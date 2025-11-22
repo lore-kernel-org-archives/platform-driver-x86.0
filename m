@@ -1,487 +1,482 @@
-Received: from mout.gmx.net (mout.gmx.net [212.227.17.22])
+Received: from mout.gmx.net (mout.gmx.net [212.227.15.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C814B2D131D;
-	Sat, 22 Nov 2025 20:38:48 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=212.227.17.22
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 350C81B532F;
+	Sat, 22 Nov 2025 23:54:16 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=212.227.15.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1763843931; cv=none; b=NylMSjW+2OAYXYGNQ8SxelEUg6bjCHNBrTduK+NbTCX1fjOlrxGiftqYbtoEpcbN1BW8XtCUBdmL1BlIy/MBd9gsfShTxOlkE62mPOHHI/JpgcFc9ulK+FgVav+9rI2KRqIg9BMPc1FJ6W6KD5zJR//gjzxNEgTlEysFn7mlijA=
+	t=1763855660; cv=none; b=lvU824wb72tCBUzse3yUF6caU3O9Syqqcb01BR+09nOSaGXN2jRwGnU3IT1vAZwMNWJefZtRRhT6hGHvw/syT9llYz941/7PxeZTRWZ9ZL+urRSoG+wFPi8lUW1i7QOcsxAdTOGMt+GpbvtbJDmgy/bWfhAO9cHKI5ftgiOtho4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1763843931; c=relaxed/simple;
-	bh=2DfUyHkuqLKEb51ARcwC5O6fLBP/HO4ZWeKvEBZVecI=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=M9VcTeVLE3zaoufNNdwV7wo4fx5p0vgARvG7gE4gWIo2Ui7fZGmUPvKcx0VM4Pzm/HUOz3kWnXLNKDOAED4CkeHIh26UX3QWrEb3fnFdUMyze1x9foq2YfkyOeTjUor3aIYiZwjLLOo4yPmsfGrYuu8HnCFA9cJMExfeGtMHt8c=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gmx.de; spf=pass smtp.mailfrom=gmx.de; dkim=pass (2048-bit key) header.d=gmx.de header.i=w_armin@gmx.de header.b=B49zNWP/; arc=none smtp.client-ip=212.227.17.22
+	s=arc-20240116; t=1763855660; c=relaxed/simple;
+	bh=DPeptKW4cRU8S/dKbMXuosHpIGxO2+kMWCw/TCeAS9Q=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=HdOfX4BRezNGsqCrWrjC7d1Tar2D8DfFnpWt/N7n/BCU7Osm3IMSrRKNdNbsdnSll/hZarmTe9Oim00TnKihmTJoYrbuUkP1T33W37rsP6S/0prbzN4AkJXN891r96pHT8k45PiJDGKRyGE6g7ji9G9qfRyg2Ubx7FScmTqgqts=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gmx.de; spf=pass smtp.mailfrom=gmx.de; dkim=pass (2048-bit key) header.d=gmx.de header.i=w_armin@gmx.de header.b=pkOmQPYl; arc=none smtp.client-ip=212.227.15.18
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gmx.de
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmx.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmx.de header.i=w_armin@gmx.de header.b="B49zNWP/"
+	dkim=pass (2048-bit key) header.d=gmx.de header.i=w_armin@gmx.de header.b="pkOmQPYl"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=gmx.de;
-	s=s31663417; t=1763843924; x=1764448724; i=w_armin@gmx.de;
-	bh=bfYnzxa6sTlma+qjc+GSsPlCO2sXENhnw7i5MiC+Afk=;
-	h=X-UI-Sender-Class:From:To:Cc:Subject:Date:Message-Id:In-Reply-To:
-	 References:MIME-Version:Content-Transfer-Encoding:cc:
-	 content-transfer-encoding:content-type:date:from:message-id:
-	 mime-version:reply-to:subject:to;
-	b=B49zNWP/3NhoRMV+mX57jkB14T9fMoGP/pvkIG1ZPKfRLclCo/v2y/SlSrhy7bFK
-	 hTI0gvaACdxsiBUGjvQAsdMucFHuc2kqlWPyy0GS2Tjk8NHvv+BAABuyyUAnAtFYy
-	 DV0/8O9db5Iw9/fNtTfYroBzJCGUfRIaKxAvvcHAVp/SOVehVU2fpkMbswfChmRG4
-	 tTGDBHkCwM+oVdH99F3/JjNXfm15zLZmucb9KUAQKe3QnhCL5nyIrjW+tBmMYdm96
-	 c8eVAADoZHZq8P4yd284bDjYy6yAtOYPifDMbof8sUEMWD23vEZBQfr86I+6np01j
-	 g29JpFREyI3K4pmocQ==
+	s=s31663417; t=1763855655; x=1764460455; i=w_armin@gmx.de;
+	bh=DPeptKW4cRU8S/dKbMXuosHpIGxO2+kMWCw/TCeAS9Q=;
+	h=X-UI-Sender-Class:Message-ID:Date:MIME-Version:Subject:To:Cc:
+	 References:From:In-Reply-To:Content-Type:
+	 Content-Transfer-Encoding:cc:content-transfer-encoding:
+	 content-type:date:from:message-id:mime-version:reply-to:subject:
+	 to;
+	b=pkOmQPYl7k76vadOMFLvsyjGH5RSoJTeYxgMBcvKZIHw7BfmTB98xYE7wv2fAvn4
+	 09E5iV8ihcJk0v5ppU3Ra62esJGgYFWG401EUPb619xX3zlUYlJuF0H8WrpYtRYJe
+	 gIX65IQcyMo7lYzfWhtMer+fJwQbQAlYarOPpVNncd5p1CWLdr/0qcN/VaXdNH7/x
+	 s1lymX9ddGoYOtBWslWmJ9nSvIYUOd3oYj10yuHvREodzAfm2X/SkD8XlDKQ92U2o
+	 4DeTnqJFAarRbtag6K7SvneNG4FcfIL7AScf6jItNqhCM0QpArxs2q1ZXqFGYA0HA
+	 lWRcfRHHRagjGmxKFg==
 X-UI-Sender-Class: 724b4f7f-cbec-4199-ad4e-598c01a50d3a
-Received: from mx-amd-b650.fritz.box ([93.202.247.91]) by mail.gmx.net
- (mrgmx105 [212.227.17.168]) with ESMTPSA (Nemesis) id
- 1MZCbB-1vaT1W3MLR-00RAyT; Sat, 22 Nov 2025 21:38:44 +0100
-From: Armin Wolf <W_Armin@gmx.de>
-To: hansg@kernel.org,
-	ilpo.jarvinen@linux.intel.com
-Cc: platform-driver-x86@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	linux@weissschuh.net,
-	Dell.Client.Kernel@dell.com,
-	corbet@lwn.net,
-	linux-doc@vger.kernel.org
-Subject: [PATCH 9/9] platform/wmi: Update driver development guide
-Date: Sat, 22 Nov 2025 21:38:03 +0100
-Message-Id: <20251122203803.6154-10-W_Armin@gmx.de>
-X-Mailer: git-send-email 2.39.5
-In-Reply-To: <20251122203803.6154-1-W_Armin@gmx.de>
-References: <20251122203803.6154-1-W_Armin@gmx.de>
+Received: from [192.168.0.69] ([93.202.247.91]) by mail.gmx.net (mrgmx004
+ [212.227.17.190]) with ESMTPSA (Nemesis) id 1MIMbO-1vJhlj09XI-009lhs; Sun, 23
+ Nov 2025 00:54:15 +0100
+Message-ID: <bed687c1-a07b-412d-9547-d2369f89ccd8@gmx.de>
+Date: Sun, 23 Nov 2025 00:54:13 +0100
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH 2/6] platform/x86/uniwill: Handle more WMI events required
+ for TUXEDO devices
+To: Werner Sembach <wse@tuxedocomputers.com>, hansg@kernel.org,
+ ilpo.jarvinen@linux.intel.com
+Cc: platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <20251117132530.32460-1-wse@tuxedocomputers.com>
+ <20251117132530.32460-3-wse@tuxedocomputers.com>
+ <fc1b75ce-113d-4de1-ac98-7616b17f915c@gmx.de>
+ <29b24831-92d4-47c6-8daf-7d1879951d43@tuxedocomputers.com>
+ <7cd7081f-b138-4548-a9fb-5c4d5165b036@gmx.de>
+ <7276b961-8649-4bc0-87f7-a1f06cd4f3ad@tuxedocomputers.com>
+ <5b554128-7466-4b34-9020-c0c39572f100@gmx.de>
+ <3c075220-79f3-4dff-a760-6fe065147793@tuxedocomputers.com>
+ <2d5d88fe-cd54-4311-b5cd-b1c435ff973d@gmx.de>
+ <d4c7b31b-1335-47d5-992a-beace78614e5@tuxedocomputers.com>
+ <f0161676-fde7-4c6f-8774-25d176265716@gmx.de>
+ <59b75eb5-59f8-472f-ad98-5d333eebebe5@tuxedocomputers.com>
+ <aa69ac42-8578-4fbb-a35c-d0a556aa394d@gmx.de>
+ <7dcf2e21-209d-42ad-8541-52eac5c77049@tuxedocomputers.com>
+Content-Language: en-US
+From: Armin Wolf <W_Armin@gmx.de>
+In-Reply-To: <7dcf2e21-209d-42ad-8541-52eac5c77049@tuxedocomputers.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: quoted-printable
-X-Provags-ID: V03:K1:kanzDpoTBZKfua4EFt73RRUOo+OWWArqxAVf2aD/oEo4b1hiT6y
- x/a3wT/KTT4CSRZl0i5R1S7G0if1oMGNWIkaVIzySD9s5M1wu52exW3J7jaMsWjzEZ9AwMM
- qqeb7//O8vnFzg66Cz252H0cTaa292XGgAdBNHfoeNJMa6YMO+xUhwsPbi7NIqx0M4FqcvG
- 3a/g9UeK1dm703QGg9JNw==
+X-Provags-ID: V03:K1:hfwQXaIuaeiRhOSUbxH9fEf/Va2c/uzB4chbcOaqLaNpelleFK3
+ FE1HP271A8DX4IuZSxerJGEkolW7zXuYbhPKIiyQlqbLEkHUNcr8gIrmNpQCBW6Bn5H4Jes
+ mo7OAYqtNfWtQYJvQF6p0TaUBQVpGECiXpFyzQHHWC4Eub9Cm7ztrWRWX57W8WAOijKMl8Y
+ GPike2y4zsSwR0tHNjtNw==
 X-Spam-Flag: NO
-UI-OutboundReport: notjunk:1;M01:P0:R5qILLG1uc8=;K5JPWKlr+PSrVaj1fYC/v6FYog+
- +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
- 3QaAAs8L2ZTOZvMEC8ef92rK0YMVN
+UI-OutboundReport: notjunk:1;M01:P0:kgW1HJtTvUw=;tUwIGnEPYVWHe4UXGSD9Nz9SSN6
+ 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
+ f82rIeqR2d1r/fH3d5CeVi9NPdOgC
 
-New WMI drivers should use the new buffer-based WMI API instead of
-the deprecated ACPI-based API. Update the driver development guide
-to recommend the buffer-based API to driver developers and explain
-the purpose of struct wmi_buffer.
+Am 20.11.25 um 23:06 schrieb Werner Sembach:
 
-Also update the ACPI interface documentation to describe the
-conversion rules for converting ACPI objects into WMI buffers.
+>
+> Am 20.11.25 um 14:40 schrieb Armin Wolf:
+>> Am 20.11.25 um 11:42 schrieb Werner Sembach:
+>>
+>>>
+>>> Am 20.11.25 um 01:53 schrieb Armin Wolf:
+>>>> Am 18.11.25 um 16:05 schrieb Werner Sembach:
+>>>>
+>>>>>
+>>>>> Am 18.11.25 um 15:41 schrieb Armin Wolf:
+>>>>>> Am 18.11.25 um 15:27 schrieb Werner Sembach:
+>>>>>>
+>>>>>>>
+>>>>>>> Am 18.11.25 um 14:48 schrieb Armin Wolf:
+>>>>>>>> Am 18.11.25 um 14:29 schrieb Werner Sembach:
+>>>>>>>>
+>>>>>>>>>
+>>>>>>>>> Am 18.11.25 um 14:12 schrieb Armin Wolf:
+>>>>>>>>>> Am 18.11.25 um 13:45 schrieb Werner Sembach:
+>>>>>>>>>>
+>>>>>>>>>>>
+>>>>>>>>>>> Am 18.11.25 um 12:08 schrieb Armin Wolf:
+>>>>>>>>>>>> Am 17.11.25 um 14:23 schrieb Werner Sembach:
+>>>>>>>>>>>>
+>>>>>>>>>>>>> Handle some more WMI events that are triggered on TUXEDO=20
+>>>>>>>>>>>>> devices.
+>>>>>>>>>>>>>
+>>>>>>>>>>>>> Signed-off-by: Werner Sembach <wse@tuxedocomputers.com>
+>>>>>>>>>>>>> ---
+>>>>>>>>>>>>> drivers/platform/x86/uniwill/uniwill-acpi.c | 19=20
+>>>>>>>>>>>>> ++++++++++++++++++-
+>>>>>>>>>>>>> drivers/platform/x86/uniwill/uniwill-wmi.h | 2 ++
+>>>>>>>>>>>>> =C2=A0 2 files changed, 20 insertions(+), 1 deletion(-)
+>>>>>>>>>>>>>
+>>>>>>>>>>>>> diff --git a/drivers/platform/x86/uniwill/uniwill-acpi.c=20
+>>>>>>>>>>>>> b/drivers/platform/x86/uniwill/uniwill-acpi.c
+>>>>>>>>>>>>> index 29bb3709bfcc8..0cb86a701b2e1 100644
+>>>>>>>>>>>>> --- a/drivers/platform/x86/uniwill/uniwill-acpi.c
+>>>>>>>>>>>>> +++ b/drivers/platform/x86/uniwill/uniwill-acpi.c
+>>>>>>>>>>>>> @@ -371,9 +371,11 @@ static const struct key_entry=20
+>>>>>>>>>>>>> uniwill_keymap[] =3D {
+>>>>>>>>>>>>> =C2=A0 =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 /* Reported in manual =
+mode when toggling the=20
+>>>>>>>>>>>>> airplane mode status */
+>>>>>>>>>>>>> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 { KE_KEY,=C2=A0=C2=A0=C2=A0=
+=C2=A0=C2=A0=C2=A0 UNIWILL_OSD_RFKILL, { KEY_RFKILL }},
+>>>>>>>>>>>>> +=C2=A0=C2=A0=C2=A0 { KE_IGNORE,=C2=A0=C2=A0=C2=A0 UNIWILL_O=
+SD_RADIOON, { KEY_UNKNOWN }},
+>>>>>>>>>>>>> +=C2=A0=C2=A0=C2=A0 { KE_IGNORE,=C2=A0=C2=A0=C2=A0 UNIWILL_O=
+SD_RADIOOFF, { KEY_UNKNOWN }},
+>>>>>>>>>>>>> =C2=A0 =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 /* Reported when user =
+wants to cycle the platform=20
+>>>>>>>>>>>>> profile */
+>>>>>>>>>>>>> -=C2=A0=C2=A0=C2=A0 { KE_IGNORE, UNIWILL_OSD_PERFORMANCE_MOD=
+E_TOGGLE, {=20
+>>>>>>>>>>>>> KEY_UNKNOWN }},
+>>>>>>>>>>>>> +=C2=A0=C2=A0=C2=A0 { KE_KEY, UNIWILL_OSD_PERFORMANCE_MODE_T=
+OGGLE, {=20
+>>>>>>>>>>>>> KEY_F14 }},
+>>>>>>>>>>>>
+>>>>>>>>>>>> I am currently working a patch adding platform profile=20
+>>>>>>>>>>>> support, so this event would
+>>>>>>>>>>>> be handled inside the kernel on models with platform=20
+>>>>>>>>>>>> profile support.
+>>>>>>>>>>>
+>>>>>>>>>>> For tuxedo devices we have profiles managed in userspace=20
+>>>>>>>>>>> that do additional things. So we need a way to handle this=20
+>>>>>>>>>>> in userspace.
+>>>>>>>>>>>
+>>>>>>>>>> Do these things have something to do with the uniwill EC? If=20
+>>>>>>>>>> so then we should implement those inside the driver
+>>>>>>>>>> itself. The control center can then poll the platform profile=
+=20
+>>>>>>>>>> sysfs file to get notified when platform_profile_cycle()
+>>>>>>>>>> is executed to perform additional actions.
+>>>>>>>>> Not exclusively, e.g. one thing is display brightness.
+>>>>>>>>
+>>>>>>>> And you cannot poll the sysfs interface?
+>>>>>>> I can't follow you atm?
+>>>>>>
+>>>>>> I meant to ask whether or not your application could poll the=20
+>>>>>> platform profile sysfs interface for changes instead of
+>>>>>> listing for the F14 key.
+>>>>> But the platform profiles are a fixed number? TCC currently allows=
+=20
+>>>>> an arbitrary amount of profiles being created.
+>>>>
+>>>> With "poll the platform profile sysfs interface" i meant that you=20
+>>>> could use poll() (https://linux.die.net/man/2/poll)
+>>>> or epoll() on the sysfs file containing the current platform profile.
+>>> Sorry i think i still don't completely get what you mean with=20
+>>> platform profile. I assume you have a poc on github? If not can you=20
+>>> give me a short overview?
+>>
+>> Example code, might not work:
+>>
+>> from select import poll, POLLPRI
+>>
+>> fd =3D open("|/sys/firmware/acpi/platform_profile", "r") p =3D poll()=
+=20
+>> p.register(fd.fileno(), POLLPRI) # Wait till platform profile changes=
+=20
+>> p.poll() print("Platform profile changed") This however comes with=20
+>> the drawback that you cannot prevent the platform profile from=20
+>> cycling. If you want to do that manually depending on the settings=20
+>> inside your custom profiles, then maybe we can keep the F14 hack for=20
+>> now. I will then add a module option when adding platform profile=20
+>> support to select between platform_profile_cycle() and the F14=20
+>> keycode. Does this sound OK?|
+>
+> a sorry i was imprecise, i wanted to know the kernelspace implementation=
+.
+>
+Take a look at https://github.com/Wer-Wolf/uniwill-laptop/tree/platform_pr=
+ofile for the prototype.
 
-Signed-off-by: Armin Wolf <W_Armin@gmx.de>
-=2D--
- Documentation/wmi/acpi-interface.rst          | 68 +++++++++++++++++
- .../wmi/driver-development-guide.rst          | 76 +++++++++++++------
- 2 files changed, 121 insertions(+), 23 deletions(-)
+The function platform_profile_cycle() is defined inside drivers/acpi/platf=
+orm_profile.
 
-diff --git a/Documentation/wmi/acpi-interface.rst b/Documentation/wmi/acpi=
--interface.rst
-index 1ef003b033bf..6dad191ac59d 100644
-=2D-- a/Documentation/wmi/acpi-interface.rst
-+++ b/Documentation/wmi/acpi-interface.rst
-@@ -104,3 +104,71 @@ holding the notification ID of the event. This method=
- should be evaluated every
- time an ACPI notification is received, since some ACPI implementations us=
-e a
- queue to store WMI event data items. This queue will overflow after a cou=
-ple
- of WMI events are received without retrieving the associated WMI event da=
-ta.
-+
-+Conversion rules for ACPI data types
-+------------------------------------
-+
-+Consumers of the ACPI-WMI interface use binary buffers to exchange data w=
-ith the WMI driver core,
-+with the internal structure of the buffer being only know to the consumer=
-s. The WMI driver core is
-+thus responsible for converting the data inside the buffer into an approp=
-riate ACPI data type for
-+consumtion by the ACPI firmware. Additionally, any data returned by the v=
-arious ACPI methods needs
-+to be converted back into a binary buffer.
-+
-+The layout of said buffers is defined by the MOF description of the WMI m=
-ethod or data block in
-+question [1]_:
-+
-+=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D =3D=3D=3D=3D=3D=3D=3D=3D=3D=
-=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
-=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
-=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D =3D=3D=3D=3D=3D=3D=3D=3D=3D
-+Data Type       Layout                                                   =
-               Alignment
-+=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D =3D=3D=3D=3D=3D=3D=3D=3D=3D=
-=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
-=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
-=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D =3D=3D=3D=3D=3D=3D=3D=3D=3D
-+``string``      Starts with a unsigned 16-bit little endian integer speci=
-fying          2 bytes
-+                the length of the string data in bytes, followed by the s=
-tring data
-+                encoded as UTF-16LE with **optional** nul termination and=
- padding.
-+                Keep in mind that some firmware implementations might dep=
-end on the
-+                terminating nul character to be present. Also the padding=
- should
-+                always be performed with nul characters.
-+``boolean``     Single byte where 0 means ``false`` and nonzero means ``t=
-rue``.         1 byte
-+``sint8``       Signed 8-bit integer.                                    =
-               1 byte
-+``uint8``       Unsigned 8-bit integer.                                  =
-               1 byte
-+``sint16``      Signed 16-bit little endian integer.                     =
-               2 byte
-+``uint16``      Unsigned 16-bit little endian integer.                   =
-               2 byte
-+``sint32``      Signed 32-bit little endian integer.                     =
-               4 byte
-+``uint32``      Unsigned 32-bit little endian integer.                   =
-               4 byte
-+``sint64``      Signed 64-bit little endian integer.                     =
-               8 bytes
-+``uint64``      Unsigned 64-bit little endian integer.                   =
-               8 bytes
-+``datetime``    A fixed-length 25-character UTF-16LE string with the form=
-at             2 bytes
-+                *yyyymmddhhmmss.mmmmmmsutf* where *yyyy* is the 4-digit y=
-ear, *mm* is
-+                the 2-digit month, *dd* is the 2-digit day, *hh* is the 2=
--digit hour
-+                based on a 24-hour clock, *mm* is the 2-digit minute, *ss=
-* is the
-+                2-digit second, *mmmmmm* is the 6-digit microsecond, *s* =
-is a plus or
-+                minus character depending on whether *utc* is a positive =
-or negative
-+                offset from UTC (or a colon if the date is an interval). =
-Unpopulated
-+                fields should be filled with asterisks.
-+=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D =3D=3D=3D=3D=3D=3D=3D=3D=3D=
-=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
-=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
-=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D =3D=3D=3D=3D=3D=3D=3D=3D=3D
-+
-+Arrays should be aligned based on the alignment of their base type, while=
- objects should be
-+aligned based on the largest alignment of an element inside them.
-+
-+All buffers returned by the WMI driver core are 8-byte aligned. When conv=
-erting ACPI data types
-+into such buffers the following conversion rules apply:
-+
-+=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D =3D=3D=3D=3D=3D=3D=3D=3D=3D=
-=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
-=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
-=3D=3D=3D
-+ACPI Data Type  Converted into
-+=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D =3D=3D=3D=3D=3D=3D=3D=3D=3D=
-=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
-=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
-=3D=3D=3D
-+Buffer          Copied as-is.
-+Integer         Converted into a ``uint32``.
-+String          Converted into a ``string`` with a terminating nul charac=
-ter
-+                to match the behavior the of the Windows driver.
-+Package         Each element inside the package is converted with alignme=
-nt
-+                of the resulting data types being respected. Nested packa=
-ges
-+                are not allowed.
-+=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D =3D=3D=3D=3D=3D=3D=3D=3D=3D=
-=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
-=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
-=3D=3D=3D
-+
-+The Windows driver does attempt to handle nested packages, but this resul=
-ts in internal data
-+structures (``_ACPI_METHOD_ARGUMENT_V1``) erroneously being copied into t=
-he resulting buffer.
-+ACPI firmware implementations should thus not return nested packages from=
- ACPI methods
-+associated with the ACPI-WMI interface.
-+
-+References
-+=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
-+
-+.. [1] https://learn.microsoft.com/en-us/windows-hardware/drivers/kernel/=
-driver-defined-wmi-data-items
-diff --git a/Documentation/wmi/driver-development-guide.rst b/Documentatio=
-n/wmi/driver-development-guide.rst
-index 99ef21fc1c1e..9019661180a0 100644
-=2D-- a/Documentation/wmi/driver-development-guide.rst
-+++ b/Documentation/wmi/driver-development-guide.rst
-@@ -69,7 +69,7 @@ to matching WMI devices using a struct wmi_device_id tab=
-le:
-         .probe =3D foo_probe,
-         .remove =3D foo_remove,         /* optional, devres is preferred =
-*/
-         .shutdown =3D foo_shutdown,     /* optional, called during shutdo=
-wn */
--        .notify =3D foo_notify,         /* optional, for event handling *=
-/
-+        .notify_new =3D foo_notify,     /* optional, for event handling *=
-/
-         .no_notify_data =3D true,       /* optional, enables events conta=
-ining no additional data */
-         .no_singleton =3D true,         /* required for new WMI drivers *=
-/
-   };
-@@ -89,9 +89,9 @@ the WMI device and put it in a well-known state for the =
-WMI driver to pick up la
- or kexec. Most WMI drivers need no special shutdown handling and can thus=
- omit this callback.
-=20
- Please note that new WMI drivers are required to be able to be instantiat=
-ed multiple times,
--and are forbidden from using any deprecated GUID-based WMI functions. Thi=
-s means that the
--WMI driver should be prepared for the scenario that multiple matching WMI=
- devices are present
--on a given machine.
-+and are forbidden from using any deprecated GUID-based and ACPI-based WMI=
- functions. This means
-+that the WMI driver should be prepared for the scenario that multiple mat=
-ching WMI devices are
-+present on a given machine.
-=20
- Because of this, WMI drivers should use the state container design patter=
-n as described in
- Documentation/driver-api/driver-model/design-patterns.rst.
-@@ -103,38 +103,37 @@ Documentation/driver-api/driver-model/design-pattern=
-s.rst.
- WMI method drivers
- ------------------
-=20
--WMI drivers can call WMI device methods using wmidev_evaluate_method(), t=
-he
--structure of the ACPI buffer passed to this function is device-specific a=
-nd usually
--needs some tinkering to get right. Looking at the ACPI tables containing =
-the WMI
--device usually helps here. The method id and instance number passed to th=
-is function
--are also device-specific, looking at the decoded Binary MOF is usually en=
-ough to
--find the right values.
-+WMI drivers can call WMI device methods using wmidev_invoke_method(). For=
- each WMI method
-+invocation the WMI driver needs to provide the instance number and the me=
-thod ID, as well as
-+a buffer with the method arguments and optionally a buffer for the result=
-s.
-=20
--The maximum instance number can be retrieved during runtime using wmidev_=
-instance_count().
-+The layout of said buffers is device-specific and described by the Binary=
- MOF data associated
-+with a given WMI device. Said Binary MOF data also describes the method I=
-D of a given WMI method
-+with the ``WmiMethodId`` qualifier. WMI devices exposing WMI methods usua=
-lly expose only a single
-+instance (instance number 0), but in theory can expose multiple instances=
- as well. In such a case
-+the number of instances can be retrieved using wmidev_instance_count().
-=20
--Take a look at drivers/platform/x86/inspur_platform_profile.c for an exam=
-ple WMI method driver.
-+Take a look at drivers/platform/x86/intel/wmi/thunderbolt.c for an exampl=
-e WMI method driver.
-=20
- WMI data block drivers
- ----------------------
-=20
--WMI drivers can query WMI device data blocks using wmidev_block_query(), =
-the
--structure of the returned ACPI object is again device-specific. Some WMI =
-devices
--also allow for setting data blocks using wmidev_block_set().
-+WMI drivers can query WMI data blocks using wmidev_query_block(), the lay=
-out of thereturned
-+buffer is again device-specific and described by the Binary MOF data. Som=
-e WMI data blocks are
-+also writeable and can be set using wmidev_set_block(). The number of dat=
-a block instances can
-+again be retrieved using wmidev_instance_count().
-=20
--The maximum instance number can also be retrieved using wmidev_instance_c=
-ount().
--
--Take a look at drivers/platform/x86/intel/wmi/sbl-fw-update.c for an exam=
-ple
--WMI data block driver.
-+Take a look at drivers/platform/x86/intel/wmi/sbl-fw-update.c for an exam=
-ple WMI data block driver.
-=20
- WMI event drivers
- -----------------
-=20
--WMI drivers can receive WMI events via the notify() callback inside the s=
-truct wmi_driver.
-+WMI drivers can receive WMI events via the notify_new() callback inside t=
-he struct wmi_driver.
- The WMI subsystem will then take care of setting up the WMI event accordi=
-ngly. Please note that
--the structure of the ACPI object passed to this callback is device-specif=
-ic, and freeing the
--ACPI object is being done by the WMI subsystem, not the driver.
-+the layout of the buffer passed to this callback is device-specific, and =
-freeing of the buffer
-+is being done by the WMI subsystem itself, not the driver.
-=20
--The WMI driver core will take care that the notify() callback will only b=
-e called after
-+The WMI driver core will take care that the notify_new() callback will on=
-ly be called after
- the probe() callback has been called, and that no events are being receiv=
-ed by the driver
- right before and after calling its remove() or shutdown() callback.
-=20
-@@ -146,6 +145,36 @@ the ``no_notify_data`` flag inside struct wmi_driver =
-should be set to ``true``.
-=20
- Take a look at drivers/platform/x86/xiaomi-wmi.c for an example WMI event=
- driver.
-=20
-+Exchanging data with the WMI driver core
-+----------------------------------------
-+
-+WMI drivers can exchange data with the WMI driver core using struct wmi_b=
-uffer. The internal
-+structure of those buffers is device-specific and only known by the WMI d=
-river. Because of this
-+the WMI driver itself is responsible for parsing and validating the data =
-received from its
-+WMI device.
-+
-+The strcture of said buffers is described by the MOF data associated with=
- the WMI device in
-+question. When such a buffer contains multiple data items it usually make=
-s sense to define a
-+C structure and use it during parsing. Since the WMI driver core guarante=
-es that all buffers
-+received from a WMI device are aligned on a 8-byte boundary, WMI drivers =
-can simply perform
-+a cast between the WMI buffer data and this C structure.
-+
-+This however should only be done after the size of the buffer was verifie=
-d to be large enough
-+to hold the whole C structure. WMI drivers should reject undersized buffe=
-rs as they are usually
-+send by the WMI device to signal an internal error. Oversized buffers how=
-ever should be accepted
-+to emulate the behavior of the Windows WMI implementation.
-+
-+When defining a C structure for parsing WMI buffers the alignment of the =
-data items should be
-+respected. This is especially important for 64-bit integers as those have=
- different alignments
-+on 64-bit (8-byte alignment) and 32-bit (4-byte alignment) architectures.=
- It is thus a good idea
-+to manually specify the alignment of such data items or mark the whole st=
-ructure as packed when
-+appropriate. Integer data items in general are little-endian integers and=
- should be marked as
-+such using ``__le64`` and friends. When parsing WMI string data items the=
- struct wmi_string should
-+be used as WMI strings have a different layout than C strings.
-+
-+See Documentation/wmi/acpi-interface.rst for more information regarding t=
-he binary format
-+of WMI data items.
-+
- Handling multiple WMI devices at once
- -------------------------------------
-=20
-@@ -170,6 +199,7 @@ Things to avoid
- When developing WMI drivers, there are a couple of things which should be=
- avoided:
-=20
- - usage of the deprecated GUID-based WMI interface which uses GUIDs inste=
-ad of WMI device structs
-+- usage of the deprecated ACPI-based WMI interface which uses ACPI object=
-s instead of plain buffers
- - bypassing of the WMI subsystem when talking to WMI devices
- - WMI drivers which cannot be instantiated multiple times.
-=20
-=2D-=20
-2.39.5
+> But let me sum up what i think you mean:
+>
+> Platform profiles are in driver predefined profiles like: Power Save,=20
+> Balanced, Performance, and Custom.
+>
+> When you press the button you want to cycle through the profiles=20
+> (except custom I guess?).
+>
+> Only in Custom things like cTGP can be directly controlled by=20
+> userspace via sysfs (otherwise the sysfs value is ignored?)
+>
+Correct.
 
+> Maybe an elegant solution would be that upon boot for example=20
+> "Balanced" is selected and when being in one of the predefined=20
+> profiles the button cycles them. But once=C2=A0Custom get selected via=
+=20
+> sysfs the button starts sending a button press as the driver now=20
+> expects everything to be handled by userspace. Bonus points if=20
+> userspace can read out what the predefined profiles actually set to,=20
+> for example, use that as initialization for custom profiles.
+>
+Agreed, i will implement this behavior once my testers give me feedback.
+
+Thanks,
+Armin Wolf
+
+>>
+>>>>
+>>>> Anyway, i attached the patch with the device descriptor=20
+>>>> infrastructure. The callback called during probe cannot modify
+>>>> the feature bitmap anymore, but i suggest that you simply set the=20
+>>>> limit for cTGP to zero. The code responsible for
+>>>> initializing cTGP support can then check if the cTGP limit is zero=20
+>>>> and return early.
+>>>
+>>> I wonder if we should directly put that into a formal quirk list.=20
+>>> Opinions?
+>>>
+>>> Best regards,
+>>>
+>>> Werner
+>>>
+>> The problem is that the quirk list will become RO before the driver=20
+>> can access the EC, so we have to use uniwill_data
+>> for storing this information.
+>>
+>> Thanks,
+>> Armin Wolf
+>>
+>>>>
+>>>> Thanks,
+>>>> Armin Wolf
+>>>>
+>>>>>>
+>>>>>> Thanks,
+>>>>>> Armin Wolf
+>>>>>>
+>>>>>>>>
+>>>>>>>>>>
+>>>>>>>>>>> The 2 things I can spontaneously think of would be a sysfs=20
+>>>>>>>>>>> toggle or 2 different UNIWILL_FEATURE_* defines.
+>>>>>>>>>>>
+>>>>>>>>>> TPH i would love to have an ordinary keycode allocated for=20
+>>>>>>>>>> that if the above does not work for you. There already
+>>>>>>>>>> exists KEY_PERFORMANCE, so adding something like=20
+>>>>>>>>>> KEY_PERFORMANCE_CYCLE should be possible.
+>>>>>>>>>
+>>>>>>>>> New keycodes won't work on X11, I don't know the reason, but=20
+>>>>>>>>> X11 only supports a max of 248 keycodes
+>>>>>>>>>
+>>>>>>>>> That's why for example touchpad toggle is bound to F21 e.g.=20
+>>>>>>>>> here=20
+>>>>>>>>> https://elixir.bootlin.com/linux/v6.17.8/source/drivers/platform=
+/x86/lg-laptop.c#L106=20
+>>>>>>>>> .
+>>>>>>>>>
+>>>>>>>> Oh no. In this case using F14 is fine.
+>>>>>>>>
+>>>>>>>>
+>>>>>>>> Thanks,
+>>>>>>>> Armin Wolf
+>>>>>>>>
+>>>>>>>>>>
+>>>>>>>>>>>>
+>>>>>>>>>>>>> =C2=A0 =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 /* Reported when the u=
+ser wants to adjust the=20
+>>>>>>>>>>>>> brightness of the keyboard */
+>>>>>>>>>>>>> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 { KE_KEY, UNIWILL_OSD_KBDILLU=
+MDOWN, {=20
+>>>>>>>>>>>>> KEY_KBDILLUMDOWN }},
+>>>>>>>>>>>>> @@ -382,11 +384,19 @@ static const struct key_entry=20
+>>>>>>>>>>>>> uniwill_keymap[] =3D {
+>>>>>>>>>>>>> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 /* Reported when the user wan=
+ts to toggle the=20
+>>>>>>>>>>>>> microphone mute status */
+>>>>>>>>>>>>> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 { KE_KEY, UNIWILL_OSD_MIC_MUT=
+E, { KEY_MICMUTE }},
+>>>>>>>>>>>>> =C2=A0 +=C2=A0=C2=A0=C2=A0 /* Reported when the user wants t=
+o toggle the mute=20
+>>>>>>>>>>>>> status */
+>>>>>>>>>>>>> +=C2=A0=C2=A0=C2=A0 { KE_IGNORE,=C2=A0=C2=A0=C2=A0 UNIWILL_O=
+SD_MUTE, { KEY_MUTE }},
+>>>>>>>>>>>>
+>>>>>>>>>>>> Why is this event being ignored?
+>>>>>>>>>>> Because the UNIWILL_OSD_MUTE event is sent in addition to=20
+>>>>>>>>>>> the mute key event, so not ignoring it here would result in=20
+>>>>>>>>>>> a double trigger.
+>>>>>>>>>>
+>>>>>>>>>> I understand.
+>>>>>>>>>>
+>>>>>>>>>>>>
+>>>>>>>>>>>>> +
+>>>>>>>>>>>>> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 /* Reported when the user loc=
+ks/unlocks the Fn key */
+>>>>>>>>>>>>> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 { KE_IGNORE,=C2=A0=C2=A0=C2=
+=A0 UNIWILL_OSD_FN_LOCK, { KEY_FN_ESC }},
+>>>>>>>>>>>>> =C2=A0 =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 /* Reported when the u=
+ser wants to toggle the=20
+>>>>>>>>>>>>> brightness of the keyboard */
+>>>>>>>>>>>>> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 { KE_KEY, UNIWILL_OSD_KBDILLU=
+MTOGGLE, {=20
+>>>>>>>>>>>>> KEY_KBDILLUMTOGGLE }},
+>>>>>>>>>>>>> +=C2=A0=C2=A0=C2=A0 { KE_KEY, UNIWILL_OSD_KB_LED_LEVEL0, {=
+=20
+>>>>>>>>>>>>> KEY_KBDILLUMTOGGLE }},
+>>>>>>>>>>>>> +=C2=A0=C2=A0=C2=A0 { KE_KEY, UNIWILL_OSD_KB_LED_LEVEL1, {=
+=20
+>>>>>>>>>>>>> KEY_KBDILLUMTOGGLE }},
+>>>>>>>>>>>>> +=C2=A0=C2=A0=C2=A0 { KE_KEY, UNIWILL_OSD_KB_LED_LEVEL2, {=
+=20
+>>>>>>>>>>>>> KEY_KBDILLUMTOGGLE }},
+>>>>>>>>>>>>> +=C2=A0=C2=A0=C2=A0 { KE_KEY, UNIWILL_OSD_KB_LED_LEVEL3, {=
+=20
+>>>>>>>>>>>>> KEY_KBDILLUMTOGGLE }},
+>>>>>>>>>>>>> +=C2=A0=C2=A0=C2=A0 { KE_KEY, UNIWILL_OSD_KB_LED_LEVEL4, {=
+=20
+>>>>>>>>>>>>> KEY_KBDILLUMTOGGLE }},
+>>>>>>>>>>>>> =C2=A0 =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 /* FIXME: find out the=
+ exact meaning of those=20
+>>>>>>>>>>>>> events */
+>>>>>>>>>>>>> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 { KE_IGNORE, UNIWILL_OSD_BAT_=
+CHARGE_FULL_24_H, {=20
+>>>>>>>>>>>>> KEY_UNKNOWN }},
+>>>>>>>>>>>>> @@ -395,6 +405,9 @@ static const struct key_entry=20
+>>>>>>>>>>>>> uniwill_keymap[] =3D {
+>>>>>>>>>>>>> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 /* Reported when the user wan=
+ts to toggle the=20
+>>>>>>>>>>>>> benchmark mode status */
+>>>>>>>>>>>>> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 { KE_IGNORE, UNIWILL_OSD_BENC=
+HMARK_MODE_TOGGLE, {=20
+>>>>>>>>>>>>> KEY_UNKNOWN }},
+>>>>>>>>>>>>> =C2=A0 +=C2=A0=C2=A0=C2=A0 /* Reported when the user wants t=
+o toggle the=20
+>>>>>>>>>>>>> webcam */
+>>>>>>>>>>>>> +=C2=A0=C2=A0=C2=A0 { KE_IGNORE, UNIWILL_OSD_WEBCAM_TOGGLE, =
+{ KEY_UNKNOWN=20
+>>>>>>>>>>>>> }},
+>>>>>>>>>>>>
+>>>>>>>>>>>> Same as above.
+>>>>>>>>>>>
+>>>>>>>>>>> Same as above ;)
+>>>>>>>>>>>
+>>>>>>>>>>> At least iirc, would have to double check
+>>>>>>>>>>>
+>>>>>>>>>> Ok.
+>>>>>>>>>>
+>>>>>>>>>> Thanks,
+>>>>>>>>>> Armin Wolf
+>>>>>>>>>>
+>>>>>>>>>>>>
+>>>>>>>>>>>>> +
+>>>>>>>>>>>>> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 { KE_END }
+>>>>>>>>>>>>> =C2=A0 };
+>>>>>>>>>>>>> =C2=A0 @@ -1247,6 +1260,10 @@ static int=20
+>>>>>>>>>>>>> uniwill_notifier_call(struct notifier_block *nb, unsigned=20
+>>>>>>>>>>>>> long action
+>>>>>>>>>>>>> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 }
+>>>>>>>>>>>>> mutex_unlock(&data->battery_lock);
+>>>>>>>>>>>>> =C2=A0 +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 return NO=
+TIFY_OK;
+>>>>>>>>>>>>> +=C2=A0=C2=A0=C2=A0 case UNIWILL_OSD_DC_ADAPTER_CHANGED:
+>>>>>>>>>>>>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 // noop for the =
+time being
+>>>>>>>>>>>>
+>>>>>>>>>>>> Wrong comment style, please use /* */.
+>>>>>>>>>>> ack
+>>>>>>>>>>>>
+>>>>>>>>>>>> Thanks,
+>>>>>>>>>>>> Armin Wolf
+>>>>>>>>>>>>
+>>>>>>>>>>>>> +
+>>>>>>>>>>>>> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 retur=
+n NOTIFY_OK;
+>>>>>>>>>>>>> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 default:
+>>>>>>>>>>>>> mutex_lock(&data->input_lock);
+>>>>>>>>>>>>> diff --git a/drivers/platform/x86/uniwill/uniwill-wmi.h=20
+>>>>>>>>>>>>> b/drivers/platform/x86/uniwill/uniwill-wmi.h
+>>>>>>>>>>>>> index 2bf69f2d80381..48783b2e9ffb9 100644
+>>>>>>>>>>>>> --- a/drivers/platform/x86/uniwill/uniwill-wmi.h
+>>>>>>>>>>>>> +++ b/drivers/platform/x86/uniwill/uniwill-wmi.h
+>>>>>>>>>>>>> @@ -113,6 +113,8 @@
+>>>>>>>>>>>>> =C2=A0 =C2=A0 #define UNIWILL_OSD_BENCHMARK_MODE_TOGGLE 0xC0
+>>>>>>>>>>>>> =C2=A0 +#define UNIWILL_OSD_WEBCAM_TOGGLE 0xCF
+>>>>>>>>>>>>> +
+>>>>>>>>>>>>> =C2=A0 #define UNIWILL_OSD_KBD_BACKLIGHT_CHANGED 0xF0
+>>>>>>>>>>>>> =C2=A0 =C2=A0 struct device;
+>>>>>>>>>>>
+>>>>>>>
+>>>>>
+>>>
+>
