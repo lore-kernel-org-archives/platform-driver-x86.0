@@ -1,356 +1,216 @@
-Received: from mout.gmx.net (mout.gmx.net [212.227.17.21])
+Received: from sender3-op-o15.zoho.com (sender3-op-o15.zoho.com [136.143.184.15])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3F9A11F09AD;
-	Sat, 22 Nov 2025 14:18:36 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=212.227.17.21
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1763821119; cv=none; b=IfoxKzqMJ2Qym1pY2/SJawnJ3cF0Cpdc8Ao593hAu/vz67ZNWF5ew8kr8B+ElLxtsQHMVm/L9IkbP2xJrRR89R2o31I7ushZ0em0P2WEhoGn5eE5MyuqWIzZUZqGHFozYJvazB+I8/ZJKRT9egIVfvHW6ydc1+wv2kNA2T1+Nkw=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1763821119; c=relaxed/simple;
-	bh=WXYIJpA/5uMWAoBbwYGh8DEu0v6CC1dOId+77yeMnkk=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=Bx48gMhJ22Q7aOn04vtsQo+y34LxY3zZQ9BGGHzkKq/DTnv7jeWc4kVzpmGDlOKTnnVBnNm47ss71iQduGxkMy4jVcRVr5X4VJFSb8uVL12vr+sYjaEMt1yTRA1cV76xcbE6D5jXK8pB2yMDdZipWoRLL+xQKGduwFLpFnNiV60=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gmx.de; spf=pass smtp.mailfrom=gmx.de; dkim=pass (2048-bit key) header.d=gmx.de header.i=w_armin@gmx.de header.b=Y1UpTHto; arc=none smtp.client-ip=212.227.17.21
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gmx.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmx.de
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 91FAA125D0;
+	Sat, 22 Nov 2025 18:45:58 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=136.143.184.15
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1763837160; cv=pass; b=NxrGy7t0saZ6DFuTKx9dEyhdnmbJ6QHwERcLJ6zseFsaX15Vqt+PPuTxMebpVJk5wm11dF8GLqPc5GMWNOY15BL/1W4XjCV43UJKwDRYCFu4Bkppftz3TQA1o9WMWm4aOcHsJNbjV7HaKTMI0SRt9MoQMuB3nyFD5fdGxUI6ycE=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1763837160; c=relaxed/simple;
+	bh=5bAtMoNNl77zppEMXMjcAvLIOO4/AO13H+U7tSiVvo0=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=J6ix0JDyD+lkluyLiIcZ3kKh9Nb/05YTFNLzN6Wd4YWN7sGAAFs/9KT7pP6jI+Ldf+2KJnrFE5PqKTLWATDTfjBiWqYU+/JppKp6lzB8Y4FslXW2GKjGeGm6wxqDJqKj2pIaF+zNJgnJmoWzWjBI9ObCEIofK/aTYnX3HFp9zHw=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=rong.moe; spf=pass smtp.mailfrom=rong.moe; dkim=pass (1024-bit key) header.d=rong.moe header.i=i@rong.moe header.b=EQL51Ss1; arc=pass smtp.client-ip=136.143.184.15
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=rong.moe
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=rong.moe
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmx.de header.i=w_armin@gmx.de header.b="Y1UpTHto"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=gmx.de;
-	s=s31663417; t=1763821096; x=1764425896; i=w_armin@gmx.de;
-	bh=Kc4yf/ip/zYhJKQehc/v1Ono+m+rQ7sS8fbaEIg4oWE=;
-	h=X-UI-Sender-Class:Message-ID:Date:MIME-Version:Subject:To:Cc:
-	 References:From:In-Reply-To:Content-Type:
-	 Content-Transfer-Encoding:cc:content-transfer-encoding:
-	 content-type:date:from:message-id:mime-version:reply-to:subject:
-	 to;
-	b=Y1UpTHto+ZoqLH5nQvLgtnB839wOH5s3ITuS1rBa0F5opUsqMNbpc05RvhNXdN+w
-	 LbP2H+cO5IdH6PqtSNGHEF0wlSpdifa3lUKxga5MHCcYij0kd1p3i2kmcuxyr5UQ5
-	 oGe/sP7emNQKmeW/rEv8Cvq8dL5crOw9wD+533pSWpiapdYfR9/sww4wBBoWvI303
-	 ko9K5byBMbCV91+W64U/ZMJVRN4NMrQJW46iRwfz8la0g21B5gAbcg9n72nkQ6yPd
-	 djLm9H5GxLznIw/0QBpCYsDwHP3840idibV2CETRLYzHOGszREUKs3+RFrJiyDlhX
-	 j6/yZOEhEn8SEgmJTw==
-X-UI-Sender-Class: 724b4f7f-cbec-4199-ad4e-598c01a50d3a
-Received: from [192.168.0.69] ([93.202.247.91]) by mail.gmx.net (mrgmx104
- [212.227.17.168]) with ESMTPSA (Nemesis) id 1MbAci-1vy58R25Qu-00ZeVB; Sat, 22
- Nov 2025 15:18:15 +0100
-Message-ID: <5f3ef610-4024-4ca0-a934-2649f5d25f40@gmx.de>
-Date: Sat, 22 Nov 2025 15:18:11 +0100
+	dkim=pass (1024-bit key) header.d=rong.moe header.i=i@rong.moe header.b="EQL51Ss1"
+ARC-Seal: i=1; a=rsa-sha256; t=1763837131; cv=none; 
+	d=zohomail.com; s=zohoarc; 
+	b=D0r/3/kZrJ/h2djnkOv9q8IM7Cn9503VvbkCVdAWSkkIJ0Cz0n5o+6Z7+DWJ/VpRbshpZ9BUXfg+xFm8dcslRwtHbqFJIyfU3maLBR3/S+KGm1Wbrm427lBRODj2XDBUw8bXQutC9GIrOmSAhvAdhyRlDulUuphVpEPqexL4aeA=
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=zohomail.com; s=zohoarc; 
+	t=1763837131; h=Content-Transfer-Encoding:Cc:Cc:Date:Date:From:From:MIME-Version:Message-ID:Subject:Subject:To:To:Message-Id:Reply-To; 
+	bh=s7h2m49EgPm7KM4Zv7fAkk1blP6UmUi4ivdOzCAYGoc=; 
+	b=LekzQSw2oKF1jW5S2sMZhmHxa6FIYahFwHp/magjYhei/ZbwEIK+4Ran4Yw6X5JgjzfSWleIpASMyj4O8nbXhj5CCzYVX5jSUe5trcw7UkQQ725OdAZkmZt7f7bNtjCRFWyj1Liv1Pj/gEiGbTCgZ+Qu1TqLhHDBhrkUFshYVv8=
+ARC-Authentication-Results: i=1; mx.zohomail.com;
+	dkim=pass  header.i=rong.moe;
+	spf=pass  smtp.mailfrom=i@rong.moe;
+	dmarc=pass header.from=<i@rong.moe>
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; t=1763837131;
+	s=zmail; d=rong.moe; i=i@rong.moe;
+	h=From:From:To:To:Cc:Cc:Subject:Subject:Date:Date:Message-ID:MIME-Version:Content-Transfer-Encoding:Message-Id:Reply-To;
+	bh=s7h2m49EgPm7KM4Zv7fAkk1blP6UmUi4ivdOzCAYGoc=;
+	b=EQL51Ss1XPhK4SDzkncfWdFgzpdEGnikXyWp2LcDmWtyaMrvd1g1aiKuf+VZlc33
+	W28O8GnQY0FomXOtRWxCXwd8JaOeNkIwfVNIdpnknajf44CAauJgH2Z00tHjoMbgbIJ
+	Q30NMXP4BJ0anaPrvgryteDeNF+6uYjtCdNOTS1A=
+Received: by mx.zohomail.com with SMTPS id 176383712834292.31666926543562;
+	Sat, 22 Nov 2025 10:45:28 -0800 (PST)
+From: Rong Zhang <i@rong.moe>
+To: Mark Pearson <mpearson-lenovo@squebb.ca>,
+	"Derek J. Clark" <derekjohn.clark@gmail.com>,
+	Armin Wolf <W_Armin@gmx.de>,
+	Hans de Goede <hansg@kernel.org>,
+	=?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
+Cc: Rong Zhang <i@rong.moe>,
+	Guenter Roeck <linux@roeck-us.net>,
+	platform-driver-x86@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	linux-hwmon@vger.kernel.org
+Subject: [PATCH v6 0/7] platform/x86: lenovo-wmi-{capdata,other}: Add HWMON for fan speed
+Date: Sun, 23 Nov 2025 02:44:40 +0800
+Message-ID: <20251122184522.18677-1-i@rong.moe>
+X-Mailer: git-send-email 2.51.0
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH RFC RESEND 0/8] thermal: core: Allow setting the parent
- device of thermal zone/cooling devices
-To: "Rafael J. Wysocki" <rafael@kernel.org>
-Cc: Daniel Lezcano <daniel.lezcano@linaro.org>,
- Zhang Rui <rui.zhang@intel.com>, Lukasz Luba <lukasz.luba@arm.com>,
- Len Brown <lenb@kernel.org>, Jonathan Corbet <corbet@lwn.net>,
- Ido Schimmel <idosch@nvidia.com>, Petr Machata <petrm@nvidia.com>,
- linux-pm@vger.kernel.org, linux-kernel@vger.kernel.org,
- etnaviv@lists.freedesktop.org, dri-devel@lists.freedesktop.org,
- linux-tegra@vger.kernel.org, linux-acpi@vger.kernel.org,
- linux-doc@vger.kernel.org, netdev@vger.kernel.org,
- linux-wireless@vger.kernel.org, ath10k@lists.infradead.org,
- ath11k@lists.infradead.org, linux-arm-kernel@lists.infradead.org,
- linux-mediatek@lists.infradead.org, platform-driver-x86@vger.kernel.org,
- linux-pci@vger.kernel.org, imx@lists.linux.dev,
- linux-renesas-soc@vger.kernel.org
-References: <20251120-thermal-device-v1-0-bbdad594d57a@gmx.de>
- <CAJZ5v0jOPrBcozzJMsB1eE12MuZRWDAV-+=jfrhJbi=S0p5J9Q@mail.gmail.com>
-Content-Language: en-US
-From: Armin Wolf <W_Armin@gmx.de>
-In-Reply-To: <CAJZ5v0jOPrBcozzJMsB1eE12MuZRWDAV-+=jfrhJbi=S0p5J9Q@mail.gmail.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: quoted-printable
-X-Provags-ID: V03:K1:p1RNGZcFb7DMYC4pNIt+bKMVaFtCpVDJjA+b5GK6HVl6ii0Qvy6
- F02X8anlkVakkbi2OTFbnt8tYeJSvn6gGOs4ruxe4iOSm964VHeR0KGAfYYSOGHAkEHE1SL
- f+0kJN0U4H4TG67hcvhs8e2p+bBtnKPBsYGRBwzRgM45wOTh3XumwYG+ToUgVBnpYQ3YAqx
- wayKxHUnhSBUFp4PBU0OA==
-X-Spam-Flag: NO
-UI-OutboundReport: notjunk:1;M01:P0:vXFK1AWv0os=;NZUt21siNzvTNFU+NCb4ppbI26X
- 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
- L4DlDx0w=
+Content-Transfer-Encoding: 8bit
+X-ZohoMailClient: External
 
-Am 21.11.25 um 21:35 schrieb Rafael J. Wysocki:
+Lenovo WMI Other Mode interface also supports querying or setting fan
+speed RPM. This capability is decribed by LENOVO_CAPABILITY_DATA_00.
+Besides, LENOVO_FAN_TEST_DATA provides reference data for self-test of
+cooling fans, including minimum and maximum fan speed RPM.
 
-> On Thu, Nov 20, 2025 at 4:41=E2=80=AFAM Armin Wolf <W_Armin@gmx.de> wrot=
-e:
->> Drivers registering thermal zone/cooling devices are currently unable
->> to tell the thermal core what parent device the new thermal zone/
->> cooling device should have, potentially causing issues with suspend
->> ordering
-> This is one potential class of problems that may arise, but I would
-> like to see a real example of this.
->
-> As it stands today, thermal_class has no PM callbacks, so there are no
-> callback execution ordering issues with devices in that class and what
-> other suspend/resume ordering issues are there?
+This patchset turns lenovo-wmi-capdata01 into a unified driver (now
+named lenovo-wmi-capdata) for LENOVO_CAPABILITY_DATA_{00,01} and
+LENOVO_FAN_TEST_DATA; then adds HWMON support for lenovo-wmi-other:
 
-Correct, that is why i said "potentially".
+ - fanX_enable: enable/disable the fan (tunable)
+ - fanX_input: current RPM
+ - fanX_max: maximum RPM
+ - fanX_min: minimum RPM
+ - fanX_target: target RPM (tunable)
 
->
-> Also, the suspend and resume of thermal zones is handled via PM
-> notifiers.  Is there a problem with this?
+LENOVO_CAPABILITY_DATA_{00,01} presents on all devices, so
+both binds to lenovo-wmi-other. However, some device does not have
+LENOVO_FAN_TEST_DATA and its presence is described by
+LENOVO_CAPABILITY_DATA_00; hence, the former binds to the latter and a
+callback is used to pass the data to lenovo-wmi-other.
 
-The problem with PM notifiers is that thermal zones stop working even befo=
-re
-user space is frozen. Freezing user space might take a lot of time, so hav=
-ing
-no thermal management during this period is less than ideal.
+Summarizing this scheme:
 
-This problem would not occur when using dev_pm_ops, as thermal zones would=
- be
-suspended after user space has been frozen successfully. Additionally, whe=
-n using
-dev_pm_ops we can get rid of thermal_pm_suspended, as the device core alre=
-ady mandates
-that no new devices (including thermal zones and cooling devices) be regis=
-tered during
-a suspend/resume cycle.
+        lenovo-wmi-other <-> capdata00 <-> capdata_fan
+        |- master            |- component
+                             |- sub-master
+                                           |- sub-component
 
-Replacing the PM notifiers with dev_pm_ops would of course be a optimizati=
-on with
-its own patch series.
+The callback will be called once both the master and the sub-component
+are bound to the sub-master (component).
 
->> and making it impossible for user space applications to
->> associate a given thermal zone device with its parent device.
-> Why does user space need to know the parent of a given cooling device
-> or thermal zone?
+This scheme is essential to solve these issues:
+- The component framework only supports one aggregation per master
+- A binding is only established until all components are found
+- The Fan Test Data interface may be missing on some devices
+- To get rid of queries for the presense of WMI GUIDs
 
-Lets say that we have two thermal zones registered by two instances of the
-Intel Wifi driver. User space is currently unable to find out which therma=
-l zone
-belongs to which Wifi adapter, as both thermal zones have the (nearly) sam=
-e type string ("iwlwifi[0-X]").
+capdata00 is registered as a component and a sub-master on probe,
+instead of chaining the registerations in one's bind callback. This is
+because calling (un)registration methods of the component framework
+causes deadlock in (un)bind callbacks, i.e., it's impossible to register
+capdata00 as a sub-master/component in its component/sub-master bind
+callback, and vice versa.
 
-This problem would be solved once we populate the parent device pointer in=
-side the thermal zone
-device, as user space can simply look at the "device" symlink to determine=
- the parent device behind
-a given thermal zone device.
+The implementation does not rely on a specific binding sequence. This
+has been fuzz-tested using:
 
-Additionally, being able to access the acpi_handle of the parent device wi=
-ll be necessary for the
-ACPI thermal zone driver to support cooling devices other than ACPI fans a=
-nd ACPI processors.
+	#!/bin/bash
 
->> This patch series aims to fix this issue by extending the functions
->> used to register thermal zone/cooling devices to also accept a parent
->> device pointer. The first six patches convert all functions used for
->> registering cooling devices, while the functions used for registering
->> thermal zone devices are converted by the remaining two patches.
->>
->> I tested this series on various devices containing (among others):
->> - ACPI thermal zones
->> - ACPI processor devices
->> - PCIe cooling devices
->> - Intel Wifi card
->> - Intel powerclamp
->> - Intel TCC cooling
-> What exactly did you do to test it?
+	DRV_DIR=/sys/bus/wmi/drivers/lenovo_wmi_cd
+	CAPDATA_GUIDS=(
+		$(find "$DRV_DIR"/ -name '*-*-*-*-*-*' -printf "%f ")
+	)
 
-I tested:
-- the thermal zone temperature readout
-- correctness of the new sysfs links
-- suspend/resume
+	b() { sudo tee "$DRV_DIR"/bind <<<"$1"; }
+	u() { sudo tee "$DRV_DIR"/unbind <<<"$1"; }
 
-I also verified that ACPI thermal zones still bind with the ACPI fans.
+	for guid in "${CAPDATA_GUIDS[@]}"; do
+		u "$guid"
+	done
 
->> I also compile-tested the remaining affected drivers, however i would
->> still be happy if the relevant maintainers (especially those of the
->> mellanox ethernet switch driver) could take a quick glance at the
->> code and verify that i am using the correct device as the parent
->> device.
-> I think that the above paragraph is not relevant any more?
+	while read -rsa perm; do
+		for guid in "${perm[@]}"; do
+			b "$guid"
+		done
+		sensors | grep -A3 lenovo_wmi_other || true
+		for guid in "${perm[@]}"; do
+			u "$guid"
+		done
+	done < <(python3 -c "
+	from itertools import permutations
+	ps = permutations('${CAPDATA_GUIDS[*]}'.split())
+	for p in ps: print(' '.join(p))")
 
-You are right, however i originally meant to CC the mellanox maintainers a=
-s
-i was a bit unsure about the changes i made to their driver. I will rework
-this section in the next revision and CC the mellanox maintainers.
+	for guid in "${CAPDATA_GUIDS[@]}"; do
+		b "$guid"
+	done
 
->
->> This work is also necessary for extending the ACPI thermal zone driver
->> to support the _TZD ACPI object in the future.
-> I'm still unsure why _TZD support requires the ability to set a
-> thermal zone parent device.
+Tested on ThinkBook 14 G7+ ASP.
 
-_TZD allows the ACPI thermal zone to bind to cooling devices other than AC=
-PI fans
-and ACPI processors, like ACPI batteries. This however will currently not =
-work as
-the ACPI thermal zone driver uses the private drvdata of the cooling devic=
-e to
-determine if said cooling device should bind. This only works for ACPI fan=
-s and
-processors due to the fact that those drivers store a ACPI device pointer =
-inside
-drvdata, something the ACPI thermal zone expects.
+Changes in v6:
+- Fix mistaken error paths
+- Link to v5: https://lore.kernel.org/r/20251114175927.52533-1-i@rong.moe/
 
-As we cannot require all cooling devices to store an ACPI device pointer i=
-nside
-their drvdata field in order to support ACPI, we must use a more generic a=
-pproach.
-I was thinking about using the acpi_handle of the parent device instead of=
- messing
-with the drvdata field, but this only works if the parent device pointer o=
-f the
-cooling device is populated.
+Changes in v5:
+- Do not cast pointer to non-pointer or vice versa (thanks kernel test
+  robot)
+- Fix missing include (ditto)
+- Link to v4: https://lore.kernel.org/r/20251113191152.96076-1-i@rong.moe/
 
-(Cooling devices without a parent device would then be ignored by the ACPI=
- thermal
-zone driver, as such cooling devices cannot be linked to ACPI).
+Changes in v4:
+- Get rid of wmi_has_guid() (thanks Armin Wolf's inspiration)
+  - Add [PATCH v4 6/7], please review & test
+    - Check 0x04050000.supported and bind capdata_fan to capdata00
+  - Rework HWMON registration
+    - Collect fan info from capdata00 and capdata_fan separately
+    - Use a callback to collect fan info from capdata_fan
+    - Trigger HWMON registration only if all fan info is collected
+    - Do not check 0x04050000.supported, implied by the presense of
+      capdata_fan
+- Drop Reviewed-by & Tested-by from [PATCH v4 7/7] due to the changes,
+  please review & test
+- Link to v3: https://lore.kernel.org/r/20251031155349.24693-1-i@rong.moe/
 
->
->> Signed-off-by: Armin Wolf <W_Armin@gmx.de>
->> ---
->> Armin Wolf (8):
->>        thermal: core: Allow setting the parent device of cooling device=
-s
->>        thermal: core: Set parent device in thermal_of_cooling_device_re=
-gister()
->>        ACPI: processor: Stop creating "device" sysfs link
-> That link is not to the cooling devices' parent, but to the ACPI
-> device object (a struct acpi_device) that corresponds to the parent.
-> The parent of the cooling device should be the processor device, not
-> its ACPI companion, so I'm not sure why there would be a conflict.
+Changes in v3:
+- Fix grammar (thanks Derek J. Clark)
+- Link to v2: https://lore.kernel.org/r/20251030193955.107148-1-i@rong.moe/
 
- From the perspective of the Linux device core, a parent device does not h=
-ave to be
-a "physical" device. In the case of the ACPI processor driver, the ACPI de=
-vice is used,
-so the cooling device registered by said driver belongs to the ACPI device=
-. I agree
-that using the Linux processor device would make more sense, but this will=
- require
-changes inside the ACPI processor driver.
+Changes in v2:
+- Add a workaround for ACPI methods that return a 4B buffer for u32
+  (thanks Armin Wolf)
+- Fix function documentation (thanks kernel test bot)
+- Reword documentation (thanks Derek J. Clark)
+- Squash min/max reporting patch into the initial HWMON one (ditto)
+- Query 0x04050000 for interface availability (ditto)
+  - New parameter "expose_all_fans" to skip this check
+- Enforce min/max RPM constraint on set (ditto)
+  - New parameter "relax_fan_constraint" to disable this behavior
+  - Drop parameter "ignore_fan_cap", superseded by the next one
+  - New parameter "expose_all_fans" to expose fans w/o such data
+- Assume auto mode on probe (ditto)
+- Do not register HWMON device if no fan can be exposed
+- fanX_target: Return -EBUSY instead of raw target value when fan stops
+- Link to v1: https://lore.kernel.org/r/20251019210450.88830-1-i@rong.moe/
 
-As for the "device" symlink: The conflict would be a naming conflict, as b=
-oth "device" symlinks
-(the one created by the ACPI processor driver and the one created by the d=
-evice core) will
-be created in the same directory (which is the directory of the cooling de=
-vice).
+Rong Zhang (7):
+  platform/x86: lenovo-wmi-helpers: Convert returned buffer into u32
+  platform/x86: Rename lenovo-wmi-capdata01 to lenovo-wmi-capdata
+  platform/x86: lenovo-wmi-{capdata,other}: Support multiple Capability
+    Data
+  platform/x86: lenovo-wmi-capdata: Add support for Capability Data 00
+  platform/x86: lenovo-wmi-capdata: Add support for Fan Test Data
+  platform/x86: lenovo-wmi-capdata: Wire up Fan Test Data
+  platform/x86: lenovo-wmi-other: Add HWMON for fan reporting/tuning
 
->>        ACPI: fan: Stop creating "device" sysfs link
->>        ACPI: video: Stop creating "device" sysfs link
-> Analogously in the above two cases AFAICS.
->
-> The parent of a cooling device should be a "physical" device object,
-> like a platform device or a PCI device or similar, not a struct
-> acpi_device (which in fact is not a device even).
+ .../wmi/devices/lenovo-wmi-other.rst          |  43 +-
+ drivers/platform/x86/lenovo/Kconfig           |   5 +-
+ drivers/platform/x86/lenovo/Makefile          |   2 +-
+ drivers/platform/x86/lenovo/wmi-capdata.c     | 811 ++++++++++++++++++
+ drivers/platform/x86/lenovo/wmi-capdata.h     |  65 ++
+ drivers/platform/x86/lenovo/wmi-capdata01.c   | 302 -------
+ drivers/platform/x86/lenovo/wmi-capdata01.h   |  25 -
+ drivers/platform/x86/lenovo/wmi-helpers.c     |  22 +-
+ drivers/platform/x86/lenovo/wmi-other.c       | 511 ++++++++++-
+ 9 files changed, 1429 insertions(+), 357 deletions(-)
+ create mode 100644 drivers/platform/x86/lenovo/wmi-capdata.c
+ create mode 100644 drivers/platform/x86/lenovo/wmi-capdata.h
+ delete mode 100644 drivers/platform/x86/lenovo/wmi-capdata01.c
+ delete mode 100644 drivers/platform/x86/lenovo/wmi-capdata01.h
 
- From the perspective of the Linux device core, a ACPI device is a perfect=
-ly valid device.
-I agree that using a platform device or PCI device is better, but this alr=
-eady happens
-inside the ACPI fan driver (platform device).
 
-Only the ACPI video driver created a "device" sysfs link that points to th=
-e ACPI device
-instead of the PCI device. I just noticed that i accidentally changed this=
- by using the
-PCI device as the parent device for the cooling device.
-
-If you want then we can keep this change.
-
->>        thermal: core: Set parent device in thermal_cooling_device_regis=
-ter()
->>        ACPI: thermal: Stop creating "device" sysfs link
-> And this link is to the struct acpi_device representing the thermal zone=
- itself.
-
-Correct, the ACPI thermal zone driver is a ACPI driver, meaning that he bi=
-nds to
-ACPI devices. Because of this all (thermal zone) devices created by an ins=
-tance of
-said driver are descendants of the ACPI device said instance is bound to.
-
-We can of course convert the ACPI thermal zone driver into a platform driv=
-er, but
-this would be a separate patch series.
-
->>        thermal: core: Allow setting the parent device of thermal zone d=
-evices
-> I'm not sure if this is a good idea, at least until it is clear what
-> the role of a thermal zone parent device should be.
-
-Take a look at my explanation with the Intel Wifi driver.
-
-Thanks,
-Armin Wolf
+base-commit: 2eba5e05d9bcf4cdea995ed51b0f07ba0275794a
+-- 
+2.51.0
 
