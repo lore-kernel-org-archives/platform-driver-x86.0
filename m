@@ -1,42 +1,42 @@
-Received: from relay13.grserver.gr (relay13.grserver.gr [178.156.171.147])
+Received: from relay10.grserver.gr (relay10.grserver.gr [37.27.248.198])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 71C2C27FD5D;
-	Sat, 22 Nov 2025 11:01:14 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=178.156.171.147
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9963817A586;
+	Sat, 22 Nov 2025 11:01:15 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=37.27.248.198
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1763809276; cv=none; b=YjM/0GF4RpHGNo3MYLF0CzQoJQitpk36y/mKgx9x51LmnM5QqZcZ0nsWPeNxluId9DJXXK8PC5fzhvYvRXphsx3X88/9D3PNWiKg0wFOHP5lOdbXI+EUqt/yNEsEkwHQyRx5oGFh2p3GdsA4S0s5YjLvY98FqseQz/vVO9fqfLE=
+	t=1763809277; cv=none; b=s2GjOJxDemun0ZYOMiiDA+2paAhkVWjuPy1i8oc/WjxLDlGfYWF7dimq83kADvFsNamTqQ1++xc3n3unDPrkqcGUdOKgHVC34EYAP4gvDXztGMQyBNrjEaXOajx4M5ll5GZMT5FSRPLxb2K18641XpruynQW7VsUPKLdjR+IxmM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1763809276; c=relaxed/simple;
-	bh=I9QsCa5KySBL07VO/mQ5lkx5BrmpHtkbbe2ZxjhAFDU=;
+	s=arc-20240116; t=1763809277; c=relaxed/simple;
+	bh=CvBO7NOSKduSWWdpani7908b+/4TUsTSHK6o09rentc=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=guZ4CGaIvG1cBOhxYR42q3wqlgBQU7owz0JswD7EuxlAfTBQg0uKrdOZQH3uVnhVIhAKZuFNSaiRSocQWSccFkBpJgefc5lZbSv7G5LAbUzHijv4KPqD+LpBJ7+rrLH8efrg4nnhljSzX3VpyFGKMYHM79YBiKuuKcVK00cJP+E=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=antheas.dev; spf=pass smtp.mailfrom=antheas.dev; dkim=pass (2048-bit key) header.d=antheas.dev header.i=@antheas.dev header.b=CSmKfCgS; arc=none smtp.client-ip=178.156.171.147
+	 MIME-Version; b=TNl2dV2hY4vlzZZU57QTvhPiXfKemE+xGg+jPumk6fz+9JKLbcRTP/B7f1ZUTRiwRtB9VbZYfgW8nk0tZiJ7cbGZAJ1ZnKE+VZpstURFYqyMwXPqLLsdPmrXh0CcqO7290G7Wr6jKMoDLpf2KFOCAGKq/crpQzYyW++5oKaw6q4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=antheas.dev; spf=pass smtp.mailfrom=antheas.dev; dkim=pass (2048-bit key) header.d=antheas.dev header.i=@antheas.dev header.b=YTnEtYfL; arc=none smtp.client-ip=37.27.248.198
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=antheas.dev
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=antheas.dev
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=antheas.dev header.i=@antheas.dev header.b="CSmKfCgS"
-Received: from relay13 (localhost [127.0.0.1])
-	by relay13.grserver.gr (Proxmox) with ESMTP id 15DF85E4C1;
-	Sat, 22 Nov 2025 13:01:06 +0200 (EET)
+	dkim=pass (2048-bit key) header.d=antheas.dev header.i=@antheas.dev header.b="YTnEtYfL"
+Received: from relay10 (localhost.localdomain [127.0.0.1])
+	by relay10.grserver.gr (Proxmox) with ESMTP id 143EC3F222;
+	Sat, 22 Nov 2025 13:01:08 +0200 (EET)
 Received: from linux3247.grserver.gr (linux3247.grserver.gr [213.158.90.240])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
 	(No client certificate requested)
-	by relay13.grserver.gr (Proxmox) with ESMTPS id C3D3A5E532;
-	Sat, 22 Nov 2025 13:01:01 +0200 (EET)
+	by relay10.grserver.gr (Proxmox) with ESMTPS id F0D213F211;
+	Sat, 22 Nov 2025 13:01:03 +0200 (EET)
 Received: from antheas-z13 (unknown [IPv6:2a05:f6c2:511b:0:8d8a:5967:d692:ea4e])
-	by linux3247.grserver.gr (Postfix) with ESMTPSA id 1076F200E56;
-	Sat, 22 Nov 2025 13:01:00 +0200 (EET)
+	by linux3247.grserver.gr (Postfix) with ESMTPSA id B6385200CCE;
+	Sat, 22 Nov 2025 13:01:02 +0200 (EET)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=antheas.dev;
-	s=default; t=1763809260;
-	bh=k0Dhe6lLC7TXavNUqsk4Q99lz6lSYfPM7KMlUfPE3dw=; h=From:To:Subject;
-	b=CSmKfCgSnyXOMlLrhIOSnQIHFhUdnPSESQV89bQnm7WDxYchTB5zGXi2/iBO4N6ww
-	 8iUwYALQwjg/JotMV0Z9GmgyRlW6pCOD6ubJgph0XsI8NyJQTibPCg3kWzA9ZCfpUQ
-	 s+oly/0NjXDG52cAS8Qy3yUvC6suWoVRkua3Qq/8HJTyvVahAEraVU4G/HzD84LhcV
-	 R3dDWcQdTtAualmrxr3aMb/IL4ql1mqd9YfFUd1wj/6liw4NjU2u5Jg9oPueiSJyQb
-	 E/MoYfRMRtNOWMw9G/ittkgxevmfUDOzkzhHgWGzkfamkge7bVxe6RYpU98D3UM30R
-	 QXX65ElQA9E/A==
+	s=default; t=1763809263;
+	bh=ZtU6OA251yONwBNhK8UyOyKhCaUX23+Far7T6xgeqso=; h=From:To:Subject;
+	b=YTnEtYfLFm6DG5A+l281krEAlJXzwtyGdTYRxrX2Gx9430oNhiCnstlJlJIa35cXS
+	 j14ZRmA6N6mDco4KXqh0yKmfXo4fH1XhHGQ5WB0HnoQEl/MYINH2PnK0mzKXTG7q5Z
+	 P/ab8seIN89Zo7P0TmZd3eDLO9Pk6WEBXKOu+hCwz0aJsU+QNodUSb4Bz9fycUUDVR
+	 AcfQY8vL7KiOssFa4b/OhIK65P6IJM208V2mh8v/OzcgP954o0IGdOOpSykqDRhBeS
+	 GwmDdCBV4tq1SvTXJoJd+9BLDbH13/wHDShG5CYSxMdoV81itMIyPgzEoN4jowH1Fl
+	 DTbhVmgfeuZOw==
 Authentication-Results: linux3247.grserver.gr;
 	spf=pass (sender IP is 2a05:f6c2:511b:0:8d8a:5967:d692:ea4e) smtp.mailfrom=lkml@antheas.dev smtp.helo=antheas-z13
 Received-SPF: pass (linux3247.grserver.gr: connection is authenticated)
@@ -52,9 +52,9 @@ Cc: linux-kernel@vger.kernel.org,
 	=?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>,
 	Denis Benato <benato.denis96@gmail.com>,
 	Antheas Kapenekakis <lkml@antheas.dev>
-Subject: [PATCH v10 01/11] HID: asus: simplify RGB init sequence
-Date: Sat, 22 Nov 2025 12:00:22 +0100
-Message-ID: <20251122110032.4274-2-lkml@antheas.dev>
+Subject: [PATCH v10 03/11] HID: asus: use same report_id in response
+Date: Sat, 22 Nov 2025 12:00:24 +0100
+Message-ID: <20251122110032.4274-4-lkml@antheas.dev>
 X-Mailer: git-send-email 2.52.0
 In-Reply-To: <20251122110032.4274-1-lkml@antheas.dev>
 References: <20251122110032.4274-1-lkml@antheas.dev>
@@ -66,103 +66,36 @@ List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 X-PPP-Message-ID: 
- <176380926063.357899.14995360920095796107@linux3247.grserver.gr>
+ <176380926346.358827.8588110918774998314@linux3247.grserver.gr>
 X-PPP-Vhost: antheas.dev
 X-Virus-Scanned: clamav-milter 1.4.3 at linux3247.grserver.gr
 X-Virus-Status: Clean
 
-Currently, RGB initialization forks depending on whether a device is
-NKEY. However, in reality both initialization forks are the same, other
-than the NKEY initialization initializing the LED_REPORT_ID1,
-LED_REPORT_ID2 endpoints, and the non-NKEY initialization having a
-functionality check which is skipped for the NKEY path.
+Currently, asus_kbd_get_functions prods the device using feature
+report report_id, but then is hardcoded to check the response through
+FEATURE_KBD_REPORT_ID. This only works if report_id is that value
+(currently true). So, use report_id in the response as well to
+maintain functionality if that value changes in the future.
 
-Therefore, merge the if blocks, gate the ID1/ID2 initializations
-behind the NKEY quirk instead, and introduce the functionality check
-for NKEY devices (it is supported by them).
-
-There should be no functional change with this patch.
-
+Reviewed-by: Denis Benato <benato.denis96@gmail.com>
 Signed-off-by: Antheas Kapenekakis <lkml@antheas.dev>
 ---
- drivers/hid/hid-asus.c | 52 ++++++++++++++++++------------------------
- 1 file changed, 22 insertions(+), 30 deletions(-)
+ drivers/hid/hid-asus.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
 diff --git a/drivers/hid/hid-asus.c b/drivers/hid/hid-asus.c
-index 472bca54642b..a82286a427b8 100644
+index 9004814fb0d3..c1a36a8beb35 100644
 --- a/drivers/hid/hid-asus.c
 +++ b/drivers/hid/hid-asus.c
-@@ -639,13 +639,20 @@ static int asus_kbd_register_leds(struct hid_device *hdev)
- 	unsigned char kbd_func;
- 	int ret;
+@@ -424,7 +424,7 @@ static int asus_kbd_get_functions(struct hid_device *hdev,
+ 	if (!readbuf)
+ 		return -ENOMEM;
  
--	if (drvdata->quirks & QUIRK_ROG_NKEY_KEYBOARD) {
--		/* Initialize keyboard */
--		ret = asus_kbd_init(hdev, FEATURE_KBD_REPORT_ID);
--		if (ret < 0)
--			return ret;
-+	ret = asus_kbd_init(hdev, FEATURE_KBD_REPORT_ID);
-+	if (ret < 0)
-+		return ret;
- 
--		/* The LED endpoint is initialised in two HID */
-+	/* Get keyboard functions */
-+	ret = asus_kbd_get_functions(hdev, &kbd_func, FEATURE_KBD_REPORT_ID);
-+	if (ret < 0)
-+		return ret;
-+
-+	/* Check for backlight support */
-+	if (!(kbd_func & SUPPORT_KBD_BACKLIGHT))
-+		return -ENODEV;
-+
-+	if (drvdata->quirks & QUIRK_ROG_NKEY_KEYBOARD) {
- 		ret = asus_kbd_init(hdev, FEATURE_KBD_LED_REPORT_ID1);
- 		if (ret < 0)
- 			return ret;
-@@ -653,34 +660,19 @@ static int asus_kbd_register_leds(struct hid_device *hdev)
- 		ret = asus_kbd_init(hdev, FEATURE_KBD_LED_REPORT_ID2);
- 		if (ret < 0)
- 			return ret;
-+	}
- 
--		if (dmi_match(DMI_PRODUCT_FAMILY, "ProArt P16")) {
--			ret = asus_kbd_disable_oobe(hdev);
--			if (ret < 0)
--				return ret;
--		}
--
--		if (drvdata->quirks & QUIRK_ROG_ALLY_XPAD) {
--			intf = to_usb_interface(hdev->dev.parent);
--			udev = interface_to_usbdev(intf);
--			validate_mcu_fw_version(hdev,
--				le16_to_cpu(udev->descriptor.idProduct));
--		}
--
--	} else {
--		/* Initialize keyboard */
--		ret = asus_kbd_init(hdev, FEATURE_KBD_REPORT_ID);
--		if (ret < 0)
--			return ret;
--
--		/* Get keyboard functions */
--		ret = asus_kbd_get_functions(hdev, &kbd_func, FEATURE_KBD_REPORT_ID);
-+	if (dmi_match(DMI_PRODUCT_FAMILY, "ProArt P16")) {
-+		ret = asus_kbd_disable_oobe(hdev);
- 		if (ret < 0)
- 			return ret;
-+	}
- 
--		/* Check for backlight support */
--		if (!(kbd_func & SUPPORT_KBD_BACKLIGHT))
--			return -ENODEV;
-+	if (drvdata->quirks & QUIRK_ROG_ALLY_XPAD) {
-+		intf = to_usb_interface(hdev->dev.parent);
-+		udev = interface_to_usbdev(intf);
-+		validate_mcu_fw_version(
-+			hdev, le16_to_cpu(udev->descriptor.idProduct));
- 	}
- 
- 	drvdata->kbd_backlight = devm_kzalloc(&hdev->dev,
+-	ret = hid_hw_raw_request(hdev, FEATURE_KBD_REPORT_ID, readbuf,
++	ret = hid_hw_raw_request(hdev, report_id, readbuf,
+ 				 FEATURE_KBD_REPORT_SIZE, HID_FEATURE_REPORT,
+ 				 HID_REQ_GET_REPORT);
+ 	if (ret < 0) {
 -- 
 2.52.0
 
