@@ -1,41 +1,37 @@
-Received: from mout.gmx.net (mout.gmx.net [212.227.15.18])
+Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 34F9727A123;
-	Sat, 22 Nov 2025 23:55:36 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=212.227.15.18
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1A9FD74C14;
+	Sun, 23 Nov 2025 01:32:24 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.137.202.133
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1763855739; cv=none; b=m/nwoqNhkNCs0NyuxgP6c71puLWYMhnprzhcpXPIe+Kl17NsqB+4ksRInCEimdUr+BhoTWI1JDfPXw0Dqn8XqOT+CM7zmb1aG8pCHWfnqpEbZ7hFEQd+Wbi4iRmWeOw+/6NoniMntdWpKnMR6SgrL0o3FqaTBnZc1BvgN6+cbkQ=
+	t=1763861548; cv=none; b=Srf/BvQgFVXtueS2fhS8+EKZVsEfvx8R6IDFd01Y0Uc3//CWuaptNLVXeECX+dXRsNtXwwvyNFhaaYSAGfc9SBNUdLpWF7M3/4tTBNTdfWQt0IVNeQRqWwhyUB7M0MeLO57AWOppjlW6Uof9+ekBoLRrSrj3VqhhJ4jMwXxPJvw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1763855739; c=relaxed/simple;
-	bh=6J2eGV0j+UBa59UjFhI7CoGgMCkNwIL66EFL6QGC7qc=;
+	s=arc-20240116; t=1763861548; c=relaxed/simple;
+	bh=7zzmZNJA/qYtngMEJ3+SEf6bJBKMxnSs3zVQoknq5NI=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=HmUjk18Fk/T2hh/VaTwPleXLF8+owpe6llWcAIAZHe4vUSwksgJglt/Gi7W4n3xaJwv9K+aCUUuSIwith4awC6E82mrszoU/f7AGvPTYFLWr28niaqxiVGrWds5czzLa9I8dCw93WLa221p+3kqWelIq6Qdgz38uvelyGnSUPTw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gmx.de; spf=pass smtp.mailfrom=gmx.de; dkim=pass (2048-bit key) header.d=gmx.de header.i=w_armin@gmx.de header.b=jGfISW7C; arc=none smtp.client-ip=212.227.15.18
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gmx.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmx.de
+	 In-Reply-To:Content-Type; b=c3EWOxRGcJE3gWZKrQj/Nm6qwWREeunFb584sQrpkb5Qfs9ZbZyIFnuGFiRD6ga/2++1FCWwKYS0OSjlSPlQdwy3OOxcFODapdSNxuF/q6qo1JkzEXqKyJJxXiqm7Run7qCQ32n+kTjla/8cUTWTXvKgsMk3njuhJGoVr3mzCbA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=nM9PbblS; arc=none smtp.client-ip=198.137.202.133
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=infradead.org
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=infradead.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmx.de header.i=w_armin@gmx.de header.b="jGfISW7C"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=gmx.de;
-	s=s31663417; t=1763855731; x=1764460531; i=w_armin@gmx.de;
-	bh=Age2za08MNxKsCkEWLwuk67v4GthKnmjyRwE6RYay2U=;
-	h=X-UI-Sender-Class:Message-ID:Date:MIME-Version:Subject:To:Cc:
-	 References:From:In-Reply-To:Content-Type:
-	 Content-Transfer-Encoding:cc:content-transfer-encoding:
-	 content-type:date:from:message-id:mime-version:reply-to:subject:
-	 to;
-	b=jGfISW7CZtrBXrq1UmdrZxVJJiqXmj6rpvIVt/GxKAfPqMe/bVM+tM1QpxowPnqm
-	 lZcD9reAFnWfINrxQ6ZRQ9wXTLJKBNaTWn4IS4c/oL6mpM0ZRB+33uuZLQMjbmnVI
-	 vduQTr0aEo53pQK2IFSjpARTLIiWe69uFaGjQfKv+hHWZ0Dn8eeUFFpS1YPQz5daK
-	 OrKSqAUpNlUCQrLbBDd/RdvYqAcAnBzKpTB3Ehh8Wbs1KCVcZR94zUO7K6staZ/rA
-	 /p+hL3KMknTssn08YpLBz7j57K42tz+6I4PtjfzHR+q4RKE+q+K2sLXAH9rawW+AD
-	 1UgHZ6F9g1PayB9A/A==
-X-UI-Sender-Class: 724b4f7f-cbec-4199-ad4e-598c01a50d3a
-Received: from [192.168.0.69] ([93.202.247.91]) by mail.gmx.net (mrgmx005
- [212.227.17.190]) with ESMTPSA (Nemesis) id 1MAfYw-1vGNru3qYq-00E89l; Sun, 23
- Nov 2025 00:55:31 +0100
-Message-ID: <df986ad5-5159-45e1-a236-0ff86c19eaa7@gmx.de>
-Date: Sun, 23 Nov 2025 00:55:29 +0100
+	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="nM9PbblS"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=infradead.org; s=bombadil.20210309; h=Content-Transfer-Encoding:
+	Content-Type:In-Reply-To:From:References:Cc:To:Subject:MIME-Version:Date:
+	Message-ID:Sender:Reply-To:Content-ID:Content-Description;
+	bh=aXL/XTTixCTBk2wpak7HceDGrKEGNUNSaNZs8hIDyN4=; b=nM9PbblSGj/crOhjJaHkhpLdPE
+	MyjNajVfHQ/8CDcGEYx5vNNnmzPW+rwxcIB997M04wVo9nG2h/WLEhcN9qrHHEaUfPcb9PS/yktYV
+	8d8WtCWkt/OnUHUbkygCRrRAcW+EDufKZYJoEms7AgtaskiTA5b+vStYeO/VjvZnqL6fApTLfLqIA
+	dHwbjmM0zXZy+TeI5ss07hJdJXpEd7/BY0rFEDRo1bmhav8gvx+90cFvzWyN6e+er4U3LnLZpEG3/
+	LbKup6Q04DdRbYEYxOEXCQKbRM4ZYLSmIJ+IF0rX44eUA1zIgSW5/0ja/nshaSfcRi+yAietyg6/g
+	dkC3NQmA==;
+Received: from [50.53.43.113] (helo=[192.168.254.34])
+	by bombadil.infradead.org with esmtpsa (Exim 4.98.2 #2 (Red Hat Linux))
+	id 1vMyxd-0000000A1t2-0l9s;
+	Sun, 23 Nov 2025 01:32:17 +0000
+Message-ID: <e57d7ade-cea7-43e2-91db-585485025b91@infradead.org>
+Date: Sat, 22 Nov 2025 17:32:16 -0800
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
@@ -43,240 +39,284 @@ List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v3 1/2] platform/x86/uniwill: Handle more WMI events
- required for TUXEDO devices
-To: Werner Sembach <wse@tuxedocomputers.com>, hansg@kernel.org,
+Subject: Re: [PATCH 9/9] platform/wmi: Update driver development guide
+To: Armin Wolf <W_Armin@gmx.de>, hansg@kernel.org,
  ilpo.jarvinen@linux.intel.com
-Cc: platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
-References: <20251120215240.436835-1-wse@tuxedocomputers.com>
- <20251120215240.436835-2-wse@tuxedocomputers.com>
+Cc: platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org,
+ linux@weissschuh.net, Dell.Client.Kernel@dell.com, corbet@lwn.net,
+ linux-doc@vger.kernel.org
+References: <20251122203803.6154-1-W_Armin@gmx.de>
+ <20251122203803.6154-10-W_Armin@gmx.de>
 Content-Language: en-US
-From: Armin Wolf <W_Armin@gmx.de>
-In-Reply-To: <20251120215240.436835-2-wse@tuxedocomputers.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: quoted-printable
-X-Provags-ID: V03:K1:7tSFUZswE1zgntOSKK/1WkVHF8J8X91j0Bg1o5c16hxoCSes3KW
- MnWcYWcpdvs+ohVT7ZOlSQYVOk6o9jmZLOsg57U3GDj+TqdaUViNFYVEz0BMvesmvXBiwlY
- cz/pt66tUT2Hb6V+MOv4jrPJbdkuqXV3eYdgpend2GKZD958DgSkGzX1iJ9RcHKOkN9CKWb
- irNBuv0NpXAErKybD91/A==
-X-Spam-Flag: NO
-UI-OutboundReport: notjunk:1;M01:P0:ryzbjMq49BU=;WLXT4tZAKJqdCxDhCkHnAeXNvKA
- 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
+From: Randy Dunlap <rdunlap@infradead.org>
+In-Reply-To: <20251122203803.6154-10-W_Armin@gmx.de>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-Am 20.11.25 um 22:49 schrieb Werner Sembach:
 
-> Handle more WMI events that are triggered on TUXEDO devices.
->
-> Testing the TUXEDO InfinityBook Pro 15 Gen9 Intel, the Stellaris 16 Gen5
-> Intel, the Stellaris 16 Gen5 AMD and going through the out of tree
-> tuxedo-drivers dkms package I identified more WMI events that are used b=
-y
-> Uniwill.
->
-> This patch binds them to their respective function, or marks them as
-> KE_IGNORE when they are send in addition to other actions, to make clear
-> that they don't need special handling. This also avoids warnings in dmes=
-g.
->
-> The events with descriptions from memory:
->
-> UNIWILL_OSD_RADIOON and UNIWILL_OSD_RADIOOFF - Sent in addition to the
-> already handled UNIWILL_OSD_RFKILL on some devices.
->
-> UNIWILL_OSD_PERFORMANCE_MODE_TOGGLE - Physical button on some devices. B=
-ind
-> it to a button so userspace can receive the keypress and to stuff with i=
-t.
->
-> UNIWILL_OSD_MUTE - Sent in addition to an already handled keypress.
->
-> UNIWILL_OSD_KB_LED_LEVEL0 - UNIWILL_OSD_KB_LED_LEVEL4 - Some devices sen=
-t
-> these instead of UNIWILL_OSD_KBDILLUMTOGGLE.
->
-> UNIWILL_OSD_WEBCAM_TOGGLE - Sent in addition to deactivating the Webcam =
-on
-> firmware level.
->
-> UNIWILL_OSD_DC_ADAPTER_CHANGED - No special handling required here atm, =
-but
-> will be for the charging priority feature.
 
-Reviewed-by: Armin Wolf <W_Armin@gmx.de>
-
-> Signed-off-by: Werner Sembach <wse@tuxedocomputers.com>
+On 11/22/25 12:38 PM, Armin Wolf wrote:
+> New WMI drivers should use the new buffer-based WMI API instead of
+> the deprecated ACPI-based API. Update the driver development guide
+> to recommend the buffer-based API to driver developers and explain
+> the purpose of struct wmi_buffer.
+> 
+> Also update the ACPI interface documentation to describe the
+> conversion rules for converting ACPI objects into WMI buffers.
+> 
+> Signed-off-by: Armin Wolf <W_Armin@gmx.de>
 > ---
->   drivers/platform/x86/uniwill/uniwill-acpi.c | 21 ++++++++++++++++++++-
->   drivers/platform/x86/uniwill/uniwill-wmi.h  |  2 ++
->   2 files changed, 22 insertions(+), 1 deletion(-)
->
-> diff --git a/drivers/platform/x86/uniwill/uniwill-acpi.c b/drivers/platf=
-orm/x86/uniwill/uniwill-acpi.c
-> index 014960d16211b..e0d356dfc74c7 100644
-> --- a/drivers/platform/x86/uniwill/uniwill-acpi.c
-> +++ b/drivers/platform/x86/uniwill/uniwill-acpi.c
-> @@ -371,9 +371,11 @@ static const struct key_entry uniwill_keymap[] =3D =
-{
->  =20
->   	/* Reported in manual mode when toggling the airplane mode status */
->   	{ KE_KEY,       UNIWILL_OSD_RFKILL,                     { KEY_RFKILL =
-}},
-> +	{ KE_IGNORE,    UNIWILL_OSD_RADIOON,                    { KEY_UNKNOWN =
-}},
-> +	{ KE_IGNORE,    UNIWILL_OSD_RADIOOFF,                   { KEY_UNKNOWN =
-}},
->  =20
->   	/* Reported when user wants to cycle the platform profile */
-> -	{ KE_IGNORE,    UNIWILL_OSD_PERFORMANCE_MODE_TOGGLE,    { KEY_UNKNOWN =
-}},
-> +	{ KE_KEY,       UNIWILL_OSD_PERFORMANCE_MODE_TOGGLE,    { KEY_F14 }},
->  =20
->   	/* Reported when the user wants to adjust the brightness of the keybo=
-ard */
->   	{ KE_KEY,       UNIWILL_OSD_KBDILLUMDOWN,               { KEY_KBDILLU=
-MDOWN }},
-> @@ -382,11 +384,19 @@ static const struct key_entry uniwill_keymap[] =3D=
- {
->   	/* Reported when the user wants to toggle the microphone mute status =
-*/
->   	{ KE_KEY,       UNIWILL_OSD_MIC_MUTE,                   { KEY_MICMUTE=
- }},
->  =20
-> +	/* Reported when the user wants to toggle the mute status */
-> +	{ KE_IGNORE,    UNIWILL_OSD_MUTE,                       { KEY_MUTE }},
+>  Documentation/wmi/acpi-interface.rst          | 68 +++++++++++++++++
+>  .../wmi/driver-development-guide.rst          | 76 +++++++++++++------
+>  2 files changed, 121 insertions(+), 23 deletions(-)
+> 
+> diff --git a/Documentation/wmi/acpi-interface.rst b/Documentation/wmi/acpi-interface.rst
+> index 1ef003b033bf..6dad191ac59d 100644
+> --- a/Documentation/wmi/acpi-interface.rst
+> +++ b/Documentation/wmi/acpi-interface.rst
+> @@ -104,3 +104,71 @@ holding the notification ID of the event. This method should be evaluated every
+>  time an ACPI notification is received, since some ACPI implementations use a
+>  queue to store WMI event data items. This queue will overflow after a couple
+>  of WMI events are received without retrieving the associated WMI event data.
 > +
->   	/* Reported when the user locks/unlocks the Fn key */
->   	{ KE_IGNORE,    UNIWILL_OSD_FN_LOCK,                    { KEY_FN_ESC =
-}},
->  =20
->   	/* Reported when the user wants to toggle the brightness of the keybo=
-ard */
->   	{ KE_KEY,       UNIWILL_OSD_KBDILLUMTOGGLE,             { KEY_KBDILLU=
-MTOGGLE }},
-> +	{ KE_KEY,       UNIWILL_OSD_KB_LED_LEVEL0,              { KEY_KBDILLUM=
-TOGGLE }},
-> +	{ KE_KEY,       UNIWILL_OSD_KB_LED_LEVEL1,              { KEY_KBDILLUM=
-TOGGLE }},
-> +	{ KE_KEY,       UNIWILL_OSD_KB_LED_LEVEL2,              { KEY_KBDILLUM=
-TOGGLE }},
-> +	{ KE_KEY,       UNIWILL_OSD_KB_LED_LEVEL3,              { KEY_KBDILLUM=
-TOGGLE }},
-> +	{ KE_KEY,       UNIWILL_OSD_KB_LED_LEVEL4,              { KEY_KBDILLUM=
-TOGGLE }},
->  =20
->   	/* FIXME: find out the exact meaning of those events */
->   	{ KE_IGNORE,    UNIWILL_OSD_BAT_CHARGE_FULL_24_H,       { KEY_UNKNOWN=
- }},
-> @@ -395,6 +405,9 @@ static const struct key_entry uniwill_keymap[] =3D {
->   	/* Reported when the user wants to toggle the benchmark mode status *=
-/
->   	{ KE_IGNORE,    UNIWILL_OSD_BENCHMARK_MODE_TOGGLE,      { KEY_UNKNOWN=
- }},
->  =20
-> +	/* Reported when the user wants to toggle the webcam */
-> +	{ KE_IGNORE,    UNIWILL_OSD_WEBCAM_TOGGLE,              { KEY_UNKNOWN =
-}},
+> +Conversion rules for ACPI data types
+> +------------------------------------
 > +
->   	{ KE_END }
->   };
->  =20
-> @@ -1247,6 +1260,12 @@ static int uniwill_notifier_call(struct notifier_=
-block *nb, unsigned long action
->   		}
->   		mutex_unlock(&data->battery_lock);
->  =20
-> +		return NOTIFY_OK;
-> +	case UNIWILL_OSD_DC_ADAPTER_CHANGED:
-> +		/* noop for the time being, will change once charging priority
-> +		 * gets implemented.
-> +		 */
+> +Consumers of the ACPI-WMI interface use binary buffers to exchange data with the WMI driver core,
+> +with the internal structure of the buffer being only know to the consumers. The WMI driver core is
+> +thus responsible for converting the data inside the buffer into an appropriate ACPI data type for
+> +consumtion by the ACPI firmware. Additionally, any data returned by the various ACPI methods needs
+
+   consumption (or: use)
+
+> +to be converted back into a binary buffer.
 > +
->   		return NOTIFY_OK;
->   	default:
->   		mutex_lock(&data->input_lock);
-> diff --git a/drivers/platform/x86/uniwill/uniwill-wmi.h b/drivers/platfo=
-rm/x86/uniwill/uniwill-wmi.h
-> index 2bf69f2d80381..48783b2e9ffb9 100644
-> --- a/drivers/platform/x86/uniwill/uniwill-wmi.h
-> +++ b/drivers/platform/x86/uniwill/uniwill-wmi.h
-> @@ -113,6 +113,8 @@
->  =20
->   #define UNIWILL_OSD_BENCHMARK_MODE_TOGGLE	0xC0
->  =20
-> +#define UNIWILL_OSD_WEBCAM_TOGGLE		0xCF
+> +The layout of said buffers is defined by the MOF description of the WMI method or data block in
+> +question [1]_:
 > +
->   #define UNIWILL_OSD_KBD_BACKLIGHT_CHANGED	0xF0
->  =20
->   struct device;
+> +=============== ======================================================================= =========
+> +Data Type       Layout                                                                  Alignment
+> +=============== ======================================================================= =========
+> +``string``      Starts with a unsigned 16-bit little endian integer specifying          2 bytes
+
+                               an unsigned
+
+> +                the length of the string data in bytes, followed by the string data
+> +                encoded as UTF-16LE with **optional** nul termination and padding.
+
+                                                         NUL
+
+> +                Keep in mind that some firmware implementations might depend on the
+> +                terminating nul character to be present. Also the padding should
+                               NUL
+
+> +                always be performed with nul characters.
+                                            NUL
+
+> +``boolean``     Single byte where 0 means ``false`` and nonzero means ``true``.         1 byte
+> +``sint8``       Signed 8-bit integer.                                                   1 byte
+> +``uint8``       Unsigned 8-bit integer.                                                 1 byte
+> +``sint16``      Signed 16-bit little endian integer.                                    2 byte
+> +``uint16``      Unsigned 16-bit little endian integer.                                  2 byte
+> +``sint32``      Signed 32-bit little endian integer.                                    4 byte
+> +``uint32``      Unsigned 32-bit little endian integer.                                  4 byte
+
+Above 4 lines should end with "bytes".
+
+> +``sint64``      Signed 64-bit little endian integer.                                    8 bytes
+> +``uint64``      Unsigned 64-bit little endian integer.                                  8 bytes
+> +``datetime``    A fixed-length 25-character UTF-16LE string with the format             2 bytes
+> +                *yyyymmddhhmmss.mmmmmmsutf* where *yyyy* is the 4-digit year, *mm* is
+> +                the 2-digit month, *dd* is the 2-digit day, *hh* is the 2-digit hour
+> +                based on a 24-hour clock, *mm* is the 2-digit minute, *ss* is the
+> +                2-digit second, *mmmmmm* is the 6-digit microsecond, *s* is a plus or
+> +                minus character depending on whether *utc* is a positive or negative
+
+                                                         ^^^ utf: or 5 lines up should be utc
+
+> +                offset from UTC (or a colon if the date is an interval). Unpopulated
+> +                fields should be filled with asterisks.
+> +=============== ======================================================================= =========
+> +
+> +Arrays should be aligned based on the alignment of their base type, while objects should be
+> +aligned based on the largest alignment of an element inside them.
+> +
+> +All buffers returned by the WMI driver core are 8-byte aligned. When converting ACPI data types
+> +into such buffers the following conversion rules apply:
+> +
+> +=============== ============================================================
+> +ACPI Data Type  Converted into
+> +=============== ============================================================
+> +Buffer          Copied as-is.
+> +Integer         Converted into a ``uint32``.
+> +String          Converted into a ``string`` with a terminating nul character
+
+                                                                  NUL
+
+> +                to match the behavior the of the Windows driver.
+> +Package         Each element inside the package is converted with alignment
+> +                of the resulting data types being respected. Nested packages
+> +                are not allowed.
+> +=============== ============================================================
+> +
+> +The Windows driver does attempt to handle nested packages, but this results in internal data
+> +structures (``_ACPI_METHOD_ARGUMENT_V1``) erroneously being copied into the resulting buffer.
+> +ACPI firmware implementations should thus not return nested packages from ACPI methods
+> +associated with the ACPI-WMI interface.
+> +
+> +References
+> +==========
+> +
+> +.. [1] https://learn.microsoft.com/en-us/windows-hardware/drivers/kernel/driver-defined-wmi-data-items
+> diff --git a/Documentation/wmi/driver-development-guide.rst b/Documentation/wmi/driver-development-guide.rst
+> index 99ef21fc1c1e..9019661180a0 100644
+> --- a/Documentation/wmi/driver-development-guide.rst
+> +++ b/Documentation/wmi/driver-development-guide.rst
+> @@ -69,7 +69,7 @@ to matching WMI devices using a struct wmi_device_id table:
+>          .probe = foo_probe,
+>          .remove = foo_remove,         /* optional, devres is preferred */
+>          .shutdown = foo_shutdown,     /* optional, called during shutdown */
+> -        .notify = foo_notify,         /* optional, for event handling */
+> +        .notify_new = foo_notify,     /* optional, for event handling */
+>          .no_notify_data = true,       /* optional, enables events containing no additional data */
+>          .no_singleton = true,         /* required for new WMI drivers */
+>    };
+> @@ -89,9 +89,9 @@ the WMI device and put it in a well-known state for the WMI driver to pick up la
+>  or kexec. Most WMI drivers need no special shutdown handling and can thus omit this callback.
+>  
+>  Please note that new WMI drivers are required to be able to be instantiated multiple times,
+> -and are forbidden from using any deprecated GUID-based WMI functions. This means that the
+> -WMI driver should be prepared for the scenario that multiple matching WMI devices are present
+> -on a given machine.
+> +and are forbidden from using any deprecated GUID-based and ACPI-based WMI functions. This means
+
+                                         I would say:     or
+
+> +that the WMI driver should be prepared for the scenario that multiple matching WMI devices are
+> +present on a given machine.
+>  
+>  Because of this, WMI drivers should use the state container design pattern as described in
+>  Documentation/driver-api/driver-model/design-patterns.rst.
+> @@ -103,38 +103,37 @@ Documentation/driver-api/driver-model/design-patterns.rst.
+>  WMI method drivers
+>  ------------------
+>  
+> -WMI drivers can call WMI device methods using wmidev_evaluate_method(), the
+> -structure of the ACPI buffer passed to this function is device-specific and usually
+> -needs some tinkering to get right. Looking at the ACPI tables containing the WMI
+> -device usually helps here. The method id and instance number passed to this function
+> -are also device-specific, looking at the decoded Binary MOF is usually enough to
+> -find the right values.
+> +WMI drivers can call WMI device methods using wmidev_invoke_method(). For each WMI method
+> +invocation the WMI driver needs to provide the instance number and the method ID, as well as
+> +a buffer with the method arguments and optionally a buffer for the results.
+>  
+> -The maximum instance number can be retrieved during runtime using wmidev_instance_count().
+> +The layout of said buffers is device-specific and described by the Binary MOF data associated
+> +with a given WMI device. Said Binary MOF data also describes the method ID of a given WMI method
+> +with the ``WmiMethodId`` qualifier. WMI devices exposing WMI methods usually expose only a single
+> +instance (instance number 0), but in theory can expose multiple instances as well. In such a case
+> +the number of instances can be retrieved using wmidev_instance_count().
+>  
+> -Take a look at drivers/platform/x86/inspur_platform_profile.c for an example WMI method driver.
+> +Take a look at drivers/platform/x86/intel/wmi/thunderbolt.c for an example WMI method driver.
+>  
+>  WMI data block drivers
+>  ----------------------
+>  
+> -WMI drivers can query WMI device data blocks using wmidev_block_query(), the
+> -structure of the returned ACPI object is again device-specific. Some WMI devices
+> -also allow for setting data blocks using wmidev_block_set().
+> +WMI drivers can query WMI data blocks using wmidev_query_block(), the layout of thereturned
+
+                                                                 (). The layout of the returned
+
+> +buffer is again device-specific and described by the Binary MOF data. Some WMI data blocks are
+> +also writeable and can be set using wmidev_set_block(). The number of data block instances can
+> +again be retrieved using wmidev_instance_count().
+>  
+> -The maximum instance number can also be retrieved using wmidev_instance_count().
+> -
+> -Take a look at drivers/platform/x86/intel/wmi/sbl-fw-update.c for an example
+> -WMI data block driver.
+> +Take a look at drivers/platform/x86/intel/wmi/sbl-fw-update.c for an example WMI data block driver.
+>  
+>  WMI event drivers
+>  -----------------
+>  
+> -WMI drivers can receive WMI events via the notify() callback inside the struct wmi_driver.
+> +WMI drivers can receive WMI events via the notify_new() callback inside the struct wmi_driver.
+>  The WMI subsystem will then take care of setting up the WMI event accordingly. Please note that
+> -the structure of the ACPI object passed to this callback is device-specific, and freeing the
+> -ACPI object is being done by the WMI subsystem, not the driver.
+> +the layout of the buffer passed to this callback is device-specific, and freeing of the buffer
+> +is being done by the WMI subsystem itself, not the driver.
+
+   is done by
+
+>  
+> -The WMI driver core will take care that the notify() callback will only be called after
+> +The WMI driver core will take care that the notify_new() callback will only be called after
+>  the probe() callback has been called, and that no events are being received by the driver
+>  right before and after calling its remove() or shutdown() callback.
+>  
+> @@ -146,6 +145,36 @@ the ``no_notify_data`` flag inside struct wmi_driver should be set to ``true``.
+>  
+>  Take a look at drivers/platform/x86/xiaomi-wmi.c for an example WMI event driver.
+>  
+> +Exchanging data with the WMI driver core
+> +----------------------------------------
+> +
+> +WMI drivers can exchange data with the WMI driver core using struct wmi_buffer. The internal
+> +structure of those buffers is device-specific and only known by the WMI driver. Because of this
+> +the WMI driver itself is responsible for parsing and validating the data received from its
+> +WMI device.
+> +
+> +The strcture of said buffers is described by the MOF data associated with the WMI device in
+
+       structure
+
+> +question. When such a buffer contains multiple data items it usually makes sense to define a
+> +C structure and use it during parsing. Since the WMI driver core guarantees that all buffers
+> +received from a WMI device are aligned on a 8-byte boundary, WMI drivers can simply perform
+
+                                          on an 8-byte
+
+> +a cast between the WMI buffer data and this C structure.
+> +
+> +This however should only be done after the size of the buffer was verified to be large enough
+> +to hold the whole C structure. WMI drivers should reject undersized buffers as they are usually
+> +send by the WMI device to signal an internal error. Oversized buffers however should be accepted
+
+   sent
+
+> +to emulate the behavior of the Windows WMI implementation.
+> +
+> +When defining a C structure for parsing WMI buffers the alignment of the data items should be
+> +respected. This is especially important for 64-bit integers as those have different alignments
+> +on 64-bit (8-byte alignment) and 32-bit (4-byte alignment) architectures. It is thus a good idea
+> +to manually specify the alignment of such data items or mark the whole structure as packed when
+> +appropriate. Integer data items in general are little-endian integers and should be marked as
+> +such using ``__le64`` and friends. When parsing WMI string data items the struct wmi_string should
+> +be used as WMI strings have a different layout than C strings.
+> +
+> +See Documentation/wmi/acpi-interface.rst for more information regarding the binary format
+> +of WMI data items.
+> +
+>  Handling multiple WMI devices at once
+>  -------------------------------------
+>  
+> @@ -170,6 +199,7 @@ Things to avoid
+>  When developing WMI drivers, there are a couple of things which should be avoided:
+>  
+>  - usage of the deprecated GUID-based WMI interface which uses GUIDs instead of WMI device structs
+> +- usage of the deprecated ACPI-based WMI interface which uses ACPI objects instead of plain buffers
+>  - bypassing of the WMI subsystem when talking to WMI devices
+>  - WMI drivers which cannot be instantiated multiple times.
+>  
+
+Otherwise LGTM. Thanks.
+
+-- 
+~Randy
+
