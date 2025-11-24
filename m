@@ -1,194 +1,101 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wm1-f52.google.com (mail-wm1-f52.google.com [209.85.128.52])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F151224A043
-	for <platform-driver-x86@vger.kernel.org>; Mon, 24 Nov 2025 10:04:56 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C446623E320
+	for <platform-driver-x86@vger.kernel.org>; Mon, 24 Nov 2025 11:53:47 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.52
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1763978697; cv=none; b=lPp2RMtW2h6d25b/xWtT9kVbevoEQKJukEapf+rRw8tI7/2ohDxnYU8ck2i+/scksXAuCRZzcOpBHD8o561BLOU4XgFQfDk3Z4fw6I3pRTcBzqICzoGxqDCiv5hax/JxFme05XQfePO2/5eW58BSqzlPRXXqc0YoUZuhzzqoVNc=
+	t=1763985229; cv=none; b=TbWBLJUTo75utiNAPAvyGbPg6efifYt9gU6Vxn+KUTGQWot3pn1V4HANbt6s4zWvkmJ7hhCIenvx7KRZM8qIQTilocJKJPowBrZmeRxLQHy6kJASEwK324X+Qf5IPBc7j2R1rPvRxo3DkJ4EXLQaT3ToqEEgnjp77CaR/TSuGi4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1763978697; c=relaxed/simple;
-	bh=62VcHo4MGInJdI+spHkT9gad561NIj+VTpM/hF42XHs=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=IGshDtCE6dnWHlOTB+Q23T/gqpV68F1pmKV7AQd7Cl05JrCRwQ5IhYaAoUs9AwfGXPrZZhE5uJCeB/nwToshUAHDioUafqD0fmeaj3tA8qnP/52vbn8U3n0bhvxXkZ1bx1SpnVx151ysRRvE1v67VP9z2SZ1iUspA43eLynSXiY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=GhTNCj8B; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1763985229; c=relaxed/simple;
+	bh=4vTYZ4gjon/h6ZxCwulEvZpS66EMn77ujDHrjcEZim8=;
+	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
+	 Content-Disposition; b=W5aG+smroEZKJMh3JzPMDZa7tckSYNaqU23zRusc5WuPv4xijpMvThvzMkAuFL0schewDpD3ExTbtq8tCkt5UBdh/6DU3dXHqy22UFnjm/qbrVqCTThXb0fE5SbmN2p2WZWgMkOeB+uB3QhL3BzhHl4BNBR7XS9uVxJ38s+SHcI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=C3rpUnNR; arc=none smtp.client-ip=209.85.128.52
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="GhTNCj8B"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 3CEF3C4CEF1;
-	Mon, 24 Nov 2025 10:04:55 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1763978696;
-	bh=62VcHo4MGInJdI+spHkT9gad561NIj+VTpM/hF42XHs=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=GhTNCj8B5JHGRcDQ0e3n56zEfCXX1xP3f1Q90Fx2/ejEMxYjKVjh9pV+v2mBeg3QM
-	 PT0QXfNB0tqFeZvjjp5F8oGICOR69DyBPHXVUH61z18gBUiSMhsUh9isLiugIcJecp
-	 Aw+y+meiLnWN9UcBbKuya0rLRVEgI1qh7IZ9mD+DjWuYtwHVMaRINfReVXOiDH+LBC
-	 7QdK+CC2hBHs/0eGiPTo9xJ0jNk40FrC5THD4n4al8jrunXI2rLcX1X7pyW0VajIce
-	 W4072hWHB1zJlqyuCZKg1qqskZ/npApi3GamtsFCNan99riJEvtVP9pS426M4e3rHg
-	 4Iz+v74UkbHGQ==
-Message-ID: <c53cec11-6b3b-4774-b00b-c5c5e4614be0@kernel.org>
-Date: Mon, 24 Nov 2025 11:04:52 +0100
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="C3rpUnNR"
+Received: by mail-wm1-f52.google.com with SMTP id 5b1f17b1804b1-4779ce2a624so37337265e9.2
+        for <platform-driver-x86@vger.kernel.org>; Mon, 24 Nov 2025 03:53:47 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1763985226; x=1764590026; darn=vger.kernel.org;
+        h=content-disposition:mime-version:message-id:subject:cc:to:from:date
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=anBHc/erd3Gbv/JIz7fZUDhUOiccefk45X3qX7qyTCQ=;
+        b=C3rpUnNR8cBR62NZN+vwHp5eJCqd05xOugAYj7SQB5V0ce8/ykbSi73IV9umkhAroj
+         4IicJA+t65OMdIItooszmz4Qdf9lKIZwOcmE5fbLsdq395zQ5kIJDxeFcKY8WxBqSyY6
+         hpNhgfbX1Q6VOU1jjjyb01pF+72L6Cx7CJDNMpMuCQURichXXo7tki4Rn2cvYwkCUbKV
+         ZtiqPCKJjbiIaKFwSBDGib7FEYBIM3aE2+Yp5svMbSkYejpDc8eI9SCYptgZ0agwVulQ
+         WA9VdgR7Swm9hlub5SQ/ROxHVmsm2Teyq/hUSmwzAxbXVi9s+1afmjdSotpyPr6Xlm38
+         iySA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1763985226; x=1764590026;
+        h=content-disposition:mime-version:message-id:subject:cc:to:from:date
+         :x-gm-gg:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=anBHc/erd3Gbv/JIz7fZUDhUOiccefk45X3qX7qyTCQ=;
+        b=lsKE//TXwgt7/QnNCKcok9wMBN46Ct0WJ0nLGpsua8EFbSY/aKqjrnobNlvn20qPLv
+         vaRBa03SG5+CSmKi/QAKmZoqKEMmxdgJtPMkNl6MP5Bwlvafsnn1DyZKX96ZAg8kHL3F
+         VeO34qKRFHTrVwiwyrdQRiugdmUXqZFHJESn7E5bFZDLHOP3eznmD0KTg3JlxyYAeb9G
+         GkndZfARpq4nNK19WmdStbd41iefYW2PR+L9hr/anPZik5ZLEhPdSHMbaD6bN0H0vNVI
+         3/OXkrYP9NnU2fTpcm9t4565jgPMcpxFI4sGjuimJOqxTAlWGAhTNP76RR4SjOsJuAHC
+         +iHg==
+X-Gm-Message-State: AOJu0YwYHxwO6wHWsKs3fwwuHd4IfMHNa9OF8ebdgKMFiqjl+a70pNND
+	QwO+3BKdaSO0lITPA3W/jZavLHfbZRw/OXm1zQEivXNj0sg3Gkton3mJZI6Glpgctcg=
+X-Gm-Gg: ASbGncsO35dqEmT48/UVcf89MjoY/GgyGg+AqM38Z0aZSv6/FLAWC0rMVRBdJZDoHGh
+	dZYuILQGzzf3MleJXeauC1oItgkQsmCCNEqNvcHsAui4u9kmvdBxzTH7z5gGyshRBD/Rumx+sVz
+	s8+3CAq4jMCJ8u2gt5LIe2zJ1reRuB93+DCwOH1xQ5IOF7lHn4k+ERtTYqhP4hs1xfhzhVPnayG
+	d00q6Z9MFWTSJwfYa7i2lxbfJA6VhEh7qe7N9jsiEvguA2/asaFnEdEm1YB7/eZKMutnpyLDQSw
+	L1P5AfP4amZIQ5OrQ2BeClZ+qJXUQIxq426GI+MRxCU9tU8C/GiS35MBvjBtIv/sb97EVqjNMOv
+	4gScBsvPxsgKHaSknahKzhsNuGkouP0osxXU2trz2VT7r9f5nhCHBQgXECBVOENZz3uOrUq0qRy
+	h2HhOVSk1Q7W9S7qjNIOH6UKfqf4c=
+X-Google-Smtp-Source: AGHT+IEAtmV1qD/tg6i98pVtDDoYTcOvdc+KM5CudeS+QYtKkhJH0qlBgVtPi9KFUgO0PaOi7hr9uQ==
+X-Received: by 2002:a05:600c:3115:b0:477:7c7d:d9b2 with SMTP id 5b1f17b1804b1-477c01f5997mr106959575e9.32.1763985225782;
+        Mon, 24 Nov 2025 03:53:45 -0800 (PST)
+Received: from localhost ([196.207.164.177])
+        by smtp.gmail.com with UTF8SMTPSA id 5b1f17b1804b1-477bf1e86b3sm226174065e9.6.2025.11.24.03.53.44
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 24 Nov 2025 03:53:45 -0800 (PST)
+Date: Mon, 24 Nov 2025 14:53:40 +0300
+From: Dan Carpenter <dan.carpenter@linaro.org>
+To: "Luke D. Jones" <luke@ljones.dev>
+Cc: platform-driver-x86@vger.kernel.org
+Subject: [bug report] platform/x86: asus-armoury: move existing tunings to
+ asus-armoury module
+Message-ID: <aSRHRCgoKxxmw4bt@stanley.mountain>
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v2 0/5] Introduce AMD PMF util layer and user-space
- interface for SystemDeck
-To: Shyam Sundar S K <Shyam-sundar.S-k@amd.com>,
- Mario Limonciello <mario.limonciello@amd.com>, ilpo.jarvinen@linux.intel.com
-Cc: platform-driver-x86@vger.kernel.org, Yijun.Shen@Dell.com,
- Sanket.Goswami@amd.com
-References: <20251111071010.4179492-1-Shyam-sundar.S-k@amd.com>
- <2c40e722-ffd7-4e00-92dd-2c89ff4768a0@kernel.org>
- <0a4eaad1-d312-4c43-94f3-b1d9986c117a@amd.com>
- <6104959e-0214-492d-8ceb-c7376d3b1121@kernel.org>
- <9d4ba01f-31f0-40f6-9d86-bd18134d2218@amd.com>
-From: Hans de Goede <hansg@kernel.org>
-Content-Language: en-US, nl
-In-Reply-To: <9d4ba01f-31f0-40f6-9d86-bd18134d2218@amd.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-Hi,
+Hello Luke D. Jones,
 
-On 20-Nov-25 08:49, Shyam Sundar S K wrote:
-> Hi hans,
-> 
-> On 11/20/2025 00:55, Hans de Goede wrote:
->> Hi Mario,
->>
->> On 19-Nov-25 5:32 PM, Mario Limonciello wrote:
->>> On 11/19/25 10:20 AM, Hans de Goede wrote:
->>>> Hi Shyam,
->>>>
->>>> On 11-Nov-25 8:10 AM, Shyam Sundar S K wrote:
->>>>> This series introduces a util layer to the AMD Platform Management
->>>>> Framework (PMF) and a minimal user-space interface via a misc character
->>>>> device, enabling feature discovery and smoother integration with
->>>>> user-space tools. It also adds caching of BIOS output policy values to
->>>>> prepare for user-space telemetry reporting via IOCTLs.
->>>>>
->>>>> The motivation is to provide a stable interface for user-space tools to
->>>>> discover PMF features and consume selected metrics. Enable smoother
->>>>> integration with AMD SystemDeck
->>>>
->>>> This does not really explain why you've chosen for a new character-device
->>>> with IOCTLs instead of sysfs where as so far (AFAICT) all the AMD PMF code
->>>> has been using sysfs APIs.
->>>>
->>>> Is there any specific reason why to switch to IOCTLs all of a sudden?
->>>>
->>>> Note that:
->>>>
->>>> 1. sysfs APIs can be (and must be) stable too, sysfs APIs are not allowed
->>>> to be changed once shipped in a stable kernel.
->>>> 2. sysfs attributes can be used with poll() to so if you want to do
->>>> notifications of changes that can be done through sysfs too.
->>>>
->>>> Note I'm not saying you must use sysfs, but so far the PMF code has been
->>>> using sysfs everywhere and this new IOCTL based API is not really consistent
->>>> with this.
->>>
->>> Isn't there only one sysfs file for turning on/off CNQF?
->>
->> Ah yes you're right somehow I thought there were more.
->>
->> Still generally speaking the kernel community is trying to avoid
->> adding new ioctl based interfaces / adding random new char devices
->> in preference of using sysfs interface where possible.
->>
->> So I've taken a better look at the actual ioctl interface
->> and it seems like a really weird multiplexer interface,
->> where there is only 2 ioctl commands and then the argument
->> gets 1 of a ton of possible feature flags resp. info variables.
->>
->> Where it also seems that none of these variables require
->> a round-trip to the hardware.
->>
->> Given the amount of different variables I can see some sense
->> in having this as an ioctl interface, but why do the whole
->> thing where userspace has to make ioctl per value it wants
->> to read. That feels very sysfs-ish if you want that maybe
->> just use sysfs ?
->>
->> I would define a uAPI struct like this:
->>
->> struct foo {
->> 	u64 size;		/* in + out, all other fields out only */
->> 	u64 features_supported; /* bitmask with feature info from patch 1/5 */
->> 	u64 feature_version	/* from patch 1/5 */
->> 	u64 power_source;	/* from patch 2/5 */
->> 	...
->> 	u64 bios_input[10];	/* from patch 2/5 */
->> 	...
->> 	etc.
->> };
->>
-> 
-> thank you for your remarks and the UAPI struct suggestion. Let me make
-> this change and come back with a newer version.
-> 
->> And have a copy of this struct embedded in the driver
->> data struct and keep that updated (replacing the cache
->> stuff) so that you can just copy_to_user that on the ioctl.
->>
->> Combined with a single get-info ioctl which just fills 
->> the struct, using the min of the size passed in by userspace
->> + the size supported by the kernel to determine how much
->> to copy and set the copied size in the struct passed
->> back to userspace (to indicate for new userspace on
->> old kernel that the new fields are not set).
->>
->> This way for future extensions new fields can be added to
->> the end of the struct and the size handling will automatically
->> do the right thing.
->>
->> As for Ilpo's comment about the battery info being duplicate
->> with /sys/class/power_supply/BAT*, where is this info coming
->> from ?  Is this a PMF specific view of the battery info,
->> IOW it might be different then the power_supply calls info?
->>
-> 
-> with regards to this:
-> 
-> The function amd_pmf_get_battery_info() fills in the data that will be
-> sent to the TA. Inside this function, it calls
-> amd_pmf_get_battery_prop() to retrieve each required battery property.
-> 
-> For example:
-> 
-> /* to get the battery percentage */
-> in->ev_info.bat_percentage =
-> amd_pmf_get_battery_prop(POWER_SUPPLY_PROP_CAPACITY);
+Commit f99eb098090e ("platform/x86: asus-armoury: move existing
+tunings to asus-armoury module") from Nov 2, 2025 (linux-next), leads
+to the following Smatch static checker warning:
 
-Ok, so this is duplicating the information from /sys/class/power_supply .
+	drivers/platform/x86/asus-armoury.c:147 armoury_has_devstate()
+	error: uninitialized symbol 'retval'.
 
-Is there a reason why your userspace app cannot just directly get
-these values from /sys/class/power_supply ?
+drivers/platform/x86/asus-armoury.c
+    141 static bool armoury_has_devstate(u32 dev_id)
+    142 {
+    143         u32 retval;
+    144         int status;
+    145 
+    146         status = asus_wmi_evaluate_method(ASUS_WMI_METHODID_DSTS, dev_id, 0, &retval);
+--> 147         pr_debug("%s called (0x%08x), retval: 0x%08x\n", __func__, dev_id, retval);
+                                                                                   ^^^^^^
+"retval" is uninitialized if asus_wmi_evaluate_method() returns negative.
 
-I guess it might be convenient to have this all in the same ioctl,
-I understand that the PMF code already needs to retrieve it regardless.
+    148 
+    149         return status == 0 && (retval & ASUS_WMI_DSTS_PRESENCE_BIT);
+    150 }
 
-Maybe just have an ioctl which just memcpy-s the entire
-ta_pmf_condition_info struct to userspace?  I think that is already
-part of the kernel <-> PMF-firmware API so making that struct uAPI
-should be fine since it is already something which cannot be changed
-because it is also firmware API ?
-
-It seems just being able to copy the cached ev_info the driver
-already has to userspace is better then defining a new struct with
-similar fields and needing to manually copy over everything field
-by field ?
-
-And then instead of an ioctl it could even just be a binary sysfs
-file, avoiding the need to add a somewhat random new chardev
-to /dev  ?
-
-Regards,
-
-Hans
-
-
+regards,
+dan carpenter
