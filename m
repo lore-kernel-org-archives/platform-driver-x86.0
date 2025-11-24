@@ -1,61 +1,61 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.18])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.11])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 136CA17A31E;
-	Mon, 24 Nov 2025 16:30:54 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.18
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 45C333161BF;
+	Mon, 24 Nov 2025 16:45:12 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.11
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1764001857; cv=none; b=tonBE46zp+Iq/+LCPHIbMer+DYZ2nCx9Y+ERhVJe8UhkmeUDapE1FWd1O1iRD2kBNrxdCDbBhArGHb1ZdSDh+mB7+7cO8MW7OB7wJCkDlLj6Sx9OmEBvt6f01rLhquerFABld6h0u7gTTX+vvc+qXHV9lVdtguR2blWP/tzEJX4=
+	t=1764002716; cv=none; b=CMQTpWJWnExjZS6xVNKA+KCARNID2QJmbulhL6q2gjE9+NShZ867K2QSZ1b8L6s7+cTN4clG0+07+XHSmoEhVLe4a3adr33L0K/ckETW3B2Ovqasp1lalY6Q7UbaM2IoYCvXkHp4hxoMUQWfMXfRJ1Fy3jx9QsLFCSE9NvwTOHg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1764001857; c=relaxed/simple;
-	bh=FXMqCT/O9G3FWouC9pz0R9LpBw0I4C3X63hIdnfJ4T8=;
+	s=arc-20240116; t=1764002716; c=relaxed/simple;
+	bh=AGg4x8Zqjx/0TN8BMcahAnqR9eCGbFbNwU4/rY56fHE=;
 	h=From:Date:To:cc:Subject:In-Reply-To:Message-ID:References:
-	 MIME-Version:Content-Type; b=o0834mtpfnowWDvrx/cAGiovsp09gkfG7cHDUWh67J6iVhn2wfK8GPwxoFFT7kzWjIhtiEO1/prnegJNvGxxk/RMqvwoSuuOZnmIGdNJhGlq+cvjtJrwd8Du1R90bW1XIaW96ysNzAdsED+/cTnB538sAxjjjwsxgoHn1E/x4gc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=pass smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=EDryu83u; arc=none smtp.client-ip=192.198.163.18
+	 MIME-Version:Content-Type; b=W3vvqjfWOJ2qR7GXcYDp1muuI7hyp+7dehOJdag3lain8q6Soa6NEHEIh6Qy1lJ4b+yWKc0LCRcyYBcdf1MnRip9LPfZcBV7g3Q5qUQBOgVQnrbESG5KabT/+PPmj/reQVJzPQoEC4xqmx8yBdzNq7+zqgAqXMkblrdNwQGnjTQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=pass smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=CGzs2DZA; arc=none smtp.client-ip=192.198.163.11
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="EDryu83u"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="CGzs2DZA"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1764001855; x=1795537855;
+  t=1764002714; x=1795538714;
   h=from:date:to:cc:subject:in-reply-to:message-id:
    references:mime-version;
-  bh=FXMqCT/O9G3FWouC9pz0R9LpBw0I4C3X63hIdnfJ4T8=;
-  b=EDryu83ueoJxy4k2TgJXXAPBCzrRYtdsa5qFWQUMjn51rSn4nR0O10wV
-   tbjGJoq58ptON+XhKLnmoRD3XwdbnvCF4ygzwIpjdVEUU4TWEugWYcLw0
-   zRg2vg3FFS/owIsPosDTwo7UeHlRnP+CXdKDd5fzIiovAG6HvMr6KulFN
-   WQARS7wUpFEDER9oyzhmkBb9D88gbYVI9BKAOUEr8ivEWURjomVPgzwca
-   hibCHBFIqp0rtIaCCaODwyiqktGH3/1lHLpckaOlm7P4xzK7KVMPXmmSl
-   xssjfnTKoX6YnPkNc3DF5V96mjQkuZX23kNe5WIvisnsSwilZKo1fexS/
-   Q==;
-X-CSE-ConnectionGUID: qNx3MDlTQlyEDcrXEkoDSg==
-X-CSE-MsgGUID: eXxlWM92Qau7m/ySTxrkZQ==
-X-IronPort-AV: E=McAfee;i="6800,10657,11623"; a="65189570"
+  bh=AGg4x8Zqjx/0TN8BMcahAnqR9eCGbFbNwU4/rY56fHE=;
+  b=CGzs2DZArAq4wOrOjsWmKsfBE9zbSfC8WJfN//WsVaaZ99qQpE2hDA7q
+   rPtDXJ4SS1JXnAwPzPqvGUmbI9zSHOMlzDUJY5zWYIxaLu03nLbu0xGv3
+   0jCybSwplhAyj1iyYNdjgj7c7KmGCiZRYJp570okokW28R8FxPfgo5x3X
+   FinMccI7jt+Cl4XbG9trHCDZkVnvwIdsnsxfu080t7+sbyWC7nJYiqbav
+   UoIC1LK3bbz5Scb/raaJPrY2dOyNHiMemt0oybU19/lGGw2jfhoJABQ9R
+   3XA1gdC9AoJdprOjNImIJcRUZkiG05aGOfJCQmfJYhi/BQns5uEVz0YhE
+   A==;
+X-CSE-ConnectionGUID: CT+OSc5ySGeQdBgRcICCIQ==
+X-CSE-MsgGUID: KUVILwZdQtSnax+iDnOkWw==
+X-IronPort-AV: E=McAfee;i="6800,10657,11623"; a="76621087"
 X-IronPort-AV: E=Sophos;i="6.20,223,1758610800"; 
-   d="scan'208";a="65189570"
-Received: from orviesa001.jf.intel.com ([10.64.159.141])
-  by fmvoesa112.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 24 Nov 2025 08:30:54 -0800
-X-CSE-ConnectionGUID: SJcxEK/tQauT409BT+ZUTA==
-X-CSE-MsgGUID: NPDVwSE4SEaGEBojFZ/SGw==
+   d="scan'208";a="76621087"
+Received: from orviesa008.jf.intel.com ([10.64.159.148])
+  by fmvoesa105.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 24 Nov 2025 08:45:12 -0800
+X-CSE-ConnectionGUID: K+cNNQ7QRDOkmCDKCgFOmw==
+X-CSE-MsgGUID: 3Q6aEZYuQwOGp/AFqRm8qw==
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="6.20,223,1758610800"; 
-   d="scan'208";a="229663017"
+   d="scan'208";a="192468296"
 Received: from ijarvine-mobl1.ger.corp.intel.com (HELO localhost) ([10.245.244.97])
-  by smtpauth.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 24 Nov 2025 08:30:51 -0800
+  by orviesa008-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 24 Nov 2025 08:45:09 -0800
 From: =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
-Date: Mon, 24 Nov 2025 18:30:46 +0200 (EET)
+Date: Mon, 24 Nov 2025 18:45:05 +0200 (EET)
 To: Rong Zhang <i@rong.moe>
 cc: Mark Pearson <mpearson-lenovo@squebb.ca>, 
     "Derek J. Clark" <derekjohn.clark@gmail.com>, Armin Wolf <W_Armin@gmx.de>, 
     Hans de Goede <hansg@kernel.org>, Guenter Roeck <linux@roeck-us.net>, 
     platform-driver-x86@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>, 
     linux-hwmon@vger.kernel.org
-Subject: Re: [PATCH v6 3/7] platform/x86: lenovo-wmi-{capdata,other}: Support
- multiple Capability Data
-In-Reply-To: <20251122184522.18677-4-i@rong.moe>
-Message-ID: <f3956fab-04b5-c86d-2625-4e8bdf81b697@linux.intel.com>
-References: <20251122184522.18677-1-i@rong.moe> <20251122184522.18677-4-i@rong.moe>
+Subject: Re: [PATCH v6 5/7] platform/x86: lenovo-wmi-capdata: Add support
+ for Fan Test Data
+In-Reply-To: <20251122184522.18677-6-i@rong.moe>
+Message-ID: <1efe99d4-95ae-d76c-71f5-0a1f98292dd4@linux.intel.com>
+References: <20251122184522.18677-1-i@rong.moe> <20251122184522.18677-6-i@rong.moe>
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
@@ -66,528 +66,315 @@ Content-Type: text/plain; charset=US-ASCII
 
 On Sun, 23 Nov 2025, Rong Zhang wrote:
 
-> The current implementation are heavily bound to capdata01. Rewrite it so
-> that it is suitable to utilize other Capability Data as well.
+> Add support for LENOVO_FAN_TEST_DATA WMI data block. Provides an
+> interface for querying the min/max fan speed RPM (reference data) of a
+> given fan ID.
 > 
-> No functional change intended.
+> This interface is optional. Hence, it does not bind to lenovo-wmi-other
+> and is not registered as a component for the moment. Appropriate binding
+> will be implemented in the subsequent patch.
 > 
 > Signed-off-by: Rong Zhang <i@rong.moe>
 > Reviewed-by: Derek J. Clark <derekjohn.clark@gmail.com>
 > Tested-by: Derek J. Clark <derekjohn.clark@gmail.com>
 > ---
-> Changes in v6:
-> - Fix the error path of lwmi_cd_match_add_all()
->   - IS_ERR(matchptr) => IS_ERR(*matchptr)
-> 
-> Changes in v5:
-> - Do not cast pointer to non-pointer or vice versa (thanks kernel test
->   robot)
-> 
 > Changes in v4:
-> - Get rid of wmi_has_guid() (thanks Armin Wolf)
->   - More changes in [PATCH v4 6/7]
-> - Prepare for [PATCH v4 6/7]
->   - Move lwmi_cd_match*() forward
->   - Use switch-case in lwmi_cd_remove()
+> - Rebase on top of changes made to [PATCH v4 3/7]
+> - Do not register it as a component until [PATCH v4 6/7]
 > 
 > Changes in v2:
-> - Fix function parameter 'type' not described in 'lwmi_cd_match' (thanks
->   kernel test bot)
+> - Reword documentation
 > ---
->  drivers/platform/x86/lenovo/wmi-capdata.c | 225 +++++++++++++++++-----
->  drivers/platform/x86/lenovo/wmi-capdata.h |   7 +-
->  drivers/platform/x86/lenovo/wmi-other.c   |  16 +-
->  3 files changed, 189 insertions(+), 59 deletions(-)
+>  .../wmi/devices/lenovo-wmi-other.rst          |  17 +++
+>  drivers/platform/x86/lenovo/wmi-capdata.c     | 102 ++++++++++++++++++
+>  drivers/platform/x86/lenovo/wmi-capdata.h     |   7 ++
+>  3 files changed, 126 insertions(+)
 > 
+> diff --git a/Documentation/wmi/devices/lenovo-wmi-other.rst b/Documentation/wmi/devices/lenovo-wmi-other.rst
+> index fcad595d49af..821282e07d93 100644
+> --- a/Documentation/wmi/devices/lenovo-wmi-other.rst
+> +++ b/Documentation/wmi/devices/lenovo-wmi-other.rst
+> @@ -62,6 +62,13 @@ The following firmware-attributes are implemented:
+>   - ppt_pl2_sppt: Platform Profile Tracking Slow Package Power Tracking
+>   - ppt_pl3_fppt: Platform Profile Tracking Fast Package Power Tracking
+>  
+> +LENOVO_FAN_TEST_DATA
+> +-------------------------
+> +
+> +WMI GUID ``B642801B-3D21-45DE-90AE-6E86F164FB21``
+> +
+> +The LENOVO_FAN_TEST_DATA interface provides reference data for self-test of
+> +cooling fans.
+>  
+>  WMI interface description
+>  =========================
+> @@ -115,3 +122,13 @@ data using the `bmfdec <https://github.com/pali/bmfdec>`_ utility:
+>      [WmiDataId(3), read, Description("Data Size.")] uint32 DataSize;
+>      [WmiDataId(4), read, Description("Default Value"), WmiSizeIs("DataSize")] uint8 DefaultValue[];
+>    };
+> +
+> +  [WMI, Dynamic, Provider("WmiProv"), Locale("MS\\0x409"), Description("Definition of Fan Test Data"), guid("{B642801B-3D21-45DE-90AE-6E86F164FB21}")]
+> +  class LENOVO_FAN_TEST_DATA {
+> +    [key, read] string InstanceName;
+> +    [read] boolean Active;
+> +    [WmiDataId(1), read, Description("Mode.")] uint32 NumOfFans;
+> +    [WmiDataId(2), read, Description("Fan ID."), WmiSizeIs("NumOfFans")] uint32 FanId[];
+> +    [WmiDataId(3), read, Description("Maximum Fan Speed."), WmiSizeIs("NumOfFans")] uint32 FanMaxSpeed[];
+> +    [WmiDataId(4), read, Description("Minumum Fan Speed."), WmiSizeIs("NumOfFans")] uint32 FanMinSpeed[];
+> +  };
 > diff --git a/drivers/platform/x86/lenovo/wmi-capdata.c b/drivers/platform/x86/lenovo/wmi-capdata.c
-> index c5e74b2bfeb3..e0710354278a 100644
+> index 29267c373ab3..e6392357395c 100644
 > --- a/drivers/platform/x86/lenovo/wmi-capdata.c
 > +++ b/drivers/platform/x86/lenovo/wmi-capdata.c
-> @@ -12,8 +12,13 @@
+> @@ -13,6 +13,10 @@
+>   * attribute has multiple pages, one for each of the thermal modes managed by
+>   * the Gamezone interface.
 >   *
+> + * Fan Test Data includes the max/min fan speed RPM for each fan. This is
+> + * reference data for self-test. If the fan is in good condition, it is capable
+> + * to spin faster than max RPM or slower than min RPM.
+> + *
 >   * Copyright (C) 2025 Derek J. Clark <derekjohn.clark@gmail.com>
 >   *   - Initial implementation (formerly named lenovo-wmi-capdata01)
-> + *
-> + * Copyright (C) 2025 Rong Zhang <i@rong.moe>
-> + *   - Unified implementation
->   */
+>   *
+> @@ -41,6 +45,7 @@
 >  
-> +#define pr_fmt(fmt) KBUILD_MODNAME ": " fmt
-> +
->  #include <linux/acpi.h>
->  #include <linux/cleanup.h>
->  #include <linux/component.h>
-> @@ -36,6 +41,23 @@
+>  #define LENOVO_CAPABILITY_DATA_00_GUID "362A3AFE-3D96-4665-8530-96DAD5BB300E"
+>  #define LENOVO_CAPABILITY_DATA_01_GUID "7A8F5407-CB67-4D6E-B547-39B3BE018154"
+> +#define LENOVO_FAN_TEST_DATA_GUID "B642801B-3D21-45DE-90AE-6E86F164FB21"
+>  
 >  #define ACPI_AC_CLASS "ac_adapter"
 >  #define ACPI_AC_NOTIFY_STATUS 0x80
+> @@ -48,6 +53,7 @@
+>  enum lwmi_cd_type {
+>  	LENOVO_CAPABILITY_DATA_00,
+>  	LENOVO_CAPABILITY_DATA_01,
+> +	LENOVO_FAN_TEST_DATA,
+>  };
 >  
-> +enum lwmi_cd_type {
-> +	LENOVO_CAPABILITY_DATA_01,
-> +};
-> +
-> +#define LWMI_CD_TABLE_ITEM(_type)		\
-> +	[_type] = {				\
-> +		.name = #_type,			\
-> +		.type = _type,			\
-> +	}
-> +
-> +static const struct lwmi_cd_info {
-> +	const char *name;
-> +	enum lwmi_cd_type type;
-> +} lwmi_cd_table[] = {
-> +	LWMI_CD_TABLE_ITEM(LENOVO_CAPABILITY_DATA_01),
-> +};
-> +
+>  #define LWMI_CD_TABLE_ITEM(_type)		\
+> @@ -62,6 +68,7 @@ static const struct lwmi_cd_info {
+>  } lwmi_cd_table[] = {
+>  	LWMI_CD_TABLE_ITEM(LENOVO_CAPABILITY_DATA_00),
+>  	LWMI_CD_TABLE_ITEM(LENOVO_CAPABILITY_DATA_01),
+> +	LWMI_CD_TABLE_ITEM(LENOVO_FAN_TEST_DATA),
+>  };
+>  
 >  struct lwmi_cd_priv {
->  	struct notifier_block acpi_nb; /* ACPI events */
->  	struct wmi_device *wdev;
-> @@ -44,15 +66,63 @@ struct lwmi_cd_priv {
->  
->  struct cd_list {
->  	struct mutex list_mutex; /* list R/W mutex */
-> +	enum lwmi_cd_type type;
->  	u8 count;
-> -	struct capdata01 data[];
-> +
-> +	union {
-> +		DECLARE_FLEX_ARRAY(struct capdata01, cd01);
-
-Add #include
-
-> +	};
+> @@ -78,6 +85,7 @@ struct cd_list {
+>  	union {
+>  		DECLARE_FLEX_ARRAY(struct capdata00, cd00);
+>  		DECLARE_FLEX_ARRAY(struct capdata01, cd01);
+> +		DECLARE_FLEX_ARRAY(struct capdata_fan, cd_fan);
+>  	};
 >  };
 >  
-> +static struct wmi_driver lwmi_cd_driver;
-> +
-> +/**
-> + * lwmi_cd_match() - Match rule for the master driver.
-> + * @dev: Pointer to the capability data parent device.
-> + * @type: Pointer to capability data type (enum lwmi_cd_type *) to match.
-> + *
-> + * Return: int.
-> + */
-> +static int lwmi_cd_match(struct device *dev, void *type)
-> +{
-> +	struct lwmi_cd_priv *priv;
-> +
-> +	if (dev->driver != &lwmi_cd_driver.driver)
-> +		return false;
-> +
-> +	priv = dev_get_drvdata(dev);
-> +	return priv->list->type == *(enum lwmi_cd_type *)type;
-> +}
-> +
-> +/**
-> + * lwmi_cd_match_add_all() - Add all match rule for the master driver.
-> + * @master: Pointer to the master device.
-> + * @matchptr: Pointer to the returned component_match pointer.
-> + *
-> + * Adds all component matches to the list stored in @matchptr for the @master
-> + * device. @matchptr must be initialized to NULL.
-> + */
-> +void lwmi_cd_match_add_all(struct device *master, struct component_match **matchptr)
-> +{
-> +	int i;
-> +
-> +	if (WARN_ON(*matchptr))
-
-Add #include
-
-> +		return;
-> +
-> +	for (i = 0; i < ARRAY_SIZE(lwmi_cd_table); i++) {
-> +		component_match_add(master, matchptr, lwmi_cd_match,
-> +				    (void *)&lwmi_cd_table[i].type);
-
-As the cast to void pointer necessary here? Usually pointer can be cast to 
-void * implicitly (but I'm not sure about this case type seems enum).
-
-> +		if (IS_ERR(*matchptr))
-
-Add #include
-
-> +			return;
-> +	}
-> +}
-> +EXPORT_SYMBOL_NS_GPL(lwmi_cd_match_add_all, "LENOVO_WMI_CD");
-> +
->  /**
->   * lwmi_cd_component_bind() - Bind component to master device.
->   * @cd_dev: Pointer to the lenovo-wmi-capdata driver parent device.
->   * @om_dev: Pointer to the lenovo-wmi-other driver parent device.
-> - * @data: cd_list object pointer used to return the capability data.
-> + * @data: lwmi_cd_binder object pointer used to return the capability data.
->   *
->   * On lenovo-wmi-other's master bind, provide a pointer to the local capdata
->   * list. This is used to call lwmi_cd*_get_data to look up attribute data
-> @@ -64,9 +134,15 @@ static int lwmi_cd_component_bind(struct device *cd_dev,
->  				  struct device *om_dev, void *data)
->  {
->  	struct lwmi_cd_priv *priv = dev_get_drvdata(cd_dev);
-> -	struct cd_list **cd_list = data;
-> +	struct lwmi_cd_binder *binder = data;
+> @@ -117,6 +125,10 @@ void lwmi_cd_match_add_all(struct device *master, struct component_match **match
+>  		return;
 >  
-> -	*cd_list = priv->list;
-> +	switch (priv->list->type) {
-> +	case LENOVO_CAPABILITY_DATA_01:
-> +		binder->cd01_list = priv->list;
-> +		break;
-> +	default:
-> +		return -EINVAL;
-> +	}
->  
->  	return 0;
->  }
-> @@ -76,30 +152,33 @@ static const struct component_ops lwmi_cd_component_ops = {
->  };
->  
->  /**
-> - * lwmi_cd01_get_data - Get the data of the specified attribute
-> + * lwmi_cd*_get_data - Get the data of the specified attribute
->   * @list: The lenovo-wmi-capdata pointer to its cd_list struct.
->   * @attribute_id: The capdata attribute ID to be found.
-> - * @output: Pointer to a capdata01 struct to return the data.
-> + * @output: Pointer to a capdata* struct to return the data.
->   *
-> - * Retrieves the capability data 01 struct pointer for the given
-> - * attribute for its specified thermal mode.
-> + * Retrieves the capability data struct pointer for the given
-> + * attribute.
->   *
->   * Return: 0 on success, or -EINVAL.
->   */
-> -int lwmi_cd01_get_data(struct cd_list *list, u32 attribute_id, struct capdata01 *output)
-> -{
-> -	u8 idx;
-> -
-> -	guard(mutex)(&list->list_mutex);
-> -	for (idx = 0; idx < list->count; idx++) {
-> -		if (list->data[idx].id != attribute_id)
-> -			continue;
-> -		memcpy(output, &list->data[idx], sizeof(list->data[idx]));
-> -		return 0;
-> +#define DEF_LWMI_CDXX_GET_DATA(_cdxx, _cd_type, _output_t)					\
-> +	int lwmi_##_cdxx##_get_data(struct cd_list *list, u32 attribute_id, _output_t *output)	\
-> +	{											\
-> +		u8 idx;										\
-
-Please follow the normal conversions, so add an empty line here (with the
-backslash contination, obviusly).
-
-> +		if (WARN_ON(list->type != _cd_type))						\
-> +			return -EINVAL;								\
-
-Empty line here too to help readability?
-
-> +		guard(mutex)(&list->list_mutex);						\
-> +		for (idx = 0; idx < list->count; idx++) {					\
-> +			if (list->_cdxx[idx].id != attribute_id)				\
-> +				continue;							\
-> +			memcpy(output, &list->_cdxx[idx], sizeof(list->_cdxx[idx]));		\
-> +			return 0;								\
-> +		}										\
-> +		return -EINVAL;									\
->  	}
->  
-> -	return -EINVAL;
-> -}
-> +DEF_LWMI_CDXX_GET_DATA(cd01, LENOVO_CAPABILITY_DATA_01, struct capdata01);
+>  	for (i = 0; i < ARRAY_SIZE(lwmi_cd_table); i++) {
+> +		/* Skip optional interfaces. */
+> +		if (lwmi_cd_table[i].type == LENOVO_FAN_TEST_DATA)
+> +			continue;
+> +
+>  		component_match_add(master, matchptr, lwmi_cd_match,
+>  				    (void *)&lwmi_cd_table[i].type);
+>  		if (IS_ERR(*matchptr))
+> @@ -194,6 +206,9 @@ EXPORT_SYMBOL_NS_GPL(lwmi_cd00_get_data, "LENOVO_WMI_CD");
+>  DEF_LWMI_CDXX_GET_DATA(cd01, LENOVO_CAPABILITY_DATA_01, struct capdata01);
 >  EXPORT_SYMBOL_NS_GPL(lwmi_cd01_get_data, "LENOVO_WMI_CD");
 >  
->  /**
-> @@ -112,10 +191,21 @@ EXPORT_SYMBOL_NS_GPL(lwmi_cd01_get_data, "LENOVO_WMI_CD");
->   */
->  static int lwmi_cd_cache(struct lwmi_cd_priv *priv)
->  {
-> +	size_t size;
->  	int idx;
-> +	void *p;
+> +DEF_LWMI_CDXX_GET_DATA(cd_fan, LENOVO_FAN_TEST_DATA, struct capdata_fan);
+> +EXPORT_SYMBOL_NS_GPL(lwmi_cd_fan_get_data, "LENOVO_WMI_CD");
 > +
-> +	switch (priv->list->type) {
-> +	case LENOVO_CAPABILITY_DATA_01:
-> +		p = &priv->list->cd01[0];
-> +		size = sizeof(priv->list->cd01[0]);
-> +		break;
-> +	default:
-> +		return -EINVAL;
-> +	}
->  
->  	guard(mutex)(&priv->list->list_mutex);
-> -	for (idx = 0; idx < priv->list->count; idx++) {
-> +	for (idx = 0; idx < priv->list->count; idx++, p += size) {
->  		union acpi_object *ret_obj __free(kfree) = NULL;
->  
->  		ret_obj = wmidev_block_query(priv->wdev, idx);
-> @@ -123,11 +213,10 @@ static int lwmi_cd_cache(struct lwmi_cd_priv *priv)
->  			return -ENODEV;
->  
->  		if (ret_obj->type != ACPI_TYPE_BUFFER ||
-> -		    ret_obj->buffer.length < sizeof(priv->list->data[idx]))
-> +		    ret_obj->buffer.length < size)
->  			continue;
->  
-> -		memcpy(&priv->list->data[idx], ret_obj->buffer.pointer,
-> -		       ret_obj->buffer.length);
-> +		memcpy(p, ret_obj->buffer.pointer, size);
+>  /**
+>   * lwmi_cd_cache() - Cache all WMI data block information
+>   * @priv: lenovo-wmi-capdata driver data.
+> @@ -217,6 +232,9 @@ static int lwmi_cd_cache(struct lwmi_cd_priv *priv)
+>  		p = &priv->list->cd01[0];
+>  		size = sizeof(priv->list->cd01[0]);
+>  		break;
+> +	case LENOVO_FAN_TEST_DATA:
+> +		/* Done by lwmi_cd_alloc() => lwmi_cd_fan_list_alloc_cache(). */
+> +		return 0;
+>  	default:
+>  		return -EINVAL;
 >  	}
->  
+> @@ -239,6 +257,78 @@ static int lwmi_cd_cache(struct lwmi_cd_priv *priv)
 >  	return 0;
-> @@ -136,20 +225,28 @@ static int lwmi_cd_cache(struct lwmi_cd_priv *priv)
+>  }
+>  
+> +/**
+> + * lwmi_cd_fan_list_alloc_cache() - Alloc and cache Fan Test Data list
+> + * @priv: lenovo-wmi-capdata driver data.
+> + * @listptr: Pointer to returned cd_list pointer.
+> + *
+> + * Return: count of fans found, or an error.
+> + */
+> +static int lwmi_cd_fan_list_alloc_cache(struct lwmi_cd_priv *priv, struct cd_list **listptr)
+> +{
+> +	u32 count, *fan_ids, *fan_min_rpms, *fan_max_rpms;
+> +	union acpi_object *ret_obj __free(kfree) = NULL;
+
+Since you're using __free(), please move this to where you assign the 
+value. This is to create a pattern with cleanup helpers. The cleanup 
+order depends on the order the variables are introduced which in some 
+other cases may be significant.
+
+> +	struct block { u32 nr; u32 data[]; } *block;
+
+This is the first time I see this style anywhere in the kernel's context, 
+has there been some general discussion about this style somewhere?
+
+At least it seems immediately obvious to me that this style will have a 
+negative impact on documentability due to (too) concise use of space.
+
+> +	struct cd_list *list;
+> +	size_t size;
+> +	int idx;
+> +
+> +	ret_obj = wmidev_block_query(priv->wdev, 0);
+> +	if (!ret_obj)
+> +		return -ENODEV;
+> +
+> +	/*
+> +	 * This is usually caused by a dummy ACPI method. Do not return an error
+> +	 * as failing to probe this device will result in master driver being
+> +	 * unbound - this behavior aligns with lwmi_cd_cache().
+> +	 */
+> +	if (ret_obj->type != ACPI_TYPE_BUFFER) {
+> +		count = 0;
+> +		goto alloc;
+> +	}
+> +
+> +	size = ret_obj->buffer.length;
+> +	block = (struct block *)ret_obj->buffer.pointer;
+
+void * can be cast implicitly.
+
+> +
+> +	count = size >= sizeof(*block) ? block->nr : 0;
+> +	if (size < struct_size(block, data, count * 3)) {
+> +		dev_warn(&priv->wdev->dev,
+> +			 "incomplete fan test data block: %zu < %zu, ignoring\n",
+> +			 size, struct_size(block, data, count * 3));
+> +		count = 0;
+> +	}
+> +
+> +	if (count == 0)
+> +		goto alloc;
+> +
+> +	if (count > U8_MAX) {
+> +		dev_warn(&priv->wdev->dev,
+> +			 "too many fans reported: %u > %u, truncating\n",
+> +			 count, U8_MAX);
+> +		count = U8_MAX;
+> +	}
+> +
+> +	fan_ids = &block->data[0];
+> +	fan_max_rpms = &block->data[count];
+> +	fan_min_rpms = &block->data[count * 2];
+
+Please rearrange so you can remove the goto:
+
+	1. limit count
+	if (count) {
+		...
+	}
+
+
+> +
+> +alloc:
+> +	list = devm_kzalloc(&priv->wdev->dev, struct_size(list, cd_fan, count), GFP_KERNEL);
+> +	if (!list)
+> +		return -ENOMEM;
+> +
+> +	for (idx = 0; idx < count; idx++) {
+> +		list->cd_fan[idx] = (struct capdata_fan) {
+> +			.id = fan_ids[idx],
+> +			.min_rpm = fan_min_rpms[idx],
+> +			.max_rpm = fan_max_rpms[idx],
+> +		};
+> +	}
+> +
+> +	*listptr = list;
+> +	return count;
+> +}
+> +
 >  /**
 >   * lwmi_cd_alloc() - Allocate a cd_list struct in drvdata
 >   * @priv: lenovo-wmi-capdata driver data.
-> + * @type: The type of capability data.
->   *
->   * Allocate a cd_list struct large enough to contain data from all WMI data
->   * blocks provided by the interface.
->   *
->   * Return: 0 on success, or an error.
->   */
-> -static int lwmi_cd_alloc(struct lwmi_cd_priv *priv)
-> +static int lwmi_cd_alloc(struct lwmi_cd_priv *priv, enum lwmi_cd_type type)
->  {
->  	struct cd_list *list;
->  	size_t list_size;
->  	int count, ret;
->  
->  	count = wmidev_instance_count(priv->wdev);
-> -	list_size = struct_size(list, data, count);
+> @@ -264,6 +354,12 @@ static int lwmi_cd_alloc(struct lwmi_cd_priv *priv, enum lwmi_cd_type type)
+>  	case LENOVO_CAPABILITY_DATA_01:
+>  		list_size = struct_size(list, cd01, count);
+>  		break;
+> +	case LENOVO_FAN_TEST_DATA:
+> +		count = lwmi_cd_fan_list_alloc_cache(priv, &list);
+> +		if (count < 0)
+> +			return count;
 > +
-> +	switch (type) {
-> +	case LENOVO_CAPABILITY_DATA_01:
-> +		list_size = struct_size(list, cd01, count);
-> +		break;
-> +	default:
-> +		return -EINVAL;
-> +	}
->  
->  	list = devm_kzalloc(&priv->wdev->dev, list_size, GFP_KERNEL);
+> +		goto got_list;
+>  	default:
+>  		return -EINVAL;
+>  	}
+> @@ -272,6 +368,7 @@ static int lwmi_cd_alloc(struct lwmi_cd_priv *priv, enum lwmi_cd_type type)
 >  	if (!list)
-> @@ -159,6 +256,7 @@ static int lwmi_cd_alloc(struct lwmi_cd_priv *priv)
->  	if (ret)
->  		return ret;
->  
-> +	list->type = type;
->  	list->count = count;
->  	priv->list = list;
->  
-> @@ -168,6 +266,7 @@ static int lwmi_cd_alloc(struct lwmi_cd_priv *priv)
->  /**
->   * lwmi_cd_setup() - Cache all WMI data block information
->   * @priv: lenovo-wmi-capdata driver data.
-> + * @type: The type of capability data.
->   *
->   * Allocate a cd_list struct large enough to contain data from all WMI data
->   * blocks provided by the interface. Then loop through each data block and
-> @@ -175,11 +274,11 @@ static int lwmi_cd_alloc(struct lwmi_cd_priv *priv)
->   *
->   * Return: 0 on success, or an error code.
->   */
-> -static int lwmi_cd_setup(struct lwmi_cd_priv *priv)
-> +static int lwmi_cd_setup(struct lwmi_cd_priv *priv, enum lwmi_cd_type type)
->  {
->  	int ret;
->  
-> -	ret = lwmi_cd_alloc(priv);
-> +	ret = lwmi_cd_alloc(priv, type);
->  	if (ret)
->  		return ret;
->  
-> @@ -235,9 +334,13 @@ static void lwmi_cd01_unregister(void *data)
->  
->  static int lwmi_cd_probe(struct wmi_device *wdev, const void *context)
->  {
-> +	const struct lwmi_cd_info *info = context;
->  	struct lwmi_cd_priv *priv;
->  	int ret;
->  
-> +	if (!info)
-> +		return -EINVAL;
-> +
->  	priv = devm_kzalloc(&wdev->dev, sizeof(*priv), GFP_KERNEL);
->  	if (!priv)
 >  		return -ENOMEM;
-> @@ -245,30 +348,58 @@ static int lwmi_cd_probe(struct wmi_device *wdev, const void *context)
->  	priv->wdev = wdev;
->  	dev_set_drvdata(&wdev->dev, priv);
 >  
-> -	ret = lwmi_cd_setup(priv);
-> +	ret = lwmi_cd_setup(priv, info->type);
+> +got_list:
+>  	ret = devm_mutex_init(&priv->wdev->dev, &list->list_mutex);
 >  	if (ret)
-> -		return ret;
+>  		return ret;
+> @@ -390,6 +487,8 @@ static int lwmi_cd_probe(struct wmi_device *wdev, const void *context)
+>  
+>  		ret = component_add(&wdev->dev, &lwmi_cd_component_ops);
+>  		goto out;
+> +	case LENOVO_FAN_TEST_DATA:
 > +		goto out;
->  
-> -	priv->acpi_nb.notifier_call = lwmi_cd01_notifier_call;
-> +	switch (info->type) {
-> +	case LENOVO_CAPABILITY_DATA_01:
-> +		priv->acpi_nb.notifier_call = lwmi_cd01_notifier_call;
->  
-> -	ret = register_acpi_notifier(&priv->acpi_nb);
-> -	if (ret)
-> -		return ret;
-> +		ret = register_acpi_notifier(&priv->acpi_nb);
-> +		if (ret)
-> +			goto out;
->  
-> -	ret = devm_add_action_or_reset(&wdev->dev, lwmi_cd01_unregister, &priv->acpi_nb);
-> -	if (ret)
-> -		return ret;
-> +		ret = devm_add_action_or_reset(&wdev->dev, lwmi_cd01_unregister,
-> +					       &priv->acpi_nb);
-> +		if (ret)
-> +			goto out;
->  
-> -	return component_add(&wdev->dev, &lwmi_cd_component_ops);
-> +		ret = component_add(&wdev->dev, &lwmi_cd_component_ops);
-> +		goto out;
-> +	default:
-> +		return -EINVAL;
-> +	}
-> +out:
-> +	if (ret) {
-> +		dev_err(&wdev->dev, "failed to register %s: %d\n",
-
-Include?
-
-> +			info->name, ret);
-> +	} else {
-> +		dev_info(&wdev->dev, "registered %s with %u items\n",
-> +			 info->name, priv->list->count);
-
-Success path should be quiet.
-
-> +	}
-> +	return ret;
->  }
->  
->  static void lwmi_cd_remove(struct wmi_device *wdev)
->  {
-> -	component_del(&wdev->dev, &lwmi_cd_component_ops);
-> +	struct lwmi_cd_priv *priv = dev_get_drvdata(&wdev->dev);
-> +
-> +	switch (priv->list->type) {
-> +	case LENOVO_CAPABILITY_DATA_01:
-> +		component_del(&wdev->dev, &lwmi_cd_component_ops);
+>  	default:
+>  		return -EINVAL;
+>  	}
+> @@ -413,6 +512,8 @@ static void lwmi_cd_remove(struct wmi_device *wdev)
+>  	case LENOVO_CAPABILITY_DATA_01:
+>  		component_del(&wdev->dev, &lwmi_cd_component_ops);
+>  		break;
+> +	case LENOVO_FAN_TEST_DATA:
 > +		break;
-> +	default:
-> +		WARN_ON(1);
-> +	}
->  }
->  
-> +#define LWMI_CD_WDEV_ID(_type)				\
-> +	.guid_string = _type##_GUID,			\
-> +	.context = &lwmi_cd_table[_type]
-
-Add comma.
-
-> +
+>  	default:
+>  		WARN_ON(1);
+>  	}
+> @@ -425,6 +526,7 @@ static void lwmi_cd_remove(struct wmi_device *wdev)
 >  static const struct wmi_device_id lwmi_cd_id_table[] = {
-> -	{ LENOVO_CAPABILITY_DATA_01_GUID, NULL },
-> +	{ LWMI_CD_WDEV_ID(LENOVO_CAPABILITY_DATA_01) },
+>  	{ LWMI_CD_WDEV_ID(LENOVO_CAPABILITY_DATA_00) },
+>  	{ LWMI_CD_WDEV_ID(LENOVO_CAPABILITY_DATA_01) },
+> +	{ LWMI_CD_WDEV_ID(LENOVO_FAN_TEST_DATA) },
 >  	{}
 >  };
 >  
-> @@ -283,22 +414,10 @@ static struct wmi_driver lwmi_cd_driver = {
->  	.no_singleton = true,
->  };
->  
-> -/**
-> - * lwmi_cd01_match() - Match rule for the master driver.
-> - * @dev: Pointer to the capability data 01 parent device.
-> - * @data: Unused void pointer for passing match criteria.
-> - *
-> - * Return: int.
-> - */
-> -int lwmi_cd01_match(struct device *dev, void *data)
-> -{
-> -	return dev->driver == &lwmi_cd_driver.driver;
-> -}
-> -EXPORT_SYMBOL_NS_GPL(lwmi_cd01_match, "LENOVO_WMI_CD");
-> -
->  module_wmi_driver(lwmi_cd_driver);
->  
->  MODULE_DEVICE_TABLE(wmi, lwmi_cd_id_table);
->  MODULE_AUTHOR("Derek J. Clark <derekjohn.clark@gmail.com>");
-> +MODULE_AUTHOR("Rong Zhang <i@rong.moe>");
->  MODULE_DESCRIPTION("Lenovo Capability Data WMI Driver");
->  MODULE_LICENSE("GPL");
 > diff --git a/drivers/platform/x86/lenovo/wmi-capdata.h b/drivers/platform/x86/lenovo/wmi-capdata.h
-> index 2a4746e38ad4..d326f9d2d165 100644
+> index a6d006ef458f..38af4c4e4ef4 100644
 > --- a/drivers/platform/x86/lenovo/wmi-capdata.h
 > +++ b/drivers/platform/x86/lenovo/wmi-capdata.h
-> @@ -7,6 +7,7 @@
->  
->  #include <linux/types.h>
->  
-> +struct component_match;
->  struct device;
->  struct cd_list;
->  
-> @@ -19,7 +20,11 @@ struct capdata01 {
+> @@ -26,6 +26,12 @@ struct capdata01 {
 >  	u32 max_value;
 >  };
 >  
-> +struct lwmi_cd_binder {
-> +	struct cd_list *cd01_list;
+> +struct capdata_fan {
+> +	u32 id;
+> +	u32 min_rpm;
+> +	u32 max_rpm;
 > +};
 > +
-> +void lwmi_cd_match_add_all(struct device *master, struct component_match **matchptr);
+>  struct lwmi_cd_binder {
+>  	struct cd_list *cd00_list;
+>  	struct cd_list *cd01_list;
+> @@ -34,5 +40,6 @@ struct lwmi_cd_binder {
+>  void lwmi_cd_match_add_all(struct device *master, struct component_match **matchptr);
+>  int lwmi_cd00_get_data(struct cd_list *list, u32 attribute_id, struct capdata00 *output);
 >  int lwmi_cd01_get_data(struct cd_list *list, u32 attribute_id, struct capdata01 *output);
-> -int lwmi_cd01_match(struct device *dev, void *data);
+> +int lwmi_cd_fan_get_data(struct cd_list *list, u32 attribute_id, struct capdata_fan *output);
 >  
 >  #endif /* !_LENOVO_WMI_CAPDATA_H_ */
-> diff --git a/drivers/platform/x86/lenovo/wmi-other.c b/drivers/platform/x86/lenovo/wmi-other.c
-> index c6dc1b4cff84..f2e1e34d58a9 100644
-> --- a/drivers/platform/x86/lenovo/wmi-other.c
-> +++ b/drivers/platform/x86/lenovo/wmi-other.c
-> @@ -579,14 +579,14 @@ static void lwmi_om_fw_attr_remove(struct lwmi_om_priv *priv)
->  static int lwmi_om_master_bind(struct device *dev)
->  {
->  	struct lwmi_om_priv *priv = dev_get_drvdata(dev);
-> -	struct cd_list *tmp_list;
-> +	struct lwmi_cd_binder binder = { 0 };
-
-= {} is enough to initialize to default values.
-
->  	int ret;
->  
-> -	ret = component_bind_all(dev, &tmp_list);
-> +	ret = component_bind_all(dev, &binder);
->  	if (ret)
->  		return ret;
->  
-> -	priv->cd01_list = tmp_list;
-> +	priv->cd01_list = binder.cd01_list;
->  	if (!priv->cd01_list)
->  		return -ENODEV;
->  
-> @@ -623,10 +623,13 @@ static int lwmi_other_probe(struct wmi_device *wdev, const void *context)
->  	if (!priv)
->  		return -ENOMEM;
->  
-> +	/* Sentinel for on-demand ida_free(). */
-> +	priv->ida_id = -EIDRM;
-> +
->  	priv->wdev = wdev;
->  	dev_set_drvdata(&wdev->dev, priv);
->  
-> -	component_match_add(&wdev->dev, &master_match, lwmi_cd01_match, NULL);
-> +	lwmi_cd_match_add_all(&wdev->dev, &master_match);
->  	if (IS_ERR(master_match))
->  		return PTR_ERR(master_match);
->  
-> @@ -639,7 +642,10 @@ static void lwmi_other_remove(struct wmi_device *wdev)
->  	struct lwmi_om_priv *priv = dev_get_drvdata(&wdev->dev);
->  
->  	component_master_del(&wdev->dev, &lwmi_om_master_ops);
-> -	ida_free(&lwmi_om_ida, priv->ida_id);
-> +
-> +	/* No IDA to free if the driver is never bound to its components. */
-> +	if (priv->ida_id >= 0)
-> +		ida_free(&lwmi_om_ida, priv->ida_id);
->  }
->  
->  static const struct wmi_device_id lwmi_other_id_table[] = {
 > 
 
 -- 
