@@ -1,69 +1,59 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.18])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4C0502BEC26;
-	Mon, 24 Nov 2025 05:09:48 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.18
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D674536D4F2;
+	Mon, 24 Nov 2025 07:17:44 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1763960990; cv=none; b=lAVByjwo1Dnt5AbkYxZazmb6q449lOajzdNI/k47+xedCAYeJySyK1/+APV5zgBOLZlUecePYgDRG3otTESZV13ZgFj+DrmKewD6g8FYaSMa6/Dco1EnujGZf3YJP5g59odDCbUOmHve+62dyxJ3OZ6Scwh8tjd6e7agQQqz02w=
+	t=1763968666; cv=none; b=mY1MxvPcK37rUIYbOsEWfy/T1XrDXWp7zQKuuKsAMbrVwN+SgpFpBATw9xj+d2MrKyVuMiy3ZsHy+kJylFy4+dQhctc2MmstR281xxXWbN2HowK05y6MVppOjJ9Q7qPhLp4ucT3U9COSX94OKmeBxiOhA+hthY+9x2UrBgXCYAo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1763960990; c=relaxed/simple;
-	bh=1f1TOEQUVvDFuVUkDzaQkzB7ZSNkRXYGJwLUqEJeLgw=;
+	s=arc-20240116; t=1763968666; c=relaxed/simple;
+	bh=WwNd/0ef7jRQxaCIuFLj5/dg9MgHWMgivzKN6GdtNH8=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=GmV53fvh7jW8d2ic2TC3Xhx5irAEirDl28KIHLLAUm9s5CtvjnxGDaJjfNv9PKld4edaxf+yACeingC4sGJJ+ilPcEbdlrxQeQ+16IiQesZSx52gBEcAhp0d26yWi6wdfs7DuLt9B1xvXkVvd90SfCWzq9x7qYSwhgAwWJ4m8qk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=IoqTl0tE; arc=none smtp.client-ip=192.198.163.18
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	 Content-Type:Content-Disposition:In-Reply-To; b=XhjfCHpLJGKjtPF1B6jDkN97dkwfWpXOG2nxWVChNUwlnH45YKBbzwDA0YjWh1GquFY1Foxx2SgRlJsHgoY5i0kwoei04+yeOtz7gpczJh6BUx5kXluuHIvQGvU5Ssa7HElTNL6S8hLj3/scyWfNMC2/mEYU1cDczIJHPa3QcTo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=pass smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=mx7r6i2+; arc=none smtp.client-ip=198.175.65.18
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="IoqTl0tE"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="mx7r6i2+"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1763960988; x=1795496988;
+  t=1763968664; x=1795504664;
   h=date:from:to:cc:subject:message-id:references:
    mime-version:in-reply-to;
-  bh=1f1TOEQUVvDFuVUkDzaQkzB7ZSNkRXYGJwLUqEJeLgw=;
-  b=IoqTl0tE6dhb/bIDAkx293PVVnWQ0V6k8Z2JIewXVtxVhqjY7h9zMd0a
-   i3EGRPwxIeExrcj6HzFMHBn/oXQKuXxwDPSHPTaoYSA0/y6uNUkpcNmaV
-   lfjCm+27r30j25EOIgb0v2pDCoywfEKbuVmt+ZhIOnH+iZ5/ZyY2Qn/hf
-   A5AkuYJMFGf7Uti0fhEl2k4mFDNVJlXppBnGIEMcnixWKHweENhaypvMP
-   8vl09oUSckwq30gMzSZydOkZMGAIMMct7foDzqOuvnuerUhGSW2N5OfBj
-   N9a56yqRezs4HBeWNvJMYZmr5EiAZyNTuM8ddYqBxwN1VNae2LEdAnGWh
+  bh=WwNd/0ef7jRQxaCIuFLj5/dg9MgHWMgivzKN6GdtNH8=;
+  b=mx7r6i2+xFuY8u7WND/NNp2dWQa9QkBJgYYy3b0XLrPzDluPqChs291S
+   ykxICfEYVpTECuXWlzQN/uo4cyAqtK7LeJ6snYL14Ben/vQ6U+H0LyDj2
+   8SOGm8GjkikZcihlfnaP3BwQm/d6F6z4kdU6XqvNSjsUARD3GYTiumBDx
+   3dc3xFl89HK3WMpms03NVM5w21G1E6opwC681WC7djC/NsFUHyTiHtZev
+   B3i3xLVKtsanSeDC7z/1K7wh4z9Xj+lM6cf/oGANMzX3L1ZzBdDhwp0XK
+   6RZwG9gC3qh1TU+qpEdZULMsXU+b1Ua2ln9kgsQHS5ab4F3n/1GEqzXGz
    g==;
-X-CSE-ConnectionGUID: +wxXSX0XRU+4oHLpKQZN3w==
-X-CSE-MsgGUID: Qus3Daa0QrmV+HM+22j9mg==
-X-IronPort-AV: E=McAfee;i="6800,10657,11622"; a="65139512"
+X-CSE-ConnectionGUID: 15NKRoNOT72G0nJUAwpIFg==
+X-CSE-MsgGUID: ECHbhM1gQ+ec0qScq5myLQ==
+X-IronPort-AV: E=McAfee;i="6800,10657,11622"; a="65992227"
 X-IronPort-AV: E=Sophos;i="6.20,222,1758610800"; 
-   d="scan'208";a="65139512"
+   d="scan'208";a="65992227"
 Received: from fmviesa005.fm.intel.com ([10.60.135.145])
-  by fmvoesa112.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 23 Nov 2025 21:09:47 -0800
-X-CSE-ConnectionGUID: adGQh+x5QImRTUk3QYC23w==
-X-CSE-MsgGUID: 61thK6UFQnGPplcka6S+xA==
+  by orvoesa110.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 23 Nov 2025 23:17:44 -0800
+X-CSE-ConnectionGUID: 4D5BEi6HQeWYE7KajjjuEQ==
+X-CSE-MsgGUID: A1G+x7k0R7i5sBLKm/2KBw==
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="6.20,222,1758610800"; 
-   d="scan'208";a="196516253"
-Received: from lkp-server01.sh.intel.com (HELO 4664bbef4914) ([10.239.97.150])
-  by fmviesa005.fm.intel.com with ESMTP; 23 Nov 2025 21:09:45 -0800
-Received: from kbuild by 4664bbef4914 with local (Exim 4.98.2)
-	(envelope-from <lkp@intel.com>)
-	id 1vNOpa-000000000Or-3509;
-	Mon, 24 Nov 2025 05:09:42 +0000
-Date: Mon, 24 Nov 2025 13:08:43 +0800
-From: kernel test robot <lkp@intel.com>
-To: "Mario Limonciello (AMD)" <superm1@kernel.org>,
-	Tom Lendacky <thomas.lendacky@amd.com>,
-	Herbert Xu <herbert@gondor.apana.org.au>,
-	Shyam Sundar S K <Shyam-sundar.S-k@amd.com>,
-	Ilpo =?iso-8859-1?Q?J=E4rvinen?= <ilpo.jarvinen@linux.intel.com>
-Cc: oe-kbuild-all@lists.linux.dev, John Allen <john.allen@amd.com>,
-	"David S . Miller" <davem@davemloft.net>,
-	Hans de Goede <hansg@kernel.org>,
-	"(open list:AMD CRYPTOGRAPHIC COPROCESSOR (CCP) DRIVER)" <linux-crypto@vger.kernel.org>,
-	platform-driver-x86@vger.kernel.org,
-	"Mario Limonciello (AMD)" <superm1@kernel.org>,
-	Lars Francke <lars.francke@gmail.com>
-Subject: Re: [PATCH 2/2] crypto: ccp - Add an S4 restore flow
-Message-ID: <202511241200.Pm3GIul3-lkp@intel.com>
-References: <20251119205942.3411155-3-superm1@kernel.org>
+   d="scan'208";a="196541620"
+Received: from egrumbac-mobl6.ger.corp.intel.com (HELO localhost) ([10.245.244.5])
+  by fmviesa005-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 23 Nov 2025 23:17:42 -0800
+Date: Mon, 24 Nov 2025 09:17:40 +0200
+From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+To: Dan Carpenter <dan.carpenter@linaro.org>
+Cc: Qipeng Zha <qipeng.zha@intel.com>, Hans de Goede <hansg@kernel.org>,
+	Ilpo =?iso-8859-1?Q?J=E4rvinen?= <ilpo.jarvinen@linux.intel.com>,
+	Darren Hart <dvhart@linux.intel.com>,
+	platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org,
+	kernel-janitors@vger.kernel.org
+Subject: Re: [PATCH] platform/x86: intel: punit_ipc: fix memory corruption
+Message-ID: <aSQGlLXYTWzus5e-@smile.fi.intel.com>
+References: <aSBqXtt8hJb7WYIc@stanley.mountain>
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
@@ -72,53 +62,22 @@ List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20251119205942.3411155-3-superm1@kernel.org>
+In-Reply-To: <aSBqXtt8hJb7WYIc@stanley.mountain>
+Organization: Intel Finland Oy - BIC 0357606-4 - c/o Alberga Business Park, 6
+ krs, Bertel Jungin Aukio 5, 02600 Espoo
 
-Hi Mario,
+On Fri, Nov 21, 2025 at 04:34:22PM +0300, Dan Carpenter wrote:
+> This passes a stack address to the IRQ handler, "&punit_ipcdev" vs
+> "punit_ipcdev" without the ampersand.  This means that the:
+> 
+> 	complete(&ipcdev->cmd_complete);
+> 
+> in intel_punit_ioc() will corrupt the wrong memory.
 
-kernel test robot noticed the following build errors:
-
-[auto build test ERROR on herbert-cryptodev-2.6/master]
-[also build test ERROR on herbert-crypto-2.6/master linus/master v6.18-rc7 next-20251121]
-[If your patch is applied to the wrong git tree, kindly drop us a note.
-And when submitting patch, we suggest to use '--base' as documented in
-https://git-scm.com/docs/git-format-patch#_base_tree_information]
-
-url:    https://github.com/intel-lab-lkp/linux/commits/Mario-Limonciello-AMD/platform-x86-amd-pmf-Prevent-TEE-errors-after-hibernate/20251120-050203
-base:   https://git.kernel.org/pub/scm/linux/kernel/git/herbert/cryptodev-2.6.git master
-patch link:    https://lore.kernel.org/r/20251119205942.3411155-3-superm1%40kernel.org
-patch subject: [PATCH 2/2] crypto: ccp - Add an S4 restore flow
-config: i386-buildonly-randconfig-003-20251124 (https://download.01.org/0day-ci/archive/20251124/202511241200.Pm3GIul3-lkp@intel.com/config)
-compiler: gcc-14 (Debian 14.2.0-19) 14.2.0
-reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20251124/202511241200.Pm3GIul3-lkp@intel.com/reproduce)
-
-If you fix the issue in a separate patch/commit (i.e. not just a new version of
-the same patch/commit), kindly add following tags
-| Reported-by: kernel test robot <lkp@intel.com>
-| Closes: https://lore.kernel.org/oe-kbuild-all/202511241200.Pm3GIul3-lkp@intel.com/
-
-All errors (new ones prefixed by >>):
-
-   ld: drivers/crypto/ccp/sp-dev.o: in function `sp_restore':
->> drivers/crypto/ccp/sp-dev.c:237:(.text+0x28f): undefined reference to `tee_restore'
-
-
-vim +237 drivers/crypto/ccp/sp-dev.c
-
-   233	
-   234	int sp_restore(struct sp_device *sp)
-   235	{
-   236		if (sp->dev_vdata->psp_vdata->tee) {
- > 237			int r = tee_restore(sp->psp_data);
-   238	
-   239			if (r)
-   240				return r;
-   241		}
-   242	
-   243		return sp_resume(sp);
-   244	}
-   245	
+Good catch, now the question, how this driver was ever tested?..
 
 -- 
-0-DAY CI Kernel Test Service
-https://github.com/intel/lkp-tests/wiki
+With Best Regards,
+Andy Shevchenko
+
+
