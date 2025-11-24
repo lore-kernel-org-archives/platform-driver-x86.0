@@ -1,83 +1,157 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.18])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D674536D4F2;
-	Mon, 24 Nov 2025 07:17:44 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.18
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 723B92E03E6;
+	Mon, 24 Nov 2025 08:06:46 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1763968666; cv=none; b=mY1MxvPcK37rUIYbOsEWfy/T1XrDXWp7zQKuuKsAMbrVwN+SgpFpBATw9xj+d2MrKyVuMiy3ZsHy+kJylFy4+dQhctc2MmstR281xxXWbN2HowK05y6MVppOjJ9Q7qPhLp4ucT3U9COSX94OKmeBxiOhA+hthY+9x2UrBgXCYAo=
+	t=1763971606; cv=none; b=j38UTCo7Ja0tMKfVeRDctL/PpHQGrNzEBTNpLvLocUfcowNvzXbn5UmuP4/CR72OFc4S6FCGv3NKrldcZS70ERMvhMnj0dnZzLAxwd3jkDpJFCHA/L0NPWMx4XzEt5nrxZ/XPItf7YhUgBvEu1sCRgvBw4460+BhevVjw5/Y8sg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1763968666; c=relaxed/simple;
-	bh=WwNd/0ef7jRQxaCIuFLj5/dg9MgHWMgivzKN6GdtNH8=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=XhjfCHpLJGKjtPF1B6jDkN97dkwfWpXOG2nxWVChNUwlnH45YKBbzwDA0YjWh1GquFY1Foxx2SgRlJsHgoY5i0kwoei04+yeOtz7gpczJh6BUx5kXluuHIvQGvU5Ssa7HElTNL6S8hLj3/scyWfNMC2/mEYU1cDczIJHPa3QcTo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=pass smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=mx7r6i2+; arc=none smtp.client-ip=198.175.65.18
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.intel.com
+	s=arc-20240116; t=1763971606; c=relaxed/simple;
+	bh=5Dv8Z4UwOIYFcIVYLZrN4/YQTXc0S+a5v/HYmlLv1PI=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version:Content-Type; b=chbejR2l+fID6WahO8U17wmY3FjNBV+uVkNu6yzHT/47Irm/Wi6L9WiohzQqwqIknd8LvSPLkrey8TV0bQ1Ph79JtxFlg1EB+5u1xpi9kFtd34qt/iOkr0KpHVWT0i3qGd88FDR/j+ARsxOiIVEz2wVnvt0E8D9LmxGYy8Z/rVE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=JEYdfKmW; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="mx7r6i2+"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1763968664; x=1795504664;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=WwNd/0ef7jRQxaCIuFLj5/dg9MgHWMgivzKN6GdtNH8=;
-  b=mx7r6i2+xFuY8u7WND/NNp2dWQa9QkBJgYYy3b0XLrPzDluPqChs291S
-   ykxICfEYVpTECuXWlzQN/uo4cyAqtK7LeJ6snYL14Ben/vQ6U+H0LyDj2
-   8SOGm8GjkikZcihlfnaP3BwQm/d6F6z4kdU6XqvNSjsUARD3GYTiumBDx
-   3dc3xFl89HK3WMpms03NVM5w21G1E6opwC681WC7djC/NsFUHyTiHtZev
-   B3i3xLVKtsanSeDC7z/1K7wh4z9Xj+lM6cf/oGANMzX3L1ZzBdDhwp0XK
-   6RZwG9gC3qh1TU+qpEdZULMsXU+b1Ua2ln9kgsQHS5ab4F3n/1GEqzXGz
-   g==;
-X-CSE-ConnectionGUID: 15NKRoNOT72G0nJUAwpIFg==
-X-CSE-MsgGUID: ECHbhM1gQ+ec0qScq5myLQ==
-X-IronPort-AV: E=McAfee;i="6800,10657,11622"; a="65992227"
-X-IronPort-AV: E=Sophos;i="6.20,222,1758610800"; 
-   d="scan'208";a="65992227"
-Received: from fmviesa005.fm.intel.com ([10.60.135.145])
-  by orvoesa110.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 23 Nov 2025 23:17:44 -0800
-X-CSE-ConnectionGUID: 4D5BEi6HQeWYE7KajjjuEQ==
-X-CSE-MsgGUID: A1G+x7k0R7i5sBLKm/2KBw==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.20,222,1758610800"; 
-   d="scan'208";a="196541620"
-Received: from egrumbac-mobl6.ger.corp.intel.com (HELO localhost) ([10.245.244.5])
-  by fmviesa005-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 23 Nov 2025 23:17:42 -0800
-Date: Mon, 24 Nov 2025 09:17:40 +0200
-From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-To: Dan Carpenter <dan.carpenter@linaro.org>
-Cc: Qipeng Zha <qipeng.zha@intel.com>, Hans de Goede <hansg@kernel.org>,
-	Ilpo =?iso-8859-1?Q?J=E4rvinen?= <ilpo.jarvinen@linux.intel.com>,
-	Darren Hart <dvhart@linux.intel.com>,
-	platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org,
-	kernel-janitors@vger.kernel.org
-Subject: Re: [PATCH] platform/x86: intel: punit_ipc: fix memory corruption
-Message-ID: <aSQGlLXYTWzus5e-@smile.fi.intel.com>
-References: <aSBqXtt8hJb7WYIc@stanley.mountain>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="JEYdfKmW"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 41AA8C4CEF1;
+	Mon, 24 Nov 2025 08:06:45 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1763971606;
+	bh=5Dv8Z4UwOIYFcIVYLZrN4/YQTXc0S+a5v/HYmlLv1PI=;
+	h=From:To:Cc:Subject:Date:From;
+	b=JEYdfKmW6S88BUJ0eu2si/+AlyGXqzX1nvNAUE7xRGU69lOZQyryfSRiamFU/vyTj
+	 Q6aw1y8nSEPmH4tFwkkCuAZogjyfTCERt5pcXJbQu7Pp3X+mtVdmQ58YlDGUROEtJr
+	 i2nXYWX6zuAsRevqr06OE9VWvBgaQ9qU4q0RFaLqI6J0vLq0mz8XmVY1jBemSZfruL
+	 0kGYiX6JqxKZdOhkEDeHE653F3tkelxkCq7NbQQkheMcxM5DgPGLyuj0Bpel1NUMIy
+	 I+0+62QIkvjuDhQ7eCjYibPsqtWUPDSyyPq2FUlAo3s7yZ9XlbI/1H4md4DMGq1dXl
+	 MwZYhOfJpU7vQ==
+From: Sasha Levin <sashal@kernel.org>
+To: patches@lists.linux.dev,
+	stable@vger.kernel.org
+Cc: Jia Ston <ston.jia@outlook.com>,
+	=?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>,
+	Sasha Levin <sashal@kernel.org>,
+	hansg@kernel.org,
+	platform-driver-x86@vger.kernel.org
+Subject: [PATCH AUTOSEL 6.17-5.10] platform/x86: huawei-wmi: add keys for HONOR models
+Date: Mon, 24 Nov 2025 03:06:15 -0500
+Message-ID: <20251124080644.3871678-1-sashal@kernel.org>
+X-Mailer: git-send-email 2.51.0
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <aSBqXtt8hJb7WYIc@stanley.mountain>
-Organization: Intel Finland Oy - BIC 0357606-4 - c/o Alberga Business Park, 6
- krs, Bertel Jungin Aukio 5, 02600 Espoo
+Content-Type: text/plain; charset=UTF-8
+X-stable: review
+X-Patchwork-Hint: Ignore
+X-stable-base: Linux 6.17.8
+Content-Transfer-Encoding: 8bit
 
-On Fri, Nov 21, 2025 at 04:34:22PM +0300, Dan Carpenter wrote:
-> This passes a stack address to the IRQ handler, "&punit_ipcdev" vs
-> "punit_ipcdev" without the ampersand.  This means that the:
-> 
-> 	complete(&ipcdev->cmd_complete);
-> 
-> in intel_punit_ioc() will corrupt the wrong memory.
+From: Jia Ston <ston.jia@outlook.com>
 
-Good catch, now the question, how this driver was ever tested?..
+[ Upstream commit 5c72329716d0858621021193330594d5d26bf44d ]
 
+HONOR MagicBook X16/X14 models produced in 2025 cannot use the Print
+Screen and YOYO keys properly, with the system reporting them as
+unknown key presses (codes: 0x028b and 0x028e).
+
+To resolve this, a key_entry is added for both the HONOR Print Screen
+key and the HONOR YOYO key, ensuring they function correctly on these
+models.
+
+Signed-off-by: Ston Jia <ston.jia@outlook.com>
+Link: https://patch.msgid.link/20251029051804.220111-1-ston.jia@outlook.com
+Reviewed-by: Ilpo Järvinen <ilpo.jarvinen@linux.intel.com>
+Signed-off-by: Ilpo Järvinen <ilpo.jarvinen@linux.intel.com>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
+---
+
+LLM Generated explanations, may be completely bogus:
+
+### Comprehensive Analysis
+
+1. **Commit Message and Issue Analysis**
+  The commit addresses a functional hardware defect on HONOR MagicBook
+  X16/X14 laptops (2025 models). The "Print Screen" and "YOYO" keys do
+  not generate input events, instead triggering "Unknown key pressed"
+  warning logs with scancodes `0x028b` and `0x028e`. This means users
+  cannot use these hardware features, which constitutes a real-world bug
+  for owners of these devices.
+
+2. **Code Review and Mechanism**
+  The fix is a surgical addition to the `huawei_wmi_keymap` array in
+  `drivers/platform/x86/huawei-wmi.c`.
+    - **Mechanism:** The driver uses `sparse_keymap_entry_from_scancode`
+      to translate WMI events into input events. Without these entries,
+      the lookup fails, and the driver drops the event.
+    - **Change:** Two lines are added:
+      ```c
+      { KE_KEY,    0x28b, { KEY_NOTIFICATION_CENTER } },
+      { KE_KEY,    0x28e, { KEY_PRINT } },
+      ```
+    - **Dependencies:** `KEY_NOTIFICATION_CENTER` was introduced in
+      Linux 5.10. This patch is suitable for stable trees 5.10, 5.15,
+      6.1, and 6.6 without modification. Older LTS versions (4.19, 5.4)
+      would require a minor adjustment (using a different keycode or
+      backporting the definition), but the patch remains conceptually
+      valid for them.
+
+3. **Stable Kernel Rules Assessment**
+    - **Exception Category:** This commit falls squarely under the
+      **"QUIRKS and WORKAROUNDS"** and **"TRIVIAL SUBSYSTEM-SPECIFIC
+      ADDITIONS"** exceptions defined in stable kernel rules. Adding
+      keymap entries is functionally identical to adding PCI/USB IDs: it
+      enables hardware that is currently present but non-functional.
+    - **Feature vs. Fix:** While the commit says "add keys," it is
+      fixing broken hardware support. The keys physically exist but do
+      not work; enabling them is a fix, not a new software feature.
+    - **New Hardware on Stable:** While the hardware is from 2025, it is
+      common for users to run Long Term Support (LTS) kernels (e.g.,
+      Ubuntu LTS, RHEL, or community LTS kernels like 6.6.y) on new
+      hardware. Refusing to backport hardware enablement forces these
+      users to run bleeding-edge kernels or suffer broken functionality.
+
+4. **Risk vs. Benefit**
+    - **Regression Risk:** **Negligible.** The change adds data to a
+      static array. It only affects the handling of two specific
+      scancodes (`0x28b`, `0x28e`) which previously resulted in an error
+      log. It cannot affect existing key mappings or other hardware.
+    - **Benefit:** Restores functionality for the "Print Screen" key
+      (essential for workflows) and the specific "YOYO" key on supported
+      laptops.
+
+5. **Conclusion**
+  Although the commit lacks a "Cc: stable" tag, it meets all objective
+  criteria for a stable backport. It is an obviously correct, low-risk,
+  hardware-enabling fix that fits the "Quirks" exception. It should be
+  included to ensure this hardware works correctly on supported LTS
+  releases.
+
+### TODO Items
+- No further investigation required.
+
+**YES**
+
+ drivers/platform/x86/huawei-wmi.c | 4 ++++
+ 1 file changed, 4 insertions(+)
+
+diff --git a/drivers/platform/x86/huawei-wmi.c b/drivers/platform/x86/huawei-wmi.c
+index c3772df34679f..8a4c54089ace3 100644
+--- a/drivers/platform/x86/huawei-wmi.c
++++ b/drivers/platform/x86/huawei-wmi.c
+@@ -81,6 +81,10 @@ static const struct key_entry huawei_wmi_keymap[] = {
+ 	{ KE_KEY,    0x289, { KEY_WLAN } },
+ 	// Huawei |M| key
+ 	{ KE_KEY,    0x28a, { KEY_CONFIG } },
++	// HONOR YOYO key
++	{ KE_KEY,    0x28b, { KEY_NOTIFICATION_CENTER } },
++	// HONOR print screen
++	{ KE_KEY,    0x28e, { KEY_PRINT } },
+ 	// Keyboard backlit
+ 	{ KE_IGNORE, 0x293, { KEY_KBDILLUMTOGGLE } },
+ 	{ KE_IGNORE, 0x294, { KEY_KBDILLUMUP } },
 -- 
-With Best Regards,
-Andy Shevchenko
-
+2.51.0
 
