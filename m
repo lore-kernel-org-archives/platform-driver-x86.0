@@ -1,42 +1,45 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 723B92E03E6;
-	Mon, 24 Nov 2025 08:06:46 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 22BB32EB85E;
+	Mon, 24 Nov 2025 08:06:50 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1763971606; cv=none; b=j38UTCo7Ja0tMKfVeRDctL/PpHQGrNzEBTNpLvLocUfcowNvzXbn5UmuP4/CR72OFc4S6FCGv3NKrldcZS70ERMvhMnj0dnZzLAxwd3jkDpJFCHA/L0NPWMx4XzEt5nrxZ/XPItf7YhUgBvEu1sCRgvBw4460+BhevVjw5/Y8sg=
+	t=1763971611; cv=none; b=lpCIrcxVbFKctvolfnXjAVdVfw4nSTfp5yNnImNiUa7sC0ybJCgZonQGj3kEM+I0nIrrOi7SIKCNjTRbkVCpubGDoiZtUHScFigGD35c0WfiudUS1R8NIIR79SxS83WigYp++jbAgGZYRijTDgVR8k3v4lJZ23HCp4b2otpzFQs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1763971606; c=relaxed/simple;
-	bh=5Dv8Z4UwOIYFcIVYLZrN4/YQTXc0S+a5v/HYmlLv1PI=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version:Content-Type; b=chbejR2l+fID6WahO8U17wmY3FjNBV+uVkNu6yzHT/47Irm/Wi6L9WiohzQqwqIknd8LvSPLkrey8TV0bQ1Ph79JtxFlg1EB+5u1xpi9kFtd34qt/iOkr0KpHVWT0i3qGd88FDR/j+ARsxOiIVEz2wVnvt0E8D9LmxGYy8Z/rVE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=JEYdfKmW; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1763971611; c=relaxed/simple;
+	bh=65ZP82TqVoivAN7YNFb6fzZ2c4nt0HIvTJUTmuQYeuA=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=r1f6ShVtRG5odgt9HpI19fDq2o5eMbTidxW+IKabOqa9deEA5WG3D1w56ajyObm66Rds3neRkv5c6pEKVU26QtGUx4OCdOHO6d/cByV4m8Ey0+WGr75HqvNAjG70MA0KE6HiDAxxtgHKZGFRya+lfLFcesU0BI/156IiugHjDl8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=KkL7nvp+; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="JEYdfKmW"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 41AA8C4CEF1;
-	Mon, 24 Nov 2025 08:06:45 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="KkL7nvp+"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id CF97FC116D0;
+	Mon, 24 Nov 2025 08:06:49 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1763971606;
-	bh=5Dv8Z4UwOIYFcIVYLZrN4/YQTXc0S+a5v/HYmlLv1PI=;
-	h=From:To:Cc:Subject:Date:From;
-	b=JEYdfKmW6S88BUJ0eu2si/+AlyGXqzX1nvNAUE7xRGU69lOZQyryfSRiamFU/vyTj
-	 Q6aw1y8nSEPmH4tFwkkCuAZogjyfTCERt5pcXJbQu7Pp3X+mtVdmQ58YlDGUROEtJr
-	 i2nXYWX6zuAsRevqr06OE9VWvBgaQ9qU4q0RFaLqI6J0vLq0mz8XmVY1jBemSZfruL
-	 0kGYiX6JqxKZdOhkEDeHE653F3tkelxkCq7NbQQkheMcxM5DgPGLyuj0Bpel1NUMIy
-	 I+0+62QIkvjuDhQ7eCjYibPsqtWUPDSyyPq2FUlAo3s7yZ9XlbI/1H4md4DMGq1dXl
-	 MwZYhOfJpU7vQ==
+	s=k20201202; t=1763971610;
+	bh=65ZP82TqVoivAN7YNFb6fzZ2c4nt0HIvTJUTmuQYeuA=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+	b=KkL7nvp+s4UQcYr/IiLZ0vyVbicCRcdOEFWscDGhFlvK0CNAgnOm1X8UdSWoxjoG3
+	 dC3Lss6AroibgRsFnEG1VBzA2oq5vZAgP5MvzajYwROMphcjfO+YQyWDxVJZURQuEs
+	 D290Ti5zpkmw/+sBwScLMGnXDzpsbz0SwDN7JxtALkPTzAHN5ORHKdAocvgMic7UKv
+	 40kjB4DZeElm8OG0ulPaZMoHHdQ/GEX8f5rLsbeFy6wXZKgNURurPMbQyGN9dMsnc+
+	 wWUqectgwYuyI4BH9IeLhZ2EXfzfeHeHQJPCR7S3XzENwf0GCISXDPtZQU33+gnlIy
+	 H42t330nmDhAg==
 From: Sasha Levin <sashal@kernel.org>
 To: patches@lists.linux.dev,
 	stable@vger.kernel.org
-Cc: Jia Ston <ston.jia@outlook.com>,
+Cc: Kuppuswamy Sathyanarayanan <sathyanarayanan.kuppuswamy@linux.intel.com>,
 	=?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>,
 	Sasha Levin <sashal@kernel.org>,
-	hansg@kernel.org,
+	srinivas.pandruvada@linux.intel.com,
 	platform-driver-x86@vger.kernel.org
-Subject: [PATCH AUTOSEL 6.17-5.10] platform/x86: huawei-wmi: add keys for HONOR models
-Date: Mon, 24 Nov 2025 03:06:15 -0500
-Message-ID: <20251124080644.3871678-1-sashal@kernel.org>
+Subject: [PATCH AUTOSEL 6.17] platform/x86: intel-uncore-freq: Add additional client processors
+Date: Mon, 24 Nov 2025 03:06:18 -0500
+Message-ID: <20251124080644.3871678-4-sashal@kernel.org>
 X-Mailer: git-send-email 2.51.0
+In-Reply-To: <20251124080644.3871678-1-sashal@kernel.org>
+References: <20251124080644.3871678-1-sashal@kernel.org>
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
@@ -49,20 +52,15 @@ X-Patchwork-Hint: Ignore
 X-stable-base: Linux 6.17.8
 Content-Transfer-Encoding: 8bit
 
-From: Jia Ston <ston.jia@outlook.com>
+From: Kuppuswamy Sathyanarayanan <sathyanarayanan.kuppuswamy@linux.intel.com>
 
-[ Upstream commit 5c72329716d0858621021193330594d5d26bf44d ]
+[ Upstream commit a229809c18926e79aeca232d5b502157beb0dec3 ]
 
-HONOR MagicBook X16/X14 models produced in 2025 cannot use the Print
-Screen and YOYO keys properly, with the system reporting them as
-unknown key presses (codes: 0x028b and 0x028e).
+Add Intel uncore frequency driver support for Pantherlake, Wildcatlake
+and Novalake processors.
 
-To resolve this, a key_entry is added for both the HONOR Print Screen
-key and the HONOR YOYO key, ensuring they function correctly on these
-models.
-
-Signed-off-by: Ston Jia <ston.jia@outlook.com>
-Link: https://patch.msgid.link/20251029051804.220111-1-ston.jia@outlook.com
+Signed-off-by: Kuppuswamy Sathyanarayanan <sathyanarayanan.kuppuswamy@linux.intel.com>
+Link: https://patch.msgid.link/20251022211733.3565526-1-sathyanarayanan.kuppuswamy@linux.intel.com
 Reviewed-by: Ilpo Järvinen <ilpo.jarvinen@linux.intel.com>
 Signed-off-by: Ilpo Järvinen <ilpo.jarvinen@linux.intel.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
@@ -70,88 +68,116 @@ Signed-off-by: Sasha Levin <sashal@kernel.org>
 
 LLM Generated explanations, may be completely bogus:
 
-### Comprehensive Analysis
+### 1. COMPREHENSIVE ANALYSIS
 
-1. **Commit Message and Issue Analysis**
-  The commit addresses a functional hardware defect on HONOR MagicBook
-  X16/X14 laptops (2025 models). The "Print Screen" and "YOYO" keys do
-  not generate input events, instead triggering "Unknown key pressed"
-  warning logs with scancodes `0x028b` and `0x028e`. This means users
-  cannot use these hardware features, which constitutes a real-world bug
-  for owners of these devices.
+- **Commit Message Analysis:**
+    - **Subject:** "platform/x86: intel-uncore-freq: Add additional
+      client processors"
+    - **Intent:** The commit explicitly adds support for Intel
+      Pantherlake, Wildcatlake, and Novalake processors to the uncore
+      frequency driver.
+    - **Tags:** No "Fixes:" or "Cc: stable" tags are present. This is
+      common for device ID additions, which are often picked up by
+      stable maintainers automatically or upon request.
 
-2. **Code Review and Mechanism**
-  The fix is a surgical addition to the `huawei_wmi_keymap` array in
-  `drivers/platform/x86/huawei-wmi.c`.
-    - **Mechanism:** The driver uses `sparse_keymap_entry_from_scancode`
-      to translate WMI events into input events. Without these entries,
-      the lookup fails, and the driver drops the event.
-    - **Change:** Two lines are added:
-      ```c
-      { KE_KEY,    0x28b, { KEY_NOTIFICATION_CENTER } },
-      { KE_KEY,    0x28e, { KEY_PRINT } },
-      ```
-    - **Dependencies:** `KEY_NOTIFICATION_CENTER` was introduced in
-      Linux 5.10. This patch is suitable for stable trees 5.10, 5.15,
-      6.1, and 6.6 without modification. Older LTS versions (4.19, 5.4)
-      would require a minor adjustment (using a different keycode or
-      backporting the definition), but the patch remains conceptually
-      valid for them.
+- **Code Inspection:**
+    - **File:** `drivers/platform/x86/intel/uncore-frequency/uncore-
+      frequency.c`
+    - **Change:** Adds 4 entries to the `intel_uncore_cpu_ids[]` array
+      using the `X86_MATCH_VFM` macro.
+    - **Mechanism:** The driver uses this table to decide whether to
+      load. Currently, on these new processors, the driver returns
+      `-ENODEV`. This patch allows the driver to initialize
+      successfully.
+    - **Complexity:** Trivial. It is a data-only change with no logic
+      modification.
 
-3. **Stable Kernel Rules Assessment**
-    - **Exception Category:** This commit falls squarely under the
-      **"QUIRKS and WORKAROUNDS"** and **"TRIVIAL SUBSYSTEM-SPECIFIC
-      ADDITIONS"** exceptions defined in stable kernel rules. Adding
-      keymap entries is functionally identical to adding PCI/USB IDs: it
-      enables hardware that is currently present but non-functional.
-    - **Feature vs. Fix:** While the commit says "add keys," it is
-      fixing broken hardware support. The keys physically exist but do
-      not work; enabling them is a fix, not a new software feature.
-    - **New Hardware on Stable:** While the hardware is from 2025, it is
-      common for users to run Long Term Support (LTS) kernels (e.g.,
-      Ubuntu LTS, RHEL, or community LTS kernels like 6.6.y) on new
-      hardware. Refusing to backport hardware enablement forces these
-      users to run bleeding-edge kernels or suffer broken functionality.
+- **Stable Rules & Exceptions:**
+    - **General Rule:** "No new features."
+    - **Exception:** "NEW DEVICE IDs (Very Common)". The rules
+      explicitly allow adding IDs (PCI, USB, ACPI, etc.) to existing
+      drivers to enable hardware support. In the context of x86 platform
+      drivers, CPU Vendor-Family-Model (VFM) IDs serve the exact same
+      purpose as PCI device IDs.
+    - **Applicability:** This commit fits squarely within the Device ID
+      exception. It enables an existing driver on new hardware variants
+      without changing the driver's core behavior.
 
-4. **Risk vs. Benefit**
-    - **Regression Risk:** **Negligible.** The change adds data to a
-      static array. It only affects the handling of two specific
-      scancodes (`0x28b`, `0x28e`) which previously resulted in an error
-      log. It cannot affect existing key mappings or other hardware.
-    - **Benefit:** Restores functionality for the "Print Screen" key
-      (essential for workflows) and the specific "YOYO" key on supported
-      laptops.
+- **Risk Assessment:**
+    - **Regression Risk:** Negligible. The change is confined to the
+      device match table. It does not alter the code path for currently
+      supported processors.
+    - **Consequence of Failure:** If the IDs are incorrect, the driver
+      simply fails to load on the new hardware, preserving the status
+      quo.
+    - **Dependencies:** The patch uses `X86_MATCH_VFM` and constants
+      like `INTEL_NOVALAKE`.
+        - *Critical Technical Note:* The `X86_MATCH_VFM` infrastructure
+          was introduced to support CPU families beyond Family 6 (Nova
+          Lake is Family 18). Target stable trees must have this
+          infrastructure and the corresponding
+          `arch/x86/include/asm/intel-family.h` definitions. For very
+          old stable trees (pre-VFM infrastructure), backporting would
+          be complex; for modern stable trees (like 6.6.y or the
+          hypothetical 6.17.y), this is straightforward.
 
-5. **Conclusion**
-  Although the commit lacks a "Cc: stable" tag, it meets all objective
-  criteria for a stable backport. It is an obviously correct, low-risk,
-  hardware-enabling fix that fits the "Quirks" exception. It should be
-  included to ensure this hardware works correctly on supported LTS
-  releases.
+### 2. DETAILED EXPLANATION
 
-### TODO Items
-- No further investigation required.
+This commit is a strong candidate for backporting based on the "New
+Device IDs" exception in the stable kernel rules.
+
+**Problem Solved:**
+Users running stable kernels on newer Intel hardware (Pantherlake,
+Wildcatlake, Novalake) currently have no access to uncore frequency
+controls because the driver does not recognize their CPUs. This limits
+power management and performance tuning capabilities that are standard
+on older platforms.
+
+**Stable Kernel Rules Compliance:**
+1. **Exception Category:** This falls under **Exception 1: NEW DEVICE
+   IDs**. While technically a "feature" (enablement), the stable rules
+   explicitly permit adding IDs to existing drivers to support new
+   hardware, provided the driver itself isn't being rewritten.
+2. **Obviously Correct:** The change adds four lines of data to a match
+   table. It is minimal and surgical.
+3. **Low Risk:** There is zero risk to existing users. The code path for
+   supported CPUs remains identical. The new entries only activate on
+   the specific new CPU models.
+
+**Caveats & Dependencies:**
+- **VFM Infrastructure:** The patch relies on the `X86_MATCH_VFM` macro.
+  Ensure the target stable tree supports this macro (introduced to
+  handle non-Family-6 CPUs like Nova Lake).
+- **Header Definitions:** The target tree must have the updated
+  `arch/x86/include/asm/intel-family.h` containing
+  `INTEL_PANTHERLAKE_L`, `INTEL_NOVALAKE`, etc. These are typically
+  backported, but verify their existence before applying this patch.
+
+**Conclusion:**
+This is a standard, low-risk hardware enablement patch that provides
+necessary functionality for users on new platforms without endangering
+existing setups.
 
 **YES**
 
- drivers/platform/x86/huawei-wmi.c | 4 ++++
+ .../platform/x86/intel/uncore-frequency/uncore-frequency.c    | 4 ++++
  1 file changed, 4 insertions(+)
 
-diff --git a/drivers/platform/x86/huawei-wmi.c b/drivers/platform/x86/huawei-wmi.c
-index c3772df34679f..8a4c54089ace3 100644
---- a/drivers/platform/x86/huawei-wmi.c
-+++ b/drivers/platform/x86/huawei-wmi.c
-@@ -81,6 +81,10 @@ static const struct key_entry huawei_wmi_keymap[] = {
- 	{ KE_KEY,    0x289, { KEY_WLAN } },
- 	// Huawei |M| key
- 	{ KE_KEY,    0x28a, { KEY_CONFIG } },
-+	// HONOR YOYO key
-+	{ KE_KEY,    0x28b, { KEY_NOTIFICATION_CENTER } },
-+	// HONOR print screen
-+	{ KE_KEY,    0x28e, { KEY_PRINT } },
- 	// Keyboard backlit
- 	{ KE_IGNORE, 0x293, { KEY_KBDILLUMTOGGLE } },
- 	{ KE_IGNORE, 0x294, { KEY_KBDILLUMUP } },
+diff --git a/drivers/platform/x86/intel/uncore-frequency/uncore-frequency.c b/drivers/platform/x86/intel/uncore-frequency/uncore-frequency.c
+index 2a6897035150c..0dfc552b28024 100644
+--- a/drivers/platform/x86/intel/uncore-frequency/uncore-frequency.c
++++ b/drivers/platform/x86/intel/uncore-frequency/uncore-frequency.c
+@@ -256,6 +256,10 @@ static const struct x86_cpu_id intel_uncore_cpu_ids[] = {
+ 	X86_MATCH_VFM(INTEL_ARROWLAKE, NULL),
+ 	X86_MATCH_VFM(INTEL_ARROWLAKE_H, NULL),
+ 	X86_MATCH_VFM(INTEL_LUNARLAKE_M, NULL),
++	X86_MATCH_VFM(INTEL_PANTHERLAKE_L, NULL),
++	X86_MATCH_VFM(INTEL_WILDCATLAKE_L, NULL),
++	X86_MATCH_VFM(INTEL_NOVALAKE, NULL),
++	X86_MATCH_VFM(INTEL_NOVALAKE_L, NULL),
+ 	{}
+ };
+ MODULE_DEVICE_TABLE(x86cpu, intel_uncore_cpu_ids);
 -- 
 2.51.0
 
