@@ -1,725 +1,261 @@
-Received: from mout.gmx.net (mout.gmx.net [212.227.17.20])
+Received: from mx0a-0064b401.pphosted.com (mx0a-0064b401.pphosted.com [205.220.166.238])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1270E18D658;
-	Tue, 25 Nov 2025 02:09:15 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=212.227.17.20
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1764036559; cv=none; b=ZczOozeSSnEfKVS2KCLsljgEAAiG/ylMN5F8SGizp6fy25w8luZV2w/msa+P/wte7bUMCeZhdj8VXlN9ADypaHtBee5uWG8Ed12tGSJL2zTXlNgpGuc2/CA9Iq0FIy7EK4uFcQTYbtDGAPUJT5frEuUkk0JBFz7JsHXRjNSYqvI=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1764036559; c=relaxed/simple;
-	bh=+TYBIjoBi9lnpfnXvICc38HO0+Peh5kHx/gwcvKjdDs=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=qxyXxAjBD8Z8IJtWWEFfMIz8IfWm4UYBwxdhrPcrC+AJMMmKQlZsZLhx2Le02teqGXE2O4f9KI+r8CPHafw/hm/LYe3cgNOlQwMwGjlf4D5rSL/++OidwoGl9NKG5jddTFA1Z7EVt8NvS96b0ICptgG9C0f0ASsZff4GsVs1l5c=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gmx.de; spf=pass smtp.mailfrom=gmx.de; dkim=pass (2048-bit key) header.d=gmx.de header.i=w_armin@gmx.de header.b=tpDc8p5c; arc=none smtp.client-ip=212.227.17.20
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gmx.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmx.de
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D084E1D7995;
+	Tue, 25 Nov 2025 02:37:12 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=205.220.166.238
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1764038235; cv=fail; b=e1PSyIhDcf7iaPPcqDVKLHarKq8Ffn5+NKOwL9DptWR7WfyijoDvs9k9cIY3pC8VBN+KJMq7ZgiKdR4sSif14atAYB0BqTgXuzoxy3A8XLrKayMylXtiZWuuLZQVNcrFZ52Bv0cQN4BYLqqFC1OWsUG8H+nqVhmsy3g+qQgeyaQ=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1764038235; c=relaxed/simple;
+	bh=zCwcurHs+b/swRkA8gGwBNYjNarevu7trsLT/Cb9Js0=;
+	h=From:To:Cc:Subject:Date:Message-ID:Content-Type:MIME-Version; b=U4ANNj9TMSkHxSNUWfFMAbDYCkwPGa6Kk/iO47kG2JqmGWaXiMTDICHSOHWWkCASfIMmlEffDn9BqMos3zKLqzFIxMsM56YSQ4RPodfCHTkgu26nPR5bCsSuBWKZU2uAn8AhjxsBm1CReMHIuFICfBWkWbtI6jRYVqnwJ1ayIV0=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=windriver.com; spf=pass smtp.mailfrom=windriver.com; dkim=pass (2048-bit key) header.d=windriver.com header.i=@windriver.com header.b=NvNbaTSr; arc=fail smtp.client-ip=205.220.166.238
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=windriver.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=windriver.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmx.de header.i=w_armin@gmx.de header.b="tpDc8p5c"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=gmx.de;
-	s=s31663417; t=1764036538; x=1764641338; i=w_armin@gmx.de;
-	bh=Ql80EbH3blCGhYrjtFqKHCkjf+IAqtxOfZo9rLpOt40=;
-	h=X-UI-Sender-Class:Message-ID:Date:MIME-Version:Subject:To:Cc:
-	 References:From:In-Reply-To:Content-Type:
-	 Content-Transfer-Encoding:cc:content-transfer-encoding:
-	 content-type:date:from:message-id:mime-version:reply-to:subject:
-	 to;
-	b=tpDc8p5cVOFV5mdffQsRUeKGuhrwdIsHf2mJYCJg9gdZOSbsYrNM+LKR6DH9zFLe
-	 5TKJrIsKgwc9QKv4DA5Tq5063dhjwiPEXu+IrCw4FlT79vxG1PFo5EZW3yUlrsIoK
-	 TOB73yZeLhYD3R1WGuEpB+gVSSG8SkgBMYKoTIsiBg50POkha+itWMF0ChT+cGQAt
-	 HgWKakG3t0J0MT8z4aa/NClqVX6ZiCnBkKnv+cVtUu8OOTLRZD6CevX5Rs9vDJ4Cd
-	 zQASjtpHHjs5cnSoDEP1+BSO4z7nNYl+I8v4jcwmEk5uXvMMj1P5oUoMoYncSeywV
-	 cPe81mQy5KgWYGxn0w==
-X-UI-Sender-Class: 724b4f7f-cbec-4199-ad4e-598c01a50d3a
-Received: from [192.168.0.69] ([93.202.247.91]) by mail.gmx.net (mrgmx105
- [212.227.17.168]) with ESMTPSA (Nemesis) id 1Mnpru-1vvRSd2jTG-00kVGD; Tue, 25
- Nov 2025 03:08:57 +0100
-Message-ID: <61e17bf7-b549-4345-9d4f-be14e13b34af@gmx.de>
-Date: Tue, 25 Nov 2025 03:08:55 +0100
+	dkim=pass (2048-bit key) header.d=windriver.com header.i=@windriver.com header.b="NvNbaTSr"
+Received: from pps.filterd (m0250810.ppops.net [127.0.0.1])
+	by mx0a-0064b401.pphosted.com (8.18.1.11/8.18.1.11) with ESMTP id 5AP1ooD33152590;
+	Mon, 24 Nov 2025 18:37:01 -0800
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=windriver.com;
+	 h=cc:content-transfer-encoding:content-type:date:from
+	:message-id:mime-version:subject:to; s=PPS06212021; bh=UoV9Mav8Y
+	jqhVZNRb9Q1D2bcIREewitT4nrv/4TlEl0=; b=NvNbaTSr0pB9APSB6kqgvUb3M
+	pfRV6NneG8/kPVHp2q7ndezCC15pRlEakdFSVWcj/Pk5fCOGtjnPnptRqTKrdFsK
+	i/KW/JOzoc0yZJJ8aoIMp7CioDjHkV2JSOlL7kd3KXy/liXdmY3am74sDOge8wck
+	BTHKKXPrLMXdcXep5aOiE9Lr2I/P1GxL83eed6TIsTXobiYIDtVW1v3oUd+5+pZV
+	lJkl1JoNY54N1usmEHH1/3gk1lhJi7hdSk7HMYTjtkCwvt+X+juUOxjXvgaAgqpe
+	LTJv9yMmeQ71iPpDOH9AEkkZqjao/0ckRl/Wf9g0uCCObpk8bh3mUdY5AWZ4g==
+Received: from ch4pr04cu002.outbound.protection.outlook.com (mail-northcentralusazon11013019.outbound.protection.outlook.com [40.107.201.19])
+	by mx0a-0064b401.pphosted.com (PPS) with ESMTPS id 4ak9b5aecq-1
+	(version=TLSv1.3 cipher=TLS_AES_256_GCM_SHA384 bits=256 verify=NOT);
+	Mon, 24 Nov 2025 18:37:01 -0800 (PST)
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=nAYlsBQbfcU+bXm1KPapK7IFy5jdUjtiuyaE+xG6kj7H7PIPIQomSitH00Mst6Uo8YUQpiEgGQT/rQ8SzENb+avuKw4nzqd8b9PjRNIBFfCG+mWllJYX+e0E68GW8Y0kvpapSOPHY3KNBq2aazut7/Q7SDnnmajTBWnNEnkD5tz6tWjCvXJtpqOOZreZPSlTtFzOi0YU24wvMK/JzkaTPnQSMfubm0/15gHj7WTSMYmURFi0Q0hQbc8G9yZ0yP9Ycd+kia8w+TdFC3aaFTJo7GYBoFxKIehf0SukBQOoSy4b/MFBaer/1X1nALF1QK0wyJIU/eJpbEDcw/+I2l+orQ==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=UoV9Mav8YjqhVZNRb9Q1D2bcIREewitT4nrv/4TlEl0=;
+ b=Ux5uDpLhEHcCxWxEzIw3v7cUcq17GUrl3ipklbSMWQ7IAIV+VG/kRtRSeLi3vbuuW2WBgZFbRNSc/yG7ZJoFvikQ61Cs4EdgF5pX7KoQqntZtBbOack01IdpebkYifMIjVvvb76uzLUVy6GLYype80OZ7u0bliM67H/SkjrHWuf3i1sPy+LewPT18hX9k4/kNdWZ9wh6vAiHrrxK7uAqUCB6dumPkaFnDkXpRY4EEu6++yoOmqyC1q/PXFt7U3REcw/R5pqQPfM1jb5kZ4yEG6TwIVmrdR/8D8G6pUwqWsvcPV+PpkvTf7iMJHVMy/aH54vUUcJMRGuarpoCVjPZvQ==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=windriver.com; dmarc=pass action=none
+ header.from=windriver.com; dkim=pass header.d=windriver.com; arc=none
+Received: from SJ0PR11MB5072.namprd11.prod.outlook.com (2603:10b6:a03:2db::18)
+ by IA3PR11MB9037.namprd11.prod.outlook.com (2603:10b6:208:580::14) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.9343.17; Tue, 25 Nov
+ 2025 02:36:58 +0000
+Received: from SJ0PR11MB5072.namprd11.prod.outlook.com
+ ([fe80::a14a:e00c:58fc:e4f8]) by SJ0PR11MB5072.namprd11.prod.outlook.com
+ ([fe80::a14a:e00c:58fc:e4f8%5]) with mapi id 15.20.9343.016; Tue, 25 Nov 2025
+ 02:36:58 +0000
+From: yongxin.liu@windriver.com
+To: linux-kernel@vger.kernel.org, netdev@vger.kernel.org,
+        david.e.box@linux.intel.com
+Cc: ilpo.jarvinen@linux.intel.com, andrew@lunn.ch, kuba@kernel.org,
+        platform-driver-x86@vger.kernel.org, stable@vger.kernel.org
+Subject: [PATCH net v2] platform/x86: intel_pmc_ipc: fix ACPI buffer memory leak
+Date: Tue, 25 Nov 2025 10:29:53 +0800
+Message-ID: <20251125022952.1748173-2-yongxin.liu@windriver.com>
+X-Mailer: git-send-email 2.46.2
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-ClientProxiedBy: SG2PR04CA0152.apcprd04.prod.outlook.com (2603:1096:4::14)
+ To SJ0PR11MB5072.namprd11.prod.outlook.com (2603:10b6:a03:2db::18)
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v6 6/7] platform/x86: lenovo-wmi-capdata: Wire up Fan Test
- Data
-To: Rong Zhang <i@rong.moe>, Mark Pearson <mpearson-lenovo@squebb.ca>,
- "Derek J. Clark" <derekjohn.clark@gmail.com>,
- Hans de Goede <hansg@kernel.org>,
- =?UTF-8?Q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
-Cc: Guenter Roeck <linux@roeck-us.net>, platform-driver-x86@vger.kernel.org,
- linux-kernel@vger.kernel.org, linux-hwmon@vger.kernel.org
-References: <20251122184522.18677-1-i@rong.moe>
- <20251122184522.18677-7-i@rong.moe>
- <9340b459-2d25-4767-8a47-765a71477d8f@gmx.de>
- <667b29838d39f7bac2a754c4f0720e33ead556f8.camel@rong.moe>
-Content-Language: en-US
-From: Armin Wolf <W_Armin@gmx.de>
-In-Reply-To: <667b29838d39f7bac2a754c4f0720e33ead556f8.camel@rong.moe>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: quoted-printable
-X-Provags-ID: V03:K1:SrFKFDR3PLZfUOCdCC+wDmQC5ID2cxiKnpM2B0jYDv11oE/Go6C
- KYn07kAIpLbGwC14O9pf/rMt3RiAg1OYUdzPE8a32tvS2ijv6/CHpp4hSL7tf2dyR52iGXS
- i1s+7FWzpOzpmBJQqdc1oF8/mghryLOD9Z3OhjtHUYsZ0I4ThsJSqTvP3SAjOxLYqZYPOi0
- AWlCv4hqz8UKCeWhUqRYA==
-X-Spam-Flag: NO
-UI-OutboundReport: notjunk:1;M01:P0:1vXwQyIMuXE=;Scey56EUZIYv95y+6PzlGrYnZHv
- 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
- HCsxtMadbUYan4QxJXOj4NwdS3vBf
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: SJ0PR11MB5072:EE_|IA3PR11MB9037:EE_
+X-MS-Office365-Filtering-Correlation-Id: 9d140023-5a79-420a-cf7f-08de2bcad661
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam:
+	BCL:0;ARA:13230040|366016|1800799024|376014|52116014|38350700014;
+X-Microsoft-Antispam-Message-Info:
+	=?us-ascii?Q?x25nT4SufMsKKWqE9c+HSg8MncRHWtgnA85k0xTT+13VXDJLZPc2+yJA0npH?=
+ =?us-ascii?Q?rB7aZG4Qj7jn+lI5cYWy3izYZKJwpNTNa5SVkIKsFtVdXpXK5L5XB6ZaETxj?=
+ =?us-ascii?Q?JH3l/oNBjFtJTJTX37iAquh6eduuer+3KnscHI9GNAyOJUmIyVQojzw0/s5p?=
+ =?us-ascii?Q?O8WEArYx3Q7y1yHe6rSLKra1Mymjqg2/7YuwYmQer6XkUyPXCSBanfGVFBo2?=
+ =?us-ascii?Q?OHNXnscL0IR1q1YA1e4HBb0N0/nwz/kkkOpKI9eV6Bc3zA7OrrivlMRsHhRj?=
+ =?us-ascii?Q?HliK+CYSOWjdXPwzjaR4eDc1QIkFsFQ2TwtLPMscoUDPRPMcJBCyqMJhCAAs?=
+ =?us-ascii?Q?0bw2AI8pctAn7IugKJBc8FA3/cYHUTlJA9Kt6AZIDDa9runI59w12hmpiNWf?=
+ =?us-ascii?Q?uVVtu1qpHdMSCFaZNlObI7jNv05Q0gwFDokGgMQvIRmPoLJTxQ77CKCGAM3N?=
+ =?us-ascii?Q?suVFSzv33b24QwslxXbPWxIhV9fNq30bgkRttbUfvgfi1NVQhxFURXHo0R/J?=
+ =?us-ascii?Q?5uHJM4Hs/cyZAQQPdIC09R2jG7HUBpOK1Q2RP78hICeEPNQswGIp54y32tza?=
+ =?us-ascii?Q?dXQUfV1NQjuhX95SrRvvOUO1pIAp6t+2xuADZAd8QXtTnl4KBiZgRMTOxEZm?=
+ =?us-ascii?Q?HkepoKLVrBIJrjXU9pGJDNtwUBXL/X19FEbHMLdqJLpY6wWJUgRZd9zj4KF7?=
+ =?us-ascii?Q?KWfwUrAzH+e6XWRkj5qO/b7NmJxEJSNau5XLMf8DGqVH2SIhnMzIYtcuJKK5?=
+ =?us-ascii?Q?eWYEQb0kKAqPXNK38Gcr9UXxNNWB/DjHGbUn/rvJkbcMRWh7luECxTNhFA9C?=
+ =?us-ascii?Q?l6rNhV9q3qG0x1cOMOEZJtd7zFOVD44ZK7k8yhdlxw3j27D0kZ4MKypDomxp?=
+ =?us-ascii?Q?lnxelWniOa/NTWq1/2wA7LHGHUsVdJrAUnyB4Y2dRanmvJXbEhpm4ClnqCfx?=
+ =?us-ascii?Q?XEc1qbapuvNQCJf4aribcjLyfkIeIOtGMe4H9IggNOmVMDcA/As8mf4qGZ4N?=
+ =?us-ascii?Q?4aSkvIBf6FluaQ+MISsvHa7Xizg/BDbOhNcHfDkhOY/sc01aXI/Qh875LneO?=
+ =?us-ascii?Q?zkhgnAWd/I3kwQgmY9xAF0X9ifN4Fgc20Wi9QawGNGWEMzVvLGYLCD3rk9Ri?=
+ =?us-ascii?Q?/vMMJ7KNH9R/NI2VJG8B35uBdZg9w9N5YcVFYJeZAgYZaSLPfnD3M/75zjTE?=
+ =?us-ascii?Q?QoECuRd9JTwVWVvpTRrwgBbCUqKaX3S3v05Mn4fRHF/E35DaWeGrqTKoWqnu?=
+ =?us-ascii?Q?rCwPMHDbPXsvOWo40KZ9uKGTWHFYIRhr4k9nr0BPoPl2legDtK3Y9fqU2Vxf?=
+ =?us-ascii?Q?OQjG3VjgG4AYEE1ixAocgglAue8BwOrxNCFLGPZG2wTMAg5K2Jh6FP2dtc74?=
+ =?us-ascii?Q?CJEj9dVzDljDtf8hVHrx6oSfpJUJ3xo91Eb9/ug5j27e/JlYVlYwRmGZfbgP?=
+ =?us-ascii?Q?UIw1DIgL81p7E6+BriJyMhzsKheaK099N3ZGM+fn13OFoYc0ZRdCplBMQl9n?=
+ =?us-ascii?Q?mBfM4fh9kA3u2zOy1LjM54SdXoFeaYu7CUl4?=
+X-Forefront-Antispam-Report:
+	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:SJ0PR11MB5072.namprd11.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(366016)(1800799024)(376014)(52116014)(38350700014);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0:
+	=?us-ascii?Q?a1ogLQvQ2zbPPGdEJFkYdliWT7IsLeojfVc1M2+EfgF2ctHsSAwLPe4WdeNe?=
+ =?us-ascii?Q?3NyK/exMvZ0ds2t+MA3ylqDomYIxYGcga0hD07KAzJde6qU1ddRykvuubLIe?=
+ =?us-ascii?Q?PNUnqp2CKx80FNs7UDOJFGKe/rjJmcHZq2uFcegpPX5ezjIzEA/gHJmMos0r?=
+ =?us-ascii?Q?D/+HKcWtBSPglf5UgoU838S81wi5gFI6wIPbD90mUMufirMq7eYGVJkCOAXx?=
+ =?us-ascii?Q?m049aUwbOLKNvTcAc2A0zhlX7fNn9JqpgYNMuNBdr9LtbHPpcewyqnCw7FYs?=
+ =?us-ascii?Q?VCBJXBA453D7Aff7Etr9Qb7FlP+6bOxjY2PsHC3KS+VEFjz2Fmiafe9gR1Gc?=
+ =?us-ascii?Q?xaMNZt4tV2bgTwY767NdDIwvIfqTXcJZAt/VS44bsg4tYFKc5Nm9FI3Fnsdw?=
+ =?us-ascii?Q?VXbKrErLoNr+E+DP3oL8JIRO50hlV1IRye/vR1rGfAbd5/RM+Se9T8eGCsv+?=
+ =?us-ascii?Q?dZ2wM+Ia0zwxf8tJ4OxExgb25y0R0LLdCSEqfCm10qLI8amIkNibJo7CYtp6?=
+ =?us-ascii?Q?IE4HNl6zZP+tD39g9jaxlpcBJr2EvgI2rGbABPIjI3Rvd0u8HznbdzmAuYnV?=
+ =?us-ascii?Q?XrM7pMo8IiB7odgMkYe1IsfoTXKZaWUet31qPeExhpMxxqwSohOG4OnovwKC?=
+ =?us-ascii?Q?BpF8XgZvY/oUVNaOurBKQyYNfrW2EjOt6I8FTFsApT+LOgZZXTbSfFIw8dcG?=
+ =?us-ascii?Q?E0qhg3Ds//apShv9VWxHH0JY5qU+1wkTB346gOyDtcyC8UPKCsSzoU0tDf2C?=
+ =?us-ascii?Q?ZFiKB2Pp37YBGb6aFSf+nB95jRv2AloQOP3Wr5AYizRKurJsS9XPW+tnMiBz?=
+ =?us-ascii?Q?Ob9xXCOU9YEWhwVS2HZxTvM/Gs0xFuwOIu1f3fGxmCbxbniFr6xlWLrihexZ?=
+ =?us-ascii?Q?Vdl7Ccac1w/3U+zZFB3rAnaUD8UY3OyRRDTt1yiEe+INqCuRj23QQoEy8i9P?=
+ =?us-ascii?Q?MwP7s0Pud6TjeUCFfQ9VMUEhvaq4NFgikDqhyWSraar+wx/jxHrRgyQXsQVR?=
+ =?us-ascii?Q?cfzJO61eR7wpYXlNR0JPtQwI5Qyget4qcFT4AZYgjlkeLNQruT1Q8WB71OV6?=
+ =?us-ascii?Q?uVodUVVxZuOLH1TDWzn8cXmlGHRMq3WyvCdkbMvWaNP+UaRKY8h5XxYczPwj?=
+ =?us-ascii?Q?R9UEecIjVYD3h3X0AHG40sfyEfGcpa9QYYzI+mDex8PDr7xpWL9bE66DJlSL?=
+ =?us-ascii?Q?4N+cHEBDY4BmfpTvEiREn+c/Mk1cvGAt+lM+MG4He/klOZIPTQ5EZtrgvWzy?=
+ =?us-ascii?Q?cRIQx7Dh578SzukosvB1lCTTQfAkEJbIW7Z7VuZKpSoGBTDNbawCAr/Q0BKL?=
+ =?us-ascii?Q?Nk+aQihSxx26qzDzp3ZjdhsD0lnB9ahoXhvISti0EDDA7N5y45UpdwuzVQV9?=
+ =?us-ascii?Q?SXBjPqiwqMuQQC6m+ftsPoalrGYJgxcbvv3f32xwwR6E7f6/QMhYlNsHP28P?=
+ =?us-ascii?Q?y7vHBJHbHxDQIJ7Te9kbQvG5VyOId7BcDhkRkE8Ro4J5SZEBmByvpELn4h5x?=
+ =?us-ascii?Q?VhdeOysEOLat0Fs6cE7BTGWtSzWJ/htAkhHeK32zEZEgmhiEiFDNSN9Tjlyr?=
+ =?us-ascii?Q?boJkbGabbuwrONECLexOHvivQKIGJxJM96HH+nb9QJIH+Y9Utk/CUG0/IYEv?=
+ =?us-ascii?Q?lw=3D=3D?=
+X-OriginatorOrg: windriver.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 9d140023-5a79-420a-cf7f-08de2bcad661
+X-MS-Exchange-CrossTenant-AuthSource: SJ0PR11MB5072.namprd11.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 25 Nov 2025 02:36:58.7712
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 8ddb2873-a1ad-4a18-ae4e-4644631433be
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: SnwJqwfxoS9uQj82pTGxN3BO4fsTO59bYm3PvARvK9sY4vrRxIkPVJKFfL2zj4jMx7rftxddJxSqbci1eQBAMBOTp/JKcgi84IJPIUUN7vY=
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: IA3PR11MB9037
+X-Authority-Analysis: v=2.4 cv=fozRpV4f c=1 sm=1 tr=0 ts=6925164d cx=c_pps
+ a=UA+Ybm6NSixuq697YtHT5A==:117 a=6eWqkTHjU83fiwn7nKZWdM+Sl24=:19
+ a=z/mQ4Ysz8XfWz/Q5cLBRGdckG28=:19 a=lCpzRmAYbLLaTzLvsPZ7Mbvzbb8=:19
+ a=xqWC_Br6kY4A:10 a=6UeiqGixMTsA:10 a=VkNPw1HP01LnGYTKEx00:22
+ a=t7CeM3EgAAAA:8 a=VwQbUJbxAAAA:8 a=GLtnJ_i9NkFmi9gY_58A:9
+ a=FdTzh2GWekK77mhwV6Dw:22
+X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUxMTI1MDAyMCBTYWx0ZWRfX12IGUHHRWXlA
+ uW/3TSEMHyP2WfzqoantqlvI6QJYveuo3kh9yclK94szg76jHkSx5cd8yZnBDd7bUKHVuf5YDEq
+ 1Q/VT+DtbOTLBcrF4EfE9O5SVSAPIyiPc+FXcB068hlN+WmtnKa7U0OLDnjvOwVbZaOIAZpaLad
+ pKzoJryuFA4iUN/+nzWH9g9cM6AFhfqvHzhAq2ma786vqtrbuGdlD4x/JM87srJbAlndaP+OXzL
+ mCdfDFbOaQjrt4Z3wv3KJ3bwN4eeNKkW7VCJ2RGrOwMV5aolp1c3Cgw3FkoXGU8hMHAFmf0B5vl
+ J4Y+5rVFIrtnuCJez5vqNxtg8KIr8H5ZIrFk7JTminQKDYzpdU2EWB5FnDHzK3dCamBYAO/cIX4
+ oK7ktKgiHxyaUojGRFlCtSKCZk6kyw==
+X-Proofpoint-GUID: LbXaXo6yNPPmfuQQn9vY6u_mHoxJw8Uf
+X-Proofpoint-ORIG-GUID: LbXaXo6yNPPmfuQQn9vY6u_mHoxJw8Uf
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1121,Hydra:6.1.9,FMLib:17.12.100.49
+ definitions=2025-11-25_01,2025-11-24_02,2025-10-01_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
+ bulkscore=0 adultscore=0 phishscore=0 lowpriorityscore=0 clxscore=1015
+ spamscore=0 impostorscore=0 malwarescore=0 suspectscore=0 priorityscore=1501
+ classifier=typeunknown authscore=0 authtc= authcc= route=outbound adjust=0
+ reason=mlx scancount=1 engine=8.22.0-2510240001 definitions=main-2511250020
 
-Am 23.11.25 um 16:02 schrieb Rong Zhang:
+From: Yongxin Liu <yongxin.liu@windriver.com>
 
-> Hi Armin,
->
-> On Sun, 2025-11-23 at 04:36 +0100, Armin Wolf wrote:
->> Am 22.11.25 um 19:44 schrieb Rong Zhang:
->>
->>> A capdata00 attribute (0x04050000) describes the presence of Fan Test
->>> Data. Query it, and bind Fan Test Data as a component of capdata00
->>> accordingly. The component master of capdata00 may pass a callback whi=
-le
->>> binding to retrieve fan info from Fan Test Data.
->>>
->>> Summarizing this scheme:
->>>
->>> 	lenovo-wmi-other <-> capdata00 <-> capdata_fan
->>> 	|- master            |- component
->>> 	                     |- sub-master
->>> 	                                   |- sub-component
->>>
->>> The callback will be called once both the master and the sub-component
->>> are bound to the sub-master (component).
->>>
->>> This scheme is essential to solve these issues:
->>> - The component framework only supports one aggregation per master
->>> - A binding is only established until all components are found
->>> - The Fan Test Data interface may be missing on some devices
->>> - To get rid of queries for the presense of WMI GUIDs
->>>
->>> capdata00 is registered as a component and a sub-master on probe,
->>> instead of chaining the registerations in one's bind callback. This is
->>> because calling (un)registration methods of the component framework
->>> causes deadlock in (un)bind callbacks, i.e., it's impossible to regist=
-er
->>> capdata00 as a sub-master/component in its component/sub-master bind
->>> callback, and vice versa.
->> I spend some time trying to understand all of this, and i have come to =
-the conclusion
->> that while passing a callback between both component masters, it still =
-is not exactly
->> clean.
-> Could you elaborate? Thanks.
->
->> Can you instead use devm_lwmi_om_register_notifier() and define another=
- event for querying
->> the fan data? This way we could ditch the component submaster with all =
-of the callback madness.
-> Thanks for your review and suggestion.
->
-> At first I thought the notifier approach was nice, however...
->
-> There are two directions to use the notifier framework:
-> (1) lenovo-wmi-other calls blocking_notifier_call_chain() to query
->      capdata_fan
-> (2) capdata_fan calls blocking_notifier_call_chain() to provide data
->      to lenovo-wmi-other
->
-> Both requires some assumptions on probing/binding sequence:
-> (1) capdata_fan must be probed before lenovo-wmi-other calling
->      blocking_notifier_call_chain(), otherwise lenovo-wmi-other will
->      mistakenly believe capdata_fan is missing
-> (2) lenovo-wmi-other must be probed before capdata_fan calling
->      blocking_notifier_call_chain(), otherwise lenovo-wmi-other will
->      wait for fan info forever
->
-> So eventually we need *both directions* to break the assumptions on
-> probing/binding sequence. Moreover, some extra synchronization
-> primitives may be required to make sure the binding between lenovo-wmi-
-> other and capdata00&01 won't be unbind while registering the HWMON
-> device.
->
->> Sorry for being the one for suggesting the submaster approach in the fi=
-rst place, i did not
->> know that the component framework is so limited when it comes to nested=
- component masters :/
-> I'd say the sub-master approach is still the least ugly one.
->
-> The callback is always called in a bind callback. Hence, the component
-> framework protects our sanity, so we don't need to worry about the
-> other side of our component chain being messed up while handling one
-> side. The approach doesn't need any assumption on binding sequence as
-> the corresponding bind/unbind callbacks effectively create a state
-> machine.
+The intel_pmc_ipc() function uses ACPI_ALLOCATE_BUFFER to allocate memory
+for the ACPI evaluation result but never frees it, causing a 192-byte
+memory leak on each call.
 
-Fine, if you prefer the submaster approach, then ignore my suggestion. As =
-long as
-you do not use wmi_has_guid(), i am happy.
+This leak is triggered during network interface initialization when the
+stmmac driver calls intel_mac_finish() -> intel_pmc_ipc().
 
-Thanks,
-Armin Wolf
+  unreferenced object 0xffff96a848d6ea80 (size 192):
+    comm "dhcpcd", pid 541, jiffies 4294684345
+    hex dump (first 32 bytes):
+      04 00 00 00 05 00 00 00 98 ea d6 48 a8 96 ff ff  ...........H....
+      00 00 00 00 00 00 00 00 01 00 00 00 00 00 00 00  ................
+    backtrace (crc b1564374):
+      kmemleak_alloc+0x2d/0x40
+      __kmalloc_noprof+0x2fa/0x730
+      acpi_ut_initialize_buffer+0x83/0xc0
+      acpi_evaluate_object+0x29a/0x2f0
+      intel_pmc_ipc+0xfd/0x170
+      intel_mac_finish+0x168/0x230
+      stmmac_mac_finish+0x3d/0x50
+      phylink_major_config+0x22b/0x5b0
+      phylink_mac_initial_config.constprop.0+0xf1/0x1b0
+      phylink_start+0x8e/0x210
+      __stmmac_open+0x12c/0x2b0
+      stmmac_open+0x23c/0x380
+      __dev_open+0x11d/0x2c0
+      __dev_change_flags+0x1d2/0x250
+      netif_change_flags+0x2b/0x70
+      dev_change_flags+0x40/0xb0
 
->> If Mark is OK with using the submaster approach then you can ignore the=
- above suggestion.
->>
->> Thanks,
->> Armin Wolf
-> Thanks,
-> Rong
->
->>> Signed-off-by: Rong Zhang <i@rong.moe>
->>> ---
->>> Changes in v6:
->>> - Fix the error path of component_add(capdata00)
->>> - Elaborate the design in commit message
->>>
->>> Changes in v5:
->>> - Fix missing include (thanks kernel test robot)
->>>
->>> Changes in v4:
->>> - New patch in the series (thanks Armin Wolf's inspiration)
->>>     - Get rid of wmi_has_guid() (see also [PATCH v4 3/7])
->>> ---
->>>    drivers/platform/x86/lenovo/wmi-capdata.c | 265 +++++++++++++++++++=
-++-
->>>    drivers/platform/x86/lenovo/wmi-capdata.h |  20 ++
->>>    drivers/platform/x86/lenovo/wmi-other.c   |   5 -
->>>    3 files changed, 283 insertions(+), 7 deletions(-)
->>>
->>> diff --git a/drivers/platform/x86/lenovo/wmi-capdata.c b/drivers/platf=
-orm/x86/lenovo/wmi-capdata.c
->>> index e6392357395c..8760f8c071ca 100644
->>> --- a/drivers/platform/x86/lenovo/wmi-capdata.c
->>> +++ b/drivers/platform/x86/lenovo/wmi-capdata.c
->>> @@ -27,6 +27,7 @@
->>>    #define pr_fmt(fmt) KBUILD_MODNAME ": " fmt
->>>   =20
->>>    #include <linux/acpi.h>
->>> +#include <linux/bitfield.h>
->>>    #include <linux/cleanup.h>
->>>    #include <linux/component.h>
->>>    #include <linux/container_of.h>
->>> @@ -50,10 +51,17 @@
->>>    #define ACPI_AC_CLASS "ac_adapter"
->>>    #define ACPI_AC_NOTIFY_STATUS 0x80
->>>   =20
->>> +#define LWMI_FEATURE_ID_FAN_TEST 0x05
->>> +
->>> +#define LWMI_ATTR_ID_FAN_TEST							\
->>> +	(FIELD_PREP(LWMI_ATTR_DEV_ID_MASK, LWMI_DEVICE_ID_FAN) |		\
->>> +	 FIELD_PREP(LWMI_ATTR_FEAT_ID_MASK, LWMI_FEATURE_ID_FAN_TEST))
->>> +
->>>    enum lwmi_cd_type {
->>>    	LENOVO_CAPABILITY_DATA_00,
->>>    	LENOVO_CAPABILITY_DATA_01,
->>>    	LENOVO_FAN_TEST_DATA,
->>> +	CD_TYPE_NONE =3D -1,
->>>    };
->>>   =20
->>>    #define LWMI_CD_TABLE_ITEM(_type)		\
->>> @@ -75,6 +83,20 @@ struct lwmi_cd_priv {
->>>    	struct notifier_block acpi_nb; /* ACPI events */
->>>    	struct wmi_device *wdev;
->>>    	struct cd_list *list;
->>> +
->>> +	/*
->>> +	 * A capdata device may be a component master of another capdata dev=
-ice.
->>> +	 * E.g., lenovo-wmi-other <-> capdata00 <-> capdata_fan
->>> +	 *       |- master            |- component
->>> +	 *                            |- sub-master
->>> +	 *                                          |- sub-component
->>> +	 */
->>> +	struct lwmi_cd_sub_master_priv {
->>> +		struct device *master_dev;
->>> +		cd_list_cb_t master_cb;
->>> +		struct cd_list *sub_component_list; /* ERR_PTR(-ENODEV) implies no =
-sub-component. */
->>> +		bool registered;                    /* Has the sub-master been regi=
-stered? */
->>> +	} *sub_master;
->>>    };
->>>   =20
->>>    struct cd_list {
->>> @@ -125,7 +147,7 @@ void lwmi_cd_match_add_all(struct device *master, =
-struct component_match **match
->>>    		return;
->>>   =20
->>>    	for (i =3D 0; i < ARRAY_SIZE(lwmi_cd_table); i++) {
->>> -		/* Skip optional interfaces. */
->>> +		/* Skip sub-components. */
->>>    		if (lwmi_cd_table[i].type =3D=3D LENOVO_FAN_TEST_DATA)
->>>    			continue;
->>>   =20
->>> @@ -137,6 +159,56 @@ void lwmi_cd_match_add_all(struct device *master,=
- struct component_match **match
->>>    }
->>>    EXPORT_SYMBOL_NS_GPL(lwmi_cd_match_add_all, "LENOVO_WMI_CD");
->>>   =20
->>> +/**
->>> + * lwmi_cd_call_master_cb() - Call the master callback for the sub-co=
-mponent.
->>> + * @priv: Pointer to the capability data private data.
->>> + *
->>> + * Call the master callback and pass the sub-component list to it if =
-the
->>> + * dependency chain (master <-> sub-master <-> sub-component) is comp=
-lete.
->>> + */
->>> +static void lwmi_cd_call_master_cb(struct lwmi_cd_priv *priv)
->>> +{
->>> +	struct cd_list *sub_component_list =3D priv->sub_master->sub_compone=
-nt_list;
->>> +
->>> +	/*
->>> +	 * Call the callback only if the dependency chain is ready:
->>> +	 * - Binding between master and sub-master: fills master_dev and mas=
-ter_cb
->>> +	 * - Binding between sub-master and sub-component: fills sub_compone=
-nt_list
->>> +	 *
->>> +	 * If a binding has been unbound before the other binding is bound, =
-the
->>> +	 * corresponding members filled by the former are guaranteed to be c=
-leared.
->>> +	 *
->>> +	 * This function is only called in bind callbacks, and the component
->>> +	 * framework guarantees bind/unbind callbacks may never execute
->>> +	 * simultaneously, which implies that it's impossible to have a race
->>> +	 * condition.
->>> +	 *
->>> +	 * Hence, this check is sufficient to ensure that the callback is ca=
-lled
->>> +	 * at most once and with the correct state, without relying on a spe=
-cific
->>> +	 * sequence of binding establishment.
->>> +	 */
->>> +	if (!sub_component_list ||
->>> +	    !priv->sub_master->master_dev ||
->>> +	    !priv->sub_master->master_cb)
->>> +		return;
->>> +
->>> +	if (PTR_ERR(sub_component_list) =3D=3D -ENODEV)
->>> +		sub_component_list =3D NULL;
->>> +	else if (WARN_ON(IS_ERR(sub_component_list)))
->>> +		return;
->>> +
->>> +	priv->sub_master->master_cb(priv->sub_master->master_dev,
->>> +				    sub_component_list);
->>> +
->>> +	/*
->>> +	 * Prevent "unbind and rebind" sequences from userspace from calling=
- the
->>> +	 * callback twice.
->>> +	 */
->>> +	priv->sub_master->master_cb =3D NULL;
->>> +	priv->sub_master->master_dev =3D NULL;
->>> +	priv->sub_master->sub_component_list =3D NULL;
->>> +}
->>> +
->>>    /**
->>>     * lwmi_cd_component_bind() - Bind component to master device.
->>>     * @cd_dev: Pointer to the lenovo-wmi-capdata driver parent device.
->>> @@ -147,6 +219,8 @@ EXPORT_SYMBOL_NS_GPL(lwmi_cd_match_add_all, "LENOV=
-O_WMI_CD");
->>>     * list. This is used to call lwmi_cd*_get_data to look up attribut=
-e data
->>>     * from the lenovo-wmi-other driver.
->>>     *
->>> + * If cd_dev is a sub-master, try to call the master callback.
->>> + *
->>>     * Return: 0
->>>     */
->>>    static int lwmi_cd_component_bind(struct device *cd_dev,
->>> @@ -158,6 +232,11 @@ static int lwmi_cd_component_bind(struct device *=
-cd_dev,
->>>    	switch (priv->list->type) {
->>>    	case LENOVO_CAPABILITY_DATA_00:
->>>    		binder->cd00_list =3D priv->list;
->>> +
->>> +		priv->sub_master->master_dev =3D om_dev;
->>> +		priv->sub_master->master_cb =3D binder->cd_fan_list_cb;
->>> +		lwmi_cd_call_master_cb(priv);
->>> +
->>>    		break;
->>>    	case LENOVO_CAPABILITY_DATA_01:
->>>    		binder->cd01_list =3D priv->list;
->>> @@ -169,8 +248,167 @@ static int lwmi_cd_component_bind(struct device =
-*cd_dev,
->>>    	return 0;
->>>    }
->>>   =20
->>> +/**
->>> + * lwmi_cd_component_unbind() - Unbind component to master device.
->>> + * @cd_dev: Pointer to the lenovo-wmi-capdata driver parent device.
->>> + * @om_dev: Pointer to the lenovo-wmi-other driver parent device.
->>> + * @data: Unused.
->>> + *
->>> + * If cd_dev is a sub-master, clear the collected data from the maste=
-r device to
->>> + * prevent the binding establishment between the sub-master and the s=
-ub-
->>> + * component (if it's about to happen) from calling the master callba=
-ck.
->>> + */
->>> +static void lwmi_cd_component_unbind(struct device *cd_dev,
->>> +				     struct device *om_dev, void *data)
->>> +{
->>> +	struct lwmi_cd_priv *priv =3D dev_get_drvdata(cd_dev);
->>> +
->>> +	switch (priv->list->type) {
->>> +	case LENOVO_CAPABILITY_DATA_00:
->>> +		priv->sub_master->master_dev =3D NULL;
->>> +		priv->sub_master->master_cb =3D NULL;
->>> +		return;
->>> +	default:
->>> +		return;
->>> +	}
->>> +}
->>> +
->>>    static const struct component_ops lwmi_cd_component_ops =3D {
->>>    	.bind =3D lwmi_cd_component_bind,
->>> +	.unbind =3D lwmi_cd_component_unbind,
->>> +};
->>> +
->>> +/**
->>> + * lwmi_cd_sub_master_bind() - Bind sub-component of sub-master devic=
-e
->>> + * @dev: The sub-master capdata basic device.
->>> + *
->>> + * Call component_bind_all to bind the sub-component device to the su=
-b-master
->>> + * device. On success, collect the pointer to the sub-component list =
-and try
->>> + * to call the master callback.
->>> + *
->>> + * Return: 0 on success, or an error code.
->>> + */
->>> +static int lwmi_cd_sub_master_bind(struct device *dev)
->>> +{
->>> +	struct lwmi_cd_priv *priv =3D dev_get_drvdata(dev);
->>> +	struct cd_list *sub_component_list;
->>> +	int ret;
->>> +
->>> +	ret =3D component_bind_all(dev, &sub_component_list);
->>> +	if (ret)
->>> +		return ret;
->>> +
->>> +	priv->sub_master->sub_component_list =3D sub_component_list;
->>> +	lwmi_cd_call_master_cb(priv);
->>> +
->>> +	return 0;
->>> +}
->>> +
->>> +/**
->>> + * lwmi_cd_sub_master_unbind() - Unbind sub-component of sub-master d=
-evice
->>> + * @dev: The sub-master capdata basic device
->>> + *
->>> + * Clear the collected pointer to the sub-component list to prevent t=
-he binding
->>> + * establishment between the sub-master and the sub-component (if it'=
-s about to
->>> + * happen) from calling the master callback. Then, call component_unb=
-ind_all to
->>> + * unbind the sub-component device from the sub-master device.
->>> + */
->>> +static void lwmi_cd_sub_master_unbind(struct device *dev)
->>> +{
->>> +	struct lwmi_cd_priv *priv =3D dev_get_drvdata(dev);
->>> +
->>> +	priv->sub_master->sub_component_list =3D NULL;
->>> +
->>> +	component_unbind_all(dev, NULL);
->>> +}
->>> +
->>> +static const struct component_master_ops lwmi_cd_sub_master_ops =3D {
->>> +	.bind =3D lwmi_cd_sub_master_bind,
->>> +	.unbind =3D lwmi_cd_sub_master_unbind,
->>> +};
->>> +
->>> +/**
->>> + * lwmi_cd_sub_master_add() - Register a sub-master with its sub-comp=
-onent
->>> + * @priv: Pointer to the sub-master capdata device private data.
->>> + * @sub_component_type: Type of the sub-component.
->>> + *
->>> + * Match the sub-component type and register the current capdata devi=
-ce as a
->>> + * sub-master. If the given sub-component type is CD_TYPE_NONE, mark =
-the sub-
->>> + * component as non-existent without registering sub-master.
->>> + *
->>> + * Return: 0 on success, or an error code.
->>> + */
->>> +static int lwmi_cd_sub_master_add(struct lwmi_cd_priv *priv,
->>> +				  enum lwmi_cd_type sub_component_type)
->>> +{
->>> +	struct component_match *master_match =3D NULL;
->>> +	int ret;
->>> +
->>> +	priv->sub_master =3D devm_kzalloc(&priv->wdev->dev, sizeof(*priv->su=
-b_master), GFP_KERNEL);
->>> +	if (!priv->sub_master)
->>> +		return -ENOMEM;
->>> +
->>> +	if (sub_component_type =3D=3D CD_TYPE_NONE) {
->>> +		/* The master callback will be called with NULL on bind. */
->>> +		priv->sub_master->sub_component_list =3D ERR_PTR(-ENODEV);
->>> +		priv->sub_master->registered =3D false;
->>> +		return 0;
->>> +	}
->>> +
->>> +	/*
->>> +	 * lwmi_cd_match() needs a pointer to enum lwmi_cd_type, but on-stac=
-k
->>> +	 * data cannot be used here. Steal one from lwmi_cd_table.
->>> +	 */
->>> +	component_match_add(&priv->wdev->dev, &master_match, lwmi_cd_match,
->>> +			    (void *)&lwmi_cd_table[sub_component_type].type);
->>> +	if (IS_ERR(master_match))
->>> +		return PTR_ERR(master_match);
->>> +
->>> +	ret =3D component_master_add_with_match(&priv->wdev->dev, &lwmi_cd_s=
-ub_master_ops,
->>> +					      master_match);
->>> +	if (ret)
->>> +		return ret;
->>> +
->>> +	priv->sub_master->registered =3D true;
->>> +	return 0;
->>> +}
->>> +
->>> +/**
->>> + * lwmi_cd_sub_master_del() - Unregister a sub-master if it's registe=
-red
->>> + * @priv: Pointer to the sub-master capdata device private data.
->>> + */
->>> +static void lwmi_cd_sub_master_del(struct lwmi_cd_priv *priv)
->>> +{
->>> +	if (priv->sub_master->registered) {
->>> +		component_master_del(&priv->wdev->dev, &lwmi_cd_sub_master_ops);
->>> +		priv->sub_master->registered =3D false;
->>> +	}
->>> +}
->>> +
->>> +/**
->>> + * lwmi_cd_sub_component_bind() - Bind sub-component to sub-master de=
-vice.
->>> + * @sc_dev: Pointer to the sub-component capdata parent device.
->>> + * @sm_dev: Pointer to the sub-master capdata parent device.
->>> + * @data: Pointer used to return the capability data list pointer.
->>> + *
->>> + * On sub-master's bind, provide a pointer to the local capdata list.
->>> + * This is used by the sub-master to call the master callback.
->>> + *
->>> + * Return: 0
->>> + */
->>> +static int lwmi_cd_sub_component_bind(struct device *sc_dev,
->>> +				      struct device *sm_dev, void *data)
->>> +{
->>> +	struct lwmi_cd_priv *priv =3D dev_get_drvdata(sc_dev);
->>> +	struct cd_list **listp =3D data;
->>> +
->>> +	*listp =3D priv->list;
->>> +
->>> +	return 0;
->>> +}
->>> +
->>> +static const struct component_ops lwmi_cd_sub_component_ops =3D {
->>> +	.bind =3D lwmi_cd_sub_component_bind,
->>>    };
->>>   =20
->>>    /**
->>> @@ -470,9 +708,28 @@ static int lwmi_cd_probe(struct wmi_device *wdev,=
- const void *context)
->>>    		goto out;
->>>   =20
->>>    	switch (info->type) {
->>> -	case LENOVO_CAPABILITY_DATA_00:
->>> +	case LENOVO_CAPABILITY_DATA_00: {
->>> +		enum lwmi_cd_type sub_component_type =3D LENOVO_FAN_TEST_DATA;
->>> +		struct capdata00 capdata00;
->>> +
->>> +		ret =3D lwmi_cd00_get_data(priv->list, LWMI_ATTR_ID_FAN_TEST, &capd=
-ata00);
->>> +		if (ret || !(capdata00.supported & LWMI_SUPP_VALID)) {
->>> +			dev_dbg(&wdev->dev, "capdata00 declares no fan test support\n");
->>> +			sub_component_type =3D CD_TYPE_NONE;
->>> +		}
->>> +
->>> +		/* Sub-master (capdata00) <-> sub-component (capdata_fan) */
->>> +		ret =3D lwmi_cd_sub_master_add(priv, sub_component_type);
->>> +		if (ret)
->>> +			goto out;
->>> +
->>> +		/* Master (lenovo-wmi-other) <-> sub-master (capdata00) */
->>>    		ret =3D component_add(&wdev->dev, &lwmi_cd_component_ops);
->>> +		if (ret)
->>> +			lwmi_cd_sub_master_del(priv);
->>> +
->>>    		goto out;
->>> +	}
->>>    	case LENOVO_CAPABILITY_DATA_01:
->>>    		priv->acpi_nb.notifier_call =3D lwmi_cd01_notifier_call;
->>>   =20
->>> @@ -488,6 +745,7 @@ static int lwmi_cd_probe(struct wmi_device *wdev, =
-const void *context)
->>>    		ret =3D component_add(&wdev->dev, &lwmi_cd_component_ops);
->>>    		goto out;
->>>    	case LENOVO_FAN_TEST_DATA:
->>> +		ret =3D component_add(&wdev->dev, &lwmi_cd_sub_component_ops);
->>>    		goto out;
->>>    	default:
->>>    		return -EINVAL;
->>> @@ -509,10 +767,13 @@ static void lwmi_cd_remove(struct wmi_device *wd=
-ev)
->>>   =20
->>>    	switch (priv->list->type) {
->>>    	case LENOVO_CAPABILITY_DATA_00:
->>> +		lwmi_cd_sub_master_del(priv);
->>> +		fallthrough;
->>>    	case LENOVO_CAPABILITY_DATA_01:
->>>    		component_del(&wdev->dev, &lwmi_cd_component_ops);
->>>    		break;
->>>    	case LENOVO_FAN_TEST_DATA:
->>> +		component_del(&wdev->dev, &lwmi_cd_sub_component_ops);
->>>    		break;
->>>    	default:
->>>    		WARN_ON(1);
->>> diff --git a/drivers/platform/x86/lenovo/wmi-capdata.h b/drivers/platf=
-orm/x86/lenovo/wmi-capdata.h
->>> index 38af4c4e4ef4..59ca3b3e5760 100644
->>> --- a/drivers/platform/x86/lenovo/wmi-capdata.h
->>> +++ b/drivers/platform/x86/lenovo/wmi-capdata.h
->>> @@ -5,8 +5,20 @@
->>>    #ifndef _LENOVO_WMI_CAPDATA_H_
->>>    #define _LENOVO_WMI_CAPDATA_H_
->>>   =20
->>> +#include <linux/bits.h>
->>>    #include <linux/types.h>
->>>   =20
->>> +#define LWMI_SUPP_VALID		BIT(0)
->>> +#define LWMI_SUPP_MAY_GET	(LWMI_SUPP_VALID | BIT(1))
->>> +#define LWMI_SUPP_MAY_SET	(LWMI_SUPP_VALID | BIT(2))
->>> +
->>> +#define LWMI_ATTR_DEV_ID_MASK	GENMASK(31, 24)
->>> +#define LWMI_ATTR_FEAT_ID_MASK	GENMASK(23, 16)
->>> +#define LWMI_ATTR_MODE_ID_MASK	GENMASK(15, 8)
->>> +#define LWMI_ATTR_TYPE_ID_MASK	GENMASK(7, 0)
->>> +
->>> +#define LWMI_DEVICE_ID_FAN	0x04
->>> +
->>>    struct component_match;
->>>    struct device;
->>>    struct cd_list;
->>> @@ -32,9 +44,17 @@ struct capdata_fan {
->>>    	u32 max_rpm;
->>>    };
->>>   =20
->>> +typedef void (*cd_list_cb_t)(struct device *master_dev, struct cd_lis=
-t *cd_list);
->>> +
->>>    struct lwmi_cd_binder {
->>>    	struct cd_list *cd00_list;
->>>    	struct cd_list *cd01_list;
->>> +	/*
->>> +	 * May be called during or after the bind callback.
->>> +	 * Will be called with NULL if capdata_fan does not exist.
->>> +	 * The pointer is only valid in the callback; never keep it for late=
-r use!
->>> +	 */
->>> +	cd_list_cb_t cd_fan_list_cb;
->>>    };
->>>   =20
->>>    void lwmi_cd_match_add_all(struct device *master, struct component_=
-match **matchptr);
->>> diff --git a/drivers/platform/x86/lenovo/wmi-other.c b/drivers/platfor=
-m/x86/lenovo/wmi-other.c
->>> index f2e1e34d58a9..b3adcc2804fa 100644
->>> --- a/drivers/platform/x86/lenovo/wmi-other.c
->>> +++ b/drivers/platform/x86/lenovo/wmi-other.c
->>> @@ -54,11 +54,6 @@
->>>    #define LWMI_FEATURE_VALUE_GET 17
->>>    #define LWMI_FEATURE_VALUE_SET 18
->>>   =20
->>> -#define LWMI_ATTR_DEV_ID_MASK GENMASK(31, 24)
->>> -#define LWMI_ATTR_FEAT_ID_MASK GENMASK(23, 16)
->>> -#define LWMI_ATTR_MODE_ID_MASK GENMASK(15, 8)
->>> -#define LWMI_ATTR_TYPE_ID_MASK GENMASK(7, 0)
->>> -
->>>    #define LWMI_OM_FW_ATTR_BASE_PATH "lenovo-wmi-other"
->>>   =20
->>>    static BLOCKING_NOTIFIER_HEAD(om_chain_head);
+Add kfree() to properly release the allocated buffer.
+
+Cc: stable@vger.kernel.org
+Fixes: 7e2f7e25f6ff ("arch: x86: add IPC mailbox accessor function and add SoC register access")
+Signed-off-by: Yongxin Liu <yongxin.liu@windriver.com>
+---
+V1->V2:
+
+Cover all potential paths for kfree();
+
+---
+ include/linux/platform_data/x86/intel_pmc_ipc.h | 14 +++++++++-----
+ 1 file changed, 9 insertions(+), 5 deletions(-)
+
+diff --git a/include/linux/platform_data/x86/intel_pmc_ipc.h b/include/linux/platform_data/x86/intel_pmc_ipc.h
+index 1d34435b7001..b65193b1e043 100644
+--- a/include/linux/platform_data/x86/intel_pmc_ipc.h
++++ b/include/linux/platform_data/x86/intel_pmc_ipc.h
+@@ -49,7 +49,7 @@ static inline int intel_pmc_ipc(struct pmc_ipc_cmd *ipc_cmd, struct pmc_ipc_rbuf
+ 	};
+ 	struct acpi_object_list arg_list = { PMC_IPCS_PARAM_COUNT, params };
+ 	union acpi_object *obj;
+-	int status;
++	int status, ret = 0;
+ 
+ 	if (!ipc_cmd || !rbuf)
+ 		return -EINVAL;
+@@ -78,18 +78,22 @@ static inline int intel_pmc_ipc(struct pmc_ipc_cmd *ipc_cmd, struct pmc_ipc_rbuf
+ 	    obj->package.count == VALID_IPC_RESPONSE) {
+ 		const union acpi_object *objs = obj->package.elements;
+ 
+-		if ((u8)objs[0].integer.value != 0)
+-			return -EINVAL;
++		if ((u8)objs[0].integer.value != 0) {
++			ret = -EINVAL;
++			goto out;
++		}
+ 
+ 		rbuf->buf[0] = objs[1].integer.value;
+ 		rbuf->buf[1] = objs[2].integer.value;
+ 		rbuf->buf[2] = objs[3].integer.value;
+ 		rbuf->buf[3] = objs[4].integer.value;
+ 	} else {
+-		return -EINVAL;
++		ret = -EINVAL;
+ 	}
+ 
+-	return 0;
++out:
++	kfree(buffer.pointer);
++	return ret;
+ #else
+ 	return -ENODEV;
+ #endif /* CONFIG_ACPI */
+-- 
+2.46.2
+
