@@ -1,97 +1,75 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.13])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail.tuxedocomputers.com (mail.tuxedocomputers.com [157.90.84.7])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E95B42BF001;
-	Tue, 25 Nov 2025 10:11:05 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.13
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C56BE26E6EB;
+	Tue, 25 Nov 2025 13:57:43 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=157.90.84.7
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1764065468; cv=none; b=fHsN3VLam+7xsnfgQcDyw+OBMItgLHs4hGRVOwddSRcjIXowz3Rv4di9A3Isw500DQ+xhCHV7Pj4GURPc0Pm7rwLVGApmbMDrCASHu5X0iAYhhGPPw5sa9GOKKomjURThe+pDM7evUzYaH73Dz5XuA+H6SCjFeSip9OBnZ4tN40=
+	t=1764079066; cv=none; b=e0Bcc6LSooiJKYfRMO5EDXXMZFtFxJPh4yp9PMmUEdAY72KHWU46I62E7subLi6QM8ap2mh8nlPSb0pKWe5vSAVm4716WP2jw/LUYBBij6HhXFZCkCU9/SOirF2Oi0uuBaoFRM3XoY4U6o17+id9j2qBJ8XJaImdm2OwmHRCtoI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1764065468; c=relaxed/simple;
-	bh=BpBuyvSZHkQFCZlmH+DV+aClxlnNHZOqh0PRZANORPw=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=akJYkg6zsklfFrcl2umoiwq7gqhmKF5EFklISakf0o0yzBlom8fb9ZwRlFg9z0ys+pWjI3DFtgQ+Yz+ptTezVxSzh/wBGrd0oALx9T4RZSB9ecfH/Lsw5MYbYqU5uXtKeQjQAYT3I0i2EwdtMBESTNSVs61UffkY1j+dJE+cR38=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=pass smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=Kz0CyX7Z; arc=none smtp.client-ip=192.198.163.13
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.intel.com
+	s=arc-20240116; t=1764079066; c=relaxed/simple;
+	bh=1fD82IlXtkUL6/mjCSV5+rtcFmxfrY9OSzQ7x/ltcnc=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=VjUqf3GlPGfQvUSn8L/SDYLDW2jnk+VL7CefDp9397uGr10aYAXt+8i1pSrZO/DN/AT2uaCyHBIfyRJ3jgkBtN5AJllFWA2x4yWU5lqTSP93SQbhtzdjWNoVlDU/9z6GzWe7DNMOvfQpCuc/dvrit/jnuAp6Hpb7CbQIaEkjVtY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=tuxedocomputers.com; spf=pass smtp.mailfrom=tuxedocomputers.com; dkim=pass (1024-bit key) header.d=tuxedocomputers.com header.i=@tuxedocomputers.com header.b=fDIaNY4x; arc=none smtp.client-ip=157.90.84.7
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=tuxedocomputers.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=tuxedocomputers.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="Kz0CyX7Z"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1764065466; x=1795601466;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=BpBuyvSZHkQFCZlmH+DV+aClxlnNHZOqh0PRZANORPw=;
-  b=Kz0CyX7ZPnuvgvV2vzfgGhWjsvzvHojelNRm3eIZ0sm/jizObgjq+j/B
-   CX+VVs5WEdKJo+psjyIy4ez1w+Qr1k8cWgLKn9IoxsxdjVHwXIPasuFX0
-   DS0UJHjOJqXvf0RTaxFUM0IlbEO++H0InvRoZzphEF6R5RRchrfULHiOt
-   taDvi21cefsN73NURehzTLHSGrm2JMNgmb96QCMQNHJhXbjBmQxvqqb17
-   ZInREiw8Gjd+LP+m6zKM2xDPwwigwA+TSGcyG0GrvnaoaoFOq4BHQ3ZB0
-   /fXiQACRsh/sim+NGQlINnwpyuzo/F7Yzo7YRJXWYB98k9TZc/7lZTx0Z
-   Q==;
-X-CSE-ConnectionGUID: 89nuUtWWQdC/cKZjmLRnnQ==
-X-CSE-MsgGUID: XWmux/v7SlecbosMroeMBw==
-X-IronPort-AV: E=McAfee;i="6800,10657,11623"; a="68668300"
-X-IronPort-AV: E=Sophos;i="6.20,225,1758610800"; 
-   d="scan'208";a="68668300"
-Received: from orviesa007.jf.intel.com ([10.64.159.147])
-  by fmvoesa107.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 25 Nov 2025 02:11:05 -0800
-X-CSE-ConnectionGUID: xMPnIGJCQ9S4u4SDfIto3Q==
-X-CSE-MsgGUID: Hldz7eUERRCpq8g+tO+46Q==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.20,225,1758610800"; 
-   d="scan'208";a="192592051"
-Received: from abityuts-desk.ger.corp.intel.com (HELO localhost) ([10.245.244.152])
-  by orviesa007-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 25 Nov 2025 02:11:02 -0800
-Date: Tue, 25 Nov 2025 12:10:59 +0200
-From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-To: Mika Westerberg <mika.westerberg@linux.intel.com>
-Cc: Baojun Xu <baojun.xu@ti.com>, linux-i2c@vger.kernel.org,
-	linux-acpi@vger.kernel.org, linux-kernel@vger.kernel.org,
-	platform-driver-x86@vger.kernel.org,
-	Wolfram Sang <wsa+renesas@sang-engineering.com>,
-	Mika Westerberg <westeri@kernel.org>,
-	Hans de Goede <hansg@kernel.org>,
-	Ilpo =?iso-8859-1?Q?J=E4rvinen?= <ilpo.jarvinen@linux.intel.com>
-Subject: Re: [PATCH v1 1/2] i2c: acpi: Return -ENOENT when no resources found
- in i2c_acpi_client_count()
-Message-ID: <aSWAs71tl5s9_Rup@smile.fi.intel.com>
-References: <20251125094249.1627498-1-andriy.shevchenko@linux.intel.com>
- <20251125094249.1627498-2-andriy.shevchenko@linux.intel.com>
- <20251125095046.GB323117@black.igk.intel.com>
+	dkim=pass (1024-bit key) header.d=tuxedocomputers.com header.i=@tuxedocomputers.com header.b="fDIaNY4x"
+Received: from wse-pc.fritz.box (pd9e597c7.dip0.t-ipconnect.de [217.229.151.199])
+	(Authenticated sender: wse@tuxedocomputers.com)
+	by mail.tuxedocomputers.com (Postfix) with ESMTPA id 1C5032FC004D;
+	Tue, 25 Nov 2025 14:57:41 +0100 (CET)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=tuxedocomputers.com;
+	s=default; t=1764079061;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:
+	 content-transfer-encoding:content-transfer-encoding;
+	bh=TGEKjfcxqIrLWPUdRQ2o9PmcRcRYhALc12y070Xe8RQ=;
+	b=fDIaNY4xHBgYqLbDg/MnT9BhLsuQmKSOExCzvxHwheeMV7QnXIPWmE1k76uoyvehYCCgBm
+	FXj3Se7e7fKB7tv4zA8TFQLg3HmwCUvcoEi2cgA+sRfbEv8xGnn1a3w7amCKsA6z/BeCc4
+	LQytsnWpOPszrjT7ETLY9qZMYHr6pws=
+Authentication-Results: mail.tuxedocomputers.com;
+	auth=pass smtp.auth=wse@tuxedocomputers.com smtp.mailfrom=wse@tuxedocomputers.com
+From: Werner Sembach <wse@tuxedocomputers.com>
+To: W_Armin@gmx.de,
+	hansg@kernel.org,
+	ilpo.jarvinen@linux.intel.com
+Cc: platform-driver-x86@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	Werner Sembach <wse@tuxedocomputers.com>
+Subject: [RFC PATCH 0/2] platform/x86: uniwill-laptop: Introduce device descriptor system
+Date: Tue, 25 Nov 2025 14:49:10 +0100
+Message-ID: <20251125135729.487837-1-wse@tuxedocomputers.com>
+X-Mailer: git-send-email 2.43.0
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20251125095046.GB323117@black.igk.intel.com>
-Organization: Intel Finland Oy - BIC 0357606-4 - c/o Alberga Business Park, 6
- krs, Bertel Jungin Aukio 5, 02600 Espoo
+Content-Transfer-Encoding: 8bit
 
-On Tue, Nov 25, 2025 at 10:50:46AM +0100, Mika Westerberg wrote:
-> On Tue, Nov 25, 2025 at 10:40:11AM +0100, Andy Shevchenko wrote:
-> > Some users want to return an error to the upper layers when
-> > i2c_acpi_client_count() returns 0. Follow the common pattern
-> > in such cases, i.e. return -ENOENT instead of 0.
-> 
-> Well what does 0 mean then?
+The first patch of this RFC is based on a PoC by Armin and extended the be able
+to modify feature bits based on readouts from the EC Memory.
 
-There is no 0.
+The 2nd patch is a new feature that requires such a modification.
 
-> To me it's logical that i2c_acpi_client_count() as it returns count,
-> returns 0 if the count is 0. Let's not make it any more complex than that.
-> ;-)
+Armin what do you think? Is this a clean approach? Technically the feature bits
+can be modified arbitrarily, but it should only ever be accessed by the slightly
+modified getter method, so the risk should be very minimal.
 
-The same approach used elsewhere, e.g., gpiod_count(),
-   of_reset_control_get_count() / reset_control_get_count().
-And other count methods used for IRQ resource, for example.
-However PCI MSI/MSI-X counters never return 0.
+I wonder if the static device_descriptor variable can somehow be skipped, but it
+doesn't bother to have it there either IMHO.
+
+Armin Wolf (1):
+  platform/x86: uniwill-laptop: Introduce device descriptor system
+
+Werner Sembach (1):
+  platform/x86/uniwill: Implement cTGP setting
+
+ drivers/platform/x86/uniwill/uniwill-acpi.c | 269 +++++++++++++++++---
+ 1 file changed, 240 insertions(+), 29 deletions(-)
 
 -- 
-With Best Regards,
-Andy Shevchenko
-
+2.43.0
 
