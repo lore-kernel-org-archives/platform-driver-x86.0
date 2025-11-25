@@ -1,166 +1,101 @@
-Received: from MW6PR02CU001.outbound.protection.outlook.com (mail-westus2azon11012032.outbound.protection.outlook.com [52.101.48.32])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.11])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 81C982BCF4A;
-	Tue, 25 Nov 2025 08:45:10 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=52.101.48.32
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1764060313; cv=fail; b=PNQdVvbm+BDLiio9q0ixB7b0MSQEd0WrU1pcgKcUUT16mfF3hRq6XntpAsbFxo0kg2TQidTxE4FXTA12OrWjokPfeG2F4nLLSEGLAQR/0b5FtL8PHc+v38QBwELX/1L749s0WJpp5a0MBRfbCoX1GSU/JmWLWKwEEgARFTdzDZE=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1764060313; c=relaxed/simple;
-	bh=F1Xibd8Hm2GccpoYGYctdzBhOnPvhH1VgHPjkXOYmCA=;
-	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=o1nYXVn3zhciDCNv5V7CQEV68ZSCrEKyRV2c7+YIWi593MbLlyRoxe6ica22/71XsDbaY6kg1coqWWkSHHECo1b+ivQvjGa0qv1QdSx6cOISVHSyzggme9r1ddp2IMZxGQgvOdVJmWhSfIpBx7WZEg+8FHZ2XDQKRe4Zg3wyC3g=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com; spf=pass smtp.mailfrom=ti.com; dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b=TdUzQCZq; arc=fail smtp.client-ip=52.101.48.32
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ti.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6D96E269B1C;
+	Tue, 25 Nov 2025 09:25:26 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.11
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1764062728; cv=none; b=F8XZB1w4nyrKa2YIUR/6ga5ccub/VvoKInhcC/AwgaSM0gInts/aMM+98QO5EzFAGv4lAQgsyi520RTx+FB6GVAH4p+6lnKffQLXFYNZJFH9MFIk41dgTcK4fvPftaap4CNgJtl5RNXflOD1ShE1duh5oXR8F/Gl3/hod3PmAfQ=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1764062728; c=relaxed/simple;
+	bh=BRYCfMuko/R34zT/a9L2atMQs+A1s5joIFdIQ6YLQwc=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=SeVCmgFhCSqU9525Dhq7Rn1nYdjoAzX61Q7XYKB+qek5+8jesDKZ3nglQakFk7YJkVRxZ1yPR1tLNwYX4nBlB7smscj31F2CtIHHI6jms7GYPG1gtO9TkAjz8xopklzZolynWcU3oizRUwsLrSI1LGhzbr5TDj/FcSO6O+cbiEs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=pass smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=AZkBvJJS; arc=none smtp.client-ip=198.175.65.11
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="TdUzQCZq"
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=uhS9T+d5uBsLIWwDG3IacEsqRqor39bYfoVmZ7BX4qvB5TT3JOlARVpeeODNFpOpVEOFmDZbIqPhphNRQTX1fE9XJddnbxUqAJZ5hnuaQ13vG7SIgTSDCBfNTthl4tsYhT51HZiIZVz19ESlPwNJ0BJC9XVF4IiU16U5wzYGDFi5J83IMMuEvNyabqbqCqBT7s/JfBLPuFt8kUnzP0cH/m1zcBGJ3yftly89/b7ZKUAApjZIwrEhY2i03zGBAdGjI96GTULZA6rixtAAN7NBXFVXUwyairjjBvbiY8bOgeEENCzR5RXHlE40BDwAJL2I4qIKU9Z/Btxr2WNGzFF82w==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=wJo2g1mFP7T0CuyXZ4P2fcKwkQ1LFmxEMqMCCfap1S8=;
- b=uuEhXcvsNjrzOCqj1NtqB9xVTqYYfF+nERiXTMQQ1Vm0U1cNuHEHOiSiLOMuJXJm+PvJTGp2KXfRYy42zWWVA3VJdzVsNkIT6BcNqE5sEBUV+VrhJ6sAiAHSUugvi60wsL4h1H33OelAkfKgSA9bIB9HxV4hlZ56BEkNekCa8od3WqzNSGL4RbvB0Svd0GxhpnJ/hIKezrReRYyHtC9qvNQ2O7dKIk2UCyzRn3T0OSiGl6VWKWSejIkVc8ED6WgMNTfEQKDqqIVR5dWk8mCsOzCIxOjTIhvfn9VVA5WixYyOnDClm2T3QrGwmawOoYnyj2clJRsTPTi+WhvgYg+ZcQ==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
- 198.47.23.194) smtp.rcpttodomain=hp.com smtp.mailfrom=ti.com; dmarc=pass
- (p=quarantine sp=none pct=100) action=none header.from=ti.com; dkim=none
- (message not signed); arc=none (0)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com; s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=wJo2g1mFP7T0CuyXZ4P2fcKwkQ1LFmxEMqMCCfap1S8=;
- b=TdUzQCZqxwAEu+RCue6eCSFcXqLOw6MNu6MuhKn9o90p16dyZdqP6MPQR9W7XSSFhNSvWY87Uuurak/sI49/4ABUQpbBTZ8FIeKLN7xzL7SivnYreExaJHF1wPP1aZWFaLNGBhDYs2u1OmNR13mtBhFojOszV8F7qIPvjwyytd4=
-Received: from BLAPR03CA0160.namprd03.prod.outlook.com (2603:10b6:208:32f::25)
- by PH5PR10MB997735.namprd10.prod.outlook.com (2603:10b6:510:34d::5) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.9343.17; Tue, 25 Nov
- 2025 08:45:09 +0000
-Received: from MN1PEPF0000F0E5.namprd04.prod.outlook.com
- (2603:10b6:208:32f:cafe::1d) by BLAPR03CA0160.outlook.office365.com
- (2603:10b6:208:32f::25) with Microsoft SMTP Server (version=TLS1_3,
- cipher=TLS_AES_256_GCM_SHA384) id 15.20.9343.17 via Frontend Transport; Tue,
- 25 Nov 2025 08:45:08 +0000
-X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 198.47.23.194)
- smtp.mailfrom=ti.com; dkim=none (message not signed) header.d=none;dmarc=pass
- action=none header.from=ti.com;
-Received-SPF: Pass (protection.outlook.com: domain of ti.com designates
- 198.47.23.194 as permitted sender) receiver=protection.outlook.com;
- client-ip=198.47.23.194; helo=lewvzet200.ext.ti.com; pr=C
-Received: from lewvzet200.ext.ti.com (198.47.23.194) by
- MN1PEPF0000F0E5.mail.protection.outlook.com (10.167.242.43) with Microsoft
- SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.9366.7 via Frontend Transport; Tue, 25 Nov 2025 08:45:08 +0000
-Received: from DLEE210.ent.ti.com (157.170.170.112) by lewvzet200.ext.ti.com
- (10.4.14.103) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.2562.20; Tue, 25 Nov
- 2025 02:45:05 -0600
-Received: from DLEE212.ent.ti.com (157.170.170.114) by DLEE210.ent.ti.com
- (157.170.170.112) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.2562.20; Tue, 25 Nov
- 2025 02:45:05 -0600
-Received: from lelvem-mr05.itg.ti.com (10.180.75.9) by DLEE212.ent.ti.com
- (157.170.170.114) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.2562.20 via Frontend
- Transport; Tue, 25 Nov 2025 02:45:05 -0600
-Received: from lelvem-mr05.itg.ti.com ([10.250.165.138])
-	by lelvem-mr05.itg.ti.com (8.18.1/8.18.1) with ESMTP id 5AP8ixcW3380800;
-	Tue, 25 Nov 2025 02:45:00 -0600
-From: Baojun Xu <baojun.xu@ti.com>
-To: <tiwai@suse.de>, <hansg@kernel.org>
-CC: <ilpo.jarvinen@linux.intel.com>, <broonie@kernel.org>,
-	<andriy.shevchenko@linux.intel.com>, <alsa-devel@alsa-project.org>,
-	<shenghao-ding@ti.com>, <13916275206@139.com>,
-	<platform-driver-x86@vger.kernel.org>, <linux-sound@vger.kernel.org>,
-	<linux-kernel@vger.kernel.org>, <baojun.xu@ti.com>, <letitia.tsai@hp.com>
-Subject: [PATCH v2] platform/x86: serial-multi-instantiate: IRQ_RESOURCE_AUTO should be compatible with IRQ_RESOURCE_NONE
-Date: Tue, 25 Nov 2025 16:44:36 +0800
-Message-ID: <20251125084436.8381-1-baojun.xu@ti.com>
-X-Mailer: git-send-email 2.43.0.windows.1
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="AZkBvJJS"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1764062727; x=1795598727;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=BRYCfMuko/R34zT/a9L2atMQs+A1s5joIFdIQ6YLQwc=;
+  b=AZkBvJJS/b0thc1GFvulTdFQ8gByEu59/PB1EIO3J39uYo0xNWR/Puii
+   r9c9AL5U9uWGi/GZj0aCiZ+twDvLLRqiiQu4dZ03euD4uR8h6/krddJCK
+   /0kCYHurtWaaKFZOxZmpUXcSvma6GW9UjXcpVpvmPeOj3X4M/w33AiIPF
+   eBPU54wliRQsVD9M2OEI5xz8DC2/nawdOAG8F9vzngfjaOaBECK0+B/AH
+   QbHLVIVHZNl4m3KcpLIGteWJsr9mWHfnlvJtGgmehqUNt1zcJZonY8Kbu
+   +iIzA1sdwiA5o8WXSwFPGw8XGX1SAsqRsurM6duMgOiia5lajCC62+IJ+
+   A==;
+X-CSE-ConnectionGUID: GDrmRRW5SDe6t98U40SEyA==
+X-CSE-MsgGUID: q7wF7TKpR+aSAY1PVUrmlA==
+X-IronPort-AV: E=McAfee;i="6800,10657,11623"; a="76399914"
+X-IronPort-AV: E=Sophos;i="6.20,225,1758610800"; 
+   d="scan'208";a="76399914"
+Received: from fmviesa003.fm.intel.com ([10.60.135.143])
+  by orvoesa103.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 25 Nov 2025 01:25:17 -0800
+X-CSE-ConnectionGUID: 0M4z7QX/S/eKdeyMedQYNw==
+X-CSE-MsgGUID: SEBCABU9RLmMdowxH6fdGg==
+X-ExtLoop1: 1
+Received: from abityuts-desk.ger.corp.intel.com (HELO localhost) ([10.245.244.152])
+  by fmviesa003-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 25 Nov 2025 01:25:14 -0800
+Date: Tue, 25 Nov 2025 11:25:11 +0200
+From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+To: Baojun Xu <baojun.xu@ti.com>
+Cc: tiwai@suse.de, hansg@kernel.org, ilpo.jarvinen@linux.intel.com,
+	broonie@kernel.org, alsa-devel@alsa-project.org,
+	shenghao-ding@ti.com, 13916275206@139.com,
+	platform-driver-x86@vger.kernel.org, linux-sound@vger.kernel.org,
+	linux-kernel@vger.kernel.org, letitia.tsai@hp.com
+Subject: Re: [PATCH v2] platform/x86: serial-multi-instantiate:
+ IRQ_RESOURCE_AUTO should be compatible with IRQ_RESOURCE_NONE
+Message-ID: <aSV190mwCKZ6WOoA@smile.fi.intel.com>
+References: <20251125084436.8381-1-baojun.xu@ti.com>
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-C2ProcessedOrg: 333ef613-75bf-4e12-a4b1-8e3623f5dcea
-X-EOPAttributedMessage: 0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: MN1PEPF0000F0E5:EE_|PH5PR10MB997735:EE_
-X-MS-Office365-Filtering-Correlation-Id: 1f4ec79f-7863-456b-bfcd-08de2bfef043
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam:
-	BCL:0;ARA:13230040|82310400026|1800799024|376014|7416014|36860700013;
-X-Microsoft-Antispam-Message-Info:
-	=?us-ascii?Q?hf1dZWGNGru5DZQJtcVzwHyOsisEBf4v7g4F755LwYY4XfNBo9MfV76EmmAI?=
- =?us-ascii?Q?wua+92sf8qKqnIlIYsqm8Gr6UBsH5TEhZ/6LpngG29aq8mGiH6nEo4fNPo6M?=
- =?us-ascii?Q?bSgMPmYCGcBcj1W0WD8hkj3vDmWw5aYxF9AqkV5fCGX/ZVFhZXxDgIGWCa/x?=
- =?us-ascii?Q?2Pj4xeaYVUBkxkFvmdy4Pn7jMHuz/gaOUAnvYfj29g4aEp/j15oHFfKMBIlr?=
- =?us-ascii?Q?Ph0B9V2Q/8AOIzO7YE8IM/9CryEBMc5QjBq6j0j6T1ZThdFp6xcuFm4CC1+k?=
- =?us-ascii?Q?HnP2kE/g0kE2l4URemHImo3VMg20Lksa4fwfp4FXA6yI628V6xn1L09FCfvq?=
- =?us-ascii?Q?FO1FZmxvFGjaKAZ4/j2EJgK8XvpWtKnQ/TH+nby6iUE3sIt+D+084hxEUWNq?=
- =?us-ascii?Q?J6Hp+aD6BR3FWwGVub/0cnvQwKnXgQR2Es7swFGAzpHsJnHyXoFBVoWP6Y8P?=
- =?us-ascii?Q?tlywC7vHjx+HTV/oTjAQ6QMO2LO7r4cc/Prte+pXtA6B5sEvFGTIjupZMgvo?=
- =?us-ascii?Q?fBJUpe9j7+ocmwbKIdC080Jn7rxdnFbtxkWJcrCb0BWDcMHPXAKOwK/lMktN?=
- =?us-ascii?Q?EMC1EB2RGa2BbCQRnzFXMzhto/eKTluvPsRS/udJBVNXLGmIkW0Tdywv2nqJ?=
- =?us-ascii?Q?EPjDsaYukfSq+FRcoqPGyYCYMH3g1DjW0fioLv/4RLBlucCfrWkePwGSM17c?=
- =?us-ascii?Q?cn/tqaaD/EyNC0VHzzbfy9C7VxtkjH3RyXvy9nHnwo6QTaMcJ5v0Pnjj5P9A?=
- =?us-ascii?Q?aZfW9J9TTsAXyQ6YdNHphcRihuTETMaIG+YGRXAz99jgePgslkWKtCYUpRml?=
- =?us-ascii?Q?kcf2wvIPf5tOwYqsaNKhhE8PnxgDeIiZeFFp0HtH41ku7da3r4KtbNhEq0Ud?=
- =?us-ascii?Q?rA1qob5Ry0SLIzGkPof4vekEQxuhk/6U8ZPiwf6Jhero6cgiaare09GSquPe?=
- =?us-ascii?Q?EYzC1SaeeMTKaq4zV4Lj0YkJPBxaroo7v3OnYm4m6BzPxNwqaptPviG44nX+?=
- =?us-ascii?Q?G9f5zoOXI0AWZ8CFsTHdYRAVhb08aRJ8EGSihBtdNNRZDFf0Qk3Zsv7mLtD9?=
- =?us-ascii?Q?Z/c94DDvqmsYi49yR/miMELnBSBub5fKd7cb+yofGgsdcuxUydJQxU7mfM0e?=
- =?us-ascii?Q?Z1oBkKz6TmhddZ0yhQpcfQcnydIphbrAbPihcsInUIhPc5sE+sWfwYCPNWdJ?=
- =?us-ascii?Q?k0v0pxUvY4JaD/aFnDcO5PUGflnqrNmNiMLbMY8H5vNVJf6foFZlQzFIsO7V?=
- =?us-ascii?Q?bYchlxrxjPPTE33Tfak1Rv0SbdFtb8TKh4lpdkhRNvjDFIo4CkhI2xivXK3v?=
- =?us-ascii?Q?d7K8MsLg6fSIlxahd/0lWzPXSv0g33rB9tRzRHt8aeeEWXOupnQCGB5oxofC?=
- =?us-ascii?Q?6r58CgPXBW/mqM8zsW2z7qqE5XRtKzCcB6B3AjZf3GT2e7emNJWCZDXbjD8X?=
- =?us-ascii?Q?7jGKXcwm1zZbrkNhYIU5Wyo44xkrGXdO+PETx6h7z4/NUvvWMXGhfQSU/ggf?=
- =?us-ascii?Q?ur/hpY4E/YHkK1ECnt0wZpc9LeYPPjWYJ34gHVNNNr5elbQ+0T5bOKHTcE5a?=
- =?us-ascii?Q?OKBF1ZMZ/dqMpzLSfqI=3D?=
-X-Forefront-Antispam-Report:
-	CIP:198.47.23.194;CTRY:US;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:lewvzet200.ext.ti.com;PTR:InfoDomainNonexistent;CAT:NONE;SFS:(13230040)(82310400026)(1800799024)(376014)(7416014)(36860700013);DIR:OUT;SFP:1101;
-X-OriginatorOrg: ti.com
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 25 Nov 2025 08:45:08.4735
- (UTC)
-X-MS-Exchange-CrossTenant-Network-Message-Id: 1f4ec79f-7863-456b-bfcd-08de2bfef043
-X-MS-Exchange-CrossTenant-Id: e5b49634-450b-4709-8abb-1e2b19b982b7
-X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=e5b49634-450b-4709-8abb-1e2b19b982b7;Ip=[198.47.23.194];Helo=[lewvzet200.ext.ti.com]
-X-MS-Exchange-CrossTenant-AuthSource:
-	MN1PEPF0000F0E5.namprd04.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Anonymous
-X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: PH5PR10MB997735
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20251125084436.8381-1-baojun.xu@ti.com>
+Organization: Intel Finland Oy - BIC 0357606-4 - c/o Alberga Business Park, 6
+ krs, Bertel Jungin Aukio 5, 02600 Espoo
 
-The tas2781-hda supports multi-projects, in some projects,
-no irq is required, so the IRQ_RESOURCE_AUTO should be compatible
-with IRQ_RESOURCE_NONE.
+On Tue, Nov 25, 2025 at 04:44:36PM +0800, Baojun Xu wrote:
+> The tas2781-hda supports multi-projects, in some projects,
+> no irq is required, so the IRQ_RESOURCE_AUTO should be compatible
+> with IRQ_RESOURCE_NONE.
 
-Signed-off-by: Baojun Xu <baojun.xu@ti.com>
----
-v2:
- - Remove error ignore, change to AUTO compatible with NONE.
----
- drivers/platform/x86/serial-multi-instantiate.c | 3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
+TL;DR: NAK.
 
-diff --git a/drivers/platform/x86/serial-multi-instantiate.c b/drivers/platform/x86/serial-multi-instantiate.c
-index db030b0f176a..eb3fffbc29ad 100644
---- a/drivers/platform/x86/serial-multi-instantiate.c
-+++ b/drivers/platform/x86/serial-multi-instantiate.c
-@@ -64,7 +64,8 @@ static int smi_get_irq(struct platform_device *pdev, struct acpi_device *adev,
- 			dev_dbg(&pdev->dev, "Using platform irq\n");
- 			break;
- 		}
--		break;
-+		dev_dbg(&pdev->dev, "No irq\n");
-+		return 0;
- 	case IRQ_RESOURCE_GPIO:
- 		ret = acpi_dev_gpio_irq_get(adev, inst->irq_idx);
- 		break;
+It will relax the conditions for the devices where IRQ is required.
+Probably you need to consider DMI quirks or so.
+
+Also you failed to provide the ACPI DSDT excerpts to show the real use case.
+And what the board is that that uses polling mode?
+
+You can also consider this approach (as a compromise between two:
+
+#define IRQ_RESOURCE_OPTIONAL	BIT(2)
+...
+	switch (inst->flags & IRQ_RESOURCE_TYPE) {
+	case IRQ_RESOURCE_AUTO:
+		...
+		if (inst->flags & IRQ_RESOURCE_OPTIONAL)
+			ret = 0;
+	break;
+	...
+	}
+...
+		{ "tas2781-hda", IRQ_RESOURCE_AUTO | IRQ_RESOURCE_OPTIONAL, 0 },
+
+
 -- 
-2.25.1
+With Best Regards,
+Andy Shevchenko
+
 
