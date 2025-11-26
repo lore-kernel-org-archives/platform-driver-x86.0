@@ -1,64 +1,58 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.9])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.12])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6AAA2287506;
-	Wed, 26 Nov 2025 09:50:21 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.9
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CCBF226FD9B
+	for <platform-driver-x86@vger.kernel.org>; Wed, 26 Nov 2025 10:06:23 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.12
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1764150624; cv=none; b=l9T07KRaRCHLJV47xwfqNZ4bi8NOo8MhWMliTwANpzC5LUozj4bxYFCIG4RGnAilu/pkS7Ejec4yCVCKi+9uQmC3bgdHWJa/jZB00CO5CvnHxxGcRcpUNlZESqkhZ05nSSyvqx+ky3aXp9DUoSDcrlLl4HxDJk0KvYbsfxwY5Gk=
+	t=1764151585; cv=none; b=lPjrX9wnjrXzwfc5z1E/yZifCl7to4wRghxXu4Sij/U//F6m2/j3cprBX71FFlifXv4P6TkPO/HSs2rXNhLlopDOkD0q7wtovxxC+qUgmdTvVJ/EYFn1Rzpg9Zq3oxLx0GoymIrh5EmLPQDpa9dnZK+rKwciVg22BwtNsnHYANw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1764150624; c=relaxed/simple;
-	bh=mp3f3CKtLoajMyv+kwe/o5yTvIU3sW1y+uUZdm/u8RE=;
+	s=arc-20240116; t=1764151585; c=relaxed/simple;
+	bh=lAjikU5HbuHdv9U+rebWQE4rtVnLx2JlTp3GX9j+j10=;
 	h=From:Date:To:cc:Subject:In-Reply-To:Message-ID:References:
-	 MIME-Version:Content-Type; b=lxnZ/fQYYtdFI4xMYIkdiNmJwQ6A4DujMlaiumH1OIrqd2JDivfycTwTr0d9cTHGyBQMIjVgBTvBEhgtEKe+iajfFAFpvjHe+Pw2PaR4Z/DE3TTeAagK3dPthinWZ0U4JfCegcAd8iAq/cKZKCp3mEKYvWsHP7wKIGwCqRAvQ3g=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=pass smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=TqPJxe4x; arc=none smtp.client-ip=198.175.65.9
+	 MIME-Version:Content-Type; b=i3ORzWB2QhisnDFkbGjxhNisY8C8Jm+jhiIvzxp5cuoY7CPTdzwLOReKtRS2dXtfknK0e5u7IStbvXFMI4PUCekZZRLg78X1Fkc46YU6zuYN3+VBjbYgAwXEw82WQ8y4ZA386mKQQ7+ee9bhLeT1sPan6SYz2SN5f19Ep2WbeHc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=pass smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=JZLLFg4r; arc=none smtp.client-ip=192.198.163.12
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="TqPJxe4x"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="JZLLFg4r"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1764150622; x=1795686622;
+  t=1764151584; x=1795687584;
   h=from:date:to:cc:subject:in-reply-to:message-id:
    references:mime-version;
-  bh=mp3f3CKtLoajMyv+kwe/o5yTvIU3sW1y+uUZdm/u8RE=;
-  b=TqPJxe4xdg7aFqTYhor2FRZqWLWBh4ZNwPXvrOpFiNRQAwVTjjWbe9VY
-   Fz0VI3Uj/Y3qTENfr52hoKrai4iisBtLZhYuAKOzyNfMsOMzHcLTzsKWy
-   x2YkZKcEz4Y1/Q54KqfhJ+hg6iD7JwCWtVzgCU73+cSmgj/YNcf01+nOr
-   e26Rm9pMGhz9fTmBNCxmz321ji8DCLBHdfKD0wWqb6VpkTuWoUAkTboSc
-   7SJk3aIpwj5ENxDYQJri15Z7MkSxRCGEkUoGWySkyngNNGTmdvWDCJAMc
-   91anRGMBHPUKBi5I0kQWVmK5GRa3gR8kgkf0MSai+ehNgjaYqk8Sd8U21
-   g==;
-X-CSE-ConnectionGUID: iNFRct8gT+KDXX/IZ4t9Ng==
-X-CSE-MsgGUID: 4WHYMG/vTbCg0K1ZVcycAw==
-X-IronPort-AV: E=McAfee;i="6800,10657,11624"; a="88830049"
+  bh=lAjikU5HbuHdv9U+rebWQE4rtVnLx2JlTp3GX9j+j10=;
+  b=JZLLFg4r3tzE6USN+kk4Jjlg9MH1aesSTMm10yx5+F9B53vpq6oRG185
+   pCa5NWwR92dYZPov1wbnNZ5MmsNb9KVCNQo/zBASyQVcbFG3F+YMMrGrk
+   I/aPDW9J4V7F4zEyPvdyHKqdl7O2+7mkImfgjChDd7OrpkdeMuCjizubg
+   SlWrwzWAUslAQoLwOlRRgiIJAsdieSkQyHZ3bAOAcsPVf511Abkiae5CQ
+   Z3NO8TSNXFNSRIMuTAUuCLpRGK+aSwxw3TMpI+4RvUvGmoL31UKWp9xMz
+   oP5I93zJc7fMYjLqwglawQmLZ0VvOYFK5WK9tXL5ldekX27skHBQ7YLej
+   w==;
+X-CSE-ConnectionGUID: BxQVN3Z+SOSFpm8y8zzxvA==
+X-CSE-MsgGUID: ChTvR20fSMKbzalWmAznRA==
+X-IronPort-AV: E=McAfee;i="6800,10657,11624"; a="70047631"
 X-IronPort-AV: E=Sophos;i="6.20,228,1758610800"; 
-   d="scan'208";a="88830049"
-Received: from orviesa009.jf.intel.com ([10.64.159.149])
-  by orvoesa101.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 26 Nov 2025 01:50:21 -0800
-X-CSE-ConnectionGUID: IHw+FPsLRsOeDVNUYVrOGQ==
-X-CSE-MsgGUID: cQjoBjXVRRKRNX571I4cgg==
+   d="scan'208";a="70047631"
+Received: from orviesa005.jf.intel.com ([10.64.159.145])
+  by fmvoesa106.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 26 Nov 2025 02:06:23 -0800
+X-CSE-ConnectionGUID: 04Hstn2PT4ajKg300L4kUw==
+X-CSE-MsgGUID: N7qclG4dRke3Fh3vr633Jg==
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="6.20,228,1758610800"; 
-   d="scan'208";a="192688248"
+   d="scan'208";a="198009016"
 Received: from ijarvine-mobl1.ger.corp.intel.com (HELO localhost) ([10.245.245.97])
-  by orviesa009-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 26 Nov 2025 01:50:14 -0800
+  by orviesa005-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 26 Nov 2025 02:06:21 -0800
 From: =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
-Date: Wed, 26 Nov 2025 11:50:10 +0200 (EET)
-To: "Liu, Yongxin" <Yongxin.Liu@windriver.com>
-cc: Jakub Kicinski <kuba@kernel.org>, 
-    "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, 
-    "netdev@vger.kernel.org" <netdev@vger.kernel.org>, 
-    "david.e.box@linux.intel.com" <david.e.box@linux.intel.com>, 
-    "andrew@lunn.ch" <andrew@lunn.ch>, 
-    "platform-driver-x86@vger.kernel.org" <platform-driver-x86@vger.kernel.org>, 
-    "stable@vger.kernel.org" <stable@vger.kernel.org>
-Subject: RE: [PATCH net v2] platform/x86: intel_pmc_ipc: fix ACPI buffer
- memory leak
-In-Reply-To: <SJ0PR11MB50725E455D5B0089507E8311E5D1A@SJ0PR11MB5072.namprd11.prod.outlook.com>
-Message-ID: <6505d4a2-9d21-64ef-e07d-dabc7123c4c1@linux.intel.com>
-References: <20251125022952.1748173-2-yongxin.liu@windriver.com> <20251124185624.682de84f@kernel.org> <SJ0PR11MB5072CCB0B5213AE5467C1456E5D1A@SJ0PR11MB5072.namprd11.prod.outlook.com> <20251124191443.4bd11a48@kernel.org>
- <SJ0PR11MB50725E455D5B0089507E8311E5D1A@SJ0PR11MB5072.namprd11.prod.outlook.com>
+Date: Wed, 26 Nov 2025 12:06:16 +0200 (EET)
+To: Shyam Sundar S K <Shyam-sundar.S-k@amd.com>
+cc: Hans de Goede <hansg@kernel.org>, platform-driver-x86@vger.kernel.org, 
+    Patil.Reddy@amd.com, mario.limonciello@amd.com
+Subject: Re: [PATCH v2] platform/x86/amd/pmf: Refactor repetitive BIOS output
+ handling
+In-Reply-To: <20251126094340.4042742-1-Shyam-sundar.S-k@amd.com>
+Message-ID: <122618f2-f39e-240f-c229-8fea02b2b0fc@linux.intel.com>
+References: <20251126094340.4042742-1-Shyam-sundar.S-k@amd.com>
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
@@ -67,65 +61,144 @@ List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=US-ASCII
 
-On Tue, 25 Nov 2025, Liu, Yongxin wrote:
+On Wed, 26 Nov 2025, Shyam Sundar S K wrote:
 
-> > -----Original Message-----
-> > From: Jakub Kicinski <kuba@kernel.org>
-> > Sent: Tuesday, November 25, 2025 11:15
-> > To: Liu, Yongxin <Yongxin.Liu@windriver.com>
-> > Cc: linux-kernel@vger.kernel.org; netdev@vger.kernel.org;
-> > david.e.box@linux.intel.com; ilpo.jarvinen@linux.intel.com; andrew@lunn.ch;
-> > platform-driver-x86@vger.kernel.org; stable@vger.kernel.org
-> > Subject: Re: [PATCH net v2] platform/x86: intel_pmc_ipc: fix ACPI buffer
-> > memory leak
-> > 
-> > CAUTION: This email comes from a non Wind River email account!
-> > Do not click links or open attachments unless you recognize the sender and
-> > know the content is safe.
-> > 
-> > On Tue, 25 Nov 2025 03:07:30 +0000 Liu, Yongxin wrote:
-> > > > -----Original Message-----
-> > > > From: Jakub Kicinski <kuba@kernel.org>
-> > > > Sent: Tuesday, November 25, 2025 10:56
-> > > > To: Liu, Yongxin <Yongxin.Liu@windriver.com>
-> > > > Cc: linux-kernel@vger.kernel.org; netdev@vger.kernel.org;
-> > > > david.e.box@linux.intel.com; ilpo.jarvinen@linux.intel.com;
-> > > > andrew@lunn.ch; platform-driver-x86@vger.kernel.org;
-> > > > stable@vger.kernel.org
-> > > > Subject: Re: [PATCH net v2] platform/x86: intel_pmc_ipc: fix ACPI
-> > > > buffer memory leak
-> > > >
-> > > > CAUTION: This email comes from a non Wind River email account!
-> > > > Do not click links or open attachments unless you recognize the
-> > > > sender and know the content is safe.
-> > > >
-> > > > On Tue, 25 Nov 2025 10:29:53 +0800 yongxin.liu@windriver.com wrote:
-> > > > > Subject: [PATCH net v2] platform/x86: intel_pmc_ipc: fix ACPI
-> > > > > buffer
-> > > > memory leak
-> > > >
-> > > > Presumably typo in the subject? Why would this go via netdev/net.. ?
-> > >
-> > > Because the only caller of intel_pmc_ipc() is
-> > drivers/net/ethernet/stmicro/stmmac/dwmac-intel.c.
-> > > I have sent both to the platform-driver-x86@vger.kernel.org and
-> > netdev@vger.kernel.org mailing lists.
-> > 
-> > Just to be clear -- the CC is fine, but given the code path - the platform
-> > maintainer will likely take this via their tree. And the subject
-> > designation is to indicate which maintainer you're expecting to process
-> > the patch.
+> Replace repetitive switch-case statements for PMF_POLICY_BIOS_OUTPUT_*
+> with a helper function and consolidated case handling. This reduces code
+> duplication and improves maintainability.
 > 
-> Got it. If needed, I will resend with the correct subject.
+> The 10 BIOS output policies (PMF_POLICY_BIOS_OUTPUT_1 through
+> PMF_POLICY_BIOS_OUTPUT_10) previously each had individual case statements
+> with identical logic. This patch introduces
+> pmf_policy_to_bios_output_index() to map policy values to array indices,
+> consolidating the handling into a single case block with fallthrough.
+> 
+> This approach handles non-sequential policy enum values gracefully and
+> makes future additions easier to implement.
+> 
+> No functional changes.
+> 
+> Signed-off-by: Shyam Sundar S K <Shyam-sundar.S-k@amd.com>
+> ---
+> v2:
+>  - Drop if() check for bios_idx
+> 
+> Note: This patch can be applied on ilpo-next
+> 
+>  drivers/platform/x86/amd/pmf/tee-if.c | 61 +++++++++++++++------------
+>  1 file changed, 33 insertions(+), 28 deletions(-)
+> 
+> diff --git a/drivers/platform/x86/amd/pmf/tee-if.c b/drivers/platform/x86/amd/pmf/tee-if.c
+> index 2c74ba2a0b51..e4562caf98fe 100644
+> --- a/drivers/platform/x86/amd/pmf/tee-if.c
+> +++ b/drivers/platform/x86/amd/pmf/tee-if.c
+> @@ -73,6 +73,34 @@ static void amd_pmf_update_uevents(struct amd_pmf_dev *dev, u16 event)
+>  	input_sync(dev->pmf_idev);
+>  }
+>  
+> +static int amd_pmf_policy_to_bios_output_index(u32 action_idx)
+> +{
+> +	switch (action_idx) {
+> +	case PMF_POLICY_BIOS_OUTPUT_1:
+> +		return 0;
+> +	case PMF_POLICY_BIOS_OUTPUT_2:
+> +		return 1;
+> +	case PMF_POLICY_BIOS_OUTPUT_3:
+> +		return 2;
+> +	case PMF_POLICY_BIOS_OUTPUT_4:
+> +		return 3;
+> +	case PMF_POLICY_BIOS_OUTPUT_5:
+> +		return 4;
+> +	case PMF_POLICY_BIOS_OUTPUT_6:
+> +		return 5;
+> +	case PMF_POLICY_BIOS_OUTPUT_7:
+> +		return 6;
+> +	case PMF_POLICY_BIOS_OUTPUT_8:
+> +		return 7;
+> +	case PMF_POLICY_BIOS_OUTPUT_9:
+> +		return 8;
+> +	case PMF_POLICY_BIOS_OUTPUT_10:
+> +		return 9;
+> +	default:
+> +		return -EINVAL;
+> +	}
+> +}
+> +
+>  static void amd_pmf_apply_policies(struct amd_pmf_dev *dev, struct ta_pmf_enact_result *out)
+>  {
+>  	u32 val;
+> @@ -183,45 +211,22 @@ static void amd_pmf_apply_policies(struct amd_pmf_dev *dev, struct ta_pmf_enact_
+>  			break;
+>  
+>  		case PMF_POLICY_BIOS_OUTPUT_1:
+> -			amd_pmf_smartpc_apply_bios_output(dev, val, BIT(0), 0);
+> -			break;
+> -
+>  		case PMF_POLICY_BIOS_OUTPUT_2:
+> -			amd_pmf_smartpc_apply_bios_output(dev, val, BIT(1), 1);
+> -			break;
+> -
+>  		case PMF_POLICY_BIOS_OUTPUT_3:
+> -			amd_pmf_smartpc_apply_bios_output(dev, val, BIT(2), 2);
+> -			break;
+> -
+>  		case PMF_POLICY_BIOS_OUTPUT_4:
+> -			amd_pmf_smartpc_apply_bios_output(dev, val, BIT(3), 3);
+> -			break;
+> -
+>  		case PMF_POLICY_BIOS_OUTPUT_5:
+> -			amd_pmf_smartpc_apply_bios_output(dev, val, BIT(4), 4);
+> -			break;
+> -
+>  		case PMF_POLICY_BIOS_OUTPUT_6:
+> -			amd_pmf_smartpc_apply_bios_output(dev, val, BIT(5), 5);
+> -			break;
+> -
+>  		case PMF_POLICY_BIOS_OUTPUT_7:
+> -			amd_pmf_smartpc_apply_bios_output(dev, val, BIT(6), 6);
+> -			break;
+> -
+>  		case PMF_POLICY_BIOS_OUTPUT_8:
+> -			amd_pmf_smartpc_apply_bios_output(dev, val, BIT(7), 7);
+> -			break;
+> -
+>  		case PMF_POLICY_BIOS_OUTPUT_9:
+> -			amd_pmf_smartpc_apply_bios_output(dev, val, BIT(8), 8);
+> -			break;
+> -
+>  		case PMF_POLICY_BIOS_OUTPUT_10:
+> -			amd_pmf_smartpc_apply_bios_output(dev, val, BIT(9), 9);
+> +		{
+> +			u32 bios_idx = amd_pmf_policy_to_bios_output_index(out->actions_list[idx]
+> +					.action_index);
 
-Hi Yongxin,
+You probably realized yourself too this is a bit too long line. :-)
 
-As this code belongs to pdx86 domain, please ignore Andrew's feedback on 
-not using __free() (which was given with the assumption this would fall 
-under netdev's domain that applies a different rule).
+There are multiple things that could be done to alleviate it (not a list 
+of requirements, just ideas where to pick from):
 
-Using cleanup.h helpers is required for new pdx86 code when it avoids 
-error handling gotos.
+- Create a local var for out->actions_list[idx] in the loop (with a 
+  relatively short name).
+
+- Try to make the function's name slightly shorter though I'm not sure 
+  it's easy beyond "index" -> "idx".
+
+- Place .action_index to a local var before the call or before the 
+  switch ().
+
+- Call some function and put this code there.
+
+I don't necessarily know which results in the best experience from code 
+reading PoV but something needs to be done.
+
+> +			amd_pmf_smartpc_apply_bios_output(dev, val, BIT(bios_idx), bios_idx);
+>  			break;
+>  		}
+> +		}
+>  	}
+>  }
+>  
+> 
 
 -- 
  i.
