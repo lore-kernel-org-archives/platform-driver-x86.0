@@ -1,291 +1,175 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.8])
+Received: from BL2PR02CU003.outbound.protection.outlook.com (mail-eastusazon11011025.outbound.protection.outlook.com [52.101.52.25])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 743321AAE28;
-	Wed, 26 Nov 2025 08:04:47 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.8
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1764144289; cv=none; b=Ah0zO2TavwYxQ4p+nBV3SC40nAxDel4biMn/ekbQYpBNxrWPnzMzKfCo2VjbZ8GpqjTZlsD9EPp7jZXhtqzyTXRpUqUvYXL4XxOCYeN8JYcFIB+DpXfcnuzhjkQFN9S91nIgKDfonywZrPtOzRZw21ZgBwRZLu/lLF7E8BfvejU=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1764144289; c=relaxed/simple;
-	bh=JKXMkKMrFpEJvJR3mhKCbPVh0/3oKT9KOJzP0/Kl0Yg=;
-	h=From:Date:To:cc:Subject:In-Reply-To:Message-ID:References:
-	 MIME-Version:Content-Type; b=liUj6JBDyNwAOqDRbsuS/FHaeetfKH1+ImMM+lI89NQ9N/VOugWG/abE8FcmrWkQYhFmw7QfYzCbKRZMlPqKHMVgwywMHoLx7CuW9mxTc/8xS4hYQuYP+K+vXeNN4R3fGb9PU4X+3GBzULv3P0FlHwyMUs94vlgMs6bXS2xCLks=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=pass smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=dz+Z9O5x; arc=none smtp.client-ip=192.198.163.8
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.intel.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CDD5B2E5429;
+	Wed, 26 Nov 2025 08:18:28 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=52.101.52.25
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1764145112; cv=fail; b=c/lxL5RC7apK6QqNLqIAXabCVTqOAPtJGtf/4wWsA8GwoEm5w55tLndN6ERQOGNvyYPtFbKz3DiPgCgkD/m/4v3K5sc6GA+R7mrwrB0dpp0eaa959cayDT2OQtvs7CYsBLZR1G++c9mkhWAW8/d+wAeC90IQnhHy2dMeuscBTEg=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1764145112; c=relaxed/simple;
+	bh=I93a5RqeDu+UDbz8i8Qf73/2q4yFmTKrujAAnIE5pP8=;
+	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=FpcLKoX3RAhcoRBAHVPMx5Xc3rPlCCSXh79/zd5dEuSYGawm3DXEOWRBdWd5C/ydex56WryjYPJPfjGbGRDBA9uVnrcHDajYOUJDA4cn5o//KL2SJsmQAr4qVJTYbn93QFIUPAO27Ue/J8DJn1sA3yIsQDH6DLrs5UN6j7aqRKQ=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com; spf=pass smtp.mailfrom=ti.com; dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b=eMGVvPOZ; arc=fail smtp.client-ip=52.101.52.25
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ti.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="dz+Z9O5x"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1764144288; x=1795680288;
-  h=from:date:to:cc:subject:in-reply-to:message-id:
-   references:mime-version;
-  bh=JKXMkKMrFpEJvJR3mhKCbPVh0/3oKT9KOJzP0/Kl0Yg=;
-  b=dz+Z9O5x3scX8umXMW0MgKyogTVpfxeT1GQqqDCnI4cIc+cs8NRrh6pd
-   KATivyPv+Hj3njllO+hJaHix4uaKAVGvLw0lfNi269IM2S6BNV8I0Z072
-   hqaVRQK4PPJfYH80IV44ZnFY+joYMwCLCLH5v6L0W1YgNp4SXN+fTtLl/
-   eV53tdf4WvwI77fNvJzljsDCiB/bZTumulcmL3qJHRkcmAy8OIoUUZaz+
-   U100MoHliNZydltYYQzrAkhuEghHPRWRBmzJHAwrnpt3YeVradBqPAgt1
-   QLAE7uc0nIzXMkpOFKHm98sMPdRpIDdwX/2NBQXIrQFuHP//+tc9QjH+O
-   g==;
-X-CSE-ConnectionGUID: FYuKQV4SQaiBrE/w/Iv7rA==
-X-CSE-MsgGUID: VnnNId2/S8eMwABm2q+s1w==
-X-IronPort-AV: E=McAfee;i="6800,10657,11624"; a="83783949"
-X-IronPort-AV: E=Sophos;i="6.20,228,1758610800"; 
-   d="scan'208";a="83783949"
-Received: from fmviesa010.fm.intel.com ([10.60.135.150])
-  by fmvoesa102.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 26 Nov 2025 00:04:47 -0800
-X-CSE-ConnectionGUID: GSgFWEtGSg2OYrFWDt3FIw==
-X-CSE-MsgGUID: 0sBbcERbQ7WcDktsA5bveA==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.20,228,1758610800"; 
-   d="scan'208";a="193684323"
-Received: from ijarvine-mobl1.ger.corp.intel.com (HELO localhost) ([10.245.245.97])
-  by fmviesa010-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 26 Nov 2025 00:04:43 -0800
-From: =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
-Date: Wed, 26 Nov 2025 10:04:39 +0200 (EET)
-To: Rong Zhang <i@rong.moe>
-cc: Mark Pearson <mpearson-lenovo@squebb.ca>, 
-    "Derek J. Clark" <derekjohn.clark@gmail.com>, Armin Wolf <W_Armin@gmx.de>, 
-    Hans de Goede <hansg@kernel.org>, Guenter Roeck <linux@roeck-us.net>, 
-    platform-driver-x86@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>, 
-    linux-hwmon@vger.kernel.org
-Subject: Re: [PATCH v6 7/7] platform/x86: lenovo-wmi-other: Add HWMON for
- fan reporting/tuning
-In-Reply-To: <121879331cae44a998ee1b18d661e3d65092e259.camel@rong.moe>
-Message-ID: <6f732364-9839-7845-b408-fad6fd2464d8@linux.intel.com>
-References: <20251122184522.18677-1-i@rong.moe>  <20251122184522.18677-8-i@rong.moe>  <2f77c928-b16e-1666-5e65-8f62a84c93fc@linux.intel.com> <121879331cae44a998ee1b18d661e3d65092e259.camel@rong.moe>
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="eMGVvPOZ"
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=jba5G0Zehz/cX4R+jl6b52rbiCdyuAs5sUU/gSSI+34aTiKdPOQhI6OhDvb+j1hOPaBOxJNqe2f8WAghFTfFKpRGjiJU7EM9Ia3R90PzOWLsrQLwj5TPyFhje88k4g1VHwU3YGDa+q7S6AENxIcoPvQmSN7l7ddYhpgfzKf6/9BiMreVEbJrmt2kj6xzi3S3Oc3DHg+H2ifGj4pHDCxVj0fAt5O+b7JTKbORW3DPPH9zAqo98vnMs8bar8lMY9N/YOC0HNICO+tNdg01kJrs6IbmBlqezs4sBicxubgt7XQSWYlAcy23nUxUiw90rdXbCnaUNZt6CI3RcOwuIJY1Vw==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=7wAcCuSnHyM9fBS9ozIn9rTBSELq626Ce7DIYn8ZjRk=;
+ b=E8jOFEwz82m4dDPCUueEKMFQcZV5GWj3ES/V82MwgYGkT603McSJgErn/RHeAUI+HZxkX+S8sOZjGfmMsCH/asr5pTeC1tdknwu+cJU98l7NMdEEBxL/N3fLuZOSZ8UgZY+zfA05keOyyTVE7Y4WRicWAr0kQqirIWDZQA9WUpaVK5j5CribR6AypF/rw4rTtDG47UDpne6ygDmeRQk3rhFZMce97FOp3fMz/rauO/lW1CZUMdZPdq37zKm/tQKSsGusXGJr7/abxMg1pUDhhjQmHfkmj6mQKexF+GLjE3cSGUQ5cyW4HLx3gRI/+712GLrrWAxFP9UbCk2WPTnyYA==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
+ 198.47.21.195) smtp.rcpttodomain=hp.com smtp.mailfrom=ti.com; dmarc=pass
+ (p=quarantine sp=none pct=100) action=none header.from=ti.com; dkim=none
+ (message not signed); arc=none (0)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com; s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=7wAcCuSnHyM9fBS9ozIn9rTBSELq626Ce7DIYn8ZjRk=;
+ b=eMGVvPOZgRezBmjEgDARg9f3YkRnakmxZaypOgAJnsobfQXnn1RqCeWIt6OhbCLm3/ISuwEYpyPO6Tj8wX7ATj0ySU9fsfbsgPioDhB25RMNM5CZfoLz9JwOP4XW8bCIIylLnJJ27i4FJ1l8Rxx6hHlQ12F4Dp3gYQiSeJr6ex4=
+Received: from DS7PR05CA0101.namprd05.prod.outlook.com (2603:10b6:8:56::21) by
+ CO1PR10MB4804.namprd10.prod.outlook.com (2603:10b6:303:90::5) with Microsoft
+ SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.9366.13; Wed, 26 Nov 2025 08:18:25 +0000
+Received: from DS2PEPF0000343D.namprd02.prod.outlook.com
+ (2603:10b6:8:56:cafe::3b) by DS7PR05CA0101.outlook.office365.com
+ (2603:10b6:8:56::21) with Microsoft SMTP Server (version=TLS1_3,
+ cipher=TLS_AES_256_GCM_SHA384) id 15.20.9366.11 via Frontend Transport; Wed,
+ 26 Nov 2025 08:18:25 +0000
+X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 198.47.21.195)
+ smtp.mailfrom=ti.com; dkim=none (message not signed) header.d=none;dmarc=pass
+ action=none header.from=ti.com;
+Received-SPF: Pass (protection.outlook.com: domain of ti.com designates
+ 198.47.21.195 as permitted sender) receiver=protection.outlook.com;
+ client-ip=198.47.21.195; helo=flwvzet201.ext.ti.com; pr=C
+Received: from flwvzet201.ext.ti.com (198.47.21.195) by
+ DS2PEPF0000343D.mail.protection.outlook.com (10.167.18.40) with Microsoft
+ SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.9366.7 via Frontend Transport; Wed, 26 Nov 2025 08:18:23 +0000
+Received: from DFLE212.ent.ti.com (10.64.6.70) by flwvzet201.ext.ti.com
+ (10.248.192.32) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.2562.20; Wed, 26 Nov
+ 2025 02:18:20 -0600
+Received: from DFLE211.ent.ti.com (10.64.6.69) by DFLE212.ent.ti.com
+ (10.64.6.70) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.2562.20; Wed, 26 Nov
+ 2025 02:18:20 -0600
+Received: from lelvem-mr06.itg.ti.com (10.180.75.8) by DFLE211.ent.ti.com
+ (10.64.6.69) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.2562.20 via Frontend
+ Transport; Wed, 26 Nov 2025 02:18:20 -0600
+Received: from lelvem-mr05.itg.ti.com ([10.250.165.138])
+	by lelvem-mr06.itg.ti.com (8.18.1/8.18.1) with ESMTP id 5AQ8IFG5933432;
+	Wed, 26 Nov 2025 02:18:16 -0600
+From: Baojun Xu <baojun.xu@ti.com>
+To: <tiwai@suse.de>, <hansg@kernel.org>
+CC: <ilpo.jarvinen@linux.intel.com>, <broonie@kernel.org>,
+	<andriy.shevchenko@linux.intel.com>, <alsa-devel@alsa-project.org>,
+	<shenghao-ding@ti.com>, <13916275206@139.com>,
+	<platform-driver-x86@vger.kernel.org>, <linux-sound@vger.kernel.org>,
+	<linux-kernel@vger.kernel.org>, <baojun.xu@ti.com>, <letitia.tsai@hp.com>
+Subject: [PATCH v3 0/1] platform/x86: serial-multi-instantiate: ACPI example code
+Date: Wed, 26 Nov 2025 16:17:40 +0800
+Message-ID: <20251126081741.10588-1-baojun.xu@ti.com>
+X-Mailer: git-send-email 2.43.0.windows.1
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/mixed; boundary="8323328-1962062935-1764144279=:968"
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-C2ProcessedOrg: 333ef613-75bf-4e12-a4b1-8e3623f5dcea
+X-EOPAttributedMessage: 0
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: DS2PEPF0000343D:EE_|CO1PR10MB4804:EE_
+X-MS-Office365-Filtering-Correlation-Id: c8895966-4307-4c76-8eb1-08de2cc45e45
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam:
+	BCL:0;ARA:13230040|82310400026|1800799024|7416014|376014|36860700013;
+X-Microsoft-Antispam-Message-Info:
+	=?us-ascii?Q?Kk52ab74Z0qiETv35vR411nrGc2DREJQ0u/WRBwCpa90WASwigT+9atsIIuh?=
+ =?us-ascii?Q?CAwQ3xAKTjC21bDWWICtkJpveESaIXJVFLTWAZVZBPaHHBfxApxg0FSMInO3?=
+ =?us-ascii?Q?mhyc0ZHgQ+3ZQnhhi5JXWQIIKbZESqTQbU5nPmTMopresmTJI2OSal5NvMVK?=
+ =?us-ascii?Q?2whI2IeWaBZ16ilgntNBOKU0i4c4Es3EAi7EOPS8QIrvdc94lX+K049bSnRr?=
+ =?us-ascii?Q?dPmuIBTUUD51JMenMNuXcKhdQJgrsshsOINnmLgNzxdzN1nZ3SiEzkQGZGBR?=
+ =?us-ascii?Q?azL9TV6MyDuZZuc49/gV2UQfXUXpiP8UwhVq0rMwNN/1sK6a703DCreqa8XR?=
+ =?us-ascii?Q?lYYmFXc1wiUg1aa8OsRQOErb/4MSufMz1BNf2i4xNydBWgiucNAMeDLN440z?=
+ =?us-ascii?Q?BqwKA6a5AoJlA8eA4XhkNzyBZ35wl/Le+Xr/NtxQXhrwBF99RfQeA88EyNlJ?=
+ =?us-ascii?Q?+SOapVFqxjzLdMyva2h5H1NOkdCwTPjRZl9hUBigSoNFtogkOnhv6BW6UUSA?=
+ =?us-ascii?Q?7w/ujtLRExARgAr9hG1nka2zVOmm7MmLpfWuw1/qLvKlohhAugJnA6hPaeTN?=
+ =?us-ascii?Q?IOEIA+1qw5A1rnZ9wennPO806N6sa/Rzlmab3E0uE0Ztuo3FQ4VFt8YTNL8d?=
+ =?us-ascii?Q?qVYMW4N+XGMSVZDcgYdqietqO+bnWzjPCOT3WesFqI7FuyCrBMRvw5d2QXT5?=
+ =?us-ascii?Q?VUSN1h2UZwNj0/YkG+E4IBWGnXJuzTYPImgJqnVhgVbvxWRu2QIKTjHm2la8?=
+ =?us-ascii?Q?LdrZgmrDpu4Shj4GkyorMUB5rV1p1MidOR7XCCtjnTilxFoBKe5FbTtNg3Pw?=
+ =?us-ascii?Q?EVQRqVOG3ifxO3XcULhH+xHLtPlbAe3l8NnPPjyai2moIeNJGXZEB7VfEKjh?=
+ =?us-ascii?Q?HpI+pqAnnlTUleYEUviXiVCyfbDNnqwPMao1LC2+zOlefVSXbXH0V9cCYMAx?=
+ =?us-ascii?Q?I0AobqgnxYL7LwHm51Rx0BwIQWtdd2Vozlks5TTPIO7KQaoCimJAtqDJ5N44?=
+ =?us-ascii?Q?GBWrFVhe60qB8PXyode64wdIwD4bs7NPTJ5LuZyM7j2qNor2gi4ZFpQL+QO4?=
+ =?us-ascii?Q?e8+CkDGgWXO4/+Wd9TI8Uxetel4L9W/yaTdXV2Sg97qR6PuWIfmsu6DQzrlb?=
+ =?us-ascii?Q?tyEg6kjsT4MUx90lxd3zsoAs75l1sxQz2kuZZ43nQZEBiPRktjg087vdjMoD?=
+ =?us-ascii?Q?+QTzxe+7/IvBG9qUu8MR37EAjQGdXxTCBOdxhIph8zQbACzrN/whm+KeSXzI?=
+ =?us-ascii?Q?It0RWFfMDadoOi0JXDi1MhrJwKEhsHuBnAQ3J81SNL7ag/VNbcT/coEenil6?=
+ =?us-ascii?Q?zA+YYLX2IY94gUviyCXxJu+bJI3/XxRl33iWBRdVSapRctgh4nH51pnBT4CL?=
+ =?us-ascii?Q?J3inyePyXI5S+jNRpI0o4SqOSrUI8HCHbiL/hpB+paExOymzOQDZEzxD4vKO?=
+ =?us-ascii?Q?nDguXa87SHMo48nkXBDC9Su3J5kYbdq0XWwa1XL4O93/omFhRK+zI/9tC+59?=
+ =?us-ascii?Q?AqOXFieXurZeQP0FVflfJd7SpkpIUt61+Cc/KTDhNMeC9yQYAE51lG/l2jrC?=
+ =?us-ascii?Q?zxHkj7e/3fTDBwwh8tk=3D?=
+X-Forefront-Antispam-Report:
+	CIP:198.47.21.195;CTRY:US;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:flwvzet201.ext.ti.com;PTR:ErrorRetry;CAT:NONE;SFS:(13230040)(82310400026)(1800799024)(7416014)(376014)(36860700013);DIR:OUT;SFP:1101;
+X-OriginatorOrg: ti.com
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 26 Nov 2025 08:18:23.9151
+ (UTC)
+X-MS-Exchange-CrossTenant-Network-Message-Id: c8895966-4307-4c76-8eb1-08de2cc45e45
+X-MS-Exchange-CrossTenant-Id: e5b49634-450b-4709-8abb-1e2b19b982b7
+X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=e5b49634-450b-4709-8abb-1e2b19b982b7;Ip=[198.47.21.195];Helo=[flwvzet201.ext.ti.com]
+X-MS-Exchange-CrossTenant-AuthSource:
+	DS2PEPF0000343D.namprd02.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Anonymous
+X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: CO1PR10MB4804
 
-  This message is in MIME format.  The first part should be readable text,
-  while the remaining parts are likely unreadable without MIME-aware tools.
+The tas2781-hda supports multi-projects, In some projects,
+GpioInt was dropped due to no IRQ connection.
+See the example code below:
 
---8323328-1962062935-1764144279=:968
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: QUOTED-PRINTABLE
+But in smi_i2c_probe(), smi_spi_probe() (serial-multi-instantiate.c),
+if looking for IRQ by smi_get_irq() fails, it will return an error,
+will not add new device, and cause smi_probe to fail.
+So need to add an exception case for these situations.
+BTW, this patch will take effect on both I2C and SPI devices.
 
-On Tue, 25 Nov 2025, Rong Zhang wrote:
+Device (SPKR)
+{
+    Name (_ADR, One)
+    Name (_HID, "TXNW2781")
+    Method (_CRS, 0, NotSerialized)
+    {
+        Name (RBUF, ResourceTemplate ()
+        {
+            I2cSerialBusV2 (0x0038, ...)
+            I2cSerialBusV2 (0x0039, ...)
+            // GpioInt (Edge, ...) { 0x0000 }
+            //"GpioInt (...) {}" was commented out due to no IRQ connection.
+        })
+        Return (RBUF)
+    }
+}
 
-> Hi Ilpo,
->=20
-> Thanks for your review.
->=20
-> On Mon, 2025-11-24 at 18:58 +0200, Ilpo J=C3=A4rvinen wrote:
-> > On Sun, 23 Nov 2025, Rong Zhang wrote:
-> >=20
-> > > Register an HWMON device for fan reporting/tuning according to
-> > > Capability Data 00 (capdata00) and Fan Test Data (capdata_fan) provid=
-ed
-> > > by lenovo-wmi-capdata. The corresponding HWMON nodes are:
-> > >=20
-> > >  - fanX_enable: enable/disable the fan (tunable)
-> > >  - fanX_input: current RPM
-> > >  - fanX_max: maximum RPM
-> > >  - fanX_min: minimum RPM
-> > >  - fanX_target: target RPM (tunable)
-> > >=20
-> > > Information from capdata00 and capdata_fan are used to control the
-> > > visibility and constraints of HWMON attributes. Fan info from capdata=
-00
-> > > is collected on bind, while fan info from capdata_fan is collected in=
- a
-> > > callback. Once all fan info is collected, register the HWMON device.
-> > >=20
-> > > Signed-off-by: Rong Zhang <i@rong.moe>
-> > > ---
-> > > Changes in v4:
-> > > - Rework HWMON registration due to the introduction of [PATCH v4 6/7]
-> > >   - Collect fan info from capdata00 and capdata_fan separately
-> > >   - Use a callback to collect fan info from capdata_fan
-> > >   - Trigger HWMON registration only if all fan info is collected
-> > >   - Do not check 0x04050000.supported, implied by the presense of
-> > >     capdata_fan
-> > > - Drop Reviewed-by & Tested-by due to the changes, please review & te=
-st
-> > >=20
-> > > Changes in v3:
-> > > - Reword documentation (thanks Derek J. Clark)
-> > >=20
-> > > Changes in v2:
-> > > - Define 4 fan channels instead of 2 (thanks Derek J. Clark)
-> > > - Squash min/max reporting patch into this one (ditto)
-> > > - Query 0x04050000 for interface availability (ditto)
-> > >   - New parameter "expose_all_fans" to skip this check
-> > > - Enforce min/max RPM constraint on set (ditto)
-> > >   - New parameter "relax_fan_constraint" to disable this behavior
-> > >   - Drop parameter "ignore_fan_cap", superseded by the next one
-> > >   - New parameter "expose_all_fans" to expose fans w/o such data
-> > > - Assume auto mode on probe (ditto)
-> > > - Reword documentation (ditto)
-> > > - Do not register HWMON device if no fan can be exposed
-> > > - fanX_target: Return -EBUSY instead of raw target value when fan sto=
-ps
-> > > ---
-> > >  .../wmi/devices/lenovo-wmi-other.rst          |  11 +
-> > >  drivers/platform/x86/lenovo/Kconfig           |   1 +
-> > >  drivers/platform/x86/lenovo/wmi-other.c       | 485 ++++++++++++++++=
-+-
-> > >  3 files changed, 487 insertions(+), 10 deletions(-)
-> > >=20
-> > > diff --git a/Documentation/wmi/devices/lenovo-wmi-other.rst b/Documen=
-tation/wmi/devices/lenovo-wmi-other.rst
-> > > index 821282e07d93..bd1d733ff286 100644
-> > > --- a/Documentation/wmi/devices/lenovo-wmi-other.rst
-> > > +++ b/Documentation/wmi/devices/lenovo-wmi-other.rst
-> > > @@ -31,6 +31,8 @@ under the following path:
-> > > =20
-> > >    /sys/class/firmware-attributes/lenovo-wmi-other/attributes/<attrib=
-ute>/
-> > > =20
-> > > +Additionally, this driver also exports attributes to HWMON.
-> > > +
-> > >  LENOVO_CAPABILITY_DATA_00
-> > >  -------------------------
-> > > =20
-> > > @@ -39,6 +41,11 @@ WMI GUID ``362A3AFE-3D96-4665-8530-96DAD5BB300E``
-> > >  The LENOVO_CAPABILITY_DATA_00 interface provides various information=
- that
-> > >  does not rely on the gamezone thermal mode.
-> > > =20
-> > > +The following HWMON attributes are implemented:
-> > > + - fanX_enable: enable/disable the fan (tunable)
-> > > + - fanX_input: current RPM
-> > > + - fanX_target: target RPM (tunable)
-> > > +
-> > >  LENOVO_CAPABILITY_DATA_01
-> > >  -------------------------
-> > > =20
-> > > @@ -70,6 +77,10 @@ WMI GUID ``B642801B-3D21-45DE-90AE-6E86F164FB21``
-> > >  The LENOVO_FAN_TEST_DATA interface provides reference data for self-=
-test of
-> > >  cooling fans.
-> > > =20
-> > > +The following HWMON attributes are implemented:
-> > > + - fanX_max: maximum RPM
-> > > + - fanX_min: minimum RPM
-> > > +
-> > >  WMI interface description
-> > >  =3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
-=3D=3D=3D
-> > > =20
-> > > diff --git a/drivers/platform/x86/lenovo/Kconfig b/drivers/platform/x=
-86/lenovo/Kconfig
-> > > index fb96a0f908f0..be9af0451146 100644
-> > > --- a/drivers/platform/x86/lenovo/Kconfig
-> > > +++ b/drivers/platform/x86/lenovo/Kconfig
-> > > @@ -263,6 +263,7 @@ config LENOVO_WMI_GAMEZONE
-> > >  config LENOVO_WMI_TUNING
-> > >  =09tristate "Lenovo Other Mode WMI Driver"
-> > >  =09depends on ACPI_WMI
-> > > +=09select HWMON
-> > >  =09select FW_ATTR_CLASS
-> > >  =09select LENOVO_WMI_DATA
-> > >  =09select LENOVO_WMI_EVENTS
-> > > diff --git a/drivers/platform/x86/lenovo/wmi-other.c b/drivers/platfo=
-rm/x86/lenovo/wmi-other.c
-> > > index b3adcc2804fa..ce1ca13db4b5 100644
-> > > --- a/drivers/platform/x86/lenovo/wmi-other.c
-> > > +++ b/drivers/platform/x86/lenovo/wmi-other.c
-> > > @@ -14,7 +14,16 @@
-> > >   * These attributes typically don't fit anywhere else in the sysfs a=
-nd are set
-> > >   * in Windows using one of Lenovo's multiple user applications.
-> > >   *
-> > > + * Additionally, this driver also exports tunable fan speed RPM to H=
-WMON.
-> > > + * Min/max RPM are also provided for reference.
-> > > + *
-> > >   * Copyright (C) 2025 Derek J. Clark <derekjohn.clark@gmail.com>
-> > > + *   - fw_attributes
-> > > + *   - binding to Capability Data 01
-> > > + *
-> > > + * Copyright (C) 2025 Rong Zhang <i@rong.moe>
-> > > + *   - HWMON
-> > > + *   - binding to Capability Data 00 and Fan
-> > >   */
-> > > =20
-> > >  #include <linux/acpi.h>
-> > > @@ -25,6 +34,7 @@
-> > >  #include <linux/device.h>
-> > >  #include <linux/export.h>
-> > >  #include <linux/gfp_types.h>
-> > > +#include <linux/hwmon.h>
-> > >  #include <linux/idr.h>
-> > >  #include <linux/kdev_t.h>
-> > >  #include <linux/kobject.h>
-> > > @@ -49,12 +59,26 @@
-> > >  #define LWMI_FEATURE_ID_CPU_SPL 0x02
-> > >  #define LWMI_FEATURE_ID_CPU_FPPT 0x03
-> > > =20
-> > > +#define LWMI_FEATURE_ID_FAN_RPM 0x03
-> > > +
-> > >  #define LWMI_TYPE_ID_NONE 0x00
-> > > =20
-> > >  #define LWMI_FEATURE_VALUE_GET 17
-> > >  #define LWMI_FEATURE_VALUE_SET 18
-> > > =20
-> > > +#define LWMI_FAN_ID_BASE 1
-> > > +#define LWMI_FAN_NR 4
-> > > +#define LWMI_FAN_ID(x) ((x) + LWMI_FAN_ID_BASE)
-> > > +
-> > > +#define LWMI_ATTR_ID_FAN_RPM(x)=09=09=09=09=09=09\
-> > > +=09(FIELD_PREP(LWMI_ATTR_DEV_ID_MASK, LWMI_DEVICE_ID_FAN) |=09\
-> > > +=09 FIELD_PREP(LWMI_ATTR_FEAT_ID_MASK, LWMI_FEATURE_ID_FAN_RPM) |=09=
-\
-> > > +=09 FIELD_PREP(LWMI_ATTR_TYPE_ID_MASK, LWMI_FAN_ID(x)))
-> > > +
-> > > +#define LWMI_FAN_STOP_RPM 1
-> > > +
-> > >  #define LWMI_OM_FW_ATTR_BASE_PATH "lenovo-wmi-other"
-> > > +#define LWMI_OM_HWMON_NAME "lenovo_wmi_other"
-> > > =20
-> > >  static BLOCKING_NOTIFIER_HEAD(om_chain_head);
-> > >  static DEFINE_IDA(lwmi_om_ida);
-> > > @@ -71,15 +95,439 @@ struct lwmi_om_priv {
-> > >  =09struct component_master_ops *ops;
-> > > =20
-> > >  =09/* only valid after capdata bind */
-> > > +=09struct cd_list *cd00_list;
-> > >  =09struct cd_list *cd01_list;
-> > > =20
-> > > +=09struct device *hwmon_dev;
-> > >  =09struct device *fw_attr_dev;
-> > >  =09struct kset *fw_attr_kset;
-> > >  =09struct notifier_block nb;
-> > >  =09struct wmi_device *wdev;
-> > >  =09int ida_id;
-> > > +
-> > > +=09struct fan_info {
-> > > +=09=09u32 supported;
-> > > +=09=09u32 last_target;
-> > > +=09=09long min_rpm;
-> > > +=09=09long max_rpm;
-> > > +=09} fan_info[LWMI_FAN_NR];
-> >=20
-> > I personally don't like this style at all because it makes finding the=
-=20
-> > type of the variable harder with grep.
->=20
-> Make sense. Will add a `lwmi_' prefix to the struct name. Thanks.
+Signed-off-by: Baojun Xu <baojun.xu@ti.com>
 
-While having prefix is good too, I was more referring to naming it at the=
-=20
-closing brace line, I'd prefer to have it on a separate line (which shows=
-=20
-type, staticness easily with grep):
+Baojun Xu (1):
+  platform/x86: serial-multi-instantiate: Add IRQ_RESOURCE_OPT for IRQ
+    missing projects
 
-struct lwmi_fan_info fan_info[LWMI_FAN_NR];
+ drivers/platform/x86/serial-multi-instantiate.c | 13 +++++++++----
+ 1 file changed, 9 insertions(+), 4 deletions(-)
 
-I see you placed it into priv in v7 which is better anyway.
+-- 
+2.25.1
 
---=20
- i.
-
---8323328-1962062935-1764144279=:968--
