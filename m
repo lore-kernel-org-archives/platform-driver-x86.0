@@ -1,33 +1,33 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 52340207A38;
-	Wed, 26 Nov 2025 17:19:51 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E29F0219A81;
+	Wed, 26 Nov 2025 17:34:07 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1764177592; cv=none; b=tpp3A1UNgOkSLLmdKGCdbLS5YXovMcbf6SNQZ/asZrWBRx/vwlOIp2b1dc+m5J65kyKaj1+WnTsS1kQb/vwqiDAukkuIJquOfH3yjKhYGi7M5JZF4DHESHoCy32RPepIjaAfTpoG+Zjt3FmJb9Idkh931cBXAM3oJ2umI5aB/DM=
+	t=1764178449; cv=none; b=gzq3Od5Pke4VXI+H1pIlvhRbAkh+e33SVlxW/2PL5CmIau/YMSd/bGB2Auz0XI3cDCZvdq71HcyCqEHe/XoxEnaCqxX6ige33n1guXsrTn+rNcDoJDE82YVoZCHe9PORPeW2o9L9cqNePwlrPBVCQqIYj6VWnSakh65iUzeGSrA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1764177592; c=relaxed/simple;
-	bh=MlT02GQ7CMP/AT621MdmGurXzngpl0+HfAiTojvD0xU=;
+	s=arc-20240116; t=1764178449; c=relaxed/simple;
+	bh=dlVMMDnyIB7QnRLlQRgXzJiIyoXcNt1w0wU3moj+IEk=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=Hq5U2KNIDcssGatByKijlykk85RNlloGG6dgqWw24oCCMhU0W0RFbHt50GQxsLm98Zcx+7ZR9aFlQVFMp95EypFptvb8JzjMtoc7fsF7QqKsrShDzBenpoC24w3PAh1Wmzb0uiunjaoeScoLcyCPYUSsaT5g499p6TGVAhCjzEg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=JAd/IPow; arc=none smtp.client-ip=10.30.226.201
+	 In-Reply-To:Content-Type; b=iMEfjftbH7ZgMYc/7lUdutsEEVFZXUsgWZzINArRtiOY+ol3CvP8ZpCTgW6hYeWtZiVa1CwdGNkURzC0bA49y0e5yCcL7ui/+mT5uRenGw0K1n27UUQXX+Kma0xRJXLGNd1qUqQ+7gMM9iBdLkJJdn1cOR+Ks9mvL/ot7ns9kws=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=b/JrmdNi; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="JAd/IPow"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 70E43C4CEF7;
-	Wed, 26 Nov 2025 17:19:49 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="b/JrmdNi"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 46229C4CEF7;
+	Wed, 26 Nov 2025 17:34:05 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1764177591;
-	bh=MlT02GQ7CMP/AT621MdmGurXzngpl0+HfAiTojvD0xU=;
+	s=k20201202; t=1764178447;
+	bh=dlVMMDnyIB7QnRLlQRgXzJiIyoXcNt1w0wU3moj+IEk=;
 	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=JAd/IPow1Fd0Vgk7KF9I3UzSzT0YyvuNv9p3wHuS38yi0HfAlIObXhSiZ+Ud8Bn/e
-	 9VZlnnRHaRgVQcUDiGHKr4Twk0ofqV5UDUqqmS4bEnv+ozAFT7cqclsskJypZUH7d4
-	 KkQdkLUJBOZytPr3gbP3YQ6/VUblazCzMnUbU9orciz3fxK2J6pEAYpJU3qBKc/28b
-	 CW1H8Hv1oa70zt/BK6evRR9yfZaul8Q5UOVuAjUVD5TWzuXaFdTFR9LGBDhIgBpnHf
-	 N8fNxwqzKNx4VHEPUbBJo4/pUdz2jkbtEyKTY4S8h3cDsj3IkEpE0hD91/Bl6KvUFQ
-	 LxdgaIMIHLqVA==
-Message-ID: <ce56da25-e8cb-4438-b75b-1dd32df10d89@kernel.org>
-Date: Wed, 26 Nov 2025 18:19:47 +0100
+	b=b/JrmdNiE4X1fMMuXwrA+Ry1jtCJYKcT/NYA8zGNT69Z3DhlCfUp9Z0fCP/JnuuBh
+	 LSsDqlqW8n9HuAX7IJdskgp9VWbYkSdFbiVezbXSi5ZVTQcXrJI5vIU2ueA9MkdUCm
+	 BgiCTmnSnLRnugLnggZrhGCPdhfAV30q6dsB7gfEZSQhGpaj2+tssJVthLc41i78Lj
+	 xDnGWIJKYKRlAyLpYCI2WtJ2DjHtowuPfX4GaaVTHocgr2nXPguP464tqCiyVtlrgP
+	 ESv7jZnFcSsXxJS0JOqfubgTmpsM1OXHggYEuukdIQrO/vHkdnvw9eHJ2B+au4TS+S
+	 2I31RaC5Mbn3A==
+Message-ID: <4bcc6708-77ff-403d-83cf-10a40934263a@kernel.org>
+Date: Wed, 26 Nov 2025 18:34:03 +0100
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
@@ -35,61 +35,79 @@ List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v5] platform/x86: serial-multi-instantiate: Add
- IRQ_RESOURCE_OPT for IRQ missing projects
-To: Baojun Xu <baojun.xu@ti.com>, tiwai@suse.de
-Cc: ilpo.jarvinen@linux.intel.com, broonie@kernel.org,
- andriy.shevchenko@linux.intel.com, alsa-devel@alsa-project.org,
- shenghao-ding@ti.com, 13916275206@139.com,
- platform-driver-x86@vger.kernel.org, linux-sound@vger.kernel.org,
- linux-kernel@vger.kernel.org, letitia.tsai@hp.com
-References: <20251126141434.11110-1-baojun.xu@ti.com>
+Subject: Re: [PATCH v10 00/11] HID: asus: Fix ASUS ROG Laptop's Keyboard
+ backlight handling
+To: =?UTF-8?Q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>,
+ Antheas Kapenekakis <lkml@antheas.dev>
+Cc: platform-driver-x86@vger.kernel.org, linux-input@vger.kernel.org,
+ LKML <linux-kernel@vger.kernel.org>, Jiri Kosina <jikos@kernel.org>,
+ Benjamin Tissoires <bentiss@kernel.org>,
+ Corentin Chary <corentin.chary@gmail.com>, "Luke D . Jones"
+ <luke@ljones.dev>, Denis Benato <benato.denis96@gmail.com>
+References: <20251122110032.4274-1-lkml@antheas.dev>
+ <CAGwozwGwkBH_03JvPQrevQiszwDZ5R4uDBnzWVeVXLo8xRmeug@mail.gmail.com>
+ <b91fa2c8-e342-9e46-f401-8c3d0590cd38@linux.intel.com>
 From: Hans de Goede <hansg@kernel.org>
 Content-Language: en-US, nl
-In-Reply-To: <20251126141434.11110-1-baojun.xu@ti.com>
+In-Reply-To: <b91fa2c8-e342-9e46-f401-8c3d0590cd38@linux.intel.com>
 Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 
 Hi,
 
-On 26-Nov-25 3:14 PM, Baojun Xu wrote:
-> The tas2781-hda supports multi-projects. In some projects, GpioInt() was
-> dropped due to no IRQ connection. See the example code below:
-> 
-> Device (SPKR)
-> {
->     Name (_ADR, One)
->     Name (_HID, "TXNW2781")
->     Method (_CRS, 0, NotSerialized)
->     {
->         Name (RBUF, ResourceTemplate ()
->         {
->             I2cSerialBusV2 (0x0038, ...)
->             I2cSerialBusV2 (0x0039, ...)
->             // GpioInt (Edge, ...) { 0x0000 }
->             //"GpioInt (...) {}" was commented out due to no IRQ connection.
->         })
->         Return (RBUF)
->     }
-> }
-> 
-> But in smi_i2c_probe(), smi_spi_probe() (serial-multi-instantiate.c), if
-> looking for IRQ by smi_get_irq() fails, it will return an error, will not add
-> new device, and cause smi_probe() to fail:
-> 
-> [    2.356546] Serial bus multi instantiate pseudo device driver TXNW2781:00:
-> error -ENXIO: IRQ index 0 not found
-> [    2.356561] Serial bus multi instantiate pseudo device driver TXNW2781:00:
-> error -ENXIO: Error requesting irq at index 0
-> 
-> So, we need to add an exception case for these situations. BTW, this patch
-> will take effect on both I2C and SPI devices.
-> 
-> Signed-off-by: Baojun Xu <baojun.xu@ti.com>
+On 26-Nov-25 4:23 PM, Ilpo Järvinen wrote:
+> On Wed, 26 Nov 2025, Antheas Kapenekakis wrote:
 
-Thanks, patch looks good to me:
+...
 
-Reviewed-by: Hans de Goede <johannes.goede@oss.qualcomm.com>
+>> As for "HID: asus: early return for ROG devices" changing the name of
+>> the devices of this driver, I will veto backporting it if it happens,
+>> so inputplumber will have the two full months to remove the name
+>> match. This is not a breaking change in the sense that software cannot
+>> be made to work on both previous and latter versions and there is no
+>> other software to my knowledge relying on name matches for Asus
+>> keyboards.
+> 
+> Did Hans give some opinion about this rename earlier, at least I don't 
+> remember nor could find from lore archives?
+
+I don't remember commenting on this myself either.
+
+So generally speaking there are plenty of cases where /dev/input/event#
+nodes for a specific device have their name changed by some kernel patches.
+
+Typically HID input devices are matched in userspace by their
+bus:vend-id:prod-id triplet not by the name. The name might even
+change by a fwupdate of the device itself.
+
+So I'm not overly worried about this and inputplumber seems nice
+enough and already is very much not a plug-and-play tool.
+
+One possible concern with laptop keyboard input-device name changes
+though is hwdb entries to fixup scancode -> ev-key-code mappings.
+
+See: /lib/udev/hwdb.d/60-keyboard.hwdb on any standard Linux systems
+an then the big comment at the top.
+
+An input-device name change might break this match pattern:
+
+#  - Input driver device name and DMI data match:
+#      evdev:name:<input device name>:dmi:bvn*:bvr*:bd*:svn<vendor>:pn*
+#    <input device name> is the name device specified by the
+#    driver, <vendor> is the firmware-provided string exported
+#    by the kernel DMI modalias, see /sys/class/dmi/id/modalias
+
+As well as the extended version of this and for laptops with USB
+keyboards this is the only match type which allows a DMI match
+which is what we want for laptop kbd mappings. Looking at the Asus
+section of the upstream 60-keyboard.hwdb I do not see any such
+matches though.
+
+There not being such matches kinda make sense since for USB-HID
+devices any special scancode -> ev-key-code mappings are typically
+handled in a vendor specific HID driver like hid-asus.
+
+TL;DR: I think that the input-device name should be fine.
 
 Regards,
 
@@ -98,55 +116,4 @@ Hans
 
 
 
-> ---
-> v5:
->  - Change the description for this patch, remove cover letter.
-> v4:
->  - Change the description for this patch.
-> v3:
->  - Add IRQ_RESOURCE_OPT for IRQ missing cases.
-> v2:
->  - Remove error ignore, change to AUTO compatible with NONE.
-> ---
->  drivers/platform/x86/serial-multi-instantiate.c | 13 +++++++++----
->  1 file changed, 9 insertions(+), 4 deletions(-)
-> 
-> diff --git a/drivers/platform/x86/serial-multi-instantiate.c b/drivers/platform/x86/serial-multi-instantiate.c
-> index db030b0f176a..1a369334f9cb 100644
-> --- a/drivers/platform/x86/serial-multi-instantiate.c
-> +++ b/drivers/platform/x86/serial-multi-instantiate.c
-> @@ -22,6 +22,7 @@
->  #define IRQ_RESOURCE_GPIO	1
->  #define IRQ_RESOURCE_APIC	2
->  #define IRQ_RESOURCE_AUTO   3
-> +#define IRQ_RESOURCE_OPT	BIT(2)
->  
->  enum smi_bus_type {
->  	SMI_I2C,
-> @@ -64,6 +65,10 @@ static int smi_get_irq(struct platform_device *pdev, struct acpi_device *adev,
->  			dev_dbg(&pdev->dev, "Using platform irq\n");
->  			break;
->  		}
-> +		if (inst->flags & IRQ_RESOURCE_OPT) {
-> +			dev_dbg(&pdev->dev, "No irq\n");
-> +			return 0;
-> +		}
->  		break;
->  	case IRQ_RESOURCE_GPIO:
->  		ret = acpi_dev_gpio_irq_get(adev, inst->irq_idx);
-> @@ -386,10 +391,10 @@ static const struct smi_node cs35l57_hda = {
->  
->  static const struct smi_node tas2781_hda = {
->  	.instances = {
-> -		{ "tas2781-hda", IRQ_RESOURCE_AUTO, 0 },
-> -		{ "tas2781-hda", IRQ_RESOURCE_AUTO, 0 },
-> -		{ "tas2781-hda", IRQ_RESOURCE_AUTO, 0 },
-> -		{ "tas2781-hda", IRQ_RESOURCE_AUTO, 0 },
-> +		{ "tas2781-hda", IRQ_RESOURCE_AUTO | IRQ_RESOURCE_OPT, 0 },
-> +		{ "tas2781-hda", IRQ_RESOURCE_AUTO | IRQ_RESOURCE_OPT, 0 },
-> +		{ "tas2781-hda", IRQ_RESOURCE_AUTO | IRQ_RESOURCE_OPT, 0 },
-> +		{ "tas2781-hda", IRQ_RESOURCE_AUTO | IRQ_RESOURCE_OPT, 0 },
->  		{}
->  	},
->  	.bus_type = SMI_AUTO_DETECT,
 
