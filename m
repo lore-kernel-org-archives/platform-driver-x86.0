@@ -1,446 +1,324 @@
-Received: from AS8PR04CU009.outbound.protection.outlook.com (mail-westeuropeazon11011048.outbound.protection.outlook.com [52.101.70.48])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.19])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AE7A0249EB;
-	Wed, 26 Nov 2025 02:38:50 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=52.101.70.48
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1764124734; cv=fail; b=ESc86PMiNX9sVZmUCP26hoLEL7P1tboWqrAbBp4WAqe6Si6S9RPtY9+35hZRCxiEkyFByM6rzbn7JXR75yz/S0zzMYT2Gv0DtKJiZZ/jXN2EN154Sy1YG1OV8XXTVoD/OdIjmXWNSrL3WopgoWZBJLkpBimw6BZHPcgyx7ip27g=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1764124734; c=relaxed/simple;
-	bh=sn4KLAyb0J3o1ugJSTWPXmSCoA3Bx3ZSv6Lk75cdZbQ=;
-	h=From:To:CC:Subject:Date:Message-ID:References:In-Reply-To:
-	 Content-Type:MIME-Version; b=imJxLfGWDBMDjJFH20AMuffSBHBzt/DxGOOHWRo03UrdqLffODuis83wEOna3GKdWtKFjuDpn7DVGgBfgALeFeH+uZ84oEkeTyKNBI2rzY5RjvD/0yoraokeedlXFVoFL7lFN4Vij9KiuVx56SnGlcd8ON84h+VfvM8/Fy+lxoU=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=nxp.com; spf=pass smtp.mailfrom=nxp.com; dkim=pass (2048-bit key) header.d=nxp.com header.i=@nxp.com header.b=JIzXjHLX; arc=fail smtp.client-ip=52.101.70.48
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=nxp.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=nxp.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7EBA22BCF5D;
+	Wed, 26 Nov 2025 07:44:52 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.19
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1764143094; cv=none; b=acgxpO8ORQR4esZSmQIfNKy8JBsUKaQ2gE+rYOBErK1KSL5Vticd0JGhRYuI1ljhXOxNlufjks4y0RXNk34JHy4hpD1xicuLmi+4/eFlGXCi68CMMsyli6YoE9xHMyrD1Dqt1UpcdRTA7DFAdTN6kEoKDwoG/neNzDcSdyKSfME=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1764143094; c=relaxed/simple;
+	bh=AFpIBoHAAb4e2OfJ84HqeZPO3Dm1xm5/CCdxucyHBpo=;
+	h=From:Date:To:cc:Subject:In-Reply-To:Message-ID:References:
+	 MIME-Version:Content-Type; b=U02YgLWy5xbC+nVEsoJwdhoD/zJjWCcTwqoLB9WKJ5nmPWC/rQZOBjqS1pY11HmgHHAa+M+1NWC3nM4H3x8tfSS7OYSTjUDo9cI73uCzpf1jN6jswdEqqS2ENZMAcxITBei1ZMJ6pwxSWMjSVsNoYcBRd4daZRKlqANXbPBfl7Y=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=pass smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=lQPOxIaS; arc=none smtp.client-ip=192.198.163.19
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=nxp.com header.i=@nxp.com header.b="JIzXjHLX"
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=U7xKQ7FwjNk9Uc4s2e8SxUJtDB5IVr37WbuaemxpSXEKaZ9G6F89KAAIr/D4mnKBjXJaRcb3Ahzj/Y+6h2keZenjADl66Lgu9msgL0RoJ3dTG7f7dTOMWEuuudc6Jr1fv5u9nAgcfo3KS+APpLDCqnwEjZNbOSz880as7cb0Fe6cjX+Wu4RTvT47Ekz4h/T+CZYnIHI0bIfUO4QH6DZYBDobyIDElJIX7r9aOwHTF5AnDkV+K4P9gVEfMAP3bd4tsUad/dPB1DZFOuBsoBYm2o/DE6s6SP+8WDAlc89rPucUPxyixtq2NzCU/IJXiXJCQ6PlzBWzWKK6rqcgkGztCQ==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=peXhP94zHXdjRC99EVuu4MIYC90oDPnY66tANDHrWo0=;
- b=zMt3RSSWmfmunBc6u/qFZS0pjRpal34Fr3shwUxe7oU2Ftgs46q1JehK2sf3BI7OlPUOGgm4VTHdwkQCRmu1Ok32H3LgYH3KZzJMHfhPPfIfe8V51MsJOH3HDAnz/GMR0zke4R4mbdEDbu0fw6LB5ybg9kqsOf0fQTA+10yimIoPyay4rhITFFO2wCWPrY5yzKXx0/6py6Ro/PUARKbymL1kHxPRx8aOnny+ln9BHuqegN7XmXLCHDax2+puptTAbPEF65EZNwqFJZawHQfhMFee/cAppWgEAsVpSSN9nVt8lJIL7I5lcBUXf3+lsZVx8Ok00bcvHka/X/3GHagqXw==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=nxp.com; dmarc=pass action=none header.from=nxp.com; dkim=pass
- header.d=nxp.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=peXhP94zHXdjRC99EVuu4MIYC90oDPnY66tANDHrWo0=;
- b=JIzXjHLXwdAHJbmwULxtsgEBEIwRYwUYuWQnFZkP/tPAKshlBcz+7NXM9s+A4jIi5CFgTHxizN7BM5kmTwYvh5ju6mySbOzMhMvC7BXJWwJLOUxtDkyt1yoG2q0QoTTydCF5vSkp06hDoY81aA8ZPvs1cVKrW+TTSdDPwSgDqDWSSXebFg+J/Qk1XKpwdFTQFPjFDGr0sVBE1doD+jZPudagLLjXtOw5PIiyCZTqx7aPsw87MuBV1oHDK1G7/GKPxkSVwtPAPTVpnrYLOJIQ99bM9J5SLExg0tEMKnaarAprXsZsZ5weEFlTMoXKwWQfRHt9hpgLQtejlH9fLWRHhQ==
-Received: from VI0PR04MB12114.eurprd04.prod.outlook.com
- (2603:10a6:800:315::13) by AM0PR04MB6866.eurprd04.prod.outlook.com
- (2603:10a6:208:183::16) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.9366.12; Wed, 26 Nov
- 2025 02:38:46 +0000
-Received: from VI0PR04MB12114.eurprd04.prod.outlook.com
- ([fe80::2943:c36f:6a8c:81f7]) by VI0PR04MB12114.eurprd04.prod.outlook.com
- ([fe80::2943:c36f:6a8c:81f7%7]) with mapi id 15.20.9366.009; Wed, 26 Nov 2025
- 02:38:45 +0000
-From: Sherry Sun <sherry.sun@nxp.com>
-To: "manivannan.sadhasivam@oss.qualcomm.com"
-	<manivannan.sadhasivam@oss.qualcomm.com>, Rob Herring <robh@kernel.org>, Greg
- Kroah-Hartman <gregkh@linuxfoundation.org>, Jiri Slaby
-	<jirislaby@kernel.org>, Nathan Chancellor <nathan@kernel.org>, Nicolas Schier
-	<nicolas.schier@linux.dev>, Hans de Goede <hansg@kernel.org>,
-	=?iso-8859-1?Q?Ilpo_J=E4rvinen?= <ilpo.jarvinen@linux.intel.com>, Mark
- Pearson <mpearson-lenovo@squebb.ca>, "Derek J. Clark"
-	<derekjohn.clark@gmail.com>, Manivannan Sadhasivam <mani@kernel.org>,
-	Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>,
-	Marcel Holtmann <marcel@holtmann.org>, Luiz Augusto von Dentz
-	<luiz.dentz@gmail.com>, Bartosz Golaszewski <brgl@bgdev.pl>
-CC: "linux-serial@vger.kernel.org" <linux-serial@vger.kernel.org>,
-	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-	"linux-kbuild@vger.kernel.org" <linux-kbuild@vger.kernel.org>,
-	"platform-driver-x86@vger.kernel.org" <platform-driver-x86@vger.kernel.org>,
-	"linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
-	"devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
-	"linux-arm-msm@vger.kernel.org" <linux-arm-msm@vger.kernel.org>,
-	"linux-bluetooth@vger.kernel.org" <linux-bluetooth@vger.kernel.org>,
-	"linux-pm@vger.kernel.org" <linux-pm@vger.kernel.org>, Stephan Gerhold
-	<stephan.gerhold@linaro.org>, Dmitry Baryshkov
-	<dmitry.baryshkov@oss.qualcomm.com>
-Subject: RE: [PATCH v2 08/10] dt-bindings: connector: Add PCIe M.2 Mechanical
- Key E connector
-Thread-Topic: [PATCH v2 08/10] dt-bindings: connector: Add PCIe M.2 Mechanical
- Key E connector
-Thread-Index: AQHcXhorWq8bv5sJ10SiyCZPQ0dHVbUDhrVQ
-Date: Wed, 26 Nov 2025 02:38:45 +0000
-Message-ID:
- <VI0PR04MB121145313FF6024D52283CA9B92DEA@VI0PR04MB12114.eurprd04.prod.outlook.com>
-References: <20251125-pci-m2-e-v2-0-32826de07cc5@oss.qualcomm.com>
- <20251125-pci-m2-e-v2-8-32826de07cc5@oss.qualcomm.com>
-In-Reply-To: <20251125-pci-m2-e-v2-8-32826de07cc5@oss.qualcomm.com>
-Accept-Language: zh-CN, en-US
-Content-Language: en-US
-X-MS-Has-Attach:
-X-MS-TNEF-Correlator:
-authentication-results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=nxp.com;
-x-ms-publictraffictype: Email
-x-ms-traffictypediagnostic: VI0PR04MB12114:EE_|AM0PR04MB6866:EE_
-x-ms-office365-filtering-correlation-id: e57ab33b-94f6-4a3a-110f-08de2c94ebce
-x-ms-exchange-senderadcheck: 1
-x-ms-exchange-antispam-relay: 0
-x-microsoft-antispam:
- BCL:0;ARA:13230040|366016|7416014|376014|1800799024|19092799006|921020|38070700021;
-x-microsoft-antispam-message-info:
- =?iso-8859-1?Q?X/sSLRrdetEowtXPAEZxCL4lZSht/c6KbrW3arl0Yr9qc1pR5mIXLDD+os?=
- =?iso-8859-1?Q?5F0b0n09pUGey3Ia9PrJ8WLxbfT26b68GddFFS/8BWR76joyKokUKMHUMU?=
- =?iso-8859-1?Q?EgoR63bFz/oijx+RRA5GN2xGmVMsxXwIuq7Hvqok/BKAOymB6vvaQSA3En?=
- =?iso-8859-1?Q?o8eDava8by8HuFVsfGxS0QUat7cQKLZYy1Me0Jg0VsboY85oKj54FP86G/?=
- =?iso-8859-1?Q?ULAdeaEJX3PAugbLmdQlrx0UTQF62R3H0Lyot362zVd711bgJsg+1QIFXQ?=
- =?iso-8859-1?Q?MP/YMyzC5dbd5bCecO6VqQuUNff3RqihmeQ2udfXz2Th7Di+lUGtv3KN3n?=
- =?iso-8859-1?Q?2Gu6HX1qPLlLQoraBjJKHxy9bk2m12YAXrj2hzwv7fqbIWqvJNI3FXppOh?=
- =?iso-8859-1?Q?fUXFLVZheWWq4HmVQ5YZAXINb1mj6y0BfNYgpN3K/0nlzV6x6m36jhCRuM?=
- =?iso-8859-1?Q?ach4VHUoUv7IcyQu14+yrWzrmLA5WzQOle6xY1opoV1b1JOaz+tTcvNpl+?=
- =?iso-8859-1?Q?QGEV2cwJks0KmCZlaKqz59AlLPXJfov1h1Y//QjBLefDaAH+nPbG885ehI?=
- =?iso-8859-1?Q?5jcePYFIHjrEAkt9Z2CIsxG+cpVkHxZc/zGZNOioqLc9rOoaQWtCrGk2+B?=
- =?iso-8859-1?Q?VJfbgmzaeYmSJMxGqyo5wEZUhh/f8xREATFBbGV67g+5/BvMZUti7U4muN?=
- =?iso-8859-1?Q?pv7l5nZUBGrbXofqhvBoOtTiQ1T+sri/8WGXwn6HA1S/MCr400LxYCzjiy?=
- =?iso-8859-1?Q?5abT8rZiXntnum8sqsSMKVtOzRHw9mGr0TYffiIMk6v+zC3hqYBNvyR/gt?=
- =?iso-8859-1?Q?k9fFu+IeOn1dQAD+BLfYTjgzKUissmGL0dVPJeaJVSEing4wEBpaFExefK?=
- =?iso-8859-1?Q?ZLd7QNmUOMptCoGdXqQitCbjOl7K+BAp1p7zkqAC+oPFUYpsg2q2sE3JNy?=
- =?iso-8859-1?Q?vhQVyMTFmPjvqkahfwufSxeRL8iDprhaJ3DW6uPNY656imaku7TUiSv+Yk?=
- =?iso-8859-1?Q?kTuYWYcGJARQzEfBpJFd5lbLsFE+jfujbrRSD8UFXZb8rZ+otaReWOl6wk?=
- =?iso-8859-1?Q?9fhqJsXQVMVy3RGcZho4oqL09k6HuHX6pxcN+mPcAN2MMfR52xZmEAR0vO?=
- =?iso-8859-1?Q?E9E1RVwymnkystRnvz1M6mxGUGIrFQ2knStjWehgY4/Gfnq7eZs5I8BPJi?=
- =?iso-8859-1?Q?ap9KDn9ZDQjteUIXzTQD4QqYtGg+e/UOEUPq4TRQZ0p3W6x20CvfHjnk8y?=
- =?iso-8859-1?Q?gBdKtY83Bh1N7hrSqPMXEBznV1aHzs0oyKhwFlq0ILcBCy6dElL8Ahlmbw?=
- =?iso-8859-1?Q?1lUaXaFnWC2RBh5Fr5CVXE24uRjP4FqUMx04PGcDL3kQqEMeeu3aaQYqqC?=
- =?iso-8859-1?Q?2Bmbikx8ygVS2sLvb7ZAb1bPs76p7XQ7b6dzFxRbqxRLu3nIoWWz1Bvhia?=
- =?iso-8859-1?Q?XYN8ve3kmD7/Dak2hmeKvu19hmC/z+OW5DgappaTXduOBsa5uSXWnRgaLz?=
- =?iso-8859-1?Q?DShMQa84D7yYlsgI5s7QNDYVK3sVEnk+UVT/HY05UX8PNczzyGFd7liSwy?=
- =?iso-8859-1?Q?Q6k6G9b2iEh+R3gqPQS61JfclrsHs8YBgMlcWEbHR/oJkfHE0Q=3D=3D?=
-x-forefront-antispam-report:
- CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:VI0PR04MB12114.eurprd04.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(366016)(7416014)(376014)(1800799024)(19092799006)(921020)(38070700021);DIR:OUT;SFP:1101;
-x-ms-exchange-antispam-messagedata-chunkcount: 1
-x-ms-exchange-antispam-messagedata-0:
- =?iso-8859-1?Q?G4jq5cGoQ4SoFuVoo0o24jdRLd4pU9BVFzw4AjhmkjmGVbOLBwxE6hOFa8?=
- =?iso-8859-1?Q?4BS8noXi31RF4ls1ZDbEjASJmPek8gan2CWQXif0HQ8wOaVCXSoBUjYWuN?=
- =?iso-8859-1?Q?QG588Tu6/BXyHv22ATmmysjiPfxISKP64LpkpsV0ia/TvA0mPd48/03zRS?=
- =?iso-8859-1?Q?qTC4n7K3pbSXXvW6cLXehUSQXbrm7hG5+mzRx6ZJFZulUyIVn8aLW7E8Yz?=
- =?iso-8859-1?Q?jXJjVzmWoWKs/COySU7pmP+5uk4DPvtlPFHb8XtJKLtv5tLtQ+gjw4WfJv?=
- =?iso-8859-1?Q?lFQkNRpmaGLdGcD1ef+j27Er6esqAEQna88Io8ih5qxXj9OqFjemEMhvqn?=
- =?iso-8859-1?Q?3R+nZsOXRv6a7GJlrCZoNNejIZG5V36LOg9yxzoWK1jDXAxbJKhb83puxR?=
- =?iso-8859-1?Q?gfNZ7ijIQavhsoZ0Lf9eSQvC3JCPEM7E+jes/lDv0DCA+R5P/17EM0LtrY?=
- =?iso-8859-1?Q?GMrF6AWwXGpKlAtH5qPfVfFKi2uYq34y9ZhGvT1v8R8SR8gtGitSplCHn1?=
- =?iso-8859-1?Q?Snn95z4Z2q51fWv/M0vkOtwIMzYjFTBxGzso9yIkCIwbNKbJzqFFren7Ny?=
- =?iso-8859-1?Q?nM/eWPWmTAaLNhP1j2DXjNVS8iZ4423fKLesEwW+6XC47eQdtPa4No8mHb?=
- =?iso-8859-1?Q?rbdQ8u3IE8lE5TRMu4p6VorUghXwpoDcd7j2Wrsf4NGotKqYqGMUvCNu+E?=
- =?iso-8859-1?Q?Fi6Mq0u9hTY539HhGy0QytAL01kPc3cw/z2kxk1FgY82+PHK2zARRKoYsk?=
- =?iso-8859-1?Q?IlyLTRVCPgqcvIv0Uzuxfm6z2NPToMUbVruZqH/4EvX44Nu3IgNaZPcm6D?=
- =?iso-8859-1?Q?dnXw6UeP/nvsBrrIbGAG1QxFmgNEUiOfUe0YR5XaZWgcShy7sP87HnQKZ/?=
- =?iso-8859-1?Q?euFUkNbqMtOiG6pSBp4S4/KN1PAnW+hVnFdJ4vWT6ySI7DGnoYvOdbYchn?=
- =?iso-8859-1?Q?OIlkEfrwivToRilsymLiMNUbn5tvArBPWtDYOIakZtOQ5gfzCfVWaZkxjb?=
- =?iso-8859-1?Q?HMvwe5jIXhKcqqR7YpDALuoeA3Qlo53TGMCB/wJx4vkbVVEqi6VtdFlc1t?=
- =?iso-8859-1?Q?ByRJ75GdHffsmsqdJAa1SJhoCD69sZfXWTRQSObRhTlN5dhir8jdbHYwNd?=
- =?iso-8859-1?Q?dD2snXOKj2j31RPRs/cbB6mQzEX977rat0p9SU7fQL8uq7nYHPTQ0gCroc?=
- =?iso-8859-1?Q?1TGZxF21AM/MwaSFG1bVDxSUsJ4axzFIMNPBU0oKcWFxBXjW13ySnMIQ4k?=
- =?iso-8859-1?Q?SxWr2Ka9Qgr5GBlMyfNljgRGwkR46l6qexNjChz3IlC2+g5AvCeobKIZWB?=
- =?iso-8859-1?Q?2RkfM/zT0q+mTewM4qsRLqws1Spl678qH7KAz4DoA+UbJiR4Qi+RrfiBP5?=
- =?iso-8859-1?Q?FsZ76VXeiIc82GIiRDqq9HOr3LIkZulNFkZAtXk1vYooReX5d0ol+3EtJx?=
- =?iso-8859-1?Q?fffTG2Ci1KZWhJacWNlqLu/PCNsROBjSf5tt0xxXVKC+d5Th2Q898agzHx?=
- =?iso-8859-1?Q?f+gtDFfWVZ7bvkyeKsPX3Qz0YqEQSykKW0lJCfJtyon+ajtlvGUp2z/4Dl?=
- =?iso-8859-1?Q?JKE14e0e2R0859NdZaZUk79qHzHdM0Aq3SfcxfYckk24uD+UO/mbYVoKHB?=
- =?iso-8859-1?Q?RMsv8gAc2RcWw=3D?=
-Content-Type: text/plain; charset="iso-8859-1"
-Content-Transfer-Encoding: quoted-printable
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="lQPOxIaS"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1764143093; x=1795679093;
+  h=from:date:to:cc:subject:in-reply-to:message-id:
+   references:mime-version:content-id;
+  bh=AFpIBoHAAb4e2OfJ84HqeZPO3Dm1xm5/CCdxucyHBpo=;
+  b=lQPOxIaSeGlSOdMJEt8XZImBFvDY8z2mt9jD1+l6/nb7nNTAfirURP2Z
+   /DppcyskauMCzlREygaHhi73Ityd/jA5CK/P6nNfdz6J3dXX17DS46j7t
+   IrXjn8+UBgwucgD0NF+6pJS93SJk/7a0+47lJjCVS8JKPnBPnr/8Vhq3r
+   WMPlB+qpwfvHPRs6bniyGCCJUnwZXe1SQ5pyUw2DdcysfPBH3iNKokZ2D
+   jRUHbLEZF28Af5//Q6zxaV34qsnk8wbC9KPlUS1L19kTaLVbA85DqLaPl
+   EC8lQ+Ru9Rr4ay5C1LebZTAN52xI05en2bTV2NKF0YKK/4U+MJqiYI4Rr
+   w==;
+X-CSE-ConnectionGUID: k21oj2/jRH6RYjv7t93+hw==
+X-CSE-MsgGUID: QDxwYIWZRQyUF0EIBgZTvw==
+X-IronPort-AV: E=McAfee;i="6800,10657,11624"; a="65174731"
+X-IronPort-AV: E=Sophos;i="6.20,227,1758610800"; 
+   d="scan'208";a="65174731"
+Received: from fmviesa005.fm.intel.com ([10.60.135.145])
+  by fmvoesa113.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 25 Nov 2025 23:44:52 -0800
+X-CSE-ConnectionGUID: ESw8DwbKQHytfETJjP9yXA==
+X-CSE-MsgGUID: SMUwjhIWRBWI1JbMH/oXVQ==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.20,227,1758610800"; 
+   d="scan'208";a="197187051"
+Received: from dalessan-mobl3.ger.corp.intel.com (HELO localhost) ([10.245.245.97])
+  by fmviesa005-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 25 Nov 2025 23:44:48 -0800
+From: =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
+Date: Wed, 26 Nov 2025 09:44:45 +0200 (EET)
+To: Rong Zhang <i@rong.moe>
+cc: Mark Pearson <mpearson-lenovo@squebb.ca>, 
+    "Derek J. Clark" <derekjohn.clark@gmail.com>, Armin Wolf <W_Armin@gmx.de>, 
+    Hans de Goede <hansg@kernel.org>, Guenter Roeck <linux@roeck-us.net>, 
+    platform-driver-x86@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>, 
+    linux-hwmon@vger.kernel.org
+Subject: Re: [PATCH v6 5/7] platform/x86: lenovo-wmi-capdata: Add support
+ for Fan Test Data
+In-Reply-To: <c13b6614d2ad4a3c4b938cdb04e6ebcc8f5bd95c.camel@rong.moe>
+Message-ID: <79934289-cdb4-385d-8042-e96ec37fdb55@linux.intel.com>
+References: <20251122184522.18677-1-i@rong.moe>  <20251122184522.18677-6-i@rong.moe>  <1efe99d4-95ae-d76c-71f5-0a1f98292dd4@linux.intel.com> <c13b6614d2ad4a3c4b938cdb04e6ebcc8f5bd95c.camel@rong.moe>
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-OriginatorOrg: nxp.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-AuthSource: VI0PR04MB12114.eurprd04.prod.outlook.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: e57ab33b-94f6-4a3a-110f-08de2c94ebce
-X-MS-Exchange-CrossTenant-originalarrivaltime: 26 Nov 2025 02:38:45.6095
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: 5eaA2JXYD1eDjnZK1PCSlil6CDAzwCr7KWnosoKrHpKGCk5DCKthNAqcnuHtZQ1u3IqUgIrQRZdc2NggVfYOHQ==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: AM0PR04MB6866
+Content-Type: multipart/mixed; BOUNDARY="8323328-1263511143-1764142940=:968"
+Content-ID: <2d2abe91-a351-d32d-1f87-657c07a76576@linux.intel.com>
 
+  This message is in MIME format.  The first part should be readable text,
+  while the remaining parts are likely unreadable without MIME-aware tools.
 
+--8323328-1263511143-1764142940=:968
+Content-Type: text/plain; CHARSET=ISO-8859-15
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Content-ID: <6be551c0-a5b2-2715-c458-46f4931ae5c0@linux.intel.com>
 
-> -----Original Message-----
-> From: Manivannan Sadhasivam via B4 Relay
-> <devnull+manivannan.sadhasivam.oss.qualcomm.com@kernel.org>
-> Sent: Tuesday, November 25, 2025 10:45 PM
-> To: Rob Herring <robh@kernel.org>; Greg Kroah-Hartman
-> <gregkh@linuxfoundation.org>; Jiri Slaby <jirislaby@kernel.org>; Nathan
-> Chancellor <nathan@kernel.org>; Nicolas Schier <nicolas.schier@linux.dev>=
-;
-> Hans de Goede <hansg@kernel.org>; Ilpo J=E4rvinen
-> <ilpo.jarvinen@linux.intel.com>; Mark Pearson <mpearson-
-> lenovo@squebb.ca>; Derek J. Clark <derekjohn.clark@gmail.com>;
-> Manivannan Sadhasivam <mani@kernel.org>; Krzysztof Kozlowski
-> <krzk+dt@kernel.org>; Conor Dooley <conor+dt@kernel.org>; Marcel
-> Holtmann <marcel@holtmann.org>; Luiz Augusto von Dentz
-> <luiz.dentz@gmail.com>; Bartosz Golaszewski <brgl@bgdev.pl>
-> Cc: linux-serial@vger.kernel.org; linux-kernel@vger.kernel.org; linux-
-> kbuild@vger.kernel.org; platform-driver-x86@vger.kernel.org; linux-
-> pci@vger.kernel.org; devicetree@vger.kernel.org; linux-arm-
-> msm@vger.kernel.org; linux-bluetooth@vger.kernel.org; linux-
-> pm@vger.kernel.org; Stephan Gerhold <stephan.gerhold@linaro.org>; Dmitry
-> Baryshkov <dmitry.baryshkov@oss.qualcomm.com>; Manivannan
-> Sadhasivam <manivannan.sadhasivam@oss.qualcomm.com>
-> Subject: [PATCH v2 08/10] dt-bindings: connector: Add PCIe M.2 Mechanical
-> Key E connector
+On Tue, 25 Nov 2025, Rong Zhang wrote:
+> On Mon, 2025-11-24 at 18:45 +0200, Ilpo J=E4rvinen wrote:
+> > On Sun, 23 Nov 2025, Rong Zhang wrote:
+> >=20
+> > > Add support for LENOVO_FAN_TEST_DATA WMI data block. Provides an
+> > > interface for querying the min/max fan speed RPM (reference data) of =
+a
+> > > given fan ID.
+> > >=20
+> > > This interface is optional. Hence, it does not bind to lenovo-wmi-oth=
+er
+> > > and is not registered as a component for the moment. Appropriate bind=
+ing
+> > > will be implemented in the subsequent patch.
+> > >=20
+> > > Signed-off-by: Rong Zhang <i@rong.moe>
+> > > Reviewed-by: Derek J. Clark <derekjohn.clark@gmail.com>
+> > > Tested-by: Derek J. Clark <derekjohn.clark@gmail.com>
+> > > ---
+> > > Changes in v4:
+> > > - Rebase on top of changes made to [PATCH v4 3/7]
+> > > - Do not register it as a component until [PATCH v4 6/7]
+> > >=20
+> > > Changes in v2:
+> > > - Reword documentation
+> > > ---
+> > >  .../wmi/devices/lenovo-wmi-other.rst          |  17 +++
+> > >  drivers/platform/x86/lenovo/wmi-capdata.c     | 102 ++++++++++++++++=
+++
+> > >  drivers/platform/x86/lenovo/wmi-capdata.h     |   7 ++
+> > >  3 files changed, 126 insertions(+)
+> > >=20
+> > > diff --git a/Documentation/wmi/devices/lenovo-wmi-other.rst b/Documen=
+tation/wmi/devices/lenovo-wmi-other.rst
+> > > index fcad595d49af..821282e07d93 100644
+> > > --- a/Documentation/wmi/devices/lenovo-wmi-other.rst
+> > > +++ b/Documentation/wmi/devices/lenovo-wmi-other.rst
+> > > @@ -62,6 +62,13 @@ The following firmware-attributes are implemented:
+> > >   - ppt_pl2_sppt: Platform Profile Tracking Slow Package Power Tracki=
+ng
+> > >   - ppt_pl3_fppt: Platform Profile Tracking Fast Package Power Tracki=
+ng
+> > > =20
+> > > +LENOVO_FAN_TEST_DATA
+> > > +-------------------------
+> > > +
+> > > +WMI GUID ``B642801B-3D21-45DE-90AE-6E86F164FB21``
+> > > +
+> > > +The LENOVO_FAN_TEST_DATA interface provides reference data for self-=
+test of
+> > > +cooling fans.
+> > > =20
+> > >  WMI interface description
+> > >  =3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
+=3D=3D=3D
+> > > @@ -115,3 +122,13 @@ data using the `bmfdec <https://github.com/pali/=
+bmfdec>`_ utility:
+> > >      [WmiDataId(3), read, Description("Data Size.")] uint32 DataSize;
+> > >      [WmiDataId(4), read, Description("Default Value"), WmiSizeIs("Da=
+taSize")] uint8 DefaultValue[];
+> > >    };
+> > > +
+> > > +  [WMI, Dynamic, Provider("WmiProv"), Locale("MS\\0x409"), Descripti=
+on("Definition of Fan Test Data"), guid("{B642801B-3D21-45DE-90AE-6E86F164F=
+B21}")]
+> > > +  class LENOVO_FAN_TEST_DATA {
+> > > +    [key, read] string InstanceName;
+> > > +    [read] boolean Active;
+> > > +    [WmiDataId(1), read, Description("Mode.")] uint32 NumOfFans;
+> > > +    [WmiDataId(2), read, Description("Fan ID."), WmiSizeIs("NumOfFan=
+s")] uint32 FanId[];
+> > > +    [WmiDataId(3), read, Description("Maximum Fan Speed."), WmiSizeI=
+s("NumOfFans")] uint32 FanMaxSpeed[];
+> > > +    [WmiDataId(4), read, Description("Minumum Fan Speed."), WmiSizeI=
+s("NumOfFans")] uint32 FanMinSpeed[];
+> > > +  };
+> > > diff --git a/drivers/platform/x86/lenovo/wmi-capdata.c b/drivers/plat=
+form/x86/lenovo/wmi-capdata.c
+> > > index 29267c373ab3..e6392357395c 100644
+> > > --- a/drivers/platform/x86/lenovo/wmi-capdata.c
+> > > +++ b/drivers/platform/x86/lenovo/wmi-capdata.c
+> > > @@ -13,6 +13,10 @@
+> > >   * attribute has multiple pages, one for each of the thermal modes m=
+anaged by
+> > >   * the Gamezone interface.
+> > >   *
+> > > + * Fan Test Data includes the max/min fan speed RPM for each fan. Th=
+is is
+> > > + * reference data for self-test. If the fan is in good condition, it=
+ is capable
+> > > + * to spin faster than max RPM or slower than min RPM.
+> > > + *
+> > >   * Copyright (C) 2025 Derek J. Clark <derekjohn.clark@gmail.com>
+> > >   *   - Initial implementation (formerly named lenovo-wmi-capdata01)
+> > >   *
+> > > @@ -41,6 +45,7 @@
+> > > =20
+> > >  #define LENOVO_CAPABILITY_DATA_00_GUID "362A3AFE-3D96-4665-8530-96DA=
+D5BB300E"
+> > >  #define LENOVO_CAPABILITY_DATA_01_GUID "7A8F5407-CB67-4D6E-B547-39B3=
+BE018154"
+> > > +#define LENOVO_FAN_TEST_DATA_GUID "B642801B-3D21-45DE-90AE-6E86F164F=
+B21"
+> > > =20
+> > >  #define ACPI_AC_CLASS "ac_adapter"
+> > >  #define ACPI_AC_NOTIFY_STATUS 0x80
+> > > @@ -48,6 +53,7 @@
+> > >  enum lwmi_cd_type {
+> > >  =09LENOVO_CAPABILITY_DATA_00,
+> > >  =09LENOVO_CAPABILITY_DATA_01,
+> > > +=09LENOVO_FAN_TEST_DATA,
+> > >  };
+> > > =20
+> > >  #define LWMI_CD_TABLE_ITEM(_type)=09=09\
+> > > @@ -62,6 +68,7 @@ static const struct lwmi_cd_info {
+> > >  } lwmi_cd_table[] =3D {
+> > >  =09LWMI_CD_TABLE_ITEM(LENOVO_CAPABILITY_DATA_00),
+> > >  =09LWMI_CD_TABLE_ITEM(LENOVO_CAPABILITY_DATA_01),
+> > > +=09LWMI_CD_TABLE_ITEM(LENOVO_FAN_TEST_DATA),
+> > >  };
+> > > =20
+> > >  struct lwmi_cd_priv {
+> > > @@ -78,6 +85,7 @@ struct cd_list {
+> > >  =09union {
+> > >  =09=09DECLARE_FLEX_ARRAY(struct capdata00, cd00);
+> > >  =09=09DECLARE_FLEX_ARRAY(struct capdata01, cd01);
+> > > +=09=09DECLARE_FLEX_ARRAY(struct capdata_fan, cd_fan);
+> > >  =09};
+> > >  };
+> > > =20
+> > > @@ -117,6 +125,10 @@ void lwmi_cd_match_add_all(struct device *master=
+, struct component_match **match
+> > >  =09=09return;
+> > > =20
+> > >  =09for (i =3D 0; i < ARRAY_SIZE(lwmi_cd_table); i++) {
+> > > +=09=09/* Skip optional interfaces. */
+> > > +=09=09if (lwmi_cd_table[i].type =3D=3D LENOVO_FAN_TEST_DATA)
+> > > +=09=09=09continue;
+> > > +
+> > >  =09=09component_match_add(master, matchptr, lwmi_cd_match,
+> > >  =09=09=09=09    (void *)&lwmi_cd_table[i].type);
+> > >  =09=09if (IS_ERR(*matchptr))
+> > > @@ -194,6 +206,9 @@ EXPORT_SYMBOL_NS_GPL(lwmi_cd00_get_data, "LENOVO_=
+WMI_CD");
+> > >  DEF_LWMI_CDXX_GET_DATA(cd01, LENOVO_CAPABILITY_DATA_01, struct capda=
+ta01);
+> > >  EXPORT_SYMBOL_NS_GPL(lwmi_cd01_get_data, "LENOVO_WMI_CD");
+> > > =20
+> > > +DEF_LWMI_CDXX_GET_DATA(cd_fan, LENOVO_FAN_TEST_DATA, struct capdata_=
+fan);
+> > > +EXPORT_SYMBOL_NS_GPL(lwmi_cd_fan_get_data, "LENOVO_WMI_CD");
+> > > +
+> > >  /**
+> > >   * lwmi_cd_cache() - Cache all WMI data block information
+> > >   * @priv: lenovo-wmi-capdata driver data.
+> > > @@ -217,6 +232,9 @@ static int lwmi_cd_cache(struct lwmi_cd_priv *pri=
+v)
+> > >  =09=09p =3D &priv->list->cd01[0];
+> > >  =09=09size =3D sizeof(priv->list->cd01[0]);
+> > >  =09=09break;
+> > > +=09case LENOVO_FAN_TEST_DATA:
+> > > +=09=09/* Done by lwmi_cd_alloc() =3D> lwmi_cd_fan_list_alloc_cache()=
+=2E */
+> > > +=09=09return 0;
+> > >  =09default:
+> > >  =09=09return -EINVAL;
+> > >  =09}
+> > > @@ -239,6 +257,78 @@ static int lwmi_cd_cache(struct lwmi_cd_priv *pr=
+iv)
+> > >  =09return 0;
+> > >  }
+> > > =20
+> > > +/**
+> > > + * lwmi_cd_fan_list_alloc_cache() - Alloc and cache Fan Test Data li=
+st
+> > > + * @priv: lenovo-wmi-capdata driver data.
+> > > + * @listptr: Pointer to returned cd_list pointer.
+> > > + *
+> > > + * Return: count of fans found, or an error.
+> > > + */
+> > > +static int lwmi_cd_fan_list_alloc_cache(struct lwmi_cd_priv *priv, s=
+truct cd_list **listptr)
+> > > +{
+> > > +=09u32 count, *fan_ids, *fan_min_rpms, *fan_max_rpms;
+> > > +=09union acpi_object *ret_obj __free(kfree) =3D NULL;
+> >=20
+> > Since you're using __free(), please move this to where you assign the=
+=20
+> > value. This is to create a pattern with cleanup helpers. The cleanup=20
+> > order depends on the order the variables are introduced which in some=
+=20
+> > other cases may be significant.
 >=20
-> From: Manivannan Sadhasivam
-> <manivannan.sadhasivam@oss.qualcomm.com>
+> Make sense. Will move it to the last declaration lines with its
+> assignment. Thanks.
 >=20
-> Add the devicetree binding for PCIe M.2 Mechanical Key E connector define=
-d
-> in the PCI Express M.2 Specification, r4.0, sec 5.1.2. This connector pro=
-vides
-> interfaces like PCIe or SDIO to attach the WiFi devices to the host machi=
-ne,
-> USB or UART+PCM interfaces to attach the Bluetooth (BT) devices along wit=
-h
-> additional interfaces like I2C for NFC solution. At any point of time, th=
-e
-> connector can only support either PCIe or SDIO as the WiFi interface and =
-USB
-> or UART as the BT interface.
+> > > +=09struct block { u32 nr; u32 data[]; } *block;
+> >
+> > This is the first time I see this style anywhere in the kernel's contex=
+t,=20
+> > has there been some general discussion about this style somewhere?
+> >=20
+> > At least it seems immediately obvious to me that this style will have a=
+=20
+> > negative impact on documentability due to (too) concise use of space.
 >=20
-> The connector provides a primary power supply of 3.3v, along with an
-> optional 1.8v VIO supply for the Adapter I/O buffer circuitry operating a=
-t 1.8v
-> sideband signaling.
+> Make sense. Will break it into multiple lines. Thanks.
 >=20
-> The connector also supplies optional signals in the form of GPIOs for fin=
-e
-> grained power management.
+> > > +=09struct cd_list *list;
+> > > +=09size_t size;
+> > > +=09int idx;
+> > > +
+> > > +=09ret_obj =3D wmidev_block_query(priv->wdev, 0);
+> > > +=09if (!ret_obj)
+> > > +=09=09return -ENODEV;
+> > > +
+> > > +=09/*
+> > > +=09 * This is usually caused by a dummy ACPI method. Do not return a=
+n error
+> > > +=09 * as failing to probe this device will result in master driver b=
+eing
+> > > +=09 * unbound - this behavior aligns with lwmi_cd_cache().
+> > > +=09 */
+> > > +=09if (ret_obj->type !=3D ACPI_TYPE_BUFFER) {
+> > > +=09=09count =3D 0;
+> > > +=09=09goto alloc;
+> > > +=09}
+> > > +
+> > > +=09size =3D ret_obj->buffer.length;
+> > > +=09block =3D (struct block *)ret_obj->buffer.pointer;
+> >=20
+> > void * can be cast implicitly.
 >=20
-> Signed-off-by: Manivannan Sadhasivam
-> <manivannan.sadhasivam@oss.qualcomm.com>
-> ---
->  .../bindings/connector/pcie-m2-e-connector.yaml    | 178
-> +++++++++++++++++++++
->  MAINTAINERS                                        |   1 +
->  2 files changed, 179 insertions(+)
->=20
-> diff --git a/Documentation/devicetree/bindings/connector/pcie-m2-e-
-> connector.yaml b/Documentation/devicetree/bindings/connector/pcie-m2-e-
-> connector.yaml
-> new file mode 100644
-> index 000000000000..fe2c9a943a21
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/connector/pcie-m2-e-
-> connector.ya
-> +++ ml
-> @@ -0,0 +1,178 @@
-> +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause) %YAML 1.2
-> +---
-> +$id:
-> +https://eur01.safelinks.protection.outlook.com/?url=3Dhttp%3A%2F%2Fdevic=
-e
-> +tree.org%2Fschemas%2Fconnector%2Fpcie-m2-e-
-> connector.yaml%23&data=3D05%7C
-> +02%7Csherry.sun%40nxp.com%7C22ea3ba76ac749b69bee08de2c314c73%7
-> C686ea1d3
-> +bc2b4c6fa92cd99c5c301635%7C0%7C0%7C638996787414741474%7CUnkno
-> wn%7CTWFpb
-> +GZsb3d8eyJFbXB0eU1hcGkiOnRydWUsIlYiOiIwLjAuMDAwMCIsIlAiOiJXaW4z
-> MiIsIkFO
-> +IjoiTWFpbCIsIldUIjoyfQ%3D%3D%7C0%7C%7C%7C&sdata=3DY8y5ctS7QJzaMZ
-> wdY%2FAnr
-> +FqydRTUumh3hRBDMtK%2B8Y4%3D&reserved=3D0
-> +$schema:
-> +https://eur01.safelinks.protection.outlook.com/?url=3Dhttp%3A%2F%2Fdevic=
-e
-> +tree.org%2Fmeta-
-> schemas%2Fcore.yaml%23&data=3D05%7C02%7Csherry.sun%40nxp.
-> +com%7C22ea3ba76ac749b69bee08de2c314c73%7C686ea1d3bc2b4c6fa92cd
-> 99c5c3016
-> +35%7C0%7C0%7C638996787414756341%7CUnknown%7CTWFpbGZsb3d8ey
-> JFbXB0eU1hcGk
-> +iOnRydWUsIlYiOiIwLjAuMDAwMCIsIlAiOiJXaW4zMiIsIkFOIjoiTWFpbCIsIldUIj
-> oyfQ
-> +%3D%3D%7C0%7C%7C%7C&sdata=3Dz9JeuCv1%2BkOH%2FjQcV2hpwgfuMJykj
-> 1SFgn4EzkHSK
-> +0Q%3D&reserved=3D0
-> +
-> +title: PCIe M.2 Mechanical Key E Connector
-> +
-> +maintainers:
-> +  - Manivannan Sadhasivam
-> <manivannan.sadhasivam@oss.qualcomm.com>
-> +
-> +description:
-> +  A PCIe M.2 E connector node represents a physical PCIe M.2 Mechanical
-> +Key E
-> +  connector. Mechanical Key E connectors are used to connect Wireless
-> +  Connectivity devices including combinations of Wi-Fi, BT, NFC to the
-> +host
-> +  machine over interfaces like PCIe/SDIO, USB/UART+PCM, and I2C.
-> +
-> +properties:
-> +  compatible:
-> +    const: pcie-m2-e-connector
-> +
-> +  vpcie3v3-supply:
-> +    description: A phandle to the regulator for 3.3v supply.
-> +
-> +  vpcie1v8-supply:
-> +    description: A phandle to the regulator for VIO 1.8v supply.
-> +
-> +  ports:
-> +    $ref: /schemas/graph.yaml#/properties/ports
-> +    description: OF graph bindings modeling the interfaces exposed on th=
-e
-> +      connector. Since a single connector can have multiple interfaces, =
-every
-> +      interface has an assigned OF graph port number as described below.
-> +
-> +    properties:
-> +      port@0:
-> +        $ref: /schemas/graph.yaml#/properties/port
-> +        description: Connector interfaces for Wi-Fi
-> +
-> +        properties:
-> +          endpoint@0:
-> +            $ref: /schemas/graph.yaml#/properties/endpoint
-> +            description: PCIe interface
-> +
-> +          endpoint@1:
-> +            $ref: /schemas/graph.yaml#/properties/endpoint
-> +            description: SDIO interface
-> +
-> +        anyOf:
-> +          - required:
-> +              - endpoint@0
-> +          - required:
-> +              - endpoint@1
-> +
-> +      port@1:
-> +        $ref: /schemas/graph.yaml#/properties/port
-> +        description: Connector interfaces for BT
-> +
-> +        properties:
-> +          endpoint@0:
-> +            $ref: /schemas/graph.yaml#/properties/endpoint
-> +            description: USB 2.0 interface
-> +
-> +          endpoint@1:
-> +            $ref: /schemas/graph.yaml#/properties/endpoint
-> +            description: UART interface
-> +
-> +        anyOf:
-> +          - required:
-> +              - endpoint@0
-> +          - required:
-> +              - endpoint@1
-> +
-> +      port@2:
-> +        $ref: /schemas/graph.yaml#/properties/port
-> +        description: PCM/I2S interface
-> +
-> +      port@3:
-> +        $ref: /schemas/graph.yaml#/properties/port
-> +        description: I2C interface
-> +
-> +    oneOf:
-> +      - required:
-> +          - port@0
-> +
-> +  clocks:
-> +    description: 32.768 KHz Suspend Clock (SUSCLK) input from the host
-> system to
-> +      the M.2 card. Refer, PCI Express M.2 Specification r4.0, sec 3.1.1=
-2.1 for
-> +      more details.
-> +    maxItems: 1
-> +
-> +  w-disable1-gpios:
-> +    description: GPIO controlled connection to W_DISABLE1# signal. This
-> signal
-> +      is used by the system to disable WiFi radio in the M.2 card. Refer=
-, PCI
-> +      Express M.2 Specification r4.0, sec 3.1.12.3 for more details.
-> +    maxItems: 1
-> +
-> +  w-disable2-gpios:
-> +    description: GPIO controlled connection to W_DISABLE2# signal. This
-> signal
-> +      is used by the system to disable BT radio in the M.2 card. Refer, =
-PCI
-> +      Express M.2 Specification r4.0, sec 3.1.12.3 for more details.
-> +    maxItems: 1
-> +
-> +  viocfg-gpios:
-> +    description: GPIO controlled connection to IO voltage configuration
-> +      (VIO_CFG) signal. This signal is used by the M.2 card to indicate =
-to the
-> +      host system that the card supports an independent IO voltage domai=
-n for
-> +      the sideband signals. Refer, PCI Express M.2 Specification r4.0, s=
-ec
-> +      3.1.15.1 for more details.
-> +    maxItems: 1
-> +
-> +  uim-power-src-gpios:
-> +    description: GPIO controlled connection to UIM_POWER_SRC signal. Thi=
-s
-> signal
-> +      is used when the NFC solution is implemented and receives the powe=
-r
-> output
-> +      from WWAN_UIM_PWR signal of the another WWAN M.2 card. Refer,
-> PCI Express
-> +      M.2 Specification r4.0, sec 3.1.11.1 for more details.
-> +    maxItems: 1
-> +
-> +  uim-power-snk-gpios:
-> +    description: GPIO controlled connection to UIM_POWER_SNK signal. Thi=
-s
-> signal
-> +      is used when the NFC solution is implemented and supplies power to=
- the
-> +      Universal Integrated Circuit Card (UICC). Refer, PCI Express M.2
-> +      Specification r4.0, sec 3.1.11.2 for more details.
-> +    maxItems: 1
-> +
-> +  uim-swp-gpios:
-> +    description: GPIO controlled connection to UIM_SWP signal. This sign=
-al is
-> +      used when the NFC solution is implemented and implements the Singl=
-e
-> Wire
-> +      Protocol (SWP) interface to the UICC. Refer, PCI Express M.2 Speci=
-fication
-> +      r4.0, sec 3.1.11.3 for more details.
-> +    maxItems: 1
-> +
-> +required:
-> +  - compatible
-> +  - vpcie3v3-supply
+> `ret_obj->buffer.pointer' is a `u8 *' pointer so the cast is mandatory.
 
-Hi Mani,
+Ah, right. I think I even tried to check it but probably picked up
+the void *pointer from struct acpi_buffer instead of the correct one.
 
-I am wondering if vpcie3v3-supply property is necessary here, consider the =
-following real board designs on our i.MX platforms.
+> Hmmm, this reminds me that `struct block' probably needs a `__packed'
+> to generate unaligned access to it.
 
-1. M.2 power always on, it connected to board VDD_3V3, no control gpio. Sho=
-uld we not configure the vpcie3v3-supply or add the fake regulator like the=
- one below?
-    reg_m2_pwr: regulator-m2-pwr {
-        compatible =3D "regulator-fixed";
-        regulator-max-microvolt =3D <3300000>;
-        regulator-min-microvolt =3D <3300000>;
-        regulator-name =3D " M.2-power";
-    };
+In all u32 struct, I don't think __packed is required. You can use pahole=
+=20
+tool to check the layout if you want, but I don't think compiler adds=20
+any gaps with only u32s.
 
-2. M.2 power regulator reuses w_disable1# gpio for control. Should we use t=
-he vpcie3v3-supply or w-disable1-gpios to control this?
-
-Best Regards
-Sherry
-
+--=20
+ i.
+--8323328-1263511143-1764142940=:968--
