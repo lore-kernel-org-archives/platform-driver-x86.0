@@ -1,249 +1,177 @@
-Received: from relay12.grserver.gr (relay12.grserver.gr [88.99.38.195])
+Received: from mout.gmx.net (mout.gmx.net [212.227.15.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7E995335555
-	for <platform-driver-x86@vger.kernel.org>; Wed, 26 Nov 2025 20:39:34 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=88.99.38.195
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9006527BF7C;
+	Wed, 26 Nov 2025 20:44:06 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=212.227.15.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1764189577; cv=none; b=PBW+W60JRTEgePo4b3ya2vC9Or8auRaZlK3vXk3Ewuh5HN4Rae6ruD7CMyTOcekha+UOV2GyUXVk/FKmpd5E9RhL12C3IFx/DMVrev4GC66V9m/8uMZexByGXwDFkhoRUJTY4bs8wkI2AdGz4MabsoA7ao4z49L4Jpb3mwkMSfw=
+	t=1764189849; cv=none; b=El07S4O+TICUdiYlJYcJHyKh3RuuRl4pNR9/5eLyoqb/6jtBe/3tSEL8n97PXnQQAHc8NYRpvZeGke6vuI0cgCaBpS30oxPTK9p3XOJGBQsp0+nevHFR7BE32YXt9rTnR5LbhD/gMfkDMj+UiUBCuZwkN7eyWt0ZJ4g+0TMDQE4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1764189577; c=relaxed/simple;
-	bh=DYEACSBCkqJ31MDLJrMbhuzr2YfGhsi6tU/kQJJnndA=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=TdmLj546LycjVsC5A9Pv+XxNa+SroMN5AzNuvBOUjNeTEgT7up71MTetpjBtbeCv4r7BPWWM4RsoZZFajOTGKksNZYi2j9qh0dNyscUiVh0YR6rt6xA6BZ2u9ZYfJzHOU9mvq1NHw3UXl/5T2L24k4aGvvxZm47ugXUITD9eeCg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=antheas.dev; spf=pass smtp.mailfrom=antheas.dev; dkim=pass (2048-bit key) header.d=antheas.dev header.i=@antheas.dev header.b=Pdcd3znJ; arc=none smtp.client-ip=88.99.38.195
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=antheas.dev
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=antheas.dev
+	s=arc-20240116; t=1764189849; c=relaxed/simple;
+	bh=qoBYHw8ZuTLi9SYdhNMb1LK5+DHet4e+/Rigdy6kp3E=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=dF1D512Pk6Szm1RGrdyKyuBW44kf/PA8CTUo2BmgWQS1isjtDZ5hl5r3tCrP3b77fkkYCo8nhezXuuXTlRMP9BND5VP6a08Ro0IX33tzQCNJ9ASbBknsuGCzybv2SG8L2bOkVUXMTbhi5sgJKlokxQUL7tRH7eOzRWovOdlOS8A=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gmx.de; spf=pass smtp.mailfrom=gmx.de; dkim=pass (2048-bit key) header.d=gmx.de header.i=w_armin@gmx.de header.b=sRGagb43; arc=none smtp.client-ip=212.227.15.18
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gmx.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmx.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=antheas.dev header.i=@antheas.dev header.b="Pdcd3znJ"
-Received: from relay12 (localhost [127.0.0.1])
-	by relay12.grserver.gr (Proxmox) with ESMTP id 7016BBCF31
-	for <platform-driver-x86@vger.kernel.org>; Wed, 26 Nov 2025 22:39:32 +0200 (EET)
-Received: from linux3247.grserver.gr (linux3247.grserver.gr [213.158.90.240])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by relay12.grserver.gr (Proxmox) with ESMTPS id B0757BDCD9
-	for <platform-driver-x86@vger.kernel.org>; Wed, 26 Nov 2025 22:39:31 +0200 (EET)
-Received: from mail-lj1-f172.google.com (mail-lj1-f172.google.com [209.85.208.172])
-	by linux3247.grserver.gr (Postfix) with ESMTPSA id 05C39201D96
-	for <platform-driver-x86@vger.kernel.org>; Wed, 26 Nov 2025 22:39:30 +0200 (EET)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=antheas.dev;
-	s=default; t=1764189571;
-	bh=Sjqff3QAgbFxS5ggUuvuusp9quhJu5P4Rj++cO8DT0Q=;
-	h=Received:From:Subject:To;
-	b=Pdcd3znJ42v0sNj2gnm36OkXM0XDSEsDOnPiI7LlcmiATAARoI1jMopl3tSlLKGo1
-	 cDHgJGC/oXGglzqLyzBK2BFSiUfoudsibjZCJ0KRh00tPsYxq8r8Hsk8dShchZ2M1y
-	 Ey2B0Fmrzma9nSMj7/Jnupt0gGD3k3iCUYsnExQpQd0bZw2PovgMOBVkaY1iHGlK0a
-	 Brox1N7tB4ZjNL7zNw94vBvft7frYdEbDLHi/sDqKkBXSOgibHTly36e/co7+9JSB0
-	 QrnIXi5zJg9yXwU4zepAbrSrNn2l6l9r0dPgIuOcavlJIRTjw0xcejCLKkynNgZnGB
-	 asjgk7tYd5aWw==
-Authentication-Results: linux3247.grserver.gr;
-        spf=pass (sender IP is 209.85.208.172) smtp.mailfrom=lkml@antheas.dev smtp.helo=mail-lj1-f172.google.com
-Received-SPF: pass (linux3247.grserver.gr: connection is authenticated)
-Received: by mail-lj1-f172.google.com with SMTP id
- 38308e7fff4ca-37a875e3418so1337901fa.1
-        for <platform-driver-x86@vger.kernel.org>;
- Wed, 26 Nov 2025 12:39:30 -0800 (PST)
-X-Gm-Message-State: AOJu0YyPkDWOXGR9g6OAHRa7C7lBpvTYMd55DdD8yzwrwPLS3SqfSIgJ
-	8tCLpRosIblr+t1jTWIleQOoeR7vxTvuMW1FrljYqz9XpmFIIqZYFoiCq/VtPbaiCBBJdO64DoD
-	+9pO1Ynlpy9Uiuvb6Dl1t+tlcbF+1Dho=
-X-Google-Smtp-Source: 
- AGHT+IFIH49lcl7asUbJO1MT9adEgXvlmGXrY2PggM19M+Dhobmud1VcOUPW3cPIXGjj7Ov1zJZ0W8BYXhhNsDo0HMI=
-X-Received: by 2002:a2e:b005:0:b0:37a:2bc5:9d7d with SMTP id
- 38308e7fff4ca-37d078e8595mr20624071fa.32.1764189570443; Wed, 26 Nov 2025
- 12:39:30 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=gmx.de header.i=w_armin@gmx.de header.b="sRGagb43"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=gmx.de;
+	s=s31663417; t=1764189844; x=1764794644; i=w_armin@gmx.de;
+	bh=vNPd9nG1BQSyvqbEHaeBu+5D/0IeTEmZMVdFXvsNFqY=;
+	h=X-UI-Sender-Class:From:To:Cc:Subject:Date:Message-Id:
+	 MIME-Version:Content-Transfer-Encoding:cc:
+	 content-transfer-encoding:content-type:date:from:message-id:
+	 mime-version:reply-to:subject:to;
+	b=sRGagb43c3Fj4Gh70Jn+ZwbFWixdh6R2IgHuowzs5tXTZQrP4f+onnnnqFlPBrWP
+	 5TY+hrsbH0774mzQ/CRXWNeNC3ltpL6wYvtqwU9/S7r3ftJCjZ3/FH0TXCj8EKqZI
+	 V8QHMBi6bNnArlwTcpOrRKn5Jzg09d4vn9rBAHzwYAzYqp0+yemvhotgw6FPTKxWz
+	 ZPPN0NUGnNt9Gmi37t61HiDFBJo5/wAJIH0Y9AgCGTCchlhcd0F42sL9SOmmr5yE0
+	 A1Z8uHym9L0G/fx/rtzWvXM7ogDHONTV1dDlDaIPqRyz1iei34aRKn8LiBKZ4dZIu
+	 4+z+X8z8tYQw6EzfrQ==
+X-UI-Sender-Class: 724b4f7f-cbec-4199-ad4e-598c01a50d3a
+Received: from mx-amd-b650.fritz.box ([93.202.247.91]) by mail.gmx.net
+ (mrgmx005 [212.227.17.190]) with ESMTPSA (Nemesis) id
+ 1MybGh-1wKTKT1akn-00wLRy; Wed, 26 Nov 2025 21:44:04 +0100
+From: Armin Wolf <W_Armin@gmx.de>
+To: andriy.shevchenko@intel.com,
+	hansg@kernel.org,
+	ilpo.jarvinen@linux.intel.com
+Cc: platform-driver-x86@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Subject: [PATCH] fs/nls: Fix inconsistency between utf8_to_utf32() and utf32_to_utf8()
+Date: Wed, 26 Nov 2025 21:43:55 +0100
+Message-Id: <20251126204355.337191-1-W_Armin@gmx.de>
+X-Mailer: git-send-email 2.39.5
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20251122110032.4274-1-lkml@antheas.dev>
- <20251122110032.4274-11-lkml@antheas.dev>
- <713cc4fd-e6a1-4db4-907a-a0575a2b7b8f@gmail.com>
-In-Reply-To: <713cc4fd-e6a1-4db4-907a-a0575a2b7b8f@gmail.com>
-From: Antheas Kapenekakis <lkml@antheas.dev>
-Date: Wed, 26 Nov 2025 21:39:18 +0100
-X-Gmail-Original-Message-ID: 
- <CAGwozwHwi7mopXY=DM2jt82jgdetdhNR-CUicX7R9KbYj4g0Xw@mail.gmail.com>
-X-Gm-Features: AWmQ_blhUr7scMJPMzqHXbDfUxNrQnMVWmrATVYXPYIPSGK16mUoFJsGBYzHMl8
-Message-ID: 
- <CAGwozwHwi7mopXY=DM2jt82jgdetdhNR-CUicX7R9KbYj4g0Xw@mail.gmail.com>
-Subject: Re: [PATCH v10 10/11] platform/x86: asus-wmi: add keyboard brightness
- event handler
-To: Denis Benato <benato.denis96@gmail.com>
-Cc: platform-driver-x86@vger.kernel.org, linux-input@vger.kernel.org,
-	linux-kernel@vger.kernel.org, Jiri Kosina <jikos@kernel.org>,
-	Benjamin Tissoires <bentiss@kernel.org>,
- Corentin Chary <corentin.chary@gmail.com>,
-	"Luke D . Jones" <luke@ljones.dev>, Hans de Goede <hansg@kernel.org>,
-	=?UTF-8?Q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
-Content-Type: text/plain; charset="UTF-8"
-X-PPP-Message-ID: 
- <176418957122.3541201.15276328102945069591@linux3247.grserver.gr>
-X-PPP-Vhost: antheas.dev
-X-Virus-Scanned: clamav-milter 1.4.3 at linux3247.grserver.gr
-X-Virus-Status: Clean
+Content-Transfer-Encoding: quoted-printable
+X-Provags-ID: V03:K1:rWuYAhy91uQyA1rRWKOO0A1n/3UrL7L+8vh2ALoVgWO/VxS241g
+ 9cOJ+2vz3rIdGmVWOnfAo6A2ANNERFCsTXWChk9GGpKrN9ZIRgNRRPjooc1akH3brlPzCSD
+ j/yrnIJt5WkCKYUOSq8iyN6RgHr+nZNdOnhct3iawEAk7IBV+tvn/kDwfZwI7cqrMQKFnZD
+ bHP9d9A4oEUGeW+nK/AXQ==
+X-Spam-Flag: NO
+UI-OutboundReport: notjunk:1;M01:P0:5eqbQMosR50=;jnvvtcqbm34PT4atAZbTsdtT39c
+ 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
 
-On Wed, 26 Nov 2025 at 21:23, Denis Benato <benato.denis96@gmail.com> wrote:
->
->
-> On 11/22/25 12:00, Antheas Kapenekakis wrote:
-> > The keyboard brightness control of Asus WMI keyboards is handled in
-> > kernel, which leads to the shortcut going from brightness 0, to 1,
-> > to 2, and 3.
-> >
-> > However, for HID keyboards it is exposed as a key and handled by the
-> > user's desktop environment. For the toggle button, this means that
-> > brightness control becomes on/off. In addition, in the absence of a
-> > DE, the keyboard brightness does not work.
-> >
-> > Therefore, expose an event handler for the keyboard brightness control
-> > which can then be used by hid-asus. Since this handler is called from
-> > an interrupt context, defer the actual work to a workqueue.
-> >
-> > In the process, introduce ASUS_EV_MAX_BRIGHTNESS to hold the constant
-> > for maximum brightness since it is shared between hid-asus/asus-wmi.
-> >
-> > Reviewed-by: Luke D. Jones <luke@ljones.dev>
-> > Tested-by: Luke D. Jones <luke@ljones.dev>
-> > Signed-off-by: Antheas Kapenekakis <lkml@antheas.dev>
-> > ---
-> >  drivers/platform/x86/asus-wmi.c            | 46 +++++++++++++++++++---
-> >  include/linux/platform_data/x86/asus-wmi.h | 13 ++++++
-> >  2 files changed, 54 insertions(+), 5 deletions(-)
-> >
-> > diff --git a/drivers/platform/x86/asus-wmi.c b/drivers/platform/x86/asus-wmi.c
-> > index 84cde34ab6a8..a69464e45ca4 100644
-> > --- a/drivers/platform/x86/asus-wmi.c
-> > +++ b/drivers/platform/x86/asus-wmi.c
-> > @@ -1719,6 +1719,44 @@ static void kbd_led_update_all(struct work_struct *work)
-> >       }
-> >  }
-> >
-> > +/*
-> > + * This function is called from hid-asus to inform asus-wmi of brightness
-> > + * changes initiated by the keyboard backlight keys.
-> > + */
-> > +int asus_hid_event(enum asus_hid_event event)
-> > +{
-> > +     struct asus_wmi *asus;
-> > +     int brightness;
-> > +
-> > +     guard(spinlock_irqsave)(&asus_ref.lock);
-> > +     asus = asus_ref.asus;
-> > +     if (!asus || !asus->kbd_led_registered)
-> > +             return -EBUSY;
-> > +
-> > +     brightness = asus->kbd_led_wk;
-> > +
-> > +     switch (event) {
-> > +     case ASUS_EV_BRTUP:
-> > +             brightness += 1;
-> > +             break;
-> > +     case ASUS_EV_BRTDOWN:
-> > +             brightness -= 1;
-> > +             break;
-> > +     case ASUS_EV_BRTTOGGLE:
-> > +             if (brightness >= ASUS_EV_MAX_BRIGHTNESS)
-> > +                     brightness = 0;
-> > +             else
-> > +                     brightness += 1;
-> > +             break;
-> > +     }
-> > +
-> > +     asus->kbd_led_wk = clamp_val(brightness, 0, ASUS_EV_MAX_BRIGHTNESS);
-> > +     asus->kbd_led_notify = true;
-> > +     queue_work(asus->led_workqueue, &asus->kbd_led_work);
-> > +     return 0;
-> > +}
-> > +EXPORT_SYMBOL_GPL(asus_hid_event);
-> > +
-> >  /*
-> >   * These functions actually update the LED's, and are called from a
-> LEDs as opposed to LED's?
+After commit 25524b619029 ("fs/nls: Fix utf16 to utf8 conversion"),
+the return values of utf8_to_utf32() and utf32_to_utf8() are
+inconsistent when encountering an error: utf8_to_utf32() returns -1,
+while utf32_to_utf8() returns errno codes. Fix this inconsistency
+by modifying utf8_to_utf32() to return errno codes as well.
 
-I agree with you, but the author of that line probably wouldn't -
-depends on author dialect and both are usually correct.
+Suggested-by: Andy Shevchenko <andriy.shevchenko@intel.com>
+Signed-off-by: Armin Wolf <W_Armin@gmx.de>
+=2D--
+ fs/nls/nls_base.c | 11 +++++++----
+ 1 file changed, 7 insertions(+), 4 deletions(-)
 
-When making acronyms plural, adding a ' is usually accepted as
-correct. But this is not added as part of this series, so you can do a
-reword commit if you wish
-
-Antheas
-
-> >   * workqueue. By doing this as separate work rather than when the LED
-> > @@ -1801,13 +1839,11 @@ static void do_kbd_led_set(struct led_classdev *led_cdev, int value)
-> >  {
-> >       struct asus_hid_listener *listener;
-> >       struct asus_wmi *asus;
-> > -     int max_level;
-> >
-> >       asus = container_of(led_cdev, struct asus_wmi, kbd_led);
-> > -     max_level = asus->kbd_led.max_brightness;
-> >
-> >       scoped_guard(spinlock_irqsave, &asus_ref.lock)
-> > -             asus->kbd_led_wk = clamp_val(value, 0, max_level);
-> > +             asus->kbd_led_wk = clamp_val(value, 0, ASUS_EV_MAX_BRIGHTNESS);
-> >
-> >       if (asus->kbd_led_avail)
-> >               kbd_led_update(asus);
-> > @@ -2011,7 +2047,7 @@ static int asus_wmi_led_init(struct asus_wmi *asus)
-> >       asus->kbd_led.flags = LED_BRIGHT_HW_CHANGED;
-> >       asus->kbd_led.brightness_set = kbd_led_set;
-> >       asus->kbd_led.brightness_get = kbd_led_get;
-> > -     asus->kbd_led.max_brightness = 3;
-> > +     asus->kbd_led.max_brightness = ASUS_EV_MAX_BRIGHTNESS;
-> >       asus->kbd_led_avail = !kbd_led_read(asus, &led_val, NULL);
-> >       INIT_WORK(&asus->kbd_led_work, kbd_led_update_all);
-> >
-> > @@ -4530,7 +4566,7 @@ static void asus_wmi_handle_event_code(int code, struct asus_wmi *asus)
-> >               return;
-> >       }
-> >       if (code == NOTIFY_KBD_BRTTOGGLE) {
-> > -             if (led_value == asus->kbd_led.max_brightness)
-> > +             if (led_value == ASUS_EV_MAX_BRIGHTNESS)
-> >                       kbd_led_set_by_kbd(asus, 0);
-> >               else
-> >                       kbd_led_set_by_kbd(asus, led_value + 1);
-> > diff --git a/include/linux/platform_data/x86/asus-wmi.h b/include/linux/platform_data/x86/asus-wmi.h
-> > index d347cffd05d5..7b872b5d0960 100644
-> > --- a/include/linux/platform_data/x86/asus-wmi.h
-> > +++ b/include/linux/platform_data/x86/asus-wmi.h
-> > @@ -178,6 +178,14 @@ struct asus_hid_listener {
-> >       void (*brightness_set)(struct asus_hid_listener *listener, int brightness);
-> >  };
-> >
-> > +enum asus_hid_event {
-> > +     ASUS_EV_BRTUP,
-> > +     ASUS_EV_BRTDOWN,
-> > +     ASUS_EV_BRTTOGGLE,
-> > +};
-> > +
-> > +#define ASUS_EV_MAX_BRIGHTNESS 3
-> > +
-> >  #if IS_REACHABLE(CONFIG_ASUS_WMI)
-> >  void set_ally_mcu_hack(enum asus_ally_mcu_hack status);
-> >  void set_ally_mcu_powersave(bool enabled);
-> > @@ -186,6 +194,7 @@ int asus_wmi_set_devstate(u32 dev_id, u32 ctrl_param, u32 *retval);
-> >  int asus_wmi_evaluate_method(u32 method_id, u32 arg0, u32 arg1, u32 *retval);
-> >  int asus_hid_register_listener(struct asus_hid_listener *cdev);
-> >  void asus_hid_unregister_listener(struct asus_hid_listener *cdev);
-> > +int asus_hid_event(enum asus_hid_event event);
-> >  #else
-> >  static inline void set_ally_mcu_hack(enum asus_ally_mcu_hack status)
-> >  {
-> > @@ -213,6 +222,10 @@ static inline int asus_hid_register_listener(struct asus_hid_listener *bdev)
-> >  static inline void asus_hid_unregister_listener(struct asus_hid_listener *bdev)
-> >  {
-> >  }
-> > +static inline int asus_hid_event(enum asus_hid_event event)
-> > +{
-> > +     return -ENODEV;
-> > +}
-> >  #endif
-> >
-> >  #endif       /* __PLATFORM_DATA_X86_ASUS_WMI_H */
->
+diff --git a/fs/nls/nls_base.c b/fs/nls/nls_base.c
+index d434c4463a8f..a5c3a9f1b8dc 100644
+=2D-- a/fs/nls/nls_base.c
++++ b/fs/nls/nls_base.c
+@@ -67,19 +67,22 @@ int utf8_to_utf32(const u8 *s, int inlen, unicode_t *p=
+u)
+ 			l &=3D t->lmask;
+ 			if (l < t->lval || l > UNICODE_MAX ||
+ 					(l & SURROGATE_MASK) =3D=3D SURROGATE_PAIR)
+-				return -1;
++				return -EILSEQ;
++
+ 			*pu =3D (unicode_t) l;
+ 			return nc;
+ 		}
+ 		if (inlen <=3D nc)
+-			return -1;
++			return -EOVERFLOW;
++
+ 		s++;
+ 		c =3D (*s ^ 0x80) & 0xFF;
+ 		if (c & 0xC0)
+-			return -1;
++			return -EILSEQ;
++
+ 		l =3D (l << 6) | c;
+ 	}
+-	return -1;
++	return -EILSEQ;
+ }
+ EXPORT_SYMBOL(utf8_to_utf32);
+=20
+=2D-=20
+2.39.5
 
