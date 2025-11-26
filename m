@@ -1,66 +1,66 @@
-Received: from mail-wm1-f49.google.com (mail-wm1-f49.google.com [209.85.128.49])
+Received: from mail-wr1-f43.google.com (mail-wr1-f43.google.com [209.85.221.43])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 44BCA33E34E
-	for <platform-driver-x86@vger.kernel.org>; Wed, 26 Nov 2025 19:57:12 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.49
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5A07834027E
+	for <platform-driver-x86@vger.kernel.org>; Wed, 26 Nov 2025 19:58:51 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.43
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1764187034; cv=none; b=Sb3RqXkHi5JQZECFrotqYRpwBOXA/YT9uQLQdWpvR4Q0W1flMilFjZHYtCXCP32/PKi6/Dn792E86Lv5BxyM928ddtxOlwV7w7S/AuN5ksCaupiiub/uYFB2yCuA6jpa2h22RQcJBtvsc1ceYUKsN5XO3loqCOcW77M3Bufy4OM=
+	t=1764187134; cv=none; b=mLXCGnS/0ckv5BjSWpTP3td9crgqfWK2SepOIceirP5DbYWbCaRcFsatHmYeP/Fc8Srorwd6Kswu9qVjY/MFWpjDxz+VG6dgM+YHdga8CQXgFYsunrj9RuD3EPPvtAVUjNVV5G+uf+0cfYI9myhcJPPVr21NVqhJWOxVHPGrv88=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1764187034; c=relaxed/simple;
-	bh=sFxdQJq77FHB9tvA6CD8aNGyL+khIcZI1+iJPTYgK0o=;
+	s=arc-20240116; t=1764187134; c=relaxed/simple;
+	bh=ouXDrryNbj+wome1fKjUn7mM0c30UoQh7+VKfbDhNr8=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=j9KVdxqZ0D0wBUF+oDpQyXEMfVRod4O0F2RtZr81XrssV0X3gEWcdwqSkg+PHZ85AuFJNHacjgC6TaAeRhavSwFCom72w/pRjOTRxsN4SmxBS+3hy1M5CeR6la57E2fthuDSPA+QSyuxn9J2S0A/+Rypbg085O21JUzvBVPKKkw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=aoeplI1a; arc=none smtp.client-ip=209.85.128.49
+	 In-Reply-To:Content-Type; b=lCRoT7z6ZftAhBYgDwIeY2iC17y4E5mdQunwue+3me8co/ZsZc/Hf37OE1Imjc6miYyEC30YbIpi+pyJxgfxS8zjymSHWG5Y/4TCDUq1vGAOOwZvWZA0qKWZ88Bzr9RirnXPnoet7EOMruTprH09SnLGqt3fwIcqpceK7rQpXns=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=hmPrVsfv; arc=none smtp.client-ip=209.85.221.43
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="aoeplI1a"
-Received: by mail-wm1-f49.google.com with SMTP id 5b1f17b1804b1-4779ce2a624so708695e9.2
-        for <platform-driver-x86@vger.kernel.org>; Wed, 26 Nov 2025 11:57:12 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="hmPrVsfv"
+Received: by mail-wr1-f43.google.com with SMTP id ffacd0b85a97d-42b3b29153fso96581f8f.3
+        for <platform-driver-x86@vger.kernel.org>; Wed, 26 Nov 2025 11:58:51 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1764187031; x=1764791831; darn=vger.kernel.org;
+        d=gmail.com; s=20230601; t=1764187130; x=1764791930; darn=vger.kernel.org;
         h=content-transfer-encoding:in-reply-to:from:content-language
          :references:cc:to:subject:user-agent:mime-version:date:message-id
          :from:to:cc:subject:date:message-id:reply-to;
-        bh=5d9lydYHfYTR/ACeyVzgTNDMdFsWzBAH+5B+oqVuOrk=;
-        b=aoeplI1aLf71KS/Lee+Zi0U+oIokFBj1dNIRENWTHxHF+XMVFjlBh7cNGTA2SvVGII
-         +TZDzRAhwOodta9nvijt1pZTTx8oNN89zRzxGz+k6STQDVfK12fpq92Ep9gZ0734pN7i
-         FkwfvfEXmM4hvKWAXsamN9LcvSEh4NkriRCON/CfM8zYCnrGSjb0o74qW1WI4hMOQUbX
-         8IhQfMNtFTAEv9fuIyh8mcIdOlObUel0fsHot7u6F97KERqTVXRwxA9kjwHtV7phwx6f
-         YnCpVrtPxQr9/vt8pQeVHBHbtoO8SxkolwuX4Rv/1HAKzsr6mcoDUKs0tzTIzceQ32D5
-         3Rng==
+        bh=OExF1JQzYpc2h2zH4FrYnRdoMgy0dMAMagT+YpDZHyA=;
+        b=hmPrVsfvF4gmoW32ZzDcuofanIOPqRQTXIx/ZZQbMOuO2jQ62K5zyk8jc2Mv/2JQiY
+         60O//qMUDFhFZiNJiENtECpTeN9A4bmbtZWgwK21N8YnZc2ssSlKR7gx3o59Ewp1jCg+
+         hfkC4qtZpeHpVU9UK2K7Zhh7llnNW49ZM4Fo8iaZ81qHFnNM/igpyKm7IcHE6o7RAFD8
+         QJV1m99QXMVQotddXfUUR57YgrTt4rr1W74s8stJ3RTGGcBH93MdmQA5LZSag2lkPfZA
+         CL7hHI6/2DCdoScTv8yHgXpYiUy2OdnsuduH00ADfgP0qitCBh2KIGOZSpHImC3pvD5N
+         SiQw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1764187031; x=1764791831;
+        d=1e100.net; s=20230601; t=1764187130; x=1764791930;
         h=content-transfer-encoding:in-reply-to:from:content-language
          :references:cc:to:subject:user-agent:mime-version:date:message-id
          :x-gm-gg:x-gm-message-state:from:to:cc:subject:date:message-id
          :reply-to;
-        bh=5d9lydYHfYTR/ACeyVzgTNDMdFsWzBAH+5B+oqVuOrk=;
-        b=WhlmTz3GyjKbbjiOheBRChsDVXtPKpvIlPbhuUEvSkiz5f+ntT2qiUTiAIpgMA65/M
-         4iqCD3d8BYQor2wFZ8yhnoI6swZ5LPz8yYlgnO9LCJBtrhcnPdo+tBplzbDx5+/DYdC4
-         TNqc4bLJhwjzx7rOwW1FJA3OmVLf6cTAJn8TEH5498fcljdS2dNKt2BsM3pmJF13Lbes
-         Tcje/dZeCtSulnonmBfQvMeH3lgJOZr9rPP4eDPpzGx1dNaopsNm74zsHfYVw0YD2Rbn
-         +Kv5eZod/77/Z+GQxhMvdhDIaUMWJEta0nXaX7R+wIFbSru+2T9kd6miJweY6tOFKS7L
-         HFfA==
-X-Gm-Message-State: AOJu0Yza29FL6F6RP03s/asNjchS9mxvKz4hW0FGinLeMvIQDQ4oVS5Q
-	FxXEAvtNJAr9IterTcoapduXxe9RFnXDerUxBwdVR4M9pnravxypsm2g
-X-Gm-Gg: ASbGncuIqjpUi9IhjlBiect0qvBpQCjqkFeGGvumhVxRoE7yrYJKX6MKzLQ8O57iMKK
-	B64uLY//9TFgOI/Q1VjEo4HyhxAJxJWr0FQFoknrWuj7VYWQJaKC/j5xEq0EEUcbRFTdwl5iH1t
-	23kK+OMXYAQRg/art3QJMeCGXxbBRXkXXUskDAPm/D+mDZSlPZ6eRWihhDMmWIaZoZKZvuz/RsQ
-	Pt2eI9W7Km0XSX7hV3KfmPjFN4o68upgCRd4HZZ0o8NNlCSnDA/d0Use3LoauYMchMHQYATFMut
-	rlhHdkNdpjnL7oqbK1mNL49gtKrsG7O4NkNIbMN7Jn8EBAVotN2IqRSw/8S8mjzw2rFIW9PuXp8
-	JJFG3Fd2cm4iG4UTw0EnCRJkzFYq8kGS/fp+vNAUSH2BoyZh21k6jM/iiVJG7ww8wn5gBDlsLfY
-	Q1W/0ses0iPKqwuNAQ2T20CTM=
-X-Google-Smtp-Source: AGHT+IGGyxkOHK8GZV6Ekt6wPcd/FqevLtVSgweKGQGNG+bJX6KjbUrpGirBnJ4u9ZEjKg1XNiVySQ==
-X-Received: by 2002:a05:600c:19c6:b0:477:7975:30ea with SMTP id 5b1f17b1804b1-47904b25e46mr73013525e9.29.1764187030408;
-        Wed, 26 Nov 2025 11:57:10 -0800 (PST)
+        bh=OExF1JQzYpc2h2zH4FrYnRdoMgy0dMAMagT+YpDZHyA=;
+        b=gheFvMKdhWe1xnlbpDaIZTWvA7TYMYLA3XiJAtnzmX5/ZRr2R8FyhE64OzF6vUoE+E
+         fZcXfs7i5aH5Bf4I6bmiBf/pW9AX1zeNnISZoMWWqh2ifYwYhqtirX0Xvry6QBuciyYa
+         QyegN0Ij+7v97FhIuCf25BD+EibVrQLX7E/Q6XbJzMk6/wi1Vv4q/Rwh2hCOJk1q0ubA
+         uCmbtr1+fMaBQwdNSSvTVIuTHu/MjzZA27fou7piMYtocKGByuPcoD9vf2qUaAJ3sw5/
+         KR1fQIk8baAhWtl05vld0Q/QSA4lAgX3vk6ZN3rToHJM5f9Hul2NayxtlHyHSxuK5cFG
+         5Agg==
+X-Gm-Message-State: AOJu0YyKLh6PoyYXe3M8gz8TVpsTCnFzuBOgO2zn99UbyGJvIVyUPlVi
+	QbBg+jn2BUIYupusJRndRw2e82+y3a1cGo5h0J6ToofVt7s56iKJs3a3
+X-Gm-Gg: ASbGnctlQDtWcQkW74MZ7YBxQ0wmi6yage4sTQ4wkLoxGDAZiryAdBMbkObsQ/1NR8v
+	5F7YfIXOFcLdzyPBIQb0isTv/kjnw4z+mHdemAHWKwG43oowRm148aA8/5fyjZzcnKrQR27alw3
+	cQBiaeClYb+qrqAk408be6O+z3FsgjES/DTRtHmRLok36pYFKBm1iroMn7AOJvBmNN9mrNGcAH7
+	McccbpQ9r1uKHJn1NzStU4VMmM1N+g2nCowlhKtXlF08SvxNM/MqW5tVAm5HMEvgiZ1a4MXCgy9
+	KizyWKS33aGj3NYsGTnU+EIm0pBJ+6+NZR2J/kzY/ErtBdHUIbP8m7wySUlpw+absHaVux8RWFP
+	LIFaNNnysoDG3SW1qrIQ2j1Wh9gRtMq/2gs55n7yARPa/bMa0MgdOu5YSxrNR6ZQ2ON9U1N4uwv
+	jxeWm+vt/TsPvLoxLTpUkXpwc=
+X-Google-Smtp-Source: AGHT+IEDx/wBoXNenK2Ypu2xX2VwmxU/aiE0sh64BmJQV0DD5n+jSMW41a202DpjwlE8D5noA5Eq1A==
+X-Received: by 2002:a5d:5c89:0:b0:42b:32f5:ad43 with SMTP id ffacd0b85a97d-42cc1ceead7mr23615938f8f.17.1764187129456;
+        Wed, 26 Nov 2025 11:58:49 -0800 (PST)
 Received: from [192.168.1.121] ([176.206.93.222])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-479040cfe17sm51335465e9.5.2025.11.26.11.57.09
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-42cb7fa3a76sm42726147f8f.24.2025.11.26.11.58.48
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 26 Nov 2025 11:57:09 -0800 (PST)
-Message-ID: <577d33c5-bf91-4a23-813b-43df8135aa0d@gmail.com>
-Date: Wed, 26 Nov 2025 20:57:09 +0100
+        Wed, 26 Nov 2025 11:58:49 -0800 (PST)
+Message-ID: <b2bf7eeb-6cc1-4b67-8118-632943fa9c7c@gmail.com>
+Date: Wed, 26 Nov 2025 20:58:48 +0100
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
@@ -70,81 +70,248 @@ MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
 Subject: Re: [PATCH v10 00/11] HID: asus: Fix ASUS ROG Laptop's Keyboard
  backlight handling
-To: Hans de Goede <hansg@kernel.org>,
- =?UTF-8?Q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>,
+To: =?UTF-8?Q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>,
  Antheas Kapenekakis <lkml@antheas.dev>
 Cc: platform-driver-x86@vger.kernel.org, linux-input@vger.kernel.org,
  LKML <linux-kernel@vger.kernel.org>, Jiri Kosina <jikos@kernel.org>,
  Benjamin Tissoires <bentiss@kernel.org>,
- Corentin Chary <corentin.chary@gmail.com>, "Luke D . Jones" <luke@ljones.dev>
+ Corentin Chary <corentin.chary@gmail.com>, "Luke D . Jones"
+ <luke@ljones.dev>, Hans de Goede <hansg@kernel.org>
 References: <20251122110032.4274-1-lkml@antheas.dev>
  <CAGwozwGwkBH_03JvPQrevQiszwDZ5R4uDBnzWVeVXLo8xRmeug@mail.gmail.com>
  <b91fa2c8-e342-9e46-f401-8c3d0590cd38@linux.intel.com>
- <4bcc6708-77ff-403d-83cf-10a40934263a@kernel.org>
+ <CAGwozwGWL4Vr1XfVZBQoGCq7tKE4mBcPYS2n-p_GAt-V8LeKgg@mail.gmail.com>
+ <CAGwozwHZrLcCAzH1m-AEKLJTZ2BE2fL1w0RY7-mF8Ck_yko8eA@mail.gmail.com>
+ <b96548e0-d788-b9bf-d8ae-33df98bdf814@linux.intel.com>
 Content-Language: en-US, it-IT, en-US-large
 From: Denis Benato <benato.denis96@gmail.com>
-In-Reply-To: <4bcc6708-77ff-403d-83cf-10a40934263a@kernel.org>
+In-Reply-To: <b96548e0-d788-b9bf-d8ae-33df98bdf814@linux.intel.com>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 
 
-On 11/26/25 18:34, Hans de Goede wrote:
-> Hi,
+On 11/26/25 16:31, Ilpo Järvinen wrote:
+> On Wed, 26 Nov 2025, Antheas Kapenekakis wrote:
 >
-> On 26-Nov-25 4:23 PM, Ilpo Järvinen wrote:
->> On Wed, 26 Nov 2025, Antheas Kapenekakis wrote:
-> ...
+>> On Wed, 26 Nov 2025 at 16:28, Antheas Kapenekakis <lkml@antheas.dev> wrote:
+>>> On Wed, 26 Nov 2025 at 16:24, Ilpo Järvinen
+>>> <ilpo.jarvinen@linux.intel.com> wrote:
+>>>> On Wed, 26 Nov 2025, Antheas Kapenekakis wrote:
+>>>>
+>>>>> On Sat, 22 Nov 2025 at 12:01, Antheas Kapenekakis <lkml@antheas.dev> wrote:
+>>>>>> This is a two part series which does the following:
+>>>>>>   - Clean-up init sequence
+>>>>>>   - Unify backlight handling to happen under asus-wmi so that all Aura
+>>>>>>     devices have synced brightness controls and the backlight button works
+>>>>>>     properly when it is on a USB laptop keyboard instead of one w/ WMI.
+>>>>>>
+>>>>>> For more context, see cover letter of V1. Since V5, I removed some patches
+>>>>>> to make this easier to merge.
+>>>>> Slight bump on this. It addresses both of the remarks Denis made in
+>>>>> the previous version.
+>>>>>
+>>>>> I begrudgingly argued a bit for those because I did not want to resend
+>>>>> the series and they were not functional changes, so sorry about that.
+>>>>> But they are fixed in this version incl. with the conflict with the
+>>>>> armoury patchset. Denis, you omitted a rby on "platform/x86: asus-wmi:
+>>>>> Add support for multiple kbd led handlers" even though I addressed
+>>>>> your comment, so you may want to add that.
+>>>> FYI, there's no direct relation that mandates a person to give a rev-by
+>>>> even if all his/her comments were addressed.
+>>> True, this is just a reminder because I did not hear from him and
+>>> since he added a rev-by on the kfree patch. There's no obligation from
+>>> my side.
+Lack of time: I will review the rest shortly unless some more unexpected
+thing shows up.
+>>>> But generally yes, it would be useful to hear whether Denis is fine with
+>>>> v10, especially those patches that had contention earlier but you've
+>>>> modified post-v8.
+>>>>
+>>>>> As for "HID: asus: early return for ROG devices" changing the name of
+>>>>> the devices of this driver, I will veto backporting it if it happens,
+>>>>> so inputplumber will have the two full months to remove the name
+>>>>> match. This is not a breaking change in the sense that software cannot
+>>>>> be made to work on both previous and latter versions and there is no
+>>>>> other software to my knowledge relying on name matches for Asus
+>>>>> keyboards.
+>>>> Did Hans give some opinion about this rename earlier, at least I don't
+>>>> remember nor could find from lore archives?
+>>> Hans jumped in on the ayaneo controller patch. I don't think I saw
+>>> activity on this series
+>> Hans had some feedback around half a year ago for the latter part of
+>> this series that binds the devices together
+> Yes but I was interested on specifically about this userspace visible 
+> change. He has been around much much longer than me so his insight on 
+> userspace visible changes is way more valuable than mine.
 >
->>> As for "HID: asus: early return for ROG devices" changing the name of
->>> the devices of this driver, I will veto backporting it if it happens,
->>> so inputplumber will have the two full months to remove the name
->>> match. This is not a breaking change in the sense that software cannot
->>> be made to work on both previous and latter versions and there is no
->>> other software to my knowledge relying on name matches for Asus
->>> keyboards.
->> Did Hans give some opinion about this rename earlier, at least I don't 
->> remember nor could find from lore archives?
-> I don't remember commenting on this myself either.
+> --
+>  i.
 >
-> So generally speaking there are plenty of cases where /dev/input/event#
-> nodes for a specific device have their name changed by some kernel patches.
->
-> Typically HID input devices are matched in userspace by their
-> bus:vend-id:prod-id triplet not by the name. The name might even
-> change by a fwupdate of the device itself.
->
-> So I'm not overly worried about this and inputplumber seems nice
-> enough and already is very much not a plug-and-play tool.
->
-> One possible concern with laptop keyboard input-device name changes
-> though is hwdb entries to fixup scancode -> ev-key-code mappings.
->
-> See: /lib/udev/hwdb.d/60-keyboard.hwdb on any standard Linux systems
-> an then the big comment at the top.
->
-> An input-device name change might break this match pattern:
->
-> #  - Input driver device name and DMI data match:
-> #      evdev:name:<input device name>:dmi:bvn*:bvr*:bd*:svn<vendor>:pn*
-> #    <input device name> is the name device specified by the
-> #    driver, <vendor> is the firmware-provided string exported
-> #    by the kernel DMI modalias, see /sys/class/dmi/id/modalias
->
-> As well as the extended version of this and for laptops with USB
-> keyboards this is the only match type which allows a DMI match
-> which is what we want for laptop kbd mappings. Looking at the Asus
-> section of the upstream 60-keyboard.hwdb I do not see any such
-> matches though.
->
-> There not being such matches kinda make sense since for USB-HID
-> devices any special scancode -> ev-key-code mappings are typically
-> handled in a vendor specific HID driver like hid-asus.
->
-> TL;DR: I think that the input-device name should be fine.
-Thank you very much for this write-up! Now I feel much more confident
-in giving approval!
-> Regards,
->
-> Hans
-Thank you,
-Denis
+>>> Antheas
+>>>
+>>>> --
+>>>>  i.
+>>>>
+>>>>> Moreover, an early exit is needed to prevent ejecting HID
+>>>>> endpoints without an ->input parameter so it is a needed fix anyway.
+>>>>> Postponing it will prevent Xbox Ally users from having RGB control
+>>>>> through userspace on a stock kernel but it is also not worth arguing
+>>>>> about
+>>>>>
+>>>>> It is also fine for me for this series to merge for 6.20, but I'd
+>>>>> rather we handle it now since there will be some turbulence for asus
+>>>>> users due to armoury merging so it makes sense to have this transition
+>>>>> once.
+>>>>>
+>>>>>> ---
+>>>>>> V9: https://lore.kernel.org/all/20251120094617.11672-1-lkml@antheas.dev/
+>>>>>> V8: https://lore.kernel.org/all/20251101104712.8011-1-lkml@antheas.dev/
+>>>>>> V7: https://lore.kernel.org/all/20251018101759.4089-1-lkml@antheas.dev/
+>>>>>> V6: https://lore.kernel.org/all/20251013201535.6737-1-lkml@antheas.dev/
+>>>>>> V5: https://lore.kernel.org/all/20250325184601.10990-1-lkml@antheas.dev/
+>>>>>> V4: https://lore.kernel.org/lkml/20250324210151.6042-1-lkml@antheas.dev/
+>>>>>> V3: https://lore.kernel.org/lkml/20250322102804.418000-1-lkml@antheas.dev/
+>>>>>> V2: https://lore.kernel.org/all/20250320220924.5023-1-lkml@antheas.dev/
+>>>>>> V1: https://lore.kernel.org/all/20250319191320.10092-1-lkml@antheas.dev/
+>>>>>>
+>>>>>> Changes since V9:
+>>>>>>   - No functional changes
+>>>>>>   - Rebase to review-ilpo-next
+>>>>>>   - Fix armoury series conflict by removing the file asus-wmi-leds-ids on
+>>>>>>     "remove unused keyboard backlight quirk" + imports
+>>>>>>     Dismiss Luke's review as this patch diverged
+>>>>>>   - Reword paragraph in "Add support for multiple kbd led handlers" to be
+>>>>>>     more verbose
+>>>>>>   - Use kfree in fortify patch
+>>>>>>   - Fix minor style quirks from --nonstict checkpatch run
+>>>>>>
+>>>>>> Changes since V8:
+>>>>>>   - No functional changes
+>>>>>>   - Move legacy init patch to second, modify first patch so that their
+>>>>>>     diff is minimized
+>>>>>>   - Split "prevent binding to all HID devices on ROG" into two patches:
+>>>>>>     - moving backlight initialization into probe
+>>>>>>     - early exit to skip ->init check and rename
+>>>>>>     - Remove skipping vendor fixups for non-vendor devices. It is not possible
+>>>>>>       to read usages before the report fixups are applied, so it did not work
+>>>>>>   - In that patch, reword a comment to be single line and make is_vendor a bool
+>>>>>>   - Dismiss Luke's tags from "Add support for multiple kbd led handlers" as it
+>>>>>>     has drifted too far since he reviewed/tested it.
+>>>>>>
+>>>>>> Changes since V7:
+>>>>>>   - Readd legacy init quirk for Dennis
+>>>>>>   - Remove HID_QUIRK_INPUT_PER_APP as a courtesy to asusctl
+>>>>>>   - Fix warning due to enum_backlight receiving negative values
+>>>>>>
+>>>>>> Changes since V6:
+>>>>>>   - Split initialization refactor into three patches, update commit text
+>>>>>>     to be clearer in what it does
+>>>>>>   - Replace spinlock accesses with guard and scoped guard in all patches
+>>>>>>   - Add missing includes mentioned by Ilpo
+>>>>>>   - Reflow, tweak comment in prevent binding to all HID devices on ROG
+>>>>>>   - Replace asus_ref.asus with local reference in all patches
+>>>>>>   - Add missing kernel doc comments
+>>>>>>   - Other minor nits from Ilpo
+>>>>>>   - User reported warning due to scheduling work while holding a spinlock.
+>>>>>>     Restructure patch for multiple handlers to limit when spinlock is held to
+>>>>>>     variable access only. In parallel, setup a workqueue to handle registration
+>>>>>>     of led device and setting brightness. This is required as registering the
+>>>>>>     led device triggers kbd_led_get which needs to hold the spinlock to
+>>>>>>     protect the led_wk value. The workqueue is also required for the hid
+>>>>>>     event passthrough to avoid scheduling work while holding the spinlock.
+>>>>>>     Apply the workqueue to wmi brightness buttons as well, as that was
+>>>>>>     omitted before this series and WMI access was performed.
+>>>>>>   - On "HID: asus: prevent binding to all HID devices on ROG", rename
+>>>>>>     quirk HANDLE_GENERIC to SKIP_REPORT_FIXUP and only skip report fixup.
+>>>>>>     This allows other quirks to apply (applies quirk that fixes keyboard
+>>>>>>     being named as a pointer device).
+>>>>>>
+>>>>>> Changes since V5:
+>>>>>>   - It's been a long time
+>>>>>>   - Remove addition of RGB as that had some comments I need to work on
+>>>>>>   - Remove folio patch (already merged)
+>>>>>>   - Remove legacy fix patch 11 from V4. There is a small chance that
+>>>>>>     without this patch, some old NKEY keyboards might not respond to
+>>>>>>     RGB commands according to Luke, but the kernel driver does not do
+>>>>>>     RGB currently. The 0x5d init is done by Armoury crate software in
+>>>>>>     Windows. If an issue is found, we can re-add it or just remove patches
+>>>>>>     1/2 before merging. However, init could use the cleanup.
+>>>>>>
+>>>>>> Changes since V4:
+>>>>>>   - Fix KConfig (reported by kernel robot)
+>>>>>>   - Fix Ilpo's nits, if I missed anything lmk
+>>>>>>
+>>>>>> Changes since V3:
+>>>>>>   - Add initializer for 0x5d for old NKEY keyboards until it is verified
+>>>>>>     that it is not needed for their media keys to function.
+>>>>>>   - Cover init in asus-wmi with spinlock as per Hans
+>>>>>>   - If asus-wmi registers WMI handler with brightness, init the brightness
+>>>>>>     in USB Asus keyboards, per Hans.
+>>>>>>   - Change hid handler name to asus-UNIQ:rgb:peripheral to match led class
+>>>>>>   - Fix oops when unregistering asus-wmi by moving unregister outside of
+>>>>>>     the spin lock (but after the asus reference is set to null)
+>>>>>>
+>>>>>> Changes since V2:
+>>>>>>   - Check lazy init succeds in asus-wmi before setting register variable
+>>>>>>   - make explicit check in asus_hid_register_listener for listener existing
+>>>>>>     to avoid re-init
+>>>>>>   - rename asus_brt to asus_hid in most places and harmonize everything
+>>>>>>   - switch to a spinlock instead of a mutex to avoid kernel ooops
+>>>>>>   - fixup hid device quirks to avoid multiple RGB devices while still exposing
+>>>>>>     all input vendor devices. This includes moving rgb init to probe
+>>>>>>     instead of the input_configured callbacks.
+>>>>>>   - Remove fan key (during retest it appears to be 0xae that is already
+>>>>>>     supported by hid-asus)
+>>>>>>   - Never unregister asus::kbd_backlight while asus-wmi is active, as that
+>>>>>>   - removes fds from userspace and breaks backlight functionality. All
+>>>>>>   - current mainline drivers do not support backlight hotplugging, so most
+>>>>>>     userspace software (e.g., KDE, UPower) is built with that assumption.
+>>>>>>     For the Ally, since it disconnects its controller during sleep, this
+>>>>>>     caused the backlight slider to not work in KDE.
+>>>>>>
+>>>>>> Changes since V1:
+>>>>>>   - Add basic RGB support on hid-asus, (Z13/Ally) tested in KDE/Z13
+>>>>>>   - Fix ifdef else having an invalid signature (reported by kernel robot)
+>>>>>>   - Restore input arguments to init and keyboard function so they can
+>>>>>>     be re-used for RGB controls.
+>>>>>>   - Remove Z13 delay (it did not work to fix the touchpad) and replace it
+>>>>>>     with a HID_GROUP_GENERIC quirk to allow hid-multitouch to load. Squash
+>>>>>>     keyboard rename into it.
+>>>>>>   - Unregister brightness listener before removing work queue to avoid
+>>>>>>     a race condition causing corruption
+>>>>>>   - Remove spurious mutex unlock in asus_brt_event
+>>>>>>   - Place mutex lock in kbd_led_set after LED_UNREGISTERING check to avoid
+>>>>>>     relocking the mutex and causing a deadlock when unregistering leds
+>>>>>>   - Add extra check during unregistering to avoid calling unregister when
+>>>>>>     no led device is registered.
+>>>>>>   - Temporarily HID_QUIRK_INPUT_PER_APP from the ROG endpoint as it causes
+>>>>>>     the driver to create 4 RGB handlers per device. I also suspect some
+>>>>>>     extra events sneak through (KDE had the @@@@@@).
+>>>>>>
+>>>>>> Antheas Kapenekakis (11):
+>>>>>>   HID: asus: simplify RGB init sequence
+>>>>>>   HID: asus: initialize additional endpoints only for legacy devices
+>>>>>>   HID: asus: use same report_id in response
+>>>>>>   HID: asus: fortify keyboard handshake
+>>>>>>   HID: asus: move vendor initialization to probe
+>>>>>>   HID: asus: early return for ROG devices
+>>>>>>   platform/x86: asus-wmi: Add support for multiple kbd led handlers
+>>>>>>   HID: asus: listen to the asus-wmi brightness device instead of
+>>>>>>     creating one
+>>>>>>   platform/x86: asus-wmi: remove unused keyboard backlight quirk
+>>>>>>   platform/x86: asus-wmi: add keyboard brightness event handler
+>>>>>>   HID: asus: add support for the asus-wmi brightness handler
+>>>>>>
+>>>>>>  drivers/hid/hid-asus.c                        | 205 ++++++++--------
+>>>>>>  drivers/platform/x86/asus-wmi.c               | 223 +++++++++++++++---
+>>>>>>  .../platform_data/x86/asus-wmi-leds-ids.h     |  50 ----
+>>>>>>  include/linux/platform_data/x86/asus-wmi.h    |  28 +++
+>>>>>>  4 files changed, 322 insertions(+), 184 deletions(-)
+>>>>>>  delete mode 100644 include/linux/platform_data/x86/asus-wmi-leds-ids.h
+>>>>>>
+>>>>>>
+>>>>>> base-commit: 2643187ccb8628144246ee9d44da5e3ac428f9c3
+>>>>>> --
+>>>>>> 2.52.0
+>>>>>>
+>>>>>>
