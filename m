@@ -1,119 +1,110 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.17])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E29F0219A81;
-	Wed, 26 Nov 2025 17:34:07 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4B1FD2DFA48;
+	Wed, 26 Nov 2025 17:47:33 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.17
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1764178449; cv=none; b=gzq3Od5Pke4VXI+H1pIlvhRbAkh+e33SVlxW/2PL5CmIau/YMSd/bGB2Auz0XI3cDCZvdq71HcyCqEHe/XoxEnaCqxX6ige33n1guXsrTn+rNcDoJDE82YVoZCHe9PORPeW2o9L9cqNePwlrPBVCQqIYj6VWnSakh65iUzeGSrA=
+	t=1764179255; cv=none; b=jh/o3AnjM/jmThpL9hmP20A2vMKnoZl3275W7oMYFjaM8GOxzFH/wJKGIyAA5UVYf+Fp2+1mkmPTZ2NEa8lQ2RDiYSFkDFPOToYAIq1sF8n+6XJ/brm3fDnbkaCJPYdQXh5v480a5u1klQoVV+xhHRAtFZMWOBJ7VnkGgqICDgU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1764178449; c=relaxed/simple;
-	bh=dlVMMDnyIB7QnRLlQRgXzJiIyoXcNt1w0wU3moj+IEk=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=iMEfjftbH7ZgMYc/7lUdutsEEVFZXUsgWZzINArRtiOY+ol3CvP8ZpCTgW6hYeWtZiVa1CwdGNkURzC0bA49y0e5yCcL7ui/+mT5uRenGw0K1n27UUQXX+Kma0xRJXLGNd1qUqQ+7gMM9iBdLkJJdn1cOR+Ks9mvL/ot7ns9kws=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=b/JrmdNi; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1764179255; c=relaxed/simple;
+	bh=CREXnS7WogomLb2RYobjD6Y/Z7X01LZZcskfhg30vMY=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=ohF3TlSMg7VAwJPySPF7BuS4m2f1/GTvvKFf/tp/aR49JANKVakm9+KjM0dt7S8Y/m5BWYSCRF8dXIngJUWYXU4FfgcoVrIzGdJS//JeiWbgQXY0e0a4gDwGMaSdWrcb65Vb0Gi7bRnBP+GxpkJGtN/7YT838xvFcJSKaOrQd/M=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=pass smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=LceMRuD7; arc=none smtp.client-ip=192.198.163.17
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="b/JrmdNi"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 46229C4CEF7;
-	Wed, 26 Nov 2025 17:34:05 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1764178447;
-	bh=dlVMMDnyIB7QnRLlQRgXzJiIyoXcNt1w0wU3moj+IEk=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=b/JrmdNiE4X1fMMuXwrA+Ry1jtCJYKcT/NYA8zGNT69Z3DhlCfUp9Z0fCP/JnuuBh
-	 LSsDqlqW8n9HuAX7IJdskgp9VWbYkSdFbiVezbXSi5ZVTQcXrJI5vIU2ueA9MkdUCm
-	 BgiCTmnSnLRnugLnggZrhGCPdhfAV30q6dsB7gfEZSQhGpaj2+tssJVthLc41i78Lj
-	 xDnGWIJKYKRlAyLpYCI2WtJ2DjHtowuPfX4GaaVTHocgr2nXPguP464tqCiyVtlrgP
-	 ESv7jZnFcSsXxJS0JOqfubgTmpsM1OXHggYEuukdIQrO/vHkdnvw9eHJ2B+au4TS+S
-	 2I31RaC5Mbn3A==
-Message-ID: <4bcc6708-77ff-403d-83cf-10a40934263a@kernel.org>
-Date: Wed, 26 Nov 2025 18:34:03 +0100
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="LceMRuD7"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1764179253; x=1795715253;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=CREXnS7WogomLb2RYobjD6Y/Z7X01LZZcskfhg30vMY=;
+  b=LceMRuD7o8zhwcIgzNzkxGkBz+mh6+dCa+iwPVqv01n2VmHGjx2rdL2+
+   +X4jKcYwFrxHDLBYubTs5Jwjz3/LI5MJpWejltNM/ZfiM4HXkG3ZUivSC
+   u5mld1nHPjqlQEeYw3RvdcvVimf3/lgkAUuVat0zP8EzXIVgJPaAEjkby
+   XFqZHeYBOdWdNSxZaaEdtQM9Q10ghkL2gNsehqvtENkYZL9BW5dfrdNBs
+   AUlDYC4dyDz8c0/FzBNZAJRnrKo/ivUPI5LYOTVDbofyoJa6gRp21Hh+R
+   jMAd+NsTkzve1BhCdc8xeuOI54b3i2wGNkNSRAk5OatihVHV4n8RRjnp7
+   Q==;
+X-CSE-ConnectionGUID: NjZYZ5vST1qoikG1pUhnSg==
+X-CSE-MsgGUID: lVxvo3SIQ26dtRCD0mgF9A==
+X-IronPort-AV: E=McAfee;i="6800,10657,11625"; a="66114361"
+X-IronPort-AV: E=Sophos;i="6.20,229,1758610800"; 
+   d="scan'208";a="66114361"
+Received: from fmviesa006.fm.intel.com ([10.60.135.146])
+  by fmvoesa111.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 26 Nov 2025 09:47:32 -0800
+X-CSE-ConnectionGUID: 3namkLD0QZCVEqJ9Nxrqfw==
+X-CSE-MsgGUID: Qitg+UGHRs6gUU8YfEERcw==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.20,228,1758610800"; 
+   d="scan'208";a="192885691"
+Received: from rvuia-mobl.ger.corp.intel.com (HELO localhost) ([10.245.245.89])
+  by fmviesa006-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 26 Nov 2025 09:47:29 -0800
+Date: Wed, 26 Nov 2025 19:47:27 +0200
+From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+To: Baojun Xu <baojun.xu@ti.com>
+Cc: tiwai@suse.de, hansg@kernel.org, ilpo.jarvinen@linux.intel.com,
+	broonie@kernel.org, alsa-devel@alsa-project.org,
+	shenghao-ding@ti.com, 13916275206@139.com,
+	platform-driver-x86@vger.kernel.org, linux-sound@vger.kernel.org,
+	linux-kernel@vger.kernel.org, letitia.tsai@hp.com
+Subject: Re: [PATCH v5] platform/x86: serial-multi-instantiate: Add
+ IRQ_RESOURCE_OPT for IRQ missing projects
+Message-ID: <aSc9L6KXG6oQubwF@smile.fi.intel.com>
+References: <20251126141434.11110-1-baojun.xu@ti.com>
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v10 00/11] HID: asus: Fix ASUS ROG Laptop's Keyboard
- backlight handling
-To: =?UTF-8?Q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>,
- Antheas Kapenekakis <lkml@antheas.dev>
-Cc: platform-driver-x86@vger.kernel.org, linux-input@vger.kernel.org,
- LKML <linux-kernel@vger.kernel.org>, Jiri Kosina <jikos@kernel.org>,
- Benjamin Tissoires <bentiss@kernel.org>,
- Corentin Chary <corentin.chary@gmail.com>, "Luke D . Jones"
- <luke@ljones.dev>, Denis Benato <benato.denis96@gmail.com>
-References: <20251122110032.4274-1-lkml@antheas.dev>
- <CAGwozwGwkBH_03JvPQrevQiszwDZ5R4uDBnzWVeVXLo8xRmeug@mail.gmail.com>
- <b91fa2c8-e342-9e46-f401-8c3d0590cd38@linux.intel.com>
-From: Hans de Goede <hansg@kernel.org>
-Content-Language: en-US, nl
-In-Reply-To: <b91fa2c8-e342-9e46-f401-8c3d0590cd38@linux.intel.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20251126141434.11110-1-baojun.xu@ti.com>
+Organization: Intel Finland Oy - BIC 0357606-4 - c/o Alberga Business Park, 6
+ krs, Bertel Jungin Aukio 5, 02600 Espoo
 
-Hi,
-
-On 26-Nov-25 4:23 PM, Ilpo Järvinen wrote:
-> On Wed, 26 Nov 2025, Antheas Kapenekakis wrote:
-
-...
-
->> As for "HID: asus: early return for ROG devices" changing the name of
->> the devices of this driver, I will veto backporting it if it happens,
->> so inputplumber will have the two full months to remove the name
->> match. This is not a breaking change in the sense that software cannot
->> be made to work on both previous and latter versions and there is no
->> other software to my knowledge relying on name matches for Asus
->> keyboards.
+On Wed, Nov 26, 2025 at 10:14:33PM +0800, Baojun Xu wrote:
+> The tas2781-hda supports multi-projects. In some projects, GpioInt() was
+> dropped due to no IRQ connection. See the example code below:
 > 
-> Did Hans give some opinion about this rename earlier, at least I don't 
-> remember nor could find from lore archives?
+> Device (SPKR)
+> {
+>     Name (_ADR, One)
+>     Name (_HID, "TXNW2781")
+>     Method (_CRS, 0, NotSerialized)
+>     {
+>         Name (RBUF, ResourceTemplate ()
+>         {
+>             I2cSerialBusV2 (0x0038, ...)
+>             I2cSerialBusV2 (0x0039, ...)
+>             // GpioInt (Edge, ...) { 0x0000 }
+>             //"GpioInt (...) {}" was commented out due to no IRQ connection.
+>         })
+>         Return (RBUF)
+>     }
+> }
+> 
+> But in smi_i2c_probe(), smi_spi_probe() (serial-multi-instantiate.c), if
+> looking for IRQ by smi_get_irq() fails, it will return an error, will not add
+> new device, and cause smi_probe() to fail:
+> 
+> [    2.356546] Serial bus multi instantiate pseudo device driver TXNW2781:00:
+> error -ENXIO: IRQ index 0 not found
+> [    2.356561] Serial bus multi instantiate pseudo device driver TXNW2781:00:
+> error -ENXIO: Error requesting irq at index 0
+> 
+> So, we need to add an exception case for these situations. BTW, this patch
+> will take effect on both I2C and SPI devices.
 
-I don't remember commenting on this myself either.
+Thanks, excellent!
+Reviewed-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
 
-So generally speaking there are plenty of cases where /dev/input/event#
-nodes for a specific device have their name changed by some kernel patches.
-
-Typically HID input devices are matched in userspace by their
-bus:vend-id:prod-id triplet not by the name. The name might even
-change by a fwupdate of the device itself.
-
-So I'm not overly worried about this and inputplumber seems nice
-enough and already is very much not a plug-and-play tool.
-
-One possible concern with laptop keyboard input-device name changes
-though is hwdb entries to fixup scancode -> ev-key-code mappings.
-
-See: /lib/udev/hwdb.d/60-keyboard.hwdb on any standard Linux systems
-an then the big comment at the top.
-
-An input-device name change might break this match pattern:
-
-#  - Input driver device name and DMI data match:
-#      evdev:name:<input device name>:dmi:bvn*:bvr*:bd*:svn<vendor>:pn*
-#    <input device name> is the name device specified by the
-#    driver, <vendor> is the firmware-provided string exported
-#    by the kernel DMI modalias, see /sys/class/dmi/id/modalias
-
-As well as the extended version of this and for laptops with USB
-keyboards this is the only match type which allows a DMI match
-which is what we want for laptop kbd mappings. Looking at the Asus
-section of the upstream 60-keyboard.hwdb I do not see any such
-matches though.
-
-There not being such matches kinda make sense since for USB-HID
-devices any special scancode -> ev-key-code mappings are typically
-handled in a vendor specific HID driver like hid-asus.
-
-TL;DR: I think that the input-device name should be fine.
-
-Regards,
-
-Hans
-
-
-
+-- 
+With Best Regards,
+Andy Shevchenko
 
 
