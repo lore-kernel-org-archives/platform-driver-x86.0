@@ -1,39 +1,33 @@
-Received: from mail.tuxedocomputers.com (mail.tuxedocomputers.com [157.90.84.7])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 48F4A326931;
-	Wed, 26 Nov 2025 12:23:54 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=157.90.84.7
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 792BB32721F;
+	Wed, 26 Nov 2025 12:29:00 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1764159841; cv=none; b=MFKnCTCawbrQXUHPWpFr1CviwlN6mW3FELyoiFrKVgHxshLeHwe3u12ccPVNwe1uy2+dyUS1Dp3iHySMyIFgImZ4EgFSvJDbT6sIjg7oCZe330arwOOYtu+1DXG8mh0xdwZfJnlpk6uVQ2COvdkw7FKpBG1nRLS7WxBjSS9bZno=
+	t=1764160140; cv=none; b=trbRfOOPer2KQS7HTY1e8m6rJFlatvXC45SuCCDv7hwms9j4glsIv/hgkyyYsAnW+kekch80R9M2BFe+0TcKY4ejWUke6jGMsTOirWRX2QQ/4ZJ8nMLIpWvSMVLWEHSM6oP4Rb98WetnOxEApUozV22nATCLPrPNNPsNgKMf6R8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1764159841; c=relaxed/simple;
-	bh=nWghKII/yEBiGrMIUbusFjipmfbfUna204yQgIyCdUw=;
+	s=arc-20240116; t=1764160140; c=relaxed/simple;
+	bh=Ob6QmmWDh4oiB6gP8J9QjMFjK/AEovlZGaBM6iIehtY=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=bXY6IRWhd6WZwhbcqX+9dpfPsSKVGevpK+j8Bnh2T2vrJPDgCBNd3G9lDF0OUAADy+9TXgjIh1WY1olrCeOzXdU2PKvTN6gwA3Z98dAygIpf3vrzfRUDc+mSlsez5faCMQHPpyfXyCuDHP/faKhAbueU2TLLAxM0MuNCasjSLyA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=tuxedocomputers.com; spf=pass smtp.mailfrom=tuxedocomputers.com; dkim=pass (1024-bit key) header.d=tuxedocomputers.com header.i=@tuxedocomputers.com header.b=gFepjPbY; arc=none smtp.client-ip=157.90.84.7
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=tuxedocomputers.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=tuxedocomputers.com
+	 In-Reply-To:Content-Type; b=tXv+RrILHYCqZpGsMD/F2s1WuxddOzDlDbDWD6/4fRqL+Cpmh/g4QrFQjw655YZ8jqH+7hTpJA/cMjje4/dWHk8DrxVqkfaGe5JebJO6dTRz1dUqFGZEBapExvlQD4F89bWFLeztKZ2Tp4t0Wf+Kck4UMfuIEVQvYaWSS0IPnd0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=r/HYW43V; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=tuxedocomputers.com header.i=@tuxedocomputers.com header.b="gFepjPbY"
-Received: from [192.168.42.116] (pd9e597c7.dip0.t-ipconnect.de [217.229.151.199])
-	(Authenticated sender: wse@tuxedocomputers.com)
-	by mail.tuxedocomputers.com (Postfix) with ESMTPSA id 6CDAC2FC004D;
-	Wed, 26 Nov 2025 13:23:52 +0100 (CET)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=tuxedocomputers.com;
-	s=default; t=1764159832;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=upyh6BQ/QJwNqyipvNMkif+SeswPQZ0/1cRTEGUW4xY=;
-	b=gFepjPbYtt1dRbcnnww4iKEK6XHV2dW4jmPU4jqYHpkk7hXUQduuKLRmFV8EImB+9+phLU
-	X1KH3G2eaXLSVJ8kLiNB77EK9vl5ipCxHP6ZzqHDqFff1ztyRe+6pyhTBQzTQ1mJ68pyi3
-	AGrmtWS1O01W3D9RuUbhLgEbkOnsFf0=
-Authentication-Results: mail.tuxedocomputers.com;
-	auth=pass smtp.auth=wse@tuxedocomputers.com smtp.mailfrom=wse@tuxedocomputers.com
-Message-ID: <6b479ab9-18f5-4ff6-a778-67469f4c9c06@tuxedocomputers.com>
-Date: Wed, 26 Nov 2025 13:23:52 +0100
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="r/HYW43V"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 23B93C113D0;
+	Wed, 26 Nov 2025 12:28:56 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1764160139;
+	bh=Ob6QmmWDh4oiB6gP8J9QjMFjK/AEovlZGaBM6iIehtY=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=r/HYW43V7mF+I82OwalGBXKAAsnW64//dqGt/1BpzVWUFDfgO+7pBsv8eCPQwA2zQ
+	 o/u7y7tOv8l29xvXkz/+locaLv4m/7I4/AL++JDuSGiHPJyazLJUBqTqQ5CN/xb3gr
+	 J+iSVztuF2t+I5m8i77tLnazWKpqsg/lsxKVqyXQfLaV6827TyPpI8Exz5/riOflo6
+	 D26hKzwJtSy9xhapQ5sHF8/9ICfdO2a8oLvNCbw6lF75v+qZbwnCE5cXBruJWxUD7t
+	 2mZrC7gUK2AYiq569njVzvzEi1DF74jmgkVJRJsYUXuRecj58NVTNVcYhFD7QgbPaP
+	 JYiArrFV/E2cw==
+Message-ID: <9b2dca55-1207-48a3-94b0-3efad1462d0f@kernel.org>
+Date: Wed, 26 Nov 2025 13:28:55 +0100
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
@@ -41,482 +35,98 @@ List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [RFC PATCH 2/2] platform/x86/uniwill: Implement cTGP setting
-To: Armin Wolf <W_Armin@gmx.de>, hansg@kernel.org,
- ilpo.jarvinen@linux.intel.com
-Cc: platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
-References: <20251125135729.487837-1-wse@tuxedocomputers.com>
- <20251125135729.487837-3-wse@tuxedocomputers.com>
- <f28cdf60-39b1-4b81-977a-ec494a868614@gmx.de>
-Content-Language: en-US
-From: Werner Sembach <wse@tuxedocomputers.com>
-In-Reply-To: <f28cdf60-39b1-4b81-977a-ec494a868614@gmx.de>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
+Subject: Re: [PATCH v4 1/1] platform/x86: serial-multi-instantiate: Add
+ IRQ_RESOURCE_OPT for IRQ missing projects
+To: Baojun Xu <baojun.xu@ti.com>, tiwai@suse.de
+Cc: ilpo.jarvinen@linux.intel.com, broonie@kernel.org,
+ andriy.shevchenko@linux.intel.com, alsa-devel@alsa-project.org,
+ shenghao-ding@ti.com, 13916275206@139.com,
+ platform-driver-x86@vger.kernel.org, linux-sound@vger.kernel.org,
+ linux-kernel@vger.kernel.org, letitia.tsai@hp.com
+References: <20251126121911.10980-1-baojun.xu@ti.com>
+ <20251126121911.10980-2-baojun.xu@ti.com>
+From: Hans de Goede <hansg@kernel.org>
+Content-Language: en-US, nl
+In-Reply-To: <20251126121911.10980-2-baojun.xu@ti.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
+
+Hi,
+
+On 26-Nov-25 1:19 PM, Baojun Xu wrote:
+> The tas2781-hda supports multi-projects. In some projects,
+> GpioInt() was dropped due to no IRQ connection.
+
+> See the example code in the cover letter.
+
+Please don't do this, the example code is not that big, people
+should not need to go and hunt down the example code, please just
+add it to the commit message.
+
+Also please use longer lines (wrap at 75 chars) for the commit msg
+and please use empty lines between paragraphs to clearly separate
+the paragraphs.
+
+Regards,
+
+Hans
 
 
-Am 25.11.25 um 21:31 schrieb Armin Wolf:
-> Am 25.11.25 um 14:49 schrieb Werner Sembach:
->
->> Uniwill offers user setable cTGP for their EC on devices using NVIDIA 3000
->> Series and newer GPUs. This patch implements this setting as a sysfs
->> attribute.
->>
->> For one device, the TUXEDO InfinityBook Gen7, the variant with and without
->> NVIDIA GPU can't be differentiated using only the DMI strings, so the new
->> probe callback needs to be used to test a bit from the EC memory.
->>
->> Signed-off-by: Werner Sembach <wse@tuxedocomputers.com>
->> ---
->>   drivers/platform/x86/uniwill/uniwill-acpi.c | 157 ++++++++++++++++----
->>   1 file changed, 132 insertions(+), 25 deletions(-)
->>
->> diff --git a/drivers/platform/x86/uniwill/uniwill-acpi.c 
->> b/drivers/platform/x86/uniwill/uniwill-acpi.c
->> index f6a1054379ee1..503de3858cc0b 100644
->> --- a/drivers/platform/x86/uniwill/uniwill-acpi.c
->> +++ b/drivers/platform/x86/uniwill/uniwill-acpi.c
->> @@ -88,6 +88,9 @@
->>     #define EC_ADDR_GPU_TEMP        0x044F
->>   +#define EC_ADDR_SYSTEM_ID        0x0456
->> +#define HAS_GPU                BIT(7)
->> +
->>   #define EC_ADDR_MAIN_FAN_RPM_1        0x0464
->>     #define EC_ADDR_MAIN_FAN_RPM_2        0x0465
->> @@ -122,11 +125,11 @@
->>   #define CTGP_DB_DB_ENABLE        BIT(1)
->>   #define CTGP_DB_CTGP_ENABLE        BIT(2)
->>   -#define EC_ADDR_CTGP_OFFSET        0x0744
->> +#define EC_ADDR_CTGP_DB_CTGP_OFFSET    0x0744
->>   -#define EC_ADDR_TPP_OFFSET        0x0745
->> +#define EC_ADDR_CTGP_DB_TPP_OFFSET    0x0745
->>   -#define EC_ADDR_MAX_TGP            0x0746
->> +#define EC_ADDR_CTGP_DB_DB_OFFSET    0x0746
->>     #define EC_ADDR_LIGHTBAR_AC_CTRL    0x0748
->>   #define LIGHTBAR_APP_EXISTS        BIT(0)
->> @@ -317,6 +320,7 @@
->>   #define UNIWILL_FEATURE_LIGHTBAR        BIT(3)
->>   #define UNIWILL_FEATURE_BATTERY            BIT(4)
->>   #define UNIWILL_FEATURE_HWMON            BIT(5)
->> +#define UNIWILL_FEATURE_NVIDIA_CTGP_CONTROL    BIT(6)
->>     struct uniwill_data {
->>       struct device *dev;
->> @@ -514,6 +518,10 @@ static bool uniwill_writeable_reg(struct device *dev, 
->> unsigned int reg)
->>       case EC_ADDR_LIGHTBAR_BAT_RED:
->>       case EC_ADDR_LIGHTBAR_BAT_GREEN:
->>       case EC_ADDR_LIGHTBAR_BAT_BLUE:
->> +    case EC_ADDR_CTGP_DB_CTRL:
->> +    case EC_ADDR_CTGP_DB_CTGP_OFFSET:
->> +    case EC_ADDR_CTGP_DB_TPP_OFFSET:
->> +    case EC_ADDR_CTGP_DB_DB_OFFSET:
->>           return true;
->>       default:
->>           return false;
->> @@ -547,6 +555,10 @@ static bool uniwill_readable_reg(struct device *dev, 
->> unsigned int reg)
->>       case EC_ADDR_LIGHTBAR_BAT_RED:
->>       case EC_ADDR_LIGHTBAR_BAT_GREEN:
->>       case EC_ADDR_LIGHTBAR_BAT_BLUE:
->> +    case EC_ADDR_CTGP_DB_CTRL:
->> +    case EC_ADDR_CTGP_DB_CTGP_OFFSET:
->> +    case EC_ADDR_CTGP_DB_TPP_OFFSET:
->> +    case EC_ADDR_CTGP_DB_DB_OFFSET:
->>           return true;
->>       default:
->>           return false;
->> @@ -802,6 +814,68 @@ static ssize_t breathing_in_suspend_show(struct device 
->> *dev, struct device_attri
->>     static DEVICE_ATTR_RW(breathing_in_suspend);
->>   +static ssize_t ctgp_offset_store(struct device *dev, struct 
->> device_attribute *attr,
->> +                 const char *buf, size_t count)
->> +{
->> +    struct uniwill_data *data = dev_get_drvdata(dev);
->> +    unsigned int value;
->> +    int ret;
->> +
->> +    ret = kstrtouint(buf, 0, &value);
->> +    if (ret < 0)
->> +        return ret;
->> Please check for input values larger than 255 and return -EINVAL in such a case.
->> +
->> +    ret = regmap_write(data->regmap, EC_ADDR_CTGP_DB_CTGP_OFFSET, value);
->> +    if (ret < 0)
->> +        return ret;
->> +
->> +    return count;
->> +}
->> +
->> +static ssize_t ctgp_offset_show(struct device *dev, struct device_attribute 
->> *attr,
->> +                char *buf)
->> +{
->> +    struct uniwill_data *data = dev_get_drvdata(dev);
->> +    unsigned int value;
->> +    int ret;
->> +
->> +    ret = regmap_read(data->regmap, EC_ADDR_CTGP_DB_CTGP_OFFSET, &value);
->> +    if (ret < 0)
->> +        return ret;
->> +
->> +    return sysfs_emit(buf, "%u\n", value);
->> +}
->> +
->> +DEVICE_ATTR_RW(ctgp_offset);
->
-> Please mark this device attribute as static.
-ack thanks for spotting
->
->> +
->> +static int uniwill_nvidia_ctgp_init(struct uniwill_data *data)
->> +{
->> +    int ret;
->> +
->> +    if (!uniwill_device_supports(data, UNIWILL_FEATURE_NVIDIA_CTGP_CONTROL))
->> +        return 0;
->> +
->> +    ret = regmap_update_bits(data->regmap, EC_ADDR_CTGP_DB_CTRL,
->> +                 CTGP_DB_GENERAL_ENABLE | CTGP_DB_DB_ENABLE | 
->> CTGP_DB_CTGP_ENABLE,
->> +                 CTGP_DB_GENERAL_ENABLE | CTGP_DB_DB_ENABLE | 
->> CTGP_DB_CTGP_ENABLE);
->
-> Please initialize the power limits before enabling them.
-ack, sorry forgot
-> Also, maybe disabling those power limits during
-> suspend and re-enabling them during resume would be a good idea? This way we 
-> can avoid overheating the
-> device should the fan stop too early.
 
-Don't think that is necessary as other vendors don't even have the ability to 
-disable db for example.
+> But in smi_i2c_probe(), smi_spi_probe() (serial-multi-instantiate.c),
+> if looking for IRQ by smi_get_irq() fails, it will return an error,
+> will not add new device, and cause smi_probe() to fail.
+> So, we need to add an exception case for these situations.
+> BTW, this patch will take effect on both I2C and SPI devices.
+> 
+> Signed-off-by: Baojun Xu <baojun.xu@ti.com>
+> ---
+> v4:
+>  - Change the description for this patch.
+> v3:
+>  - Add IRQ_RESOURCE_OPT for IRQ missing cases.
+> v2:
+>  - Remove error ignore, change to AUTO compatible with NONE.
+> ---
+>  drivers/platform/x86/serial-multi-instantiate.c | 13 +++++++++----
+>  1 file changed, 9 insertions(+), 4 deletions(-)
+> 
+> diff --git a/drivers/platform/x86/serial-multi-instantiate.c b/drivers/platform/x86/serial-multi-instantiate.c
+> index db030b0f176a..1a369334f9cb 100644
+> --- a/drivers/platform/x86/serial-multi-instantiate.c
+> +++ b/drivers/platform/x86/serial-multi-instantiate.c
+> @@ -22,6 +22,7 @@
+>  #define IRQ_RESOURCE_GPIO	1
+>  #define IRQ_RESOURCE_APIC	2
+>  #define IRQ_RESOURCE_AUTO   3
+> +#define IRQ_RESOURCE_OPT	BIT(2)
+>  
+>  enum smi_bus_type {
+>  	SMI_I2C,
+> @@ -64,6 +65,10 @@ static int smi_get_irq(struct platform_device *pdev, struct acpi_device *adev,
+>  			dev_dbg(&pdev->dev, "Using platform irq\n");
+>  			break;
+>  		}
+> +		if (inst->flags & IRQ_RESOURCE_OPT) {
+> +			dev_dbg(&pdev->dev, "No irq\n");
+> +			return 0;
+> +		}
+>  		break;
+>  	case IRQ_RESOURCE_GPIO:
+>  		ret = acpi_dev_gpio_irq_get(adev, inst->irq_idx);
+> @@ -386,10 +391,10 @@ static const struct smi_node cs35l57_hda = {
+>  
+>  static const struct smi_node tas2781_hda = {
+>  	.instances = {
+> -		{ "tas2781-hda", IRQ_RESOURCE_AUTO, 0 },
+> -		{ "tas2781-hda", IRQ_RESOURCE_AUTO, 0 },
+> -		{ "tas2781-hda", IRQ_RESOURCE_AUTO, 0 },
+> -		{ "tas2781-hda", IRQ_RESOURCE_AUTO, 0 },
+> +		{ "tas2781-hda", IRQ_RESOURCE_AUTO | IRQ_RESOURCE_OPT, 0 },
+> +		{ "tas2781-hda", IRQ_RESOURCE_AUTO | IRQ_RESOURCE_OPT, 0 },
+> +		{ "tas2781-hda", IRQ_RESOURCE_AUTO | IRQ_RESOURCE_OPT, 0 },
+> +		{ "tas2781-hda", IRQ_RESOURCE_AUTO | IRQ_RESOURCE_OPT, 0 },
+>  		{}
+>  	},
+>  	.bus_type = SMI_AUTO_DETECT,
 
-Also even with ctgp and db disabled the minimum TGP is still reachable and that 
-already is 125W on some devices.
-
->
->> +    if (ret < 0)
->> +        return ret;
->> +
->> +    ret = regmap_write(data->regmap, EC_ADDR_CTGP_DB_CTGP_OFFSET, 0);
->> +    if (ret < 0)
->> +        return ret;
->> +
->> +    ret = regmap_write(data->regmap, EC_ADDR_CTGP_DB_TPP_OFFSET, 255);
->> +    if (ret < 0)
->> +        return ret;
->> +
->> +    ret = regmap_write(data->regmap, EC_ADDR_CTGP_DB_DB_OFFSET, 25);
->> +    if (ret < 0)
->> +        return ret;
->> +
->> +    return 0;
->> +}
->> +
->>   static struct attribute *uniwill_attrs[] = {
->>       /* Keyboard-related */
->>       &dev_attr_fn_lock_toggle_enable.attr,
->> @@ -810,6 +884,8 @@ static struct attribute *uniwill_attrs[] = {
->>       /* Lightbar-related */
->>       &dev_attr_rainbow_animation.attr,
->>       &dev_attr_breathing_in_suspend.attr,
->> +    /* Power-management-related */
->> +    &dev_attr_ctgp_offset.attr,
->>       NULL
->>   };
->>   @@ -839,6 +915,11 @@ static umode_t uniwill_attr_is_visible(struct kobject 
->> *kobj, struct attribute *a
->>               return attr->mode;
->>       }
->>   +    if (attr == &dev_attr_ctgp_offset.attr) {
->> +        if (uniwill_device_supports(data, UNIWILL_FEATURE_NVIDIA_CTGP_CONTROL))
->> +            return attr->mode;
->> +    }
->> +
->>       return 0;
->>   }
->>   @@ -1405,6 +1486,10 @@ static int uniwill_probe(struct platform_device *pdev)
->>       if (ret < 0)
->>           return ret;
->>   +    ret = uniwill_nvidia_ctgp_init(data);
->> +    if (ret < 0)
->> +        return ret;
->> +
->>       return uniwill_input_init(data);
->>   }
->>   @@ -1545,6 +1630,28 @@ struct uniwill_device_descriptor lapkc71f_descriptor 
->> __initdata = {
->>               UNIWILL_FEATURE_HWMON
->>   };
->>   +static int phxarx1_phxaqf1_probe(struct uniwill_data *data)
->> +{
->> +    unsigned int value;
->> +    int ret;
->> +
->> +    ret = regmap_read(data->regmap, EC_ADDR_SYSTEM_ID, &value);
->> +    if (ret < 0)
->> +        return ret;
->
-> Please add an empty line here.
-kk
->
->> +    if (value & HAS_GPU)
->> +        data->features |= UNIWILL_FEATURE_NVIDIA_CTGP_CONTROL;
->> +
->> +    return 0;
->> +};
->> +
->> +struct uniwill_device_descriptor phxarx1_phxaqf1_descriptor __initdata = {
->> +    .probe = phxarx1_phxaqf1_probe
->> +};
->> +
->> +struct uniwill_device_descriptor tux_featureset_1_descriptor __initdata = {
->> +    .features = UNIWILL_FEATURE_NVIDIA_CTGP_CONTROL
->> +};
->> +
->>   struct uniwill_device_descriptor void_descriptor __initdata = {};
->
-> I just noticed that all device descriptors are not marked as static. Please 
-> fix this.
-
-ack, sorry overlooked that
-
-Quick feedback if I should include the suspend disable anyway and I will wait a 
-little bit to give Ilpo a chance to respond, but other than that: non RFC of 
-this patchset incoming
-
-Best regards,
-
-Werner
-
->
-> Other than that, the patch looks very promising.
->
-> Thanks,
-> Armin Wolf
->
->>     static const struct dmi_system_id uniwill_dmi_table[] __initconst = {
->> @@ -1594,7 +1701,7 @@ static const struct dmi_system_id uniwill_dmi_table[] 
->> __initconst = {
->>               DMI_MATCH(DMI_SYS_VENDOR, "TUXEDO"),
->>               DMI_EXACT_MATCH(DMI_BOARD_NAME, "PHxTQx1"),
->>           },
->> -        .driver_data = &void_descriptor,
->> +        .driver_data = &tux_featureset_1_descriptor,
->>       },
->>       {
->>           .ident = "TUXEDO InfinityBook Pro 14/16 Gen7 Intel",
->> @@ -1602,7 +1709,7 @@ static const struct dmi_system_id uniwill_dmi_table[] 
->> __initconst = {
->>               DMI_MATCH(DMI_SYS_VENDOR, "TUXEDO"),
->>               DMI_EXACT_MATCH(DMI_BOARD_NAME, "PHxARX1_PHxAQF1"),
->>           },
->> -        .driver_data = &void_descriptor,
->> +        .driver_data = &tux_featureset_1_descriptor,
->>       },
->>       {
->>           .ident = "TUXEDO InfinityBook Pro 16 Gen7 Intel/Commodore 
->> Omnia-Book Pro Gen 7",
->> @@ -1610,7 +1717,7 @@ static const struct dmi_system_id uniwill_dmi_table[] 
->> __initconst = {
->>               DMI_MATCH(DMI_SYS_VENDOR, "TUXEDO"),
->>               DMI_EXACT_MATCH(DMI_BOARD_NAME, "PH6AG01_PH6AQ71_PH6AQI1"),
->>           },
->> -        .driver_data = &void_descriptor,
->> +        .driver_data = &tux_featureset_1_descriptor,
->>       },
->>       {
->>           .ident = "TUXEDO InfinityBook Pro 14/16 Gen8 Intel/Commodore 
->> Omnia-Book Pro Gen 8",
->> @@ -1626,7 +1733,7 @@ static const struct dmi_system_id uniwill_dmi_table[] 
->> __initconst = {
->>               DMI_MATCH(DMI_SYS_VENDOR, "TUXEDO"),
->>               DMI_EXACT_MATCH(DMI_BOARD_NAME, "PH4PG31"),
->>           },
->> -        .driver_data = &void_descriptor,
->> +        .driver_data = &tux_featureset_1_descriptor,
->>       },
->>       {
->>           .ident = "TUXEDO InfinityBook Pro 16 Gen8 Intel",
->> @@ -1634,7 +1741,7 @@ static const struct dmi_system_id uniwill_dmi_table[] 
->> __initconst = {
->>               DMI_MATCH(DMI_SYS_VENDOR, "TUXEDO"),
->>               DMI_EXACT_MATCH(DMI_BOARD_NAME, "PH6PG01_PH6PG71"),
->>           },
->> -        .driver_data = &void_descriptor,
->> +        .driver_data = &tux_featureset_1_descriptor,
->>       },
->>       {
->>           .ident = "TUXEDO InfinityBook Pro 14/15 Gen9 AMD",
->> @@ -1802,7 +1909,7 @@ static const struct dmi_system_id uniwill_dmi_table[] 
->> __initconst = {
->>               DMI_MATCH(DMI_SYS_VENDOR, "TUXEDO"),
->>               DMI_EXACT_MATCH(DMI_BOARD_NAME, "GMxMGxx"),
->>           },
->> -        .driver_data = &void_descriptor,
->> +        .driver_data = &tux_featureset_1_descriptor,
->>       },
->>       {
->>           .ident = "TUXEDO Polaris 15/17 Gen2 Intel",
->> @@ -1810,7 +1917,7 @@ static const struct dmi_system_id uniwill_dmi_table[] 
->> __initconst = {
->>               DMI_MATCH(DMI_SYS_VENDOR, "TUXEDO"),
->>               DMI_EXACT_MATCH(DMI_BOARD_NAME, "GMxNGxx"),
->>           },
->> -        .driver_data = &void_descriptor,
->> +        .driver_data = &tux_featureset_1_descriptor,
->>       },
->>       {
->>           .ident = "TUXEDO Stellaris/Polaris 15/17 Gen3 AMD",
->> @@ -1818,7 +1925,7 @@ static const struct dmi_system_id uniwill_dmi_table[] 
->> __initconst = {
->>               DMI_MATCH(DMI_SYS_VENDOR, "TUXEDO"),
->>               DMI_EXACT_MATCH(DMI_BOARD_NAME, "GMxZGxx"),
->>           },
->> -        .driver_data = &void_descriptor,
->> +        .driver_data = &tux_featureset_1_descriptor,
->>       },
->>       {
->>           .ident = "TUXEDO Stellaris/Polaris 15/17 Gen3 Intel",
->> @@ -1826,7 +1933,7 @@ static const struct dmi_system_id uniwill_dmi_table[] 
->> __initconst = {
->>               DMI_MATCH(DMI_SYS_VENDOR, "TUXEDO"),
->>               DMI_EXACT_MATCH(DMI_BOARD_NAME, "GMxTGxx"),
->>           },
->> -        .driver_data = &void_descriptor,
->> +        .driver_data = &tux_featureset_1_descriptor,
->>       },
->>       {
->>           .ident = "TUXEDO Stellaris/Polaris 15/17 Gen4 AMD",
->> @@ -1834,7 +1941,7 @@ static const struct dmi_system_id uniwill_dmi_table[] 
->> __initconst = {
->>               DMI_MATCH(DMI_SYS_VENDOR, "TUXEDO"),
->>               DMI_EXACT_MATCH(DMI_BOARD_NAME, "GMxRGxx"),
->>           },
->> -        .driver_data = &void_descriptor,
->> +        .driver_data = &tux_featureset_1_descriptor,
->>       },
->>       {
->>           .ident = "TUXEDO Stellaris 15 Gen4 Intel",
->> @@ -1842,7 +1949,7 @@ static const struct dmi_system_id uniwill_dmi_table[] 
->> __initconst = {
->>               DMI_MATCH(DMI_SYS_VENDOR, "TUXEDO"),
->>               DMI_EXACT_MATCH(DMI_BOARD_NAME, "GMxAGxx"),
->>           },
->> -        .driver_data = &void_descriptor,
->> +        .driver_data = &tux_featureset_1_descriptor,
->>       },
->>       {
->>           .ident = "TUXEDO Polaris 15/17 Gen5 AMD",
->> @@ -1850,7 +1957,7 @@ static const struct dmi_system_id uniwill_dmi_table[] 
->> __initconst = {
->>               DMI_MATCH(DMI_SYS_VENDOR, "TUXEDO"),
->>               DMI_EXACT_MATCH(DMI_BOARD_NAME, "GMxXGxx"),
->>           },
->> -        .driver_data = &void_descriptor,
->> +        .driver_data = &tux_featureset_1_descriptor,
->>       },
->>       {
->>           .ident = "TUXEDO Stellaris 16 Gen5 AMD",
->> @@ -1858,7 +1965,7 @@ static const struct dmi_system_id uniwill_dmi_table[] 
->> __initconst = {
->>               DMI_MATCH(DMI_SYS_VENDOR, "TUXEDO"),
->>               DMI_EXACT_MATCH(DMI_BOARD_NAME, "GM6XGxX"),
->>           },
->> -        .driver_data = &void_descriptor,
->> +        .driver_data = &tux_featureset_1_descriptor,
->>       },
->>       {
->>           .ident = "TUXEDO Stellaris 16/17 Gen5 Intel/Commodore ORION Gen 5",
->> @@ -1866,7 +1973,7 @@ static const struct dmi_system_id uniwill_dmi_table[] 
->> __initconst = {
->>               DMI_MATCH(DMI_SYS_VENDOR, "TUXEDO"),
->>               DMI_EXACT_MATCH(DMI_BOARD_NAME, "GMxPXxx"),
->>           },
->> -        .driver_data = &void_descriptor,
->> +        .driver_data = &tux_featureset_1_descriptor,
->>       },
->>       {
->>           .ident = "TUXEDO Stellaris Slim 15 Gen6 AMD",
->> @@ -1874,7 +1981,7 @@ static const struct dmi_system_id uniwill_dmi_table[] 
->> __initconst = {
->>               DMI_MATCH(DMI_SYS_VENDOR, "TUXEDO"),
->>               DMI_EXACT_MATCH(DMI_BOARD_NAME, "GMxHGxx"),
->>           },
->> -        .driver_data = &void_descriptor,
->> +        .driver_data = &tux_featureset_1_descriptor,
->>       },
->>       {
->>           .ident = "TUXEDO Stellaris Slim 15 Gen6 Intel/Commodore ORION Slim 
->> 15 Gen6",
->> @@ -1882,7 +1989,7 @@ static const struct dmi_system_id uniwill_dmi_table[] 
->> __initconst = {
->>               DMI_MATCH(DMI_SYS_VENDOR, "TUXEDO"),
->>               DMI_EXACT_MATCH(DMI_BOARD_NAME, "GM5IXxA"),
->>           },
->> -        .driver_data = &void_descriptor,
->> +        .driver_data = &tux_featureset_1_descriptor,
->>       },
->>       {
->>           .ident = "TUXEDO Stellaris 16 Gen6 Intel/Commodore ORION 16 Gen6",
->> @@ -1890,7 +1997,7 @@ static const struct dmi_system_id uniwill_dmi_table[] 
->> __initconst = {
->>               DMI_MATCH(DMI_SYS_VENDOR, "TUXEDO"),
->>               DMI_EXACT_MATCH(DMI_BOARD_NAME, "GM6IXxB_MB1"),
->>           },
->> -        .driver_data = &void_descriptor,
->> +        .driver_data = &tux_featureset_1_descriptor,
->>       },
->>       {
->>           .ident = "TUXEDO Stellaris 16 Gen6 Intel/Commodore ORION 16 Gen6",
->> @@ -1898,7 +2005,7 @@ static const struct dmi_system_id uniwill_dmi_table[] 
->> __initconst = {
->>               DMI_MATCH(DMI_SYS_VENDOR, "TUXEDO"),
->>               DMI_EXACT_MATCH(DMI_BOARD_NAME, "GM6IXxB_MB2"),
->>           },
->> -        .driver_data = &void_descriptor,
->> +        .driver_data = &tux_featureset_1_descriptor,
->>       },
->>       {
->>           .ident = "TUXEDO Stellaris 17 Gen6 Intel/Commodore ORION 17 Gen6",
->> @@ -1906,7 +2013,7 @@ static const struct dmi_system_id uniwill_dmi_table[] 
->> __initconst = {
->>               DMI_MATCH(DMI_SYS_VENDOR, "TUXEDO"),
->>               DMI_EXACT_MATCH(DMI_BOARD_NAME, "GM7IXxN"),
->>           },
->> -        .driver_data = &void_descriptor,
->> +        .driver_data = &tux_featureset_1_descriptor,
->>       },
->>       {
->>           .ident = "TUXEDO Stellaris 16 Gen7 AMD",
->> @@ -1914,7 +2021,7 @@ static const struct dmi_system_id uniwill_dmi_table[] 
->> __initconst = {
->>               DMI_MATCH(DMI_SYS_VENDOR, "TUXEDO"),
->>               DMI_EXACT_MATCH(DMI_BOARD_NAME, "X6FR5xxY"),
->>           },
->> -        .driver_data = &void_descriptor,
->> +        .driver_data = &tux_featureset_1_descriptor,
->>       },
->>       {
->>           .ident = "TUXEDO Stellaris 16 Gen7 Intel",
->> @@ -1922,7 +2029,7 @@ static const struct dmi_system_id uniwill_dmi_table[] 
->> __initconst = {
->>               DMI_MATCH(DMI_SYS_VENDOR, "TUXEDO"),
->>               DMI_EXACT_MATCH(DMI_BOARD_NAME, "X6AR5xxY"),
->>           },
->> -        .driver_data = &void_descriptor,
->> +        .driver_data = &tux_featureset_1_descriptor,
->>       },
->>       {
->>           .ident = "TUXEDO Stellaris 16 Gen7 Intel",
->> @@ -1930,7 +2037,7 @@ static const struct dmi_system_id uniwill_dmi_table[] 
->> __initconst = {
->>               DMI_MATCH(DMI_SYS_VENDOR, "TUXEDO"),
->>               DMI_EXACT_MATCH(DMI_BOARD_NAME, "X6AR5xxY_mLED"),
->>           },
->> -        .driver_data = &void_descriptor,
->> +        .driver_data = &tux_featureset_1_descriptor,
->>       },
->>       {
->>           .ident = "TUXEDO Pulse 14 Gen1 AMD",
