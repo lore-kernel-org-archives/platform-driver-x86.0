@@ -1,59 +1,64 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.9])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.13])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8C6A028C87D
-	for <platform-driver-x86@vger.kernel.org>; Thu, 27 Nov 2025 12:09:15 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.9
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 126B3318152;
+	Thu, 27 Nov 2025 12:11:45 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.13
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1764245357; cv=none; b=mgQMGN8rC2t18T6Lp+QV6ZqwG0uZX16qaHXjAok7R1oRwvP4+ROOA7ErjyID4nZfhUQpu2QUtT6uo0xYqaP+5D99i5vpffAB49EDdhpjgv1Bgv/Ad+5+cRsfoQUE9LAj3MWerGDPMhtsA4t2g/0SU+BaG6MJeiHOxkCf/ncmVY8=
+	t=1764245508; cv=none; b=dHQ8ZfDeA4sxwgfh2JdIzUrkTG/r+cTnauR0vJITgCuErGSosklI+pMbzKncmeRDvd3wmsotmz094rqRgRAxT2o9yk0in4njwrQpraBkW8iuFUhxon//Sfmwh3Qib3xC62hW4vmUyz+VNTyLmsG4gxBcKnoLrx2ras2d2TTfGoo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1764245357; c=relaxed/simple;
-	bh=jfSfZonNeq/jG4OAOAG43zDYDB8oIlvWzctHS15/Ars=;
+	s=arc-20240116; t=1764245508; c=relaxed/simple;
+	bh=LXDgqcysQchAQtxKVAqF+yisHSm+vLWY9SjQmRJty18=;
 	h=From:Date:To:cc:Subject:In-Reply-To:Message-ID:References:
-	 MIME-Version:Content-Type; b=lu7Bs2aRdeVlJCUqiVEgpxTGovg9aKllC1bUC6WTI6EzxyJa0TXJasBSmYWNpN5z7x/+FJL1Z2o3mAPV2bsfaKDB3jrMv7R6BwVGNyJlBWQhSM+uSpQZP8NbyIw4bKcx6VJYsHSKY8yoNIiE2fUlXPDyZHRb9oIpG16FXETxI1A=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=pass smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=KnoowqZl; arc=none smtp.client-ip=198.175.65.9
+	 MIME-Version:Content-Type; b=Cvz5BeBGIYKR2CXYu3eSYoihDpQxuzui5EHLnoQAbhyFLpud3VB3Ym4YpX4aaKeXwEEn1ZJvMy3BCbRXNFIaLM07iOamyIcEDQU86p2nuBbcOtr1KrFJCylSJjAK8T0ZPCKd30XJ5Wa6W7Hm8RdWkyBU8YHworfqDZLTqHgMjEY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=pass smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=XUYQwiT4; arc=none smtp.client-ip=198.175.65.13
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="KnoowqZl"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="XUYQwiT4"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1764245356; x=1795781356;
+  t=1764245506; x=1795781506;
   h=from:date:to:cc:subject:in-reply-to:message-id:
    references:mime-version;
-  bh=jfSfZonNeq/jG4OAOAG43zDYDB8oIlvWzctHS15/Ars=;
-  b=KnoowqZld9PCk4rSiun98TW5PuZ2OM6uE5wU0F5uWQeMIgMlvXLmKOlT
-   8fOoaJVGobrR9GfGRaOW56E2U0VmOAPTBZt9tgZu59zLTUXdmOq9wohkc
-   PSI4b0BVzpn1cFNKIhjLwSEl+9URaYwLIw3O4I8vJGi1VgqI8wH9OlNzW
-   B0N3Ky2XWtQ9eStp0z0+Tqj83DwLcuF8YsEADE/H/Q8IETBKDIY0DOVVK
-   FQRZRuE5GGURkcQgr2Db1bhQ3FTvgy2nLnk+b6LWWJaGDZwbwY/yKUuUU
-   VxH/vH2tpJ0puMhmknK24BWvKQJQ+5ijGb5t1QfOVM403Xy4pXlUJxm8s
-   A==;
-X-CSE-ConnectionGUID: wURXuN1vTDyQyMqxbhIJ8A==
-X-CSE-MsgGUID: CxDV7vY2SYGEHWW73pLWig==
-X-IronPort-AV: E=McAfee;i="6800,10657,11625"; a="88935802"
+  bh=LXDgqcysQchAQtxKVAqF+yisHSm+vLWY9SjQmRJty18=;
+  b=XUYQwiT4P/J87e6Lu3UoK46XayhegsnTIVCraivdSYjjhskvquoCDTSj
+   zagYgu+7+Q9qII21D9AJFMqPC5TdPrOA+GJ6cSSK5qbslSBqxU054P4QP
+   RfUTXkn1PfuSP3SaNtoMvbl9s5fOwTSmK/J6dpwt8xMG0gmKCBKc7FyRe
+   y267Ce6RyVPfBPXE4TdBzFmAU1mpnMt/7SDZxrOwiJknVuYL1+Qo1kHOk
+   5Hvmz2ij3B7N9YRyI+ik6RDXdg+p6eWNhbKB5jDXyQEOe6N7QO8KmcLAl
+   VXuhO5+kvi/SJmyniH8tUeYr9ZPU1SDG+7icqXuCmClsUq7ppmAxMs44H
+   Q==;
+X-CSE-ConnectionGUID: G6Zl0whlQEa+/i3U7SDDzg==
+X-CSE-MsgGUID: XF1sDFSCR4OhZ/WHacLAjA==
+X-IronPort-AV: E=McAfee;i="6800,10657,11625"; a="77394340"
 X-IronPort-AV: E=Sophos;i="6.20,231,1758610800"; 
-   d="scan'208";a="88935802"
-Received: from orviesa004.jf.intel.com ([10.64.159.144])
-  by orvoesa101.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 27 Nov 2025 04:09:15 -0800
-X-CSE-ConnectionGUID: PD9hcJOpRiWIw7bT2xfFiw==
-X-CSE-MsgGUID: AYg8Dnd9Sre3A+woe/IHjA==
+   d="scan'208";a="77394340"
+Received: from orviesa009.jf.intel.com ([10.64.159.149])
+  by orvoesa105.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 27 Nov 2025 04:11:45 -0800
+X-CSE-ConnectionGUID: iQmZRf1GSi6r28Y4bJlMNg==
+X-CSE-MsgGUID: VTDfkI1zS0642kzT7VHGiw==
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="6.20,231,1758610800"; 
-   d="scan'208";a="197697585"
+   d="scan'208";a="193021648"
 Received: from ijarvine-mobl1.ger.corp.intel.com (HELO localhost) ([10.245.244.42])
-  by orviesa004-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 27 Nov 2025 04:09:12 -0800
+  by orviesa009-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 27 Nov 2025 04:11:41 -0800
 From: =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
-Date: Thu, 27 Nov 2025 14:09:09 +0200 (EET)
-To: Shyam Sundar S K <Shyam-sundar.S-k@amd.com>
-cc: Hans de Goede <hansg@kernel.org>, platform-driver-x86@vger.kernel.org, 
-    Patil.Reddy@amd.com, Mario Limonciello <superm1@kernel.org>, 
-    Yijun Shen <Yijun.Shen@Dell.com>
-Subject: Re: [PATCH v4 3/3] platform/x86/amd/pmf: Use ring buffer to store
- custom BIOS input values
-In-Reply-To: <20251119085813.546813-3-Shyam-sundar.S-k@amd.com>
-Message-ID: <9f30b9ff-5f27-68c3-9bc1-4bed9fe0bd89@linux.intel.com>
-References: <20251119085813.546813-1-Shyam-sundar.S-k@amd.com> <20251119085813.546813-3-Shyam-sundar.S-k@amd.com>
+Date: Thu, 27 Nov 2025 14:11:36 +0200 (EET)
+To: Armin Wolf <W_Armin@gmx.de>, "Derek J. Clark" <derekjohn.clark@gmail.com>
+cc: Len Brown <lenb@kernel.org>, "Rafael J . Wysocki" <rafael@kernel.org>, 
+    Jonathan Corbet <corbet@lwn.net>, Mario Limonciello <superm1@kernel.org>, 
+    Zhixin Zhang <zhangzx36@lenovo.com>, Mia Shao <shaohz1@lenovo.com>, 
+    Mark Pearson <mpearson-lenovo@squebb.ca>, 
+    "Pierre-Loup A . Griffais" <pgriffais@valvesoftware.com>, 
+    Kurt Borja <kuurtb@gmail.com>, platform-driver-x86@vger.kernel.org, 
+    linux-doc@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>, 
+    linux-acpi@vger.kernel.org
+Subject: Re: [PATCH v3 1/3] acpi: platform_profile - Add max-power profile
+ option
+In-Reply-To: <e801bef5-158e-4422-9c23-93dc2210f734@gmx.de>
+Message-ID: <bf61e05b-74ac-28de-d8ea-4a909d6e5fb8@linux.intel.com>
+References: <20251113212639.459896-1-derekjohn.clark@gmail.com> <20251113212639.459896-2-derekjohn.clark@gmail.com> <7050cadc-9cb7-4f9b-8393-247bddb56965@gmx.de> <CFD27662-0044-4AF3-8E66-65229324CECF@gmail.com> <e801bef5-158e-4422-9c23-93dc2210f734@gmx.de>
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
@@ -62,308 +67,117 @@ List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=US-ASCII
 
-On Wed, 19 Nov 2025, Shyam Sundar S K wrote:
+On Mon, 17 Nov 2025, Armin Wolf wrote:
 
-> Custom BIOS input values can be updated by multiple sources, such as power
-> mode changes and sensor events, each triggering a custom BIOS input event.
-> When these events occur in rapid succession, new data may overwrite
-> previous values before they are processed, resulting in lost updates.
+> Am 16.11.25 um 20:01 schrieb Derek J. Clark:
 > 
-> To address this, introduce a fixed-size, power-of-two ring buffer to
-> capture every custom BIOS input event, storing both the pending request
-> and its associated input values. Access to the ring buffer is synchronized
-> using a mutex.
-> 
-> The previous use of memset() to clear the pending request structure after
-> each event is removed, as each BIOS input value is now copied into the
-> buffer as a snapshot. Consumers now process entries directly from the ring
-> buffer, making explicit clearing of the pending request structure
-> unnecessary.
-> 
-> Reviewed-by: Mario Limonciello (AMD) <superm1@kernel.org>
-> Tested-by: Yijun Shen <Yijun.Shen@Dell.com>
-> Co-developed-by: Patil Rajesh Reddy <Patil.Reddy@amd.com>
-> Signed-off-by: Patil Rajesh Reddy <Patil.Reddy@amd.com>
-> Signed-off-by: Shyam Sundar S K <Shyam-sundar.S-k@amd.com>
-> ---
-> v4:
->  - Do not store local copy of the ring buffer
->  - use devm_mutex_init()
-> 
-> v3:
->  - include headers wherever missing
->  - use dev_warn() instead of dev_WARN_ONCE()
->  - remove generic struct names
->  - enhance ringbuffer mechanism to handle common path
->  - other cosmetic remarks
-> 
-> v2:
->  - Add dev_WARN_ONCE()
->  - Change variable name rb_mutex to cbi_mutex
->  - Move tail increment logic above pending request check
-> 
->  drivers/platform/x86/amd/pmf/acpi.c   | 40 +++++++++++++++++++++++++++
->  drivers/platform/x86/amd/pmf/core.c   |  5 ++++
->  drivers/platform/x86/amd/pmf/pmf.h    | 21 ++++++++++++++
->  drivers/platform/x86/amd/pmf/spc.c    | 32 +++++++++++----------
->  drivers/platform/x86/amd/pmf/tee-if.c |  2 ++
->  5 files changed, 86 insertions(+), 14 deletions(-)
-> 
-> diff --git a/drivers/platform/x86/amd/pmf/acpi.c b/drivers/platform/x86/amd/pmf/acpi.c
-> index 13c4fec2c7ef..3d94b03cf794 100644
-> --- a/drivers/platform/x86/amd/pmf/acpi.c
-> +++ b/drivers/platform/x86/amd/pmf/acpi.c
-> @@ -9,6 +9,9 @@
->   */
->  
->  #include <linux/acpi.h>
-> +#include <linux/array_size.h>
-> +#include <linux/cleanup.h>
-> +#include <linux/dev_printk.h>
->  #include "pmf.h"
->  
->  #define APMF_CQL_NOTIFICATION  2
-> @@ -331,6 +334,39 @@ int apmf_get_sbios_requests(struct amd_pmf_dev *pdev, struct apmf_sbios_req *req
->  									 req, sizeof(*req));
->  }
->  
-> +/* Store custom BIOS inputs data in ring buffer */
-> +static void amd_pmf_custom_bios_inputs_rb(struct amd_pmf_dev *pmf_dev)
-> +{
-> +	struct pmf_cbi_ring_buffer *rb = &pmf_dev->cbi_buf;
-> +	int i;
-> +
-> +	guard(mutex)(&pmf_dev->cbi_mutex);
-> +
-> +	switch (pmf_dev->cpu_id) {
-> +	case AMD_CPU_ID_PS:
-> +		for (i = 0; i < ARRAY_SIZE(custom_bios_inputs_v1); i++)
-> +			rb->data[rb->head].val[i] = pmf_dev->req1.custom_policy[i];
-> +		rb->data[rb->head].preq = pmf_dev->req1.pending_req;
-> +		break;
-> +	case PCI_DEVICE_ID_AMD_1AH_M20H_ROOT:
-> +	case PCI_DEVICE_ID_AMD_1AH_M60H_ROOT:
-> +		for (i = 0; i < ARRAY_SIZE(custom_bios_inputs); i++)
-> +			rb->data[rb->head].val[i] = pmf_dev->req.custom_policy[i];
-> +		rb->data[rb->head].preq = pmf_dev->req.pending_req;
-> +		break;
-> +	default:
-> +		return;
-> +	}
-> +
-> +	if (CIRC_SPACE(rb->head, rb->tail, CUSTOM_BIOS_INPUT_RING_ENTRIES) == 0) {
-> +		/* Rare case: ensures the newest BIOS input value is kept */
-> +		dev_warn(pmf_dev->dev, "Overwriting BIOS input value, data may be lost\n");
-> +		rb->tail = (rb->tail + 1) & (CUSTOM_BIOS_INPUT_RING_ENTRIES - 1);
-> +	}
-> +
-> +	rb->head = (rb->head + 1) & (CUSTOM_BIOS_INPUT_RING_ENTRIES - 1);
-> +}
-> +
->  static void amd_pmf_handle_early_preq(struct amd_pmf_dev *pdev)
->  {
->  	if (!pdev->cb_flag)
-> @@ -356,6 +392,8 @@ static void apmf_event_handler_v2(acpi_handle handle, u32 event, void *data)
->  	dev_dbg(pmf_dev->dev, "Pending request (preq): 0x%x\n", pmf_dev->req.pending_req);
->  
->  	amd_pmf_handle_early_preq(pmf_dev);
-> +
-> +	amd_pmf_custom_bios_inputs_rb(pmf_dev);
->  }
->  
->  static void apmf_event_handler_v1(acpi_handle handle, u32 event, void *data)
-> @@ -374,6 +412,8 @@ static void apmf_event_handler_v1(acpi_handle handle, u32 event, void *data)
->  	dev_dbg(pmf_dev->dev, "Pending request (preq1): 0x%x\n", pmf_dev->req1.pending_req);
->  
->  	amd_pmf_handle_early_preq(pmf_dev);
-> +
-> +	amd_pmf_custom_bios_inputs_rb(pmf_dev);
->  }
->  
->  static void apmf_event_handler(acpi_handle handle, u32 event, void *data)
-> diff --git a/drivers/platform/x86/amd/pmf/core.c b/drivers/platform/x86/amd/pmf/core.c
-> index 2ec4cb92e34f..71421a5d7afd 100644
-> --- a/drivers/platform/x86/amd/pmf/core.c
-> +++ b/drivers/platform/x86/amd/pmf/core.c
-> @@ -11,6 +11,7 @@
->  #include <linux/debugfs.h>
->  #include <linux/iopoll.h>
->  #include <linux/module.h>
-> +#include <linux/mutex.h>
->  #include <linux/pci.h>
->  #include <linux/platform_device.h>
->  #include <linux/power_supply.h>
-> @@ -477,6 +478,10 @@ static int amd_pmf_probe(struct platform_device *pdev)
->  	if (err)
->  		return err;
->  
-> +	err = devm_mutex_init(dev->dev, &dev->cbi_mutex);
-> +	if (err)
-> +		return err;
-> +
->  	apmf_acpi_init(dev);
->  	platform_set_drvdata(pdev, dev);
->  	amd_pmf_dbgfs_register(dev);
-> diff --git a/drivers/platform/x86/amd/pmf/pmf.h b/drivers/platform/x86/amd/pmf/pmf.h
-> index 2145df4128cd..5a18b3604b6e 100644
-> --- a/drivers/platform/x86/amd/pmf/pmf.h
-> +++ b/drivers/platform/x86/amd/pmf/pmf.h
-> @@ -12,7 +12,9 @@
->  #define PMF_H
->  
->  #include <linux/acpi.h>
-> +#include <linux/circ_buf.h>
->  #include <linux/input.h>
-> +#include <linux/mutex_types.h>
->  #include <linux/platform_device.h>
->  #include <linux/platform_profile.h>
->  
-> @@ -120,6 +122,7 @@ struct cookie_header {
->  #define APTS_MAX_STATES		16
->  #define CUSTOM_BIOS_INPUT_BITS	GENMASK(16, 7)
->  #define BIOS_INPUTS_MAX		10
-> +#define CUSTOM_BIOS_INPUT_RING_ENTRIES	64	/* Must be power of two for CIRC_* macros */
->  
->  typedef void (*apmf_event_handler_t)(acpi_handle handle, u32 event, void *data);
->  
-> @@ -359,6 +362,22 @@ struct pmf_bios_inputs_prev {
->  	u32 custom_bios_inputs[BIOS_INPUTS_MAX];
->  };
->  
-> +/**
-> + * struct pmf_bios_input_entry - Snapshot of custom BIOS input event
-> + * @val: Array of custom BIOS input values
-> + * @preq: Pending request value associated with this event
-> + */
-> +struct pmf_bios_input_entry {
-> +	u32 val[BIOS_INPUTS_MAX];
-> +	u32 preq;
-> +};
-> +
-> +struct pmf_cbi_ring_buffer {
-> +	struct pmf_bios_input_entry data[CUSTOM_BIOS_INPUT_RING_ENTRIES];
-> +	int head;
-> +	int tail;
-> +};
-> +
->  struct amd_pmf_dev {
->  	void __iomem *regbase;
->  	void __iomem *smu_virt_addr;
-> @@ -407,6 +426,8 @@ struct amd_pmf_dev {
->  	struct apmf_sbios_req_v1 req1;
->  	struct pmf_bios_inputs_prev cb_prev; /* To preserve custom BIOS inputs */
->  	bool cb_flag;			     /* To handle first custom BIOS input */
-> +	struct pmf_cbi_ring_buffer cbi_buf;
-> +	struct mutex cbi_mutex;		     /* Protects ring buffer access */
->  };
->  
->  struct apmf_sps_prop_granular_v2 {
-> diff --git a/drivers/platform/x86/amd/pmf/spc.c b/drivers/platform/x86/amd/pmf/spc.c
-> index 85192c7536b8..34fff41b86fe 100644
-> --- a/drivers/platform/x86/amd/pmf/spc.c
-> +++ b/drivers/platform/x86/amd/pmf/spc.c
-> @@ -11,6 +11,7 @@
->  
->  #include <acpi/button.h>
->  #include <linux/amd-pmf-io.h>
-> +#include <linux/cleanup.h>
->  #include <linux/power_supply.h>
->  #include <linux/units.h>
->  #include "pmf.h"
-> @@ -132,30 +133,37 @@ static void amd_pmf_set_ta_custom_bios_input(struct ta_pmf_enact_table *in, int
->  	}
->  }
->  
-> -static void amd_pmf_update_bios_inputs(struct amd_pmf_dev *pdev, u32 pending_req,
-> +static void amd_pmf_update_bios_inputs(struct amd_pmf_dev *pdev, struct pmf_bios_input_entry *data,
->  				       const struct amd_pmf_pb_bitmap *inputs,
-> -				       const u32 *custom_policy, struct ta_pmf_enact_table *in)
-> +				       struct ta_pmf_enact_table *in)
->  {
->  	unsigned int i;
->  
->  	for (i = 0; i < ARRAY_SIZE(custom_bios_inputs); i++) {
-> -		if (!(pending_req & inputs[i].bit_mask))
-> +		if (!(data->preq & inputs[i].bit_mask))
->  			continue;
-> -		amd_pmf_set_ta_custom_bios_input(in, i, custom_policy[i]);
-> -		pdev->cb_prev.custom_bios_inputs[i] = custom_policy[i];
-> -		dev_dbg(pdev->dev, "Custom BIOS Input[%d]: %u\n", i, custom_policy[i]);
-> +		amd_pmf_set_ta_custom_bios_input(in, i, data->val[i]);
-> +		pdev->cb_prev.custom_bios_inputs[i] = data->val[i];
-> +		dev_dbg(pdev->dev, "Custom BIOS Input[%d]: %u\n", i, data->val[i]);
->  	}
->  }
->  
->  static void amd_pmf_get_custom_bios_inputs(struct amd_pmf_dev *pdev,
->  					   struct ta_pmf_enact_table *in)
->  {
-> +	struct pmf_cbi_ring_buffer *rb = &pdev->cbi_buf;
->  	unsigned int i;
->  
-> +	guard(mutex)(&pdev->cbi_mutex);
-> +
->  	for (i = 0; i < ARRAY_SIZE(custom_bios_inputs); i++)
->  		amd_pmf_set_ta_custom_bios_input(in, i, pdev->cb_prev.custom_bios_inputs[i]);
->  
-> -	if (!(pdev->req.pending_req || pdev->req1.pending_req))
-> +	if (CIRC_CNT(rb->head, rb->tail, CUSTOM_BIOS_INPUT_RING_ENTRIES) == 0)
-> +		return;	/* return if ring buffer is empty */
-> +
-> +	/* If no active custom BIOS input pending request, do not consume further work */
-> +	if (!rb->data[rb->tail].preq)
->  		return;
+> > On November 16, 2025 8:13:17 AM PST, Armin Wolf <W_Armin@gmx.de> wrote:
+> > > Am 13.11.25 um 22:26 schrieb Derek J. Clark:
+> > > 
+> > > > Some devices, namely Lenovo Legion devices, have an "extreme" mode where
+> > > > power draw is at the maximum limit of the cooling hardware. Add a new
+> > > > "max-power" platform profile to properly reflect this operating mode.
+> > > > 
+> > > > Reviewed-by: Mario Limonciello (AMD) <superm1@kernel.org>
+> > > > Acked-by: Rafael J. Wysocki (Intel) <rafael@kernel.org>
+> > > > Signed-off-by: Derek J. Clark <derekjohn.clark@gmail.com>
+> > > > ---
+> > > >    Documentation/ABI/testing/sysfs-class-platform-profile | 2 ++
+> > > >    drivers/acpi/platform_profile.c                        | 1 +
+> > > >    include/linux/platform_profile.h                       | 1 +
+> > > >    3 files changed, 4 insertions(+)
+> > > > 
+> > > > diff --git a/Documentation/ABI/testing/sysfs-class-platform-profile
+> > > > b/Documentation/ABI/testing/sysfs-class-platform-profile
+> > > > index dc72adfb830a..fcab26894ec3 100644
+> > > > --- a/Documentation/ABI/testing/sysfs-class-platform-profile
+> > > > +++ b/Documentation/ABI/testing/sysfs-class-platform-profile
+> > > > @@ -23,6 +23,8 @@ Description:	This file contains a space-separated
+> > > > list of profiles supported
+> > > >    					power consumption with a
+> > > > slight bias
+> > > >    					towards performance
+> > > >    		performance		High performance operation
+> > > > +		max-power		Higher performance operation that may
+> > > > exceed
+> > > > +					internal battery draw limits when on
+> > > > AC power
+> > > I am not sure if it is a good idea to allow platform_profile_cycle() to
+> > > cycle into this
+> > > new max-power profile. The system could encounter a brownout if it is
+> > > currently operating
+> > > on battery power when selecting max-power.
+> > > 
+> > > Maybe we should prevent platform_profile_cylce() from selecting max-power?
+> > At least for Lenovo devices unplugging AC will automatically throttle the
+> > ppt values to roughly equivalent to performance. It will look at a different
+> > WMI data block for the values when switched, so there's no risk for cycling
+> > in this case. This seems like smart hardware design, but we've certainly
+> > seen bad hardware design so the concern is warranted. Perhaps it is worth
+> > visiting if another vendor implements it differently? That being said, what
+> > you're describing would match up with how the physical profile selection
+> > button works, so it would align with consumer expectation. I have no strong
+> > feelings either way, but I'm a little concerned about meeting the merge
+> > window as this series fixes a pretty disruptive bug affecting 6.17 users.
+> > 
+> > Regards,
+> > - Derek
+> > 
+> If the physical platform selection button does not automatically select the
+> max-power profile under Windows, then we should copy this behavior i think.
+> The changes necessary for that are fairly small, basically you only have to
+> extend the handling of PLATFORM_PROFILE_CUSTOM inside platform_profile_cycle()
+> to also include the max-power profile. So i would prefer if we modify
+> platform_profile_cycle() now has doing this later might be seen as a
+> regression.
 
-I'm left usure if "do not consume further work" comment really means that 
-the entry is supposed to not get removed from the ring, which stalls the 
-ring forever?
+Derek,
 
-If that's the wanted behavior, does that imply overwrite dev_warn() above 
-can spam the logs from that point on as the ring can fill up without 
-anything consuming entries from it?
+Any comments on this?
 
-I've taken first two patches into review-ilpo-next.
+I'd very much prefer to take this series in this cycle but this comment 
+seems unresolved and has userspace visible impact so may bind us 
+irrevocably to certain behavior.
 
->  	if (!pdev->smart_pc_enabled)
-> @@ -165,20 +173,16 @@ static void amd_pmf_get_custom_bios_inputs(struct amd_pmf_dev *pdev,
->  	case PMF_IF_V1:
->  		if (!is_apmf_bios_input_notifications_supported(pdev))
->  			return;
-> -		amd_pmf_update_bios_inputs(pdev, pdev->req1.pending_req, custom_bios_inputs_v1,
-> -					   pdev->req1.custom_policy, in);
-> +		amd_pmf_update_bios_inputs(pdev, &rb->data[rb->tail], custom_bios_inputs_v1, in);
->  		break;
->  	case PMF_IF_V2:
-> -		amd_pmf_update_bios_inputs(pdev, pdev->req.pending_req, custom_bios_inputs,
-> -					   pdev->req.custom_policy, in);
-> +		amd_pmf_update_bios_inputs(pdev, &rb->data[rb->tail], custom_bios_inputs, in);
->  		break;
->  	default:
->  		break;
->  	}
->  
-> -	/* Clear pending requests after handling */
-> -	memset(&pdev->req, 0, sizeof(pdev->req));
-> -	memset(&pdev->req1, 0, sizeof(pdev->req1));
-> +	rb->tail = (rb->tail + 1) & (CUSTOM_BIOS_INPUT_RING_ENTRIES - 1);
->  }
->  
->  static void amd_pmf_get_c0_residency(u16 *core_res, size_t size, struct ta_pmf_enact_table *in)
-> diff --git a/drivers/platform/x86/amd/pmf/tee-if.c b/drivers/platform/x86/amd/pmf/tee-if.c
-> index 6e8116bef4f6..add742e33e1e 100644
-> --- a/drivers/platform/x86/amd/pmf/tee-if.c
-> +++ b/drivers/platform/x86/amd/pmf/tee-if.c
-> @@ -579,6 +579,8 @@ int amd_pmf_init_smart_pc(struct amd_pmf_dev *dev)
->  		status = ret == TA_PMF_TYPE_SUCCESS;
->  		if (status) {
->  			dev->cb_flag = true;
-> +			dev->cbi_buf.head = 0;
-> +			dev->cbi_buf.tail = 0;
->  			break;
->  		}
->  		amd_pmf_tee_deinit(dev);
-> 
-
--- 
+--
  i.
 
+> 
+> Thanks,
+> Armin Wolf
+> 
+> > > Other than that:
+> > > Reviewed-by: Armin Wolf <W_Armin@gmx.de>
+> > > 
+> > > >    		custom			Driver defined custom profile
+> > > >    		====================
+> > > > ========================================
+> > > >    diff --git a/drivers/acpi/platform_profile.c
+> > > > b/drivers/acpi/platform_profile.c
+> > > > index b43f4459a4f6..aa1dce05121b 100644
+> > > > --- a/drivers/acpi/platform_profile.c
+> > > > +++ b/drivers/acpi/platform_profile.c
+> > > > @@ -37,6 +37,7 @@ static const char * const profile_names[] = {
+> > > >    	[PLATFORM_PROFILE_BALANCED] = "balanced",
+> > > >    	[PLATFORM_PROFILE_BALANCED_PERFORMANCE] =
+> > > > "balanced-performance",
+> > > >    	[PLATFORM_PROFILE_PERFORMANCE] = "performance",
+> > > > +	[PLATFORM_PROFILE_MAX_POWER] = "max-power",
+> > > >    	[PLATFORM_PROFILE_CUSTOM] = "custom",
+> > > >    };
+> > > >    static_assert(ARRAY_SIZE(profile_names) == PLATFORM_PROFILE_LAST);
+> > > > diff --git a/include/linux/platform_profile.h
+> > > > b/include/linux/platform_profile.h
+> > > > index a299225ab92e..855b28340e95 100644
+> > > > --- a/include/linux/platform_profile.h
+> > > > +++ b/include/linux/platform_profile.h
+> > > > @@ -24,6 +24,7 @@ enum platform_profile_option {
+> > > >    	PLATFORM_PROFILE_BALANCED,
+> > > >    	PLATFORM_PROFILE_BALANCED_PERFORMANCE,
+> > > >    	PLATFORM_PROFILE_PERFORMANCE,
+> > > > +	PLATFORM_PROFILE_MAX_POWER,
+> > > >    	PLATFORM_PROFILE_CUSTOM,
+> > > >    	PLATFORM_PROFILE_LAST, /*must always be last */
+> > > >    };
+> > 
+> 
