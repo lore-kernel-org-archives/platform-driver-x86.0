@@ -1,143 +1,115 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pl1-f182.google.com (mail-pl1-f182.google.com [209.85.214.182])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A7B0A224B06;
-	Thu, 27 Nov 2025 01:55:04 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2114C248F51
+	for <platform-driver-x86@vger.kernel.org>; Thu, 27 Nov 2025 07:04:17 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.182
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1764208508; cv=none; b=cItkA1b+8qhf+BEesLEAUNw8kSk4E3IDIEeQQIZX9aZ6XG9W1Vhzn4TJ+ozGnh1VAq/0epMpbz6YAV1y6M8ABQis91mp8hLHWsIBhNirdDDuFrGWbSI3PvgIfuHpfOZb4pTe0zpIn2mnqcilzIuhp7U1C+ULHvAZlAXq3+7ITQU=
+	t=1764227059; cv=none; b=ZMCUCgqMRa6zpOx1+m38TrkvwbWPQP4HYVFShxN1Ccfjo7dnPodYq52sSm/BLJLrcTAYQKcu61zTNIhG3ccR5UBzMS3py37v7bauyXkZyNmAvSx5auahzWgKnn+Y4zKPYSo9To3hgDCnzoo1LXoxI0eAyXlWTk5rZM3ptgcPNYk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1764208508; c=relaxed/simple;
-	bh=/NqG17rwpRoq7YYKDty/OdxHUk6Tf8IpKhsClBMsOkg=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=Xwt6xpAI9uRCxqsUe7Sp2tmNxSwadWcTyDr8BXKxwpOx+ufLqgBNgSWlCbAwMwSOxwSE/Kzqseq9WG3LJoPAaD/rZIkShjCuu58fJBLWbrWGNj3lKyZS7CVpApZS7W+9r8Ksda/jo6a53EBzBzH/WztbgryNnTrZi5SxUPVOREo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=EzYiOJa3; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1764227059; c=relaxed/simple;
+	bh=N1efc10EOHLWGixBPIiAqpcHEkD2vemhSNPai7tnGeo=;
+	h=From:To:Subject:Date:Message-ID:MIME-Version; b=EMca6nTdJ3jZ8Y+XeSDuxhu5sgVIl6E6iYXGiWPOfayqK5/KZWoDiQBML/mU2124WVHpKOEYzBarw7oWBUFKl9R8z0S8InKVKYBL5Cpy1VOa3FJx4qpwaBImOnMHwfYaC76f2CjAfHxBe9SrLWRIn8LMb+JxY1zWv977FRxu13Q=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=reject dis=none) header.from=canonical.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=V5yftRa2; arc=none smtp.client-ip=209.85.214.182
+Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=reject dis=none) header.from=canonical.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="EzYiOJa3"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id E68CBC4CEF7;
-	Thu, 27 Nov 2025 01:55:03 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1764208504;
-	bh=/NqG17rwpRoq7YYKDty/OdxHUk6Tf8IpKhsClBMsOkg=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=EzYiOJa3YR9H6eZ8HCr1KToCFxIEO+ew/BcLqhj57zGekCM/ZK/Pr/eiTyQaXGvgv
-	 T5AhkQWLJvlTEBoFbvcJIDxxsmF6ndlEpDBQa/hmxDBJwgIigrTpQ6ZUOYPPt18jo7
-	 Kvd50M/qhN6chJCvZYY53aFrtDgpreG0isN+lQBIPAgnmshLUwdbUPoYSQ1au2st5M
-	 XXwsiF2q1J6/YoAI/TVrenCyJT3o9zykMk5Ki9Xk4l7s5zZMQDnA7G66aQgLnvVp/I
-	 1Xu19QcNEw7OTPqMlsFElD0TE/oyVjCXOQkJBWKAWcEvy0dGi9DPjnF/cVS+mfBIuW
-	 9b8HslW/nh5yQ==
-Date: Wed, 26 Nov 2025 19:55:02 -0600
-From: Rob Herring <robh@kernel.org>
-To: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
-Cc: Saravana Kannan <saravanak@google.com>,
-	"Rafael J. Wysocki" <rafael@kernel.org>,
-	Viresh Kumar <viresh.kumar@linaro.org>,
-	Matthias Brugger <matthias.bgg@gmail.com>,
-	AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>,
-	Yangtao Li <tiny.windzz@gmail.com>, Chen-Yu Tsai <wens@kernel.org>,
-	Jernej Skrabec <jernej.skrabec@gmail.com>,
-	Samuel Holland <samuel@sholland.org>,
-	Lorenzo Pieralisi <lpieralisi@kernel.org>,
-	Daniel Lezcano <daniel.lezcano@linaro.org>,
-	Bjorn Andersson <andersson@kernel.org>,
-	Konrad Dybcio <konradybcio@kernel.org>,
-	Thomas Gleixner <tglx@linutronix.de>,
-	Nicolas Ferre <nicolas.ferre@microchip.com>,
-	Alexandre Belloni <alexandre.belloni@bootlin.com>,
-	Claudiu Beznea <claudiu.beznea@tuxon.dev>,
-	Maximilian Luz <luzmaximilian@gmail.com>,
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="V5yftRa2"
+Received: by mail-pl1-f182.google.com with SMTP id d9443c01a7336-2984dfae043so4709895ad.0
+        for <platform-driver-x86@vger.kernel.org>; Wed, 26 Nov 2025 23:04:17 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1764227057; x=1764831857; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:to
+         :from:sender:from:to:cc:subject:date:message-id:reply-to;
+        bh=QBR/AheFm3tKat06cP5NedrfvtvOTlhKN1ydYNsbaV8=;
+        b=V5yftRa2iTeJgYnMs4oim6qkA4P7oYeimFpPw6BY6DGPylOJ1/qoRa3HCt5O7DDcHM
+         0D3y3JJ8scbgW89HpMDy/oFmmKWEft2rSd9XUYdSyBiTnBNLhsK+u4RYgl5ZJS4BDNP0
+         ptGSbDfVFkhLzQteUhYFaNku65c7agFp47UqhWh6OGOYjkXIJtamvgtURmkTNIH3B/3G
+         Q0soBIJ/w/ixLBDU1meADhii0ONjim8ztHcg4LXbW7VI0TNeXPYnXYRDdE2iiyJYbZtk
+         lH/4gYgD/s+OInbMw+vMp8QaoEZmUQPyBVeDC9PmV829TInii2Q7NHQ/YqL3M0Y1gdqg
+         cFCw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1764227057; x=1764831857;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:to
+         :from:sender:x-gm-gg:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=QBR/AheFm3tKat06cP5NedrfvtvOTlhKN1ydYNsbaV8=;
+        b=JKgsAo2CbV4KPqN8HgcMKMUu+uT8aHZhWY6MmlUACumYsyudL6Gu1HdMiM3ymYIldc
+         oEFUyRU//RnNB8uC0tgU7kU0Iy8sOKC7eTMJQ/OCqK5ZUmafTl3t8JKa9aRXE3RxucCi
+         INditb0EGfN5QX6ACsGDeEVJ1iJyXId0Ixe+bQT9Qz6a7ot4KjiCNq7JvShr2/VYSByy
+         eGdDfgjz2gkMBu+s+jjxpeZqUyTTeKmMT9IhQExmeqSmXtZeol0FKwoJ4qa5KnpPosee
+         HPn2SlxdLT9vPa+aZNnQ5Vw1s+6jhh2qCSMTxh3cXfb09EZYsmsglP3mP6fSVgg6RuxV
+         jmaA==
+X-Forwarded-Encrypted: i=1; AJvYcCWrCdP0aGHfGOtnwOXH1CWIL0eEGlOJrgD05Ysa5NiusVvU02GElO2FcYTIp/XsghKoI2U5/s+zNEtotJIfnFdbaNAT@vger.kernel.org
+X-Gm-Message-State: AOJu0Ywb4hqvo0HojrwNGQMDK+FNdODeBFA8Hv9o2y2Fcfo1wFSJdUfN
+	ucpqFLd5dFbn8ZmgIRhCMfv43XyWfD9hlnwolGyQSNIhK12ONK11+jVs
+X-Gm-Gg: ASbGncsb7MAGu0VdSJje6WPnK2B9J2xkznjatxaXpqi0XuH630WLIfg/a3cORljIhSw
+	1CQ0t6fNJNXcg0BpZtDS0lJvvTORHXITZtDRdDz07tSoAuMdtXsFJfDyv1M1MEvLJO4rIKiSvox
+	/XulnxIdRYhzD9XHZnkXLlKhTyUb+q1P2Rh6dxC+oJAW75rN3WJmDU6dUbX9CQXyTmIUYUIga2t
+	qNuwyIqPmkrdJGQRP4ZXiz1K7kg1Jz/3wEjhtAseEBPphqy8on7pC8d51Vay96sciVAD02n8uOh
+	CeYvLN7PwiOAOUTNnoLor1S0TFmWkMK9oJl0pXq/M+Q1YpyVxNR1kC7EtyV3nnp/SUIUdOBW7Nq
+	tIkdeswbFlSsd896hV45GQ9xJPM6jDhDJwuwZ/F31zEes1Utbsyrkzh9onoaQJ35vmiMrJA==
+X-Google-Smtp-Source: AGHT+IEhYoBW8JrPyEqqtjUkAziGdRG3TVUK/F66fcIUyqpf5N1TN2UAhMfDGX54jOk4lBv3UmiZqA==
+X-Received: by 2002:a17:903:2ec4:b0:290:b53b:7455 with SMTP id d9443c01a7336-29b6c3c2ac4mr225288675ad.10.1764227057291;
+        Wed, 26 Nov 2025 23:04:17 -0800 (PST)
+Received: from localhost ([2001:67c:1562:8007::aac:4468])
+        by smtp.gmail.com with ESMTPSA id d9443c01a7336-29bce40ab81sm7276575ad.3.2025.11.26.23.04.14
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 26 Nov 2025 23:04:16 -0800 (PST)
+Sender: AceLan Kao <acelan@gmail.com>
+From: "Chia-Lin Kao (AceLan)" <acelan.kao@canonical.com>
+To: Alex Hung <alexhung@gmail.com>,
 	Hans de Goede <hansg@kernel.org>,
-	Ilpo =?iso-8859-1?Q?J=E4rvinen?= <ilpo.jarvinen@linux.intel.com>,
-	Daniel Lezcano <daniel.lezcano@kernel.org>,
-	Thierry Reding <thierry.reding@gmail.com>,
-	Jonathan Hunter <jonathanh@nvidia.com>, devicetree@vger.kernel.org,
-	linux-kernel@vger.kernel.org, linux-pm@vger.kernel.org,
-	linux-arm-kernel@lists.infradead.org,
-	linux-mediatek@lists.infradead.org, linux-sunxi@lists.linux.dev,
-	linux-arm-msm@vger.kernel.org, platform-driver-x86@vger.kernel.org,
-	linux-tegra@vger.kernel.org,
-	Konrad Dybcio <konrad.dybcio@oss.qualcomm.com>,
-	Dmitry Baryshkov <dmitry.baryshkov@oss.qualcomm.com>
-Subject: Re: [PATCH v2 00/11] of: Add wrappers to match root node with OF
- device ID tables
-Message-ID: <20251127015502.GA3141507-robh@kernel.org>
-References: <20251112-b4-of-match-matchine-data-v2-0-d46b72003fd6@linaro.org>
+	=?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>,
+	platform-driver-x86@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Subject: [PATCH] platform/x86/intel/hid: Add Dell Pro Rugged 10/12 tablet to VGBS DMI quirks
+Date: Thu, 27 Nov 2025 15:04:07 +0800
+Message-ID: <20251127070407.656463-1-acelan.kao@canonical.com>
+X-Mailer: git-send-email 2.43.0
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20251112-b4-of-match-matchine-data-v2-0-d46b72003fd6@linaro.org>
+Content-Transfer-Encoding: 8bit
 
-On Wed, Nov 12, 2025 at 11:28:45AM +0100, Krzysztof Kozlowski wrote:
-> Changes in v2:
-> - Drop cpufreq/ti change: not correct.
-> - Drop soc/qcom/qcom_pd_mapper.c - objections from Dmitry and I think
->   better to drop the patch in such case.
-> - I did not implement feedback for first patch to make the
->   of_machine_compatible_match() matching machines in arbitrary nodes,
->   because there is no such use case possible and no arguments were provided.
->   I also did not use cleanup.h in first patch because existing code
->   of_device_get_match_data() does not use it and I prefer uniformity.
-> 
-> - Add Ack/Rb tags.
-> - Link to v1: https://patch.msgid.link/20251106-b4-of-match-matchine-data-v1-0-d780ea1780c2@linaro.org
-> 
-> Dependency/merging
-> ==================
-> All patches depend on the first patch, thus everything could go via
-> Rob's tree with people's acks.
-> 
-> Description
-> ===========
-> Several drivers duplicate same code for getting reference to the root
-> node, matching it against 'struct of_device_id' table and getting out
-> the match data from the table entry.
-> 
-> There is a of_machine_compatible_match() wrapper but it takes array of
-> strings, which is not suitable for many drivers since they want the
-> driver data associated with each compatible.
-> 
-> Add two wrappers, similar to existing of_device_get_match_data():
-> 1. of_machine_device_match() doing only matching against 'struct
->    of_device_id' and returning bool.
-> 2. of_machine_get_match_data() doing the matching and returning
->    associated driver data for found compatible.
-> 
-> Best regards,
-> Krzysztof
-> 
-> ---
-> Krzysztof Kozlowski (11):
->       of: Add wrappers to match root node with OF device ID tables
->       cpufreq: dt-platdev: Simplify with of_machine_get_match_data()
->       cpufreq: mediatek: Simplify with of_machine_get_match_data()
->       cpufreq: sun50i: Simplify with of_machine_device_match()
->       cpuidle: big_little: Simplify with of_machine_device_match()
->       firmware: qcom: scm: Simplify with of_machine_device_match()
->       irqchip/atmel-aic: Simplify with of_machine_get_match_data()
->       platform: surface: Simplify with of_machine_get_match_data()
->       powercap: dtpm: Simplify with of_machine_get_match_data()
->       soc: qcom: ubwc: Simplify with of_machine_get_match_data()
->       soc: tegra: Simplify with of_machine_device_match()
-> 
->  drivers/cpufreq/cpufreq-dt-platdev.c               | 15 ++-----
->  drivers/cpufreq/mediatek-cpufreq.c                 | 12 +-----
->  drivers/cpufreq/sun50i-cpufreq-nvmem.c             | 11 +----
->  drivers/cpuidle/cpuidle-big_little.c               | 11 +----
->  drivers/firmware/qcom/qcom_scm.c                   | 17 +-------
->  drivers/irqchip/irq-atmel-aic-common.c             | 15 ++-----
->  drivers/of/base.c                                  | 47 ++++++++++++++++++++++
->  .../platform/surface/surface_aggregator_registry.c | 13 +-----
->  drivers/powercap/dtpm.c                            | 16 +-------
->  drivers/soc/qcom/ubwc_config.c                     | 14 ++-----
->  drivers/soc/tegra/common.c                         | 12 +-----
->  include/linux/of.h                                 | 13 ++++++
->  12 files changed, 79 insertions(+), 117 deletions(-)
+Dell Pro Rugged 10/12 tablets has a reliable VGBS method.
+If VGBS is not called on boot, the on-screen keyboard won't appear if the
+device is booted without a keyboard.
 
-Applied, thanks.
+Call VGBS on boot on thess devices to get the initial state of
+SW_TABLET_MODE in a reliable way.
 
-Rob
+Signed-off-by: Chia-Lin Kao (AceLan) <acelan.kao@canonical.com>
+---
+ drivers/platform/x86/intel/hid.c | 12 ++++++++++++
+ 1 file changed, 12 insertions(+)
+
+diff --git a/drivers/platform/x86/intel/hid.c b/drivers/platform/x86/intel/hid.c
+index 9c07a7faf18f..560cc063198e 100644
+--- a/drivers/platform/x86/intel/hid.c
++++ b/drivers/platform/x86/intel/hid.c
+@@ -177,6 +177,18 @@ static const struct dmi_system_id dmi_vgbs_allow_list[] = {
+ 			DMI_MATCH(DMI_PRODUCT_NAME, "HP Elite Dragonfly G2 Notebook PC"),
+ 		},
+ 	},
++	{
++		.matches = {
++			DMI_MATCH(DMI_SYS_VENDOR, "Dell Inc."),
++			DMI_MATCH(DMI_PRODUCT_NAME, "Dell Pro Rugged 10 Tablet RA00260"),
++		},
++	},
++	{
++		.matches = {
++			DMI_MATCH(DMI_SYS_VENDOR, "Dell Inc."),
++			DMI_MATCH(DMI_PRODUCT_NAME, "Dell Pro Rugged 12 Tablet RA02260"),
++		},
++	},
+ 	{ }
+ };
+ 
+-- 
+2.43.0
+
