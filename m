@@ -1,490 +1,522 @@
-Received: from CO1PR03CU002.outbound.protection.outlook.com (mail-westus2azon11010064.outbound.protection.outlook.com [52.101.46.64])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 687DD304BCA
-	for <platform-driver-x86@vger.kernel.org>; Thu, 27 Nov 2025 20:41:09 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=52.101.46.64
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1764276073; cv=fail; b=AwymC2OX3BXK/yNYHZ3Avh8876VtlgcQHUUcrLAL+aGVMdEPOOUQx1SAWuBv3MybPxUTcwJcp6tVKgk9ROs3O1MJZnM+gfFX+7xhslxRaCy0QP/lkZpsNW9Whx9xIHVtVFhnJ4GUfiKtxqxBjB+6/UN7PJBYODrmM/jF9RdEjlk=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1764276073; c=relaxed/simple;
-	bh=+M/rtqVkKQi4WlNsQPp+bY7HxipLSU6iZXjwpXSHh4o=;
-	h=Message-ID:Date:Subject:To:Cc:References:From:In-Reply-To:
-	 Content-Type:MIME-Version; b=QnuZ4JBvvb5sl7sKwooTZ49ZJT5ydH/KW2ELSc68XHjd0tloHrGnVUqtv8EGfpXjgdnFS5tllwTvR9UYhFvDI95FGV8lhcFwdhHQhPFJMKPckcMn4blPrsW2V6bubmBmAD7w4nqcV1Vo4DjZZMHZqShLKMZuY9fmc5WfFQ+DOLU=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=4boa1T/q; arc=fail smtp.client-ip=52.101.46.64
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com
-Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=amd.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9B3BF2765D2
+	for <platform-driver-x86@vger.kernel.org>; Thu, 27 Nov 2025 21:47:09 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1764280029; cv=none; b=tpYU698zYG/NBCSynhvObmbkfhOzvTOY0aszCIgo+SCZwbLq0rIZZYvu7fKIIOS0gw/Pgi7yyllFyjdARf5h7FhZfE36CTm6+GQQaHe+72IMp2bKO/2dgWlSD87dYDIt9zXFthKL7Gkj8FTWTGzcvZRXVuAK/6vJyA7bXXitywM=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1764280029; c=relaxed/simple;
+	bh=0hbwTH5W/JlWKv9bNMjq36XQT6ojFwR3MpjzfawHYAo=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=WUWZ4xovwjaGBZv4K4flurGNWlNtPJ2VAuHfTYESh3JcplaXO8GNDWLhHDkoUcgsAtzibI/sag5hnSGcvd8vf7E5TWfAgwXbdxKY5/WA+8H+lJVnphHqHv6XFGb9qgIx026IDkMVf0s7I/0FFvfu17fE55RacwfsklaBpd/cGuE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=iq+L3smq; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="4boa1T/q"
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=cufRIWZScKbYW5+FGng9GaIqzIvZjUFwULEclfAd4qEabP6hjJwBZFv2zRsIgzDtuao8dvbpKujZZYolznFR5R8mMBuDC5zuuxqll/Z4lzlXEY0zt9VeXflUjG1a1thdp8rebKWefuaG1TSAuqI7hFEI1+Y44HX7suqUvtb+OK0loNIGk8p6aT7RrAvvgqgfaNRmrpmkrfSqW6wyQHaNEzfJzYqhP5f2meWe8Yf6mdV5kA/fZzEK2I2hRmolWI4nVYUosXm5SjQDmjOZCIbSaGIamRM57A0800Tp7dOknh7IbbHUcj/74P07PWVG7k1ivL0nOrNTM1hYulNut5PPVw==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=GMIjhOOyZfEgIDdEloh8ytXrWYOIO+KffQ6YLcj8WqE=;
- b=L6ZJQV8MraJibiPghxlnQ4UB702PjGG//MErM07h3OsKgsQehgnjR8lDIUBOIB54UKhdPLrv4gP6OvOZj1WOFoF2xEInoWCtMUkGq6O7WU+lCv48tHIQCYGHdMIPFr3I0Trf3hYYRI2vEHAjIa2ZEzk46qowmsBxNwbZyL0tPtOWb86TEeiclCMf6qCSwgh47UEL8UIb8/aNuNTjpygBlKrWsLBqddjAR51DxU1v0NkVXrDuk1EvBk6FqzLYRQqoBS2Cb59gjixcmlwKy9wi8+TEvrngaKN0GPWaLB+yTV2Q5DG1NAh5dARnAqjwjtIvizZef74jR9/XLZa5kwNLrA==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=amd.com; dmarc=pass action=none header.from=amd.com; dkim=pass
- header.d=amd.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=GMIjhOOyZfEgIDdEloh8ytXrWYOIO+KffQ6YLcj8WqE=;
- b=4boa1T/qQk4T+MYZ9D81yAr+ifsS/y6ncBGT4wLLn9tizxUZLQM6O7s/pgjF3z3OPwsFPHrrLlyJGDKlYMIERIoQ1OgY4XJjC2+CFErktcTsqPsUclp/htXr0OKff6kx3cuKJ2FkZEzaH62uAFZVpl12JE//BjXqQplnu/SAhyg=
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=amd.com;
-Received: from BL1PR12MB5176.namprd12.prod.outlook.com (2603:10b6:208:311::19)
- by CY5PR12MB6300.namprd12.prod.outlook.com (2603:10b6:930:f::8) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.9366.12; Thu, 27 Nov
- 2025 20:40:54 +0000
-Received: from BL1PR12MB5176.namprd12.prod.outlook.com
- ([fe80::ed5b:dd2f:995a:bcf4]) by BL1PR12MB5176.namprd12.prod.outlook.com
- ([fe80::ed5b:dd2f:995a:bcf4%6]) with mapi id 15.20.9366.012; Thu, 27 Nov 2025
- 20:40:54 +0000
-Message-ID: <80e375e1-0b6b-4c2e-bc5c-7137eb35a8bb@amd.com>
-Date: Fri, 28 Nov 2025 02:10:49 +0530
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v4 3/3] platform/x86/amd/pmf: Use ring buffer to store
- custom BIOS input values
-To: =?UTF-8?Q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
-Cc: Hans de Goede <hansg@kernel.org>, platform-driver-x86@vger.kernel.org,
- Patil.Reddy@amd.com, Mario Limonciello <superm1@kernel.org>,
- Yijun Shen <Yijun.Shen@Dell.com>
-References: <20251119085813.546813-1-Shyam-sundar.S-k@amd.com>
- <20251119085813.546813-3-Shyam-sundar.S-k@amd.com>
- <9f30b9ff-5f27-68c3-9bc1-4bed9fe0bd89@linux.intel.com>
-Content-Language: en-US
-From: Shyam Sundar S K <Shyam-sundar.S-k@amd.com>
-In-Reply-To: <9f30b9ff-5f27-68c3-9bc1-4bed9fe0bd89@linux.intel.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
-X-ClientProxiedBy: BM1PR01CA0152.INDPRD01.PROD.OUTLOOK.COM
- (2603:1096:b00:68::22) To BL1PR12MB5176.namprd12.prod.outlook.com
- (2603:10b6:208:311::19)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="iq+L3smq"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 4DDCEC2BC86
+	for <platform-driver-x86@vger.kernel.org>; Thu, 27 Nov 2025 21:47:09 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1764280029;
+	bh=0hbwTH5W/JlWKv9bNMjq36XQT6ojFwR3MpjzfawHYAo=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+	b=iq+L3smqUYdeNudiBtdYdT2RzYy3Np9HmKuBwTHMb1oosvKvcQ0ozV9ftXBCSeAEL
+	 IfV+Rj2P4WVx2i1yREbklfsDBYCjUY+VFSOLu8Wiy8IKr9O48AR+Z8FJLzTwG3s6ca
+	 0HtEWWtVVtEUppn+fgwqRkmmlnNKus+WLA4/3KrfimZoBIv09hrbkI25NUeH1YlolV
+	 8UM5kZVv86d1KGXEnlCBZzTAXWnfjY8aG40zhSQ2aNc0z0+ESVU5Hdpf20zvM0IpkV
+	 cBTzGT1RXEjAXiy8WBwH3VdstalR5W7zlFj950ohYJpoy5LQfDSIJFzj+JjlQlrf+j
+	 iVGjWYXCD2oxg==
+Received: by mail-oi1-f170.google.com with SMTP id 5614622812f47-45076d89e56so628127b6e.1
+        for <platform-driver-x86@vger.kernel.org>; Thu, 27 Nov 2025 13:47:09 -0800 (PST)
+X-Forwarded-Encrypted: i=1; AJvYcCV3ZdQCboLghbEDEZJ32//ZOAVPAUQTBaXuNJtwLAqzy3OrLQxW1cn4XmnfSGrPXK2RfxydH1mxyaDLW+IJ6cXRdtB1@vger.kernel.org
+X-Gm-Message-State: AOJu0Ywuc93WN2JfvW4pASVSQuTGL38yedO6hkDoCHLdtF+/5otnuLEs
+	hPlJOfaYL0QohEECCn47NJxinPiqtT3VayHWkg7/u3qLCDMhMy/e9+bEuSehrgAMgs8fDV6/frq
+	I38BElqMx7fBEx9QxcT37Mb+TZUdOVuw=
+X-Google-Smtp-Source: AGHT+IFmxxeOGUZ3As3e5BufQf4xNzGTm7a385xAZ3Y0cZ1X4zoOX5pvKGR4+1mZPCbutdUHj673OdSkeTXc9RZYPJo=
+X-Received: by 2002:a05:6808:1507:b0:44f:fc93:f612 with SMTP id
+ 5614622812f47-4514e79dd05mr4974594b6e.32.1764280028352; Thu, 27 Nov 2025
+ 13:47:08 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: BL1PR12MB5176:EE_|CY5PR12MB6300:EE_
-X-MS-Office365-Filtering-Correlation-Id: 403ec0b9-8acf-418f-1478-08de2df542a0
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;ARA:13230040|376014|1800799024|366016;
-X-Microsoft-Antispam-Message-Info:
-	=?utf-8?B?V2xYSkFHVXFLdGJORmxPa05iRFZqMUJHOHFYaFVtT1pvMGt1a0cyWmJabE1i?=
- =?utf-8?B?OTBuc1hZaWIwMlprNHRiNVFlNkh6b0pxejhvL0NBYmZIek04eXdoTGZ5OXBo?=
- =?utf-8?B?azhWSFI5cmZ1cUNhbnRYZGs1c1hsbjZpbEN2ajdkR0NTK3Zta2syczdQRGtt?=
- =?utf-8?B?dnJ4eFlCU1BPanloaHVFU09iWmNudEhsV3RHOGtScU9FS1Q5ZDl0cU5weWlQ?=
- =?utf-8?B?bk44bDhHcFZMdVJyeTduTlFlT3Z0bFJCSzZkSDI4ZjBHais0d2toQlBiOENs?=
- =?utf-8?B?QUxPU0twckhMV0ljdlB5T2FZZEZucmgvdFk1bVBObi83OFY5RXQvNUVNUzlG?=
- =?utf-8?B?VUJLUkNaeFNpZ2ZnYmJmZDlISlkvb1pCVnIyT3NTcjFlWVFDTWpIcU9uMjI3?=
- =?utf-8?B?Y2o3L3N1dURDUUM4R3hibzJObXZiYmdBOFRYSjRqYTJqdklFR2hHUUU4SGcx?=
- =?utf-8?B?TWJQV2ZidSs4R2E2RlFuNWxSREtPQlo1aFhuMGlOOTJvTkhXQ2IwQVVMSnpO?=
- =?utf-8?B?Tk14VXk1Mm96bGp6a0ZqbGRMd2R6dXNQOGNNNXVaMkY1L0lWbWFHM29pV2hq?=
- =?utf-8?B?U1huSHQyV0RGY1hQUEU1WTRuTGRJMytOQWdtSWR3KzQwQ0xYaFF6Z2FaTEFV?=
- =?utf-8?B?aFk5M2I4eFB4bDZPeFFETHlSQzJtUW1GbzZYd2xLUlBCdmZwd1JEM0xNWlM1?=
- =?utf-8?B?a0pDcXdjOElzQ0xsWDh5K3ZLZldleStsYVdrV1RiemZLRjAyL3JVZ1QvaDcw?=
- =?utf-8?B?MVlXMFFSSXVoK25QZGlaRzZzVnVlVDFRWGhRMmtEWEwrd3pRZmE0d3RlY3Bv?=
- =?utf-8?B?MGExZ3VPKzYyL3E2QmhITGFHMk9WVDR5VW9ORmZ3eWJ6Qllhd1dSc1g2SzY2?=
- =?utf-8?B?NmFON29EM25TSTR6V0tWNFhXT21wQ2gyRmtVa0lnZTRpNlY0TTJrb3M5U29w?=
- =?utf-8?B?R3pVNko4N1hVZDB5MWxjTkFBb1Nwcm1NYXhOc0RxVUtrZVdBNWZZdUdTMzlR?=
- =?utf-8?B?VEdkemtOV0NIZVpVYS9kUXh2U2Q4akR1YzJqMXRkaVdFS0FqTG5DUlhUZG50?=
- =?utf-8?B?V2FLMXcxbVhjTWJobWNEVUZnOW5GaUp1WnVuT3FWWTlYcGdkdkRtQWNVdVpO?=
- =?utf-8?B?VElLRnlTQVIweE9JOXJzZnZNQWRBODJaWHFyTTlhb21GSE5Gb2I0MHhOVXdO?=
- =?utf-8?B?aVNSZHRIakd0UDM3VTk4NlJFQjM2dW4rbW42MnhtWHRJRnRpcnd5cE9ZZ2l5?=
- =?utf-8?B?cHJHN3p5aTJRc083bVpEcDlUQTVHaFZDSlNRZHRjR3FrZnBlYWlNQklvVWlB?=
- =?utf-8?B?SXBVS2FxZDBTQXdBVlR3cnAzcjg4aG02S3Z0UjJQZ2Q4TTRCMTErQjk5QXlI?=
- =?utf-8?B?eFJ6anZwTTZuNGVheDVieTE2NEZLMldlaWFLbFFuM0Z1WVcyL3pLVjVvSjZG?=
- =?utf-8?B?dkZ1eElUclJCRk1IWEVtdWR3MFZuRE5pK3lBZmVKNHV6U0djWlNyaEFWenNZ?=
- =?utf-8?B?OS9zZEFTYlhWcDM3L1g3eGhLVHhpTjY3ZUgvTHg0TVFNRXE3VmEwcW4yNUF6?=
- =?utf-8?B?M0pYQ05QM1BrT2x0bGM5WlFBdk9DTVMwVHZ3ak10cGxsMUVTODRUaUZ4SGVj?=
- =?utf-8?B?ZHNOdmlOZDFaMnRNcmJpZU8xV1d1Ly9WM1ZHdHFmM0hNTVZ2anJHdXB3NnM3?=
- =?utf-8?B?OVAxUkx6UXFWWWZvY0xicTlXRnRqVUpPYnpUNTBnN1AwcE5pMVdyWmw4Y1Z5?=
- =?utf-8?B?Z01PVThRYVNlV1lsRnFxMHVoeWVGNXVMNmQ0WDk0ZDhXRVRQNDM3WWl2bjli?=
- =?utf-8?B?dGFTU1o3WkpTYjhrRUVNN1IxUWd5ODc1US92VStCc0ViVGx0L1NTbXkySzhS?=
- =?utf-8?B?SUZMYkcvOWNQSWJOSDNscys2M2psaGJHbHBhemtaNWlqZHRRRER3YXcwaGFK?=
- =?utf-8?Q?CvWnkwGLinfg0MsNczHi5PpHJABAXqXh?=
-X-Forefront-Antispam-Report:
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:BL1PR12MB5176.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(376014)(1800799024)(366016);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0:
-	=?utf-8?B?Q1N2T0d5TGFPQUxGckVrQ2JCWFE4Vkducyt2UUhib3FYN3MxTU9sY1VZWlpP?=
- =?utf-8?B?cDl6eHJyUFY2UEFEMi9QQnBFamt5UG9GMWo5SjZ5NzdUQTJDT29qYllPOXBq?=
- =?utf-8?B?SHE1MUhzNXFVMW1tZEFLMUlUbUR0cXB5STAzY1c3L0pnSHBMWU1HU1dEYWh2?=
- =?utf-8?B?RWdQczIySlR3T1YrOWxjc3NxdDM4eTZJTzRCK0dEZkNNaFZoMlJrWUFmS1dj?=
- =?utf-8?B?NWhNTjBRK09UTFpuemU0eWFEUnlUNkwwOEU5UHdrUUkxN3QwRHpGMWt3OExL?=
- =?utf-8?B?aWxDRjhZVFRxTFpFVHpKOFlXcU9OUENjTWJFWm5aOFVrcnFRVEFPZDVaVHdH?=
- =?utf-8?B?Qk1veUZudkFDRzZ4MmorZHQzVXBHZ0x3NVNoWndRQnJKOTJLVEVHTGJmTFJD?=
- =?utf-8?B?MWdBbGJ3NjZ0NFNaQ3hvTDQrTlA1djllYkVQR2dTVk9reHYyQnZMMDNDK0F1?=
- =?utf-8?B?V3FZeUtVSFJWOUJnMUNFVndKY0NWRHVJd3YwUjNWRW5DZmVvUDB1VWkyWGtN?=
- =?utf-8?B?M2dhL0FYYUFtS1BHaS9xL1JnUFE1eWMvcEFPRmVjZ1R5bE8vbGsxT1NKV0tB?=
- =?utf-8?B?dzJYYnJNeUtsMys2V0YxZXNORjVobm55cDgwNWU1OFFpcE9xTGMvd05YRlV5?=
- =?utf-8?B?Uy94ODBQT254WXNQSnQ5QURYQjBsYWpWQ0NicSsySU5Ld0dtcWJjNzYyNEkr?=
- =?utf-8?B?eXlmYmlTdzZjYmlzUXR2bTFEcFprOHhkMk1UTzRXdjczSHNBQjUxUkwxVXNz?=
- =?utf-8?B?aC9pRG1WN0VvNlQ2MXQ0eGlDajZyRXo2UlFWeDlpTkUrTlRVc3Ewa0YrMVRn?=
- =?utf-8?B?SUtnS1dFTDZxQndRRW4wL0F5RXdaa1NmTFFna3ViVmtqVTBvUkR1bFAwYlhB?=
- =?utf-8?B?VXlBZnZzaUYvOU8zNGxXNWNhWmFIMEpybktrQ2RJckhzTDkyQjZUT3R4SVQ3?=
- =?utf-8?B?QUt3UmhuL1RQZE9LT3lGSkRyU0ptVTNoMGxNaU91RnNWZldNVUdHRklSVmU0?=
- =?utf-8?B?T05LRWZndk5SQXduUlZIVFkwNXRUSklmMUpSdmJUTnV1ckpoaGhpZWQ5bUVH?=
- =?utf-8?B?dEppU094THpveW1hd0pkWUVhY082VHhmTHF2ZWtQaGFnelRtbWNNSkJCVTEw?=
- =?utf-8?B?cmlDV2dGVjhTN3JiUityZTR5dm9LVkZvSG9HMm96YmFPWWV4OXlFd2g4RzNK?=
- =?utf-8?B?YU5BR25JRk5ESDIySnNqZlFuRExTVnllTUN1V0psUkVmOGMxZk9nQ1o0VFF4?=
- =?utf-8?B?blBNem5BS3Q5N3hlTWp1bllKWURqWGZPejNsQURFc2ZMNk1UL0JMYnRuVm5l?=
- =?utf-8?B?ODFQSmg2QU5qS0hNc0NwUjQvalp3Z296ZE1Jc2hUaUd4ejVMN1FIOUVQZ0hS?=
- =?utf-8?B?SG5CVTRVTHB6VjhxeGZFenNCQkJHZ203amtpbTVsYlNKb2RmUkdjNjdvQ0JZ?=
- =?utf-8?B?SGRwb1NTc09tc3NQRFRSU3dWZ3RlRG16Sk5aMytxME9pN0NBODh6R1IzRks4?=
- =?utf-8?B?V0ZoOVRGOFZoWFg3cHV4S2VXOGE2OWRaRHV3ZStlbkIzM1ZIZGVBL2p5dXda?=
- =?utf-8?B?ODB6dWZxZFoyNnRPZzFZR1NVTklMNXV6ZnYvcWsrMVloMnJKdUd5c2xrOWdh?=
- =?utf-8?B?eE5GUDd3MXFxS1VqMjUvZFU5dXBjNUM1TUJQcW5hR1VzM09nZ2hWOXR0amt5?=
- =?utf-8?B?bVpiMUVDemhpMEUzcEhxeVZxYWc3YXlWakhhb2JzcGRZOG5tZUt4MHBUQnFj?=
- =?utf-8?B?VmFwTWQxc1lxcDhvTWNTTmREUFlveXRXS0d2TjRzVVBXendmNllRV3Vib1Nt?=
- =?utf-8?B?K2ZxaDh5eUtzWWJXakRORldEVm5FSlRjVmdIOXQ4ZkdzTzljOTNrYkFwOE5C?=
- =?utf-8?B?ME1rK2Z4bVNvbHE3eEx2blh5SDk5bGdaWTdUTU1mU1NFS0ZmRU53bkx2WUZE?=
- =?utf-8?B?SzJkT3lDTExTYkFjZC9zRHZsTk1Za3R6SFNOekFXSmlLVGU3K0RNbUhpZEFm?=
- =?utf-8?B?V3JkamFBN1BrV2JtcGVIeG9IZTNPK3BzU0dNbFV1QjVvd0RSV291cG5qajFj?=
- =?utf-8?B?bVRWODM2TFRXcDVuV2tzM3E5SFRtMVhmYzVoOHhHdVNycjNKb0h5eEtwNElT?=
- =?utf-8?Q?8lmC3TJOr+eciHCJevM8Er0/V?=
-X-OriginatorOrg: amd.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 403ec0b9-8acf-418f-1478-08de2df542a0
-X-MS-Exchange-CrossTenant-AuthSource: BL1PR12MB5176.namprd12.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 27 Nov 2025 20:40:54.5624
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: NpzkOPzB+Vkv+ZQ7cmAlPDTrVCsjscreSR8CQ6HzQzOJEErBglNgmv2DYKTfn2NycJM7HIEZjg3da/DzzjZoMw==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: CY5PR12MB6300
+References: <20251120-thermal-device-v1-0-bbdad594d57a@gmx.de>
+ <CAJZ5v0jOPrBcozzJMsB1eE12MuZRWDAV-+=jfrhJbi=S0p5J9Q@mail.gmail.com>
+ <5f3ef610-4024-4ca0-a934-2649f5d25f40@gmx.de> <CAJZ5v0iJVV=kf-aJBx8F8dtGfaZpGVyhfi6DBWEg4j3c_nH8_A@mail.gmail.com>
+ <e360b9b3-ada4-4cd1-8971-097484cf3f5f@gmx.de>
+In-Reply-To: <e360b9b3-ada4-4cd1-8971-097484cf3f5f@gmx.de>
+From: "Rafael J. Wysocki" <rafael@kernel.org>
+Date: Thu, 27 Nov 2025 22:46:57 +0100
+X-Gmail-Original-Message-ID: <CAJZ5v0ij_Frdrya3=FaekbU2DFHUyBJnBq-oe9jRsB9eqXDisA@mail.gmail.com>
+X-Gm-Features: AWmQ_bnaSW9x-ggzFC_V23fXty6wAm5053FuGqaNQc77lPfLojGlov-ebGjIlT8
+Message-ID: <CAJZ5v0ij_Frdrya3=FaekbU2DFHUyBJnBq-oe9jRsB9eqXDisA@mail.gmail.com>
+Subject: Re: [PATCH RFC RESEND 0/8] thermal: core: Allow setting the parent
+ device of thermal zone/cooling devices
+To: Armin Wolf <W_Armin@gmx.de>
+Cc: "Rafael J. Wysocki" <rafael@kernel.org>, Daniel Lezcano <daniel.lezcano@linaro.org>, 
+	Zhang Rui <rui.zhang@intel.com>, Lukasz Luba <lukasz.luba@arm.com>, Len Brown <lenb@kernel.org>, 
+	Jonathan Corbet <corbet@lwn.net>, Ido Schimmel <idosch@nvidia.com>, Petr Machata <petrm@nvidia.com>, 
+	linux-pm@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	etnaviv@lists.freedesktop.org, dri-devel@lists.freedesktop.org, 
+	linux-tegra@vger.kernel.org, linux-acpi@vger.kernel.org, 
+	linux-doc@vger.kernel.org, netdev@vger.kernel.org, 
+	linux-wireless@vger.kernel.org, ath10k@lists.infradead.org, 
+	ath11k@lists.infradead.org, linux-arm-kernel@lists.infradead.org, 
+	linux-mediatek@lists.infradead.org, platform-driver-x86@vger.kernel.org, 
+	linux-pci@vger.kernel.org, imx@lists.linux.dev, 
+	linux-renesas-soc@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
+On Thu, Nov 27, 2025 at 9:06=E2=80=AFPM Armin Wolf <W_Armin@gmx.de> wrote:
+>
+> Am 27.11.25 um 18:41 schrieb Rafael J. Wysocki:
+>
+> > On Sat, Nov 22, 2025 at 3:18=E2=80=AFPM Armin Wolf <W_Armin@gmx.de> wro=
+te:
+> >> Am 21.11.25 um 21:35 schrieb Rafael J. Wysocki:
+> >>
+> >>> On Thu, Nov 20, 2025 at 4:41=E2=80=AFAM Armin Wolf <W_Armin@gmx.de> w=
+rote:
+> >>>> Drivers registering thermal zone/cooling devices are currently unabl=
+e
+> >>>> to tell the thermal core what parent device the new thermal zone/
+> >>>> cooling device should have, potentially causing issues with suspend
+> >>>> ordering
+> >>> This is one potential class of problems that may arise, but I would
+> >>> like to see a real example of this.
+> >>>
+> >>> As it stands today, thermal_class has no PM callbacks, so there are n=
+o
+> >>> callback execution ordering issues with devices in that class and wha=
+t
+> >>> other suspend/resume ordering issues are there?
+> >> Correct, that is why i said "potentially".
+> >>
+> >>> Also, the suspend and resume of thermal zones is handled via PM
+> >>> notifiers.  Is there a problem with this?
+> >> The problem with PM notifiers is that thermal zones stop working even =
+before
+> >> user space is frozen. Freezing user space might take a lot of time, so=
+ having
+> >> no thermal management during this period is less than ideal.
+> > This can be addressed by doing thermal zone suspend after freezing
+> > tasks and before starting to suspend devices.  Accordingly, thermal
+> > zones could be resumed after resuming devices and before thawing
+> > tasks.  That should not be an overly complex change to make.
+>
+> AFAIK this is only possible by using dev_pm_ops,
 
+Of course it is not the case.
 
-On 11/27/2025 17:39, Ilpo Järvinen wrote:
-> On Wed, 19 Nov 2025, Shyam Sundar S K wrote:
-> 
->> Custom BIOS input values can be updated by multiple sources, such as power
->> mode changes and sensor events, each triggering a custom BIOS input event.
->> When these events occur in rapid succession, new data may overwrite
->> previous values before they are processed, resulting in lost updates.
->>
->> To address this, introduce a fixed-size, power-of-two ring buffer to
->> capture every custom BIOS input event, storing both the pending request
->> and its associated input values. Access to the ring buffer is synchronized
->> using a mutex.
->>
->> The previous use of memset() to clear the pending request structure after
->> each event is removed, as each BIOS input value is now copied into the
->> buffer as a snapshot. Consumers now process entries directly from the ring
->> buffer, making explicit clearing of the pending request structure
->> unnecessary.
->>
->> Reviewed-by: Mario Limonciello (AMD) <superm1@kernel.org>
->> Tested-by: Yijun Shen <Yijun.Shen@Dell.com>
->> Co-developed-by: Patil Rajesh Reddy <Patil.Reddy@amd.com>
->> Signed-off-by: Patil Rajesh Reddy <Patil.Reddy@amd.com>
->> Signed-off-by: Shyam Sundar S K <Shyam-sundar.S-k@amd.com>
->> ---
->> v4:
->>  - Do not store local copy of the ring buffer
->>  - use devm_mutex_init()
->>
->> v3:
->>  - include headers wherever missing
->>  - use dev_warn() instead of dev_WARN_ONCE()
->>  - remove generic struct names
->>  - enhance ringbuffer mechanism to handle common path
->>  - other cosmetic remarks
->>
->> v2:
->>  - Add dev_WARN_ONCE()
->>  - Change variable name rb_mutex to cbi_mutex
->>  - Move tail increment logic above pending request check
->>
->>  drivers/platform/x86/amd/pmf/acpi.c   | 40 +++++++++++++++++++++++++++
->>  drivers/platform/x86/amd/pmf/core.c   |  5 ++++
->>  drivers/platform/x86/amd/pmf/pmf.h    | 21 ++++++++++++++
->>  drivers/platform/x86/amd/pmf/spc.c    | 32 +++++++++++----------
->>  drivers/platform/x86/amd/pmf/tee-if.c |  2 ++
->>  5 files changed, 86 insertions(+), 14 deletions(-)
->>
->> diff --git a/drivers/platform/x86/amd/pmf/acpi.c b/drivers/platform/x86/amd/pmf/acpi.c
->> index 13c4fec2c7ef..3d94b03cf794 100644
->> --- a/drivers/platform/x86/amd/pmf/acpi.c
->> +++ b/drivers/platform/x86/amd/pmf/acpi.c
->> @@ -9,6 +9,9 @@
->>   */
->>  
->>  #include <linux/acpi.h>
->> +#include <linux/array_size.h>
->> +#include <linux/cleanup.h>
->> +#include <linux/dev_printk.h>
->>  #include "pmf.h"
->>  
->>  #define APMF_CQL_NOTIFICATION  2
->> @@ -331,6 +334,39 @@ int apmf_get_sbios_requests(struct amd_pmf_dev *pdev, struct apmf_sbios_req *req
->>  									 req, sizeof(*req));
->>  }
->>  
->> +/* Store custom BIOS inputs data in ring buffer */
->> +static void amd_pmf_custom_bios_inputs_rb(struct amd_pmf_dev *pmf_dev)
->> +{
->> +	struct pmf_cbi_ring_buffer *rb = &pmf_dev->cbi_buf;
->> +	int i;
->> +
->> +	guard(mutex)(&pmf_dev->cbi_mutex);
->> +
->> +	switch (pmf_dev->cpu_id) {
->> +	case AMD_CPU_ID_PS:
->> +		for (i = 0; i < ARRAY_SIZE(custom_bios_inputs_v1); i++)
->> +			rb->data[rb->head].val[i] = pmf_dev->req1.custom_policy[i];
->> +		rb->data[rb->head].preq = pmf_dev->req1.pending_req;
->> +		break;
->> +	case PCI_DEVICE_ID_AMD_1AH_M20H_ROOT:
->> +	case PCI_DEVICE_ID_AMD_1AH_M60H_ROOT:
->> +		for (i = 0; i < ARRAY_SIZE(custom_bios_inputs); i++)
->> +			rb->data[rb->head].val[i] = pmf_dev->req.custom_policy[i];
->> +		rb->data[rb->head].preq = pmf_dev->req.pending_req;
->> +		break;
->> +	default:
->> +		return;
->> +	}
->> +
->> +	if (CIRC_SPACE(rb->head, rb->tail, CUSTOM_BIOS_INPUT_RING_ENTRIES) == 0) {
->> +		/* Rare case: ensures the newest BIOS input value is kept */
->> +		dev_warn(pmf_dev->dev, "Overwriting BIOS input value, data may be lost\n");
->> +		rb->tail = (rb->tail + 1) & (CUSTOM_BIOS_INPUT_RING_ENTRIES - 1);
->> +	}
->> +
->> +	rb->head = (rb->head + 1) & (CUSTOM_BIOS_INPUT_RING_ENTRIES - 1);
->> +}
->> +
->>  static void amd_pmf_handle_early_preq(struct amd_pmf_dev *pdev)
->>  {
->>  	if (!pdev->cb_flag)
->> @@ -356,6 +392,8 @@ static void apmf_event_handler_v2(acpi_handle handle, u32 event, void *data)
->>  	dev_dbg(pmf_dev->dev, "Pending request (preq): 0x%x\n", pmf_dev->req.pending_req);
->>  
->>  	amd_pmf_handle_early_preq(pmf_dev);
->> +
->> +	amd_pmf_custom_bios_inputs_rb(pmf_dev);
->>  }
->>  
->>  static void apmf_event_handler_v1(acpi_handle handle, u32 event, void *data)
->> @@ -374,6 +412,8 @@ static void apmf_event_handler_v1(acpi_handle handle, u32 event, void *data)
->>  	dev_dbg(pmf_dev->dev, "Pending request (preq1): 0x%x\n", pmf_dev->req1.pending_req);
->>  
->>  	amd_pmf_handle_early_preq(pmf_dev);
->> +
->> +	amd_pmf_custom_bios_inputs_rb(pmf_dev);
->>  }
->>  
->>  static void apmf_event_handler(acpi_handle handle, u32 event, void *data)
->> diff --git a/drivers/platform/x86/amd/pmf/core.c b/drivers/platform/x86/amd/pmf/core.c
->> index 2ec4cb92e34f..71421a5d7afd 100644
->> --- a/drivers/platform/x86/amd/pmf/core.c
->> +++ b/drivers/platform/x86/amd/pmf/core.c
->> @@ -11,6 +11,7 @@
->>  #include <linux/debugfs.h>
->>  #include <linux/iopoll.h>
->>  #include <linux/module.h>
->> +#include <linux/mutex.h>
->>  #include <linux/pci.h>
->>  #include <linux/platform_device.h>
->>  #include <linux/power_supply.h>
->> @@ -477,6 +478,10 @@ static int amd_pmf_probe(struct platform_device *pdev)
->>  	if (err)
->>  		return err;
->>  
->> +	err = devm_mutex_init(dev->dev, &dev->cbi_mutex);
->> +	if (err)
->> +		return err;
->> +
->>  	apmf_acpi_init(dev);
->>  	platform_set_drvdata(pdev, dev);
->>  	amd_pmf_dbgfs_register(dev);
->> diff --git a/drivers/platform/x86/amd/pmf/pmf.h b/drivers/platform/x86/amd/pmf/pmf.h
->> index 2145df4128cd..5a18b3604b6e 100644
->> --- a/drivers/platform/x86/amd/pmf/pmf.h
->> +++ b/drivers/platform/x86/amd/pmf/pmf.h
->> @@ -12,7 +12,9 @@
->>  #define PMF_H
->>  
->>  #include <linux/acpi.h>
->> +#include <linux/circ_buf.h>
->>  #include <linux/input.h>
->> +#include <linux/mutex_types.h>
->>  #include <linux/platform_device.h>
->>  #include <linux/platform_profile.h>
->>  
->> @@ -120,6 +122,7 @@ struct cookie_header {
->>  #define APTS_MAX_STATES		16
->>  #define CUSTOM_BIOS_INPUT_BITS	GENMASK(16, 7)
->>  #define BIOS_INPUTS_MAX		10
->> +#define CUSTOM_BIOS_INPUT_RING_ENTRIES	64	/* Must be power of two for CIRC_* macros */
->>  
->>  typedef void (*apmf_event_handler_t)(acpi_handle handle, u32 event, void *data);
->>  
->> @@ -359,6 +362,22 @@ struct pmf_bios_inputs_prev {
->>  	u32 custom_bios_inputs[BIOS_INPUTS_MAX];
->>  };
->>  
->> +/**
->> + * struct pmf_bios_input_entry - Snapshot of custom BIOS input event
->> + * @val: Array of custom BIOS input values
->> + * @preq: Pending request value associated with this event
->> + */
->> +struct pmf_bios_input_entry {
->> +	u32 val[BIOS_INPUTS_MAX];
->> +	u32 preq;
->> +};
->> +
->> +struct pmf_cbi_ring_buffer {
->> +	struct pmf_bios_input_entry data[CUSTOM_BIOS_INPUT_RING_ENTRIES];
->> +	int head;
->> +	int tail;
->> +};
->> +
->>  struct amd_pmf_dev {
->>  	void __iomem *regbase;
->>  	void __iomem *smu_virt_addr;
->> @@ -407,6 +426,8 @@ struct amd_pmf_dev {
->>  	struct apmf_sbios_req_v1 req1;
->>  	struct pmf_bios_inputs_prev cb_prev; /* To preserve custom BIOS inputs */
->>  	bool cb_flag;			     /* To handle first custom BIOS input */
->> +	struct pmf_cbi_ring_buffer cbi_buf;
->> +	struct mutex cbi_mutex;		     /* Protects ring buffer access */
->>  };
->>  
->>  struct apmf_sps_prop_granular_v2 {
->> diff --git a/drivers/platform/x86/amd/pmf/spc.c b/drivers/platform/x86/amd/pmf/spc.c
->> index 85192c7536b8..34fff41b86fe 100644
->> --- a/drivers/platform/x86/amd/pmf/spc.c
->> +++ b/drivers/platform/x86/amd/pmf/spc.c
->> @@ -11,6 +11,7 @@
->>  
->>  #include <acpi/button.h>
->>  #include <linux/amd-pmf-io.h>
->> +#include <linux/cleanup.h>
->>  #include <linux/power_supply.h>
->>  #include <linux/units.h>
->>  #include "pmf.h"
->> @@ -132,30 +133,37 @@ static void amd_pmf_set_ta_custom_bios_input(struct ta_pmf_enact_table *in, int
->>  	}
->>  }
->>  
->> -static void amd_pmf_update_bios_inputs(struct amd_pmf_dev *pdev, u32 pending_req,
->> +static void amd_pmf_update_bios_inputs(struct amd_pmf_dev *pdev, struct pmf_bios_input_entry *data,
->>  				       const struct amd_pmf_pb_bitmap *inputs,
->> -				       const u32 *custom_policy, struct ta_pmf_enact_table *in)
->> +				       struct ta_pmf_enact_table *in)
->>  {
->>  	unsigned int i;
->>  
->>  	for (i = 0; i < ARRAY_SIZE(custom_bios_inputs); i++) {
->> -		if (!(pending_req & inputs[i].bit_mask))
->> +		if (!(data->preq & inputs[i].bit_mask))
->>  			continue;
->> -		amd_pmf_set_ta_custom_bios_input(in, i, custom_policy[i]);
->> -		pdev->cb_prev.custom_bios_inputs[i] = custom_policy[i];
->> -		dev_dbg(pdev->dev, "Custom BIOS Input[%d]: %u\n", i, custom_policy[i]);
->> +		amd_pmf_set_ta_custom_bios_input(in, i, data->val[i]);
->> +		pdev->cb_prev.custom_bios_inputs[i] = data->val[i];
->> +		dev_dbg(pdev->dev, "Custom BIOS Input[%d]: %u\n", i, data->val[i]);
->>  	}
->>  }
->>  
->>  static void amd_pmf_get_custom_bios_inputs(struct amd_pmf_dev *pdev,
->>  					   struct ta_pmf_enact_table *in)
->>  {
->> +	struct pmf_cbi_ring_buffer *rb = &pdev->cbi_buf;
->>  	unsigned int i;
->>  
->> +	guard(mutex)(&pdev->cbi_mutex);
->> +
->>  	for (i = 0; i < ARRAY_SIZE(custom_bios_inputs); i++)
->>  		amd_pmf_set_ta_custom_bios_input(in, i, pdev->cb_prev.custom_bios_inputs[i]);
->>  
->> -	if (!(pdev->req.pending_req || pdev->req1.pending_req))
->> +	if (CIRC_CNT(rb->head, rb->tail, CUSTOM_BIOS_INPUT_RING_ENTRIES) == 0)
->> +		return;	/* return if ring buffer is empty */
->> +
->> +	/* If no active custom BIOS input pending request, do not consume further work */
->> +	if (!rb->data[rb->tail].preq)
->>  		return;
-> 
-> I'm left usure if "do not consume further work" comment really means that 
-> the entry is supposed to not get removed from the ring, which stalls the 
-> ring forever?
+For example, thermal_pm_notify_prepare() could be called directly from
+dpm_prepare() and thermal_pm_notify_complete() could be called
+directly from dpm_complete() (which would require switching over
+thermal to a non-freezable workqueue).
 
-No. The amd_pmf_populate_ta_inputs() function runs periodically and
-calls amd_pmf_get_custom_bios_inputs(). The preq check prevents
-unnecessary processing when the ring buffer is empty or contains no
-valid pending requests.
+> the PM notifier is triggered before tasks are frozen during suspend and a=
+fter they are thawed during resume.
 
-Regarding the ring stall:
-Entries are added to the ring buffer only when a valid ACPI event
-triggers the event handler. Once an entry with preq set is queued, the
-consumer processes it and increments the tail.
+I know that.
 
-The check acts as a guard when the periodic function runs but no new
-events are available - either the ring buffer is empty or the current
-entry has no active pending request.
+> Using dev_pm_ops would also ensure that thermal zone devices are resumed =
+after their
+> parent devices, so no additional changes inside the pm core would be need=
+ed.
 
-> 
-> If that's the wanted behavior, does that imply overwrite dev_warn() above 
-> can spam the logs from that point on as the ring can fill up without 
-> anything consuming entries from it?
+Not really.  thermal_pm_suspended needs to be set and cleared from somewher=
+e.
 
-Entries with valid preq are always consumed, preventing ring stalls.
-The dev_warn() only triggers when the buffer overflows, not from
-stalled consumption.
+> >> This problem would not occur when using dev_pm_ops, as thermal zones w=
+ould be
+> >> suspended after user space has been frozen successfully. Additionally,=
+ when using
+> >> dev_pm_ops we can get rid of thermal_pm_suspended, as the device core =
+already mandates
+> >> that no new devices (including thermal zones and cooling devices) be r=
+egistered during
+> >> a suspend/resume cycle.
+> >>
+> >> Replacing the PM notifiers with dev_pm_ops would of course be a optimi=
+zation with
+> >> its own patch series.
+> >
+> > Honestly, I don't see much benefit from using dev_pm_ops for thermal
+> > zone devices and cooling devices.  Moreover, I actually think that
+> > they could be "no PM" devices that are not even put on the
+> > suspend-resume device list.  Technically, they are just interfaces on
+> > top of some other devices allowing the user space to interact with the
+> > latter and combining different pieces described by the platform
+> > firmware.  They by themselves have no PM capabilities.
+>
+> Correct, thermal zone devices are virtual devices representing thermal ma=
+nagement
+> aspects of the underlying parent device. This however does not mean that =
+thermal zone
+> devices have no PM capabilities, because they contain state. Some part of=
+ this state
+> (namely TZ_STATE_FLAG_SUSPENDED and TZ_STATE_FLAG_RESUMING) is affected b=
+y power management,
+> so we should tell the device core about this by using dev_pm_ops instead =
+of the PM notifier.
 
-Thanks,
-Shyam
+Changing the zone state to anything different from TZ_STATE_READY
+causes __thermal_zone_device_update() to do nothing and this is the
+whole "suspend".  It does not need to be done from a PM callback and I
+see no reason why doing it from a PM callback would be desirable.
+Sorry.
 
-> 
-> I've taken first two patches into review-ilpo-next.
-> 
->>  	if (!pdev->smart_pc_enabled)
->> @@ -165,20 +173,16 @@ static void amd_pmf_get_custom_bios_inputs(struct amd_pmf_dev *pdev,
->>  	case PMF_IF_V1:
->>  		if (!is_apmf_bios_input_notifications_supported(pdev))
->>  			return;
->> -		amd_pmf_update_bios_inputs(pdev, pdev->req1.pending_req, custom_bios_inputs_v1,
->> -					   pdev->req1.custom_policy, in);
->> +		amd_pmf_update_bios_inputs(pdev, &rb->data[rb->tail], custom_bios_inputs_v1, in);
->>  		break;
->>  	case PMF_IF_V2:
->> -		amd_pmf_update_bios_inputs(pdev, pdev->req.pending_req, custom_bios_inputs,
->> -					   pdev->req.custom_policy, in);
->> +		amd_pmf_update_bios_inputs(pdev, &rb->data[rb->tail], custom_bios_inputs, in);
->>  		break;
->>  	default:
->>  		break;
->>  	}
->>  
->> -	/* Clear pending requests after handling */
->> -	memset(&pdev->req, 0, sizeof(pdev->req));
->> -	memset(&pdev->req1, 0, sizeof(pdev->req1));
->> +	rb->tail = (rb->tail + 1) & (CUSTOM_BIOS_INPUT_RING_ENTRIES - 1);
->>  }
->>  
->>  static void amd_pmf_get_c0_residency(u16 *core_res, size_t size, struct ta_pmf_enact_table *in)
->> diff --git a/drivers/platform/x86/amd/pmf/tee-if.c b/drivers/platform/x86/amd/pmf/tee-if.c
->> index 6e8116bef4f6..add742e33e1e 100644
->> --- a/drivers/platform/x86/amd/pmf/tee-if.c
->> +++ b/drivers/platform/x86/amd/pmf/tee-if.c
->> @@ -579,6 +579,8 @@ int amd_pmf_init_smart_pc(struct amd_pmf_dev *dev)
->>  		status = ret == TA_PMF_TYPE_SUCCESS;
->>  		if (status) {
->>  			dev->cb_flag = true;
->> +			dev->cbi_buf.head = 0;
->> +			dev->cbi_buf.tail = 0;
->>  			break;
->>  		}
->>  		amd_pmf_tee_deinit(dev);
->>
-> 
+Apart from the above, TZ_STATE_FLAG_SUSPENDED and
+TZ_STATE_FLAG_RESUMING are only used for coordination between
+thermal_zone_pm_prepare(), thermal_zone_device_resume() and
+thermal_zone_pm_complete(), so this is not a state anything other then
+the specific thermal zone in question cares about.
 
+Moreover, resuming a thermal zone before resuming any cooling devices
+bound to it would almost certainly break things and I'm not sure how
+you would make that work with dev_pm_ops.  BTW, using device links for
+this is not an option as far as I'm concerned.
+
+> >>>> and making it impossible for user space applications to
+> >>>> associate a given thermal zone device with its parent device.
+> >>> Why does user space need to know the parent of a given cooling device
+> >>> or thermal zone?
+> >> Lets say that we have two thermal zones registered by two instances of=
+ the
+> >> Intel Wifi driver. User space is currently unable to find out which th=
+ermal zone
+> >> belongs to which Wifi adapter, as both thermal zones have the (nearly)=
+ same type string ("iwlwifi[0-X]").
+> > But the "belong" part is not quite well defined here.  I think that
+> > what user space needs to know is what devices are located in a given
+> > thermal zone, isn't it?  Knowing the parent doesn't necessarily
+> > address this.
+>
+> The device exposing a given thermal zone device is not always a member of=
+ the thermal zone itself.
+> In case of the Intel Wifi adapters, the individual Wifi adapters are inde=
+ed members of the thermal zone
+> associated with their thermal zone device. But thermal zones created thru=
+ a system management controller
+> for example might only cover devices like the CPUs and GPUs, not the syst=
+em management controller device itself.
+
+Well, exactly.
+
+> The parent device of a child device is the upstream device of the child d=
+evice. The connection between parent
+> and child can be physical (SMBus controller (parent) -> i2c device (child=
+)) or purely logical
+> (PCI device (parent) -> thermal zone device (child)). There exists a pare=
+nt-child dependency between a parent
+> and a child device (the child device cannot function without its parent b=
+eing operational), and user space
+> might want to be able to discover such dependencies.
+
+But this needs to be consistent.
+
+If the parent of one thermal zone represents the device affected by it
+and the parent of another thermal zone represents something else, user
+space will need platform-specific knowledge to figure this out, which
+is the case today.  Without consistency, this is just not useful.
+
+> >> This problem would be solved once we populate the parent device pointe=
+r inside the thermal zone
+> >> device, as user space can simply look at the "device" symlink to deter=
+mine the parent device behind
+> >> a given thermal zone device.
+> > I'm not convinced about this.
+> >
+> >> Additionally, being able to access the acpi_handle of the parent devic=
+e will be necessary for the
+> >> ACPI thermal zone driver to support cooling devices other than ACPI fa=
+ns and ACPI processors.
+> > I guess by the "parent" you mean the device represented in the ACPI
+> > namespace by a ThermalZone object, right?  But this is not the same as
+> > the "parent" in the Wifi driver context, is it?
+>
+> In the context of a ACPI ThermalZone, the parent device of the thermal co=
+oling device would currently
+> be the ACPI device bound to the "thermal" ACPI driver. In the context of =
+the Intel Wifi card, the parent
+> device would be PCI device bound to the corresponding Intel Wifi driver.
+>
+> I think you misunderstood what kind of parent device i was referring to. =
+You likely though that i was referring
+> to the parent device of the ACPI ThermalZone, right?
+
+No.  I thought that you were referring to the ACPI ThermalZone itself.
+Or rather, a platform device associated with the ACPI ThermalZone
+(that is, the device the ACPI ThermalZone in the ACPI_COMPAION() of).
+
+> That however is not the case , with "parent device" i was
+> referring to the device responsible for creating a given struct thermal_z=
+one_device instance.
+
+So I was not confused.
+
+> >>>> This patch series aims to fix this issue by extending the functions
+> >>>> used to register thermal zone/cooling devices to also accept a paren=
+t
+> >>>> device pointer. The first six patches convert all functions used for
+> >>>> registering cooling devices, while the functions used for registerin=
+g
+> >>>> thermal zone devices are converted by the remaining two patches.
+> >>>>
+> >>>> I tested this series on various devices containing (among others):
+> >>>> - ACPI thermal zones
+> >>>> - ACPI processor devices
+> >>>> - PCIe cooling devices
+> >>>> - Intel Wifi card
+> >>>> - Intel powerclamp
+> >>>> - Intel TCC cooling
+> >>> What exactly did you do to test it?
+> >> I tested:
+> >> - the thermal zone temperature readout
+> >> - correctness of the new sysfs links
+> >> - suspend/resume
+> >>
+> >> I also verified that ACPI thermal zones still bind with the ACPI fans.
+> > I see, thanks.
+> >
+> >>>> I also compile-tested the remaining affected drivers, however i woul=
+d
+> >>>> still be happy if the relevant maintainers (especially those of the
+> >>>> mellanox ethernet switch driver) could take a quick glance at the
+> >>>> code and verify that i am using the correct device as the parent
+> >>>> device.
+> >>> I think that the above paragraph is not relevant any more?
+> >> You are right, however i originally meant to CC the mellanox maintaine=
+rs as
+> >> i was a bit unsure about the changes i made to their driver. I will re=
+work
+> >> this section in the next revision and CC the mellanox maintainers.
+> >>
+> >>>> This work is also necessary for extending the ACPI thermal zone driv=
+er
+> >>>> to support the _TZD ACPI object in the future.
+> >>> I'm still unsure why _TZD support requires the ability to set a
+> >>> thermal zone parent device.
+> >> _TZD allows the ACPI thermal zone to bind to cooling devices other tha=
+n ACPI fans
+> >> and ACPI processors, like ACPI batteries.
+> > No, it is not for cooling devices if my reading of the specification
+> > is correct.  It says:
+> >
+> > "_TZD (Thermal Zone Devices)
+> >
+> > This optional object evaluates to a package of device names. Each name
+> > corresponds to a device in the ACPI namespace that is associated with
+> > the thermal zone. The temperature reported by the thermal zone is
+> > roughly correspondent to that of each of the devices."
+> >
+> > And then
+> >
+> > "The list of devices returned by the control method need not be a
+> > complete and absolute list of devices affected by the thermal zone.
+> > However, the package should at least contain the devices that would
+> > uniquely identify where this thermal zone is located in the machine.
+> > For example, a thermal zone in a docking station should include a
+> > device in the docking station, a thermal zone for the CD-ROM bay,
+> > should include the CD-ROM."
+> >
+> > So IIUC this is a list of devices allowing the location of the thermal
+> > zone to be figured out.  There's nothing about cooling in this
+> > definition.
+>
+> Using _TZD to figure out the location of a given thermal zone is another =
+usage
+> of this ACPI control method, but lets take a look at section 11.6:
+>
+> - If _PSV is defined then either the _PSL or _TZD objects must exist. The=
+ _PSL and _TZD objects may both exist.
+> - If _PSV is defined and _PSL is not defined then at least one device in =
+thermal zone, as indicated by either the
+>    _TZD device list or devices=E2=80=99 _TZM objects, must support device=
+ performance states.
+>
+> So according to my understanding, _TZD can also be used to discover addit=
+ional cooling devices used for passive cooling.
+
+But it doesn't actually say how those "device performance states" are
+supposed to be used for cooling, does it?
+
+> This makes sense as _PSL is defined to only contain processor objects (se=
+e section 11.4.10), so _TZD can act like an
+> extension of _PSL for things like ACPI control method batteries (see 10.2=
+.2.12).
+
+But not everything in _TZD needs to be a potential "cooling device"
+and how you'll decide which one is?
+
+> Microsoft also follows this approach (see https://learn.microsoft.com/en-=
+us/windows-hardware/design/device-experiences/design-guide
+> section "Thermally managed devices" paragraph "Processor aggregator").
+
+Interesting.
+
+I agree that it would make sense to follow them because there will be
+platform dependencies on that, if there aren't already.
+
+> >> This however will currently not work as
+> >> the ACPI thermal zone driver uses the private drvdata of the cooling d=
+evice to
+> >> determine if said cooling device should bind. This only works for ACPI=
+ fans and
+> >> processors due to the fact that those drivers store a ACPI device poin=
+ter inside
+> >> drvdata, something the ACPI thermal zone expects.
+> > I'm not sure I understand the above.
+> >
+> > There is a list of ACPI device handles per trip point, as returned by
+> > either _PSL or _ALx.  Devices whose handles are in that list will be
+> > bound to the thermal zone, so long as there are struct acpi_device
+> > objects representing them which is verified with the help of the
+> > devdata field in struct thermal_cooling_device.
+>
+> AFAIK devdata is meant to be used by the thermal zone device callbacks to=
+ access the state
+> container struct of the associated device driver instance. Assuming that =
+a given device driver
+> will populate devdata with a pointer to is ACPI companion device is an im=
+plementation-specific
+> detail that does not apply to all cooling device implementations. It just=
+ so happens that the
+> ACPI processor and fan driver do this, likely because they where designed=
+ specifically to work
+> with the ACPI thermal zone driver.
+>
+> The documentation of thermal_cooling_device_register() even describes dev=
+data as "device private data", so any meaning of devdata purely depends on =
+the
+> given device driver.
+
+Yes, and these particular drivers decide to store a pointer to struct
+acpi_device in it.
+
+But this is not super important, they might as well set the
+ACPI_COMPANION() of the cooling device to the corresponding struct
+acpi_device and the ACPI thermal driver might use that information.
+
+I'm not opposed to using parents for this purpose, but it doesn't
+change the big picture that the ACPI thermal driver will need to know
+the ACPI handle corresponding to each cooling device.
+
+If you want to use _TZD instead of or in addition to _PSL for this, it
+doesn't change much here, it's just another list of ACPI handles, so
+saying that parents are needed for supporting this is not exactly
+accurate IMV.
+
+> > IOW, cooling device drivers that create struct thermal_cooling_device
+> > objects representing them are expected to set devdata in those objects
+> > to point to struct acpi_device objects corresponding to their ACPI
+> > handles, but in principle acpi_thermal_should_bind_cdev() might as
+> > well just use the handles themselves.  It just needs to know that
+> > there is a cooling driver on the other side of the ACPI handle.
+> >
+> > The point is that a cooling device to be bound to an ACPI thermal zone
+> > needs an ACPI handle in the first place to be listed in _PSL or _ALx.
+>
+> Correct, i merely change the way the ACPI thermal zone driver retrieves t=
+he
+> ACPI handle associated with a given cooling device.
+
+Right.
+
+> >> As we cannot require all cooling devices to store an ACPI device point=
+er inside
+> >> their drvdata field in order to support ACPI,
+> > Cooling devices don't store ACPI device pointers in struct
+> > thermal_cooling_device objects, ACPI cooling drivers do, and there are
+> > two reasons to do that: (1) to associate a given struct
+> > thermal_cooling_device with an ACPI handle and (2) to let
+> > acpi_thermal_should_bind_cdev() know that the cooling device is
+> > present and functional.
+> >
+> > This can be changed to store an ACPI handle in struct
+> > thermal_cooling_device and acpi_thermal_should_bind_cdev() may just
+> > verify that the device is there by itself.
+>
+> I can of course extend thermal_cooling_device_register() to accept a fwno=
+de_handle that
+> can be used for both ACPI and OF based cooling device identification, if =
+this is what you
+> prefer.
+
+I'm not sure about this ATM and see below.
+
+> This patch series would then turn into a cleanup series, focusing on prop=
+erly adding
+> thermal zone devices and cooling devices into the global device hierarchy=
+.
+
+I'd prefer to do one thing at a time though.
+
+If you want cooling devices to get parents, fine.  I'm not
+fundamentally opposed to that idea, but let's have clear rules for
+device drivers on how to set those parents for the sake of
+consistency.
+
+As for the ACPI case, one rule that I want to be followed (as already
+stated multiple times) is that a struct acpi_device can only be a
+parent of another struct acpi_device.  This means that the parent of a
+cooling device needs to be a platform device or similar representing
+the actual device that will be used for implementing the cooling.
+
+A separate question is how acpi_thermal_should_bind_cdev() will match
+cooling devices with the ACPI handles coming from _PSL, _ALx, _TZD
+etc. and the rule can be that it will look at the ACPI_COMPANION() of
+the parent of the given cooling device.
+
+> >> we must use a more generic approach.
+> > I'm not sure what use case you are talking about.
+> >
+> > Surely, devices with no representation in the ACPI namespace cannot be
+> > bound to ACPI thermal zones.  For devices that have a representation
+> > in the ACPI namespace, storing an ACPI handle in devdata should not be
+> > a problem.
+>
+> See my above explanations for details, drvdata is defined to hold device =
+private data,
+> nothing more.
+
+This is related to the discussion below.
+
+> >> I was thinking about using the acpi_handle of the parent device instea=
+d of messing
+> >> with the drvdata field, but this only works if the parent device point=
+er of the
+> >> cooling device is populated.
+> >>
+> >> (Cooling devices without a parent device would then be ignored by the =
+ACPI thermal
+> >> zone driver, as such cooling devices cannot be linked to ACPI).
+> > It can be arranged this way, but what's the practical difference?
+> > Anyone who creates a struct thermal_cooling_device and can set its
+> > parent pointer to a device with an ACPI companion, may as well set its
+> > devdata to point to that companion directly - or to its ACPI handle if
+> > that's preferred.
+>
+> Yes, but this would require explicit support for ACPI in every driver tha=
+t registers cooling devices.
+
+So you want to have generic drivers that may work on ACPI platforms
+and on DT platforms to be able to create cooling devices for use with
+ACPI thermal zones.  Well, had you started the whole discussion with
+this statement, it would have been much easier to understand your
+point.
+
+> Using the parent device to retrieve the acpi_handle or allowing all drive=
+rs to just submit a fwnode_handle
+> of their choice when creating a cooling device will fix this.
+
+If you go the parents route, this is an important consideration for
+the rules on how to set those parents.  Namely, they would need to be
+set so that the fwnode_handle of the parent could be used for binding
+the cooling device to a thermal zone either on ACPI or on DT systems.
+
+Of course, there are also cooling devices whose parents will not have
+an fwnode_handle and they would still need to work in this brave new
+world.
