@@ -1,266 +1,127 @@
-Received: from mail-lf1-f52.google.com (mail-lf1-f52.google.com [209.85.167.52])
+Received: from mail-wm1-f47.google.com (mail-wm1-f47.google.com [209.85.128.47])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E519C3321C3
-	for <platform-driver-x86@vger.kernel.org>; Thu, 27 Nov 2025 14:37:56 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.52
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C978F333756
+	for <platform-driver-x86@vger.kernel.org>; Thu, 27 Nov 2025 14:41:43 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.47
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1764254280; cv=none; b=ih0lSgxWxDL40tRZ2KslpkWJ4I/jXDjengYepxpokph7He3iWUhIxVpe1dNxwhjv3BKwung6yUh/wpF/jUbDR4Iud+jAGxY91s63SbXynj+ViyF14dz86k4UGTqKN68dG6yg3jE+JNWXqB76BzMJNaXaX+5fj4bMg0hrQBmdSCs=
+	t=1764254506; cv=none; b=nlgKv/ANn7f9//c4SOOFYJcccxKlJ5TWaXaeDkliMSrWGTP8JKigxsG0Y2JJDSWkZef5KRvwecwMf5cQqAJZ3Ojj3CdGVdYCzgPCyV9tRRtebv1D9vMVVNo9F9X0B1YBztKdRFVckL1O2p1MmgmxfjsFdn7rWlHb1ItRa0I+veA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1764254280; c=relaxed/simple;
-	bh=X1Ldd1pDA8Igmeknj7tlqAQAGac9Gmdov5hMB67qp6c=;
-	h=From:In-Reply-To:MIME-Version:References:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=OscLaFKPnmz8KQKeazxolcme2BvodmFapKuGQTHwzUmohFdoaHhmeTS2HlYHrkTzhoeF53k9754duQGgRNMBbgEG53YsFBSi3xMyT1vPLVKROpzdmJ6DxQo/nyNGdIVFOzQfttoqw1qHaVxUjB5OfuYGZbtfeA8Zu3SxikB0x8A=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl; spf=none smtp.mailfrom=bgdev.pl; dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b=jxF5SLN/; arc=none smtp.client-ip=209.85.167.52
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=bgdev.pl
+	s=arc-20240116; t=1764254506; c=relaxed/simple;
+	bh=a05l+xjPnkH2tclAOQRwbLGIvzoRBjJJTyLWxQjwHaE=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=RzOC7rVg3dDmH0z0DN2+XBW+gLkdTkiBZnyN3fYFk3lTVpm4FPei0mKBGj6Oqtp3UxPsFraCY2ZwoUwOHxCS2F9WB089LzyZwSfQTZ9PVD2q8OvtzsEArrJCsCp4CrnEW+PsRN7c3JmvhB7LuSqtcVzIVCrRW8FoGgnUDosN3kc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com; spf=pass smtp.mailfrom=suse.com; dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b=e7bk+74r; arc=none smtp.client-ip=209.85.128.47
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b="jxF5SLN/"
-Received: by mail-lf1-f52.google.com with SMTP id 2adb3069b0e04-5942a631c2dso1337267e87.2
-        for <platform-driver-x86@vger.kernel.org>; Thu, 27 Nov 2025 06:37:56 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b="e7bk+74r"
+Received: by mail-wm1-f47.google.com with SMTP id 5b1f17b1804b1-477770019e4so7056455e9.3
+        for <platform-driver-x86@vger.kernel.org>; Thu, 27 Nov 2025 06:41:43 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=bgdev-pl.20230601.gappssmtp.com; s=20230601; t=1764254275; x=1764859075; darn=vger.kernel.org;
-        h=cc:to:subject:message-id:date:references:mime-version:in-reply-to
-         :from:from:to:cc:subject:date:message-id:reply-to;
-        bh=VYjGgDc62jC79UPrwBm0Wqe2D8LTyTSAMvzD7Li+ucA=;
-        b=jxF5SLN/pGSuWhG6RX6JQ/iQtzX1+hvCKdXFLQ02hzVEHuibi9lhcOylRZtpgBtYtW
-         Bte1hAnjfpTjYlO+lH0k8ulDN+RfDwbsFNsiJJ8WueffeHIJA2cLYc5vakN5P5V9fLBz
-         HuzcDIwN6oOvYnubDW8nW3VQSYg0f9wTZbNA6eQBLZvE/+bph/TbtrjCtlc/dJupRC5K
-         r0VZslHg4XTIkNjGxZeARcDYEJM2GlJZQBuRx/ptgrDfKM4aOLwIl2L2mcYM2oo+Bn3n
-         V2Omjo9ySA1obEEes0B1Qv1qmMJHzR0rTmONVhwSRQteQM0RwPMIY4DmNeWJIZLMp1AS
-         CYVQ==
+        d=suse.com; s=google; t=1764254502; x=1764859302; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=G8zESVUEAodlwzxoOWrKR7D4lrz2pYYL4sJuFsgHQDc=;
+        b=e7bk+74rBxFWwOxhjhXNcVj1T+Q8GMdJkUaKcIU5Vzu8uqDS4MWZ6+qPP0gNahY5i3
+         Dpt6yarFW19a8KPBUMrd7Z01DNfcrme3RVm7xjImIHhZd8OOLExdcitOSutpLBbI7Rr/
+         fznQgnI58ukwlK3Geq1Xa9lwXcBpNOro3+pzKFTdpDhADhJzjUYppdEAklvcsGH6MiQQ
+         WAILRh9HqJW2wGVuBLds5lScw9HAQhh1LUh8AC0M6tI6C+wIqmBAfFo92f715g63clV0
+         oYbZ11+wTlCuNNYkv3HxvTNDj4doZV6ulYOKVK3Kt+RmcpiFXMM+9f5kQs+YC5jRM6XJ
+         y1gA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1764254275; x=1764859075;
-        h=cc:to:subject:message-id:date:references:mime-version:in-reply-to
-         :from:x-gm-gg:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=VYjGgDc62jC79UPrwBm0Wqe2D8LTyTSAMvzD7Li+ucA=;
-        b=YgSlL1CgEYfl6yBDPWoKS5/nnnPbOUMrhaBjenupx7ANy8fZV+rZE5RTe51uor7GSi
-         Z4L2NV+02JuU2wsPmgWIuk6sQqEtUobVgAzVZgC26atUdq5TeiG6zAwX+nJVIziJkIjd
-         I+ecqwt9OsZr9cbvu9DVk9z+69DCcaTpAX7My52ciR3/D0kQpQeq0g3dMOr2d0yxDpz9
-         FBiAoZPqVpb/+0s9f0PrbBGVuNP1xmue9n9JHrBs3hexxcnD279t2YWgAegQt5u7XtUe
-         5OUp8cb4VXmFAG3KxpFO+PXlcqbb1fnXhh2W6OcuZwVm01F/6uEqXaJJCZHBWm8m1Z0P
-         uOdg==
-X-Forwarded-Encrypted: i=1; AJvYcCU7nTTzWOZTGwe+KdX1oLEf+cUttLGNTc+e0MMyJf8Hf9RaUixA97ACz8FoYrbwwbRXneHCgzMBw6G6IFOyz9HHz6B+@vger.kernel.org
-X-Gm-Message-State: AOJu0Yzd64ash1VwSlK+wXhI1Ik3CkdFbhTnJbc68qfm8rN4Q4+HTUEI
-	gH0MW+1XOYLdcZBeW+5tqi9/H2j+4rgAMGO1qiQtG8sL6+oCjCpaHEUc/eGKoKPzmcusNbH/O2X
-	SrDw0P0syjYQwGJ4Ickonxw3IqyAPbEEJVoxMQnc8kA==
-X-Gm-Gg: ASbGncunHc4SjBnlv1gqNsrMl5eWg7141rJhMF2QC5K2BTTuLy1qGnSI+tpMGrLMbA/
-	sXu5ENR7x9E0Mkgg9pTTimF6OV8O5hdRywG9vG9hezf+FkXz3IQK405JudT485fAT7pUfnu3eIV
-	KYKUyOqJ2MP3GYxa6YJ5cnbYozbbMbmQfpyktpEGGCdWi6GCDH6SOJZi7EaEXTYGO0cDVUMqUaK
-	mzGTIzh0gGVtgw37IB69K5Y1UxQ03XfJB9PK1IE9xLkyotDqUnB7dAq0o6LT4cnVPlcAE2ZUJAe
-	gQGhNKpxHxpOeUsV4X92+1P5XXw=
-X-Google-Smtp-Source: AGHT+IH8Ttsbi5KEeEAGk11LiOYQsu2N95FdEs0+cbMJMu5dLDKPCc8OYAk6PKicQIK8vI3aANmTaZiucmGCvDUboNk=
-X-Received: by 2002:a05:6512:3a95:b0:595:a5f0:1110 with SMTP id
- 2adb3069b0e04-596a3ec065fmr8521200e87.30.1764254274981; Thu, 27 Nov 2025
- 06:37:54 -0800 (PST)
-Received: from 969154062570 named unknown by gmailapi.google.com with
- HTTPREST; Thu, 27 Nov 2025 06:37:53 -0800
-Received: from 969154062570 named unknown by gmailapi.google.com with
- HTTPREST; Thu, 27 Nov 2025 06:37:53 -0800
-From: Bartosz Golaszewski <brgl@bgdev.pl>
-In-Reply-To: <20251125-pci-m2-e-v2-10-32826de07cc5@oss.qualcomm.com>
+        d=1e100.net; s=20230601; t=1764254502; x=1764859302;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:x-gm-gg:x-gm-message-state:from
+         :to:cc:subject:date:message-id:reply-to;
+        bh=G8zESVUEAodlwzxoOWrKR7D4lrz2pYYL4sJuFsgHQDc=;
+        b=KJQgDekTk10ZsFfTcumMQDpXsi/SUSTwjX9lzZLLSJeV0YYxcoxqaIkTwHa/m6VX5Z
+         FuiA3+zijJCUVMu2kQ9bFkO2I5v8xWR4x0gOTf2gIeemzRTZRCS8fv41WBbbTnnlbM1l
+         UH0dLGBxSWPVaw9EXlML0ad2iJf4CGp2VJc37H29/rOE2iPvzMHF6lt+w7SPXKVChqAd
+         cLdIWVFiW5MQwPL6Pj3BGX9aF5/Nqb0pSAe8iFqcflfFII7jLUPa0liVQZSLcXoCUhk3
+         aWucRne4Bn5iUGGGdbi2e3AiJ+YRitekpYyko7CGBPziOsNuW2PpybTeOKgodFRNZBrQ
+         iI/w==
+X-Forwarded-Encrypted: i=1; AJvYcCVqAqc+bHSIWuBdYPxrngZccBfLkVb+8+AjmRGgNLSoTF7BSYOr+xpjpewOG2lJjXUNff7qxJasbkIXq5N6d3rrJmLU@vger.kernel.org
+X-Gm-Message-State: AOJu0YylELBwW3c8T9XyTA3hyiP4EryIZr6IWzxqMI9ao2Tu4nUdT4ci
+	tBkl+X3RkeAxPaCbUShJS9dspAYJAErVb+wP27/OM3xHxdWlAZ94bM6UkNmkkfktTK4=
+X-Gm-Gg: ASbGncuL5CgJGI6cRqyXdoE0/iHoapGaE/XKdK08oyRi2DhJO8mak8Ddgm5yuxEvIfh
+	iBT8t6um2Rl826V9rHga+t19ihoQLdgcAKZ6DUGCDGokxsTnPSMEGPkHJLBdhcT+lCHDEQ2fRXU
+	ghinFLqOlpDbb8DVaPTbeSnIRWjfuuCOp+pqO/37Sdumas+ziMTgKGU0ElRKAsjlJ/PBo7QMVUn
+	EMj3ea+/ot+C28Qji0ZifR/TSIX8fj1u0hlwrTpTmAb65+3/sYBcHJ/13cRyq7gVgfiST/9615T
+	YX2gEfZDX/vo14oJJHTm3T6kOJUCr1++GzJXdMMC+hAuxwamfWgyxrvt1CsFIs/hGY/s2wJ1M03
+	NH9VdwsY9IFvX6F9dddV5XbGNnOFeSJiSTAa/h5T4qZ95HUlo27G03HB/4gUidPy0PQtPoGTlGx
+	+/NOZTjRHZRJPT49QyASxnd68vOzzf9WNzTQ==
+X-Google-Smtp-Source: AGHT+IHhiLO3LNoW9TfkmFdBrPy/+jNq9NtcOJURTcSkG24LQE5dIfyVQSe1Sq163XuRQytFHVPHBA==
+X-Received: by 2002:a05:600c:1c27:b0:471:13dd:bae7 with SMTP id 5b1f17b1804b1-47904b2bfd9mr114591805e9.30.1764254501890;
+        Thu, 27 Nov 2025 06:41:41 -0800 (PST)
+Received: from localhost.localdomain ([2a00:6d43:105:c401:e307:1a37:2e76:ce91])
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-479110b6da9sm37351465e9.0.2025.11.27.06.41.41
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 27 Nov 2025 06:41:41 -0800 (PST)
+From: Marco Crivellari <marco.crivellari@suse.com>
+To: linux-kernel@vger.kernel.org,
+	platform-driver-x86@vger.kernel.org
+Cc: Tejun Heo <tj@kernel.org>,
+	Lai Jiangshan <jiangshanlai@gmail.com>,
+	Frederic Weisbecker <frederic@kernel.org>,
+	Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
+	Marco Crivellari <marco.crivellari@suse.com>,
+	Michal Hocko <mhocko@suse.com>,
+	Maximilian Luz <luzmaximilian@gmail.com>,
+	Hans de Goede <hansg@kernel.org>,
+	Ilpo Jarvinen <ilpo.jarvinen@linux.intel.com>
+Subject: [PATCH v2 1/3] platform/surface: acpi-notify: add WQ_PERCPU to alloc_workqueue users
+Date: Thu, 27 Nov 2025 15:41:23 +0100
+Message-ID: <20251127144125.233728-2-marco.crivellari@suse.com>
+X-Mailer: git-send-email 2.51.1
+In-Reply-To: <20251127144125.233728-1-marco.crivellari@suse.com>
+References: <20251127144125.233728-1-marco.crivellari@suse.com>
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20251125-pci-m2-e-v2-0-32826de07cc5@oss.qualcomm.com> <20251125-pci-m2-e-v2-10-32826de07cc5@oss.qualcomm.com>
-Date: Thu, 27 Nov 2025 06:37:53 -0800
-X-Gm-Features: AWmQ_bmnE127PrJJlBfvUEW3R05_jJjqY__HdS6nPt4vVoiWctPQWqo-RlX_yNA
-Message-ID: <CAMRc=McH9u7Y8EZMwSjcCUs6rVx9K+h5OxFOrjwXhKm1td-EeQ@mail.gmail.com>
-Subject: Re: [PATCH v2 10/10] power: sequencing: pcie-m2: Add support for PCIe
- M.2 Key E connectors
-To: manivannan.sadhasivam@oss.qualcomm.com
-Cc: Manivannan Sadhasivam via B4 Relay <devnull+manivannan.sadhasivam.oss.qualcomm.com@kernel.org>, 
-	linux-serial@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	linux-kbuild@vger.kernel.org, platform-driver-x86@vger.kernel.org, 
-	linux-pci@vger.kernel.org, devicetree@vger.kernel.org, 
-	linux-arm-msm@vger.kernel.org, linux-bluetooth@vger.kernel.org, 
-	linux-pm@vger.kernel.org, Stephan Gerhold <stephan.gerhold@linaro.org>, 
-	Dmitry Baryshkov <dmitry.baryshkov@oss.qualcomm.com>, Rob Herring <robh@kernel.org>, 
-	Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Jiri Slaby <jirislaby@kernel.org>, 
-	Nathan Chancellor <nathan@kernel.org>, Nicolas Schier <nicolas.schier@linux.dev>, 
-	Hans de Goede <hansg@kernel.org>, =?UTF-8?Q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>, 
-	Mark Pearson <mpearson-lenovo@squebb.ca>, "Derek J. Clark" <derekjohn.clark@gmail.com>, 
-	Manivannan Sadhasivam <mani@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, 
-	Marcel Holtmann <marcel@holtmann.org>, Luiz Augusto von Dentz <luiz.dentz@gmail.com>, 
-	Bartosz Golaszewski <brgl@bgdev.pl>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 
-On Tue, 25 Nov 2025 15:45:14 +0100, Manivannan Sadhasivam via B4 Relay
-<devnull+manivannan.sadhasivam.oss.qualcomm.com@kernel.org> said:
-> From: Manivannan Sadhasivam <manivannan.sadhasivam@oss.qualcomm.com>
->
-> Add support for handling the power sequence of the PCIe M.2 Key E
-> connectors. These connectors are used to attach the Wireless Connectivity
-> devices to the host machine including combinations of WiFi, BT, NFC using
-> interfaces such as PCIe/SDIO for WiFi, USB/UART for BT and I2C for NFC.
->
-> Currently, this driver supports only the PCIe interface for WiFi and UART
-> interface for BT. The driver also only supports driving the 3.3v/1.8v power
-> supplies and W_DISABLE{1/2}# GPIOs. The optional signals of the Key E
-> connectors are not currently supported.
->
-> For supporting Bluetooth over the non-discoverable UART interface, the
-> driver currently creates the serdev interface after enumerating the PCIe
-> interface. This is mandatory since the device ID is only known after the
-> PCIe enumeration and the ID is used for creating the serdev device.
->
-> Signed-off-by: Manivannan Sadhasivam <manivannan.sadhasivam@oss.qualcomm.com>
-> ---
->  drivers/power/sequencing/Kconfig          |   1 +
->  drivers/power/sequencing/pwrseq-pcie-m2.c | 205 +++++++++++++++++++++++++++++-
->  2 files changed, 199 insertions(+), 7 deletions(-)
->
-> diff --git a/drivers/power/sequencing/Kconfig b/drivers/power/sequencing/Kconfig
-> index f5fff84566ba..29bd204319cc 100644
-> --- a/drivers/power/sequencing/Kconfig
-> +++ b/drivers/power/sequencing/Kconfig
-> @@ -38,6 +38,7 @@ config POWER_SEQUENCING_TH1520_GPU
->  config POWER_SEQUENCING_PCIE_M2
->  	tristate "PCIe M.2 connector power sequencing driver"
->  	depends on OF || COMPILE_TEST
-> +	depends on PCI
->  	help
->  	  Say Y here to enable the power sequencing driver for PCIe M.2
->  	  connectors. This driver handles the power sequencing for the M.2
-> diff --git a/drivers/power/sequencing/pwrseq-pcie-m2.c b/drivers/power/sequencing/pwrseq-pcie-m2.c
-> index 4835d099d967..c2cc129f6917 100644
-> --- a/drivers/power/sequencing/pwrseq-pcie-m2.c
-> +++ b/drivers/power/sequencing/pwrseq-pcie-m2.c
-> @@ -5,14 +5,17 @@
->   */
->
+This continues the effort to refactor workqueue APIs, which began with
+the introduction of new workqueues and a new alloc_workqueue flag in:
 
-I think you're missing linux/err.h here.
+   commit 128ea9f6ccfb ("workqueue: Add system_percpu_wq and system_dfl_wq")
+   commit 930c2ea566af ("workqueue: Add new WQ_PERCPU flag")
 
->  #include <linux/device.h>
-> +#include <linux/gpio/consumer.h>
->  #include <linux/mod_devicetable.h>
->  #include <linux/module.h>
->  #include <linux/of.h>
->  #include <linux/of_graph.h>
->  #include <linux/of_platform.h>
-> +#include <linux/pci.h>
->  #include <linux/platform_device.h>
->  #include <linux/pwrseq/provider.h>
->  #include <linux/regulator/consumer.h>
-> +#include <linux/serdev.h>
->  #include <linux/slab.h>
+The refactoring is going to alter the default behavior of
+alloc_workqueue() to be unbound by default.
 
-(snip)
+With the introduction of the WQ_PERCPU flag (equivalent to !WQ_UNBOUND),
+any alloc_workqueue() caller that doesn’t explicitly specify WQ_UNBOUND
+must now use WQ_PERCPU. For more details see the Link tag below.
 
->
-> +static int pwrseq_m2_pcie_notify(struct notifier_block *nb, unsigned long action,
-> +			      void *data)
-> +{
-> +	struct pwrseq_pcie_m2_ctx *ctx = container_of(nb, struct pwrseq_pcie_m2_ctx, nb);
-> +	struct pci_dev *pdev = to_pci_dev(data);
-> +	struct device_node *pci_remote __free(device_node) = NULL;
-> +	struct device_node *serdev_remote __free(device_node) = NULL;
-> +	struct serdev_controller *serdev_ctrl;
-> +	struct serdev_device *serdev;
-> +	struct device *dev = ctx->dev;
-> +	int ret;
-> +
-> +	/*
-> +	 * Check whether the PCI device is associated with this M.2 connector or
-> +	 * not, by comparing the OF node of the PCI device parent and the Port 0
-> +	 * (PCIe) remote node parent OF node.
-> +	 */
-> +	pci_remote = of_graph_get_remote_node(dev_of_node(ctx->dev), 0, 0);
-> +	if (!pci_remote || (pci_remote != pdev->dev.parent->of_node))
-> +		return NOTIFY_DONE;
-> +
-> +	switch (action) {
-> +	case BUS_NOTIFY_ADD_DEVICE:
-> +		/* Create serdev device for WCN7850 */
-> +		if (pdev->vendor == PCI_VENDOR_ID_QCOM && pdev->device == 0x1107) {
-> +			serdev_remote = of_graph_get_remote_node(dev_of_node(ctx->dev), 1, 1);
-> +			if (!serdev_remote)
-> +				return NOTIFY_DONE;
-> +
-> +			serdev_ctrl = of_find_serdev_controller_by_node(serdev_remote);
-> +			if (!serdev_ctrl)
-> +				return NOTIFY_DONE;
-> +
-> +			serdev = serdev_device_alloc(serdev_ctrl);
-> +			if (!serdev)
-> +				return NOTIFY_BAD;
-> +
+In order to keep alloc_workqueue() behavior identical, explicitly request
+WQ_PERCPU.
 
+Suggested-by: Tejun Heo <tj@kernel.org>
+Signed-off-by: Marco Crivellari <marco.crivellari@suse.com>
+Link: https://lore.kernel.org/all/20250221112003.1dSuoGyc@linutronix.de/
+---
+ drivers/platform/surface/surface_acpi_notify.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-This is where you'd add the software node I wrote about under another patch
-from this series.
+diff --git a/drivers/platform/surface/surface_acpi_notify.c b/drivers/platform/surface/surface_acpi_notify.c
+index 3b30cfe3466b..a9dcb0bbe90e 100644
+--- a/drivers/platform/surface/surface_acpi_notify.c
++++ b/drivers/platform/surface/surface_acpi_notify.c
+@@ -862,7 +862,7 @@ static int __init san_init(void)
+ {
+ 	int ret;
+ 
+-	san_wq = alloc_workqueue("san_wq", 0, 0);
++	san_wq = alloc_workqueue("san_wq", WQ_PERCPU, 0);
+ 	if (!san_wq)
+ 		return -ENOMEM;
+ 	ret = platform_driver_register(&surface_acpi_notify);
+-- 
+2.51.1
 
-> +			ret = serdev_device_add(serdev, "WCN7850");
-> +			if (ret) {
-> +				dev_err(dev, "Failed to add serdev for WCN7850: %d\n", ret);
-> +				serdev_device_put(serdev);
-
-If you're touching serdev code in the same series, maybe you could define
-a cleanup action for serdev devices and use it here?
-
-> +				return NOTIFY_BAD;
-> +			}
-> +		}
-> +		break;
-> +	}
-> +
-> +	return NOTIFY_OK;
-> +}
-> +
-> +static bool pwrseq_pcie_m2_check_remote_node(struct device *dev, u8 port, u8 endpoint,
-> +					     const char *node)
-> +{
-> +	struct device_node *remote __free(device_node) = NULL;
-> +
-> +	remote = of_graph_get_remote_node(dev_of_node(dev), port, endpoint);
-
-I'd do it like this to follow the convention of initializing automatic
-variables at definition.
-
-	struct device_node *remote __free(device_node) =
-		of_graph_get_remote_node(dev_of_node(dev), port, endpoint);
-
-> +	if (remote && of_node_name_eq(remote, node))
-> +		return true;
-> +
-> +	return false;
-> +}
-> +
-> +/*
-> + * If the connector exposes a non-discoverable bus like UART, the respective
-> + * protocol device needs to be created manually with the help of the notifier
-> + * of the discoverable bus like PCIe.
-> + */
-> +static int pwrseq_pcie_m2_register_notifier(struct pwrseq_pcie_m2_ctx *ctx, struct device *dev)
-> +{
-> +	int ret;
-> +
-> +	/*
-> +	 * Register a PCI notifier for Key E connector that has PCIe as Port
-> +	 * 0/Endpoint 0 interface and Serial as Port 1/Endpoint 1 interface.
-> +	 */
-> +	if (pwrseq_pcie_m2_check_remote_node(dev, 1, 1, "serial")) {
-> +		if (pwrseq_pcie_m2_check_remote_node(dev, 0, 0, "pcie")) {
-> +			ctx->dev = dev;
-> +			ctx->nb.notifier_call = pwrseq_m2_pcie_notify;
-> +			ret = bus_register_notifier(&pci_bus_type, &ctx->nb);
-> +			if (ret) {
-> +				dev_err_probe(dev, ret, "Failed to register notifier for serdev\n");
-> +				return ret;
-> +			}
-
-return dev_err_probe() and save three lines?
-
-> +		}
-> +	}
-> +
-> +	return 0;
-> +}
-> +
-
-Bart
