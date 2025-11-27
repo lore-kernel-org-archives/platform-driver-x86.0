@@ -1,64 +1,64 @@
-Received: from mail-wm1-f52.google.com (mail-wm1-f52.google.com [209.85.128.52])
+Received: from mail-wm1-f53.google.com (mail-wm1-f53.google.com [209.85.128.53])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5D41E332EDD
-	for <platform-driver-x86@vger.kernel.org>; Thu, 27 Nov 2025 14:41:44 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.52
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1B0D23126AF
+	for <platform-driver-x86@vger.kernel.org>; Thu, 27 Nov 2025 14:41:45 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.53
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1764254507; cv=none; b=I/8ilmyIDejJbnn7kriZJMCHansMTXHpj/cTnvFjCBs/RdKG7bNC7AFmoZagMTLgnPc7fifZR+I1KVzI+1AKHnHFQteIBQIj/BTo5t8RFHx0p/xVUtXgpJ5XD4eQUkxzaukimNbixxIcYAWpgamsHkc9pjrOuLqodupv/ggd4No=
+	t=1764254508; cv=none; b=olK+AGxIRedxy6uMrNczygbi4CmRNZI1ZvzYrT46qP5jx/YrwFEbdPI3f+VA7IPQfmqPcJNvzyxKTwXWJmxFwmNnrNQBspYVGSFsdhvS18E3Rw4dIrt3UQkn0ZBsv3n1y5/B2A62G5wXXsa7P6iV0gDv5BTutO2bSG8exW4oJ1w=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1764254507; c=relaxed/simple;
-	bh=DGTGbzKydnekt3uJ/EMCQTdJL8P7EFEqykjlAHEO0+0=;
+	s=arc-20240116; t=1764254508; c=relaxed/simple;
+	bh=LPEPMnco5Xm8MILGkRvk/pMSNneneSPfuGpd3/HN5VA=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=s5qC0Oa0MMwGr3fjSd2DCalZ5VPlPSpTDefNcEZJYyogdq+6d1uPxehbER6QVZBSgnMut9aEvqxyMtFrNhS0AETXNf+4rREF5kIB+gsU1VK9TmEw2Lnn0TvjMggiDI13tpW5VuUKhNrF4QsQbjNLk6Y5zS0QE2jWmehKAaGSVbc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com; spf=pass smtp.mailfrom=suse.com; dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b=Q84GUErY; arc=none smtp.client-ip=209.85.128.52
+	 MIME-Version; b=Amsx+nn85D61UmyDLYtU9oJFxX2/YnqbtIMb79HnyWjge7As4OJ4CFRKzvBpPZpo7m5f7xlVvd7mTeedSzCzmnjgAJk7qtosA0RWXK7wLg+VoyzHSaU7we3yhvun+yJ5phOpSSYpRKGC+WeKOpz+tuh322SBUslHIpoieKAFfk8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com; spf=pass smtp.mailfrom=suse.com; dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b=XeRdmx7s; arc=none smtp.client-ip=209.85.128.53
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b="Q84GUErY"
-Received: by mail-wm1-f52.google.com with SMTP id 5b1f17b1804b1-47775fb6cb4so6305385e9.0
-        for <platform-driver-x86@vger.kernel.org>; Thu, 27 Nov 2025 06:41:44 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b="XeRdmx7s"
+Received: by mail-wm1-f53.google.com with SMTP id 5b1f17b1804b1-4779cc419b2so8773075e9.3
+        for <platform-driver-x86@vger.kernel.org>; Thu, 27 Nov 2025 06:41:45 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=suse.com; s=google; t=1764254503; x=1764859303; darn=vger.kernel.org;
+        d=suse.com; s=google; t=1764254504; x=1764859304; darn=vger.kernel.org;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=WFTw99QutH3DAHx7lo41dcD9dNbkV9nNUON1QxtxjDE=;
-        b=Q84GUErYgu8ixEvRMR0nYtWZ1zxLk/Rt115b0CaIxrqoEl6Wv9/WEOVoIAlAorKF5v
-         mX5Wi0W25X0/LTMeHY7q1AY1z4NEnrjc4nAqWKeOZCbdzyx2cq3/hwQ9YoQIY1YSF42o
-         qLF1Gf9sQMcVXU+x/LmbNfilLp/HOaTANN4P9IlwUrsiThCfKaVEIYWaciCECgsb3MeT
-         ggHFBUGGllje7Khy0OqsrGJdl7KQA9BUFJEEpGA6x+ObmW0bkG3+49sEvScQHVo+oW1d
-         lGU9/W1qxP6vYHjewqrq9VnO6PcWVbeYYpiR1ZaLA9lkLlDLLHLNs8N/4uFWgdVJpaVa
-         sEfA==
+        bh=c5QhYCMIe8+tnJfC8W7qm9EkL8jbmR0b4KbpIadX0+A=;
+        b=XeRdmx7sIl7BlR3rJjPd281XAbFENcmAlstHl4GrtLYcE9gk+5v4q5Czc1ENqWWd4a
+         bK6RXNEQ0pGGH6cELM+FIBivpAEaEI70DHKAAu30vky1J91E4DRjqW2OcUuxk/SjYk+V
+         /Uanuv9RnEpKuy93AnUyQ6L3/seyynD+k+a7DMWP9EUElqcz9eVnpSzuCqnG1j8VFbVx
+         ZXJsIMXGWJj+vRBtDScuZh5lpyI28vhwua5x3crhmAuwix+Qc/aKHuswgNYrwsBv6Lc/
+         gB0wgwdtDtwPApt+2kVYeU30p2wH2DbH4/tcGco+rrj3nUN+MDUbwWRXy3IUPaSNb18m
+         5thQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1764254503; x=1764859303;
+        d=1e100.net; s=20230601; t=1764254504; x=1764859304;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:x-gm-gg:x-gm-message-state:from
          :to:cc:subject:date:message-id:reply-to;
-        bh=WFTw99QutH3DAHx7lo41dcD9dNbkV9nNUON1QxtxjDE=;
-        b=nklNDYiDd2qec3IEZq6CydTHm6PzvFzYJj7+K/bbZMj1dZ1BmstRJdPCX2qQJtsw/Z
-         Oaq+Rw66D1fvbyfq74iJbEDVNWfZUYaojHrnr7hBhLLo80GpX8Yy5zZpGveeL4qiLyiE
-         /jqIFZ/ury7yu0PMh7EK/1eSWjpQjTEflA2PN6VrVu3P/PkYAcYlJVe2E4STgnmWC+jj
-         d5kJ+GBlDXHk24GzgzY9EIc8L72f6SXQPDNw1aBvXQJwtHyAG7kc5bSd1cF2PSVKOi8j
-         RdcgRqczXzYfsKmdZr53kVMkkKujVC+kwG2SeiNaVfX6xeq5lGZ51aHIm+5Kp3xQ8lTn
-         IL9g==
-X-Forwarded-Encrypted: i=1; AJvYcCX81QQW3tK49fhJpZ3awrOw9PEin025h0QK60DnjOk/DuUOOYbJfSjgc0WG0HVCiXyPL10GsTaute3X4peqh4uL10/5@vger.kernel.org
-X-Gm-Message-State: AOJu0Yy6Whv6U04mawZ077bTIY63Ib7bJ3RzWKMfEhhxi9yHFpWpR4kh
-	wVq+pPn6+pxeqC0DLZW1ocP5wvCetQsyzFfQ/uz1fOuvJq0j2kEkSTXBwsc7zwt8H70=
-X-Gm-Gg: ASbGnctnNGw+l7M4ooaXPpV3mUYNgwDNO3LXslY/cNAyIerqK2dI5ppvaLZ1J6fm/8d
-	jX6KgPsd0Pawoj4vzZ8Prdm6xbhNO5QnOUjKkVTsuWM6pDEGjzwDczVlGOz//2flUoYoUWCzpom
-	MeGtWuJgH6xhZv/5EyIsXXmoE1Y0jZRbuPM6ijPmxsrjLk9x/JyFxuCN/ApK6kKJ9rKWr0PqnhU
-	1jMUJVrrsLQocisIL9AuCppxSM/Nyvb1AO9OLXbf27BebVJr9pn90txzzJA/EP/o9+QBMJBN08m
-	TPHxtR5dDnEd7xGzfZMmEB4Kb66vokhQZwFUxMjaEfcFD82pkfxtD2H5Stf6Xyh4JKmY+ziId1Z
-	f0yk58GCptmiVBDiqIaUhrx741C3dQo/t1JEFSJ//14NjFF+YNb2kbH9lGz1Yx1Pw0EUTTX0d3w
-	fC/3TscoiDnryU578eKaXVLdnaGcOQWCvMIniKoVVM072a
-X-Google-Smtp-Source: AGHT+IEoav5mPX67GfE3cqAErw5RFXLYdv6KEIdh54PkbMtNJOQdLCLrtOH8pJr2AIJGwUIf7TFRrQ==
-X-Received: by 2002:a05:600c:470a:b0:45d:dc85:c009 with SMTP id 5b1f17b1804b1-477c10d49b5mr201413185e9.10.1764254502871;
-        Thu, 27 Nov 2025 06:41:42 -0800 (PST)
+        bh=c5QhYCMIe8+tnJfC8W7qm9EkL8jbmR0b4KbpIadX0+A=;
+        b=NQIMG/SlMRjMVJM0DGAYdF9aTKkJJ23Smz5ABgLkv+DgbH7w9d4Aj4yHB5FjpotGHf
+         FppKMhdy51Ys6ARvd9BtJhO2VPUf5n43amRkKji4aVbifD6m4jXhxXgARsnpmaL2bGY1
+         oYmseYHM2SyCfEJS4xPFWDXQDLhal7G0I9/bPQBGqMuooeGmeZBi29lk/00cbmR8dnjH
+         kWMukaxIMBBQLymU6pJsJtmxJv2eZ1wJAWyyN9QnKIF+YsKBax3ZCa6Hp001R7sHSRcC
+         6dg0SKWYaU/HJDnOnMtIm+RnzuOmPyVqmOnjXN8GztdkZoRRIC1fa+tjdTcGGfTB2hS+
+         7u+w==
+X-Forwarded-Encrypted: i=1; AJvYcCWwhfC30Gjv4QE17WZ4G0kQwmAbEyU4ZxxwaZZZWfMe9sc2BCv6NfmGlgq94fhWhfZSqEsgf0AdAUmo4BLlprk2QpVs@vger.kernel.org
+X-Gm-Message-State: AOJu0YzmOdXBgOiikPdbJKPNZ44SFio4KMOtojv1LblG8q0pGp42zVL8
+	rj1+TN988QM5+D8lbnsAYBpjutZ76CuVEKG94RKaUYn6FjS8arPMmOvJaz0bDdXKFEE=
+X-Gm-Gg: ASbGncvMQbsDjE/kWYU8JOOI9K0EYxGtrSm1SqCGYnm2zzXWddoqQjALEWc5YUwN/3c
+	unZeCqVNkSCQ8lTq2UVsJqf2uv3NHlgQZQnqA2vyldCaq5yhUoHckoqtO6KPJAvOwA/t7+jBSTL
+	o95HY2qTtQ4x3d/AgBX33QHvm5NrQOwtL1hfH5m9cclSCUXbkEmdek7Gb6++dOJdSuPKaXrPnzN
+	d4tdacrf7wZk/zY/xqgGhCX+z+jK0a6GSGF9yhKFFNGdw4DkdyP/4e4pJeeqTqWjW1Svt1wrnF7
+	NUfCe3OhGijDVy3B/5+kN4QtbO66xncHs9tIht5cHPrIqwcMgcu7V70urPQUlZUGVHiXbHY6azO
+	I9bcCMCoVK91mPtIunSVSkoXbBEFn2lsRUaQdxoCeyqZ6+swPdDfx4jaKzelB5igDFxPSOKnrf2
+	Pgmg+nrNoaLuezmkaTmp54smQmoMuFDMwuCPPINQ2mIwaP
+X-Google-Smtp-Source: AGHT+IFYY06oLJ7g09W/M0ZrcXobhxX7T2QvNS6KAiC9yahbr2Fz/AYikghcO3j3I6L3pA0iEav/7w==
+X-Received: by 2002:a05:600c:19ce:b0:46e:48fd:a1a9 with SMTP id 5b1f17b1804b1-477c115dfaamr213338575e9.33.1764254503891;
+        Thu, 27 Nov 2025 06:41:43 -0800 (PST)
 Received: from localhost.localdomain ([2a00:6d43:105:c401:e307:1a37:2e76:ce91])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-479110b6da9sm37351465e9.0.2025.11.27.06.41.42
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-479110b6da9sm37351465e9.0.2025.11.27.06.41.43
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 27 Nov 2025 06:41:42 -0800 (PST)
+        Thu, 27 Nov 2025 06:41:43 -0800 (PST)
 From: Marco Crivellari <marco.crivellari@suse.com>
 To: linux-kernel@vger.kernel.org,
 	platform-driver-x86@vger.kernel.org
@@ -71,9 +71,9 @@ Cc: Tejun Heo <tj@kernel.org>,
 	Maximilian Luz <luzmaximilian@gmail.com>,
 	Hans de Goede <hansg@kernel.org>,
 	Ilpo Jarvinen <ilpo.jarvinen@linux.intel.com>
-Subject: [PATCH v2 2/3] platform: x86: replace use of system_wq with system_percpu_wq
-Date: Thu, 27 Nov 2025 15:41:24 +0100
-Message-ID: <20251127144125.233728-3-marco.crivellari@suse.com>
+Subject: [PATCH v2 3/3] platform: surface: replace use of system_wq with system_percpu_wq
+Date: Thu, 27 Nov 2025 15:41:25 +0100
+Message-ID: <20251127144125.233728-4-marco.crivellari@suse.com>
 X-Mailer: git-send-email 2.51.1
 In-Reply-To: <20251127144125.233728-1-marco.crivellari@suse.com>
 References: <20251127144125.233728-1-marco.crivellari@suse.com>
@@ -109,44 +109,36 @@ Suggested-by: Tejun Heo <tj@kernel.org>
 Signed-off-by: Marco Crivellari <marco.crivellari@suse.com>
 Link: https://lore.kernel.org/all/20250221112003.1dSuoGyc@linutronix.de/
 ---
- drivers/platform/x86/gpd-pocket-fan.c                      | 4 ++--
- drivers/platform/x86/x86-android-tablets/vexia_atla10_ec.c | 2 +-
- 2 files changed, 3 insertions(+), 3 deletions(-)
+ drivers/platform/surface/aggregator/ssh_packet_layer.c  | 2 +-
+ drivers/platform/surface/aggregator/ssh_request_layer.c | 2 +-
+ 2 files changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/platform/x86/gpd-pocket-fan.c b/drivers/platform/x86/gpd-pocket-fan.c
-index 7a20f68ae206..c9236738f896 100644
---- a/drivers/platform/x86/gpd-pocket-fan.c
-+++ b/drivers/platform/x86/gpd-pocket-fan.c
-@@ -112,14 +112,14 @@ static void gpd_pocket_fan_worker(struct work_struct *work)
- 	gpd_pocket_fan_set_speed(fan, speed);
+diff --git a/drivers/platform/surface/aggregator/ssh_packet_layer.c b/drivers/platform/surface/aggregator/ssh_packet_layer.c
+index 6081b0146d5f..3dd22856570f 100644
+--- a/drivers/platform/surface/aggregator/ssh_packet_layer.c
++++ b/drivers/platform/surface/aggregator/ssh_packet_layer.c
+@@ -671,7 +671,7 @@ static void ssh_ptl_timeout_reaper_mod(struct ssh_ptl *ptl, ktime_t now,
+ 	/* Re-adjust / schedule reaper only if it is above resolution delta. */
+ 	if (ktime_before(aexp, ptl->rtx_timeout.expires)) {
+ 		ptl->rtx_timeout.expires = expires;
+-		mod_delayed_work(system_wq, &ptl->rtx_timeout.reaper, delta);
++		mod_delayed_work(system_percpu_wq, &ptl->rtx_timeout.reaper, delta);
+ 	}
  
- 	/* When mostly idle (low temp/speed), slow down the poll interval. */
--	queue_delayed_work(system_wq, &fan->work,
-+	queue_delayed_work(system_percpu_wq, &fan->work,
- 			   msecs_to_jiffies(4000 / (speed + 1)));
- }
+ 	spin_unlock(&ptl->rtx_timeout.lock);
+diff --git a/drivers/platform/surface/aggregator/ssh_request_layer.c b/drivers/platform/surface/aggregator/ssh_request_layer.c
+index 879ca9ee7ff6..a356e4956562 100644
+--- a/drivers/platform/surface/aggregator/ssh_request_layer.c
++++ b/drivers/platform/surface/aggregator/ssh_request_layer.c
+@@ -434,7 +434,7 @@ static void ssh_rtl_timeout_reaper_mod(struct ssh_rtl *rtl, ktime_t now,
+ 	/* Re-adjust / schedule reaper only if it is above resolution delta. */
+ 	if (ktime_before(aexp, rtl->rtx_timeout.expires)) {
+ 		rtl->rtx_timeout.expires = expires;
+-		mod_delayed_work(system_wq, &rtl->rtx_timeout.reaper, delta);
++		mod_delayed_work(system_percpu_wq, &rtl->rtx_timeout.reaper, delta);
+ 	}
  
- static void gpd_pocket_fan_force_update(struct gpd_pocket_fan_data *fan)
- {
- 	fan->last_speed = -1;
--	mod_delayed_work(system_wq, &fan->work, 0);
-+	mod_delayed_work(system_percpu_wq, &fan->work, 0);
- }
- 
- static int gpd_pocket_fan_probe(struct platform_device *pdev)
-diff --git a/drivers/platform/x86/x86-android-tablets/vexia_atla10_ec.c b/drivers/platform/x86/x86-android-tablets/vexia_atla10_ec.c
-index 2f8cd8d9e0ab..ebbedfe5f4e8 100644
---- a/drivers/platform/x86/x86-android-tablets/vexia_atla10_ec.c
-+++ b/drivers/platform/x86/x86-android-tablets/vexia_atla10_ec.c
-@@ -183,7 +183,7 @@ static void atla10_ec_external_power_changed(struct power_supply *psy)
- 	struct atla10_ec_data *data = power_supply_get_drvdata(psy);
- 
- 	/* After charger plug in/out wait 0.5s for things to stabilize */
--	mod_delayed_work(system_wq, &data->work, HZ / 2);
-+	mod_delayed_work(system_percpu_wq, &data->work, HZ / 2);
- }
- 
- static const enum power_supply_property atla10_ec_psy_props[] = {
+ 	spin_unlock(&rtl->rtx_timeout.lock);
 -- 
 2.51.1
 
