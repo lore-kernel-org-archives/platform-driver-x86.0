@@ -1,77 +1,76 @@
-Received: from mail-lf1-f45.google.com (mail-lf1-f45.google.com [209.85.167.45])
+Received: from mail-lf1-f42.google.com (mail-lf1-f42.google.com [209.85.167.42])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E608432E6A9
-	for <platform-driver-x86@vger.kernel.org>; Thu, 27 Nov 2025 13:53:01 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.45
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8E3F22163B2
+	for <platform-driver-x86@vger.kernel.org>; Thu, 27 Nov 2025 14:32:08 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.42
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1764251585; cv=none; b=cfAYKM/vzLv8tUZyq+YRMR44KB3PaTBnmiiAukBaNXKC7KI7e7JZkbUCIHm48CQwFf36yWRUGE2+QVoCxLYj+Hq6tpzx1IpsUQSebNsGQ328U/bC1L2h1YuaRXVJcd37k8BnLzWYfbQBQn6J/o+XnfaSywR7MMqpwCS7hhIgZFY=
+	t=1764253931; cv=none; b=acVHYAx6zGRylFOQGVJeHWaJGVWF4TcZEloYmouUMXLB6ap/4TYKlTpu+548KolM70r0LjP1GVJRlTChz7jZ0zIk/ug7ocrJBGvRElMzGt67z2MsJkr8kyR6jT8t+qO2P5l+H4y1gPEEGgjeSjV0UvJGlp7nMiSqkmH3C+M6L0U=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1764251585; c=relaxed/simple;
-	bh=uvWSUnAueiEOoFOEIl2JYdtmpK89idUnhb83TwQALwc=;
+	s=arc-20240116; t=1764253931; c=relaxed/simple;
+	bh=5s4kM/4I9QIFAIQ7Xr2TkK6RVCGV+sQOtn5UYl+vDlI=;
 	h=From:In-Reply-To:MIME-Version:References:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=AeNsyB5AS1ypiNA+8YZS1NsrLMnBd6GiDDUBSZc0xMGT5NC41tFGjmyeSbbVc1iPjlpgMdRxP6uSj3r5Qh6tmHHtRN+Pu3yT3c2DnjL+TvnBDKEhOzkqtv5t4oVDz32Pmdb75qOLO/5R32ua58YAmHsl4QgI2pHp4B8RGZyy9iU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl; spf=none smtp.mailfrom=bgdev.pl; dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b=Dnu4my3I; arc=none smtp.client-ip=209.85.167.45
+	 To:Cc:Content-Type; b=Z0CChjrRhQQTNwqKZ44L9S9w+sCNU7Kcg84Utd4gzjKBepwb17fVmrDJGA3cjo3OWFR5olDb5AXZVqhbA9bKHqeC0pmsXKBXAS3n/2V2dRxKNSTDM89kOCSMJ12XR5YRJ/TW0XJ3RsTln0sJwaXEbKYWUZVcn3LebnsQpqbAk5g=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl; spf=none smtp.mailfrom=bgdev.pl; dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b=IWxFRvrM; arc=none smtp.client-ip=209.85.167.42
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl
 Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=bgdev.pl
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b="Dnu4my3I"
-Received: by mail-lf1-f45.google.com with SMTP id 2adb3069b0e04-596a055b1b8so1020731e87.0
-        for <platform-driver-x86@vger.kernel.org>; Thu, 27 Nov 2025 05:53:01 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b="IWxFRvrM"
+Received: by mail-lf1-f42.google.com with SMTP id 2adb3069b0e04-59428d2d975so967818e87.3
+        for <platform-driver-x86@vger.kernel.org>; Thu, 27 Nov 2025 06:32:08 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=bgdev-pl.20230601.gappssmtp.com; s=20230601; t=1764251580; x=1764856380; darn=vger.kernel.org;
+        d=bgdev-pl.20230601.gappssmtp.com; s=20230601; t=1764253927; x=1764858727; darn=vger.kernel.org;
         h=cc:to:subject:message-id:date:references:mime-version:in-reply-to
          :from:from:to:cc:subject:date:message-id:reply-to;
-        bh=pN64heDHbxqZ2OKQxyJVBsdd0gJZEzFf6zoPDx6GqoA=;
-        b=Dnu4my3Ic1+uyfUIZlX9r952UDUx4Un5aKBPAnOVnWX73cFuzv4Tkz8I9uXsjRJwDy
-         MifpyoIwNOgbL1pELe3kXR/zFqhGUIl3TqjztPcB48bz1ldm4CK7cW0DbdNTve9VIq7P
-         SmrjS9T50H7epBqEQbscoqdLnpPNqiU0laDWV91fA/BfQd7nM0zQKlPMhi9wOxRuytPs
-         pW7vG1oxg9wvtBLXoFuCIc3VDceGbrtGz4hgzfYdTCUe5bBoRDor1kb65LH9mSQsiJ5V
-         XdzxXXZdjPjLFSGngOt53q+/dEXCODNSz3+fNLs1aR99Vz2500fGNy4qAKLDTWsENyVa
-         /eWw==
+        bh=kV+ineTuRO2FCjwv8fpM2FJ3fRBCPasbNXO10VdD+pQ=;
+        b=IWxFRvrMBKqU2T7gnCRsGpMHoF1i3Xi+cfhr+RyIsef0wp/QKhTcnfhklLfGXRnASb
+         pcH6UiEpO4jJN3Ib4jpPSiR/Wwf8SW96dUC/ciDVikh96MyfKn8fnMDt4ipw8p6wYME4
+         C8s3FtqyMCTJAUAjxl2mBs2HMq4OIAV9TqQTh6zjgwi878I6+q2cXSzTFqPse7Es368i
+         ylGVQxglxUwTNtKjv570uq+c3g/nbEidck5W/BdxvFhnCwJRVfdTl6SojmpKAVFH3+Od
+         mjqcdHRw6DBYfq2DIUKJKLoDfF2TMgIznce9NtBv8joUFMpIOr8TMfeNYtLfL2fWr34n
+         tZEw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1764251580; x=1764856380;
+        d=1e100.net; s=20230601; t=1764253927; x=1764858727;
         h=cc:to:subject:message-id:date:references:mime-version:in-reply-to
          :from:x-gm-gg:x-gm-message-state:from:to:cc:subject:date:message-id
          :reply-to;
-        bh=pN64heDHbxqZ2OKQxyJVBsdd0gJZEzFf6zoPDx6GqoA=;
-        b=Bdu+BpfgOkNLEsn9GAADDPYwcTFQ/Di3bKtfxlsojXxFteuPn8Y09UsWRPZrQ7dfRZ
-         xOzvKnFeVAelN3xCd+7sfEoFHgbf6g0Jzf4Z4AAdA9PUy291y7hE1OmHHlAvGyHNmUVI
-         GDgfuG5BODaT42k8sCcMuhZboWzJDz89bcOZOjj686bB//Vm+ajvtUnbdQ0lS3KTv50r
-         R6lk+j5Vo2FbOCyKLeLGIgzkxSlTYX+YNdZYsx6h4Mf7vz5qRYS1yTcpbEXALJVO/5yD
-         FV1n+0vC69SV2tZtTQzcXRK7UK2/qR2HNJrtzXHw7LW1nnl7NQH3gpjwJ97xog4Ci2m3
-         SvTg==
-X-Forwarded-Encrypted: i=1; AJvYcCUkA3rcROyjfESK63NJNNSSausijdhcMxSxPuQZH4ZoClgEiqPXmWama7adPP8guqVkmBn1l+9TqP1ydaAaGGPSQC5H@vger.kernel.org
-X-Gm-Message-State: AOJu0YwBihSxifq7M3amujovJROIGg++B5bJtvf2DiF+1/UcwxlRjbma
-	t1KtCnpIWWjdked45RMzuLS+QkkzZPkhLeqhMo2LZ/jeFq4HRpkG/4rDxysi4uFik5m6YYm+1O+
-	8tHI4eQ2j+dEMBWyWK9mTtLmT1/Yb8u6Y4Qc4E2ousg==
-X-Gm-Gg: ASbGnct5F2I+2fCcgpHZg7udrxXVZi6Ooz48ZvZlVlZ+o3X+rr7lXx5gxRmQYGEyYe0
-	/JaUmiCAEroLz5YDkCgccwUThieuUdXzIO3flNKoNnOIfwqIPH5RzoNCT37BM633Qm9ZSYOWiwM
-	qPGZeRqdOgQTzNGz/PEQy1Rsdyo14Q0VQrIf0HlFny7h0gagab25C5XgrIjTO/8qCLCs0i9dWPl
-	2cIrPRGXtcn4uNFZI4Dl3fUGAiuTtq3+cSWSYS2Z4gLfxn2UN6k9jbyapeu0hNeIPmqGI6VXRCW
-	hebYLss7d4VrLAl3N0RrlNyqiZg=
-X-Google-Smtp-Source: AGHT+IG6PL+Jiezoh/uDW8dnWLihyDKxT0NJj0K3mdDXkbk6oKkhSmfyJZwok91yAbizDOVups9BJ+4+9Gf5UTlIkv4=
-X-Received: by 2002:a05:6512:2351:b0:594:93b8:88b6 with SMTP id
- 2adb3069b0e04-596a3eed692mr7226030e87.38.1764251580020; Thu, 27 Nov 2025
- 05:53:00 -0800 (PST)
+        bh=kV+ineTuRO2FCjwv8fpM2FJ3fRBCPasbNXO10VdD+pQ=;
+        b=ROy7QUmclIChblTPk9212rAx7z1PGsFvMFVuAuBhRfLJIkPWpL+Tb9JeZZK/ZpPJFG
+         FzVU1oR36/L78ZlgbSDwVllPaCCXqJ9gcHCs1zq7SbkDkFiQZ05MaU/6lIh45xFOM736
+         P75Lsv3Mq3w9O6NYKquTa1Ki8xp1fiZeNzsHg51eE13uf9xkQqan2LLPkJqYz3IX8feH
+         5SuWoNEQWZTmUIcw4uyO2NugiCAFTsGkdewBlH0tzWP32n93QdfqiuVoPQZRoJQkCRnH
+         jxmkJQlUUtAEXnxRE3Yg+B/ZubEVLHxshP9AAQTWw6vTDjor/PVdmp4WIShyQcwdX6Ts
+         JmQw==
+X-Forwarded-Encrypted: i=1; AJvYcCWfWXmwxcSIWy3Xnlnm6Zn2kOVwFmw/AiJ5QzRZpn8WpZgF9t9c0mCpnrz5I1tm9mochv3EwssheG3m25Bgm0L2AXXg@vger.kernel.org
+X-Gm-Message-State: AOJu0YyI7vGkfGBNwCI7/aFOoufW0zcglRGA2uSvK9g4RRjvNpTAQTE3
+	Djhh7DcK3ldIIqNaN/HSPKmMibWwtY3696nvZQiYlNr3b/19hnzS4NStB65lSPsc1ZHgJVioMPV
+	zpajuivLT9sglDaDfxO9FdN95kKZgYj99BM8swEKtFw==
+X-Gm-Gg: ASbGncuHEhXrU9iEGxgURdG3bdDh6+x3O2C0gg/ayZXkcBmbsJWm0QKsJxioNADNUQI
+	ons354iXq78hSEupwlumSUq0/19qQUglUWhEwoODmxGizX1olbszUXQDX0U1IJodkADN/dxyffE
+	N4OirNBSQvqvoWChMn9b7bIzXLQOg5CfXUOyZjQC8hN71pWWXsv3bDUjSb2xJyzieH9CnMCQfXJ
+	ICAicXF3TmvljHAJ/DRcYMYghUtEI6TgqQ94uxA6Cf81voERDjNpCnkK7CX+chgdo+UUS1JFAcS
+	VIJj0m+kxMNzYqec2SW4N0JOtTA=
+X-Google-Smtp-Source: AGHT+IHlhhzIIp/gnfsTHhd+vqhk+v48Z9xJOXoO7x5goAaqvtEG81gcVcAV13Y3mYngJi03cv1qgF1Hme/Zouniots=
+X-Received: by 2002:a05:6512:3e14:b0:591:c8de:467b with SMTP id
+ 2adb3069b0e04-596b528c028mr4219398e87.40.1764253926578; Thu, 27 Nov 2025
+ 06:32:06 -0800 (PST)
 Received: from 969154062570 named unknown by gmailapi.google.com with
- HTTPREST; Thu, 27 Nov 2025 07:52:58 -0600
+ HTTPREST; Thu, 27 Nov 2025 06:32:04 -0800
 Received: from 969154062570 named unknown by gmailapi.google.com with
- HTTPREST; Thu, 27 Nov 2025 07:52:58 -0600
+ HTTPREST; Thu, 27 Nov 2025 06:32:04 -0800
 From: Bartosz Golaszewski <brgl@bgdev.pl>
-In-Reply-To: <20251125-pci-m2-e-v2-4-32826de07cc5@oss.qualcomm.com>
+In-Reply-To: <20251125-pci-m2-e-v2-2-32826de07cc5@oss.qualcomm.com>
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20251125-pci-m2-e-v2-0-32826de07cc5@oss.qualcomm.com> <20251125-pci-m2-e-v2-4-32826de07cc5@oss.qualcomm.com>
-Date: Thu, 27 Nov 2025 07:52:58 -0600
-X-Gm-Features: AWmQ_bmPoMOTBlwPqpCqq0qp_ZAAK68AQ2h724JshuQcjnDCyPKjaA9BdddHSek
-Message-ID: <CAMRc=MeOfpFME0LL+WDSM3ZVUOiqTCHQN-E3=PZ_qTMLWDKaKQ@mail.gmail.com>
-Subject: Re: [PATCH v2 04/10] serdev: Add an API to find the serdev controller
- associated with the devicetree node
+References: <20251125-pci-m2-e-v2-0-32826de07cc5@oss.qualcomm.com> <20251125-pci-m2-e-v2-2-32826de07cc5@oss.qualcomm.com>
+Date: Thu, 27 Nov 2025 06:32:04 -0800
+X-Gm-Features: AWmQ_bmdSkzBaj3zxXIgo7YdGy9A3hKC58TOOOS51TGwxK6BIP2tm8BLLT5PXkE
+Message-ID: <CAMRc=Mc-WebsQZ3jt2xirioNMticiWj9PJ3fsPTXGCeJ1iTLRg@mail.gmail.com>
+Subject: Re: [PATCH v2 02/10] serdev: Add serdev device based driver match support
 To: manivannan.sadhasivam@oss.qualcomm.com
 Cc: Manivannan Sadhasivam via B4 Relay <devnull+manivannan.sadhasivam.oss.qualcomm.com@kernel.org>, 
 	linux-serial@vger.kernel.org, linux-kernel@vger.kernel.org, 
@@ -89,81 +88,153 @@ Cc: Manivannan Sadhasivam via B4 Relay <devnull+manivannan.sadhasivam.oss.qualco
 	Bartosz Golaszewski <brgl@bgdev.pl>
 Content-Type: text/plain; charset="UTF-8"
 
-On Tue, 25 Nov 2025 15:45:08 +0100, Manivannan Sadhasivam via B4 Relay
+On Tue, 25 Nov 2025 15:45:06 +0100, Manivannan Sadhasivam via B4 Relay
 <devnull+manivannan.sadhasivam.oss.qualcomm.com@kernel.org> said:
 > From: Manivannan Sadhasivam <manivannan.sadhasivam@oss.qualcomm.com>
 >
-> Add of_find_serdev_controller_by_node() API to find the serdev controller
-> device associated with the devicetree node.
+> Add support to match serdev devices with serdev drivers based on the serdev
+> ID table defined in serdev_device_driver::id_table.
+>
+> The matching function, serdev_driver_match_device() uses the serdev device
+> name to match against the entries in serdev_device_driver::id_table.
+>
+> If there is no serdev id_table for the driver, then serdev_device_match()
+> will fallback to ACPI and DT based matching.
 >
 > Signed-off-by: Manivannan Sadhasivam <manivannan.sadhasivam@oss.qualcomm.com>
 > ---
->  drivers/tty/serdev/core.c | 16 ++++++++++++++++
->  include/linux/serdev.h    |  9 +++++++++
->  2 files changed, 25 insertions(+)
+>  drivers/tty/serdev/core.c         | 23 ++++++++++++++++++++++-
+>  include/linux/mod_devicetable.h   |  7 +++++++
+>  include/linux/serdev.h            |  4 ++++
+>  scripts/mod/devicetable-offsets.c |  3 +++
+>  4 files changed, 36 insertions(+), 1 deletion(-)
 >
 > diff --git a/drivers/tty/serdev/core.c b/drivers/tty/serdev/core.c
-> index 76b89dd0720f..f90095cb778f 100644
+> index b33e708cb245..2b5582cd5063 100644
 > --- a/drivers/tty/serdev/core.c
 > +++ b/drivers/tty/serdev/core.c
-> @@ -530,6 +530,22 @@ struct serdev_controller *serdev_controller_alloc(struct device *host,
->  }
->  EXPORT_SYMBOL_GPL(serdev_controller_alloc);
+> @@ -85,12 +85,33 @@ static const struct device_type serdev_ctrl_type = {
+>  	.release	= serdev_ctrl_release,
+>  };
 >
-> +/**
-> + * of_find_serdev_controller_by_node() - Find the serdev controller associated
-> + *					 with the devicetree node
-> + * @node:	Devicetree node
-> + *
-> + * Return: Pointer to the serdev controller associated with the node. NULL if
-> + * the controller is not found.
-> + */
-> +struct serdev_controller *of_find_serdev_controller_by_node(struct device_node *node)
+> +static int serdev_driver_match_device(struct device *dev, const struct device_driver *drv)
 > +{
-> +	struct device *dev = bus_find_device_by_of_node(&serdev_bus_type, node);
+> +	const struct serdev_device_driver *serdev_drv = to_serdev_device_driver(drv);
+> +	struct serdev_device *serdev = to_serdev_device(dev);
+> +	const struct serdev_device_id *id;
 > +
-> +	return (dev && dev->type == &serdev_ctrl_type) ? to_serdev_controller(dev) : NULL;
+> +	if (!serdev_drv->id_table)
+> +		return 0;
+> +
+> +	for (id = serdev_drv->id_table; id->name[0]; id++) {
+> +		if (!strcmp(dev_name(dev), id->name)) {
+> +			serdev->id = id;
+> +			return 1;
+> +		}
+> +	}
+> +
+> +	return 0;
 > +}
-> +EXPORT_SYMBOL_GPL(of_find_serdev_controller_by_node);
 > +
->  static int of_serdev_register_devices(struct serdev_controller *ctrl)
+
+I don't know if Rob agrees with me but I would very much prefer to see
+software-node-based approach instead of an ID table matching.
+
+Could you in the pwrseq driver, create a software node for the serdev device
+you allocate, set its "compatible" to "qcom,wcn7850-bt" and match against it
+here?
+
+This has several benefits: if you ever need to pass more properties to the
+serdev devices, you already have a medium for that and you can also leave
+serdev_device_add() alone. You're comparing the entire name here - what if
+someone sets device's ID to some value and the name will be "WCN7850.2"?
+
+You could also drop the serdev_id field from struct serdev_device. For matching
+you could even reuse the of_device_id from the device driver.
+
+Which also makes me think that maybe we should finally think about a generic,
+fwnode-based device driver matching in the driver model...
+
+Bartosz
+
+>  static int serdev_device_match(struct device *dev, const struct device_driver *drv)
 >  {
->  	struct device_node *node;
+>  	if (!is_serdev_device(dev))
+>  		return 0;
+>
+> -	/* TODO: platform matching */
+> +	if (serdev_driver_match_device(dev, drv))
+> +		return 1;
+> +
+>  	if (acpi_driver_match_device(dev, drv))
+>  		return 1;
+>
+> diff --git a/include/linux/mod_devicetable.h b/include/linux/mod_devicetable.h
+> index 6077972e8b45..70c54c4bedba 100644
+> --- a/include/linux/mod_devicetable.h
+> +++ b/include/linux/mod_devicetable.h
+> @@ -976,4 +976,11 @@ struct coreboot_device_id {
+>  	kernel_ulong_t driver_data;
+>  };
+>
+> +#define SERDEV_NAME_SIZE 32
+> +
+> +struct serdev_device_id {
+> +	const char name[SERDEV_NAME_SIZE];
+> +	kernel_ulong_t driver_data;
+> +};
+> +
+>  #endif /* LINUX_MOD_DEVICETABLE_H */
 > diff --git a/include/linux/serdev.h b/include/linux/serdev.h
-> index ffc6eb13f44b..fa235c92592a 100644
+> index ecde0ad3e248..aca92e0ee6e7 100644
 > --- a/include/linux/serdev.h
 > +++ b/include/linux/serdev.h
-> @@ -337,4 +337,13 @@ static inline bool serdev_acpi_get_uart_resource(struct acpi_resource *ares,
->  }
->  #endif /* CONFIG_ACPI */
+> @@ -39,6 +39,7 @@ struct serdev_device_ops {
+>   * @ops:	Device operations.
+>   * @write_comp	Completion used by serdev_device_write() internally
+>   * @write_lock	Lock to serialize access when writing data
+> + * @id:		serdev device ID entry
+>   */
+>  struct serdev_device {
+>  	struct device dev;
+> @@ -47,6 +48,7 @@ struct serdev_device {
+>  	const struct serdev_device_ops *ops;
+>  	struct completion write_comp;
+>  	struct mutex write_lock;
+> +	const struct serdev_device_id *id;
+>  };
 >
-> +#ifdef CONFIG_OF
-
-You can make it independent from OF if you base the code on fwnode like:
-
-struct serdev_controller find_serdev_controller_by_fwnode(struct
-fwnode_handle *fwnode);
-{
-	struct device *dev = bus_find_device_by_fwnode(&serdev_bus_type, node);
-
-	(...)
-}
-
-Users can always convert OF nodes to firmware nodes.
-
-Bart
-
-> +struct serdev_controller *of_find_serdev_controller_by_node(struct device_node *node);
-> +#else
-> +struct serdev_controller *of_find_serdev_controller_by_node(struct device_node *node)
-> +{
-> +	return NULL;
-> +}
-> +#endif /* CONFIG_OF */
+>  #define to_serdev_device(d) container_of_const(d, struct serdev_device, dev)
+> @@ -55,11 +57,13 @@ struct serdev_device {
+>   * struct serdev_device_driver - serdev slave device driver
+>   * @driver:	serdev device drivers should initialize name field of this
+>   *		structure.
+> + * @id_table:	serdev device ID table
+>   * @probe:	binds this driver to a serdev device.
+>   * @remove:	unbinds this driver from the serdev device.
+>   */
+>  struct serdev_device_driver {
+>  	struct device_driver driver;
+> +	const struct serdev_device_id *id_table;
+>  	int	(*probe)(struct serdev_device *);
+>  	void	(*remove)(struct serdev_device *);
+>  };
+> diff --git a/scripts/mod/devicetable-offsets.c b/scripts/mod/devicetable-offsets.c
+> index d3d00e85edf7..c1bfa8eddc4d 100644
+> --- a/scripts/mod/devicetable-offsets.c
+> +++ b/scripts/mod/devicetable-offsets.c
+> @@ -280,5 +280,8 @@ int main(void)
+>  	DEVID(coreboot_device_id);
+>  	DEVID_FIELD(coreboot_device_id, tag);
+>
+> +	DEVID(serdev_device_id);
+> +	DEVID_FIELD(serdev_device_id, name);
 > +
->  #endif /*_LINUX_SERDEV_H */
+>  	return 0;
+>  }
 >
 > --
 > 2.48.1
+>
 >
 >
