@@ -1,183 +1,116 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.13])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-lf1-f43.google.com (mail-lf1-f43.google.com [209.85.167.43])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 126B3318152;
-	Thu, 27 Nov 2025 12:11:45 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.13
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5531028314A
+	for <platform-driver-x86@vger.kernel.org>; Thu, 27 Nov 2025 13:47:25 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.43
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1764245508; cv=none; b=dHQ8ZfDeA4sxwgfh2JdIzUrkTG/r+cTnauR0vJITgCuErGSosklI+pMbzKncmeRDvd3wmsotmz094rqRgRAxT2o9yk0in4njwrQpraBkW8iuFUhxon//Sfmwh3Qib3xC62hW4vmUyz+VNTyLmsG4gxBcKnoLrx2ras2d2TTfGoo=
+	t=1764251247; cv=none; b=Ps/2o2EccEbxAKmxntf+1vTtyQ4AOczQvE+TSGmdJAnp/zRPNMQW4UfdbvYAtDwHURXjgk9WVuFRdtWPaov6DzdU5jzT28+ZT9eMUoyQGY/9Xhctmyfom/JjX5aWZaXouZzTG/ipAoPjgI8NV9OHco1zklMjDUAa5meVZxVml3M=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1764245508; c=relaxed/simple;
-	bh=LXDgqcysQchAQtxKVAqF+yisHSm+vLWY9SjQmRJty18=;
-	h=From:Date:To:cc:Subject:In-Reply-To:Message-ID:References:
-	 MIME-Version:Content-Type; b=Cvz5BeBGIYKR2CXYu3eSYoihDpQxuzui5EHLnoQAbhyFLpud3VB3Ym4YpX4aaKeXwEEn1ZJvMy3BCbRXNFIaLM07iOamyIcEDQU86p2nuBbcOtr1KrFJCylSJjAK8T0ZPCKd30XJ5Wa6W7Hm8RdWkyBU8YHworfqDZLTqHgMjEY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=pass smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=XUYQwiT4; arc=none smtp.client-ip=198.175.65.13
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.intel.com
+	s=arc-20240116; t=1764251247; c=relaxed/simple;
+	bh=27yd/l6012XaQH/g8Ixa+D6cMcVdfn8d9/IVn2JOVCI=;
+	h=From:In-Reply-To:MIME-Version:References:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=Dm6KFixQnxaDe7yxwqjmykf6mBkIQR9d4wX5UZotPqN6NhdEtv0uUah8EDjMYHykr0qwkRaDeCmQeTsYF6wUPnKm1b/Ge8y7hackMtqnlQNLakToamx+bqk0DiFwLt9qi8KiGLA5ZC84QuYBctlzdWSZesUjd1VM32RBhILhIRA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl; spf=none smtp.mailfrom=bgdev.pl; dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b=Mqi7wt8o; arc=none smtp.client-ip=209.85.167.43
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=bgdev.pl
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="XUYQwiT4"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1764245506; x=1795781506;
-  h=from:date:to:cc:subject:in-reply-to:message-id:
-   references:mime-version;
-  bh=LXDgqcysQchAQtxKVAqF+yisHSm+vLWY9SjQmRJty18=;
-  b=XUYQwiT4P/J87e6Lu3UoK46XayhegsnTIVCraivdSYjjhskvquoCDTSj
-   zagYgu+7+Q9qII21D9AJFMqPC5TdPrOA+GJ6cSSK5qbslSBqxU054P4QP
-   RfUTXkn1PfuSP3SaNtoMvbl9s5fOwTSmK/J6dpwt8xMG0gmKCBKc7FyRe
-   y267Ce6RyVPfBPXE4TdBzFmAU1mpnMt/7SDZxrOwiJknVuYL1+Qo1kHOk
-   5Hvmz2ij3B7N9YRyI+ik6RDXdg+p6eWNhbKB5jDXyQEOe6N7QO8KmcLAl
-   VXuhO5+kvi/SJmyniH8tUeYr9ZPU1SDG+7icqXuCmClsUq7ppmAxMs44H
-   Q==;
-X-CSE-ConnectionGUID: G6Zl0whlQEa+/i3U7SDDzg==
-X-CSE-MsgGUID: XF1sDFSCR4OhZ/WHacLAjA==
-X-IronPort-AV: E=McAfee;i="6800,10657,11625"; a="77394340"
-X-IronPort-AV: E=Sophos;i="6.20,231,1758610800"; 
-   d="scan'208";a="77394340"
-Received: from orviesa009.jf.intel.com ([10.64.159.149])
-  by orvoesa105.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 27 Nov 2025 04:11:45 -0800
-X-CSE-ConnectionGUID: iQmZRf1GSi6r28Y4bJlMNg==
-X-CSE-MsgGUID: VTDfkI1zS0642kzT7VHGiw==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.20,231,1758610800"; 
-   d="scan'208";a="193021648"
-Received: from ijarvine-mobl1.ger.corp.intel.com (HELO localhost) ([10.245.244.42])
-  by orviesa009-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 27 Nov 2025 04:11:41 -0800
-From: =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
-Date: Thu, 27 Nov 2025 14:11:36 +0200 (EET)
-To: Armin Wolf <W_Armin@gmx.de>, "Derek J. Clark" <derekjohn.clark@gmail.com>
-cc: Len Brown <lenb@kernel.org>, "Rafael J . Wysocki" <rafael@kernel.org>, 
-    Jonathan Corbet <corbet@lwn.net>, Mario Limonciello <superm1@kernel.org>, 
-    Zhixin Zhang <zhangzx36@lenovo.com>, Mia Shao <shaohz1@lenovo.com>, 
-    Mark Pearson <mpearson-lenovo@squebb.ca>, 
-    "Pierre-Loup A . Griffais" <pgriffais@valvesoftware.com>, 
-    Kurt Borja <kuurtb@gmail.com>, platform-driver-x86@vger.kernel.org, 
-    linux-doc@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>, 
-    linux-acpi@vger.kernel.org
-Subject: Re: [PATCH v3 1/3] acpi: platform_profile - Add max-power profile
- option
-In-Reply-To: <e801bef5-158e-4422-9c23-93dc2210f734@gmx.de>
-Message-ID: <bf61e05b-74ac-28de-d8ea-4a909d6e5fb8@linux.intel.com>
-References: <20251113212639.459896-1-derekjohn.clark@gmail.com> <20251113212639.459896-2-derekjohn.clark@gmail.com> <7050cadc-9cb7-4f9b-8393-247bddb56965@gmx.de> <CFD27662-0044-4AF3-8E66-65229324CECF@gmail.com> <e801bef5-158e-4422-9c23-93dc2210f734@gmx.de>
+	dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b="Mqi7wt8o"
+Received: by mail-lf1-f43.google.com with SMTP id 2adb3069b0e04-5959b2f3fc9so883753e87.2
+        for <platform-driver-x86@vger.kernel.org>; Thu, 27 Nov 2025 05:47:25 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=bgdev-pl.20230601.gappssmtp.com; s=20230601; t=1764251243; x=1764856043; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:references
+         :mime-version:in-reply-to:from:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=27yd/l6012XaQH/g8Ixa+D6cMcVdfn8d9/IVn2JOVCI=;
+        b=Mqi7wt8oNrr+2+e4XNhQBFHjbbJlNk2prXtZZdeiWDpubDuSNPjtqVuc6fFI7gQTNW
+         vlhDRF8Ikv07ZhquMqzkqlRbUqUBvhhznOF0yf+VzMxYMKnOLOCd6txDRXhkTGnAwFfn
+         9q/AFxkcnrl71n9rhoZuu/08jdMh/RFnG0Cl63G8H+FblB9m8ujHai9LfGR+WngJj2Dd
+         TjMLWQA1KgMyWpako1U/QHpPDjlp8y4V15h620/0cvt4YsBCRXEygHzP/Lbbhj6NIsYB
+         DsZitljR6hDpZnbRH3U5UlgO5Ha0pWvDDCPBmOt/Z+Dos4I7Or/n2AinAFdgzuAfJvVY
+         hiLQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1764251243; x=1764856043;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:references
+         :mime-version:in-reply-to:from:x-gm-gg:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=27yd/l6012XaQH/g8Ixa+D6cMcVdfn8d9/IVn2JOVCI=;
+        b=s40Oq/QBaBUC3BQZAXQk+Q9F8hDTFOV4BqtZMWXxytOsx3mOCvhG/jbMPFoc0tSLNN
+         3pVtF/5PB+ur7NbUzPkW2kZi1xQSvK8IOAfkC16S1dVT3t6qA5W/wKECK1pIK9nQw3/L
+         i2uMNrBYRddU+j3e9DoBLbDHyXY036aL44vc73Zp+ZcoGfwbb+Uttnt2mYzvKJTKXM1f
+         Lp0t6uK6KNkz3pyQQif0uImaALMLqvVSavg6Vs0wqgVqm8h3ZlxBhVveck2lNaueifuw
+         cY5DDEaP5DPPY7aTJ+M22M0QG+lUk7OfI7JHGEEOm6Wg/rKcr/CAvYrThNI5FLkRhiZP
+         qh8A==
+X-Forwarded-Encrypted: i=1; AJvYcCWls1uEuHrlU+t2z19ceDewfnU+fdK51kJmLKoALVI9Hzmc13HpFz5K+yS0cxBQ59nlbmzqjrG60qjdlenAScYmgt4g@vger.kernel.org
+X-Gm-Message-State: AOJu0Yww0VdfIFd3gM8UutffmGXu5WbUqo3GxXTLOuUVIeYbVD0RhQ+n
+	VUvKwSaPsDWaZh7nnG3QiqjFfhBc8fMtQbQoMHn9AS1s1qyHYUPBzRVZZyy2Q0SWh2Fvy0I6Hdq
+	89q8oCRSaMn5tcpgh7DPqChipT7XCtIoFkgivTnvz/A==
+X-Gm-Gg: ASbGnct817dZQVEd95cDOxCwfn9vgUtvUC0SVZgAXkNJ5Mb9240ittXqjWbyN99ez2T
+	qxy59kSCLP8EEWL+E2kObRRgKgVBXuxcpXnBecRFCLozmCBQZ+np28P70Rs4LiSJJoo8LTXGRIA
+	H7lDHPWrx3bvBiGrGrPjPhO+R1b8toYeloEs/tWJvTom9CmQpEuGZFL72CE4wre66RPsR+f+V3Y
+	6kO6WUAj7MPYrLKJgpRpvjIvOINQmVXwS1MMPrrtXL1rLt3GL7WVG67P1uuhhNd3wBlkzjkXKzZ
+	bHd9w9qbBQTkHqiTa/mlKRZ7OjA=
+X-Google-Smtp-Source: AGHT+IHIByvzTN9XhwquV0dZ7CSOzT2wtZW2aRAexw9uGkGjWx9uXnsQQnkc0lHm6G8MnJ63g3o+AbKWIIpqZ/ETI6E=
+X-Received: by 2002:a05:6512:2354:b0:594:36b3:d1f9 with SMTP id
+ 2adb3069b0e04-596a3ec4221mr8118131e87.25.1764251243268; Thu, 27 Nov 2025
+ 05:47:23 -0800 (PST)
+Received: from 969154062570 named unknown by gmailapi.google.com with
+ HTTPREST; Thu, 27 Nov 2025 08:47:21 -0500
+Received: from 969154062570 named unknown by gmailapi.google.com with
+ HTTPREST; Thu, 27 Nov 2025 08:47:21 -0500
+From: Bartosz Golaszewski <brgl@bgdev.pl>
+In-Reply-To: <20251125-pci-m2-e-v2-1-32826de07cc5@oss.qualcomm.com>
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+References: <20251125-pci-m2-e-v2-0-32826de07cc5@oss.qualcomm.com> <20251125-pci-m2-e-v2-1-32826de07cc5@oss.qualcomm.com>
+Date: Thu, 27 Nov 2025 08:47:21 -0500
+X-Gm-Features: AWmQ_blvAAM2uq578ciPVCG4M9rg3fVM1qAGhRvJTTtDZYm9qOnYz1mkG_i5iVY
+Message-ID: <CAMRc=Me+mWYaa4ZKTmch-NtuvP-2ifbY1Zwi9E9KMyUgFSt0fA@mail.gmail.com>
+Subject: Re: [PATCH v2 01/10] serdev: Convert to_serdev_*() helpers to macros
+ and use container_of_const()
+To: manivannan.sadhasivam@oss.qualcomm.com
+Cc: Rob Herring <robh@kernel.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, 
+	Jiri Slaby <jirislaby@kernel.org>, Nathan Chancellor <nathan@kernel.org>, 
+	Nicolas Schier <nicolas.schier@linux.dev>, Hans de Goede <hansg@kernel.org>, 
+	=?UTF-8?Q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>, 
+	Mark Pearson <mpearson-lenovo@squebb.ca>, "Derek J. Clark" <derekjohn.clark@gmail.com>, 
+	Manivannan Sadhasivam <mani@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, 
+	Marcel Holtmann <marcel@holtmann.org>, Luiz Augusto von Dentz <luiz.dentz@gmail.com>, 
+	Bartosz Golaszewski <brgl@bgdev.pl>, 
+	Manivannan Sadhasivam via B4 Relay <devnull+manivannan.sadhasivam.oss.qualcomm.com@kernel.org>, 
+	linux-serial@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	linux-kbuild@vger.kernel.org, platform-driver-x86@vger.kernel.org, 
+	linux-pci@vger.kernel.org, devicetree@vger.kernel.org, 
+	linux-arm-msm@vger.kernel.org, linux-bluetooth@vger.kernel.org, 
+	linux-pm@vger.kernel.org, Stephan Gerhold <stephan.gerhold@linaro.org>, 
+	Dmitry Baryshkov <dmitry.baryshkov@oss.qualcomm.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Mon, 17 Nov 2025, Armin Wolf wrote:
+On Tue, 25 Nov 2025 15:45:05 +0100, Manivannan Sadhasivam via B4 Relay
+<devnull+manivannan.sadhasivam.oss.qualcomm.com@kernel.org> said:
+> From: Manivannan Sadhasivam <manivannan.sadhasivam@oss.qualcomm.com>
+>
+> If these helpers receive the 'const struct device' pointer, then the cons=
+t
+> qualifier will get dropped, leading to below warning:
+>
+> warning: passing argument 1 of =E2=80=98to_serdev_device_driver=E2=80=99 =
+discards 'const'
+> qualifier from pointer target type [-Wdiscarded-qualifiers]
+>
+> This is not an issue as of now, but with the future commits adding serdev
+> device based driver matching, this warning will get triggered. Hence,
+> convert these helpers to macros so that the qualifier get preserved and
+> also use container_of_const() as container_of() is deprecated.
+>
+> Signed-off-by: Manivannan Sadhasivam <manivannan.sadhasivam@oss.qualcomm.=
+com>
+> ---
 
-> Am 16.11.25 um 20:01 schrieb Derek J. Clark:
-> 
-> > On November 16, 2025 8:13:17 AM PST, Armin Wolf <W_Armin@gmx.de> wrote:
-> > > Am 13.11.25 um 22:26 schrieb Derek J. Clark:
-> > > 
-> > > > Some devices, namely Lenovo Legion devices, have an "extreme" mode where
-> > > > power draw is at the maximum limit of the cooling hardware. Add a new
-> > > > "max-power" platform profile to properly reflect this operating mode.
-> > > > 
-> > > > Reviewed-by: Mario Limonciello (AMD) <superm1@kernel.org>
-> > > > Acked-by: Rafael J. Wysocki (Intel) <rafael@kernel.org>
-> > > > Signed-off-by: Derek J. Clark <derekjohn.clark@gmail.com>
-> > > > ---
-> > > >    Documentation/ABI/testing/sysfs-class-platform-profile | 2 ++
-> > > >    drivers/acpi/platform_profile.c                        | 1 +
-> > > >    include/linux/platform_profile.h                       | 1 +
-> > > >    3 files changed, 4 insertions(+)
-> > > > 
-> > > > diff --git a/Documentation/ABI/testing/sysfs-class-platform-profile
-> > > > b/Documentation/ABI/testing/sysfs-class-platform-profile
-> > > > index dc72adfb830a..fcab26894ec3 100644
-> > > > --- a/Documentation/ABI/testing/sysfs-class-platform-profile
-> > > > +++ b/Documentation/ABI/testing/sysfs-class-platform-profile
-> > > > @@ -23,6 +23,8 @@ Description:	This file contains a space-separated
-> > > > list of profiles supported
-> > > >    					power consumption with a
-> > > > slight bias
-> > > >    					towards performance
-> > > >    		performance		High performance operation
-> > > > +		max-power		Higher performance operation that may
-> > > > exceed
-> > > > +					internal battery draw limits when on
-> > > > AC power
-> > > I am not sure if it is a good idea to allow platform_profile_cycle() to
-> > > cycle into this
-> > > new max-power profile. The system could encounter a brownout if it is
-> > > currently operating
-> > > on battery power when selecting max-power.
-> > > 
-> > > Maybe we should prevent platform_profile_cylce() from selecting max-power?
-> > At least for Lenovo devices unplugging AC will automatically throttle the
-> > ppt values to roughly equivalent to performance. It will look at a different
-> > WMI data block for the values when switched, so there's no risk for cycling
-> > in this case. This seems like smart hardware design, but we've certainly
-> > seen bad hardware design so the concern is warranted. Perhaps it is worth
-> > visiting if another vendor implements it differently? That being said, what
-> > you're describing would match up with how the physical profile selection
-> > button works, so it would align with consumer expectation. I have no strong
-> > feelings either way, but I'm a little concerned about meeting the merge
-> > window as this series fixes a pretty disruptive bug affecting 6.17 users.
-> > 
-> > Regards,
-> > - Derek
-> > 
-> If the physical platform selection button does not automatically select the
-> max-power profile under Windows, then we should copy this behavior i think.
-> The changes necessary for that are fairly small, basically you only have to
-> extend the handling of PLATFORM_PROFILE_CUSTOM inside platform_profile_cycle()
-> to also include the max-power profile. So i would prefer if we modify
-> platform_profile_cycle() now has doing this later might be seen as a
-> regression.
-
-Derek,
-
-Any comments on this?
-
-I'd very much prefer to take this series in this cycle but this comment 
-seems unresolved and has userspace visible impact so may bind us 
-irrevocably to certain behavior.
-
---
- i.
-
-> 
-> Thanks,
-> Armin Wolf
-> 
-> > > Other than that:
-> > > Reviewed-by: Armin Wolf <W_Armin@gmx.de>
-> > > 
-> > > >    		custom			Driver defined custom profile
-> > > >    		====================
-> > > > ========================================
-> > > >    diff --git a/drivers/acpi/platform_profile.c
-> > > > b/drivers/acpi/platform_profile.c
-> > > > index b43f4459a4f6..aa1dce05121b 100644
-> > > > --- a/drivers/acpi/platform_profile.c
-> > > > +++ b/drivers/acpi/platform_profile.c
-> > > > @@ -37,6 +37,7 @@ static const char * const profile_names[] = {
-> > > >    	[PLATFORM_PROFILE_BALANCED] = "balanced",
-> > > >    	[PLATFORM_PROFILE_BALANCED_PERFORMANCE] =
-> > > > "balanced-performance",
-> > > >    	[PLATFORM_PROFILE_PERFORMANCE] = "performance",
-> > > > +	[PLATFORM_PROFILE_MAX_POWER] = "max-power",
-> > > >    	[PLATFORM_PROFILE_CUSTOM] = "custom",
-> > > >    };
-> > > >    static_assert(ARRAY_SIZE(profile_names) == PLATFORM_PROFILE_LAST);
-> > > > diff --git a/include/linux/platform_profile.h
-> > > > b/include/linux/platform_profile.h
-> > > > index a299225ab92e..855b28340e95 100644
-> > > > --- a/include/linux/platform_profile.h
-> > > > +++ b/include/linux/platform_profile.h
-> > > > @@ -24,6 +24,7 @@ enum platform_profile_option {
-> > > >    	PLATFORM_PROFILE_BALANCED,
-> > > >    	PLATFORM_PROFILE_BALANCED_PERFORMANCE,
-> > > >    	PLATFORM_PROFILE_PERFORMANCE,
-> > > > +	PLATFORM_PROFILE_MAX_POWER,
-> > > >    	PLATFORM_PROFILE_CUSTOM,
-> > > >    	PLATFORM_PROFILE_LAST, /*must always be last */
-> > > >    };
-> > 
-> 
+Reviewed-by: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
