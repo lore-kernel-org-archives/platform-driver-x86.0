@@ -1,345 +1,244 @@
-Received: from mout.gmx.net (mout.gmx.net [212.227.15.15])
+Received: from mx0b-0064b401.pphosted.com (mx0b-0064b401.pphosted.com [205.220.178.238])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 212FD23ABA7;
-	Thu, 27 Nov 2025 23:53:07 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=212.227.15.15
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1764287592; cv=none; b=TFt4rsroNd1NwEl/R8GmoY4MAs5JMAq5tmxrM5Im4SNpuONNEk56H1pF6eKn97bciY5MOrrdNkPOvmXnSXkR4012ZuCqAGHCvA5b4aEdnThFNV0tkUMTR2SbkiEQOg+v4v2e3SahrAf4uOsC/Y360oa9B/5GZIsBiFaXyt2zcYQ=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1764287592; c=relaxed/simple;
-	bh=Pzd5CdLCzueTjM9HaCRB+hjzWcatsgYas/5VNPfLIbk=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=pgF32nJtM0uIGbHc1G8bVK5ja4vTjZwVsxkXZAdvEByrBkOhU2DrIBgzjsN/twUdNEgWYSVI+8JoycngDNpd16snk7KSAbT27S+Ye0JY3wXxab3/lS0qCyKofgdmVfHzWWfCVPZTvTPzjI5h0YjGdJi47fhY8hX8jaxUgxdHjQE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gmx.de; spf=pass smtp.mailfrom=gmx.de; dkim=pass (2048-bit key) header.d=gmx.de header.i=w_armin@gmx.de header.b=b4FpeI0G; arc=none smtp.client-ip=212.227.15.15
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gmx.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmx.de
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A75E9288C81;
+	Fri, 28 Nov 2025 03:36:00 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=205.220.178.238
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1764300963; cv=fail; b=LIWuFbX/HJDmAKn+pYhglAX3XkX+wg6ZudEbcw7sq7ECnEoy5838iEG0FslWBvu9/Iv0BElNSPYcHHl2246n533LzXnztFxq52ALFKxJh5Fv50E5t4w9tj+4ys4yr4DvVreXoBd+TfHNxUjXgHibZRWzj8tjFt0R+deCEEZuR+8=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1764300963; c=relaxed/simple;
+	bh=jB0U2gulf4sAtjFakoCLX+Se3u+OoKaNSyw4mZ0L1r0=;
+	h=From:To:Cc:Subject:Date:Message-ID:Content-Type:MIME-Version; b=a1jsrVGFqRx5VPJYZplWMT9j257IQwJlZb9aoWW2PrUuLEMMKTUrNdn8Wr8/KL9qKqMMhv9Y4/J84bpqGQ3o5sCttspla1XsCN2HPNGf44H4JoAJEzn7dCh6Kkr9cy4Icuq1+/qwB2qBmnmOmrmejMQmDLcABZOFnu/gKxP2InY=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=windriver.com; spf=pass smtp.mailfrom=windriver.com; dkim=pass (2048-bit key) header.d=windriver.com header.i=@windriver.com header.b=d1V5jVur; arc=fail smtp.client-ip=205.220.178.238
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=windriver.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=windriver.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmx.de header.i=w_armin@gmx.de header.b="b4FpeI0G"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=gmx.de;
-	s=s31663417; t=1764287573; x=1764892373; i=w_armin@gmx.de;
-	bh=XH4L8vJd3Pgpkz5I5/5j7PvlshtX9zs5NurfTRvHPhc=;
-	h=X-UI-Sender-Class:Message-ID:Date:MIME-Version:Subject:To:Cc:
-	 References:From:In-Reply-To:Content-Type:
-	 Content-Transfer-Encoding:cc:content-transfer-encoding:
-	 content-type:date:from:message-id:mime-version:reply-to:subject:
-	 to;
-	b=b4FpeI0GdvrvQyS6l8P2lezwX5ckkF2u6ginTiTt37wA7LMBOLrv99J5QRQLj1Uy
-	 k1kVy5Oj/I91rUSmge7JLM0p7+0n7z0nRY2slB89KPqIRcz+63YNBV35lZhUHtDLB
-	 B0nbHZV4srXiazlOU6gZFpZ1WpHHAuSZ4RXeQAxk8h7uY+8/nAMeMUCIGQTPClhJO
-	 wMYI5wzlQv37qSl4LjiG9hg+6LS1+0vOOp/LxW2pTEoJ9jrOncwKijg9H613lgbvv
-	 FsjHxgfNDzoUFgPlljajXeDpxQnNclRPEhc1GV2uswTdLk+EEhQVGFwyDBEoXm6j5
-	 Fhl5h/Gw7BO8d+uanQ==
-X-UI-Sender-Class: 724b4f7f-cbec-4199-ad4e-598c01a50d3a
-Received: from [192.168.0.69] ([93.202.247.91]) by mail.gmx.net (mrgmx005
- [212.227.17.190]) with ESMTPSA (Nemesis) id 1N7QxL-1wA7ku0qHF-0156NT; Fri, 28
- Nov 2025 00:52:53 +0100
-Message-ID: <a2ef1a42-6c06-4186-83ef-e13414fb818a@gmx.de>
-Date: Fri, 28 Nov 2025 00:52:47 +0100
+	dkim=pass (2048-bit key) header.d=windriver.com header.i=@windriver.com header.b="d1V5jVur"
+Received: from pps.filterd (m0250811.ppops.net [127.0.0.1])
+	by mx0a-0064b401.pphosted.com (8.18.1.11/8.18.1.11) with ESMTP id 5AS04eXe4144873;
+	Fri, 28 Nov 2025 03:35:46 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=windriver.com;
+	 h=cc:content-transfer-encoding:content-type:date:from
+	:message-id:mime-version:subject:to; s=PPS06212021; bh=wiq8OL2Mu
+	JPbR3z5xc8KdDK8MoPfVbmf9q0xlH2bMME=; b=d1V5jVur1+Q9Gf82bayeioVYH
+	gG0mA/fLODbxCSUhfZQNYO2/EtgDC4Cl7j8o9gwAzRaAesRSF2jJvP7KpyvxZkcy
+	uTEDgm7T6w44m1M2rWYzqJQf7UuJ2xMlXeqPI485vPEXjoVjolzv3gHPYoIYD43w
+	nBpTv4NCC855ujpDwKbSvx2ZzKVvhe+wZxQhcVsfF/Mz28d7fKtwAq0W2q6OnYSg
+	l3bYSkWckJW/R34mamTnfjSJFeTdH8ZRJ9Vp34/izzZ3j+L03sgl7lxx2ollPKnL
+	Dzm1SgKsQ0vNAvTc29bvyE21VH27wZaZYVrMCYfRFRrd8shmQTuAHqFstM0xA==
+Received: from ph8pr06cu001.outbound.protection.outlook.com (mail-westus3azon11012043.outbound.protection.outlook.com [40.107.209.43])
+	by mx0a-0064b401.pphosted.com (PPS) with ESMTPS id 4ak2d0xj85-1
+	(version=TLSv1.3 cipher=TLS_AES_256_GCM_SHA384 bits=256 verify=NOT);
+	Fri, 28 Nov 2025 03:35:45 +0000 (GMT)
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=dSTD5lIP8l+fQNITuVkcc0dEf2RNbaH2+OBEySJmdvZCFb6/WLAAyDLp2gGgHn92BJ6TUHeavviFiy93yMJrqs3z90Po7WGC8YvrMbYUNBVnBhVjTXiwbjuD+y9FGiPl6hRiRQdRKhalwrxIJrLYiK3EHIMOa0bHFOIUmCk52aZhXlbgVeBkiN4KNxt2tLedC3S66wCNHlSc4qxIVVCk/GXEFDS0VoR1sHxBvE4JA8RlgQl5afjYvPBV2LD95KdPL4o+TSmB7gaecby5tsB2ehwmGRHXK6kyqI4pkYdiEp/6FidBmRRJztArDRXAicU8lH1QwUkjSsC99Dzynm+cVQ==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=wiq8OL2MuJPbR3z5xc8KdDK8MoPfVbmf9q0xlH2bMME=;
+ b=FVeY1p+QbjT1bCLwm+VscBPH6lS6jBqfXNaTF49MVvs+JqhL1ZPhyQaivVIOaBl8Ee4ibuv84EcTcJ4812eIhfC8J5BMFn9vFqRc5RvUryem3mt02wOEf3hNcCbjM+45/yL4PW+UzCFFCrMiEjXX7FoKBG6s4F6W8iFEBaBtLWz9SxVz3jgeVxUY1qQSOnPxNxgyXlxELhuRXYVXIONXX6Gb31v5sgJQgdVPCoIhcF7EV6jAyQqu1rA+ysIalEoxXsVptZbM52CSg6j1aDEeoGh/n5hCwteUWgYWyx2rynqPvcjMg0ViJAlDS8M7c2ESTDr/vv6sI2DYoDMpDazwWw==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=windriver.com; dmarc=pass action=none
+ header.from=windriver.com; dkim=pass header.d=windriver.com; arc=none
+Received: from PH0PR11MB5061.namprd11.prod.outlook.com (2603:10b6:510:3c::21)
+ by PH7PR11MB6379.namprd11.prod.outlook.com (2603:10b6:510:1f9::12) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.9366.14; Fri, 28 Nov
+ 2025 03:35:42 +0000
+Received: from PH0PR11MB5061.namprd11.prod.outlook.com
+ ([fe80::2e23:904:be29:f4e9]) by PH0PR11MB5061.namprd11.prod.outlook.com
+ ([fe80::2e23:904:be29:f4e9%6]) with mapi id 15.20.9366.012; Fri, 28 Nov 2025
+ 03:35:42 +0000
+From: yongxin.liu@windriver.com
+To: platform-driver-x86@vger.kernel.org, david.e.box@linux.intel.com,
+        ilpo.jarvinen@linux.intel.com
+Cc: linux-kernel@vger.kernel.org, andrew@lunn.ch, kuba@kernel.org,
+        stable@vger.kernel.org
+Subject: [PATCH v3] platform/x86: intel_pmc_ipc: fix ACPI buffer memory leak
+Date: Fri, 28 Nov 2025 11:32:55 +0800
+Message-ID: <20251128033254.3247322-2-yongxin.liu@windriver.com>
+X-Mailer: git-send-email 2.46.2
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-ClientProxiedBy: SG2P153CA0052.APCP153.PROD.OUTLOOK.COM (2603:1096:4:c6::21)
+ To PH0PR11MB5061.namprd11.prod.outlook.com (2603:10b6:510:3c::21)
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH RFC RESEND 0/8] thermal: core: Allow setting the parent
- device of thermal zone/cooling devices
-To: "Rafael J. Wysocki" <rafael@kernel.org>
-Cc: Daniel Lezcano <daniel.lezcano@linaro.org>,
- Zhang Rui <rui.zhang@intel.com>, Lukasz Luba <lukasz.luba@arm.com>,
- Len Brown <lenb@kernel.org>, Jonathan Corbet <corbet@lwn.net>,
- Ido Schimmel <idosch@nvidia.com>, Petr Machata <petrm@nvidia.com>,
- linux-pm@vger.kernel.org, linux-kernel@vger.kernel.org,
- etnaviv@lists.freedesktop.org, dri-devel@lists.freedesktop.org,
- linux-tegra@vger.kernel.org, linux-acpi@vger.kernel.org,
- linux-doc@vger.kernel.org, netdev@vger.kernel.org,
- linux-wireless@vger.kernel.org, ath10k@lists.infradead.org,
- ath11k@lists.infradead.org, linux-arm-kernel@lists.infradead.org,
- linux-mediatek@lists.infradead.org, platform-driver-x86@vger.kernel.org,
- linux-pci@vger.kernel.org, imx@lists.linux.dev,
- linux-renesas-soc@vger.kernel.org
-References: <20251120-thermal-device-v1-0-bbdad594d57a@gmx.de>
- <CAJZ5v0jOPrBcozzJMsB1eE12MuZRWDAV-+=jfrhJbi=S0p5J9Q@mail.gmail.com>
- <5f3ef610-4024-4ca0-a934-2649f5d25f40@gmx.de>
- <CAJZ5v0hdqY-=O5Ai6c5qjMr_pRFc+SDyV1QruM=ZeHH9Z=guSg@mail.gmail.com>
- <cf86344b-d9f1-4d3c-9fe9-deeb4ade9304@gmx.de>
- <CAJZ5v0iH8jkqJaSNtqaTHxt_305DeiEq0AqQCo4Eho5hMKkU4Q@mail.gmail.com>
-Content-Language: en-US
-From: Armin Wolf <W_Armin@gmx.de>
-In-Reply-To: <CAJZ5v0iH8jkqJaSNtqaTHxt_305DeiEq0AqQCo4Eho5hMKkU4Q@mail.gmail.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: quoted-printable
-X-Provags-ID: V03:K1:D6Q5pBOhq7j59tqn32AlaC7zNQxXY6IiWSrkHAM6P3gKJlbj6J6
- uTxSkHZHP7Jrt8LS6M31wBcEB910kNJD6DwnAUq6LpINXEEK63L9fmub3s1O8nU0ES+qChr
- O97vvWnAxbDtjA1N9QuygQJuv/Ks2U1ByUKDErVnqBHvBEKF+SSKyPhz2w1uTWQeFAg5N+n
- SOOeHBClzmSGO95ACdnBg==
-X-Spam-Flag: NO
-UI-OutboundReport: notjunk:1;M01:P0:MOyX3V+VNO8=;uFxfjrT42UHTZLKfvOt2xMNe9rm
- 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
- 8RvIZEcv5bZF5XQUwLjDfTq6sEgl3
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: PH0PR11MB5061:EE_|PH7PR11MB6379:EE_
+X-MS-Office365-Filtering-Correlation-Id: 5a29ec29-902a-40fd-c742-08de2e2f3529
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam:
+	BCL:0;ARA:13230040|52116014|376014|1800799024|366016|38350700014;
+X-Microsoft-Antispam-Message-Info:
+	=?us-ascii?Q?KDukw3wcmCCsofPJxUxYVAPH8y0Cihr5urUGT31Vi3FM9nUUE4nRfVQ3wHGm?=
+ =?us-ascii?Q?AdDak3vp+PU9jDPbYhffgDXQmX/R949z/TvHnOqbzN3yN0oIfanvNJkdOQfY?=
+ =?us-ascii?Q?IsoDU2gC+pVE9sJ9GOO/GvD2HNKvwlOCPKtuBI6fcFGB2eqxrlE9DwPocbnH?=
+ =?us-ascii?Q?lSvyzyJAzZ0fyk0VCkXKIXEAIp6fNTwhvmzbOle+/rLRnsSYFxBMr03gKfxD?=
+ =?us-ascii?Q?Y+UAx1pgSK5LliAKpCFdtF7atzZR8E8Oo3qarx0ONq57Ricm4a0nHbaFDYuQ?=
+ =?us-ascii?Q?hltiRsTbL6AncyC4nptdzGcxOTdic21Tkh+Ds35Xw/aa8WfvCijzILdU/obK?=
+ =?us-ascii?Q?/LA/QER66UIPA6sHZg3qN59tyCGqNIQYhIEHYXTKtqZi46LKeOUSUA/Q8c/d?=
+ =?us-ascii?Q?yTHiaMcyMNph2bOIsiqoLqFZ8zwBfUlWxjHRNKuIxInvN76SwVJkW8A/fnV3?=
+ =?us-ascii?Q?YT+ltGKsmUfAYm5+86B0eY4IVYBoBR4DQKCm541p9pDCC5hpBUMGNL0hE0rw?=
+ =?us-ascii?Q?4dw5P8pX65skYwqiByF9Xk4Nou/jBuoB0OkJTtyP8IKtnDZnZFIvbPqyZRy4?=
+ =?us-ascii?Q?YLcs6nLnVbOOnQLRnaa0llLw68/1HUxBWGae5JXvR0BvdEJuqdkAPBmHUSpN?=
+ =?us-ascii?Q?3uH8WQ6REm2umABFH1fxLu8uJcDYNanuyKfR8nhgfam9T0AFDHVVzBCdG3Op?=
+ =?us-ascii?Q?x9NGCI45r84lRQlb6Ls8T6rwCa3gk6ZTnSjNKdDF9YZjjF/1p/2nI5TeL0Pi?=
+ =?us-ascii?Q?4b+qHy3RG4CLmvNZsOdmWi/iLxo98e+abNxaf4KHzj0bgX3dFMx/SSUKSRGQ?=
+ =?us-ascii?Q?o5j+XtCVcHJgdMvobtlpEDVB0258phmKSmVN0aG36cYqeBJFGK95sntN7/15?=
+ =?us-ascii?Q?tILtCP2we1auxRpb9JrT582BVdNreeZ/mgMgWMe0cLzVPnHSOogLyoRykqX9?=
+ =?us-ascii?Q?qduNAfmBQtc5LNTUBYdWownz0r9MybsBjIzXw23e6AQPvzq0acgKZDG1V9K0?=
+ =?us-ascii?Q?J+eUM/4+K2zUQi2eiQkvo7COJ+SMrpfw4/2EjuzHpEyA8EM91cjOth85hwe/?=
+ =?us-ascii?Q?uxhdVaQWJTfDsjV6ujZKW22DgF94dtSuuGFUodg1TWpJMuApfOPZfdJ6KhXu?=
+ =?us-ascii?Q?MQ+ejwKR4egXJ+N40jCZ0zW+pr859e2bccrA90d7l7yEuZG7vDOuPJirFAA+?=
+ =?us-ascii?Q?sbpi1rmIJbT74sFASw6z/ffAhCvHsLkdTvFSQ+1TlwlO+jIN7qLgJKbOkCDF?=
+ =?us-ascii?Q?+vaNLsVqIB1YnPFNMZDUppQoZiu4D2kBSGWGLsOrdinq4VVYmBH5ir7P1j4q?=
+ =?us-ascii?Q?5xmxZocblUvpeS8kJq1QCg4I7sA8wSby3yQF3iTYGvNmM8MgStGvjhflJg0E?=
+ =?us-ascii?Q?oLNK0DzQLk26xE6lYZOna2hLEGfMZtnTgiCfJ5KDSiEdRXdAcSXQ7Wdgd0JF?=
+ =?us-ascii?Q?u4GRHzuTmTRM2+mPqpiYOwfVzsmbITNRWORSsWED+wcE+cp02kaxgjwfbMEk?=
+ =?us-ascii?Q?QxOAJ/eNd5+q3GUV5Y4PfNlnSUk22+1IeZgY?=
+X-Forefront-Antispam-Report:
+	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:PH0PR11MB5061.namprd11.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(52116014)(376014)(1800799024)(366016)(38350700014);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0:
+	=?us-ascii?Q?diBIEDxzWHWbZ8c6aNOEPrIgUKuDSVUh+bBDaYpj6FPLZGtKtne5L8zE2N36?=
+ =?us-ascii?Q?Yd6yhmk0qL6W0mm0O6H7C/lbtaZCax4PM7fO0Qz4mr+ItqFxcpG4LN21O/NY?=
+ =?us-ascii?Q?oqXE759aEfnrpcPIRPelfXXmi1NY8AvqdtR+YJV17BpoZe9HhSVmYQtlx8pk?=
+ =?us-ascii?Q?p0SZQ0HM48BLTRRkg+GjBYZG3C/zv9j9qYuJ/LImSoVTMmab71U12trD4Qlr?=
+ =?us-ascii?Q?GIYcFzHsHzHfPiv3LF9nwnTItv0VuFNTaspUxORdZvQiaAQN27jssIHxcDpb?=
+ =?us-ascii?Q?ASBwiCJy03soEoWhnSUm/7A5f48pm7oSay+Me/0bkL/ez10wzmydiAeoUp6m?=
+ =?us-ascii?Q?/WeuGXOi+t1r9YQ5ShfKP9x2xraLOgqDqg37+qTkVessrWwdIPTCeL8DAWqF?=
+ =?us-ascii?Q?vRchsOzDDHpx+vNQowClnfTp70z+b0dXrUzbPtT8NRPCM2H8GEDkqYxzvBwl?=
+ =?us-ascii?Q?+eoQ6bQc44ipLhIyvpbnI807REP1MjwLnfkF8WelZk+ikAHhIaFqmO3QWldQ?=
+ =?us-ascii?Q?QG6nmTHkOYqNBCsE/p2mEDwvR3aSb0i2nDDlbPLu/TOJkEn/wDxIYbhcd0Cp?=
+ =?us-ascii?Q?b3rHSoZCP3gBl1EFYJHkvH/J/epm3nfpjgUT8DYjfPbz+nJECWxi5dkmzfU3?=
+ =?us-ascii?Q?aIlhonQvDKDDgk23wbKqdN71nQ+ReTrgqIpS9B9J/p7rUrOWFDvPenk2WhFk?=
+ =?us-ascii?Q?E4L5IezMqp7NH9WjgHWNTM2NoRTILK9QAELEGnj/OoZmZAlWS/mzs2SBG56Z?=
+ =?us-ascii?Q?9QmaZF0APeH3Oml1p3sWzcVWzAzi9xPFNBD5099TOKZckdCZ3AMcYScZUkeH?=
+ =?us-ascii?Q?ERXQ0H8+1EntnMQejJOdtvQh3bOi/MO+hpIc3JiMaE8IXjkxyK5DB+NNf6gZ?=
+ =?us-ascii?Q?LfM/lU3oSnaSvCvOnGz3MBGl5SnoM56U8UMCGSPasiPzgoSeOZrY2Aqu6wml?=
+ =?us-ascii?Q?iZEJR56roOoV9vEris/pohV/63ngrKZlM/KdRKu9NeqKNCUCsiB4pnX3Iwgo?=
+ =?us-ascii?Q?oxoyolv4OO8Yj6c9+n6Y9ak3oNg1L2r8gYS1Y4lu/hyuIqtjq5LWiQhtLtr5?=
+ =?us-ascii?Q?C4zTxp3tFHgPtgKzV/37jsrNcnQsluFrSlGIbeXbXV15JiBJcN8jalPWd/XZ?=
+ =?us-ascii?Q?0bf0h+j/8FuAW4AFvG2o1GFUu38DWfVTY+THaaWahAredzHHzh7+hAV+HsT8?=
+ =?us-ascii?Q?Zxt+fR3CN1todHGyVT5xIKFt7enHD6ofaSlXaWkF4sFrR2h2x3poHiIsUQ6Y?=
+ =?us-ascii?Q?C/cLk85kKnZGGuriTBxB7uNDsqcJ+yHlqUHuSCqoaTLhxL5c5qPK0TbkqfHl?=
+ =?us-ascii?Q?t1ZoUABPX8hcnmT4vTOoimiNGoI1YwHjlIldhv3IzZHxieJgEP6jzEf0BQzx?=
+ =?us-ascii?Q?U0fob/R6F7vhlG0xkfnOd3gDJgYzgNWo5eQ3BbWju4/RYvzOnHTeW6yyOiXM?=
+ =?us-ascii?Q?7bgufeXdZ3nbYq0/jfQLxtzlaIqUDa1MBlCQjPj89DmPyzHTCwQXhKV0iWE2?=
+ =?us-ascii?Q?jG+1k8KauQr5tx5EJgw5am3ZGcjEZS245dpvnZCjUZzishf3t5aIP+fpq2t/?=
+ =?us-ascii?Q?v+FVvr/UUqW+cUVVpmN0RjeBxGx+rNC5VIFuPJAGMrGmXaLnjF3lrsdy5rJA?=
+ =?us-ascii?Q?kA=3D=3D?=
+X-OriginatorOrg: windriver.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 5a29ec29-902a-40fd-c742-08de2e2f3529
+X-MS-Exchange-CrossTenant-AuthSource: PH0PR11MB5061.namprd11.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 28 Nov 2025 03:35:42.5025
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 8ddb2873-a1ad-4a18-ae4e-4644631433be
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: HFLozyOHJfA3rSpQ8dBDJBhdUEHitDU+3hqn3aQYrgAoLnvswmOP/F309tSghKbmTwivmyCtVJ4a2kHRtR8vzF8gTN6FbNLF0x6QW5nf0hk=
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: PH7PR11MB6379
+X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUxMTI4MDAyNCBTYWx0ZWRfXzuM6l9eZxqXo
+ t45SjNjnn9+PI5y2ZJWMuFiospSh5VoB7D8IAMlyAqMmJ0u+mhzWgdpkzwgScY7Fsjwcbl5dVLQ
+ I8CJp7qhMsgQZbeMNNfwY8Y1Iqm6S+PU1DrEFVWWwJesdOIEyvYGzoZQS81IPH5KtpLvL4/T/QY
+ dJcjKzIQfk9OGnf0sYBLLBwaS0lYOLNKVDiIn3aoI0YNE0gTMaAQL0V7/7VBLDs74X2wA2hBggz
+ qbLoHfaL8OUbWJO+h3pFs4zIuZJhwoSE2L6IM2w7w311HPQE2TVbbZuKmpwaPo+bJAFu9AuUo64
+ 6Ij8EKzU8ZIywwqGI9RgQzcRkJBWxLIZMW1si8/9FVI/yQj+I/nGj1YoZ3zabmr+TCOu+Jg5Nhn
+ /ng+uerWYeXPoa0yOZZxdpfyjVNI3A==
+X-Authority-Analysis: v=2.4 cv=JcCxbEKV c=1 sm=1 tr=0 ts=69291891 cx=c_pps
+ a=HCsVV3dTzGSkd59CkKbNuQ==:117 a=6eWqkTHjU83fiwn7nKZWdM+Sl24=:19
+ a=z/mQ4Ysz8XfWz/Q5cLBRGdckG28=:19 a=lCpzRmAYbLLaTzLvsPZ7Mbvzbb8=:19
+ a=xqWC_Br6kY4A:10 a=6UeiqGixMTsA:10 a=VkNPw1HP01LnGYTKEx00:22
+ a=t7CeM3EgAAAA:8 a=VwQbUJbxAAAA:8 a=GLtnJ_i9NkFmi9gY_58A:9
+ a=FdTzh2GWekK77mhwV6Dw:22
+X-Proofpoint-GUID: DHnITfYPsyeuVshH3mKGcC-pr5RArxQt
+X-Proofpoint-ORIG-GUID: DHnITfYPsyeuVshH3mKGcC-pr5RArxQt
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1121,Hydra:6.1.9,FMLib:17.12.100.49
+ definitions=2025-11-25_02,2025-11-27_02,2025-10-01_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
+ malwarescore=0 priorityscore=1501 lowpriorityscore=0 suspectscore=0
+ adultscore=0 spamscore=0 phishscore=0 clxscore=1015 bulkscore=0
+ impostorscore=0 classifier=typeunknown authscore=0 authtc= authcc=
+ route=outbound adjust=0 reason=mlx scancount=1 engine=8.22.0-2510240001
+ definitions=main-2511280024
 
-Am 27.11.25 um 23:14 schrieb Rafael J. Wysocki:
+From: Yongxin Liu <yongxin.liu@windriver.com>
 
-> On Thu, Nov 27, 2025 at 9:29=E2=80=AFPM Armin Wolf <W_Armin@gmx.de> wrot=
-e:
->> Am 27.11.25 um 19:22 schrieb Rafael J. Wysocki:
->>
->>> On Sat, Nov 22, 2025 at 3:18=E2=80=AFPM Armin Wolf <W_Armin@gmx.de> wr=
-ote:
->>>> Am 21.11.25 um 21:35 schrieb Rafael J. Wysocki:
->>>>
->>>>> On Thu, Nov 20, 2025 at 4:41=E2=80=AFAM Armin Wolf <W_Armin@gmx.de> =
-wrote:
->>> [...]
->>>
->>>>>> ---
->>>>>> Armin Wolf (8):
->>>>>>          thermal: core: Allow setting the parent device of cooling =
-devices
->>>>>>          thermal: core: Set parent device in thermal_of_cooling_dev=
-ice_register()
->>>>>>          ACPI: processor: Stop creating "device" sysfs link
->>>>> That link is not to the cooling devices' parent, but to the ACPI
->>>>> device object (a struct acpi_device) that corresponds to the parent.
->>>>> The parent of the cooling device should be the processor device, not
->>>>> its ACPI companion, so I'm not sure why there would be a conflict.
->>>>    From the perspective of the Linux device core, a parent device doe=
-s not have to be
->>>> a "physical" device. In the case of the ACPI processor driver, the AC=
-PI device is used,
->>>> so the cooling device registered by said driver belongs to the ACPI d=
-evice.
->>> Well, that's a problem.  A struct acpi_device should not be a parent
->>> of anything other than a struct acpi_device.
->> Understandable, in this case we should indeed use the the CPU device, e=
-specially since the fwnode
->> associated with it already points to the correct ACPI processor object =
-(at least on my machine).
->>
->>>> I agree that using the Linux processor device would make more sense, =
-but this will require
->>>> changes inside the ACPI processor driver.
->>> So be it.
->> OK.
->>
->>>> As for the "device" symlink: The conflict would be a naming conflict,=
- as both "device" symlinks
->>>> (the one created by the ACPI processor driver and the one created by =
-the device core) will
->>>> be created in the same directory (which is the directory of the cooli=
-ng device).
->>> I see.
->>>
->>> But why is the new symlink needed in the first place?  If the device
->>> has a parent, it will appear under that parent in /sys/devices/, won't
->>> it?
->>>
->>> Currently, all of the thermal class devices appear under
->>> /sys/devices/virtual/thermal/ because they have no parents and they
->>> all get a class parent kobject under /sys/devices/virtual/, as that's
->>> what get_device_parent() does.
->>>
->>> If they have real parents, they will appear under those parents, so
->>> why will the parents need to be pointed to additionally?
->> The "device" smylink is a comfort feature provided by the device core i=
-tself to allow user space
->> application to traverse the device tree from bottom to top, like a doub=
-le-linked list. We cannot
->> disable the creation of this symlink, nor should we.
-> I think you mean device_add_class_symlinks(), but that's just for
-> class devices.  Of course, thermal devices are class devices, so
-> they'll get those links if they get parents.  Fair enough.
->
->>> BTW, this means that the layout of /sys/devices/ will change when
->>> thermal devices get real parents.  I'm not sure if this is a problem,
->>> but certainly something to note.
->> I know, most applications likely use /sys/class/thermal/, so they are n=
-ot impacted by this. I will
->> note this in the cover letter of the next revision.
->>
->>>>>>          ACPI: fan: Stop creating "device" sysfs link
->>>>>>          ACPI: video: Stop creating "device" sysfs link
->>>>> Analogously in the above two cases AFAICS.
->>>>>
->>>>> The parent of a cooling device should be a "physical" device object,
->>>>> like a platform device or a PCI device or similar, not a struct
->>>>> acpi_device (which in fact is not a device even).
->>>>    From the perspective of the Linux device core, a ACPI device is a =
-perfectly valid device.
->>> The driver core is irrelevant here.
->>>
->>> As I said before, a struct acpi_device object should not be a parent
->>> of anything other than a struct acpi_device object.  Those things are
->>> not devices and they cannot be used for representing PM dependencies,
->>> for example.
->>>
->>>> I agree that using a platform device or PCI device is better, but thi=
-s already happens
->>>> inside the ACPI fan driver (platform device).
->>> So it should not happen there.
->> I meant that the ACPI fan driver already uses the platform device as th=
-e parent device of the
->> cooling device, so the ACPI device is only used for interacting with th=
-e ACPI control methods
->> (and registering sysfs attributes i think).
-> OK
->
->>>> Only the ACPI video driver created a "device" sysfs link that points =
-to the ACPI device
->>>> instead of the PCI device. I just noticed that i accidentally changed=
- this by using the
->>>> PCI device as the parent device for the cooling device.
->>>>
->>>> If you want then we can keep this change.
->>> The PCI device should be its parent.
->> Alright, i will note this in the patch description.
->>
->>>>>>          thermal: core: Set parent device in thermal_cooling_device=
-_register()
->>>>>>          ACPI: thermal: Stop creating "device" sysfs link
->>>>> And this link is to the struct acpi_device representing the thermal =
-zone itself.
->>>> Correct, the ACPI thermal zone driver is a ACPI driver, meaning that =
-he binds to
->>>> ACPI devices. Because of this all (thermal zone) devices created by a=
-n instance of
->>>> said driver are descendants of the ACPI device said instance is bound=
- to.
->>>>
->>>> We can of course convert the ACPI thermal zone driver into a platform=
- driver, but
->>>> this would be a separate patch series.
->>> If you want parents, this needs to be done first, but I'm still not
->>> sure what the parent of a thermal zone would represent.
->>>
->>> In the ACPI case it is kind of easy - it would be the (platform)
->>> device corresponding to a given ThermalZone object in the ACPI
->>> namespace - but it only has a practical meaning if that device has a
->>> specific parent.  For example, if the corresponding ThermalZone object
->>> is present in the \_SB scope, the presence of the thermal zone parent
->>> won't provide any additional information.
->> To the device core it will, as the platform device will need to be susp=
-ended
->> after the thermal zone device has been suspended, among other things.
-> Let's set suspend aside for now, I think I've explained my viewpoint
-> on this enough elsewhere.
->
-Agreed.
+The intel_pmc_ipc() function uses ACPI_ALLOCATE_BUFFER to allocate memory
+for the ACPI evaluation result but never frees it, causing a 192-byte
+memory leak on each call.
 
->>> Unfortunately, the language in the specification isn't particularly
->>> helpful here: "Thermal zone objects should appear in the namespace
->>> under the portion of the system that comprises the thermal zone. For
->>> example, a thermal zone that is isolated to a docking station should
->>> be defined within the scope of the docking station device."  To me
->>> "the portion of the system" is not too meaningful unless it is just
->>> one device without children.  That's why _TZD has been added AFAICS.
->> I think you are confusing the parent device of the ThermalZone ACPI dev=
-ice
->> with the parent device of the struct thermal_zone_device.
-> No, I'm not.
->
->> I begin to wonder if mentioning the ACPI ThermalZone device together wi=
-th the
->> struct thermal_zone_device was a bad idea on my side xd.
-> Maybe.
->
->>>>>>          thermal: core: Allow setting the parent device of thermal =
-zone devices
->>>>> I'm not sure if this is a good idea, at least until it is clear what
->>>>> the role of a thermal zone parent device should be.
->>>> Take a look at my explanation with the Intel Wifi driver.
->>> I did and I think that you want the parent to be a device somehow
->>> associated with the thermal zone, but how exactly?  What should that
->>> be in the Wifi driver case, the PCI device or something else?
->>>
->>> And what if the thermal zone affects multiple devices?  Which of them
->>> (if any) would be its parent?  And would it be consistent with the
->>> ACPI case described above?
->>>
->>> All of that needs consideration IMV.
->> I agree, but there is a difference between "this struct thermal_zone_de=
-vice depends on
->> device X to be operational" and "this thermal zone affects device X, de=
-vice Y and device Z".
-> Yes, there is.
->
->> This patch series exclusively deals with telling the driver core that "=
-this struct thermal_zone_device
->> depends on device X to be operational".
-> Maybe let's take care of cooling devices first and get back to this late=
-r?
->
-Agreed.
+This leak is triggered during network interface initialization when the
+stmmac driver calls intel_mac_finish() -> intel_pmc_ipc().
+
+  unreferenced object 0xffff96a848d6ea80 (size 192):
+    comm "dhcpcd", pid 541, jiffies 4294684345
+    hex dump (first 32 bytes):
+      04 00 00 00 05 00 00 00 98 ea d6 48 a8 96 ff ff  ...........H....
+      00 00 00 00 00 00 00 00 01 00 00 00 00 00 00 00  ................
+    backtrace (crc b1564374):
+      kmemleak_alloc+0x2d/0x40
+      __kmalloc_noprof+0x2fa/0x730
+      acpi_ut_initialize_buffer+0x83/0xc0
+      acpi_evaluate_object+0x29a/0x2f0
+      intel_pmc_ipc+0xfd/0x170
+      intel_mac_finish+0x168/0x230
+      stmmac_mac_finish+0x3d/0x50
+      phylink_major_config+0x22b/0x5b0
+      phylink_mac_initial_config.constprop.0+0xf1/0x1b0
+      phylink_start+0x8e/0x210
+      __stmmac_open+0x12c/0x2b0
+      stmmac_open+0x23c/0x380
+      __dev_open+0x11d/0x2c0
+      __dev_change_flags+0x1d2/0x250
+      netif_change_flags+0x2b/0x70
+      dev_change_flags+0x40/0xb0
+
+Add __free(kfree) for ACPI object to properly release the allocated buffer.
+
+Cc: stable@vger.kernel.org
+Fixes: 7e2f7e25f6ff ("arch: x86: add IPC mailbox accessor function and add SoC register access")
+Signed-off-by: Yongxin Liu <yongxin.liu@windriver.com>
+---
+V2->V3:
+Use __free(kfree) instead of goto and kfree();
+
+V1->V2:
+Cover all potential paths for kfree();
+---
+ include/linux/platform_data/x86/intel_pmc_ipc.h | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
+
+diff --git a/include/linux/platform_data/x86/intel_pmc_ipc.h b/include/linux/platform_data/x86/intel_pmc_ipc.h
+index 1d34435b7001..cf0b78048b0e 100644
+--- a/include/linux/platform_data/x86/intel_pmc_ipc.h
++++ b/include/linux/platform_data/x86/intel_pmc_ipc.h
+@@ -9,6 +9,7 @@
+ #ifndef INTEL_PMC_IPC_H
+ #define INTEL_PMC_IPC_H
+ #include <linux/acpi.h>
++#include <linux/cleanup.h>
+ 
+ #define IPC_SOC_REGISTER_ACCESS			0xAA
+ #define IPC_SOC_SUB_CMD_READ			0x00
+@@ -48,7 +49,7 @@ static inline int intel_pmc_ipc(struct pmc_ipc_cmd *ipc_cmd, struct pmc_ipc_rbuf
+ 		{.type = ACPI_TYPE_INTEGER,},
+ 	};
+ 	struct acpi_object_list arg_list = { PMC_IPCS_PARAM_COUNT, params };
+-	union acpi_object *obj;
++	union acpi_object *obj __free(kfree) = NULL;
+ 	int status;
+ 
+ 	if (!ipc_cmd || !rbuf)
+-- 
+2.46.2
 
