@@ -1,244 +1,483 @@
-Received: from mx0b-0064b401.pphosted.com (mx0b-0064b401.pphosted.com [205.220.178.238])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.14])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A75E9288C81;
-	Fri, 28 Nov 2025 03:36:00 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=205.220.178.238
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1764300963; cv=fail; b=LIWuFbX/HJDmAKn+pYhglAX3XkX+wg6ZudEbcw7sq7ECnEoy5838iEG0FslWBvu9/Iv0BElNSPYcHHl2246n533LzXnztFxq52ALFKxJh5Fv50E5t4w9tj+4ys4yr4DvVreXoBd+TfHNxUjXgHibZRWzj8tjFt0R+deCEEZuR+8=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1764300963; c=relaxed/simple;
-	bh=jB0U2gulf4sAtjFakoCLX+Se3u+OoKaNSyw4mZ0L1r0=;
-	h=From:To:Cc:Subject:Date:Message-ID:Content-Type:MIME-Version; b=a1jsrVGFqRx5VPJYZplWMT9j257IQwJlZb9aoWW2PrUuLEMMKTUrNdn8Wr8/KL9qKqMMhv9Y4/J84bpqGQ3o5sCttspla1XsCN2HPNGf44H4JoAJEzn7dCh6Kkr9cy4Icuq1+/qwB2qBmnmOmrmejMQmDLcABZOFnu/gKxP2InY=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=windriver.com; spf=pass smtp.mailfrom=windriver.com; dkim=pass (2048-bit key) header.d=windriver.com header.i=@windriver.com header.b=d1V5jVur; arc=fail smtp.client-ip=205.220.178.238
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=windriver.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=windriver.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D62DF2FBDF4
+	for <platform-driver-x86@vger.kernel.org>; Fri, 28 Nov 2025 09:48:53 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.14
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1764323336; cv=none; b=FGq8ULhu2ZFABzrUfDizJOtFGgyqBUz8OymBt6Ft5Vp2DbaJNJ9+9O5qRDWWmnOXkqREP6XlAj87WAfkYstzPz0E+ejIPCRuohuy0U/W6V3ycY34ZNrqph503il6SDDJnxheDFShezSMY1z14kfaZO2nadOwVLkD/VgNOJpAi2g=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1764323336; c=relaxed/simple;
+	bh=GoCl+Msx7ZzHz5XDAsDgXnL25FQToQhG+X8SFz6rB0U=;
+	h=From:Date:To:cc:Subject:In-Reply-To:Message-ID:References:
+	 MIME-Version:Content-Type; b=g3pvQsAItgUaIDUI6WrIrB+4PZVrnUoC8C2QZt79Mn35s9vkScgpiTsIWpO+XKJhV1JmL6eHMPgZoHxRq2W2uJgZuuKyIOwzr0F6yUHE9Qhuhgllg3i9YSYqRQJarniMU1Q0VbqcOWMkVV9y4o6VRBgCiYP6IuJtwa3hsgploA0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=pass smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=ILYLVWi9; arc=none smtp.client-ip=198.175.65.14
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=windriver.com header.i=@windriver.com header.b="d1V5jVur"
-Received: from pps.filterd (m0250811.ppops.net [127.0.0.1])
-	by mx0a-0064b401.pphosted.com (8.18.1.11/8.18.1.11) with ESMTP id 5AS04eXe4144873;
-	Fri, 28 Nov 2025 03:35:46 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=windriver.com;
-	 h=cc:content-transfer-encoding:content-type:date:from
-	:message-id:mime-version:subject:to; s=PPS06212021; bh=wiq8OL2Mu
-	JPbR3z5xc8KdDK8MoPfVbmf9q0xlH2bMME=; b=d1V5jVur1+Q9Gf82bayeioVYH
-	gG0mA/fLODbxCSUhfZQNYO2/EtgDC4Cl7j8o9gwAzRaAesRSF2jJvP7KpyvxZkcy
-	uTEDgm7T6w44m1M2rWYzqJQf7UuJ2xMlXeqPI485vPEXjoVjolzv3gHPYoIYD43w
-	nBpTv4NCC855ujpDwKbSvx2ZzKVvhe+wZxQhcVsfF/Mz28d7fKtwAq0W2q6OnYSg
-	l3bYSkWckJW/R34mamTnfjSJFeTdH8ZRJ9Vp34/izzZ3j+L03sgl7lxx2ollPKnL
-	Dzm1SgKsQ0vNAvTc29bvyE21VH27wZaZYVrMCYfRFRrd8shmQTuAHqFstM0xA==
-Received: from ph8pr06cu001.outbound.protection.outlook.com (mail-westus3azon11012043.outbound.protection.outlook.com [40.107.209.43])
-	by mx0a-0064b401.pphosted.com (PPS) with ESMTPS id 4ak2d0xj85-1
-	(version=TLSv1.3 cipher=TLS_AES_256_GCM_SHA384 bits=256 verify=NOT);
-	Fri, 28 Nov 2025 03:35:45 +0000 (GMT)
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=dSTD5lIP8l+fQNITuVkcc0dEf2RNbaH2+OBEySJmdvZCFb6/WLAAyDLp2gGgHn92BJ6TUHeavviFiy93yMJrqs3z90Po7WGC8YvrMbYUNBVnBhVjTXiwbjuD+y9FGiPl6hRiRQdRKhalwrxIJrLYiK3EHIMOa0bHFOIUmCk52aZhXlbgVeBkiN4KNxt2tLedC3S66wCNHlSc4qxIVVCk/GXEFDS0VoR1sHxBvE4JA8RlgQl5afjYvPBV2LD95KdPL4o+TSmB7gaecby5tsB2ehwmGRHXK6kyqI4pkYdiEp/6FidBmRRJztArDRXAicU8lH1QwUkjSsC99Dzynm+cVQ==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=wiq8OL2MuJPbR3z5xc8KdDK8MoPfVbmf9q0xlH2bMME=;
- b=FVeY1p+QbjT1bCLwm+VscBPH6lS6jBqfXNaTF49MVvs+JqhL1ZPhyQaivVIOaBl8Ee4ibuv84EcTcJ4812eIhfC8J5BMFn9vFqRc5RvUryem3mt02wOEf3hNcCbjM+45/yL4PW+UzCFFCrMiEjXX7FoKBG6s4F6W8iFEBaBtLWz9SxVz3jgeVxUY1qQSOnPxNxgyXlxELhuRXYVXIONXX6Gb31v5sgJQgdVPCoIhcF7EV6jAyQqu1rA+ysIalEoxXsVptZbM52CSg6j1aDEeoGh/n5hCwteUWgYWyx2rynqPvcjMg0ViJAlDS8M7c2ESTDr/vv6sI2DYoDMpDazwWw==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=windriver.com; dmarc=pass action=none
- header.from=windriver.com; dkim=pass header.d=windriver.com; arc=none
-Received: from PH0PR11MB5061.namprd11.prod.outlook.com (2603:10b6:510:3c::21)
- by PH7PR11MB6379.namprd11.prod.outlook.com (2603:10b6:510:1f9::12) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.9366.14; Fri, 28 Nov
- 2025 03:35:42 +0000
-Received: from PH0PR11MB5061.namprd11.prod.outlook.com
- ([fe80::2e23:904:be29:f4e9]) by PH0PR11MB5061.namprd11.prod.outlook.com
- ([fe80::2e23:904:be29:f4e9%6]) with mapi id 15.20.9366.012; Fri, 28 Nov 2025
- 03:35:42 +0000
-From: yongxin.liu@windriver.com
-To: platform-driver-x86@vger.kernel.org, david.e.box@linux.intel.com,
-        ilpo.jarvinen@linux.intel.com
-Cc: linux-kernel@vger.kernel.org, andrew@lunn.ch, kuba@kernel.org,
-        stable@vger.kernel.org
-Subject: [PATCH v3] platform/x86: intel_pmc_ipc: fix ACPI buffer memory leak
-Date: Fri, 28 Nov 2025 11:32:55 +0800
-Message-ID: <20251128033254.3247322-2-yongxin.liu@windriver.com>
-X-Mailer: git-send-email 2.46.2
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-ClientProxiedBy: SG2P153CA0052.APCP153.PROD.OUTLOOK.COM (2603:1096:4:c6::21)
- To PH0PR11MB5061.namprd11.prod.outlook.com (2603:10b6:510:3c::21)
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="ILYLVWi9"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1764323334; x=1795859334;
+  h=from:date:to:cc:subject:in-reply-to:message-id:
+   references:mime-version;
+  bh=GoCl+Msx7ZzHz5XDAsDgXnL25FQToQhG+X8SFz6rB0U=;
+  b=ILYLVWi9S1fPmfe0KAtz31qwl01LwVDgiSd8jNO4LdVrpHyrFxcnRUK9
+   MByj8Xcdi9RGToQ6j8IEWWbOZIiWGawKwx9O0kLEppF6FTwy/nhYQTmwH
+   5uG0LFTWI+RuFdM88Ha4dVpvDGowtCDDpiCvyS2CAYMA21du6/DLy7KRP
+   S+5bE7iR/tN1RZcZPg0t2aSHj+b8x1y1LsjQeCFo4faRTMOVY+Z0m32QC
+   P8DIU2sYMA7RvIXWyNDYndp2Xv88yjUJGwpzDgEY3H14UY8dJMym4lafi
+   W66/MStztlkVeuY2SMbhXsUEEG4mMAKsWM6vUoWYrhaQxX3CiIiwpTiHD
+   A==;
+X-CSE-ConnectionGUID: 2/EV8kbeS3iWhHvW+QzAQA==
+X-CSE-MsgGUID: f1oSnGBUTnGybGNAfNeBHw==
+X-IronPort-AV: E=McAfee;i="6800,10657,11626"; a="70220793"
+X-IronPort-AV: E=Sophos;i="6.20,232,1758610800"; 
+   d="scan'208";a="70220793"
+Received: from fmviesa008.fm.intel.com ([10.60.135.148])
+  by orvoesa106.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 28 Nov 2025 01:48:53 -0800
+X-CSE-ConnectionGUID: MuWXwKf+R0GAFRuG5YGShg==
+X-CSE-MsgGUID: h2DtB6NHSvG93VGRjzpuDA==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.20,232,1758610800"; 
+   d="scan'208";a="193643636"
+Received: from ijarvine-mobl1.ger.corp.intel.com (HELO localhost) ([10.245.244.229])
+  by fmviesa008-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 28 Nov 2025 01:48:50 -0800
+From: =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
+Date: Fri, 28 Nov 2025 11:48:46 +0200 (EET)
+To: Shyam Sundar S K <Shyam-sundar.S-k@amd.com>
+cc: Hans de Goede <hansg@kernel.org>, platform-driver-x86@vger.kernel.org, 
+    Patil.Reddy@amd.com, Mario Limonciello <superm1@kernel.org>, 
+    Yijun Shen <Yijun.Shen@Dell.com>
+Subject: Re: [PATCH v4 3/3] platform/x86/amd/pmf: Use ring buffer to store
+ custom BIOS input values
+In-Reply-To: <80e375e1-0b6b-4c2e-bc5c-7137eb35a8bb@amd.com>
+Message-ID: <0741ec72-f948-a499-fa8c-042dff826871@linux.intel.com>
+References: <20251119085813.546813-1-Shyam-sundar.S-k@amd.com> <20251119085813.546813-3-Shyam-sundar.S-k@amd.com> <9f30b9ff-5f27-68c3-9bc1-4bed9fe0bd89@linux.intel.com> <80e375e1-0b6b-4c2e-bc5c-7137eb35a8bb@amd.com>
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: PH0PR11MB5061:EE_|PH7PR11MB6379:EE_
-X-MS-Office365-Filtering-Correlation-Id: 5a29ec29-902a-40fd-c742-08de2e2f3529
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam:
-	BCL:0;ARA:13230040|52116014|376014|1800799024|366016|38350700014;
-X-Microsoft-Antispam-Message-Info:
-	=?us-ascii?Q?KDukw3wcmCCsofPJxUxYVAPH8y0Cihr5urUGT31Vi3FM9nUUE4nRfVQ3wHGm?=
- =?us-ascii?Q?AdDak3vp+PU9jDPbYhffgDXQmX/R949z/TvHnOqbzN3yN0oIfanvNJkdOQfY?=
- =?us-ascii?Q?IsoDU2gC+pVE9sJ9GOO/GvD2HNKvwlOCPKtuBI6fcFGB2eqxrlE9DwPocbnH?=
- =?us-ascii?Q?lSvyzyJAzZ0fyk0VCkXKIXEAIp6fNTwhvmzbOle+/rLRnsSYFxBMr03gKfxD?=
- =?us-ascii?Q?Y+UAx1pgSK5LliAKpCFdtF7atzZR8E8Oo3qarx0ONq57Ricm4a0nHbaFDYuQ?=
- =?us-ascii?Q?hltiRsTbL6AncyC4nptdzGcxOTdic21Tkh+Ds35Xw/aa8WfvCijzILdU/obK?=
- =?us-ascii?Q?/LA/QER66UIPA6sHZg3qN59tyCGqNIQYhIEHYXTKtqZi46LKeOUSUA/Q8c/d?=
- =?us-ascii?Q?yTHiaMcyMNph2bOIsiqoLqFZ8zwBfUlWxjHRNKuIxInvN76SwVJkW8A/fnV3?=
- =?us-ascii?Q?YT+ltGKsmUfAYm5+86B0eY4IVYBoBR4DQKCm541p9pDCC5hpBUMGNL0hE0rw?=
- =?us-ascii?Q?4dw5P8pX65skYwqiByF9Xk4Nou/jBuoB0OkJTtyP8IKtnDZnZFIvbPqyZRy4?=
- =?us-ascii?Q?YLcs6nLnVbOOnQLRnaa0llLw68/1HUxBWGae5JXvR0BvdEJuqdkAPBmHUSpN?=
- =?us-ascii?Q?3uH8WQ6REm2umABFH1fxLu8uJcDYNanuyKfR8nhgfam9T0AFDHVVzBCdG3Op?=
- =?us-ascii?Q?x9NGCI45r84lRQlb6Ls8T6rwCa3gk6ZTnSjNKdDF9YZjjF/1p/2nI5TeL0Pi?=
- =?us-ascii?Q?4b+qHy3RG4CLmvNZsOdmWi/iLxo98e+abNxaf4KHzj0bgX3dFMx/SSUKSRGQ?=
- =?us-ascii?Q?o5j+XtCVcHJgdMvobtlpEDVB0258phmKSmVN0aG36cYqeBJFGK95sntN7/15?=
- =?us-ascii?Q?tILtCP2we1auxRpb9JrT582BVdNreeZ/mgMgWMe0cLzVPnHSOogLyoRykqX9?=
- =?us-ascii?Q?qduNAfmBQtc5LNTUBYdWownz0r9MybsBjIzXw23e6AQPvzq0acgKZDG1V9K0?=
- =?us-ascii?Q?J+eUM/4+K2zUQi2eiQkvo7COJ+SMrpfw4/2EjuzHpEyA8EM91cjOth85hwe/?=
- =?us-ascii?Q?uxhdVaQWJTfDsjV6ujZKW22DgF94dtSuuGFUodg1TWpJMuApfOPZfdJ6KhXu?=
- =?us-ascii?Q?MQ+ejwKR4egXJ+N40jCZ0zW+pr859e2bccrA90d7l7yEuZG7vDOuPJirFAA+?=
- =?us-ascii?Q?sbpi1rmIJbT74sFASw6z/ffAhCvHsLkdTvFSQ+1TlwlO+jIN7qLgJKbOkCDF?=
- =?us-ascii?Q?+vaNLsVqIB1YnPFNMZDUppQoZiu4D2kBSGWGLsOrdinq4VVYmBH5ir7P1j4q?=
- =?us-ascii?Q?5xmxZocblUvpeS8kJq1QCg4I7sA8wSby3yQF3iTYGvNmM8MgStGvjhflJg0E?=
- =?us-ascii?Q?oLNK0DzQLk26xE6lYZOna2hLEGfMZtnTgiCfJ5KDSiEdRXdAcSXQ7Wdgd0JF?=
- =?us-ascii?Q?u4GRHzuTmTRM2+mPqpiYOwfVzsmbITNRWORSsWED+wcE+cp02kaxgjwfbMEk?=
- =?us-ascii?Q?QxOAJ/eNd5+q3GUV5Y4PfNlnSUk22+1IeZgY?=
-X-Forefront-Antispam-Report:
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:PH0PR11MB5061.namprd11.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(52116014)(376014)(1800799024)(366016)(38350700014);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0:
-	=?us-ascii?Q?diBIEDxzWHWbZ8c6aNOEPrIgUKuDSVUh+bBDaYpj6FPLZGtKtne5L8zE2N36?=
- =?us-ascii?Q?Yd6yhmk0qL6W0mm0O6H7C/lbtaZCax4PM7fO0Qz4mr+ItqFxcpG4LN21O/NY?=
- =?us-ascii?Q?oqXE759aEfnrpcPIRPelfXXmi1NY8AvqdtR+YJV17BpoZe9HhSVmYQtlx8pk?=
- =?us-ascii?Q?p0SZQ0HM48BLTRRkg+GjBYZG3C/zv9j9qYuJ/LImSoVTMmab71U12trD4Qlr?=
- =?us-ascii?Q?GIYcFzHsHzHfPiv3LF9nwnTItv0VuFNTaspUxORdZvQiaAQN27jssIHxcDpb?=
- =?us-ascii?Q?ASBwiCJy03soEoWhnSUm/7A5f48pm7oSay+Me/0bkL/ez10wzmydiAeoUp6m?=
- =?us-ascii?Q?/WeuGXOi+t1r9YQ5ShfKP9x2xraLOgqDqg37+qTkVessrWwdIPTCeL8DAWqF?=
- =?us-ascii?Q?vRchsOzDDHpx+vNQowClnfTp70z+b0dXrUzbPtT8NRPCM2H8GEDkqYxzvBwl?=
- =?us-ascii?Q?+eoQ6bQc44ipLhIyvpbnI807REP1MjwLnfkF8WelZk+ikAHhIaFqmO3QWldQ?=
- =?us-ascii?Q?QG6nmTHkOYqNBCsE/p2mEDwvR3aSb0i2nDDlbPLu/TOJkEn/wDxIYbhcd0Cp?=
- =?us-ascii?Q?b3rHSoZCP3gBl1EFYJHkvH/J/epm3nfpjgUT8DYjfPbz+nJECWxi5dkmzfU3?=
- =?us-ascii?Q?aIlhonQvDKDDgk23wbKqdN71nQ+ReTrgqIpS9B9J/p7rUrOWFDvPenk2WhFk?=
- =?us-ascii?Q?E4L5IezMqp7NH9WjgHWNTM2NoRTILK9QAELEGnj/OoZmZAlWS/mzs2SBG56Z?=
- =?us-ascii?Q?9QmaZF0APeH3Oml1p3sWzcVWzAzi9xPFNBD5099TOKZckdCZ3AMcYScZUkeH?=
- =?us-ascii?Q?ERXQ0H8+1EntnMQejJOdtvQh3bOi/MO+hpIc3JiMaE8IXjkxyK5DB+NNf6gZ?=
- =?us-ascii?Q?LfM/lU3oSnaSvCvOnGz3MBGl5SnoM56U8UMCGSPasiPzgoSeOZrY2Aqu6wml?=
- =?us-ascii?Q?iZEJR56roOoV9vEris/pohV/63ngrKZlM/KdRKu9NeqKNCUCsiB4pnX3Iwgo?=
- =?us-ascii?Q?oxoyolv4OO8Yj6c9+n6Y9ak3oNg1L2r8gYS1Y4lu/hyuIqtjq5LWiQhtLtr5?=
- =?us-ascii?Q?C4zTxp3tFHgPtgKzV/37jsrNcnQsluFrSlGIbeXbXV15JiBJcN8jalPWd/XZ?=
- =?us-ascii?Q?0bf0h+j/8FuAW4AFvG2o1GFUu38DWfVTY+THaaWahAredzHHzh7+hAV+HsT8?=
- =?us-ascii?Q?Zxt+fR3CN1todHGyVT5xIKFt7enHD6ofaSlXaWkF4sFrR2h2x3poHiIsUQ6Y?=
- =?us-ascii?Q?C/cLk85kKnZGGuriTBxB7uNDsqcJ+yHlqUHuSCqoaTLhxL5c5qPK0TbkqfHl?=
- =?us-ascii?Q?t1ZoUABPX8hcnmT4vTOoimiNGoI1YwHjlIldhv3IzZHxieJgEP6jzEf0BQzx?=
- =?us-ascii?Q?U0fob/R6F7vhlG0xkfnOd3gDJgYzgNWo5eQ3BbWju4/RYvzOnHTeW6yyOiXM?=
- =?us-ascii?Q?7bgufeXdZ3nbYq0/jfQLxtzlaIqUDa1MBlCQjPj89DmPyzHTCwQXhKV0iWE2?=
- =?us-ascii?Q?jG+1k8KauQr5tx5EJgw5am3ZGcjEZS245dpvnZCjUZzishf3t5aIP+fpq2t/?=
- =?us-ascii?Q?v+FVvr/UUqW+cUVVpmN0RjeBxGx+rNC5VIFuPJAGMrGmXaLnjF3lrsdy5rJA?=
- =?us-ascii?Q?kA=3D=3D?=
-X-OriginatorOrg: windriver.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 5a29ec29-902a-40fd-c742-08de2e2f3529
-X-MS-Exchange-CrossTenant-AuthSource: PH0PR11MB5061.namprd11.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 28 Nov 2025 03:35:42.5025
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 8ddb2873-a1ad-4a18-ae4e-4644631433be
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: HFLozyOHJfA3rSpQ8dBDJBhdUEHitDU+3hqn3aQYrgAoLnvswmOP/F309tSghKbmTwivmyCtVJ4a2kHRtR8vzF8gTN6FbNLF0x6QW5nf0hk=
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: PH7PR11MB6379
-X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUxMTI4MDAyNCBTYWx0ZWRfXzuM6l9eZxqXo
- t45SjNjnn9+PI5y2ZJWMuFiospSh5VoB7D8IAMlyAqMmJ0u+mhzWgdpkzwgScY7Fsjwcbl5dVLQ
- I8CJp7qhMsgQZbeMNNfwY8Y1Iqm6S+PU1DrEFVWWwJesdOIEyvYGzoZQS81IPH5KtpLvL4/T/QY
- dJcjKzIQfk9OGnf0sYBLLBwaS0lYOLNKVDiIn3aoI0YNE0gTMaAQL0V7/7VBLDs74X2wA2hBggz
- qbLoHfaL8OUbWJO+h3pFs4zIuZJhwoSE2L6IM2w7w311HPQE2TVbbZuKmpwaPo+bJAFu9AuUo64
- 6Ij8EKzU8ZIywwqGI9RgQzcRkJBWxLIZMW1si8/9FVI/yQj+I/nGj1YoZ3zabmr+TCOu+Jg5Nhn
- /ng+uerWYeXPoa0yOZZxdpfyjVNI3A==
-X-Authority-Analysis: v=2.4 cv=JcCxbEKV c=1 sm=1 tr=0 ts=69291891 cx=c_pps
- a=HCsVV3dTzGSkd59CkKbNuQ==:117 a=6eWqkTHjU83fiwn7nKZWdM+Sl24=:19
- a=z/mQ4Ysz8XfWz/Q5cLBRGdckG28=:19 a=lCpzRmAYbLLaTzLvsPZ7Mbvzbb8=:19
- a=xqWC_Br6kY4A:10 a=6UeiqGixMTsA:10 a=VkNPw1HP01LnGYTKEx00:22
- a=t7CeM3EgAAAA:8 a=VwQbUJbxAAAA:8 a=GLtnJ_i9NkFmi9gY_58A:9
- a=FdTzh2GWekK77mhwV6Dw:22
-X-Proofpoint-GUID: DHnITfYPsyeuVshH3mKGcC-pr5RArxQt
-X-Proofpoint-ORIG-GUID: DHnITfYPsyeuVshH3mKGcC-pr5RArxQt
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1121,Hydra:6.1.9,FMLib:17.12.100.49
- definitions=2025-11-25_02,2025-11-27_02,2025-10-01_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
- malwarescore=0 priorityscore=1501 lowpriorityscore=0 suspectscore=0
- adultscore=0 spamscore=0 phishscore=0 clxscore=1015 bulkscore=0
- impostorscore=0 classifier=typeunknown authscore=0 authtc= authcc=
- route=outbound adjust=0 reason=mlx scancount=1 engine=8.22.0-2510240001
- definitions=main-2511280024
+Content-Type: multipart/mixed; boundary="8323328-1846387695-1764323326=:2091"
 
-From: Yongxin Liu <yongxin.liu@windriver.com>
+  This message is in MIME format.  The first part should be readable text,
+  while the remaining parts are likely unreadable without MIME-aware tools.
 
-The intel_pmc_ipc() function uses ACPI_ALLOCATE_BUFFER to allocate memory
-for the ACPI evaluation result but never frees it, causing a 192-byte
-memory leak on each call.
+--8323328-1846387695-1764323326=:2091
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: QUOTED-PRINTABLE
 
-This leak is triggered during network interface initialization when the
-stmmac driver calls intel_mac_finish() -> intel_pmc_ipc().
+On Fri, 28 Nov 2025, Shyam Sundar S K wrote:
+> On 11/27/2025 17:39, Ilpo J=C3=A4rvinen wrote:
+> > On Wed, 19 Nov 2025, Shyam Sundar S K wrote:
+> >=20
+> >> Custom BIOS input values can be updated by multiple sources, such as p=
+ower
+> >> mode changes and sensor events, each triggering a custom BIOS input ev=
+ent.
+> >> When these events occur in rapid succession, new data may overwrite
+> >> previous values before they are processed, resulting in lost updates.
+> >>
+> >> To address this, introduce a fixed-size, power-of-two ring buffer to
+> >> capture every custom BIOS input event, storing both the pending reques=
+t
+> >> and its associated input values. Access to the ring buffer is synchron=
+ized
+> >> using a mutex.
+> >>
+> >> The previous use of memset() to clear the pending request structure af=
+ter
+> >> each event is removed, as each BIOS input value is now copied into the
+> >> buffer as a snapshot. Consumers now process entries directly from the =
+ring
+> >> buffer, making explicit clearing of the pending request structure
+> >> unnecessary.
+> >>
+> >> Reviewed-by: Mario Limonciello (AMD) <superm1@kernel.org>
+> >> Tested-by: Yijun Shen <Yijun.Shen@Dell.com>
+> >> Co-developed-by: Patil Rajesh Reddy <Patil.Reddy@amd.com>
+> >> Signed-off-by: Patil Rajesh Reddy <Patil.Reddy@amd.com>
+> >> Signed-off-by: Shyam Sundar S K <Shyam-sundar.S-k@amd.com>
+> >> ---
+> >> v4:
+> >>  - Do not store local copy of the ring buffer
+> >>  - use devm_mutex_init()
+> >>
+> >> v3:
+> >>  - include headers wherever missing
+> >>  - use dev_warn() instead of dev_WARN_ONCE()
+> >>  - remove generic struct names
+> >>  - enhance ringbuffer mechanism to handle common path
+> >>  - other cosmetic remarks
+> >>
+> >> v2:
+> >>  - Add dev_WARN_ONCE()
+> >>  - Change variable name rb_mutex to cbi_mutex
+> >>  - Move tail increment logic above pending request check
+> >>
+> >>  drivers/platform/x86/amd/pmf/acpi.c   | 40 ++++++++++++++++++++++++++=
++
+> >>  drivers/platform/x86/amd/pmf/core.c   |  5 ++++
+> >>  drivers/platform/x86/amd/pmf/pmf.h    | 21 ++++++++++++++
+> >>  drivers/platform/x86/amd/pmf/spc.c    | 32 +++++++++++----------
+> >>  drivers/platform/x86/amd/pmf/tee-if.c |  2 ++
+> >>  5 files changed, 86 insertions(+), 14 deletions(-)
+> >>
+> >> diff --git a/drivers/platform/x86/amd/pmf/acpi.c b/drivers/platform/x8=
+6/amd/pmf/acpi.c
+> >> index 13c4fec2c7ef..3d94b03cf794 100644
+> >> --- a/drivers/platform/x86/amd/pmf/acpi.c
+> >> +++ b/drivers/platform/x86/amd/pmf/acpi.c
+> >> @@ -9,6 +9,9 @@
+> >>   */
+> >> =20
+> >>  #include <linux/acpi.h>
+> >> +#include <linux/array_size.h>
+> >> +#include <linux/cleanup.h>
+> >> +#include <linux/dev_printk.h>
+> >>  #include "pmf.h"
+> >> =20
+> >>  #define APMF_CQL_NOTIFICATION  2
+> >> @@ -331,6 +334,39 @@ int apmf_get_sbios_requests(struct amd_pmf_dev *p=
+dev, struct apmf_sbios_req *req
+> >>  =09=09=09=09=09=09=09=09=09 req, sizeof(*req));
+> >>  }
+> >> =20
+> >> +/* Store custom BIOS inputs data in ring buffer */
+> >> +static void amd_pmf_custom_bios_inputs_rb(struct amd_pmf_dev *pmf_dev=
+)
+> >> +{
+> >> +=09struct pmf_cbi_ring_buffer *rb =3D &pmf_dev->cbi_buf;
+> >> +=09int i;
+> >> +
+> >> +=09guard(mutex)(&pmf_dev->cbi_mutex);
+> >> +
+> >> +=09switch (pmf_dev->cpu_id) {
+> >> +=09case AMD_CPU_ID_PS:
+> >> +=09=09for (i =3D 0; i < ARRAY_SIZE(custom_bios_inputs_v1); i++)
+> >> +=09=09=09rb->data[rb->head].val[i] =3D pmf_dev->req1.custom_policy[i]=
+;
+> >> +=09=09rb->data[rb->head].preq =3D pmf_dev->req1.pending_req;
+> >> +=09=09break;
+> >> +=09case PCI_DEVICE_ID_AMD_1AH_M20H_ROOT:
+> >> +=09case PCI_DEVICE_ID_AMD_1AH_M60H_ROOT:
+> >> +=09=09for (i =3D 0; i < ARRAY_SIZE(custom_bios_inputs); i++)
+> >> +=09=09=09rb->data[rb->head].val[i] =3D pmf_dev->req.custom_policy[i];
+> >> +=09=09rb->data[rb->head].preq =3D pmf_dev->req.pending_req;
+> >> +=09=09break;
+> >> +=09default:
+> >> +=09=09return;
+> >> +=09}
+> >> +
+> >> +=09if (CIRC_SPACE(rb->head, rb->tail, CUSTOM_BIOS_INPUT_RING_ENTRIES)=
+ =3D=3D 0) {
+> >> +=09=09/* Rare case: ensures the newest BIOS input value is kept */
+> >> +=09=09dev_warn(pmf_dev->dev, "Overwriting BIOS input value, data may =
+be lost\n");
+> >> +=09=09rb->tail =3D (rb->tail + 1) & (CUSTOM_BIOS_INPUT_RING_ENTRIES -=
+ 1);
+> >> +=09}
+> >> +
+> >> +=09rb->head =3D (rb->head + 1) & (CUSTOM_BIOS_INPUT_RING_ENTRIES - 1)=
+;
+> >> +}
+> >> +
+> >>  static void amd_pmf_handle_early_preq(struct amd_pmf_dev *pdev)
+> >>  {
+> >>  =09if (!pdev->cb_flag)
+> >> @@ -356,6 +392,8 @@ static void apmf_event_handler_v2(acpi_handle hand=
+le, u32 event, void *data)
+> >>  =09dev_dbg(pmf_dev->dev, "Pending request (preq): 0x%x\n", pmf_dev->r=
+eq.pending_req);
+> >> =20
+> >>  =09amd_pmf_handle_early_preq(pmf_dev);
+> >> +
+> >> +=09amd_pmf_custom_bios_inputs_rb(pmf_dev);
+> >>  }
+> >> =20
+> >>  static void apmf_event_handler_v1(acpi_handle handle, u32 event, void=
+ *data)
+> >> @@ -374,6 +412,8 @@ static void apmf_event_handler_v1(acpi_handle hand=
+le, u32 event, void *data)
+> >>  =09dev_dbg(pmf_dev->dev, "Pending request (preq1): 0x%x\n", pmf_dev->=
+req1.pending_req);
+> >> =20
+> >>  =09amd_pmf_handle_early_preq(pmf_dev);
+> >> +
+> >> +=09amd_pmf_custom_bios_inputs_rb(pmf_dev);
+> >>  }
+> >> =20
+> >>  static void apmf_event_handler(acpi_handle handle, u32 event, void *d=
+ata)
+> >> diff --git a/drivers/platform/x86/amd/pmf/core.c b/drivers/platform/x8=
+6/amd/pmf/core.c
+> >> index 2ec4cb92e34f..71421a5d7afd 100644
+> >> --- a/drivers/platform/x86/amd/pmf/core.c
+> >> +++ b/drivers/platform/x86/amd/pmf/core.c
+> >> @@ -11,6 +11,7 @@
+> >>  #include <linux/debugfs.h>
+> >>  #include <linux/iopoll.h>
+> >>  #include <linux/module.h>
+> >> +#include <linux/mutex.h>
+> >>  #include <linux/pci.h>
+> >>  #include <linux/platform_device.h>
+> >>  #include <linux/power_supply.h>
+> >> @@ -477,6 +478,10 @@ static int amd_pmf_probe(struct platform_device *=
+pdev)
+> >>  =09if (err)
+> >>  =09=09return err;
+> >> =20
+> >> +=09err =3D devm_mutex_init(dev->dev, &dev->cbi_mutex);
+> >> +=09if (err)
+> >> +=09=09return err;
+> >> +
+> >>  =09apmf_acpi_init(dev);
+> >>  =09platform_set_drvdata(pdev, dev);
+> >>  =09amd_pmf_dbgfs_register(dev);
+> >> diff --git a/drivers/platform/x86/amd/pmf/pmf.h b/drivers/platform/x86=
+/amd/pmf/pmf.h
+> >> index 2145df4128cd..5a18b3604b6e 100644
+> >> --- a/drivers/platform/x86/amd/pmf/pmf.h
+> >> +++ b/drivers/platform/x86/amd/pmf/pmf.h
+> >> @@ -12,7 +12,9 @@
+> >>  #define PMF_H
+> >> =20
+> >>  #include <linux/acpi.h>
+> >> +#include <linux/circ_buf.h>
+> >>  #include <linux/input.h>
+> >> +#include <linux/mutex_types.h>
+> >>  #include <linux/platform_device.h>
+> >>  #include <linux/platform_profile.h>
+> >> =20
+> >> @@ -120,6 +122,7 @@ struct cookie_header {
+> >>  #define APTS_MAX_STATES=09=0916
+> >>  #define CUSTOM_BIOS_INPUT_BITS=09GENMASK(16, 7)
+> >>  #define BIOS_INPUTS_MAX=09=0910
+> >> +#define CUSTOM_BIOS_INPUT_RING_ENTRIES=0964=09/* Must be power of two=
+ for CIRC_* macros */
+> >> =20
+> >>  typedef void (*apmf_event_handler_t)(acpi_handle handle, u32 event, v=
+oid *data);
+> >> =20
+> >> @@ -359,6 +362,22 @@ struct pmf_bios_inputs_prev {
+> >>  =09u32 custom_bios_inputs[BIOS_INPUTS_MAX];
+> >>  };
+> >> =20
+> >> +/**
+> >> + * struct pmf_bios_input_entry - Snapshot of custom BIOS input event
+> >> + * @val: Array of custom BIOS input values
+> >> + * @preq: Pending request value associated with this event
+> >> + */
+> >> +struct pmf_bios_input_entry {
+> >> +=09u32 val[BIOS_INPUTS_MAX];
+> >> +=09u32 preq;
+> >> +};
+> >> +
+> >> +struct pmf_cbi_ring_buffer {
+> >> +=09struct pmf_bios_input_entry data[CUSTOM_BIOS_INPUT_RING_ENTRIES];
+> >> +=09int head;
+> >> +=09int tail;
+> >> +};
+> >> +
+> >>  struct amd_pmf_dev {
+> >>  =09void __iomem *regbase;
+> >>  =09void __iomem *smu_virt_addr;
+> >> @@ -407,6 +426,8 @@ struct amd_pmf_dev {
+> >>  =09struct apmf_sbios_req_v1 req1;
+> >>  =09struct pmf_bios_inputs_prev cb_prev; /* To preserve custom BIOS in=
+puts */
+> >>  =09bool cb_flag;=09=09=09     /* To handle first custom BIOS input */
+> >> +=09struct pmf_cbi_ring_buffer cbi_buf;
+> >> +=09struct mutex cbi_mutex;=09=09     /* Protects ring buffer access *=
+/
+> >>  };
+> >> =20
+> >>  struct apmf_sps_prop_granular_v2 {
+> >> diff --git a/drivers/platform/x86/amd/pmf/spc.c b/drivers/platform/x86=
+/amd/pmf/spc.c
+> >> index 85192c7536b8..34fff41b86fe 100644
+> >> --- a/drivers/platform/x86/amd/pmf/spc.c
+> >> +++ b/drivers/platform/x86/amd/pmf/spc.c
+> >> @@ -11,6 +11,7 @@
+> >> =20
+> >>  #include <acpi/button.h>
+> >>  #include <linux/amd-pmf-io.h>
+> >> +#include <linux/cleanup.h>
+> >>  #include <linux/power_supply.h>
+> >>  #include <linux/units.h>
+> >>  #include "pmf.h"
+> >> @@ -132,30 +133,37 @@ static void amd_pmf_set_ta_custom_bios_input(str=
+uct ta_pmf_enact_table *in, int
+> >>  =09}
+> >>  }
+> >> =20
+> >> -static void amd_pmf_update_bios_inputs(struct amd_pmf_dev *pdev, u32 =
+pending_req,
+> >> +static void amd_pmf_update_bios_inputs(struct amd_pmf_dev *pdev, stru=
+ct pmf_bios_input_entry *data,
+> >>  =09=09=09=09       const struct amd_pmf_pb_bitmap *inputs,
+> >> -=09=09=09=09       const u32 *custom_policy, struct ta_pmf_enact_tabl=
+e *in)
+> >> +=09=09=09=09       struct ta_pmf_enact_table *in)
+> >>  {
+> >>  =09unsigned int i;
+> >> =20
+> >>  =09for (i =3D 0; i < ARRAY_SIZE(custom_bios_inputs); i++) {
+> >> -=09=09if (!(pending_req & inputs[i].bit_mask))
+> >> +=09=09if (!(data->preq & inputs[i].bit_mask))
+> >>  =09=09=09continue;
+> >> -=09=09amd_pmf_set_ta_custom_bios_input(in, i, custom_policy[i]);
+> >> -=09=09pdev->cb_prev.custom_bios_inputs[i] =3D custom_policy[i];
+> >> -=09=09dev_dbg(pdev->dev, "Custom BIOS Input[%d]: %u\n", i, custom_pol=
+icy[i]);
+> >> +=09=09amd_pmf_set_ta_custom_bios_input(in, i, data->val[i]);
+> >> +=09=09pdev->cb_prev.custom_bios_inputs[i] =3D data->val[i];
+> >> +=09=09dev_dbg(pdev->dev, "Custom BIOS Input[%d]: %u\n", i, data->val[=
+i]);
+> >>  =09}
+> >>  }
+> >> =20
+> >>  static void amd_pmf_get_custom_bios_inputs(struct amd_pmf_dev *pdev,
+> >>  =09=09=09=09=09   struct ta_pmf_enact_table *in)
+> >>  {
+> >> +=09struct pmf_cbi_ring_buffer *rb =3D &pdev->cbi_buf;
+> >>  =09unsigned int i;
+> >> =20
+> >> +=09guard(mutex)(&pdev->cbi_mutex);
+> >> +
+> >>  =09for (i =3D 0; i < ARRAY_SIZE(custom_bios_inputs); i++)
+> >>  =09=09amd_pmf_set_ta_custom_bios_input(in, i, pdev->cb_prev.custom_bi=
+os_inputs[i]);
+> >> =20
+> >> -=09if (!(pdev->req.pending_req || pdev->req1.pending_req))
+> >> +=09if (CIRC_CNT(rb->head, rb->tail, CUSTOM_BIOS_INPUT_RING_ENTRIES) =
+=3D=3D 0)
+> >> +=09=09return;=09/* return if ring buffer is empty */
+> >> +
+> >> +=09/* If no active custom BIOS input pending request, do not consume =
+further work */
+> >> +=09if (!rb->data[rb->tail].preq)
+> >>  =09=09return;
+> >=20
+> > I'm left usure if "do not consume further work" comment really means th=
+at=20
+> > the entry is supposed to not get removed from the ring, which stalls th=
+e=20
+> > ring forever?
+>=20
+> No. The amd_pmf_populate_ta_inputs() function runs periodically and
+> calls amd_pmf_get_custom_bios_inputs(). The preq check prevents
+> unnecessary processing when the ring buffer is empty or contains no
+> valid pending requests.
 
-  unreferenced object 0xffff96a848d6ea80 (size 192):
-    comm "dhcpcd", pid 541, jiffies 4294684345
-    hex dump (first 32 bytes):
-      04 00 00 00 05 00 00 00 98 ea d6 48 a8 96 ff ff  ...........H....
-      00 00 00 00 00 00 00 00 01 00 00 00 00 00 00 00  ................
-    backtrace (crc b1564374):
-      kmemleak_alloc+0x2d/0x40
-      __kmalloc_noprof+0x2fa/0x730
-      acpi_ut_initialize_buffer+0x83/0xc0
-      acpi_evaluate_object+0x29a/0x2f0
-      intel_pmc_ipc+0xfd/0x170
-      intel_mac_finish+0x168/0x230
-      stmmac_mac_finish+0x3d/0x50
-      phylink_major_config+0x22b/0x5b0
-      phylink_mac_initial_config.constprop.0+0xf1/0x1b0
-      phylink_start+0x8e/0x210
-      __stmmac_open+0x12c/0x2b0
-      stmmac_open+0x23c/0x380
-      __dev_open+0x11d/0x2c0
-      __dev_change_flags+0x1d2/0x250
-      netif_change_flags+0x2b/0x70
-      dev_change_flags+0x40/0xb0
+At this point, the ring buffer IS NOT EMPTY as you just checked for it=20
+above this check! So no, this preq check cannot ever find ring buffer=20
+empty.
 
-Add __free(kfree) for ACPI object to properly release the allocated buffer.
+> Regarding the ring stall:
+> Entries are added to the ring buffer only when a valid ACPI event
+> triggers the event handler. Once an entry with preq set is queued, the
+> consumer processes it and increments the tail.
 
-Cc: stable@vger.kernel.org
-Fixes: 7e2f7e25f6ff ("arch: x86: add IPC mailbox accessor function and add SoC register access")
-Signed-off-by: Yongxin Liu <yongxin.liu@windriver.com>
----
-V2->V3:
-Use __free(kfree) instead of goto and kfree();
+Who is consuming them? This function? And it keeps returning if the entry=
+=20
+at rb->tail has zero preq.
 
-V1->V2:
-Cover all potential paths for kfree();
----
- include/linux/platform_data/x86/intel_pmc_ipc.h | 3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
+> The check acts as a guard when the periodic function runs but no new
+> events are available - either the ring buffer is empty or the current
+> entry has no active pending request.
 
-diff --git a/include/linux/platform_data/x86/intel_pmc_ipc.h b/include/linux/platform_data/x86/intel_pmc_ipc.h
-index 1d34435b7001..cf0b78048b0e 100644
---- a/include/linux/platform_data/x86/intel_pmc_ipc.h
-+++ b/include/linux/platform_data/x86/intel_pmc_ipc.h
-@@ -9,6 +9,7 @@
- #ifndef INTEL_PMC_IPC_H
- #define INTEL_PMC_IPC_H
- #include <linux/acpi.h>
-+#include <linux/cleanup.h>
- 
- #define IPC_SOC_REGISTER_ACCESS			0xAA
- #define IPC_SOC_SUB_CMD_READ			0x00
-@@ -48,7 +49,7 @@ static inline int intel_pmc_ipc(struct pmc_ipc_cmd *ipc_cmd, struct pmc_ipc_rbuf
- 		{.type = ACPI_TYPE_INTEGER,},
- 	};
- 	struct acpi_object_list arg_list = { PMC_IPCS_PARAM_COUNT, params };
--	union acpi_object *obj;
-+	union acpi_object *obj __free(kfree) = NULL;
- 	int status;
- 
- 	if (!ipc_cmd || !rbuf)
--- 
-2.46.2
+But the entry is left in place so the next invocation finds "no active=20
+pending requests", and the entry is again left in place, and so on.
 
+> > If that's the wanted behavior, does that imply overwrite dev_warn() abo=
+ve=20
+> > can spam the logs from that point on as the ring can fill up without=20
+> > anything consuming entries from it?
+>=20
+> Entries with valid preq are always consumed,
+
+True, but I'm talking about the opposite case, that is, when the=20
+rb->tail entry has an entry with zero preq!
+
+> preventing ring stalls.
+
+This returns when !preq so I don't know what would prevent the stalling.=20
+Please explain (but please think twice whether the explanation you're=20
+going to give is sound!).
+
+> The dev_warn() only triggers when the buffer overflows, not from
+> stalled consumption.
+
+Stalled consumer and queuing more and more entries to the circular buffer=
+=20
+will eventually lead to overflow, no matter what.
+
+The overflow would likely actually destall it by overwriting the entry=20
+with zero preq but that'd just hide to logic bug you have here.
+
+
+I think what you should do is to consume the entry even when it has !preq
+(that is, advance rb->tail also in that case; I'm not talking about other=
+=20
+processing you do but getting rid of the "nothing to do" entry at the=20
+rb->tail).
+
+> > I've taken first two patches into review-ilpo-next.
+> >=20
+> >>  =09if (!pdev->smart_pc_enabled)
+> >> @@ -165,20 +173,16 @@ static void amd_pmf_get_custom_bios_inputs(struc=
+t amd_pmf_dev *pdev,
+> >>  =09case PMF_IF_V1:
+> >>  =09=09if (!is_apmf_bios_input_notifications_supported(pdev))
+> >>  =09=09=09return;
+> >> -=09=09amd_pmf_update_bios_inputs(pdev, pdev->req1.pending_req, custom=
+_bios_inputs_v1,
+> >> -=09=09=09=09=09   pdev->req1.custom_policy, in);
+> >> +=09=09amd_pmf_update_bios_inputs(pdev, &rb->data[rb->tail], custom_bi=
+os_inputs_v1, in);
+> >>  =09=09break;
+> >>  =09case PMF_IF_V2:
+> >> -=09=09amd_pmf_update_bios_inputs(pdev, pdev->req.pending_req, custom_=
+bios_inputs,
+> >> -=09=09=09=09=09   pdev->req.custom_policy, in);
+> >> +=09=09amd_pmf_update_bios_inputs(pdev, &rb->data[rb->tail], custom_bi=
+os_inputs, in);
+> >>  =09=09break;
+> >>  =09default:
+> >>  =09=09break;
+> >>  =09}
+> >> =20
+> >> -=09/* Clear pending requests after handling */
+> >> -=09memset(&pdev->req, 0, sizeof(pdev->req));
+> >> -=09memset(&pdev->req1, 0, sizeof(pdev->req1));
+> >> +=09rb->tail =3D (rb->tail + 1) & (CUSTOM_BIOS_INPUT_RING_ENTRIES - 1)=
+;
+> >>  }
+> >> =20
+> >>  static void amd_pmf_get_c0_residency(u16 *core_res, size_t size, stru=
+ct ta_pmf_enact_table *in)
+> >> diff --git a/drivers/platform/x86/amd/pmf/tee-if.c b/drivers/platform/=
+x86/amd/pmf/tee-if.c
+> >> index 6e8116bef4f6..add742e33e1e 100644
+> >> --- a/drivers/platform/x86/amd/pmf/tee-if.c
+> >> +++ b/drivers/platform/x86/amd/pmf/tee-if.c
+> >> @@ -579,6 +579,8 @@ int amd_pmf_init_smart_pc(struct amd_pmf_dev *dev)
+> >>  =09=09status =3D ret =3D=3D TA_PMF_TYPE_SUCCESS;
+> >>  =09=09if (status) {
+> >>  =09=09=09dev->cb_flag =3D true;
+> >> +=09=09=09dev->cbi_buf.head =3D 0;
+> >> +=09=09=09dev->cbi_buf.tail =3D 0;
+> >>  =09=09=09break;
+> >>  =09=09}
+> >>  =09=09amd_pmf_tee_deinit(dev);
+> >>
+> >=20
+>=20
+
+--=20
+ i.
+
+--8323328-1846387695-1764323326=:2091--
