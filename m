@@ -1,83 +1,139 @@
-Received: from out-179.mta1.migadu.com (out-179.mta1.migadu.com [95.215.58.179])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B0A2F26F299
-	for <platform-driver-x86@vger.kernel.org>; Sat, 29 Nov 2025 14:26:30 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=95.215.58.179
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4C30E2475CF;
+	Sat, 29 Nov 2025 14:31:11 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1764426393; cv=none; b=AHuH/W1LD/U/Wq6Wj2AxvXl4BGFIkIGxzo5cmfB690Zhc9R91NpVU2kqqvht9K7UK/CLNHO7WFY2o2ofAg/udjCaAgqHdUXZYcF5q9daCipDRrsRSyvR9NO5Thpg1o8WA1DGhKAqPvoPWKttCM1NEW0fBwG1TTF+99HR/XPwvjY=
+	t=1764426674; cv=none; b=Sxo1hPp3WSd5PqN2GqITi1mZoFmIeGeo/36jarfEx8lnSxPMgawifVPSIz06jZ/DF7BV1RhbdK1rU0HRklUySiXM+6Q+3dm7o4xbODItXmaY36zkXJt6zGyibeOUbEhOUOP7tcy3Ln0klK5Swd4/FnL2Zo7cfcMPeEZG7gkFQ6c=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1764426393; c=relaxed/simple;
-	bh=/jBmx2Wapxxwkd+H+Xh+8/chAEo031HqcDF3AthVxbo=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=Gw+5DuG2+vWpgtAN3Ru4nBPK123SxyA4/5InQWSLRxVDrBLIj8I+bgjHhtmJUZ4sa3JNJ5UmhqXYfaFBrcFv+lXYpfTsAfXEhK3oG1EePle/yaD+7TVwQRFx4nq9RuX+VKmFjGmGjlvbdy3ewoP/xYq26dkfa9nzYIfgFY+DUyw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=HdbdbZHs; arc=none smtp.client-ip=95.215.58.179
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
+	s=arc-20240116; t=1764426674; c=relaxed/simple;
+	bh=OOXM+8VJNr1jofMq1aDwIoY/tJO1ZvIsD3b19brw7lc=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=FCdDzs/duUsn4BXITUAsA78yUYV+ycWDFrOKQqPRv09WDwaYOG8NQ5VyRJWb7smtVbyLITP7KxwocUlAhoNl4N5VHqA9AR8qi9carSdI/ASsPPzqDzDXaSf/eUJ+F+MgnUkLypMKFzWgcPPnlfupXu38/SqX9mNx6/XDnkA91Og=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=PWj4NUCZ; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="HdbdbZHs"
-X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
-	t=1764426388;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:
-	 content-transfer-encoding:content-transfer-encoding;
-	bh=IY9UUw14IXgmMrM/diyfL6pxylWuvaL+8vmwiexvwQo=;
-	b=HdbdbZHssCv/FVTPQ9FacaIxZ+7mvVQQ6NNgK/tfuWikHZifiZJKdrsdf3XYyVQvRoMXTo
-	mZIaSbL7ocxHC3bg70MeBwH6F5GD9XmQTwwQijnqCKSzfW2AWdOfTpqmQfcHb8DDcfAHwH
-	oNwcNYXZDtixBnzxZ7Q6/qn+sXnLEJ8=
-From: Denis Benato <denis.benato@linux.dev>
-To: linux-kernel@vger.kernel.org
-Cc: platform-driver-x86@vger.kernel.org,
-	"Hans de Goede" <hansg@kernel.org>,
-	=?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>,
-	"Luke D . Jones" <luke@ljones.dev>,
-	"Mateusz Schyboll" <dragonn@op.pl>,
-	"Denis Benato" <benato.denis96@gmail.com>,
-	Denis Benato <denis.benato@linux.dev>
-Subject: [PATCH] platform/x86: asus-armoury: add support for GA503QR
-Date: Sat, 29 Nov 2025 15:26:21 +0100
-Message-ID: <20251129142621.152027-1-denis.benato@linux.dev>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="PWj4NUCZ"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id E083AC4CEF7;
+	Sat, 29 Nov 2025 14:31:05 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1764426671;
+	bh=OOXM+8VJNr1jofMq1aDwIoY/tJO1ZvIsD3b19brw7lc=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=PWj4NUCZXJCf0cQOQb/LwGSzkgtSkTq3JT0SBX/1zyzCien82/KxUzpcFPaPNswO1
+	 LPsmXmQGJaV/nsBwXaRc+feT5qhOHUyfve6rwdiYNZTuZDq4ve43Lr9B6KzaOEx1BT
+	 3zmN40bldzF85pdUb/lerOgzou1GFRyUUPNCnRVlHr1SUTob626mzl5IcZJvMWTvAt
+	 OANnR3Mpymo9zIAywoq14c/rXgiM7+MbSLIw+wWZzQrHmOWro44T3QcT70eaQ626DY
+	 MvjC4jKdWWhEH5sfrKC/+iEzAFN9Gm2uGILsrHvsHzIGHMqlgMtiMcR6i1cpV+wLao
+	 gm220dgQpILkw==
+Message-ID: <9efa0a3c-ffef-488a-97f3-45b9649d35fd@kernel.org>
+Date: Sat, 29 Nov 2025 15:31:03 +0100
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Migadu-Flow: FLOW_OUT
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v2 10/10] power: sequencing: pcie-m2: Add support for PCIe
+ M.2 Key E connectors
+To: manivannan.sadhasivam@oss.qualcomm.com, Rob Herring <robh@kernel.org>,
+ Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+ Jiri Slaby <jirislaby@kernel.org>, Nathan Chancellor <nathan@kernel.org>,
+ Nicolas Schier <nicolas.schier@linux.dev>, Hans de Goede <hansg@kernel.org>,
+ =?UTF-8?Q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>,
+ Mark Pearson <mpearson-lenovo@squebb.ca>,
+ "Derek J. Clark" <derekjohn.clark@gmail.com>,
+ Manivannan Sadhasivam <mani@kernel.org>,
+ Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley
+ <conor+dt@kernel.org>, Marcel Holtmann <marcel@holtmann.org>,
+ Luiz Augusto von Dentz <luiz.dentz@gmail.com>,
+ Bartosz Golaszewski <brgl@bgdev.pl>
+Cc: linux-serial@vger.kernel.org, linux-kernel@vger.kernel.org,
+ linux-kbuild@vger.kernel.org, platform-driver-x86@vger.kernel.org,
+ linux-pci@vger.kernel.org, devicetree@vger.kernel.org,
+ linux-arm-msm@vger.kernel.org, linux-bluetooth@vger.kernel.org,
+ linux-pm@vger.kernel.org, Stephan Gerhold <stephan.gerhold@linaro.org>,
+ Dmitry Baryshkov <dmitry.baryshkov@oss.qualcomm.com>
+References: <20251125-pci-m2-e-v2-0-32826de07cc5@oss.qualcomm.com>
+ <20251125-pci-m2-e-v2-10-32826de07cc5@oss.qualcomm.com>
+From: Krzysztof Kozlowski <krzk@kernel.org>
+Content-Language: en-US
+Autocrypt: addr=krzk@kernel.org; keydata=
+ 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 a/A=
+In-Reply-To: <20251125-pci-m2-e-v2-10-32826de07cc5@oss.qualcomm.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-Add TDP data for laptop model GA503QR.
+On 25/11/2025 15:45, Manivannan Sadhasivam via B4 Relay wrote:
+>  static const struct pwrseq_pcie_m2_pdata pwrseq_pcie_m2_m_of_data = {
+>  	.targets = pwrseq_pcie_m2_m_targets,
+>  };
+> @@ -92,6 +174,96 @@ static int pwrseq_pcie_m2_match(struct pwrseq_device *pwrseq,
+>  	return PWRSEQ_NO_MATCH;
+>  }
+>  
+> +static int pwrseq_m2_pcie_notify(struct notifier_block *nb, unsigned long action,
+> +			      void *data)
+> +{
+> +	struct pwrseq_pcie_m2_ctx *ctx = container_of(nb, struct pwrseq_pcie_m2_ctx, nb);
+> +	struct pci_dev *pdev = to_pci_dev(data);
+> +	struct device_node *pci_remote __free(device_node) = NULL;
 
-Signed-off-by: Denis Benato <denis.benato@linux.dev>
----
- drivers/platform/x86/asus-armoury.h | 14 ++++++++++++++
- 1 file changed, 14 insertions(+)
 
-diff --git a/drivers/platform/x86/asus-armoury.h b/drivers/platform/x86/asus-armoury.h
-index 40fcd7c04b73..a1bb2005c3f3 100644
---- a/drivers/platform/x86/asus-armoury.h
-+++ b/drivers/platform/x86/asus-armoury.h
-@@ -822,6 +822,20 @@ static const struct dmi_system_id power_limits[] = {
- 			.requires_fan_curve = true,
- 		},
- 	},
-+	{
-+		.matches = {
-+			DMI_MATCH(DMI_BOARD_NAME, "GA503QR"),
-+		},
-+		.driver_data = &(struct power_data) {
-+			.ac_data = &(struct power_limits) {
-+				.ppt_pl1_spl_min = 15,
-+				.ppt_pl1_spl_def = 35,
-+				.ppt_pl1_spl_max = 80,
-+				.ppt_pl2_sppt_min = 65,
-+				.ppt_pl2_sppt_max = 80,
-+			},
-+		},
-+	},
- 	{
- 		.matches = {
- 			DMI_MATCH(DMI_BOARD_NAME, "GA503R"),
--- 
-2.52.0
+This is an undesired syntax explicitly documented as one to avoid. You
+need here proper assignment, not NULL. Please don't use cleanup.h if you
+do not intend to follow it because it does not make the code simpler.
 
+> +	struct device_node *serdev_remote __free(device_node) = NULL;
+
+This is even worse. Instead of making it local scope, you have automatic
+cleanup for entire function with completely redundant constructor.
+
+Please, use cleanup.h only if you really want to follow its spirit.
+Otherwise it does not make the code easier.
+
+
+Best regards,
+Krzysztof
