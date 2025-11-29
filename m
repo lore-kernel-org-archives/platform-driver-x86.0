@@ -1,33 +1,33 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4C30E2475CF;
-	Sat, 29 Nov 2025 14:31:11 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C3C46262FC1;
+	Sat, 29 Nov 2025 14:49:02 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1764426674; cv=none; b=Sxo1hPp3WSd5PqN2GqITi1mZoFmIeGeo/36jarfEx8lnSxPMgawifVPSIz06jZ/DF7BV1RhbdK1rU0HRklUySiXM+6Q+3dm7o4xbODItXmaY36zkXJt6zGyibeOUbEhOUOP7tcy3Ln0klK5Swd4/FnL2Zo7cfcMPeEZG7gkFQ6c=
+	t=1764427742; cv=none; b=DdSnaGzSoWABmTuJ5zRtBRztX/B8Ji1J3KZpy2WgDKtJQp4ghaNMRmZdJavkBj/0tPaxseBrlL34TFVsCzPzPNK4FjNHfwCXFsjbse2iFJVITiLOIzLfuwnzDzevme2f68Z0P/zD2Z2xjASMViUuRQnpr3+VSgIs5AidlB4CxI0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1764426674; c=relaxed/simple;
-	bh=OOXM+8VJNr1jofMq1aDwIoY/tJO1ZvIsD3b19brw7lc=;
+	s=arc-20240116; t=1764427742; c=relaxed/simple;
+	bh=ZGaY1UMQFcaWR//+oyKixU40+cjodIS95PP9QfpxBXI=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=FCdDzs/duUsn4BXITUAsA78yUYV+ycWDFrOKQqPRv09WDwaYOG8NQ5VyRJWb7smtVbyLITP7KxwocUlAhoNl4N5VHqA9AR8qi9carSdI/ASsPPzqDzDXaSf/eUJ+F+MgnUkLypMKFzWgcPPnlfupXu38/SqX9mNx6/XDnkA91Og=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=PWj4NUCZ; arc=none smtp.client-ip=10.30.226.201
+	 In-Reply-To:Content-Type; b=Ekl+mmwGuBWVZCxDkv1uZ5nEA2lxZsQReLwBdVKqu5LGltR/JncVgbwWkwIZ2gNkL03VEUWZRMzcBh6pWf8aZ2CxUtmhqKsLmL4np3+BtU2DnXKFEWw/DAtSwwo0sooSTBulQtu3xKM1itpxX21ed1RuO8VWU8lLyRlL4KcAGRs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Uj84wY9c; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="PWj4NUCZ"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id E083AC4CEF7;
-	Sat, 29 Nov 2025 14:31:05 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Uj84wY9c"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id D8B7AC4CEF7;
+	Sat, 29 Nov 2025 14:48:59 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1764426671;
-	bh=OOXM+8VJNr1jofMq1aDwIoY/tJO1ZvIsD3b19brw7lc=;
+	s=k20201202; t=1764427742;
+	bh=ZGaY1UMQFcaWR//+oyKixU40+cjodIS95PP9QfpxBXI=;
 	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=PWj4NUCZXJCf0cQOQb/LwGSzkgtSkTq3JT0SBX/1zyzCien82/KxUzpcFPaPNswO1
-	 LPsmXmQGJaV/nsBwXaRc+feT5qhOHUyfve6rwdiYNZTuZDq4ve43Lr9B6KzaOEx1BT
-	 3zmN40bldzF85pdUb/lerOgzou1GFRyUUPNCnRVlHr1SUTob626mzl5IcZJvMWTvAt
-	 OANnR3Mpymo9zIAywoq14c/rXgiM7+MbSLIw+wWZzQrHmOWro44T3QcT70eaQ626DY
-	 MvjC4jKdWWhEH5sfrKC/+iEzAFN9Gm2uGILsrHvsHzIGHMqlgMtiMcR6i1cpV+wLao
-	 gm220dgQpILkw==
-Message-ID: <9efa0a3c-ffef-488a-97f3-45b9649d35fd@kernel.org>
-Date: Sat, 29 Nov 2025 15:31:03 +0100
+	b=Uj84wY9cihudCcWOBhUhN6CVKeFkLTVeYDRe/eN28FqOvjWM4Jhrnq3R5JAHooSIZ
+	 p8AdyqBWE3csNDufZwkEqRvR1iAZwrKClzQ000k9kLcvE31CR0I08GFeRv4eXdIb+f
+	 xvElFPtPWJDPsR3rpvFxFu4Bou4MFD5+alUW7y5T+tr/KAVMtRln8e+eS/3eRfFhBd
+	 o/IJ8yjU8ETQ8b50MycqO5RY9LnY9J8J4VGAwrENcq/pCpi1b97EE6QQowzCXdHw3y
+	 sb/TjipLHXDxXfx1vjtZV3mazt8QZfCBIXHRtx1f7V0CShR5Qti5jw0Fn4/x2vs1jj
+	 RzlWYSSjMfG0g==
+Message-ID: <6ebeb4e7-e446-45aa-a0bb-fc96d1431580@kernel.org>
+Date: Sat, 29 Nov 2025 15:48:57 +0100
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
@@ -35,105 +35,169 @@ List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v2 10/10] power: sequencing: pcie-m2: Add support for PCIe
- M.2 Key E connectors
-To: manivannan.sadhasivam@oss.qualcomm.com, Rob Herring <robh@kernel.org>,
- Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
- Jiri Slaby <jirislaby@kernel.org>, Nathan Chancellor <nathan@kernel.org>,
- Nicolas Schier <nicolas.schier@linux.dev>, Hans de Goede <hansg@kernel.org>,
- =?UTF-8?Q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>,
- Mark Pearson <mpearson-lenovo@squebb.ca>,
- "Derek J. Clark" <derekjohn.clark@gmail.com>,
- Manivannan Sadhasivam <mani@kernel.org>,
- Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley
- <conor+dt@kernel.org>, Marcel Holtmann <marcel@holtmann.org>,
- Luiz Augusto von Dentz <luiz.dentz@gmail.com>,
- Bartosz Golaszewski <brgl@bgdev.pl>
-Cc: linux-serial@vger.kernel.org, linux-kernel@vger.kernel.org,
- linux-kbuild@vger.kernel.org, platform-driver-x86@vger.kernel.org,
- linux-pci@vger.kernel.org, devicetree@vger.kernel.org,
- linux-arm-msm@vger.kernel.org, linux-bluetooth@vger.kernel.org,
- linux-pm@vger.kernel.org, Stephan Gerhold <stephan.gerhold@linaro.org>,
- Dmitry Baryshkov <dmitry.baryshkov@oss.qualcomm.com>
-References: <20251125-pci-m2-e-v2-0-32826de07cc5@oss.qualcomm.com>
- <20251125-pci-m2-e-v2-10-32826de07cc5@oss.qualcomm.com>
-From: Krzysztof Kozlowski <krzk@kernel.org>
-Content-Language: en-US
-Autocrypt: addr=krzk@kernel.org; keydata=
- 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 a/A=
-In-Reply-To: <20251125-pci-m2-e-v2-10-32826de07cc5@oss.qualcomm.com>
+Subject: Re: [PATCH v4 2/3] platform/x86: thinkpad_acpi - Add doubletap_filter
+ sysfs interface
+To: Vishnu Sankar <vishnuocv@gmail.com>, corbet@lwn.net,
+ dmitry.torokhov@gmail.com, hmh@hmh.eng.br, derekjohn.clark@gmail.com,
+ ilpo.jarvinen@linux.intel.com
+Cc: mpearson-lenovo@squebb.ca, linux-doc@vger.kernel.org,
+ linux-input@vger.kernel.org, linux-kernel@vger.kernel.org,
+ ibm-acpi-devel@lists.sourceforge.net, platform-driver-x86@vger.kernel.org,
+ vsankar@lenovo.com
+References: <20251129002533.9070-1-vishnuocv@gmail.com>
+ <20251129002533.9070-3-vishnuocv@gmail.com>
+From: Hans de Goede <hansg@kernel.org>
+Content-Language: en-US, nl
+In-Reply-To: <20251129002533.9070-3-vishnuocv@gmail.com>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 
-On 25/11/2025 15:45, Manivannan Sadhasivam via B4 Relay wrote:
->  static const struct pwrseq_pcie_m2_pdata pwrseq_pcie_m2_m_of_data = {
->  	.targets = pwrseq_pcie_m2_m_targets,
->  };
-> @@ -92,6 +174,96 @@ static int pwrseq_pcie_m2_match(struct pwrseq_device *pwrseq,
->  	return PWRSEQ_NO_MATCH;
+Hi Vishnu,
+
+On 29-Nov-25 1:25 AM, Vishnu Sankar wrote:
+> Add sysfs interface for controlling TrackPoint doubletap event filtering.
+> This allows userspace to enable/disable doubletap functionality and
+> query the current state.
+> 
+> The attribute is available at:
+> /sys/devices/platform/thinkpad_acpi/doubletap_filter
+> 
+> When set to 1, doubletap events are filtered out (ignored).
+> When set to 0, doubletap events are processed (default).
+> 
+> This complements the automatic hardware enablement in the trackpoint
+> driver by providing user control over event processing at the kernel level.
+> 
+> Signed-off-by: Vishnu Sankar <vishnuocv@gmail.com>
+> Suggested-by: Mark Pearson <mpearson-lenovo@squebb.ca>
+> ---
+> Changes in v2:
+> - Updated commit message to clarify dependency on trackpoint driver
+> - Now handling sysfs read/write of trackpoint driver using file read/write
+> - Removed sysfs attribute creation of trackpoint double tap here
+> - Reversed the logic and return false right away
+> - Dropped unnecessary debug messages
+> - Using dev_dbg() instead of pr_xxxx()
+> 
+> Changes in v3:
+> - No changes
+> 
+> Changes in v4:
+> - Simplified approach: single sysfs attribute for user control
+> - Clear naming: doubletap_filter instead of doubletap_enabled
+> - Intuitive behavior: 0=process events, 1=filter events
+> - No cross-driver dependencies or complex interactions
+> - Minimal code changes using existing thinkpad_acpi infrastructure
+> ---
+> ---
+>  drivers/platform/x86/lenovo/thinkpad_acpi.c | 54 +++++++++++++++++++--
+>  1 file changed, 49 insertions(+), 5 deletions(-)
+> 
+> diff --git a/drivers/platform/x86/lenovo/thinkpad_acpi.c b/drivers/platform/x86/lenovo/thinkpad_acpi.c
+> index cc19fe520ea9..9b646ecff452 100644
+> --- a/drivers/platform/x86/lenovo/thinkpad_acpi.c
+> +++ b/drivers/platform/x86/lenovo/thinkpad_acpi.c
+> @@ -373,7 +373,7 @@ static struct {
+>  	u32 hotkey_poll_active:1;
+>  	u32 has_adaptive_kbd:1;
+>  	u32 kbd_lang:1;
+> -	u32 trackpoint_doubletap:1;
+> +	u32 trackpoint_doubletap_filter:1;
+
+Why the rename? The new name suggests that events will be filtered
+when trackpoint_doubletap_filter = 1, so inverted of the old name
+but when processing events events are let through when
+trackpoint_doubletap_filter == 1 so 1 means _not_ filtering which
+makes the name weird:
+
+> +		/* Only send the event if kernel-level filtering allows it */
+> +		if (tp_features.trackpoint_doubletap_filter)
+>  			tpacpi_input_send_key(hkey, send_acpi_ev);
+
+Maybe you forgot to add an '!' here, iow this should become:
+
+		/* Only send the event if kernel-level filtering allows it */
+		if (!tp_features.trackpoint_doubletap_filter)
+			tpacpi_input_send_key(hkey, send_acpi_ev);
+
+?
+
+>  	struct quirk_entry *quirks;
+>  } tp_features;
+>  
+> @@ -3104,8 +3104,35 @@ static void tpacpi_send_radiosw_update(void)
+>  	hotkey_radio_sw_notify_change();
 >  }
 >  
-> +static int pwrseq_m2_pcie_notify(struct notifier_block *nb, unsigned long action,
-> +			      void *data)
+> +static ssize_t doubletap_filter_show(struct device *dev,
+> +				      struct device_attribute *attr,
+> +				      char *buf)
 > +{
-> +	struct pwrseq_pcie_m2_ctx *ctx = container_of(nb, struct pwrseq_pcie_m2_ctx, nb);
-> +	struct pci_dev *pdev = to_pci_dev(data);
-> +	struct device_node *pci_remote __free(device_node) = NULL;
+> +	return sysfs_emit(buf, "%d\n", tp_features.trackpoint_doubletap_filter);
+> +}
+> +
+> +static ssize_t doubletap_filter_store(struct device *dev,
+> +				       struct device_attribute *attr,
+> +				       const char *buf, size_t count)
+> +{
+> +	bool filter;
+> +	int err;
+> +
+> +	err = kstrtobool(buf, &filter);
+> +	if (err)
+> +		return err;
+> +
+> +	tp_features.trackpoint_doubletap_filter = filter;
+> +	return count;
+> +}
+> +
+> +static DEVICE_ATTR_RW(doubletap_filter);
+> +
+>  static void hotkey_exit(void)
+>  {
+> +	if (tpacpi_pdev)
+> +		device_remove_file(&tpacpi_pdev->dev, &dev_attr_doubletap_filter);
+> +
+
+New code should not use device_create_file() / device_remove_file() instead
+the attribute should be added to hotkey_attributes[] and then the driver
+core will automatically add/remove it.
+
+>  	mutex_lock(&hotkey_mutex);
+>  	hotkey_poll_stop_sync();
+>  	dbg_printk(TPACPI_DBG_EXIT | TPACPI_DBG_HKEY,
+> @@ -3557,8 +3584,22 @@ static int __init hotkey_init(struct ibm_init_struct *iibm)
+>  
+>  	hotkey_poll_setup_safe(true);
+>  
+> -	/* Enable doubletap by default */
+> -	tp_features.trackpoint_doubletap = 1;
+> +	/*
+> +	 * Enable kernel-level doubletap event filtering by default.
+> +	 * This allows doubletap events to reach userspace.
+> +	 */
+> +	tp_features.trackpoint_doubletap_filter = 1;
+
+Again this seems to be inverted, or if you really want
+trackpoint_doubletap_filter to work as an enable flag
+then please rename it to trackpoint_doubletap_enable.
 
 
-This is an undesired syntax explicitly documented as one to avoid. You
-need here proper assignment, not NULL. Please don't use cleanup.h if you
-do not intend to follow it because it does not make the code simpler.
+> +
+> +	/* Create doubletap_filter sysfs attribute */
+> +	if (tpacpi_pdev) {
+> +		int err = device_create_file(&tpacpi_pdev->dev, &dev_attr_doubletap_filter);
+> +		if (err) {
+> +			pr_warn("Unable to create doubletap_filter sysfs attribute\n");
+> +			/* Continue even if sysfs creation fails */
+> +		} else {
+> +			pr_info("ThinkPad ACPI doubletap_filter sysfs attribute created\n");
+> +		}
+> +	}
 
-> +	struct device_node *serdev_remote __free(device_node) = NULL;
+This can be dropped (replaced by adding the attr to hotkey_attributes[].
 
-This is even worse. Instead of making it local scope, you have automatic
-cleanup for entire function with completely redundant constructor.
+Regards,
 
-Please, use cleanup.h only if you really want to follow its spirit.
-Otherwise it does not make the code easier.
+Hans
 
-
-Best regards,
-Krzysztof
