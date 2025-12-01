@@ -1,55 +1,57 @@
 Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.17])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 18E642F3617;
-	Mon,  1 Dec 2025 10:28:07 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C5B40302CB4;
+	Mon,  1 Dec 2025 10:28:16 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.17
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1764584889; cv=none; b=DwTbWsDVFDpXMzrWuWR/HOL8E2Sz1nFqi9M5fDDhpqUMRXc+wcKmCjWT5+ui8sRuZXcnFxeRW2Yeo8kg1R7FaaQL/YUeBTlJiOGK2ZPhQMgeBiqTYkOF/Uz5VBAQ6B+Xj0d62SA6DVFKbwnTKIx6oFQKqPkiUh6TBcS3rbtddZw=
+	t=1764584898; cv=none; b=GpSMqu2aPI2thZ5372yXC/yjw3NNUj32kxlg/4ezEDgmzs4NCbRuBpI1jeXY88g17PsrS3p94rkd3OzRIDrXwG1KLE3kZct1b7MnUk60ET5PcHmUzMN7nsjh5i5raGR6iJYX/eADjpV28SFpqa1OwySUZmLo5HJX1b9XRf2dl6s=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1764584889; c=relaxed/simple;
-	bh=lubySu67AHHHOsHwPeiSETVoQM3qsK9Z9OuTdp/4n0o=;
-	h=From:To:In-Reply-To:References:Subject:Message-Id:Date:
-	 MIME-Version:Content-Type; b=IGqRcXPYSVB/vjenIcU42dxO8iKMO9k/dAy7KEG40a1rNUc8z9XFvW4k4UfGN60xAcrXliR//YHxuVUmaTbrtCZM2mwXlyxdjp+FV741ajzunIl6vsbWwa2KiTlf1G319B+Vu+Stm0/6fUK4Rk85j1WtTK6WWXbX2hoXlvwqx+4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=pass smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=bYowddWm; arc=none smtp.client-ip=192.198.163.17
+	s=arc-20240116; t=1764584898; c=relaxed/simple;
+	bh=kT5X//GhJjikAD5RWnXukswO6wYtIaZuTzepa00csFE=;
+	h=From:To:Cc:In-Reply-To:References:Subject:Message-Id:Date:
+	 MIME-Version:Content-Type; b=kVktEVo0SRXsxeTmRukI1Sx1axupaXMDeYRvQ+XaAvZUzTIiF31s2/oU3WYdMzC6eqKafJsHxIvZxrXH4Ry8kd+v4B/r1lulYyiRkl4eJm3G92q+D05zO2FcCdVAdWuhq0EanZ4jM79HL7NRUzAXHAVFBJuNQZSlMXUfwaDzD70=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=pass smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=URNLc2K0; arc=none smtp.client-ip=192.198.163.17
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="bYowddWm"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="URNLc2K0"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1764584888; x=1796120888;
-  h=from:to:in-reply-to:references:subject:message-id:date:
-   mime-version:content-transfer-encoding;
-  bh=lubySu67AHHHOsHwPeiSETVoQM3qsK9Z9OuTdp/4n0o=;
-  b=bYowddWmwKpQ3576Mm+WHGDxkwye2n1nyMRadK7McYgDjpjLBQpERwcW
-   3VueZIE2Amag1+AFiyUO0BrswwJ7MHD8FAXaYoGfTENtSZzv5zVdIy++V
-   JWTmC/bjsCtE22l4T1RWwaPMvHHppqvcUBvvLGfGJdjQ0nuyDJVWvVRd4
-   ewP9c+ULxENkJ69ER8CDs/TxQMRLZV5A73HODT4UYTqYBYleSXmioUIH4
-   oRa0Ymisvw5U7Vcfl2rQrmCX7V1L5EICJuOlsebmfxnJTCiF3OHREHd5I
-   sOK970P8zmYUm8ofOm4s14SiiuBdEIEwV0GlG2hs5kGdItWTYo0eiKDVS
-   g==;
-X-CSE-ConnectionGUID: VczF2rCGTcGVQBCPNo94QA==
-X-CSE-MsgGUID: 9HjYuHheST6GNC9b1I4fIg==
-X-IronPort-AV: E=McAfee;i="6800,10657,11629"; a="66407626"
+  t=1764584897; x=1796120897;
+  h=from:to:cc:in-reply-to:references:subject:message-id:
+   date:mime-version:content-transfer-encoding;
+  bh=kT5X//GhJjikAD5RWnXukswO6wYtIaZuTzepa00csFE=;
+  b=URNLc2K0KRXwLEqjG5LR5UNl/b6YQUbWGzmb5a2bTOlyzH352q3izuxI
+   0j1WjTVWDgWLEQzzGHyxEKZFrJJftWPgbTpPvudHzocEg3yoScnGc3OKG
+   4dAnu6ws89zMMMVw67Oa6T5Hzz3c5GNcereRnVx8E23LNu5RiJBJTgvFJ
+   8rO9SSmb5iTHDyQ4aa0hkjfu4V3OoLts0tQGZN+pysPmzCAlFgh3vsTCa
+   REvh9wFXOH105lePzKH/H9o9KYNMMECWOt+Ejp0kE/tJH0PYhe9S28138
+   Aa1nMLvE/fUs1EXEEReOHTAENCXbbVj6qjw7zyWXzxYfxEVXBqAPrnDsC
+   w==;
+X-CSE-ConnectionGUID: H9qkspNbTlW330GOSPKX4w==
+X-CSE-MsgGUID: +/oADK6TTz2EO7fVtzfE1w==
+X-IronPort-AV: E=McAfee;i="6800,10657,11629"; a="66407643"
 X-IronPort-AV: E=Sophos;i="6.20,240,1758610800"; 
-   d="scan'208";a="66407626"
+   d="scan'208";a="66407643"
 Received: from fmviesa003.fm.intel.com ([10.60.135.143])
-  by fmvoesa111.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 01 Dec 2025 02:28:07 -0800
-X-CSE-ConnectionGUID: uJPac02KQLSJbJpiRWDXiA==
-X-CSE-MsgGUID: Ct5nlTKmSTie4vaUcPDpDg==
+  by fmvoesa111.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 01 Dec 2025 02:28:16 -0800
+X-CSE-ConnectionGUID: yoelmp2nSrqj2bvrnYXCPg==
+X-CSE-MsgGUID: /co980COSBClJxfn2twXRg==
 X-ExtLoop1: 1
 Received: from ijarvine-mobl1.ger.corp.intel.com (HELO localhost) ([10.245.245.202])
-  by fmviesa003-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 01 Dec 2025 02:28:05 -0800
+  by fmviesa003-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 01 Dec 2025 02:28:13 -0800
 From: =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
-To: Hans de Goede <hansg@kernel.org>, platform-driver-x86@vger.kernel.org, 
- linux-kernel@vger.kernel.org, 
- =?utf-8?q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
-In-Reply-To: <20251128120215.4450-1-ilpo.jarvinen@linux.intel.com>
-References: <20251128120215.4450-1-ilpo.jarvinen@linux.intel.com>
-Subject: Re: [PATCH 1/1] platform/x86: hp-wmi: Order DMI board name arrays
-Message-Id: <176458488089.9246.11630802631698059482.b4-ty@linux.intel.com>
-Date: Mon, 01 Dec 2025 12:28:00 +0200
+To: platform-driver-x86@vger.kernel.org, david.e.box@linux.intel.com, 
+ yongxin.liu@windriver.com
+Cc: linux-kernel@vger.kernel.org, andrew@lunn.ch, kuba@kernel.org, 
+ stable@vger.kernel.org
+In-Reply-To: <20251128102437.3412891-2-yongxin.liu@windriver.com>
+References: <20251128102437.3412891-2-yongxin.liu@windriver.com>
+Subject: Re: [PATCH v4] platform/x86: intel_pmc_ipc: fix ACPI buffer memory
+ leak
+Message-Id: <176458488785.9246.12086096381340723589.b4-ty@linux.intel.com>
+Date: Mon, 01 Dec 2025 12:28:07 +0200
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
@@ -57,17 +59,17 @@ List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 8bit
+Content-Transfer-Encoding: 7bit
 X-Mailer: b4 0.13.0
 
-On Fri, 28 Nov 2025 14:02:15 +0200, Ilpo Järvinen wrote:
+On Fri, 28 Nov 2025 18:24:38 +0800, yongxin.liu@windriver.com wrote:
 
-> The hp-wmi driver has a number of arrays that are getting new entries
-> and all/most entries have been added to the end of the array. As a
-> result, the numerical order is mixed up in a few entries.
+> The intel_pmc_ipc() function uses ACPI_ALLOCATE_BUFFER to allocate memory
+> for the ACPI evaluation result but never frees it, causing a 192-byte
+> memory leak on each call.
 > 
-> Reorder the array entries. Split lines for each two leading chars to
-> make the arrays easier to read.
+> This leak is triggered during network interface initialization when the
+> stmmac driver calls intel_mac_finish() -> intel_pmc_ipc().
 > 
 > [...]
 
@@ -78,8 +80,8 @@ platform-drivers-x86/review-ilpo-next branch only once I've pushed my
 local branch there, which might take a while.
 
 The list of commits applied:
-[1/1] platform/x86: hp-wmi: Order DMI board name arrays
-      commit: 68779adbabdbb1891ba4d9b8c7d3be99ed5e0b3d
+[1/1] platform/x86: intel_pmc_ipc: fix ACPI buffer memory leak
+      commit: 611cf41ef6ac8301d23daadd8e78b013db0c5071
 
 --
  i.
