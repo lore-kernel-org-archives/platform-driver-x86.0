@@ -1,78 +1,314 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from relay12.grserver.gr (relay12.grserver.gr [88.99.38.195])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3FA872C0F9A
-	for <platform-driver-x86@vger.kernel.org>; Mon,  1 Dec 2025 11:38:38 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B0CF82D97AC
+	for <platform-driver-x86@vger.kernel.org>; Mon,  1 Dec 2025 11:44:35 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=88.99.38.195
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1764589119; cv=none; b=m7Vd9u9Bz9NIhJ9kJIinv2CnAScbujXdkIF937tQZkC+LhVYFo0wdQpDTLb108+j23Mh0tKRNkvECqclSCxCyWysXMpKeZXuKQb6xhPazf4ISiCMR7g8BM1aD0xeWIyQVTY3PJpXe3XvaVghw8g60shwiG6mRKtbYmcmPVvmWeE=
+	t=1764589478; cv=none; b=Y4tdoMaV0Tl8Pu5qgD/1Ohedcs7uiqF7FI+1NuBF3soueidI5H4ogD9PAxi6JKuixOonbvNnDrYAHFhejrP1QydAZc427nZmrWf9dYvjfiNzEUezAAals3F7yrSpOyc1pC335XMF584rSeh87gE/F6YFnLFKufK+BZBBQ7gbvaU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1764589119; c=relaxed/simple;
-	bh=M2hvLR0O2s3vDr4XtET4ZSOdB7xmB7FGpPxMztUp7oY=;
-	h=From:To:Subject:Date:Message-ID:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=OVZm/oojDIxbK8COyvnNen1vNpV51vQnCGqRZD8DZWil6UU/qLDjQDaYA1L6EKfpAUx2a031eQC9X8h2ulKOw7G034wYS+0o3CDXC/6DzUj35+jNpDRmTY0e1nVbI5mxQsj4XwYkFBAjaM0aSp8ipSb6VpdFCEI5h/0VEK0mGxE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=k6pnsEQ0; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1764589478; c=relaxed/simple;
+	bh=TsBbzYG6kV21XFhXbXZjXim/2PHcbnEJwP+hiihBFos=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=dy6kCPXZblrMceFjWt0V4HKUROJYoqzLpaScwbNbLveaM/rLtzqx/sw3kJtkHUwyzButsREXuUJKoH/wCey2xyl3wWWPf0/b028TEqo5R/5Gp7dnH6KvzBiFe1cxQD1zMqVC+4CjXj/TW3MHYX3oG8HtmiGqbEP4zIU9PO14ay8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=antheas.dev; spf=pass smtp.mailfrom=antheas.dev; dkim=pass (2048-bit key) header.d=antheas.dev header.i=@antheas.dev header.b=VkdqKzYq; arc=none smtp.client-ip=88.99.38.195
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=antheas.dev
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=antheas.dev
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="k6pnsEQ0"
-Received: by smtp.kernel.org (Postfix) with ESMTPS id CB00CC4CEF1
-	for <platform-driver-x86@vger.kernel.org>; Mon,  1 Dec 2025 11:38:38 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1764589118;
-	bh=M2hvLR0O2s3vDr4XtET4ZSOdB7xmB7FGpPxMztUp7oY=;
-	h=From:To:Subject:Date:In-Reply-To:References:From;
-	b=k6pnsEQ0ViY/gkEezSbG3chHAfNgKt9+tzWJUqRjIkrZ7yUFxZVPp0cc4ZxEiREVL
-	 u7o3PgXDEvQu8zKF73svpmAI4Lb5fZ3+jO90ntODF/3apLCgMOLwvKGA3ubgsoBhec
-	 3uvcQTPltKCiKjZNRhanHSnhSxMITJONAF5dD5bW6+Zg3CHfmrlZ0wFFLywXDD3N41
-	 9bu8EbCCW9DAZwAK5Seccrv28qyfllSm5LMdTOb6ZD8HvhjIou3n4SOFieVFktWnj5
-	 mxiAy+9bIJEA2nIMPbVbJbjcLVv8V0MZWz9vp9SnlMeRwJlFOzp//JmGg9qZKPxjec
-	 8QpXdx5fOQv+w==
-Received: by aws-us-west-2-korg-bugzilla-1.web.codeaurora.org (Postfix, from userid 48)
-	id BD321C41613; Mon,  1 Dec 2025 11:38:38 +0000 (UTC)
-From: bugzilla-daemon@kernel.org
-To: platform-driver-x86@vger.kernel.org
-Subject: [Bug 219904] pc speaker not working (just pop's/click's) on intel
- chipsets gen 6, 7 and probably more
-Date: Mon, 01 Dec 2025 11:38:38 +0000
-X-Bugzilla-Reason: None
-X-Bugzilla-Type: changed
-X-Bugzilla-Watch-Reason: AssignedTo drivers_platform_x86@kernel-bugs.osdl.org
-X-Bugzilla-Product: Drivers
-X-Bugzilla-Component: Platform_x86
-X-Bugzilla-Version: 2.5
-X-Bugzilla-Keywords: 
-X-Bugzilla-Severity: normal
-X-Bugzilla-Who: aros@gmx.com
-X-Bugzilla-Status: RESOLVED
-X-Bugzilla-Resolution: INVALID
-X-Bugzilla-Priority: P3
-X-Bugzilla-Assigned-To: drivers_platform_x86@kernel-bugs.osdl.org
-X-Bugzilla-Flags: 
-X-Bugzilla-Changed-Fields: bug_status resolution
-Message-ID: <bug-219904-215701-iHHatdLW8Y@https.bugzilla.kernel.org/>
-In-Reply-To: <bug-219904-215701@https.bugzilla.kernel.org/>
-References: <bug-219904-215701@https.bugzilla.kernel.org/>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-X-Bugzilla-URL: https://bugzilla.kernel.org/
-Auto-Submitted: auto-generated
+	dkim=pass (2048-bit key) header.d=antheas.dev header.i=@antheas.dev header.b="VkdqKzYq"
+Received: from relay12 (localhost [127.0.0.1])
+	by relay12.grserver.gr (Proxmox) with ESMTP id CDE8CBDBD8
+	for <platform-driver-x86@vger.kernel.org>; Mon,  1 Dec 2025 13:44:33 +0200 (EET)
+Received: from linux3247.grserver.gr (linux3247.grserver.gr [213.158.90.240])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by relay12.grserver.gr (Proxmox) with ESMTPS id 00B37BDB5E
+	for <platform-driver-x86@vger.kernel.org>; Mon,  1 Dec 2025 13:44:32 +0200 (EET)
+Received: from mail-lj1-f180.google.com (mail-lj1-f180.google.com [209.85.208.180])
+	by linux3247.grserver.gr (Postfix) with ESMTPSA id 5A0E01FF01C
+	for <platform-driver-x86@vger.kernel.org>; Mon,  1 Dec 2025 13:44:31 +0200 (EET)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=antheas.dev;
+	s=default; t=1764589471;
+	bh=3JZbRSHwGX4arYVCJTOlVExAvtxi6WruTVEXNFHv7OM=;
+	h=Received:From:Subject:To;
+	b=VkdqKzYqFxW+wvheAIRZVkxquAubLXdL0mspZCkO20v2uUs00zBWbSUkJKVTuxAaA
+	 s4NWZidPESY5iuVE/Om4YwrJvO5Xw/2KhOZKQzGc7alnGTSyATS7XPDKG8tTHGbV0M
+	 Xq4qxtovdOoXiEALpnF9S+jyYAaq6pxV6o492vN4vPJ3HAkXNLQA+HnXFw/Kd5B+GV
+	 RH95FWKig740RR7wUupfR3NHK2T3ZcO7S/rMlJlP42BLGUt4/9NudPVIz7GCLyWDyn
+	 gUyJYLIT+sJM7+6pmgJDFYc/wtkOnLjDdNJDxfrLkc0buPkf8v57flSVljsmw0AZI9
+	 fgA6n+NHFVANA==
+Authentication-Results: linux3247.grserver.gr;
+        spf=pass (sender IP is 209.85.208.180) smtp.mailfrom=lkml@antheas.dev smtp.helo=mail-lj1-f180.google.com
+Received-SPF: pass (linux3247.grserver.gr: connection is authenticated)
+Received: by mail-lj1-f180.google.com with SMTP id
+ 38308e7fff4ca-37b9728a353so20529331fa.0
+        for <platform-driver-x86@vger.kernel.org>;
+ Mon, 01 Dec 2025 03:44:31 -0800 (PST)
+X-Forwarded-Encrypted: i=1;
+ AJvYcCU5NJUA9+Ae7BhWQ+LfZcUmja47o07h5AYtW/itorx+ayn0lrzKfIL2I4/9yoDaOYCJQREtLdRZt5jwlMxm6o3RLp6e@vger.kernel.org
+X-Gm-Message-State: AOJu0YyEL49rvhzpstwVCfnRJkafCJ4knvztt4ycWmvtINNf8y+Cipx1
+	EC3UZah1VdJj47reTBFsBLjt8+bLOsI/dlIUDvf0iRa/3Sahtu8oActtgcf+I3j1H9nGjZguXv+
+	/8dt7BWlbPse3QFFnTyndL9C8MjxqFJY=
+X-Google-Smtp-Source: 
+ AGHT+IF35OxllvEWkjK0qxe/OGGTueEv3S7roktr2Sxwo0WQOs5m1EUOtB0k/Wdg0Bp5hVMS5HacFDitAtnLG2i3HoQ=
+X-Received: by 2002:a2e:c41:0:b0:37b:970f:d33f with SMTP id
+ 38308e7fff4ca-37cd9287d6dmr68637781fa.21.1764589470783; Mon, 01 Dec 2025
+ 03:44:30 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+References: <20251122110032.4274-1-lkml@antheas.dev>
+ <20251122110032.4274-11-lkml@antheas.dev>
+ <713cc4fd-e6a1-4db4-907a-a0575a2b7b8f@gmail.com>
+ <CAGwozwHwi7mopXY=DM2jt82jgdetdhNR-CUicX7R9KbYj4g0Xw@mail.gmail.com>
+ <CAGwozwGOgE2JPaR34V8ETEq66bMd1rjGNokdnbLDE1Ch7PR5ig@mail.gmail.com>
+ <4c24cacf-a1e0-186d-5e44-c6772e32ffc2@linux.intel.com>
+In-Reply-To: <4c24cacf-a1e0-186d-5e44-c6772e32ffc2@linux.intel.com>
+From: Antheas Kapenekakis <lkml@antheas.dev>
+Date: Mon, 1 Dec 2025 12:44:18 +0100
+X-Gmail-Original-Message-ID: 
+ <CAGwozwGquTikG3-7oJxQWDt6a836FU-Lk+M3JtM6efaTCc0Vng@mail.gmail.com>
+X-Gm-Features: AWmQ_bmFkRR95ilHUu8zjgL7h_TkdTnpcRXbTQn2lj0-mU7cRTQd8JiVAkY0iF8
+Message-ID: 
+ <CAGwozwGquTikG3-7oJxQWDt6a836FU-Lk+M3JtM6efaTCc0Vng@mail.gmail.com>
+Subject: Re: [PATCH v10 10/11] platform/x86: asus-wmi: add keyboard brightness
+ event handler
+To: =?UTF-8?Q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
+Cc: Denis Benato <benato.denis96@gmail.com>,
+ platform-driver-x86@vger.kernel.org,
+	linux-input@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>,
+	Jiri Kosina <jikos@kernel.org>, Benjamin Tissoires <bentiss@kernel.org>,
+	Corentin Chary <corentin.chary@gmail.com>,
+ "Luke D . Jones" <luke@ljones.dev>,
+	Hans de Goede <hansg@kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+X-PPP-Message-ID: 
+ <176458947166.3500920.2523072882248263316@linux3247.grserver.gr>
+X-PPP-Vhost: antheas.dev
+X-Virus-Scanned: clamav-milter 1.4.3 at linux3247.grserver.gr
+X-Virus-Status: Clean
 
-https://bugzilla.kernel.org/show_bug.cgi?id=3D219904
+On Mon, 1 Dec 2025 at 10:52, Ilpo J=C3=A4rvinen
+<ilpo.jarvinen@linux.intel.com> wrote:
+>
+> On Mon, 1 Dec 2025, Antheas Kapenekakis wrote:
+> > On Wed, 26 Nov 2025 at 21:39, Antheas Kapenekakis <lkml@antheas.dev> wr=
+ote:
+> > > On Wed, 26 Nov 2025 at 21:23, Denis Benato <benato.denis96@gmail.com>=
+ wrote:
+> > > > On 11/22/25 12:00, Antheas Kapenekakis wrote:
+> > > > > The keyboard brightness control of Asus WMI keyboards is handled =
+in
+> > > > > kernel, which leads to the shortcut going from brightness 0, to 1=
+,
+> > > > > to 2, and 3.
+> > > > >
+> > > > > However, for HID keyboards it is exposed as a key and handled by =
+the
+> > > > > user's desktop environment. For the toggle button, this means tha=
+t
+> > > > > brightness control becomes on/off. In addition, in the absence of=
+ a
+> > > > > DE, the keyboard brightness does not work.
+> > > > >
+> > > > > Therefore, expose an event handler for the keyboard brightness co=
+ntrol
+> > > > > which can then be used by hid-asus. Since this handler is called =
+from
+> > > > > an interrupt context, defer the actual work to a workqueue.
+> > > > >
+> > > > > In the process, introduce ASUS_EV_MAX_BRIGHTNESS to hold the cons=
+tant
+> > > > > for maximum brightness since it is shared between hid-asus/asus-w=
+mi.
+> > > > >
+> > > > > Reviewed-by: Luke D. Jones <luke@ljones.dev>
+> > > > > Tested-by: Luke D. Jones <luke@ljones.dev>
+> > > > > Signed-off-by: Antheas Kapenekakis <lkml@antheas.dev>
+> > > > > ---
+> > > > >  drivers/platform/x86/asus-wmi.c            | 46 ++++++++++++++++=
++++---
+> > > > >  include/linux/platform_data/x86/asus-wmi.h | 13 ++++++
+> > > > >  2 files changed, 54 insertions(+), 5 deletions(-)
+> > > > >
+> > > > > diff --git a/drivers/platform/x86/asus-wmi.c b/drivers/platform/x=
+86/asus-wmi.c
+> > > > > index 84cde34ab6a8..a69464e45ca4 100644
+> > > > > --- a/drivers/platform/x86/asus-wmi.c
+> > > > > +++ b/drivers/platform/x86/asus-wmi.c
+> > > > > @@ -1719,6 +1719,44 @@ static void kbd_led_update_all(struct work=
+_struct *work)
+> > > > >       }
+> > > > >  }
+> > > > >
+> > > > > +/*
+> > > > > + * This function is called from hid-asus to inform asus-wmi of b=
+rightness
+> > > > > + * changes initiated by the keyboard backlight keys.
+> > > > > + */
+> > > > > +int asus_hid_event(enum asus_hid_event event)
+> > > > > +{
+> > > > > +     struct asus_wmi *asus;
+> > > > > +     int brightness;
+> > > > > +
+> > > > > +     guard(spinlock_irqsave)(&asus_ref.lock);
+> > > > > +     asus =3D asus_ref.asus;
+> > > > > +     if (!asus || !asus->kbd_led_registered)
+> > > > > +             return -EBUSY;
+> > > > > +
+> > > > > +     brightness =3D asus->kbd_led_wk;
+> > > > > +
+> > > > > +     switch (event) {
+> > > > > +     case ASUS_EV_BRTUP:
+> > > > > +             brightness +=3D 1;
+> > > > > +             break;
+> > > > > +     case ASUS_EV_BRTDOWN:
+> > > > > +             brightness -=3D 1;
+> > > > > +             break;
+> > > > > +     case ASUS_EV_BRTTOGGLE:
+> > > > > +             if (brightness >=3D ASUS_EV_MAX_BRIGHTNESS)
+> > > > > +                     brightness =3D 0;
+> > > > > +             else
+> > > > > +                     brightness +=3D 1;
+> > > > > +             break;
+> > > > > +     }
+> > > > > +
+> > > > > +     asus->kbd_led_wk =3D clamp_val(brightness, 0, ASUS_EV_MAX_B=
+RIGHTNESS);
+> > > > > +     asus->kbd_led_notify =3D true;
+> > > > > +     queue_work(asus->led_workqueue, &asus->kbd_led_work);
+> > > > > +     return 0;
+> > > > > +}
+> > > > > +EXPORT_SYMBOL_GPL(asus_hid_event);
+> > > > > +
+> > > > >  /*
+> > > > >   * These functions actually update the LED's, and are called fro=
+m a
+> > > > LEDs as opposed to LED's?
+> > >
+> > > I agree with you, but the author of that line probably wouldn't -
+> > > depends on author dialect and both are usually correct.
+> > >
+> > > When making acronyms plural, adding a ' is usually accepted as
+> > > correct. But this is not added as part of this series, so you can do =
+a
+> > > reword commit if you wish
+> > >
+> > > Antheas
+> >
+> > Hm, perhaps this was not clear but the part you commented on was not
+> > part of the patch/this series. Do you want to finish reviewing this
+> > patch and add a rev-by?
+> >
+> > @Ilpo: with 6.18 releasing yesterday, what is the status on this? is
+> > it for 6.20? Hans commented on patch 5
+>
+> It will have to wait to the 6.20 cycle as it's cross-subsystem series so
+> there are other maintainers involved than just me.
 
-Artem S. Tashkinov (aros@gmx.com) changed:
+Unfortunate. Jiri is cc'd on this series and we had around 2 weeks
+where the code was frozen. Was it my responsibility to ask for acks so
+it can go through x86?
 
-           What    |Removed                     |Added
-----------------------------------------------------------------------------
-             Status|NEW                         |RESOLVED
-         Resolution|---                         |INVALID
+> --
+>  i.
+>
+> > Thanks,
+> > Antheas
+> >
+> > > > >   * workqueue. By doing this as separate work rather than when th=
+e LED
+> > > > > @@ -1801,13 +1839,11 @@ static void do_kbd_led_set(struct led_cla=
+ssdev *led_cdev, int value)
+> > > > >  {
+> > > > >       struct asus_hid_listener *listener;
+> > > > >       struct asus_wmi *asus;
+> > > > > -     int max_level;
+> > > > >
+> > > > >       asus =3D container_of(led_cdev, struct asus_wmi, kbd_led);
+> > > > > -     max_level =3D asus->kbd_led.max_brightness;
+> > > > >
+> > > > >       scoped_guard(spinlock_irqsave, &asus_ref.lock)
+> > > > > -             asus->kbd_led_wk =3D clamp_val(value, 0, max_level)=
+;
+> > > > > +             asus->kbd_led_wk =3D clamp_val(value, 0, ASUS_EV_MA=
+X_BRIGHTNESS);
+> > > > >
+> > > > >       if (asus->kbd_led_avail)
+> > > > >               kbd_led_update(asus);
+> > > > > @@ -2011,7 +2047,7 @@ static int asus_wmi_led_init(struct asus_wm=
+i *asus)
+> > > > >       asus->kbd_led.flags =3D LED_BRIGHT_HW_CHANGED;
+> > > > >       asus->kbd_led.brightness_set =3D kbd_led_set;
+> > > > >       asus->kbd_led.brightness_get =3D kbd_led_get;
+> > > > > -     asus->kbd_led.max_brightness =3D 3;
+> > > > > +     asus->kbd_led.max_brightness =3D ASUS_EV_MAX_BRIGHTNESS;
+> > > > >       asus->kbd_led_avail =3D !kbd_led_read(asus, &led_val, NULL)=
+;
+> > > > >       INIT_WORK(&asus->kbd_led_work, kbd_led_update_all);
+> > > > >
+> > > > > @@ -4530,7 +4566,7 @@ static void asus_wmi_handle_event_code(int =
+code, struct asus_wmi *asus)
+> > > > >               return;
+> > > > >       }
+> > > > >       if (code =3D=3D NOTIFY_KBD_BRTTOGGLE) {
+> > > > > -             if (led_value =3D=3D asus->kbd_led.max_brightness)
+> > > > > +             if (led_value =3D=3D ASUS_EV_MAX_BRIGHTNESS)
+> > > > >                       kbd_led_set_by_kbd(asus, 0);
+> > > > >               else
+> > > > >                       kbd_led_set_by_kbd(asus, led_value + 1);
+> > > > > diff --git a/include/linux/platform_data/x86/asus-wmi.h b/include=
+/linux/platform_data/x86/asus-wmi.h
+> > > > > index d347cffd05d5..7b872b5d0960 100644
+> > > > > --- a/include/linux/platform_data/x86/asus-wmi.h
+> > > > > +++ b/include/linux/platform_data/x86/asus-wmi.h
+> > > > > @@ -178,6 +178,14 @@ struct asus_hid_listener {
+> > > > >       void (*brightness_set)(struct asus_hid_listener *listener, =
+int brightness);
+> > > > >  };
+> > > > >
+> > > > > +enum asus_hid_event {
+> > > > > +     ASUS_EV_BRTUP,
+> > > > > +     ASUS_EV_BRTDOWN,
+> > > > > +     ASUS_EV_BRTTOGGLE,
+> > > > > +};
+> > > > > +
+> > > > > +#define ASUS_EV_MAX_BRIGHTNESS 3
+> > > > > +
+> > > > >  #if IS_REACHABLE(CONFIG_ASUS_WMI)
+> > > > >  void set_ally_mcu_hack(enum asus_ally_mcu_hack status);
+> > > > >  void set_ally_mcu_powersave(bool enabled);
+> > > > > @@ -186,6 +194,7 @@ int asus_wmi_set_devstate(u32 dev_id, u32 ctr=
+l_param, u32 *retval);
+> > > > >  int asus_wmi_evaluate_method(u32 method_id, u32 arg0, u32 arg1, =
+u32 *retval);
+> > > > >  int asus_hid_register_listener(struct asus_hid_listener *cdev);
+> > > > >  void asus_hid_unregister_listener(struct asus_hid_listener *cdev=
+);
+> > > > > +int asus_hid_event(enum asus_hid_event event);
+> > > > >  #else
+> > > > >  static inline void set_ally_mcu_hack(enum asus_ally_mcu_hack sta=
+tus)
+> > > > >  {
+> > > > > @@ -213,6 +222,10 @@ static inline int asus_hid_register_listener=
+(struct asus_hid_listener *bdev)
+> > > > >  static inline void asus_hid_unregister_listener(struct asus_hid_=
+listener *bdev)
+> > > > >  {
+> > > > >  }
+> > > > > +static inline int asus_hid_event(enum asus_hid_event event)
+> > > > > +{
+> > > > > +     return -ENODEV;
+> > > > > +}
+> > > > >  #endif
+> > > > >
+> > > > >  #endif       /* __PLATFORM_DATA_X86_ASUS_WMI_H */
+> > > >
+> >
+>
 
---=20
-You may reply to this email to add a comment.
-
-You are receiving this mail because:
-You are watching the assignee of the bug.=
