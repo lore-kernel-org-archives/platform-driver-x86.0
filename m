@@ -1,189 +1,414 @@
-Received: from mail-yx1-f50.google.com (mail-yx1-f50.google.com [74.125.224.50])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.11])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 38CF13161BD
-	for <platform-driver-x86@vger.kernel.org>; Tue,  2 Dec 2025 14:07:18 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=74.125.224.50
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2AA833242C8
+	for <platform-driver-x86@vger.kernel.org>; Tue,  2 Dec 2025 15:59:40 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.11
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1764684439; cv=none; b=FXxVkpVCXziBMw+qb70N2w7y0wXPVXJrh3Ikv7kZydUyTg40lt57X0pnZDnDlJVoXXmgCuf71zNKwyNxGWQuGlt4MdxHTRgY+4E6jKSKXsmsILWTmahTpeXSdEpjMCJnvvAZbHUwffS04+uVGy11POGWxvFJO9oSA0qKkSI1l08=
+	t=1764691183; cv=none; b=PSAr1IYZj3DgkLuA3HKgQW8hX/9hN0w99E2axi5C48w37nvKdgsqfM8qx3qnjJQtEhTW9/x6pKDHhGw2JMFUqso0fBqvs7HiZi40e6UveZaly0QpbjBLpfz2bGX+JzQ4VwnpuqGoVCyze5nhLuKTkiynEMBQJvNAzgagEYIVqrE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1764684439; c=relaxed/simple;
-	bh=vHUrQ6w324fYnCNxiHl4mdFInNGEkkrZLMojf3dBXGg=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=keJWN9CllgCoX81yBw2ax7G83LqsMDNpReJ6kz9jsrFtGwEFvxtoUZRJ5swqvbIrvicDkT+0eva1H1qy9LOE6O04/YrGJ4HHygk26zqqZwqUcWSDiZ/UapWG2/NVihuijRixpsQ+6aH/yCOYYcd6P5M8MEmtPsvW9E19Joj7Mpk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-m68k.org; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=74.125.224.50
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-m68k.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-yx1-f50.google.com with SMTP id 956f58d0204a3-6420dc2e5feso4336892d50.3
-        for <platform-driver-x86@vger.kernel.org>; Tue, 02 Dec 2025 06:07:17 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1764684437; x=1765289237;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-gg:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=P35uIC8+DPfTCMfHgmdtX7Glr2h/6n9nJWKZMAhyHf0=;
-        b=dDsYNe1fI5goEZ0Lg7Z1yt/tFCaDdzCo306dgVzlNg3IlLufNhpBBxg/Xiq2PUj3Lf
-         j9R/rMxbm2D1H19SuKm4U+7iaImPLiqD/ttMHlTl2Fay8yps6lMqkR40ObQ8LjwJQDfq
-         vwoZjvboxZnN4k//fYsejcuR+RAhtNvdgtpadF+2BmWlytvXcltfYy8gF3eMTR735j2x
-         lw4sNiC/ueSjkIfht0INIaAY/vWTLhn0dRXFpBoHDywWUn/tRus+TVrsJDZYx46uNbd9
-         tb8GdqukI+idICn9ODM1mrsJi1jXgVscJ+K//atDVhUQ8WeRHJpbGsntdTAEqXfBybiI
-         mkSw==
-X-Forwarded-Encrypted: i=1; AJvYcCU59J10t6MriEAi+JgDWowbczDzRfmB33twrsz1q1+Ah8Xjrydcw6IKHe8v8z1Hoa0hPv7WDl7i9IO4mgKimk0X9mmz@vger.kernel.org
-X-Gm-Message-State: AOJu0YwLK0FcsqveGbvXngSgVGlDIZo6PhPP/iX9yznxw6Qe3ix3nmw9
-	hpoWZS/mXEdd1GIZ25rnWJy4+RMwhZ1vneOKdHXR7TeHIBlUVe08MTdhEoHkikJp
-X-Gm-Gg: ASbGncskrPSBHznqI02XJazBM/5P1mLQpD3qRrh+8rDduHWBtk1ao7HZbbnBty/3zt8
-	7k7goQIimK9E+3Xh9hJDFnlp07h4I0IayKLboFV2+5Gmwx7I25xFniDdLZi8/WiNeEcfhBjj89n
-	Bt140ppoGzbuV1zhkmfoXQtsxGZTRiIekicUMhHqoSDp5y3JKxZ7iTp4+VJczxAIi/p9Buzvl2+
-	HTW/Z4FiHh8z1wzNrIzLQiShs6IzsskiFzzRpyrSv2nV20/kQwy9v2ubtv2LdEwivqclwiLcjO1
-	9pS3VvpL4tgAVoh+gz4epmgF9QJNlpM2HNTJRYGuvknGCdhhiHEdoT+3hr7z9Zj8bRtF53lqAHz
-	HixUQ4DSv7cWeLLgepgaMxjVAlcdvbmZ/sFDQdTr9BUBhPd43BdjC/ICYlgwBVsZM8u5R/tuIGz
-	RL29H0cJuCLxNQ+FpMmHqrX0wJUvCeATFGVCHmZe6+5SN6qH+06OSO4SpBMis=
-X-Google-Smtp-Source: AGHT+IF7vl9X9h66HMULkRvqf3JAIWeRqy258D+qKdPVe/a8ctIZSGUznzPbslywXV/gO3lnxq3tCQ==
-X-Received: by 2002:a53:edc8:0:b0:63f:aef7:d005 with SMTP id 956f58d0204a3-64302acdaf5mr25518768d50.61.1764684437011;
-        Tue, 02 Dec 2025 06:07:17 -0800 (PST)
-Received: from mail-yx1-f48.google.com (mail-yx1-f48.google.com. [74.125.224.48])
-        by smtp.gmail.com with ESMTPSA id 00721157ae682-78ad102ac1bsm62709157b3.40.2025.12.02.06.07.15
-        for <platform-driver-x86@vger.kernel.org>
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 02 Dec 2025 06:07:15 -0800 (PST)
-Received: by mail-yx1-f48.google.com with SMTP id 956f58d0204a3-6442e2dd8bbso912379d50.0
-        for <platform-driver-x86@vger.kernel.org>; Tue, 02 Dec 2025 06:07:15 -0800 (PST)
-X-Forwarded-Encrypted: i=1; AJvYcCWwghSwAEEKbxOz2uRsviS8QHhWR/W37plWE3FFsOcTb40VRXbveanjlHXql4ZLwaw3rm4KcOZHwMv/XbKAlVOFt9JA@vger.kernel.org
-X-Received: by 2002:a53:dd48:0:b0:63e:17d8:d977 with SMTP id
- 956f58d0204a3-64302abbb9cmr22209916d50.41.1764684434875; Tue, 02 Dec 2025
- 06:07:14 -0800 (PST)
+	s=arc-20240116; t=1764691183; c=relaxed/simple;
+	bh=1p0FkE70gX07+t9E0oBVRsQHKb67A9frfFmCiwPyPRE=;
+	h=From:Date:To:cc:Subject:In-Reply-To:Message-ID:References:
+	 MIME-Version:Content-Type; b=TzX2iWpFUcPWmWeZD936cPbdyMFu+hAfeDzj0bwdvyQfXGKHxTiDQfpdYv7DQtNb46p0oM9baCBWCu17vA6pQqf0rsNsvrRLWT+4T0y94K5c4/cJ0CnIrnARiCJYAjzo5rlsMazybnFyFHLkzMHhOjhrya32HhQTB+zS4mKjNeA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=pass smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=etk4iMr4; arc=none smtp.client-ip=198.175.65.11
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="etk4iMr4"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1764691181; x=1796227181;
+  h=from:date:to:cc:subject:in-reply-to:message-id:
+   references:mime-version;
+  bh=1p0FkE70gX07+t9E0oBVRsQHKb67A9frfFmCiwPyPRE=;
+  b=etk4iMr41tUJWzSoZsMUnX/a/7PQe1kueUmYRi4LM2WktSjcu7JKf7if
+   vDjAfgKVZ3TfXhMcArV3eBR9+SXldHYVID5QQNnfBMicJ0qpWfpeIUFW2
+   2gj+dz7rGMHf9DU5LlokPClDovKPyjiUBsAwlIAUXgJvCcUoi65UAY9PA
+   pYdNTPuoNaFCgoLsh4z4fR9DViZ3tvF1r2YDTT1NjCTOlus8S78cBuU/O
+   EWWySF6tW+a7mslyDjwo7J/g4o0b9WtFpOqLbWbpjffZvMhT09SxHdvhD
+   Z/rdzPj3UVnfjaZdDQ1iBoWGHUipbFzTOGPYd9UrhPfetuNG5Ftn5GqaY
+   A==;
+X-CSE-ConnectionGUID: QDznMEYkSESiAvk/DhqUVw==
+X-CSE-MsgGUID: tryGatQtRD+EkVEZGhm3iA==
+X-IronPort-AV: E=McAfee;i="6800,10657,11630"; a="76983593"
+X-IronPort-AV: E=Sophos;i="6.20,243,1758610800"; 
+   d="scan'208";a="76983593"
+Received: from fmviesa008.fm.intel.com ([10.60.135.148])
+  by orvoesa103.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 02 Dec 2025 07:59:40 -0800
+X-CSE-ConnectionGUID: JUk269JYRXWnjMx30M0VRA==
+X-CSE-MsgGUID: C9gu9mpjTju15z86IQN9lg==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.20,243,1758610800"; 
+   d="scan'208";a="194636942"
+Received: from ijarvine-mobl1.ger.corp.intel.com (HELO localhost) ([10.245.244.183])
+  by fmviesa008-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 02 Dec 2025 07:59:38 -0800
+From: =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
+Date: Tue, 2 Dec 2025 17:59:34 +0200 (EET)
+To: Shyam Sundar S K <Shyam-sundar.S-k@amd.com>
+cc: Hans de Goede <hansg@kernel.org>, platform-driver-x86@vger.kernel.org, 
+    Patil.Reddy@amd.com, mario.limonciello@amd.com, 
+    Mario Limonciello <superm1@kernel.org>, Yijun Shen <Yijun.Shen@Dell.com>
+Subject: Re: [PATCH v5] platform/x86/amd/pmf: Use ring buffer to store custom
+ BIOS input values
+In-Reply-To: <20251202042219.245173-1-Shyam-sundar.S-k@amd.com>
+Message-ID: <5c429abe-7b82-85ed-c679-e14d09207d6c@linux.intel.com>
+References: <20251202042219.245173-1-Shyam-sundar.S-k@amd.com>
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20251112-b4-of-match-matchine-data-v2-0-d46b72003fd6@linaro.org> <20251112-b4-of-match-matchine-data-v2-1-d46b72003fd6@linaro.org>
-In-Reply-To: <20251112-b4-of-match-matchine-data-v2-1-d46b72003fd6@linaro.org>
-From: Geert Uytterhoeven <geert@linux-m68k.org>
-Date: Tue, 2 Dec 2025 15:07:03 +0100
-X-Gmail-Original-Message-ID: <CAMuHMdVAZpp7M+pp27+kHZwoet2Q8Rm-Y4ePu7=W_1oXhebLmQ@mail.gmail.com>
-X-Gm-Features: AWmQ_bnQtK_C28o8ts-DX6QMHSfgR5FWBqGmuyp3cjxdu41cx4XkoPs5W_lQhYE
-Message-ID: <CAMuHMdVAZpp7M+pp27+kHZwoet2Q8Rm-Y4ePu7=W_1oXhebLmQ@mail.gmail.com>
-Subject: Re: [PATCH v2 01/11] of: Add wrappers to match root node with OF
- device ID tables
-To: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
-Cc: Rob Herring <robh@kernel.org>, Saravana Kannan <saravanak@google.com>, 
-	"Rafael J. Wysocki" <rafael@kernel.org>, Viresh Kumar <viresh.kumar@linaro.org>, 
-	Matthias Brugger <matthias.bgg@gmail.com>, 
-	AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>, 
-	Yangtao Li <tiny.windzz@gmail.com>, Chen-Yu Tsai <wens@kernel.org>, 
-	Jernej Skrabec <jernej.skrabec@gmail.com>, Samuel Holland <samuel@sholland.org>, 
-	Lorenzo Pieralisi <lpieralisi@kernel.org>, Daniel Lezcano <daniel.lezcano@linaro.org>, 
-	Bjorn Andersson <andersson@kernel.org>, Konrad Dybcio <konradybcio@kernel.org>, 
-	Thomas Gleixner <tglx@linutronix.de>, Nicolas Ferre <nicolas.ferre@microchip.com>, 
-	Alexandre Belloni <alexandre.belloni@bootlin.com>, Claudiu Beznea <claudiu.beznea@tuxon.dev>, 
-	Maximilian Luz <luzmaximilian@gmail.com>, Hans de Goede <hansg@kernel.org>, 
-	=?UTF-8?Q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>, 
-	Daniel Lezcano <daniel.lezcano@kernel.org>, Thierry Reding <thierry.reding@gmail.com>, 
-	Jonathan Hunter <jonathanh@nvidia.com>, devicetree@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, linux-pm@vger.kernel.org, 
-	linux-arm-kernel@lists.infradead.org, linux-mediatek@lists.infradead.org, 
-	linux-sunxi@lists.linux.dev, linux-arm-msm@vger.kernel.org, 
-	platform-driver-x86@vger.kernel.org, linux-tegra@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: multipart/mixed; boundary="8323328-774990684-1764691174=:974"
 
-Hi Krzysztof,
+  This message is in MIME format.  The first part should be readable text,
+  while the remaining parts are likely unreadable without MIME-aware tools.
 
-Thanks for your patch, which is now commit 4a93adcbd201aad5
-("of: Add wrappers to match root node with OF device ID tables")
-in dt-rh/for-next.
+--8323328-774990684-1764691174=:974
+Content-Type: text/plain; charset=ISO-8859-15
+Content-Transfer-Encoding: QUOTED-PRINTABLE
 
-On Wed, 12 Nov 2025 at 11:30, Krzysztof Kozlowski
-<krzysztof.kozlowski@linaro.org> wrote:
-> Several drivers duplicate same code for getting reference to the root
-> node, matching it against 'struct of_device_id' table and getting out
-> the match data from the table entry.
->
-> There is a of_machine_compatible_match() wrapper but it takes array of
-> strings, which is not suitable for many drivers since they want the
-> driver data associated with each compatible.
->
-> Add two wrappers, similar to existing of_device_get_match_data():
-> 1. of_machine_device_match() doing only matching against 'struct
->    of_device_id' and returning bool.
-> 2. of_machine_get_match_data() doing the matching and returning
->    associated driver data for found compatible.
+On Tue, 2 Dec 2025, Shyam Sundar S K wrote:
 
-Shouldn't the first function be called of_match_machine(), and return
-a const struct of_device_id *, cfr. of_match_device()?
-
->
-> Reviewed-by: AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>
-> Signed-off-by: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
-
-> --- a/drivers/of/base.c
-> +++ b/drivers/of/base.c
-> @@ -434,6 +434,53 @@ bool of_machine_compatible_match(const char *const *compats)
+> Custom BIOS input values can be updated by multiple sources, such as powe=
+r
+> mode changes and sensor events, each triggering a custom BIOS input event=
+=2E
+> When these events occur in rapid succession, new data may overwrite
+> previous values before they are processed, resulting in lost updates.
+>=20
+> To address this, introduce a fixed-size, power-of-two ring buffer to
+> capture every custom BIOS input event, storing both the pending request
+> and its associated input values. Access to the ring buffer is synchronize=
+d
+> using a mutex.
+>=20
+> The previous use of memset() to clear the pending request structure after
+> each event is removed, as each BIOS input value is now copied into the
+> buffer as a snapshot. Consumers now process entries directly from the rin=
+g
+> buffer, making explicit clearing of the pending request structure
+> unnecessary.
+>=20
+> Reviewed-by: Mario Limonciello (AMD) <superm1@kernel.org>
+> Tested-by: Yijun Shen <Yijun.Shen@Dell.com>
+> Co-developed-by: Patil Rajesh Reddy <Patil.Reddy@amd.com>
+> Signed-off-by: Patil Rajesh Reddy <Patil.Reddy@amd.com>
+> Signed-off-by: Shyam Sundar S K <Shyam-sundar.S-k@amd.com>
+> ---
+> v5:
+>  - Advance ring buffer tail with a goto label
+>=20
+> v4:
+>  - Do not store local copy of the ring buffer
+>  - use devm_mutex_init()
+>=20
+> v3:
+>  - include headers wherever missing
+>  - use dev_warn() instead of dev_WARN_ONCE()
+>  - remove generic struct names
+>  - enhance ringbuffer mechanism to handle common path
+>  - other cosmetic remarks
+>=20
+> v2:
+>  - Add dev_WARN_ONCE()
+>  - Change variable name rb_mutex to cbi_mutex
+>  - Move tail increment logic above pending request check
+>=20
+>  drivers/platform/x86/amd/pmf/acpi.c   | 40 +++++++++++++++++++++++++++
+>  drivers/platform/x86/amd/pmf/core.c   |  5 ++++
+>  drivers/platform/x86/amd/pmf/pmf.h    | 21 ++++++++++++++
+>  drivers/platform/x86/amd/pmf/spc.c    | 33 ++++++++++++----------
+>  drivers/platform/x86/amd/pmf/tee-if.c |  2 ++
+>  5 files changed, 87 insertions(+), 14 deletions(-)
+>=20
+> diff --git a/drivers/platform/x86/amd/pmf/acpi.c b/drivers/platform/x86/a=
+md/pmf/acpi.c
+> index 13c4fec2c7ef..3d94b03cf794 100644
+> --- a/drivers/platform/x86/amd/pmf/acpi.c
+> +++ b/drivers/platform/x86/amd/pmf/acpi.c
+> @@ -9,6 +9,9 @@
+>   */
+> =20
+>  #include <linux/acpi.h>
+> +#include <linux/array_size.h>
+> +#include <linux/cleanup.h>
+> +#include <linux/dev_printk.h>
+>  #include "pmf.h"
+> =20
+>  #define APMF_CQL_NOTIFICATION  2
+> @@ -331,6 +334,39 @@ int apmf_get_sbios_requests(struct amd_pmf_dev *pdev=
+, struct apmf_sbios_req *req
+>  =09=09=09=09=09=09=09=09=09 req, sizeof(*req));
 >  }
->  EXPORT_SYMBOL(of_machine_compatible_match);
->
-> +/**
-> + * of_machine_device_match - Test root of device tree against a of_device_id array
-> + * @matches:   NULL terminated array of of_device_id match structures to search in
-> + *
-> + * Returns true if the root node has any of the given compatible values in its
-> + * compatible property.
-> + */
-> +bool of_machine_device_match(const struct of_device_id *matches)
+> =20
+> +/* Store custom BIOS inputs data in ring buffer */
+> +static void amd_pmf_custom_bios_inputs_rb(struct amd_pmf_dev *pmf_dev)
 > +{
-> +       struct device_node *root;
-> +       const struct of_device_id *match = NULL;
+> +=09struct pmf_cbi_ring_buffer *rb =3D &pmf_dev->cbi_buf;
+> +=09int i;
 > +
-> +       root = of_find_node_by_path("/");
-> +       if (root) {
-> +               match = of_match_node(matches, root);
-> +               of_node_put(root);
-> +       }
+> +=09guard(mutex)(&pmf_dev->cbi_mutex);
 > +
-> +       return match != NULL;
+> +=09switch (pmf_dev->cpu_id) {
+> +=09case AMD_CPU_ID_PS:
+> +=09=09for (i =3D 0; i < ARRAY_SIZE(custom_bios_inputs_v1); i++)
+> +=09=09=09rb->data[rb->head].val[i] =3D pmf_dev->req1.custom_policy[i];
+> +=09=09rb->data[rb->head].preq =3D pmf_dev->req1.pending_req;
+> +=09=09break;
+> +=09case PCI_DEVICE_ID_AMD_1AH_M20H_ROOT:
+> +=09case PCI_DEVICE_ID_AMD_1AH_M60H_ROOT:
+> +=09=09for (i =3D 0; i < ARRAY_SIZE(custom_bios_inputs); i++)
+> +=09=09=09rb->data[rb->head].val[i] =3D pmf_dev->req.custom_policy[i];
+> +=09=09rb->data[rb->head].preq =3D pmf_dev->req.pending_req;
+> +=09=09break;
+> +=09default:
+> +=09=09return;
+> +=09}
+> +
+> +=09if (CIRC_SPACE(rb->head, rb->tail, CUSTOM_BIOS_INPUT_RING_ENTRIES) =
+=3D=3D 0) {
+> +=09=09/* Rare case: ensures the newest BIOS input value is kept */
+> +=09=09dev_warn(pmf_dev->dev, "Overwriting BIOS input value, data may be =
+lost\n");
+> +=09=09rb->tail =3D (rb->tail + 1) & (CUSTOM_BIOS_INPUT_RING_ENTRIES - 1)=
+;
+> +=09}
+> +
+> +=09rb->head =3D (rb->head + 1) & (CUSTOM_BIOS_INPUT_RING_ENTRIES - 1);
 > +}
-> +EXPORT_SYMBOL(of_machine_device_match);
 > +
+>  static void amd_pmf_handle_early_preq(struct amd_pmf_dev *pdev)
+>  {
+>  =09if (!pdev->cb_flag)
+> @@ -356,6 +392,8 @@ static void apmf_event_handler_v2(acpi_handle handle,=
+ u32 event, void *data)
+>  =09dev_dbg(pmf_dev->dev, "Pending request (preq): 0x%x\n", pmf_dev->req.=
+pending_req);
+> =20
+>  =09amd_pmf_handle_early_preq(pmf_dev);
+> +
+> +=09amd_pmf_custom_bios_inputs_rb(pmf_dev);
+>  }
+> =20
+>  static void apmf_event_handler_v1(acpi_handle handle, u32 event, void *d=
+ata)
+> @@ -374,6 +412,8 @@ static void apmf_event_handler_v1(acpi_handle handle,=
+ u32 event, void *data)
+>  =09dev_dbg(pmf_dev->dev, "Pending request (preq1): 0x%x\n", pmf_dev->req=
+1.pending_req);
+> =20
+>  =09amd_pmf_handle_early_preq(pmf_dev);
+> +
+> +=09amd_pmf_custom_bios_inputs_rb(pmf_dev);
+>  }
+> =20
+>  static void apmf_event_handler(acpi_handle handle, u32 event, void *data=
+)
+> diff --git a/drivers/platform/x86/amd/pmf/core.c b/drivers/platform/x86/a=
+md/pmf/core.c
+> index 8fc293c9c538..9f4a1f79459a 100644
+> --- a/drivers/platform/x86/amd/pmf/core.c
+> +++ b/drivers/platform/x86/amd/pmf/core.c
+> @@ -11,6 +11,7 @@
+>  #include <linux/debugfs.h>
+>  #include <linux/iopoll.h>
+>  #include <linux/module.h>
+> +#include <linux/mutex.h>
+>  #include <linux/pci.h>
+>  #include <linux/platform_device.h>
+>  #include <linux/power_supply.h>
+> @@ -477,6 +478,10 @@ static int amd_pmf_probe(struct platform_device *pde=
+v)
+>  =09if (err)
+>  =09=09return err;
+> =20
+> +=09err =3D devm_mutex_init(dev->dev, &dev->cbi_mutex);
+> +=09if (err)
+> +=09=09return err;
+> +
+>  =09apmf_acpi_init(dev);
+>  =09platform_set_drvdata(pdev, dev);
+>  =09amd_pmf_dbgfs_register(dev);
+> diff --git a/drivers/platform/x86/amd/pmf/pmf.h b/drivers/platform/x86/am=
+d/pmf/pmf.h
+> index 9144c8c3bbaf..e65a7eca0508 100644
+> --- a/drivers/platform/x86/amd/pmf/pmf.h
+> +++ b/drivers/platform/x86/amd/pmf/pmf.h
+> @@ -12,7 +12,9 @@
+>  #define PMF_H
+> =20
+>  #include <linux/acpi.h>
+> +#include <linux/circ_buf.h>
+>  #include <linux/input.h>
+> +#include <linux/mutex_types.h>
+>  #include <linux/platform_device.h>
+>  #include <linux/platform_profile.h>
+> =20
+> @@ -120,6 +122,7 @@ struct cookie_header {
+>  #define APTS_MAX_STATES=09=0916
+>  #define CUSTOM_BIOS_INPUT_BITS=09GENMASK(16, 7)
+>  #define BIOS_INPUTS_MAX=09=0910
+> +#define CUSTOM_BIOS_INPUT_RING_ENTRIES=0964=09/* Must be power of two fo=
+r CIRC_* macros */
+> =20
+>  /* amd_pmf_send_cmd() set/get */
+>  #define SET_CMD=09=09false
+> @@ -365,6 +368,22 @@ struct pmf_bios_inputs_prev {
+>  =09u32 custom_bios_inputs[BIOS_INPUTS_MAX];
+>  };
+> =20
 > +/**
-> + * of_machine_get_match_data - Tell if root of device tree has a matching of_match structure
-> + * @matches:   NULL terminated array of of_device_id match structures to search in
-> + *
-> + * Returns data associated with matched entry or NULL
+> + * struct pmf_bios_input_entry - Snapshot of custom BIOS input event
+> + * @val: Array of custom BIOS input values
+> + * @preq: Pending request value associated with this event
 > + */
-> +const void *of_machine_get_match_data(const struct of_device_id *matches)
-> +{
-> +       const struct of_device_id *match;
-> +       struct device_node *root;
+> +struct pmf_bios_input_entry {
+> +=09u32 val[BIOS_INPUTS_MAX];
+> +=09u32 preq;
+> +};
 > +
-> +       root = of_find_node_by_path("/");
-> +       if (!root)
-> +               return NULL;
+> +struct pmf_cbi_ring_buffer {
+> +=09struct pmf_bios_input_entry data[CUSTOM_BIOS_INPUT_RING_ENTRIES];
+> +=09int head;
+> +=09int tail;
+> +};
 > +
-> +       match = of_match_node(matches, root);
-> +       of_node_put(root);
+>  struct amd_pmf_dev {
+>  =09void __iomem *regbase;
+>  =09void __iomem *smu_virt_addr;
+> @@ -413,6 +432,8 @@ struct amd_pmf_dev {
+>  =09struct apmf_sbios_req_v1 req1;
+>  =09struct pmf_bios_inputs_prev cb_prev; /* To preserve custom BIOS input=
+s */
+>  =09bool cb_flag;=09=09=09     /* To handle first custom BIOS input */
+> +=09struct pmf_cbi_ring_buffer cbi_buf;
+> +=09struct mutex cbi_mutex;=09=09     /* Protects ring buffer access */
+>  };
+> =20
+>  struct apmf_sps_prop_granular_v2 {
+> diff --git a/drivers/platform/x86/amd/pmf/spc.c b/drivers/platform/x86/am=
+d/pmf/spc.c
+> index 0a37dc6a7950..f48678a23cc7 100644
+> --- a/drivers/platform/x86/amd/pmf/spc.c
+> +++ b/drivers/platform/x86/amd/pmf/spc.c
+> @@ -11,6 +11,7 @@
+> =20
+>  #include <acpi/button.h>
+>  #include <linux/amd-pmf-io.h>
+> +#include <linux/cleanup.h>
+>  #include <linux/power_supply.h>
+>  #include <linux/units.h>
+>  #include "pmf.h"
+> @@ -132,32 +133,39 @@ static void amd_pmf_set_ta_custom_bios_input(struct=
+ ta_pmf_enact_table *in, int
+>  =09}
+>  }
+> =20
+> -static void amd_pmf_update_bios_inputs(struct amd_pmf_dev *pdev, u32 pen=
+ding_req,
+> +static void amd_pmf_update_bios_inputs(struct amd_pmf_dev *pdev, struct =
+pmf_bios_input_entry *data,
+>  =09=09=09=09       const struct amd_pmf_pb_bitmap *inputs,
+> -=09=09=09=09       const u32 *custom_policy, struct ta_pmf_enact_table *=
+in)
+> +=09=09=09=09       struct ta_pmf_enact_table *in)
+>  {
+>  =09unsigned int i;
+> =20
+>  =09for (i =3D 0; i < ARRAY_SIZE(custom_bios_inputs); i++) {
+> -=09=09if (!(pending_req & inputs[i].bit_mask))
+> +=09=09if (!(data->preq & inputs[i].bit_mask))
+>  =09=09=09continue;
+> -=09=09amd_pmf_set_ta_custom_bios_input(in, i, custom_policy[i]);
+> -=09=09pdev->cb_prev.custom_bios_inputs[i] =3D custom_policy[i];
+> -=09=09dev_dbg(pdev->dev, "Custom BIOS Input[%d]: %u\n", i, custom_policy=
+[i]);
+> +=09=09amd_pmf_set_ta_custom_bios_input(in, i, data->val[i]);
+> +=09=09pdev->cb_prev.custom_bios_inputs[i] =3D data->val[i];
+> +=09=09dev_dbg(pdev->dev, "Custom BIOS Input[%d]: %u\n", i, data->val[i])=
+;
+>  =09}
+>  }
+> =20
+>  static void amd_pmf_get_custom_bios_inputs(struct amd_pmf_dev *pdev,
+>  =09=09=09=09=09   struct ta_pmf_enact_table *in)
+>  {
+> +=09struct pmf_cbi_ring_buffer *rb =3D &pdev->cbi_buf;
+>  =09unsigned int i;
+> =20
+> +=09guard(mutex)(&pdev->cbi_mutex);
 > +
-> +       if (!match)
-> +               return NULL;
+>  =09for (i =3D 0; i < ARRAY_SIZE(custom_bios_inputs); i++)
+>  =09=09amd_pmf_set_ta_custom_bios_input(in, i, pdev->cb_prev.custom_bios_=
+inputs[i]);
+> =20
+> -=09if (!(pdev->req.pending_req || pdev->req1.pending_req))
+> +=09if (CIRC_CNT(rb->head, rb->tail, CUSTOM_BIOS_INPUT_RING_ENTRIES) =3D=
+=3D 0)
+>  =09=09return;
+> =20
+> +=09/* If no active custom BIOS input pending request, do not consume fur=
+ther work */
+> +=09if (!rb->data[rb->tail].preq)
+> +=09=09goto out_rbadvance;
 > +
-> +       return match->data;
-> +}
-> +EXPORT_SYMBOL(of_machine_get_match_data);
+>  =09if (!pdev->smart_pc_enabled)
+>  =09=09return;
+> =20
+> @@ -165,20 +173,17 @@ static void amd_pmf_get_custom_bios_inputs(struct a=
+md_pmf_dev *pdev,
+>  =09case PMF_IF_V1:
+>  =09=09if (!is_apmf_bios_input_notifications_supported(pdev))
+>  =09=09=09return;
+> -=09=09amd_pmf_update_bios_inputs(pdev, pdev->req1.pending_req, custom_bi=
+os_inputs_v1,
+> -=09=09=09=09=09   pdev->req1.custom_policy, in);
+> +=09=09amd_pmf_update_bios_inputs(pdev, &rb->data[rb->tail], custom_bios_=
+inputs_v1, in);
+>  =09=09break;
+>  =09case PMF_IF_V2:
+> -=09=09amd_pmf_update_bios_inputs(pdev, pdev->req.pending_req, custom_bio=
+s_inputs,
+> -=09=09=09=09=09   pdev->req.custom_policy, in);
+> +=09=09amd_pmf_update_bios_inputs(pdev, &rb->data[rb->tail], custom_bios_=
+inputs, in);
+>  =09=09break;
+>  =09default:
+>  =09=09break;
+>  =09}
+> =20
+> -=09/* Clear pending requests after handling */
+> -=09memset(&pdev->req, 0, sizeof(pdev->req));
+> -=09memset(&pdev->req1, 0, sizeof(pdev->req1));
+> +out_rbadvance:
+> +=09rb->tail =3D (rb->tail + 1) & (CUSTOM_BIOS_INPUT_RING_ENTRIES - 1);
+>  }
+> =20
+>  static void amd_pmf_get_c0_residency(u16 *core_res, size_t size, struct =
+ta_pmf_enact_table *in)
+> diff --git a/drivers/platform/x86/amd/pmf/tee-if.c b/drivers/platform/x86=
+/amd/pmf/tee-if.c
+> index 0abce76f89ff..cec8b38c1afe 100644
+> --- a/drivers/platform/x86/amd/pmf/tee-if.c
+> +++ b/drivers/platform/x86/amd/pmf/tee-if.c
+> @@ -591,6 +591,8 @@ int amd_pmf_init_smart_pc(struct amd_pmf_dev *dev)
+>  =09=09status =3D ret =3D=3D TA_PMF_TYPE_SUCCESS;
+>  =09=09if (status) {
+>  =09=09=09dev->cb_flag =3D true;
+> +=09=09=09dev->cbi_buf.head =3D 0;
+> +=09=09=09dev->cbi_buf.tail =3D 0;
+>  =09=09=09break;
+>  =09=09}
+>  =09=09amd_pmf_tee_deinit(dev);
+>=20
 
-These two functions are very similar, but look different.  If the
-former would return a pointer instead of a bool, the latter could be
-built on top.
+Looks okay now,
 
-Even if you still prefer returning a bool, they could share a common
-private helper returning a pointer.
+Reviewed-by: Ilpo J=E4rvinen <ilpo.jarvinen@linux.intel.com>
 
-Gr{oetje,eeting}s,
+--=20
+ i.
 
-                        Geert
-
--- 
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
-
-In personal conversations with technical people, I call myself a hacker. But
-when I'm talking to journalists I just say "programmer" or something like that.
-                                -- Linus Torvalds
+--8323328-774990684-1764691174=:974--
