@@ -1,35 +1,35 @@
 Received: from mail.tuxedocomputers.com (mail.tuxedocomputers.com [157.90.84.7])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D2840221D87;
-	Thu,  4 Dec 2025 13:49:39 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2169F23D7C4;
+	Thu,  4 Dec 2025 13:51:29 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=157.90.84.7
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1764856182; cv=none; b=sVfo3JsjHDJ3iDXiED3YY9ImUR+hKbqJPna3ewHsZWIqQ7/hS53PBvlaTKVEcp3rrlz0CWvj53BHC6kfEwpk5EKdxuT7oHgBDOIF9phItVZlScnE10oesM2ZuBTYv+D9z8Ie/pv/HMjJqgywwYMkv6GLK+hreVrnGPULu9Ab+sI=
+	t=1764856295; cv=none; b=dYwOIPC8Dmn+MK8o0eSyx34eWvnc7z79PTE5/X+fs0Wn/OjWUYFBq2gwHGSxsX9YVHlhqTEJMevhbOPBU6UZ+Gx4fabJwaaFJOwxnsc3A0v9xJ3/Yq6z+pWYpTqkRWzuW+QdLinZWKqFhaea6/Tp2P779MLeyGyFWDhknmZIUaY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1764856182; c=relaxed/simple;
+	s=arc-20240116; t=1764856295; c=relaxed/simple;
 	bh=uaBlp18RghFHum3+2l5MqMj28EBp7N8P5n5Jj6zIAZ4=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=T6ito95gIv+w1H31ZLKbkru6YqNITE5W39v1gsxkWD6rkpG8em55MKeDNvV6TCHBTTVKueDcX3X7cV1Kijv5Ap12f3CVvDl6/s2KJ4sD36vhViK7eni1LK3AUuivsNcJJhbXLAbscJ6DP+dkI/mITpII0c+vAOkt9+Zkp60cCFE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=tuxedocomputers.com; spf=pass smtp.mailfrom=tuxedocomputers.com; dkim=pass (1024-bit key) header.d=tuxedocomputers.com header.i=@tuxedocomputers.com header.b=pqEiZoPZ; arc=none smtp.client-ip=157.90.84.7
+	 MIME-Version; b=mEbSYEVLcoRoSrnkUDGAoO2FpKl2VrntZGaHPrwYKzIZZNzA/q6/vXIdQ5qmE77Pjx8f91JJfhxFoykPFc0FrzGllu2lHTMOzK0s61VpVoUE/2lrWpm6xfiO0bVf0SOxwbY5polkScVsLgH4gwB/UKHZZfGZ7xSsb50myk9Vy3M=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=tuxedocomputers.com; spf=pass smtp.mailfrom=tuxedocomputers.com; dkim=pass (1024-bit key) header.d=tuxedocomputers.com header.i=@tuxedocomputers.com header.b=XO6OZW8d; arc=none smtp.client-ip=157.90.84.7
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=tuxedocomputers.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=tuxedocomputers.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=tuxedocomputers.com header.i=@tuxedocomputers.com header.b="pqEiZoPZ"
+	dkim=pass (1024-bit key) header.d=tuxedocomputers.com header.i=@tuxedocomputers.com header.b="XO6OZW8d"
 Received: from wse-pc.fritz.box (pd9e597c7.dip0.t-ipconnect.de [217.229.151.199])
 	(Authenticated sender: wse@tuxedocomputers.com)
-	by mail.tuxedocomputers.com (Postfix) with ESMTPA id 5A9DE2FC0098;
-	Thu,  4 Dec 2025 14:49:31 +0100 (CET)
+	by mail.tuxedocomputers.com (Postfix) with ESMTPA id 847452FC0095;
+	Thu,  4 Dec 2025 14:51:25 +0100 (CET)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=tuxedocomputers.com;
-	s=default; t=1764856171;
+	s=default; t=1764856285;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
 	bh=lhsS7yX+gkI2gb3SOcFrx5jsA9mtPA0a7sOVkQ3AgAw=;
-	b=pqEiZoPZs+V9vOaVHkaGgBx8a7KWK2ISW6jjuy47Y0lCfNi9wa2o7bcx9lq4AAtCRcZVNG
-	KmIEdHwZOU5m5uDxfCpz27kMKX6UASexv3XwRA+KqLh96Kk25/ahvY33V5zggISakGGVVq
-	dpVLW+2zzDqJTbV+IYPeMjo8MPV6b5M=
+	b=XO6OZW8d6fX05Ho7RdLTwz1upNVp4cPwWjNbu0a8q1S9OGSD2WZW9VjuUOdhO1e8j91SKH
+	7sIg0rMfqn115TJIcVuVtT7Typ1vsXJcx/mM3wMna6t3ERGG01CXN1Mq3UF9P4Mb0Mv/hG
+	Bze1lFjRq1WXwmdh1twkJondRqVRNYM=
 Authentication-Results: mail.tuxedocomputers.com;
 	auth=pass smtp.auth=wse@tuxedocomputers.com smtp.mailfrom=wse@tuxedocomputers.com
 From: Werner Sembach <wse@tuxedocomputers.com>
@@ -39,12 +39,12 @@ To: W_Armin@gmx.de,
 Cc: platform-driver-x86@vger.kernel.org,
 	linux-kernel@vger.kernel.org,
 	Werner Sembach <wse@tuxedocomputers.com>
-Subject: [RFC PATCH 1/2] platform/x86: uniwill-laptop: Introduce device descriptor system
-Date: Thu,  4 Dec 2025 14:40:39 +0100
-Message-ID: <20251204134927.434158-2-wse@tuxedocomputers.com>
+Subject: [PATCH 1/2] platform/x86: uniwill-laptop: Introduce device descriptor system
+Date: Thu,  4 Dec 2025 14:50:03 +0100
+Message-ID: <20251204135121.435905-2-wse@tuxedocomputers.com>
 X-Mailer: git-send-email 2.43.0
-In-Reply-To: <20251204134927.434158-1-wse@tuxedocomputers.com>
-References: <20251204134927.434158-1-wse@tuxedocomputers.com>
+In-Reply-To: <20251204135121.435905-1-wse@tuxedocomputers.com>
+References: <20251204135121.435905-1-wse@tuxedocomputers.com>
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
