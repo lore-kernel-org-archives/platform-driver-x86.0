@@ -1,66 +1,67 @@
-Received: from mail-yx1-f49.google.com (mail-yx1-f49.google.com [74.125.224.49])
+Received: from mail-yw1-f170.google.com (mail-yw1-f170.google.com [209.85.128.170])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E3AB6362AB2
-	for <platform-driver-x86@vger.kernel.org>; Fri,  5 Dec 2025 18:50:43 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=74.125.224.49
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 57874362AAF
+	for <platform-driver-x86@vger.kernel.org>; Fri,  5 Dec 2025 18:50:45 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.170
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1764960646; cv=none; b=RiVOBMvy/OmUIIWSnUvD9BcZzNCriMBSUwzr/2VhOFp/d3Ymn38u8fAMFcEW6je3MSEf5ZQyHFbJquK54gJUGnYt2voha3hVD9Qf2BqyJiXqf6Ys8HOvYhxD7fSD377vV9PHhlFsutKSkQ4ZFbVIwrPtuvbVZM3uBy3SJZ4vupo=
+	t=1764960647; cv=none; b=pEe0S1DdFhxH5vrYdpiKwzQsDClZzpP1T+FGRNpl0FbRLLq+BnXl09GnMr+rbaSARLjtC2jrqMMX0s6TL9q+AP6kUUv+7QHFcrR2gTKXtrUTzbbmu+zXHeTNn1BhXVAL1I85pXXKxy+A1SYLOx/wc3iZKDjjbkviunvg5gMTDe0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1764960646; c=relaxed/simple;
-	bh=6iGgmquBb2OQMyy4OCnTzg1W/C2l8RhX58tZjEEgFL0=;
-	h=From:Subject:Date:Message-Id:MIME-Version:Content-Type:To:Cc; b=cKyOamEFCkmdCEM43+4+GtC6uAPHtn2WH/c0icu0rKyilPn05zgqG4OpTcXH5vB81rRXZXio16LSdGpzVKQrKbdsd6vgUVe5Mk8/PAnx9/kR/yHiXnLYn4PMhYZolgYfb00GXfHW52Bh6utab78y7Rxif0T+7jEcfqnbxPbibeI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=dqx+zF//; arc=none smtp.client-ip=74.125.224.49
+	s=arc-20240116; t=1764960647; c=relaxed/simple;
+	bh=wVWV9v2dndzW9G7C9zHZu6Hf5HnBKJQnlI/RL0C9pFQ=;
+	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
+	 In-Reply-To:To:Cc; b=WqrHgYR8G2spJ0+tSWYi5G2XijMFGjlrrMONTLDQ/dCk/hGBTv4b5TnpuV/a/R6jSUiwS/nEZVyIxswYTNM3ys0BU9Mp5zdssBWMA+zrLpTSdYDjOvlnTQDiZ/2aHbtSFJ07u+k/7GUTHCPxfi+P5NiF/RXlp/xJDLeU9HEsHrM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=hbvNVe8a; arc=none smtp.client-ip=209.85.128.170
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="dqx+zF//"
-Received: by mail-yx1-f49.google.com with SMTP id 956f58d0204a3-64107188baeso2226828d50.3
-        for <platform-driver-x86@vger.kernel.org>; Fri, 05 Dec 2025 10:50:43 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="hbvNVe8a"
+Received: by mail-yw1-f170.google.com with SMTP id 00721157ae682-78a712cfbc0so28598717b3.1
+        for <platform-driver-x86@vger.kernel.org>; Fri, 05 Dec 2025 10:50:45 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1764960643; x=1765565443; darn=vger.kernel.org;
-        h=cc:to:content-transfer-encoding:mime-version:message-id:date
-         :subject:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=VmOeFvGS/shn95dKI0JtWqVywFDHQTTRXmnRsDr85GI=;
-        b=dqx+zF//utaPQ+CH9Tsu9TLKyRfWWUjOVgifYF5c7wGrtyc38jOLyI9y5+uZB0q2Zg
-         0CQrGUCJs5ajdTP3aOATmTZI7AF5N1/U8TYhXPXkcVjDHuIMrELVKTFWADKbN3RanydL
-         NrrKCWXp9qFQXT68vgeZ0Gsfbm+4ePfhtysGwqSaiwsvjvo5N/OFcabV5YM5XsakGzpG
-         LDI0/rjRradO2NyQYvjrWZo6yEqifG/H/MaxNB/pl9YxSa8Jm/pmXf7sqFBgV630MURj
-         EAMnUqFXMw597UvXMYgb6d9pLd2PtMz1IBdViabpTe0dqIeElGsayQ2XMBI0tNFAsHpf
-         qjrQ==
+        d=gmail.com; s=20230601; t=1764960644; x=1765565444; darn=vger.kernel.org;
+        h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
+         :mime-version:subject:date:from:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=+4FC9ZR4LnrPLjRGT6F+4FkLOaJCr0tyBTJeZVKrvaQ=;
+        b=hbvNVe8aqZDkvqvIbTrt6cul8beqitob7GEz+4k6EmBOieS6v5eh9kHLQ58cIYLwRy
+         OUh6FGF0dbzagHa1Yd8uHOGyjLn/GjxNJ+K2UnjKjQuUbIBU5c2ILTrnqQn9sfwPS9X/
+         K2g/t9a1JjU/PcF9VgbrSDUPOZEvFU3aAz82/Mc5I4TRS9al4T7Ck7T5rOn+7WXRaaIS
+         LX4kd/UgnG9jPSfg5WbQfNpmCl9u4DWPsMaDJbzsqutkzPyU+LOzmfz/1ppu7oE1K6Mi
+         OGkD+5xlj8aCVVJ9ZF1wgPWuf3luoctXwb5+b3XaXKtXNj6O7fhrXqHN2eKc1N0KzxBh
+         cpwg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1764960643; x=1765565443;
-        h=cc:to:content-transfer-encoding:mime-version:message-id:date
-         :subject:from:x-gm-gg:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=VmOeFvGS/shn95dKI0JtWqVywFDHQTTRXmnRsDr85GI=;
-        b=SOctmj9l0cUX0qpGL4FSkbhPuohhoBsfIOlJ4oyXIe6/zwVvg9MG/JNqBQ/J+flB72
-         SvWwbdV5tPsWs997NZQF3gaJHgQBShAZfXq3v4xdGj9NbI2/RSqGhY+2BJq3LKCsqk6t
-         By/BKGDr52CrsNkQmHV8Hh4gZ1IX0azDjRqYrbrFGD7/bhBWgW1Hgruyx00pV5d5RK4W
-         9btQ6FlFvzuZCjtx8nu36rCIsEKNdgiJ2NpY/LD8Fvl2ZpulZkN2QcYIB0lb1enVWPEK
-         b31EsKNxpjnGGAQIVB5LU1dzV9oybhIYEqD+MOdz0Nv9v2pGjr7+5Fem6gM2RXJdbU0+
-         t9jg==
-X-Gm-Message-State: AOJu0Yw2gXsutbW1FqXt2YG/twpVCUd5V1j4/ZLY6RaG1F5c546754IW
-	KdfYgR/8GJLmtuqCyn8c3oKbn3FMR3P8Mtyvx1P49P2FOXDU+0+udH4h
-X-Gm-Gg: ASbGnctH9YXih00Tr705P5joZvlipS7vjjIJCVyEeKmyASdP4V22ssvnfM84lcbEPxL
-	7PkoGCikc+/+UkdMl5Hj62FT+As9MUpTbD4uF6bE3EUZ3IgtF3EFpf0LNNpgfWPFYtixQhp4RDu
-	to/vkYq/WPDvXq6+TrpR9LudmFHjDL77kFHjqMbQu/KbHptOInjRKOfAVKRz3TZXjubO3O0LJDr
-	jYx41Ui2DuZqPReAcjsk0fE/hDIjuaxpkRa0Tn7rEIilWGV8znJI5k/npiCHk3NVSn6Tibq58Mu
-	A03fsSduA1zMn4aSF+aj87csecfxD9dGoF67eLwJR1pNTx/o4QCdER7Tpdpr60z8aYqIvTC6GQP
-	xU3yg/51+KrFx9Awh6bidkW9gNsu1rw1qIZPTq7MoLSXtTZpI60xJmdXcvWjYMRO/Hzr52sGe2t
-	a15QvBBjKFpVFA
-X-Google-Smtp-Source: AGHT+IG61DsBhh1ZgcKsskQQratX9ekKOF2MgGuutbt6NmFhXG9LVlbqb6z7YZyFCrS+rxydsl4mGw==
-X-Received: by 2002:a05:690e:1507:b0:644:4771:2d34 with SMTP id 956f58d0204a3-64447712e56mr1909415d50.61.1764960642815;
-        Fri, 05 Dec 2025 10:50:42 -0800 (PST)
+        d=1e100.net; s=20230601; t=1764960644; x=1765565444;
+        h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
+         :mime-version:subject:date:from:x-gm-gg:x-gm-message-state:from:to
+         :cc:subject:date:message-id:reply-to;
+        bh=+4FC9ZR4LnrPLjRGT6F+4FkLOaJCr0tyBTJeZVKrvaQ=;
+        b=WyPegfTM1PZ06fIgaRr/jEUXXWpNRvvnLwsGAe7P2KrB/GCZgoUBVwLnTUlpxi/gnZ
+         oh1qkLYeaPyBj8c5knY8Ow84I+LzM6o9t/ODxUvbtryRkXwqOPD69mk8Ac/pQNfRmX6Q
+         7E2F7ea8QQtQ5CjTiLwLyXClvDm4WvcBJwsQHprVHEr6F+Gv9x7nXHEeVYVM9Ie16Xip
+         pVX7VAWLt9bF5693AVUkOCF4KWhTZKBicFmfAE7IAas8dVYI+rB4mwvYk8gHbLSu55R+
+         rwzG/KmO3ICWpZzMCwp/Qa1aAGeCJxOUn8IsZfvSGX2A3ZOtSxnVi6DuJJD3ae84C0PG
+         Iweg==
+X-Gm-Message-State: AOJu0Yyot7dY/C8V+g6xltdhnDhc6xZgNgWlqDfhaV+v1hkkKeMH6Zmd
+	g5bXOPv7L5JCoPIkumVFkmgfr8lI8PP/ZP7YicceOO755L/8k6AGGPmVAdrp+w==
+X-Gm-Gg: ASbGncstaOuCFvLjUoqD0ddFiuQP8jILTiu6CHLUm0/eoRyjqietZIIo0CSS+vAfWXz
+	Jk9v3M00PRKvvWvSMulfeNt/Uo4hBvx57LFdLDMuhA9tThcrCxJK2RLGM5OtN3gK0KN4ima5EC9
+	Nl7Th/hjzsiQKWo05G/J/zcSol097pTEajPPUcP3apcr8553X86q5zTNkYKbLWo8La1OPf3/XNL
+	9w1S1d9uLFx/lmNauVoQzar5RSPIpXnqjzuLqi311NpcYGJSASry0eGrUgMWbpBBfHziOyj9zjn
+	l7im3dKcbN8cSHExqHrZRO4klBp5gFTu/Yo74co/VI1LWgyo7YIoYqSIwjy5NE59Kw7ZvddfeUo
+	gTNOCN4tPXr1OWZjNuOE4HV1cmmGYZY9HKu/fX14dxqsiqggFyyF9eAkeCAbT9Gsex+hfGX1sBU
+	P3jxWgV/3C8UGk
+X-Google-Smtp-Source: AGHT+IHDnDPvUbYlQgcriJvfjhySPybGA4/BWIL9b6ubFJhIXF54dFxJRTUU+VR3u85g8j4D/Pioig==
+X-Received: by 2002:a05:690c:6982:b0:78c:2a2e:e9fa with SMTP id 00721157ae682-78c33c1612emr843437b3.32.1764960644095;
+        Fri, 05 Dec 2025 10:50:44 -0800 (PST)
 Received: from [192.168.100.70] ([2800:bf0:82:3d2:875c:6c76:e06b:3095])
-        by smtp.gmail.com with ESMTPSA id 00721157ae682-78c2f0aaf83sm4586407b3.32.2025.12.05.10.50.41
+        by smtp.gmail.com with ESMTPSA id 00721157ae682-78c2f0aaf83sm4586407b3.32.2025.12.05.10.50.43
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 05 Dec 2025 10:50:42 -0800 (PST)
+        Fri, 05 Dec 2025 10:50:43 -0800 (PST)
 From: Kurt Borja <kuurtb@gmail.com>
-Subject: [PATCH 0/3] platform/x86: alienware-wmi-wmax: Add support for some
- newly released models
-Date: Fri, 05 Dec 2025 13:50:09 -0500
-Message-Id: <20251205-area-51-v1-0-d2cb13530851@gmail.com>
+Date: Fri, 05 Dec 2025 13:50:10 -0500
+Subject: [PATCH 1/3] platform/x86: alienware-wmi-wmax: Add support for new
+ Area-51 laptops
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
@@ -69,45 +70,60 @@ List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-X-B4-Tracking: v=1; b=H4sIAGEpM2kC/6tWKk4tykwtVrJSqFYqSi3LLM7MzwNyDHUUlJIzE
- vPSU3UzU4B8JSMDI1NDINBNLEpN1DU11DVPNUs2MjUwTDVJTVICqi4oSk3LrACbFB1bWwsAvi9
- vEFkAAAA=
-X-Change-ID: 20251111-area-51-7e6c2501e4eb
+Message-Id: <20251205-area-51-v1-1-d2cb13530851@gmail.com>
+References: <20251205-area-51-v1-0-d2cb13530851@gmail.com>
+In-Reply-To: <20251205-area-51-v1-0-d2cb13530851@gmail.com>
 To: Hans de Goede <hansg@kernel.org>, 
  =?utf-8?q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
 Cc: platform-driver-x86@vger.kernel.org, Dell.Client.Kernel@dell.com, 
  linux-kernel@vger.kernel.org, Kurt Borja <kuurtb@gmail.com>, 
  stable@vger.kernel.org
 X-Mailer: b4 0.14.3
-X-Developer-Signature: v=1; a=openpgp-sha256; l=681; i=kuurtb@gmail.com;
- h=from:subject:message-id; bh=6iGgmquBb2OQMyy4OCnTzg1W/C2l8RhX58tZjEEgFL0=;
- b=owGbwMvMwCUmluBs8WX+lTTG02pJDJnGmnUV53fyBCTVFXnPsD+29LN9xazpL9bF2S0sEuZJC
- eY6z7m2o5SFQYyLQVZMkaU9YdG3R1F5b/0OhN6HmcPKBDKEgYtTACaSe47hryh71vwdM78yvzod
- 9G1t4c0DMceiDZtaNW4ZCGd9qT+lqMPw3+t24ZbDa5afrY2QT/spXb2G+eDmI1oclnHxzisCFoY
- W8wEA
+X-Developer-Signature: v=1; a=openpgp-sha256; l=1177; i=kuurtb@gmail.com;
+ h=from:subject:message-id; bh=wVWV9v2dndzW9G7C9zHZu6Hf5HnBKJQnlI/RL0C9pFQ=;
+ b=owGbwMvMwCUmluBs8WX+lTTG02pJDJnGmg0mC5S4r26qK3v/SPf5xYCQ0xM0XSSMcs8q/y755
+ cdSfsmoo5SFQYyLQVZMkaU9YdG3R1F5b/0OhN6HmcPKBDKEgYtTACby7QbD/8TA60qv5t/3OTN/
+ 5hYb4ef5Dbp3l5xsazi0NbLu/9/g3z0M/4MmNLrM/dy07s/kzzf1tG+cSSmdaxy8aF3Us3m68m2
+ LnnIBAA==
 X-Developer-Key: i=kuurtb@gmail.com; a=openpgp;
  fpr=54D3BE170AEF777983C3C63B57E3B6585920A69A
 
-Hi Ilpo,
+Add AWCC support for new Alienware Area-51 laptops.
 
-I managed to get my hands on acpidumps for these models so this is
-verified against those.
-
-Thanks for all your latest reviews!
-
+Cc: stable@vger.kernel.org
 Signed-off-by: Kurt Borja <kuurtb@gmail.com>
 ---
-Kurt Borja (3):
-      platform/x86: alienware-wmi-wmax: Add support for new Area-51 laptops
-      platform/x86: alienware-wmi-wmax: Add AWCC support for Alienware x16
-      platform/x86: alienware-wmi-wmax: Add support for Alienware 16X Aurora
+ drivers/platform/x86/dell/alienware-wmi-wmax.c | 16 ++++++++++++++++
+ 1 file changed, 16 insertions(+)
 
- drivers/platform/x86/dell/alienware-wmi-wmax.c | 32 ++++++++++++++++++++++++++
- 1 file changed, 32 insertions(+)
----
-base-commit: 9b9c0adbc3f8a524d291baccc9d0c04097fb4869
-change-id: 20251111-area-51-7e6c2501e4eb
+diff --git a/drivers/platform/x86/dell/alienware-wmi-wmax.c b/drivers/platform/x86/dell/alienware-wmi-wmax.c
+index fadf7aac6779..b7b684fda22e 100644
+--- a/drivers/platform/x86/dell/alienware-wmi-wmax.c
++++ b/drivers/platform/x86/dell/alienware-wmi-wmax.c
+@@ -89,6 +89,22 @@ static struct awcc_quirks generic_quirks = {
+ static struct awcc_quirks empty_quirks;
+ 
+ static const struct dmi_system_id awcc_dmi_table[] __initconst = {
++	{
++		.ident = "Alienware 16 Area-51",
++		.matches = {
++			DMI_MATCH(DMI_SYS_VENDOR, "Alienware"),
++			DMI_MATCH(DMI_PRODUCT_NAME, "Alienware 16 Area-51"),
++		},
++		.driver_data = &g_series_quirks,
++	},
++	{
++		.ident = "Alienware 18 Area-51",
++		.matches = {
++			DMI_MATCH(DMI_SYS_VENDOR, "Alienware"),
++			DMI_MATCH(DMI_PRODUCT_NAME, "Alienware 18 Area-51"),
++		},
++		.driver_data = &g_series_quirks,
++	},
+ 	{
+ 		.ident = "Alienware 16 Aurora",
+ 		.matches = {
 
 -- 
- ~ Kurt
+2.52.0
 
