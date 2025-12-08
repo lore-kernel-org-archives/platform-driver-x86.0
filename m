@@ -1,189 +1,188 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.11])
+Received: from mail-244104.protonmail.ch (mail-244104.protonmail.ch [109.224.244.104])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A13C42E92B4;
-	Mon,  8 Dec 2025 17:11:29 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.11
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 91A7F2E8B85
+	for <platform-driver-x86@vger.kernel.org>; Mon,  8 Dec 2025 19:31:08 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=109.224.244.104
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1765213891; cv=none; b=qrmQb1gFzRov4sX94U52zzDqSpLpAYNKT3X97UZ98uMDLtDImS39QUL0GeH/GPGUW+4ZBgM+fZ+9WhaulXB/O/0iesq0SdP7zK0AqCF8Pvr6NyC2715/7kM0L/qjkHSO9kgfP6EfLCG3C+VOZinrjbhXZ02D31N3dcq/Hs0oS1M=
+	t=1765222271; cv=none; b=DJN76OjvXPy2seHFWuF3lsAvbngJyq4f0LhltVzWRiJm2MO0kPnJDu+Xt9SPMiKhDsBYSA61eZ7qY3hz1sS+6TFILJ14ESPjdcaSxWNLGpjhYx1A9lySffJISmgRlHjr7aspn/ovzYJLz8kBk/nW/PotaFzSEbnWrb6snCk58bU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1765213891; c=relaxed/simple;
-	bh=tT2naDJ/9hkgag9LbLdUu1K8WHpzlF8JN28RO3LHY18=;
-	h=From:Date:To:cc:Subject:In-Reply-To:Message-ID:References:
-	 MIME-Version:Content-Type; b=oobs1Eg7ETOkj1NYJhU9hSv58hDiujAI3eot46iUvkt5uVAE/+YvyjEZ20FA8emQ22RtzBqUAvLsPGhoXl7bs2gbt7fQpfHWA1M/+WAqRQE7LK7ytYE7LO28lSbWrkJqsgwLQ8retOvCdl1ARtRE1AJlSp6LE9wnWZpX5emsZvE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=pass smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=CF9AkOpA; arc=none smtp.client-ip=198.175.65.11
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.intel.com
+	s=arc-20240116; t=1765222271; c=relaxed/simple;
+	bh=tl9OhclGTrjlaRVYuekGUOUx/dvpwUo+YEmNtIliV3c=;
+	h=Date:To:From:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=NNHyR85n1DMS5mFF508mHvzPqsaCGCi7iiuJ0QfXMeNJf4kD+6971R3lm9Pn73PG385uCnjmnTYhAm+H+DbeF43q4B3DFp7jM+j9S8nvW2OzB711KqsdVqqTYwwiP4QuFSYjKpDHsIaBRVejRX2yqvT+mxA2U1aoEiGA1WiOPYs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=pm.me; spf=pass smtp.mailfrom=pm.me; dkim=pass (2048-bit key) header.d=pm.me header.i=@pm.me header.b=h1RWMOYW; arc=none smtp.client-ip=109.224.244.104
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=pm.me
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=pm.me
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="CF9AkOpA"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1765213889; x=1796749889;
-  h=from:date:to:cc:subject:in-reply-to:message-id:
-   references:mime-version;
-  bh=tT2naDJ/9hkgag9LbLdUu1K8WHpzlF8JN28RO3LHY18=;
-  b=CF9AkOpAv6n4e3qXi1oy71VlHxXqhn5xcOEbsHcuqQ/Yw2PBvF/6xzNo
-   kDPfQxHXaVBsoODQesVJ4TGmxQO5oqtTOMB+be7enxVn2XLiV/Hf1Ev99
-   k0E98XF+K82UaLN/AVE9g9qvkhsTCl3nlJwH5/TtrAV88jVeHE/XAJk6j
-   5Netk2JmT0z4cjh/tPBX8QJOcyttv65FiFMAHKOYbeuAEf963oqPoXEnN
-   yQ542OPrb4H+iX9RlUJUX3tYW60HbXvMHT4letZ9rbSh+XlDgLHzFfcGv
-   hODJ8kBPKzNHPbTVt2UG3xQpj7NCuwHI5iD7EJ+FPELbiiafw1Y8bBpgv
-   A==;
-X-CSE-ConnectionGUID: O9PkUUXqRgCjRZRH17QTvA==
-X-CSE-MsgGUID: ayGiBhttRlm94y0+l9SQTQ==
-X-IronPort-AV: E=McAfee;i="6800,10657,11636"; a="77483117"
-X-IronPort-AV: E=Sophos;i="6.20,259,1758610800"; 
-   d="scan'208";a="77483117"
-Received: from orviesa009.jf.intel.com ([10.64.159.149])
-  by orvoesa103.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 08 Dec 2025 09:11:29 -0800
-X-CSE-ConnectionGUID: sIoj3Q9oQPSCddR6u+OGEw==
-X-CSE-MsgGUID: crM6cM1SSfqsQ07VEXRqrg==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.20,259,1758610800"; 
-   d="scan'208";a="195774826"
-Received: from vpanait-mobl.ger.corp.intel.com (HELO localhost) ([10.245.245.92])
-  by orviesa009-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 08 Dec 2025 09:11:26 -0800
-From: =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
-Date: Mon, 8 Dec 2025 19:11:22 +0200 (EET)
-To: Antheas Kapenekakis <lkml@antheas.dev>
-cc: platform-driver-x86@vger.kernel.org, linux-input@vger.kernel.org, 
-    LKML <linux-kernel@vger.kernel.org>, Jiri Kosina <jikos@kernel.org>, 
-    Benjamin Tissoires <bentiss@kernel.org>, 
-    Corentin Chary <corentin.chary@gmail.com>, 
-    "Luke D . Jones" <luke@ljones.dev>, Hans de Goede <hansg@kernel.org>, 
-    Denis Benato <benato.denis96@gmail.com>
-Subject: Re: [PATCH v10 05/11] HID: asus: move vendor initialization to
- probe
-In-Reply-To: <20251122110032.4274-6-lkml@antheas.dev>
-Message-ID: <8e3817f1-73e8-6f61-3eca-e45aa4d46af3@linux.intel.com>
-References: <20251122110032.4274-1-lkml@antheas.dev> <20251122110032.4274-6-lkml@antheas.dev>
+	dkim=pass (2048-bit key) header.d=pm.me header.i=@pm.me header.b="h1RWMOYW"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=pm.me;
+	s=protonmail3; t=1765221778; x=1765480978;
+	bh=iMZ4+CG1RSn32vQZbK+Xr+OK7e2mAWyVwkGhcW7bBj4=;
+	h=Date:To:From:Cc:Subject:Message-ID:In-Reply-To:References:
+	 Feedback-ID:From:To:Cc:Date:Subject:Reply-To:Feedback-ID:
+	 Message-ID:BIMI-Selector;
+	b=h1RWMOYWJL7qw7FUozymGoeg4mEGL1rLYgMPmjzkGFbiY/9Gv5GJ2/DWCH9jZ4zCf
+	 6COLImHP0Wp7e+hIBco85E8QU9DFjYrN/WbOjll++9TO4FrV4iWzUXJ8bzHglRWKPY
+	 qgQnvPmZhDya/fMdvLziJY3iOoi6qsWsYJ6b2EcE+j1dXfoVJrNrq7mOa5yCdx3ywP
+	 q1PIvUG72Uj4lVN05SvWxlZhaE5TSVncVhnOVQpPRx0CoMViQ58/IinBzQa+Jer0yv
+	 B7RsCv/VdUXcxRGJJ0QJVVoYTGlDwSvICjW5TL5rPMXcRPNWuP9DQybU4y69tFBr9N
+	 /BIqUQmcRaYjw==
+Date: Mon, 08 Dec 2025 19:22:53 +0000
+To: Mario Limonciello <mario.limonciello@amd.com>
+From: CX MAIL <mailcx@pm.me>
+Cc: "Shyam-sundar.S-k@amd.com" <Shyam-sundar.S-k@amd.com>, "platform-driver-x86@vger.kernel.org" <platform-driver-x86@vger.kernel.org>
+Subject: Re: [BUG] AMD PMC causes system hang on suspend (HP EliteBook X G1a, Strix Point)
+Message-ID: <_coqLqv0F7WEy-Y31rFUYSagGjuaEVB6-xIARLfhAn0nr4_1ELo_38YthlyZA6Ou1mKAcoDCKIBYZ8foICKeyaEAmUjIYBiTDCfeWCtjpYA=@pm.me>
+In-Reply-To: <60b09100-fe58-4330-b5dd-707eabf8f5ff@amd.com>
+References: <93e7ZGFEiN1SZoCHCVwqctZPrrUmJUlz9NHui4lh4glOm8PYaanRann4m0T9jeq3LwD8mICbSiCw9-COSfmMcDoGNN83VHkK-3wj-PUmfNo=@pm.me> <60b09100-fe58-4330-b5dd-707eabf8f5ff@amd.com>
+Feedback-ID: 163859403:user:proton
+X-Pm-Message-ID: b71081cb395077ebe5326d7fd4937a7b7da20c8b
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: quoted-printable
 
-On Sat, 22 Nov 2025, Antheas Kapenekakis wrote:
+I have collected more logs with amd-debug-tools and created this issue on d=
+rm/freedesktop
+https://gitlab.freedesktop.org/drm/amd/-/issues/4767
 
-> ROG NKEY devices have multiple HID endpoints, around 3-4. One of those
-> endpoints has a usage page of 0xff31, and is the one that emits keyboard
-> shortcuts and controls RGB/backlight. Currently, this driver places
-> the usage page check under asus_input_mapping and then inits backlight
-> in asus_input_configured which is unnecessarily complicated and prevents
-> probe from performing customizations on the vendor endpoint.
-> 
-> Simplify the logic by introducing an is_vendor variable into probe that
-> checks for usage page 0xff31. Then, use this variable to move backlight
-> initialization into probe instead of asus_input_configured, and remove
-> the backlight check from asus_input_mapping.
+I was able to run the script with --force despite the warnings below. I get=
+ the same symptom that system hangs before suspend entry.
 
-In the changelogs, please add () after any name that refers to a C 
-function so the reader immediately knows you're talking about a function.
+Thanks,
+CX
 
-> Signed-off-by: Antheas Kapenekakis <lkml@antheas.dev>
-> ---
->  drivers/hid/hid-asus.c | 35 ++++++++++++++++++-----------------
->  1 file changed, 18 insertions(+), 17 deletions(-)
-> 
-> diff --git a/drivers/hid/hid-asus.c b/drivers/hid/hid-asus.c
-> index 2a412e10f916..faac971794c0 100644
-> --- a/drivers/hid/hid-asus.c
-> +++ b/drivers/hid/hid-asus.c
-> @@ -48,6 +48,7 @@ MODULE_DESCRIPTION("Asus HID Keyboard and TouchPad");
->  #define T100CHI_MOUSE_REPORT_ID 0x06
->  #define FEATURE_REPORT_ID 0x0d
->  #define INPUT_REPORT_ID 0x5d
-> +#define HID_USAGE_PAGE_VENDOR 0xff310000
->  #define FEATURE_KBD_REPORT_ID 0x5a
->  #define FEATURE_KBD_REPORT_SIZE 64
->  #define FEATURE_KBD_LED_REPORT_ID1 0x5d
-> @@ -127,7 +128,6 @@ struct asus_drvdata {
->  	struct input_dev *tp_kbd_input;
->  	struct asus_kbd_leds *kbd_backlight;
->  	const struct asus_touchpad_info *tp;
-> -	bool enable_backlight;
->  	struct power_supply *battery;
->  	struct power_supply_desc battery_desc;
->  	int battery_capacity;
-> @@ -318,7 +318,7 @@ static int asus_e1239t_event(struct asus_drvdata *drvdat, u8 *data, int size)
->  static int asus_event(struct hid_device *hdev, struct hid_field *field,
->  		      struct hid_usage *usage, __s32 value)
->  {
-> -	if ((usage->hid & HID_USAGE_PAGE) == 0xff310000 &&
-> +	if ((usage->hid & HID_USAGE_PAGE) == HID_USAGE_PAGE_VENDOR &&
->  	    (usage->hid & HID_USAGE) != 0x00 &&
->  	    (usage->hid & HID_USAGE) != 0xff && !usage->type) {
->  		hid_warn(hdev, "Unmapped Asus vendor usagepage code 0x%02x\n",
-> @@ -941,11 +941,6 @@ static int asus_input_configured(struct hid_device *hdev, struct hid_input *hi)
->  
->  	drvdata->input = input;
->  
-> -	if (drvdata->enable_backlight &&
-> -	    !asus_kbd_wmi_led_control_present(hdev) &&
-> -	    asus_kbd_register_leds(hdev))
-> -		hid_warn(hdev, "Failed to initialize backlight.\n");
-> -
->  	return 0;
->  }
->  
-> @@ -1018,15 +1013,6 @@ static int asus_input_mapping(struct hid_device *hdev,
->  			return -1;
->  		}
->  
-> -		/*
-> -		 * Check and enable backlight only on devices with UsagePage ==
-> -		 * 0xff31 to avoid initializing the keyboard firmware multiple
-> -		 * times on devices with multiple HID descriptors but same
-> -		 * PID/VID.
-> -		 */
-> -		if (drvdata->quirks & QUIRK_USE_KBD_BACKLIGHT)
-> -			drvdata->enable_backlight = true;
-> -
->  		set_bit(EV_REP, hi->input->evbit);
->  		return 1;
->  	}
-> @@ -1143,8 +1129,11 @@ static int __maybe_unused asus_reset_resume(struct hid_device *hdev)
->  
->  static int asus_probe(struct hid_device *hdev, const struct hid_device_id *id)
->  {
-> -	int ret;
-> +	struct hid_report_enum *rep_enum;
->  	struct asus_drvdata *drvdata;
-> +	struct hid_report *rep;
-> +	bool is_vendor = false;
-> +	int ret;
->  
->  	drvdata = devm_kzalloc(&hdev->dev, sizeof(*drvdata), GFP_KERNEL);
->  	if (drvdata == NULL) {
-> @@ -1228,12 +1217,24 @@ static int asus_probe(struct hid_device *hdev, const struct hid_device_id *id)
->  		return ret;
->  	}
->  
-> +	/* Check for vendor for RGB init and handle generic devices properly. */
-> +	rep_enum = &hdev->report_enum[HID_INPUT_REPORT];
-> +	list_for_each_entry(rep, &rep_enum->report_list, list) {
-> +		if ((rep->application & HID_USAGE_PAGE) == HID_USAGE_PAGE_VENDOR)
-> +			is_vendor = true;
-> +	}
-> +
->  	ret = hid_hw_start(hdev, HID_CONNECT_DEFAULT);
->  	if (ret) {
->  		hid_err(hdev, "Asus hw start failed: %d\n", ret);
->  		return ret;
->  	}
->  
-> +	if (is_vendor && (drvdata->quirks & QUIRK_USE_KBD_BACKLIGHT) &&
-> +	    !asus_kbd_wmi_led_control_present(hdev) &&
-> +	    asus_kbd_register_leds(hdev))
-> +		hid_warn(hdev, "Failed to initialize backlight.\n");
-> +
->  	/*
->  	 * Check that input registration succeeded. Checking that
->  	 * HID_CLAIMED_INPUT is set prevents a UAF when all input devices
-> 
+```
+Debugging script for s2idle on AMD systems
+=F0=9F=92=BB HP HP EliteBook X G1a 14 inch Notebook Next Gen AI PC (103C_53=
+36AN HP EliteBook)
+=F0=9F=90=A7 Bazzite
+=F0=9F=90=A7 Kernel 6.17.7-ba19.fc43.x86_64
+=F0=9F=94=8B Battery BAT0 (Hewlett-Packard Primary) is operating at 98.37% =
+of design
+Checking prerequisites for s2idle
+=E2=9C=85 Logs are provided via systemd
+=E2=9C=85 AMD Ryzen AI 9 HX PRO 375 w/ Radeon 890M (family 1a model 24)
+=E2=9C=85 ASPM policy set to 'default'
+=E2=9C=85 SMT enabled
+=E2=9C=85 LPS0 _DSM enabled
+=E2=9C=85 ACPI FADT supports Low-power S0 idle
+=E2=9C=85 PMC driver `amd_pmc` loaded (Program 11 Firmware 93.10.0)
+=E2=9C=85 USB3 driver `xhci_hcd` bound to 0000:c3:00.4
+=E2=9C=85 USB3 driver `xhci_hcd` bound to 0000:c5:00.0
+=E2=9C=85 USB3 driver `xhci_hcd` bound to 0000:c5:00.3
+=E2=9C=85 USB3 driver `xhci_hcd` bound to 0000:c5:00.4
+=E2=9C=85 USB4 driver `thunderbolt` bound to 0000:c5:00.5
+=E2=9C=85 USB4 driver `thunderbolt` bound to 0000:c5:00.6
+=E2=9C=85 WLAN driver `mt7925e` bound to 0000:c2:00.0
+=E2=9C=85 GPU driver `amdgpu` bound to 0000:c3:00.0
+=E2=9C=85 System is configured for s2idle
+=E2=9C=85 GPIO driver `pinctrl_amd` available
+=E2=9C=85 PC6 and CC6 states are enabled
+=E2=9D=8C IOMMU is misconfigured: missing MSFT0201 ACPI device
+=E2=9C=85 RTC driver `rtc_cmos` configured to use CMOS alarm
+=E2=9D=8C Kernel is tainted: 64
+Your system does not meet s2idle prerequisites!
+Explanations for your system
+=F0=9F=9A=A6 Device MSFT0201 missing from ACPI tables
+        The ACPI device {device} is required for suspend to work when the I=
+OMMU is enabled.
+        Please check your BIOS settings and if configured correctly, report=
+ a bug to your system vendor.
 
--- 
- i.
+For more information on this failure see:
+        https://gitlab.freedesktop.org/drm/amd/-/issues/3738#note_2667140
+=F0=9F=9A=A6 Kernel is tainted
+        A tainted kernel may exhibit unpredictable bugs that are difficult =
+for this script to characterize.
+        If this is intended behavior run the tool with --force.
 
+For more information on this failure see:
+        https://gitlab.freedesktop.org/drm/amd/-/issues/3089
+```
+
+
+Sent with Proton Mail secure email.
+
+On Wednesday, December 3rd, 2025 at 1:56 PM, Mario Limonciello <mario.limon=
+ciello@amd.com> wrote:
+
+> On 12/3/25 11:28 AM, CX MAIL wrote:
+>=20
+> > Hello,
+> >=20
+> > I'm reporting a critical suspend issue on HP EliteBook X G1a with AMD R=
+yzen
+> > AI 9 HX 375 (Strix Point). The system completely hangs when entering s2=
+idle
+> > with the AMD PMC driver loaded.
+> >=20
+> > Hardware:
+> > - Model: HP EliteBook X G1a 14 inch (Model 8D08)
+> > - CPU: AMD Ryzen AI 9 HX 375 (Strix Point)
+> > - GPU: Radeon 890M (integrated)
+> > - BIOS: X88 Ver. 01.03.11 (2025-09-03)
+> >=20
+> > Kernel: 6.17.7-ba19.fc43.x86_64 (Fedora-based)
+> > Current cmdline: bluetooth.disable_ertm=3D1 amdgpu.gpu_recovery=3D1 pci=
+e_aspm=3Doff
+> >=20
+> > Problem:
+> > When executing "systemctl suspend", the system enters s2idle but immedi=
+ately
+> > hangs. The last kernel message is "PM: suspend entry (s2idle)" with no
+> > further output. System becomes completely unresponsive - keyboard, touc=
+hpad,
+> > and power button (short press) have no effect. Only hard power-off work=
+s.
+> >=20
+> > BIOS configuration:
+> > - APMF enabled
+> > - Modern Standby (s2idle only, S3 not supported by firmware)
+> > - /sys/power/mem_sleep: [s2idle]
+> >=20
+> > AMD PMC device present: /sys/bus/platform/devices/AMDI000A:00/
+> >=20
+> > Workaround:
+> > Adding "initcall_blacklist=3Damd_pmc_driver_init" to kernel cmdline pre=
+vents
+> > the AMD PMC driver from loading. With this workaround, s2idle works per=
+fectly
+> > and the system resumes normally from suspend.
+> >=20
+> > Verification with workaround:
+> > - lsmod | grep amd_pmc: (no output - driver not loaded)
+> > - Suspend/resume cycle: successful
+> >=20
+> > Logs attached:
+> > 1. system-info.txt - detailed system information
+> > 2. suspend-fail.log - Journal from failed suspend attempt (hangs after
+> > "PM: suspend entry")
+> > 3. suspend-success.log - Journal from successful suspend/resume with
+> > workaround applied
+> >=20
+> > The failure log shows the system stops all output immediately after ent=
+ering
+> > s2idle, suggesting the AMD PMC driver causes a hard hang during early
+> > platform suspend initialization.
+> >=20
+> > Please let me know if you need any additional debug information or woul=
+d like
+> > me to test patches.
+> >=20
+> > Best regards,
+> > CX
+>=20
+>=20
+> Hi,
+>=20
+> Please use amd-s2idle from https://pypi.org/project/amd-debug-tools/ to
+> generate a report. It may root cause it for you. If it doesn't, please
+> attach it to a bugzilla or drm/freedesktop bug report and CC me.
+>=20
+> Thanks,
