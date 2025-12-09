@@ -1,300 +1,238 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from relay14.grserver.gr (relay14.grserver.gr [157.180.73.62])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3CAA226056D;
-	Mon,  8 Dec 2025 20:28:06 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7147827A47F
+	for <platform-driver-x86@vger.kernel.org>; Tue,  9 Dec 2025 09:12:46 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=157.180.73.62
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1765225687; cv=none; b=d+dHHiLrBMiGRgTnrypxhlhPVa6MF5dqQS7v7Tqy64DGWNY9z7VPdXcDp3FuDlhyrSlrATlGhe4vEuembI0oyWEBwPdEtHE8wsXhlUQJkwE9SgGtXUdYv+LfCbH1qXO9fNVABAxmts7eNW7hGmnb4wT3K40NzR0JRPNAY0y5jpc=
+	t=1765271569; cv=none; b=BjW1Y53hp0cg4oDtUn6UU1xufbwvf5pwpagiGfGmFwqAS9l4UL+m7Ak7PpEnRYYOiGKzqj3SwkCAKqf5ELQvJlpvmXqbRfHEDodkP+CNDQabqTM3ixsFop7JnKRZQZR7GeMJWgS2oLY2+58X6pcDm9DQXKZmRIKRuh3T+ueBoS0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1765225687; c=relaxed/simple;
-	bh=YIXliSchTOGG+1D3mmfdvl+VICDaZKaTzDSnNx+OpKw=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=CW2gyI8ypjI0lkE+Eidni43MS5rea9Oe7HXS7yYIHmQEb6kp4T2tZnJEFnLVC1VwKkWPdY74ONVfZp4AFdwF8p16utjn5LhEzig3ccNVMxbW3q1RJH9X+NLrK3zndL9CBsp0yC/E4/OnqujQQBckOl2nFC5e0mqLxKpoq9RbIOQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=cKSQiL3F; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1765271569; c=relaxed/simple;
+	bh=9zmBbWbRImWRdJgWga8epc3BLm+Rcf1D6zJU+mw+os4=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=UFyb/WUYiuWwqn2jLQrewayASva2JGOARc6kvA7eU2EK/yj5DVwvOMlgJO81H1yFU5MKmTMGUlrPIHR/noqNo40ZvOS7SyN2pUSQH7ibQQJ5GFU+XhU8Az9WLfJCPSt2TmjxctEf+Q66SryThh0VXRf6Mfe9f27zReQ716V47Ko=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=antheas.dev; spf=pass smtp.mailfrom=antheas.dev; dkim=pass (2048-bit key) header.d=antheas.dev header.i=@antheas.dev header.b=QrNFKciX; arc=none smtp.client-ip=157.180.73.62
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=antheas.dev
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=antheas.dev
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="cKSQiL3F"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 96B46C4CEF1;
-	Mon,  8 Dec 2025 20:28:06 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1765225686;
-	bh=YIXliSchTOGG+1D3mmfdvl+VICDaZKaTzDSnNx+OpKw=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=cKSQiL3F7jbs9gE3oqTSJIXkLb7tk+tk91qixKYoK8qtGJAUSs5aJ9ePUjh2Qyia8
-	 nHuumMDiLGW1aiPxpaKX3WZKl+PSFWJ2IZJf5qmM9A3ntp+DnWf4EWqg8Mt20FNsiV
-	 o/BElrDBTbH82vMlXrixaqJYwwWoybic9v8tQbVhKn8pHPN5/PLJU3eAYfXUA78Zi4
-	 +tyZs8g1KoMMLqcFIe1M/jPs4Gp2QwLh9hKNINqnMoqyHy+KrNjxUG/R7NNuh/CfU2
-	 gqOTAR3nA/ZFH8fqhudoLG513fmgCYvOOeMyYP8VijHvl6qcbVorCvBQWiAJErnTbN
-	 mrFyypLkTFIww==
-Date: Mon, 8 Dec 2025 14:28:03 -0600
-From: Rob Herring <robh@kernel.org>
-To: Manivannan Sadhasivam <manivannan.sadhasivam@oss.qualcomm.com>
-Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-	Jiri Slaby <jirislaby@kernel.org>,
-	Nathan Chancellor <nathan@kernel.org>,
-	Nicolas Schier <nicolas.schier@linux.dev>,
-	Hans de Goede <hansg@kernel.org>,
-	Ilpo =?iso-8859-1?Q?J=E4rvinen?= <ilpo.jarvinen@linux.intel.com>,
-	Mark Pearson <mpearson-lenovo@squebb.ca>,
-	"Derek J. Clark" <derekjohn.clark@gmail.com>,
-	Manivannan Sadhasivam <mani@kernel.org>,
-	Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>,
-	Marcel Holtmann <marcel@holtmann.org>,
-	Luiz Augusto von Dentz <luiz.dentz@gmail.com>,
-	Bartosz Golaszewski <brgl@bgdev.pl>, linux-serial@vger.kernel.org,
-	linux-kernel@vger.kernel.org, linux-kbuild@vger.kernel.org,
-	platform-driver-x86@vger.kernel.org, linux-pci@vger.kernel.org,
-	devicetree@vger.kernel.org, linux-arm-msm@vger.kernel.org,
-	linux-bluetooth@vger.kernel.org, linux-pm@vger.kernel.org,
-	Stephan Gerhold <stephan.gerhold@linaro.org>,
-	Dmitry Baryshkov <dmitry.baryshkov@oss.qualcomm.com>
-Subject: Re: [PATCH v2 08/10] dt-bindings: connector: Add PCIe M.2 Mechanical
- Key E connector
-Message-ID: <20251208202803.GA2541017-robh@kernel.org>
-References: <20251125-pci-m2-e-v2-0-32826de07cc5@oss.qualcomm.com>
- <20251125-pci-m2-e-v2-8-32826de07cc5@oss.qualcomm.com>
+	dkim=pass (2048-bit key) header.d=antheas.dev header.i=@antheas.dev header.b="QrNFKciX"
+Received: from relay14 (localhost [127.0.0.1])
+	by relay14.grserver.gr (Proxmox) with ESMTP id C280943F73
+	for <platform-driver-x86@vger.kernel.org>; Tue,  9 Dec 2025 09:12:38 +0000 (UTC)
+Received: from linux3247.grserver.gr (linux3247.grserver.gr [213.158.90.240])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by relay14.grserver.gr (Proxmox) with ESMTPS id C587C43F55
+	for <platform-driver-x86@vger.kernel.org>; Tue,  9 Dec 2025 09:12:37 +0000 (UTC)
+Received: from mail-lj1-f171.google.com (mail-lj1-f171.google.com [209.85.208.171])
+	by linux3247.grserver.gr (Postfix) with ESMTPSA id DFB0B1FE5CD
+	for <platform-driver-x86@vger.kernel.org>; Tue,  9 Dec 2025 11:12:36 +0200 (EET)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=antheas.dev;
+	s=default; t=1765271557;
+	bh=3K8QBCeC0fJaTLvxIvNmHdMK3cQJaRit1KWWquGMhsY=;
+	h=Received:From:Subject:To;
+	b=QrNFKciXqBsuc9WSrAe2e7m0fOdIWOk33hL17irzQzQVH7Nvg4FzsMaaOYf4C+X9B
+	 Rgh+xRnE0Et0fkstgE+/+fVqfdY+A8y4X2JRvenYgRPHJRaNlncPsE1NHeZCV7ik/e
+	 lQgY6uhrpXu0rifLDYk1ChJAYEl+dTyzAO0PwLUwN0fsZCIYFX4BbFy8WUx8+RpbVu
+	 GPYShs8PY6Oevi3hkpwaR9VEPwyKSvdHVTDVgGZLwPyW7l8SAtxk9yKkscaj/yqNjm
+	 RPF3eZNVkxMk3FnjApLWDc7GwdC/IB1pMnYLAhJu75oiUpF33y0M0afOzcFjOeLPzc
+	 a8fXbWwDpnITw==
+Authentication-Results: linux3247.grserver.gr;
+        spf=pass (sender IP is 209.85.208.171) smtp.mailfrom=lkml@antheas.dev smtp.helo=mail-lj1-f171.google.com
+Received-SPF: pass (linux3247.grserver.gr: connection is authenticated)
+Received: by mail-lj1-f171.google.com with SMTP id
+ 38308e7fff4ca-37d13ddaa6aso34972721fa.1
+        for <platform-driver-x86@vger.kernel.org>;
+ Tue, 09 Dec 2025 01:12:36 -0800 (PST)
+X-Gm-Message-State: AOJu0Yz4uOGylRdc3CpYN/lySwmnoiC5v29UwQc/obD5Zk7ks8yLw6Gl
+	DydmewoCAx60I72zy0XnV1dJPmAx/UpuEwAmUP+gzlRdWFIuH8BozlKq+wouq+05BqacvfO9faX
+	Ez3VBvwkIueKR4H0KBB/7vq04vA41QWY=
+X-Google-Smtp-Source: 
+ AGHT+IFdWBDjquv9IWBtiFHrZuzYYdRUDlIq8aohdZDAnNGIYdA3mm9ciblhnYrIzcaGCnKre0tGSwciqsjgfowKEjg=
+X-Received: by 2002:a05:651c:31cf:b0:37c:c370:60a3 with SMTP id
+ 38308e7fff4ca-37ec5079e31mr24542801fa.0.1765271556329; Tue, 09 Dec 2025
+ 01:12:36 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20251125-pci-m2-e-v2-8-32826de07cc5@oss.qualcomm.com>
+References: <20251122110032.4274-1-lkml@antheas.dev>
+ <20251122110032.4274-6-lkml@antheas.dev>
+ <8e3817f1-73e8-6f61-3eca-e45aa4d46af3@linux.intel.com>
+In-Reply-To: <8e3817f1-73e8-6f61-3eca-e45aa4d46af3@linux.intel.com>
+From: Antheas Kapenekakis <lkml@antheas.dev>
+Date: Tue, 9 Dec 2025 10:12:23 +0100
+X-Gmail-Original-Message-ID: 
+ <CAGwozwEN-Rzjk2nZ9mbROE2vbiQ4LUiTn5OB6mKSfArRwDgL7Q@mail.gmail.com>
+X-Gm-Features: AQt7F2r4d2I2mYtDrrVzWy7wlOq-9Y_8c2lXl7IdlFgpc70msYGHl4IBehsd7B4
+Message-ID: 
+ <CAGwozwEN-Rzjk2nZ9mbROE2vbiQ4LUiTn5OB6mKSfArRwDgL7Q@mail.gmail.com>
+Subject: Re: [PATCH v10 05/11] HID: asus: move vendor initialization to probe
+To: =?UTF-8?Q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
+Cc: platform-driver-x86@vger.kernel.org, linux-input@vger.kernel.org,
+	LKML <linux-kernel@vger.kernel.org>, Jiri Kosina <jikos@kernel.org>,
+	Benjamin Tissoires <bentiss@kernel.org>,
+ Corentin Chary <corentin.chary@gmail.com>,
+	"Luke D . Jones" <luke@ljones.dev>, Hans de Goede <hansg@kernel.org>,
+	Denis Benato <benato.denis96@gmail.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+X-PPP-Message-ID: 
+ <176527155727.2174971.4458819111260907195@linux3247.grserver.gr>
+X-PPP-Vhost: antheas.dev
+X-Virus-Scanned: clamav-milter 1.4.3 at linux3247.grserver.gr
+X-Virus-Status: Clean
 
-On Tue, Nov 25, 2025 at 08:15:12PM +0530, Manivannan Sadhasivam wrote:
-> Add the devicetree binding for PCIe M.2 Mechanical Key E connector defined
-> in the PCI Express M.2 Specification, r4.0, sec 5.1.2. This connector
-> provides interfaces like PCIe or SDIO to attach the WiFi devices to the
-> host machine, USB or UART+PCM interfaces to attach the Bluetooth (BT)
-> devices along with additional interfaces like I2C for NFC solution. At any
-> point of time, the connector can only support either PCIe or SDIO as the
-> WiFi interface and USB or UART as the BT interface.
+On Mon, 8 Dec 2025 at 18:11, Ilpo J=C3=A4rvinen
+<ilpo.jarvinen@linux.intel.com> wrote:
+>
+> On Sat, 22 Nov 2025, Antheas Kapenekakis wrote:
+>
+> > ROG NKEY devices have multiple HID endpoints, around 3-4. One of those
+> > endpoints has a usage page of 0xff31, and is the one that emits keyboar=
+d
+> > shortcuts and controls RGB/backlight. Currently, this driver places
+> > the usage page check under asus_input_mapping and then inits backlight
+> > in asus_input_configured which is unnecessarily complicated and prevent=
+s
+> > probe from performing customizations on the vendor endpoint.
+> >
+> > Simplify the logic by introducing an is_vendor variable into probe that
+> > checks for usage page 0xff31. Then, use this variable to move backlight
+> > initialization into probe instead of asus_input_configured, and remove
+> > the backlight check from asus_input_mapping.
+>
+> In the changelogs, please add () after any name that refers to a C
+> function so the reader immediately knows you're talking about a function.
 
-AFAICT, there's no muxing of interfaces. Maybe that's a defacto 
-limitation on x86 systems? There's no reason to encode that into the 
-binding if the pins aren't mux'ed on the connector.
+Sure. What should be my timeline for fixing this?
 
-> 
-> The connector provides a primary power supply of 3.3v, along with an
-> optional 1.8v VIO supply for the Adapter I/O buffer circuitry operating at
-> 1.8v sideband signaling.
-> 
-> The connector also supplies optional signals in the form of GPIOs for fine
-> grained power management.
-> 
-> Signed-off-by: Manivannan Sadhasivam <manivannan.sadhasivam@oss.qualcomm.com>
-> ---
->  .../bindings/connector/pcie-m2-e-connector.yaml    | 178 +++++++++++++++++++++
->  MAINTAINERS                                        |   1 +
->  2 files changed, 179 insertions(+)
-> 
-> diff --git a/Documentation/devicetree/bindings/connector/pcie-m2-e-connector.yaml b/Documentation/devicetree/bindings/connector/pcie-m2-e-connector.yaml
-> new file mode 100644
-> index 000000000000..fe2c9a943a21
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/connector/pcie-m2-e-connector.yaml
-> @@ -0,0 +1,178 @@
-> +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
-> +%YAML 1.2
-> +---
-> +$id: http://devicetree.org/schemas/connector/pcie-m2-e-connector.yaml#
-> +$schema: http://devicetree.org/meta-schemas/core.yaml#
-> +
-> +title: PCIe M.2 Mechanical Key E Connector
-> +
-> +maintainers:
-> +  - Manivannan Sadhasivam <manivannan.sadhasivam@oss.qualcomm.com>
-> +
-> +description:
-> +  A PCIe M.2 E connector node represents a physical PCIe M.2 Mechanical Key E
-> +  connector. Mechanical Key E connectors are used to connect Wireless
-> +  Connectivity devices including combinations of Wi-Fi, BT, NFC to the host
-> +  machine over interfaces like PCIe/SDIO, USB/UART+PCM, and I2C.
-> +
-> +properties:
-> +  compatible:
-> +    const: pcie-m2-e-connector
-> +
-> +  vpcie3v3-supply:
-> +    description: A phandle to the regulator for 3.3v supply.
-> +
-> +  vpcie1v8-supply:
-> +    description: A phandle to the regulator for VIO 1.8v supply.
-> +
-> +  ports:
-> +    $ref: /schemas/graph.yaml#/properties/ports
-> +    description: OF graph bindings modeling the interfaces exposed on the
-> +      connector. Since a single connector can have multiple interfaces, every
-> +      interface has an assigned OF graph port number as described below.
-> +
-> +    properties:
-> +      port@0:
-> +        $ref: /schemas/graph.yaml#/properties/port
-> +        description: Connector interfaces for Wi-Fi
-> +
-> +        properties:
-> +          endpoint@0:
-> +            $ref: /schemas/graph.yaml#/properties/endpoint
-> +            description: PCIe interface
-> +
-> +          endpoint@1:
-> +            $ref: /schemas/graph.yaml#/properties/endpoint
-> +            description: SDIO interface
-> +
-> +        anyOf:
-> +          - required:
-> +              - endpoint@0
-> +          - required:
-> +              - endpoint@1
-> +
-> +      port@1:
-> +        $ref: /schemas/graph.yaml#/properties/port
-> +        description: Connector interfaces for BT
-> +
-> +        properties:
-> +          endpoint@0:
-> +            $ref: /schemas/graph.yaml#/properties/endpoint
-> +            description: USB 2.0 interface
-> +
-> +          endpoint@1:
-> +            $ref: /schemas/graph.yaml#/properties/endpoint
-> +            description: UART interface
-> +
-> +        anyOf:
-> +          - required:
-> +              - endpoint@0
-> +          - required:
-> +              - endpoint@1
-> +
-> +      port@2:
-> +        $ref: /schemas/graph.yaml#/properties/port
-> +        description: PCM/I2S interface
+I assume we missed the merge window. If not, I can tweak the series
+and send it later today
 
-Does this work with any existing DAI bindings? Or conflict with the 
-audio graph card binding?
+Antheas
 
-> +
-> +      port@3:
-> +        $ref: /schemas/graph.yaml#/properties/port
-> +        description: I2C interface
+> > Signed-off-by: Antheas Kapenekakis <lkml@antheas.dev>
+> > ---
+> >  drivers/hid/hid-asus.c | 35 ++++++++++++++++++-----------------
+> >  1 file changed, 18 insertions(+), 17 deletions(-)
+> >
+> > diff --git a/drivers/hid/hid-asus.c b/drivers/hid/hid-asus.c
+> > index 2a412e10f916..faac971794c0 100644
+> > --- a/drivers/hid/hid-asus.c
+> > +++ b/drivers/hid/hid-asus.c
+> > @@ -48,6 +48,7 @@ MODULE_DESCRIPTION("Asus HID Keyboard and TouchPad");
+> >  #define T100CHI_MOUSE_REPORT_ID 0x06
+> >  #define FEATURE_REPORT_ID 0x0d
+> >  #define INPUT_REPORT_ID 0x5d
+> > +#define HID_USAGE_PAGE_VENDOR 0xff310000
+> >  #define FEATURE_KBD_REPORT_ID 0x5a
+> >  #define FEATURE_KBD_REPORT_SIZE 64
+> >  #define FEATURE_KBD_LED_REPORT_ID1 0x5d
+> > @@ -127,7 +128,6 @@ struct asus_drvdata {
+> >       struct input_dev *tp_kbd_input;
+> >       struct asus_kbd_leds *kbd_backlight;
+> >       const struct asus_touchpad_info *tp;
+> > -     bool enable_backlight;
+> >       struct power_supply *battery;
+> >       struct power_supply_desc battery_desc;
+> >       int battery_capacity;
+> > @@ -318,7 +318,7 @@ static int asus_e1239t_event(struct asus_drvdata *d=
+rvdat, u8 *data, int size)
+> >  static int asus_event(struct hid_device *hdev, struct hid_field *field=
+,
+> >                     struct hid_usage *usage, __s32 value)
+> >  {
+> > -     if ((usage->hid & HID_USAGE_PAGE) =3D=3D 0xff310000 &&
+> > +     if ((usage->hid & HID_USAGE_PAGE) =3D=3D HID_USAGE_PAGE_VENDOR &&
+> >           (usage->hid & HID_USAGE) !=3D 0x00 &&
+> >           (usage->hid & HID_USAGE) !=3D 0xff && !usage->type) {
+> >               hid_warn(hdev, "Unmapped Asus vendor usagepage code 0x%02=
+x\n",
+> > @@ -941,11 +941,6 @@ static int asus_input_configured(struct hid_device=
+ *hdev, struct hid_input *hi)
+> >
+> >       drvdata->input =3D input;
+> >
+> > -     if (drvdata->enable_backlight &&
+> > -         !asus_kbd_wmi_led_control_present(hdev) &&
+> > -         asus_kbd_register_leds(hdev))
+> > -             hid_warn(hdev, "Failed to initialize backlight.\n");
+> > -
+> >       return 0;
+> >  }
+> >
+> > @@ -1018,15 +1013,6 @@ static int asus_input_mapping(struct hid_device =
+*hdev,
+> >                       return -1;
+> >               }
+> >
+> > -             /*
+> > -              * Check and enable backlight only on devices with UsageP=
+age =3D=3D
+> > -              * 0xff31 to avoid initializing the keyboard firmware mul=
+tiple
+> > -              * times on devices with multiple HID descriptors but sam=
+e
+> > -              * PID/VID.
+> > -              */
+> > -             if (drvdata->quirks & QUIRK_USE_KBD_BACKLIGHT)
+> > -                     drvdata->enable_backlight =3D true;
+> > -
+> >               set_bit(EV_REP, hi->input->evbit);
+> >               return 1;
+> >       }
+> > @@ -1143,8 +1129,11 @@ static int __maybe_unused asus_reset_resume(stru=
+ct hid_device *hdev)
+> >
+> >  static int asus_probe(struct hid_device *hdev, const struct hid_device=
+_id *id)
+> >  {
+> > -     int ret;
+> > +     struct hid_report_enum *rep_enum;
+> >       struct asus_drvdata *drvdata;
+> > +     struct hid_report *rep;
+> > +     bool is_vendor =3D false;
+> > +     int ret;
+> >
+> >       drvdata =3D devm_kzalloc(&hdev->dev, sizeof(*drvdata), GFP_KERNEL=
+);
+> >       if (drvdata =3D=3D NULL) {
+> > @@ -1228,12 +1217,24 @@ static int asus_probe(struct hid_device *hdev, =
+const struct hid_device_id *id)
+> >               return ret;
+> >       }
+> >
+> > +     /* Check for vendor for RGB init and handle generic devices prope=
+rly. */
+> > +     rep_enum =3D &hdev->report_enum[HID_INPUT_REPORT];
+> > +     list_for_each_entry(rep, &rep_enum->report_list, list) {
+> > +             if ((rep->application & HID_USAGE_PAGE) =3D=3D HID_USAGE_=
+PAGE_VENDOR)
+> > +                     is_vendor =3D true;
+> > +     }
+> > +
+> >       ret =3D hid_hw_start(hdev, HID_CONNECT_DEFAULT);
+> >       if (ret) {
+> >               hid_err(hdev, "Asus hw start failed: %d\n", ret);
+> >               return ret;
+> >       }
+> >
+> > +     if (is_vendor && (drvdata->quirks & QUIRK_USE_KBD_BACKLIGHT) &&
+> > +         !asus_kbd_wmi_led_control_present(hdev) &&
+> > +         asus_kbd_register_leds(hdev))
+> > +             hid_warn(hdev, "Failed to initialize backlight.\n");
+> > +
+> >       /*
+> >        * Check that input registration succeeded. Checking that
+> >        * HID_CLAIMED_INPUT is set prevents a UAF when all input devices
+> >
+>
+> --
+>  i.
+>
+>
 
-Like the other one, use i2c-parent.
-
-> +
-> +    oneOf:
-> +      - required:
-> +          - port@0
-> +
-> +  clocks:
-> +    description: 32.768 KHz Suspend Clock (SUSCLK) input from the host system to
-> +      the M.2 card. Refer, PCI Express M.2 Specification r4.0, sec 3.1.12.1 for
-> +      more details.
-> +    maxItems: 1
-> +
-> +  w-disable1-gpios:
-> +    description: GPIO controlled connection to W_DISABLE1# signal. This signal
-> +      is used by the system to disable WiFi radio in the M.2 card. Refer, PCI
-> +      Express M.2 Specification r4.0, sec 3.1.12.3 for more details.
-> +    maxItems: 1
-> +
-> +  w-disable2-gpios:
-> +    description: GPIO controlled connection to W_DISABLE2# signal. This signal
-> +      is used by the system to disable BT radio in the M.2 card. Refer, PCI
-> +      Express M.2 Specification r4.0, sec 3.1.12.3 for more details.
-> +    maxItems: 1
-> +
-> +  viocfg-gpios:
-> +    description: GPIO controlled connection to IO voltage configuration
-> +      (VIO_CFG) signal. This signal is used by the M.2 card to indicate to the
-> +      host system that the card supports an independent IO voltage domain for
-> +      the sideband signals. Refer, PCI Express M.2 Specification r4.0, sec
-> +      3.1.15.1 for more details.
-> +    maxItems: 1
-> +
-> +  uim-power-src-gpios:
-> +    description: GPIO controlled connection to UIM_POWER_SRC signal. This signal
-> +      is used when the NFC solution is implemented and receives the power output
-> +      from WWAN_UIM_PWR signal of the another WWAN M.2 card. Refer, PCI Express
-> +      M.2 Specification r4.0, sec 3.1.11.1 for more details.
-> +    maxItems: 1
-> +
-> +  uim-power-snk-gpios:
-> +    description: GPIO controlled connection to UIM_POWER_SNK signal. This signal
-> +      is used when the NFC solution is implemented and supplies power to the
-> +      Universal Integrated Circuit Card (UICC). Refer, PCI Express M.2
-> +      Specification r4.0, sec 3.1.11.2 for more details.
-> +    maxItems: 1
-> +
-> +  uim-swp-gpios:
-> +    description: GPIO controlled connection to UIM_SWP signal. This signal is
-> +      used when the NFC solution is implemented and implements the Single Wire
-> +      Protocol (SWP) interface to the UICC. Refer, PCI Express M.2 Specification
-> +      r4.0, sec 3.1.11.3 for more details.
-> +    maxItems: 1
-> +
-> +required:
-> +  - compatible
-> +  - vpcie3v3-supply
-> +
-> +additionalProperties: false
-> +
-> +examples:
-> +  # PCI M.2 Key E connector for Wi-Fi/BT with PCIe/UART interfaces
-> +  - |
-> +    #include <dt-bindings/gpio/gpio.h>
-> +
-> +    connector {
-> +        compatible = "pcie-m2-e-connector";
-> +        vpcie3v3-supply = <&vreg_wcn_3p3>;
-> +        vpcie1v8-supply = <&vreg_l15b_1p8>;
-> +        w-disable1-gpios = <&tlmm 117 GPIO_ACTIVE_LOW>;
-> +        w-disable2-gpios = <&tlmm 116 GPIO_ACTIVE_LOW>;
-> +
-> +        ports {
-> +            #address-cells = <1>;
-> +            #size-cells = <0>;
-> +
-> +            port@0 {
-> +                #address-cells = <1>;
-> +                #size-cells = <0>;
-> +
-> +                reg = <0>;
-> +
-> +                endpoint@0 {
-> +                    reg = <0>;
-> +                    remote-endpoint = <&pcie4_port0_ep>;
-> +                };
-> +            };
-> +
-> +            port@1 {
-> +                #address-cells = <1>;
-> +                #size-cells = <0>;
-> +
-> +                reg = <1>;
-> +
-> +                endpoint@1 {
-> +                    reg = <1>;
-> +                    remote-endpoint = <&uart14_ep>;
-> +                };
-> +            };
-> +        };
-> +    };
-> diff --git a/MAINTAINERS b/MAINTAINERS
-> index 9b3f689d1f50..f707f29d0a37 100644
-> --- a/MAINTAINERS
-> +++ b/MAINTAINERS
-> @@ -20478,6 +20478,7 @@ PCIE M.2 POWER SEQUENCING
->  M:	Manivannan Sadhasivam <mani@kernel.org>
->  L:	linux-pci@vger.kernel.org
->  S:	Maintained
-> +F:	Documentation/devicetree/bindings/connector/pcie-m2-e-connector.yaml
->  F:	Documentation/devicetree/bindings/connector/pcie-m2-m-connector.yaml
->  F:	drivers/power/sequencing/pwrseq-pcie-m2.c
->  
-> 
-> -- 
-> 2.48.1
-> 
