@@ -1,193 +1,160 @@
-Received: from mail-pf1-f182.google.com (mail-pf1-f182.google.com [209.85.210.182])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from CY7PR03CU001.outbound.protection.outlook.com (mail-westcentralusazon11010003.outbound.protection.outlook.com [40.93.198.3])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3EFCC29B8C7
-	for <platform-driver-x86@vger.kernel.org>; Thu, 11 Dec 2025 06:49:29 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.182
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1765435772; cv=none; b=pg+B+D+M1376MTQFwElqqM4aQXINNgrKKYPkZjoNOO9CwRcJENJFqeQ5rv0Bg/cCJMTlTW4JHVH4eAKLEPqpov+VdtQKjwkq1IzXadc7Aj82sRjrtK1v6t00kKm0rpvPYBbAxhxiiXmjBCeTgsvzfcXsNTBuSWqOcPRLa+OkfCY=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1765435772; c=relaxed/simple;
-	bh=St5P/dKbzDpzDcZYqoy/Tl1MQ0rf5fYQKRZAJ31LVaY=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=BZqrBdUfPvZ/DMyW68lpPuqZuC6KaJOEK15Uoj+zlkKA1r5s4RrgxlUsUm5CQ8v0dQGKCtirLfMglunwTRHozPlNVm1h9UijIUA8/XUQLkd1H8lnfntLz2CRiVkXQUDhtcpbTZCUSbD+MYuYM39HxCUUxVVrfvmjwJowGhd7hW8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=Ux3Boi1R; arc=none smtp.client-ip=209.85.210.182
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BFF862E62C3;
+	Thu, 11 Dec 2025 09:25:00 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.93.198.3
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1765445104; cv=fail; b=F6Ak5YadY/34vMBXfMVNbnQVDmtttoH1BE0eJLpp0iZ+b7+0/yQSYgthZW+kDI7j+mOnInwylO5Gk31NAp8V0U/Nhf9MltLUxYmWRGWQdYBzrFWD7K+Pu67ntoRP9O+a+vZGCVnkPG9gDdDbF1CqcG+HLd7TgdI7ebj2vV3mM+Y=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1765445104; c=relaxed/simple;
+	bh=v3Zl5QS7F29UwT2sPJFw5g/7aKouBjLvi8+vHZe2K+8=;
+	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=lLQkkfEv7fb1Up5+R+3Y2OeLhC7lqrHo5z1tE/5QLT2NzhLMy0fQV2/WRLW8HGI+BA9u7bVjGrOvKz6CK/lo6L2hUnPwiCu2LKZ7T0A/qFyfq7NvrbOYEF2uzapuLt2oDaf2EMrIYN1R5bQhQ+QboDs5NDaGHOLBdwyeUXoFfLo=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com; spf=pass smtp.mailfrom=ti.com; dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b=J8DcNM/R; arc=fail smtp.client-ip=40.93.198.3
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ti.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Ux3Boi1R"
-Received: by mail-pf1-f182.google.com with SMTP id d2e1a72fcca58-7bab7c997eeso731831b3a.0
-        for <platform-driver-x86@vger.kernel.org>; Wed, 10 Dec 2025 22:49:29 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1765435769; x=1766040569; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=TvqvRKg6Dvm4JYTqbcpJmcxvj5YVSJwC2ID5rS1kYns=;
-        b=Ux3Boi1RJtJkm4EKbwkd1TdKIUlssLr03nVEJpWhDJi/DHdIulpYzI1rLQL/kolX++
-         zWjmIPlSHeTL3sPm8RPn8la+UTd71tOooPd0mdXQ0sADyMStR83wynd9RZ0vTYmyyeBb
-         M9lYT1dRZMLzucoPWjiG2kOIDNpSsYSoI8coZq6PK+OtAsCW3jHAA9emiRs0LjXEAZMt
-         n58YEgbsx9U69XvTfQ0MvmU+wpNRujfS/tGiszkUpK8+AEpyBlEqFn4/WkNW25rZlra4
-         UwmzgU89xhfM02rHCb2zmq30AbU19IlQlr+vVoMkt/CZSfMIrx5rPdTEArXPc6pbn1Rs
-         /nIw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1765435769; x=1766040569;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-gg:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=TvqvRKg6Dvm4JYTqbcpJmcxvj5YVSJwC2ID5rS1kYns=;
-        b=alHgXyi60kF7Wf9J8Suuwb4pnkTjsQ6Q8mgX+8dhnrNENwA+jeFov2K6v0KmWJ4WSJ
-         6BKn1ywshumRnmhah+tI2XbhDMiFLIEJ5dRHMby24VEscKUv7SVHOtMzdp27w1uBmj3J
-         kvn5dyjiykytu3uLcX8P+NG402g/VM5387A2sJU7dAJSW1x3SCkxTFVlyjQfq+R+qfOZ
-         +sfD17bTPW/EMOgsPbh5B7JHsntX0Ir3U1qkZTYOh860g9+UIJM0NXj8c0Hj22DTmiIH
-         6PUINh3NCynVa/N4Pqzvg4afa7PtAb7l+LbtuAIiA4sJZxV50h1mmI6V2AlhI/UlLGNq
-         r6vg==
-X-Forwarded-Encrypted: i=1; AJvYcCX++ISMYlt+Skc3EnH+awlEFl5bXt1XYjV9SwGIgeSwSuXqDGalpp4X5Jlmh9A9fyaw1BJUQO+bHz0356y3+BgEtvuZ@vger.kernel.org
-X-Gm-Message-State: AOJu0YwrKvKz/qeKYqmA5pOJBxgGtOb2k84jiR7H8tS+kRiE17bod1P7
-	NpQkFy0ij6zQWkvedlFvKEcdad6sP5amYQi6LZkgYpdbvvgh9dvyBsaB
-X-Gm-Gg: AY/fxX7H+6i3K91SYshGS5e6X1136Nl1CM6iv4kwgh8p5SoSj+stTgJ68T6sPWhwZHB
-	9KM/b2dga76IheswqyRFriN054v072sTEGrJmS4C6jiU0nN3dcujFpEr1/caxsXIuErEthQEvvA
-	hW6u0fC5HELhQR+mu4o5kh7rMtxfQkoRy34EKkr8xk/sTRmDVOm5x8JUl8UKtbcSS8kdjfC+kFw
-	CjxlGBi126sruHMGUqfVlY34NRybYWZjqfPhSHy+yM1i26iRNQUSVxqqg1hgdk+zomNzH05XqGb
-	RIHb/rCKAN5AzMASfsmBfBkJuvUQYohrzqqIYn3IIHEioklKzNvFnoiA7A83yLLNhf/3coG2ZUc
-	+LUAMGrwEABkt9tPTSEfqMWFqyRON9Fmt8gQgw8GhOvznR3GWGuSyZ+AxOtq5ADoOifwe2jh9T6
-	/w4pfNrY2OazH2avVN+wyBMyK7dZYN3rPWP4Ig9FqcUGaFxHc9T0Kz
-X-Google-Smtp-Source: AGHT+IEyDtd0oe3IAE6MkIRcuPF1XAaex7O+UXkzSJ582FShFldjGqeQBlos3z7LrpPfpvFbd/RWdg==
-X-Received: by 2002:a05:7022:985:b0:119:e569:f25f with SMTP id a92af1059eb24-11f2966bd00mr4273471c88.8.1765435768924;
-        Wed, 10 Dec 2025 22:49:28 -0800 (PST)
-Received: from google.com ([2a00:79e0:2ebe:8:8720:58cb:6770:779f])
-        by smtp.gmail.com with ESMTPSA id a92af1059eb24-11f2e2b4bb8sm4156046c88.7.2025.12.10.22.49.28
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 10 Dec 2025 22:49:28 -0800 (PST)
-Date: Wed, 10 Dec 2025 22:49:25 -0800
-From: Dmitry Torokhov <dmitry.torokhov@gmail.com>
-To: Vishnu Sankar <vishnuocv@gmail.com>
-Cc: corbet@lwn.net, hmh@hmh.eng.br, derekjohn.clark@gmail.com, 
-	hansg@kernel.org, ilpo.jarvinen@linux.intel.com, mpearson-lenovo@squebb.ca, 
-	linux-doc@vger.kernel.org, linux-input@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	ibm-acpi-devel@lists.sourceforge.net, platform-driver-x86@vger.kernel.org, vsankar@lenovo.com
-Subject: Re: [PATCH v4 1/3] input: trackpoint - Enable doubletap by default
- on capable devices
-Message-ID: <he73fiwxso45ykidteqz2s2gjklezsyd47xwxtwlfes27kxuq3@ucwhmacbtsn4>
-References: <20251129002533.9070-1-vishnuocv@gmail.com>
- <20251129002533.9070-2-vishnuocv@gmail.com>
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="J8DcNM/R"
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=P7kIxRZD9O9FU6+0WOwii1U/QDx7vOu01ndGYFmfllPdimWLD9j5dlWu1nZyk4FDh0EBLOI4BYiTCQM13bYVw0sFqVaZlfQ/0DzE4WRBz6K+XftFSkEQV+OFknuWF7XzGojp2id2ubaK5EntIZQrRwgqN5MvdvhVvBRHoff3rXzooa0XzL6cSjrjaqOBdoYA/iL2kg06xIqtgNGRopVmoVranrWDyEBXHyR64YdeavVjWtpYwZuN3QdQZSTYuA3QLplfQPcJ3boBob9Z7vyQwCJYNWJmZEVe2wqPiN15vnEw5hIdw2RPfU+rsdI6cX8ZtZI18tfQcNP5oxJjOQmqfQ==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=BJ9ZGCFiJ8/3fufb4jNa5wTzJYrZWJNYmKx5sKqv27k=;
+ b=KjvZW08r3J9tvTR7ngmiwUpnHAB+jubnYQ+Aa5+zu91UEdCRsTDb67JyTt7qrOyaOEl+sl7hv6Xp8uuem8VZZ9x3unDbTDYuCAvcNIoQzQ2ou8maQ2OdSIezql24+NRuK8LABV40RjtmdweylQ+GyfTeUEZ/Sby3qjDBWjXYI32W8NcR3B57JimPLotn0t0rwf3rty4dh4ch3iGGZe27K8hWqZDZqUgurElfhtZhMnMFzBnsWixzR8LFHT7dJ1pDKzw2CXIsWnoKwANa+qRI4i/dXXj5sQCa4s/c1IBjCHwcoO2P4Q4QIO0htIejGIGwuZKrJTpdqajQU5m2EIKe0g==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
+ 198.47.21.195) smtp.rcpttodomain=canonical.com smtp.mailfrom=ti.com;
+ dmarc=pass (p=quarantine sp=none pct=100) action=none header.from=ti.com;
+ dkim=none (message not signed); arc=none (0)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com; s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=BJ9ZGCFiJ8/3fufb4jNa5wTzJYrZWJNYmKx5sKqv27k=;
+ b=J8DcNM/RJVN4isQZ085R1yIYfc9vckL8AT+stsKeCp79IkjJQtGHaZzHP6J1RknU4mdaLZhdfvndjtpI6MyRsEf7Bw0fBBnS3eLKb+s55naClXiBPw9AnW54VS+FgPvxbzE2D6SgxA76RCpfNUzPg2RCU00OnzceMq6iTkVIjQU=
+Received: from SA9PR13CA0111.namprd13.prod.outlook.com (2603:10b6:806:24::26)
+ by LV3PR10MB7916.namprd10.prod.outlook.com (2603:10b6:408:218::11) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.9412.9; Thu, 11 Dec
+ 2025 09:24:57 +0000
+Received: from SN1PEPF000397B4.namprd05.prod.outlook.com
+ (2603:10b6:806:24:cafe::fd) by SA9PR13CA0111.outlook.office365.com
+ (2603:10b6:806:24::26) with Microsoft SMTP Server (version=TLS1_3,
+ cipher=TLS_AES_256_GCM_SHA384) id 15.20.9434.5 via Frontend Transport; Thu,
+ 11 Dec 2025 09:24:57 +0000
+X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 198.47.21.195)
+ smtp.mailfrom=ti.com; dkim=none (message not signed) header.d=none;dmarc=pass
+ action=none header.from=ti.com;
+Received-SPF: Pass (protection.outlook.com: domain of ti.com designates
+ 198.47.21.195 as permitted sender) receiver=protection.outlook.com;
+ client-ip=198.47.21.195; helo=flwvzet201.ext.ti.com; pr=C
+Received: from flwvzet201.ext.ti.com (198.47.21.195) by
+ SN1PEPF000397B4.mail.protection.outlook.com (10.167.248.58) with Microsoft
+ SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.9412.4 via Frontend Transport; Thu, 11 Dec 2025 09:24:55 +0000
+Received: from DFLE208.ent.ti.com (10.64.6.66) by flwvzet201.ext.ti.com
+ (10.248.192.32) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.2562.20; Thu, 11 Dec
+ 2025 03:24:52 -0600
+Received: from DFLE206.ent.ti.com (10.64.6.64) by DFLE208.ent.ti.com
+ (10.64.6.66) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.2562.20; Thu, 11 Dec
+ 2025 03:24:52 -0600
+Received: from lelvem-mr06.itg.ti.com (10.180.75.8) by DFLE206.ent.ti.com
+ (10.64.6.64) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.2562.20 via Frontend
+ Transport; Thu, 11 Dec 2025 03:24:52 -0600
+Received: from lelvem-mr05.itg.ti.com ([10.250.165.138])
+	by lelvem-mr06.itg.ti.com (8.18.1/8.18.1) with ESMTP id 5BB9Okn4235351;
+	Thu, 11 Dec 2025 03:24:47 -0600
+From: Baojun Xu <baojun.xu@ti.com>
+To: <tiwai@suse.de>, <hansg@kernel.org>
+CC: <ilpo.jarvinen@linux.intel.com>, <broonie@kernel.org>,
+	<andriy.shevchenko@linux.intel.com>, <alsa-devel@alsa-project.org>,
+	<shenghao-ding@ti.com>, <13916275206@139.com>,
+	<platform-driver-x86@vger.kernel.org>, <linux-sound@vger.kernel.org>,
+	<linux-kernel@vger.kernel.org>, <baojun.xu@ti.com>, <letitia.tsai@hp.com>,
+	<bill.yu@canonical.com>
+Subject: [PATCH v1] ALSA: hda/tas2781: Add new quirk for HP new project
+Date: Thu, 11 Dec 2025 17:24:26 +0800
+Message-ID: <20251211092427.1648-1-baojun.xu@ti.com>
+X-Mailer: git-send-email 2.43.0.windows.1
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20251129002533.9070-2-vishnuocv@gmail.com>
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-C2ProcessedOrg: 333ef613-75bf-4e12-a4b1-8e3623f5dcea
+X-EOPAttributedMessage: 0
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: SN1PEPF000397B4:EE_|LV3PR10MB7916:EE_
+X-MS-Office365-Filtering-Correlation-Id: d0f354d7-76d3-4a5f-8b2f-08de389725a8
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam:
+	BCL:0;ARA:13230040|1800799024|82310400026|36860700013|376014|7416014;
+X-Microsoft-Antispam-Message-Info:
+	=?us-ascii?Q?oHO6tQEL3AtxHB9BwwQCf7vvPcaudFbspj/KGzywFNf26xQbSZc0x4OqatF8?=
+ =?us-ascii?Q?0FPb+I7G5d9E7adWlDhadwnZThodzEy3tOEYEemU8YxeZRm/gKvoqOFem0Ik?=
+ =?us-ascii?Q?zieusMEN/15zbjH7Hc815KZIAF5xwPCQSHoAQvhn6gETE1HZVA4Yz5ygwGHi?=
+ =?us-ascii?Q?c659oYoU/bWuNhMW8PebhG9zTOBq50MHaINbCGeMMakhv65jYw6mIMDE71As?=
+ =?us-ascii?Q?zpqQ8op3sosFCPdAivil6eGjKChacczAplmy6If5+RB/J1Lz6prgVaVBSD4e?=
+ =?us-ascii?Q?NgVTFsnDZHoXmojUPp2AmzHl+mfD6DQ/f1WsOq8Bj2HubHv9m74aSR50E/Fa?=
+ =?us-ascii?Q?hDXL/53VguAFfzb2/We3l80U+3Q516peY+QG+2+Kmu+xdZuzusir8cbp6r+V?=
+ =?us-ascii?Q?x4+AAHHHFXe+w4TXG6kKXeYitSxtcsNWCvMfkb0DD6IfuCWy7MMDIk0dEjHE?=
+ =?us-ascii?Q?8+AE73GqthsqhTXxEaytUmS2xPEUmNKV7OxWCtIdhhx/4WQ2506zzfWgkWkl?=
+ =?us-ascii?Q?7bfD4XGCDFxZFOjDU1xP5XUKCuTPZME49bokroKuHP+c5Mh5flSYrB1ga55l?=
+ =?us-ascii?Q?DkPIyOCHKwcMUbgm4YbZ19MyxqhdFviz6iTnOe+hGRGIy4/8pBzn/NEk+GrA?=
+ =?us-ascii?Q?LQ0B6LAMPT5Zg19wKrjzON5bsbWmH1+dYN/VgfPYfo8yyYlzzwToWOfJnT7D?=
+ =?us-ascii?Q?SCw8nfrVvGS/JFkjhYvwN8WjsZsgzLzqO6hrIntTU47Og2v/maZnT6lunJT/?=
+ =?us-ascii?Q?1VfQ5R+hM6zviZx5iIqofjXth+vMXEbZQHofYq2X9XaIV8+f+38iR5H7p5IB?=
+ =?us-ascii?Q?Lwrd7d3I3iws3kw8HSxC53nqDS1LBgZoTyq9YDV1j4jW7/cfoty+kfZP6F2D?=
+ =?us-ascii?Q?2SiWQl+alqCZmRtHUSQR34HPxbDg8mmMWtPOlRLPG52uyrMRvQHFZ7HA1j9/?=
+ =?us-ascii?Q?5FuvYQG9oQ5N1aqrfE/WsKtfKkwo4kZG+0+NUJx83e3VVXajvvlajlN81IHe?=
+ =?us-ascii?Q?ZVOOzoFgpiDg1hQym/SgAosVBKrNHJ5IbjXq+OYsbTBYInzLufQIfQnuBGHV?=
+ =?us-ascii?Q?gAiT0M2/oRmBho2TlBHGifIte9EjUUQ8Kv5xTd/NDvWLhqmKAM0lrmqnD6HQ?=
+ =?us-ascii?Q?T1ozdh3ympEf91My/PHQPjR+w6zuVfvp0xjCuocBtdlbNTtTTfJvJoVw1YdZ?=
+ =?us-ascii?Q?A1fc+lRUuqJLMUEnDWimHZ/OwHqreGH3+AI6gBGB97Jbi9MljdC5aJ2r+gJe?=
+ =?us-ascii?Q?TmXqXk4Cxv07+p4wSR+x8wSyzJ/SAIOr2KhmcCefJUN0cOW48Z6ZQEw/ho90?=
+ =?us-ascii?Q?HyPbyRzMJCvp1d+K7XTeUdk1hZg1Nyk2tzuoMd+sIN0FilD4054RVh1CbYZu?=
+ =?us-ascii?Q?gSu5kHnOajSjo8nqOzmzBPj8G2G5oQNcRmoB8xb4SX6AuR6QpbUMzhNMHJLt?=
+ =?us-ascii?Q?BCnVLERENZ81N9R10k37e///Rh8jr8gOjet96MYH1TsYjzB+px3FbgpQ93lT?=
+ =?us-ascii?Q?JDWRdLg2xR03pPk5Tvbc9tuu+4QoOsqJSxusPHKH+A4HkWzGTcxaGnmqlrvz?=
+ =?us-ascii?Q?eVMkCUlrT1i0wyjDG8w=3D?=
+X-Forefront-Antispam-Report:
+	CIP:198.47.21.195;CTRY:US;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:flwvzet201.ext.ti.com;PTR:ErrorRetry;CAT:NONE;SFS:(13230040)(1800799024)(82310400026)(36860700013)(376014)(7416014);DIR:OUT;SFP:1101;
+X-OriginatorOrg: ti.com
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 11 Dec 2025 09:24:55.5936
+ (UTC)
+X-MS-Exchange-CrossTenant-Network-Message-Id: d0f354d7-76d3-4a5f-8b2f-08de389725a8
+X-MS-Exchange-CrossTenant-Id: e5b49634-450b-4709-8abb-1e2b19b982b7
+X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=e5b49634-450b-4709-8abb-1e2b19b982b7;Ip=[198.47.21.195];Helo=[flwvzet201.ext.ti.com]
+X-MS-Exchange-CrossTenant-AuthSource:
+	SN1PEPF000397B4.namprd05.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Anonymous
+X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: LV3PR10MB7916
 
-Hi Vishnu,
+Add new vendor_id and subsystem_id in quirk for HP new project (NexusX).
 
-On Sat, Nov 29, 2025 at 09:25:31AM +0900, Vishnu Sankar wrote:
-> Enable doubletap functionality by default on TrackPoint devices that
-> support it. The feature is detected using firmware ID pattern matching
-> (PNP: LEN03xxx) with a deny list of incompatible devices.
-> 
-> This provides immediate doubletap functionality without requiring
-> userspace configuration. The hardware is enabled during device
-> detection, while event filtering continues to be handled by the
-> thinkpad_acpi driver as before.
-> 
-> Signed-off-by: Vishnu Sankar <vishnuocv@gmail.com>
-> Suggested-by: Mark Pearson <mpearson-lenovo@squebb.ca>
-> ---
-> Changes in v4:
-> - Simplified approach: removed all sysfs attributes and user interface
-> - Enable doubletap by default during device detection
-> - Removed global variables and complex attribute infrastructure
-> - Uses minimal firmware ID detection with deny list
-> - Follows KISS principle as suggested by reviewers
-> 
-> Changes in v3:
-> - No changes
-> 
-> Changes in v2:
-> - Improve commit messages
-> - Sysfs attributes moved to trackpoint.c
-> - Removed unnecessary comments
-> - Removed unnecessary debug messages
-> - Using strstarts() instead of strcmp()
-> - is_trackpoint_dt_capable() modified
-> - Removed _BIT suffix and used BIT() define
-> - Reverse the trackpoint_doubletap_status() logic to return error first
-> - Removed export functions as a result of the design change
-> - Changed trackpoint_dev->psmouse to parent_psmouse
-> - The path of trackpoint.h is not changed
-> ---
->  drivers/input/mouse/trackpoint.c | 51 ++++++++++++++++++++++++++++++++
->  drivers/input/mouse/trackpoint.h |  5 ++++
->  2 files changed, 56 insertions(+)
-> 
-> diff --git a/drivers/input/mouse/trackpoint.c b/drivers/input/mouse/trackpoint.c
-> index 5f6643b69a2c..67144c27bccd 100644
-> --- a/drivers/input/mouse/trackpoint.c
-> +++ b/drivers/input/mouse/trackpoint.c
-> @@ -393,6 +393,48 @@ static int trackpoint_reconnect(struct psmouse *psmouse)
->  	return 0;
->  }
->  
-> +/* List of known incapable device PNP IDs */
-> +static const char * const dt_incompatible_devices[] = {
-> +	"LEN0304",
-> +	"LEN0306",
-> +	"LEN0317",
-> +	"LEN031A",
-> +	"LEN031B",
-> +	"LEN031C",
-> +	"LEN031D",
-> +};
-> +
-> +/*
-> + * Checks if it's a doubletap capable device
+Signed-off-by: Baojun Xu <baojun.xu@ti.com>
+---
+ sound/hda/codecs/realtek/alc269.c | 1 +
+ 1 file changed, 1 insertion(+)
 
-Please finish the sentence with a period.
-
-> + * The PNP ID format is "PNP: LEN030d PNP0f13".
-> + */
-> +static bool is_trackpoint_dt_capable(const char *pnp_id)
-
-Let's call it trackpoint_is_dt_capable() to keep with common
-"trackpoint_" prefix in the file.
-
-> +{
-> +	const char *id_start;
-> +	char id[8];
-> +	size_t i;
-> +
-> +	if (!strstarts(pnp_id, "PNP: LEN03"))
-> +		return false;
-> +
-> +	/* Points to "LEN03xxxx" */
-> +	id_start = pnp_id + 5;
-> +	if (sscanf(id_start, "%7s", id) != 1)
-> +		return false;
-> +
-> +	/* Check if it's in the deny list */
-> +	for (i = 0; i < ARRAY_SIZE(dt_incompatible_devices); i++) {
-> +		if (strcmp(id, dt_incompatible_devices[i]) == 0)
-
-Why can't we use strncmp(pnp_id + 5, dt_incompatible_devices[i], 7) here
-(after ensuring that pnp_id is of sufficient length to begin with) and
-avoid sscanf()?
-
-> +			return false;
-> +	}
-> +	return true;
-> +}
-> +
-> +static int trackpoint_set_doubletap(struct ps2dev *ps2dev, bool enable)
-> +{
-> +	return trackpoint_write(ps2dev, TP_DOUBLETAP, enable ? TP_DOUBLETAP_ENABLE : TP_DOUBLETAP_DISABLE);
-> +}
-
-This wrapper seems an overkill given that it is called only once and
-always to enable the doubletap.
-
-Thanks.
-
+diff --git a/sound/hda/codecs/realtek/alc269.c b/sound/hda/codecs/realtek/alc269.c
+index 9510aa2f1bda..171a71457ec3 100644
+--- a/sound/hda/codecs/realtek/alc269.c
++++ b/sound/hda/codecs/realtek/alc269.c
+@@ -6770,6 +6770,7 @@ static const struct hda_quirk alc269_fixup_tbl[] = {
+ 	SND_PCI_QUIRK(0x103c, 0x8e60, "HP Trekker ", ALC287_FIXUP_CS35L41_I2C_2),
+ 	SND_PCI_QUIRK(0x103c, 0x8e61, "HP Trekker ", ALC287_FIXUP_CS35L41_I2C_2),
+ 	SND_PCI_QUIRK(0x103c, 0x8e62, "HP Trekker ", ALC287_FIXUP_CS35L41_I2C_2),
++	SND_PCI_QUIRK(0x103c, 0x8e8a, "HP NexusX", ALC245_FIXUP_HP_TAS2781_I2C_MUTE_LED),
+ 	SND_PCI_QUIRK(0x103c, 0x8e9d, "HP 17 Turbine OmniBook X UMA", ALC287_FIXUP_CS35L41_I2C_2),
+ 	SND_PCI_QUIRK(0x103c, 0x8e9e, "HP 17 Turbine OmniBook X UMA", ALC287_FIXUP_CS35L41_I2C_2),
+ 	SND_PCI_QUIRK(0x103c, 0x8eb6, "HP Abe A6U", ALC236_FIXUP_HP_MUTE_LED_MICMUTE_GPIO),
 -- 
-Dmitry
+2.25.1
+
