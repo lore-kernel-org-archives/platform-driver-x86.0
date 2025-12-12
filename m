@@ -1,223 +1,336 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from PH7PR06CU001.outbound.protection.outlook.com (mail-westus3azon11010009.outbound.protection.outlook.com [52.101.201.9])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1F5661990C7;
-	Fri, 12 Dec 2025 02:09:14 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1765505355; cv=none; b=lpsSh0JAg7Pc+ueiy9jZeUcT8+ppu3H4u1Gt2o06qtsioiEJyBdLDZbmS6IbjBcYyJND5LFF/0udVeFD4Y4g9Wh0blBYaxNvMZZ+Q7f1OY+zU0jMR44Qlt+iDVIsJS8QE6YwUfy7qasbgHcCiyVRb1jqoQlBV2/mL7m/21YTjf4=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1765505355; c=relaxed/simple;
-	bh=Q0zPclX8sDJjPyfg/Ub1RrRNa1FZeWqxEeqLAcXePMU=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=DC+P+9xi+PUPo/6B+Q5JFqwfslt3erFBEc1oJ61h6ogBE4qjXHebY6Z/84Pi8oc7si/7Y03kiqnuRKSErczfA4h7WAjwmaL1Q0HP/AtmhRxyUj4cWB3Z/TJ7CCMlY7b+DdN+q2dBNE8BmJjmNaY3Kdjv9I+vn9Jh+a0iabAFiaQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ZBtahSZX; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CD78B42A82;
+	Fri, 12 Dec 2025 06:00:39 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=52.101.201.9
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1765519241; cv=fail; b=KHK6I8iGodKockkSvfUqgoENvtDGp7jMofORAoUb3gvaewdisei3Ye162KoKl/2rPj7o3yyJOUFaX0S4ZaZJXQgAlEg4OmTDQTjfKGT/sAk/ehgBBDTcHUGQlmRzQcaX+YUxyaMqMDec7H5CYge81npAQGPxmwoJYZE5Ct8A2Ew=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1765519241; c=relaxed/simple;
+	bh=okyLTIc+/TwnOBYQjppLCQXRo0noRJNs2xGIGy+v0L4=;
+	h=Message-ID:Date:Subject:To:Cc:References:From:In-Reply-To:
+	 Content-Type:MIME-Version; b=re/YZhHVAQ+PSAnOAzLs0XVHC0B/k8BNBq1qRSEsuP7ysmFMIRoPh7UfMMjt52A6DMjVR4wQHNHagsJZZi51YnN4yihFv1c5JtUSOoxsniRPZ8SO3XPPYlu+oJ14ABm5SeLJ966g+v+0Lu963vdSCh4I65IMYHM7862S/KF4Zw4=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=asoeCfeG; arc=fail smtp.client-ip=52.101.201.9
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=amd.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ZBtahSZX"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 4044FC19421;
-	Fri, 12 Dec 2025 02:09:13 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1765505354;
-	bh=Q0zPclX8sDJjPyfg/Ub1RrRNa1FZeWqxEeqLAcXePMU=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=ZBtahSZXikRp4sHZ8WUpliESIkwhaHmjMgkOXsDYieCqQN5aSiYFKPW2deH3kY9QW
-	 gZ2izzUIUpHyXvwf+mKGGwOQYzOcCya3i0bTvrLFwFKUUdO0RvtONnsdu7CPppQkxS
-	 jIGpu8mYuM2VB0lPFedmazPBAhSk3ZkbrPHwtbOCh0veDLM7VPvbQX56JcoE2DGD5h
-	 ovNi+qUt0Ii+LpTtepkF+/5IwZKRH0Zzw12MgNU4d9k3aU8btpqaIZ4s6ZZGegdVTh
-	 Y+csX4vaa2sGw6baTTYPHxaqSFssG/S0ln1xh0J4eVryUdeCX7G+HA9aIJ2BOqxBaJ
-	 v2NXlNQE1wjyw==
-From: Sasha Levin <sashal@kernel.org>
-To: patches@lists.linux.dev,
-	stable@vger.kernel.org
-Cc: "Derek J. Clark" <derekjohn.clark@gmail.com>,
-	Armin Wolf <W_Armin@gmx.de>,
-	Mark Pearson <mpearson-lenovo@squebb.ca>,
-	=?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>,
-	Sasha Levin <sashal@kernel.org>,
-	platform-driver-x86@vger.kernel.org
-Subject: [PATCH AUTOSEL 6.18-6.17] platform/x86: wmi-gamezone: Add Legion Go 2 Quirks
-Date: Thu, 11 Dec 2025 21:08:56 -0500
-Message-ID: <20251212020903.4153935-4-sashal@kernel.org>
-X-Mailer: git-send-email 2.51.0
-In-Reply-To: <20251212020903.4153935-1-sashal@kernel.org>
-References: <20251212020903.4153935-1-sashal@kernel.org>
+	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="asoeCfeG"
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=Rg7kUNoytkEpc7rYeBTWP/JQswGrUtRHvKKha/NoWO/uU+cWLVwWIZF1Oc/+R6Fgr0VtpXU4Mx0IHWqFKDS5bLp+rRHK+54Bjlo4s+J3GtuVJuqYClsfcM/2AePSa2uzhLM3algBAFLxoHRtAG4mI3X9Jgd2Iloy4BdzuvjWWD9UzGUNKIpDaAjgtcCOPCEleEFQPRVrzOtRE1wI1jN/lvPXYKg8hN30cg0mSIcpQXRvlTF1u+vLLJG8zcw9R8iiuXVNVmFJqfcktQcI4eKDmMwyhnGzGRwB/djo84rmc2K84p3YqvXfBxdSUUfgI3XyRxPNnBsBjj/db+2Zq4BOsQ==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=fu5frvd74PyqmdLck1t+0WZAVuoYaWvfTj9rQCTrg6I=;
+ b=m2/KpWSYUqeY3AZITo0qgktxfwkaNadfzoS8fFtqS4FymXXspDbSn2Uhrcg1Xlqj04rYt+DnADip7WexVPBC7lJ/aInTiCQeZ317PAt7+zmjfCnJzGjNG289jA4xbuOmTXdF+7VpzkN/Qd57AB6lyBwKVrmbQx2PlO/ePmpKrClgtu/Uk8QlCGvqYbMjyiboeoyRkon2r76hlyvwBDKPgyGwSd2rtocuv6O/XpVG6ZqX4kcAlqEYaLjAjbZbkD+ht+zfMo/3Uch58PMkpO2M09oDIF/He6sNafGNjK4IjTdVbiLVCt8nJyt/QzAsxURuVU4lg0ELaz3dIZJJiYZgpg==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=amd.com; dmarc=pass action=none header.from=amd.com; dkim=pass
+ header.d=amd.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=fu5frvd74PyqmdLck1t+0WZAVuoYaWvfTj9rQCTrg6I=;
+ b=asoeCfeGyO74TNqGdqhnc6S0n7G5MElVqBsUg48lKhIQNe0fforTAkgLauJ3jKA4KITPBsCeVnuwLvI41ZZQe26r5ar+Vwco8moINgmA4FiV1VNePYFGxLpG/CggZrkwLjEfaNFo5HAwBprkc8SJwgPmtXpn4xR1gdVqkJ5DCcQ=
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=amd.com;
+Received: from BL1PR12MB5176.namprd12.prod.outlook.com (2603:10b6:208:311::19)
+ by IA0PR12MB7603.namprd12.prod.outlook.com (2603:10b6:208:439::9) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.9412.11; Fri, 12 Dec
+ 2025 06:00:36 +0000
+Received: from BL1PR12MB5176.namprd12.prod.outlook.com
+ ([fe80::ed5b:dd2f:995a:bcf4]) by BL1PR12MB5176.namprd12.prod.outlook.com
+ ([fe80::ed5b:dd2f:995a:bcf4%6]) with mapi id 15.20.9412.005; Fri, 12 Dec 2025
+ 06:00:36 +0000
+Message-ID: <b3ed5b11-c0cb-46c5-a498-95e6ba6f4e01@amd.com>
+Date: Fri, 12 Dec 2025 11:30:29 +0530
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH V1 1/2] platform/x86/amd/pmf: Introduce new interface to
+ export NPU metrics
+To: =?UTF-8?Q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>,
+ Lizhi Hou <lizhi.hou@amd.com>
+Cc: Hans de Goede <hansg@kernel.org>, ogabbay@kernel.org,
+ quic_jhugo@quicinc.com, maciej.falkowski@linux.intel.com,
+ LKML <linux-kernel@vger.kernel.org>, max.zhen@amd.com, sonal.santan@amd.com,
+ mario.limonciello@amd.com, platform-driver-x86@vger.kernel.org,
+ dri-devel@lists.freedesktop.org, VinitKumar.Shukla@amd.com,
+ Patil Rajesh Reddy <Patil.Reddy@amd.com>
+References: <20251211175802.1760860-1-lizhi.hou@amd.com>
+ <20251211175802.1760860-2-lizhi.hou@amd.com>
+ <5217a9b3-8489-fd18-051a-46a497ff56bd@linux.intel.com>
+Content-Language: en-US
+From: Shyam Sundar S K <Shyam-sundar.S-k@amd.com>
+In-Reply-To: <5217a9b3-8489-fd18-051a-46a497ff56bd@linux.intel.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+X-ClientProxiedBy: PN2PR01CA0227.INDPRD01.PROD.OUTLOOK.COM
+ (2603:1096:c01:eb::14) To BL1PR12MB5176.namprd12.prod.outlook.com
+ (2603:10b6:208:311::19)
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-X-stable: review
-X-Patchwork-Hint: Ignore
-X-stable-base: Linux 6.18
-Content-Transfer-Encoding: 8bit
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: BL1PR12MB5176:EE_|IA0PR12MB7603:EE_
+X-MS-Office365-Filtering-Correlation-Id: 00eaa7c0-2499-46d6-ea67-08de3943c4e3
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;ARA:13230040|1800799024|376014|366016;
+X-Microsoft-Antispam-Message-Info:
+	=?utf-8?B?MStZaDZPZUQ2a3ZiNXJwcG83MTVMVzhISzh4KzFnRDJhV1c5MHpvTUNSZ2VS?=
+ =?utf-8?B?ZEZ6Q1QwMzJpZW9ydHNBcjJDSFlhWm1UajhETFYzTHQycWZKeER6U0oxelBo?=
+ =?utf-8?B?a0E2Slc2S3l4TSsyOTcyNk1JMkszanpHV3BobGpKZFJPQ1RNYVphNUExSmRt?=
+ =?utf-8?B?NVpZclhqaW0rN3VYSTZQVld6Rmd5cjVpeDh3M3RJa0FKWFJ5MjFsVHpXU0FS?=
+ =?utf-8?B?OVZ2T0MyRE1JV3BiS2pWS0VleHB5aEs1QnJwOUhSeW8wQjdLMTJyZmU2d0FS?=
+ =?utf-8?B?VFJUVEJlQTV5V2dyTkZ4QkNPZDFMOStSZXNJL1c3alN0Z3c0ZjMwaFliRStx?=
+ =?utf-8?B?UkJibEZTTDJLMTEyd25IY0Irb3lnR2FJUXNKNkRCUkExdUpDcmo3L0ZwbTA0?=
+ =?utf-8?B?MVBzeTlkVWpGenNuTzErS2hYemNwSWhmWHNlbE1BZkVTdkQwbFRGei9ySm1k?=
+ =?utf-8?B?S2tEN3NxaHF1S2NIcFdEWGxIZHAzd0F1Z3Nkd1I4ejBaUmlFcmVwRS9BeTRV?=
+ =?utf-8?B?aVk2M293bGFucnpVVWtEMG5haS9xNnc3WjhwY0lhK0J1Z1g0OHZjUUwrK21N?=
+ =?utf-8?B?T1NkUHRia1RQVHI4a0J0YVlYUjVjaHM5VE9iQURTOXFsaXhjUGxxNnZBVEY3?=
+ =?utf-8?B?ZzNoV3RMaWx2Z0JFWGlkOXVOZ01tdXh4RWI5b3VwZzRNdzBHZVRyTlJZbG5Q?=
+ =?utf-8?B?d0VnbE5TZ3k4SWpERHorN1lZOSs3K2MvOUJNMkpmTnd0bUljWE0yck91MUpo?=
+ =?utf-8?B?WkhPYkd5TzBZZHN3TEcrWExUd2tKbDFaZkxJaTB5VVZRTFdua2gvbitRb3I1?=
+ =?utf-8?B?Q1l1N3Y4amp6UEV0aDk2allJYlFFS2k1N0FkMXRaTzZuMEdCa2tQN1Z6WUN2?=
+ =?utf-8?B?L1Bzd0lSZVBSSWJTbmRrVU11Qzd4M3RlcHVyRnFhVmlBNXFtZlBoc2FOaitY?=
+ =?utf-8?B?UDBlcnZRWEJqS1dXaUEvT3FKSlJXSGIrK2xpbit0aUVyQnFqMUEyby9IT0F0?=
+ =?utf-8?B?dnBGMEJWbCt6U2RhRklwOEtJVXFMbUNPVkU4YmZmQjVtR0tXTitkSjQvZElK?=
+ =?utf-8?B?TzYrZVhGZHRid25hc084WnhxbmhKOE80VFBNT0IyaEZTdEtNb3YxOW1FRVVQ?=
+ =?utf-8?B?aCtYNkYybEhiWXQzUUFmQ1NnWmZLNnVRZ0pmZFlnWnV6TVhiT20yMlF0b2VX?=
+ =?utf-8?B?bEtxYzQvZVdQUkdvaU15US9vQkM2SDRtNVUrdGwyK0VlQkN1NTNJakl3ajBT?=
+ =?utf-8?B?V1dNNXlqSVBrQzdvaThpWXJkUHFGRHJmVXQydk9aT3F1MDBzem1tS3B6Y2ZM?=
+ =?utf-8?B?VkxHR3kycm05RWt3QXAxazNvWnZlY1F0YzVwdU9yMGRMMFRwZXFnTmNGQ0ts?=
+ =?utf-8?B?cXZneHEvWlZXTWQ2bVpneVJ6cmFIRm5lejZYTHBVYmc3aC9KbEM5LzlSVy9F?=
+ =?utf-8?B?aC90RktCOVdlWjVLSllNZFp0bkIzMndieDVscTBFTHE4S1VtUDNhWWRxV1Z5?=
+ =?utf-8?B?TkoxTExTaFMrVzhXcUFHcGFjTXQrZHVjV2NOYXh0U0krQTBOV2NvT2k5cHRy?=
+ =?utf-8?B?WUF4K2xha1pqS1ZOemd1TlNJZUtTRDJySXpQN2UrMXNIUXdENFNWWTFBNGgw?=
+ =?utf-8?B?UFBTM0JDM3hLMk5KYWl1c1dEU3c2U1ZLSTB1emlyMjcyOXowemZYV0s2a09y?=
+ =?utf-8?B?QlZrbUsvdmkxVkhwQkNyakNZUC9NOFh4TzJJbG9uNW9FT01nS1RDNGNNcExs?=
+ =?utf-8?B?eEVHcW40MmtTMk13a3RiUWFMQjZWMGhHRjlFckRZUVRXbzBrV3d4VmZWMm5W?=
+ =?utf-8?B?aFRTdm1SUDFiZkdrWVVSUzFRSHNqRURQZU9lMzlsZnVXSTRUVlJRVkJBY0dJ?=
+ =?utf-8?B?VzlGNGw5dkNWSFJhaWU0UWN0Mm1xdUZSazRwd2hDR2lJSFF5cWRNZUk3ajUr?=
+ =?utf-8?B?cFYrTWJ4ZlRXZm82MzIvSjBFbDFRNDhPZS9hU0RrYW9ONmlWVEVFcCtXMnpR?=
+ =?utf-8?B?TW5LeDhSa2pnPT0=?=
+X-Forefront-Antispam-Report:
+	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:BL1PR12MB5176.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(1800799024)(376014)(366016);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0:
+	=?utf-8?B?VitWeGo5Z3FSWElXaVh4U2JNbmYzaytuTlNjUWRJTmZnMGNVS254VkNmMnc2?=
+ =?utf-8?B?VHpmMVhjT2NwYllvdS96Sllzem1sVllyaHVZVFdYMUc5K0ZmZzU2anMyNERo?=
+ =?utf-8?B?VjJvK2JVTG5wbWdUMW42TnNMQyt0OTJUOGpWckM3OEZoR2NNR3owQlVGbFBl?=
+ =?utf-8?B?b1R3aVFyVnpyK0QwQVF4ZzJxcU1nYTZaaHlaY0JZTWZYbll3SmpRSU42d3o4?=
+ =?utf-8?B?cWVOaDliL0Z3UkNUbnU1WkVVNFhKT0IxYlFNdWFzREpWR3ljVFhlZlJpM1V5?=
+ =?utf-8?B?YUZkTU1XV3RNSlVFanRwdHZqTEpVd1NRdHg2ZHo3TmFTRS8yZkVwdTFHbEJ6?=
+ =?utf-8?B?Q2NPNnpMajUvc0RFdGRxYlhsSjdyWEgzRW04Q0JVR0JBRnM5TGtHempadllw?=
+ =?utf-8?B?MFhRT2UyNm1pQnkyRXd3Znd4eWJqdjNRb3BoUmhZUm1mT01yUkI1WkdoczlS?=
+ =?utf-8?B?SGtocit5eUlHdkxOVy9NemhKUmpOTW1tTmJHQkwyOXhZWXcrd3VkV21MUExM?=
+ =?utf-8?B?ZUk5ZjdVdnZKL3FGOWlhYTZpZE1MMHhZYzVINy8xT3JXRWErU1pUa2xaL3A0?=
+ =?utf-8?B?MEsvNDVscmhqbkdzK1ozZmdsM2NnMlZxWW1nRzdvUVc3cjgzVWVvbk5ERFZK?=
+ =?utf-8?B?RTYraEN3Ym5OWXExR0xUYmR6OElkaURHMDJmZFkrU1Uza3VDK2c4UXlnY0xP?=
+ =?utf-8?B?dytRZjlGdm9zTnVlOHB0cjVyTk9DanBpV2lsU09XMEhFZ1dYSXp5U0FQU1Uz?=
+ =?utf-8?B?SGNUV2ZQV2FaM1BXbno1M3NxSzlqOFNzWXBwWDB4R25wSTRNOVZXa1U4ZGp2?=
+ =?utf-8?B?QWlCcEFzZ2RuQWJ1Yk9SNkpOa1lXd1NWZVBSKzRBQlp2bmpwVHdWU0VFdkRr?=
+ =?utf-8?B?Wlg1bms1VUUwRll3Ykd4ejV3Q3gwYWpJcklPUjFHandjb0xreHB1QUxFRUk5?=
+ =?utf-8?B?SDF6WjZkOGp6NXFUQ1VITnlxaytDSnN0NGc5dlBOUXpudEtoU1ZJSnJreVVY?=
+ =?utf-8?B?TlQ0bTh4b1ZzLy9mWGhFWWFob0F2dXpLNW5qMzIwTGY4d1d6M1ZmaldXL2Ux?=
+ =?utf-8?B?TTliUGptYjZhL1JkY25KeGRBYjEvUU9SNEFCalZ3UjR0U2RVb3FNSkMwYmUx?=
+ =?utf-8?B?S1dBVUNCUk9uc1ZCZGN1d3hNVVVmSVArZnduUDJia1RTNVdFSThiL2lKc250?=
+ =?utf-8?B?dTBoUFo5N2hUZExwNXE2bUQ0NGlRZVZjTXhhc29oajh1L1VjdkpORmhtVDgv?=
+ =?utf-8?B?dDRDaEduN0xrY25STWQ3TFNZRnNnL2xwN0ZINzhhNGUvMUcrMWljSW4yVDlT?=
+ =?utf-8?B?Q1UxZmJsRHl0aCtPcGowMytHTjA0R0NPWi8vT2xmNDM2czNGVGVFaEZjWEdQ?=
+ =?utf-8?B?RG1BaWVndWRBTFFGcGpKZFVyYzRSMEpRWWM5N3VlenZ6dTdlU0FaWWo0RmRt?=
+ =?utf-8?B?OUlXQ0VpQVltNUNuOVYxeE5VN2Q3VVNjMDR4U0JXZnNrcFU5MUpjb0o1VFpD?=
+ =?utf-8?B?QXJLU0doTE4rN1hqM0RJT0F2NXY2bU1qZ2FkN0lHczlTZytrM1g3cjBoekpN?=
+ =?utf-8?B?VnIra0NpODJjQWtzZVN1VWNyc2c0aVJIU3ZVK2RuS3ppMXVxOGtEZ1plL2R6?=
+ =?utf-8?B?cnBickxHYTJJZXNpQ2RyNFFsMXZXanZ0b3o5dCt0ZXZnNWJ4YXhNczdIMWY4?=
+ =?utf-8?B?MkdYY05OQ0F4S2R5aG5Fd0pVTVFFYWpIS0cySlJydVc1VXRmd2pVSHBvVmYz?=
+ =?utf-8?B?dHNBa01vdFhIOHU1S2x4YjdGSWx3VjJkbzQ0K2FYcW9DelZMT3A1RVFObjRs?=
+ =?utf-8?B?QitsS0JJeW1QcXA1clU1RW5NaEZFbStTV2ozQ3lTZzQ2N1M2dWhiSjgxUklS?=
+ =?utf-8?B?UUVGU2cwRktHeU5kYmxvRWFINE4vaXM0WGNrSmgyVmNST2hwOGZsdzI0REVM?=
+ =?utf-8?B?U0hUdXEycGZoTnRFYVdjNktMendvWlcyZ3JCdGNKY005bXplaHdGcGVkUUpr?=
+ =?utf-8?B?VmlYejNsaEwzdy9pOFBvY1czeXd2TlJyc2NnWldSRm5kVndPdmdXaUJvT0JB?=
+ =?utf-8?B?V1NrTm5JdFJuYkZVaUJFdmpXbEdDUERNaUtjN0NKUnZBR081dVExMkpwRTJI?=
+ =?utf-8?Q?TcRkEi2o47xBPMIyj1e5yS9A6?=
+X-OriginatorOrg: amd.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 00eaa7c0-2499-46d6-ea67-08de3943c4e3
+X-MS-Exchange-CrossTenant-AuthSource: BL1PR12MB5176.namprd12.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 12 Dec 2025 06:00:36.5568
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: UZ7vTidbnvMAVuy3Gx3k8sx2mSVxG8lIGn/42MQZgcZCIgfNP9cXHK+vcf5AsaVSi2pfqK5mzXbx1wmDJvGuaQ==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: IA0PR12MB7603
 
-From: "Derek J. Clark" <derekjohn.clark@gmail.com>
 
-[ Upstream commit 55715d7ad5e772d621c3201da3895f250591bce8 ]
 
-Add Legion Go 2 SKU's to the Extreme Mode quirks table.
+On 12/11/2025 23:58, Ilpo Järvinen wrote:
+> On Thu, 11 Dec 2025, Lizhi Hou wrote:
+> 
+>> From: Shyam Sundar S K <Shyam-sundar.S-k@amd.com>
+>>
+>> The PMF driver retrieves NPU metrics data from the PMFW. Introduce a new
+>> interface to make NPU metrics accessible to other drivers like AMDXDNA
+>> driver, which can access and utilize this information as needed.
+>>
+>> Reviewed-by: Mario Limonciello <mario.limonciello@amd.com>
+>> Co-developed-by: Patil Rajesh Reddy <Patil.Reddy@amd.com>
+>> Signed-off-by: Patil Rajesh Reddy <Patil.Reddy@amd.com>
+>> Signed-off-by: Shyam Sundar S K <Shyam-sundar.S-k@amd.com>
+>> Signed-off-by: Lizhi Hou <lizhi.hou@amd.com>
+>> ---
+>>  drivers/platform/x86/amd/pmf/core.c | 75 +++++++++++++++++++++++++++++
+>>  drivers/platform/x86/amd/pmf/pmf.h  |  2 +
+>>  include/linux/amd-pmf-io.h          | 21 ++++++++
+>>  3 files changed, 98 insertions(+)
+>>
+>> diff --git a/drivers/platform/x86/amd/pmf/core.c b/drivers/platform/x86/amd/pmf/core.c
+>> index a6a5d416edf9..8e4ce91b3527 100644
+>> --- a/drivers/platform/x86/amd/pmf/core.c
+>> +++ b/drivers/platform/x86/amd/pmf/core.c
+>> @@ -8,12 +8,15 @@
+>>   * Author: Shyam Sundar S K <Shyam-sundar.S-k@amd.com>
+>>   */
+>>  
+>> +#include <linux/array_size.h>
+>> +#include <linux/cleanup.h>
+>>  #include <linux/debugfs.h>
+>>  #include <linux/iopoll.h>
+>>  #include <linux/module.h>
+>>  #include <linux/pci.h>
+>>  #include <linux/platform_device.h>
+>>  #include <linux/power_supply.h>
+>> +#include <linux/string.h>
+>>  #include <asm/amd/node.h>
+>>  #include "pmf.h"
+>>  
+>> @@ -53,6 +56,8 @@ static bool force_load;
+>>  module_param(force_load, bool, 0444);
+>>  MODULE_PARM_DESC(force_load, "Force load this driver on supported older platforms (experimental)");
+>>  
+>> +static struct device *pmf_device;
+>> +
+>>  static int amd_pmf_pwr_src_notify_call(struct notifier_block *nb, unsigned long event, void *data)
+>>  {
+>>  	struct amd_pmf_dev *pmf = container_of(nb, struct amd_pmf_dev, pwr_src_notifier);
+>> @@ -314,6 +319,70 @@ int amd_pmf_init_metrics_table(struct amd_pmf_dev *dev)
+>>  	return 0;
+>>  }
+>>  
+>> +static int is_npu_metrics_supported(struct amd_pmf_dev *pdev)
+>> +{
+>> +	switch (pdev->cpu_id) {
+>> +	case PCI_DEVICE_ID_AMD_1AH_M20H_ROOT:
+>> +	case PCI_DEVICE_ID_AMD_1AH_M60H_ROOT:
+>> +		return 0;
+>> +	default:
+>> +		return -EOPNOTSUPP;
+>> +	}
+>> +}
+>> +
+>> +static int amd_pmf_get_smu_metrics(struct amd_pmf_dev *dev, struct amd_pmf_npu_metrics *data)
+>> +{
+>> +	int ret, i;
+>> +
+>> +	guard(mutex)(&dev->metrics_mutex);
+>> +
+>> +	if (is_npu_metrics_supported(dev))
+>> +		return -EOPNOTSUPP;
+>> +
+>> +	ret = amd_pmf_set_dram_addr(dev, true);
+>> +	if (ret)
+>> +		return ret;
+>> +
+>> +	memset(dev->buf, 0, dev->mtable_size);
+>> +
+>> +	/* Send SMU command to get NPU metrics */
+>> +	ret = amd_pmf_send_cmd(dev, SET_TRANSFER_TABLE, SET_CMD, METRICS_TABLE_ID, NULL);
+>> +	if (ret) {
+>> +		dev_err(dev->dev, "SMU command failed to get NPU metrics: %d\n", ret);
+>> +		return ret;
+>> +	}
+>> +
+>> +	memcpy(&dev->m_table_v2, dev->buf, dev->mtable_size);
+>> +
+>> +	data->npuclk_freq = dev->m_table_v2.npuclk_freq;
+>> +	for (i = 0; i < ARRAY_SIZE(data->npu_busy); i++)
+>> +		data->npu_busy[i] = dev->m_table_v2.npu_busy[i];
+>> +	data->npu_power = dev->m_table_v2.npu_power;
+>> +	data->mpnpuclk_freq = dev->m_table_v2.mpnpuclk_freq;
+>> +	data->npu_reads = dev->m_table_v2.npu_reads;
+>> +	data->npu_writes = dev->m_table_v2.npu_writes;
+>> +
+>> +	return 0;
+>> +}
+>> +
+>> +int amd_pmf_get_npu_data(struct amd_pmf_npu_metrics *info)
+>> +{
+>> +	struct amd_pmf_dev *pdev;
+>> +
+>> +	if (!info)
+>> +		return -EINVAL;
+>> +
+>> +	if (!pmf_device)
+>> +		return -ENODEV;
+>> +
+>> +	pdev = dev_get_drvdata(pmf_device);
+>> +	if (!pdev)
+>> +		return -ENODEV;
+>> +
+>> +	return amd_pmf_get_smu_metrics(pdev, info);
+>> +}
+>> +EXPORT_SYMBOL_GPL(amd_pmf_get_npu_data);
+>> +
+>>  static int amd_pmf_suspend_handler(struct device *dev)
+>>  {
+>>  	struct amd_pmf_dev *pdev = dev_get_drvdata(dev);
+>> @@ -469,6 +538,10 @@ static int amd_pmf_probe(struct platform_device *pdev)
+>>  	mutex_init(&dev->update_mutex);
+>>  	mutex_init(&dev->cb_mutex);
+>>  
+>> +	err = devm_mutex_init(dev->dev, &dev->metrics_mutex);
+>> +	if (err)
+>> +		return err;
+>> +
+>>  	apmf_acpi_init(dev);
+>>  	platform_set_drvdata(pdev, dev);
+>>  	amd_pmf_dbgfs_register(dev);
+>> @@ -477,6 +550,8 @@ static int amd_pmf_probe(struct platform_device *pdev)
+>>  	if (is_apmf_func_supported(dev, APMF_FUNC_SBIOS_HEARTBEAT_V2))
+>>  		amd_pmf_notify_sbios_heartbeat_event_v2(dev, ON_LOAD);
+>>  
+>> +	pmf_device = dev->dev;
+>> +
+>>  	dev_info(dev->dev, "registered PMF device successfully\n");
+>>  
+>>  	return 0;
+>> diff --git a/drivers/platform/x86/amd/pmf/pmf.h b/drivers/platform/x86/amd/pmf/pmf.h
+>> index f07e9f4c660a..0354cc5dc79e 100644
+>> --- a/drivers/platform/x86/amd/pmf/pmf.h
+>> +++ b/drivers/platform/x86/amd/pmf/pmf.h
+>> @@ -12,6 +12,7 @@
+>>  #define PMF_H
+>>  
+>>  #include <linux/acpi.h>
+>> +#include <linux/amd-pmf-io.h>
+>>  #include <linux/input.h>
+>>  #include <linux/platform_device.h>
+>>  #include <linux/platform_profile.h>
+>> @@ -412,6 +413,7 @@ struct amd_pmf_dev {
+>>  	struct apmf_sbios_req_v1 req1;
+>>  	struct pmf_bios_inputs_prev cb_prev; /* To preserve custom BIOS inputs */
+>>  	bool cb_flag;			     /* To handle first custom BIOS input */
+>> +	struct mutex metrics_mutex;
+> 
+> This files seems to lack include for struct mutex (despite using them 
+> already so please add it finally there :-)).
 
-Signed-off-by: Derek J. Clark <derekjohn.clark@gmail.com>
-Reviewed-by: Armin Wolf <W_Armin@gmx.de>
-Reviewed-by: Mark Pearson <mpearson-lenovo@squebb.ca>
-Link: https://patch.msgid.link/20251127151605.1018026-4-derekjohn.clark@gmail.com
-Reviewed-by: Ilpo Järvinen <ilpo.jarvinen@linux.intel.com>
-Signed-off-by: Ilpo Järvinen <ilpo.jarvinen@linux.intel.com>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
----
+This is already taken care in one of the patch already in queue.
 
-LLM Generated explanations, may be completely bogus:
+https://patchwork.kernel.org/project/platform-driver-x86/patch/20251202042219.245173-1-Shyam-sundar.S-k@amd.com/
 
-## Analysis of Commit: platform/x86: wmi-gamezone: Add Legion Go 2
-Quirks
-
-### 1. COMMIT MESSAGE ANALYSIS
-
-**Subject:** Adds Legion Go 2 SKUs to the Extreme Mode quirks table
-
-**Tags present:**
-- Multiple Reviewed-by tags (3 reviewers: Armin Wolf, Mark Pearson, Ilpo
-  Järvinen)
-- Signed-off-by tags
-
-**Tags absent:**
-- No `Cc: stable@vger.kernel.org`
-- No `Fixes:` tag
-
-### 2. CODE CHANGE ANALYSIS
-
-The change is minimal and mechanical:
-- Adds two new DMI entries to the existing `fwbug_list[]` table
-- New entries: "Legion Go 8ASP2" and "Legion Go 8AHP2" (Legion Go 2
-  variants)
-- Both use the same `&quirk_no_extreme_bug` quirk as existing Legion Go
-  devices
-- Also removes a stray blank line (cleanup)
-
-The structure is identical to existing entries - DMI vendor/product
-matching to apply a known quirk.
-
-### 3. CLASSIFICATION: QUIRK/DEVICE-ID ADDITION
-
-This falls into **two explicit exception categories** for stable:
-
-1. **Device ID Addition:** Adding DMI identifiers to an existing driver
-   to enable hardware support
-2. **Hardware Quirk:** The `quirk_no_extreme_bug` works around firmware
-   bugs where devices falsely report extreme thermal mode support
-
-Without this quirk, the driver would attempt to enable "extreme mode" on
-Legion Go 2 devices that have incomplete BIOS implementations,
-potentially causing thermal management issues.
-
-### 4. SCOPE AND RISK ASSESSMENT
-
-| Metric | Value |
-|--------|-------|
-| Lines added | ~14 (two DMI table entries) |
-| Files changed | 1 |
-| Complexity | Very low |
-| Risk | Minimal |
-
-**Risk analysis:**
-- Change only affects Legion Go 2 hardware (DMI matching ensures
-  isolation)
-- Uses exact same quirk mechanism proven with existing Legion Go devices
-- No new code paths introduced
-- Pattern identical to existing well-tested entries
-
-### 5. USER IMPACT
-
-**Affected users:** Legion Go 2 (8ASP2/8AHP2) owners
-
-**Without this fix:** These devices might have their thermal
-profiles/extreme mode misconfigured due to firmware bugs, potentially
-causing:
-- Unexpected platform profile behavior
-- Incorrect thermal mode settings
-
-**Severity:** Moderate - hardware usability issue
-
-### 6. STABILITY INDICATORS
-
-- **3 Reviewed-by tags** from different reviewers (strong review
-  coverage)
-- Pattern is well-established in the driver
-- Mechanical, predictable change
-
-### 7. DEPENDENCY CHECK
-
-The wmi-gamezone driver needs to exist in the target stable tree. This
-is a relatively new driver (for Legion Go devices released ~2023), so it
-may only exist in recent stable branches (6.6+). If the driver doesn't
-exist in older stables, the patch simply won't apply.
-
-### DECISION RATIONALE
-
-**Arguments FOR backporting:**
-1. Classic quirk addition - explicitly allowed exception in stable rules
-2. Equivalent to device ID addition for new hardware SKUs
-3. Very small, surgical change with minimal risk
-4. Uses existing infrastructure and proven quirk
-5. Well-reviewed (3 reviewers)
-6. Fixes real hardware behavior issues (firmware bugs)
-7. DMI matching isolates impact to specific hardware only
-
-**Arguments AGAINST:**
-1. No explicit `Cc: stable` tag from maintainer
-2. Adds support for new hardware (could be viewed as feature)
-3. Driver may not exist in older stable trees
-
-**Conclusion:**
-
-This commit is a textbook example of a hardware quirk addition that's
-appropriate for stable backporting. The stable kernel documentation
-explicitly allows:
-- Adding device IDs to existing drivers
-- Adding hardware quirks/workarounds for buggy devices
-
-The change is small (~14 lines), low risk (DMI-isolated to specific
-hardware), uses existing proven mechanisms, and fixes real hardware
-issues. The lack of an explicit stable tag isn't disqualifying - many
-valid stable patches don't include it. Stable maintainers can determine
-applicability based on whether the driver exists in their trees.
-
-**YES**
-
- drivers/platform/x86/lenovo/wmi-gamezone.c | 17 ++++++++++++++++-
- 1 file changed, 16 insertions(+), 1 deletion(-)
-
-diff --git a/drivers/platform/x86/lenovo/wmi-gamezone.c b/drivers/platform/x86/lenovo/wmi-gamezone.c
-index 0eb7fe8222f4a..b26806b37d960 100644
---- a/drivers/platform/x86/lenovo/wmi-gamezone.c
-+++ b/drivers/platform/x86/lenovo/wmi-gamezone.c
-@@ -274,8 +274,23 @@ static const struct dmi_system_id fwbug_list[] = {
- 		},
- 		.driver_data = &quirk_no_extreme_bug,
- 	},
-+	{
-+		.ident = "Legion Go 8ASP2",
-+		.matches = {
-+			DMI_MATCH(DMI_SYS_VENDOR, "LENOVO"),
-+			DMI_MATCH(DMI_PRODUCT_VERSION, "Legion Go 8ASP2"),
-+		},
-+		.driver_data = &quirk_no_extreme_bug,
-+	},
-+	{
-+		.ident = "Legion Go 8AHP2",
-+		.matches = {
-+			DMI_MATCH(DMI_SYS_VENDOR, "LENOVO"),
-+			DMI_MATCH(DMI_PRODUCT_VERSION, "Legion Go 8AHP2"),
-+		},
-+		.driver_data = &quirk_no_extreme_bug,
-+	},
- 	{},
--
- };
- 
- /**
--- 
-2.51.0
+Thanks,
+Shyam
 
