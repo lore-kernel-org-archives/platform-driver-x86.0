@@ -1,43 +1,46 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 15537288C2F;
-	Fri, 12 Dec 2025 02:09:07 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1F5661990C7;
+	Fri, 12 Dec 2025 02:09:14 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1765505348; cv=none; b=K/bvgD0WKZHUBD3KvdBBt9qxbVfmK6G4LI9R/uHDR5AU36UbvE5Vkz/3SJkT9fH3r+SPumZ858qveP2uN22UXl2xPKtTi6Z88FoRFHqtGZ45OfGrFcR5DomxVRRlCpE/czClZI2g9kyZBRVQW+MDi3GIbIfizsvh8gYvu4ZnB1g=
+	t=1765505355; cv=none; b=lpsSh0JAg7Pc+ueiy9jZeUcT8+ppu3H4u1Gt2o06qtsioiEJyBdLDZbmS6IbjBcYyJND5LFF/0udVeFD4Y4g9Wh0blBYaxNvMZZ+Q7f1OY+zU0jMR44Qlt+iDVIsJS8QE6YwUfy7qasbgHcCiyVRb1jqoQlBV2/mL7m/21YTjf4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1765505348; c=relaxed/simple;
-	bh=xztAl+yUdUBl9iS92e/EVdZJjo1rMp7L5dv8wpvuQdI=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version:Content-Type; b=sOaXwVwLXjCrSk5jk2xFd07k+RWVs/RhxidwcYH4Tu2tqwrFTwux29ADC8NVhmQRusPMNzuT/82Tbz/lljtSdPlVwnMI2e3GgSH/FP2QWNhJxvIV5fsqgbrQ/ig/8Ach1X3MOgo4cGtRqb5PCexUPt7zHMXWDKUoFi4Z6tP8Ul4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=QXv5dLAO; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1765505355; c=relaxed/simple;
+	bh=Q0zPclX8sDJjPyfg/Ub1RrRNa1FZeWqxEeqLAcXePMU=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=DC+P+9xi+PUPo/6B+Q5JFqwfslt3erFBEc1oJ61h6ogBE4qjXHebY6Z/84Pi8oc7si/7Y03kiqnuRKSErczfA4h7WAjwmaL1Q0HP/AtmhRxyUj4cWB3Z/TJ7CCMlY7b+DdN+q2dBNE8BmJjmNaY3Kdjv9I+vn9Jh+a0iabAFiaQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ZBtahSZX; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="QXv5dLAO"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id A375AC4CEF7;
-	Fri, 12 Dec 2025 02:09:05 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ZBtahSZX"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 4044FC19421;
+	Fri, 12 Dec 2025 02:09:13 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1765505347;
-	bh=xztAl+yUdUBl9iS92e/EVdZJjo1rMp7L5dv8wpvuQdI=;
-	h=From:To:Cc:Subject:Date:From;
-	b=QXv5dLAObLRWQuoKHMxs95NDXYjwupJRpHENY+ZcjvEfApK7xHeXP75ih3pmNS+qy
-	 HHpvupI4byRjurhrCtBPSWI8W22z+XXTsKQ6o/rRm3mV2WRbBNsVeABavWoc3NloKV
-	 8ywcWauZ9jLeZV3MlHtoUv/ahSUWiL9gQXuWlLkWY3uCi4JtqzT/+OLFt2olaOezdu
-	 cG1QcXVm8I99SxQa2KTpP1RlIIh4sAFqykBPij/5Z0U9zHYs6yTz8hG0DC6Pcq9YmZ
-	 0qQk/8B2qeoHQLRqxncEnsBQs9U2ZcBsxjPJDoNT4C+e0Z74B2qq3i+zx7J/ZZdl5W
-	 sSBxKxDSgOQnA==
+	s=k20201202; t=1765505354;
+	bh=Q0zPclX8sDJjPyfg/Ub1RrRNa1FZeWqxEeqLAcXePMU=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+	b=ZBtahSZXikRp4sHZ8WUpliESIkwhaHmjMgkOXsDYieCqQN5aSiYFKPW2deH3kY9QW
+	 gZ2izzUIUpHyXvwf+mKGGwOQYzOcCya3i0bTvrLFwFKUUdO0RvtONnsdu7CPppQkxS
+	 jIGpu8mYuM2VB0lPFedmazPBAhSk3ZkbrPHwtbOCh0veDLM7VPvbQX56JcoE2DGD5h
+	 ovNi+qUt0Ii+LpTtepkF+/5IwZKRH0Zzw12MgNU4d9k3aU8btpqaIZ4s6ZZGegdVTh
+	 Y+csX4vaa2sGw6baTTYPHxaqSFssG/S0ln1xh0J4eVryUdeCX7G+HA9aIJ2BOqxBaJ
+	 v2NXlNQE1wjyw==
 From: Sasha Levin <sashal@kernel.org>
 To: patches@lists.linux.dev,
 	stable@vger.kernel.org
-Cc: "Chia-Lin Kao (AceLan)" <acelan.kao@canonical.com>,
-	Hans de Goede <johannes.goede@oss.qualcomm.com>,
+Cc: "Derek J. Clark" <derekjohn.clark@gmail.com>,
+	Armin Wolf <W_Armin@gmx.de>,
+	Mark Pearson <mpearson-lenovo@squebb.ca>,
 	=?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>,
 	Sasha Levin <sashal@kernel.org>,
-	alexhung@gmail.com,
 	platform-driver-x86@vger.kernel.org
-Subject: [PATCH AUTOSEL 6.18-5.15] platform/x86/intel/hid: Add Dell Pro Rugged 10/12 tablet to VGBS DMI quirks
-Date: Thu, 11 Dec 2025 21:08:53 -0500
-Message-ID: <20251212020903.4153935-1-sashal@kernel.org>
+Subject: [PATCH AUTOSEL 6.18-6.17] platform/x86: wmi-gamezone: Add Legion Go 2 Quirks
+Date: Thu, 11 Dec 2025 21:08:56 -0500
+Message-ID: <20251212020903.4153935-4-sashal@kernel.org>
 X-Mailer: git-send-email 2.51.0
+In-Reply-To: <20251212020903.4153935-1-sashal@kernel.org>
+References: <20251212020903.4153935-1-sashal@kernel.org>
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
@@ -50,20 +53,16 @@ X-Patchwork-Hint: Ignore
 X-stable-base: Linux 6.18
 Content-Transfer-Encoding: 8bit
 
-From: "Chia-Lin Kao (AceLan)" <acelan.kao@canonical.com>
+From: "Derek J. Clark" <derekjohn.clark@gmail.com>
 
-[ Upstream commit b169e1733cadb614e87f69d7a5ae1b186c50d313 ]
+[ Upstream commit 55715d7ad5e772d621c3201da3895f250591bce8 ]
 
-Dell Pro Rugged 10/12 tablets has a reliable VGBS method.
-If VGBS is not called on boot, the on-screen keyboard won't appear if the
-device is booted without a keyboard.
+Add Legion Go 2 SKU's to the Extreme Mode quirks table.
 
-Call VGBS on boot on thess devices to get the initial state of
-SW_TABLET_MODE in a reliable way.
-
-Signed-off-by: Chia-Lin Kao (AceLan) <acelan.kao@canonical.com>
-Reviewed-by: Hans de Goede <johannes.goede@oss.qualcomm.com>
-Link: https://patch.msgid.link/20251127070407.656463-1-acelan.kao@canonical.com
+Signed-off-by: Derek J. Clark <derekjohn.clark@gmail.com>
+Reviewed-by: Armin Wolf <W_Armin@gmx.de>
+Reviewed-by: Mark Pearson <mpearson-lenovo@squebb.ca>
+Link: https://patch.msgid.link/20251127151605.1018026-4-derekjohn.clark@gmail.com
 Reviewed-by: Ilpo Järvinen <ilpo.jarvinen@linux.intel.com>
 Signed-off-by: Ilpo Järvinen <ilpo.jarvinen@linux.intel.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
@@ -71,105 +70,154 @@ Signed-off-by: Sasha Levin <sashal@kernel.org>
 
 LLM Generated explanations, may be completely bogus:
 
-## Summary Analysis
+## Analysis of Commit: platform/x86: wmi-gamezone: Add Legion Go 2
+Quirks
 
-### What This Commit Does
-This commit adds two Dell tablet models (Dell Pro Rugged 10 Tablet
-RA00260 and Dell Pro Rugged 12 Tablet RA02260) to the
-`dmi_vgbs_allow_list` DMI quirk table. When a device matches this list,
-the driver calls the VGBS ACPI method at probe time to properly detect
-the initial SW_TABLET_MODE state.
+### 1. COMMIT MESSAGE ANALYSIS
 
-### The Bug Being Fixed
-Without this quirk, on these Dell tablets:
-- The VGBS method isn't called at boot
-- The kernel doesn't know the device is in tablet mode
-- The on-screen keyboard won't appear if the device is booted without a
-  physical keyboard attached
-- This makes the device difficult/impossible to use in tablet-only mode
+**Subject:** Adds Legion Go 2 SKUs to the Extreme Mode quirks table
 
-### Classification: Hardware Quirk/Workaround
-This falls squarely into the **QUIRKS and WORKAROUNDS** category which
-is explicitly allowed for stable backporting:
-- It's a DMI-based allowlist entry for specific hardware models
-- The pattern is identical to existing entries (HP Spectre, Microsoft
-  Surface Go, HP Dragonfly G2)
-- The mechanism has been stable since Linux 5.10
+**Tags present:**
+- Multiple Reviewed-by tags (3 reviewers: Armin Wolf, Mark Pearson, Ilpo
+  Järvinen)
+- Signed-off-by tags
 
-### Risk Assessment
-**Risk Level: EXTREMELY LOW**
-- **Lines changed**: ~12 lines (just two DMI match entries)
-- **Files touched**: 1 file
-- **Scope**: Only affects Dell Pro Rugged 10/12 tablets
-- **Cannot regress other hardware**: DMI matching is device-specific
-- **Pattern proven**: Same structure as existing entries that have
-  worked for years
+**Tags absent:**
+- No `Cc: stable@vger.kernel.org`
+- No `Fixes:` tag
 
-### Stability Indicators
-- **Reviewed-by:** Hans de Goede (well-known x86 platform maintainer)
-- **Reviewed-by:** Ilpo Järvinen (Intel platform maintainer)
-- The `dmi_vgbs_allow_list` infrastructure has existed since v5.10-rc1
-  (commit 537b0dd4729e7)
+### 2. CODE CHANGE ANALYSIS
 
-### Stable Tree Criteria Assessment
-| Criterion | Status |
-|-----------|--------|
-| Obviously correct | ✅ Yes - trivial data addition |
-| Fixes real bug | ✅ Yes - on-screen keyboard not working |
-| Small and contained | ✅ Yes - ~12 lines in 1 file |
-| No new features | ✅ Yes - enables existing functionality |
-| Applies cleanly | ✅ Yes - simple addition to allowlist |
+The change is minimal and mechanical:
+- Adds two new DMI entries to the existing `fwbug_list[]` table
+- New entries: "Legion Go 8ASP2" and "Legion Go 8AHP2" (Legion Go 2
+  variants)
+- Both use the same `&quirk_no_extreme_bug` quirk as existing Legion Go
+  devices
+- Also removes a stray blank line (cleanup)
 
-### Concerns
-1. **No explicit "Cc: stable" tag** - However, DMI quirk additions are
-   commonly appropriate for stable even without explicit tags
-2. **No "Fixes:" tag** - This is adding new device support rather than
-   fixing a regression in existing code
+The structure is identical to existing entries - DMI vendor/product
+matching to apply a known quirk.
 
-### Verdict
-This commit is appropriate for stable backporting because:
-1. It's a minimal, surgical hardware quirk that only affects two
-   specific Dell tablet models
-2. It fixes a real usability issue for affected users (tablet becomes
-   difficult to use without keyboard)
-3. Zero risk of regression for any other hardware
-4. The pattern exactly matches existing stable entries
-5. The infrastructure has been stable since v5.10, available in all
-   current LTS kernels
-6. Well-reviewed by experienced platform maintainers
+### 3. CLASSIFICATION: QUIRK/DEVICE-ID ADDITION
 
-The lack of explicit stable tags is not disqualifying - this is a
-textbook example of a hardware quirk addition that should go to stable
-trees to enable proper device functionality.
+This falls into **two explicit exception categories** for stable:
+
+1. **Device ID Addition:** Adding DMI identifiers to an existing driver
+   to enable hardware support
+2. **Hardware Quirk:** The `quirk_no_extreme_bug` works around firmware
+   bugs where devices falsely report extreme thermal mode support
+
+Without this quirk, the driver would attempt to enable "extreme mode" on
+Legion Go 2 devices that have incomplete BIOS implementations,
+potentially causing thermal management issues.
+
+### 4. SCOPE AND RISK ASSESSMENT
+
+| Metric | Value |
+|--------|-------|
+| Lines added | ~14 (two DMI table entries) |
+| Files changed | 1 |
+| Complexity | Very low |
+| Risk | Minimal |
+
+**Risk analysis:**
+- Change only affects Legion Go 2 hardware (DMI matching ensures
+  isolation)
+- Uses exact same quirk mechanism proven with existing Legion Go devices
+- No new code paths introduced
+- Pattern identical to existing well-tested entries
+
+### 5. USER IMPACT
+
+**Affected users:** Legion Go 2 (8ASP2/8AHP2) owners
+
+**Without this fix:** These devices might have their thermal
+profiles/extreme mode misconfigured due to firmware bugs, potentially
+causing:
+- Unexpected platform profile behavior
+- Incorrect thermal mode settings
+
+**Severity:** Moderate - hardware usability issue
+
+### 6. STABILITY INDICATORS
+
+- **3 Reviewed-by tags** from different reviewers (strong review
+  coverage)
+- Pattern is well-established in the driver
+- Mechanical, predictable change
+
+### 7. DEPENDENCY CHECK
+
+The wmi-gamezone driver needs to exist in the target stable tree. This
+is a relatively new driver (for Legion Go devices released ~2023), so it
+may only exist in recent stable branches (6.6+). If the driver doesn't
+exist in older stables, the patch simply won't apply.
+
+### DECISION RATIONALE
+
+**Arguments FOR backporting:**
+1. Classic quirk addition - explicitly allowed exception in stable rules
+2. Equivalent to device ID addition for new hardware SKUs
+3. Very small, surgical change with minimal risk
+4. Uses existing infrastructure and proven quirk
+5. Well-reviewed (3 reviewers)
+6. Fixes real hardware behavior issues (firmware bugs)
+7. DMI matching isolates impact to specific hardware only
+
+**Arguments AGAINST:**
+1. No explicit `Cc: stable` tag from maintainer
+2. Adds support for new hardware (could be viewed as feature)
+3. Driver may not exist in older stable trees
+
+**Conclusion:**
+
+This commit is a textbook example of a hardware quirk addition that's
+appropriate for stable backporting. The stable kernel documentation
+explicitly allows:
+- Adding device IDs to existing drivers
+- Adding hardware quirks/workarounds for buggy devices
+
+The change is small (~14 lines), low risk (DMI-isolated to specific
+hardware), uses existing proven mechanisms, and fixes real hardware
+issues. The lack of an explicit stable tag isn't disqualifying - many
+valid stable patches don't include it. Stable maintainers can determine
+applicability based on whether the driver exists in their trees.
 
 **YES**
 
- drivers/platform/x86/intel/hid.c | 12 ++++++++++++
- 1 file changed, 12 insertions(+)
+ drivers/platform/x86/lenovo/wmi-gamezone.c | 17 ++++++++++++++++-
+ 1 file changed, 16 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/platform/x86/intel/hid.c b/drivers/platform/x86/intel/hid.c
-index 9c07a7faf18fe..560cc063198e1 100644
---- a/drivers/platform/x86/intel/hid.c
-+++ b/drivers/platform/x86/intel/hid.c
-@@ -177,6 +177,18 @@ static const struct dmi_system_id dmi_vgbs_allow_list[] = {
- 			DMI_MATCH(DMI_PRODUCT_NAME, "HP Elite Dragonfly G2 Notebook PC"),
+diff --git a/drivers/platform/x86/lenovo/wmi-gamezone.c b/drivers/platform/x86/lenovo/wmi-gamezone.c
+index 0eb7fe8222f4a..b26806b37d960 100644
+--- a/drivers/platform/x86/lenovo/wmi-gamezone.c
++++ b/drivers/platform/x86/lenovo/wmi-gamezone.c
+@@ -274,8 +274,23 @@ static const struct dmi_system_id fwbug_list[] = {
  		},
+ 		.driver_data = &quirk_no_extreme_bug,
  	},
 +	{
++		.ident = "Legion Go 8ASP2",
 +		.matches = {
-+			DMI_MATCH(DMI_SYS_VENDOR, "Dell Inc."),
-+			DMI_MATCH(DMI_PRODUCT_NAME, "Dell Pro Rugged 10 Tablet RA00260"),
++			DMI_MATCH(DMI_SYS_VENDOR, "LENOVO"),
++			DMI_MATCH(DMI_PRODUCT_VERSION, "Legion Go 8ASP2"),
 +		},
++		.driver_data = &quirk_no_extreme_bug,
 +	},
 +	{
++		.ident = "Legion Go 8AHP2",
 +		.matches = {
-+			DMI_MATCH(DMI_SYS_VENDOR, "Dell Inc."),
-+			DMI_MATCH(DMI_PRODUCT_NAME, "Dell Pro Rugged 12 Tablet RA02260"),
++			DMI_MATCH(DMI_SYS_VENDOR, "LENOVO"),
++			DMI_MATCH(DMI_PRODUCT_VERSION, "Legion Go 8AHP2"),
 +		},
++		.driver_data = &quirk_no_extreme_bug,
 +	},
- 	{ }
+ 	{},
+-
  };
  
+ /**
 -- 
 2.51.0
 
