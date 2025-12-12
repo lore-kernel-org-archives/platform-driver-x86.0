@@ -1,46 +1,73 @@
-Received: from mail.tuxedocomputers.com (mail.tuxedocomputers.com [157.90.84.7])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from DM5PR21CU001.outbound.protection.outlook.com (mail-centralusazon11011036.outbound.protection.outlook.com [52.101.62.36])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D36101E86E;
-	Fri, 12 Dec 2025 18:03:23 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=157.90.84.7
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1765562607; cv=none; b=DAtXgpnWDWF6MAqngnfYiWyflzdIC6x82lksC0gpSvtPIO//P0gHWNjkkU0Jkg3p6cv+YWhKzbrUAxuGDS3QJqs1MIOfzgD+Ivnfn0OgMDPHSkvVCxO+hj0h3EIbHgUG5hAmqYTCVictksL/IlywnQvPch1019bO3hWnyC2Jiqc=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1765562607; c=relaxed/simple;
-	bh=oPkjB3e5PDKXoBlPn7faUmXH29TO0WHbXeAI+4x6oCM=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=TkJtisbrVZ8dw/2IRtypSVHeFSyYHZfuzXd/uGtlOJIus33Rd1aBYlRqdnrt37Ak+znQ1W+4b7OYK/eDhEaTXyhgtJ3nW3oxghnz7qrpsh1R1667tiM7zvWuFvu/tLvL4FL+Yq4WN/TnzYxjUGQrqU7d1zhA0JNQ/Da7JrMV+30=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=tuxedocomputers.com; spf=pass smtp.mailfrom=tuxedocomputers.com; dkim=pass (1024-bit key) header.d=tuxedocomputers.com header.i=@tuxedocomputers.com header.b=KOMON+o3; arc=none smtp.client-ip=157.90.84.7
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=tuxedocomputers.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=tuxedocomputers.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3EF7A2FD663;
+	Fri, 12 Dec 2025 18:18:58 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=52.101.62.36
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1765563540; cv=fail; b=qGIdp48LxqPtUVIiDahU3A/eT7UknPQqKD+JcRUpb4sWpWbUMfknsDb3y7uTgiFNnBax5ypNeQt+LMwUKOJlKOLRGu+sKv9GrjjUaW8UWTKWZgbMG5LSFh23S5XY6WebmyCTHWRqivYhbFQHgU/G1nBPVCELoZhUFSpgLRdiU9g=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1765563540; c=relaxed/simple;
+	bh=6dKBw05qkA/805moko9r8MbNY4CuCSbcIgu2UrP1038=;
+	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=tg4wvfukQtKzJ8yU7WI1fix8daMt+RvXjZRS6aRRs62RBzJOInTYlChaPons2EPj6zMT5gDo3+mp6Kz/TSE4x9OyC0Ufap/lSc/n9oa8nCAVzS0cVNPJnLOhETpGm/mDHKBtlf/hsEyP3dmyQ4JgynKv6s22ishZLlX6dvmvOFc=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=u2D9KClp; arc=fail smtp.client-ip=52.101.62.36
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=amd.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=tuxedocomputers.com header.i=@tuxedocomputers.com header.b="KOMON+o3"
-Received: from wse-pc.fritz.box (pd9e597c7.dip0.t-ipconnect.de [217.229.151.199])
-	(Authenticated sender: wse@tuxedocomputers.com)
-	by mail.tuxedocomputers.com (Postfix) with ESMTPA id 45B012FC0052;
-	Fri, 12 Dec 2025 19:03:21 +0100 (CET)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=tuxedocomputers.com;
-	s=default; t=1765562601;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:
-	 content-transfer-encoding:content-transfer-encoding;
-	bh=bvFuWbEYb8B/H+iu8J4E4uvN06ZkuOaozBN6xmRUOvI=;
-	b=KOMON+o3l9HEPHnrAo4QwlXnK/jhUwszK6Di3cc5WXla51V8d0r7B8yDHK8+eyrD89NFG1
-	R/u3PDiUOIu9VwWhjF8R4L3uAzJq83wQ2uAoFWCDV0QQ8pjpSCNYDfIlI/dk3JVFwwYVAp
-	aRX1ISf7dvf/BMtGpoq8jeHiQaiWg/g=
-Authentication-Results: mail.tuxedocomputers.com;
-	auth=pass smtp.auth=wse@tuxedocomputers.com smtp.mailfrom=wse@tuxedocomputers.com
-From: Werner Sembach <wse@tuxedocomputers.com>
-To: Armin Wolf <W_Armin@gmx.de>,
-	Hans de Goede <hansg@kernel.org>,
-	=?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
-Cc: Werner Sembach <wse@tuxedocomputers.com>,
-	platform-driver-x86@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Subject: [PATCH v2] platform/x86/uniwill: Add TUXEDO Book BA15 Gen10
-Date: Fri, 12 Dec 2025 19:02:22 +0100
-Message-ID: <20251212180319.712913-1-wse@tuxedocomputers.com>
-X-Mailer: git-send-email 2.43.0
+	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="u2D9KClp"
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=OV2mlTv91vBy4XcOXooSyemmRn37Jn2cM5wYNnl5Ogl/5NqEmuC0efMfv4liC8awOdfrKIcFc42YrG7dt3sryLndmD0jGrXsddeyQxQ9p3jXOYowFKnQhnnyEIXsXmdMz9/ztvMfBGy/4XVyxTaq7U8NbSwJFvVy9mQ4Oyq5iuYIARQOS77Pkr49rs7xxG2eGTUXduzAhL/KGuV3mA8huQLhWU6R8xJNDR/1rCUp0cvL4Tk6XeaGQUS3v/zUeB4e8CnF1BxEMmUWot+E51b9hKs3IjDnzgHcSdpV63IyRdWuwFHPjza5m2fMQ2LnCZlKROreWpdz3M33ELQniTSRwA==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=j00sdrh4sE5HHfvjFj5+TH3bUIOBiCiInhEIZZqt1vQ=;
+ b=vNs4nE4ocLkv7ByivGRycRRlQBCJvUogRSMtc8msihtC1/CpCvCn20bfkiL4KtFcAxUV+Pc1KNN4MVOCj/9qgcl47VT3K7aAcW2vwMvV3LnrXrRNZfWnK6ZQk122ABcpSaZZCQD0khdDgLYpn4CRoJIvNA+CYYr7kgrp3QQNG9s4YlEP1IIKhdofPaaYJDkBgrNnlXBFqeY0GDwVZDPBaZ0y/k9Zx9lrwlr2SJG2KCr5z1RyVLLfijO1gmlmhICBo7Aznx3dRG7tXMWpAxJnI9UGukGM8ngidOeQ1xCoJ0nHS5kNnlXtEj5cekmZDm2SGRPBH+CfufCRFDXnoKjhQg==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
+ 165.204.84.17) smtp.rcpttodomain=linux.intel.com smtp.mailfrom=amd.com;
+ dmarc=pass (p=quarantine sp=quarantine pct=100) action=none
+ header.from=amd.com; dkim=none (message not signed); arc=none (0)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=j00sdrh4sE5HHfvjFj5+TH3bUIOBiCiInhEIZZqt1vQ=;
+ b=u2D9KClpB3LsqGazkx5iNUdUezkF3AQM6ODxxuswDr4yxisMD/O/jPLXAygsr/oCRpbxDH2nMV5shtRRjNZdSCfS6k9sBku4e9c3YkyBjcde9z0+VInPzoBwxJ9BdQaSbskEjW7MqSV7JEJwpdbFWW3ukUgTrPKdQyfHyfMejrU=
+Received: from SN7P220CA0011.NAMP220.PROD.OUTLOOK.COM (2603:10b6:806:123::16)
+ by DM6PR12MB4372.namprd12.prod.outlook.com (2603:10b6:5:2af::14) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.9412.10; Fri, 12 Dec
+ 2025 18:18:55 +0000
+Received: from SA2PEPF00003F68.namprd04.prod.outlook.com
+ (2603:10b6:806:123:cafe::a8) by SN7P220CA0011.outlook.office365.com
+ (2603:10b6:806:123::16) with Microsoft SMTP Server (version=TLS1_3,
+ cipher=TLS_AES_256_GCM_SHA384) id 15.20.9412.10 via Frontend Transport; Fri,
+ 12 Dec 2025 18:18:38 +0000
+X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 165.204.84.17)
+ smtp.mailfrom=amd.com; dkim=none (message not signed)
+ header.d=none;dmarc=pass action=none header.from=amd.com;
+Received-SPF: Pass (protection.outlook.com: domain of amd.com designates
+ 165.204.84.17 as permitted sender) receiver=protection.outlook.com;
+ client-ip=165.204.84.17; helo=satlexmb07.amd.com; pr=C
+Received: from satlexmb07.amd.com (165.204.84.17) by
+ SA2PEPF00003F68.mail.protection.outlook.com (10.167.248.43) with Microsoft
+ SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.9412.4 via Frontend Transport; Fri, 12 Dec 2025 18:18:54 +0000
+Received: from satlexmb08.amd.com (10.181.42.217) by satlexmb07.amd.com
+ (10.181.42.216) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.2562.17; Fri, 12 Dec
+ 2025 12:18:53 -0600
+Received: from xsjlizhih51.xilinx.com (10.180.168.240) by satlexmb08.amd.com
+ (10.181.42.217) with Microsoft SMTP Server id 15.2.2562.17 via Frontend
+ Transport; Fri, 12 Dec 2025 10:18:52 -0800
+From: Lizhi Hou <lizhi.hou@amd.com>
+To: <ilpo.jarvinen@linux.intel.com>, <hansg@kernel.org>, <ogabbay@kernel.org>,
+	<quic_jhugo@quicinc.com>, <maciej.falkowski@linux.intel.com>
+CC: Lizhi Hou <lizhi.hou@amd.com>, <linux-kernel@vger.kernel.org>,
+	<max.zhen@amd.com>, <sonal.santan@amd.com>, <mario.limonciello@amd.com>,
+	<dri-devel@lists.freedesktop.org>, <platform-driver-x86@vger.kernel.org>,
+	<Shyam-sundar.S-k@amd.com>, <VinitKumar.Shukla@amd.com>
+Subject: [PATCH V2 0/2] Get real time power input via AMD PMF
+Date: Fri, 12 Dec 2025 10:18:01 -0800
+Message-ID: <20251212181803.1825142-1-lizhi.hou@amd.com>
+X-Mailer: git-send-email 2.34.1
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
@@ -48,35 +75,89 @@ List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-EOPAttributedMessage: 0
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: SA2PEPF00003F68:EE_|DM6PR12MB4372:EE_
+X-MS-Office365-Filtering-Correlation-Id: a25fc289-415c-4010-60c5-08de39aae894
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam:
+	BCL:0;ARA:13230040|36860700013|376014|82310400026|1800799024|13003099007;
+X-Microsoft-Antispam-Message-Info:
+	=?us-ascii?Q?xUMryNPOkkvDpG/I8TtKcVNqCOkA92LZHI9pwp7z1iRKVRNnTB0YsOdB5Jj9?=
+ =?us-ascii?Q?8kAd7VOh9M/O32upuj0sMyKajJBFSbAjoY0aqlKWtxM9DvtcXcEwypHejfau?=
+ =?us-ascii?Q?zvmwPRWof0fDiPKsLE6u2MMp9M6MrEIoYZcTyfusMbAjQo1g5gmTS2SMk3Sb?=
+ =?us-ascii?Q?MOrjHOQ5M8NThmR4VoecPgHd0IeBvfVukuU7AEirDxUkRjr7qGaxACnJ0AHG?=
+ =?us-ascii?Q?YTNRy8zuzCEyva3r2dWGE2zrLp/sy67b3d/BLSTZGUzMu2rsU9Wm1HyhNmT8?=
+ =?us-ascii?Q?kBThYM07d+j1+1go+TSUmh2I/C7mqCkTnv4a3Y/EzuQFfz0SKsTlCW7tj7n5?=
+ =?us-ascii?Q?u9JILstUUq9ej/8xg51gpP+MtWDGl5o1nbYmF9GeLRw9fLXI5LqsN56dPy+R?=
+ =?us-ascii?Q?cYepeXv3DyTdmtY8BXnMPRCqSq1LR2f9hw+/KeRJ2SRi4n+7FefAFkH0RjZ4?=
+ =?us-ascii?Q?ZhIklvuA4Wqa8wYe71fou9YHIp8WPsmsCk0Hui+Zkv+Vh1BngL1tJjpUdn1L?=
+ =?us-ascii?Q?U4eDUeiTHZFcR8rBpym/ZBdmQoFDIp3S3UNsjdjeniUV3hpE7U76yHq4v7qG?=
+ =?us-ascii?Q?aMlh0I37ev30P/qiPCXo4Bz4tsZ6WDIqvFPnxNL1CqLJPvtRqb1SDJwMQkTd?=
+ =?us-ascii?Q?UV+CBXiVxb0RsUr1GE2XqFsqluz+6R8udihLw3A9jJaPraCZ/cLvkj4ywJ64?=
+ =?us-ascii?Q?WyCv+Qjk9u7EkF7NeDQTURAwBH66HudVpFPDsIds97R+9Im+ur9ha+NeqVKx?=
+ =?us-ascii?Q?79m6P4uRU7suhoBxdixKyGFly8CIBva31d+0vqWGJUaZ+NDuc27WOsTceYk2?=
+ =?us-ascii?Q?nkAzrYsMZXEkn8czBBI8jRAvlix+bkivCxOxGz/twC6j/797ecmLxNRrt3sz?=
+ =?us-ascii?Q?NCbPOicXj87fdMuyxmTgpcB/3bMA4wZ1cpxOw7q//hRUFXSqwlgNX4Ho4STI?=
+ =?us-ascii?Q?qJtUb0ubejuygGYr53L8+eZoa2066NBEJGo6ZV22Xk+/7E1B2fcsVTS2Anbs?=
+ =?us-ascii?Q?dw7cyhFeXvjvBnR29qQlObMVkZsb7OkHwBAU5EiR6JO50SKJptpCgSrZj66S?=
+ =?us-ascii?Q?O8pD5BMchptmCXSzTJxRw4X5ChJVQijqZtj+L6VKhP94YRiLSHJzB5HB4llc?=
+ =?us-ascii?Q?qm2Mr++rv0MH+Eh9cXFS5zoeaKqPRbbzhIWFRsO4u8oFvU0Z+oKwYa46CGm7?=
+ =?us-ascii?Q?tlLAFbx9QUqv7sweEr0XJGMFBNSfuxWBwoYk6/GkzqeVmX/qHZsWuB3UZhSg?=
+ =?us-ascii?Q?CI11B34vXNveDkv09id17FaHHP2gKOeEW5xoJ3e3UPbt/dtHMSoDOFsK4oJ/?=
+ =?us-ascii?Q?KJcOJ5JHNjtWRo/TjghCeXyRD5KaOVGy2+CiQsLxRh+mKp+ipRZdsLfhGDmG?=
+ =?us-ascii?Q?evu6Zw/7ah772l3GeSSTECPa1rnYr/gEjvpsGhHhEqYo0abJTD0xmdhg066P?=
+ =?us-ascii?Q?W6P+KgfjnUElodnLzzMtGmD96wZCr1eT9Yw3SxC16t8FPkXyKP8kS/IgPpHk?=
+ =?us-ascii?Q?Pvw7kAY79ju3BfiV62YNH6oA11fteggGV0CVwAJSXPnmWXyLul64cVv9rVc4?=
+ =?us-ascii?Q?SGbZdAJvuxPE6GafFfprIZCwSWGCsR4Gcbi3JQOa?=
+X-Forefront-Antispam-Report:
+	CIP:165.204.84.17;CTRY:US;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:satlexmb07.amd.com;PTR:InfoDomainNonexistent;CAT:NONE;SFS:(13230040)(36860700013)(376014)(82310400026)(1800799024)(13003099007);DIR:OUT;SFP:1101;
+X-OriginatorOrg: amd.com
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 12 Dec 2025 18:18:54.1724
+ (UTC)
+X-MS-Exchange-CrossTenant-Network-Message-Id: a25fc289-415c-4010-60c5-08de39aae894
+X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
+X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=3dd8961f-e488-4e60-8e11-a82d994e183d;Ip=[165.204.84.17];Helo=[satlexmb07.amd.com]
+X-MS-Exchange-CrossTenant-AuthSource:
+	SA2PEPF00003F68.namprd04.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Anonymous
+X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM6PR12MB4372
 
-In my previous patch I missed the TUXEDO Book BA15 Gen10. Adding this now
-also to the list of supported devices of the Uniwill driver.
+Adding new NPU metrics API to AMD PMF driver is pending because of
+lacking real case.
+  https://lore.kernel.org/all/d344b850-f68d-f9a5-f0dc-55af4b48b714@linux.intel.com/
 
-Signed-off-by: Werner Sembach <wse@tuxedocomputers.com>
----
-V1->V2: Slight .ident change to be consistent with the rest of the entries
+Create xdna driver patch to fetch real time power input via PMF API.
+Here is an example output with xrt-smi(1) tool.
 
- drivers/platform/x86/uniwill/uniwill-acpi.c | 7 +++++++
- 1 file changed, 7 insertions(+)
+# xrt-smi examine -r all | grep Power
+  Power Mode             : Default
+Estimated Power          : 0.563 Watts
 
-diff --git a/drivers/platform/x86/uniwill/uniwill-acpi.c b/drivers/platform/x86/uniwill/uniwill-acpi.c
-index bd7e63dd51810..0f935532f2504 100644
---- a/drivers/platform/x86/uniwill/uniwill-acpi.c
-+++ b/drivers/platform/x86/uniwill/uniwill-acpi.c
-@@ -1844,6 +1844,13 @@ static const struct dmi_system_id uniwill_dmi_table[] __initconst = {
- 			DMI_EXACT_MATCH(DMI_BOARD_NAME, "X6AR5xxY_mLED"),
- 		},
- 	},
-+	{
-+		.ident = "TUXEDO Book BA15 Gen10 AMD",
-+		.matches = {
-+			DMI_MATCH(DMI_SYS_VENDOR, "TUXEDO"),
-+			DMI_EXACT_MATCH(DMI_BOARD_NAME, "PF5PU1G"),
-+		},
-+	},
- 	{
- 		.ident = "TUXEDO Pulse 14 Gen1 AMD",
- 		.matches = {
+V2:
+    Including header file for struct mutex will be added by
+        https://patchwork.kernel.org/project/platform-driver-x86/patch/20251202042219.245173-1-Shyam-sundar.S-k@amd.com/
+    Add include for U32_MAX
+    Replace snprintf by scnprintf
+    Fix coding style
+
+Lizhi Hou (1):
+  accel/amdxdna: Add IOCTL to retrieve realtime NPU power estimate
+
+Shyam Sundar S K (1):
+  platform/x86/amd/pmf: Introduce new interface to export NPU metrics
+
+ drivers/accel/amdxdna/aie2_pci.c        | 29 ++++++++++
+ drivers/accel/amdxdna/aie2_pci.h        | 20 +++++++
+ drivers/accel/amdxdna/amdxdna_pci_drv.c |  3 +-
+ drivers/platform/x86/amd/pmf/core.c     | 75 +++++++++++++++++++++++++
+ drivers/platform/x86/amd/pmf/pmf.h      |  2 +
+ include/linux/amd-pmf-io.h              | 21 +++++++
+ 6 files changed, 149 insertions(+), 1 deletion(-)
+
 -- 
-2.43.0
+2.34.1
 
