@@ -1,77 +1,70 @@
-Received: from SN4PR2101CU001.outbound.protection.outlook.com (mail-southcentralusazon11012068.outbound.protection.outlook.com [40.93.195.68])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pj1-f52.google.com (mail-pj1-f52.google.com [209.85.216.52])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3977F30102A;
-	Fri, 12 Dec 2025 18:19:01 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.93.195.68
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1765563543; cv=fail; b=g1eX5slKuODjnLfn/yVK6V1A2whzPYuv5Y5OuZMzNdJLE4cWTVdnyLyOl4qqZ6L2mfcBNhKtQ5Nz0WyRdjUfx0bbno3sLZmZKrSkK/16Hdg7eEi8epDdiAc2KNuSPfvFb6SzxmIIFgqEFqHWstcQrybKH/Nd49iOomutdzk+A5E=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1765563543; c=relaxed/simple;
-	bh=k/vW36N+CMGaeRTeNwaouhIWRmmaOWyEt7fZQX+S8gI=;
-	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=ABaZHZ4P8x1z5w3HC/yc89z8o7ULZrh6ShZBTv5ys8RrsaDKomYBuLC3VY6+RU++4bsn+XDyeKiySSsNMjAt8JTS4Y476eKwl2jl9aompS56LW7K0+uG5t7C3FCC/emAUzpu7XdWOWD4VFB18nIROpUPJSkandqeI6YEqpZvMis=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=KOCBX6c7; arc=fail smtp.client-ip=40.93.195.68
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com
-Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=amd.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 173941DE4E1
+	for <platform-driver-x86@vger.kernel.org>; Sat, 13 Dec 2025 18:51:13 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.52
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1765651875; cv=none; b=ABCxh2kZppAqSbq8sMdO7wE44tIvDeSAdrB8IGBfn5C1n9omwkxdSrESKuddtZUIFOm7mtLPipiRLEw6IQNhftU02aYChfQhNvSJSsc0F2L86pgPNN1xLXCZMNpRD3qrkai1HqtRDI5ImVCH3+Shl6VDlgBT7YxyMVysUagIjT8=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1765651875; c=relaxed/simple;
+	bh=Nrocump//UT0hoseAopkuQU9LhsQ1KnMWoqDONQlz7E=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=e9R7EklyCvIunFTqdawLNK86KmElAgwSHveWD2/dywiO9zM/TyY38z2sSDtJgayiwGDERVWa2HeVwnay3Tuq6lOZEyRat6VSX9SH25kIbWOhuwuAuaAxAdbKpuRJbnl+NZryS4wfwltRVJfdjoHG4pVvnDogy7tTrIP4S/xBgws=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=nmowZuSD; arc=none smtp.client-ip=209.85.216.52
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="KOCBX6c7"
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=aZmwUt83ktGl8xbN6pAPBTznJLtXb4t4Mu85dUjGa4QqyTwxC1SC/Uye35ocjXXexfv15U/zk2heISb1xRNOwkfeAn1nEBkKOXpZjrgo5ojlQBlB35AqTJI25S0PNvJNv0u2gZHwU62R0jFBv+Wxaz1fezc6kFD5hZnYUTuwPUvWEyZh4W5hM5B+of10MT+AKYLHMyqG65p9nBdSJPNPRiDMQWH4Ig++FgALmBQsvuh4r1BEsPkUMECU//LPZ1dSlmTIonPUyougjVhNIBoZSpmiBEdsFYTh6qsM/bJz3FRWGJ/PFTF3lBFXY+UV7SODj6WeNk0YdUe3eCp0nuTo0A==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=IM3hRlIxZB0jKtOtIWpKEqtUOd22XjRm+8Awk1QE3F0=;
- b=kGfDJMFWgXjXyA6arWr7WR89KAdq9wqRAfHZB82nWetYCp1Kx1T1RGXEM/F8c2bniCHHV8DO9fGnCbgDTeXThB3PdQH8CeZw4iphJndR/KmGc1DLuoIoRvG72zHygc7bCh6ScQR1F0/Zm0HoGzF1p0zPZWqQ+i3V93p4eRua3CgcucijyV+8aUHa7d+TPODOyVLSqEdl5SBJiIlDSH8MpGvNKjC5UYOYhMMKMtAZzNJ0VtNFV4DmAA5nXnSbJTXyjTHxWXkPc1HtPJR6vMYAIOgP2JkhE8GL1obyS08xTZHab20/iAKpcTrAq84yrWoJpUNPrDtkOoWjprzUsgzvnA==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
- 165.204.84.17) smtp.rcpttodomain=linux.intel.com smtp.mailfrom=amd.com;
- dmarc=pass (p=quarantine sp=quarantine pct=100) action=none
- header.from=amd.com; dkim=none (message not signed); arc=none (0)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=IM3hRlIxZB0jKtOtIWpKEqtUOd22XjRm+8Awk1QE3F0=;
- b=KOCBX6c7CNgC/4C8Qls1leJrN+n78IgZluvz6qqA+FXJClANW/m8EL5Chs71hqaYGBa9pDbz16TrlpYrqJlmXYtpMpZfQcX9RROrkeg67WpJJsXdyg/uKQYn4EBwWCuMEQOvaFNjQmKKjNLVw2fpyjmIZaw2czaQS+LPKhwml2Y=
-Received: from DS7PR03CA0167.namprd03.prod.outlook.com (2603:10b6:5:3b2::22)
- by SN7PR12MB7130.namprd12.prod.outlook.com (2603:10b6:806:2a2::22) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.9412.9; Fri, 12 Dec
- 2025 18:18:57 +0000
-Received: from CY4PEPF0000FCC1.namprd03.prod.outlook.com
- (2603:10b6:5:3b2:cafe::f) by DS7PR03CA0167.outlook.office365.com
- (2603:10b6:5:3b2::22) with Microsoft SMTP Server (version=TLS1_3,
- cipher=TLS_AES_256_GCM_SHA384) id 15.20.9388.15 via Frontend Transport; Fri,
- 12 Dec 2025 18:18:56 +0000
-X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 165.204.84.17)
- smtp.mailfrom=amd.com; dkim=none (message not signed)
- header.d=none;dmarc=pass action=none header.from=amd.com;
-Received-SPF: Pass (protection.outlook.com: domain of amd.com designates
- 165.204.84.17 as permitted sender) receiver=protection.outlook.com;
- client-ip=165.204.84.17; helo=satlexmb08.amd.com; pr=C
-Received: from satlexmb08.amd.com (165.204.84.17) by
- CY4PEPF0000FCC1.mail.protection.outlook.com (10.167.242.103) with Microsoft
- SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.9412.4 via Frontend Transport; Fri, 12 Dec 2025 18:18:56 +0000
-Received: from satlexmb08.amd.com (10.181.42.217) by satlexmb08.amd.com
- (10.181.42.217) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.2562.17; Fri, 12 Dec
- 2025 12:18:55 -0600
-Received: from xsjlizhih51.xilinx.com (10.180.168.240) by satlexmb08.amd.com
- (10.181.42.217) with Microsoft SMTP Server id 15.2.2562.17 via Frontend
- Transport; Fri, 12 Dec 2025 10:18:55 -0800
-From: Lizhi Hou <lizhi.hou@amd.com>
-To: <ilpo.jarvinen@linux.intel.com>, <hansg@kernel.org>, <ogabbay@kernel.org>,
-	<quic_jhugo@quicinc.com>, <maciej.falkowski@linux.intel.com>
-CC: Lizhi Hou <lizhi.hou@amd.com>, <linux-kernel@vger.kernel.org>,
-	<max.zhen@amd.com>, <sonal.santan@amd.com>, <mario.limonciello@amd.com>,
-	<dri-devel@lists.freedesktop.org>, <platform-driver-x86@vger.kernel.org>,
-	<Shyam-sundar.S-k@amd.com>, <VinitKumar.Shukla@amd.com>, Mario Limonciello
-	<superm1@kernel.org>
-Subject: [PATCH V2 2/2] accel/amdxdna: Add IOCTL to retrieve realtime NPU power estimate
-Date: Fri, 12 Dec 2025 10:18:03 -0800
-Message-ID: <20251212181803.1825142-3-lizhi.hou@amd.com>
-X-Mailer: git-send-email 2.34.1
-In-Reply-To: <20251212181803.1825142-1-lizhi.hou@amd.com>
-References: <20251212181803.1825142-1-lizhi.hou@amd.com>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="nmowZuSD"
+Received: by mail-pj1-f52.google.com with SMTP id 98e67ed59e1d1-34abc7da414so1397127a91.0
+        for <platform-driver-x86@vger.kernel.org>; Sat, 13 Dec 2025 10:51:13 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1765651873; x=1766256673; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=5BjeNij9NJictwA/Nmpy2B9exYRrQ4lKtb8tO0JZFyM=;
+        b=nmowZuSDUHjokM1oeTnzOPouVNX5mz0D8JyhHyb2/3A0PdjyVJfi//MWsJEP/DgSir
+         ZnOnwNSz6EM9JqM5+pbCltxBrJ7pz6WzEjxB4XQEaSt7YM5yHVj+LiG5RAtAp8ebBmwm
+         XrMUBnRbefzBgdAQokN791VSU5j5BgHXOZvDh5HnF9W5dfvqybWq0Oaxoed8SD4VWvQF
+         YTCsXI3DGnHpJaoOAKsIC/JM4aGloFBnV2b2GkpQDj6/BVPuX54zHfzLBMhUW6QI6R2v
+         L0ciF24PYBQPzirEXI8yDtUW8bVviF8JMBxuCoTRrtVlYfoVbojTSWvB8mtSYHJ8NBKp
+         r+3Q==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1765651873; x=1766256673;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-gg:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=5BjeNij9NJictwA/Nmpy2B9exYRrQ4lKtb8tO0JZFyM=;
+        b=oQV6sL0TO+Q3Ub1T5OYDeA2Jz2Bm0Qug/zu0J8ISRpLo9CJ1pRootfFDWutoHJTH75
+         Lu5IwOXEsSqp6jWZzgk8wtksHXOo440B53CvzRFwYAFCroz0fHJm+m8WhJYBxwr+MxJF
+         WrTCQ6TyxJZ1+RQkKvaQMaAucD0ES8mIR5JSXUw1KKtVRCIcF+BCTkdzw9QBO3HMwMvP
+         IdTMC5ytl8U+wVfu7llUNZwVsBIOkxQ/TzSGxiEaxUU5UJVtUuLnw7huThC7yxkFrby2
+         gETOHRnAFtKwdf4x582ng7AqpXWRCbU8vweuPi/GOPROwS7uXENKd0src4+YPBYHrRHQ
+         whlA==
+X-Gm-Message-State: AOJu0YzTpvpYyxeCSyOIsi/irNUi6P81tmfTGjOmxqAS991UffDbbwrf
+	Az9Dy3Q+WdVHMuFf4vkJ3J8pk/b4JeGEm05yhTAoMwkS4X6eS6IkUlyh
+X-Gm-Gg: AY/fxX4fFaMvO6zL2eTZLFLquq6VrjeBSUo7zvzXSEksFS6R+tGFb3T7RyG3wrJ+XPQ
+	Dx7dEyeuT8VSTjt/8UZxrzDMwGWAu0ZD2xypQrzETNs5yrLV6BAKQt7iiGU4UPU5jx/rRYfdJFu
+	2cFwWZWba1cp8NtvWG9XHjPzL8f/SgMM6H2NCpVxjLDGuw7yKMPig6E/EMYplqEQzZ5SR+ZNwiR
+	SOhIEHVV87k7baL7ZMZdLX055GOOULuTDLfkpi5fNm+69vCEQDE7cl20A/GzLhZNISMsm+rjTRB
+	kKCQQq49zesK797n8v1ZamjIiEfpTRuykWeP1QuuakXJ/FjLWE2uVNQUr2RLO2LAAS7dyn9KsKx
+	nO7RAsA1zJkxAyo0pBMh5Y1xL3hTc7RRp80DJqioFTI5CldjRTSMWsgs0m0gU7PIRjj2iZ0uN90
+	HNrPxfe4pZVwb41XNzcxA=
+X-Google-Smtp-Source: AGHT+IHsQcJnIERBwhNaB8N5jTa0eD2McdlMbtBz7ve5xL6PQO2uvtGgxY5sj/PByyIYqFiQszBGwg==
+X-Received: by 2002:a17:90b:2743:b0:34a:a1dd:1f2a with SMTP id 98e67ed59e1d1-34abd761703mr5615412a91.20.1765651873244;
+        Sat, 13 Dec 2025 10:51:13 -0800 (PST)
+Received: from archlinux ([2405:201:1b:225c:bd87:a308:8427:d21d])
+        by smtp.gmail.com with ESMTPSA id 98e67ed59e1d1-34abe1ffde5sm5087012a91.1.2025.12.13.10.51.11
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sat, 13 Dec 2025 10:51:12 -0800 (PST)
+From: Krishna Chomal <krishna.chomal108@gmail.com>
+To: ilpo.jarvinen@linux.intel.com,
+	hansg@kernel.org
+Cc: platform-driver-x86@vger.kernel.org,
+	Krishna Chomal <krishna.chomal108@gmail.com>
+Subject: [PATCH] platform/x86: hp-wmi: fix platform profile values for Omen 16-wf1xxx
+Date: Sun, 14 Dec 2025 00:21:07 +0530
+Message-ID: <20251213185107.179130-1-krishna.chomal108@gmail.com>
+X-Mailer: git-send-email 2.52.0
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
@@ -79,179 +72,112 @@ List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-EOPAttributedMessage: 0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: CY4PEPF0000FCC1:EE_|SN7PR12MB7130:EE_
-X-MS-Office365-Filtering-Correlation-Id: 039eda97-8177-412f-e560-08de39aaea1e
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam:
-	BCL:0;ARA:13230040|1800799024|82310400026|36860700013|376014;
-X-Microsoft-Antispam-Message-Info:
-	=?us-ascii?Q?JYNeU/inirDiRMB1m+oXzE3dWW7WPFo0z6qMxB+og9qJJdDQ0r9X2nW4Rh3S?=
- =?us-ascii?Q?i/DV4Q8fBTIOq8eAZnkR28DiE5jo+vbYu7ICppu1o2DlqWZdJw+j7obH2m+A?=
- =?us-ascii?Q?XX7tgWzzUJ8GG9X7rXi3Rugv12FzqgDpI1/Rn8/8MpWJxjoYvp6wCpwPhJPE?=
- =?us-ascii?Q?Uy6zuKCW5mNZsgPXoJGNsiYIgcibqEKCg1gjfcRV/HDA+u5AamZwbO7h+RYg?=
- =?us-ascii?Q?Zu94hGPZdqSvT5B06rXmItiQIr+CmAR5sVVno58L2kZwz1QevIiFqYttscz8?=
- =?us-ascii?Q?9scWeSuToTIAinMG/EJiRcjt2U1wQiIEAHoOLh+OLjh/rTnu5saGbmwms3W6?=
- =?us-ascii?Q?R4i5Yv3JlTlprLvYCrotZiIE2FwhkqEXh7L3bjtpDWb3IaImNbszxUEeIA4t?=
- =?us-ascii?Q?gVfwHFlrg4fxIiCqXKk2UTdgFgJIPK1wJWE0X0XTkZhWTG1cQSK3zGt5rtFG?=
- =?us-ascii?Q?jXcAd71H3rAobqNo7glL4sX6s4EvkikNjrU++qz1Gg5DmDjdYO9G0K7+dava?=
- =?us-ascii?Q?k+puzc7c81CWa3oMjXmut5qTWnpqr5nCm6Y1NP2u/MvGEZzYbKIpPOOLdPg3?=
- =?us-ascii?Q?ba8LK+FZsc7YKeNxlhLHn1XChU1JVYC3ORnuGbT5120eExLI/zuEdDD/lmYN?=
- =?us-ascii?Q?s47+RK/9RD+KBb2pOx1VAAkMtrrbKow76x2h8B+74dxIVLE5n9hOofXB6pBw?=
- =?us-ascii?Q?bxLv007Hi8s6uRRsf6Icrvqsx8jfuUvHbGuZKur9kobkNc8NuEPdAL2uIl7g?=
- =?us-ascii?Q?lQP8G/Kk6AE6Rlq9GiSpRerTm5gHj4eYjQJOIMCirlzwrilSsBfleou2GtNa?=
- =?us-ascii?Q?atop4pYMRhGHY8CP8pPIowW0Fy7KBC82C3FNAnA5aH14xh0pYkD8/A768qkJ?=
- =?us-ascii?Q?d4h+HkCDAD0VgUk0NNlAo2lrpxs40bSy0ye+w3ISD4vjrVY58EbQy29CJYmr?=
- =?us-ascii?Q?hyRnwe6e26LvL4BqnLtmdlF74j3xUDvZFdfr1ACxwlbgqb32OeaL8ImqI0qp?=
- =?us-ascii?Q?7b3NzEoGb1nT6NZnA1wlyl6ypgGL2IAZsz81A1paBSY3sLNs6ElwymfPwoHY?=
- =?us-ascii?Q?+V2sc5IU3prAlWSbJ+DuKps7kXhRTHb9vv/4MMaVkNkwVeo+NjkikVM6TBUo?=
- =?us-ascii?Q?1gr71Fw+ZK903UM5ZPGvnoIYx2ODDZ/onZRfffu0/h05h63b0+uyujSt3beh?=
- =?us-ascii?Q?unkhfgXa9Ab+sG/v+jvDWLL4woBpkCTnw7uX8w218ptXvS64QlZoM5K4K8z/?=
- =?us-ascii?Q?SH14oF7orwSr+Offo+dZ0KMGVbrcYVScUjuKGfLvXZJ/cFTfa8VmVTnit1Pw?=
- =?us-ascii?Q?s9oE73PMibRTnqKLLb80mpfmeq4rUQoyVG7a3Q1UYwP5qNZjxh2WcNGw8krD?=
- =?us-ascii?Q?UVaqvadLZI6IMHKfzgPLn6FRz+5lPVWYkA7JktdicV/LTMiryAcUiO1wHQX8?=
- =?us-ascii?Q?x8G9h1cpJRwsYF2qacRy/0kpRh2AvQq8MhTBcR3aLsEkW/eR9FRl/IYd/Ves?=
- =?us-ascii?Q?l7HC6rU8/HncHxeIwLE07DL81IW5r4EXeMi76rGE5NC/VFiTTNpN8izaIHa4?=
- =?us-ascii?Q?fM82t2gylGPli+ZpMEU=3D?=
-X-Forefront-Antispam-Report:
-	CIP:165.204.84.17;CTRY:US;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:satlexmb08.amd.com;PTR:InfoDomainNonexistent;CAT:NONE;SFS:(13230040)(1800799024)(82310400026)(36860700013)(376014);DIR:OUT;SFP:1101;
-X-OriginatorOrg: amd.com
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 12 Dec 2025 18:18:56.7435
- (UTC)
-X-MS-Exchange-CrossTenant-Network-Message-Id: 039eda97-8177-412f-e560-08de39aaea1e
-X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
-X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=3dd8961f-e488-4e60-8e11-a82d994e183d;Ip=[165.204.84.17];Helo=[satlexmb08.amd.com]
-X-MS-Exchange-CrossTenant-AuthSource:
-	CY4PEPF0000FCC1.namprd03.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Anonymous
-X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: SN7PR12MB7130
 
-The AMD PMF driver provides an interface to obtain realtime power
-estimates for the NPU. Expose this information to userspace through a
-new DRM_IOCTL_AMDXDNA_GET_INFO parameter, allowing applications to query
-the current NPU power level.
+HP Omen 16-wf1xxx (board ID 8C78) currently sends the incorrect
+Victus-specific thermal profile values via WMI, leading to a logical
+inconsistency when switching between platform profiles.
 
-Reviewed-by: Mario Limonciello (AMD) <superm1@kernel.org>
-Reviewed-by: Shyam Sundar S K <Shyam-sundar.S-k@amd.com>
-Signed-off-by: Lizhi Hou <lizhi.hou@amd.com>
+The driver currently uses Victus S values:
+0x00 => Balanced / Low-Power
+0x01 => Performance
+
+However, Omen Gaming Hub logs / EC register inspection on Windows shows
+that this board is intended to use:
+0x30 => Balanced / Low-Power
+0x31 => Performance
+
+This patch corrects the thermal profile command values to match the
+values observed from Omen Gaming Hub logs. The performance benchmarks
+and peak power draw (from both CPU and GPU) show no observable change
+with this correction (suggesting that the firmware is currently tolerant
+of the incorrect values). However sending the correct values prevents
+potential regressions after future firmware updates.
+
+Create a new omen_new_thermal_profile_boards[] array for devices that
+share the Victus WMI queries but require Omen thermal profile values.
+Conditionally use these values in platform_profile_victus_s_set_ec().
+
+Tested on: HP Omen 16-wf1xxx (board 8C78)
+Result: Confirmed WMI codes 0x30/0x31 are now sent, resolving the
+logical inconsistency and ensuring the value visible in EC registers
+match the Windows state for this profile.
+
+Fixes: fb146a38cb11 ("platform/x86: hp-wmi: Add Omen 16-wf1xxx fan support")
+Signed-off-by: Krishna Chomal <krishna.chomal108@gmail.com>
 ---
- drivers/accel/amdxdna/aie2_pci.c        | 29 +++++++++++++++++++++++++
- drivers/accel/amdxdna/aie2_pci.h        | 20 +++++++++++++++++
- drivers/accel/amdxdna/amdxdna_pci_drv.c |  3 ++-
- 3 files changed, 51 insertions(+), 1 deletion(-)
+ drivers/platform/x86/hp/hp-wmi.c | 35 +++++++++++++++++++++++++++++---
+ 1 file changed, 32 insertions(+), 3 deletions(-)
 
-diff --git a/drivers/accel/amdxdna/aie2_pci.c b/drivers/accel/amdxdna/aie2_pci.c
-index 81a8e4137bfd..55fbc8f0f455 100644
---- a/drivers/accel/amdxdna/aie2_pci.c
-+++ b/drivers/accel/amdxdna/aie2_pci.c
-@@ -10,6 +10,7 @@
- #include <drm/drm_managed.h>
- #include <drm/drm_print.h>
- #include <drm/gpu_scheduler.h>
-+#include <linux/amd-pmf-io.h>
- #include <linux/cleanup.h>
- #include <linux/errno.h>
- #include <linux/firmware.h>
-@@ -777,6 +778,31 @@ static int aie2_get_clock_metadata(struct amdxdna_client *client,
- 	return ret;
+diff --git a/drivers/platform/x86/hp/hp-wmi.c b/drivers/platform/x86/hp/hp-wmi.c
+index f4ea1ea05997..4dfd5fc230e2 100644
+--- a/drivers/platform/x86/hp/hp-wmi.c
++++ b/drivers/platform/x86/hp/hp-wmi.c
+@@ -105,6 +105,14 @@ static const char * const victus_s_thermal_profile_boards[] = {
+ 	"8D41",
+ };
+ 
++/* DMI Board names of Omen laptops that have same WMI queries as
++ * victus_s_thermal_profile_boards but use hp_thermal_profile_omen_v1
++ * values.
++ */
++static const char * const omen_new_thermal_profile_boards[] = {
++	"8C78",
++};
++
+ enum hp_wmi_radio {
+ 	HPWMI_WIFI	= 0x0,
+ 	HPWMI_BLUETOOTH	= 0x1,
+@@ -1522,6 +1530,18 @@ static bool is_victus_thermal_profile(void)
+ 			    board_name) >= 0;
  }
  
-+static int aie2_get_sensors(struct amdxdna_client *client,
-+			    struct amdxdna_drm_get_info *args)
++static bool is_omen_new_thermal_profile(void)
 +{
-+	struct amdxdna_drm_query_sensor sensor = {};
-+	int ret;
++	const char *board_name = dmi_get_system_info(DMI_BOARD_NAME);
 +
-+	if (args->buffer_size < sizeof(sensor))
-+		return -EINVAL;
++	if (!board_name)
++		return false;
 +
-+	ret = AIE2_GET_PMF_NPU_DATA(npu_power, sensor.input);
-+	if (ret)
-+		return ret;
-+	sensor.type = AMDXDNA_SENSOR_TYPE_POWER;
-+	sensor.unitm = -3;
-+	scnprintf(sensor.label, sizeof(sensor.label), "Total Power");
-+	scnprintf(sensor.units, sizeof(sensor.units), "mW");
-+
-+	if (copy_to_user(u64_to_user_ptr(args->buffer), &sensor, sizeof(sensor)))
-+		return -EFAULT;
-+
-+	args->buffer_size = sizeof(sensor);
-+
-+	return 0;
++	return match_string(omen_new_thermal_profile_boards,
++			    ARRAY_SIZE(omen_new_thermal_profile_boards),
++			    board_name) >= 0;
 +}
 +
- static int aie2_hwctx_status_cb(struct amdxdna_hwctx *hwctx, void *arg)
+ static int platform_profile_victus_get_ec(enum platform_profile_option *profile)
  {
- 	struct amdxdna_drm_hwctx_entry *tmp __free(kfree) = NULL;
-@@ -980,6 +1006,9 @@ static int aie2_get_info(struct amdxdna_client *client, struct amdxdna_drm_get_i
- 	case DRM_AMDXDNA_QUERY_CLOCK_METADATA:
- 		ret = aie2_get_clock_metadata(client, args);
+ 	int tp;
+@@ -1678,19 +1698,28 @@ static int platform_profile_victus_s_set_ec(enum platform_profile_option profile
+ 
+ 	switch (profile) {
+ 	case PLATFORM_PROFILE_PERFORMANCE:
+-		tp = HP_VICTUS_S_THERMAL_PROFILE_PERFORMANCE;
++		if (is_omen_new_thermal_profile())
++			tp = HP_OMEN_V1_THERMAL_PROFILE_PERFORMANCE;
++		else
++			tp = HP_VICTUS_S_THERMAL_PROFILE_PERFORMANCE;
+ 		gpu_ctgp_enable = true;
+ 		gpu_ppab_enable = true;
+ 		gpu_dstate = 1;
  		break;
-+	case DRM_AMDXDNA_QUERY_SENSORS:
-+		ret = aie2_get_sensors(client, args);
-+		break;
- 	case DRM_AMDXDNA_QUERY_HW_CONTEXTS:
- 		ret = aie2_get_hwctx_status(client, args);
+ 	case PLATFORM_PROFILE_BALANCED:
+-		tp = HP_VICTUS_S_THERMAL_PROFILE_DEFAULT;
++		if (is_omen_new_thermal_profile())
++			tp = HP_OMEN_V1_THERMAL_PROFILE_DEFAULT;
++		else
++			tp = HP_VICTUS_S_THERMAL_PROFILE_DEFAULT;
+ 		gpu_ctgp_enable = false;
+ 		gpu_ppab_enable = true;
+ 		gpu_dstate = 1;
  		break;
-diff --git a/drivers/accel/amdxdna/aie2_pci.h b/drivers/accel/amdxdna/aie2_pci.h
-index c6b5cf4ae5c4..7f588ad99240 100644
---- a/drivers/accel/amdxdna/aie2_pci.h
-+++ b/drivers/accel/amdxdna/aie2_pci.h
-@@ -7,6 +7,7 @@
- #define _AIE2_PCI_H_
- 
- #include <drm/amdxdna_accel.h>
-+#include <linux/limits.h>
- #include <linux/semaphore.h>
- 
- #include "amdxdna_mailbox.h"
-@@ -46,6 +47,25 @@
- 	pci_resource_len(NDEV2PDEV(_ndev), (_ndev)->xdna->dev_info->mbox_bar); \
- })
- 
-+#if IS_ENABLED(CONFIG_AMD_PMF)
-+#define AIE2_GET_PMF_NPU_DATA(field, val)				\
-+({									\
-+	struct amd_pmf_npu_metrics _npu_metrics;			\
-+	int _ret;							\
-+									\
-+	_ret = amd_pmf_get_npu_data(&_npu_metrics);			\
-+	val = _ret ? U32_MAX : _npu_metrics.field;			\
-+	(_ret);								\
-+})
-+#else
-+#define SENSOR_DEFAULT_npu_power	U32_MAX
-+#define AIE2_GET_PMF_NPU_DATA(field, val)				\
-+({									\
-+	val = SENSOR_DEFAULT_##field;					\
-+	(-EOPNOTSUPP);							\
-+})
-+#endif
-+
- enum aie2_smu_reg_idx {
- 	SMU_CMD_REG = 0,
- 	SMU_ARG_REG,
-diff --git a/drivers/accel/amdxdna/amdxdna_pci_drv.c b/drivers/accel/amdxdna/amdxdna_pci_drv.c
-index 1973ab67721b..643ebd387074 100644
---- a/drivers/accel/amdxdna/amdxdna_pci_drv.c
-+++ b/drivers/accel/amdxdna/amdxdna_pci_drv.c
-@@ -32,9 +32,10 @@ MODULE_FIRMWARE("amdnpu/17f0_20/npu.sbin");
-  * 0.4: Support getting resource information
-  * 0.5: Support getting telemetry data
-  * 0.6: Support preemption
-+ * 0.7: Support getting power data
-  */
- #define AMDXDNA_DRIVER_MAJOR		0
--#define AMDXDNA_DRIVER_MINOR		6
-+#define AMDXDNA_DRIVER_MINOR		7
- 
- /*
-  * Bind the driver base on (vendor_id, device_id) pair and later use the
+ 	case PLATFORM_PROFILE_LOW_POWER:
+-		tp = HP_VICTUS_S_THERMAL_PROFILE_DEFAULT;
++		if (is_omen_new_thermal_profile())
++			tp = HP_OMEN_V1_THERMAL_PROFILE_DEFAULT;
++		else
++			tp = HP_VICTUS_S_THERMAL_PROFILE_DEFAULT;
+ 		gpu_ctgp_enable = false;
+ 		gpu_ppab_enable = false;
+ 		gpu_dstate = 1;
 -- 
-2.34.1
+2.52.0
 
