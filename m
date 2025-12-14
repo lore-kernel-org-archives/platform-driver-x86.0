@@ -1,156 +1,101 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0F8CB165F1A;
-	Sun, 14 Dec 2025 19:12:30 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B171221D3CD;
+	Sun, 14 Dec 2025 20:20:03 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.137.202.133
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1765739550; cv=none; b=kYAyKY9bz2atOV5ZmoHsfwms5CKGwcJZDf0KnbyTCSpXue8LhNmcukhemIci+U2syztoqF1Q5y3a/jCsyNCYkBTyZTPAuwEjI5ighRlYMY0/d7KPixCcIG7p+CPK1MrbMbGQ0P2JC/vgAbG3XuoeiEbsb7fbVDhHZrJu8cuBS08=
+	t=1765743606; cv=none; b=SolN+wTNoh3Uzmy35yIS6NlKBt1qeWpyldJFCE/J15w3pAIxuLEpubmi46h9kjprtbdQIgo4BuyOBhnpf6c/KBRXnDQLfEx16TgW1AFLg8aPVZCxK1J6fVxc+k7RFxOaKuIh9szUO2gvOui51mWZjFHI5VxkCvjUyAUoKEumNdE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1765739550; c=relaxed/simple;
-	bh=DuEosKzXgyd2W8Nv/kNx7HLj/KUQ34kWA5PTB0JM2wc=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=B/zb0HsW14q6ATH91pyASsUZvxmX8JomkKNm3SLctdSHxCpF8nZBKTMcjdu4TcQx++2GCgsoP1yJjj8BJnAl6vxvnmGIjxPK5FTtmfk1GrleNC5/ezVb0x8yDVvFPqRVLzgW5RKhbZk6lwsxT279buwiV0B9JuAc7oSqltLl9LI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=h2ZPpe2H; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1765743606; c=relaxed/simple;
+	bh=+gGFv0iTIzJmHmAGRGBexRNjCwraUMZ0Z30cjSbPvMo=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version:Content-Type; b=BU6o5CQOAVCSCknXtzuCFxv+95C20v3boTLY0DtKdxjM1vHlht/oxq8x8BjpktN+Dpvu5RmUSUpHm6u9VmgKBH4pYXU4+JAwHmixsc8J/EyVv25o+rKDZh8EJDcg2IbtddzrFD1BJ1mP9KMHxl8ejkpzhtNjVQGegQPKAiPCKAQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=XzfyiDL7; arc=none smtp.client-ip=198.137.202.133
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=infradead.org
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=infradead.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="h2ZPpe2H"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id B943DC4CEF1;
-	Sun, 14 Dec 2025 19:12:28 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1765739549;
-	bh=DuEosKzXgyd2W8Nv/kNx7HLj/KUQ34kWA5PTB0JM2wc=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=h2ZPpe2HxDcQ5LtNwWfe1zlbm7LbFjTsQRObHXE92v2oYMk2LC3P5ZhN/RtQWmgLq
-	 LK9BocaIHzgo8cjofFmd71F/zbdeVqErEv+vxA9SqHGYuEAKY8ezsuZTb90aQod5ex
-	 XpVuDqx+rPM1hEBliakZXHnJl5KK2HJQZf4flt7x8RUwDNtopeEITMNmnIDdywWyxt
-	 lHFpxKM5inYp7itbMtUiTnxl+A1Ax0QSqgGLUupV+jOuVQldNJNzF6/7VNiu1l3CdS
-	 uxs4Y/W9leLwqRLcsOpqPcjpnrh8rrUTM1WcfEpAhah8yJYFUOjTfwTCIUby8Llb2C
-	 wTUVVqsvja2ew==
-From: "Mario Limonciello (AMD)" <superm1@kernel.org>
-To: Tom Lendacky <thomas.lendacky@amd.com>,
-	Herbert Xu <herbert@gondor.apana.org.au>,
-	Shyam Sundar S K <Shyam-sundar.S-k@amd.com>,
-	=?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>,
-	Rijo Thomas <Rijo-john.Thomas@amd.com>
-Cc: John Allen <john.allen@amd.com>,
-	"David S . Miller" <davem@davemloft.net>,
+	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="XzfyiDL7"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=infradead.org; s=bombadil.20210309; h=Content-Transfer-Encoding:
+	Content-Type:MIME-Version:Message-ID:Date:Subject:Cc:To:From:Sender:Reply-To:
+	Content-ID:Content-Description:In-Reply-To:References;
+	bh=nCCWAkTjW23jyyBF1+0qwVXkoHoIg4WlxDfgQRqNDvY=; b=XzfyiDL72RBAtvY8RoFOh4kOhG
+	qADv67KrAWjB3wolBoIXrqiURt01njm2PFR3EMNxb2cMYuJRFR44ISLAE95ImZad1RlMfUG4k7SdM
+	AS9Brll6WQZrMcXbHn9JvxxnTt2amzY26e8h6ye/MJQPxLVScyjYGvfKxtMQU1K1Cx0ZMOMtc9pg8
+	NuTHzj/GxUrdlpM6uoBWD6+TThfjM2sS6o5+yrQhCA+WaPMvF7t1hfyGKe7i/2ZHSDIxPbQ4kn/AW
+	WYmRDwnemdwT2DVJ7PaAvTFSwzAWvNEGXx3WdeIeOcykRP5UiW1X5GkWBo8H6AxrJc9fjdKwtaEfm
+	q++OyaqQ==;
+Received: from [50.53.43.113] (helo=bombadil.infradead.org)
+	by bombadil.infradead.org with esmtpsa (Exim 4.98.2 #2 (Red Hat Linux))
+	id 1vUsZW-00000002iNw-2MhA;
+	Sun, 14 Dec 2025 20:20:02 +0000
+From: Randy Dunlap <rdunlap@infradead.org>
+To: linux-kernel@vger.kernel.org
+Cc: Randy Dunlap <rdunlap@infradead.org>,
+	"David E. Box" <david.e.box@linux.intel.com>,
 	Hans de Goede <hansg@kernel.org>,
-	linux-crypto@vger.kernel.org (open list:AMD CRYPTOGRAPHIC COPROCESSOR (CCP) DRIVER),
-	platform-driver-x86@vger.kernel.org (open list:AMD PMF DRIVER),
-	Lars Francke <lars.francke@gmail.com>,
-	Yijun Shen <Yijun.Shen@dell.com>,
-	"Mario Limonciello (AMD)" <superm1@kernel.org>
-Subject: [PATCH v3 5/5] crypto: ccp - Send PSP_CMD_TEE_RING_DESTROY when PSP_CMD_TEE_RING_INIT fails
-Date: Sun, 14 Dec 2025 13:12:13 -0600
-Message-ID: <20251214191213.154021-6-superm1@kernel.org>
-X-Mailer: git-send-email 2.43.0
-In-Reply-To: <20251214191213.154021-1-superm1@kernel.org>
-References: <20251214191213.154021-1-superm1@kernel.org>
+	=?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>,
+	platform-driver-x86@vger.kernel.org
+Subject: [PATCH] platform/x86/intel/vsec: correct kernel-doc comments
+Date: Sun, 14 Dec 2025 12:19:57 -0800
+Message-ID: <20251214201959.2195863-1-rdunlap@infradead.org>
+X-Mailer: git-send-email 2.52.0
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 
-The hibernate resume sequence involves loading a resume kernel that is just
-used for loading the hibernate image before shifting back to the existing
-kernel.
+Fix kernel-doc warnings in intel_vsec.h to eliminate all kernel-doc
+warnings:
 
-During that hibernate resume sequence the resume kernel may have loaded
-the ccp driver.  If this happens the resume kernel will also have called
-PSP_CMD_TEE_RING_INIT but it will never have called
-PSP_CMD_TEE_RING_DESTROY.
+Warning: include/linux/intel_vsec.h:92 struct member 'read_telem' not
+ described in 'pmt_callbacks'
+Warning: include/linux/intel_vsec.h:146 expecting prototype for struct
+ intel_sec_device.  Prototype was for struct intel_vsec_device instead
+Warning: include/linux/intel_vsec.h:146 struct member 'priv_data_size'
+ not described in 'intel_vsec_device'
 
-This is problematic because the existing kernel needs to re-initialize the
-ring.  One could argue that the existing kernel should call destroy
-as part of restore() but there is no guarantee that the resume kernel did
-or didn't load the ccp driver.  There is also no callback opportunity for
-the resume kernel to destroy before handing back control to the existing
-kernel.
-
-Similar problems could potentially exist with the use of kdump and
-crash handling. I actually reproduced this issue like this:
-
-1) rmmod ccp
-2) hibernate the system
-3) resume the system
-4) modprobe ccp
-
-The resume kernel will have loaded ccp but never destroyed and then when
-I try to modprobe it fails.
-
-Because of these possible cases add a flow that checks the error code from
-the PSP_CMD_TEE_RING_INIT call and tries to call PSP_CMD_TEE_RING_DESTROY
-if it failed.  If this succeeds then call PSP_CMD_TEE_RING_INIT again.
-
-Fixes: f892a21f51162 ("crypto: ccp - use generic power management")
-Reported-by: Lars Francke <lars.francke@gmail.com>
-Closes: https://lore.kernel.org/platform-driver-x86/CAD-Ua_gfJnQSo8ucS_7ZwzuhoBRJ14zXP7s8b-zX3ZcxcyWePw@mail.gmail.com/
-Signed-off-by: Mario Limonciello (AMD) <superm1@kernel.org>
+Signed-off-by: Randy Dunlap <rdunlap@infradead.org>
 ---
-v3:
- * Add a comment (Tom)
- * Add a define for busy condition (Shyam)
- * Rename label (Shyam)
- * Upgrade message to info (Shyam)
- * Use a helper that validates result for destroy command (Shyam)
+Cc: David E. Box <david.e.box@linux.intel.com>
+Cc: Hans de Goede <hansg@kernel.org>
+Cc: Ilpo Järvinen <ilpo.jarvinen@linux.intel.com>
+Cc: platform-driver-x86@vger.kernel.org
 ---
- drivers/crypto/ccp/tee-dev.c | 12 ++++++++++++
- include/linux/psp.h          |  2 ++
- 2 files changed, 14 insertions(+)
+ include/linux/intel_vsec.h |    7 ++++---
+ 1 file changed, 4 insertions(+), 3 deletions(-)
 
-diff --git a/drivers/crypto/ccp/tee-dev.c b/drivers/crypto/ccp/tee-dev.c
-index ef1430f86ad62..9edb220abbc1a 100644
---- a/drivers/crypto/ccp/tee-dev.c
-+++ b/drivers/crypto/ccp/tee-dev.c
-@@ -113,6 +113,7 @@ static int tee_init_ring(struct psp_tee_device *tee)
- {
- 	int ring_size = MAX_RING_BUFFER_ENTRIES * sizeof(struct tee_ring_cmd);
- 	struct tee_init_ring_cmd *cmd;
-+	bool retry = false;
- 	unsigned int reg;
- 	int ret;
+--- linux-next-20251201.orig/include/linux/intel_vsec.h
++++ linux-next-20251201/include/linux/intel_vsec.h
+@@ -80,8 +80,8 @@ enum intel_vsec_quirks {
  
-@@ -135,6 +136,7 @@ static int tee_init_ring(struct psp_tee_device *tee)
- 	/* Send command buffer details to Trusted OS by writing to
- 	 * CPU-PSP message registers
- 	 */
-+retry_init:
- 	ret = psp_mailbox_command(tee->psp, PSP_CMD_TEE_RING_INIT, cmd,
- 				  TEE_DEFAULT_CMD_TIMEOUT, &reg);
- 	if (ret) {
-@@ -145,6 +147,16 @@ static int tee_init_ring(struct psp_tee_device *tee)
- 	}
+ /**
+  * struct pmt_callbacks - Callback infrastructure for PMT devices
+- * ->read_telem() when specified, called by client driver to access PMT data (instead
+- * of direct copy).
++ * @read_telem: when specified, called by client driver to access PMT
++ * data (instead of direct copy).
+  * @pdev:  PCI device reference for the callback's use
+  * @guid:  ID of data to acccss
+  * @data:  buffer for the data to be copied
+@@ -120,7 +120,7 @@ struct intel_vsec_platform_info {
+ };
  
- 	if (FIELD_GET(PSP_CMDRESP_STS, reg)) {
-+		/*
-+		 * During the hibernate resume sequence driver may have gotten loaded
-+		 * but the ring not properly destroyed. If the ring doesn't work, try
-+		 * to destroy and re-init once.
-+		 */
-+		if (!retry && FIELD_GET(PSP_CMDRESP_STS, reg) == PSP_TEE_STATUS_RING_BUSY) {
-+			dev_info(tee->dev, "tee: ring init command failed with busy status, retrying\n");
-+			if (tee_send_destroy_cmd(tee))
-+				goto retry_init;
-+		}
- 		dev_err(tee->dev, "tee: ring init command failed (%#010lx)\n",
- 			FIELD_GET(PSP_CMDRESP_STS, reg));
- 		tee_free_ring(tee);
-diff --git a/include/linux/psp.h b/include/linux/psp.h
-index 92e60aeef21e1..a329148e3684b 100644
---- a/include/linux/psp.h
-+++ b/include/linux/psp.h
-@@ -23,6 +23,8 @@
- #define PSP_CMDRESP_RECOVERY	BIT(30)
- #define PSP_CMDRESP_RESP	BIT(31)
- 
-+#define PSP_TEE_STATUS_RING_BUSY 0x0000000d  /* Ring already initialized */
-+
- #define PSP_DRBL_MSG		PSP_CMDRESP_CMD
- #define PSP_DRBL_RING		BIT(0)
- 
--- 
-2.43.0
-
+ /**
+- * struct intel_sec_device - Auxbus specific device information
++ * struct intel_vsec_device - Auxbus specific device information
+  * @auxdev:        auxbus device struct for auxbus access
+  * @pcidev:        pci device associated with the device
+  * @resource:      any resources shared by the parent
+@@ -128,6 +128,7 @@ struct intel_vsec_platform_info {
+  * @num_resources: number of resources
+  * @id:            xarray id
+  * @priv_data:     any private data needed
++ * @priv_data_size: size of private data area
+  * @quirks:        specified quirks
+  * @base_addr:     base address of entries (if specified)
+  * @cap_id:        the enumerated id of the vsec feature
