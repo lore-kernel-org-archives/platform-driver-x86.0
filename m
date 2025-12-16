@@ -1,143 +1,106 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.9])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pf1-f175.google.com (mail-pf1-f175.google.com [209.85.210.175])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 647E2266B6B;
-	Tue, 16 Dec 2025 10:19:07 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.9
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BA3832BE043
+	for <platform-driver-x86@vger.kernel.org>; Tue, 16 Dec 2025 10:20:32 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.175
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1765880349; cv=none; b=JONbWit8MMk2c6EckFGkPN95EfvBNXUC2P9IzwLG7loPhv2i51axn0ZmU/WctSFpfMtuaMgRIYgyT4CxGzAn5NeM5DHYOmcITgEiB+SbBr5yX/KnTcePl1a2Tnxo3sNtfaypc/CfN/HncNZkEcnN0647Kwz+BIGs0ThLyjZkoic=
+	t=1765880434; cv=none; b=CXLuPA4jdfanDmrLDdI7qpaugXJKncB1X7vpU5nlMeioaD42/t1V0qgckP1xY8NWO5UTDaKeREFmrd+ht5fJf4UV+awT9qgWdVwBNtVdeHehpCz3U51UVLSF00yDyBOaYHnYSMusi4LwwdpgVqi6h7Pymg+SSKbrX9PjsLKHnis=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1765880349; c=relaxed/simple;
-	bh=Z5NejKRokFvRLLbsiNsAOdWAO6KfUAOCWTPlQ+whD2k=;
-	h=From:Date:To:cc:Subject:In-Reply-To:Message-ID:References:
-	 MIME-Version:Content-Type; b=GtgE6njWGX3pAEo6C7YtK3qw7M0/WeOgoTkVjmC5aGpTMIlXPjUgVQq24fMZeIjOAoq442g3fSMcsuyvpUbMfYEhWEEF3nu7D0zvHuhKghPUABSYOsbEGoPdUygcpIb2H5JQeHP0mRCTK9XT0dz0mlI1ARWI136nfhCPH0tZ3MA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=pass smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=WraMjXIQ; arc=none smtp.client-ip=198.175.65.9
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.intel.com
+	s=arc-20240116; t=1765880434; c=relaxed/simple;
+	bh=BEmeVYYIt531yB9sjEO4wda5zrTDvA0/l8rj0W/Kp/0=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=HLLiTokAu1Q884H7lGJ2K/VRrx/GHfODp0R3XtVltdeFRNOkU8gpXY/hGcpV36fUWoy3P0NOwfWNY6PnKCGJpgI8T2Kw5lut0g/yayXFGrwMomb++/tlaJr0OWwg5CmcmNAa2i0H8QjeLPhnB4PzlzuX7WwkdOZXlxJZwfmaNIc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=kHoMraAO; arc=none smtp.client-ip=209.85.210.175
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="WraMjXIQ"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1765880348; x=1797416348;
-  h=from:date:to:cc:subject:in-reply-to:message-id:
-   references:mime-version;
-  bh=Z5NejKRokFvRLLbsiNsAOdWAO6KfUAOCWTPlQ+whD2k=;
-  b=WraMjXIQtxC2nFPROcaXuOqAKo5lhxmI1MzPQS0i96TVu0wHtyevfrrd
-   ql9veRHNoYShOzYKJ7VBNiMFh+rSS1NO+SjygkG6I7PyXTUUofXFcfE81
-   pkyxjuQ2K68PLl0d3UY8cqD2ihPceEFEsfh/wD7RbPu7Wm27x51cRxmhT
-   H9ztScitcxKUWM/PFjVl/yLKSgBx2RDKX4Qvov0xT+43+L52FSStJX8/2
-   xiN2bGIGv6frV3N5B+D52XmRDwm4SGwOmiwsoeIXi7LyG8P71gjY2hwx9
-   NS1S6B20GnKMdN+QZtpYH8vfzvez0XLI4yJkA5cYYMaIzcysQ5zUOmGEZ
-   Q==;
-X-CSE-ConnectionGUID: 6K3lXc2JS5C9loFxsu0w0A==
-X-CSE-MsgGUID: 6mOvXUWxTleBEgREgtR0sQ==
-X-IronPort-AV: E=McAfee;i="6800,10657,11643"; a="90450604"
-X-IronPort-AV: E=Sophos;i="6.21,152,1763452800"; 
-   d="scan'208";a="90450604"
-Received: from fmviesa010.fm.intel.com ([10.60.135.150])
-  by orvoesa101.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 16 Dec 2025 02:19:07 -0800
-X-CSE-ConnectionGUID: GCN4nsqKTGK/xLte74/iPg==
-X-CSE-MsgGUID: jhkL+es+TM6aMX+GThKFxw==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.21,152,1763452800"; 
-   d="scan'208";a="198788628"
-Received: from ijarvine-mobl1.ger.corp.intel.com (HELO localhost) ([10.245.245.4])
-  by fmviesa010-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 16 Dec 2025 02:19:03 -0800
-From: =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
-Date: Tue, 16 Dec 2025 12:19:00 +0200 (EET)
-To: Nitin <nitjoshi@gmail.com>
-cc: kernel test robot <lkp@intel.com>, Hans de Goede <hansg@kernel.org>, 
-    oe-kbuild-all@lists.linux.dev, platform-driver-x86@vger.kernel.org, 
-    LKML <linux-kernel@vger.kernel.org>, njoshi1@lenovo.com, 
-    Mark Pearson <mpearson-lenovo@squebb.ca>
-Subject: Re: [PATCH v2 1/2] platform/x86: thinkpad_acpi: Add support to detect
- hardware damage detection capability.
-In-Reply-To: <213b3f29-09ee-4305-940b-89d4652101b1@gmail.com>
-Message-ID: <2433802f-ba32-1549-41f1-5a77e998c139@linux.intel.com>
-References: <20251210151133.7933-1-nitjoshi@gmail.com> <202512160219.94nMjvxO-lkp@intel.com> <213b3f29-09ee-4305-940b-89d4652101b1@gmail.com>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="kHoMraAO"
+Received: by mail-pf1-f175.google.com with SMTP id d2e1a72fcca58-7b852bb31d9so5065147b3a.0
+        for <platform-driver-x86@vger.kernel.org>; Tue, 16 Dec 2025 02:20:32 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1765880432; x=1766485232; darn=vger.kernel.org;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date:from:to
+         :cc:subject:date:message-id:reply-to;
+        bh=BEmeVYYIt531yB9sjEO4wda5zrTDvA0/l8rj0W/Kp/0=;
+        b=kHoMraAOkrTev+ccD528K/9Dnf1vTv2VmIt5uWY3Ihgl9dnCQtC1vPMQYfBcBNaoRG
+         wfi2UcYPEFvlgkJjc5UhA/LebBQ44kP8rlZvOVNgZHwf9Uj6y92UGa5igFwDuvNPC+Y3
+         WI8L3RDLJ6iQLgWkO4O5LUkT5ijkoMrTCOQ4sQ+sjFDLP0mVmR5VmiUNLS3PRLKIUFI9
+         +ZDWpEpcy0NiDv6ucmmIAQzM4/p+wn9aVp6KE/gKKWTqKJols6DoTX0GtUjYwjfNlHVF
+         DoWTudM+0SmRO5Ro/x97wKuc+uOfsWD7RhK/QnFAWiHC3pY8s4Lm0YJ9iuqtZ7TB/aOZ
+         EO0A==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1765880432; x=1766485232;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date:x-gm-gg
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=BEmeVYYIt531yB9sjEO4wda5zrTDvA0/l8rj0W/Kp/0=;
+        b=cdBT3XHSt1UEEaFv2RcS3M/UtW/W69Z6eR3/Sbws6LCUkBJ0NgbBaTujBK0IfOAtDj
+         qrOcrYbhM0qJBu3Zb8zeqwaKJxJfdnpvlEJzYyX3zyb5DCe791eNGTnWeNA2X8SPl01X
+         cq+USe+bVZsBaumQcZMlOIETq/vTl72YFTiSS+9Meqt43aE9mjcbwo9g1HxPnhRShgvc
+         b8g4TUJ5mta1wRfdtdGfbgU4RPR5B4W75CYzbRTEMGE7+V0lzNn6RbCm+e0aMlIDhP7t
+         JdJ0cjrob6tS2564HuVSwOQ960u46jcZGhohNVvmuf/EpO/TIJNElEGt3YetDtgvz90e
+         VKGA==
+X-Forwarded-Encrypted: i=1; AJvYcCVY1ZVSX8m2TQj/ipcVzxMA+4abRWyz4MQtecSfG52yWlfXMHLX3FpSC0XYaJgWABk8cfvNobgVjVF3NbXQOsMR/nF+@vger.kernel.org
+X-Gm-Message-State: AOJu0YzPFs+EoPwVEvmcH4Ik3e6pZNubQWmm8QFGzyae+QvACjnd6agF
+	ISNJMWKQ3izrNHST9Vo1JlqsqxKPpR/gmUMkUBr9mgnCuGsK4uFjph4TACrjiQt2
+X-Gm-Gg: AY/fxX5spiEQ3DBNgNyXeqFBxpw6Zzp1gaC7fXVaewPKCDlAMHKkha+55Xa+ioHW751
+	46aviG+tRoKaBhKmcGO7nDOoWOxOL/1iK1vroSJzixRLZh/9enRCkbsaPsa+lDkigM/gwhL6kF/
+	Qw3PS2TllBQBPPRIY3vi9C1gtIxSRHXNKnd3Px4MajJwB1lE4cHKoYYhnPgw33GOPEZy3x5yUco
+	p6a+zu+QrlAFfWhtCCrw9Qm5RsNab7NjC9MARdDSSsAC1Ci2z+sEZ7e18MF1IHDPK8Q6YmJF4yX
+	FbqCL9vhz2c1qYtB+fZteNmh/rpdzIavKF1gl9+zrHdhYNLJaw31pDu5BDfxhE9MT6V4Tir+IIV
+	3XzHMFjqc3jjnNUAE+978WHUnU6Yz8FEYyt/ORcpIG79Qb8RRrnTdor9Hez6GTX42622GK9lzUZ
+	nbG5IJZX36wHmWk1eaiuZj02U/7VO23Q==
+X-Google-Smtp-Source: AGHT+IH4odnvFRVnfVHIXJ0dxSTPX2H4aqjdD+4OmBwymdIXvKqL3rBkgog82uqCKCdNr5MSrxrdtw==
+X-Received: by 2002:a05:6a00:6ca1:b0:7a2:6b48:5359 with SMTP id d2e1a72fcca58-7f6679368f6mr14105309b3a.24.1765880431870;
+        Tue, 16 Dec 2025 02:20:31 -0800 (PST)
+Received: from archlinux ([2405:201:1b:225c:bd87:a308:8427:d21d])
+        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-7f4c566b3e3sm15106964b3a.66.2025.12.16.02.20.29
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 16 Dec 2025 02:20:31 -0800 (PST)
+Date: Tue, 16 Dec 2025 15:50:27 +0530
+From: Krishna Chomal <krishna.chomal108@gmail.com>
+To: Ilpo =?utf-8?B?SsOkcnZpbmVu?= <ilpo.jarvinen@linux.intel.com>
+Cc: Hans de Goede <hansg@kernel.org>, platform-driver-x86@vger.kernel.org
+Subject: Re: [PATCH] platform/x86: hp-wmi: fix platform profile values for
+ Omen 16-wf1xxx
+Message-ID: <aUEty81BD-FaT0Mj@archlinux>
+References: <20251213185107.179130-1-krishna.chomal108@gmail.com>
+ <6ae912bf-ceb9-b8cf-5e9b-831c91135a59@linux.intel.com>
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <6ae912bf-ceb9-b8cf-5e9b-831c91135a59@linux.intel.com>
 
-On Tue, 16 Dec 2025, Nitin wrote:
+Hi Ilpo,
 
-> Hello ,
-> 
-> On 12/16/25 10:19, kernel test robot wrote:
-> > Hi Nitin,
-> > 
-> > kernel test robot noticed the following build warnings:
-> > 
-> > [auto build test WARNING on linus/master]
-> > [also build test WARNING on v6.19-rc1 next-20251215]
-> > [If your patch is applied to the wrong git tree, kindly drop us a note.
-> > And when submitting patch, we suggest to use '--base' as documented in
-> > https://git-scm.com/docs/git-format-patch#_base_tree_information]
-> > 
-> > url:
-> > https://github.com/intel-lab-lkp/linux/commits/Nitin-Joshi/platform-x86-thinkpad_acpi-Add-sysfs-to-display-details-of-damaged-device/20251210-231409
-> > base:   linus/master
-> > patch link:
-> > https://lore.kernel.org/r/20251210151133.7933-1-nitjoshi%40gmail.com
-> > patch subject: [PATCH v2 1/2] platform/x86: thinkpad_acpi: Add support to
-> > detect hardware damage detection capability.
-> > reproduce:
-> > (https://download.01.org/0day-ci/archive/20251216/202512160219.94nMjvxO-lkp@intel.com/reproduce)
-> > 
-> > If you fix the issue in a separate patch/commit (i.e. not just a new version
-> > of
-> > the same patch/commit), kindly add following tags
-> > | Reported-by: kernel test robot <lkp@intel.com>
-> > | Closes:
-> > https://lore.kernel.org/oe-kbuild-all/202512160219.94nMjvxO-lkp@intel.com/
-> 
-> Thank you for reporting this issue and I will fix this issue .
-> 
-> I have already send patch v3 for this and will fix this warning in next patch
-> version i.e v4 .
-> 
-> May i know, if its OK to add this Reported-by and closes tag in patch version
-> v4 ?
+On Mon, Dec 15, 2025 at 04:25:17PM +0200, Ilpo Järvinen wrote:
+>Thank you for the patch but it looks this approach to add mappings using
+>if()s to handle variations should be replaced with something better.
 
-Hi,
+Thank you for the feedback. I agree that stacking if/else statements for
+board variations is not a scalable idea.
 
-Please only add those tags when you're fixing code that exists in a repo 
-already. For new work, we don't normally add lkp report tags despite the 
-email suggesting you to do so (I know it's a bit confusing but it's sort 
-of same as we don't normally mention all reviewers who gave improvement 
-suggestions either).
+For V2, I plan to refactor this driver to use DMI system ID table's
+driver_data field to handle the profile mapping (at least for
+victus_s_thermal_profile_boards in this patch).
 
-> > All warnings (new ones prefixed by >>):
-> > 
-> >     WARNING: No kernel-doc for file ./include/linux/pci.h
-> >     ERROR: Cannot find file ./include/linux/mod_devicetable.h
-> >     WARNING: No kernel-doc for file ./include/linux/mod_devicetable.h
-> >     ERROR: Cannot find file ./include/linux/bootconfig.h
-> >     WARNING: No kernel-doc for file ./include/linux/bootconfig.h
-> > > > Documentation/admin-guide/laptops/thinkpad-acpi.rst:1581: WARNING: Title
-> > > > underline too short.
-> > --
-> >     Hardware damage detection capability
-> >     ----------------- [docutils]
-> > > > Documentation/admin-guide/laptops/thinkpad-acpi.rst:1581: WARNING: Title
-> > > > underline too short.
-> 
-> Ack. Thank you !
-> 
-> > 
-> > vim +1581 Documentation/admin-guide/laptops/thinkpad-acpi.rst
-> > 
-> >    1579	
-> >    1580	Hardware damage detection capability
-> > > 1581	-----------------
-> >    1582	
-> > 
-> 
+The implementation will introduce a `struct thermal_profile_params` to
+hold the specific thermal values (Performance/Balanced/Low-Power). Then
+I can convert victus_s_thermal_profile_boards from a simple string
+array to a `struct dmi_system_id[]` array, where each entry maps a DMI
+Board Name to its specific thermal_profile_params via driver_data.
 
--- 
- i.
+Then platform_profile_victus_s_set_ec can simply retrieve the correct
+parameters via dmi_first_match(), removing the need for nested if()s.
 
+I feel this restructuring makes the code much cleaner and makes the
+thermal profile choice for new boards explicit. Does this plan look like
+the right direction for V2?
