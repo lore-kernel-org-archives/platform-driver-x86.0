@@ -1,118 +1,143 @@
-Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.9])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E69B62798ED;
-	Tue, 16 Dec 2025 06:38:04 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.137.202.133
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 647E2266B6B;
+	Tue, 16 Dec 2025 10:19:07 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.9
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1765867093; cv=none; b=h1LE1pSJ3jwfS2Zdue3l527EG6DeNVDEyulKazNRikdRLRS2IWDRtDyKhAb6b3HeohdFfxwNTc7kNL7dhWFDOGJnpubVuuj/m5RjP42AMYOE/X+oTCxjIPYiG4Py7UHDF9BxXcawFtbYFgV4Ip8B5pOUAXGYoVHkqL4ed+EzMQY=
+	t=1765880349; cv=none; b=JONbWit8MMk2c6EckFGkPN95EfvBNXUC2P9IzwLG7loPhv2i51axn0ZmU/WctSFpfMtuaMgRIYgyT4CxGzAn5NeM5DHYOmcITgEiB+SbBr5yX/KnTcePl1a2Tnxo3sNtfaypc/CfN/HncNZkEcnN0647Kwz+BIGs0ThLyjZkoic=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1765867093; c=relaxed/simple;
-	bh=k68jsUYEpYYTSTn0LkdWveaBvBBp7M+xkV63wPTjBCg=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version:Content-Type; b=OWkpnu0XaB6V71nytk58ubuwMkh7fUEA7BZffOxJsUj4o0NcBkVm8Mxr0hyCHYhTWW+/NXwYa/sEOgbMpnmBtyByrWCBD3It0xt/askNuR0kOZxEYfCS3GSKj+R5IuFm5D2bhtUchkHLCjWBDV5+8cqF74CK9jgQkyNcR9O0Ib0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=agraP6PX; arc=none smtp.client-ip=198.137.202.133
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=infradead.org
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=infradead.org
+	s=arc-20240116; t=1765880349; c=relaxed/simple;
+	bh=Z5NejKRokFvRLLbsiNsAOdWAO6KfUAOCWTPlQ+whD2k=;
+	h=From:Date:To:cc:Subject:In-Reply-To:Message-ID:References:
+	 MIME-Version:Content-Type; b=GtgE6njWGX3pAEo6C7YtK3qw7M0/WeOgoTkVjmC5aGpTMIlXPjUgVQq24fMZeIjOAoq442g3fSMcsuyvpUbMfYEhWEEF3nu7D0zvHuhKghPUABSYOsbEGoPdUygcpIb2H5JQeHP0mRCTK9XT0dz0mlI1ARWI136nfhCPH0tZ3MA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=pass smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=WraMjXIQ; arc=none smtp.client-ip=198.175.65.9
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="agraP6PX"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=infradead.org; s=bombadil.20210309; h=Content-Transfer-Encoding:
-	Content-Type:MIME-Version:Message-ID:Date:Subject:Cc:To:From:Sender:Reply-To:
-	Content-ID:Content-Description:In-Reply-To:References;
-	bh=r8GP7/PD03r3ea7LhUbPnxbrKUEXf9L+A08SlPs8K3A=; b=agraP6PX4vAcAYwTY7n2r3IKD7
-	jdmi9dRQkxrRLiqKLhvfj1Av1f1eAUn1+E5sH/NTkpXB+Af8GauGHR8uLl2HtkxkKR5w0xWRZXoes
-	UNItuD9BASx/6ILweuDdcGybZZfUcu/BlbxgbEh/de3AjzlEqPFB/8zkQJ3gs9PDaHrMl1j/Vtuv0
-	WTeQkkuml4fKeA/z+wn7g0+LB6tp99phyHGaBT3qm/vTrBjkODD+DCaZvbmRJMhQbjgHbjSvFsLjj
-	sTgMTKr5tADSacDlnmfYp6uiisyPUad4QOilRzwDkXiER4G1AsPDl2WsDgD5iVF6sNn7O3UHerp+h
-	sfPvFehQ==;
-Received: from [50.53.43.113] (helo=bombadil.infradead.org)
-	by bombadil.infradead.org with esmtpsa (Exim 4.98.2 #2 (Red Hat Linux))
-	id 1vVOh8-00000004nFX-3Bqu;
-	Tue, 16 Dec 2025 06:38:02 +0000
-From: Randy Dunlap <rdunlap@infradead.org>
-To: linux-kernel@vger.kernel.org
-Cc: Randy Dunlap <rdunlap@infradead.org>,
-	"David E. Box" <david.e.box@linux.intel.com>,
-	Hans de Goede <hansg@kernel.org>,
-	=?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>,
-	platform-driver-x86@vger.kernel.org
-Subject: [PATCH v2] platform/x86/intel/vsec: correct kernel-doc comments
-Date: Mon, 15 Dec 2025 22:38:00 -0800
-Message-ID: <20251216063801.2896495-1-rdunlap@infradead.org>
-X-Mailer: git-send-email 2.52.0
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="WraMjXIQ"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1765880348; x=1797416348;
+  h=from:date:to:cc:subject:in-reply-to:message-id:
+   references:mime-version;
+  bh=Z5NejKRokFvRLLbsiNsAOdWAO6KfUAOCWTPlQ+whD2k=;
+  b=WraMjXIQtxC2nFPROcaXuOqAKo5lhxmI1MzPQS0i96TVu0wHtyevfrrd
+   ql9veRHNoYShOzYKJ7VBNiMFh+rSS1NO+SjygkG6I7PyXTUUofXFcfE81
+   pkyxjuQ2K68PLl0d3UY8cqD2ihPceEFEsfh/wD7RbPu7Wm27x51cRxmhT
+   H9ztScitcxKUWM/PFjVl/yLKSgBx2RDKX4Qvov0xT+43+L52FSStJX8/2
+   xiN2bGIGv6frV3N5B+D52XmRDwm4SGwOmiwsoeIXi7LyG8P71gjY2hwx9
+   NS1S6B20GnKMdN+QZtpYH8vfzvez0XLI4yJkA5cYYMaIzcysQ5zUOmGEZ
+   Q==;
+X-CSE-ConnectionGUID: 6K3lXc2JS5C9loFxsu0w0A==
+X-CSE-MsgGUID: 6mOvXUWxTleBEgREgtR0sQ==
+X-IronPort-AV: E=McAfee;i="6800,10657,11643"; a="90450604"
+X-IronPort-AV: E=Sophos;i="6.21,152,1763452800"; 
+   d="scan'208";a="90450604"
+Received: from fmviesa010.fm.intel.com ([10.60.135.150])
+  by orvoesa101.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 16 Dec 2025 02:19:07 -0800
+X-CSE-ConnectionGUID: GCN4nsqKTGK/xLte74/iPg==
+X-CSE-MsgGUID: jhkL+es+TM6aMX+GThKFxw==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.21,152,1763452800"; 
+   d="scan'208";a="198788628"
+Received: from ijarvine-mobl1.ger.corp.intel.com (HELO localhost) ([10.245.245.4])
+  by fmviesa010-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 16 Dec 2025 02:19:03 -0800
+From: =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
+Date: Tue, 16 Dec 2025 12:19:00 +0200 (EET)
+To: Nitin <nitjoshi@gmail.com>
+cc: kernel test robot <lkp@intel.com>, Hans de Goede <hansg@kernel.org>, 
+    oe-kbuild-all@lists.linux.dev, platform-driver-x86@vger.kernel.org, 
+    LKML <linux-kernel@vger.kernel.org>, njoshi1@lenovo.com, 
+    Mark Pearson <mpearson-lenovo@squebb.ca>
+Subject: Re: [PATCH v2 1/2] platform/x86: thinkpad_acpi: Add support to detect
+ hardware damage detection capability.
+In-Reply-To: <213b3f29-09ee-4305-940b-89d4652101b1@gmail.com>
+Message-ID: <2433802f-ba32-1549-41f1-5a77e998c139@linux.intel.com>
+References: <20251210151133.7933-1-nitjoshi@gmail.com> <202512160219.94nMjvxO-lkp@intel.com> <213b3f29-09ee-4305-940b-89d4652101b1@gmail.com>
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=US-ASCII
 
-Fix kernel-doc warnings in intel_vsec.h to eliminate all kernel-doc
-warnings:
+On Tue, 16 Dec 2025, Nitin wrote:
 
-Warning: include/linux/intel_vsec.h:92 struct member 'read_telem' not
- described in 'pmt_callbacks'
-Warning: include/linux/intel_vsec.h:146 expecting prototype for struct
- intel_sec_device.  Prototype was for struct intel_vsec_device instead
-Warning: include/linux/intel_vsec.h:146 struct member 'priv_data_size'
- not described in 'intel_vsec_device'
+> Hello ,
+> 
+> On 12/16/25 10:19, kernel test robot wrote:
+> > Hi Nitin,
+> > 
+> > kernel test robot noticed the following build warnings:
+> > 
+> > [auto build test WARNING on linus/master]
+> > [also build test WARNING on v6.19-rc1 next-20251215]
+> > [If your patch is applied to the wrong git tree, kindly drop us a note.
+> > And when submitting patch, we suggest to use '--base' as documented in
+> > https://git-scm.com/docs/git-format-patch#_base_tree_information]
+> > 
+> > url:
+> > https://github.com/intel-lab-lkp/linux/commits/Nitin-Joshi/platform-x86-thinkpad_acpi-Add-sysfs-to-display-details-of-damaged-device/20251210-231409
+> > base:   linus/master
+> > patch link:
+> > https://lore.kernel.org/r/20251210151133.7933-1-nitjoshi%40gmail.com
+> > patch subject: [PATCH v2 1/2] platform/x86: thinkpad_acpi: Add support to
+> > detect hardware damage detection capability.
+> > reproduce:
+> > (https://download.01.org/0day-ci/archive/20251216/202512160219.94nMjvxO-lkp@intel.com/reproduce)
+> > 
+> > If you fix the issue in a separate patch/commit (i.e. not just a new version
+> > of
+> > the same patch/commit), kindly add following tags
+> > | Reported-by: kernel test robot <lkp@intel.com>
+> > | Closes:
+> > https://lore.kernel.org/oe-kbuild-all/202512160219.94nMjvxO-lkp@intel.com/
+> 
+> Thank you for reporting this issue and I will fix this issue .
+> 
+> I have already send patch v3 for this and will fix this warning in next patch
+> version i.e v4 .
+> 
+> May i know, if its OK to add this Reported-by and closes tag in patch version
+> v4 ?
 
-In struct pmt_callbacks, correct the kernel-doc for @read_telem.
-kernel-doc doesn't support documenting callback function parameters,
-so drop the '@' signs on those and use "* *" to make them somewhat
-readable in the produced documentation output.
+Hi,
 
-Signed-off-by: Randy Dunlap <rdunlap@infradead.org>
----
-v2: make changes to the callback fn parameters as requested by Ilpo.
+Please only add those tags when you're fixing code that exists in a repo 
+already. For new work, we don't normally add lkp report tags despite the 
+email suggesting you to do so (I know it's a bit confusing but it's sort 
+of same as we don't normally mention all reviewers who gave improvement 
+suggestions either).
 
-Cc: David E. Box <david.e.box@linux.intel.com>
-Cc: Hans de Goede <hansg@kernel.org>
-Cc: Ilpo Järvinen <ilpo.jarvinen@linux.intel.com>
-Cc: platform-driver-x86@vger.kernel.org
----
- include/linux/intel_vsec.h |   17 +++++++++--------
- 1 file changed, 9 insertions(+), 8 deletions(-)
+> > All warnings (new ones prefixed by >>):
+> > 
+> >     WARNING: No kernel-doc for file ./include/linux/pci.h
+> >     ERROR: Cannot find file ./include/linux/mod_devicetable.h
+> >     WARNING: No kernel-doc for file ./include/linux/mod_devicetable.h
+> >     ERROR: Cannot find file ./include/linux/bootconfig.h
+> >     WARNING: No kernel-doc for file ./include/linux/bootconfig.h
+> > > > Documentation/admin-guide/laptops/thinkpad-acpi.rst:1581: WARNING: Title
+> > > > underline too short.
+> > --
+> >     Hardware damage detection capability
+> >     ----------------- [docutils]
+> > > > Documentation/admin-guide/laptops/thinkpad-acpi.rst:1581: WARNING: Title
+> > > > underline too short.
+> 
+> Ack. Thank you !
+> 
+> > 
+> > vim +1581 Documentation/admin-guide/laptops/thinkpad-acpi.rst
+> > 
+> >    1579	
+> >    1580	Hardware damage detection capability
+> > > 1581	-----------------
+> >    1582	
+> > 
+> 
 
---- linux-next-20251210.orig/include/linux/intel_vsec.h
-+++ linux-next-20251210/include/linux/intel_vsec.h
-@@ -80,13 +80,13 @@ enum intel_vsec_quirks {
- 
- /**
-  * struct pmt_callbacks - Callback infrastructure for PMT devices
-- * ->read_telem() when specified, called by client driver to access PMT data (instead
-- * of direct copy).
-- * @pdev:  PCI device reference for the callback's use
-- * @guid:  ID of data to acccss
-- * @data:  buffer for the data to be copied
-- * @off:   offset into the requested buffer
-- * @count: size of buffer
-+ * @read_telem: when specified, called by client driver to access PMT
-+ * data (instead of direct copy).
-+ * * pdev:  PCI device reference for the callback's use
-+ * * guid:  ID of data to acccss
-+ * * data:  buffer for the data to be copied
-+ * * off:   offset into the requested buffer
-+ * * count: size of buffer
-  */
- struct pmt_callbacks {
- 	int (*read_telem)(struct pci_dev *pdev, u32 guid, u64 *data, loff_t off, u32 count);
-@@ -120,7 +120,7 @@ struct intel_vsec_platform_info {
- };
- 
- /**
-- * struct intel_sec_device - Auxbus specific device information
-+ * struct intel_vsec_device - Auxbus specific device information
-  * @auxdev:        auxbus device struct for auxbus access
-  * @pcidev:        pci device associated with the device
-  * @resource:      any resources shared by the parent
-@@ -128,6 +128,7 @@ struct intel_vsec_platform_info {
-  * @num_resources: number of resources
-  * @id:            xarray id
-  * @priv_data:     any private data needed
-+ * @priv_data_size: size of private data area
-  * @quirks:        specified quirks
-  * @base_addr:     base address of entries (if specified)
-  * @cap_id:        the enumerated id of the vsec feature
+-- 
+ i.
+
