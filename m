@@ -1,127 +1,114 @@
-Received: from mail-244116.protonmail.ch (mail-244116.protonmail.ch [109.224.244.116])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AA1941E520C;
-	Wed, 17 Dec 2025 19:20:05 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=109.224.244.116
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C835025333F;
+	Wed, 17 Dec 2025 23:56:57 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1765999208; cv=none; b=j4g6moYnF5trpuoz65yXPhQIthRmPCMx7QtDSAjgcqdlnTu+H/ThNJCMnZ+ulbeL1KKs6XwpSW2/sgjfHBEJjltqFOK2eqEK8M1e9PThwTg3mSaNho63Y22ABHmdRpfWePP8tBV+/RDCtj8NkEilUbXyhnKyHVAxBAno3QKYt94=
+	t=1766015817; cv=none; b=NMMEskfjqhioHBO2cmnUY7Lz1pUkqCwHvfUaq9cbnOL0BSJvOqDp+QS6qzgxJ16DURu4w033hRUfSNhvcf76mC+7tU7DxS4mve7iWNy0ZulL4nmodbsA3Nn/zJHVcXJkYXdDbHpGjgLFljZ/9q3guZ5ZtpyNIsDFljfw1UfCxN8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1765999208; c=relaxed/simple;
-	bh=1+wQu3DU4CveI1Mh+k8iA2Z1S2uievEyjDzxJ+b0qXk=;
-	h=Date:To:From:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=rRZjvrhxk5SS87qZwuUJALFsPqRB2Dp66fPdbAea/uE30hxJOkgchRY+0tsIVjyGHkQ5bYEJz1iXHLxLyEfq83bHO3CgyijuuW5ktI4/uAkjOxO5d2zvee71U7SelS1O+s1LBD0krAZvC5yE22OFW6+Tktf3TmzoCPeqW/4vHxg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=protonmail.com; spf=pass smtp.mailfrom=protonmail.com; dkim=pass (2048-bit key) header.d=protonmail.com header.i=@protonmail.com header.b=OLmNAUZe; arc=none smtp.client-ip=109.224.244.116
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=protonmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=protonmail.com
+	s=arc-20240116; t=1766015817; c=relaxed/simple;
+	bh=97wia3zS1qlYRADNyWZ1Dearx5E9Qhtfzmpsvc4CY1U=;
+	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
+	 In-Reply-To:To:Cc; b=hGgPyvbMlf5rEbmie9BMF/vNlQYTLtKq3X3fBzwvjkXr66wdXRfZECbhYzBbTg7JlnAnjdWqx55C7SfpRqUPs7fc12475hDtis2axhAntEqKR9dQl9CAYs1t6+E6hXoToWaQ650LA33m5cvtk4bY6+CaL/k1UoG4t0iGoEKuY80=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=sZ7PPPAS; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=protonmail.com header.i=@protonmail.com header.b="OLmNAUZe"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=protonmail.com;
-	s=protonmail3; t=1765999202; x=1766258402;
-	bh=SxDHQdz0UsAAfomsYBxGUPDOxZEVHiqHRxjT3siJq0Y=;
-	h=Date:To:From:Cc:Subject:Message-ID:In-Reply-To:References:
-	 Feedback-ID:From:To:Cc:Date:Subject:Reply-To:Feedback-ID:
-	 Message-ID:BIMI-Selector;
-	b=OLmNAUZeqWq7HeJDwGUR9ZexOwdIfVY0lTN3vV8I7B5fsJ1Y74OnrPVVULnJHJTPc
-	 bm1PViGhKNofLwWUu9psDlsj+J69cNFQy+6JLWz5ZTUt2qrRtcceGOwMXL8w8ilstY
-	 nhQFJSZc7lDyq5D20eQYYgkti9k1NcO8qMKkpOdphN+ZmbUMqar9hVnLBt6qgcE69s
-	 73vkTNXYx9ZfYwe2hLPE2faJRbjcSXDUn2bz6HaZAiPj+n4AjUXPswgDoRE8DkmVt8
-	 K6hGP0cR0/pXrcEexJNvDtx+sqOp4LUOX5yt5/fiT+Eto5U+XARqPy3rzohbOCn696
-	 TkmQbb35ISf4A==
-Date: Wed, 17 Dec 2025 19:19:56 +0000
-To: Mario Limonciello <superm1@kernel.org>
-From: Francesco Lauritano <francesco.lauritano1@protonmail.com>
-Cc: Hans de Goede <hansg@kernel.org>, "linux-acpi@vger.kernel.org" <linux-acpi@vger.kernel.org>, "open list:GPIO ACPI SUPPORT" <linux-gpio@vger.kernel.org>, "platform-driver-x86@vger.kernel.org" <platform-driver-x86@vger.kernel.org>, "westeri@kernel.org" <westeri@kernel.org>
-Subject: Re: [BUG] 36-second boot delay due to by acpi_gpio_handle_deferred_request_irqs on ASUS ROG Strix G16 (2025)
-Message-ID: <ReQS8sQSGy3UTuG6tyPvoOb8_037sC6A2yXsSFNuXY1PlTFtCcDHnjf8vufEsk8avBSIL46U0qE-ZjTJD1xsbVYZ6_d2-wlTOZ2NJ2coTsc=@protonmail.com>
-In-Reply-To: <e8ed4d4e-37e1-4577-bf80-62fcefbef7dc@kernel.org>
-References: <2kSCn4XaoXsXJ3EUR0syTdmip8Z1cBuUr0Br4sFVnwnsA8q4GlhiHOmsJkeBxvxYoLnetp4r44wIPXw42yTAFl-BtMROnIwR-NkckKgA5EY=@protonmail.com> <6iFCwGH2vssb7NRUTWGpkubGMNbgIlBHSz40z8ZsezjxngXpoiiRiJaijviNvhiDAGIr43bfUmdxLmxYoHDjyft4DgwFc3Pnu5hzPguTa0s=@protonmail.com> <4402ed86-77f5-4a47-a9e1-8d57a709bb15@kernel.org> <woxnPhTYiKi2aLzBK8GnO8DpvdgYjQc-P42uhJOzyrcYC3Gdstht27hML8yNHgOklhm2MgGA7wt9gGZ17BHoWlG0vqJuVVJDgCSev8udfds=@protonmail.com> <NIIS8XD_nSRvp36X39GxcDRAWsaScQIFx6o9JsFCbyBZk5PqznRdxg9EDDb_9tzWd5TcjzxrRtFx5_uLCVa5wJAYykW2k0Ue_XPMPtWCQiY=@protonmail.com> <e8ed4d4e-37e1-4577-bf80-62fcefbef7dc@kernel.org>
-Feedback-ID: 66654272:user:proton
-X-Pm-Message-ID: e296eaddc6befbe5480d0ef28284d40fa59a5ac2
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="sZ7PPPAS"
+Received: by smtp.kernel.org (Postfix) with ESMTPS id 7582FC116C6;
+	Wed, 17 Dec 2025 23:56:57 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1766015817;
+	bh=97wia3zS1qlYRADNyWZ1Dearx5E9Qhtfzmpsvc4CY1U=;
+	h=From:Date:Subject:References:In-Reply-To:To:Cc:Reply-To:From;
+	b=sZ7PPPASDFFO8yLqhmWDxlKm6HjerwDesovkOoIKUtnR5jSrZEx1ZDWXM3nmP5XVA
+	 aVSZhEL9zj+dbNmSVz9GpvRBltUqClg4aj/KmBi8yLg4MAVMygmtN1VkyCjNmrLB1z
+	 kTZiXNwoEq36yTaaaZxYyC4dvhXYwd8UIrceKny017cHI2KbBJGMRDdOoLCBTEuAug
+	 YaNX8zE8CJecCugGsM3GfyI8MS/u4SXhd51eAtju/4xqgUpFORC8TBttpiDKXbdosy
+	 jKOm5zCd51p3jkLza5kr8dYnf2rXiaUmbIhWJmBpKodAqMKdIiAC97GLcNKEaCPTg6
+	 YGVV+UP7c0xOA==
+Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 63876D68BC6;
+	Wed, 17 Dec 2025 23:56:57 +0000 (UTC)
+From: =?utf-8?q?J=C3=A9r=C3=B4me_de_Bretagne_via_B4_Relay?= <devnull+jerome.debretagne.gmail.com@kernel.org>
+Date: Thu, 18 Dec 2025 00:56:37 +0100
+Subject: [PATCH v3 1/6] dt-bindings: arm: qcom: Document Microsoft Surface
+ Pro 11
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 8bit
+Message-Id: <20251218-surface-sp11-for-next-v3-1-875afc7bd3b7@gmail.com>
+References: <20251218-surface-sp11-for-next-v3-0-875afc7bd3b7@gmail.com>
+In-Reply-To: <20251218-surface-sp11-for-next-v3-0-875afc7bd3b7@gmail.com>
+To: Bjorn Andersson <andersson@kernel.org>, 
+ Konrad Dybcio <konradybcio@kernel.org>, Rob Herring <robh@kernel.org>, 
+ Krzysztof Kozlowski <krzk+dt@kernel.org>, 
+ Conor Dooley <conor+dt@kernel.org>, 
+ Johannes Berg <johannes@sipsolutions.net>, 
+ Lorenzo Bianconi <lorenzo@kernel.org>, 
+ Maximilian Luz <luzmaximilian@gmail.com>, Hans de Goede <hansg@kernel.org>, 
+ =?utf-8?q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>, 
+ Jeff Johnson <jjohnson@kernel.org>
+Cc: linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org, 
+ linux-kernel@vger.kernel.org, linux-wireless@vger.kernel.org, 
+ platform-driver-x86@vger.kernel.org, ath12k@lists.infradead.org, 
+ Dale Whinham <daleyo@gmail.com>, 
+ =?utf-8?q?J=C3=A9r=C3=B4me_de_Bretagne?= <jerome.debretagne@gmail.com>
+X-Mailer: b4 0.14.2
+X-Developer-Signature: v=1; a=ed25519-sha256; t=1766015816; l=1359;
+ i=jerome.debretagne@gmail.com; s=20251217; h=from:subject:message-id;
+ bh=qhZGa2NeEFuwnlmtetVVgl3HuNxZv/a5Bxw1IkCiHVY=;
+ b=B5FfylNnd9JStM4MWLyxTQ8KbZQ+xR+ncPAvrCe1feg7LFBArZWMSVMQP9uxrP4U+FzK0W+a5
+ Mv2GLTwX9smDRgjjVOk7yG9oN6Mxks5iqDQr/vSEKvQCUvGjA1hW8sG
+X-Developer-Key: i=jerome.debretagne@gmail.com; a=ed25519;
+ pk=DcPD9n3oDMsPkt+12tU96swmGb5H86cxt+yiEVcUEGk=
+X-Endpoint-Received: by B4 Relay for jerome.debretagne@gmail.com/20251217
+ with auth_id=580
+X-Original-From: =?utf-8?q?J=C3=A9r=C3=B4me_de_Bretagne?= <jerome.debretagne@gmail.com>
+Reply-To: jerome.debretagne@gmail.com
 
-On Wednesday, December 17th, 2025 at 7:01 PM, Mario Limonciello <superm1@ke=
-rnel.org> wrote:
+From: Jérôme de Bretagne <jerome.debretagne@gmail.com>
 
-> On 12/17/25 10:57 AM, Francesco Lauritano wrote:
->=20
-> > On Wednesday, December 17th, 2025 at 4:12 PM, Francesco Lauritano franc=
-esco.lauritano1@protonmail.com wrote:
-> >=20
-> > > The _AEI defines 5 GPIO interrupts. Narrowed it down to two:
-> > >=20
-> > > gpiolib_acpi.ignore_interrupt=3DAMDI0030:00@21,AMDI0030:00@24
-> > >=20
-> > > This fixes the delay. Pins 0x15 and 0x18 both call: \_SB.PCI0.SBRG.HN=
-C0()
-> >=20
-> > Traced it further. HNC0(pin, 0) takes the Else branch and calls:
-> > ATKM(0xC0)
-> > ADTM(Zero)
-> >=20
-> > ADTM calls NOD2(), which is the actual culprit:
-> >=20
-> > While ((Arg0 !=3D RDNT))
-> > {
-> > If ((Local0 >=3D 0x0F)) { Break }
-> > Notify (^^GPP0.PEGP, Arg0)
-> > Local0++
-> > Sleep (Local0 * 0x64)
-> > }
-> >=20
-> > It notifies the dGPU and polls RDNT, sleeping 100, 200, ... 1500ms per =
-iteration.
-> > Max 15 loops =3D ~12s per pin. GPU doesn't respond at boot so it maxes =
-out.
-> >=20
-> > Two pins, ~12s each, ~24-36s total.
-> >=20
-> > Francesco
->=20
->=20
-> Any idea why isn't the dGPU responding? I would have expected
-> https://git.kernel.org/torvalds/c/4d4c10f763d78 sets up policy that it's
-> in D0.
->=20
-> Is the dGPU turned off in BIOS or through some reverse engineered
-> tool/API or something?
+Add the compatibles for the Qualcomm-based Microsoft Surface Pro 11,
+using its Denali codename.
 
-dmesg without the workaround:
-[    1.005184] pci 0000:01:00.0: PME# supported from D0 D3hot
-[    1.288811] pci 0000:01:00.0: vgaarb: VGA device added
-[   38.250139] nvidia: loading out-of-tree module taints kernel.
-[   38.369358] nvidia 0000:01:00.0: enabling device (0000 -> 0003)
-[   39.744421] NVRM: GPS ACPI DSM called before _acpiDsmSupportedFuncCacheI=
-nit
+The LCD models are using the Qualcomm Snapdragon X1 Plus (X1P64100),
+the OLED ones are using the Qualcomm Snapdragon X1 Elite (X1E80100).
 
-GPU is in D0 from 1.0s. nvidia loads at 38.2s after the GPIO hang completes=
-.
+Due to the difference in how the built-in panel is being handled
+between the OLED variant and LCD one, it is required to have two
+separate DTBs, so document the compatible string for both variants.
 
-No weird tools/APIs besides userspace utils (asusctl/supergfxctl).=20
+Signed-off-by: Jérôme de Bretagne <jerome.debretagne@gmail.com>
+---
+ Documentation/devicetree/bindings/arm/qcom.yaml | 8 ++++++++
+ 1 file changed, 8 insertions(+)
 
-No changes to BIOS factory defaults other than disabling Fast Boot.
-dGPU is active, Display Mode is Dynamic (hybrid).
+diff --git a/Documentation/devicetree/bindings/arm/qcom.yaml b/Documentation/devicetree/bindings/arm/qcom.yaml
+index d84bd3bca2010508a8225b9549d8c634efa06531..7c99bc0d3aae3dc6e9c08fef0a535e114a3297a8 100644
+--- a/Documentation/devicetree/bindings/arm/qcom.yaml
++++ b/Documentation/devicetree/bindings/arm/qcom.yaml
+@@ -1067,6 +1067,14 @@ properties:
+           - const: qcom,x1e78100
+           - const: qcom,x1e80100
+ 
++      - items:
++          - enum:
++              - microsoft,denali-lcd
++              - microsoft,denali-oled
++          - const: microsoft,denali
++          - const: qcom,x1p64100
++          - const: qcom,x1e80100
++
+       - items:
+           - enum:
+               - asus,vivobook-s15
 
-Traced RDNT - it's set by GPS function 19 in the ACPI tables:
-Case (0x13)
-{
-    Debug =3D "GPS fun 19"
-    \_SB.PCI0.SBRG.RDNT =3D (Local1 + 0xD1)
-}
+-- 
+2.47.3
 
-As far as I can understand GPIO initcall blocks at late_initcall_sync, prev=
-enting nvidia=20
-from loading in time to respond. Based on the timing, GPU is awake but noth=
-ing can=20
-register a handler while kernel is stuck at NOD2 polling loop.
-
-Thanks,
-Francesco
 
