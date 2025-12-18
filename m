@@ -1,163 +1,113 @@
-Received: from mail-qk1-f180.google.com (mail-qk1-f180.google.com [209.85.222.180])
+Received: from mail-pf1-f173.google.com (mail-pf1-f173.google.com [209.85.210.173])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B73C82EA173
-	for <platform-driver-x86@vger.kernel.org>; Thu, 18 Dec 2025 08:04:46 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.222.180
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DBAAA4C79
+	for <platform-driver-x86@vger.kernel.org>; Thu, 18 Dec 2025 08:26:38 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.173
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1766045088; cv=none; b=or7KFpG/aYMQevbDU5AGbN21A9FVZvI5Fe9SpD5QQayEXX7abMrsRcuBF/rUr2mxqEZ11G9iTUANbNd1AxYdS/BwmQOv6/nNEYPOWIvxV/qXzsitIlSuLqkvlFsMkrTRtGl5SjlWLIF7Hx14FtcrOvIl+nSuIlYAZOnezDpVKOU=
+	t=1766046401; cv=none; b=iSQWmZ0ds/VgUgFmxjjlqWhJZvjLkpp/sB5YsWP9pnU0zetw/fN2hn/uAmeuUKXcMKq//GxaD/8pRriAPgxzIxDPsYsyP14zAjuHsh4UDMTEGbvoZVE28vjiLLsVoJbk4krCxDfkXMwBHgoQV0x1ojlqKSVyH5JxUrQyPKa6W9M=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1766045088; c=relaxed/simple;
-	bh=EUWA9vBS/8Bj7ML6MIoqvCIK0kHU15G6PnmKBfCoYhk=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=a6Tsl6JqhQa+oYN+O5qKu46PehCEKG1XuqBaQ6Nu1Aj65ckdSR8q3yVgcM+wf0xcSGuTqfq6KUE9fPWxlKJLHzQeFunENXdw8go6/GU5rtoUOV+N8o48aV3ce76DOjHHF7D3/rujz4qtMisTxh/jlhT775vk/8lgAdQFwlal6MU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=guQfAe+x; arc=none smtp.client-ip=209.85.222.180
+	s=arc-20240116; t=1766046401; c=relaxed/simple;
+	bh=TafDWPGT2uac8tFoxqnsQMcCLC1BWRvN6Nvuh1FCZvY=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=aMxSO8Erqu/ZX65HX89RtQoXTJ4aHIpcBoCYq7laB69b1WuhWPMZXAn3oGZyi9MZwdDyEewrTKBm9dgWTBsV7gD+eB7hmIEi6pwtT6c6D1Q4/C8fB4KPsBhN2dFhsuO5WsD3O5nltqi5gfJmRHxgROXigD0gx4bwQC/RWw6H8FY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=OFpBIzrq; arc=none smtp.client-ip=209.85.210.173
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="guQfAe+x"
-Received: by mail-qk1-f180.google.com with SMTP id af79cd13be357-8b602811a01so43669285a.2
-        for <platform-driver-x86@vger.kernel.org>; Thu, 18 Dec 2025 00:04:46 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="OFpBIzrq"
+Received: by mail-pf1-f173.google.com with SMTP id d2e1a72fcca58-7d26a7e5639so472505b3a.1
+        for <platform-driver-x86@vger.kernel.org>; Thu, 18 Dec 2025 00:26:38 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1766045085; x=1766649885; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=ZFatZ2cHC57MPqYi+kElcilUE7e6ABilLQQM4w6mW4c=;
-        b=guQfAe+xdwIYVfnbl2P7NeYl3RvgnZekq458I5TSmauxRj5I+LyEX55C/jdUJ5oWam
-         G+MVsWqfq0pBytYwhNN4JP8C2wcMHedfZWuzrxrbbXaM79o/8XK/aFCpk1F9Sag+iOpx
-         PYlgzDONeJ4y6ME8qfcl1lln+VevTT+bBe7w+Ei/WAEa36ZrRpSeLJHmeyACAbs2jVJi
-         fcnTiLyxZ3k3cC4/pdjhHooxB4S+ZXHre+u8oqtXlWB3JmT4S/mzgP6W2Ra4BIP0b8C/
-         pKfiqvsfsBRJ+6BleZ4f4WwL4spYglq9PqfOWqiv08YFkh2sMKdGz+p3jCNSyDKqV7HF
-         7zkA==
+        d=gmail.com; s=20230601; t=1766046397; x=1766651197; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=sQJUNYwC1e0jDgeb4YzHJlg75Gqr1c7azJgTBpIUepQ=;
+        b=OFpBIzrqcDVFV0/PY+yfRUcdnr1QZ8fxnzG73HDhVfWHD+9988IUplvLYH1NTe0FED
+         /2Ag0FTVCfolaO11BeI8lAhLwtS6NVzav2i7rMifG5ET7BAcnbVjvNv8bO37Zb3ewVB1
+         b2/gPnudS+W3G+FjWy8zrtDVVjIKJUNdpkcwVgmicQ37plQqVhbyuaJtoAYvPeoDkQGf
+         wm6oy8xxOI88OAECn8AkVRiX1XXnNpSLounbzXQWoxWpakECB0PBJu0QlLqUIBImlxmQ
+         377/QgOjaHWT+XTs3CumgqYeOQ0taXQ1nXcVQ4w3FwEkHUkx5gTq/pw59jldWcdpj6KR
+         LCEQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1766045085; x=1766649885;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-gg:x-gm-message-state:from
-         :to:cc:subject:date:message-id:reply-to;
-        bh=ZFatZ2cHC57MPqYi+kElcilUE7e6ABilLQQM4w6mW4c=;
-        b=RZTnJ0ITBq8HxzaUcqUAlf3q6nDRkxZYZJFymctO9DzVgVNmvSCet0lq7fXaXeaPk3
-         SWyfmHIR438WMwy1ZCHdahwL9svfnqUTSUJI8YFWrV69n3iMux9oc9Qw4SdlcJ46sQgI
-         wYMDrsMEAlqnSaJdEzj9T+EBv8fx2ohMPF2jtYHaWgNB2nkr6cV7zg6PLG5sN/sVkXmu
-         MXLI0okVRSFumT3azk3H19BaWfxiEc8O0bhBmNR9CoC7QQOAf7D1u0yHdIvyhhCrxjxE
-         wquZrYq5ZJvSrEZlj6WfVdjnPiPe5lHL1tFrMUq/GITv8apZWQOz+SfHSIADL5suNjZT
-         mEUQ==
-X-Forwarded-Encrypted: i=1; AJvYcCVVKhFmpGS23yY9osUqzK915ZJ+fVHgdNEKhKpMNYrVzNjqm6AcV0x6kh6aWzVGGDrJ1MTiq9hPMGK0iW2xRpWWEfUW@vger.kernel.org
-X-Gm-Message-State: AOJu0Ywn7C6m6jhAPIvDYt6jNhDyPMn7/gwgNXBQjrkb9zE9q0kppiFC
-	qajwoLS5mAIelYBcngLS6GnmmfQ28StLo12nbTMSeFs7AxOO2Bo33d9rTaT6jvYaehRKe0YGgrp
-	K6IXf8rud8ArjB/JT+RvvteiLXgoPVw==
-X-Gm-Gg: AY/fxX4IjgzsmVUXXXn1IydR/QvvlzXeaSJsQpvFLeG/TL/2QNgqi9umQHuJqKuammg
-	4/pQxTKBzVClOvQ2gg9IWleL5ZNn5jGtZFgQac1jU5nUIPdc+t4D964iFxNhieXlh+hDZZeOv1f
-	sCwlKsFH653ELHhDabJhvGehMsZzWPziFJRDrY4yh+cTONgGAYtnVc/L93VzBDcgL8eDotSEMeu
-	eYYHRFg8j8Z0GLu2v/ozSs7H7yoRLlzS5LZFv+7Hh6lDNV+td9kmRSX0/N0tmvIpYOopz90ZpSY
-	fYOLShByqRZEB7QqEZpS7QunuIj7+R03
-X-Google-Smtp-Source: AGHT+IGeR69NlMrzzWAKf9Swns5oCRSmbi6pAM+ySzcMfeKthzzgVomUQBx8U3ObrUEQapivifkUsz3RXTHr8lctfyo=
-X-Received: by 2002:a05:620a:460a:b0:8b2:e179:feb7 with SMTP id
- af79cd13be357-8bb3a36d2c1mr2973617185a.49.1766045085533; Thu, 18 Dec 2025
- 00:04:45 -0800 (PST)
+        d=1e100.net; s=20230601; t=1766046397; x=1766651197;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-gg:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=sQJUNYwC1e0jDgeb4YzHJlg75Gqr1c7azJgTBpIUepQ=;
+        b=OUFVv8tU2BEPpvGAWXydSSUZWCFYPcvzN1yc/YbNI5ZNj918gTMWw1EBNo2QFcU5IX
+         gxu1MN4JFDctDZR5Ld4UXx8PJV0Su/K3rUscOj7vzuLEnpefYhliiZMrh+SPe6csSdNt
+         norZ+VstyijnFntXSRYjabY/vF6flqi0CGE+vM4txmMYeflvq5iktz+r13rO68AsaxsW
+         maRNuzMNypOLkhSJ+tweh/hjMomnghJeXEmTC3XmApTACBRpc7V65awix1V6YrVsRfz9
+         zWeyed1vRFsc4NFU29VTJ/O+N8Vc6B9W8sAYHswrI/U45EQZhlxVzI3pt1sRiIeROBFG
+         hNdg==
+X-Gm-Message-State: AOJu0YxmqpO52ynamRrKC8QFcf5760wRVu2ihMDXGcDKQHegB7cXq+Cy
+	NtOCioQf497F+EDiuNz85jpcrBtNvnB2wn4vLfbul5nzTSTQOEZCgPnQjN90lg==
+X-Gm-Gg: AY/fxX6RzpM8+nExfen5fSDVv4sdCijmzWRIbbiD/k8/9h0prnDeCka4FT5fOZ/u4hf
+	a/g6h0WzVBbnXPnitzLtkcI9IST96fJ71RqWMEHGDQ46pj3wTuFsPHNIHweQFjiobH3aFGCFjy+
+	7q3x+k1bZ13ynyrAsTk8MWOpCUVCa/4xt5k2hPd76lfH4BaZk6cIBuDISD0vjoHNhShAiPwRj7R
+	WSs4DDt+2HiPK7scfCwa2nk+TJ4v16QAH/5Er6ftIfT8QE0FHC4dwRj4mvT7Mspvf8QbmRB8LIt
+	N5duPFckRIKlnJOrkH/gVTGCf3zBtbHkH87zKuVdbLx4WHIHOel0rXG627yXo5DLxWu9++uZYwz
+	QRCvAYeQ438SrHIe+oIx+o4uX/1w00H0kf3SPRGI3eSRLzIZu4U5JtAm7AIJ6xmWpnpqoSDAO8b
+	hgvZuzrXKVzleQ4URnTvc=
+X-Google-Smtp-Source: AGHT+IEGofcpxflPL0bUL0HmxfAYSWFncuKsLOECWrps6YAbku/CzM3+lGSH0BUGdnxmS7neQag5Kg==
+X-Received: by 2002:a05:6a00:330a:b0:7aa:17f0:f63c with SMTP id d2e1a72fcca58-7f6702be84dmr20413002b3a.29.1766046397321;
+        Thu, 18 Dec 2025 00:26:37 -0800 (PST)
+Received: from archlinux ([2405:201:1b:225c:9e18:7101:be84:75eb])
+        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-7fe121222bcsm1817973b3a.19.2025.12.18.00.26.33
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 18 Dec 2025 00:26:37 -0800 (PST)
+From: Krishna Chomal <krishna.chomal108@gmail.com>
+To: ilpo.jarvinen@linux.intel.com,
+	hansg@kernel.org
+Cc: platform-driver-x86@vger.kernel.org,
+	Krishna Chomal <krishna.chomal108@gmail.com>
+Subject: [PATCH v3 0/2] Fix Omen 16-wf1xxx thermal profile and add EC readback
+Date: Thu, 18 Dec 2025 13:56:27 +0530
+Message-ID: <20251218082629.567911-1-krishna.chomal108@gmail.com>
+X-Mailer: git-send-email 2.52.0
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20251218-surface-sp11-for-next-v3-0-875afc7bd3b7@gmail.com>
- <20251218-surface-sp11-for-next-v3-4-875afc7bd3b7@gmail.com> <s45ki2ckgw7fu25h5wd6mb3mc4kzs6qq5eitv56asqf2suxh6l@s5tbqce7gz3f>
-In-Reply-To: <s45ki2ckgw7fu25h5wd6mb3mc4kzs6qq5eitv56asqf2suxh6l@s5tbqce7gz3f>
-From: =?UTF-8?B?SsOpcsO0bWUgZGUgQnJldGFnbmU=?= <jerome.debretagne@gmail.com>
-Date: Thu, 18 Dec 2025 09:04:09 +0100
-X-Gm-Features: AQt7F2rxXLkRo1KdQwBVcMP3Fy3-pCbHAovHIvjCqXVawC_ZHWulzabv7lnj8zk
-Message-ID: <CA+kEDGFTh5bG98dtok66A+hC+-QcfSubdr64M7+JZ0nLeqm_tw@mail.gmail.com>
-Subject: Re: [PATCH v3 4/6] platform/surface: aggregator_registry: Add Surface
- Pro 11
-To: Dmitry Baryshkov <dmitry.baryshkov@oss.qualcomm.com>
-Cc: Bjorn Andersson <andersson@kernel.org>, Konrad Dybcio <konradybcio@kernel.org>, 
-	Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, 
-	Johannes Berg <johannes@sipsolutions.net>, Lorenzo Bianconi <lorenzo@kernel.org>, 
-	Maximilian Luz <luzmaximilian@gmail.com>, Hans de Goede <hansg@kernel.org>, 
-	=?UTF-8?Q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>, 
-	Jeff Johnson <jjohnson@kernel.org>, linux-arm-msm@vger.kernel.org, 
-	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	linux-wireless@vger.kernel.org, platform-driver-x86@vger.kernel.org, 
-	ath12k@lists.infradead.org, Dale Whinham <daleyo@gmail.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 8bit
 
-Le jeu. 18 d=C3=A9c. 2025 =C3=A0 01:07, Dmitry Baryshkov
-<dmitry.baryshkov@oss.qualcomm.com> a =C3=A9crit :
->
-> On Thu, Dec 18, 2025 at 12:56:40AM +0100, J=C3=A9r=C3=B4me de Bretagne vi=
-a B4 Relay wrote:
-> > From: Dale Whinham <daleyo@gmail.com>
-> >
-> > This enables support for the X1-based Surface Pro 11.
-> >
-> > Signed-off-by: Dale Whinham <daleyo@gmail.com>
-> > Signed-off-by: J=C3=A9r=C3=B4me de Bretagne <jerome.debretagne@gmail.co=
-m>
-> > Reviewed-by: Maximilian Luz <luzmaximilian@gmail.com>
-> > ---
-> >  drivers/platform/surface/surface_aggregator_registry.c | 18 ++++++++++=
-++++++++
-> >  1 file changed, 18 insertions(+)
-> >
-> > diff --git a/drivers/platform/surface/surface_aggregator_registry.c b/d=
-rivers/platform/surface/surface_aggregator_registry.c
-> > index 78ac3a8fbb736384f7e50f1888a71297a892a7c3..c18d991afc8b0a0bbb26966=
-351b75b8ea01097a4 100644
-> > --- a/drivers/platform/surface/surface_aggregator_registry.c
-> > +++ b/drivers/platform/surface/surface_aggregator_registry.c
-> > @@ -406,6 +406,22 @@ static const struct software_node *ssam_node_group=
-_sp9_5g[] =3D {
-> >       NULL,
-> >  };
-> >
-> > +/* Devices for Surface Pro 11 (ARM/QCOM) */
-> > +static const struct software_node *ssam_node_group_sp11[] =3D {
-> > +     &ssam_node_root,
-> > +     &ssam_node_hub_kip,
-> > +     &ssam_node_bat_ac,
-> > +     &ssam_node_bat_main,
-> > +     &ssam_node_tmp_sensors,
-> > +     &ssam_node_hid_kip_keyboard,
-> > +     &ssam_node_hid_kip_penstash,
-> > +     &ssam_node_hid_kip_touchpad,
-> > +     &ssam_node_hid_kip_fwupd,
-> > +     &ssam_node_hid_sam_sensors,
-> > +     &ssam_node_kip_tablet_switch,
-> > +     NULL,
-> > +};
-> > +
-> >  /* -- SSAM platform/meta-hub driver. ---------------------------------=
-------- */
-> >
-> >  static const struct acpi_device_id ssam_platform_hub_acpi_match[] =3D =
-{
-> > @@ -485,6 +501,8 @@ static const struct of_device_id ssam_platform_hub_=
-of_match[] __maybe_unused =3D {
-> >       /* Surface Laptop 7 */
-> >       { .compatible =3D "microsoft,romulus13", (void *)ssam_node_group_=
-sl7 },
-> >       { .compatible =3D "microsoft,romulus15", (void *)ssam_node_group_=
-sl7 },
-> > +     /* Surface Pro 11 */
-> > +     { .compatible =3D "microsoft,denali", (void *)ssam_node_group_sp1=
-1 },
->
-> Please keep it sorted. arcata < denali < romulus
+This series fixes incorrect thermal profile parameters sent for HP Omen
+16-wf1xxx and implements hardware readback support for Victus S thermal
+profiles.
 
-Thank you, I will fix this in v4.
+The first patch refactors the DMI handling for Victus S boards. By
+moving from simple string list to DMI system id table with driver_data,
+we can now map each board to its correct thermal parameters.
 
+The second patch implements "get" callback for the platform profile API.
+It reads the hardware state from EC register 0x59. This ensures that the
+driver stays in sync with the hardware during driver init and power
+source change events.
 
-> >       { },
-> >  };
-> >
-> >
-> > --
-> > 2.47.3
-> >
-> >
->
-> --
-> With best wishes
-> Dmitry
+Changes in V3:
+- Moved DMI lookup to hp_wmi_init()
+- Marked DMI table as __initconst
+- Renamed `eco` to `low_power`
+- Added second patch to implement "get" support for Victus S devices
+
+Changes in V2:
+- Refactored victus_s_thermal_profile_boards to use DMI table
+- Implemented driver_data to handle thermal profile parameters
+- Moved enum definitions earlier in the file for thermal profile
+  parameters
+
+- Changes in V1:
+  Initial fix for Omen 16-wf1xxx thermal profile values
+
+Krishna Chomal (2):
+  platform/x86: hp-wmi: fix platform profile values for Omen 16-wf1xxx
+  platform/x86: hp-wmi: Add EC offsets to read Victus S thermal profile
+
+ drivers/platform/x86/hp/hp-wmi.c | 259 +++++++++++++++++++++++--------
+ 1 file changed, 197 insertions(+), 62 deletions(-)
+
+-- 
+2.52.0
+
