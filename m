@@ -1,153 +1,117 @@
-Received: from mail-qv1-f41.google.com (mail-qv1-f41.google.com [209.85.219.41])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 57EA634E745
-	for <platform-driver-x86@vger.kernel.org>; Thu, 18 Dec 2025 16:35:40 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.41
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 155672D97B7;
+	Thu, 18 Dec 2025 22:22:13 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1766075744; cv=none; b=u3I5Lg7UBYyMhrGoHvxArK9E/TkvZY2+WksYJNDv21PVMUhAm+X7YCpNLupKl3EBq7h9F6uHpWHQ2esOlY4odAUAtqTGz4J7ZUZVanOXChm1g7/m4nomzw+ovjgXNpUVdsSiEff9CACnPn00LviKgeLaWV/LSFC594PWAAP1KTs=
+	t=1766096534; cv=none; b=Lz+JWXeLNw4B4IeHtaurdwTCgzdgg6kGC02rbqb6ld/r8cQPmSoN8mvcJEjEiUYKRXaELNnz2z3KLVGndJBtcGlI82jkkXzlhIcNgkUDSAavyb6WMYBqoX8IMJSb90Q6+hDXWK6SqdLCUx4/qTtvEwt3uSud6qyyjjw8RMJ68/o=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1766075744; c=relaxed/simple;
-	bh=Qxt65n4062GAtyCItZG91W6WkPx1gldCA6LORPhoKy4=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=olDyTqQAZ7e2rzjamQarv/VZnuapDcdtEm3pf80KjJ0pn771Xt0b5X87QOT14QzkBxuppZ8TJNS1L5vsadTWaYE+V+2olelgQQsWD12+OlqdwVr8/YOlHnZMINb+5tZnUxiO9mosnShN2sNPG8Kq1xtCjWRqGJT0b97DVaWn/lc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=fS8M2XgM; arc=none smtp.client-ip=209.85.219.41
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1766096534; c=relaxed/simple;
+	bh=XhLZIJ1aGNsOa6zR/7FJFBDE32GVcpBkjhLN7XTCseA=;
+	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
+	 In-Reply-To:To:Cc; b=V9znfLeuJMOL1GWFDKhwZ3ObSzCSlGoOsVwXqReO9m+pAJnvdPtOIYSYvWlwZN1W692r1pVPoG+Jl+e4bnzPK81MR6lhHYWXepLlzkIqBr5ZK36nBFML1zgR/6kL5IJ20O5YTNB0PEKzu7IiFSPQN29QGFFAWu0lAc10nW4CtuU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=NNGmKXMv; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="fS8M2XgM"
-Received: by mail-qv1-f41.google.com with SMTP id 6a1803df08f44-8888a16d243so8609696d6.1
-        for <platform-driver-x86@vger.kernel.org>; Thu, 18 Dec 2025 08:35:39 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1766075738; x=1766680538; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=vthX8EZ69SmXta9bEKt82uOMLThl45XqVhRz116/j3k=;
-        b=fS8M2XgM7KnCat7J5+hkeiZHM2H5asJJOL1xpI9tNyAodAFqTCrDUBjEfo4pDvJxwS
-         lplvz3Wdnh+EujNVeIRLOO/zDL4eGe8kLsOw+uY/skCW/l3T7sDumyN2NPpdvvip7YP0
-         asY5aN0vS859pTDX9xwTv9nnmsaL6qFCkWHhQ1Nde+tcjr+Bx/WycZQ7vxNV8xPnaGYV
-         9EfbnqEqpmxhDiHaRvNsiIqTw8bRfUTSHMaycVRM1NAgJeIv1wVhVFOdWjz8bzLeYR2H
-         n6z47w7xJde5v81fkDYvfu9PIfrN7nN1fKCBPK9m/CLIZoMxgzEOWPlsgogprWW4Hk1G
-         GmkA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1766075738; x=1766680538;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-gg:x-gm-message-state:from
-         :to:cc:subject:date:message-id:reply-to;
-        bh=vthX8EZ69SmXta9bEKt82uOMLThl45XqVhRz116/j3k=;
-        b=FIGE+wGmEElZrjjiSowA4ZJwNFIgMdHGogi3kdkLXw0suuY9Svkpqa7bpHmAeTh68a
-         Ysz7N6yNDORCoMGAyOueCyTqkIiPqvsS3nGeLsTV6bDrT1wox3NmMwuVFIZX13sNnKZY
-         bKRzCyg4Bl+GrkMCF5TpcVsGCV6kuPIVQcPmIkksV6NmLjIvvg9qwj+q+cox/iWpCD+6
-         l19sH2Jm/jqFiRE5708REXybDoelcn4w39CYmfV9SJElxkFRdBIl+ZOTWjSjhVAijT7I
-         B53LmKt00o1Q9l4vhwg/PX9udC24A9R6tZLxI4CjuiePwafDCKwJqCLTpxxzRyeYx9y+
-         0YUQ==
-X-Forwarded-Encrypted: i=1; AJvYcCUoo79Sz1hEOkcxND36gazfkJM4xd9Z5WvzHDBbnn9JmF1Ca/pzTHG3Y1G0UcplOp+G/gPwWYVkIlCufBXqWZjM2LCX@vger.kernel.org
-X-Gm-Message-State: AOJu0YxJe+ksLx6IvC9m2dMrX+dbr+OWL/1Y1Gtch7spoGvvA6aCAWtM
-	/iBkBVQiB2/9bgpddOqE5J4uqeezxmNG5CkMnfas4Sk3u/DQluQhHAlwPACjHRA7CZojIjmv29g
-	6Nj/yTGjDKwoRmsZk13jQZ4+GxJm0Qw==
-X-Gm-Gg: AY/fxX6hyE8lT3cvLhX1gH2Hy0lk0FIhvMXne7laYgNnuAWeCIVIxE94n0Of2MzIzAf
-	LBnZTDT+exuC3oIwItuQFLg0ztckxG6xhy/c6A6Wg2GIEhssaN1lKEeVpsSONTYF+DtxDI50u+8
-	k3wQ7MlnslV7VqYyrGuejAMNlkoBCPK+w/VbPkFJSUFYF6EzpN0LK94sEwUZ1kevWnPCje8lgMo
-	Okt/iaYpuJyEuoLStL0cxJM4+KZ+ZBEDv9siAZctGP3z0UtUY+VspWJJri5El7M324jrfhZCdtm
-	BJARlkvtpGZp6DpD2CwN1oCrDZQ=
-X-Google-Smtp-Source: AGHT+IE9/ZCMCiyjrmPyCIsxYsQHia6PO/5OA2ZJrCLu8tQ8JQjcXci/gveKRp2q1MLBH7jp/9tKHDC2qJ1c5+HtAN0=
-X-Received: by 2002:a05:6214:598e:b0:888:7e41:a9a with SMTP id
- 6a1803df08f44-88d87be8db8mr2888306d6.46.1766075738235; Thu, 18 Dec 2025
- 08:35:38 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="NNGmKXMv"
+Received: by smtp.kernel.org (Postfix) with ESMTPS id AE3CBC113D0;
+	Thu, 18 Dec 2025 22:22:13 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1766096533;
+	bh=XhLZIJ1aGNsOa6zR/7FJFBDE32GVcpBkjhLN7XTCseA=;
+	h=From:Date:Subject:References:In-Reply-To:To:Cc:Reply-To:From;
+	b=NNGmKXMvkK97gBmx6jjXbDK/gHvSeNyOk1vzCaOv6KgA6Mfb3SKvbvgFI5qiOYMIu
+	 bFBzsOnE7DPNKwGZ/G0jeE/6/6OtplaPHC8SoOEG4oOxVZd6xFhn/uto+gOsiXSRhY
+	 hgiUMbysQXpFAnboY96/1MzdACYgZVRb+TBR1zQCKU07ekFIY8mC7796eVHcJNrOA6
+	 LZdfpL7qs/yxcN+liN9jOfUslencR0hm/zVSrtL/tjgscheV9CTORTmDLQZX9piEtf
+	 b7f/lVvvU2nl+lwu9eDhiwMu98VUh2GyFc9nSjD1xLZwlEXflQAu+E/5j/4wCSoEoR
+	 0g3rfvUerc8Dg==
+Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9D91CD6E2AE;
+	Thu, 18 Dec 2025 22:22:13 +0000 (UTC)
+From: =?utf-8?q?J=C3=A9r=C3=B4me_de_Bretagne_via_B4_Relay?= <devnull+jerome.debretagne.gmail.com@kernel.org>
+Date: Thu, 18 Dec 2025 23:22:07 +0100
+Subject: [PATCH v4 1/6] dt-bindings: arm: qcom: Document Microsoft Surface
+ Pro 11
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20251218-surface-sp11-for-next-v3-0-875afc7bd3b7@gmail.com>
- <20251218-surface-sp11-for-next-v3-1-875afc7bd3b7@gmail.com> <438a352e-5174-4361-b6e5-6ff5fe1ce0c0@oss.qualcomm.com>
-In-Reply-To: <438a352e-5174-4361-b6e5-6ff5fe1ce0c0@oss.qualcomm.com>
-From: =?UTF-8?B?SsOpcsO0bWUgZGUgQnJldGFnbmU=?= <jerome.debretagne@gmail.com>
-Date: Thu, 18 Dec 2025 17:35:03 +0100
-X-Gm-Features: AQt7F2rTRoXMF5xHMqmkLERUjvS2qI4aUT26N8INWGtmOaD17Y8RxpKD_isxRH0
-Message-ID: <CA+kEDGE42HhaWZy1o9DjpwcjPiJcqvq52o-_g+auOkp26ukULg@mail.gmail.com>
-Subject: Re: [PATCH v3 1/6] dt-bindings: arm: qcom: Document Microsoft Surface
- Pro 11
-To: Konrad Dybcio <konrad.dybcio@oss.qualcomm.com>
-Cc: Bjorn Andersson <andersson@kernel.org>, Konrad Dybcio <konradybcio@kernel.org>, 
-	Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, 
-	Johannes Berg <johannes@sipsolutions.net>, Lorenzo Bianconi <lorenzo@kernel.org>, 
-	Maximilian Luz <luzmaximilian@gmail.com>, Hans de Goede <hansg@kernel.org>, 
-	=?UTF-8?Q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>, 
-	Jeff Johnson <jjohnson@kernel.org>, linux-arm-msm@vger.kernel.org, 
-	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	linux-wireless@vger.kernel.org, platform-driver-x86@vger.kernel.org, 
-	ath12k@lists.infradead.org, Dale Whinham <daleyo@gmail.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 8bit
+Message-Id: <20251218-surface-sp11-for-next-v4-1-7bcf83c1504a@gmail.com>
+References: <20251218-surface-sp11-for-next-v4-0-7bcf83c1504a@gmail.com>
+In-Reply-To: <20251218-surface-sp11-for-next-v4-0-7bcf83c1504a@gmail.com>
+To: Bjorn Andersson <andersson@kernel.org>, 
+ Konrad Dybcio <konradybcio@kernel.org>, Rob Herring <robh@kernel.org>, 
+ Krzysztof Kozlowski <krzk+dt@kernel.org>, 
+ Conor Dooley <conor+dt@kernel.org>, 
+ Johannes Berg <johannes@sipsolutions.net>, 
+ Lorenzo Bianconi <lorenzo@kernel.org>, 
+ Maximilian Luz <luzmaximilian@gmail.com>, Hans de Goede <hansg@kernel.org>, 
+ =?utf-8?q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>, 
+ Jeff Johnson <jjohnson@kernel.org>
+Cc: linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org, 
+ linux-kernel@vger.kernel.org, linux-wireless@vger.kernel.org, 
+ platform-driver-x86@vger.kernel.org, ath12k@lists.infradead.org, 
+ Dale Whinham <daleyo@gmail.com>, 
+ =?utf-8?q?J=C3=A9r=C3=B4me_de_Bretagne?= <jerome.debretagne@gmail.com>
+X-Mailer: b4 0.14.2
+X-Developer-Signature: v=1; a=ed25519-sha256; t=1766096532; l=1443;
+ i=jerome.debretagne@gmail.com; s=20251217; h=from:subject:message-id;
+ bh=ODLaLlEkMG2kK+0djUMjgpeCyxYtB1rpe7QmWVeQ38w=;
+ b=eapOBwWELgT98JYZhKAFUjAKdIgtUMS8sccAXttnQQdPnFEJhY7bwjbBpP1t0DnYlJLBkb5mt
+ 89OUwlWY6lLDb0zxIoJUrrX6sG3qYmmn9OgQTwsON0kwgm/HN5nvwIl
+X-Developer-Key: i=jerome.debretagne@gmail.com; a=ed25519;
+ pk=DcPD9n3oDMsPkt+12tU96swmGb5H86cxt+yiEVcUEGk=
+X-Endpoint-Received: by B4 Relay for jerome.debretagne@gmail.com/20251217
+ with auth_id=580
+X-Original-From: =?utf-8?q?J=C3=A9r=C3=B4me_de_Bretagne?= <jerome.debretagne@gmail.com>
+Reply-To: jerome.debretagne@gmail.com
 
-Le jeu. 18 d=C3=A9c. 2025 =C3=A0 15:15, Konrad Dybcio
-<konrad.dybcio@oss.qualcomm.com> a =C3=A9crit :
->
-> On 12/18/25 12:56 AM, J=C3=A9r=C3=B4me de Bretagne via B4 Relay wrote:
-> > From: J=C3=A9r=C3=B4me de Bretagne <jerome.debretagne@gmail.com>
-> >
-> > Add the compatibles for the Qualcomm-based Microsoft Surface Pro 11,
-> > using its Denali codename.
-> >
-> > The LCD models are using the Qualcomm Snapdragon X1 Plus (X1P64100),
-> > the OLED ones are using the Qualcomm Snapdragon X1 Elite (X1E80100).
-> >
-> > Due to the difference in how the built-in panel is being handled
-> > between the OLED variant and LCD one, it is required to have two
-> > separate DTBs, so document the compatible string for both variants.
-> >
-> > Signed-off-by: J=C3=A9r=C3=B4me de Bretagne <jerome.debretagne@gmail.co=
-m>
-> > ---
-> >  Documentation/devicetree/bindings/arm/qcom.yaml | 8 ++++++++
-> >  1 file changed, 8 insertions(+)
-> >
-> > diff --git a/Documentation/devicetree/bindings/arm/qcom.yaml b/Document=
-ation/devicetree/bindings/arm/qcom.yaml
-> > index d84bd3bca2010508a8225b9549d8c634efa06531..7c99bc0d3aae3dc6e9c08fe=
-f0a535e114a3297a8 100644
-> > --- a/Documentation/devicetree/bindings/arm/qcom.yaml
-> > +++ b/Documentation/devicetree/bindings/arm/qcom.yaml
-> > @@ -1067,6 +1067,14 @@ properties:
-> >            - const: qcom,x1e78100
-> >            - const: qcom,x1e80100
-> >
-> > +      - items:
-> > +          - enum:
-> > +              - microsoft,denali-lcd
-> > +              - microsoft,denali-oled
-> > +          - const: microsoft,denali
-> > +          - const: qcom,x1p64100
-> > +          - const: qcom,x1e80100
->
-> As the bot pointed out, this is valid, but not what you want:
->
-> This expects
->
-> "microsoft,denali-(lcd/oled)", "microsoft,denali", "qcom,x1p64100",
-> "qcom,x1e80100"
->
-> whereas you're looking for 2 entries:
->
-> - items:
->         const: microsoft,denali-lcd
->         const: microsoft,denali
->         const: qcom,x1p64100
->         const: qcom,x1e80100
->
-> - items:
->         const: microsoft,denali-oled
->         const: microsoft,denali
->         const: qcom,x1e80100
+From: Jérôme de Bretagne <jerome.debretagne@gmail.com>
 
-I was trying to group the 2 variants together, as they are very much
-related. Your description captures the 2 variants way more precisely,
-I will switch to 2 distinct entries in v4.
+Add the compatibles for the Qualcomm-based Microsoft Surface Pro 11,
+using its Denali codename.
 
-> Konrad
+The LCD models are using the Qualcomm Snapdragon X1 Plus (X1P64100),
+the OLED ones are using the Qualcomm Snapdragon X1 Elite (X1E80100).
 
-Thanks again for your review,
-J=C3=A9r=C3=B4me
+Due to the difference in how the built-in panel is being handled
+between the OLED variant and LCD one, it is required to have two
+separate DTBs, so document the compatible string for both variants.
+
+Signed-off-by: Jérôme de Bretagne <jerome.debretagne@gmail.com>
+---
+ Documentation/devicetree/bindings/arm/qcom.yaml | 11 +++++++++++
+ 1 file changed, 11 insertions(+)
+
+diff --git a/Documentation/devicetree/bindings/arm/qcom.yaml b/Documentation/devicetree/bindings/arm/qcom.yaml
+index d84bd3bca2010508a8225b9549d8c634efa06531..3685330344c0bf621125fc3d2f9c04082d6de144 100644
+--- a/Documentation/devicetree/bindings/arm/qcom.yaml
++++ b/Documentation/devicetree/bindings/arm/qcom.yaml
+@@ -1067,6 +1067,17 @@ properties:
+           - const: qcom,x1e78100
+           - const: qcom,x1e80100
+ 
++      - items:
++          - const: microsoft,denali-lcd
++          - const: microsoft,denali
++          - const: qcom,x1p64100
++          - const: qcom,x1e80100
++
++      - items:
++          - const: microsoft,denali-oled
++          - const: microsoft,denali
++          - const: qcom,x1e80100
++
+       - items:
+           - enum:
+               - asus,vivobook-s15
+
+-- 
+2.47.3
+
+
