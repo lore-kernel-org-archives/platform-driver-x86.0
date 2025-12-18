@@ -1,85 +1,177 @@
-Received: from mail-pl1-f169.google.com (mail-pl1-f169.google.com [209.85.214.169])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DC952332904
-	for <platform-driver-x86@vger.kernel.org>; Thu, 18 Dec 2025 09:32:59 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.169
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D9F793321A1;
+	Thu, 18 Dec 2025 10:33:18 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1766050381; cv=none; b=Qo2qvgUPcsrYtdW2OzEhUl+R7PSy6eKYociwbyGww+68S1Xkv9Ji2t4BxoSvstNP9r3CY9k3qS6SkXApIrNUu+c425jZvvc595LuPMxOs4LCmTmrm/gl2ERIHad2gkx4x0csgXcIwJ69q6QA2XFncelstuk1OUtQk1qbhQsgHnc=
+	t=1766053999; cv=none; b=OThdphWmWBW1DvVrLqCBI5FNyJIZjpkO9ZGDbhYeNZQzjAWskwxtZjbaH4DXP2Mx2NwdJXN34SJz77Xwxk6KEKYu0H9wH8rcxlpt0qdS07WDkA7fw+H9PMlyxV/PHwFshEGE5EV+RRrgAiWGQ3lFem4Bb5uBALr2vjTQnFKYpvw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1766050381; c=relaxed/simple;
-	bh=ETCrNGhrxoZWlEiQq//UovDI5PS60LbxoY3w67jEZnU=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=oDu9t/DWWWlJ+88ytVj3LTmgze5ZiGD7Pz54gq8+9m2K6Pl7YDZJ2EEbh9FXrwXS+ydpiNk1Aj9Yb9zANsLYcP0xoyjShlLQiMXBeIjJB8rEBO0uCXa/vls/u1ozT80uZlAIjwcpJg98abuGmOT+oVjB2Kfsu2rS42UFnehtsFQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=BDk5ICXS; arc=none smtp.client-ip=209.85.214.169
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1766053999; c=relaxed/simple;
+	bh=skIvvXN07qvYfaK6UHfMPbtyuznCiAiYd7zPINp94oU=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=Os5mIDIuDKhhjTEUSMOfov3722KFywPgd3WlAucJhqD4LaN0fxA/AeglFwC1FDezoyTmyDuQzOJRMkNs/T0MgCA8UCvpI3yQV9IDpxn8Istlzdz6w6b98HXwpFtUF57ZaBFMUYY5F5UXruidgdtYdClHnVKiBskxOvDCXRH0/Ms=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=r8NCQRZ0; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="BDk5ICXS"
-Received: by mail-pl1-f169.google.com with SMTP id d9443c01a7336-29f0f875bc5so5931515ad.3
-        for <platform-driver-x86@vger.kernel.org>; Thu, 18 Dec 2025 01:32:59 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1766050379; x=1766655179; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=ETCrNGhrxoZWlEiQq//UovDI5PS60LbxoY3w67jEZnU=;
-        b=BDk5ICXSmHe4Svy42NdepFw1Ufczlhyl9Fp8GyoRuQ16Q43r1SwksZS3dqGrxtUdex
-         7TPt4k3tg1wnjzKLN1y3ouuq2u/pfB7UPNJ8nIf9pDzskVAFxpiL5wnsSCOhQNH7HKJi
-         TI8DWMvyLf7vp2tnLybhnCL/JXP4e7WHVvlAK7XC57TD3Et0bIgwZ0LISqrDUnYz0nDr
-         EmESklnh0KypK+brRkUbwO8ZYvZRm8qCMMCX3NjL8KkUqjIS0ETra/AGxtmh2kk9EcYA
-         yx0HwPRCmi6vcqpqJpYopu3xxQC1JW6IzcaE6KIkskWDJ4cQeKmHOHEq/Zi9a77PSBVE
-         xLhA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1766050379; x=1766655179;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-gg:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=ETCrNGhrxoZWlEiQq//UovDI5PS60LbxoY3w67jEZnU=;
-        b=fQn2QRJgqI777jB2sFfcx+4vqR6v7MRfEhVhJq6DifHDevHjoiKmYThfpXur69Emi1
-         y0kfqCmo2VzkbztSs7XuXPjUrQGM2NHHE3tQg35KYXZBFrwXpLOBn+qwpMz0H4/pPXKb
-         yJUzzfQnGA1k0BbCGT02uV4Tyj5QaH/5OinVeWf8tKWzeNxsVpicGHUGOwWrUZDV4YtK
-         ZvgoXe/xxlKr9/hYcjySlEDrfphH3sH+mR6Jrwi18kZt6/QVpRBEuK+zmYeWxE7/cniT
-         M/IO/YSJYW1HrvJuW7/RD3+97PwFJNAR1DPuxwJgJqMhC36YdqPv40rCL53l11d1QPGg
-         NlWA==
-X-Gm-Message-State: AOJu0Yzvw4Vb6jQtGpEi+YXZ46nvH5jrbVPBx0aIbFUEKMXXR86NWA+A
-	ka+h2g+OUOTG2vc+gD/ZJGpyOCeDbk9ay0RRbs4dXQsrPYewm9itwbMR
-X-Gm-Gg: AY/fxX6Sz4avzX/Mthfqk6M2pYiy8fwWhGzrTShBL90/jyMjXTRVfQYJp6rvrJPhwpI
-	1OvbBHz0OjinpcfK+gWC1auNOnRUpNyhSn4XkaUHEBnT5BlZ577jvZGC0JqBvCzqdq7cTpTK1Zq
-	39hdTaley8NK0244kh71sOc0Ic2PmmSTajkaQVeFU3ONw1JNylIQiioNuT0erUrLssWM+GYZWpZ
-	Lt47axG5+BLuzVq94ZnYMCZMrwP1P2p2Ue2ARqFjepH4NXz7VxIJWnPInf3hyu81n7AFk6eAcxk
-	MnsgPGCnVH93918RA3qoV5hxEkBxOOJC8YStITkF4UIeBhoEgjajFKArLTMRgZsUNH+YRhO+1K7
-	PKSq8M5S6+Z4PiCiK5WAbVomWXS0KFvAmShuppkIb1BCXLObjdjowVlQEWA2MlzMtMlRjSh5M/e
-	nEL0IgbjPmEwBpwd+fwieW73ASR53W9A==
-X-Google-Smtp-Source: AGHT+IGUlt8EUB9iVAa9EhM2ZyTZvNoC8tcqhtVFDqWsSb/Z9C3ToMopUY+592RbQr3gO3ABU9cl6w==
-X-Received: by 2002:a17:902:ef44:b0:2a0:a9f8:48f7 with SMTP id d9443c01a7336-2a0a9f849f9mr172303795ad.55.1766050379142;
-        Thu, 18 Dec 2025 01:32:59 -0800 (PST)
-Received: from archlinux ([2405:201:1b:225c:eb9d:1fc0:f95c:bd90])
-        by smtp.gmail.com with ESMTPSA id d9443c01a7336-2a2d0888fbdsm19609675ad.32.2025.12.18.01.32.55
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 18 Dec 2025 01:32:58 -0800 (PST)
-Date: Thu, 18 Dec 2025 15:02:50 +0530
-From: Krishna Chomal <krishna.chomal108@gmail.com>
-To: ilpo.jarvinen@linux.intel.com, hansg@kernel.org
-Cc: platform-driver-x86@vger.kernel.org, 
-	Krishna Chomal <krishna.chomal108@gmail.com>
-Subject: Re: [PATCH v3 0/2] Fix Omen 16-wf1xxx thermal profile and add EC
- readback
-Message-ID: <aUPIztp4uffvYmc3@archlinux>
-References: <20251218082629.567911-1-krishna.chomal108@gmail.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="r8NCQRZ0"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id B4D2EC116D0;
+	Thu, 18 Dec 2025 10:33:16 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1766053998;
+	bh=skIvvXN07qvYfaK6UHfMPbtyuznCiAiYd7zPINp94oU=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=r8NCQRZ0lmcz3qsAg7BJ26MIYdk6j2BqV+lBp9AgjYepdp9M6kJMKXj6Acdnm5+Ds
+	 dyOVe6ouY+GgSX3pICEhCS/OI5x2elvwzwIPtry1q6s2d7LbtwfAR9MsPlrXo8fsfV
+	 C/KvlKQnPgrP7/5KIjzpgsHlMn4gGqPa3t4efRA+4/5nSRbuqlRCzBQy32+zFrUqc5
+	 TSITbzi+vzT94KSjlMg/AEHHn/rM3AjSyf0DrlzcI3pbLRj2wwdMw86l40y4Lq3GUR
+	 iXyD+31xbWb05mtZjt/EafamTaBekwJOMdYQxGJy1xwUGNoSa1MkoyGdFxrL65teVG
+	 9UK0URaDm5+Rw==
+Message-ID: <b57b44c3-ea96-4189-8b70-71bf4a80d29b@kernel.org>
+Date: Thu, 18 Dec 2025 11:33:14 +0100
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Disposition: inline
-In-Reply-To: <20251218082629.567911-1-krishna.chomal108@gmail.com>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [BUG] 36-second boot delay due to by
+ acpi_gpio_handle_deferred_request_irqs on ASUS ROG Strix G16 (2025)
+To: Mika Westerberg <mika.westerberg@linux.intel.com>,
+ Francesco Lauritano <francesco.lauritano1@protonmail.com>
+Cc: Mario Limonciello <superm1@kernel.org>,
+ "linux-acpi@vger.kernel.org" <linux-acpi@vger.kernel.org>,
+ "open list:GPIO ACPI SUPPORT" <linux-gpio@vger.kernel.org>,
+ "platform-driver-x86@vger.kernel.org" <platform-driver-x86@vger.kernel.org>,
+ "westeri@kernel.org" <westeri@kernel.org>,
+ Benjamin Tissoires <bentiss@kernel.org>
+References: <2kSCn4XaoXsXJ3EUR0syTdmip8Z1cBuUr0Br4sFVnwnsA8q4GlhiHOmsJkeBxvxYoLnetp4r44wIPXw42yTAFl-BtMROnIwR-NkckKgA5EY=@protonmail.com>
+ <6iFCwGH2vssb7NRUTWGpkubGMNbgIlBHSz40z8ZsezjxngXpoiiRiJaijviNvhiDAGIr43bfUmdxLmxYoHDjyft4DgwFc3Pnu5hzPguTa0s=@protonmail.com>
+ <4402ed86-77f5-4a47-a9e1-8d57a709bb15@kernel.org>
+ <woxnPhTYiKi2aLzBK8GnO8DpvdgYjQc-P42uhJOzyrcYC3Gdstht27hML8yNHgOklhm2MgGA7wt9gGZ17BHoWlG0vqJuVVJDgCSev8udfds=@protonmail.com>
+ <NIIS8XD_nSRvp36X39GxcDRAWsaScQIFx6o9JsFCbyBZk5PqznRdxg9EDDb_9tzWd5TcjzxrRtFx5_uLCVa5wJAYykW2k0Ue_XPMPtWCQiY=@protonmail.com>
+ <e8ed4d4e-37e1-4577-bf80-62fcefbef7dc@kernel.org>
+ <ReQS8sQSGy3UTuG6tyPvoOb8_037sC6A2yXsSFNuXY1PlTFtCcDHnjf8vufEsk8avBSIL46U0qE-ZjTJD1xsbVYZ6_d2-wlTOZ2NJ2coTsc=@protonmail.com>
+ <20251218063954.GT2275908@black.igk.intel.com>
+From: Hans de Goede <hansg@kernel.org>
+Content-Language: en-US, nl
+In-Reply-To: <20251218063954.GT2275908@black.igk.intel.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
 Hi,
 
-Please ignore this v3 series. I have identified a logic issue which
-causes hp_wmi to fail to load, the first time after boot. I will send
-the fix for v4 soon.
+On 18-Dec-25 07:39, Mika Westerberg wrote:
+> On Wed, Dec 17, 2025 at 07:19:56PM +0000, Francesco Lauritano wrote:
+>> On Wednesday, December 17th, 2025 at 7:01 PM, Mario Limonciello <superm1@kernel.org> wrote:
+>>
+>>> On 12/17/25 10:57 AM, Francesco Lauritano wrote:
+>>>
+>>>> On Wednesday, December 17th, 2025 at 4:12 PM, Francesco Lauritano francesco.lauritano1@protonmail.com wrote:
+>>>>
+>>>>> The _AEI defines 5 GPIO interrupts. Narrowed it down to two:
+>>>>>
+>>>>> gpiolib_acpi.ignore_interrupt=AMDI0030:00@21,AMDI0030:00@24
+>>>>>
+>>>>> This fixes the delay. Pins 0x15 and 0x18 both call: \_SB.PCI0.SBRG.HNC0()
+>>>>
+>>>> Traced it further. HNC0(pin, 0) takes the Else branch and calls:
+>>>> ATKM(0xC0)
+>>>> ADTM(Zero)
+>>>>
+>>>> ADTM calls NOD2(), which is the actual culprit:
+>>>>
+>>>> While ((Arg0 != RDNT))
+>>>> {
+>>>> If ((Local0 >= 0x0F)) { Break }
+>>>> Notify (^^GPP0.PEGP, Arg0)
+>>>> Local0++
+>>>> Sleep (Local0 * 0x64)
+>>>> }
+>>>>
+>>>> It notifies the dGPU and polls RDNT, sleeping 100, 200, ... 1500ms per iteration.
+>>>> Max 15 loops = ~12s per pin. GPU doesn't respond at boot so it maxes out.
+>>>>
+>>>> Two pins, ~12s each, ~24-36s total.
+>>>>
+>>>> Francesco
+>>>
+>>>
+>>> Any idea why isn't the dGPU responding? I would have expected
+>>> https://git.kernel.org/torvalds/c/4d4c10f763d78 sets up policy that it's
+>>> in D0.
+>>>
+>>> Is the dGPU turned off in BIOS or through some reverse engineered
+>>> tool/API or something?
+>>
+>> dmesg without the workaround:
+>> [    1.005184] pci 0000:01:00.0: PME# supported from D0 D3hot
+>> [    1.288811] pci 0000:01:00.0: vgaarb: VGA device added
+>> [   38.250139] nvidia: loading out-of-tree module taints kernel.
+>> [   38.369358] nvidia 0000:01:00.0: enabling device (0000 -> 0003)
+>> [   39.744421] NVRM: GPS ACPI DSM called before _acpiDsmSupportedFuncCacheInit
+>>
+>> GPU is in D0 from 1.0s. nvidia loads at 38.2s after the GPIO hang completes.
+>>
+>> No weird tools/APIs besides userspace utils (asusctl/supergfxctl). 
+>>
+>> No changes to BIOS factory defaults other than disabling Fast Boot.
+>> dGPU is active, Display Mode is Dynamic (hybrid).
+>>
+>> Traced RDNT - it's set by GPS function 19 in the ACPI tables:
+>> Case (0x13)
+>> {
+>>     Debug = "GPS fun 19"
+>>     \_SB.PCI0.SBRG.RDNT = (Local1 + 0xD1)
+>> }
+>>
+>> As far as I can understand GPIO initcall blocks at late_initcall_sync, preventing nvidia 
+>> from loading in time to respond. Based on the timing, GPU is awake but nothing can 
+>> register a handler while kernel is stuck at NOD2 polling loop.
+> 
+> I wonder if you could try with the nouveau driver so that it's built-in to
+> the kernel proper? Then it should be ready at the time these events
+> trigger.
 
-Thanks and apologies for the noise.
+That is not really a workable solution though.
+
+I think either we need to DMI quirk the 2 models with this issue;
+
+Or perhaps it is time to rethink the whole running of edge handlers
+on boot thing.
+
+Based on the existing DMI quirks, which fix some much more serious
+breakage (breaking HDMI out port DCC, causing a USB-A port to not
+get 5V out) I would say it is safe to say that Windows does not do
+this.
+
+As for the original reasons mentioned in the commit message
+introducing this:
+
+https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/commit/?id=ca876c7483b6
+
+The BYT tabled ID pin handling has been sowewhat controversial. Some
+people actually liked that many BYT BIOSes leave the USB data pins in
+host mode even when a charger is connected as this allows using
+a USB-otg-charging HUB charging and being in host mode at the same time.
+
+That just leaves the original LID handling on microsoft surface 3
+tablets case as somewhat of a problem.
+
+But we can just pick an initial LID state of LID not closed there,
+booting up with the LID closed is unusual and if done, the user
+likely does *not* want to suspend right away which would happen
+when reporting the LID as closed.
+
+I still have a Surface 3 and I can check if that is the default and
+if not this could be fixed with a quirk in the ACPI LID handling code.
+
+TL;DR: I think this is a case where we can fix things by ripping
+out a whole bunch of code + quirks and stop running edge event
+handlers on boot.
+
+Regards,
+
+Hans
+
+
