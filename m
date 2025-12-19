@@ -1,60 +1,60 @@
-Received: from mail-qv1-f45.google.com (mail-qv1-f45.google.com [209.85.219.45])
+Received: from mail-qt1-f180.google.com (mail-qt1-f180.google.com [209.85.160.180])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CA6E92D73A7
-	for <platform-driver-x86@vger.kernel.org>; Fri, 19 Dec 2025 20:58:20 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.45
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D35702F7468
+	for <platform-driver-x86@vger.kernel.org>; Fri, 19 Dec 2025 20:59:33 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.180
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1766177902; cv=none; b=AczB4NKBfd1LRcKstCpE3Lgb5iSWgTzF6cDRjPFgrph/ceLecBJLTwvxyOpFoGSWAz4pfxhw81S2TXEuAV7hXLphrQLro+573Nu0I9kjcRhSU+W81FWHkT1/6SOQsg+oFnDIYaQl5M4OPFFCig/whsEpUlM1JSR7/p8ZJXL5pL0=
+	t=1766177976; cv=none; b=ihQoEDZduKuNXAv2NeiWspQYSaBvDAyBAmuiMEqw3HrEPrbelbMFHslVWMeG+J194hlMYFE/07X1fZcF5Hsvzq25X2t+Flo+Af9gnlUf8izSFRy3j63f2k0Hivoq1WUpouVn4OOebrV2NFvfLqzKQA/4WYGcod0jLcAShoo+bAM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1766177902; c=relaxed/simple;
-	bh=GI0vwFm7IpACeuQ0a/1FT/Ls1BnVN0WU4IFXbwr2GMg=;
+	s=arc-20240116; t=1766177976; c=relaxed/simple;
+	bh=l/FPv+AV/507GEG9Gaur2OmbxtI5yOaBuOZ9o8Vljxc=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=kDeqc+mpsP6uZ7KOeGFGQdAU1tc1eU65EW/1trXaB4hLumIOoXW4zxht6WoqR9y9ZTeYbJjHNp4EhAhrJj3Ppe27fb4nWd9Q4ya1LdrDhJyHxwloXn8SueCx9BUFjOm1Xb63lzkGXS1kAbH12y0zE1C7FVcXPDPC/k/FhiI9wUo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=BdC3FLXp; arc=none smtp.client-ip=209.85.219.45
+	 To:Cc:Content-Type; b=nPkI2RVQT7Mv4yz7WFVpzQ3IHSJHFnMw4inYbB2WnR/Iw6n6g5jks/bmV78ajZNsZOizfYdB2/V0cog+c0SVfdjmf+v2TvqbpYVpIyKmK5pIARd4AclJtiix8/AMCt2PUMGsiIpiyvXfPOjlRmzrhf/QCptxB8wo4kYDsIIQKCs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=ngIxYodu; arc=none smtp.client-ip=209.85.160.180
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="BdC3FLXp"
-Received: by mail-qv1-f45.google.com with SMTP id 6a1803df08f44-88a367a1db0so33827096d6.3
-        for <platform-driver-x86@vger.kernel.org>; Fri, 19 Dec 2025 12:58:20 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ngIxYodu"
+Received: by mail-qt1-f180.google.com with SMTP id d75a77b69052e-4ed66b5abf7so31336621cf.1
+        for <platform-driver-x86@vger.kernel.org>; Fri, 19 Dec 2025 12:59:33 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1766177900; x=1766782700; darn=vger.kernel.org;
+        d=gmail.com; s=20230601; t=1766177972; x=1766782772; darn=vger.kernel.org;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=z2mHPlSnjBcdFaDnCQucul1Ba9bLMUO55RhPO6dSnwA=;
-        b=BdC3FLXpHekyYdRqG0JNkrtQ6VMJntaTp1wZIRDx2hilL3WSKFWny3Wv1Gnb0ge1RG
-         49UAx82j1pjjMV484d/T5k7WbXe0gtm6tjJgiXlLKtE5yp46UzFkp9LtfXL/GOuPz1XK
-         4uhut8czMFz+0Esm9wyXeRRSAYhFr8lEn+PDxegTyxdx4JXw5emDA9oJJJ+cQL4L8Vqh
-         PJLrdTTDCMKNYYqkWmfprGFnCuEJ8asVmPXCAtX8nVhaWISRwOnHoLKaBUR+3PdUE4jy
-         FxrJA3b7EUoh99qeaqmlMhy6OXUBg1HNO+aD8z82anFZ4VK+hMm0YuuxjTGmL8vi3QwY
-         xipw==
+        bh=aS4OmYCzbKdvwE5BntPhqf93lcN6z7RXIUJ/QZyRAnc=;
+        b=ngIxYodu3yKcssM5N2R+tjpicpBULBOzhr+FE4mmmuTMc79cVulyx1bK/1CSAwwbAi
+         7fIXqhvQBOVZcRsxRkhyqAD2l+omhQw7BP476GdlmGCOUP2rkYESHK5no6ldlTAzw998
+         GidIUbkPefJOXLgGSbs8N/0BEmuWI0alRZ6owWJ6Z2B6T18j6KyvzKqkqsngk4NCKZCR
+         eQwUR8bPLAClUqI6pcI7AKzrrwxrWXL8SMmMbkKK3+ZyIQKXPNVOGBbq3Jpo9P6rEwSS
+         6kV9n5vqiBv8VO45DefVUVUavKMjRLUU/GdsUl0qJhYzq4EjWSwK+DSFS5QZeD6uvR4N
+         OPhQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1766177900; x=1766782700;
+        d=1e100.net; s=20230601; t=1766177972; x=1766782772;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:x-gm-gg:x-gm-message-state:from
          :to:cc:subject:date:message-id:reply-to;
-        bh=z2mHPlSnjBcdFaDnCQucul1Ba9bLMUO55RhPO6dSnwA=;
-        b=d4chPgLff04dLZXRLM9WgQbB90lbnx9fpb1h6tj0xsndYluQGAtdGinNo6LYbEi0xo
-         IzA3ga3F8JYasOnYaG/CpEpCdTcEt6zXp99mYh4dJlyNN0cX15W1pXpvzAHQXRG3n2k4
-         cnlpdhdNjpcx2QulmEeygTK2D7roKTgHDQl/slP4O2rgsbEMe8v5V5reITbyzMuv1H6k
-         4JyR/2NpDkCy97qT9aNgWPuWy4LgWGiinllY3iz1c+wgVfw3zzO5r/pGL2TJi9SnCXCY
-         eMfSyzGz9k64TnkemVPzeKmRDmYvvl3LiJiMa6epSHX+FrTPRBnsGLHq/dcpBxh4QdWP
-         H1tQ==
-X-Forwarded-Encrypted: i=1; AJvYcCVbepsH5jc2LqiH4cTFzeQ/Jt7Si62FdjNjYRd9T7T6u/sz7cIE//fg7ezUqyVHjWZsdAWXerBoiMinEaYm5S6X+TAF@vger.kernel.org
-X-Gm-Message-State: AOJu0YwdxOeCP6XQRQQ8MZNqd3EnMw28LA0sNJFyrpjcbMZp0x/wefY2
-	DEHUwSUThw7jxnmtpvfwW5FmyY/S+9XNAc/DTdSy8lRQipXMnZYU2VWnVNmV5F/QJ0jqFqrEDjs
-	Sw3kykXDNSYz8CzdBA+Hpiir14YMGCg==
-X-Gm-Gg: AY/fxX6DfC3VC7hlr5Cia6GjQbvoi5ko+HuGyLfS2lsWOa4FR+t4HVTwvdcAnb8SKl9
-	qRaVqtnksuUT7PeuZc8LUYrTQ29nnKu8vq87aCEHy9JZ5cAlS+PuJ9WEfUNtLbIiuaMrLDSlNTj
-	oQ3ZZ3drgh4xFcSfWvUNRZcsGkze2VVY9OCDGXDSun1pmp4+CpW2Y71is00lXF/mUnm1Y7ofIVk
-	04plFrOYX0kQ/7fu9Soa9Ok7k8Ruey3lhVAOx1LTuPk5jybNNXtJUw48kKXUSXQyHtpK/ExYWgx
-	hY/gbB+3h/Y3+7nOH0kOtJoSOBc=
-X-Google-Smtp-Source: AGHT+IE5zXTwVQxrbaPXQC3VXCOoLJhpKpR4tXpdb/7cIMJryLXfVsLBo2c1bVuuXPFjDhO95WFjskd8XdCTxgQXiZU=
-X-Received: by 2002:a05:6214:459f:b0:88a:2ce5:a049 with SMTP id
- 6a1803df08f44-88d8491cb3dmr66535756d6.62.1766177899802; Fri, 19 Dec 2025
- 12:58:19 -0800 (PST)
+        bh=aS4OmYCzbKdvwE5BntPhqf93lcN6z7RXIUJ/QZyRAnc=;
+        b=Jcv404jhJI8py1oyedrPGa1LDAVrokw+zYwUZIqD1/wTaKWjsvnr7L70ujiptj6rm6
+         e2TpmfzP9/0t0I/ibPV3q9oz1QJ0h8dBAc9v9HcKrDwcCZvgnChnFdkZWQsUFZFu/LY/
+         YVaj670+zBWPeXrotR6g+xOeGp6IQI1zD+u4Po4ikDpt7bbIG4f+eOUzqyfgnVDZ3c2q
+         sd4eZMcSPTx58H7IkzIAg3gcn2pJ+qrnLMuDXP5YvLGqPTf7bNa2YlqIcD1G0YZOPEPs
+         jr6fo+tGYWiFqe+Q8Xi95mhbleaIdyu88k6Lc+CcIwgvtYzCdKHSsjSltBp1o3C7t6ba
+         ih8A==
+X-Forwarded-Encrypted: i=1; AJvYcCVXSMyVzQnq7w23culKZGN8nIu8VPU3QNG9vw78h+4w58QYspRee7U1h1P+11EwlseN2fsjMv5jfjNXF0M6ggDghhs9@vger.kernel.org
+X-Gm-Message-State: AOJu0YwUYDtHI6xTtLZWHXYcGcr1c9vVGNvUOJ1p3Ik8jkGobYUPObeu
+	M3iqPJMtZ78wr+i6wQ6ue+TE9MKaH/0gAkgDBcxInRi+dVSCtCn/6IiKZZz0vYnE+3FWVF+kvNW
+	hFcPTTCppDOOgIhx8yHesZ0qvQhC+3w==
+X-Gm-Gg: AY/fxX59BeOShJ25AVegmrHwCk+yoVtvNHFP4ewIvQGV65SNUmMYbVydRsLz4zjz+q7
+	SaCDla1Rh0b06AbS8KLrVu+sjVv4xZKIzz5/YBLgnFz6CSDiBd85X2ZFTjjRuHSu0+TGkcPEUNX
+	7Cjeisy5Pqwt9wTvLCtAhUpCRqmILWeA5sVonviw4NXFJHzygf5vzegMNhuDj9GS4NXVOlASma5
+	wLM+OEDsYvnKO2VMC2BgNSsxcmh3ecxasFYVosIeV7SOY9aP37Lpydr7QvENSc1hq2hgX/YWiNL
+	Z2/tyjUPP4MAtR+mcoDIe4LMqp8=
+X-Google-Smtp-Source: AGHT+IHUInld4dr0tzVSPygeNnFyM8vctUDTI0mt+1P0cbCbzfNlC5onUK4e2vD+yoiglNE4/4NgRuxckawSVQK9Zag=
+X-Received: by 2002:a05:622a:30d:b0:4ed:9264:30fa with SMTP id
+ d75a77b69052e-4f35f45624dmr120435961cf.31.1766177972100; Fri, 19 Dec 2025
+ 12:59:32 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
@@ -62,14 +62,15 @@ List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 References: <20251218-surface-sp11-for-next-v4-0-7bcf83c1504a@gmail.com>
- <20251218-surface-sp11-for-next-v4-2-7bcf83c1504a@gmail.com> <9c7115b2-9f31-49e1-a2cd-2071b84fb85d@kernel.org>
-In-Reply-To: <9c7115b2-9f31-49e1-a2cd-2071b84fb85d@kernel.org>
+ <20251218-surface-sp11-for-next-v4-1-7bcf83c1504a@gmail.com>
+ <4d167792-cc62-422b-bf65-3ce101377d46@kernel.org> <fe4148ec-9dbd-4418-9c36-f4a0b9fd2c24@kernel.org>
+In-Reply-To: <fe4148ec-9dbd-4418-9c36-f4a0b9fd2c24@kernel.org>
 From: =?UTF-8?B?SsOpcsO0bWUgZGUgQnJldGFnbmU=?= <jerome.debretagne@gmail.com>
-Date: Fri, 19 Dec 2025 21:57:42 +0100
-X-Gm-Features: AQt7F2pKwyReFTFBW1AkMHui4zZvwtcdzXVXBUuKjfAtNTDFOhMAD_POvY0snFk
-Message-ID: <CA+kEDGGsmANidzkMV4=Dhr_tvTYKYNyrU1TBDja40tZ3MygYag@mail.gmail.com>
-Subject: Re: [PATCH v4 2/6] dt-bindings: wireless: ieee80211: Add
- disable-rfkill property
+Date: Fri, 19 Dec 2025 21:58:56 +0100
+X-Gm-Features: AQt7F2r6__kaZegqQ_DFSq72HXuciQhViJslLmVbHDK7WPbCev8YRRE_uxJgK2U
+Message-ID: <CA+kEDGHK7J3h8mUvgjf-Y_PJ11zcuaCPXik1d_rp27WPCbLBFg@mail.gmail.com>
+Subject: Re: [PATCH v4 1/6] dt-bindings: arm: qcom: Document Microsoft Surface
+ Pro 11
 To: Krzysztof Kozlowski <krzk@kernel.org>
 Cc: Bjorn Andersson <andersson@kernel.org>, Konrad Dybcio <konradybcio@kernel.org>, 
 	Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, 
@@ -83,43 +84,74 @@ Cc: Bjorn Andersson <andersson@kernel.org>, Konrad Dybcio <konradybcio@kernel.or
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-Le ven. 19 d=C3=A9c. 2025 =C3=A0 18:38, Krzysztof Kozlowski <krzk@kernel.or=
+Le ven. 19 d=C3=A9c. 2025 =C3=A0 18:44, Krzysztof Kozlowski <krzk@kernel.or=
 g> a =C3=A9crit :
 >
-> On 18/12/2025 23:22, J=C3=A9r=C3=B4me de Bretagne via B4 Relay wrote:
-> > From: J=C3=A9r=C3=B4me de Bretagne <jerome.debretagne@gmail.com>
+> On 19/12/2025 18:40, Krzysztof Kozlowski wrote:
+> > On 18/12/2025 23:22, J=C3=A9r=C3=B4me de Bretagne via B4 Relay wrote:
+> >> From: J=C3=A9r=C3=B4me de Bretagne <jerome.debretagne@gmail.com>
+> >>
+> >> Add the compatibles for the Qualcomm-based Microsoft Surface Pro 11,
+> >> using its Denali codename.
+> >>
+> >> The LCD models are using the Qualcomm Snapdragon X1 Plus (X1P64100),
+> >> the OLED ones are using the Qualcomm Snapdragon X1 Elite (X1E80100).
+> >>
+> >> Due to the difference in how the built-in panel is being handled
+> >> between the OLED variant and LCD one, it is required to have two
+> >> separate DTBs, so document the compatible string for both variants.
+> >>
+> >> Signed-off-by: J=C3=A9r=C3=B4me de Bretagne <jerome.debretagne@gmail.c=
+om>
+> >> ---
+> >>  Documentation/devicetree/bindings/arm/qcom.yaml | 11 +++++++++++
+> >>  1 file changed, 11 insertions(+)
+> >>
+> >> diff --git a/Documentation/devicetree/bindings/arm/qcom.yaml b/Documen=
+tation/devicetree/bindings/arm/qcom.yaml
+> >> index d84bd3bca2010508a8225b9549d8c634efa06531..3685330344c0bf621125fc=
+3d2f9c04082d6de144 100644
+> >> --- a/Documentation/devicetree/bindings/arm/qcom.yaml
+> >> +++ b/Documentation/devicetree/bindings/arm/qcom.yaml
+> >> @@ -1067,6 +1067,17 @@ properties:
+> >>            - const: qcom,x1e78100
+> >>            - const: qcom,x1e80100
+> >>
+> >> +      - items:
+> >> +          - const: microsoft,denali-lcd
+> >> +          - const: microsoft,denali
+> >> +          - const: qcom,x1p64100
 > >
-> > For some devices, Wi-Fi is entirely hard blocked by default making
-> > the Wi-Fi radio unusable, except if rfkill is disabled as expected
-> > on those models.
-> >
-> > Commit c6a7c0b09d5f ("wifi: ath12k: Add Support for enabling or
-> > disabling specific features based on ACPI bitflag") added a way to
-> > support features set via ACPI, including the DISABLE_RFKILL bit.
-> >
-> > Add a disable-rfkill property to expose the DISABLE_RFKILL bit
-> > equivalent for devices described by a Devicetree instead of ACPI.
-> >
-> > Tested-by: Dale Whinham <daleyo@gmail.com>
+> > 64 < 78, so this should be placed after devkit list.
 >
-> You cannot test a binding. Building and other make-steps are not testing.
->
-> I don't even get how this appeared - wasn't here before and there is no
-> trace on the mailing lists. Can you point to the mailing where this was
-> given?
+> No, I missed this is x1p, not x1e. This is placed correct, but the oled
+> should be moved as I suggested.
 
-We co-develop and test this patchset with Dale, I missed that Tb:
-tags shouldn't be used for a binding, my bad, I will drop this in v5.
+Indeed, this is x1p for the 64100, I didn't choose this naming :)
+I will move the oled entry after hamoa in v5.
 
-> > Signed-off-by: J=C3=A9r=C3=B4me de Bretagne <jerome.debretagne@gmail.co=
-m>
-> > ---
-> >  Documentation/devicetree/bindings/net/wireless/ieee80211.yaml | 6 ++++=
-++
-> >  1 file changed, 6 insertions(+)
+> >> +          - const: qcom,x1e80100
+> >> +
+> >> +      - items:
+> >> +          - const: microsoft,denali-oled
+> >> +          - const: microsoft,denali
 > >
+> > So this goes after hamoa list, to keep somehow logical order.
+> >
+> >> +          - const: qcom,x1e80100
+> >> +
+> >>        - items:
+> >>            - enum:
+> >>                - asus,vivobook-s15
+> >>
+> >
+> >
+> > Best regards,
+> > Krzysztof
+>
+>
 > Best regards,
 > Krzysztof
 
-Thank you for your review,
+Thank you for the review,
 J=C3=A9r=C3=B4me
