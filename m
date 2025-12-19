@@ -1,143 +1,163 @@
-Received: from fhigh-a4-smtp.messagingengine.com (fhigh-a4-smtp.messagingengine.com [103.168.172.155])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BE065303C87;
-	Fri, 19 Dec 2025 15:39:14 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=103.168.172.155
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DC6A5366569;
+	Fri, 19 Dec 2025 16:49:08 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1766158757; cv=none; b=sTzEuJKBO0vo36HYIumu8S+fTXl2J7oQDteG2NrGWHbMv8AQTY9G0bfkOMiqgqlv8ILMo/kUEaBBrbcueo7kvSdcMupaQHPoxmkszJygBip2UrEACJN4BBosIVVEZcKglCyyCgKKoXu0t8oSEhyDLIAsw7yPfaZhGkX7oEzT5Ck=
+	t=1766162950; cv=none; b=HPNAblX7klE17LIbCIIUoQO6SW8LNyEGKEssGmA4GJ13NtW+vSmn5CL1gnPxfsLOp8j7v2dlflYBgYgF7LvMur6/uwm966Ow0NJmgVM/4dMDogr6lFj9rliqw6Kl+1VqUWeL/jKB46FI3K22Q1WfWFMabZyg9ypDT0kQwhEksdk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1766158757; c=relaxed/simple;
-	bh=pwUNub46A6T6HH+SbMvbCQ1Lq5+MaD8nOQBpVCSmKf4=;
-	h=MIME-Version:Date:From:Cc:Message-Id:In-Reply-To:References:
-	 Subject:Content-Type; b=FbGQvY9gRskwrtqCH+p8AfnSQu+A9C7Ucu+xLVnS12QB+SLmHIC4OGRYO7NTz6b2Am12ieYM5tpAemvCfSXkckyqSmvQ3bUopN58t63WXBdpT7hZj2/+hcbO+bI59AcYyOs4ACzK3539Egs+7DAqu+9ycGlDNCo7RBvrgqnJpDk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=squebb.ca; spf=pass smtp.mailfrom=squebb.ca; dkim=pass (2048-bit key) header.d=squebb.ca header.i=@squebb.ca header.b=ll2hMbol; dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b=QR+pl184; arc=none smtp.client-ip=103.168.172.155
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=squebb.ca
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=squebb.ca
+	s=arc-20240116; t=1766162950; c=relaxed/simple;
+	bh=gU/Spk635yGSmiL/m1EMeZ4emx6QYD9+JLagft52vcs=;
+	h=From:Date:Content-Type:MIME-Version:Cc:To:In-Reply-To:References:
+	 Message-Id:Subject; b=WFeaYy4glv3mb80eYES+EZSNGG91WzHYxUSbGNzTdb8VadwUY/IseckAW0A+9NGX35Gd8LfJiXRCnvtoMNcer95iZ/lD6nzpiOtNoyK6apb7uWiAfXVe5at62p5BOp4PIwKfCC2VNZ2aX0Mom9VHpV+jtUJVA4MQ4iq0OrB1Rno=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=kUYbiruI; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=squebb.ca header.i=@squebb.ca header.b="ll2hMbol";
-	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="QR+pl184"
-Received: from phl-compute-02.internal (phl-compute-02.internal [10.202.2.42])
-	by mailfhigh.phl.internal (Postfix) with ESMTP id D0AA41400054;
-	Fri, 19 Dec 2025 10:39:13 -0500 (EST)
-Received: from phl-imap-08 ([10.202.2.84])
-  by phl-compute-02.internal (MEProxy); Fri, 19 Dec 2025 10:39:13 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=squebb.ca; h=cc
-	:cc:content-transfer-encoding:content-type:content-type:date
-	:date:from:from:in-reply-to:in-reply-to:message-id:mime-version
-	:references:reply-to:subject:subject:to; s=fm2; t=1766158753; x=
-	1766245153; bh=d7juB06YucnF/Qp8ulL/06AMeoxCKD/YEFXfJKlh048=; b=l
-	l2hMbol2p02tMPVknP3wdGHjidyJb4f7JlGmAfVbi16o8jGTvNDVH4M2s0SNEGQh
-	Yj63OvraD8jFTgOTjXvUKMlNMTWJ6S/5PuQ43Y4lEdQGgSNxF1LbJDMwTM4J+6mv
-	ombVv9YyNSGGcX6plXDZWemof+ayC4DgzfIif550EN8xXoI7j5zV/7qd9u6uYk8M
-	wg3yGPVdyQMtxQMdg8nBR3aGtB01V3eCNjB4w2FdhhGEJtzbS65OAejwboLgndgK
-	wMDCOFh8R5IzP/kNocJ323PoAUMfq4ojTLq6cRJSjK+QUCLYJGUgw4Y2VC5ECmlH
-	PwtdR0TUs7E9GnLlGWPtw==
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-	messagingengine.com; h=cc:cc:content-transfer-encoding
-	:content-type:content-type:date:date:feedback-id:feedback-id
-	:from:from:in-reply-to:in-reply-to:message-id:mime-version
-	:references:reply-to:subject:subject:to:x-me-proxy:x-me-sender
-	:x-me-sender:x-sasl-enc; s=fm1; t=1766158753; x=1766245153; bh=d
-	7juB06YucnF/Qp8ulL/06AMeoxCKD/YEFXfJKlh048=; b=QR+pl184CTGhkGyCo
-	Mog136reZ98mDRT5Jk70Wf/0QwZymL3po3rH/WU3J7V5auV9H19mrALlxwrkvhNR
-	jshfQ/ukbEiRrTcrypewkrS74xTsLmKWSJgII3zqTXH+5payC1lhjXkiR9IaK/8z
-	bJK64sWv/FKND8Vf4vVrg2BcUlpY/0HfsURCHXJHCzEGU44tg5AOzZaWYAtceK2i
-	CBu9s1JGIfyOQFJj9WECkgIgVQluKugGJ3sP7XCtDsLyparK67gospSqghAdmpcT
-	DfOZnyI08IzkFFhFuvvtIasqW9UvW5Wu32y79QJeK8v/RJBfhBiWr+yZn4G6xSyF
-	pNjXg==
-X-ME-Sender: <xms:oXFFaX0J6i82svhP3Py5Y_LFvmqibFd2B5-4r5jCDwSTaS6yBBrVxg>
-    <xme:oXFFaQ4s96teFpKUOli_jxASfce_kIgAZp3Xjt-TQf0irjGcuhjj45mM6UD5-h-PX
-    tSUVEOBnFqDVgvdqdPvBnkePjjB3V0tH2WnW265p7zYEBl9tvq58Q>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeefgedrtddtgdegkeeikecutefuodetggdotefrod
-    ftvfcurfhrohhfihhlvgemucfhrghsthforghilhdpuffrtefokffrpgfnqfghnecuuegr
-    ihhlohhuthemuceftddtnecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenmhhish
-    hsihhnghcuvffquchfihgvlhguucdlfedtmdenucfjughrpefoggffhfevkfgjfhfutgfg
-    sehtjeertdertddtnecuhfhrohhmpedfofgrrhhkucfrvggrrhhsohhnfdcuoehmphgvrg
-    hrshhonhdqlhgvnhhovhhosehsqhhuvggssgdrtggrqeenucggtffrrghtthgvrhhnpedv
-    keefueefvddvfeevudejffeugfelvddugeegteetudefhedtveejffelteelueenucevlh
-    hushhtvghrufhiiigvpedtnecurfgrrhgrmhepmhgrihhlfhhrohhmpehmphgvrghrshho
-    nhdqlhgvnhhovhhosehsqhhuvggssgdrtggrpdhnsggprhgtphhtthhopeegpdhmohguvg
-    epshhmthhpohhuthdprhgtphhtthhopehhrghnshhgsehkvghrnhgvlhdrohhrghdprhgt
-    phhtthhopehilhhpohdrjhgrrhhvihhnvghnsehlihhnuhigrdhinhhtvghlrdgtohhmpd
-    hrtghpthhtoheplhhinhhugidqkhgvrhhnvghlsehvghgvrhdrkhgvrhhnvghlrdhorhhg
-    pdhrtghpthhtohepphhlrghtfhhorhhmqdgurhhivhgvrhdqgiekieesvhhgvghrrdhkvg
-    hrnhgvlhdrohhrgh
-X-ME-Proxy: <xmx:oXFFaZimrdehWiSyiHOa2k8hDTSTYc0kYLBee-tSeqjHqB7lYg7NfA>
-    <xmx:oXFFaU5l6Vc1nRvuOpjpSByYY_Zq_4Qc_hn4oVRV3ncMDX0ZKTnRDA>
-    <xmx:oXFFaRbJXsrqGWTu-t0_GzWZySgKF8ybtdWHdEqoiAjZo1V6TOGKrQ>
-    <xmx:oXFFaZ6M7kzOwAu7Mxmv00Fm930Fa8GR7Rrrh09wqLESp53d8E4nSA>
-    <xmx:oXFFaagaO6OP9ZZ0MbyZEjJZBtjQCixsPB9yE9VkcR4GG1kcprznVBU4>
-Feedback-ID: ibe194615:Fastmail
-Received: by mailuser.phl.internal (Postfix, from userid 501)
-	id 8255A2CE0072; Fri, 19 Dec 2025 10:39:13 -0500 (EST)
-X-Mailer: MessagingEngine.com Webmail Interface
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="kUYbiruI"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 22C59C116D0;
+	Fri, 19 Dec 2025 16:49:08 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1766162948;
+	bh=gU/Spk635yGSmiL/m1EMeZ4emx6QYD9+JLagft52vcs=;
+	h=From:Date:Cc:To:In-Reply-To:References:Subject:From;
+	b=kUYbiruIk0KQIvLCn3b0/Y/uX1d6dGlovgCtUnooFBg/BQ8bwIIWe8AKgSK5TcBfq
+	 9ZxFO4O5sRrW1PtXvKgH/KK7/YMGNRUCV9lXneSGToB2DHS8Z45yW6KfzaA1hZkQlU
+	 ZpG5kk4tVHcAVabmrrYDkuMOOn+O8h/ZZiIHuQkHLM4TM+zR1j83rPD/QlZHP5/HiE
+	 cg+POSQsIDcdqxV3SOKiGObha/fUIcBmgYggt3CLnG6pAVfWNLjUoR+kOo1MF4HnHQ
+	 tjCYCSSprwqYkYViBTsBbbzbh70hXHQR178Mm3Njq79aRdQ5QL4TQf2uezgw/J86J2
+	 Df+lCZ1ZZfxPw==
+From: Rob Herring <robh@kernel.org>
+Date: Fri, 19 Dec 2025 10:49:06 -0600
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-ThreadId: AKqE3OuVU7B-
-Date: Fri, 19 Dec 2025 10:38:49 -0500
-From: "Mark Pearson" <mpearson-lenovo@squebb.ca>
-Cc: "Hans de Goede" <hansg@kernel.org>,
- =?UTF-8?Q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>,
- "platform-driver-x86@vger.kernel.org" <platform-driver-x86@vger.kernel.org>,
- linux-kernel@vger.kernel.org
-Message-Id: <32d95a0f-4027-4ae7-811c-cef18a48c41c@app.fastmail.com>
-In-Reply-To: <20251127202959.399040-1-mpearson-lenovo@squebb.ca>
-References: <mpearson-lenovo@squebb.ca>
- <20251127202959.399040-1-mpearson-lenovo@squebb.ca>
-Subject: Re: [PATCH] platform/x86: think-lmi: Add WMI certificate thumbprint support
- for ThinkCenter
-Content-Type: text/plain
-Content-Transfer-Encoding: 7bit
+Cc: Johannes Berg <johannes@sipsolutions.net>, 
+ Konrad Dybcio <konradybcio@kernel.org>, Dale Whinham <daleyo@gmail.com>, 
+ linux-arm-msm@vger.kernel.org, 
+ Konrad Dybcio <konrad.dybcio@oss.qualcomm.com>, 
+ Hans de Goede <hansg@kernel.org>, platform-driver-x86@vger.kernel.org, 
+ devicetree@vger.kernel.org, Conor Dooley <conor+dt@kernel.org>, 
+ Dmitry Baryshkov <dmitry.baryshkov@oss.qualcomm.com>, 
+ ath12k@lists.infradead.org, Maximilian Luz <luzmaximilian@gmail.com>, 
+ linux-wireless@vger.kernel.org, Lorenzo Bianconi <lorenzo@kernel.org>, 
+ Jeff Johnson <jjohnson@kernel.org>, linux-kernel@vger.kernel.org, 
+ Krzysztof Kozlowski <krzk+dt@kernel.org>, 
+ Bjorn Andersson <andersson@kernel.org>, 
+ =?utf-8?q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
+To: =?utf-8?q?J=C3=A9r=C3=B4me_de_Bretagne?= <jerome.debretagne@gmail.com>
+In-Reply-To: <20251218-surface-sp11-for-next-v4-0-7bcf83c1504a@gmail.com>
+References: <20251218-surface-sp11-for-next-v4-0-7bcf83c1504a@gmail.com>
+Message-Id: <176616243275.3584198.6534106165888918555.robh@kernel.org>
+Subject: Re: [PATCH v4 0/6] Microsoft Surface Pro 11 support
 
-On Thu, Nov 27, 2025, at 3:29 PM, Mark Pearson wrote:
-> The ThinkCenter team are adding WMI certificate thumbprint support.
->
-> Updating the driver to enable it. They are using the same GUID as
-> Thinkpad/ThinkStation.
-> Tested on M75q Gen 5.
->
-> Signed-off-by: Mark Pearson <mpearson-lenovo@squebb.ca>
+
+On Thu, 18 Dec 2025 23:22:06 +0100, Jérôme de Bretagne wrote:
+> This series brings support for the Qualcomm-based Microsoft Surface
+> Pro 11 covering both the OLED and LCD variants.
+> 
+> Signed-off-by: Dale Whinham <daleyo@gmail.com>
+> Signed-off-by: Jérôme de Bretagne <jerome.debretagne@gmail.com>
 > ---
->  drivers/platform/x86/lenovo/think-lmi.c | 6 +++++-
->  1 file changed, 5 insertions(+), 1 deletion(-)
->
-> diff --git a/drivers/platform/x86/lenovo/think-lmi.c 
-> b/drivers/platform/x86/lenovo/think-lmi.c
-> index 540b472b1bf3..c45f0206b4ab 100644
-> --- a/drivers/platform/x86/lenovo/think-lmi.c
-> +++ b/drivers/platform/x86/lenovo/think-lmi.c
-> @@ -195,7 +195,7 @@ static const struct tlmi_cert_guids 
-> thinkpad_cert_guid = {
->  };
+> Changes in v4:
+> - Re-order the denali entry in the aggregator_registry acpi_match table [Dmitry]
+> - Improve the bindings by splitting the LCD and OLED variants into 2 entries [Konrad]
+> - Enable i2c4 to make it accessible through i2c-tools [Konrad]
+> - Document the addresses for i2c0 and i2c4 like in romulus.dtsi [Konrad]
+> - Fix the clock-frequency for i2c0 based on DSDT/SSDT
+> - Drop i2c5 which is not found in the DSDT after double-checking
+> - Add the R-b: tag from Konrad for the SP11 device trees
+> - Link to v3: https://lore.kernel.org/r/20251218-surface-sp11-for-next-v3-0-875afc7bd3b7@gmail.com
 > 
->  static const struct tlmi_cert_guids thinkcenter_cert_guid = {
-> -	.thumbprint = NULL,
-> +	.thumbprint = LENOVO_CERT_THUMBPRINT_GUID, /* Same GUID as TP */
->  	.set_bios_setting = LENOVO_TC_SET_BIOS_SETTING_CERT_GUID,
->  	.save_bios_setting = LENOVO_TC_SAVE_BIOS_SETTING_CERT_GUID,
->  	.cert_to_password = LENOVO_TC_CERT_TO_PASSWORD_GUID,
-> @@ -709,6 +709,10 @@ static ssize_t cert_thumbprint(char *buf, const 
-> char *arg, int count)
->  	if (!tlmi_priv.cert_guid->thumbprint)
->  		return -EOPNOTSUPP;
+> Changes in v3:
+> - Update the compatible strings to document both the OLED and LCD variants
+> - Move the disable-rfkill property into ieee80211.yaml [Rob,Krzysztof]
+> - Reference commit c6a7c0b09d5f and detail the disable-rfkill patch description [Rob,Krzysztof]
+> - Switch to the renamed hamoa.dtsi and hamoa-pmics.dtsi [Dale]
+> - Improve the comments describing the 2 USB Type-C port location
+> - Update the speaker definition to describe only 2-speakers [Konrad]
+> - Drop output-low from the speaker definition [Konrad]
+> - Enable i2c0 to make it accessible through i2c-tools [Konrad]
+> - Delete a non-applicable comment about removable WLAN card [Konrad]
+> - Re-order a few nodes and fix indentation issues [Konrad]
+> - Squash one of the patches as suggested [Krzysztof]
+> - Drop the NAKed patch patch about a dpcd link rate quirk [Dmitry]
+> - Include the Reviewed-by: tags
+> - Link to v2: https://lore.kernel.org/all/20251201011457.17422-1-daleyo@gmail.com/
 > 
-> +	/* Older ThinkCenter BIOS may not have support */
-> +	if (!wmi_has_guid(tlmi_priv.cert_guid->thumbprint))
-> +		return -EOPNOTSUPP;
-> +
->  	status = wmi_evaluate_method(tlmi_priv.cert_guid->thumbprint, 0, 0, 
-> &input, &output);
->  	if (ACPI_FAILURE(status)) {
->  		kfree(output.pointer);
-> -- 
-> 2.43.0
+> Changes in v2:
+>   - Dropped ATNA30DW01 patch as it was merged.
+>   - Split device tree into x1e (OLED)/x1p (LCD) specific *.dts files and move common code into x1-microsoft-denali.dtsi (patch 4).
+>   - Device tree now enables higher external monitor refresh rates/resolutions (patch 4).
+>   - Device tree now enables partially working audio output; requires alsa-ucm-conf and audioreach-topology definitions in userspace (patch 4).
+>   - Replaced 'Work around bogus maximum link rate' with a quirk-based approach (patch 5).
+>   - Improve the commit message about the disable-rfkill property in response to feedback (patch 6).
+> 
+> ---
+> Dale Whinham (4):
+>       firmware: qcom: scm: allow QSEECOM on Surface Pro 11
+>       platform/surface: aggregator_registry: Add Surface Pro 11 (QCOM)
+>       arm64: dts: qcom: Add support for Surface Pro 11
+>       wifi: ath12k: Add support for disabling rfkill via devicetree
+> 
+> Jérôme de Bretagne (2):
+>       dt-bindings: arm: qcom: Document Microsoft Surface Pro 11
+>       dt-bindings: wireless: ieee80211: Add disable-rfkill property
+> 
+>  Documentation/devicetree/bindings/arm/qcom.yaml    |   11 +
+>  .../bindings/net/wireless/ieee80211.yaml           |    6 +
+>  arch/arm64/boot/dts/qcom/Makefile                  |    4 +
+>  arch/arm64/boot/dts/qcom/x1-microsoft-denali.dtsi  | 1324 ++++++++++++++++++++
+>  .../dts/qcom/x1e80100-microsoft-denali-oled.dts    |   20 +
+>  .../boot/dts/qcom/x1p64100-microsoft-denali.dts    |   16 +
+>  drivers/firmware/qcom/qcom_scm.c                   |    1 +
+>  drivers/net/wireless/ath/ath12k/core.c             |    3 +
+>  .../platform/surface/surface_aggregator_registry.c |   18 +
+>  9 files changed, 1403 insertions(+)
+> ---
+> base-commit: 8f0b4cce4481fb22653697cced8d0d04027cb1e8
+> change-id: 20251218-surface-sp11-for-next-626e327f7b33
+> 
+> Best regards,
+> --
+> Jérôme de Bretagne <jerome.debretagne@gmail.com>
+> 
+> 
+> 
 
-Would it be possible to get a review for this please? It's pretty minor and would like to get this feature available to users.
 
-Thanks
-Mark
+My bot found new DTB warnings on the .dts files added or changed in this
+series.
+
+Some warnings may be from an existing SoC .dtsi. Or perhaps the warnings
+are fixed by another series. Ultimately, it is up to the platform
+maintainer whether these warnings are acceptable or not. No need to reply
+unless the platform maintainer has comments.
+
+If you already ran DT checks and didn't see these error(s), then
+make sure dt-schema is up to date:
+
+  pip3 install dtschema --upgrade
+
+
+This patch series was applied (using b4) to base:
+ Base: 8f0b4cce4481fb22653697cced8d0d04027cb1e8 (use --merge-base to override)
+
+If this is not the correct base, please add 'base-commit' tag
+(or use b4 which does this automatically)
+
+New warnings running 'make CHECK_DTBS=y for arch/arm64/boot/dts/qcom/' for 20251218-surface-sp11-for-next-v4-0-7bcf83c1504a@gmail.com:
+
+arch/arm64/boot/dts/qcom/x1e80100-microsoft-denali-oled.dtb: wifi@0 (pci17cb,1107): 'disable-rfkill' does not match any of the regexes: '^pinctrl-[0-9]+$'
+	from schema $id: http://devicetree.org/schemas/net/wireless/qcom,ath12k.yaml
+arch/arm64/boot/dts/qcom/x1p64100-microsoft-denali.dtb: wifi@0 (pci17cb,1107): 'disable-rfkill' does not match any of the regexes: '^pinctrl-[0-9]+$'
+	from schema $id: http://devicetree.org/schemas/net/wireless/qcom,ath12k.yaml
+
+
+
+
+
