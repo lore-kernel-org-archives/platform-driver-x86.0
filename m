@@ -1,115 +1,169 @@
-Received: from mail-wm1-f49.google.com (mail-wm1-f49.google.com [209.85.128.49])
+Received: from mail-qt1-f182.google.com (mail-qt1-f182.google.com [209.85.160.182])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D8A1E33E37D
-	for <platform-driver-x86@vger.kernel.org>; Fri, 19 Dec 2025 19:27:05 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.49
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4CBAE157487
+	for <platform-driver-x86@vger.kernel.org>; Fri, 19 Dec 2025 20:50:09 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.182
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1766172427; cv=none; b=BTQ2NyafKrub9RTPW7qR5NFg2MSy0KY4S/Kchtc3AeuPLypBe4KvqkqqTOo8rDDDbyqGrF56IUIOKKZR+F371N3JJzrcgDabfkuWoR+vsJUurBVbl28EsijeCYjkibn382aXrGkVpRwNjJNltpXCq6XI2LjXKA/fMwhauNI9cbA=
+	t=1766177412; cv=none; b=LNlMJSWcS2imSsDcNMpyWPA468giq/kSoc8tHQgD6otnb/xRjZUXkSA7Sp4kDAhlSi62tkwGfeVWmfz4bLLZVDLorpQvLmQu/T1jDL1dxK5Iqao3Z8UbOkO0vG4Z/UpBRrplCu2EEDUCXOJQ++hu86jK5cpdz5gnEd2CFB6DOqg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1766172427; c=relaxed/simple;
-	bh=k8mZy/7yVU2Ufqg1SNQ09M+d2/3IpCiWvdHzzLcqN/s=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=A+NxROo+J1EHwt0k/GxNeU4DMbU6Fjj7uj/06pTz4DAz8LhbgBHAAP/Kqw0JEsVc7Adqb1AKkk49aF5ajnsFxTIT1m+Y5OwzAWgrZOL4OkoKmjqj3JbU2DHiBMRg6kkBTzCi11UU7uxHXlbxFvUV9WKqwPtvRiiBxtikO/a8+FA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=dgqvxHys; arc=none smtp.client-ip=209.85.128.49
+	s=arc-20240116; t=1766177412; c=relaxed/simple;
+	bh=qK0aX9ex4MVXzE2y/hhCxHObw7qjjH4KOguPRtU7gc4=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=mDsBQwAKi0JXSrFKKAQpXUwFyehuM0ygWM3HxU019MU14hNUqiOjY9YKHdYVEZTvKtrQj0CY/dCMdobQQ9jq/7rDuErqyZwVdolE6QK4do53RbnMhP9U8jzVHw2ShKfQ7ZtAQsBuUNLg82l2pMgl1uBNc/TC+XSoR8IcIz+gICQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=dHv6XO5f; arc=none smtp.client-ip=209.85.160.182
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="dgqvxHys"
-Received: by mail-wm1-f49.google.com with SMTP id 5b1f17b1804b1-47774d3536dso17822315e9.0
-        for <platform-driver-x86@vger.kernel.org>; Fri, 19 Dec 2025 11:27:05 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="dHv6XO5f"
+Received: by mail-qt1-f182.google.com with SMTP id d75a77b69052e-4f34c5f2f98so24055271cf.1
+        for <platform-driver-x86@vger.kernel.org>; Fri, 19 Dec 2025 12:50:09 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1766172424; x=1766777224; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=6kxkkJnPi9GBxxRfQSUamkMaS41d/etdoL+kweUhQKE=;
-        b=dgqvxHyscE8x5odAA7E78z5K7MNsroQg+/L9I/uZ9yWC24/bjxq70etDClDf4FCLk0
-         qqmhy6JyjnLKZIijjALs5CzjUtBa+pLkMJQMsYNfThiW62tD5qNoA5Teikg+IJxRPqbC
-         jnrKPFHjSq5LC/ybxe2LpyzD5y0RCfyN4I5OimlmV1CI8SGKDjW9qCf3yMjbngP1mQPV
-         DeAt3Lr0DPx0FVjBkFX33r38fLqrVCAqyTzKXp9TN5bs/Pg84iKaqrvJ3yY7oi5vBbZL
-         tHX9lXv9XBFe+ycMNpP4oBPbjRB/cW7pqxKnFRyunBYAcGcNZnL5W1FocrqVwvbkdfd7
-         uHIw==
+        d=gmail.com; s=20230601; t=1766177409; x=1766782209; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=E/s7YcuiJpwKoMYsi7MmSYzjmyYOegw0fzBHdgiPFOM=;
+        b=dHv6XO5ftk4Lmf+KDT8Wsgo4ETQTW8Jw1U4XqyoNEDh3SzQ00yYsLysNn1rTQm08fK
+         8FSwgQZEUWj3Navyv9tE8HYJHu2rSA3gZWGeB829zll/eLZYm1R1OUDwwe+agtSXoivr
+         xuqqdiiVxyUNyFE0AAJKv39y3Q5Jqd+dJgqPd8z1cHH2Ghjq5A+TofkOU8TMvw2ii4ZU
+         vnlFsOfG6Dz7jdoNX4iu5ylP4wYhha641M9g3F2DQ3HSpjSz2LwelfFZaycPQ8qvYUQ5
+         kHwfdg2sPlTy8t+eOPcr4GOWjKAvdBSga3Yro4Q7DrglK75MQCuu0Mo/93zmfBpWceYT
+         aZDA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1766172424; x=1766777224;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-gg:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=6kxkkJnPi9GBxxRfQSUamkMaS41d/etdoL+kweUhQKE=;
-        b=PXsGOfzxjfKEc5lJWJVKzpheDsuOJ4p0J2ezYIg+KRWs/019tbuuGMvYdipmsaArLf
-         9l6DqP8x5BN0/qYkGLNFE6VmmWqr7vRKBXqZJHDD3p16Gb/biOVRkP5w9KvHZmUGTCyu
-         UuRmT92ftt1MrAoRZEY7IWq96cZG614zPYLXoY2I9DWvDoywBnuSMQuH+7/t+i5PitYC
-         vBA8QN/l6Juo2lyWmPyn8FzqDpA6WmmCbrAxIXA1pzYwoimvkE2v+UAJgNxB7rzDlGGd
-         5w3yzA3FshQMDpTokWX710ZKRkwkUtsykIiQSfbmf1DFqpTkrc/6Aa2x2/JVfMFmzxVN
-         dZZQ==
-X-Forwarded-Encrypted: i=1; AJvYcCW4aY9O0YbJrkQfQrSi1z17ovMuCs2Z4pMEB9SQMEymCqg1XLs/0IrY6RfV5HkuRyJdHhbKoQcX3pWg0ck0loSUz+27@vger.kernel.org
-X-Gm-Message-State: AOJu0YwlXGIK06Xke1UZCAtawd/sIKIvYJDCaHTAJqPsWPczNT+pnRK7
-	ra50VFplppZouGgnlMCcdJpAo37Swr5ONtPYXX4Mx5IMz23LbMy0NhcQ
-X-Gm-Gg: AY/fxX5puAaUQReR1HhkzJEtlKaY2ok5XBXILLJ+cNFyjsyYL3ox90hrhOKWlCC3VUd
-	AJN9BMc3sDrU4XEZuahVZsZKTWtnhVX3Ea9DSR3tj4VGuZ74ePgWWMRMwhhk3oeLK3TpRzAIzPq
-	sIQMNk6IFcYrTY2bpTUzDLx9kQVCmjujnyIFq0YFM+TrssqLADfcian/jnifzG1T4fg5/Ps5pNw
-	Mmg8CdAM7PmQTFCZecnUyHkEwpvDvImTzVwEU7L56bZHNEqJwxxYDFXRng4ITOQFS2/XZkcOvR6
-	iYe6v0hIq4gjzt6IpMJoQbjS/pRjJBYfLL9oyTzDxsC218U4iuEXn1EZuth8GBr77VMLzBrpQPe
-	mjJGRZpoUxmW2EbeFh2opYe7yHmCeGzyiQQl2Paufed2BjCd/lOgCd8Km0bYeNCHN9x37SmpHv8
-	Q8rCFx1AvEGAJaF/Hirqn2tVknEJ97LBbxU0rbkNU1HtzIiCiYZa1ucrJekYepZwkgXi4Po/K+u
-	2eTPH/E
-X-Google-Smtp-Source: AGHT+IHqqrUl2vSl0/wNfOnsIYZIIhJ1dpHJbH2MQVzIZ0EaTbpy5rMArQU7ewGjw++aIHXKYVdtyg==
-X-Received: by 2002:a05:600c:4f08:b0:475:d9de:952e with SMTP id 5b1f17b1804b1-47d18b83218mr39401345e9.1.1766172423809;
-        Fri, 19 Dec 2025 11:27:03 -0800 (PST)
-Received: from [192.168.1.10] (92.40.201.212.threembb.co.uk. [92.40.201.212])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-47d193e329asm57197755e9.15.2025.12.19.11.27.01
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Fri, 19 Dec 2025 11:27:03 -0800 (PST)
-Message-ID: <d4a87f75-92a3-4c09-9f9c-e906f0b7ae70@gmail.com>
-Date: Fri, 19 Dec 2025 19:27:01 +0000
+        d=1e100.net; s=20230601; t=1766177409; x=1766782209;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-gg:x-gm-message-state:from
+         :to:cc:subject:date:message-id:reply-to;
+        bh=E/s7YcuiJpwKoMYsi7MmSYzjmyYOegw0fzBHdgiPFOM=;
+        b=V1epQdSxMBATNHC/nJmYlGph/7mN9UlRJjDmmrfhYQqYd3G70NJ4JGCdGdE7IRF6NN
+         ay7X/rns/BHRQMtttgWQ8bDb+c3e9qU3No2RfkA9CvvD2kNhUo7nDmwlsb+GcqlkCuU/
+         RPiodwtvUz/FmMzucB0H8kEP6o34QgG+xaVghr7dBCbUGhMVioXPIPgMOQOAZcmIuP/Z
+         YOgdUZBF/IhlEwA7A8iC8n1vX5vqsPcGjEvU8QRrId/cNb8+MChQIyHnXMrq8/pvWl2H
+         AZpESKMmCbcxhgTIvTnf8o0qTTI5ZcOGozncv8SJQDjt9sCgpzGUupCudGpPGMurkf4g
+         J0Uw==
+X-Forwarded-Encrypted: i=1; AJvYcCWf1gIhy7reYGwq8NALo/gS+kWYM7+vwft3sucdVa0731YG8uuNF5o8tWD9ryJTsKwcghLEdKhdJcmhtcere40lLRRv@vger.kernel.org
+X-Gm-Message-State: AOJu0Yy4Bh7WOvcsswtRZEUK9lmm4CUkVeGOyirocb/s8wtWl6mkxFVA
+	ksYZtW2x6z/cvA+5YXSCfK+7BFRZv00HztZHNPJlkmqVPn4gvjv3n2l8wRMly8w9psurs0bj6Qt
+	UcXwaJy+DZ/fcKpWfzxOWnKj0allYcw==
+X-Gm-Gg: AY/fxX5bbfoaF4vY+BEKAEcO787916n20rqZGsSSUSx9KTR8HYh3/9pa6XAhQprV7GJ
+	3DGXoOs0i7eS7uNOTKyYzhq6L0ISSShU/ylpfFZZ6r7M1SmIA/ZWP1ly1KM/NZdFLoNMxUklEC7
+	XL+h/NMLnzpbLmS2ibKFWPvbJgvETJAPpAlynFcIwaGd2c6AuyXJiwkI1akY4rV+N+id1EgU1Qd
+	o0mevGIbjgXcNAaTOy72vfpPjfuy8DIlme3b1b1VArj86ySXEcyqppJ/8qSX9QmlYVPNMFG8C01
+	wIqA5R+/psNW8nUfv2Jot5aLgU4=
+X-Google-Smtp-Source: AGHT+IE42yv7FIsrWMR9yjYwFTyqReRn26jbbdEMiBw0u/y/uO6l059x2jBMuDoxTGPi0k5VPly4SKVeRcBZYLHomSo=
+X-Received: by 2002:a05:622a:400e:b0:4ee:d6:7a51 with SMTP id
+ d75a77b69052e-4f4abcceef9mr71345351cf.12.1766177408683; Fri, 19 Dec 2025
+ 12:50:08 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v4 5/6] arm64: dts: qcom: Add support for Surface Pro 11
-To: Krzysztof Kozlowski <krzk@kernel.org>, jerome.debretagne@gmail.com,
- Bjorn Andersson <andersson@kernel.org>,
- Konrad Dybcio <konradybcio@kernel.org>, Rob Herring <robh@kernel.org>,
- Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley
- <conor+dt@kernel.org>, Johannes Berg <johannes@sipsolutions.net>,
- Lorenzo Bianconi <lorenzo@kernel.org>,
- Maximilian Luz <luzmaximilian@gmail.com>, Hans de Goede <hansg@kernel.org>,
- =?UTF-8?Q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>,
- Jeff Johnson <jjohnson@kernel.org>
-Cc: linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org,
- linux-kernel@vger.kernel.org, linux-wireless@vger.kernel.org,
- platform-driver-x86@vger.kernel.org, ath12k@lists.infradead.org,
- Konrad Dybcio <konrad.dybcio@oss.qualcomm.com>
 References: <20251218-surface-sp11-for-next-v4-0-7bcf83c1504a@gmail.com>
- <20251218-surface-sp11-for-next-v4-5-7bcf83c1504a@gmail.com>
- <de00f21e-7fc7-4caa-93ec-afbcc5d9e12d@kernel.org>
-Content-Language: en-GB
-From: Dale Whinham <daleyo@gmail.com>
+ <20251218-surface-sp11-for-next-v4-5-7bcf83c1504a@gmail.com> <de00f21e-7fc7-4caa-93ec-afbcc5d9e12d@kernel.org>
 In-Reply-To: <de00f21e-7fc7-4caa-93ec-afbcc5d9e12d@kernel.org>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+From: =?UTF-8?B?SsOpcsO0bWUgZGUgQnJldGFnbmU=?= <jerome.debretagne@gmail.com>
+Date: Fri, 19 Dec 2025 21:49:32 +0100
+X-Gm-Features: AQt7F2pcZUitjZSQNg2PzbbA2oie2fjwh-55TuTLVMXOnU3tEdVckxLHObxjFK0
+Message-ID: <CA+kEDGHL0A=KYhp79_08sx=dUyvpDOuHXEuvgsOU+61PshtN3w@mail.gmail.com>
+Subject: Re: [PATCH v4 5/6] arm64: dts: qcom: Add support for Surface Pro 11
+To: Krzysztof Kozlowski <krzk@kernel.org>
+Cc: Bjorn Andersson <andersson@kernel.org>, Konrad Dybcio <konradybcio@kernel.org>, 
+	Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, 
+	Johannes Berg <johannes@sipsolutions.net>, Lorenzo Bianconi <lorenzo@kernel.org>, 
+	Maximilian Luz <luzmaximilian@gmail.com>, Hans de Goede <hansg@kernel.org>, 
+	=?UTF-8?Q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>, 
+	Jeff Johnson <jjohnson@kernel.org>, linux-arm-msm@vger.kernel.org, 
+	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	linux-wireless@vger.kernel.org, platform-driver-x86@vger.kernel.org, 
+	ath12k@lists.infradead.org, Dale Whinham <daleyo@gmail.com>, 
+	Konrad Dybcio <konrad.dybcio@oss.qualcomm.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On 19/12/2025 17:47, Krzysztof Kozlowski wrote:
->> +// SPDX-License-Identifier: BSD-3-Clause
->> +/*
->> + * Copyright (c) 2024 Qualcomm Innovation Center, Inc. All rights reserved.
-> 
+Le ven. 19 d=C3=A9c. 2025 =C3=A0 18:47, Krzysztof Kozlowski <krzk@kernel.or=
+g> a =C3=A9crit :
+>
+> On 18/12/2025 23:22, J=C3=A9r=C3=B4me de Bretagne via B4 Relay wrote:
+> > From: Dale Whinham <daleyo@gmail.com>
+> >
+> > Add device trees for the Qualcomm X1E and X1P-based Microsoft Surface
+> > Pro 11 machines (codenamed 'Denali').
+> >
+> > This device is very similar to the Surface Laptop 7 ('Romulus').
+> >
+> > Use a similar strategy to x1-asus-zenbook-a14.dtsi so that we can creat=
+e
+> > x1e and x1p-specific flavors of the device tree without too much code
+> > duplication.
+> >
+> > Hardware support is similar to other X1 machines. The most notable
+> > missing features are:
+> >
+> > - Touchscreen and pen
+> > - Cameras (and status LEDs)
+> >
+> > Signed-off-by: Dale Whinham <daleyo@gmail.com>
+> > Tested-by: Dale Whinham <daleyo@gmail.com>
+>
+> Drop, authorship implies this. Otherwise this suggest none of other
+> authors test their code before sending.
+
+Sure, I will remove this line in v5.
+
+> > Signed-off-by: J=C3=A9r=C3=B4me de Bretagne <jerome.debretagne@gmail.co=
+m>
+> > Reviewed-by: Konrad Dybcio <konrad.dybcio@oss.qualcomm.com>
+> > ---
+> >  arch/arm64/boot/dts/qcom/Makefile                  |    4 +
+> >  arch/arm64/boot/dts/qcom/x1-microsoft-denali.dtsi  | 1324 ++++++++++++=
+++++++++
+> >  .../dts/qcom/x1e80100-microsoft-denali-oled.dts    |   20 +
+> >  .../boot/dts/qcom/x1p64100-microsoft-denali.dts    |   16 +
+> >  4 files changed, 1364 insertions(+)
+> >
+>
+> This DTS fails dtbs_check.
+
+Indeed, this has regressed when moving disable-rfkill into
+ieee80211.yaml, we need to reference the moved property
+from qcom,ath12k.yaml also now, I will fix this in v5.
+
+> > diff --git a/arch/arm64/boot/dts/qcom/x1p64100-microsoft-denali.dts b/a=
+rch/arm64/boot/dts/qcom/x1p64100-microsoft-denali.dts
+> > new file mode 100644
+> > index 0000000000000000000000000000000000000000..93f1620ad8c71c6cf36ba3e=
+c34b9eebc47bf3f18
+> > --- /dev/null
+> > +++ b/arch/arm64/boot/dts/qcom/x1p64100-microsoft-denali.dts
+> > @@ -0,0 +1,16 @@
+> > +// SPDX-License-Identifier: BSD-3-Clause
+> > +/*
+> > + * Copyright (c) 2024 Qualcomm Innovation Center, Inc. All rights rese=
+rved.
+>
 > How exactly is this copyrighted by Qualcomm? I don't think Qualcomm ever
 > prepared DTS for this, so can you point us to the original work?
+> > + * Copyright (c) 2025 Dale Whinham <daleyo@gmail.com>
+> > + */
+> > +
+> > +/dts-v1/;
+> > +
+> > +#include "hamoa.dtsi"
+> > +#include "x1-microsoft-denali.dtsi"
+> > +
+> > +/ {
+> > +     model =3D "Microsoft Surface Pro 11th Edition (LCD)";
+> > +     compatible =3D "microsoft,denali-lcd", "microsoft,denali",
+> > +                  "qcom,x1p64100", "qcom,x1e80100";
+> > +};
+> >
+>
+>
+> Best regards,
+> Krzysztof
 
-As mentioned in the commit message, this device is very similar to 
-Microsoft Romulus (Surface Laptop 7).
-
-Its associated device tree (x1e80100-microsoft-romulus.dtsi) was used as 
-a starting point for SP11, and so I felt it would be courteous to keep 
-the original copyright notice there.
-
-If this isn't appropriate, then that's fair enough and we can remove it.
-
--- 
-Best regards,
-Dale
+Thank you for the review,
+J=C3=A9r=C3=B4me
