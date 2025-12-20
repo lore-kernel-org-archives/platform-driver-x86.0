@@ -1,172 +1,128 @@
-Received: from mail-qv1-f48.google.com (mail-qv1-f48.google.com [209.85.219.48])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C99F91E230E
-	for <platform-driver-x86@vger.kernel.org>; Sat, 20 Dec 2025 14:03:14 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.48
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3E3CB29E0E7;
+	Sat, 20 Dec 2025 15:27:54 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1766239396; cv=none; b=ADjuypG7a6z64yJXT1ERvMOkLvL7RcMzrYbCan1jCh/+FgtRkIwKrrEzq7xN05LIYCWMhUQlg/4RR9X/popLtrXwHMw5i6GimX5hf2OwUMYaYddKiMqs3T4ERr6ZcOGfaKMXT1YRq6p+qkg/FbzbEzofPyf4mMqRlznDQTcWrsQ=
+	t=1766244474; cv=none; b=Q4OyMqamaN+/1XaQA50v6PejsiRoB8XS2VTXaOPFO6kQ3ENLfY92ky2fXlHN7BBL9SF+lRpsGc4liwLgcVSwayQRn8m73FPXEh+++4we0vpKL9pG5iik19sb76LU6SYFdgeFZG7HcULVeNwle2GbiXnW4OM3xdIxe8PNTPTAMNA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1766239396; c=relaxed/simple;
-	bh=U92C7ajF9y/pESK6SVDL/9uXSTMr9EvRTNP1cZpQmZs=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=bjQFxSZqdPFF0KkFgpB9qNxl/0QOeTLMDbZVfocrmzgt1LiTG+uIqjgpT8VUcFQAlSrC4FRAxJgJowCgmxfALHo1EAi9XoU7gLiEelmuOR99dDX6IM1Cl7ExGnuftR5gIU9l8GbI5sLMS1MFoPMt3oZWZZzWBWEfKYk0AxRlEwc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=jsT6tVcM; arc=none smtp.client-ip=209.85.219.48
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1766244474; c=relaxed/simple;
+	bh=T/d6LTvfqaL3MG852gJg4nPx0ZgexNqll6MZ+I8JFhc=;
+	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
+	 In-Reply-To:To:Cc; b=mfQCijSvBDTr+khc56VKrXjlJjjhQtYWp9Kx2pYtuNYKc+fB0eTuKLEg7XTDDlxkfN9pmu6pG4QMivPRmU/iN74IA/lX2wCLw/eUGfCVE5oYIm4xSRDfqwnF6VCRTuyOcdibqlOJ3e/Gxuv+HuBpXX0d4dyrCcjLCK4+LjkPE6w=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=StWMbfbQ; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="jsT6tVcM"
-Received: by mail-qv1-f48.google.com with SMTP id 6a1803df08f44-88a346c284fso30106396d6.3
-        for <platform-driver-x86@vger.kernel.org>; Sat, 20 Dec 2025 06:03:14 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1766239394; x=1766844194; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=vTIPtqzMduKujdd0veJ2LC19WzlWxxZcItU+/SfvSHQ=;
-        b=jsT6tVcMNb4IkV7xg9NZmw2+gDmYL5vOhaNZy1so78ROnnVW9mF7oRbOdAIEzkcMy9
-         xBDLkwrzFXtJ7yA9MhuTkL0rXBrVfmZbZG1owRbKBP4RBnJVQM4yQNmexDkCaZIej7wo
-         12jWE3becB8RYY8IkbynNZqiEW5Qeip+y2jwuo4QlyIC+iMySUsnKyyQwDHVCKoDV4rd
-         8r2YlhMdWz48tX5TLUEOu2uOWCgqQ45j2ICqmxi3N+6AtQwPfSMJOCnhj/FtquGRN3Wb
-         0L18jv8BmZagtunARZnmtuS0+1ysqUhnps7oGaMutHcEUWiSDGP4j869IiN1YykaLkQd
-         B/0g==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1766239394; x=1766844194;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-gg:x-gm-message-state:from
-         :to:cc:subject:date:message-id:reply-to;
-        bh=vTIPtqzMduKujdd0veJ2LC19WzlWxxZcItU+/SfvSHQ=;
-        b=SRGjkj0jzxB2RtP5RxGUzO1Le1xxBVHGhDrqkVA95A/70ZjUvHa21MLWiUDb1Vt7Xk
-         7ViR+1DuCcZJ8k8vRQirMR/V4mpprExMyZZ/vEd2XrdVf8jkfABsqqq6Hnk8vRrYAdYm
-         LyZXKQY7Ga9dpS+rG9+qSqeh6YmSAvyFJKALLmysalRc++0Q8rWS0zLc+CQ2NbbfbfB9
-         4Pf7ieNmHY0qKzyNcdRc6pGhyKHM6D30wWWDt/xWwiuhLuDWQ4I+MYHYmhptTNkJww0r
-         ovzXGNuwt+ncH9csY9lE2iLS+i46Nnjj4px4zRr3T9S6AC6o1BX2FK4/HtztQiD4YXcv
-         ia/A==
-X-Forwarded-Encrypted: i=1; AJvYcCWt88kzTcbpMhGBBctnOJ9wG9ndQZ7XVYTJuB3CK6Vfjp1GygalBabEgnEwCFBV5AYsXZLY9FLiHayKaK4XrvAnS2Ao@vger.kernel.org
-X-Gm-Message-State: AOJu0YyO5zTNaruhWR/kylr6JBiI1GZuvFnR7aWzul7YLd3+nTgo87Xa
-	1oguqMiQ0kb7GyM3zAlIYEvmoEiSHQ7gOu46BCd6NlljJ7Ak+kyIwfpz80WCIN8t1jN7mWgaXWm
-	dtJvHAccRKyi89TwYHDHR3aywc5ff+Q==
-X-Gm-Gg: AY/fxX4OFfNiol30DzHujA7lg9IKL18rE90LByzFRpYunD5e1I67RC2lSWRmPkeWxKd
-	gWcKQemMH+jNINgoa/NontL2NVt+8vHAsbJXClam7cuoJq4C5CrR9zlouZO75kFrgi4a0tRN9bi
-	JfSsg8i4jSsbHLncaZzzKFJGdlF6DeE54WidR+HjeX+9JKjvQ3NUVL1htoIuUWrwTrjyAZrltur
-	2CFktZt89YpPs/U1ngd+FIAhB9S3DPFlJXlO84hsYFA81g2Xz8RGXg/I3Xgdocxrj7fLkp1kmUe
-	VMKlbEYgmfwgtjoPZS8Q3WdmcKw=
-X-Google-Smtp-Source: AGHT+IFp4fR8Wc2qjRuYRZCvAQmroP/eyGv/wjwh1rGAG5pfcUyLHfpF6uaQ82FZr3MKIP8d6MaoUKVouxW6yw2G3dY=
-X-Received: by 2002:a05:6214:248b:b0:70f:a4b0:1eb8 with SMTP id
- 6a1803df08f44-88d8203f029mr99469936d6.13.1766239393583; Sat, 20 Dec 2025
- 06:03:13 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="StWMbfbQ"
+Received: by smtp.kernel.org (Postfix) with ESMTPS id 8D539C116D0;
+	Sat, 20 Dec 2025 15:27:53 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1766244473;
+	bh=T/d6LTvfqaL3MG852gJg4nPx0ZgexNqll6MZ+I8JFhc=;
+	h=From:Date:Subject:References:In-Reply-To:To:Cc:Reply-To:From;
+	b=StWMbfbQqkDAtk+t5aAWY3MXwGOhcEKW8WUTkIl2UNxy+fLktR6TB5Ru7yXsxGOIh
+	 Sg/26H2LrfQRMKzoslqYo1xVtuG2nqlh2m2wJTtTIF/DtD9P16qUM+yHFCinwhkSyz
+	 pzAV52FEk0Iq7PqNtAYvFXBlpK0fu7sgbe487lkxQ/baxCsuLDdbCpYeWGkASb1j8z
+	 vtH56NLNKXRotOit1XJqMXjaLnpmVds5CR90He14FxFZ0HpnAVe90zS4VMJQM2pisd
+	 2rkLuq6rnMcj1rSCDJRBcb6Xwk80LNsqgM/TZAhzsOl4Pev4q2rsaNfjXEFi2V49GR
+	 ZEBlhi99YZBDQ==
+Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7F434E67480;
+	Sat, 20 Dec 2025 15:27:53 +0000 (UTC)
+From: =?utf-8?q?J=C3=A9r=C3=B4me_de_Bretagne_via_B4_Relay?= <devnull+jerome.debretagne.gmail.com@kernel.org>
+Date: Sat, 20 Dec 2025 16:26:31 +0100
+Subject: [PATCH v6 3/4] platform/surface: aggregator_registry: Add Surface
+ Pro 11 (QCOM)
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20251220-surface-sp11-for-next-v5-0-16065bef8ef3@gmail.com>
- <M7kfFb5fz-WB43U_xCUwgxpmBJ4TNdp4jE6yFu6HmemIcDx5tXO6H4xnW_pEQz6DMkKm-3POdB9hIdB092zhGQ==@protonmail.internalid>
- <20251220-surface-sp11-for-next-v5-2-16065bef8ef3@gmail.com>
- <e0e9e690-c56e-4b56-90f9-2af46a7feaf3@nxsw.ie> <20251220-fervent-mamba-of-sunshine-f680a8@quoll>
-In-Reply-To: <20251220-fervent-mamba-of-sunshine-f680a8@quoll>
-From: =?UTF-8?B?SsOpcsO0bWUgZGUgQnJldGFnbmU=?= <jerome.debretagne@gmail.com>
-Date: Sat, 20 Dec 2025 15:02:36 +0100
-X-Gm-Features: AQt7F2qSP3aNPDvdAnYCQhdwd2yv91UgJ5ZtJLf3svJOCJgsank9Z_-67rvi34Y
-Message-ID: <CA+kEDGEB-c1SuEdR4W8mnxYQLxN5bqW0v3G6wb=e+a8LY8+OTg@mail.gmail.com>
-Subject: Re: [PATCH v5 2/7] dt-bindings: wireless: ieee80211: Add
- disable-rfkill property
-To: Krzysztof Kozlowski <krzk@kernel.org>
-Cc: "Bryan O'Donoghue" <bod.linux@nxsw.ie>, Bjorn Andersson <andersson@kernel.org>, 
-	Konrad Dybcio <konradybcio@kernel.org>, Rob Herring <robh@kernel.org>, 
-	Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, 
-	Johannes Berg <johannes@sipsolutions.net>, Lorenzo Bianconi <lorenzo@kernel.org>, 
-	Maximilian Luz <luzmaximilian@gmail.com>, Hans de Goede <hansg@kernel.org>, 
-	=?UTF-8?Q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>, 
-	Jeff Johnson <jjohnson@kernel.org>, linux-arm-msm@vger.kernel.org, 
-	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	linux-wireless@vger.kernel.org, platform-driver-x86@vger.kernel.org, 
-	ath12k@lists.infradead.org, Jeff Johnson <jeff.johnson@oss.qualcomm.com>, 
-	Dale Whinham <daleyo@gmail.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 8bit
+Message-Id: <20251220-surface-sp11-for-next-v6-3-81f7451edb77@gmail.com>
+References: <20251220-surface-sp11-for-next-v6-0-81f7451edb77@gmail.com>
+In-Reply-To: <20251220-surface-sp11-for-next-v6-0-81f7451edb77@gmail.com>
+To: Bjorn Andersson <andersson@kernel.org>, 
+ Konrad Dybcio <konradybcio@kernel.org>, Rob Herring <robh@kernel.org>, 
+ Krzysztof Kozlowski <krzk+dt@kernel.org>, 
+ Conor Dooley <conor+dt@kernel.org>, 
+ Johannes Berg <johannes@sipsolutions.net>, 
+ Lorenzo Bianconi <lorenzo@kernel.org>, 
+ Maximilian Luz <luzmaximilian@gmail.com>, Hans de Goede <hansg@kernel.org>, 
+ =?utf-8?q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>, 
+ Jeff Johnson <jjohnson@kernel.org>
+Cc: linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org, 
+ linux-kernel@vger.kernel.org, linux-wireless@vger.kernel.org, 
+ platform-driver-x86@vger.kernel.org, ath12k@lists.infradead.org, 
+ Jeff Johnson <jeff.johnson@oss.qualcomm.com>, 
+ Dale Whinham <daleyo@gmail.com>, 
+ =?utf-8?q?J=C3=A9r=C3=B4me_de_Bretagne?= <jerome.debretagne@gmail.com>, 
+ Dmitry Baryshkov <dmitry.baryshkov@oss.qualcomm.com>
+X-Mailer: b4 0.14.2
+X-Developer-Signature: v=1; a=ed25519-sha256; t=1766244472; l=2027;
+ i=jerome.debretagne@gmail.com; s=20251217; h=from:subject:message-id;
+ bh=T3FVcCFZemvYy2B2tfWs5X5U9WEV1cgBV3QQZBYuEGE=;
+ b=yGgnk7WT0PhLT7Kz1WPWzhTkpz50FfTMIYW9V3oNbOHzBVBrf/zIa4Yq3PgeYUBZJ8pCL2cWi
+ zxFRd+mElrWA+KP9reQ1fvPvM5BMSiNzU/JCufIoUrTExmS6g//6goY
+X-Developer-Key: i=jerome.debretagne@gmail.com; a=ed25519;
+ pk=DcPD9n3oDMsPkt+12tU96swmGb5H86cxt+yiEVcUEGk=
+X-Endpoint-Received: by B4 Relay for jerome.debretagne@gmail.com/20251217
+ with auth_id=580
+X-Original-From: =?utf-8?q?J=C3=A9r=C3=B4me_de_Bretagne?= <jerome.debretagne@gmail.com>
+Reply-To: jerome.debretagne@gmail.com
 
-Le sam. 20 d=C3=A9c. 2025 =C3=A0 10:12, Krzysztof Kozlowski <krzk@kernel.or=
-g> a =C3=A9crit :
->
-> On Sat, Dec 20, 2025 at 06:04:00AM +0000, Bryan O'Donoghue wrote:
-> > On 20/12/2025 00:21, J=C3=A9r=C3=B4me de Bretagne via B4 Relay wrote:
-> > > From: J=C3=A9r=C3=B4me de Bretagne <jerome.debretagne@gmail.com>
-> > >
-> > > For some devices, Wi-Fi is entirely hard blocked by default making
-> > > the Wi-Fi radio unusable, except if rfkill is disabled as expected
-> > > on those models.
-> > >
-> > > Commit c6a7c0b09d5f ("wifi: ath12k: Add Support for enabling or
-> > > disabling specific features based on ACPI bitflag") added a way to
-> > > support features set via ACPI, including the DISABLE_RFKILL bit.
-> > >
-> > > Add a disable-rfkill property to expose the DISABLE_RFKILL bit
-> > > equivalent for devices described by a Devicetree instead of ACPI.
-> > >
-> > > Signed-off-by: J=C3=A9r=C3=B4me de Bretagne <jerome.debretagne@gmail.=
-com>
-> > > ---
-> > >   Documentation/devicetree/bindings/net/wireless/ieee80211.yaml | 6 +=
-+++++
-> > >   1 file changed, 6 insertions(+)
-> > >
-> > > diff --git a/Documentation/devicetree/bindings/net/wireless/ieee80211=
-.yaml b/Documentation/devicetree/bindings/net/wireless/ieee80211.yaml
-> > > index d89f7a3f88a71d45d6f4ab2ae909eae09cbcaf9a..c10a4675640be947cd0b5=
-eaec2c7ff367fd93945 100644
-> > > --- a/Documentation/devicetree/bindings/net/wireless/ieee80211.yaml
-> > > +++ b/Documentation/devicetree/bindings/net/wireless/ieee80211.yaml
-> > > @@ -29,6 +29,12 @@ properties:
-> > >         different 5 GHz subbands. Using them incorrectly could not wo=
-rk or
-> > >         decrease performance noticeably
-> > >
-> > > +  disable-rfkill:
-> > > +    type: boolean
-> > > +    description:
-> > > +      Disable rfkill for some devices on which Wi-Fi would be entire=
-ly hard
-> > > +      blocked by default otherwise
-> > > +
-> > >   additionalProperties: true
-> > >
-> > >   examples:
-> > >
-> > > --
-> > > 2.47.3
-> > >
-> > >
-> > >
-> >
-> > Is this really a hardware description though ?
-> >
-> > Its really more of a logical/functional description. It tells the runti=
-me
-> > what todo, not what the hardware is.
-> >
-> > You could also have a list of quirks in ath12k for this or have a user-=
-space
-> > utility look for the appropriate platform device string name and disabl=
-e
-> > rfkill.
-> >
-> > I think this logic belongs in drivers/net/wireless/ath/ath12k/ triggeri=
-ng on
-> > a compat string.
->
-> This is good point. Either this could be deducible from the compatible
+From: Dale Whinham <daleyo@gmail.com>
 
-Thank you Bryan and Krzysztof for your feedback, I will drop the
-disable-rfkill patches from this patchset in v6 then. I will work on
-a separate patch using a list of quirks in ath12k as suggested.
+This enables support for the Qualcomm-based Surface Pro 11.
 
-> or this should actually describe the hardware and whatever is there
-> wired/configured, not what OS should do.
->
-> Best regards,
-> Krzysztof
+Signed-off-by: Dale Whinham <daleyo@gmail.com>
+Signed-off-by: Jérôme de Bretagne <jerome.debretagne@gmail.com>
+Reviewed-by: Maximilian Luz <luzmaximilian@gmail.com>
+Reviewed-by: Dmitry Baryshkov <dmitry.baryshkov@oss.qualcomm.com>
+---
+ drivers/platform/surface/surface_aggregator_registry.c | 18 ++++++++++++++++++
+ 1 file changed, 18 insertions(+)
 
-Best regards,
-J=C3=A9r=C3=B4me
+diff --git a/drivers/platform/surface/surface_aggregator_registry.c b/drivers/platform/surface/surface_aggregator_registry.c
+index 78ac3a8fbb736384f7e50f1888a71297a892a7c3..0599d5adf02e61583cf3e1fc11000070f51f7be3 100644
+--- a/drivers/platform/surface/surface_aggregator_registry.c
++++ b/drivers/platform/surface/surface_aggregator_registry.c
+@@ -406,6 +406,22 @@ static const struct software_node *ssam_node_group_sp9_5g[] = {
+ 	NULL,
+ };
+ 
++/* Devices for Surface Pro 11 (ARM/QCOM) */
++static const struct software_node *ssam_node_group_sp11[] = {
++	&ssam_node_root,
++	&ssam_node_hub_kip,
++	&ssam_node_bat_ac,
++	&ssam_node_bat_main,
++	&ssam_node_tmp_sensors,
++	&ssam_node_hid_kip_keyboard,
++	&ssam_node_hid_kip_penstash,
++	&ssam_node_hid_kip_touchpad,
++	&ssam_node_hid_kip_fwupd,
++	&ssam_node_hid_sam_sensors,
++	&ssam_node_kip_tablet_switch,
++	NULL,
++};
++
+ /* -- SSAM platform/meta-hub driver. ---------------------------------------- */
+ 
+ static const struct acpi_device_id ssam_platform_hub_acpi_match[] = {
+@@ -482,6 +498,8 @@ MODULE_DEVICE_TABLE(acpi, ssam_platform_hub_acpi_match);
+ static const struct of_device_id ssam_platform_hub_of_match[] __maybe_unused = {
+ 	/* Surface Pro 9 5G (ARM/QCOM) */
+ 	{ .compatible = "microsoft,arcata", (void *)ssam_node_group_sp9_5g },
++	/* Surface Pro 11 (ARM/QCOM) */
++	{ .compatible = "microsoft,denali", (void *)ssam_node_group_sp11 },
+ 	/* Surface Laptop 7 */
+ 	{ .compatible = "microsoft,romulus13", (void *)ssam_node_group_sl7 },
+ 	{ .compatible = "microsoft,romulus15", (void *)ssam_node_group_sl7 },
+
+-- 
+2.47.3
+
+
