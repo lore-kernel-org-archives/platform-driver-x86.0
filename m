@@ -1,138 +1,116 @@
-Received: from sender8.mail.selcloud.ru (sender8.mail.selcloud.ru [5.8.75.171])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wr1-f45.google.com (mail-wr1-f45.google.com [209.85.221.45])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 541382236F3;
-	Sun, 21 Dec 2025 18:42:17 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=5.8.75.171
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9F2BB315D4F
+	for <platform-driver-x86@vger.kernel.org>; Sun, 21 Dec 2025 19:30:55 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.45
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1766342541; cv=none; b=U7BI7VV44e83M+gkaIUfzT1pVk+z4oBucZvMEIm3bG8bJoE5Ah4MlDVidxAkQHqxXvL6ppb99WXB9zokjn4J/gJY8f/VIAEU/o8UXbsyAIVGnnJBysqa8oPZsGoPPlziSBw7rSd4PSpvDfFeeLHlrr1xoVBzk6lP65tUauPHVsc=
+	t=1766345457; cv=none; b=Z6Wk3G+7L8wpDdBauMZoQDbayMpz40eTbTpqICMXPH/1q+0GpRpm85RJClrEvtBZfpSa0U5oA2kNua9WB7G57g7/yNLsWjrDCPToxnDfGKBXcvumEuTSud57gixSq6hMqPsqG1BjBsEL8uuVqEhoKLon8WS3lurHnXM6JLvNtnQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1766342541; c=relaxed/simple;
-	bh=ewDXJ92nqmjmgcRy6bbFHt6exby2eLI8vrpfQTvr/xk=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=KNlfk2mP41IW+g8rV3nJ7NewrQcsn+vBwyKnDKaEIrOpsea+vned6GA0e+p14rFDlhD0LHol12rtq02xqH8g4tSpBH7om8ydcODa74WKM9A4EqIAKMDPvgLPwZl/qkC3Rk7ttzD5qhU6SCDcltG8+TPn6k2D+IUietHfvPbZMT0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=foxido.dev; spf=pass smtp.mailfrom=mail.selcloud.ru; dkim=pass (1024-bit key) header.d=mail.selcloud.ru header.i=@mail.selcloud.ru header.b=VmVEZ5ZQ; dkim=pass (1024-bit key) header.d=foxido.dev header.i=@foxido.dev header.b=iOzyHQRh; dkim=pass (2048-bit key) header.d=foxido.dev header.i=@foxido.dev header.b=rVHPQ41w; dkim=permerror (0-bit key) header.d=foxido.dev header.i=@foxido.dev header.b=amZUeVHn; arc=none smtp.client-ip=5.8.75.171
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=foxido.dev
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=mail.selcloud.ru
+	s=arc-20240116; t=1766345457; c=relaxed/simple;
+	bh=nymvoDYiRG+/a9TlEVZljuFk+8qNO07pZs6iJ+msjKg=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=UrgC9d2vQuXbLZOujiyEFUOEh3WzoGBowE/n6ZsntU4BlhJTJEg6cd6P6DA1WxFqzZ0EbjDdjr1ps7/m+guMGfPTQG7K2VL7zFEza2amDfgwyi25SOjB0GHfc7fevtDm9emODABMVgdizb61GMCLUaT79v32OtpAey5KLvGPqv4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=cGI54Nmo; arc=none smtp.client-ip=209.85.221.45
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=mail.selcloud.ru header.i=@mail.selcloud.ru header.b="VmVEZ5ZQ";
-	dkim=pass (1024-bit key) header.d=foxido.dev header.i=@foxido.dev header.b="iOzyHQRh";
-	dkim=pass (2048-bit key) header.d=foxido.dev header.i=@foxido.dev header.b="rVHPQ41w";
-	dkim=permerror (0-bit key) header.d=foxido.dev header.i=@foxido.dev header.b="amZUeVHn"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=mail.selcloud.ru; s=selcloud; h=Content-Transfer-Encoding:MIME-Version:
-	Message-ID:Date:Subject:Cc:To:From:List-id:List-Unsubscribe:Sender:Reply-To:
-	Content-Type:Content-ID:Content-Description:Resent-Date:Resent-From:
-	Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:In-Reply-To:References:
-	List-Help:List-Subscribe:List-Post:List-Owner:List-Archive;
-	bh=KNqbE56JeVxXH6bY9brDdpiS0n3wvdlFojRJ3E6dFEk=; t=1766342537; x=1766515337;
-	 b=VmVEZ5ZQAPy0S5tfm4YExdPAZGbGZFmh7xiNcvTYmcmhrxYjzyf6V+Vbfh0y92Dz9Na9KyeGcn
-	sApub5Ov6SWZ6Nhrg/Tx77I7+9ABpuCeHHAaReEdjUavZcXypkK+DYg2nYuX8oCaLrlzdqqc3y/u9
-	AtdMOYTe2tOBxl/sdCG8=;
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=foxido.dev;
-	 s=selcloud; h=Content-Transfer-Encoding:MIME-Version:Message-ID:Date:Subject
-	:Cc:To:From:List-id:List-Unsubscribe:Sender:Reply-To:Content-Type:Content-ID:
-	Content-Description:Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc
-	:Resent-Message-ID:In-Reply-To:References:List-Help:List-Subscribe:List-Post:
-	List-Owner:List-Archive; bh=KNqbE56JeVxXH6bY9brDdpiS0n3wvdlFojRJ3E6dFEk=;
-	t=1766342537; x=1766515337; b=iOzyHQRhN1B3V1pR22o7r/MgPh5uaSMLUbAQW9O3HEWwidB
-	epQkouOuLjNk1BPJwsFd3KXHWlBZ4GYc3mFQX8yCuzUBeOv7M4egnAgI9u0oDMQJExTQduxnIYiLY
-	qC9TuCD6BlJig1A4dRtnwpdTBWGHtr2/1LYxqWPtPXSm9gQ=;
-Precedence: bulk
-X-Issuen: 1502087
-X-User: 335779833
-X-Postmaster-Msgtype: 3849
-Feedback-ID: 1502087:15965:3849:samotpravil
-X-From: foxido.dev
-X-from-id: 15965
-X-MSG-TYPE: bulk
-List-Unsubscribe-Post: List-Unsubscribe=One-Click
-X-blist-id: 3849
-X-Gungo: 20251205.071128
-X-SMTPUID: mlgnr62
-DKIM-Signature: v=1; a=rsa-sha256; s=202508r; d=foxido.dev; c=relaxed/relaxed;
-	h=Message-ID:Date:Subject:To:From; t=1766341429; bh=KNqbE56JeVxXH6bY9brDdpi
-	S0n3wvdlFojRJ3E6dFEk=; b=rVHPQ41wFWeobOoswjfbReSUG5gWqf5joA6iHSNqRSeyq0hKfa
-	px2d4RM4/6V+gS3VwqyGkGPSGO7frJfIf6kEgo7iuo6CW9VZlrj13oVgP4q7Vy81sIKSumi+GjK
-	ULgPH2CDsvT3ysFS6Xnut/pQ1ZD5r2wnfasNCobxOcFRUc+NObHKaNS6mJbMhMqukZeRUgvIliP
-	iS2YfauZtaUVzhEmhJWcEWP09wP9zdemfnMWuwIztsps6XlaCe99KUnf0fkFAN9XoY1Gmj+M6of
-	tMa/gMLlhihEeeYMQLijvQZIJKbMNX5vcboJDDlOkW4ztBb+/ULqE7Q4JUg944qkmbw==;
-DKIM-Signature: v=1; a=ed25519-sha256; s=202508e; d=foxido.dev; c=relaxed/relaxed;
-	h=Message-ID:Date:Subject:To:From; t=1766341429; bh=KNqbE56JeVxXH6bY9brDdpi
-	S0n3wvdlFojRJ3E6dFEk=; b=amZUeVHnl30rQj8yN5k5Dxx6/8SzoOQzRxRfxZBYkgLnQ+d2BI
-	kEuwAm2obeU3BA5pUtADx+j4GSq5GwvdVRCQ==;
-From: Gladyshev Ilya <foxido@foxido.dev>
-To: "foxido @ foxido . dev-cc= Rafael J. Wysocki" <rafael@kernel.org>
-Cc: Len Brown <lenb@kernel.org>,
-	Miguel Ojeda <ojeda@kernel.org>,
-	Boqun Feng <boqun.feng@gmail.com>,
-	Gary Guo <gary@garyguo.net>,
-	=?UTF-8?q?Bj=C3=B6rn=20Roy=20Baron?= <bjorn3_gh@protonmail.com>,
-	Benno Lossin <lossin@kernel.org>,
-	Andreas Hindborg <a.hindborg@kernel.org>,
-	Alice Ryhl <aliceryhl@google.com>,
-	Trevor Gross <tmgross@umich.edu>,
-	Danilo Krummrich <dakr@kernel.org>,
-	Tamir Duberstein <tamird@gmail.com>,
-	Armin Wolf <W_Armin@gmx.de>,
-	platform-driver-x86@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	rust-for-linux@vger.kernel.org,
-	linux-acpi@vger.kernel.org,
-	Gladyshev Ilya <foxido@foxido.dev>
-Subject: [RFC PATCH 0/3] rust: WMI abstractions
-Date: Sun, 21 Dec 2025 21:22:36 +0300
-Message-ID: <cover.1766331321.git.foxido@foxido.dev>
-X-Mailer: git-send-email 2.51.1.dirty
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="cGI54Nmo"
+Received: by mail-wr1-f45.google.com with SMTP id ffacd0b85a97d-42fbc305552so2710348f8f.0
+        for <platform-driver-x86@vger.kernel.org>; Sun, 21 Dec 2025 11:30:55 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1766345454; x=1766950254; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=+cNgIKYsfD3+19gOiM5zXD/eV1gJa4oVMdFD5KhhkHg=;
+        b=cGI54NmoJH0AvbuSWLq3QvXvctqfRWuEbFP1Ds89qXykR1JtNtw8sPtZNTx3pKIeCm
+         GhZqDHL6RUWYhQwGq5Mv35LOMqJ3nkNZZ0BKn2FnPzrOGc5t4B+eqlVouTJzBt7+klnv
+         tXGflWep9SZBqeU6hhXqKbwH9qlEQG0oyhW1TjtYwm2U1mDoDmgq4nLXCzonobjXZ2QD
+         dvKGxRXJedWOAdb/gufeKi715+6kq14c0QA8Hy08AAzzXSaegje9xGKo52rwQFxZldY+
+         w1kTxNspSbSJXOwvR0t31JK5RzIixrslYKspxx80jfJktd6e7odXWH6qnvPam+n5V6Nu
+         KtLA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1766345454; x=1766950254;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-gg:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=+cNgIKYsfD3+19gOiM5zXD/eV1gJa4oVMdFD5KhhkHg=;
+        b=DZtZaerUVh5RJ1RpoCD+rKMCOKIJ2F/KLQE376L0kLmKzb8ktGSFfdDsNZOaoPoWvD
+         Gkp3jLh2yC9cg1QzY/Lljyh3cBK7U/MKjdwXLYcxATmgZ9i+047FmGm5v9wGMHeOHxVW
+         ztBqD9HgNITa+FUglNlU6Taji8urCqWr7ayTovYjwIApZzUR2in1IGSVc64mxEd0NEEu
+         DYtMliowsZDRvz0ZV0LYFcAtAWADxYrTbJcFYMXNJnfDj2pJpeebRffxno9tZt2aGBZ7
+         TMWzTgJRpdYa3OqMA/oykZzp1s3racalhLYpLmuiro9+M+OlbzSdeHFXV32b2f4Rj9QC
+         b3TQ==
+X-Forwarded-Encrypted: i=1; AJvYcCVzSrDs4nnD6519iYKSHfukKgrBSij2/VoEaJGJUwibUB3klLkvdn39r+loREwh4jHg5ee27TiOslx7CtN3drNlzncr@vger.kernel.org
+X-Gm-Message-State: AOJu0YxBnNUai3kp8GqdW23w/XqOrLZqalavRM8s76kjm7Tni12f56QF
+	1eoOWDXoNH5Gw9CmziRdqeiJe7AUUN9WjZqh4IzdBZZSZ+d2W8VNF70U
+X-Gm-Gg: AY/fxX6DClCaJbEjH7AP71n8IJesU9dnDJElL86oUrpYHHj6CJ6AmKcG3wfgTWvTCv9
+	ZAjs68CYVamCCNVStm3D7OGeWENT4t36GooYybfECRq9fUKEB2eD7NXF4Xuz83Oinav1HG2kgcr
+	+smqtqPZEFs9PosRb6Go+zpoJ+vP6fEC4c7AK0FSs6tqfujHjIb8VxtRtbPn1L+Wi0/cSq32EZC
+	Xwq0+huLdWgmQXk8bgoVEpxyLat1PJVS4MdMwDDckttsajUUHLM+Oe+XZVpG2R7Mg7AiwIc3IYE
+	B9NoGp1PnixC1TAka7bFr6NwM93VQdf+O9+CVTJeQAObzniV6t1KK8v54mwoO5yTyTIkLRLgaks
+	aQVlDIZr7wn05Z0TjssmxxkCJvwiyVodB74IXEcg9tzJwA/GNhGkx6VsCF7vwraAWdVRcGJ2+f3
+	w+OdOw/bZrHANDMSYXIgkUc2g=
+X-Google-Smtp-Source: AGHT+IGy2hUZ5i2v2YhgD8pXmru0ulZzxxincAcAZsPuYbo6PvlVgXnqscwgjBQILkZYZNffitLDGg==
+X-Received: by 2002:a5d:5d0e:0:b0:430:f58d:40df with SMTP id ffacd0b85a97d-4324e4c7132mr10409116f8f.10.1766345453686;
+        Sun, 21 Dec 2025 11:30:53 -0800 (PST)
+Received: from [192.168.1.121] ([176.206.93.222])
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-4324eaa2bdfsm18112607f8f.32.2025.12.21.11.30.53
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Sun, 21 Dec 2025 11:30:53 -0800 (PST)
+Message-ID: <1c2e0f32-8110-4bf1-9c5a-e4d6dbfecc7e@gmail.com>
+Date: Sun, 21 Dec 2025 20:30:52 +0100
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-
-Overview
-========
-This patchset was developed some time ago out of pure curiosity
-about the R4L project, but I believe it may still be useful, so
-I decided to resume and post this work.
-The goal of my curiosity is to develop a simple WMI driver in Rust
-for unsupported laptop (I have some laying around) or, as a last
-resort, submit a rewrite of redmi-wmi as a sample driver -- if that
-would be acceptable.
-
-I know that there is an undergoing API change in the WMI subsystem[1],
-however it doesn't change the abstracted surface a lot.
-
-This patchset consists of 3 patches:
-1. Wrapper around ACPI objects (this may be unneeded after [1])
-2. WMI abstractions
-3. Sample driver for demonstration purposes only
-
-Why RFC?
-========
-1. No real users for now
-2. I have a feeling that I am doing something very wrong
-
-[1]: https://lore.kernel.org/platform-driver-x86/20251220204622.3541-1-W_Armin@gmx.de/
-
-Gladyshev Ilya (3):
-  rust: implement wrapper for acpi_object
-  rust: introduce WMI abstractions
-  rust: sample driver for WMI demonstrations
-
- drivers/platform/x86/Makefile        |   1 +
- drivers/platform/x86/redmi_wmi_rs.rs |  60 ++++++
- rust/bindings/bindings_helper.h      |   1 +
- rust/kernel/acpi.rs                  | 103 +++++++++++
- rust/kernel/lib.rs                   |   2 +
- rust/kernel/wmi.rs                   | 267 +++++++++++++++++++++++++++
- 6 files changed, 434 insertions(+)
- create mode 100644 drivers/platform/x86/redmi_wmi_rs.rs
- create mode 100644 rust/kernel/wmi.rs
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH] platform/x86: asus-nb-wmi: Add keymap for display toggle
+To: Tim Wassink <timwassink.dev@gmail.com>,
+ platform-driver-x86@vger.kernel.org
+Cc: Corentin Chary <corentin.chary@gmail.com>, "Luke D. Jones"
+ <luke@ljones.dev>, Hans de Goede <hansg@kernel.org>,
+ =?UTF-8?Q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>,
+ open list <linux-kernel@vger.kernel.org>
+References: <20251221181724.19927-1-timwassink.dev@gmail.com>
+Content-Language: en-US, it-IT, en-US-large
+From: Denis Benato <benato.denis96@gmail.com>
+In-Reply-To: <20251221181724.19927-1-timwassink.dev@gmail.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
 
-base-commit: 9094662f6707d1d4b53d18baba459604e8bb0783
--- 
-2.51.1.dirty
+On 12/21/25 19:17, Tim Wassink wrote:
+> On the Asus Zenbook 14 (UX3405MA), the Fn+F7 key combination emits
+> WMI code 0x2d, which was previously unmapped.
+As in "unapped scancode: 0x2d" in dmesg?
+> Map this code to KEY_DISPLAYTOGGLE. This matches the behavior of the
+> display toggle/projector mode key found on other Asus laptops, allowing
+> userspace to handle multi-monitor switching or screen toggling.
+>
+> Tested on ASUS Zenbook 14 UX3405MA.
+>
+> Signed-off-by: Tim Wassink <timwassink.dev@gmail.com>
+Thank you for this!
 
+Reviewed-by: Denis Benato <benato.denis96@gmail.com>
+> ---
+>  drivers/platform/x86/asus-nb-wmi.c | 1 +
+>  1 file changed, 1 insertion(+)
+>
+> diff --git a/drivers/platform/x86/asus-nb-wmi.c b/drivers/platform/x86/asus-nb-wmi.c
+> index 6a62bc5b02fd..a38a65f5c550 100644
+> --- a/drivers/platform/x86/asus-nb-wmi.c
+> +++ b/drivers/platform/x86/asus-nb-wmi.c
+> @@ -580,6 +580,7 @@ static const struct key_entry asus_nb_wmi_keymap[] = {
+>  	{ KE_KEY, 0x2a, { KEY_SELECTIVE_SCREENSHOT } },
+>  	{ KE_IGNORE, 0x2b, }, /* PrintScreen (also send via PS/2) on newer models */
+>  	{ KE_IGNORE, 0x2c, }, /* CapsLock (also send via PS/2) on newer models */
+> +	{ KE_KEY, 0x2d, { KEY_DISPLAYTOGGLE } },
+>  	{ KE_KEY, 0x30, { KEY_VOLUMEUP } },
+>  	{ KE_KEY, 0x31, { KEY_VOLUMEDOWN } },
+>  	{ KE_KEY, 0x32, { KEY_MUTE } },
