@@ -1,100 +1,117 @@
-Received: from mail-lj1-f182.google.com (mail-lj1-f182.google.com [209.85.208.182])
+Received: from mail-ej1-f42.google.com (mail-ej1-f42.google.com [209.85.218.42])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0954B31A065
-	for <platform-driver-x86@vger.kernel.org>; Sun, 21 Dec 2025 20:09:31 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.182
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2D1D46FBF
+	for <platform-driver-x86@vger.kernel.org>; Sun, 21 Dec 2025 21:03:15 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.42
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1766347773; cv=none; b=KkHTxChuwmAXqwFivE1rWASmTFeCf46YVo666cD72qmJyCyqbZGYRp1YP49AYJDGbZxn0+KNM7bFXTC1StDllJNIl1rAG96u64pplFK5OvveE320fpf74Vr/ifMa4nVE6t/Se3Cia0wNnsoMd569cTwu34QUeFB08WYNg5CnqWA=
+	t=1766350997; cv=none; b=iCPqBFVvXgHtQ2Wg9r0CbJMBsGvWc1ogJVXnTe1xcrpK29D/ALHqubj2qEsqOVk+bZqBdCMsbfzV3WTAltRCe7EXDU17QexnMYnzFOdlF9t/y/Sv4MYndqSuX+Hm8UJRHLlXEV+ctaRNgFUoTYPHtkUZfISz+72T1dPm/LUnk1M=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1766347773; c=relaxed/simple;
-	bh=pkSHrtlpjtTr4esB7K212Q3jAyGZ90Xq19EK0ko3rjE=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=OFWIKNLObaaHZ/OiLQ39KeW26VW2UxB5i5kTU1x1UAUGvxKmbu+2A2jvmoZQ3CMGBupg9tt80HjdE9k1mWGry/dmiEb/iwyLH2zbfen0FlRM5J9LcYEl3iZBvfZim+VAcVI4zi4MJ4y2wgWEFdFUCei3z8DJZTZ06saedFgsPUs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=i+Hpnn5x; arc=none smtp.client-ip=209.85.208.182
+	s=arc-20240116; t=1766350997; c=relaxed/simple;
+	bh=aCbnMjBI7ze4sQF+R+PyaPodOdN++ld+MIXC/lfsCoM=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=mU6cquE1NSb0itPekPJftVJgYxjAjahlcn2W1OXjyKcQJyjZChEs0nnVc0d7kUk8iwN836tlxqZDSMuiixJ8cvIpa/4Y3gljbYbGYKnOCh/x9GDjLeMjjwkqnyeK3DU2zCcurO9hYq2ttOUZbb4fByUMD5hqBD/XO4zgLk10Tw4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=EYwtphyz; arc=none smtp.client-ip=209.85.218.42
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="i+Hpnn5x"
-Received: by mail-lj1-f182.google.com with SMTP id 38308e7fff4ca-37b96cbd875so27737511fa.3
-        for <platform-driver-x86@vger.kernel.org>; Sun, 21 Dec 2025 12:09:31 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="EYwtphyz"
+Received: by mail-ej1-f42.google.com with SMTP id a640c23a62f3a-b79af62d36bso594641866b.3
+        for <platform-driver-x86@vger.kernel.org>; Sun, 21 Dec 2025 13:03:15 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1766347770; x=1766952570; darn=vger.kernel.org;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:from:to:cc:subject:date:message-id:reply-to;
-        bh=gOM/Zs08kE5JjXrr7rPcPdeZybR5dEwaO1Uiob/hfTo=;
-        b=i+Hpnn5xuy4Mb1BOL8ndfd+WWwUVRi8Cg0m9KXJ2KOBS7paAp1SD4aOOdIpS400R8L
-         Zgxol0I5KblSqmlEWdE+ajZFzcpsPtvTepD/nZQtzV4kPaB2CqW9HdGtK31HIYnkgwbr
-         BRIYlarhRdIyZe003D1GXdSDxbq/YB2KUSPYcf7vjg74lF48U5hZgYwrBQaosmao+SiJ
-         PXXwZmZgsjumXFMGu3VkfrQVkvc9mdtIv/tAivOrwSj7oabWRJ3lOAqCi7l9W5ejuWxI
-         WLAYPSI3p9MOTiKI1V/NIqCcvLX1JKp+iosTXk+AXzeJwMNT3fnB1Yk0oXb3V++IbkDj
-         TrzQ==
+        d=gmail.com; s=20230601; t=1766350994; x=1766955794; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=yxhPKm1etdcxC1Xo5wytb4E2GIlA0gPj7MvS6c25mQ4=;
+        b=EYwtphyzWq87eC4ZEK2KXb9lqGiKehbsDFsPgUPjEthaKFimZMxXRJa61HMz9TplEQ
+         MZFJbfWZO0bosbT7ShfFLzvL0LGDYkC7xRmnTB9tRxl2fh3ckbK+zBbatA5qWJqf/c6H
+         /774EiLXmcOfUaEZPNxHK/MyTj/N5w0adsgFX1sMSqrZoA0qUJTqdN+g0qfQJgU4a0gs
+         ABux9k1x0jWnPI8mEh+Sv/y2ldU0/hxUTo9a8dbvNYW9Cb92MRc7S8NAygFa19Yf3KWW
+         IN6dNH3tlC15pZmnT2Ebh9wI0Dbi9qrjFaPZHGII/qr+8AEwOGHueD/muG7rNz131Rii
+         4jSw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1766347770; x=1766952570;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-gg:x-gm-message-state:from:to:cc:subject:date
+        d=1e100.net; s=20230601; t=1766350994; x=1766955794;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-gg:x-gm-message-state:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=gOM/Zs08kE5JjXrr7rPcPdeZybR5dEwaO1Uiob/hfTo=;
-        b=EAj5D9WFV7OX9htTUxRqaR0VQed1S4LLeuDBUEKap3ESOcClAIAqKJ0NlJf8VRHq0t
-         59XHLwRe1BdH37P2Gd8OFyGZIjvSDiKc64r+2A9Q6zCg+b5ve5T26YdR91koJP1Pl/eT
-         P/X5TpqmMCetGAlwhDhXtcYNmqeNwKKzHAtFLeT0ZUZd58pBeXdSYFsfJDYyYgZev1cA
-         gQNzB4ji3/Y2UimsmBzAizK2JZjqUTMp6XVejQczdeUE/z9W+l9NCehJ8Qyrc9iAIMbU
-         CSd/Tgz10E+c3an3iaCUyHYzqWFPBSjAuA5ErbBXnctEbQZeZ0yWV+Hf6XxZ1PevmETB
-         5i7g==
-X-Gm-Message-State: AOJu0YwgvdrRXb1Nzf6Jh92Zb2p3TuWNkYHLPWi4kFlUE0Zk2SaBW9ts
-	zZ4MFZ16ucBPYJUuSIQODe2HiG7vPnTBj02yd3YIcqURnTS515zBR/zV4AzM8JhcJ+RYUwL5DgP
-	aP/cCZ/piXJjyRwe5oUYSwlpi5BpN6r8=
-X-Gm-Gg: AY/fxX6AzDHnZh1/4LSYg+QDhPzb0K7b62bVWxFEwSIZ9dVszoVKVY+q5NiEPy5wi4t
-	IV42yttAagjD81r4WcQpzhokJiRDxHK9V0JxSil4YPicYi473CUVWErSLiXtUOw3iAnI9j++HfU
-	Blr+M6r3vIUWq7rmkc0YVV+xl0cGYyuzKJQ9XCnUMlA7rC+zE/j1dMIPAdZt+iDE9qkTJ83lK2p
-	D+C54+rbA69cv11Bv+NbcNamSKPN2vSklZuVKOW6BLtbgw6w3t1krBZ71cEvkBXw8ZIAWvLpNhG
-	4frNkiiMnirb9WY=
-X-Google-Smtp-Source: AGHT+IGC3ouh39IEVkkxFH4wTNKTm8RXTOpmuOheoY/ab2kSzg0FQAp42gOf7Gn6LoYakWXXx+EtdErK7z7kIFCEXSI=
-X-Received: by 2002:a05:651c:2225:b0:37e:5602:4a53 with SMTP id
- 38308e7fff4ca-3812162148cmr31919101fa.22.1766347769880; Sun, 21 Dec 2025
- 12:09:29 -0800 (PST)
+        bh=yxhPKm1etdcxC1Xo5wytb4E2GIlA0gPj7MvS6c25mQ4=;
+        b=lIto35gnlnWJWFWBCcJHgQv8CT8nHps7dGpf+2SVrwmuYzsZbdRJ7Jucz4+eI/aB2F
+         fnJAakoJA8AKVT9IdziEkl52UXXCGnnmIMmvHcOrBSjr2ZDvJF11qmc0U6cWuWjNfJCQ
+         v+75pVbcIyFpUVeW0iKpkiGfnblLqVkR9ZKenktQMA15I4F2wlm+iGgdreNj/LZl9hwE
+         UO6ZpC4+Qv5vcBreBC3zBet+ErD8SPoPIaEmPwQFjHpZwbmpajfxr2GKJ6p7QezJWwbu
+         +GG5sDi+Zj0IJ7GPaMWM1MMe3BfymsPiwJKxQZJc66kfuFjAjChFIwcV02YRcgymDsan
+         TZzA==
+X-Forwarded-Encrypted: i=1; AJvYcCWYus53xHh3VZW/lpJZXaEWCPp/kYU7V9bGtC1M+IR8dFKsSBbYHVXmHi7tB7PS/WNgT7582QOd7q8lWzJpcc49n3JR@vger.kernel.org
+X-Gm-Message-State: AOJu0Yznr9WXpavVPfoT4RFnBtxUtYrU9FqIXSUWaa3EXM92yS18VJTx
+	7+kKgAHhege9GzYvGfhe1TemEZZI1u6+QpeVmuhz+r3S+pJ3h0lRGEpw
+X-Gm-Gg: AY/fxX7u6P7gSaJZryGTMujBcmc0vB7BbYV3QQYabrtFYlgDL0jtb6fN9zxOnZL2eDb
+	h31llgXcK7KFVddGALp0Ajqjd32mfUZdYuAiGObSBp/aUtJN8rx8sELrv6fEVQ4dh/BqlZngsl3
+	OQoYovY2YzLdXXKjes8wnhFwnncQx93DNiAUomnJtUCo2pGeLPnQdKNiwcmzGaO/XL5bPLoPrsl
+	BGMplksZEEfMhYGVEu0g0nRegK5vq38UpJRZBDs9I+BId2HEVgY5Tka6OwWJKfao1KYxOcx6Zdn
+	f33aHm26A6CU6fPcXX9T+E2pqMJLZNm1BCENk3WWdzy9W7beIYHvpVjzulWfiK5zuq8I4y4YcXf
+	2pgH/gtuC8he/XuXk1WmsOzFclY4GITHXdgO/WNv+Y9+x4grmYDWdROex52s15jUewmIu1352qm
+	Jeoj/ASaGHvLLH7JZJ2t0ItjJQkhOPSDauNO2+SdGo45jz73qrMxSMnHwE43aI44T/
+X-Google-Smtp-Source: AGHT+IHinQWOG8IjXWZwyfZLqr9hHDVSLz0QbnUfYn+YXUNgIoPy9Xp/jee9PFGMvSSfKtTqwCAuaw==
+X-Received: by 2002:a17:907:9686:b0:b4b:dd7e:65f2 with SMTP id a640c23a62f3a-b8036ecbb91mr985856166b.5.1766350994243;
+        Sun, 21 Dec 2025 13:03:14 -0800 (PST)
+Received: from localhost (2a02-a44a-2a80-0-8c2a-39d0-7ce1-2682.fixed6.kpn.net. [2a02:a44a:2a80:0:8c2a:39d0:7ce1:2682])
+        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-b8037f37ee8sm839737466b.59.2025.12.21.13.03.13
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sun, 21 Dec 2025 13:03:13 -0800 (PST)
+From: Tim Wassink <timwassink.dev@gmail.com>
+To: Corentin Chary <corentin.chary@gmail.com>,
+	"Luke D. Jones" <luke@ljones.dev>,
+	Denis Benato <benato.denis96@gmail.com>,
+	Hans de Goede <hansg@kernel.org>,
+	=?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>,
+	platform-driver-x86@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Cc: Tim Wassink <timwassink.dev@gmail.com>
+Subject: [PATCH] platform/x86: asus-nb-wmi: add quirk_asus_ignore_fan for UX3405MA
+Date: Sun, 21 Dec 2025 22:01:48 +0100
+Message-ID: <20251221210218.12274-1-timwassink.dev@gmail.com>
+X-Mailer: git-send-email 2.52.0
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20251221181724.19927-1-timwassink.dev@gmail.com> <1c2e0f32-8110-4bf1-9c5a-e4d6dbfecc7e@gmail.com>
-In-Reply-To: <1c2e0f32-8110-4bf1-9c5a-e4d6dbfecc7e@gmail.com>
-From: Tim Wassink <timwassink.dev@gmail.com>
-Date: Sun, 21 Dec 2025 21:09:19 +0100
-X-Gm-Features: AQt7F2qZeIO4S_S4UmY0B1XMNAaO48CYt1b4RJlF4_TI0_m0Y6QDLn-z7C9vYzk
-Message-ID: <CAD4HHcW_b9DPmj0rEL8+QuvVCsfMHnTQnH2h6+w+yzVOgJpFyQ@mail.gmail.com>
-Subject: Re: [PATCH] platform/x86: asus-nb-wmi: Add keymap for display toggle
-To: Denis Benato <benato.denis96@gmail.com>
-Cc: platform-driver-x86@vger.kernel.org, 
-	Corentin Chary <corentin.chary@gmail.com>, "Luke D. Jones" <luke@ljones.dev>, 
-	Hans de Goede <hansg@kernel.org>, =?UTF-8?Q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>, 
-	open list <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
 
-On 12/21/25 20:45, Denis Benato wrote:
+The ASUS Zenbook 14 (UX3405MA) uses a newer WMI interface for thermal
+management that does not support the legacy WMI fan control methods.
+Currently, this results in ENODEV (-19) errors in dmesg when the driver
+attempts to fetch factory fan curve defaults.
 
-> On 12/21/25 19:17, Tim Wassink wrote:
->
->> On the Asus Zenbook 14 (UX3405MA), the Fn+F7 key combination emits
->> WMI code 0x2d, which was previously unmapped.
->
-> As in "unapped scancode: 0x2d" in dmesg?
+Add a quirk to use quirk_asus_ignore_fan to silence these errors and
+signal that legacy fan control is intentionally unsupported, as thermal
+policies are handled through the platform_profile interface.
 
-Hi Denis,
+Signed-off-by: Tim Wassink <timwassink.dev@gmail.com>
+---
+ drivers/platform/x86/asus-nb-wmi.c | 9 +++++++++
+ 1 file changed, 9 insertions(+)
 
-Thank you for the review!
+diff --git a/drivers/platform/x86/asus-nb-wmi.c b/drivers/platform/x86/asus-nb-wmi.c
+index 6a62bc5b02fd..eaa8abe506cb 100644
+--- a/drivers/platform/x86/asus-nb-wmi.c
++++ b/drivers/platform/x86/asus-nb-wmi.c
+@@ -544,6 +544,15 @@ static const struct dmi_system_id asus_quirks[] = {
+ 		},
+ 		.driver_data = &quirk_asus_zenbook_duo_kbd,
+ 	},
++	{
++		.callback = dmi_matched,
++		.ident = "ASUS Zenbook 14 UX3405MA",
++		.matches = {
++			DMI_MATCH(DMI_SYS_VENDOR, "ASUSTeK COMPUTER INC."),
++			DMI_MATCH(DMI_PRODUCT_NAME, "UX3405MA"),
++		},
++		.driver_data = &quirk_asus_ignore_fan,
++	},
+ 	{
+ 		.callback = dmi_matched,
+ 		.ident = "ASUS ROG Z13",
+-- 
+2.52.0
 
-Yes, exactly. In dmesg it was reporting:
-
-  [ 906.273271] asus_wmi: Unknown key code 0x2d
-
-I found out about it through evtest. It showed the following when the
-key was pressed:
-
-  Event: type 4 (EV_MSC), code 4 (MSC_SCAN), value 2d
-  Event: type 1 (EV_KEY), code 240 (KEY_UNKNOWN), value 1
-
-Best regards,
-Tim
