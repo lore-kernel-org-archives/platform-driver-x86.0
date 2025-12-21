@@ -1,74 +1,58 @@
-Received: from mail-ed1-f41.google.com (mail-ed1-f41.google.com [209.85.208.41])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from m.foxido.dev (m.foxido.dev [81.177.217.87])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 046EE221FCD
-	for <platform-driver-x86@vger.kernel.org>; Sun, 21 Dec 2025 18:19:14 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.41
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A54692FE598;
+	Sun, 21 Dec 2025 18:24:43 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=81.177.217.87
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1766341156; cv=none; b=imCOvp+61e7+Ko4IaA9SBtX2KgLmMW5xP2D0H6KunB6ac/dUjo9r52BK/rbcl4LJfZWFU+7pRQacJpmJncEFtry6LdCnjfRuElvqR67kZvo0jXxV8D4uw9rlTnswrm+jXs9dozK8KZtZicIKqTmb/e9gPFwW1zHfqdxoBn+ixgk=
+	t=1766341487; cv=none; b=ZftT4O/yo9rGghm6tF37G3sMcY+i/on9AzmfEPtVLxrxvutC9UJ/MM+uXvMpLp43O8iTzJjOgi1w5rWBgpy/hE8imqXKVy0UMawEHcZchxurbJEJcRur2G6UmlYV5mgJoDVMUqgd8LJ2ZUp2kMVZqp29oB97LhVC397H0oHEDzU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1766341156; c=relaxed/simple;
-	bh=RXmW0atasCuSrW0Y7GsY9dZ6mnkSlYB9AlHzcCZgyhI=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=Eiy37jSKGcJCmbRnwlfK+ivtyy8cdPqQ9qeUmUiwg/5GrIy3d+PgEPHPo0ISptvgzxSzIjTb7WbbKMCjM0brBRU03W7DrABADIJw5IpdvvSM+/X+5i0GCX6GLQAmiDcyjqeuAOiKb7ft2kLlm0wAOt0ZfzPOPt4soMiY9rNppnY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=iWoT8JU8; arc=none smtp.client-ip=209.85.208.41
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1766341487; c=relaxed/simple;
+	bh=4guQZLwLk/zxWfZ72wTJRC77JUzl36ROeuOGICzIA0A=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=fqTzHjxaRvg/qIWr0UD+QYXFxkAhyGZ3ieM7/JQmtb25Q0C1Bal8Sd6B3j1nG4Z2bamXYCh9jaSr+HAAowJD6Pwv4UC7YbMJp2uCQFKEvx57k9B8UshsEF8f9TxmROS+60onHCJUTi10cuVP+qeaeDNzcAhrat1quseBydMDca4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=foxido.dev; spf=pass smtp.mailfrom=foxido.dev; dkim=pass (2048-bit key) header.d=foxido.dev header.i=@foxido.dev header.b=WBFvIfQl; dkim=permerror (0-bit key) header.d=foxido.dev header.i=@foxido.dev header.b=q4WyASaU; arc=none smtp.client-ip=81.177.217.87
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=foxido.dev
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=foxido.dev
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="iWoT8JU8"
-Received: by mail-ed1-f41.google.com with SMTP id 4fb4d7f45d1cf-64ba74e6892so3284485a12.2
-        for <platform-driver-x86@vger.kernel.org>; Sun, 21 Dec 2025 10:19:14 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1766341153; x=1766945953; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=D9TT7zhqvqJiplcf52NWEybMRU+oLF/P3+KC9H/O1Oc=;
-        b=iWoT8JU826d6vM4gvomBGcerOhYBJdfS6rX4EI+7tDXhezD0VRsDfobS+2QmOyDdQE
-         l+mWKh3tHL2cyD+gQido8xQTNNVg0NELZoCeZxJ3r+8r9Jzeu80ypQE9SrkMgAgjhaof
-         eXCeE10M+FfQkdpR0EIB41ds3hTy0bamQC4TtC+x7uI0eucvl2cTdY7WHe6/M3oaKY4m
-         5Sc44A3/4fujk40YmauzjDvGbvH5SXGLOOC2QD50Uv1dT7D6/7en1N872XizH5eXYbY4
-         tx9cqT93hN88jIZ2PGrPLrocUcK1xRpORbO4mZMURxCTICfRXwGRzbRW8GNq3ixSKuWo
-         GvWw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1766341153; x=1766945953;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-gg:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=D9TT7zhqvqJiplcf52NWEybMRU+oLF/P3+KC9H/O1Oc=;
-        b=JmdBHHMBoYLyW5DQm8GX1JR5F5dMciGFYHIZZgEaVTIQcoVwL+R7JfSO5vnWjQJydn
-         /9Na3Oqzr3glMdNs4vOCK6FeVY4nBz2Hsa1fU+lhXvBBBJDP2XSk3Ynnir8U+8GKdx5E
-         Tdr6gxkY5fUU/ASLClzaxtFrjlGl1QtrpBPMB3T867pkv+PgmH5pobUhwBnJtpdBsG9M
-         0Mztoj1NX3JLVR+fDENqXZsr6klwcH4qILPQkFq+Qo6J29CYLryIQA2eat5eCgLd1gPp
-         fsh6p3S9Vq1GS1JnZG4RlUmkLVu+zD98xDlvxp/2pycbfeaq6C7xiR1FH9C1YtQocryb
-         AY0A==
-X-Gm-Message-State: AOJu0YzF46ki9YbHO97+iIjiI8MfdKZaCACgiv9vo9eoGzTX01+d4Qaq
-	Ml5ov3PMVAdAsfgIWvgF3CIl/uXlZmYBITzDWcAPL9mZBgVXVeyQl9RzX8Vy4fZ/
-X-Gm-Gg: AY/fxX54wDbqZsaShSqr3v6W7NP/If5N31De9Z1ic2sRWTEz/lVmyiZI9GBuX3Ivx5B
-	/fOHw3kWF7nUR9RBu13DYfegmHpiD9o7yO8paPnh5mR2J5wLHdG11WkELB9Q/EI9NMfFk1d9fG5
-	+aCGmtGFBN8UM660MVPRvAs1Lc7sQvBsov3iMuxU/8QrmBpqUjcHlUqmJoDr8x2p3CNUUmR2lYp
-	7TeR5R0b/eTI+rILSnt5NnmYHRpomV1CS4M4jjs7nZ2b/dH0SqJmZhXvR0Y3smyIaUvFHvNN2R7
-	qMySzM0UJkoWWNiC//g84SlnDMhYJ4LVP30qvngXK/qUoIxZgDaZfFdTz/uclSS86WpDQfj/w/j
-	/L6CklU849oadzwSi37cmJtX4WEbjkPQjj9aHSJ4onpEtAGFnvrWrsH81CvqN+WcM4NuT6/PV5C
-	qzzw9AYwQEgB7oPmeSVhxDMlS81gLoTq8xdTsm8wb0Rbb21iSJhP+SkQZylsiPB3Jq
-X-Google-Smtp-Source: AGHT+IFcpqNRh6GUdhmMqalZKHKvlxynCUVoFzkDr9gsGge6Hpud16Cs5cB6rbhoFfIZsDWS1vtYWQ==
-X-Received: by 2002:aa7:d283:0:b0:64b:5abb:9be7 with SMTP id 4fb4d7f45d1cf-64b8ecb2036mr6036864a12.23.1766341152748;
-        Sun, 21 Dec 2025 10:19:12 -0800 (PST)
-Received: from localhost (2a02-a44a-2a80-0-8c2a-39d0-7ce1-2682.fixed6.kpn.net. [2a02:a44a:2a80:0:8c2a:39d0:7ce1:2682])
-        by smtp.gmail.com with ESMTPSA id 4fb4d7f45d1cf-64b9159a4eesm7678494a12.24.2025.12.21.10.19.12
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 21 Dec 2025 10:19:12 -0800 (PST)
-From: Tim Wassink <timwassink.dev@gmail.com>
-To: platform-driver-x86@vger.kernel.org
-Cc: Tim Wassink <timwassink.dev@gmail.com>,
-	Corentin Chary <corentin.chary@gmail.com>,
-	"Luke D. Jones" <luke@ljones.dev>,
-	Denis Benato <benato.denis96@gmail.com>,
-	Hans de Goede <hansg@kernel.org>,
-	=?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>,
-	linux-kernel@vger.kernel.org (open list)
-Subject: [PATCH] platform/x86: asus-nb-wmi: Add keymap for display toggle
-Date: Sun, 21 Dec 2025 19:17:14 +0100
-Message-ID: <20251221181724.19927-1-timwassink.dev@gmail.com>
-X-Mailer: git-send-email 2.52.0
+	dkim=pass (2048-bit key) header.d=foxido.dev header.i=@foxido.dev header.b="WBFvIfQl";
+	dkim=permerror (0-bit key) header.d=foxido.dev header.i=@foxido.dev header.b="q4WyASaU"
+DKIM-Signature: v=1; a=rsa-sha256; s=202508r; d=foxido.dev; c=relaxed/relaxed;
+	h=Message-ID:Date:Subject:To:From; t=1766341438; bh=ZHlBPPcME7C6jnvNm+5ih+z
+	OvfMMvMSU3Q8a3ToZSzc=; b=WBFvIfQl6gYIp88mgLfFolN0CiZ8m6+TlYZURzMflibIXc4pXI
+	pOulkw6g8ss24HXJrj48s4lOx/u/bOqG8k+vjF0T9yWWiszLrBPwFziwdL+Nv3XJsLh6xihZVVm
+	G5WZZR8y+gyEjo4r+pJPWejtbEkjSJPcDNQbTaP5mQYctKwZQbEaKDxftz5bEVET796WkQHrqUT
+	05ArP4rGyv2ReVqOZ3j7NdAchoQraPj6/42RX9CI0x5+CFZ6Eqbf7BcAZrZzfIRc1ZFIVBUNxtt
+	LnbrjtjkttWqSB/s8jqWOE9DqNXh2U/y0LCy4vM7W950YJIyzYzY8ywU7lo6r+Cfs3w==;
+DKIM-Signature: v=1; a=ed25519-sha256; s=202508e; d=foxido.dev; c=relaxed/relaxed;
+	h=Message-ID:Date:Subject:To:From; t=1766341438; bh=ZHlBPPcME7C6jnvNm+5ih+z
+	OvfMMvMSU3Q8a3ToZSzc=; b=q4WyASaULkOjz5k9rhflsp/oqyfEtNW4/mtWduHqw/COdV9H7o
+	bpTPkVEi9k7+HTuEhGMQ8Wp/JRUvNAX8fgAg==;
+From: Gladyshev Ilya <foxido@foxido.dev>
+To: "foxido @ foxido . dev-cc= Rafael J. Wysocki" <rafael@kernel.org>
+Cc: Len Brown <lenb@kernel.org>,
+	Miguel Ojeda <ojeda@kernel.org>,
+	Boqun Feng <boqun.feng@gmail.com>,
+	Gary Guo <gary@garyguo.net>,
+	=?UTF-8?q?Bj=C3=B6rn=20Roy=20Baron?= <bjorn3_gh@protonmail.com>,
+	Benno Lossin <lossin@kernel.org>,
+	Andreas Hindborg <a.hindborg@kernel.org>,
+	Alice Ryhl <aliceryhl@google.com>,
+	Trevor Gross <tmgross@umich.edu>,
+	Danilo Krummrich <dakr@kernel.org>,
+	Tamir Duberstein <tamird@gmail.com>,
+	Armin Wolf <W_Armin@gmx.de>,
+	platform-driver-x86@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	rust-for-linux@vger.kernel.org,
+	linux-acpi@vger.kernel.org,
+	Gladyshev Ilya <foxido@foxido.dev>
+Subject: [RFC PATCH 1/3] rust: implement wrapper for acpi_object
+Date: Sun, 21 Dec 2025 21:22:37 +0300
+Message-ID: <a28e83201e1413091333509628274807e50ec170.1766331321.git.foxido@foxido.dev>
+X-Mailer: git-send-email 2.51.1.dirty
+In-Reply-To: <cover.1766331321.git.foxido@foxido.dev>
+References: <cover.1766331321.git.foxido@foxido.dev>
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
@@ -77,32 +61,126 @@ List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-On the Asus Zenbook 14 (UX3405MA), the Fn+F7 key combination emits
-WMI code 0x2d, which was previously unmapped.
+ACPI Object is represented via union on C-side. On Rust side, it's
+zero-cost type wrapper for each ACPI Type, with individual methods for
+getters and other interactions.
 
-Map this code to KEY_DISPLAYTOGGLE. This matches the behavior of the
-display toggle/projector mode key found on other Asus laptops, allowing
-userspace to handle multi-monitor switching or screen toggling.
-
-Tested on ASUS Zenbook 14 UX3405MA.
-
-Signed-off-by: Tim Wassink <timwassink.dev@gmail.com>
+Signed-off-by: Gladyshev Ilya <foxido@foxido.dev>
 ---
- drivers/platform/x86/asus-nb-wmi.c | 1 +
- 1 file changed, 1 insertion(+)
+ rust/kernel/acpi.rs | 103 ++++++++++++++++++++++++++++++++++++++++++++
+ 1 file changed, 103 insertions(+)
 
-diff --git a/drivers/platform/x86/asus-nb-wmi.c b/drivers/platform/x86/asus-nb-wmi.c
-index 6a62bc5b02fd..a38a65f5c550 100644
---- a/drivers/platform/x86/asus-nb-wmi.c
-+++ b/drivers/platform/x86/asus-nb-wmi.c
-@@ -580,6 +580,7 @@ static const struct key_entry asus_nb_wmi_keymap[] = {
- 	{ KE_KEY, 0x2a, { KEY_SELECTIVE_SCREENSHOT } },
- 	{ KE_IGNORE, 0x2b, }, /* PrintScreen (also send via PS/2) on newer models */
- 	{ KE_IGNORE, 0x2c, }, /* CapsLock (also send via PS/2) on newer models */
-+	{ KE_KEY, 0x2d, { KEY_DISPLAYTOGGLE } },
- 	{ KE_KEY, 0x30, { KEY_VOLUMEUP } },
- 	{ KE_KEY, 0x31, { KEY_VOLUMEDOWN } },
- 	{ KE_KEY, 0x32, { KEY_MUTE } },
+diff --git a/rust/kernel/acpi.rs b/rust/kernel/acpi.rs
+index 9b8efa623130..0a164ca8cceb 100644
+--- a/rust/kernel/acpi.rs
++++ b/rust/kernel/acpi.rs
+@@ -63,3 +63,106 @@ macro_rules! acpi_device_table {
+         $crate::module_device_table!("acpi", $module_table_name, $table_name);
+     };
+ }
++
++/// An ACPI object.
++///
++/// This structure represents the Rust abstraction for a C [`struct acpi_object`].
++/// You probably want to convert it into actual object type.
++///
++/// # Example
++/// ```
++/// # use kernel::prelude::*
++/// use kernel::acpi::{AcpiObject};
++///
++/// fn read_first_acpi_byte(obj: &AcpiObject) -> Result<u8> {
++///     if obj.type_id() != AcpiBuffer::ACPI_TYPE {
++///         return Err(EINVAL);
++///     }
++///
++///     let obj: &AcpiBuffer = obj.try_into()?;
++///
++///     Ok(obj.payload()[0])
++/// }
++/// ```
++#[repr(transparent)]
++pub struct AcpiObject(bindings::acpi_object);
++
++impl AcpiObject {
++    /// Returns object type (see `acpitypes.h`)
++    pub fn type_id(&self) -> u32 {
++        // SAFETY: `type` field is valid in all union variants
++        unsafe { self.0.type_ }
++    }
++}
++
++/// Generate AcpiObject subtype
++///
++/// For given subtype implements
++/// - `TryFrom<&AcpiObject> for &SubType` trait
++/// - unsafe try_from_unchecked() with same semantics, but without type check
++macro_rules! acpi_object_subtype {
++    ($subtype_name:ident <- ($acpi_type:ident, $field_name:ident, $union_type:ty)) => {
++        /// Wraps `acpi_object` subtype
++        #[repr(transparent)]
++        pub struct $subtype_name($union_type);
++
++        impl TryFrom<&AcpiObject> for &$subtype_name {
++            type Error = Error;
++
++            fn try_from(value: &AcpiObject) -> core::result::Result<Self, Self::Error> {
++                // SAFETY: type_ field present in all union types and is always valid
++                let real_type = unsafe { value.0.type_ };
++
++                if (real_type != $subtype_name::ACPI_TYPE) {
++                    return Err(EINVAL);
++                }
++
++                // SAFETY: We validated union subtype
++                Ok(unsafe {
++                    ::core::mem::transmute::<&$union_type, &$subtype_name>(&value.0.$field_name)
++                })
++            }
++        }
++
++        impl $subtype_name {
++            /// This ACPI type int value (see `acpitypes.h`)
++            pub const ACPI_TYPE: u32 = bindings::$acpi_type;
++
++            /// Converts AcpiObject reference into exact ACPI type wrapper
++            ///
++            /// # Safety
++            ///
++            /// Assumes that value is correct (`Self`) subtype
++            pub unsafe fn try_from_unchecked(value: &AcpiObject) -> &Self {
++                // SAFETY: Only unsafety comes from unchecked transformation and
++                // we transfered
++                unsafe {
++                    ::core::mem::transmute::<&$union_type, &$subtype_name>(&value.0.$field_name)
++                }
++            }
++        }
++    };
++}
++
++acpi_object_subtype!(AcpiInteger
++    <- (ACPI_TYPE_INTEGER, integer, bindings::acpi_object__bindgen_ty_1));
++acpi_object_subtype!(AcpiString
++    <- (ACPI_TYPE_STRING, string, bindings::acpi_object__bindgen_ty_2));
++acpi_object_subtype!(AcpiBuffer
++    <- (ACPI_TYPE_BUFFER, buffer, bindings::acpi_object__bindgen_ty_3));
++acpi_object_subtype!(AcpiPackage
++    <- (ACPI_TYPE_PACKAGE, package, bindings::acpi_object__bindgen_ty_4));
++acpi_object_subtype!(AcpiReference
++    <- (ACPI_TYPE_LOCAL_REFERENCE, reference, bindings::acpi_object__bindgen_ty_5));
++acpi_object_subtype!(AcpiProcessor
++    <- (ACPI_TYPE_PROCESSOR, processor, bindings::acpi_object__bindgen_ty_6));
++acpi_object_subtype!(AcpiPowerResource
++    <- (ACPI_TYPE_POWER, power_resource, bindings::acpi_object__bindgen_ty_7));
++
++impl AcpiBuffer {
++    /// Get Buffer's content
++    pub fn payload(&self) -> &[u8] {
++        // SAFETY: (pointer, length) indeed represents byte slice
++        unsafe { ::core::slice::from_raw_parts(self.0.pointer, self.0.length as usize) }
++    }
++}
 -- 
-2.52.0
+2.51.1.dirty
 
