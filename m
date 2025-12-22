@@ -1,161 +1,161 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-lj1-f169.google.com (mail-lj1-f169.google.com [209.85.208.169])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 60269329E65;
-	Mon, 22 Dec 2025 10:23:25 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 750112264DC
+	for <platform-driver-x86@vger.kernel.org>; Mon, 22 Dec 2025 10:44:55 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.169
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1766399005; cv=none; b=gmpR8UYaEMq9iEt3qn4jB0+xiLWNr89z9Xef6cFDdsUrZk04gQ02sCSZwWshD51GnKoRhiKV7OPDaH+M3qnsA1sVb5EVmrxOzl4P0BluEx+D+oecuWKQ/UjVVfUTln77fAyP77JQJ5MwTom5C2c33lEGgH066WECEEvS7uQpfBc=
+	t=1766400297; cv=none; b=GCvtEGEMIeuzTfCyGtgmQCWtIitse2z/wGCjoDpWQP/6wh3Jc+HIMwXuD7MFGkwcX4AUdUcDQqJQR0gXJY+Iyn7PAdivc3Pe4PCfrqFu9M2FU1rx6X3P9iUZxK9NRmrMgFujR87Nw6XdbxR4p0MjUo/vrktwqrIn/gU65TnadtI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1766399005; c=relaxed/simple;
-	bh=FWAzzIL1x1PVb5pw3WRq7KOwgjGFCl6UQKfwo1uVKc0=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=cdrR8MQlK9c/ECFCElPXdu7TTJH1qanbDLGmcE56ktnwWURBkYZgaUUqtU+0+4iW7lSfzrUPGXlKJ5IZhUMUBfBrm3zXQrjh0glW0tlZzCxPB2HXymv0e6shjL5wFkkWCHUQC82naNJubwKfgla5g3Xv6A6+RUJnBLW63qSZRKU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=W6sC2Icn; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1766400297; c=relaxed/simple;
+	bh=EPACU3NG1hHLFcX0DiGcRb34TrV8oFmHcQFcuICEEk8=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=tpI4Zk9A6YTMOwPeQI356V8/6lH4Hh9zki8C8Zd3vM9wBsIIN4kR/mWQMEoXUTtg0Bp195TT1n90DOtFILVtOc/R7OCbzbIOBAVvQAO8FZb36T0ejUN+Q1vrFsWacSYv5kc+cCi5Y6995aT7rVtlGHGouoN5sw2fSKYOX98nRFc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=ard288iu; arc=none smtp.client-ip=209.85.208.169
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="W6sC2Icn"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 06207C4CEF1;
-	Mon, 22 Dec 2025 10:23:20 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1766399005;
-	bh=FWAzzIL1x1PVb5pw3WRq7KOwgjGFCl6UQKfwo1uVKc0=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=W6sC2IcnGt71ZuEzFn7MTJ1rEEbh9mKgXHqAPPCWUdldtNqvlcVWixNcjVm5Eik0F
-	 eSXvXLLEciWBV8hJYFtCVePMBiFkkhYWC/bkDYyeW7RghoZH0nJBsWTISXH4VNAOYF
-	 yOTYfti6RyDab3wgQwkyy4SIMNB5MJeZseAuvsyM3rZoh5UIVlgTCjqSxFHkmRt+gH
-	 G93m47K3btiYtzavzG0INPh7iU7fGO9XMazOuYPMQW8ZEzzxkEmA54utKlvC19keww
-	 oAXOZ3ILDjmAimwFm7PiFfqFVAE3gQ3v0ox4gy50qkWFWHzlV3ru5gXR+2Ui9k/7Gi
-	 POjGFbhai9UPA==
-Message-ID: <c29de60c-c7c6-45d7-8d90-616df23df01c@kernel.org>
-Date: Mon, 22 Dec 2025 11:23:18 +0100
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ard288iu"
+Received: by mail-lj1-f169.google.com with SMTP id 38308e7fff4ca-37a33b06028so33178691fa.2
+        for <platform-driver-x86@vger.kernel.org>; Mon, 22 Dec 2025 02:44:55 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1766400294; x=1767005094; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=qQE/LH62Sbw4ndYdvZhBLEm6Dus4d7R8l3tz7tXypxE=;
+        b=ard288iuPmuxQpceB8EKvU9RSw7DW0hZ527B+M/BRacA52YHogy2B7nNjzUeqduT9n
+         1mTkdIAp39lCRFvGBrx5rFju0Um9VegdjrKOjA3lpIYgVsrw8Dg0yMCeKShA7kEb2Zaw
+         7PSMQ4nX3x1h8FIuN3oQYCWTKVXzBaDVBxo6S6HvoMPjS1a2XpC2FkkMCAiFBuwzAt3r
+         nqA/cYgJhorjhyIqw4B+E967vHARwGE5Fd8Lfdrqal1fD6H3WsJF85Dm9VCnQsz4oWqM
+         ylAn068KJpJLp8CONH9B2YdVTUC+7zSkmu6/P83mFa5xwT1jvUIkyE8PF09v9UQIozVY
+         pSug==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1766400294; x=1767005094;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-gg:x-gm-message-state:from
+         :to:cc:subject:date:message-id:reply-to;
+        bh=qQE/LH62Sbw4ndYdvZhBLEm6Dus4d7R8l3tz7tXypxE=;
+        b=e1+b3gPcc+Dbd60ia/dR15BeMrnKinIEd1lzuGp4zvXJaKpUGFe1mBszMNvftr6AhB
+         wDty0wN+vTgm0S/wsf6HMUhNd2f8cfbS7G2uES2cOUyeRQV2XuKehln5n/sGE50Ba607
+         zgKu1HYS/2xO6mVSIJI15gqIYdeXAUJjJ0YWjgo/YNZbOBQyEvNsR667ereRthOo495y
+         SkUsYAGvqGhXR4l5Dzw1Enn6SbMBrHipddDLoiskJmVSsb+IEm119UQ5MTgpJy4XBlED
+         y8GMMhocTzlbQyekPtYw4E5i4JwRRo5Bxe/W+AA9Jr25zEEx+uCuklcixGkpfuBzyOKr
+         mSqg==
+X-Forwarded-Encrypted: i=1; AJvYcCXv/o5C9RKlV2Ssci/t2/ZKNx2R9VNcQZmPIMyFGpuyMHTwll49RZYyoB7a5S5I0bn4CE1nsPagb+N++Hbf4h4XN3ZQ@vger.kernel.org
+X-Gm-Message-State: AOJu0YyCGP8/Hj70P2vocoeCrlWWUR++j6AJmeccjPl1qs9b+y/hfrN5
+	bJ+Iou2MLqEPabDNbl9DkpELpwJQ3bwlILMCIM1s8TC4+lAF7Z013Oz+hoRk/Y6novijhBhbFql
+	/0r9DI5UQQjrAh+540/LNrmLIVv6yM1k=
+X-Gm-Gg: AY/fxX4yVxChSPw5UBBc189T551On1T4KyuvwhvNjOjfNo0m1/F6LCIFLPHJluyxTYD
+	AfVxzxp5Byg7wTBAMbkweoatlanOpKDksIz//GJkKjkFvIuG9rKi+DaFfStqj2J8RSFAhLXC/y7
+	90vZ+trRm77qtINQWMJ5Uye2FpqS344kxJtWSNKjsqZdluaAwET9o0smY3lR5Xs8QIM6IHakR0y
+	Tnn3NrODE1e7X5ZeFyCmxoGyVmJJ/y6DM8Mtez90LaK2hKPUruHzlJFxG9OLJJpi+BQ9lHQqH2u
+	STcmUKckoR+OEs4/dnYzyWMLSQ==
+X-Google-Smtp-Source: AGHT+IExMt04YgNdjSch5W1UnJS7Eolr2o03dJzdazxnxqvXjjm1CocRsWnJHKYTzcX8r4YlfDwnucSvyur3DniW6rw=
+X-Received: by 2002:a05:651c:1617:b0:37a:2c75:7d83 with SMTP id
+ 38308e7fff4ca-381215b054bmr36246051fa.13.1766400293314; Mon, 22 Dec 2025
+ 02:44:53 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v5 2/7] dt-bindings: wireless: ieee80211: Add
- disable-rfkill property
-To: Bryan O'Donoghue <bod.linux@nxsw.ie>, jerome.debretagne@gmail.com,
- Bjorn Andersson <andersson@kernel.org>,
- Konrad Dybcio <konradybcio@kernel.org>, Rob Herring <robh@kernel.org>,
- Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley
- <conor+dt@kernel.org>, Johannes Berg <johannes@sipsolutions.net>,
- Lorenzo Bianconi <lorenzo@kernel.org>,
- Maximilian Luz <luzmaximilian@gmail.com>,
- =?UTF-8?Q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>,
- Jeff Johnson <jjohnson@kernel.org>, Manivannan Sadhasivam <mani@kernel.org>
-Cc: linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org,
- linux-kernel@vger.kernel.org, linux-wireless@vger.kernel.org,
- platform-driver-x86@vger.kernel.org, ath12k@lists.infradead.org,
- Jeff Johnson <jeff.johnson@oss.qualcomm.com>, Dale Whinham <daleyo@gmail.com>
-References: <20251220-surface-sp11-for-next-v5-0-16065bef8ef3@gmail.com>
- <M7kfFb5fz-WB43U_xCUwgxpmBJ4TNdp4jE6yFu6HmemIcDx5tXO6H4xnW_pEQz6DMkKm-3POdB9hIdB092zhGQ==@protonmail.internalid>
- <20251220-surface-sp11-for-next-v5-2-16065bef8ef3@gmail.com>
- <e0e9e690-c56e-4b56-90f9-2af46a7feaf3@nxsw.ie>
-From: Hans de Goede <hansg@kernel.org>
-Content-Language: en-US, nl
-In-Reply-To: <e0e9e690-c56e-4b56-90f9-2af46a7feaf3@nxsw.ie>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+References: <20251221210218.12274-1-timwassink.dev@gmail.com> <b02a7c96-9653-4ab2-ac4a-86d365af1a2d@gmail.com>
+In-Reply-To: <b02a7c96-9653-4ab2-ac4a-86d365af1a2d@gmail.com>
+From: Tim Wassink <timwassink.dev@gmail.com>
+Date: Mon, 22 Dec 2025 11:44:42 +0100
+X-Gm-Features: AQt7F2rh9KAQ1OwVVI4849iBACCxHSc-sMIK23Hu0PZZpk6ce00qIzboCdxHtss
+Message-ID: <CAD4HHcVKCL-9CV5kWH_6oz0jmh=+eXP-xU7cm2FvAHHucrPF7w@mail.gmail.com>
+Subject: Re: [PATCH] platform/x86: asus-nb-wmi: add quirk_asus_ignore_fan for UX3405MA
+To: Denis Benato <benato.denis96@gmail.com>
+Cc: Corentin Chary <corentin.chary@gmail.com>, "Luke D. Jones" <luke@ljones.dev>, 
+	Hans de Goede <hansg@kernel.org>, =?UTF-8?Q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>, 
+	platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-+Cc Mani
+On Sun, Dec 21, 2025 at 10:01 PM Denis Benato <denis.benato@somemail.com> w=
+rote:
+> On 12/21/25 22:01, Tim Wassink wrote:
+> > The ASUS Zenbook 14 (UX3405MA) uses a newer WMI interface for thermal
+> > management that does not support the legacy WMI fan control methods.
+> > Currently, this results in ENODEV (-19) errors in dmesg when the driver
+> > attempts to fetch factory fan curve defaults.
+> >
+> > Add a quirk to use quirk_asus_ignore_fan to silence these errors and
+> > signal that legacy fan control is intentionally unsupported, as thermal
+> > policies are handled through the platform_profile interface.
+>
+> It is my understanding that this patch suppresses the error,
+> while maintaining the current behavior in every other aspect,
+> correct?
 
-Hi,
+I am actually not sure anymore if this patch is ok, as it introduces a
+trade-off regarding telemetry.
 
-On 20-Dec-25 07:04, Bryan O'Donoghue wrote:
-> On 20/12/2025 00:21, Jérôme de Bretagne via B4 Relay wrote:
->> From: Jérôme de Bretagne <jerome.debretagne@gmail.com>
->>
->> For some devices, Wi-Fi is entirely hard blocked by default making
->> the Wi-Fi radio unusable, except if rfkill is disabled as expected
->> on those models.
->>
->> Commit c6a7c0b09d5f ("wifi: ath12k: Add Support for enabling or
->> disabling specific features based on ACPI bitflag") added a way to
->> support features set via ACPI, including the DISABLE_RFKILL bit.
->>
->> Add a disable-rfkill property to expose the DISABLE_RFKILL bit
->> equivalent for devices described by a Devicetree instead of ACPI.
->>
->> Signed-off-by: Jérôme de Bretagne <jerome.debretagne@gmail.com>
->> ---
->>   Documentation/devicetree/bindings/net/wireless/ieee80211.yaml | 6 ++++++
->>   1 file changed, 6 insertions(+)
->>
->> diff --git a/Documentation/devicetree/bindings/net/wireless/ieee80211.yaml b/Documentation/devicetree/bindings/net/wireless/ieee80211.yaml
->> index d89f7a3f88a71d45d6f4ab2ae909eae09cbcaf9a..c10a4675640be947cd0b5eaec2c7ff367fd93945 100644
->> --- a/Documentation/devicetree/bindings/net/wireless/ieee80211.yaml
->> +++ b/Documentation/devicetree/bindings/net/wireless/ieee80211.yaml
->> @@ -29,6 +29,12 @@ properties:
->>         different 5 GHz subbands. Using them incorrectly could not work or
->>         decrease performance noticeably
->>
->> +  disable-rfkill:
->> +    type: boolean
->> +    description:
->> +      Disable rfkill for some devices on which Wi-Fi would be entirely hard
->> +      blocked by default otherwise
->> +
->>   additionalProperties: true
->>
->>   examples:
->>
->> -- 
->> 2.47.3
->>
->>
->>
-> 
-> Is this really a hardware description though ?
+While the patch successfully silences the ENODEV (-19) errors, I have
+verified locally that it also inhibits the registration of the fan
+telemetry in hwmon. This means the read-only 'fan1_input' (RPM) is no
+longer available to the user.
 
-I would say yes it is. The wifi chip has an rfkill input pin and
-things will be broken when that pin is hardwired to a fixed value
-rather then being actually connected to a GPIO from say
-the embedded controller.
+I initially followed the precedent of commit 82cc5c6c624c ("platform/x86:
+asus-wmi: Ignore fan on E410MA"), which can be found here:
+https://lore.kernel.org/all/20221221-asus-fan-v1-2-e07f3949725b@weissschuh.=
+net/
 
-So I think that we would need here is not a disable-rfkill property
-but some way to indicate in the DT-node that the rfkill input pin
-is not connected and thus should be ignored.
+Now I realize that case was specifically for a fanless system. The
+UX3405MA does have a physical fan
+which remains functional via the platform_profile (AIPT) interface
+after this patch, as confirmed by stress testing.
 
-This (the rfkill input pin being not-connected) IMHO very much
-is hw-description.
+I thought this quirk was the standard way to handle it, but I am not
+so sure anymore.
 
-Also see the
-"[PATCH 0/9] Add support for handling PCIe M.2 Key E connectors in devicetree"
-series and then specifically:
+Best regards,
+Tim
 
-https://lore.kernel.org/platform-driver-x86/20251112-pci-m2-e-v1-7-97413d6bf824@oss.qualcomm.com/
-
-Which adds:
-
-+  w_disable1-gpios:
-+    description: GPIO controlled connection to W_DISABLE1# signal. This signal
-+      is used by the system to disable WiFi radio in the M.2 card. Refer, PCI
-+      Express M.2 Specification r4.0, sec 3.1.12.3 for more details.
-+    maxItems: 1
-
-What if there is no such GPIO, because the W_DISABLE1# signal is hardwired
-in a specific implementation of the M.2 slot ?
-
-In that case we will also need some way to propagate that info to the wifi
-driver, having some sort of generic devicetree property for wifi-cards
-which can be injected as a software-node property in the PCI-device being
-instantiated for the WIFI card to let the driver no not to honor to
-W_DISABLE1# signal will be useful here too and this is as hardware-description
-as hardware-description can get.
-
-So how about: "w_disable1-not-connected" + "w_disable2-not-connected" boolean
-properties in a generic WIFI devicetree binding and also use that here?
-
-> I think this logic belongs in drivers/net/wireless/ath/ath12k/ triggering on a compat string.
-
-See above, I do not believe that abusing compat-strings for this is the way
-to go.
-
-Regards,
-
-Hans
-
-
+On Mon, Dec 22, 2025 at 3:54=E2=80=AFAM Denis Benato <benato.denis96@gmail.=
+com> wrote:
+>
+>
+> On 12/21/25 22:01, Tim Wassink wrote:
+> > The ASUS Zenbook 14 (UX3405MA) uses a newer WMI interface for thermal
+> > management that does not support the legacy WMI fan control methods.
+> > Currently, this results in ENODEV (-19) errors in dmesg when the driver
+> > attempts to fetch factory fan curve defaults.
+> >
+> > Add a quirk to use quirk_asus_ignore_fan to silence these errors and
+> > signal that legacy fan control is intentionally unsupported, as thermal
+> > policies are handled through the platform_profile interface.
+> It is my understanding that this patch suppresses the error,
+> while maintaining the current behavior in every other aspect,
+> correct?
+> > Signed-off-by: Tim Wassink <timwassink.dev@gmail.com>
+> > ---
+> >  drivers/platform/x86/asus-nb-wmi.c | 9 +++++++++
+> >  1 file changed, 9 insertions(+)
+> >
+> > diff --git a/drivers/platform/x86/asus-nb-wmi.c b/drivers/platform/x86/=
+asus-nb-wmi.c
+> > index 6a62bc5b02fd..eaa8abe506cb 100644
+> > --- a/drivers/platform/x86/asus-nb-wmi.c
+> > +++ b/drivers/platform/x86/asus-nb-wmi.c
+> > @@ -544,6 +544,15 @@ static const struct dmi_system_id asus_quirks[] =
+=3D {
+> >               },
+> >               .driver_data =3D &quirk_asus_zenbook_duo_kbd,
+> >       },
+> > +     {
+> > +             .callback =3D dmi_matched,
+> > +             .ident =3D "ASUS Zenbook 14 UX3405MA",
+> > +             .matches =3D {
+> > +                     DMI_MATCH(DMI_SYS_VENDOR, "ASUSTeK COMPUTER INC."=
+),
+> > +                     DMI_MATCH(DMI_PRODUCT_NAME, "UX3405MA"),
+> > +             },
+> > +             .driver_data =3D &quirk_asus_ignore_fan,
+> > +     },
+> >       {
+> >               .callback =3D dmi_matched,
+> >               .ident =3D "ASUS ROG Z13",
