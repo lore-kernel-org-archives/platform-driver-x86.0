@@ -1,57 +1,58 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.21])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.17])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D322F2D322E;
-	Mon, 22 Dec 2025 14:43:23 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.21
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E19BC2E8DEA;
+	Mon, 22 Dec 2025 14:43:30 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.17
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1766414605; cv=none; b=A3SIsiUEtkg8/RvEjyx//o3kpRy3jlzNjYJ2JqNuk9a/7i6tt1PMZQ26ccea9RgiDUgB2sMVn6EC04vsZX3cHvG45zh3ria6seOXg1s14Qpuld6JvqAJ6GKbPZPVuNsc57lRIpqScBIz0wkllrAufFsYOH0s+rE9bhW7gdt4CR0=
+	t=1766414612; cv=none; b=rOa3/ozLdMtzJ73t9TPB2MF00S8NavRBa8EW+Ux/W7coEP+UDuE9LBPSKFt5G/yG/F+wa6LdwGJRJMZbfdMauzoM90A7TPZxOtyM20I5aoZayJLbgZUUSmVHKCxeO4k6bSsdr5vCYbe67hDFsljtxKECmlorNxqQePuGBwrJnj8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1766414605; c=relaxed/simple;
-	bh=2azAXEZag1CP73ejF1HxRF/4u8J/0WYdUTQ42NntXKU=;
+	s=arc-20240116; t=1766414612; c=relaxed/simple;
+	bh=juAqyrruV3GFPoKV951l6jiYtYE8wtB+VzmkTbjjKws=;
 	h=From:To:Cc:In-Reply-To:References:Subject:Message-Id:Date:
-	 MIME-Version:Content-Type; b=QzygMCAukStnoCppgjUP0/5D44RZluAXAKlcysAMU4+F86x9MGOgfHNbW22PCL2RLRg+tQKGmI6e+2Vi/lfLzbExnSito/2XDqQBfPo/nlwEtJZNFoAeAc63uaxEGUFhJPQNtuGowcHx/CoV+qokAPrS/EKKj6e4p7pZQGfcobU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=pass smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=bSehHNL+; arc=none smtp.client-ip=198.175.65.21
+	 MIME-Version:Content-Type; b=UFizGPQ8EHeUFue1nYAngveN5lN/Z0IQtTN6vhkDG00o8xPqCrHm8hRYyWTA4iiz1h6wupwnzzzxJoze01f03i3YZoIBh0JFDp3nV9fx/wbs1HvnE8wPa64Hf83ztr3N0SuGOb92AbJ/JsLIvIfW9j7iDbYrEnIy0c6zBdmnOJk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=pass smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=Af4YlGsF; arc=none smtp.client-ip=192.198.163.17
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="bSehHNL+"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="Af4YlGsF"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1766414604; x=1797950604;
+  t=1766414611; x=1797950611;
   h=from:to:cc:in-reply-to:references:subject:message-id:
    date:mime-version:content-transfer-encoding;
-  bh=2azAXEZag1CP73ejF1HxRF/4u8J/0WYdUTQ42NntXKU=;
-  b=bSehHNL+sgYA1sRofYO7pyumZXEDeloRb/QNW/qO38SXO7l0T1w5f/Zo
-   1NR/bmiX61h5P1hSxK2X/a/7RfKbWO8khhW2bV0d590SM/lA+rwVL3FMG
-   kldmSW0cNFrrWsmBHf4jJrWCLu5Qf1GA8gMd2oSZuCzrFy3yG8skTb6xh
-   w0j2v+Z/zrvn+v5LepgOkYAyh28I1SdK8LHDQsvG3H5XV/bchRzwvo6HN
-   ri8BweL7gQtfcstipZm5P1tviU/wJ+wYumJC4CFx/ASKolipFaYwguP7G
-   d2w+s870OFwVISZexY+7MHGbtgxFoUr1V3EHa5BDfHbte13niSezH4f9Z
-   g==;
-X-CSE-ConnectionGUID: pazIjfeXROSfXCo7moCLEQ==
-X-CSE-MsgGUID: sSv0/6QTR0+cp4OKCedzjw==
-X-IronPort-AV: E=McAfee;i="6800,10657,11635"; a="68206160"
-X-IronPort-AV: E=Sophos;i="6.20,256,1758610800"; 
-   d="scan'208";a="68206160"
-Received: from fmviesa003.fm.intel.com ([10.60.135.143])
-  by orvoesa113.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 22 Dec 2025 06:43:24 -0800
-X-CSE-ConnectionGUID: r9IHh6KEQ6mV9FGj5hzITg==
-X-CSE-MsgGUID: 0CsnrxYwSl2nfb8US9hFig==
+  bh=juAqyrruV3GFPoKV951l6jiYtYE8wtB+VzmkTbjjKws=;
+  b=Af4YlGsF8DoGTZKhLT8lOX8mqOZoUjN36xbGXx8SaDROP0OOimEcWgYc
+   pZxaaKkIxFap77z9/jriQMSCTxzZ15eazC0x38iq7dlRFJwgg4UKo2Wrg
+   yPi6H/rGnBEyKNPwBNsxjSFGo1JJj11gwdZoFQMh90XPmi7z3S2nsynOd
+   cUB2Nv6n4Ej8Lx30J8OmNJrds+uNuijOonHUmY6JONIYbBalN9FAXYybS
+   v17UvbHgnQjjCtrCvCYi1As4//RMe+nFhKJFqvekPT1GMzQr5xRJtNOGp
+   Dec3x3nzoZDRClbhQ9FVqpLXFgwb0KCGdV1cpmueR4Jf+LYYgiEO1xVhS
+   Q==;
+X-CSE-ConnectionGUID: 4DUjaYfgSrGI1iwOj6+l3A==
+X-CSE-MsgGUID: E/3/+vmNRMSbVOhCrN+BLA==
+X-IronPort-AV: E=McAfee;i="6800,10657,11650"; a="68150863"
+X-IronPort-AV: E=Sophos;i="6.21,168,1763452800"; 
+   d="scan'208";a="68150863"
+Received: from fmviesa009.fm.intel.com ([10.60.135.149])
+  by fmvoesa111.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 22 Dec 2025 06:43:30 -0800
+X-CSE-ConnectionGUID: 2Ia2C8hKRI2j/WGnhXCPdA==
+X-CSE-MsgGUID: 58vLnH5VTHmmi55GwXdbbw==
 X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.21,168,1763452800"; 
+   d="scan'208";a="200042766"
 Received: from ijarvine-mobl1.ger.corp.intel.com (HELO localhost) ([10.245.245.235])
-  by fmviesa003-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 22 Dec 2025 06:43:20 -0800
+  by fmviesa009-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 22 Dec 2025 06:43:28 -0800
 From: =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
-To: Hans de Goede <hansg@kernel.org>, Vernon Mauery <vernux@us.ibm.com>, 
- Matthew Garrett <mjg@redhat.com>, Junrui Luo <moonafterrain@outlook.com>
-Cc: platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org, 
- Yuhao Jiang <danisjiang@gmail.com>
-In-Reply-To: <SYBPR01MB78812D887A92DE3802D0D06EAFA9A@SYBPR01MB7881.ausprd01.prod.outlook.com>
-References: <SYBPR01MB78812D887A92DE3802D0D06EAFA9A@SYBPR01MB7881.ausprd01.prod.outlook.com>
-Subject: Re: [PATCH] platform/x86: ibm_rtl: fix EBDA signature search
- pointer arithmetic
-Message-Id: <176641459407.16407.6172664210555241455.b4-ty@linux.intel.com>
-Date: Mon, 22 Dec 2025 16:43:14 +0200
+To: linux-kernel@vger.kernel.org, Randy Dunlap <rdunlap@infradead.org>
+Cc: "David E. Box" <david.e.box@linux.intel.com>, 
+ Hans de Goede <hansg@kernel.org>, platform-driver-x86@vger.kernel.org
+In-Reply-To: <20251216063801.2896495-1-rdunlap@infradead.org>
+References: <20251216063801.2896495-1-rdunlap@infradead.org>
+Subject: Re: [PATCH v2] platform/x86/intel/vsec: correct kernel-doc
+ comments
+Message-Id: <176641460369.16407.5613191397256413657.b4-ty@linux.intel.com>
+Date: Mon, 22 Dec 2025 16:43:23 +0200
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
@@ -62,14 +63,17 @@ Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
 X-Mailer: b4 0.13.0
 
-On Fri, 19 Dec 2025 16:30:29 +0800, Junrui Luo wrote:
+On Mon, 15 Dec 2025 22:38:00 -0800, Randy Dunlap wrote:
 
-> The ibm_rtl_init() function searches for the signature but has a pointer
-> arithmetic error. The loop counter suggests searching at 4-byte intervals
-> but the implementation only advances by 1 byte per iteration.
+> Fix kernel-doc warnings in intel_vsec.h to eliminate all kernel-doc
+> warnings:
 > 
-> Fix by properly advancing the pointer by sizeof(unsigned int) bytes
-> each iteration.
+> Warning: include/linux/intel_vsec.h:92 struct member 'read_telem' not
+>  described in 'pmt_callbacks'
+> Warning: include/linux/intel_vsec.h:146 expecting prototype for struct
+>  intel_sec_device.  Prototype was for struct intel_vsec_device instead
+> Warning: include/linux/intel_vsec.h:146 struct member 'priv_data_size'
+>  not described in 'intel_vsec_device'
 > 
 > [...]
 
@@ -80,8 +84,8 @@ platform-drivers-x86/review-ilpo-fixes branch only once I've pushed my
 local branch there, which might take a while.
 
 The list of commits applied:
-[1/1] platform/x86: ibm_rtl: fix EBDA signature search pointer arithmetic
-      commit: 15dd100349b8526cbdf2de0ce3e72e700eb6c208
+[1/1] platform/x86/intel/vsec: correct kernel-doc comments
+      commit: 20e20b147cf7cb6780a5b95da2a0e37c52cd1015
 
 --
  i.
