@@ -1,204 +1,173 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 65EA9313E24;
-	Mon, 22 Dec 2025 11:35:14 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 88A3521FF23;
+	Mon, 22 Dec 2025 11:45:23 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1766403314; cv=none; b=PYhQSLWi6GzyKf2Eso7jdo3R0vBlHHei/RJYWuIsvSB2s9Sp5j4K9NxduA/I0veQNuVhJoLjWOKc3hcG9aIOA6AjRfkFuK66GtyUibzWVI5VEPk55NjtF2lapQO/DsCw0t3Tj1UmfWMxFOJHcCqN+OuoLi7fj+INE5oCoSKFHcw=
+	t=1766403923; cv=none; b=lYo51k/PyzqC7N/D1VnC4d345gJNlL7RQpDbuvVWO6IArY+twPXZDp3DfJCpVByqXOEjRGOOWgXFMbeKhqjBogDzQK09kAnTAA1hT3H7eyLYjUb/tLCpRquKZ0Ql+GBSw/bPW2dCaqZFfJEgOPcd+G6qxT/lDXSUMi/fHtgdgCQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1766403314; c=relaxed/simple;
-	bh=BofS04asxFICi56vUDiVBEg4qyYf90vaa4Ld2Hab65I=;
-	h=Mime-Version:Content-Type:Date:Message-Id:From:Subject:Cc:To:
-	 References:In-Reply-To; b=Qf85TkvvTUVpOAY6byPrTlLA0+pH70xo9ccnmd1zkHrCdYrPilmT/LqV0OdA5TgX/2liaf3IW1U/QhIjNCzLkK718LuRLCvCQgsxogmRGItYDlGYHKAkY9YHu+i3em3egwUPPZBiJ8SJIc2hQHSELaWkXXQjvRIVbGhMRBzcqSU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=p4MTqpYf; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1766403923; c=relaxed/simple;
+	bh=a3HAZXboIYJtAUAVesMtixmEpYZ6agiytIhdOW9P2HU=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=OOy31/fDZxZjseG57AFfmu5E1WV8SgpR6TMONn6+/PCzaCn0HGtehLBRJ63llVkWaV2FvoHPV9S2MNVotvyjlET54wfzUnyWwMukv884DBo+N8k0sRUpPsLOaZLqFDyYsWfgKU9wlkiV/czUhK0Lq2mQ31vFMYAB12KerDavYo8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=I6GBvEeK; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="p4MTqpYf"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id A4840C4CEF1;
-	Mon, 22 Dec 2025 11:35:10 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="I6GBvEeK"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 5FA7DC4CEF1;
+	Mon, 22 Dec 2025 11:45:15 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1766403313;
-	bh=BofS04asxFICi56vUDiVBEg4qyYf90vaa4Ld2Hab65I=;
-	h=Date:From:Subject:Cc:To:References:In-Reply-To:From;
-	b=p4MTqpYfLYrV41B2H7R8TP1GCquSJjiBNHONStnG494lkxiwgfTGZW+mEZ6AdLhbo
-	 Ze+U9USO4FE5R9vqxyrBev74V+veq2DbI9Jlg1mGwyw+gd2iYyHwLr02r8u6fPLT3+
-	 dreYMVykdtBowaEDE+qn0zhG6XtMEXooHssmOGFwTrOLY+Aaz4GwIoCgU0gFIL7h64
-	 fMWznhVmIOLHo2Z5KGxYfpVEKJlVpiNceJKKkY0uXAClOTJv5FJRVZwVzfML+QtziO
-	 2e1+vj+MOsh32F2tnBw1lYxGVd4SKxal/SkI6Um3SkD3AP21lajpnHElmJvK1b4mne
-	 J8d88ArYC49Jw==
+	s=k20201202; t=1766403923;
+	bh=a3HAZXboIYJtAUAVesMtixmEpYZ6agiytIhdOW9P2HU=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=I6GBvEeK7QJIwyVC0RguQ8ppbhf51QHCw6gAC9fbdnqgVssO3G4JNHD4Dag9JsdU8
+	 gH/BPSeZZ2RbMHrvJSd3yGXap6TfLSEA78UkcgthxVw9F9jgOl3jghxJh3OQw40Ilj
+	 RYkBP5lOkDJvbkcgJVyAWND1g2rHAARICk89OBfJ9SCd2to93kVQjsA4D9JG92aqOY
+	 2gGgc47Xi5xvRX6rnaHUTjP9/soKRV70zOW4zdd0n4ncZtFIY5+FfjtM+eJc7V1RsN
+	 0hajoj0KmFqLiZZR5bjuug2o7TycznWf+owlgZLVJEiTsjkPzwm3vMzz9jTFcbMZlS
+	 c5iC2jQalglEA==
+Date: Mon, 22 Dec 2025 17:15:05 +0530
+From: Manivannan Sadhasivam <mani@kernel.org>
+To: Hans de Goede <hansg@kernel.org>
+Cc: Bryan O'Donoghue <bod.linux@nxsw.ie>, jerome.debretagne@gmail.com, 
+	Bjorn Andersson <andersson@kernel.org>, Konrad Dybcio <konradybcio@kernel.org>, 
+	Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>, 
+	Conor Dooley <conor+dt@kernel.org>, Johannes Berg <johannes@sipsolutions.net>, 
+	Lorenzo Bianconi <lorenzo@kernel.org>, Maximilian Luz <luzmaximilian@gmail.com>, 
+	Ilpo =?utf-8?B?SsOkcnZpbmVu?= <ilpo.jarvinen@linux.intel.com>, Jeff Johnson <jjohnson@kernel.org>, 
+	linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	linux-wireless@vger.kernel.org, platform-driver-x86@vger.kernel.org, ath12k@lists.infradead.org, 
+	Jeff Johnson <jeff.johnson@oss.qualcomm.com>, Dale Whinham <daleyo@gmail.com>
+Subject: Re: [PATCH v5 2/7] dt-bindings: wireless: ieee80211: Add
+ disable-rfkill property
+Message-ID: <v4hxei4t7n6ebvw6heoccei2t3mskq7uo7zejv6dyvvq5fr5sv@xzpsiic5x7a4>
+References: <20251220-surface-sp11-for-next-v5-0-16065bef8ef3@gmail.com>
+ <M7kfFb5fz-WB43U_xCUwgxpmBJ4TNdp4jE6yFu6HmemIcDx5tXO6H4xnW_pEQz6DMkKm-3POdB9hIdB092zhGQ==@protonmail.internalid>
+ <20251220-surface-sp11-for-next-v5-2-16065bef8ef3@gmail.com>
+ <e0e9e690-c56e-4b56-90f9-2af46a7feaf3@nxsw.ie>
+ <c29de60c-c7c6-45d7-8d90-616df23df01c@kernel.org>
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
-Content-Type: text/plain; charset=UTF-8
-Date: Mon, 22 Dec 2025 12:35:08 +0100
-Message-Id: <DF4PPPGQBPNA.13TJNSRSRUW0A@kernel.org>
-From: "Danilo Krummrich" <dakr@kernel.org>
-Subject: Re: [RFC PATCH 1/3] rust: implement wrapper for acpi_object
-Cc: "foxido @ foxido . dev-cc= Rafael J. Wysocki" <rafael@kernel.org>, "Len
- Brown" <lenb@kernel.org>, "Miguel Ojeda" <ojeda@kernel.org>, "Boqun Feng"
- <boqun.feng@gmail.com>, "Gary Guo" <gary@garyguo.net>,
- =?utf-8?q?Bj=C3=B6rn_Roy_Baron?= <bjorn3_gh@protonmail.com>, "Benno Lossin"
- <lossin@kernel.org>, "Andreas Hindborg" <a.hindborg@kernel.org>, "Alice
- Ryhl" <aliceryhl@google.com>, "Trevor Gross" <tmgross@umich.edu>, "Tamir
- Duberstein" <tamird@gmail.com>, "Armin Wolf" <W_Armin@gmx.de>,
- <platform-driver-x86@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
- <rust-for-linux@vger.kernel.org>, <linux-acpi@vger.kernel.org>
-To: "Gladyshev Ilya" <foxido@foxido.dev>
-References: <cover.1766331321.git.foxido@foxido.dev>
- <a28e83201e1413091333509628274807e50ec170.1766331321.git.foxido@foxido.dev>
-In-Reply-To: <a28e83201e1413091333509628274807e50ec170.1766331321.git.foxido@foxido.dev>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <c29de60c-c7c6-45d7-8d90-616df23df01c@kernel.org>
 
-On Sun Dec 21, 2025 at 7:22 PM CET, Gladyshev Ilya wrote:
-> +/// An ACPI object.
-> +///
-> +/// This structure represents the Rust abstraction for a C [`struct acpi=
-_object`].
-> +/// You probably want to convert it into actual object type.
+On Mon, Dec 22, 2025 at 11:23:18AM +0100, Hans de Goede wrote:
+> +Cc Mani
+> 
+> Hi,
+> 
+> On 20-Dec-25 07:04, Bryan O'Donoghue wrote:
+> > On 20/12/2025 00:21, Jérôme de Bretagne via B4 Relay wrote:
+> >> From: Jérôme de Bretagne <jerome.debretagne@gmail.com>
+> >>
+> >> For some devices, Wi-Fi is entirely hard blocked by default making
+> >> the Wi-Fi radio unusable, except if rfkill is disabled as expected
+> >> on those models.
+> >>
+> >> Commit c6a7c0b09d5f ("wifi: ath12k: Add Support for enabling or
+> >> disabling specific features based on ACPI bitflag") added a way to
+> >> support features set via ACPI, including the DISABLE_RFKILL bit.
+> >>
+> >> Add a disable-rfkill property to expose the DISABLE_RFKILL bit
+> >> equivalent for devices described by a Devicetree instead of ACPI.
+> >>
+> >> Signed-off-by: Jérôme de Bretagne <jerome.debretagne@gmail.com>
+> >> ---
+> >>   Documentation/devicetree/bindings/net/wireless/ieee80211.yaml | 6 ++++++
+> >>   1 file changed, 6 insertions(+)
+> >>
+> >> diff --git a/Documentation/devicetree/bindings/net/wireless/ieee80211.yaml b/Documentation/devicetree/bindings/net/wireless/ieee80211.yaml
+> >> index d89f7a3f88a71d45d6f4ab2ae909eae09cbcaf9a..c10a4675640be947cd0b5eaec2c7ff367fd93945 100644
+> >> --- a/Documentation/devicetree/bindings/net/wireless/ieee80211.yaml
+> >> +++ b/Documentation/devicetree/bindings/net/wireless/ieee80211.yaml
+> >> @@ -29,6 +29,12 @@ properties:
+> >>         different 5 GHz subbands. Using them incorrectly could not work or
+> >>         decrease performance noticeably
+> >>
+> >> +  disable-rfkill:
+> >> +    type: boolean
+> >> +    description:
+> >> +      Disable rfkill for some devices on which Wi-Fi would be entirely hard
+> >> +      blocked by default otherwise
+> >> +
+> >>   additionalProperties: true
+> >>
+> >>   examples:
+> >>
+> >> -- 
+> >> 2.47.3
+> >>
+> >>
+> >>
+> > 
+> > Is this really a hardware description though ?
+> 
+> I would say yes it is. The wifi chip has an rfkill input pin and
+> things will be broken when that pin is hardwired to a fixed value
+> rather then being actually connected to a GPIO from say
+> the embedded controller.
+> 
 
-I think this is a good place to link the corresponding types.
+IIUC, even if the M.2 slot has the W_DISABLE1# signal routed from the host,
+the device won't make use of it as there is no physical connection. So you want
+the WLAN driver to change the state through SW?
 
-> +///
-> +/// # Example
-> +/// ```
-> +/// # use kernel::prelude::*
-> +/// use kernel::acpi::{AcpiObject};
+> So I think that we would need here is not a disable-rfkill property
+> but some way to indicate in the DT-node that the rfkill input pin
+> is not connected and thus should be ignored.
+> 
+> This (the rfkill input pin being not-connected) IMHO very much
+> is hw-description.
+> 
 
-Braces not needed.
+Though we can argue this way, I would prefer to handle it in the driver. For
+example, with my M.2 series, we will end up describing the M.2 slot:
 
-> +///
-> +/// fn read_first_acpi_byte(obj: &AcpiObject) -> Result<u8> {
-> +///     if obj.type_id() !=3D AcpiBuffer::ACPI_TYPE {
-> +///         return Err(EINVAL);
-> +///     }
+	connector {
+		compatible = "pcie-m2-e-connector";
+		w-disable1-gpios = <&tlmm 117 GPIO_ACTIVE_LOW>;
+		...
+		ports {
+			...
+			endpoint@0 {
+				reg = <0>;
+				remote-endpoint = <&pcie4_port0_ep>;
+			};
+		};
+	};
 
-Given the try_into() conversion below this check is unnecessary.
+Then if we use a DT property to convey the RFKILL pin state of the device, we
+would need to describe the endpoint device in DT and hardcode the state:
 
-> +///     let obj: &AcpiBuffer =3D obj.try_into()?;
-> +///
-> +///     Ok(obj.payload()[0])
-> +/// }
-> +/// ```
-> +#[repr(transparent)]
-> +pub struct AcpiObject(bindings::acpi_object);
-> +
-> +impl AcpiObject {
-> +    /// Returns object type (see `acpitypes.h`)
-> +    pub fn type_id(&self) -> u32 {
-> +        // SAFETY: `type` field is valid in all union variants
+	&pcie4_port0 {
+		...
+		port {
+			pcie4_port0_ep: endpoint {
+				remote-endpoint = <&m2_e_pcie_ep>;
+				disable-rfkill;
+			};
+		};
+	};
 
-Here and in a lot of other places, please end with a period.
+So this will essentially make the M.2 device non-swappable unless you change the
+DT since you've how hardcoded the device property in the binding. This is
+something I try to avoid to make the M.2 slot really swappable.
 
-> +        unsafe { self.0.type_ }
-> +    }
-> +}
-> +
-> +/// Generate AcpiObject subtype
-> +///
-> +/// For given subtype implements
-> +/// - `TryFrom<&AcpiObject> for &SubType` trait
-> +/// - unsafe try_from_unchecked() with same semantics, but without type =
-check
-> +macro_rules! acpi_object_subtype {
-> +    ($subtype_name:ident <- ($acpi_type:ident, $field_name:ident, $union=
-_type:ty)) =3D> {
-> +        /// Wraps `acpi_object` subtype
-> +        #[repr(transparent)]
-> +        pub struct $subtype_name($union_type);
-> +
-> +        impl TryFrom<&AcpiObject> for &$subtype_name {
-> +            type Error =3D Error;
-> +
-> +            fn try_from(value: &AcpiObject) -> core::result::Result<Self=
-, Self::Error> {
-> +                // SAFETY: type_ field present in all union types and is=
- always valid
-> +                let real_type =3D unsafe { value.0.type_ };
-> +
-> +                if (real_type !=3D $subtype_name::ACPI_TYPE) {
-> +                    return Err(EINVAL);
-> +                }
+For this reason, I would prefer to handle the RFKILL state in the WLAN driver
+using the device specific compatible. This will be problematic only if multiple
+cards of the same Device ID have different RFKILL state and the devices are not
+distinguishable even with sub IDs.
 
-This should just be
+FWIW, ACPI support added with commit c6a7c0b09d5f, suffers from the same
+limitation.
 
-	if (value.type_id() !=3D $subtype_name::ACPI_TYPE) {
-	    return Err(EINVAL);
-	}
+- Mani
 
-> +
-> +                // SAFETY: We validated union subtype
-
-When writing safety comments, please read the safety documentation of the
-corresponding function and try to cover all requirements listed as bullet
-points.
-
-> +                Ok(unsafe {
-> +                    ::core::mem::transmute::<&$union_type, &$subtype_nam=
-e>(&value.0.$field_name)
-> +                })
-> +            }
-> +        }
-> +
-> +        impl $subtype_name {
-> +            /// This ACPI type int value (see `acpitypes.h`)
-> +            pub const ACPI_TYPE: u32 =3D bindings::$acpi_type;
-> +
-> +            /// Converts AcpiObject reference into exact ACPI type wrapp=
-er
-> +            ///
-> +            /// # Safety
-> +            ///
-> +            /// Assumes that value is correct (`Self`) subtype
-> +            pub unsafe fn try_from_unchecked(value: &AcpiObject) -> &Sel=
-f {
-
-The name try_from_unchecked() implies that the function is fallible, but it
-isn't. I suggest calling it something along the lines of cast_unchecked().
-
-> +                // SAFETY: Only unsafety comes from unchecked transforma=
-tion and
-> +                // we transfered
-> +                unsafe {
-> +                    ::core::mem::transmute::<&$union_type, &$subtype_nam=
-e>(&value.0.$field_name)
-> +                }
-> +            }
-> +        }
-> +    };
-> +}
-> +
-> +acpi_object_subtype!(AcpiInteger
-> +    <- (ACPI_TYPE_INTEGER, integer, bindings::acpi_object__bindgen_ty_1)=
-);
-> +acpi_object_subtype!(AcpiString
-> +    <- (ACPI_TYPE_STRING, string, bindings::acpi_object__bindgen_ty_2));
-> +acpi_object_subtype!(AcpiBuffer
-> +    <- (ACPI_TYPE_BUFFER, buffer, bindings::acpi_object__bindgen_ty_3));
-> +acpi_object_subtype!(AcpiPackage
-> +    <- (ACPI_TYPE_PACKAGE, package, bindings::acpi_object__bindgen_ty_4)=
-);
-> +acpi_object_subtype!(AcpiReference
-> +    <- (ACPI_TYPE_LOCAL_REFERENCE, reference, bindings::acpi_object__bin=
-dgen_ty_5));
-> +acpi_object_subtype!(AcpiProcessor
-> +    <- (ACPI_TYPE_PROCESSOR, processor, bindings::acpi_object__bindgen_t=
-y_6));
-> +acpi_object_subtype!(AcpiPowerResource
-> +    <- (ACPI_TYPE_POWER, power_resource, bindings::acpi_object__bindgen_=
-ty_7));
-> +
-> +impl AcpiBuffer {
-> +    /// Get Buffer's content
-> +    pub fn payload(&self) -> &[u8] {
-> +        // SAFETY: (pointer, length) indeed represents byte slice
-> +        unsafe { ::core::slice::from_raw_parts(self.0.pointer, self.0.le=
-ngth as usize) }
-> +    }
-> +}
-
-What about the values of the other types? How are they accessed?
-
-Also, I think it would be better to use a Deref impl rather than a method.
+-- 
+மணிவண்ணன் சதாசிவம்
