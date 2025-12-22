@@ -1,173 +1,209 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 88A3521FF23;
-	Mon, 22 Dec 2025 11:45:23 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9EB0D239E79;
+	Mon, 22 Dec 2025 11:50:38 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1766403923; cv=none; b=lYo51k/PyzqC7N/D1VnC4d345gJNlL7RQpDbuvVWO6IArY+twPXZDp3DfJCpVByqXOEjRGOOWgXFMbeKhqjBogDzQK09kAnTAA1hT3H7eyLYjUb/tLCpRquKZ0Ql+GBSw/bPW2dCaqZFfJEgOPcd+G6qxT/lDXSUMi/fHtgdgCQ=
+	t=1766404238; cv=none; b=BWaNeAHs1aK7tlUT2e/6r3pnugpUC5lxPgr2xxsMNxpJy6d0YixxoqmcKeuGZ8etdUcApNVHrdnw9NAnGvzNGWdWQpYWQkcEuqG5NWSN1tRy66rp2uHwZ5Y9lmemgSRYpvYIwTCTfZ6rVBxwH26jrA3IGKOQiA9uPCKYjTj+tUE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1766403923; c=relaxed/simple;
-	bh=a3HAZXboIYJtAUAVesMtixmEpYZ6agiytIhdOW9P2HU=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=OOy31/fDZxZjseG57AFfmu5E1WV8SgpR6TMONn6+/PCzaCn0HGtehLBRJ63llVkWaV2FvoHPV9S2MNVotvyjlET54wfzUnyWwMukv884DBo+N8k0sRUpPsLOaZLqFDyYsWfgKU9wlkiV/czUhK0Lq2mQ31vFMYAB12KerDavYo8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=I6GBvEeK; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1766404238; c=relaxed/simple;
+	bh=WhCdTM+aRTwVD9MNtOdkcZNsIZowj80yg1ouTKHU5+0=;
+	h=Mime-Version:Content-Type:Date:Message-Id:To:From:Subject:Cc:
+	 References:In-Reply-To; b=I28qwIfLrI0d5IY35ecSLAI+3uvGccUAB9xZckOGXQeR7jKyfH2NpAbk9Gv9Zps10NBA32u3U4fmlf0ZOhkpckPjnrQSGEICFdJJxN6U3lS12ZtASVw1udYrN1dzeG15bXVkocNcDUyEKv+wEqvFXzTLm2UKgqqSy/MFa+edeoc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=S0aevQiS; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="I6GBvEeK"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 5FA7DC4CEF1;
-	Mon, 22 Dec 2025 11:45:15 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="S0aevQiS"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id E2762C116D0;
+	Mon, 22 Dec 2025 11:50:34 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1766403923;
-	bh=a3HAZXboIYJtAUAVesMtixmEpYZ6agiytIhdOW9P2HU=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=I6GBvEeK7QJIwyVC0RguQ8ppbhf51QHCw6gAC9fbdnqgVssO3G4JNHD4Dag9JsdU8
-	 gH/BPSeZZ2RbMHrvJSd3yGXap6TfLSEA78UkcgthxVw9F9jgOl3jghxJh3OQw40Ilj
-	 RYkBP5lOkDJvbkcgJVyAWND1g2rHAARICk89OBfJ9SCd2to93kVQjsA4D9JG92aqOY
-	 2gGgc47Xi5xvRX6rnaHUTjP9/soKRV70zOW4zdd0n4ncZtFIY5+FfjtM+eJc7V1RsN
-	 0hajoj0KmFqLiZZR5bjuug2o7TycznWf+owlgZLVJEiTsjkPzwm3vMzz9jTFcbMZlS
-	 c5iC2jQalglEA==
-Date: Mon, 22 Dec 2025 17:15:05 +0530
-From: Manivannan Sadhasivam <mani@kernel.org>
-To: Hans de Goede <hansg@kernel.org>
-Cc: Bryan O'Donoghue <bod.linux@nxsw.ie>, jerome.debretagne@gmail.com, 
-	Bjorn Andersson <andersson@kernel.org>, Konrad Dybcio <konradybcio@kernel.org>, 
-	Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>, 
-	Conor Dooley <conor+dt@kernel.org>, Johannes Berg <johannes@sipsolutions.net>, 
-	Lorenzo Bianconi <lorenzo@kernel.org>, Maximilian Luz <luzmaximilian@gmail.com>, 
-	Ilpo =?utf-8?B?SsOkcnZpbmVu?= <ilpo.jarvinen@linux.intel.com>, Jeff Johnson <jjohnson@kernel.org>, 
-	linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	linux-wireless@vger.kernel.org, platform-driver-x86@vger.kernel.org, ath12k@lists.infradead.org, 
-	Jeff Johnson <jeff.johnson@oss.qualcomm.com>, Dale Whinham <daleyo@gmail.com>
-Subject: Re: [PATCH v5 2/7] dt-bindings: wireless: ieee80211: Add
- disable-rfkill property
-Message-ID: <v4hxei4t7n6ebvw6heoccei2t3mskq7uo7zejv6dyvvq5fr5sv@xzpsiic5x7a4>
-References: <20251220-surface-sp11-for-next-v5-0-16065bef8ef3@gmail.com>
- <M7kfFb5fz-WB43U_xCUwgxpmBJ4TNdp4jE6yFu6HmemIcDx5tXO6H4xnW_pEQz6DMkKm-3POdB9hIdB092zhGQ==@protonmail.internalid>
- <20251220-surface-sp11-for-next-v5-2-16065bef8ef3@gmail.com>
- <e0e9e690-c56e-4b56-90f9-2af46a7feaf3@nxsw.ie>
- <c29de60c-c7c6-45d7-8d90-616df23df01c@kernel.org>
+	s=k20201202; t=1766404238;
+	bh=WhCdTM+aRTwVD9MNtOdkcZNsIZowj80yg1ouTKHU5+0=;
+	h=Date:To:From:Subject:Cc:References:In-Reply-To:From;
+	b=S0aevQiSSiRvp16fgMzbEMcYmZ92iEjb0U1nRr3AcB5QKb7NyEa0TFNnVP7g/8vXo
+	 xZKQjPXhyU1uXb1YiqNx8Nquk2dxjcyejviLjLu13dHIpS0oETfwkZEiUVCxVTk5Mr
+	 s9wiQOsPtyZ6dkpMVW0kq45KqqA70Fj3oRg6sM5Y2guLcMd1/4nY8YEvFDcmSsTxVJ
+	 VbqlZpd9QWQNmr9uiAX3qcqLFkq7TOjfG5ARVsoa1PAv/iMBWkL4Ty45mrSURMCltm
+	 /7GGlRXnQX5aExNwu424+NW13px1ED6Kvfog/u1BHknOUTOvscob0uNl9XfPMvZyD9
+	 V7326loP7z8lg==
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <c29de60c-c7c6-45d7-8d90-616df23df01c@kernel.org>
+Mime-Version: 1.0
+Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=UTF-8
+Date: Mon, 22 Dec 2025 12:50:32 +0100
+Message-Id: <DF4Q1I15MG7E.Q8234J76FQ1O@kernel.org>
+To: "Gladyshev Ilya" <foxido@foxido.dev>
+From: "Danilo Krummrich" <dakr@kernel.org>
+Subject: Re: [RFC PATCH 2/3] rust: introduce WMI abstractions
+Cc: "foxido @ foxido . dev-cc= Rafael J. Wysocki" <rafael@kernel.org>, "Len
+ Brown" <lenb@kernel.org>, "Miguel Ojeda" <ojeda@kernel.org>, "Boqun Feng"
+ <boqun.feng@gmail.com>, "Gary Guo" <gary@garyguo.net>,
+ =?utf-8?q?Bj=C3=B6rn_Roy_Baron?= <bjorn3_gh@protonmail.com>, "Benno Lossin"
+ <lossin@kernel.org>, "Andreas Hindborg" <a.hindborg@kernel.org>, "Alice
+ Ryhl" <aliceryhl@google.com>, "Trevor Gross" <tmgross@umich.edu>, "Tamir
+ Duberstein" <tamird@gmail.com>, "Armin Wolf" <W_Armin@gmx.de>,
+ <platform-driver-x86@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+ <rust-for-linux@vger.kernel.org>, <linux-acpi@vger.kernel.org>
+References: <cover.1766331321.git.foxido@foxido.dev>
+ <cc4a2e7e9fd5f07f8a0831ca085e489f0ae87d1f.1766331321.git.foxido@foxido.dev>
+In-Reply-To: <cc4a2e7e9fd5f07f8a0831ca085e489f0ae87d1f.1766331321.git.foxido@foxido.dev>
 
-On Mon, Dec 22, 2025 at 11:23:18AM +0100, Hans de Goede wrote:
-> +Cc Mani
-> 
-> Hi,
-> 
-> On 20-Dec-25 07:04, Bryan O'Donoghue wrote:
-> > On 20/12/2025 00:21, Jérôme de Bretagne via B4 Relay wrote:
-> >> From: Jérôme de Bretagne <jerome.debretagne@gmail.com>
-> >>
-> >> For some devices, Wi-Fi is entirely hard blocked by default making
-> >> the Wi-Fi radio unusable, except if rfkill is disabled as expected
-> >> on those models.
-> >>
-> >> Commit c6a7c0b09d5f ("wifi: ath12k: Add Support for enabling or
-> >> disabling specific features based on ACPI bitflag") added a way to
-> >> support features set via ACPI, including the DISABLE_RFKILL bit.
-> >>
-> >> Add a disable-rfkill property to expose the DISABLE_RFKILL bit
-> >> equivalent for devices described by a Devicetree instead of ACPI.
-> >>
-> >> Signed-off-by: Jérôme de Bretagne <jerome.debretagne@gmail.com>
-> >> ---
-> >>   Documentation/devicetree/bindings/net/wireless/ieee80211.yaml | 6 ++++++
-> >>   1 file changed, 6 insertions(+)
-> >>
-> >> diff --git a/Documentation/devicetree/bindings/net/wireless/ieee80211.yaml b/Documentation/devicetree/bindings/net/wireless/ieee80211.yaml
-> >> index d89f7a3f88a71d45d6f4ab2ae909eae09cbcaf9a..c10a4675640be947cd0b5eaec2c7ff367fd93945 100644
-> >> --- a/Documentation/devicetree/bindings/net/wireless/ieee80211.yaml
-> >> +++ b/Documentation/devicetree/bindings/net/wireless/ieee80211.yaml
-> >> @@ -29,6 +29,12 @@ properties:
-> >>         different 5 GHz subbands. Using them incorrectly could not work or
-> >>         decrease performance noticeably
-> >>
-> >> +  disable-rfkill:
-> >> +    type: boolean
-> >> +    description:
-> >> +      Disable rfkill for some devices on which Wi-Fi would be entirely hard
-> >> +      blocked by default otherwise
-> >> +
-> >>   additionalProperties: true
-> >>
-> >>   examples:
-> >>
-> >> -- 
-> >> 2.47.3
-> >>
-> >>
-> >>
-> > 
-> > Is this really a hardware description though ?
-> 
-> I would say yes it is. The wifi chip has an rfkill input pin and
-> things will be broken when that pin is hardwired to a fixed value
-> rather then being actually connected to a GPIO from say
-> the embedded controller.
-> 
+On Sun Dec 21, 2025 at 7:22 PM CET, Gladyshev Ilya wrote:
+> diff --git a/rust/kernel/wmi.rs b/rust/kernel/wmi.rs
+> new file mode 100644
+> index 000000000000..018e88d01e8c
+> --- /dev/null
+> +++ b/rust/kernel/wmi.rs
+> @@ -0,0 +1,267 @@
+> +// SPDX-License-Identifier: GPL-2.0
+> +
+> +//! Abstractions for the WMI devices.
+> +//!
+> +//! C header: [`include/linux/wmi.h`](srctree/include/linux/wmi.h)
+> +
+> +use crate::{
+> +    acpi::AcpiObject,
+> +    device,
+> +    device_id::{RawDeviceId, RawDeviceIdIndex},
+> +    driver,
+> +    error::{from_result, to_result, VTABLE_DEFAULT_ERROR},
+> +    prelude::*,
+> +    types::Opaque,
+> +};
+> +use core::{
+> +    marker::PhantomData,
+> +    mem::MaybeUninit,
+> +    ptr::{addr_of_mut, NonNull},
+> +};
+> +use macros::vtable;
 
-IIUC, even if the M.2 slot has the W_DISABLE1# signal routed from the host,
-the device won't make use of it as there is no physical connection. So you want
-the WLAN driver to change the state through SW?
+Please use kernel vertical style.
 
-> So I think that we would need here is not a disable-rfkill property
-> but some way to indicate in the DT-node that the rfkill input pin
-> is not connected and thus should be ignored.
-> 
-> This (the rfkill input pin being not-connected) IMHO very much
-> is hw-description.
-> 
+[1] https://docs.kernel.org/rust/coding-guidelines.html#imports
 
-Though we can argue this way, I would prefer to handle it in the driver. For
-example, with my M.2 series, we will end up describing the M.2 slot:
+> +
+> +/// [`IdTable`](kernel::device_id::IdTable) type for WMI.
+> +pub type IdTable<T> =3D &'static dyn kernel::device_id::IdTable<DeviceId=
+, T>;
+> +
+> +/// The WMI driver trait.
+> +#[vtable]
+> +pub trait Driver: Send {
+> +    /// The type holding information about each one of the device ids su=
+pported by the driver.
+> +    type IdInfo: 'static;
+> +
+> +    /// The table of device ids supported by the driver.
+> +    const TABLE: IdTable<Self::IdInfo>;
+> +
+> +    /// WMI driver probe.
+> +    ///
+> +    /// Called when a new WMI device is bound to this driver.
+> +    /// Implementers should attempt to initialize the driver here.
+> +    fn probe(dev: &Device<device::Core>, id_info: &Self::IdInfo) -> impl=
+ PinInit<Self, Error>;
+> +
+> +    /// WMI device notify.
+> +    ///
+> +    /// Called when new WMI event received from bounded device
+> +    fn notify(&self, _dev: &Device<device::Core>, _event: &AcpiObject) {
 
-	connector {
-		compatible = "pcie-m2-e-connector";
-		w-disable1-gpios = <&tlmm 117 GPIO_ACTIVE_LOW>;
-		...
-		ports {
-			...
-			endpoint@0 {
-				reg = <0>;
-				remote-endpoint = <&pcie4_port0_ep>;
-			};
-		};
-	};
+Please use Pin<&Self> instead.
 
-Then if we use a DT property to convey the RFKILL pin state of the device, we
-would need to describe the endpoint device in DT and hardcode the state:
+> +        build_error!(VTABLE_DEFAULT_ERROR);
+> +    }
+> +
+> +    /// WMI driver remove.
+> +    fn remove(self: Pin<KBox<Self>>, _dev: &Device<device::Core>) {
 
-	&pcie4_port0 {
-		...
-		port {
-			pcie4_port0_ep: endpoint {
-				remote-endpoint = <&m2_e_pcie_ep>;
-				disable-rfkill;
-			};
-		};
-	};
+We can't pass the driver's device private data by value here. As long as th=
+e
+device is not fully unbound, there may still be calls to Device::drvdata();
+please see also [2]). Hence, please use Pin<&Self> instead.
 
-So this will essentially make the M.2 device non-swappable unless you change the
-DT since you've how hardcoded the device property in the binding. This is
-something I try to avoid to make the M.2 slot really swappable.
+Also, please call this method unbind() to be consistent with other busses.
 
-For this reason, I would prefer to handle the RFKILL state in the WLAN driver
-using the device specific compatible. This will be problematic only if multiple
-cards of the same Device ID have different RFKILL state and the devices are not
-distinguishable even with sub IDs.
+[2] https://lore.kernel.org/rust-for-linux/DEZMS6Y4A7XE.XE7EUBT5SJFJ@kernel=
+.org/
 
-FWIW, ACPI support added with commit c6a7c0b09d5f, suffers from the same
-limitation.
+> +        build_error!(VTABLE_DEFAULT_ERROR);
+> +    }
+> +}
 
-- Mani
+<snip>
 
--- 
-மணிவண்ணன் சதாசிவம்
+> +impl<Ctx: device::DeviceContext> AsRef<device::Device<Ctx>> for Device<C=
+tx> {
+> +    fn as_ref(&self) -> &device::Device<Ctx> {
+> +        // SAFETY: By the type invariant of `Self`, `self.as_raw()` is a=
+ pointer to a valid
+> +        // `struct platform_device`.
+> +        let dev =3D unsafe { addr_of_mut!((*self.inner.get()).dev) };
+
+Please use &raw mut instead.
+
+> +
+> +        // SAFETY: `dev` points to a valid `struct device`.
+> +        unsafe { device::Device::from_raw(dev) }
+> +    }
+> +}
+> +
+> +kernel::impl_device_context_deref!(unsafe { Device });
+> +kernel::impl_device_context_into_aref!(Device);
+> +
+> +// SAFETY: Instances of `Device` are always reference-counted.
+> +unsafe impl crate::sync::aref::AlwaysRefCounted for Device {
+> +    fn inc_ref(&self) {
+> +        // SAFETY: The existence of a shared reference guarantees that t=
+he refcount is non-zero.
+> +        unsafe { bindings::get_device(self.as_ref().as_raw()) };
+> +    }
+> +
+> +    unsafe fn dec_ref(obj: NonNull<Self>) {
+> +        // SAFETY: The safety requirements guarantee that the refcount i=
+s non-zero.
+> +        unsafe { bindings::put_device(&raw mut (*obj.as_ref().as_raw()).=
+dev) }
+> +    }
+> +}
+> +
+> +/// Abstraction for the WMI device ID structure, i.e. [`struct wmi_devic=
+e_id`].
+> +#[repr(transparent)]
+> +pub struct DeviceId(bindings::wmi_device_id);
+> +
+> +impl DeviceId {
+> +    /// Constructs new DeviceId from GUID string
+> +    pub const fn new(guid: &[u8; bindings::UUID_STRING_LEN as usize]) ->=
+ Self {
+> +        // SAFETY: FFI type is valid to be zero-initialized.
+> +        let mut inner: bindings::wmi_device_id =3D unsafe { MaybeUninit:=
+:zeroed().assume_init() };
+> +
+> +        build_assert!(inner.guid_string.len() =3D=3D bindings::UUID_STRI=
+NG_LEN as usize + 1);
+> +
+> +        // SAFETY: It's safe to copy UUID_STRING_LEN, because we validat=
+ed lengths
+> +        // Also we leave last byte zeroed -> guid_string is valid C stri=
+ng
+> +        unsafe {
+> +            ::core::ptr::copy_nonoverlapping(
+> +                guid.as_ptr(),
+> +                &raw mut inner.guid_string[0],
+> +                bindings::UUID_STRING_LEN as usize,
+> +            );
+> +        }
+
+This does not compile without const_intrinsic_copy. I think we can enable i=
+t
+though, since it should be stable since 1.83.
+
+> +
+> +        Self(inner)
+> +    }
+> +}
