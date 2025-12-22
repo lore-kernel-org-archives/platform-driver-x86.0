@@ -1,249 +1,184 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.17])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 289642D7DD2;
-	Mon, 22 Dec 2025 14:23:02 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9A068252917;
+	Mon, 22 Dec 2025 14:41:19 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.17
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1766413382; cv=none; b=Q4EppNolrQh9/wlMJeI4+lTb8YeE/t0xqHZpysrcMw6v2eJ27ltUHBj0Z/4o1sxu+tywhvvdxemKosT+DcLnEjz7/W0Ob6ltC0SqpU7lWSaP4p9NkVhx2muCjEZocwKF82VHIWpQTurtkdtZ3FqyuKVrtsi0CfQN/TPAJlYVj28=
+	t=1766414481; cv=none; b=b9kTGsWnbodx+Zu10PgPQ8l1PPKTrMIHb59D6Hb6LaTPpzZZpC/v/jnEunemdHinx30IeIHTxbpm1NZFUh06RKD7HU5u8HP6IIJm2kq3GfLG7gjftVWTz/pVEc1YpMEslcpD08tUomGsU+dRBLG73vn1PS5cJq9zcBsbdWx5usA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1766413382; c=relaxed/simple;
-	bh=VikiU5fJynBjtrVjM7EPrymHCn4PkuWUnCmSsSRBpE8=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=HKVw9Zz47HvwQYru88UpuR4QcgqO6Bmo29F24rKhjl05W2L5IUp9UjilM0wPDGZ47COBrZQ5/Osi/JAZ6l94/OBh0ZCy20w47eQHofopu+yl+/XMWLAAhkXeR85YFQEQqMwiQCNPVIcu2Iwb5km5FqZpvCT3JxCKrJNHaivB2rc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=iJlt9irw; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1766414481; c=relaxed/simple;
+	bh=qYxwWlzlV8VryzF8wa3TfBZSOXy8qpGaQwJLhULJ1yE=;
+	h=From:Date:To:cc:Subject:In-Reply-To:Message-ID:References:
+	 MIME-Version:Content-Type; b=NIWXNcrWM0f4cKBh5RoI03vGgnPLbAWD9cJHtvcPM9DQC0aMkz+SlSXVM+eeDm6vv60Xm6BQcz9ZAI/OAMXhHDmXFBA0sogwfWfdF4hBY+DI/wzQrtIzPM+2F7VzcPvJ1QO0wM/EQfAY3l0CAqDraS4N9gl+lz0ONvWN7BRAeqs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=pass smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=d7bATgDa; arc=none smtp.client-ip=192.198.163.17
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="iJlt9irw"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 01EF4C4CEF1;
-	Mon, 22 Dec 2025 14:22:57 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1766413382;
-	bh=VikiU5fJynBjtrVjM7EPrymHCn4PkuWUnCmSsSRBpE8=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=iJlt9irwlYODv0YGIGhyBb8rTYjxTGC5jrLyZdV+mB+afn07ANjnTMQtYVYbb+T2B
-	 0tQFFg84nWC3W+Zu88y0helvYklulqG3eB4axCmttATks3F/ghutcFxHPvsI+sKTiG
-	 Jjl6xxHMpkuBgvYHVDKTxXixqCztigua5jtFQUlAWIM6bBUQA0gL9R4y7T6lzJOxQ1
-	 8yu8n2MEl+qodeSujwahL1pU/jJwd//0CiyJOKColrzFSG4++Zk9Hw6mSJSArKfctt
-	 6HfYwSPk9ozIN74mHNa2SRkL0phDxx7MFfOJ+FkDfLRj4fQMbr0u5iHulkEHsk9i4a
-	 +5p2Sw721+V0g==
-Message-ID: <8b79b662-931f-4634-9389-6602d353d67a@kernel.org>
-Date: Mon, 22 Dec 2025 15:22:55 +0100
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="d7bATgDa"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1766414479; x=1797950479;
+  h=from:date:to:cc:subject:in-reply-to:message-id:
+   references:mime-version;
+  bh=qYxwWlzlV8VryzF8wa3TfBZSOXy8qpGaQwJLhULJ1yE=;
+  b=d7bATgDaQidZt1ocSQCm49Z4pIVdcCSegAwHpIR0lj1RREnz3+zvpQFI
+   D6wwoqfBxMN07K4l/n8kibuoFpKQjRANo0ILLyCQOHpmrNJX4IXAOo+yJ
+   CHHInavicfO/Sj3DjgXlHK3kDsOunhB+A0RecPxAHKjd4SWVvmC9klctv
+   HOSXdE2jBDwGLUzmcJdN9OYuu3HbCfDn7krULPqk+o70+rodqPX/DwXKV
+   UvXsuLFp6cfdaEptixsMAZEFs7eCJmzColw8z1uvpRIFhhL0R1rY6VB+w
+   rghMvPL5Tpd/uo9IP9L4Y6wXrDJ+lhLSYIA5MmtRTnfnaSRwpnbTej2yC
+   g==;
+X-CSE-ConnectionGUID: px5qbRPGS3Gx/gmZKvWz4A==
+X-CSE-MsgGUID: wrDVvXFxQpitZwua3Dsakw==
+X-IronPort-AV: E=McAfee;i="6800,10657,11650"; a="68150749"
+X-IronPort-AV: E=Sophos;i="6.21,168,1763452800"; 
+   d="scan'208";a="68150749"
+Received: from fmviesa009.fm.intel.com ([10.60.135.149])
+  by fmvoesa111.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 22 Dec 2025 06:41:19 -0800
+X-CSE-ConnectionGUID: ENBfs1KFQIyvYYL16ucRfg==
+X-CSE-MsgGUID: 3sGJXZzRSPOdCr4EJdXG/Q==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.21,168,1763452800"; 
+   d="scan'208";a="200042477"
+Received: from ijarvine-mobl1.ger.corp.intel.com (HELO localhost) ([10.245.245.235])
+  by fmviesa009-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 22 Dec 2025 06:41:16 -0800
+From: =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
+Date: Mon, 22 Dec 2025 16:41:12 +0200 (EET)
+To: Junrui Luo <moonafterrain@outlook.com>
+cc: Jorge Lopez <jorge.lopez2@hp.com>, Hans de Goede <hansg@kernel.org>, 
+    =?ISO-8859-15?Q?Thomas_Wei=DFschuh?= <linux@weissschuh.net>, 
+    platform-driver-x86@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>, 
+    Yuhao Jiang <danisjiang@gmail.com>
+Subject: Re: [PATCH] platform/x86: hp-bioscfg: Fix out-of-bounds array access
+ in ACPI package parsing
+In-Reply-To: <SYBPR01MB78816A828BF586364CF7A4FFAFA6A@SYBPR01MB7881.ausprd01.prod.outlook.com>
+Message-ID: <9a1f0216-9445-f1a1-6ccd-e59e03b184d7@linux.intel.com>
+References: <SYBPR01MB78816A828BF586364CF7A4FFAFA6A@SYBPR01MB7881.ausprd01.prod.outlook.com>
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v5 2/7] dt-bindings: wireless: ieee80211: Add
- disable-rfkill property
-To: Manivannan Sadhasivam <mani@kernel.org>
-Cc: Bryan O'Donoghue <bod.linux@nxsw.ie>, jerome.debretagne@gmail.com,
- Bjorn Andersson <andersson@kernel.org>,
- Konrad Dybcio <konradybcio@kernel.org>, Rob Herring <robh@kernel.org>,
- Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley
- <conor+dt@kernel.org>, Johannes Berg <johannes@sipsolutions.net>,
- Lorenzo Bianconi <lorenzo@kernel.org>,
- Maximilian Luz <luzmaximilian@gmail.com>,
- =?UTF-8?Q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>,
- Jeff Johnson <jjohnson@kernel.org>, linux-arm-msm@vger.kernel.org,
- devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
- linux-wireless@vger.kernel.org, platform-driver-x86@vger.kernel.org,
- ath12k@lists.infradead.org, Jeff Johnson <jeff.johnson@oss.qualcomm.com>,
- Dale Whinham <daleyo@gmail.com>
-References: <20251220-surface-sp11-for-next-v5-0-16065bef8ef3@gmail.com>
- <M7kfFb5fz-WB43U_xCUwgxpmBJ4TNdp4jE6yFu6HmemIcDx5tXO6H4xnW_pEQz6DMkKm-3POdB9hIdB092zhGQ==@protonmail.internalid>
- <20251220-surface-sp11-for-next-v5-2-16065bef8ef3@gmail.com>
- <e0e9e690-c56e-4b56-90f9-2af46a7feaf3@nxsw.ie>
- <c29de60c-c7c6-45d7-8d90-616df23df01c@kernel.org>
- <v4hxei4t7n6ebvw6heoccei2t3mskq7uo7zejv6dyvvq5fr5sv@xzpsiic5x7a4>
- <2ff993a7-0fda-4337-9acc-92aaa75be750@kernel.org>
- <blbyjjkcxwnm5otgkodckxl2gx5ncelhnpqire7jt3yfdvszef@jgk6o7yvn2vo>
-From: Hans de Goede <hansg@kernel.org>
-Content-Language: en-US, nl
-In-Reply-To: <blbyjjkcxwnm5otgkodckxl2gx5ncelhnpqire7jt3yfdvszef@jgk6o7yvn2vo>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=US-ASCII
 
-Hi,
+On Thu, 4 Dec 2025, Junrui Luo wrote:
 
-On 22-Dec-25 14:41, Manivannan Sadhasivam wrote:
-> On Mon, Dec 22, 2025 at 01:41:48PM +0100, Hans de Goede wrote:
->> Hi Mani,
->>
->> On 22-Dec-25 12:45, Manivannan Sadhasivam wrote:
->>> On Mon, Dec 22, 2025 at 11:23:18AM +0100, Hans de Goede wrote:
->>>> +Cc Mani
->>>>
->>>> Hi,
->>>>
->>>> On 20-Dec-25 07:04, Bryan O'Donoghue wrote:
->>>>> On 20/12/2025 00:21, Jérôme de Bretagne via B4 Relay wrote:
->>>>>> From: Jérôme de Bretagne <jerome.debretagne@gmail.com>
->>>>>>
->>>>>> For some devices, Wi-Fi is entirely hard blocked by default making
->>>>>> the Wi-Fi radio unusable, except if rfkill is disabled as expected
->>>>>> on those models.
->>>>>>
->>>>>> Commit c6a7c0b09d5f ("wifi: ath12k: Add Support for enabling or
->>>>>> disabling specific features based on ACPI bitflag") added a way to
->>>>>> support features set via ACPI, including the DISABLE_RFKILL bit.
->>>>>>
->>>>>> Add a disable-rfkill property to expose the DISABLE_RFKILL bit
->>>>>> equivalent for devices described by a Devicetree instead of ACPI.
->>>>>>
->>>>>> Signed-off-by: Jérôme de Bretagne <jerome.debretagne@gmail.com>
->>>>>> ---
->>>>>>   Documentation/devicetree/bindings/net/wireless/ieee80211.yaml | 6 ++++++
->>>>>>   1 file changed, 6 insertions(+)
->>>>>>
->>>>>> diff --git a/Documentation/devicetree/bindings/net/wireless/ieee80211.yaml b/Documentation/devicetree/bindings/net/wireless/ieee80211.yaml
->>>>>> index d89f7a3f88a71d45d6f4ab2ae909eae09cbcaf9a..c10a4675640be947cd0b5eaec2c7ff367fd93945 100644
->>>>>> --- a/Documentation/devicetree/bindings/net/wireless/ieee80211.yaml
->>>>>> +++ b/Documentation/devicetree/bindings/net/wireless/ieee80211.yaml
->>>>>> @@ -29,6 +29,12 @@ properties:
->>>>>>         different 5 GHz subbands. Using them incorrectly could not work or
->>>>>>         decrease performance noticeably
->>>>>>
->>>>>> +  disable-rfkill:
->>>>>> +    type: boolean
->>>>>> +    description:
->>>>>> +      Disable rfkill for some devices on which Wi-Fi would be entirely hard
->>>>>> +      blocked by default otherwise
->>>>>> +
->>>>>>   additionalProperties: true
->>>>>>
->>>>>>   examples:
->>>>>>
->>>>>> -- 
->>>>>> 2.47.3
->>>>>>
->>>>>>
->>>>>>
->>>>>
->>>>> Is this really a hardware description though ?
->>>>
->>>> I would say yes it is. The wifi chip has an rfkill input pin and
->>>> things will be broken when that pin is hardwired to a fixed value
->>>> rather then being actually connected to a GPIO from say
->>>> the embedded controller.
->>>>
->>>
->>> IIUC, even if the M.2 slot has the W_DISABLE1# signal routed from the host,
->>> the device won't make use of it as there is no physical connection. So you want
->>> the WLAN driver to change the state through SW?
->>>
->>>> So I think that we would need here is not a disable-rfkill property
->>>> but some way to indicate in the DT-node that the rfkill input pin
->>>> is not connected and thus should be ignored.
->>>>
->>>> This (the rfkill input pin being not-connected) IMHO very much
->>>> is hw-description.
->>>>
->>>
->>> Though we can argue this way, I would prefer to handle it in the driver. For
->>> example, with my M.2 series, we will end up describing the M.2 slot:
->>>
->>> 	connector {
->>> 		compatible = "pcie-m2-e-connector";
->>> 		w-disable1-gpios = <&tlmm 117 GPIO_ACTIVE_LOW>;
->>> 		...
->>> 		ports {
->>> 			...
->>> 			endpoint@0 {
->>> 				reg = <0>;
->>> 				remote-endpoint = <&pcie4_port0_ep>;
->>> 			};
->>> 		};
->>> 	};
->>>
->>> Then if we use a DT property to convey the RFKILL pin state of the device, we
->>> would need to describe the endpoint device in DT and hardcode the state:
->>>
->>> 	&pcie4_port0 {
->>> 		...
->>> 		port {
->>> 			pcie4_port0_ep: endpoint {
->>> 				remote-endpoint = <&m2_e_pcie_ep>;
->>> 				disable-rfkill;
->>> 			};
->>> 		};
->>> 	};
->>>
->>> So this will essentially make the M.2 device non-swappable unless you change the
->>> DT since you've how hardcoded the device property in the binding. This is
->>> something I try to avoid to make the M.2 slot really swappable.
->>>
->>> For this reason, I would prefer to handle the RFKILL state in the WLAN driver
->>> using the device specific compatible. This will be problematic only if multiple
->>> cards of the same Device ID have different RFKILL state and the devices are not
->>> distinguishable even with sub IDs.
->>
->> I think we're miscommunicating here. I'm not talking about the card having
->> a broken rfkill implementation, I'm talking about the M.2 slot on the mainboard
->> having e.g. W_DISABLE1# hardwired in such a way that cards would interpret it as
->> having to always disable their wifi radio which is very similar to what is
->> happening on the surface device. Except that on the Surface there is no M.2 slot,
->> the wifi is just soldered onto the mainboard I believe.
->>
+> The hp_populate_*_elements_from_package() functions in the hp-bioscfg
+> driver contain out-of-bounds array access vulnerabilities.
 > 
-> Ah, sorry for the confusion. I did misinterpret what you said.
+> The fix changes the bounds check to validate the actual accessed index.
+
+Thanks for the patch. Unfortunately this description is too vague. Please 
+explain things more precisely, with name references to related variables, 
+etc. so a reviewer / person looking this change later in the git history 
+does not have to figure out the entire function (there's quite much code 
+in there so it's not all that obvious).
+
+While I could probably have figured this out by figuring out those 
+functions during review but I ended up not doing it because this 
+information should be present in the changelog as well.
+
+-- 
+ i.
+
+> Reported-by: Yuhao Jiang <danisjiang@gmail.com>
+> Reported-by: Junrui Luo <moonafterrain@outlook.com>
+> Fixes: e6c7b3e15559 ("platform/x86: hp-bioscfg: string-attributes")
+> Signed-off-by: Junrui Luo <moonafterrain@outlook.com>
+> ---
+>  drivers/platform/x86/hp/hp-bioscfg/enum-attributes.c       | 4 ++--
+>  drivers/platform/x86/hp/hp-bioscfg/int-attributes.c        | 2 +-
+>  drivers/platform/x86/hp/hp-bioscfg/order-list-attributes.c | 5 +++++
+>  drivers/platform/x86/hp/hp-bioscfg/passwdobj-attributes.c  | 5 +++++
+>  drivers/platform/x86/hp/hp-bioscfg/string-attributes.c     | 2 +-
+>  5 files changed, 14 insertions(+), 4 deletions(-)
 > 
->> Based on experience I'm pretty sure we will encounter M.2 slots which such
->> a hardwired W_DISABLE1# signal sooner rather then later.
->>
+> diff --git a/drivers/platform/x86/hp/hp-bioscfg/enum-attributes.c b/drivers/platform/x86/hp/hp-bioscfg/enum-attributes.c
+> index c50ad5880503..f346aad8e9d8 100644
+> --- a/drivers/platform/x86/hp/hp-bioscfg/enum-attributes.c
+> +++ b/drivers/platform/x86/hp/hp-bioscfg/enum-attributes.c
+> @@ -207,7 +207,7 @@ static int hp_populate_enumeration_elements_from_package(union acpi_object *enum
+>  		case PREREQUISITES:
+>  			size = min_t(u32, enum_data->common.prerequisites_size, MAX_PREREQUISITES_SIZE);
+>  			for (reqs = 0; reqs < size; reqs++) {
+> -				if (elem >= enum_obj_count) {
+> +				if (elem + reqs >= enum_obj_count) {
+>  					pr_err("Error enum-objects package is too small\n");
+>  					return -EINVAL;
+>  				}
+> @@ -255,7 +255,7 @@ static int hp_populate_enumeration_elements_from_package(union acpi_object *enum
+>  
+>  			for (pos_values = 0; pos_values < size && pos_values < MAX_VALUES_SIZE;
+>  			     pos_values++) {
+> -				if (elem >= enum_obj_count) {
+> +				if (elem + pos_values >= enum_obj_count) {
+>  					pr_err("Error enum-objects package is too small\n");
+>  					return -EINVAL;
+>  				}
+> diff --git a/drivers/platform/x86/hp/hp-bioscfg/int-attributes.c b/drivers/platform/x86/hp/hp-bioscfg/int-attributes.c
+> index 6c7f4d5fa9cb..63b1fda2be4e 100644
+> --- a/drivers/platform/x86/hp/hp-bioscfg/int-attributes.c
+> +++ b/drivers/platform/x86/hp/hp-bioscfg/int-attributes.c
+> @@ -227,7 +227,7 @@ static int hp_populate_integer_elements_from_package(union acpi_object *integer_
+>  			size = min_t(u32, integer_data->common.prerequisites_size, MAX_PREREQUISITES_SIZE);
+>  
+>  			for (reqs = 0; reqs < size; reqs++) {
+> -				if (elem >= integer_obj_count) {
+> +				if (elem + reqs >= integer_obj_count) {
+>  					pr_err("Error elem-objects package is too small\n");
+>  					return -EINVAL;
+>  				}
+> diff --git a/drivers/platform/x86/hp/hp-bioscfg/order-list-attributes.c b/drivers/platform/x86/hp/hp-bioscfg/order-list-attributes.c
+> index c6e57bb9d8b7..6a31f47ce3f5 100644
+> --- a/drivers/platform/x86/hp/hp-bioscfg/order-list-attributes.c
+> +++ b/drivers/platform/x86/hp/hp-bioscfg/order-list-attributes.c
+> @@ -216,6 +216,11 @@ static int hp_populate_ordered_list_elements_from_package(union acpi_object *ord
+>  			size = min_t(u32, ordered_list_data->common.prerequisites_size,
+>  				     MAX_PREREQUISITES_SIZE);
+>  			for (reqs = 0; reqs < size; reqs++) {
+> +				if (elem + reqs >= order_obj_count) {
+> +					pr_err("Error elem-objects package is too small\n");
+> +					return -EINVAL;
+> +				}
+> +
+>  				ret = hp_convert_hexstr_to_str(order_obj[elem + reqs].string.pointer,
+>  							       order_obj[elem + reqs].string.length,
+>  							       &str_value, &value_len);
+> diff --git a/drivers/platform/x86/hp/hp-bioscfg/passwdobj-attributes.c b/drivers/platform/x86/hp/hp-bioscfg/passwdobj-attributes.c
+> index 187b372123ed..ec79d9d50377 100644
+> --- a/drivers/platform/x86/hp/hp-bioscfg/passwdobj-attributes.c
+> +++ b/drivers/platform/x86/hp/hp-bioscfg/passwdobj-attributes.c
+> @@ -303,6 +303,11 @@ static int hp_populate_password_elements_from_package(union acpi_object *passwor
+>  				     MAX_PREREQUISITES_SIZE);
+>  
+>  			for (reqs = 0; reqs < size; reqs++) {
+> +				if (elem + reqs >= password_obj_count) {
+> +					pr_err("Error elem-objects package is too small\n");
+> +					return -EINVAL;
+> +				}
+> +
+>  				ret = hp_convert_hexstr_to_str(password_obj[elem + reqs].string.pointer,
+>  							       password_obj[elem + reqs].string.length,
+>  							       &str_value, &value_len);
+> diff --git a/drivers/platform/x86/hp/hp-bioscfg/string-attributes.c b/drivers/platform/x86/hp/hp-bioscfg/string-attributes.c
+> index 27758b779b2d..7b885d25650c 100644
+> --- a/drivers/platform/x86/hp/hp-bioscfg/string-attributes.c
+> +++ b/drivers/platform/x86/hp/hp-bioscfg/string-attributes.c
+> @@ -217,7 +217,7 @@ static int hp_populate_string_elements_from_package(union acpi_object *string_ob
+>  				     MAX_PREREQUISITES_SIZE);
+>  
+>  			for (reqs = 0; reqs < size; reqs++) {
+> -				if (elem >= string_obj_count) {
+> +				if (elem + reqs >= string_obj_count) {
+>  					pr_err("Error elem-objects package is too small\n");
+>  					return -EINVAL;
+>  				}
 > 
-> But it makes no sense IMO. Vendors will usually connect unimplemented W_DISABL1#
-> GPIOs to a pull-up resistor so that the radios are operational all the time. I
-> don't see how they would expect a WLAN or any device with a radio to be
-> connected to the slot if they hardwire the pin to low.
-
-Pins which are considered "unused" are also often hardwired
-to ground. If the m.2 slot is tested with a wifi-module where
-the W_DISABLE1# signal is not used on the wifi-module I can
-easily see this happen. I've seen a lot crazier / buggy stuff
-happen.
-
-> Are you sure that on the surface the pin is actually hardwired to low and not
-> connected to a GPIO that drivers the signal low?
-
-I don't know what is the exact problem on the Surface. I just
-expect to see this more often, we've certainly seen lots of
-issues like this on x86 laptops. Things end up looking like
-the hard rfkill is activated all the time (and we often don't know
-if this is a fw issue, or an actually hardwired problem).
-
-Just an example from the top of my head the Broadcom windows
-drivers use different BT fw files for the same wifi/bt combo
-chip depending on the vend:prod id pair. One of the things which
-is different is that some fw files invert the BT rfkill signal
-because it is wired wrong (or there is an EC fw bug) and this
-is then worked around in the bt fw.
-
-As we see a growing proliferation of arm64 laptops I fully
-expect all the fun from having a gazillion different designs
-with a time to market rush behind them result in similar issues
-on arm64.
-
-Note I'm not saying we must tackle this today, we can wait
-till we see the first case in the real world I guess.
-
-I just thought that based on my experience this is more or
-less bound to happen, we could comeup with a solution for
-this now and then this solution could also nicely serve
-the Surface case which started this thread.
-
-But we can also delay tackling this and come up with some
-bespoke solution for the Surface case, like as suggested
-maybe a special compatible string ?
-
-> It is just hard to believe that board designers can do a blunder like this.
-
-Heh, you won't believe all the crap happening on cheap
-x86 devices.
-
-Regards,
-
-Hans
-
-
+> ---
+> base-commit: 4a26e7032d7d57c998598c08a034872d6f0d3945
+> change-id: 20251204-fixes-a7747a291dc9
+> 
+> Best regards,
+> 
