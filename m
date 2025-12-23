@@ -1,74 +1,74 @@
-Received: from mail-lj1-f174.google.com (mail-lj1-f174.google.com [209.85.208.174])
+Received: from mail-lf1-f41.google.com (mail-lf1-f41.google.com [209.85.167.41])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7DF073002DD
-	for <platform-driver-x86@vger.kernel.org>; Tue, 23 Dec 2025 19:09:13 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.174
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7D3A42DF13D
+	for <platform-driver-x86@vger.kernel.org>; Tue, 23 Dec 2025 19:19:52 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.41
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1766516955; cv=none; b=SqXQ1i4zV/6tNwi3+sJLYKqbBDnrqFhBrsrp+T0hmdw3I0xAHvFtvU1O6AEF9xzh2pHLHGZzRbYzVO8CxrzeNurR/OaJ0RiKVxKV505+tgCfHZhWOHyCtilt3iL1nh4U3R81YYYYits3TPcYbXKUbu0Q4l7OzFNVHEeaCEnz2Mw=
+	t=1766517594; cv=none; b=rBrHfybRADnYW+OHu4kJ8QHzGyKej+/XfK6KwbXQHjm62Y+mDjPLEG4lYJ6HyXEzkDdkIbyWGJHaPXr4Da6AwlYx6CxjktNwlv0Z3XyMvsHoizuND79b6RNKpti2rHI0w7xbMHCJeTB44TxfaEDJUpv+Wo5hdxRLTlN+/MqFTJQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1766516955; c=relaxed/simple;
+	s=arc-20240116; t=1766517594; c=relaxed/simple;
 	bh=IuW3ft2k35MAniwOYCLe7MFi00Zud8YNij77x8jy8Q8=;
 	h=From:In-Reply-To:References:MIME-Version:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=Re974Q7BNZ9SuOXFRZrPyTDct4pr7I+JWHC8bIX8wCt1nZVNUVMukNiH7PGF/eem42KZ2E90Wu/1b2KsQ8JnkxjFl+mSwLIkbFSzEPZbUPsaeO8xIirFJum+OAheE0Hput+7rTYKzYBDCckzkh/drZJgjSTAfn/C3CL+J0zfGGs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=ZSpGHVVQ; arc=none smtp.client-ip=209.85.208.174
+	 To:Cc:Content-Type; b=BwAD7aYmyieA0VBZf2qyyLQKRaXwuF0DdK7fz9XVc3EJeBUawX5MMBQKLGu+g03OkCfYip/1lfk/4qm2I4/XwNy5CHrxy2N3oy62BzOKVylDT42DkyKJE2tq0U14yPBrfMlxGfN/w9eH2lyu19rXJjpny7eitpRO7hZYZYGESL4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=I0KixlYW; arc=none smtp.client-ip=209.85.167.41
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ZSpGHVVQ"
-Received: by mail-lj1-f174.google.com with SMTP id 38308e7fff4ca-37bbb36c990so55275121fa.0
-        for <platform-driver-x86@vger.kernel.org>; Tue, 23 Dec 2025 11:09:12 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="I0KixlYW"
+Received: by mail-lf1-f41.google.com with SMTP id 2adb3069b0e04-59a10ef758aso4328686e87.2
+        for <platform-driver-x86@vger.kernel.org>; Tue, 23 Dec 2025 11:19:52 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1766516951; x=1767121751; darn=vger.kernel.org;
+        d=gmail.com; s=20230601; t=1766517590; x=1767122390; darn=vger.kernel.org;
         h=cc:to:subject:message-id:date:mime-version:references:in-reply-to
          :from:from:to:cc:subject:date:message-id:reply-to;
         bh=XIl8aapFfoVEdVThyT8e/W+2bxVCSeI46Ht9h2+xOy0=;
-        b=ZSpGHVVQKveqWM1d3DPa+9tOJ0OfW9xvn819qnFM9iuLCTh3ha0SZ15JwNVpdYTyYk
-         3JZhvLMX31zBUaaezMuwx+xL4gSHpJozuCy2Cwqs4Xew/lFII+fIBwzZbvWeGJVrsJ5T
-         +4SwJYyEGYyzxotHEN/Xy7YEaR2O6yuAXNqca31nn7VWMr8ASfRhp1KzqJqikl5vgwT5
-         Q4VUJHDSk4KceMJ/IJrKxpDcRZ9NKUJhjxtv7dq1aPnBCgexrjiMe7q43ielrulUKYWA
-         W7WxERPynPQkQVO9lI5SXji6RM6nKprJKvjffY/OenMRCDR9Y1kHX+Hx+Uaz8xsg9yej
-         YBgA==
+        b=I0KixlYWqhxKMDxcndrrvB4wM9amAxJ1NKhrtkdoPtu6YovR1P114uN6snZSxcL7ZH
+         1Gb+U+M8bCytvDlVGmynlnW3Vhr/6/v/rWmDI/dDIHEMuPxPlj2CNjBLe5YZlV8Rvt9n
+         40N378G7tWZ7awhotzZhyZ0aQut1jyT/qeE1MFwRpeMbbVypdGq6BTN8iO5lgJE0Hmah
+         GixSkyWQesFUhpRwu6IG1/vapVwbsrLEzSJZba7bya2yIP73dvNxxVoYdqu5uUcZJlgP
+         2KuU8YqcXlNDFWpNilOCzJNaeHrqzsnMFbmW7NpwEBc4TW4vKMEUbp6wHOw9N45i46Kn
+         UekQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1766516951; x=1767121751;
+        d=1e100.net; s=20230601; t=1766517590; x=1767122390;
         h=cc:to:subject:message-id:date:mime-version:references:in-reply-to
          :from:x-gm-gg:x-gm-message-state:from:to:cc:subject:date:message-id
          :reply-to;
         bh=XIl8aapFfoVEdVThyT8e/W+2bxVCSeI46Ht9h2+xOy0=;
-        b=NdNz3roE71FL0Odq1erP4e8nk7OLI8wI1+dv2HcG6pi1+TxupIC2d7weyF+RIGj/9B
-         uvVwxzubWsX9HaJVFogewgSL5urqAuPV2Y9YsuUpFOMCb1lJyR8K9O69SiSA/5HcKsB/
-         XMlH0NPrgAdcWGdmMMVGk8tlg6F3Arv7eEf4MTa0rrO0U1P1rzYVO9t8a4Igk+8aaTTF
-         kfYS3GkSgltWDrnEno8sg/CG/1GDw+yCOW/dfutC4pP0RulNrfJ/icvkPRHZvPEVgqBr
-         SvbfTflREFrDq1piQ8jO7RA8a1P7Sb3WtWcN43CWPd/aQE9SXj5EwtUmnhaF9SY9sVUh
-         7SUw==
-X-Gm-Message-State: AOJu0YxzpgQgGNJhtWjztGV/iwXLZGnVhSLVWkIDKYfD5r+VaxlqtW0d
-	dclaKX7JRKNci+yN8h4awIvatRqrz3iKmkWKj5E0dlWVf19dghm/yrHAoCswPHDURKItpd96BFz
-	QAAS3H4jLxDeIVhKE4qZnaJOiFB5v9UbsCqc9
-X-Gm-Gg: AY/fxX5Xqqlcaw779CTruUkps7CLYh/qk0mCO3AjZNb9Iy6w0yIOADUZ4YlzeCIf2JR
-	kaglWdejdLSUtJFERUkiwKVdtcWkwrh7Y5QcCFZosZXOnBqdnc6Ds6iZk+cOkXkzgbmCABTyXdh
-	vNEaQ9/BzrQq3sMfhrWsytMMWQWPYeN7Gb8YjtZ0QMnLp/jmQGpT0FLNwuDW5i6QGTN4OpKHuNq
-	JgfPJqd6PijHVflofXhZISotmtHEWB7JjM/1JqXSm0iwo0frXZ5luFzl9rw3BDnbTpMv0U=
-X-Google-Smtp-Source: AGHT+IG50jCqDcc+09CUBzFysbZE24F89loG98D+eTbZ+Rh8F1oRwnVm6cmIaHVxkFdS1T6W0HprE1VUB9zgqANsL5k=
-X-Received: by 2002:a05:651c:1506:b0:378:f3b6:f762 with SMTP id
- 38308e7fff4ca-3812079a3c5mr47998221fa.8.1766516950815; Tue, 23 Dec 2025
- 11:09:10 -0800 (PST)
+        b=EflH4WtL9mRLA0aLOCS1+vILstLf0KqOwiyOmsPqXGumNFzcmTs+f7NfQnyqZIQNp5
+         QE3WHzr4tizmo9SSyFNXXQwSp6G0yJIelePCWCwLUYNSD7YtGY68zT3lAjI3WLe0EDog
+         HOUsZRFzzFMRpwJ6ZeXEDfzvqTDRv7OZ/GghzaqBURcsBU6be2wkMz/SnsYxYItWZ30U
+         Wu2qR0Xpp4ES0sbyjOY0V6uR9U0+Jm9F5P3L7nn9cNmt+nrm/95H6HxNKUV2yeAjSdZ3
+         tXSrTwVPAZD08tVspr3mukAN5UWrNLjVRpzRPS+IJptuGBEejmUEpYOCPS+KPKF3JODU
+         i5xA==
+X-Gm-Message-State: AOJu0Yw7LzvQ65ZgmKOUDgScPx/QTP7lz5y9kfj7boRhyufKCFYJKzaO
+	KWexAaRAn6xqK+ZqlGpehcAMl0VZEDSkl+nrWlMG8///KAXHRBrdvrc/IuGGJIYyN1/HijaQ+V6
+	U46/T3s2jCJ3xnwRszI03elJ4GHTkQnUmMvpW
+X-Gm-Gg: AY/fxX5mxV/h0tXCfORnDUrEu2fyAiwOZvqB5Bzof02nklXMJ4eQmvJv9g+srqKmuEo
+	CgULKGNX77uvcPdF9gnYKP+8ENXSvmvrZC7jKtYkDikWmqCPC4h169uLrhWEd/18YUwIVIRscdm
+	Q7Db/QCOeAN+8qslfNlrKGJiFOfZWS31RmwC+F0EnQovuKGsQGpN5YdTTPvqQHJBTdUoqyHxV6/
+	MqAhuIdRNRb6iFjjTESlhhO2EubOwCL+Ztnaj8EvfH0ezK05GAVEtPUcmVvJTC6hYgnWBM=
+X-Google-Smtp-Source: AGHT+IHNrBAhAcXdlX8cz2u4uFifVxNE0J6JMW4c7P1T1MksQYe+kl6sV+tNtewCFKz0Iup2HtGcDd3QmCPS7QTv2g8=
+X-Received: by 2002:a05:6512:238c:b0:594:768d:c3ef with SMTP id
+ 2adb3069b0e04-59a17d3c40emr5635200e87.30.1766517590076; Tue, 23 Dec 2025
+ 11:19:50 -0800 (PST)
 Received: from 753933720722 named unknown by gmailapi.google.com with
- HTTPREST; Tue, 23 Dec 2025 19:09:10 +0000
+ HTTPREST; Tue, 23 Dec 2025 19:19:49 +0000
 Received: from 753933720722 named unknown by gmailapi.google.com with
- HTTPREST; Tue, 23 Dec 2025 19:09:10 +0000
+ HTTPREST; Tue, 23 Dec 2025 19:19:49 +0000
 From: Benjamin Philip <benjamin.philip495@gmail.com>
 X-Mailer: git-send-email 2.52.0
-In-Reply-To: <20251223190844.944633-1-benjamin.philip495@gmail.com>
-References: <20251223190844.944633-1-benjamin.philip495@gmail.com>
+In-Reply-To: <CAMEXYWcY-7Kn8V1EwZ=fUPFWDwnAHEuferY9Ap0zO6xfmXx4JQ@mail.gmail.com>
+References: <CAMEXYWcY-7Kn8V1EwZ=fUPFWDwnAHEuferY9Ap0zO6xfmXx4JQ@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Date: Tue, 23 Dec 2025 19:09:10 +0000
-X-Gm-Features: AQt7F2pdChlIABaEam7Pbv2m9UnG_RUTxsdPD1KEgOLCN-87dkHEH3bqZ6twFjg
-Message-ID: <CAMEXYWdAzVQyiPaHnYgRsx70uJMLxD4rYbORg4VqXjq0tq7gMw@mail.gmail.com>
+Date: Tue, 23 Dec 2025 19:19:49 +0000
+X-Gm-Features: AQt7F2oWDdGUzTnndG-Xab99IP6lVMinFR6JUjPvj448_RanV_yjy80doozqAzk
+Message-ID: <CAMEXYWech3B+_7__Xo+Fa5OQ+Gu+Mkd4eedb4Ve78E+UuFaeew@mail.gmail.com>
 Subject: [PATCH 1/5] platform/x86: think-lmi: Clean up types in headers
 To: platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
 Cc: Mark Pearson <mpearson-lenovo@squebb.ca>, "Derek J. Clark" <derekjohn.clark@gmail.com>, 
