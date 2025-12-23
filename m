@@ -1,230 +1,174 @@
-Received: from mail-lj1-f178.google.com (mail-lj1-f178.google.com [209.85.208.178])
+Received: from mail-wm1-f49.google.com (mail-wm1-f49.google.com [209.85.128.49])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D9D3C30EF72
-	for <platform-driver-x86@vger.kernel.org>; Tue, 23 Dec 2025 12:45:08 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.178
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A8BA1276046
+	for <platform-driver-x86@vger.kernel.org>; Tue, 23 Dec 2025 13:50:42 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.49
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1766493910; cv=none; b=ij23cXV0E+C5coLPNbIQN9ozsDQC24PACzMtndLyt6ADXBKroqHetFUzg0IUnfpDPzXAdSJd+a5PmasBPZnRf8Day6iHXQDzZgKppDtVSVWp7877Gk37M9h3PFa0z8xNS8EmZNL4xAIElMWDfdFsJVvy+pRpXNbqSzYsUnTGskc=
+	t=1766497844; cv=none; b=PvqV6PvBtPq7FZvTEE+dLjfLkH3oENmi9+KSMgHGTBBvdHliHFX1vA3DlmtZIMbHGEUdr0xXTG4jfSnWwPYiuzlXZ1m5L0SRMMyH6p4EBT9ZAbfOMxTceIzW98VLmVwzy4LP2ObGvlPT/05e25q+7S29K29EMaCq37Dvv8OrgcA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1766493910; c=relaxed/simple;
-	bh=K4iZKV6Sumq97XEJ1kg03JoVRXPiTqSDK/Hm5dzNf4w=;
-	h=From:MIME-Version:Date:Message-ID:Subject:To:Cc:Content-Type; b=AF/nKu1HBwptp09i8KEnea1WlFkCFGQZ56LPinbVJ+w/7kwmw54qBuk6x6/Skjc5MYlWtFJrWyieogXK9CASjFz7JNDdDsYpVfoKpllvRCn8Zb0mPukrTE3a+i3xgtcXfM8G/xHYx9JqWNQ8tkIqlcmcQwsNPlh/1imuvx91eVg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=CNKFgIOZ; arc=none smtp.client-ip=209.85.208.178
+	s=arc-20240116; t=1766497844; c=relaxed/simple;
+	bh=JQTXS/wYMzvek+4ggAsosG0VXdWLW1tbpUHCZl693sk=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=oP28adCEB4TVCXu3m5FFrWrQrrHu4hDF8KI0arkBJfGf9DqWS6a5ca3IhxWQClwv1YkrF549J34yW4Kj+NSfThfMArR1mFzBS/AmYSnVqLJlLYFWTULOzY2yrkCgZ9fBN+g+vjQrYUprZk06v2VlfQjt9KBooIQIu3xZFoFwbUU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=FXJ5CAmr; arc=none smtp.client-ip=209.85.128.49
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="CNKFgIOZ"
-Received: by mail-lj1-f178.google.com with SMTP id 38308e7fff4ca-37a3340391cso38992901fa.3
-        for <platform-driver-x86@vger.kernel.org>; Tue, 23 Dec 2025 04:45:08 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="FXJ5CAmr"
+Received: by mail-wm1-f49.google.com with SMTP id 5b1f17b1804b1-477a219dbcaso41836525e9.3
+        for <platform-driver-x86@vger.kernel.org>; Tue, 23 Dec 2025 05:50:42 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1766493907; x=1767098707; darn=vger.kernel.org;
-        h=cc:to:subject:message-id:date:mime-version:from:from:to:cc:subject
-         :date:message-id:reply-to;
-        bh=5719znsWU4nhuGJrAbQLtf94jfir7/Dv6FX2HBWtA0Y=;
-        b=CNKFgIOZkoG54HSxc1EL6v+yeY/D/UU4nrVHIJ8RhwbRlF/ioqCkuAenAhMnfZWzaF
-         mOWkCTFo7t7j2uFFG5FrVpvpVwb44OtFzuj/n4U0I/YrQlQeLcyR8uEGi+3iKf0YVhKN
-         bYpIR2HS30YkY33MyTv0gB8D3HpWgvXDJmgDp+e9h0iQ360CKOlrl4iXBmxC29vevlxN
-         gf9hMzDdU0ZgGymDcGraxsLLa8Hzc34odwwTCGtIZWSR/ccnMO91JtgvEVXqXdpFxErY
-         TFM42FWTcc0eDyKzDXuF/bps+izd0dTPLYhZYFOOhqkmoPQeVONG1YV5H//i1hUq7Ipq
-         /Oqw==
+        d=gmail.com; s=20230601; t=1766497841; x=1767102641; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=GqeoU932E3jkcWropIRFkLF7YQVKeZWJseuKYTCW02o=;
+        b=FXJ5CAmrPPp8x6CUz3PkkkzMXkCHTCIKTwWnTV1vK4+wXHaV7hagJn7ubgYlHZNYFn
+         tIq59oJsdYLQM8AtiebtL00jJgww51vo94zRSsP+forXTGMGM16j6wDoJessSc3x4Q18
+         HC6CK1z30/w0ILrcErfJ1CLV7idlZnbtlae7xzLHLYMYI+BtjWanaUJO/65hyi+9Do3l
+         Q+juMEEwN3A+FsamMTiEaMSdZHqJe5MIWntTNGLw46zGSRJBqP3b6zvI/7NNLjWMBte3
+         vfoAvxSrrqFz5ra/LcHnlltNk/tPVULhflCKbdG1+wMPiJaaXfO3uaK1aFpgOgser8AU
+         D/ow==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1766493907; x=1767098707;
-        h=cc:to:subject:message-id:date:mime-version:from:x-gm-gg
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=5719znsWU4nhuGJrAbQLtf94jfir7/Dv6FX2HBWtA0Y=;
-        b=swsd0HKyKfGqR8adFAv9b98b47zyoYGsrTzQ0JfOm6ND8MtxTpRlQfSct+tFv/1jHr
-         Xo9AZPshB7/pNF9mjvlG+MF4KPySlvmQdLVkFgOZdVgVvO6LeuHG7nF1EYsgqubDTH9r
-         CTCuhfI3q9RnEUGByWjiEeJnrwlg9Akdz1R5dofbkwTS+zHxMdca7aUiN+VlJ3nVwBHH
-         g1beLXZM9oGlWx9/M9OrVtJ0uWuDg/8qel9hjnZLw5FzEKw9dIPfon24SgAThQZL1+mp
-         4FZZxoQSr/jCuVyRwH2SQRXy2h4zrt690lHDSdbtoFamMB4xIk1dPBhLD+EPAl/hJY4m
-         ozVA==
-X-Gm-Message-State: AOJu0YySpHZH/AgWBQakfgn64pOVLzOYuhbeX75ZsRqpOQVEmTQPBnlI
-	LlbLOQlcFJi7gfEUKF62zniSy4TNlqtc3zu3z8X3EZS+dvIKDGLMekHMJZPE3R2e9Aa7XjTXNwp
-	anhifOBf99g7TNCzCpeWJ7+oDOKX2lgQE2eeZ
-X-Gm-Gg: AY/fxX4czG8K/T+VjXxWf1w8JwCJvFF7e6ksS0AMZjAgMl3tnvqy89RVwA6nI4/oIib
-	+jNk8QT9dHRH0sfvsCpigqL3pqa33GlKuXYG5cgoGBF02jpSoNGG221afHT3G/AFSdWqV3oj4bG
-	dwUaCUuNV8DfdLbOW4tDRBgzc/RT9z2GbMEJCxumaPUfJu1BpcvnJxt8XKyB0ytvNMNDg5AEgad
-	xxgMOb9B+Mw8Bh7ZahWZmLMUEwuESC7y7xlvGEpZFmphqDMry8zGi4tBb93mxkk/lLB+qs=
-X-Google-Smtp-Source: AGHT+IF2lEbpbWAKaFHtJSxADIbTHZcQwu25zLGwccYDum+H8nSG1G44DzV0vgTfr06n7DtUi4pVo5Zh6u3LOc1BWKU=
-X-Received: by 2002:a05:651c:2125:b0:37b:a4e2:4407 with SMTP id
- 38308e7fff4ca-3812167ad49mr36012151fa.43.1766493906460; Tue, 23 Dec 2025
- 04:45:06 -0800 (PST)
-Received: from 753933720722 named unknown by gmailapi.google.com with
- HTTPREST; Tue, 23 Dec 2025 12:45:05 +0000
-Received: from 753933720722 named unknown by gmailapi.google.com with
- HTTPREST; Tue, 23 Dec 2025 12:45:05 +0000
-From: Benjamin Philip <benjamin.philip495@gmail.com>
-X-Mailer: git-send-email 2.52.0
+        d=1e100.net; s=20230601; t=1766497841; x=1767102641;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-gg:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=GqeoU932E3jkcWropIRFkLF7YQVKeZWJseuKYTCW02o=;
+        b=UwVVwCoLHAmKCBleHjmm7/8yJ5fUShh255MU2ZbDypKldqw5lb1TMKbkX8ybZzBOij
+         pgOr/S/jovhEzsgaUWNhMOT25iFLCNfSe+EaQJ9hl34DnDl8F+bbwFYwPYmvS4vfQh8h
+         HlcdYw0EMYCDGx8aDRIOo/7ViCj6f3SyAaa2srzK13c9fvfAliRa8gAwblMWzbRK44HS
+         whmEdnqXwOhgz6tErVMHBBPcNr66v5OOmXkXWNHUwUB0XAam1lMxNNSLKXbzHMM8Q3o/
+         Y+xTTm6+3qLyNmVKb+B/c5fFl80OoENZgpRlNUx0IOUVW/ZGLNsIzu4maEEz4ADlx0t0
+         1oeA==
+X-Forwarded-Encrypted: i=1; AJvYcCXwLjpX1F4WvlJP4yndP7AyoqvkzbUtHfTFH/i/3T3oucrgB0nhoMAP36VWABk/+/YSTF6rw2dhs0Mwo288Ga+3prZj@vger.kernel.org
+X-Gm-Message-State: AOJu0Yyou5otna9AHTPwN1tXcptlezIf47l+uy6Eos4tVNsl8rQdTnRH
+	tWRhL4tM0zFE+nJrhuQ0h8rdXaJkEHenFwl+dHYPEPV9dXs5wGwbm/KQ
+X-Gm-Gg: AY/fxX5n9Lf2HnFSkqI4/x5y38t0IBaBfi7xBSs9R36BTyMobeH8iFCHTYYBTa9wJgd
+	bqtdHhrXanbkullwgAcBPvGdjHS3fdxY6HZnU7wGib1k5DAj2Mf1Ru6xP95pwzqxtazKGSYOJqO
+	QtYRxDGcfEOEIAuD6rnRYScEbUpIdP1TJBaBL7iS14wMgIJvy0vVFZ49/g7hzzmRwek+FXiS+GS
+	FlDK3OhcRJRBT6CbsBYZJL8q4GHApYdZFEjDSyGyMkL4nwrC2F1ct6kUnlEstPPC720Ua4eN0E/
+	FjeZjvNZIaTXzogltNKt3MZsIb6SrWEnS3cpnhP28bOmc4GLApLeh7tgxplazaZugPeTOSrULsC
+	OjEwFzikrRgRISARdjqm4d3AvgjljNITNkt0UWV749/uGi+bmTQ2B7XFO4ntCMqDnyjxyWhiu3H
+	DTtg8lWOQ9Bm3qBI8VU/iqu18=
+X-Google-Smtp-Source: AGHT+IG8AsTo+t9sk0hU0othTg5pT8jTi5K0OjCjX+h2p6P+SMnZ3sYYS1W7tDwW8jnyO6+O/9AZsQ==
+X-Received: by 2002:a05:6000:611:b0:42f:b690:6788 with SMTP id ffacd0b85a97d-4324e4c1264mr16049308f8f.10.1766497840775;
+        Tue, 23 Dec 2025 05:50:40 -0800 (PST)
+Received: from [192.168.1.121] ([176.206.93.222])
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-4324eaa08d9sm28704414f8f.30.2025.12.23.05.50.39
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 23 Dec 2025 05:50:40 -0800 (PST)
+Message-ID: <74f1a53d-3556-4e67-8dc2-2a86d6c52365@gmail.com>
+Date: Tue, 23 Dec 2025 14:50:39 +0100
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Date: Tue, 23 Dec 2025 12:45:05 +0000
-X-Gm-Features: AQt7F2oL9hoOl9VpeGbDK4aQJTlT9lGi-QjjCje2LUZzjoDEvq5trW6hGF7f4Ew
-Message-ID: <CAMEXYWdoXFJM96gE=JLVtrP7YeAdWwO+NmDFqfsy_pk49PreYg@mail.gmail.com>
-Subject: [PATCH] platform/x86: ideadpad-laptop: Clean up style warnings and checks
-To: platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
-Cc: Benjamin Philip <benjamin.philip495@gmail.com>, Mark Pearson <mpearson-lenovo@squebb.ca>, 
-	"Derek J. Clark" <derekjohn.clark@gmail.com>, Ike Panhc <ikepanhc@gmail.com>, 
-	Hans de Goede <hansg@kernel.org>, =?UTF-8?Q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
-Content-Type: text/plain; charset="UTF-8"
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH] platform/x86: asus-nb-wmi: add quirk_asus_ignore_fan for
+ UX3405MA
+To: Tim Wassink <timwassink.dev@gmail.com>
+Cc: Corentin Chary <corentin.chary@gmail.com>, "Luke D. Jones"
+ <luke@ljones.dev>, Hans de Goede <hansg@kernel.org>,
+ =?UTF-8?Q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>,
+ platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <20251221210218.12274-1-timwassink.dev@gmail.com>
+ <b02a7c96-9653-4ab2-ac4a-86d365af1a2d@gmail.com>
+ <CAD4HHcVKCL-9CV5kWH_6oz0jmh=+eXP-xU7cm2FvAHHucrPF7w@mail.gmail.com>
+Content-Language: en-US, it-IT, en-US-large
+From: Denis Benato <benato.denis96@gmail.com>
+In-Reply-To: <CAD4HHcVKCL-9CV5kWH_6oz0jmh=+eXP-xU7cm2FvAHHucrPF7w@mail.gmail.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 
-This commit makes some style changes to clean up the following
-checkpatch warnings and checks at various places in ideapad.c:
 
-- WARNING: quoted string split across lines
-- WARNING: space prohibited between function name and open parenthesis '('
-- WARNING: braces {} are not necessary for any arm of this statement
-- CHECK: Alignment should match open parenthesis
+On 12/22/25 11:44, Tim Wassink wrote:
+> On Sun, Dec 21, 2025 at 10:01 PM Denis Benato <denis.benato@somemail.com> wrote:
+>> On 12/21/25 22:01, Tim Wassink wrote:
+>>> The ASUS Zenbook 14 (UX3405MA) uses a newer WMI interface for thermal
+>>> management that does not support the legacy WMI fan control methods.
+>>> Currently, this results in ENODEV (-19) errors in dmesg when the driver
+>>> attempts to fetch factory fan curve defaults.
+>>>
+>>> Add a quirk to use quirk_asus_ignore_fan to silence these errors and
+>>> signal that legacy fan control is intentionally unsupported, as thermal
+>>> policies are handled through the platform_profile interface.
+>> It is my understanding that this patch suppresses the error,
+>> while maintaining the current behavior in every other aspect,
+>> correct?
+> I am actually not sure anymore if this patch is ok, as it introduces a
+> trade-off regarding telemetry.
+>
+> While the patch successfully silences the ENODEV (-19) errors, I have
+> verified locally that it also inhibits the registration of the fan
+> telemetry in hwmon. This means the read-only 'fan1_input' (RPM) is no
+> longer available to the user.
+>
+> I initially followed the precedent of commit 82cc5c6c624c ("platform/x86:
+> asus-wmi: Ignore fan on E410MA"), which can be found here:
+> https://lore.kernel.org/all/20221221-asus-fan-v1-2-e07f3949725b@weissschuh.net/
+>
+> Now I realize that case was specifically for a fanless system. The
+> UX3405MA does have a physical fan
+> which remains functional via the platform_profile (AIPT) interface
+> after this patch, as confirmed by stress testing.
+>
+> I thought this quirk was the standard way to handle it, but I am not
+> so sure anymore.
+Hi,
 
-We exceed the 80 column limit to fix the quoted string warning since
-strings in question are user visible. See coding style, part 2 for
-details.
+I think what's happening is that asus-nb-wmi is binding multiple devices: for those
+that are unsupported the driver returns -ENODEV and the kernel, as a result,
+probes successive drivers for those devices that can't be bound.
 
-Signed-off-by: Benjamin Philip <benjamin.philip495@gmail.com>
----
- drivers/platform/x86/lenovo/ideapad-laptop.c | 39 ++++++++------------
- 1 file changed, 16 insertions(+), 23 deletions(-)
+It's very likely that using that quirk prevents asus-nb-wmi to bind all devices,
+and this can very well result in what you are seeing...
 
-diff --git a/drivers/platform/x86/lenovo/ideapad-laptop.c
-b/drivers/platform/x86/lenovo/ideapad-laptop.c
-index 5171a077f62c..3d8a8b4f3e86 100644
---- a/drivers/platform/x86/lenovo/ideapad-laptop.c
-+++ b/drivers/platform/x86/lenovo/ideapad-laptop.c
-@@ -219,38 +219,32 @@ MODULE_PARM_DESC(no_bt_rfkill, "No rfkill for
-bluetooth.");
- static bool allow_v4_dytc;
- module_param(allow_v4_dytc, bool, 0444);
- MODULE_PARM_DESC(allow_v4_dytc,
--	"Enable DYTC version 4 platform-profile support. "
--	"If you need this please report this to:
-platform-driver-x86@vger.kernel.org");
-+		 "Enable DYTC version 4 platform-profile support. If you need this
-please report this to: platform-driver-x86@vger.kernel.org");
-
- static bool hw_rfkill_switch;
- module_param(hw_rfkill_switch, bool, 0444);
- MODULE_PARM_DESC(hw_rfkill_switch,
--	"Enable rfkill support for laptops with a hw on/off wifi switch/slider. "
--	"If you need this please report this to:
-platform-driver-x86@vger.kernel.org");
-+		 "Enable rfkill support for laptops with a hw on/off wifi
-switch/slider. If you need this please report this to:
-platform-driver-x86@vger.kernel.org");
-
- static bool set_fn_lock_led;
- module_param(set_fn_lock_led, bool, 0444);
- MODULE_PARM_DESC(set_fn_lock_led,
--	"Enable driver based updates of the fn-lock LED on fn-lock changes. "
--	"If you need this please report this to:
-platform-driver-x86@vger.kernel.org");
-+		 "Enable driver based updates of the fn-lock LED on fn-lock
-changes. If you need this please report this to:
-platform-driver-x86@vger.kernel.org");
-
- static bool ctrl_ps2_aux_port;
- module_param(ctrl_ps2_aux_port, bool, 0444);
- MODULE_PARM_DESC(ctrl_ps2_aux_port,
--	"Enable driver based PS/2 aux port en-/dis-abling on touchpad on/off toggle. "
--	"If you need this please report this to:
-platform-driver-x86@vger.kernel.org");
-+		 "Enable driver based PS/2 aux port en-/dis-abling on touchpad
-on/off toggle. If you need this please report this to:
-platform-driver-x86@vger.kernel.org");
-
- static bool touchpad_ctrl_via_ec;
- module_param(touchpad_ctrl_via_ec, bool, 0444);
- MODULE_PARM_DESC(touchpad_ctrl_via_ec,
--	"Enable registering a 'touchpad' sysfs-attribute which can be used
-to manually "
--	"tell the EC to enable/disable the touchpad. This may not work on
-all models.");
-+		 "Enable registering a 'touchpad' sysfs-attribute which can be used
-to manually tell the EC to enable/disable the touchpad. This may not
-work on all models.");
-
- static bool ymc_ec_trigger __read_mostly;
- module_param(ymc_ec_trigger, bool, 0444);
- MODULE_PARM_DESC(ymc_ec_trigger,
--	"Enable EC triggering work-around to force emitting tablet mode events. "
--	"If you need this please report this to:
-platform-driver-x86@vger.kernel.org");
-+		 "Enable EC triggering work-around to force emitting tablet mode
-events. If you need this please report this to:
-platform-driver-x86@vger.kernel.org");
-
- /*
-  * shared data
-@@ -1446,7 +1440,7 @@ static void ideapad_check_special_buttons(struct
-ideapad_private *priv)
- 		if (read_ec_data(priv->adev->handle, VPCCMD_R_SPECIAL_BUTTONS, &value))
- 			return;
-
--	for_each_set_bit (bit, &value, 16) {
-+	for_each_set_bit(bit, &value, 16) {
- 		switch (bit) {
- 		case 6:	/* Z570 */
- 		case 0:	/* Z580 */
-@@ -1706,11 +1700,10 @@ static int ideapad_kbd_bl_init(struct
-ideapad_private *priv)
- 	if (WARN_ON(priv->kbd_bl.initialized))
- 		return -EEXIST;
-
--	if (ideapad_kbd_bl_check_tristate(priv->kbd_bl.type)) {
-+	if (ideapad_kbd_bl_check_tristate(priv->kbd_bl.type))
- 		priv->kbd_bl.led.max_brightness = 2;
--	} else {
-+	else
- 		priv->kbd_bl.led.max_brightness = 1;
--	}
-
- 	brightness = ideapad_kbd_bl_brightness_get(priv);
- 	if (brightness < 0)
-@@ -1752,7 +1745,7 @@ static enum led_brightness
-ideapad_fn_lock_led_cdev_get(struct led_classdev *led
- }
-
- static int ideapad_fn_lock_led_cdev_set(struct led_classdev *led_cdev,
--	enum led_brightness brightness)
-+					enum led_brightness brightness)
- {
- 	struct ideapad_private *priv = container_of(led_cdev, struct
-ideapad_private, fn_lock.led);
-
-@@ -1928,7 +1921,7 @@ static void ideapad_acpi_notify(acpi_handle
-handle, u32 event, void *data)
-
- 	vpc1 = (vpc2 << 8) | vpc1;
-
--	for_each_set_bit (bit, &vpc1, 16) {
-+	for_each_set_bit(bit, &vpc1, 16) {
- 		switch (bit) {
- 		case 13:
- 		case 11:
-@@ -2142,14 +2135,14 @@ static const enum power_supply_property
-ideapad_power_supply_props[] = {
- 	}
-
- DEFINE_IDEAPAD_POWER_SUPPLY_EXTENSION(ideapad_battery_ext_v1,
--	(BIT(POWER_SUPPLY_CHARGE_TYPE_STANDARD) |
--	 BIT(POWER_SUPPLY_CHARGE_TYPE_LONGLIFE))
-+				      (BIT(POWER_SUPPLY_CHARGE_TYPE_STANDARD) |
-+				       BIT(POWER_SUPPLY_CHARGE_TYPE_LONGLIFE))
- );
-
- DEFINE_IDEAPAD_POWER_SUPPLY_EXTENSION(ideapad_battery_ext_v2,
--	(BIT(POWER_SUPPLY_CHARGE_TYPE_STANDARD) |
--	 BIT(POWER_SUPPLY_CHARGE_TYPE_FAST) |
--	 BIT(POWER_SUPPLY_CHARGE_TYPE_LONGLIFE))
-+				      (BIT(POWER_SUPPLY_CHARGE_TYPE_STANDARD) |
-+				       BIT(POWER_SUPPLY_CHARGE_TYPE_FAST) |
-+				       BIT(POWER_SUPPLY_CHARGE_TYPE_LONGLIFE))
- );
-
- static int ideapad_battery_add(struct power_supply *battery, struct
-acpi_battery_hook *hook)
--- 
-2.52.0
+The only runtime problem is that an error appears in dmesg, right? The rest is
+working from what I can understand from your messages. 
+> Best regards,
+> Tim
+>
+> On Mon, Dec 22, 2025 at 3:54 AM Denis Benato <benato.denis96@gmail.com> wrote:
+>>
+>> On 12/21/25 22:01, Tim Wassink wrote:
+>>> The ASUS Zenbook 14 (UX3405MA) uses a newer WMI interface for thermal
+>>> management that does not support the legacy WMI fan control methods.
+>>> Currently, this results in ENODEV (-19) errors in dmesg when the driver
+>>> attempts to fetch factory fan curve defaults.
+>>>
+>>> Add a quirk to use quirk_asus_ignore_fan to silence these errors and
+>>> signal that legacy fan control is intentionally unsupported, as thermal
+>>> policies are handled through the platform_profile interface.
+>> It is my understanding that this patch suppresses the error,
+>> while maintaining the current behavior in every other aspect,
+>> correct?
+>>> Signed-off-by: Tim Wassink <timwassink.dev@gmail.com>
+>>> ---
+>>>  drivers/platform/x86/asus-nb-wmi.c | 9 +++++++++
+>>>  1 file changed, 9 insertions(+)
+>>>
+>>> diff --git a/drivers/platform/x86/asus-nb-wmi.c b/drivers/platform/x86/asus-nb-wmi.c
+>>> index 6a62bc5b02fd..eaa8abe506cb 100644
+>>> --- a/drivers/platform/x86/asus-nb-wmi.c
+>>> +++ b/drivers/platform/x86/asus-nb-wmi.c
+>>> @@ -544,6 +544,15 @@ static const struct dmi_system_id asus_quirks[] = {
+>>>               },
+>>>               .driver_data = &quirk_asus_zenbook_duo_kbd,
+>>>       },
+>>> +     {
+>>> +             .callback = dmi_matched,
+>>> +             .ident = "ASUS Zenbook 14 UX3405MA",
+>>> +             .matches = {
+>>> +                     DMI_MATCH(DMI_SYS_VENDOR, "ASUSTeK COMPUTER INC."),
+>>> +                     DMI_MATCH(DMI_PRODUCT_NAME, "UX3405MA"),
+>>> +             },
+>>> +             .driver_data = &quirk_asus_ignore_fan,
+>>> +     },
+>>>       {
+>>>               .callback = dmi_matched,
+>>>               .ident = "ASUS ROG Z13",
