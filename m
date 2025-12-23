@@ -1,61 +1,61 @@
 Received: from fhigh-a2-smtp.messagingengine.com (fhigh-a2-smtp.messagingengine.com [103.168.172.153])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 693F221D3F6;
-	Tue, 23 Dec 2025 20:31:16 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5318A313539;
+	Tue, 23 Dec 2025 20:34:55 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=103.168.172.153
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1766521878; cv=none; b=eetyIYTXmAnpzPz8NZ+20T2jjW/EBYHgNhnFfAvnY3WTliUTmEXxNS3Kp8Sa+kYyceIqeuxgUa1WOTo7Y98zZjcOLozkHrGf0OH+UJ+EEWaPmI7U23wMvWp44lIoso0cFicgdu5vC1EoxaaMRk/nTwzJWbAw5/4d3frGqjb1zQs=
+	t=1766522096; cv=none; b=srS4jaqQCZSvfZ2ZT5Xf26c+jNJvjVCeYOo+qNQ8pQ91PDmc+j11UKC8I8rtkSQR/qNBBbkNsSRmgcrKjzan7Yi+HmpVMpu4wOlhX+2+NcTbnDcty/5NaIR18v+0AZ2A3oMBzIWPrShVKyQvYlRTsQJvG6CT5VvVq3YjCS+G33M=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1766521878; c=relaxed/simple;
-	bh=rhIVI0O33kzLB8UoJ3U2eFERmHWoJxpppsn//IoRxPw=;
+	s=arc-20240116; t=1766522096; c=relaxed/simple;
+	bh=66VC8Jl1Nz4UseMwf40je1PajxUvteujd3q5ce1qilQ=;
 	h=MIME-Version:Date:From:To:Cc:Message-Id:In-Reply-To:References:
-	 Subject:Content-Type; b=DvL/6DeCq4s22XkDmOfVZK9pX3bNg92QIz8OQJvh0rrjjG3+vXokcGQBBHfqdT67aqkXgUD5peaPZKrwVjpmLbM5bVvqGTa1ibrniicJGmwMGbN3kkcjNlEGeykgj84x1dUn0UI/kKorpGAuOWG7zMGc+KBsuU9D96KpL12obTM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=squebb.ca; spf=pass smtp.mailfrom=squebb.ca; dkim=pass (2048-bit key) header.d=squebb.ca header.i=@squebb.ca header.b=gBR1NgAU; dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b=BwBLaKdX; arc=none smtp.client-ip=103.168.172.153
+	 Subject:Content-Type; b=ZsUrycr1dBu4nyerdoorw+MPXtCJTTLcKvu2aWHaZIfeJc/IW1JkHAbcwBJl/CjM9heiZ9ttrRlbf8VjW7JW29CAP7PV3L6UFRE7QPCFgM4zATXW7XEUA90Fq3ZZt44Xl/LrAvOLNIjt2Gwf5OI4Xaw+gC/2Fxia0H1Pwcjve5Q=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=squebb.ca; spf=pass smtp.mailfrom=squebb.ca; dkim=pass (2048-bit key) header.d=squebb.ca header.i=@squebb.ca header.b=MPmp6teK; dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b=uel5h3th; arc=none smtp.client-ip=103.168.172.153
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=squebb.ca
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=squebb.ca
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=squebb.ca header.i=@squebb.ca header.b="gBR1NgAU";
-	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="BwBLaKdX"
+	dkim=pass (2048-bit key) header.d=squebb.ca header.i=@squebb.ca header.b="MPmp6teK";
+	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="uel5h3th"
 Received: from phl-compute-02.internal (phl-compute-02.internal [10.202.2.42])
-	by mailfhigh.phl.internal (Postfix) with ESMTP id 541971400126;
-	Tue, 23 Dec 2025 15:31:15 -0500 (EST)
+	by mailfhigh.phl.internal (Postfix) with ESMTP id 8851E1400143;
+	Tue, 23 Dec 2025 15:34:54 -0500 (EST)
 Received: from phl-imap-08 ([10.202.2.84])
-  by phl-compute-02.internal (MEProxy); Tue, 23 Dec 2025 15:31:15 -0500
+  by phl-compute-02.internal (MEProxy); Tue, 23 Dec 2025 15:34:54 -0500
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=squebb.ca; h=cc
 	:cc:content-transfer-encoding:content-type:content-type:date
 	:date:from:from:in-reply-to:in-reply-to:message-id:mime-version
-	:references:reply-to:subject:subject:to:to; s=fm2; t=1766521875;
-	 x=1766608275; bh=ncg9XHg06l5U0iYF1lmXedZ67NuqGTsPAW52U7Z9p8c=; b=
-	gBR1NgAUx18JtXJVlnnqplmw5V+JODGulBIWkHhzXjPPx1AEh8jmhWWv5CKiJW/n
-	ZdV07RPlaLv1F126OZ2Jgufjk8KYZZ7Xh4W3uO4HGZYQjhxIcbj8yJgY5FOgBdWK
-	jPVNnhoLVdV1L4nukHa4X1tdJt6e6S+TcLXhmowyYKS0nEonGR3nkQ802vIedVw6
-	TmVTx5pdIPae6MNXT/byNBFL+1l5qA9zWivc751CMvh5WysoQr6QjVn6g+trABwr
-	oDNt9HzUyhrWkdj3StR0+CrX79NM6NZc2lFVnYC8H+OJB3rroJNNeS/4kbFf0xVV
-	MWMjUxH9i40Q3qBpGVMq+g==
+	:references:reply-to:subject:subject:to:to; s=fm2; t=1766522094;
+	 x=1766608494; bh=9kswkJzR8yvGLuw/imitqRY4qex836jKMJIhnbyRuEw=; b=
+	MPmp6teKcBThbjHV9l642rMdDe4rxAFMBUub8DaeF4foj2g9sEFe/fGm9O2UKjs0
+	6ADuKMoG43Qdx9e2bniMuul5fGVNPinYreSy6LBowaPIyom/EE/uMB970Y6XPvu8
+	3TXSBJRU3m0Y6TBKygveKkcGdgWILqvCpekCSxPiiMplHdIvC/uMJXQVZ9zdMeFj
+	CokBdIYRbGy1zj/s7SZEJq8ezTO7Xl1TpBFy7Vdqnt/1VWRUK3cJrnwIGM/evmdj
+	WTd+NNix+iwQLXgcXG3RNeps8tUDfS0LY/o+dYwaBmuSyXAACg0wBkYqrPO9iGLt
+	cWQKc3YlSefdfPJbeTM4Ow==
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
 	messagingengine.com; h=cc:cc:content-transfer-encoding
 	:content-type:content-type:date:date:feedback-id:feedback-id
 	:from:from:in-reply-to:in-reply-to:message-id:mime-version
 	:references:reply-to:subject:subject:to:to:x-me-proxy
-	:x-me-sender:x-me-sender:x-sasl-enc; s=fm1; t=1766521875; x=
-	1766608275; bh=ncg9XHg06l5U0iYF1lmXedZ67NuqGTsPAW52U7Z9p8c=; b=B
-	wBLaKdXzE6QFtN+7ggKSBshi82zEucFIBzEOdgSc/g+NItLtwzuHKnJTLijNe0Z6
-	46sG23bJAjQqu2D03affOtG9VxLtl62tjJXRYkoR7qVGNDt3sIXkj7O639QRqbVc
-	JjOZ81/ftbt//PK5fcjIYy9cfFZTJzq5F25zsXGBXpswoTbJWC570h6BBI42rjh5
-	//rpQiC64bwCEbCBFeGxR43/3GjA7FE2Q0ZXAXOmbWqP9UA+KCh+KTpK572OylEO
-	xQ8yajKxUK5c075s5aeJdWpEB9FD6I03RIcB1QT1U0AmYSHJDzA1V+k4alVTbb++
-	oGePU7iJzzolikS5LnNXg==
-X-ME-Sender: <xms:E_xKaUPZyObxQU1KbiCklfa0P1nzDdzwMCOK06abLmy5-sXpBEFwnQ>
-    <xme:E_xKaVyHCfYIeKoupTtBo50JlQMzSS7CYRjQ8zw0u9Ktsw6Vxvr4_AVmfEKhWyuPD
-    lwS5eqZEzYgOniKfThI2qPu5_5NfGVOrFQZy4Yd2j_tHQAWRaL9q1U>
+	:x-me-sender:x-me-sender:x-sasl-enc; s=fm1; t=1766522094; x=
+	1766608494; bh=9kswkJzR8yvGLuw/imitqRY4qex836jKMJIhnbyRuEw=; b=u
+	el5h3thJNOMT9SnyJMiFlGaX7/cQn/+WL8LxFvajT+LzZLkhKitZ3s4v3H9GmKnQ
+	9lBLmVLvDoSz5wcBVaKXQycPskOHlXAv3Zd+qjhIXoEO6CMkJIYimdCq84q7gARo
+	lguP1oYW1PqGcXf1AjThPcAx1TadiGDGyMeI9oawThlHDMzFINV4k0RjWE5DKHHS
+	wlzXPqiclX8DYgI+HjaQzrZH1S/MckZcSsA7SiTeJB+3pj36gqxnm5HrnCVp4tyK
+	VWfgIyMUQ6dw+MmgTGU0oEA5JPIVrFWrpv3yCcSYmlGNhmk2JGeYEyCux5p8/NkX
+	sozF6k0RK0Vuhp/fna7+g==
+X-ME-Sender: <xms:7vxKaWBV7VAGdH6Jvbf7kIb6TGseURjFgDsgO2AjI2c9IFbxhc-o6w>
+    <xme:7vxKabVt0H9RgheL2JFCOnLUxdnRYIBL4_najpxxqEltpNGYhO1MwaLDRl1Q4atxv
+    HtZGpQLGOhOnxffStOeOR6d0Ulu4QOtBCMmSNmxeJVupeKBLnuQLA>
 X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeefgedrtddtgdeitdejlecutefuodetggdotefrod
     ftvfcurfhrohhfihhlvgemucfhrghsthforghilhdpuffrtefokffrpgfnqfghnecuuegr
     ihhlohhuthemuceftddtnecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenucfjug
     hrpefoggffhffvvefkjghfufgtgfesthejredtredttdenucfhrhhomhepfdforghrkhcu
     rfgvrghrshhonhdfuceomhhpvggrrhhsohhnqdhlvghnohhvohesshhquhgvsggsrdgtrg
     eqnecuggftrfgrthhtvghrnhephfeuvdehteeghedthedtveehuddvjeejgffgieejvdeg
-    kefhfeelheekhedvffehnecuvehluhhsthgvrhfuihiivgeptdenucfrrghrrghmpehmrg
+    kefhfeelheekhedvffehnecuvehluhhsthgvrhfuihiivgepudenucfrrghrrghmpehmrg
     hilhhfrhhomhepmhhpvggrrhhsohhnqdhlvghnohhvohesshhquhgvsggsrdgtrgdpnhgs
     pghrtghpthhtohepiedpmhhouggvpehsmhhtphhouhhtpdhrtghpthhtohepsggvnhhjrg
     hmihhnrdhphhhilhhiphegleehsehgmhgrihhlrdgtohhmpdhrtghpthhtohepuggvrhgv
@@ -64,14 +64,14 @@ X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeefgedrtddtgdeitdejlecutefuodetgg
     uhigrdhinhhtvghlrdgtohhmpdhrtghpthhtoheplhhinhhugidqkhgvrhhnvghlsehvgh
     gvrhdrkhgvrhhnvghlrdhorhhgpdhrtghpthhtohepphhlrghtfhhorhhmqdgurhhivhgv
     rhdqgiekieesvhhgvghrrdhkvghrnhgvlhdrohhrgh
-X-ME-Proxy: <xmx:E_xKadw7sUtwV9Ak-j1_Y8Uzt24hqkOS8wz0F-bmR37ogZ9DhbAPOQ>
-    <xmx:E_xKafgo3GuF7V6g7LVznkEmjt1T56ujKLznwXhblrWmpQHkPWzPgw>
-    <xmx:E_xKaZkdcHkwiVNu2mwWQD4Ysu-qnxR0GXiCDKlAQ8s8RcfRy29-Gw>
-    <xmx:E_xKaVh-D_ULLmstINSvrFf1AhPdYGmX1l88Gm6TVIsKmL1f7Qvs5Q>
-    <xmx:E_xKaRkKxLT1-fRj6F_qTq7Bz0bxtIRZkp_bzuWqGRor2XPo1Eyc9Nfy>
+X-ME-Proxy: <xmx:7vxKaelXbfnbZ-nCQ-uk9H6xCHIOvbu0z2qvALa-XKCDSVvlnWBShQ>
+    <xmx:7vxKaYHII4g61U7m8GZ-Fz-L2NQzW5DBqJWnHBJAett6PSS-oHsGaA>
+    <xmx:7vxKae4gkL2CETYhBNd8rESEWkpZVfmMhC8gNcJ_qiSalSHQOnyvNg>
+    <xmx:7vxKaYlHC4I3uAJ7CPtv5QqYBf-Y5IpFZAQOzwZdjaDnYwH4VmLHug>
+    <xmx:7vxKaZJETo4AH2wPNdwZzlJzIsRzPT_ZUpQMEAvxRlUFrkR_p_AvnX0M>
 Feedback-ID: ibe194615:Fastmail
 Received: by mailuser.phl.internal (Postfix, from userid 501)
-	id 162C92CE0072; Tue, 23 Dec 2025 15:31:15 -0500 (EST)
+	id 577082CE0072; Tue, 23 Dec 2025 15:34:54 -0500 (EST)
 X-Mailer: MessagingEngine.com Webmail Interface
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
@@ -79,8 +79,8 @@ List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-ThreadId: Aq84NCJrzX0R
-Date: Tue, 23 Dec 2025 15:30:54 -0500
+X-ThreadId: AgG1KmZ3azLF
+Date: Tue, 23 Dec 2025 15:34:34 -0500
 From: "Mark Pearson" <mpearson-lenovo@squebb.ca>
 To: "Benjamin Philip" <benjamin.philip495@gmail.com>,
  "platform-driver-x86@vger.kernel.org" <platform-driver-x86@vger.kernel.org>,
@@ -88,147 +88,142 @@ To: "Benjamin Philip" <benjamin.philip495@gmail.com>,
 Cc: "Derek J . Clark" <derekjohn.clark@gmail.com>,
  "Hans de Goede" <hansg@kernel.org>,
  =?UTF-8?Q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
-Message-Id: <14753762-a3b5-454e-88bb-14bf851de9bb@app.fastmail.com>
+Message-Id: <572f5363-c23b-435f-a36b-7b708704a3c1@app.fastmail.com>
 In-Reply-To: 
- <CAMEXYWcuZXx285npcPB3q0Umit2bAwmFzo1sBPLYnyhoUT0EnQ@mail.gmail.com>
+ <CAMEXYWf_m8PL-ZGAv_1ufLp_1ryQK15ziaO90_OxmMV4VkpTPQ@mail.gmail.com>
 References: 
  <CAMEXYWcY-7Kn8V1EwZ=fUPFWDwnAHEuferY9Ap0zO6xfmXx4JQ@mail.gmail.com>
  <20251223191932.946794-1-benjamin.philip495@gmail.com>
- <CAMEXYWcuZXx285npcPB3q0Umit2bAwmFzo1sBPLYnyhoUT0EnQ@mail.gmail.com>
-Subject: Re: [PATCH 3/5] platform/x86: think-lmi: Clean up misc checks
+ <CAMEXYWf_m8PL-ZGAv_1ufLp_1ryQK15ziaO90_OxmMV4VkpTPQ@mail.gmail.com>
+Subject: Re: [PATCH 4/5] platform/x86: think-lmi: fix column limit overflow
 Content-Type: text/plain
 Content-Transfer-Encoding: 7bit
 
 On Tue, Dec 23, 2025, at 2:24 PM, Benjamin Philip wrote:
-> This commit cleans up the following checks:
+> This commit handles some column limit overflows (that occur after fixing
+> their alignment), i.e. the following check:
 >
-> - CHECK: braces {} should be used on all arms of this statement
-> - CHECK: Please use a blank line after function/struct/union/enum
->   declarations
-> - CHECK: Prefer kzalloc(sizeof(*new_pwd)...) over
->   kzalloc(sizeof(struct tlmi_pwd_setting)...)
-> - CHECK: spaces preferred around that '/' (ctx:VxV)
-> - CHECK: Unbalanced braces around else statement
+> CHECK: line length of ... exceeds 100 columns
+>
+> by defining a constant opt, and replacing the offending
+> expression with opt.
 >
 > Signed-off-by: Benjamin Philip <benjamin.philip495@gmail.com>
 > ---
->  drivers/platform/x86/lenovo/think-lmi.c | 32 +++++++++++++------------
->  1 file changed, 17 insertions(+), 15 deletions(-)
+>  drivers/platform/x86/lenovo/think-lmi.c | 31 +++++++++++++++----------
+>  1 file changed, 19 insertions(+), 12 deletions(-)
 >
 > diff --git a/drivers/platform/x86/lenovo/think-lmi.c
 > b/drivers/platform/x86/lenovo/think-lmi.c
-> index 1fac8986d077..1ada4d800383 100644
+> index 1ada4d800383..07ba0d84720a 100644
 > --- a/drivers/platform/x86/lenovo/think-lmi.c
 > +++ b/drivers/platform/x86/lenovo/think-lmi.c
-> @@ -223,14 +223,16 @@ static const struct tlmi_err_codes tlmi_errs[] = {
->  	{"Set Certificate operation failed with status:Certificate too
-> large.", -EFBIG},
->  };
->
-> -static const char * const encoding_options[] = {
-> +static const char *const encoding_options[] = {
->  	[TLMI_ENCODING_ASCII] = "ascii",
->  	[TLMI_ENCODING_SCANCODE] = "scancode",
->  };
-> -static const char * const level_options[] = {
-> +
-> +static const char *const level_options[] = {
->  	[TLMI_LEVEL_USER] = "user",
->  	[TLMI_LEVEL_MASTER] = "master",
->  };
-> +
->  static struct think_lmi tlmi_priv;
->  static DEFINE_MUTEX(tlmi_mutex);
->
-> @@ -249,7 +251,7 @@ static int tlmi_errstr_to_err(const char *errstr)
->  {
->  	int i;
->
-> -	for (i = 0; i < sizeof(tlmi_errs)/sizeof(struct tlmi_err_codes); i++) {
-> +	for (i = 0; i < sizeof(tlmi_errs) / sizeof(struct tlmi_err_codes); i++) {
->  		if (!strcmp(tlmi_errs[i].err_str, errstr))
->  			return tlmi_errs[i].err_code;
->  	}
-> @@ -570,19 +572,19 @@ static ssize_t mechanism_show(struct kobject
-> *kobj, struct kobj_attribute *attr,
->  		return sysfs_emit(buf, "certificate\n");
->  	return sysfs_emit(buf, "password\n");
->  }
-> +
->  static struct kobj_attribute auth_mechanism = __ATTR_RO(mechanism);
->
->  static ssize_t encoding_show(struct kobject *kobj, struct kobj_attribute *attr,
-> -			 char *buf)
-> +			     char *buf)
->  {
->  	struct tlmi_pwd_setting *setting = to_tlmi_pwd_setting(kobj);
->
->  	return sysfs_emit(buf, "%s\n", encoding_options[setting->encoding]);
->  }
->
-> -static ssize_t encoding_store(struct kobject *kobj,
-> -				  struct kobj_attribute *attr,
-> -				  const char *buf, size_t count)
-> +static ssize_t encoding_store(struct kobject *kobj, struct
-> kobj_attribute *attr,
-> +			      const char *buf, size_t count)
->  {
->  	struct tlmi_pwd_setting *setting = to_tlmi_pwd_setting(kobj);
->  	int i;
-> @@ -632,19 +634,19 @@ static ssize_t role_show(struct kobject *kobj,
+> @@ -1083,12 +1083,13 @@ static ssize_t type_show(struct kobject *kobj,
 > struct kobj_attribute *attr,
->
->  	return sysfs_emit(buf, "%s\n", setting->role);
->  }
-> +
->  static struct kobj_attribute auth_role = __ATTR_RO(role);
->
->  static ssize_t index_show(struct kobject *kobj, struct kobj_attribute *attr,
-> -			 char *buf)
-> +			  char *buf)
->  {
->  	struct tlmi_pwd_setting *setting = to_tlmi_pwd_setting(kobj);
->
->  	return sysfs_emit(buf, "%d\n", setting->index);
 >  }
 >
-> -static ssize_t index_store(struct kobject *kobj,
-> -				  struct kobj_attribute *attr,
-> -				  const char *buf, size_t count)
-> +static ssize_t index_store(struct kobject *kobj, struct kobj_attribute *attr,
-> +			   const char *buf, size_t count)
+>  static ssize_t current_value_store(struct kobject *kobj,
+> -		struct kobj_attribute *attr,
+> -		const char *buf, size_t count)
+> +				   struct kobj_attribute *attr, const char *buf,
+> +				   size_t count)
 >  {
->  	struct tlmi_pwd_setting *setting = to_tlmi_pwd_setting(kobj);
->  	int err, val;
-> @@ -1047,9 +1049,9 @@ static ssize_t current_value_show(struct kobject
-> *kobj, struct kobj_attribute *a
+>  	struct tlmi_attr_setting *setting = to_tlmi_attr_setting(kobj);
+>  	char *set_str = NULL, *new_setting = NULL;
+>  	char *auth_str = NULL;
+> +	const char *opt;
+>  	int ret;
 >
->  	/* validate and split from `item,value` -> `value` */
->  	value = strpbrk(item, ",");
-> -	if (!value || value == item || !strlen(value + 1))
-> +	if (!value || value == item || !strlen(value + 1)) {
->  		ret = -EINVAL;
-> -	else {
-> +	} else {
->  		/* On Workstations remove the Options part after the value */
->  		strreplace(value, ';', '\0');
->  		ret = sysfs_emit(buf, "%s\n", value + 1);
-> @@ -1585,11 +1587,11 @@ static int tlmi_sysfs_init(void)
->
->  /* ---- Base Driver -------------------------------------------------------- */
->  static struct tlmi_pwd_setting *tlmi_create_auth(const char *pwd_type,
-> -			    const char *pwd_role)
-> +						 const char *pwd_role)
+>  	if (!tlmi_priv.can_set_bios_settings)
+> @@ -1163,10 +1164,11 @@ static ssize_t current_value_store(struct kobject *kobj,
+>  			ret = tlmi_save_bios_settings("");
+>  	} else { /* old non-opcode based authentication method (deprecated) */
+>  		if (tlmi_priv.pwd_admin->pwd_enabled && tlmi_priv.pwd_admin->password[0]) {
+> +			opt = encoding_options[tlmi_priv.pwd_admin->encoding];
+>  			auth_str = kasprintf(GFP_KERNEL, "%s,%s,%s;",
+> -					tlmi_priv.pwd_admin->password,
+> -					encoding_options[tlmi_priv.pwd_admin->encoding],
+> -					tlmi_priv.pwd_admin->kbdlang);
+> +					     tlmi_priv.pwd_admin->password,
+> +					     opt,
+> +					     tlmi_priv.pwd_admin->kbdlang);
+>  			if (!auth_str) {
+>  				ret = -ENOMEM;
+>  				goto out;
+> @@ -1299,6 +1301,7 @@ static ssize_t save_settings_store(struct
+> kobject *kobj, struct kobj_attribute *
+>  				   const char *buf, size_t count)
 >  {
->  	struct tlmi_pwd_setting *new_pwd;
+>  	char *auth_str = NULL;
+> +	const char *opt;
+>  	int ret = 0;
+>  	int cmd;
 >
-> -	new_pwd = kzalloc(sizeof(struct tlmi_pwd_setting), GFP_KERNEL);
-> +	new_pwd = kzalloc(sizeof(*new_pwd), GFP_KERNEL);
->  	if (!new_pwd)
->  		return NULL;
+> @@ -1347,9 +1350,10 @@ static ssize_t save_settings_store(struct
+> kobject *kobj, struct kobj_attribute *
+>  			ret = tlmi_save_bios_settings("");
+>  		} else { /* old non-opcode based authentication method (deprecated) */
+>  			if (tlmi_priv.pwd_admin->pwd_enabled && tlmi_priv.pwd_admin->password[0]) {
+> +				opt = encoding_options[tlmi_priv.pwd_admin->encoding];
+>  				auth_str = kasprintf(GFP_KERNEL, "%s,%s,%s;",
+>  						     tlmi_priv.pwd_admin->password,
+> -						     encoding_options[tlmi_priv.pwd_admin->encoding],
+> +						     opt,
+>  						     tlmi_priv.pwd_admin->kbdlang);
+>  				if (!auth_str) {
+>  					ret = -ENOMEM;
+> @@ -1381,11 +1385,13 @@ static ssize_t save_settings_store(struct
+> kobject *kobj, struct kobj_attribute *
+>  static struct kobj_attribute save_settings = __ATTR_RW(save_settings);
 >
+>  /* ---- Debug 
+> interface---------------------------------------------------------
+> */
+> -static ssize_t debug_cmd_store(struct kobject *kobj, struct
+> kobj_attribute *attr,
+> -				const char *buf, size_t count)
+> +static ssize_t debug_cmd_store(struct kobject *kobj,
+> +			       struct kobj_attribute *attr, const char *buf,
+> +			       size_t count)
+>  {
+>  	char *set_str = NULL, *new_setting = NULL;
+>  	char *auth_str = NULL;
+> +	const char *opt;
+>  	int ret;
+>
+>  	if (!tlmi_priv.can_debug_cmd)
+> @@ -1397,10 +1403,11 @@ static ssize_t debug_cmd_store(struct kobject
+> *kobj, struct kobj_attribute *attr
+>  		return -ENOMEM;
+>
+>  	if (tlmi_priv.pwd_admin->pwd_enabled && tlmi_priv.pwd_admin->password[0]) {
+> +		opt = encoding_options[tlmi_priv.pwd_admin->encoding];
+>  		auth_str = kasprintf(GFP_KERNEL, "%s,%s,%s;",
+> -				tlmi_priv.pwd_admin->password,
+> -				encoding_options[tlmi_priv.pwd_admin->encoding],
+> -				tlmi_priv.pwd_admin->kbdlang);
+> +				     tlmi_priv.pwd_admin->password,
+> +				     opt,
+> +				     tlmi_priv.pwd_admin->kbdlang);
+>  		if (!auth_str) {
+>  			ret = -ENOMEM;
+>  			goto out;
+> @@ -1775,7 +1782,7 @@ static int tlmi_analyze(struct wmi_device *wdev)
+>  						ffs(tlmi_priv.pwdcfg.ext.hdd_user_password) - 1;
+>  			}
+>  			if (tlmi_priv.pwdcfg.ext.nvme_user_password ||
+> -					tlmi_priv.pwdcfg.ext.nvme_master_password) {
+> +			    tlmi_priv.pwdcfg.ext.nvme_master_password) {
+>  				tlmi_priv.pwd_nvme->pwd_enabled = true;
+>  				if (tlmi_priv.pwdcfg.ext.nvme_master_password)
+>  					tlmi_priv.pwd_nvme->index =
 > -- 
 > 2.52.0
 
-Reviewed-by: Mark Pearson <mpearson-lenovo@squebb.ca>
+I'll defer to the pdx86 reviewers for this set of changes.
+
+This seems to me to make things more complicated than needed, purely to address a 100 column limit. I personally don't like the change.
+
+Nothing wrong with the code, and if more experienced maintainers prefer it, I'm happy to defer to them. Otherwise it seems to me noise for the sake of noise I'm afraid
+
 Mark
