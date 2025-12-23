@@ -1,59 +1,59 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.19])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 915BD335550;
-	Tue, 23 Dec 2025 12:15:00 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.19
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A74F32D77F7;
+	Tue, 23 Dec 2025 12:29:29 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1766492103; cv=none; b=L3bhfdEOjx+IP80/Kb5tqBMM/4yM702Cwbr39gibmQDOxGEBYi9N/CGeI1UIwlNS8D4tQPniecTyjdbHTmUwkekjDACNCu4p74XeftYAOBuew6Z1mLGYjhETZGKFIvyaU0tWwiEQxhkqG+FJnyC0/bTrZ1aFkINB7Hw1SAXXPhk=
+	t=1766492971; cv=none; b=KktIkpgR3MQATOF4+4vNBB66c0EfptGwdTOPFUkvtIFYXgoCpy07anfxYJ/CNVUG2e1o49QORilzmwU+YcNnWKgqis7rOdvKiP7k3QwW2HcILxQq7i1e/vRmT9Q93HliEEA1RCGWz+0qfNktWMb1nJaQAqhR9GyORSt+L14N3q8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1766492103; c=relaxed/simple;
-	bh=L+08YRMeX1yIw69iq81eywxqmxk/cMV4uDhNi4qBYkM=;
+	s=arc-20240116; t=1766492971; c=relaxed/simple;
+	bh=WjswL0tpeFyblrLVXPMJbmSpvGR6aiDnS3KaYJwgQAc=;
 	h=From:Date:To:cc:Subject:In-Reply-To:Message-ID:References:
-	 MIME-Version:Content-Type; b=NudUmwtTE91E+PjrItQ3oGmqOOMbQ3JkGt7AY3L42ogRuNq1O8zqJ51nUtR1lFjTlMxFaxyLIn7C7iqZ0D2gHPcuNuy1qnAJ4PCUXjhWM3mE/dQ1LJoSobZeXIySK2TR+au5CCjuKo+81Jb6rLH2iNPy2hRNoW5UtxPU3uHMFRY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=pass smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=m1wnvS5V; arc=none smtp.client-ip=192.198.163.19
+	 MIME-Version:Content-Type; b=CFUtLR/mkdJkUPcWr940ov1NkAO48Q/AaIq5doJHrE7VR1FVaR9M14I/F/VpjvRSvEf8vDUJDhdWP2gEI15jxgFd8FF+TEmXDDqyy590zOqmoA2KJgY4LbN1hR5d8N512ljvzTfuLxSYJ/tzSzOP8iFUo+QroCX+65bx3pBqRmw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=pass smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=JsahPuzA; arc=none smtp.client-ip=198.175.65.18
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="m1wnvS5V"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="JsahPuzA"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1766492100; x=1798028100;
+  t=1766492969; x=1798028969;
   h=from:date:to:cc:subject:in-reply-to:message-id:
    references:mime-version;
-  bh=L+08YRMeX1yIw69iq81eywxqmxk/cMV4uDhNi4qBYkM=;
-  b=m1wnvS5VtDTmYMrmVaU3SJ3YQ/TQsF8Ilo9ih3iEA9VFamPGsqSWY982
-   TMcsgKO6IRUVHvtj5nMloUO6fs0SzwkUb/5QQyF38ssG/+xtvY9lTdnPB
-   g99Q4/7pht4WrCBLJYKKJsm9RsWedK0LuXjoXxC2OTYyb4K/Ciq5tHbYS
-   Q6RZWZoIekP4dkJFOWhzdnQLkI38XLS1iFeeHu4M/4NiJWEj+Y07QSBo1
-   ytVcAtfBrYJ4sd/UFFlerwBBclhO/U791bkarzzzamkXPLOSWWIjlfEP5
-   wl5MzkVHI3G5bmLCqU4KhUdYMqZAuxWbd0kkSKjwfM1XncpTOsfa2nWgu
+  bh=WjswL0tpeFyblrLVXPMJbmSpvGR6aiDnS3KaYJwgQAc=;
+  b=JsahPuzA8CYmrpNSoLZc3Racveax7lKJ890+3LGhAfZKxNsaMOIeUIVi
+   st/ZMOLVfZovsfaWvYDfMP0IUzEFR/JYkCkQNA+9c+XD6ea6uiezpWh1x
+   CUR3rjN7ekEFPvorxcioFk4sjiyq4guBOe8DBSJ3r5S9ysOHK8+0NR5ik
+   ixyUdtVlSdHxfuJc/9d1kbqR546NyTep2s9hIBr1OOcJgVzMFvqqMoKqr
+   jUNgxJVNSwWyk57z0NroB0j5R2SFyjig0l7SsuTP8ZdbrVqiO+JXkrjie
+   R/rgjRq3aG/yKMYbaF9X9qnpnUamp4644AjId35arpAu3jcvxVRUnKn73
    g==;
-X-CSE-ConnectionGUID: cCuuP6oPSSWVuxfqnNWxsA==
-X-CSE-MsgGUID: F/NoHE3PSQWvFTBsqS9ELQ==
-X-IronPort-AV: E=McAfee;i="6800,10657,11650"; a="67334652"
+X-CSE-ConnectionGUID: NvSHUAwFQWyNpWhSmEe2Rg==
+X-CSE-MsgGUID: aWg66/3NTRCcE/7Gp58T3w==
+X-IronPort-AV: E=McAfee;i="6800,10657,11651"; a="68385271"
 X-IronPort-AV: E=Sophos;i="6.21,170,1763452800"; 
-   d="scan'208";a="67334652"
-Received: from orviesa001.jf.intel.com ([10.64.159.141])
-  by fmvoesa113.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 23 Dec 2025 04:14:59 -0800
-X-CSE-ConnectionGUID: yHtsWi2lQ6O1Hp4sZ5+vPw==
-X-CSE-MsgGUID: NUf7zR4pQ+SNmHtgRhrguA==
+   d="scan'208";a="68385271"
+Received: from fmviesa006.fm.intel.com ([10.60.135.146])
+  by orvoesa110.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 23 Dec 2025 04:29:29 -0800
+X-CSE-ConnectionGUID: AwluVt9OS8atyWr2uxdYaQ==
+X-CSE-MsgGUID: uGqulKFHRUKIE0R9kBZAXQ==
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="6.21,170,1763452800"; 
-   d="scan'208";a="237181182"
+   d="scan'208";a="199684292"
 Received: from ijarvine-mobl1.ger.corp.intel.com (HELO localhost) ([10.245.244.48])
-  by smtpauth.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 23 Dec 2025 04:14:57 -0800
+  by fmviesa006-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 23 Dec 2025 04:29:26 -0800
 From: =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
-Date: Tue, 23 Dec 2025 14:14:53 +0200 (EET)
-To: Nitin Joshi <nitjoshi@gmail.com>
-cc: Hans de Goede <hansg@kernel.org>, platform-driver-x86@vger.kernel.org, 
-    LKML <linux-kernel@vger.kernel.org>, njoshi1@lenovo.com, 
-    Mark Pearson <mpearson-lenovo@squebb.ca>
-Subject: Re: [PATCH v5 1/2] platform/x86: thinkpad_acpi: Add support to detect
- hardware damage detection capability.
-In-Reply-To: <20251217065523.48399-1-nitjoshi@gmail.com>
-Message-ID: <5ba8fe79-ff4f-2dc1-f80d-8e3a32a29efa@linux.intel.com>
-References: <20251217065523.48399-1-nitjoshi@gmail.com>
+Date: Tue, 23 Dec 2025 14:29:23 +0200 (EET)
+To: Xi Pardee <xi.pardee@linux.intel.com>
+cc: irenic.rajneesh@gmail.com, david.e.box@linux.intel.com, 
+    hdegoede@redhat.com, platform-driver-x86@vger.kernel.org, 
+    LKML <linux-kernel@vger.kernel.org>, linux-pm@vger.kernel.org
+Subject: Re: [PATCH 1/3] platform/x86/intel/pmc: Change LPM mode fields to
+ u8
+In-Reply-To: <20251217002343.2289577-2-xi.pardee@linux.intel.com>
+Message-ID: <0de42147-16c3-e610-caae-e7aba5406782@linux.intel.com>
+References: <20251217002343.2289577-1-xi.pardee@linux.intel.com> <20251217002343.2289577-2-xi.pardee@linux.intel.com>
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
@@ -62,206 +62,112 @@ List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=US-ASCII
 
-On Wed, 17 Dec 2025, Nitin Joshi wrote:
+On Tue, 16 Dec 2025, Xi Pardee wrote:
 
-> Thinkpads are adding the ability to detect and report hardware damage
-> status. Add new sysfs interface to identify whether hardware damage
-> is detected or not.
+> Change the datatypes pf num_lpm_modes and lpm_en_modes[] from int
+> to u8. The u8 type is more appropriate and improves the readability
+> and maintainability of the code.
 > 
-> Initial support is available for the USB-C replaceable connector.
-> 
-> Reviewed-by: Mark Pearson <mpearson-lenovo@squebb.ca>
-> Signed-off-by: Nitin Joshi<nitjoshi@gmail.com>
+> Signed-off-by: Xi Pardee <xi.pardee@linux.intel.com>
 > ---
-> Changes since v1:
-> -Split patch between hwdd_status and hwdd_detail
-> -Incorporated review comments
-> Changes since v2:
-> -Control visibility of the sysfs attribute based upon ucdd_supported
-> Changes since v3:
-> -Fix documentation build warning
-> Changes since v4:
-> -Removed extra line
-> ---
->  .../admin-guide/laptops/thinkpad-acpi.rst     |  21 ++++
->  drivers/platform/x86/lenovo/thinkpad_acpi.c   | 105 ++++++++++++++++++
->  2 files changed, 126 insertions(+)
+>  drivers/platform/x86/intel/pmc/core.c | 18 ++++++++++--------
+>  drivers/platform/x86/intel/pmc/core.h |  4 ++--
+>  2 files changed, 12 insertions(+), 10 deletions(-)
 > 
-> diff --git a/Documentation/admin-guide/laptops/thinkpad-acpi.rst b/Documentation/admin-guide/laptops/thinkpad-acpi.rst
-> index 4ab0fef7d440..2db05f718b11 100644
-> --- a/Documentation/admin-guide/laptops/thinkpad-acpi.rst
-> +++ b/Documentation/admin-guide/laptops/thinkpad-acpi.rst
-> @@ -54,6 +54,7 @@ detailed description):
->  	- Setting keyboard language
->  	- WWAN Antenna type
->  	- Auxmac
-> +	- Hardware damage detection capability
+> diff --git a/drivers/platform/x86/intel/pmc/core.c b/drivers/platform/x86/intel/pmc/core.c
+> index 7d7ae8a40b0ec..3e916228e7ed2 100644
+> --- a/drivers/platform/x86/intel/pmc/core.c
+> +++ b/drivers/platform/x86/intel/pmc/core.c
+> @@ -779,7 +779,7 @@ static int pmc_core_substate_res_show(struct seq_file *s, void *unused)
+>  	struct pmc *pmc = pmcdev->pmcs[PMC_IDX_MAIN];
+>  	const int lpm_adj_x2 = pmc->map->lpm_res_counter_step_x2;
+>  	u32 offset = pmc->map->lpm_residency_offset;
+> -	int mode;
+> +	u8 mode;
 >  
->  A compatibility table by model and feature is maintained on the web
->  site, http://ibm-acpi.sf.net/. I appreciate any success or failure
-> @@ -1576,6 +1577,26 @@ percentage level, above which charging will stop.
->  The exact semantics of the attributes may be found in
->  Documentation/ABI/testing/sysfs-class-power.
+>  	seq_printf(s, "%-10s %-15s\n", "Substate", "Residency");
 >  
-> +Hardware damage detection capability
-> +------------------------------------
-> +
-> +sysfs attributes: hwdd_status
-> +
-> +Thinkpads are adding the ability to detect and report hardware damage.
-> +Add new sysfs interface to identify the damaged device status.
-> +Initial support is available for the USB-C replaceable connector.
-> +
-> +The command to check device damaged status is::
-> +
-> +        cat /sys/devices/platform/thinkpad_acpi/hwdd_status
-> +
-> +This value displays status of device damaged
-> +- 0 = Not Damaged
-> +- 1 = Damaged
-> +
-> +The property is read-only. If feature is not supported then sysfs
-> +attribute is not created.
-> +
->  Multiple Commands, Module Parameters
->  ------------------------------------
+> @@ -838,7 +838,7 @@ static void pmc_core_substate_req_header_show(struct seq_file *s, int pmc_index,
+>  					      enum header_type type)
+>  {
+>  	struct pmc_dev *pmcdev = s->private;
+> -	int mode;
+> +	u8 mode;
 >  
-> diff --git a/drivers/platform/x86/lenovo/thinkpad_acpi.c b/drivers/platform/x86/lenovo/thinkpad_acpi.c
-> index cc19fe520ea9..cb1f6dae9334 100644
-> --- a/drivers/platform/x86/lenovo/thinkpad_acpi.c
-> +++ b/drivers/platform/x86/lenovo/thinkpad_acpi.c
-> @@ -11080,6 +11080,106 @@ static const struct attribute_group auxmac_attr_group = {
->  	.attrs = auxmac_attributes,
->  };
+>  	seq_printf(s, "%40s |", "Element");
+>  	pmc_for_each_mode(mode, pmcdev)
+> @@ -880,7 +880,7 @@ static int pmc_core_substate_blk_req_show(struct seq_file *s, void *unused)
+>  			const struct pmc_bit_map *map;
 >  
-> +/*************************************************************************
-> + * HWDD subdriver, for the Lenovo Hardware Damage Detection feature.
-> + */
-> +
-> +#define HWDD_GET_DMG_USBC	0x80000001
-> +#define HWDD_GET_CAP		0
-> +#define HWDD_NOT_SUPPORTED	BIT(31)
-> +#define HWDD_SUPPORT_USBC	BIT(0)
-> +
-> +#define PORT_STATUS		GENMASK(7, 4)
-> +#define NUM_PORTS		4
-> +
-> +static bool hwdd_support_available;
-> +static bool ucdd_supported;
-> +
-> +static int hwdd_command(int command, int *output)
-> +{
-> +	acpi_handle hwdd_handle;
-> +
-> +	if (ACPI_FAILURE(acpi_get_handle(hkey_handle, "HWDD", &hwdd_handle)))
-> +		return -ENODEV;
-> +
-> +	if (!acpi_evalf(hwdd_handle, output, NULL, "dd", command))
-> +		return -EIO;
-> +
-> +	return 0;
-> +}
-> +
-> +/* sysfs type-c damage detection capability */
-> +static ssize_t hwdd_status_show(struct device *dev,
-> +				struct device_attribute *attr,
-> +				char *buf)
-> +{
-> +	unsigned int damage_status, port_status;
-> +	int err, i;
-> +
-> +	if (ucdd_supported) {
-> +		/* Get USB TYPE-C damage status */
-> +		err = hwdd_command(HWDD_GET_DMG_USBC, &damage_status);
-> +		if (err)
-> +			return err;
-> +
-> +		port_status = FIELD_GET(PORT_STATUS, damage_status);
-> +		for (i = 0; i < NUM_PORTS; i++) {
-> +			if (!(damage_status & BIT(i)))
-> +				continue;
-> +			if (port_status & BIT(i))
-> +				return sysfs_emit(buf, "1\n");
-> +		}
-> +	} else
-> +		return -ENODEV;
+>  			for (map = maps[r_idx]; map->name; map++) {
+> -				int mode;
+> +				u8 mode;
+>  
+>  				if (!map->blk)
+>  					continue;
+> @@ -953,7 +953,8 @@ static int pmc_core_substate_req_regs_show(struct seq_file *s, void *unused)
+>  			u32 lpm_status;
+>  			u32 lpm_status_live;
+>  			const struct pmc_bit_map *map;
+> -			int mode, i, len = 32;
+> +			int i, len = 32;
+> +			u8 mode;
+>  
+>  			/*
+>  			 * Capture the requirements and create a mask so that we only
+> @@ -1065,7 +1066,7 @@ static int pmc_core_lpm_latch_mode_show(struct seq_file *s, void *unused)
+>  	struct pmc *pmc = pmcdev->pmcs[PMC_IDX_MAIN];
+>  	bool c10;
+>  	u32 reg;
+> -	int mode;
+> +	u8 mode;
+>  
+>  	reg = pmc_core_reg_read(pmc, pmc->map->lpm_sts_latch_en_offset);
+>  	if (reg & LPM_STS_LATCH_MODE) {
+> @@ -1097,8 +1098,9 @@ static ssize_t pmc_core_lpm_latch_mode_write(struct file *file,
+>  	struct pmc *pmc = pmcdev->pmcs[PMC_IDX_MAIN];
+>  	bool clear = false, c10 = false;
+>  	unsigned char buf[8];
+> -	int m, mode;
+> +	int mode;
+>  	u32 reg;
+> +	u8 m;
+>  
+>  	if (count > sizeof(buf) - 1)
+>  		return -EINVAL;
+> @@ -1490,8 +1492,8 @@ int pmc_core_pmt_get_lpm_req(struct pmc_dev *pmcdev, struct pmc *pmc, struct tel
+>  {
+>  	const u8 *lpm_indices;
+>  	int num_maps, mode_offset = 0;
+> -	int ret, mode;
+> -	int lpm_size;
+> +	int ret, lpm_size;
+> +	u8 mode;
+>  
+>  	lpm_indices = pmc->map->lpm_reg_index;
+>  	num_maps = pmc->map->lpm_num_maps;
 
-The usual approach is to first check not supported + return errno, then 
-you don't even need "else". The same comment to the other patch.
+Why is "mode" in pmc_core_get_low_power_modes() left untouched?
+
+(Unrelated to the patch, it seems to contain a double empty line as well.)
+
+> diff --git a/drivers/platform/x86/intel/pmc/core.h b/drivers/platform/x86/intel/pmc/core.h
+> index 272fb4f57f346..ead2f33ed3ed5 100644
+> --- a/drivers/platform/x86/intel/pmc/core.h
+> +++ b/drivers/platform/x86/intel/pmc/core.h
+> @@ -462,8 +462,8 @@ struct pmc_dev {
+>  	struct mutex lock; /* generic mutex lock for PMC Core */
+>  
+>  	u64 s0ix_counter;
+> -	int num_lpm_modes;
+> -	int lpm_en_modes[LPM_MAX_NUM_MODES];
+> +	u8 num_lpm_modes;
+> +	u8 lpm_en_modes[LPM_MAX_NUM_MODES];
+>  	void (*suspend)(struct pmc_dev *pmcdev);
+>  	int (*resume)(struct pmc_dev *pmcdev);
+>  
+> 
 
 -- 
  i.
 
-
-> +
-> +	return sysfs_emit(buf, "0\n");
-> +}
-> +static DEVICE_ATTR_RO(hwdd_status);
-> +
-> +static struct attribute *hwdd_attributes[] = {
-> +	&dev_attr_hwdd_status.attr,
-> +	NULL
-> +};
-> +
-> +static umode_t hwdd_attr_is_visible(struct kobject *kobj,
-> +				struct attribute *attr, int n)
-> +{
-> +	return hwdd_support_available ? attr->mode : 0;
-> +}
-> +
-> +static const struct attribute_group hwdd_attr_group = {
-> +	.is_visible = hwdd_attr_is_visible,
-> +	.attrs = hwdd_attributes,
-> +};
-> +
-> +static int tpacpi_hwdd_init(struct ibm_init_struct *iibm)
-> +{
-> +	int err, output;
-> +
-> +	/* Below command checks the HWDD damage capability */
-> +	err = hwdd_command(HWDD_GET_CAP, &output);
-> +	if (err)
-> +		return err;
-> +
-> +	if (!(output & HWDD_NOT_SUPPORTED))
-> +		return -ENODEV;
-> +
-> +	hwdd_support_available = true;
-> +
-> +	/*
-> +	 * BIT(0) is assigned to check capability of damage detection is
-> +	 * supported for USB Type-C port or not.
-> +	 */
-> +	if (output & HWDD_SUPPORT_USBC)
-> +		ucdd_supported = true;
-> +
-> +	return err;
-> +}
-> +
-> +static struct ibm_struct hwdd_driver_data = {
-> +	.name = "hwdd",
-> +};
-> +
->  /* --------------------------------------------------------------------- */
->  
->  static struct attribute *tpacpi_driver_attributes[] = {
-> @@ -11139,6 +11239,7 @@ static const struct attribute_group *tpacpi_groups[] = {
->  	&kbdlang_attr_group,
->  	&dprc_attr_group,
->  	&auxmac_attr_group,
-> +	&hwdd_attr_group,
->  	NULL,
->  };
->  
-> @@ -11752,6 +11853,10 @@ static struct ibm_init_struct ibms_init[] __initdata = {
->  		.init = auxmac_init,
->  		.data = &auxmac_data,
->  	},
-> +	{
-> +		.init = tpacpi_hwdd_init,
-> +		.data = &hwdd_driver_data,
-> +	},
->  };
->  
->  static int __init set_ibm_param(const char *val, const struct kernel_param *kp)
-> 
