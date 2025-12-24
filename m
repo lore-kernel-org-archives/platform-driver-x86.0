@@ -1,77 +1,57 @@
-Received: from mail-pf1-f181.google.com (mail-pf1-f181.google.com [209.85.210.181])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mx0a-00069f02.pphosted.com (mx0a-00069f02.pphosted.com [205.220.165.32])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D3E3833F390
-	for <platform-driver-x86@vger.kernel.org>; Wed, 24 Dec 2025 09:50:33 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.181
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7D56D2AE68
+	for <platform-driver-x86@vger.kernel.org>; Wed, 24 Dec 2025 09:52:09 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.165.32
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1766569835; cv=none; b=r8pgtDS+y199yICJaNrErISQmqQZXIghjaQEPJXsmN1gXL9JyLwciSfEAIeJihICU6ylhyXzFQUNxj6yLrE1AHlJOsOBWCPdPEMkjUwN236EN+zkje8ey3y3J4ful0RTrO7nOHZMO2EmI+15WIkexuKV75OTyonRPxilW8I4+dY=
+	t=1766569931; cv=none; b=NeAsbwKO4YnZVvl3zPbH3nMNj4twGM0bPLvTRobR3dt3NODL6MGf3SMtRyhrhpJdDxvkvHBT67yOBwE/FePUNTpR0ijGvOxA0NuF0s0sim7gliMYd+TElUALDUunbGdQlLx30SMTvck3wEYkFPC+qjqXfPy6X5DOK8VTKt2FvHE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1766569835; c=relaxed/simple;
-	bh=V5EGk4BGjnS/4/eleHFD550gqcXi7T6uzPhHKGSXLaY=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=XKXKItAOjDs8AXc/8ATOdNEcnVcYUdwcsCfpK3OGr1W6NegbqbBBe7iv/TOTixrJZJEbDRtzXc1uL4kxnVQ7HBlJhkBNu0UNflmcM66XKRY0n+lMcX1Dyo/fkgVhZQfcH65c/9viRLRpjyyuqp9fs2Wp68B3uVCcsJsA27PiLIk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=MJ8OKaHM; arc=none smtp.client-ip=209.85.210.181
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1766569931; c=relaxed/simple;
+	bh=2Iv/HgCqRQYy62fsci0Nyg3xsvb2pMCwzY/rKfDLA5w=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=Fxl2k3sfFtjXrZkDV66uDqz/lmMAg4GlXLkgEftesNTqnlOp/nVZVC+HUkD8kY0d3FmTBCuP6fIhGtLC9fef4u/irHeXNtlj0i9ahM7ZGy5QPM1D+eCc1JICLewnlHE2ZGiIAUMHzdsRoXmQVeyfObHis5dy/ClFoUib4+5Wwic=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oracle.com; spf=pass smtp.mailfrom=oracle.com; dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b=ST4cpnHh; arc=none smtp.client-ip=205.220.165.32
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oracle.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oracle.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="MJ8OKaHM"
-Received: by mail-pf1-f181.google.com with SMTP id d2e1a72fcca58-7bb710d1d1dso8044620b3a.1
-        for <platform-driver-x86@vger.kernel.org>; Wed, 24 Dec 2025 01:50:33 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1766569833; x=1767174633; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=Hn8WmsMwEydmglOkF6CvabWkz0d6PWX3JFU+DhEGtU0=;
-        b=MJ8OKaHMvj6B6bpXhf7ZqpAW6JV4EW5BKcc9hhtI8+cVqouYjMYafC9TScyJmhUn+o
-         cnYvBHY5KklfHrdhrLhOG6PkCSaszIChMybBpsA4Xubf1C+2stFomKeGk73UvdnfO7T6
-         zUb1MIGUjrOITdNaCkKnfZW4CYgeRHy17maxK5RGdBW2Os/n7gprpWJl2vsH4lTJIJb6
-         3hHR7VBWwe9N1ly/hDuhNniUPd/BKLpsfibk5fAcNmOQvQtx//Z1O8wMyJOQCtWXFsbq
-         MtsS3rFB4YG7tTenBuBftARYX604A30OlT/6ew03D5WEOXDhyuUp8TYVFxa5HaOyzIH/
-         F8ww==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1766569833; x=1767174633;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-gg:x-gm-message-state:from
-         :to:cc:subject:date:message-id:reply-to;
-        bh=Hn8WmsMwEydmglOkF6CvabWkz0d6PWX3JFU+DhEGtU0=;
-        b=oxsKmdM6ZlcCfilJomjuee80W0yjYfOhnLLbjZgEi0KkVwTCbEiP/ADeYWTQtW1FS/
-         25wDF/jnNc6BdwHvRlMYz0jE54abtZDNLGxgH88LMS3plcsu81qG8Yn7dkkpyHiBxXk4
-         4JIQp4MzkxpZr59btvAFNn2HzbpJkMZhSXzLypCQOmJzZSZTrGv5VbFpRvMftyitgq1d
-         YP9Fp7iYDQSEZei7NV5aZuuBeQQjVuDTstk10VqZbcGt7jj3g4sZS/tuDLsMduKAxV5q
-         QZLykS0gmT+cZwSa0yZux/1IOZPETXodEXNqoN9e01LhKtVK3Pg9VJXRPlOD0Yfs1WIZ
-         u0+Q==
-X-Gm-Message-State: AOJu0Ywx/IFFKlcaQylbop5O4Blm3HdSuxEYad/ZCdZDTDeuHQ/+Y1b6
-	737XVqHb8u8ZnxEY6jWOW79SKoa4Nk70yIqVRFGeNwcvww8hPSXqNtKx
-X-Gm-Gg: AY/fxX5c7ddcKjbNRHMlyCMPE8ukkzQGxNKMseLRBF03ResPTPGb7bfXITl40n7Vk5k
-	+/tiZHyCYl/xG3acIoLX4Pe2JVIe9yOjOJ0q1uOvZbmY2KPUMBwfTX2vQnZYifdhm8uvzMgwZjY
-	6rViiNUBD0HujYGVNzIk4Uvta8XwjllJ9chhkNsPHb/UF9kSoRUqykRsgtN9f/LxL1O4+fR1UCX
-	WhiJRhylnwtEf8u6xM7uJy4S2uYoMQ04tohf80a/KOj1nvksHvETMouokUSMEoV29st/b/s0S89
-	dI45hyANRRZPugwUEARi6AAupAW83emQycmiZb368QUkoRMLLJIuUlcnlDNNlh3rDvMHHRemk80
-	DMEjWU+aUanPjXDuuMb8eQDLeGny0qIlGAv/ChRqVQ1vWC2LLH4WyIdrX4bakTShhK5rhfak3aJ
-	0N/QKih/c4BWeX5DWaRTYx7KhoPOvv4A==
-X-Google-Smtp-Source: AGHT+IETVJYi2E5BtSLEGF8Rmd3fNXRH+VBDvZUg94MbaZzPvtwxOLMq/Y/lo6J9evMOoL+usBQSLw==
-X-Received: by 2002:a05:6a00:420f:b0:7ac:1444:6777 with SMTP id d2e1a72fcca58-7ff646f9380mr16325759b3a.12.1766569833193;
-        Wed, 24 Dec 2025 01:50:33 -0800 (PST)
-Received: from nitin-ThinkPad-T1g-Gen-8.. ([2405:201:3006:188a:9ac9:e6ff:432:bb3])
-        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-7ff7aa328basm16372003b3a.11.2025.12.24.01.50.29
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 24 Dec 2025 01:50:32 -0800 (PST)
-From: Nitin Joshi <nitjoshi@gmail.com>
-To: hansg@kernel.org,
-	ilpo.jarvinen@linux.intel.com
-Cc: platform-driver-x86@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	njoshi1@lenovo.com,
-	Nitin Joshi <nitjoshi@gmail.com>,
-	Mark Pearson <mpearson-lenovo@squebb.ca>
-Subject: [PATCH v6 2/2] platform/x86: thinkpad_acpi: Add sysfs to display details of damaged device.
-Date: Wed, 24 Dec 2025 18:50:19 +0900
-Message-ID: <20251224095019.11622-2-nitjoshi@gmail.com>
-X-Mailer: git-send-email 2.43.0
-In-Reply-To: <20251224095019.11622-1-nitjoshi@gmail.com>
-References: <20251224095019.11622-1-nitjoshi@gmail.com>
+	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="ST4cpnHh"
+Received: from pps.filterd (m0246617.ppops.net [127.0.0.1])
+	by mx0b-00069f02.pphosted.com (8.18.1.11/8.18.1.11) with ESMTP id 5BO81Nw82147886;
+	Wed, 24 Dec 2025 09:52:05 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=cc
+	:content-transfer-encoding:date:from:message-id:mime-version
+	:subject:to; s=corp-2025-04-25; bh=4b+StJqzxZzvZH9ln2day/ddhqjvY
+	6Td5HPVyiGVbIo=; b=ST4cpnHh8xGgrmy6M5Jq8NJMvWdgpNQ575VzYXdj/zNsa
+	iLULYTyXrBEc12c02aI1Hbl4B363X3UmItPJnLOaQSwjHPqZWWc1Yttrqb9NNhxv
+	m94c9QcktRtWHBqs83BwxMjdHIGs4qaPX2y8mFqyMpW4EhvIdsTACAHZOHyT8Q0D
+	23V4l0Gsm5iaa0uJ1VkjgW4an/1IJB7j0x4SgLU9FkW+7qZaz/B/aOOiVgPwE3Wk
+	O2aLAB4xnmdYLDUfcKNq4tSDINNRKfSN66ohqaC//3OdnEn83FcoGF+CmVnNuoH8
+	EcnzZm3+EJcgcScocW5PG3I/jeG1nBulDf/f2SlFw==
+Received: from phxpaimrmta03.imrmtpd1.prodappphxaev1.oraclevcn.com (phxpaimrmta03.appoci.oracle.com [138.1.37.129])
+	by mx0b-00069f02.pphosted.com (PPS) with ESMTPS id 4b8ca4032x-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Wed, 24 Dec 2025 09:52:04 +0000 (GMT)
+Received: from pps.filterd (phxpaimrmta03.imrmtpd1.prodappphxaev1.oraclevcn.com [127.0.0.1])
+	by phxpaimrmta03.imrmtpd1.prodappphxaev1.oraclevcn.com (8.18.1.2/8.18.1.2) with ESMTP id 5BO8fCNx039943;
+	Wed, 24 Dec 2025 09:52:04 GMT
+Received: from pps.reinject (localhost [127.0.0.1])
+	by phxpaimrmta03.imrmtpd1.prodappphxaev1.oraclevcn.com (PPS) with ESMTPS id 4b5j899ved-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Wed, 24 Dec 2025 09:52:04 +0000
+Received: from phxpaimrmta03.imrmtpd1.prodappphxaev1.oraclevcn.com (phxpaimrmta03.imrmtpd1.prodappphxaev1.oraclevcn.com [127.0.0.1])
+	by pps.reinject (8.17.1.5/8.17.1.5) with ESMTP id 5BO9q3p4040288;
+	Wed, 24 Dec 2025 09:52:03 GMT
+Received: from ca-dev110.us.oracle.com (ca-dev110.us.oracle.com [10.129.136.45])
+	by phxpaimrmta03.imrmtpd1.prodappphxaev1.oraclevcn.com (PPS) with ESMTP id 4b5j899ve0-1;
+	Wed, 24 Dec 2025 09:52:03 +0000
+From: Alok Tiwari <alok.a.tiwari@oracle.com>
+To: david.e.box@linux.intel.com, hansg@kernel.org,
+        ilpo.jarvinen@linux.intel.com, platform-driver-x86@vger.kernel.org
+Cc: alok.a.tiwarilinux@gmail.com, alok.a.tiwari@oracle.com
+Subject: [PATCH] platform/x86/intel/pmt/discovery: use valid device pointer in dev_err_probe
+Date: Wed, 24 Dec 2025 01:51:09 -0800
+Message-ID: <20251224095133.115678-1-alok.a.tiwari@oracle.com>
+X-Mailer: git-send-email 2.50.1
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
@@ -79,189 +59,59 @@ List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1121,Hydra:6.1.9,FMLib:17.12.100.49
+ definitions=2025-12-24_03,2025-12-22_01,2025-10-01_01
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 mlxscore=0 adultscore=0 bulkscore=0
+ mlxlogscore=999 phishscore=0 malwarescore=0 spamscore=0 suspectscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2512120000
+ definitions=main-2512240084
+X-Authority-Analysis: v=2.4 cv=UKHQ3Sfy c=1 sm=1 tr=0 ts=694bb7c4 b=1 cx=c_pps
+ a=WeWmnZmh0fydH62SvGsd2A==:117 a=WeWmnZmh0fydH62SvGsd2A==:17
+ a=wP3pNCr1ah4A:10 a=VkNPw1HP01LnGYTKEx00:22 a=yPCof4ZbAAAA:8
+ a=cjlv63_sTXVYdLjBQ-0A:9
+X-Proofpoint-ORIG-GUID: RjapG_B8EzwLohl52CqL7GMzmbITJCuO
+X-Proofpoint-GUID: RjapG_B8EzwLohl52CqL7GMzmbITJCuO
+X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUxMjI0MDA4NCBTYWx0ZWRfXxcwc5z4cFyFS
+ 6ZvDqdZerNimk937TwwcAdSSgE85aH+WbooBv2QYjwWQof71ftJKqNG/xf+X+V3HYo3G8cl6uXJ
+ m/HpDzt77582GwQCQp2ivRqffDsxkKbWmzy+keM9w0YsBIX4BAQfRWPyYcLwFcWBswLDewHqLSd
+ 7s5yy6sIdRpQoOQdODmwF1aQynYw4GyLP4KwnOvryUyGZ2XLIthwMCv3g0t7NRqCzyyQ2NV+Mvh
+ 4wFil2alLWFrrWihzdKBrrj20AXigJFHWW260bv5XatiKsnrHRqFcVbI/vQstIbaOI0cXfeijdv
+ Py9lYsCG/z4eiw8xNj9FOzNXJPdci5A4/2CPUAv++vfOeozB5TSnSty2vlCcw0eoARaUd2pujQr
+ dYXQtjiYbzb/shHhSo9Ke5B0jmmxtB7XzgSdyRwQqR7I9bU58Wzqa1Q04y+ClNzdZBkMLZPFlGR
+ 9FpWI2XqENdx3NHy3DQ==
 
-Add new sysfs interface to identify the impacted component with location of
-device.
+The PMT feature probe creates a child device with device_create().
+If device creation fail, the code pass priv->dev (which is an ERR_PTR)
+to dev_err_probe(), which is not a valid device pointer.
 
-Reviewed-by: Mark Pearson <mpearson-lenovo@squebb.ca>
-Signed-off-by: Nitin Joshi<nitjoshi@gmail.com>
+This patch change the dev_err_probe() call to use the parent auxiliary
+device (&auxdev->dev) and update the error message to reference the
+parent device name. It ensure correct error reporting and avoid
+passing an invalid device pointer.
+
+Fixes: d9a078809356 ("platform/x86/intel/pmt: Add PMT Discovery driver")
+Signed-off-by: Alok Tiwari <alok.a.tiwari@oracle.com>
 ---
-Changes since v2:
--Control visibility of the sysfs attribute based upon ucdd_supported
-Changes since v3:
--Fix documentation build warning
-Changes since v4:
--Improved indentation and removed extra line
-Changes since v5:
--Improved indentation
----
- .../admin-guide/laptops/thinkpad-acpi.rst     |  13 ++-
- drivers/platform/x86/lenovo/thinkpad_acpi.c   | 104 +++++++++++++++++-
- 2 files changed, 114 insertions(+), 3 deletions(-)
+ drivers/platform/x86/intel/pmt/discovery.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/Documentation/admin-guide/laptops/thinkpad-acpi.rst b/Documentation/admin-guide/laptops/thinkpad-acpi.rst
-index 2db05f718b11..3a37b14863a8 100644
---- a/Documentation/admin-guide/laptops/thinkpad-acpi.rst
-+++ b/Documentation/admin-guide/laptops/thinkpad-acpi.rst
-@@ -1580,7 +1580,7 @@ Documentation/ABI/testing/sysfs-class-power.
- Hardware damage detection capability
- ------------------------------------
+diff --git a/drivers/platform/x86/intel/pmt/discovery.c b/drivers/platform/x86/intel/pmt/discovery.c
+index 32713a194a55..fe93d4938c32 100644
+--- a/drivers/platform/x86/intel/pmt/discovery.c
++++ b/drivers/platform/x86/intel/pmt/discovery.c
+@@ -546,9 +546,9 @@ static int pmt_features_probe(struct auxiliary_device *auxdev, const struct auxi
+ 	priv->dev = device_create(&intel_pmt_class, &auxdev->dev, MKDEV(0, 0), priv,
+ 				  "%s-%s", "features", dev_name(priv->parent));
+ 	if (IS_ERR(priv->dev))
+-		return dev_err_probe(priv->dev, PTR_ERR(priv->dev),
++		return dev_err_probe(&auxdev->dev, PTR_ERR(priv->dev),
+ 				     "Could not create %s-%s device node\n",
+-				     "features", dev_name(priv->dev));
++				     "features", dev_name(priv->parent));
  
--sysfs attributes: hwdd_status
-+sysfs attributes: hwdd_status, hwdd_detail
- 
- Thinkpads are adding the ability to detect and report hardware damage.
- Add new sysfs interface to identify the damaged device status.
-@@ -1594,6 +1594,17 @@ This value displays status of device damaged
- - 0 = Not Damaged
- - 1 = Damaged
- 
-+The command to check location of damaged device is::
-+
-+        cat /sys/devices/platform/thinkpad_acpi/hwdd_detail
-+
-+This value displays location of damaged device having 1 line per damaged "item".
-+For example:
-+if no damage is detected:
-+- No damage detected
-+if damage detected:
-+- TYPE-C: Base, Right side, Center port
-+
- The property is read-only. If feature is not supported then sysfs
- attribute is not created.
- 
-diff --git a/drivers/platform/x86/lenovo/thinkpad_acpi.c b/drivers/platform/x86/lenovo/thinkpad_acpi.c
-index 3702374357ab..95755fa1e008 100644
---- a/drivers/platform/x86/lenovo/thinkpad_acpi.c
-+++ b/drivers/platform/x86/lenovo/thinkpad_acpi.c
-@@ -11089,8 +11089,24 @@ static const struct attribute_group auxmac_attr_group = {
- #define HWDD_NOT_SUPPORTED	BIT(31)
- #define HWDD_SUPPORT_USBC	BIT(0)
- 
--#define PORT_STATUS		GENMASK(7, 4)
--#define NUM_PORTS		4
-+#define PORT_STATUS     GENMASK(7, 4)
-+#define LID_STATUS      GENMASK(11, 8)
-+#define BASE_STATUS     GENMASK(15, 12)
-+#define POS_STATUS      GENMASK(3, 2)
-+#define PANEL_STATUS    GENMASK(1, 0)
-+
-+#define PORT_DETAIL_OFFSET	16
-+
-+#define PANEL_TOP	0
-+#define PANEL_BASE	1
-+#define PANEL_LEFT	2
-+#define PANEL_RIGHT	3
-+
-+#define POS_LEFT	0
-+#define POS_CENTER	1
-+#define POS_RIGHT	2
-+
-+#define NUM_PORTS	4
- 
- static bool hwdd_support_available;
- static bool ucdd_supported;
-@@ -11108,6 +11124,88 @@ static int hwdd_command(int command, int *output)
- 	return 0;
- }
- 
-+static bool display_damage(char *buf, int *count, char *type, unsigned int dmg_status)
-+{
-+	unsigned char lid_status, base_status, port_status;
-+	unsigned char loc_status, pos_status, panel_status;
-+	bool damage_detected = false;
-+	int i;
-+
-+	port_status = FIELD_GET(PORT_STATUS, dmg_status);
-+	lid_status = FIELD_GET(LID_STATUS, dmg_status);
-+	base_status = FIELD_GET(BASE_STATUS, dmg_status);
-+	for (i = 0; i < NUM_PORTS; i++) {
-+		if (!(dmg_status & BIT(i)) || !(port_status & BIT(i)))
-+			continue;
-+
-+		*count += sysfs_emit_at(buf, *count, "%s: ", type);
-+		loc_status = (dmg_status >> (PORT_DETAIL_OFFSET + (4 * i))) & 0xF;
-+		pos_status = FIELD_GET(POS_STATUS, loc_status);
-+		panel_status = FIELD_GET(PANEL_STATUS, loc_status);
-+
-+		if (lid_status & BIT(i))
-+			*count += sysfs_emit_at(buf, *count, "Lid, ");
-+		if (base_status & BIT(i))
-+			*count += sysfs_emit_at(buf, *count, "Base, ");
-+
-+		switch (pos_status) {
-+		case PANEL_TOP:
-+			*count += sysfs_emit_at(buf, *count, "Top, ");
-+			break;
-+		case PANEL_BASE:
-+			*count += sysfs_emit_at(buf, *count, "Bottom, ");
-+			break;
-+		case PANEL_LEFT:
-+			*count += sysfs_emit_at(buf, *count, "Left, ");
-+			break;
-+		case PANEL_RIGHT:
-+			*count += sysfs_emit_at(buf, *count, "Right, ");
-+			break;
-+		default:
-+			pr_err("Unexpected value %d in switch statement\n", pos_status);
-+		};
-+
-+		switch (panel_status) {
-+		case POS_LEFT:
-+			*count += sysfs_emit_at(buf, *count, "Left port\n");
-+			break;
-+		case POS_CENTER:
-+			*count += sysfs_emit_at(buf, *count, "Center port\n");
-+			break;
-+		case POS_RIGHT:
-+			*count += sysfs_emit_at(buf, *count, "Right port\n");
-+			break;
-+		default:
-+			*count += sysfs_emit_at(buf, *count, "Undefined\n");
-+			break;
-+		};
-+		damage_detected = true;
-+	}
-+	return damage_detected;
-+}
-+
-+/* sysfs type-c damage detection detail */
-+static ssize_t hwdd_detail_show(struct device *dev,
-+				struct device_attribute *attr,
-+				char *buf)
-+{
-+	unsigned int damage_status;
-+	int err, count = 0;
-+
-+	if (!ucdd_supported)
-+		return -ENODEV;
-+
-+	/* Get USB TYPE-C damage status */
-+	err = hwdd_command(HWDD_GET_DMG_USBC, &damage_status);
-+	if (err)
-+		return err;
-+
-+	if (!display_damage(buf, &count, "Type-C", damage_status))
-+		count += sysfs_emit_at(buf, count, "No damage detected\n");
-+
-+	return count;
-+}
-+
- /* sysfs type-c damage detection capability */
- static ssize_t hwdd_status_show(struct device *dev,
- 				struct device_attribute *attr,
-@@ -11135,9 +11233,11 @@ static ssize_t hwdd_status_show(struct device *dev,
- 	return sysfs_emit(buf, "0\n");
- }
- static DEVICE_ATTR_RO(hwdd_status);
-+static DEVICE_ATTR_RO(hwdd_detail);
- 
- static struct attribute *hwdd_attributes[] = {
- 	&dev_attr_hwdd_status.attr,
-+	&dev_attr_hwdd_detail.attr,
- 	NULL
- };
- 
+ 	/* Initialize each feature */
+ 	for (i = 0; i < ivdev->num_resources; i++) {
 -- 
-2.43.0
+2.50.1
 
