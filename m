@@ -1,117 +1,239 @@
-Received: from mx0a-00069f02.pphosted.com (mx0a-00069f02.pphosted.com [205.220.165.32])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-lf1-f50.google.com (mail-lf1-f50.google.com [209.85.167.50])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7D56D2AE68
-	for <platform-driver-x86@vger.kernel.org>; Wed, 24 Dec 2025 09:52:09 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.165.32
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DE0D33090FF
+	for <platform-driver-x86@vger.kernel.org>; Wed, 24 Dec 2025 11:33:22 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.50
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1766569931; cv=none; b=NeAsbwKO4YnZVvl3zPbH3nMNj4twGM0bPLvTRobR3dt3NODL6MGf3SMtRyhrhpJdDxvkvHBT67yOBwE/FePUNTpR0ijGvOxA0NuF0s0sim7gliMYd+TElUALDUunbGdQlLx30SMTvck3wEYkFPC+qjqXfPy6X5DOK8VTKt2FvHE=
+	t=1766576004; cv=none; b=bZ+fIjlrcwnCZKNR7RzDAllozS3sCquNCG3VcR6RPi7C+I9r5jWLFkkKtq4x8IzIz4TYRpsQF2vSRiLhjKJLh9whXJRzu/Y+d75biEnQgnUyn82CeYRZgTt11D/69UNW2zW3k5SZLKhG4MHO3/QAM9/GLhhRU41MkManW/Xl4W4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1766569931; c=relaxed/simple;
-	bh=2Iv/HgCqRQYy62fsci0Nyg3xsvb2pMCwzY/rKfDLA5w=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=Fxl2k3sfFtjXrZkDV66uDqz/lmMAg4GlXLkgEftesNTqnlOp/nVZVC+HUkD8kY0d3FmTBCuP6fIhGtLC9fef4u/irHeXNtlj0i9ahM7ZGy5QPM1D+eCc1JICLewnlHE2ZGiIAUMHzdsRoXmQVeyfObHis5dy/ClFoUib4+5Wwic=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oracle.com; spf=pass smtp.mailfrom=oracle.com; dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b=ST4cpnHh; arc=none smtp.client-ip=205.220.165.32
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oracle.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oracle.com
+	s=arc-20240116; t=1766576004; c=relaxed/simple;
+	bh=rbo5nMJSwgGFUXNPpqBM4A3bkW7GHCprfG2RrSmaZJo=;
+	h=From:In-Reply-To:References:MIME-Version:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=Ws2s4tUQYn86qdLPCORtXye+PIc4Eaec+Cz/YdzvtMjrlVC4HuPfEIdrzgps8y+hZ+gYT3tlzhC3QXIrhkjhyN+I1SgSVsIZd849CRXthEBfm5wULnyCnddLdchamTD0y0FddUDFHXzZoEq/j2DU4cl71ALZZMWC8XhTHf6ZqFU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=DHqaU9jx; arc=none smtp.client-ip=209.85.167.50
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="ST4cpnHh"
-Received: from pps.filterd (m0246617.ppops.net [127.0.0.1])
-	by mx0b-00069f02.pphosted.com (8.18.1.11/8.18.1.11) with ESMTP id 5BO81Nw82147886;
-	Wed, 24 Dec 2025 09:52:05 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=cc
-	:content-transfer-encoding:date:from:message-id:mime-version
-	:subject:to; s=corp-2025-04-25; bh=4b+StJqzxZzvZH9ln2day/ddhqjvY
-	6Td5HPVyiGVbIo=; b=ST4cpnHh8xGgrmy6M5Jq8NJMvWdgpNQ575VzYXdj/zNsa
-	iLULYTyXrBEc12c02aI1Hbl4B363X3UmItPJnLOaQSwjHPqZWWc1Yttrqb9NNhxv
-	m94c9QcktRtWHBqs83BwxMjdHIGs4qaPX2y8mFqyMpW4EhvIdsTACAHZOHyT8Q0D
-	23V4l0Gsm5iaa0uJ1VkjgW4an/1IJB7j0x4SgLU9FkW+7qZaz/B/aOOiVgPwE3Wk
-	O2aLAB4xnmdYLDUfcKNq4tSDINNRKfSN66ohqaC//3OdnEn83FcoGF+CmVnNuoH8
-	EcnzZm3+EJcgcScocW5PG3I/jeG1nBulDf/f2SlFw==
-Received: from phxpaimrmta03.imrmtpd1.prodappphxaev1.oraclevcn.com (phxpaimrmta03.appoci.oracle.com [138.1.37.129])
-	by mx0b-00069f02.pphosted.com (PPS) with ESMTPS id 4b8ca4032x-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Wed, 24 Dec 2025 09:52:04 +0000 (GMT)
-Received: from pps.filterd (phxpaimrmta03.imrmtpd1.prodappphxaev1.oraclevcn.com [127.0.0.1])
-	by phxpaimrmta03.imrmtpd1.prodappphxaev1.oraclevcn.com (8.18.1.2/8.18.1.2) with ESMTP id 5BO8fCNx039943;
-	Wed, 24 Dec 2025 09:52:04 GMT
-Received: from pps.reinject (localhost [127.0.0.1])
-	by phxpaimrmta03.imrmtpd1.prodappphxaev1.oraclevcn.com (PPS) with ESMTPS id 4b5j899ved-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Wed, 24 Dec 2025 09:52:04 +0000
-Received: from phxpaimrmta03.imrmtpd1.prodappphxaev1.oraclevcn.com (phxpaimrmta03.imrmtpd1.prodappphxaev1.oraclevcn.com [127.0.0.1])
-	by pps.reinject (8.17.1.5/8.17.1.5) with ESMTP id 5BO9q3p4040288;
-	Wed, 24 Dec 2025 09:52:03 GMT
-Received: from ca-dev110.us.oracle.com (ca-dev110.us.oracle.com [10.129.136.45])
-	by phxpaimrmta03.imrmtpd1.prodappphxaev1.oraclevcn.com (PPS) with ESMTP id 4b5j899ve0-1;
-	Wed, 24 Dec 2025 09:52:03 +0000
-From: Alok Tiwari <alok.a.tiwari@oracle.com>
-To: david.e.box@linux.intel.com, hansg@kernel.org,
-        ilpo.jarvinen@linux.intel.com, platform-driver-x86@vger.kernel.org
-Cc: alok.a.tiwarilinux@gmail.com, alok.a.tiwari@oracle.com
-Subject: [PATCH] platform/x86/intel/pmt/discovery: use valid device pointer in dev_err_probe
-Date: Wed, 24 Dec 2025 01:51:09 -0800
-Message-ID: <20251224095133.115678-1-alok.a.tiwari@oracle.com>
-X-Mailer: git-send-email 2.50.1
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="DHqaU9jx"
+Received: by mail-lf1-f50.google.com with SMTP id 2adb3069b0e04-5942b58ac81so5054134e87.2
+        for <platform-driver-x86@vger.kernel.org>; Wed, 24 Dec 2025 03:33:22 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1766576001; x=1767180801; darn=vger.kernel.org;
+        h=cc:to:subject:message-id:date:mime-version:references:in-reply-to
+         :from:from:to:cc:subject:date:message-id:reply-to;
+        bh=yZ1KV9C/f/PiFx/DNrtIQveUhvwKbDLgrTookKgtC/U=;
+        b=DHqaU9jxQGRC2Ls8R/gEXNJDGTiOspm8SpQ2v4Yt4R4rs8/PWjJSFyN1+CVnt7vN1D
+         200gXFLWwi6dDKgCtLg1KP1VQxHQh0Zx/KZIExoZNJ/ro30mTjQHBMkOtU/pkzNYV2qF
+         QvgYvqNpm/rgnsswbOnhCYrbXF3WzoZLcQb4vpfj6caG8bj4g7CzZnnP6rhoyJJAtOU1
+         muS4qJhGrltD/DekwgIJ7UhC1M1jMWs2/dO5jndZEpzLVUstGGp3hroyXZw1ObY6yeF8
+         LnMhyNwH4/xlcvVphW21vEJ/QvkgcshUu4IY9qc9VXKq2/nsyv2I032j0Kg7CKcVsCwR
+         Ak+g==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1766576001; x=1767180801;
+        h=cc:to:subject:message-id:date:mime-version:references:in-reply-to
+         :from:x-gm-gg:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=yZ1KV9C/f/PiFx/DNrtIQveUhvwKbDLgrTookKgtC/U=;
+        b=Y+2zH71BysvVdn00S11N/YqeECWW1UThpCgP4o6x5TYjXV2diq91+8PqjYPga0/vyw
+         go2PoOa4yuYBRa8vS7ERwUwTj7uDlyupcm4+NS1+WACDVKmaXxmxGsGa5cJhIIhA3bck
+         LMGRh1qZqpc53JdpLqhhXlk0q10sXEicOZApB8JBTDYGJymR4zgObByjc15Cy+G8aBN7
+         j+/xj180yAwz6MDzwQvDTj9dTX7tgKSDCCr8q02aqXXNax5oPFQKVPnf+RdrEidQz051
+         YHrtvUqf/0e869KszjVW5JMj2ekgcWZPTEsjbnczLtxPw6YnhzMt6SeHo6D53TbadUHV
+         +9Kw==
+X-Forwarded-Encrypted: i=1; AJvYcCXv5slaawxfejdo2COpfo1kJiq8dm4mlOQe2nvLMjfca/TyR5BCVJ9D68eVVM3vlpNfISV48ItXXh1Xqb4cphpHArl+@vger.kernel.org
+X-Gm-Message-State: AOJu0YxV8TMVAM+2z3SnHZ+If8UvjK5VhZiooHUs8BXv5AgTJ1YI6piS
+	9hWDqbjpPW1US/BuU06aasxlwLZ7Y8f/cTdiQ9go2qi0w5eG87uX4oB3X4TMvi74+3QyWnn34qU
+	wzU91Xbram8oTWAHDD1YQ03lfuLepBrs=
+X-Gm-Gg: AY/fxX6gp6P8K5i+uv4BAHy7cy8+hQ4ESG+XhySH9UAaf1ZjwX5OLkpkyLZEHB5jt8W
+	Ox6eIXVo5xYy5baySZtqDWoBzBrThlB1O4CM1MKMEbyWucdYLaS4DqVo0djQejmomR/JbKGAwTc
+	rzom0yOqXzePFbc0cS8M+l4xZwV1fHvZ3OcRSY2zpw1oOq0vwkCDtPSXL51nDrAT9ef0KlJdeHe
+	aXJvwkli0pvKwtkyQ+h4awgeTmwF0mZO6ssPZ7YKZ1+aqOqbmPMLape38INzIrhCBwPRg0=
+X-Google-Smtp-Source: AGHT+IH1pji4j1n8BkHd20Z/BEPqtB+/CQHasJecjKHqu/NHt/cExQav8YC7z8ptIhR4VDrsDJmqEtHfoyWISUPYl4s=
+X-Received: by 2002:a05:6512:3c8f:b0:594:39bf:6d4b with SMTP id
+ 2adb3069b0e04-59a17df1e07mr4434996e87.46.1766576000416; Wed, 24 Dec 2025
+ 03:33:20 -0800 (PST)
+Received: from 753933720722 named unknown by gmailapi.google.com with
+ HTTPREST; Wed, 24 Dec 2025 11:33:19 +0000
+Received: from 753933720722 named unknown by gmailapi.google.com with
+ HTTPREST; Wed, 24 Dec 2025 11:33:19 +0000
+From: Benjamin Philip <benjamin.philip495@gmail.com>
+In-Reply-To: <572f5363-c23b-435f-a36b-7b708704a3c1@app.fastmail.com>
+References: <CAMEXYWcY-7Kn8V1EwZ=fUPFWDwnAHEuferY9Ap0zO6xfmXx4JQ@mail.gmail.com>
+ <20251223191932.946794-1-benjamin.philip495@gmail.com> <CAMEXYWf_m8PL-ZGAv_1ufLp_1ryQK15ziaO90_OxmMV4VkpTPQ@mail.gmail.com>
+ <572f5363-c23b-435f-a36b-7b708704a3c1@app.fastmail.com>
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1121,Hydra:6.1.9,FMLib:17.12.100.49
- definitions=2025-12-24_03,2025-12-22_01,2025-10-01_01
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 mlxscore=0 adultscore=0 bulkscore=0
- mlxlogscore=999 phishscore=0 malwarescore=0 spamscore=0 suspectscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2512120000
- definitions=main-2512240084
-X-Authority-Analysis: v=2.4 cv=UKHQ3Sfy c=1 sm=1 tr=0 ts=694bb7c4 b=1 cx=c_pps
- a=WeWmnZmh0fydH62SvGsd2A==:117 a=WeWmnZmh0fydH62SvGsd2A==:17
- a=wP3pNCr1ah4A:10 a=VkNPw1HP01LnGYTKEx00:22 a=yPCof4ZbAAAA:8
- a=cjlv63_sTXVYdLjBQ-0A:9
-X-Proofpoint-ORIG-GUID: RjapG_B8EzwLohl52CqL7GMzmbITJCuO
-X-Proofpoint-GUID: RjapG_B8EzwLohl52CqL7GMzmbITJCuO
-X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUxMjI0MDA4NCBTYWx0ZWRfXxcwc5z4cFyFS
- 6ZvDqdZerNimk937TwwcAdSSgE85aH+WbooBv2QYjwWQof71ftJKqNG/xf+X+V3HYo3G8cl6uXJ
- m/HpDzt77582GwQCQp2ivRqffDsxkKbWmzy+keM9w0YsBIX4BAQfRWPyYcLwFcWBswLDewHqLSd
- 7s5yy6sIdRpQoOQdODmwF1aQynYw4GyLP4KwnOvryUyGZ2XLIthwMCv3g0t7NRqCzyyQ2NV+Mvh
- 4wFil2alLWFrrWihzdKBrrj20AXigJFHWW260bv5XatiKsnrHRqFcVbI/vQstIbaOI0cXfeijdv
- Py9lYsCG/z4eiw8xNj9FOzNXJPdci5A4/2CPUAv++vfOeozB5TSnSty2vlCcw0eoARaUd2pujQr
- dYXQtjiYbzb/shHhSo9Ke5B0jmmxtB7XzgSdyRwQqR7I9bU58Wzqa1Q04y+ClNzdZBkMLZPFlGR
- 9FpWI2XqENdx3NHy3DQ==
+Date: Wed, 24 Dec 2025 11:33:19 +0000
+X-Gm-Features: AQt7F2qAZExd7UlTWDRMYArYhV_cyOjP0a9fiXSHq35MsPkTAJoqi-K__ilgUkg
+Message-ID: <CAMEXYWf9TF=O_vZTSsc4T7Go4dVw=xw5zZfGWKhGWu8d4eHwrg@mail.gmail.com>
+Subject: Re: [PATCH 4/5] platform/x86: think-lmi: fix column limit overflow
+To: Mark Pearson <mpearson-lenovo@squebb.ca>, 
+	"platform-driver-x86@vger.kernel.org" <platform-driver-x86@vger.kernel.org>, linux-kernel@vger.kernel.org
+Cc: "Derek J . Clark" <derekjohn.clark@gmail.com>, Hans de Goede <hansg@kernel.org>, 
+	=?UTF-8?Q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
+Content-Type: text/plain; charset="UTF-8"
 
-The PMT feature probe creates a child device with device_create().
-If device creation fail, the code pass priv->dev (which is an ERR_PTR)
-to dev_err_probe(), which is not a valid device pointer.
+"Mark Pearson" <mpearson-lenovo@squebb.ca> writes:
 
-This patch change the dev_err_probe() call to use the parent auxiliary
-device (&auxdev->dev) and update the error message to reference the
-parent device name. It ensure correct error reporting and avoid
-passing an invalid device pointer.
+> On Tue, Dec 23, 2025, at 2:24 PM, Benjamin Philip wrote:
+>> This commit handles some column limit overflows (that occur after fixing
+>> their alignment), i.e. the following check:
+>>
+>> CHECK: line length of ... exceeds 100 columns
+>>
+>> by defining a constant opt, and replacing the offending
+>> expression with opt.
+>>
+>> Signed-off-by: Benjamin Philip <benjamin.philip495@gmail.com>
+>> ---
+>>  drivers/platform/x86/lenovo/think-lmi.c | 31 +++++++++++++++----------
+>>  1 file changed, 19 insertions(+), 12 deletions(-)
+>>
+>> diff --git a/drivers/platform/x86/lenovo/think-lmi.c
+>> b/drivers/platform/x86/lenovo/think-lmi.c
+>> index 1ada4d800383..07ba0d84720a 100644
+>> --- a/drivers/platform/x86/lenovo/think-lmi.c
+>> +++ b/drivers/platform/x86/lenovo/think-lmi.c
+>> @@ -1083,12 +1083,13 @@ static ssize_t type_show(struct kobject *kobj,
+>> struct kobj_attribute *attr,
+>>  }
+>>
+>>  static ssize_t current_value_store(struct kobject *kobj,
+>> -		struct kobj_attribute *attr,
+>> -		const char *buf, size_t count)
+>> +				   struct kobj_attribute *attr, const char *buf,
+>> +				   size_t count)
+>>  {
+>>  	struct tlmi_attr_setting *setting = to_tlmi_attr_setting(kobj);
+>>  	char *set_str = NULL, *new_setting = NULL;
+>>  	char *auth_str = NULL;
+>> +	const char *opt;
+>>  	int ret;
+>>
+>>  	if (!tlmi_priv.can_set_bios_settings)
+>> @@ -1163,10 +1164,11 @@ static ssize_t current_value_store(struct kobject *kobj,
+>>  			ret = tlmi_save_bios_settings("");
+>>  	} else { /* old non-opcode based authentication method (deprecated) */
+>>  		if (tlmi_priv.pwd_admin->pwd_enabled && tlmi_priv.pwd_admin->password[0]) {
+>> +			opt = encoding_options[tlmi_priv.pwd_admin->encoding];
+>>  			auth_str = kasprintf(GFP_KERNEL, "%s,%s,%s;",
+>> -					tlmi_priv.pwd_admin->password,
+>> -					encoding_options[tlmi_priv.pwd_admin->encoding],
+>> -					tlmi_priv.pwd_admin->kbdlang);
+>> +					     tlmi_priv.pwd_admin->password,
+>> +					     opt,
+>> +					     tlmi_priv.pwd_admin->kbdlang);
+>>  			if (!auth_str) {
+>>  				ret = -ENOMEM;
+>>  				goto out;
+>> @@ -1299,6 +1301,7 @@ static ssize_t save_settings_store(struct
+>> kobject *kobj, struct kobj_attribute *
+>>  				   const char *buf, size_t count)
+>>  {
+>>  	char *auth_str = NULL;
+>> +	const char *opt;
+>>  	int ret = 0;
+>>  	int cmd;
+>>
+>> @@ -1347,9 +1350,10 @@ static ssize_t save_settings_store(struct
+>> kobject *kobj, struct kobj_attribute *
+>>  			ret = tlmi_save_bios_settings("");
+>>  		} else { /* old non-opcode based authentication method (deprecated) */
+>>  			if (tlmi_priv.pwd_admin->pwd_enabled && tlmi_priv.pwd_admin->password[0]) {
+>> +				opt = encoding_options[tlmi_priv.pwd_admin->encoding];
+>>  				auth_str = kasprintf(GFP_KERNEL, "%s,%s,%s;",
+>>  						     tlmi_priv.pwd_admin->password,
+>> -						     encoding_options[tlmi_priv.pwd_admin->encoding],
+>> +						     opt,
+>>  						     tlmi_priv.pwd_admin->kbdlang);
+>>  				if (!auth_str) {
+>>  					ret = -ENOMEM;
+>> @@ -1381,11 +1385,13 @@ static ssize_t save_settings_store(struct
+>> kobject *kobj, struct kobj_attribute *
+>>  static struct kobj_attribute save_settings = __ATTR_RW(save_settings);
+>>
+>>  /* ---- Debug
+>> interface---------------------------------------------------------
+>> */
+>> -static ssize_t debug_cmd_store(struct kobject *kobj, struct
+>> kobj_attribute *attr,
+>> -				const char *buf, size_t count)
+>> +static ssize_t debug_cmd_store(struct kobject *kobj,
+>> +			       struct kobj_attribute *attr, const char *buf,
+>> +			       size_t count)
+>>  {
+>>  	char *set_str = NULL, *new_setting = NULL;
+>>  	char *auth_str = NULL;
+>> +	const char *opt;
+>>  	int ret;
+>>
+>>  	if (!tlmi_priv.can_debug_cmd)
+>> @@ -1397,10 +1403,11 @@ static ssize_t debug_cmd_store(struct kobject
+>> *kobj, struct kobj_attribute *attr
+>>  		return -ENOMEM;
+>>
+>>  	if (tlmi_priv.pwd_admin->pwd_enabled && tlmi_priv.pwd_admin->password[0]) {
+>> +		opt = encoding_options[tlmi_priv.pwd_admin->encoding];
+>>  		auth_str = kasprintf(GFP_KERNEL, "%s,%s,%s;",
+>> -				tlmi_priv.pwd_admin->password,
+>> -				encoding_options[tlmi_priv.pwd_admin->encoding],
+>> -				tlmi_priv.pwd_admin->kbdlang);
+>> +				     tlmi_priv.pwd_admin->password,
+>> +				     opt,
+>> +				     tlmi_priv.pwd_admin->kbdlang);
+>>  		if (!auth_str) {
+>>  			ret = -ENOMEM;
+>>  			goto out;
+>> @@ -1775,7 +1782,7 @@ static int tlmi_analyze(struct wmi_device *wdev)
+>>  						ffs(tlmi_priv.pwdcfg.ext.hdd_user_password) - 1;
+>>  			}
+>>  			if (tlmi_priv.pwdcfg.ext.nvme_user_password ||
+>> -					tlmi_priv.pwdcfg.ext.nvme_master_password) {
+>> +			    tlmi_priv.pwdcfg.ext.nvme_master_password) {
+>>  				tlmi_priv.pwd_nvme->pwd_enabled = true;
+>>  				if (tlmi_priv.pwdcfg.ext.nvme_master_password)
+>>  					tlmi_priv.pwd_nvme->index =
+>> --
+>> 2.52.0
+>
+> I'll defer to the pdx86 reviewers for this set of changes.
+>
+> This seems to me to make things more complicated than needed, purely to address a 100 column limit. I personally don't like the change.
+>
+> Nothing wrong with the code, and if more experienced maintainers prefer it, I'm happy to defer to them. Otherwise it seems to me noise for the sake of noise I'm afraid
+>
+> Mark
 
-Fixes: d9a078809356 ("platform/x86/intel/pmt: Add PMT Discovery driver")
-Signed-off-by: Alok Tiwari <alok.a.tiwari@oracle.com>
----
- drivers/platform/x86/intel/pmt/discovery.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+An alternative could be to set this a constant pwd_admin to
+tlmi_priv.pwd_admin. There are 13 other references to
+tlmi_priv.pwd_admin in one function alone, so maybe it might be a more
+meaningful improvement?
 
-diff --git a/drivers/platform/x86/intel/pmt/discovery.c b/drivers/platform/x86/intel/pmt/discovery.c
-index 32713a194a55..fe93d4938c32 100644
---- a/drivers/platform/x86/intel/pmt/discovery.c
-+++ b/drivers/platform/x86/intel/pmt/discovery.c
-@@ -546,9 +546,9 @@ static int pmt_features_probe(struct auxiliary_device *auxdev, const struct auxi
- 	priv->dev = device_create(&intel_pmt_class, &auxdev->dev, MKDEV(0, 0), priv,
- 				  "%s-%s", "features", dev_name(priv->parent));
- 	if (IS_ERR(priv->dev))
--		return dev_err_probe(priv->dev, PTR_ERR(priv->dev),
-+		return dev_err_probe(&auxdev->dev, PTR_ERR(priv->dev),
- 				     "Could not create %s-%s device node\n",
--				     "features", dev_name(priv->dev));
-+				     "features", dev_name(priv->parent));
- 
- 	/* Initialize each feature */
- 	for (i = 0; i < ivdev->num_resources; i++) {
--- 
-2.50.1
+Then again, the question arises why we aren't following the same pattern
+for all the other heavily used fields under tlmi_priv. Adding more
+constants seems to be wrong way forward.
 
+Another option would be to move repeated functionality into other
+functions (all the column limit violations seem to be identical and
+involve encoding_options and kasprintf in the same way), but a refactor
+of this nature seemed *way* beyond the scope of a simple code syle clean
+up.
+
+Thus, assigning the required value to a small constant seemed to be the
+best immediate solution. I can see why you feel it adds complexity.
+Typically in a dynamic language (or even in a declare-as-you-need code
+style in C) this is a trivial change, whereas in a top-of-block style
+this does seem to add some cruft.
+
+Perhaps we should drop this patch for now? Nevertheless, I think the
+column limit violations, long functions, and repeated lines are a sign
+that some refactoring is in order.
+
+Thoughts?
+
+-- bp
