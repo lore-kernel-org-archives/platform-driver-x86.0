@@ -1,56 +1,56 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.13])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.7])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 27A591367
-	for <platform-driver-x86@vger.kernel.org>; Wed, 24 Dec 2025 04:46:36 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.13
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 75D5529B204
+	for <platform-driver-x86@vger.kernel.org>; Wed, 24 Dec 2025 06:14:22 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.7
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1766551598; cv=none; b=A024YtCu7J+3w1dbhZDC7EmArBN7UvwevRBHKafXNTYTzq1vWv1QB7aSDUTtxAe2mIM3Ht1GzVm9nzI3nuZdsJkYu1g/gxSQJN9Y73+vc074NRSCMeAfM1Gn1/4O/F3VRCbIyut5LIJylGFfA0zEe8CuX9Hep9fL1pbOGUmq3xU=
+	t=1766556864; cv=none; b=PZAxeiMTgizKEJqhbt2AKZaApRtmOEf2odEYx35Ffj8gXwZZp/Vn2ZXufdb0Q9FFqV3bm4UtNjX/CTkRlwbSFPw3PTiueEAiOdgSMHtzkIXm4lG4WQf5jGZ1BmthtcWoWUJIgBdJa+ayxPwjwWZPzlhdQBqmupJEWvVNeYciYGU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1766551598; c=relaxed/simple;
-	bh=bKLhkrW8HcucVS0kG42Uq+NPsbD77zJkEPFeQwt+HeY=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=dzJnDaWNUAH1AIeI9wxrI7eQ0pAo3AYiFK0GEQOdvVNsvEuyJVlrsJ4c2B04+FJHd1zjh23xZ5gmEz0MQ035yXcwgvuOwqC/yUcxgtgyE69ofURLwGYXrXHRPcp7RyPmhsepsihFw09RlBuPHR6DiOJMTkiCyaSJZCE47+FQbjE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=Ne/RGI3F; arc=none smtp.client-ip=192.198.163.13
+	s=arc-20240116; t=1766556864; c=relaxed/simple;
+	bh=OgYM7W5k7WDEqR7CZ4hOXgGssxKmCZd+e0LnOmyK6nU=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=mQ+z+C/nGwKJ0kc8tq712uzSII+r5f151laUo/XKqxDj6k0Zlvg8JvGiCwmsWHuwmkZanEyxA6R7fgQ05lkXD8V3HjM7NZfZh6nm9QpeFeLQT9bLeyYoRf4I6tTKXv4GgBkSgOpJdfkBOAneHT6g/vn3nbBd8joJzuEMHNOSaxc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=a4hBa7zT; arc=none smtp.client-ip=192.198.163.7
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="Ne/RGI3F"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="a4hBa7zT"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1766551597; x=1798087597;
+  t=1766556862; x=1798092862;
   h=from:to:cc:subject:date:message-id:mime-version:
    content-transfer-encoding;
-  bh=bKLhkrW8HcucVS0kG42Uq+NPsbD77zJkEPFeQwt+HeY=;
-  b=Ne/RGI3FOFKZwYmQ1h2nzxa9IQrwoSFbxexIPi/yM/0oydY3IPn94Reb
-   JvuM3NKdS5scCERa/Ueh/lpmaShFb/6pseujc70iAR5nVhJosPKTM2Qg8
-   O7IXdVa0r8yDZjvD/hZWopAyd0hgN9ngmUPTSVF+aecPbXrYT44aUU3WO
-   gBJENdawIDNTZiIdGRL65/U0C9FbLmj0DRS5EEz6wuuwR+pSVNzC8cqbq
-   UvhrkGFED4TqqYqf406+0YZO6fpVnTPASJ8wbN88m0OXSxUGTgIzfsB3n
-   VAsSWoWP0hX9JpxkZXWFticy3I8vPChuEFPzlivE+NsLvbeqXFdWt3Cf5
+  bh=OgYM7W5k7WDEqR7CZ4hOXgGssxKmCZd+e0LnOmyK6nU=;
+  b=a4hBa7zTQHJAtBcjqV1AFpF33CjCk2iNtDq+c7xe3C59nM2TgmMn3BAG
+   7JAiWOIUw3v18bRA/oqrENIDBX1CnY1WSNc1aN3N04d7fG9xYgn1TveYl
+   Rz4g1KCjdTzYE1klr0clWQuIbYiegyPS77LcbjTPOr9nsskmSbKezvoUo
+   hcuYkbSxVD8LFR36QPZRo8vUEfazlYGTq74/M041360EZiWZBKPR/qIRB
+   HU8KoCDmagDFOftD7EX/qDR2FXkDbVoEjgy/m4+0WZmN7Lj8CmwbGAV07
+   dkFouAJ18MeseFunRPZp8bggdyY1SDjTQGL84jDA8flFeoj8eZczSSCjC
    g==;
-X-CSE-ConnectionGUID: oUUy7YnkTOeRLI/39oblbQ==
-X-CSE-MsgGUID: TOnG080xSBa1K6Rb0ksShw==
-X-IronPort-AV: E=McAfee;i="6800,10657,11651"; a="70975417"
+X-CSE-ConnectionGUID: EcffHsjvTKihSMMVGiPvqw==
+X-CSE-MsgGUID: YHF3xyl8T1ebRkR7tlUt8w==
+X-IronPort-AV: E=McAfee;i="6800,10657,11651"; a="93871483"
 X-IronPort-AV: E=Sophos;i="6.21,172,1763452800"; 
-   d="scan'208";a="70975417"
-Received: from fmviesa006.fm.intel.com ([10.60.135.146])
-  by fmvoesa107.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 23 Dec 2025 20:46:36 -0800
-X-CSE-ConnectionGUID: CCjxTxMRQbOgnzNp3A3Y7w==
-X-CSE-MsgGUID: tpl9qXowTJuYxu2TXSmxIw==
+   d="scan'208";a="93871483"
+Received: from fmviesa002.fm.intel.com ([10.60.135.142])
+  by fmvoesa101.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 23 Dec 2025 22:14:21 -0800
+X-CSE-ConnectionGUID: nHosVS4ARcyf+lsPl7gdhw==
+X-CSE-MsgGUID: yu+JN0VfRIuursuHlSR93w==
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="6.21,172,1763452800"; 
-   d="scan'208";a="199851215"
+   d="scan'208";a="223429478"
 Received: from baandr0id001.iind.intel.com ([10.66.253.151])
-  by fmviesa006.fm.intel.com with ESMTP; 23 Dec 2025 20:46:34 -0800
+  by fmviesa002.fm.intel.com with ESMTP; 23 Dec 2025 22:14:20 -0800
 From: Kaushlendra Kumar <kaushlendra.kumar@intel.com>
 To: david.e.box@linux.intel.com,
 	hansg@kernel.org,
 	ilpo.jarvinen@linux.intel.com
 Cc: platform-driver-x86@vger.kernel.org,
 	Kaushlendra Kumar <kaushlendra.kumar@intel.com>
-Subject: [PATCH] platform/x86: intel_telemetry: Fix PCI device ref leak
-Date: Wed, 24 Dec 2025 10:13:59 +0530
-Message-Id: <20251224044359.3919178-1-kaushlendra.kumar@intel.com>
+Subject: [PATCH] platform/x86: intel_telemetry: Fix PSS event register mask
+Date: Wed, 24 Dec 2025 11:41:44 +0530
+Message-Id: <20251224061144.3925519-1-kaushlendra.kumar@intel.com>
 X-Mailer: git-send-email 2.34.1
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
@@ -60,31 +60,35 @@ List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-The for_each_pci_dev() macro increments the reference count for each
-PCI device. Without calling pci_dev_put() to release these references,
-the code leaks device references.
+The PSS telemetry info parsing incorrectly applies
+TELEM_INFO_SRAMEVTS_MASK when extracting event register
+count from firmware response. This reads bits 15-8 instead
+of the correct bits 7-0, causing misdetection of hardware
+capabilities.
 
-Add pci_dev_put() at the end of each iteration to properly release the
-reference taken by for_each_pci_dev().
+The IOSS path correctly uses TELEM_INFO_NENABLES_MASK for
+register count. Apply the same mask to PSS parsing for
+consistency.
 
-Fixes: 87bee290998d ("platform:x86: Add Intel Telemetry Debugfs interfaces")
+Fixes: 9d16b482b059 ("platform:x86: Add Intel telemetry platform driver")
 Signed-off-by: Kaushlendra Kumar <kaushlendra.kumar@intel.com>
 ---
- drivers/platform/x86/intel/telemetry/debugfs.c | 1 +
- 1 file changed, 1 insertion(+)
+ drivers/platform/x86/intel/telemetry/pltdrv.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/platform/x86/intel/telemetry/debugfs.c b/drivers/platform/x86/intel/telemetry/debugfs.c
-index 189c61ff7ff0..8fdc9965ff27 100644
---- a/drivers/platform/x86/intel/telemetry/debugfs.c
-+++ b/drivers/platform/x86/intel/telemetry/debugfs.c
-@@ -589,6 +589,7 @@ static int telem_soc_states_show(struct seq_file *s, void *unused)
- 			   dev->vendor, dev->device, dev_name(&dev->dev),
- 			   dev_driver_string(&dev->dev));
- 		seq_printf(s, " d3:%x\n", d3_state);
-+		pci_dev_put(dev);
- 	}
- 
- 	seq_puts(s, "\n--------------------------------------\n");
+diff --git a/drivers/platform/x86/intel/telemetry/pltdrv.c b/drivers/platform/x86/intel/telemetry/pltdrv.c
+index f23c170a55dc..d9aa349f81e4 100644
+--- a/drivers/platform/x86/intel/telemetry/pltdrv.c
++++ b/drivers/platform/x86/intel/telemetry/pltdrv.c
+@@ -610,7 +610,7 @@ static int telemetry_setup(struct platform_device *pdev)
+ 	/* Get telemetry Info */
+ 	events = (read_buf & TELEM_INFO_SRAMEVTS_MASK) >>
+ 		  TELEM_INFO_SRAMEVTS_SHIFT;
+-	event_regs = read_buf & TELEM_INFO_SRAMEVTS_MASK;
++	event_regs = read_buf & TELEM_INFO_NENABLES_MASK;
+ 	if ((events < TELEM_MAX_EVENTS_SRAM) ||
+ 	    (event_regs < TELEM_MAX_EVENTS_SRAM)) {
+ 		dev_err(&pdev->dev, "PSS:Insufficient Space for SRAM Trace\n");
 -- 
 2.34.1
 
