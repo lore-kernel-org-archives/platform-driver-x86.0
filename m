@@ -1,30 +1,30 @@
-Received: from out-188.mta0.migadu.com (out-188.mta0.migadu.com [91.218.175.188])
+Received: from out-172.mta1.migadu.com (out-172.mta1.migadu.com [95.215.58.172])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D50B98F48
-	for <platform-driver-x86@vger.kernel.org>; Thu, 25 Dec 2025 02:53:09 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.218.175.188
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 050961946BC
+	for <platform-driver-x86@vger.kernel.org>; Thu, 25 Dec 2025 03:04:07 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=95.215.58.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1766631191; cv=none; b=qQCgoVkH9Es7mdSdPbNRY/T8tZVvhYtKOZn6pldoeWYBcsC+kT7dsPLTDRdrFH5Gc8M09CdtCAQIMz0tCVsxduUBPCJbURq+xiw0inXK/Gta8oz0nhMfnPvYONuSXim99L0uJ4APxRj8cLKkuNLvg/p/wwaHR9efyYiu9kogf34=
+	t=1766631852; cv=none; b=mXQd2dunFoPTGdDZpFjCfcVIZNK63/Y4d4XGU/bNyakjvqpc9oTBq+9QM3yPaDLd7tDmLjJ77v6SVfOXRXgXfe6rBSOPb2fJkyrV15WfXAKYV6phucithzsO2NKzYywi7/z836wbPUwJNrny3gdSd0YvQOk1hRejAv4NYPTDv0g=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1766631191; c=relaxed/simple;
-	bh=c7Md9oSmcjY2+BEm/jBq4SHq4Vq0DRQdOJjrjqVzH4U=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=MSpA1lTTXEAbhd5V8/H/s+buUP155a2sZ3ONU+B6UvAVyXVpK7BfrLbTd9dwX2WNnEXReMM6cn4v2dU6xrLRnnadMhmK1i/+/JXd+5SeJy/3n0kShjMC6jbbOXOaN8PKBnN/Yl3DWM4PRPb2K+r64wZa5FCRxH2w5tM4HtRUkjs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=PBxFLJnM; arc=none smtp.client-ip=91.218.175.188
+	s=arc-20240116; t=1766631852; c=relaxed/simple;
+	bh=a/H2RLkLjBleZAdHnjzXn+MdXoLBICpSPfar2O9FC6U=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=adojNg+fSQIBQPdMPsjRBLHh8wjyZ46ghooBXB+COhbisbYTmPV/vUE3GeulXTjYMPq9OZEeJ4kO7oConoRsiY0jRc6OUgELk8cXstWXBARCXtv5keMlCfnhUGaVhIN/7Ln2b4pV+ZZpuSoi8ZQztf1e1ewkAX2vAKjJdqFWKa8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=ErFDQZi9; arc=none smtp.client-ip=95.215.58.172
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="PBxFLJnM"
+	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="ErFDQZi9"
 X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
-	t=1766631186;
+	t=1766631845;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:
 	 content-transfer-encoding:content-transfer-encoding;
-	bh=u24y6gjcAX+Iq0jDwE2IF8tDLxBMC9XjBD3YbgOfHOs=;
-	b=PBxFLJnMUfvDYYsE3Kq/DcHIGCa+YGC2pOlkhQ7jebypp7yDgwU44iRb1drj0ZNCjCf+9v
-	RJTHEnDzYNwH5YFs+PK5NQQOeWvJ3n2nYDBkFTYTq5l/6xHaNGWfyezefIYJYQAqybHTqt
-	Fl+jy+P6CATmdvOtPctBeIAsbA5gPnY=
+	bh=vHMVNfrwxfifskhYHu4lhJfvsSTZLvhSriOGZ2pLmUs=;
+	b=ErFDQZi9JCw2GnRSm8Vf6Uz767bPYE6jhXvZhFCk2O8kQ5J2GQrTXBrtSpaXHduB9Ir2Dt
+	w72MFRYapNq7bqdUHYkRf1YmAwL5B+ok7fX3RoGDcIYzSYKQzGsu5jlhL5UHNLt0ijxitY
+	QZ04JLk9gUrTg8lQmLYngw5GQDn/3Rk=
 From: Denis Benato <denis.benato@linux.dev>
 To: linux-kernel@vger.kernel.org
 Cc: platform-driver-x86@vger.kernel.org,
@@ -34,9 +34,9 @@ Cc: platform-driver-x86@vger.kernel.org,
 	"Mateusz Schyboll" <dragonn@op.pl>,
 	"Denis Benato" <benato.denis96@gmail.com>,
 	Denis Benato <denis.benato@linux.dev>
-Subject: [PATCH] platform/x86: asus-armoury: add support for GA403WR
-Date: Thu, 25 Dec 2025 03:53:01 +0100
-Message-ID: <20251225025301.1980627-1-denis.benato@linux.dev>
+Subject: [PATCH] platform/x86: asus-armoury: add support for FA608UM
+Date: Thu, 25 Dec 2025 04:03:54 +0100
+Message-ID: <20251225030354.2315874-1-denis.benato@linux.dev>
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
@@ -46,56 +46,60 @@ MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 X-Migadu-Flow: FLOW_OUT
 
-Add TDP data for laptop model GA403WR.
+Add TDP data for laptop model FA608UM.
 
 Signed-off-by: Denis Benato <denis.benato@linux.dev>
 ---
- drivers/platform/x86/asus-armoury.h | 32 +++++++++++++++++++++++++++++
- 1 file changed, 32 insertions(+)
+ drivers/platform/x86/asus-armoury.h | 36 +++++++++++++++++++++++++++++
+ 1 file changed, 36 insertions(+)
 
 diff --git a/drivers/platform/x86/asus-armoury.h b/drivers/platform/x86/asus-armoury.h
-index a1bb2005c3f3..6a9f8e2900bf 100644
+index 6a9f8e2900bf..e0a78b4bcd91 100644
 --- a/drivers/platform/x86/asus-armoury.h
 +++ b/drivers/platform/x86/asus-armoury.h
-@@ -822,6 +822,38 @@ static const struct dmi_system_id power_limits[] = {
- 			.requires_fan_curve = true,
+@@ -552,6 +552,42 @@ static const struct dmi_system_id power_limits[] = {
+ 			},
  		},
  	},
 +	{
 +		.matches = {
-+			DMI_MATCH(DMI_BOARD_NAME, "GA403WR"),
++			DMI_MATCH(DMI_BOARD_NAME, "FA608UM"),
 +		},
 +		.driver_data = &(struct power_data) {
 +			.ac_data = &(struct power_limits) {
 +				.ppt_pl1_spl_min = 15,
-+				.ppt_pl1_spl_max = 80,
-+				.ppt_pl2_sppt_min = 25,
-+				.ppt_pl2_sppt_max = 80,
++				.ppt_pl1_spl_def = 45,
++				.ppt_pl1_spl_max = 90,
++				.ppt_pl2_sppt_min = 35,
++				.ppt_pl2_sppt_def = 54,
++				.ppt_pl2_sppt_max = 90,
 +				.ppt_pl3_fppt_min = 35,
-+				.ppt_pl3_fppt_max = 80,
-+				.nv_dynamic_boost_min = 0,
-+				.nv_dynamic_boost_max = 25,
++				.ppt_pl3_fppt_def = 90,
++				.ppt_pl3_fppt_max = 65,
++				.nv_dynamic_boost_min = 10,
++				.nv_dynamic_boost_max = 15,
 +				.nv_temp_target_min = 75,
 +				.nv_temp_target_max = 87,
-+				.nv_tgp_min = 80,
-+				.nv_tgp_max = 95,
++				.nv_tgp_min = 55,
++				.nv_tgp_max = 100,
 +			},
 +			.dc_data = &(struct power_limits) {
 +				.ppt_pl1_spl_min = 15,
-+				.ppt_pl1_spl_max = 35,
-+				.ppt_pl2_sppt_min = 25,
-+				.ppt_pl2_sppt_max = 35,
++				.ppt_pl1_spl_def = 45,
++				.ppt_pl1_spl_max = 65,
++				.ppt_pl2_sppt_min = 35,
++				.ppt_pl2_sppt_def = 54,
++				.ppt_pl2_sppt_max = 65,
 +				.ppt_pl3_fppt_min = 35,
 +				.ppt_pl3_fppt_max = 65,
 +				.nv_temp_target_min = 75,
 +				.nv_temp_target_max = 87,
 +			},
-+			.requires_fan_curve = true,
 +		},
 +	},
  	{
  		.matches = {
- 			DMI_MATCH(DMI_BOARD_NAME, "GA503QR"),
+ 			DMI_MATCH(DMI_BOARD_NAME, "FA608WI"),
 -- 
 2.52.0
 
