@@ -1,399 +1,189 @@
-Received: from out-172.mta0.migadu.com (out-172.mta0.migadu.com [91.218.175.172])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wm1-f51.google.com (mail-wm1-f51.google.com [209.85.128.51])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 40486218EB1
-	for <platform-driver-x86@vger.kernel.org>; Thu, 25 Dec 2025 14:30:16 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.218.175.172
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F160927F754
+	for <platform-driver-x86@vger.kernel.org>; Thu, 25 Dec 2025 17:13:59 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.51
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1766673018; cv=none; b=LWa+bHwDO10TM30kmMuw8wcJlF6sFZArd6mbNR8BN+KD5J1T4mRSWbgSwPBLofxDRwvzMSgTghuw9EvMhyYkQKbrNB/s3fD1tSd3ZXBlE1HHVn13UiTYUw6dbdZI+Cf4S8WXZLHkH/h+j/AknDnw/pl2F4hrhC5ugTofHSl2tBY=
+	t=1766682843; cv=none; b=WUDZJNyoeEAskPqOfjKdTukXGuBbdJyRFOu4CdY34KRcd+qcVj9GI2Uel8+KnbHY7/UCjVe25V49bx9+W3uDbUzG7DsSzQs46kE+0tnIqHChGMQ+5pBoqI7yclpa/rpauDEzT7Ws0goZIB/Ed+8mLKi/jkXihNM0NRQxAMHhxzw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1766673018; c=relaxed/simple;
-	bh=Bgc7f+zcDXtUSZxuCVW0o8XX0Fg9ampdvxiKc6dwmBY=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=pqCkGrUEM+x1ykWdL9FQSOgx8emI5H5p8pP67HdBusgzfFx0ZFYoemMB/QkPehztz2I2oc+FhtUQT+6IgVaaZ0IwAk/ZGgw1aSTTMJlWUbFcbOdjeqvySBG2u5xpe3Sm18+aGa8VTiTfCmmWB4wlgos4QVMlxLAMjlHoYuKhEw8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=O9WB5ZrB; arc=none smtp.client-ip=91.218.175.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
+	s=arc-20240116; t=1766682843; c=relaxed/simple;
+	bh=JyqiU+nSIoi30u5aBUuzbePbJQaUZjsH/VU6JqQh40w=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=ZcZA/ouaHQ9S/vw+35/Gxp24Poyf9BeBAaYtCjqcnDLWRkpN6NqdYfSCKt0n0EgVRDOrzADU7IGRovCHsSyoR5rO1RPlLAq8oTNb6wjF5F7xd7TnP4nitSgOHM8EHX8ogepjMxMtUhi84FJy3LW8Y6owOEJf9XuNPLIgZahs91I=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=PaWpZv3y; arc=none smtp.client-ip=209.85.128.51
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="O9WB5ZrB"
-X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
-	t=1766673014;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=NPy2y/WeFTE5qeVxrFoySqM7SqNk3yZh3X3YJSnkXig=;
-	b=O9WB5ZrBBHwmMgKx/umZYq3qN/jqUqkFLgI+orjziShMya5XqqNHRlpPfkX1zG42k6r44d
-	H+kzE4CbUNmL7PDPwBt4tudBgDjnRVo1cbGD+z0JA1VWzZtBsgZPZ5khHB6IpTvWpiRi7k
-	1z8C3iz3Z0iYNVJdH2QJAn2qALC7hqQ=
-From: Denis Benato <denis.benato@linux.dev>
-To: linux-kernel@vger.kernel.org
-Cc: platform-driver-x86@vger.kernel.org,
-	"Hans de Goede" <hansg@kernel.org>,
-	=?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>,
-	"Luke D . Jones" <luke@ljones.dev>,
-	"Mateusz Schyboll" <dragonn@op.pl>,
-	"Denis Benato" <benato.denis96@gmail.com>,
-	Denis Benato <denis.benato@linux.dev>
-Subject: [PATCH 3/3] platform/x86: asus-armoury: add keyboard control firmware attributes
-Date: Thu, 25 Dec 2025 15:30:07 +0100
-Message-ID: <20251225143007.2684239-4-denis.benato@linux.dev>
-In-Reply-To: <20251225143007.2684239-1-denis.benato@linux.dev>
-References: <20251225143007.2684239-1-denis.benato@linux.dev>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="PaWpZv3y"
+Received: by mail-wm1-f51.google.com with SMTP id 5b1f17b1804b1-47d3ffa6720so10626025e9.0
+        for <platform-driver-x86@vger.kernel.org>; Thu, 25 Dec 2025 09:13:59 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1766682837; x=1767287637; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=J02DSARA50fLgHgJBNysiJn5LkYB29lpMUN/ojmuv5g=;
+        b=PaWpZv3yRMgtW0qlKQIJb9cbf3nRt9oNK1EUFRncFnajMn98U2VzE3LPDW7dgclWcJ
+         t9l/qbGPLvtIjqih/Y+4KLesjH/QwJ8XAvdNVG44asV6OTUq8T9gohtSGXiOCBOMrMba
+         k6g3NXYDegX05UIjKpBOkRxRuC3oo5XOEmyA1M7lrD2BhzmrCDfon24ZAF55zMrmj3N9
+         c4h2+/G2RBkT6HfX6WoDOcLz3npidmXlx9ZX1NJHRX54bz+CF1LOs8pShqIe4uuSKjxd
+         qro0h8GFyTSgAYdS9PO9iylF4Wju8Kq1UGEXeo+NZc98Pwi3yUHwl2vkJ+Hf98RxEbtC
+         evYg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1766682837; x=1767287637;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-gg:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=J02DSARA50fLgHgJBNysiJn5LkYB29lpMUN/ojmuv5g=;
+        b=fe7BX4entqo1BicroC+uWg+8Du70KB26BB8PljAxEf/hTbhrJHXfLr/m2CtNkt7fBG
+         EJYOoS6I8uP3HMN+d0gegfILK9vQ2J6XxufGrFUlbUKGE5Feg4y16ivs1CjWc1trbNK6
+         M42BWhk6wa63U0tJEbuYizLD0TrEtaFRFlvGiUpgbs5XdQThLatPFVh6ujKkpTmdZmQ4
+         qNFjs5Z/P+xxnEjqaQBLNmFwoddFFjao0ilB7axOrdZ/QtAMB4NPEugjq3uaani9MyF6
+         0ysFFeyscRqwCFZMwzaWLOAbmcyw12m8wpyI3TucbxTBPWLBnRe0w7vPiUApkogSiEKL
+         7syA==
+X-Forwarded-Encrypted: i=1; AJvYcCXdJWkzFY2dOJv6AncJ3yKt1CknBGiRGpNHwPc5CV5ewdPKE5CBbor1jVZ4OqqIGXuuiMK2T0BmiAGdPcns7GoNoxLz@vger.kernel.org
+X-Gm-Message-State: AOJu0Yye3LEUc/m14S2lxvDCl47GJQ57TMIy0llKZghjX+zvjm/S+9aH
+	djZwVVoCI23f9yrIkFodHoiSrN2LG7AZqOCtZNG3D5wGGWXpvp6eboXo
+X-Gm-Gg: AY/fxX41taGvCYiTTNIOVN2DWKo7ZJqlhLoiE4q3OpyF+mgyeK208U25jGran+p0z8T
+	RNK0TJU7piSv1UmPGeQPVeto0KhJS93lkkm21sj9aYA0ORFDY6/wZHcfTH0uopj/EtBIt717x4N
+	xD+YRPjIZNU3jlevtms6hF1n+v3mRvBFKxYAVqCA7KMBFRvi6FWW0yDiB4QE1070qzzs9Hn5hjd
+	L0RzLxZ9tqQMf2bH0IadI81cgLig4Ek3JGWqPBT0cXK5eaRbpJyb+AS4eT09YrVB+j/YR9bNQXQ
+	XidHiwIGdwSGQRfCx2QfpPeV1H+RmZTuek/EPdTM2BLFWb1skY+Df7gVsF+jmZKaXTKTVFFAZdL
+	KpwUFimYEbCx+e1V+nnCtyMb5aT1ZCaFkMpc+E0Za8QK5SNMWeMGi5ivx4qjgIFqwJRS2PY2kM9
+	nS6BNWjE4IZXQ/ibFOqX5IDN0=
+X-Google-Smtp-Source: AGHT+IHoZhq8SVAipdNH7xE9wyhQnfuq3z56aGjMvtz7PZ/zOPLpecF3r2gK41lOG6sx9jcWcULjGw==
+X-Received: by 2002:a05:600c:1d1d:b0:477:abea:9023 with SMTP id 5b1f17b1804b1-47d19577fb8mr217809585e9.9.1766682836550;
+        Thu, 25 Dec 2025 09:13:56 -0800 (PST)
+Received: from [192.168.1.121] ([176.206.93.222])
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-47be2723d19sm434751195e9.2.2025.12.25.09.13.55
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 25 Dec 2025 09:13:56 -0800 (PST)
+Message-ID: <e2bf55e6-b5ec-4865-bd67-54183a65c14e@gmail.com>
+Date: Thu, 25 Dec 2025 18:13:55 +0100
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH] platform/x86: asus-nb-wmi: add quirk_asus_ignore_fan for
+ UX3405MA
+To: Tim Wassink <timwassink.dev@gmail.com>
+Cc: Corentin Chary <corentin.chary@gmail.com>, "Luke D. Jones"
+ <luke@ljones.dev>, Hans de Goede <hansg@kernel.org>,
+ =?UTF-8?Q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>,
+ platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <20251221210218.12274-1-timwassink.dev@gmail.com>
+ <b02a7c96-9653-4ab2-ac4a-86d365af1a2d@gmail.com>
+ <CAD4HHcVKCL-9CV5kWH_6oz0jmh=+eXP-xU7cm2FvAHHucrPF7w@mail.gmail.com>
+ <74f1a53d-3556-4e67-8dc2-2a86d6c52365@gmail.com>
+ <CAD4HHcXvyC+xFGZ+PgFRv3F+tYwsfp6cxDh9ZOpquZOg29VOBQ@mail.gmail.com>
+Content-Language: en-US, it-IT, en-US-large
+From: Denis Benato <benato.denis96@gmail.com>
+In-Reply-To: <CAD4HHcXvyC+xFGZ+PgFRv3F+tYwsfp6cxDh9ZOpquZOg29VOBQ@mail.gmail.com>
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
-X-Migadu-Flow: FLOW_OUT
 
-Implement keyboard status attributes in asus-armoury after
-deprecating those attribute(s) in asus-wmi to avoid losing
-the ability to control LEDs status.
 
-Signed-off-by: Denis Benato <benato.denis96@gmail.com>
----
- drivers/platform/x86/asus-armoury.c        | 258 +++++++++++++++++++++
- include/linux/platform_data/x86/asus-wmi.h |  15 ++
- 2 files changed, 273 insertions(+)
+On 12/25/25 00:43, Tim Wassink wrote:
+> Hi,
+>  
+> yes the only problem is the error in dmesg, the rest seems to work.
+Then I think we can leave this as-is, unless there is a particular reason
+to ensure no errors are being reported in this case.
 
-diff --git a/drivers/platform/x86/asus-armoury.c b/drivers/platform/x86/asus-armoury.c
-index 9c1a9ad42bc4..a37713854691 100644
---- a/drivers/platform/x86/asus-armoury.c
-+++ b/drivers/platform/x86/asus-armoury.c
-@@ -76,10 +76,22 @@ struct rog_tunables {
- 	u32 nv_tgp;
- };
- 
-+struct asus_armoury_kbd_status {
-+	bool boot;
-+	bool awake;
-+	bool sleep;
-+	bool shutdown;
-+};
-+
- struct asus_armoury_priv {
- 	struct device *fw_attr_dev;
- 	struct kset *fw_attr_kset;
- 
-+	struct mutex keyboard_mutex;
-+
-+	/* Current TUF keyboard RGB state tracking */
-+	struct asus_armoury_kbd_status *kbd_state;
-+
- 	/*
- 	 * Mutex to protect eGPU activation/deactivation
- 	 * sequences and dGPU connection status:
-@@ -97,6 +109,7 @@ struct asus_armoury_priv {
- 
- static struct asus_armoury_priv asus_armoury = {
- 	.egpu_mutex = __MUTEX_INITIALIZER(asus_armoury.egpu_mutex),
-+	.keyboard_mutex = __MUTEX_INITIALIZER(asus_armoury.keyboard_mutex),
- };
- 
- struct fw_attrs_group {
-@@ -433,6 +446,169 @@ static ssize_t mini_led_mode_possible_values_show(struct kobject *kobj,
- }
- ASUS_ATTR_GROUP_ENUM(mini_led_mode, "mini_led_mode", "Set the mini-LED backlight mode");
- 
-+/* Keyboard power management **************************************************/
-+
-+static int armoury_kbd_state(struct kobj_attribute *attr,
-+			     const struct asus_armoury_kbd_status *status)
-+{
-+	u32 kbd_state = 0xBD | BIT(2) << 8;
-+
-+	if (status->boot)
-+		kbd_state |= BIT(1) << 16;
-+	if (status->awake)
-+		kbd_state |= BIT(3) << 16;
-+	if (status->sleep)
-+		kbd_state |= BIT(5) << 16;
-+	if (status->shutdown)
-+		kbd_state |= BIT(7) << 16;
-+
-+	return armoury_set_devstate(attr, kbd_state, NULL,
-+				    ASUS_WMI_DEVID_TUF_RGB_STATE);
-+}
-+
-+enum asus_armoury_kbd_state_field {
-+	ASUS_ARMOURY_KBD_STATE_BOOT,
-+	ASUS_ARMOURY_KBD_STATE_AWAKE,
-+	ASUS_ARMOURY_KBD_STATE_SLEEP,
-+	ASUS_ARMOURY_KBD_STATE_SHUTDOWN,
-+};
-+
-+static ssize_t armoury_kbd_state_write(struct kobject *kobj, struct kobj_attribute *attr,
-+				       const char *buf, size_t count,
-+				       enum asus_armoury_kbd_state_field field)
-+{
-+	ssize_t err;
-+	bool enable;
-+	struct asus_armoury_kbd_status kbd_status;
-+
-+	err = kstrtobool(buf, &enable);
-+	if (err)
-+		return err;
-+
-+	scoped_guard(mutex, &asus_armoury.keyboard_mutex) {
-+		memcpy(&kbd_status, asus_armoury.kbd_state, sizeof(kbd_status));
-+
-+		switch (field) {
-+		case ASUS_ARMOURY_KBD_STATE_BOOT:
-+			kbd_status.boot = enable;
-+			break;
-+		case ASUS_ARMOURY_KBD_STATE_AWAKE:
-+			kbd_status.awake = enable;
-+			break;
-+		case ASUS_ARMOURY_KBD_STATE_SLEEP:
-+			kbd_status.sleep = enable;
-+			break;
-+		case ASUS_ARMOURY_KBD_STATE_SHUTDOWN:
-+			kbd_status.shutdown = enable;
-+			break;
-+		default:
-+			return -EINVAL;
-+		}
-+
-+		err = armoury_kbd_state(attr, &kbd_status);
-+		if (err)
-+			return err;
-+
-+		memcpy(asus_armoury.kbd_state, &kbd_status, sizeof(kbd_status));
-+	}
-+
-+	sysfs_notify(kobj, NULL, attr->attr.name);
-+
-+	return count;
-+}
-+
-+static ssize_t armoury_kbd_state_read(struct kobject *kobj, struct kobj_attribute *attr,
-+				      char *buf, enum asus_armoury_kbd_state_field field)
-+{
-+	bool *field_ptr, field_enabled;
-+
-+	switch (field) {
-+	case ASUS_ARMOURY_KBD_STATE_AWAKE:
-+		field_ptr = &asus_armoury.kbd_state->awake;
-+		break;
-+	case ASUS_ARMOURY_KBD_STATE_SLEEP:
-+		field_ptr = &asus_armoury.kbd_state->sleep;
-+		break;
-+	case ASUS_ARMOURY_KBD_STATE_BOOT:
-+		field_ptr = &asus_armoury.kbd_state->boot;
-+		break;
-+	case ASUS_ARMOURY_KBD_STATE_SHUTDOWN:
-+		field_ptr = &asus_armoury.kbd_state->shutdown;
-+		break;
-+	default:
-+		return -EINVAL;
-+	}
-+
-+	scoped_guard(mutex, &asus_armoury.keyboard_mutex)
-+		field_enabled = *field_ptr;
-+
-+	return sysfs_emit(buf, field_enabled ? "1\n" : "0\n");
-+}
-+
-+static ssize_t kbd_leds_sleep_current_value_store(struct kobject *kobj,
-+						  struct kobj_attribute *attr,
-+						  const char *buf, size_t count)
-+{
-+	return armoury_kbd_state_write(kobj, attr, buf, count, ASUS_ARMOURY_KBD_STATE_SLEEP);
-+}
-+
-+static ssize_t kbd_leds_sleep_current_value_show(struct kobject *kobj,
-+						 struct kobj_attribute *attr, char *buf)
-+{
-+	return armoury_kbd_state_read(kobj, attr, buf, ASUS_ARMOURY_KBD_STATE_SLEEP);
-+}
-+
-+ASUS_ATTR_GROUP_BOOL(kbd_leds_sleep, "kbd_leds_sleep",
-+		     "Keyboard backlight while system is sleeping");
-+
-+static ssize_t kbd_leds_boot_current_value_store(struct kobject *kobj,
-+						 struct kobj_attribute *attr,
-+						 const char *buf, size_t count)
-+{
-+	return armoury_kbd_state_write(kobj, attr, buf, count, ASUS_ARMOURY_KBD_STATE_BOOT);
-+}
-+
-+static ssize_t kbd_leds_boot_current_value_show(struct kobject *kobj,
-+						struct kobj_attribute *attr, char *buf)
-+{
-+	return armoury_kbd_state_read(kobj, attr, buf, ASUS_ARMOURY_KBD_STATE_BOOT);
-+}
-+
-+ASUS_ATTR_GROUP_BOOL(kbd_leds_boot, "kbd_leds_boot",
-+		     "Keyboard backlight while system is booting");
-+
-+static ssize_t kbd_leds_awake_current_value_store(struct kobject *kobj,
-+						  struct kobj_attribute *attr,
-+						  const char *buf, size_t count)
-+{
-+	return armoury_kbd_state_write(kobj, attr, buf, count, ASUS_ARMOURY_KBD_STATE_AWAKE);
-+}
-+
-+static ssize_t kbd_leds_awake_current_value_show(struct kobject *kobj,
-+						 struct kobj_attribute *attr, char *buf)
-+{
-+	return armoury_kbd_state_read(kobj, attr, buf, ASUS_ARMOURY_KBD_STATE_AWAKE);
-+}
-+
-+ASUS_ATTR_GROUP_BOOL(kbd_leds_awake, "kbd_leds_awake",
-+		     "Keyboard backlight while system is awake");
-+
-+static ssize_t kbd_leds_shutdown_current_value_store(struct kobject *kobj,
-+						     struct kobj_attribute *attr,
-+						     const char *buf, size_t count)
-+{
-+	return armoury_kbd_state_write(kobj, attr, buf, count, ASUS_ARMOURY_KBD_STATE_SHUTDOWN);
-+}
-+
-+static ssize_t kbd_leds_shutdown_current_value_show(struct kobject *kobj,
-+						    struct kobj_attribute *attr, char *buf)
-+{
-+	return armoury_kbd_state_read(kobj, attr, buf, ASUS_ARMOURY_KBD_STATE_SHUTDOWN);
-+}
-+
-+ASUS_ATTR_GROUP_BOOL(kbd_leds_shutdown, "kbd_leds_shutdown",
-+		     "Keyboard backlight while system is shutdown");
-+
- static ssize_t gpu_mux_mode_current_value_store(struct kobject *kobj,
- 						struct kobj_attribute *attr,
- 						const char *buf, size_t count)
-@@ -867,6 +1043,35 @@ static bool has_valid_limit(const char *name, const struct power_limits *limits)
- 	return limit_value > 0;
- }
- 
-+static struct asus_armoury_kbd_status *asus_init_kbd_state(void)
-+{
-+	int err;
-+	u32 kbd_status;
-+	struct asus_armoury_kbd_status *kbd_state __free(kfree) = NULL;
-+
-+	err = armoury_get_devstate(NULL, &kbd_status, ASUS_WMI_DEVID_TUF_RGB_STATE);
-+	if (err) {
-+		pr_err("ACPI does not support keyboard power control: %d\n", err);
-+		return ERR_PTR(-ENODEV);
-+	}
-+
-+	pr_info("Detected keyboard backlight support\n");
-+
-+	kbd_state = kzalloc(sizeof(*kbd_state), GFP_KERNEL);
-+	if (!kbd_state)
-+		return ERR_PTR(-ENODEV);
-+
-+	/*
-+	 * By default leds are off for all states (to spare power)
-+	 * except for when laptop is awake, where leds color and
-+	 * brightness are controllable by userspace.
-+	 */
-+	memset(kbd_state, 0, sizeof(*kbd_state));
-+	kbd_state->awake = true;
-+
-+	return no_free_ptr(kbd_state);
-+}
-+
- static int asus_fw_attr_add(void)
- {
- 	const struct rog_tunables *const ac_rog_tunables =
-@@ -926,6 +1131,51 @@ static int asus_fw_attr_add(void)
- 		}
- 	}
- 
-+	asus_armoury.kbd_state = NULL;
-+	if (armoury_has_devstate(ASUS_WMI_DEVID_TUF_RGB_STATE)) {
-+		asus_armoury.kbd_state = asus_init_kbd_state();
-+		if (IS_ERR(asus_armoury.kbd_state)) {
-+			err = PTR_ERR(asus_armoury.kbd_state);
-+			pr_err("Failed to get keyboard status: %d\n", err);
-+			goto err_remove_kbd_state;
-+		}
-+
-+		err = sysfs_create_group(&asus_armoury.fw_attr_kset->kobj, &kbd_leds_sleep_attr_group);
-+		if (err) {
-+			pr_err("Failed to create sysfs-group for keyboard backlight sleep state: %d\n", err);
-+			goto err_remove_kbd_state;
-+		}
-+
-+		err = sysfs_create_group(&asus_armoury.fw_attr_kset->kobj, &kbd_leds_boot_attr_group);
-+		if (err) {
-+			pr_err("Failed to create sysfs-group for keyboard backlight boot state: %d\n", err);
-+			goto err_remove_kbd_state;
-+		}
-+
-+		err = sysfs_create_group(&asus_armoury.fw_attr_kset->kobj, &kbd_leds_awake_attr_group);
-+		if (err) {
-+			pr_err("Failed to create sysfs-group for keyboard backlight awake state: %d\n", err);
-+			goto err_remove_kbd_state;
-+		}
-+
-+		err = sysfs_create_group(&asus_armoury.fw_attr_kset->kobj, &kbd_leds_shutdown_attr_group);
-+		if (err) {
-+			pr_err("Failed to create sysfs-group for keyboard backlight shutdown state: %d\n", err);
-+			goto err_remove_kbd_state;
-+		}
-+
-+		/*
-+		 * The attribute is write-only and for the state to be coherent
-+		 * a default state has to written: userspace is expected to
-+		 * modify it based on user preference.
-+		 */
-+		err = armoury_kbd_state(&attr_kbd_leds_awake_current_value, asus_armoury.kbd_state);
-+		if (err) {
-+			pr_err("Failed to initialize keyboard backlight states: %d\n", err);
-+			goto err_remove_kbd_state;
-+		}
-+	}
-+
- 	for (i = 0; i < ARRAY_SIZE(armoury_attr_groups); i++) {
- 		if (!armoury_has_devstate(armoury_attr_groups[i].wmi_devid))
- 			continue;
-@@ -965,6 +1215,14 @@ static int asus_fw_attr_add(void)
- 	}
- 	if (asus_armoury.gpu_mux_dev_id)
- 		sysfs_remove_group(&asus_armoury.fw_attr_kset->kobj, &gpu_mux_mode_attr_group);
-+err_remove_kbd_state:
-+	kfree(asus_armoury.kbd_state);
-+	if (asus_armoury.kbd_state) {
-+		sysfs_remove_group(&asus_armoury.fw_attr_kset->kobj, &kbd_leds_sleep_attr_group);
-+		sysfs_remove_group(&asus_armoury.fw_attr_kset->kobj, &kbd_leds_boot_attr_group);
-+		sysfs_remove_group(&asus_armoury.fw_attr_kset->kobj, &kbd_leds_awake_attr_group);
-+		sysfs_remove_group(&asus_armoury.fw_attr_kset->kobj, &kbd_leds_shutdown_attr_group);
-+	}
- err_remove_mini_led_group:
- 	if (asus_armoury.mini_led_dev_id)
- 		sysfs_remove_group(&asus_armoury.fw_attr_kset->kobj, &mini_led_mode_attr_group);
-diff --git a/include/linux/platform_data/x86/asus-wmi.h b/include/linux/platform_data/x86/asus-wmi.h
-index 419491d4abca..6667b3b474c2 100644
---- a/include/linux/platform_data/x86/asus-wmi.h
-+++ b/include/linux/platform_data/x86/asus-wmi.h
-@@ -153,6 +153,21 @@
- /* TUF laptop RGB power/state */
- #define ASUS_WMI_DEVID_TUF_RGB_STATE	0x00100057
- 
-+/*
-+ * Flags for TUF RGB state to be used with
-+ * ASUS_WMI_DEVID_TUF_RGB_STATE:
-+ * 0xBD | BIT(1) << 8 | flags
-+ *
-+ * where 0xBD is required for the method call
-+ * to not be discarded, BIT(2)<<8 specified
-+ * this is a command and flags is a combination
-+ * of one or more of the following flags.
-+ */
-+#define ASUS_WMI_DEVID_TUF_RGB_STATE_BOOT (BIT(1) << 16u)
-+#define ASUS_WMI_DEVID_TUF_RGB_STATE_AWAKE (BIT(3) << 16u)
-+#define ASUS_WMI_DEVID_TUF_RGB_STATE_SLEEP (BIT(5) << 16u)
-+#define ASUS_WMI_DEVID_TUF_RGB_STATE_SHUTDOWN (BIT(7) << 16u)
-+
- /* Bootup sound control */
- #define ASUS_WMI_DEVID_BOOT_SOUND	0x00130022
- 
--- 
-2.52.0
+This is not the only module that does things this way, so I don't think
+it's going to be a problem.
 
+Thank you for your time and looking into the matter :)
+>
+> On Tue, Dec 23, 2025 at 2:50 PM Denis Benato <benato.denis96@gmail.com> wrote:
+>>
+>> On 12/22/25 11:44, Tim Wassink wrote:
+>>> On Sun, Dec 21, 2025 at 10:01 PM Denis Benato <denis.benato@somemail.com> wrote:
+>>>> On 12/21/25 22:01, Tim Wassink wrote:
+>>>>> The ASUS Zenbook 14 (UX3405MA) uses a newer WMI interface for thermal
+>>>>> management that does not support the legacy WMI fan control methods.
+>>>>> Currently, this results in ENODEV (-19) errors in dmesg when the driver
+>>>>> attempts to fetch factory fan curve defaults.
+>>>>>
+>>>>> Add a quirk to use quirk_asus_ignore_fan to silence these errors and
+>>>>> signal that legacy fan control is intentionally unsupported, as thermal
+>>>>> policies are handled through the platform_profile interface.
+>>>> It is my understanding that this patch suppresses the error,
+>>>> while maintaining the current behavior in every other aspect,
+>>>> correct?
+>>> I am actually not sure anymore if this patch is ok, as it introduces a
+>>> trade-off regarding telemetry.
+>>>
+>>> While the patch successfully silences the ENODEV (-19) errors, I have
+>>> verified locally that it also inhibits the registration of the fan
+>>> telemetry in hwmon. This means the read-only 'fan1_input' (RPM) is no
+>>> longer available to the user.
+>>>
+>>> I initially followed the precedent of commit 82cc5c6c624c ("platform/x86:
+>>> asus-wmi: Ignore fan on E410MA"), which can be found here:
+>>> https://lore.kernel.org/all/20221221-asus-fan-v1-2-e07f3949725b@weissschuh.net/
+>>>
+>>> Now I realize that case was specifically for a fanless system. The
+>>> UX3405MA does have a physical fan
+>>> which remains functional via the platform_profile (AIPT) interface
+>>> after this patch, as confirmed by stress testing.
+>>>
+>>> I thought this quirk was the standard way to handle it, but I am not
+>>> so sure anymore.
+>> Hi,
+>>
+>> I think what's happening is that asus-nb-wmi is binding multiple devices: for those
+>> that are unsupported the driver returns -ENODEV and the kernel, as a result,
+>> probes successive drivers for those devices that can't be bound.
+>>
+>> It's very likely that using that quirk prevents asus-nb-wmi to bind all devices,
+>> and this can very well result in what you are seeing...
+>>
+>> The only runtime problem is that an error appears in dmesg, right? The rest is
+>> working from what I can understand from your messages.
+>>> Best regards,
+>>> Tim
+>>>
+>>> On Mon, Dec 22, 2025 at 3:54 AM Denis Benato <benato.denis96@gmail.com> wrote:
+>>>> On 12/21/25 22:01, Tim Wassink wrote:
+>>>>> The ASUS Zenbook 14 (UX3405MA) uses a newer WMI interface for thermal
+>>>>> management that does not support the legacy WMI fan control methods.
+>>>>> Currently, this results in ENODEV (-19) errors in dmesg when the driver
+>>>>> attempts to fetch factory fan curve defaults.
+>>>>>
+>>>>> Add a quirk to use quirk_asus_ignore_fan to silence these errors and
+>>>>> signal that legacy fan control is intentionally unsupported, as thermal
+>>>>> policies are handled through the platform_profile interface.
+>>>> It is my understanding that this patch suppresses the error,
+>>>> while maintaining the current behavior in every other aspect,
+>>>> correct?
+>>>>> Signed-off-by: Tim Wassink <timwassink.dev@gmail.com>
+>>>>> ---
+>>>>>  drivers/platform/x86/asus-nb-wmi.c | 9 +++++++++
+>>>>>  1 file changed, 9 insertions(+)
+>>>>>
+>>>>> diff --git a/drivers/platform/x86/asus-nb-wmi.c b/drivers/platform/x86/asus-nb-wmi.c
+>>>>> index 6a62bc5b02fd..eaa8abe506cb 100644
+>>>>> --- a/drivers/platform/x86/asus-nb-wmi.c
+>>>>> +++ b/drivers/platform/x86/asus-nb-wmi.c
+>>>>> @@ -544,6 +544,15 @@ static const struct dmi_system_id asus_quirks[] = {
+>>>>>               },
+>>>>>               .driver_data = &quirk_asus_zenbook_duo_kbd,
+>>>>>       },
+>>>>> +     {
+>>>>> +             .callback = dmi_matched,
+>>>>> +             .ident = "ASUS Zenbook 14 UX3405MA",
+>>>>> +             .matches = {
+>>>>> +                     DMI_MATCH(DMI_SYS_VENDOR, "ASUSTeK COMPUTER INC."),
+>>>>> +                     DMI_MATCH(DMI_PRODUCT_NAME, "UX3405MA"),
+>>>>> +             },
+>>>>> +             .driver_data = &quirk_asus_ignore_fan,
+>>>>> +     },
+>>>>>       {
+>>>>>               .callback = dmi_matched,
+>>>>>               .ident = "ASUS ROG Z13",
