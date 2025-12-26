@@ -1,104 +1,170 @@
-Received: from mail-wm1-f65.google.com (mail-wm1-f65.google.com [209.85.128.65])
+Received: from mail-wm1-f67.google.com (mail-wm1-f67.google.com [209.85.128.67])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7E931242D98
-	for <platform-driver-x86@vger.kernel.org>; Fri, 26 Dec 2025 20:34:57 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.65
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0018B2F5A32
+	for <platform-driver-x86@vger.kernel.org>; Fri, 26 Dec 2025 20:37:46 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.67
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1766781299; cv=none; b=FQR8bhya0Ak2Am6SS5cdam/dMQshZySGUeDaxi8dMFFG4VIVHr7PXNPG30sTzPvDAWNmc2qG6KPjTZ+bO3p6hFU48zdvk9cB19wG0Y6A3cgKwh0B4tkWT29x4rIIb9CeIN1Cus0dgJyOORJCnD8DXTD+CxFKDoHxUu1pVPTZ+EI=
+	t=1766781469; cv=none; b=llacTnSzJ6lCIGpuEfoFyFDXMhQ2hFmhZNOM96/PJTTQjVXsbr9pjQAcK5Q/2Tpr/pPHmCNntsjprVxBlYyAOZPC27xYYLfiXXbn7TzKW9lugOEsnkgh5YBlxoi5zpOYDVjPVTeSx6b4WkVrf30wBF2sQe7G3lIVCidU2KRDgzs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1766781299; c=relaxed/simple;
-	bh=hmKsO/1JWno4d/Yci4BzgDUhGgq7HD6XQb5UtyHvm8g=;
-	h=From:To:Subject:Date:Message-ID:MIME-Version:Content-Type; b=gePjONScVdqp8JWXg71swUDnqHhdd+4VYtBoFDOApkdwXSkuvL2vhKKw5fCymcBwCrYWwORTd32fq5MAoHTW+g1MjY8kh2hvi9xpyZoAMR01RPiMAhVU7xnKAt7nexYVmBg/AfCuRpj96c557qypRlfUle3ZP1Sp/C0F2sctpas=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=CXr4R1S9; arc=none smtp.client-ip=209.85.128.65
+	s=arc-20240116; t=1766781469; c=relaxed/simple;
+	bh=s/KVVzpn5tfrVfUqQILEJpmVp2j7KLekvYfPsh0bjP8=;
+	h=Content-Type:Message-Id:From:To:Subject:Date:In-Reply-To:
+	 References:MIME-Version; b=MvXWdJVz2aeX7ZtHZ/9YO/1iZSthv1djaJkCXAcbbvXm5Wn2IDFTmO92PS/WsoYRn/SvQbLzYd6CvKzRLVjMDwtuSl0pBXL9xHx0JwPlR1ma+7TKQaFSxBfZs2htlhg4Ys+CWIA8CwYqh8ododu9S4mmldFEcfY+fQSMS1wfHhk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=lB4jZRgU; arc=none smtp.client-ip=209.85.128.67
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="CXr4R1S9"
-Received: by mail-wm1-f65.google.com with SMTP id 5b1f17b1804b1-47a9567bcd9so5670805e9.2
-        for <platform-driver-x86@vger.kernel.org>; Fri, 26 Dec 2025 12:34:57 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="lB4jZRgU"
+Received: by mail-wm1-f67.google.com with SMTP id 5b1f17b1804b1-4779c9109ceso6185825e9.1
+        for <platform-driver-x86@vger.kernel.org>; Fri, 26 Dec 2025 12:37:46 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1766781295; x=1767386095; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:to
-         :from:from:to:cc:subject:date:message-id:reply-to;
-        bh=CV3oeGImNqWDpohcfzcqKappaYTZtWAuPzG0OYSH1YQ=;
-        b=CXr4R1S9LUfdex6EUHikkXOcq86IbumuZ5GhVH849qRiyqjhuVhFVtVUYlNu+Mrn1f
-         YsL8kDzjc6QkbuOY9VuX/xO4zAEgpNFMXDXfqawgjTU1FwZ+IZ7qSRv1QXAbWHmUSpHk
-         aEJapesptFDGL2ojXDL5TRDx4MpX9L//2yfQ4JBuvK82B90eQy7BKeOOtK2RplIt1yFf
-         Fo+4amjoih41dhK4fzFPUL7XLhdQSqGDpl/kSQTthtEJD3XGOrcOIX2w0ix5M+W56kY6
-         NauRxpyE27ooQKJWHZiU6iTGl0S4h1U5hntdKBmUlIwqYlE3GgjziuoOkfhB+AvdrIn2
-         tRgw==
+        d=gmail.com; s=20230601; t=1766781465; x=1767386265; darn=vger.kernel.org;
+        h=mime-version:content-transfer-encoding:user-agent:references
+         :in-reply-to:date:subject:to:from:message-id:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=jBgm/q5c8oRQdA4cw4eFy9cmIf/nksRHAM4xaBKkolY=;
+        b=lB4jZRgUkLplazOf9D1YL/5V/loeaDpCqYZcMgDvjy+PlwPlHlGSZ/+aGWKNVZHHSH
+         q1psls3+D1H6DUOKR1uq6YD2fmiCrIQshDPuz55OwRS90mZppBxio7Bin/CTgM9Hfy7q
+         9n57NDNdBSreU6JuT8w0iG8gNCiwDnZMRPLSxBOWOhTSdo+uqaMpiWgJVvqnbyJkCUJl
+         Ji2EF4yU/5N92MpXJpAHsgzoAiBeI0zKRpUhkcK2FbRFDspjKi4MAPS9895DPAz9HKwO
+         BuRxdOX92UK4hDQEWI4QOIWtlEv/ggVQtz702WIltr7zFVZq779gagCyhQzY10ZCFwSl
+         7kXg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1766781295; x=1767386095;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:to
-         :from:x-gm-gg:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=CV3oeGImNqWDpohcfzcqKappaYTZtWAuPzG0OYSH1YQ=;
-        b=OWZxUK8izhiIKvv3+IHPFFuGrQyCQI4135bgextsojXmPkoyREbCWcnrKrO5pa1tmL
-         cOX22ayrvbRI6PuFhmN4JrFrQV8qo021Yd1T5U2NjAd8BZ2uZdkk8qC3rOKO3O+af3UM
-         Lfxh2Dx+26g2Yeerdui+ZpHa/FDDcwUFuxQr7fbXFGzqCG05Y3zWUjKAt1/nF6eKDDMO
-         z45DX9L744GQFbKBEK4iPPpTWbTR+eE2c3BXGnBWDtjchWLSv2pZr0cEvWfWNNeB3Emk
-         KfhoyB5GD5AbFXtPu2hoRNXdxdQzXtonL2MSeMM5K4L2sOygyulKmLaMg7wEl1sSAANe
-         nqUw==
-X-Gm-Message-State: AOJu0YxiP9CJvNoKK6zta6C8jnK6KvfP9cLaRBhacHIEdJMNwwo1mkWI
-	QaC/JGuh9ThEDoH4ZiqU4yUxoxLtkgJq+m0lX4xdS+Y36+JC7311/e8PKFGpcQkiE00=
-X-Gm-Gg: AY/fxX4nybwND4ptgACKru3Rly9ZRByUkjiIBgG7LonwdFvluolEw4YmZbQ7GhvoefP
-	KTPopNU/EKTdcqMZpblfBMc3b7x94xQJwcf70CGlMkn0XKdBbHNzZi5yQldCculx+LO0B8CHj9L
-	TPMppErUrqeIWDHCcrgl/WVeGNheio7tXcIfBivt8bMAjW1L+KWLV8dqVD1J76nRaYPmFnp+3LG
-	6ui8vo4ZB5jr+FCFuAEnNdVdGDX6CdgxcvdI37uaGqW7jNbpvBSeMhilaAUqvecj6uXJcuEDBHs
-	pl46JOBhkpd1raMNSljNMu2Wy9w/peTRsrY7uwa22dgjtklLYQdGT0A+sGsO/S2ldz7+dO45x78
-	2IfP2lj3j3K0yDz6AYwDteL1ZQo9uO4CaZVLQEBvYBvp+Lo7Lr9KoqwE2REWR0kF1jZxJYNpKON
-	64yhy6sh0=
-X-Google-Smtp-Source: AGHT+IH+ldne5N2p05s9YWLRcQ0W+T4cd156gSQADmyPE3yc7KZi0SwIcudMUCJCdDqOV0PP5AHL1Q==
-X-Received: by 2002:a05:600c:8b44:b0:477:9c40:2fa1 with SMTP id 5b1f17b1804b1-47d19574dfemr154689355e9.4.1766781295500;
-        Fri, 26 Dec 2025 12:34:55 -0800 (PST)
-Received: from GreenOne.lan ([2a03:a900:1000:22b1::9d4])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-47d1936d220sm441929315e9.8.2025.12.26.12.34.54
+        d=1e100.net; s=20230601; t=1766781465; x=1767386265;
+        h=mime-version:content-transfer-encoding:user-agent:references
+         :in-reply-to:date:subject:to:from:message-id:x-gm-gg
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=jBgm/q5c8oRQdA4cw4eFy9cmIf/nksRHAM4xaBKkolY=;
+        b=eAJ+6TcJWp5wzHhFdAI5GXMylA+YSU/CxAJsEAyFKCQIL3GLKXDGYEK/R6tJ272hN8
+         Wutfi15oG1yjj8bvBFjU7m8GLWMMWaRy5gmo4SvXlBlp2C5UcYKMxt7R9O+vvH0CL9aK
+         00CNwCGzGXWalu3Zh3D2nOdIkzhRIWJA3MfT4p5cxFQB1AvOewm6DAoVtwHrHVJb+J3j
+         ARPJ8A3O4Woag7tVrcGJPXq4tcUz4vwpXuRcczg2eM/Dug1c2R7/hshYsiowJRRj+02x
+         MbXpSz7h0bC1ajBEssWNBeA2wZW1cocspHyXL7YP8o0uf/mOZIgNeg57QnOYLmTPnGzg
+         K1ZA==
+X-Gm-Message-State: AOJu0Yw9GOu/GEVIsubR/Q7W61DMBvLTrzCiSbG8rYU4FbWnq0oXmo63
+	EygdIs42b9cW5MMt+mk6XjXUz1998tpoB7bOPiDt35RbKiWi97vbzavtekieJdhMTSE=
+X-Gm-Gg: AY/fxX6NcccOX0mgUpV0XpYk75yuh/Hd5IfbbgZSgURdRhc4dtuZo6Dq+vhpcVEXY5y
+	wvOj5Ab5f2dzjkOPP74xZm951uIRlCsxUM2snKwxazm583ZmCNDji+pu1RMQfrCVvv0R+iF0Ym6
+	5c7AkUyJ3ve9dq30Y0XMY/h281q//4ypTRRA47Q97H8gEuHJ6/Cd11B+/21UkXoVn2OyivNNCDk
+	AILVQ3VwilKtOEX+ZnwohGiwP5Yfw8nL7m7D67LUmeKpmDPwe75glsdzBNtQXC5qDhsZw+cBBFU
+	Ynb5EK5hQF415/h9bRgq/EHE027krM51qMYSlir9+TUbwBXAQk7ICzFhPiyqsbSBiXTmz1Tw01K
+	LhUXi5SfutouUMlgagdhNhg89tXZ/JkYy8U/8J6KM5fdW2CUdS7DoNoZ3q0/4aDHYD3CoQtixbN
+	zSR/S4qBBfu7Pc
+X-Google-Smtp-Source: AGHT+IGN0Ow8+eOlpIlWhfxVE0XDvCurE31rNn+ctzFAAD/hIJPl6/fsrJUrfQqdAPnpBwF9xF0i/A==
+X-Received: by 2002:a05:600c:3151:b0:477:a203:66dd with SMTP id 5b1f17b1804b1-47d197f69demr167715395e9.2.1766781464853;
+        Fri, 26 Dec 2025 12:37:44 -0800 (PST)
+Received: from noip.localdomain ([2a03:a900:1000:22b1::9d4])
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-4324eab2ebfsm46733391f8f.40.2025.12.26.12.37.42
         for <platform-driver-x86@vger.kernel.org>
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 26 Dec 2025 12:34:55 -0800 (PST)
-From: =?UTF-8?q?Tom=C3=A1=C5=A1=20Hnyk?= <tomashnyk@gmail.com>
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Fri, 26 Dec 2025 12:37:43 -0800 (PST)
+Content-Type: text/plain; charset=utf-8
+Message-Id: <1766781371853.1837395511.4224584554@gmail.com>
+From: =?UTF-8?Q?Tom=C3=A1=C5=A1_Hnyk?= <tomashnyk@gmail.com>
 To: platform-driver-x86@vger.kernel.org
-Subject: [PATCH v2] platform/x86: ideapad-laptop: Reassign KEY_CUT to KEY_SELECTIVE_SCREENSHOT
-Date: Fri, 26 Dec 2025 21:34:54 +0100
-Message-ID: <20251226203454.405520-1-tomashnyk@gmail.com>
-X-Mailer: git-send-email 2.52.0
+Subject: Re: [PATCH] platform/x86: lenovo: Reassign KEY_CUT to
+ KEY_SELECTIVE_SCREENSHOT for Ideapad laptops
+Date: Fri, 26 Dec 2025 20:37:42 +0000
+In-Reply-To: <219e020c-11e8-fdea-0ad6-656101999e88@linux.intel.com>
+References: <219e020c-11e8-fdea-0ad6-656101999e88@linux.intel.com>
+X-Mailer: Vivaldi Mail
+User-Agent: Vivaldi Mail/7.7.3851.61
+Content-Transfer-Encoding: quoted-printable
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
 
-As per Lenovo documentation, Fn+Print-Screen should "Open the Snipping
-tool" which corresponds to KEY_SELECTIVE_SCREENSHOT (keycode 0x27a). It
-is currently assigned to KEY_CUT because keycodes under 248 were
-preferred due to X11 limitations.
 
-Reassign Fn+Print-Screen from KEY_CUT to KEY_SELECTIVE_SCREENSHOT.
+Hello,
 
-Closes: https://bugzilla.kernel.org/show_bug.cgi?id=3D220566
+On Monday 15. September 2025, 12:11:48 (+02:00), Ilpo J=C3=A4rvinen wrote:
 
-Signed-off-by: Tomáš Hnyk <tomashnyk@gmail.com>
----
- drivers/platform/x86/lenovo/ideapad-laptop.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+> On Thu, 11 Sep 2025, Tom=C3=A1=C5=A1 Hnyk wrote:
+>=20
+> > This key is produced by FN+PRINT_SCREEN and as per Lenovo documentation=
+,
+> > it should be "Open the Snipping tool". This corresponds to
+> > KEY_SELECTIVE_SCRENSHOT, whose keycode is 0x27a. Previously, keycodes
+> > under 248 were preferred due to X11 limitations, so KEY_CUT was used.
+> > This is now being corrected.
+>=20
+> Hi Tomas,
+>=20
+> Thanks for the patch.
+>=20
+> Please use "platform/x86: ideapad-laptop:" as the prefix for shortlog =
+and=20
+> remove "for Ideapad laptops" as prefix already covers that information.
+>=20
+> I'd rehrapse the commit message to something along the lines of:
+>=20
+> As per Lenovo documentation, Fn+Print-Screen should "Open the =
+Snipping=20
+> tool" which corresponds to KEY_SELECTIVE_SCREENSHOT (keycode 0x27a). It
+> is currently assigned to KEY_CUT because keycodes under 248 were
+> preferred due to X11 limitations.
+>=20
+> Reassign Fn+Print-Screen from KEY_CUT to KEY_SELECTIVE_SCREENSHOT.
+>=20
+>=20
+> Note also there should be double E in SCREENSHOT.
+>=20
+> > Signed-off-by: Tom=C3=A1=C5=A1 Hnyk <tomashnyk@gmail.com>
+> > ---
+> >  Fixes https://bugzilla.kernel.org/show_bug.cgi?id=3D220566
+>=20
+> Fixes: (note the colon) tag should refer to a commit you're fixing =
+with=20
+> this patch (not really applicable here). It also has a certain =
+formatting=20
+> requirements which are explained in Documentation/process in case you =
+need=20
+> to use that tag one day.
+>=20
+> Closes: is the correct tag to use for bug tickets so please change to=20
+> that.
+>=20
+> Also, please place all tags before your signed-off-by line as anything =
+you=20
+> put after --- line will be automatically cut by maintainer tools.
+> =20
+> >  drivers/platform/x86/lenovo/ideapad-laptop.c | 2 +-
+> >  1 file changed, 1 insertion(+), 1 deletion(-)
+> >=20
+> > diff --git a/drivers/platform/x86/lenovo/ideapad-laptop.c =
+b/drivers/platform/x86/lenovo/ideapad-laptop.c
+> > index fcebfbaf0460..556d50fb7996 100644
+> > --- a/drivers/platform/x86/lenovo/ideapad-laptop.c
+> > +++ b/drivers/platform/x86/lenovo/ideapad-laptop.c
+> > @@ -1328,7 +1328,7 @@ static const struct key_entry ideapad_keymap[] =
+=3D {
+> >     /* Performance toggle also Fn+Q, handled inside =
+ideapad_wmi_notify() */
+> >     { KE_KEY,   0x3d | IDEAPAD_WMI_KEY, { KEY_PROG4 } },
+> >     /* shift + prtsc */
+> > -   { KE_KEY,   0x2d | IDEAPAD_WMI_KEY, { KEY_CUT } },
+> > +   { KE_KEY,   0x2d | IDEAPAD_WMI_KEY, { KEY_SELECTIVE_SCREENSHOT } },=
 
-diff --git a/drivers/platform/x86/lenovo/ideapad-laptop.c b/drivers/platform/x86/lenovo/ideapad-laptop.c
-index 5171a077f62c..7d5f7a2f6564 100644
---- a/drivers/platform/x86/lenovo/ideapad-laptop.c
-+++ b/drivers/platform/x86/lenovo/ideapad-laptop.c
-@@ -1367,7 +1367,7 @@ static const struct key_entry ideapad_keymap[] = {
- 	/* Performance toggle also Fn+Q, handled inside ideapad_wmi_notify() */
- 	{ KE_KEY,	0x3d | IDEAPAD_WMI_KEY, { KEY_PROG4 } },
- 	/* shift + prtsc */
--	{ KE_KEY,   0x2d | IDEAPAD_WMI_KEY, { KEY_CUT } },
-+	{ KE_KEY,   0x2d | IDEAPAD_WMI_KEY, { KEY_SELECTIVE_SCREENSHOT } },
- 	{ KE_KEY,   0x29 | IDEAPAD_WMI_KEY, { KEY_TOUCHPAD_TOGGLE } },
- 	{ KE_KEY,   0x2a | IDEAPAD_WMI_KEY, { KEY_ROOT_MENU } },
- 
--- 
-2.52.0
-
+> >     { KE_KEY,   0x29 | IDEAPAD_WMI_KEY, { KEY_TOUCHPAD_TOGGLE } },
+> >     { KE_KEY,   0x2a | IDEAPAD_WMI_KEY, { KEY_ROOT_MENU } },
+>=20
+> This patch is corrupted by spaces. (This is a quite common problem, =
+no=20
+> need to apologize).
+>=20
+> After fixing the forementioned issues, please send v2. You may want =
+to=20
+> try first to send the patch only to yourself and try applying the =
+patch=20
+> you received from yourself to check that nothing corrupted the patch =
+while=20
+> sending it.
+>=20
+Sorry, I completely missed this e-mail back in September. I have just sent =
+version2. I first tried to send it to myself and it applied. I also fixed =
+the commit message. I hope now everything is ok.
+Tomas
