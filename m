@@ -1,30 +1,32 @@
-Received: from out-177.mta1.migadu.com (out-177.mta1.migadu.com [95.215.58.177])
+Received: from out-178.mta1.migadu.com (out-178.mta1.migadu.com [95.215.58.178])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 87F4E22A1D5
-	for <platform-driver-x86@vger.kernel.org>; Sun, 28 Dec 2025 20:08:37 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=95.215.58.177
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7073727FD43
+	for <platform-driver-x86@vger.kernel.org>; Sun, 28 Dec 2025 20:08:39 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=95.215.58.178
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1766952520; cv=none; b=NcwTMws3I9dAEA5w4vcd7MOedoiUyY8CjKdD02G5TW4ptIKKt0yU1zoSjkDUhd+eqEdNky7YhvELiecSirrF8t7Sh5Q3ZNdmmnxQWqBNELH8cCvmgoGcenbym+JizIJet0I6G1V16kABJNHMjlMbFp2S47aNO3Xtjor7kw4blw0=
+	t=1766952521; cv=none; b=T+8zAZ11gBGFP8MnLuNwrft6CA6CSpJsrlXvrNPU5zHmIFTo7X8SZzmbVMIwmjizf9eWTVuWnA1u4UpELLQxnNqitOqhzJSLU3iU+I50qWkygNqZD35TWdV20iwtcgyurElLrbDlM12yOqbzKPuRqxw4fA28osGpNylVHhY87bU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1766952520; c=relaxed/simple;
-	bh=siVU3FiTnlUkcfaR8W60pOQzPfgyKvJ4ZYv1XPp17B8=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=cYxisS7+A3fR9assYfxUiZTeKIZHmZthypYGPa7G1EmPALAAVSPWRqgytEif65tQtKi7wLCiu6oGZ6xVXB6ArnbeLkvs8Bilb1x48E6Wk5PT3oXRMIoiza5HBKcOiygkytRdLV2sPNN+pSAxyJWMxSavVsJVOvXDu92kkr7kkrg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=Df5I4Z17; arc=none smtp.client-ip=95.215.58.177
+	s=arc-20240116; t=1766952521; c=relaxed/simple;
+	bh=XCQHYdq3spbZE86t6SluvclGO9w1CrqV32bMnR1uFeI=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=pbvHxCsKjKnUrGtmhr21WKKHEO0a8C7lZ14cnbpunxnokKo9z8WX/MoZ+akFi9sqPQepOOCF7CUYiRjshwq1IJWpQ+/DjN/mVEz6MNlTHihFucc00bPdbDLisPZ5pIEhUs8rOU+v8BqN1hK0YTGD9jjId70KlB+9e75E7sUUJb4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=EeDbB9CB; arc=none smtp.client-ip=95.215.58.178
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="Df5I4Z17"
+	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="EeDbB9CB"
 X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
-	t=1766952515;
+	t=1766952517;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:
-	 content-transfer-encoding:content-transfer-encoding;
-	bh=uMPybpHOJ/3RgA09XrvGwJg4KpEjJQJlsaLOYala+V0=;
-	b=Df5I4Z172hj0PAikO9AWVHGQqPpMr4pJfhmKq+eOoz3ZCYJTgJM+P7zsH/54CpI85hPtby
-	Fia9jExxxF2GvNmpRcm6WdBU237IdWgeOoZIU9Qx/Fmw/uEybNE0kqWvyZvDxSEmFgIWIO
-	4VCn+RuiTgaZBX1qRPv6utYEd1buRSI=
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=3m20kD7PwGCTH43gt8FUGu7YcWOl9a9RmHjQnwvr5Pg=;
+	b=EeDbB9CBP2vXXxNv7zfy1bwigiEJl2TwUP7B9I+HtJGYEChqkblDNfLK0kuKle3aHDNvTC
+	pgDtTTK5QZvD6hfS6u840V2zxZ5lz4mUsthpOEru/qN80PwPDflHasYJQl8lIDsPgNkQrV
+	dwX/aWQ299Ke6BfzcfHKPc7YFDHEsxE=
 From: Denis Benato <denis.benato@linux.dev>
 To: linux-kernel@vger.kernel.org
 Cc: platform-driver-x86@vger.kernel.org,
@@ -36,9 +38,11 @@ Cc: platform-driver-x86@vger.kernel.org,
 	"Krzysztof Kozlowski" <krzk@kernel.org>,
 	"Denis Benato" <benato.denis96@gmail.com>,
 	Denis Benato <denis.benato@linux.dev>
-Subject: [PATCH v2 0/3] platform/x86: asus-wmi: move keyboard control firmware attributes
-Date: Sun, 28 Dec 2025 21:07:59 +0100
-Message-ID: <20251228200815.794265-1-denis.benato@linux.dev>
+Subject: [PATCH v2 1/3] platform/x86: asus-wmi: explicitly mark more code with CONFIG_ASUS_WMI_DEPRECATED_ATTRS
+Date: Sun, 28 Dec 2025 21:08:00 +0100
+Message-ID: <20251228200815.794265-2-denis.benato@linux.dev>
+In-Reply-To: <20251228200815.794265-1-denis.benato@linux.dev>
+References: <20251228200815.794265-1-denis.benato@linux.dev>
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
@@ -48,44 +52,59 @@ MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 X-Migadu-Flow: FLOW_OUT
 
-Hi all,
+Be more explicit in code that will be excluded when compiling
+with CONFIG_ASUS_WMI_DEPRECATED_ATTRS disabled.
 
-I was recently reading through the asusctl issue tracker and I found
-out that some users have been having troubles with the keyboard RGB control
-that was working before since the creation of asus-armoury and subequent
-deprecation of old sysfs attributes.
+Signed-off-by: Denis Benato <denis.benato@linux.dev>
+---
+ drivers/platform/x86/asus-wmi.c | 10 ++++++++++
+ 1 file changed, 10 insertions(+)
 
-This patch series aims to re-introduce those attributes in asus-armoury
-so that userspace tools can still control keyboard RGB lighting
-without having to rely on deprecated asus-wmi attributes.
-
-In addition to that, since disabling OOBE is essential for controlling
-LEDs on some models and it was incorrectly tied to deprecated attributes,
-this patch series also fixes sending OOBE at probe time.
-
-Link: https://gitlab.com/asus-linux/asusctl/-/issues/619
-
-Regards,
-Denis
-
-Changelog:
-- v1
-  - Initial submission
-- v2
-  - asus-armoury: drivers should be silent on success
-  - asus-armoury: make better use of __free annotation
-
-Denis Benato (3):
-  platform/x86: asus-wmi: explicitly mark more code with
-    CONFIG_ASUS_WMI_DEPRECATED_ATTRS
-  platform/x86: asus-wmi: fix sending OOBE at probe
-  platform/x86: asus-armoury: add keyboard control firmware attributes
-
- drivers/platform/x86/asus-armoury.c        | 256 +++++++++++++++++++++
- drivers/platform/x86/asus-wmi.c            |  13 +-
- include/linux/platform_data/x86/asus-wmi.h |  15 ++
- 3 files changed, 283 insertions(+), 1 deletion(-)
-
+diff --git a/drivers/platform/x86/asus-wmi.c b/drivers/platform/x86/asus-wmi.c
+index 4aec7ec69250..a49447eff4f4 100644
+--- a/drivers/platform/x86/asus-wmi.c
++++ b/drivers/platform/x86/asus-wmi.c
+@@ -302,7 +302,11 @@ struct asus_wmi {
+ 	u32 nv_temp_target;
+ 
+ 	u32 kbd_rgb_dev;
++
++#if IS_ENABLED(CONFIG_ASUS_WMI_DEPRECATED_ATTRS)
+ 	bool kbd_rgb_state_available;
++#endif /* IS_ENABLED(CONFIG_ASUS_WMI_DEPRECATED_ATTRS) */
++
+ 	bool oobe_state_available;
+ 
+ 	u8 throttle_thermal_policy_mode;
+@@ -1060,6 +1064,7 @@ static const struct attribute_group kbd_rgb_mode_group = {
+ };
+ 
+ /* TUF Laptop Keyboard RGB State **********************************************/
++#if IS_ENABLED(CONFIG_ASUS_WMI_DEPRECATED_ATTRS)
+ static ssize_t kbd_rgb_state_store(struct device *dev,
+ 				 struct device_attribute *attr,
+ 				 const char *buf, size_t count)
+@@ -1106,6 +1111,8 @@ static const struct attribute_group kbd_rgb_state_group = {
+ 	.attrs = kbd_rgb_state_attrs,
+ };
+ 
++#endif /* IS_ENABLED(CONFIG_ASUS_WMI_DEPRECATED_ATTRS) */
++
+ static const struct attribute_group *kbd_rgb_mode_groups[] = {
+ 	NULL,
+ 	NULL,
+@@ -1861,8 +1868,11 @@ static int asus_wmi_led_init(struct asus_wmi *asus)
+ 
+ 	if (asus->kbd_rgb_dev)
+ 		kbd_rgb_mode_groups[num_rgb_groups++] = &kbd_rgb_mode_group;
++
++#if IS_ENABLED(CONFIG_ASUS_WMI_DEPRECATED_ATTRS)
+ 	if (asus->kbd_rgb_state_available)
+ 		kbd_rgb_mode_groups[num_rgb_groups++] = &kbd_rgb_state_group;
++#endif /* IS_ENABLED(CONFIG_ASUS_WMI_DEPRECATED_ATTRS) */
+ 
+ 	asus->led_workqueue = create_singlethread_workqueue("led_workqueue");
+ 	if (!asus->led_workqueue)
 -- 
 2.52.0
 
