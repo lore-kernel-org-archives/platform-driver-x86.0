@@ -1,190 +1,148 @@
 Received: from mout.gmx.net (mout.gmx.net [212.227.15.19])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2DCD1274B3B;
-	Sun, 28 Dec 2025 21:42:44 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 97AD81D6195;
+	Sun, 28 Dec 2025 21:50:47 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=212.227.15.19
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1766958167; cv=none; b=RDa8SA9w9YVaUdi53/ik19c6y9QVJW+RhX8Rclk5VfTDAVfsl3b6fMsEnD3tkIpkuI8KUEUdH/pTuKg1bgMnCi9+jU43DVF79tpPlZWq7IWwl7Bcltip79WoGW6BT0tHnZHGv6RQwIN5c/OyBQp6QabCfi6KEctnYDMiCX/EPvU=
+	t=1766958650; cv=none; b=rmprWdNK4EqHUWSo/TtEdiVTuB7HM65RzOocQar6Kp6+hRM7As6Du+ERQb3JrXHxsVV/2EGl06tw/zC9ae+kJmRCaA17bapQe67QBotFuOGifGQptaj3DavW5aCeWU6NFGj+ft+y97YZSluMcLY1JBccmfzJwlhSr1/XCKLnJ/E=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1766958167; c=relaxed/simple;
-	bh=KHy3cpBHcA5E5rb1dfYHq4PN2NMGhtW35VzQq6ym9Tg=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=us4fKNiwtLDHpavi5ZPre7id7+47gYH/nV/KPYC/gbRAK5fLhOqQpck/ayRGaXBIRIVE1kxYHdQPABs0PSjvCrNFGRxcTjRKeK8nPbIG3Yn/qi3ANE8EPpavd3wQkDmIS78LwMuqJuF3nqIOM9qcUDfa1n4QFka6z6Geom+tquA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gmx.de; spf=pass smtp.mailfrom=gmx.de; dkim=pass (2048-bit key) header.d=gmx.de header.i=w_armin@gmx.de header.b=jJbMY8C4; arc=none smtp.client-ip=212.227.15.19
+	s=arc-20240116; t=1766958650; c=relaxed/simple;
+	bh=+LowKQzg2oMwl5FeiRZ9qc953KnycDQ1TdAgQGb3gow=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=AY04ysFegLrN9wbotuJGMjxum5OZmdKrI15Ou5O4V5ONiyC6NnCjqZ2SYZ//2Hl5So5GLFty7Z8c54W4GnKjnVKHhuLC70SXTTMfaexveBP+yg8Z/27z4yLk3y3kheppqz24Iua2Fts6n8RPNK2rYMoMI0AoNmsO2g0eQKW0gvs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gmx.de; spf=pass smtp.mailfrom=gmx.de; dkim=pass (2048-bit key) header.d=gmx.de header.i=w_armin@gmx.de header.b=Vx/u1OnI; arc=none smtp.client-ip=212.227.15.19
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gmx.de
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmx.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmx.de header.i=w_armin@gmx.de header.b="jJbMY8C4"
+	dkim=pass (2048-bit key) header.d=gmx.de header.i=w_armin@gmx.de header.b="Vx/u1OnI"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=gmx.de;
-	s=s31663417; t=1766958148; x=1767562948; i=w_armin@gmx.de;
-	bh=W+tlFXPvvzTAou4qPekZ9sYhiKGpBWhR05/jOAAJTsY=;
-	h=X-UI-Sender-Class:From:To:Cc:Subject:Date:Message-ID:
-	 MIME-Version:Content-Transfer-Encoding:cc:
-	 content-transfer-encoding:content-type:date:from:message-id:
-	 mime-version:reply-to:subject:to;
-	b=jJbMY8C4u6vhcr5g2hXNxYbv1SCbdH19ogNOeYmjF/yY9st69R28k4+pwf9pjz3l
-	 FIAQyH5P7luPsKA+dc577qpUTizfVFqmS5O73SUAfs9iAub+AMbl+yUxeSP2NTsn3
-	 MtEHG+tt55loexQCzRuiZ49KIBOVv3YtEih8KPDkq1+Lw+cPHkKTz0WIAxwpUrIio
-	 cgRE2F+4Sqaw/G5qye9VlTilxX8aojPGYaqbJd/IiVzuJr/3xhF5VvsLEuXK+jbFS
-	 0YWs491WXvKF7R2H/dB5bkQwBmlnnlA64iIzQebG5eg1BzCRNbBFiRUQB9t7uKRvb
-	 gMTcqtVYp+TCN+HP+A==
+	s=s31663417; t=1766958645; x=1767563445; i=w_armin@gmx.de;
+	bh=+LowKQzg2oMwl5FeiRZ9qc953KnycDQ1TdAgQGb3gow=;
+	h=X-UI-Sender-Class:Message-ID:Date:MIME-Version:Subject:To:Cc:
+	 References:From:In-Reply-To:Content-Type:
+	 Content-Transfer-Encoding:cc:content-transfer-encoding:
+	 content-type:date:from:message-id:mime-version:reply-to:subject:
+	 to;
+	b=Vx/u1OnINPrhKHkAYlhi8mOzLlqVKPwypev+NcoDKROqBzFFeGQLfwKyZ1cSvi0H
+	 uJYoY3igLKY9lVJIoCeCTZUwWUkXKIbNNDihbfLndQ3Ski+RAwo2/aLuGT0SQjkay
+	 ScF5hKd+0B1j77x+C1zGPUVJoP7+vGAeK/qQYU8g05UZ+oqzb/uO5ar2rcFWPVFZT
+	 8DmHxKghUd+yPraFM8xbTm2q0AEp+Kzz7OVBvHWTZMHy6fd4kBDBkjOJMfg/7Qcc6
+	 Metf9d2vYHbmMWTNxCx0JrfdP9o8/zTpJb8b0kfKBsmTFrKUn9MzGwiHM0j+hMRS+
+	 vK/Kq4RllyVrSuZcVg==
 X-UI-Sender-Class: 724b4f7f-cbec-4199-ad4e-598c01a50d3a
-Received: from linux.fritz.box ([5.61.142.23]) by mail.gmx.net (mrgmx004
- [212.227.17.190]) with ESMTPSA (Nemesis) id 1MLR1V-1vIitU3KbL-00NMpJ; Sun, 28
- Dec 2025 22:42:28 +0100
-From: Armin Wolf <W_Armin@gmx.de>
-To: josh@joshuagrisham.com,
-	dakkar@thenautilus.net
-Cc: hansg@kernel.org,
-	ilpo.jarvinen@linux.intel.com,
-	platform-driver-x86@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Subject: [PATCH] platform/x86: samsung-galaxybook: Fix problematic pointer cast
-Date: Sun, 28 Dec 2025 22:41:31 +0100
-Message-ID: <20251228214217.35972-1-W_Armin@gmx.de>
-X-Mailer: git-send-email 2.52.0
+Received: from [192.168.2.35] ([5.61.142.23]) by mail.gmx.net (mrgmx004
+ [212.227.17.190]) with ESMTPSA (Nemesis) id 1MIwzA-1vLChT1vpK-00Ppno; Sun, 28
+ Dec 2025 22:50:45 +0100
+Message-ID: <7933de4e-7775-4657-b59d-1aa6097308b8@gmx.de>
+Date: Sun, 28 Dec 2025 22:50:44 +0100
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
-X-Provags-ID: V03:K1:VV41Fg6caLk3s0ZjTfTfEnt2WHPnBu+yjzVBIX+DwzazNOVfkeA
- b+Ud82GGFEoQ1L0qPmIKHemGmDixDY5A/dTSo8zYv6g0e/t9MdZMUuTBE+SlKcXpjarWK85
- njZfDtcmGHWN76TjbYySgOV3WZncia0c8DOJT+/cL03grwc2NFOJpdQgPJani3d1VmLuROJ
- TKYLV7x0CR9mEp+EsSH2Q==
+User-Agent: Mozilla Thunderbird
+Subject: Re: samsung-galaxybook writes to a int via a u8*
+To: Gianni Ceccarelli <dakkar@thenautilus.net>
+Cc: Joshua Grisham <josh@joshuagrisham.com>,
+ platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <20251228115556.14362d66@thenautilus.net>
+ <c6f87174-8ab1-40ae-bf7d-601caee89784@gmx.de>
+ <20251228210649.65c1dd80@thenautilus.net>
+Content-Language: en-US
+From: Armin Wolf <W_Armin@gmx.de>
+In-Reply-To: <20251228210649.65c1dd80@thenautilus.net>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
+X-Provags-ID: V03:K1:gOR1GogkpAsR7ahSYlVG9eiF40Uz65e/qpzgehbF9hiBDiDmkbn
+ X/RSd62GhMNlom3bqY1FW0HFtEaKtlRQ+kHjUaYXBz2H4C6KNnxgZV2+2arjCPEdo0Ae42X
+ 9SP68eOElokD2NZM+ZmUPVbS+OL//WsZC3XZl3vqFO/R/MwGO9iK8L7mXMp3lFbHxvrQo4u
+ O5hTQ8Q74VoNHK8KcG0Bg==
 X-Spam-Flag: NO
-UI-OutboundReport: notjunk:1;M01:P0:lEOzTv2MMfg=;F+GqutdM5w5ywMM0mjxLxdNVr8I
- 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
- YfUWG5KVhh2Z7nYUYHMaMlYB9RHuf
+UI-OutboundReport: notjunk:1;M01:P0:dG3IqyTShgE=;O8HhfJST6eGXZRfJlv5M2OLqDyx
+ 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
+ 6UzbBJ8b15Y0jbwZKiszhs4CAA=
 
-A user reported that reading the charge threshold on his device
-results in very strange values (like 78497792) being returned.
-The reason for this seems to be the fact that the driver casts
-the int pointer to an u8 pointer, leaving the last 3 bytes of
-the destination uninitialized. Fix this by using a temporary
-variable instead.
+Am 28.12.25 um 22:06 schrieb Gianni Ceccarelli:
 
-Cc: stable@vger.kernel.org
-Fixes: 56f529ce4370 ("platform/x86: samsung-galaxybook: Add samsung-galaxy=
-book driver")
-Reported-by: Gianni Ceccarelli <dakkar@thenautilus.net>
-Closes: https://lore.kernel.org/platform-driver-x86/20251228115556.14362d6=
-6@thenautilus.net/
-Tested-by: Gianni Ceccarelli <dakkar@thenautilus.net>
-Signed-off-by: Armin Wolf <W_Armin@gmx.de>
-=2D--
- drivers/platform/x86/samsung-galaxybook.c | 9 ++++++---
- 1 file changed, 6 insertions(+), 3 deletions(-)
+> On 2025-12-28 Armin Wolf <W_Armin@gmx.de> wrote:
+>> Thanks for your report, this pointer cast indeed seems to be the root
+>> cause of the strange values returned by charge_control_end_threshold.
+>> I attached a patch for you to test that implements you suggestion.
+> I confirm that the patch works.
+>
+Thank you, i just submitted said patch for inclusion into the mainline kernel.
 
-diff --git a/drivers/platform/x86/samsung-galaxybook.c b/drivers/platform/=
-x86/samsung-galaxybook.c
-index 3c13e13d4885..755cb82bdb60 100644
-=2D-- a/drivers/platform/x86/samsung-galaxybook.c
-+++ b/drivers/platform/x86/samsung-galaxybook.c
-@@ -442,12 +442,13 @@ static int galaxybook_battery_ext_property_get(struc=
-t power_supply *psy,
- 					       union power_supply_propval *val)
- {
- 	struct samsung_galaxybook *galaxybook =3D ext_data;
-+	u8 value;
- 	int err;
-=20
- 	if (psp !=3D POWER_SUPPLY_PROP_CHARGE_CONTROL_END_THRESHOLD)
- 		return -EINVAL;
-=20
--	err =3D charge_control_end_threshold_acpi_get(galaxybook, (u8 *)&val->in=
-tval);
-+	err =3D charge_control_end_threshold_acpi_get(galaxybook, &value);
- 	if (err)
- 		return err;
-=20
-@@ -455,8 +456,10 @@ static int galaxybook_battery_ext_property_get(struct=
- power_supply *psy,
- 	 * device stores "no end threshold" as 0 instead of 100;
- 	 * if device has 0, report 100
- 	 */
--	if (val->intval =3D=3D 0)
--		val->intval =3D 100;
-+	if (value =3D=3D 0)
-+		value =3D 100;
-+
-+	val->intval =3D value;
-=20
- 	return 0;
- }
-=2D-=20
-2.52.0
+Thanks,
+Armin Wolf
 
