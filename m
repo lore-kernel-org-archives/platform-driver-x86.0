@@ -1,45 +1,46 @@
 Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.8])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C97B8329376;
-	Mon, 29 Dec 2025 18:34:56 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B4AF633122E;
+	Mon, 29 Dec 2025 18:34:58 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.8
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1767033298; cv=none; b=nfGWq9+zgROHPXtnVC8cxR68T2DnkA15xeN8M41+iQKO/HQrI/DrW4lsZ/+TpXpfWmV2prNcxNNXzcLwb/wgJX5ytxAa9YjVv6PkA63tGeYG5YXIRHRGp42q/Vjxwlj0X4tFwi+c80JJtuy9EqYDl68Vq6GfudkX9iodyWZG5i8=
+	t=1767033300; cv=none; b=M5mYlOsJkhWwpbQqQP+raZ1zNpvuJtopFR3V9dUqGCD6cpnxG7IS+VTs+4W4DB5cUwJMeyW55zy3IPJRww46KGmXv3K6LarnEO4VqROKodecPkbKoq3FoQbC+VRpRIYYcAUKF38+FEPEPi21FCOE/kPeva9ry7yeAD/CLqRB4Uc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1767033298; c=relaxed/simple;
-	bh=4q1Jjqv8GO9z+Zu6jmtpMjrczwAgyLNQRsyarTm/BjE=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=pOXvfB860lSnBITX16irY1BfiQFiyTnNaxyjy2UVxDyg86Hfs7VP4jD7xonepLvC/rMGReri+EKL3c8eRwu6gS8LS2s7vVPgn2eGG11f5EnrzWZxexQt8KLpbT/MnTRRlOckY4oJ+GtcDweEf0LZbgAa7KthYiiuTzCR9Wk56AE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=pass smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=BgSGyaYl; arc=none smtp.client-ip=192.198.163.8
+	s=arc-20240116; t=1767033300; c=relaxed/simple;
+	bh=VLsmDFWtMsuAsB/lyKJEUjtf1LGGqwugmcXpvfUHRzk=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=G9HkcJHfocqZvVuKLVSkCV+6LCyIWcx0wrxhwErQbj8h578BHjV/xnYj0PAQDAc/VPpkF3zi2YUysp1nUFFC6YoK681T98VLdxbRrvMghAkwsXyvUZXdw1agM4xnLetNXTzCcWJyCVHupK+cMjMcrz1YyeRWqN+Fi0WhjNcIugs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=pass smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=OuiJeaZU; arc=none smtp.client-ip=192.198.163.8
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="BgSGyaYl"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="OuiJeaZU"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1767033297; x=1798569297;
-  h=from:to:cc:subject:date:message-id:mime-version:
-   content-transfer-encoding;
-  bh=4q1Jjqv8GO9z+Zu6jmtpMjrczwAgyLNQRsyarTm/BjE=;
-  b=BgSGyaYl7CGXO68Bt1VbQFZejY6rzoQsCQcIOrqQisncJt1/2UaXGzoh
-   Pl9185U3DtCH9FDmibIkPcJc6LkhHxd5mHrkn6jmKPwoHdP8yl9lb9LyN
-   0ERdijoeAMc9CSUwKG8OnP0C3WCNxsdqgx8Lka+20WmzQbY17SlWtD2GS
-   4jAJ1WfPJu/JPtyIiwCgxpwJpHflHGgUJqNB+LTcfWfOJmvBl0CIOH1yx
-   427oVHXEGGC0IyEKMutgzlO7Tct6ISZkWMdQk8+Aa0dBAXnLc6G4q8hVF
-   uOo/+7yOsM6bwffriRfrsxQvnkJDD14CODYAQRsnK3O+Qaw98d2eXIAIu
-   g==;
-X-CSE-ConnectionGUID: n7/Smz6XSU68iDktPrLR3Q==
-X-CSE-MsgGUID: VAa9vt5URQuMfuKGJawnsg==
-X-IronPort-AV: E=McAfee;i="6800,10657,11656"; a="86218717"
+  t=1767033299; x=1798569299;
+  h=from:to:cc:subject:date:message-id:in-reply-to:
+   references:mime-version:content-transfer-encoding;
+  bh=VLsmDFWtMsuAsB/lyKJEUjtf1LGGqwugmcXpvfUHRzk=;
+  b=OuiJeaZUYGDQYbWOiY1Ho8PE0KTO32uehn5q8FFQQ5XiQZOIUDYPeAAC
+   i7BkRaStElYt2Wwn7JhON1Lv19zgysNd4VT3WT+XfmWHa7TnDI8QRPpY8
+   ZvpQjdPMJnfT7mINOUKpQvJPOleh5XbGPdli4TSyHZkO40aI08FBB1w0T
+   AydkLdmocObt654angL46Ah43QUuREcJTEmPdSX1MH/1jkwzt3XQPjq6R
+   ty6fRpAJpjELwYevGR65EyJGURpgxSjiDSmMl1B/hutZJMSpyLBlofTnY
+   2o+/j6hq94aWC6AlxdqLxD9q4EPEWp7SMNF9nVrQ/JyTaTg1NH3zROfrn
+   w==;
+X-CSE-ConnectionGUID: PvnjQcG+Qf+hxt7cqGStEw==
+X-CSE-MsgGUID: DzoPtNWGQcqCAcnJ++IwsQ==
+X-IronPort-AV: E=McAfee;i="6800,10657,11656"; a="86218720"
 X-IronPort-AV: E=Sophos;i="6.21,186,1763452800"; 
-   d="scan'208";a="86218717"
+   d="scan'208";a="86218720"
 Received: from orviesa003.jf.intel.com ([10.64.159.143])
   by fmvoesa102.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 29 Dec 2025 10:34:56 -0800
-X-CSE-ConnectionGUID: c+4tfYxNRImbThXgbV6tQA==
-X-CSE-MsgGUID: d/N1BvNXTXO3bR/Y9Igquw==
+X-CSE-ConnectionGUID: x54Y5Sq7RE+0kJ6Fhi2ZJA==
+X-CSE-MsgGUID: egmceNQ6RR2YXqvL3YN4dQ==
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="6.21,186,1763452800"; 
-   d="scan'208";a="205120422"
+   d="scan'208";a="205120425"
 Received: from spandruv-desk.jf.intel.com ([10.54.55.20])
   by orviesa003.jf.intel.com with ESMTP; 29 Dec 2025 10:34:56 -0800
 From: Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>
@@ -47,11 +48,14 @@ To: hansg@kernel.org,
 	ilpo.jarvinen@linux.intel.com
 Cc: platform-driver-x86@vger.kernel.org,
 	linux-kernel@vger.kernel.org,
-	Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>
-Subject: [PATCH 0/2] platform/x86: ISST: Fix for write lock and suspend/resume
-Date: Mon, 29 Dec 2025 10:34:48 -0800
-Message-ID: <20251229183450.823244-1-srinivas.pandruvada@linux.intel.com>
+	Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>,
+	stable@vger.kernel.org
+Subject: [PATCH 1/2] platform/x86: ISST: Add missing write block check
+Date: Mon, 29 Dec 2025 10:34:49 -0800
+Message-ID: <20251229183450.823244-2-srinivas.pandruvada@linux.intel.com>
 X-Mailer: git-send-email 2.51.0
+In-Reply-To: <20251229183450.823244-1-srinivas.pandruvada@linux.intel.com>
+References: <20251229183450.823244-1-srinivas.pandruvada@linux.intel.com>
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
@@ -60,19 +64,30 @@ List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-There are two issues, which are not urgent as the current deployed systems
-don't support them, but need fixes:
-- Write lock- Even if the TPMI is write locked it will still write to MMIO
-- store-restore data during suspend/resume: Not storing and restoring data to
-all power domains.
+If writes are blocked, then return error during SST-CP enable command.
+Add missing write block check in this code path.
 
-Srinivas Pandruvada (2):
-  platform/x86: ISST: Add missing write block check
-  platform/x86: ISST: Store and restore all domains data
+Fixes: 8bed9ff7dbcc ("platform/x86: ISST: Process read/write blocked feature status")
+Signed-off-by: Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>
+Cc: <stable@vger.kernel.org>
+---
+ drivers/platform/x86/intel/speed_select_if/isst_tpmi_core.c | 3 +++
+ 1 file changed, 3 insertions(+)
 
- .../intel/speed_select_if/isst_tpmi_core.c    | 56 ++++++++++++-------
- 1 file changed, 36 insertions(+), 20 deletions(-)
-
+diff --git a/drivers/platform/x86/intel/speed_select_if/isst_tpmi_core.c b/drivers/platform/x86/intel/speed_select_if/isst_tpmi_core.c
+index 34bff2f65a83..f587709ddd47 100644
+--- a/drivers/platform/x86/intel/speed_select_if/isst_tpmi_core.c
++++ b/drivers/platform/x86/intel/speed_select_if/isst_tpmi_core.c
+@@ -612,6 +612,9 @@ static long isst_if_core_power_state(void __user *argp)
+ 		return -EINVAL;
+ 
+ 	if (core_power.get_set) {
++		if (power_domain_info->write_blocked)
++			return -EPERM;
++
+ 		_write_cp_info("cp_enable", core_power.enable, SST_CP_CONTROL_OFFSET,
+ 			       SST_CP_ENABLE_START, SST_CP_ENABLE_WIDTH, SST_MUL_FACTOR_NONE)
+ 		_write_cp_info("cp_prio_type", core_power.priority_type, SST_CP_CONTROL_OFFSET,
 -- 
 2.52.0
 
