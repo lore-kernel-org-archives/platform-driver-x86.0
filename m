@@ -1,102 +1,213 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.11])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.13])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9DF5822A4EB;
-	Mon, 29 Dec 2025 13:59:41 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.11
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 179A317C211;
+	Mon, 29 Dec 2025 14:14:06 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.13
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1767016783; cv=none; b=fg5UELrrQhNuyVH7GfX2c054NYipMIturvjB5Aqc5cz2q5gu4uz09HcY6xT5mHKnf9iZ5dXdR7iPEqQzHH/3FdguLK4hkOul2xjxHMsurnG22pIMyhNewrv3R0+1HQszQEiZNHlz68BIdaADYwiM72vGOWkWIxrZT6DsU5dxPQE=
+	t=1767017649; cv=none; b=AFPWpfvFhEAvqOnyzZRh83rl1RG2DSg8BmJoR7gSorkFY1B62EYQahYUAQxb9a33sjp+YbBtGU16nCcS73FdAQ2EJ2jhoSs7V5ooOsxIG7jLA4BPM+A3kzyYunBssamKQ1E3Z6/GaLffg184V7p+kFSL5Sef8YMexhEksEfc+ok=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1767016783; c=relaxed/simple;
-	bh=YgeKsqSmq+b3p5O+F/5daCRKQroduLfvCONtedqFWvs=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=d5XIlcBw1RO4dJSmMKXtby57hQ5KmH1eehHMhMpkEK8TTrk4cxiQPMjf8r2GtVNl8FGifV4p+3QnkbTnqlKo9oJhhKDty3Iu1oH2+dX3TgGIUN2+V8t9GxRMot4AYVaNzsR21MI60THqINbHogeOucLdj8d5p3u/1PDtLUq5mG0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=pass smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=b7tW8joq; arc=none smtp.client-ip=192.198.163.11
+	s=arc-20240116; t=1767017649; c=relaxed/simple;
+	bh=KUD0fQNa2Ze2Ce0WPSxr+mkgSJWKzQXsBRhV4ekH0aI=;
+	h=From:Date:To:cc:Subject:In-Reply-To:Message-ID:References:
+	 MIME-Version:Content-Type; b=NaE66qbPZFtGU7DEXMdwB2hHm/v4JhqcOy/sBehB/dH6i5rL2wUH7F21X5/J14YMuuHs0madgiM3/Tbx/cc9ZGx526ckxzdsdPZM9Q+EFUuHoOKTp6xBRACDGt3g+Wnd6a5tfz0sZMklgQ8oiJ4Gn2l0dK/W2mO4UluyiErT5Ts=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=pass smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=lnDPlcyx; arc=none smtp.client-ip=198.175.65.13
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="b7tW8joq"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="lnDPlcyx"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1767016782; x=1798552782;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:content-transfer-encoding:in-reply-to;
-  bh=YgeKsqSmq+b3p5O+F/5daCRKQroduLfvCONtedqFWvs=;
-  b=b7tW8joqMqpQvfH+nHFlsOeVYaSC6aKDmKrEBKERcQpLTvZa4vDr0f3G
-   RE/LoAA6VARapQjrl8TOHSsE3jW8OJ3MOGJOWyguY+zypdfR0fDoT0RNC
-   2vfN8aL2N44h7g4rqtGMYe6vvmkhP54L7EZ+unzgFvxVE9f/v6LFnlI56
-   ZhK/7F1NLdVr7aRe+b+BNmmm0bnWWDZV+EgdCUTCt0Os5TE+NC9z8+mHi
-   c//TbRzpDCLObp30XR8+M3cwGaMpBg8l4qz0lf7qaYIuJncJMvtrR/69m
-   TQabYvhb0D0WzNd0NjMzsAcBep0nIZFdpb0ZWE/mtGJFWg7sI55fi1mRz
-   Q==;
-X-CSE-ConnectionGUID: CKUhoaBbSPebrDIY85VNng==
-X-CSE-MsgGUID: Hfqn28XVTK20au0bdVJjtg==
-X-IronPort-AV: E=McAfee;i="6800,10657,11656"; a="79256732"
+  t=1767017647; x=1798553647;
+  h=from:date:to:cc:subject:in-reply-to:message-id:
+   references:mime-version;
+  bh=KUD0fQNa2Ze2Ce0WPSxr+mkgSJWKzQXsBRhV4ekH0aI=;
+  b=lnDPlcyxlnjApuFGLSOVR+o+afT9ih1zhwEf8ugUvCLUri6VhMXXA4KK
+   /5/R8ejoM9xzfbpyYuacmmjNGNOq3SOmjtjAGakM5hivrQNx0beMOQYV8
+   FqDYnd+azNUkTXsfOyNzyFENIi0RsH5KRdi3BtOCt/KdFrZ9JPzZwy5Kx
+   2KJDZ1kryrjSCDasRwIWN9lP3CIjUsla9V+g562QO2CKwCzMfEmMD+w5x
+   n5+2iFWz4iqKyRKjcr9yjdqB4L6yUhrgJ5eAnSTynOX1vTSmBceV9RrCj
+   NTCZsMZFUHxiI4tcllFBrQLF4HTgzIEsN/k3ClxLGbdTDVfOxMOdpenvF
+   w==;
+X-CSE-ConnectionGUID: 6OyT0OxCT2a5ma6H1or46A==
+X-CSE-MsgGUID: GXIkAvyZRaCKePpSwHfeZQ==
+X-IronPort-AV: E=McAfee;i="6800,10657,11656"; a="79742088"
 X-IronPort-AV: E=Sophos;i="6.21,186,1763452800"; 
-   d="scan'208";a="79256732"
-Received: from orviesa004.jf.intel.com ([10.64.159.144])
-  by fmvoesa105.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 29 Dec 2025 05:59:41 -0800
-X-CSE-ConnectionGUID: X4wh6Y99Q4WOhY5DMMfHJA==
-X-CSE-MsgGUID: pwrvkKiRREKv1c6rewuDHA==
+   d="scan'208";a="79742088"
+Received: from fmviesa004.fm.intel.com ([10.60.135.144])
+  by orvoesa105.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 29 Dec 2025 06:14:06 -0800
+X-CSE-ConnectionGUID: 1TpNIV1VQuqKfGqyYl2KUA==
+X-CSE-MsgGUID: cJQmzNDyTtik+hoamlqOdA==
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="6.21,186,1763452800"; 
-   d="scan'208";a="205450092"
-Received: from kniemiec-mobl1.ger.corp.intel.com (HELO localhost) ([10.245.245.31])
-  by orviesa004-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 29 Dec 2025 05:59:38 -0800
-Date: Mon, 29 Dec 2025 15:59:35 +0200
-From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-To: "Rafael J. Wysocki" <rafael@kernel.org>
-Cc: Linux ACPI <linux-acpi@vger.kernel.org>,
-	LKML <linux-kernel@vger.kernel.org>,
-	Bjorn Helgaas <helgaas@kernel.org>, Zhang Rui <rui.zhang@intel.com>,
-	Chen Yu <yu.c.chen@intel.com>,
-	Mika Westerberg <mika.westerberg@linux.intel.com>,
-	Linux PCI <linux-pci@vger.kernel.org>,
-	Alex Hung <alexhung@gmail.com>, Hans de Goede <hansg@kernel.org>,
-	Ilpo =?iso-8859-1?Q?J=E4rvinen?= <ilpo.jarvinen@linux.intel.com>,
-	platform-driver-x86@vger.kernel.org,
-	AceLan Kao <acelan.kao@canonical.com>
-Subject: Re: [PATCH v1 2/4] platform/x86/intel/hid: Stop creating a platform
- device
-Message-ID: <aVKJR2jZf7JAEuIv@smile.fi.intel.com>
-References: <7888874.EvYhyI6sBW@rafael.j.wysocki>
- <6115868.MhkbZ0Pkbq@rafael.j.wysocki>
- <aVGBW4UcRAaxtbCX@smile.fi.intel.com>
- <CAJZ5v0gyhVFA65YCqrz7WiY=4H+dhKb6FYMo06sU-hF=4fLS4Q@mail.gmail.com>
+   d="scan'208";a="205827756"
+Received: from ijarvine-mobl1.ger.corp.intel.com (HELO localhost) ([10.245.245.30])
+  by fmviesa004-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 29 Dec 2025 06:14:03 -0800
+From: =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
+Date: Mon, 29 Dec 2025 16:14:00 +0200 (EET)
+To: Junrui Luo <moonafterrain@outlook.com>, Jorge Lopez <jorge.lopez2@hp.com>, 
+    Jorge Lopez <jorgealtxwork@gmail.com>
+cc: Hans de Goede <hansg@kernel.org>, 
+    =?ISO-8859-15?Q?Thomas_Wei=DFschuh?= <linux@weissschuh.net>, 
+    platform-driver-x86@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>, 
+    Yuhao Jiang <danisjiang@gmail.com>
+Subject: Re: [PATCH v2] platform/x86: hp-bioscfg: Fix out-of-bounds array
+ access in ACPI package parsing
+In-Reply-To: <SYBPR01MB788173D7DD4EA2CB6383683DAFB0A@SYBPR01MB7881.ausprd01.prod.outlook.com>
+Message-ID: <0d39773f-d464-ba9f-2bb9-fef83643011b@linux.intel.com>
+References: <SYBPR01MB788173D7DD4EA2CB6383683DAFB0A@SYBPR01MB7881.ausprd01.prod.outlook.com>
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <CAJZ5v0gyhVFA65YCqrz7WiY=4H+dhKb6FYMo06sU-hF=4fLS4Q@mail.gmail.com>
-Organization: Intel Finland Oy - BIC 0357606-4 - c/o Alberga Business Park, 6
- krs, Bertel Jungin Aukio 5, 02600 Espoo
+Content-Type: text/plain; charset=US-ASCII
 
-On Mon, Dec 29, 2025 at 02:07:23PM +0100, Rafael J. Wysocki wrote:
-> On Sun, Dec 28, 2025 at 8:13 PM Andy Shevchenko
-> <andriy.shevchenko@linux.intel.com> wrote:
-> > On Mon, Dec 15, 2025 at 02:35:05PM +0100, Rafael J. Wysocki wrote:
+On Fri, 26 Dec 2025, Junrui Luo wrote:
 
-...
+> The hp_populate_*_elements_from_package() functions in the hp-bioscfg
+> driver contain out-of-bounds array access vulnerabilities.
+> 
+> These functions parse ACPI packages into internal data structures using
+> a for loop with index variable 'elem' that iterates through
+> enum_obj/integer_obj/order_obj/password_obj/string_obj arrays.
+> 
+> When processing multi-element fields like PREREQUISITES and
+> ENUM_POSSIBLE_VALUES, these functions read multiple consecutive array
+> elements using expressions like 'enum_obj[elem + reqs]' and
+> 'enum_obj[elem + pos_values]' within nested loops.
+> 
+> The bug is that the bounds check only validated elem, but did not consider
+> the additional offset when accessing elem + reqs or elem + pos_values.
+> 
+> The fix changes the bounds check to validate the actual accessed index.
+> 
+> Reported-by: Yuhao Jiang <danisjiang@gmail.com>
+> Reported-by: Junrui Luo <moonafterrain@outlook.com>
+> Fixes: e6c7b3e15559 ("platform/x86: hp-bioscfg: string-attributes")
+> Signed-off-by: Junrui Luo <moonafterrain@outlook.com>
 
-> > >       .remove = intel_hid_remove,
-> > >  };
-> >
-> > This blank line now can also be removed as the module_platform_driver() coupled
-> > with the above structure initialiser.
+Hi,
 
-> Feel free to send a patch to remove it then, perhaps along with the
-> one in the other driver.
+Thanks for the update, I've now applied this to the review-ilpo-fixes 
+branch.
 
-If it's already applied the mention change would be just a churn, no need to
-bother with it.
+However, I still find multiple eyerising points in these copy-pasted 
+blocks. This code was originally added half-baked with outstanding 
+comments from me about the unreasonable use of copy-paste (IIRC, Hans 
+didn't notice my outstanding comments from an earlier version):
+
+- Why are there number of variations what is done when 
+  hp_convert_hexstr_to_str() fails between the different types, some 
+  return -EINVAL, some do continue, some break?!?
+- Should these obj_count checks actually occur before the loop?
+  (-EINVAL is returned, so why do part of the work at all?)
+
+(IMO, this whole code under case PREREQUISITES: should have been put 
+into a helper, perhaps a macro if function is not viable to avoid code 
+variations such as those fixed by this patch. IIRC, there was other use 
+of copy-paste as well.)
 
 -- 
-With Best Regards,
-Andy Shevchenko
+ i.
 
-
+> ---
+> Changes in v2:
+> - Add a more detailed description
+> - Link to v1: https://lore.kernel.org/all/SYBPR01MB78816A828BF586364CF7A4FFAFA6A@SYBPR01MB7881.ausprd01.prod.outlook.com/
+> ---
+>  drivers/platform/x86/hp/hp-bioscfg/enum-attributes.c       | 4 ++--
+>  drivers/platform/x86/hp/hp-bioscfg/int-attributes.c        | 2 +-
+>  drivers/platform/x86/hp/hp-bioscfg/order-list-attributes.c | 5 +++++
+>  drivers/platform/x86/hp/hp-bioscfg/passwdobj-attributes.c  | 5 +++++
+>  drivers/platform/x86/hp/hp-bioscfg/string-attributes.c     | 2 +-
+>  5 files changed, 14 insertions(+), 4 deletions(-)
+> 
+> diff --git a/drivers/platform/x86/hp/hp-bioscfg/enum-attributes.c b/drivers/platform/x86/hp/hp-bioscfg/enum-attributes.c
+> index c50ad5880503..f346aad8e9d8 100644
+> --- a/drivers/platform/x86/hp/hp-bioscfg/enum-attributes.c
+> +++ b/drivers/platform/x86/hp/hp-bioscfg/enum-attributes.c
+> @@ -207,7 +207,7 @@ static int hp_populate_enumeration_elements_from_package(union acpi_object *enum
+>  		case PREREQUISITES:
+>  			size = min_t(u32, enum_data->common.prerequisites_size, MAX_PREREQUISITES_SIZE);
+>  			for (reqs = 0; reqs < size; reqs++) {
+> -				if (elem >= enum_obj_count) {
+> +				if (elem + reqs >= enum_obj_count) {
+>  					pr_err("Error enum-objects package is too small\n");
+>  					return -EINVAL;
+>  				}
+> @@ -255,7 +255,7 @@ static int hp_populate_enumeration_elements_from_package(union acpi_object *enum
+>  
+>  			for (pos_values = 0; pos_values < size && pos_values < MAX_VALUES_SIZE;
+>  			     pos_values++) {
+> -				if (elem >= enum_obj_count) {
+> +				if (elem + pos_values >= enum_obj_count) {
+>  					pr_err("Error enum-objects package is too small\n");
+>  					return -EINVAL;
+>  				}
+> diff --git a/drivers/platform/x86/hp/hp-bioscfg/int-attributes.c b/drivers/platform/x86/hp/hp-bioscfg/int-attributes.c
+> index 6c7f4d5fa9cb..63b1fda2be4e 100644
+> --- a/drivers/platform/x86/hp/hp-bioscfg/int-attributes.c
+> +++ b/drivers/platform/x86/hp/hp-bioscfg/int-attributes.c
+> @@ -227,7 +227,7 @@ static int hp_populate_integer_elements_from_package(union acpi_object *integer_
+>  			size = min_t(u32, integer_data->common.prerequisites_size, MAX_PREREQUISITES_SIZE);
+>  
+>  			for (reqs = 0; reqs < size; reqs++) {
+> -				if (elem >= integer_obj_count) {
+> +				if (elem + reqs >= integer_obj_count) {
+>  					pr_err("Error elem-objects package is too small\n");
+>  					return -EINVAL;
+>  				}
+> diff --git a/drivers/platform/x86/hp/hp-bioscfg/order-list-attributes.c b/drivers/platform/x86/hp/hp-bioscfg/order-list-attributes.c
+> index c6e57bb9d8b7..6a31f47ce3f5 100644
+> --- a/drivers/platform/x86/hp/hp-bioscfg/order-list-attributes.c
+> +++ b/drivers/platform/x86/hp/hp-bioscfg/order-list-attributes.c
+> @@ -216,6 +216,11 @@ static int hp_populate_ordered_list_elements_from_package(union acpi_object *ord
+>  			size = min_t(u32, ordered_list_data->common.prerequisites_size,
+>  				     MAX_PREREQUISITES_SIZE);
+>  			for (reqs = 0; reqs < size; reqs++) {
+> +				if (elem + reqs >= order_obj_count) {
+> +					pr_err("Error elem-objects package is too small\n");
+> +					return -EINVAL;
+> +				}
+> +
+>  				ret = hp_convert_hexstr_to_str(order_obj[elem + reqs].string.pointer,
+>  							       order_obj[elem + reqs].string.length,
+>  							       &str_value, &value_len);
+> diff --git a/drivers/platform/x86/hp/hp-bioscfg/passwdobj-attributes.c b/drivers/platform/x86/hp/hp-bioscfg/passwdobj-attributes.c
+> index 187b372123ed..ec79d9d50377 100644
+> --- a/drivers/platform/x86/hp/hp-bioscfg/passwdobj-attributes.c
+> +++ b/drivers/platform/x86/hp/hp-bioscfg/passwdobj-attributes.c
+> @@ -303,6 +303,11 @@ static int hp_populate_password_elements_from_package(union acpi_object *passwor
+>  				     MAX_PREREQUISITES_SIZE);
+>  
+>  			for (reqs = 0; reqs < size; reqs++) {
+> +				if (elem + reqs >= password_obj_count) {
+> +					pr_err("Error elem-objects package is too small\n");
+> +					return -EINVAL;
+> +				}
+> +
+>  				ret = hp_convert_hexstr_to_str(password_obj[elem + reqs].string.pointer,
+>  							       password_obj[elem + reqs].string.length,
+>  							       &str_value, &value_len);
+> diff --git a/drivers/platform/x86/hp/hp-bioscfg/string-attributes.c b/drivers/platform/x86/hp/hp-bioscfg/string-attributes.c
+> index 27758b779b2d..7b885d25650c 100644
+> --- a/drivers/platform/x86/hp/hp-bioscfg/string-attributes.c
+> +++ b/drivers/platform/x86/hp/hp-bioscfg/string-attributes.c
+> @@ -217,7 +217,7 @@ static int hp_populate_string_elements_from_package(union acpi_object *string_ob
+>  				     MAX_PREREQUISITES_SIZE);
+>  
+>  			for (reqs = 0; reqs < size; reqs++) {
+> -				if (elem >= string_obj_count) {
+> +				if (elem + reqs >= string_obj_count) {
+>  					pr_err("Error elem-objects package is too small\n");
+>  					return -EINVAL;
+>  				}
+> 
+> ---
+> base-commit: 9448598b22c50c8a5bb77a9103e2d49f134c9578
+> change-id: 20251226-fixes-91414deb7fd9
+> 
+> Best regards,
+> 
