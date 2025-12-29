@@ -1,86 +1,131 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.21])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.15])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CFDD13AC39;
-	Mon, 29 Dec 2025 16:00:33 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.21
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0FD48225408;
+	Mon, 29 Dec 2025 16:49:46 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.15
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1767024035; cv=none; b=vAu472IrO4KHCd8NAqy10jDAOefnzaimSHWsHv8Eo2c1Kjn7xYeyaGAGHRtNutgPxKOI+v93fDaKIfVYj2PPdEKeQAWAyfNOaHjFxX6/cmjleGhVDB1OTn2d6d4LiTMgE9FkF7zcgpIfF5lwEhsIOkXwRuVKegOAaF+lVkpDQDs=
+	t=1767026989; cv=none; b=fPVV++DSoY0HTuS2mwrlS3+lL1MzG/A2enIdHIcQG+9enOs8am8hDQOOm2l4xWuvlP6HtJQnUZANHuvDM6qj2L8xFQT06Da6Sr9pwXFpJr1DcZv8f90oFhm3BIPZ/Acp4T+7Rz9iZWRPiuFV7kkAgvlZfZ1oPU1WQfKh4L2b/sQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1767024035; c=relaxed/simple;
-	bh=41R633P2ByRjhO2GQ7Uwpl9+1NL0J70e0YyRx9oLxCU=;
-	h=From:To:Cc:In-Reply-To:References:Subject:Message-Id:Date:
-	 MIME-Version:Content-Type; b=febkb4nVh87wkDK5LUvOts1y0kFapyYOI1RYcHWilB0w0KLjCZ+ebfgcVIUpq9MFIREuj9nwZPF2jrmmJ31ntRYfU0sDkTlY1uOrVuNpE8JweZ0lFrfnpsfVqbD3RvFmu1w9wlmDBWa7of+ejkM3tvzj1qiOEdFOnkRJR0QvYQU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=pass smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=aJNAa0/f; arc=none smtp.client-ip=198.175.65.21
+	s=arc-20240116; t=1767026989; c=relaxed/simple;
+	bh=rVB8ZaVuTlPGLHl3oQZ7CJLvRsUoyLME3es2ERmDx/w=;
+	h=From:Date:To:cc:Subject:In-Reply-To:Message-ID:References:
+	 MIME-Version:Content-Type; b=d3ORfZJ6f+63Sb3xktn7CUXn0vVfxx4P7fhLBZL6Dk9J+Zj/D6YOnGiymB8x/ZUzP7/+jlx0aXi1TxbNFOtwvnQtepfcNPKR/1POrGUxTjWi29/3+keY+7ij5yWl9YM+az9u3IaAPxx9mJPnoNkxPe9X/Mw7IIBAa1FqhUvvUt4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=pass smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=KIe06hOa; arc=none smtp.client-ip=192.198.163.15
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="aJNAa0/f"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="KIe06hOa"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1767024034; x=1798560034;
-  h=from:to:cc:in-reply-to:references:subject:message-id:
-   date:mime-version:content-transfer-encoding;
-  bh=41R633P2ByRjhO2GQ7Uwpl9+1NL0J70e0YyRx9oLxCU=;
-  b=aJNAa0/f+G4/rBDz9ywqACKGKg/1Ya3zZnwFbiv3AnHqUOkP65eTZVi5
-   B4FdbWXdfLnXwjjanfkwSZ4pxHsOkjxsW7cG5zxlIDWrxue0ABlplhq3N
-   nEKqP/Og9g9xeF717hMUhu0PCJnRlTXoNdh+JwTAh6v/faUfyjXzz0Y3g
-   O76eQyN/Fb1F1L11sCkeZyANQ57aLQSLClm05MZKqL2XXGXDL7MRIRud2
-   D72WYKyEL1ZgmUOaPdrElz9HEsjzqwuJWIjI99GxX3fvUCYbF/5pCctCP
-   wrcJ2KBc/QjGkZGq5ZdsJdXlmPC9JHZdKWXkts09D2YJQRTtwWOGv+hqZ
-   g==;
-X-CSE-ConnectionGUID: xLr3+qsuTkmSo4ZESZk6+w==
-X-CSE-MsgGUID: nM2zeEX3TQCvJtZGDXS2Mw==
-X-IronPort-AV: E=McAfee;i="6800,10657,11635"; a="68567627"
-X-IronPort-AV: E=Sophos;i="6.20,256,1758610800"; 
-   d="scan'208";a="68567627"
-Received: from orviesa001.jf.intel.com ([10.64.159.141])
-  by orvoesa113.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 29 Dec 2025 08:00:34 -0800
-X-CSE-ConnectionGUID: preh2SluS4mh87A7ezC9YQ==
-X-CSE-MsgGUID: PJdSLZ13Qh2rksIZKiQMCA==
+  t=1767026987; x=1798562987;
+  h=from:date:to:cc:subject:in-reply-to:message-id:
+   references:mime-version;
+  bh=rVB8ZaVuTlPGLHl3oQZ7CJLvRsUoyLME3es2ERmDx/w=;
+  b=KIe06hOa1LUVdfrisMKesl66oJ4BTXorlDZkkf0KLhukn9QKfL+8c9nG
+   EVKzWHZyd75G2Cxn8lNcozCycR+aFZZhQ2rzJibTZeAswsKV/UK+cqQmG
+   Qg6rsMKIAvZVNhWfPk9KDJGHOgWMtjGJRw3ZHFA2ABVRC5IHXAosF5Wdg
+   cwSohalIiiTjF3IUwSGgQ6EVzRxF3KF/srEvhVdeh0J0HI5UG7IH/MeIY
+   NZqURXgKc9RTv6gK3Zl37+t1sBloHEDV+4pBDc5p4j/kpE4lWlHEaDT4x
+   khRRMGzgfqSCXnDw1pNVN/GVm0Gy2KPLJP3h4Sg2IyQUIRH+TtNnD4ZTc
+   A==;
+X-CSE-ConnectionGUID: zH1hA2ngRQu7dnkhJKbQzQ==
+X-CSE-MsgGUID: tw5x0l7eQhK8q1clE+SJkg==
+X-IronPort-AV: E=McAfee;i="6800,10657,11656"; a="68706791"
+X-IronPort-AV: E=Sophos;i="6.21,186,1763452800"; 
+   d="scan'208";a="68706791"
+Received: from fmviesa010.fm.intel.com ([10.60.135.150])
+  by fmvoesa109.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 29 Dec 2025 08:49:46 -0800
+X-CSE-ConnectionGUID: 9gSJqiAoRZi1rq57EtuDUQ==
+X-CSE-MsgGUID: dd/0y72PSVKaNpJpv2itEQ==
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="6.21,186,1763452800"; 
-   d="scan'208";a="238359232"
+   d="scan'208";a="201881264"
 Received: from ijarvine-mobl1.ger.corp.intel.com (HELO localhost) ([10.245.245.30])
-  by smtpauth.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 29 Dec 2025 08:00:30 -0800
+  by fmviesa010-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 29 Dec 2025 08:49:43 -0800
 From: =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
-To: linux-kernel@vger.kernel.org, Denis Benato <denis.benato@linux.dev>
-Cc: platform-driver-x86@vger.kernel.org, Hans de Goede <hansg@kernel.org>, 
- "Luke D . Jones" <luke@ljones.dev>, Mateusz Schyboll <dragonn@op.pl>, 
- =?utf-8?q?Merthan_Karaka=C5=9F?= <m3rthn.k@gmail.com>, 
- Denis Benato <benato.denis96@gmail.com>
-In-Reply-To: <20251229150755.1351495-1-denis.benato@linux.dev>
-References: <20251229150755.1351495-1-denis.benato@linux.dev>
-Subject: Re: [PATCH v2] platform/x86: asus-armoury: fix ppt data for FA507R
-Message-Id: <176702402537.34195.3210240061686906848.b4-ty@linux.intel.com>
-Date: Mon, 29 Dec 2025 18:00:25 +0200
+Date: Mon, 29 Dec 2025 18:49:39 +0200 (EET)
+To: Nitin Joshi <nitjoshi@gmail.com>
+cc: Hans de Goede <hansg@kernel.org>, platform-driver-x86@vger.kernel.org, 
+    LKML <linux-kernel@vger.kernel.org>, njoshi1@lenovo.com, 
+    Mark Pearson <mpearson-lenovo@squebb.ca>
+Subject: Re: [PATCH v6 1/2] platform/x86: thinkpad_acpi: Add support to detect
+ hardware damage detection capability.
+In-Reply-To: <20251224095019.11622-1-nitjoshi@gmail.com>
+Message-ID: <f359e9e7-ade6-a022-f21e-47a581ab97c7@linux.intel.com>
+References: <20251224095019.11622-1-nitjoshi@gmail.com>
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-X-Mailer: b4 0.13.0
+Content-Type: text/plain; charset=US-ASCII
 
-On Mon, 29 Dec 2025 16:07:55 +0100, Denis Benato wrote:
+On Wed, 24 Dec 2025, Nitin Joshi wrote:
 
-> PPT data for FA507R was reported to be wrong by a user:
-> change limits to make them equal to Armoury Crate limits.
+> Thinkpads are adding the ability to detect and report hardware damage
+> status. Add new sysfs interface to identify whether hardware damage
+> is detected or not.
 > 
+> Initial support is available for the USB-C replaceable connector.
 > 
+> Reviewed-by: Mark Pearson <mpearson-lenovo@squebb.ca>
+> Signed-off-by: Nitin Joshi<nitjoshi@gmail.com>
+> ---
+> Changes since v1:
+> -Split patch between hwdd_status and hwdd_detail
+> -Incorporated review comments
+> Changes since v2:
+> -Control visibility of the sysfs attribute based upon ucdd_supported
+> Changes since v3:
+> -Fix documentation build warning
+> Changes since v4:
+> -Removed extra line
+> Changes since v5:
+> -Improved code indentation
+> ---
+>  .../admin-guide/laptops/thinkpad-acpi.rst     |  21 ++++
+>  drivers/platform/x86/lenovo/thinkpad_acpi.c   | 105 ++++++++++++++++++
+>  2 files changed, 126 insertions(+)
+> 
+> diff --git a/Documentation/admin-guide/laptops/thinkpad-acpi.rst b/Documentation/admin-guide/laptops/thinkpad-acpi.rst
+> index 4ab0fef7d440..2db05f718b11 100644
+> --- a/Documentation/admin-guide/laptops/thinkpad-acpi.rst
+> +++ b/Documentation/admin-guide/laptops/thinkpad-acpi.rst
+> @@ -54,6 +54,7 @@ detailed description):
+>  	- Setting keyboard language
+>  	- WWAN Antenna type
+>  	- Auxmac
+> +	- Hardware damage detection capability
+>  
+>  A compatibility table by model and feature is maintained on the web
+>  site, http://ibm-acpi.sf.net/. I appreciate any success or failure
+> @@ -1576,6 +1577,26 @@ percentage level, above which charging will stop.
+>  The exact semantics of the attributes may be found in
+>  Documentation/ABI/testing/sysfs-class-power.
+>  
+> +Hardware damage detection capability
+> +------------------------------------
+> +
+> +sysfs attributes: hwdd_status
+> +
+> +Thinkpads are adding the ability to detect and report hardware damage.
+> +Add new sysfs interface to identify the damaged device status.
+> +Initial support is available for the USB-C replaceable connector.
+> +
+> +The command to check device damaged status is::
+> +
+> +        cat /sys/devices/platform/thinkpad_acpi/hwdd_status
+> +
+> +This value displays status of device damaged
+> +- 0 = Not Damaged
+> +- 1 = Damaged
 
+This seems to result in not the best formatting for htmldocs:
 
-Thank you for your contribution, it has been applied to my local
-review-ilpo-fixes branch. Note it will show up in the public
-platform-drivers-x86/review-ilpo-fixes branch only once I've pushed my
-local branch there, which might take a while.
+"This value displays status of device damaged - 0 = Not Damaged - 1 = Damaged"
 
-The list of commits applied:
-[1/1] platform/x86: asus-armoury: fix ppt data for FA507R
-      commit: 6a02651c4c4b710ecbaf798eb4feb57c97f2bc14
-
---
+-- 
  i.
 
