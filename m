@@ -1,236 +1,156 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.20])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.11])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7CE3D315D2F;
-	Mon, 29 Dec 2025 13:21:49 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.20
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AE72C3164AA;
+	Mon, 29 Dec 2025 13:58:20 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.11
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1767014511; cv=none; b=j+SBK36hM7bFJNqIyMyDQ2SC2kI4s9lO9EIqYCd/65R4tuyfErCXva9hHFHSbJwPvILf80Y5pJ+eQhOYlKI+IOHs589e5MafH7KYQSSrcCljTmiPNqoEhmDjCsXqBENNtpO74ElTAfQQD1W/2wjoDGN23QmbbhRAezTcFziQDTI=
+	t=1767016702; cv=none; b=qUx4icsLmhjlxBHmSdO4fSGMIU/4N6Vqb+nwymWS/b8j4PZgs24aTCc3GTI5rpv89DbQzbgJIXbfTuk5dcJtXlAzc4t+fl7NanHjPnjXC3hnUmpcFVFKTgdiOlFN/K0FnVZEXTks1jqgFeNAhDolquQHZTTrMvtMdNvFlbEyWHI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1767014511; c=relaxed/simple;
-	bh=euF2Rn3J/0a39W7BqXwikQXTo0mHhXBQOHWPcRpRw5Y=;
-	h=From:Date:To:cc:Subject:In-Reply-To:Message-ID:References:
-	 MIME-Version:Content-Type; b=MvbaQ5Nxz3PIsG2lmt9Fqdb4i2DILtS9aUMmTw8Z731mAE4+KsSzfMdaWRgtRvtgX5Yn7B1xtMANlRVi2n1yzqg7dCAAhplKvH7z2e8h6g9AYHnAWsByd+PSPwAucG2rbBUgvA3sWqnbPKlI5OUaV8uts42R3eF2xTuyjmjq768=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=pass smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=WFvWlrSg; arc=none smtp.client-ip=198.175.65.20
+	s=arc-20240116; t=1767016702; c=relaxed/simple;
+	bh=wjLcMD0qGW0E+ZyDIf9hcocUQCpvukGWYx3eueWZI3U=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=skHMGetYqsvSYSAyX4x90ppYF3Lq1x1n4jadlUxQtjDZGSOfN7V2VwEcXg7uP/ha0p5JcZOo+UmwV2hA7bAVHNl5kDRkh82L10pqg+uMDeyT0iYzMddOnt58QtgQ5976rGBEESCxw9I7N6l5QzXgSUCfIus7W/gm96jiqOhvA5Y=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=pass smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=Ix+aSw1b; arc=none smtp.client-ip=192.198.163.11
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="WFvWlrSg"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="Ix+aSw1b"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1767014510; x=1798550510;
-  h=from:date:to:cc:subject:in-reply-to:message-id:
-   references:mime-version;
-  bh=euF2Rn3J/0a39W7BqXwikQXTo0mHhXBQOHWPcRpRw5Y=;
-  b=WFvWlrSgRRcDrkk5+WwGdgunfKNSsjBzt+7Pc8zIDfxAZZd2LHX9k76j
-   n7vKDoMXdOYkzDqJOnJkWb5mysvN5XOzT9C2w3tOUHzx+6D/uRThC6uWs
-   zkeiE/+WiPHFRIvuqIIP6Db3baqkJUqZVxJnCS/bq2WUlIYz+z96CE+TV
-   tNZ53CJDz3iBgNkGkM+REnkSFeeC7anyGD01IErlo4kJEgPGHxmLRZOdf
-   /SqPt84GkIQ0crjEgLoStF3sj/irscv6cJ/slmmgGqDOrre6F94Ln0dp6
-   7nLa4H8NuoyGIhTJcU+tNeEbQ4VhI5hg8Ao36YyNcREWv3uFpRF++I4/+
-   g==;
-X-CSE-ConnectionGUID: BKvslMb2S1S3hXA+HwdUpA==
-X-CSE-MsgGUID: u370U8hMQZmO93fiECyv0Q==
-X-IronPort-AV: E=McAfee;i="6800,10657,11655"; a="68376802"
-X-IronPort-AV: E=Sophos;i="6.21,185,1763452800"; 
-   d="scan'208";a="68376802"
-Received: from orviesa009.jf.intel.com ([10.64.159.149])
-  by orvoesa112.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 29 Dec 2025 05:21:49 -0800
-X-CSE-ConnectionGUID: 9clG72k2ScysaNs1SCUz0Q==
-X-CSE-MsgGUID: gSx7fw/JRGmnQ7+oftmZUQ==
+  t=1767016701; x=1798552701;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:content-transfer-encoding:in-reply-to;
+  bh=wjLcMD0qGW0E+ZyDIf9hcocUQCpvukGWYx3eueWZI3U=;
+  b=Ix+aSw1bfpj/ur8zK32rDTn/nhC7L+cA+nCDgtApJRC1zRe6SQP8fTmz
+   hrPe/byXB/pGFlRW9zuaiFS2i9cNgtbgWZidhFb8bc40O8l1tJ1ALxfsW
+   Qwjzd77pHPtRc3vyXRk7+DaCacLEJSBX+JQH5J9kNgRkkxqDhh3qk/oqT
+   M+68l33+9aSjO/3uTfQexlgzZ8/Swy0qBjTuRU2M3ygrRbyC7SvWLxI/c
+   vDbMWK3vzPWsMCDJw7qLR9vO//mPjQCmKJVp4aHqf9ww5N8Mwajs9ZwuQ
+   EGJFg2A5hmfnt76qA+gJOY2ztOHnjeTcXKmz4cojmaHtTejvzJecOEB/G
+   w==;
+X-CSE-ConnectionGUID: w9tI/sFsTnu+Hgpg2998IA==
+X-CSE-MsgGUID: 6Mxk75cEQnKLM4W0ppBI8A==
+X-IronPort-AV: E=McAfee;i="6800,10657,11656"; a="79256633"
+X-IronPort-AV: E=Sophos;i="6.21,186,1763452800"; 
+   d="scan'208";a="79256633"
+Received: from orviesa004.jf.intel.com ([10.64.159.144])
+  by fmvoesa105.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 29 Dec 2025 05:58:20 -0800
+X-CSE-ConnectionGUID: I5n7O36SSpyDY118sODhvA==
+X-CSE-MsgGUID: jpD4gO7sQeWu1GPuEJU7Rw==
 X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.21,185,1763452800"; 
-   d="scan'208";a="200643909"
-Received: from ijarvine-mobl1.ger.corp.intel.com (HELO localhost) ([10.245.245.30])
-  by orviesa009-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 29 Dec 2025 05:21:46 -0800
-From: =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
-Date: Mon, 29 Dec 2025 15:21:42 +0200 (EET)
-To: Krishna Chomal <krishna.chomal108@gmail.com>
-cc: Hans de Goede <hansg@kernel.org>, linux@roeck-us.net, 
-    platform-driver-x86@vger.kernel.org, linux-hwmon@vger.kernel.org, 
-    LKML <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH 2/2] platform/x86: hp-wmi: implement fan keep-alive
-In-Reply-To: <20251225142310.204831-3-krishna.chomal108@gmail.com>
-Message-ID: <7072d96f-455a-5249-2553-6e72e6a00577@linux.intel.com>
-References: <20251225142310.204831-1-krishna.chomal108@gmail.com> <20251225142310.204831-3-krishna.chomal108@gmail.com>
+X-IronPort-AV: E=Sophos;i="6.21,186,1763452800"; 
+   d="scan'208";a="205449882"
+Received: from kniemiec-mobl1.ger.corp.intel.com (HELO localhost) ([10.245.245.31])
+  by orviesa004-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 29 Dec 2025 05:58:17 -0800
+Date: Mon, 29 Dec 2025 15:58:14 +0200
+From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+To: "Rafael J. Wysocki" <rafael@kernel.org>
+Cc: Linux ACPI <linux-acpi@vger.kernel.org>,
+	LKML <linux-kernel@vger.kernel.org>,
+	Bjorn Helgaas <helgaas@kernel.org>, Zhang Rui <rui.zhang@intel.com>,
+	Chen Yu <yu.c.chen@intel.com>,
+	Mika Westerberg <mika.westerberg@linux.intel.com>,
+	Linux PCI <linux-pci@vger.kernel.org>,
+	Alex Hung <alexhung@gmail.com>, Hans de Goede <hansg@kernel.org>,
+	Ilpo =?iso-8859-1?Q?J=E4rvinen?= <ilpo.jarvinen@linux.intel.com>,
+	platform-driver-x86@vger.kernel.org,
+	AceLan Kao <acelan.kao@canonical.com>
+Subject: Re: [PATCH v1 1/4] ACPI: PNP: Drop PNP0C01 and PNP0C02 from
+ acpi_pnp_device_ids[]
+Message-ID: <aVKI9lVAepGw4lVg@smile.fi.intel.com>
+References: <7888874.EvYhyI6sBW@rafael.j.wysocki>
+ <9550709.CDJkKcVGEf@rafael.j.wysocki>
+ <aVGA9Mgwht_4nlPD@smile.fi.intel.com>
+ <CAJZ5v0h-uOs1Q3RXxsbw4AOxTvY5siGrnxSLfXfk+Ea-ZUz7bQ@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <CAJZ5v0h-uOs1Q3RXxsbw4AOxTvY5siGrnxSLfXfk+Ea-ZUz7bQ@mail.gmail.com>
+Organization: Intel Finland Oy - BIC 0357606-4 - c/o Alberga Business Park, 6
+ krs, Bertel Jungin Aukio 5, 02600 Espoo
 
-On Thu, 25 Dec 2025, Krishna Chomal wrote:
+On Mon, Dec 29, 2025 at 02:12:10PM +0100, Rafael J. Wysocki wrote:
+> On Sun, Dec 28, 2025 at 8:11 PM Andy Shevchenko
+> <andriy.shevchenko@linux.intel.com> wrote:
+> > On Mon, Dec 15, 2025 at 02:34:06PM +0100, Rafael J. Wysocki wrote:
 
-> The firmware on some HP laptops automatically reverts the fan speed
-> control to "Auto" mode after a 120 second timeout window.
+...
+
+> > > +     if (match_string(acpi_system_dev_ids, -1, acpi_device_hid(device)) >= 0) {
+> >
+> > Using -1 makes sense when we have no direct visibility of the mentioned array.
+> > Here we have it visible and statically defined, hence the ARRAY_SIZE() is more
+> > appropriate.
 > 
-> To ensure that the user-selected fan profile (Max/Manual) persists,
-> implement a keep-alive mechanism that periodically refreshes the fan
-> mode trigger before the timeout occurs.
+> But as it stands it is more consistent with what happens elsewhere in this file.
+
+It's not a big deal, especially if there is some consistency involved.
+
+...
+
+> > > +static void acpi_scan_claim_resources(struct acpi_device *adev)
+> > > +{
+> > > +     struct list_head resource_list = LIST_HEAD_INIT(resource_list);
+> > > +     struct resource_entry *rentry;
+> > > +     unsigned int count = 0;
+> > > +     const char *regionid;
+> >
+> > > +     if (acpi_dev_get_resources(adev, &resource_list, NULL, NULL) <= 0)
+> > > +             return;
+> >
+> > Strictly speaking the acpi_dev_free_resource_list() still needs to be called
+> > on 0 return as it's called only for the error cases.
 > 
-> - Introduce a delayed workqueue to trigger the fan mode refresh every 90
->   seconds, ensuring the system maintains the correct fan mode setting.
-> - Integrate the refresh mechanism into hp_wmi_hwmon_enforce_ctx() to
->   start, update or cancel the keep-alive process based on the current
->   fan mode.
+> The return value of 0 means that the list is empty, so there's nothing to free.
 > 
-> This ensures that the driver stays in sync with the hardware.
+> > I think this is the first and the only time I see a combined comparison <= 0
+> > for the acpi_dev_get_resources().
 > 
-> Tested on: HP Omen 16-wf1xxx (board ID 8C78)
+> I don't see a problem here though.
+
+There is no problem, the only minor thing is that the pattern I see seems only
+here.
+
+> > > +     regionid = kstrdup(dev_name(&adev->dev), GFP_KERNEL);
+> > > +     if (!regionid)
+> > > +             goto exit;
+> > > +
+> > > +     list_for_each_entry(rentry, &resource_list, node) {
+> > > +             struct resource *res = rentry->res;
+> > > +             struct resource *r;
+> > > +
+> > > +             /* Skip disabled and invalid resources. */
+> > > +             if ((res->flags & IORESOURCE_DISABLED) || res->end < res->start)
+> > > +                     continue;
+> >
+> > > +             if (res->flags & IORESOURCE_IO) {
+> >
+> > We have resource_type() helper.
 > 
-> Signed-off-by: Krishna Chomal <krishna.chomal108@gmail.com>
-> ---
->  drivers/platform/x86/hp/hp-wmi.c | 52 +++++++++++++++++++++++++++++---
->  1 file changed, 48 insertions(+), 4 deletions(-)
+> I had considered using it, but then I couldn't convince myself that it
+> would matter, so I went for simpler code.
 > 
-> diff --git a/drivers/platform/x86/hp/hp-wmi.c b/drivers/platform/x86/hp/hp-wmi.c
-> index 9fb956ce809a..fbe012e7a342 100644
-> --- a/drivers/platform/x86/hp/hp-wmi.c
-> +++ b/drivers/platform/x86/hp/hp-wmi.c
-> @@ -31,6 +31,7 @@
->  #include <linux/string.h>
->  #include <linux/dmi.h>
->  #include <linux/fixp-arith.h>
-> +#include <linux/workqueue.h>
->  
->  MODULE_AUTHOR("Matthew Garrett <mjg59@srcf.ucam.org>");
->  MODULE_DESCRIPTION("HP laptop WMI driver");
-> @@ -365,8 +366,15 @@ struct hp_wmi_hwmon_priv {
->  	u8 gpu_delta;
->  	u8 mode;
->  	u8 pwm;
-> +	struct delayed_work keep_alive_dwork;
->  };
->  
-> +/*
-> + * 90s delay to prevent the firmware from resetting fan mode after fixed
-> + * 120s timeout
-> + */
-> +#define KEEP_ALIVE_DELAY	90
-
-For any time related define, please include its unit in the name so a 
-person reading code can immediately know it.
-
-> +
->  #define RPM_TO_PWM(rpm, ctx) fixp_linear_interpolate(0, 0, \
->  						(ctx)->max_rpm, U8_MAX, \
->  						clamp_val((rpm), \
-> @@ -2073,6 +2081,7 @@ static int __init hp_wmi_bios_setup(struct platform_device *device)
->  static void __exit hp_wmi_bios_remove(struct platform_device *device)
->  {
->  	int i;
-> +	struct hp_wmi_hwmon_priv *ctx;
->  
->  	for (i = 0; i < rfkill2_count; i++) {
->  		rfkill_unregister(rfkill2[i].rfkill);
-> @@ -2091,6 +2100,10 @@ static void __exit hp_wmi_bios_remove(struct platform_device *device)
->  		rfkill_unregister(wwan_rfkill);
->  		rfkill_destroy(wwan_rfkill);
->  	}
-> +
-> +	ctx = platform_get_drvdata(device);
-> +	if (ctx)
-> +		cancel_delayed_work_sync(&ctx->keep_alive_dwork);
->  }
->  
->  static int hp_wmi_resume_handler(struct device *device)
-> @@ -2152,6 +2165,8 @@ static struct platform_driver hp_wmi_driver __refdata = {
->  
->  static int hp_wmi_hwmon_enforce_ctx(struct hp_wmi_hwmon_priv *ctx)
->  {
-> +	int ret;
-> +
->  	if (!ctx)
->  		return -ENODEV;
->  
-> @@ -2159,23 +2174,36 @@ static int hp_wmi_hwmon_enforce_ctx(struct hp_wmi_hwmon_priv *ctx)
->  	case PWM_MODE_MAX:
->  		if (is_victus_s_thermal_profile())
->  			hp_wmi_get_fan_count_userdefine_trigger();
-> -		return hp_wmi_fan_speed_max_set(1);
-> +		ret = hp_wmi_fan_speed_max_set(1);
-> +		break;
->  	case PWM_MODE_MANUAL:
->  		if (!is_victus_s_thermal_profile())
->  			return -EOPNOTSUPP;
-> -		return hp_wmi_fan_speed_set(ctx, PWM_TO_RPM(ctx->pwm, ctx));
-> +		ret = hp_wmi_fan_speed_set(ctx, PWM_TO_RPM(ctx->pwm, ctx));
-> +		break;
->  	case PWM_MODE_AUTO:
->  		if (is_victus_s_thermal_profile()) {
->  			hp_wmi_get_fan_count_userdefine_trigger();
-> -			return hp_wmi_fan_speed_max_reset(ctx);
-> +			ret = hp_wmi_fan_speed_max_reset(ctx);
->  		} else {
-> -			return hp_wmi_fan_speed_max_set(0);
-> +			ret = hp_wmi_fan_speed_max_set(0);
->  		}
-> +		break;
->  	default:
->  		/* shouldn't happen */
->  		return -EINVAL;
->  	}
->  
-> +	if (ret < 0)
-> +		return ret;
-> +
-> +	/* Reschedule keep-alive work based on the new state */
-> +	if (ctx->mode == PWM_MODE_MAX || ctx->mode == PWM_MODE_MANUAL)
-> +		schedule_delayed_work(&ctx->keep_alive_dwork,
-> +				      secs_to_jiffies(KEEP_ALIVE_DELAY));
-> +	else
-> +		cancel_delayed_work_sync(&ctx->keep_alive_dwork);
-
-This is now duplicating the switch/case, just add these to the existing 
-cases.
-
-You may want to introduce ret variable already in PATCH 1/2 and add a note 
-there that an upcoming change is going to add keep-alive so the return 
-value has to be stored temporarily.
-
-> +
->  	return 0;
->  }
->  
-> @@ -2321,6 +2349,20 @@ static const struct hwmon_chip_info chip_info = {
->  	.info = info,
->  };
->  
-> +static void hp_wmi_hwmon_keep_alive_handler(struct work_struct *work)
-> +{
-> +	struct delayed_work *dwork;
-> +	struct hp_wmi_hwmon_priv *ctx;
-> +
-> +	dwork = to_delayed_work(work);
-> +	ctx = container_of(dwork, struct hp_wmi_hwmon_priv, keep_alive_dwork);
-> +	/*
-> +	 * Re-apply the current hwmon context settings.
-> +	 * NOTE: hp_wmi_hwmon_enforce_ctx will handle the re-scheduling.
-> +	 */
-> +	hp_wmi_hwmon_enforce_ctx(ctx);
-
-(I only now understand why you named this function like this, and I still 
-don't think it's a good name for it as you've other callers besides this 
-one real "enforcing" case.)
-
-> +}
-> +
->  static int hp_wmi_hwmon_setup_ctx(struct hp_wmi_hwmon_priv *ctx)
->  {
->  	u8 fan_data[128];
-> @@ -2377,6 +2419,8 @@ static int hp_wmi_hwmon_init(void)
->  		return PTR_ERR(hwmon);
->  	}
->  
-> +	INIT_DELAYED_WORK(&ctx->keep_alive_dwork, hp_wmi_hwmon_keep_alive_handler);
-> +	platform_set_drvdata(hp_wmi_platform_dev, ctx);
->  	hp_wmi_hwmon_enforce_ctx(ctx);
->  
->  	return 0;
+> > And I believe the direct comparison in this case is better.
 > 
+> You seem to be arguing that it matters after all, so why does it matter?
+
+In the light of the resent findings of the resource_size() use on zeroed data
+it also might be that in some cases the opposite happens, i.e. the resource had
+initially a more bits of type assigned while checked for the certain one(s).
+In such case the resource_type() == IORESOURCE_foo will fail on those.
+
+I assume, nevertheless, that the code in question is quite unlikely exposed to
+such mistakes.
 
 -- 
- i.
+With Best Regards,
+Andy Shevchenko
+
 
