@@ -1,57 +1,42 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.17])
+Received: from out-180.mta1.migadu.com (out-180.mta1.migadu.com [95.215.58.180])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B10BF220F49;
-	Mon, 29 Dec 2025 18:36:54 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.17
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 69DFD277029
+	for <platform-driver-x86@vger.kernel.org>; Mon, 29 Dec 2025 20:45:05 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=95.215.58.180
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1767033416; cv=none; b=AsCJBprGpQqiZ0LgaV8Y0f1WlEKM9IJG6sWZOerf7au6KrLV/99a5cLAneqekdB5IKNsj60CRh1ZWBDrsZ6g/OonnLInS6F+y12xNpIrYCN4Ey1Kci/KzbegzU63iQBdYAtObiZnezCAJplQc0szos+uZV/8MMOtBdgz5tBmAqI=
+	t=1767041109; cv=none; b=KH+/FL3KpPKkTxZ9dP7U4CQiEdZCTBEP2rJa0dvEz7Umq5MSKXznB2y10xDiVoqt9AvqmicOgjrHgCHFs6JYI96LWOgdm3sjSv1bvVe6wdHO9rBHyrAu3oaLBep/rq5dYIVEME1eb1qDZbwKDYxwR5L/PK2PMZpRVRSXhs7ymMs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1767033416; c=relaxed/simple;
-	bh=q0GBygwYbI5zUXyj6QNcghhn1CBbCCSv5rqq7GQJQEw=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=ginbOPBXmzYQexK7A3hFKG9KyfzF9QgcHC72wqiQZJzT8YVk3ukvnKzc46Hg6eslJm+aU/SJ6pvDOHTeJzPLP1vKbayubRBoRX20yw7cKp9mA+jvsOcJyPQOsfswQ0X4ILKaymHHj+lmcTl2+WUGb8bJlLlXId6dt5uLOnzaBMA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=pass smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=PwBL+xTJ; arc=none smtp.client-ip=198.175.65.17
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.intel.com
+	s=arc-20240116; t=1767041109; c=relaxed/simple;
+	bh=93AqE3fA+Vl4brEiffNkiHRyx8vfDQWZhBJdDVk+GkM=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=el+xx4Fqhi9Ekn3itQcmL02Jbgxy0mD9C2lNQUC7/0zPy725BrV2Lr6bro//HkmNQUWwW/GwveIgrAAHFJ2GbjJbKDSJv6CoWKpecd872HWLTITcHMNqEaVjcd1JEv2VWVANOwfSejQxDOGioXrnL0+DTUQnyU7U87gGIVLeNDg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=ptNB27Nn; arc=none smtp.client-ip=95.215.58.180
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="PwBL+xTJ"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1767033414; x=1798569414;
-  h=from:to:cc:subject:date:message-id:mime-version:
-   content-transfer-encoding;
-  bh=q0GBygwYbI5zUXyj6QNcghhn1CBbCCSv5rqq7GQJQEw=;
-  b=PwBL+xTJPmKZTWmnKR7EHR8BLUQy1QMu5b5dCJVSuIcM8Tx9FoxWWI1v
-   zr0l70ZYne67eQFOTgK3oz+n67IJaEDsT1WD3Vn+5jO++CDbtWRvZxLmk
-   3o4D8rBJzTfDa9qms/bHl0eMfOVhvNnqgaEqCfZ0cbSfCQMO+Z879NXFL
-   HH6QeODwb+WI+WR+YtbfkKdxF9dKGRXdASl11DMcdqTddfhrKSIlO8TOt
-   iNjyKwwzqpjud4nYy9NlrpnmkbtIGcm3o9QWaDzJ9HV+HQ9jS6NcsQSvE
-   UQcM3MgZTKLuMbw6xlKar62F8tDalz+b6evsf5JCwrUYJvhRaV8bSDKhk
-   Q==;
-X-CSE-ConnectionGUID: LmOgHM5/QMOZskib3g6rrw==
-X-CSE-MsgGUID: VYkxggqVTpCK1//e7CGZHg==
-X-IronPort-AV: E=McAfee;i="6800,10657,11656"; a="68613938"
-X-IronPort-AV: E=Sophos;i="6.21,186,1763452800"; 
-   d="scan'208";a="68613938"
-Received: from fmviesa010.fm.intel.com ([10.60.135.150])
-  by orvoesa109.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 29 Dec 2025 10:36:54 -0800
-X-CSE-ConnectionGUID: +QBzUQvqS++aztqW/qJejw==
-X-CSE-MsgGUID: i+zkzwvwSw2vbW4rl93/PA==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.21,186,1763452800"; 
-   d="scan'208";a="201905969"
-Received: from spandruv-desk.jf.intel.com ([10.54.55.20])
-  by fmviesa010.fm.intel.com with ESMTP; 29 Dec 2025 10:36:53 -0800
-From: Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>
-To: hansg@kernel.org,
-	ilpo.jarvinen@linux.intel.com
+	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="ptNB27Nn"
+X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
+	t=1767041103;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:
+	 content-transfer-encoding:content-transfer-encoding;
+	bh=YV2sWj691PWBCNhNLlsMnvQ+FxH0XQWylA2wIHdYDis=;
+	b=ptNB27NncFPDbc9oVc2hu4glSuAjL2CzIDI+2ei0z2oOgS418VEPL+genNUrn2Kchi/Any
+	uQPD0MxFLWYLQNC5a+879KUrptVHVNx/51V02CMY6BovYh3CMIOGGFRZfN8jc445gLVYBN
+	Rg6b2I41RLL0fTOH9iQqj5q2dfG5FVE=
+From: Denis Benato <denis.benato@linux.dev>
+To: linux-kernel@vger.kernel.org
 Cc: platform-driver-x86@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>
-Subject: [PATCH] platform/x86: ISST: Check for admin capability for write commands
-Date: Mon, 29 Dec 2025 10:36:52 -0800
-Message-ID: <20251229183652.823308-1-srinivas.pandruvada@linux.intel.com>
-X-Mailer: git-send-email 2.51.0
+	"Hans de Goede" <hansg@kernel.org>,
+	=?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>,
+	"Luke D . Jones" <luke@ljones.dev>,
+	"Mateusz Schyboll" <dragonn@op.pl>,
+	"Denis Benato" <benato.denis96@gmail.com>,
+	Denis Benato <denis.benato@linux.dev>
+Subject: [PATCH] platform/x86: asus-armoury: add support for G835LW
+Date: Mon, 29 Dec 2025 21:44:58 +0100
+Message-ID: <20251229204458.2658777-1-denis.benato@linux.dev>
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
@@ -59,71 +44,55 @@ List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
+X-Migadu-Flow: FLOW_OUT
 
-In some SST deployments, administrators want to allow reading SST
-capabilities for non-root users. This can be achieved by changing file
-permissions for "/dev/isst_interface", but they still want to prevent
-any changes to the SST configuration by non-root users.
+Add TDP data for laptop model G835LW.
 
-This capability was available before for non-TPMI SST. Extend the same
-capability for TPMI SST by adding a check for CAP_SYS_ADMIN for all
-write commands.
-
-Signed-off-by: Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>
+Signed-off-by: Denis Benato <denis.benato@linux.dev>
 ---
- .../x86/intel/speed_select_if/isst_tpmi_core.c        | 11 ++++++-----
- 1 file changed, 6 insertions(+), 5 deletions(-)
+ drivers/platform/x86/asus-armoury.h | 29 +++++++++++++++++++++++++++++
+ 1 file changed, 29 insertions(+)
 
-diff --git a/drivers/platform/x86/intel/speed_select_if/isst_tpmi_core.c b/drivers/platform/x86/intel/speed_select_if/isst_tpmi_core.c
-index 47026bb3e1af..a624e0b2991f 100644
---- a/drivers/platform/x86/intel/speed_select_if/isst_tpmi_core.c
-+++ b/drivers/platform/x86/intel/speed_select_if/isst_tpmi_core.c
-@@ -612,7 +612,7 @@ static long isst_if_core_power_state(void __user *argp)
- 		return -EINVAL;
- 
- 	if (core_power.get_set) {
--		if (power_domain_info->write_blocked)
-+		if (power_domain_info->write_blocked || !capable(CAP_SYS_ADMIN))
- 			return -EPERM;
- 
- 		_write_cp_info("cp_enable", core_power.enable, SST_CP_CONTROL_OFFSET,
-@@ -659,7 +659,7 @@ static long isst_if_clos_param(void __user *argp)
- 		return -EINVAL;
- 
- 	if (clos_param.get_set) {
--		if (power_domain_info->write_blocked)
-+		if (power_domain_info->write_blocked || !capable(CAP_SYS_ADMIN))
- 			return -EPERM;
- 
- 		_write_cp_info("clos.min_freq", clos_param.min_freq_mhz,
-@@ -751,7 +751,8 @@ static long isst_if_clos_assoc(void __user *argp)
- 
- 		power_domain_info = &sst_inst->power_domain_info[part][punit_id];
- 
--		if (assoc_cmds.get_set && power_domain_info->write_blocked)
-+		if (assoc_cmds.get_set && (power_domain_info->write_blocked ||
-+					   !capable(CAP_SYS_ADMIN)))
- 			return -EPERM;
- 
- 		offset = SST_CLOS_ASSOC_0_OFFSET +
-@@ -928,7 +929,7 @@ static int isst_if_set_perf_level(void __user *argp)
- 	if (!power_domain_info)
- 		return -EINVAL;
- 
--	if (power_domain_info->write_blocked)
-+	if (power_domain_info->write_blocked || !capable(CAP_SYS_ADMIN))
- 		return -EPERM;
- 
- 	if (!(power_domain_info->pp_header.allowed_level_mask & BIT(perf_level.level)))
-@@ -988,7 +989,7 @@ static int isst_if_set_perf_feature(void __user *argp)
- 	if (!power_domain_info)
- 		return -EINVAL;
- 
--	if (power_domain_info->write_blocked)
-+	if (power_domain_info->write_blocked || !capable(CAP_SYS_ADMIN))
- 		return -EPERM;
- 
- 	_write_pp_info("perf_feature", perf_feature.feature, SST_PP_CONTROL_OFFSET,
+diff --git a/drivers/platform/x86/asus-armoury.h b/drivers/platform/x86/asus-armoury.h
+index a1bb2005c3f3..98e05e11eef1 100644
+--- a/drivers/platform/x86/asus-armoury.h
++++ b/drivers/platform/x86/asus-armoury.h
+@@ -1426,6 +1426,35 @@ static const struct dmi_system_id power_limits[] = {
+ 			.requires_fan_curve = true,
+ 		},
+ 	},
++	{
++		.matches = {
++			DMI_MATCH(DMI_BOARD_NAME, "G835LW"),
++		},
++		.driver_data = &(struct power_data) {
++			.ac_data = &(struct power_limits) {
++				.ppt_pl1_spl_min = 28,
++				.ppt_pl1_spl_def = 140,
++				.ppt_pl1_spl_max = 175,
++				.ppt_pl2_sppt_min = 28,
++				.ppt_pl2_sppt_max = 175,
++				.nv_dynamic_boost_min = 5,
++				.nv_dynamic_boost_max = 25,
++				.nv_temp_target_min = 75,
++				.nv_temp_target_max = 87,
++				.nv_tgp_min = 80,
++				.nv_tgp_max = 150,
++			},
++			.dc_data = &(struct power_limits) {
++				.ppt_pl1_spl_min = 25,
++				.ppt_pl1_spl_max = 55,
++				.ppt_pl2_sppt_min = 25,
++				.ppt_pl2_sppt_max = 70,
++				.nv_temp_target_min = 75,
++				.nv_temp_target_max = 87,
++			},
++			.requires_fan_curve = true,
++		},
++	},
+ 	{
+ 		.matches = {
+ 			DMI_MATCH(DMI_BOARD_NAME, "H7606W"),
 -- 
 2.52.0
 
