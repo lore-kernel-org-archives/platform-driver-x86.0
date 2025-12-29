@@ -1,213 +1,107 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.13])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wr1-f50.google.com (mail-wr1-f50.google.com [209.85.221.50])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 179A317C211;
-	Mon, 29 Dec 2025 14:14:06 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.13
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9BD9632A3C5
+	for <platform-driver-x86@vger.kernel.org>; Mon, 29 Dec 2025 14:56:48 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.50
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1767017649; cv=none; b=AFPWpfvFhEAvqOnyzZRh83rl1RG2DSg8BmJoR7gSorkFY1B62EYQahYUAQxb9a33sjp+YbBtGU16nCcS73FdAQ2EJ2jhoSs7V5ooOsxIG7jLA4BPM+A3kzyYunBssamKQ1E3Z6/GaLffg184V7p+kFSL5Sef8YMexhEksEfc+ok=
+	t=1767020211; cv=none; b=i/3OayQJyXLIL7ysFtSz+Gi2ryiQO3Vf6616fXyS9udk4vcLaalOvPBIcbLU+RMiJUGc9sha5BDigvCNtkt3NYmFYmsFeiMdbWxPu/4m8IH1lx8vNbvDMvIl91WFmV6RiceM5KLxME3IOri7OivCC9ka3kFImA5YHS4+1klLxtY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1767017649; c=relaxed/simple;
-	bh=KUD0fQNa2Ze2Ce0WPSxr+mkgSJWKzQXsBRhV4ekH0aI=;
-	h=From:Date:To:cc:Subject:In-Reply-To:Message-ID:References:
-	 MIME-Version:Content-Type; b=NaE66qbPZFtGU7DEXMdwB2hHm/v4JhqcOy/sBehB/dH6i5rL2wUH7F21X5/J14YMuuHs0madgiM3/Tbx/cc9ZGx526ckxzdsdPZM9Q+EFUuHoOKTp6xBRACDGt3g+Wnd6a5tfz0sZMklgQ8oiJ4Gn2l0dK/W2mO4UluyiErT5Ts=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=pass smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=lnDPlcyx; arc=none smtp.client-ip=198.175.65.13
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.intel.com
+	s=arc-20240116; t=1767020211; c=relaxed/simple;
+	bh=Yy20N8xpV0q3ic4WNBZrn3cmUoSV/XUZ2XWZwrqI33I=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=bWv4Ps6esUmWSWSOlrRsoHGpjETpgYgfL2NS/VZJ5TqAN35oaeIkTeu0jAs3qeOOXmY05YwjHewbObepGftrNwik3UA3RI8AgSOSH0LSFijlrnhZLGZmwKQeFaSzD7vwPihQBNIa6pcstgcM7XAZHmddgWQfom3sXgMftEqW1e0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=Dt6KVzks; arc=none smtp.client-ip=209.85.221.50
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="lnDPlcyx"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1767017647; x=1798553647;
-  h=from:date:to:cc:subject:in-reply-to:message-id:
-   references:mime-version;
-  bh=KUD0fQNa2Ze2Ce0WPSxr+mkgSJWKzQXsBRhV4ekH0aI=;
-  b=lnDPlcyxlnjApuFGLSOVR+o+afT9ih1zhwEf8ugUvCLUri6VhMXXA4KK
-   /5/R8ejoM9xzfbpyYuacmmjNGNOq3SOmjtjAGakM5hivrQNx0beMOQYV8
-   FqDYnd+azNUkTXsfOyNzyFENIi0RsH5KRdi3BtOCt/KdFrZ9JPzZwy5Kx
-   2KJDZ1kryrjSCDasRwIWN9lP3CIjUsla9V+g562QO2CKwCzMfEmMD+w5x
-   n5+2iFWz4iqKyRKjcr9yjdqB4L6yUhrgJ5eAnSTynOX1vTSmBceV9RrCj
-   NTCZsMZFUHxiI4tcllFBrQLF4HTgzIEsN/k3ClxLGbdTDVfOxMOdpenvF
-   w==;
-X-CSE-ConnectionGUID: 6OyT0OxCT2a5ma6H1or46A==
-X-CSE-MsgGUID: GXIkAvyZRaCKePpSwHfeZQ==
-X-IronPort-AV: E=McAfee;i="6800,10657,11656"; a="79742088"
-X-IronPort-AV: E=Sophos;i="6.21,186,1763452800"; 
-   d="scan'208";a="79742088"
-Received: from fmviesa004.fm.intel.com ([10.60.135.144])
-  by orvoesa105.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 29 Dec 2025 06:14:06 -0800
-X-CSE-ConnectionGUID: 1TpNIV1VQuqKfGqyYl2KUA==
-X-CSE-MsgGUID: cJQmzNDyTtik+hoamlqOdA==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.21,186,1763452800"; 
-   d="scan'208";a="205827756"
-Received: from ijarvine-mobl1.ger.corp.intel.com (HELO localhost) ([10.245.245.30])
-  by fmviesa004-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 29 Dec 2025 06:14:03 -0800
-From: =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
-Date: Mon, 29 Dec 2025 16:14:00 +0200 (EET)
-To: Junrui Luo <moonafterrain@outlook.com>, Jorge Lopez <jorge.lopez2@hp.com>, 
-    Jorge Lopez <jorgealtxwork@gmail.com>
-cc: Hans de Goede <hansg@kernel.org>, 
-    =?ISO-8859-15?Q?Thomas_Wei=DFschuh?= <linux@weissschuh.net>, 
-    platform-driver-x86@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>, 
-    Yuhao Jiang <danisjiang@gmail.com>
-Subject: Re: [PATCH v2] platform/x86: hp-bioscfg: Fix out-of-bounds array
- access in ACPI package parsing
-In-Reply-To: <SYBPR01MB788173D7DD4EA2CB6383683DAFB0A@SYBPR01MB7881.ausprd01.prod.outlook.com>
-Message-ID: <0d39773f-d464-ba9f-2bb9-fef83643011b@linux.intel.com>
-References: <SYBPR01MB788173D7DD4EA2CB6383683DAFB0A@SYBPR01MB7881.ausprd01.prod.outlook.com>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Dt6KVzks"
+Received: by mail-wr1-f50.google.com with SMTP id ffacd0b85a97d-4327790c4e9so1419590f8f.2
+        for <platform-driver-x86@vger.kernel.org>; Mon, 29 Dec 2025 06:56:48 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1767020207; x=1767625007; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=/myolSI3ijeysotw4zvyldzrMlSOrHxWATPOL6sKOKE=;
+        b=Dt6KVzksawKKimOi/FIZq+gu1PDiL88+VP+NI/gXiHy5d6Sh3ceq2K1XdEq+tQ/XHW
+         WYbp9iUQttL4qP78fBGKLX3pTRcG/JJdBCToDLhn0Kp0Ph7WvUiuTRwtQyMsmf3iM47+
+         QQGpn5At44RWMKrsbENPyIRwMPLFISg/jMQXsuC/O+ZcZ5v22/07K+XyY8ze/FexIThv
+         UTQsHtRNBgajnyLHavVt/+W7vMIFfKjT8o+NY0Oot4fuJj+HEyv/4h9icFn/1ecihEsD
+         uZScC0IfXH0oUnXseD+VqsWHbAl9/TuQXMrtFWb3ocel2fHsqFr7G3v+VGd4Wn75lUju
+         tIJQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1767020207; x=1767625007;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-gg:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=/myolSI3ijeysotw4zvyldzrMlSOrHxWATPOL6sKOKE=;
+        b=b0uHcUAvRFYHZDHp+1zsvKMOU5Wpi0XbIUl210iwb/h05gEumPRE4hTk6oZfd+beSF
+         THjat6VP1VXMoienmuzC1oQF6B2KxBNt/ZKMEgOobw9/q29msgmzj72SeIIfmaimRVj1
+         wx8xhET+DMnyaZKZjM3s6+DYUbwucuPyKSpiOiA2bJZZl88K/qkO/JDHrTd6l2Orae+V
+         0MmQvh8Y8vAjw0jSXfbioqbEm0xC8lLlDsjyuZNpvygo8uMzcDP/HM3jH1DwXpKJ8nb+
+         swdBaLryRGmPlUHgsTOG0N0vOCxvFVvT8JHNSb4l3QWv/u8ycmPPrb7Mjb373l5CPZVq
+         qiew==
+X-Forwarded-Encrypted: i=1; AJvYcCWTCgZ0BY9J/drTPb2IeV3TZGlEuzhskEQS4Aq4JuMzOtJU8Mhl7bHiD0Sl4/j7pOhoy9fuJMgoI/QMDFogN97uOcxB@vger.kernel.org
+X-Gm-Message-State: AOJu0YwGQULzyC1AAOJUgtCra1lDFOUBttrojaf6jj9QukmrnKTuPD6R
+	W+j7UBaSbinn8MOJwRDznTy9bkzRcylTVT2mI/yK2PI6fQqtwKQL+hgZ
+X-Gm-Gg: AY/fxX6ZT4GKA8hZ+9V5ojoSjcsek2eDop4c5Xgq7kUDnrgKwd3HDGsab4OTu09QYUt
+	oPxlx8tfka0dMKl9fvRlr+V66okqDWtO8VUc0BFqW3RiSjcedVzHdLBaR545ST2Gk78j8/fj+NJ
+	s1Sf5IS0WsqmaS3yWn89Vr/U6X5eMYx1SySxAaB4ji0X0lAkwDk3Q27CErwt9UdlyFU3lFqilK6
+	9d+R/hKdcD1RHBcH1MTAV7jzd9JizgaNfGGsUtde3DreiOOGYu+zS+LkMk0qdQEJKKqEq+a2QzH
+	/J2jn8xthp13ghJtQmt8qCnR6UjmR1ehXEba8HCh00235PXGhK2A6B2JUewtCoa3DsEJdx0qQB3
+	gb3M7/mugKsrhrnz0ndTMXsWF+1ftSoSILwpRP2QaLaFbTI3KHDX6mjayOkotzH+od3Is++j2fX
+	VcVnZAvU2mgh5XXGgv+TsRlJo=
+X-Google-Smtp-Source: AGHT+IGoa4KSa8jcgJfGItYbbAfpOmwSpvpF+KDFq3kotNPtyEX0qhccg31LWemW0rNwxMRRU3wpmw==
+X-Received: by 2002:a05:6000:248a:b0:429:c14f:5f7d with SMTP id ffacd0b85a97d-4324e4f69f6mr36874027f8f.29.1767020206740;
+        Mon, 29 Dec 2025 06:56:46 -0800 (PST)
+Received: from [192.168.1.121] ([176.206.93.222])
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-4324eaa08efsm63172354f8f.29.2025.12.29.06.56.46
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Mon, 29 Dec 2025 06:56:46 -0800 (PST)
+Message-ID: <79bb267b-d24b-40a8-ae82-fa4d813cb234@gmail.com>
+Date: Mon, 29 Dec 2025 15:56:45 +0100
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH] platform/x86: asus-armoury: add support for GU605CR
+To: =?UTF-8?Q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>,
+ Denis Benato <denis.benato@linux.dev>
+Cc: LKML <linux-kernel@vger.kernel.org>, platform-driver-x86@vger.kernel.org,
+ Hans de Goede <hansg@kernel.org>, "Luke D . Jones" <luke@ljones.dev>,
+ Mateusz Schyboll <dragonn@op.pl>
+References: <20251225023841.1970513-1-denis.benato@linux.dev>
+ <491d2182-930c-46fd-20f6-5d6e7f5ffeb7@linux.intel.com>
+Content-Language: en-US, it-IT, en-US-large
+From: Denis Benato <benato.denis96@gmail.com>
+In-Reply-To: <491d2182-930c-46fd-20f6-5d6e7f5ffeb7@linux.intel.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 
-On Fri, 26 Dec 2025, Junrui Luo wrote:
 
-> The hp_populate_*_elements_from_package() functions in the hp-bioscfg
-> driver contain out-of-bounds array access vulnerabilities.
-> 
-> These functions parse ACPI packages into internal data structures using
-> a for loop with index variable 'elem' that iterates through
-> enum_obj/integer_obj/order_obj/password_obj/string_obj arrays.
-> 
-> When processing multi-element fields like PREREQUISITES and
-> ENUM_POSSIBLE_VALUES, these functions read multiple consecutive array
-> elements using expressions like 'enum_obj[elem + reqs]' and
-> 'enum_obj[elem + pos_values]' within nested loops.
-> 
-> The bug is that the bounds check only validated elem, but did not consider
-> the additional offset when accessing elem + reqs or elem + pos_values.
-> 
-> The fix changes the bounds check to validate the actual accessed index.
-> 
-> Reported-by: Yuhao Jiang <danisjiang@gmail.com>
-> Reported-by: Junrui Luo <moonafterrain@outlook.com>
-> Fixes: e6c7b3e15559 ("platform/x86: hp-bioscfg: string-attributes")
-> Signed-off-by: Junrui Luo <moonafterrain@outlook.com>
-
+On 12/29/25 14:09, Ilpo Järvinen wrote:
+> On Thu, 25 Dec 2025, Denis Benato wrote:
+>
+>> Add TDP data for laptop model GU605CR.
+>>
+>> Signed-off-by: Denis Benato <denis.benato@linux.dev>
+> Hi Denis,
+>
+> I've applied these 4 to the review-ilpo-fixes branch, but next time please 
+> please make them a series instead of sending 4 very similar ID addition 
+> changes to the same file independently.
+>
+> A series is easier for me to apply as a whole than 4 patches individually. 
+> Also, series won't cause some messy misapplication as easily as individual 
+> patches that can be applied in order different from what was used by the 
+> submitter to create them (it seems there were no context conflicts with 
+> these but I had to check that == extra work for me).
+>
 Hi,
 
-Thanks for the update, I've now applied this to the review-ilpo-fixes 
-branch.
-
-However, I still find multiple eyerising points in these copy-pasted 
-blocks. This code was originally added half-baked with outstanding 
-comments from me about the unreasonable use of copy-paste (IIRC, Hans 
-didn't notice my outstanding comments from an earlier version):
-
-- Why are there number of variations what is done when 
-  hp_convert_hexstr_to_str() fails between the different types, some 
-  return -EINVAL, some do continue, some break?!?
-- Should these obj_count checks actually occur before the loop?
-  (-EINVAL is returned, so why do part of the work at all?)
-
-(IMO, this whole code under case PREREQUISITES: should have been put 
-into a helper, perhaps a macro if function is not viable to avoid code 
-variations such as those fixed by this patch. IIRC, there was other use 
-of copy-paste as well.)
-
--- 
- i.
-
-> ---
-> Changes in v2:
-> - Add a more detailed description
-> - Link to v1: https://lore.kernel.org/all/SYBPR01MB78816A828BF586364CF7A4FFAFA6A@SYBPR01MB7881.ausprd01.prod.outlook.com/
-> ---
->  drivers/platform/x86/hp/hp-bioscfg/enum-attributes.c       | 4 ++--
->  drivers/platform/x86/hp/hp-bioscfg/int-attributes.c        | 2 +-
->  drivers/platform/x86/hp/hp-bioscfg/order-list-attributes.c | 5 +++++
->  drivers/platform/x86/hp/hp-bioscfg/passwdobj-attributes.c  | 5 +++++
->  drivers/platform/x86/hp/hp-bioscfg/string-attributes.c     | 2 +-
->  5 files changed, 14 insertions(+), 4 deletions(-)
-> 
-> diff --git a/drivers/platform/x86/hp/hp-bioscfg/enum-attributes.c b/drivers/platform/x86/hp/hp-bioscfg/enum-attributes.c
-> index c50ad5880503..f346aad8e9d8 100644
-> --- a/drivers/platform/x86/hp/hp-bioscfg/enum-attributes.c
-> +++ b/drivers/platform/x86/hp/hp-bioscfg/enum-attributes.c
-> @@ -207,7 +207,7 @@ static int hp_populate_enumeration_elements_from_package(union acpi_object *enum
->  		case PREREQUISITES:
->  			size = min_t(u32, enum_data->common.prerequisites_size, MAX_PREREQUISITES_SIZE);
->  			for (reqs = 0; reqs < size; reqs++) {
-> -				if (elem >= enum_obj_count) {
-> +				if (elem + reqs >= enum_obj_count) {
->  					pr_err("Error enum-objects package is too small\n");
->  					return -EINVAL;
->  				}
-> @@ -255,7 +255,7 @@ static int hp_populate_enumeration_elements_from_package(union acpi_object *enum
->  
->  			for (pos_values = 0; pos_values < size && pos_values < MAX_VALUES_SIZE;
->  			     pos_values++) {
-> -				if (elem >= enum_obj_count) {
-> +				if (elem + pos_values >= enum_obj_count) {
->  					pr_err("Error enum-objects package is too small\n");
->  					return -EINVAL;
->  				}
-> diff --git a/drivers/platform/x86/hp/hp-bioscfg/int-attributes.c b/drivers/platform/x86/hp/hp-bioscfg/int-attributes.c
-> index 6c7f4d5fa9cb..63b1fda2be4e 100644
-> --- a/drivers/platform/x86/hp/hp-bioscfg/int-attributes.c
-> +++ b/drivers/platform/x86/hp/hp-bioscfg/int-attributes.c
-> @@ -227,7 +227,7 @@ static int hp_populate_integer_elements_from_package(union acpi_object *integer_
->  			size = min_t(u32, integer_data->common.prerequisites_size, MAX_PREREQUISITES_SIZE);
->  
->  			for (reqs = 0; reqs < size; reqs++) {
-> -				if (elem >= integer_obj_count) {
-> +				if (elem + reqs >= integer_obj_count) {
->  					pr_err("Error elem-objects package is too small\n");
->  					return -EINVAL;
->  				}
-> diff --git a/drivers/platform/x86/hp/hp-bioscfg/order-list-attributes.c b/drivers/platform/x86/hp/hp-bioscfg/order-list-attributes.c
-> index c6e57bb9d8b7..6a31f47ce3f5 100644
-> --- a/drivers/platform/x86/hp/hp-bioscfg/order-list-attributes.c
-> +++ b/drivers/platform/x86/hp/hp-bioscfg/order-list-attributes.c
-> @@ -216,6 +216,11 @@ static int hp_populate_ordered_list_elements_from_package(union acpi_object *ord
->  			size = min_t(u32, ordered_list_data->common.prerequisites_size,
->  				     MAX_PREREQUISITES_SIZE);
->  			for (reqs = 0; reqs < size; reqs++) {
-> +				if (elem + reqs >= order_obj_count) {
-> +					pr_err("Error elem-objects package is too small\n");
-> +					return -EINVAL;
-> +				}
-> +
->  				ret = hp_convert_hexstr_to_str(order_obj[elem + reqs].string.pointer,
->  							       order_obj[elem + reqs].string.length,
->  							       &str_value, &value_len);
-> diff --git a/drivers/platform/x86/hp/hp-bioscfg/passwdobj-attributes.c b/drivers/platform/x86/hp/hp-bioscfg/passwdobj-attributes.c
-> index 187b372123ed..ec79d9d50377 100644
-> --- a/drivers/platform/x86/hp/hp-bioscfg/passwdobj-attributes.c
-> +++ b/drivers/platform/x86/hp/hp-bioscfg/passwdobj-attributes.c
-> @@ -303,6 +303,11 @@ static int hp_populate_password_elements_from_package(union acpi_object *passwor
->  				     MAX_PREREQUISITES_SIZE);
->  
->  			for (reqs = 0; reqs < size; reqs++) {
-> +				if (elem + reqs >= password_obj_count) {
-> +					pr_err("Error elem-objects package is too small\n");
-> +					return -EINVAL;
-> +				}
-> +
->  				ret = hp_convert_hexstr_to_str(password_obj[elem + reqs].string.pointer,
->  							       password_obj[elem + reqs].string.length,
->  							       &str_value, &value_len);
-> diff --git a/drivers/platform/x86/hp/hp-bioscfg/string-attributes.c b/drivers/platform/x86/hp/hp-bioscfg/string-attributes.c
-> index 27758b779b2d..7b885d25650c 100644
-> --- a/drivers/platform/x86/hp/hp-bioscfg/string-attributes.c
-> +++ b/drivers/platform/x86/hp/hp-bioscfg/string-attributes.c
-> @@ -217,7 +217,7 @@ static int hp_populate_string_elements_from_package(union acpi_object *string_ob
->  				     MAX_PREREQUISITES_SIZE);
->  
->  			for (reqs = 0; reqs < size; reqs++) {
-> -				if (elem >= string_obj_count) {
-> +				if (elem + reqs >= string_obj_count) {
->  					pr_err("Error elem-objects package is too small\n");
->  					return -EINVAL;
->  				}
-> 
-> ---
-> base-commit: 9448598b22c50c8a5bb77a9103e2d49f134c9578
-> change-id: 20251226-fixes-91414deb7fd9
-> 
-> Best regards,
-> 
+Thank you, I'll keep this in mind.
