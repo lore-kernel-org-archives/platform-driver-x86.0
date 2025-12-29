@@ -1,58 +1,57 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.15])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.16])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 59C7C212F98;
-	Mon, 29 Dec 2025 10:44:52 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.15
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E56924A0C
+	for <platform-driver-x86@vger.kernel.org>; Mon, 29 Dec 2025 10:54:45 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.16
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1767005094; cv=none; b=ldmbMmHNcEV0hsk6UJ6J1SETX0PSJ/gek6EfwFJj88SRwDwQ3zEptfCUOb6ceBo0UMa8CWlN3RacqOtHKlcK2i6vTeys08PxywrFmMxQzYISp9gmZlnGLRFJkzMwiIWYPv7+WGSDVuBxQwAXKLmc3zgGH6JTzuoeonlxOcVEjV0=
+	t=1767005687; cv=none; b=KC4+G4dKjGMJyedhVcwRu46vPcyFw0U+A+6xcvbtKksumSCTqMymGgjHLlgEwYWM1xWwz4Giz/d8a23eAU6amP+jO+FCT6dobMYw6GfhMJXcJFQXooWn13hZwHVLeVn7D9gSRO6lE1douTRJjHGV52amhK3xaibBmxmvUkvSYzQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1767005094; c=relaxed/simple;
-	bh=ADSHyaH3l1QMtFLxEB68EIhbsz5LetaH9PG9L4gdXcE=;
+	s=arc-20240116; t=1767005687; c=relaxed/simple;
+	bh=fOfmMKbyFL0YL/MSMnzXopQ1cVOGWVYiIxRefLPXkQ0=;
 	h=From:Date:To:cc:Subject:In-Reply-To:Message-ID:References:
-	 MIME-Version:Content-Type; b=o4pYFDtkzhgvB+dE6ATRceCk4hXDGDheiTa28f+RWMEtmr7K4hX38hmSWCQzCOrQ+2Dk5t/vJYMHkcjM95kqRVxwzJ76CZlXbRBsIEB9j69dEXIf8CKt3vTgHMYv2n9xfyQqi1PBkvAWuU/G23yj63OxBxBnlh5G9fdEZCjTplU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=pass smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=oKfzXan/; arc=none smtp.client-ip=198.175.65.15
+	 MIME-Version:Content-Type; b=g8BVGsQV0529HIY1xU82M63/qhbAV5s7pOlk5QVTX8/y375aoYXhCQ8AKIAB0IwlkIGBeR+DC+kwtd/R4ObVRMEQSWt+JBJXju+Ngwv1aMZBkbNqunmNeD2AbEv3bwjgeLwjY3Qkq+Nd22BJ10bc5uo6uf2SlBl3lA1J6ULa7HY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=pass smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=Wd1pq7h3; arc=none smtp.client-ip=192.198.163.16
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="oKfzXan/"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="Wd1pq7h3"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1767005092; x=1798541092;
+  t=1767005686; x=1798541686;
   h=from:date:to:cc:subject:in-reply-to:message-id:
    references:mime-version;
-  bh=ADSHyaH3l1QMtFLxEB68EIhbsz5LetaH9PG9L4gdXcE=;
-  b=oKfzXan//qMr3k8dtUKAbS0TWdFPYbpQt91hEVYlhS/Ry82PFmyGdQFD
-   ee5TF170NVU21l9KrLn3m94eIlKcQ8Q2Yy8aRCh45N7MHfCy/b23JCaof
-   kjOK6s74lp31R+XflZhCJ1jq90RahWPobhUXQi4I9Q1hhnc7cGTSmL84I
-   PqbS0uu047QjD///AkAiyLrIHvBkHBk9TAkfavWfAhC8OXhHxCSdZo2Sf
-   yV5SWFDmN1k7BdMbftyAlQQAkBukZykWtghto6OmmlbEBWuNN+iVCrH6y
-   T8AB2j4tZ9JOHGP13tA1FKoHfQpqsrHlCbrWOu2iq0efNVo0k3jB/3gdq
-   g==;
-X-CSE-ConnectionGUID: ThJaReVoS02m5+7kCveLjQ==
-X-CSE-MsgGUID: zIVUuIgVQLOAiF0fqr38Lg==
-X-IronPort-AV: E=McAfee;i="6800,10657,11655"; a="72238677"
+  bh=fOfmMKbyFL0YL/MSMnzXopQ1cVOGWVYiIxRefLPXkQ0=;
+  b=Wd1pq7h3BtZnJtHrfHGcEmyU5+2qMEQ61px3ke/wUf9moT4k9wFbdswX
+   rKiRnefuIkCEaLZBpi+6OYyzJX0R7IrDnfZnhsE8S/ETLHvh+p/akdfBN
+   2W2tW7S7aK696qEfISYmN68TenjAqXn40KILVZocd8otFg8HuURgDcL64
+   gbiXYx+zdxZet+2YlD1FceS69Lcow7ocEAOeWZQQtt9ZFQ4tlWKBmXzQr
+   pJxkUthluTSvrSk5ueG7p5rr8vbx6XEbVe0VFOa81ShGuBenArNnQS9jh
+   gaqHD43HmnCnQS7tW5w25nhIkNaKTrnCzs22IizkJgZivZAe1EgBUtcjC
+   Q==;
+X-CSE-ConnectionGUID: Dhlmm1w1S2m5pMx9xv7gFg==
+X-CSE-MsgGUID: zsVTRzIRT564yCE2/HlxfQ==
+X-IronPort-AV: E=McAfee;i="6800,10657,11655"; a="56187719"
 X-IronPort-AV: E=Sophos;i="6.21,185,1763452800"; 
-   d="scan'208";a="72238677"
-Received: from fmviesa006.fm.intel.com ([10.60.135.146])
-  by orvoesa107.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 29 Dec 2025 02:44:52 -0800
-X-CSE-ConnectionGUID: fX8gfYzoSgqggBPQQlKPNA==
-X-CSE-MsgGUID: 3yg0zviCTbmQmR+yl0mNaQ==
+   d="scan'208";a="56187719"
+Received: from orviesa003.jf.intel.com ([10.64.159.143])
+  by fmvoesa110.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 29 Dec 2025 02:54:45 -0800
+X-CSE-ConnectionGUID: UNsDoCXbRcesHXYp8DHP/g==
+X-CSE-MsgGUID: meKxWszzTt69rCddM3uJww==
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="6.21,185,1763452800"; 
-   d="scan'208";a="200791517"
+   d="scan'208";a="205029350"
 Received: from ijarvine-mobl1.ger.corp.intel.com (HELO localhost) ([10.245.245.30])
-  by fmviesa006-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 29 Dec 2025 02:44:49 -0800
+  by ORVIESA003-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 29 Dec 2025 02:54:44 -0800
 From: =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
-Date: Mon, 29 Dec 2025 12:44:45 +0200 (EET)
-To: Denis Benato <denis.benato@linux.dev>
-cc: LKML <linux-kernel@vger.kernel.org>, platform-driver-x86@vger.kernel.org, 
-    Hans de Goede <hansg@kernel.org>, "Luke D . Jones" <luke@ljones.dev>, 
-    Mateusz Schyboll <dragonn@op.pl>, Denis Benato <benato.denis96@gmail.com>
-Subject: Re: [PATCH] platform/x86: asus-armoury: fix ppt data for FA507R
-In-Reply-To: <20251224230726.1836388-1-denis.benato@linux.dev>
-Message-ID: <a94abbbd-523a-6a02-e85c-5e6f9c59f921@linux.intel.com>
-References: <20251224230726.1836388-1-denis.benato@linux.dev>
+Date: Mon, 29 Dec 2025 12:54:39 +0200 (EET)
+To: Kaushlendra Kumar <kaushlendra.kumar@intel.com>
+cc: david.e.box@linux.intel.com, Hans de Goede <hansg@kernel.org>, 
+    platform-driver-x86@vger.kernel.org
+Subject: Re: [PATCH] platform/x86: intel_telemetry: Fix PCI device ref leak
+In-Reply-To: <20251224044359.3919178-1-kaushlendra.kumar@intel.com>
+Message-ID: <5d8619cc-2272-c544-fceb-dc4d4223b769@linux.intel.com>
+References: <20251224044359.3919178-1-kaushlendra.kumar@intel.com>
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
@@ -61,55 +60,37 @@ List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=US-ASCII
 
-On Thu, 25 Dec 2025, Denis Benato wrote:
+On Wed, 24 Dec 2025, Kaushlendra Kumar wrote:
 
-> PPT data for FA507R was reported to be wrong by a user:
-> Change limits to make them equal to Armoury Crate limits.
+> The for_each_pci_dev() macro increments the reference count for each
+> PCI device. Without calling pci_dev_put() to release these references,
+> the code leaks device references.
+>
+> Add pci_dev_put() at the end of each iteration to properly release the
+> reference taken by for_each_pci_dev().
 > 
-> Signed-off-by: Denis Benato <denis.benato@linux.dev>
+> Fixes: 87bee290998d ("platform:x86: Add Intel Telemetry Debugfs interfaces")
+> Signed-off-by: Kaushlendra Kumar <kaushlendra.kumar@intel.com>
+> ---
+>  drivers/platform/x86/intel/telemetry/debugfs.c | 1 +
+>  1 file changed, 1 insertion(+)
+> 
+> diff --git a/drivers/platform/x86/intel/telemetry/debugfs.c b/drivers/platform/x86/intel/telemetry/debugfs.c
+> index 189c61ff7ff0..8fdc9965ff27 100644
+> --- a/drivers/platform/x86/intel/telemetry/debugfs.c
+> +++ b/drivers/platform/x86/intel/telemetry/debugfs.c
+> @@ -589,6 +589,7 @@ static int telem_soc_states_show(struct seq_file *s, void *unused)
+>  			   dev->vendor, dev->device, dev_name(&dev->dev),
+>  			   dev_driver_string(&dev->dev));
+>  		seq_printf(s, " d3:%x\n", d3_state);
+> +		pci_dev_put(dev);
+>  	}
 
-Fixes tag missing.
+Hi,
+
+This looks incorrect as the loop keeps iterating forward so it will 
+decrement the reference count for dev.
 
 -- 
  i.
 
-> ---
->  drivers/platform/x86/asus-armoury.h | 21 ++++++++++++++++++---
->  1 file changed, 18 insertions(+), 3 deletions(-)
-> 
-> diff --git a/drivers/platform/x86/asus-armoury.h b/drivers/platform/x86/asus-armoury.h
-> index a1bb2005c3f3..ad23718b4298 100644
-> --- a/drivers/platform/x86/asus-armoury.h
-> +++ b/drivers/platform/x86/asus-armoury.h
-> @@ -449,12 +449,27 @@ static const struct dmi_system_id power_limits[] = {
->  			.ac_data = &(struct power_limits) {
->  				.ppt_pl1_spl_min = 15,
->  				.ppt_pl1_spl_max = 80,
-> -				.ppt_pl2_sppt_min = 25,
-> +				.ppt_pl2_sppt_min = 35,
->  				.ppt_pl2_sppt_max = 80,
->  				.ppt_pl3_fppt_min = 35,
-> -				.ppt_pl3_fppt_max = 80
-> +				.ppt_pl3_fppt_max = 80,
-> +				.nv_dynamic_boost_min = 5,
-> +				.nv_dynamic_boost_max = 25,
-> +				.nv_temp_target_min = 75,
-> +				.nv_temp_target_max = 87,
-> +			},
-> +			.dc_data = &(struct power_limits) {
-> +				.ppt_pl1_spl_min = 15,
-> +				.ppt_pl1_spl_def = 45,
-> +				.ppt_pl1_spl_max = 65,
-> +				.ppt_pl2_sppt_min = 35,
-> +				.ppt_pl2_sppt_def = 54,
-> +				.ppt_pl2_sppt_max = 65,
-> +				.ppt_pl3_fppt_min = 35,
-> +				.ppt_pl3_fppt_max = 65,
-> +				.nv_temp_target_min = 75,
-> +				.nv_temp_target_max = 87,
->  			},
-> -			.dc_data = NULL,
->  		},
->  	},
->  	{
-> 
