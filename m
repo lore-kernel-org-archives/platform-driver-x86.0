@@ -1,135 +1,127 @@
-Received: from mail-yx1-f42.google.com (mail-yx1-f42.google.com [74.125.224.42])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.12])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 16427241CB7
-	for <platform-driver-x86@vger.kernel.org>; Mon, 29 Dec 2025 08:18:09 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=74.125.224.42
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 53B6D8821;
+	Mon, 29 Dec 2025 10:06:36 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.12
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1766996291; cv=none; b=b0TAb23wOYsWqMoWMHOdv/RCQNa1iCifj80Z7tS5Yxomtr+vDB/tbholFR9spyB7Al1aFb8nFLKYwMKRgIh6FN8o+2yLq0pdQeVAuPCDTnFGP42x7nTcatDC+x6SNPakr2YaHskwUMb3PJqoOVRgEgvgrPIj61NEizWih2DEn9A=
+	t=1767002798; cv=none; b=d/mWzBP7mXqNUDYEww1Fhb4OBaYnoR0WLZLSPfoyU/399l+/rgbG2P92zw1dGDNcAppEZUYHD+wPfvwjU/D9H+j9Tn76Jkcl7d6N6pq1GWWzf0eUBdjtf2NV/swrHToqJjw7by6jdm4dVn3GSRn6jH90i2x0l2mLEYZiJAMNzZo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1766996291; c=relaxed/simple;
-	bh=X5aC0WSpXnb0fZ/ZqQSEMAsxQxdXxCbrq/9IOVYaCYI=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=EGwcRTjTI67eF2ole2OYXuBmZCVpMyI9hhmXO95iYYG9WNmoKMcGXwLjqA3gJ/SLHgCSqrs7BaHbjJnGf4ow5WyHh7284G6z4pHzOVXFcU/doJxWfwiBBknBpxF8jtwsIrt6vI1+6dMwI2J7scXc0tJ1uErsx2pwdZkuH2E2SLk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=AlYB8kVX; arc=none smtp.client-ip=74.125.224.42
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1767002798; c=relaxed/simple;
+	bh=1XFVMOt8oahbjs4a5UaZi6d3YrJEM0ZsgsWbP05ZkS0=;
+	h=From:Date:To:cc:Subject:In-Reply-To:Message-ID:References:
+	 MIME-Version:Content-Type; b=q4t08K2yU8Vhlwd8Q8nyTKKITTeUG4K1DmkGCtTbbUKMfE8UE42U4CB6Noy5XmcMqobfN1NpAjHIa6J+iQvBdtLSzCUCQO0jXPNkFU2FqHiiIxJ3l1Q51pONMFEJncZuCucYpPfp8AYuylE/gNVK7U/vuSAKDry0VVrvZBhmcho=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=pass smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=bk0RXu1h; arc=none smtp.client-ip=198.175.65.12
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="AlYB8kVX"
-Received: by mail-yx1-f42.google.com with SMTP id 956f58d0204a3-64669a2ecb5so8258712d50.1
-        for <platform-driver-x86@vger.kernel.org>; Mon, 29 Dec 2025 00:18:09 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1766996289; x=1767601089; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=X5aC0WSpXnb0fZ/ZqQSEMAsxQxdXxCbrq/9IOVYaCYI=;
-        b=AlYB8kVX25/p1KA3OPyf3AsuRgT1uhnQ9GlzQ5GuQqJ+3Pq5e5XbQcUeD9x4gUCTRg
-         5oT8qAKR41WGUcnmsc092/0qofrVicw3c9lI5WaTC6Iw52FRkfzs7UnYXO6nbOfttCdw
-         m1KppJ66ATLhjM0MsGiAGgStDMO4FsJy3QzjC0EtWY8zy9P+sMZcJT36TV0rl1z6og1t
-         eup/X/WvjFmhTiVARbLkRltD5hkouNUXEq/wOcb03B8GxSLL2DOYB7pN5epikoMpdh/d
-         eI8dEDMcU4TuLEB9Be5DoG096PtkyEjK3AhjTp5b8zwt1JgRJNvwiVBcIYRDxv2AZXSz
-         3t7A==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1766996289; x=1767601089;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-gg:x-gm-message-state:from
-         :to:cc:subject:date:message-id:reply-to;
-        bh=X5aC0WSpXnb0fZ/ZqQSEMAsxQxdXxCbrq/9IOVYaCYI=;
-        b=knGOVonJy8BQjS7z40cumX6pwz1M8BUaYd08R0EAlC3k2hTVanxsnlwZP0FWifWJmK
-         8Jy9dm52CVoGpj7N4xQ0dT0v1nOZgDvEmZbOD2tzYcc/NnhwuUbYq6rlMeM1OObAa2uC
-         mR/E3XuEaC5mpliA+zdrljOCfYX1s6x2lfQjWChudO4vD8Rd7nZobJPd2QRgT+S6ZfQk
-         CvHgGwVkxV0oJKae1rgJHI63kpMTmf4vwdQOtKyWQeHG11FSbAoHpWO4gHegV/0Zq3Cb
-         aITNYxyg+WUHXa2v1YQo06SWKj8OqjcHHIz8NTQ6F/5hMCWusCW6NfWIFqxIvFUykhZi
-         7KQw==
-X-Gm-Message-State: AOJu0YwcLusBuK7qq8pH9ZZErv5UETKh739lKi61ar8Ghw7v5BvHSyfO
-	tWgA3vFVCcQiwxxRuceNXaMzi7QCPWd5Hy87mDtV9AECDvKe5LIg2JMrk7o2LNu114VPeib3Aoa
-	JdUbV1YEHo2O6KPOgZIY9r2c8QDZHt46WcQ==
-X-Gm-Gg: AY/fxX7Xrm4PRimXMvwhn63vCiLvos5pGedoJcf6cZ2H5tRJYWUQpgD2R+o6bLfnBEX
-	psFC+vgDKCdhxPibBKZhIaqkOrZXNG9QOZczAnO00oWu57k4Dp3gYmMVQshYzjThRFtkqNvc+c3
-	9/AX5IMBGkH9B2N/KJbseuqD4je+1VW7Y9A/hSdlw6+UsivO81uNMeTej8SvIqbnebLpFbOdDvZ
-	8I81QG+ukaf+FjjpRHWouA04gl1ZznV3QpFVnMO1KViH2W3ctsgTSif4NFsMFdFx0f69KeJoq0e
-	qheGvqrDA3WSYssxndgMqui3rbemUw==
-X-Google-Smtp-Source: AGHT+IEjKREascVU5P1eBeymAz92LoWdcukHRx09eF464pg7VeSVTe9y6CdmBZ7i2lX8Xtt2KN3qET6E5sO8DjIAalQ=
-X-Received: by 2002:a05:690e:2519:10b0:641:f5bc:6930 with SMTP id
- 956f58d0204a3-646632e007bmr19394392d50.41.1766996288848; Mon, 29 Dec 2025
- 00:18:08 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="bk0RXu1h"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1767002796; x=1798538796;
+  h=from:date:to:cc:subject:in-reply-to:message-id:
+   references:mime-version;
+  bh=1XFVMOt8oahbjs4a5UaZi6d3YrJEM0ZsgsWbP05ZkS0=;
+  b=bk0RXu1hy5LXVU/UacImA1ClPHptFYSWoCRNvxdhcH4CbMwgckOujdch
+   FBx2Xj7n2gVD6g83A/DAx3jK/nEA/oCvEPgZ87wH+YmHiU9Br6mCAtOwZ
+   DEB251qqrmCvItXx9ZiYvPayqZazp3ZSYt8GEPYD1CJ+eVLKBKXKh0Dav
+   lo9hk2Y/JfHZk04XJ2K9xBdvOAHYZW6bz/HnSsjOrq1zHZ7SL4ZXGYgW1
+   MG2AXLwEZ2Nxowu/ZJoIfB8kMNCpk9d0CCnK5poMkn+35T3ZcAS21sedZ
+   B5jhU5T6HfpRsB91ksqR0dAeKmrzoVuMPUD/LCpQ3/ZbfgVAc7UmqfQbQ
+   g==;
+X-CSE-ConnectionGUID: OPxj3RzDRoCtv9f8UMS9uQ==
+X-CSE-MsgGUID: tH7lVfHEQ4WLudWMcDyiGA==
+X-IronPort-AV: E=McAfee;i="6800,10657,11655"; a="80065850"
+X-IronPort-AV: E=Sophos;i="6.21,185,1763452800"; 
+   d="scan'208";a="80065850"
+Received: from fmviesa004.fm.intel.com ([10.60.135.144])
+  by orvoesa104.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 29 Dec 2025 02:06:35 -0800
+X-CSE-ConnectionGUID: +AmN0JJWTGiPR8HCHRPYWg==
+X-CSE-MsgGUID: HhwqIf0/TRyVKCaLvTFulw==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.21,185,1763452800"; 
+   d="scan'208";a="205795142"
+Received: from ijarvine-mobl1.ger.corp.intel.com (HELO localhost) ([10.245.245.30])
+  by fmviesa004-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 29 Dec 2025 02:06:32 -0800
+From: =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
+Date: Mon, 29 Dec 2025 12:06:29 +0200 (EET)
+To: Denis Benato <denis.benato@linux.dev>
+cc: LKML <linux-kernel@vger.kernel.org>, platform-driver-x86@vger.kernel.org, 
+    Hans de Goede <hansg@kernel.org>, "Luke D . Jones" <luke@ljones.dev>, 
+    Mateusz Schyboll <dragonn@op.pl>, Denis Benato <benato.denis96@gmail.com>
+Subject: Re: [PATCH 1/3] platform/x86: asus-wmi: explicitly mark more code
+ with CONFIG_ASUS_WMI_DEPRECATED_ATTRS
+In-Reply-To: <20251225143007.2684239-2-denis.benato@linux.dev>
+Message-ID: <54cc6828-9191-403c-18d5-76f768d70381@linux.intel.com>
+References: <20251225143007.2684239-1-denis.benato@linux.dev> <20251225143007.2684239-2-denis.benato@linux.dev>
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <CACy5qBaFv_L5y_nGJU_3pd3CXbFZrUAE18y5Fc-hnAmrd8bSLA@mail.gmail.com>
- <1e4fe52c-d044-4869-a583-fa14f9740de0@gmx.de> <CACy5qBZW1pbYrrTc-1tcNwzGTuty=aovnrK17==CaSppXuBurg@mail.gmail.com>
- <abeb08c2-5aa5-4919-8016-d714c04c508b@gmx.de>
-In-Reply-To: <abeb08c2-5aa5-4919-8016-d714c04c508b@gmx.de>
-From: Pranay <pranaypawarofficial@gmail.com>
-Date: Mon, 29 Dec 2025 13:47:57 +0530
-X-Gm-Features: AQt7F2oyMHpMWTMlDdvyzspdA41qTo7m8KcT5opvEhjIl4nlXwvWF_DVA6GJQ2E
-Message-ID: <CACy5qBY-6v7_jRizJ=dJkeKGF+4fVUwmX9oaP=8XHGROEYOgCA@mail.gmail.com>
-Subject: Re: platform/x86: acer-wmi: Missing max fan speed (7000+ RPM) on Acer
- Nitro AN515-58
-To: Armin Wolf <W_Armin@gmx.de>
-Cc: platform-driver-x86@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=US-ASCII
 
-Yes this patch is making the driver work as expected. I had modified
-the acer-wmi driver and loaded it, then changed platform profile to
-balanced-performance & now fans are able to reach max RPM's. But in
-performance mode (Which is supposed to be powerful than
-balanced-performance) the fans are still max locked at 4500 rpm only.
+On Thu, 25 Dec 2025, Denis Benato wrote:
 
-Thanks & Regards,
-Bugaddr (Pranay Pawar)
+> Be more explicit in code that will be excluded when compiling
+> with CONFIG_ASUS_WMI_DEPRECATED_ATTRS disabled.
 
-On Mon, Dec 29, 2025 at 2:10=E2=80=AFAM Armin Wolf <W_Armin@gmx.de> wrote:
->
-> Am 25.12.25 um 22:51 schrieb Pranay:
->
-> > Sure here you go, in attachments
-> >
-> > Thanks,
-> > Bugaddr
->
-> I attached an experimental patch that should whitelist fan control for yo=
-ur model. Can you
-> test that fan control and the nitro button works?
->
-> Thanks,
-> Armin Wolf
->
-> >
-> > On Thu, Dec 25, 2025 at 11:14=E2=80=AFPM Armin Wolf <W_Armin@gmx.de> wr=
-ote:
-> >> Am 24.12.25 um 20:40 schrieb Pranay:
-> >>
-> >>> Dear Maintainers,
-> >>>
-> >>> I am reporting a limitation in the acer-wmi driver regarding fan spee=
-d
-> >>> control on the Acer Nitro AN515-58.
-> >>>
-> >>> The Issue: On Windows, enabling "Performance" mode via NitroSense
-> >>> ramps the fans up to 7000+ RPM. On Linux, selecting the "Performance"
-> >>> platform profile boosts the CPU power correctly, but the fans remain
-> >>> capped at maximum 3500-4000 RPM.
-> >>>
-> >>> Observation: This laptop model lacks a physical "Turbo" button. thoug=
-h
-> >>> there is a nitrosense button which is useless in linux.
-> >>>
-> >>> I am requesting that support be added to fix the maximum fan speed st=
-ate issue.
-> >> Sure thing, can you share the output of "acpidump" to i can whitelist =
-your model
-> >> for fan control?
-> >>
-> >> Thanks,
-> >> Armin Wolf
-> >>
-> >>> Best regards,
-> >>>
-> >>> bugaddr
-> >>>
+Does this result in build fails or warnings? If that's the case, it should 
+be mentioned in the changelog + Fixes tag added.
+
+> Signed-off-by: Denis Benato <denis.benato@linux.dev>
+> ---
+>  drivers/platform/x86/asus-wmi.c | 10 ++++++++++
+>  1 file changed, 10 insertions(+)
+> 
+> diff --git a/drivers/platform/x86/asus-wmi.c b/drivers/platform/x86/asus-wmi.c
+> index 4aec7ec69250..a49447eff4f4 100644
+> --- a/drivers/platform/x86/asus-wmi.c
+> +++ b/drivers/platform/x86/asus-wmi.c
+> @@ -302,7 +302,11 @@ struct asus_wmi {
+>  	u32 nv_temp_target;
+>  
+>  	u32 kbd_rgb_dev;
+> +
+> +#if IS_ENABLED(CONFIG_ASUS_WMI_DEPRECATED_ATTRS)
+>  	bool kbd_rgb_state_available;
+> +#endif /* IS_ENABLED(CONFIG_ASUS_WMI_DEPRECATED_ATTRS) */
+> +
+>  	bool oobe_state_available;
+>  
+>  	u8 throttle_thermal_policy_mode;
+> @@ -1060,6 +1064,7 @@ static const struct attribute_group kbd_rgb_mode_group = {
+>  };
+>  
+>  /* TUF Laptop Keyboard RGB State **********************************************/
+> +#if IS_ENABLED(CONFIG_ASUS_WMI_DEPRECATED_ATTRS)
+>  static ssize_t kbd_rgb_state_store(struct device *dev,
+>  				 struct device_attribute *attr,
+>  				 const char *buf, size_t count)
+> @@ -1106,6 +1111,8 @@ static const struct attribute_group kbd_rgb_state_group = {
+>  	.attrs = kbd_rgb_state_attrs,
+>  };
+>  
+> +#endif /* IS_ENABLED(CONFIG_ASUS_WMI_DEPRECATED_ATTRS) */
+> +
+>  static const struct attribute_group *kbd_rgb_mode_groups[] = {
+>  	NULL,
+>  	NULL,
+> @@ -1861,8 +1868,11 @@ static int asus_wmi_led_init(struct asus_wmi *asus)
+>  
+>  	if (asus->kbd_rgb_dev)
+>  		kbd_rgb_mode_groups[num_rgb_groups++] = &kbd_rgb_mode_group;
+> +
+> +#if IS_ENABLED(CONFIG_ASUS_WMI_DEPRECATED_ATTRS)
+>  	if (asus->kbd_rgb_state_available)
+>  		kbd_rgb_mode_groups[num_rgb_groups++] = &kbd_rgb_state_group;
+> +#endif /* IS_ENABLED(CONFIG_ASUS_WMI_DEPRECATED_ATTRS) */
+>  
+>  	asus->led_workqueue = create_singlethread_workqueue("led_workqueue");
+>  	if (!asus->led_workqueue)
+> 
+
+-- 
+ i.
+
