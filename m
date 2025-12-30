@@ -1,74 +1,93 @@
-Received: from mail-m49197.qiye.163.com (mail-m49197.qiye.163.com [45.254.49.197])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7A1FA309F01;
-	Tue, 30 Dec 2025 09:17:30 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.254.49.197
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9AB562E764D;
+	Tue, 30 Dec 2025 09:57:38 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1767086253; cv=none; b=bp1woPx6m5+ECNZQBS+kfZv68B/AVR6OsNnkrFVJmk9L1TLysG6FnKIlSzxsFgXJoi1Z3io/QgVnvGebm/pRYPC89b6uBlGdlzDRuOfnQuwgyHcYatcBHeyXVCGn0Ofw4dWFM3dm5+WfF3q7YBonP5kQmecffd6QUatFipS+ykE=
+	t=1767088658; cv=none; b=TIDKwXAhcGPQ49kGFTW1DOudXgZq2F6vonny1TGA7oOjhh7TNx5oDW9fkzNrD/xmEpXvfSlcHG463OBSdQqqJGIwR4M7ed9YI6DgqXUPSoebAvP03Arbyw1v8trTAvTAhEg0nzhc6HQPsCEdNhR9nOlR5fdCwEwS77mZczKz9c4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1767086253; c=relaxed/simple;
-	bh=Cgv3AFo88Qu+EaJb6WNB7A0WhqC6uxLpDpbzcffCvek=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=itO0RgzBMLpkiy8bYalI54I/LMNqD4yHooYKCnD+Z4j7JkorAj3JqLGs9sXrQ1YdBOlnlYJVKv8+D9kJGnzqZMQwIY1MBVQq3Gyx7mbXsX5ENOKM8Jzg983yPRG83ZRyXSsXtbjylqk80PKnMRQAWcpbVK09vH9+qKNDtjC/ImY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=seu.edu.cn; spf=pass smtp.mailfrom=seu.edu.cn; dkim=pass (1024-bit key) header.d=seu.edu.cn header.i=@seu.edu.cn header.b=Up1uR7I3; arc=none smtp.client-ip=45.254.49.197
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=seu.edu.cn
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=seu.edu.cn
+	s=arc-20240116; t=1767088658; c=relaxed/simple;
+	bh=HGx1ic1t7aTiIFW+Y1/81F3eQnEoNSTUIq+92dzQeiM=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version:Content-Type; b=Pb/ULNwlAc/lUqIXsPKvSpOlTNn5jTPR9z2Ok+ZYxVTW2xqWXhKjRxOF7dj7h18CBpl54+TKpiyCvBlAcxy9/u5su/RprKb9u+P/qjRsrvCVgmgEPBpxyM1tdpWtONlbc02M01kLjKRtTOYnASmDB37KePJQn9nGyWBnYVenoUc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=aFvy0ze8; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=seu.edu.cn header.i=@seu.edu.cn header.b="Up1uR7I3"
-Received: from LAPTOP-N070L597.localdomain (unknown [222.191.246.242])
-	by smtp.qiye.163.com (Hmail) with ESMTP id 2f04a4e00;
-	Tue, 30 Dec 2025 17:17:27 +0800 (GMT+08:00)
-From: Zilin Guan <zilin@seu.edu.cn>
-To: zilin@seu.edu.cn
-Cc: hansg@kernel.org,
-	ilpo.jarvinen@linux.intel.com,
-	jianhao.xu@seu.edu.cn,
-	linux-kernel@vger.kernel.org,
-	platform-driver-x86@vger.kernel.org
-Subject: Re: [PATCH] platform/x86/amd: Fix memory leak in wbrf_record()
-Date: Tue, 30 Dec 2025 09:17:25 +0000
-Message-Id: <20251230091725.1140570-1-zilin@seu.edu.cn>
-X-Mailer: git-send-email 2.34.1
-In-Reply-To: <20251230064325.1036637-1-zilin@seu.edu.cn>
-References: <20251230064325.1036637-1-zilin@seu.edu.cn>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="aFvy0ze8"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 02537C4CEFB;
+	Tue, 30 Dec 2025 09:57:35 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1767088658;
+	bh=HGx1ic1t7aTiIFW+Y1/81F3eQnEoNSTUIq+92dzQeiM=;
+	h=From:To:Cc:Subject:Date:From;
+	b=aFvy0ze8OCx9tudNxMpTaspzCWyiPazxYFu+Ba+mxVUL+I+5KUENDvs1w4geMal5s
+	 EVKhWor08kfcHi5XLU8SMWEJO2O671fGANBt23jHdW0a+9Lqb46zFn8xSawAyomknD
+	 myS3tf+bqT2JGtOaeHTDb6+BVi2oewOary6Ln4OzCDgknYC1TQW2g16L8eS5VvYUC8
+	 nty/nFOcWDAZOKoitVyi3OPOIxICLAbpeTL4OPoZC+SGst+rNgwoB3j1f3ruCTc3bP
+	 YJ+uNNCi0ZXT7SvB63hY0ns+6t2j/pwYps01KzyJWnSBcLr+ViMCBqcmEZWka0pROi
+	 /A0TIXNcxD43g==
+From: "Rafael J. Wysocki" <rafael@kernel.org>
+To: Linux ACPI <linux-acpi@vger.kernel.org>
+Cc: LKML <linux-kernel@vger.kernel.org>, Bjorn Helgaas <helgaas@kernel.org>,
+ Zhang Rui <rui.zhang@intel.com>, Chen Yu <yu.c.chen@intel.com>,
+ Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+ Mika Westerberg <mika.westerberg@linux.intel.com>,
+ Linux PCI <linux-pci@vger.kernel.org>, Alex Hung <alexhung@gmail.com>,
+ Hans de Goede <hansg@kernel.org>,
+ Ilpo =?ISO-8859-1?Q?J=E4rvinen?= <ilpo.jarvinen@linux.intel.com>,
+ platform-driver-x86@vger.kernel.org, AceLan Kao <acelan.kao@canonical.com>
+Subject: [PATCH v1] ACPI: scan: Use resource_type() for resource type checking
+Date: Tue, 30 Dec 2025 10:57:34 +0100
+Message-ID: <12814730.O9o76ZdvQC@rafael.j.wysocki>
+Organization: Linux Kernel Development
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
-X-HM-Tid: 0a9b6e8c4c7d03a1kunmaffaf60d1569cb
-X-HM-MType: 10
-X-HM-Spam-Status: e1kfGhgUHx5ZQUpXWQgPGg8OCBgUHx5ZQUlOS1dZFg8aDwILHllBWSg2Ly
-	tZV1koWUFITzdXWS1ZQUlXWQ8JGhUIEh9ZQVkaTk5CVkpIHhlITRkeQh9DSVYeHw5VEwETFhoSFy
-	QUDg9ZV1kYEgtZQVlJSUlVSkJKVUlPTVVJT0lZV1kWGg8SFR0UWUFZT0tIVUpLSUhOQ0NVSktLVU
-	tZBg++
-DKIM-Signature: a=rsa-sha256;
-	b=Up1uR7I3D+v+ONotACxYVe9DgYB6ReEXdGYVGp8ub8O59icvfog+6bdOlSBD/lTbLDGLvHkLH4Z8Z7Ib63Vsq9QrV4Ui5Fi9Il7aVmpipMO0ZqwmCG6A+ZCFsY/tjSnltjeEJDxEFURZaryGWWgYpd74xZvZJ4PNb2oPtzSDw+8=; s=default; c=relaxed/relaxed; d=seu.edu.cn; v=1;
-	bh=uYUSXaydU/3pikWQ0IwKBVHyBxX58eRt8auDBeL7b+s=;
-	h=date:mime-version:subject:message-id:from;
+Content-Transfer-Encoding: 7Bit
+Content-Type: text/plain; charset="UTF-8"
 
-On Tue, Dec 30, 2025 at 09:51:06AM+0100, Markus Elfring wrote:
-> …
-> > Fix this by adding a free_tmp label and jumping to it when obj is NULL,
-> > ensuring tmp is properly freed.
-> 
-> How do you think about to increase the application of scope-based resource management?
-> 
-> Regards,
-> Markus
+From: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
 
-Thanks for the suggestion.
+To follow a well-established existing pattern, use resource_type() for
+resource type checking in acpi_scan_claim_resources().
 
-While scope-based resource management is a valid improvement, I prefer to 
-keep this patch focused solely on fixing the memory leak using the 
-existing coding style of the file. This ensures the fix is minimal and 
-easier to backport.
+No intentional functional impact.
 
-Such refactoring is arguably outside the scope of this fix.
+Signed-off-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
+---
 
-Regards,
-Zilin Guan
+This is a follow-up to
+
+https://lore.kernel.org/linux-acpi/7888874.EvYhyI6sBW@rafael.j.wysocki/
+
+which is present in linux-next.
+
+---
+ drivers/acpi/scan.c |    4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
+
+--- a/drivers/acpi/scan.c
++++ b/drivers/acpi/scan.c
+@@ -2624,7 +2624,7 @@ static void acpi_scan_claim_resources(st
+ 		if ((res->flags & IORESOURCE_DISABLED) || res->end < res->start)
+ 			continue;
+ 
+-		if (res->flags & IORESOURCE_IO) {
++		if (resource_type(res) == IORESOURCE_IO) {
+ 			/*
+ 			 * Follow the PNP system driver and on x86 skip I/O
+ 			 * resources that start below 0x100 (the "standard PC
+@@ -2635,7 +2635,7 @@ static void acpi_scan_claim_resources(st
+ 				continue;
+ 			}
+ 			r = request_region(res->start, resource_size(res), regionid);
+-		} else if (res->flags & IORESOURCE_MEM) {
++		} else if (resource_type(res) == IORESOURCE_MEM) {
+ 			r = request_mem_region(res->start, resource_size(res), regionid);
+ 		} else {
+ 			continue;
+
+
+
