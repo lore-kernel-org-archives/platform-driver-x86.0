@@ -1,103 +1,84 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.13])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.7])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BA15621254B
-	for <platform-driver-x86@vger.kernel.org>; Tue, 30 Dec 2025 10:49:01 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.13
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6F04A2C0293;
+	Tue, 30 Dec 2025 10:52:32 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.7
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1767091743; cv=none; b=Sa+W57prXAkNY0Mirx9l48SNAvE6fqmnO60A4GG746wP5tYktsGQha4bhY97ZVzcl6PqaCHr1i0jHAKWBt63yiz0lMQSzKHcYiTE/KnFDsWQDtZE2euLjlZa2hrUSHuGFIOkIHPXmZnxRrQpYrhWwbxM0ylufrj0nRpfOZASYvE=
+	t=1767091953; cv=none; b=QJrGGCkndQ10xMi+iEg0ROosbts7kCtLdozsrnZTlToum0GNrMNISpqtdlWypU1XjyBMyQcSEZBBQsOB0mcUJ2VUpw3L32aEzIS9RMHTe5i/fqiq+yLav6SJYCjdGCHWeklC11hawbIIbh2f8e+P0N4Wqxleuetdj4OJNueFXJI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1767091743; c=relaxed/simple;
-	bh=+8DMae0YP8fdt2IFMD2juSfTWcBuvRIJBNYQWBTXxCE=;
-	h=From:Date:To:cc:Subject:In-Reply-To:Message-ID:References:
-	 MIME-Version:Content-Type; b=sRVkYtNOR1q4bv0rJHzIZrpe40pvULiydlUGBw7BFZQQTy0lHSGYXlUZQxq8HXuo4cZ4v8Q9vymclXu3SZ8nnke1dPsGYQp7ePJPBxHzSRteSMgcu0y8+yA7nfvsi15LRYkC6PraTr7xqb5s1QelZScLm6xunUeS9+6iEUY3GMI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=pass smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=esOjFzON; arc=none smtp.client-ip=198.175.65.13
+	s=arc-20240116; t=1767091953; c=relaxed/simple;
+	bh=VDuezWAiSKHgcfjw+NSbxO/rIsPPUcJ7lrC2nzEJ1Vs=;
+	h=From:To:Cc:In-Reply-To:References:Subject:Message-Id:Date:
+	 MIME-Version:Content-Type; b=sa8MOhx8wwXIm++NSPsUuxe8d5bVfmgyKlTJaFmi0RWiPT4WUAIG4I76iuyopFOcz6d/s9FJTC0vBtblbQN4qgN/tGNdK64f+k2Y4oCw9nRC87jteMqdaZTZhQSQkXv98f44Gcq58ZZT8b6uq2ZttwozeZo3aCZcfBYE4WRvAQs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=pass smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=eBEdubuD; arc=none smtp.client-ip=192.198.163.7
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="esOjFzON"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="eBEdubuD"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1767091742; x=1798627742;
-  h=from:date:to:cc:subject:in-reply-to:message-id:
-   references:mime-version;
-  bh=+8DMae0YP8fdt2IFMD2juSfTWcBuvRIJBNYQWBTXxCE=;
-  b=esOjFzONTSBzYck3267l3cDOilzEMeCjdg698mo6+ohcGFIaZBkfN85W
-   vEcKB7mUVUFw/gNwPgsRcekdTfoSabAcK3zhHvIWeIg7Xo0hnrRyREzLX
-   UTmmrC/YbihovgMo6P3+5HOJYR2bKbSA3lUbasXvskuUOWLWJQseIPyGh
-   JtouRFotgxgX1XOA2d75sO/3KMT5IS5HLtBv4zFX0mLIlVJb1uphGojx9
-   Rq7SoO+UH4QXXqM7xdtbEzACkoMmIsLHV2zrOIddF7chvoaZMFtJ55xnV
-   KshLZwiVs4VHT7Yn4Aes+VFJWS9dkutklVHVfqiF+SB/ij0qNqS9Wg2xe
-   Q==;
-X-CSE-ConnectionGUID: rFsOs+u+TOWdjG5OAuYmHw==
-X-CSE-MsgGUID: XsdM+geUT42fN6uEnS0PiQ==
-X-IronPort-AV: E=McAfee;i="6800,10657,11656"; a="79802284"
+  t=1767091953; x=1798627953;
+  h=from:to:cc:in-reply-to:references:subject:message-id:
+   date:mime-version:content-transfer-encoding;
+  bh=VDuezWAiSKHgcfjw+NSbxO/rIsPPUcJ7lrC2nzEJ1Vs=;
+  b=eBEdubuDAzZbIXGSWY7WNWWiCHqExSb9vHfiAMCpznQcyI1+MG8F50Ez
+   kEobk3v1747wSCRDEzMDMpx2bBApaz+Hisf04XE69b8l1WT6oWJJIEVbI
+   Xcc1y7TYMx5P9NFlC/S3nMInAUQ34UG/bibO9cEeL+2MrvnokVs0eUuag
+   wH6l5NtwyJaMhKmccUhEIB3nH1NUKVxCWFx/JEABV0qpLpAaaT6UFuc0V
+   OaX65osaaCcFIqZg8pTMwrfPS7Ey7NqF+W75sHYVv4y4Da++a3M51rrqx
+   1LUHvDcIZKismGSYiK2mmNlxxLJEp0nOJuegbeaTGk2emnmuSt/S9M2r/
+   A==;
+X-CSE-ConnectionGUID: WHPn7ECBQxSVTxZsb4XZFQ==
+X-CSE-MsgGUID: vdWnuI21SnqeMmBLd1FNNw==
+X-IronPort-AV: E=McAfee;i="6800,10657,11656"; a="94148756"
 X-IronPort-AV: E=Sophos;i="6.21,188,1763452800"; 
-   d="scan'208";a="79802284"
-Received: from fmviesa001.fm.intel.com ([10.60.135.141])
-  by orvoesa105.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 30 Dec 2025 02:49:01 -0800
-X-CSE-ConnectionGUID: 2ZYJQ8lSRpq36l91bcypLw==
-X-CSE-MsgGUID: 2ZbkD/LiT4uqdbe0W9Gx0g==
+   d="scan'208";a="94148756"
+Received: from orviesa007.jf.intel.com ([10.64.159.147])
+  by fmvoesa101.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 30 Dec 2025 02:52:32 -0800
+X-CSE-ConnectionGUID: ZOGSnLlATm6zhkTVbTsPBw==
+X-CSE-MsgGUID: yNoj24VGQ52KkXhZGJ9keQ==
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="6.21,188,1763452800"; 
-   d="scan'208";a="232264996"
+   d="scan'208";a="201186969"
 Received: from ijarvine-mobl1.ger.corp.intel.com (HELO localhost) ([10.245.245.114])
-  by smtpauth.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 30 Dec 2025 02:48:59 -0800
+  by orviesa007-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 30 Dec 2025 02:52:29 -0800
 From: =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
-Date: Tue, 30 Dec 2025 12:48:56 +0200 (EET)
-To: Kaushlendra Kumar <kaushlendra.kumar@intel.com>
-cc: srinivas.pandruvada@linux.intel.com, Hans de Goede <hansg@kernel.org>, 
-    platform-driver-x86@vger.kernel.org
-Subject: Re: [PATCH 1/2] platform/x86/intel/uncore-freq: Replace sprintf()
- with snprintf()
-In-Reply-To: <20251230080545.224954-2-kaushlendra.kumar@intel.com>
-Message-ID: <f0c3235b-815d-c3f6-feb2-fa38ea2dc456@linux.intel.com>
-References: <20251230080545.224954-1-kaushlendra.kumar@intel.com> <20251230080545.224954-2-kaushlendra.kumar@intel.com>
+To: linux-kernel@vger.kernel.org, Denis Benato <denis.benato@linux.dev>
+Cc: platform-driver-x86@vger.kernel.org, Hans de Goede <hansg@kernel.org>, 
+ "Luke D . Jones" <luke@ljones.dev>, Mateusz Schyboll <dragonn@op.pl>, 
+ Denis Benato <benato.denis96@gmail.com>
+In-Reply-To: <20251229204458.2658777-1-denis.benato@linux.dev>
+References: <20251229204458.2658777-1-denis.benato@linux.dev>
+Subject: Re: [PATCH] platform/x86: asus-armoury: add support for G835LW
+Message-Id: <176709194398.1979.58867892250302393.b4-ty@linux.intel.com>
+Date: Tue, 30 Dec 2025 12:52:23 +0200
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+X-Mailer: b4 0.13.0
 
-On Tue, 30 Dec 2025, Kaushlendra Kumar wrote:
+On Mon, 29 Dec 2025 21:44:58 +0100, Denis Benato wrote:
 
-> Replace unbounded sprintf() calls with snprintf() to prevent potential
-> buffer overflows when formatting device names. While the current format
-> strings cannot overflow the buffer, using snprintf() follows kernel
-> best practices for string formatting.
+> Add TDP data for laptop model G835LW.
 > 
-> Signed-off-by: Kaushlendra Kumar <kaushlendra.kumar@intel.com>
-> ---
->  .../x86/intel/uncore-frequency/uncore-frequency-common.c     | 5 +++--
->  1 file changed, 3 insertions(+), 2 deletions(-)
 > 
-> diff --git a/drivers/platform/x86/intel/uncore-frequency/uncore-frequency-common.c b/drivers/platform/x86/intel/uncore-frequency/uncore-frequency-common.c
-> index 65897fae17df..c129dd450360 100644
-> --- a/drivers/platform/x86/intel/uncore-frequency/uncore-frequency-common.c
-> +++ b/drivers/platform/x86/intel/uncore-frequency/uncore-frequency-common.c
-> @@ -269,9 +269,10 @@ int uncore_freq_add_entry(struct uncore_data *data, int cpu)
->  			goto uncore_unlock;
->  
->  		data->instance_id = ret;
-> -		sprintf(data->name, "uncore%02d", ret);
-> +		snprintf(data->name, sizeof(data->name), "uncore%02d", ret);
->  	} else {
-> -		sprintf(data->name, "package_%02d_die_%02d", data->package_id, data->die_id);
-> +		snprintf(data->name, sizeof(data->name), "package_%02d_die_%02d",
-> +			 data->package_id, data->die_id);
->  	}
->  
->  	uncore_read(data, &data->initial_min_freq_khz, UNCORE_INDEX_MIN_FREQ);
 
-Hi,
 
-Thanks for the patch. Please use scnprintf() instead. You don't use the 
-return value so the distinction doesn't make a difference but it would be 
-useful to eventually only have one of them remaining, which should be 
-scnprintf() that gives a more sane return value than snprintf().
+Thank you for your contribution, it has been applied to my local
+review-ilpo-fixes branch. Note it will show up in the public
+platform-drivers-x86/review-ilpo-fixes branch only once I've pushed my
+local branch there, which might take a while.
 
--- 
+The list of commits applied:
+[1/1] platform/x86: asus-armoury: add support for G835LW
+      commit: c6703f10c8cc36f53b867bdbdd5bacaaa47ce799
+
+--
  i.
 
