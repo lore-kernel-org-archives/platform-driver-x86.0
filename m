@@ -1,84 +1,90 @@
 Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.7])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6F04A2C0293;
-	Tue, 30 Dec 2025 10:52:32 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E312C28135D;
+	Tue, 30 Dec 2025 11:28:35 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.7
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1767091953; cv=none; b=QJrGGCkndQ10xMi+iEg0ROosbts7kCtLdozsrnZTlToum0GNrMNISpqtdlWypU1XjyBMyQcSEZBBQsOB0mcUJ2VUpw3L32aEzIS9RMHTe5i/fqiq+yLav6SJYCjdGCHWeklC11hawbIIbh2f8e+P0N4Wqxleuetdj4OJNueFXJI=
+	t=1767094118; cv=none; b=azX1ApyBqDZUxlxzQBT2qQQKzQmE1mK8r7S+CypbyljlsOcVQwvFBZf+HYy/n3T/cD1YbnaeGCJed6GyNwCvGCJkEEn7teSpatifGfsXeSHyxSsf59vubIzACy5x0Nqw4EEyPWlBcu/GvZ6HRi4kYaD0cm2ph5yoDY3ycK54m6Q=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1767091953; c=relaxed/simple;
-	bh=VDuezWAiSKHgcfjw+NSbxO/rIsPPUcJ7lrC2nzEJ1Vs=;
-	h=From:To:Cc:In-Reply-To:References:Subject:Message-Id:Date:
-	 MIME-Version:Content-Type; b=sa8MOhx8wwXIm++NSPsUuxe8d5bVfmgyKlTJaFmi0RWiPT4WUAIG4I76iuyopFOcz6d/s9FJTC0vBtblbQN4qgN/tGNdK64f+k2Y4oCw9nRC87jteMqdaZTZhQSQkXv98f44Gcq58ZZT8b6uq2ZttwozeZo3aCZcfBYE4WRvAQs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=pass smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=eBEdubuD; arc=none smtp.client-ip=192.198.163.7
+	s=arc-20240116; t=1767094118; c=relaxed/simple;
+	bh=K7lLyfcUHXbaLJYCSwQJizOkuqiu/G8kSEq3MzHqlb0=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=Ujb/IPivHURQAy8M48UleXfRsAamRLs15EJ+LcwtRHpBa0MzJRSxOS60wsxnVDFO1u6wlvR4+G1GnjfIeVQF84jpGN5GkwBrfiNP0b+8jcaQLjIzm5dg7A9mndXjUvA3LAPf7vdVNNifiR1hY/fdlzfGLhAEcJ2H7Tt0H9FGynk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=pass smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=AbEL0XGr; arc=none smtp.client-ip=192.198.163.7
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="eBEdubuD"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="AbEL0XGr"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1767091953; x=1798627953;
-  h=from:to:cc:in-reply-to:references:subject:message-id:
-   date:mime-version:content-transfer-encoding;
-  bh=VDuezWAiSKHgcfjw+NSbxO/rIsPPUcJ7lrC2nzEJ1Vs=;
-  b=eBEdubuDAzZbIXGSWY7WNWWiCHqExSb9vHfiAMCpznQcyI1+MG8F50Ez
-   kEobk3v1747wSCRDEzMDMpx2bBApaz+Hisf04XE69b8l1WT6oWJJIEVbI
-   Xcc1y7TYMx5P9NFlC/S3nMInAUQ34UG/bibO9cEeL+2MrvnokVs0eUuag
-   wH6l5NtwyJaMhKmccUhEIB3nH1NUKVxCWFx/JEABV0qpLpAaaT6UFuc0V
-   OaX65osaaCcFIqZg8pTMwrfPS7Ey7NqF+W75sHYVv4y4Da++a3M51rrqx
-   1LUHvDcIZKismGSYiK2mmNlxxLJEp0nOJuegbeaTGk2emnmuSt/S9M2r/
-   A==;
-X-CSE-ConnectionGUID: WHPn7ECBQxSVTxZsb4XZFQ==
-X-CSE-MsgGUID: vdWnuI21SnqeMmBLd1FNNw==
-X-IronPort-AV: E=McAfee;i="6800,10657,11656"; a="94148756"
+  t=1767094116; x=1798630116;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=K7lLyfcUHXbaLJYCSwQJizOkuqiu/G8kSEq3MzHqlb0=;
+  b=AbEL0XGruGIzVtRB2DPeCQBbMKOQu4kNq4GTDojdy6DZsn6dNpKEIQrl
+   q+F3+4AUfna9GQtuqIpGYYrL1ly3D9Hz4ASdA7RUoqNR69K8JTdyPuPwD
+   JtYjEijMcnWLC0s6ClHiKbNKw9d+QUw7JkU3frsGIvWITR2+V4/kBFD8q
+   zbrGCGuSXeRSmm3vIHs69jC3bV4/Fmpbfdh7WaOrsfBGseKAZm4tykV79
+   +KVHW8GcTgmaQYzq1yZrDLQgsRC4wlvFELGGDjZegwswbASzkIIMWDYOz
+   S99d87guI5YqFjec57VVRI3NJobrioT4wqwu2USKd6wik3NeRBKLFP4ih
+   w==;
+X-CSE-ConnectionGUID: tHNyTwc+TJub8hEmzVS/0g==
+X-CSE-MsgGUID: S39f1f7MQ8y1/uLcwDSPqw==
+X-IronPort-AV: E=McAfee;i="6800,10657,11656"; a="94150505"
 X-IronPort-AV: E=Sophos;i="6.21,188,1763452800"; 
-   d="scan'208";a="94148756"
-Received: from orviesa007.jf.intel.com ([10.64.159.147])
-  by fmvoesa101.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 30 Dec 2025 02:52:32 -0800
-X-CSE-ConnectionGUID: ZOGSnLlATm6zhkTVbTsPBw==
-X-CSE-MsgGUID: yNoj24VGQ52KkXhZGJ9keQ==
+   d="scan'208";a="94150505"
+Received: from fmviesa004.fm.intel.com ([10.60.135.144])
+  by fmvoesa101.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 30 Dec 2025 03:28:35 -0800
+X-CSE-ConnectionGUID: OrDRp9gQTr2RavtAMJnd2g==
+X-CSE-MsgGUID: 9J60oO6jSk+UuU79+l75Ew==
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="6.21,188,1763452800"; 
-   d="scan'208";a="201186969"
-Received: from ijarvine-mobl1.ger.corp.intel.com (HELO localhost) ([10.245.245.114])
-  by orviesa007-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 30 Dec 2025 02:52:29 -0800
-From: =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
-To: linux-kernel@vger.kernel.org, Denis Benato <denis.benato@linux.dev>
-Cc: platform-driver-x86@vger.kernel.org, Hans de Goede <hansg@kernel.org>, 
- "Luke D . Jones" <luke@ljones.dev>, Mateusz Schyboll <dragonn@op.pl>, 
- Denis Benato <benato.denis96@gmail.com>
-In-Reply-To: <20251229204458.2658777-1-denis.benato@linux.dev>
-References: <20251229204458.2658777-1-denis.benato@linux.dev>
-Subject: Re: [PATCH] platform/x86: asus-armoury: add support for G835LW
-Message-Id: <176709194398.1979.58867892250302393.b4-ty@linux.intel.com>
-Date: Tue, 30 Dec 2025 12:52:23 +0200
+   d="scan'208";a="206076938"
+Received: from egrumbac-mobl6.ger.corp.intel.com (HELO localhost) ([10.245.245.103])
+  by fmviesa004-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 30 Dec 2025 03:28:32 -0800
+Date: Tue, 30 Dec 2025 13:28:30 +0200
+From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+To: "Rafael J. Wysocki" <rafael@kernel.org>
+Cc: Linux ACPI <linux-acpi@vger.kernel.org>,
+	LKML <linux-kernel@vger.kernel.org>,
+	Bjorn Helgaas <helgaas@kernel.org>, Zhang Rui <rui.zhang@intel.com>,
+	Chen Yu <yu.c.chen@intel.com>,
+	Mika Westerberg <mika.westerberg@linux.intel.com>,
+	Linux PCI <linux-pci@vger.kernel.org>,
+	Alex Hung <alexhung@gmail.com>, Hans de Goede <hansg@kernel.org>,
+	Ilpo =?iso-8859-1?Q?J=E4rvinen?= <ilpo.jarvinen@linux.intel.com>,
+	platform-driver-x86@vger.kernel.org,
+	AceLan Kao <acelan.kao@canonical.com>
+Subject: Re: [PATCH v1] ACPI: scan: Use resource_type() for resource type
+ checking
+Message-ID: <aVO3Xsl4MbBHrkEV@smile.fi.intel.com>
+References: <12814730.O9o76ZdvQC@rafael.j.wysocki>
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-X-Mailer: b4 0.13.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <12814730.O9o76ZdvQC@rafael.j.wysocki>
+Organization: Intel Finland Oy - BIC 0357606-4 - c/o Alberga Business Park, 6
+ krs, Bertel Jungin Aukio 5, 02600 Espoo
 
-On Mon, 29 Dec 2025 21:44:58 +0100, Denis Benato wrote:
+On Tue, Dec 30, 2025 at 10:57:34AM +0100, Rafael J. Wysocki wrote:
 
-> Add TDP data for laptop model G835LW.
+> To follow a well-established existing pattern, use resource_type() for
+> resource type checking in acpi_scan_claim_resources().
 > 
-> 
+> No intentional functional impact.
+
+Thanks for this!
+Reviewed-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
 
 
-Thank you for your contribution, it has been applied to my local
-review-ilpo-fixes branch. Note it will show up in the public
-platform-drivers-x86/review-ilpo-fixes branch only once I've pushed my
-local branch there, which might take a while.
+-- 
+With Best Regards,
+Andy Shevchenko
 
-The list of commits applied:
-[1/1] platform/x86: asus-armoury: add support for G835LW
-      commit: c6703f10c8cc36f53b867bdbdd5bacaaa47ce799
-
---
- i.
 
