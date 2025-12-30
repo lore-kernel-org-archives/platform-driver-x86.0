@@ -1,153 +1,109 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.8])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wr1-f43.google.com (mail-wr1-f43.google.com [209.85.221.43])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 870A62A1BB;
-	Tue, 30 Dec 2025 13:41:31 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.8
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5C032221F26
+	for <platform-driver-x86@vger.kernel.org>; Tue, 30 Dec 2025 13:53:30 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.43
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1767102093; cv=none; b=P2V1JyIibxqk7XoEaCC7oxhvgJoxTUGnkIgfoByir4qKV9JUr2IjMkwbeHUlnNN9VjHPh1TcIVosx0eP/iVvsGsfeu2s81ThE7ZmLJwQuvJdGIGILHKRYFP7V+83B944pmaWsEGvYPio5z8zNI1JNfCYV0eaHmJGuJz6f0DMa1s=
+	t=1767102811; cv=none; b=XEb9rcLQr3bQ0rlIKn0RparJRJ3l/9pzlQHKNn5o0G5ObZG4mYYLcF5dGOkgSnElvK+pJarjHil0bJibbqsScQ34FmkS7vhOatyw1FP7l8Z7B+51xkdUVdWZpeafrCGXCPtZyVTxtGx5PtmVEuUMI/Phi41rjR3whRtMH+cUnVY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1767102093; c=relaxed/simple;
-	bh=jTVXkJBui5GfHxe32TmF6NWw8h9YVF7iBdXS6HlK8cY=;
-	h=From:Date:To:cc:Subject:In-Reply-To:Message-ID:References:
-	 MIME-Version:Content-Type; b=uGyuXXPbwxB0wMP5FgJ/iEfgx7IqM/lmgIZJOB9oz84iWYuvZnaG02VhzPzZUWt1TJ8VBMPGT7fOG0SJcFN2UMitkXRJepzA9JtI7P2WzaL5dFlBsT3UFl9JF1gNggmikwHNLoZgM4r6gz/ZZmPCTfxAdK03gAAdWb/mNAIRfPg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=pass smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=MWIroVcr; arc=none smtp.client-ip=192.198.163.8
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.intel.com
+	s=arc-20240116; t=1767102811; c=relaxed/simple;
+	bh=xPfS9uEzLSD/mtv5oATPYDlSphRp/Rq9VCGtX5HIytA=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=O4GiIivPEwxS4/3ibpW1cOVvVn++a61M5Yr/T3WVw3dVVmhkji1oZAC9GvczehEMWaLNl39PVPoWhpcBLk253RyVj6cCtZuH5JOjjn9ORJmsB2r04A1jCc/u4LhH6r3zsx+JK1WxMvRRlwWIeCJqfyiu/gNzUTQid4qhY6etzTk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=Eh05CogE; arc=none smtp.client-ip=209.85.221.43
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="MWIroVcr"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1767102091; x=1798638091;
-  h=from:date:to:cc:subject:in-reply-to:message-id:
-   references:mime-version;
-  bh=jTVXkJBui5GfHxe32TmF6NWw8h9YVF7iBdXS6HlK8cY=;
-  b=MWIroVcrCXg5y3oFMcU2hsWV5WqB1fYvkmlqkNihXUIVrXCt4bpv7+x1
-   xCkj1MvBlOe08/ywGgNSkQjEkTPPcvCMmU/GcQRstZLzXuvqf2xNvDF+0
-   mMVTrW6o7Jw0Evcw6pkY6kuHbx7euDF0McD6j9SkxcEbJ/XHKrbxHZwoV
-   y41rXmcw2BrmfiVTLXZlzS2oLXSNpxouhawx6tTmZqmjLKSYuqeuoUCxg
-   /ZXs2YOIktP7/pmiw3+g5LChRoMw3MtXfamBXd75nDla3P1Z2Uh9zROvp
-   0+dI6ikLMK9y+3ULgSebzqRELbIcPjnL0yuL2jodH4yu0ThoXu0PUe826
-   Q==;
-X-CSE-ConnectionGUID: SlkEMptlRriZDIxhB1tdoQ==
-X-CSE-MsgGUID: eC8uatCORr+YcniEOqjjow==
-X-IronPort-AV: E=McAfee;i="6800,10657,11656"; a="86268734"
-X-IronPort-AV: E=Sophos;i="6.21,189,1763452800"; 
-   d="scan'208";a="86268734"
-Received: from fmviesa005.fm.intel.com ([10.60.135.145])
-  by fmvoesa102.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 30 Dec 2025 05:41:31 -0800
-X-CSE-ConnectionGUID: Uk8Ba9nCSn2pMwKQXfHWIw==
-X-CSE-MsgGUID: i55o6j+rSBW+42YSUY2t9Q==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.21,189,1763452800"; 
-   d="scan'208";a="205697490"
-Received: from ijarvine-mobl1.ger.corp.intel.com (HELO localhost) ([10.245.245.114])
-  by fmviesa005-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 30 Dec 2025 05:41:28 -0800
-From: =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
-Date: Tue, 30 Dec 2025 15:41:25 +0200 (EET)
-To: Denis Benato <benato.denis96@gmail.com>
-cc: Denis Benato <denis.benato@linux.dev>, LKML <linux-kernel@vger.kernel.org>, 
-    platform-driver-x86@vger.kernel.org, Hans de Goede <hansg@kernel.org>, 
-    "Luke D . Jones" <luke@ljones.dev>, Mateusz Schyboll <dragonn@op.pl>
-Subject: Re: [PATCH 1/3] platform/x86: asus-wmi: explicitly mark more code
- with CONFIG_ASUS_WMI_DEPRECATED_ATTRS
-In-Reply-To: <1579d5ed-8233-44a5-8e0d-5462fd8b41d4@gmail.com>
-Message-ID: <9f5085e9-454f-f003-27cd-0eb86dfd9e11@linux.intel.com>
-References: <20251225143007.2684239-1-denis.benato@linux.dev> <20251225143007.2684239-2-denis.benato@linux.dev> <54cc6828-9191-403c-18d5-76f768d70381@linux.intel.com> <1579d5ed-8233-44a5-8e0d-5462fd8b41d4@gmail.com>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Eh05CogE"
+Received: by mail-wr1-f43.google.com with SMTP id ffacd0b85a97d-42fbc3056afso5387972f8f.2
+        for <platform-driver-x86@vger.kernel.org>; Tue, 30 Dec 2025 05:53:30 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1767102809; x=1767707609; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=Fo8YsSR2acA7AZXD620JQ39rcIw2BpkEhIXbexp4DAo=;
+        b=Eh05CogEa0qByXsI5/AeNIUzBk0WGkd0UYQj0teI30lDkEDo+JI4ZJ7vjehgF+1Jcr
+         N983usxicppPH6fC0QZ2tM3ilLqsh+WF3LoZHtPyMn8T5roQqSjkf00LAq222Ga4iunE
+         1umSFE1nocs7wLQVv3TMFh4Iyn7rdPFtgkCNrDBzHu1JBtRQ7XNR0DFA70wzBtpo6aHi
+         pMY6T3AoWTvH18GIOskL4M9lv8Xu7yT/IjyO6+N/ZPAxjvtf2MEGo+7rpAEBxw/+x5Rz
+         uimstFrZzWKK1AjhHoqr+ag+A+mqS6JaVMIYheX4CwDJw9IxBbxGIdI0gD4k6mRQjyhF
+         xiuQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1767102809; x=1767707609;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-gg:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=Fo8YsSR2acA7AZXD620JQ39rcIw2BpkEhIXbexp4DAo=;
+        b=WoIAxeI/31hSAoCmYCiM699Ri2pByqFxHaARrHxZVaknZ1h40QGVPye5WgOjt4yhW+
+         dM5odEnKC7zfeTNzpFVZpSvdq5MN6FddJGnKGYB3Hv8W+GdEuxxx6UYyoRfrSoO9wGTX
+         htWzY7b0Pmqkcxblw9fflbLu57tAKxtY/PYKbgJtNAN8ZaoWEZiTNE6/ix+3zJ5QwX8o
+         3mUaRbQTK6cSLibDEJG65YtbEVYzObomQ2a5VHUhAq3ZPX2FptnaOeyYRVUy2HogvmgD
+         1uzGVQPqTVVb34+grraQEcWGfVyw1OSCrKHfH68WStMKAc7ptnZaduzkpaz09AIgd7G/
+         mqIA==
+X-Forwarded-Encrypted: i=1; AJvYcCWtYF2c2gHxoU/uin3gdqbLN39nTc6teAjT59VTGwBBn3o3pYGAfILKOrMWQA3Ue6a1ShKTpKJ18VVa3cOP2/rW8BEW@vger.kernel.org
+X-Gm-Message-State: AOJu0Yxc+phQJYgBMJJlCmW7UPq6K6f72gN8omKFG9txHBDlJjV2cqFr
+	isd2pGsxH/NYq1B7U0IgNxaYEozsys7J1UbY0Q6+4RbBsYqJFTuu8hT3
+X-Gm-Gg: AY/fxX544cOweBVFUiqrRDAytwj0GAxRgwGGXz12sIYwcuFZrqCI9XPrH1nIUYfLOEO
+	YNe66awyM2BtKBMseFo8cemRne7qIsxwGgABVKFhqphRoaoTzrEIbpbgu/Zr9t3Q0LVB+jLjcbC
+	M4DiLlERqgt2UAmHtpgknEsFtpJpG0F54CV7vQYLBn4iVrlSEzxcWuPOw0a3R7BK040YExGb6ow
+	FoUlHcsZM7F+SZknT1XCkuaSYcv7fd1Fukq2WrIwpY6q9DYCMmPzqloOIfiCyq33D8Gr7uVqyfo
+	lQwPMBsmvVWYtD23tcSEV1xEZ0u4E/JYb6v5SKfObMj3xl8YwRX1MT45dg40WfGZsoxJ1Us3mpb
+	X05pOCmsB5yGZ606JfFtUHR+x72yllW6GudPsJFMWmt1vd+rpjP0BnAp5zfdBoqIlQ0hjqMeqap
+	AkK5VKUx5oFhqc4W+4W4SOlm4n8gW9N1XYkQ==
+X-Google-Smtp-Source: AGHT+IGYnNj/cKfvnasLAKMOMw+DEPW5XlDq88uCuUDLyNooiQAmHbfudOuBJIYoJ2ohxqq8V3LcAw==
+X-Received: by 2002:a5d:4705:0:b0:432:5c34:fb32 with SMTP id ffacd0b85a97d-4325c34ff28mr32698515f8f.23.1767102808510;
+        Tue, 30 Dec 2025 05:53:28 -0800 (PST)
+Received: from [192.168.1.121] ([176.206.93.222])
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-4324eaa4749sm69344229f8f.37.2025.12.30.05.53.26
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 30 Dec 2025 05:53:28 -0800 (PST)
+Message-ID: <eb0f4db5-a169-4e28-882b-346e595c81b5@gmail.com>
+Date: Tue, 30 Dec 2025 14:53:26 +0100
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/mixed; boundary="8323328-1920203301-1767102085=:985"
-
-  This message is in MIME format.  The first part should be readable text,
-  while the remaining parts are likely unreadable without MIME-aware tools.
-
---8323328-1920203301-1767102085=:985
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH 1/3] platform/x86: asus-wmi: explicitly mark more code
+ with CONFIG_ASUS_WMI_DEPRECATED_ATTRS
+To: =?UTF-8?Q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
+Cc: Denis Benato <denis.benato@linux.dev>, LKML
+ <linux-kernel@vger.kernel.org>, platform-driver-x86@vger.kernel.org,
+ Hans de Goede <hansg@kernel.org>, "Luke D . Jones" <luke@ljones.dev>,
+ Mateusz Schyboll <dragonn@op.pl>
+References: <20251225143007.2684239-1-denis.benato@linux.dev>
+ <20251225143007.2684239-2-denis.benato@linux.dev>
+ <54cc6828-9191-403c-18d5-76f768d70381@linux.intel.com>
+ <1579d5ed-8233-44a5-8e0d-5462fd8b41d4@gmail.com>
+ <9f5085e9-454f-f003-27cd-0eb86dfd9e11@linux.intel.com>
+Content-Language: en-US, it-IT, en-US-large
+From: Denis Benato <benato.denis96@gmail.com>
+In-Reply-To: <9f5085e9-454f-f003-27cd-0eb86dfd9e11@linux.intel.com>
 Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: QUOTED-PRINTABLE
+Content-Transfer-Encoding: 8bit
 
-On Tue, 30 Dec 2025, Denis Benato wrote:
-> On 12/29/25 11:06, Ilpo J=C3=A4rvinen wrote:
-> > On Thu, 25 Dec 2025, Denis Benato wrote:
-> >
-> >> Be more explicit in code that will be excluded when compiling
-> >> with CONFIG_ASUS_WMI_DEPRECATED_ATTRS disabled.
-> > Does this result in build fails or warnings? If that's the case, it sho=
-uld=20
-> > be mentioned in the changelog + Fixes tag added.
-> Hi,
->=20
-> Sadly no, despite a property in a struct instantiated only once
-> being forcefully set to false no warning is emitted by neither
-> clang nor gcc :(
 
-Ah, I was mainly expecting unused function warning but apparently since it=
-=20
-was still being "used" it obviously won't trigger that warning.
-
---=20
- i.
-
-> >> Signed-off-by: Denis Benato <denis.benato@linux.dev>
-> >> ---
-> >>  drivers/platform/x86/asus-wmi.c | 10 ++++++++++
-> >>  1 file changed, 10 insertions(+)
-> >>
-> >> diff --git a/drivers/platform/x86/asus-wmi.c b/drivers/platform/x86/as=
-us-wmi.c
-> >> index 4aec7ec69250..a49447eff4f4 100644
-> >> --- a/drivers/platform/x86/asus-wmi.c
-> >> +++ b/drivers/platform/x86/asus-wmi.c
-> >> @@ -302,7 +302,11 @@ struct asus_wmi {
-> >>  =09u32 nv_temp_target;
-> >> =20
-> >>  =09u32 kbd_rgb_dev;
-> >> +
-> >> +#if IS_ENABLED(CONFIG_ASUS_WMI_DEPRECATED_ATTRS)
-> >>  =09bool kbd_rgb_state_available;
-> >> +#endif /* IS_ENABLED(CONFIG_ASUS_WMI_DEPRECATED_ATTRS) */
-> >> +
-> >>  =09bool oobe_state_available;
-> >> =20
-> >>  =09u8 throttle_thermal_policy_mode;
-> >> @@ -1060,6 +1064,7 @@ static const struct attribute_group kbd_rgb_mode=
-_group =3D {
-> >>  };
-> >> =20
-> >>  /* TUF Laptop Keyboard RGB State ************************************=
-**********/
-> >> +#if IS_ENABLED(CONFIG_ASUS_WMI_DEPRECATED_ATTRS)
-> >>  static ssize_t kbd_rgb_state_store(struct device *dev,
-> >>  =09=09=09=09 struct device_attribute *attr,
-> >>  =09=09=09=09 const char *buf, size_t count)
-> >> @@ -1106,6 +1111,8 @@ static const struct attribute_group kbd_rgb_stat=
-e_group =3D {
-> >>  =09.attrs =3D kbd_rgb_state_attrs,
-> >>  };
-> >> =20
-> >> +#endif /* IS_ENABLED(CONFIG_ASUS_WMI_DEPRECATED_ATTRS) */
-> >> +
-> >>  static const struct attribute_group *kbd_rgb_mode_groups[] =3D {
-> >>  =09NULL,
-> >>  =09NULL,
-> >> @@ -1861,8 +1868,11 @@ static int asus_wmi_led_init(struct asus_wmi *a=
-sus)
-> >> =20
-> >>  =09if (asus->kbd_rgb_dev)
-> >>  =09=09kbd_rgb_mode_groups[num_rgb_groups++] =3D &kbd_rgb_mode_group;
-> >> +
-> >> +#if IS_ENABLED(CONFIG_ASUS_WMI_DEPRECATED_ATTRS)
-> >>  =09if (asus->kbd_rgb_state_available)
-> >>  =09=09kbd_rgb_mode_groups[num_rgb_groups++] =3D &kbd_rgb_state_group;
-> >> +#endif /* IS_ENABLED(CONFIG_ASUS_WMI_DEPRECATED_ATTRS) */
-> >> =20
-> >>  =09asus->led_workqueue =3D create_singlethread_workqueue("led_workque=
-ue");
-> >>  =09if (!asus->led_workqueue)
-> >>
->=20
-5~
---8323328-1920203301-1767102085=:985--
+On 12/30/25 14:41, Ilpo Järvinen wrote:
+> On Tue, 30 Dec 2025, Denis Benato wrote:
+>> On 12/29/25 11:06, Ilpo Järvinen wrote:
+>>> On Thu, 25 Dec 2025, Denis Benato wrote:
+>>>
+>>>> Be more explicit in code that will be excluded when compiling
+>>>> with CONFIG_ASUS_WMI_DEPRECATED_ATTRS disabled.
+>>> Does this result in build fails or warnings? If that's the case, it should 
+>>> be mentioned in the changelog + Fixes tag added.
+>> Hi,
+>>
+>> Sadly no, despite a property in a struct instantiated only once
+>> being forcefully set to false no warning is emitted by neither
+>> clang nor gcc :(
+> Ah, I was mainly expecting unused function warning but apparently since it 
+> was still being "used" it obviously won't trigger that warning.
+>
+Plus if gcc/clang could have catched it build bots would have done so
+when posting the asus-armoury series as they catched other things.
