@@ -1,115 +1,304 @@
-Received: from mail-pl1-f178.google.com (mail-pl1-f178.google.com [209.85.214.178])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from fhigh-a6-smtp.messagingengine.com (fhigh-a6-smtp.messagingengine.com [103.168.172.157])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 449FC25DAEA
-	for <platform-driver-x86@vger.kernel.org>; Mon, 29 Dec 2025 20:45:14 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.178
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8D70C2DA742;
+	Tue, 30 Dec 2025 03:07:55 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=103.168.172.157
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1767041115; cv=none; b=gnqPsDmcJbqkEb+bD+YggG9s6Sd9C5J39CIArnofQmUKwmuFNyzv8CVFxAbBbXDNxgFZCu5uWiP3CJq/m+St/tOIFWFocUzC6FbEQHl3y5iQzj3nlUtUxHybIxUyZlIpJxTBQwZ5orySd48cmvyZFnkmBwmBbCFmC93ve0/o/+Y=
+	t=1767064078; cv=none; b=W1Aj3S+sr69C/yyMTWRtW4tf+hzjhVO4DzLSMHTO2nAEZ8eOCcI6fJAkShfHlLuO/lHLE5jJTZUtE6kHgTvuc6Pjqzenz3G7baOqBliLTTyJoEPOUPrlwFiIIUGMH233/f4Ssu9lnMJ7ZkwfrO4mjw0n8ufZPxMMM18jFwgj9nM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1767041115; c=relaxed/simple;
-	bh=ex4Ck4olJols2jBEGb1IF+15qqIBqbl/l4O//LrmuTo=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=grG7R+pXN5Tx2p68zwSmM1zJHkx/nn0RMWvxKgofCz6pBKWXWH82YiyiZhMTcUXrKA3GDczs4CPSPvbrxv3U3HVDv3BDavks5B7GbySt0Y7N/fwYxs+99hQBHSPOOxkpYa786myXti8kk16PaZmRIu+MtOIaYd6vuosSAUa8u9s=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=GpdqnlLW; arc=none smtp.client-ip=209.85.214.178
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1767064078; c=relaxed/simple;
+	bh=iq9iOzJztU1qTK0k7VX53eNOepDoL3yKFERgee8ACuU=;
+	h=MIME-Version:Date:From:To:Cc:Message-Id:In-Reply-To:References:
+	 Subject:Content-Type; b=e0NzXOGDufKA5kJjTBFB5CT+4EN5pSg/zSsbOxsuzOdfjbiYAvBzGObJN3NXmiI4j3qxhqT46cTIjHihQ1PTQ0t4/A4W1ec2QofFyxppqlTI5MC0Q+ODDfBVnGNjYLWu4nrTcV+9F9HFl390T16w9VnIG7U8D33WJ93vvdEii0Q=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=squebb.ca; spf=pass smtp.mailfrom=squebb.ca; dkim=pass (2048-bit key) header.d=squebb.ca header.i=@squebb.ca header.b=thiwzAxg; dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b=qnlm5iDu; arc=none smtp.client-ip=103.168.172.157
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=squebb.ca
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=squebb.ca
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="GpdqnlLW"
-Received: by mail-pl1-f178.google.com with SMTP id d9443c01a7336-2a07fac8aa1so100141145ad.1
-        for <platform-driver-x86@vger.kernel.org>; Mon, 29 Dec 2025 12:45:14 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1767041113; x=1767645913; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=XR7nS3vjfSXzQvWBx2iWQPFkgcQ7WikNJkPELgNSlxo=;
-        b=GpdqnlLW+84UASApoH6DDfoYwzgdjvlvVC9oDRL0kmt0Nr2xaaSpTYFSxth941B8Qd
-         bgKqbVabWqGX6W9Uif22E0VIGsozroKeVoVZvgoR2mSQ0mJZBOzlL5cyQD6HL/pEb6Pv
-         meUXwdnr46hLissqa3ZBst5yLLbbU7tAtZgG2HN4fG+GXq4hxJowHy5swccm49m/91TT
-         kVRnvbZJFAyGeIfZB1JLPkggTSyNhzmmjJqCu6wqgxkxHE0iGdLIBZ71S9XWPhQA8Vy4
-         VrxijNx6AlP6JNywoNKVUq1j3YLT+LjnV7bp2FPtmqkmEZkZ779o2jQg+1/zFo6xZKqS
-         XSHw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1767041113; x=1767645913;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-gg:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=XR7nS3vjfSXzQvWBx2iWQPFkgcQ7WikNJkPELgNSlxo=;
-        b=Kqo0Cvac0TU9Nq7iWcw7yLgvNXGoWYbp7Z+K6Y+n+BC2OK6qEBRc/emCMWlhf3uYfq
-         Nr5ql2GTuS8DIcdBTn10vGOc0CCK+RaKmuP2mHCyrhtxv6MmeZQwZFely5d49RWZtlVx
-         VwcakavxMAF6EvTlV1IwRYmtHrv/v4++Q8i4mBvKbUulJM5hru/NIFAbelBfoWQfOtQv
-         /VmOsiQT2V7gEytF+iM+EMdN9B4DcnZeapxjZbUogDOQQuUI/ctgNSl4IOQr6JmsCvkG
-         BWGcGgRFiWQl1G3Age7kbPsEtW/Iawxmxyqg4NO6FoaFnVXfCWDpsLHGctTdTEAcL8zG
-         MrJQ==
-X-Forwarded-Encrypted: i=1; AJvYcCU8u44xJUJPR0QKhDgjVWEiuhLBiVG/asO41iy5kJK78yjA03zd0qztT0uKsyUlBFajLskHmlYGqfNxZ5NUe1MNgQJ3@vger.kernel.org
-X-Gm-Message-State: AOJu0Yw3kd+KFHukIa394i+0DyaYQgpyhzq0IMerpSX5TASbTls7E7dH
-	UkUDLnelVjJVMQuVpykmCzVE37sOsbAJnMvv4wsKxZ4Fi1eAUOURs2dk
-X-Gm-Gg: AY/fxX5oqB4wQFOBzful1/i+dPxuAsEZF2CXhQYbw5VUtFjAZQ55UOOdKOtm+BbFemu
-	oef2o/6rALdml/RQqd6qLfo2s0iYvVg/siotj0y+ha5AgszxLAyS8ou87yhIylYOOTvV4iPeHEE
-	/ALZXbkbyTyolq6A5i0h+a7bpkReE3wiy7UHZSVBwuEjOKXG/Q9QRoc/Duwvej5Nd0SPQvjyDww
-	XXqkxdn6bD/iftkyblorXX87acc7sf2fCPsDMYCE/5c6QfeFuvn4hpjyqK7fQJoYGEiSh0UcrU+
-	Ha4EElw4pLyKW66Ay3mIOpaEGPKsS2eXQZkVBfv4C9D5zbT2htBMBZkjugsQMxLEr4zEe8Vl8T/
-	2tOgbKC9pUhRBjKN1zDTH82x8apBarVm39NE8cDajGmnyXGw5S/IOezQWuUJI7/K9X/TuAxSm1h
-	H829n0rtoELkNScJf0LSsFKvQYt1uhhJAGLLtiAgJjaOMdDCMuCF3dtzFzqVGNunb45iyD5bSXG
-	Ipr1LgmYLl9gnRC8k6ugHF+PUbJnas=
-X-Google-Smtp-Source: AGHT+IFEfxbCJNyep68E2bVjyNh8c2EuIYEHYYBAlmm5IH3Kky8zHTf2A2xL1t44n2dtRKhC5cU2PA==
-X-Received: by 2002:a05:7022:924:b0:119:e55a:9beb with SMTP id a92af1059eb24-121721aa33fmr24820417c88.7.1767041113328;
-        Mon, 29 Dec 2025 12:45:13 -0800 (PST)
-Received: from apollo.tail3ccdd3.ts.net ([2601:646:8201:fd20::28b])
-        by smtp.gmail.com with ESMTPSA id a92af1059eb24-1217253c23csm118090355c88.9.2025.12.29.12.45.12
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 29 Dec 2025 12:45:12 -0800 (PST)
-From: Khem Raj <raj.khem@gmail.com>
-To: Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>,
-	platform-driver-x86@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Cc: Khem Raj <raj.khem@gmail.com>
-Subject: [PATCH] tools/power/x86/intel-speed-select: Use pkg-config for libnl-3.0 detection
-Date: Mon, 29 Dec 2025 12:45:06 -0800
-Message-ID: <20251229204506.720353-1-raj.khem@gmail.com>
-X-Mailer: git-send-email 2.52.0
+	dkim=pass (2048-bit key) header.d=squebb.ca header.i=@squebb.ca header.b="thiwzAxg";
+	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="qnlm5iDu"
+Received: from phl-compute-02.internal (phl-compute-02.internal [10.202.2.42])
+	by mailfhigh.phl.internal (Postfix) with ESMTP id A52E4140014C;
+	Mon, 29 Dec 2025 22:07:54 -0500 (EST)
+Received: from phl-imap-08 ([10.202.2.84])
+  by phl-compute-02.internal (MEProxy); Mon, 29 Dec 2025 22:07:54 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=squebb.ca; h=cc
+	:cc:content-transfer-encoding:content-type:content-type:date
+	:date:from:from:in-reply-to:in-reply-to:message-id:mime-version
+	:references:reply-to:subject:subject:to:to; s=fm3; t=1767064074;
+	 x=1767150474; bh=TVr7ArUr37OKRVN60PXzHdLsZ3cUyxRAkpJrkGLHwX8=; b=
+	thiwzAxgKlq3eeJQcfvYFLb/I+YHk2E8Ao+26zPFpJiubi62giY6liND4ExA5J/4
+	CXNq3SkX2qgCk6XZlcfgHPRlD5wK8waC6/OEl5HGaDZEeDqjiMAcBRiZtsvwTHp0
+	cUxHvcJkIotENE0irHeTs4RQsVwfav2v7AjTgjyq0WvYask/+4yD5W10hJxi7u8L
+	gYdHsu/TqwswnWSbfCuURRhkziE1C7N7nuB2rjk3QTs8PqOBulcKgoP4CvAyLYXN
+	yuP4oku9XfJMmbSyx2DJTQTpN25qQt1WMHf0QGIINklA9anEOuohKYcrOoHqwxcQ
+	02uFTqTYhPtYkYNOjT6UnQ==
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
+	messagingengine.com; h=cc:cc:content-transfer-encoding
+	:content-type:content-type:date:date:feedback-id:feedback-id
+	:from:from:in-reply-to:in-reply-to:message-id:mime-version
+	:references:reply-to:subject:subject:to:to:x-me-proxy
+	:x-me-sender:x-me-sender:x-sasl-enc; s=fm2; t=1767064074; x=
+	1767150474; bh=TVr7ArUr37OKRVN60PXzHdLsZ3cUyxRAkpJrkGLHwX8=; b=q
+	nlm5iDu7MF4Qua/BX0J7I/NwA5tt0hfykOeDNsmh/bgN7V5m9F5mnrhkJZONn+8/
+	4qFCVQEcCMzmC54ZrBtNCT99Sy9rLwYrDGxtAXpSFcjnPHcSZ9Cu7zDMLiQswN54
+	4ebNMjaDAElJLQLPEbw/wYJUMTG31uekZTY2u6j+HCZmTjkY20QJTS75Y+jOYYtD
+	PChpc+q7vl2APH//ZsHsUTrrxX67QlbhyzPVIr/GeS/TZvOWC3qQPjeurrTivejZ
+	O80xyPy2UMXFFet8ZzK0onEtuhUjWoW3uyIsoMaHt+vmBxMpnK8D2jekdg9Ny5E9
+	Gr+xX5V34/+rrkWf0Tk9A==
+X-ME-Sender: <xms:CkJTaSnyDCyk0K6IlMnqiugaa_Tzg84wvG8j9p1JDXJoL_S2L5SqjA>
+    <xme:CkJTaUrFbgocobvUbEl5-UL5xsNgHe2OqoLalW9YlrD-f-GDPPwuDSKxLrYO019Ad
+    wGkENyUU-5QqAVjykxKaItfjXkXiwDWxZKmcja1sju71YZKudKIm_8>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeefgedrtddtgdejkeeltdcutefuodetggdotefrod
+    ftvfcurfhrohhfihhlvgemucfhrghsthforghilhdpuffrtefokffrpgfnqfghnecuuegr
+    ihhlohhuthemuceftddtnecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenucfjug
+    hrpefoggffhffvvefkjghfufgtgfesthhqredtredtjeenucfhrhhomhepfdforghrkhcu
+    rfgvrghrshhonhdfuceomhhpvggrrhhsohhnqdhlvghnohhvohesshhquhgvsggsrdgtrg
+    eqnecuggftrfgrthhtvghrnhephfevkeejueeukeefhfelleejheeuudfgteffvdetkeff
+    jeduleffvdejkeefhedvnecuvehluhhsthgvrhfuihiivgeptdenucfrrghrrghmpehmrg
+    hilhhfrhhomhepmhhpvggrrhhsohhnqdhlvghnohhvohesshhquhgvsggsrdgtrgdpnhgs
+    pghrtghpthhtohepiedpmhhouggvpehsmhhtphhouhhtpdhrtghpthhtohepsggvnhhjrg
+    hmihhnrdhphhhilhhiphegleehsehgmhgrihhlrdgtohhmpdhrtghpthhtohepuggvrhgv
+    khhjohhhnhdrtghlrghrkhesghhmrghilhdrtghomhdprhgtphhtthhopehhrghnshhgse
+    hkvghrnhgvlhdrohhrghdprhgtphhtthhopehilhhpohdrjhgrrhhvihhnvghnsehlihhn
+    uhigrdhinhhtvghlrdgtohhmpdhrtghpthhtoheplhhinhhugidqkhgvrhhnvghlsehvgh
+    gvrhdrkhgvrhhnvghlrdhorhhgpdhrtghpthhtohepphhlrghtfhhorhhmqdgurhhivhgv
+    rhdqgiekieesvhhgvghrrdhkvghrnhgvlhdrohhrgh
+X-ME-Proxy: <xmx:CkJTaeJadQwSgXa2Mam6WULPhie2yoVgItW_vRneT4HrvVpnWHHjNA>
+    <xmx:CkJTaYbCxIDpkpQ9AmGGkqPRLauadf7NqmSKlqhonnXPGX6k6jDANw>
+    <xmx:CkJTaQ8TVw2LI9Nfen7eIAYwKrl6RFTkdMzM9VBFL22LCobhuA8QrA>
+    <xmx:CkJTaZYFtgtJFvNY5mOlOHGxN1xxosla2AWUzMUEmdHqfpBy1tElLQ>
+    <xmx:CkJTaceTPPkNBED9DAguTsAnRESf_oQkJi6Px8HovLb95_9_718Uz7vS>
+Feedback-ID: ibe194615:Fastmail
+Received: by mailuser.phl.internal (Postfix, from userid 501)
+	id EB0062CE0078; Mon, 29 Dec 2025 22:07:53 -0500 (EST)
+X-Mailer: MessagingEngine.com Webmail Interface
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+X-ThreadId: AgG1KmZ3azLF
+Date: Mon, 29 Dec 2025 22:07:26 -0500
+From: "Mark Pearson" <mpearson-lenovo@squebb.ca>
+To: =?UTF-8?Q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>,
+ "Benjamin Philip" <benjamin.philip495@gmail.com>
+Cc: 
+ "platform-driver-x86@vger.kernel.org" <platform-driver-x86@vger.kernel.org>,
+ LKML <linux-kernel@vger.kernel.org>,
+ "Derek J . Clark" <derekjohn.clark@gmail.com>,
+ "Hans de Goede" <hansg@kernel.org>
+Message-Id: <05eb6019-5ed5-463a-b556-27792ea43568@app.fastmail.com>
+In-Reply-To: <69c27b14-5943-eab1-407c-209d8d484bc1@linux.intel.com>
+References: 
+ <CAMEXYWcY-7Kn8V1EwZ=fUPFWDwnAHEuferY9Ap0zO6xfmXx4JQ@mail.gmail.com>
+ <20251223191932.946794-1-benjamin.philip495@gmail.com>
+ <CAMEXYWf_m8PL-ZGAv_1ufLp_1ryQK15ziaO90_OxmMV4VkpTPQ@mail.gmail.com>
+ <572f5363-c23b-435f-a36b-7b708704a3c1@app.fastmail.com>
+ <CAMEXYWf9TF=O_vZTSsc4T7Go4dVw=xw5zZfGWKhGWu8d4eHwrg@mail.gmail.com>
+ <3b1fe510-4849-1950-1086-bc52bc43e65d@linux.intel.com>
+ <877bu5gr48.fsf@gmail.com>
+ <69c27b14-5943-eab1-407c-209d8d484bc1@linux.intel.com>
+Subject: Re: [PATCH 4/5] platform/x86: think-lmi: fix column limit overflow
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: quoted-printable
 
-Replace hardcoded libnl3 include path with pkg-config detection to
-improve portability across different distributions and build environments.
 
-The previous implementation used a fixed path constructed from the
-compiler's sysroot, which could fail on systems with non-standard
-library installations. Now the build system:
-- Attempts to detect libnl-3.0 include paths using pkg-config
-- Falls back to /usr/include/libnl3 if pkg-config is unavailable
-- Maintains backward compatibility with existing build configurations
 
-This ensures the tool builds correctly on a wider range of systems
-while preserving existing behavior when pkg-config is not present.
-
-Closes:https://bugzilla.kernel.org/show_bug.cgi?id=220819
-Signed-off-by: Khem Raj <raj.khem@gmail.com>
+On Mon, Dec 29, 2025, at 12:32 PM, Ilpo J=C3=A4rvinen wrote:
+> On Mon, 29 Dec 2025, Benjamin Philip wrote:
+>> Ilpo J=C3=A4rvinen <ilpo.jarvinen@linux.intel.com> writes:
+>> > On Wed, 24 Dec 2025, Benjamin Philip wrote:
+>> >> "Mark Pearson" <mpearson-lenovo@squebb.ca> writes:
+>> >> > On Tue, Dec 23, 2025, at 2:24 PM, Benjamin Philip wrote:
+>> >> >> This commit handles some column limit overflows (that occur aft=
+er fixing
+>> >> >> their alignment), i.e. the following check:
+>> >> >>
+>> >> >> CHECK: line length of ... exceeds 100 columns
+>> >> >>
+>> >> >> by defining a constant opt, and replacing the offending
+>> >> >> expression with opt.
+>> >> >>
+>> >> >> Signed-off-by: Benjamin Philip <benjamin.philip495@gmail.com>
+>> >> >> ---
+>> >> >>  drivers/platform/x86/lenovo/think-lmi.c | 31 +++++++++++++++--=
+--------
+>> >> >>  1 file changed, 19 insertions(+), 12 deletions(-)
+>> >> >>
+>> >> >> diff --git a/drivers/platform/x86/lenovo/think-lmi.c
+>> >> >> b/drivers/platform/x86/lenovo/think-lmi.c
+>> >> >> index 1ada4d800383..07ba0d84720a 100644
+>> >> >> --- a/drivers/platform/x86/lenovo/think-lmi.c
+>> >> >> +++ b/drivers/platform/x86/lenovo/think-lmi.c
+>> >> >> @@ -1083,12 +1083,13 @@ static ssize_t type_show(struct kobject=
+ *kobj,
+>> >> >> struct kobj_attribute *attr,
+>> >> >>  }
+>> >> >>
+>> >> >>  static ssize_t current_value_store(struct kobject *kobj,
+>> >> >> -		struct kobj_attribute *attr,
+>> >> >> -		const char *buf, size_t count)
+>> >> >> +				   struct kobj_attribute *attr, const char *buf,
+>> >> >> +				   size_t count)
+>> >> >>  {
+>> >> >>  	struct tlmi_attr_setting *setting =3D to_tlmi_attr_setting(ko=
+bj);
+>> >> >>  	char *set_str =3D NULL, *new_setting =3D NULL;
+>> >> >>  	char *auth_str =3D NULL;
+>> >> >> +	const char *opt;
+>> >> >>  	int ret;
+>> >> >>
+>> >> >>  	if (!tlmi_priv.can_set_bios_settings)
+>> >> >> @@ -1163,10 +1164,11 @@ static ssize_t current_value_store(stru=
+ct kobject *kobj,
+>> >> >>  			ret =3D tlmi_save_bios_settings("");
+>> >> >>  	} else { /* old non-opcode based authentication method (depre=
+cated) */
+>> >> >>  		if (tlmi_priv.pwd_admin->pwd_enabled && tlmi_priv.pwd_admin-=
+>password[0]) {
+>> >> >> +			opt =3D encoding_options[tlmi_priv.pwd_admin->encoding];
+>> >> >>  			auth_str =3D kasprintf(GFP_KERNEL, "%s,%s,%s;",
+>> >> >> -					tlmi_priv.pwd_admin->password,
+>> >> >> -					encoding_options[tlmi_priv.pwd_admin->encoding],
+>> >> >> -					tlmi_priv.pwd_admin->kbdlang);
+>> >> >> +					     tlmi_priv.pwd_admin->password,
+>> >> >> +					     opt,
+>> >> >> +					     tlmi_priv.pwd_admin->kbdlang);
+>> >> >>  			if (!auth_str) {
+>> >> >>  				ret =3D -ENOMEM;
+>> >> >>  				goto out;
+>> >> >> @@ -1299,6 +1301,7 @@ static ssize_t save_settings_store(struct
+>> >> >> kobject *kobj, struct kobj_attribute *
+>> >> >>  				   const char *buf, size_t count)
+>> >> >>  {
+>> >> >>  	char *auth_str =3D NULL;
+>> >> >> +	const char *opt;
+>> >> >>  	int ret =3D 0;
+>> >> >>  	int cmd;
+>> >> >>
+>> >> >> @@ -1347,9 +1350,10 @@ static ssize_t save_settings_store(struct
+>> >> >> kobject *kobj, struct kobj_attribute *
+>> >> >>  			ret =3D tlmi_save_bios_settings("");
+>> >> >>  		} else { /* old non-opcode based authentication method (depr=
+ecated) */
+>> >> >>  			if (tlmi_priv.pwd_admin->pwd_enabled && tlmi_priv.pwd_admin=
+->password[0]) {
+>> >> >> +				opt =3D encoding_options[tlmi_priv.pwd_admin->encoding];
+>> >> >>  				auth_str =3D kasprintf(GFP_KERNEL, "%s,%s,%s;",
+>> >> >>  						     tlmi_priv.pwd_admin->password,
+>> >> >> -						     encoding_options[tlmi_priv.pwd_admin->encoding],
+>> >> >> +						     opt,
+>> >> >>  						     tlmi_priv.pwd_admin->kbdlang);
+>> >> >>  				if (!auth_str) {
+>> >> >>  					ret =3D -ENOMEM;
+>> >> >> @@ -1381,11 +1385,13 @@ static ssize_t save_settings_store(stru=
+ct
+>> >> >> kobject *kobj, struct kobj_attribute *
+>> >> >>  static struct kobj_attribute save_settings =3D __ATTR_RW(save_=
+settings);
+>> >> >>
+>> >> >>  /* ---- Debug
+>> >> >> interface------------------------------------------------------=
 ---
- tools/power/x86/intel-speed-select/Makefile | 8 +++++++-
- 1 file changed, 7 insertions(+), 1 deletion(-)
+>> >> >> */
+>> >> >> -static ssize_t debug_cmd_store(struct kobject *kobj, struct
+>> >> >> kobj_attribute *attr,
+>> >> >> -				const char *buf, size_t count)
+>> >> >> +static ssize_t debug_cmd_store(struct kobject *kobj,
+>> >> >> +			       struct kobj_attribute *attr, const char *buf,
+>> >> >> +			       size_t count)
+>> >> >>  {
+>> >> >>  	char *set_str =3D NULL, *new_setting =3D NULL;
+>> >> >>  	char *auth_str =3D NULL;
+>> >> >> +	const char *opt;
+>> >> >>  	int ret;
+>> >> >>
+>> >> >>  	if (!tlmi_priv.can_debug_cmd)
+>> >> >> @@ -1397,10 +1403,11 @@ static ssize_t debug_cmd_store(struct k=
+object
+>> >> >> *kobj, struct kobj_attribute *attr
+>> >> >>  		return -ENOMEM;
+>> >> >>
+>> >> >>  	if (tlmi_priv.pwd_admin->pwd_enabled && tlmi_priv.pwd_admin->=
+password[0]) {
+>> >> >> +		opt =3D encoding_options[tlmi_priv.pwd_admin->encoding];
+>> >> >>  		auth_str =3D kasprintf(GFP_KERNEL, "%s,%s,%s;",
+>> >> >> -				tlmi_priv.pwd_admin->password,
+>> >> >> -				encoding_options[tlmi_priv.pwd_admin->encoding],
+>> >> >> -				tlmi_priv.pwd_admin->kbdlang);
+>> >> >> +				     tlmi_priv.pwd_admin->password,
+>> >> >> +				     opt,
+>> >> >> +				     tlmi_priv.pwd_admin->kbdlang);
+>> >> >>  		if (!auth_str) {
+>> >> >>  			ret =3D -ENOMEM;
+>> >> >>  			goto out;
+>> >> >> @@ -1775,7 +1782,7 @@ static int tlmi_analyze(struct wmi_device=
+ *wdev)
+>> >> >>  						ffs(tlmi_priv.pwdcfg.ext.hdd_user_password) - 1;
+>> >> >>  			}
+>> >> >>  			if (tlmi_priv.pwdcfg.ext.nvme_user_password ||
+>> >> >> -					tlmi_priv.pwdcfg.ext.nvme_master_password) {
+>> >> >> +			    tlmi_priv.pwdcfg.ext.nvme_master_password) {
+>> >> >>  				tlmi_priv.pwd_nvme->pwd_enabled =3D true;
+>> >> >>  				if (tlmi_priv.pwdcfg.ext.nvme_master_password)
+>> >> >>  					tlmi_priv.pwd_nvme->index =3D
+>> >> >> --
+>> >> >> 2.52.0
+>> >> >
+>> >> > I'll defer to the pdx86 reviewers for this set of changes.
+>> >> >
+>> >> > This seems to me to make things more complicated than needed, pu=
+rely=20
+>> >> > to address a 100 column limit. I personally don't like the chang=
+e.=20
+>> >> >
+>> >> > Nothing wrong with the code, and if more experienced maintainers=
+ prefer it, I'm happy to defer to them. Otherwise it seems to me noise f=
+or the sake of noise I'm afraid
+>> >> >
+>> >> > Mark
+>> >>=20
+>> >> An alternative could be to set this a constant pwd_admin to
+>> >> tlmi_priv.pwd_admin. There are 13 other references to
+>> >> tlmi_priv.pwd_admin in one function alone, so maybe it might be a =
+more
+>> >> meaningful improvement?
+>> >
+>> > Hi,
+>> >
+>> > The general theme in this driver seems to be that tlmi_priv.pwd_adm=
+in=20
+>> > usually causes long lines so introducing a local variable for it in=
+ such=20
+>> > functions would certainly help.
+>> >
+>> > This probably came to be when pwd_admin was migrated over into tlmi=
+_priv=20
+>> > which certainly was correct place for it, but case with the cost of=
+ adding=20
+>> > into the line lengths.
+>> >
+>>=20
+>> In this case, would you prefer that a local variable for pwd_admin be
+>> introduced instead of variables for values in the long lines?=20
+>
+> Mark who's the maintainer seems to be against it, so I don't want to s=
+tep
+> too strongly on his lot in this. It's merely my opinion how we normall=
+y=20
+> handle cases like this (I probably didn't express that clearly enough).
+>
 
-diff --git a/tools/power/x86/intel-speed-select/Makefile b/tools/power/x86/intel-speed-select/Makefile
-index 8d3a02a20f3d..6b299aae2ded 100644
---- a/tools/power/x86/intel-speed-select/Makefile
-+++ b/tools/power/x86/intel-speed-select/Makefile
-@@ -13,7 +13,13 @@ endif
- # Do not use make's built-in rules
- # (this improves performance and avoids hard-to-debug behaviour);
- MAKEFLAGS += -r
--override CFLAGS += -O2 -Wall -g -D_GNU_SOURCE -I$(OUTPUT)include -I$(shell $(CC) -print-sysroot)/usr/include/libnl3
-+
-+NL3_CFLAGS = $(shell pkg-config --cflags libnl-3.0 2>/dev/null)
-+ifeq ($(NL3_CFLAGS),)
-+NL3_CFLAGS = -I/usr/include/libnl3
-+endif
-+
-+override CFLAGS += -O2 -Wall -g -D_GNU_SOURCE -I$(OUTPUT)include $(NL3_CFLAGS)
- override LDFLAGS += -lnl-genl-3 -lnl-3
- 
- ALL_TARGETS := intel-speed-select
+I don't have a strong opinion :) If it's business as usual, then it's fi=
+ne and we can include it.
+
+From my perspective, it would be useful to know if it's been tested on r=
+eal HW, and (if so) which platforms. Unfortunately Thinkpad, ThinkCenter=
+ and ThinkStation all use this module and all have their own little quir=
+ks.=20
+I'll do some testing here (soonish...) to confirm they're all still sane=
+ after (they should be) and throw in a tested-by tag.
+
+Mark
