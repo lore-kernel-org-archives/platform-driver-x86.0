@@ -1,229 +1,90 @@
-Received: from mail-pl1-f172.google.com (mail-pl1-f172.google.com [209.85.214.172])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from www.redadmin.org (bc043154.ppp.asahi-net.or.jp [222.228.43.154])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 173D931ED88
-	for <platform-driver-x86@vger.kernel.org>; Tue, 30 Dec 2025 14:51:18 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.172
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1767106283; cv=none; b=STNhOmRdbpmFUaFlAAXuYjQajBPm6TOp5dmaKmHorim/dNs5ceepjVEJ76hceBm2O5YKq//bZ1WZBySyzFK/SaohQYyewjAU3h8DEUBFI8ODON6mM1Ep6wz8M9Slwy4A9mLH3GYT2gmliwuUtzoDm4sb9rvIKG84xSal0iTx32k=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1767106283; c=relaxed/simple;
-	bh=PafXgWDMvXLR2Nstor1AR1m6gZWJgpmSJIc0jQ0emsk=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=izw2NHss9IHOcjOMxPjk/9nyu10PCuyPZfRP8Msslj3KVlHrcTn8gLe5Kvy1CiX8a4E6d/I6w7BKoFTZdblHQRrASRQMwhdTgKg8tJ8QJw86OHzJLowSXYYjajCJwJ8d0nDffB068ZJaEBOo+st4F1KRxOUKQvPdeScU0VStlNQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=D4WjBufF; arc=none smtp.client-ip=209.85.214.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6436B22301;
+	Tue, 30 Dec 2025 21:40:05 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=222.228.43.154
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1767130811; cv=pass; b=cDFqEdbywqQKHK8RXucHBbidfCCtKmj8a5v4m5/17f+t+L9q6Qg3Gs/Cfe+M1uzhApN4ttbPkTCFsD5MJsCaN3WzR+Wy9bNLhqfiIIB6IKvhJf2oEku+gdRQtcB7ijlDSam/u2CeumIrhqJ2Ds13UtJQamnL1QoTPB7VTqScnQQ=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1767130811; c=relaxed/simple;
+	bh=q3qt+AHp1LgY3uLdtkGV1dlrrIc1qjbyc/fBi9O6V7M=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=Tw/uenAdDBvu7hwaI2IrOgCnIML0D7DpAXIooLOEyb+QUuvFhBOnqfdfap0Om5dGEhg0bJJMlPNCu8IdLK9G7pL/vqwUJgBmCdwIEOdz5DIMZX/xgg2NivroKE2SXfl/d3Ghn9+synIYoSkjDTZ4soYtJzn39RPGz00GquTNhqE=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redadmin.org; spf=pass smtp.mailfrom=redadmin.org; dkim=pass (1024-bit key) header.d=redadmin.org header.i=@redadmin.org header.b=etIcFiRI; arc=pass smtp.client-ip=222.228.43.154
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redadmin.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redadmin.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="D4WjBufF"
-Received: by mail-pl1-f172.google.com with SMTP id d9443c01a7336-2a0c09bb78cso72645935ad.0
-        for <platform-driver-x86@vger.kernel.org>; Tue, 30 Dec 2025 06:51:18 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1767106278; x=1767711078; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=xbAQovtJoKutCpVbRAys9lPE9fj9fNigF3AvHChA6z4=;
-        b=D4WjBufFKWJRbhhoytD4vdCGmMhu9+zkffluefb8iWHWhkbSyGlsihb5EiyDdZLxco
-         xpDywUNzYvfX5v95YvClBJo7R6ZlYMgxXYGB0pFZUx0b0aEsh+ulu8UUWwJRA4xtD0jT
-         Lx4HDNLFPkLXbTFTcmjvpSaq1t8pWgEXbOPErmyqkYKzx+bcd6nSbB+1LkoYScN4x77N
-         TVjadq+1uD1ZT5XMcWYUH1jdSqqpah2eoVV08gWJWRErTD6fM6rpRBBr+sYCS2tCoDld
-         BUx/ExVeAHPy1z1WxSyWZ4RTinpR9/n9B0gkbOpkfkgaO96qOD3wAVAdsIL0tkrpkMb7
-         B7jw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1767106278; x=1767711078;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-gg:x-gm-message-state:from
-         :to:cc:subject:date:message-id:reply-to;
-        bh=xbAQovtJoKutCpVbRAys9lPE9fj9fNigF3AvHChA6z4=;
-        b=ePgWgwG9LBH+sVE7FB+WZeilncZX87gSLTbIrKq/yx5sOWnms8naTJv0kuhUm8QWck
-         kqcQVzt2SKVy8ndb2QVI5VxHqPDUIz9mnYqfK2HO5K5kVVoxdFP+Sr8/SUNyJ95s5zjr
-         pv1i1QZmjKYHuEvEvriszo9OdvDo9JGC3B1+CoGANf8UZx+wkrfyueAHo/X2AVofV1rf
-         SELAQ0khxyQLxjC3VQT6al9j5mfA40Rzf00OEaCxARmjuEqI4c4XpjDL3uLkd3OKbaEp
-         q5LTntafdBvAxEgLCIXA0Pya7NO60NLSqXgei2mmeG6OPnw3ElQRqIY1BFKB1ZBncnp1
-         oAFQ==
-X-Gm-Message-State: AOJu0YxXZJ2Uu+ajg/TvZtFh96ctHsmuALnJIj8PVbDwHPHzPQaO2XMA
-	k0jS9m8QYqUeTPUWWj1nWLfQ0RGsB5ro+7lsU6OhdHjfE1C3mLBSXlij
-X-Gm-Gg: AY/fxX6EY4LOuMadxZo+WGZHNjwCQ1GHlM1jetenicV/MyuCkg6sxYnF/t3tJtCniL0
-	0BgwRBXEajgNhMO9TsjaTTC8zBvZUOmv4hq+NHe5AbFehrQ2VxzojM8rmo2uKXNWzfZefKOHqkJ
-	0AFzjuBIcLAPNXEpXFc5zSyCYd8v7sWIZW5jZ1oW7NxVbULu5a5Glu+8/do9ah9Fab7Ex2mpf7n
-	NEcErDWe+stTZLyLlVrjdgtZFTuz/3sCFyEUZy3Z/zd0t9dZc1RFZbwk3BdMTvrSa+kV+SLyX1A
-	wXNraBu3HMb1luSUUaP8GvOUPSUkGq08rZXMnWGLLo0cv6IdvEFByoY1MyV9WERmByd+hUAskV7
-	pF2veBYPDTqc6320NZ9OGYItD0hJnSScbI8ApziMT8yq3TseXKLnr/sCGBjBQluywyXL4WjA8oz
-	6JHWwlTK8JFAJ4EQZw31b9umg/Cx3QVw==
-X-Google-Smtp-Source: AGHT+IEus/WFmxvaHScCzlZVMv3z622sVJr0P9J3GJWro2Nxl6f1Smit9+HrdVV6jt9rstkznaDlyg==
-X-Received: by 2002:a17:903:2450:b0:2a0:e5c3:d149 with SMTP id d9443c01a7336-2a2f0d40410mr353178025ad.23.1767106278186;
-        Tue, 30 Dec 2025 06:51:18 -0800 (PST)
-Received: from archlinux ([2405:201:1b:225c:eb9d:1fc0:f95c:bd90])
-        by smtp.gmail.com with ESMTPSA id d9443c01a7336-2a2f3d5d86esm301257245ad.74.2025.12.30.06.51.14
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 30 Dec 2025 06:51:17 -0800 (PST)
-From: Krishna Chomal <krishna.chomal108@gmail.com>
-To: ilpo.jarvinen@linux.intel.com,
-	hansg@kernel.org,
-	linux@roeck-us.net
-Cc: platform-driver-x86@vger.kernel.org,
-	linux-hwmon@vger.kernel.org,
+	dkim=pass (1024-bit key) header.d=redadmin.org header.i=@redadmin.org header.b="etIcFiRI"
+Received: from localhost (localhost [127.0.0.1])
+	by www.redadmin.org (Postfix) with ESMTP id 7CCD5109D6C0F;
+	Wed, 31 Dec 2025 06:34:37 +0900 (JST)
+X-Virus-Scanned: amavis at redadmin.org
+Received: from www.redadmin.org ([127.0.0.1])
+ by localhost (redadmin.org [127.0.0.1]) (amavis, port 10024) with ESMTP
+ id LaslHGX1Zb6N; Wed, 31 Dec 2025 06:34:33 +0900 (JST)
+Received: by www.redadmin.org (Postfix, from userid 1000)
+	id 78F59109EFAE2; Wed, 31 Dec 2025 06:34:33 +0900 (JST)
+Authentication-Results: www.redadmin.org; arc=none smtp.remote-ip=127.0.0.1
+ARC-Seal: i=1; a=rsa-sha256; d=redadmin.org; s=20231208space; t=1767130473;
+	cv=none; b=xZYqt2W+ew38xWK8dY5wpKEJh8TuQJWF7dzISAR9HTb8I+LHRGdZhlqDuvspMNPbVZnIxmbNmsaUhssixuGf/XBwNYIZFOd9GbXaZ8sE8bZ+k8lReGyazgZ7RwfnTwIWNAV3CEqv04Zmq2TEde0q9+Zd/JCGN50jvJQTWkWab2c=
+ARC-Message-Signature: i=1; a=rsa-sha256; d=redadmin.org; s=20231208space;
+	t=1767130473; c=relaxed/relaxed;
+	bh=q3qt+AHp1LgY3uLdtkGV1dlrrIc1qjbyc/fBi9O6V7M=;
+	h=DKIM-Filter:DKIM-Signature:From:To:Cc:Subject:Date:Message-ID:
+	 X-Mailer:MIME-Version:Content-Transfer-Encoding; b=DiXdc/Ankvty806Fb3BMM0DmPQXUItbJi4Ghd3oYnboXa3W8LGM6vwO2dn3K4A77sPPs/DPf5DRJJ/0ltFk9g5pcdxdJ9q8FcE342unuoK4Z5c1VDxFSjhjNRDap/yKqXet5HfnXX+7NPNQoup1ayWRnn1tcj/NtOcmDNA+4g1Y=
+ARC-Authentication-Results: i=1; www.redadmin.org
+DKIM-Filter: OpenDKIM Filter v2.11.0 www.redadmin.org 78F59109EFAE2
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redadmin.org;
+	s=20231208space; t=1767130473;
+	bh=q3qt+AHp1LgY3uLdtkGV1dlrrIc1qjbyc/fBi9O6V7M=;
+	h=From:To:Cc:Subject:Date:From;
+	b=etIcFiRIl+xV7ec/PhAGdkxEZFyyKoOYUiqUQvdP4qAGtfjTjkXHNWIDTqxBjJObl
+	 eOp1yN4PRROhjmAtgF28bkhcscpedZLWra7psIPvdVXEv1dWipK/v+yr2fqRc3X1Q+
+	 mDQa674Khp6CoVznN6hws4a0TCIhXpwnBvf+TPLg=
+From: Akiyoshi Kurita <weibu@redadmin.org>
+To: Kurt Borja <kuurtb@gmail.com>
+Cc: Jonathan Corbet <corbet@lwn.net>,
+	platform-driver-x86@vger.kernel.org,
+	Dell.Client.Kernel@dell.com,
+	linux-doc@vger.kernel.org,
 	linux-kernel@vger.kernel.org,
-	Krishna Chomal <krishna.chomal108@gmail.com>
-Subject: [PATCH v2 2/2] platform/x86: hp-wmi: implement fan keep-alive
-Date: Tue, 30 Dec 2025 20:20:53 +0530
-Message-ID: <20251230145053.516196-3-krishna.chomal108@gmail.com>
-X-Mailer: git-send-email 2.52.0
-In-Reply-To: <20251230145053.516196-1-krishna.chomal108@gmail.com>
-References: <20251225142310.204831-1-krishna.chomal108@gmail.com>
- <20251230145053.516196-1-krishna.chomal108@gmail.com>
+	Akiyoshi Kurita <weibu@redadmin.org>
+Subject: [PATCH v2] docs: alienware-wmi: fix typo
+Date: Wed, 31 Dec 2025 06:34:31 +0900
+Message-ID: <20251230213431.656106-1-weibu@redadmin.org>
+X-Mailer: git-send-email 2.47.3
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Transfer-Encoding: quoted-printable
 
-The firmware on some HP laptops automatically reverts the fan speed
-control to "Auto" mode after a 120 second timeout window.
+Fix a typo in the manual fan control description ("aproximate" -> "approxim=
+ate").
+No functional change.
 
-To ensure that the user-selected fan profile (Max/Manual) persists,
-implement a keep-alive mechanism that periodically refreshes the fan
-mode trigger before the timeout occurs.
-
-- Introduce a delayed workqueue to trigger the fan mode refresh every 90
-  seconds, ensuring the system maintains the correct fan mode setting.
-- Integrate the refresh mechanism into hp_wmi_hwmon_enforce_ctx() to
-  start, update or cancel the keep-alive process based on the current
-  fan mode.
-
-This ensures that the driver stays in sync with the hardware.
-
-Tested on: HP Omen 16-wf1xxx (board ID 8C78)
-
-Signed-off-by: Krishna Chomal <krishna.chomal108@gmail.com>
+Signed-off-by: Akiyoshi Kurita <weibu@redadmin.org>
 ---
-Changes in v2:
-- Explicitly specify time unit in KEEP_ALIVE_DELAY macro
-- Handle work rescheduling directly in switch/case
----
- drivers/platform/x86/hp/hp-wmi.c | 46 +++++++++++++++++++++++++++++---
- 1 file changed, 43 insertions(+), 3 deletions(-)
+ Documentation/admin-guide/laptops/alienware-wmi.rst | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/platform/x86/hp/hp-wmi.c b/drivers/platform/x86/hp/hp-wmi.c
-index ef419575174c..cf9327e1f40e 100644
---- a/drivers/platform/x86/hp/hp-wmi.c
-+++ b/drivers/platform/x86/hp/hp-wmi.c
-@@ -34,6 +34,7 @@
- #include <linux/limits.h>
- #include <linux/minmax.h>
- #include <linux/compiler_attributes.h>
-+#include <linux/workqueue.h>
- 
- MODULE_AUTHOR("Matthew Garrett <mjg59@srcf.ucam.org>");
- MODULE_DESCRIPTION("HP laptop WMI driver");
-@@ -368,6 +369,7 @@ struct hp_wmi_hwmon_priv {
- 	u8 gpu_delta;
- 	u8 mode;
- 	u8 pwm;
-+	struct delayed_work keep_alive_dwork;
- };
- 
- struct victus_s_fan_table_header {
-@@ -386,6 +388,12 @@ struct victus_s_fan_table {
- 	struct victus_s_fan_table_entry entries[];
- } __packed;
- 
-+/*
-+ * 90s delay to prevent the firmware from resetting fan mode after fixed
-+ * 120s timeout
-+ */
-+#define KEEP_ALIVE_DELAY_SECS     90
-+
- static inline u8 rpm_to_pwm(u8 rpm, struct hp_wmi_hwmon_priv *priv)
- {
- 	return fixp_linear_interpolate(0, 0, priv->max_rpm, U8_MAX,
-@@ -2093,6 +2101,7 @@ static int __init hp_wmi_bios_setup(struct platform_device *device)
- static void __exit hp_wmi_bios_remove(struct platform_device *device)
- {
- 	int i;
-+	struct hp_wmi_hwmon_priv *ctx;
- 
- 	for (i = 0; i < rfkill2_count; i++) {
- 		rfkill_unregister(rfkill2[i].rfkill);
-@@ -2111,6 +2120,10 @@ static void __exit hp_wmi_bios_remove(struct platform_device *device)
- 		rfkill_unregister(wwan_rfkill);
- 		rfkill_destroy(wwan_rfkill);
- 	}
-+
-+	ctx = platform_get_drvdata(device);
-+	if (ctx)
-+		cancel_delayed_work_sync(&ctx->keep_alive_dwork);
- }
- 
- static int hp_wmi_resume_handler(struct device *device)
-@@ -2179,12 +2192,20 @@ static int hp_wmi_apply_fan_settings(struct hp_wmi_hwmon_priv *priv)
- 		if (is_victus_s_thermal_profile())
- 			hp_wmi_get_fan_count_userdefine_trigger();
- 		ret = hp_wmi_fan_speed_max_set(1);
--		return ret;
-+		if (ret < 0)
-+			return ret;
-+		schedule_delayed_work(&priv->keep_alive_dwork,
-+				      secs_to_jiffies(KEEP_ALIVE_DELAY_SECS));
-+		return 0;
- 	case PWM_MODE_MANUAL:
- 		if (!is_victus_s_thermal_profile())
- 			return -EOPNOTSUPP;
- 		ret = hp_wmi_fan_speed_set(priv, pwm_to_rpm(priv->pwm, priv));
--		return ret;
-+		if (ret < 0)
-+			return ret;
-+		schedule_delayed_work(&priv->keep_alive_dwork,
-+				      secs_to_jiffies(KEEP_ALIVE_DELAY_SECS));
-+		return 0;
- 	case PWM_MODE_AUTO:
- 		if (is_victus_s_thermal_profile()) {
- 			hp_wmi_get_fan_count_userdefine_trigger();
-@@ -2192,7 +2213,10 @@ static int hp_wmi_apply_fan_settings(struct hp_wmi_hwmon_priv *priv)
- 		} else {
- 			ret = hp_wmi_fan_speed_max_set(0);
- 		}
--		return ret;
-+		if (ret < 0)
-+			return ret;
-+		cancel_delayed_work_sync(&priv->keep_alive_dwork);
-+		return 0;
- 	default:
- 		/* shouldn't happen */
- 		return -EINVAL;
-@@ -2337,6 +2361,20 @@ static const struct hwmon_chip_info chip_info = {
- 	.info = info,
- };
- 
-+static void hp_wmi_hwmon_keep_alive_handler(struct work_struct *work)
-+{
-+	struct delayed_work *dwork;
-+	struct hp_wmi_hwmon_priv *ctx;
-+
-+	dwork = to_delayed_work(work);
-+	ctx = container_of(dwork, struct hp_wmi_hwmon_priv, keep_alive_dwork);
-+	/*
-+	 * Re-apply the current hwmon context settings.
-+	 * NOTE: hp_wmi_apply_fan_settings will handle the re-scheduling.
-+	 */
-+	hp_wmi_apply_fan_settings(ctx);
-+}
-+
- static int hp_wmi_setup_fan_settings(struct hp_wmi_hwmon_priv *priv)
- {
- 	u8 fan_data[128] = { 0 };
-@@ -2395,6 +2433,8 @@ static int hp_wmi_hwmon_init(void)
- 		return PTR_ERR(hwmon);
- 	}
- 
-+	INIT_DELAYED_WORK(&priv->keep_alive_dwork, hp_wmi_hwmon_keep_alive_handler);
-+	platform_set_drvdata(hp_wmi_platform_dev, priv);
- 	hp_wmi_apply_fan_settings(priv);
- 
- 	return 0;
--- 
-2.52.0
+diff --git a/Documentation/admin-guide/laptops/alienware-wmi.rst b/Document=
+ation/admin-guide/laptops/alienware-wmi.rst
+index 27a32a8057da..e532c60db8e2 100644
+--- a/Documentation/admin-guide/laptops/alienware-wmi.rst
++++ b/Documentation/admin-guide/laptops/alienware-wmi.rst
+@@ -105,7 +105,7 @@ information.
+=20
+ Manual fan control on the other hand, is not exposed directly by the AWCC
+ interface. Instead it let's us control a fan `boost` value. This `boost` v=
+alue
+-has the following aproximate behavior over the fan pwm:
++has the following approximate behavior over the fan pwm:
+=20
+ ::
+=20
+--=20
+2.47.3
 
