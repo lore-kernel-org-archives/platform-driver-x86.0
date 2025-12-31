@@ -1,325 +1,273 @@
-Received: from fhigh-a4-smtp.messagingengine.com (fhigh-a4-smtp.messagingengine.com [103.168.172.155])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.17])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AD31D22A4EB;
-	Wed, 31 Dec 2025 02:48:06 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=103.168.172.155
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 10E2E2E764D;
+	Wed, 31 Dec 2025 10:19:32 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.17
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1767149289; cv=none; b=oGn3DbBmZamqOHen3/u5G6x0ox/A861XZzZrko/7YQrLbkRbE3rXo2gRPmdDtYnkZnnwFJQEwxZ7m1A7qEd3i9vkVjDn1XdcpPi2enZqNs80mHconMWXhM1mQNh3iNQncfmkTZuA7Ch2z6na5IuU7E9voOfqK/rW+wR1UpmOaiQ=
+	t=1767176375; cv=none; b=O+qK5oT7gPtM+juMDcLTQEFciUlUvbJDz+4fHFHBTCfNdJZ2/F5PVQbIET8Loa8am7RRa6iKe3D590laF1LFalQIwMZmby+EsAamIfHSHnlT0yOPeeqsnB9t7RX3BvUHOO3R/jSUHDSzgoCWkv+H2S1HPWcniiLyxO6FlF28cOI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1767149289; c=relaxed/simple;
-	bh=DkBhfst4lSXrDuTNtXJsfqGxKCS1IjLpqG2dN67AybY=;
-	h=MIME-Version:Date:From:To:Cc:Message-Id:In-Reply-To:References:
-	 Subject:Content-Type; b=S+f6WTbrXtT0ot12eabGIY7wJ0UnYjn0mU020Dk2Fghf4uQie0gggVF0WfgOFoLpAwXPV4R8rYS+7FZTmaoKKjB7WUCmh9M9ZqWovnexDJn7YhkCF/fQE1Xm0YGZMRQYwpWxhZDOx2OOEa7OCPb51cGHNXfHBsxzLqPC5alffHk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=squebb.ca; spf=pass smtp.mailfrom=squebb.ca; dkim=pass (2048-bit key) header.d=squebb.ca header.i=@squebb.ca header.b=UKma0h3H; dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b=dGXFv00z; arc=none smtp.client-ip=103.168.172.155
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=squebb.ca
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=squebb.ca
+	s=arc-20240116; t=1767176375; c=relaxed/simple;
+	bh=+fvjN0iPO/jSPODeyRMkaTNrupoqHC/Wqjf6fVtJs2w=;
+	h=From:To:Cc:Date:Subject:Message-ID:MIME-Version:Content-Type; b=KIJM8Svdp0SwSb4EJy0aTXNY3Ury55AigNy3m73VKzMCUOliQlE/8wr4p8iRJPuvuLYcc/07VWbG7kD/z1tz5nplAoH7by8x2yY64aDsX5e2psKxldEPeiegNBNMZSobAV1mMSPiRXpUxEz0hxmJY7YCujI3CublU8FsoY9B/pc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=pass smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=kFww3NT0; arc=none smtp.client-ip=192.198.163.17
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=squebb.ca header.i=@squebb.ca header.b="UKma0h3H";
-	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="dGXFv00z"
-Received: from phl-compute-02.internal (phl-compute-02.internal [10.202.2.42])
-	by mailfhigh.phl.internal (Postfix) with ESMTP id BAD421400114;
-	Tue, 30 Dec 2025 21:48:05 -0500 (EST)
-Received: from phl-imap-08 ([10.202.2.84])
-  by phl-compute-02.internal (MEProxy); Tue, 30 Dec 2025 21:48:05 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=squebb.ca; h=cc
-	:cc:content-transfer-encoding:content-type:content-type:date
-	:date:from:from:in-reply-to:in-reply-to:message-id:mime-version
-	:references:reply-to:subject:subject:to:to; s=fm3; t=1767149285;
-	 x=1767235685; bh=Nv7LoQXP3MJzznzVbZQAXOoI3zKhtz6pABTeClGqAKQ=; b=
-	UKma0h3H08ZOmbHtFiSE52VM9y9CZ/eMx9FWBjF5TIX0V9ArexL6U/XC+7VrfHB4
-	I6zIl6FnrksrPoyGlB+nEfQX3x0vf8KEHwPgTpG/RYiECQt83TjJaODF8yWqWoI6
-	tGTUEty1ZO34lkpIVjaNVZmt12pIpoyMoPlwyslEQnruUVf4sBNtSBMDVGz7YTHE
-	N5w3CXYeytipJru5ZYHCzVH6thHRuqjUyQsAOJYWJxap0OEMd58hr6zoY1iyTAJy
-	Bzk0E1dJjzXCmyjz8es868Xf38rysADubchHIAG+f+oZylw9BF74/Vhu56rwWPgl
-	CaIrysKkaY3n6SdMwoNl9Q==
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-	messagingengine.com; h=cc:cc:content-transfer-encoding
-	:content-type:content-type:date:date:feedback-id:feedback-id
-	:from:from:in-reply-to:in-reply-to:message-id:mime-version
-	:references:reply-to:subject:subject:to:to:x-me-proxy
-	:x-me-sender:x-me-sender:x-sasl-enc; s=fm2; t=1767149285; x=
-	1767235685; bh=Nv7LoQXP3MJzznzVbZQAXOoI3zKhtz6pABTeClGqAKQ=; b=d
-	GXFv00zOiRzkU25cRtozaDe/5d79rwuYBU7wf8Flxw3Ruval0mc1+9wrxHYiqnMv
-	Rj1JuNKC7U7bIQe6qnogyi+IgqTGBddE9I+1BACFvIHJui2+rXrqQL3zouB2O7sX
-	XyxVGMCUnDRJbBGsUVUqRvZe5r6kjdvt3saP0lIWQWw5dPN4MTbM6EWiIjEsWnQp
-	gSfZ65PzJD5zz9T6G2XzgGyFYXSGUgijFwWBgk0qvQ8GlFZXj8MQoXo6oUEOO4HU
-	YCh979gcz442P3815IdAPUCcSaBHdLy7TtSYFaANgtBHBjrIAhN9O7qgBw3c5mrM
-	+yj7DO4XfPMXwEaOyVJAA==
-X-ME-Sender: <xms:5Y5UaWyEvQNsmWtpN9aw2_OLeX-m0hU3UjrkrnVWUbbx8CGXFmQnqw>
-    <xme:5Y5UadE9yXPcSSN5Klz7nqPF069e-AC4wSa9oQMhZRhsq4pd90B-4S1IAPk2RcbA6
-    kAjJrbBM96n_eK0UBgEAxBHBmKxMfDO9GD1HFooes8eK39AKC0BvM8>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeefgedrtddtgdekudejgecutefuodetggdotefrod
-    ftvfcurfhrohhfihhlvgemucfhrghsthforghilhdpuffrtefokffrpgfnqfghnecuuegr
-    ihhlohhuthemuceftddtnecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenucfjug
-    hrpefoggffhffvvefkjghfufgtgfesthhqredtredtjeenucfhrhhomhepfdforghrkhcu
-    rfgvrghrshhonhdfuceomhhpvggrrhhsohhnqdhlvghnohhvohesshhquhgvsggsrdgtrg
-    eqnecuggftrfgrthhtvghrnhephfevkeejueeukeefhfelleejheeuudfgteffvdetkeff
-    jeduleffvdejkeefhedvnecuvehluhhsthgvrhfuihiivgeptdenucfrrghrrghmpehmrg
-    hilhhfrhhomhepmhhpvggrrhhsohhnqdhlvghnohhvohesshhquhgvsggsrdgtrgdpnhgs
-    pghrtghpthhtohepiedpmhhouggvpehsmhhtphhouhhtpdhrtghpthhtohepsggvnhhjrg
-    hmihhnrdhphhhilhhiphegleehsehgmhgrihhlrdgtohhmpdhrtghpthhtohepuggvrhgv
-    khhjohhhnhdrtghlrghrkhesghhmrghilhdrtghomhdprhgtphhtthhopehhrghnshhgse
-    hkvghrnhgvlhdrohhrghdprhgtphhtthhopehilhhpohdrjhgrrhhvihhnvghnsehlihhn
-    uhigrdhinhhtvghlrdgtohhmpdhrtghpthhtoheplhhinhhugidqkhgvrhhnvghlsehvgh
-    gvrhdrkhgvrhhnvghlrdhorhhgpdhrtghpthhtohepphhlrghtfhhorhhmqdgurhhivhgv
-    rhdqgiekieesvhhgvghrrdhkvghrnhgvlhdrohhrgh
-X-ME-Proxy: <xmx:5Y5UaTWv9n9DZPVarZK8rJf-Rt7qjW6nuyNM3aKbl7j-WdV6wKNiow>
-    <xmx:5Y5Uad07HJfAS71soffWj6nT4fMKK_XJ7m-lzYR3FO_2uzet3as1RQ>
-    <xmx:5Y5UaRrnzXVQ0Azzfk2uLzXAFvmUH7Sp70-QFjnzIUdacw_iacm1HQ>
-    <xmx:5Y5UaUUw9ExeOKm3FAw1I19YeDlvlx0z_Xitv0Pz8oXzJaB2oKUccw>
-    <xmx:5Y5UaS50OEPjC9n_lNB6tHv8qmYkIDP_8r0AiEV42u-_YHp2dra4McU3>
-Feedback-ID: ibe194615:Fastmail
-Received: by mailuser.phl.internal (Postfix, from userid 501)
-	id 372812CE0072; Tue, 30 Dec 2025 21:48:05 -0500 (EST)
-X-Mailer: MessagingEngine.com Webmail Interface
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="kFww3NT0"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1767176373; x=1798712373;
+  h=from:to:cc:date:subject:message-id:mime-version:
+   content-transfer-encoding;
+  bh=+fvjN0iPO/jSPODeyRMkaTNrupoqHC/Wqjf6fVtJs2w=;
+  b=kFww3NT0zaLe2P+oOcd3vIycid4sE9w2c+nLl5EmxzTRic0OnhmN1sy/
+   5Q3NvHlG0rRIa6u7Lt5bA6SGjfWW1lHisKUswR1VKZjhZQwb+WGB2Rjr3
+   sAkTlhgj8Zb5cEDLN1JuC+NWdh2ga/ehpzjcmODN3RQGQGgDtBp+O+V4y
+   K2agzcuJF3f93h7Y3rVjz2Uy2St9p8XAoWW79SRw08hfCwPvyz6cNUvvd
+   Q6chPxDbAwPADAEBqwredjNUXsphmd2dwfs/jyHJQkK0oLtwSeqFSLKwu
+   3hi0aWySnRl/ls7zeyCNg/ZsA86kl6zvajRECx9reAekFT2xQkH/Yh3mo
+   g==;
+X-CSE-ConnectionGUID: TPFM/RoFSNG5uiLi3ESPnw==
+X-CSE-MsgGUID: myRniLonQ4mpKIkVFhTkNA==
+X-IronPort-AV: E=McAfee;i="6800,10657,11657"; a="68639368"
+X-IronPort-AV: E=Sophos;i="6.21,191,1763452800"; 
+   d="scan'208";a="68639368"
+Received: from fmviesa010.fm.intel.com ([10.60.135.150])
+  by fmvoesa111.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 31 Dec 2025 02:19:32 -0800
+X-CSE-ConnectionGUID: EhTKYw96RlCt7Q7BK6LehQ==
+X-CSE-MsgGUID: 1v3JQRgbR46T0GkJqHe9FQ==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.21,191,1763452800"; 
+   d="scan'208";a="202362503"
+Received: from ijarvine-mobl1.ger.corp.intel.com (HELO localhost) ([10.245.245.186])
+  by fmviesa010-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 31 Dec 2025 02:19:30 -0800
+From: =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
+To: Linus Torvalds <torvalds@linux-foundation.org>
+Cc: LKML <linux-kernel@vger.kernel.org>, PDx86 <platform-driver-x86@vger.kernel.org>, Hans de Goede <hansg@kernel.org>, Andy Shevchenko <andy@kernel.org>
+Date: Wed, 31 Dec 2025 12:18:42 +0200
+Subject: [GIT PULL] platform-drivers-x86 for v6.19-2
+Message-ID: <pdx86-pr-20251231121842-433127174@linux.intel.com>
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-ThreadId: AgG1KmZ3azLF
-Date: Tue, 30 Dec 2025 21:47:44 -0500
-From: "Mark Pearson" <mpearson-lenovo@squebb.ca>
-To: "Benjamin Philip" <benjamin.philip495@gmail.com>,
- =?UTF-8?Q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
-Cc: 
- "platform-driver-x86@vger.kernel.org" <platform-driver-x86@vger.kernel.org>,
- LKML <linux-kernel@vger.kernel.org>,
- "Derek J . Clark" <derekjohn.clark@gmail.com>,
- "Hans de Goede" <hansg@kernel.org>
-Message-Id: <d182f05e-2a26-4f0a-af2f-dcecee25fc95@app.fastmail.com>
-In-Reply-To: <87344shcsi.fsf@gmail.com>
-References: 
- <CAMEXYWcY-7Kn8V1EwZ=fUPFWDwnAHEuferY9Ap0zO6xfmXx4JQ@mail.gmail.com>
- <20251223191932.946794-1-benjamin.philip495@gmail.com>
- <CAMEXYWf_m8PL-ZGAv_1ufLp_1ryQK15ziaO90_OxmMV4VkpTPQ@mail.gmail.com>
- <572f5363-c23b-435f-a36b-7b708704a3c1@app.fastmail.com>
- <CAMEXYWf9TF=O_vZTSsc4T7Go4dVw=xw5zZfGWKhGWu8d4eHwrg@mail.gmail.com>
- <3b1fe510-4849-1950-1086-bc52bc43e65d@linux.intel.com>
- <877bu5gr48.fsf@gmail.com>
- <69c27b14-5943-eab1-407c-209d8d484bc1@linux.intel.com>
- <05eb6019-5ed5-463a-b556-27792ea43568@app.fastmail.com>
- <87344shcsi.fsf@gmail.com>
-Subject: Re: [PATCH 4/5] platform/x86: think-lmi: fix column limit overflow
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+
+Hi Linus,
+
+Here is a platform-drivers-x86 fixes PR for v6.19.
+
+Fixes and New HW Support
+
+- alienware-wmi-wmax: Area-51, x16, and 16X Aurora laptops support
+
+- asus-armoury:
+  - Fix FA507R PPT data
+  - Add TDP data for more laptop models
+
+- asus-nb-wmi: Asus Zenbook 14 display toggle key support
+
+- dell-lis3lv02d: Dell Latitude 5400 support
+
+- hp-bioscfg: Fix out-of-bounds array access in ACPI package parsing
+
+- ibm_rtl: Fix EBDA signature search pointer arithmetic
+
+- ideapad-laptop: Reassign KEY_CUT to KEY_SELECTIVE_SCREENSHOT
+
+- intel/pmt:
+  - Fix kobject memory leak on init failure
+  - Use valid pointers on error handling path
+
+- intel/vsec: Correct kernel doc comments
+
+- mellanox: mlxbf-pmc: Fix event names
+
+- msi-laptop: Add sysfs_remove_group()
+
+- samsumg-galaxybook: Do not cast pointer to a shorter type
+
+- think-lmi: WMI certificate thumbprint support for ThinkCenter
+
+- uniwill: Tuxedo Book BA15 Gen10 support
+
+Regards, i.
 
 
+The following changes since commit 8f0b4cce4481fb22653697cced8d0d04027cb1e8:
 
-On Mon, Dec 29, 2025, at 10:24 PM, Benjamin Philip wrote:
-> "Mark Pearson" <mpearson-lenovo@squebb.ca> writes:
->
->> On Mon, Dec 29, 2025, at 12:32 PM, Ilpo J=C3=A4rvinen wrote:
->>> On Mon, 29 Dec 2025, Benjamin Philip wrote:
->>>> Ilpo J=C3=A4rvinen <ilpo.jarvinen@linux.intel.com> writes:
->>>> > On Wed, 24 Dec 2025, Benjamin Philip wrote:
->>>> >> "Mark Pearson" <mpearson-lenovo@squebb.ca> writes:
->>>> >> > On Tue, Dec 23, 2025, at 2:24 PM, Benjamin Philip wrote:
->>>> >> >> This commit handles some column limit overflows (that occur a=
-fter fixing
->>>> >> >> their alignment), i.e. the following check:
->>>> >> >>
->>>> >> >> CHECK: line length of ... exceeds 100 columns
->>>> >> >>
->>>> >> >> by defining a constant opt, and replacing the offending
->>>> >> >> expression with opt.
->>>> >> >>
->>>> >> >> Signed-off-by: Benjamin Philip <benjamin.philip495@gmail.com>
->>>> >> >> ---
->>>> >> >>  drivers/platform/x86/lenovo/think-lmi.c | 31 +++++++++++++++=
-----------
->>>> >> >>  1 file changed, 19 insertions(+), 12 deletions(-)
->>>> >> >>
->>>> >> >> diff --git a/drivers/platform/x86/lenovo/think-lmi.c
->>>> >> >> b/drivers/platform/x86/lenovo/think-lmi.c
->>>> >> >> index 1ada4d800383..07ba0d84720a 100644
->>>> >> >> --- a/drivers/platform/x86/lenovo/think-lmi.c
->>>> >> >> +++ b/drivers/platform/x86/lenovo/think-lmi.c
->>>> >> >> @@ -1083,12 +1083,13 @@ static ssize_t type_show(struct kobje=
-ct *kobj,
->>>> >> >> struct kobj_attribute *attr,
->>>> >> >>  }
->>>> >> >>
->>>> >> >>  static ssize_t current_value_store(struct kobject *kobj,
->>>> >> >> -		struct kobj_attribute *attr,
->>>> >> >> -		const char *buf, size_t count)
->>>> >> >> +				   struct kobj_attribute *attr, const char *buf,
->>>> >> >> +				   size_t count)
->>>> >> >>  {
->>>> >> >>  	struct tlmi_attr_setting *setting =3D to_tlmi_attr_setting(=
-kobj);
->>>> >> >>  	char *set_str =3D NULL, *new_setting =3D NULL;
->>>> >> >>  	char *auth_str =3D NULL;
->>>> >> >> +	const char *opt;
->>>> >> >>  	int ret;
->>>> >> >>
->>>> >> >>  	if (!tlmi_priv.can_set_bios_settings)
->>>> >> >> @@ -1163,10 +1164,11 @@ static ssize_t current_value_store(st=
-ruct kobject *kobj,
->>>> >> >>  			ret =3D tlmi_save_bios_settings("");
->>>> >> >>  	} else { /* old non-opcode based authentication method (dep=
-recated) */
->>>> >> >>  		if (tlmi_priv.pwd_admin->pwd_enabled && tlmi_priv.pwd_admi=
-n->password[0]) {
->>>> >> >> +			opt =3D encoding_options[tlmi_priv.pwd_admin->encoding];
->>>> >> >>  			auth_str =3D kasprintf(GFP_KERNEL, "%s,%s,%s;",
->>>> >> >> -					tlmi_priv.pwd_admin->password,
->>>> >> >> -					encoding_options[tlmi_priv.pwd_admin->encoding],
->>>> >> >> -					tlmi_priv.pwd_admin->kbdlang);
->>>> >> >> +					     tlmi_priv.pwd_admin->password,
->>>> >> >> +					     opt,
->>>> >> >> +					     tlmi_priv.pwd_admin->kbdlang);
->>>> >> >>  			if (!auth_str) {
->>>> >> >>  				ret =3D -ENOMEM;
->>>> >> >>  				goto out;
->>>> >> >> @@ -1299,6 +1301,7 @@ static ssize_t save_settings_store(stru=
-ct
->>>> >> >> kobject *kobj, struct kobj_attribute *
->>>> >> >>  				   const char *buf, size_t count)
->>>> >> >>  {
->>>> >> >>  	char *auth_str =3D NULL;
->>>> >> >> +	const char *opt;
->>>> >> >>  	int ret =3D 0;
->>>> >> >>  	int cmd;
->>>> >> >>
->>>> >> >> @@ -1347,9 +1350,10 @@ static ssize_t save_settings_store(str=
-uct
->>>> >> >> kobject *kobj, struct kobj_attribute *
->>>> >> >>  			ret =3D tlmi_save_bios_settings("");
->>>> >> >>  		} else { /* old non-opcode based authentication method (de=
-precated) */
->>>> >> >>  			if (tlmi_priv.pwd_admin->pwd_enabled && tlmi_priv.pwd_adm=
-in->password[0]) {
->>>> >> >> +				opt =3D encoding_options[tlmi_priv.pwd_admin->encoding];
->>>> >> >>  				auth_str =3D kasprintf(GFP_KERNEL, "%s,%s,%s;",
->>>> >> >>  						     tlmi_priv.pwd_admin->password,
->>>> >> >> -						     encoding_options[tlmi_priv.pwd_admin->encoding],
->>>> >> >> +						     opt,
->>>> >> >>  						     tlmi_priv.pwd_admin->kbdlang);
->>>> >> >>  				if (!auth_str) {
->>>> >> >>  					ret =3D -ENOMEM;
->>>> >> >> @@ -1381,11 +1385,13 @@ static ssize_t save_settings_store(st=
-ruct
->>>> >> >> kobject *kobj, struct kobj_attribute *
->>>> >> >>  static struct kobj_attribute save_settings =3D __ATTR_RW(sav=
-e_settings);
->>>> >> >>
->>>> >> >>  /* ---- Debug
->>>> >> >> interface----------------------------------------------------=
------
->>>> >> >> */
->>>> >> >> -static ssize_t debug_cmd_store(struct kobject *kobj, struct
->>>> >> >> kobj_attribute *attr,
->>>> >> >> -				const char *buf, size_t count)
->>>> >> >> +static ssize_t debug_cmd_store(struct kobject *kobj,
->>>> >> >> +			       struct kobj_attribute *attr, const char *buf,
->>>> >> >> +			       size_t count)
->>>> >> >>  {
->>>> >> >>  	char *set_str =3D NULL, *new_setting =3D NULL;
->>>> >> >>  	char *auth_str =3D NULL;
->>>> >> >> +	const char *opt;
->>>> >> >>  	int ret;
->>>> >> >>
->>>> >> >>  	if (!tlmi_priv.can_debug_cmd)
->>>> >> >> @@ -1397,10 +1403,11 @@ static ssize_t debug_cmd_store(struct=
- kobject
->>>> >> >> *kobj, struct kobj_attribute *attr
->>>> >> >>  		return -ENOMEM;
->>>> >> >>
->>>> >> >>  	if (tlmi_priv.pwd_admin->pwd_enabled && tlmi_priv.pwd_admin=
-->password[0]) {
->>>> >> >> +		opt =3D encoding_options[tlmi_priv.pwd_admin->encoding];
->>>> >> >>  		auth_str =3D kasprintf(GFP_KERNEL, "%s,%s,%s;",
->>>> >> >> -				tlmi_priv.pwd_admin->password,
->>>> >> >> -				encoding_options[tlmi_priv.pwd_admin->encoding],
->>>> >> >> -				tlmi_priv.pwd_admin->kbdlang);
->>>> >> >> +				     tlmi_priv.pwd_admin->password,
->>>> >> >> +				     opt,
->>>> >> >> +				     tlmi_priv.pwd_admin->kbdlang);
->>>> >> >>  		if (!auth_str) {
->>>> >> >>  			ret =3D -ENOMEM;
->>>> >> >>  			goto out;
->>>> >> >> @@ -1775,7 +1782,7 @@ static int tlmi_analyze(struct wmi_devi=
-ce *wdev)
->>>> >> >>  						ffs(tlmi_priv.pwdcfg.ext.hdd_user_password) - 1;
->>>> >> >>  			}
->>>> >> >>  			if (tlmi_priv.pwdcfg.ext.nvme_user_password ||
->>>> >> >> -					tlmi_priv.pwdcfg.ext.nvme_master_password) {
->>>> >> >> +			    tlmi_priv.pwdcfg.ext.nvme_master_password) {
->>>> >> >>  				tlmi_priv.pwd_nvme->pwd_enabled =3D true;
->>>> >> >>  				if (tlmi_priv.pwdcfg.ext.nvme_master_password)
->>>> >> >>  					tlmi_priv.pwd_nvme->index =3D
->>>> >> >> --
->>>> >> >> 2.52.0
->>>> >> >
->>>> >> > I'll defer to the pdx86 reviewers for this set of changes.
->>>> >> >
->>>> >> > This seems to me to make things more complicated than needed, =
-purely=20
->>>> >> > to address a 100 column limit. I personally don't like the cha=
-nge.=20
->>>> >> >
->>>> >> > Nothing wrong with the code, and if more experienced maintaine=
-rs prefer it, I'm happy to defer to them. Otherwise it seems to me noise=
- for the sake of noise I'm afraid
->>>> >> >
->>>> >> > Mark
->>>> >>=20
->>>> >> An alternative could be to set this a constant pwd_admin to
->>>> >> tlmi_priv.pwd_admin. There are 13 other references to
->>>> >> tlmi_priv.pwd_admin in one function alone, so maybe it might be =
-a more
->>>> >> meaningful improvement?
->>>> >
->>>> > Hi,
->>>> >
->>>> > The general theme in this driver seems to be that tlmi_priv.pwd_a=
-dmin=20
->>>> > usually causes long lines so introducing a local variable for it =
-in such=20
->>>> > functions would certainly help.
->>>> >
->>>> > This probably came to be when pwd_admin was migrated over into tl=
-mi_priv=20
->>>> > which certainly was correct place for it, but case with the cost =
-of adding=20
->>>> > into the line lengths.
->>>> >
->>>>=20
->>>> In this case, would you prefer that a local variable for pwd_admin =
-be
->>>> introduced instead of variables for values in the long lines?=20
->>>
->>> Mark who's the maintainer seems to be against it, so I don't want to=
- step
->>> too strongly on his lot in this. It's merely my opinion how we norma=
-lly=20
->>> handle cases like this (I probably didn't express that clearly enoug=
-h).
->>>
->>
->> I don't have a strong opinion :) If it's business as usual, then it's=
- fine and we can include it.
->>
->> From my perspective, it would be useful to know if it's been tested o=
-n real HW, and (if so) which platforms. Unfortunately Thinkpad, ThinkCen=
-ter and ThinkStation all use this module and all have their own little q=
-uirks.=20
->> I'll do some testing here (soonish...) to confirm they're all still s=
-ane after (they should be) and throw in a tested-by tag.
->>
->> Mark
->
-> Before you do that I can send a v2 with the parentheses changes remove=
-d.
-> If you can point to the tests in particular you run, I can test on a
-> Thinkpad as well before sending.
->
-OK.
-Testing - nothing too exciting, just check that everything shows up unde=
-r /sys/class/firmware-attributes and check a setting can be changed back=
-/forth.
+  Linux 6.19-rc1 (2025-12-14 16:05:07 +1200)
 
-Mark
+are available in the Git repository at:
+
+  https://git.kernel.org/pub/scm/linux/kernel/git/pdx86/platform-drivers-x86.git tags/platform-drivers-x86-v6.19-2
+
+for you to fetch changes up to c6703f10c8cc36f53b867bdbdd5bacaaa47ce799:
+
+  platform/x86: asus-armoury: add support for G835LW (2025-12-30 12:51:46 +0200)
+
+----------------------------------------------------------------
+platform-drivers-x86 for v6.19-2
+
+Fixes and New HW Support
+
+- alienware-wmi-wmax: Area-51, x16, and 16X Aurora laptops support
+
+- asus-armoury:
+  - Fix FA507R PPT data
+  - Add TDP data for more laptop models
+
+- asus-nb-wmi: Asus Zenbook 14 display toggle key support
+
+- dell-lis3lv02d: Dell Latitude 5400 support
+
+- hp-bioscfg: Fix out-of-bounds array access in ACPI package parsing
+
+- ibm_rtl: Fix EBDA signature search pointer arithmetic
+
+- ideapad-laptop: Reassign KEY_CUT to KEY_SELECTIVE_SCREENSHOT
+
+- intel/pmt:
+  - Fix kobject memory leak on init failure
+  - Use valid pointers on error handling path
+
+- intel/vsec: Correct kernel doc comments
+
+- mellanox: mlxbf-pmc: Fix event names
+
+- msi-laptop: Add sysfs_remove_group()
+
+- samsumg-galaxybook: Do not cast pointer to a shorter type
+
+- think-lmi: WMI certificate thumbprint support for ThinkCenter
+
+- uniwill: Tuxedo Book BA15 Gen10 support
+
+The following is an automated shortlog grouped by driver:
+
+alienware-wmi-wmax:
+ -  Add AWCC support for Alienware x16
+ -  Add support for Alienware 16X Aurora
+ -  Add support for new Area-51 laptops
+
+asus-armoury:
+ -  add support for FA608UM
+ -  add support for G615LR
+ -  add support for G835LW
+ -  add support for GA403WR
+ -  add support for GU605CR
+ -  fix ppt data for FA507R
+
+asus-nb-wmi:
+ -  Add keymap for display toggle
+
+dell-lis3lv02d:
+ -  Add Latitude 5400
+
+hp-bioscfg:
+ -  Fix out-of-bounds array access in ACPI package parsing
+
+ibm_rtl:
+ -  fix EBDA signature search pointer arithmetic
+
+ideapad-laptop:
+ -  Reassign KEY_CUT to KEY_SELECTIVE_SCREENSHOT
+
+intel/pmt/discovery:
+ -  use valid device pointer in dev_err_probe
+
+intel/pmt:
+ -  Fix kobject memory leak on init failure
+
+intel/vsec:
+ -  correct kernel-doc comments
+
+mlxbf-pmc:
+ -  Remove trailing whitespaces from event names
+
+msi-laptop:
+ -  add missing sysfs_remove_group()
+
+samsung-galaxybook:
+ -  Fix problematic pointer cast
+
+think-lmi:
+ -  Add WMI certificate thumbprint support for ThinkCenter
+
+uniwill:
+ -  Add TUXEDO Book BA15 Gen10
+
+----------------------------------------------------------------
+Alok Tiwari (1):
+      platform/x86/intel/pmt/discovery: use valid device pointer in dev_err_probe
+
+Armin Wolf (1):
+      platform/x86: samsung-galaxybook: Fix problematic pointer cast
+
+Denis Benato (6):
+      platform/x86: asus-armoury: add support for GU605CR
+      platform/x86: asus-armoury: add support for GA403WR
+      platform/x86: asus-armoury: add support for FA608UM
+      platform/x86: asus-armoury: add support for G615LR
+      platform/x86: asus-armoury: fix ppt data for FA507R
+      platform/x86: asus-armoury: add support for G835LW
+
+Dmytro Bagrii (1):
+      platform/x86: dell-lis3lv02d: Add Latitude 5400
+
+Junrui Luo (2):
+      platform/x86: ibm_rtl: fix EBDA signature search pointer arithmetic
+      platform/x86: hp-bioscfg: Fix out-of-bounds array access in ACPI package parsing
+
+Kaushlendra Kumar (1):
+      platform/x86/intel/pmt: Fix kobject memory leak on init failure
+
+Kurt Borja (3):
+      platform/x86: alienware-wmi-wmax: Add support for new Area-51 laptops
+      platform/x86: alienware-wmi-wmax: Add AWCC support for Alienware x16
+      platform/x86: alienware-wmi-wmax: Add support for Alienware 16X Aurora
+
+Mark Pearson (1):
+      platform/x86: think-lmi: Add WMI certificate thumbprint support for ThinkCenter
+
+Randy Dunlap (1):
+      platform/x86/intel/vsec: correct kernel-doc comments
+
+Shravan Kumar Ramani (1):
+      platform/mellanox: mlxbf-pmc: Remove trailing whitespaces from event names
+
+Thomas Fourier (1):
+      platform/x86: msi-laptop: add missing sysfs_remove_group()
+
+Tim Wassink (1):
+      platform/x86: asus-nb-wmi: Add keymap for display toggle
+
+Tomáš Hnyk (1):
+      platform/x86: ideapad-laptop: Reassign KEY_CUT to KEY_SELECTIVE_SCREENSHOT
+
+Werner Sembach (1):
+      platform/x86/uniwill: Add TUXEDO Book BA15 Gen10
+
+ drivers/platform/mellanox/mlxbf-pmc.c              |  14 +-
+ drivers/platform/x86/asus-armoury.h                | 176 ++++++++++++++++++++-
+ drivers/platform/x86/asus-nb-wmi.c                 |   1 +
+ drivers/platform/x86/dell/alienware-wmi-wmax.c     |  32 ++++
+ drivers/platform/x86/dell/dell-lis3lv02d.c         |   1 +
+ .../platform/x86/hp/hp-bioscfg/enum-attributes.c   |   4 +-
+ .../platform/x86/hp/hp-bioscfg/int-attributes.c    |   2 +-
+ .../x86/hp/hp-bioscfg/order-list-attributes.c      |   5 +
+ .../x86/hp/hp-bioscfg/passwdobj-attributes.c       |   5 +
+ .../platform/x86/hp/hp-bioscfg/string-attributes.c |   2 +-
+ drivers/platform/x86/ibm_rtl.c                     |   2 +-
+ drivers/platform/x86/intel/pmt/discovery.c         |   8 +-
+ drivers/platform/x86/lenovo/ideapad-laptop.c       |   2 +-
+ drivers/platform/x86/lenovo/think-lmi.c            |   6 +-
+ drivers/platform/x86/msi-laptop.c                  |   3 +
+ drivers/platform/x86/samsung-galaxybook.c          |   9 +-
+ drivers/platform/x86/uniwill/uniwill-acpi.c        |   7 +
+ include/linux/intel_vsec.h                         |  17 +-
+ 18 files changed, 265 insertions(+), 31 deletions(-)
