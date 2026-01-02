@@ -1,68 +1,99 @@
-Received: from frasgout.his.huawei.com (frasgout.his.huawei.com [185.176.79.56])
+Received: from out-177.mta0.migadu.com (out-177.mta0.migadu.com [91.218.175.177])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E915B2EC09B;
-	Fri,  2 Jan 2026 11:56:57 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.176.79.56
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E5915245014
+	for <platform-driver-x86@vger.kernel.org>; Fri,  2 Jan 2026 23:43:50 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.218.175.177
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1767355020; cv=none; b=L9MK4qBITBK34LD9I95mN93fqEIa+A7W314oAoDqwWwou0wywzM2Z8dOLwuKA4+VKKNL6zVeDYJ7j1xuXi+M32nzGcNFxwLHH/9XRn1yPso/5t2ZDnyQowwNpQ7NbhnCmt+ghR7tcFiwZS4sn21IEyHP+ijaVD7Xic5Qpw3iJac=
+	t=1767397434; cv=none; b=KqO+VZuDUY6jr1AG3XK3oHq73lcYw8IGuoEfNMlu0AJRAnz5pm6eecc0eV49dTTJ53kNPvYys5Byj2BAsrAEASII/awQLcElGSx5W3L3adwVNORh9mCDRTrd07QlPhclzQW5VsZ5tEJgGdrztA9d1qPzyX4I9ioOT4D3acPBdO0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1767355020; c=relaxed/simple;
-	bh=W1MRgIFZb+sXlokt40e9WqCJbxhWIGkQEC8U7O9cie0=;
-	h=Date:From:To:CC:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=WTAhDl6MPM/dfP+IYaixxOWtYWiMJ16gVkHuKFdR5MaIbz8hFenSI/o2Ou/45qWIPfKJXivQZYW7K1MEdSJHEurbji+Y8iEmu3xPOHY6XZinXsy1e1+X6dFZhDzMrT7Cd9VF3OZaqNb1EH4PRPdYaot+BzsX5JBlchMF8hKTOtg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=185.176.79.56
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
-Received: from mail.maildlp.com (unknown [172.18.224.83])
-	by frasgout.his.huawei.com (SkyGuard) with ESMTPS id 4djMbM4LfdzJ468k;
-	Fri,  2 Jan 2026 19:55:59 +0800 (CST)
-Received: from dubpeml100005.china.huawei.com (unknown [7.214.146.113])
-	by mail.maildlp.com (Postfix) with ESMTPS id 06D7840086;
-	Fri,  2 Jan 2026 19:56:55 +0800 (CST)
-Received: from localhost (10.203.177.15) by dubpeml100005.china.huawei.com
- (7.214.146.113) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.36; Fri, 2 Jan
- 2026 11:56:54 +0000
-Date: Fri, 2 Jan 2026 11:56:53 +0000
-From: Jonathan Cameron <jonathan.cameron@huawei.com>
-To: "Rafael J. Wysocki" <rafael@kernel.org>
-CC: Linux ACPI <linux-acpi@vger.kernel.org>, LKML
-	<linux-kernel@vger.kernel.org>, Bjorn Helgaas <helgaas@kernel.org>, "Zhang
- Rui" <rui.zhang@intel.com>, Chen Yu <yu.c.chen@intel.com>, Andy Shevchenko
-	<andriy.shevchenko@linux.intel.com>, Mika Westerberg
-	<mika.westerberg@linux.intel.com>, Linux PCI <linux-pci@vger.kernel.org>,
-	Alex Hung <alexhung@gmail.com>, Hans de Goede <hansg@kernel.org>, Ilpo
- =?ISO-8859-1?Q?J=E4rvinen?= <ilpo.jarvinen@linux.intel.com>,
-	<platform-driver-x86@vger.kernel.org>, AceLan Kao <acelan.kao@canonical.com>
-Subject: Re: [PATCH v1] ACPI: scan: Use resource_type() for resource type
- checking
-Message-ID: <20260102115653.000027f0@huawei.com>
-In-Reply-To: <12814730.O9o76ZdvQC@rafael.j.wysocki>
-References: <12814730.O9o76ZdvQC@rafael.j.wysocki>
-X-Mailer: Claws Mail 4.3.0 (GTK 3.24.42; x86_64-w64-mingw32)
+	s=arc-20240116; t=1767397434; c=relaxed/simple;
+	bh=lJF7koj7xndjOROAsXcmMbeiumqurimC2NVaaQ6nG7s=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version:Content-Type; b=gcycBOBmxeLzFTEWHAWok2Q8fO4K4Z1+GA/4iVAWMDiTPSNomE2ynrC6/DK+WX8FkInayMwFXmN+cL01KxKj+J+PveiGQVHK2PRMfjCb/6olG6Xm4+LnDC6nH9qk4NltuLSbAnEz6nnV25zB+AtJ1coYPn2JUF4KCl4Ibzzdom4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=aTTDxtU2; arc=none smtp.client-ip=91.218.175.177
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="aTTDxtU2"
+X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
+	t=1767397428;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding;
+	bh=ocqsrRDl31aKDAj1je0lVeXsT62eKn1DEtpqHUCuHjE=;
+	b=aTTDxtU2oOZTMhhAeYK/8xq65LvJiTtEBgC3dEybUE0TLd7bg4nxBxEk74dasGsIul4ecf
+	LH69NMb4936X5+6murQVSW2KHS8hVSptTjZGEwjeHh01PBdilPRE+ORJp0xDvRla9DuKEQ
+	a0vJJudt0bqoqaaXW1sZzTd3HjLfbco=
+From: Denis Benato <denis.benato@linux.dev>
+To: linux-kernel@vger.kernel.org
+Cc: platform-driver-x86@vger.kernel.org,
+	"Hans de Goede" <hansg@kernel.org>,
+	=?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>,
+	"Luke D . Jones" <luke@ljones.dev>,
+	"Mateusz Schyboll" <dragonn@op.pl>,
+	"Denis Benato" <benato.denis96@gmail.com>,
+	Denis Benato <denis.benato@linux.dev>
+Subject: [PATCH v4 0/3] platform/x86: asus-wmi: move keyboard control firmware attributes
+Date: Sat,  3 Jan 2026 00:43:41 +0100
+Message-ID: <20260102234344.366227-1-denis.benato@linux.dev>
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="US-ASCII"
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: lhrpeml500011.china.huawei.com (7.191.174.215) To
- dubpeml100005.china.huawei.com (7.214.146.113)
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+X-Migadu-Flow: FLOW_OUT
 
-On Tue, 30 Dec 2025 10:57:34 +0100
-"Rafael J. Wysocki" <rafael@kernel.org> wrote:
+Hi all,
 
-> From: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
-> 
-> To follow a well-established existing pattern, use resource_type() for
-> resource type checking in acpi_scan_claim_resources().
-> 
-> No intentional functional impact.
-> 
-> Signed-off-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
-Reviewed-by: Jonathan Cameron <jonathan.cameron@huawei.com>
+I was recently reading through the asusctl issue tracker and I found
+out that some users have been having troubles with the keyboard RGB control
+that was working before since the creation of asus-armoury and subequent
+deprecation of old sysfs attributes.
 
+This patch series aims to re-introduce those attributes in asus-armoury
+so that userspace tools can still control keyboard RGB lighting
+without having to rely on deprecated asus-wmi attributes.
+
+In addition to that, since disabling OOBE is essential for controlling
+LEDs on some models and it was incorrectly tied to deprecated attributes,
+this patch series also fixes sending OOBE at probe time.
+
+Link: https://gitlab.com/asus-linux/asusctl/-/issues/619
+
+Regards,
+Denis
+
+Changelog:
+- v1
+  - Initial submission
+- v2
+  - asus-armoury: drivers should be silent on success
+  - asus-armoury: make better use of __free annotation
+- v3
+  - asus-wmi: use GENMASK for flags
+  - asus-armoury: fix error handling in keyboard attribute creation
+  - asus-armoury: fix logic bug in error path
+  - asus-armoury: use proper defines for keyboard state flags
+- v4
+  - asus-armoury: reorder variable declarations
+  - asus-armoury: add bitfields.h include for BIT and FIELD_PREP
+  - asus-armoury: reorganize armoury_kbd_state() for clarity
+
+Denis Benato (3):
+  platform/x86: asus-wmi: explicitly mark more code with
+    CONFIG_ASUS_WMI_DEPRECATED_ATTRS
+  platform/x86: asus-wmi: fix sending OOBE at probe
+  platform/x86: asus-armoury: add keyboard control firmware attributes
+
+ drivers/platform/x86/asus-armoury.c        | 253 +++++++++++++++++++++
+ drivers/platform/x86/asus-wmi.c            |  13 +-
+ include/linux/platform_data/x86/asus-wmi.h |  18 ++
+ 3 files changed, 283 insertions(+), 1 deletion(-)
+
+-- 
+2.52.0
 
