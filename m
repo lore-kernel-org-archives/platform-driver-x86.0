@@ -1,108 +1,68 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.7])
+Received: from frasgout.his.huawei.com (frasgout.his.huawei.com [185.176.79.56])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CEB0126F2B9;
-	Fri,  2 Jan 2026 11:29:27 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.7
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E915B2EC09B;
+	Fri,  2 Jan 2026 11:56:57 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.176.79.56
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1767353369; cv=none; b=OcfxKUDG5fY2AUhSAl2+DYP85OjqkSRwR8iUDpasDUS0B83Fd5Ka8bJKpk2EOWivTfIQfsmJlrer58MUwOSnHk4PV5BHMkUsaox/USGiIEiZz90QwaHWN8JBtBBKH0kySTsNbVldJN7Tf6xgaIivoXc2YpuOkR5hwc+rB7QqUIE=
+	t=1767355020; cv=none; b=L9MK4qBITBK34LD9I95mN93fqEIa+A7W314oAoDqwWwou0wywzM2Z8dOLwuKA4+VKKNL6zVeDYJ7j1xuXi+M32nzGcNFxwLHH/9XRn1yPso/5t2ZDnyQowwNpQ7NbhnCmt+ghR7tcFiwZS4sn21IEyHP+ijaVD7Xic5Qpw3iJac=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1767353369; c=relaxed/simple;
-	bh=bzoQD3aA6fgfdGUgVsoRfSBnjfsOyBiLmdEBTM7Xa5s=;
-	h=From:Date:To:cc:Subject:In-Reply-To:Message-ID:References:
-	 MIME-Version:Content-Type; b=I1zOE3wlze1/Z/75H0XParILsi0/uSQY2fNbFqN7DCd92d18YgTgdlKqUyJBDEaAhEoqfWFU7rkohkOLa0Vv3qpQJELiikG4/Or7/BQnrkHbmkzk6nSZTqOowBhv0a22ZLce2uWVihcmyqS2l61JkPXqwLWAZ8tv0n6evixuous=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=pass smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=mqNDuvKd; arc=none smtp.client-ip=192.198.163.7
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="mqNDuvKd"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1767353368; x=1798889368;
-  h=from:date:to:cc:subject:in-reply-to:message-id:
-   references:mime-version;
-  bh=bzoQD3aA6fgfdGUgVsoRfSBnjfsOyBiLmdEBTM7Xa5s=;
-  b=mqNDuvKdTPZtpn47x/ZeBTXJns2qcP1Hj7Vqw7QPpIktIri4VhwyTzio
-   0QCw8ZlHZ7vXuAvzwtp3cf8l+FC6HTcSGR82Jr/NNHmizIDlRjlqP2+mm
-   +Wm+NHT6sxuJYIXvdG/LmIKfN28j+xqOmfvTPGQtYJgUtVXaXd1Hbehi7
-   Uoee4GGD8b0U8+0fR+4oI4m5o3wMEQpsou0Ep8KJWSB7T6rRqheuawT5O
-   BEz4lYqF4w8Ag+5LijGvR7TASaNwS8VEly/1uPTdqDAH3YMdI7qusi+nK
-   mGtTYC1WJVjnC5WfMJWsxpX6PTLHqH+cX8GmpLc3uJGpO5Mxm2fYppBIj
-   g==;
-X-CSE-ConnectionGUID: aHkxuhDkQVmdKt3vgO1KoQ==
-X-CSE-MsgGUID: BNEzZnaSTEWyiypXXgbghQ==
-X-IronPort-AV: E=McAfee;i="6800,10657,11658"; a="94317424"
-X-IronPort-AV: E=Sophos;i="6.21,197,1763452800"; 
-   d="scan'208";a="94317424"
-Received: from fmviesa009.fm.intel.com ([10.60.135.149])
-  by fmvoesa101.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 02 Jan 2026 03:29:27 -0800
-X-CSE-ConnectionGUID: YI8HiaZ+TjK7E0wFcPVg3w==
-X-CSE-MsgGUID: Z5Z9FaAyRLGa32n0yWWCsA==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.21,197,1763452800"; 
-   d="scan'208";a="202266702"
-Received: from abityuts-desk.ger.corp.intel.com (HELO localhost) ([10.245.244.45])
-  by fmviesa009-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 02 Jan 2026 03:29:26 -0800
-From: =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
-Date: Fri, 2 Jan 2026 13:29:20 +0200 (EET)
-To: Zilin Guan <zilin@seu.edu.cn>
-cc: Hans de Goede <hansg@kernel.org>, jianhao.xu@seu.edu.cn, 
-    LKML <linux-kernel@vger.kernel.org>, platform-driver-x86@vger.kernel.org
-Subject: Re: [PATCH] platform/x86/amd: Fix memory leak in wbrf_record()
-In-Reply-To: <20251230091725.1140570-1-zilin@seu.edu.cn>
-Message-ID: <df87cb9d-467b-e9bd-52d6-5ca4f0c1137a@linux.intel.com>
-References: <20251230064325.1036637-1-zilin@seu.edu.cn> <20251230091725.1140570-1-zilin@seu.edu.cn>
+	s=arc-20240116; t=1767355020; c=relaxed/simple;
+	bh=W1MRgIFZb+sXlokt40e9WqCJbxhWIGkQEC8U7O9cie0=;
+	h=Date:From:To:CC:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=WTAhDl6MPM/dfP+IYaixxOWtYWiMJ16gVkHuKFdR5MaIbz8hFenSI/o2Ou/45qWIPfKJXivQZYW7K1MEdSJHEurbji+Y8iEmu3xPOHY6XZinXsy1e1+X6dFZhDzMrT7Cd9VF3OZaqNb1EH4PRPdYaot+BzsX5JBlchMF8hKTOtg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=185.176.79.56
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
+Received: from mail.maildlp.com (unknown [172.18.224.83])
+	by frasgout.his.huawei.com (SkyGuard) with ESMTPS id 4djMbM4LfdzJ468k;
+	Fri,  2 Jan 2026 19:55:59 +0800 (CST)
+Received: from dubpeml100005.china.huawei.com (unknown [7.214.146.113])
+	by mail.maildlp.com (Postfix) with ESMTPS id 06D7840086;
+	Fri,  2 Jan 2026 19:56:55 +0800 (CST)
+Received: from localhost (10.203.177.15) by dubpeml100005.china.huawei.com
+ (7.214.146.113) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.36; Fri, 2 Jan
+ 2026 11:56:54 +0000
+Date: Fri, 2 Jan 2026 11:56:53 +0000
+From: Jonathan Cameron <jonathan.cameron@huawei.com>
+To: "Rafael J. Wysocki" <rafael@kernel.org>
+CC: Linux ACPI <linux-acpi@vger.kernel.org>, LKML
+	<linux-kernel@vger.kernel.org>, Bjorn Helgaas <helgaas@kernel.org>, "Zhang
+ Rui" <rui.zhang@intel.com>, Chen Yu <yu.c.chen@intel.com>, Andy Shevchenko
+	<andriy.shevchenko@linux.intel.com>, Mika Westerberg
+	<mika.westerberg@linux.intel.com>, Linux PCI <linux-pci@vger.kernel.org>,
+	Alex Hung <alexhung@gmail.com>, Hans de Goede <hansg@kernel.org>, Ilpo
+ =?ISO-8859-1?Q?J=E4rvinen?= <ilpo.jarvinen@linux.intel.com>,
+	<platform-driver-x86@vger.kernel.org>, AceLan Kao <acelan.kao@canonical.com>
+Subject: Re: [PATCH v1] ACPI: scan: Use resource_type() for resource type
+ checking
+Message-ID: <20260102115653.000027f0@huawei.com>
+In-Reply-To: <12814730.O9o76ZdvQC@rafael.j.wysocki>
+References: <12814730.O9o76ZdvQC@rafael.j.wysocki>
+X-Mailer: Claws Mail 4.3.0 (GTK 3.24.42; x86_64-w64-mingw32)
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/mixed; boundary="8323328-1031692739-1767353360=:969"
+Content-Type: text/plain; charset="US-ASCII"
+Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: lhrpeml500011.china.huawei.com (7.191.174.215) To
+ dubpeml100005.china.huawei.com (7.214.146.113)
 
-  This message is in MIME format.  The first part should be readable text,
-  while the remaining parts are likely unreadable without MIME-aware tools.
+On Tue, 30 Dec 2025 10:57:34 +0100
+"Rafael J. Wysocki" <rafael@kernel.org> wrote:
 
---8323328-1031692739-1767353360=:969
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: QUOTED-PRINTABLE
+> From: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
+> 
+> To follow a well-established existing pattern, use resource_type() for
+> resource type checking in acpi_scan_claim_resources().
+> 
+> No intentional functional impact.
+> 
+> Signed-off-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
+Reviewed-by: Jonathan Cameron <jonathan.cameron@huawei.com>
 
-On Tue, 30 Dec 2025, Zilin Guan wrote:
-> On Tue, Dec 30, 2025 at 09:51:06AM+0100, Markus Elfring wrote:
-> > =E2=80=A6
-> > > Fix this by adding a free_tmp label and jumping to it when obj is NUL=
-L,
-> > > ensuring tmp is properly freed.
-> >=20
-> > How do you think about to increase the application of scope-based=20
-> > resource management?=20
-> >=20
-> > Regards,
-> > Markus
->=20
-> Thanks for the suggestion.
->=20
-> While scope-based resource management is a valid improvement, I prefer to=
-=20
-> keep this patch focused solely on fixing the memory leak using the=20
-> existing coding style of the file. This ensures the fix is minimal and=20
-> easier to backport.
->=20
-> Such refactoring is arguably outside the scope of this fix.
 
-Hi,
-
-Lets not get too attached to the ways of the past, using __free() is
-what we want to use even as a fix here. Adding goto labels adds=20
-complexity, not reduces it, so I don't buy the easier backport argument
-(on backport each goto target should be carefully reviewed which is=20
-something __free() does not require because it simply is better=20
-interface).
-
-You just need to remember to move also the variable declaration down to=20
-the alloc site as per the guidance in cleanup.h.
-
---=20
- i.
-
---8323328-1031692739-1767353360=:969--
