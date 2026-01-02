@@ -1,159 +1,196 @@
-Received: from mail-pl1-f176.google.com (mail-pl1-f176.google.com [209.85.214.176])
+Received: from mail-lf1-f43.google.com (mail-lf1-f43.google.com [209.85.167.43])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 80E7D1F0994
-	for <platform-driver-x86@vger.kernel.org>; Fri,  2 Jan 2026 06:24:15 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.176
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C19822E2679
+	for <platform-driver-x86@vger.kernel.org>; Fri,  2 Jan 2026 11:13:41 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.43
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1767335056; cv=none; b=uQMiXbjhmM6GZRPMrC54qmT+C/TxRPeXvWFHm7SzLup7c0/25xYiajvWUjhegzIHZ4hGYDfzLeVedRxcm3WAWMnmfzGwOJMDALOiTVo8i90GR+wMSj3iq9JVtr7GJgjEsBZlQSHU7qkZNhq7GgNRFnm0zakDb/+80UL9h+XDTOA=
+	t=1767352424; cv=none; b=qr0J2GxAJgBv3AT7RcTONslK4qDYrI9Y+4gm+YA7Tfe0gqA/Y/9oe6LXBE+M6MdrSjpdoQVRF+p0HqE8u7XzFEq29h+aR6L5jRjLpUc53I6uNaj+8wky26czuM+TGor38pPVlxK1/L6pyEr/yz3R6JlcfEu0YFSkxcsDWVdDLgc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1767335056; c=relaxed/simple;
-	bh=9bzBfr08+IEmJIWG2LANqmJsICXXby+sd3q/EboRJNo=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=GLtcpRB1SgxXXkH4rNVKFyjZFgXwPhWz94ludIvDAfqmSRN+RoFir8ygIyRwzlTiFu7CIqa9pedYGzXDrf68TfEp9PBDhCuhS8xE3HokokvLL0J97tZifKPhaIgxiI8TKbxhLbh61ZbGhQz7xLvlqOylidsd2vr0mOhLgp0MFPA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=WjFKMwoM; arc=none smtp.client-ip=209.85.214.176
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1767352424; c=relaxed/simple;
+	bh=nXFZwZZBKquh8LmMNfYlo2E6H3yvO66kM3Z2AGIucRg=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=ufzgbjylkA4bvRsFFgFA6uz6utgVSTHA6gQfYqirgyoa3tJ+/Y5ptgoU247/0dWJ9F/EY6j5luBLau+H9/Z7pfERhcGHRCGj4hPIXIs1jPKL8lwsz88/n17eQnhIi5ZN8iQyXz0xlFDTBEPq9+XG0lzxsWC8XxyI3iJgPA8D1X8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl; spf=none smtp.mailfrom=bgdev.pl; dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b=E+DJ2rP6; arc=none smtp.client-ip=209.85.167.43
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=bgdev.pl
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="WjFKMwoM"
-Received: by mail-pl1-f176.google.com with SMTP id d9443c01a7336-2a102494058so63768275ad.0
-        for <platform-driver-x86@vger.kernel.org>; Thu, 01 Jan 2026 22:24:15 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b="E+DJ2rP6"
+Received: by mail-lf1-f43.google.com with SMTP id 2adb3069b0e04-59a10df8027so15497341e87.0
+        for <platform-driver-x86@vger.kernel.org>; Fri, 02 Jan 2026 03:13:41 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1767335055; x=1767939855; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=JFvH9cy/X4mqt+/CowADnADDmqYUegocrS0ZIjaaLkE=;
-        b=WjFKMwoMAIrwZ0D/7p6MMBj9NXEctWvspPOqlr+0awj3IazHU8FvUl3Nldkoga/12K
-         eXY8l51ia++JlkKPPRgc0QfnWi0LWi4AAmL2y27NMPRMck/qDpNGK2rzVVeNv/1GBKtZ
-         aJrHgnImq/WjS6g8rcGhfgztl1OGiAy4U4yGpw3TFy95pNeTe/IhF6IY5vh3okYqwjRR
-         tDp05WW+nm8VvaUvoSCR2r98lq2W6I03ZdOtBR6wK5I8+lZRHKpTEAKGApb9fKX8MY1m
-         RV4WPIyESKSMHcTP6doth76URkn8crVAmKRp+OSFMErrnXYIdixukQT37o3Y+f/RMalq
-         wowA==
+        d=bgdev-pl.20230601.gappssmtp.com; s=20230601; t=1767352420; x=1767957220; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=FsSijJtpaI/oDSTtzaUkeXToSyfCr4FMo1aTrP8qZaU=;
+        b=E+DJ2rP6MxVUCdmBqZoI8P0tCI2IXXRTYgVdh+t0wtuN5qhCvwC8gsXod6vw7KkFDh
+         FX0G8uZKwAKwhcZpD9fB0YcUqH7AYcatZ0IVw7+OSkhch+6ID6Y0kLwrn/R+CRqgVOyD
+         tpN3Dc2+4KHitrxseeIxY9cratYQyTnVB13uoPBYdWVGsqBSkVZ3vCa6OkigVNmpp3fv
+         5m7yPUiqflkZGIPCNgqdLBbFxbNi5+APmnzvs+69Ca5UOHYui3zP27LzMpqQDjSXaz0l
+         +le3YqGnrtn5GgRi2URtYCVep5lwkpa3u3/8tI+TAFBALnLY32FvPFm/rDNuKieBMvCj
+         Ee4w==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1767335055; x=1767939855;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-gg:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=JFvH9cy/X4mqt+/CowADnADDmqYUegocrS0ZIjaaLkE=;
-        b=qirMzZ/L4mk+msl5cf4qTuL+2cKEAbbphtId/bqetQ5DWCXegBFT9ID2mghX2Q5CMv
-         7UFATy5iNVscofoICquCyRWhSTII9PaP8y+NQZGP5Bw5P2DxRcglIMhNPq+zrYAVQvuf
-         7CqbL9Qo8Cur0CyVDYAvB822XEi7AZIGbByj9Q6/N7dh9nvR1ZJ+NAwRp9tpQB3sFxQY
-         50UlBJtkorOfTF5C9QjEOxAXuxxLrMQaiYLquEStoasT1jpo8BT+yoxOpXfo6glpDDXP
-         1Zm5F0QD5IGxCfoky3aQOnW4hroVSDnTsWvuG/l1K921NaEWDSOoXJOi31GdNRRpuOf6
-         hJEA==
-X-Forwarded-Encrypted: i=1; AJvYcCUPjcPXeLqmFCuW3++1Sh5msZ9Sfn4vC1KwiMVEa8SB+5l9upSYqqQKPToXtO1SzPiqQUyeCDbnD8Wihcodw0QJrwEf@vger.kernel.org
-X-Gm-Message-State: AOJu0Yx3HHhPcmTHS3GsInLDyPv7lSfqcNIS5zso7GkK6brSnPfPuevE
-	dK5NUZNHgCk6Ft3THhqZZERN1Qn8Zgzph0ALwqQelo3+bUQtqBl/9jbJ
-X-Gm-Gg: AY/fxX7NUvYCgwNhlG395+PU7nHvXwKJD1+ULLdJxkR2PHPpBZcb86tMNFsACFAff2r
-	M96vP6YfF+z0/JdB5wTmNn9kyJeRHIMwbvROs8oWnb8qZnsLFUJebjZt9IY11SvyffJcUrGOH2t
-	EMJ7Dgtk0izn0F8lUZ8ZNBUwCLcosTmCNliG8qa9194zlG12y4kS4zJxizt9BiMne+RQYTeSqBz
-	llzd1rh/xGi/Z2W9eBN1AKZ9T37FYY+IkdDbP4PFLBuYizfec2hCVkJWwKzwwFVFW4DayM3hg9E
-	tZVUyjnakx0DFMfbMGJqK1WgxZPH/KcrqQPnah6wSjrzp/fIV1JRQx2q9om6TdyMemZiqErpLk+
-	7MHnnqXgQP3tETCsmzm/lN5l6PNuuMG8Jwm30Hh7Wqdgd7T0g8OWvsjZZEPsSKYnoRTC3wsUS/S
-	fmiCfxL83GKBEZAyqWUpRVLz/0safzxHQwj9EuYisck35BYKSBd2hyNTe6XQ==
-X-Google-Smtp-Source: AGHT+IHh5cgnSpqzJNtUeuHqvA6rCUFv1c/TWLYJNLF9apl2tuXdiNWTogRCm+O7QnCBDGYusCBZhw==
-X-Received: by 2002:a17:902:e785:b0:2a0:93e7:eba with SMTP id d9443c01a7336-2a2f0d5fea4mr417666295ad.30.1767335054665;
-        Thu, 01 Jan 2026 22:24:14 -0800 (PST)
-Received: from ?IPV6:2405:201:3006:188a:ab1c:a345:8b47:60e8? ([2405:201:3006:188a:ab1c:a345:8b47:60e8])
-        by smtp.gmail.com with ESMTPSA id d9443c01a7336-2a2f3c66629sm369715935ad.14.2026.01.01.22.24.11
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 01 Jan 2026 22:24:14 -0800 (PST)
-Message-ID: <5795292f-d732-4f75-a827-b86bb6c69ab7@gmail.com>
-Date: Fri, 2 Jan 2026 15:24:09 +0900
+        d=1e100.net; s=20230601; t=1767352420; x=1767957220;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-gg:x-gm-message-state:from
+         :to:cc:subject:date:message-id:reply-to;
+        bh=FsSijJtpaI/oDSTtzaUkeXToSyfCr4FMo1aTrP8qZaU=;
+        b=pkjBUEm2HOzPCxpdBdl9F4pHliDeB4dNCB9WMP4+prkyRpK76SzUB0m/1ExvvauQkM
+         /oDuKD7l0/oKSXA8mF5cTytj/xjrXLfupwrHicAfkkQLYnYng29BTK6cm47kovUOb9wQ
+         uZD7Zy5kYJP+/TtIEug5oD1wDio/Pb/KVh3fJvVxhNADsSprG51K629r2Pb9spjMkTwZ
+         BgGqCycVK3PFJvDU1le/1cw0PF/fDdFAAh1EtELlzLB3vD/3M5hXgkVK+1J3oyqEsIEC
+         dG1zvshDToLESaTugD+OavsotaREp5Sfh1Zpc4AT2S+hnwVc/B0d9D1OzsVyixhDTQaa
+         /HjA==
+X-Forwarded-Encrypted: i=1; AJvYcCV3VNjQqNHJKX4o1h2OdnryQ8KkfSQYso3m8GI/wOaVLWWiJduIwnDQmECyPBoakRujFsV5WWzsqdls83g+Uymi/6nD@vger.kernel.org
+X-Gm-Message-State: AOJu0Ywb2QKLE3iiYyf0yYYqVNhIsfk3YZpChjs7nk67WwYsHl5l+NNQ
+	P36h1J6lz0PIora4swzamzp1JmD5UUtMqh5/uf1noIw75n4kuo6fk8dx6IFY1Kay9EUYXOc65Z5
+	aYTT9HxxRVqLs+EVJVOnZ7A4CiM3rA7DOglxHska7PQ==
+X-Gm-Gg: AY/fxX5HRRCi4yya/jPCUltAK6nzNC+KoSMLVSD3Ay9soQ1KGpyLvwt4JrOzF56t2Uj
+	teQdSIOMY921WKMjpiiNZtlzvPdia01LedejCAFTdZa4dVYQxhc5f2htFUI9Dz84O4UUDMQF4KF
+	NM/DOfEfNbdkyRn1tsd/IR3r0QriDfwYllW+QIxVMuBfq4NnFJan76NwpEYcGp5VUkwSb4yyojz
+	AQeFKEBVYGodE6oJ0nOoveTFSnBOdKBUAHEpd3qxLddhBxTze+H5q9EomiOsDp6PYNtx5A2EBfH
+	r4VOo3ExV3Etbm/mgXnxZVWWAcU=
+X-Google-Smtp-Source: AGHT+IFAdaCcjUwdY3Ew9NHcwLT11KRJipC8z25Ztoxl2WB+caL1mXRBHlm39ALYwigrxotmoGpHP+uwj2P6/o6YWRA=
+X-Received: by 2002:a05:6512:b8b:b0:598:8f92:c33f with SMTP id
+ 2adb3069b0e04-59a17d77435mr14680425e87.51.1767352419706; Fri, 02 Jan 2026
+ 03:13:39 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v6 1/2] platform/x86: thinkpad_acpi: Add support to detect
- hardware damage detection capability.
-To: =?UTF-8?Q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
-Cc: Hans de Goede <hansg@kernel.org>, platform-driver-x86@vger.kernel.org,
- LKML <linux-kernel@vger.kernel.org>, njoshi1@lenovo.com,
- Mark Pearson <mpearson-lenovo@squebb.ca>
-References: <20251224095019.11622-1-nitjoshi@gmail.com>
- <f359e9e7-ade6-a022-f21e-47a581ab97c7@linux.intel.com>
-Content-Language: en-US
-From: Nitin <nitjoshi@gmail.com>
-In-Reply-To: <f359e9e7-ade6-a022-f21e-47a581ab97c7@linux.intel.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
+References: <20251125-pci-m2-e-v2-0-32826de07cc5@oss.qualcomm.com>
+ <20251125-pci-m2-e-v2-2-32826de07cc5@oss.qualcomm.com> <CAMRc=Mc-WebsQZ3jt2xirioNMticiWj9PJ3fsPTXGCeJ1iTLRg@mail.gmail.com>
+ <fwzmob6ez7c6xbakcd4rq2icp7mdwgdvimss3zybb4ivdds3uo@mwguaz7rekjc>
+In-Reply-To: <fwzmob6ez7c6xbakcd4rq2icp7mdwgdvimss3zybb4ivdds3uo@mwguaz7rekjc>
+From: Bartosz Golaszewski <brgl@bgdev.pl>
+Date: Fri, 2 Jan 2026 12:13:27 +0100
+X-Gm-Features: AQt7F2rD4Vva2u72gj0duDgyvxJiVfI_tVGQktahu3E6VwiSEZFuXnq9LhXUXbk
+Message-ID: <CAMRc=MdNTHtzTJ3f3qVHH=qFbK86MzUP0vvx3ogZsXG+iqMUnw@mail.gmail.com>
+Subject: Re: [PATCH v2 02/10] serdev: Add serdev device based driver match support
+To: Manivannan Sadhasivam <mani@kernel.org>
+Cc: manivannan.sadhasivam@oss.qualcomm.com, 
+	Manivannan Sadhasivam via B4 Relay <devnull+manivannan.sadhasivam.oss.qualcomm.com@kernel.org>, 
+	linux-serial@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	linux-kbuild@vger.kernel.org, platform-driver-x86@vger.kernel.org, 
+	linux-pci@vger.kernel.org, devicetree@vger.kernel.org, 
+	linux-arm-msm@vger.kernel.org, linux-bluetooth@vger.kernel.org, 
+	linux-pm@vger.kernel.org, Stephan Gerhold <stephan.gerhold@linaro.org>, 
+	Dmitry Baryshkov <dmitry.baryshkov@oss.qualcomm.com>, Rob Herring <robh@kernel.org>, 
+	Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Jiri Slaby <jirislaby@kernel.org>, 
+	Nathan Chancellor <nathan@kernel.org>, Nicolas Schier <nicolas.schier@linux.dev>, 
+	Hans de Goede <hansg@kernel.org>, =?UTF-8?Q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>, 
+	Mark Pearson <mpearson-lenovo@squebb.ca>, "Derek J. Clark" <derekjohn.clark@gmail.com>, 
+	Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, 
+	Marcel Holtmann <marcel@holtmann.org>, Luiz Augusto von Dentz <luiz.dentz@gmail.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-
-On 12/30/25 01:49, Ilpo Järvinen wrote:
-> On Wed, 24 Dec 2025, Nitin Joshi wrote:
+On Tue, Dec 30, 2025 at 8:56=E2=80=AFAM Manivannan Sadhasivam <mani@kernel.=
+org> wrote:
 >
->> Thinkpads are adding the ability to detect and report hardware damage
->> status. Add new sysfs interface to identify whether hardware damage
->> is detected or not.
->>
->> Initial support is available for the USB-C replaceable connector.
->>
->> Reviewed-by: Mark Pearson <mpearson-lenovo@squebb.ca>
->> Signed-off-by: Nitin Joshi<nitjoshi@gmail.com>
->> ---
->> Changes since v1:
->> -Split patch between hwdd_status and hwdd_detail
->> -Incorporated review comments
->> Changes since v2:
->> -Control visibility of the sysfs attribute based upon ucdd_supported
->> Changes since v3:
->> -Fix documentation build warning
->> Changes since v4:
->> -Removed extra line
->> Changes since v5:
->> -Improved code indentation
->> ---
->>   .../admin-guide/laptops/thinkpad-acpi.rst     |  21 ++++
->>   drivers/platform/x86/lenovo/thinkpad_acpi.c   | 105 ++++++++++++++++++
->>   2 files changed, 126 insertions(+)
->>
->> diff --git a/Documentation/admin-guide/laptops/thinkpad-acpi.rst b/Documentation/admin-guide/laptops/thinkpad-acpi.rst
->> index 4ab0fef7d440..2db05f718b11 100644
->> --- a/Documentation/admin-guide/laptops/thinkpad-acpi.rst
->> +++ b/Documentation/admin-guide/laptops/thinkpad-acpi.rst
->> @@ -54,6 +54,7 @@ detailed description):
->>   	- Setting keyboard language
->>   	- WWAN Antenna type
->>   	- Auxmac
->> +	- Hardware damage detection capability
->>   
->>   A compatibility table by model and feature is maintained on the web
->>   site, http://ibm-acpi.sf.net/. I appreciate any success or failure
->> @@ -1576,6 +1577,26 @@ percentage level, above which charging will stop.
->>   The exact semantics of the attributes may be found in
->>   Documentation/ABI/testing/sysfs-class-power.
->>   
->> +Hardware damage detection capability
->> +------------------------------------
->> +
->> +sysfs attributes: hwdd_status
->> +
->> +Thinkpads are adding the ability to detect and report hardware damage.
->> +Add new sysfs interface to identify the damaged device status.
->> +Initial support is available for the USB-C replaceable connector.
->> +
->> +The command to check device damaged status is::
->> +
->> +        cat /sys/devices/platform/thinkpad_acpi/hwdd_status
->> +
->> +This value displays status of device damaged
->> +- 0 = Not Damaged
->> +- 1 = Damaged
-> This seems to result in not the best formatting for htmldocs:
+> On Thu, Nov 27, 2025 at 06:32:04AM -0800, Bartosz Golaszewski wrote:
+> > On Tue, 25 Nov 2025 15:45:06 +0100, Manivannan Sadhasivam via B4 Relay
+> > <devnull+manivannan.sadhasivam.oss.qualcomm.com@kernel.org> said:
+> > > From: Manivannan Sadhasivam <manivannan.sadhasivam@oss.qualcomm.com>
+> > >
+> > > Add support to match serdev devices with serdev drivers based on the =
+serdev
+> > > ID table defined in serdev_device_driver::id_table.
+> > >
+> > > The matching function, serdev_driver_match_device() uses the serdev d=
+evice
+> > > name to match against the entries in serdev_device_driver::id_table.
+> > >
+> > > If there is no serdev id_table for the driver, then serdev_device_mat=
+ch()
+> > > will fallback to ACPI and DT based matching.
+> > >
+> > > Signed-off-by: Manivannan Sadhasivam <manivannan.sadhasivam@oss.qualc=
+omm.com>
+> > > ---
+> > >  drivers/tty/serdev/core.c         | 23 ++++++++++++++++++++++-
+> > >  include/linux/mod_devicetable.h   |  7 +++++++
+> > >  include/linux/serdev.h            |  4 ++++
+> > >  scripts/mod/devicetable-offsets.c |  3 +++
+> > >  4 files changed, 36 insertions(+), 1 deletion(-)
+> > >
+> > > diff --git a/drivers/tty/serdev/core.c b/drivers/tty/serdev/core.c
+> > > index b33e708cb245..2b5582cd5063 100644
+> > > --- a/drivers/tty/serdev/core.c
+> > > +++ b/drivers/tty/serdev/core.c
+> > > @@ -85,12 +85,33 @@ static const struct device_type serdev_ctrl_type =
+=3D {
+> > >     .release        =3D serdev_ctrl_release,
+> > >  };
+> > >
+> > > +static int serdev_driver_match_device(struct device *dev, const stru=
+ct device_driver *drv)
+> > > +{
+> > > +   const struct serdev_device_driver *serdev_drv =3D to_serdev_devic=
+e_driver(drv);
+> > > +   struct serdev_device *serdev =3D to_serdev_device(dev);
+> > > +   const struct serdev_device_id *id;
+> > > +
+> > > +   if (!serdev_drv->id_table)
+> > > +           return 0;
+> > > +
+> > > +   for (id =3D serdev_drv->id_table; id->name[0]; id++) {
+> > > +           if (!strcmp(dev_name(dev), id->name)) {
+> > > +                   serdev->id =3D id;
+> > > +                   return 1;
+> > > +           }
+> > > +   }
+> > > +
+> > > +   return 0;
+> > > +}
+> > > +
+> >
+> > I don't know if Rob agrees with me but I would very much prefer to see
+> > software-node-based approach instead of an ID table matching.
+> >
+> > Could you in the pwrseq driver, create a software node for the serdev d=
+evice
+> > you allocate, set its "compatible" to "qcom,wcn7850-bt" and match again=
+st it
+> > here?
+> >
+> > This has several benefits: if you ever need to pass more properties to =
+the
+> > serdev devices, you already have a medium for that and you can also lea=
+ve
+> > serdev_device_add() alone. You're comparing the entire name here - what=
+ if
+> > someone sets device's ID to some value and the name will be "WCN7850.2"=
+?
+> >
+> > You could also drop the serdev_id field from struct serdev_device. For =
+matching
+> > you could even reuse the of_device_id from the device driver.
+> >
 >
-> "This value displays status of device damaged - 0 = Not Damaged - 1 = Damaged"
+> I tried this approach and I really liked it since it gets rid of the yet-=
+another
+> id_table for serdev (which I didn't like it btw). But there is one concer=
+n
+> though. We need a generic 'device_get_match_data' implementation for swno=
+de.
+> While trying to implement it, I stumbled upon this patch [1] which does t=
+he same
+> for other usecase, but there was a disagreement on whether swnode should =
+be used
+> for driver matching or not. For my usecase, I find it very useful and
+> reasonable, but Dmitry Torokhov believes otherwise.
+>
+> Maybe I'll include this patch in the next version, CC Dmitry and see wher=
+e it
+> goes.
 
-Ack. I will modify it and send updated patch for this. I will also 
-modify slightly for Patch 2/2 as well.
+Thanks for bringing this to my attention. I think that historically
+software nodes were meant to always be "secondary" but now we have all
+kinds of auxiliary devices that use software nodes as their "primary"
+nodes so maybe we can re-discuss this.
 
-  Happy New Year !
-
-Best Regards,
-
-Nitin Joshi
-
+Bart
