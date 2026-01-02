@@ -1,196 +1,108 @@
-Received: from mail-lf1-f43.google.com (mail-lf1-f43.google.com [209.85.167.43])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.7])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C19822E2679
-	for <platform-driver-x86@vger.kernel.org>; Fri,  2 Jan 2026 11:13:41 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.43
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CEB0126F2B9;
+	Fri,  2 Jan 2026 11:29:27 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.7
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1767352424; cv=none; b=qr0J2GxAJgBv3AT7RcTONslK4qDYrI9Y+4gm+YA7Tfe0gqA/Y/9oe6LXBE+M6MdrSjpdoQVRF+p0HqE8u7XzFEq29h+aR6L5jRjLpUc53I6uNaj+8wky26czuM+TGor38pPVlxK1/L6pyEr/yz3R6JlcfEu0YFSkxcsDWVdDLgc=
+	t=1767353369; cv=none; b=OcfxKUDG5fY2AUhSAl2+DYP85OjqkSRwR8iUDpasDUS0B83Fd5Ka8bJKpk2EOWivTfIQfsmJlrer58MUwOSnHk4PV5BHMkUsaox/USGiIEiZz90QwaHWN8JBtBBKH0kySTsNbVldJN7Tf6xgaIivoXc2YpuOkR5hwc+rB7QqUIE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1767352424; c=relaxed/simple;
-	bh=nXFZwZZBKquh8LmMNfYlo2E6H3yvO66kM3Z2AGIucRg=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=ufzgbjylkA4bvRsFFgFA6uz6utgVSTHA6gQfYqirgyoa3tJ+/Y5ptgoU247/0dWJ9F/EY6j5luBLau+H9/Z7pfERhcGHRCGj4hPIXIs1jPKL8lwsz88/n17eQnhIi5ZN8iQyXz0xlFDTBEPq9+XG0lzxsWC8XxyI3iJgPA8D1X8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl; spf=none smtp.mailfrom=bgdev.pl; dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b=E+DJ2rP6; arc=none smtp.client-ip=209.85.167.43
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=bgdev.pl
+	s=arc-20240116; t=1767353369; c=relaxed/simple;
+	bh=bzoQD3aA6fgfdGUgVsoRfSBnjfsOyBiLmdEBTM7Xa5s=;
+	h=From:Date:To:cc:Subject:In-Reply-To:Message-ID:References:
+	 MIME-Version:Content-Type; b=I1zOE3wlze1/Z/75H0XParILsi0/uSQY2fNbFqN7DCd92d18YgTgdlKqUyJBDEaAhEoqfWFU7rkohkOLa0Vv3qpQJELiikG4/Or7/BQnrkHbmkzk6nSZTqOowBhv0a22ZLce2uWVihcmyqS2l61JkPXqwLWAZ8tv0n6evixuous=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=pass smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=mqNDuvKd; arc=none smtp.client-ip=192.198.163.7
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b="E+DJ2rP6"
-Received: by mail-lf1-f43.google.com with SMTP id 2adb3069b0e04-59a10df8027so15497341e87.0
-        for <platform-driver-x86@vger.kernel.org>; Fri, 02 Jan 2026 03:13:41 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=bgdev-pl.20230601.gappssmtp.com; s=20230601; t=1767352420; x=1767957220; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=FsSijJtpaI/oDSTtzaUkeXToSyfCr4FMo1aTrP8qZaU=;
-        b=E+DJ2rP6MxVUCdmBqZoI8P0tCI2IXXRTYgVdh+t0wtuN5qhCvwC8gsXod6vw7KkFDh
-         FX0G8uZKwAKwhcZpD9fB0YcUqH7AYcatZ0IVw7+OSkhch+6ID6Y0kLwrn/R+CRqgVOyD
-         tpN3Dc2+4KHitrxseeIxY9cratYQyTnVB13uoPBYdWVGsqBSkVZ3vCa6OkigVNmpp3fv
-         5m7yPUiqflkZGIPCNgqdLBbFxbNi5+APmnzvs+69Ca5UOHYui3zP27LzMpqQDjSXaz0l
-         +le3YqGnrtn5GgRi2URtYCVep5lwkpa3u3/8tI+TAFBALnLY32FvPFm/rDNuKieBMvCj
-         Ee4w==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1767352420; x=1767957220;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-gg:x-gm-message-state:from
-         :to:cc:subject:date:message-id:reply-to;
-        bh=FsSijJtpaI/oDSTtzaUkeXToSyfCr4FMo1aTrP8qZaU=;
-        b=pkjBUEm2HOzPCxpdBdl9F4pHliDeB4dNCB9WMP4+prkyRpK76SzUB0m/1ExvvauQkM
-         /oDuKD7l0/oKSXA8mF5cTytj/xjrXLfupwrHicAfkkQLYnYng29BTK6cm47kovUOb9wQ
-         uZD7Zy5kYJP+/TtIEug5oD1wDio/Pb/KVh3fJvVxhNADsSprG51K629r2Pb9spjMkTwZ
-         BgGqCycVK3PFJvDU1le/1cw0PF/fDdFAAh1EtELlzLB3vD/3M5hXgkVK+1J3oyqEsIEC
-         dG1zvshDToLESaTugD+OavsotaREp5Sfh1Zpc4AT2S+hnwVc/B0d9D1OzsVyixhDTQaa
-         /HjA==
-X-Forwarded-Encrypted: i=1; AJvYcCV3VNjQqNHJKX4o1h2OdnryQ8KkfSQYso3m8GI/wOaVLWWiJduIwnDQmECyPBoakRujFsV5WWzsqdls83g+Uymi/6nD@vger.kernel.org
-X-Gm-Message-State: AOJu0Ywb2QKLE3iiYyf0yYYqVNhIsfk3YZpChjs7nk67WwYsHl5l+NNQ
-	P36h1J6lz0PIora4swzamzp1JmD5UUtMqh5/uf1noIw75n4kuo6fk8dx6IFY1Kay9EUYXOc65Z5
-	aYTT9HxxRVqLs+EVJVOnZ7A4CiM3rA7DOglxHska7PQ==
-X-Gm-Gg: AY/fxX5HRRCi4yya/jPCUltAK6nzNC+KoSMLVSD3Ay9soQ1KGpyLvwt4JrOzF56t2Uj
-	teQdSIOMY921WKMjpiiNZtlzvPdia01LedejCAFTdZa4dVYQxhc5f2htFUI9Dz84O4UUDMQF4KF
-	NM/DOfEfNbdkyRn1tsd/IR3r0QriDfwYllW+QIxVMuBfq4NnFJan76NwpEYcGp5VUkwSb4yyojz
-	AQeFKEBVYGodE6oJ0nOoveTFSnBOdKBUAHEpd3qxLddhBxTze+H5q9EomiOsDp6PYNtx5A2EBfH
-	r4VOo3ExV3Etbm/mgXnxZVWWAcU=
-X-Google-Smtp-Source: AGHT+IFAdaCcjUwdY3Ew9NHcwLT11KRJipC8z25Ztoxl2WB+caL1mXRBHlm39ALYwigrxotmoGpHP+uwj2P6/o6YWRA=
-X-Received: by 2002:a05:6512:b8b:b0:598:8f92:c33f with SMTP id
- 2adb3069b0e04-59a17d77435mr14680425e87.51.1767352419706; Fri, 02 Jan 2026
- 03:13:39 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="mqNDuvKd"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1767353368; x=1798889368;
+  h=from:date:to:cc:subject:in-reply-to:message-id:
+   references:mime-version;
+  bh=bzoQD3aA6fgfdGUgVsoRfSBnjfsOyBiLmdEBTM7Xa5s=;
+  b=mqNDuvKdTPZtpn47x/ZeBTXJns2qcP1Hj7Vqw7QPpIktIri4VhwyTzio
+   0QCw8ZlHZ7vXuAvzwtp3cf8l+FC6HTcSGR82Jr/NNHmizIDlRjlqP2+mm
+   +Wm+NHT6sxuJYIXvdG/LmIKfN28j+xqOmfvTPGQtYJgUtVXaXd1Hbehi7
+   Uoee4GGD8b0U8+0fR+4oI4m5o3wMEQpsou0Ep8KJWSB7T6rRqheuawT5O
+   BEz4lYqF4w8Ag+5LijGvR7TASaNwS8VEly/1uPTdqDAH3YMdI7qusi+nK
+   mGtTYC1WJVjnC5WfMJWsxpX6PTLHqH+cX8GmpLc3uJGpO5Mxm2fYppBIj
+   g==;
+X-CSE-ConnectionGUID: aHkxuhDkQVmdKt3vgO1KoQ==
+X-CSE-MsgGUID: BNEzZnaSTEWyiypXXgbghQ==
+X-IronPort-AV: E=McAfee;i="6800,10657,11658"; a="94317424"
+X-IronPort-AV: E=Sophos;i="6.21,197,1763452800"; 
+   d="scan'208";a="94317424"
+Received: from fmviesa009.fm.intel.com ([10.60.135.149])
+  by fmvoesa101.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 02 Jan 2026 03:29:27 -0800
+X-CSE-ConnectionGUID: YI8HiaZ+TjK7E0wFcPVg3w==
+X-CSE-MsgGUID: Z5Z9FaAyRLGa32n0yWWCsA==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.21,197,1763452800"; 
+   d="scan'208";a="202266702"
+Received: from abityuts-desk.ger.corp.intel.com (HELO localhost) ([10.245.244.45])
+  by fmviesa009-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 02 Jan 2026 03:29:26 -0800
+From: =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
+Date: Fri, 2 Jan 2026 13:29:20 +0200 (EET)
+To: Zilin Guan <zilin@seu.edu.cn>
+cc: Hans de Goede <hansg@kernel.org>, jianhao.xu@seu.edu.cn, 
+    LKML <linux-kernel@vger.kernel.org>, platform-driver-x86@vger.kernel.org
+Subject: Re: [PATCH] platform/x86/amd: Fix memory leak in wbrf_record()
+In-Reply-To: <20251230091725.1140570-1-zilin@seu.edu.cn>
+Message-ID: <df87cb9d-467b-e9bd-52d6-5ca4f0c1137a@linux.intel.com>
+References: <20251230064325.1036637-1-zilin@seu.edu.cn> <20251230091725.1140570-1-zilin@seu.edu.cn>
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20251125-pci-m2-e-v2-0-32826de07cc5@oss.qualcomm.com>
- <20251125-pci-m2-e-v2-2-32826de07cc5@oss.qualcomm.com> <CAMRc=Mc-WebsQZ3jt2xirioNMticiWj9PJ3fsPTXGCeJ1iTLRg@mail.gmail.com>
- <fwzmob6ez7c6xbakcd4rq2icp7mdwgdvimss3zybb4ivdds3uo@mwguaz7rekjc>
-In-Reply-To: <fwzmob6ez7c6xbakcd4rq2icp7mdwgdvimss3zybb4ivdds3uo@mwguaz7rekjc>
-From: Bartosz Golaszewski <brgl@bgdev.pl>
-Date: Fri, 2 Jan 2026 12:13:27 +0100
-X-Gm-Features: AQt7F2rD4Vva2u72gj0duDgyvxJiVfI_tVGQktahu3E6VwiSEZFuXnq9LhXUXbk
-Message-ID: <CAMRc=MdNTHtzTJ3f3qVHH=qFbK86MzUP0vvx3ogZsXG+iqMUnw@mail.gmail.com>
-Subject: Re: [PATCH v2 02/10] serdev: Add serdev device based driver match support
-To: Manivannan Sadhasivam <mani@kernel.org>
-Cc: manivannan.sadhasivam@oss.qualcomm.com, 
-	Manivannan Sadhasivam via B4 Relay <devnull+manivannan.sadhasivam.oss.qualcomm.com@kernel.org>, 
-	linux-serial@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	linux-kbuild@vger.kernel.org, platform-driver-x86@vger.kernel.org, 
-	linux-pci@vger.kernel.org, devicetree@vger.kernel.org, 
-	linux-arm-msm@vger.kernel.org, linux-bluetooth@vger.kernel.org, 
-	linux-pm@vger.kernel.org, Stephan Gerhold <stephan.gerhold@linaro.org>, 
-	Dmitry Baryshkov <dmitry.baryshkov@oss.qualcomm.com>, Rob Herring <robh@kernel.org>, 
-	Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Jiri Slaby <jirislaby@kernel.org>, 
-	Nathan Chancellor <nathan@kernel.org>, Nicolas Schier <nicolas.schier@linux.dev>, 
-	Hans de Goede <hansg@kernel.org>, =?UTF-8?Q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>, 
-	Mark Pearson <mpearson-lenovo@squebb.ca>, "Derek J. Clark" <derekjohn.clark@gmail.com>, 
-	Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, 
-	Marcel Holtmann <marcel@holtmann.org>, Luiz Augusto von Dentz <luiz.dentz@gmail.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: multipart/mixed; boundary="8323328-1031692739-1767353360=:969"
 
-On Tue, Dec 30, 2025 at 8:56=E2=80=AFAM Manivannan Sadhasivam <mani@kernel.=
-org> wrote:
->
-> On Thu, Nov 27, 2025 at 06:32:04AM -0800, Bartosz Golaszewski wrote:
-> > On Tue, 25 Nov 2025 15:45:06 +0100, Manivannan Sadhasivam via B4 Relay
-> > <devnull+manivannan.sadhasivam.oss.qualcomm.com@kernel.org> said:
-> > > From: Manivannan Sadhasivam <manivannan.sadhasivam@oss.qualcomm.com>
-> > >
-> > > Add support to match serdev devices with serdev drivers based on the =
-serdev
-> > > ID table defined in serdev_device_driver::id_table.
-> > >
-> > > The matching function, serdev_driver_match_device() uses the serdev d=
-evice
-> > > name to match against the entries in serdev_device_driver::id_table.
-> > >
-> > > If there is no serdev id_table for the driver, then serdev_device_mat=
-ch()
-> > > will fallback to ACPI and DT based matching.
-> > >
-> > > Signed-off-by: Manivannan Sadhasivam <manivannan.sadhasivam@oss.qualc=
-omm.com>
-> > > ---
-> > >  drivers/tty/serdev/core.c         | 23 ++++++++++++++++++++++-
-> > >  include/linux/mod_devicetable.h   |  7 +++++++
-> > >  include/linux/serdev.h            |  4 ++++
-> > >  scripts/mod/devicetable-offsets.c |  3 +++
-> > >  4 files changed, 36 insertions(+), 1 deletion(-)
-> > >
-> > > diff --git a/drivers/tty/serdev/core.c b/drivers/tty/serdev/core.c
-> > > index b33e708cb245..2b5582cd5063 100644
-> > > --- a/drivers/tty/serdev/core.c
-> > > +++ b/drivers/tty/serdev/core.c
-> > > @@ -85,12 +85,33 @@ static const struct device_type serdev_ctrl_type =
-=3D {
-> > >     .release        =3D serdev_ctrl_release,
-> > >  };
-> > >
-> > > +static int serdev_driver_match_device(struct device *dev, const stru=
-ct device_driver *drv)
-> > > +{
-> > > +   const struct serdev_device_driver *serdev_drv =3D to_serdev_devic=
-e_driver(drv);
-> > > +   struct serdev_device *serdev =3D to_serdev_device(dev);
-> > > +   const struct serdev_device_id *id;
-> > > +
-> > > +   if (!serdev_drv->id_table)
-> > > +           return 0;
-> > > +
-> > > +   for (id =3D serdev_drv->id_table; id->name[0]; id++) {
-> > > +           if (!strcmp(dev_name(dev), id->name)) {
-> > > +                   serdev->id =3D id;
-> > > +                   return 1;
-> > > +           }
-> > > +   }
-> > > +
-> > > +   return 0;
-> > > +}
-> > > +
-> >
-> > I don't know if Rob agrees with me but I would very much prefer to see
-> > software-node-based approach instead of an ID table matching.
-> >
-> > Could you in the pwrseq driver, create a software node for the serdev d=
-evice
-> > you allocate, set its "compatible" to "qcom,wcn7850-bt" and match again=
-st it
-> > here?
-> >
-> > This has several benefits: if you ever need to pass more properties to =
-the
-> > serdev devices, you already have a medium for that and you can also lea=
-ve
-> > serdev_device_add() alone. You're comparing the entire name here - what=
- if
-> > someone sets device's ID to some value and the name will be "WCN7850.2"=
-?
-> >
-> > You could also drop the serdev_id field from struct serdev_device. For =
-matching
-> > you could even reuse the of_device_id from the device driver.
-> >
->
-> I tried this approach and I really liked it since it gets rid of the yet-=
-another
-> id_table for serdev (which I didn't like it btw). But there is one concer=
-n
-> though. We need a generic 'device_get_match_data' implementation for swno=
-de.
-> While trying to implement it, I stumbled upon this patch [1] which does t=
-he same
-> for other usecase, but there was a disagreement on whether swnode should =
-be used
-> for driver matching or not. For my usecase, I find it very useful and
-> reasonable, but Dmitry Torokhov believes otherwise.
->
-> Maybe I'll include this patch in the next version, CC Dmitry and see wher=
-e it
-> goes.
+  This message is in MIME format.  The first part should be readable text,
+  while the remaining parts are likely unreadable without MIME-aware tools.
 
-Thanks for bringing this to my attention. I think that historically
-software nodes were meant to always be "secondary" but now we have all
-kinds of auxiliary devices that use software nodes as their "primary"
-nodes so maybe we can re-discuss this.
+--8323328-1031692739-1767353360=:969
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: QUOTED-PRINTABLE
 
-Bart
+On Tue, 30 Dec 2025, Zilin Guan wrote:
+> On Tue, Dec 30, 2025 at 09:51:06AM+0100, Markus Elfring wrote:
+> > =E2=80=A6
+> > > Fix this by adding a free_tmp label and jumping to it when obj is NUL=
+L,
+> > > ensuring tmp is properly freed.
+> >=20
+> > How do you think about to increase the application of scope-based=20
+> > resource management?=20
+> >=20
+> > Regards,
+> > Markus
+>=20
+> Thanks for the suggestion.
+>=20
+> While scope-based resource management is a valid improvement, I prefer to=
+=20
+> keep this patch focused solely on fixing the memory leak using the=20
+> existing coding style of the file. This ensures the fix is minimal and=20
+> easier to backport.
+>=20
+> Such refactoring is arguably outside the scope of this fix.
+
+Hi,
+
+Lets not get too attached to the ways of the past, using __free() is
+what we want to use even as a fix here. Adding goto labels adds=20
+complexity, not reduces it, so I don't buy the easier backport argument
+(on backport each goto target should be carefully reviewed which is=20
+something __free() does not require because it simply is better=20
+interface).
+
+You just need to remember to move also the variable declaration down to=20
+the alloc site as per the guidance in cleanup.h.
+
+--=20
+ i.
+
+--8323328-1031692739-1767353360=:969--
