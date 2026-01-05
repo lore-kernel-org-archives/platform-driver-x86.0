@@ -1,139 +1,170 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from fout-a5-smtp.messagingengine.com (fout-a5-smtp.messagingengine.com [103.168.172.148])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0ED1E1CEADB
-	for <platform-driver-x86@vger.kernel.org>; Mon,  5 Jan 2026 00:48:57 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9C409199D8;
+	Mon,  5 Jan 2026 02:14:37 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=103.168.172.148
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1767574138; cv=none; b=I33czvBg2w8VySgd3oGqqkF73nkZkSxfeZhmPcBrLpCEWMlCFuQZZFTWjA8Bfogb51O7+ooDzyc+Q3aJR4uBgFcqnKH5IkUnuzRnRYRXaEtQ6gGN0gTMN0hP8/BuvEvKufYVfp/hidBoAKU8nqDMrIK/wkJUs54fvBT63+5JAm8=
+	t=1767579279; cv=none; b=I08bM/rX6dG1YQTcCldDGRK6XjVvIoODywDLS4/ltLJwfyIWSTQRUxm/mv5hUubxwv+bBOUi5LU3XTD6v3Veh8IbzO8XyK8xaD1YGnVmKIpvD62XZQ9NmnuV075q5YfjAIdEaEpGOwFmsbwocoU/RJtZkzgjjOXN16SQctlaGkM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1767574138; c=relaxed/simple;
-	bh=JfU3CvaEacRIbgBSBFuor8g9DGHKh1t1BN0LrbYQZQQ=;
-	h=From:To:Subject:Date:Message-ID:Content-Type:MIME-Version; b=M9SDSsr3reFQzKagr994rfWNLNGTXt3+gpXzmN9PC11a0FZ/9MTy9YXohMB1kh2feBFy+jA93aFP04vIW2QvhoOcDQRWuP8D397RMQOooi/0oIbZZ34YQh5FnnuGej2/zLTEugLxOtKtUgG/dghMdmxy/Xl/8hMhriIcjLc2LQs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=YT12jIxx; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1767579279; c=relaxed/simple;
+	bh=eSPiTuiLmDygq4SjJt5sNymSqRGSFTyZuO69GG6FdmQ=;
+	h=MIME-Version:Date:From:To:Cc:Message-Id:In-Reply-To:References:
+	 Subject:Content-Type; b=r1+/XvUA1+Yn9Ul+FQAS4amEvazSHoykxN5ZDfSGlXQ6YdHHEYIEB98PyjbyPGhrp3sh857JwTjVx02O71VbfRY5wEw/aGmskXkrBe/465KN2fa4z0zPwHoL6pxXnO9ZPez+lc6BFbu2JLzjt3B1TGOZjHVF5XvlvHaVwvtfTvU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=squebb.ca; spf=pass smtp.mailfrom=squebb.ca; dkim=pass (2048-bit key) header.d=squebb.ca header.i=@squebb.ca header.b=aef3DFDD; dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b=Lti4N79j; arc=none smtp.client-ip=103.168.172.148
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=squebb.ca
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=squebb.ca
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="YT12jIxx"
-Received: by smtp.kernel.org (Postfix) with ESMTPS id 980F5C19424
-	for <platform-driver-x86@vger.kernel.org>; Mon,  5 Jan 2026 00:48:57 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1767574137;
-	bh=JfU3CvaEacRIbgBSBFuor8g9DGHKh1t1BN0LrbYQZQQ=;
-	h=From:To:Subject:Date:From;
-	b=YT12jIxxYrSmWRQ/bgQGucNf+VcCviJmxw2K1iuhvB9t33+6Ew1txJ8QRzTF+JsmX
-	 zp4ThXVR+wTSCCcHW/1lZLQF9m2AvxmqkMcll/wk/BXTe9wvWajNA+Zz5q0Pgr+HYc
-	 oefT8oMMtgXChUmJXnUjkhSo7MCX2ESm9FLeLOxuPgUmnMjX2hAmtMPC5O6GJV3wKZ
-	 2YyYlyPPbD2r23WhoBksxdHIaOtJ1htzjuEapR9Vd38+tVEKhSISigvqvMUW28G2Bb
-	 nNDyqWa1tNUO0rQekeUvo+C1ZULmiOikggPt8EUzGqXHurKLho5ynZzWem7XMdwCIN
-	 HZB729EnEpk1g==
-Received: by aws-us-west-2-korg-bugzilla-1.web.codeaurora.org (Postfix, from userid 48)
-	id 8C7A4C41614; Mon,  5 Jan 2026 00:48:57 +0000 (UTC)
-From: bugzilla-daemon@kernel.org
-To: platform-driver-x86@vger.kernel.org
-Subject: [Bug 220945] New: ASUS Q405UA requires tablet_mode_sw=2 for proper
- tablet mode detection
-Date: Mon, 05 Jan 2026 00:48:57 +0000
-X-Bugzilla-Reason: None
-X-Bugzilla-Type: new
-X-Bugzilla-Watch-Reason: AssignedTo drivers_platform_x86@kernel-bugs.osdl.org
-X-Bugzilla-Product: Drivers
-X-Bugzilla-Component: Platform_x86
-X-Bugzilla-Version: 2.5
-X-Bugzilla-Keywords: 
-X-Bugzilla-Severity: normal
-X-Bugzilla-Who: andy.r.blank@gmail.com
-X-Bugzilla-Status: NEW
-X-Bugzilla-Resolution: 
-X-Bugzilla-Priority: P3
-X-Bugzilla-Assigned-To: drivers_platform_x86@kernel-bugs.osdl.org
-X-Bugzilla-Flags: 
-X-Bugzilla-Changed-Fields: bug_id short_desc product version
- cf_kernel_version rep_platform op_sys bug_status bug_severity priority
- component assigned_to reporter cf_regression attachments.created
-Message-ID: <bug-220945-215701@https.bugzilla.kernel.org/>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-X-Bugzilla-URL: https://bugzilla.kernel.org/
-Auto-Submitted: auto-generated
+	dkim=pass (2048-bit key) header.d=squebb.ca header.i=@squebb.ca header.b="aef3DFDD";
+	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="Lti4N79j"
+Received: from phl-compute-02.internal (phl-compute-02.internal [10.202.2.42])
+	by mailfout.phl.internal (Postfix) with ESMTP id 91579EC0022;
+	Sun,  4 Jan 2026 21:14:36 -0500 (EST)
+Received: from phl-imap-08 ([10.202.2.84])
+  by phl-compute-02.internal (MEProxy); Sun, 04 Jan 2026 21:14:36 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=squebb.ca; h=cc
+	:cc:content-transfer-encoding:content-type:content-type:date
+	:date:from:from:in-reply-to:in-reply-to:message-id:mime-version
+	:references:reply-to:subject:subject:to:to; s=fm3; t=1767579276;
+	 x=1767665676; bh=/dc7lVw3NxD1yDOQNjjhsNmz9oefdEWxWwUBsvucQeU=; b=
+	aef3DFDDvYUJFAjz4LCHwZ9+URwnHM7TJ7NDsIPxzNMsDJG4OWRCUuUzNP+Osz66
+	xy0XG+g5KlX5rvQMiLv/sayqQrlnLNdYntvYpbgaep4tY2P2KO7JC/wtWtDXEVjZ
+	zxTTjAIZbdKPxGDhbv+K8Nv4QDokub4iRVzcNlruxL+whKtM2LVvDrTRUZuDlbaJ
+	+AInBH1ncqjLbM+gVVCH6SK4W3OUIlTJq+z5+vL7lOhTLvwk5KzmKcYhei+uFGUU
+	whbcPzrFXbLAveOoKyGEGalqoiGvbbBv7MZXB5zouI6XmlJKgJ6w+jwomkpsZOjW
+	fqvqf34y29mLchaXTirzrw==
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
+	messagingengine.com; h=cc:cc:content-transfer-encoding
+	:content-type:content-type:date:date:feedback-id:feedback-id
+	:from:from:in-reply-to:in-reply-to:message-id:mime-version
+	:references:reply-to:subject:subject:to:to:x-me-proxy
+	:x-me-sender:x-me-sender:x-sasl-enc; s=fm2; t=1767579276; x=
+	1767665676; bh=/dc7lVw3NxD1yDOQNjjhsNmz9oefdEWxWwUBsvucQeU=; b=L
+	ti4N79jM+kgTTfMcCjOYglv//C6dO5p+qK6+Blw6pzz2gZSuLe+MqsCbqkd2WU/A
+	0BmVkTiiucfnkNkAs5PWQankdc0/LYLeQCiaEGm4b3yeugMNXaxLQzNo9Bb6wX7F
+	0PQ5OF1heuW8OJdjZCEK9VD9GxXt0/guxTm/nFUnRS3nmJ42aEigIQOKb/sksv8k
+	LJ5yxX6IB4SBDdvcrLLcCcQb3lsVcM9pS42AOhNwD+IZkHMl8jjO5KlbOgwlAAmq
+	e5HaDaPO9XlgDrF8r36vLpJWrpTpZXAZYY7/sF3ft2L1WFrPnzv3rC4ujcCjhC7X
+	+b3ORFKv+KUl/XufE363Q==
+X-ME-Sender: <xms:ix5baf85YitvKFSk_iMQCbaDgvnuz5BwOagf8myucRDLCYXKJFxXJw>
+    <xme:ix5baWifkC1YOiSw6X_7V_0ZknN77tUO1_dg3IRt0ndaw6KPgALjBtn3wESJ1NCmF
+    J6KSe4obE3IW71ACDqIeqpgic2jnaV-fJ3-myOkgdk7WTLqAlbOAI4>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeefgedrtddtgdeliedtjecutefuodetggdotefrod
+    ftvfcurfhrohhfihhlvgemucfhrghsthforghilhdpuffrtefokffrpgfnqfghnecuuegr
+    ihhlohhuthemuceftddtnecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenucfjug
+    hrpefoggffhffvvefkjghfufgtgfesthejredtredttdenucfhrhhomhepfdforghrkhcu
+    rfgvrghrshhonhdfuceomhhpvggrrhhsohhnqdhlvghnohhvohesshhquhgvsggsrdgtrg
+    eqnecuggftrfgrthhtvghrnhephfeuvdehteeghedthedtveehuddvjeejgffgieejvdeg
+    kefhfeelheekhedvffehnecuvehluhhsthgvrhfuihiivgeptdenucfrrghrrghmpehmrg
+    hilhhfrhhomhepmhhpvggrrhhsohhnqdhlvghnohhvohesshhquhgvsggsrdgtrgdpnhgs
+    pghrtghpthhtohepiedpmhhouggvpehsmhhtphhouhhtpdhrtghpthhtohepsggvnhhjrg
+    hmihhnrdhphhhilhhiphegleehsehgmhgrihhlrdgtohhmpdhrtghpthhtohepuggvrhgv
+    khhjohhhnhdrtghlrghrkhesghhmrghilhdrtghomhdprhgtphhtthhopehhrghnshhgse
+    hkvghrnhgvlhdrohhrghdprhgtphhtthhopehilhhpohdrjhgrrhhvihhnvghnsehlihhn
+    uhigrdhinhhtvghlrdgtohhmpdhrtghpthhtoheplhhinhhugidqkhgvrhhnvghlsehvgh
+    gvrhdrkhgvrhhnvghlrdhorhhgpdhrtghpthhtohepphhlrghtfhhorhhmqdgurhhivhgv
+    rhdqgiekieesvhhgvghrrdhkvghrnhgvlhdrohhrgh
+X-ME-Proxy: <xmx:ix5badgtgzxppkR0vQVnGoS4T9e_MurRE__S6uccVm9ccBe3xgamyg>
+    <xmx:ix5baUSZ-DDTysULbgGGtBJQU9jZjS37iAtQRs4D6jw-is2UbFYjXw>
+    <xmx:ix5bafU1gGH20DdEVgOvZzDCBVwS80WOhsewFoH1qQArZ8D2UygelQ>
+    <xmx:ix5baYSFnHbV4EqxrxlyJcPw6cmrQbjx9B-KcwbPaRk1GNLh1SZhcw>
+    <xmx:jB5bacvLcnKlzxQbuT3M8G0iaVymZ-f91dth2eNmgE53_vIEVwBJloOp>
+Feedback-ID: ibe194615:Fastmail
+Received: by mailuser.phl.internal (Postfix, from userid 501)
+	id C91082CE0078; Sun,  4 Jan 2026 21:14:35 -0500 (EST)
+X-Mailer: MessagingEngine.com Webmail Interface
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+X-ThreadId: ATdvTkCHFK3g
+Date: Sun, 04 Jan 2026 21:14:14 -0500
+From: "Mark Pearson" <mpearson-lenovo@squebb.ca>
+To: "Benjamin Philip" <benjamin.philip495@gmail.com>,
+ "platform-driver-x86@vger.kernel.org" <platform-driver-x86@vger.kernel.org>,
+ linux-kernel@vger.kernel.org
+Cc: "Derek J . Clark" <derekjohn.clark@gmail.com>,
+ "Hans de Goede" <hansg@kernel.org>,
+ =?UTF-8?Q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
+Message-Id: <ae5bbfdb-5a93-4f7b-b553-86014e6a2029@app.fastmail.com>
+In-Reply-To: <20260101141657.54258-1-benjamin.philip495@gmail.com>
+References: <20260101141657.54258-1-benjamin.philip495@gmail.com>
+Subject: Re: [PATCH v2] platform/x86: yogabook: Clean up code style
+Content-Type: text/plain
+Content-Transfer-Encoding: 7bit
 
-https://bugzilla.kernel.org/show_bug.cgi?id=3D220945
 
-            Bug ID: 220945
-           Summary: ASUS Q405UA requires tablet_mode_sw=3D2 for proper
-                    tablet mode detection
-           Product: Drivers
-           Version: 2.5
-    Kernel Version: 6.17.12-300.fc43.x86_64
-          Hardware: Intel
-                OS: Linux
-            Status: NEW
-          Severity: normal
-          Priority: P3
-         Component: Platform_x86
-          Assignee: drivers_platform_x86@kernel-bugs.osdl.org
-          Reporter: andy.r.blank@gmail.com
-        Regression: No
 
-Created attachment 309126
-  --> https://bugzilla.kernel.org/attachment.cgi?id=3D309126&action=3Dedit
-Terminal output for uname, dmidecode, dmesg, input devices, & evtest
+On Thu, Jan 1, 2026, at 9:16 AM, Benjamin Philip wrote:
+> This commit cleans up the following checks flagged by checkpatch in
+> yogabook.c:
+>
+> - CHECK: Prefer kernel type 'u8' over 'uint8_t'
+> - CHECK: Comparison to NULL could be written "!data"
+> - CHECK: line length of ... exceeds 100 columns
+>
+> Signed-off-by: Benjamin Philip <benjamin.philip495@gmail.com>
+> ---
+> Changes in v2:
+>   - Drop cleanup for "CHECK: Unnecessary parentheses around '...'" 
+>
+>  drivers/platform/x86/lenovo/yogabook.c | 12 +++++++-----
+>  1 file changed, 7 insertions(+), 5 deletions(-)
+>
+> diff --git a/drivers/platform/x86/lenovo/yogabook.c 
+> b/drivers/platform/x86/lenovo/yogabook.c
+> index 31b298dc5046..69887de36c9b 100644
+> --- a/drivers/platform/x86/lenovo/yogabook.c
+> +++ b/drivers/platform/x86/lenovo/yogabook.c
+> @@ -57,7 +57,7 @@ struct yogabook_data {
+>  	struct work_struct work;
+>  	struct led_classdev kbd_bl_led;
+>  	unsigned long flags;
+> -	uint8_t brightness;
+> +	u8 brightness;
+>  };
+> 
+>  static void yogabook_work(struct work_struct *work)
+> @@ -338,16 +338,18 @@ static int yogabook_wmi_probe(struct wmi_device 
+> *wdev, const void *context)
+>  	int r;
+> 
+>  	data = devm_kzalloc(dev, sizeof(*data), GFP_KERNEL);
+> -	if (data == NULL)
+> +	if (!data)
+>  		return -ENOMEM;
+> 
+>  	data->kbd_adev = acpi_dev_get_first_match_dev("GDIX1001", NULL, -1);
+>  	if (!data->kbd_adev)
+> -		return dev_err_probe(dev, -ENODEV, "Cannot find the touchpad device 
+> in ACPI tables\n");
+> +		return dev_err_probe(dev, -ENODEV,
+> +				     "Cannot find the touchpad device in ACPI tables\n");
+> 
+>  	data->dig_adev = acpi_dev_get_first_match_dev("WCOM0019", NULL, -1);
+>  	if (!data->dig_adev) {
+> -		r = dev_err_probe(dev, -ENODEV, "Cannot find the digitizer device in 
+> ACPI tables\n");
+> +		r = dev_err_probe(dev, -ENODEV,
+> +				  "Cannot find the digitizer device in ACPI tables\n");
+>  		goto error_put_devs;
+>  	}
+> 
+> @@ -453,7 +455,7 @@ static int yogabook_pdev_probe(struct platform_device *pdev)
+>  	int r;
+> 
+>  	data = devm_kzalloc(dev, sizeof(*data), GFP_KERNEL);
+> -	if (data == NULL)
+> +	if (!data)
+>  		return -ENOMEM;
+> 
+>  	data->kbd_dev = bus_find_device_by_name(&i2c_bus_type, NULL, "i2c-goodix_ts");
+> -- 
+> 2.52.0
 
-The ASUS Q405UA 2-in-1 convertible laptop does not properly expose the
-SW_TABLET_MODE switch with the default tablet_mode_sw=3D-1 (auto-detect) se=
-tting
-in the asus-nb-wmi driver.
-DMI Information: Product Q405UA, Board Q405UA, BIOS Q405UA.308, Chassis Typ=
-e 31
-(Convertible)
-CURRENT BEHAVIOR: With default settings (tablet_mode_sw=3D-1), no SW_TABLET=
-_MODE
-switch is exposed. The Embedded Controller (EC) correctly disables the keyb=
-oard
-when folding past 180 degrees. KEY_PROG2 events are generated on hinge
-transitions via /dev/input/event14 (Asus WMI hotkeys). Touchpad remains act=
-ive
-in tablet mode because no tablet mode switch is available for userspace.
-EXPECTED BEHAVIOR: SW_TABLET_MODE switch should be automatically exposed.
-Tablet mode state should change when laptop is folded past 180 degrees.
-Userspace (libinput/KDE/GNOME) should be able to automatically disable touc=
-hpad
-in tablet mode.
-WORKAROUND: Setting tablet_mode_sw=3D2 (lid-flip detection) in the asus-nb-=
-wmi
-module parameters properly exposes the SW_TABLET_MODE switch and resolves t=
-he
-issue. Create /etc/modprobe.d/asus-nb-wmi.conf with: options asus_nb_wmi
-tablet_mode_sw=3D2
-PROPOSED SOLUTION: Add a DMI quirk for the ASUS Q405UA to automatically set
-tablet_mode_sw=3D2, similar to other models in the asus-nb-wmi driver
-(drivers/platform/x86/asus-nb-wmi.c).
-SYSTEM INFORMATION: Model ASUS Q405UA, Kernel 6.17.12-300.fc43.x86_64,
-Distribution Fedora 43
-DRIVER MESSAGES (from dmesg): asus_wmi: ASUS WMI generic driver loaded,
-asus_wmi: Initialization: 0x1, asus_wmi: BIOS WMI version: 9.0, asus_wmi: S=
-FUN
-value: 0x21, asus-nb-wmi asus-nb-wmi: Detected ATK, not ASUSWMI, use DSTS,
-input: Asus WMI hotkeys as /devices/platform/asus-nb-wmi/input/input20
-TESTING RESULTS: With tablet_mode_sw=3D2 configured, evtest shows Event cod=
-e 1
-(SW_TABLET_MODE) is present. Switch state correctly toggles between 0 (lapt=
-op)
-and 1 (tablet) when folding. libinput debug-events shows proper SWITCH_TOGG=
-LE
-events. Touchpad automatically disables in tablet mode as expected.
-ADDITIONAL NOTES: The EC already tracks hinge position (evidenced by automa=
-tic
-keyboard disabling). KEY_PROG2 events fire on hinge transitions but are
-insufficient for userspace to properly detect tablet mode. Other ASUS 2-in-1
-models with similar behavior may also benefit from this quirk.
+Looks good to me. Thanks!
+Reviewed-by: Mark Pearson <mpearson-lenovo@squebb.ca>
 
---=20
-You may reply to this email to add a comment.
-
-You are receiving this mail because:
-You are watching the assignee of the bug.=
+Mark
