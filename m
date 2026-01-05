@@ -1,98 +1,358 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.18])
+Received: from CY7PR03CU001.outbound.protection.outlook.com (mail-westcentralusazon11010066.outbound.protection.outlook.com [40.93.198.66])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 320D81C84BB;
-	Mon,  5 Jan 2026 15:29:09 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.18
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1767626951; cv=none; b=B34K4YeRxodESuV5aqzdlKAKPEHh8XHlm59sgo8maEAxDBKES0+B/N1g5Z0yi5JEZB25vXSbi1MZTm2r/CVrwFdWJHIpZtUKlAMsLpbrU0oseZd0rWgLR/4i0ljcUPqX1bRTlCM4RXhZl9Qsg+ukuS+PLQ/Hk2GwB6qiFkBWebE=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1767626951; c=relaxed/simple;
-	bh=gR0EEkhchhl/9ruBsCOfr6xzYU++I71FdcUhdJ8T5Dc=;
-	h=From:To:Cc:In-Reply-To:References:Subject:Message-Id:Date:
-	 MIME-Version:Content-Type; b=dTvvIWkWmmMxccbBheYliSqy7uE9W5tSLJpDKv3jirJKT4VgtkL4L4S84l8/ItcIyzGx8SDGsq6s5F4V1yGRs5g5Cqgz6VLea0tkBq/Ll2RBKkKSWWpShnerD8T3fV+xkJVvfllIbM6SSz4md9imj/elA4jeC5Yll72Gb3mKRZs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=pass smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=KT4va6wL; arc=none smtp.client-ip=192.198.163.18
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.intel.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 716EC337B9D;
+	Mon,  5 Jan 2026 16:29:06 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.93.198.66
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1767630550; cv=fail; b=qnK6gXrHRA9Szl6PqJmuTvPcsvlg2VP03CIlQZwkCLwdW+TeW6M6s07hBTIm1FUqla+eIcC/V4iLk8285ijeiMtqichhv4CozcRh7++IEgQuq6EnktwtDHETYgECVuSZs1+1VKP3Yfg4EcIJIF8JsthBEZyo/lQShYfY8XCHtak=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1767630550; c=relaxed/simple;
+	bh=vkiE1ghbPMJbzOgJn3NnzroD9Pd4TItr8x7luhUbdM8=;
+	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
+	 In-Reply-To:Content-Type; b=ooJUZQ1vB7ZqEEbmOXqZkCV8RGRbSLef98ScOjppmpfSoDIP7w9ewibRL9i2JlzSyZwQca3oLUxcRdTspNmPJDxR9gsd3lKqGuMVGHudpx7JlaoNGzAXiadFUlvL57WnNNFsoGzjXwcmtl6Uw5KzawOdCR/54eeF702TdR9doKw=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=IYUVaGp5; arc=fail smtp.client-ip=40.93.198.66
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=amd.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="KT4va6wL"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1767626950; x=1799162950;
-  h=from:to:cc:in-reply-to:references:subject:message-id:
-   date:mime-version:content-transfer-encoding;
-  bh=gR0EEkhchhl/9ruBsCOfr6xzYU++I71FdcUhdJ8T5Dc=;
-  b=KT4va6wLPRUFG+soEjaBdJj9nuiFOZqcO0JfOyz326A5UVL3U17cZAZK
-   KNrlSQPxU41Q/pc3myhKLViMNV6+KNWOM/LU3+Fzw+VD4m51vO/99tA5Y
-   K4F9UgHT7XqZdfqe9UkF+08iMw0vfr6T3Y2+DcXe65vP+MQBoJjI4cDKh
-   kPIFIWWsrZD8uLP64g3euI5u+nwPtCba1R8MI9HuIf08LGnSauoVdHCo/
-   dH9Kli5niUMJw1Ag2f9rY2PLYSfSCw4ddeBj6bm0NDsxGxVmv3//Lr/tW
-   IkMf8ddnYsIZ+AyqGjwlRFU1gBgwc2V5Jzyai/XCqBteEhtMJEqQfkCYD
-   Q==;
-X-CSE-ConnectionGUID: ctAXfFqMS3a1nIzaTVUGJQ==
-X-CSE-MsgGUID: 9+hUCPsdTm2CYigkD9ryRw==
-X-IronPort-AV: E=McAfee;i="6800,10657,11662"; a="68186255"
-X-IronPort-AV: E=Sophos;i="6.21,203,1763452800"; 
-   d="scan'208";a="68186255"
-Received: from orviesa001.jf.intel.com ([10.64.159.141])
-  by fmvoesa112.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 05 Jan 2026 07:29:09 -0800
-X-CSE-ConnectionGUID: J0HYnX1KS2KsbAr2uYOckw==
-X-CSE-MsgGUID: lAEGPfbUTe2UtwdtkGqThQ==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.21,203,1763452800"; 
-   d="scan'208";a="239896325"
-Received: from ijarvine-mobl1.ger.corp.intel.com (HELO localhost) ([10.245.244.202])
-  by smtpauth.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 05 Jan 2026 07:29:03 -0800
-From: =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
-To: linux-doc@vger.kernel.org, Haiyue Wang <haiyuewa@163.com>
-Cc: Naveen Krishna Chatradhi <naveenkrishna.chatradhi@amd.com>, 
- Carlos Bilbao <carlos.bilbao@kernel.org>, 
- Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@redhat.com>, 
- Borislav Petkov <bp@alien8.de>, Dave Hansen <dave.hansen@linux.intel.com>, 
- x86@kernel.org, "H. Peter Anvin" <hpa@zytor.com>, 
- Jonathan Corbet <corbet@lwn.net>, 
- Greg Kroah-Hartman <gregkh@linuxfoundation.org>, 
- Randy Dunlap <rdunlap@infradead.org>, Akshay Gupta <akshay.gupta@amd.com>, 
- Bagas Sanjaya <bagasdotme@gmail.com>, platform-driver-x86@vger.kernel.org, 
- linux-kernel@vger.kernel.org
-In-Reply-To: <20251230133101.14362-1-haiyuewa@163.com>
-References: <20251230133101.14362-1-haiyuewa@163.com>
-Subject: Re: [PATCH v1] docs: fix PPR for AMD EPYC broken link
-Message-Id: <176762693843.2568.9282406819072603735.b4-ty@linux.intel.com>
-Date: Mon, 05 Jan 2026 17:28:58 +0200
+	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="IYUVaGp5"
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=eCvuZV0Wh2B8XxV2+fU/j2W2la73//kfwo+g1gYS7ZWyhjbBO1GRnxxwtChwBhYzkvgUP/V8veobN72V3n/dw71pgYl1/UUuH8/nHHaysxtckfO6Cznfi6SoxpQWVH4oBFO7gkhUjXgKeV26zJls0Z1JSDPiYBT/EPklDQgTn8Re/IswWhSKtwGOI8l5E5uZZ9W1epZQL4EmqIh7PhPXHlLlImrTu3/Kv+8PyVd3iJQzcOaCYfRG/ZZz815uypzwhQZHLsvWcCR/J91Z+9yhqseM14wuO7BrLEDhKBV9uUXfwpRenFTQvP1ljfEjV/RWIuG5+cYb5ptOG7lmNgnzfQ==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=g3Pn5EnbhcKQNJ/BtLdKibeqtnTzXBmw8iebLfLjyLs=;
+ b=AdVff8camTGw9vAy4r6sbPVqvgbHgKoJybemElGz5b4pOgh+g8Cmyom37P+CUUvd2QZpagKT9uzC4305+AeRadKLVC1zvdxH/4hZLYfbx6u1fLBl+lB7mtXkD0FozeO0HmzPJ7bjiGkoiNIRKiIN/wiZjt6b1ECGCvikVXIRcEZmlJlsOCVv4paSP0g/s6xgm7oKtIsv4lB+C7jrwaG/OKNPsv6teQdCnLfBcipkYoLJX0LoQBtqIwlDKOqOdyCzjBcikwk5iouHMbhGp7xb/SvmMZgDg5xjvD+C+vxPhtik5RcxqJ20rUaVamPqVJZ/qHHCV14rxKJbhMQvQ5yXzw==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
+ 165.204.84.17) smtp.rcpttodomain=linux.intel.com smtp.mailfrom=amd.com;
+ dmarc=pass (p=quarantine sp=quarantine pct=100) action=none
+ header.from=amd.com; dkim=none (message not signed); arc=none (0)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=g3Pn5EnbhcKQNJ/BtLdKibeqtnTzXBmw8iebLfLjyLs=;
+ b=IYUVaGp5w7xWOUA8usJRqkQZYCRFKy8KGoxAZ+9CcckGMWXlt6y1+Nd8mxgNoGIkVfA4x6/dot21dPpOju0+u1DoE11Bqh9sftdjL9Emj5moDPRyiAorGaQOjWix2aADVrUljei7aD1ft8C6cue+Jl56cTm7Zu5w9+mzDGNBqgM=
+Received: from SN6PR2101CA0012.namprd21.prod.outlook.com
+ (2603:10b6:805:106::22) by MW6PR12MB8960.namprd12.prod.outlook.com
+ (2603:10b6:303:23e::22) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.9478.4; Mon, 5 Jan
+ 2026 16:29:03 +0000
+Received: from SA2PEPF00001508.namprd04.prod.outlook.com
+ (2603:10b6:805:106:cafe::e6) by SN6PR2101CA0012.outlook.office365.com
+ (2603:10b6:805:106::22) with Microsoft SMTP Server (version=TLS1_3,
+ cipher=TLS_AES_256_GCM_SHA384) id 15.20.9520.0 via Frontend Transport; Mon, 5
+ Jan 2026 16:29:01 +0000
+X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 165.204.84.17)
+ smtp.mailfrom=amd.com; dkim=none (message not signed)
+ header.d=none;dmarc=pass action=none header.from=amd.com;
+Received-SPF: Pass (protection.outlook.com: domain of amd.com designates
+ 165.204.84.17 as permitted sender) receiver=protection.outlook.com;
+ client-ip=165.204.84.17; helo=satlexmb08.amd.com; pr=C
+Received: from satlexmb08.amd.com (165.204.84.17) by
+ SA2PEPF00001508.mail.protection.outlook.com (10.167.242.40) with Microsoft
+ SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.9499.1 via Frontend Transport; Mon, 5 Jan 2026 16:29:01 +0000
+Received: from satlexmb10.amd.com (10.181.42.219) by satlexmb08.amd.com
+ (10.181.42.217) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.2562.17; Mon, 5 Jan
+ 2026 10:29:00 -0600
+Received: from satlexmb08.amd.com (10.181.42.217) by satlexmb10.amd.com
+ (10.181.42.219) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.2562.17; Mon, 5 Jan
+ 2026 10:29:00 -0600
+Received: from [172.19.71.207] (10.180.168.240) by satlexmb08.amd.com
+ (10.181.42.217) with Microsoft SMTP Server id 15.2.2562.17 via Frontend
+ Transport; Mon, 5 Jan 2026 10:28:59 -0600
+Message-ID: <f5c11ef5-0370-a53e-9fb2-b43f1367b0e9@amd.com>
+Date: Mon, 5 Jan 2026 08:28:59 -0800
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
+ Thunderbird/91.11.0
+Subject: Re: [PATCH V2 1/2] platform/x86/amd/pmf: Introduce new interface to
+ export NPU metrics
+Content-Language: en-US
+To: =?UTF-8?Q?Ilpo_J=c3=a4rvinen?= <ilpo.jarvinen@linux.intel.com>
+CC: Hans de Goede <hansg@kernel.org>, <ogabbay@kernel.org>,
+	<quic_jhugo@quicinc.com>, <maciej.falkowski@linux.intel.com>, "Shyam Sundar S
+ K" <Shyam-sundar.S-k@amd.com>, LKML <linux-kernel@vger.kernel.org>,
+	<max.zhen@amd.com>, <sonal.santan@amd.com>, <mario.limonciello@amd.com>,
+	<dri-devel@lists.freedesktop.org>, <platform-driver-x86@vger.kernel.org>,
+	<VinitKumar.Shukla@amd.com>, Patil Rajesh Reddy <Patil.Reddy@amd.com>
+References: <20251212181803.1825142-1-lizhi.hou@amd.com>
+ <20251212181803.1825142-2-lizhi.hou@amd.com>
+ <975fcbfc-33d2-758c-9efb-cbacef47883b@linux.intel.com>
+From: Lizhi Hou <lizhi.hou@amd.com>
+In-Reply-To: <975fcbfc-33d2-758c-9efb-cbacef47883b@linux.intel.com>
+Content-Type: text/plain; charset="UTF-8"; format=flowed
 Content-Transfer-Encoding: 8bit
-X-Mailer: b4 0.13.0
+X-EOPAttributedMessage: 0
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: SA2PEPF00001508:EE_|MW6PR12MB8960:EE_
+X-MS-Office365-Filtering-Correlation-Id: 78467549-a857-4ac2-fcb7-08de4c7788c0
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam:
+	BCL:0;ARA:13230040|82310400026|376014|1800799024|36860700013;
+X-Microsoft-Antispam-Message-Info:
+	=?utf-8?B?MVk3ZmpjVVJpMENTaVlRZVoxSjBnRmx3TW9tV0xTdFREQ2RtSlltNjN1M2tk?=
+ =?utf-8?B?cUFGaW44MTdNWkV6QkJjK280UysxbE44cFFrenV1VmRoMlFYVjV5QnVOQWJV?=
+ =?utf-8?B?VnhrMUQxZkNGRndhRVA3TFlRT2RxSzJyNEorclBUb3NodWQzRG1UT0F3U2FL?=
+ =?utf-8?B?YW9CUDE1OTluTGlRa0N5VzlTOGovRisrUXFsbnFXLzl1QUhHR1RYNTlaYTBw?=
+ =?utf-8?B?YXBWUXhMTnFlVGhMaE5sbzFFa2drWWpEdFNSVXFaMmFpSGcvUVp4bWRDMFdC?=
+ =?utf-8?B?MTRJU3JSc3lCTFdyeEZsL0ZZM3dIbStPazFhSW9uY2FjY0QvUjNWVGNjeC9D?=
+ =?utf-8?B?RkJsVnJpcXJ1K2dBRTZ4bTNjcUZXZ3ZVeGRicURhZGhKNCs5aElKUTUxU09H?=
+ =?utf-8?B?eTlFVjVxQzFzbDdZWWxaR20vcWFHdExNVzVmd1ZmUXNLWVhMZytkUzhvRXFB?=
+ =?utf-8?B?L01ZNUY1NzlGNHM0Tk91N0pGMmRyUTZMbXFlNXBYNDhha0ZaRW9tNU96OWJJ?=
+ =?utf-8?B?cFNiM1d6MncvV21JM3hDdnRuelZ1ZVFPQzNuNFE5aTdhaHFRd05XZXd3VVRW?=
+ =?utf-8?B?QjFKWi9GT3pRdENzNmxTbkxwREMvSnRJWjZYWk16NUJlWkU0ZlFWeXVYRzYy?=
+ =?utf-8?B?dlVkMkh4MzNIU0lQRUkya2U4MUZYdzU0NGVRQ1EwYjgzcStFNmNjdjJpR1Zi?=
+ =?utf-8?B?WGxJSytDU0pvMlRUTkRVZ04weTgxR3AwUkpHRnpSWlFncUFTVklZWDRxaTVo?=
+ =?utf-8?B?WkxuSUllT21QK3VZb1N5M05weEhDazY2MTRlV3I3Z0lPTkdyeEtROGI1QThv?=
+ =?utf-8?B?ZnNibTBYZ1FNeGgxNG1oenVZb1I0SlYyZUhpSkhGeWlWR3JiVkVQdG9hMU1F?=
+ =?utf-8?B?bUFnNjFZamNLZk9HVjdZa3c1RjVCcE9tbElaaENSRC9pN1pIMUltRlZnVUJV?=
+ =?utf-8?B?bmlPUVpncFlJN3NqekVydEE0RnI5MUkvTU5hdGs3bDJQUkxTQUR2VjQ3blVC?=
+ =?utf-8?B?STFCUGZGaGxSNzRSc29zUllNc0ozYzYxZ3pnY0p0ZmczMXdEbDFXbk5SVXVW?=
+ =?utf-8?B?R0hYTjJKYlkrTWNkcXhQYlI4M3puMFNwbEVPNElGTk1ldFZlSlgycjZKWVJF?=
+ =?utf-8?B?M2QzcElGL3dROGoxN1o2YURvbUtuSTlSTzF2bm5Dbm5XSVNmOUxUd0JnZ3VY?=
+ =?utf-8?B?RmIzemFXTlp0UFdJcjJmV2IvS2owVGhOTEFDZUI1ajBhdmVhTlBtaENXVWd3?=
+ =?utf-8?B?QUQ3TVJtWXF1T2R6RENPYXhmZXJGU1ZxeTJZYXNvaW9MMXRleXlKRTQyVDNZ?=
+ =?utf-8?B?d3JHTUtkSnJRb3hzaDJTZ1R2Q2dOL3BFNmEzWUgxVG0vNFNQYlcxbjZIZ1Nx?=
+ =?utf-8?B?clk4TjhIVjFQUjlDZFZvelNJalIrL1lhWUR6MEtZOUxiWU1kL2xJTzJidUFM?=
+ =?utf-8?B?aVpXMll0UU4zeTVwZ3JxS1NLWDNFV3ZJWkRzNzFMU2xWYk9vSERWTFFsNE1x?=
+ =?utf-8?B?RTd4Skt4aEpFNWZkRHEvOEozODBSK2lSVFNNNnlHU015UlllYzJWak9tSmUr?=
+ =?utf-8?B?bmZ5QjZNSFA1c0hlV3RSNHRlQytCNkRhS2Z3T0Vpd3crVG11YzZYeUdrSlUv?=
+ =?utf-8?B?dEwvWHhab05UeVBHK2Q4SFVrNUlOWTBXYXo2WkE4Uk9lZFRNNzVCNzNybDVl?=
+ =?utf-8?B?VkI5YkZHVlVQTGx1VUR0ZTZ6UVpUYXZjTUYzcTE5MTdsTzJ5U2dzbVY5UUlK?=
+ =?utf-8?B?S3FLKzlqM1pzb1dWOC9UaFlsenFxMEpOS0kvTHQrbXhYNmIxcjVHbnpHek9u?=
+ =?utf-8?B?MHQ5VkNySnpwMTFiQmV0ZThWczIzWWRkTUxCQVJPMXRTdzVhWkRHSWZOcFIw?=
+ =?utf-8?B?dE1NYzdWTEMvVmJsUE1FbnRMWDVaTDhrMjV2bWlqR0NJQW40SENUTkk2Q1lh?=
+ =?utf-8?B?L1Y0K0p1SURXdW9iRm1mM0hDakJ3c1FDT2VORXpteFZZNmwxazFOeVExWjhp?=
+ =?utf-8?B?cTBHR0x5UGd6QklEc001czMwa1N2V3ZZQ2FGY3lBSC9HVzA2R3pEQ1dSbGxX?=
+ =?utf-8?B?T242R3NPeGdIS3U1NTR3VXBVRktXeGdNdmRQWkxPTURURENxQzlvZDZxa1dz?=
+ =?utf-8?Q?ySwY=3D?=
+X-Forefront-Antispam-Report:
+	CIP:165.204.84.17;CTRY:US;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:satlexmb08.amd.com;PTR:InfoDomainNonexistent;CAT:NONE;SFS:(13230040)(82310400026)(376014)(1800799024)(36860700013);DIR:OUT;SFP:1101;
+X-OriginatorOrg: amd.com
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 05 Jan 2026 16:29:01.1713
+ (UTC)
+X-MS-Exchange-CrossTenant-Network-Message-Id: 78467549-a857-4ac2-fcb7-08de4c7788c0
+X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
+X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=3dd8961f-e488-4e60-8e11-a82d994e183d;Ip=[165.204.84.17];Helo=[satlexmb08.amd.com]
+X-MS-Exchange-CrossTenant-AuthSource:
+	SA2PEPF00001508.namprd04.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Anonymous
+X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: MW6PR12MB8960
 
-On Tue, 30 Dec 2025 21:30:50 +0800, Haiyue Wang wrote:
 
-> As 'AMD Documentation Hub' [1] announced: "All technical documentation,
-> including for AMD EPYC™ processors ..., and more is now hosted on the
-> AMD Technical Information Portal (TIP) [2]".
-> 
-> By searching the No.55898, update the new URL.
-> 
-> [1] https://www.amd.com/en/search/documentation/hub.html
-> [2] https://docs.amd.com/
-> 
-> [...]
+On 1/5/26 07:27, Ilpo Järvinen wrote:
+> On Fri, 12 Dec 2025, Lizhi Hou wrote:
+>
+>> From: Shyam Sundar S K <Shyam-sundar.S-k@amd.com>
+>>
+>> The PMF driver retrieves NPU metrics data from the PMFW. Introduce a new
+>> interface to make NPU metrics accessible to other drivers like AMDXDNA
+>> driver, which can access and utilize this information as needed.
+>>
+>> Reviewed-by: Mario Limonciello <mario.limonciello@amd.com>
+>> Co-developed-by: Patil Rajesh Reddy <Patil.Reddy@amd.com>
+>> Signed-off-by: Patil Rajesh Reddy <Patil.Reddy@amd.com>
+>> Signed-off-by: Shyam Sundar S K <Shyam-sundar.S-k@amd.com>
+>> Signed-off-by: Lizhi Hou <lizhi.hou@amd.com>
+>> ---
+>>   drivers/platform/x86/amd/pmf/core.c | 75 +++++++++++++++++++++++++++++
+>>   drivers/platform/x86/amd/pmf/pmf.h  |  2 +
+>>   include/linux/amd-pmf-io.h          | 21 ++++++++
+>>   3 files changed, 98 insertions(+)
+>>
+>> diff --git a/drivers/platform/x86/amd/pmf/core.c b/drivers/platform/x86/amd/pmf/core.c
+>> index a6a5d416edf9..8e4ce91b3527 100644
+>> --- a/drivers/platform/x86/amd/pmf/core.c
+>> +++ b/drivers/platform/x86/amd/pmf/core.c
+>> @@ -8,12 +8,15 @@
+>>    * Author: Shyam Sundar S K <Shyam-sundar.S-k@amd.com>
+>>    */
+>>   
+>> +#include <linux/array_size.h>
+>> +#include <linux/cleanup.h>
+>>   #include <linux/debugfs.h>
+>>   #include <linux/iopoll.h>
+>>   #include <linux/module.h>
+>>   #include <linux/pci.h>
+>>   #include <linux/platform_device.h>
+>>   #include <linux/power_supply.h>
+>> +#include <linux/string.h>
+>>   #include <asm/amd/node.h>
+>>   #include "pmf.h"
+>>   
+>> @@ -53,6 +56,8 @@ static bool force_load;
+>>   module_param(force_load, bool, 0444);
+>>   MODULE_PARM_DESC(force_load, "Force load this driver on supported older platforms (experimental)");
+>>   
+>> +static struct device *pmf_device;
+>> +
+>>   static int amd_pmf_pwr_src_notify_call(struct notifier_block *nb, unsigned long event, void *data)
+>>   {
+>>   	struct amd_pmf_dev *pmf = container_of(nb, struct amd_pmf_dev, pwr_src_notifier);
+>> @@ -314,6 +319,70 @@ int amd_pmf_init_metrics_table(struct amd_pmf_dev *dev)
+>>   	return 0;
+>>   }
+>>   
+>> +static int is_npu_metrics_supported(struct amd_pmf_dev *pdev)
+>> +{
+>> +	switch (pdev->cpu_id) {
+>> +	case PCI_DEVICE_ID_AMD_1AH_M20H_ROOT:
+>> +	case PCI_DEVICE_ID_AMD_1AH_M60H_ROOT:
+>> +		return 0;
+>> +	default:
+>> +		return -EOPNOTSUPP;
+>> +	}
+>> +}
+>> +
+>> +static int amd_pmf_get_smu_metrics(struct amd_pmf_dev *dev, struct amd_pmf_npu_metrics *data)
+>> +{
+>> +	int ret, i;
+>> +
+>> +	guard(mutex)(&dev->metrics_mutex);
+>> +
+>> +	if (is_npu_metrics_supported(dev))
+>> +		return -EOPNOTSUPP;
+> Generally, we don't want to shadow error codes like this so please save it
+> from is_npu_metrics_supported() and do return ret;
+Sure.
+>
+>> +
+>> +	ret = amd_pmf_set_dram_addr(dev, true);
+>> +	if (ret)
+>> +		return ret;
+>> +
+>> +	memset(dev->buf, 0, dev->mtable_size);
+>> +
+>> +	/* Send SMU command to get NPU metrics */
+>> +	ret = amd_pmf_send_cmd(dev, SET_TRANSFER_TABLE, SET_CMD, METRICS_TABLE_ID, NULL);
+>> +	if (ret) {
+>> +		dev_err(dev->dev, "SMU command failed to get NPU metrics: %d\n", ret);
+>> +		return ret;
+>> +	}
+>> +
+>> +	memcpy(&dev->m_table_v2, dev->buf, dev->mtable_size);
+>> +
+>> +	data->npuclk_freq = dev->m_table_v2.npuclk_freq;
+>> +	for (i = 0; i < ARRAY_SIZE(data->npu_busy); i++)
+>> +		data->npu_busy[i] = dev->m_table_v2.npu_busy[i];
+>> +	data->npu_power = dev->m_table_v2.npu_power;
+> To confirm, so only this field is currently going to be used?
+
+Yes. Only this field will be used for now.
 
 
-Thank you for your contribution, it has been applied to my local
-review-ilpo-fixes branch. Note it will show up in the public
-platform-drivers-x86/review-ilpo-fixes branch only once I've pushed my
-local branch there, which might take a while.
+Lizhi
 
-The list of commits applied:
-[1/1] docs: fix PPR for AMD EPYC broken link
-      commit: c92724b40c2f36ca0f2a789cf8cb80dd51107f25
-
---
- i.
-
+>
+> --
+>   i.
+>
+>> +	data->mpnpuclk_freq = dev->m_table_v2.mpnpuclk_freq;
+>> +	data->npu_reads = dev->m_table_v2.npu_reads;
+>> +	data->npu_writes = dev->m_table_v2.npu_writes;
+>> +
+>> +	return 0;
+>> +}
+>> +
+>> +int amd_pmf_get_npu_data(struct amd_pmf_npu_metrics *info)
+>> +{
+>> +	struct amd_pmf_dev *pdev;
+>> +
+>> +	if (!info)
+>> +		return -EINVAL;
+>> +
+>> +	if (!pmf_device)
+>> +		return -ENODEV;
+>> +
+>> +	pdev = dev_get_drvdata(pmf_device);
+>> +	if (!pdev)
+>> +		return -ENODEV;
+>> +
+>> +	return amd_pmf_get_smu_metrics(pdev, info);
+>> +}
+>> +EXPORT_SYMBOL_GPL(amd_pmf_get_npu_data);
+>> +
+>>   static int amd_pmf_suspend_handler(struct device *dev)
+>>   {
+>>   	struct amd_pmf_dev *pdev = dev_get_drvdata(dev);
+>> @@ -469,6 +538,10 @@ static int amd_pmf_probe(struct platform_device *pdev)
+>>   	mutex_init(&dev->update_mutex);
+>>   	mutex_init(&dev->cb_mutex);
+>>   
+>> +	err = devm_mutex_init(dev->dev, &dev->metrics_mutex);
+>> +	if (err)
+>> +		return err;
+>> +
+>>   	apmf_acpi_init(dev);
+>>   	platform_set_drvdata(pdev, dev);
+>>   	amd_pmf_dbgfs_register(dev);
+>> @@ -477,6 +550,8 @@ static int amd_pmf_probe(struct platform_device *pdev)
+>>   	if (is_apmf_func_supported(dev, APMF_FUNC_SBIOS_HEARTBEAT_V2))
+>>   		amd_pmf_notify_sbios_heartbeat_event_v2(dev, ON_LOAD);
+>>   
+>> +	pmf_device = dev->dev;
+>> +
+>>   	dev_info(dev->dev, "registered PMF device successfully\n");
+>>   
+>>   	return 0;
+>> diff --git a/drivers/platform/x86/amd/pmf/pmf.h b/drivers/platform/x86/amd/pmf/pmf.h
+>> index f07e9f4c660a..0354cc5dc79e 100644
+>> --- a/drivers/platform/x86/amd/pmf/pmf.h
+>> +++ b/drivers/platform/x86/amd/pmf/pmf.h
+>> @@ -12,6 +12,7 @@
+>>   #define PMF_H
+>>   
+>>   #include <linux/acpi.h>
+>> +#include <linux/amd-pmf-io.h>
+>>   #include <linux/input.h>
+>>   #include <linux/platform_device.h>
+>>   #include <linux/platform_profile.h>
+>> @@ -412,6 +413,7 @@ struct amd_pmf_dev {
+>>   	struct apmf_sbios_req_v1 req1;
+>>   	struct pmf_bios_inputs_prev cb_prev; /* To preserve custom BIOS inputs */
+>>   	bool cb_flag;			     /* To handle first custom BIOS input */
+>> +	struct mutex metrics_mutex;
+>>   };
+>>   
+>>   struct apmf_sps_prop_granular_v2 {
+>> diff --git a/include/linux/amd-pmf-io.h b/include/linux/amd-pmf-io.h
+>> index 6fa510f419c0..55198d2875cc 100644
+>> --- a/include/linux/amd-pmf-io.h
+>> +++ b/include/linux/amd-pmf-io.h
+>> @@ -61,5 +61,26 @@ enum laptop_placement {
+>>   	LP_UNDEFINED,
+>>   };
+>>   
+>> +/**
+>> + * struct amd_pmf_npu_metrics: Get NPU metrics data from PMF driver
+>> + * @npuclk_freq: NPU clock frequency [MHz]
+>> + * @npu_busy: NPU busy % [0-100]
+>> + * @npu_power: NPU power [mW]
+>> + * @mpnpuclk_freq: MPNPU [MHz]
+>> + * @npu_reads: NPU read bandwidth [MB/sec]
+>> + * @npu_writes: NPU write bandwidth [MB/sec]
+>> + */
+>> +struct amd_pmf_npu_metrics {
+>> +	u16 npuclk_freq;
+>> +	u16 npu_busy[8];
+>> +	u16 npu_power;
+>> +	u16 mpnpuclk_freq;
+>> +	u16 npu_reads;
+>> +	u16 npu_writes;
+>> +};
+>> +
+>>   int amd_get_sfh_info(struct amd_sfh_info *sfh_info, enum sfh_message_type op);
+>> +
+>> +/* AMD PMF and NPU interface */
+>> +int amd_pmf_get_npu_data(struct amd_pmf_npu_metrics *info);
+>>   #endif
+>>
