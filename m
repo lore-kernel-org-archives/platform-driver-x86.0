@@ -1,358 +1,236 @@
-Received: from CY7PR03CU001.outbound.protection.outlook.com (mail-westcentralusazon11010066.outbound.protection.outlook.com [40.93.198.66])
+Received: from mout.gmx.net (mout.gmx.net [212.227.17.20])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 716EC337B9D;
-	Mon,  5 Jan 2026 16:29:06 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.93.198.66
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1767630550; cv=fail; b=qnK6gXrHRA9Szl6PqJmuTvPcsvlg2VP03CIlQZwkCLwdW+TeW6M6s07hBTIm1FUqla+eIcC/V4iLk8285ijeiMtqichhv4CozcRh7++IEgQuq6EnktwtDHETYgECVuSZs1+1VKP3Yfg4EcIJIF8JsthBEZyo/lQShYfY8XCHtak=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1767630550; c=relaxed/simple;
-	bh=vkiE1ghbPMJbzOgJn3NnzroD9Pd4TItr8x7luhUbdM8=;
-	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
-	 In-Reply-To:Content-Type; b=ooJUZQ1vB7ZqEEbmOXqZkCV8RGRbSLef98ScOjppmpfSoDIP7w9ewibRL9i2JlzSyZwQca3oLUxcRdTspNmPJDxR9gsd3lKqGuMVGHudpx7JlaoNGzAXiadFUlvL57WnNNFsoGzjXwcmtl6Uw5KzawOdCR/54eeF702TdR9doKw=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=IYUVaGp5; arc=fail smtp.client-ip=40.93.198.66
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com
-Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=amd.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A8F7986348
+	for <platform-driver-x86@vger.kernel.org>; Mon,  5 Jan 2026 17:01:59 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=212.227.17.20
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1767632522; cv=none; b=NY8tlkjesRMw7fGyz2kYs8kBExwGxJWxuaak96EUdxhE/s5ZrkwxfQ0N6PqeSXyGwixTH7gBzrV5F5Rl+MaPx/sEC81srnMWsJ+J9P10SsGFDjTUE+bWo74jSwHBuWMNocIWkqu81U9yg7PyxMdo+cXA3qjn2/FKdBBBuMLKtTk=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1767632522; c=relaxed/simple;
+	bh=6hcb7eMs6DcF6dNEVOKWzxlZfxbC2U1s6U+ivLrENbw=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=PxWCKGKItiiTMbQeErSESsf0WZ84GKHHZAPXkyeCGLRDeYU4lwMR8Xx469MgKMD2dyf/UqNuYM4v2Gr5mEw4fjEFl6BGFpOIc6HNO2C5h/hoMkgNpj8988Yk2gfbEek+mHb1fjp95FUL//mIms7OwKnyswBRxzIw9t2y4KBFA8o=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gmx.de; spf=pass smtp.mailfrom=gmx.de; dkim=pass (2048-bit key) header.d=gmx.de header.i=w_armin@gmx.de header.b=sXZsqmtR; arc=none smtp.client-ip=212.227.17.20
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gmx.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmx.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="IYUVaGp5"
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=eCvuZV0Wh2B8XxV2+fU/j2W2la73//kfwo+g1gYS7ZWyhjbBO1GRnxxwtChwBhYzkvgUP/V8veobN72V3n/dw71pgYl1/UUuH8/nHHaysxtckfO6Cznfi6SoxpQWVH4oBFO7gkhUjXgKeV26zJls0Z1JSDPiYBT/EPklDQgTn8Re/IswWhSKtwGOI8l5E5uZZ9W1epZQL4EmqIh7PhPXHlLlImrTu3/Kv+8PyVd3iJQzcOaCYfRG/ZZz815uypzwhQZHLsvWcCR/J91Z+9yhqseM14wuO7BrLEDhKBV9uUXfwpRenFTQvP1ljfEjV/RWIuG5+cYb5ptOG7lmNgnzfQ==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=g3Pn5EnbhcKQNJ/BtLdKibeqtnTzXBmw8iebLfLjyLs=;
- b=AdVff8camTGw9vAy4r6sbPVqvgbHgKoJybemElGz5b4pOgh+g8Cmyom37P+CUUvd2QZpagKT9uzC4305+AeRadKLVC1zvdxH/4hZLYfbx6u1fLBl+lB7mtXkD0FozeO0HmzPJ7bjiGkoiNIRKiIN/wiZjt6b1ECGCvikVXIRcEZmlJlsOCVv4paSP0g/s6xgm7oKtIsv4lB+C7jrwaG/OKNPsv6teQdCnLfBcipkYoLJX0LoQBtqIwlDKOqOdyCzjBcikwk5iouHMbhGp7xb/SvmMZgDg5xjvD+C+vxPhtik5RcxqJ20rUaVamPqVJZ/qHHCV14rxKJbhMQvQ5yXzw==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
- 165.204.84.17) smtp.rcpttodomain=linux.intel.com smtp.mailfrom=amd.com;
- dmarc=pass (p=quarantine sp=quarantine pct=100) action=none
- header.from=amd.com; dkim=none (message not signed); arc=none (0)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=g3Pn5EnbhcKQNJ/BtLdKibeqtnTzXBmw8iebLfLjyLs=;
- b=IYUVaGp5w7xWOUA8usJRqkQZYCRFKy8KGoxAZ+9CcckGMWXlt6y1+Nd8mxgNoGIkVfA4x6/dot21dPpOju0+u1DoE11Bqh9sftdjL9Emj5moDPRyiAorGaQOjWix2aADVrUljei7aD1ft8C6cue+Jl56cTm7Zu5w9+mzDGNBqgM=
-Received: from SN6PR2101CA0012.namprd21.prod.outlook.com
- (2603:10b6:805:106::22) by MW6PR12MB8960.namprd12.prod.outlook.com
- (2603:10b6:303:23e::22) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.9478.4; Mon, 5 Jan
- 2026 16:29:03 +0000
-Received: from SA2PEPF00001508.namprd04.prod.outlook.com
- (2603:10b6:805:106:cafe::e6) by SN6PR2101CA0012.outlook.office365.com
- (2603:10b6:805:106::22) with Microsoft SMTP Server (version=TLS1_3,
- cipher=TLS_AES_256_GCM_SHA384) id 15.20.9520.0 via Frontend Transport; Mon, 5
- Jan 2026 16:29:01 +0000
-X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 165.204.84.17)
- smtp.mailfrom=amd.com; dkim=none (message not signed)
- header.d=none;dmarc=pass action=none header.from=amd.com;
-Received-SPF: Pass (protection.outlook.com: domain of amd.com designates
- 165.204.84.17 as permitted sender) receiver=protection.outlook.com;
- client-ip=165.204.84.17; helo=satlexmb08.amd.com; pr=C
-Received: from satlexmb08.amd.com (165.204.84.17) by
- SA2PEPF00001508.mail.protection.outlook.com (10.167.242.40) with Microsoft
- SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.9499.1 via Frontend Transport; Mon, 5 Jan 2026 16:29:01 +0000
-Received: from satlexmb10.amd.com (10.181.42.219) by satlexmb08.amd.com
- (10.181.42.217) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.2562.17; Mon, 5 Jan
- 2026 10:29:00 -0600
-Received: from satlexmb08.amd.com (10.181.42.217) by satlexmb10.amd.com
- (10.181.42.219) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.2562.17; Mon, 5 Jan
- 2026 10:29:00 -0600
-Received: from [172.19.71.207] (10.180.168.240) by satlexmb08.amd.com
- (10.181.42.217) with Microsoft SMTP Server id 15.2.2562.17 via Frontend
- Transport; Mon, 5 Jan 2026 10:28:59 -0600
-Message-ID: <f5c11ef5-0370-a53e-9fb2-b43f1367b0e9@amd.com>
-Date: Mon, 5 Jan 2026 08:28:59 -0800
+	dkim=pass (2048-bit key) header.d=gmx.de header.i=w_armin@gmx.de header.b="sXZsqmtR"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=gmx.de;
+	s=s31663417; t=1767632516; x=1768237316; i=w_armin@gmx.de;
+	bh=6hcb7eMs6DcF6dNEVOKWzxlZfxbC2U1s6U+ivLrENbw=;
+	h=X-UI-Sender-Class:Message-ID:Date:MIME-Version:Subject:To:Cc:
+	 References:From:In-Reply-To:Content-Type:
+	 Content-Transfer-Encoding:cc:content-transfer-encoding:
+	 content-type:date:from:message-id:mime-version:reply-to:subject:
+	 to;
+	b=sXZsqmtRY7GaTPTgYT22EGBGf0mr70GalTH5bQ7TdfSkDnItdyDrNN/CnAGI97r3
+	 Mbzu1Io3u+/3wvmCHsOu44PBTjAQWKEm2y5fV0fIEAUcrrSOpgIDiIP/f9ilUx2jS
+	 qZlDdEUjNDblJtm7DtBS/nW+CoiGYBF9MZkf9Qoh3lb4/qKCodcc0TnutUA7nw1aL
+	 kgL33UAp1Fix0H5wR+nUgcwrNtqmDryLyxL1HJfHnwJg1f/l7wAdjF9QNldpPHxDm
+	 5viwalotlc7kIXFACV3BinQTnRfghnHs+ZWMMwlQtLMVXPAbpyH796yBsu/EM+xNp
+	 AbfWKUg0f5w/3JjCTA==
+X-UI-Sender-Class: 724b4f7f-cbec-4199-ad4e-598c01a50d3a
+Received: from [192.168.0.24] ([93.202.247.91]) by mail.gmx.net (mrgmx104
+ [212.227.17.168]) with ESMTPSA (Nemesis) id 1MFsYx-1vfFUJ2Kvn-00DbIN; Mon, 05
+ Jan 2026 18:01:56 +0100
+Message-ID: <655738e4-6128-4b43-aabe-b0eb0da0a0c7@gmx.de>
+Date: Mon, 5 Jan 2026 18:01:55 +0100
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
- Thunderbird/91.11.0
-Subject: Re: [PATCH V2 1/2] platform/x86/amd/pmf: Introduce new interface to
- export NPU metrics
+User-Agent: Mozilla Thunderbird
+Subject: Re: platform/x86: acer-wmi: Missing max fan speed (7000+ RPM) on Acer
+ Nitro AN515-58
+To: Pranay Pawar <pranaypawarofficial@gmail.com>
+Cc: platform-driver-x86@vger.kernel.org
+References: <CACy5qBaFv_L5y_nGJU_3pd3CXbFZrUAE18y5Fc-hnAmrd8bSLA@mail.gmail.com>
+ <1e4fe52c-d044-4869-a583-fa14f9740de0@gmx.de>
+ <CACy5qBZW1pbYrrTc-1tcNwzGTuty=aovnrK17==CaSppXuBurg@mail.gmail.com>
+ <abeb08c2-5aa5-4919-8016-d714c04c508b@gmx.de>
+ <CACy5qBY-6v7_jRizJ=dJkeKGF+4fVUwmX9oaP=8XHGROEYOgCA@mail.gmail.com>
+ <CACy5qBbgvgLa-y-TXz9ChaC1pvCAgKjQbU+=0Zd3gm-qyHHW_Q@mail.gmail.com>
 Content-Language: en-US
-To: =?UTF-8?Q?Ilpo_J=c3=a4rvinen?= <ilpo.jarvinen@linux.intel.com>
-CC: Hans de Goede <hansg@kernel.org>, <ogabbay@kernel.org>,
-	<quic_jhugo@quicinc.com>, <maciej.falkowski@linux.intel.com>, "Shyam Sundar S
- K" <Shyam-sundar.S-k@amd.com>, LKML <linux-kernel@vger.kernel.org>,
-	<max.zhen@amd.com>, <sonal.santan@amd.com>, <mario.limonciello@amd.com>,
-	<dri-devel@lists.freedesktop.org>, <platform-driver-x86@vger.kernel.org>,
-	<VinitKumar.Shukla@amd.com>, Patil Rajesh Reddy <Patil.Reddy@amd.com>
-References: <20251212181803.1825142-1-lizhi.hou@amd.com>
- <20251212181803.1825142-2-lizhi.hou@amd.com>
- <975fcbfc-33d2-758c-9efb-cbacef47883b@linux.intel.com>
-From: Lizhi Hou <lizhi.hou@amd.com>
-In-Reply-To: <975fcbfc-33d2-758c-9efb-cbacef47883b@linux.intel.com>
-Content-Type: text/plain; charset="UTF-8"; format=flowed
-Content-Transfer-Encoding: 8bit
-X-EOPAttributedMessage: 0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: SA2PEPF00001508:EE_|MW6PR12MB8960:EE_
-X-MS-Office365-Filtering-Correlation-Id: 78467549-a857-4ac2-fcb7-08de4c7788c0
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam:
-	BCL:0;ARA:13230040|82310400026|376014|1800799024|36860700013;
-X-Microsoft-Antispam-Message-Info:
-	=?utf-8?B?MVk3ZmpjVVJpMENTaVlRZVoxSjBnRmx3TW9tV0xTdFREQ2RtSlltNjN1M2tk?=
- =?utf-8?B?cUFGaW44MTdNWkV6QkJjK280UysxbE44cFFrenV1VmRoMlFYVjV5QnVOQWJV?=
- =?utf-8?B?VnhrMUQxZkNGRndhRVA3TFlRT2RxSzJyNEorclBUb3NodWQzRG1UT0F3U2FL?=
- =?utf-8?B?YW9CUDE1OTluTGlRa0N5VzlTOGovRisrUXFsbnFXLzl1QUhHR1RYNTlaYTBw?=
- =?utf-8?B?YXBWUXhMTnFlVGhMaE5sbzFFa2drWWpEdFNSVXFaMmFpSGcvUVp4bWRDMFdC?=
- =?utf-8?B?MTRJU3JSc3lCTFdyeEZsL0ZZM3dIbStPazFhSW9uY2FjY0QvUjNWVGNjeC9D?=
- =?utf-8?B?RkJsVnJpcXJ1K2dBRTZ4bTNjcUZXZ3ZVeGRicURhZGhKNCs5aElKUTUxU09H?=
- =?utf-8?B?eTlFVjVxQzFzbDdZWWxaR20vcWFHdExNVzVmd1ZmUXNLWVhMZytkUzhvRXFB?=
- =?utf-8?B?L01ZNUY1NzlGNHM0Tk91N0pGMmRyUTZMbXFlNXBYNDhha0ZaRW9tNU96OWJJ?=
- =?utf-8?B?cFNiM1d6MncvV21JM3hDdnRuelZ1ZVFPQzNuNFE5aTdhaHFRd05XZXd3VVRW?=
- =?utf-8?B?QjFKWi9GT3pRdENzNmxTbkxwREMvSnRJWjZYWk16NUJlWkU0ZlFWeXVYRzYy?=
- =?utf-8?B?dlVkMkh4MzNIU0lQRUkya2U4MUZYdzU0NGVRQ1EwYjgzcStFNmNjdjJpR1Zi?=
- =?utf-8?B?WGxJSytDU0pvMlRUTkRVZ04weTgxR3AwUkpHRnpSWlFncUFTVklZWDRxaTVo?=
- =?utf-8?B?WkxuSUllT21QK3VZb1N5M05weEhDazY2MTRlV3I3Z0lPTkdyeEtROGI1QThv?=
- =?utf-8?B?ZnNibTBYZ1FNeGgxNG1oenVZb1I0SlYyZUhpSkhGeWlWR3JiVkVQdG9hMU1F?=
- =?utf-8?B?bUFnNjFZamNLZk9HVjdZa3c1RjVCcE9tbElaaENSRC9pN1pIMUltRlZnVUJV?=
- =?utf-8?B?bmlPUVpncFlJN3NqekVydEE0RnI5MUkvTU5hdGs3bDJQUkxTQUR2VjQ3blVC?=
- =?utf-8?B?STFCUGZGaGxSNzRSc29zUllNc0ozYzYxZ3pnY0p0ZmczMXdEbDFXbk5SVXVW?=
- =?utf-8?B?R0hYTjJKYlkrTWNkcXhQYlI4M3puMFNwbEVPNElGTk1ldFZlSlgycjZKWVJF?=
- =?utf-8?B?M2QzcElGL3dROGoxN1o2YURvbUtuSTlSTzF2bm5Dbm5XSVNmOUxUd0JnZ3VY?=
- =?utf-8?B?RmIzemFXTlp0UFdJcjJmV2IvS2owVGhOTEFDZUI1ajBhdmVhTlBtaENXVWd3?=
- =?utf-8?B?QUQ3TVJtWXF1T2R6RENPYXhmZXJGU1ZxeTJZYXNvaW9MMXRleXlKRTQyVDNZ?=
- =?utf-8?B?d3JHTUtkSnJRb3hzaDJTZ1R2Q2dOL3BFNmEzWUgxVG0vNFNQYlcxbjZIZ1Nx?=
- =?utf-8?B?clk4TjhIVjFQUjlDZFZvelNJalIrL1lhWUR6MEtZOUxiWU1kL2xJTzJidUFM?=
- =?utf-8?B?aVpXMll0UU4zeTVwZ3JxS1NLWDNFV3ZJWkRzNzFMU2xWYk9vSERWTFFsNE1x?=
- =?utf-8?B?RTd4Skt4aEpFNWZkRHEvOEozODBSK2lSVFNNNnlHU015UlllYzJWak9tSmUr?=
- =?utf-8?B?bmZ5QjZNSFA1c0hlV3RSNHRlQytCNkRhS2Z3T0Vpd3crVG11YzZYeUdrSlUv?=
- =?utf-8?B?dEwvWHhab05UeVBHK2Q4SFVrNUlOWTBXYXo2WkE4Uk9lZFRNNzVCNzNybDVl?=
- =?utf-8?B?VkI5YkZHVlVQTGx1VUR0ZTZ6UVpUYXZjTUYzcTE5MTdsTzJ5U2dzbVY5UUlK?=
- =?utf-8?B?S3FLKzlqM1pzb1dWOC9UaFlsenFxMEpOS0kvTHQrbXhYNmIxcjVHbnpHek9u?=
- =?utf-8?B?MHQ5VkNySnpwMTFiQmV0ZThWczIzWWRkTUxCQVJPMXRTdzVhWkRHSWZOcFIw?=
- =?utf-8?B?dE1NYzdWTEMvVmJsUE1FbnRMWDVaTDhrMjV2bWlqR0NJQW40SENUTkk2Q1lh?=
- =?utf-8?B?L1Y0K0p1SURXdW9iRm1mM0hDakJ3c1FDT2VORXpteFZZNmwxazFOeVExWjhp?=
- =?utf-8?B?cTBHR0x5UGd6QklEc001czMwa1N2V3ZZQ2FGY3lBSC9HVzA2R3pEQ1dSbGxX?=
- =?utf-8?B?T242R3NPeGdIS3U1NTR3VXBVRktXeGdNdmRQWkxPTURURENxQzlvZDZxa1dz?=
- =?utf-8?Q?ySwY=3D?=
-X-Forefront-Antispam-Report:
-	CIP:165.204.84.17;CTRY:US;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:satlexmb08.amd.com;PTR:InfoDomainNonexistent;CAT:NONE;SFS:(13230040)(82310400026)(376014)(1800799024)(36860700013);DIR:OUT;SFP:1101;
-X-OriginatorOrg: amd.com
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 05 Jan 2026 16:29:01.1713
- (UTC)
-X-MS-Exchange-CrossTenant-Network-Message-Id: 78467549-a857-4ac2-fcb7-08de4c7788c0
-X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
-X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=3dd8961f-e488-4e60-8e11-a82d994e183d;Ip=[165.204.84.17];Helo=[satlexmb08.amd.com]
-X-MS-Exchange-CrossTenant-AuthSource:
-	SA2PEPF00001508.namprd04.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Anonymous
-X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: MW6PR12MB8960
+From: Armin Wolf <W_Armin@gmx.de>
+In-Reply-To: <CACy5qBbgvgLa-y-TXz9ChaC1pvCAgKjQbU+=0Zd3gm-qyHHW_Q@mail.gmail.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: quoted-printable
+X-Provags-ID: V03:K1:Xv6tblqp3PnjVPdBoJD7hU+gsqROTLRwAMXMezEmTTMe0Sk0W6Q
+ 4dLTpTiLTBvVPxjYGj3xuo4jxGtaIdy6ouniWBPEWiTYfeLzjLC+Wa+iuBrSpHu4oX3qkWf
+ tvplnLoTouUmiB2IMJOincixBbkJ2YXvOHjglyTvCwTM7/8dGT5s4TM3HbmcdQ49cURgdFV
+ Bp7Ylvgc8DBZx4bjG62/w==
+X-Spam-Flag: NO
+UI-OutboundReport: notjunk:1;M01:P0:qvX7l4vTPTM=;NDOv56rcrlp1+JWZDWj/pyqOpNh
+ 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
+ QLxfTyVg=
 
+Am 30.12.25 um 06:54 schrieb Pranay Pawar:
 
-On 1/5/26 07:27, Ilpo Järvinen wrote:
-> On Fri, 12 Dec 2025, Lizhi Hou wrote:
+> Sorry for the confusion earlier =E2=80=94 after rechecking the behavior
+> without the new patch, I=E2=80=99d like to clarify the results.
 >
->> From: Shyam Sundar S K <Shyam-sundar.S-k@amd.com>
->>
->> The PMF driver retrieves NPU metrics data from the PMFW. Introduce a new
->> interface to make NPU metrics accessible to other drivers like AMDXDNA
->> driver, which can access and utilize this information as needed.
->>
->> Reviewed-by: Mario Limonciello <mario.limonciello@amd.com>
->> Co-developed-by: Patil Rajesh Reddy <Patil.Reddy@amd.com>
->> Signed-off-by: Patil Rajesh Reddy <Patil.Reddy@amd.com>
->> Signed-off-by: Shyam Sundar S K <Shyam-sundar.S-k@amd.com>
->> Signed-off-by: Lizhi Hou <lizhi.hou@amd.com>
->> ---
->>   drivers/platform/x86/amd/pmf/core.c | 75 +++++++++++++++++++++++++++++
->>   drivers/platform/x86/amd/pmf/pmf.h  |  2 +
->>   include/linux/amd-pmf-io.h          | 21 ++++++++
->>   3 files changed, 98 insertions(+)
->>
->> diff --git a/drivers/platform/x86/amd/pmf/core.c b/drivers/platform/x86/amd/pmf/core.c
->> index a6a5d416edf9..8e4ce91b3527 100644
->> --- a/drivers/platform/x86/amd/pmf/core.c
->> +++ b/drivers/platform/x86/amd/pmf/core.c
->> @@ -8,12 +8,15 @@
->>    * Author: Shyam Sundar S K <Shyam-sundar.S-k@amd.com>
->>    */
->>   
->> +#include <linux/array_size.h>
->> +#include <linux/cleanup.h>
->>   #include <linux/debugfs.h>
->>   #include <linux/iopoll.h>
->>   #include <linux/module.h>
->>   #include <linux/pci.h>
->>   #include <linux/platform_device.h>
->>   #include <linux/power_supply.h>
->> +#include <linux/string.h>
->>   #include <asm/amd/node.h>
->>   #include "pmf.h"
->>   
->> @@ -53,6 +56,8 @@ static bool force_load;
->>   module_param(force_load, bool, 0444);
->>   MODULE_PARM_DESC(force_load, "Force load this driver on supported older platforms (experimental)");
->>   
->> +static struct device *pmf_device;
->> +
->>   static int amd_pmf_pwr_src_notify_call(struct notifier_block *nb, unsigned long event, void *data)
->>   {
->>   	struct amd_pmf_dev *pmf = container_of(nb, struct amd_pmf_dev, pwr_src_notifier);
->> @@ -314,6 +319,70 @@ int amd_pmf_init_metrics_table(struct amd_pmf_dev *dev)
->>   	return 0;
->>   }
->>   
->> +static int is_npu_metrics_supported(struct amd_pmf_dev *pdev)
->> +{
->> +	switch (pdev->cpu_id) {
->> +	case PCI_DEVICE_ID_AMD_1AH_M20H_ROOT:
->> +	case PCI_DEVICE_ID_AMD_1AH_M60H_ROOT:
->> +		return 0;
->> +	default:
->> +		return -EOPNOTSUPP;
->> +	}
->> +}
->> +
->> +static int amd_pmf_get_smu_metrics(struct amd_pmf_dev *dev, struct amd_pmf_npu_metrics *data)
->> +{
->> +	int ret, i;
->> +
->> +	guard(mutex)(&dev->metrics_mutex);
->> +
->> +	if (is_npu_metrics_supported(dev))
->> +		return -EOPNOTSUPP;
-> Generally, we don't want to shadow error codes like this so please save it
-> from is_npu_metrics_supported() and do return ret;
-Sure.
+> ** Without the patch:
+> 1. The fans are able to reach maximum RPM only when using the
+> balanced-performance profile.
+> 2. When selecting the performance profile, the fan speed remains
+> capped at ~4500 RPM.
 >
->> +
->> +	ret = amd_pmf_set_dram_addr(dev, true);
->> +	if (ret)
->> +		return ret;
->> +
->> +	memset(dev->buf, 0, dev->mtable_size);
->> +
->> +	/* Send SMU command to get NPU metrics */
->> +	ret = amd_pmf_send_cmd(dev, SET_TRANSFER_TABLE, SET_CMD, METRICS_TABLE_ID, NULL);
->> +	if (ret) {
->> +		dev_err(dev->dev, "SMU command failed to get NPU metrics: %d\n", ret);
->> +		return ret;
->> +	}
->> +
->> +	memcpy(&dev->m_table_v2, dev->buf, dev->mtable_size);
->> +
->> +	data->npuclk_freq = dev->m_table_v2.npuclk_freq;
->> +	for (i = 0; i < ARRAY_SIZE(data->npu_busy); i++)
->> +		data->npu_busy[i] = dev->m_table_v2.npu_busy[i];
->> +	data->npu_power = dev->m_table_v2.npu_power;
-> To confirm, so only this field is currently going to be used?
+> ** With the patch applied:
+> 1. Manual fan control is unlocked, which makes this patch important
+> and effective.
+> 2. The fans are able to reach maximum RPM only when using the
+> balanced-performance profile.
+>
+> So the issue is specifically that the performance profile still keeps
+> the fans capped, even though it is expected to be more aggressive than
+> balanced-performance.
 
-Yes. Only this field will be used for now.
+I see. Can you check if the fans reach their max. speed if you set the pwm=
+X_enable
+sysfs attributes below the associated hwmon device to "0"? This should swi=
+tch them
+into turbo mode.
 
-
-Lizhi
+Thanks,
+Armin Wolf
 
 >
-> --
->   i.
+> Apologies for the misunderstanding.
 >
->> +	data->mpnpuclk_freq = dev->m_table_v2.mpnpuclk_freq;
->> +	data->npu_reads = dev->m_table_v2.npu_reads;
->> +	data->npu_writes = dev->m_table_v2.npu_writes;
->> +
->> +	return 0;
->> +}
->> +
->> +int amd_pmf_get_npu_data(struct amd_pmf_npu_metrics *info)
->> +{
->> +	struct amd_pmf_dev *pdev;
->> +
->> +	if (!info)
->> +		return -EINVAL;
->> +
->> +	if (!pmf_device)
->> +		return -ENODEV;
->> +
->> +	pdev = dev_get_drvdata(pmf_device);
->> +	if (!pdev)
->> +		return -ENODEV;
->> +
->> +	return amd_pmf_get_smu_metrics(pdev, info);
->> +}
->> +EXPORT_SYMBOL_GPL(amd_pmf_get_npu_data);
->> +
->>   static int amd_pmf_suspend_handler(struct device *dev)
->>   {
->>   	struct amd_pmf_dev *pdev = dev_get_drvdata(dev);
->> @@ -469,6 +538,10 @@ static int amd_pmf_probe(struct platform_device *pdev)
->>   	mutex_init(&dev->update_mutex);
->>   	mutex_init(&dev->cb_mutex);
->>   
->> +	err = devm_mutex_init(dev->dev, &dev->metrics_mutex);
->> +	if (err)
->> +		return err;
->> +
->>   	apmf_acpi_init(dev);
->>   	platform_set_drvdata(pdev, dev);
->>   	amd_pmf_dbgfs_register(dev);
->> @@ -477,6 +550,8 @@ static int amd_pmf_probe(struct platform_device *pdev)
->>   	if (is_apmf_func_supported(dev, APMF_FUNC_SBIOS_HEARTBEAT_V2))
->>   		amd_pmf_notify_sbios_heartbeat_event_v2(dev, ON_LOAD);
->>   
->> +	pmf_device = dev->dev;
->> +
->>   	dev_info(dev->dev, "registered PMF device successfully\n");
->>   
->>   	return 0;
->> diff --git a/drivers/platform/x86/amd/pmf/pmf.h b/drivers/platform/x86/amd/pmf/pmf.h
->> index f07e9f4c660a..0354cc5dc79e 100644
->> --- a/drivers/platform/x86/amd/pmf/pmf.h
->> +++ b/drivers/platform/x86/amd/pmf/pmf.h
->> @@ -12,6 +12,7 @@
->>   #define PMF_H
->>   
->>   #include <linux/acpi.h>
->> +#include <linux/amd-pmf-io.h>
->>   #include <linux/input.h>
->>   #include <linux/platform_device.h>
->>   #include <linux/platform_profile.h>
->> @@ -412,6 +413,7 @@ struct amd_pmf_dev {
->>   	struct apmf_sbios_req_v1 req1;
->>   	struct pmf_bios_inputs_prev cb_prev; /* To preserve custom BIOS inputs */
->>   	bool cb_flag;			     /* To handle first custom BIOS input */
->> +	struct mutex metrics_mutex;
->>   };
->>   
->>   struct apmf_sps_prop_granular_v2 {
->> diff --git a/include/linux/amd-pmf-io.h b/include/linux/amd-pmf-io.h
->> index 6fa510f419c0..55198d2875cc 100644
->> --- a/include/linux/amd-pmf-io.h
->> +++ b/include/linux/amd-pmf-io.h
->> @@ -61,5 +61,26 @@ enum laptop_placement {
->>   	LP_UNDEFINED,
->>   };
->>   
->> +/**
->> + * struct amd_pmf_npu_metrics: Get NPU metrics data from PMF driver
->> + * @npuclk_freq: NPU clock frequency [MHz]
->> + * @npu_busy: NPU busy % [0-100]
->> + * @npu_power: NPU power [mW]
->> + * @mpnpuclk_freq: MPNPU [MHz]
->> + * @npu_reads: NPU read bandwidth [MB/sec]
->> + * @npu_writes: NPU write bandwidth [MB/sec]
->> + */
->> +struct amd_pmf_npu_metrics {
->> +	u16 npuclk_freq;
->> +	u16 npu_busy[8];
->> +	u16 npu_power;
->> +	u16 mpnpuclk_freq;
->> +	u16 npu_reads;
->> +	u16 npu_writes;
->> +};
->> +
->>   int amd_get_sfh_info(struct amd_sfh_info *sfh_info, enum sfh_message_type op);
->> +
->> +/* AMD PMF and NPU interface */
->> +int amd_pmf_get_npu_data(struct amd_pmf_npu_metrics *info);
->>   #endif
+> Best regards,
+> Pranay Pawar (Bugaddr)
+>
+> On Mon, Dec 29, 2025 at 1:47=E2=80=AFPM Pranay <pranaypawarofficial@gmai=
+l.com> wrote:
+>> Yes this patch is making the driver work as expected. I had modified
+>> the acer-wmi driver and loaded it, then changed platform profile to
+>> balanced-performance & now fans are able to reach max RPM's. But in
+>> performance mode (Which is supposed to be powerful than
+>> balanced-performance) the fans are still max locked at 4500 rpm only.
 >>
+>> Thanks & Regards,
+>> Bugaddr (Pranay Pawar)
+>>
+>> On Mon, Dec 29, 2025 at 2:10=E2=80=AFAM Armin Wolf <W_Armin@gmx.de> wro=
+te:
+>>> Am 25.12.25 um 22:51 schrieb Pranay:
+>>>
+>>>> Sure here you go, in attachments
+>>>>
+>>>> Thanks,
+>>>> Bugaddr
+>>> I attached an experimental patch that should whitelist fan control for=
+ your model. Can you
+>>> test that fan control and the nitro button works?
+>>>
+>>> Thanks,
+>>> Armin Wolf
+>>>
+>>>> On Thu, Dec 25, 2025 at 11:14=E2=80=AFPM Armin Wolf <W_Armin@gmx.de> =
+wrote:
+>>>>> Am 24.12.25 um 20:40 schrieb Pranay:
+>>>>>
+>>>>>> Dear Maintainers,
+>>>>>>
+>>>>>> I am reporting a limitation in the acer-wmi driver regarding fan sp=
+eed
+>>>>>> control on the Acer Nitro AN515-58.
+>>>>>>
+>>>>>> The Issue: On Windows, enabling "Performance" mode via NitroSense
+>>>>>> ramps the fans up to 7000+ RPM. On Linux, selecting the "Performanc=
+e"
+>>>>>> platform profile boosts the CPU power correctly, but the fans remai=
+n
+>>>>>> capped at maximum 3500-4000 RPM.
+>>>>>>
+>>>>>> Observation: This laptop model lacks a physical "Turbo" button. tho=
+ugh
+>>>>>> there is a nitrosense button which is useless in linux.
+>>>>>>
+>>>>>> I am requesting that support be added to fix the maximum fan speed =
+state issue.
+>>>>> Sure thing, can you share the output of "acpidump" to i can whitelis=
+t your model
+>>>>> for fan control?
+>>>>>
+>>>>> Thanks,
+>>>>> Armin Wolf
+>>>>>
+>>>>>> Best regards,
+>>>>>>
+>>>>>> bugaddr
+>>>>>>
