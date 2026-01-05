@@ -1,112 +1,128 @@
-Received: from out-176.mta1.migadu.com (out-176.mta1.migadu.com [95.215.58.176])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.9])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CA91D2C0F96
-	for <platform-driver-x86@vger.kernel.org>; Mon,  5 Jan 2026 14:52:14 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=95.215.58.176
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1513C2F60A2;
+	Mon,  5 Jan 2026 15:11:40 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.9
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1767624741; cv=none; b=dv/9iRQ3bSm6rD3aXeT5Dcl38elPQwu6LWuNtfbURNu7zO+nR4vnWAcVZJVksuGxXSW/QHGNPYLrZMv3giw4C2a9Hsrgr4Iq2mcys+23rIC8QGdObS7w42uZce7SfxBExkZAH13T60P9+zOWejSdaXkjobwd1EPUqor40tzcNTM=
+	t=1767625904; cv=none; b=kI9IKIUgjEh2JKpnBMe6lylEOfpAV2H5IbZJ96wNv7dkfCxkfIXAmZaQ8JZ4F0+ECTF1mqtsdDLVUJ6sSw5+Fz8JbW/UiyggiU7k7h7Hue3lkV+tkgFCb1/4+GQUZFZKo31oN7cKwZh7B4d/1dwJM3thatyWlnVkagc3u3DC67s=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1767624741; c=relaxed/simple;
-	bh=5nMIfEABV8JPk0/1GBhF6FLpko1dWB1z4qO3YVpNfT4=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=hnWEPR4JTRo86FLK883yQu3HbBP49NMTuvjwNdgA3k6T9ZhJjD8XGIkLLwQfklTdK2yEXqvjfx3K58Si7i2mniilOQBSTuzxk9LESFxehwOYmvNe5FzHyi/bgtmJtfgaiHzD4lKH110qC6ZlDNhzP+8PsGJzPP17kkAu8P3IMUo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=lj0HN+lm; arc=none smtp.client-ip=95.215.58.176
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
+	s=arc-20240116; t=1767625904; c=relaxed/simple;
+	bh=X7yZaTq6J3XeXDrYPjlj0n4zroCPIdpvxbxZXJdI2nk=;
+	h=From:Date:To:cc:Subject:In-Reply-To:Message-ID:References:
+	 MIME-Version:Content-Type; b=Avq+r2CRjsqv95MEykFTFqvLqGAbNx5DPZmLWM0o59UOCW8v3/bQvpokXiXfBggwAGPRdvDeIK4SfvRz4kuScQls8+S7YarumNx4nvCXEwR05g7qoePVYsu8vZAzr4KkirwkxICfsjfK8mrW2b96+SdYrBakRWhSTqDUnfxQ/cs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=pass smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=TVTBed/D; arc=none smtp.client-ip=192.198.163.9
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="lj0HN+lm"
-X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
-	t=1767624730;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:
-	 content-transfer-encoding:content-transfer-encoding;
-	bh=hr+N5djQhAopsvCEmnr4rlHkUGJjovOU/36k2aG4V2U=;
-	b=lj0HN+lma+qGJRr88y0yRTX7xvpcJ1rUcjqWTnJSjTOOxs+f0wvYIgv9l69NRgF0VzCcbw
-	V2SuEEAWRD2u8PnZ04f+fL5IcxTUUFLZM1Jv/+pM8QgcPGHOvlbDrkrZHnt9OVS4KGECtI
-	gX6bGkeUhKLC18vtSt1r3SDuFMYrKlA=
-From: Thorsten Blum <thorsten.blum@linux.dev>
-To: Chen Yu <yu.c.chen@intel.com>,
-	Hans de Goede <hansg@kernel.org>,
-	=?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>,
-	Maximilian Luz <luzmaximilian@gmail.com>
-Cc: Thorsten Blum <thorsten.blum@linux.dev>,
-	platform-driver-x86@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Subject: [PATCH v2] platform/surface: Replace deprecated strcpy() in surface_button_add()
-Date: Mon,  5 Jan 2026 15:50:46 +0100
-Message-ID: <20260105145045.52764-2-thorsten.blum@linux.dev>
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="TVTBed/D"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1767625901; x=1799161901;
+  h=from:date:to:cc:subject:in-reply-to:message-id:
+   references:mime-version;
+  bh=X7yZaTq6J3XeXDrYPjlj0n4zroCPIdpvxbxZXJdI2nk=;
+  b=TVTBed/DBl/NUGc1QxisW8u3BMXW6B7LWfljHQlyse5AQBUZOXagWNMU
+   Ij3A96LtLuiQMLr4Ws1LvebKwV3Eby92kCjwC9w8lof6gTa53o1gI7YgA
+   OYzpdmyt+PgJ/mRLjeQkP2/RpQS1TAW4Is6OrzD8gGAk5UBAOMIlz3opS
+   kosPKx+DKZsZzAaHetMeBckQuItddaC6jN8kEFk9WG7LUMl4RILP0KtrO
+   ldn6cdMupTPYEnuwWsDF7A8NZSsJk7qZ7RKRTnbBFjOtHr99qmboJMqmC
+   EhFBi4VXPpIfn9D9HHQlJwXb6GRpeYiHCpzd4g8xthE+UqnUL7zYvKBKu
+   w==;
+X-CSE-ConnectionGUID: OWDH6Fz/S2GSDzYNze2ilw==
+X-CSE-MsgGUID: CEvofYRhQWK78ET2AS/cJQ==
+X-IronPort-AV: E=McAfee;i="6800,10657,11662"; a="79713883"
+X-IronPort-AV: E=Sophos;i="6.21,203,1763452800"; 
+   d="scan'208";a="79713883"
+Received: from orviesa009.jf.intel.com ([10.64.159.149])
+  by fmvoesa103.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 05 Jan 2026 07:11:39 -0800
+X-CSE-ConnectionGUID: cNndLfefSWKe4fJUBINung==
+X-CSE-MsgGUID: EKFgfNPeROC2VeQB34/l1A==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.21,203,1763452800"; 
+   d="scan'208";a="202178673"
+Received: from ijarvine-mobl1.ger.corp.intel.com (HELO localhost) ([10.245.244.202])
+  by orviesa009-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 05 Jan 2026 07:11:37 -0800
+From: =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
+Date: Mon, 5 Jan 2026 17:11:32 +0200 (EET)
+To: =?ISO-8859-15?Q?Uwe_Kleine-K=F6nig?= <u.kleine-koenig@baylibre.com>, 
+    Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+cc: Rob Herring <robh@kernel.org>, Maximilian Luz <luzmaximilian@gmail.com>, 
+    Hans de Goede <hansg@kernel.org>, 
+    linux-serial <linux-serial@vger.kernel.org>, 
+    platform-driver-x86@vger.kernel.org
+Subject: Re: [PATCH v1 4/4] platform/surface: Migrate to serdev specific
+ shutdown function
+In-Reply-To: <9682d206a1f375cd98e7dbfce4f1a83b4b345178.1765526117.git.u.kleine-koenig@baylibre.com>
+Message-ID: <60578bea-2351-2a7d-bb24-2ee2ab5a7bf9@linux.intel.com>
+References: <cover.1765526117.git.u.kleine-koenig@baylibre.com> <9682d206a1f375cd98e7dbfce4f1a83b4b345178.1765526117.git.u.kleine-koenig@baylibre.com>
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Migadu-Flow: FLOW_OUT
+Content-Type: multipart/mixed; boundary="8323328-1052401463-1767625892=:980"
 
-strcpy() has been deprecated [1] because it performs no bounds checking
-on the destination buffer, which can lead to buffer overflows. Replace
-it with the safer strscpy().  No functional changes.
+  This message is in MIME format.  The first part should be readable text,
+  while the remaining parts are likely unreadable without MIME-aware tools.
 
-Link: https://www.kernel.org/doc/html/latest/process/deprecated.html#strcpy [1]
-Reviewed-by: Chen Yu <yu.c.chen@intel.com>
-Signed-off-by: Thorsten Blum <thorsten.blum@linux.dev>
----
-Changes in v2:
-- Remove local variable 'name' (Ilpo)
-- Update patch subject (Ilpo)
-- Link to v1: https://lore.kernel.org/lkml/20260105121802.1947-2-thorsten.blum@linux.dev/
----
- drivers/platform/surface/surfacepro3_button.c | 11 +++++------
- 1 file changed, 5 insertions(+), 6 deletions(-)
+--8323328-1052401463-1767625892=:980
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: QUOTED-PRINTABLE
 
-diff --git a/drivers/platform/surface/surfacepro3_button.c b/drivers/platform/surface/surfacepro3_button.c
-index 2755601f979c..e652c85c9161 100644
---- a/drivers/platform/surface/surfacepro3_button.c
-+++ b/drivers/platform/surface/surfacepro3_button.c
-@@ -10,6 +10,7 @@
- #include <linux/kernel.h>
- #include <linux/module.h>
- #include <linux/init.h>
-+#include <linux/string.h>
- #include <linux/types.h>
- #include <linux/input.h>
- #include <linux/acpi.h>
-@@ -189,7 +190,6 @@ static int surface_button_add(struct acpi_device *device)
- 	struct surface_button *button;
- 	struct input_dev *input;
- 	const char *hid = acpi_device_hid(device);
--	char *name;
- 	int error;
- 
- 	if (strncmp(acpi_device_bid(device), SURFACE_BUTTON_OBJ_NAME,
-@@ -210,11 +210,10 @@ static int surface_button_add(struct acpi_device *device)
- 		goto err_free_button;
- 	}
- 
--	name = acpi_device_name(device);
--	strcpy(name, SURFACE_BUTTON_DEVICE_NAME);
-+	strscpy(acpi_device_name(device), SURFACE_BUTTON_DEVICE_NAME);
- 	snprintf(button->phys, sizeof(button->phys), "%s/buttons", hid);
- 
--	input->name = name;
-+	input->name = acpi_device_name(device);
- 	input->phys = button->phys;
- 	input->id.bustype = BUS_HOST;
- 	input->dev.parent = &device->dev;
-@@ -228,8 +227,8 @@ static int surface_button_add(struct acpi_device *device)
- 		goto err_free_input;
- 
- 	device_init_wakeup(&device->dev, true);
--	dev_info(&device->dev,
--			"%s [%s]\n", name, acpi_device_bid(device));
-+	dev_info(&device->dev, "%s [%s]\n", acpi_device_name(device),
-+		 acpi_device_bid(device));
- 	return 0;
- 
-  err_free_input:
--- 
-Thorsten Blum <thorsten.blum@linux.dev>
-GPG: 1D60 735E 8AEF 3BE4 73B6  9D84 7336 78FD 8DFE EAD4
+On Fri, 12 Dec 2025, Uwe Kleine-K=C3=B6nig wrote:
 
+> The motivation is stop using the callback .shutdown in
+> qca_serdev_driver.driver to make it possible to drop that.
+>=20
+> Signed-off-by: Uwe Kleine-K=C3=B6nig <u.kleine-koenig@baylibre.com>
+
+In case somebody wants to take the entire series,
+
+Acked-by: Ilpo J=C3=A4rvinen <ilpo.jarvinen@linux.intel.com>
+
+--=20
+ i.
+
+
+> ---
+>  drivers/platform/surface/aggregator/core.c | 6 +++---
+>  1 file changed, 3 insertions(+), 3 deletions(-)
+>=20
+> diff --git a/drivers/platform/surface/aggregator/core.c b/drivers/platfor=
+m/surface/aggregator/core.c
+> index c58e1fdd1a5f..860702c4266f 100644
+> --- a/drivers/platform/surface/aggregator/core.c
+> +++ b/drivers/platform/surface/aggregator/core.c
+> @@ -380,9 +380,9 @@ static int ssam_serdev_setup(struct acpi_device *ssh,=
+ struct serdev_device *serd
+> =20
+>  /* -- Power management. ------------------------------------------------=
+----- */
+> =20
+> -static void ssam_serial_hub_shutdown(struct device *dev)
+> +static void ssam_serial_hub_shutdown(struct serdev_device *serdev)
+>  {
+> -=09struct ssam_controller *c =3D dev_get_drvdata(dev);
+> +=09struct ssam_controller *c =3D dev_get_drvdata(&serdev->dev);
+>  =09int status;
+> =20
+>  =09/*
+> @@ -834,12 +834,12 @@ MODULE_DEVICE_TABLE(of, ssam_serial_hub_of_match);
+>  static struct serdev_device_driver ssam_serial_hub =3D {
+>  =09.probe =3D ssam_serial_hub_probe,
+>  =09.remove =3D ssam_serial_hub_remove,
+> +=09.shutdown =3D ssam_serial_hub_shutdown,
+>  =09.driver =3D {
+>  =09=09.name =3D "surface_serial_hub",
+>  =09=09.acpi_match_table =3D ACPI_PTR(ssam_serial_hub_acpi_match),
+>  =09=09.of_match_table =3D of_match_ptr(ssam_serial_hub_of_match),
+>  =09=09.pm =3D &ssam_serial_hub_pm_ops,
+> -=09=09.shutdown =3D ssam_serial_hub_shutdown,
+>  =09=09.probe_type =3D PROBE_PREFER_ASYNCHRONOUS,
+>  =09},
+>  };
+>=20
+
+--8323328-1052401463-1767625892=:980--
