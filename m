@@ -1,174 +1,278 @@
-Received: from CH4PR04CU002.outbound.protection.outlook.com (mail-northcentralusazon11013038.outbound.protection.outlook.com [40.107.201.38])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pf1-f169.google.com (mail-pf1-f169.google.com [209.85.210.169])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D47412FF169;
-	Tue,  6 Jan 2026 17:35:15 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.201.38
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1767720918; cv=fail; b=Ojz7vuj4+IXRzhbeYixtUSuJbSiLBmgJFqPHrfby7dVt9kSmnyV2MfAr2s1ccsMUl+rGsTGVkijEIC2wSf+o48ocRzWnX8j7rdymoEVNWBVZAzqAnt/dFUyEl3DPVsQzU6lGbF/qPmgetyAPRaRnST+N4m9uTEMTHh3Tds/qBQ8=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1767720918; c=relaxed/simple;
-	bh=UDP+sXH6xlp/2nGNUAbGpMeb6jNCYBoDrduDpRBlegA=;
-	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
-	 In-Reply-To:Content-Type; b=eyU8DOI+HgvuX2s/NLD4R0BPttHMB1XVVkb/Hyb74lMUBsa531UHsW9Lm9tGipaqonmnZuvVtme6Wxhdhs30S4Ok4CC6xIM3NSCwMjICwTT/IMe/lagfWWOKzplbFnMdqauogk2tyCEL8mGbBuAHEuTpwpgQd7acigSfQsDxthI=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=YrwzNnh7; arc=fail smtp.client-ip=40.107.201.38
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com
-Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=amd.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 529363590B3
+	for <platform-driver-x86@vger.kernel.org>; Tue,  6 Jan 2026 17:45:43 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.169
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1767721544; cv=none; b=ptbOauW9doyOhApb00vV1UcU6W03M0EwHP6lGU4OaDnRY8T21Ny8vDNzN7xGs4ZHoBMuLUlUSq3nUJAogdtV/VKxtJnmSebsjJBlHtHJPbDyTvRJbVy8Np6P93c7owPuwwyXEckRERH1JeWUjyOVPfIlDWFmXzGTWLBStedPJes=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1767721544; c=relaxed/simple;
+	bh=N5XDA3pHbxwIVNv4Q62stjY3z7JIMCAXVl4G72PT+rI=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=LHV94ouhK/eiONewzGxUU022cTQM+05JR9LNe8YSi14bJtIImO1FU4h//7WCX0wctEUJlv/SI/FjDDEy2Ef0v1P0OocqRueqQwhj2PIiL0rhi1F6OaRDE8WHlOmjEk311uo+2pSQcUaSSBSiNa7WSRjinC61YWXlWYFb1pOPpH4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=bjbnL8Ln; arc=none smtp.client-ip=209.85.210.169
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="YrwzNnh7"
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=KsbJncF49TT2LODyjD5V58jvhrjR+fmVlTGusU9Yw4ARnjY3t5zu1F795krVWWtrflbcuNgrl0xNhLPFQWzx4y5vz4c6K9AeXBrfEVx/p9fXGSLurDi9IVd5xFzLTf4F4ezXcWfL8ccLglTsnhPslH5BIHDQl4y6BLWYSHq644hW23/4WbJpGYnvTEVaaJ8YuNX/4FHvcwAq5nnHE9YJKHh3n6sg1uenqoEqWlezoIt10OpBcjqI6d2FlZMaSeF32ipJhoxzJmgA3DkdMOa51BxKr8VApTZgNjtEwiY4vfhq/PrPzzHLV1hl/W3Wk20BbNUEqLLzVont9rp9ive8UA==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=B+4l/Zkr75SJk+KZnbptK80XFZFLHmomhmNbNnqpCyo=;
- b=ho0ut6wG9Opq6jqGND8fh2e2X3eiBQhGp+2Dz0Sg/OGX0wDUzMQya3dWO9EQabbUwzbQoYaZYIJYpTqCZOQL/if3BHUisw9a2QBDytlS/43gXZJ3v4xOytivyFPj8a3sKzIGOqUuo7T5+aJu0n0sB06MaKGU2w6fiEAhcHkQlHHLJLJOimADlqq0d1ZCTDH5pxKIccQ1EY9fbx7+8uMjweDCaEZhT21dkZ4+Tea8ZU6ru+0qC4aQA5QUnA3JrqH8TeAxCaVr/fFmxMy3p6S8MDV+qO4zuUVEhJFnX+Of+vJCoO4CIo9IvUC8R3bnz+s8Fsj8ywtrKxLX9406bL+OsA==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
- 165.204.84.17) smtp.rcpttodomain=linux.intel.com smtp.mailfrom=amd.com;
- dmarc=pass (p=quarantine sp=quarantine pct=100) action=none
- header.from=amd.com; dkim=none (message not signed); arc=none (0)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=B+4l/Zkr75SJk+KZnbptK80XFZFLHmomhmNbNnqpCyo=;
- b=YrwzNnh7EZfMpNF7Z9MFR3e+TNZE42ERwozHlnxqqjKSP705FK+E1R44uPrHvJwihjD5VnlAQYdou8HctHi+OhtcC9UnFRlreSJuvUFQAZj6H6XaBcr91OqGrUPfK/wg2JFj71WWFOp/btOaVf1YJGQIH45TxeV2bGk6a6KXE4I=
-Received: from BYAPR08CA0001.namprd08.prod.outlook.com (2603:10b6:a03:100::14)
- by IA1PR12MB6580.namprd12.prod.outlook.com (2603:10b6:208:3a0::9) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.9456.14; Tue, 6 Jan
- 2026 17:35:09 +0000
-Received: from SJ1PEPF00002323.namprd03.prod.outlook.com
- (2603:10b6:a03:100:cafe::12) by BYAPR08CA0001.outlook.office365.com
- (2603:10b6:a03:100::14) with Microsoft SMTP Server (version=TLS1_3,
- cipher=TLS_AES_256_GCM_SHA384) id 15.20.9499.2 via Frontend Transport; Tue, 6
- Jan 2026 17:35:09 +0000
-X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 165.204.84.17)
- smtp.mailfrom=amd.com; dkim=none (message not signed)
- header.d=none;dmarc=pass action=none header.from=amd.com;
-Received-SPF: Pass (protection.outlook.com: domain of amd.com designates
- 165.204.84.17 as permitted sender) receiver=protection.outlook.com;
- client-ip=165.204.84.17; helo=satlexmb08.amd.com; pr=C
-Received: from satlexmb08.amd.com (165.204.84.17) by
- SJ1PEPF00002323.mail.protection.outlook.com (10.167.242.85) with Microsoft
- SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.9499.1 via Frontend Transport; Tue, 6 Jan 2026 17:35:09 +0000
-Received: from satlexmb08.amd.com (10.181.42.217) by satlexmb08.amd.com
- (10.181.42.217) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.2562.17; Tue, 6 Jan
- 2026 11:35:06 -0600
-Received: from [172.19.71.207] (10.180.168.240) by satlexmb08.amd.com
- (10.181.42.217) with Microsoft SMTP Server id 15.2.2562.17 via Frontend
- Transport; Tue, 6 Jan 2026 11:35:04 -0600
-Message-ID: <93210832-aa75-7639-c9d2-99ec802d88e4@amd.com>
-Date: Tue, 6 Jan 2026 09:35:04 -0800
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="bjbnL8Ln"
+Received: by mail-pf1-f169.google.com with SMTP id d2e1a72fcca58-7b8bbf16b71so1160503b3a.2
+        for <platform-driver-x86@vger.kernel.org>; Tue, 06 Jan 2026 09:45:43 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1767721543; x=1768326343; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=3We0aNqjHbYJgCNoEmx0vHJsTgZdujoUbsScQteKmFg=;
+        b=bjbnL8LnsAX28BmJuHMQXXuvHJJyAEXcNwrqT6wUPqqxiQOn6cRW2k1jr1bVc/Mwz9
+         xagb2WA0HT1JJXFm3q9nyYw0tSAsm0OUl+09xHhZLe57r7gehTvYedQuqHDexTgr1iXQ
+         pm55e2qDxa8kE1811zn140kXF8kXlxcGHYbOiVK5DcLgoYPtkxPFSKqekpNMeAMTpArD
+         Qwi0FP1O9y81iyDtpZe433J5k8q1QoxJrQDAMelQ5c8R4bhO+nuJKM++UWRlBn1BI4oT
+         M8L7pSdtLpCEwLeWPojBMPiWTYUjossQxMG5qdErjvBjYWvU/5w99a6PiP5+gNA51+Vh
+         ZZoA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1767721543; x=1768326343;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-gg:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=3We0aNqjHbYJgCNoEmx0vHJsTgZdujoUbsScQteKmFg=;
+        b=amKYs9hIczojuXgT/m9SmhdbU5CgGwiB0OaIsjR2+9kSuxHxVJUNAbtoh04UN0oZqo
+         C5czFxwjQ6xV7TO7RnAn8g47cSTdUlUBhK30nzvT6Itg8GdWUbKg5qDB1sezzYcrvTI9
+         gm9fGXREMXNvx5MXtnHGT0mView1y0qXM2CGaTOZ5/uLlS01cGTyQcxtaMM+Rm8JalEI
+         NTwB7VrNLEbz2Gl33YqCXhJ/Aq7bLtSoJJLOkmjHsqJo00CsSQFSDF86Q186/tPcpsfZ
+         pyjF64pWXvAI448YFb79djk4dnXjS7yJdhUwijhcpl+N0XZ8zMsiYKljPqI2nUDCzGyS
+         Nj8w==
+X-Gm-Message-State: AOJu0YwGg6rwNu7Qyp4PxUokOAhSHmt60EPQ/PiAHWX2ebRFGMSs9yBn
+	cUO1eDWcWXZ3p95uTfRfEGVT8QddAJE3GLLKm4R4v6vUgA5LgAC+uz9E
+X-Gm-Gg: AY/fxX6xw/0BUVe2CH5nQo3DJmoKIDrNyTJAzupw7O3YoCw9HL7bKaPSDT5idodF26d
+	+W3GS5Eqvee9HhmiCtG/LxXoEAIdVnAxCsZFiu99ISPADOIF97YKcfiqqKkFB0kh+TfAyKWpfOO
+	N9HRKE26ZdPt44NTKzKMCJbxLsaxqWlxWerPbLkkBPMwd7pM0/hpsKOLuMJQKRPd4PbOs1Stu48
+	FI756tLvhzFijT+bQ3LIeLikB3S4EORRCu9JBkVKfqoNIyqx/gBT+Qihqy7p/yOHuMAcAkLdMLd
+	eicyiyX0GyVamTICraCXZbUCvBsTqXrpiO9qNfEItOYhzJicTO19oPQQ0OKraRA2tWtqW01T5JI
+	n3LnH5qZd/PEt5Qt9IlbAk4PUx+NLc5W1Q10a3qjod3E3ktd2fQq0gZv2NN8ZvtOpD79GOmRB20
+	EjmkG162H0pehxppAzSTwLQOfYIuzzMyE=
+X-Google-Smtp-Source: AGHT+IFmLF0U9sMTkHwAs7WeIqoh1LXSWh5COrN/21DjLYpj5NfMqzMqIrcPFGwn+NtnjHym7bH7VQ==
+X-Received: by 2002:a05:6a00:1d06:b0:7e8:450c:61d2 with SMTP id d2e1a72fcca58-81882dde6f7mr3141538b3a.66.1767721542515;
+        Tue, 06 Jan 2026 09:45:42 -0800 (PST)
+Received: from nitin-ThinkPad-T1g-Gen-8.. ([2405:201:3006:188a:8d12:f5f:47cc:6a19])
+        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-819c52fd904sm2736818b3a.33.2026.01.06.09.45.39
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 06 Jan 2026 09:45:41 -0800 (PST)
+From: Nitin Joshi <nitjoshi@gmail.com>
+To: hansg@kernel.org,
+	ilpo.jarvinen@linux.intel.com
+Cc: platform-driver-x86@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	njoshi1@lenovo.com,
+	Nitin Joshi <nitjoshi@gmail.com>,
+	Mark Pearson <mpearson-lenovo@squebb.ca>
+Subject: [PATCH v7 1/2] platform/x86: thinkpad_acpi: Add support to detect hardware damage detection capability.
+Date: Wed,  7 Jan 2026 02:45:18 +0900
+Message-ID: <20260106174519.6402-1-nitjoshi@gmail.com>
+X-Mailer: git-send-email 2.43.0
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
- Thunderbird/91.11.0
-Subject: Re: [PATCH V3 1/2] platform/x86/amd/pmf: Introduce new interface to
- export NPU metrics
-Content-Language: en-US
-To: =?UTF-8?Q?Ilpo_J=c3=a4rvinen?= <ilpo.jarvinen@linux.intel.com>
-CC: Shyam Sundar S K <Shyam-sundar.S-k@amd.com>, <ogabbay@kernel.org>,
-	<quic_jhugo@quicinc.com>, <maciej.falkowski@linux.intel.com>, Hans de Goede
-	<hansg@kernel.org>, <dri-devel@lists.freedesktop.org>, LKML
-	<linux-kernel@vger.kernel.org>, <max.zhen@amd.com>, <sonal.santan@amd.com>,
-	<mario.limonciello@amd.com>, <platform-driver-x86@vger.kernel.org>,
-	<VinitKumar.Shukla@amd.com>, Patil Rajesh Reddy <Patil.Reddy@amd.com>
-References: <20260105172956.3732123-1-lizhi.hou@amd.com>
- <20260105172956.3732123-2-lizhi.hou@amd.com>
- <3e19f17e-3d5d-4b48-8776-65ac2543c066@amd.com>
- <8495eeb5-b049-2efc-4ba7-c6dad1747501@amd.com>
- <4363d65e-c50b-eb1a-39d3-99a9809f3c37@amd.com>
- <b6c80015-d399-e8c1-4b8a-d2ebb4cee9da@linux.intel.com>
-From: Lizhi Hou <lizhi.hou@amd.com>
-In-Reply-To: <b6c80015-d399-e8c1-4b8a-d2ebb4cee9da@linux.intel.com>
-Content-Type: text/plain; charset="UTF-8"; format=flowed
 Content-Transfer-Encoding: 8bit
-X-EOPAttributedMessage: 0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: SJ1PEPF00002323:EE_|IA1PR12MB6580:EE_
-X-MS-Office365-Filtering-Correlation-Id: 1e033342-a5d2-4882-3e88-08de4d49f073
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam:
-	BCL:0;ARA:13230040|82310400026|376014|36860700013|1800799024;
-X-Microsoft-Antispam-Message-Info:
-	=?utf-8?B?NVdKQlQ1RS9nMU0vVjZmTlZPY0xtUXgyWGVsbmhzOFU1MXFOY0kzdU1rTDhK?=
- =?utf-8?B?K1FCbENtR25FTTZOdzJIaVVTL29WTWdLMzdoT1h3MU8zUTFBQ2JpZEo3Nmgx?=
- =?utf-8?B?ME1rRVZYSXpWbXdjSTRpSDE5N01OYlBGbGJGL2MyZ0JKWldQMG9tZ0FYNnhW?=
- =?utf-8?B?RHJra3VqeE9KOFdpRVZrY3JmN0NHVk5JS3p5RnJuOHBJYXpIT2I2REQ3TWc4?=
- =?utf-8?B?TUJMTUtVeU1LaFJLVHNSUVNuemlEQ0Vld3NQbFRtZWc5TEl0NStQN0M0ei94?=
- =?utf-8?B?K1ZFbUVSZkkyYzlHOElMd0g0TDMwUURXdnZMMlE5SHlnS2VvMjNMY0dsSUpm?=
- =?utf-8?B?ZGl6aXA1ZVc3NE0wN1pFSmVpdEsrSzFJdUJGODJ6TTBqNTNpUE1WYU5PbXVR?=
- =?utf-8?B?a29ZQlo5THpwbGZKMmFKN0RudG9PbHMxZHJWRTZ4bU1nM3RRRDgzZmthSTdl?=
- =?utf-8?B?UHBCODR0MVIwZzQ1bHlJYW9RamlDUjVnSmlqR1h1bDROM1BRaE9FcndzRjdV?=
- =?utf-8?B?S3hiQk40WHdtODhmcU5oRGc1SFlxdmJrcVFIQ1hvaWJKL0N0ZkpRWVZIMUhY?=
- =?utf-8?B?RGRCUG5LMU1VNktPcDk3bUIxQTlCbTZQUEpOUVBYaVU5K2tTdkNzcDNYc3lZ?=
- =?utf-8?B?VXNMcGJQV1BGeEwwejR5VU5kTnUvYXJmMTFHY21MWERTZTc0K2tLdTFLc3pV?=
- =?utf-8?B?ZzNkd2J6Y3NzRUo1b0NWU0RXOERJaThtZFZDRHhVUlZWRk5ZMmVRdTN2Qmgx?=
- =?utf-8?B?d2d3a01meFNpNXhmdGQxSXN3RENUcDZMSWhockZicE0xdTkrM21hekQzR3lY?=
- =?utf-8?B?TWViMUJWTU95N0o5Qk5Jc2IxU2RrYUFKYWQ2UEVNNUVYL0twWEZLUUJlZm9H?=
- =?utf-8?B?MzJmcmdIWko1MmkyV3BNZUhEYnAvUytoQm9pY2gyM2V5eTNzTGswbUVwTkVP?=
- =?utf-8?B?TTUrMXRhMDc4TGNPaUtSR0JVdk1tTHhKbWUrMEY1aXVZMzV0WGtMRUh2bXJk?=
- =?utf-8?B?ZWU2OGFLOFN3YkkzL2U0Q3FiSStDaTRDRmtmNUtOeVRFY1Zwd0N1VjFSUmwx?=
- =?utf-8?B?WkE2Y050azJMR3BoeHg4eEpJMDQyYVUvM3FUOUQvL0N3SUxLbWNnZEs2ZWov?=
- =?utf-8?B?WTR1MkNTdVRPRERRTUNvMW1PVExGRk54OXJwdDljdUQ3OUJkZmd0eXlsOWtJ?=
- =?utf-8?B?TU5sYnpuZG5yekQwcUszR0VRVDg5Z3c4cDRkUUg2QkJwazJaRUxCNEJDWnhy?=
- =?utf-8?B?U0xLUi84KzBsQ1pNdjduc2VBMkM4S3VJcnFSS0tzd3ljczVYc05vdzVxdEZm?=
- =?utf-8?B?Z0dyOHExQ1d6OXRyYW9waUwyOTQvTjBraTYwZzNEeXhRamkwTG9VSlhINk9N?=
- =?utf-8?B?MmljR0Zvc0lBQnpTTGwxR3RTRzBscmN1WEN5dGUzbzhSU3FUVDNMblUrZ3di?=
- =?utf-8?B?NEhWTUZSUmNBa1lyN1FXaG9GakNwVlhOKzBZZFRQVm9VcU80c3J2MDBmb01o?=
- =?utf-8?B?VlFIdEFJU0lyOWN0aTJBME9NSXg1TURQcG9pQXRxSUE3QjJSMkdEdndyQnhv?=
- =?utf-8?B?TEJWN2RzMG4rVTE2aThLbkMrdWZGcnVMWWhqVnd3RnQ0R0RGcEkzdU5hWW9K?=
- =?utf-8?B?YmdsSkNwYUs5Rk1pV0VBWVNOSGtPajlvVDd1cmI2RVljaGMwcUJEelFzZ3ND?=
- =?utf-8?B?bDVrVjJLQzZhblhqazZTbXhhazBTTDJyQnpscmhyRitiUTVRYjdqUXpIekhT?=
- =?utf-8?B?VFkvOVlucm5WZ2x3cXJwSlVseUcrWjBYSkI0ZkNtTEx3NzhDSXVreDFhdS9W?=
- =?utf-8?B?QWs5VGEvL01XQlM3UmFnemd2Y2M5NzVFdmJyRnBiY014TVB3dzdWcTlpT29B?=
- =?utf-8?B?UWYydlYzOHF5WTlXemh2QlNUTUpMblB1UWlyS2F4WkFGTlFtMG95SE5kbTRs?=
- =?utf-8?B?OFVXZHZRdjU0RTFwdEVIeTRQOFZiQmN3OTlMTlBxazVOTkZYVzF4dHpyRVF4?=
- =?utf-8?B?STV0NkhYOTlVN2lGMmFQQzAzOHl4bUFwb1V5enljSlFJcWZUblRQS2pBMitQ?=
- =?utf-8?B?SVJwMjUzcGR3NldwbExub1c2US9pSy95RU9pUjNOOFVQejJQM1U0NGl5cjFt?=
- =?utf-8?Q?LZk8=3D?=
-X-Forefront-Antispam-Report:
-	CIP:165.204.84.17;CTRY:US;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:satlexmb08.amd.com;PTR:InfoDomainNonexistent;CAT:NONE;SFS:(13230040)(82310400026)(376014)(36860700013)(1800799024);DIR:OUT;SFP:1101;
-X-OriginatorOrg: amd.com
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 06 Jan 2026 17:35:09.4120
- (UTC)
-X-MS-Exchange-CrossTenant-Network-Message-Id: 1e033342-a5d2-4882-3e88-08de4d49f073
-X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
-X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=3dd8961f-e488-4e60-8e11-a82d994e183d;Ip=[165.204.84.17];Helo=[satlexmb08.amd.com]
-X-MS-Exchange-CrossTenant-AuthSource:
-	SJ1PEPF00002323.namprd03.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Anonymous
-X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: IA1PR12MB6580
 
+Thinkpads are adding the ability to detect and report hardware damage
+status. Add new sysfs interface to identify whether hardware damage
+is detected or not.
 
-On 1/6/26 09:09, Ilpo Järvinen wrote:
-> On Tue, 6 Jan 2026, Lizhi Hou wrote:
->
->> What should be the next step? Should I generate both patches based on
->> review-ilpo-next? Will the amdxdna change upstream through platform-x86 tree?
-> (We seemed to have crossed emails.)
->
-> That would work for me too, but I thought it was wanted that patch 2 to
-> go through accel?
+Initial support is available for the USB-C replaceable connector.
 
-Thanks a lot. Glad to know patch 1 is good and I will not post another 
-one. :)
+Reviewed-by: Mark Pearson <mpearson-lenovo@squebb.ca>
+Signed-off-by: Nitin Joshi<nitjoshi@gmail.com>
+---
+Changes since v1:
+-Split patch between hwdd_status and hwdd_detail
+-Incorporated review comments
+Changes since v2:
+-Control visibility of the sysfs attribute based upon ucdd_supported
+Changes since v3:
+-Fix documentation build warning
+Changes since v4:
+-Removed extra line
+Changes since v5:
+-Improved code indentation
+Changes since v6:
+- Improved formatting for htmldocs
+---
+ .../admin-guide/laptops/thinkpad-acpi.rst     |  22 ++++
+ drivers/platform/x86/lenovo/thinkpad_acpi.c   | 105 ++++++++++++++++++
+ 2 files changed, 127 insertions(+)
 
-The patch 2 depends on patch1. I agree that patch 2 to go through accel  
-which can avoid conflict with other recent amdxdna driver changes. So I 
-can wait the patch 1 to be upstream and reach to drm-misc, then submit 
-patch 2 there. Does it sound a right plan?
+diff --git a/Documentation/admin-guide/laptops/thinkpad-acpi.rst b/Documentation/admin-guide/laptops/thinkpad-acpi.rst
+index 4ab0fef7d440..2f910ff31b37 100644
+--- a/Documentation/admin-guide/laptops/thinkpad-acpi.rst
++++ b/Documentation/admin-guide/laptops/thinkpad-acpi.rst
+@@ -54,6 +54,7 @@ detailed description):
+ 	- Setting keyboard language
+ 	- WWAN Antenna type
+ 	- Auxmac
++	- Hardware damage detection capability
+ 
+ A compatibility table by model and feature is maintained on the web
+ site, http://ibm-acpi.sf.net/. I appreciate any success or failure
+@@ -1576,6 +1577,27 @@ percentage level, above which charging will stop.
+ The exact semantics of the attributes may be found in
+ Documentation/ABI/testing/sysfs-class-power.
+ 
++Hardware damage detection capability
++------------------------------------
++
++sysfs attributes: hwdd_status
++
++Thinkpads are adding the ability to detect and report hardware damage.
++Add new sysfs interface to identify the damaged device status.
++Initial support is available for the USB-C replaceable connector.
++
++The command to check device damaged status is::
++
++        cat /sys/devices/platform/thinkpad_acpi/hwdd_status
++
++This value displays status of device damaged.
++
++- 0 = Not Damaged
++- 1 = Damaged
++
++The property is read-only. If feature is not supported then sysfs
++attribute is not created.
++
+ Multiple Commands, Module Parameters
+ ------------------------------------
+ 
+diff --git a/drivers/platform/x86/lenovo/thinkpad_acpi.c b/drivers/platform/x86/lenovo/thinkpad_acpi.c
+index cc19fe520ea9..3702374357ab 100644
+--- a/drivers/platform/x86/lenovo/thinkpad_acpi.c
++++ b/drivers/platform/x86/lenovo/thinkpad_acpi.c
+@@ -11080,6 +11080,106 @@ static const struct attribute_group auxmac_attr_group = {
+ 	.attrs = auxmac_attributes,
+ };
+ 
++/*************************************************************************
++ * HWDD subdriver, for the Lenovo Hardware Damage Detection feature.
++ */
++
++#define HWDD_GET_DMG_USBC	0x80000001
++#define HWDD_GET_CAP		0
++#define HWDD_NOT_SUPPORTED	BIT(31)
++#define HWDD_SUPPORT_USBC	BIT(0)
++
++#define PORT_STATUS		GENMASK(7, 4)
++#define NUM_PORTS		4
++
++static bool hwdd_support_available;
++static bool ucdd_supported;
++
++static int hwdd_command(int command, int *output)
++{
++	acpi_handle hwdd_handle;
++
++	if (ACPI_FAILURE(acpi_get_handle(hkey_handle, "HWDD", &hwdd_handle)))
++		return -ENODEV;
++
++	if (!acpi_evalf(hwdd_handle, output, NULL, "dd", command))
++		return -EIO;
++
++	return 0;
++}
++
++/* sysfs type-c damage detection capability */
++static ssize_t hwdd_status_show(struct device *dev,
++				struct device_attribute *attr,
++				char *buf)
++{
++	unsigned int damage_status, port_status;
++	int err, i;
++
++	if (!ucdd_supported)
++		return -ENODEV;
++
++	/* Get USB TYPE-C damage status */
++	err = hwdd_command(HWDD_GET_DMG_USBC, &damage_status);
++	if (err)
++		return err;
++
++	port_status = FIELD_GET(PORT_STATUS, damage_status);
++	for (i = 0; i < NUM_PORTS; i++) {
++		if (!(damage_status & BIT(i)))
++			continue;
++		if (port_status & BIT(i))
++			return sysfs_emit(buf, "1\n");
++	}
++
++	return sysfs_emit(buf, "0\n");
++}
++static DEVICE_ATTR_RO(hwdd_status);
++
++static struct attribute *hwdd_attributes[] = {
++	&dev_attr_hwdd_status.attr,
++	NULL
++};
++
++static umode_t hwdd_attr_is_visible(struct kobject *kobj,
++				struct attribute *attr, int n)
++{
++	return hwdd_support_available ? attr->mode : 0;
++}
++
++static const struct attribute_group hwdd_attr_group = {
++	.is_visible = hwdd_attr_is_visible,
++	.attrs = hwdd_attributes,
++};
++
++static int tpacpi_hwdd_init(struct ibm_init_struct *iibm)
++{
++	int err, output;
++
++	/* Below command checks the HWDD damage capability */
++	err = hwdd_command(HWDD_GET_CAP, &output);
++	if (err)
++		return err;
++
++	if (!(output & HWDD_NOT_SUPPORTED))
++		return -ENODEV;
++
++	hwdd_support_available = true;
++
++	/*
++	 * BIT(0) is assigned to check capability of damage detection is
++	 * supported for USB Type-C port or not.
++	 */
++	if (output & HWDD_SUPPORT_USBC)
++		ucdd_supported = true;
++
++	return err;
++}
++
++static struct ibm_struct hwdd_driver_data = {
++	.name = "hwdd",
++};
++
+ /* --------------------------------------------------------------------- */
+ 
+ static struct attribute *tpacpi_driver_attributes[] = {
+@@ -11139,6 +11239,7 @@ static const struct attribute_group *tpacpi_groups[] = {
+ 	&kbdlang_attr_group,
+ 	&dprc_attr_group,
+ 	&auxmac_attr_group,
++	&hwdd_attr_group,
+ 	NULL,
+ };
+ 
+@@ -11752,6 +11853,10 @@ static struct ibm_init_struct ibms_init[] __initdata = {
+ 		.init = auxmac_init,
+ 		.data = &auxmac_data,
+ 	},
++	{
++		.init = tpacpi_hwdd_init,
++		.data = &hwdd_driver_data,
++	},
+ };
+ 
+ static int __init set_ibm_param(const char *val, const struct kernel_param *kp)
+-- 
+2.43.0
 
-
-Thanks,
-
-Lizhi
-
->
