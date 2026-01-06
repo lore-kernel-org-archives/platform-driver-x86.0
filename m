@@ -1,160 +1,228 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.16])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 45D7E29B200;
-	Tue,  6 Jan 2026 04:54:49 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E8CC31BBBE5;
+	Tue,  6 Jan 2026 08:55:44 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.16
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1767675290; cv=none; b=rGH2bBOSd2Fpp70zNyj2IXkB/vzum1vpj2QLjAjeOQ2xdoqv0YIPI2iqDgjlDGjrfBULuGml+XkZNawdKu/Fc5BIS2IQiO9A0t37/pckU92ig0VE5L1JksNrxk+IBUE3goUvX9jXXUf6wThEbBU3JVDmFYhFTsJ2+Wn2RsiBVxw=
+	t=1767689747; cv=none; b=E5lX2IHDT/LZFfVjs1GCmsX2k97GzctlxKTO/PHQIRk+uqDpYneUjzYLy/MYiK8yX3RVa+FHi6R/EuEBaobd06Tcn9LoNiJ3c4n550fPzv3/n80G5fsSY911daHBKzYNAX9FaEcewXUohCfa7Z67hHJXyPnSszukkF6AuEq11dc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1767675290; c=relaxed/simple;
-	bh=DTlFMoVilhV/FLeEwG7XEdkFKSPZAjHouUnTDFEHaQo=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=WqS/TpT0nKK55SqROlpqtZzgu/2zuoT2bxarRkMHJ/mSv+t9yVkqV44ExSjmmgSbJ7Gqim5YcuA/Bpal3mesC0jTUxpAtBz8sHhLh5+HuulWjGCLmJ0b3Uj1PI47+6FzYmbcvch/AF40C7wAccEW9BxrgmTgkqi0zvYI4RY1jU8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=eajNNoCA; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1767689747; c=relaxed/simple;
+	bh=dZYBQxX1h0yvmkH6tQrG4Hb2eAEoskzZ/lW0f4iGBXo=;
+	h=From:Date:To:cc:Subject:In-Reply-To:Message-ID:References:
+	 MIME-Version:Content-Type; b=DcpswqxaYclqWyIABnNaJT3jix2K7bOmMNJarz+uHvWws1vziZ/jM6bIa5d7HzPgc5SV29DHBapE4jL47t51/xVezl83I4odxxB6w7+PKIPAT2PVdy2Sv5kp9pAphMqDPAhRTNVIzZaFO0EuLfzkDSY3sYZBxmgggnJmxdARTp4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=pass smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=btf0gggS; arc=none smtp.client-ip=198.175.65.16
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="eajNNoCA"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 6C599C116C6;
-	Tue,  6 Jan 2026 04:54:48 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1767675289;
-	bh=DTlFMoVilhV/FLeEwG7XEdkFKSPZAjHouUnTDFEHaQo=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=eajNNoCA5pf1BxipARgX8lJQ7upQhHn4Yn3PztHMl1YkavZPJBojQXRaT7fcYUBPo
-	 UB5/zV44jC1TOnvxvu0x6IsVqJ2fT/8Il4Z+bkxtpzJaddpNtBS04RV7dxdjUPMjSM
-	 J2zR3H2w62e7BiOg0DfEqjpvxc/prq1mlORIS6gJiXQNDb4WsjJz5CaIKNHWgIvKc/
-	 1yBMNAsBxBzijPvYBR34oqWM59dNMB5Oo5apdUMIB1sDCXXtAOXWYujF2svWoVSTsO
-	 paiLmdD1jNp0UWzfnycqiIZdAtdojM5z6rETq8h7q3HrQVSbTXk7sSgfxhA7xYcxQ6
-	 46wB9Nz2wECxw==
-From: "Mario Limonciello (AMD)" <superm1@kernel.org>
-To: Tom Lendacky <thomas.lendacky@amd.com>,
-	Herbert Xu <herbert@gondor.apana.org.au>,
-	Shyam Sundar S K <Shyam-sundar.S-k@amd.com>,
-	=?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>,
-	Rijo Thomas <Rijo-john.Thomas@amd.com>
-Cc: John Allen <john.allen@amd.com>,
-	"David S . Miller" <davem@davemloft.net>,
-	Hans de Goede <hansg@kernel.org>,
-	linux-crypto@vger.kernel.org (open list:AMD CRYPTOGRAPHIC COPROCESSOR (CCP) DRIVER),
-	platform-driver-x86@vger.kernel.org (open list:AMD PMF DRIVER),
-	Lars Francke <lars.francke@gmail.com>,
-	Yijun Shen <Yijun.Shen@dell.com>,
-	"Mario Limonciello (AMD)" <superm1@kernel.org>,
-	Yijun Shen <Yijun.Shen@Dell.com>
-Subject: [PATCH v4 5/5] crypto: ccp - Send PSP_CMD_TEE_RING_DESTROY when PSP_CMD_TEE_RING_INIT fails
-Date: Mon,  5 Jan 2026 22:54:23 -0600
-Message-ID: <20260106045423.55190-6-superm1@kernel.org>
-X-Mailer: git-send-email 2.43.0
-In-Reply-To: <20260106045423.55190-1-superm1@kernel.org>
-References: <20260106045423.55190-1-superm1@kernel.org>
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="btf0gggS"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1767689745; x=1799225745;
+  h=from:date:to:cc:subject:in-reply-to:message-id:
+   references:mime-version;
+  bh=dZYBQxX1h0yvmkH6tQrG4Hb2eAEoskzZ/lW0f4iGBXo=;
+  b=btf0gggSAMMUL+E4Bl7qUHAZ8Rp1C5wVDid9nRRERgmH0XlFTJDlyJC3
+   mZAGvOKpAnzJ+yBA1iBQnwkvMZrQ7YJXtRWUCS7MJ5vTkiV35Xc32ouLB
+   FjpPwaUfKwrwKLIsJgPkW3c5RMcS0CT2oXqlT8k2n8EQobyilvZwXwxIk
+   Mr8EptCVMSvzB4WLn1K8S0Jw8Cw4BGVyRiCdulOHRwqwb7tTPY5VTKxfD
+   xFaXdmb0WIwJaAfLvgJykFb8W9NM80T7YdimhLAItoGJ5RwMJNBqY4j0m
+   Fs4oY4+NT8rRSN2NuHkMh4PVSjBK0ogCU1x6vfY5JI1jIyBlmreclDzz0
+   Q==;
+X-CSE-ConnectionGUID: vVyYS01aQiidoOPACWhM9w==
+X-CSE-MsgGUID: 6TRmaAeXQeOOE4jTm+Weaw==
+X-IronPort-AV: E=McAfee;i="6800,10657,11662"; a="69214988"
+X-IronPort-AV: E=Sophos;i="6.21,204,1763452800"; 
+   d="scan'208";a="69214988"
+Received: from orviesa009.jf.intel.com ([10.64.159.149])
+  by orvoesa108.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 06 Jan 2026 00:55:44 -0800
+X-CSE-ConnectionGUID: zV/L/O9PSNqVGe6BvsvJug==
+X-CSE-MsgGUID: cBBedc/+QdmtLu9Qoii/Tg==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.21,204,1763452800"; 
+   d="scan'208";a="202380027"
+Received: from ijarvine-mobl1.ger.corp.intel.com (HELO localhost) ([10.245.245.6])
+  by orviesa009-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 06 Jan 2026 00:55:42 -0800
+From: =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
+Date: Tue, 6 Jan 2026 10:55:38 +0200 (EET)
+To: Benjamin Philip <benjamin.philip495@gmail.com>
+cc: platform-driver-x86@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>, 
+    Mark Pearson <mpearson-lenovo@squebb.ca>, 
+    "Derek J. Clark" <derekjohn.clark@gmail.com>, 
+    Ike Panhc <ikepanhc@gmail.com>, Hans de Goede <hansg@kernel.org>
+Subject: Re: [PATCH] platform/x86: ideadpad-laptop: Clean up style warnings
+ and checks
+In-Reply-To: <CAMEXYWdoXFJM96gE=JLVtrP7YeAdWwO+NmDFqfsy_pk49PreYg@mail.gmail.com>
+Message-ID: <2aabfc42-22e8-b09d-4da9-c6af8adfd1cf@linux.intel.com>
+References: <CAMEXYWdoXFJM96gE=JLVtrP7YeAdWwO+NmDFqfsy_pk49PreYg@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=US-ASCII
 
-The hibernate resume sequence involves loading a resume kernel that is just
-used for loading the hibernate image before shifting back to the existing
-kernel.
+On Tue, 23 Dec 2025, Benjamin Philip wrote:
 
-During that hibernate resume sequence the resume kernel may have loaded
-the ccp driver.  If this happens the resume kernel will also have called
-PSP_CMD_TEE_RING_INIT but it will never have called
-PSP_CMD_TEE_RING_DESTROY.
+> This commit makes some style changes to clean up the following
+> checkpatch warnings and checks at various places in ideapad.c:
+> 
+> - WARNING: quoted string split across lines
+> - WARNING: space prohibited between function name and open parenthesis '('
+> - WARNING: braces {} are not necessary for any arm of this statement
+> - CHECK: Alignment should match open parenthesis
+> 
+> We exceed the 80 column limit to fix the quoted string warning since
+> strings in question are user visible. See coding style, part 2 for
+> details.
+> 
+> Signed-off-by: Benjamin Philip <benjamin.philip495@gmail.com>
 
-This is problematic because the existing kernel needs to re-initialize the
-ring.  One could argue that the existing kernel should call destroy
-as part of restore() but there is no guarantee that the resume kernel did
-or didn't load the ccp driver.  There is also no callback opportunity for
-the resume kernel to destroy before handing back control to the existing
-kernel.
+This patch has some formatting issue.
 
-Similar problems could potentially exist with the use of kdump and
-crash handling. I actually reproduced this issue like this:
+--
+ i.
 
-1) rmmod ccp
-2) hibernate the system
-3) resume the system
-4) modprobe ccp
-
-The resume kernel will have loaded ccp but never destroyed and then when
-I try to modprobe it fails.
-
-Because of these possible cases add a flow that checks the error code from
-the PSP_CMD_TEE_RING_INIT call and tries to call PSP_CMD_TEE_RING_DESTROY
-if it failed.  If this succeeds then call PSP_CMD_TEE_RING_INIT again.
-
-Fixes: f892a21f51162 ("crypto: ccp - use generic power management")
-Reported-by: Lars Francke <lars.francke@gmail.com>
-Closes: https://lore.kernel.org/platform-driver-x86/CAD-Ua_gfJnQSo8ucS_7ZwzuhoBRJ14zXP7s8b-zX3ZcxcyWePw@mail.gmail.com/
-Tested-by: Yijun Shen <Yijun.Shen@Dell.com>
-Signed-off-by: Mario Limonciello (AMD) <superm1@kernel.org>
----
-v4:
- * Add tag (Yijun)
- * Move and rename PSP_TEE_STS_RING_BUSY (Ilpo)
-v3:
- * Add a comment (Tom)
- * Add a define for busy condition (Shyam)
- * Rename label (Shyam)
- * Upgrade message to info (Shyam)
- * Use a helper that validates result for destroy command (Shyam)
----
- drivers/crypto/ccp/tee-dev.c | 12 ++++++++++++
- include/linux/psp.h          |  1 +
- 2 files changed, 13 insertions(+)
-
-diff --git a/drivers/crypto/ccp/tee-dev.c b/drivers/crypto/ccp/tee-dev.c
-index ef1430f86ad62..ea9b94d5b10ba 100644
---- a/drivers/crypto/ccp/tee-dev.c
-+++ b/drivers/crypto/ccp/tee-dev.c
-@@ -113,6 +113,7 @@ static int tee_init_ring(struct psp_tee_device *tee)
- {
- 	int ring_size = MAX_RING_BUFFER_ENTRIES * sizeof(struct tee_ring_cmd);
- 	struct tee_init_ring_cmd *cmd;
-+	bool retry = false;
- 	unsigned int reg;
- 	int ret;
- 
-@@ -135,6 +136,7 @@ static int tee_init_ring(struct psp_tee_device *tee)
- 	/* Send command buffer details to Trusted OS by writing to
- 	 * CPU-PSP message registers
- 	 */
-+retry_init:
- 	ret = psp_mailbox_command(tee->psp, PSP_CMD_TEE_RING_INIT, cmd,
- 				  TEE_DEFAULT_CMD_TIMEOUT, &reg);
- 	if (ret) {
-@@ -145,6 +147,16 @@ static int tee_init_ring(struct psp_tee_device *tee)
- 	}
- 
- 	if (FIELD_GET(PSP_CMDRESP_STS, reg)) {
-+		/*
-+		 * During the hibernate resume sequence driver may have gotten loaded
-+		 * but the ring not properly destroyed. If the ring doesn't work, try
-+		 * to destroy and re-init once.
-+		 */
-+		if (!retry && FIELD_GET(PSP_CMDRESP_STS, reg) == PSP_TEE_STS_RING_BUSY) {
-+			dev_info(tee->dev, "tee: ring init command failed with busy status, retrying\n");
-+			if (tee_send_destroy_cmd(tee))
-+				goto retry_init;
-+		}
- 		dev_err(tee->dev, "tee: ring init command failed (%#010lx)\n",
- 			FIELD_GET(PSP_CMDRESP_STS, reg));
- 		tee_free_ring(tee);
-diff --git a/include/linux/psp.h b/include/linux/psp.h
-index 92e60aeef21e1..b337dcce1e991 100644
---- a/include/linux/psp.h
-+++ b/include/linux/psp.h
-@@ -18,6 +18,7 @@
-  * and should include an appropriate local definition in their source file.
-  */
- #define PSP_CMDRESP_STS		GENMASK(15, 0)
-+#define  PSP_TEE_STS_RING_BUSY 0x0000000d  /* Ring already initialized */
- #define PSP_CMDRESP_CMD		GENMASK(23, 16)
- #define PSP_CMDRESP_RESERVED	GENMASK(29, 24)
- #define PSP_CMDRESP_RECOVERY	BIT(30)
--- 
-2.43.0
-
+> ---
+>  drivers/platform/x86/lenovo/ideapad-laptop.c | 39 ++++++++------------
+>  1 file changed, 16 insertions(+), 23 deletions(-)
+> 
+> diff --git a/drivers/platform/x86/lenovo/ideapad-laptop.c
+> b/drivers/platform/x86/lenovo/ideapad-laptop.c
+> index 5171a077f62c..3d8a8b4f3e86 100644
+> --- a/drivers/platform/x86/lenovo/ideapad-laptop.c
+> +++ b/drivers/platform/x86/lenovo/ideapad-laptop.c
+> @@ -219,38 +219,32 @@ MODULE_PARM_DESC(no_bt_rfkill, "No rfkill for
+> bluetooth.");
+>  static bool allow_v4_dytc;
+>  module_param(allow_v4_dytc, bool, 0444);
+>  MODULE_PARM_DESC(allow_v4_dytc,
+> -	"Enable DYTC version 4 platform-profile support. "
+> -	"If you need this please report this to:
+> platform-driver-x86@vger.kernel.org");
+> +		 "Enable DYTC version 4 platform-profile support. If you need this
+> please report this to: platform-driver-x86@vger.kernel.org");
+> 
+>  static bool hw_rfkill_switch;
+>  module_param(hw_rfkill_switch, bool, 0444);
+>  MODULE_PARM_DESC(hw_rfkill_switch,
+> -	"Enable rfkill support for laptops with a hw on/off wifi switch/slider. "
+> -	"If you need this please report this to:
+> platform-driver-x86@vger.kernel.org");
+> +		 "Enable rfkill support for laptops with a hw on/off wifi
+> switch/slider. If you need this please report this to:
+> platform-driver-x86@vger.kernel.org");
+> 
+>  static bool set_fn_lock_led;
+>  module_param(set_fn_lock_led, bool, 0444);
+>  MODULE_PARM_DESC(set_fn_lock_led,
+> -	"Enable driver based updates of the fn-lock LED on fn-lock changes. "
+> -	"If you need this please report this to:
+> platform-driver-x86@vger.kernel.org");
+> +		 "Enable driver based updates of the fn-lock LED on fn-lock
+> changes. If you need this please report this to:
+> platform-driver-x86@vger.kernel.org");
+> 
+>  static bool ctrl_ps2_aux_port;
+>  module_param(ctrl_ps2_aux_port, bool, 0444);
+>  MODULE_PARM_DESC(ctrl_ps2_aux_port,
+> -	"Enable driver based PS/2 aux port en-/dis-abling on touchpad on/off toggle. "
+> -	"If you need this please report this to:
+> platform-driver-x86@vger.kernel.org");
+> +		 "Enable driver based PS/2 aux port en-/dis-abling on touchpad
+> on/off toggle. If you need this please report this to:
+> platform-driver-x86@vger.kernel.org");
+> 
+>  static bool touchpad_ctrl_via_ec;
+>  module_param(touchpad_ctrl_via_ec, bool, 0444);
+>  MODULE_PARM_DESC(touchpad_ctrl_via_ec,
+> -	"Enable registering a 'touchpad' sysfs-attribute which can be used
+> to manually "
+> -	"tell the EC to enable/disable the touchpad. This may not work on
+> all models.");
+> +		 "Enable registering a 'touchpad' sysfs-attribute which can be used
+> to manually tell the EC to enable/disable the touchpad. This may not
+> work on all models.");
+> 
+>  static bool ymc_ec_trigger __read_mostly;
+>  module_param(ymc_ec_trigger, bool, 0444);
+>  MODULE_PARM_DESC(ymc_ec_trigger,
+> -	"Enable EC triggering work-around to force emitting tablet mode events. "
+> -	"If you need this please report this to:
+> platform-driver-x86@vger.kernel.org");
+> +		 "Enable EC triggering work-around to force emitting tablet mode
+> events. If you need this please report this to:
+> platform-driver-x86@vger.kernel.org");
+> 
+>  /*
+>   * shared data
+> @@ -1446,7 +1440,7 @@ static void ideapad_check_special_buttons(struct
+> ideapad_private *priv)
+>  		if (read_ec_data(priv->adev->handle, VPCCMD_R_SPECIAL_BUTTONS, &value))
+>  			return;
+> 
+> -	for_each_set_bit (bit, &value, 16) {
+> +	for_each_set_bit(bit, &value, 16) {
+>  		switch (bit) {
+>  		case 6:	/* Z570 */
+>  		case 0:	/* Z580 */
+> @@ -1706,11 +1700,10 @@ static int ideapad_kbd_bl_init(struct
+> ideapad_private *priv)
+>  	if (WARN_ON(priv->kbd_bl.initialized))
+>  		return -EEXIST;
+> 
+> -	if (ideapad_kbd_bl_check_tristate(priv->kbd_bl.type)) {
+> +	if (ideapad_kbd_bl_check_tristate(priv->kbd_bl.type))
+>  		priv->kbd_bl.led.max_brightness = 2;
+> -	} else {
+> +	else
+>  		priv->kbd_bl.led.max_brightness = 1;
+> -	}
+> 
+>  	brightness = ideapad_kbd_bl_brightness_get(priv);
+>  	if (brightness < 0)
+> @@ -1752,7 +1745,7 @@ static enum led_brightness
+> ideapad_fn_lock_led_cdev_get(struct led_classdev *led
+>  }
+> 
+>  static int ideapad_fn_lock_led_cdev_set(struct led_classdev *led_cdev,
+> -	enum led_brightness brightness)
+> +					enum led_brightness brightness)
+>  {
+>  	struct ideapad_private *priv = container_of(led_cdev, struct
+> ideapad_private, fn_lock.led);
+> 
+> @@ -1928,7 +1921,7 @@ static void ideapad_acpi_notify(acpi_handle
+> handle, u32 event, void *data)
+> 
+>  	vpc1 = (vpc2 << 8) | vpc1;
+> 
+> -	for_each_set_bit (bit, &vpc1, 16) {
+> +	for_each_set_bit(bit, &vpc1, 16) {
+>  		switch (bit) {
+>  		case 13:
+>  		case 11:
+> @@ -2142,14 +2135,14 @@ static const enum power_supply_property
+> ideapad_power_supply_props[] = {
+>  	}
+> 
+>  DEFINE_IDEAPAD_POWER_SUPPLY_EXTENSION(ideapad_battery_ext_v1,
+> -	(BIT(POWER_SUPPLY_CHARGE_TYPE_STANDARD) |
+> -	 BIT(POWER_SUPPLY_CHARGE_TYPE_LONGLIFE))
+> +				      (BIT(POWER_SUPPLY_CHARGE_TYPE_STANDARD) |
+> +				       BIT(POWER_SUPPLY_CHARGE_TYPE_LONGLIFE))
+>  );
+> 
+>  DEFINE_IDEAPAD_POWER_SUPPLY_EXTENSION(ideapad_battery_ext_v2,
+> -	(BIT(POWER_SUPPLY_CHARGE_TYPE_STANDARD) |
+> -	 BIT(POWER_SUPPLY_CHARGE_TYPE_FAST) |
+> -	 BIT(POWER_SUPPLY_CHARGE_TYPE_LONGLIFE))
+> +				      (BIT(POWER_SUPPLY_CHARGE_TYPE_STANDARD) |
+> +				       BIT(POWER_SUPPLY_CHARGE_TYPE_FAST) |
+> +				       BIT(POWER_SUPPLY_CHARGE_TYPE_LONGLIFE))
+>  );
+> 
+>  static int ideapad_battery_add(struct power_supply *battery, struct
+> acpi_battery_hook *hook)
+> 
