@@ -1,59 +1,59 @@
 Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.9])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8E210289824;
-	Tue,  6 Jan 2026 13:46:28 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 80B0125FA0E;
+	Tue,  6 Jan 2026 13:46:37 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.9
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1767707190; cv=none; b=SptmO4mWHXP6Ui7bnoq2vLiDulsE1njDxqCf7+sXTSK2NK9sk33Ko6vr8IlUZJ49rW6KSg3cM4x6Cz526HjmVgwrI6cvoua2asiW3oOVHxirll/T1bwTERU8Ol03wztoTTX0fAgX4b0H+bkLqH7sWmRejWradMVZd4CMZKtzTsA=
+	t=1767707199; cv=none; b=EhVghXLMwWzfTK7VAvILomfIupKtcxfk36B2EXdY6QWa+dylYX+W7a1qimIOAGeNPvLNe/wq7iJvyBKdcBBR5Pc+a1U0ZoglgkJevdOtybHNBeW1UF8MpYmAZXnagRV2s0jVQy5SnHuF676QC7w8JCFGEZsdNoNZstZMz74rK0c=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1767707190; c=relaxed/simple;
-	bh=s5mrkN6oWWd04lj9UV0qqWv751JhTrGG5mJC6ALeQKg=;
+	s=arc-20240116; t=1767707199; c=relaxed/simple;
+	bh=hJQhoddBlzYv3nhR61h2XkrhfINkYhdJF2IKN6iuuDU=;
 	h=From:To:Cc:In-Reply-To:References:Subject:Message-Id:Date:
-	 MIME-Version:Content-Type; b=aBuS5FA2+24tYCx3G7tpGcsdMqxtSGadMGoXKh1yFyTgwrz3Qd5xN/ktglwSraH5PV9Fxx1SkPE2x5mIICLwuswZUBCbdNZKlzACz34UQoBV2w1aiyE36YDzRbg/P2VGqTjYX7idxcK2RAHf1OEWtWzS9hLfXr6k17aQATVeOQY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=pass smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=gq9zLEr+; arc=none smtp.client-ip=198.175.65.9
+	 MIME-Version:Content-Type; b=dTlr88HUkthSCsyda5twO14rFBMYJIBVYiTZ2e3wrOgpkdls9oM7Svez0R64QeV3+WxMa4/ruv+tp9XhEZENwVsp+HW/eXamUtRZbPLzy2KPfCX/+9TfhlJnNvumT9zzw+ehX8glfxfmX/IFPnsKQBsKRWB1SoTRGRHNiVsB1s4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=pass smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=fHN97KoE; arc=none smtp.client-ip=198.175.65.9
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="gq9zLEr+"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="fHN97KoE"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1767707189; x=1799243189;
+  t=1767707198; x=1799243198;
   h=from:to:cc:in-reply-to:references:subject:message-id:
    date:mime-version:content-transfer-encoding;
-  bh=s5mrkN6oWWd04lj9UV0qqWv751JhTrGG5mJC6ALeQKg=;
-  b=gq9zLEr+MQ7f+/iF2r89GFmuHJDuLhrU/i5AJ8y752UXi09oFLpb2AsN
-   5EjojpEeX1O/7WfOSCvLJMVnqGFWYdiKKucuj1XqsTUxYS9v/O0WeMm9W
-   NP5IdM4EFE2DorziC1qTmbOIObEZ8RBSEHOVSQUIaVO4kMm4oNPH+fNv7
-   NsiGjyaqVJtEOvvW2NPw1jOjqVIityi63f4OCOauVMmcezKtG9Gb+7Dyd
-   teY51FRackPI5wR7wiw6t2iN+QrvrcdpphZ9wevBq6KO2H0mQveVLkxeN
-   LiFUokb9RiS3Kk6ju4MshP0gSzxeUN+IfpqBEBqwXMjInlvXXc3DWjCbN
-   w==;
-X-CSE-ConnectionGUID: I970vZyTSZGjuHTqxTTGyQ==
-X-CSE-MsgGUID: SxtnNJyvTjCBN3F7OEkIwg==
-X-IronPort-AV: E=McAfee;i="6800,10657,11663"; a="91726668"
+  bh=hJQhoddBlzYv3nhR61h2XkrhfINkYhdJF2IKN6iuuDU=;
+  b=fHN97KoE7Bepb4hyPRzbp14H9aYfluoVmkeWHAMhxG7XTxAoslKe0T7k
+   fWZqzTaZR9EvP4QWccy91+EQ8etjTD75tNK5j5OE5MsU8nmWfyrS15W7E
+   p1nQpwv9JAq68m065aBJK1AZxByTNa6c4CBwjTGQV7G8/DdHmnCbgKMKf
+   6S20aAwZvYOqK14myixIL+bg2Wx9CYM+b4WMNBQekUE7juvj7FYBxFY1I
+   7GZo7eLmiEtlWn24vEnI5a1tqHwSO1uBBu7zUogNF25qYivyJUItxwYWG
+   g0uteUB5ERsODwWo1RW/UG35GeRFEsOxCHyi/QsxoLhnJgsvibYQjkIix
+   Q==;
+X-CSE-ConnectionGUID: EoeGdM2WRYi+u1oR/2aSxg==
+X-CSE-MsgGUID: Cppc3ernSQidVDfHcdM+FQ==
+X-IronPort-AV: E=McAfee;i="6800,10657,11663"; a="91726685"
 X-IronPort-AV: E=Sophos;i="6.21,204,1763452800"; 
-   d="scan'208";a="91726668"
+   d="scan'208";a="91726685"
 Received: from fmviesa005.fm.intel.com ([10.60.135.145])
-  by orvoesa101.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 06 Jan 2026 05:46:28 -0800
-X-CSE-ConnectionGUID: dpp26i9FRHa13hk/d4la9w==
-X-CSE-MsgGUID: T71Qoc9lR1aeT4LP2qJHdQ==
+  by orvoesa101.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 06 Jan 2026 05:46:37 -0800
+X-CSE-ConnectionGUID: 2E6ge+REQLuFggQPYSOlBw==
+X-CSE-MsgGUID: MQZGnN4iQFeJkVMt8IJUGw==
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="6.21,204,1763452800"; 
-   d="scan'208";a="207127884"
+   d="scan'208";a="207127885"
 Received: from ijarvine-mobl1.ger.corp.intel.com (HELO localhost) ([10.245.245.6])
-  by fmviesa005-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 06 Jan 2026 05:46:25 -0800
+  by fmviesa005-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 06 Jan 2026 05:46:34 -0800
 From: =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
-To: Chen Yu <yu.c.chen@intel.com>, Hans de Goede <hansg@kernel.org>, 
- Maximilian Luz <luzmaximilian@gmail.com>, 
- Thorsten Blum <thorsten.blum@linux.dev>
-Cc: platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
-In-Reply-To: <20260105145045.52764-2-thorsten.blum@linux.dev>
-References: <20260105145045.52764-2-thorsten.blum@linux.dev>
-Subject: Re: [PATCH v2] platform/surface: Replace deprecated strcpy() in
- surface_button_add()
-Message-Id: <176770718089.2365.17181925544709248266.b4-ty@linux.intel.com>
-Date: Tue, 06 Jan 2026 15:46:20 +0200
+To: platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org, 
+ Benjamin Philip <benjamin.philip495@gmail.com>
+Cc: Mark Pearson <mpearson-lenovo@squebb.ca>, 
+ "Derek J. Clark" <derekjohn.clark@gmail.com>, 
+ Hans de Goede <hansg@kernel.org>
+In-Reply-To: <20260101141657.54258-1-benjamin.philip495@gmail.com>
+References: <20260101141657.54258-1-benjamin.philip495@gmail.com>
+Subject: Re: [PATCH v2] platform/x86: yogabook: Clean up code style
+Message-Id: <176770718833.2365.2834893725256676790.b4-ty@linux.intel.com>
+Date: Tue, 06 Jan 2026 15:46:28 +0200
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
@@ -64,13 +64,16 @@ Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
 X-Mailer: b4 0.13.0
 
-On Mon, 05 Jan 2026 15:50:46 +0100, Thorsten Blum wrote:
+On Thu, 01 Jan 2026 19:46:57 +0530, Benjamin Philip wrote:
 
-> strcpy() has been deprecated [1] because it performs no bounds checking
-> on the destination buffer, which can lead to buffer overflows. Replace
-> it with the safer strscpy().  No functional changes.
+> This commit cleans up the following checks flagged by checkpatch in
+> yogabook.c:
 > 
+> - CHECK: Prefer kernel type 'u8' over 'uint8_t'
+> - CHECK: Comparison to NULL could be written "!data"
+> - CHECK: line length of ... exceeds 100 columns
 > 
+> [...]
 
 
 Thank you for your contribution, it has been applied to my local
@@ -79,8 +82,8 @@ platform-drivers-x86/review-ilpo-next branch only once I've pushed my
 local branch there, which might take a while.
 
 The list of commits applied:
-[1/1] platform/surface: Replace deprecated strcpy() in surface_button_add()
-      commit: 1716c1e0860b42980f338b69b974149d035582ca
+[1/1] platform/x86: yogabook: Clean up code style
+      commit: 751e2ebf29a74c0e46144cbb35e5be478bcd7668
 
 --
  i.
