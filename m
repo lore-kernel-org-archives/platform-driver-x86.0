@@ -1,234 +1,187 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.16])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.15])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0181F265CA8;
-	Tue,  6 Jan 2026 23:24:42 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.16
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AF48531D362;
+	Tue,  6 Jan 2026 23:45:25 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.15
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1767741885; cv=none; b=mi7kyZnXDBxLe1hlUkV7rBlejijEs6Pgxqdu3dMhDgsyimDQ6/6tfXcz63kZHoLvSdoxVLtJHpZFLpA55Yj65MhO0WgYh6/QzsPpSvt3dmWWNr5cQWYEGppK02wAZPzlttWQDIGGt6g+wdss7f9oSRGhB5KEs4JCqTtnYyQCImU=
+	t=1767743128; cv=none; b=qzwkNM2EJTzuvaH1quOWEPR3gsCQ+tNF6c7K0I9V0Sldvr4UBgZTSKIGHpqU01laLvg/CStlHBcZHG6IUjWuTugp0ENNDqcpb5qaVmDCIqTVIUrh+i8rnWeHSOHVUV3P3Pr70mHixUrnuLlwKPKGjhWVxiAbR3X61UDHKkh0250=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1767741885; c=relaxed/simple;
-	bh=kbi25AN7J5KJOEyHPG4pOFTWqivq8V9VYd+c0YDMyg4=;
-	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=OXLlVCxEKfybeaib4TXNpRN6zzFo5nDqLFb2lXXlaTbPfOaxcdpaPaQFEWYrF0zRwm7b6tBN37LL1n7DuPXpf61L7GOce+kglEqjMW73gOLNR7g7OD75NWXhe/T1P72EubSP2Jr4hfA4P+8zoua3qFe58nZG3Kh+bs0NViCVwYM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=pass smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=Hxq82pJH; arc=none smtp.client-ip=192.198.163.16
+	s=arc-20240116; t=1767743128; c=relaxed/simple;
+	bh=TMgxkcSBBdBBt6dwVKsJzh+5rmtR3LX83lcFSJNMUnk=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=Y9uuOXl4mkKBjiO4mCPr+DmwyD1+R996edjCtIROKwTjDWmqDmf0hVubKzzxDysLCzco68cwGv6UyEt5kvMLGWpsJD8Fqf/I0V9pqu0sSrUYmu4N1/GZsPlJWoH3GUMXalcHOmGheoRuGw1bF0lJr+WXus5rdGNmBbAGB4+m0Q0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=pass smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=G6p0m6SM; arc=none smtp.client-ip=198.175.65.15
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="Hxq82pJH"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="G6p0m6SM"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1767741883; x=1799277883;
-  h=message-id:subject:from:to:cc:date:in-reply-to:
-   references:content-transfer-encoding:mime-version;
-  bh=kbi25AN7J5KJOEyHPG4pOFTWqivq8V9VYd+c0YDMyg4=;
-  b=Hxq82pJHKeNpjWbi8WP44bidDHS0pkQ/+Ms9VBZMy8aUL0OoeMjKU5Zv
-   uSWa9k4C1+YutPJ8dnFHAbUEGekPf5M7XsmoX3GKLwVqkJ1F4IwZsZCTj
-   pM3ak4dya0jak8dgMqaIa4qomhsju6HdRGgyibm1DidgbNrFHcUtl7hP7
-   iuX1cJtneajGH/HkWDz44TV0sgQcm9+3afAEGksXGk1qD8OBDVC0C88Pf
-   z26Rh2HsEClADA4usew8eRKHOcpbiK2QpzqSUHAGECzJeMldkqS47i8gH
-   RmmhzxWVB48yuqoNM69lzfGQu3ULIiEbEravjwpJ1GWhyHN0Wm0L4phFS
-   Q==;
-X-CSE-ConnectionGUID: KHrg+4b+T8+6Z/FXq8+DpQ==
-X-CSE-MsgGUID: X5swP7GBTGOFxZLltlNwqA==
-X-IronPort-AV: E=McAfee;i="6800,10657,11663"; a="56672321"
+  t=1767743126; x=1799279126;
+  h=message-id:date:mime-version:subject:to:cc:references:
+   from:in-reply-to:content-transfer-encoding;
+  bh=TMgxkcSBBdBBt6dwVKsJzh+5rmtR3LX83lcFSJNMUnk=;
+  b=G6p0m6SMODk6Hk9XTQAGlhYuQBvb4ZgMMMkd2KL2bh8rUV06e979YufB
+   vELBI87vqPbyo7eyCDfjbZpFPTLuTIInIGpyONZVvKgS1agLPhkX+OAXu
+   UQyNkNWA7h+mN6eaLX37cq2LzneEb9IWhjPV7j3ATGh8zXc+CdzNlpGCG
+   vYSZ+F1HT2uFKPOA7RSyhS3Dlh0N/wWRXMeeCbHUOsET1o6EpnQALe0G5
+   ff9VWpEwya7H0ohhyXKfBQFFA/iko2yda19qtZjRkxcqqNTPUVdorS3I4
+   /8DJ9SsbzjwTuLk8sw9FogxqjwvvaUxjLyR9C++V05OaK6QlrggdXPhAG
+   w==;
+X-CSE-ConnectionGUID: FCk+GkVkSk28vQa7X+Dn9Q==
+X-CSE-MsgGUID: 3uz0x3G9S/KBssYLPBSHIQ==
+X-IronPort-AV: E=McAfee;i="6800,10657,11663"; a="72744607"
 X-IronPort-AV: E=Sophos;i="6.21,206,1763452800"; 
-   d="scan'208";a="56672321"
-Received: from fmviesa008.fm.intel.com ([10.60.135.148])
-  by fmvoesa110.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 06 Jan 2026 15:24:42 -0800
-X-CSE-ConnectionGUID: x30M/ogrRHajS00RnEcBug==
-X-CSE-MsgGUID: taV9jgqFRTyH7/TcTIPNSQ==
+   d="scan'208";a="72744607"
+Received: from orviesa005.jf.intel.com ([10.64.159.145])
+  by orvoesa107.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 06 Jan 2026 15:45:25 -0800
+X-CSE-ConnectionGUID: MryDhUyYQZaU5L9XHr1Lcg==
+X-CSE-MsgGUID: bffes8gETHiYE5+vbUIE5w==
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="6.21,206,1763452800"; 
-   d="scan'208";a="203028852"
-Received: from spandruv-mobl5.amr.corp.intel.com (HELO [10.247.173.62]) ([10.247.173.62])
-  by fmviesa008-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 06 Jan 2026 15:24:40 -0800
-Message-ID: <e1d38d68f53302a150e11619b978d1b99d7590c2.camel@linux.intel.com>
-Subject: Re: [PATCH 2/2] platform/x86: ISST: Store and restore all domains
- data
-From: srinivas pandruvada <srinivas.pandruvada@linux.intel.com>
-To: Ilpo =?ISO-8859-1?Q?J=E4rvinen?= <ilpo.jarvinen@linux.intel.com>
-Cc: Hans de Goede <hansg@kernel.org>, platform-driver-x86@vger.kernel.org,
- LKML	 <linux-kernel@vger.kernel.org>, stable@vger.kernel.org
-Date: Tue, 06 Jan 2026 15:24:36 -0800
-In-Reply-To: <39be18a6-d50e-e625-1347-7709cea78ea6@linux.intel.com>
-References: <20251229183450.823244-1-srinivas.pandruvada@linux.intel.com>
-		 <20251229183450.823244-3-srinivas.pandruvada@linux.intel.com>
-	 <39be18a6-d50e-e625-1347-7709cea78ea6@linux.intel.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-User-Agent: Evolution 3.58.2 (3.58.2-1.fc43) 
+   d="scan'208";a="207836582"
+Received: from xpardee-mobl.amr.corp.intel.com (HELO [10.246.154.149]) ([10.246.154.149])
+  by orviesa005-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 06 Jan 2026 15:45:25 -0800
+Message-ID: <11077f24-72e4-4ba0-87b5-5a6e4dbd1eb0@linux.intel.com>
+Date: Tue, 6 Jan 2026 15:45:12 -0800
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH 1/3] platform/x86/intel/pmc: Change LPM mode fields to u8
+To: =?UTF-8?Q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
+Cc: irenic.rajneesh@gmail.com, david.e.box@linux.intel.com,
+ hdegoede@redhat.com, platform-driver-x86@vger.kernel.org,
+ LKML <linux-kernel@vger.kernel.org>, linux-pm@vger.kernel.org
+References: <20251217002343.2289577-1-xi.pardee@linux.intel.com>
+ <20251217002343.2289577-2-xi.pardee@linux.intel.com>
+ <0de42147-16c3-e610-caae-e7aba5406782@linux.intel.com>
+Content-Language: en-US
+From: Xi Pardee <xi.pardee@linux.intel.com>
+In-Reply-To: <0de42147-16c3-e610-caae-e7aba5406782@linux.intel.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
 
-On Tue, 2026-01-06 at 11:44 +0200, Ilpo J=C3=A4rvinen wrote:
-> On Mon, 29 Dec 2025, Srinivas Pandruvada wrote:
->=20
-> > The suspend/resume callbacks currently only store and restore the
-> > configuration for power domain 0. However, other power domains may
-> > also
-> > have modified configurations that need to be preserved across
-> > suspend/
-> > resume cycles.
-> >=20
-> > Extend the store/restore functionality to handle all power domains.
-> >=20
-> > Fixes: 91576acab020 ("platform/x86: ISST: Add suspend/resume
-> > callbacks")
-> > Signed-off-by: Srinivas Pandruvada
-> > <srinivas.pandruvada@linux.intel.com>
-> > CC: stable@vger.kernel.org
-> > ---
-> > =C2=A0.../intel/speed_select_if/isst_tpmi_core.c=C2=A0=C2=A0=C2=A0 | 53=
- ++++++++++++---
-> > ----
-> > =C2=A01 file changed, 33 insertions(+), 20 deletions(-)
-> >=20
-> > diff --git
-> > a/drivers/platform/x86/intel/speed_select_if/isst_tpmi_core.c
-> > b/drivers/platform/x86/intel/speed_select_if/isst_tpmi_core.c
-> > index f587709ddd47..47026bb3e1af 100644
-> > --- a/drivers/platform/x86/intel/speed_select_if/isst_tpmi_core.c
-> > +++ b/drivers/platform/x86/intel/speed_select_if/isst_tpmi_core.c
-> > @@ -1723,55 +1723,68 @@ EXPORT_SYMBOL_NS_GPL(tpmi_sst_dev_remove,
-> > "INTEL_TPMI_SST");
-> > =C2=A0void tpmi_sst_dev_suspend(struct auxiliary_device *auxdev)
-> > =C2=A0{
-> > =C2=A0	struct tpmi_sst_struct *tpmi_sst =3D
-> > auxiliary_get_drvdata(auxdev);
-> > -	struct tpmi_per_power_domain_info *power_domain_info;
-> > +	struct tpmi_per_power_domain_info *power_domain_info,
-> > *pd_info;
-> > =C2=A0	struct oobmsm_plat_info *plat_info;
-> > =C2=A0	void __iomem *cp_base;
-> > +	int num_resources, i;
-> > =C2=A0
-> > =C2=A0	plat_info =3D tpmi_get_platform_data(auxdev);
-> > =C2=A0	if (!plat_info)
-> > =C2=A0		return;
-> > =C2=A0
-> > =C2=A0	power_domain_info =3D tpmi_sst->power_domain_info[plat_info-
-> > >partition];
-> > +	num_resources =3D tpmi_sst-
-> > >number_of_power_domains[plat_info->partition];
-> > =C2=A0
-> > -	cp_base =3D power_domain_info->sst_base + power_domain_info-
-> > >sst_header.cp_offset;
-> > -	power_domain_info->saved_sst_cp_control =3D readq(cp_base +
-> > SST_CP_CONTROL_OFFSET);
-> > +	for (i =3D 0; i < num_resources; i++) {
-> > +		pd_info =3D &power_domain_info[i];
-> > +		if (!pd_info || !pd_info->sst_base)
-> > +			continue;
-> > =C2=A0
-> > -	memcpy_fromio(power_domain_info->saved_clos_configs,
-> > cp_base + SST_CLOS_CONFIG_0_OFFSET,
-> > -		=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 sizeof(power_domain_info-
-> > >saved_clos_configs));
-> > +		cp_base =3D pd_info->sst_base + pd_info-
-> > >sst_header.cp_offset;
-> > =C2=A0
-> > -	memcpy_fromio(power_domain_info->saved_clos_assocs,
-> > cp_base + SST_CLOS_ASSOC_0_OFFSET,
-> > -		=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 sizeof(power_domain_info-
-> > >saved_clos_assocs));
-> > +		pd_info->saved_sst_cp_control =3D readq(cp_base +
-> > SST_CP_CONTROL_OFFSET);
-> > +		memcpy_fromio(pd_info->saved_clos_configs, cp_base
-> > + SST_CLOS_CONFIG_0_OFFSET,
-> > +			=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 sizeof(pd_info-
-> > >saved_clos_configs));
-> > +		memcpy_fromio(pd_info->saved_clos_assocs, cp_base
-> > + SST_CLOS_ASSOC_0_OFFSET,
-> > +			=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 sizeof(pd_info->saved_clos_assocs));
-> > =C2=A0
-> > -	power_domain_info->saved_pp_control =3D
-> > readq(power_domain_info->sst_base +
-> > -						=C2=A0=C2=A0=C2=A0
-> > power_domain_info->sst_header.pp_offset +
-> > -						=C2=A0=C2=A0=C2=A0
-> > SST_PP_CONTROL_OFFSET);
-> > +		pd_info->saved_pp_control =3D readq(pd_info-
-> > >sst_base +
-> > +						=C2=A0 pd_info-
-> > >sst_header.pp_offset +
-> > +						=C2=A0
-> > SST_PP_CONTROL_OFFSET);
-> > +	}
-> > =C2=A0}
-> > =C2=A0EXPORT_SYMBOL_NS_GPL(tpmi_sst_dev_suspend, "INTEL_TPMI_SST");
-> > =C2=A0
-> > =C2=A0void tpmi_sst_dev_resume(struct auxiliary_device *auxdev)
-> > =C2=A0{
-> > =C2=A0	struct tpmi_sst_struct *tpmi_sst =3D
-> > auxiliary_get_drvdata(auxdev);
-> > -	struct tpmi_per_power_domain_info *power_domain_info;
-> > +	struct tpmi_per_power_domain_info *power_domain_info,
-> > *pd_info;
-> > =C2=A0	struct oobmsm_plat_info *plat_info;
-> > =C2=A0	void __iomem *cp_base;
-> > +	int num_resources, i;
-> > =C2=A0
-> > =C2=A0	plat_info =3D tpmi_get_platform_data(auxdev);
-> > =C2=A0	if (!plat_info)
-> > =C2=A0		return;
-> > =C2=A0
-> > =C2=A0	power_domain_info =3D tpmi_sst->power_domain_info[plat_info-
-> > >partition];
-> > +	num_resources =3D tpmi_sst-
-> > >number_of_power_domains[plat_info->partition];
-> > =C2=A0
-> > -	cp_base =3D power_domain_info->sst_base + power_domain_info-
-> > >sst_header.cp_offset;
-> > -	writeq(power_domain_info->saved_sst_cp_control, cp_base +
-> > SST_CP_CONTROL_OFFSET);
-> > -
-> > -	memcpy_toio(cp_base + SST_CLOS_CONFIG_0_OFFSET,
-> > power_domain_info->saved_clos_configs,
-> > -		=C2=A0=C2=A0=C2=A0 sizeof(power_domain_info-
-> > >saved_clos_configs));
-> > +	for (i =3D 0; i < num_resources; i++) {
-> > +		pd_info =3D &power_domain_info[i];
-> > +		if (!pd_info || !pd_info->sst_base)
-> > +			continue;
-> > =C2=A0
-> > -	memcpy_toio(cp_base + SST_CLOS_ASSOC_0_OFFSET,
-> > power_domain_info->saved_clos_assocs,
-> > -		=C2=A0=C2=A0=C2=A0 sizeof(power_domain_info->saved_clos_assocs));
-> > +		cp_base =3D pd_info->sst_base + pd_info-
-> > >sst_header.cp_offset;
-> > +		writeq(pd_info->saved_sst_cp_control, cp_base +
-> > SST_CP_CONTROL_OFFSET);
-> > +		memcpy_toio(cp_base + SST_CLOS_CONFIG_0_OFFSET,
-> > pd_info->saved_clos_configs,
-> > +			=C2=A0=C2=A0=C2=A0 sizeof(pd_info->saved_clos_configs));
-> > +		memcpy_toio(cp_base + SST_CLOS_ASSOC_0_OFFSET,
-> > pd_info->saved_clos_assocs,
-> > +			=C2=A0=C2=A0=C2=A0 sizeof(pd_info->saved_clos_assocs));
->=20
-> Why is the use of empty lines inconsistent between suspend and
-> resume?
+Hi Ilpo,
 
-I will fix that.
+Thanks for reviewing the patch. My response is inline.
 
-Thanks,
-Srinivas
+On 12/23/2025 4:29 AM, Ilpo Järvinen wrote:
+> On Tue, 16 Dec 2025, Xi Pardee wrote:
+>
+>> Change the datatypes pf num_lpm_modes and lpm_en_modes[] from int
+>> to u8. The u8 type is more appropriate and improves the readability
+>> and maintainability of the code.
+>>
+>> Signed-off-by: Xi Pardee <xi.pardee@linux.intel.com>
+>> ---
+>>   drivers/platform/x86/intel/pmc/core.c | 18 ++++++++++--------
+>>   drivers/platform/x86/intel/pmc/core.h |  4 ++--
+>>   2 files changed, 12 insertions(+), 10 deletions(-)
+>>
+>> diff --git a/drivers/platform/x86/intel/pmc/core.c b/drivers/platform/x86/intel/pmc/core.c
+>> index 7d7ae8a40b0ec..3e916228e7ed2 100644
+>> --- a/drivers/platform/x86/intel/pmc/core.c
+>> +++ b/drivers/platform/x86/intel/pmc/core.c
+>> @@ -779,7 +779,7 @@ static int pmc_core_substate_res_show(struct seq_file *s, void *unused)
+>>   	struct pmc *pmc = pmcdev->pmcs[PMC_IDX_MAIN];
+>>   	const int lpm_adj_x2 = pmc->map->lpm_res_counter_step_x2;
+>>   	u32 offset = pmc->map->lpm_residency_offset;
+>> -	int mode;
+>> +	u8 mode;
+>>   
+>>   	seq_printf(s, "%-10s %-15s\n", "Substate", "Residency");
+>>   
+>> @@ -838,7 +838,7 @@ static void pmc_core_substate_req_header_show(struct seq_file *s, int pmc_index,
+>>   					      enum header_type type)
+>>   {
+>>   	struct pmc_dev *pmcdev = s->private;
+>> -	int mode;
+>> +	u8 mode;
+>>   
+>>   	seq_printf(s, "%40s |", "Element");
+>>   	pmc_for_each_mode(mode, pmcdev)
+>> @@ -880,7 +880,7 @@ static int pmc_core_substate_blk_req_show(struct seq_file *s, void *unused)
+>>   			const struct pmc_bit_map *map;
+>>   
+>>   			for (map = maps[r_idx]; map->name; map++) {
+>> -				int mode;
+>> +				u8 mode;
+>>   
+>>   				if (!map->blk)
+>>   					continue;
+>> @@ -953,7 +953,8 @@ static int pmc_core_substate_req_regs_show(struct seq_file *s, void *unused)
+>>   			u32 lpm_status;
+>>   			u32 lpm_status_live;
+>>   			const struct pmc_bit_map *map;
+>> -			int mode, i, len = 32;
+>> +			int i, len = 32;
+>> +			u8 mode;
+>>   
+>>   			/*
+>>   			 * Capture the requirements and create a mask so that we only
+>> @@ -1065,7 +1066,7 @@ static int pmc_core_lpm_latch_mode_show(struct seq_file *s, void *unused)
+>>   	struct pmc *pmc = pmcdev->pmcs[PMC_IDX_MAIN];
+>>   	bool c10;
+>>   	u32 reg;
+>> -	int mode;
+>> +	u8 mode;
+>>   
+>>   	reg = pmc_core_reg_read(pmc, pmc->map->lpm_sts_latch_en_offset);
+>>   	if (reg & LPM_STS_LATCH_MODE) {
+>> @@ -1097,8 +1098,9 @@ static ssize_t pmc_core_lpm_latch_mode_write(struct file *file,
+>>   	struct pmc *pmc = pmcdev->pmcs[PMC_IDX_MAIN];
+>>   	bool clear = false, c10 = false;
+>>   	unsigned char buf[8];
+>> -	int m, mode;
+>> +	int mode;
+>>   	u32 reg;
+>> +	u8 m;
+>>   
+>>   	if (count > sizeof(buf) - 1)
+>>   		return -EINVAL;
+>> @@ -1490,8 +1492,8 @@ int pmc_core_pmt_get_lpm_req(struct pmc_dev *pmcdev, struct pmc *pmc, struct tel
+>>   {
+>>   	const u8 *lpm_indices;
+>>   	int num_maps, mode_offset = 0;
+>> -	int ret, mode;
+>> -	int lpm_size;
+>> +	int ret, lpm_size;
+>> +	u8 mode;
+>>   
+>>   	lpm_indices = pmc->map->lpm_reg_index;
+>>   	num_maps = pmc->map->lpm_num_maps;
+> Why is "mode" in pmc_core_get_low_power_modes() left untouched?
+>
+> (Unrelated to the patch, it seems to contain a double empty line as well.)
 
->=20
-> > -	writeq(power_domain_info->saved_pp_control,
-> > power_domain_info->sst_base +
-> > -				power_domain_info-
-> > >sst_header.pp_offset + SST_PP_CONTROL_OFFSET);
-> > +		writeq(pd_info->saved_pp_control,
-> > power_domain_info->sst_base +
-> > +		=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 pd_info->sst_header.pp_offset +
-> > SST_PP_CONTROL_OFFSET);
-> > +	}
-> > =C2=A0}
-> > =C2=A0EXPORT_SYMBOL_NS_GPL(tpmi_sst_dev_resume, "INTEL_TPMI_SST");
-> > =C2=A0
-> >=20
+I missed this function. Will change the type of "mode" in 
+pmc_core_get_low_power_modes() in next version.
+
+Will add another patch to remove one empty line in next version.
+
+Thanks!
+
+Xi
+
+>
+>> diff --git a/drivers/platform/x86/intel/pmc/core.h b/drivers/platform/x86/intel/pmc/core.h
+>> index 272fb4f57f346..ead2f33ed3ed5 100644
+>> --- a/drivers/platform/x86/intel/pmc/core.h
+>> +++ b/drivers/platform/x86/intel/pmc/core.h
+>> @@ -462,8 +462,8 @@ struct pmc_dev {
+>>   	struct mutex lock; /* generic mutex lock for PMC Core */
+>>   
+>>   	u64 s0ix_counter;
+>> -	int num_lpm_modes;
+>> -	int lpm_en_modes[LPM_MAX_NUM_MODES];
+>> +	u8 num_lpm_modes;
+>> +	u8 lpm_en_modes[LPM_MAX_NUM_MODES];
+>>   	void (*suspend)(struct pmc_dev *pmcdev);
+>>   	int (*resume)(struct pmc_dev *pmcdev);
+>>   
+>>
