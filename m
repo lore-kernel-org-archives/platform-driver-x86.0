@@ -1,140 +1,145 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.15])
+Received: from mout.web.de (mout.web.de [212.227.17.12])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CD8A429B8E6;
-	Tue,  6 Jan 2026 09:49:20 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.15
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 458FC175A5;
+	Tue,  6 Jan 2026 11:00:59 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=212.227.17.12
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1767692962; cv=none; b=QEgVqCgNoe/e9l2ZpWq5OeoPghnbezpIbce11mdDZDDrRVcHUdrBiarKzL3CHcbUh4JWPDjLdFuO+LE9GW9nLp0nN38Ha9AGcqwHghtc85/+SZkkhqe/pKe5tYQyMqV0FnlcGnToFJNwUKHMVwFJWv/k7mIRxldTKxiOKBWctmk=
+	t=1767697262; cv=none; b=q5K10d0B9gXkYwsnE2udxPZlOOspKnSBgyvmW0jSZxIpbWq3ipFTt21B/kYjjchFoKar7SPXOxbZJ8aDDO2cRqq+ugxSx20u/mky2+TxrmhqXTckssraJlcP4TQvWeD15rYij7WRm6kYhn9a3NJCq1r9ZQT5ZKltd1kpjSG9BlM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1767692962; c=relaxed/simple;
-	bh=cj6Xc+9+WqQCp6dTjJnvjTcUNW+/vV7+TyscA3n9Z9M=;
-	h=From:Date:To:cc:Subject:In-Reply-To:Message-ID:References:
-	 MIME-Version:Content-Type; b=nAyoQ6AZ+zg/rGIsu5WunH99352NvlT9hxz8G5tWs0t1MEpeAHL0oQjRSJZpXTl5yIATs69+5vsXAfCMa4ORI2xAf/F2KoQWgDvRclcfrvXF8TZE4JQjvy52sJPAYAgddJcx8l6OfUJQL5H0Z//X2oZFtHsAHS7XTYikMEl7tKQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=pass smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=CLGFEsGE; arc=none smtp.client-ip=192.198.163.15
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.intel.com
+	s=arc-20240116; t=1767697262; c=relaxed/simple;
+	bh=hHK+Xfk6315BsU0hYuSUtCB4Vev7vL9BXBnzUVOUB+4=;
+	h=Message-ID:Date:MIME-Version:To:Cc:References:Subject:From:
+	 In-Reply-To:Content-Type; b=THQw0TXxdkvWOJv+7aNUZKUoG+mtKyogrZet09bp9YX+T8C82FARgARGPLw0sjnTJCcXLCofFUokzr3ZJ88IQm0huyjhR+KfcmqfwQeWMZoJ4gYqsq7tZvcNilW2Se8rG8yI3Fpco2Yn6hXems98Jk3XftlZq0WgTP0G60Z/NvI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=web.de; spf=pass smtp.mailfrom=web.de; dkim=pass (2048-bit key) header.d=web.de header.i=markus.elfring@web.de header.b=YQkY/KrD; arc=none smtp.client-ip=212.227.17.12
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=web.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=web.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="CLGFEsGE"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1767692961; x=1799228961;
-  h=from:date:to:cc:subject:in-reply-to:message-id:
-   references:mime-version;
-  bh=cj6Xc+9+WqQCp6dTjJnvjTcUNW+/vV7+TyscA3n9Z9M=;
-  b=CLGFEsGEYdbnXyuNFYDz7AyzJlvtXe5c2If+3pKHZKR0Ro4ktlQOXq1w
-   gxXHMbRnJqWLuBL9IPaRHO2Xf2GIbUYKuCWD7VKFoopfPMIIKCmT65rrr
-   yp2aCIZ54JC5Nzv1dp2qmRY0WP6PPVJPwljqYMg5fTtNvG27SZwAiZpgp
-   m5GG3PBUYnTLXQFsdlw6TyVVdbwxngFv3uJz/hIWULPkBfMvjLQKv7uVH
-   9Nr+xPMNZ5RKX++KurcRgg+cDpKV1B3B3LMchL0UxlwRPWHce9CwsqscO
-   hvk/w+UPwEYzGcArBlL1SHDrKb0oYCsrcHijmSwiZjnGTH1FDkxmkMpJI
-   w==;
-X-CSE-ConnectionGUID: /Y6hVP6uQQq4RUKtNqofew==
-X-CSE-MsgGUID: 77KbALYGTXuSDTjn58w++Q==
-X-IronPort-AV: E=McAfee;i="6800,10657,11662"; a="69130880"
-X-IronPort-AV: E=Sophos;i="6.21,204,1763452800"; 
-   d="scan'208";a="69130880"
-Received: from orviesa005.jf.intel.com ([10.64.159.145])
-  by fmvoesa109.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 06 Jan 2026 01:49:20 -0800
-X-CSE-ConnectionGUID: 79p08VRMRH6OW4K6vF+JoA==
-X-CSE-MsgGUID: Xwknt0bESX21LemyY+/Gew==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.21,204,1763452800"; 
-   d="scan'208";a="207656252"
-Received: from ijarvine-mobl1.ger.corp.intel.com (HELO localhost) ([10.245.245.6])
-  by orviesa005-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 06 Jan 2026 01:49:17 -0800
-From: =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
-Date: Tue, 6 Jan 2026 11:49:13 +0200 (EET)
-To: Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>
-cc: Hans de Goede <hansg@kernel.org>, platform-driver-x86@vger.kernel.org, 
-    LKML <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH] platform/x86: ISST: Check for admin capability for write
- commands
-In-Reply-To: <20251229183652.823308-1-srinivas.pandruvada@linux.intel.com>
-Message-ID: <b402fa2b-0cc8-d39a-6f35-3680ff54407b@linux.intel.com>
-References: <20251229183652.823308-1-srinivas.pandruvada@linux.intel.com>
+	dkim=pass (2048-bit key) header.d=web.de header.i=markus.elfring@web.de header.b="YQkY/KrD"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=web.de;
+	s=s29768273; t=1767697251; x=1768302051; i=markus.elfring@web.de;
+	bh=hHK+Xfk6315BsU0hYuSUtCB4Vev7vL9BXBnzUVOUB+4=;
+	h=X-UI-Sender-Class:Message-ID:Date:MIME-Version:To:Cc:References:
+	 Subject:From:In-Reply-To:Content-Type:Content-Transfer-Encoding:
+	 cc:content-transfer-encoding:content-type:date:from:message-id:
+	 mime-version:reply-to:subject:to;
+	b=YQkY/KrDZvAqRJ2LgmJmKSWh8AY5ax5RF47Hz5smXE+TcmtSmVPQwJA/DK/z9WUA
+	 U7DYLvz2OhFYzbo+BC0cMQGTqyNc+4US5uRzBoDe5WeBEO8ojquGkHs/NjXDLL9g8
+	 O45583j1zfzad9cptbA3V4de1aXDC4IQaiOGW+UTABbOQSxID+T9E3MbCQ9l7dejo
+	 iHZK6ODeaO7DAWY9UC3KEuHhPBgXlt3E8YccNkv9hsHKZMOU8H/I7tN3BEC04vbdj
+	 1fqHgb6QK4HzWsyt1mUk+ZCQjJBd9zIpO7kukEFjLo4drfxaabXqwrL1/KhOrIOuW
+	 H/EvzblXuIImgmtzXA==
+X-UI-Sender-Class: 814a7b36-bfc1-4dae-8640-3722d8ec6cd6
+Received: from [192.168.178.29] ([94.31.69.180]) by smtp.web.de (mrweb106
+ [213.165.67.124]) with ESMTPSA (Nemesis) id 1MgibW-1w4S0k3jKe-00pFkM; Tue, 06
+ Jan 2026 12:00:50 +0100
+Message-ID: <fd8f6c9e-35ef-4c41-a3ab-f773aebe6a9d@web.de>
+Date: Tue, 6 Jan 2026 12:00:48 +0100
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+User-Agent: Mozilla Thunderbird
+To: Jianhao Xu <jianhao.xu@seu.edu.cn>, Zilin Guan <zilin@seu.edu.cn>,
+ platform-driver-x86@vger.kernel.org, Hans de Goede <hansg@kernel.org>,
+ =?UTF-8?Q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
+Cc: LKML <linux-kernel@vger.kernel.org>
+References: <20260106091318.747019-1-zilin@seu.edu.cn>
+Subject: Re: [PATCH v3 1/2] platform/x86/amd: Fix memory leak in wbrf_record()
+Content-Language: en-GB, de-DE
+From: Markus Elfring <Markus.Elfring@web.de>
+In-Reply-To: <20260106091318.747019-1-zilin@seu.edu.cn>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: quoted-printable
+X-Provags-ID: V03:K1:E6ni7DVyLfQDydOicrcmk5FlTZnDbpCaZR3O/X+0iJCoGbL20jG
+ rMNOe+wVqm260sh2PA2rHItVXRRwbwdseLndruT8+7XAR94i/GB7UaJY9lWCobuxr5P1zdS
+ p7pJUrRGwD6sls8EAbXEktjI/+L8fmiTBvMNtNW1VWDR+wMXuRpLW3KAoR9rDgMQS0ZqLEt
+ h8/+gfsLzqsp+n6Q4OcDQ==
+X-Spam-Flag: NO
+UI-OutboundReport: notjunk:1;M01:P0:gmsbsYIe0Lg=;HWVVfq+9JQhC2p3QNpnkYSAJIdn
+ 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
+ Bx/UoxOY=
 
-On Mon, 29 Dec 2025, Srinivas Pandruvada wrote:
-
-> In some SST deployments, administrators want to allow reading SST
-> capabilities for non-root users. This can be achieved by changing file
-> permissions for "/dev/isst_interface", but they still want to prevent
-> any changes to the SST configuration by non-root users.
-> 
-> This capability was available before for non-TPMI SST. Extend the same
-> capability for TPMI SST by adding a check for CAP_SYS_ADMIN for all
-> write commands.
-> 
-> Signed-off-by: Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>
+=E2=80=A6
 > ---
->  .../x86/intel/speed_select_if/isst_tpmi_core.c        | 11 ++++++-----
->  1 file changed, 6 insertions(+), 5 deletions(-)
-> 
-> diff --git a/drivers/platform/x86/intel/speed_select_if/isst_tpmi_core.c b/drivers/platform/x86/intel/speed_select_if/isst_tpmi_core.c
-> index 47026bb3e1af..a624e0b2991f 100644
-> --- a/drivers/platform/x86/intel/speed_select_if/isst_tpmi_core.c
-> +++ b/drivers/platform/x86/intel/speed_select_if/isst_tpmi_core.c
-> @@ -612,7 +612,7 @@ static long isst_if_core_power_state(void __user *argp)
->  		return -EINVAL;
->  
->  	if (core_power.get_set) {
-> -		if (power_domain_info->write_blocked)
-> +		if (power_domain_info->write_blocked || !capable(CAP_SYS_ADMIN))
+> Changes in v3:
+> - Split from v2 to separate the fix from the cleanup.
+=E2=80=A6
 
-Hi,
+Would a cover letter be helpful also for such a small patch series?
 
-This check doesn't exist in my tree, you seem to have mis-submitted this 
-independently of the other series that adds the check.
-
--- 
- i.
-
->  			return -EPERM;
->  
->  		_write_cp_info("cp_enable", core_power.enable, SST_CP_CONTROL_OFFSET,
-> @@ -659,7 +659,7 @@ static long isst_if_clos_param(void __user *argp)
->  		return -EINVAL;
->  
->  	if (clos_param.get_set) {
-> -		if (power_domain_info->write_blocked)
-> +		if (power_domain_info->write_blocked || !capable(CAP_SYS_ADMIN))
->  			return -EPERM;
->  
->  		_write_cp_info("clos.min_freq", clos_param.min_freq_mhz,
-> @@ -751,7 +751,8 @@ static long isst_if_clos_assoc(void __user *argp)
->  
->  		power_domain_info = &sst_inst->power_domain_info[part][punit_id];
->  
-> -		if (assoc_cmds.get_set && power_domain_info->write_blocked)
-> +		if (assoc_cmds.get_set && (power_domain_info->write_blocked ||
-> +					   !capable(CAP_SYS_ADMIN)))
->  			return -EPERM;
->  
->  		offset = SST_CLOS_ASSOC_0_OFFSET +
-> @@ -928,7 +929,7 @@ static int isst_if_set_perf_level(void __user *argp)
->  	if (!power_domain_info)
->  		return -EINVAL;
->  
-> -	if (power_domain_info->write_blocked)
-> +	if (power_domain_info->write_blocked || !capable(CAP_SYS_ADMIN))
->  		return -EPERM;
->  
->  	if (!(power_domain_info->pp_header.allowed_level_mask & BIT(perf_level.level)))
-> @@ -988,7 +989,7 @@ static int isst_if_set_perf_feature(void __user *argp)
->  	if (!power_domain_info)
->  		return -EINVAL;
->  
-> -	if (power_domain_info->write_blocked)
-> +	if (power_domain_info->write_blocked || !capable(CAP_SYS_ADMIN))
->  		return -EPERM;
->  
->  	_write_pp_info("perf_feature", perf_feature.feature, SST_PP_CONTROL_OFFSET,
-> 
-
+Regards,
+Markus
