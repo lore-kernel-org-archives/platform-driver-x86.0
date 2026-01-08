@@ -1,87 +1,92 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2EF7A330B27
-	for <platform-driver-x86@vger.kernel.org>; Thu,  8 Jan 2026 20:53:47 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6F69C1E531;
+	Thu,  8 Jan 2026 22:31:47 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1767905628; cv=none; b=ZLbh9r5nqT8ZqZdHWlQc4B7pFVR7802aJikVRMf8LAjvv3xep3JShoX5L6dfrXZf6v6BOxVeC2B5ruGG02+K/YOs+HxeMnYwxowoH/O2WNpaPZGzEXBzFOwFXXhcCuB+jJv4S1rzFAwuNHWtXAk68TYMubk18yWVXwW9sr/1G6A=
+	t=1767911509; cv=none; b=sv2kQLP+UpCO1p9Oima1QB4HIupm/O9YXpcrwIBjJl4mhCny450rTuTKxZxphI4pHWO8zwfHLcgE51AFa507Dygi22ehFMVptC+I3DVV0wvAid/I7DNFJiDyBtQw5mI5xBK9H5kFfDOQH7N05umycLO/7+xYvNJwMZITFPiSUTw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1767905628; c=relaxed/simple;
-	bh=X3BIhQTNdoAUxb7JFxIxtdITAdjcAGoQ7uvkyfW/xvw=;
-	h=From:To:Subject:Date:Message-ID:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=DRgHB/2eHAr6NHX4GQP+AUEHQAp+OmvrrLf+Rkb1wfbV+V/ECDM4oDghOdq4rR/pIg8GvH4tDeFv3DrR6DASfUIqKRPf7zXMx+LmlPrbUEIX3DQem6uN52CI+hHqa7n+rv6GAnd3DoJaRIrWdu+anLLUik3376WiGm+owhWSeIE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=fRPjldyM; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1767911509; c=relaxed/simple;
+	bh=CqveTZgZbJzSU8fw9+y/7SDCMc7BC5wtpkeZJFB0C2M=;
+	h=From:To:Subject:Date:Message-ID:MIME-Version; b=IiTREG4hqoFJDfL/BgvTZqBOZEhjjMmX+k5HP5hGpewENL/RSYb6LoovAMvCEZxf6kOV4/BvaPIQ8MFCisWF/7c48sQN5ZjdqEnaT9ko1pg8XTXrjb4EgTEzBXcOaOWnGgm0t2V36P/b+4M5EjF8JfLz+CCd1jGOS94WVKbxIj0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=pass smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=mK9jygwR; arc=none smtp.client-ip=198.175.65.18
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="fRPjldyM"
-Received: by smtp.kernel.org (Postfix) with ESMTPS id C9E73C16AAE
-	for <platform-driver-x86@vger.kernel.org>; Thu,  8 Jan 2026 20:53:47 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1767905627;
-	bh=X3BIhQTNdoAUxb7JFxIxtdITAdjcAGoQ7uvkyfW/xvw=;
-	h=From:To:Subject:Date:In-Reply-To:References:From;
-	b=fRPjldyMqXNzXH4U4BCyFJmHKrXUwLJEJ9aLW6/u1g7vloXMY8GHqp/00VlIVAo0Y
-	 EDw0AzycVCBYqMwfrEzvwTUDlUln9cSP7TdVl4zjTdRZI0UVs/9bnSsZiDoy6DXwsI
-	 m8dYsATOtJ/4ogazkgN3qh66WO91Ay0//7C5ssUQqX2o6xCYNHY5rNMLKhWqqldlte
-	 SDIxZfLk0fGNUmZqPPJg4+L6v4lTUJ4YWuE1N+EHgllGQnZddi0cpHkNxPCRf7D7hp
-	 fFs5UpZIQafHhtsB9ku/LyXze4tWkF9da4fG3JyAfsjOXh+vG3sWw8UBYzfL5PJmqc
-	 5e+mRdR1sUt6A==
-Received: by aws-us-west-2-korg-bugzilla-1.web.codeaurora.org (Postfix, from userid 48)
-	id C5DE5C53BC5; Thu,  8 Jan 2026 20:53:47 +0000 (UTC)
-From: bugzilla-daemon@kernel.org
-To: platform-driver-x86@vger.kernel.org
-Subject: [Bug 218305] Ryzen 7 7840HS gets stuck at 544MHz frequency after
- resuming after unplugging the power cord during sleep
-Date: Thu, 08 Jan 2026 20:53:47 +0000
-X-Bugzilla-Reason: None
-X-Bugzilla-Type: changed
-X-Bugzilla-Watch-Reason: AssignedTo drivers_platform_x86@kernel-bugs.osdl.org
-X-Bugzilla-Product: Drivers
-X-Bugzilla-Component: Platform_x86
-X-Bugzilla-Version: 2.5
-X-Bugzilla-Keywords: 
-X-Bugzilla-Severity: blocking
-X-Bugzilla-Who: mario.limonciello@amd.com
-X-Bugzilla-Status: REOPENED
-X-Bugzilla-Resolution: 
-X-Bugzilla-Priority: P3
-X-Bugzilla-Assigned-To: drivers_platform_x86@kernel-bugs.osdl.org
-X-Bugzilla-Flags: 
-X-Bugzilla-Changed-Fields: 
-Message-ID: <bug-218305-215701-gzWnYbgSFu@https.bugzilla.kernel.org/>
-In-Reply-To: <bug-218305-215701@https.bugzilla.kernel.org/>
-References: <bug-218305-215701@https.bugzilla.kernel.org/>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-X-Bugzilla-URL: https://bugzilla.kernel.org/
-Auto-Submitted: auto-generated
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="mK9jygwR"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1767911507; x=1799447507;
+  h=from:to:subject:date:message-id:mime-version:
+   content-transfer-encoding;
+  bh=CqveTZgZbJzSU8fw9+y/7SDCMc7BC5wtpkeZJFB0C2M=;
+  b=mK9jygwRT1SlP/ILHQ1taIGGVhlpXtFUZxXc3xev50UgRPXlYMB/PZ8j
+   RxPK02IMQpkqgNJnUeZU+36xoARA4ztJNZa//gf6GAc+LxuuWXL1qjqKL
+   1S8SjmQVF3AIKieFLubwb4V+D1JYdj0sCrLNaenb1yPoV+MPz6qYczIqv
+   ulHqnw+X4g9DGaT2nhAu4aZ1a7wS2c7/+wI+/WMupkZfb+Bkw589q6NSd
+   LlD1BzP/US05ZuxpfCmSXhIemH8tndaVD4ayPb1MaHU9qiMct48nAKPTS
+   69uU+S0bMukcnGODJGP7iF0HUPcG80ToY5nWDkFs7R4ZOW2MKYOTZYu9W
+   A==;
+X-CSE-ConnectionGUID: PSp4xQhZTtad8QK+iZqiOw==
+X-CSE-MsgGUID: 6NOA5OTbR7eu4iqCkSGxAg==
+X-IronPort-AV: E=McAfee;i="6800,10657,11665"; a="69349132"
+X-IronPort-AV: E=Sophos;i="6.21,211,1763452800"; 
+   d="scan'208";a="69349132"
+Received: from fmviesa005.fm.intel.com ([10.60.135.145])
+  by orvoesa110.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 08 Jan 2026 14:31:47 -0800
+X-CSE-ConnectionGUID: gyU3HS/MQoy7WcauMsSHzA==
+X-CSE-MsgGUID: NZDGnZTQQ9e8jNz871LNCA==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.21,211,1763452800"; 
+   d="scan'208";a="207797168"
+Received: from msatwood-mobl.amr.corp.intel.com (HELO xpardee-desk.lan) ([10.125.109.238])
+  by fmviesa005-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 08 Jan 2026 14:31:46 -0800
+From: Xi Pardee <xi.pardee@linux.intel.com>
+To: xi.pardee@linux.intel.com,
+	irenic.rajneesh@gmail.com,
+	david.e.box@linux.intel.com,
+	ilpo.jarvinen@linux.intel.com,
+	platform-driver-x86@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	linux-pm@vger.kernel.org
+Subject: [PATCH v2 0/4] Enable substate residencies for multiple PMCs
+Date: Thu,  8 Jan 2026 14:31:38 -0800
+Message-ID: <20260108223144.504267-1-xi.pardee@linux.intel.com>
+X-Mailer: git-send-email 2.43.0
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
 
-https://bugzilla.kernel.org/show_bug.cgi?id=3D218305
+This patch series enables substate residencies for multiple PMCs.
+The first two patches prepare this change: 
 
---- Comment #149 from Mario Limonciello (AMD) (mario.limonciello@amd.com) -=
---
-> The code would be prepared to use only one of them, but I think a bug was
-> added with a change that makes it use both. And maybe the laptop isn't
-> prepared for this.
-> Mario what do you think?
+- The first patch changes the datatype of LPM mode attributes to u8.
+- The second patch moves the LPM mode attributes from the pmc_dev to
+  the pmc struture.
+- The third patch enables the substate residencies for multiple PMCs.
+- The final removes one empty line.
 
-It was actually intended that both paths execute.  From a discussion with my
-Windows colleagues this is the Windows behavior.
+v2->v1:
+- Changed the datatype of mode to u8 in pmc_core_get_low_power_mode().
+- Added a patch to remove one empty line.
+- Rearranged the commit message of the second patch.
+- Used post-increment in for loop.
 
-> If you ever revert to the old BIOS version, please send us an acpidump so=
- we
-> can get closer to a solution.
+Xi Pardee (4):
+  platform/x86/intel/pmc: Change LPM mode fields to u8
+  platform/x86/intel/pmc: Move LPM mode attributes to PMC
+  platform/x86/intel/pmc: Enable substate residencies for multiple PMCs
+  platform/x86/intel/pmc: Remove double empty line
 
-I am still feeling this is an EC bug.
+ drivers/platform/x86/intel/pmc/core.c | 85 ++++++++++++++++++---------
+ drivers/platform/x86/intel/pmc/core.h | 15 +++--
+ 2 files changed, 63 insertions(+), 37 deletions(-)
 
---=20
-You may reply to this email to add a comment.
+-- 
+2.43.0
 
-You are receiving this mail because:
-You are watching the assignee of the bug.=
