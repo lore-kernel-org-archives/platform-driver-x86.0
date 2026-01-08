@@ -1,38 +1,38 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9FAAA155C97
-	for <platform-driver-x86@vger.kernel.org>; Thu,  8 Jan 2026 07:26:16 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DA8E737BE8F
+	for <platform-driver-x86@vger.kernel.org>; Thu,  8 Jan 2026 13:06:07 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1767857176; cv=none; b=mJbLhVjGl8BshxzmhJNLCPq+vE9kUaT5q6ZaeX8MzcAArProRzBdo5RGxWzXEyBAzMbsGQys0KAsHRLRlL1s86CZzRRPrqWvm/xdyPC+yO9mcxy9V4Wxk4DUbHEqiXYmkwERkDlG7foss64zbnQwS4eOHUsVFd0Clg+Mp9RU83A=
+	t=1767877567; cv=none; b=DsbvkfO+MFFI7m1l9rlEnCNus2kqaSmYfIY0XTLirVOUMEZxsba95WC1hMnto4rhYreWuQ0aJ/UBNs4MLjFGHLvJTbAdNj8kMPecVKJQOpbd2Dkl2xQ1CsS/TQ2ATZlzPyiSg1xIy34iNh5Cl6zTC8KgKQpmsyq/AIj+jYntZtg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1767857176; c=relaxed/simple;
-	bh=ZzS9UZVnVbGP2nIrHq0aJnJOptoyFfd50Reof56PuIk=;
+	s=arc-20240116; t=1767877567; c=relaxed/simple;
+	bh=m75Xj/WTYr2yzvoA5MaDwRDCxmC0CIt60osM/o5Bnk8=;
 	h=From:To:Subject:Date:Message-ID:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=WkhnbVkC2HsXahMs2VitdNm65whuxI2KQv3jXuSfFnKU9qePhjrrzgnD1BhJQJqSBPe4lrb3VfIqYfHSg/9Hj3t5geFmdRbyuQr3KMEtl237MBRXobrps8g2ttkJRo2MtvOyFNIFx8Gd8Y+jbb+NVFg7mMawQKQK5atXQm+DkBU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Q1m7Ssoa; arc=none smtp.client-ip=10.30.226.201
+	 Content-Type:MIME-Version; b=snhRK56m1EI4XrOJSQFbQbpJEvs7azNG+2Y7Sv7ZG96wq5N5g7RGx4fRbeSjYhetTT8+BbMMJQvhnGrBlmoNySDAh9XSN1piVaLqgUd7oGA4t+3J/j7gDqTTqEW5CHliZqLObE69eODUFacnAcfoaaOyKnCRB3PPn/Wuqh0nd3s=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=OERQDaaD; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Q1m7Ssoa"
-Received: by smtp.kernel.org (Postfix) with ESMTPS id 414C6C2BC9E
-	for <platform-driver-x86@vger.kernel.org>; Thu,  8 Jan 2026 07:26:16 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="OERQDaaD"
+Received: by smtp.kernel.org (Postfix) with ESMTPS id 67DB8C2BC86
+	for <platform-driver-x86@vger.kernel.org>; Thu,  8 Jan 2026 13:06:07 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1767857176;
-	bh=ZzS9UZVnVbGP2nIrHq0aJnJOptoyFfd50Reof56PuIk=;
+	s=k20201202; t=1767877567;
+	bh=m75Xj/WTYr2yzvoA5MaDwRDCxmC0CIt60osM/o5Bnk8=;
 	h=From:To:Subject:Date:In-Reply-To:References:From;
-	b=Q1m7Ssoazn/NqQLdxAuLwXIUiF0pvkp2dIU08AcAUnzspUubxATiLwo0p0ZOE7fKt
-	 wCRukNDyy40ny52Xv0esJ1yFiogWigd4JTWaDOoZPj4/JO552yel9c5QnVkPxz9maP
-	 z52aoFKwPYZ50eNgpHMqz4R7bOkGwH0kl2XZ8AmbBxWfbQejBFaAowWlq42xV3dpkl
-	 laC8dKyiBtiZXVtb61LBn+Gx/ig3LmvX8Qdfkv5tzVqCIfRCN/DyFzuioxRMW/7j5Y
-	 8ZxL9lxfE1vPsO7+djDC9tmlkzwosH7OJUQ1/7KW1GsaoOKuQdNAAiCf4xvsTRHaZE
-	 gm78TK3ql/iEw==
+	b=OERQDaaDet5ZZY/xUmLw2WSb87yD6uPSm2lQt7Zyi88awoERyiIWoEtN2yWKes+W3
+	 hslsaHxDK7seTuKYCWk8x5tTVde4jRJw07xd6AcffeNcGUoTrrZ+bquUO44ZmY+UK8
+	 qQq3mhFg5Z6XY2MCk/x6L2zIm8gL69fSRzRWc7K2iyPUvf9saZfZPiSmbt7UdcSiCJ
+	 /8Yke5CaEkvYbMyfaLpptYP/vHM9Yr3aeCYfzCVWMXvOjUhzzrjAvA6FSa8Rs7QjPI
+	 GwAcZM9Uo7jwLPkWhjndOasLQR6DbXtzt88F/73RCJjpq05GuyGkcoqZGzgBd5IiGT
+	 noWwqI6vFm4Qw==
 Received: by aws-us-west-2-korg-bugzilla-1.web.codeaurora.org (Postfix, from userid 48)
-	id 3BDD5C433E1; Thu,  8 Jan 2026 07:26:16 +0000 (UTC)
+	id 63A5AC4160E; Thu,  8 Jan 2026 13:06:07 +0000 (UTC)
 From: bugzilla-daemon@kernel.org
 To: platform-driver-x86@vger.kernel.org
 Subject: [Bug 218305] Ryzen 7 7840HS gets stuck at 544MHz frequency after
  resuming after unplugging the power cord during sleep
-Date: Thu, 08 Jan 2026 07:26:15 +0000
+Date: Thu, 08 Jan 2026 13:06:06 +0000
 X-Bugzilla-Reason: None
 X-Bugzilla-Type: changed
 X-Bugzilla-Watch-Reason: AssignedTo drivers_platform_x86@kernel-bugs.osdl.org
@@ -41,14 +41,14 @@ X-Bugzilla-Component: Platform_x86
 X-Bugzilla-Version: 2.5
 X-Bugzilla-Keywords: 
 X-Bugzilla-Severity: blocking
-X-Bugzilla-Who: aros@gmx.com
+X-Bugzilla-Who: soyer@irl.hu
 X-Bugzilla-Status: REOPENED
 X-Bugzilla-Resolution: 
 X-Bugzilla-Priority: P3
 X-Bugzilla-Assigned-To: drivers_platform_x86@kernel-bugs.osdl.org
 X-Bugzilla-Flags: 
-X-Bugzilla-Changed-Fields: attachments.created
-Message-ID: <bug-218305-215701-LJ8pzRSlQx@https.bugzilla.kernel.org/>
+X-Bugzilla-Changed-Fields: 
+Message-ID: <bug-218305-215701-lgO2iiuFv9@https.bugzilla.kernel.org/>
 In-Reply-To: <bug-218305-215701@https.bugzilla.kernel.org/>
 References: <bug-218305-215701@https.bugzilla.kernel.org/>
 Content-Type: text/plain; charset="UTF-8"
@@ -64,30 +64,41 @@ MIME-Version: 1.0
 
 https://bugzilla.kernel.org/show_bug.cgi?id=3D218305
 
---- Comment #147 from Artem S. Tashkinov (aros@gmx.com) ---
-Created attachment 309151
-  --> https://bugzilla.kernel.org/attachment.cgi?id=3D309151&action=3Dedit
-HP EliteBook 845 14 inch G10 acpi dump.bin.xz
+--- Comment #148 from Gergo K (soyer@irl.hu) ---
+Thank you guys!
 
-Here's the funny thing.
+> Note that CPU was *not* throttled while I took this dump, it was running
+> normally.
 
-I can swear the previous BIOS for my laptop (HP EliteBook 845 14 inch G10)
-worked fine but then I simultaneously upgraded the kernel and the BIOS and =
-the
-issue resurfaced, even though the new maximum frequency is different - it's=
- not
-544MHz any longer, it's 1101 MHz, as mentioned earlier but even at this
-frequency the laptop is unusable.
+This is not a problem, it does not contain any running state, it would retu=
+rn
+the same.
 
-The current BIOS (buggy): Version: 01.10.03 Rev.A, dated Oct 20, 2025
-The previous one (worked perfectly): 01.10.00 Rev.A, dated Aug 18, 2025
+> The previous one (worked perfectly): 01.10.00 Rev.A, dated Aug 18, 2025
 
-But again I also upgraded the kernel in the meanwhile to 6.17.8.
+If you ever revert to the old BIOS version, please send us an acpidump so we
+can get closer to a solution.
 
-(In reply to Gergo K from comment #145)
-> Can someone upload an acpidump output? Thanks.
+What I noticed is that they are implementing both AMD and Microsoft's LPS0 =
+DSM.
 
-Here it is.
+The code would be prepared to use only one of them, but I think a bug was a=
+dded
+with a change that makes it use both. And maybe the laptop isn't prepared f=
+or
+this.
+
+/drivers/acpi/x86/s2idle.c:462:
+} else if (lps0_dsm_func_mask_microsoft > 0 && rev_id) {
+        lps0_dsm_func_mask_microsoft =3D -EINVAL;
+        acpi_handle_debug(adev->handle, "_DSM Using AMD method\n");
+}
+but the rev_id is always 0 here, so both lps0_dsm_func_mask,
+lps0_dsm_func_mask_microsoft will be active.
+
+Would removing " && rev_id" from the if solve the problem?
+
+Mario what do you think?
 
 --=20
 You may reply to this email to add a comment.
