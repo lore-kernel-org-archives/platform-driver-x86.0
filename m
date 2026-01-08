@@ -1,161 +1,199 @@
-Received: from mout.gmx.net (mout.gmx.net [212.227.17.22])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-yw1-f182.google.com (mail-yw1-f182.google.com [209.85.128.182])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4116C44DB72
-	for <platform-driver-x86@vger.kernel.org>; Thu,  8 Jan 2026 13:52:35 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=212.227.17.22
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A2AA03E8C79
+	for <platform-driver-x86@vger.kernel.org>; Thu,  8 Jan 2026 14:38:27 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.182
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1767880359; cv=none; b=U0p2+dZxhEEKnn1vLBv3y9dxHSDOkbpKPDVKTYtFAuplJ6yh8LlXdpCx9O/6Myo0mDriUFg85ZoKM9snqTe7AYgexTxrFwluBpHDXW6xSR35VdM/MFzroJwS5kfusxuOJRIFVoAWUKQzllLuASXmXC1+6IL1lR68ob7Wuf+sS50=
+	t=1767883109; cv=none; b=bQtdZQf3XYi7i9rbSqesfpA4yc/PxbzrLDdG6NBw7he8VXlnMAkNyjjBcfjbK6KB6h6Pe4QYg7Hs4zRzu93kEmzgwciDT3f6rONy1x/eYahyBs1Gc4h+eXW5seELlOR2a4ChGjp2TJNrRpFbHG3ZEi3g9bzEAyfGTkUmtlllvlQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1767880359; c=relaxed/simple;
-	bh=2FVumPwgES+sNwUni9+7FWoMlFwIhOe3SnLTHLPRjdY=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=qvE/NzGTiq3WJqswbpfHLKenDvYBMnROqaspX70nSoRF8XBNC2t4cb5/fAfFEdFxrKnXM5NItFO11u72WgW2I2lVAKw4vGCrLfCRIyZPmE/yOaQYCgYkXHey+9LoFaW0BV4yk0zheNqJ5DJAnU66QYB940h1ZnJL/0K2WZR8b1A=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gmx.de; spf=pass smtp.mailfrom=gmx.de; dkim=pass (2048-bit key) header.d=gmx.de header.i=w_armin@gmx.de header.b=DZg/3/sO; arc=none smtp.client-ip=212.227.17.22
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gmx.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmx.de
+	s=arc-20240116; t=1767883109; c=relaxed/simple;
+	bh=yXR3akQkkOd1suwHrre1Hd3X0xIOLAKYfSQdYQ9bmUA=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=A/D9k96VEGBu/J82kmlDY5rRajWyUxb1VbpywqWvlpv8mJS+9zkCzBKebZSAzBUhaZPNr+VsM/dYPT+Sypq8yFCGdBCv2IApV4FmUP8yQGl01ECOb0Dqp6tj+F1O44n+OS4wBmus91xlsV/yvF7EeL0HO5MkjLT9SBgtyam2bRM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=lNGTj/Xi; arc=none smtp.client-ip=209.85.128.182
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmx.de header.i=w_armin@gmx.de header.b="DZg/3/sO"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=gmx.de;
-	s=s31663417; t=1767880354; x=1768485154; i=w_armin@gmx.de;
-	bh=eRCmE2NYOyxTTC6NaYQTb4lfttCXiRkG06M16zP1GWA=;
-	h=X-UI-Sender-Class:Message-ID:Date:MIME-Version:Subject:To:Cc:
-	 References:From:In-Reply-To:Content-Type:
-	 Content-Transfer-Encoding:cc:content-transfer-encoding:
-	 content-type:date:from:message-id:mime-version:reply-to:subject:
-	 to;
-	b=DZg/3/sOvTYmz1skZp5akzFqfH2OuVIGyjIAb/P0BCawVX710XXK9++/PAiLVnBx
-	 YVQQnlnN//SjhOdqSQgHdb+Dg9Md7mjfRA33NE1S9v6x+JKYnPVfC5DHeVIC4cuKZ
-	 7IPa7ZuTdpIGnh6FyDfUM107mF5LjvewdVqe+2GVXRFXgaqGSdtHKnTO1sWooY/0u
-	 fi4gCxs61CiECV7eBgii6j1oTCjkzWTcuXWJdNP0l1xyPNGqZ1u9vxKGWzcao6oPw
-	 eGKIaKCCJvC7mvxCVjdsMgexCbwvRu3t2EKzqIPUm0XZA6dpKxlHot9DPfxj73Xuc
-	 1Gz5NGPmYcu/DLEPNA==
-X-UI-Sender-Class: 724b4f7f-cbec-4199-ad4e-598c01a50d3a
-Received: from [172.16.90.225] ([141.76.8.161]) by mail.gmx.net (mrgmx105
- [212.227.17.168]) with ESMTPSA (Nemesis) id 1N2V0B-1w01BW1unv-016Kyn; Thu, 08
- Jan 2026 14:52:33 +0100
-Message-ID: <90ba47db-fe4b-4f1e-aadf-160d44c6930c@gmx.de>
-Date: Thu, 8 Jan 2026 14:52:31 +0100
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="lNGTj/Xi"
+Received: by mail-yw1-f182.google.com with SMTP id 00721157ae682-78c66bdf675so32829387b3.2
+        for <platform-driver-x86@vger.kernel.org>; Thu, 08 Jan 2026 06:38:27 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1767883106; x=1768487906; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=yXR3akQkkOd1suwHrre1Hd3X0xIOLAKYfSQdYQ9bmUA=;
+        b=lNGTj/XihYvy6Cc5nPkYuBJ1EP7mFmLHoHkHTBjvg+qkLQNTVB/O7fhBINyoJCSXCU
+         75+BvI3p4O8Riv2te3kgPPtT3wgUZrwuFWjCejbgupCc9E3qPiYs5Yv2PEDf2Em+CGKM
+         SmNS8C22Z4Hq5OI9zb87PFUSmsJZsyOikR/GYELL8K+XYKF6XA02x4C+9NRlzjrPNuRU
+         zQ+xwd1gvJ4oq24N8fgu+HnytIyLUHUwJkl/qsrwM7u9gRvRToJrxI+hfLtSa5hMZReg
+         1SGWvadQ+qI6tm4/klrMibNGRgxu5AZacR8jjGaj0sRWEgqKQytekEvtOzLB53DgT1AD
+         HZNQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1767883106; x=1768487906;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-gg:x-gm-message-state:from
+         :to:cc:subject:date:message-id:reply-to;
+        bh=yXR3akQkkOd1suwHrre1Hd3X0xIOLAKYfSQdYQ9bmUA=;
+        b=Il1cBEzTfMNQu5BjE4S1KxKZa42EI/letUA2jKcDQws55UHjGGy+kosNkPXi4DBni7
+         HtdWJRs1yKA8WmM/k+tmh1ZbonYDVtZyOYBPzrKSzmrqR934px4IBdC6ouFEvvNEssDp
+         xe5MoAndwNdAklhY7eYoYqhDE1Qra3r2GJf7rUn+EhYL87elKc33TY/w/VMd1tknCYuM
+         bse8urjzexvXmslgux3N6cIg34hFQX3t0jaqivlsOR7zF0mmqLEpyJdl3Silde1dIaqi
+         IVgctPMRnjJuKDCV3QvdjxEsZMCHpMJZqNbf1bnoty44/+oXH0gLRA3zikYXjOhg/FK7
+         3fzQ==
+X-Gm-Message-State: AOJu0YyssoDqvn53mSjGObujdog31I2fI9g73+AVYp/pPxIUy9+KPRmq
+	QOx3PYory1DAGpUahk9CfL2oPPn9vimH47bdPIWR4bJOp6LTrlbJCWCtR2yOf/tCx+j5Vyueuef
+	u3Z581n8iTGlHWM+aPfs5hwJCt/LKENA=
+X-Gm-Gg: AY/fxX5vC3LQis/7gLUJWYAeJWKsrGSa9icLbn3kFtEITGXu0pR3IjFh7Iy7dlbWa2o
+	do49KruS3SMBt7tcHeR28JpS6XbdDrKgSdHXNbpkryY5EDwFsAL1oPh4thdl2tPQmGIQwDYitAS
+	rtpqVPhPqPF9Y8SUsvWeiNTH6upAptykrenQtEAfDWXgxuoLWYN0TnMZIoUlTJRTKRupckQ0RTr
+	P5oPZtdMG1uxFhqk2U/dE0onNtKamuNEkZN99asKTBhoCDkZQk1Zqo+luwsX28q4hhDlyADeQxN
+	hLsVEGkodY64ljN4DAA3qGaIVhgx
+X-Google-Smtp-Source: AGHT+IFXrIXlqGUjYwpKqGeJa9p3KuY/9HKtvZoNMrZXdusyJzPXu+LEBCldBtgTD3dO5DcCpioYV0nYf+Kz8ZkZYKE=
+X-Received: by 2002:a53:b2fb:0:b0:645:527b:bc11 with SMTP id
+ 956f58d0204a3-64716bbba19mr3956925d50.3.1767883106425; Thu, 08 Jan 2026
+ 06:38:26 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 0/1] add Acer battery control driver
-To: Jelle van der Waa <jelle@vdwaa.nl>, Hans de Goede <hansg@kernel.org>,
- =?UTF-8?Q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
-Cc: platform-driver-x86@vger.kernel.org,
- Frederik Harwath <frederik@harwath.name>
-References: <20260105171024.227758-1-jelle@vdwaa.nl>
-Content-Language: en-US
-From: Armin Wolf <W_Armin@gmx.de>
-In-Reply-To: <20260105171024.227758-1-jelle@vdwaa.nl>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
-X-Provags-ID: V03:K1:/H1I00crx7MZyIy52PfaOWM3+Ot1x51qatSf/6WivjplP3XYEps
- F56Mibu5CUradxy2xeZeglrS4/sP3vazDvY7SExLVZbdKfotBdwQ/94nCMPVuwpy3d1QffU
- 0v2uloOem1NjuftnyJbesFy2X2IAELzdJ+uKAgrfC9dzbQa7eryoo+GlKzVCWioMGzYpfca
- aWaOqUafCyKLOhG6mUYbg==
-X-Spam-Flag: NO
-UI-OutboundReport: notjunk:1;M01:P0:bB5YOqZLtpI=;Nbw/WfRDQI8jYoYDOebrhXrrLX9
- 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
+References: <CACy5qBaFv_L5y_nGJU_3pd3CXbFZrUAE18y5Fc-hnAmrd8bSLA@mail.gmail.com>
+ <1e4fe52c-d044-4869-a583-fa14f9740de0@gmx.de> <CACy5qBZW1pbYrrTc-1tcNwzGTuty=aovnrK17==CaSppXuBurg@mail.gmail.com>
+ <abeb08c2-5aa5-4919-8016-d714c04c508b@gmx.de> <CACy5qBY-6v7_jRizJ=dJkeKGF+4fVUwmX9oaP=8XHGROEYOgCA@mail.gmail.com>
+ <CACy5qBbgvgLa-y-TXz9ChaC1pvCAgKjQbU+=0Zd3gm-qyHHW_Q@mail.gmail.com>
+ <655738e4-6128-4b43-aabe-b0eb0da0a0c7@gmx.de> <CACy5qBZmA47D1G9Ma5V+yn4bcZZYg98JCGtXeKX212FFUoo13Q@mail.gmail.com>
+In-Reply-To: <CACy5qBZmA47D1G9Ma5V+yn4bcZZYg98JCGtXeKX212FFUoo13Q@mail.gmail.com>
+From: Pranay Pawar <pranaypawarofficial@gmail.com>
+Date: Thu, 8 Jan 2026 20:08:14 +0530
+X-Gm-Features: AQt7F2rKrWRYw5Zqmi6BsAo5Sw1wCKeW2DckgHUfCmukCqrtrYR775sVzZ4rPDk
+Message-ID: <CACy5qBaPBFwZ6d735fNbtC6_U4r9imzgeLuYpBuj0ckBXVDhPg@mail.gmail.com>
+Subject: Re: platform/x86: acer-wmi: Missing max fan speed (7000+ RPM) on Acer
+ Nitro AN515-58
+To: Armin Wolf <W_Armin@gmx.de>
+Cc: platform-driver-x86@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-Am 05.01.26 um 18:10 schrieb Jelle van der Waa:
+Hi Armin,
 
-> This patch upstreams a part of the out of tree acer wmi battery
-> specifically the battery charge control and battery temperature. [1]
-> On my Acer Aspire A315-510P battery calibration did not work as expected
-> so for now this is left out.
+I have tested the suggested sysfs attributes with the patched driver,
+and here are the results:
 
-Nice work. There are some issues with this patch but nothing too serious.
-Can you tell me more about the calibration mode issue on your device?
+Mode: balanced, pwmX_enable=3D0
+Setting this to "0" successfully puts both fans at maximum speed.
+
+Mode: balanced-performance, pwmX_enable=3D0
+Setting this to "0" also puts both fans at maximum speed.
+
+Mode: performance, pwmX_enable=3D0
+Setting this to "0" also puts both fans at maximum speed.
+
+It appears that switching the attributes to "0" does correctly trigger
+the turbo mode for the fans.
 
 Thanks,
-Armin Wolf
+Pranay Pawar (Bugaddr)
 
->
-> [1] https://github.com/frederik-h/acer-wmi-battery
->
-> Jelle van der Waa (1):
->    platform/x86: add Acer battery control driver
->
->   drivers/platform/x86/Kconfig            |  12 +
->   drivers/platform/x86/Makefile           |   1 +
->   drivers/platform/x86/acer-wmi-battery.c | 345 ++++++++++++++++++++++++
->   3 files changed, 358 insertions(+)
->   create mode 100644 drivers/platform/x86/acer-wmi-battery.c
->
+> On Mon, Jan 5, 2026 at 10:31=E2=80=AFPM Armin Wolf <W_Armin@gmx.de> wrote=
+:
+>>
+>> Am 30.12.25 um 06:54 schrieb Pranay Pawar:
+>>
+>> > Sorry for the confusion earlier =E2=80=94 after rechecking the behavio=
+r
+>> > without the new patch, I=E2=80=99d like to clarify the results.
+>> >
+>> > ** Without the patch:
+>> > 1. The fans are able to reach maximum RPM only when using the
+>> > balanced-performance profile.
+>> > 2. When selecting the performance profile, the fan speed remains
+>> > capped at ~4500 RPM.
+>> >
+>> > ** With the patch applied:
+>> > 1. Manual fan control is unlocked, which makes this patch important
+>> > and effective.
+>> > 2. The fans are able to reach maximum RPM only when using the
+>> > balanced-performance profile.
+>> >
+>> > So the issue is specifically that the performance profile still keeps
+>> > the fans capped, even though it is expected to be more aggressive than
+>> > balanced-performance.
+>>
+>> I see. Can you check if the fans reach their max. speed if you set the p=
+wmX_enable
+>> sysfs attributes below the associated hwmon device to "0"? This should s=
+witch them
+>> into turbo mode.
+>>
+>> Thanks,
+>> Armin Wolf
+>>
+>> >
+>> > Apologies for the misunderstanding.
+>> >
+>> > Best regards,
+>> > Pranay Pawar (Bugaddr)
+>> >
+>> > On Mon, Dec 29, 2025 at 1:47=E2=80=AFPM Pranay <pranaypawarofficial@gm=
+ail.com> wrote:
+>> >> Yes this patch is making the driver work as expected. I had modified
+>> >> the acer-wmi driver and loaded it, then changed platform profile to
+>> >> balanced-performance & now fans are able to reach max RPM's. But in
+>> >> performance mode (Which is supposed to be powerful than
+>> >> balanced-performance) the fans are still max locked at 4500 rpm only.
+>> >>
+>> >> Thanks & Regards,
+>> >> Bugaddr (Pranay Pawar)
+>> >>
+>> >> On Mon, Dec 29, 2025 at 2:10=E2=80=AFAM Armin Wolf <W_Armin@gmx.de> w=
+rote:
+>> >>> Am 25.12.25 um 22:51 schrieb Pranay:
+>> >>>
+>> >>>> Sure here you go, in attachments
+>> >>>>
+>> >>>> Thanks,
+>> >>>> Bugaddr
+>> >>> I attached an experimental patch that should whitelist fan control f=
+or your model. Can you
+>> >>> test that fan control and the nitro button works?
+>> >>>
+>> >>> Thanks,
+>> >>> Armin Wolf
+>> >>>
+>> >>>> On Thu, Dec 25, 2025 at 11:14=E2=80=AFPM Armin Wolf <W_Armin@gmx.de=
+> wrote:
+>> >>>>> Am 24.12.25 um 20:40 schrieb Pranay:
+>> >>>>>
+>> >>>>>> Dear Maintainers,
+>> >>>>>>
+>> >>>>>> I am reporting a limitation in the acer-wmi driver regarding fan =
+speed
+>> >>>>>> control on the Acer Nitro AN515-58.
+>> >>>>>>
+>> >>>>>> The Issue: On Windows, enabling "Performance" mode via NitroSense
+>> >>>>>> ramps the fans up to 7000+ RPM. On Linux, selecting the "Performa=
+nce"
+>> >>>>>> platform profile boosts the CPU power correctly, but the fans rem=
+ain
+>> >>>>>> capped at maximum 3500-4000 RPM.
+>> >>>>>>
+>> >>>>>> Observation: This laptop model lacks a physical "Turbo" button. t=
+hough
+>> >>>>>> there is a nitrosense button which is useless in linux.
+>> >>>>>>
+>> >>>>>> I am requesting that support be added to fix the maximum fan spee=
+d state issue.
+>> >>>>> Sure thing, can you share the output of "acpidump" to i can whitel=
+ist your model
+>> >>>>> for fan control?
+>> >>>>>
+>> >>>>> Thanks,
+>> >>>>> Armin Wolf
+>> >>>>>
+>> >>>>>> Best regards,
+>> >>>>>>
+>> >>>>>> bugaddr
+>> >>>>>>
