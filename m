@@ -1,38 +1,38 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9C3132FFDE2
-	for <platform-driver-x86@vger.kernel.org>; Thu,  8 Jan 2026 06:50:18 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9FAAA155C97
+	for <platform-driver-x86@vger.kernel.org>; Thu,  8 Jan 2026 07:26:16 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1767855018; cv=none; b=Vuhs+bk41JcPrtNKRLvdxHIy1AxPd4t0VL70GwfHIcMtjcsfgl2GMzXnCBpnbmRyBbAQaxJta6kupu9kpUNJ2+RNeYmDm0kJ/vDcB2iMp6n2+wqeR9xV4di/7z5duxu1oKsYUrMAVfNHGx5+YfoHkfMJJoTYdQRfDUy/mzg5S/I=
+	t=1767857176; cv=none; b=mJbLhVjGl8BshxzmhJNLCPq+vE9kUaT5q6ZaeX8MzcAArProRzBdo5RGxWzXEyBAzMbsGQys0KAsHRLRlL1s86CZzRRPrqWvm/xdyPC+yO9mcxy9V4Wxk4DUbHEqiXYmkwERkDlG7foss64zbnQwS4eOHUsVFd0Clg+Mp9RU83A=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1767855018; c=relaxed/simple;
-	bh=wxKbtcujm7Wae4xAliGaKie3QVcg1XYok4gZhtnC1o0=;
+	s=arc-20240116; t=1767857176; c=relaxed/simple;
+	bh=ZzS9UZVnVbGP2nIrHq0aJnJOptoyFfd50Reof56PuIk=;
 	h=From:To:Subject:Date:Message-ID:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=s6PGdEcHX5eGD1JbDhhFZHZHgQCB068MyLiPfk1WQqCfX68A7E6WsTny4jWnoGTr3gky3GPMUmpS6bZGEwre2XT9WxYIfuGJFbVWwuCmSNbyLGiTIHuEpK6AHAfusWRoL23wD+RQukE7GgAOSDHblI3pW6RAHFhNOn8c0aQcRi0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=TFOCCxWx; arc=none smtp.client-ip=10.30.226.201
+	 Content-Type:MIME-Version; b=WkhnbVkC2HsXahMs2VitdNm65whuxI2KQv3jXuSfFnKU9qePhjrrzgnD1BhJQJqSBPe4lrb3VfIqYfHSg/9Hj3t5geFmdRbyuQr3KMEtl237MBRXobrps8g2ttkJRo2MtvOyFNIFx8Gd8Y+jbb+NVFg7mMawQKQK5atXQm+DkBU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Q1m7Ssoa; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="TFOCCxWx"
-Received: by smtp.kernel.org (Postfix) with ESMTPS id 1D753C2BCAF
-	for <platform-driver-x86@vger.kernel.org>; Thu,  8 Jan 2026 06:50:18 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Q1m7Ssoa"
+Received: by smtp.kernel.org (Postfix) with ESMTPS id 414C6C2BC9E
+	for <platform-driver-x86@vger.kernel.org>; Thu,  8 Jan 2026 07:26:16 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1767855018;
-	bh=wxKbtcujm7Wae4xAliGaKie3QVcg1XYok4gZhtnC1o0=;
+	s=k20201202; t=1767857176;
+	bh=ZzS9UZVnVbGP2nIrHq0aJnJOptoyFfd50Reof56PuIk=;
 	h=From:To:Subject:Date:In-Reply-To:References:From;
-	b=TFOCCxWxA9W4Zk2bQ2OaGU5/QfCSeVIgCOIQj3rOh54ePQeaGoPNeZWJwXrxSPdMB
-	 sMuI605x9mYwe3Fs3k+Yq4H+YpcIeJ7N+pr3uy14Lf6gREZq2F0td/ZsfEEM5eURr+
-	 YnMqW93jyt2wEHq6aGHDRRzclucjesL57jW/gI2Wy67Le34CqFvxdiSTJKScjnlyL1
-	 XCaKRTp9zHLCLC4b+hRgq26+sFUeIdrLRFI91zhka7vmU+0TL3FUyfuO1hJKo+IhDz
-	 Vyo3Z6X5A8He9RuwoWefPY7iel1h05EXI4NlqypZ8Zhg9vVvKJKEIf1aHB6naFC1z/
-	 sI48MaEYKHJQg==
+	b=Q1m7Ssoazn/NqQLdxAuLwXIUiF0pvkp2dIU08AcAUnzspUubxATiLwo0p0ZOE7fKt
+	 wCRukNDyy40ny52Xv0esJ1yFiogWigd4JTWaDOoZPj4/JO552yel9c5QnVkPxz9maP
+	 z52aoFKwPYZ50eNgpHMqz4R7bOkGwH0kl2XZ8AmbBxWfbQejBFaAowWlq42xV3dpkl
+	 laC8dKyiBtiZXVtb61LBn+Gx/ig3LmvX8Qdfkv5tzVqCIfRCN/DyFzuioxRMW/7j5Y
+	 8ZxL9lxfE1vPsO7+djDC9tmlkzwosH7OJUQ1/7KW1GsaoOKuQdNAAiCf4xvsTRHaZE
+	 gm78TK3ql/iEw==
 Received: by aws-us-west-2-korg-bugzilla-1.web.codeaurora.org (Postfix, from userid 48)
-	id 16656C433E1; Thu,  8 Jan 2026 06:50:18 +0000 (UTC)
+	id 3BDD5C433E1; Thu,  8 Jan 2026 07:26:16 +0000 (UTC)
 From: bugzilla-daemon@kernel.org
 To: platform-driver-x86@vger.kernel.org
 Subject: [Bug 218305] Ryzen 7 7840HS gets stuck at 544MHz frequency after
  resuming after unplugging the power cord during sleep
-Date: Thu, 08 Jan 2026 06:50:17 +0000
+Date: Thu, 08 Jan 2026 07:26:15 +0000
 X-Bugzilla-Reason: None
 X-Bugzilla-Type: changed
 X-Bugzilla-Watch-Reason: AssignedTo drivers_platform_x86@kernel-bugs.osdl.org
@@ -41,14 +41,14 @@ X-Bugzilla-Component: Platform_x86
 X-Bugzilla-Version: 2.5
 X-Bugzilla-Keywords: 
 X-Bugzilla-Severity: blocking
-X-Bugzilla-Who: tore@fud.no
+X-Bugzilla-Who: aros@gmx.com
 X-Bugzilla-Status: REOPENED
 X-Bugzilla-Resolution: 
 X-Bugzilla-Priority: P3
 X-Bugzilla-Assigned-To: drivers_platform_x86@kernel-bugs.osdl.org
 X-Bugzilla-Flags: 
 X-Bugzilla-Changed-Fields: attachments.created
-Message-ID: <bug-218305-215701-l5LPDVWTkU@https.bugzilla.kernel.org/>
+Message-ID: <bug-218305-215701-LJ8pzRSlQx@https.bugzilla.kernel.org/>
 In-Reply-To: <bug-218305-215701@https.bugzilla.kernel.org/>
 References: <bug-218305-215701@https.bugzilla.kernel.org/>
 Content-Type: text/plain; charset="UTF-8"
@@ -64,21 +64,30 @@ MIME-Version: 1.0
 
 https://bugzilla.kernel.org/show_bug.cgi?id=3D218305
 
---- Comment #146 from Tore Anderson (tore@fud.no) ---
-Created attachment 309150
-  --> https://bugzilla.kernel.org/attachment.cgi?id=3D309150&action=3Dedit
-acpidump
+--- Comment #147 from Artem S. Tashkinov (aros@gmx.com) ---
+Created attachment 309151
+  --> https://bugzilla.kernel.org/attachment.cgi?id=3D309151&action=3Dedit
+HP EliteBook 845 14 inch G10 acpi dump.bin.xz
+
+Here's the funny thing.
+
+I can swear the previous BIOS for my laptop (HP EliteBook 845 14 inch G10)
+worked fine but then I simultaneously upgraded the kernel and the BIOS and =
+the
+issue resurfaced, even though the new maximum frequency is different - it's=
+ not
+544MHz any longer, it's 1101 MHz, as mentioned earlier but even at this
+frequency the laptop is unusable.
+
+The current BIOS (buggy): Version: 01.10.03 Rev.A, dated Oct 20, 2025
+The previous one (worked perfectly): 01.10.00 Rev.A, dated Aug 18, 2025
+
+But again I also upgraded the kernel in the meanwhile to 6.17.8.
 
 (In reply to Gergo K from comment #145)
 > Can someone upload an acpidump output? Thanks.
 
-Attached. This is from an =C2=ABHP EliteBook 845 14 inch G11 Notebook PC=C2=
-=BB with a
-=C2=ABAMD Ryzen 7 8840HS w/ Radeon 780M Graphics=C2=BB. Note that CPU was *=
-not* throttled
-while I took this dump, it was running normally.
-
-Tore
+Here it is.
 
 --=20
 You may reply to this email to add a comment.
