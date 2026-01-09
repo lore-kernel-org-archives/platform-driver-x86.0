@@ -1,38 +1,38 @@
-Received: from mout.gmx.net (mout.gmx.net [212.227.15.15])
+Received: from mout.gmx.net (mout.gmx.net [212.227.15.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1EA1A33E378;
-	Fri,  9 Jan 2026 21:46:48 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=212.227.15.15
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EEF3D8462;
+	Fri,  9 Jan 2026 21:46:56 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=212.227.15.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1767995218; cv=none; b=c154uOwf4jRi1+siVo5/wa/3csgv599Te1xUYxWjZmMBv1FgkvWBB1ow7d81vOSevKpIf1SzsGni5vPfhMvXur1luI4QSG1xwkbgl8Hc76/TWmgLCEyjJhnqR0fDLzfjPL0/Jwaw1XNLiTUHpdFSDIOEZ4A1Aoljlzye5Tz7cgU=
+	t=1767995218; cv=none; b=G0pZJ3Rh4OoQLoB3zQD+hvBn8b7K0cSOo069U5HOJOMQ97wjJIlxBaa3nrb5cEM8YczJlYw6LfZ7hJ9OuhFJufCCA0dNOdvruQfnX3SXlLTZKsPp6rAXcKT3eM0zMNk845IIp0eo8F1g0ovtsrF071RxXDd+p+W9HC1NuvLVT0Y=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1767995218; c=relaxed/simple;
-	bh=ky6Uv9/uEc7uB1evuRXEl6vo13vIWeN02C3RIC6h4Jg=;
+	bh=E0+UClZTKNFD+rOEMwUWuL+siCBjTPa2M63+5AWwdmU=;
 	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=j2YTfu/iPXhLvVegtG/KPVXfEqGwk+IuREMjYErwQdlf2hjwyw/W6XQS3kxxd2SQsg5b/EBMYX/7zX85lR3UOR2ka59RvAyIbC/95v7iwAXGYZIti33r+WTLBfFxOwWetFcNbLoh38fZaCAgyVwtpHTqq3j6swe0HZgEbUVdAL0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gmx.de; spf=pass smtp.mailfrom=gmx.de; dkim=pass (2048-bit key) header.d=gmx.de header.i=w_armin@gmx.de header.b=cArdKqNM; arc=none smtp.client-ip=212.227.15.15
+	 MIME-Version; b=W8TysimwzDLx86AtfYBudaT1h+5kz5FqGAKIjMCMkEChjTpmXXb+wxL/OvnMUeuCAZo1YCY2yzCNJhO25dNCFcilw3I4b+CzYuZDU3xA3/fm77U76b6MefiW14DxyJH9MS6315QD/L4FrT9ly+w7wE4qf1A81kjEgkkjfaO9gho=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gmx.de; spf=pass smtp.mailfrom=gmx.de; dkim=pass (2048-bit key) header.d=gmx.de header.i=w_armin@gmx.de header.b=clLyW0ON; arc=none smtp.client-ip=212.227.15.18
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gmx.de
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmx.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmx.de header.i=w_armin@gmx.de header.b="cArdKqNM"
+	dkim=pass (2048-bit key) header.d=gmx.de header.i=w_armin@gmx.de header.b="clLyW0ON"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=gmx.de;
-	s=s31663417; t=1767995205; x=1768600005; i=w_armin@gmx.de;
-	bh=NitAERjcXLJHRK6288iehSoLRg5EoInw/6zaVgJadU8=;
+	s=s31663417; t=1767995202; x=1768600002; i=w_armin@gmx.de;
+	bh=nCru25MMcaxm5j3/lo9WJAhRUlsBhv2miRhQx5ANaFE=;
 	h=X-UI-Sender-Class:From:To:Cc:Subject:Date:Message-Id:In-Reply-To:
-	 References:MIME-Version:Content-Type:Content-Transfer-Encoding:cc:
+	 References:MIME-Version:Content-Transfer-Encoding:cc:
 	 content-transfer-encoding:content-type:date:from:message-id:
 	 mime-version:reply-to:subject:to;
-	b=cArdKqNMjV17l9k7SZ6bmZhY4+KU9HRRRNfgi8sPe1OzHmIXY+a7ty0JXi93UXaG
-	 MHjLSnNRPKRUI0B91obrDuiSt7OY2rU9c0a9RUW/9AHi67B1L215mhZc4sxlwUadX
-	 vR32NkCUkAlz0anMt5XNElWkeCybAjB+flhDGK5oaDcduvkalkeZDheM1eBLEYV40
-	 4e0VdOh/AHOWcSir8d3K9q9JzoF9sZkfNcmU7lXXtMm+6Sh/LdrM88Mm1xt6fXdKg
-	 xgSLrkyfflLc2w77X4MTaA7Ue6K2/9ysd80wO4ZEodBXKMMraxKq+6z1bPmjGSMD3
-	 rXHRdTDbe/l54UT1aA==
+	b=clLyW0ON5JLfZoSz8DAZO9vH4l+MnJM64cw5ixqX/+e1KMuR6KO9gPkwT11qZDte
+	 ZaqrAtqQbwkMIORWoZQOLXCJz0HvBlA0mG5FTveY+BpwXjlb5sAf3aDjVWisMCcP2
+	 31ztDLMnmFcEDdAx7NY375gyxa/3+nkH+HtYN7ybq8Ihz1TUxPFGJRxGZChneQO2V
+	 H6zp0ZVEodcsuk7QwN7ro3p9nQQ/axEUxPV1Yd6FrXeIT29d+9IuFE23DxodsFGWp
+	 uLi+rAVopwfKB7nzMIPSCzYoT3oQpYWD3Pwi3fIOv/eJSWVh8Dw99IwHrtY0CRVc/
+	 XRtpVzGzaOiXo+HTIw==
 X-UI-Sender-Class: 724b4f7f-cbec-4199-ad4e-598c01a50d3a
 Received: from mx-amd-b650.fritz.box ([93.202.247.91]) by mail.gmx.net
- (mrgmx004 [212.227.17.190]) with ESMTPSA (Nemesis) id
- 1MPGW7-1vU4Mr3sEv-00KasE; Fri, 09 Jan 2026 22:46:45 +0100
+ (mrgmx005 [212.227.17.190]) with ESMTPSA (Nemesis) id
+ 1M3lY1-1vebAH0X23-007NOc; Fri, 09 Jan 2026 22:46:42 +0100
 From: Armin Wolf <W_Armin@gmx.de>
 To: hansg@kernel.org,
 	ilpo.jarvinen@linux.intel.com
@@ -42,9 +42,9 @@ Cc: platform-driver-x86@vger.kernel.org,
 	Dell.Client.Kernel@dell.com,
 	corbet@lwn.net,
 	linux-doc@vger.kernel.org
-Subject: [PATCH v3 4/9] platform/wmi: Add kunit test for the string conversion code
-Date: Fri,  9 Jan 2026 22:46:14 +0100
-Message-Id: <20260109214619.7289-5-W_Armin@gmx.de>
+Subject: [PATCH v3 3/9] platform/wmi: Add helper functions for WMI string conversions
+Date: Fri,  9 Jan 2026 22:46:13 +0100
+Message-Id: <20260109214619.7289-4-W_Armin@gmx.de>
 X-Mailer: git-send-email 2.39.5
 In-Reply-To: <20260109214619.7289-1-W_Armin@gmx.de>
 References: <20260109214619.7289-1-W_Armin@gmx.de>
@@ -54,440 +54,273 @@ List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: quoted-printable
-X-Provags-ID: V03:K1:18qiiithjGkB4g8k532jBMoP1W1MLvz7U7ePJ3iIWlusNljBQ9z
- 8WBTneWPTMud48FvcRYR3jrotURMsoSGD5tAo3Bsq++b5ER9a9KYQJBb1lRiVu5DfkDJTlW
- HHsTwg2ZVJU5h/J/m+6+MMfdQRyrTvdsHeqN3LzxIAQj3PAfuMW+IW+mzkNrREySVH6yAYN
- 6SINvB/C0vGu5T0cmtt6A==
+X-Provags-ID: V03:K1:SMBTD9afB4XbmuosnPnWOKTZak/DGEQkzOHVVXJbvyBEwLj5hoI
+ rwbPem1zwFbeLfDV7329pga0RUTcwhHvJJrFpOnb6VigTaTD4mFu/3VA5wLNpw0pXTctJcY
+ Zobll99NWv4C0jzopBgX+plZKSa0hp2NCpNg9/wHCWc9LHYsZcDBXJfPhh3xQkQq1JKH7p5
+ mwA33ueLRIY/wiopw1EFw==
 X-Spam-Flag: NO
-UI-OutboundReport: notjunk:1;M01:P0:QzSF2KKyJrM=;jR5HXMkKCWt/B3oLGhzgiB63Sch
- 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
- 0jXLEEX2uvl3U3OLeRbY
+UI-OutboundReport: notjunk:1;M01:P0:CdCV5juykc8=;LwnWEZacLiFN3AjJeEfYGjD8QM2
+ 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
 
-The string conversion frunctions provided by the WMI driver core
-have no dependencies on the remaining WMI API, making them suitable
-for unit tests.
-
-Implement such a unit test using kunit. Those unit tests verify that
-converting between WMI strings and UTF8 strings works as expected.
-They also verify that edge cases are handled correctly.
+WMI strings are encoded using UTF16-LE characters, forcing WMI drivers
+to manually convert them to/from standard UTF8 strings. Add a two
+helper functions for those tasks.
 
 Signed-off-by: Armin Wolf <W_Armin@gmx.de>
 =2D--
- drivers/platform/wmi/tests/Kconfig        |  11 +
- drivers/platform/wmi/tests/Makefile       |   3 +
- drivers/platform/wmi/tests/string_kunit.c | 278 ++++++++++++++++++++++
- 3 files changed, 292 insertions(+)
- create mode 100644 drivers/platform/wmi/tests/string_kunit.c
+ Documentation/driver-api/wmi.rst |  3 ++
+ drivers/platform/wmi/Kconfig     |  1 +
+ drivers/platform/wmi/Makefile    |  2 +-
+ drivers/platform/wmi/string.c    | 92 ++++++++++++++++++++++++++++++++
+ include/linux/wmi.h              |  5 ++
+ 5 files changed, 102 insertions(+), 1 deletion(-)
+ create mode 100644 drivers/platform/wmi/string.c
 
-diff --git a/drivers/platform/wmi/tests/Kconfig b/drivers/platform/wmi/tes=
-ts/Kconfig
-index efcbcb51c251..f7f0f3c540f5 100644
-=2D-- a/drivers/platform/wmi/tests/Kconfig
-+++ b/drivers/platform/wmi/tests/Kconfig
-@@ -14,3 +14,14 @@ config ACPI_WMI_MARSHALLING_KUNIT_TEST
- 	  to the KUnit documentation in Documentation/dev-tools/kunit/.
+diff --git a/Documentation/driver-api/wmi.rst b/Documentation/driver-api/w=
+mi.rst
+index db835b43c937..b847bcdcbb09 100644
+=2D-- a/Documentation/driver-api/wmi.rst
++++ b/Documentation/driver-api/wmi.rst
+@@ -16,5 +16,8 @@ which will be bound to compatible WMI devices by the dri=
+ver core.
+ .. kernel-doc:: include/linux/wmi.h
+    :internal:
 =20
- 	  If unsure, say N.
++.. kernel-doc:: drivers/platform/wmi/string.c
++   :export:
 +
-+config ACPI_WMI_STRING_KUNIT_TEST
-+	tristate "KUnit Test for ACPI-WMI string conversion" if !KUNIT_ALL_TESTS
-+	depends on KUNIT
-+	default KUNIT_ALL_TESTS
-+	help
-+	  This builds unit tests for the ACPI-WMI string conversion code.
-+	  For more information on KUnit and unit tests in general, please refer
-+	  to the KUnit documentation in Documentation/dev-tools/kunit/.
-+
-+	  If unsure, say N.
-diff --git a/drivers/platform/wmi/tests/Makefile b/drivers/platform/wmi/te=
-sts/Makefile
-index 252c3125353a..62c438e26259 100644
-=2D-- a/drivers/platform/wmi/tests/Makefile
-+++ b/drivers/platform/wmi/tests/Makefile
-@@ -6,3 +6,6 @@
+ .. kernel-doc:: drivers/platform/wmi/core.c
+    :export:
+diff --git a/drivers/platform/wmi/Kconfig b/drivers/platform/wmi/Kconfig
+index 21fa3e440042..d62f51ff3b7f 100644
+=2D-- a/drivers/platform/wmi/Kconfig
++++ b/drivers/platform/wmi/Kconfig
+@@ -6,6 +6,7 @@
+ menuconfig ACPI_WMI
+ 	tristate "ACPI-WMI support"
+ 	depends on ACPI && X86
++	select NLS
+ 	help
+ 	  This option enables support for the ACPI-WMI driver core.
 =20
- wmi_marshalling_kunit-y				:=3D marshalling_kunit.o
- obj-$(CONFIG_ACPI_WMI_MARSHALLING_KUNIT_TEST)	+=3D wmi_marshalling_kunit.=
-o
-+
-+wmi_string_kunit-y				:=3D string_kunit.o
-+obj-$(CONFIG_ACPI_WMI_STRING_KUNIT_TEST)	+=3D wmi_string_kunit.o
-diff --git a/drivers/platform/wmi/tests/string_kunit.c b/drivers/platform/=
-wmi/tests/string_kunit.c
+diff --git a/drivers/platform/wmi/Makefile b/drivers/platform/wmi/Makefile
+index 93f37ce519ae..2feff94a5594 100644
+=2D-- a/drivers/platform/wmi/Makefile
++++ b/drivers/platform/wmi/Makefile
+@@ -4,7 +4,7 @@
+ # ACPI WMI core
+ #
+=20
+-wmi-y			:=3D core.o marshalling.o
++wmi-y			:=3D core.o marshalling.o string.o
+ obj-$(CONFIG_ACPI_WMI)	+=3D wmi.o
+=20
+ # Unit tests
+diff --git a/drivers/platform/wmi/string.c b/drivers/platform/wmi/string.c
 new file mode 100644
-index 000000000000..9aa3ffa85090
+index 000000000000..0fc43218aa5b
 =2D-- /dev/null
-+++ b/drivers/platform/wmi/tests/string_kunit.c
-@@ -0,0 +1,278 @@
++++ b/drivers/platform/wmi/string.c
+@@ -0,0 +1,92 @@
 +// SPDX-License-Identifier: GPL-2.0-or-later
 +/*
-+ * KUnit test for the ACPI-WMI string conversion code.
++ * WMI string utility functions.
 + *
 + * Copyright (C) 2025 Armin Wolf <W_Armin@gmx.de>
 + */
 +
-+#include <linux/module.h>
-+#include <linux/slab.h>
-+#include <linux/string.h>
++#include <linux/build_bug.h>
++#include <linux/compiler_types.h>
++#include <linux/err.h>
++#include <linux/export.h>
++#include <linux/nls.h>
++#include <linux/limits.h>
++#include <linux/types.h>
 +#include <linux/wmi.h>
-+
-+#include <kunit/resource.h>
-+#include <kunit/test.h>
 +
 +#include <asm/byteorder.h>
 +
-+struct wmi_string_param {
-+	const char *name;
-+	const struct wmi_string *wmi_string;
-+	/*
-+	 * Remember that using sizeof() on a struct wmi_string will
-+	 * always return a size of two bytes due to the flexible
-+	 * array member!
-+	 */
-+	size_t wmi_string_length;
-+	const u8 *utf8_string;
-+	size_t utf8_string_length;
-+};
++static_assert(sizeof(__le16) =3D=3D sizeof(wchar_t));
 +
-+#define TEST_WMI_STRING_LENGTH 12
-+
-+static const struct wmi_string test_wmi_string =3D {
-+	.length =3D cpu_to_le16(10),
-+	.chars =3D {
-+		cpu_to_le16(u'T'),
-+		cpu_to_le16(u'E'),
-+		cpu_to_le16(u'S'),
-+		cpu_to_le16(u'T'),
-+		cpu_to_le16(u'\0'),
-+	},
-+};
-+
-+static const u8 test_utf8_string[] =3D "TEST";
-+
-+#define SPECIAL_WMI_STRING_LENGTH 14
-+
-+static const struct wmi_string special_wmi_string =3D {
-+	.length =3D cpu_to_le16(12),
-+	.chars =3D {
-+		cpu_to_le16(u'=C3=84'),
-+		cpu_to_le16(u'=C3=96'),
-+		cpu_to_le16(u'=C3=9C'),
-+		cpu_to_le16(u'=C3=9F'),
-+		cpu_to_le16(u'=E2=82=AC'),
-+		cpu_to_le16(u'\0'),
-+	},
-+};
-+
-+static const u8 special_utf8_string[] =3D "=C3=84=C3=96=C3=9C=C3=9F=E2=82=
-=AC";
-+
-+#define MULTI_POINT_WMI_STRING_LENGTH 12
-+
-+static const struct wmi_string multi_point_wmi_string =3D {
-+	.length =3D cpu_to_le16(10),
-+	.chars =3D {
-+		cpu_to_le16(u'K'),
-+		/* =F0=9F=90=A7 */
-+		cpu_to_le16(0xD83D),
-+		cpu_to_le16(0xDC27),
-+		cpu_to_le16(u'!'),
-+		cpu_to_le16(u'\0'),
-+	},
-+};
-+
-+static const u8 multi_point_utf8_string[] =3D "K=F0=9F=90=A7!";
-+
-+#define PADDED_TEST_WMI_STRING_LENGTH 14
-+
-+static const struct wmi_string padded_test_wmi_string =3D {
-+	.length =3D cpu_to_le16(12),
-+	.chars =3D {
-+		cpu_to_le16(u'T'),
-+		cpu_to_le16(u'E'),
-+		cpu_to_le16(u'S'),
-+		cpu_to_le16(u'T'),
-+		cpu_to_le16(u'\0'),
-+		cpu_to_le16(u'\0'),
-+	},
-+};
-+
-+static const u8 padded_test_utf8_string[] =3D "TEST\0";
-+
-+#define OVERSIZED_TEST_WMI_STRING_LENGTH 14
-+
-+static const struct wmi_string oversized_test_wmi_string =3D {
-+	.length =3D cpu_to_le16(8),
-+	.chars =3D {
-+		cpu_to_le16(u'T'),
-+		cpu_to_le16(u'E'),
-+		cpu_to_le16(u'S'),
-+		cpu_to_le16(u'T'),
-+		cpu_to_le16(u'!'),
-+		cpu_to_le16(u'\0'),
-+	},
-+};
-+
-+static const u8 oversized_test_utf8_string[] =3D "TEST!";
-+
-+#define INVALID_TEST_WMI_STRING_LENGTH 14
-+
-+static const struct wmi_string invalid_test_wmi_string =3D {
-+	.length =3D cpu_to_le16(12),
-+	.chars =3D {
-+		cpu_to_le16(u'T'),
-+		/* =F0=9F=90=A7, with low surrogate missing */
-+		cpu_to_le16(0xD83D),
-+		cpu_to_le16(u'E'),
-+		cpu_to_le16(u'S'),
-+		cpu_to_le16(u'T'),
-+		cpu_to_le16(u'\0'),
-+	},
-+};
-+
-+/* We have to split the string here to end the hex escape sequence */
-+static const u8 invalid_test_utf8_string[] =3D "T" "\xF0\x9F" "EST";
-+
-+static const struct wmi_string_param wmi_string_params_array[] =3D {
-+	{
-+		.name =3D "ascii_string",
-+		.wmi_string =3D &test_wmi_string,
-+		.wmi_string_length =3D TEST_WMI_STRING_LENGTH,
-+		.utf8_string =3D test_utf8_string,
-+		.utf8_string_length =3D sizeof(test_utf8_string),
-+	},
-+	{
-+		.name =3D "special_string",
-+		.wmi_string =3D &special_wmi_string,
-+		.wmi_string_length =3D SPECIAL_WMI_STRING_LENGTH,
-+		.utf8_string =3D special_utf8_string,
-+		.utf8_string_length =3D sizeof(special_utf8_string),
-+	},
-+	{
-+		.name =3D "multi_point_string",
-+		.wmi_string =3D &multi_point_wmi_string,
-+		.wmi_string_length =3D MULTI_POINT_WMI_STRING_LENGTH,
-+		.utf8_string =3D multi_point_utf8_string,
-+		.utf8_string_length =3D sizeof(multi_point_utf8_string),
-+	},
-+};
-+
-+static void wmi_string_param_get_desc(const struct wmi_string_param *para=
-m, char *desc)
++/**
++ * wmi_string_to_utf8s - Convert a WMI string into a UTF8 string.
++ * @str: WMI string representation
++ * @dst: Buffer to fill with UTF8 characters
++ * @length: Length of the destination buffer
++ *
++ * Convert as WMI string into a standard UTF8 string. The conversion will=
+ stop
++ * once a NUL character is detected or when the buffer is full. Any inval=
+id UTF16
++ * characters will be ignored. The resulting UTF8 string will always be N=
+UL-terminated
++ * when this function returns successfully.
++ *
++ * Return: Length of the resulting UTF8 string or negative errno code on =
+failure.
++ */
++ssize_t wmi_string_to_utf8s(const struct wmi_string *str, u8 *dst, size_t=
+ length)
 +{
-+	strscpy(desc, param->name, KUNIT_PARAM_DESC_SIZE);
++	/* Contains the maximum number of UTF16 code points to read */
++	int inlen =3D le16_to_cpu(str->length) / 2;
++	int ret;
++
++	if (length < 1)
++		return -EINVAL;
++
++	/* We must leave room for the NUL character at the end of the destinatio=
+n buffer */
++	ret =3D utf16s_to_utf8s((__force const wchar_t *)str->chars, inlen, UTF1=
+6_LITTLE_ENDIAN, dst,
++			      length - 1);
++	if (ret < 0)
++		return ret;
++
++	dst[ret] =3D '\0';
++
++	return ret;
 +}
++EXPORT_SYMBOL_GPL(wmi_string_to_utf8s);
 +
-+KUNIT_ARRAY_PARAM(wmi_string, wmi_string_params_array, wmi_string_param_g=
-et_desc);
-+
-+static void wmi_string_to_utf8s_test(struct kunit *test)
++/**
++ * wmi_string_from_utf8s - Convert a UTF8 string into a WMI string.
++ * @str: WMI string representation
++ * @max_chars: Maximum number of UTF16 code points to store inside the WM=
+I string
++ * @src: UTF8 string to convert
++ * @src_length: Length of the source string without any trailing NUL-char=
+acters
++ *
++ * Convert a UTF8 string into a WMI string. The conversion will stop when=
+ the WMI string is
++ * full. The resulting WMI string will always be NUL-terminated and have =
+its length field set
++ * to and appropriate value when this function returns successfully.
++ *
++ * Return: Number of UTF16 code points inside the WMI string or negative =
+errno code on failure.
++ */
++ssize_t wmi_string_from_utf8s(struct wmi_string *str, size_t max_chars, c=
+onst u8 *src,
++			      size_t src_length)
 +{
-+	const struct wmi_string_param *param =3D test->param_value;
-+	ssize_t ret;
-+	u8 *result;
++	size_t str_length;
++	int ret;
 +
-+	result =3D kunit_kzalloc(test, param->utf8_string_length, GFP_KERNEL);
-+	KUNIT_ASSERT_NOT_ERR_OR_NULL(test, result);
++	if (max_chars < 1)
++		return -EINVAL;
 +
-+	ret =3D wmi_string_to_utf8s(param->wmi_string, result, param->utf8_strin=
-g_length);
++	/* We must leave room for the NUL character at the end of the WMI string=
+ */
++	ret =3D utf8s_to_utf16s(src, src_length, UTF16_LITTLE_ENDIAN, (__force w=
+char_t *)str->chars,
++			      max_chars - 1);
++	if (ret < 0)
++		return ret;
 +
-+	KUNIT_EXPECT_EQ(test, ret, param->utf8_string_length - 1);
-+	KUNIT_EXPECT_MEMEQ(test, result, param->utf8_string, param->utf8_string_=
-length);
++	str_length =3D (ret + 1) * sizeof(u16);
++	if (str_length > U16_MAX)
++		return -EOVERFLOW;
++
++	str->length =3D cpu_to_le16(str_length);
++	str->chars[ret] =3D '\0';
++
++	return ret;
 +}
++EXPORT_SYMBOL_GPL(wmi_string_from_utf8s);
+diff --git a/include/linux/wmi.h b/include/linux/wmi.h
+index 81f24d238a2c..75cb0c7cfe57 100644
+=2D-- a/include/linux/wmi.h
++++ b/include/linux/wmi.h
+@@ -62,6 +62,11 @@ struct wmi_string {
+ 	__le16 chars[];
+ } __packed;
+=20
++ssize_t wmi_string_to_utf8s(const struct wmi_string *str, u8 *dst, size_t=
+ length);
 +
-+static void wmi_string_from_utf8s_test(struct kunit *test)
-+{
-+	const struct wmi_string_param *param =3D test->param_value;
-+	struct wmi_string *result;
-+	size_t max_chars;
-+	ssize_t ret;
++ssize_t wmi_string_from_utf8s(struct wmi_string *str, size_t max_chars, c=
+onst u8 *src,
++			      size_t src_length);
 +
-+	max_chars =3D (param->wmi_string_length - sizeof(*result)) / 2;
-+	result =3D kunit_kzalloc(test, param->wmi_string_length, GFP_KERNEL);
-+	KUNIT_ASSERT_NOT_ERR_OR_NULL(test, result);
-+
-+	ret =3D wmi_string_from_utf8s(result, max_chars, param->utf8_string,
-+				    param->utf8_string_length);
-+
-+	KUNIT_EXPECT_EQ(test, ret, max_chars - 1);
-+	KUNIT_EXPECT_MEMEQ(test, result, param->wmi_string, param->wmi_string_le=
-ngth);
-+}
-+
-+static void wmi_string_to_utf8s_padded_test(struct kunit *test)
-+{
-+	u8 result[sizeof(padded_test_utf8_string)];
-+	ssize_t ret;
-+
-+	ret =3D wmi_string_to_utf8s(&padded_test_wmi_string, result, sizeof(resu=
-lt));
-+
-+	KUNIT_EXPECT_EQ(test, ret, sizeof(test_utf8_string) - 1);
-+	KUNIT_EXPECT_MEMEQ(test, result, test_utf8_string, sizeof(test_utf8_stri=
-ng));
-+}
-+
-+static void wmi_string_from_utf8s_padded_test(struct kunit *test)
-+{
-+	struct wmi_string *result;
-+	size_t max_chars;
-+	ssize_t ret;
-+
-+	max_chars =3D (PADDED_TEST_WMI_STRING_LENGTH - sizeof(*result)) / 2;
-+	result =3D kunit_kzalloc(test, PADDED_TEST_WMI_STRING_LENGTH, GFP_KERNEL=
-);
-+	KUNIT_ASSERT_NOT_ERR_OR_NULL(test, result);
-+
-+	ret =3D wmi_string_from_utf8s(result, max_chars, padded_test_utf8_string=
-,
-+				    sizeof(padded_test_utf8_string));
-+
-+	KUNIT_EXPECT_EQ(test, ret, sizeof(test_utf8_string) - 1);
-+	KUNIT_EXPECT_MEMEQ(test, result, &test_wmi_string, sizeof(test_wmi_strin=
-g));
-+}
-+
-+static void wmi_string_to_utf8s_oversized_test(struct kunit *test)
-+{
-+	u8 result[sizeof(oversized_test_utf8_string)];
-+	ssize_t ret;
-+
-+	ret =3D wmi_string_to_utf8s(&oversized_test_wmi_string, result, sizeof(r=
-esult));
-+
-+	KUNIT_EXPECT_EQ(test, ret, sizeof(test_utf8_string) - 1);
-+	KUNIT_EXPECT_MEMEQ(test, result, test_utf8_string, sizeof(test_utf8_stri=
-ng));
-+}
-+
-+static void wmi_string_to_utf8s_invalid_test(struct kunit *test)
-+{
-+	u8 result[sizeof(invalid_test_utf8_string)];
-+	ssize_t ret;
-+
-+	ret =3D wmi_string_to_utf8s(&invalid_test_wmi_string, result, sizeof(res=
-ult));
-+
-+	KUNIT_EXPECT_EQ(test, ret, sizeof(test_utf8_string) - 1);
-+	KUNIT_EXPECT_MEMEQ(test, result, test_utf8_string, sizeof(test_utf8_stri=
-ng));
-+}
-+
-+static void wmi_string_from_utf8s_invalid_test(struct kunit *test)
-+{
-+	struct wmi_string *result;
-+	size_t max_chars;
-+	ssize_t ret;
-+
-+	max_chars =3D (INVALID_TEST_WMI_STRING_LENGTH - sizeof(*result)) / 2;
-+	result =3D kunit_kzalloc(test, INVALID_TEST_WMI_STRING_LENGTH, GFP_KERNE=
-L);
-+	KUNIT_ASSERT_NOT_ERR_OR_NULL(test, result);
-+
-+	ret =3D wmi_string_from_utf8s(result, max_chars, invalid_test_utf8_strin=
-g,
-+				    sizeof(invalid_test_utf8_string));
-+
-+	KUNIT_EXPECT_EQ(test, ret, -EINVAL);
-+}
-+
-+static struct kunit_case wmi_string_test_cases[] =3D {
-+	KUNIT_CASE_PARAM(wmi_string_to_utf8s_test, wmi_string_gen_params),
-+	KUNIT_CASE_PARAM(wmi_string_from_utf8s_test, wmi_string_gen_params),
-+	KUNIT_CASE(wmi_string_to_utf8s_padded_test),
-+	KUNIT_CASE(wmi_string_from_utf8s_padded_test),
-+	KUNIT_CASE(wmi_string_to_utf8s_oversized_test),
-+	KUNIT_CASE(wmi_string_to_utf8s_invalid_test),
-+	KUNIT_CASE(wmi_string_from_utf8s_invalid_test),
-+	{}
-+};
-+
-+static struct kunit_suite wmi_string_test_suite =3D {
-+	.name =3D "wmi_string",
-+	.test_cases =3D wmi_string_test_cases,
-+};
-+
-+kunit_test_suite(wmi_string_test_suite);
-+
-+MODULE_AUTHOR("Armin Wolf <W_Armin@gmx.de>");
-+MODULE_DESCRIPTION("KUnit test for the ACPI-WMI string conversion code");
-+MODULE_LICENSE("GPL");
+ int wmidev_invoke_method(struct wmi_device *wdev, u8 instance, u32 method=
+_id,
+ 			 const struct wmi_buffer *in, struct wmi_buffer *out);
+=20
 =2D-=20
 2.39.5
 
