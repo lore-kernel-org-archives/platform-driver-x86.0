@@ -1,110 +1,122 @@
-Received: from m.foxido.dev (m.foxido.dev [81.177.217.87])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pf1-f170.google.com (mail-pf1-f170.google.com [209.85.210.170])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5F0C63168E8;
-	Fri,  9 Jan 2026 11:31:41 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=81.177.217.87
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6332535B13F
+	for <platform-driver-x86@vger.kernel.org>; Fri,  9 Jan 2026 13:06:13 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.170
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1767958304; cv=none; b=pi2vZFGqzVofb0JAXHJCzYAcquRByyj9WrKPCQYAbNFyh6oUoeWbw5f5U6AdFcmrKXxiMkSWdvYgBF+2XVbYEo4K/yK079lQRaxDil+mnBgno8rsTwSe3y7xKr1vzn/hkJ3k5Jbgfym2TE7sjtJDp4HUcmB4kZV05NSZzDo8o3w=
+	t=1767963974; cv=none; b=cGo4HrkX4dk6GqSA2PXiz/IkZXPxpq4DxDox1ldMrzr6bwZeedIlplK4zD37S/W+Hi1z42XHr7PTftqGjVO4Vqmaq49Sxbsc+slYQOYQwdHBzeX4NQu5r93Yt6S9OwRX4sqerp17zytk7vr+BJDVkJ3hQntyLxKGjBRkeSuqVIQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1767958304; c=relaxed/simple;
-	bh=ugsAOZfphBhKRWRiP1eUSkvkC4NbACU3I+VJnhjNiJU=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=n5sKu6p2c3R37PpiPCDoEYjk1ptwqmeKVPJOhrkTOkkqohTNx1t2iXLYvGHaZ10z43XfHvGiekzOeNgOjrOOKi9LnqEejTqAHpxp3KaewEZnykLtGOunvKLR9mRjj4Dse50e8erWmjomZuHQDjh6dfXW1BeKpRyrA6IGlbN94zk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=foxido.dev; spf=pass smtp.mailfrom=foxido.dev; dkim=pass (2048-bit key) header.d=foxido.dev header.i=@foxido.dev header.b=XUbFeytf; dkim=permerror (0-bit key) header.d=foxido.dev header.i=@foxido.dev header.b=lHrSMw5R; arc=none smtp.client-ip=81.177.217.87
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=foxido.dev
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=foxido.dev
+	s=arc-20240116; t=1767963974; c=relaxed/simple;
+	bh=pz0DZbvDntyKvROA6tUEbHiYYLi2Y8QPku1FXmsSHUE=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=f3l2Zwll8Z4c42TMHHDERa/ub4i1FL7SqbWmEJwvtebKrX+Wap8vGhlM+MaCb2DJzaBMwTpy0y6fVA7Cru0n2wdCtVotRMrVVREubqhTFSLpP3+KYtv3Qd7nYF1gDFEiM9IoNnSuvzP63kgXuMSh5lE2qrAdh9VS3sAsPcBmVwM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=PMlGNBCG; arc=none smtp.client-ip=209.85.210.170
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=foxido.dev header.i=@foxido.dev header.b="XUbFeytf";
-	dkim=permerror (0-bit key) header.d=foxido.dev header.i=@foxido.dev header.b="lHrSMw5R"
-DKIM-Signature: v=1; a=rsa-sha256; s=202508r; d=foxido.dev; c=relaxed/relaxed;
-	h=From:To:Subject:Date:Message-ID; t=1767958269; bh=HvhXiix4VgEJzf/Kvw/3TGg
-	xljQ9Gg2tlxhZKWzIxUo=; b=XUbFeytfq99EG2/QvULh+zr+sA7bF6zvbv05SJWrefyqd90M63
-	aGEpF1ra0HesrK35eFdlCvB5+JyFhFhNWqFYstIqJBhEeBcA1io9JcGEa7hkiv/rAL/sCfsTPHQ
-	NlPfEH5vkUnCRmQLcb3f0JC1gfPsUQtqC2eI0lRy/vt6ya8WSGTD6mWJZZDW1AeWVyQMelZ3Vph
-	lFvu56T1BZWD6sQ0MzBRZgVwNELxmMxfjJHxPRU5P18CuCiLO2WLUtqwLy3bwklnNaa3ce+sgw7
-	k19XqnxmInN8140/Q2+le7Dbrsxet6Nsml7Yo+tFfNuVUloc65bjqyaAX5uDAZU2cbg==;
-DKIM-Signature: v=1; a=ed25519-sha256; s=202508e; d=foxido.dev; c=relaxed/relaxed;
-	h=From:To:Subject:Date:Message-ID; t=1767958269; bh=HvhXiix4VgEJzf/Kvw/3TGg
-	xljQ9Gg2tlxhZKWzIxUo=; b=lHrSMw5RY0SkOe8dERIUTHyFdBhpxBa8n0rcUogGCsysKZsumG
-	SGJomNMzLD3nVzNDyRnlheklRAFFYbXqLxAw==;
-Message-ID: <284c09c9-c4ed-4838-a76b-dc90210b0be6@foxido.dev>
-Date: Fri, 9 Jan 2026 14:31:08 +0300
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="PMlGNBCG"
+Received: by mail-pf1-f170.google.com with SMTP id d2e1a72fcca58-81e98a1f55eso222382b3a.3
+        for <platform-driver-x86@vger.kernel.org>; Fri, 09 Jan 2026 05:06:13 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1767963973; x=1768568773; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=5ng03cgJYVjTeUA4uTAAYxETfgYhvuVnC7MiEJVAAhM=;
+        b=PMlGNBCGryp2uiatMV70lqq2uEUW3XAKZ/jEorpzuq5XDX9VEMK4nWovqHHUpSi0LP
+         acBg/m7VLD4al1KV5BqHuLBZW6q6JHs36dXAnmrtRaFcGpQi0gLnXDigxDv0hpySAwmp
+         J+X77yDdGyCdy482xruLT7DSC+LhobIJpf2FReh9xbfqj5tLy3yNZxRJ9qZ9vBHeYh2u
+         cUhi0IWcVLSo7hiEYPbngzfY82vDckReTHFVZzSiYoy/4oTO2V6stGmw7NnSPAyjvsaC
+         gRiM8sMHcmjEE9r2y0k25XQDkBNSYh84ajljoG6b43z461ZkdnZIAOyZP0AWFtcazIAL
+         +dTg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1767963973; x=1768568773;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:x-gm-gg:x-gm-message-state:from
+         :to:cc:subject:date:message-id:reply-to;
+        bh=5ng03cgJYVjTeUA4uTAAYxETfgYhvuVnC7MiEJVAAhM=;
+        b=fhy6sr626YDaCNb3+MBA+Y7XYtbxwhnU2uhIeoKY3nLsg3hcuWoGmecJd/I/ec83db
+         oxOuIDtXGUvX/WxAhZk+vIsENFGIIQBJz43/rqrkrR52ObFB+2BB8phaVi17yVDvhKCu
+         8YUwIyN8BOT8mWt3tdALm6tAA0udYsB/0jFgi3VD7tkBGY1QmMggWB13Rs7Nem33WZdZ
+         Dp28HEP+SSZlTw0D3BAeejrqXIjXmFJwi8p7bRw7XuP9YwagkxVM4Sjijk0211FMYk0R
+         v2hAXLbquoEiZAWOHKqAFhqfBQAk+FcKlbKTgE9OuuOUiWnFUyujbF5FOJ3mpYfsoeIs
+         ktkg==
+X-Gm-Message-State: AOJu0YygtgV/l0MZcmOLQW7lPJDRTs5gQdZ7lF9pGG0tPAUoXl4vEXOo
+	p4kW+vBUWfv6PGvZzOrHaDlEFp6DuSO2FhQIDe6+2Brq2kjoEKFb+7r/P6JHAA==
+X-Gm-Gg: AY/fxX6YbiXQLnL5oirtu+uNk05/jIdRCnGpYnH0pp1CJ3lPSbfnd+zuAZPHOlqbfC0
+	kSNIlXwIlbE3gmCWkAiSOEuNaO0buxGVeXez1QnhSP39ZEbfJKaMDML4Hz9JJ8P7HPNdz9a6/Gf
+	9H3i/rpJ4uyZBhW/qaPRLjaP+0N9W2RD4e9qPLIRGPL8jUAmfUhRIIpQLYK50Hq/+Vm5U9VkD99
+	peCspaa4rYTqjSmmFbLbwEu5TmMh4CHslaEmxjVoTkRIJc87Iuw05H+bpVbyZgmofilLAl3ibZU
+	aGce487jT+x+NnBqfh4giYEQRa5M+WH8JrmFEKCWwXjxf6Ue3a54sl1VCfL1PX1Bw9vCwaw+Vr4
+	ZsCLqo90BYgrQHYs4nA0QoDu7gJADY5GZ3ol9qGCZjcdV7H848MuWDeqNBNJl63TnRW0lEO46kf
+	xYk+dPZX9UNsSWUnaeg/3cWYXV+yzrbDSAkR0=
+X-Google-Smtp-Source: AGHT+IF90SDIpfHVVLRB4vRmxrthFz97ww9vGImuoEdn7l0ysbKxAcpNfhAJ/eBg+EiKIYmZ4sgImQ==
+X-Received: by 2002:a05:6a00:4512:b0:7b8:ac7f:5955 with SMTP id d2e1a72fcca58-81b7dc6206bmr8438096b3a.17.1767963972574;
+        Fri, 09 Jan 2026 05:06:12 -0800 (PST)
+Received: from CachyOS-G513QY ([2409:40f2:36:142:1ce:dda7:a9ca:7cd8])
+        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-819bafe9b8dsm10419553b3a.22.2026.01.09.05.06.09
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 09 Jan 2026 05:06:12 -0800 (PST)
+From: Shresth Sarthak Awasthi <bengdeeba@gmail.com>
+To: hansg@kernel.org,
+	ilpo.jarvinen@linux.intel.com
+Cc: platform-driver-x86@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	Shresth Sarthak Awasthi <bengdeeba@gmail.com>
+Subject: [PATCH v2] platform/x86: asus-armoury: Add power limits for Asus G513QY
+Date: Fri,  9 Jan 2026 18:35:57 +0530
+Message-ID: <20260109130557.78720-1-bengdeeba@gmail.com>
+X-Mailer: git-send-email 2.52.0
+In-Reply-To: <20260109055026.18593-1-bengdeeba@gmail.com>
+References: <20260109055026.18593-1-bengdeeba@gmail.com>
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 3/3] rust: add WMI abstractions
-To: Kari Argillander <kari.argillander@gmail.com>
-Cc: "Rafael J. Wysocki" <rafael@kernel.org>, Len Brown <lenb@kernel.org>,
- Miguel Ojeda <ojeda@kernel.org>, Boqun Feng <boqun.feng@gmail.com>,
- Gary Guo <gary@garyguo.net>, Benno Lossin <lossin@kernel.org>,
- Andreas Hindborg <a.hindborg@kernel.org>, Alice Ryhl <aliceryhl@google.com>,
- Trevor Gross <tmgross@umich.edu>, Danilo Krummrich <dakr@kernel.org>,
- Tamir Duberstein <tamird@gmail.com>, Armin Wolf <W_Armin@gmx.de>,
- platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org,
- rust-for-linux@vger.kernel.org, linux-acpi@vger.kernel.org
-References: <cover.1767818037.git.foxido@foxido.dev>
- <a119094f2e248587c541daf7c5b65bf4398b281b.1767818037.git.foxido@foxido.dev>
- <CAKBF=psOiiakGigJj0Kee3Z5rym41eksSZTgzsO3H1gzUP6DjA@mail.gmail.com>
- <670cab36-3d32-4769-8a3c-a5d3e1bdd74a@foxido.dev>
- <CAC=eVgRHu9UzPyTMcWZFGAwo0+6wO+v-iuqmoKmznj_kSPVL=Q@mail.gmail.com>
-Content-Language: en-US
-From: Gladyshev Ilya <foxido@foxido.dev>
-In-Reply-To: <CAC=eVgRHu9UzPyTMcWZFGAwo0+6wO+v-iuqmoKmznj_kSPVL=Q@mail.gmail.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 
-On 1/9/26 14:15, Kari Argillander wrote:
-> pe 9.1.2026 klo 13.01 Gladyshev Ilya (foxido@foxido.dev) kirjoitti:
->>
->> On 1/8/26 23:48, Kari Argillander wrote:
->>> On Wed, 7 Jan 2026 at 22:56, Gladyshev Ilya <foxido@foxido.dev> wrote:
->>> <snip>
->>>
->>>> +impl DeviceId {
->>>> +    /// Constructs new DeviceId from GUID string.
->>>> +    pub const fn new(guid: &[u8; bindings::UUID_STRING_LEN as usize]) -> Self {
->>>> +        // SAFETY: FFI type is valid to be zero-initialized.
->>>> +        let mut inner: bindings::wmi_device_id = unsafe { MaybeUninit::zeroed().assume_init() };
->>>> +
->>>> +        build_assert!(inner.guid_string.len() == bindings::UUID_STRING_LEN as usize + 1);
->>>> +
->>>> +        // SAFETY: It's safe to copy UUID_STRING_LEN, because we validated lengths.
->>>> +        // Also we leave last byte zeroed, so guid_string is valid C string.
->>>> +        unsafe {
->>>> +            ::core::ptr::copy_nonoverlapping(
->>>> +                guid.as_ptr(),
->>>> +                &raw mut inner.guid_string[0],
->>>> +                bindings::UUID_STRING_LEN as usize,
->>>> +            );
->>>> +        }
->>>
->>> Just use while here so no unsafe is needed at all. Then probably patch
->>> 1/3 is not needed.
->>
->> Overall this operation is still unsafe because we are constructing C
->> string in FFI object. So for me avoiding `unsafe` via less readable
->> (imo) loop will just mask unsafe operation without any real benefits.
-> 
-> It is not unsafe if you also use pin_init::zeroed()
->          let mut inner: bindings::wmi_device_id = pin_init::zeroed();
-> 
->          let mut i = 0usize;
->          while i < bindings::UUID_STRING_LEN as usize {
->              inner.guid_string[i] = guid[i];
->              i += 1;
->          }
-> 
-> you can then also remove 'core::mem::MaybeUninit'
+Add the DMI entry and power limits for the Asus ROG Strix G15
+Advantage Edition (G513QY). This laptop requires manual fan curves
+and specific APU/Platform PPT limits.
 
-I was talking more about "constructing C string is still 'unsafe' 
-because you shouldn't miss the \0 byte". IMO unsafe but primitive memcpy 
-is more readable and alerting than while loop, but that's not something 
-I will insist on
+Signed-off-by: Shresth Sarthak Awasthi <bengdeeba@gmail.com>
+---
+Changes in v2:
+ - Fixed typo in ppt_platform_sppt_min (changed 190 to 70).
 
-I'll play around more with `guid: &CStr` API, probably I missed 
-something simple)
+ drivers/platform/x86/asus-armoury.h | 16 ++++++++++++++++
+ 1 file changed, 16 insertions(+)
+
+diff --git a/drivers/platform/x86/asus-armoury.h b/drivers/platform/x86/asus-armoury.h
+index 3ac7aea37838..6f2c18a2d93d 100644
+--- a/drivers/platform/x86/asus-armoury.h
++++ b/drivers/platform/x86/asus-armoury.h
+@@ -1316,6 +1316,22 @@ static const struct dmi_system_id power_limits[] = {
+ 			.requires_fan_curve = true,
+ 		},
+ 	},
++	{
++		.matches = {
++			DMI_MATCH(DMI_BOARD_NAME, "G513QY"),
++		},
++		.driver_data = &(struct power_data) {
++			.ac_data = &(struct power_limits) {
++				/* Advantage Edition Laptop, no PL1 or PL2 limits */
++				.ppt_apu_sppt_min = 15,
++				.ppt_apu_sppt_max = 100,
++				.ppt_platform_sppt_min = 70,
++				.ppt_platform_sppt_max = 190,
++			},
++			.dc_data = NULL,
++			.requires_fan_curve = true,
++		},
++	},
+ 	{
+ 		.matches = {
+ 			DMI_MATCH(DMI_BOARD_NAME, "G513R"),
+-- 
+2.52.0
+
