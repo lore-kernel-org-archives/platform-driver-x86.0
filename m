@@ -1,35 +1,35 @@
 Received: from m.foxido.dev (m.foxido.dev [81.177.217.87])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1F4B533B6FE;
-	Fri,  9 Jan 2026 11:01:44 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9F1B2212FB9;
+	Fri,  9 Jan 2026 11:12:43 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=81.177.217.87
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1767956507; cv=none; b=IIBV0+9U2yfU1lp5nj8bzYFEoykzoYlDL5LE3hdbTHLvcGazOks8sHYlyV7Me0WUp6u8ntAQbAD1cKb+yBcpWIj6yuJIjglKdSU3vboPSr7MBMe24u/bAA6Al8Kqfx3x2QaLCTR2ehOUuGxO9M9UPGywQVD09b8pvQBdHt1p5UM=
+	t=1767957166; cv=none; b=RbtPPj04/+NOpbR/BJUOroDAe7/+lRIjqxQCoLNBw5vP34V68oziUCETAJu53fxF+C4a5Ymkl3LvA8CyIgLoV4OugOuRkDopG3K10pKPheUK6jRC5Hg1VFMaGdTwPrarhEhg0z5rRrPUx0FJMto/SLjno0ENhgsf4Mj0S9ezwwc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1767956507; c=relaxed/simple;
-	bh=MgdDRhOX289Jvru5sc60n2UQcHf+WqOnCsD6DPlUQfw=;
+	s=arc-20240116; t=1767957166; c=relaxed/simple;
+	bh=Dkau82hsJ+DmW1Y6VMA9TTxIuOJDmZMwqjFKfCCruAY=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=pylGT8/GJtFLj3qiIGjXg/5D/Q7kIvvKcU7VRjGgz12L8ue7ZQ7mqWaM77BQTesw63x590dw2w5DeF//hTq9oeu7aOZtoEKrDavo+0D2NUy1eeBX8HX4c0Og62BEKIfXfI3ol+Mr9nq7/7og1GpB2XUekG0+akpg4x4OuFuxd2s=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=foxido.dev; spf=pass smtp.mailfrom=foxido.dev; dkim=pass (2048-bit key) header.d=foxido.dev header.i=@foxido.dev header.b=pOwUdcUs; dkim=permerror (0-bit key) header.d=foxido.dev header.i=@foxido.dev header.b=z0zefi5V; arc=none smtp.client-ip=81.177.217.87
+	 In-Reply-To:Content-Type; b=jYMnMl5cT/QDBddB/VSuo5QZ/oXFbJaxf/lfnsFyt1Kv2PILK2wdd82uG++MjCLd2+NIYYRsAe+Jv+Qmysb2XKL+2FiBNTzvR33gQiS8UqQog0AFvJmVU02qm4VT3AzJWpIMGbAU4f0ojagKzsFMzbO2x/m04GvAKsfi/fjIEfI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=foxido.dev; spf=pass smtp.mailfrom=foxido.dev; dkim=pass (2048-bit key) header.d=foxido.dev header.i=@foxido.dev header.b=RxoCJkty; dkim=permerror (0-bit key) header.d=foxido.dev header.i=@foxido.dev header.b=i38XKqfr; arc=none smtp.client-ip=81.177.217.87
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=foxido.dev
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=foxido.dev
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=foxido.dev header.i=@foxido.dev header.b="pOwUdcUs";
-	dkim=permerror (0-bit key) header.d=foxido.dev header.i=@foxido.dev header.b="z0zefi5V"
+	dkim=pass (2048-bit key) header.d=foxido.dev header.i=@foxido.dev header.b="RxoCJkty";
+	dkim=permerror (0-bit key) header.d=foxido.dev header.i=@foxido.dev header.b="i38XKqfr"
 DKIM-Signature: v=1; a=rsa-sha256; s=202508r; d=foxido.dev; c=relaxed/relaxed;
-	h=From:To:Subject:Date:Message-ID; t=1767956480; bh=gI6MZQ7/iz2bg3zwj8e+wkv
-	2PcH8IyIJieSl0rYYyFQ=; b=pOwUdcUs6C68jl4kbnH827ZBTPO4EK9IBCcBxcDi5XHh6ZAcau
-	6RTNgNPNjxLrgpzJvu1JuOX53kYPEO/8TLPhQVUyU3BMBe35tOxKzglVENPg8uhE0ELDHOP++V3
-	YgDbre9kr8duMrkVdc+czxipK/W4/Loz4EPklX+BK35tl7Gd4aSFfCq51kgOxtOLTP58AxQlxWh
-	iXlHItsuUs9OR5SF+Hl6qtArD0CW/N92FjfyXPd4+9bL/mBpQbr9dUpTpdL1bhMJAw3lJMfv9RR
-	/CPUVSUtaiYjl8m2WcB4EuwwwBXWXfXqxlkpj0titm6xVVCV8juToDbHerr59r9Lb4w==;
+	h=From:To:Subject:Date:Message-ID; t=1767957134; bh=D3VjQJrX7fEC9KlHLozvNVJ
+	PpBrGVqH1peCc0TRpagE=; b=RxoCJktyixPsXBwzaqgz1AvP0qkvr+5swubyEBU/G8P7dRNqik
+	iKZpQrYri5Qk9Vp0/7WHbXpxfzbVH8b/xtT9V8DeFoASijjcA6+kjiMn73hp8qTCAF85fcNmngk
+	5MDwF2nhtiHR4qn4CVebnMZw6roS2luOO3QjhZHP4WDipsDu7C3C06dtjvxMyJj9fT0j/6POF/v
+	g6rbsle3zY1xprg1k9+7ND66L4x9z7EgpisyTGxD/stM3ok2aEaa5TeUTAj4Hn+Qm0sp9AwmAC8
+	XOpoguKoW/wLzHxTYuOg1+1IJFujDRIPRuvyodqAGLWnj5vH+9TZlXkv+U3BGPQwfXg==;
 DKIM-Signature: v=1; a=ed25519-sha256; s=202508e; d=foxido.dev; c=relaxed/relaxed;
-	h=From:To:Subject:Date:Message-ID; t=1767956480; bh=gI6MZQ7/iz2bg3zwj8e+wkv
-	2PcH8IyIJieSl0rYYyFQ=; b=z0zefi5V/vZmm5UV/oZOBZYDs09wdumVf7FPBpV1oi4SDgQJU9
-	tAklbcqp3sWqho1v9bNZE9iJx7kpBl22VDBA==;
-Message-ID: <670cab36-3d32-4769-8a3c-a5d3e1bdd74a@foxido.dev>
-Date: Fri, 9 Jan 2026 14:01:16 +0300
+	h=From:To:Subject:Date:Message-ID; t=1767957134; bh=D3VjQJrX7fEC9KlHLozvNVJ
+	PpBrGVqH1peCc0TRpagE=; b=i38XKqfrIU/EnpOhVYovj1diulR8mYtFOVwg8prQxNE/cnsTtd
+	TdUNM6ig5WMmTNkayZEeN9730CCPvVg7+UDw==;
+Message-ID: <622213c0-1793-4b1f-ba9a-aa99f73047f6@foxido.dev>
+Date: Fri, 9 Jan 2026 14:12:10 +0300
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
@@ -49,48 +49,51 @@ Cc: "Rafael J. Wysocki" <rafael@kernel.org>, Len Brown <lenb@kernel.org>,
  rust-for-linux@vger.kernel.org, linux-acpi@vger.kernel.org, foxido@foxido.dev
 References: <cover.1767818037.git.foxido@foxido.dev>
  <a119094f2e248587c541daf7c5b65bf4398b281b.1767818037.git.foxido@foxido.dev>
- <CAKBF=psOiiakGigJj0Kee3Z5rym41eksSZTgzsO3H1gzUP6DjA@mail.gmail.com>
+ <CAKBF=psGUwgr7e+EM1d2OAv8H1A6zKfhQaSPS56vVcnc=Ez_KA@mail.gmail.com>
 Content-Language: en-US
 From: Gladyshev Ilya <foxido@foxido.dev>
-In-Reply-To: <CAKBF=psOiiakGigJj0Kee3Z5rym41eksSZTgzsO3H1gzUP6DjA@mail.gmail.com>
+In-Reply-To: <CAKBF=psGUwgr7e+EM1d2OAv8H1A6zKfhQaSPS56vVcnc=Ez_KA@mail.gmail.com>
 Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 7bit
 
-On 1/8/26 23:48, Kari Argillander wrote:
+On 1/8/26 22:48, Kari Argillander wrote:
 > On Wed, 7 Jan 2026 at 22:56, Gladyshev Ilya <foxido@foxido.dev> wrote:
-> <snip>
+[snip]
+>> +    /// WMI device notify.
+>> +    ///
+>> +    /// Called when new WMI event received from bounded device.
+>> +    fn notify(self: Pin<&Self>, _dev: &Device<device::Core>, _event: Option<&AcpiObject>) {
 > 
->> +impl DeviceId {
->> +    /// Constructs new DeviceId from GUID string.
->> +    pub const fn new(guid: &[u8; bindings::UUID_STRING_LEN as usize]) -> Self {
->> +        // SAFETY: FFI type is valid to be zero-initialized.
->> +        let mut inner: bindings::wmi_device_id = unsafe { MaybeUninit::zeroed().assume_init() };
->> +
->> +        build_assert!(inner.guid_string.len() == bindings::UUID_STRING_LEN as usize + 1);
->> +
->> +        // SAFETY: It's safe to copy UUID_STRING_LEN, because we validated lengths.
->> +        // Also we leave last byte zeroed, so guid_string is valid C string.
->> +        unsafe {
->> +            ::core::ptr::copy_nonoverlapping(
->> +                guid.as_ptr(),
->> +                &raw mut inner.guid_string[0],
->> +                bindings::UUID_STRING_LEN as usize,
->> +            );
->> +        }
+> This should be device::Bound
 > 
-> Just use while here so no unsafe is needed at all. Then probably patch
-> 1/3 is not needed.
+> Also probably _ marks are not needed. I think compiler does give
+> unused build warnings.
+> 
+> I do not know reason but usually other drivers use this over self. And
+> device first so this
+> would be:
+> 
+>      fn notify(dev: &Device<device::Bound>, this: Pin<&Self>, event:
+> Option<&AcpiObject>) {
+> 
+> Same also in unbind. But like I said I'm not completely sure about this.
 
-Overall this operation is still unsafe because we are constructing C 
-string in FFI object. So for me avoiding `unsafe` via less readable 
-(imo) loop will just mask unsafe operation without any real benefits.
+I thought the reason for using this instead of self was because of the 
+limited set of possible self types in previous versions of Rust...
 
-Ideally this function should receive c string and just validate it's 
-length, but IIRC I had troubles with build-time validation of C string 
-length
+IMO using Rust's self is more readable
 
->> +
->> +        Self(inner)
+>> +        build_error!(VTABLE_DEFAULT_ERROR);
 >> +    }
->> +}
+>> +
+>> +    /// WMI driver remove.
+>> +    fn unbind(self: Pin<&Self>, _dev: &Device<device::Core>) {
+>> +        build_error!(VTABLE_DEFAULT_ERROR);
+>> +    }
+> 
+> unbind should not be mandatory so here just do
+It's not mandatory, that why there is default implementation. See 
+https://rust.docs.kernel.org/macros/attr.vtable.html
 
+
+For other comments: Ack, thanks!
