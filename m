@@ -1,276 +1,148 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.16])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A9660349AE6;
-	Sat, 10 Jan 2026 06:57:06 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2886233D6EA;
+	Sat, 10 Jan 2026 11:19:42 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.16
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1768028226; cv=none; b=j0Vqvts3v1p7X2SY4uYWwGsAOgMb9/7g8vHrmRcDAhR6KFh+5fsSXUWxOTK3nnKbOOAMb8QMYEY0Pmm2vM/Rou/Vjun9RMnck18T8u/TmeBjyqYS/icoTvJXZ/Ykboq7ws0Tm0uovtmVdpzPcOAzojEs06tV5i8n5cUrMO8n5qI=
+	t=1768043986; cv=none; b=pTK6vuEss50K/NdMnVCSLlu9sXTtzkplmZMWvp5r9UGcpDIvgy436R53vCXBM+iscmbo1DMT5Yhi8+VVN49/glsDJLP2I5v8e0Zpb0SLryJEk/JjBlbv98R6P7tZ5ncRQ40wwgLge85fmxardToMWx3pxINBcvOk+blF2noI4fY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1768028226; c=relaxed/simple;
-	bh=M63xYuGhzTnw77y0XcBIHpc3qTNOnrlDzshVGfxXGIc=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=eo+uSyBwaKQFO/RlG7o0AJ3CmW7nYFjzBRj/ayNdWhXFesGWQ1hb57HvbZwNsQBR2z7MMQZpecd45VZjYMxxpwnBTFUy1hnjcaDw3eJilspVR1IAp2Gt7NYiJ1L66LdCu/bSaQ0J2xfLWf7ujq+CnIdANkVz1R0no1gLH61u/cQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=lvAbBmRf; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1768043986; c=relaxed/simple;
+	bh=Fo+c18Xe2tfWUtdNEYdFNt+2/i05dN2dynXzKW1h+gk=;
+	h=From:Date:To:cc:Subject:In-Reply-To:Message-ID:References:
+	 MIME-Version:Content-Type; b=VZrJfDZLvUmwCSPluwZivE/5QGsePVVi59hLwbZmek3/8o4dZGrIeR4rk8qpaNmgpFICkQBR/wAZYFRJ7b9wMNtvH9oZb38LvhHp2m2WZP4UqwxmDrLrLHa9b1DeBMT5NpfCz/U3dDqfy4lWXbJzvDgEvz7lxWzUOHNB3HaL+0E=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=pass smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=kNm1ZBhX; arc=none smtp.client-ip=198.175.65.16
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="lvAbBmRf"
-Received: by smtp.kernel.org (Postfix) with ESMTPS id 627C1C19423;
-	Sat, 10 Jan 2026 06:57:06 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1768028226;
-	bh=M63xYuGhzTnw77y0XcBIHpc3qTNOnrlDzshVGfxXGIc=;
-	h=From:Date:Subject:References:In-Reply-To:To:Cc:Reply-To:From;
-	b=lvAbBmRfc3NdDNO3EaF5NsjOgZEjNcZhWEmfNeQb0Px/Iml5xA7wczcQeXcllpCYj
-	 ZjwF3EZ31za3ZRi8exnQ1NsZvvrAKHXG+CNxG/5xWZMLt+gzZEQMbiEuGzJeKBh31k
-	 v4OiIfSs3zLl6clB+HJMnkcqnMUyD/8LlVGW/Y0W6LxPINwqbeyAUVcYXyb+vkvcC1
-	 0faiXwo4tR11s4P8+yGM11LOzyblcnB4RO2DaDShTlan0uGQ7EWfE2R+mESuBfxliF
-	 Bc93pr2DyDqu25bfdI5EJrS00wdU8v49SH+IxUpKNj3BcZ/CuSml+9PG5ofpxcY2xU
-	 k1P7ulPDXN64Q==
-Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5A17DD277CB;
-	Sat, 10 Jan 2026 06:57:06 +0000 (UTC)
-From: Manivannan Sadhasivam via B4 Relay <devnull+manivannan.sadhasivam.oss.qualcomm.com@kernel.org>
-Date: Sat, 10 Jan 2026 12:26:32 +0530
-Subject: [PATCH v3 14/14] power: sequencing: pcie-m2: Create serdev device
- for WCN7850 bluetooth
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="kNm1ZBhX"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1768043984; x=1799579984;
+  h=from:date:to:cc:subject:in-reply-to:message-id:
+   references:mime-version;
+  bh=Fo+c18Xe2tfWUtdNEYdFNt+2/i05dN2dynXzKW1h+gk=;
+  b=kNm1ZBhX7sn8i9y0jCS313l6sEMCAn7jdz8SYn+EGR0Bu1lGASFjyT2Z
+   lJ95CblNjvso/yC3YpYjrFWrarcESpeVjrcSyueMTNQlj1BettJIR4Tgt
+   KfgPYTPjQNSAUYaIHNVOq1n6uURANFedkdSzJsTeX8UPFvdnmlmlY8VkK
+   bF6sOtnnHHLt16nh6Tt6AkEMdrB6MbwzxxL0LlqVmZtafz/P0frlx2PU4
+   FXqRWx2NsVJ3rOcoyVBCDQoKNkD5Xot6hb/A6YTy2uHeymTcnbsG/HWPJ
+   oy1Rz2K3TKFeBKZubCF0ipQgTM3F+hM8CLP8/vChdsqlrl08SJfLngCPP
+   g==;
+X-CSE-ConnectionGUID: 1LD2SOpnQluw0LTjv23x2g==
+X-CSE-MsgGUID: +TjLMK6nS5GesC7dWBsCzg==
+X-IronPort-AV: E=McAfee;i="6800,10657,11666"; a="69558905"
+X-IronPort-AV: E=Sophos;i="6.21,215,1763452800"; 
+   d="scan'208";a="69558905"
+Received: from fmviesa001.fm.intel.com ([10.60.135.141])
+  by orvoesa108.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 10 Jan 2026 03:19:42 -0800
+X-CSE-ConnectionGUID: SN3I9PJbST+nPQa1VKqNxw==
+X-CSE-MsgGUID: rbP7RPyoSeSgZrQrabMSJw==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.21,215,1763452800"; 
+   d="scan'208";a="234890814"
+Received: from ijarvine-mobl1.ger.corp.intel.com (HELO localhost) ([10.245.244.227])
+  by smtpauth.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 10 Jan 2026 03:19:35 -0800
+From: =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
+Date: Sat, 10 Jan 2026 13:19:31 +0200 (EET)
+To: =?ISO-8859-15?Q?J=E9r=F4me_de_Bretagne?= <jerome.debretagne@gmail.com>
+cc: Bjorn Andersson <andersson@kernel.org>, 
+    Konrad Dybcio <konradybcio@kernel.org>, Rob Herring <robh@kernel.org>, 
+    Krzysztof Kozlowski <krzk+dt@kernel.org>, 
+    Conor Dooley <conor+dt@kernel.org>, 
+    Johannes Berg <johannes@sipsolutions.net>, 
+    Lorenzo Bianconi <lorenzo@kernel.org>, 
+    Maximilian Luz <luzmaximilian@gmail.com>, Hans de Goede <hansg@kernel.org>, 
+    Jeff Johnson <jjohnson@kernel.org>, linux-arm-msm@vger.kernel.org, 
+    devicetree@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>, 
+    linux-wireless@vger.kernel.org, platform-driver-x86@vger.kernel.org, 
+    ath12k@lists.infradead.org, Jeff Johnson <jeff.johnson@oss.qualcomm.com>, 
+    Dale Whinham <daleyo@gmail.com>, 
+    Dmitry Baryshkov <dmitry.baryshkov@oss.qualcomm.com>
+Subject: Re: [PATCH v6 3/4] platform/surface: aggregator_registry: Add Surface
+ Pro 11 (QCOM)
+In-Reply-To: <20251220-surface-sp11-for-next-v6-3-81f7451edb77@gmail.com>
+Message-ID: <17f18028-730f-9e9f-7df5-8b792fe6c9c5@linux.intel.com>
+References: <20251220-surface-sp11-for-next-v6-0-81f7451edb77@gmail.com> <20251220-surface-sp11-for-next-v6-3-81f7451edb77@gmail.com>
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Message-Id: <20260110-pci-m2-e-v3-14-4faee7d0d5ae@oss.qualcomm.com>
-References: <20260110-pci-m2-e-v3-0-4faee7d0d5ae@oss.qualcomm.com>
-In-Reply-To: <20260110-pci-m2-e-v3-0-4faee7d0d5ae@oss.qualcomm.com>
-To: Rob Herring <robh@kernel.org>, 
- Greg Kroah-Hartman <gregkh@linuxfoundation.org>, 
- Jiri Slaby <jirislaby@kernel.org>, Nathan Chancellor <nathan@kernel.org>, 
- Nicolas Schier <nicolas.schier@linux.dev>, Hans de Goede <hansg@kernel.org>, 
- =?utf-8?q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>, 
- Mark Pearson <mpearson-lenovo@squebb.ca>, 
- "Derek J. Clark" <derekjohn.clark@gmail.com>, 
- Manivannan Sadhasivam <mani@kernel.org>, 
- Krzysztof Kozlowski <krzk+dt@kernel.org>, 
- Conor Dooley <conor+dt@kernel.org>, Marcel Holtmann <marcel@holtmann.org>, 
- Luiz Augusto von Dentz <luiz.dentz@gmail.com>, 
- Bartosz Golaszewski <brgl@bgdev.pl>, 
- Andy Shevchenko <andriy.shevchenko@linux.intel.com>, 
- Daniel Scally <djrscally@gmail.com>, 
- Heikki Krogerus <heikki.krogerus@linux.intel.com>, 
- Sakari Ailus <sakari.ailus@linux.intel.com>, 
- "Rafael J. Wysocki" <rafael@kernel.org>, Danilo Krummrich <dakr@kernel.org>, 
- Bartosz Golaszewski <brgl@kernel.org>
-Cc: linux-serial@vger.kernel.org, linux-kernel@vger.kernel.org, 
- linux-kbuild@vger.kernel.org, platform-driver-x86@vger.kernel.org, 
- linux-pci@vger.kernel.org, devicetree@vger.kernel.org, 
- linux-arm-msm@vger.kernel.org, linux-bluetooth@vger.kernel.org, 
- linux-pm@vger.kernel.org, Stephan Gerhold <stephan.gerhold@linaro.org>, 
- Dmitry Baryshkov <dmitry.baryshkov@oss.qualcomm.com>, 
- linux-acpi@vger.kernel.org, 
- Manivannan Sadhasivam <manivannan.sadhasivam@oss.qualcomm.com>
-X-Mailer: b4 0.14.3
-X-Developer-Signature: v=1; a=openpgp-sha256; l=5942;
- i=manivannan.sadhasivam@oss.qualcomm.com; h=from:subject:message-id;
- bh=Vp7zYCRu5g++KTpycV6G46GxYVukXvcLdhL4fCvf0XY=;
- b=owEBbQGS/pANAwAKAVWfEeb+kc71AcsmYgBpYfg++CojcI/ArwvutjAh/aYmpyIOq9cl2wKAe
- 28Y/hBJCleJATMEAAEKAB0WIQRnpUMqgUjL2KRYJ5dVnxHm/pHO9QUCaWH4PgAKCRBVnxHm/pHO
- 9Ql5B/9E1CdAqnK1mNQgswa7wqthDkSc9rCfk/sIks3lGXEgHCzNRoFIxTTAXs8x9BZ7uoUV6Pw
- gsJDjJxoTu1H+qIi7ZWQKMbPIPYZDgD2J+NrccRfcR9T05z8r9T/YESRPMeooyA3LwMoosxgLy0
- EcLU8B+j7nO5KAHKiGGeNt6kP9A2uFZiJlC7G0uZ8NI7n0v+HDXEZ5HY8QSQ5yPCoyI7+rP75ew
- EYlAWhJZzZMfe3fFbCOtEQenFlR+HJARr4s78hWj7XAsKbUTkN0iJNIXXdmAb5EGjsW6d2qArxV
- lterlf/QYVzMwuBnByh/jQ6HHZ8b3ko+MSYmJYmAlNdcDOZh
-X-Developer-Key: i=manivannan.sadhasivam@oss.qualcomm.com; a=openpgp;
- fpr=C668AEC3C3188E4C611465E7488550E901166008
-X-Endpoint-Received: by B4 Relay for
- manivannan.sadhasivam@oss.qualcomm.com/default with auth_id=461
-X-Original-From: Manivannan Sadhasivam <manivannan.sadhasivam@oss.qualcomm.com>
-Reply-To: manivannan.sadhasivam@oss.qualcomm.com
+Content-Type: multipart/mixed; boundary="8323328-495146878-1768043971=:1002"
 
-From: Manivannan Sadhasivam <manivannan.sadhasivam@oss.qualcomm.com>
+  This message is in MIME format.  The first part should be readable text,
+  while the remaining parts are likely unreadable without MIME-aware tools.
 
-For supporting bluetooth over the non-discoverable UART interface of
-WCN7850, create the serdev device after enumerating the PCIe interface.
-This is mandatory since the device ID is only known after the PCIe
-enumeration and the ID is used for creating the serdev device.
+--8323328-495146878-1768043971=:1002
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: QUOTED-PRINTABLE
 
-Since there is no OF or ACPI table for the created serdev, a software node
-is created with the 'compatible' property. This property will be used to
-match the existing OF device id in the bluetooth driver.
+On Sat, 20 Dec 2025, J=C3=A9r=C3=B4me de Bretagne via B4 Relay wrote:
 
-Signed-off-by: Manivannan Sadhasivam <manivannan.sadhasivam@oss.qualcomm.com>
----
- drivers/power/sequencing/pwrseq-pcie-m2.c | 125 +++++++++++++++++++++++++++++-
- 1 file changed, 124 insertions(+), 1 deletion(-)
+> From: Dale Whinham <daleyo@gmail.com>
+>=20
+> This enables support for the Qualcomm-based Surface Pro 11.
+>=20
+> Signed-off-by: Dale Whinham <daleyo@gmail.com>
+> Signed-off-by: J=C3=A9r=C3=B4me de Bretagne <jerome.debretagne@gmail.com>
+> Reviewed-by: Maximilian Luz <luzmaximilian@gmail.com>
+> Reviewed-by: Dmitry Baryshkov <dmitry.baryshkov@oss.qualcomm.com>
+> ---
+>  drivers/platform/surface/surface_aggregator_registry.c | 18 ++++++++++++=
+++++++
+>  1 file changed, 18 insertions(+)
+>=20
+> diff --git a/drivers/platform/surface/surface_aggregator_registry.c b/dri=
+vers/platform/surface/surface_aggregator_registry.c
+> index 78ac3a8fbb736384f7e50f1888a71297a892a7c3..0599d5adf02e61583cf3e1fc1=
+1000070f51f7be3 100644
+> --- a/drivers/platform/surface/surface_aggregator_registry.c
+> +++ b/drivers/platform/surface/surface_aggregator_registry.c
+> @@ -406,6 +406,22 @@ static const struct software_node *ssam_node_group_s=
+p9_5g[] =3D {
+>  =09NULL,
+>  };
+> =20
+> +/* Devices for Surface Pro 11 (ARM/QCOM) */
+> +static const struct software_node *ssam_node_group_sp11[] =3D {
+> +=09&ssam_node_root,
+> +=09&ssam_node_hub_kip,
+> +=09&ssam_node_bat_ac,
+> +=09&ssam_node_bat_main,
+> +=09&ssam_node_tmp_sensors,
+> +=09&ssam_node_hid_kip_keyboard,
+> +=09&ssam_node_hid_kip_penstash,
+> +=09&ssam_node_hid_kip_touchpad,
+> +=09&ssam_node_hid_kip_fwupd,
+> +=09&ssam_node_hid_sam_sensors,
+> +=09&ssam_node_kip_tablet_switch,
+> +=09NULL,
+> +};
+> +
+>  /* -- SSAM platform/meta-hub driver. -----------------------------------=
+----- */
+> =20
+>  static const struct acpi_device_id ssam_platform_hub_acpi_match[] =3D {
+> @@ -482,6 +498,8 @@ MODULE_DEVICE_TABLE(acpi, ssam_platform_hub_acpi_matc=
+h);
+>  static const struct of_device_id ssam_platform_hub_of_match[] __maybe_un=
+used =3D {
+>  =09/* Surface Pro 9 5G (ARM/QCOM) */
+>  =09{ .compatible =3D "microsoft,arcata", (void *)ssam_node_group_sp9_5g =
+},
+> +=09/* Surface Pro 11 (ARM/QCOM) */
+> +=09{ .compatible =3D "microsoft,denali", (void *)ssam_node_group_sp11 },
+>  =09/* Surface Laptop 7 */
+>  =09{ .compatible =3D "microsoft,romulus13", (void *)ssam_node_group_sl7 =
+},
+>  =09{ .compatible =3D "microsoft,romulus15", (void *)ssam_node_group_sl7 =
+},
 
-diff --git a/drivers/power/sequencing/pwrseq-pcie-m2.c b/drivers/power/sequencing/pwrseq-pcie-m2.c
-index ad94090bbdb2..7c7bde563341 100644
---- a/drivers/power/sequencing/pwrseq-pcie-m2.c
-+++ b/drivers/power/sequencing/pwrseq-pcie-m2.c
-@@ -17,6 +17,7 @@
- #include <linux/platform_device.h>
- #include <linux/pwrseq/provider.h>
- #include <linux/regulator/consumer.h>
-+#include <linux/serdev.h>
- #include <linux/slab.h>
- 
- struct pwrseq_pcie_m2_pdata {
-@@ -26,11 +27,14 @@ struct pwrseq_pcie_m2_pdata {
- struct pwrseq_pcie_m2_ctx {
- 	struct pwrseq_device *pwrseq;
- 	struct device_node *of_node;
-+	struct fwnode_handle *fwnode;
-+	struct serdev_device *serdev;
- 	const struct pwrseq_pcie_m2_pdata *pdata;
- 	struct regulator_bulk_data *regs;
- 	size_t num_vregs;
- 	struct gpio_desc *w_disable1_gpio;
- 	struct gpio_desc *w_disable2_gpio;
-+	struct notifier_block nb;
- 	struct device *dev;
- 
- };
-@@ -179,9 +183,124 @@ static void pwrseq_pcie_free_resources(void *data)
- {
- 	struct pwrseq_pcie_m2_ctx *ctx = data;
- 
-+	fwnode_handle_put(ctx->fwnode);
-+	serdev_device_put(ctx->serdev);
-+	bus_unregister_notifier(&pci_bus_type, &ctx->nb);
- 	regulator_bulk_free(ctx->num_vregs, ctx->regs);
- }
- 
-+static const struct property_entry wcn7850_bt_props[] = {
-+	PROPERTY_ENTRY_STRING("compatible", "qcom,wcn7850-bt"),
-+};
-+
-+static int pwrseq_m2_pcie_notify(struct notifier_block *nb, unsigned long action,
-+			      void *data)
-+{
-+	struct pwrseq_pcie_m2_ctx *ctx = container_of(nb, struct pwrseq_pcie_m2_ctx, nb);
-+	struct pci_dev *pdev = to_pci_dev(data);
-+	struct serdev_controller *serdev_ctrl;
-+	struct device *dev = ctx->dev;
-+	struct device_node *remote;
-+	int ret;
-+
-+	/*
-+	 * Check whether the PCI device is associated with this M.2 connector or
-+	 * not, by comparing the OF node of the PCI device parent and the Port 0
-+	 * (PCIe) remote node parent OF node.
-+	 */
-+	remote = of_graph_get_remote_node(dev_of_node(ctx->dev), 0, 0);
-+	if (!remote || (remote != pdev->dev.parent->of_node)) {
-+		of_node_put(remote);
-+		return NOTIFY_DONE;
-+	}
-+	of_node_put(remote);
-+
-+	switch (action) {
-+	case BUS_NOTIFY_ADD_DEVICE:
-+		/* Create serdev device for WCN7850 */
-+		if (pdev->vendor == PCI_VENDOR_ID_QCOM && pdev->device == 0x1107) {
-+			remote = of_graph_get_remote_node(dev_of_node(ctx->dev), 1, 1);
-+			if (!remote) {
-+				of_node_put(remote);
-+				return NOTIFY_DONE;
-+			}
-+
-+			serdev_ctrl = of_find_serdev_controller_by_node(remote);
-+			of_node_put(remote);
-+			if (!serdev_ctrl)
-+				return NOTIFY_DONE;
-+
-+			ctx->serdev = serdev_device_alloc(serdev_ctrl);
-+			if (!ctx->serdev)
-+				return NOTIFY_BAD;
-+
-+			ctx->fwnode = fwnode_create_software_node(wcn7850_bt_props, NULL);
-+			if (IS_ERR(ctx->fwnode))
-+				return notifier_from_errno(PTR_ERR(ctx->fwnode));
-+
-+			device_set_node(&ctx->serdev->dev, ctx->fwnode);
-+
-+			ret = serdev_device_add(ctx->serdev);
-+			if (ret) {
-+				dev_err(dev, "Failed to add serdev for WCN7850: %d\n", ret);
-+				fwnode_handle_put(ctx->fwnode);
-+				serdev_device_put(ctx->serdev);
-+				return notifier_from_errno(ret);
-+			}
-+		}
-+		break;
-+	case BUS_NOTIFY_REMOVED_DEVICE:
-+		/* Destroy serdev device for WCN7850 */
-+		if (pdev->vendor == PCI_VENDOR_ID_QCOM && pdev->device == 0x1107) {
-+			fwnode_handle_put(ctx->fwnode);
-+			serdev_device_put(ctx->serdev);
-+		}
-+		break;
-+	}
-+
-+	return NOTIFY_OK;
-+}
-+
-+static bool pwrseq_pcie_m2_check_remote_node(struct device *dev, u8 port, u8 endpoint,
-+					     const char *node)
-+{
-+	struct device_node *remote __free(device_node) =
-+			of_graph_get_remote_node(dev_of_node(dev), port, endpoint);
-+
-+	if (remote && of_node_name_eq(remote, node))
-+		return true;
-+
-+	return false;
-+}
-+
-+/*
-+ * If the connector exposes a non-discoverable bus like UART, the respective
-+ * protocol device needs to be created manually with the help of the notifier
-+ * of the discoverable bus like PCIe.
-+ */
-+static int pwrseq_pcie_m2_register_notifier(struct pwrseq_pcie_m2_ctx *ctx, struct device *dev)
-+{
-+	int ret;
-+
-+	/*
-+	 * Register a PCI notifier for Key E connector that has PCIe as Port
-+	 * 0/Endpoint 0 interface and Serial as Port 1/Endpoint 1 interface.
-+	 */
-+	if (pwrseq_pcie_m2_check_remote_node(dev, 1, 1, "serial")) {
-+		if (pwrseq_pcie_m2_check_remote_node(dev, 0, 0, "pcie")) {
-+			ctx->dev = dev;
-+			ctx->nb.notifier_call = pwrseq_m2_pcie_notify;
-+			ret = bus_register_notifier(&pci_bus_type, &ctx->nb);
-+			if (ret) {
-+				dev_err_probe(dev, ret, "Failed to register notifier for serdev\n");
-+				return ret;
-+			}
-+		}
-+	}
-+
-+	return 0;
-+}
-+
- static int pwrseq_pcie_m2_probe(struct platform_device *pdev)
- {
- 	struct device *dev = &pdev->dev;
-@@ -236,7 +355,11 @@ static int pwrseq_pcie_m2_probe(struct platform_device *pdev)
- 		return dev_err_probe(dev, PTR_ERR(ctx->pwrseq),
- 				     "Failed to register the power sequencer\n");
- 
--	return 0;
-+	/*
-+	 * Register a notifier for creating protocol devices for
-+	 * non-discoverable busses like UART.
-+	 */
-+	return pwrseq_pcie_m2_register_notifier(ctx, dev);
- }
- 
- static const struct of_device_id pwrseq_pcie_m2_of_match[] = {
+Applied PATCH 3/4 to the review-ilpo-next branch.
 
--- 
-2.48.1
+--=20
+ i.
 
-
+--8323328-495146878-1768043971=:1002--
