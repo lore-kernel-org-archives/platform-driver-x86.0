@@ -1,185 +1,334 @@
-Received: from mout.gmx.net (mout.gmx.net [212.227.15.15])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pj1-f44.google.com (mail-pj1-f44.google.com [209.85.216.44])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B8D9B37F8AB;
-	Mon, 12 Jan 2026 18:00:41 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=212.227.15.15
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6173B3803EC
+	for <platform-driver-x86@vger.kernel.org>; Mon, 12 Jan 2026 18:04:02 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.44
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1768240844; cv=none; b=BUUoFLAVhnXrKeILyJZnKIkLuq/uBoGXe/k9ez7wA2RqUOxKK3NWpsw8JpRr2Jq5x1bLIlhvu0D/eyibe3bYqnMTz3jBxK1/DwiRhtHyIsn6d/c+MD6eDlfTdStvCXpjCYpMFzTd8ZJM//YnDL2D0ib5OIeU+MqfNRvA0sVJLg0=
+	t=1768241043; cv=none; b=n5oGQVvvB15E/bVF+FAj+Os9qJkXuqJqxY99CUdfZVZkG1AfUoqtflpjiUuGmi22sDe8inpJCzDNkOwihIB5FfJif4ate3gxnzfnG+dvv7zqBIC+TniaKKM2Ue3Mn2Tc0HCwYTsjHRiH+NTsaNXWIdcduE4JH104zddZxx7CVGg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1768240844; c=relaxed/simple;
-	bh=BGsyaAe3ks/ytF3/pzCnsb9yxRYwSpTkt1c5gm6pQQU=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=Sv0bKZ1bBeet0YFFuIT5D1XA7FrFS2QwPrJd9eepl9wRgwwxmpXSYbWlx5YjlU/LL4RrE2/eeOYQ4eEZRN7SJ4AXLtf9uxvdOYqA/XYeJGK9Cawyo3wMPecf5KrapLP2SKvjZ3lsO9jHKOwVFV16NEvfwiXn+Z9HATMJClWtbSQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gmx.de; spf=pass smtp.mailfrom=gmx.de; dkim=pass (2048-bit key) header.d=gmx.de header.i=w_armin@gmx.de header.b=Bv6Mo+sW; arc=none smtp.client-ip=212.227.15.15
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gmx.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmx.de
+	s=arc-20240116; t=1768241043; c=relaxed/simple;
+	bh=s0DyzuRoahq/948IDG6/4DfMllFeddohpgguBX6Q5Zw=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=pWxRw37VPSLx3NYe5dO2Wb81UCpvoNaLFyLIyDjrht0Rq1BozBeFmiUpDhSCc3791FgXYlbSuUbm0ErSA56CMSVsrBA4EpmHQl9qDZsG6LJKXZSrStgdAUA6rgueXNKYOV3MjdHttqXPUVC0o8nm1TKgQWswENqobzMOHRpn9T0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=Y+xLCkjw; arc=none smtp.client-ip=209.85.216.44
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmx.de header.i=w_armin@gmx.de header.b="Bv6Mo+sW"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=gmx.de;
-	s=s31663417; t=1768240828; x=1768845628; i=w_armin@gmx.de;
-	bh=5SS4aQFWxrGj96GC/MwDTxhXKL0itp0u+hCSvBqA46Q=;
-	h=X-UI-Sender-Class:Message-ID:Date:MIME-Version:Subject:To:Cc:
-	 References:From:In-Reply-To:Content-Type:
-	 Content-Transfer-Encoding:cc:content-transfer-encoding:
-	 content-type:date:from:message-id:mime-version:reply-to:subject:
-	 to;
-	b=Bv6Mo+sWMCh7vRKIe5HRFAXznLiTadsItDu7rmPC5nvKqKCoNPMPkHPH0hTi4gfg
-	 0LxjLRw7QI0nqBJVxDRWDbfH96VaVY2ES8dkZfBJSTyiLieoVy9m5PUjn4yaiqevQ
-	 aETANO6ZSUVY+7L1qbzKaxprvW/WyZPFfsfSK7PCetZh5LNzsaXg38ieKfl8sGNpP
-	 kSQQ8zQQt2sp5+xqcSbWWDv4D8b29AETG5M6JBFEqqyS4GMVyK2Fe1WtRY3akijIZ
-	 wKNsKbrILSVRkXZj2kO1gkCXrqLYe+bXBoBcL5zs9myF8VXK2F4PEL8IgmGI4CfrZ
-	 qNIqzBtDbOK/aXY7ow==
-X-UI-Sender-Class: 724b4f7f-cbec-4199-ad4e-598c01a50d3a
-Received: from [192.168.0.69] ([93.202.247.91]) by mail.gmx.net (mrgmx005
- [212.227.17.190]) with ESMTPSA (Nemesis) id 1MxDp4-1w3kkW1FZg-00r4nl; Mon, 12
- Jan 2026 19:00:28 +0100
-Message-ID: <0914098e-e61b-40c1-9b6e-357832fef5a9@gmx.de>
-Date: Mon, 12 Jan 2026 19:00:25 +0100
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Y+xLCkjw"
+Received: by mail-pj1-f44.google.com with SMTP id 98e67ed59e1d1-34e730f5fefso4781618a91.0
+        for <platform-driver-x86@vger.kernel.org>; Mon, 12 Jan 2026 10:04:02 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1768241042; x=1768845842; darn=vger.kernel.org;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date:from:to
+         :cc:subject:date:message-id:reply-to;
+        bh=PHOdFCVwPg+cWYrkZjMT76zLSqbmskzKF7iiDprWkXM=;
+        b=Y+xLCkjwQ93q2fybjqeSGN84RYx/myhSlFJn8TxLik6/YFpZTME7/Lv0FPJ8SE/IwC
+         R0k1Rbg90iTmOSWu1aXYTh/3ZA6GNP7lFYNbGb4R5UIIluc2lYIRd4HZlPjSMZ+5dZFF
+         UTmUlIIa2l/WAj0Ofgwn4LHt2xRwlNDYUhmswh9ir20dmd9VK6w/2jT5QARZSAYZ35x0
+         MgKEwKNb45rVhzNTLu5iPBs3Xs5iFbgV1zqijZ0rFbEcRU6KCxPNmhaZAwPU0ar8r1AO
+         Txwtnd70PBNwdNot5TqCXq0XSLxe+5/SUr/VKpBJIH27+IuTFbqFTxbuIa2pb3nXUL7d
+         HHdA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1768241042; x=1768845842;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date:x-gm-gg
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=PHOdFCVwPg+cWYrkZjMT76zLSqbmskzKF7iiDprWkXM=;
+        b=jaPgkQVzI+tUJg2x8M7uMqPoYvLIorSUsNA8SJ80iaJvZfWD0M7k52EYx3usXH8R67
+         QrMFZQjXMdbYCrWitP0C5UCdT0UcZRjihNEO8zIfHAdvs3zga7MYOM0lwDWu8K/uJ1d/
+         +xiSq9zd9c414LwCZTCH4ds8Buy4TqIqZ5+ZZvuLKHQrfSlOQ6NvnBAPNkt+4kf2NPoL
+         z051NW0VilqQrIEVRKVAN/mzoN6L1MC+2pA5NnfIOrVvnj9UZMDEOujc07R6gbeAFgXE
+         sq1yCTf9G7WVQdjmQ09MIWyidbL8evuVhlsbDgRnRxxWSTuKdZoz0bI289R7H6yxA9KJ
+         2ZKA==
+X-Forwarded-Encrypted: i=1; AJvYcCUD1MEeu9zmMuFG7iw9bGFpQU/j6DMI/71cBlsrVswCmHC+gVR9NjPU0ZSp+YAN7YvEC8zdAy0i8VKuyh0kei8hxqf3@vger.kernel.org
+X-Gm-Message-State: AOJu0YwxH2RJMA+nQ7fdBBK1M1H9kqMmZ8Ro6f2gXpXaVfsZFDpcQ/O2
+	ci8cJK30G6VJn5Mm8Y90aM8XfkDS0dmXEl7stPV6RxClzbYzighy8x36
+X-Gm-Gg: AY/fxX67mAzeg4ktcBo5gMbxwNR27n853OBqrd+JZVp7B9EGmp2DV10dNNSbdh9ikv4
+	nIX+NrQXXwgG1JXxiC4NgzcY6eDyg2PWWmcoDCfrvOxVsd3oPO/KIIFvhnTlhoaiMZDCrla4X9t
+	7UCrUtReJLIl6V+uWg4Ma6tSVj1svY3GUdIyB4vvyFnju6FgToSbp4+S/HWX2RCFNepn//6Yzpy
+	NMkHIKaYVOcEmnRiOdi+sPHJsVCqNlhd9+Eh4OMIpQZYNvtuL1HOPotrO/WuJtbmOA7vMd5WhI4
+	RKRt51b9eGr1a3I++blblEp9JAel24cQRPk3ZibqwUuj7s2dCqwIxGyF+8DF5VS0yxnL0J9rpc0
+	nueizyrh/96u9ruxoZq2Qt3JI4z1u0Am9qgpVx4Hv+54qv1TszDFM2fbG+15lCThk2oI0uH6Xk9
+	xBZfPLrEYjZ/wOaqSFW5s=
+X-Google-Smtp-Source: AGHT+IG+4HLDxw75AREG9Cn7q0iZTkTuEpR+ouZIoe4nrPNgxO9/2Yto8IAno89RDPTKdWTsaRJEXQ==
+X-Received: by 2002:a17:90b:5830:b0:338:3789:2e7b with SMTP id 98e67ed59e1d1-34f68c4cdcfmr14902163a91.13.1768241041645;
+        Mon, 12 Jan 2026 10:04:01 -0800 (PST)
+Received: from archlinux ([2405:201:1b:225c:eb9d:1fc0:f95c:bd90])
+        by smtp.gmail.com with ESMTPSA id 98e67ed59e1d1-350fd7b8e1bsm7135a91.8.2026.01.12.10.03.57
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 12 Jan 2026 10:04:01 -0800 (PST)
+Date: Mon, 12 Jan 2026 23:33:52 +0530
+From: Krishna Chomal <krishna.chomal108@gmail.com>
+To: Ilpo =?utf-8?B?SsOkcnZpbmVu?= <ilpo.jarvinen@linux.intel.com>
+Cc: Hans de Goede <hansg@kernel.org>, linux@roeck-us.net, 
+	platform-driver-x86@vger.kernel.org, linux-hwmon@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH v2 1/2] platform/x86: hp-wmi: add manual fan control for
+ Victus S models
+Message-ID: <aWUvvzDCtVCOaBwq@archlinux>
+References: <20251225142310.204831-1-krishna.chomal108@gmail.com>
+ <20251230145053.516196-1-krishna.chomal108@gmail.com>
+ <20251230145053.516196-2-krishna.chomal108@gmail.com>
+ <ce48f7b8-7d88-266f-ca8d-6af3b01815db@linux.intel.com>
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v3 0/9] platform/wmi: Introduce marshalling support
-To: =?UTF-8?Q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>,
- hansg@kernel.org
-Cc: platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org,
- linux@weissschuh.net, Dell.Client.Kernel@dell.com, corbet@lwn.net,
- linux-doc@vger.kernel.org
-References: <20260109214619.7289-1-W_Armin@gmx.de>
- <176823202983.9723.14857677950268577030.b4-ty@linux.intel.com>
-Content-Language: en-US
-From: Armin Wolf <W_Armin@gmx.de>
-In-Reply-To: <176823202983.9723.14857677950268577030.b4-ty@linux.intel.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: quoted-printable
-X-Provags-ID: V03:K1:dHzVbf25GEv7GfxWYi+jige/MR1zvBg/koOiG+sXUQ6KcahPEZe
- E+FTEWSks6M0p3VJDqBTDA2Gx0dUm2677jvaeGLQpRK9TOFLQ1czJ2FfkJ2pMEtuCKIOGB3
- azdAY4weItXzMIgDaH76FTS5oFX3YAPowyS6nkAV0cDhg99TY+1/b/EcuMQu2wtIInJfyYY
- AZVOc2PbRo9TU8BBn2ULQ==
-X-Spam-Flag: NO
-UI-OutboundReport: notjunk:1;M01:P0:Gnzmhy+MdFk=;w+p+xiCZmwYSpwbXgb8Dr8zlU2R
- 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
- 9jrlZCvU6+eTW5ub9e4Kao5jFw+8y
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <ce48f7b8-7d88-266f-ca8d-6af3b01815db@linux.intel.com>
 
-Am 12.01.26 um 16:33 schrieb Ilpo J=C3=A4rvinen:
-
-> On Fri, 09 Jan 2026 22:46:10 +0100, Armin Wolf wrote:
+On Mon, Jan 12, 2026 at 05:13:05PM +0200, Ilpo Järvinen wrote:
+>On Tue, 30 Dec 2025, Krishna Chomal wrote:
 >
->> The Windows WMI-ACPI driver likely uses wmilib [1] to interact with
->> the WMI service in userspace. Said library uses plain byte buffers
->> for exchanging data, so the WMI-ACPI driver has to convert between
->> those byte buffers and ACPI objects returned by the ACPI firmware.
+[snip]
+>>  #include <linux/string.h>
+>>  #include <linux/dmi.h>
+>> +#include <linux/fixp-arith.h>
+>> +#include <linux/limits.h>
+>> +#include <linux/minmax.h>
+>> +#include <linux/compiler_attributes.h>
 >>
->> The format of the byte buffer is publicly documented [2], and after
->> some reverse eingineering of the WMI-ACPI driver using a set of custom
->> ACPI tables, the following conversion rules have been discovered:
+[snip]
+>> +
+>> +struct victus_s_fan_table_header {
+>> +	u8 unknown;
+>> +	u8 num_entries;
+>> +} __packed;
+>
+>Please add #include for __packed.
+>
+
+__packed is defined in compiler_attributes.h, which is included in this
+patch. Please let me know if there are any other headers that should be
+included.
+
+>> +struct victus_s_fan_table_entry {
+>> +	u8 cpu_rpm;
+>> +	u8 gpu_rpm;
+>> +	u8 unknown;
+>> +} __packed;
+>> +
+>> +struct victus_s_fan_table {
+>> +	struct victus_s_fan_table_header header;
+>> +	struct victus_s_fan_table_entry entries[];
+>> +} __packed;
+>> +
+>> +static inline u8 rpm_to_pwm(u8 rpm, struct hp_wmi_hwmon_priv *priv)
+>> +{
+>> +	return fixp_linear_interpolate(0, 0, priv->max_rpm, U8_MAX,
+>> +					clamp_val(rpm, 0, priv->max_rpm));
+>
+>Please align the correctly.
+>
+
+Apologies for the bad alignment of multi-line function calls and
+if-statements in this patch. I have noted them and will fix them all in
+v3.
+
+[snip]
+>> -static int hp_wmi_fan_speed_max_reset(void)
+>> -{
+>> -	int ret;
+>> +	/*
+>> +	 * GPU fan speed is always a little higher than CPU fan speed, we fetch
+>> +	 * this delta value from the fan table during hwmon init.
+>> +	 * Exception: Speed is set to HP_FAN_SPEED_AUTOMATIC, to revert to
+>> +	 * automatic mode.
+>> +	 */
+>> +	if (speed != HP_FAN_SPEED_AUTOMATIC)
+>> +		fan_speed[GPU_FAN] = clamp_val((unsigned int)speed +
+>> +						(unsigned int)priv->gpu_delta,
+>> +						0, U8_MAX);
+>
+>Add braces is it's multiline if.
+>
+>If you use unsigned int, clamp to 0 makes no sense as those values have
+>already underflowed.
+>
+>You also have an alignment problem here, but this seems a cleaner way
+>which doesn't have underflow issues:
+>
+>	if (...) {
+>		int new_speed = speed + priv->gpu_delta;
+>
+>		fan_speed[GPU_FAN] = clamp_val(new_speed, 0, U8_MAX);
+>	}
+>
+
+Understood. I will introduce a new "gpu_speed" variable and follow this
+style in v3.
+
+[snip]
+>> @@ -2147,16 +2244,21 @@ static int hp_wmi_hwmon_read(struct device *dev, enum hwmon_sensor_types type,
+>>  		*val = ret;
+>>  		return 0;
+>>  	case hwmon_pwm:
+>> -		switch (hp_wmi_fan_speed_max_get()) {
+>> -		case 0:
+>> -			/* 0 is automatic fan, which is 2 for hwmon */
+>> -			*val = 2;
+>> +		if (attr == hwmon_pwm_input) {
+>> +			if (!is_victus_s_thermal_profile())
+>> +				return -EOPNOTSUPP;
+>
+>Add an empty line here.
+>
+
+Will do.
+
+>> +			ret = hp_wmi_get_fan_speed_victus_s(channel);
+>> +			if (ret < 0)
+>> +				return ret;
+>> +			current_rpm = ret;
+>
+>I'm not sure if using ret here makes things better or not, I'd prefer just
+>assigning directly to current_rpm without ret as intermediate var.
+>
+
+Understood. I will directly use current_rpm then.
+
+[snip]
+>>  static int hp_wmi_hwmon_write(struct device *dev, enum hwmon_sensor_types type,
+>>  			      u32 attr, int channel, long val)
+>>  {
+>> +	struct hp_wmi_hwmon_priv *priv;
+>> +	int current_rpm, ret;
+>> +
+>> +	priv = dev_get_drvdata(dev);
+>>  	switch (type) {
+>>  	case hwmon_pwm:
+>> +		if (attr == hwmon_pwm_input) {
+>> +			if (!is_victus_s_thermal_profile())
+>> +				return -EOPNOTSUPP;
+>> +			/* pwm input is invalid when not in manual mode */
+>
+>PWM (capitalize textual/comment "pwm"s correctly please).
+>
+
+Corrected.
+
+>> +			if (priv->mode != PWM_MODE_MANUAL)
+>> +				return -EINVAL;
+>
+>ADd empty line here.
+>
+
+Added.
+
+>> +			/* ensure pwm input is within valid fan speeds */
+>
+>PWM
+>
+
+Fixed.
+
+>> +			priv->pwm = rpm_to_pwm(clamp_val(pwm_to_rpm(val, priv),
+>> +							priv->min_rpm,
+>> +							priv->max_rpm),
+>
+>These look misaligned.
+>
+>I suggest you split this to multiple lines though, it will likely be
+>easier to read that way.
+>
+
+Agreed, this is too much nesting. I will split it into separate statements
+for each function call.
+
+>> +						priv);
+>> +			return hp_wmi_apply_fan_settings(priv);
+>> +		}
+>>  		switch (val) {
+>> -		case 0:
+>> -			if (is_victus_s_thermal_profile())
+>> -				hp_wmi_get_fan_count_userdefine_trigger();
+>> -			/* 0 is no fan speed control (max), which is 1 for us */
+>> -			return hp_wmi_fan_speed_max_set(1);
+>> -		case 2:
+>> -			/* 2 is automatic speed control, which is 0 for us */
+>> -			if (is_victus_s_thermal_profile()) {
+>> -				hp_wmi_get_fan_count_userdefine_trigger();
+>> -				return hp_wmi_fan_speed_max_reset();
+>> -			} else
+>> -				return hp_wmi_fan_speed_max_set(0);
+>> +		case PWM_MODE_MAX:
+>> +			priv->mode = PWM_MODE_MAX;
+>> +			return hp_wmi_apply_fan_settings(priv);
+>> +		case PWM_MODE_MANUAL:
+>> +			if (!is_victus_s_thermal_profile())
+>> +				return -EOPNOTSUPP;
+>> +			/*
+>> +			 * When switching to manual mode, set fan speed to
+>> +			 * current RPM values to ensure a smooth transition.
+>> +			 */
+>> +			ret = hp_wmi_get_fan_speed_victus_s(channel);
+>
+>Assign directly to current_rpm ?
+>
+
+Yes, will do in v3.
+
+>> +			if (ret < 0)
+>> +				return ret;
+>> +			current_rpm = ret;
+>> +			priv->pwm = rpm_to_pwm(current_rpm / 100, priv);
+>> +			priv->mode = PWM_MODE_MANUAL;
+>> +			return hp_wmi_apply_fan_settings(priv);
+>> +		case PWM_MODE_AUTO:
+>> +			priv->mode = PWM_MODE_AUTO;
+>> +			return hp_wmi_apply_fan_settings(priv);
+>>  		default:
+>> -			/* we don't support manual fan speed control */
+>>  			return -EINVAL;
+>>  		}
+>>  	default:
+>> @@ -2196,7 +2322,7 @@ static int hp_wmi_hwmon_write(struct device *dev, enum hwmon_sensor_types type,
 >>
->> [...]
+>>  static const struct hwmon_channel_info * const info[] = {
+>>  	HWMON_CHANNEL_INFO(fan, HWMON_F_INPUT, HWMON_F_INPUT),
+>> -	HWMON_CHANNEL_INFO(pwm, HWMON_PWM_ENABLE),
+>> +	HWMON_CHANNEL_INFO(pwm, HWMON_PWM_ENABLE | HWMON_PWM_INPUT),
+>>  	NULL
+>>  };
+>>
+>> @@ -2211,12 +2337,57 @@ static const struct hwmon_chip_info chip_info = {
+>>  	.info = info,
+>>  };
+>>
+>> +static int hp_wmi_setup_fan_settings(struct hp_wmi_hwmon_priv *priv)
+>> +{
+>> +	u8 fan_data[128] = { 0 };
+>> +	struct victus_s_fan_table *fan_table;
+>> +	u8 min_rpm, max_rpm, gpu_delta;
+>> +	int ret;
+>> +
+>> +	/* Default behaviour on hwmon init is automatic mode */
+>> +	priv->mode = PWM_MODE_AUTO;
+>> +
+>> +	/* Bypass all non-Victus S devices */
+>> +	if (!is_victus_s_thermal_profile())
+>> +		return 0;
+>> +
+>> +	ret = hp_wmi_perform_query(HPWMI_VICTUS_S_GET_FAN_TABLE_QUERY,
+>> +				   HPWMI_GM, &fan_data, 4, sizeof(fan_data));
+>> +	if (ret)
+>> +		return ret;
+>> +
+>> +	fan_table = (struct victus_s_fan_table *)fan_data;
+>> +	if (fan_table->header.num_entries == 0 ||
+>> +		sizeof(struct victus_s_fan_table_header) +
+>> +		sizeof(struct victus_s_fan_table_entry) * fan_table->header.num_entries >
+>> +		sizeof(fan_data))
 >
-> Thank you for your contribution, it has been applied to my local
-> review-ilpo-next branch. Note it will show up in the public
-> platform-drivers-x86/review-ilpo-next branch only once I've pushed my
-> local branch there, which might take a while.
+>Badly misaligned.
 >
-> The list of commits applied:
-> [1/9] platform/wmi: Introduce marshalling support
->        commit: bfa284e9f5e77c9e7389116a403b1dc478f2d58e
-> [2/9] platform/wmi: Add kunit test for the marshalling code
->        commit: 1e4746e93871168f50f237e9e316dc6c9a883719
-> [3/9] platform/wmi: Add helper functions for WMI string conversions
->        commit: 3ae53ee45d5c958aae883173d1e4cafe15564cce
-> [4/9] platform/wmi: Add kunit test for the string conversion code
->        commit: 3579df4cf0b5a3c1d50146c72b13bb4215d509b5
-> [5/9] platform/x86: intel-wmi-sbl-fw-update: Use new buffer-based WMI AP=
-I
->        commit: ca7861de6a37a52bf75fe41be51fd39162a9281d
-> [6/9] platform/x86/intel/wmi: thunderbolt: Use new buffer-based WMI API
->        commit: 7f331e5f10ebb72d3bbc83470e4b409337024093
-> [7/9] platform/x86: xiaomi-wmi: Use new buffer-based WMI API
->        commit: e9997669653bc0622f9ed8a3fe778cc989d1e254
-> [8/9] platform/x86: wmi-bmof: Use new buffer-based WMI API
->        commit: 70d37a7fd341e5c0090385034feb8f6f93a56ae7
-> [9/9] platform/wmi: Update driver development guide
->        commit: 0835f9737d4705a9f72de05fde09ba806dcbc862
+>Splitting at > is somewhat misleading so I'd prefer to avoid it (you can
+>use up to 100 chars per line if needed).
+>
 
-Thank you :)
-
-> --
->   i.
->
->
+Ok, will fix the alignment and ensure to keep the > in a single line.
