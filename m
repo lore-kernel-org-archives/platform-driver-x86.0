@@ -1,110 +1,232 @@
-Received: from out-181.mta1.migadu.com (out-181.mta1.migadu.com [95.215.58.181])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7E76C2F25F9
-	for <platform-driver-x86@vger.kernel.org>; Mon, 12 Jan 2026 20:49:27 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=95.215.58.181
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 32629330D36;
+	Mon, 12 Jan 2026 21:25:12 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1768250969; cv=none; b=UP6xe0sEWk8vt+bOAsD3Ev8cW9V1en6no8Zn/uyH/8p4yboSZWpsMuAn9NFe+Rage3dKvg5mYSe2uYrMK2zNCpnSCEcaHJYpU9WmjfsTHeUewbut2elDdbSrIvySQfyPYHRmNpbjEutSwUgRm+zHihh3702WQE2lW+l/adQ390s=
+	t=1768253113; cv=none; b=rl799A5VCk1SayVU467MFjYIaVeU02Ho6uRORqTpRy2vnA7XaB7v8PuPsSWldaWTXtTYUDfL0CdSh47gyokX6R1DgXMB3hky3a7O/qUZucuXIBIMgOtYyT6KwOpcbW92X4I/Q8ElIhEdDoGxkv3YmhW3rMpar0uCDcGepqps50I=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1768250969; c=relaxed/simple;
-	bh=XLD9xq3l6kL6jdRiWQIQfZGMJpOdDteWKDWVuTEqCbY=;
+	s=arc-20240116; t=1768253113; c=relaxed/simple;
+	bh=dDRp4mpGxN5nvZCGUaMGXAHlBrsATVpfcDiYMNE6F3s=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=VSOR1C31dYCjDGvNYZL5VA6ZpZGl5gDCJTDZ20BpkLtFMrCkXb6ILqFZnZXIZ6cbPIkOEWGxfE6WKu9WoDck0YEIULqL9EEXqV+HkxE5SQI8Z/GkGOWo4cw9+yWeVoy0nQPCaWRVq1Weo6smgUdpAhwmF2WebDM8WNNSRhX88KQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=bWKHIJwB; arc=none smtp.client-ip=95.215.58.181
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
+	 In-Reply-To:Content-Type; b=Emb0h3ImMZ80OH6a62/UuYdD7PxC/2IS/WxC+z9qNuvfxHyVkLMszT/xe/G6joQnMMIDiAVn+4CQ68tTX6xknMp0hybWXZ0omEVSE2tgZHnK6acbVtOqpqhQulZFTCA3siGUrjyn8ONSEQGDVcanGNfCBLkC+1nUlk7kxJwiaPE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=qMNp0vFG; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="bWKHIJwB"
-Message-ID: <88609e7c-3348-440e-adc0-eed9dc4d452c@linux.dev>
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
-	t=1768250965;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=vIBC0svTxFuG4m+rliGVWh0BFIk6KaQMG6hV+TD0gr8=;
-	b=bWKHIJwBSkmStJLbO079S75NVjgFJOBmq3OnX8QRSO5qhwmrDH1rNZJwz8cJOU8JGLGCLh
-	Xfx+IRAETSlLqeYRKVZmv6TGFcT6H2Plq2pDUy3d5KOcuJdkuwSUhGoa0VcsQCDpJEGWkC
-	wdaR6f7FJXUXtNievSksxfCzVe92XDo=
-Date: Mon, 12 Jan 2026 21:49:18 +0100
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="qMNp0vFG"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id CA35EC116D0;
+	Mon, 12 Jan 2026 21:25:11 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1768253112;
+	bh=dDRp4mpGxN5nvZCGUaMGXAHlBrsATVpfcDiYMNE6F3s=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=qMNp0vFGrp1Sn47Cz0jA2vNZ8Sgrog7ptBfrpVdhblROMamHUQnKLEqoLgC/CSBqh
+	 ClUF4v2rVs3oHgU72/At/00RnIQ1MrhZe7I2WVlLubNJwnV/1HqkmqCJwE30wBXVQu
+	 LSxEb8ZdqO3yCk/XOOOl+Lxh8PgSkAFn+i5GeJlwNM52QNNZQXz62bSzmOdSWaxaWA
+	 tuMswyPGX+4gumGMOo6kr177iFAzPRhs21bEMA6JrwN3ZkrYJFlipwoQLpNXlHa6la
+	 kvpDNCqVNwSioeVRXaSg6xCwAE6aMGaIy85BnbiAEmgOPH3/B2MYn2SnGhS2SgzIg4
+	 htTe1NZAVtlQQ==
+Message-ID: <20acfb14-02a0-4f7a-9924-fa70fb485418@kernel.org>
+Date: Mon, 12 Jan 2026 15:25:11 -0600
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Subject: Re: [PATCH v4 0/3] platform/x86: asus-wmi: move keyboard control
- firmware attributes
-To: linux-kernel@vger.kernel.org
-Cc: platform-driver-x86@vger.kernel.org, Hans de Goede <hansg@kernel.org>,
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v5 3/5] crypto: ccp - Add an S4 restore flow
+To: Tom Lendacky <thomas.lendacky@amd.com>,
+ Herbert Xu <herbert@gondor.apana.org.au>,
+ Shyam Sundar S K <Shyam-sundar.S-k@amd.com>,
  =?UTF-8?Q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>,
- "Luke D . Jones" <luke@ljones.dev>, Mateusz Schyboll <dragonn@op.pl>,
- Denis Benato <benato.denis96@gmail.com>
-References: <20260102234344.366227-1-denis.benato@linux.dev>
-Content-Language: en-US, it-IT, en-US-large
-X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
-From: Denis Benato <denis.benato@linux.dev>
-In-Reply-To: <20260102234344.366227-1-denis.benato@linux.dev>
-Content-Type: text/plain; charset=UTF-8
+ Rijo Thomas <Rijo-john.Thomas@amd.com>
+Cc: John Allen <john.allen@amd.com>, "David S . Miller"
+ <davem@davemloft.net>,
+ "open list:AMD CRYPTOGRAPHIC COPROCESSOR (CCP) DRIVER"
+ <linux-crypto@vger.kernel.org>, Hans de Goede <hansg@kernel.org>,
+ "open list:AMD PMF DRIVER" <platform-driver-x86@vger.kernel.org>,
+ Lars Francke <lars.francke@gmail.com>, Yijun Shen <Yijun.Shen@dell.com>,
+ Devaraj Rangasamy <Devaraj.Rangasamy@amd.com>
+References: <20260112053610.2566943-1-superm1@kernel.org>
+ <20260112053610.2566943-4-superm1@kernel.org>
+ <69f9b4eb-02a7-4a8f-8e77-903dee9e2de5@amd.com>
+Content-Language: en-US
+From: Mario Limonciello <superm1@kernel.org>
+In-Reply-To: <69f9b4eb-02a7-4a8f-8e77-903dee9e2de5@amd.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 7bit
-X-Migadu-Flow: FLOW_OUT
 
+On 1/12/26 10:33 AM, Tom Lendacky wrote:
+> On 1/11/26 23:36, Mario Limonciello (AMD) wrote:
+>> The system will have lost power during S4.  The ring used for TEE
+>> communications needs to be initialized before use.
+>>
+>> Fixes: f892a21f51162 ("crypto: ccp - use generic power management")
+>> Reported-by: Lars Francke <lars.francke@gmail.com>
+>> Closes: https://lore.kernel.org/platform-driver-x86/CAD-Ua_gfJnQSo8ucS_7ZwzuhoBRJ14zXP7s8b-zX3ZcxcyWePw@mail.gmail.com/
+>> Tested-by: Yijun Shen <Yijun.Shen@Dell.com>
+>> Signed-off-by: Mario Limonciello (AMD) <superm1@kernel.org>
+>> ---
+>> v5:
+>>   * Fix return for psp_restore() (LKP robot, Shyam)
+>> v4:
+>>   * Add tag (Yijun)
+>>   * Remove blank line (Ilpo)
+>>   * Adjust whitespace in psp_restore() (Ilpo)
+>> ---
+>>   drivers/crypto/ccp/psp-dev.c | 11 +++++++++++
+>>   drivers/crypto/ccp/sp-dev.h  |  2 ++
+>>   drivers/crypto/ccp/sp-pci.c  | 24 +++++++++++++++++++++++-
+>>   drivers/crypto/ccp/tee-dev.c |  5 +++++
+>>   drivers/crypto/ccp/tee-dev.h |  1 +
+>>   5 files changed, 42 insertions(+), 1 deletion(-)
+>>
+>> diff --git a/drivers/crypto/ccp/psp-dev.c b/drivers/crypto/ccp/psp-dev.c
+>> index 9e21da0e298ad..5c7f7e02a7d8a 100644
+>> --- a/drivers/crypto/ccp/psp-dev.c
+>> +++ b/drivers/crypto/ccp/psp-dev.c
+>> @@ -351,6 +351,17 @@ struct psp_device *psp_get_master_device(void)
+>>   	return sp ? sp->psp_data : NULL;
+>>   }
+>>   
+>> +int psp_restore(struct sp_device *sp)
+>> +{
+>> +	struct psp_device *psp = sp->psp_data;
+>> +	int ret = 0;
+>> +
+>> +	if (psp->tee_data)
+>> +		ret = tee_restore(psp);
+>> +
+>> +	return ret;
+>> +}
+>> +
+>>   void psp_pci_init(void)
+>>   {
+>>   	psp_master = psp_get_master_device();
+>> diff --git a/drivers/crypto/ccp/sp-dev.h b/drivers/crypto/ccp/sp-dev.h
+>> index 1335a83fe052e..0deea1a399e47 100644
+>> --- a/drivers/crypto/ccp/sp-dev.h
+>> +++ b/drivers/crypto/ccp/sp-dev.h
+>> @@ -174,6 +174,7 @@ int psp_dev_init(struct sp_device *sp);
+>>   void psp_pci_init(void);
+>>   void psp_dev_destroy(struct sp_device *sp);
+>>   void psp_pci_exit(void);
+>> +int psp_restore(struct sp_device *sp);
+>>   
+>>   #else /* !CONFIG_CRYPTO_DEV_SP_PSP */
+>>   
+>> @@ -181,6 +182,7 @@ static inline int psp_dev_init(struct sp_device *sp) { return 0; }
+>>   static inline void psp_pci_init(void) { }
+>>   static inline void psp_dev_destroy(struct sp_device *sp) { }
+>>   static inline void psp_pci_exit(void) { }
+>> +static inline int psp_restore(struct sp_device *sp) { return 0; }
+>>   
+>>   #endif /* CONFIG_CRYPTO_DEV_SP_PSP */
+>>   
+>> diff --git a/drivers/crypto/ccp/sp-pci.c b/drivers/crypto/ccp/sp-pci.c
+>> index 8891ceee1d7d0..931ec6bf2cec6 100644
+>> --- a/drivers/crypto/ccp/sp-pci.c
+>> +++ b/drivers/crypto/ccp/sp-pci.c
+>> @@ -353,6 +353,21 @@ static int __maybe_unused sp_pci_resume(struct device *dev)
+>>   	return sp_resume(sp);
+>>   }
+>>   
+>> +static int __maybe_unused sp_pci_restore(struct device *dev)
+>> +{
+>> +	struct sp_device *sp = dev_get_drvdata(dev);
+>> +
+>> +#ifdef CONFIG_CRYPTO_DEV_SP_PSP
+> 
+> This isn't needed since you have the "#else" definition in sp-dev.h.
 
-On 1/3/26 00:43, Denis Benato wrote:
-> Hi all,
->
-> I was recently reading through the asusctl issue tracker and I found
-> out that some users have been having troubles with the keyboard RGB control
-> that was working before since the creation of asus-armoury and subequent
-> deprecation of old sysfs attributes.
->
-> This patch series aims to re-introduce those attributes in asus-armoury
-> so that userspace tools can still control keyboard RGB lighting
-> without having to rely on deprecated asus-wmi attributes.
->
-> In addition to that, since disabling OOBE is essential for controlling
-> LEDs on some models and it was incorrectly tied to deprecated attributes,
-> this patch series also fixes sending OOBE at probe time.
->
-> Link: https://gitlab.com/asus-linux/asusctl/-/issues/619
->
-> Regards,
-> Denis
-Hi Ilpo,
+Ack.
 
-I see no comments on this revision, did I sent it at wrong time?
-Should I resend some other time?
+> 
+>> +	if (sp->psp_data) {
+>> +		int ret = psp_restore(sp);
+>> +
+> 
+> Remove blank line.
 
-Sorry for the question but I don't know if something went wrong,
-and if so what exactly.
+Then checkpatch complains:
 
-Thanks,
-Denis
-> Changelog:
-> - v1
->   - Initial submission
-> - v2
->   - asus-armoury: drivers should be silent on success
->   - asus-armoury: make better use of __free annotation
-> - v3
->   - asus-wmi: use GENMASK for flags
->   - asus-armoury: fix error handling in keyboard attribute creation
->   - asus-armoury: fix logic bug in error path
->   - asus-armoury: use proper defines for keyboard state flags
-> - v4
->   - asus-armoury: reorder variable declarations
->   - asus-armoury: add bitfields.h include for BIT and FIELD_PREP
->   - asus-armoury: reorganize armoury_kbd_state() for clarity
->
-> Denis Benato (3):
->   platform/x86: asus-wmi: explicitly mark more code with
->     CONFIG_ASUS_WMI_DEPRECATED_ATTRS
->   platform/x86: asus-wmi: fix sending OOBE at probe
->   platform/x86: asus-armoury: add keyboard control firmware attributes
->
->  drivers/platform/x86/asus-armoury.c        | 253 +++++++++++++++++++++
->  drivers/platform/x86/asus-wmi.c            |  13 +-
->  include/linux/platform_data/x86/asus-wmi.h |  18 ++
->  3 files changed, 283 insertions(+), 1 deletion(-)
->
+Missing a blank line after declarations
+
+> 
+>> +		if (ret)
+>> +			return ret;
+>> +	}
+>> +#endif
+> 
+> This isn't the way the other functions work. This function should just
+> be calling to sp_resume() and then sp_resume() should call psp_restore()
+> (or psp_dev_restore() ?) if the psp_data is present.
+> 
+> And if you need to distinguish between the resume and restore case in
+> sp_resume(), then it sounds like you need an sp_restore().
+
+We do need a different path for resume and restore.
+
+I guess the call path you're looking for is:
+
+sp_pci_restore()
+-> sp_restore()
+->-> psp_restore()
+->-> sp_resume()
+
+Basically move the contents of sp_pci_restore() into a new sp_restore().
+
+> 
+> Thanks,
+> Tom
+> 
+>> +	return sp_resume(sp);
+>> +}
+>> +
+>>   #ifdef CONFIG_CRYPTO_DEV_SP_PSP
+>>   static const struct sev_vdata sevv1 = {
+>>   	.cmdresp_reg		= 0x10580,	/* C2PMSG_32 */
+>> @@ -563,7 +578,14 @@ static const struct pci_device_id sp_pci_table[] = {
+>>   };
+>>   MODULE_DEVICE_TABLE(pci, sp_pci_table);
+>>   
+>> -static SIMPLE_DEV_PM_OPS(sp_pci_pm_ops, sp_pci_suspend, sp_pci_resume);
+>> +static const struct dev_pm_ops sp_pci_pm_ops = {
+>> +	.suspend = pm_sleep_ptr(sp_pci_suspend),
+>> +	.resume = pm_sleep_ptr(sp_pci_resume),
+>> +	.freeze = pm_sleep_ptr(sp_pci_suspend),
+>> +	.thaw = pm_sleep_ptr(sp_pci_resume),
+>> +	.poweroff = pm_sleep_ptr(sp_pci_suspend),
+>> +	.restore_early = pm_sleep_ptr(sp_pci_restore),
+>> +};
+>>   
+>>   static struct pci_driver sp_pci_driver = {
+>>   	.name = "ccp",
+>> diff --git a/drivers/crypto/ccp/tee-dev.c b/drivers/crypto/ccp/tee-dev.c
+>> index af881daa5855b..11c4b05e2f3a2 100644
+>> --- a/drivers/crypto/ccp/tee-dev.c
+>> +++ b/drivers/crypto/ccp/tee-dev.c
+>> @@ -366,3 +366,8 @@ int psp_check_tee_status(void)
+>>   	return 0;
+>>   }
+>>   EXPORT_SYMBOL(psp_check_tee_status);
+>> +
+>> +int tee_restore(struct psp_device *psp)
+>> +{
+>> +	return tee_init_ring(psp->tee_data);
+>> +}
+>> diff --git a/drivers/crypto/ccp/tee-dev.h b/drivers/crypto/ccp/tee-dev.h
+>> index ea9a2b7c05f57..c23416cb7bb37 100644
+>> --- a/drivers/crypto/ccp/tee-dev.h
+>> +++ b/drivers/crypto/ccp/tee-dev.h
+>> @@ -111,5 +111,6 @@ struct tee_ring_cmd {
+>>   
+>>   int tee_dev_init(struct psp_device *psp);
+>>   void tee_dev_destroy(struct psp_device *psp);
+>> +int tee_restore(struct psp_device *psp);
+>>   
+>>   #endif /* __TEE_DEV_H__ */
+> 
+> 
+
