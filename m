@@ -1,296 +1,407 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.9])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 32F082EA15C;
-	Mon, 12 Jan 2026 16:43:29 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 783F0364E87;
+	Mon, 12 Jan 2026 17:25:23 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.9
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1768236210; cv=none; b=piWqC5+AOJhTv8vXoTAjOr6ckxT81mInOjrHG6GM3yIK7TaxY1XlutfR4ecW5JFf1DVbK7beu9UaoX3WYxm/p4DNUv5T/kVdOBPKSss+9PDA5UtYwK58OeDTGH4RMNjXzYzJjUCmb1qJxrFE+cCS4Inf97AT1RqL1IziIwISSes=
+	t=1768238725; cv=none; b=ahZyxfgzh034cVJouvDoT5NWvMXAmuMytXoATHVzty5k01asMMlMpBUeoODEo0LY7k2CAabPJBfVc5sd7zb1TTdmIbSNjbKrTpesGhJQ2lfXyAoushDb9FL/D1R3FHs5RsrICcTCwSYDpDLa/9Ys9mclsxTsbY0V6159IjNErCY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1768236210; c=relaxed/simple;
-	bh=lFgctjtutGQXOiqTT6uzDo7xxjSfF86bzNybiJFqlFs=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=TqERfB7Ihs2lPnYlrc843qZm2YPpErJJBQDKzd9t9rYn1GO+pS/js2W61G8oDdRLYGXZOS/5RtkaihupD40Y/6CmrGjA9b5Q3SzT0z1GKrEyNYTNpz0gN27DNVgNqFTZEi8LB9VRktjxNJvL9jC/06NPjsA/z7MxD9Br2pyGycM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=KQemu9lb; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1768238725; c=relaxed/simple;
+	bh=QVnU8ndV4X5BJ/myVlXmIlKSbhPB4GakGfTXyL7GW1E=;
+	h=From:Date:To:cc:Subject:In-Reply-To:Message-ID:References:
+	 MIME-Version:Content-Type; b=CWRM5WdX2lOVClu1qx6mtMZ0i/W5NqeFcwZQN6jIEiMvWMGL3hlmK768dmdo+IFv6581kn7X2sODquW+xwFUBvN1p5xxJTekl2wVxsxRAwr85rK6lkDzOD6woylwPQ7gMUDYqv+Tkp2FD3DNkE1+Gqa5CfL23stipWsZraz04n4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=pass smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=bFO5D7c6; arc=none smtp.client-ip=192.198.163.9
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="KQemu9lb"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 0DE18C116D0;
-	Mon, 12 Jan 2026 16:43:19 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1768236209;
-	bh=lFgctjtutGQXOiqTT6uzDo7xxjSfF86bzNybiJFqlFs=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=KQemu9lbPmlYlUdtCfab0b3qxZiqjkrWH1seRGrIAxCggA9PopzCct9Mh4DzyzYTx
-	 OepzY7Vybccjz7N141sngTsDVA35C3gqQ5wObndsc7Qskcw0zYDbxoezbrEfodA86z
-	 jmDo/5g3u7XxNhxgeh9FZ7x+GthsibsbLsw+CLJ+bJIN9izFhGzwfQpcywuu++wsnF
-	 i6Elmuk5du1aosfR0RdykwcjBsKiUaG+lQQMhDQYmwfAmqVxHWfKnvhW4k41V18qQ3
-	 u6qtf+z+VLd1ebCDg1TuxOBbYHIRDvgs47m8AEqbDwo/QU0KxGJDga6uPBbSWRhSyA
-	 h2zFd7sNTP96w==
-Date: Mon, 12 Jan 2026 22:13:16 +0530
-From: Manivannan Sadhasivam <mani@kernel.org>
-To: manivannan.sadhasivam@oss.qualcomm.com
-Cc: Rob Herring <robh@kernel.org>, 
-	Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Jiri Slaby <jirislaby@kernel.org>, 
-	Nathan Chancellor <nathan@kernel.org>, Nicolas Schier <nicolas.schier@linux.dev>, 
-	Hans de Goede <hansg@kernel.org>, Ilpo =?utf-8?B?SsOkcnZpbmVu?= <ilpo.jarvinen@linux.intel.com>, 
-	Mark Pearson <mpearson-lenovo@squebb.ca>, "Derek J. Clark" <derekjohn.clark@gmail.com>, 
-	Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, 
-	Marcel Holtmann <marcel@holtmann.org>, Luiz Augusto von Dentz <luiz.dentz@gmail.com>, 
-	Bartosz Golaszewski <brgl@bgdev.pl>, Andy Shevchenko <andriy.shevchenko@linux.intel.com>, 
-	Bartosz Golaszewski <brgl@kernel.org>, linux-serial@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	linux-kbuild@vger.kernel.org, platform-driver-x86@vger.kernel.org, linux-pci@vger.kernel.org, 
-	devicetree@vger.kernel.org, linux-arm-msm@vger.kernel.org, linux-bluetooth@vger.kernel.org, 
-	linux-pm@vger.kernel.org, Stephan Gerhold <stephan.gerhold@linaro.org>, 
-	Dmitry Baryshkov <dmitry.baryshkov@oss.qualcomm.com>, linux-acpi@vger.kernel.org
-Subject: Re: [PATCH v3 03/14] software node: Implement device_get_match_data
- fwnode callback
-Message-ID: <jo4flkszwuy6bxmjn55jtprtj567adlisaqfqgrqwbigfmvd4e@zp3kllj2y4fh>
-References: <20260112-pci-m2-e-v4-0-eff84d2c6d26@oss.qualcomm.com>
- <20260112-pci-m2-e-v4-9-eff84d2c6d26@oss.qualcomm.com>
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="bFO5D7c6"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1768238723; x=1799774723;
+  h=from:date:to:cc:subject:in-reply-to:message-id:
+   references:mime-version;
+  bh=QVnU8ndV4X5BJ/myVlXmIlKSbhPB4GakGfTXyL7GW1E=;
+  b=bFO5D7c6JAGtXvrfdcNRt0ZhaYuB6HIimiFZg2v1RUYnULkxPyLEzpg7
+   XxVdnqx+ORXHwLNGESRaezBvHn54jHjfn57auq1umQ+9T3xAH+5G26FTw
+   qbSSVLydK6X8pHrGnnXA7USAaNo64uRXwxr1ptwZXqzWgVv76k7RfLDEm
+   CHEkdDtiHifvH8MSn4p/Do3+Hr/ExTxJRysZYzQsFnNLyCy0fg1bpZw6c
+   Pz0au1tFrFCm0TCCKN6WA7IDgRfBGStTkzMh1Y0t2beTkB8f9VzTLxJR7
+   aMCxdefryDACkJlbE+4PXLmlFLfnq+q4P/l/m946t7oQYaUX22dxVjXK8
+   A==;
+X-CSE-ConnectionGUID: dneGd9zmQCmsn1T3ikE/DQ==
+X-CSE-MsgGUID: V43G6NkmRbOlZYdGfih6FA==
+X-IronPort-AV: E=McAfee;i="6800,10657,11669"; a="80239267"
+X-IronPort-AV: E=Sophos;i="6.21,221,1763452800"; 
+   d="scan'208";a="80239267"
+Received: from orviesa002.jf.intel.com ([10.64.159.142])
+  by fmvoesa103.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 12 Jan 2026 09:25:22 -0800
+X-CSE-ConnectionGUID: 5rGmMs1xRnue0NevFXKHZw==
+X-CSE-MsgGUID: Ir/Esw3JSg+2xchGX1TfbA==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.21,221,1763452800"; 
+   d="scan'208";a="234852921"
+Received: from ijarvine-mobl1.ger.corp.intel.com (HELO localhost) ([10.245.245.111])
+  by orviesa002-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 12 Jan 2026 09:25:19 -0800
+From: =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
+Date: Mon, 12 Jan 2026 19:25:15 +0200 (EET)
+To: Rong Zhang <i@rong.moe>
+cc: Mark Pearson <mpearson-lenovo@squebb.ca>, 
+    "Derek J. Clark" <derekjohn.clark@gmail.com>, Armin Wolf <W_Armin@gmx.de>, 
+    Hans de Goede <hansg@kernel.org>, 
+    =?ISO-8859-15?Q?Ilpo_J=E4rvinen?= <ilpo.jarvinen@linux.intel.com>, 
+    Guenter Roeck <linux@roeck-us.net>, platform-driver-x86@vger.kernel.org, 
+    linux-kernel@vger.kernel.org, linux-hwmon@vger.kernel.org
+Subject: Re: [PATCH v7 5/7] platform/x86: lenovo-wmi-capdata: Add support
+ for Fan Test Data
+In-Reply-To: <20251125194959.157524-6-i@rong.moe>
+Message-ID: <64d3f499-baa3-5039-dc87-c3581623ce8c@linux.intel.com>
+References: <20251125194959.157524-1-i@rong.moe> <20251125194959.157524-6-i@rong.moe>
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20260112-pci-m2-e-v4-9-eff84d2c6d26@oss.qualcomm.com>
+Content-Type: multipart/mixed; boundary="8323328-1045187270-1768238715=:1026"
 
-On Mon, Jan 12, 2026 at 09:56:08PM +0530, Manivannan Sadhasivam via B4 Relay wrote:
-> From: Manivannan Sadhasivam <manivannan.sadhasivam@oss.qualcomm.com>
-> 
-> For supporting bluetooth over the non-discoverable UART interface of
-> WCN7850, create the serdev device after enumerating the PCIe interface.
-> This is mandatory since the device ID is only known after the PCIe
-> enumeration and the ID is used for creating the serdev device.
-> 
-> Since by default there is no OF or ACPI node for the created serdev,
-> create a dynamic OF 'bluetooth' node with the 'compatible' property and
-> attach it to the serdev device. This will allow the serdev device to bind
-> to the existing bluetooth driver.
-> 
+  This message is in MIME format.  The first part should be readable text,
+  while the remaining parts are likely unreadable without MIME-aware tools.
 
-Missed "select OF_DYNAMIC" in Kconfig...
+--8323328-1045187270-1768238715=:1026
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: QUOTED-PRINTABLE
 
-- Mani
+On Wed, 26 Nov 2025, Rong Zhang wrote:
 
-> Signed-off-by: Manivannan Sadhasivam <manivannan.sadhasivam@oss.qualcomm.com>
+> Add support for LENOVO_FAN_TEST_DATA WMI data block. Provides an
+> interface for querying the min/max fan speed RPM (reference data) of a
+> given fan ID.
+>=20
+> This interface is optional. Hence, it does not bind to lenovo-wmi-other
+> and is not registered as a component for the moment. Appropriate binding
+> will be implemented in the subsequent patch.
+>=20
+> Signed-off-by: Rong Zhang <i@rong.moe>
+> Reviewed-by: Derek J. Clark <derekjohn.clark@gmail.com>
+> Tested-by: Derek J. Clark <derekjohn.clark@gmail.com>
 > ---
->  drivers/power/sequencing/pwrseq-pcie-m2.c | 170 +++++++++++++++++++++++++++++-
->  1 file changed, 169 insertions(+), 1 deletion(-)
-> 
-> diff --git a/drivers/power/sequencing/pwrseq-pcie-m2.c b/drivers/power/sequencing/pwrseq-pcie-m2.c
-> index 4b85a40d7692..5f9232e6c700 100644
-> --- a/drivers/power/sequencing/pwrseq-pcie-m2.c
-> +++ b/drivers/power/sequencing/pwrseq-pcie-m2.c
-> @@ -17,6 +17,7 @@
->  #include <linux/platform_device.h>
->  #include <linux/pwrseq/provider.h>
->  #include <linux/regulator/consumer.h>
-> +#include <linux/serdev.h>
->  #include <linux/slab.h>
->  
->  struct pwrseq_pcie_m2_pdata {
-> @@ -32,6 +33,9 @@ struct pwrseq_pcie_m2_ctx {
->  	struct gpio_desc *w_disable1_gpio;
->  	struct gpio_desc *w_disable2_gpio;
->  	struct device *dev;
-> +	struct serdev_device *serdev;
-> +	struct notifier_block nb;
-> +	struct of_changeset *ocs;
+> Changes in v7:
+> - Rearrange lwmi_cd_fan_list_alloc_cache() to drop gotos (thanks Ilpo
+>   J=C3=A4rvinen)
+> - Move the declarations of __free()-managed variablesto where thet are
+>   assigned (ditto)
+> - Prevent back-and-forth changes (ditto)
+> - Improve the readablity of struct definition (ditto)
+> - Emit unaligned access to the WMI block
+> - Properly calculate array index when we truncate the data
+>=20
+> Changes in v4:
+> - Rebase on top of changes made to [PATCH v4 3/7]
+> - Do not register it as a component until [PATCH v4 6/7]
+>=20
+> Changes in v2:
+> - Reword documentation
+> ---
+>  .../wmi/devices/lenovo-wmi-other.rst          | 17 ++++
+>  drivers/platform/x86/lenovo/wmi-capdata.c     | 96 +++++++++++++++++++
+>  drivers/platform/x86/lenovo/wmi-capdata.h     |  7 ++
+>  3 files changed, 120 insertions(+)
+>=20
+> diff --git a/Documentation/wmi/devices/lenovo-wmi-other.rst b/Documentati=
+on/wmi/devices/lenovo-wmi-other.rst
+> index fcad595d49af..821282e07d93 100644
+> --- a/Documentation/wmi/devices/lenovo-wmi-other.rst
+> +++ b/Documentation/wmi/devices/lenovo-wmi-other.rst
+> @@ -62,6 +62,13 @@ The following firmware-attributes are implemented:
+>   - ppt_pl2_sppt: Platform Profile Tracking Slow Package Power Tracking
+>   - ppt_pl3_fppt: Platform Profile Tracking Fast Package Power Tracking
+> =20
+> +LENOVO_FAN_TEST_DATA
+> +-------------------------
+> +
+> +WMI GUID ``B642801B-3D21-45DE-90AE-6E86F164FB21``
+> +
+> +The LENOVO_FAN_TEST_DATA interface provides reference data for self-test=
+ of
+> +cooling fans.
+> =20
+>  WMI interface description
+>  =3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
+=3D
+> @@ -115,3 +122,13 @@ data using the `bmfdec <https://github.com/pali/bmfd=
+ec>`_ utility:
+>      [WmiDataId(3), read, Description("Data Size.")] uint32 DataSize;
+>      [WmiDataId(4), read, Description("Default Value"), WmiSizeIs("DataSi=
+ze")] uint8 DefaultValue[];
+>    };
+> +
+> +  [WMI, Dynamic, Provider("WmiProv"), Locale("MS\\0x409"), Description("=
+Definition of Fan Test Data"), guid("{B642801B-3D21-45DE-90AE-6E86F164FB21}=
+")]
+> +  class LENOVO_FAN_TEST_DATA {
+> +    [key, read] string InstanceName;
+> +    [read] boolean Active;
+> +    [WmiDataId(1), read, Description("Mode.")] uint32 NumOfFans;
+> +    [WmiDataId(2), read, Description("Fan ID."), WmiSizeIs("NumOfFans")]=
+ uint32 FanId[];
+> +    [WmiDataId(3), read, Description("Maximum Fan Speed."), WmiSizeIs("N=
+umOfFans")] uint32 FanMaxSpeed[];
+> +    [WmiDataId(4), read, Description("Minumum Fan Speed."), WmiSizeIs("N=
+umOfFans")] uint32 FanMinSpeed[];
+> +  };
+> diff --git a/drivers/platform/x86/lenovo/wmi-capdata.c b/drivers/platform=
+/x86/lenovo/wmi-capdata.c
+> index 08a78dc490f6..9fed162abd17 100644
+> --- a/drivers/platform/x86/lenovo/wmi-capdata.c
+> +++ b/drivers/platform/x86/lenovo/wmi-capdata.c
+> @@ -13,6 +13,10 @@
+>   * attribute has multiple pages, one for each of the thermal modes manag=
+ed by
+>   * the Gamezone interface.
+>   *
+> + * Fan Test Data includes the max/min fan speed RPM for each fan. This i=
+s
+> + * reference data for self-test. If the fan is in good condition, it is =
+capable
+> + * to spin faster than max RPM or slower than min RPM.
+> + *
+>   * Copyright (C) 2025 Derek J. Clark <derekjohn.clark@gmail.com>
+>   *   - Initial implementation (formerly named lenovo-wmi-capdata01)
+>   *
+> @@ -45,6 +49,7 @@
+> =20
+>  #define LENOVO_CAPABILITY_DATA_00_GUID "362A3AFE-3D96-4665-8530-96DAD5BB=
+300E"
+>  #define LENOVO_CAPABILITY_DATA_01_GUID "7A8F5407-CB67-4D6E-B547-39B3BE01=
+8154"
+> +#define LENOVO_FAN_TEST_DATA_GUID "B642801B-3D21-45DE-90AE-6E86F164FB21"
+> =20
+>  #define ACPI_AC_CLASS "ac_adapter"
+>  #define ACPI_AC_NOTIFY_STATUS 0x80
+> @@ -52,6 +57,7 @@
+>  enum lwmi_cd_type {
+>  =09LENOVO_CAPABILITY_DATA_00,
+>  =09LENOVO_CAPABILITY_DATA_01,
+> +=09LENOVO_FAN_TEST_DATA,
 >  };
->  
->  static int pwrseq_pcie_m2_vregs_enable(struct pwrseq_device *pwrseq)
-> @@ -178,9 +182,169 @@ static void pwrseq_pcie_free_resources(void *data)
->  {
->  	struct pwrseq_pcie_m2_ctx *ctx = data;
->  
-> +	serdev_device_remove(ctx->serdev);
-> +	of_changeset_revert(ctx->ocs);
-> +	of_changeset_destroy(ctx->ocs);
-> +	bus_unregister_notifier(&pci_bus_type, &ctx->nb);
->  	regulator_bulk_free(ctx->num_vregs, ctx->regs);
+> =20
+>  #define LWMI_CD_TABLE_ITEM(_type)=09=09\
+> @@ -66,6 +72,7 @@ static const struct lwmi_cd_info {
+>  } lwmi_cd_table[] =3D {
+>  =09LWMI_CD_TABLE_ITEM(LENOVO_CAPABILITY_DATA_00),
+>  =09LWMI_CD_TABLE_ITEM(LENOVO_CAPABILITY_DATA_01),
+> +=09LWMI_CD_TABLE_ITEM(LENOVO_FAN_TEST_DATA),
+>  };
+> =20
+>  struct lwmi_cd_priv {
+> @@ -82,6 +89,7 @@ struct cd_list {
+>  =09union {
+>  =09=09DECLARE_FLEX_ARRAY(struct capdata00, cd00);
+>  =09=09DECLARE_FLEX_ARRAY(struct capdata01, cd01);
+> +=09=09DECLARE_FLEX_ARRAY(struct capdata_fan, cd_fan);
+>  =09};
+>  };
+> =20
+> @@ -121,6 +129,10 @@ void lwmi_cd_match_add_all(struct device *master, st=
+ruct component_match **match
+>  =09=09return;
+> =20
+>  =09for (i =3D 0; i < ARRAY_SIZE(lwmi_cd_table); i++) {
+> +=09=09/* Skip sub-components. */
+> +=09=09if (lwmi_cd_table[i].type =3D=3D LENOVO_FAN_TEST_DATA)
+> +=09=09=09continue;
+> +
+>  =09=09component_match_add(master, matchptr, lwmi_cd_match,
+>  =09=09=09=09    (void *)&lwmi_cd_table[i].type);
+>  =09=09if (IS_ERR(*matchptr))
+> @@ -200,6 +212,9 @@ EXPORT_SYMBOL_NS_GPL(lwmi_cd00_get_data, "LENOVO_WMI_=
+CD");
+>  DEF_LWMI_CDXX_GET_DATA(cd01, LENOVO_CAPABILITY_DATA_01, struct capdata01=
+);
+>  EXPORT_SYMBOL_NS_GPL(lwmi_cd01_get_data, "LENOVO_WMI_CD");
+> =20
+> +DEF_LWMI_CDXX_GET_DATA(cd_fan, LENOVO_FAN_TEST_DATA, struct capdata_fan)=
+;
+> +EXPORT_SYMBOL_NS_GPL(lwmi_cd_fan_get_data, "LENOVO_WMI_CD");
+> +
+>  /**
+>   * lwmi_cd_cache() - Cache all WMI data block information
+>   * @priv: lenovo-wmi-capdata driver data.
+> @@ -223,6 +238,9 @@ static int lwmi_cd_cache(struct lwmi_cd_priv *priv)
+>  =09=09p =3D &priv->list->cd01[0];
+>  =09=09size =3D sizeof(priv->list->cd01[0]);
+>  =09=09break;
+> +=09case LENOVO_FAN_TEST_DATA:
+> +=09=09/* Done by lwmi_cd_alloc() =3D> lwmi_cd_fan_list_alloc_cache(). */
+> +=09=09return 0;
+>  =09default:
+>  =09=09return -EINVAL;
+>  =09}
+> @@ -245,6 +263,72 @@ static int lwmi_cd_cache(struct lwmi_cd_priv *priv)
+>  =09return 0;
 >  }
->  
-> +static int pwrseq_m2_pcie_create_bt_node(struct pwrseq_pcie_m2_ctx *ctx,
-> +					struct device_node *parent)
-> +{
-> +	struct device *dev = ctx->dev;
-> +	struct device_node *np;
-> +	int ret;
-> +
-> +	ctx->ocs = devm_kzalloc(dev, sizeof(*ctx->ocs), GFP_KERNEL);
-> +	if (!ctx->ocs)
-> +		return -ENOMEM;
-> +
-> +	of_changeset_init(ctx->ocs);
-> +
-> +	np = of_changeset_create_node(ctx->ocs, parent, "bluetooth");
-> +	if (!np) {
-> +		dev_err(dev, "Failed to create bluetooth node\n");
-> +		ret = -ENODEV;
-> +		goto err_destroy_changeset;
-> +	}
-> +
-> +	ret = of_changeset_add_prop_string(ctx->ocs, np, "compatible", "qcom,wcn7850-bt");
-> +	if (ret) {
-> +		dev_err(dev, "Failed to add bluetooth compatible: %d\n", ret);
-> +		goto err_destroy_changeset;
-> +	}
-> +
-> +	ret = of_changeset_apply(ctx->ocs);
-> +	if (ret) {
-> +		dev_err(dev, "Failed to apply changeset: %d\n", ret);
-> +		goto err_destroy_changeset;
-> +	}
-> +
-> +	ret = device_add_of_node(&ctx->serdev->dev, np);
-> +	if (ret) {
-> +		dev_err(dev, "Failed to add OF node: %d\n", ret);
-> +		goto err_revert_changeset;
-> +	}
-> +
-> +	return 0;
-> +
-> +err_revert_changeset:
-> +	of_changeset_revert(ctx->ocs);
-> +err_destroy_changeset:
-> +	of_changeset_destroy(ctx->ocs);
-> +
-> +	return ret;
-> +}
-> +
-> +static int pwrseq_m2_pcie_notify(struct notifier_block *nb, unsigned long action,
-> +			      void *data)
-> +{
-> +	struct pwrseq_pcie_m2_ctx *ctx = container_of(nb, struct pwrseq_pcie_m2_ctx, nb);
-> +	struct pci_dev *pdev = to_pci_dev(data);
-> +	struct serdev_controller *serdev_ctrl;
-> +	struct device *dev = ctx->dev;
-> +	struct device_node *pci_parent;
-> +	int ret;
-> +
-> +	/*
-> +	 * Check whether the PCI device is associated with this M.2 connector or
-> +	 * not, by comparing the OF node of the PCI device parent and the Port 0
-> +	 * (PCIe) remote node parent OF node.
-> +	 */
-> +	pci_parent = of_graph_get_remote_node(dev_of_node(ctx->dev), 0, 0);
-> +	if (!pci_parent || (pci_parent != pdev->dev.parent->of_node)) {
-> +		of_node_put(pci_parent);
-> +		return NOTIFY_DONE;
-> +	}
-> +	of_node_put(pci_parent);
-> +
-> +	switch (action) {
-> +	case BUS_NOTIFY_ADD_DEVICE:
-> +		/* Create serdev device for WCN7850 */
-> +		if (pdev->vendor == PCI_VENDOR_ID_QCOM && pdev->device == 0x1107) {
-> +			struct device_node *serdev_parent __free(device_node) =
-> +				of_graph_get_remote_node(dev_of_node(ctx->dev), 1, 1);
-> +			if (!serdev_parent)
-> +				return NOTIFY_DONE;
-> +
-> +			serdev_ctrl = of_find_serdev_controller_by_node(serdev_parent);
-> +			if (!serdev_ctrl)
-> +				return NOTIFY_DONE;
-> +
-> +			ctx->serdev = serdev_device_alloc(serdev_ctrl);
-> +			if (!ctx->serdev)
-> +				return NOTIFY_BAD;
-> +
-> +			ret = pwrseq_m2_pcie_create_bt_node(ctx, serdev_parent);
-> +			if (ret) {
-> +				serdev_device_put(ctx->serdev);
-> +				return notifier_from_errno(ret);
-> +			}
-> +
-> +			ret = serdev_device_add(ctx->serdev);
-> +			if (ret) {
-> +				dev_err(dev, "Failed to add serdev for WCN7850: %d\n", ret);
-> +				of_changeset_revert(ctx->ocs);
-> +				of_changeset_destroy(ctx->ocs);
-> +				serdev_device_put(ctx->serdev);
-> +				return notifier_from_errno(ret);
-> +			}
-> +		}
-> +		break;
-> +	case BUS_NOTIFY_REMOVED_DEVICE:
-> +		/* Destroy serdev device for WCN7850 */
-> +		if (pdev->vendor == PCI_VENDOR_ID_QCOM && pdev->device == 0x1107) {
-> +			serdev_device_remove(ctx->serdev);
-> +			of_changeset_revert(ctx->ocs);
-> +			of_changeset_destroy(ctx->ocs);
-> +		}
-> +		break;
-> +	}
-> +
-> +	return NOTIFY_OK;
-> +}
-> +
-> +static bool pwrseq_pcie_m2_check_remote_node(struct device *dev, u8 port, u8 endpoint,
-> +					     const char *node)
-> +{
-> +	struct device_node *remote __free(device_node) =
-> +			of_graph_get_remote_node(dev_of_node(dev), port, endpoint);
-> +
-> +	if (remote && of_node_name_eq(remote, node))
-> +		return true;
-> +
-> +	return false;
-> +}
-> +
-> +/*
-> + * If the connector exposes a non-discoverable bus like UART, the respective
-> + * protocol device needs to be created manually with the help of the notifier
-> + * of the discoverable bus like PCIe.
+> =20
+> +/**
+> + * lwmi_cd_fan_list_alloc_cache() - Alloc and cache Fan Test Data list
+> + * @priv: lenovo-wmi-capdata driver data.
+> + * @listptr: Pointer to returned cd_list pointer.
+> + *
+> + * Return: count of fans found, or an error.
 > + */
-> +static int pwrseq_pcie_m2_register_notifier(struct pwrseq_pcie_m2_ctx *ctx, struct device *dev)
+> +static int lwmi_cd_fan_list_alloc_cache(struct lwmi_cd_priv *priv, struc=
+t cd_list **listptr)
 > +{
-> +	int ret;
+> +=09struct cd_list *list;
+> +=09size_t size;
+> +=09u32 count;
+> +=09int idx;
 > +
-> +	/*
-> +	 * Register a PCI notifier for Key E connector that has PCIe as Port
-> +	 * 0/Endpoint 0 interface and Serial as Port 1/Endpoint 1 interface.
-> +	 */
-> +	if (pwrseq_pcie_m2_check_remote_node(dev, 1, 1, "serial")) {
-> +		if (pwrseq_pcie_m2_check_remote_node(dev, 0, 0, "pcie")) {
-> +			ctx->dev = dev;
-> +			ctx->nb.notifier_call = pwrseq_m2_pcie_notify;
-> +			ret = bus_register_notifier(&pci_bus_type, &ctx->nb);
-> +			if (ret) {
-> +				dev_err_probe(dev, ret, "Failed to register notifier for serdev\n");
-> +				return ret;
-> +			}
-> +		}
-> +	}
+> +=09/* Emit unaligned access to u8 buffer with __packed. */
+> +=09struct cd_fan_block {
+> +=09=09u32 nr;
+> +=09=09u32 data[]; /* id[nr], max_rpm[nr], min_rpm[nr] */
+> +=09} __packed * block;
 > +
-> +	return 0;
+> +=09union acpi_object *ret_obj __free(kfree) =3D wmidev_block_query(priv-=
+>wdev, 0);
+> +=09if (!ret_obj)
+> +=09=09return -ENODEV;
+> +
+> +=09if (ret_obj->type =3D=3D ACPI_TYPE_BUFFER) {
+> +=09=09block =3D (struct cd_fan_block *)ret_obj->buffer.pointer;
+> +=09=09size =3D ret_obj->buffer.length;
+> +
+> +=09=09count =3D size >=3D sizeof(*block) ? block->nr : 0;
+> +=09=09if (size < struct_size(block, data, count * 3)) {
+> +=09=09=09dev_warn(&priv->wdev->dev,
+> +=09=09=09=09 "incomplete fan test data block: %zu < %zu, ignoring\n",
+> +=09=09=09=09 size, struct_size(block, data, count * 3));
+> +=09=09=09count =3D 0;
+> +=09=09} else if (count > U8_MAX) {
+
++ limits.h
+
+--=20
+ i.
+
+> +=09=09=09dev_warn(&priv->wdev->dev,
+> +=09=09=09=09 "too many fans reported: %u > %u, truncating\n",
+> +=09=09=09=09 count, U8_MAX);
+> +=09=09=09count =3D U8_MAX;
+> +=09=09}
+> +=09} else {
+> +=09=09/*
+> +=09=09 * This is usually caused by a dummy ACPI method. Do not return an=
+ error
+> +=09=09 * as failing to probe this device will result in sub-master devic=
+e being
+> +=09=09 * unbound. This behavior aligns with lwmi_cd_cache().
+> +=09=09 */
+> +=09=09count =3D 0;
+> +=09}
+> +
+> +=09list =3D devm_kzalloc(&priv->wdev->dev, struct_size(list, cd_fan, cou=
+nt), GFP_KERNEL);
+> +=09if (!list)
+> +=09=09return -ENOMEM;
+> +
+> +=09for (idx =3D 0; idx < count; idx++) {
+> +=09=09/* Do not calculate array index using count, as it may be truncate=
+d. */
+> +=09=09list->cd_fan[idx] =3D (struct capdata_fan) {
+> +=09=09=09.id      =3D block->data[idx],
+> +=09=09=09.max_rpm =3D block->data[idx + block->nr],
+> +=09=09=09.min_rpm =3D block->data[idx + (2 * block->nr)],
+> +=09=09};
+> +=09}
+> +
+> +=09*listptr =3D list;
+> +=09return count;
 > +}
 > +
->  static int pwrseq_pcie_m2_probe(struct platform_device *pdev)
->  {
->  	struct device *dev = &pdev->dev;
-> @@ -235,7 +399,11 @@ static int pwrseq_pcie_m2_probe(struct platform_device *pdev)
->  		return dev_err_probe(dev, PTR_ERR(ctx->pwrseq),
->  				     "Failed to register the power sequencer\n");
->  
-> -	return 0;
-> +	/*
-> +	 * Register a notifier for creating protocol devices for
-> +	 * non-discoverable busses like UART.
-> +	 */
-> +	return pwrseq_pcie_m2_register_notifier(ctx, dev);
->  }
->  
->  static const struct of_device_id pwrseq_pcie_m2_of_match[] = {
-> 
-> -- 
-> 2.48.1
-> 
-> 
+>  /**
+>   * lwmi_cd_alloc() - Allocate a cd_list struct in drvdata
+>   * @priv: lenovo-wmi-capdata driver data.
+> @@ -270,6 +354,12 @@ static int lwmi_cd_alloc(struct lwmi_cd_priv *priv, =
+enum lwmi_cd_type type)
+>  =09case LENOVO_CAPABILITY_DATA_01:
+>  =09=09list_size =3D struct_size(list, cd01, count);
+>  =09=09break;
+> +=09case LENOVO_FAN_TEST_DATA:
+> +=09=09count =3D lwmi_cd_fan_list_alloc_cache(priv, &list);
+> +=09=09if (count < 0)
+> +=09=09=09return count;
+> +
+> +=09=09goto got_list;
+>  =09default:
+>  =09=09return -EINVAL;
+>  =09}
+> @@ -278,6 +368,7 @@ static int lwmi_cd_alloc(struct lwmi_cd_priv *priv, e=
+num lwmi_cd_type type)
+>  =09if (!list)
+>  =09=09return -ENOMEM;
+> =20
+> +got_list:
+>  =09ret =3D devm_mutex_init(&priv->wdev->dev, &list->list_mutex);
+>  =09if (ret)
+>  =09=09return ret;
+> @@ -396,6 +487,8 @@ static int lwmi_cd_probe(struct wmi_device *wdev, con=
+st void *context)
+> =20
+>  =09=09ret =3D component_add(&wdev->dev, &lwmi_cd_component_ops);
+>  =09=09goto out;
+> +=09case LENOVO_FAN_TEST_DATA:
+> +=09=09goto out;
+>  =09default:
+>  =09=09return -EINVAL;
+>  =09}
+> @@ -419,6 +512,8 @@ static void lwmi_cd_remove(struct wmi_device *wdev)
+>  =09case LENOVO_CAPABILITY_DATA_01:
+>  =09=09component_del(&wdev->dev, &lwmi_cd_component_ops);
+>  =09=09break;
+> +=09case LENOVO_FAN_TEST_DATA:
+> +=09=09break;
+>  =09default:
+>  =09=09WARN_ON(1);
+>  =09}
+> @@ -431,6 +526,7 @@ static void lwmi_cd_remove(struct wmi_device *wdev)
+>  static const struct wmi_device_id lwmi_cd_id_table[] =3D {
+>  =09{ LWMI_CD_WDEV_ID(LENOVO_CAPABILITY_DATA_00) },
+>  =09{ LWMI_CD_WDEV_ID(LENOVO_CAPABILITY_DATA_01) },
+> +=09{ LWMI_CD_WDEV_ID(LENOVO_FAN_TEST_DATA) },
+>  =09{}
+>  };
+> =20
+> diff --git a/drivers/platform/x86/lenovo/wmi-capdata.h b/drivers/platform=
+/x86/lenovo/wmi-capdata.h
+> index a6d006ef458f..38af4c4e4ef4 100644
+> --- a/drivers/platform/x86/lenovo/wmi-capdata.h
+> +++ b/drivers/platform/x86/lenovo/wmi-capdata.h
+> @@ -26,6 +26,12 @@ struct capdata01 {
+>  =09u32 max_value;
+>  };
+> =20
+> +struct capdata_fan {
+> +=09u32 id;
+> +=09u32 min_rpm;
+> +=09u32 max_rpm;
+> +};
+> +
+>  struct lwmi_cd_binder {
+>  =09struct cd_list *cd00_list;
+>  =09struct cd_list *cd01_list;
+> @@ -34,5 +40,6 @@ struct lwmi_cd_binder {
+>  void lwmi_cd_match_add_all(struct device *master, struct component_match=
+ **matchptr);
+>  int lwmi_cd00_get_data(struct cd_list *list, u32 attribute_id, struct ca=
+pdata00 *output);
+>  int lwmi_cd01_get_data(struct cd_list *list, u32 attribute_id, struct ca=
+pdata01 *output);
+> +int lwmi_cd_fan_get_data(struct cd_list *list, u32 attribute_id, struct =
+capdata_fan *output);
+> =20
+>  #endif /* !_LENOVO_WMI_CAPDATA_H_ */
+>=20
 
--- 
-மணிவண்ணன் சதாசிவம்
+--8323328-1045187270-1768238715=:1026--
