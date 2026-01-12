@@ -1,195 +1,209 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.11])
+Received: from mout.gmx.net (mout.gmx.net [212.227.15.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2B691336EC7;
-	Mon, 12 Jan 2026 18:11:20 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.11
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EA745387568;
+	Mon, 12 Jan 2026 18:17:00 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=212.227.15.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1768241482; cv=none; b=sYqF7peOhPxnKppth/M+L1ygFWLOtsvyDUhEyyEywKtHpixbVpUD+JS6OtKjIZBg/uqmjyriWOtFzmTc2Zz8zHrM6TjVK/Cq4SrjVqesnIdP86Ulhf2rnpz5j5R7715QJZOjSCeNoT1DWnXYL1QV7nw+SdvELv+sH8WcSNnocug=
+	t=1768241833; cv=none; b=b+GwP/v3c32+PLv955XBVQ+Z5+WXZkY9Qx0QaP/jr95Knj2oBN8xP5R0g8MV7Bh5MMutTlefhOugVh9mOcLW4Yrl74y7nCOqZ7/wR/SfcDfUyjGK44f5BJ8Ha5uHvl7KTwDN902qiw+McQyyDoBdqz3f5BlF6d8Q2NfDzny+CCw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1768241482; c=relaxed/simple;
-	bh=/KLQXz2NNIZ2+NznPVGmdBCIfGtlqCpRNDu4767I9Mk=;
-	h=From:Date:To:cc:Subject:In-Reply-To:Message-ID:References:
-	 MIME-Version:Content-Type; b=F3Lmb6A3fCP+KLZSI8h9pXLW5/DlgIDnt9B8XRHIfstu9eHahXU8CShRD/Fq9uKbJUPEwcL7vGyd64p1T5OodaMQiXtn7CF5qjnmIDNWWNqwSilGQHuqbRSPBRIsfrzEWmOG+Uj9eKDkQ55O4TVzplEKvuObGmvKnNRoF56sijQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=pass smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=AP6j+q6D; arc=none smtp.client-ip=192.198.163.11
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.intel.com
+	s=arc-20240116; t=1768241833; c=relaxed/simple;
+	bh=e6oFFRQgJUYC6D4OBMUwhS+EehwF4cgz64/fy4PDz8o=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=bHh1lP8wXPpHH1POigEnFUtz6n0TeKpeBWNRrMln0Jyyr+2w8DjUcz6ZVZbdNHTng7YgRHBmZZqS2DaOaf+pfKZvZuP+iCvwpn3rBu0Tt5V+SfoBrpxTx0z9coYg2UOKRvEpQazljpzBVNsdfl4KbDi9luRrJNaU3oc6Q0Mf1yU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gmx.de; spf=pass smtp.mailfrom=gmx.de; dkim=pass (2048-bit key) header.d=gmx.de header.i=w_armin@gmx.de header.b=QVJBk8YZ; arc=none smtp.client-ip=212.227.15.18
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gmx.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmx.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="AP6j+q6D"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1768241481; x=1799777481;
-  h=from:date:to:cc:subject:in-reply-to:message-id:
-   references:mime-version;
-  bh=/KLQXz2NNIZ2+NznPVGmdBCIfGtlqCpRNDu4767I9Mk=;
-  b=AP6j+q6DFo290m1VE6f5IiNx3p4YqsyWf0koeFJcpvDFMsDRjg4D9qSP
-   crYO4JaL/Mvto82lcNyFxFtmwOJ+iKifQt/me9HDI/yeeXG28E/3YWHzy
-   GMWaGiyV3JrH+jJgQcxThpNeOwsoV4pqb90q4uz68wPU0gUsPUfyWH/0z
-   /bXTGtv1y26d7/hBzIUkHRTvOM2APyP9KYbjsLRvB6l2JPOa17OoETiR2
-   43TYolcgDVCYsYcnlEiAbH+X3EUQtfcnp2xnpSMjZnUSAPYi3IlbumvCA
-   ms7rERbgsYAJ1KkZhQiajsvmL3BFcKtMTy0TrYNe8z+JrZUmL0wZCFsnt
-   Q==;
-X-CSE-ConnectionGUID: QVbO0Hl3R46AosiWnHMOYQ==
-X-CSE-MsgGUID: xZRpXouAT4qhR3e0a9oJ+w==
-X-IronPort-AV: E=McAfee;i="6800,10657,11669"; a="80162869"
-X-IronPort-AV: E=Sophos;i="6.21,221,1763452800"; 
-   d="scan'208";a="80162869"
-Received: from fmviesa004.fm.intel.com ([10.60.135.144])
-  by fmvoesa105.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 12 Jan 2026 10:11:21 -0800
-X-CSE-ConnectionGUID: CIzlXUJNStiPtt/oaJlvsw==
-X-CSE-MsgGUID: p+cpguJiTgCdao7GAGgEZw==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.21,221,1763452800"; 
-   d="scan'208";a="208992204"
-Received: from ijarvine-mobl1.ger.corp.intel.com (HELO localhost) ([10.245.245.111])
-  by fmviesa004-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 12 Jan 2026 10:11:17 -0800
-From: =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
-Date: Mon, 12 Jan 2026 20:11:15 +0200 (EET)
-To: Armin Wolf <W_Armin@gmx.de>
-cc: Hans de Goede <hansg@kernel.org>, platform-driver-x86@vger.kernel.org, 
-    LKML <linux-kernel@vger.kernel.org>, linux@weissschuh.net, 
-    Dell.Client.Kernel@dell.com, corbet@lwn.net, linux-doc@vger.kernel.org
-Subject: Re: [PATCH v3 4/9] platform/wmi: Add kunit test for the string
- conversion code
-In-Reply-To: <e1b3bc91-bc89-4a6e-8f80-f9ac25b2bedb@gmx.de>
-Message-ID: <0edb4c4a-5177-c535-dd7f-f7062797d86d@linux.intel.com>
-References: <20260109214619.7289-1-W_Armin@gmx.de> <20260109214619.7289-5-W_Armin@gmx.de> <c8c399b0-7eda-a12a-61b4-9777e07c98ae@linux.intel.com> <e1b3bc91-bc89-4a6e-8f80-f9ac25b2bedb@gmx.de>
+	dkim=pass (2048-bit key) header.d=gmx.de header.i=w_armin@gmx.de header.b="QVJBk8YZ"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=gmx.de;
+	s=s31663417; t=1768241818; x=1768846618; i=w_armin@gmx.de;
+	bh=dDr4tipJ7k1sRf694vdrWqRqjWKUgyefV1KrOdrySKQ=;
+	h=X-UI-Sender-Class:Message-ID:Date:MIME-Version:Subject:To:Cc:
+	 References:From:In-Reply-To:Content-Type:
+	 Content-Transfer-Encoding:cc:content-transfer-encoding:
+	 content-type:date:from:message-id:mime-version:reply-to:subject:
+	 to;
+	b=QVJBk8YZJE16QNZCopDtjp9g9R7iikfV+5BRbb4pna4r+QHMYHDB5xBEuMPEpXfR
+	 NDMQX75/CKZkRz2kDPCa2WwO/cy82w1IxgNeJHBiw9vBXXGKHidm/p8Z+YFWnF1H6
+	 f2G95h9p5IEr+v3gTodiUoshP2hUoCfCHXdehRBNeYbMQP91nO8j3zw5gvMB3SH0t
+	 rSnVZEWxjLIMDCDOIVlGqfnd90KGdgBd/b4Ir6iszzsWpnTjx4Xy71hr76T7XcEaq
+	 ExMYMtROM0lRFhnfQ44hUOAzSt1Wr7OSVgmiXTIGuPkCli63c7wtcGOgXUfb3J9PV
+	 z9jdtqtkmVseMPusMg==
+X-UI-Sender-Class: 724b4f7f-cbec-4199-ad4e-598c01a50d3a
+Received: from [192.168.0.69] ([93.202.247.91]) by mail.gmx.net (mrgmx004
+ [212.227.17.190]) with ESMTPSA (Nemesis) id 1M4s4r-1veXWg3ZIt-004bqd; Mon, 12
+ Jan 2026 19:16:58 +0100
+Message-ID: <d7898ded-bde5-487e-a476-02ff01d94565@gmx.de>
+Date: Mon, 12 Jan 2026 19:16:55 +0100
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/mixed; boundary="8323328-613519053-1768241475=:1026"
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v2 0/2] rust: WMI abstractions
+To: Gladyshev Ilya <foxido@foxido.dev>
+Cc: "Rafael J. Wysocki" <rafael@kernel.org>, Len Brown <lenb@kernel.org>,
+ Miguel Ojeda <ojeda@kernel.org>, Boqun Feng <boqun.feng@gmail.com>,
+ Gary Guo <gary@garyguo.net>, Benno Lossin <lossin@kernel.org>,
+ Andreas Hindborg <a.hindborg@kernel.org>, Alice Ryhl <aliceryhl@google.com>,
+ Trevor Gross <tmgross@umich.edu>, Danilo Krummrich <dakr@kernel.org>,
+ Tamir Duberstein <tamird@gmail.com>, platform-driver-x86@vger.kernel.org,
+ linux-kernel@vger.kernel.org, rust-for-linux@vger.kernel.org,
+ linux-acpi@vger.kernel.org
+References: <cover.1768153572.git.foxido@foxido.dev>
+Content-Language: en-US
+From: Armin Wolf <W_Armin@gmx.de>
+In-Reply-To: <cover.1768153572.git.foxido@foxido.dev>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
+X-Provags-ID: V03:K1:Jsoe/v5Z2z/1MT401XY92OGVboytiYnmd4PO8vPxQ1SG0faP/4d
+ b691G5JIoOtise4ua9Ll2aGnpfy0AYaYkP7KfdCHVcSM1e5Ad8zdTOBrSlfiR9+WxDPOeq5
+ +K5wlSxTnvxf4WyQaMOYyGN8BaiOdh+YYychPkcQJjl2rZ3QLTjmRz1gZCG5S0wfSjnwklC
+ Ps4WYv7sjFAeCoqb5Z2pg==
+X-Spam-Flag: NO
+UI-OutboundReport: notjunk:1;M01:P0:jGue6/7mxb0=;4//UFwdc8htGPaNN0Va1sKSN8fx
+ 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
+ JrUmm/tMQ9pcDvj9hVLReuMhQlmL9
 
-  This message is in MIME format.  The first part should be readable text,
-  while the remaining parts are likely unreadable without MIME-aware tools.
+Am 11.01.26 um 19:31 schrieb Gladyshev Ilya:
 
---8323328-613519053-1768241475=:1026
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: QUOTED-PRINTABLE
+> Overview
+> ========
+> This patchset implements WMI abstractions for Rust drivers. It is the successor
+> of the previous RFC posting [0]. These abstractions allow most WMI drivers to be
+> implemented in Rust (provided other dependencies are abstracted as well).
+>
+> Currently, the only driver in existance is a reference driver (rewrite of redmi-wmi,
+> Armin is OK with that [1]). While being fully functional, it depends on sparse-keyboard
+> abstractions, which I am still polishing. You can view WIP abstractions & driver at [2].
+>
+> Notes
+> =====
+> I do not know how these abstractions should be handled in MAINTAINERS, so for now I have
+> simply added them to the original WMI entry. I would be happy to be added as a reviewer
+> to keep the Rust version 'synced'/valid though.
+>
+> [0]: https://lore.kernel.org/rust-for-linux/cover.1766331321.git.foxido@foxido.dev/
+> [1]: https://lore.kernel.org/rust-for-linux/c7384f13-e286-45a4-95c6-24d389217185@gmx.de/
+> [2]: https://git.foxido.dev/foxido/linux/-/commits/rust_wmi?ref_type=heads
 
-On Mon, 12 Jan 2026, Armin Wolf wrote:
+Just a side note:
 
-> Am 12.01.26 um 17:34 schrieb Ilpo J=C3=A4rvinen:
->=20
-> > On Fri, 9 Jan 2026, Armin Wolf wrote:
-> >=20
-> > > The string conversion frunctions provided by the WMI driver core
-> > > have no dependencies on the remaining WMI API, making them suitable
-> > > for unit tests.
-> > >=20
-> > > Implement such a unit test using kunit. Those unit tests verify that
-> > > converting between WMI strings and UTF8 strings works as expected.
-> > > They also verify that edge cases are handled correctly.
-> > >=20
-> > > Signed-off-by: Armin Wolf <W_Armin@gmx.de>
-> > > ---
-> > >   drivers/platform/wmi/tests/Kconfig        |  11 +
-> > >   drivers/platform/wmi/tests/Makefile       |   3 +
-> > >   drivers/platform/wmi/tests/string_kunit.c | 278 +++++++++++++++++++=
-+++
-> > >   3 files changed, 292 insertions(+)
-> > >   create mode 100644 drivers/platform/wmi/tests/string_kunit.c
-> > >=20
-> > > diff --git a/drivers/platform/wmi/tests/Kconfig
-> > > b/drivers/platform/wmi/tests/Kconfig
-> > > index efcbcb51c251..f7f0f3c540f5 100644
-> > > --- a/drivers/platform/wmi/tests/Kconfig
-> > > +++ b/drivers/platform/wmi/tests/Kconfig
-> > > @@ -14,3 +14,14 @@ config ACPI_WMI_MARSHALLING_KUNIT_TEST
-> > >   =09  to the KUnit documentation in Documentation/dev-tools/kunit/.
-> > >     =09  If unsure, say N.
-> > > +
-> > > +config ACPI_WMI_STRING_KUNIT_TEST
-> > > +=09tristate "KUnit Test for ACPI-WMI string conversion" if
-> > > !KUNIT_ALL_TESTS
-> > > +=09depends on KUNIT
-> > > +=09default KUNIT_ALL_TESTS
-> > > +=09help
-> > > +=09  This builds unit tests for the ACPI-WMI string conversion code.
-> > > +=09  For more information on KUnit and unit tests in general, please
-> > > refer
-> > > +=09  to the KUnit documentation in Documentation/dev-tools/kunit/.
-> > > +
-> > > +=09  If unsure, say N.
-> > > diff --git a/drivers/platform/wmi/tests/Makefile
-> > > b/drivers/platform/wmi/tests/Makefile
-> > > index 252c3125353a..62c438e26259 100644
-> > > --- a/drivers/platform/wmi/tests/Makefile
-> > > +++ b/drivers/platform/wmi/tests/Makefile
-> > > @@ -6,3 +6,6 @@
-> > >     wmi_marshalling_kunit-y=09=09=09=09:=3D marshalling_kunit.o
-> > >   obj-$(CONFIG_ACPI_WMI_MARSHALLING_KUNIT_TEST)=09+=3D
-> > > wmi_marshalling_kunit.o
-> > > +
-> > > +wmi_string_kunit-y=09=09=09=09:=3D string_kunit.o
-> > > +obj-$(CONFIG_ACPI_WMI_STRING_KUNIT_TEST)=09+=3D wmi_string_kunit.o
-> > > diff --git a/drivers/platform/wmi/tests/string_kunit.c
-> > > b/drivers/platform/wmi/tests/string_kunit.c
-> > > new file mode 100644
-> > > index 000000000000..9aa3ffa85090
-> > > --- /dev/null
-> > > +++ b/drivers/platform/wmi/tests/string_kunit.c
-> > > @@ -0,0 +1,278 @@
-> > > +// SPDX-License-Identifier: GPL-2.0-or-later
-> > > +/*
-> > > + * KUnit test for the ACPI-WMI string conversion code.
-> > > + *
-> > > + * Copyright (C) 2025 Armin Wolf <W_Armin@gmx.de>
-> > > + */
-> > > +
-> > > +#include <linux/module.h>
-> > > +#include <linux/slab.h>
-> > > +#include <linux/string.h>
-> > > +#include <linux/wmi.h>
-> > > +
-> > > +#include <kunit/resource.h>
-> > > +#include <kunit/test.h>
-> > > +
-> > > +#include <asm/byteorder.h>
-> > > +
-> > > +struct wmi_string_param {
-> > > +=09const char *name;
-> > > +=09const struct wmi_string *wmi_string;
-> > > +=09/*
-> > > +=09 * Remember that using sizeof() on a struct wmi_string will
-> > > +=09 * always return a size of two bytes due to the flexible
-> > > +=09 * array member!
-> > > +=09 */
-> > > +=09size_t wmi_string_length;
-> > > +=09const u8 *utf8_string;
-> > > +=09size_t utf8_string_length;
-> > > +};
-> > > +
-> > > +#define TEST_WMI_STRING_LENGTH 12
-> > > +
-> > > +static const struct wmi_string test_wmi_string =3D {
-> > > +=09.length =3D cpu_to_le16(10),
-> > > +=09.chars =3D {
-> > > +=09=09cpu_to_le16(u'T'),
-> > I've applied this to for-next and intend to keep these there but FYI th=
-ese
-> > trigger sparse errors. I don't know if they're fixable or not with
-> > reasonable effort on kernel side.
->=20
-> To me it seems that sparse ignores the u-prefix signaling that the charac=
-ter
-> constant
-> has a length of 16-bits, but good catch.
->=20
-> If this really is a problem then gcc would issue a warning anyway (happen=
-ed
-> when i was
-> using the =F0=9F=90=A7 character which does not fit into a 16-bit charact=
-er constant).
+The patch series for the buffer-based WMI API (https://lore.kernel.org/platform-driver-x86/0914098e-e61b-40c1-9b6e-357832fef5a9@gmx.de/T/#mb8d1591e475a6c346421e8875a1307f3ed1528af)
+was accepted into the pdx86 kernel tree and will soon show up on the for-next branch. If you want you can target this API instead because
+it replaces the usage of ACPI objects with a plain buffer that might be easier to model in rust.
 
-I guess I'll have to add another filter to my build-test.sh for this file.=
-=20
-I already -v -e 'error: bad constant expression' filter in use. Sadly=20
-sparse seems to be rotting.
+Thanks,
+Armin Wolf
 
---=20
- i.
-
---8323328-613519053-1768241475=:1026--
+> ---
+> Changes since v1:
+> - Add lifetime to AcpiObject
+> - Add forgotten `Sync` requirement to the WMI driver trait
+> - Drop unsafe in DeviceId::new() (so no need for the const_intrinsic_copy feature)
+> - Device<Core> -> Device<Bound> in notify
+> - Small fixes (styling, missing safety comment)
+> - Add link to the WIP reference driver
+>
+> I didn't touch AcpiObject::type_id() in v2 because it does its job for now. It's currently
+> small (only one subtype, whereas both enum options would introduce a larger integration
+> surface), and it would be an easy change if someone needs a more powerful solution.
+>
+> I've also played around with some other suggestions, but:
+> - Suggested wrapping acpi_object instead of bindgen union subtypes will only introduce
+>      unneeded unsafety in each subtype's operation. I decided it's better to expose the bindgen
+>      type once than to validate a safety invariant each time.
+> - Suggested implementation via a sealed trait didn't really provide any benefits; it just
+>      raised code complexity a bit. Maybe I did it wrong, though...
+>
+> Link to v1: https://lore.kernel.org/rust-for-linux/cover.1767818037.git.foxido@foxido.dev/
+> ---
+>
+> Gladyshev Ilya (2):
+>    rust: implement wrapper for acpi_object
+>    rust: add WMI abstractions
+>
+>   MAINTAINERS                     |   1 +
+>   rust/bindings/bindings_helper.h |   1 +
+>   rust/kernel/acpi.rs             |  97 +++++++++++
+>   rust/kernel/lib.rs              |   2 +
+>   rust/kernel/wmi.rs              | 286 ++++++++++++++++++++++++++++++++
+>   5 files changed, 387 insertions(+)
+>   create mode 100644 rust/kernel/wmi.rs
+>
+>
+> base-commit: 9ace4753a5202b02191d54e9fdf7f9e3d02b85eb
