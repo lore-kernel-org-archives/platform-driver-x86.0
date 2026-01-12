@@ -1,58 +1,57 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.11])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.13])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 87C6935F8AA;
-	Mon, 12 Jan 2026 15:34:19 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.11
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C7FEA35F8DC;
+	Mon, 12 Jan 2026 15:34:26 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.13
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1768232060; cv=none; b=XHkEtV538G/oM5D7NznVEFiKwYTEIQnNK1uNDFZlPJ7y3l6J0LRKekyQJTiFFSzsL4ssb30qcVCNsf4afV5pjx+AvO+8ZtUZQAwYyuY7/DXkmWwJPAiWMux0mnOYU6hWjzlUSj3Z4y/E4C3S9EWmSat+pesOGGj0Z81pbyU+PKA=
+	t=1768232068; cv=none; b=bWi88XnJTRsKnx4RBGHuc2rBoE+A0DgTaj6QEc6dmXf4YE9yJOKMQ6RcNs1ttyC2zErbfVwmeuExURQR5nyGIX6LwXOjspFUT8uCSAVIafs1PhCG7vEZtuxPMcMUUTDTfFU4V3Yk9yIDziCyfYOzdm3oNE4JdwVXAUP9CiAfCG8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1768232060; c=relaxed/simple;
-	bh=EVlCqEGFDT+jt4JJ8bIsiUiUlcEaGcW/oAgwrx2LAI4=;
-	h=From:To:Cc:In-Reply-To:References:Subject:Message-Id:Date:
-	 MIME-Version:Content-Type; b=T6HpxkKEtxLK5Mb4TaWIQvFaTqKlZQT4R6rjx9ejnNS1//6g3h6VeWi3L/OSYkdLR4mLvQeFW6pV/QpOIQLQ1Ue+1no+eLLgMx1z+m0Yj33BiX+Iy914GKPfs2EPfxqStim0s+/wnYnzrXeg5GSQ6NAArP63BVhuzwePBFDkrOA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=pass smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=AFCntYw0; arc=none smtp.client-ip=192.198.163.11
+	s=arc-20240116; t=1768232068; c=relaxed/simple;
+	bh=a3TlgYsJtuSfcvrnZK1cr9fEMlfi/sVWNa+LB683VZE=;
+	h=From:To:In-Reply-To:References:Subject:Message-Id:Date:
+	 MIME-Version:Content-Type; b=XjQ2TCT4Y9XmaeiUzh9vGX+L/SjuBQxLlVmnLHFhmOcGvnxPjYmyp4swB2SutzUs2dN2yXmZzkTcrC9jDp3o4hp/qKLPqfR62CXx8o0bU6Ka4Mdgi5TbxWOlYPvN5U3y1PFSZlLfRlpOspcjoWYfPuAWdW4olswgVpULzfRBAUM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=pass smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=Tq34tck6; arc=none smtp.client-ip=198.175.65.13
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="AFCntYw0"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="Tq34tck6"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1768232059; x=1799768059;
-  h=from:to:cc:in-reply-to:references:subject:message-id:
-   date:mime-version:content-transfer-encoding;
-  bh=EVlCqEGFDT+jt4JJ8bIsiUiUlcEaGcW/oAgwrx2LAI4=;
-  b=AFCntYw03T85qEnxsirNWlwlLKxTgoN41d4LcuwJ3y6sFypNF7DgdOK/
-   ABN6JuZAT8b3Rwg2oJ9ahGQb+64XVUDAZot7ODGyRTKbM+wppkKd5tl3x
-   17f45bmB1NCossDGnPmU0ZpkExUDqDe1qNGPxJ+9Ree+ob9PFFLwfRx0Z
-   kzY0qrH9ZqkglbRwCvdAvMPS7TB/xtyOfHYQni9t+xF8Khqed2pGrGFCk
-   pxxNA3pbQanVwUE9cn1Q/3F7pNpewuGf761Hl75oAgVcV0TzeRJVKKXUm
-   ygQcpRu9g9JmTwSI+JEj9wh7XBKzo+nkxhTFREW0/POmUmfYPrDMrfIg6
-   Q==;
-X-CSE-ConnectionGUID: 7Qa6G6hbTrexvgDmPMW3ng==
-X-CSE-MsgGUID: eEOaClsRSN+8nf884qcY3A==
-X-IronPort-AV: E=McAfee;i="6800,10657,11669"; a="80147118"
+  t=1768232067; x=1799768067;
+  h=from:to:in-reply-to:references:subject:message-id:date:
+   mime-version:content-transfer-encoding;
+  bh=a3TlgYsJtuSfcvrnZK1cr9fEMlfi/sVWNa+LB683VZE=;
+  b=Tq34tck66yoIJtiHUzR+DERhj7w/huxSPU0QzWlvZ1LvgeWxKtJGzQfO
+   mo9HmvjcGf2LuZpiorkoL+pKLIKkqH3n2HAgxeMPd9Dyr7JY7o8r7kvr5
+   pj+2lYT1gqKpKaEmf7ChBrTEa3IQqMitg4nw9oGWZq0kmK295HBlcE1/j
+   rpQGfTrdXt45welh5g97aw93w6fidupYv20ZHsyygNoc8Voh7UL6XQIf4
+   V7si7YxygyeCBeFOH9uA+8Zv6mby3547eXVTuPKn7ZcGzQ8sXxLeQ7p/z
+   wrW57+cnvRcScKMP/FIOxOCNRkVKs38x30ZzSVM9P6UjNpHo76DHx4iO3
+   w==;
+X-CSE-ConnectionGUID: 0QPnTB3RQTWvnhmE+eOhJw==
+X-CSE-MsgGUID: IUbzbLERQoK7G6NniZom7A==
+X-IronPort-AV: E=McAfee;i="6800,10657,11669"; a="80613188"
 X-IronPort-AV: E=Sophos;i="6.21,221,1763452800"; 
-   d="scan'208";a="80147118"
-Received: from orviesa004.jf.intel.com ([10.64.159.144])
-  by fmvoesa105.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 12 Jan 2026 07:34:19 -0800
-X-CSE-ConnectionGUID: RXPKclCeRACg3xD1KExIDQ==
-X-CSE-MsgGUID: J2uImRc+Qo+FLmSOkPEMgg==
+   d="scan'208";a="80613188"
+Received: from fmviesa004.fm.intel.com ([10.60.135.144])
+  by orvoesa105.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 12 Jan 2026 07:34:26 -0800
+X-CSE-ConnectionGUID: cg8M25/zQ0iUufcbGMV50Q==
+X-CSE-MsgGUID: IIySZUuNRyeqQggz4bnOTA==
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="6.21,221,1763452800"; 
-   d="scan'208";a="208636351"
+   d="scan'208";a="208960303"
 Received: from ijarvine-mobl1.ger.corp.intel.com (HELO localhost) ([10.245.245.111])
-  by orviesa004-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 12 Jan 2026 07:34:17 -0800
+  by fmviesa004-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 12 Jan 2026 07:34:24 -0800
 From: =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
-To: hansg@kernel.org, 
- Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>
-Cc: platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
-In-Reply-To: <20260107061649.1634737-1-srinivas.pandruvada@linux.intel.com>
-References: <20260107061649.1634737-1-srinivas.pandruvada@linux.intel.com>
-Subject: Re: [PATCH v2] platform/x86: ISST: Optimize suspend/resume
- callbacks
-Message-Id: <176823205135.9723.8244225730976886683.b4-ty@linux.intel.com>
-Date: Mon, 12 Jan 2026 17:34:11 +0200
+To: irenic.rajneesh@gmail.com, david.e.box@linux.intel.com, 
+ platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org, 
+ linux-pm@vger.kernel.org, Xi Pardee <xi.pardee@linux.intel.com>
+In-Reply-To: <20260108223144.504267-1-xi.pardee@linux.intel.com>
+References: <20260108223144.504267-1-xi.pardee@linux.intel.com>
+Subject: Re: [PATCH v2 0/4] Enable substate residencies for multiple PMCs
+Message-Id: <176823205942.9723.15543574397569061940.b4-ty@linux.intel.com>
+Date: Mon, 12 Jan 2026 17:34:19 +0200
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
@@ -63,12 +62,18 @@ Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
 X-Mailer: b4 0.13.0
 
-On Tue, 06 Jan 2026 22:16:49 -0800, Srinivas Pandruvada wrote:
+On Thu, 08 Jan 2026 14:31:38 -0800, Xi Pardee wrote:
 
-> If SST-CP or SST-PP is not supported then don't store configuration
-> during suspend callback and restore during resume callback.
+> This patch series enables substate residencies for multiple PMCs.
+> The first two patches prepare this change:
 > 
+> - The first patch changes the datatype of LPM mode attributes to u8.
+> - The second patch moves the LPM mode attributes from the pmc_dev to
+>   the pmc struture.
+> - The third patch enables the substate residencies for multiple PMCs.
+> - The final removes one empty line.
 > 
+> [...]
 
 
 Thank you for your contribution, it has been applied to my local
@@ -77,8 +82,14 @@ platform-drivers-x86/review-ilpo-next branch only once I've pushed my
 local branch there, which might take a while.
 
 The list of commits applied:
-[1/1] platform/x86: ISST: Optimize suspend/resume callbacks
-      commit: b1ac196265dd90f8bec71ea42f0b7831d80c9167
+[1/4] platform/x86/intel/pmc: Change LPM mode fields to u8
+      commit: d155800918b0106e9a4147d00c81bc6f21c17233
+[2/4] platform/x86/intel/pmc: Move LPM mode attributes to PMC
+      commit: a1c745c84043001f696ae063c213f1eefdb03a1a
+[3/4] platform/x86/intel/pmc: Enable substate residencies for multiple PMCs
+      commit: ec4cda37a62cb736e9c7a5ad1630e6418e465af7
+[4/4] platform/x86/intel/pmc: Remove double empty line
+      commit: 291cb0fc143ca603d4e959ae3fbf4bb149281a39
 
 --
  i.
