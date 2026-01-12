@@ -1,127 +1,179 @@
-Received: from mail-pl1-f170.google.com (mail-pl1-f170.google.com [209.85.214.170])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.7])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 65235387561
-	for <platform-driver-x86@vger.kernel.org>; Mon, 12 Jan 2026 18:17:26 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.170
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 359DB31ED80;
+	Mon, 12 Jan 2026 19:22:48 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.7
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1768241848; cv=none; b=ZMMJmVmx6kdpwcDS2vS0sA1wamV3sIBtaxRtd9I8xPmU5ULJO31RvbmIttm82V6GlGFKHS8cG4F9UfrZTgcvnUmBM49IIT3JV4/I7ezwevHgv3MDm8g+8hVHUW1+MAvQ+C6ILIqLytT6vuG2YrW+saKL2tbJkLtueP1zRq//Ezw=
+	t=1768245779; cv=none; b=oVQh5XhschZXCo4kyU+4D3nl1v6Q+m5u9IgMh/wLECYcBeyNp5/2GOfsKQEYW+F+/1Vr021akap5PmvwJXo/DXwbYs0wXtQ+BDjYioJvI7AQDalA8WzKsqJuulMsvJWwJ/Wfm2So+7d/KDkU+c6lJb2egN1SGX5hw1HK/JvN/BU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1768241848; c=relaxed/simple;
-	bh=HZWb8NTGhICIn9r0/1N4Kr1/FZT+Sn4S6zblZ/laKMg=;
+	s=arc-20240116; t=1768245779; c=relaxed/simple;
+	bh=ZhRs7xnPZSV6XzTqCAD9BCDygo93shWOqBF0P1AaaRE=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=tVG/aUXE+p94T4DRNvRvoKbPyLGd2rH356d9hpMm81Q9+bF0hCpVU5i+gA6KulYTeyAH+7LxlFQcTxaVOfQn6FOfJjPaginw4enuSeid/JXd71S8FSW40mYKbn8FO6h0U9E8MeOK77tRlUy8WpDy9ZYaZ8ki5s/p8Psszkd4bJE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=GjUYMmq6; arc=none smtp.client-ip=209.85.214.170
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	 Content-Type:Content-Disposition:In-Reply-To; b=FzOFyZHnRzDFLzhHMao+5LGyKiTVJKN8/hKH217f4bkEZrHyjxEXXtjegcwzPrje9efqBca8DsG/ia/cQukeT7yvBagdE14eEgrF6ZWEWCC/ZJB+vYLv/+BN9bl57B7++/f86AexhMQ85R4RCh3Iflpq1BO+Qr0BfSaqtoXCpyU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=pass smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=LZEyCo93; arc=none smtp.client-ip=192.198.163.7
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="GjUYMmq6"
-Received: by mail-pl1-f170.google.com with SMTP id d9443c01a7336-2a1022dda33so42216585ad.2
-        for <platform-driver-x86@vger.kernel.org>; Mon, 12 Jan 2026 10:17:26 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1768241846; x=1768846646; darn=vger.kernel.org;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date:from:to
-         :cc:subject:date:message-id:reply-to;
-        bh=EtGlqg5k06i3Wt6eqTAnbJ1drNbM/2MSyECysgkVtSA=;
-        b=GjUYMmq6ihpSNNICeV8pA9aAnEwbo7l5+C1FcMLtFJkog3GMNjZS4b+3gKO2I+kcAG
-         G5xp1Z9cm3cNSrgWtcknFTtzEsEU6QHytB+8jouGSBN3HwUtlL3uvF3fAfuUIQlwJ6dx
-         xMDiVzBIH4uBIYyb7Vay7ibt9JmDcXKj/UYI7++pjCiuHkPEaT3kK2dARWiBR0HSbQkU
-         +0Y3xZgv5VJnja7qmmSwyl9dvO3Y+l7fc57oiZKCkexMUxS7jHlP+tymQ5PbsutffLVH
-         XrgXGQsx3xMDY8/polrh2VZ8jCg28y0A1gfT2m7xpPEUoYwX7tWJXIZKjnHP4qeNiNip
-         nBCw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1768241846; x=1768846646;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date:x-gm-gg
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=EtGlqg5k06i3Wt6eqTAnbJ1drNbM/2MSyECysgkVtSA=;
-        b=rAqGzmvrmUInfoC/SAiRcZEiShYImF8wGTKSazXY4Lsf+uvIfvwfHAUM0K3gO6dRVq
-         K3Iwb7Te887C64RdKaembLQ3S0VtYLquneA4ujmQqqQ0HSP9a7UqmS10U+TnLYqkxn6a
-         nRVlHaTe9i5w4/3Cz1hlhGKsqJWA+n7ajn8S7ifaiFiGcTuYNUf7lo0oa8PPiNlST6Zy
-         QaeEZ+5JTyaABl/zJ7SOdgE+zDf8T6FQRFj6roHzm/1LGa2OdmWXENobsBK9E/v9YQxB
-         v4Lo1uswyCXwgWYSuUBpQ1nDfW7Kb87izRmnWyTfdOvLJjzo2trkqH5D7jgeFsjQiUCX
-         t+/Q==
-X-Forwarded-Encrypted: i=1; AJvYcCXMldylIexDAlqqb5pJaaum8Bz1J4sbvWakoHIpjo1dEHl1KjezoTGq59U5V+xRo6gUgfgZ9By4uz18sxO4R+jeltQT@vger.kernel.org
-X-Gm-Message-State: AOJu0YyrwDOB831dM+QcmIt670jIL54bDHwmjT+A6wVBjrnZZfdlGGk0
-	T8vw0kse2vsnlem5/vqUWcmqDr60lNo9CG3UIVp54y8Y3qBDiZrKDoBC
-X-Gm-Gg: AY/fxX77HeqAvMXeUHbLMiZTwb3kEsiUbtOCK45YtM8mZJe67lizB4s+i4j9XpyCrLE
-	FIu9eWYzJIXIWgZ5V0T//cAMKmvecxET4hHoUWyPNZh/W8mOvojXVWXiijVaXqFDmYu7tCPk3Co
-	598pFyaNyrLVibtH0JUjtbDnmFyXrw3qIUMV28dMsyFr4MZEiaGC7LnUBqJ2KI1B9EWc40jroRb
-	i2I2docxlIBGDj3xUm6poDlMCCTiK63Z/NgkC/GB3C0ddy+8tHqkrxefg6nrpf9PSXvAKTLysLO
-	Gc9AgayupMMqPqYBDsInD3G/7gg1YxF3Acri+nYpzjjK5O4fN+2gQ3EVODXt0i27XgqzuCjKXpM
-	u89D7QHsGPFqTUPLDSUat/VOVJIMF249gYe/qGn3tPE+ZXIBcMQUAFQzT3jBXu9UG2RNwl1F+sZ
-	ngGkhGvM+uj/2GHXN694c=
-X-Google-Smtp-Source: AGHT+IH67SsAmDW+XdcDdNkuZHCuju5RGcFncESFWYkzYZSMHpAuj4JZCKO+lnsTd85qUcAxrMy/lg==
-X-Received: by 2002:a17:903:1b6b:b0:2a3:c667:e0a0 with SMTP id d9443c01a7336-2a3ee47dee7mr204871275ad.29.1768241845516;
-        Mon, 12 Jan 2026 10:17:25 -0800 (PST)
-Received: from archlinux ([2405:201:1b:225c:eb9d:1fc0:f95c:bd90])
-        by smtp.gmail.com with ESMTPSA id d9443c01a7336-2a3e3cb2debsm182203665ad.65.2026.01.12.10.17.21
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 12 Jan 2026 10:17:25 -0800 (PST)
-Date: Mon, 12 Jan 2026 23:47:15 +0530
-From: Krishna Chomal <krishna.chomal108@gmail.com>
-To: Ilpo =?utf-8?B?SsOkcnZpbmVu?= <ilpo.jarvinen@linux.intel.com>
-Cc: Hans de Goede <hansg@kernel.org>, linux@roeck-us.net, 
-	platform-driver-x86@vger.kernel.org, linux-hwmon@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH v2 1/2] platform/x86: hp-wmi: add manual fan control for
- Victus S models
-Message-ID: <aWU5Mf89hTifpewY@archlinux>
-References: <20251225142310.204831-1-krishna.chomal108@gmail.com>
- <20251230145053.516196-1-krishna.chomal108@gmail.com>
- <20251230145053.516196-2-krishna.chomal108@gmail.com>
- <ce48f7b8-7d88-266f-ca8d-6af3b01815db@linux.intel.com>
- <aWUvvzDCtVCOaBwq@archlinux>
- <f6ca0445-431a-f9d7-eeee-0d437efa3c76@linux.intel.com>
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="LZEyCo93"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1768245768; x=1799781768;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=ZhRs7xnPZSV6XzTqCAD9BCDygo93shWOqBF0P1AaaRE=;
+  b=LZEyCo93wnXyTfQbLqFQg0VpXsXl8PqF7X2A6MLtmiKMTbw2BO8U+MSt
+   dRXBqLL3n+4ZsfsVnv1QbOo/sk+abxPg9r89OI2gWeho20fSIICb+8Oa5
+   a2pJ3MA2CqyYw5j4y6CjDEszz8t+Y4a8Bxp1iZW2V3dG5Wp/aPsRwdffC
+   lhunireMdavEvJ+suCtRKmeVgA0HrTVteOA80aBDbj0eUrdo29RN6J/od
+   pOi/nyE679ci6KhBOrvruykiDBJMHdh+RMcOeunnU1nxK9ZYebMEC1mBq
+   otT6lyAgjYEWJDDXP2a+8/R8Npq6Gfv8pQEDuL2FwK/We+c17Fd5vzRWh
+   g==;
+X-CSE-ConnectionGUID: M1qEcAmqSamuh7M1v4oe2g==
+X-CSE-MsgGUID: 9l0OgbWyQUO7Mk6WGs7k4A==
+X-IronPort-AV: E=McAfee;i="6800,10657,11669"; a="95004014"
+X-IronPort-AV: E=Sophos;i="6.21,221,1763452800"; 
+   d="scan'208";a="95004014"
+Received: from orviesa004.jf.intel.com ([10.64.159.144])
+  by fmvoesa101.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 12 Jan 2026 11:22:47 -0800
+X-CSE-ConnectionGUID: /POQ5LCQRMmFK2RRBMq4iA==
+X-CSE-MsgGUID: sRBvAVgdRVW3CVbcLKyFvw==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.21,221,1763452800"; 
+   d="scan'208";a="208690532"
+Received: from dhhellew-desk2.ger.corp.intel.com (HELO localhost) ([10.245.245.37])
+  by orviesa004-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 12 Jan 2026 11:22:40 -0800
+Date: Mon, 12 Jan 2026 21:22:38 +0200
+From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+To: manivannan.sadhasivam@oss.qualcomm.com
+Cc: Rob Herring <robh@kernel.org>,
+	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+	Jiri Slaby <jirislaby@kernel.org>,
+	Nathan Chancellor <nathan@kernel.org>,
+	Nicolas Schier <nicolas.schier@linux.dev>,
+	Hans de Goede <hansg@kernel.org>,
+	Ilpo =?iso-8859-1?Q?J=E4rvinen?= <ilpo.jarvinen@linux.intel.com>,
+	Mark Pearson <mpearson-lenovo@squebb.ca>,
+	"Derek J. Clark" <derekjohn.clark@gmail.com>,
+	Manivannan Sadhasivam <mani@kernel.org>,
+	Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>,
+	Marcel Holtmann <marcel@holtmann.org>,
+	Luiz Augusto von Dentz <luiz.dentz@gmail.com>,
+	Bartosz Golaszewski <brgl@bgdev.pl>,
+	Bartosz Golaszewski <brgl@kernel.org>, linux-serial@vger.kernel.org,
+	linux-kernel@vger.kernel.org, linux-kbuild@vger.kernel.org,
+	platform-driver-x86@vger.kernel.org, linux-pci@vger.kernel.org,
+	devicetree@vger.kernel.org, linux-arm-msm@vger.kernel.org,
+	linux-bluetooth@vger.kernel.org, linux-pm@vger.kernel.org,
+	Stephan Gerhold <stephan.gerhold@linaro.org>,
+	Dmitry Baryshkov <dmitry.baryshkov@oss.qualcomm.com>,
+	linux-acpi@vger.kernel.org
+Subject: Re: [PATCH v4 9/9] power: sequencing: pcie-m2: Create serdev device
+ for WCN7850 bluetooth
+Message-ID: <aWVJ_ncUkAYswE3W@smile.fi.intel.com>
+References: <20260112-pci-m2-e-v4-0-eff84d2c6d26@oss.qualcomm.com>
+ <20260112-pci-m2-e-v4-9-eff84d2c6d26@oss.qualcomm.com>
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <f6ca0445-431a-f9d7-eeee-0d437efa3c76@linux.intel.com>
+In-Reply-To: <20260112-pci-m2-e-v4-9-eff84d2c6d26@oss.qualcomm.com>
+Organization: Intel Finland Oy - BIC 0357606-4 - c/o Alberga Business Park, 6
+ krs, Bertel Jungin Aukio 5, 02600 Espoo
 
-On Mon, Jan 12, 2026 at 08:08:29PM +0200, Ilpo Järvinen wrote:
->On Mon, 12 Jan 2026, Krishna Chomal wrote:
->
->> On Mon, Jan 12, 2026 at 05:13:05PM +0200, Ilpo Järvinen wrote:
->> > On Tue, 30 Dec 2025, Krishna Chomal wrote:
->> >
->> [snip]
->> > >  #include <linux/string.h>
->> > >  #include <linux/dmi.h>
->> > > +#include <linux/fixp-arith.h>
->> > > +#include <linux/limits.h>
->> > > +#include <linux/minmax.h>
->> > > +#include <linux/compiler_attributes.h>
->> > >
->> [snip]
->
->Hmm, these should be ordered alphabetically and if the existing one
->aren't, try your best (or add a patch to fix the order for all).
->
+On Mon, Jan 12, 2026 at 09:56:08PM +0530, Manivannan Sadhasivam via B4 Relay wrote:
 
-Ok, then I will add a separate patch to this series to fix the ordering
-for all includes.
+> For supporting bluetooth over the non-discoverable UART interface of
+> WCN7850, create the serdev device after enumerating the PCIe interface.
+> This is mandatory since the device ID is only known after the PCIe
+> enumeration and the ID is used for creating the serdev device.
+> 
+> Since by default there is no OF or ACPI node for the created serdev,
+> create a dynamic OF 'bluetooth' node with the 'compatible' property and
+> attach it to the serdev device. This will allow the serdev device to bind
+> to the existing bluetooth driver.
 
->> > > +
->> > > +struct victus_s_fan_table_header {
->> > > +	u8 unknown;
->> > > +	u8 num_entries;
->> > > +} __packed;
->> >
->> > Please add #include for __packed.
->> >
->>
->> __packed is defined in compiler_attributes.h, which is included in this
->> patch. Please let me know if there are any other headers that should be
->> included.
->
->Sorry, I don't know why I didn't notice it (too much reviewing in a row or
->too much multi-tasking I guess :-)).
->
+...
 
-No problem, I understand. Thanks for the quick feedback.
+> +static int pwrseq_m2_pcie_notify(struct notifier_block *nb, unsigned long action,
+> +			      void *data)
+> +{
+> +	struct pwrseq_pcie_m2_ctx *ctx = container_of(nb, struct pwrseq_pcie_m2_ctx, nb);
+> +	struct pci_dev *pdev = to_pci_dev(data);
+> +	struct serdev_controller *serdev_ctrl;
+> +	struct device *dev = ctx->dev;
+> +	struct device_node *pci_parent;
+> +	int ret;
+> +
+> +	/*
+> +	 * Check whether the PCI device is associated with this M.2 connector or
+> +	 * not, by comparing the OF node of the PCI device parent and the Port 0
+> +	 * (PCIe) remote node parent OF node.
+> +	 */
+> +	pci_parent = of_graph_get_remote_node(dev_of_node(ctx->dev), 0, 0);
+
+> +	if (!pci_parent || (pci_parent != pdev->dev.parent->of_node)) {
+
+!device_match_of_node()
+
+> +		of_node_put(pci_parent);
+> +		return NOTIFY_DONE;
+> +	}
+> +	of_node_put(pci_parent);
+> +
+> +	switch (action) {
+> +	case BUS_NOTIFY_ADD_DEVICE:
+> +		/* Create serdev device for WCN7850 */
+> +		if (pdev->vendor == PCI_VENDOR_ID_QCOM && pdev->device == 0x1107) {
+> +			struct device_node *serdev_parent __free(device_node) =
+> +				of_graph_get_remote_node(dev_of_node(ctx->dev), 1, 1);
+> +			if (!serdev_parent)
+> +				return NOTIFY_DONE;
+> +
+> +			serdev_ctrl = of_find_serdev_controller_by_node(serdev_parent);
+> +			if (!serdev_ctrl)
+> +				return NOTIFY_DONE;
+> +
+> +			ctx->serdev = serdev_device_alloc(serdev_ctrl);
+> +			if (!ctx->serdev)
+> +				return NOTIFY_BAD;
+> +
+> +			ret = pwrseq_m2_pcie_create_bt_node(ctx, serdev_parent);
+> +			if (ret) {
+> +				serdev_device_put(ctx->serdev);
+> +				return notifier_from_errno(ret);
+> +			}
+> +
+> +			ret = serdev_device_add(ctx->serdev);
+> +			if (ret) {
+> +				dev_err(dev, "Failed to add serdev for WCN7850: %d\n", ret);
+> +				of_changeset_revert(ctx->ocs);
+> +				of_changeset_destroy(ctx->ocs);
+> +				serdev_device_put(ctx->serdev);
+> +				return notifier_from_errno(ret);
+> +			}
+> +		}
+> +		break;
+> +	case BUS_NOTIFY_REMOVED_DEVICE:
+> +		/* Destroy serdev device for WCN7850 */
+> +		if (pdev->vendor == PCI_VENDOR_ID_QCOM && pdev->device == 0x1107) {
+> +			serdev_device_remove(ctx->serdev);
+> +			of_changeset_revert(ctx->ocs);
+> +			of_changeset_destroy(ctx->ocs);
+> +		}
+> +		break;
+> +	}
+> +
+> +	return NOTIFY_OK;
+> +}
+
+-- 
+With Best Regards,
+Andy Shevchenko
+
+
