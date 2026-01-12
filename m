@@ -1,76 +1,75 @@
-Received: from mail-pj1-f44.google.com (mail-pj1-f44.google.com [209.85.216.44])
+Received: from mail-pl1-f173.google.com (mail-pl1-f173.google.com [209.85.214.173])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6173B3803EC
-	for <platform-driver-x86@vger.kernel.org>; Mon, 12 Jan 2026 18:04:02 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.44
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B8C093806B2
+	for <platform-driver-x86@vger.kernel.org>; Mon, 12 Jan 2026 18:07:52 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.173
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1768241043; cv=none; b=n5oGQVvvB15E/bVF+FAj+Os9qJkXuqJqxY99CUdfZVZkG1AfUoqtflpjiUuGmi22sDe8inpJCzDNkOwihIB5FfJif4ate3gxnzfnG+dvv7zqBIC+TniaKKM2Ue3Mn2Tc0HCwYTsjHRiH+NTsaNXWIdcduE4JH104zddZxx7CVGg=
+	t=1768241273; cv=none; b=F926od1jJs01yo+Hbs1vGo0/VrxtVcwJHIe2wDSd7+b5OiaB7KSr3btZ0o1kQqUHI+zIlPrGHRaSIMlZm6GNlr0tBX+GENeYFVBsNFa4W1qaD4gVOAw8hgWMEM3up7ZUbJ5P2eleCvYSjjPzJixsgRdGK0VcjSrBj3I+Mt6EIGI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1768241043; c=relaxed/simple;
-	bh=s0DyzuRoahq/948IDG6/4DfMllFeddohpgguBX6Q5Zw=;
+	s=arc-20240116; t=1768241273; c=relaxed/simple;
+	bh=dHrr/T4aX+vs3oAgOvAPZZQy7mi8rDhEwAcJ4vKtt48=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=pWxRw37VPSLx3NYe5dO2Wb81UCpvoNaLFyLIyDjrht0Rq1BozBeFmiUpDhSCc3791FgXYlbSuUbm0ErSA56CMSVsrBA4EpmHQl9qDZsG6LJKXZSrStgdAUA6rgueXNKYOV3MjdHttqXPUVC0o8nm1TKgQWswENqobzMOHRpn9T0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=Y+xLCkjw; arc=none smtp.client-ip=209.85.216.44
+	 Content-Type:Content-Disposition:In-Reply-To; b=sG1pCIUK6r4USisEEj/awd0Lta17WLIJDjScYyyV7zQkvLOqGWATnS46f37Gt/IPOjpWtnjaqSrFdjdaFpdBarCZ/Sxz2FvVfEmyhbxw+zQJ2ziDj47IlfVzpC5lqqj9bddY7NG0U12bUo+jGu/PqZjqCCO5ZvPgcXCWzcZSx8U=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=ccDCxXBY; arc=none smtp.client-ip=209.85.214.173
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Y+xLCkjw"
-Received: by mail-pj1-f44.google.com with SMTP id 98e67ed59e1d1-34e730f5fefso4781618a91.0
-        for <platform-driver-x86@vger.kernel.org>; Mon, 12 Jan 2026 10:04:02 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ccDCxXBY"
+Received: by mail-pl1-f173.google.com with SMTP id d9443c01a7336-2a0bae9aca3so42976395ad.3
+        for <platform-driver-x86@vger.kernel.org>; Mon, 12 Jan 2026 10:07:52 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1768241042; x=1768845842; darn=vger.kernel.org;
+        d=gmail.com; s=20230601; t=1768241272; x=1768846072; darn=vger.kernel.org;
         h=in-reply-to:content-transfer-encoding:content-disposition
          :mime-version:references:message-id:subject:cc:to:from:date:from:to
          :cc:subject:date:message-id:reply-to;
-        bh=PHOdFCVwPg+cWYrkZjMT76zLSqbmskzKF7iiDprWkXM=;
-        b=Y+xLCkjwQ93q2fybjqeSGN84RYx/myhSlFJn8TxLik6/YFpZTME7/Lv0FPJ8SE/IwC
-         R0k1Rbg90iTmOSWu1aXYTh/3ZA6GNP7lFYNbGb4R5UIIluc2lYIRd4HZlPjSMZ+5dZFF
-         UTmUlIIa2l/WAj0Ofgwn4LHt2xRwlNDYUhmswh9ir20dmd9VK6w/2jT5QARZSAYZ35x0
-         MgKEwKNb45rVhzNTLu5iPBs3Xs5iFbgV1zqijZ0rFbEcRU6KCxPNmhaZAwPU0ar8r1AO
-         Txwtnd70PBNwdNot5TqCXq0XSLxe+5/SUr/VKpBJIH27+IuTFbqFTxbuIa2pb3nXUL7d
-         HHdA==
+        bh=zDGQRAbPUjfkXaVJhLTd0EOsqSoToEi+iTNTPo6suIg=;
+        b=ccDCxXBYhuF35ZvvT//IXUBYFG5RQ562qWvlVHF0KxTlZgMF2/fBrYhuPVTiiHNz2r
+         yFVJovT+sUOPzu0DVGKbfN/CpH3NIR7DVIfkem+4VxjDz8TGjCvfbMnVEyMK8fAKSVoR
+         z/TQYsTlkgM2Sor3aWES2vEgKdT0P5sNff55KAPIgJtJ/n5DvCHso7vTi/jiL/xn6r6L
+         P7d8TnDWL7dm5snN7ESHk6zgqOoBV3fVuB10T0j3xdllJtCzQU3Fq/2qpSZOhg5wnt9x
+         HCRawoUcJxy3U3dk9Y0j5moAtKv+PsgsBenN1d7daR5u+Vg8+sSInp2A6eSRX6HyoroD
+         qUYw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1768241042; x=1768845842;
+        d=1e100.net; s=20230601; t=1768241272; x=1768846072;
         h=in-reply-to:content-transfer-encoding:content-disposition
          :mime-version:references:message-id:subject:cc:to:from:date:x-gm-gg
          :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=PHOdFCVwPg+cWYrkZjMT76zLSqbmskzKF7iiDprWkXM=;
-        b=jaPgkQVzI+tUJg2x8M7uMqPoYvLIorSUsNA8SJ80iaJvZfWD0M7k52EYx3usXH8R67
-         QrMFZQjXMdbYCrWitP0C5UCdT0UcZRjihNEO8zIfHAdvs3zga7MYOM0lwDWu8K/uJ1d/
-         +xiSq9zd9c414LwCZTCH4ds8Buy4TqIqZ5+ZZvuLKHQrfSlOQ6NvnBAPNkt+4kf2NPoL
-         z051NW0VilqQrIEVRKVAN/mzoN6L1MC+2pA5NnfIOrVvnj9UZMDEOujc07R6gbeAFgXE
-         sq1yCTf9G7WVQdjmQ09MIWyidbL8evuVhlsbDgRnRxxWSTuKdZoz0bI289R7H6yxA9KJ
-         2ZKA==
-X-Forwarded-Encrypted: i=1; AJvYcCUD1MEeu9zmMuFG7iw9bGFpQU/j6DMI/71cBlsrVswCmHC+gVR9NjPU0ZSp+YAN7YvEC8zdAy0i8VKuyh0kei8hxqf3@vger.kernel.org
-X-Gm-Message-State: AOJu0YwxH2RJMA+nQ7fdBBK1M1H9kqMmZ8Ro6f2gXpXaVfsZFDpcQ/O2
-	ci8cJK30G6VJn5Mm8Y90aM8XfkDS0dmXEl7stPV6RxClzbYzighy8x36
-X-Gm-Gg: AY/fxX67mAzeg4ktcBo5gMbxwNR27n853OBqrd+JZVp7B9EGmp2DV10dNNSbdh9ikv4
-	nIX+NrQXXwgG1JXxiC4NgzcY6eDyg2PWWmcoDCfrvOxVsd3oPO/KIIFvhnTlhoaiMZDCrla4X9t
-	7UCrUtReJLIl6V+uWg4Ma6tSVj1svY3GUdIyB4vvyFnju6FgToSbp4+S/HWX2RCFNepn//6Yzpy
-	NMkHIKaYVOcEmnRiOdi+sPHJsVCqNlhd9+Eh4OMIpQZYNvtuL1HOPotrO/WuJtbmOA7vMd5WhI4
-	RKRt51b9eGr1a3I++blblEp9JAel24cQRPk3ZibqwUuj7s2dCqwIxGyF+8DF5VS0yxnL0J9rpc0
-	nueizyrh/96u9ruxoZq2Qt3JI4z1u0Am9qgpVx4Hv+54qv1TszDFM2fbG+15lCThk2oI0uH6Xk9
-	xBZfPLrEYjZ/wOaqSFW5s=
-X-Google-Smtp-Source: AGHT+IG+4HLDxw75AREG9Cn7q0iZTkTuEpR+ouZIoe4nrPNgxO9/2Yto8IAno89RDPTKdWTsaRJEXQ==
-X-Received: by 2002:a17:90b:5830:b0:338:3789:2e7b with SMTP id 98e67ed59e1d1-34f68c4cdcfmr14902163a91.13.1768241041645;
-        Mon, 12 Jan 2026 10:04:01 -0800 (PST)
+        bh=zDGQRAbPUjfkXaVJhLTd0EOsqSoToEi+iTNTPo6suIg=;
+        b=uT/xG99qGXEXbyVbs2/nxFkb8usaQKHWl5Q+pcf5VXhSDgaEfGOeb7WPI5c1sLw1mr
+         t7TL01EsW7LiKk3+e86S1aS88vT3bztbTpFMeHb1yiX0Uqdw+SQPXhzvG+SXGcH7Bkr8
+         AhSEvdIr5iYLhDXrG/MMQ5fYxit40tz6OyBIWdyGr7lQ+kJd6210Ibm8q1hNJlOonvJd
+         ZA5xG8TXmcad+LashZ8fcaTBD91GtYRtlRRv5Hz8smIvVhlhMv+rQhJibFzNIL16Wq2T
+         UgjaWxni0gDfPz38ep94NpEB4LHUHRjds6YGDk3YKC3QMLIdH6hS04H5l1rFhb+y18++
+         L5SA==
+X-Forwarded-Encrypted: i=1; AJvYcCXAQZebroqx8KjkPXZJhi0WYhvMOfG9UQN8V8KhfM8liBXh9yQQLikV+T3vGn7uo7oKGe1wUqutElUf4bXV9FbmN2pQ@vger.kernel.org
+X-Gm-Message-State: AOJu0Yz7KltrlU9oSjsLKy6bsrw6dslGosvvwOloEwxJ7FQmrApa/GYN
+	QPShkhhz9G+Vle8LNR7xK1unACNjw1lPpQkvOCdXHuRMFQVUUANb/iQ0
+X-Gm-Gg: AY/fxX7zDwt21/D6exTM6YvuU0I2iZfQ3ZDeCL6xh0Chy1IsEnyUyk5Mg7vjrpS3haG
+	HIEC7A8/1y9xhoY8Pp22GYW4x/jrj49ttipKZto7AoCDUh6nDV5fLj/NioC1N/aC+uJNYB5XX1Q
+	eUurSTkmXP31En4jDcHnrnFd5J3891zwaXe8mZ1mlBDX0t1kDlM2a92ScLDWBhA6LOUVmiDhg/o
+	EQQTU6buDV38Fu9CnWTTrh0sB7eOTAkQ7z/pTkCPZT8WcKGANf6WY1ihkzRzsCFLwbjadxFn8vw
+	RFUI0z3nTIWUwjHglMBsm8u9iqzYbGLoumLHkOeKU/W/fU+EWaiBm5Hn4V4uNmsiwISvdEC8G9A
+	c3LaUFXcOA2EXwRW6NPnR1F/EDkRAhcC8BmXX82O78+xxrcy7dbyNtqsFLVMYgkseLI3BEpsgRw
+	TsLVkF/DnzrzVDCAE2JeE=
+X-Google-Smtp-Source: AGHT+IEUzxrN8NZqXvPH5JJMBYF3btzaRQp1HHCq9owJBNQYe6YmOBfDUYXF/ZMNTxgE09jJO72Ljg==
+X-Received: by 2002:a17:903:234c:b0:29d:6b8e:d565 with SMTP id d9443c01a7336-2a3ee4c0e80mr152917325ad.38.1768241271894;
+        Mon, 12 Jan 2026 10:07:51 -0800 (PST)
 Received: from archlinux ([2405:201:1b:225c:eb9d:1fc0:f95c:bd90])
-        by smtp.gmail.com with ESMTPSA id 98e67ed59e1d1-350fd7b8e1bsm7135a91.8.2026.01.12.10.03.57
+        by smtp.gmail.com with ESMTPSA id d9443c01a7336-2a3e3cc88fcsm178881325ad.83.2026.01.12.10.07.47
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 12 Jan 2026 10:04:01 -0800 (PST)
-Date: Mon, 12 Jan 2026 23:33:52 +0530
+        Mon, 12 Jan 2026 10:07:51 -0800 (PST)
+Date: Mon, 12 Jan 2026 23:37:43 +0530
 From: Krishna Chomal <krishna.chomal108@gmail.com>
 To: Ilpo =?utf-8?B?SsOkcnZpbmVu?= <ilpo.jarvinen@linux.intel.com>
 Cc: Hans de Goede <hansg@kernel.org>, linux@roeck-us.net, 
 	platform-driver-x86@vger.kernel.org, linux-hwmon@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH v2 1/2] platform/x86: hp-wmi: add manual fan control for
- Victus S models
-Message-ID: <aWUvvzDCtVCOaBwq@archlinux>
+Subject: Re: [PATCH v2 2/2] platform/x86: hp-wmi: implement fan keep-alive
+Message-ID: <aWU3oEJinHyO__1X@archlinux>
 References: <20251225142310.204831-1-krishna.chomal108@gmail.com>
  <20251230145053.516196-1-krishna.chomal108@gmail.com>
- <20251230145053.516196-2-krishna.chomal108@gmail.com>
- <ce48f7b8-7d88-266f-ca8d-6af3b01815db@linux.intel.com>
+ <20251230145053.516196-3-krishna.chomal108@gmail.com>
+ <6b2be55e-dcfe-74b7-d8ca-b78f49cedb7a@linux.intel.com>
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
@@ -80,255 +79,17 @@ MIME-Version: 1.0
 Content-Type: text/plain; charset=utf-8; format=flowed
 Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <ce48f7b8-7d88-266f-ca8d-6af3b01815db@linux.intel.com>
+In-Reply-To: <6b2be55e-dcfe-74b7-d8ca-b78f49cedb7a@linux.intel.com>
 
-On Mon, Jan 12, 2026 at 05:13:05PM +0200, Ilpo Järvinen wrote:
->On Tue, 30 Dec 2025, Krishna Chomal wrote:
->
+On Mon, Jan 12, 2026 at 05:14:12PM +0200, Ilpo Järvinen wrote:
 [snip]
->>  #include <linux/string.h>
->>  #include <linux/dmi.h>
->> +#include <linux/fixp-arith.h>
->> +#include <linux/limits.h>
->> +#include <linux/minmax.h>
->> +#include <linux/compiler_attributes.h>
->>
-[snip]
->> +
->> +struct victus_s_fan_table_header {
->> +	u8 unknown;
->> +	u8 num_entries;
->> +} __packed;
->
->Please add #include for __packed.
->
-
-__packed is defined in compiler_attributes.h, which is included in this
-patch. Please let me know if there are any other headers that should be
-included.
-
->> +struct victus_s_fan_table_entry {
->> +	u8 cpu_rpm;
->> +	u8 gpu_rpm;
->> +	u8 unknown;
->> +} __packed;
->> +
->> +struct victus_s_fan_table {
->> +	struct victus_s_fan_table_header header;
->> +	struct victus_s_fan_table_entry entries[];
->> +} __packed;
->> +
->> +static inline u8 rpm_to_pwm(u8 rpm, struct hp_wmi_hwmon_priv *priv)
->> +{
->> +	return fixp_linear_interpolate(0, 0, priv->max_rpm, U8_MAX,
->> +					clamp_val(rpm, 0, priv->max_rpm));
->
->Please align the correctly.
->
-
-Apologies for the bad alignment of multi-line function calls and
-if-statements in this patch. I have noted them and will fix them all in
-v3.
-
-[snip]
->> -static int hp_wmi_fan_speed_max_reset(void)
->> -{
->> -	int ret;
->> +	/*
->> +	 * GPU fan speed is always a little higher than CPU fan speed, we fetch
->> +	 * this delta value from the fan table during hwmon init.
->> +	 * Exception: Speed is set to HP_FAN_SPEED_AUTOMATIC, to revert to
->> +	 * automatic mode.
->> +	 */
->> +	if (speed != HP_FAN_SPEED_AUTOMATIC)
->> +		fan_speed[GPU_FAN] = clamp_val((unsigned int)speed +
->> +						(unsigned int)priv->gpu_delta,
->> +						0, U8_MAX);
->
->Add braces is it's multiline if.
->
->If you use unsigned int, clamp to 0 makes no sense as those values have
->already underflowed.
->
->You also have an alignment problem here, but this seems a cleaner way
->which doesn't have underflow issues:
->
->	if (...) {
->		int new_speed = speed + priv->gpu_delta;
->
->		fan_speed[GPU_FAN] = clamp_val(new_speed, 0, U8_MAX);
->	}
->
-
-Understood. I will introduce a new "gpu_speed" variable and follow this
-style in v3.
-
-[snip]
->> @@ -2147,16 +2244,21 @@ static int hp_wmi_hwmon_read(struct device *dev, enum hwmon_sensor_types type,
->>  		*val = ret;
->>  		return 0;
->>  	case hwmon_pwm:
->> -		switch (hp_wmi_fan_speed_max_get()) {
->> -		case 0:
->> -			/* 0 is automatic fan, which is 2 for hwmon */
->> -			*val = 2;
->> +		if (attr == hwmon_pwm_input) {
->> +			if (!is_victus_s_thermal_profile())
->> +				return -EOPNOTSUPP;
->
->Add an empty line here.
->
-
-Will do.
-
->> +			ret = hp_wmi_get_fan_speed_victus_s(channel);
->> +			if (ret < 0)
->> +				return ret;
->> +			current_rpm = ret;
->
->I'm not sure if using ret here makes things better or not, I'd prefer just
->assigning directly to current_rpm without ret as intermediate var.
->
-
-Understood. I will directly use current_rpm then.
-
-[snip]
->>  static int hp_wmi_hwmon_write(struct device *dev, enum hwmon_sensor_types type,
->>  			      u32 attr, int channel, long val)
+>>  static void __exit hp_wmi_bios_remove(struct platform_device *device)
 >>  {
->> +	struct hp_wmi_hwmon_priv *priv;
->> +	int current_rpm, ret;
->> +
->> +	priv = dev_get_drvdata(dev);
->>  	switch (type) {
->>  	case hwmon_pwm:
->> +		if (attr == hwmon_pwm_input) {
->> +			if (!is_victus_s_thermal_profile())
->> +				return -EOPNOTSUPP;
->> +			/* pwm input is invalid when not in manual mode */
+>>  	int i;
+>> +	struct hp_wmi_hwmon_priv *ctx;
 >
->PWM (capitalize textual/comment "pwm"s correctly please).
+>Can't we just call this priv everywhere as per the normal custom?
 >
 
-Corrected.
-
->> +			if (priv->mode != PWM_MODE_MANUAL)
->> +				return -EINVAL;
->
->ADd empty line here.
->
-
-Added.
-
->> +			/* ensure pwm input is within valid fan speeds */
->
->PWM
->
-
-Fixed.
-
->> +			priv->pwm = rpm_to_pwm(clamp_val(pwm_to_rpm(val, priv),
->> +							priv->min_rpm,
->> +							priv->max_rpm),
->
->These look misaligned.
->
->I suggest you split this to multiple lines though, it will likely be
->easier to read that way.
->
-
-Agreed, this is too much nesting. I will split it into separate statements
-for each function call.
-
->> +						priv);
->> +			return hp_wmi_apply_fan_settings(priv);
->> +		}
->>  		switch (val) {
->> -		case 0:
->> -			if (is_victus_s_thermal_profile())
->> -				hp_wmi_get_fan_count_userdefine_trigger();
->> -			/* 0 is no fan speed control (max), which is 1 for us */
->> -			return hp_wmi_fan_speed_max_set(1);
->> -		case 2:
->> -			/* 2 is automatic speed control, which is 0 for us */
->> -			if (is_victus_s_thermal_profile()) {
->> -				hp_wmi_get_fan_count_userdefine_trigger();
->> -				return hp_wmi_fan_speed_max_reset();
->> -			} else
->> -				return hp_wmi_fan_speed_max_set(0);
->> +		case PWM_MODE_MAX:
->> +			priv->mode = PWM_MODE_MAX;
->> +			return hp_wmi_apply_fan_settings(priv);
->> +		case PWM_MODE_MANUAL:
->> +			if (!is_victus_s_thermal_profile())
->> +				return -EOPNOTSUPP;
->> +			/*
->> +			 * When switching to manual mode, set fan speed to
->> +			 * current RPM values to ensure a smooth transition.
->> +			 */
->> +			ret = hp_wmi_get_fan_speed_victus_s(channel);
->
->Assign directly to current_rpm ?
->
-
-Yes, will do in v3.
-
->> +			if (ret < 0)
->> +				return ret;
->> +			current_rpm = ret;
->> +			priv->pwm = rpm_to_pwm(current_rpm / 100, priv);
->> +			priv->mode = PWM_MODE_MANUAL;
->> +			return hp_wmi_apply_fan_settings(priv);
->> +		case PWM_MODE_AUTO:
->> +			priv->mode = PWM_MODE_AUTO;
->> +			return hp_wmi_apply_fan_settings(priv);
->>  		default:
->> -			/* we don't support manual fan speed control */
->>  			return -EINVAL;
->>  		}
->>  	default:
->> @@ -2196,7 +2322,7 @@ static int hp_wmi_hwmon_write(struct device *dev, enum hwmon_sensor_types type,
->>
->>  static const struct hwmon_channel_info * const info[] = {
->>  	HWMON_CHANNEL_INFO(fan, HWMON_F_INPUT, HWMON_F_INPUT),
->> -	HWMON_CHANNEL_INFO(pwm, HWMON_PWM_ENABLE),
->> +	HWMON_CHANNEL_INFO(pwm, HWMON_PWM_ENABLE | HWMON_PWM_INPUT),
->>  	NULL
->>  };
->>
->> @@ -2211,12 +2337,57 @@ static const struct hwmon_chip_info chip_info = {
->>  	.info = info,
->>  };
->>
->> +static int hp_wmi_setup_fan_settings(struct hp_wmi_hwmon_priv *priv)
->> +{
->> +	u8 fan_data[128] = { 0 };
->> +	struct victus_s_fan_table *fan_table;
->> +	u8 min_rpm, max_rpm, gpu_delta;
->> +	int ret;
->> +
->> +	/* Default behaviour on hwmon init is automatic mode */
->> +	priv->mode = PWM_MODE_AUTO;
->> +
->> +	/* Bypass all non-Victus S devices */
->> +	if (!is_victus_s_thermal_profile())
->> +		return 0;
->> +
->> +	ret = hp_wmi_perform_query(HPWMI_VICTUS_S_GET_FAN_TABLE_QUERY,
->> +				   HPWMI_GM, &fan_data, 4, sizeof(fan_data));
->> +	if (ret)
->> +		return ret;
->> +
->> +	fan_table = (struct victus_s_fan_table *)fan_data;
->> +	if (fan_table->header.num_entries == 0 ||
->> +		sizeof(struct victus_s_fan_table_header) +
->> +		sizeof(struct victus_s_fan_table_entry) * fan_table->header.num_entries >
->> +		sizeof(fan_data))
->
->Badly misaligned.
->
->Splitting at > is somewhat misleading so I'd prefer to avoid it (you can
->use up to 100 chars per line if needed).
->
-
-Ok, will fix the alignment and ensure to keep the > in a single line.
+Yes this was a mistake, I forgot to rename "ctx" to "priv" in v2, sorry.
+I will ensure to fix this in v3.
