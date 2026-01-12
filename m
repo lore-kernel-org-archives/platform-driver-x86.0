@@ -1,95 +1,113 @@
-Received: from mail-pl1-f173.google.com (mail-pl1-f173.google.com [209.85.214.173])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.18])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B8C093806B2
-	for <platform-driver-x86@vger.kernel.org>; Mon, 12 Jan 2026 18:07:52 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.173
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 76F1F3806B2;
+	Mon, 12 Jan 2026 18:08:35 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1768241273; cv=none; b=F926od1jJs01yo+Hbs1vGo0/VrxtVcwJHIe2wDSd7+b5OiaB7KSr3btZ0o1kQqUHI+zIlPrGHRaSIMlZm6GNlr0tBX+GENeYFVBsNFa4W1qaD4gVOAw8hgWMEM3up7ZUbJ5P2eleCvYSjjPzJixsgRdGK0VcjSrBj3I+Mt6EIGI=
+	t=1768241316; cv=none; b=INSGD0/JHgg6wTH1W8y/5gvPr0Vk9ePv61RiIZlT7YRa0MRR9G03JOuyx41Z4TVVNyp0gbL+SK3tR+xWjWUH6mJgvjFR+H0+RL3aNnfBu48qtM2s94qjbl/z7X6azXiTQgJrMYrInTHkXg+KxpddHWsMz5kJPui9JRmIbL0RCU0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1768241273; c=relaxed/simple;
-	bh=dHrr/T4aX+vs3oAgOvAPZZQy7mi8rDhEwAcJ4vKtt48=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=sG1pCIUK6r4USisEEj/awd0Lta17WLIJDjScYyyV7zQkvLOqGWATnS46f37Gt/IPOjpWtnjaqSrFdjdaFpdBarCZ/Sxz2FvVfEmyhbxw+zQJ2ziDj47IlfVzpC5lqqj9bddY7NG0U12bUo+jGu/PqZjqCCO5ZvPgcXCWzcZSx8U=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=ccDCxXBY; arc=none smtp.client-ip=209.85.214.173
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1768241316; c=relaxed/simple;
+	bh=NR0XOa5HitdinUSXh4ltE4RrUkyHrgEI0FBzFid4Fpk=;
+	h=From:Date:To:cc:Subject:In-Reply-To:Message-ID:References:
+	 MIME-Version:Content-Type; b=iwrPYrlGcevUx8ihhbVAnUmlTvRk1XcryCOXckDOhetFMJIe7TRv4sR0Y3R0usNjOlHioajU6HPRttJnky2pPkahqPLi31T6FoBMS7AYl7w/z6Dul0b0QWvynFxG+sp2w59DOCF3Cl2i6cKLOycMUJd4lfE6Gw6QgTuf5ruMG4Q=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=pass smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=E+eYnnjO; arc=none smtp.client-ip=192.198.163.18
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ccDCxXBY"
-Received: by mail-pl1-f173.google.com with SMTP id d9443c01a7336-2a0bae9aca3so42976395ad.3
-        for <platform-driver-x86@vger.kernel.org>; Mon, 12 Jan 2026 10:07:52 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1768241272; x=1768846072; darn=vger.kernel.org;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date:from:to
-         :cc:subject:date:message-id:reply-to;
-        bh=zDGQRAbPUjfkXaVJhLTd0EOsqSoToEi+iTNTPo6suIg=;
-        b=ccDCxXBYhuF35ZvvT//IXUBYFG5RQ562qWvlVHF0KxTlZgMF2/fBrYhuPVTiiHNz2r
-         yFVJovT+sUOPzu0DVGKbfN/CpH3NIR7DVIfkem+4VxjDz8TGjCvfbMnVEyMK8fAKSVoR
-         z/TQYsTlkgM2Sor3aWES2vEgKdT0P5sNff55KAPIgJtJ/n5DvCHso7vTi/jiL/xn6r6L
-         P7d8TnDWL7dm5snN7ESHk6zgqOoBV3fVuB10T0j3xdllJtCzQU3Fq/2qpSZOhg5wnt9x
-         HCRawoUcJxy3U3dk9Y0j5moAtKv+PsgsBenN1d7daR5u+Vg8+sSInp2A6eSRX6HyoroD
-         qUYw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1768241272; x=1768846072;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date:x-gm-gg
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=zDGQRAbPUjfkXaVJhLTd0EOsqSoToEi+iTNTPo6suIg=;
-        b=uT/xG99qGXEXbyVbs2/nxFkb8usaQKHWl5Q+pcf5VXhSDgaEfGOeb7WPI5c1sLw1mr
-         t7TL01EsW7LiKk3+e86S1aS88vT3bztbTpFMeHb1yiX0Uqdw+SQPXhzvG+SXGcH7Bkr8
-         AhSEvdIr5iYLhDXrG/MMQ5fYxit40tz6OyBIWdyGr7lQ+kJd6210Ibm8q1hNJlOonvJd
-         ZA5xG8TXmcad+LashZ8fcaTBD91GtYRtlRRv5Hz8smIvVhlhMv+rQhJibFzNIL16Wq2T
-         UgjaWxni0gDfPz38ep94NpEB4LHUHRjds6YGDk3YKC3QMLIdH6hS04H5l1rFhb+y18++
-         L5SA==
-X-Forwarded-Encrypted: i=1; AJvYcCXAQZebroqx8KjkPXZJhi0WYhvMOfG9UQN8V8KhfM8liBXh9yQQLikV+T3vGn7uo7oKGe1wUqutElUf4bXV9FbmN2pQ@vger.kernel.org
-X-Gm-Message-State: AOJu0Yz7KltrlU9oSjsLKy6bsrw6dslGosvvwOloEwxJ7FQmrApa/GYN
-	QPShkhhz9G+Vle8LNR7xK1unACNjw1lPpQkvOCdXHuRMFQVUUANb/iQ0
-X-Gm-Gg: AY/fxX7zDwt21/D6exTM6YvuU0I2iZfQ3ZDeCL6xh0Chy1IsEnyUyk5Mg7vjrpS3haG
-	HIEC7A8/1y9xhoY8Pp22GYW4x/jrj49ttipKZto7AoCDUh6nDV5fLj/NioC1N/aC+uJNYB5XX1Q
-	eUurSTkmXP31En4jDcHnrnFd5J3891zwaXe8mZ1mlBDX0t1kDlM2a92ScLDWBhA6LOUVmiDhg/o
-	EQQTU6buDV38Fu9CnWTTrh0sB7eOTAkQ7z/pTkCPZT8WcKGANf6WY1ihkzRzsCFLwbjadxFn8vw
-	RFUI0z3nTIWUwjHglMBsm8u9iqzYbGLoumLHkOeKU/W/fU+EWaiBm5Hn4V4uNmsiwISvdEC8G9A
-	c3LaUFXcOA2EXwRW6NPnR1F/EDkRAhcC8BmXX82O78+xxrcy7dbyNtqsFLVMYgkseLI3BEpsgRw
-	TsLVkF/DnzrzVDCAE2JeE=
-X-Google-Smtp-Source: AGHT+IEUzxrN8NZqXvPH5JJMBYF3btzaRQp1HHCq9owJBNQYe6YmOBfDUYXF/ZMNTxgE09jJO72Ljg==
-X-Received: by 2002:a17:903:234c:b0:29d:6b8e:d565 with SMTP id d9443c01a7336-2a3ee4c0e80mr152917325ad.38.1768241271894;
-        Mon, 12 Jan 2026 10:07:51 -0800 (PST)
-Received: from archlinux ([2405:201:1b:225c:eb9d:1fc0:f95c:bd90])
-        by smtp.gmail.com with ESMTPSA id d9443c01a7336-2a3e3cc88fcsm178881325ad.83.2026.01.12.10.07.47
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 12 Jan 2026 10:07:51 -0800 (PST)
-Date: Mon, 12 Jan 2026 23:37:43 +0530
-From: Krishna Chomal <krishna.chomal108@gmail.com>
-To: Ilpo =?utf-8?B?SsOkcnZpbmVu?= <ilpo.jarvinen@linux.intel.com>
-Cc: Hans de Goede <hansg@kernel.org>, linux@roeck-us.net, 
-	platform-driver-x86@vger.kernel.org, linux-hwmon@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH v2 2/2] platform/x86: hp-wmi: implement fan keep-alive
-Message-ID: <aWU3oEJinHyO__1X@archlinux>
-References: <20251225142310.204831-1-krishna.chomal108@gmail.com>
- <20251230145053.516196-1-krishna.chomal108@gmail.com>
- <20251230145053.516196-3-krishna.chomal108@gmail.com>
- <6b2be55e-dcfe-74b7-d8ca-b78f49cedb7a@linux.intel.com>
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="E+eYnnjO"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1768241316; x=1799777316;
+  h=from:date:to:cc:subject:in-reply-to:message-id:
+   references:mime-version;
+  bh=NR0XOa5HitdinUSXh4ltE4RrUkyHrgEI0FBzFid4Fpk=;
+  b=E+eYnnjOs7+ER9kkKwTOjBgqBjgcznYFfmRJFF4i+bR8aFUxeSnjkuFN
+   Un9Ghv/bVxMdD0SipHRChmxCg4lAdn5UYtglEge3Ru76/OG7RXERpcPWf
+   b1nf04qRxWsm8oLt8CTwhUafB2OSSKQRLfWAxVu59saovtmSxTP/38vvG
+   Sxoz6RmjA89FRy0RQsbVoupkME6MM0XrfJp+wtw8C66tR5552PVmRwkVU
+   aTtr/IGoHq+D8K2s/0tIN8mpJFypLomJ+eSmux8hojBEFxXg9L3KDkUjo
+   tP0i741zkKg63RFbeh88LHHkOYNpiTHuepwX5R43rrmdqsA1uhSFf711I
+   g==;
+X-CSE-ConnectionGUID: UXgm2ZkfShapF+fwobQqzw==
+X-CSE-MsgGUID: KR6bEYjHR4ONvkGsf8ssxA==
+X-IronPort-AV: E=McAfee;i="6800,10657,11669"; a="68727017"
+X-IronPort-AV: E=Sophos;i="6.21,221,1763452800"; 
+   d="scan'208";a="68727017"
+Received: from fmviesa005.fm.intel.com ([10.60.135.145])
+  by fmvoesa112.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 12 Jan 2026 10:08:35 -0800
+X-CSE-ConnectionGUID: kejYe3AwT3u7402cqvwf8A==
+X-CSE-MsgGUID: q14/Xq31SyCXzoHTKL7bMA==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.21,221,1763452800"; 
+   d="scan'208";a="208629735"
+Received: from ijarvine-mobl1.ger.corp.intel.com (HELO localhost) ([10.245.245.111])
+  by fmviesa005-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 12 Jan 2026 10:08:32 -0800
+From: =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
+Date: Mon, 12 Jan 2026 20:08:29 +0200 (EET)
+To: Krishna Chomal <krishna.chomal108@gmail.com>
+cc: =?ISO-8859-15?Q?Ilpo_J=E4rvinen?= <ilpo.jarvinen@linux.intel.com>, 
+    Hans de Goede <hansg@kernel.org>, linux@roeck-us.net, 
+    platform-driver-x86@vger.kernel.org, linux-hwmon@vger.kernel.org, 
+    LKML <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH v2 1/2] platform/x86: hp-wmi: add manual fan control for
+ Victus S models
+In-Reply-To: <aWUvvzDCtVCOaBwq@archlinux>
+Message-ID: <f6ca0445-431a-f9d7-eeee-0d437efa3c76@linux.intel.com>
+References: <20251225142310.204831-1-krishna.chomal108@gmail.com> <20251230145053.516196-1-krishna.chomal108@gmail.com> <20251230145053.516196-2-krishna.chomal108@gmail.com> <ce48f7b8-7d88-266f-ca8d-6af3b01815db@linux.intel.com>
+ <aWUvvzDCtVCOaBwq@archlinux>
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <6b2be55e-dcfe-74b7-d8ca-b78f49cedb7a@linux.intel.com>
+Content-Type: multipart/mixed; boundary="8323328-100285923-1768241309=:1026"
 
-On Mon, Jan 12, 2026 at 05:14:12PM +0200, Ilpo Järvinen wrote:
-[snip]
->>  static void __exit hp_wmi_bios_remove(struct platform_device *device)
->>  {
->>  	int i;
->> +	struct hp_wmi_hwmon_priv *ctx;
->
->Can't we just call this priv everywhere as per the normal custom?
->
+  This message is in MIME format.  The first part should be readable text,
+  while the remaining parts are likely unreadable without MIME-aware tools.
 
-Yes this was a mistake, I forgot to rename "ctx" to "priv" in v2, sorry.
-I will ensure to fix this in v3.
+--8323328-100285923-1768241309=:1026
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+
+On Mon, 12 Jan 2026, Krishna Chomal wrote:
+
+> On Mon, Jan 12, 2026 at 05:13:05PM +0200, Ilpo J=C3=A4rvinen wrote:
+> > On Tue, 30 Dec 2025, Krishna Chomal wrote:
+> >=20
+> [snip]
+> > >  #include <linux/string.h>
+> > >  #include <linux/dmi.h>
+> > > +#include <linux/fixp-arith.h>
+> > > +#include <linux/limits.h>
+> > > +#include <linux/minmax.h>
+> > > +#include <linux/compiler_attributes.h>
+> > >=20
+> [snip]
+
+Hmm, these should be ordered alphabetically and if the existing one=20
+aren't, try your best (or add a patch to fix the order for all).
+
+> > > +
+> > > +struct victus_s_fan_table_header {
+> > > +=09u8 unknown;
+> > > +=09u8 num_entries;
+> > > +} __packed;
+> >=20
+> > Please add #include for __packed.
+> >=20
+>=20
+> __packed is defined in compiler_attributes.h, which is included in this
+> patch. Please let me know if there are any other headers that should be
+> included.
+
+Sorry, I don't know why I didn't notice it (too much reviewing in a row or=
+=20
+too much multi-tasking I guess :-)).
+
+
+--=20
+ i.
+
+--8323328-100285923-1768241309=:1026--
