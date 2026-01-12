@@ -1,57 +1,38 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.13])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8892D3612E1
-	for <platform-driver-x86@vger.kernel.org>; Mon, 12 Jan 2026 15:34:49 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.13
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 342A6306B12;
+	Mon, 12 Jan 2026 16:28:33 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1768232090; cv=none; b=s6+2dJyHONV0+bKjtZCphZY6NlzDk+ZtuYrNLc7j97byRRUFie9SX2Hs2CrRtsH1hZ2AN0wlYPd90K7mNWrbsGOihZx1yWxTlIvqElXjQSz/1B01CSvzICb1FXZ5WHtwuycX3O4HqzBuLHH1NU83eOEBGtiIJubo/1ZVuirjhbI=
+	t=1768235313; cv=none; b=F8hVcokTJEAUK/f6jIHpq/Arsz6SEON0car4aAZ1N88GOsieVUGsyOcWoDeTMkBvGekAd3uIwqwYVOpj/YCAKzZ6cIF/uzBb4Rs7IuzWs4fMmJY1FUfBI3aL6PHsemLCCnhAnJb0gcQCbpV/LwNSeYojAON+6jY9exX+mHqAP3U=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1768232090; c=relaxed/simple;
-	bh=DPu4Wmvz1J2fY1y8yxbjaRTUiB9DfGU/gFIT9kSlSvo=;
-	h=From:To:Cc:In-Reply-To:References:Subject:Message-Id:Date:
-	 MIME-Version:Content-Type; b=DiAMtE+H4Fp+2NkwzFt8bSHs/5IUk4FEucBaXxIIhziAkqxE76u43tRqnZYj5ZtQH/hJxotjzJ+UQz7gPDbzhlqj+Lv6ZyPr/m+CTlUszAXOT1QzGRtK0NOlOeaFqd5DgC4Yxtx7bA3ZxWXoaatEYWOWrrG+kFKaaZan8luqWEU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=pass smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=J1tcLszz; arc=none smtp.client-ip=198.175.65.13
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.intel.com
+	s=arc-20240116; t=1768235313; c=relaxed/simple;
+	bh=GlJ71tujJcltgFnDfKrfK0RHu+muqUMEqgwXCraygEc=;
+	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
+	 In-Reply-To:To:Cc; b=WPe0jGXBjEqXepV8yV59nLelKQPqUA97ya2SQ+hSXPF1Q1UvX03M3LFvd51SrZzII4C/pglEmjV7fJkQTBTIdIHTdQcXYRPOHh+GMmdH8HWe2ZbHH7HHjAs1T/7Wv2uXk5pSXv1O2YlqstUajXP/VVPjRTKN2nOOnmy7JZw/rwg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=PaUH/J9R; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="J1tcLszz"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1768232090; x=1799768090;
-  h=from:to:cc:in-reply-to:references:subject:message-id:
-   date:mime-version:content-transfer-encoding;
-  bh=DPu4Wmvz1J2fY1y8yxbjaRTUiB9DfGU/gFIT9kSlSvo=;
-  b=J1tcLszzM9DQeRWaFVraL/73GNgATA9Xsjkc7te2TP4Ha/+ohNITXY5R
-   7smmF0hrY1dIlM/apj+dwYxf+pCjC929GbuCM5dvugoU8THIQLTQ4Hr35
-   3eHlic7QnlnqX/01z58imTlqi1ymxdlxP1PSBgap7pMvb2bjrYv/AggKL
-   F/aLi4zvWzTs4aWjA8vqUIMfbouAc65KYfvSmQ3CE6k9zj4mgzTnbv2zp
-   BxF4rzw2VpxZTcHL/0FlCIociyZGD5YxZo+3M7Kf+Ds/hh9xNY/mCWwEh
-   xZzTGgOqhuQSB9VQD6dR4B6tD2c90G+KKsuuVaOizxSvvfb43yZM29Q52
-   g==;
-X-CSE-ConnectionGUID: d5hDAJIrTgycbmTf9ZTSWw==
-X-CSE-MsgGUID: kGZAwBl5QIeJAYvFdCcVAw==
-X-IronPort-AV: E=McAfee;i="6800,10657,11669"; a="80613207"
-X-IronPort-AV: E=Sophos;i="6.21,221,1763452800"; 
-   d="scan'208";a="80613207"
-Received: from fmviesa004.fm.intel.com ([10.60.135.144])
-  by orvoesa105.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 12 Jan 2026 07:34:49 -0800
-X-CSE-ConnectionGUID: bk8GSdRuTEO1YJP7S8gqzA==
-X-CSE-MsgGUID: 0df4z30nShe+RwjJanqX0g==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.21,221,1763452800"; 
-   d="scan'208";a="208960362"
-Received: from ijarvine-mobl1.ger.corp.intel.com (HELO localhost) ([10.245.245.111])
-  by fmviesa004-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 12 Jan 2026 07:34:47 -0800
-From: =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
-To: hansg@kernel.org, Krishna Chomal <krishna.chomal108@gmail.com>
-Cc: platform-driver-x86@vger.kernel.org
-In-Reply-To: <20251218124303.22024-1-krishna.chomal108@gmail.com>
-References: <20251218124303.22024-1-krishna.chomal108@gmail.com>
-Subject: Re: [PATCH v4 0/2] Fix Omen 16-wf1xxx thermal profile and add EC
- readback
-Message-Id: <176823207511.9723.10021168845490287383.b4-ty@linux.intel.com>
-Date: Mon, 12 Jan 2026 17:34:35 +0200
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="PaUH/J9R"
+Received: by smtp.kernel.org (Postfix) with ESMTPS id 07FE9C16AAE;
+	Mon, 12 Jan 2026 16:28:33 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1768235313;
+	bh=GlJ71tujJcltgFnDfKrfK0RHu+muqUMEqgwXCraygEc=;
+	h=From:Date:Subject:References:In-Reply-To:To:Cc:Reply-To:From;
+	b=PaUH/J9RPZmbIvHp2Fn+kT5AYtWmn23AwVRzXo0vhaxyzQifOAi0+znz4sLkMxQBa
+	 J6Pwj+gwDTJM5TxkiOEdSus301MZUeGZrvvS/joQgoGBPtPGmOBxTrGyspe+UCXmKf
+	 yXmFHxTXh1dRZWSfBcSvHeDvRkaewgB1o9hWxuI7SJTFfMkj2Mv87QBVPAKgosUJGR
+	 wVt2XxGpd/twxXNR51uvuqK9/kUYRwVlocXpd7IAtq1/t0BkJI0K/GdzBf8l5b0oRE
+	 fBLp1A9+rjuVWxEsbB7mi3G8yXVMLDXO3ah01prMR0DpYlJA1BTFQZq9UR7XwBFesV
+	 nirHgWt74kmgA==
+Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E3306D25041;
+	Mon, 12 Jan 2026 16:28:32 +0000 (UTC)
+From: Manivannan Sadhasivam via B4 Relay <devnull+manivannan.sadhasivam.oss.qualcomm.com@kernel.org>
+Date: Mon, 12 Jan 2026 21:56:00 +0530
+Subject: [PATCH v4 1/9] serdev: Convert to_serdev_*() helpers to macros and
+ use container_of_const()
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
@@ -59,33 +40,112 @@ List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-X-Mailer: b4 0.13.0
+Content-Transfer-Encoding: 8bit
+Message-Id: <20260112-pci-m2-e-v4-1-eff84d2c6d26@oss.qualcomm.com>
+References: <20260112-pci-m2-e-v4-0-eff84d2c6d26@oss.qualcomm.com>
+In-Reply-To: <20260112-pci-m2-e-v4-0-eff84d2c6d26@oss.qualcomm.com>
+To: Rob Herring <robh@kernel.org>, 
+ Greg Kroah-Hartman <gregkh@linuxfoundation.org>, 
+ Jiri Slaby <jirislaby@kernel.org>, Nathan Chancellor <nathan@kernel.org>, 
+ Nicolas Schier <nicolas.schier@linux.dev>, Hans de Goede <hansg@kernel.org>, 
+ =?utf-8?q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>, 
+ Mark Pearson <mpearson-lenovo@squebb.ca>, 
+ "Derek J. Clark" <derekjohn.clark@gmail.com>, 
+ Manivannan Sadhasivam <mani@kernel.org>, 
+ Krzysztof Kozlowski <krzk+dt@kernel.org>, 
+ Conor Dooley <conor+dt@kernel.org>, Marcel Holtmann <marcel@holtmann.org>, 
+ Luiz Augusto von Dentz <luiz.dentz@gmail.com>, 
+ Bartosz Golaszewski <brgl@bgdev.pl>, 
+ Andy Shevchenko <andriy.shevchenko@linux.intel.com>, 
+ Bartosz Golaszewski <brgl@kernel.org>
+Cc: linux-serial@vger.kernel.org, linux-kernel@vger.kernel.org, 
+ linux-kbuild@vger.kernel.org, platform-driver-x86@vger.kernel.org, 
+ linux-pci@vger.kernel.org, devicetree@vger.kernel.org, 
+ linux-arm-msm@vger.kernel.org, linux-bluetooth@vger.kernel.org, 
+ linux-pm@vger.kernel.org, Stephan Gerhold <stephan.gerhold@linaro.org>, 
+ Dmitry Baryshkov <dmitry.baryshkov@oss.qualcomm.com>, 
+ linux-acpi@vger.kernel.org, 
+ Manivannan Sadhasivam <manivannan.sadhasivam@oss.qualcomm.com>, 
+ Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
+X-Mailer: b4 0.14.3
+X-Developer-Signature: v=1; a=openpgp-sha256; l=2192;
+ i=manivannan.sadhasivam@oss.qualcomm.com; h=from:subject:message-id;
+ bh=07vK9ciXXRPSn3N/nNhnkZAEN4PO5YKuZEczKGyjzQ4=;
+ b=owEBbQGS/pANAwAKAVWfEeb+kc71AcsmYgBpZSEtLU1+T/SQ8muTj88PMLYAc1JIDUMVESqYm
+ PJvutm3t5WJATMEAAEKAB0WIQRnpUMqgUjL2KRYJ5dVnxHm/pHO9QUCaWUhLQAKCRBVnxHm/pHO
+ 9ZvgCACOa5aYDJDQeVpU6yq+fCGtKV9Xz1BGEatNRuENRILo7sSUAPtGbyGfxzQ/0vcy4Gb+3tW
+ jcnVrjZLjEZ+dCXlNXAFyy6VwIckMC8ZO8GOlS67JL5iOmWHfQ/aFzmBY9Uz79eiPwI6BCQTliK
+ 1hhKWLBCLzlvHxyooeqQs1gksE36iewETbO1uczvYdH5m2JtG9K6jY89FC7YE756kTcdmskU6B4
+ CKcv2Zojofh08iFJ1rz0zid+PoQTNbqCffd6F7xPEkCRAl31mzXhHRzRKNItT5fgOdkhPKgCVC7
+ YRafq06sSCerUESzjyX7I3cqm12BXILp3NiBAcA8WQ3w/Pxo
+X-Developer-Key: i=manivannan.sadhasivam@oss.qualcomm.com; a=openpgp;
+ fpr=C668AEC3C3188E4C611465E7488550E901166008
+X-Endpoint-Received: by B4 Relay for
+ manivannan.sadhasivam@oss.qualcomm.com/default with auth_id=461
+X-Original-From: Manivannan Sadhasivam <manivannan.sadhasivam@oss.qualcomm.com>
+Reply-To: manivannan.sadhasivam@oss.qualcomm.com
 
-On Thu, 18 Dec 2025 18:13:01 +0530, Krishna Chomal wrote:
+From: Manivannan Sadhasivam <manivannan.sadhasivam@oss.qualcomm.com>
 
-> This series fixes incorrect thermal profile parameters sent for HP Omen
-> 16-wf1xxx and implements hardware readback support for Victus S thermal
-> profiles.
-> 
-> The first patch refactors the DMI handling for Victus S boards. By
-> moving from simple string list to DMI system id table with driver_data,
-> we can now map each board to its correct thermal parameters.
-> 
-> [...]
+If these helpers receive the 'const struct device' pointer, then the const
+qualifier will get dropped, leading to below warning:
 
+ warning: passing argument 1 of ‘to_serdev_device_driver’ discards 'const'
+ qualifier from pointer target type [-Wdiscarded-qualifiers]
 
-Thank you for your contribution, it has been applied to my local
-review-ilpo-next branch. Note it will show up in the public
-platform-drivers-x86/review-ilpo-next branch only once I've pushed my
-local branch there, which might take a while.
+This is not an issue as of now, but with the future commits adding serdev
+device based driver matching, this warning will get triggered. Hence,
+convert these helpers to macros so that the qualifier get preserved and
+also use container_of_const() as container_of() is deprecated.
 
-The list of commits applied:
-[1/2] platform/x86: hp-wmi: fix platform profile values for Omen 16-wf1xxx
-      commit: d8bf01424f9eb555bf13b802a8ddffbb49f221a7
-[2/2] platform/x86: hp-wmi: Add EC offsets to read Victus S thermal profile
-      commit: 2511dd4dbb76ef6914c9b45ccba2492da25d772d
+Reviewed-by: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
+Signed-off-by: Manivannan Sadhasivam <manivannan.sadhasivam@oss.qualcomm.com>
+---
+ include/linux/serdev.h | 15 +++------------
+ 1 file changed, 3 insertions(+), 12 deletions(-)
 
---
- i.
+diff --git a/include/linux/serdev.h b/include/linux/serdev.h
+index 34562eb99931..ecde0ad3e248 100644
+--- a/include/linux/serdev.h
++++ b/include/linux/serdev.h
+@@ -49,10 +49,7 @@ struct serdev_device {
+ 	struct mutex write_lock;
+ };
+ 
+-static inline struct serdev_device *to_serdev_device(struct device *d)
+-{
+-	return container_of(d, struct serdev_device, dev);
+-}
++#define to_serdev_device(d) container_of_const(d, struct serdev_device, dev)
+ 
+ /**
+  * struct serdev_device_driver - serdev slave device driver
+@@ -67,10 +64,7 @@ struct serdev_device_driver {
+ 	void	(*remove)(struct serdev_device *);
+ };
+ 
+-static inline struct serdev_device_driver *to_serdev_device_driver(struct device_driver *d)
+-{
+-	return container_of(d, struct serdev_device_driver, driver);
+-}
++#define to_serdev_device_driver(d) container_of_const(d, struct serdev_device_driver, driver)
+ 
+ enum serdev_parity {
+ 	SERDEV_PARITY_NONE,
+@@ -111,10 +105,7 @@ struct serdev_controller {
+ 	const struct serdev_controller_ops *ops;
+ };
+ 
+-static inline struct serdev_controller *to_serdev_controller(struct device *d)
+-{
+-	return container_of(d, struct serdev_controller, dev);
+-}
++#define to_serdev_controller(d) container_of_const(d, struct serdev_controller, dev)
+ 
+ static inline void *serdev_device_get_drvdata(const struct serdev_device *serdev)
+ {
+
+-- 
+2.48.1
+
 
