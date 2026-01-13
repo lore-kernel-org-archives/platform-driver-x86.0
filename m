@@ -1,134 +1,298 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.14])
+Received: from out-173.mta0.migadu.com (out-173.mta0.migadu.com [91.218.175.173])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6F3CE231858
-	for <platform-driver-x86@vger.kernel.org>; Tue, 13 Jan 2026 14:38:27 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.14
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EB5E1392B87;
+	Tue, 13 Jan 2026 15:26:51 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.218.175.173
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1768315112; cv=none; b=CMrRHPzcMqqIlGS9nSr4+90tn1DazwjCRZKCPZIh5rO0omWLD6zFISELZM6rMgAqIa8pHVewE5MLK+LGOXUWIp5/x1drg2nqPsqHKXOxa1CFajya+Ti889HMDxjy8IbYTkTzdDWqlv8LETs1faOV6kjG+p3iS/x0Pt8eRVPvhEo=
+	t=1768318014; cv=none; b=VEIVSBr1GDuXE1z0G1sOp/6YnjElbXiveKxAn/Se5+YMDHOVOztV1ybd8DKv7BdZ4w/6LYJ6oHkN3DUPPRqnY68eGlnZawSq2Owq/BqpAJTfvq2RugbDKVkBLBojNjMxFNvIunhCaewyPjGqeF2N4Rdin5dVtl6BVtEzXSUX0Jw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1768315112; c=relaxed/simple;
-	bh=pMr8j4zMO3Lo6hRqjxF7/Nq1d5ViRPtx5GASQ5qGkCs=;
-	h=From:Date:To:cc:Subject:In-Reply-To:Message-ID:References:
-	 MIME-Version:Content-Type; b=pbwFnHiJWc5y43+9fTwqy9xrwT5mmnj6/BWxVrBHCX2aBX9sEybYh8lpoBL1+LtfD1qnj+C6fIwfMLCBngYmDH2fzoEHjxdhHD7MFGfm8VoCorqBUjRt7o2bAJ1PNNW2ycYfihguTCakEXrEgUxzl5jKilK8lH7+Fmvm4rCRX1A=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=pass smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=iUZOVTAM; arc=none smtp.client-ip=198.175.65.14
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.intel.com
+	s=arc-20240116; t=1768318014; c=relaxed/simple;
+	bh=DAFK6ts6h5oycafq6Gc/0yiCRES3UGi7RyPEY9i83m8=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=G1OgDH0HSvUhhHrIKVFiysaxYgIUmjk1IvHKyws+QN5E4dhJGPReLcAa/UfiAMdub7oCQI+pITjH7/m5+nB6SzpGOmsW1wVWEvx1lMmcTpS4Q5StJQcTX+jhfjWq8TZFpaDtYyLh8WmMNXWtqPlTWHbUkIsB+iHMqwe31mLufGc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=db+k16Oo; arc=none smtp.client-ip=91.218.175.173
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="iUZOVTAM"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1768315110; x=1799851110;
-  h=from:date:to:cc:subject:in-reply-to:message-id:
-   references:mime-version;
-  bh=pMr8j4zMO3Lo6hRqjxF7/Nq1d5ViRPtx5GASQ5qGkCs=;
-  b=iUZOVTAMproxxiFUCas7oq92o6Q/rwotRvn+RdSrF4lpJ1a9OnHKHmjw
-   EwP++dPGpUCMYqpxBlIUyxvLvWV9xGwleta+0mgR8Fw8VlRkv3UDNhYKd
-   cxO0tW9ErXlDaK7scCRFCYKsNknJUMpf5j7LedZewum096+RNixbPx6fI
-   n5O4TjbEg6Rvn4SNVGxnVR4tS8hsbIIh/cx8TEoETb+2523nale/3nnkV
-   5Zfdetq5xVnRmjiLW2KRwboRe2MIlh2SIODJb/bi40tqOFfjbf/ty1BfG
-   +WaC4Xhxo6hXBDQY2z8Cjz7nchgwXjq++pTAK1KBWdZJ0qRcp4/n99P20
-   g==;
-X-CSE-ConnectionGUID: b4fFX8uETM2IlxYeSCK8Pg==
-X-CSE-MsgGUID: Av+XqXOiSOqbXH0O1+XB0w==
-X-IronPort-AV: E=McAfee;i="6800,10657,11670"; a="73441473"
-X-IronPort-AV: E=Sophos;i="6.21,222,1763452800"; 
-   d="scan'208";a="73441473"
-Received: from orviesa008.jf.intel.com ([10.64.159.148])
-  by orvoesa106.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 13 Jan 2026 06:38:27 -0800
-X-CSE-ConnectionGUID: 5t0WjVB0SdeQ4QfrjxB7Xw==
-X-CSE-MsgGUID: mcbSh4fNSLee6XgyWNdl7w==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.21,222,1763452800"; 
-   d="scan'208";a="204480022"
-Received: from ijarvine-mobl1.ger.corp.intel.com (HELO localhost) ([10.245.244.10])
-  by orviesa008-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 13 Jan 2026 06:38:25 -0800
-From: =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
-Date: Tue, 13 Jan 2026 16:38:22 +0200 (EET)
-To: Krishna Chomal <krishna.chomal108@gmail.com>
-cc: Hans de Goede <hansg@kernel.org>, platform-driver-x86@vger.kernel.org
-Subject: Re: [PATCH v4 0/2] Fix Omen 16-wf1xxx thermal profile and add EC
- readback
-In-Reply-To: <aWZGNQKt61SzH14d@archlinux>
-Message-ID: <ee7aa07d-1cf4-dc74-856d-03a8ceea7778@linux.intel.com>
-References: <20251218124303.22024-1-krishna.chomal108@gmail.com> <176823207511.9723.10021168845490287383.b4-ty@linux.intel.com> <aWZGNQKt61SzH14d@archlinux>
+	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="db+k16Oo"
+Message-ID: <2432dafc-4101-4b23-90b2-85ea5459435c@linux.dev>
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
+	t=1768317998;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=jG0Bu8LbTPoVOj6e4IGMmcUh/bkY4GBbkm/sd8XSO1E=;
+	b=db+k16OoHiSaywpFQWYsVmgGEuM+ade9mP+cAI3oNm49lUFhfW8ZAwQYAAdsHmNiUM4xX7
+	LAXOUmYB0Q1pqZoIFEa7rz8MdmEJirefRM6mdtDUamHSieJarY/koc8SzZm7hp/nmUla0i
+	ZKjpJui8Rd9xNxafuH+9252J3qgP5O8=
+Date: Tue, 13 Jan 2026 10:26:04 -0500
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/mixed; boundary="8323328-2134474321-1768315102=:966"
+Subject: Re: [PATCH v4 8/9] power: sequencing: pcie-m2: Add support for PCIe
+ M.2 Key E connectors
+To: manivannan.sadhasivam@oss.qualcomm.com, Rob Herring <robh@kernel.org>,
+ Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+ Jiri Slaby <jirislaby@kernel.org>, Nathan Chancellor <nathan@kernel.org>,
+ Nicolas Schier <nicolas.schier@linux.dev>, Hans de Goede <hansg@kernel.org>,
+ =?UTF-8?Q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>,
+ Mark Pearson <mpearson-lenovo@squebb.ca>,
+ "Derek J. Clark" <derekjohn.clark@gmail.com>,
+ Manivannan Sadhasivam <mani@kernel.org>,
+ Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley
+ <conor+dt@kernel.org>, Marcel Holtmann <marcel@holtmann.org>,
+ Luiz Augusto von Dentz <luiz.dentz@gmail.com>,
+ Bartosz Golaszewski <brgl@bgdev.pl>,
+ Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+ Bartosz Golaszewski <brgl@kernel.org>
+Cc: linux-serial@vger.kernel.org, linux-kernel@vger.kernel.org,
+ linux-kbuild@vger.kernel.org, platform-driver-x86@vger.kernel.org,
+ linux-pci@vger.kernel.org, devicetree@vger.kernel.org,
+ linux-arm-msm@vger.kernel.org, linux-bluetooth@vger.kernel.org,
+ linux-pm@vger.kernel.org, Stephan Gerhold <stephan.gerhold@linaro.org>,
+ Dmitry Baryshkov <dmitry.baryshkov@oss.qualcomm.com>,
+ linux-acpi@vger.kernel.org
+References: <20260112-pci-m2-e-v4-0-eff84d2c6d26@oss.qualcomm.com>
+ <20260112-pci-m2-e-v4-8-eff84d2c6d26@oss.qualcomm.com>
+Content-Language: en-US
+X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
+From: Sean Anderson <sean.anderson@linux.dev>
+In-Reply-To: <20260112-pci-m2-e-v4-8-eff84d2c6d26@oss.qualcomm.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
+X-Migadu-Flow: FLOW_OUT
 
-  This message is in MIME format.  The first part should be readable text,
-  while the remaining parts are likely unreadable without MIME-aware tools.
+On 1/12/26 11:26, Manivannan Sadhasivam via B4 Relay wrote:
+> From: Manivannan Sadhasivam <manivannan.sadhasivam@oss.qualcomm.com>
+> 
+> Add support for handling the power sequence of the PCIe M.2 Key E
+> connectors. These connectors are used to attach the Wireless Connectivity
+> devices to the host machine including combinations of WiFi, BT, NFC using
+> interfaces such as PCIe/SDIO for WiFi, USB/UART for BT and I2C for NFC.
+> 
+> Currently, this driver supports only the PCIe interface for WiFi and UART
+> interface for BT. The driver also only supports driving the 3.3v/1.8v power
+> supplies and W_DISABLE{1/2}# GPIOs. The optional signals of the Key E
+> connectors are not currently supported.
+> 
+> Signed-off-by: Manivannan Sadhasivam <manivannan.sadhasivam@oss.qualcomm.com>
+> ---
+>  drivers/power/sequencing/Kconfig          |   1 +
+>  drivers/power/sequencing/pwrseq-pcie-m2.c | 110 ++++++++++++++++++++++++++++--
+>  2 files changed, 104 insertions(+), 7 deletions(-)
+> 
+> diff --git a/drivers/power/sequencing/Kconfig b/drivers/power/sequencing/Kconfig
+> index f5fff84566ba..29bd204319cc 100644
+> --- a/drivers/power/sequencing/Kconfig
+> +++ b/drivers/power/sequencing/Kconfig
+> @@ -38,6 +38,7 @@ config POWER_SEQUENCING_TH1520_GPU
+>  config POWER_SEQUENCING_PCIE_M2
+>  	tristate "PCIe M.2 connector power sequencing driver"
+>  	depends on OF || COMPILE_TEST
+> +	depends on PCI
+>  	help
+>  	  Say Y here to enable the power sequencing driver for PCIe M.2
+>  	  connectors. This driver handles the power sequencing for the M.2
+> diff --git a/drivers/power/sequencing/pwrseq-pcie-m2.c b/drivers/power/sequencing/pwrseq-pcie-m2.c
+> index e01e19123415..4b85a40d7692 100644
+> --- a/drivers/power/sequencing/pwrseq-pcie-m2.c
+> +++ b/drivers/power/sequencing/pwrseq-pcie-m2.c
+> @@ -4,12 +4,16 @@
+>   * Author: Manivannan Sadhasivam <manivannan.sadhasivam@oss.qualcomm.com>
+>   */
+>  
+> +#include <linux/err.h>
+>  #include <linux/device.h>
+> +#include <linux/delay.h>
+> +#include <linux/gpio/consumer.h>
+>  #include <linux/mod_devicetable.h>
+>  #include <linux/module.h>
+>  #include <linux/of.h>
+>  #include <linux/of_graph.h>
+>  #include <linux/of_platform.h>
+> +#include <linux/pci.h>
+>  #include <linux/platform_device.h>
+>  #include <linux/pwrseq/provider.h>
+>  #include <linux/regulator/consumer.h>
+> @@ -25,17 +29,19 @@ struct pwrseq_pcie_m2_ctx {
+>  	const struct pwrseq_pcie_m2_pdata *pdata;
+>  	struct regulator_bulk_data *regs;
+>  	size_t num_vregs;
+> -	struct notifier_block nb;
+> +	struct gpio_desc *w_disable1_gpio;
+> +	struct gpio_desc *w_disable2_gpio;
+> +	struct device *dev;
+>  };
+>  
+> -static int pwrseq_pcie_m2_m_vregs_enable(struct pwrseq_device *pwrseq)
+> +static int pwrseq_pcie_m2_vregs_enable(struct pwrseq_device *pwrseq)
+>  {
+>  	struct pwrseq_pcie_m2_ctx *ctx = pwrseq_device_get_drvdata(pwrseq);
+>  
+>  	return regulator_bulk_enable(ctx->num_vregs, ctx->regs);
+>  }
+>  
+> -static int pwrseq_pcie_m2_m_vregs_disable(struct pwrseq_device *pwrseq)
+> +static int pwrseq_pcie_m2_vregs_disable(struct pwrseq_device *pwrseq)
+>  {
+>  	struct pwrseq_pcie_m2_ctx *ctx = pwrseq_device_get_drvdata(pwrseq);
+>  
+> @@ -44,18 +50,84 @@ static int pwrseq_pcie_m2_m_vregs_disable(struct pwrseq_device *pwrseq)
+>  
+>  static const struct pwrseq_unit_data pwrseq_pcie_m2_vregs_unit_data = {
+>  	.name = "regulators-enable",
+> -	.enable = pwrseq_pcie_m2_m_vregs_enable,
+> -	.disable = pwrseq_pcie_m2_m_vregs_disable,
+> +	.enable = pwrseq_pcie_m2_vregs_enable,
+> +	.disable = pwrseq_pcie_m2_vregs_disable,
+>  };
+>  
+> -static const struct pwrseq_unit_data *pwrseq_pcie_m2_m_unit_deps[] = {
+> +static const struct pwrseq_unit_data *pwrseq_pcie_m2_unit_deps[] = {
+>  	&pwrseq_pcie_m2_vregs_unit_data,
+>  	NULL
+>  };
+>  
+> +static int pwrseq_pci_m2_e_uart_enable(struct pwrseq_device *pwrseq)
+> +{
+> +	struct pwrseq_pcie_m2_ctx *ctx = pwrseq_device_get_drvdata(pwrseq);
+> +
+> +	return gpiod_set_value_cansleep(ctx->w_disable2_gpio, 0);
+> +}
+> +
+> +static int pwrseq_pci_m2_e_uart_disable(struct pwrseq_device *pwrseq)
+> +{
+> +	struct pwrseq_pcie_m2_ctx *ctx = pwrseq_device_get_drvdata(pwrseq);
+> +
+> +	return gpiod_set_value_cansleep(ctx->w_disable2_gpio, 1);
+> +}
+> +
+> +static const struct pwrseq_unit_data pwrseq_pcie_m2_e_uart_unit_data = {
+> +	.name = "uart-enable",
+> +	.deps = pwrseq_pcie_m2_unit_deps,
+> +	.enable = pwrseq_pci_m2_e_uart_enable,
+> +	.disable = pwrseq_pci_m2_e_uart_disable,
+> +};
+> +
+> +static int pwrseq_pci_m2_e_pcie_enable(struct pwrseq_device *pwrseq)
+> +{
+> +	struct pwrseq_pcie_m2_ctx *ctx = pwrseq_device_get_drvdata(pwrseq);
+> +
+> +	return gpiod_set_value_cansleep(ctx->w_disable1_gpio, 0);
+> +}
+> +
+> +static int pwrseq_pci_m2_e_pcie_disable(struct pwrseq_device *pwrseq)
+> +{
+> +	struct pwrseq_pcie_m2_ctx *ctx = pwrseq_device_get_drvdata(pwrseq);
+> +
+> +	return gpiod_set_value_cansleep(ctx->w_disable1_gpio, 1);
+> +}
+> +
+> +static const struct pwrseq_unit_data pwrseq_pcie_m2_e_pcie_unit_data = {
+> +	.name = "pcie-enable",
+> +	.deps = pwrseq_pcie_m2_unit_deps,
+> +	.enable = pwrseq_pci_m2_e_pcie_enable,
+> +	.disable = pwrseq_pci_m2_e_pcie_disable,
+> +};
+> +
+>  static const struct pwrseq_unit_data pwrseq_pcie_m2_m_pcie_unit_data = {
+>  	.name = "pcie-enable",
+> -	.deps = pwrseq_pcie_m2_m_unit_deps,
+> +	.deps = pwrseq_pcie_m2_unit_deps,
+> +};
+> +
+> +static int pwrseq_pcie_m2_e_pwup_delay(struct pwrseq_device *pwrseq)
+> +{
+> +	/*
+> +	 * FIXME: This delay is only required for some Qcom WLAN/BT cards like
+> +	 * WCN7850 and not for all devices. But currently, there is no way to
+> +	 * identify the device model before enumeration.
+> +	 */
+> +	msleep(50);
 
---8323328-2134474321-1768315102=:966
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: QUOTED-PRINTABLE
+Section 3.1.4 of the M.2 spec says that "Power Valid to PERST# input
+inactive" (T_PVPGL) is "Implementation specific recommended 50 ms." So I
+think we should delay for at least 50 ms for all M.2 cards.
+Additionally, the PCIe CEM specifies that "Power stable to PERST#
+inactive" (T_PVPERL) must be at least 100 ms. So I think we should just
+delay for 100 ms regardless of the slot, perhaps making this
+configurable in the devicetree if e.g. the system integrator knows the
+soldered-down M.2 requires less initialization time. This is exactly
+what I proposed in [1].
 
-On Tue, 13 Jan 2026, Krishna Chomal wrote:
+--Sean
 
-> On Mon, Jan 12, 2026 at 05:34:35PM +0200, Ilpo J=C3=A4rvinen wrote:
-> > On Thu, 18 Dec 2025 18:13:01 +0530, Krishna Chomal wrote:
-> >=20
-> > > This series fixes incorrect thermal profile parameters sent for HP Om=
-en
-> > > 16-wf1xxx and implements hardware readback support for Victus S therm=
-al
-> > > profiles.
-> > >=20
-> > > The first patch refactors the DMI handling for Victus S boards. By
-> > > moving from simple string list to DMI system id table with driver_dat=
-a,
-> > > we can now map each board to its correct thermal parameters.
-> > >=20
-> > > [...]
-> >=20
-> >=20
-> > Thank you for your contribution, it has been applied to my local
-> > review-ilpo-next branch. Note it will show up in the public
-> > platform-drivers-x86/review-ilpo-next branch only once I've pushed my
-> > local branch there, which might take a while.
-> >=20
-> > The list of commits applied:
-> > [1/2] platform/x86: hp-wmi: fix platform profile values for Omen 16-wf1=
-xxx
-> >      commit: d8bf01424f9eb555bf13b802a8ddffbb49f221a7
-> > [2/2] platform/x86: hp-wmi: Add EC offsets to read Victus S thermal pro=
-file
-> >      commit: 2511dd4dbb76ef6914c9b45ccba2492da25d772d
-> >=20
-> > --
-> > i.
-> >=20
->=20
-> Hi Ilpo,
->=20
-> I want to inform you about a potential issue in patch 2/2. My implementat=
-ion
-> assumed a strict correlation between WMI command types and EC layouts,
-> but I have discovered this isn't universal. Some boards (like 8E35, not
-> present in this driver right now) use Victus S WMI commands but retain
-> the older EC layout (thermal profile offset: 0x95). Directly using
-> offset 0x59 for victus_s devices would not work for boards like 8E35.
->=20
-> To fix this, I suggest updating platform_profile_victus_s_get_ec(), to
-> check both of these offsets for a valid thermal profile.
->=20
-> I can either:
-> 1. Send a follow-up patch to implement this iterative check.
-> 2. Send a v5 with this logic integrated, if you prefer to drop the
->    current series from your review branch.
->=20
-> Please let me know which path you prefer.
+[1] https://lore.kernel.org/linux-pci/20251219172222.2808195-2-sean.anderson@linux.dev/
 
-Thanks for following through!
-
-Please just send v5 as I had to drop the wmi series anyway from the=20
-review-ilpo-next branch so this was easy drop while at it.
-
---=20
- i.
-
---8323328-2134474321-1768315102=:966--
+> +	return 0;
+> +}
+> +
+> +static const struct pwrseq_target_data pwrseq_pcie_m2_e_uart_target_data = {
+> +	.name = "uart",
+> +	.unit = &pwrseq_pcie_m2_e_uart_unit_data,
+> +	.post_enable = pwrseq_pcie_m2_e_pwup_delay,
+> +};
+> +
+> +static const struct pwrseq_target_data pwrseq_pcie_m2_e_pcie_target_data = {
+> +	.name = "pcie",
+> +	.unit = &pwrseq_pcie_m2_e_pcie_unit_data,
+> +	.post_enable = pwrseq_pcie_m2_e_pwup_delay,
+>  };
+>  
+>  static const struct pwrseq_target_data pwrseq_pcie_m2_m_pcie_target_data = {
+> @@ -63,11 +135,21 @@ static const struct pwrseq_target_data pwrseq_pcie_m2_m_pcie_target_data = {
+>  	.unit = &pwrseq_pcie_m2_m_pcie_unit_data,
+>  };
+>  
+> +static const struct pwrseq_target_data *pwrseq_pcie_m2_e_targets[] = {
+> +	&pwrseq_pcie_m2_e_pcie_target_data,
+> +	&pwrseq_pcie_m2_e_uart_target_data,
+> +	NULL
+> +};
+> +
+>  static const struct pwrseq_target_data *pwrseq_pcie_m2_m_targets[] = {
+>  	&pwrseq_pcie_m2_m_pcie_target_data,
+>  	NULL
+>  };
+>  
+> +static const struct pwrseq_pcie_m2_pdata pwrseq_pcie_m2_e_of_data = {
+> +	.targets = pwrseq_pcie_m2_e_targets,
+> +};
+> +
+>  static const struct pwrseq_pcie_m2_pdata pwrseq_pcie_m2_m_of_data = {
+>  	.targets = pwrseq_pcie_m2_m_targets,
+>  };
+> @@ -126,6 +208,16 @@ static int pwrseq_pcie_m2_probe(struct platform_device *pdev)
+>  		return dev_err_probe(dev, ret,
+>  				     "Failed to get all regulators\n");
+>  
+> +	ctx->w_disable1_gpio = devm_gpiod_get_optional(dev, "w-disable1", GPIOD_OUT_HIGH);
+> +	if (IS_ERR(ctx->w_disable1_gpio))
+> +		return dev_err_probe(dev, PTR_ERR(ctx->w_disable1_gpio),
+> +				     "Failed to get the W_DISABLE_1# GPIO\n");
+> +
+> +	ctx->w_disable2_gpio = devm_gpiod_get_optional(dev, "w-disable2", GPIOD_OUT_HIGH);
+> +	if (IS_ERR(ctx->w_disable2_gpio))
+> +		return dev_err_probe(dev, PTR_ERR(ctx->w_disable2_gpio),
+> +				     "Failed to get the W_DISABLE_2# GPIO\n");
+> +
+>  	ctx->num_vregs = ret;
+>  
+>  	ret = devm_add_action_or_reset(dev, pwrseq_pcie_free_resources, ctx);
+> @@ -151,6 +243,10 @@ static const struct of_device_id pwrseq_pcie_m2_of_match[] = {
+>  		.compatible = "pcie-m2-m-connector",
+>  		.data = &pwrseq_pcie_m2_m_of_data,
+>  	},
+> +	{
+> +		.compatible = "pcie-m2-e-connector",
+> +		.data = &pwrseq_pcie_m2_e_of_data,
+> +	},
+>  	{ }
+>  };
+>  MODULE_DEVICE_TABLE(of, pwrseq_pcie_m2_of_match);
+> 
