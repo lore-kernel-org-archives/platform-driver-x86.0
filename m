@@ -1,231 +1,146 @@
-Received: from mail-pf1-f178.google.com (mail-pf1-f178.google.com [209.85.210.178])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0053738F953
-	for <platform-driver-x86@vger.kernel.org>; Tue, 13 Jan 2026 12:38:01 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.178
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 26CF9346E4C
+	for <platform-driver-x86@vger.kernel.org>; Tue, 13 Jan 2026 13:54:58 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1768307884; cv=none; b=LssQhWwr1Jtq4wm5JWhL2v32fSherv/Jrou5HsePlmbYv/qsBj4BqCE+SVxzpZvZg89dsAszwEWDv1reuJDu5nFTD5I2fws0yBUe2CBQykflTlnc6SQupigFfMJlk/LIhiCU16eicEoY53zOMZWpTRMFxJgHJL3raMRpNcO+9zE=
+	t=1768312498; cv=none; b=bINDV0lQa0MylqeYYe4/HWdqMC6LgPOdhseCFSC86uMO/GgteIJ0Jo9XHVC9Vrs4j/KpkVXeJXaDSbdbB4y7M9d31lQVtxyykjUqhvS8gSMjp1NJvKfOyS3FczldPXJj7a7SqyHxaUILGU65TvbxbIqHPVFMzMUi9YyrycUHqBw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1768307884; c=relaxed/simple;
-	bh=CCULviIUt1z9O4zm0Y/tKUyP/DMbEeojREOXeyucv0w=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=fD/82Zuh2Rb5OPgN8hcgHwdQjTeT3dootT66AL2bN85qX+xifecBFcnwV1qk8hLeV61c9b66E7egludzdwk0uZEbSSy82AUaQBjnORbiaXwrzl/xv2yCk7iVLX8kokYRJKDZK8u5n8/QxoAiLv7mob0evYiaFpZl98bhxZwP99I=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=TjAF6B46; arc=none smtp.client-ip=209.85.210.178
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1768312498; c=relaxed/simple;
+	bh=qoD2yGygqaoN/33J25h6tmmzMz3XXXhCzzZUa7glhR0=;
+	h=From:In-Reply-To:MIME-Version:References:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=lu2V6Qfn4s8KvlQmTvfu3QNSY/1cHYUYNarX3HwioicrPKHobczCCTPKOUR+2LiPy0wvnhlN0H/PzhTEfVD9cYCZwRkMQ8D+Z7J2T/lYFhS4jSwwmy+AyETrquE2Pjw+Z851lywbfMy6BZdGXa7wsHeSHA5rcScAkFmNEYEpemc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=LwcX08r7; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="TjAF6B46"
-Received: by mail-pf1-f178.google.com with SMTP id d2e1a72fcca58-81f4a1a3181so1146485b3a.3
-        for <platform-driver-x86@vger.kernel.org>; Tue, 13 Jan 2026 04:38:01 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1768307880; x=1768912680; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=2KgPNZ1+hiG4bP2a4hNVRlEnc7lnvw26sruTYHkKl3A=;
-        b=TjAF6B46C1880MRmAKko5tS55L1chEmPHhJ2d5ObRAw6+1tmQZM5Z8aMnBXN9GaU32
-         wqP7DWJ0NYNfPyaMqvhKYQtLzklElcrshJHU6Cal4Lki5dOyBKGAdCPi2IUjIdy71bUj
-         TLne4nfC4SnF3rg9UC1Nn+fxPzGDT+Ru12+7TgcoQHK1GkIxz8LU1rS47dfIh4Gongw4
-         NZe3KmEhFA5oSccgvX3sGeL/N3Sh8jcx6bHtErJCVnVtwzO2ftvVt+VZ1y446XAyryEx
-         3PAP5rlUnQ+8AI8ga8ry3WlS7Wlp0+ahgxQ1LkPkqBmZT24uYqrR+T2G/KpfrqNdXF+b
-         6NZw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1768307880; x=1768912680;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-gg:x-gm-message-state:from
-         :to:cc:subject:date:message-id:reply-to;
-        bh=2KgPNZ1+hiG4bP2a4hNVRlEnc7lnvw26sruTYHkKl3A=;
-        b=oGT7SRdxqsXEexI/7cT/H/sLCVCQ4gVqtEGBKwZBK5UfH8UZdb40Hd6pX5fYjcQb1z
-         lRm99VpShmHZy8fdmOq6c78rTtmLSo0a+LYfjK67FlcpDb2ibW7XvG8eNuo5SacJITeb
-         ujS18Rhub7nfFM0J//wJy/p5WzvzfNRf5VLO5ULsgQaCX4ErQr8N2DvkKqzD1tUZJ2yz
-         43lG8SUwBiPUu2tQAJgdq51qe5mjr4Uh2wjznp8tNRON/Ml2nyOtL7q2hMdj1DgdD5mk
-         sXPp8/2y20kaysfLLOiImHW6OdDbwSY+k55jGM7IgqAVx/6DxS0diD3tR9SVwLEpF+vK
-         Vqhw==
-X-Gm-Message-State: AOJu0YzEJmuimxSjl2FwOPb9gE+Fjj/XgIY9UzLTciYf4Op1+RGEpDWM
-	tTp3Xchj+m4LjiGZmggVKZ5qmRlg9vijiA7XnTEQQgWtaYZPZJMdYv02
-X-Gm-Gg: AY/fxX5vmDxusThgwMyJDhajGfai+P9dP0V3waXpiWf2v45ORlTmquw9DdM6NUk+LLP
-	SSJJ5yQ+4XLXcnfwQRTqdoieZPo+U8n2fR/NY0EEc5QZ+7jxjGFcUSsnAbnGSRH7BSRcfnk97Uf
-	KjntK7NHJVHd0PjZVCVAYj1HxykpWfc9H+hc777QpemaYQySw3R3Os955Hm8MbJsOmjdqfcPh7L
-	IAfECkiFVZ965qZuNA1WJWcLIhW08AKVBTTYd9rcUGwGpMXQBXQQLipNqOYzCR9UGzFvqAzxQfS
-	7v9zCcfv2IZ5d+I/GVDrJnU6GFS1VLnrbhoft2abMz0QKeZuYN79hEoT8qhCihV4DPEUOXu7dLL
-	BVW98bc540HmZvB40XM5YdDL3CABg96C4WnmZQovqs5VQ0nBlLEZLZXXyuldzMxjaZZOzOeHDIf
-	f9MiO/hi4DU+Wrc8vLJEo=
-X-Google-Smtp-Source: AGHT+IE4FDzI2fl3iF/FeHvk73xQO0/uUff9GpZajmdaH4++8DOBr9WgUzShXoJrvM7PV7zAGGon7Q==
-X-Received: by 2002:a05:6a00:8c10:b0:7b7:5066:7f9 with SMTP id d2e1a72fcca58-81b7e928742mr18063499b3a.7.1768307880309;
-        Tue, 13 Jan 2026 04:38:00 -0800 (PST)
-Received: from archlinux ([2405:201:1b:225c:eb9d:1fc0:f95c:bd90])
-        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-81e9dd8fd8dsm11409000b3a.10.2026.01.13.04.37.55
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 13 Jan 2026 04:38:00 -0800 (PST)
-From: Krishna Chomal <krishna.chomal108@gmail.com>
-To: ilpo.jarvinen@linux.intel.com,
-	hansg@kernel.org,
-	linux@roeck-us.net
-Cc: platform-driver-x86@vger.kernel.org,
-	linux-hwmon@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	Krishna Chomal <krishna.chomal108@gmail.com>
-Subject: [PATCH v3 3/3] platform/x86: hp-wmi: implement fan keep-alive
-Date: Tue, 13 Jan 2026 18:07:38 +0530
-Message-ID: <20260113123738.222244-4-krishna.chomal108@gmail.com>
-X-Mailer: git-send-email 2.52.0
-In-Reply-To: <20260113123738.222244-1-krishna.chomal108@gmail.com>
-References: <20251230145053.516196-1-krishna.chomal108@gmail.com>
- <20260113123738.222244-1-krishna.chomal108@gmail.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="LwcX08r7"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 0997CC2BCB3
+	for <platform-driver-x86@vger.kernel.org>; Tue, 13 Jan 2026 13:54:58 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1768312498;
+	bh=qoD2yGygqaoN/33J25h6tmmzMz3XXXhCzzZUa7glhR0=;
+	h=From:In-Reply-To:References:Date:Subject:To:Cc:From;
+	b=LwcX08r7EsQDhJCbjPOzCDQ8L/NJdp+Yvx5t+jbK2RONDVNJfRDUxJFYirLqfL4sF
+	 emf/K5rGhWKjJY0Cp/kFBkd2OilME1JHhepYAOW6CY8x9Kw/pIXuSvv3hC6j+EsK8/
+	 0a+05/4KgEUVUYNEmL+wyQB/T823za1JSHgdHxa6U4Q0w2PeTNShckZR3ydeMV1uey
+	 4Ha3BJJNScCIVUmwVvgxd20QmZwNpJqq/5fIOnuYD+8vamKE6oLKoANxUyAbFwPrvR
+	 qD6qC+pSUwRXhxUfLJ0QdpT9Ij8EfviBbSxu2t97P58E+9mfVv58fGQ+VjsH4zA42u
+	 +MBLUBaxcl10w==
+Received: by mail-lf1-f52.google.com with SMTP id 2adb3069b0e04-59b72a1e2f0so7456779e87.0
+        for <platform-driver-x86@vger.kernel.org>; Tue, 13 Jan 2026 05:54:57 -0800 (PST)
+X-Forwarded-Encrypted: i=1; AJvYcCW+HheYZWG87pvqSEqgJa0uNep5ON+arxxaubQB7kpBSNoDQvDlxQcj1Cj19HYwkF3fdvzupAYgyX5O5hALWW01h4ty@vger.kernel.org
+X-Gm-Message-State: AOJu0YxK4dtNjJhLOjJo2VDhkknkaVi1dzyW2DRBREnUU/0NkNX0ZxG8
+	KvTTfUZtc4zR8RaY2IrrOz6deFO98u+ZdOV3KRStY/D9B7Zqkq2foZojdTOlDYuwoVnvuMyBjSq
+	CfagdpVphcR1IHzKYL5Ls+VECfoSQOpM8vmX/Wh5ZoA==
+X-Google-Smtp-Source: AGHT+IHtxkUGwU9KE66IHi1cBKvrXikFiqjf5FnMhLoUqzd0zbPBghAy/6jPyeE4fjWfRvr/ZtuwVmPnk4eOTeZtRkw=
+X-Received: by 2002:a2e:be13:0:b0:37f:a216:e455 with SMTP id
+ 38308e7fff4ca-382ff6a998emr60740471fa.18.1768312496407; Tue, 13 Jan 2026
+ 05:54:56 -0800 (PST)
+Received: from 969154062570 named unknown by gmailapi.google.com with
+ HTTPREST; Tue, 13 Jan 2026 08:54:55 -0500
+Received: from 969154062570 named unknown by gmailapi.google.com with
+ HTTPREST; Tue, 13 Jan 2026 08:54:55 -0500
+From: Bartosz Golaszewski <brgl@kernel.org>
+In-Reply-To: <20260112-pci-m2-e-v4-2-eff84d2c6d26@oss.qualcomm.com>
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+References: <20260112-pci-m2-e-v4-0-eff84d2c6d26@oss.qualcomm.com> <20260112-pci-m2-e-v4-2-eff84d2c6d26@oss.qualcomm.com>
+Date: Tue, 13 Jan 2026 08:54:55 -0500
+X-Gmail-Original-Message-ID: <CAMRc=McDvQoqfH0Gy-wzbcEGvNCZACSACCcviwpCc4YNSpKYrw@mail.gmail.com>
+X-Gm-Features: AZwV_QiNfMpaasLV4YYAdk4pjC7egojRYHOX7MP76SYTH8HXlXx4MiSntJqB_WU
+Message-ID: <CAMRc=McDvQoqfH0Gy-wzbcEGvNCZACSACCcviwpCc4YNSpKYrw@mail.gmail.com>
+Subject: Re: [PATCH v4 2/9] serdev: Add an API to find the serdev controller
+ associated with the devicetree node
+To: manivannan.sadhasivam@oss.qualcomm.com
+Cc: Rob Herring <robh@kernel.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, 
+	Jiri Slaby <jirislaby@kernel.org>, Nathan Chancellor <nathan@kernel.org>, 
+	Nicolas Schier <nicolas.schier@linux.dev>, Hans de Goede <hansg@kernel.org>, 
+	=?UTF-8?Q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>, 
+	Mark Pearson <mpearson-lenovo@squebb.ca>, "Derek J. Clark" <derekjohn.clark@gmail.com>, 
+	Manivannan Sadhasivam <mani@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, 
+	Marcel Holtmann <marcel@holtmann.org>, Luiz Augusto von Dentz <luiz.dentz@gmail.com>, 
+	Bartosz Golaszewski <brgl@bgdev.pl>, Andy Shevchenko <andriy.shevchenko@linux.intel.com>, 
+	Bartosz Golaszewski <brgl@kernel.org>, 
+	Manivannan Sadhasivam via B4 Relay <devnull+manivannan.sadhasivam.oss.qualcomm.com@kernel.org>, 
+	linux-serial@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	linux-kbuild@vger.kernel.org, platform-driver-x86@vger.kernel.org, 
+	linux-pci@vger.kernel.org, devicetree@vger.kernel.org, 
+	linux-arm-msm@vger.kernel.org, linux-bluetooth@vger.kernel.org, 
+	linux-pm@vger.kernel.org, Stephan Gerhold <stephan.gerhold@linaro.org>, 
+	Dmitry Baryshkov <dmitry.baryshkov@oss.qualcomm.com>, linux-acpi@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 
-The firmware on some HP laptops automatically reverts the fan speed
-control to "Auto" mode after a 120 second timeout window.
+On Mon, 12 Jan 2026 17:26:01 +0100, Manivannan Sadhasivam via B4 Relay
+<devnull+manivannan.sadhasivam.oss.qualcomm.com@kernel.org> said:
+> From: Manivannan Sadhasivam <manivannan.sadhasivam@oss.qualcomm.com>
+>
+> Add of_find_serdev_controller_by_node() API to find the serdev controller
+> device associated with the devicetree node.
+>
+> Signed-off-by: Manivannan Sadhasivam <manivannan.sadhasivam@oss.qualcomm.com>
+> ---
+>  drivers/tty/serdev/core.c | 16 ++++++++++++++++
+>  include/linux/serdev.h    |  9 +++++++++
+>  2 files changed, 25 insertions(+)
+>
+> diff --git a/drivers/tty/serdev/core.c b/drivers/tty/serdev/core.c
+> index b33e708cb245..25382c2d63e6 100644
+> --- a/drivers/tty/serdev/core.c
+> +++ b/drivers/tty/serdev/core.c
+> @@ -504,6 +504,22 @@ struct serdev_controller *serdev_controller_alloc(struct device *host,
+>  }
+>  EXPORT_SYMBOL_GPL(serdev_controller_alloc);
+>
+> +/**
+> + * of_find_serdev_controller_by_node() - Find the serdev controller associated
+> + *					 with the devicetree node
+> + * @node:	Devicetree node
+> + *
+> + * Return: Pointer to the serdev controller associated with the node. NULL if
+> + * the controller is not found.
+> + */
 
-To ensure that the user-selected fan profile (Max/Manual) persists,
-implement a keep-alive mechanism that periodically refreshes the fan
-mode trigger before the timeout occurs.
+Please also say that the caller is responsible for calling
+serdev_controller_put() on the returned object.
 
-- Introduce a delayed workqueue to trigger the fan mode refresh every 90
-  seconds, ensuring the system maintains the correct fan mode setting.
-- Integrate the refresh mechanism into hp_wmi_hwmon_enforce_ctx() to
-  start, update or cancel the keep-alive process based on the current
-  fan mode.
+Bart
 
-This ensures that the driver stays in sync with the hardware.
-
-Tested on: HP Omen 16-wf1xxx (board ID 8C78)
-
-Signed-off-by: Krishna Chomal <krishna.chomal108@gmail.com>
----
-Changes in v3:
-- Rename "ctx" to "priv" for drvdata
-Changes in v2:
-- Explicitly specify time unit in KEEP_ALIVE_DELAY macro
-- Handle work rescheduling directly in switch/case
----
- drivers/platform/x86/hp/hp-wmi.c | 46 +++++++++++++++++++++++++++++---
- 1 file changed, 43 insertions(+), 3 deletions(-)
-
-diff --git a/drivers/platform/x86/hp/hp-wmi.c b/drivers/platform/x86/hp/hp-wmi.c
-index d04e53ae1803..45ab644ff10e 100644
---- a/drivers/platform/x86/hp/hp-wmi.c
-+++ b/drivers/platform/x86/hp/hp-wmi.c
-@@ -34,6 +34,7 @@
- #include <linux/slab.h>
- #include <linux/string.h>
- #include <linux/types.h>
-+#include <linux/workqueue.h>
- 
- MODULE_AUTHOR("Matthew Garrett <mjg59@srcf.ucam.org>");
- MODULE_DESCRIPTION("HP laptop WMI driver");
-@@ -368,6 +369,7 @@ struct hp_wmi_hwmon_priv {
- 	u8 gpu_delta;
- 	u8 mode;
- 	u8 pwm;
-+	struct delayed_work keep_alive_dwork;
- };
- 
- struct victus_s_fan_table_header {
-@@ -386,6 +388,12 @@ struct victus_s_fan_table {
- 	struct victus_s_fan_table_entry entries[];
- } __packed;
- 
-+/*
-+ * 90s delay to prevent the firmware from resetting fan mode after fixed
-+ * 120s timeout
-+ */
-+#define KEEP_ALIVE_DELAY_SECS     90
-+
- static inline u8 rpm_to_pwm(u8 rpm, struct hp_wmi_hwmon_priv *priv)
- {
- 	return fixp_linear_interpolate(0, 0, priv->max_rpm, U8_MAX,
-@@ -2093,6 +2101,7 @@ static int __init hp_wmi_bios_setup(struct platform_device *device)
- static void __exit hp_wmi_bios_remove(struct platform_device *device)
- {
- 	int i;
-+	struct hp_wmi_hwmon_priv *priv;
- 
- 	for (i = 0; i < rfkill2_count; i++) {
- 		rfkill_unregister(rfkill2[i].rfkill);
-@@ -2111,6 +2120,10 @@ static void __exit hp_wmi_bios_remove(struct platform_device *device)
- 		rfkill_unregister(wwan_rfkill);
- 		rfkill_destroy(wwan_rfkill);
- 	}
-+
-+	priv = platform_get_drvdata(device);
-+	if (priv)
-+		cancel_delayed_work_sync(&priv->keep_alive_dwork);
- }
- 
- static int hp_wmi_resume_handler(struct device *device)
-@@ -2179,12 +2192,20 @@ static int hp_wmi_apply_fan_settings(struct hp_wmi_hwmon_priv *priv)
- 		if (is_victus_s_thermal_profile())
- 			hp_wmi_get_fan_count_userdefine_trigger();
- 		ret = hp_wmi_fan_speed_max_set(1);
--		return ret;
-+		if (ret < 0)
-+			return ret;
-+		schedule_delayed_work(&priv->keep_alive_dwork,
-+				      secs_to_jiffies(KEEP_ALIVE_DELAY_SECS));
-+		return 0;
- 	case PWM_MODE_MANUAL:
- 		if (!is_victus_s_thermal_profile())
- 			return -EOPNOTSUPP;
- 		ret = hp_wmi_fan_speed_set(priv, pwm_to_rpm(priv->pwm, priv));
--		return ret;
-+		if (ret < 0)
-+			return ret;
-+		schedule_delayed_work(&priv->keep_alive_dwork,
-+				      secs_to_jiffies(KEEP_ALIVE_DELAY_SECS));
-+		return 0;
- 	case PWM_MODE_AUTO:
- 		if (is_victus_s_thermal_profile()) {
- 			hp_wmi_get_fan_count_userdefine_trigger();
-@@ -2192,7 +2213,10 @@ static int hp_wmi_apply_fan_settings(struct hp_wmi_hwmon_priv *priv)
- 		} else {
- 			ret = hp_wmi_fan_speed_max_set(0);
- 		}
--		return ret;
-+		if (ret < 0)
-+			return ret;
-+		cancel_delayed_work_sync(&priv->keep_alive_dwork);
-+		return 0;
- 	default:
- 		/* shouldn't happen */
- 		return -EINVAL;
-@@ -2336,6 +2360,20 @@ static const struct hwmon_chip_info chip_info = {
- 	.info = info,
- };
- 
-+static void hp_wmi_hwmon_keep_alive_handler(struct work_struct *work)
-+{
-+	struct delayed_work *dwork;
-+	struct hp_wmi_hwmon_priv *priv;
-+
-+	dwork = to_delayed_work(work);
-+	priv = container_of(dwork, struct hp_wmi_hwmon_priv, keep_alive_dwork);
-+	/*
-+	 * Re-apply the current hwmon context settings.
-+	 * NOTE: hp_wmi_apply_fan_settings will handle the re-scheduling.
-+	 */
-+	hp_wmi_apply_fan_settings(priv);
-+}
-+
- static int hp_wmi_setup_fan_settings(struct hp_wmi_hwmon_priv *priv)
- {
- 	u8 fan_data[128] = { 0 };
-@@ -2393,6 +2431,8 @@ static int hp_wmi_hwmon_init(void)
- 		return PTR_ERR(hwmon);
- 	}
- 
-+	INIT_DELAYED_WORK(&priv->keep_alive_dwork, hp_wmi_hwmon_keep_alive_handler);
-+	platform_set_drvdata(hp_wmi_platform_dev, priv);
- 	hp_wmi_apply_fan_settings(priv);
- 
- 	return 0;
--- 
-2.52.0
-
+> +struct serdev_controller *of_find_serdev_controller_by_node(struct device_node *node)
+> +{
+> +	struct device *dev = bus_find_device_by_of_node(&serdev_bus_type, node);
+> +
+> +	return (dev && dev->type == &serdev_ctrl_type) ? to_serdev_controller(dev) : NULL;
+> +}
+> +EXPORT_SYMBOL_GPL(of_find_serdev_controller_by_node);
+> +
+>  static int of_serdev_register_devices(struct serdev_controller *ctrl)
+>  {
+>  	struct device_node *node;
+> diff --git a/include/linux/serdev.h b/include/linux/serdev.h
+> index ecde0ad3e248..db9bfaba0662 100644
+> --- a/include/linux/serdev.h
+> +++ b/include/linux/serdev.h
+> @@ -333,4 +333,13 @@ static inline bool serdev_acpi_get_uart_resource(struct acpi_resource *ares,
+>  }
+>  #endif /* CONFIG_ACPI */
+>
+> +#ifdef CONFIG_OF
+> +struct serdev_controller *of_find_serdev_controller_by_node(struct device_node *node);
+> +#else
+> +struct serdev_controller *of_find_serdev_controller_by_node(struct device_node *node)
+> +{
+> +	return NULL;
+> +}
+> +#endif /* CONFIG_OF */
+> +
+>  #endif /*_LINUX_SERDEV_H */
+>
+> --
+> 2.48.1
+>
+>
+>
