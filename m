@@ -1,155 +1,250 @@
-Received: from out-183.mta0.migadu.com (out-183.mta0.migadu.com [91.218.175.183])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ej1-f54.google.com (mail-ej1-f54.google.com [209.85.218.54])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 725902D77E9;
-	Wed, 14 Jan 2026 03:41:16 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.218.175.183
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BD776374189
+	for <platform-driver-x86@vger.kernel.org>; Wed, 14 Jan 2026 07:10:17 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.54
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1768362078; cv=none; b=cyODGYn8x2KYQJMjFa3sha337t3b+ZlMZXMpATmB5GNez9EuA2HWukVlSyULM1IIHlNzwBDxe6T1bEj3eRKt6yoArKeh+pLXsU2uy6JpuM01FQtxR0+jkEQBwB+eaCj1ntB6fKSo2QHbzhttPrUiN/cjElHjWQrDO5SYwQPs7Bo=
+	t=1768374621; cv=none; b=khcLrisqYzr2/ooUU/CS9AT7arxWAv5RDUQ8nWmMbqdfdujIkfumMgwO61cReU3r7vQkYPwUfYerextisqJViGI2LA2cZWp4AQ744Nh2yvj0PUUocDMmfIdQt1TwqCdPwbj0FQKfrbEvWXVBL6zPJGWdEztaAyEKNjTgeVe+0PM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1768362078; c=relaxed/simple;
-	bh=fuHX1gJvEHLXSbrpNZBA4M1RZiyGD+1HT2Iv1MurZ9o=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=FZ5/UPKWHF6GQBFPlV0baX3R3bN4kr0/H9yGUgmlSsqegiUKO6VpQhqQWWkZnv4vgab2wj6nKmLvTj9tCYbX8x0PQEQZBMByuqrvAwNCnrx8aDsHWR5TUd00NQBhiKY9gi7DZI1QQeALkUeo4lHZtU6TYu2nCNnAyhkudVdhSlE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=kkyEAjf3; arc=none smtp.client-ip=91.218.175.183
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
+	s=arc-20240116; t=1768374621; c=relaxed/simple;
+	bh=ctUYPBC6+nJZEmDVZF5qucDUeCidCa4GEKiDIyw7EQ4=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=ad3tNKPz1fY8/mJUaCS9YJLRLRCkSSolAMEXFFCuZeQwLsAA+XdSY2GjvE/2/K7qI6NZSEiFpOJnIxMqy5vD321QvRP5vpcgeqKPIkVksr0YHS2uWdgdaBkkPiAoMMCAjWf+WIrgLGYB8Y9vxkmzp4NKvOfIWANvNjQdtoEzgBI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=WpQ28Lk/; arc=none smtp.client-ip=209.85.218.54
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="kkyEAjf3"
-Message-ID: <977d29f6-4157-4fdb-b0d6-c24def482c06@linux.dev>
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
-	t=1768362064;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=wzuS26H8SYTScmOx3++ZwcMsS+D3jzSzvm/KUyjaJik=;
-	b=kkyEAjf3vAwmkpA6qQLnuaSZre5hBN1zivZR7feQaZvMwILYv8oANx8h+F6HDtKtMjlTGd
-	gn0lxegePRhz+XBSWXtBXaiKo9+/Gdy9/KJsL/7dx5iYjqhXvnXEZ+zWcHtH+MjVlHKQFM
-	4yb2rB8VCNXVTy1HzFsLEuwTZ+qx5q0=
-Date: Wed, 14 Jan 2026 11:40:51 +0800
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="WpQ28Lk/"
+Received: by mail-ej1-f54.google.com with SMTP id a640c23a62f3a-b86f69bbe60so463852566b.1
+        for <platform-driver-x86@vger.kernel.org>; Tue, 13 Jan 2026 23:10:17 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1768374614; x=1768979414; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=VZLt7c6ghw+MbNmmeD8W7gMeP5vlZ3ZHsqysaqmiypg=;
+        b=WpQ28Lk/WHjVbX+cTbjTsQnRXCAd9/PdZFVO9zYdCm/K29OlgDWeYM4rAMmJSHPSNi
+         bwrZgKHa7txnbF+bcs+pUrgynVT7zysRkJ7aJuRijW+HCq0LB/TsWS1Pf53HDu1zvTWs
+         rbYcmQDFk31zkIHf+Yl8cnL9HLLMyVKdK1CfNqmmlWlVRZ2lWaqkv4JvyTc2Gsr4j/Ns
+         bbxYzBaSwWwYDrfeDDifKpvYmdhQhTdZauQLVAn8TWds0IdeFGidygoWvMYfQL0rGKeL
+         Dqz9yUV/oDZZwvK6HjF7PsHI0u1uIb/pEri4L4fsf401HeaalTKaCwvJYE520un4ocl/
+         /ehg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1768374614; x=1768979414;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-gg:x-gm-message-state:from
+         :to:cc:subject:date:message-id:reply-to;
+        bh=VZLt7c6ghw+MbNmmeD8W7gMeP5vlZ3ZHsqysaqmiypg=;
+        b=dTZ+86hclNh6IsAYtRLcfYzmd4ZHdMT8gv4wwyLhkrLm+JLsCp22j7WheUGDjH5K/N
+         vKTmdzlPsqNQ5nfTNG1ss9o5B6bG26T2WDknMDnbKgCW35q3DPTjHKlJK2BAZ5rViBKM
+         +jkR7AS+/dJerBbWK48bibDEUYL6Z3QMH5aghXaYFVl/helHejIxTEjMOJFZe6OnWCzM
+         EvOEVSuhGckBiWK8csfAJFA9O2NNtAI9rjK1m4+nVmPrI44z5J52Q/u8AWiB4gSlQqY/
+         PBZx8o+H6Ndps7WnEiAfOZTfle2vkKPol3OYhCofR/VPPbt9XCgP31JPyGUCksTzpsW3
+         zeSg==
+X-Gm-Message-State: AOJu0YzM+xkbwaNi1c9HUKTeDR/ZPP41acz8fqVavmeNngo0Bpt7c7gB
+	1ezpgHaf3EJQ+PYx11VpFBUUf0naf1XONPARMMhZp2GzRNfnu5+d2Tby33Ncwp8Nd6b4U4xK79g
+	RvJwnzKB9pvy+dRzTPgTWWr/vFhJHR8k=
+X-Gm-Gg: AY/fxX569aO/87A8gIkX1REz6AVkfmHbw/l8NhoftkNus4Pi9Egxe2ywLdjdJw66WG7
+	30bANKyOnz1JvPmDtiejj7SPSRer4cOJ3y88N4QOkowP/hA9mobFV0jasG513pbTzOnXTRwuchN
+	oMNXEH9AUikTgsdvUBkZvNMmXYmM4ByKlEPa9KQ3tneLwKuYEbPMdlI2Pcqh1IwmK6wnpeMly+l
+	PoMEZEAJj3knRzJf9n6qhn6Vgox5gcaKwn//OElunKQlTr6f5Nsgyx+gdOkgrDxqQyJOw==
+X-Received: by 2002:a17:906:9fca:b0:b3b:5fe6:577a with SMTP id
+ a640c23a62f3a-b8760fce1b8mr136030466b.8.1768374613670; Tue, 13 Jan 2026
+ 23:10:13 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Subject: Re: [PATCH v3 03/14] software node: Implement device_get_match_data
- fwnode callback
-To: Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
- manivannan.sadhasivam@oss.qualcomm.com
-Cc: Rob Herring <robh@kernel.org>,
- Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
- Jiri Slaby <jirislaby@kernel.org>, Nathan Chancellor <nathan@kernel.org>,
- Nicolas Schier <nicolas.schier@linux.dev>, Hans de Goede <hansg@kernel.org>,
- =?UTF-8?Q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>,
- Mark Pearson <mpearson-lenovo@squebb.ca>,
- "Derek J. Clark" <derekjohn.clark@gmail.com>,
- Manivannan Sadhasivam <mani@kernel.org>,
- Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley
- <conor+dt@kernel.org>, Marcel Holtmann <marcel@holtmann.org>,
- Luiz Augusto von Dentz <luiz.dentz@gmail.com>,
- Bartosz Golaszewski <brgl@bgdev.pl>, Daniel Scally <djrscally@gmail.com>,
- Heikki Krogerus <heikki.krogerus@linux.intel.com>,
- Sakari Ailus <sakari.ailus@linux.intel.com>,
- "Rafael J. Wysocki" <rafael@kernel.org>, Danilo Krummrich <dakr@kernel.org>,
- Bartosz Golaszewski <brgl@kernel.org>, linux-serial@vger.kernel.org,
- linux-kernel@vger.kernel.org, linux-kbuild@vger.kernel.org,
- platform-driver-x86@vger.kernel.org, linux-pci@vger.kernel.org,
- devicetree@vger.kernel.org, linux-arm-msm@vger.kernel.org,
- linux-bluetooth@vger.kernel.org, linux-pm@vger.kernel.org,
- Stephan Gerhold <stephan.gerhold@linaro.org>,
- Dmitry Baryshkov <dmitry.baryshkov@oss.qualcomm.com>,
- linux-acpi@vger.kernel.org, linux-pci@vger.kernel.org
-References: <20260110-pci-m2-e-v3-0-4faee7d0d5ae@oss.qualcomm.com>
- <20260110-pci-m2-e-v3-3-4faee7d0d5ae@oss.qualcomm.com>
- <aWSpFk9z0zpyKjr6@smile.fi.intel.com>
-Content-Language: en-US
-X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
-From: Sui Jingfeng <sui.jingfeng@linux.dev>
-In-Reply-To: <aWSpFk9z0zpyKjr6@smile.fi.intel.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
-X-Migadu-Flow: FLOW_OUT
+References: <20260106184830.34426-1-benjamin.philip495@gmail.com>
+In-Reply-To: <20260106184830.34426-1-benjamin.philip495@gmail.com>
+From: Ike Panhc <ikepanhc@gmail.com>
+Date: Wed, 14 Jan 2026 15:10:02 +0800
+X-Gm-Features: AZwV_QjVLe5HKorFIVaObQOYrGhLDW-d7e1BubPh_jrIHmyxdynaM8dOR463nyI
+Message-ID: <CADwxbCU1O4nGb9yKdVqNfYZ3Su9epERv86eEOD3ggvTjGvm22g@mail.gmail.com>
+Subject: Re: [PATCH RESEND] platform/x86: ideadpad-laptop: Clean up style
+ warnings and checks
+To: Benjamin Philip <benjamin.philip495@gmail.com>
+Cc: platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	Mark Pearson <mpearson-lenovo@squebb.ca>, "Derek J. Clark" <derekjohn.clark@gmail.com>, 
+	Hans de Goede <hansg@kernel.org>, =?UTF-8?Q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
+On Wed, Jan 7, 2026 at 2:49=E2=80=AFAM Benjamin Philip
+<benjamin.philip495@gmail.com> wrote:
+>
+> This commit makes some style changes to clean up the following
+> checkpatch warnings and checks at various places in ideapad.c:
+>
+> - WARNING: quoted string split across lines
+> - WARNING: space prohibited between function name and open parenthesis '(=
+'
+> - WARNING: braces {} are not necessary for any arm of this statement
+> - CHECK: Alignment should match open parenthesis
+>
+> We exceed the 80 column limit to fix the quoted string warning since
+> strings in question are user visible. See coding style, part 2 for
+> details.
+>
+> Signed-off-by: Benjamin Philip <benjamin.philip495@gmail.com>
+> ---
+>  drivers/platform/x86/lenovo/ideapad-laptop.c | 39 ++++++++------------
+>  1 file changed, 16 insertions(+), 23 deletions(-)
+>
+> diff --git a/drivers/platform/x86/lenovo/ideapad-laptop.c b/drivers/platf=
+orm/x86/lenovo/ideapad-laptop.c
+> index 5171a077f62c..3d8a8b4f3e86 100644
+> --- a/drivers/platform/x86/lenovo/ideapad-laptop.c
+> +++ b/drivers/platform/x86/lenovo/ideapad-laptop.c
+> @@ -219,38 +219,32 @@ MODULE_PARM_DESC(no_bt_rfkill, "No rfkill for bluet=
+ooth.");
+>  static bool allow_v4_dytc;
+>  module_param(allow_v4_dytc, bool, 0444);
+>  MODULE_PARM_DESC(allow_v4_dytc,
+> -       "Enable DYTC version 4 platform-profile support. "
+> -       "If you need this please report this to: platform-driver-x86@vger=
+.kernel.org");
+> +                "Enable DYTC version 4 platform-profile support. If you =
+need this please report this to: platform-driver-x86@vger.kernel.org");
+>
+>  static bool hw_rfkill_switch;
+>  module_param(hw_rfkill_switch, bool, 0444);
+>  MODULE_PARM_DESC(hw_rfkill_switch,
+> -       "Enable rfkill support for laptops with a hw on/off wifi switch/s=
+lider. "
+> -       "If you need this please report this to: platform-driver-x86@vger=
+.kernel.org");
+> +                "Enable rfkill support for laptops with a hw on/off wifi=
+ switch/slider. If you need this please report this to: platform-driver-x86=
+@vger.kernel.org");
+>
+>  static bool set_fn_lock_led;
+>  module_param(set_fn_lock_led, bool, 0444);
+>  MODULE_PARM_DESC(set_fn_lock_led,
+> -       "Enable driver based updates of the fn-lock LED on fn-lock change=
+s. "
+> -       "If you need this please report this to: platform-driver-x86@vger=
+.kernel.org");
+> +                "Enable driver based updates of the fn-lock LED on fn-lo=
+ck changes. If you need this please report this to: platform-driver-x86@vge=
+r.kernel.org");
+>
+>  static bool ctrl_ps2_aux_port;
+>  module_param(ctrl_ps2_aux_port, bool, 0444);
+>  MODULE_PARM_DESC(ctrl_ps2_aux_port,
+> -       "Enable driver based PS/2 aux port en-/dis-abling on touchpad on/=
+off toggle. "
+> -       "If you need this please report this to: platform-driver-x86@vger=
+.kernel.org");
+> +                "Enable driver based PS/2 aux port en-/dis-abling on tou=
+chpad on/off toggle. If you need this please report this to: platform-drive=
+r-x86@vger.kernel.org");
+>
+>  static bool touchpad_ctrl_via_ec;
+>  module_param(touchpad_ctrl_via_ec, bool, 0444);
+>  MODULE_PARM_DESC(touchpad_ctrl_via_ec,
+> -       "Enable registering a 'touchpad' sysfs-attribute which can be use=
+d to manually "
+> -       "tell the EC to enable/disable the touchpad. This may not work on=
+ all models.");
+> +                "Enable registering a 'touchpad' sysfs-attribute which c=
+an be used to manually tell the EC to enable/disable the touchpad. This may=
+ not work on all models.");
+>
+>  static bool ymc_ec_trigger __read_mostly;
+>  module_param(ymc_ec_trigger, bool, 0444);
+>  MODULE_PARM_DESC(ymc_ec_trigger,
+> -       "Enable EC triggering work-around to force emitting tablet mode e=
+vents. "
+> -       "If you need this please report this to: platform-driver-x86@vger=
+.kernel.org");
+> +                "Enable EC triggering work-around to force emitting tabl=
+et mode events. If you need this please report this to: platform-driver-x86=
+@vger.kernel.org");
+>
+>  /*
+>   * shared data
+> @@ -1446,7 +1440,7 @@ static void ideapad_check_special_buttons(struct id=
+eapad_private *priv)
+>                 if (read_ec_data(priv->adev->handle, VPCCMD_R_SPECIAL_BUT=
+TONS, &value))
+>                         return;
+>
+> -       for_each_set_bit (bit, &value, 16) {
+> +       for_each_set_bit(bit, &value, 16) {
+>                 switch (bit) {
+>                 case 6: /* Z570 */
+>                 case 0: /* Z580 */
+> @@ -1706,11 +1700,10 @@ static int ideapad_kbd_bl_init(struct ideapad_pri=
+vate *priv)
+>         if (WARN_ON(priv->kbd_bl.initialized))
+>                 return -EEXIST;
+>
+> -       if (ideapad_kbd_bl_check_tristate(priv->kbd_bl.type)) {
+> +       if (ideapad_kbd_bl_check_tristate(priv->kbd_bl.type))
+>                 priv->kbd_bl.led.max_brightness =3D 2;
+> -       } else {
+> +       else
+>                 priv->kbd_bl.led.max_brightness =3D 1;
+> -       }
+>
+>         brightness =3D ideapad_kbd_bl_brightness_get(priv);
+>         if (brightness < 0)
+> @@ -1752,7 +1745,7 @@ static enum led_brightness ideapad_fn_lock_led_cdev=
+_get(struct led_classdev *led
+>  }
+>
+>  static int ideapad_fn_lock_led_cdev_set(struct led_classdev *led_cdev,
+> -       enum led_brightness brightness)
+> +                                       enum led_brightness brightness)
+>  {
+>         struct ideapad_private *priv =3D container_of(led_cdev, struct id=
+eapad_private, fn_lock.led);
+>
+> @@ -1928,7 +1921,7 @@ static void ideapad_acpi_notify(acpi_handle handle,=
+ u32 event, void *data)
+>
+>         vpc1 =3D (vpc2 << 8) | vpc1;
+>
+> -       for_each_set_bit (bit, &vpc1, 16) {
+> +       for_each_set_bit(bit, &vpc1, 16) {
+>                 switch (bit) {
+>                 case 13:
+>                 case 11:
+> @@ -2142,14 +2135,14 @@ static const enum power_supply_property ideapad_p=
+ower_supply_props[] =3D {
+>         }
+>
+>  DEFINE_IDEAPAD_POWER_SUPPLY_EXTENSION(ideapad_battery_ext_v1,
+> -       (BIT(POWER_SUPPLY_CHARGE_TYPE_STANDARD) |
+> -        BIT(POWER_SUPPLY_CHARGE_TYPE_LONGLIFE))
+> +                                     (BIT(POWER_SUPPLY_CHARGE_TYPE_STAND=
+ARD) |
+> +                                      BIT(POWER_SUPPLY_CHARGE_TYPE_LONGL=
+IFE))
+>  );
+>
+>  DEFINE_IDEAPAD_POWER_SUPPLY_EXTENSION(ideapad_battery_ext_v2,
+> -       (BIT(POWER_SUPPLY_CHARGE_TYPE_STANDARD) |
+> -        BIT(POWER_SUPPLY_CHARGE_TYPE_FAST) |
+> -        BIT(POWER_SUPPLY_CHARGE_TYPE_LONGLIFE))
+> +                                     (BIT(POWER_SUPPLY_CHARGE_TYPE_STAND=
+ARD) |
+> +                                      BIT(POWER_SUPPLY_CHARGE_TYPE_FAST)=
+ |
+> +                                      BIT(POWER_SUPPLY_CHARGE_TYPE_LONGL=
+IFE))
+>  );
+>
+>  static int ideapad_battery_add(struct power_supply *battery, struct acpi=
+_battery_hook *hook)
+> --
+> 2.52.0
+>
 
+Looks good to me. Thanks for fixing these.
 
-On 2026/1/12 15:56, Andy Shevchenko wrote:
-> On Sat, Jan 10, 2026 at 12:26:21PM +0530, Manivannan Sadhasivam via B4 Relay wrote:
-> 
->> Because the software node backend of the fwnode API framework lacks an
->> implementation for the .device_get_match_data function callback.
-> 
-> Maybe this is done on purpose. 
-
-
-It is a *fact* that the broken swnode lacks an implementation for the 
-.device_get_match_data stub.
-
-
-Otherwise, If it is really done *on purpose*, the maintainers of swnode
-backend probably shall document it in the source file *explicitly*.
-
-Have you thought about this aspect?
-> 
-
-If it is sure thing, then it shouldn't start with "Maybe ..."
-
-
->> This makes it difficult to use(and/or test) a few drivers that originates
->> from DT world on the non-DT platform.
-> 
-> How difficult? 
-
-The emphasis isn't on the 'difficult' word, it means 'inconvenience'
-
-> DSA implementation went to the way of taking DT overlay
-> approach. Why that one can't be applied here?
-
-
-Software node as an complement of ACPI, Therefore should do the same.
-
-
-
-DT overlay introduce extra overhead/side effects on the non-DT systems.
-
-Besides, DT overlay requires the OS distribution(such as ubuntu) has the 
-DT overlay config option selected.
-
-
-
-> 
->> Implement the .device_get_match_data fwnode callback, which helps to keep
->> the three backends of the fwnode API aligned as much as possible. This is
->> also a fundamental step to make a few drivers OF-independent truely
->> possible.
->>
->> Device drivers or platform setup codes are expected to provide a software
->> node string property, named as "compatible". At this moment, the value of
->> this string property is being used to match against the compatible entries
->> in the of_device_id table. It can be extended in the future though.
-> 
-> I really do not want to see this patch
-
-You can do that by dropping the maintainer-ship.
-
-Your endless, bruth-force ranting on such a straight-forward thing 
-doesn't make much sense, because that waste everybody's time.
-
-> without very good justification
-
-
-Justifications has been provided over and over again.
-
-> (note, there were at least two attempts in the past to add this stuff
-
-This exactly saying that the implementation is missing.
-
->   and no-one was merged, 
-
-That's the reason why you see it at least the second time.
-
-have you studied those cases?).
-> 
-
-The first one is not 100% correct.
+Acked-by: Ike Panhc <ikepanhc@gmail.com>
