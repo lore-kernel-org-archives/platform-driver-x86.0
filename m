@@ -1,220 +1,162 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from BN1PR04CU002.outbound.protection.outlook.com (mail-eastus2azon11010047.outbound.protection.outlook.com [52.101.56.47])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 978B4326929
-	for <platform-driver-x86@vger.kernel.org>; Wed, 14 Jan 2026 17:45:57 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1768412757; cv=none; b=L+CCN0w2hxS0BcN1GZbFpXNYcS2sLqCIrY2dBVW2tYlI348H/pmpC2vuBx5gmPw/3rSgpTDbtateVPxRB2G/QnyPxOvWxBhgE9qlYsRyBRtnOGQQa+usx6WA8h3GVz3HnFOvCvqI/D2swsacPP1Z171A6NuIETsWpDxfgh4eziQ=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1768412757; c=relaxed/simple;
-	bh=VLyvNJXlQ7uY8tpXWo5FC7Z644s2L6LFH6yjNoy6qEE=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=Anr/JDteuM2SQ+mfQqdeamOglx8zI2BxXL9vn5sc2UHLk2p43WNF0PXorOY8ZgSb11HI/2DUmuaNjtc0s2faiuVa+bDMBcBwUWtiU9HQUMdbRI2VV6ZmBRIORfZlDddsLksczEkxwPcDS1Wc4aDPqsC0eGcZniN5oigqYqo8Xtc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=L3f4RUtw; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DF0503AEF4F
+	for <platform-driver-x86@vger.kernel.org>; Wed, 14 Jan 2026 22:18:01 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=52.101.56.47
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1768429084; cv=fail; b=SaUMfJDp6oWW7Xroo4C+7usx7I7Nz08P0Lch20lVjWrccszSVPcYKyQQIu8sV+Zp6GB2hiekQoTMvjRDKdysJa2L121olZZQvPnqSNDT7bZ5056SzOn3n5gyzYQwurr0TP78gkMo1gbmtAyaxq/menm9ROH7wj7WoePEnd6g0yo=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1768429084; c=relaxed/simple;
+	bh=vWVwVYpvcULZ0J9R+aGKo1NWXKWnAAKea3fnkQNCdkQ=;
+	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=NndJ6BQZCe1vZdolpl+BfsEIThpQT5ZK3kv8i4i0GWAtp9KuYE3FE+DewLJyQKLvsN93NInxkI4n50ThEQfaq/IHaQnICrUZHysXQDJojU2K+WoEFMeuzfIv1YO7QawWmRnXnrOgsX+McpQPIo3TegmHzUxDhz7eL8axz8N87jw=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=HLXchaCp; arc=fail smtp.client-ip=52.101.56.47
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=amd.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="L3f4RUtw"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 47A50C2BCAF
-	for <platform-driver-x86@vger.kernel.org>; Wed, 14 Jan 2026 17:45:57 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1768412757;
-	bh=VLyvNJXlQ7uY8tpXWo5FC7Z644s2L6LFH6yjNoy6qEE=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-	b=L3f4RUtwn3UXoZPZmKpVuAv7wS20RfV9nBeLqZmGUIuaNo8FvXrtH44hdthYVevDH
-	 QSVQZx/Ui5iVSgXFYt4fQV/OR2h5BgZM0KQs8bOzjqskmkZBBtcPZdAQe8kvMzlQV7
-	 0D8fQ5rfmBXgU6sADeLNFwDWj4BiYHWgcJBj3/HVC2LCKSPDslf04gYsc7F7fomOS6
-	 XAeELhC98vWgbpqPJYZUyYa6bAtBZ8ms96XRGp9rnARwthStUCk/pgZyhS8Dvx7NH+
-	 4ef2okqQF+r1LwZp/eSJ0JojapcPG691nvMn06RUn32l9vbyAkm7o3fyZIw/LWsY3F
-	 XlpOzBa2RmVkQ==
-Received: by mail-ej1-f51.google.com with SMTP id a640c23a62f3a-b876798b97eso18154066b.1
-        for <platform-driver-x86@vger.kernel.org>; Wed, 14 Jan 2026 09:45:57 -0800 (PST)
-X-Forwarded-Encrypted: i=1; AJvYcCUWW0LXo6+BM3b8ohW9Cl3d30Di3w84lcWBYqoGFhC/A1ZnBDA+EhvJs2rMs6qSljGwIaLT7NV8Ai1K1ZK2Wt1Tq2/O@vger.kernel.org
-X-Gm-Message-State: AOJu0YzvzqUTq5+krgWoJ5rPHSvcmsUoQhxyhkuOoa287BN9DszqNItR
-	QrC7CRTFqluZVCcghiy9Efc/XnbSuHcfZKvg3jCRbJBduwfHGf5jfyoqyp86GSMIF2AODE4EY5O
-	3FQa4tUQdDM+/iXaRynpiPBKlYqCfvQ==
-X-Received: by 2002:a17:907:6d14:b0:b7d:1d1b:217a with SMTP id
- a640c23a62f3a-b87611110eamr270292166b.34.1768412755531; Wed, 14 Jan 2026
- 09:45:55 -0800 (PST)
+	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="HLXchaCp"
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=soo9oQsXQCvqjn1DghCN+U/dCvze8qzCJV2XhLyNTxuwigErLGKXOE5awvkx9tJp+v4luCEytv6q78gEZIAXOOdQtp/kuuTKWixF7cRK8KL8FQaEDhD5gFJvzCDhM2YxEqIMkz2WtfS13eXAv3BD/ifa23uLaBShxwEJxXsaYu3G8lVdo6cR0aagLk+6nbOVsnRhIXHx+bXMiCEEQuv8CPP4C8b6nEkOUmYd2PE663IJAsqj1VuVcRwYN7kSo7CSbkdGI6UcGHOBd5ffjQRFCnrgzIDdRAEXO1P6prTPGo7Q4q93OTuaW2M84aNpfsNQgKQ6YDTUeA9SyQ/u6iYChg==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=w1eAnTA+ksYya2YzLFEkzU5nXfncE5Lh1xiGmnO2u1w=;
+ b=evuIUetQ7m0oSJxsyfw66mLfge8XqELE91Pyv0AonMCAPmeeA9a1MrDViHtLPvbekX4cuGBS+IscoXGV4zoKOnEf8kphFLoLxcMgktojRUJSCbEB0FNzOmFbPGODqtylp010f+ZN7LlYESCstRx6avLfE6yr4z4hPWtnFYM6Al5pvtNRBjVPR96nA2FrmiTZfMJUoznjq/MZ0XqVtQ81fqAG5Xxx5lvkM86nZyyqqFN3nfPwddNyzXCA31uPhA7uQxVfiqcj3tem97Kirfsc4cLmU95o3fxOf4nsZ4S2+f+6sOAMUvgw88D1yf24exztk4UuDl+WReegkEVnq25v+Q==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
+ 165.204.84.17) smtp.rcpttodomain=hp.com smtp.mailfrom=amd.com; dmarc=pass
+ (p=quarantine sp=quarantine pct=100) action=none header.from=amd.com;
+ dkim=none (message not signed); arc=none (0)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=w1eAnTA+ksYya2YzLFEkzU5nXfncE5Lh1xiGmnO2u1w=;
+ b=HLXchaCpgNGUzTPd+JVD5yQUFtfdejvFVA7/lecBoi30Ze7te0kr/kzyzLzCTmY3cMao5YHc7flafedOLYt6rJqDogS79wDO+ZYQKpFAkf6Ji8BBdYyJzbs8HUgf3jemOoE9m2zPmTkvwEl/lzKq4u1zOpssF/pkdgBizkftW/8=
+Received: from BY3PR04CA0014.namprd04.prod.outlook.com (2603:10b6:a03:217::19)
+ by SJ0PR12MB5612.namprd12.prod.outlook.com (2603:10b6:a03:427::12) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.9520.4; Wed, 14 Jan
+ 2026 22:17:55 +0000
+Received: from SJ1PEPF00001CE5.namprd03.prod.outlook.com
+ (2603:10b6:a03:217:cafe::bf) by BY3PR04CA0014.outlook.office365.com
+ (2603:10b6:a03:217::19) with Microsoft SMTP Server (version=TLS1_3,
+ cipher=TLS_AES_256_GCM_SHA384) id 15.20.9520.6 via Frontend Transport; Wed,
+ 14 Jan 2026 22:17:53 +0000
+X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 165.204.84.17)
+ smtp.mailfrom=amd.com; dkim=none (message not signed)
+ header.d=none;dmarc=pass action=none header.from=amd.com;
+Received-SPF: Pass (protection.outlook.com: domain of amd.com designates
+ 165.204.84.17 as permitted sender) receiver=protection.outlook.com;
+ client-ip=165.204.84.17; helo=satlexmb07.amd.com; pr=C
+Received: from satlexmb07.amd.com (165.204.84.17) by
+ SJ1PEPF00001CE5.mail.protection.outlook.com (10.167.242.21) with Microsoft
+ SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.9520.1 via Frontend Transport; Wed, 14 Jan 2026 22:17:55 +0000
+Received: from dogwood-dvt-marlim.amd.com (10.180.168.240) by
+ satlexmb07.amd.com (10.181.42.216) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.2562.17; Wed, 14 Jan 2026 16:17:54 -0600
+From: Mario Limonciello <mario.limonciello@amd.com>
+To: <mario.limonciello@amd.com>, <jorge.lopez2@hp.com>, <hansg@kernel.org>,
+	<ilpo.jarvinen@linux.intel.com>
+CC: <platform-driver-x86@vger.kernel.org>
+Subject: [PATCH] platform/x86/hp: hp-bioscfg: Fix kobject warnings for empty attribute names
+Date: Wed, 14 Jan 2026 16:17:18 -0600
+Message-ID: <20260114221730.653822-1-mario.limonciello@amd.com>
+X-Mailer: git-send-email 2.52.0
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20260112-pci-m2-e-v4-0-eff84d2c6d26@oss.qualcomm.com>
- <20260112-pci-m2-e-v4-5-eff84d2c6d26@oss.qualcomm.com> <20260113171424.GA3925312-robh@kernel.org>
- <xyttom64ht5hrrp5hecjqehnyfgsv4mfl2t36e2sveu44ccpjl@lkzquse2kqsx>
-In-Reply-To: <xyttom64ht5hrrp5hecjqehnyfgsv4mfl2t36e2sveu44ccpjl@lkzquse2kqsx>
-From: Rob Herring <robh@kernel.org>
-Date: Wed, 14 Jan 2026 11:45:42 -0600
-X-Gmail-Original-Message-ID: <CAL_JsqJxBNm0y6T7vji6MXgsO65iDJ-tdUEo0cOxkw7EuMKpkg@mail.gmail.com>
-X-Gm-Features: AZwV_Qjd8RRdZiuji8UWlnEg_b-A7CkYgcetFKx6gFJZkZR9Wa6Q2Mjzt04XOZQ
-Message-ID: <CAL_JsqJxBNm0y6T7vji6MXgsO65iDJ-tdUEo0cOxkw7EuMKpkg@mail.gmail.com>
-Subject: Re: [PATCH v4 5/9] dt-bindings: connector: Add PCIe M.2 Mechanical
- Key E connector
-To: Manivannan Sadhasivam <mani@kernel.org>
-Cc: Manivannan Sadhasivam <manivannan.sadhasivam@oss.qualcomm.com>, 
-	Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Jiri Slaby <jirislaby@kernel.org>, 
-	Nathan Chancellor <nathan@kernel.org>, Nicolas Schier <nicolas.schier@linux.dev>, 
-	Hans de Goede <hansg@kernel.org>, =?UTF-8?Q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>, 
-	Mark Pearson <mpearson-lenovo@squebb.ca>, "Derek J. Clark" <derekjohn.clark@gmail.com>, 
-	Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, 
-	Marcel Holtmann <marcel@holtmann.org>, Luiz Augusto von Dentz <luiz.dentz@gmail.com>, 
-	Bartosz Golaszewski <brgl@bgdev.pl>, Andy Shevchenko <andriy.shevchenko@linux.intel.com>, 
-	Bartosz Golaszewski <brgl@kernel.org>, linux-serial@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, linux-kbuild@vger.kernel.org, 
-	platform-driver-x86@vger.kernel.org, linux-pci@vger.kernel.org, 
-	devicetree@vger.kernel.org, linux-arm-msm@vger.kernel.org, 
-	linux-bluetooth@vger.kernel.org, linux-pm@vger.kernel.org, 
-	Stephan Gerhold <stephan.gerhold@linaro.org>, 
-	Dmitry Baryshkov <dmitry.baryshkov@oss.qualcomm.com>, linux-acpi@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-ClientProxiedBy: satlexmb08.amd.com (10.181.42.217) To satlexmb07.amd.com
+ (10.181.42.216)
+X-EOPAttributedMessage: 0
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: SJ1PEPF00001CE5:EE_|SJ0PR12MB5612:EE_
+X-MS-Office365-Filtering-Correlation-Id: 99929990-5fe8-4948-9387-08de53bac448
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam:
+	BCL:0;ARA:13230040|376014|1800799024|82310400026|36860700013;
+X-Microsoft-Antispam-Message-Info:
+	=?us-ascii?Q?2FzqERKj5hFy0WnexV9E7OEni/jF0nx4NqyE229xaxTnPhMlz6Fs3lVzEFiJ?=
+ =?us-ascii?Q?rPAI9fGzIaElMFAL5wK7I13lcGt0DilHcyyvNTgR5YkCvddhhZh6jvSDXE7m?=
+ =?us-ascii?Q?ndL+E8A6CGOmBs3unv4hQYyQ1WP4HZlnTNoctFbmH8VoUEG43UR4alxbsnJy?=
+ =?us-ascii?Q?YXzjGWkGKMtkAaBGZMKybjuqEkHYbBf/wkZVhKEsKUTBSAZdkjHubVeg12eI?=
+ =?us-ascii?Q?NG9+UX57KRbz6Wv4VTdIPZQreMnse3xI/ru9o5diV3AQmRWbjgdUrKQok6r6?=
+ =?us-ascii?Q?v0yiU6stVBHuGnMLCbVXw9qNOet3IAo/crNAGqAyGWn3gUuk+a+/ZyNzCGEn?=
+ =?us-ascii?Q?Wlp8/ISnKwrSNxP8jcq1ZJqDcO1sRws5QIkOVY4DrXuCz5LJ1NX3igM9q2D8?=
+ =?us-ascii?Q?PuObQsAlIMUFpQM0ahPHV1pC6YEq5Wr99NeGaeScvCFPD9LqVjBLki2LLPgP?=
+ =?us-ascii?Q?ZMXgEEL+KXIuQd3IbOCADQQMilmKJJXWBOvR2wGB4saAcTvawZBJMCx2EwOD?=
+ =?us-ascii?Q?zojciwGZHIzviJWp345UbDH6kXoCeH2wVteWgFDV3pghQxluio+TWfLfhm9M?=
+ =?us-ascii?Q?ltDnWu5vxMU+iBKh1+XwG7DZ9RMc6d5UyTMY+SJ+V+jL1vk+VPPF7+wFKdMn?=
+ =?us-ascii?Q?mXxnmladdJaULD8HDCJo0hF4BKTjSFIuMaMKsB+/mRpBJribZuIzKXVv4IHp?=
+ =?us-ascii?Q?sWZ+5AQncHHh1p57SJuew9nROghe19h3lQW5xDpOEW2nOIZ9H3xcF2Jv6MLT?=
+ =?us-ascii?Q?F7V964mTh/xeSj4TvTjeO8QvK7ZD+DKmMeWZkQ3ZFSRIr55wrJvs1b3x5aAJ?=
+ =?us-ascii?Q?hEhjfqI5ol4F4prugHl3f15zBgBLdM7EPXsj9xuRYa7V99jL+Au63JrWK08F?=
+ =?us-ascii?Q?9PxMYP4BBpol+jAg4tZGJEX5Venn8oZpjf4hTQfvCsRxP0Xq4zhTOmqPWG7P?=
+ =?us-ascii?Q?d8si+yZCQY3tDzdkuUrWhNgdsyJVDsbfVtCcitUR2iET0JpqgxlSYeDbDLlH?=
+ =?us-ascii?Q?Vpbp8nuVHmqKxf+Z23/4ggtXLyXa1Ep9h5ckAj8ZPvkB/Mu3f5ljos0jlF9D?=
+ =?us-ascii?Q?V34j+4dmUnFss+RCuR7qifXqyAm3O+5i075T3jYwPAaLxiOIQBpbClQr26cQ?=
+ =?us-ascii?Q?T1zt2WU0Jix017AxZYv2bYwHdKEjo9dwOsIxiDsCAH1NO/IgvD2mmlCZuepR?=
+ =?us-ascii?Q?JGZxfq4N0OsA3PZkfyra0lDSK3/nD99Ut1s4vk2WFWG6Nx1X9uWwdF7l//QV?=
+ =?us-ascii?Q?+DoY3xaTBYzMI5hbFJIgczdq5ji4apJ0bVSGp2BsFenbgCVV/PelWfkyRKG/?=
+ =?us-ascii?Q?wXGDkx9EBU8cwE5txp1qScsUpaf946GYTm5oPhFMErpsY/l+8kKEwJQv3JVq?=
+ =?us-ascii?Q?hNfK8Cr4gUWnhPoTXdobxJ6YTVwCJ+t9q3Y6tpqpJogDYddmLRbGkPA20mNc?=
+ =?us-ascii?Q?kFVJIFXQRzwJe6aLUPrMW3dabXTfcSfne+fDK5ogkSF2WH0MuUmNPfnjcz7k?=
+ =?us-ascii?Q?Lh/A+ANyGVv6t8Ydok+qc2WmgDIOoozWfqCb509o2/K3pkwaszx8GgX5CeLt?=
+ =?us-ascii?Q?ZnIKJy+hctMjJx29lEl6yQOdfcVyBDC/DzcsV9IUSIMcXI3hpm6TiqHFucqk?=
+ =?us-ascii?Q?tDHsSLin15T02IvJ9A1bA5ctQ35w/RYW6mUMljCewWOw?=
+X-Forefront-Antispam-Report:
+	CIP:165.204.84.17;CTRY:US;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:satlexmb07.amd.com;PTR:InfoDomainNonexistent;CAT:NONE;SFS:(13230040)(376014)(1800799024)(82310400026)(36860700013);DIR:OUT;SFP:1101;
+X-OriginatorOrg: amd.com
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 14 Jan 2026 22:17:55.3964
+ (UTC)
+X-MS-Exchange-CrossTenant-Network-Message-Id: 99929990-5fe8-4948-9387-08de53bac448
+X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
+X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=3dd8961f-e488-4e60-8e11-a82d994e183d;Ip=[165.204.84.17];Helo=[satlexmb07.amd.com]
+X-MS-Exchange-CrossTenant-AuthSource:
+	SJ1PEPF00001CE5.namprd03.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Anonymous
+X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: SJ0PR12MB5612
 
-On Wed, Jan 14, 2026 at 10:14=E2=80=AFAM Manivannan Sadhasivam <mani@kernel=
-.org> wrote:
->
-> On Tue, Jan 13, 2026 at 11:14:24AM -0600, Rob Herring wrote:
-> > On Mon, Jan 12, 2026 at 09:56:04PM +0530, Manivannan Sadhasivam wrote:
-> > > Add the devicetree binding for PCIe M.2 Mechanical Key E connector de=
-fined
-> > > in the PCI Express M.2 Specification, r4.0, sec 5.1.2. This connector
-> > > provides interfaces like PCIe or SDIO to attach the WiFi devices to t=
-he
-> > > host machine, USB or UART+PCM interfaces to attach the Bluetooth (BT)
-> > > devices. Spec also provides an optional interface to connect the UIM =
-card,
-> > > but that is not covered in this binding.
-> > >
-> > > The connector provides a primary power supply of 3.3v, along with an
-> > > optional 1.8v VIO supply for the Adapter I/O buffer circuitry operati=
-ng at
-> > > 1.8v sideband signaling.
-> > >
-> > > The connector also supplies optional signals in the form of GPIOs for=
- fine
-> > > grained power management.
-> > >
-> > > Signed-off-by: Manivannan Sadhasivam <manivannan.sadhasivam@oss.qualc=
-omm.com>
-> > > ---
-> > >  .../bindings/connector/pcie-m2-e-connector.yaml    | 154 +++++++++++=
-++++++++++
-> > >  MAINTAINERS                                        |   1 +
-> > >  2 files changed, 155 insertions(+)
-> > >
-> > > diff --git a/Documentation/devicetree/bindings/connector/pcie-m2-e-co=
-nnector.yaml b/Documentation/devicetree/bindings/connector/pcie-m2-e-connec=
-tor.yaml
-> > > new file mode 100644
-> > > index 000000000000..b65b39ddfd19
-> > > --- /dev/null
-> > > +++ b/Documentation/devicetree/bindings/connector/pcie-m2-e-connector=
-.yaml
-> > > @@ -0,0 +1,154 @@
-> > > +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
-> > > +%YAML 1.2
-> > > +---
-> > > +$id: http://devicetree.org/schemas/connector/pcie-m2-e-connector.yam=
-l#
-> > > +$schema: http://devicetree.org/meta-schemas/core.yaml#
-> > > +
-> > > +title: PCIe M.2 Mechanical Key E Connector
-> > > +
-> > > +maintainers:
-> > > +  - Manivannan Sadhasivam <manivannan.sadhasivam@oss.qualcomm.com>
-> > > +
-> > > +description:
-> > > +  A PCIe M.2 E connector node represents a physical PCIe M.2 Mechani=
-cal Key E
-> > > +  connector. Mechanical Key E connectors are used to connect Wireles=
-s
-> > > +  Connectivity devices including combinations of Wi-Fi, BT, NFC to t=
-he host
-> > > +  machine over interfaces like PCIe/SDIO, USB/UART+PCM, and I2C.
-> > > +
-> > > +properties:
-> > > +  compatible:
-> > > +    const: pcie-m2-e-connector
-> > > +
-> > > +  vpcie3v3-supply:
-> > > +    description: A phandle to the regulator for 3.3v supply.
-> > > +
-> > > +  vpcie1v8-supply:
-> > > +    description: A phandle to the regulator for VIO 1.8v supply.
-> >
-> > I don't see any 1.8V supply on the connector. There are 1.8V IOs and yo=
-u
-> > may need something in DT to ensure those are powered. However, there's
-> > no guarantee that it's a single supply.
-> >
->
-> 1.8v VIO supply is an optional supply and is only required if the platfor=
-m
-> supports 1.8v for sideband signals such as PERST#, WAKE#... I can include=
- it in
-> the example for completeness.
+The hp-bioscfg driver attempts to register kobjects with empty names when
+the HP BIOS returns attributes with empty name strings. This causes
+multiple kernel warnings:
 
-My point is that PERST# and WAKE# supplies could be 2 different 1.8V
-supplies and those supply the I/O pads of the GPIO pins (and possibly
-external pull-ups) that drive them. The 1.8V supply doesn't supply
-1.8V to the slot, so making it a slot/connector property is wrong.
+  kobject: (00000000135fb5e6): attempted to be registered with empty name!
+  WARNING: CPU: 14 PID: 3336 at lib/kobject.c:219 kobject_add_internal+0x2eb/0x310
 
-This isn't exactly a new issue. It could be an issue on any binding
-with GPIOs. Perhaps this needs to be handled within GPIO or pinctrl.
+Add validation in hp_init_bios_buffer_attribute() to check if the
+attribute name is empty after parsing it from the WMI buffer. If empty,
+log a debug message and skip registration of that attribute, allowing the
+module to continue processing other valid attributes.
 
-> > > +
-> > > +    oneOf:
-> > > +      - required:
-> > > +          - port@0
-> > > +
-> > > +  clocks:
-> > > +    description: 32.768 KHz Suspend Clock (SUSCLK) input from the ho=
-st system to
-> > > +      the M.2 card. Refer, PCI Express M.2 Specification r4.0, sec 3=
-.1.12.1 for
-> > > +      more details.
-> > > +    maxItems: 1
-> > > +
-> > > +  w-disable1-gpios:
-> > > +    description: GPIO input to W_DISABLE1# signal. This signal is us=
-ed by the
-> > > +      system to disable WiFi radio in the M.2 card. Refer, PCI Expre=
-ss M.2
-> > > +      Specification r4.0, sec 3.1.12.3 for more details.
-> > > +    maxItems: 1
-> > > +
-> > > +  w-disable2-gpios:
-> > > +    description: GPIO input to W_DISABLE2# signal. This signal is us=
-ed by the
-> > > +      system to disable WiFi radio in the M.2 card. Refer, PCI Expre=
-ss M.2
-> > > +      Specification r4.0, sec 3.1.12.3 for more details.
-> > > +    maxItems: 1
-> > > +
-> > > +  viocfg-gpios:
-> > > +    description: GPIO output to IO voltage configuration (VIO_CFG) s=
-ignal. This
-> > > +      signal is used by the M.2 card to indicate to the host system =
-that the
-> > > +      card supports an independent IO voltage domain for the sideban=
-d signals.
-> > > +      Refer, PCI Express M.2 Specification r4.0, sec 3.1.15.1 for mo=
-re details.
-> > > +    maxItems: 1
-> >
-> > What about SDIO and UART WAKE, SDIO RESET, and vendor defined signals?
-> >
->
-> Not sure about vendor defined signals as they can be either GPIO or inter=
-face
-> signals. How should them be defined?
+Signed-off-by: Mario Limonciello <mario.limonciello@amd.com>
+---
+ drivers/platform/x86/hp/hp-bioscfg/bioscfg.c | 6 ++++++
+ 1 file changed, 6 insertions(+)
 
-That kind of breaks any notion of this being a generic slot/connector.
-How's the host supposed to know how to connect them? What if a card
-required them to be driven a certain way before you can discover the
-card? If they can be GPIOs and can be hooked up to the host system
-GPIOs, then you should define GPIOs for them. If they aren't GPIOs on
-a host, then you omit them.
+diff --git a/drivers/platform/x86/hp/hp-bioscfg/bioscfg.c b/drivers/platform/x86/hp/hp-bioscfg/bioscfg.c
+index 5bfa7159f5bc..5bee916429aa 100644
+--- a/drivers/platform/x86/hp/hp-bioscfg/bioscfg.c
++++ b/drivers/platform/x86/hp/hp-bioscfg/bioscfg.c
+@@ -781,6 +781,12 @@ static int hp_init_bios_buffer_attribute(enum hp_wmi_data_type attr_type,
+ 	if (ret < 0)
+ 		goto buff_attr_exit;
+ 
++	if (strlen(str) == 0) {
++		pr_debug("Ignoring attribute with empty name\n");
++		ret = 0;
++		goto buff_attr_exit;
++	}
++
+ 	if (attr_type == HPWMI_PASSWORD_TYPE ||
+ 	    attr_type == HPWMI_SECURE_PLATFORM_TYPE)
+ 		temp_kset = bioscfg_drv.authentication_dir_kset;
+-- 
+2.52.0
 
-Rob
