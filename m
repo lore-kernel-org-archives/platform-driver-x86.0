@@ -1,101 +1,102 @@
-Received: from out-172.mta0.migadu.com (out-172.mta0.migadu.com [91.218.175.172])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.19])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 27DDC34F46A
-	for <platform-driver-x86@vger.kernel.org>; Tue, 13 Jan 2026 21:53:53 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.218.175.172
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id ED7AF137930;
+	Wed, 14 Jan 2026 00:49:00 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.19
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1768341236; cv=none; b=m0VWzi0G9+mo5SassliPX/NxY1Pmi0PuTNU6NvfYKNesSZRFyPi6NDb3X/I1lAK2SRk5hlmxU4rO5oxi1eEfnsfD3/dHGB55Obs2N8Ngc8hsZ2IWKbN+XcOlZ+LaZgkt7rAuLBlWDG/VOmGFVNUw14w5Vho3w8DZbaRJVJD7aWo=
+	t=1768351744; cv=none; b=j2LBLCRZ+6JVuUyHUZTBMzaFDf2AittODHfhxzJqseglHqSEaRChanTDO6qi+McR44OIKVanC0obAF+piMvOtRJXE946dZxLLYxK7w1oR20jImtXFh+y+a/Vg5FyX+5Y4gVRnTBPI82dO7DoiD0BqBCzTH+V11WrPz+DdTx7k8M=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1768341236; c=relaxed/simple;
-	bh=Nlfzr/VkEwdNXyk12U5CaOV50mDJ2G2+jYnNZCgY53E=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=cu/BKjgnd0VibQ6wGrrOWSQznXT8AXk92MjGC4nTcnpoZ6jdED0cS7q7FvWsyXcJDzwd8EbuS9uCXX2ShO30Dsv8MOk0sNZg9RWDsyQWZCVIoF3hX6Aes6ZwogTCaCqc4Yzm7s+rQcyvm4rhlKGjLA/z8nhy1knsihD5wGbzTpg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=anFTu/CZ; arc=none smtp.client-ip=91.218.175.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
+	s=arc-20240116; t=1768351744; c=relaxed/simple;
+	bh=omMOofyBVN38IBiVN1n2wsYAy5EaED13sUkxbjNNMvQ=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=rKG4MEsLJTCtGroubny7qs8IpDGAYvoI2nZ0FW2Yg5T5iPY9mFpLgQ7fgABlFBy2dUb61JzESuUPtaWLDExBI/u5gAPL5MWFSrXrnIyHMMxJoI8+FdTam407NrFNKMDpXOtqBpAkC3qA/Bru00cw6K1IOadEpOPWTTKeJ0rsfxY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=g4s7qgNR; arc=none smtp.client-ip=192.198.163.19
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="anFTu/CZ"
-Message-ID: <2e1f5ce5-3647-4dff-b67e-327b0c1cb12e@linux.dev>
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
-	t=1768341232;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=muH3UgLALFf05MsDXXAEqhqttHCXkSgTJDYBjU4vZ4I=;
-	b=anFTu/CZJX2hdNUHbiq2GRBcKVC6SElAJRW9bqvCh1cdP3pyvagVGd1rrU2pW8U3SVyPkx
-	ER4cevkSQs3Q80yv3E7sj25adQtOt//ercU+dPUjZs6I7erP2fqiZa6HAhAElCxRsE9Qbu
-	vHhPHLn5kegj1X0YT/zsqxeIsGlnMw4=
-Date: Tue, 13 Jan 2026 22:53:49 +0100
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="g4s7qgNR"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1768351741; x=1799887741;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=omMOofyBVN38IBiVN1n2wsYAy5EaED13sUkxbjNNMvQ=;
+  b=g4s7qgNRLFd7yortAhqRqLmNdxJ6iy8o37kzcLLjf0RyaEpJOxuEIP5S
+   S4mgjzd50IH8GKnvhKCPc9LiIx6naI3UehfOUnUJtGc+xq8kM1O4/0uLw
+   CmnFpHkR+/jbvjzauLt8JKpdNL7yO9n8M/Y4bzjslPiBOjn/xmqVzJdLe
+   EVffAq7ncFBy3FgYh2Fw6RrGxkECwgyl/sqr6v9GscxEcnqsraF1nzdA3
+   e+qwgBBB1oAxnBVI8QYQQ9gLU07R+cLwVQL1PjpKnkQqntboH3/fhDgGs
+   zYNlLDz+1xh3UH3B/WhYa+JzZqF4YS7XwsJoTFZ5u22AsKKsTjq2xCicJ
+   w==;
+X-CSE-ConnectionGUID: Cw/uX5dBSVikioVZYgZjfw==
+X-CSE-MsgGUID: NqsdKXVBTVuMTuRMZOh+Xw==
+X-IronPort-AV: E=McAfee;i="6800,10657,11670"; a="68654892"
+X-IronPort-AV: E=Sophos;i="6.21,224,1763452800"; 
+   d="scan'208";a="68654892"
+Received: from orviesa005.jf.intel.com ([10.64.159.145])
+  by fmvoesa113.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 13 Jan 2026 16:49:00 -0800
+X-CSE-ConnectionGUID: OdvWVfutRQmmyDklFxkgyg==
+X-CSE-MsgGUID: GUtoVnNkSDCixTkXHxejUQ==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.21,224,1763452800"; 
+   d="scan'208";a="209583530"
+Received: from lkp-server01.sh.intel.com (HELO 765f4a05e27f) ([10.239.97.150])
+  by orviesa005.jf.intel.com with ESMTP; 13 Jan 2026 16:48:57 -0800
+Received: from kbuild by 765f4a05e27f with local (Exim 4.98.2)
+	(envelope-from <lkp@intel.com>)
+	id 1vfp4A-00000000FZS-1Ws9;
+	Wed, 14 Jan 2026 00:48:54 +0000
+Date: Wed, 14 Jan 2026 08:48:05 +0800
+From: kernel test robot <lkp@intel.com>
+To: Rong Zhang <i@rong.moe>, Mark Pearson <mpearson-lenovo@squebb.ca>,
+	"Derek J. Clark" <derekjohn.clark@gmail.com>,
+	Armin Wolf <W_Armin@gmx.de>, Hans de Goede <hansg@kernel.org>,
+	Ilpo =?iso-8859-1?Q?J=E4rvinen?= <ilpo.jarvinen@linux.intel.com>
+Cc: oe-kbuild-all@lists.linux.dev, Rong Zhang <i@rong.moe>,
+	Guenter Roeck <linux@roeck-us.net>,
+	platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org,
+	linux-hwmon@vger.kernel.org
+Subject: Re: [PATCH v8 3/7] platform/x86: lenovo-wmi-{capdata,other}: Support
+ multiple Capability Data
+Message-ID: <202601140833.WJ1oZKuV-lkp@intel.com>
+References: <20260113172817.393856-4-i@rong.moe>
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Subject: Re: [PATCH v4 0/3] platform/x86: asus-wmi: move keyboard control
- firmware attributes
-To: =?UTF-8?Q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
-Cc: LKML <linux-kernel@vger.kernel.org>, platform-driver-x86@vger.kernel.org,
- Hans de Goede <hansg@kernel.org>, "Luke D . Jones" <luke@ljones.dev>,
- Mateusz Schyboll <dragonn@op.pl>, Denis Benato <benato.denis96@gmail.com>
-References: <20260102234344.366227-1-denis.benato@linux.dev>
- <88609e7c-3348-440e-adc0-eed9dc4d452c@linux.dev>
- <992b2843-4afa-ede1-d276-8ccaa61b1fee@linux.intel.com>
-Content-Language: en-US, it-IT, en-US-large
-X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
-From: Denis Benato <denis.benato@linux.dev>
-In-Reply-To: <992b2843-4afa-ede1-d276-8ccaa61b1fee@linux.intel.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
-X-Migadu-Flow: FLOW_OUT
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20260113172817.393856-4-i@rong.moe>
 
+Hi Rong,
 
-On 1/13/26 15:02, Ilpo Järvinen wrote:
-> On Mon, 12 Jan 2026, Denis Benato wrote:
->> On 1/3/26 00:43, Denis Benato wrote:
->>> I was recently reading through the asusctl issue tracker and I found
->>> out that some users have been having troubles with the keyboard RGB control
->>> that was working before since the creation of asus-armoury and subequent
->>> deprecation of old sysfs attributes.
->>>
->>> This patch series aims to re-introduce those attributes in asus-armoury
->>> so that userspace tools can still control keyboard RGB lighting
->>> without having to rely on deprecated asus-wmi attributes.
->>>
->>> In addition to that, since disabling OOBE is essential for controlling
->>> LEDs on some models and it was incorrectly tied to deprecated attributes,
->>> this patch series also fixes sending OOBE at probe time.
->>>
->>> Link: https://gitlab.com/asus-linux/asusctl/-/issues/619
->>>
->>> Regards,
->>> Denis
->> Hi Ilpo,
->>
->> I see no comments on this revision, did I sent it at wrong time?
->> Should I resend some other time?
->>
->> Sorry for the question but I don't know if something went wrong,
->> and if so what exactly.
-> Hi,
->
-> Nothing is wrong, I've just had to spend time on finally processing 
-> some larger next series which were even older than yours. And we're only 1 
-> week past a holiday period which tend to add to delay.
-Oh okay, thank you for letting me know! I feared I repeated the error
-I made on the netdev list :)
-> Patchwork keeps track of pdx86 patches:
->
-> https://patchwork.kernel.org/project/platform-driver-x86/list/
->
-> If your patch is listed there, there's no need to ping as I'll get it it 
-> eventually (and it won't get forgotten).
-Understood! Sorry for the inconvenient :D
-> There's no "wrong time" to send a patch to pdx86, only that when the 
-> merge window is open, I might do processing of any patches during that 
-> time. But unlike some other subsystems, we don't disallow sending patches 
-> during merge window or any other time.
->
-That's very good to know. Thank you very much, always very informative!
+kernel test robot noticed the following build warnings:
+
+[auto build test WARNING on b71e635feefc852405b14620a7fc58c4c80c0f73]
+
+url:    https://github.com/intel-lab-lkp/linux/commits/Rong-Zhang/platform-x86-lenovo-wmi-helpers-Convert-returned-buffer-into-u32/20260114-013537
+base:   b71e635feefc852405b14620a7fc58c4c80c0f73
+patch link:    https://lore.kernel.org/r/20260113172817.393856-4-i%40rong.moe
+patch subject: [PATCH v8 3/7] platform/x86: lenovo-wmi-{capdata,other}: Support multiple Capability Data
+config: x86_64-buildonly-randconfig-002-20260114 (https://download.01.org/0day-ci/archive/20260114/202601140833.WJ1oZKuV-lkp@intel.com/config)
+compiler: gcc-14 (Debian 14.2.0-19) 14.2.0
+reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20260114/202601140833.WJ1oZKuV-lkp@intel.com/reproduce)
+
+If you fix the issue in a separate patch/commit (i.e. not just a new version of
+the same patch/commit), kindly add following tags
+| Reported-by: kernel test robot <lkp@intel.com>
+| Closes: https://lore.kernel.org/oe-kbuild-all/202601140833.WJ1oZKuV-lkp@intel.com/
+
+All warnings (new ones prefixed by >>):
+
+>> Warning: drivers/platform/x86/lenovo/wmi-capdata.c:168 function parameter '_cdxx' not described in 'DEF_LWMI_CDXX_GET_DATA'
+>> Warning: drivers/platform/x86/lenovo/wmi-capdata.c:168 function parameter '_cd_type' not described in 'DEF_LWMI_CDXX_GET_DATA'
+>> Warning: drivers/platform/x86/lenovo/wmi-capdata.c:168 function parameter '_output_t' not described in 'DEF_LWMI_CDXX_GET_DATA'
+>> Warning: drivers/platform/x86/lenovo/wmi-capdata.c:168 expecting prototype for _get_data(). Prototype was for DEF_LWMI_CDXX_GET_DATA() instead
+
+-- 
+0-DAY CI Kernel Test Service
+https://github.com/intel/lkp-tests/wiki
