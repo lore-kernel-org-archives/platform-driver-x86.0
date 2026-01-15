@@ -1,278 +1,247 @@
-Received: from SA9PR02CU001.outbound.protection.outlook.com (mail-southcentralusazon11013015.outbound.protection.outlook.com [40.93.196.15])
+Received: from sender4-op-o15.zoho.com (sender4-op-o15.zoho.com [136.143.188.15])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2088B1C5D59;
-	Thu, 15 Jan 2026 16:49:07 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.93.196.15
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BC42E2C028F;
+	Thu, 15 Jan 2026 17:03:13 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=136.143.188.15
 ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1768495749; cv=fail; b=P8rk6+0tjlwLEWfsHpaTdzTmZVcgyk6H0e5BdaLa/8rolejsqvPvLrfcY+ZiDwq9nQSyumwJTi1VEE+QcMAw2UWZngggavDgdtPKc2BAu5l6tTgkUjklK34ooVjYCyUHrh06VBdffV9WbUZgUdT+4tChFYwOlHRVeRP6R899duI=
+	t=1768496595; cv=pass; b=MFIFOY04aY9IG054UaBYmjinCk2g9RL8VAsl6vJurOSMwZ5gQ84j7P+QJV44g/81mIv8wl0gwYe196BS8y0vLs8l49RgSl4qZqK4aj5vCto1GDmwZM3tRxKJvS7iiJfhZrPO+I8uWAMoe6sOQ9pG1DsA2qoU0hAjAP9MOwMxByI=
 ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1768495749; c=relaxed/simple;
-	bh=gp0taYfdrKXeGAd1KJcT6TLOwOdUMIQ5e1mbhCsjq08=;
-	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
-	 In-Reply-To:Content-Type; b=WCw17+SOnIv/8VqE7X8Zo9EYRpFeJRrCalMc9PI50+YHSRRK8BqfvrgdqgZo7XNXO5OsjYidzvU6xsyeaTNXQxUw9R9g6qonmQDmJFj37pm9Z5K1UIvq0/dd8x9KZZB895QV99FOM/us8mmFPVg7VVX2kD72avrM6p+f7LIQPdQ=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=Xk9cLO39; arc=fail smtp.client-ip=40.93.196.15
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com
-Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=amd.com
+	s=arc-20240116; t=1768496595; c=relaxed/simple;
+	bh=l6sVhh0kKlne+9ROSMcYHRtFARgpwWhFz3ZUtjCHSuk=;
+	h=Message-ID:Subject:From:To:Cc:In-Reply-To:References:Content-Type:
+	 Date:MIME-Version; b=RX/p+IY6KL71gvuHMXCEJOa0kA/76ZksZVcfZ+m8kBxpcdjVsg+AooPccvg/jUvjSfkMxCobfguzRLOkI/AtoxJbLB73He7dms1xpqKaFWYsuSZna0wmRIDz4zq1cUzGm9OjPliHOFZBQkGgWr1Meb7VTifxt8KYCiftXXwbGH4=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=rong.moe; spf=pass smtp.mailfrom=rong.moe; dkim=pass (1024-bit key) header.d=rong.moe header.i=i@rong.moe header.b=T8Hte4uc; arc=pass smtp.client-ip=136.143.188.15
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=rong.moe
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=rong.moe
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="Xk9cLO39"
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=yl5FYwTZVjZyAFOFMJzVJJXhmxMWUEHp/oF4adqvactvz+0FG7CUqCdwbyN7pKzjNv19SuvcA1FpimLBqNVhXdqw007QBrFj/KNlnu1UwnGmJ0xkp6CS+lZseYlxHGj3jfRrbGigpZA5W9oQ17LoCg7CkVly5N+hkCSaZwZvsynF1Q0MsX9QxXFXHhQUjTMBf/dNXT7F/iolb8ryQCm4zbAzFjqoJeA1etdlxNjil3fGpeGWMCAgCCSlBFLQPUQ58KzbmkqfD9luvLyne+fVU/2yRq/oWuWE+iWubRPa8GYCbIUifuAk1ej88UlbtZlKmYsTyFy71fwBisnbO42e6g==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=seogoqTdhfW+TPJn+CEKXLzvWS8JAtGtmnkEntykfYs=;
- b=MWCI0YXXZwpa7AlGgEE2TwRcVct5FpqqWIpsaAgRiK5KtfNRXx1vBxT200F7F2KOc6tLWDtgvLkKnjiVgvO6WCHhH424SCusJCjTNo5PNX0Hq5BL5C7wuU/MxhUATnOIjGZP5zbaaZZLi16Jppd2PFUNlQAXtas+Lkee5pIGTX8Q8wNw8ov3cgWNb67D8e6pxCWH0KTAiWa3BDGfxxP/ltl2K2lonP3dPiEz6lQDNib+xBy06++7hPlx09hSzvlguYZ8P8qyaKPFkRDYbmji3G8oG0zTXYULhNpUR1/XYOXNdeFwC49s4aVs/cnLP/NAoZExx0DN+9O9++tHtelSKQ==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
- 165.204.84.17) smtp.rcpttodomain=linux.intel.com smtp.mailfrom=amd.com;
- dmarc=pass (p=quarantine sp=quarantine pct=100) action=none
- header.from=amd.com; dkim=none (message not signed); arc=none (0)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=seogoqTdhfW+TPJn+CEKXLzvWS8JAtGtmnkEntykfYs=;
- b=Xk9cLO39cDXDx5NKEczxlTOmCl9u5Okqec99rkj3F6sDA7qZKb6O+TYxkDuv3iVztFqxEJfYoupHmrav9Popqt3JeOD1T3+/IuSiGsip8H/KSIm8n+hgtLnq7DDdtL4GoVx/HGhsX5wKB05pFJXy0sXXJ0Efk9FfPTQw97pQTSk=
-Received: from SA0PR11CA0034.namprd11.prod.outlook.com (2603:10b6:806:d0::9)
- by MW4PR12MB6998.namprd12.prod.outlook.com (2603:10b6:303:20a::22) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.9520.5; Thu, 15 Jan
- 2026 16:49:04 +0000
-Received: from SN1PEPF000252A0.namprd05.prod.outlook.com
- (2603:10b6:806:d0:cafe::bb) by SA0PR11CA0034.outlook.office365.com
- (2603:10b6:806:d0::9) with Microsoft SMTP Server (version=TLS1_3,
- cipher=TLS_AES_256_GCM_SHA384) id 15.20.9520.4 via Frontend Transport; Thu,
- 15 Jan 2026 16:49:02 +0000
-X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 165.204.84.17)
- smtp.mailfrom=amd.com; dkim=none (message not signed)
- header.d=none;dmarc=pass action=none header.from=amd.com;
-Received-SPF: Pass (protection.outlook.com: domain of amd.com designates
- 165.204.84.17 as permitted sender) receiver=protection.outlook.com;
- client-ip=165.204.84.17; helo=satlexmb08.amd.com; pr=C
-Received: from satlexmb08.amd.com (165.204.84.17) by
- SN1PEPF000252A0.mail.protection.outlook.com (10.167.242.7) with Microsoft
- SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.9542.4 via Frontend Transport; Thu, 15 Jan 2026 16:49:02 +0000
-Received: from satlexmb07.amd.com (10.181.42.216) by satlexmb08.amd.com
- (10.181.42.217) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.2562.17; Thu, 15 Jan
- 2026 10:49:02 -0600
-Received: from [172.19.71.207] (10.180.168.240) by satlexmb07.amd.com
- (10.181.42.216) with Microsoft SMTP Server id 15.2.2562.17 via Frontend
- Transport; Thu, 15 Jan 2026 08:49:01 -0800
-Message-ID: <f404080d-b325-98c0-9fa1-2190ee2e0ed2@amd.com>
-Date: Thu, 15 Jan 2026 08:49:01 -0800
+	dkim=pass (1024-bit key) header.d=rong.moe header.i=i@rong.moe header.b="T8Hte4uc"
+ARC-Seal: i=1; a=rsa-sha256; t=1768496572; cv=none; 
+	d=zohomail.com; s=zohoarc; 
+	b=j/yU7JO0WDWZ5aIaAzEi5r75NfqC6Xb5o24/Kzi9lKCM2sR/+/ZZV1K6nDVLsCBYKj6GdAruyxTacD8+rs7FU/jnuTOCKZ4jzs2Nz1VY6pULWzqAqZVHuhjMvhNuyWCmUsDMH7UC39oemOmEsZkC8dWZ//i4UrGGQAjUenJXqtk=
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=zohomail.com; s=zohoarc; 
+	t=1768496572; h=Content-Type:Content-Transfer-Encoding:Cc:Cc:Date:Date:From:From:In-Reply-To:MIME-Version:Message-ID:References:Subject:Subject:To:To:Message-Id:Reply-To; 
+	bh=6uZEoFYfSJ865J79wtdo8eztp3deXrJkRzBhOv9flHE=; 
+	b=brDLtC8CCSAXveatDckbyhG/jusnyfwRr6SN3MkXOJTIzwJg2sx7A5z6m1y/7O0x0FMhutT8Xoap5pfo6StBGoT3hD4ahRvER3piFxPZ0hcCrQ3zJQI34q865nu/dvV146Eld9b0xJ4jzyKloj1aJdwtX0D1Qznc5IjzNkZZ2bw=
+ARC-Authentication-Results: i=1; mx.zohomail.com;
+	dkim=pass  header.i=rong.moe;
+	spf=pass  smtp.mailfrom=i@rong.moe;
+	dmarc=pass header.from=<i@rong.moe>
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; t=1768496572;
+	s=zmail; d=rong.moe; i=i@rong.moe;
+	h=Message-ID:Subject:Subject:From:From:To:To:Cc:Cc:In-Reply-To:References:Content-Type:Content-Transfer-Encoding:Date:Date:MIME-Version:Message-Id:Reply-To;
+	bh=6uZEoFYfSJ865J79wtdo8eztp3deXrJkRzBhOv9flHE=;
+	b=T8Hte4uc9iLPaUpCUDJX5YFu+ZbiJVD5HJA/pI4bzSDBUYl3IFUeY1y5BobWupjl
+	/P95fHsaaK0BdGywqP/rQKv+Um8o8uIapZlxI5ZzKSudmgYhRfp89saYy9j2RQSW3GK
+	4ZqOzxXRH4knGa6bNHI3jcCKkQVP8sTxtSAeZo6s=
+Received: by mx.zohomail.com with SMTPS id 1768496570571653.2246695988532;
+	Thu, 15 Jan 2026 09:02:50 -0800 (PST)
+Message-ID: <9ff2b73e30f06be69b6c0b72b91a19d766310db7.camel@rong.moe>
+Subject: Re: [PATCH v9 7/7] platform/x86: lenovo-wmi-other: Add HWMON for
+ fan reporting/tuning
+From: Rong Zhang <i@rong.moe>
+To: Kurt Borja <kuurtb@gmail.com>, "Derek J. Clark"
+ <derekjohn.clark@gmail.com>
+Cc: Mark Pearson <mpearson-lenovo@squebb.ca>, Armin Wolf <W_Armin@gmx.de>, 
+ Hans de Goede <hansg@kernel.org>, Ilpo =?ISO-8859-1?Q?J=E4rvinen?=
+ <ilpo.jarvinen@linux.intel.com>,  Guenter Roeck <linux@roeck-us.net>,
+ platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	linux-hwmon@vger.kernel.org
+In-Reply-To: <DFP7SAGSD32N.3SIIV8JMYHWRM@gmail.com>
+References: <20260114122745.986699-1-i@rong.moe>
+	 <20260114122745.986699-8-i@rong.moe> <DFOQB6DGBKBZ.39JQKPB7XDSJG@gmail.com>
+	 <1a9909f4083d85736a1e28067517ae0899e462f2.camel@rong.moe>
+	 <DFP7SAGSD32N.3SIIV8JMYHWRM@gmail.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+Date: Fri, 16 Jan 2026 00:57:42 +0800
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
- Thunderbird/91.11.0
-Subject: Re: [PATCH V3 1/2] platform/x86/amd/pmf: Introduce new interface to
- export NPU metrics
-Content-Language: en-US
-To: =?UTF-8?Q?Ilpo_J=c3=a4rvinen?= <ilpo.jarvinen@linux.intel.com>
-CC: <ogabbay@kernel.org>, <quic_jhugo@quicinc.com>,
-	<maciej.falkowski@linux.intel.com>, Hans de Goede <hansg@kernel.org>, "Shyam
- Sundar S K" <Shyam-sundar.S-k@amd.com>, <dri-devel@lists.freedesktop.org>,
-	LKML <linux-kernel@vger.kernel.org>, <max.zhen@amd.com>,
-	<sonal.santan@amd.com>, <mario.limonciello@amd.com>,
-	<platform-driver-x86@vger.kernel.org>, <VinitKumar.Shukla@amd.com>, "Patil
- Rajesh Reddy" <Patil.Reddy@amd.com>
-References: <20260105172956.3732123-1-lizhi.hou@amd.com>
- <20260105172956.3732123-2-lizhi.hou@amd.com>
- <4d365fb4-08f5-0b2f-62df-b8f46b792953@linux.intel.com>
-From: Lizhi Hou <lizhi.hou@amd.com>
-In-Reply-To: <4d365fb4-08f5-0b2f-62df-b8f46b792953@linux.intel.com>
-Content-Type: text/plain; charset="UTF-8"; format=flowed
-Content-Transfer-Encoding: 8bit
-X-EOPAttributedMessage: 0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: SN1PEPF000252A0:EE_|MW4PR12MB6998:EE_
-X-MS-Office365-Filtering-Correlation-Id: 4309e4f6-0d8d-40ab-ec6d-08de5455fd30
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam:
-	BCL:0;ARA:13230040|36860700013|1800799024|376014|82310400026;
-X-Microsoft-Antispam-Message-Info:
-	=?utf-8?B?T2ZmY2gyaGNFL0RuOVhKMzhReVNnRDVRbzdjRDZWL0Y1RUszdjNiWDNpWVds?=
- =?utf-8?B?VlZjWnJsMFBnWUVSMEJCdGRLR3BOMUo2ZGhlenRJYUQvTmtZd05YWnJDVXVi?=
- =?utf-8?B?MG84cENRWlFTcW5pcXpMSXgwaHV4OFV0YXFpSXFiR05oYlA0R3FkZXhCNGJ4?=
- =?utf-8?B?Qy9wVjhsSmdCb0w1Y3NYcWN0VWNpNWxTNHFaYm8xbmVDVG10QmVJbVk0Y1gy?=
- =?utf-8?B?eTU4a3JmcVlJZGFQdzBKQm4zMnFvaVVUV21Cd3dvQUJwN1RUUzFORE5Jdkpv?=
- =?utf-8?B?a1lLdWFIQnVNQWtJZnllNGJEZFlOYzllTWxHYklsdk1iQngxek51dmZWT1ZB?=
- =?utf-8?B?NCtFSGZmdjFnbHpMU2kvZHB1ZzFWQkdFb0NKUTJtcGI0bFRYM2hwazQ4Ui92?=
- =?utf-8?B?SUlTUFUxcytPZnJlOTZ1K0ptV3IvVUcxSEN4QjVkK1JoWkVHWDRvUmhaYnJY?=
- =?utf-8?B?Q251dzhLWU9FQ2hXR04wMURKZkQ4eWlKdjBuQjBnS3VGQVptdzhLd3pIMjI4?=
- =?utf-8?B?bVpKMDF1NTVQeGtpK2JPMFUvRmVtQWJRR2hrMEE1ZVkzRDFIdHBKdHhINjA4?=
- =?utf-8?B?dlllLyt4blQ5Z2doUWlZOGswVTN5eEZEZkVQTWM4V3hVWit0MkdpMm5Editt?=
- =?utf-8?B?UXI2Zy83YnZJOUdTM2p6dFplaGFXRkJzR2Rra21id0hTWThUQndyWGdXTVA5?=
- =?utf-8?B?dHBMdm4rcW5KRmtjS2U2NzU0eEdJMGNyc0pONUdvcS9sdHcxS0dtRjB6Qmpm?=
- =?utf-8?B?MzdVSUFpNFFOSjhCejNCaXlvZ3VCb004dHg2c05aVytQNW11bUR4WkdHaEh4?=
- =?utf-8?B?WTFRS3BQc3paY2JBcVUvM2lRbE1aSGdKS2RtbE5pM2Rja0FqeDBuTkFhUkxz?=
- =?utf-8?B?VE9IYy9qNDJOc280U0MrRFF3TnJSTmVMdUUwZURodkI5YkhpRjdGcHZsVzYy?=
- =?utf-8?B?em1DK2w3MU5ZWWpwMk1DMStzL1RlMHg4MmVwaVNZNDNOV203T0Uxb1hQYnZZ?=
- =?utf-8?B?K2N3OWVsbjV6RE40akhJTjVPVGpzakZTNG9aSEVGMzI1NFhUUkpyWXUxaFNE?=
- =?utf-8?B?Y3BnaXVSZ3ZsR2N6Rk9MVzZINTAxWnl2RExiL21jUkZkUGJPM0lLcTNvWHVC?=
- =?utf-8?B?RTluWi9DMDJ0OGM2dXE3RGtJNitDVnlpQWdGS0JCbmR1ZTNFeUM0ejZFaXUw?=
- =?utf-8?B?SEN2c3VscmxKemxnc2FEYmpxbnZrUHBtWXFHem95SGpPMHl5bmpkUlFlSGs5?=
- =?utf-8?B?L0xlem94elI1NXBLdXJZMGtnSHE1N2NFVm9SbXNwUmM5OUVJSEJ6cVM4QkVC?=
- =?utf-8?B?aXJEUENVanlvRjl3WTVacnNoZ2laakxaVTdYd1B2N1d2OG1ieStkS1gzdStQ?=
- =?utf-8?B?MHRVL0xacElPdGdnUXNkTjB2NytVcmltMDRkWTBYSFM2ZmNuUjJZdWVjaUcw?=
- =?utf-8?B?ckowQjQ4WndJbUlBVnNqRkh2cm56OXg2bWlCRU9EMVM0bTNNQzJ2Vjd1ZVpO?=
- =?utf-8?B?YktyY3htMXF6OGtoQmFKQTNEbWVoemdYaWt1Uk1SVDFNNStmNHM1aVJMV2or?=
- =?utf-8?B?VjRvWW1jWFF1NWJYbzlTTDJEV1lpN2FVTjUvelVoUkxPbG82NjgvVVFvc3li?=
- =?utf-8?B?MjdqYWQ1aFJMazh6MnVKTGlTdUM1RkFkZXU3cnJ5bDJDSWFVcE44bW9Rb2l0?=
- =?utf-8?B?bkhkZXpXMHp0WnNZNm9MT1dzakNRdUJndXFOY1VwTE1QbUJ5MFpwMEhKWWdu?=
- =?utf-8?B?UDhJVkNZZTZJWTlGQTJTdFBpUGtBTEFwVVlaSnRuOFF3bmMzWHMvYW9qZWVw?=
- =?utf-8?B?eVVBOTlwT2hVOTZxY3FpVWNod1BPUXdFMjJuU1d2QkwrSVFsYzdYMEErWERy?=
- =?utf-8?B?UlBXNGYrck5CaGlEdHR5K3F5Z3BLNzZqT04zLzdOQ2IwVWpLUXZZelpOVmdB?=
- =?utf-8?B?WFVJbjY1b2ZZRFM2bFR3akZiVUI1TCttenN4QW0xa2pjYklEOUJHbVFXRmtI?=
- =?utf-8?B?bzJ1eldBSHIvbGllT0pGSFNxWFdNQmhRQkI4bkNxU3R5ekkxZTdyK3J0WEo0?=
- =?utf-8?B?djdabU41SkVmTExBc0l3WjB4ZWgyYVRmRVRTWGs0LzNCRDc4YW5iOTdoRHAw?=
- =?utf-8?B?S1lxWGE0NGFjY0VrVUxPRWtQdGFJTGs3clVKNVhyWGJaYVorUjVsbUpneHpr?=
- =?utf-8?B?SFBtYmdyUENnTDlXQ2tmbEJleGE2bGMxdFk1amJGL3phSEI0Qit2V0Fxb0JM?=
- =?utf-8?B?ZVRvVzhEZ1BZSjk1TmRUVHM0c25RPT0=?=
-X-Forefront-Antispam-Report:
-	CIP:165.204.84.17;CTRY:US;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:satlexmb08.amd.com;PTR:InfoDomainNonexistent;CAT:NONE;SFS:(13230040)(36860700013)(1800799024)(376014)(82310400026);DIR:OUT;SFP:1101;
-X-OriginatorOrg: amd.com
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 15 Jan 2026 16:49:02.9638
- (UTC)
-X-MS-Exchange-CrossTenant-Network-Message-Id: 4309e4f6-0d8d-40ab-ec6d-08de5455fd30
-X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
-X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=3dd8961f-e488-4e60-8e11-a82d994e183d;Ip=[165.204.84.17];Helo=[satlexmb08.amd.com]
-X-MS-Exchange-CrossTenant-AuthSource:
-	SN1PEPF000252A0.namprd05.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Anonymous
-X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: MW4PR12MB6998
+User-Agent: Evolution 3.56.2-8 
+X-ZohoMailClient: External
 
+Hi Kurt,
 
-On 1/15/26 07:18, Ilpo Järvinen wrote:
-> On Mon, 5 Jan 2026, Lizhi Hou wrote:
->
->> From: Shyam Sundar S K <Shyam-sundar.S-k@amd.com>
->>
->> The PMF driver retrieves NPU metrics data from the PMFW. Introduce a new
->> interface to make NPU metrics accessible to other drivers like AMDXDNA
->> driver, which can access and utilize this information as needed.
->>
->> Reviewed-by: Mario Limonciello <mario.limonciello@amd.com>
->> Co-developed-by: Patil Rajesh Reddy <Patil.Reddy@amd.com>
->> Signed-off-by: Patil Rajesh Reddy <Patil.Reddy@amd.com>
->> Signed-off-by: Shyam Sundar S K <Shyam-sundar.S-k@amd.com>
->> [lizhi: save return value of is_npu_metrics_supported() and return it]
->> Signed-off-by: Lizhi Hou <lizhi.hou@amd.com>
->> ---
->>   drivers/platform/x86/amd/pmf/core.c | 76 +++++++++++++++++++++++++++++
->>   drivers/platform/x86/amd/pmf/pmf.h  |  2 +
->>   include/linux/amd-pmf-io.h          | 21 ++++++++
->>   3 files changed, 99 insertions(+)
->>
->> diff --git a/drivers/platform/x86/amd/pmf/core.c b/drivers/platform/x86/amd/pmf/core.c
->> index 8fc293c9c538..d180a39e03bf 100644
->> --- a/drivers/platform/x86/amd/pmf/core.c
->> +++ b/drivers/platform/x86/amd/pmf/core.c
->> @@ -8,12 +8,15 @@
->>    * Author: Shyam Sundar S K <Shyam-sundar.S-k@amd.com>
->>    */
->>   
->> +#include <linux/array_size.h>
->> +#include <linux/cleanup.h>
->>   #include <linux/debugfs.h>
->>   #include <linux/iopoll.h>
->>   #include <linux/module.h>
->>   #include <linux/pci.h>
->>   #include <linux/platform_device.h>
->>   #include <linux/power_supply.h>
->> +#include <linux/string.h>
->>   #include <asm/amd/node.h>
->>   #include "pmf.h"
->>   
->> @@ -53,6 +56,8 @@ static bool force_load;
->>   module_param(force_load, bool, 0444);
->>   MODULE_PARM_DESC(force_load, "Force load this driver on supported older platforms (experimental)");
->>   
->> +static struct device *pmf_device;
->> +
->>   static int amd_pmf_pwr_src_notify_call(struct notifier_block *nb, unsigned long event, void *data)
->>   {
->>   	struct amd_pmf_dev *pmf = container_of(nb, struct amd_pmf_dev, pwr_src_notifier);
->> @@ -314,6 +319,71 @@ int amd_pmf_init_metrics_table(struct amd_pmf_dev *dev)
->>   	return 0;
->>   }
->>   
->> +static int is_npu_metrics_supported(struct amd_pmf_dev *pdev)
->> +{
->> +	switch (pdev->cpu_id) {
->> +	case PCI_DEVICE_ID_AMD_1AH_M20H_ROOT:
->> +	case PCI_DEVICE_ID_AMD_1AH_M60H_ROOT:
->> +		return 0;
->> +	default:
->> +		return -EOPNOTSUPP;
->> +	}
->> +}
->> +
->> +static int amd_pmf_get_smu_metrics(struct amd_pmf_dev *dev, struct amd_pmf_npu_metrics *data)
->> +{
->> +	int ret, i;
->> +
->> +	guard(mutex)(&dev->metrics_mutex);
->> +
->> +	ret = is_npu_metrics_supported(dev);
->> +	if (ret)
->> +		return ret;
->> +
->> +	ret = amd_pmf_set_dram_addr(dev, true);
->> +	if (ret)
->> +		return ret;
->> +
->> +	memset(dev->buf, 0, dev->mtable_size);
->> +
->> +	/* Send SMU command to get NPU metrics */
->> +	ret = amd_pmf_send_cmd(dev, SET_TRANSFER_TABLE, SET_CMD, METRICS_TABLE_ID, NULL);
->> +	if (ret) {
->> +		dev_err(dev->dev, "SMU command failed to get NPU metrics: %d\n", ret);
->> +		return ret;
->> +	}
->> +
->> +	memcpy(&dev->m_table_v2, dev->buf, dev->mtable_size);
->> +
->> +	data->npuclk_freq = dev->m_table_v2.npuclk_freq;
->> +	for (i = 0; i < ARRAY_SIZE(data->npu_busy); i++)
->> +		data->npu_busy[i] = dev->m_table_v2.npu_busy[i];
->> +	data->npu_power = dev->m_table_v2.npu_power;
->> +	data->mpnpuclk_freq = dev->m_table_v2.mpnpuclk_freq;
->> +	data->npu_reads = dev->m_table_v2.npu_reads;
->> +	data->npu_writes = dev->m_table_v2.npu_writes;
->> +
->> +	return 0;
->> +}
->> +
->> +int amd_pmf_get_npu_data(struct amd_pmf_npu_metrics *info)
->> +{
->> +	struct amd_pmf_dev *pdev;
->> +
->> +	if (!info)
->> +		return -EINVAL;
->> +
->> +	if (!pmf_device)
->> +		return -ENODEV;
->> +
->> +	pdev = dev_get_drvdata(pmf_device);
->> +	if (!pdev)
->> +		return -ENODEV;
->> +
->> +	return amd_pmf_get_smu_metrics(pdev, info);
->> +}
->> +EXPORT_SYMBOL_GPL(amd_pmf_get_npu_data);
-> One more thing, the export should be namespaced.
->
-> And since I'll be applying only this patch and not do an IB, can you also
-> rebase it on top for the for-next branch.
+On Thu, 2026-01-15 at 08:58 -0500, Kurt Borja wrote:
+> On Thu Jan 15, 2026 at 8:03 AM -05, Rong Zhang wrote:
+> > Hi Kurt,
+> >=20
+> > On Wed, 2026-01-14 at 19:16 -0500, Kurt Borja wrote:
+> > > Hi Rong,
+> > >=20
+> > > On Wed Jan 14, 2026 at 7:27 AM -05, Rong Zhang wrote:
+> > > > Register an HWMON device for fan reporting/tuning according to
+> > > > Capability Data 00 (capdata00) and Fan Test Data (capdata_fan) prov=
+ided
+> > > > by lenovo-wmi-capdata. The corresponding HWMON nodes are:
+> > > >=20
+> > > >  - fanX_enable: enable/disable the fan (tunable)
+> > > >  - fanX_input: current RPM
+> > > >  - fanX_max: maximum RPM
+> > > >  - fanX_min: minimum RPM
+> > > >  - fanX_target: target RPM (tunable)
+> > > >=20
+> > > > Information from capdata00 and capdata_fan are used to control the
+> > > > visibility and constraints of HWMON attributes. Fan info from capda=
+ta00
+> > > > is collected on bind, while fan info from capdata_fan is collected =
+in a
+> > > > callback. Once all fan info is collected, register the HWMON device=
+.
+> > > >=20
+> > > > Signed-off-by: Rong Zhang <i@rong.moe>
+> > > > Reviewed-by: Derek J. Clark <derekjohn.clark@gmail.com>
+> > > > ---
+> > >=20
+> > > ...
+> > >=20
+> > > > diff --git a/Documentation/wmi/devices/lenovo-wmi-other.rst b/Docum=
+entation/wmi/devices/lenovo-wmi-other.rst
+> > > > index 821282e07d93c..bd1d733ff286d 100644
+> > > > --- a/Documentation/wmi/devices/lenovo-wmi-other.rst
+> > > > +++ b/Documentation/wmi/devices/lenovo-wmi-other.rst
+> > > > @@ -31,6 +31,8 @@ under the following path:
+> > > > =20
+> > > >    /sys/class/firmware-attributes/lenovo-wmi-other/attributes/<attr=
+ibute>/
+> > > > =20
+> > > > +Additionally, this driver also exports attributes to HWMON.
+> > > > +
+> > > >  LENOVO_CAPABILITY_DATA_00
+> > > >  -------------------------
+> > > > =20
+> > > > @@ -39,6 +41,11 @@ WMI GUID ``362A3AFE-3D96-4665-8530-96DAD5BB300E`=
+`
+> > > >  The LENOVO_CAPABILITY_DATA_00 interface provides various informati=
+on that
+> > > >  does not rely on the gamezone thermal mode.
+> > > > =20
+> > > > +The following HWMON attributes are implemented:
+> > > > + - fanX_enable: enable/disable the fan (tunable)
+> > >=20
+> > > I was testing this series and I'm a bit confused about fanX_enable.
+> >=20
+> > Thanks for testing!
+>=20
+> Thanks for working on this!
+>=20
+> >=20
+> > > Judging by this comment and also by taking a quick look at the code, =
+it
+> > > looks like writting 0 to this attribute disables the fan.
+> > >=20
+> > > This is however (per hwmon ABI documentation [1]) not how this attrib=
+ute
+> > > should work. IIUC, it is intended for devices which can disable the f=
+an
+> > > sensor, not the actual fan.
+> >=20
+> > Hmm, what a confusing name :-/
+> >=20
+> > > I fail to see how this feature is useful and I also find it dangerous
+> > > for this to be exposed by default, considering the same could be
+> > > achieved with the relaxed module parameter, which at least tells the
+> > > user to be careful.
+> >=20
+> > Makes sense. I will remove the attribute and mention such behavior in
+> > the module parameter.
+>=20
+> Also, it would be worth to mention that writting 0 to the fanY_target
+> attribute is auto mode, right?
 
-Sure, I will send a V4 patch.
+Ah, yes.
 
-Lizhi
+> I was testing the fanX_target attribute and it does work as intended,
+> i.e. the fan speed changes to the desired speed. However, every time I
+> write to this attribute I'm getting -EIO error and it always reads 0.
+>=20
+> For example:
+>=20
+> 	$ echo 3550 | sudo tee fan*_target
+> 	3550
+> 	tee: fan1_target: Input/output error
+> 	tee: fan2_target: Input/output error
+> 	$ cat fan*_target
+> 	0
+> 	0
+>=20
+> But as I said, the fans do reach the desired speed (an approximation of
+> it):
+>=20
+> 	$ cat fan*_input
+> 	3500
+> 	3500
+>=20
+> This is a bit weird, but I haven't look in depth into it. I will find
+> some time to do it later. This happens on a 83KY (Legion 7 16IAX1)
+> laptop.
 
->
+I'd like to fix it in the next revision. Looking forward to your
+progress in debugging :-)
+
+It seems to me that the corresponding ACPI method did not return 1 on
+success. There should be some clues in the decompiled ASL code. Could
+you attach it in your reply? The HWMON implementation was developed
+mostly based on my understanding on the decompiled ASL code of my
+device. I'd like to check the one of your device as a cross-reference
+to see if there are more potential bugs.
+
+> As it seems that you can change the RPM in 100 increments,
+
+Yeah. That's also true on my device, but I am not sure if all devices
+with the interface behave like this. I'd prefer not making such an
+assumption.
+
+> maybe you
+> could look into the pwmY attributes [1]. I think it is a better fit for
+> this feature because pwmY_enable allows you to select between manual and
+> auto fan control [2], and I believe some user-space tools already use
+> this attribute.
+
+For pwmY, I don't see the point why the kernel should adapt to
+userspace tools... If we don't have to, don't be overfit.
+
+For pwmY_enable, it is only a good choice if we adopt pwmY. It's weird
+to mix pwmY_enable and fanY_target.
+
+@Derek, may I ask for your opinion here? Should we adopt pwmY*?
+
+> On the implementation you can use fixp_linear_interpolate() [3] to
+> convert between and from pwm duty cycle.
+
+If we adopt this, I could imagine three ways to create a PWM-RPM curve:
+(1) PWM[0,255] =3D> RPM[min,max]
+(2) PWM[0,255] =3D> RPM[0,max]
+(3) PWM[0,255] =3D> RPM[0,a_large_number]
+
+relax_fan_constraint=3D1 definitely needs (3) as the fan can spin
+slower/faster than min/max_rpm. I don't want to create scale mismatches
+between relax_fan_constraint=3D1 and =3D0, so only (3) looks viable to me
+in any case. Hmm, we are creating a weird PWM-RPM curve with two
+plateau [1].
+
+> This is just a suggestion though, I know I came in too late to the
+> discussion but I just got this laptop :P
+
+Happy hacking :P
+
+ThinkBook (my device) only implements few Legion interfaces, so your
+information here is very valuable.
+
+> [1] https://elixir.bootlin.com/linux/v6.19-rc5/source/Documentation/ABI/t=
+esting/sysfs-class-hwmon#L297
+> [2] https://elixir.bootlin.com/linux/v6.19-rc5/source/Documentation/ABI/t=
+esting/sysfs-class-hwmon#L312
+> [3] https://elixir.bootlin.com/linux/v6.19-rc5/source/include/linux/fixp-=
+arith.h#L145
+
+[1]: Typical curves look like
+https://www.overclock.net/threads/are-voltage-controllers-for-fans-bad-and-=
+pwm-controlled-fans-better.1627409/#post-25993378
+
+Thanks,
+Rong
