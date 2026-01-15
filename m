@@ -1,172 +1,103 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.9])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.13])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 10E5730BB9E;
-	Thu, 15 Jan 2026 08:35:02 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.9
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AB33F33B94A;
+	Thu, 15 Jan 2026 09:50:12 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.13
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1768466104; cv=none; b=dqklwJP5Eq0qbbbxzwiIwwUnwmSonTi/HN/CwmJ6IEUiWyM38KRMy3UPNufDZtN4GP68/kUYvXiMe/GeJNeEi5KqXTf+EAmFsVjaJ7q04VJpMbVVkkQ7Udmqe/zriV+QVP71L3cnrwCs2ff/dUObp7GmVp3ygczb4nyEsaJVYZ4=
+	t=1768470613; cv=none; b=K/oOm0F/3s1koP8EeaNGW3x1ajEijhoZoNOSFJnGaEjIg7o+2UiSJjKnjJJPRhWAKgUCwaQIx29IqoHEjrSqB71eyS+vITswcSIsNUHHvzfN27SDP0fFUHdH2tYQc4lj8sq2rDYb2q8ixTsrJN/TIMmcRUsq2GfKYascu+k+JAI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1768466104; c=relaxed/simple;
-	bh=Y95zzIMiPLc9Yw5WLKhSJ3INoWPgjkkwJjawVxx5x/A=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=fuVxsvRpjWkeZE68f/GGhM/H5r/HdJP3n3ko9v2tDbqGc049htc/oGTbnVAsqH01If6QYTmynDoB87h20iIZkBkMxo3r5wx4u7WV1YGqkVM+HTirOpoNfX93F2y60FhAIyOmpRaJehLPOhxdVK1fbuiWW1lPmcepng3eL3yjnOg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=pass smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=ISkoo89I; arc=none smtp.client-ip=192.198.163.9
+	s=arc-20240116; t=1768470613; c=relaxed/simple;
+	bh=PLmybabc8oOgIMMPz2cu7v6muPfVYZSQB3ZUj9GT3nY=;
+	h=From:Date:To:cc:Subject:In-Reply-To:Message-ID:References:
+	 MIME-Version:Content-Type; b=s7I6wTAj2H6XsEilQgDGAZBj75eEn+Y/omhm3w6cSpCnF4/pDKMQPRR0bvNzXrPNJxpvRTTLd5K9t3mMnn0clzAxuJ87Bp2PsKLrfW8G8EOPMQRba7nu8UOLprsLMmYgctb6GmzMJDMNwJLk4IoVNcSqGroxEmlgt8b98kq7Gcc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=pass smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=eX84eL7+; arc=none smtp.client-ip=198.175.65.13
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="ISkoo89I"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="eX84eL7+"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1768466103; x=1800002103;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=Y95zzIMiPLc9Yw5WLKhSJ3INoWPgjkkwJjawVxx5x/A=;
-  b=ISkoo89I7jf9OKnBz3pRmLDDOq0POYcvo01XctUQDBMyMOWEwGaJdNL2
-   RnYaxoJKpoBX1ls066jyRxuFsAwGMMDLVTe06k3uYWZNRAgoMiwrlQTmB
-   9iLf0Xs8SOGXXre+U+8hfLDY/kmEeWj2vUZuHu+gdj+s1gJBWP7Ka9j7Z
-   ANXM/WMenU2o7FGkl0gHFjbWanntz3QTPkb2e25h/22M5lBIVh4K1rU+B
-   xqauYMySL/sKQg3VJUdFg6vrFznpFRtHyh5ngCpaqGYN+YxCHwFRfTbPF
-   k9Zwv+DwK3zKVpEp3kqKeR4qCQgUNV/njnSbQlI2n13Ts0hJ2tmHw3mHP
-   w==;
-X-CSE-ConnectionGUID: JAw7Z14kQIquPScwXAZcKw==
-X-CSE-MsgGUID: uif1XOUUROysSwUB65DCEg==
-X-IronPort-AV: E=McAfee;i="6800,10657,11671"; a="80489977"
+  t=1768470613; x=1800006613;
+  h=from:date:to:cc:subject:in-reply-to:message-id:
+   references:mime-version;
+  bh=PLmybabc8oOgIMMPz2cu7v6muPfVYZSQB3ZUj9GT3nY=;
+  b=eX84eL7+QM4hMwoOE9PeIy7uUrafBSE44Ew87J3Zm/txzj9/Di1lIUAy
+   gnMeos453rp107litoi4VNouw+h+PPHlYuvh2t1BC/X34z1wXJQLm0253
+   8AAQUtKv3Oo9rI035wIuS+riRTty1acb4SLLYECl/8xSjzr3TtltoeLnp
+   XGXeQjmpi0aonzot5aT0lBiddOeb2C4h9EJN+wGarAQUJ53dF4yp53bzZ
+   mFp60qLGediXTtl0OtL7bMFYfk1ApUel57LcRqL/AhwvhafepDZJWTqTG
+   23G1qzM1f/nkwGsVJKgO2m+x0Z3KgO4GPw/2v62RoPMh0fXra7zcE8/CJ
+   A==;
+X-CSE-ConnectionGUID: L+tGoqQGRVihO/VWgkApHw==
+X-CSE-MsgGUID: gNuVcmq/SGyeXINy0duTtQ==
+X-IronPort-AV: E=McAfee;i="6800,10657,11671"; a="80885279"
 X-IronPort-AV: E=Sophos;i="6.21,226,1763452800"; 
-   d="scan'208";a="80489977"
-Received: from orviesa001.jf.intel.com ([10.64.159.141])
-  by fmvoesa103.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 15 Jan 2026 00:35:02 -0800
-X-CSE-ConnectionGUID: BveYYDTXTeyG3+UfBMNT7g==
-X-CSE-MsgGUID: 5TbYGUM9SSy7mBEJiQ9YJQ==
+   d="scan'208";a="80885279"
+Received: from orviesa003.jf.intel.com ([10.64.159.143])
+  by orvoesa105.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 15 Jan 2026 01:50:12 -0800
+X-CSE-ConnectionGUID: EXp0czF9Q66AXWiSPisqXw==
+X-CSE-MsgGUID: y/dEKkEMSy+xuCl+FMhr+Q==
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="6.21,226,1763452800"; 
-   d="scan'208";a="242450907"
-Received: from egrumbac-mobl6.ger.corp.intel.com (HELO localhost) ([10.245.244.216])
-  by smtpauth.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 15 Jan 2026 00:35:00 -0800
-Date: Thu, 15 Jan 2026 10:34:57 +0200
-From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-To: Ciju Rajan K <crajank@nvidia.com>
-Cc: hdegoede@redhat.com, ilpo.jarvinen@linux.intel.com, tglx@linutronix.de,
-	christophe.jaillet@wanadoo.fr, vadimp@nvidia.com,
-	platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH platform-next v4 2/2] platform/mellanox: mlxreg-hotplug:
- Enabling interrupt storm detection
-Message-ID: <aWimsaqu5gCV5uZV@smile.fi.intel.com>
-References: <20260115074909.245852-1-crajank@nvidia.com>
- <20260115074909.245852-3-crajank@nvidia.com>
+   d="scan'208";a="209066493"
+Received: from ijarvine-mobl1.ger.corp.intel.com (HELO localhost) ([10.245.244.248])
+  by ORVIESA003-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 15 Jan 2026 01:50:09 -0800
+From: =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
+Date: Thu, 15 Jan 2026 11:50:05 +0200 (EET)
+To: Chen Ni <nichen@iscas.ac.cn>
+cc: hmh@hmh.eng.br, Mark Pearson <mpearson-lenovo@squebb.ca>, 
+    derekjohn.clark@gmail.com, Hans de Goede <hansg@kernel.org>, 
+    ibm-acpi-devel@lists.sourceforge.net, platform-driver-x86@vger.kernel.org, 
+    LKML <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH] platform/x86: thinkpad_acpi: Remove unneeded semicolon
+In-Reply-To: <20260115081636.164041-1-nichen@iscas.ac.cn>
+Message-ID: <19a1325c-692c-3d1e-2a1d-1fcf31fb1dcd@linux.intel.com>
+References: <20260115081636.164041-1-nichen@iscas.ac.cn>
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20260115074909.245852-3-crajank@nvidia.com>
-Organization: Intel Finland Oy - BIC 0357606-4 - c/o Alberga Business Park, 6
- krs, Bertel Jungin Aukio 5, 02600 Espoo
+Content-Type: text/plain; charset=US-ASCII
 
-On Thu, Jan 15, 2026 at 09:49:09AM +0200, Ciju Rajan K wrote:
-> This patch enables the interrupt storm detection feature and
-> also adds the per device counter for tracking the faulty
-> devices. It also masks the faulty devices from generating
-> any further interrupts.
+On Thu, 15 Jan 2026, Chen Ni wrote:
+
+> Remove unnecessary semicolons reported by Coccinelle/coccicheck and the
+> semantic patch at scripts/coccinelle/misc/semicolon.cocci.
 > 
-> Add field for interrupt storm handling.
-> Extend structure mlxreg_core_data with the following field:
->  'wmark_cntr'   - interrupt storm counter.
+> Signed-off-by: Chen Ni <nichen@iscas.ac.cn>
+> ---
+>  drivers/platform/x86/lenovo/thinkpad_acpi.c | 4 ++--
+>  1 file changed, 2 insertions(+), 2 deletions(-)
 > 
-> Extend structure mlxreg_core_item with the following field:
->  'storming_bits' - interrupt storming bits mask.
-
-...
-
-> +static void mlxreg_hotplug_storm_handler(unsigned int irq, unsigned int freq, void *dev_id)
-> +{
-> +	struct mlxreg_hotplug_priv_data *priv = dev_id;
-> +	struct mlxreg_core_hotplug_platform_data *pdata;
-> +	struct mlxreg_core_item *item;
-> +	struct mlxreg_core_data *data;
-> +	unsigned long asserted;
-> +	u32 bit;
-> +
-> +	dev_warn(priv->dev,
-> +		 "Interrupt storm detected on IRQ %u (%u interrupts/sec)",
-> +		 irq, freq);
-
-Below you put long line, here it seems wrapped by 80, why so inconsistent?
-Please, choose one style and use it everywhere (inside the same file).
-
-> +	pdata = dev_get_platdata(&priv->pdev->dev);
-> +	item = pdata->items;
-> +	asserted = item->cache;
-> +
-> +	for_each_set_bit(bit, &asserted, 8) {
-> +		int pos;
-> +
-> +		pos = mlxreg_hotplug_item_label_index_get(item->mask, bit);
-> +		if (pos < 0)
-
-> +			goto out;
-
-Used only once. Just drop the label and move the related code under the branch.
-
-> +		data = item->data + pos;
-> +		/* Check per device interrupt counter */
-> +		if (data->wmark_cntr >= MLXREG_HOTPLUG_INTR_FREQ_HZ - 1) {
-> +			dev_err(priv->dev,
-> +				"Storming bit %d (label: %s) - interrupt masked permanently. Replace broken HW.",
-> +				bit, data->label);
-> +			/* Mark bit as storming. */
-> +			item->storming_bits |= BIT(bit);
+> diff --git a/drivers/platform/x86/lenovo/thinkpad_acpi.c b/drivers/platform/x86/lenovo/thinkpad_acpi.c
+> index a272f27e6227..6b0e4b4c485e 100644
+> --- a/drivers/platform/x86/lenovo/thinkpad_acpi.c
+> +++ b/drivers/platform/x86/lenovo/thinkpad_acpi.c
+> @@ -11164,7 +11164,7 @@ static bool display_damage(char *buf, int *count, char *type, unsigned int dmg_s
+>  			break;
+>  		default:
+>  			pr_err("Unexpected value %d in switch statement\n", pos_status);
+> -		};
 > +		}
-> +		data->wmark_cntr = 0;
-> +	}
-> +	return;
-> + out:
-> +	dev_err(priv->dev, "Failed to complete interrupt storm handler\n");
-> +}
+>  
+>  		switch (panel_status) {
+>  		case POS_LEFT:
+> @@ -11179,7 +11179,7 @@ static bool display_damage(char *buf, int *count, char *type, unsigned int dmg_s
+>  		default:
+>  			*count += sysfs_emit_at(buf, *count, "Undefined\n");
+>  			break;
+> -		};
+> +		}
+>  		damage_detected = true;
+>  	}
+>  	return damage_detected;
+> 
 
-...
-
-> +	/* Register with generic interrupt storm detection */
-> +	if (!irq_register_storm_detection(priv->irq, MLXREG_HOTPLUG_INTR_FREQ_HZ,
-> +					  mlxreg_hotplug_storm_handler, priv)) {
-> +		dev_warn(&pdev->dev, "Failed to register generic interrupt storm detection\n");
-> +	} else {
-> +		dev_info(&pdev->dev, "Registered generic storm detection for IRQ %d\n", priv->irq);
-> +	}
-
-Invert the conditional, it will be slightly easier to parse.
-
-...
-
->  struct mlxreg_core_data {
->  	char label[MLXREG_CORE_LABEL_MAX_SIZE];
-
->  	u8 regnum;
->  	u8 slot;
->  	u8 secured;
-> +	unsigned int wmark_cntr;
->  };
-
-Have you run `pahole`? No issues / room to improve this layout?
-
-...
-
->  struct mlxreg_core_item {
->  	struct mlxreg_core_data *data;
-
->  	u8 ind;
->  	u8 inversed;
->  	u8 health;
-> +	u32 storming_bits;
->  };
-
-Ditto.
+Thanks, I've folded this into the original change.
 
 -- 
-With Best Regards,
-Andy Shevchenko
-
+ i.
 
