@@ -1,103 +1,98 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.13])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AB33F33B94A;
-	Thu, 15 Jan 2026 09:50:12 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.13
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E815335A94F
+	for <platform-driver-x86@vger.kernel.org>; Thu, 15 Jan 2026 10:03:49 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1768470613; cv=none; b=K/oOm0F/3s1koP8EeaNGW3x1ajEijhoZoNOSFJnGaEjIg7o+2UiSJjKnjJJPRhWAKgUCwaQIx29IqoHEjrSqB71eyS+vITswcSIsNUHHvzfN27SDP0fFUHdH2tYQc4lj8sq2rDYb2q8ixTsrJN/TIMmcRUsq2GfKYascu+k+JAI=
+	t=1768471435; cv=none; b=MWgklVIjDVQgrv4UTBT8zbYmSrwkTlmEOYDHjbWIHj1N0NfHSPLeF2y6c9xDcU0cP49t3WzJrdoxCs+EVN6ALA1bfzEXeLcJ708DKF7cZZypdcgb1dHHZl3Ojpvrvzchk2XJgARccMHxZVJsDQNsYF1ceFQngwdFVODk0Ost8TE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1768470613; c=relaxed/simple;
-	bh=PLmybabc8oOgIMMPz2cu7v6muPfVYZSQB3ZUj9GT3nY=;
-	h=From:Date:To:cc:Subject:In-Reply-To:Message-ID:References:
-	 MIME-Version:Content-Type; b=s7I6wTAj2H6XsEilQgDGAZBj75eEn+Y/omhm3w6cSpCnF4/pDKMQPRR0bvNzXrPNJxpvRTTLd5K9t3mMnn0clzAxuJ87Bp2PsKLrfW8G8EOPMQRba7nu8UOLprsLMmYgctb6GmzMJDMNwJLk4IoVNcSqGroxEmlgt8b98kq7Gcc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=pass smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=eX84eL7+; arc=none smtp.client-ip=198.175.65.13
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.intel.com
+	s=arc-20240116; t=1768471435; c=relaxed/simple;
+	bh=VKRspfwk/E0Ml02M5It3zrCx88fPV1OAFMqDvhWcVHU=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=DCH0+X9va3WnGnkxZWn5JvK3bq5x0IJBfEbWVt4gAXXatgDhvWT69tLj0cFFWhbQv9XhhL7vA69jV7FnNar5KnEFgxaHWTz5zBmRTbkCDwfckVBEYLDYyjHUsoWmLXBYq/1E7e5kZXV+CjCkD0+go1xDtgzSKJ702bvJnAUj8J8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=jLGbjzeY; arc=none smtp.client-ip=170.10.133.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="eX84eL7+"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1768470613; x=1800006613;
-  h=from:date:to:cc:subject:in-reply-to:message-id:
-   references:mime-version;
-  bh=PLmybabc8oOgIMMPz2cu7v6muPfVYZSQB3ZUj9GT3nY=;
-  b=eX84eL7+QM4hMwoOE9PeIy7uUrafBSE44Ew87J3Zm/txzj9/Di1lIUAy
-   gnMeos453rp107litoi4VNouw+h+PPHlYuvh2t1BC/X34z1wXJQLm0253
-   8AAQUtKv3Oo9rI035wIuS+riRTty1acb4SLLYECl/8xSjzr3TtltoeLnp
-   XGXeQjmpi0aonzot5aT0lBiddOeb2C4h9EJN+wGarAQUJ53dF4yp53bzZ
-   mFp60qLGediXTtl0OtL7bMFYfk1ApUel57LcRqL/AhwvhafepDZJWTqTG
-   23G1qzM1f/nkwGsVJKgO2m+x0Z3KgO4GPw/2v62RoPMh0fXra7zcE8/CJ
-   A==;
-X-CSE-ConnectionGUID: L+tGoqQGRVihO/VWgkApHw==
-X-CSE-MsgGUID: gNuVcmq/SGyeXINy0duTtQ==
-X-IronPort-AV: E=McAfee;i="6800,10657,11671"; a="80885279"
-X-IronPort-AV: E=Sophos;i="6.21,226,1763452800"; 
-   d="scan'208";a="80885279"
-Received: from orviesa003.jf.intel.com ([10.64.159.143])
-  by orvoesa105.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 15 Jan 2026 01:50:12 -0800
-X-CSE-ConnectionGUID: EXp0czF9Q66AXWiSPisqXw==
-X-CSE-MsgGUID: y/dEKkEMSy+xuCl+FMhr+Q==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.21,226,1763452800"; 
-   d="scan'208";a="209066493"
-Received: from ijarvine-mobl1.ger.corp.intel.com (HELO localhost) ([10.245.244.248])
-  by ORVIESA003-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 15 Jan 2026 01:50:09 -0800
-From: =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
-Date: Thu, 15 Jan 2026 11:50:05 +0200 (EET)
-To: Chen Ni <nichen@iscas.ac.cn>
-cc: hmh@hmh.eng.br, Mark Pearson <mpearson-lenovo@squebb.ca>, 
-    derekjohn.clark@gmail.com, Hans de Goede <hansg@kernel.org>, 
-    ibm-acpi-devel@lists.sourceforge.net, platform-driver-x86@vger.kernel.org, 
-    LKML <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH] platform/x86: thinkpad_acpi: Remove unneeded semicolon
-In-Reply-To: <20260115081636.164041-1-nichen@iscas.ac.cn>
-Message-ID: <19a1325c-692c-3d1e-2a1d-1fcf31fb1dcd@linux.intel.com>
-References: <20260115081636.164041-1-nichen@iscas.ac.cn>
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="jLGbjzeY"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1768471427;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:
+	 content-transfer-encoding:content-transfer-encoding;
+	bh=pPv1njqMSOp/eneqhdzPt0PfWlDoz+4scBCuvivC+m8=;
+	b=jLGbjzeYC/gZGjxNqk1ZPelm5dJqVcywAaaOR/VyvQK2D0hm/2TEkuA3wSs4nfR1jWdq5Y
+	eBuJqCRSKHLDDXiS0F/UbUu6weS/eXwAa2p5ES1eWwxEjL7MBw0SOvdxyndzHCKoSrunFW
+	ZFS6Lf993B20ZAkwAhiYzMrvwzqMydw=
+Received: from mx-prod-mc-06.mail-002.prod.us-west-2.aws.redhat.com
+ (ec2-35-165-154-97.us-west-2.compute.amazonaws.com [35.165.154.97]) by
+ relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
+ cipher=TLS_AES_256_GCM_SHA384) id us-mta-56-Z1WlxylvNkSboXVhnVTkKA-1; Thu,
+ 15 Jan 2026 05:03:43 -0500
+X-MC-Unique: Z1WlxylvNkSboXVhnVTkKA-1
+X-Mimecast-MFC-AGG-ID: Z1WlxylvNkSboXVhnVTkKA_1768471422
+Received: from mx-prod-int-06.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-06.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.93])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by mx-prod-mc-06.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 669D118005B3;
+	Thu, 15 Jan 2026 10:03:42 +0000 (UTC)
+Received: from mrout-thinkpadp16vgen1.punetw6.csb (unknown [10.74.64.47])
+	by mx-prod-int-06.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTP id 0D89B180009E;
+	Thu, 15 Jan 2026 10:03:38 +0000 (UTC)
+From: Malaya Kumar Rout <mrout@redhat.com>
+To: srinivas.pandruvada@linux.intel.com
+Cc: mrout@redhat.com,
+	malayarout91@gmail.com,
+	platform-driver-x86@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Subject: [PATCH] tools/power/x86/intel-speed-select: Fix file descriptor leak in isolate_cpus()
+Date: Thu, 15 Jan 2026 15:33:33 +0530
+Message-ID: <20260115100333.171244-1-mrout@redhat.com>
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 8bit
+X-Scanned-By: MIMEDefang 3.4.1 on 10.30.177.93
 
-On Thu, 15 Jan 2026, Chen Ni wrote:
+The file descriptor opened in isolate_cpus() when (!level) is true was
+not being closed before returning, causing a file descriptor leak in
+both the error path and the success path.
 
-> Remove unnecessary semicolons reported by Coccinelle/coccicheck and the
-> semantic patch at scripts/coccinelle/misc/semicolon.cocci.
-> 
-> Signed-off-by: Chen Ni <nichen@iscas.ac.cn>
-> ---
->  drivers/platform/x86/lenovo/thinkpad_acpi.c | 4 ++--
->  1 file changed, 2 insertions(+), 2 deletions(-)
-> 
-> diff --git a/drivers/platform/x86/lenovo/thinkpad_acpi.c b/drivers/platform/x86/lenovo/thinkpad_acpi.c
-> index a272f27e6227..6b0e4b4c485e 100644
-> --- a/drivers/platform/x86/lenovo/thinkpad_acpi.c
-> +++ b/drivers/platform/x86/lenovo/thinkpad_acpi.c
-> @@ -11164,7 +11164,7 @@ static bool display_damage(char *buf, int *count, char *type, unsigned int dmg_s
->  			break;
->  		default:
->  			pr_err("Unexpected value %d in switch statement\n", pos_status);
-> -		};
-> +		}
->  
->  		switch (panel_status) {
->  		case POS_LEFT:
-> @@ -11179,7 +11179,7 @@ static bool display_damage(char *buf, int *count, char *type, unsigned int dmg_s
->  		default:
->  			*count += sysfs_emit_at(buf, *count, "Undefined\n");
->  			break;
-> -		};
-> +		}
->  		damage_detected = true;
->  	}
->  	return damage_detected;
-> 
+When write() fails at line 950, the function returns at line 953 without
+closing the file descriptor. Similarly, on success, the function returns
+at line 956 without closing the file descriptor.
 
-Thanks, I've folded this into the original change.
+Add close(fd) calls before both return statements to fix the resource
+leak. This follows the same pattern used elsewhere in the same function
+where file descriptors are properly closed before returning (see lines
+1005 and 1027).
 
+Fixes: 997074df658e ("tools/power/x86/intel-speed-select: Use cgroup v2 isolation")
+Signed-off-by: Malaya Kumar Rout <mrout@redhat.com>
+---
+ tools/power/x86/intel-speed-select/isst-config.c | 2 ++
+ 1 file changed, 2 insertions(+)
+
+diff --git a/tools/power/x86/intel-speed-select/isst-config.c b/tools/power/x86/intel-speed-select/isst-config.c
+index 558138eea75e..d00d15490a98 100644
+--- a/tools/power/x86/intel-speed-select/isst-config.c
++++ b/tools/power/x86/intel-speed-select/isst-config.c
+@@ -950,9 +950,11 @@ int isolate_cpus(struct isst_id *id, int mask_size, cpu_set_t *cpu_mask, int lev
+ 		ret = write(fd, "member", strlen("member"));
+ 		if (ret == -1) {
+ 			printf("Can't update to member\n");
++			close(fd);
+ 			return ret;
+ 		}
+ 
++		close(fd);
+ 		return 0;
+ 	}
+ 
 -- 
- i.
+2.52.0
 
