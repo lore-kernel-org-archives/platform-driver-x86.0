@@ -1,127 +1,115 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.12])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 49C0036C0CC;
-	Thu, 15 Jan 2026 10:45:00 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A4BEE376BD5
+	for <platform-driver-x86@vger.kernel.org>; Thu, 15 Jan 2026 12:16:20 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.12
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1768473900; cv=none; b=qdzlAemVo7+4MCX/2IvV6t6yVALBtoJBpCpL+5BquJFmu9isMTdz3eQhZKoJiw8i6/NjsnXXCaqrl+K7n2jk51uyVQzM6TBsBCpObtK41ElBmubqgeA5FM7wwuOsrN63G3ICGng7zO5ksEbRccQIFMQZL5/n+gMOwJvu+xK+xIY=
+	t=1768479382; cv=none; b=ausyPic1kScDlGMI4MOTllORj7US5qC9VT3H/HnjG8hnr7fmxfhtihkThPoQioA5vnd0Xmni7S3JyxDsUUeC9DlntnqnxsbfnrRWAgaT5CQLg99nBK/4oLjthckNI7rK0pBAyrWVT6o8CkpSxkHgHt7q7DbLAD6RoBsRTHLh/EM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1768473900; c=relaxed/simple;
-	bh=KCf9/BUWQWrV3YzZSQGIBitilFEV6z7FvLz9+gF37+I=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=Oex+vl1fhQmlZHLjnjUgH+5Ef382bp86X6OXITRa7IBg95eYAos71Mwob4tzCX9dAc7V+3Xyuw0xM04P8va69RY6A3CisXeR/FgKkQMbOdeUT07/W2nlfyxpJIv/ECaL4M5nYkeGweZUQmu1p3roWABM8hPbdwwtmdNX6fBnaQo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=bzw1nZu0; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1768479382; c=relaxed/simple;
+	bh=mgtdeMRZ49GGOM7C7Ium8QI1Y3BTxTMbuTCncJWBHe4=;
+	h=From:Date:To:cc:Subject:In-Reply-To:Message-ID:References:
+	 MIME-Version:Content-Type; b=e48G/ixEUor1k9P/5J2R3U5nQbU6pksTEDJ2KEjsBfvGCs+JYAUluFTFP1i9Td2RKGgN/sC4YQtMfp7np1btWfXIsjzpXO17CaxAX5Rx8uEtXT0jzIgSmNpy+ZEy1l4JgH6m7fNsLltMN2XBv+3WYvIoSvVzmr0VpPvGTAVMxOw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=pass smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=Tg53stUw; arc=none smtp.client-ip=192.198.163.12
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="bzw1nZu0"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id AE9EAC116D0;
-	Thu, 15 Jan 2026 10:44:50 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1768473899;
-	bh=KCf9/BUWQWrV3YzZSQGIBitilFEV6z7FvLz9+gF37+I=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=bzw1nZu02dQejptA0JvWTI5Kzv8ZivGSWw//ar5HN7g3e3fvnK7diB8O0pmaWexh4
-	 5XojmtjQzGc+FqgbwVH2OFPPVeB906fgkmpSff5sPYhHM9sX74IQMkFXLXtpzuQfpO
-	 Pk8R5eLtUsALQjTeXVEzkQhHjDEr5iiYb4F3/cPOxl99In93iEdalxJ3MLkIBxWSLs
-	 H+RNlPsIdKmA7LfQjWgynvtJn1jEMFnR4fv0CDiviCt6UruWq6Lva0mb7fk3SP90DC
-	 JomhCfyV4tem4mdNhgWhbDBkTX7C0gcNvZ9B6aLLKSKPDPMSTV0V4oPzyFvhH5q9zu
-	 hvi8JEqsO6aag==
-Date: Thu, 15 Jan 2026 16:14:41 +0530
-From: Manivannan Sadhasivam <mani@kernel.org>
-To: Rob Herring <robh@kernel.org>
-Cc: Manivannan Sadhasivam <manivannan.sadhasivam@oss.qualcomm.com>, 
-	Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Jiri Slaby <jirislaby@kernel.org>, 
-	Nathan Chancellor <nathan@kernel.org>, Nicolas Schier <nicolas.schier@linux.dev>, 
-	Hans de Goede <hansg@kernel.org>, Ilpo =?utf-8?B?SsOkcnZpbmVu?= <ilpo.jarvinen@linux.intel.com>, 
-	Mark Pearson <mpearson-lenovo@squebb.ca>, "Derek J. Clark" <derekjohn.clark@gmail.com>, 
-	Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, 
-	Marcel Holtmann <marcel@holtmann.org>, Luiz Augusto von Dentz <luiz.dentz@gmail.com>, 
-	Bartosz Golaszewski <brgl@bgdev.pl>, Andy Shevchenko <andriy.shevchenko@linux.intel.com>, 
-	Bartosz Golaszewski <brgl@kernel.org>, linux-serial@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	linux-kbuild@vger.kernel.org, platform-driver-x86@vger.kernel.org, linux-pci@vger.kernel.org, 
-	devicetree@vger.kernel.org, linux-arm-msm@vger.kernel.org, linux-bluetooth@vger.kernel.org, 
-	linux-pm@vger.kernel.org, Stephan Gerhold <stephan.gerhold@linaro.org>, 
-	Dmitry Baryshkov <dmitry.baryshkov@oss.qualcomm.com>, linux-acpi@vger.kernel.org
-Subject: Re: [PATCH v4 5/9] dt-bindings: connector: Add PCIe M.2 Mechanical
- Key E connector
-Message-ID: <pfyzilu4xpggftei4th37uv7wb4gpfsntjlagctsydrrc35qci@4uyd3zog6t7j>
-References: <20260112-pci-m2-e-v4-0-eff84d2c6d26@oss.qualcomm.com>
- <20260112-pci-m2-e-v4-5-eff84d2c6d26@oss.qualcomm.com>
- <20260113171601.GB3925312-robh@kernel.org>
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="Tg53stUw"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1768479381; x=1800015381;
+  h=from:date:to:cc:subject:in-reply-to:message-id:
+   references:mime-version;
+  bh=mgtdeMRZ49GGOM7C7Ium8QI1Y3BTxTMbuTCncJWBHe4=;
+  b=Tg53stUwzMOfTmE0YZQLkeHZ+gKQtMFfnPUpZzKFaAXT2lfonRUQVUPv
+   0tQ2gRIlBz9NOVZudk5SCih4nIH+2GD4uhrjsrqp+2mMGBG4qj2+qnM1t
+   v0XI74rItElRgaWLLWOzVaBE1/sRRV5aKBYkkRryEKVAiOoMAPJQHE6Es
+   NmRsfMJU5Ay61D/TxrLA/6JgHjUuqYteJN4ZBtHSg2q7lvKxlmtCge7do
+   iJRPiUrAV429EV/2yDJiWsZXeLgy1oDZ8mmOEcaWYaQ97u1tKZKlP9+b/
+   LBI3RbOZRE5j1M0S6KGRUVT5HJJ8DASKNEUm+fip5sdCQVzIDdsk4Oe3a
+   A==;
+X-CSE-ConnectionGUID: v+M0KTL6R+m6FrzO/tvitw==
+X-CSE-MsgGUID: qT+PvIk1RLCCUMVG+FK/qg==
+X-IronPort-AV: E=McAfee;i="6800,10657,11671"; a="73634564"
+X-IronPort-AV: E=Sophos;i="6.21,228,1763452800"; 
+   d="scan'208";a="73634564"
+Received: from orviesa008.jf.intel.com ([10.64.159.148])
+  by fmvoesa106.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 15 Jan 2026 04:16:11 -0800
+X-CSE-ConnectionGUID: pZY79SWFTXGMP5l6nvyi2g==
+X-CSE-MsgGUID: ZtqiE62jS8y8lkRFmY1sBQ==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.21,228,1763452800"; 
+   d="scan'208";a="204996207"
+Received: from ijarvine-mobl1.ger.corp.intel.com (HELO localhost) ([10.245.244.248])
+  by orviesa008-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 15 Jan 2026 04:16:09 -0800
+From: =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
+Date: Thu, 15 Jan 2026 14:16:03 +0200 (EET)
+To: Mario Limonciello <mario.limonciello@amd.com>
+cc: jorge.lopez2@hp.com, Hans de Goede <hansg@kernel.org>, 
+    platform-driver-x86@vger.kernel.org
+Subject: Re: [PATCH] platform/x86/hp: hp-bioscfg: Fix kobject warnings for
+ empty attribute names
+In-Reply-To: <20260114221730.653822-1-mario.limonciello@amd.com>
+Message-ID: <b3654571-013d-1a3c-18da-33f67e17d225@linux.intel.com>
+References: <20260114221730.653822-1-mario.limonciello@amd.com>
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20260113171601.GB3925312-robh@kernel.org>
+Content-Type: text/plain; charset=US-ASCII
 
-On Tue, Jan 13, 2026 at 11:16:01AM -0600, Rob Herring wrote:
-> On Mon, Jan 12, 2026 at 09:56:04PM +0530, Manivannan Sadhasivam wrote:
-> > Add the devicetree binding for PCIe M.2 Mechanical Key E connector defined
-> > in the PCI Express M.2 Specification, r4.0, sec 5.1.2. This connector
-> > provides interfaces like PCIe or SDIO to attach the WiFi devices to the
-> > host machine, USB or UART+PCM interfaces to attach the Bluetooth (BT)
-> > devices. Spec also provides an optional interface to connect the UIM card,
-> > but that is not covered in this binding.
-> > 
-> > The connector provides a primary power supply of 3.3v, along with an
-> > optional 1.8v VIO supply for the Adapter I/O buffer circuitry operating at
-> > 1.8v sideband signaling.
-> > 
-> > The connector also supplies optional signals in the form of GPIOs for fine
-> > grained power management.
-> > 
-> > Signed-off-by: Manivannan Sadhasivam <manivannan.sadhasivam@oss.qualcomm.com>
-> > ---
-> >  .../bindings/connector/pcie-m2-e-connector.yaml    | 154 +++++++++++++++++++++
-> >  MAINTAINERS                                        |   1 +
-> >  2 files changed, 155 insertions(+)
-> > 
-> > diff --git a/Documentation/devicetree/bindings/connector/pcie-m2-e-connector.yaml b/Documentation/devicetree/bindings/connector/pcie-m2-e-connector.yaml
-> > new file mode 100644
-> > index 000000000000..b65b39ddfd19
-> > --- /dev/null
-> > +++ b/Documentation/devicetree/bindings/connector/pcie-m2-e-connector.yaml
-> > @@ -0,0 +1,154 @@
-> > +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
-> > +%YAML 1.2
-> > +---
-> > +$id: http://devicetree.org/schemas/connector/pcie-m2-e-connector.yaml#
-> > +$schema: http://devicetree.org/meta-schemas/core.yaml#
-> > +
-> > +title: PCIe M.2 Mechanical Key E Connector
-> > +
-> > +maintainers:
-> > +  - Manivannan Sadhasivam <manivannan.sadhasivam@oss.qualcomm.com>
-> > +
-> > +description:
-> > +  A PCIe M.2 E connector node represents a physical PCIe M.2 Mechanical Key E
-> > +  connector. Mechanical Key E connectors are used to connect Wireless
-> > +  Connectivity devices including combinations of Wi-Fi, BT, NFC to the host
-> > +  machine over interfaces like PCIe/SDIO, USB/UART+PCM, and I2C.
-> > +
-> > +properties:
-> > +  compatible:
-> > +    const: pcie-m2-e-connector
-> > +
-> > +  vpcie3v3-supply:
-> > +    description: A phandle to the regulator for 3.3v supply.
-> > +
-> > +  vpcie1v8-supply:
-> > +    description: A phandle to the regulator for VIO 1.8v supply.
-> > +
-> > +  ports:
+On Wed, 14 Jan 2026, Mario Limonciello wrote:
+
+> The hp-bioscfg driver attempts to register kobjects with empty names when
+> the HP BIOS returns attributes with empty name strings. This causes
+> multiple kernel warnings:
 > 
-> Also, nodes go after all properties.
+>   kobject: (00000000135fb5e6): attempted to be registered with empty name!
+>   WARNING: CPU: 14 PID: 3336 at lib/kobject.c:219 kobject_add_internal+0x2eb/0x310
 > 
+> Add validation in hp_init_bios_buffer_attribute() to check if the
+> attribute name is empty after parsing it from the WMI buffer. If empty,
+> log a debug message and skip registration of that attribute, allowing the
+> module to continue processing other valid attributes.
+> 
+> Signed-off-by: Mario Limonciello <mario.limonciello@amd.com>
 
-Ack.
+A Fixes tag?
 
-- Mani
+> ---
+>  drivers/platform/x86/hp/hp-bioscfg/bioscfg.c | 6 ++++++
+>  1 file changed, 6 insertions(+)
+> 
+> diff --git a/drivers/platform/x86/hp/hp-bioscfg/bioscfg.c b/drivers/platform/x86/hp/hp-bioscfg/bioscfg.c
+> index 5bfa7159f5bc..5bee916429aa 100644
+> --- a/drivers/platform/x86/hp/hp-bioscfg/bioscfg.c
+> +++ b/drivers/platform/x86/hp/hp-bioscfg/bioscfg.c
+> @@ -781,6 +781,12 @@ static int hp_init_bios_buffer_attribute(enum hp_wmi_data_type attr_type,
+>  	if (ret < 0)
+>  		goto buff_attr_exit;
+>  
+> +	if (strlen(str) == 0) {
+
++ #include.
+
+> +		pr_debug("Ignoring attribute with empty name\n");
+
+This too seems to lack an include.
+
+(Both problems seem to pre-exist.)
+
+> +		ret = 0;
+> +		goto buff_attr_exit;
+> +	}
+> +
+>  	if (attr_type == HPWMI_PASSWORD_TYPE ||
+>  	    attr_type == HPWMI_SECURE_PLATFORM_TYPE)
+>  		temp_kset = bioscfg_drv.authentication_dir_kset;
+> 
 
 -- 
-மணிவண்ணன் சதாசிவம்
+ i.
+
