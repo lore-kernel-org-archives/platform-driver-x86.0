@@ -1,91 +1,279 @@
-Received: from cstnet.cn (smtp81.cstnet.cn [159.226.251.81])
-	(using TLSv1.2 with cipher DHE-RSA-AES256-SHA (256/256 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.15])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 353BB32B9BD;
-	Thu, 15 Jan 2026 08:18:34 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=159.226.251.81
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DC9DE329E46;
+	Thu, 15 Jan 2026 08:29:20 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.15
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1768465118; cv=none; b=rRCM7/4EFMRpVQmITCSWOJnRbeDlhM92hOHRWyPHYVFYr4dKY780GntpAu3UvOGw9KokYyG1Zbb/4vHFnH4FFu7PPquA5G5HmAp9m2QxFhrMQ5f2/gAKXXkeVZ74rRQbgKXtGb+cmWXklsCgSrLff7S8IlrmXor4yLnh5gMmtyg=
+	t=1768465763; cv=none; b=Nn7G1hUuzcdH0qEemCW760mAlc4BX1xuNXOa0i10FgNp22UxY3XVbcJIVyZuMO3cS13uOA8pJfI5Xtn7NCmYylBfUU8qrX9EpsgYpiaNceXsPr8RjQn9PMobC+qbxwAQN39sQAsRS67T03WrKDYFxAuj/wQZYGgQBqStWgmd8EA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1768465118; c=relaxed/simple;
-	bh=udHLRBVZSBvvjXSa2jYMIcC0XUC3xK09ybchmNCCbq8=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=e+AQDeG9HNs+pzuSqxOlHI6hQcwccA7+HD1/VKonqq7SZsvTLOXZ09oZvm/VUWVn01DUhCLh4rgMB8cYRFTYo8Cu3c0NwEdvozHcDe2PlR/esbpKUFO4OM9X9hA2LU9CpwF6hd89c6IHI9Gcsv2ouzZSwHZMM/GE5tMk+FahkBA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=iscas.ac.cn; spf=pass smtp.mailfrom=iscas.ac.cn; arc=none smtp.client-ip=159.226.251.81
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=iscas.ac.cn
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=iscas.ac.cn
-Received: from localhost (unknown [124.16.138.129])
-	by APP-03 (Coremail) with SMTP id rQCowACHa+LMomhpmq04BQ--.64122S2;
-	Thu, 15 Jan 2026 16:18:20 +0800 (CST)
-From: Chen Ni <nichen@iscas.ac.cn>
-To: hmh@hmh.eng.br,
-	mpearson-lenovo@squebb.ca,
-	derekjohn.clark@gmail.com,
-	hansg@kernel.org,
-	ilpo.jarvinen@linux.intel.com
-Cc: ibm-acpi-devel@lists.sourceforge.net,
-	platform-driver-x86@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	Chen Ni <nichen@iscas.ac.cn>
-Subject: [PATCH] platform/x86: thinkpad_acpi: Remove unneeded semicolon
-Date: Thu, 15 Jan 2026 16:16:36 +0800
-Message-Id: <20260115081636.164041-1-nichen@iscas.ac.cn>
-X-Mailer: git-send-email 2.25.1
+	s=arc-20240116; t=1768465763; c=relaxed/simple;
+	bh=Ol/cE9aNvuG9XmkQehtZm2Fvdyz9jcWSI88dcqprOt0=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=tj7SPD6IAtt2Yym2/QslozmdnavexhTFwL9l1P2TAk7C8ZIcJi6miY+dmuE7K3It9hrkAG1kgwuQzR8J3nRfQ2ntpYn9m2LiawrbfQ0lhJu2btknD8DNZqgL1rPFpqy41eMq6kkeVEd5GrgrYq75Oq1gtXvMFfJw/597zB6Ez5Q=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=pass smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=EpgZPBOw; arc=none smtp.client-ip=198.175.65.15
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="EpgZPBOw"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1768465761; x=1800001761;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=Ol/cE9aNvuG9XmkQehtZm2Fvdyz9jcWSI88dcqprOt0=;
+  b=EpgZPBOw4UApAixEzwrS8deTBD+c/tL4Um6Wuj/9SDhT1N4DaTU9NPiN
+   7XCPMCLuH/6snvGtzktppd09UXIFNJtnlbu/D3rg2FpJUqlsV/K+rsKLl
+   jgLBZdudPXYcjSEBueBXNUU7+AlxC10GhUqdyeWWTIyyjfrPbmchZ8Upv
+   AxLZa8CFrGBrS+y42Mfwvc5i/B/ctOs77kRan9zWAWoDwDCDL18/xmngr
+   tSrBJ1gdAZ3vASJ1QHe2/TnzMpdSaQHe30n5tDHjHnFiwUZ8+5y1eUGbj
+   PEnFSH2HDBzu05+/3nQyDgXSn7OCniIvgNt55nvED7eOGGx1/VnLPiUCe
+   Q==;
+X-CSE-ConnectionGUID: ryLmuJmUQl200xMdaaOWzw==
+X-CSE-MsgGUID: U0034n3TQzq/0Gqvl3AzRA==
+X-IronPort-AV: E=McAfee;i="6800,10657,11671"; a="73402243"
+X-IronPort-AV: E=Sophos;i="6.21,226,1763452800"; 
+   d="scan'208";a="73402243"
+Received: from fmviesa008.fm.intel.com ([10.60.135.148])
+  by orvoesa107.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 15 Jan 2026 00:29:20 -0800
+X-CSE-ConnectionGUID: y0J6NPZBQ+yv3ABpdzIgIA==
+X-CSE-MsgGUID: r7LXLZ93QEy6BTOagW6k+g==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.21,226,1763452800"; 
+   d="scan'208";a="205183049"
+Received: from egrumbac-mobl6.ger.corp.intel.com (HELO localhost) ([10.245.244.216])
+  by fmviesa008-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 15 Jan 2026 00:29:17 -0800
+Date: Thu, 15 Jan 2026 10:29:14 +0200
+From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+To: Ciju Rajan K <crajank@nvidia.com>
+Cc: hdegoede@redhat.com, ilpo.jarvinen@linux.intel.com, tglx@linutronix.de,
+	christophe.jaillet@wanadoo.fr, vadimp@nvidia.com,
+	platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH platform-next v4 1/2] kernel/irq: Add generic interrupt
+ storm detection mechanism
+Message-ID: <aWilWsTaAZeH8x1x@smile.fi.intel.com>
+References: <20260115074909.245852-1-crajank@nvidia.com>
+ <20260115074909.245852-2-crajank@nvidia.com>
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-CM-TRANSID:rQCowACHa+LMomhpmq04BQ--.64122S2
-X-Coremail-Antispam: 1UD129KBjvdXoWrZFWDuF4rXw4DWrWDCF1kuFg_yoWDKFb_uF
-	109w17uw1DGFn0kF12yr4fZr9xt3WxWFW8GF9ayF4aya4UZayUtryavFW3Jw45uryjyrW5
-	W3ykGr9I934SvjkaLaAFLSUrUUUU8b8apTn2vfkv8UJUUUU8Yxn0WfASr-VFAUDa7-sFnT
-	9fnUUIcSsGvfJTRUUUbaAFF20E14v26r4j6ryUM7CY07I20VC2zVCF04k26cxKx2IYs7xG
-	6rWj6s0DM7CIcVAFz4kK6r1j6r18M28lY4IEw2IIxxk0rwA2F7IY1VAKz4vEj48ve4kI8w
-	A2z4x0Y4vE2Ix0cI8IcVAFwI0_Xr0_Ar1l84ACjcxK6xIIjxv20xvEc7CjxVAFwI0_Gr1j
-	6F4UJwA2z4x0Y4vEx4A2jsIE14v26rxl6s0DM28EF7xvwVC2z280aVCY1x0267AKxVW0oV
-	Cq3wAaw2AFwI0_Jrv_JF1le2I262IYc4CY6c8Ij28IcVAaY2xG8wAqx4xG64xvF2IEw4CE
-	5I8CrVC2j2WlYx0E2Ix0cI8IcVAFwI0_Wrv_ZF1lYx0Ex4A2jsIE14v26rkl6F8dMcvjeV
-	CFs4IE7xkEbVWUJVW8JwACjcxG0xvY0x0EwIxGrwACjI8F5VA0II8E6IAqYI8I648v4I1l
-	c7CjxVAaw2AFwI0_Jw0_GFylc2xSY4AK67AK6r43MxAIw28IcxkI7VAKI48JMxC20s026x
-	CaFVCjc4AY6r1j6r4UMI8I3I0E5I8CrVAFwI0_Jr0_Jr4lx2IqxVCjr7xvwVAFwI0_JrI_
-	JrWlx4CE17CEb7AF67AKxVWUtVW8ZwCIc40Y0x0EwIxGrwCI42IY6xIIjxv20xvE14v26r
-	1j6r1xMIIF0xvE2Ix0cI8IcVCY1x0267AKxVW8JVWxJwCI42IY6xAIw20EY4v20xvaj40_
-	Jr0_JF4lIxAIcVC2z280aVAFwI0_Jr0_Gr1lIxAIcVC2z280aVCY1x0267AKxVW8JVW8Jr
-	UvcSsGvfC2KfnxnUUI43ZEXa7sR_hSdPUUUUU==
-X-CM-SenderInfo: xqlfxv3q6l2u1dvotugofq/
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20260115074909.245852-2-crajank@nvidia.com>
+Organization: Intel Finland Oy - BIC 0357606-4 - c/o Alberga Business Park, 6
+ krs, Bertel Jungin Aukio 5, 02600 Espoo
 
-Remove unnecessary semicolons reported by Coccinelle/coccicheck and the
-semantic patch at scripts/coccinelle/misc/semicolon.cocci.
+On Thu, Jan 15, 2026 at 09:49:08AM +0200, Ciju Rajan K wrote:
+> If the hardware is broken, it is possible that faulty device will
+> flood interrupt handler with false events. For example, if fan or
+> power supply has damaged presence pin, it will cause permanent
 
-Signed-off-by: Chen Ni <nichen@iscas.ac.cn>
----
- drivers/platform/x86/lenovo/thinkpad_acpi.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+I would say "has a floating presence pin" as the term floating is
+well established and describes the case exactly how you put it further
+in the text.
 
-diff --git a/drivers/platform/x86/lenovo/thinkpad_acpi.c b/drivers/platform/x86/lenovo/thinkpad_acpi.c
-index a272f27e6227..6b0e4b4c485e 100644
---- a/drivers/platform/x86/lenovo/thinkpad_acpi.c
-+++ b/drivers/platform/x86/lenovo/thinkpad_acpi.c
-@@ -11164,7 +11164,7 @@ static bool display_damage(char *buf, int *count, char *type, unsigned int dmg_s
- 			break;
- 		default:
- 			pr_err("Unexpected value %d in switch statement\n", pos_status);
--		};
-+		}
- 
- 		switch (panel_status) {
- 		case POS_LEFT:
-@@ -11179,7 +11179,7 @@ static bool display_damage(char *buf, int *count, char *type, unsigned int dmg_s
- 		default:
- 			*count += sysfs_emit_at(buf, *count, "Undefined\n");
- 			break;
--		};
-+		}
- 		damage_detected = true;
- 	}
- 	return damage_detected;
+> generation of plugged in / plugged out events. As a result, interrupt
+> handler will consume a lot of CPU resources and will keep raising
+> "UDEV" events to the user space.
+> 
+> This patch provides a mechanism for detecting interrupt storm.
+> Use the following criteria: if the specific interrupt was generated
+> 'N' times during 'T' seconds, such device is to be considered as
+> broken and user will be notified through a call back function.
+> This feature can be used by any kernel subsystems or drivers.
+> 
+> The implementation includes:
+> 
+> - irq_storm_cb_t: Callback function type for storm notifications
+> - struct irq_storm: Per-IRQ storm detection data structure
+> - irq_register_storm_detection(): Register storm detection with
+> 				  configurable parameters
+> - irq_unregister_storm_detection(): Unregister storm detection
+> - Integration with note_interrupt() for automatic storm checking
+> 
+> Callback API parameters:
+> - irq: interrupt number to monitor
+> - max_freq: maximum allowed frequency (interrupts per second)
+> - dev_id: device identifier passed to callback
+
+...
+
+> --- a/include/linux/interrupt.h
+> +++ b/include/linux/interrupt.h
+> @@ -20,6 +20,7 @@
+>  #include <asm/ptrace.h>
+>  #include <asm/irq.h>
+>  #include <asm/sections.h>
+> +#include <linux/jiffies.h>
+
+I would not mix linux/* group with asm/* group and to me the best location for
+this inclusion is just before kref.h. Note, this header needs a bit more of
+a cleanup, as it includes basically everything (due to kernel.h and maybe other
+messed up headers). But this is out of scope of your series.
+
+...
+
+>  extern int irq_can_set_affinity(unsigned int irq);
+>  extern int irq_select_affinity(unsigned int irq);
+
+> +extern bool irq_register_storm_detection(unsigned int irq, unsigned int max_freq,
+> +					 irq_storm_cb_t cb, void *dev_id);
+> +extern void irq_unregister_storm_detection(unsigned int irq);
+
+Do we still need "extern" keyword?
+
+>  extern int __irq_apply_affinity_hint(unsigned int irq, const struct cpumask *m,
+>  				     bool setaffinity);
+
+...
+
+> +struct irq_storm {
+> +	unsigned long		max_cnt;
+> +	unsigned long		last_cnt;
+> +	unsigned long		next_period;
+> +	irq_storm_cb_t		cb;
+> +	void			*dev_id;
+> +};
+
+I'm wondering if you have tried to shuffle this layout based on the frequency
+of a use of each member. In some cases it might generate less code (can be
+measured with bloat-o-meter).
+
+...
+
+> static struct irqaction *__free_irq(struct irq_desc *desc, void *dev_id)
+
+>  		irq_release_resources(desc);
+>  		chip_bus_sync_unlock(desc);
+>  		irq_remove_timings(desc);
+
+> +		if (desc->irq_storm) {
+
+Unneeded (duplicate) check.
+
+> +			kfree(desc->irq_storm);
+
+> +			desc->irq_storm = NULL;
+
+Do we need this? If so, still can be done unconditionally.
+
+> +		}
+>  	}
+
+> +/* Minimum frequency threshold */
+> +#define IRQ_STORM_MIN_FREQ_HZ		50
+> +#define IRQ_STORM_MAX_FREQ_SCALE	(IRQ_STORM_MIN_FREQ_HZ * 2)
+
+Plain numbers are easier to read, hence 100
+
+> +/* Time window over which storm check is performed */
+> +#define IRQ_STORM_PERIOD_WINDOW_MS	(IRQ_STORM_MIN_FREQ_HZ * 20)
+
+MS = HZ?! It's from some other universe with different physics laws.
+
+...
+
+> + * Returns: true on success, false on failure
+
+Are the rest use "Returns" (with "s")? Because the main keyword is "Return".
+(Yes, "Returns" works, but it's a secondary one, not even documented IIRC.)
+
+...
+
+> +bool irq_register_storm_detection(unsigned int irq, unsigned int max_freq,
+> +				  irq_storm_cb_t cb, void *dev_id)
+> +{
+> +	struct irq_storm *storm;
+> +	bool ret = false;
+> +
+> +	if (max_freq < IRQ_STORM_MIN_FREQ_HZ || !cb)
+> +		return false;
+> +
+> +	storm = kzalloc(sizeof(*storm), GFP_KERNEL);
+> +	if (!storm)
+> +		return false;
+> +
+> +	/* Adjust to count per 10ms */
+> +	storm->max_cnt = max_freq / (IRQ_STORM_MAX_FREQ_SCALE);
+> +	storm->cb = cb;
+> +	storm->dev_id = dev_id;
+> +
+> +	scoped_irqdesc_get_and_buslock(irq, IRQ_GET_DESC_CHECK_GLOBAL) {
+> +		if (scoped_irqdesc->action && !scoped_irqdesc->irq_storm) {
+> +			storm->last_cnt = scoped_irqdesc->tot_count;
+> +			storm->next_period = jiffies + msecs_to_jiffies(IRQ_STORM_PERIOD_WINDOW_MS);
+> +			scoped_irqdesc->irq_storm = storm;
+> +			ret = true;
+> +		}
+> +	}
+
+> +	if (!ret)
+> +		kfree(storm);
+> +
+> +	return ret;
+
+Better to avoid negative conditionals in such contexts.
+
+	if (ret)
+		return ret;
+
+	kfree(...);
+
+But it's boolean and assigned inside scoped section. Why we can't return true
+directly from scoped section?
+
+> +}
+
+...
+
+> +void irq_unregister_storm_detection(unsigned int irq)
+> +{
+> +	scoped_irqdesc_get_and_buslock(irq, IRQ_GET_DESC_CHECK_GLOBAL) {
+
+> +		if (scoped_irqdesc->irq_storm) {
+
+Dup check, drop it.
+
+> +			kfree(scoped_irqdesc->irq_storm);
+> +			scoped_irqdesc->irq_storm = NULL;
+> +		}
+> +	}
+> +}
+
+...
+
+> +static void irq_storm_check(struct irq_desc *desc)
+> +{
+> +	struct irq_storm *storm = desc->irq_storm;
+> +	unsigned long delta, now = jiffies;
+> +
+> +	if (!time_after_eq(now, storm->next_period))
+> +		return;
+
+> +	storm->next_period = now + msecs_to_jiffies(IRQ_STORM_PERIOD_WINDOW_MS);
+
+Just do
+
+#define IRQ_STORM_PERIOD_WINDOW		msecs_to_jiffies(1000)
+
+It will address my above comment and make this be read better.
+
+> +	delta = desc->tot_count - storm->last_cnt;
+> +	storm->last_cnt = desc->tot_count;
+> +	if (delta > storm->max_cnt) {
+> +		/* Calculate actual frequency: interrupts per second */
+> +		storm->cb(irq_desc_get_irq(desc),
+> +			(delta * (IRQ_STORM_MAX_FREQ_SCALE)),
+> +			storm->dev_id);
+> +	}
+> +}
+
+
 -- 
-2.25.1
+With Best Regards,
+Andy Shevchenko
+
 
