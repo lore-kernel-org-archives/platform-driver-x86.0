@@ -1,41 +1,41 @@
 Received: from mout.gmx.net (mout.gmx.net [212.227.17.22])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1BA8930DED8;
-	Thu, 15 Jan 2026 20:41:21 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D4B412D73AE;
+	Thu, 15 Jan 2026 20:41:34 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=212.227.17.22
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1768509685; cv=none; b=ZTZ42OKViSJJwAKByphmid266HnJmZk/EFBEPGOI7YGcNlOfvBnodHwr/QZthTNwIRvmVx6puQ4pH8DSLS/aTFjMuKbuS0F1nsbVHnPODP/kSDHMPTQn9XojgCBUbq10hiTIkQNBLeN2ZQIrBQxpCtGhbPWBgCgpudoJzwBGAhg=
+	t=1768509697; cv=none; b=Py0MD2xsoW0VN1lEzfV/JiogdPMpHy2PMudUfXrF9nxkwm7iKA7tHI2Swa1kec1wCTU9Ld3n+xhWeYD86BbEYImFAx4H5uE6Z3wVf0XYcZ+4MzV8j3vSx89Uo+JIwvQdPdrCL1jOTvwv+SFMKm2VcEz2VcQs7aIsKk4XYuSlFsk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1768509685; c=relaxed/simple;
-	bh=iMWx1KI0G6DC9SOzHG3RclyntzfXxTAdoCS8KTRYJGk=;
+	s=arc-20240116; t=1768509697; c=relaxed/simple;
+	bh=gd7km78Y96pYIyZ67ps5hIwGI8hrBo+A/y8zHPdMB9M=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=enSDQkDD8o//Nf0UvUidVECLJ7KnPqtAKOeEd8Iiy/Bi5LThaIpPHddjaiLufa79ha4CbDJZGe06eTAjvFEeVBw3n/c3rf3aIrYwZlpG2V6chB6H+CxfANYFNhi6973aX3f0+GWQ11nEjAAUlk4zJev61QgyH7da5JxJWWBHwm0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gmx.de; spf=pass smtp.mailfrom=gmx.de; dkim=pass (2048-bit key) header.d=gmx.de header.i=w_armin@gmx.de header.b=qHh3OspB; arc=none smtp.client-ip=212.227.17.22
+	 In-Reply-To:Content-Type; b=kUeNi9N7nHVxc9AT6OU9/XLcR5yqxh6uaGzM1uDx8xcoS40QVG6j8kt2Z4++iTFvglyBUngIIzIGOgjxxzcutWeR0qX7Bz5KJhs/Stewb0p2lUrj9Sk0F8HR1dv4KDRj6qp1+mZR/OjFTDsRgTk67n/FdA0eJ/vZ5l8Ca/JTNf4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gmx.de; spf=pass smtp.mailfrom=gmx.de; dkim=pass (2048-bit key) header.d=gmx.de header.i=w_armin@gmx.de header.b=EBrf6ii7; arc=none smtp.client-ip=212.227.17.22
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gmx.de
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmx.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmx.de header.i=w_armin@gmx.de header.b="qHh3OspB"
+	dkim=pass (2048-bit key) header.d=gmx.de header.i=w_armin@gmx.de header.b="EBrf6ii7"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=gmx.de;
-	s=s31663417; t=1768509669; x=1769114469; i=w_armin@gmx.de;
-	bh=irQoFQEbAo7CPhqJ7cmsyiwqZsf+fHq7fOdppVQr814=;
+	s=s31663417; t=1768509689; x=1769114489; i=w_armin@gmx.de;
+	bh=lbeoEuxd5hDytzt/L4NZB/mxpNvfE4kbiE+x0M0GnaQ=;
 	h=X-UI-Sender-Class:Message-ID:Date:MIME-Version:Subject:To:Cc:
 	 References:From:In-Reply-To:Content-Type:
 	 Content-Transfer-Encoding:cc:content-transfer-encoding:
 	 content-type:date:from:message-id:mime-version:reply-to:subject:
 	 to;
-	b=qHh3OspBefTVK0vzhUOgmVhjOt6+mhUh1mDufu4XQcdxzGYlTGkv2U10ZWA+920W
-	 yuYCpZyzIwSS9JajpjwJVskRz8xHH6YqrVAmwVs+bRdYMRoycEqSmSBGtUvYSc2ug
-	 LbfecCZavkUZrgvgjRFbe1bTUdnow2noKuPARSVQwmb3etQ6z9ikmMdJ7nSU43VLf
-	 h+MawCl50cfP+49BeHoIGaDgpwgslIk4LMrbCq3KicM/vButz2fkxFrXt4m3gNsso
-	 kXIMMBibWVDM9PD0CVdXPEN2lsdfsSOR/WrJBhn82fiKVRvA7qPqQdjtiXJpIm1C1
-	 KDwGQTM1JhtY3Udmmg==
+	b=EBrf6ii7hJuvervds/y1Wdxt+fExxCSGMFJ9/bpVhPuZo1qx50lZKAkQb5pdVZx1
+	 drKeuNX6FEc82ojl3cgCNzc59f8mqz1Vx0jVFqRJj19C7L4cvzO56t49R/QbNQFko
+	 3e+Qic4o7LGpf2dWiB8U0qu1or+pXV+6V5nQ4tUZQsEVf8qFYVoJZU5eCDN74Vp97
+	 yDpLFnT8XNTTrO1l0OGTNrLxDyRQR9kE/GcXWqIbNODFeOF7k7Z030PAxW6zVbAXx
+	 R+nxgEPZHinfpB1KE1Z58L3QCL0cp/hzO+c8KIMqIPIhLJgYSbXAp0WoQ+ryveIlS
+	 fq8MnmPMmkl6rEYSDA==
 X-UI-Sender-Class: 724b4f7f-cbec-4199-ad4e-598c01a50d3a
-Received: from [192.168.0.69] ([93.202.247.91]) by mail.gmx.net (mrgmx104
- [212.227.17.168]) with ESMTPSA (Nemesis) id 1Mbir8-1wFHjv0GDe-00fpyQ; Thu, 15
- Jan 2026 21:41:09 +0100
-Message-ID: <dcdca55c-ab8e-445a-9d42-f6e82e836bd2@gmx.de>
-Date: Thu, 15 Jan 2026 21:41:07 +0100
+Received: from [192.168.0.69] ([93.202.247.91]) by mail.gmx.net (mrgmx105
+ [212.227.17.168]) with ESMTPSA (Nemesis) id 1MLzBp-1vOXlY1plR-00QNyM; Thu, 15
+ Jan 2026 21:41:29 +0100
+Message-ID: <f07ab255-0783-480d-b224-b007099f469e@gmx.de>
+Date: Thu, 15 Jan 2026 21:41:27 +0100
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
@@ -43,846 +43,614 @@ List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 1/2] platform/x86: uniwill-laptop: Introduce device
- descriptor system
+Subject: Re: [PATCH 2/2] platform/x86/uniwill: Implement cTGP setting
 To: Werner Sembach <wse@tuxedocomputers.com>, Hans de Goede
  <hansg@kernel.org>, =?UTF-8?Q?Ilpo_J=C3=A4rvinen?=
  <ilpo.jarvinen@linux.intel.com>
 Cc: platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
 References: <20260115154332.402873-1-wse@tuxedocomputers.com>
+ <20260115154332.402873-2-wse@tuxedocomputers.com>
 Content-Language: en-US
 From: Armin Wolf <W_Armin@gmx.de>
-In-Reply-To: <20260115154332.402873-1-wse@tuxedocomputers.com>
+In-Reply-To: <20260115154332.402873-2-wse@tuxedocomputers.com>
 Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: quoted-printable
-X-Provags-ID: V03:K1:05z+FcK8cXYy3dVo4Lshb13a6y1muwIHJxFDMm6jkDXiiNgJAZo
- Mf+17CSqM4zeyosyXRcxdVbnKXRcXZe7DR2CiIwiLoE5uHahJDvc7382nmiQAp6IGraRLBM
- SdKpX+RInHwUFDKm+1xIgWo0UTxIvDoZHRvto7dPi4ziwwlgaGshvEPUjmcTsZA5XlRu7Ga
- 9EBR0kHLetpCH3jSjOnIA==
+X-Provags-ID: V03:K1:gct6IgELKIUWK0Cml6OYQ8b0nrtzTaD+qK+VdS/QOu6ulTeGAhC
+ BrapeSqjP0X6hLz6z5oHFoc82zO2MHsiDrr5tDwTW45vczMRKumkKqzkuhoXQfyYxOmhU9v
+ 2ZXV4MWjPQldR0dJj2jKr3fa2IA8+d2WX3Up9ZHF60iAsy+/8pPAsFBaT/qT86iTNPJKuJs
+ 23tG7xlLwHzYA2K9ud5nw==
 X-Spam-Flag: NO
-UI-OutboundReport: notjunk:1;M01:P0:0DeI7GMd6g4=;dJlH120t894ag60SEWg91fGjT/2
- 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
+UI-OutboundReport: notjunk:1;M01:P0:y/E+4cBZ67E=;xyuIzucWSb0i3S0pXocyW6590yo
+ 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
+ xrFo/Pwc=
 
 Am 15.01.26 um 16:42 schrieb Werner Sembach:
 
-> From: Armin Wolf <W_Armin@gmx.de>
+> Uniwill offers user setable cTGP for their EC on devices using NVIDIA 30=
+00
+> Series and newer GPUs. This patch implements this setting as a sysfs
+> attribute.
 >
-> Future additions to the driver will depend on device-specific
-> initialization steps. Extend the DMI-based feature detection system
-> to include device descriptors. Each descriptor contains a bitmap of
-> supported features and a set of callback for performing
-> device-specific initialization.
+> For one device, the TUXEDO InfinityBook Gen7, the variant with and witho=
+ut
+> NVIDIA GPU can't be differentiated using only the DMI strings, so the ne=
+w
+> probe callback needs to be used to test a bit from the EC memory.
 
 Reviewed-by: Armin Wolf <W_Armin@gmx.de>
 
+> Co-developed-by: Armin Wolf <W_Armin@gmx.de>
 > Signed-off-by: Armin Wolf <W_Armin@gmx.de>
-> Co-developed-by: Werner Sembach <wse@tuxedocomputers.com>
 > Signed-off-by: Werner Sembach <wse@tuxedocomputers.com>
 > ---
->   drivers/platform/x86/uniwill/uniwill-acpi.c | 157 ++++++++++++++++----
->   1 file changed, 131 insertions(+), 26 deletions(-)
+>   drivers/platform/x86/uniwill/uniwill-acpi.c | 189 +++++++++++++++++---
+>   1 file changed, 163 insertions(+), 26 deletions(-)
 >
 > diff --git a/drivers/platform/x86/uniwill/uniwill-acpi.c b/drivers/platf=
 orm/x86/uniwill/uniwill-acpi.c
-> index 0f935532f2504..3d8c136e36219 100644
+> index 3d8c136e36219..8f843b5d7e4bd 100644
 > --- a/drivers/platform/x86/uniwill/uniwill-acpi.c
 > +++ b/drivers/platform/x86/uniwill/uniwill-acpi.c
-> @@ -322,6 +322,7 @@ struct uniwill_data {
->   	struct device *dev;
->   	acpi_handle handle;
->   	struct regmap *regmap;
-> +	unsigned int features;
->   	struct acpi_battery_hook hook;
->   	unsigned int last_charge_ctrl;
->   	struct mutex battery_lock;	/* Protects the list of currently register=
-ed batteries */
-> @@ -341,12 +342,21 @@ struct uniwill_battery_entry {
->   	struct power_supply *battery;
->   };
+> @@ -88,6 +88,9 @@
 >  =20
-> +struct uniwill_device_descriptor {
-> +	unsigned int features;
-> +	/* Executed during driver probing */
-> +	int (*probe)(struct uniwill_data *data);
-> +};
+>   #define EC_ADDR_GPU_TEMP		0x044F
+>  =20
+> +#define EC_ADDR_SYSTEM_ID		0x0456
+> +#define HAS_GPU				BIT(7)
 > +
->   static bool force;
->   module_param_unsafe(force, bool, 0);
->   MODULE_PARM_DESC(force, "Force loading without checking for supported =
-devices\n");
+>   #define EC_ADDR_MAIN_FAN_RPM_1		0x0464
 >  =20
-> -/* Feature bitmask since the associated registers are not reliable */
-> -static unsigned int supported_features;
-> +/*
-> + * Contains device specific data like the feature bitmap since
-> + * the associated registers are not always reliable.
-> + */
-> +static struct uniwill_device_descriptor device_descriptor __ro_after_in=
-it;
+>   #define EC_ADDR_MAIN_FAN_RPM_2		0x0465
+> @@ -122,11 +125,11 @@
+>   #define CTGP_DB_DB_ENABLE		BIT(1)
+>   #define CTGP_DB_CTGP_ENABLE		BIT(2)
 >  =20
->   static const char * const uniwill_temp_labels[] =3D {
->   	"CPU",
-> @@ -411,6 +421,12 @@ static const struct key_entry uniwill_keymap[] =3D =
-{
->   	{ KE_END }
->   };
+> -#define EC_ADDR_CTGP_OFFSET		0x0744
+> +#define EC_ADDR_CTGP_DB_CTGP_OFFSET	0x0744
 >  =20
-> +static inline bool uniwill_device_supports(struct uniwill_data *data,
-> +					   unsigned int features)
+> -#define EC_ADDR_TPP_OFFSET		0x0745
+> +#define EC_ADDR_CTGP_DB_TPP_OFFSET	0x0745
+>  =20
+> -#define EC_ADDR_MAX_TGP			0x0746
+> +#define EC_ADDR_CTGP_DB_DB_OFFSET	0x0746
+>  =20
+>   #define EC_ADDR_LIGHTBAR_AC_CTRL	0x0748
+>   #define LIGHTBAR_APP_EXISTS		BIT(0)
+> @@ -317,6 +320,7 @@
+>   #define UNIWILL_FEATURE_LIGHTBAR		BIT(3)
+>   #define UNIWILL_FEATURE_BATTERY			BIT(4)
+>   #define UNIWILL_FEATURE_HWMON			BIT(5)
+> +#define UNIWILL_FEATURE_NVIDIA_CTGP_CONTROL	BIT(6)
+>  =20
+>   struct uniwill_data {
+>   	struct device *dev;
+> @@ -514,6 +518,10 @@ static bool uniwill_writeable_reg(struct device *de=
+v, unsigned int reg)
+>   	case EC_ADDR_LIGHTBAR_BAT_RED:
+>   	case EC_ADDR_LIGHTBAR_BAT_GREEN:
+>   	case EC_ADDR_LIGHTBAR_BAT_BLUE:
+> +	case EC_ADDR_CTGP_DB_CTRL:
+> +	case EC_ADDR_CTGP_DB_CTGP_OFFSET:
+> +	case EC_ADDR_CTGP_DB_TPP_OFFSET:
+> +	case EC_ADDR_CTGP_DB_DB_OFFSET:
+>   		return true;
+>   	default:
+>   		return false;
+> @@ -547,6 +555,11 @@ static bool uniwill_readable_reg(struct device *dev=
+, unsigned int reg)
+>   	case EC_ADDR_LIGHTBAR_BAT_RED:
+>   	case EC_ADDR_LIGHTBAR_BAT_GREEN:
+>   	case EC_ADDR_LIGHTBAR_BAT_BLUE:
+> +	case EC_ADDR_SYSTEM_ID:
+> +	case EC_ADDR_CTGP_DB_CTRL:
+> +	case EC_ADDR_CTGP_DB_CTGP_OFFSET:
+> +	case EC_ADDR_CTGP_DB_TPP_OFFSET:
+> +	case EC_ADDR_CTGP_DB_DB_OFFSET:
+>   		return true;
+>   	default:
+>   		return false;
+> @@ -802,6 +815,70 @@ static ssize_t breathing_in_suspend_show(struct dev=
+ice *dev, struct device_attri
+>  =20
+>   static DEVICE_ATTR_RW(breathing_in_suspend);
+>  =20
+> +static ssize_t ctgp_offset_store(struct device *dev, struct device_attr=
+ibute *attr,
+> +				 const char *buf, size_t count)
 > +{
-> +	return (data->features & features) =3D=3D features;
+> +	struct uniwill_data *data =3D dev_get_drvdata(dev);
+> +	unsigned int value;
+> +	int ret;
+> +
+> +	ret =3D kstrtouint(buf, 0, &value);
+> +	if (ret < 0)
+> +		return ret;
+> +
+> +	if (value > U8_MAX)
+> +		return -EINVAL;
+> +
+> +	ret =3D regmap_write(data->regmap, EC_ADDR_CTGP_DB_CTGP_OFFSET, value)=
+;
+> +	if (ret < 0)
+> +		return ret;
+> +
+> +	return count;
 > +}
 > +
->   static int uniwill_ec_reg_write(void *context, unsigned int reg, unsig=
-ned int val)
->   {
->   	union acpi_object params[2] =3D {
-> @@ -799,24 +815,27 @@ static struct attribute *uniwill_attrs[] =3D {
->  =20
->   static umode_t uniwill_attr_is_visible(struct kobject *kobj, struct at=
-tribute *attr, int n)
->   {
-> +	struct device *dev =3D kobj_to_dev(kobj);
+> +static ssize_t ctgp_offset_show(struct device *dev, struct device_attri=
+bute *attr,
+> +				char *buf)
+> +{
 > +	struct uniwill_data *data =3D dev_get_drvdata(dev);
+> +	unsigned int value;
+> +	int ret;
 > +
->   	if (attr =3D=3D &dev_attr_fn_lock_toggle_enable.attr) {
-> -		if (supported_features & UNIWILL_FEATURE_FN_LOCK_TOGGLE)
-> +		if (uniwill_device_supports(data, UNIWILL_FEATURE_FN_LOCK_TOGGLE))
+> +	ret =3D regmap_read(data->regmap, EC_ADDR_CTGP_DB_CTGP_OFFSET, &value)=
+;
+> +	if (ret < 0)
+> +		return ret;
+> +
+> +	return sysfs_emit(buf, "%u\n", value);
+> +}
+> +
+> +static DEVICE_ATTR_RW(ctgp_offset);
+> +
+> +static int uniwill_nvidia_ctgp_init(struct uniwill_data *data)
+> +{
+> +	int ret;
+> +
+> +	if (!uniwill_device_supports(data, UNIWILL_FEATURE_NVIDIA_CTGP_CONTROL=
+))
+> +		return 0;
+> +
+> +	ret =3D regmap_write(data->regmap, EC_ADDR_CTGP_DB_CTGP_OFFSET, 0);
+> +	if (ret < 0)
+> +		return ret;
+> +
+> +	ret =3D regmap_write(data->regmap, EC_ADDR_CTGP_DB_TPP_OFFSET, 255);
+> +	if (ret < 0)
+> +		return ret;
+> +
+> +	ret =3D regmap_write(data->regmap, EC_ADDR_CTGP_DB_DB_OFFSET, 25);
+> +	if (ret < 0)
+> +		return ret;
+> +
+> +	ret =3D regmap_set_bits(data->regmap, EC_ADDR_CTGP_DB_CTRL,
+> +			      CTGP_DB_GENERAL_ENABLE | CTGP_DB_DB_ENABLE | CTGP_DB_CTGP_ENAB=
+LE);
+> +	if (ret < 0)
+> +		return ret;
+> +
+> +	return 0;
+> +}
+> +
+>   static struct attribute *uniwill_attrs[] =3D {
+>   	/* Keyboard-related */
+>   	&dev_attr_fn_lock_toggle_enable.attr,
+> @@ -810,6 +887,8 @@ static struct attribute *uniwill_attrs[] =3D {
+>   	/* Lightbar-related */
+>   	&dev_attr_rainbow_animation.attr,
+>   	&dev_attr_breathing_in_suspend.attr,
+> +	/* Power-management-related */
+> +	&dev_attr_ctgp_offset.attr,
+>   	NULL
+>   };
+>  =20
+> @@ -839,6 +918,11 @@ static umode_t uniwill_attr_is_visible(struct kobje=
+ct *kobj, struct attribute *a
 >   			return attr->mode;
 >   	}
 >  =20
->   	if (attr =3D=3D &dev_attr_super_key_toggle_enable.attr) {
-> -		if (supported_features & UNIWILL_FEATURE_SUPER_KEY_TOGGLE)
-> +		if (uniwill_device_supports(data, UNIWILL_FEATURE_SUPER_KEY_TOGGLE))
->   			return attr->mode;
->   	}
+> +	if (attr =3D=3D &dev_attr_ctgp_offset.attr) {
+> +		if (uniwill_device_supports(data, UNIWILL_FEATURE_NVIDIA_CTGP_CONTROL=
+))
+> +			return attr->mode;
+> +	}
+> +
+>   	return 0;
+>   }
 >  =20
->   	if (attr =3D=3D &dev_attr_touchpad_toggle_enable.attr) {
-> -		if (supported_features & UNIWILL_FEATURE_TOUCHPAD_TOGGLE)
-> +		if (uniwill_device_supports(data, UNIWILL_FEATURE_TOUCHPAD_TOGGLE))
->   			return attr->mode;
->   	}
->  =20
->   	if (attr =3D=3D &dev_attr_rainbow_animation.attr ||
->   	    attr =3D=3D &dev_attr_breathing_in_suspend.attr) {
-> -		if (supported_features & UNIWILL_FEATURE_LIGHTBAR)
-> +		if (uniwill_device_supports(data, UNIWILL_FEATURE_LIGHTBAR))
->   			return attr->mode;
->   	}
->  =20
-> @@ -944,7 +963,7 @@ static int uniwill_hwmon_init(struct uniwill_data *d=
-ata)
->   {
->   	struct device *hdev;
->  =20
-> -	if (!(supported_features & UNIWILL_FEATURE_HWMON))
-> +	if (!uniwill_device_supports(data, UNIWILL_FEATURE_HWMON))
->   		return 0;
->  =20
->   	hdev =3D devm_hwmon_device_register_with_info(data->dev, "uniwill", d=
-ata,
-> @@ -1019,7 +1038,7 @@ static int uniwill_led_init(struct uniwill_data *d=
-ata)
->   	unsigned int value;
->   	int ret;
->  =20
-> -	if (!(supported_features & UNIWILL_FEATURE_LIGHTBAR))
-> +	if (!uniwill_device_supports(data, UNIWILL_FEATURE_LIGHTBAR))
->   		return 0;
->  =20
->   	ret =3D devm_mutex_init(data->dev, &data->led_lock);
-> @@ -1232,7 +1251,7 @@ static int uniwill_battery_init(struct uniwill_dat=
-a *data)
->   {
->   	int ret;
->  =20
-> -	if (!(supported_features & UNIWILL_FEATURE_BATTERY))
-> +	if (!uniwill_device_supports(data, UNIWILL_FEATURE_BATTERY))
->   		return 0;
->  =20
->   	ret =3D devm_mutex_init(data->dev, &data->battery_lock);
-> @@ -1361,6 +1380,19 @@ static int uniwill_probe(struct platform_device *=
+> @@ -1405,6 +1489,10 @@ static int uniwill_probe(struct platform_device *=
 pdev)
 >   	if (ret < 0)
 >   		return ret;
 >  =20
-> +	data->features =3D device_descriptor.features;
+> +	ret =3D uniwill_nvidia_ctgp_init(data);
+> +	if (ret < 0)
+> +		return ret;
 > +
-> +	/*
-> +	 * Some devices might need to perform some device-specific initializat=
-ion steps
-> +	 * before the supported features are initialized. Because of this we h=
-ave to call
-> +	 * this callback just after the EC itself was initialized.
-> +	 */
-> +	if (device_descriptor.probe) {
-> +		ret =3D device_descriptor.probe(data);
-> +		if (ret < 0)
-> +			return ret;
-> +	}
+>   	return uniwill_input_init(data);
+>   }
+>  =20
+> @@ -1440,6 +1528,15 @@ static int uniwill_suspend_battery(struct uniwill=
+_data *data)
+>   	return regmap_read(data->regmap, EC_ADDR_CHARGE_CTRL, &data->last_cha=
+rge_ctrl);
+>   }
+>  =20
+> +static int uniwill_suspend_nvidia_ctgp(struct uniwill_data *data)
+> +{
+> +	if (!uniwill_device_supports(data, UNIWILL_FEATURE_NVIDIA_CTGP_CONTROL=
+))
+> +		return 0;
 > +
->   	ret =3D uniwill_battery_init(data);
+> +	return regmap_clear_bits(data->regmap, EC_ADDR_CTGP_DB_CTRL,
+> +				 CTGP_DB_DB_ENABLE | CTGP_DB_CTGP_ENABLE);
+> +}
+> +
+>   static int uniwill_suspend(struct device *dev)
+>   {
+>   	struct uniwill_data *data =3D dev_get_drvdata(dev);
+> @@ -1453,6 +1550,10 @@ static int uniwill_suspend(struct device *dev)
 >   	if (ret < 0)
 >   		return ret;
-> @@ -1385,7 +1417,7 @@ static void uniwill_shutdown(struct platform_devic=
-e *pdev)
 >  =20
->   static int uniwill_suspend_keyboard(struct uniwill_data *data)
->   {
-> -	if (!(supported_features & UNIWILL_FEATURE_SUPER_KEY_TOGGLE))
-> +	if (!uniwill_device_supports(data, UNIWILL_FEATURE_SUPER_KEY_TOGGLE))
->   		return 0;
+> +	ret =3D uniwill_suspend_nvidia_ctgp(data);
+> +	if (ret < 0)
+> +		return ret;
+> +
+>   	regcache_cache_only(data->regmap, true);
+>   	regcache_mark_dirty(data->regmap);
 >  =20
->   	/*
-> @@ -1397,7 +1429,7 @@ static int uniwill_suspend_keyboard(struct uniwill=
-_data *data)
->  =20
->   static int uniwill_suspend_battery(struct uniwill_data *data)
->   {
-> -	if (!(supported_features & UNIWILL_FEATURE_BATTERY))
-> +	if (!uniwill_device_supports(data, UNIWILL_FEATURE_BATTERY))
->   		return 0;
->  =20
->   	/*
-> @@ -1432,7 +1464,7 @@ static int uniwill_resume_keyboard(struct uniwill_=
+> @@ -1487,6 +1588,15 @@ static int uniwill_resume_battery(struct uniwill_=
 data *data)
->   	unsigned int value;
->   	int ret;
+>   				  data->last_charge_ctrl);
+>   }
 >  =20
-> -	if (!(supported_features & UNIWILL_FEATURE_SUPER_KEY_TOGGLE))
-> +	if (!uniwill_device_supports(data, UNIWILL_FEATURE_SUPER_KEY_TOGGLE))
->   		return 0;
->  =20
->   	ret =3D regmap_read(data->regmap, EC_ADDR_SWITCH_STATUS, &value);
-> @@ -1448,7 +1480,7 @@ static int uniwill_resume_keyboard(struct uniwill_=
-data *data)
->  =20
->   static int uniwill_resume_battery(struct uniwill_data *data)
+> +static int uniwill_resume_nvidia_ctgp(struct uniwill_data *data)
+> +{
+> +	if (!uniwill_device_supports(data, UNIWILL_FEATURE_NVIDIA_CTGP_CONTROL=
+))
+> +		return 0;
+> +
+> +	return regmap_set_bits(data->regmap, EC_ADDR_CTGP_DB_CTRL,
+> +			       CTGP_DB_DB_ENABLE | CTGP_DB_CTGP_ENABLE);
+> +}
+> +
+>   static int uniwill_resume(struct device *dev)
 >   {
-> -	if (!(supported_features & UNIWILL_FEATURE_BATTERY))
-> +	if (!uniwill_device_supports(data, UNIWILL_FEATURE_BATTERY))
->   		return 0;
+>   	struct uniwill_data *data =3D dev_get_drvdata(dev);
+> @@ -1502,7 +1612,11 @@ static int uniwill_resume(struct device *dev)
+>   	if (ret < 0)
+>   		return ret;
 >  =20
->   	return regmap_update_bits(data->regmap, EC_ADDR_CHARGE_CTRL, CHARGE_C=
-TRL_MASK,
-> @@ -1496,6 +1528,25 @@ static struct platform_driver uniwill_driver =3D =
-{
->   	.shutdown =3D uniwill_shutdown,
+> -	return uniwill_resume_battery(data);
+> +	ret =3D uniwill_resume_battery(data);
+> +	if (ret < 0)
+> +		return ret;
+> +
+> +	return uniwill_resume_nvidia_ctgp(data);
+>   }
+>  =20
+>   static DEFINE_SIMPLE_DEV_PM_OPS(uniwill_pm_ops, uniwill_suspend, uniwi=
+ll_resume);
+> @@ -1545,6 +1659,29 @@ static struct uniwill_device_descriptor lapkc71f_=
+descriptor __initdata =3D {
+>   		    UNIWILL_FEATURE_HWMON
 >   };
 >  =20
-> +static struct uniwill_device_descriptor lapac71h_descriptor __initdata =
-=3D {
-> +	.features =3D UNIWILL_FEATURE_FN_LOCK_TOGGLE |
-> +		    UNIWILL_FEATURE_SUPER_KEY_TOGGLE |
-> +		    UNIWILL_FEATURE_TOUCHPAD_TOGGLE |
-> +		    UNIWILL_FEATURE_BATTERY |
-> +		    UNIWILL_FEATURE_HWMON
+> +static int phxarx1_phxaqf1_probe(struct uniwill_data *data)
+> +{
+> +	unsigned int value;
+> +	int ret;
+> +
+> +	ret =3D regmap_read(data->regmap, EC_ADDR_SYSTEM_ID, &value);
+> +	if (ret < 0)
+> +		return ret;
+> +
+> +	if (value & HAS_GPU)
+> +		data->features |=3D UNIWILL_FEATURE_NVIDIA_CTGP_CONTROL;
+> +
+> +	return 0;
 > +};
 > +
-> +static struct uniwill_device_descriptor lapkc71f_descriptor __initdata =
-=3D {
-> +	.features =3D UNIWILL_FEATURE_FN_LOCK_TOGGLE |
-> +		    UNIWILL_FEATURE_SUPER_KEY_TOGGLE |
-> +		    UNIWILL_FEATURE_TOUCHPAD_TOGGLE |
-> +		    UNIWILL_FEATURE_LIGHTBAR |
-> +		    UNIWILL_FEATURE_BATTERY |
-> +		    UNIWILL_FEATURE_HWMON
+> +static struct uniwill_device_descriptor phxarx1_phxaqf1_descriptor __in=
+itdata =3D {
+> +	.probe =3D phxarx1_phxaqf1_probe
 > +};
 > +
-> +static struct uniwill_device_descriptor empty_descriptor __initdata =3D=
- {};
+> +static struct uniwill_device_descriptor tux_featureset_1_descriptor __i=
+nitdata =3D {
+> +	.features =3D UNIWILL_FEATURE_NVIDIA_CTGP_CONTROL
+> +};
 > +
+>   static struct uniwill_device_descriptor empty_descriptor __initdata =
+=3D {};
+>  =20
 >   static const struct dmi_system_id uniwill_dmi_table[] __initconst =3D =
 {
->   	{
->   		.ident =3D "XMG FUSION 15",
-> @@ -1503,6 +1554,7 @@ static const struct dmi_system_id uniwill_dmi_tabl=
-e[] __initconst =3D {
->   			DMI_MATCH(DMI_SYS_VENDOR, "SchenkerTechnologiesGmbH"),
->   			DMI_EXACT_MATCH(DMI_BOARD_NAME, "LAPQC71A"),
->   		},
-> +		.driver_data =3D &empty_descriptor,
->   	},
->   	{
->   		.ident =3D "XMG FUSION 15",
-> @@ -1510,6 +1562,7 @@ static const struct dmi_system_id uniwill_dmi_tabl=
-e[] __initconst =3D {
->   			DMI_MATCH(DMI_SYS_VENDOR, "SchenkerTechnologiesGmbH"),
->   			DMI_EXACT_MATCH(DMI_BOARD_NAME, "LAPQC71B"),
->   		},
-> +		.driver_data =3D &empty_descriptor,
->   	},
->   	{
->   		.ident =3D "Intel NUC x15",
-> @@ -1517,11 +1570,7 @@ static const struct dmi_system_id uniwill_dmi_tab=
-le[] __initconst =3D {
->   			DMI_EXACT_MATCH(DMI_SYS_VENDOR, "Intel(R) Client Systems"),
->   			DMI_EXACT_MATCH(DMI_PRODUCT_NAME, "LAPAC71H"),
->   		},
-> -		.driver_data =3D (void *)(UNIWILL_FEATURE_FN_LOCK_TOGGLE |
-> -					UNIWILL_FEATURE_SUPER_KEY_TOGGLE |
-> -					UNIWILL_FEATURE_TOUCHPAD_TOGGLE |
-> -					UNIWILL_FEATURE_BATTERY |
-> -					UNIWILL_FEATURE_HWMON),
-> +		.driver_data =3D &lapac71h_descriptor,
->   	},
->   	{
->   		.ident =3D "Intel NUC x15",
-> @@ -1529,12 +1578,7 @@ static const struct dmi_system_id uniwill_dmi_tab=
-le[] __initconst =3D {
->   			DMI_EXACT_MATCH(DMI_SYS_VENDOR, "Intel(R) Client Systems"),
->   			DMI_EXACT_MATCH(DMI_PRODUCT_NAME, "LAPKC71F"),
->   		},
-> -		.driver_data =3D (void *)(UNIWILL_FEATURE_FN_LOCK_TOGGLE |
-> -					UNIWILL_FEATURE_SUPER_KEY_TOGGLE |
-> -					UNIWILL_FEATURE_TOUCHPAD_TOGGLE |
-> -					UNIWILL_FEATURE_LIGHTBAR |
-> -					UNIWILL_FEATURE_BATTERY |
-> -					UNIWILL_FEATURE_HWMON),
-> +		.driver_data =3D &lapkc71f_descriptor,
->   	},
->   	{
->   		.ident =3D "TUXEDO InfinityBook Pro 14 Gen6 Intel",
-> @@ -1542,6 +1586,7 @@ static const struct dmi_system_id uniwill_dmi_tabl=
-e[] __initconst =3D {
->   			DMI_MATCH(DMI_SYS_VENDOR, "TUXEDO"),
->   			DMI_EXACT_MATCH(DMI_BOARD_NAME, "PHxTxX1"),
->   		},
-> +		.driver_data =3D &empty_descriptor,
->   	},
->   	{
->   		.ident =3D "TUXEDO InfinityBook Pro 14 Gen6 Intel",
-> @@ -1549,6 +1594,7 @@ static const struct dmi_system_id uniwill_dmi_tabl=
+> @@ -1594,7 +1731,7 @@ static const struct dmi_system_id uniwill_dmi_tabl=
 e[] __initconst =3D {
 >   			DMI_MATCH(DMI_SYS_VENDOR, "TUXEDO"),
 >   			DMI_EXACT_MATCH(DMI_BOARD_NAME, "PHxTQx1"),
 >   		},
-> +		.driver_data =3D &empty_descriptor,
+> -		.driver_data =3D &empty_descriptor,
+> +		.driver_data =3D &tux_featureset_1_descriptor,
 >   	},
 >   	{
 >   		.ident =3D "TUXEDO InfinityBook Pro 14/16 Gen7 Intel",
-> @@ -1556,6 +1602,7 @@ static const struct dmi_system_id uniwill_dmi_tabl=
+> @@ -1602,7 +1739,7 @@ static const struct dmi_system_id uniwill_dmi_tabl=
 e[] __initconst =3D {
 >   			DMI_MATCH(DMI_SYS_VENDOR, "TUXEDO"),
 >   			DMI_EXACT_MATCH(DMI_BOARD_NAME, "PHxARX1_PHxAQF1"),
 >   		},
-> +		.driver_data =3D &empty_descriptor,
+> -		.driver_data =3D &empty_descriptor,
+> +		.driver_data =3D &phxarx1_phxaqf1_descriptor,
 >   	},
 >   	{
 >   		.ident =3D "TUXEDO InfinityBook Pro 16 Gen7 Intel/Commodore Omnia-Bo=
 ok Pro Gen 7",
-> @@ -1563,6 +1610,7 @@ static const struct dmi_system_id uniwill_dmi_tabl=
+> @@ -1610,7 +1747,7 @@ static const struct dmi_system_id uniwill_dmi_tabl=
 e[] __initconst =3D {
 >   			DMI_MATCH(DMI_SYS_VENDOR, "TUXEDO"),
 >   			DMI_EXACT_MATCH(DMI_BOARD_NAME, "PH6AG01_PH6AQ71_PH6AQI1"),
 >   		},
-> +		.driver_data =3D &empty_descriptor,
+> -		.driver_data =3D &empty_descriptor,
+> +		.driver_data =3D &tux_featureset_1_descriptor,
 >   	},
 >   	{
 >   		.ident =3D "TUXEDO InfinityBook Pro 14/16 Gen8 Intel/Commodore Omnia=
 -Book Pro Gen 8",
-> @@ -1570,6 +1618,7 @@ static const struct dmi_system_id uniwill_dmi_tabl=
-e[] __initconst =3D {
->   			DMI_MATCH(DMI_SYS_VENDOR, "TUXEDO"),
->   			DMI_EXACT_MATCH(DMI_BOARD_NAME, "PH4PRX1_PH6PRX1"),
->   		},
-> +		.driver_data =3D &empty_descriptor,
->   	},
->   	{
->   		.ident =3D "TUXEDO InfinityBook Pro 14 Gen8 Intel/Commodore Omnia-Bo=
-ok Pro Gen 8",
-> @@ -1577,6 +1626,7 @@ static const struct dmi_system_id uniwill_dmi_tabl=
+> @@ -1626,7 +1763,7 @@ static const struct dmi_system_id uniwill_dmi_tabl=
 e[] __initconst =3D {
 >   			DMI_MATCH(DMI_SYS_VENDOR, "TUXEDO"),
 >   			DMI_EXACT_MATCH(DMI_BOARD_NAME, "PH4PG31"),
 >   		},
-> +		.driver_data =3D &empty_descriptor,
+> -		.driver_data =3D &empty_descriptor,
+> +		.driver_data =3D &tux_featureset_1_descriptor,
 >   	},
 >   	{
 >   		.ident =3D "TUXEDO InfinityBook Pro 16 Gen8 Intel",
-> @@ -1584,6 +1634,7 @@ static const struct dmi_system_id uniwill_dmi_tabl=
+> @@ -1634,7 +1771,7 @@ static const struct dmi_system_id uniwill_dmi_tabl=
 e[] __initconst =3D {
 >   			DMI_MATCH(DMI_SYS_VENDOR, "TUXEDO"),
 >   			DMI_EXACT_MATCH(DMI_BOARD_NAME, "PH6PG01_PH6PG71"),
 >   		},
-> +		.driver_data =3D &empty_descriptor,
+> -		.driver_data =3D &empty_descriptor,
+> +		.driver_data =3D &tux_featureset_1_descriptor,
 >   	},
 >   	{
 >   		.ident =3D "TUXEDO InfinityBook Pro 14/15 Gen9 AMD",
-> @@ -1591,6 +1642,7 @@ static const struct dmi_system_id uniwill_dmi_tabl=
-e[] __initconst =3D {
->   			DMI_MATCH(DMI_SYS_VENDOR, "TUXEDO"),
->   			DMI_EXACT_MATCH(DMI_BOARD_NAME, "GXxHRXx"),
->   		},
-> +		.driver_data =3D &empty_descriptor,
->   	},
->   	{
->   		.ident =3D "TUXEDO InfinityBook Pro 14/15 Gen9 Intel/Commodore Omnia=
--Book 15 Gen9",
-> @@ -1598,6 +1650,7 @@ static const struct dmi_system_id uniwill_dmi_tabl=
-e[] __initconst =3D {
->   			DMI_MATCH(DMI_SYS_VENDOR, "TUXEDO"),
->   			DMI_EXACT_MATCH(DMI_BOARD_NAME, "GXxMRXx"),
->   		},
-> +		.driver_data =3D &empty_descriptor,
->   	},
->   	{
->   		.ident =3D "TUXEDO InfinityBook Pro 14/15 Gen10 AMD",
-> @@ -1605,6 +1658,7 @@ static const struct dmi_system_id uniwill_dmi_tabl=
-e[] __initconst =3D {
->   			DMI_MATCH(DMI_SYS_VENDOR, "TUXEDO"),
->   			DMI_EXACT_MATCH(DMI_BOARD_NAME, "XxHP4NAx"),
->   		},
-> +		.driver_data =3D &empty_descriptor,
->   	},
->   	{
->   		.ident =3D "TUXEDO InfinityBook Pro 14/15 Gen10 AMD",
-> @@ -1612,6 +1666,7 @@ static const struct dmi_system_id uniwill_dmi_tabl=
-e[] __initconst =3D {
->   			DMI_MATCH(DMI_SYS_VENDOR, "TUXEDO"),
->   			DMI_EXACT_MATCH(DMI_BOARD_NAME, "XxKK4NAx_XxSP4NAx"),
->   		},
-> +		.driver_data =3D &empty_descriptor,
->   	},
->   	{
->   		.ident =3D "TUXEDO InfinityBook Pro 15 Gen10 Intel",
-> @@ -1619,6 +1674,7 @@ static const struct dmi_system_id uniwill_dmi_tabl=
-e[] __initconst =3D {
->   			DMI_MATCH(DMI_SYS_VENDOR, "TUXEDO"),
->   			DMI_EXACT_MATCH(DMI_BOARD_NAME, "XxAR4NAx"),
->   		},
-> +		.driver_data =3D &empty_descriptor,
->   	},
->   	{
->   		.ident =3D "TUXEDO InfinityBook Max 15 Gen10 AMD",
-> @@ -1626,6 +1682,7 @@ static const struct dmi_system_id uniwill_dmi_tabl=
-e[] __initconst =3D {
->   			DMI_MATCH(DMI_SYS_VENDOR, "TUXEDO"),
->   			DMI_EXACT_MATCH(DMI_BOARD_NAME, "X5KK45xS_X5SP45xS"),
->   		},
-> +		.driver_data =3D &empty_descriptor,
->   	},
->   	{
->   		.ident =3D "TUXEDO InfinityBook Max 16 Gen10 AMD",
-> @@ -1633,6 +1690,7 @@ static const struct dmi_system_id uniwill_dmi_tabl=
-e[] __initconst =3D {
->   			DMI_MATCH(DMI_SYS_VENDOR, "TUXEDO"),
->   			DMI_EXACT_MATCH(DMI_BOARD_NAME, "X6HP45xU"),
->   		},
-> +		.driver_data =3D &empty_descriptor,
->   	},
->   	{
->   		.ident =3D "TUXEDO InfinityBook Max 16 Gen10 AMD",
-> @@ -1640,6 +1698,7 @@ static const struct dmi_system_id uniwill_dmi_tabl=
-e[] __initconst =3D {
->   			DMI_MATCH(DMI_SYS_VENDOR, "TUXEDO"),
->   			DMI_EXACT_MATCH(DMI_BOARD_NAME, "X6KK45xU_X6SP45xU"),
->   		},
-> +		.driver_data =3D &empty_descriptor,
->   	},
->   	{
->   		.ident =3D "TUXEDO InfinityBook Max 15 Gen10 Intel",
-> @@ -1647,6 +1706,7 @@ static const struct dmi_system_id uniwill_dmi_tabl=
-e[] __initconst =3D {
->   			DMI_MATCH(DMI_SYS_VENDOR, "TUXEDO"),
->   			DMI_EXACT_MATCH(DMI_BOARD_NAME, "X5AR45xS"),
->   		},
-> +		.driver_data =3D &empty_descriptor,
->   	},
->   	{
->   		.ident =3D "TUXEDO InfinityBook Max 16 Gen10 Intel",
-> @@ -1654,6 +1714,7 @@ static const struct dmi_system_id uniwill_dmi_tabl=
-e[] __initconst =3D {
->   			DMI_MATCH(DMI_SYS_VENDOR, "TUXEDO"),
->   			DMI_EXACT_MATCH(DMI_BOARD_NAME, "X6AR55xU"),
->   		},
-> +		.driver_data =3D &empty_descriptor,
->   	},
->   	{
->   		.ident =3D "TUXEDO Polaris 15 Gen1 AMD",
-> @@ -1661,6 +1722,7 @@ static const struct dmi_system_id uniwill_dmi_tabl=
-e[] __initconst =3D {
->   			DMI_MATCH(DMI_SYS_VENDOR, "TUXEDO"),
->   			DMI_EXACT_MATCH(DMI_BOARD_NAME, "POLARIS1501A1650TI"),
->   		},
-> +		.driver_data =3D &empty_descriptor,
->   	},
->   	{
->   		.ident =3D "TUXEDO Polaris 15 Gen1 AMD",
-> @@ -1668,6 +1730,7 @@ static const struct dmi_system_id uniwill_dmi_tabl=
-e[] __initconst =3D {
->   			DMI_MATCH(DMI_SYS_VENDOR, "TUXEDO"),
->   			DMI_EXACT_MATCH(DMI_BOARD_NAME, "POLARIS1501A2060"),
->   		},
-> +		.driver_data =3D &empty_descriptor,
->   	},
->   	{
->   		.ident =3D "TUXEDO Polaris 17 Gen1 AMD",
-> @@ -1675,6 +1738,7 @@ static const struct dmi_system_id uniwill_dmi_tabl=
-e[] __initconst =3D {
->   			DMI_MATCH(DMI_SYS_VENDOR, "TUXEDO"),
->   			DMI_EXACT_MATCH(DMI_BOARD_NAME, "POLARIS1701A1650TI"),
->   		},
-> +		.driver_data =3D &empty_descriptor,
->   	},
->   	{
->   		.ident =3D "TUXEDO Polaris 17 Gen1 AMD",
-> @@ -1682,6 +1746,7 @@ static const struct dmi_system_id uniwill_dmi_tabl=
-e[] __initconst =3D {
->   			DMI_MATCH(DMI_SYS_VENDOR, "TUXEDO"),
->   			DMI_EXACT_MATCH(DMI_BOARD_NAME, "POLARIS1701A2060"),
->   		},
-> +		.driver_data =3D &empty_descriptor,
->   	},
->   	{
->   		.ident =3D "TUXEDO Polaris 15 Gen1 Intel",
-> @@ -1689,6 +1754,7 @@ static const struct dmi_system_id uniwill_dmi_tabl=
-e[] __initconst =3D {
->   			DMI_MATCH(DMI_SYS_VENDOR, "TUXEDO"),
->   			DMI_EXACT_MATCH(DMI_BOARD_NAME, "POLARIS1501I1650TI"),
->   		},
-> +		.driver_data =3D &empty_descriptor,
->   	},
->   	{
->   		.ident =3D "TUXEDO Polaris 15 Gen1 Intel",
-> @@ -1696,6 +1762,7 @@ static const struct dmi_system_id uniwill_dmi_tabl=
-e[] __initconst =3D {
->   			DMI_MATCH(DMI_SYS_VENDOR, "TUXEDO"),
->   			DMI_EXACT_MATCH(DMI_BOARD_NAME, "POLARIS1501I2060"),
->   		},
-> +		.driver_data =3D &empty_descriptor,
->   	},
->   	{
->   		.ident =3D "TUXEDO Polaris 17 Gen1 Intel",
-> @@ -1703,6 +1770,7 @@ static const struct dmi_system_id uniwill_dmi_tabl=
-e[] __initconst =3D {
->   			DMI_MATCH(DMI_SYS_VENDOR, "TUXEDO"),
->   			DMI_EXACT_MATCH(DMI_BOARD_NAME, "POLARIS1701I1650TI"),
->   		},
-> +		.driver_data =3D &empty_descriptor,
->   	},
->   	{
->   		.ident =3D "TUXEDO Polaris 17 Gen1 Intel",
-> @@ -1710,6 +1778,7 @@ static const struct dmi_system_id uniwill_dmi_tabl=
-e[] __initconst =3D {
->   			DMI_MATCH(DMI_SYS_VENDOR, "TUXEDO"),
->   			DMI_EXACT_MATCH(DMI_BOARD_NAME, "POLARIS1701I2060"),
->   		},
-> +		.driver_data =3D &empty_descriptor,
->   	},
->   	{
->   		.ident =3D "TUXEDO Trinity 15 Intel Gen1",
-> @@ -1717,6 +1786,7 @@ static const struct dmi_system_id uniwill_dmi_tabl=
-e[] __initconst =3D {
->   			DMI_MATCH(DMI_SYS_VENDOR, "TUXEDO"),
->   			DMI_EXACT_MATCH(DMI_BOARD_NAME, "TRINITY1501I"),
->   		},
-> +		.driver_data =3D &empty_descriptor,
->   	},
->   	{
->   		.ident =3D "TUXEDO Trinity 17 Intel Gen1",
-> @@ -1724,6 +1794,7 @@ static const struct dmi_system_id uniwill_dmi_tabl=
-e[] __initconst =3D {
->   			DMI_MATCH(DMI_SYS_VENDOR, "TUXEDO"),
->   			DMI_EXACT_MATCH(DMI_BOARD_NAME, "TRINITY1701I"),
->   		},
-> +		.driver_data =3D &empty_descriptor,
->   	},
->   	{
->   		.ident =3D "TUXEDO Polaris 15/17 Gen2 AMD",
-> @@ -1731,6 +1802,7 @@ static const struct dmi_system_id uniwill_dmi_tabl=
+> @@ -1802,7 +1939,7 @@ static const struct dmi_system_id uniwill_dmi_tabl=
 e[] __initconst =3D {
 >   			DMI_MATCH(DMI_SYS_VENDOR, "TUXEDO"),
 >   			DMI_EXACT_MATCH(DMI_BOARD_NAME, "GMxMGxx"),
 >   		},
-> +		.driver_data =3D &empty_descriptor,
+> -		.driver_data =3D &empty_descriptor,
+> +		.driver_data =3D &tux_featureset_1_descriptor,
 >   	},
 >   	{
 >   		.ident =3D "TUXEDO Polaris 15/17 Gen2 Intel",
-> @@ -1738,6 +1810,7 @@ static const struct dmi_system_id uniwill_dmi_tabl=
+> @@ -1810,7 +1947,7 @@ static const struct dmi_system_id uniwill_dmi_tabl=
 e[] __initconst =3D {
 >   			DMI_MATCH(DMI_SYS_VENDOR, "TUXEDO"),
 >   			DMI_EXACT_MATCH(DMI_BOARD_NAME, "GMxNGxx"),
 >   		},
-> +		.driver_data =3D &empty_descriptor,
+> -		.driver_data =3D &empty_descriptor,
+> +		.driver_data =3D &tux_featureset_1_descriptor,
 >   	},
 >   	{
 >   		.ident =3D "TUXEDO Stellaris/Polaris 15/17 Gen3 AMD",
-> @@ -1745,6 +1818,7 @@ static const struct dmi_system_id uniwill_dmi_tabl=
+> @@ -1818,7 +1955,7 @@ static const struct dmi_system_id uniwill_dmi_tabl=
 e[] __initconst =3D {
 >   			DMI_MATCH(DMI_SYS_VENDOR, "TUXEDO"),
 >   			DMI_EXACT_MATCH(DMI_BOARD_NAME, "GMxZGxx"),
 >   		},
-> +		.driver_data =3D &empty_descriptor,
+> -		.driver_data =3D &empty_descriptor,
+> +		.driver_data =3D &tux_featureset_1_descriptor,
 >   	},
 >   	{
 >   		.ident =3D "TUXEDO Stellaris/Polaris 15/17 Gen3 Intel",
-> @@ -1752,6 +1826,7 @@ static const struct dmi_system_id uniwill_dmi_tabl=
+> @@ -1826,7 +1963,7 @@ static const struct dmi_system_id uniwill_dmi_tabl=
 e[] __initconst =3D {
 >   			DMI_MATCH(DMI_SYS_VENDOR, "TUXEDO"),
 >   			DMI_EXACT_MATCH(DMI_BOARD_NAME, "GMxTGxx"),
 >   		},
-> +		.driver_data =3D &empty_descriptor,
+> -		.driver_data =3D &empty_descriptor,
+> +		.driver_data =3D &tux_featureset_1_descriptor,
 >   	},
 >   	{
 >   		.ident =3D "TUXEDO Stellaris/Polaris 15/17 Gen4 AMD",
-> @@ -1759,6 +1834,7 @@ static const struct dmi_system_id uniwill_dmi_tabl=
+> @@ -1834,7 +1971,7 @@ static const struct dmi_system_id uniwill_dmi_tabl=
 e[] __initconst =3D {
 >   			DMI_MATCH(DMI_SYS_VENDOR, "TUXEDO"),
 >   			DMI_EXACT_MATCH(DMI_BOARD_NAME, "GMxRGxx"),
 >   		},
-> +		.driver_data =3D &empty_descriptor,
+> -		.driver_data =3D &empty_descriptor,
+> +		.driver_data =3D &tux_featureset_1_descriptor,
 >   	},
 >   	{
 >   		.ident =3D "TUXEDO Stellaris 15 Gen4 Intel",
-> @@ -1766,6 +1842,7 @@ static const struct dmi_system_id uniwill_dmi_tabl=
+> @@ -1842,7 +1979,7 @@ static const struct dmi_system_id uniwill_dmi_tabl=
 e[] __initconst =3D {
 >   			DMI_MATCH(DMI_SYS_VENDOR, "TUXEDO"),
 >   			DMI_EXACT_MATCH(DMI_BOARD_NAME, "GMxAGxx"),
 >   		},
-> +		.driver_data =3D &empty_descriptor,
+> -		.driver_data =3D &empty_descriptor,
+> +		.driver_data =3D &tux_featureset_1_descriptor,
 >   	},
 >   	{
 >   		.ident =3D "TUXEDO Polaris 15/17 Gen5 AMD",
-> @@ -1773,6 +1850,7 @@ static const struct dmi_system_id uniwill_dmi_tabl=
+> @@ -1850,7 +1987,7 @@ static const struct dmi_system_id uniwill_dmi_tabl=
 e[] __initconst =3D {
 >   			DMI_MATCH(DMI_SYS_VENDOR, "TUXEDO"),
 >   			DMI_EXACT_MATCH(DMI_BOARD_NAME, "GMxXGxx"),
 >   		},
-> +		.driver_data =3D &empty_descriptor,
+> -		.driver_data =3D &empty_descriptor,
+> +		.driver_data =3D &tux_featureset_1_descriptor,
 >   	},
 >   	{
 >   		.ident =3D "TUXEDO Stellaris 16 Gen5 AMD",
-> @@ -1780,6 +1858,7 @@ static const struct dmi_system_id uniwill_dmi_tabl=
+> @@ -1858,7 +1995,7 @@ static const struct dmi_system_id uniwill_dmi_tabl=
 e[] __initconst =3D {
 >   			DMI_MATCH(DMI_SYS_VENDOR, "TUXEDO"),
 >   			DMI_EXACT_MATCH(DMI_BOARD_NAME, "GM6XGxX"),
 >   		},
-> +		.driver_data =3D &empty_descriptor,
+> -		.driver_data =3D &empty_descriptor,
+> +		.driver_data =3D &tux_featureset_1_descriptor,
 >   	},
 >   	{
 >   		.ident =3D "TUXEDO Stellaris 16/17 Gen5 Intel/Commodore ORION Gen 5"=
 ,
-> @@ -1787,6 +1866,7 @@ static const struct dmi_system_id uniwill_dmi_tabl=
+> @@ -1866,7 +2003,7 @@ static const struct dmi_system_id uniwill_dmi_tabl=
 e[] __initconst =3D {
 >   			DMI_MATCH(DMI_SYS_VENDOR, "TUXEDO"),
 >   			DMI_EXACT_MATCH(DMI_BOARD_NAME, "GMxPXxx"),
 >   		},
-> +		.driver_data =3D &empty_descriptor,
+> -		.driver_data =3D &empty_descriptor,
+> +		.driver_data =3D &tux_featureset_1_descriptor,
 >   	},
 >   	{
 >   		.ident =3D "TUXEDO Stellaris Slim 15 Gen6 AMD",
-> @@ -1794,6 +1874,7 @@ static const struct dmi_system_id uniwill_dmi_tabl=
+> @@ -1874,7 +2011,7 @@ static const struct dmi_system_id uniwill_dmi_tabl=
 e[] __initconst =3D {
 >   			DMI_MATCH(DMI_SYS_VENDOR, "TUXEDO"),
 >   			DMI_EXACT_MATCH(DMI_BOARD_NAME, "GMxHGxx"),
 >   		},
-> +		.driver_data =3D &empty_descriptor,
+> -		.driver_data =3D &empty_descriptor,
+> +		.driver_data =3D &tux_featureset_1_descriptor,
 >   	},
 >   	{
 >   		.ident =3D "TUXEDO Stellaris Slim 15 Gen6 Intel/Commodore ORION Slim=
  15 Gen6",
-> @@ -1801,6 +1882,7 @@ static const struct dmi_system_id uniwill_dmi_tabl=
+> @@ -1882,7 +2019,7 @@ static const struct dmi_system_id uniwill_dmi_tabl=
 e[] __initconst =3D {
 >   			DMI_MATCH(DMI_SYS_VENDOR, "TUXEDO"),
 >   			DMI_EXACT_MATCH(DMI_BOARD_NAME, "GM5IXxA"),
 >   		},
-> +		.driver_data =3D &empty_descriptor,
+> -		.driver_data =3D &empty_descriptor,
+> +		.driver_data =3D &tux_featureset_1_descriptor,
 >   	},
 >   	{
 >   		.ident =3D "TUXEDO Stellaris 16 Gen6 Intel/Commodore ORION 16 Gen6",
-> @@ -1808,6 +1890,7 @@ static const struct dmi_system_id uniwill_dmi_tabl=
+> @@ -1890,7 +2027,7 @@ static const struct dmi_system_id uniwill_dmi_tabl=
 e[] __initconst =3D {
 >   			DMI_MATCH(DMI_SYS_VENDOR, "TUXEDO"),
 >   			DMI_EXACT_MATCH(DMI_BOARD_NAME, "GM6IXxB_MB1"),
 >   		},
-> +		.driver_data =3D &empty_descriptor,
+> -		.driver_data =3D &empty_descriptor,
+> +		.driver_data =3D &tux_featureset_1_descriptor,
 >   	},
 >   	{
 >   		.ident =3D "TUXEDO Stellaris 16 Gen6 Intel/Commodore ORION 16 Gen6",
-> @@ -1815,6 +1898,7 @@ static const struct dmi_system_id uniwill_dmi_tabl=
+> @@ -1898,7 +2035,7 @@ static const struct dmi_system_id uniwill_dmi_tabl=
 e[] __initconst =3D {
 >   			DMI_MATCH(DMI_SYS_VENDOR, "TUXEDO"),
 >   			DMI_EXACT_MATCH(DMI_BOARD_NAME, "GM6IXxB_MB2"),
 >   		},
-> +		.driver_data =3D &empty_descriptor,
+> -		.driver_data =3D &empty_descriptor,
+> +		.driver_data =3D &tux_featureset_1_descriptor,
 >   	},
 >   	{
 >   		.ident =3D "TUXEDO Stellaris 17 Gen6 Intel/Commodore ORION 17 Gen6",
-> @@ -1822,6 +1906,7 @@ static const struct dmi_system_id uniwill_dmi_tabl=
+> @@ -1906,7 +2043,7 @@ static const struct dmi_system_id uniwill_dmi_tabl=
 e[] __initconst =3D {
 >   			DMI_MATCH(DMI_SYS_VENDOR, "TUXEDO"),
 >   			DMI_EXACT_MATCH(DMI_BOARD_NAME, "GM7IXxN"),
 >   		},
-> +		.driver_data =3D &empty_descriptor,
+> -		.driver_data =3D &empty_descriptor,
+> +		.driver_data =3D &tux_featureset_1_descriptor,
 >   	},
 >   	{
 >   		.ident =3D "TUXEDO Stellaris 16 Gen7 AMD",
-> @@ -1829,6 +1914,7 @@ static const struct dmi_system_id uniwill_dmi_tabl=
+> @@ -1914,7 +2051,7 @@ static const struct dmi_system_id uniwill_dmi_tabl=
 e[] __initconst =3D {
 >   			DMI_MATCH(DMI_SYS_VENDOR, "TUXEDO"),
 >   			DMI_EXACT_MATCH(DMI_BOARD_NAME, "X6FR5xxY"),
 >   		},
-> +		.driver_data =3D &empty_descriptor,
+> -		.driver_data =3D &empty_descriptor,
+> +		.driver_data =3D &tux_featureset_1_descriptor,
 >   	},
 >   	{
 >   		.ident =3D "TUXEDO Stellaris 16 Gen7 Intel",
-> @@ -1836,6 +1922,7 @@ static const struct dmi_system_id uniwill_dmi_tabl=
+> @@ -1922,7 +2059,7 @@ static const struct dmi_system_id uniwill_dmi_tabl=
 e[] __initconst =3D {
 >   			DMI_MATCH(DMI_SYS_VENDOR, "TUXEDO"),
 >   			DMI_EXACT_MATCH(DMI_BOARD_NAME, "X6AR5xxY"),
 >   		},
-> +		.driver_data =3D &empty_descriptor,
+> -		.driver_data =3D &empty_descriptor,
+> +		.driver_data =3D &tux_featureset_1_descriptor,
 >   	},
 >   	{
 >   		.ident =3D "TUXEDO Stellaris 16 Gen7 Intel",
-> @@ -1843,6 +1930,7 @@ static const struct dmi_system_id uniwill_dmi_tabl=
+> @@ -1930,7 +2067,7 @@ static const struct dmi_system_id uniwill_dmi_tabl=
 e[] __initconst =3D {
 >   			DMI_MATCH(DMI_SYS_VENDOR, "TUXEDO"),
 >   			DMI_EXACT_MATCH(DMI_BOARD_NAME, "X6AR5xxY_mLED"),
 >   		},
-> +		.driver_data =3D &empty_descriptor,
+> -		.driver_data =3D &empty_descriptor,
+> +		.driver_data =3D &tux_featureset_1_descriptor,
 >   	},
 >   	{
 >   		.ident =3D "TUXEDO Book BA15 Gen10 AMD",
-> @@ -1850,6 +1938,7 @@ static const struct dmi_system_id uniwill_dmi_tabl=
-e[] __initconst =3D {
->   			DMI_MATCH(DMI_SYS_VENDOR, "TUXEDO"),
->   			DMI_EXACT_MATCH(DMI_BOARD_NAME, "PF5PU1G"),
->   		},
-> +		.driver_data =3D &empty_descriptor,
->   	},
->   	{
->   		.ident =3D "TUXEDO Pulse 14 Gen1 AMD",
-> @@ -1857,6 +1946,7 @@ static const struct dmi_system_id uniwill_dmi_tabl=
-e[] __initconst =3D {
->   			DMI_MATCH(DMI_SYS_VENDOR, "TUXEDO"),
->   			DMI_EXACT_MATCH(DMI_BOARD_NAME, "PULSE1401"),
->   		},
-> +		.driver_data =3D &empty_descriptor,
->   	},
->   	{
->   		.ident =3D "TUXEDO Pulse 15 Gen1 AMD",
-> @@ -1864,6 +1954,7 @@ static const struct dmi_system_id uniwill_dmi_tabl=
-e[] __initconst =3D {
->   			DMI_MATCH(DMI_SYS_VENDOR, "TUXEDO"),
->   			DMI_EXACT_MATCH(DMI_BOARD_NAME, "PULSE1501"),
->   		},
-> +		.driver_data =3D &empty_descriptor,
->   	},
->   	{
->   		.ident =3D "TUXEDO Pulse 15 Gen2 AMD",
-> @@ -1871,6 +1962,7 @@ static const struct dmi_system_id uniwill_dmi_tabl=
-e[] __initconst =3D {
->   			DMI_MATCH(DMI_SYS_VENDOR, "TUXEDO"),
->   			DMI_EXACT_MATCH(DMI_BOARD_NAME, "PF5LUXG"),
->   		},
-> +		.driver_data =3D &empty_descriptor,
->   	},
->   	{ }
->   };
-> @@ -1878,6 +1970,7 @@ MODULE_DEVICE_TABLE(dmi, uniwill_dmi_table);
->  =20
->   static int __init uniwill_init(void)
->   {
-> +	const struct uniwill_device_descriptor *descriptor;
->   	const struct dmi_system_id *id;
->   	int ret;
->  =20
-> @@ -1887,10 +1980,22 @@ static int __init uniwill_init(void)
->   			return -ENODEV;
->  =20
->   		/* Assume that the device supports all features */
-> -		supported_features =3D UINT_MAX;
-> +		device_descriptor.features =3D UINT_MAX;
->   		pr_warn("Loading on a potentially unsupported device\n");
->   	} else {
-> -		supported_features =3D (uintptr_t)id->driver_data;
-> +		/*
-> +		 * Some devices might support additional features depending on
-> +		 * the BIOS version/date, so we call this callback to let them
-> +		 * modify their device descriptor accordingly.
-> +		 */
-> +		if (id->callback) {
-> +			ret =3D id->callback(id);
-> +			if (ret < 0)
-> +				return ret;
-> +		}
-> +
-> +		descriptor =3D id->driver_data;
-> +		device_descriptor =3D *descriptor;
->   	}
->  =20
->   	ret =3D platform_driver_register(&uniwill_driver);
