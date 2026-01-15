@@ -1,61 +1,58 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.19])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.16])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7F59E39E6E3;
-	Thu, 15 Jan 2026 13:15:08 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.19
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 829251AA1D2;
+	Thu, 15 Jan 2026 13:26:51 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.16
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1768482910; cv=none; b=ebODP8dCIpAfneSPFNamsXChmO3RoLyBGcMWxvWNBkhc7EeiHC44tEQMQvZ1tqEcsPu5GOGQr/8Qf/3QX+7VeXguhwelh+2wCe1lk0JGMWODiIM7BwB3+XPaCY/t8DEk1/otAQDEGq+0McEC9ZVDdfN3Dy0szd7cA+zY5L+pzT4=
+	t=1768483614; cv=none; b=YwNLxKudRkhrKjnQSO0oazbTaRhVO9poycSOONDg5Q4NJ0EOR+D6VJGtU7EmSAcoUdXH0je9TRyAU4Z1QP2nPNHYrn5SEKfj1hnkdfBdioja6q0uLtT9o2ZmCT3zmuEKymyERLa7ZG/PiSB1qJA0Qms2NBY39+stvsZN3Ee/t9Y=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1768482910; c=relaxed/simple;
-	bh=NAQ/zSg6GXxRikkqlsstfGl2uLu71T/Xx4H5SHFFafo=;
+	s=arc-20240116; t=1768483614; c=relaxed/simple;
+	bh=GRPVYHM/dMBfgoBb8jyqTFMZsHnti7WRGalY21pVLiU=;
 	h=From:Date:To:cc:Subject:In-Reply-To:Message-ID:References:
-	 MIME-Version:Content-Type; b=urPIRRoVzLkEvjucDnP0aeZeYZBguAfGR4+mRg23+ah05OmBeFWmn1JNHDnHE3+1n7WHSbF8kaEejLuJWjr2RZx6nbwdo1yE0nA8nZM8J51WlHAmeyFMkGLON0tBx0BaPwlF09qm+MfG0xPAITNgs7nRnlFRnrrjkRFGvLcrFY4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=pass smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=NSzkwAho; arc=none smtp.client-ip=198.175.65.19
+	 MIME-Version:Content-Type; b=d4kc/cHXXSQn0KL8agu2CKVwIKRIBaG28jbw9w5QQ81nDp/jM8G1gGYm+ep//B0tTrkryJ6yogeaDmc/YETbs8Mqegdyu0hRPPssaNT3Vsx+gBvrntAFMmEyrrT5O28C4lTrslTsb6/ng1dIb2QAw9ARF5pn0gxrP0DZ9R6WiVw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=pass smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=A+6PKieg; arc=none smtp.client-ip=198.175.65.16
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="NSzkwAho"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="A+6PKieg"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1768482909; x=1800018909;
+  t=1768483612; x=1800019612;
   h=from:date:to:cc:subject:in-reply-to:message-id:
    references:mime-version;
-  bh=NAQ/zSg6GXxRikkqlsstfGl2uLu71T/Xx4H5SHFFafo=;
-  b=NSzkwAhoWkQxxhQnVl4VWJFMEmRHmuzgpG4QjXeLA3I8jbBBO+jYXVSe
-   3P9BWARiiey38xwDmXBuCuloQy2DLThhtjJqJg8rPoyuWI2TkGzXb4mlz
-   0qDmLtRXjCpUWrx3AMD+lscG9iRrfnmbmj6VAYYZAdZ5gTEMLy4DR/koG
-   y0W8mRheyTeBK4A2Ye7IivIKyS+bpW6TxcMIYhkWUiPe/L9q+0qfmdzA7
-   CFhkW69c6vfp2sH9Q8e5ECr/2sB/10+6enpwoKu9RkyRisgO2hLw+xptQ
-   9nvwa1RCNP9urZEs6m/6m50DeQLjLLmzKeNKE6cl1SRdW6pZUZM+uS7C7
+  bh=GRPVYHM/dMBfgoBb8jyqTFMZsHnti7WRGalY21pVLiU=;
+  b=A+6PKieg5tP8PKNzDCwlvKU+/RQz7A0c17s1K9EYByxrWNCevzqWqNqe
+   72fNXNNXQSJRisZuW56PnHJyWhA2bzsLIY3aVUw7JZcnrS9Yei02R4hM2
+   cDO2T41hsRnxqoJL80TSoW0ykAsmgitfcvZWT4aHDgmpl87PZBQSWAd01
+   fjOngVELifHVVteMwgkcVFaUlAWpHGtKdmi+luiyp4RIRm3sF5rrIzeCS
+   8kUskjKnK7zJrz+hYXPj4ODqf3NgSgEjaaFOEZNFTy1F0pC8RwArjgbJt
+   REpBndlU0uarNlmygFrmKYbTOHrdsq9/Vw1BhskGoGUJubldEO9IY9P4t
    Q==;
-X-CSE-ConnectionGUID: TrwNEXaJQB60ntRNLV2Qwg==
-X-CSE-MsgGUID: rlNTikitSEixrPP4v1UEEw==
-X-IronPort-AV: E=McAfee;i="6800,10657,11671"; a="69685849"
+X-CSE-ConnectionGUID: hVptzZNvQIeKmU3fIp+Mhw==
+X-CSE-MsgGUID: C55/mvsAT6ODiwvOTFqvBQ==
+X-IronPort-AV: E=McAfee;i="6800,10657,11671"; a="69955217"
 X-IronPort-AV: E=Sophos;i="6.21,228,1763452800"; 
-   d="scan'208";a="69685849"
-Received: from orviesa002.jf.intel.com ([10.64.159.142])
-  by orvoesa111.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 15 Jan 2026 05:15:09 -0800
-X-CSE-ConnectionGUID: Tj77cPJuRCOPwXAPgwmE8Q==
-X-CSE-MsgGUID: l8iG3PnbQNCJ/xf8Uy+u8Q==
+   d="scan'208";a="69955217"
+Received: from orviesa009.jf.intel.com ([10.64.159.149])
+  by orvoesa108.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 15 Jan 2026 05:26:51 -0800
+X-CSE-ConnectionGUID: n7BPZ852Q4SACwuofKjmZQ==
+X-CSE-MsgGUID: hmsRjuhzQl2uwgY1vVtc8g==
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="6.21,228,1763452800"; 
-   d="scan'208";a="235662931"
+   d="scan'208";a="204736012"
 Received: from ijarvine-mobl1.ger.corp.intel.com (HELO localhost) ([10.245.244.248])
-  by orviesa002-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 15 Jan 2026 05:15:05 -0800
+  by orviesa009-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 15 Jan 2026 05:26:49 -0800
 From: =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
-Date: Thu, 15 Jan 2026 15:15:01 +0200 (EET)
-To: "David E. Box" <david.e.box@linux.intel.com>
-cc: thomas.hellstrom@linux.intel.com, rodrigo.vivi@intel.com, 
-    irenic.rajneesh@gmail.com, srinivas.pandruvada@linux.intel.com, 
-    intel-xe@lists.freedesktop.org, dri-devel@lists.freedesktop.org, 
-    xi.pardee@linux.intel.comn, Hans de Goede <hansg@kernel.org>, 
-    LKML <linux-kernel@vger.kernel.org>, platform-driver-x86@vger.kernel.org
-Subject: Re: [PATCH 4/4] platform/x86/intel/vsec: Plumb ACPI PMT discovery
- tables through vsec
-In-Reply-To: <20260107002153.63830-5-david.e.box@linux.intel.com>
-Message-ID: <35e7afb6-2aad-1729-bb79-2c56a64c3277@linux.intel.com>
-References: <20260107002153.63830-1-david.e.box@linux.intel.com> <20260107002153.63830-5-david.e.box@linux.intel.com>
+Date: Thu, 15 Jan 2026 15:26:45 +0200 (EET)
+To: Krishna Chomal <krishna.chomal108@gmail.com>, 
+    Hans de Goede <hansg@kernel.org>
+cc: platform-driver-x86@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH v5 2/2] platform/x86: hp-wmi: Add EC offsets to read
+ Victus S thermal profile
+In-Reply-To: <20260113182604.115211-3-krishna.chomal108@gmail.com>
+Message-ID: <60c0e7ad-f25e-4e73-668b-4bb08dbbb79e@linux.intel.com>
+References: <20251218124303.22024-1-krishna.chomal108@gmail.com> <20260113182604.115211-1-krishna.chomal108@gmail.com> <20260113182604.115211-3-krishna.chomal108@gmail.com>
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
@@ -64,140 +61,222 @@ List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=US-ASCII
 
-On Tue, 6 Jan 2026, David E. Box wrote:
+On Tue, 13 Jan 2026, Krishna Chomal wrote:
 
-> Newer platform will optionally expose PMT discovery via ACPI instead of PCI
-> BARs. Add a generic discovery source flag and carry ACPI discovery entries
-> alongside the existing PCI resource path so PMT clients can consume either.
+> The current implementation for Victus S thermal profiles only supports
+> setting the profile. The driver was missing the logic to read the
+> hardware state, meaning it would default to "Balanced" on driver load,
+> overriding the currently active profile. Furthermore, the driver could
+> not detect if the firmware reset the profile on a power source change.
 > 
-> Changes:
->   - Add enum intel_vsec_disc_source { _PCI, _ACPI }.
->   - Extend intel_vsec_platform_info and intel_vsec_device with source enum
->     and ACPI discovery table pointer/
->   - When src==ACPI, skip BAR resource setup and copy the ACPI discovery
->     entries into the aux device.
+> Add platform_profile_victus_s_get_ec() to read the current thermal
+> profile state directly from EC offset 0x59. Since both Balanced and
+> Low-Power profiles share the same thermal profile value, differentiate
+> them by querying the GPU CTGP and PPAB states via existing functions.
+> Additionally, update the power source event notifier to use the actual
+> hardware state when re-trigger CPU power limits actualization.
 > 
-> No user-visible behavior change yet; this only wires ACPI data through vsec
-> in preparation for ACPI-enumerated PMT clients.
+> Testing on HP Omen 16-wf1xxx (board ID 8C78) confirmed that the thermal
+> profile is now persistent across driver loads and power source change
+> events.
 > 
-> Signed-off-by: David E. Box <david.e.box@linux.intel.com>
+> Signed-off-by: Krishna Chomal <krishna.chomal108@gmail.com>
 > ---
->  drivers/platform/x86/intel/vsec.c | 16 ++++++++++++++++
->  include/linux/intel_vsec.h        | 20 +++++++++++++++++++-
->  2 files changed, 35 insertions(+), 1 deletion(-)
+> Changes in v5:
+> - Improved platform_profile_victus_s_get_ec() to support multiple EC
+>   layouts by iteratively probing offsets.
+> Changes in v4:
+> - Fixed platform_profile_victus_s_get_ec() to use both
+>   victus_s_thermal_params and omen_v1_thermal_params instead of
+>   active_thermal_params to fix regression caused in v3.
+> - Handle err after calling victus_s_gpu_thermal_profile_get().
+> - Fixed a wrong function call in victus_s_powersource_event().
+> Changes in v3:
+> - New patch in this series
+> ---
+>  drivers/platform/x86/hp/hp-wmi.c | 100 +++++++++++++++++++++++++++----
+>  1 file changed, 89 insertions(+), 11 deletions(-)
 > 
-> diff --git a/drivers/platform/x86/intel/vsec.c b/drivers/platform/x86/intel/vsec.c
-> index 42471fd609b1..705672dcdd11 100644
-> --- a/drivers/platform/x86/intel/vsec.c
-> +++ b/drivers/platform/x86/intel/vsec.c
-> @@ -109,6 +109,7 @@ static void intel_vsec_dev_release(struct device *dev)
+> diff --git a/drivers/platform/x86/hp/hp-wmi.c b/drivers/platform/x86/hp/hp-wmi.c
+> index 24d065ddfc6a..ed52c697d2ea 100644
+> --- a/drivers/platform/x86/hp/hp-wmi.c
+> +++ b/drivers/platform/x86/hp/hp-wmi.c
+> @@ -13,6 +13,7 @@
 >  
->  	ida_free(intel_vsec_dev->ida, intel_vsec_dev->auxdev.id);
+>  #define pr_fmt(fmt) KBUILD_MODNAME ": " fmt
 >  
-> +	kfree(intel_vsec_dev->acpi_disc);
->  	kfree(intel_vsec_dev->resource);
->  	kfree(intel_vsec_dev);
+> +#include <linux/array_size.h>
+>  #include <linux/kernel.h>
+>  #include <linux/module.h>
+>  #include <linux/init.h>
+> @@ -44,6 +45,7 @@ MODULE_ALIAS("wmi:5FB7F034-2C63-45E9-BE91-3D44E2C707E4");
+>  #define HP_OMEN_EC_THERMAL_PROFILE_FLAGS_OFFSET 0x62
+>  #define HP_OMEN_EC_THERMAL_PROFILE_TIMER_OFFSET 0x63
+>  #define HP_OMEN_EC_THERMAL_PROFILE_OFFSET 0x95
+> +#define HP_VICTUS_S_EC_THERMAL_PROFILE_OFFSET 0x59
+>  
+>  #define HP_FAN_SPEED_AUTOMATIC	 0x00
+>  #define HP_POWER_LIMIT_DEFAULT	 0x00
+> @@ -640,6 +642,12 @@ static bool is_omen_thermal_profile(void)
+>  			    board_name) >= 0;
 >  }
-> @@ -321,6 +322,10 @@ static int intel_vsec_add_dev(struct device *dev, struct intel_vsec_header *head
->  	 * auxiliary device driver.
->  	 */
->  	for (i = 0, tmp = res; i < header->num_entries; i++, tmp++) {
-> +		/* This check doesn't apply to ACPI based discovery */
-
-"This check" is somewhat vague, if it doesn't require a novel, it would be 
-better to write out what check.
-
-> +		if (info->src == INTEL_VSEC_DISC_ACPI)
-> +			break;
-> +
->  		tmp->start = base_addr + header->offset + i * (header->entry_size * sizeof(u32));
->  		tmp->end = tmp->start + (header->entry_size * sizeof(u32)) - 1;
->  		tmp->flags = IORESOURCE_MEM;
-> @@ -339,6 +344,17 @@ static int intel_vsec_add_dev(struct device *dev, struct intel_vsec_header *head
->  	intel_vsec_dev->base_addr = info->base_addr;
->  	intel_vsec_dev->priv_data = info->priv_data;
->  	intel_vsec_dev->cap_id = cap_id;
-> +	intel_vsec_dev->src = info->src;
-> +
-> +	if (info->src == INTEL_VSEC_DISC_ACPI) {
-> +		size_t bytes;
-> +
-> +		bytes = intel_vsec_dev->num_resources * sizeof(info->acpi_disc[0]);
-
-Should this use some overflow.h helper?
-
-> +
-> +		intel_vsec_dev->acpi_disc = kmemdup(info->acpi_disc, bytes, GFP_KERNEL);
-
-include for kmemdup() seems missing.
-
-> +		if (!intel_vsec_dev->acpi_disc)
-> +			return -ENOMEM;
-> +	}
 >  
->  	if (header->id == VSEC_ID_SDSI)
->  		intel_vsec_dev->ida = &intel_vsec_sdsi_ida;
-> diff --git a/include/linux/intel_vsec.h b/include/linux/intel_vsec.h
-> index 931ff42361a9..9d7795480c49 100644
-> --- a/include/linux/intel_vsec.h
-> +++ b/include/linux/intel_vsec.h
-> @@ -32,6 +32,11 @@
->  struct resource;
->  struct pci_dev;
->  
-> +enum intel_vsec_disc_source {
-> +	INTEL_VSEC_DISC_PCI,	/* PCI, default */
-> +	INTEL_VSEC_DISC_ACPI,	/* ACPI */
-> +};
+> +static bool is_victus_s_thermal_profile(void)
+> +{
+> +	/* Initialised in driver init, hence safe to use here */
+> +	return is_victus_s_board;
+> +}
 > +
->  enum intel_vsec_id {
->  	VSEC_ID_TELEMETRY	= 2,
->  	VSEC_ID_WATCHER		= 3,
-> @@ -102,6 +107,10 @@ struct vsec_feature_dependency {
->   * @parent:    parent device in the auxbus chain
->   * @headers:   list of headers to define the PMT client devices to create
->   * @deps:      array of feature dependencies
-> + * @acpi_disc: ACPI discovery tables, each entry is two QWORDs
-> + *             in little-endian format as defined by the PMT ACPI spec.
-> + *             Valid only when @provider == INTEL_VSEC_PROV_ACPI.
-> + * @src:       source of discovery table data
->   * @priv_data: private data, usable by parent devices, currently a callback
->   * @caps:      bitmask of PMT capabilities for the given headers
->   * @quirks:    bitmask of VSEC device quirks
-> @@ -112,6 +121,8 @@ struct intel_vsec_platform_info {
->  	struct device *parent;
->  	struct intel_vsec_header **headers;
->  	const struct vsec_feature_dependency *deps;
-> +	u32 (*acpi_disc)[4];
-> +	enum intel_vsec_disc_source src;
->  	void *priv_data;
->  	unsigned long caps;
->  	unsigned long quirks;
-> @@ -123,7 +134,12 @@ struct intel_vsec_platform_info {
->   * struct intel_sec_device - Auxbus specific device information
->   * @auxdev:        auxbus device struct for auxbus access
->   * @dev:           struct device associated with the device
-> - * @resource:      any resources shared by the parent
-> + * @resource:      PCI discovery resources (BAR windows), one per discovery
-> + *                 instance. Valid only when @src == INTEL_VSEC_PROV_PCI
-> + * @acpi_disc:     ACPI discovery tables, each entry is two QWORDs
-> + *                 in little-endian format as defined by the PMT ACPI spec.
-> + *                 Valid only when @src == INTEL_VSEC_PROV_ACPI.
-> + * @src:           source of discovery table data
->   * @ida:           id reference
->   * @num_resources: number of resources
->   * @id:            xarray id
-> @@ -136,6 +152,8 @@ struct intel_vsec_device {
->  	struct auxiliary_device auxdev;
->  	struct device *dev;
->  	struct resource *resource;
-> +	u32 (*acpi_disc)[4];
-> +	enum intel_vsec_disc_source src;
->  	struct ida *ida;
->  	int num_resources;
->  	int id; /* xa */
-> 
+>  static int omen_get_thermal_policy_version(void)
+>  {
+>  	unsigned char buffer[8] = { 0 };
+> @@ -1631,12 +1639,6 @@ static int platform_profile_victus_set_ec(enum platform_profile_option profile)
+>  	return 0;
+>  }
+>  
+> -static bool is_victus_s_thermal_profile(void)
+> -{
+> -	/* Initialised in driver init, hence safe to use here */
+> -	return is_victus_s_board;
+> -}
+> -
+>  static int victus_s_gpu_thermal_profile_get(bool *ctgp_enable,
+>  					    bool *ppab_enable,
+>  					    u8 *dstate,
+> @@ -1715,6 +1717,68 @@ static int victus_s_set_cpu_pl1_pl2(u8 pl1, u8 pl2)
+>  	return ret;
+>  }
+>  
+> +static int platform_profile_victus_s_get_ec(enum platform_profile_option *profile)
+> +{
+> +	int ret, i;
+> +	bool current_ctgp_state, current_ppab_state;
+> +	u8 current_dstate, current_gpu_slowdown_temp, tp;
+> +	static const u8 tp_ec_offsets[2] = { HP_OMEN_EC_THERMAL_PROFILE_OFFSET,
+> +					     HP_VICTUS_S_EC_THERMAL_PROFILE_OFFSET };
+> +
+> +	/*
+> +	 * Victus S devices have more than 1 EC layouts, hence we cannot directly
+> +	 * call omen_thermal_profile_get() like other platform_profile_*_get_ec()
+> +	 * variants, since it would only resolve to that 1 type of board. Hence
+> +	 * we iteratively query a set of candidates: tp_ec_offsets[] until we
+> +	 * find a valid thermal profile.
+> +	 */
+> +	for (i = 0 ; i < ARRAY_SIZE(tp_ec_offsets) ; i++) {
+> +		ret = ec_read(tp_ec_offsets[i], &tp);
+
+I'm not so sure about this. Reading EC offsets and hoping we find the 
+correct one doesn't sound the best idea. I'd prefer we store the 
+information like we already do for thermal profiles. Unless there's some 
+other way to detect which layout it is?
+
+FYI, I took the first patch of this series again into the review-ilpo-next 
+branch as it seems uncontested and fixes a problem in the existing code.
 
 -- 
  i.
 
+
+> +		if (ret)
+> +			return ret;
+> +
+> +		/*
+> +		 * We cannot use active_thermal_profile_params here, because boards
+> +		 * like 8C78 have tp == 0x0 || tp == 0x1 after cold boot, but logically
+> +		 * it should have tp == 0x30 || tp == 0x31, as corrected by the Omen
+> +		 * Gaming Hub on windows. Hence accept both of these values.
+> +		 */
+> +		if (tp == victus_s_thermal_params.performance ||
+> +		    tp == omen_v1_thermal_params.performance) {
+> +			*profile = PLATFORM_PROFILE_PERFORMANCE;
+> +			return 0;
+> +		} else if (tp == victus_s_thermal_params.balanced ||
+> +			   tp == omen_v1_thermal_params.balanced) {
+> +			/*
+> +			 * Since both PLATFORM_PROFILE_LOW_POWER and
+> +			 * PLATFORM_PROFILE_BALANCED share the same thermal
+> +			 * profile parameter value, hence to differentiate
+> +			 * between them, we query the GPU CTGP and PPAB states
+> +			 * and compare based off of that.
+> +			 */
+> +			ret = victus_s_gpu_thermal_profile_get(&current_ctgp_state,
+> +							       &current_ppab_state,
+> +							       &current_dstate,
+> +							       &current_gpu_slowdown_temp);
+> +			if (ret < 0)
+> +				return ret;
+> +
+> +			if (current_ctgp_state == 0 && current_ppab_state == 0) {
+> +				*profile = PLATFORM_PROFILE_LOW_POWER;
+> +				return 0;
+> +			} else if (current_ctgp_state == 0 && current_ppab_state == 1) {
+> +				*profile = PLATFORM_PROFILE_BALANCED;
+> +				return 0;
+> +			} else {
+> +				return -EINVAL;
+> +			}
+> +		}
+> +	}
+> +
+> +	/* Failed to get thermal profile from all EC offsets */
+> +	return -EINVAL;
+> +}
+> +
+>  static int platform_profile_victus_s_set_ec(enum platform_profile_option profile)
+>  {
+>  	struct thermal_profile_params *params;
+> @@ -1882,6 +1946,7 @@ static int victus_s_powersource_event(struct notifier_block *nb,
+>  				      void *data)
+>  {
+>  	struct acpi_bus_event *event_entry = data;
+> +	enum platform_profile_option actual_profile;
+>  	int err;
+>  
+>  	if (strcmp(event_entry->device_class, ACPI_AC_CLASS) != 0)
+> @@ -1889,6 +1954,17 @@ static int victus_s_powersource_event(struct notifier_block *nb,
+>  
+>  	pr_debug("Received power source device event\n");
+>  
+> +	guard(mutex)(&active_platform_profile_lock);
+> +	err = platform_profile_victus_s_get_ec(&actual_profile);
+> +	if (err < 0) {
+> +		/*
+> +		 * Although we failed to get the current platform profile, we
+> +		 * still want the other event consumers to process it.
+> +		 */
+> +		pr_warn("Failed to read current platform profile (%d)\n", err);
+> +		return NOTIFY_DONE;
+> +	}
+> +
+>  	/*
+>  	 * Switching to battery power source while Performance mode is active
+>  	 * needs manual triggering of CPU power limits. Same goes when switching
+> @@ -1897,7 +1973,7 @@ static int victus_s_powersource_event(struct notifier_block *nb,
+>  	 * Seen on HP 16-s1034nf (board 8C9C) with F.11 and F.13 BIOS versions.
+>  	 */
+>  
+> -	if (active_platform_profile == PLATFORM_PROFILE_PERFORMANCE) {
+> +	if (actual_profile == PLATFORM_PROFILE_PERFORMANCE) {
+>  		pr_debug("Triggering CPU PL1/PL2 actualization\n");
+>  		err = victus_s_set_cpu_pl1_pl2(HP_POWER_LIMIT_DEFAULT,
+>  					       HP_POWER_LIMIT_DEFAULT);
+> @@ -2007,12 +2083,14 @@ static int thermal_profile_setup(struct platform_device *device)
+>  
+>  		ops = &platform_profile_victus_ops;
+>  	} else if (is_victus_s_thermal_profile()) {
+> +		err = platform_profile_victus_s_get_ec(&active_platform_profile);
+> +		if (err < 0)
+> +			return err;
+> +
+>  		/*
+> -		 * Being unable to retrieve laptop's current thermal profile,
+> -		 * during this setup, we set it to Balanced by default.
+> +		 * call thermal profile write command to ensure that the
+> +		 * firmware correctly sets the OEM variables
+>  		 */
+> -		active_platform_profile = PLATFORM_PROFILE_BALANCED;
+> -
+>  		err = platform_profile_victus_s_set_ec(active_platform_profile);
+>  		if (err < 0)
+>  			return err;
+> 
