@@ -1,63 +1,61 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.13])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.9])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 636B83A0E85;
-	Thu, 15 Jan 2026 14:01:09 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.13
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B67F4334695;
+	Thu, 15 Jan 2026 14:12:10 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.9
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1768485671; cv=none; b=kFA5eWPy0vSCC7F42Anbywh3r5EZuTK4nIINPCjSEIpj2fam3xU254zX+XyuBj81JRYWz2vQwekT2NsoSNFFEt2nIIQQJdqBSeMrp8rD/sdpoFo3YPmwhF5nwGPoHzGixXZ9OUs3oQHlGzkftzXmtq8RjdBPSJn4os1hIGkTGLQ=
+	t=1768486333; cv=none; b=U/aSkRcT2FsqK/6ve82S1/aAhRiA1NU1m7r6VuzWGuD69Enp1JW1AnOAnNEPDFNGyN8lbdZNm1NGFmc2JVcaO9d348rD9kVsfBor6gGr11sfdJEjK2IvGScul22VIRAe2Lp68QgfYTBIVu7tA13HaTtDSQ46kLr7trz+Gmb4zmw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1768485671; c=relaxed/simple;
-	bh=NY56gSrCfddQq8TILMmRYuu0qRjwWj2aOtJfEsVoGDA=;
+	s=arc-20240116; t=1768486333; c=relaxed/simple;
+	bh=4GYT6Kq3mYaQNfR3/J0uuPnpvzhSSojvNqi5oBq8ZY8=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=Cz6Mzi3aMEhHcvY4oGDVz0Gqau0CVQKM0qUSD/qnMKpbFB8569eJlk7LZG9py7UGYpV17wN+rY+3fV7DQ3mJEZUV9zCrkIXzFqynfkD6OiNmlFR9u6OJz31OLE8fSPoSVLGhkU+pQK078QuA8yaWNMQbe8E0nZt5dC8jhk51iBE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=JcBx675g; arc=none smtp.client-ip=192.198.163.13
+	 Content-Type:Content-Disposition:In-Reply-To; b=LYoxxG59OjyD8tJRdflE5rB29sMSNoxwCtnfERdZQ2DJmbss01dGi0Z5rR88H5SHIUsHPFJrar+Cf5yg8QUltlz93xbO7GHKJ4sagdocXbwU2GcsyMD838tWASLOD8NhoMNMGBlKJMmDD/5UmmXcb+ezZqeExTlVfPHXnkYp3BI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=Ey5Kx2JN; arc=none smtp.client-ip=198.175.65.9
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="JcBx675g"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="Ey5Kx2JN"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1768485669; x=1800021669;
+  t=1768486331; x=1800022331;
   h=date:from:to:cc:subject:message-id:references:
    mime-version:in-reply-to;
-  bh=NY56gSrCfddQq8TILMmRYuu0qRjwWj2aOtJfEsVoGDA=;
-  b=JcBx675gmpVlLDG6G0k4RHcmlJD1Q+aTVMN/7m6cKm47jgC3KiTl3tt2
-   MG7JbiGlcLOhdHFjPpQcr9McONdseDsYtRIrZJtd2ICyELSECLULLqcw/
-   NlEobpoJZZJanFaBIhy4THg0ye2rE5Hr/G0FMlASIZ/5OKfQ5kgtVkDt/
-   C6a2ZAW2YSR8P9sqA+f2VqvPjqfGVrbgDo7aAi+0uhOlvYeULSUAOOa+K
-   eEK14VgGL1NT09U0TXqB72L9pFKsbFKF+3ExawKHvqF7Xr/bHQiPOZKw7
-   Y9aBmlpUjZq7npXEU1/a4OgyfkijjBDAU6sj7TOVub8uwLdoUkethgjTt
+  bh=4GYT6Kq3mYaQNfR3/J0uuPnpvzhSSojvNqi5oBq8ZY8=;
+  b=Ey5Kx2JNKN8yLABTHYQeyStwORwD62Bl/DqHZdqrqSUKLDexNIOIg+3L
+   Bfb+fp1Inj8TfW32ECVq1BSlfCL4RjaoF5Anl+vrnjZfW6gsyxeJHFcCv
+   JxDx5s72lOb+wf4EaFcqgtpSIgzMuT/boD6/x+HNVzHslcloaQZwcUmxH
+   Ht2gUh+R/MjRucuF77JtKs1DKRc5qiq21ys8h7L51ak+4SPbrVlRGYfEI
+   QAB/ITwBLb53wmr1y/GROrpHJkOwd+7ECjXZ5DObltgbLfJ8Fjeln0URA
+   GEoKY8tAIzYPun1w4wqaIDqYNrAoUNLnpKgT81f1UKAgRM0+OM9StOlcf
    g==;
-X-CSE-ConnectionGUID: WUYyYIe/RuO1vtCO+AwEJw==
-X-CSE-MsgGUID: qDG1wa6mSAaCpzTl73f8cQ==
-X-IronPort-AV: E=McAfee;i="6800,10657,11672"; a="72375527"
+X-CSE-ConnectionGUID: 48GbmlDnQqK6affshKl/fw==
+X-CSE-MsgGUID: mCFjVjBVQ/iPLkx8cTuN4Q==
+X-IronPort-AV: E=McAfee;i="6800,10657,11672"; a="92461865"
 X-IronPort-AV: E=Sophos;i="6.21,228,1763452800"; 
-   d="scan'208";a="72375527"
-Received: from fmviesa010.fm.intel.com ([10.60.135.150])
-  by fmvoesa107.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 15 Jan 2026 06:01:09 -0800
-X-CSE-ConnectionGUID: fTBPd5/jQGimTqOsUba12A==
-X-CSE-MsgGUID: pibZMDtIS+uNB34QaOfB7Q==
+   d="scan'208";a="92461865"
+Received: from fmviesa003.fm.intel.com ([10.60.135.143])
+  by orvoesa101.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 15 Jan 2026 06:12:10 -0800
+X-CSE-ConnectionGUID: grB5EEhZTtGnWLyxtBSwYQ==
+X-CSE-MsgGUID: BhU7+7owTB67k/vyqZbbZw==
 X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.21,228,1763452800"; 
-   d="scan'208";a="205452425"
 Received: from lkp-server01.sh.intel.com (HELO 765f4a05e27f) ([10.239.97.150])
-  by fmviesa010.fm.intel.com with ESMTP; 15 Jan 2026 06:01:06 -0800
+  by fmviesa003.fm.intel.com with ESMTP; 15 Jan 2026 06:12:07 -0800
 Received: from kbuild by 765f4a05e27f with local (Exim 4.98.2)
 	(envelope-from <lkp@intel.com>)
-	id 1vgNuK-00000000I2C-2GRX;
-	Thu, 15 Jan 2026 14:01:04 +0000
-Date: Thu, 15 Jan 2026 22:00:49 +0800
+	id 1vgO4z-00000000I2y-1DNL;
+	Thu, 15 Jan 2026 14:12:05 +0000
+Date: Thu, 15 Jan 2026 22:11:30 +0800
 From: kernel test robot <lkp@intel.com>
 To: Ciju Rajan K <crajank@nvidia.com>, hdegoede@redhat.com,
 	ilpo.jarvinen@linux.intel.com, tglx@linutronix.de
-Cc: oe-kbuild-all@lists.linux.dev, christophe.jaillet@wanadoo.fr,
-	andriy.shevchenko@linux.intel.com, vadimp@nvidia.com,
-	platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org,
-	Ciju Rajan K <crajank@nvidia.com>
+Cc: llvm@lists.linux.dev, oe-kbuild-all@lists.linux.dev,
+	christophe.jaillet@wanadoo.fr, andriy.shevchenko@linux.intel.com,
+	vadimp@nvidia.com, platform-driver-x86@vger.kernel.org,
+	linux-kernel@vger.kernel.org, Ciju Rajan K <crajank@nvidia.com>
 Subject: Re: [PATCH platform-next v4 1/2] kernel/irq: Add generic interrupt
  storm detection mechanism
-Message-ID: <202601152136.LGHBo3k1-lkp@intel.com>
+Message-ID: <202601152104.pBPeNPHR-lkp@intel.com>
 References: <20260115074909.245852-2-crajank@nvidia.com>
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
@@ -84,23 +82,32 @@ url:    https://github.com/intel-lab-lkp/linux/commits/Ciju-Rajan-K/kernel-irq-A
 base:   linus/master
 patch link:    https://lore.kernel.org/r/20260115074909.245852-2-crajank%40nvidia.com
 patch subject: [PATCH platform-next v4 1/2] kernel/irq: Add generic interrupt storm detection mechanism
-config: arc-allnoconfig (https://download.01.org/0day-ci/archive/20260115/202601152136.LGHBo3k1-lkp@intel.com/config)
-compiler: arc-linux-gcc (GCC) 15.2.0
-reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20260115/202601152136.LGHBo3k1-lkp@intel.com/reproduce)
+config: arm-allnoconfig (https://download.01.org/0day-ci/archive/20260115/202601152104.pBPeNPHR-lkp@intel.com/config)
+compiler: clang version 22.0.0git (https://github.com/llvm/llvm-project 9b8addffa70cee5b2acc5454712d9cf78ce45710)
+reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20260115/202601152104.pBPeNPHR-lkp@intel.com/reproduce)
 
 If you fix the issue in a separate patch/commit (i.e. not just a new version of
 the same patch/commit), kindly add following tags
 | Reported-by: kernel test robot <lkp@intel.com>
-| Closes: https://lore.kernel.org/oe-kbuild-all/202601152136.LGHBo3k1-lkp@intel.com/
+| Closes: https://lore.kernel.org/oe-kbuild-all/202601152104.pBPeNPHR-lkp@intel.com/
 
 All warnings (new ones prefixed by >>):
 
->> kernel/irq/spurious.c:41:6: warning: no previous prototype for 'irq_register_storm_detection' [-Wmissing-prototypes]
+>> kernel/irq/spurious.c:41:6: warning: no previous prototype for function 'irq_register_storm_detection' [-Wmissing-prototypes]
       41 | bool irq_register_storm_detection(unsigned int irq, unsigned int max_freq,
-         |      ^~~~~~~~~~~~~~~~~~~~~~~~~~~~
->> kernel/irq/spurious.c:79:6: warning: no previous prototype for 'irq_unregister_storm_detection' [-Wmissing-prototypes]
+         |      ^
+   kernel/irq/spurious.c:41:1: note: declare 'static' if the function is not intended to be used outside of this translation unit
+      41 | bool irq_register_storm_detection(unsigned int irq, unsigned int max_freq,
+         | ^
+         | static 
+>> kernel/irq/spurious.c:79:6: warning: no previous prototype for function 'irq_unregister_storm_detection' [-Wmissing-prototypes]
       79 | void irq_unregister_storm_detection(unsigned int irq)
-         |      ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+         |      ^
+   kernel/irq/spurious.c:79:1: note: declare 'static' if the function is not intended to be used outside of this translation unit
+      79 | void irq_unregister_storm_detection(unsigned int irq)
+         | ^
+         | static 
+   2 warnings generated.
 
 
 vim +/irq_register_storm_detection +41 kernel/irq/spurious.c
