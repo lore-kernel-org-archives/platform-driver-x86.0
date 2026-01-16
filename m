@@ -1,140 +1,394 @@
-Received: from mail-pf1-f172.google.com (mail-pf1-f172.google.com [209.85.210.172])
+Received: from mail-ua1-f49.google.com (mail-ua1-f49.google.com [209.85.222.49])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DA539336EE5
-	for <platform-driver-x86@vger.kernel.org>; Fri, 16 Jan 2026 15:11:49 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.172
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 05B0A3939AE
+	for <platform-driver-x86@vger.kernel.org>; Fri, 16 Jan 2026 17:17:06 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.222.49
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1768576311; cv=none; b=gyou+bDOw+lh1SiORpWXrsOUUioXgSnYgBJA6AtmIDbq8INR+kTDZdIABh+Me/3juUbVHPLFkEr0hXMwX5qapZU0VFjcqGyYExEKzEwYELyjkuFANnGStdxXQ4Lg/HUQmiBF/eOJpKxddbKBlt88LzZoUrfGqmUR7ePJpcpSxcE=
+	t=1768583830; cv=none; b=hEhJhbHS4rWn/7qhyb3fFKLQnH6WF/CFiub48aw1bVNHMz0dEeBjjCXKCnJ+9Nijds/GOJRldsKX7D56bGVK1UDNc5hmFz62ajkK+qvhiPzerck3xy1d0ztcfLz+VnjNZ3gy6fbIEKJrQooca393WubgG5Rm9mDq6RHyquOEcYQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1768576311; c=relaxed/simple;
-	bh=LHJz1cNbdJQq0/h8jrYMOKnwm3tV3jhv4dWCXIxIans=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=DEd9kVHfIYbDRgedretPGCi/uaUZzLqcZDJ1cYoritt87VKttc/bWr7rszXNhKSIpjcTFL3S5Iz4atjyJ0xKwvhWFMqDIs8N+ppHTeESJsl1ZyMs9/jX2+vTJCH3Q8SRwhcfoN1seP0xipdZe5OdHPYYaWnNgw2CjdPa0Tf5mOo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=EYKKhCwg; arc=none smtp.client-ip=209.85.210.172
+	s=arc-20240116; t=1768583830; c=relaxed/simple;
+	bh=8NIdsHO4R7Z+ITNhfbm3oeuM2cLj1tSAVYP1uCUbvnU=;
+	h=Mime-Version:Content-Type:Date:Message-Id:Cc:Subject:From:To:
+	 References:In-Reply-To; b=pM1HGTNLvVfU6Myx0FCGbffZunH4fbet7IyJ/LFvzba8bkETRj/BSL+5niBXhcUhhaL+XZxaHhN/b24Owa+RhttSs1e9QUcbxr3rugQ+nc/84ddXGk4C8/I1YZRb8nSyD/LMrhTA8jUpoeyyF0RZxsMg1dPX4fitRBisRnDrLLY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=N6/1BR8R; arc=none smtp.client-ip=209.85.222.49
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="EYKKhCwg"
-Received: by mail-pf1-f172.google.com with SMTP id d2e1a72fcca58-81f4e136481so1028158b3a.3
-        for <platform-driver-x86@vger.kernel.org>; Fri, 16 Jan 2026 07:11:49 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="N6/1BR8R"
+Received: by mail-ua1-f49.google.com with SMTP id a1e0cc1a2514c-93f4f04d9f6so1994728241.0
+        for <platform-driver-x86@vger.kernel.org>; Fri, 16 Jan 2026 09:17:06 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1768576309; x=1769181109; darn=vger.kernel.org;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date:from:to
-         :cc:subject:date:message-id:reply-to;
-        bh=oXeFz9RUH6z49b4qnoPEulCblA5c5mYZyI1OI75NppM=;
-        b=EYKKhCwgfkbT+r5t475W4DqjJIS55JuR7DHiL6rDFUds5+jUSQiKfGoa72zT/A1qtj
-         wQNurPFk0FRO9MTh/M8/G+EI9NX0NYtvlWDukBYDJeWMH+m75SMJolKi2aGN8HI7HC/I
-         kt+Q3nQzyJ8x+2/otVHT5wb532IpkL/LZJbo/9mvIW3fChefz87ubJfdtRX91MC2J5xV
-         KyZ2PwHchD1JfMsUdbxhc41FcszD4Ex7MEr65s2AK4NSjRK/DGd5zUdPj8WjiI2s5u6E
-         5X0Uog/90pWC63K5FERZIuERUQUV3hlJkZBJe8eAcvtUOK9sxG8saDVS1NlCbVbjdDt6
-         1yfg==
+        d=gmail.com; s=20230601; t=1768583825; x=1769188625; darn=vger.kernel.org;
+        h=in-reply-to:references:to:from:subject:cc:message-id:date
+         :content-transfer-encoding:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=efGgTmZq2s8Wr+4vLiVPiPXTWhArQuy6Lzh7ja4nxnI=;
+        b=N6/1BR8RUaxX6cGefsjmCMMF9Sw11EDcX9jY0Af/DP/hldoUvRutYyVAZ0w1NX8lol
+         nUXkpmbvShEWD0E5IkGyXkw0L/CmED6Ablz5TLHZC2OSZrjlxCbVuKve4nh+IeLtAnBh
+         RXN2pq4+/wOcLEijqAqeu0r9FiC6E/vvZx4NrA6x1fKOSOUWd0D8Ua4pgUBdZM7TLRjo
+         2YiAdzxvp64yBvpFyeBQCpc+mJyjssvKZsjvNnLNBRhKqfKXDPg9P9rm8jR/TJSC1Ego
+         KY1kZvLwD1WaKijom39sj8l93Y2ZFDTOFHZ3HpxIOrqlp6WdxxclKdU9Wt7ND1fl2UcF
+         cscQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1768576309; x=1769181109;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date:x-gm-gg
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=oXeFz9RUH6z49b4qnoPEulCblA5c5mYZyI1OI75NppM=;
-        b=ByZpFCgI8aUmr9ANfKlYaP2eIczSOWq9QF6B0rvVKbbbgo7S9IHaC3StTWSZP1MRBU
-         LcrOIfj1pwAul5ZQr02XQl6eN198BR9fxVHrJOjDKriy5Mg6RmiwufnxSn3WthyWMmjq
-         hWLk56NOBam0dIW3reptwfv3WkxSk0qYS9Eq4pCdpd0qb6KcnkeITTJYkrlSCjcN9F0S
-         w8AE+3RpibUso1boXx1KigNu5f8m8xjEXB/wj4n4NHK+Ru2GLWoyx97Mywfp0vbR36vD
-         5Gl8aUPRrNC5gqSIc8NwlJo5C23wRKLrl74Jf0M/MgyO6NZro/XUQ4rushjG/TOgrziN
-         XHTA==
-X-Forwarded-Encrypted: i=1; AJvYcCXwNJADhGzj8Q40oaeHPOuHItcTXVp6bevyxxKgS4lPjU81Jx+3XosUbt/z4CTnGS00a/AB/GY8isC+hsNN84BkppYZ@vger.kernel.org
-X-Gm-Message-State: AOJu0Yw+DN75GPOXTcUg+Zb4RC6yZA0WazBxyKVkbbd85CQuuqPgQ+1e
-	CX5LBouGK442Rf8VDvrbCV0CB7Co4h7NErEaEO6638S2NdvBM8nqMp6A
-X-Gm-Gg: AY/fxX4msRBG3F5qX1/aZGbhEFdCH//pXcbWOJ/dlTOobD5tSm827zwuhvUIBLW5zdw
-	HYEk2WCrWw0CUZEsQfOCcK4BNspdwba5o/Gn+XInSifQuU2s6T+9CZ+EOE2SFQaWsGRsl+tkx6H
-	8JJYyN2cV2jkaC7EvjOaixc08KWQcjZ9E0Ks+bPHwk9Ml7gH40jlPXGUAM56qVHOlMkSsswS+Ga
-	GC6VaSBr+AYDc6kWi2DiNq0DZxunhFHu9yqA+eiIax1aXVCgTcFcdHITJF3RN4yh5hznSfD/RXo
-	SRU3HiSGvZvPnSI6vpNSojrhh7G7OhZmxpn4/NFFuUHeKox6Ijq7grCVqUbkZP/lf4eTKNKRjtz
-	uLM718BFPVkW/7w7cI52EEPfXgQl04Ioi7rDm77jNqTHfSIAToFqnQ6ZPF1D/azFWPXoLR8mXua
-	iELWtv+tg0HN1d8xuZMZo=
-X-Received: by 2002:a05:6a00:369a:b0:81e:cbb0:db14 with SMTP id d2e1a72fcca58-81fa17a1465mr2493656b3a.21.1768576309123;
-        Fri, 16 Jan 2026 07:11:49 -0800 (PST)
-Received: from archlinux ([2405:201:1b:225c:eb9d:1fc0:f95c:bd90])
-        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-81fa108bf00sm2347192b3a.10.2026.01.16.07.11.44
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 16 Jan 2026 07:11:48 -0800 (PST)
-Date: Fri, 16 Jan 2026 20:41:40 +0530
-From: Krishna Chomal <krishna.chomal108@gmail.com>
-To: Ilpo =?utf-8?B?SsOkcnZpbmVu?= <ilpo.jarvinen@linux.intel.com>
-Cc: Hans de Goede <hansg@kernel.org>, platform-driver-x86@vger.kernel.org, 
-	LKML <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH v5 2/2] platform/x86: hp-wmi: Add EC offsets to read
- Victus S thermal profile
-Message-ID: <aWpKUa--tT0ZSRKG@archlinux>
-References: <20251218124303.22024-1-krishna.chomal108@gmail.com>
- <20260113182604.115211-1-krishna.chomal108@gmail.com>
- <20260113182604.115211-3-krishna.chomal108@gmail.com>
- <60c0e7ad-f25e-4e73-668b-4bb08dbbb79e@linux.intel.com>
+        d=1e100.net; s=20230601; t=1768583825; x=1769188625;
+        h=in-reply-to:references:to:from:subject:cc:message-id:date
+         :content-transfer-encoding:mime-version:x-gm-gg:x-gm-message-state
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=efGgTmZq2s8Wr+4vLiVPiPXTWhArQuy6Lzh7ja4nxnI=;
+        b=YSFHFvLKVPex3ZM6bbzVofp2ubOh6qQXD/LGowO/T3gesrZdd/evn2b2n8Sb79w+8Z
+         qeJUBgLIzg3jBbGZFFuWpPMBoZ44AhZzrVlmg0QNrhB5s9Z/56bAudh+qiQTlVq8mlxN
+         IYP587NBMcS9joB5L+vQvze9oZ+0d6tCT2kwTlhA2r79aq/A3IT6i52t504Rr55+Fkjk
+         gipL3UEPiCbKCZlixC4GqYNgrCiURxL48w1bBKQ9o6SCPp5zhWYLz8j+NUEHoV+w/3mc
+         qg6N65rYzIiBatmgIcxqr8qA5yIKt/27fjM0DNvqTcK94xolIlUJXqGCUXxxucsPJu9C
+         8t1g==
+X-Forwarded-Encrypted: i=1; AJvYcCWA8Ka1C+8a9TnAO3sFt+QLXwt/UPBWxZ+b0ypdbhNvng4aqwR+FwVSDOrD977TCXjZMtDBHXcRifj/GBeuIAah75ng@vger.kernel.org
+X-Gm-Message-State: AOJu0YxDsswSC4jfMkmsDJV2B95uZxopSMhKU5mQwUJ879Wif8llimrT
+	8DA519tAj196ZLlXF8Dgg1u1eVoKJGAggzkquQfsahUSqzsm/SKkkVy0
+X-Gm-Gg: AY/fxX4uAqmsHomTgZPF57JWetY/hz5Fz2+XrwpRxMmMNzIneItdTaA1plgOw8MUXR6
+	mgT9fbGTivmyz5pHqFmizpHCLFR+it7QuzJzMEC0jSoJIKQ9ejl3WIH2UNC5ayeLxgtI5DaaMiE
+	86qtUOaPcI9lzp5cZtciX46XE/0w/SzwnVGXGo+zpjWduQkBBHjT9FXul4hjKMQE1TkTPgWlrMM
+	xaXWQ2/4tWjnDW+Z2gcf4JjN3Z91Nz3VjU3d8hr8LI7gKGXKt4u5fZ1JUrPkCGC81pRsRwtf+yY
+	wzM5PWrqset+B2kGGztklHSfXHYc9dWTm2xwcHODlH71xg8zFTFk4Q1CZshIsjgoeySnvBGIobM
+	ovNd6QH99dJHkH7ctFFYWOAU68OZWPJxqARWIA3OXWCoc4MsaKgPZ0698cgwSNzUC1obr63a2dV
+	o8i4I4fXw=
+X-Received: by 2002:a05:6102:dd1:b0:5ef:a315:28e5 with SMTP id ada2fe7eead31-5f1923fbde7mr3035107137.3.1768583825301;
+        Fri, 16 Jan 2026 09:17:05 -0800 (PST)
+Received: from localhost ([2800:bf0:4580:3149:c903:2904:3cc3:8b4c])
+        by smtp.gmail.com with ESMTPSA id ada2fe7eead31-5f1a6925726sm1017693137.5.2026.01.16.09.17.03
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Fri, 16 Jan 2026 09:17:04 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <60c0e7ad-f25e-4e73-668b-4bb08dbbb79e@linux.intel.com>
+Mime-Version: 1.0
+Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=UTF-8
+Date: Fri, 16 Jan 2026 12:17:02 -0500
+Message-Id: <DFQ6N3R4HO0M.2L0HZMH3N0N49@gmail.com>
+Cc: "Derek J. Clark" <derekjohn.clark@gmail.com>, "Mark Pearson"
+ <mpearson-lenovo@squebb.ca>, "Armin Wolf" <W_Armin@gmx.de>, "Hans de Goede"
+ <hansg@kernel.org>, =?utf-8?q?Ilpo_J=C3=A4rvinen?=
+ <ilpo.jarvinen@linux.intel.com>, "Guenter Roeck" <linux@roeck-us.net>,
+ <platform-driver-x86@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+ <linux-hwmon@vger.kernel.org>
+Subject: Re: [PATCH v9 7/7] platform/x86: lenovo-wmi-other: Add HWMON for
+ fan reporting/tuning
+From: "Kurt Borja" <kuurtb@gmail.com>
+To: "Rong Zhang" <i@rong.moe>, "Kurt Borja" <kuurtb@gmail.com>
+X-Mailer: aerc 0.21.0-0-g5549850facc2
+References: <20260114122745.986699-1-i@rong.moe>
+ <20260114122745.986699-8-i@rong.moe> <DFOQB6DGBKBZ.39JQKPB7XDSJG@gmail.com>
+ <1a9909f4083d85736a1e28067517ae0899e462f2.camel@rong.moe>
+ <DFP7SAGSD32N.3SIIV8JMYHWRM@gmail.com>
+ <9ff2b73e30f06be69b6c0b72b91a19d766310db7.camel@rong.moe>
+ <DFPEEI5LNJXZ.2E32AHA8VUJW3@gmail.com>
+ <0e7dfebcaa4509e907faa7b43fc8d49ca6729ca2.camel@rong.moe>
+In-Reply-To: <0e7dfebcaa4509e907faa7b43fc8d49ca6729ca2.camel@rong.moe>
 
-On Thu, Jan 15, 2026 at 03:26:45PM +0200, Ilpo Järvinen wrote:
-[snip]
->> +static int platform_profile_victus_s_get_ec(enum platform_profile_option *profile)
->> +{
->> +	int ret, i;
->> +	bool current_ctgp_state, current_ppab_state;
->> +	u8 current_dstate, current_gpu_slowdown_temp, tp;
->> +	static const u8 tp_ec_offsets[2] = { HP_OMEN_EC_THERMAL_PROFILE_OFFSET,
->> +					     HP_VICTUS_S_EC_THERMAL_PROFILE_OFFSET };
->> +
->> +	/*
->> +	 * Victus S devices have more than 1 EC layouts, hence we cannot directly
->> +	 * call omen_thermal_profile_get() like other platform_profile_*_get_ec()
->> +	 * variants, since it would only resolve to that 1 type of board. Hence
->> +	 * we iteratively query a set of candidates: tp_ec_offsets[] until we
->> +	 * find a valid thermal profile.
->> +	 */
->> +	for (i = 0 ; i < ARRAY_SIZE(tp_ec_offsets) ; i++) {
->> +		ret = ec_read(tp_ec_offsets[i], &tp);
+On Fri Jan 16, 2026 at 9:18 AM -05, Rong Zhang wrote:
+> Hi Kurt,
 >
->I'm not so sure about this. Reading EC offsets and hoping we find the
->correct one doesn't sound the best idea. I'd prefer we store the
->information like we already do for thermal profiles. Unless there's some
->other way to detect which layout it is?
+> On Thu, 2026-01-15 at 14:09 -0500, Kurt Borja wrote:
+>> On Thu Jan 15, 2026 at 11:57 AM -05, Rong Zhang wrote:
+>> > Hi Kurt,
+>> >=20
+>> > On Thu, 2026-01-15 at 08:58 -0500, Kurt Borja wrote:
+>> > > On Thu Jan 15, 2026 at 8:03 AM -05, Rong Zhang wrote:
+>> > > > Hi Kurt,
+>> > > >=20
+>> > > > On Wed, 2026-01-14 at 19:16 -0500, Kurt Borja wrote:
+>> > > > > Hi Rong,
+>> > > > >=20
+>> > > > > On Wed Jan 14, 2026 at 7:27 AM -05, Rong Zhang wrote:
+>> > > > > > Register an HWMON device for fan reporting/tuning according to
+>> > > > > > Capability Data 00 (capdata00) and Fan Test Data (capdata_fan)=
+ provided
+>> > > > > > by lenovo-wmi-capdata. The corresponding HWMON nodes are:
+>> > > > > >=20
+>> > > > > >  - fanX_enable: enable/disable the fan (tunable)
+>> > > > > >  - fanX_input: current RPM
+>> > > > > >  - fanX_max: maximum RPM
+>> > > > > >  - fanX_min: minimum RPM
+>> > > > > >  - fanX_target: target RPM (tunable)
+>> > > > > >=20
+>> > > > > > Information from capdata00 and capdata_fan are used to control=
+ the
+>> > > > > > visibility and constraints of HWMON attributes. Fan info from =
+capdata00
+>> > > > > > is collected on bind, while fan info from capdata_fan is colle=
+cted in a
+>> > > > > > callback. Once all fan info is collected, register the HWMON d=
+evice.
+>> > > > > >=20
+>> > > > > > Signed-off-by: Rong Zhang <i@rong.moe>
+>> > > > > > Reviewed-by: Derek J. Clark <derekjohn.clark@gmail.com>
+>> > > > > > ---
+>> > > > >=20
+>> > > > > ...
+>> > > > >=20
+>> > > > > > diff --git a/Documentation/wmi/devices/lenovo-wmi-other.rst b/=
+Documentation/wmi/devices/lenovo-wmi-other.rst
+>> > > > > > index 821282e07d93c..bd1d733ff286d 100644
+>> > > > > > --- a/Documentation/wmi/devices/lenovo-wmi-other.rst
+>> > > > > > +++ b/Documentation/wmi/devices/lenovo-wmi-other.rst
+>> > > > > > @@ -31,6 +31,8 @@ under the following path:
+>> > > > > > =20
+>> > > > > >    /sys/class/firmware-attributes/lenovo-wmi-other/attributes/=
+<attribute>/
+>> > > > > > =20
+>> > > > > > +Additionally, this driver also exports attributes to HWMON.
+>> > > > > > +
+>> > > > > >  LENOVO_CAPABILITY_DATA_00
+>> > > > > >  -------------------------
+>> > > > > > =20
+>> > > > > > @@ -39,6 +41,11 @@ WMI GUID ``362A3AFE-3D96-4665-8530-96DAD5BB=
+300E``
+>> > > > > >  The LENOVO_CAPABILITY_DATA_00 interface provides various info=
+rmation that
+>> > > > > >  does not rely on the gamezone thermal mode.
+>> > > > > > =20
+>> > > > > > +The following HWMON attributes are implemented:
+>> > > > > > + - fanX_enable: enable/disable the fan (tunable)
+>> > > > >=20
+>> > > > > I was testing this series and I'm a bit confused about fanX_enab=
+le.
+>> > > >=20
+>> > > > Thanks for testing!
+>> > >=20
+>> > > Thanks for working on this!
+>> > >=20
+>> > > >=20
+>> > > > > Judging by this comment and also by taking a quick look at the c=
+ode, it
+>> > > > > looks like writting 0 to this attribute disables the fan.
+>> > > > >=20
+>> > > > > This is however (per hwmon ABI documentation [1]) not how this a=
+ttribute
+>> > > > > should work. IIUC, it is intended for devices which can disable =
+the fan
+>> > > > > sensor, not the actual fan.
+>> > > >=20
+>> > > > Hmm, what a confusing name :-/
+>> > > >=20
+>> > > > > I fail to see how this feature is useful and I also find it dang=
+erous
+>> > > > > for this to be exposed by default, considering the same could be
+>> > > > > achieved with the relaxed module parameter, which at least tells=
+ the
+>> > > > > user to be careful.
+>> > > >=20
+>> > > > Makes sense. I will remove the attribute and mention such behavior=
+ in
+>> > > > the module parameter.
+>> > >=20
+>> > > Also, it would be worth to mention that writting 0 to the fanY_targe=
+t
+>> > > attribute is auto mode, right?
+>> >=20
+>> > Ah, yes.
+>> >=20
+>> > > I was testing the fanX_target attribute and it does work as intended=
+,
+>> > > i.e. the fan speed changes to the desired speed. However, every time=
+ I
+>> > > write to this attribute I'm getting -EIO error and it always reads 0=
+.
+>> > >=20
+>> > > For example:
+>> > >=20
+>> > > 	$ echo 3550 | sudo tee fan*_target
+>> > > 	3550
+>> > > 	tee: fan1_target: Input/output error
+>> > > 	tee: fan2_target: Input/output error
+>> > > 	$ cat fan*_target
+>> > > 	0
+>> > > 	0
+>> > >=20
+>> > > But as I said, the fans do reach the desired speed (an approximation=
+ of
+>> > > it):
+>> > >=20
+>> > > 	$ cat fan*_input
+>> > > 	3500
+>> > > 	3500
+>> > >=20
+>> > > This is a bit weird, but I haven't look in depth into it. I will fin=
+d
+>> > > some time to do it later. This happens on a 83KY (Legion 7 16IAX1)
+>> > > laptop.
+>> >=20
+>> > I'd like to fix it in the next revision. Looking forward to your
+>> > progress in debugging :-)
+>> >=20
+>> > It seems to me that the corresponding ACPI method did not return 1 on
+>> > success. There should be some clues in the decompiled ASL code. Could
+>> > you attach it in your reply? The HWMON implementation was developed
+>> > mostly based on my understanding on the decompiled ASL code of my
+>> > device. I'd like to check the one of your device as a cross-reference
+>> > to see if there are more potential bugs.
+>>=20
+>> Yep, the ACPI method retval is 0 instead of 1.
+>
+> Given the divergence between your device and mine, I think we could
+> just accept both 0 and 1. That should be fine considering that we've
+> strictly checked LENOVO_CAPABILITY_DATA_00 and LENOVO_FAN_TEST_DATA
+> before exposing fan channels.
 
-I explored the Omen Gaming Hub (OGH) behavior on Windows to see if a WMI
-query exists for readback. OGH appears to default to "Balanced" on first
-run and tracks state via a profile.json file on the disk. Deleting this
-file causes the app to lose the current state, suggesting that there is no
-official WMI readback query. By implementing EC reads, the driver can
-actually remain more consistent with the real hardware state than the
-offcial software.
-
-I agree that iterative EC reads are not ideal. However, since these two
-offsets (0x95 and 0x59) cover all (or almost all) known Victus/Omen layouts,
-the risk of "hoping" is low.
-
-Storing them at compile time in the victus_s array as a part of
-.driver_data is indeed the best thing. But since we do not know what EC
-layout is followed by the existing boards in the array, we can take a
-hybrid approach here:
-1. I (and subsequent additions) will store their EC offset in the
-    .driver_data field struct.
-2. For already existing boards we will perform this iterative probe once
-    during init, and store it somewhere common.
-3. Then platform_profile_victus_s_get_ec() can simply use this "definite"
-    offset to perform the EC read.
+Thanks! This fixes the -EIO issue.
 
 >
->FYI, I took the first patch of this series again into the review-ilpo-next
->branch as it seems uncontested and fixes a problem in the existing code.
+>> Here is a snippet of what I believe is the fan control stuff on my
+>> device (L: 50393):
+>>=20
+>>=20
+>> 	If ((SFV0 =3D=3D 0x04030001))
+>> 	{
+>> 		Local0 =3D (SFV1 / 0x64)
+>> 		^^PC00.LPCB.EC0.LECR (0xD1, One, Local0, 0x02)
+>> 		Return (Zero)
+>> 	}
+>>=20
+>> 	If ((SFV0 =3D=3D 0x04030002))
+>> 	{
+>> 		Local0 =3D (SFV1 / 0x64)
+>> 		^^PC00.LPCB.EC0.LECR (0xD1, 0x02, Local0, 0x02)
+>> 		Return (Zero)
+>> 	}
+>>=20
+>> 	If ((SFV0 =3D=3D 0x04030004))
+>> 	{
+>> 		Local0 =3D (SFV1 / 0x64)
+>> 		^^PC00.LPCB.EC0.LECR (0xD1, 0x03, Local0, 0x02)
+>> 		Return (Zero)
+>> 	}
 >
->-- 
-> i.
->
+> On my device, 0x04030001 always returns 1 after writing to EC
+> registers. 0x04030002 is a stub and always returns 0. That was the
+> reason why I assumed 1 =3D> success and 0 =3D> failure. Here's the
+> corresponding code snippet on my device:
 
-Thank you :)
+I had this exact issue in the alienware-wmi-wmax driver. OEMs tend to be
+inconsistent with return values across models.
+
+>
+>    If ((DEV1 =3D=3D 0x04))
+>    {
+>        If ((FEA1 =3D=3D 0x03))
+>        {
+>            Local0 =3D Buffer (0x06){}
+>            Local0 [Zero] =3D 0x46
+>            If ((TYP1 =3D=3D One))
+>            {
+>                Local1 =3D ToInteger (DAT1)
+>                If ((Local1 =3D=3D Zero))
+
+Here auto mode is more explicit too.
+
+>                {
+>                    Local0 [One] =3D 0x84
+>                }
+>                Else
+>                {
+>                    MBGS ("Fan1S")
+>                    Local0 [One] =3D 0x85
+>                    Divide (Local1, 0x64, Local2, Local1)
+>                    Local0 [0x02] =3D Local1
+>                }
+>            }
+>   =20
+>            If ((TYP1 =3D=3D 0x02))
+>            {
+>                MBGS ("Fan2S")
+>                Return (Zero)
+>            }
+>   =20
+>            \_SB.PCI0.LPC0.EC0.ERCD (Local0)
+>            Return (One)
+>        }
+>   =20
+>        If ((FEA1 =3D=3D 0x04))
+>        {
+>            MBGS ("wSet FanNoise")
+>            DB2H (DAT1)
+>            \_SB.FANL =3D DAT1 /* \_SB_.GZFD.WMAE.DAT1 */
+>            Notify (\_TZ.VFAN, 0x80) // Status Change
+>        }
+>    }
+>
+>> You can find the full acpidump attached in this email.
+>
+> Thanks for that.
+>
+>> Do you have any idea of what 0x04030004 might be?
+>
+> It's "system fan". See
+> https://lore.kernel.org/all/CAFqHKTkOZUfDb8cGbGnVPCS9wNbOBsiyOk_MkZR-2_Za=
+6ZPMng@mail.gmail.com/
+>
+>> This laptop only has 2
+>> fans. FW bug?
+>
+> Nope, that's not a bug as long as LENOVO_CAPABILITY_DATA_00 or
+> LENOVO_FAN_TEST_DATA only indicates the presence of fan 1&2. Lenovo
+> usually reuses a lot of ASL code among different SKUs, with some other
+> mechanism to gate inapplicable functionalities.
+>
+> So I quickly glanced at the decompiled ASL code of your device...
+>
+> Method WQA9 is LENOVO_CAPABILITY_DATA_00, and it only exposes fan 4 on
+> specific SKUs (L: 47975):
+>
+>    If (((GSKU =3D=3D 0x02) || (GSKU =3D=3D 0x03)))
+>    {
+>        Return (Buffer (0x0C)
+>        {
+>            /* 0000 */  0x04, 0x00, 0x03, 0x04, 0x07, 0x00, 0x00, 0x00,
+>            /* 0008 */  0x01, 0x00, 0x00, 0x00
+>        })
+>    }
+>    Else
+>    {
+>        Return (Buffer (0x0C)
+>        {
+>            /* 0000 */  0x04, 0x00, 0x03, 0x04, 0x00, 0x00, 0x00, 0x00,
+>            /* 0008 */  0x00, 0x00, 0x00, 0x00
+>        })
+>    }
+>
+> I assume your device should return the latter buffer, indicating fan 4
+> does not exist. That being said, it won't be surprising if the former
+> one is returned -- my device's LENOVO_CAPABILITY_DATA_00 indicates the
+> presence of fan 1&2 while LENOVO_FAN_TEST_DATA only exposes fan 1.
+>
+> Method WQAB is LENOVO_FAN_TEST_DATA (L: 48195). It exposes fan 1&2,
+> declaring their RPM range to be [1700,5700].
+>
+>    Return (Buffer (0x1C)
+>    {
+>        /* 0000 */  0x02, 0x00, 0x00, 0x00, 0x01, 0x00, 0x00, 0x00,
+>        /* 0008 */  0x02, 0x00, 0x00, 0x00, 0x44, 0x16, 0x00, 0x00,
+>        /* 0010 */  0x44, 0x16, 0x00, 0x00, 0xA4, 0x06, 0x00, 0x00,
+>        /* 0018 */  0xA4, 0x06, 0x00, 0x00
+>    })
+>
+> So these WMI interfaces on your device are implemented mostly well.
+> LENOVO_FAN_TEST_DATA is enough to prevent fan 4 from being exposed on
+> your device.
+
+Yes, fan 4 is not exposed to user-space so everything is fine here.
+
+Thanks for the detailed explaination! I'll check the structure of those
+buffers to understand these drivers better.
+
+>
+> Thanks,
+> Rong
+
+
+--=20
+Thanks,
+ ~ Kurt
+
