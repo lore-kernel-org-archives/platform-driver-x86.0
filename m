@@ -1,41 +1,40 @@
-Received: from out-188.mta0.migadu.com (out-188.mta0.migadu.com [91.218.175.188])
+Received: from out-181.mta1.migadu.com (out-181.mta1.migadu.com [95.215.58.181])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 18ED02DE719
-	for <platform-driver-x86@vger.kernel.org>; Fri, 16 Jan 2026 20:44:26 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.218.175.188
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2F90D26CE3F;
+	Fri, 16 Jan 2026 21:08:32 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=95.215.58.181
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1768596269; cv=none; b=jbOAr2kz7gmFjnOM6P7T2olNHV38fwu+QMAj7ZsynHso1QA1bnKsJjjsxgeNuoB3wPQBv491C6npE1pya04Kau2cBmBBf8m11ALX5jMdBcFjsQzT1ZAIn/71XxgkqBLrpTwFA2dNwOaWewKPvlRZh0JGnWnnkPsn7mvFLHqSC+s=
+	t=1768597713; cv=none; b=r4s1QL7WNG2wp2sYG4U6gb+mbvacTcam/jcJPV4G1rhjqhXwy8n/CDoxHDv1fUToJSv5VMvOTwShzNx1JfKRh2XExPbLelEodW+m5/2y3VXtGH7HykXIVuQd01epKjRTLFyYLVyb+Mwt45kgOlZkc0vHH8uw2HesqivpT951bwY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1768596269; c=relaxed/simple;
-	bh=M8LkTKRkLec0STYo/DU8PaDAmjRAFKXbQLuojTz1Dbg=;
+	s=arc-20240116; t=1768597713; c=relaxed/simple;
+	bh=AkjJWnZwgal8xaOK88qYlNP91OsTCo4qwVqk+x9WbgM=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=ndP92xt5qZDkh2QA6y3x4CDlsbUcHp50ALd5aZlu+Vy/4P9+fMrB+Y1fxpSTpgAirNsQtyxBFwCex4JUEmuZ/sFkYFWSjmyJ1RCeS4Uo2VcyQtmjX5CQJmFmnCaJh6BJ+7YhJAPXrAbCpN5/SIrhPLVZzShs7W3/qwTDRz1W+AA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=hVBcTEWz; arc=none smtp.client-ip=91.218.175.188
+	 In-Reply-To:Content-Type; b=mVrVEceXLKNoDE62bgxxKP8p1LeOiiDZh+WEBZVxlXZHcLpCJZxdnT7UCZzm1IWyXqUUo+UrPAxSlxXSzFTIQP4XvVVUFdMLxnJ11HPlDnJyVaG1HFJUjP25eQq3hqWgqC5mB0ajjFooMlICLyADQ9sNfoh1/DgzvsG5T1LWXCQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=QIRPTsJj; arc=none smtp.client-ip=95.215.58.181
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="hVBcTEWz"
-Message-ID: <14407ba9-34f1-4114-bfb3-043b53ea7769@linux.dev>
+	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="QIRPTsJj"
+Message-ID: <01bce222-1b91-404a-a9de-62fdc5627988@linux.dev>
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
-	t=1768596265;
+	t=1768597699;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=n3lnLpdcVciN6Vt5b33M7WFN7rUWFTE1TjkraXuEkcY=;
-	b=hVBcTEWzeHTrwRzKD7YupGRB/hb8c5YOVZpyWBQh6/R7wM69qT6uEQOprS4y7KE8BFUIR6
-	Nv37zjvw+JtzhnjSB6YjNOwyAnJ4XcYUZEOHtIyyH2RNT/rWFgl4MRoN/w3oK7HlKvoy+T
-	p8BrqrCom19l98LdCIZnZMQIjZB9NNI=
-Date: Fri, 16 Jan 2026 21:44:21 +0100
+	bh=E+12L4KLTe4istJDiyrkeED2dOGlq9BG/7fg75TP8Hw=;
+	b=QIRPTsJjgvnXZ3c3UgvZQ+y5N9E7DT0/RkxrNBC/NXFb/0GKlxqxw7ZsOe8oTK8aePo0gp
+	fouVCGEjOQU3mRhJojDq3nK3Feh+5txdQ73+MePTbj2vjSqOJbw7Bs+sqDaSS5bAFE3Vvh
+	jLjuJkI7+uS9bRtIURbctk13cZ7X63o=
+Date: Fri, 16 Jan 2026 22:08:12 +0100
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Subject: Re: [PATCH v11 02/11] HID: asus: initialize additional endpoints only
- for legacy devices
+Subject: Re: [PATCH v11 05/11] HID: asus: move vendor initialization to probe
 To: Antheas Kapenekakis <lkml@antheas.dev>,
  platform-driver-x86@vger.kernel.org, linux-input@vger.kernel.org
 Cc: linux-kernel@vger.kernel.org, Jiri Kosina <jikos@kernel.org>,
@@ -44,94 +43,130 @@ Cc: linux-kernel@vger.kernel.org, Jiri Kosina <jikos@kernel.org>,
  <luke@ljones.dev>, Hans de Goede <hansg@kernel.org>,
  =?UTF-8?Q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
 References: <20260116133150.5606-1-lkml@antheas.dev>
- <20260116133150.5606-3-lkml@antheas.dev>
+ <20260116133150.5606-6-lkml@antheas.dev>
 Content-Language: en-US, it-IT, en-US-large
 X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
 From: Denis Benato <denis.benato@linux.dev>
-In-Reply-To: <20260116133150.5606-3-lkml@antheas.dev>
+In-Reply-To: <20260116133150.5606-6-lkml@antheas.dev>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 X-Migadu-Flow: FLOW_OUT
 
 On 1/16/26 14:31, Antheas Kapenekakis wrote:
 
-> Currently, ID1/ID2 initializations are performed for all NKEY devices.
-> However, ID1 initializations are only required for RGB control and are
-> only supported for RGB capable devices. ID2 initializations are only
-> required for initializing the Anime display endpoint which is only
-> supported on devices with an Anime display. Both of these
-> initializations are out of scope for this driver (this is a brightness
-> control and keyboard shortcut driver) and they should not be performed
-> for devices that do not support them in any case.
+> ROG NKEY devices have multiple HID endpoints, around 3-4. One of those
+> endpoints has a usage page of 0xff31, and is the one that emits keyboard
+> shortcuts and controls RGB/backlight. Currently, this driver places
+> the usage page check under asus_input_mapping and then inits backlight
+> in asus_input_configured which is unnecessarily complicated and prevents
+> probe from performing customizations on the vendor endpoint.
 >
-> At the same time, there are older NKEY devices that have only been
-> tested with these initializations in the kernel and it is not possible
-> to recheck them. There is a possibility that especially with the ID1
-> initialization, certain laptop models might have their shortcuts stop
-> working (currently unproven).
->
-> For an abundance of caution, only initialize ID1/ID2 for those older
-> NKEY devices by introducing a quirk for them and replacing the NKEY
-> quirk in the block that performs the inits with that.
->
-> In addition, as these initializations might not be supported by the
-> affected devices, change the function to not bail if they fail.
->
+> Simplify the logic by introducing an is_vendor variable into probe that
+> checks for usage page 0xff31. Then, use this variable to move backlight
+> initialization into probe instead of asus_input_configured, and remove
+> the backlight check from asus_input_mapping.
+Gmail has decided that it doesn't like part of this patchset and I can't find
+them in spam either, so I will use my usual tag from this account.
+
+Reviewed-by: Denis Benato <benato.denis96@gmail.com>
 > Acked-by: Benjamin Tissoires <bentiss@kernel.org>
 > Signed-off-by: Antheas Kapenekakis <lkml@antheas.dev>
 > ---
->  drivers/hid/hid-asus.c | 16 ++++++----------
->  1 file changed, 6 insertions(+), 10 deletions(-)
+>  drivers/hid/hid-asus.c | 35 ++++++++++++++++++-----------------
+>  1 file changed, 18 insertions(+), 17 deletions(-)
 >
 > diff --git a/drivers/hid/hid-asus.c b/drivers/hid/hid-asus.c
-> index 323e6302bac5..dc7af12cf31a 100644
+> index e1291dcd99fd..428481aa2083 100644
 > --- a/drivers/hid/hid-asus.c
 > +++ b/drivers/hid/hid-asus.c
-> @@ -90,6 +90,7 @@ MODULE_DESCRIPTION("Asus HID Keyboard and TouchPad");
->  #define QUIRK_ROG_NKEY_KEYBOARD		BIT(11)
->  #define QUIRK_ROG_CLAYMORE_II_KEYBOARD BIT(12)
->  #define QUIRK_ROG_ALLY_XPAD		BIT(13)
-> +#define QUIRK_ROG_NKEY_LEGACY		BIT(14)
-These past days I have taken a look at new 2025 models and they do make use of ID2,
-and won't do harm sending ID1 either. I think you can safely remove the if and send regardless.
-
-At least 2023 models like mine that don't support ID2 will simply reply with 0xFF 0xFF and the rest 0x00.
-No consequences.
-
-Regardless the name is wrong: mine is a 2023 rog strix with
-ID 0b05:19b6ASUSTek Computer, Inc. N-KEY Device
-and surely isn't legacy.
+> @@ -48,6 +48,7 @@ MODULE_DESCRIPTION("Asus HID Keyboard and TouchPad");
+>  #define T100CHI_MOUSE_REPORT_ID 0x06
+>  #define FEATURE_REPORT_ID 0x0d
+>  #define INPUT_REPORT_ID 0x5d
+> +#define HID_USAGE_PAGE_VENDOR 0xff310000
+>  #define FEATURE_KBD_REPORT_ID 0x5a
+>  #define FEATURE_KBD_REPORT_SIZE 64
+>  #define FEATURE_KBD_LED_REPORT_ID1 0x5d
+> @@ -127,7 +128,6 @@ struct asus_drvdata {
+>  	struct input_dev *tp_kbd_input;
+>  	struct asus_kbd_leds *kbd_backlight;
+>  	const struct asus_touchpad_info *tp;
+> -	bool enable_backlight;
+>  	struct power_supply *battery;
+>  	struct power_supply_desc battery_desc;
+>  	int battery_capacity;
+> @@ -318,7 +318,7 @@ static int asus_e1239t_event(struct asus_drvdata *drvdat, u8 *data, int size)
+>  static int asus_event(struct hid_device *hdev, struct hid_field *field,
+>  		      struct hid_usage *usage, __s32 value)
+>  {
+> -	if ((usage->hid & HID_USAGE_PAGE) == 0xff310000 &&
+> +	if ((usage->hid & HID_USAGE_PAGE) == HID_USAGE_PAGE_VENDOR &&
+>  	    (usage->hid & HID_USAGE) != 0x00 &&
+>  	    (usage->hid & HID_USAGE) != 0xff && !usage->type) {
+>  		hid_warn(hdev, "Unmapped Asus vendor usagepage code 0x%02x\n",
+> @@ -938,11 +938,6 @@ static int asus_input_configured(struct hid_device *hdev, struct hid_input *hi)
 >  
->  #define I2C_KEYBOARD_QUIRKS			(QUIRK_FIX_NOTEBOOK_REPORT | \
->  						 QUIRK_NO_INIT_REPORTS | \
-> @@ -652,14 +653,9 @@ static int asus_kbd_register_leds(struct hid_device *hdev)
->  	if (!(kbd_func & SUPPORT_KBD_BACKLIGHT))
->  		return -ENODEV;
+>  	drvdata->input = input;
 >  
-> -	if (drvdata->quirks & QUIRK_ROG_NKEY_KEYBOARD) {
-> -		ret = asus_kbd_init(hdev, FEATURE_KBD_LED_REPORT_ID1);
-> -		if (ret < 0)
-> -			return ret;
+> -	if (drvdata->enable_backlight &&
+> -	    !asus_kbd_wmi_led_control_present(hdev) &&
+> -	    asus_kbd_register_leds(hdev))
+> -		hid_warn(hdev, "Failed to initialize backlight.\n");
 > -
-> -		ret = asus_kbd_init(hdev, FEATURE_KBD_LED_REPORT_ID2);
-> -		if (ret < 0)
-> -			return ret;
-> +	if (drvdata->quirks & QUIRK_ROG_NKEY_LEGACY) {
-> +		asus_kbd_init(hdev, FEATURE_KBD_LED_REPORT_ID1);
-> +		asus_kbd_init(hdev, FEATURE_KBD_LED_REPORT_ID2);
+>  	return 0;
+>  }
+>  
+> @@ -1015,15 +1010,6 @@ static int asus_input_mapping(struct hid_device *hdev,
+>  			return -1;
+>  		}
+>  
+> -		/*
+> -		 * Check and enable backlight only on devices with UsagePage ==
+> -		 * 0xff31 to avoid initializing the keyboard firmware multiple
+> -		 * times on devices with multiple HID descriptors but same
+> -		 * PID/VID.
+> -		 */
+> -		if (drvdata->quirks & QUIRK_USE_KBD_BACKLIGHT)
+> -			drvdata->enable_backlight = true;
+> -
+>  		set_bit(EV_REP, hi->input->evbit);
+>  		return 1;
+>  	}
+> @@ -1140,8 +1126,11 @@ static int __maybe_unused asus_reset_resume(struct hid_device *hdev)
+>  
+>  static int asus_probe(struct hid_device *hdev, const struct hid_device_id *id)
+>  {
+> -	int ret;
+> +	struct hid_report_enum *rep_enum;
+>  	struct asus_drvdata *drvdata;
+> +	struct hid_report *rep;
+> +	bool is_vendor = false;
+> +	int ret;
+>  
+>  	drvdata = devm_kzalloc(&hdev->dev, sizeof(*drvdata), GFP_KERNEL);
+>  	if (drvdata == NULL) {
+> @@ -1225,12 +1214,24 @@ static int asus_probe(struct hid_device *hdev, const struct hid_device_id *id)
+>  		return ret;
 >  	}
 >  
->  	if (dmi_match(DMI_PRODUCT_FAMILY, "ProArt P16")) {
-> @@ -1376,10 +1372,10 @@ static const struct hid_device_id asus_devices[] = {
->  	  QUIRK_USE_KBD_BACKLIGHT },
->  	{ HID_USB_DEVICE(USB_VENDOR_ID_ASUSTEK,
->  	    USB_DEVICE_ID_ASUSTEK_ROG_NKEY_KEYBOARD),
-> -	  QUIRK_USE_KBD_BACKLIGHT | QUIRK_ROG_NKEY_KEYBOARD },
-> +	  QUIRK_USE_KBD_BACKLIGHT | QUIRK_ROG_NKEY_KEYBOARD | QUIRK_ROG_NKEY_LEGACY },
->  	{ HID_USB_DEVICE(USB_VENDOR_ID_ASUSTEK,
->  	    USB_DEVICE_ID_ASUSTEK_ROG_NKEY_KEYBOARD2),
-> -	  QUIRK_USE_KBD_BACKLIGHT | QUIRK_ROG_NKEY_KEYBOARD },
-> +	  QUIRK_USE_KBD_BACKLIGHT | QUIRK_ROG_NKEY_KEYBOARD | QUIRK_ROG_NKEY_LEGACY },
->  	{ HID_USB_DEVICE(USB_VENDOR_ID_ASUSTEK,
->  	    USB_DEVICE_ID_ASUSTEK_ROG_Z13_LIGHTBAR),
->  	  QUIRK_USE_KBD_BACKLIGHT | QUIRK_ROG_NKEY_KEYBOARD },
+> +	/* Check for vendor for RGB init and handle generic devices properly. */
+> +	rep_enum = &hdev->report_enum[HID_INPUT_REPORT];
+> +	list_for_each_entry(rep, &rep_enum->report_list, list) {
+> +		if ((rep->application & HID_USAGE_PAGE) == HID_USAGE_PAGE_VENDOR)
+> +			is_vendor = true;
+> +	}
+> +
+>  	ret = hid_hw_start(hdev, HID_CONNECT_DEFAULT);
+>  	if (ret) {
+>  		hid_err(hdev, "Asus hw start failed: %d\n", ret);
+>  		return ret;
+>  	}
+>  
+> +	if (is_vendor && (drvdata->quirks & QUIRK_USE_KBD_BACKLIGHT) &&
+> +	    !asus_kbd_wmi_led_control_present(hdev) &&
+> +	    asus_kbd_register_leds(hdev))
+> +		hid_warn(hdev, "Failed to initialize backlight.\n");
+> +
+>  	/*
+>  	 * Check that input registration succeeded. Checking that
+>  	 * HID_CLAIMED_INPUT is set prevents a UAF when all input devices
