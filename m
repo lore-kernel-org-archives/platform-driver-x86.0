@@ -1,272 +1,114 @@
-Received: from relay11.grserver.gr (relay11.grserver.gr [78.46.171.57])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.17])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6D516313E18
-	for <platform-driver-x86@vger.kernel.org>; Fri, 16 Jan 2026 23:10:40 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=78.46.171.57
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A24E114A4F9;
+	Fri, 16 Jan 2026 23:43:14 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.17
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1768605044; cv=none; b=nGpRuuEXBeIgUeaG7k7WATbAiJIhB1JkC0sjfX0UuDcRFJ75xeaQXCEzuKI4Zbt89qQUUkSfx8gt9GiEjbSU5aFoKh1Kb3t7godxyVyKW4eIffpCI25MAo/H8Qnx0PYwjFELpCOjhXa0FRv7k7N2diQVdpj2cT54gPlTFxt9POQ=
+	t=1768606996; cv=none; b=XffdCm+qBwcPt16xG4xpOND9KhqySbhlkOcAfBsYZxMG5meWcQC6ff/O9dIhySY8vyZSyhHQ4bC3Mm82foXQ35mNBUHpjKSlZQdKOU90Xmo4Kj6nGxxST1/gcGdonkamD/OTpOJvjU4/pfFX9GAw+lpJqY5QI6zpsHqQjV0IFWA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1768605044; c=relaxed/simple;
-	bh=TJosHKRGzCY6t3vXfvC5MKeXYQzLJShSr+kT7jDk0IA=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=at7XSFAMaN294HyKPElw71xqOqqI0Rx9cCYSQ88Vm7ahkevNl2rHjMbfZaAW/IxUhXeMp6EFD9VyTwyiMj5M6G3BeyvT3rGlWAnj/DSM3fRTXNVhzLwg3xsl3qn9Mu+gK8oZ47ZDdJuRLJmsFZqI4Nv0VBHNP3TsS9D7vYxGhic=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=antheas.dev; spf=pass smtp.mailfrom=antheas.dev; dkim=pass (2048-bit key) header.d=antheas.dev header.i=@antheas.dev header.b=mggkpwgY; arc=none smtp.client-ip=78.46.171.57
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=antheas.dev
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=antheas.dev
+	s=arc-20240116; t=1768606996; c=relaxed/simple;
+	bh=qK86MVRgbDFnGYxTDZvdbuDmcPN2Xkw+EdWyWtNo4iM=;
+	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
+	 Content-Type:MIME-Version; b=Ry8elS6seESfjGwH4piIXS3V338EGUu22bf9B79RojHhiOZH0spXpkc1Srile/YgAPo60uAZNew7RHuBmBIR4bVUF4j2Gi5qniDS2FWVWGlpWfZunnY+hx2/nvxYUW9tTc00sJsoJQnYxXDC1UGbYY4CsUuF6G+Bb/wheo1uKcc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=pass smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=T+lKhgXa; arc=none smtp.client-ip=192.198.163.17
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=antheas.dev header.i=@antheas.dev header.b="mggkpwgY"
-Received: from relay11 (localhost.localdomain [127.0.0.1])
-	by relay11.grserver.gr (Proxmox) with ESMTP id 72A1AC0630
-	for <platform-driver-x86@vger.kernel.org>; Sat, 17 Jan 2026 01:10:38 +0200 (EET)
-Received: from linux3247.grserver.gr (linux3247.grserver.gr [213.158.90.240])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by relay11.grserver.gr (Proxmox) with ESMTPS id 71B7DC055E
-	for <platform-driver-x86@vger.kernel.org>; Sat, 17 Jan 2026 01:10:37 +0200 (EET)
-Received: from mail-lj1-f170.google.com (mail-lj1-f170.google.com [209.85.208.170])
-	by linux3247.grserver.gr (Postfix) with ESMTPSA id AD8EA202668
-	for <platform-driver-x86@vger.kernel.org>; Sat, 17 Jan 2026 01:10:36 +0200 (EET)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=antheas.dev;
-	s=default; t=1768605036;
-	bh=q56jDIRlmSfjLHG7VwrMJyLogHl3eKHzYr+H7yCD34Q=;
-	h=Received:From:Subject:To;
-	b=mggkpwgY4DY45V29gFgLYnOLBtn0sTOAkqH25dZ54UX1ybkYKyfeTfpcsXfIJg0W5
-	 kq2IhihNgUD+621994k0RdHrUmilYtzSOSbUGZnRoeZxtZKwt3rnkdh/arQW9jOD6U
-	 REvOhXeZWZicbwrJ6SANyZ2wW+WVeJ9j7+tqPqMnVrU6gEvjgDD56ahS6m2MR0PtBh
-	 KMqlASTxc/7PXXaJhuufBmIJGRG1mLUC57gGA2ZmG+Eh1xLd2TYgWVBReFRhizEIor
-	 Qcu8hI1FfuwKogeNkCO2KtXrPY3sf2fKUoLb7J0RYNdN1yRkaD86+jTC1Y5Aaw81/p
-	 0R7vSQH7MZgvQ==
-Authentication-Results: linux3247.grserver.gr;
-        spf=pass (sender IP is 209.85.208.170) smtp.mailfrom=lkml@antheas.dev smtp.helo=mail-lj1-f170.google.com
-Received-SPF: pass (linux3247.grserver.gr: connection is authenticated)
-Received: by mail-lj1-f170.google.com with SMTP id
- 38308e7fff4ca-382fea4a160so22487781fa.2
-        for <platform-driver-x86@vger.kernel.org>;
- Fri, 16 Jan 2026 15:10:36 -0800 (PST)
-X-Gm-Message-State: AOJu0YxNXtZNoDaaOAhQrGJbcFHY5V++f25XdfGLqr23r+LgEw+leQ6G
-	xK39dtpEPDf2j90ABYkED8B1PW38E4HiAcWTlQW/Wg0xpmKtx/BSu2qwday8npf3Q5BZIaGFnx8
-	Tcb3K7YgGp0RdTtcFsiQj3uNDRnFkIbQ=
-X-Received: by 2002:a2e:b8ce:0:b0:383:1b54:2f34 with SMTP id
- 38308e7fff4ca-383841aa222mr11373641fa.18.1768605036036; Fri, 16 Jan 2026
- 15:10:36 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="T+lKhgXa"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1768606995; x=1800142995;
+  h=message-id:subject:from:to:cc:date:in-reply-to:
+   references:content-transfer-encoding:mime-version;
+  bh=qK86MVRgbDFnGYxTDZvdbuDmcPN2Xkw+EdWyWtNo4iM=;
+  b=T+lKhgXad5mrf9DokwE3y+IbBAHDsCLli0usFqiRevpmBouGO8fiWnUR
+   qc8cnfgZJM1J5mcno9rZtN28c9DuDXHD/tj1vGqG6G3nrsU8gAJ9lrZXi
+   aCLu1Bx35u0/NjvKNuxs4RJVBQcFzfVMoJ6rPjPbuQe41tGqv2StR927I
+   FC6LIKgrKniMv2vKkKFfkaEFpjZwygAePOUwWDKWraWBAuKkUTSrQMYqt
+   NmIi1udpL19us0+E38y7+/uzGkESI+8Mu1NIhxHUOQR6LYeisSxtOHmuk
+   VMnM9vyvo8cxneewhlmePyfRPoomVtl8f1iyHePMZRkiBJj9v9QghUYk9
+   g==;
+X-CSE-ConnectionGUID: hIdNiFxUTAGtn8h3eLt1Og==
+X-CSE-MsgGUID: EXWEVw+6QGK1GKmMr+8XIA==
+X-IronPort-AV: E=McAfee;i="6800,10657,11673"; a="69826162"
+X-IronPort-AV: E=Sophos;i="6.21,232,1763452800"; 
+   d="scan'208";a="69826162"
+Received: from orviesa001.jf.intel.com ([10.64.159.141])
+  by fmvoesa111.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 16 Jan 2026 15:43:14 -0800
+X-CSE-ConnectionGUID: naJXohIIQ+yCH/aeXyCZEw==
+X-CSE-MsgGUID: ek/nRSHeSqep5F/iqjDI+A==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.21,232,1763452800"; 
+   d="scan'208";a="242916539"
+Received: from spandruv-mobl5.amr.corp.intel.com (HELO [10.125.111.178]) ([10.125.111.178])
+  by smtpauth.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 16 Jan 2026 15:43:14 -0800
+Message-ID: <adc80024f2754bc409bc0994e436dc0ffe18c9f5.camel@linux.intel.com>
+Subject: Re: [PATCH] tools/power/x86/intel-speed-select: Fix file descriptor
+ leak in isolate_cpus()
+From: srinivas pandruvada <srinivas.pandruvada@linux.intel.com>
+To: Malaya Kumar Rout <mrout@redhat.com>
+Cc: malayarout91@gmail.com, platform-driver-x86@vger.kernel.org, 
+	linux-kernel@vger.kernel.org
+Date: Fri, 16 Jan 2026 15:43:13 -0800
+In-Reply-To: <20260115100333.171244-1-mrout@redhat.com>
+References: <20260115100333.171244-1-mrout@redhat.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+User-Agent: Evolution 3.58.2 (3.58.2-1.fc43) 
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20260116133150.5606-1-lkml@antheas.dev>
- <20260116133150.5606-3-lkml@antheas.dev>
- <14407ba9-34f1-4114-bfb3-043b53ea7769@linux.dev>
-In-Reply-To: <14407ba9-34f1-4114-bfb3-043b53ea7769@linux.dev>
-From: Antheas Kapenekakis <lkml@antheas.dev>
-Date: Sat, 17 Jan 2026 00:10:24 +0100
-X-Gmail-Original-Message-ID: 
- <CAGwozwGyUpBq4GGvyDHj089a9-vxNOnqgSBys3-CC_+tKDywaA@mail.gmail.com>
-X-Gm-Features: AZwV_QhtkpYwWk41tccphCew9AREU1JxoREoh-BtI1M_DPEZu1LK6pZc2FvSnPQ
-Message-ID: 
- <CAGwozwGyUpBq4GGvyDHj089a9-vxNOnqgSBys3-CC_+tKDywaA@mail.gmail.com>
-Subject: Re: [PATCH v11 02/11] HID: asus: initialize additional endpoints only
- for legacy devices
-To: Denis Benato <denis.benato@linux.dev>
-Cc: platform-driver-x86@vger.kernel.org, linux-input@vger.kernel.org,
-	linux-kernel@vger.kernel.org, Jiri Kosina <jikos@kernel.org>,
-	Benjamin Tissoires <bentiss@kernel.org>,
- Corentin Chary <corentin.chary@gmail.com>,
-	"Luke D . Jones" <luke@ljones.dev>, Hans de Goede <hansg@kernel.org>,
-	=?UTF-8?Q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
-Content-Type: text/plain; charset="UTF-8"
-X-PPP-Message-ID: 
- <176860503694.1710111.5040801902963932276@linux3247.grserver.gr>
-X-PPP-Vhost: antheas.dev
-X-Virus-Scanned: clamav-milter 1.4.3 at linux3247.grserver.gr
-X-Virus-Status: Clean
 
-On Fri, 16 Jan 2026 at 21:44, Denis Benato <denis.benato@linux.dev> wrote:
->
-> On 1/16/26 14:31, Antheas Kapenekakis wrote:
->
-> > Currently, ID1/ID2 initializations are performed for all NKEY devices.
-> > However, ID1 initializations are only required for RGB control and are
-> > only supported for RGB capable devices. ID2 initializations are only
-> > required for initializing the Anime display endpoint which is only
-> > supported on devices with an Anime display. Both of these
-> > initializations are out of scope for this driver (this is a brightness
-> > control and keyboard shortcut driver) and they should not be performed
-> > for devices that do not support them in any case.
-> >
-> > At the same time, there are older NKEY devices that have only been
-> > tested with these initializations in the kernel and it is not possible
-> > to recheck them. There is a possibility that especially with the ID1
-> > initialization, certain laptop models might have their shortcuts stop
-> > working (currently unproven).
-> >
-> > For an abundance of caution, only initialize ID1/ID2 for those older
-> > NKEY devices by introducing a quirk for them and replacing the NKEY
-> > quirk in the block that performs the inits with that.
-> >
-> > In addition, as these initializations might not be supported by the
-> > affected devices, change the function to not bail if they fail.
-> >
-> > Acked-by: Benjamin Tissoires <bentiss@kernel.org>
-> > Signed-off-by: Antheas Kapenekakis <lkml@antheas.dev>
-> > ---
-> >  drivers/hid/hid-asus.c | 16 ++++++----------
-> >  1 file changed, 6 insertions(+), 10 deletions(-)
-> >
-> > diff --git a/drivers/hid/hid-asus.c b/drivers/hid/hid-asus.c
-> > index 323e6302bac5..dc7af12cf31a 100644
-> > --- a/drivers/hid/hid-asus.c
-> > +++ b/drivers/hid/hid-asus.c
-> > @@ -90,6 +90,7 @@ MODULE_DESCRIPTION("Asus HID Keyboard and TouchPad");
-> >  #define QUIRK_ROG_NKEY_KEYBOARD              BIT(11)
-> >  #define QUIRK_ROG_CLAYMORE_II_KEYBOARD BIT(12)
-> >  #define QUIRK_ROG_ALLY_XPAD          BIT(13)
-> > +#define QUIRK_ROG_NKEY_LEGACY                BIT(14)
-> These past days I have taken a look at new 2025 models and they do make use of ID2,
-> and won't do harm sending ID1 either. I think you can safely remove the if and send regardless.
+On Thu, 2026-01-15 at 15:33 +0530, Malaya Kumar Rout wrote:
+> The file descriptor opened in isolate_cpus() when (!level) is true
+> was
+> not being closed before returning, causing a file descriptor leak in
+> both the error path and the success path.
+>=20
+> When write() fails at line 950, the function returns at line 953
+> without
+> closing the file descriptor. Similarly, on success, the function
+> returns
+> at line 956 without closing the file descriptor.
+>=20
+> Add close(fd) calls before both return statements to fix the resource
+> leak. This follows the same pattern used elsewhere in the same
+> function
+> where file descriptors are properly closed before returning (see
+> lines
+> 1005 and 1027).
+>=20
+> Fixes: 997074df658e ("tools/power/x86/intel-speed-select: Use cgroup
+> v2 isolation")
 
-Hi Denis,
-it is not the responsibility of this driver. ID2 is used by Anime
-models. It is a concession to make sure that we do not cause a
-regression that will cause warnings for a lot of users.
+Thanks for the change. Will include in the next pull request.
 
-> At least 2023 models like mine that don't support ID2 will simply reply with 0xFF 0xFF and the rest 0x00.
-> No consequences.
+-Srinivas
 
-In your laptop. In the other user's laptop, the get feature report fails
-
-> Regardless the name is wrong: mine is a 2023 rog strix with
-> ID 0b05:19b6ASUSTek Computer, Inc. N-KEY Device
-> and surely isn't legacy.
-
-Sure, can you try removing the if block?
-
-If it works in your laptop, that is one less reason to keep it for 19b6
-
-Antheas
-
-> >
-> >  #define I2C_KEYBOARD_QUIRKS                  (QUIRK_FIX_NOTEBOOK_REPORT | \
-> >                                                QUIRK_NO_INIT_REPORTS | \
-> > @@ -652,14 +653,9 @@ static int asus_kbd_register_leds(struct hid_device *hdev)
-> >       if (!(kbd_func & SUPPORT_KBD_BACKLIGHT))
-> >               return -ENODEV;
-> >
-> > -     if (drvdata->quirks & QUIRK_ROG_NKEY_KEYBOARD) {
-> > -             ret = asus_kbd_init(hdev, FEATURE_KBD_LED_REPORT_ID1);
-> > -             if (ret < 0)
-> > -                     return ret;
-> > -
-> > -             ret = asus_kbd_init(hdev, FEATURE_KBD_LED_REPORT_ID2);
-> > -             if (ret < 0)
-> > -                     return ret;
-> > +     if (drvdata->quirks & QUIRK_ROG_NKEY_LEGACY) {
-> > +             asus_kbd_init(hdev, FEATURE_KBD_LED_REPORT_ID1);
-> > +             asus_kbd_init(hdev, FEATURE_KBD_LED_REPORT_ID2);
-> >       }
-> >
-> >       if (dmi_match(DMI_PRODUCT_FAMILY, "ProArt P16")) {
-> > @@ -1376,10 +1372,10 @@ static const struct hid_device_id asus_devices[] = {
-> >         QUIRK_USE_KBD_BACKLIGHT },
-> >       { HID_USB_DEVICE(USB_VENDOR_ID_ASUSTEK,
-> >           USB_DEVICE_ID_ASUSTEK_ROG_NKEY_KEYBOARD),
-> > -       QUIRK_USE_KBD_BACKLIGHT | QUIRK_ROG_NKEY_KEYBOARD },
-> > +       QUIRK_USE_KBD_BACKLIGHT | QUIRK_ROG_NKEY_KEYBOARD | QUIRK_ROG_NKEY_LEGACY },
-> >       { HID_USB_DEVICE(USB_VENDOR_ID_ASUSTEK,
-> >           USB_DEVICE_ID_ASUSTEK_ROG_NKEY_KEYBOARD2),
-> > -       QUIRK_USE_KBD_BACKLIGHT | QUIRK_ROG_NKEY_KEYBOARD },
-> > +       QUIRK_USE_KBD_BACKLIGHT | QUIRK_ROG_NKEY_KEYBOARD | QUIRK_ROG_NKEY_LEGACY },
-> >       { HID_USB_DEVICE(USB_VENDOR_ID_ASUSTEK,
-> >           USB_DEVICE_ID_ASUSTEK_ROG_Z13_LIGHTBAR),
-> >         QUIRK_USE_KBD_BACKLIGHT | QUIRK_ROG_NKEY_KEYBOARD },
->
-
-On Fri, 16 Jan 2026 at 21:44, Denis Benato <denis.benato@linux.dev> wrote:
->
-> On 1/16/26 14:31, Antheas Kapenekakis wrote:
->
-> > Currently, ID1/ID2 initializations are performed for all NKEY devices.
-> > However, ID1 initializations are only required for RGB control and are
-> > only supported for RGB capable devices. ID2 initializations are only
-> > required for initializing the Anime display endpoint which is only
-> > supported on devices with an Anime display. Both of these
-> > initializations are out of scope for this driver (this is a brightness
-> > control and keyboard shortcut driver) and they should not be performed
-> > for devices that do not support them in any case.
-> >
-> > At the same time, there are older NKEY devices that have only been
-> > tested with these initializations in the kernel and it is not possible
-> > to recheck them. There is a possibility that especially with the ID1
-> > initialization, certain laptop models might have their shortcuts stop
-> > working (currently unproven).
-> >
-> > For an abundance of caution, only initialize ID1/ID2 for those older
-> > NKEY devices by introducing a quirk for them and replacing the NKEY
-> > quirk in the block that performs the inits with that.
-> >
-> > In addition, as these initializations might not be supported by the
-> > affected devices, change the function to not bail if they fail.
-> >
-> > Acked-by: Benjamin Tissoires <bentiss@kernel.org>
-> > Signed-off-by: Antheas Kapenekakis <lkml@antheas.dev>
-> > ---
-> >  drivers/hid/hid-asus.c | 16 ++++++----------
-> >  1 file changed, 6 insertions(+), 10 deletions(-)
-> >
-> > diff --git a/drivers/hid/hid-asus.c b/drivers/hid/hid-asus.c
-> > index 323e6302bac5..dc7af12cf31a 100644
-> > --- a/drivers/hid/hid-asus.c
-> > +++ b/drivers/hid/hid-asus.c
-> > @@ -90,6 +90,7 @@ MODULE_DESCRIPTION("Asus HID Keyboard and TouchPad");
-> >  #define QUIRK_ROG_NKEY_KEYBOARD              BIT(11)
-> >  #define QUIRK_ROG_CLAYMORE_II_KEYBOARD BIT(12)
-> >  #define QUIRK_ROG_ALLY_XPAD          BIT(13)
-> > +#define QUIRK_ROG_NKEY_LEGACY                BIT(14)
-> These past days I have taken a look at new 2025 models and they do make use of ID2,
-> and won't do harm sending ID1 either. I think you can safely remove the if and send regardless.
->
-> At least 2023 models like mine that don't support ID2 will simply reply with 0xFF 0xFF and the rest 0x00.
-> No consequences.
->
-> Regardless the name is wrong: mine is a 2023 rog strix with
-> ID 0b05:19b6ASUSTek Computer, Inc. N-KEY Device
-> and surely isn't legacy.
-> >
-> >  #define I2C_KEYBOARD_QUIRKS                  (QUIRK_FIX_NOTEBOOK_REPORT | \
-> >                                                QUIRK_NO_INIT_REPORTS | \
-> > @@ -652,14 +653,9 @@ static int asus_kbd_register_leds(struct hid_device *hdev)
-> >       if (!(kbd_func & SUPPORT_KBD_BACKLIGHT))
-> >               return -ENODEV;
-> >
-> > -     if (drvdata->quirks & QUIRK_ROG_NKEY_KEYBOARD) {
-> > -             ret = asus_kbd_init(hdev, FEATURE_KBD_LED_REPORT_ID1);
-> > -             if (ret < 0)
-> > -                     return ret;
-> > -
-> > -             ret = asus_kbd_init(hdev, FEATURE_KBD_LED_REPORT_ID2);
-> > -             if (ret < 0)
-> > -                     return ret;
-> > +     if (drvdata->quirks & QUIRK_ROG_NKEY_LEGACY) {
-> > +             asus_kbd_init(hdev, FEATURE_KBD_LED_REPORT_ID1);
-> > +             asus_kbd_init(hdev, FEATURE_KBD_LED_REPORT_ID2);
-> >       }
-> >
-> >       if (dmi_match(DMI_PRODUCT_FAMILY, "ProArt P16")) {
-> > @@ -1376,10 +1372,10 @@ static const struct hid_device_id asus_devices[] = {
-> >         QUIRK_USE_KBD_BACKLIGHT },
-> >       { HID_USB_DEVICE(USB_VENDOR_ID_ASUSTEK,
-> >           USB_DEVICE_ID_ASUSTEK_ROG_NKEY_KEYBOARD),
-> > -       QUIRK_USE_KBD_BACKLIGHT | QUIRK_ROG_NKEY_KEYBOARD },
-> > +       QUIRK_USE_KBD_BACKLIGHT | QUIRK_ROG_NKEY_KEYBOARD | QUIRK_ROG_NKEY_LEGACY },
-> >       { HID_USB_DEVICE(USB_VENDOR_ID_ASUSTEK,
-> >           USB_DEVICE_ID_ASUSTEK_ROG_NKEY_KEYBOARD2),
-> > -       QUIRK_USE_KBD_BACKLIGHT | QUIRK_ROG_NKEY_KEYBOARD },
-> > +       QUIRK_USE_KBD_BACKLIGHT | QUIRK_ROG_NKEY_KEYBOARD | QUIRK_ROG_NKEY_LEGACY },
-> >       { HID_USB_DEVICE(USB_VENDOR_ID_ASUSTEK,
-> >           USB_DEVICE_ID_ASUSTEK_ROG_Z13_LIGHTBAR),
-> >         QUIRK_USE_KBD_BACKLIGHT | QUIRK_ROG_NKEY_KEYBOARD },
->
-
+> Signed-off-by: Malaya Kumar Rout <mrout@redhat.com>
+> ---
+> =C2=A0tools/power/x86/intel-speed-select/isst-config.c | 2 ++
+> =C2=A01 file changed, 2 insertions(+)
+>=20
+> diff --git a/tools/power/x86/intel-speed-select/isst-config.c
+> b/tools/power/x86/intel-speed-select/isst-config.c
+> index 558138eea75e..d00d15490a98 100644
+> --- a/tools/power/x86/intel-speed-select/isst-config.c
+> +++ b/tools/power/x86/intel-speed-select/isst-config.c
+> @@ -950,9 +950,11 @@ int isolate_cpus(struct isst_id *id, int
+> mask_size, cpu_set_t *cpu_mask, int lev
+> =C2=A0		ret =3D write(fd, "member", strlen("member"));
+> =C2=A0		if (ret =3D=3D -1) {
+> =C2=A0			printf("Can't update to member\n");
+> +			close(fd);
+> =C2=A0			return ret;
+> =C2=A0		}
+> =C2=A0
+> +		close(fd);
+> =C2=A0		return 0;
+> =C2=A0	}
+> =C2=A0
