@@ -1,38 +1,38 @@
-Received: from mout.gmx.net (mout.gmx.net [212.227.15.18])
+Received: from mout.gmx.net (mout.gmx.net [212.227.15.19])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 639B73A63E7;
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 317C43A641D;
 	Fri, 16 Jan 2026 20:42:00 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=212.227.15.18
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=212.227.15.19
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1768596122; cv=none; b=XhDmytUlHsEtIA2xQv4c4Nsm7mut44v1Nvh4fIr2F4q8M8+LpibA4M6hljd7VBNE1EVgbJOiNe/fNvzIBP5jHC3AXQf3L2Ax38auXj+l2Xu4EAjral7QWLyDHa5o4ee09z3PaREyCJNOPUKQvo2uj8C3zauZrdTfdfKNuHD8WkA=
+	t=1768596123; cv=none; b=lJiSJrO3ZzUzafM5R/++tgJrCTI/7+CWLOoygPD6MSLKoRPTAMYJi7v8fTJ8WO4ivdA1xsZCN86iDPCBXa5GEOpdrisuveenIDa/EE66rsIWWrEWvaFOqKwSgiQ4Y8orZszsk0o/jVHX8svihpvn1DOWNpOTGvzQ13/rhsVC7Nk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1768596122; c=relaxed/simple;
-	bh=TJgLzTksdV6FW6f/rYwBBRpRBJulZLasWdVu8QXIRik=;
+	s=arc-20240116; t=1768596123; c=relaxed/simple;
+	bh=8MWKvLKrIhwESL6K2lYU1hcXZLjKr62HLpiR+lptuBw=;
 	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=l0N0hkBS/OfCFVKATl6anaw6kcENBX9CTGb/vvdO+G4+jWmOx6nk7DsT3eTvwKWi+2FK/mRNpAp9051nTuOf23Qce27rq0MEu0TZwFN613xrnLmykXDuPezcEX+naHnGV45PdS2csKa8fko40FOSuViGGAzXUtuOGC5A93d4ymg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gmx.de; spf=pass smtp.mailfrom=gmx.de; dkim=pass (2048-bit key) header.d=gmx.de header.i=w_armin@gmx.de header.b=aboy+SSf; arc=none smtp.client-ip=212.227.15.18
+	 MIME-Version; b=UlzTOKhONzs0jdaHlqxcnDpckXtmiDFlELicPPjRwUL1XeaJpax1ewVu7aR/zzE084WvZtdxZtiJWGlZymfU31yFByKXL5CI2VFYnbCh4qFt2tuWv/rWbFZRVC+cBkgPHnYw/cXOrtS/NdPdeW0MUnSvgde4WPo75SN0fuJru7I=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gmx.de; spf=pass smtp.mailfrom=gmx.de; dkim=pass (2048-bit key) header.d=gmx.de header.i=w_armin@gmx.de header.b=aBu9qxsn; arc=none smtp.client-ip=212.227.15.19
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gmx.de
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmx.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmx.de header.i=w_armin@gmx.de header.b="aboy+SSf"
+	dkim=pass (2048-bit key) header.d=gmx.de header.i=w_armin@gmx.de header.b="aBu9qxsn"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=gmx.de;
-	s=s31663417; t=1768596106; x=1769200906; i=w_armin@gmx.de;
-	bh=my3Bwy9Nqnm5Ql6505L7xx+AOmSQ2MHcXjgLv2xvJRI=;
+	s=s31663417; t=1768596110; x=1769200910; i=w_armin@gmx.de;
+	bh=WUXnniPV7qpv2Ba8+v4zPdnBdenui6dm7evYQTvUE04=;
 	h=X-UI-Sender-Class:From:To:Cc:Subject:Date:Message-Id:In-Reply-To:
 	 References:MIME-Version:Content-Transfer-Encoding:cc:
 	 content-transfer-encoding:content-type:date:from:message-id:
 	 mime-version:reply-to:subject:to;
-	b=aboy+SSfG5LkHjV6K9+Z8HGKSiKhb8xkw62RI2fdNIfUpFesNtLM9/mFbbM+82Uj
-	 Qft8OtpOH0a1LH22tiAWTdmBTVoWrbj3oisyhW8Stw0AaJk2o53cWBlhCg6ZRjkgs
-	 mp6CIcLc5bNZsa9df8L6i7HHaS87tnDQc8FcqIluQxYbxhxwg6RT6PpPyjKw0Z10T
-	 WGg38WFAZjnyS55NcA+tmnIwra3glD5kSVmsw2fRUt5Z0+v1+2lQkBOERNh/n1I8S
-	 tmdF3OiwE0VRmugCNAUkSNiO6Klb/lOL+y4f5H1QYKWJ1xcayVoyC3oWl5F+wLF+b
-	 MlTkAbHsliF08q0kOA==
+	b=aBu9qxsn5IjTtC7ya2WiLu/ryhPF7HdDfT62p74mDOONtcrBoyKPSIpyTDi5XHP3
+	 UpYugPx+1p5gDFNO+uCqaCMbVV3MidX8jCccnrU95w9PX21RRKr+GGwcvD8g6m7Yd
+	 ixdawc1WD1/xmxS9wa6W+kPtcMv31ybEr3hticaDhLtP15BjUFBeEVYo9Nq1E3rvU
+	 Q5F7Q/KljYR2kTpU9m1jlAjYFJy18H10hZqNxncr8LiyFmC6SKq0EJQjHoK6U8z6+
+	 vz+p3nuAMoMaEswwGHNdvVRg7BpoOw9C9qB+5vSWhXnv16HykpoC2ZzsuxVcGotkG
+	 i4aXSj0feV3db4jbhA==
 X-UI-Sender-Class: 724b4f7f-cbec-4199-ad4e-598c01a50d3a
 Received: from mx-amd-b650.fritz.box ([93.202.247.91]) by mail.gmx.net
- (mrgmx005 [212.227.17.190]) with ESMTPSA (Nemesis) id
- 1M9Wys-1vmMxB3eZI-002Ksm; Fri, 16 Jan 2026 21:41:46 +0100
+ (mrgmx004 [212.227.17.190]) with ESMTPSA (Nemesis) id
+ 1MNKhs-1vQzY732pG-00HtBN; Fri, 16 Jan 2026 21:41:49 +0100
 From: Armin Wolf <W_Armin@gmx.de>
 To: hansg@kernel.org,
 	ilpo.jarvinen@linux.intel.com
@@ -42,9 +42,9 @@ Cc: platform-driver-x86@vger.kernel.org,
 	Dell.Client.Kernel@dell.com,
 	corbet@lwn.net,
 	linux-doc@vger.kernel.org
-Subject: [PATCH v4 7/9] platform/x86: xiaomi-wmi: Use new buffer-based WMI API
-Date: Fri, 16 Jan 2026 21:41:14 +0100
-Message-Id: <20260116204116.4030-8-W_Armin@gmx.de>
+Subject: [PATCH v4 9/9] platform/wmi: Update driver development guide
+Date: Fri, 16 Jan 2026 21:41:16 +0100
+Message-Id: <20260116204116.4030-10-W_Armin@gmx.de>
 X-Mailer: git-send-email 2.39.5
 In-Reply-To: <20260116204116.4030-1-W_Armin@gmx.de>
 References: <20260116204116.4030-1-W_Armin@gmx.de>
@@ -55,128 +55,434 @@ List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
-X-Provags-ID: V03:K1:nKMeIxKX/Y2HAk5aXLgGHNLe9fcRooHkvrCxOWPBujlzQHgrfXR
- DygKgKbgjMyBruLQAmhBAzdo9NEPPVqaQJ0ub790VOVY0Vm3bBdoAyd7uqRzwnAcg+/mPH8
- t//wEvql/7rCWUEz5+FQfRorv7X4H8ZHqH7NjtGmCBGT9npdHWttc+ZcFrYRucg4GT1EcAx
- yC6ASXxb0kifwmVCalQDA==
+X-Provags-ID: V03:K1:5wjcP1X1FAk2mc+M4yaDfBywVkchNoBYmgPtLLjTsMTeCSbzRbu
+ cTWwBgNzWcyjDbfHi8XxnMror0zpjOIbGzZlJD0hLGRWZp9IC1wB/8jGkd+AuTUmwRIAwBJ
+ 8skanJv8dDTC2F+GI0lhVan5TZVJy9p8H5ME4NWo+/9UPNZF9i32TMzEG5qxffx9xM/D91U
+ Xa0VP+kYtZ8Iq7KggNjxQ==
 X-Spam-Flag: NO
-UI-OutboundReport: notjunk:1;M01:P0:o5VL95Aq4+I=;iHQGzyelPeKASV9P0rJWfjAluZj
- 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
+UI-OutboundReport: notjunk:1;M01:P0:s1kxFnWhS5E=;MKg8QmCLqtvaeMuFZam3LkjFjw8
+ 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
+ 5g+mG5pBQXoameUQndewzoNb5OdiF
 
-Use the new buffer-based WMI API to avoid having to deal with ACPI
-at all.
+New WMI drivers should use the new buffer-based WMI API instead of
+the deprecated ACPI-based API. Update the driver development guide
+to recommend the buffer-based API to driver developers and explain
+the purpose of struct wmi_buffer.
 
+Also update the ACPI interface documentation to describe the
+conversion rules for converting ACPI objects into WMI buffers.
+
+Reviewed-by: Randy Dunlap <rdunlap@infradead.org>
 Signed-off-by: Armin Wolf <W_Armin@gmx.de>
 =2D--
- drivers/platform/x86/xiaomi-wmi.c | 5 ++---
- 1 file changed, 2 insertions(+), 3 deletions(-)
+ Documentation/wmi/acpi-interface.rst          | 68 +++++++++++++++++
+ .../wmi/driver-development-guide.rst          | 76 +++++++++++++------
+ 2 files changed, 121 insertions(+), 23 deletions(-)
 
-diff --git a/drivers/platform/x86/xiaomi-wmi.c b/drivers/platform/x86/xiao=
-mi-wmi.c
-index b892007b9863..badf9e42e015 100644
-=2D-- a/drivers/platform/x86/xiaomi-wmi.c
-+++ b/drivers/platform/x86/xiaomi-wmi.c
-@@ -1,7 +1,6 @@
- // SPDX-License-Identifier: GPL-2.0
- /* WMI driver for Xiaomi Laptops */
+diff --git a/Documentation/wmi/acpi-interface.rst b/Documentation/wmi/acpi=
+-interface.rst
+index 1ef003b033bf..4657101c528a 100644
+=2D-- a/Documentation/wmi/acpi-interface.rst
++++ b/Documentation/wmi/acpi-interface.rst
+@@ -104,3 +104,71 @@ holding the notification ID of the event. This method=
+ should be evaluated every
+ time an ACPI notification is received, since some ACPI implementations us=
+e a
+ queue to store WMI event data items. This queue will overflow after a cou=
+ple
+ of WMI events are received without retrieving the associated WMI event da=
+ta.
++
++Conversion rules for ACPI data types
++------------------------------------
++
++Consumers of the ACPI-WMI interface use binary buffers to exchange data w=
+ith the WMI driver core,
++with the internal structure of the buffer being only know to the consumer=
+s. The WMI driver core is
++thus responsible for converting the data inside the buffer into an approp=
+riate ACPI data type for
++consumption by the ACPI firmware. Additionally, any data returned by the =
+various ACPI methods needs
++to be converted back into a binary buffer.
++
++The layout of said buffers is defined by the MOF description of the WMI m=
+ethod or data block in
++question [1]_:
++
++=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D =3D=3D=3D=3D=3D=3D=3D=3D=3D=
+=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
+=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
+=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D =3D=3D=3D=3D=3D=3D=3D=3D=3D
++Data Type       Layout                                                   =
+               Alignment
++=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D =3D=3D=3D=3D=3D=3D=3D=3D=3D=
+=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
+=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
+=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D =3D=3D=3D=3D=3D=3D=3D=3D=3D
++``string``      Starts with an unsigned 16-bit little endian integer spec=
+ifying         2 bytes
++                the length of the string data in bytes, followed by the s=
+tring data
++                encoded as UTF-16LE with **optional** NULL termination an=
+d padding.
++                Keep in mind that some firmware implementations might dep=
+end on the
++                terminating NULL character to be present. Also the paddin=
+g should
++                always be performed with NULL characters.
++``boolean``     Single byte where 0 means ``false`` and nonzero means ``t=
+rue``.         1 byte
++``sint8``       Signed 8-bit integer.                                    =
+               1 byte
++``uint8``       Unsigned 8-bit integer.                                  =
+               1 byte
++``sint16``      Signed 16-bit little endian integer.                     =
+               2 bytes
++``uint16``      Unsigned 16-bit little endian integer.                   =
+               2 bytes
++``sint32``      Signed 32-bit little endian integer.                     =
+               4 bytes
++``uint32``      Unsigned 32-bit little endian integer.                   =
+               4 bytes
++``sint64``      Signed 64-bit little endian integer.                     =
+               8 bytes
++``uint64``      Unsigned 64-bit little endian integer.                   =
+               8 bytes
++``datetime``    A fixed-length 25-character UTF-16LE string with the form=
+at             2 bytes
++                *yyyymmddhhmmss.mmmmmmsutc* where *yyyy* is the 4-digit y=
+ear, *mm* is
++                the 2-digit month, *dd* is the 2-digit day, *hh* is the 2=
+-digit hour
++                based on a 24-hour clock, *mm* is the 2-digit minute, *ss=
+* is the
++                2-digit second, *mmmmmm* is the 6-digit microsecond, *s* =
+is a plus or
++                minus character depending on whether *utc* is a positive =
+or negative
++                offset from UTC (or a colon if the date is an interval). =
+Unpopulated
++                fields should be filled with asterisks.
++=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D =3D=3D=3D=3D=3D=3D=3D=3D=3D=
+=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
+=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
+=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D =3D=3D=3D=3D=3D=3D=3D=3D=3D
++
++Arrays should be aligned based on the alignment of their base type, while=
+ objects should be
++aligned based on the largest alignment of an element inside them.
++
++All buffers returned by the WMI driver core are 8-byte aligned. When conv=
+erting ACPI data types
++into such buffers the following conversion rules apply:
++
++=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D =3D=3D=3D=3D=3D=3D=3D=3D=3D=
+=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
+=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
+=3D=3D=3D
++ACPI Data Type  Converted into
++=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D =3D=3D=3D=3D=3D=3D=3D=3D=3D=
+=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
+=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
+=3D=3D=3D
++Buffer          Copied as-is.
++Integer         Converted into a ``uint32``.
++String          Converted into a ``string`` with a terminating NULL chara=
+cter
++                to match the behavior the of the Windows driver.
++Package         Each element inside the package is converted with alignme=
+nt
++                of the resulting data types being respected. Nested packa=
+ges
++                are not allowed.
++=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D =3D=3D=3D=3D=3D=3D=3D=3D=3D=
+=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
+=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
+=3D=3D=3D
++
++The Windows driver does attempt to handle nested packages, but this resul=
+ts in internal data
++structures (``_ACPI_METHOD_ARGUMENT_V1``) erroneously being copied into t=
+he resulting buffer.
++ACPI firmware implementations should thus not return nested packages from=
+ ACPI methods
++associated with the ACPI-WMI interface.
++
++References
++=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
++
++.. [1] https://learn.microsoft.com/en-us/windows-hardware/drivers/kernel/=
+driver-defined-wmi-data-items
+diff --git a/Documentation/wmi/driver-development-guide.rst b/Documentatio=
+n/wmi/driver-development-guide.rst
+index 5680303ae314..fbc2d9b12fe9 100644
+=2D-- a/Documentation/wmi/driver-development-guide.rst
++++ b/Documentation/wmi/driver-development-guide.rst
+@@ -70,7 +70,7 @@ to matching WMI devices using a struct wmi_device_id tab=
+le:
+         .probe =3D foo_probe,
+         .remove =3D foo_remove,         /* optional, devres is preferred =
+*/
+         .shutdown =3D foo_shutdown,     /* optional, called during shutdo=
+wn */
+-        .notify =3D foo_notify,         /* optional, for event handling *=
+/
++        .notify_new =3D foo_notify,     /* optional, for event handling *=
+/
+         .no_notify_data =3D true,       /* optional, enables events conta=
+ining no additional data */
+         .no_singleton =3D true,         /* required for new WMI drivers *=
+/
+   };
+@@ -90,9 +90,9 @@ the WMI device and put it in a well-known state for the =
+WMI driver to pick up la
+ or kexec. Most WMI drivers need no special shutdown handling and can thus=
+ omit this callback.
 =20
--#include <linux/acpi.h>
- #include <linux/device.h>
- #include <linux/input.h>
- #include <linux/module.h>
-@@ -56,7 +55,7 @@ static int xiaomi_wmi_probe(struct wmi_device *wdev, con=
-st void *context)
- 	return input_register_device(data->input_dev);
- }
+ Please note that new WMI drivers are required to be able to be instantiat=
+ed multiple times,
+-and are forbidden from using any deprecated GUID-based WMI functions. Thi=
+s means that the
+-WMI driver should be prepared for the scenario that multiple matching WMI=
+ devices are present
+-on a given machine.
++and are forbidden from using any deprecated GUID-based or ACPI-based WMI =
+functions. This means
++that the WMI driver should be prepared for the scenario that multiple mat=
+ching WMI devices are
++present on a given machine.
 =20
--static void xiaomi_wmi_notify(struct wmi_device *wdev, union acpi_object =
-*dummy)
-+static void xiaomi_wmi_notify(struct wmi_device *wdev, const struct wmi_b=
-uffer *dummy)
- {
- 	struct xiaomi_wmi *data =3D dev_get_drvdata(&wdev->dev);
+ Because of this, WMI drivers should use the state container design patter=
+n as described in
+ Documentation/driver-api/driver-model/design-patterns.rst.
+@@ -104,38 +104,37 @@ Documentation/driver-api/driver-model/design-pattern=
+s.rst.
+ WMI method drivers
+ ------------------
 =20
-@@ -85,7 +84,7 @@ static struct wmi_driver xiaomi_wmi_driver =3D {
- 	},
- 	.id_table =3D xiaomi_wmi_id_table,
- 	.probe =3D xiaomi_wmi_probe,
--	.notify =3D xiaomi_wmi_notify,
-+	.notify_new =3D xiaomi_wmi_notify,
- 	.no_singleton =3D true,
- };
- module_wmi_driver(xiaomi_wmi_driver);
+-WMI drivers can call WMI device methods using wmidev_evaluate_method(), t=
+he
+-structure of the ACPI buffer passed to this function is device-specific a=
+nd usually
+-needs some tinkering to get right. Looking at the ACPI tables containing =
+the WMI
+-device usually helps here. The method id and instance number passed to th=
+is function
+-are also device-specific, looking at the decoded Binary MOF is usually en=
+ough to
+-find the right values.
++WMI drivers can call WMI device methods using wmidev_invoke_method(). For=
+ each WMI method
++invocation the WMI driver needs to provide the instance number and the me=
+thod ID, as well as
++a buffer with the method arguments and optionally a buffer for the result=
+s.
+=20
+-The maximum instance number can be retrieved during runtime using wmidev_=
+instance_count().
++The layout of said buffers is device-specific and described by the Binary=
+ MOF data associated
++with a given WMI device. Said Binary MOF data also describes the method I=
+D of a given WMI method
++with the ``WmiMethodId`` qualifier. WMI devices exposing WMI methods usua=
+lly expose only a single
++instance (instance number 0), but in theory can expose multiple instances=
+ as well. In such a case
++the number of instances can be retrieved using wmidev_instance_count().
+=20
+-Take a look at drivers/platform/x86/inspur_platform_profile.c for an exam=
+ple WMI method driver.
++Take a look at drivers/platform/x86/intel/wmi/thunderbolt.c for an exampl=
+e WMI method driver.
+=20
+ WMI data block drivers
+ ----------------------
+=20
+-WMI drivers can query WMI device data blocks using wmidev_block_query(), =
+the
+-structure of the returned ACPI object is again device-specific. Some WMI =
+devices
+-also allow for setting data blocks using wmidev_block_set().
++WMI drivers can query WMI data blocks using wmidev_query_block(), the lay=
+out of the returned
++buffer is again device-specific and described by the Binary MOF data. Som=
+e WMI data blocks are
++also writeable and can be set using wmidev_set_block(). The number of dat=
+a block instances can
++again be retrieved using wmidev_instance_count().
+=20
+-The maximum instance number can also be retrieved using wmidev_instance_c=
+ount().
+-
+-Take a look at drivers/platform/x86/intel/wmi/sbl-fw-update.c for an exam=
+ple
+-WMI data block driver.
++Take a look at drivers/platform/x86/intel/wmi/sbl-fw-update.c for an exam=
+ple WMI data block driver.
+=20
+ WMI event drivers
+ -----------------
+=20
+-WMI drivers can receive WMI events via the notify() callback inside the s=
+truct wmi_driver.
++WMI drivers can receive WMI events via the notify_new() callback inside t=
+he struct wmi_driver.
+ The WMI subsystem will then take care of setting up the WMI event accordi=
+ngly. Please note that
+-the structure of the ACPI object passed to this callback is device-specif=
+ic, and freeing the
+-ACPI object is being done by the WMI subsystem, not the driver.
++the layout of the buffer passed to this callback is device-specific, and =
+freeing of the buffer
++is done by the WMI subsystem itself, not the driver.
+=20
+-The WMI driver core will take care that the notify() callback will only b=
+e called after
++The WMI driver core will take care that the notify_new() callback will on=
+ly be called after
+ the probe() callback has been called, and that no events are being receiv=
+ed by the driver
+ right before and after calling its remove() or shutdown() callback.
+=20
+@@ -147,6 +146,36 @@ the ``no_notify_data`` flag inside struct wmi_driver =
+should be set to ``true``.
+=20
+ Take a look at drivers/platform/x86/xiaomi-wmi.c for an example WMI event=
+ driver.
+=20
++Exchanging data with the WMI driver core
++----------------------------------------
++
++WMI drivers can exchange data with the WMI driver core using struct wmi_b=
+uffer. The internal
++structure of those buffers is device-specific and only known by the WMI d=
+river. Because of this
++the WMI driver itself is responsible for parsing and validating the data =
+received from its
++WMI device.
++
++The structure of said buffers is described by the MOF data associated wit=
+h the WMI device in
++question. When such a buffer contains multiple data items it usually make=
+s sense to define a
++C structure and use it during parsing. Since the WMI driver core guarante=
+es that all buffers
++received from a WMI device are aligned on an 8-byte boundary, WMI drivers=
+ can simply perform
++a cast between the WMI buffer data and this C structure.
++
++This however should only be done after the size of the buffer was verifie=
+d to be large enough
++to hold the whole C structure. WMI drivers should reject undersized buffe=
+rs as they are usually
++sent by the WMI device to signal an internal error. Oversized buffers how=
+ever should be accepted
++to emulate the behavior of the Windows WMI implementation.
++
++When defining a C structure for parsing WMI buffers the alignment of the =
+data items should be
++respected. This is especially important for 64-bit integers as those have=
+ different alignments
++on 64-bit (8-byte alignment) and 32-bit (4-byte alignment) architectures.=
+ It is thus a good idea
++to manually specify the alignment of such data items or mark the whole st=
+ructure as packed when
++appropriate. Integer data items in general are little-endian integers and=
+ should be marked as
++such using ``__le64`` and friends. When parsing WMI string data items the=
+ struct wmi_string should
++be used as WMI strings have a different layout than C strings.
++
++See Documentation/wmi/acpi-interface.rst for more information regarding t=
+he binary format
++of WMI data items.
++
+ Handling multiple WMI devices at once
+ -------------------------------------
+=20
+@@ -171,6 +200,7 @@ Things to avoid
+ When developing WMI drivers, there are a couple of things which should be=
+ avoided:
+=20
+ - usage of the deprecated GUID-based WMI interface which uses GUIDs inste=
+ad of WMI device structs
++- usage of the deprecated ACPI-based WMI interface which uses ACPI object=
+s instead of plain buffers
+ - bypassing of the WMI subsystem when talking to WMI devices
+ - WMI drivers which cannot be instantiated multiple times.
+=20
 =2D-=20
 2.39.5
 
