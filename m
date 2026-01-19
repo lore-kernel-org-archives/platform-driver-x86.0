@@ -1,127 +1,138 @@
-Received: from mail-lf1-f51.google.com (mail-lf1-f51.google.com [209.85.167.51])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from fout-a2-smtp.messagingengine.com (fout-a2-smtp.messagingengine.com [103.168.172.145])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 988C82DB7AF
-	for <platform-driver-x86@vger.kernel.org>; Mon, 19 Jan 2026 20:22:03 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.51
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B44AF2ED15D
+	for <platform-driver-x86@vger.kernel.org>; Mon, 19 Jan 2026 20:23:15 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=103.168.172.145
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1768854125; cv=none; b=lL+u05OhlaHSAvIm1XZRzEw6lFDjdot9yo3CuKAgQ8tvzbH+bVxJIOp4TQ/azSWbgHhbxWt2utHe3qkHyE4ktzxJrzW8rI9/vZECbPSk7zE/kjXKzT+eG0wbJoA+TuqUopftdjzKZYNHtMHliYo4tdfVKsaDesh80tubLNFu0Uw=
+	t=1768854198; cv=none; b=Au7AjxLiFhYFUk1v7MOltRDMEliDJtIRaozNIaP7aStBajq/rTl5PWPqF95bLrwhjegeGZisxQFAgR+X+G4uJAO9AerFa5OFEHbJbLo3nEgr7Mgle93JaqN4sDzCqswiotjYgkKyuJuksMSwuvFqBjuPk6XFWLTBolJ76oxMAaY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1768854125; c=relaxed/simple;
-	bh=1+ATMbfh4i8Fx2ZKhiRLK3SENQT3d/ijvIS3iYHK0Bo=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=IKUdGmJ533xFCu4I/fE+Wx8TPYFktTW6v8Pj4cNBiy396nHGjx56owTp0NHRCJNxmJDDVQLSE5m77lsYeBD3WL/yGWGttbk6j0eXjg/vrbMQ8KStiJOcRoRcsusmBSLbsdvI+x+x+hXfs9JXodR4pInJ3gQnPWbL79xHNeex7kU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=UW7BJIpO; arc=none smtp.client-ip=209.85.167.51
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1768854198; c=relaxed/simple;
+	bh=n/jb49OY9R2S80JQO3ZaIBCNkQzzVzM8eLNoe2sL3Bs=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=XF9nVechtOxhtsc+yu5xhw9TScNyHHRKb2W1ereo+WxIuOEznf64hdviKYukqvDNAPDRJwHKPwbv3ZS3OUMDGvuN/wyxp1GYCWxFJnnhZlJmXmPeuaMVhxclmTHFZ6/YXUd69yFofu0w1db4Fr3zYW+TCek2eiVYMJxS3s+YVgY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=vdwaa.nl; spf=pass smtp.mailfrom=vdwaa.nl; dkim=pass (2048-bit key) header.d=vdwaa.nl header.i=@vdwaa.nl header.b=QF798XhN; dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b=Jyx8hdTc; arc=none smtp.client-ip=103.168.172.145
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=vdwaa.nl
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=vdwaa.nl
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="UW7BJIpO"
-Received: by mail-lf1-f51.google.com with SMTP id 2adb3069b0e04-59b67388c9cso5777338e87.2
-        for <platform-driver-x86@vger.kernel.org>; Mon, 19 Jan 2026 12:22:03 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1768854121; x=1769458921; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=xDBK20VPaxSq0MCDY5hKGxl3s141opvsvW0EECGHPsU=;
-        b=UW7BJIpOtAnbhWX13KI00KEbpom/nopRS4YUB6a2iX8+m2u7yD8QWewIQAk5B0W328
-         q0B/SkkgjHe8+QZqK0U0he7hPDun8yjDVOa7oBjb5aTrZaIBSox+0qPvDcEw5ghE400T
-         ZvtIC9WQJRuWJDuwt8MNZUXi5exAy8UP2yzMCMM24fICiciXrnkcbUeVNGywdO3jB9rF
-         W3cbiOKtluF4/r36+tF/3xEJ2YbxDDcCxYg0QGhLoOx2Mbd0PiBWVnec/aZaw9wxS8j8
-         qHcf/GOI+iJWWXV5lTgyItlLUDNPZaExwTntY7k5Dsqp6DgkbHMS+P6WeiMDZU6o50VU
-         HLkw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1768854121; x=1769458921;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-gg:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=xDBK20VPaxSq0MCDY5hKGxl3s141opvsvW0EECGHPsU=;
-        b=X28i7ATCrIBvfCuU2IdrkOpt2BCa2cH6NdAbN2Ihwe7/uxIHR2xwfdsadKLS3kw/9n
-         ikGqSe/r0N7i9oNgAhW5AT8rhhPQq9S0xw7hxu/KSYVNvbMPLVc7fJU1iRAiGZaw7xh2
-         kjnFzKYU8kG+mKLrnbNpOceyC64Dt3NQcjOZngYGQVfeo63RS8OG0oa9kglsvq5P/X/S
-         Nqmsdfcyy1TzVXkz4PZQNmaymVEnLTtjAehouRI1pwyQsfMtYePluoUEcUNEZRr1wLzE
-         MOPoNbSqfiPV5otZBa6rebmZmGhxWnE1+25+31FhnOsJm/SS1XdIGk/kg/Pu0XFCEIK+
-         7p0A==
-X-Gm-Message-State: AOJu0Yx5z9vFc/xkrNOJy9OuZnOtbNP2tUKrGcYtrgg1mgZLeFiMGpEk
-	jLvYuIjKT9X1MdXZJnMMu67CMC/ru6cENgG3UDVRavbB26vd3o+4/2gd10tPn3If
-X-Gm-Gg: AY/fxX7BiDymCHrlc+qe6njU+jqnRmFgn0Z1EDO2WGbh2Oe14r0smQ6Ud3NQLNNKazC
-	048J+BZ0aHhdDiB4B2mwX2ghGitiy0qZTy7/m0U7Kq0kZQSMnUPKx3HGhxe4EHGBCchhzxslkC0
-	iAX1NyMC2W44SP2HyoH0cH9BCMd/RrkY+5fACxIhuCGBXHwAV1dLci2lX5yyK276JQqsdIqVFlT
-	FB29bOsgjjMbHz0eIFhDpsx81DEYMDW7WTj3WlGA+qD00qToXv2vD6Pxn8dvTdDOG6hopBHfDzv
-	7nQLE8DXOcY+4hEzjwAE+Ezb66kPamc/fS3/knCfb5wdiePCsNtRL8DvBwBAN/tTZGa7Qh23tf1
-	wDfTzhXjNLwQG5CHDkoqJ8WHVcB+JHxd7usFEfZPoxjg8GjzDmzz5TQg8mKfm3w9qC6wUj0XP+k
-	x9DVI=
-X-Received: by 2002:a05:6512:132a:b0:59b:7c26:13b0 with SMTP id 2adb3069b0e04-59baeed4bdamr3652321e87.18.1768854121161;
-        Mon, 19 Jan 2026 12:22:01 -0800 (PST)
-Received: from gl-laptop.flowwow.loc ([2a0c:9a40:8950:800::67d])
-        by smtp.gmail.com with ESMTPSA id 2adb3069b0e04-59baf9d442dsm3678659e87.94.2026.01.19.12.21.59
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 19 Jan 2026 12:22:00 -0800 (PST)
-From: Alexey Zagorodnikov <xglooom@gmail.com>
-To: platform-driver-x86@vger.kernel.org
-Cc: Alexey Zagorodnikov <xglooom@gmail.com>,
-	Shyam Sundar S K <Shyam-sundar.S-k@amd.com>,
-	Hans de Goede <hansg@kernel.org>,
-	=?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>,
-	linux-kernel@vger.kernel.org
-Subject: [PATCH 1/1] platform/x86/amd/pmf: Added a module parameter to disable the Smart PC function
-Date: Tue, 20 Jan 2026 01:20:34 +0500
-Message-ID: <20260119202100.785129-1-xglooom@gmail.com>
-X-Mailer: git-send-email 2.52.0
+	dkim=pass (2048-bit key) header.d=vdwaa.nl header.i=@vdwaa.nl header.b="QF798XhN";
+	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="Jyx8hdTc"
+Received: from phl-compute-04.internal (phl-compute-04.internal [10.202.2.44])
+	by mailfout.phl.internal (Postfix) with ESMTP id 878CAEC0070;
+	Mon, 19 Jan 2026 15:23:14 -0500 (EST)
+Received: from phl-frontend-03 ([10.202.2.162])
+  by phl-compute-04.internal (MEProxy); Mon, 19 Jan 2026 15:23:14 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=vdwaa.nl; h=cc
+	:cc:content-transfer-encoding:content-type:content-type:date
+	:date:from:from:in-reply-to:in-reply-to:message-id:mime-version
+	:references:reply-to:subject:subject:to:to; s=fm3; t=1768854194;
+	 x=1768940594; bh=86vOLFDEsniKZERYsWKI6hTgBvsNJnvNYt105iuOlk4=; b=
+	QF798XhNIrNBfhWnqG9iM7E9xb+d5MMVa4Z/daXCiQkFYIXr2XVl+HpKqdrslwNR
+	nf0r0Js8Ku/k0jKjJuy5K5JILCOQ72uBhdzqpwl+gUATdEYI513NeHtjTjRLqwqC
+	Zjm2NfFN4PgJg+uNahsBFv5IxYIJ5Vk8ohjB9LcXnbDt8caHwvZGRxWokeQ3NXB9
+	uiHgt5+tTrSS3ptXKxs3Vq9ykAR4rUpS2k3T1LaOHL4NlWmEBYvM70VOU3pY718g
+	9K19ZpS6axQpN7bySdPNBtABBL4E6AyCrRE54z1jQMdyE3CdqqQecv7zoAsNdDl+
+	vUjN7Bojk/55IBtiqGKL9g==
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
+	messagingengine.com; h=cc:cc:content-transfer-encoding
+	:content-type:content-type:date:date:feedback-id:feedback-id
+	:from:from:in-reply-to:in-reply-to:message-id:mime-version
+	:references:reply-to:subject:subject:to:to:x-me-proxy
+	:x-me-sender:x-me-sender:x-sasl-enc; s=fm2; t=1768854194; x=
+	1768940594; bh=86vOLFDEsniKZERYsWKI6hTgBvsNJnvNYt105iuOlk4=; b=J
+	yx8hdTcKV7STPfVB0ZDuKiaB2nP2mI0Iyr+jimocyA/aObRZV3W8GeIQZwNrdcRg
+	dHSvj2C01XnU8ViCLLxKNr/ECWNM4fnFBMDpzrq81H6NAjnVYHOaFsXzry5i6IO4
+	1j+XN36h+mg7q12IfwaTnQbdLHIF38gN5lHS7vQtNFtPn3q2IOvZW6FVw1WyEuM5
+	9nHGxO0VzeTl28Zvu9YQHN4nhsGmKDhgFQEdPKWDVTOyOsv69r8vGp+5FkfweTkW
+	rK0pz1kkO7j7J/hB4W7pJENkiIJLbAtY0VuE2MtZ/RqWQiQA9Fyqd208hB213nHx
+	FWEuuGwGjXzph0TKUVKtg==
+X-ME-Sender: <xms:sZJuaTxayAPAARNzN8bveTD8xXxyy-02sIer__QOAEN4jBoVW9GUpQ>
+    <xme:sZJuacx9UVp_44S0erz5VgfQ381EmQ6gmJqo041XyMkqmEJIDLpCaujWugF3mEcS_
+    _f_Pr4ndbxL8GPN3eTdbn0JtCDThrxNd0ZDshyB641UGiltNX-BF3Jv>
+X-ME-Received: <xmr:sZJuadaU3cCARkAMZ4F7Dj_sSTaq1tNUSXlrciiMTyJPVZdexyAYxzgoCOT7a6K_vfWn-vHIryc2GJeFosowsdUfUE_80A>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeefgedrtddtgddufeekheduucetufdoteggodetrf
+    dotffvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdfurfetoffkrfgpnffqhgenuceu
+    rghilhhouhhtmecufedttdenucesvcftvggtihhpihgvnhhtshculddquddttddmnecujf
+    gurhepkfffgggfuffvvehfhfgjtgfgsehtjeertddtvdejnecuhfhrohhmpeflvghllhgv
+    uchvrghnucguvghrucghrggruceojhgvlhhlvgesvhgufigrrgdrnhhlqeenucggtffrrg
+    htthgvrhhnpeeugedtgfevleefvddvkedtfffghfejjedttdffvddvudfhheetueefgfdv
+    teejgeenucevlhhushhtvghrufhiiigvpedtnecurfgrrhgrmhepmhgrihhlfhhrohhmpe
+    hjvghllhgvsehvugifrggrrdhnlhdpnhgspghrtghpthhtohephedpmhhouggvpehsmhht
+    phhouhhtpdhrtghpthhtohepfigprghrmhhinhesghhmgidruggvpdhrtghpthhtohephh
+    grnhhsgheskhgvrhhnvghlrdhorhhgpdhrtghpthhtohepihhlphhordhjrghrvhhinhgv
+    nheslhhinhhugidrihhnthgvlhdrtghomhdprhgtphhtthhopehplhgrthhfohhrmhdqug
+    hrihhvvghrqdigkeeisehvghgvrhdrkhgvrhhnvghlrdhorhhgpdhrtghpthhtohepfhhr
+    vgguvghrihhksehhrghrfigrthhhrdhnrghmvg
+X-ME-Proxy: <xmx:sZJuadX8VP_pTHwoNA1D4P5ywpRpGzk1cEycVdfneBzU8eBJAGyuSg>
+    <xmx:sZJuabhM7DLHuERjwEeQT_6j4QurkkiEzhhQc5LCkECuqDCMp97Vag>
+    <xmx:sZJuabs7mzzHhckZGASnnF41ihITKXjVZAPbId3E2XhBlFJz_xl0zA>
+    <xmx:sZJuaU7L6chdo7qJgurBH196e7lpJ1hpCCBsp2V09qja9e0RANTTEQ>
+    <xmx:spJuafjnHnn68PmfzTmtyxWxhXN4skEsJtLF8MgIc08QsskWN8i2uG9L>
+Feedback-ID: i2d0446dd:Fastmail
+Received: by mail.messagingengine.com (Postfix) with ESMTPA; Mon,
+ 19 Jan 2026 15:23:13 -0500 (EST)
+Message-ID: <d6991fd3-21a2-467c-99a3-9742e70977d9@vdwaa.nl>
+Date: Mon, 19 Jan 2026 21:23:10 +0100
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH 0/1] add Acer battery control driver
+To: Armin Wolf <W_Armin@gmx.de>, Hans de Goede <hansg@kernel.org>,
+ =?UTF-8?Q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
+Cc: platform-driver-x86@vger.kernel.org,
+ Frederik Harwath <frederik@harwath.name>
+References: <20260105171024.227758-1-jelle@vdwaa.nl>
+ <90ba47db-fe4b-4f1e-aadf-160d44c6930c@gmx.de>
+Content-Language: en-US
+From: Jelle van der Waa <jelle@vdwaa.nl>
+Autocrypt: addr=jelle@vdwaa.nl;
+ keydata= xsBNBE6QLAIBCAC3O6LmF+GKvOh7IV00TG+EKAQHAwjESnHGJOW58lKK7eAYn62ZM1uy0+6h
+ yCMu5PD7+ND6U1gcgTTHYwNK8AaJt7yY4FRssgdcJk59uJBwROZtllotClJ893CuB6Wgr68b
+ 07gIRbENYrB8rEoGfpUG//8/ep7sY8PS03jnFb4ll6mPlUE2oQVdYOlXgF4f9qkkIi4SQeE2
+ MTuERaOrDuUNDlroJ7Yfx3J/rL5Qjn578/TKCAxg0pns6VIA/P9spRGmLhT4zP+OxZXeSZme
+ IxcwFdJJXHr4oGaZvqe1yHlMmKR98rrIfPWhkw2Ls/XIZIxf6prT0XyczbzBnC2y1JyNABEB
+ AAHNIkplbGxlIHZhbiBkZXIgV2FhIDxqZWxsZUB2ZHdhYS5ubD7CwHsEEwECACUCGwMGCwkI
+ BwMCBhUIAgkKCwQWAgMBAh4BAheABQJUX8WhAhkBAAoJEMBghjN8UHc+mFwH/jjN+Qob4O36
+ YiieajRwVLGuYdUDt9Z655oQYU8V4qbWf2tjUtqTYXrxLnaY6xQoYouRz9yFbh9dIKZb67ir
+ 7AeVgCOtWVesGxAlGH6EY5JBZcsN0v0ScsivqQAv/Mv+4HK+XM57YlyRagD8tkprYskioWHg
+ OwQfXAO6nlm4BJHWO9bHJUMgiGs7I190IKQG7iLBnJuGjsOFuy5KTLpnv+w7twmz0H+pkUPe
+ jVHfJlJWdN4v1PigpgpjOR6ZepSIggMk7dHsa6GNLUOzi61yYVFe60+EGXhwyJIqSt56a4oR
+ jMUcXaOugGr+JwC8Eq7Pg2+aFk+8fbe0oUzZJucHGnDOwE0ETpAsAgEIAK4Usb7B00WRxCZG
+ HtM973F7V4OhOKv4kZKduxtu71bVUZsTuzn4h+m8guJ51uY/I2icUrN9gJG5aEzRqPuQi2L7
+ KmZUjs3pscZWgUgiT8UZFDR6RuQ4k3CcWobsRCjYZdSblSZ8ccrLJE7xSbwKMXjAh2PEiaQT
+ lS6wQbn6mHv4y3H9QVHs7+jXbmfHCxnVcwLqRmpuegSmezDaL5TlSc102voiXinhrWEZUvAB
+ KDh6VuJ/60Y6zelCXVsEjRaApz90iXY1nifLhkHM8B2wG7Pum3V3X0Y0QTVD+z3EL1iq5mFu
+ epKp//IOeeJN5iwHcRSJGy2s1oOzjRDyPv6v1AUAEQEAAcLAXwQYAQIACQUCTpAsAgIbDAAK
+ CRDAYIYzfFB3PvDuB/0dI13hSYHW27c2Rq8BaGbIhXYYETtPD5B25/P1JJ5OQZkPmVq+vSHw
+ uzUaDZHy3ZcwE+xFXzlkwXGdWos07JUGo74zV3HfeZxVEPv0HB9ACqQVU/JKjLZNj2SfhgzL
+ 4F+O4Zgdsf0YaZG09F5PbMvbhoCZLfAaKWz/4fLEfhrDJLhrphUyPDXosn0UxPkDv0iiixn4
+ V+bEZ5/wd8dRWi58R/iND+gRGsBREm5SpzdhnsarwoX6YdsQ449379enDNUN7jV4C3Gkon2s
+ VwI2ZZbS10cY8rFSAV/CJA2E9daRoz40DI0tgXgLBAVhy7y5HWZJsDZexU0HFKJfkDi7RUPj
+In-Reply-To: <90ba47db-fe4b-4f1e-aadf-160d44c6930c@gmx.de>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-Addresses a low power limits issue on HP ZBook Ultra G1a
-https://gitlab.freedesktop.org/drm/amd/-/issues/4868
+On 1/8/26 14:52, Armin Wolf wrote:
+> Am 05.01.26 um 18:10 schrieb Jelle van der Waa:
+> 
+>> This patch upstreams a part of the out of tree acer wmi battery
+>> specifically the battery charge control and battery temperature. [1]
+>> On my Acer Aspire A315-510P battery calibration did not work as expected
+>> so for now this is left out.
+> 
+> Nice work. There are some issues with this patch but nothing too serious.
+> Can you tell me more about the calibration mode issue on your device?
 
-If vendor firmware capped APU power limits with 3rd-party AC adapters,
-the user can disable the Smart PC function via the module parameter
+Thanks for the review and sorry for the slow response. When I enabled 
+the calibration mode on my device the device started to charge but never 
+discharged successfully. I want to take a bit more time to investigate 
+this properly. On my thinkpad device enabling calibration mode 
+discharges the laptop till ~ 0% and then switches over to AC power.
 
-Signed-off-by: Alexey Zagorodnikov <xglooom@gmail.com>
----
- drivers/platform/x86/amd/pmf/core.c | 19 ++++++++++++++-----
- 1 file changed, 14 insertions(+), 5 deletions(-)
+Greetings,
 
-diff --git a/drivers/platform/x86/amd/pmf/core.c b/drivers/platform/x86/amd/pmf/core.c
-index 8fc293c9c5380..00a4fc899c727 100644
---- a/drivers/platform/x86/amd/pmf/core.c
-+++ b/drivers/platform/x86/amd/pmf/core.c
-@@ -53,6 +53,11 @@ static bool force_load;
- module_param(force_load, bool, 0444);
- MODULE_PARM_DESC(force_load, "Force load this driver on supported older platforms (experimental)");
- 
-+/* Force to disable Smart PC Solution */
-+static bool disable_smart_pc;
-+module_param(disable_smart_pc, bool, 0444);
-+MODULE_PARM_DESC(disable_smart_pc, "Disable Smart PC Solution");
-+
- static int amd_pmf_pwr_src_notify_call(struct notifier_block *nb, unsigned long event, void *data)
- {
- 	struct amd_pmf_dev *pmf = container_of(nb, struct amd_pmf_dev, pwr_src_notifier);
-@@ -362,11 +367,15 @@ static void amd_pmf_init_features(struct amd_pmf_dev *dev)
- 		dev_dbg(dev->dev, "SPS enabled and Platform Profiles registered\n");
- 	}
- 
--	amd_pmf_init_smart_pc(dev);
--	if (dev->smart_pc_enabled) {
--		dev_dbg(dev->dev, "Smart PC Solution Enabled\n");
--		/* If Smart PC is enabled, no need to check for other features */
--		return;
-+	if (disable_smart_pc) {
-+		dev->smart_pc_enabled = false;
-+	} else {
-+		amd_pmf_init_smart_pc(dev);
-+		if (dev->smart_pc_enabled) {
-+			dev_dbg(dev->dev, "Smart PC Solution Enabled\n");
-+			/* If Smart PC is enabled, no need to check for other features */
-+			return;
-+		}
- 	}
- 
- 	if (is_apmf_func_supported(dev, APMF_FUNC_AUTO_MODE)) {
--- 
-2.52.0
-
+Jelle van der Waa
