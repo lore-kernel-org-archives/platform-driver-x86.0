@@ -1,568 +1,246 @@
-Received: from relay15.grserver.gr (relay15.grserver.gr [46.62.234.254])
+Received: from DM5PR21CU001.outbound.protection.outlook.com (mail-centralusazon11011017.outbound.protection.outlook.com [52.101.62.17])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6212F313274
-	for <platform-driver-x86@vger.kernel.org>; Mon, 19 Jan 2026 11:34:54 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=46.62.234.254
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1768822497; cv=none; b=UJA8U0vGdJZCTg+UEbc49ZZ5LDJpibWf3xe/UtywZr6w2hLQtZgJAdlgrVTBt28IN84MtYQzsC07SuyTyOmdw4X+JrHvQI1+GJS8h61y/O/XZzasp4cqLBp7pkFmcooUdSS7e1igf23Omgu4iqZP9Z1L03snRn+1jlF1sHVDzGE=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1768822497; c=relaxed/simple;
-	bh=cH4f2Q7EQH9zur7Usd58A7hfCQ9blNGrAJSm7FGnf8o=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=S2/7Oo5oiliGgLZDwoM0hj+GzH3tgXWRCKKRGzEsW6F4SC0dNJhLZGkmKVbFMML5b7spEfS5JnNTMUMymwaWscBaN6Oug93rpk2VZRB7N9mTFYx/2Wx1jgh6JNSJlOKPNj+LwFOBvmjWw0mrcvWAe1iVJOJz1N/l0WpnYEpbtc4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=antheas.dev; spf=pass smtp.mailfrom=antheas.dev; dkim=pass (2048-bit key) header.d=antheas.dev header.i=@antheas.dev header.b=fG1LhKFS; arc=none smtp.client-ip=46.62.234.254
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=antheas.dev
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=antheas.dev
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DC38A36E47F;
+	Mon, 19 Jan 2026 14:10:41 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=52.101.62.17
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1768831843; cv=fail; b=SGWpg27P9O4NUNRGvP8unZEhWh0a4CfFkAGlyucGmBcySZMmW7kX5faqjVA/0HNsLeXLm2TFsuMhHQTSStKHAY676q2ITopXQqlH15QkkSGkdpeUrw4b2LyUjrMrYvKkNzir7zdYpe3Srpa43HqfCnLe8CzdPLXVktMpn3zcUIs=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1768831843; c=relaxed/simple;
+	bh=ic825M2sdSAFIuyYgTFXtznWtCHZ7EfbpAlTQikpiBU=;
+	h=Message-ID:Date:Subject:To:Cc:References:From:In-Reply-To:
+	 Content-Type:MIME-Version; b=JOWqwOUJSM5YlaR7sPoruyl1PIJvZyp/ANdaucVJDjjmp/G1mY3G6q4K9TiiyGk8RjV9cWC4nlwP85ipvqanQ2CFiZxtaNoT6L7sWKSJM1cR8QEcJAlpIXHzoSHBFQ6hcRyZhbqE3mpiEeYyaVX+OjeTO68CcK3csix7iydrSF0=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=TzjNm+zU; arc=fail smtp.client-ip=52.101.62.17
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=amd.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=antheas.dev header.i=@antheas.dev header.b="fG1LhKFS"
-Received: from relay15 (localhost [127.0.0.1])
-	by relay15.grserver.gr (Proxmox) with ESMTP id A011A40A22
-	for <platform-driver-x86@vger.kernel.org>; Mon, 19 Jan 2026 11:34:47 +0000 (UTC)
-Received: from linux3247.grserver.gr (linux3247.grserver.gr [213.158.90.240])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by relay15.grserver.gr (Proxmox) with ESMTPS id 48FB840A21
-	for <platform-driver-x86@vger.kernel.org>; Mon, 19 Jan 2026 11:34:44 +0000 (UTC)
-Received: from mail-lj1-f172.google.com (mail-lj1-f172.google.com [209.85.208.172])
-	by linux3247.grserver.gr (Postfix) with ESMTPSA id 7ABBB2025B7
-	for <platform-driver-x86@vger.kernel.org>; Mon, 19 Jan 2026 13:34:43 +0200 (EET)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=antheas.dev;
-	s=default; t=1768822483;
-	bh=Z4Pi1sOHmhuepA1pWLEI/8HtOxcMi/6ODPNd7i5vzV4=;
-	h=Received:From:Subject:To;
-	b=fG1LhKFSw3bw+4h04efMQsMcLmO81vDrn/ea3KO4LCmFT6bV5p6zf0IjOaCUmdDBs
-	 YmarExH8cq3YbbDYI0p8EkffeIlpvHxcOO2/ywxEqoMp7BuuvHFPt9Uyh642ggtBBM
-	 h184ngcMdPmDCg2Durexwaj238bom2Y5wZz+9GOvv/W+4Bi/bxAKcPbL/riP29fKMt
-	 sUbgybqxGrl88E5h2lyHhMtkIhYFiv+ZGLTMQ5WSM4QqzRwymWL0q41abCGxtjb1RI
-	 FpyuAg1dHty1YFPDRk+A/yF4v3xANXd0Zoi+dW5f5v8MFV7Im7Qw61aAj6oleyQd6f
-	 xd5mYIggTsRyg==
-Authentication-Results: linux3247.grserver.gr;
-        spf=pass (sender IP is 209.85.208.172) smtp.mailfrom=lkml@antheas.dev smtp.helo=mail-lj1-f172.google.com
-Received-SPF: pass (linux3247.grserver.gr: connection is authenticated)
-Received: by mail-lj1-f172.google.com with SMTP id
- 38308e7fff4ca-38310ee9d40so37602221fa.1
-        for <platform-driver-x86@vger.kernel.org>;
- Mon, 19 Jan 2026 03:34:43 -0800 (PST)
-X-Forwarded-Encrypted: i=1;
- AJvYcCV1piLJ7sB8biKcYLzZMyFPBIt9yft7f+9wVc+REn3UohY2hOuQ1Ue4zLnt+bV+jbPTY2ctZmCneQmEbm0Vc84o23I/@vger.kernel.org
-X-Gm-Message-State: AOJu0Ywb+epSDEFOs9XhSAY/eJsWHxhjmb289epz16ia7QvxIOilqf04
-	tvkhDRi37xS0rO8oEQ11uluQ8k+hckEyXf005Wd/fLmOmwAzfI/dD6WKximctEVvLh5VCv+9wik
-	Wn2OQoWuwhDkFWU/8xDuieGQiNa0nB1o=
-X-Received: by 2002:a2e:b8c4:0:b0:383:246a:74ec with SMTP id
- 38308e7fff4ca-3849d202cf1mr10117711fa.18.1768822482847; Mon, 19 Jan 2026
- 03:34:42 -0800 (PST)
+	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="TzjNm+zU"
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=DWWkIz9esVUVFHMbI3UtVtNtb5/8Yct/fm8jBlgzoil4aVxVnbOy/1PrNL3P4aYOUBI5u7Hmq9m9CI5o/nXkqYRQeF83W6YenT9n3yfFTXTqmH+BrO7AzBk0Jxo13tev5qD98NfWL1TJj6fY/LZS5XdnYgEGjekU+faEESKLFVf9H32TCljTWly23UGrSlMF3vo0S+5RAvXMLMyj9rDbJOyzNQW8V6+UXxIpA2dwNWYO0ikZQNVipjEPsUy4EN32fHmwLAougm6cQXblqco06cz2GtFKqD2XgeMij2j+Oi1EFc6VCIegP7d0yt3pzcM6DvHC/yT6Xmnut6MrNsethw==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=daBfrgcyo7/PK3IdsXMl4S1MynDAMkXNB22iCu8XUbk=;
+ b=OKOUpT60vHSdrkJ/FE7xXTuuTW4/4Xg67pCny53rgmH8LMKF2cjbbzCkv1c5GLB+wjecxyDMyI/EuL+srN8spGKM40X3Pgt2vam0kiUCut0Bt3Aa21SUzrgk42ER0a3Gz32iHJPael/fR4n7uge0pve8xuXprQ2FcpZ6x8XI9/2izEFg5A2l2MuJ1E4Asa28xc+NX0tGdNYWakkCEySvH2y6kvLBIhlz3/lBiwuE4u5qPQNgxzksEracj4X4JjryVMUyxt+wbAp09xFQlgZ2p2dr80NYsBhsXj8omR7pUh/rfAYbzGlMzgEAC3jYrdLMNZqRHv90Tq3TroIePu8t7A==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=amd.com; dmarc=pass action=none header.from=amd.com; dkim=pass
+ header.d=amd.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=daBfrgcyo7/PK3IdsXMl4S1MynDAMkXNB22iCu8XUbk=;
+ b=TzjNm+zU4pYmVahj1c3NhW9CLC0eG67ldZOLilJWBfGZaEF3NfQjW0qX7lSYncf+zlyzs+8ZvvBhdOD6nXwYd/92NkWDe+PeVtTN/nPj2u+zTB7LBna2F8s8hKbzZDmgpXac+ZtkvcZAtpZfvZeuCbbZc1ZI3M9i7nhReiAYb9M=
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=amd.com;
+Received: from DM4PR12MB5070.namprd12.prod.outlook.com (2603:10b6:5:389::22)
+ by CY8PR12MB7434.namprd12.prod.outlook.com (2603:10b6:930:52::20) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.9520.5; Mon, 19 Jan
+ 2026 14:10:36 +0000
+Received: from DM4PR12MB5070.namprd12.prod.outlook.com
+ ([fe80::20a9:919e:fd6b:5a6e]) by DM4PR12MB5070.namprd12.prod.outlook.com
+ ([fe80::20a9:919e:fd6b:5a6e%5]) with mapi id 15.20.9520.011; Mon, 19 Jan 2026
+ 14:10:36 +0000
+Message-ID: <b3e355f7-b242-4fda-ac13-f8cb90225fb5@amd.com>
+Date: Mon, 19 Jan 2026 08:10:34 -0600
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v6 2/5] crypto: ccp - Declare PSP dead if
+ PSP_CMD_TEE_RING_INIT fails
+To: "Mario Limonciello (AMD)" <superm1@kernel.org>,
+ Herbert Xu <herbert@gondor.apana.org.au>,
+ Shyam Sundar S K <Shyam-sundar.S-k@amd.com>,
+ =?UTF-8?Q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>,
+ Rijo Thomas <Rijo-john.Thomas@amd.com>
+Cc: John Allen <john.allen@amd.com>, "David S . Miller"
+ <davem@davemloft.net>, Hans de Goede <hansg@kernel.org>,
+ "open list:AMD CRYPTOGRAPHIC COPROCESSOR (CCP) DRIVER"
+ <linux-crypto@vger.kernel.org>,
+ "open list:AMD PMF DRIVER" <platform-driver-x86@vger.kernel.org>,
+ Lars Francke <lars.francke@gmail.com>, Yijun Shen <Yijun.Shen@dell.com>,
+ Devaraj Rangasamy <Devaraj.Rangasamy@amd.com>
+References: <20260116041132.153674-1-superm1@kernel.org>
+ <20260116041132.153674-3-superm1@kernel.org>
+From: Tom Lendacky <thomas.lendacky@amd.com>
+Content-Language: en-US
+Autocrypt: addr=thomas.lendacky@amd.com; keydata=
+ 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
+ WiyqywZI5g==
+In-Reply-To: <20260116041132.153674-3-superm1@kernel.org>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: SA1P222CA0161.NAMP222.PROD.OUTLOOK.COM
+ (2603:10b6:806:3c3::9) To DM4PR12MB5070.namprd12.prod.outlook.com
+ (2603:10b6:5:389::22)
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20260116133150.5606-1-lkml@antheas.dev>
- <20260116133150.5606-8-lkml@antheas.dev>
- <3354c446-3e1c-40c7-ac08-43b3ef630d91@linux.dev>
- <CAGwozwF0KaG0VJDJSPWfX8DVty-nZ+m8_ugDOk9wwHr+UbvYQA@mail.gmail.com>
- <2f7c8e80-274e-4cec-98bf-cd9cc49fb363@linux.dev>
- <CAGwozwEEd8+Gfrs=9zX2ES-tLpNQLmcWicRqHaWgd_UsCsHjPg@mail.gmail.com>
- <22651aa1-5677-4d76-8850-49e6a348a257@linux.dev>
- <73924a7a-ab91-a11d-313e-5f94f73f5e53@linux.intel.com>
-In-Reply-To: <73924a7a-ab91-a11d-313e-5f94f73f5e53@linux.intel.com>
-From: Antheas Kapenekakis <lkml@antheas.dev>
-Date: Mon, 19 Jan 2026 12:34:31 +0100
-X-Gmail-Original-Message-ID: 
- <CAGwozwF2HzEfWUtkEptdBBVdhob2OzP3EXGPA+qy9at5r5MXwA@mail.gmail.com>
-X-Gm-Features: AZwV_QicXCjPQgf4IArPkHRBbC5sXE8Ouo-n9oxdnhDNzsukEBqVu6mUhcnt3Gk
-Message-ID: 
- <CAGwozwF2HzEfWUtkEptdBBVdhob2OzP3EXGPA+qy9at5r5MXwA@mail.gmail.com>
-Subject: Re: [PATCH v11 07/11] platform/x86: asus-wmi: Add support for
- multiple kbd led handlers
-To: =?UTF-8?Q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
-Cc: Denis Benato <denis.benato@linux.dev>,
- platform-driver-x86@vger.kernel.org,
-	linux-input@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>,
-	Jiri Kosina <jikos@kernel.org>, Benjamin Tissoires <bentiss@kernel.org>,
-	Corentin Chary <corentin.chary@gmail.com>,
- "Luke D . Jones" <luke@ljones.dev>,
-	Hans de Goede <hansg@kernel.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-X-PPP-Message-ID: 
- <176882248375.555036.875155288104686020@linux3247.grserver.gr>
-X-PPP-Vhost: antheas.dev
-X-Virus-Scanned: clamav-milter 1.4.3 at linux3247.grserver.gr
-X-Virus-Status: Clean
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: DM4PR12MB5070:EE_|CY8PR12MB7434:EE_
+X-MS-Office365-Filtering-Correlation-Id: 1e402a48-ff14-4377-6d28-08de57648488
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;ARA:13230040|1800799024|376014|366016|7053199007;
+X-Microsoft-Antispam-Message-Info:
+	=?utf-8?B?Q3dMZlJvMEx0dy9GT24rZXA2MjU3MjZzeUQrd2JCU2NjaGdnOU9FSWRKU25M?=
+ =?utf-8?B?N2J1YWpLUUpvMGtHcGpCbTdRSkNsWnFSMU9NUXZjSG5RK0RhYXNhTFpxK2Vz?=
+ =?utf-8?B?UjZRTnl3eW5hVHlNVSt0VjJoSUNmVnVDNk5NTmN3bnd0ZHpKMlEzcWRRREVp?=
+ =?utf-8?B?dFFVeEdBdVJEbjc1QlpLVWJLaUhkOU9VTnBpRytCMklGdU1Bd2FXaXRjRHlN?=
+ =?utf-8?B?TVRhTDhxUS83bW9yS01vMlpUSkdVZUo4akpsUW8xanRtbUVQMUd0ZXR6MlZ3?=
+ =?utf-8?B?dm1HMWJxR0tFVVI4T0VwL1RLdTZSSmVQOW40K25kZHZiNi9IaEJ1QlViRUVG?=
+ =?utf-8?B?eFZqdUpMRjhnMW9GSzNsNkw3Z2dUcTV6OFJvTnVQUEdLbHF3Q01KOFJpMXRr?=
+ =?utf-8?B?SzdJanNJM0krR2FmdDB2bkJLK0toUzIwRG5ZWVdqbWdhQXcrUGV1eEMyUHpN?=
+ =?utf-8?B?RGlTYnZ4amFzTU5DM3VOdmh4TUNXRGphaUt3T3Z0TVdJWGFyT1RuTXprMXN6?=
+ =?utf-8?B?M0o0bDdFT240bEk0bCtGSjVObkFqcE13L0dhTkNnV05paE1OYWVjdFplY3JP?=
+ =?utf-8?B?emVEOHNKVWhNbTdTd2hZODg4bko3bkMrWTRHYThBazZOWTl4U0Y4ci8zbjdl?=
+ =?utf-8?B?UGNKcWVTQzZaTDJQTXhKSVRLMURRVkVkRlRPUHhhUytFQkhCRUVhZnVnNnNl?=
+ =?utf-8?B?bG1kV29MeElnQjlLaERtRlQ5S0h3a3ZqZEZhekZtemRIZUREdHZMVzBhYlpR?=
+ =?utf-8?B?SFhZMkhHdk5DK0tRSHBaZnFaa0ZHRzRhRkQwTVZXelJiSjJZRUdDV3VSaDN6?=
+ =?utf-8?B?OVZrYUtHNFF6bmR3cGtOam1wSUxyUDRKZU43SXNLYnVOeERHN2VIMWpqakJJ?=
+ =?utf-8?B?cTdpQTk0Ykcranp0UFM2RDBEVndhRlBLTkhiN0tFcXFMbklTVi9reTN2Mm11?=
+ =?utf-8?B?TVpZUlR5WFA3SGdUZkJVemFzVDBaUkVEUWZOd0NtdWduYWhPMzJwM0JhS2Yx?=
+ =?utf-8?B?WE1WaFV4eWhnUGpOYWFkdWJ5RHVvenI5NzFiUjM5dThDWjM0MGFhVHBwZVdD?=
+ =?utf-8?B?SFcwTGdOKy9CMzNMMlh6K0ZDRnp1U2NMdVpWR3FkMjBha1RLbzkrZVJWbW9h?=
+ =?utf-8?B?QlVCNWJ5VCtrZXhEQ3d6OXd2Z3R5d0l4UUFDTHJNTXNnTm5IZXIrOURva3RO?=
+ =?utf-8?B?SldablFDS0ZxTHVFSHBweGFCcFZtMGZDQ3VVa3Z0U2FDTkkvU3VJYzZmUnRZ?=
+ =?utf-8?B?dHdmQmYya2VtTmdtN0VDa3BRc2tmMVNaTUxuQVNCU3Y3MjB0YkV3Z0FORzYz?=
+ =?utf-8?B?MHdiUENRYVJnTU5EMHRCYVM2Q0NiVG8vN2NNZ1RMWll0T3RoSUU3SnlBYktj?=
+ =?utf-8?B?MGx2dFc1TXZKMk9GYW1mZnJnbS9HQ1Jvc0dhQ2JiMjJhZnJ4UlU4bGlGWVZE?=
+ =?utf-8?B?Mnp4anhUeGJuam41YTlIaDMvVFRBTlc2bkpJdHoyRkZ5Y2lmdXJnT2NTMGZ2?=
+ =?utf-8?B?M3BTWG5XSXM3Vzk3SnNIaW9TZWV1a1l6VmxXakpGMnZ4OUU0YjB3VGZyZ1lQ?=
+ =?utf-8?B?ZWJPVTBBRGRXVVlmdE5PNkdKYTVpRVNBaXVjRlBYTGNJMVNsQVBYd3lXYThl?=
+ =?utf-8?B?RHNIbkFTZk5HN09pak5uTmZ1TTRJdjhzS2dZcExtMTQ0MXg4MzdSenlqWS9M?=
+ =?utf-8?B?MFJnYnh0QmFoU2FsbjluK3F4UEt6aFJTQk5TNXN4Zis3blgrWTUxUkxsS0Zq?=
+ =?utf-8?B?ZVNvK3creGZWb1dwRVNwV0pzd3kvSkJHR1NxbXV1WjJENzY1R0xMbzF1cko2?=
+ =?utf-8?B?dzVMQTU2dkplVmRqbFpGemRsSjU1c1lySGM5dFN6M24rWXdvMjZESmdWU1lB?=
+ =?utf-8?B?K3MrcE03T3piNWREL2tablFheFE4OUdPa0wvcG5VRTk3ei91NU5KNGl3OEwz?=
+ =?utf-8?B?YTlnRCtJQVlhdEJ6TjUvYnh3VGhSTFRMV2ZQZG83K2hvS1B1MURhdW9EeWZ1?=
+ =?utf-8?B?NnQ3cVV4UWkvM2VDNnh5a21JaWs2b2M5SmVlSitqcE43dWZnZWlOa094VnIx?=
+ =?utf-8?B?YXduUm9yVjNEQ0FnNnhpYWdhOUdPNnJNVEtjb1FoTEFnZW5kV2t6Y3J5aDNJ?=
+ =?utf-8?Q?aTSo=3D?=
+X-Forefront-Antispam-Report:
+	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DM4PR12MB5070.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(1800799024)(376014)(366016)(7053199007);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0:
+	=?utf-8?B?U0JWT01aTldSSTJBODN4K0FKckUway85MGZHNGRyTG82Z0tRblZCNDBrQ3dv?=
+ =?utf-8?B?YW95OGIzVmdSTForcElqY2VlMDJJVlRDeGhieWc2dFZ3UXJBZWdMbmFlZjNR?=
+ =?utf-8?B?MExBVEFTVWZqOWlrejQxczZLVm1hZXAzaFE0UU8rYy84ZTdlYnNQTjcxOVRH?=
+ =?utf-8?B?RTNST3g1OHlsWkpRNEZvMnFMMC84bzdxYmhCWkMxdFJKU21UTDNHZ2FJK3RU?=
+ =?utf-8?B?Y1Z6L3JicklQRExGcVdNZitEZ1piM3NnUDBXQ3NsZm5JUnlGOGZKdlpKck56?=
+ =?utf-8?B?R0J6QlpMekgvbWlhVnY1K0YvQzliYUJFSy82SGUrUE5ZMTgvYS8vVVFobUpL?=
+ =?utf-8?B?TDN0WUtoL3hqbFp3RGtGZHV1NjdmbWR3N0ZlYXdpZUlSanUrL3Q2YXh3RUd2?=
+ =?utf-8?B?RFlZK3FoZlJxYkN2ZWE4YzRsOHFlY0tpTHNjZ28yVlY0RVFIai9yUVhlcTFv?=
+ =?utf-8?B?K1pGekNZUlRIbmNQNEZwbCtzOXFhcUY5aVFZK3UvL01qZTIzRXBObVdPK0lO?=
+ =?utf-8?B?SURqTW9hNU8ydktaM1JXSkpuWmFsc2xVTWxVTEZRczVhM1JmY2ZpZU56WXZB?=
+ =?utf-8?B?cVdSKzBramx4NGZuaGVMVy8zVXYrcFVJWUpoTTk0R3l6eEtkMXpSUk1hcytQ?=
+ =?utf-8?B?MGxHQjltMGRJS0JiVy9XZU1tQUhDdWRsemZpNVJGNUU5OFN0ZTB0RzJ2c1Fj?=
+ =?utf-8?B?bG41RlNRbjhSYnlXSE5lOTl5QncyMVJSb2dhdHhncEdNQnN2M0g0NGRuWFgz?=
+ =?utf-8?B?dUJNR3RQclNpLzJZRzlyNzRLdk1UNlVYUjhuS25MYTd0b1NyRlNTL1M3LzZH?=
+ =?utf-8?B?MXNJaTNKK3dPZWlCZ0lKWGlYR09xUUZ4ZGI0WXduL0pyR0U3OG9qampWYnkx?=
+ =?utf-8?B?NlV0Mk5qRmp6VnI1MXVYSllkTHUrNFIyZ090citLU3h0VTZjajVLeXBGQzFt?=
+ =?utf-8?B?UzNLRDVYK3ptSExzSFk0V1BRSVBpcG11dXBOdG4rb2I3aHM2dmZZZXZhV09N?=
+ =?utf-8?B?YTBqekl2NUxYc1ViNlVPMmpPNW1DMGZhVEtxT1YyZk1hVTErTFRTa1JYQWR5?=
+ =?utf-8?B?VUN4SDNCd3AxU2ZBajRLekF1ajJPZElpd25vNk00eXNWTXZpN280ZWsyNWZS?=
+ =?utf-8?B?em9CUTdyNnFGai9KTzdMOFZDNm80ZkdNRjk3UXhXbmlZM2Q3bjNwaHN2cnN4?=
+ =?utf-8?B?aGRHa21jalpIbWxycGhJWXlHRzZwVzh3VTRzL1NSYzZuTm5tc3VTV2hiYXo3?=
+ =?utf-8?B?OVlHNjlZcUR2U01DdGYyTWszcWQyVnZrcFVpM3VaUWErQW1uMGJDTUZ4Zlll?=
+ =?utf-8?B?Z3JaMldEbGpFUWlyYkVvQ3BTY2grdElhR2RSTmw5Rm5QRTE1Mm00ZVdqYnBQ?=
+ =?utf-8?B?R21OWWp6cW84NTQwd1d0NEttSjVLdzBESWVQUnBmQjIyOWV4NDdONDVybWVO?=
+ =?utf-8?B?WWtWaEVsdGR2N04vUnFwc3FNTUZWVWQ4UTB4T1lMM0dFNG1uS0dqd3lsTUN0?=
+ =?utf-8?B?dXBYN0lzakJDa0IzUTVoRklhSllLT2xLdkxiOURrMGpHcnN0K241dGtjNGRQ?=
+ =?utf-8?B?MEpkYmgxWTR3T3VlYnlKTHhFWXkwbWxLZGpyMHNGQTYyclFDWm5jMUVsenNI?=
+ =?utf-8?B?R3lzNDJqWnNuV2tQVFA3S0N2TG1GWmhzOUl5K1Y3MWxTM0psazZXRUVlbSto?=
+ =?utf-8?B?dUVvREd3NmVtOTZpeEN4NnlSV1YyNlFiQUtLay9zYy9heFd0bHpUYmpMckNE?=
+ =?utf-8?B?ZElZMHk3NWtjd3V5OXRQMHhPRlYyZFh6VWhIam9tTXRxQjlGNHBCVTNpU0Yx?=
+ =?utf-8?B?eGg0dDBqZUNJcndSc0V3S2VJVVNlNU9ULzV6ekdvRVlZNjdmM3hheWtTRDhn?=
+ =?utf-8?B?ek96T3RIb0ZWMEx5TEdJWjI1Qk9hVVNOeU1LS0g0cGZma3RJU3BHTVo0RE9B?=
+ =?utf-8?B?dTJkVlRicWQ4T3ZSeVl2bUZ6Znc1VkdZUE5kUGV0L3g0L0Y4KytEVncraGxx?=
+ =?utf-8?B?Sy8vRHFmOWw1akt6N0ZLMlpTMmQ0ZlZsVlhlcytMK1hUWHFUWWdoYmt2TTBr?=
+ =?utf-8?B?MFBWcjBIdlhZdTMwMnk3U0t2YVh0M3RxbFJLNTR0akxzSW5JdzB1bmhpOWNn?=
+ =?utf-8?B?QTlvS1ZEMGtRakdhMVppT1pNeUhBT1k5aDJRTzBlK3FpUG93OUN6QkJCYlQ3?=
+ =?utf-8?B?RU5IcnJJUWdYdVZZcDlEVVIrQzZIeFQrVjEyYWtPcjNBOVMzT0RxKzU3Ump2?=
+ =?utf-8?B?bVhZRGdkdjZMR0t5YitPN2ZFS25sSlNkUitYN2oxeGQxRXBUNFh5R2lZVlpI?=
+ =?utf-8?Q?ocyFmCGD8HZI7QBLXS?=
+X-OriginatorOrg: amd.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 1e402a48-ff14-4377-6d28-08de57648488
+X-MS-Exchange-CrossTenant-AuthSource: DM4PR12MB5070.namprd12.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 19 Jan 2026 14:10:36.7020
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: /AV2uJvCCSDLC/pejkzyzV9PMuODDFfJeezkbkFuMo1zsZynt0WlQmms4h3+D8In5t2QtG8WYN+hlBXO3k9Sdw==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: CY8PR12MB7434
 
-On Mon, 19 Jan 2026 at 10:53, Ilpo J=C3=A4rvinen
-<ilpo.jarvinen@linux.intel.com> wrote:
->
-> On Sat, 17 Jan 2026, Denis Benato wrote:
-> > On 1/17/26 15:11, Antheas Kapenekakis wrote:
-> > > On Sat, 17 Jan 2026 at 14:56, Denis Benato <denis.benato@linux.dev> w=
-rote:
-> > >>
-> > >> On 1/17/26 14:49, Antheas Kapenekakis wrote:
-> > >>> On Sat, 17 Jan 2026 at 14:16, Denis Benato <denis.benato@linux.dev>=
- wrote:
-> > >>>> On 1/16/26 14:31, Antheas Kapenekakis wrote:
-> > >>>>> Some devices, such as the Z13 have multiple Aura devices connecte=
-d
-> > >>>>> to them by USB. In addition, they might have a WMI interface for
-> > >>>>> RGB. In Windows, Armoury Crate exposes a unified brightness slide=
-r
-> > >>>>> for all of them, with 3 brightness levels.
-> > >>>>>
-> > >>>>> Therefore, to be synergistic in Linux, and support existing tooli=
-ng
-> > >>>>> such as UPower, allow adding listeners to the RGB device of the W=
-MI
-> > >>>>> interface. If WMI does not exist, lazy initialize the interface.
-> > >>>>>
-> > >>>>> Since hid-asus and asus-wmi can both interact with the led object=
-s
-> > >>>>> including from an atomic context, protect the brightness access w=
-ith a
-> > >>>>> spinlock and update the values from a workqueue. Use this workque=
-ue to
-> > >>>>> also process WMI keyboard events, so they are handled asynchronou=
-sly.
-> > >>>>>
-> > >>>>> Acked-by: Benjamin Tissoires <bentiss@kernel.org>
-> > >>>>> Signed-off-by: Antheas Kapenekakis <lkml@antheas.dev>
-> > >>>>> ---
-> > >>>>>  drivers/platform/x86/asus-wmi.c            | 183 +++++++++++++++=
-+++---
-> > >>>>>  include/linux/platform_data/x86/asus-wmi.h |  15 ++
-> > >>>>>  2 files changed, 173 insertions(+), 25 deletions(-)
-> > >>>>>
-> > >>>>> diff --git a/drivers/platform/x86/asus-wmi.c b/drivers/platform/x=
-86/asus-wmi.c
-> > >>>>> index 4aec7ec69250..df2365efb2b8 100644
-> > >>>>> --- a/drivers/platform/x86/asus-wmi.c
-> > >>>>> +++ b/drivers/platform/x86/asus-wmi.c
-> > >>>>> @@ -31,13 +31,13 @@
-> > >>>>>  #include <linux/pci.h>
-> > >>>>>  #include <linux/pci_hotplug.h>
-> > >>>>>  #include <linux/platform_data/x86/asus-wmi.h>
-> > >>>>> -#include <linux/platform_data/x86/asus-wmi-leds-ids.h>
-> > >>>>>  #include <linux/platform_device.h>
-> > >>>>>  #include <linux/platform_profile.h>
-> > >>>>>  #include <linux/power_supply.h>
-> > >>>>>  #include <linux/rfkill.h>
-> > >>>>>  #include <linux/seq_file.h>
-> > >>>>>  #include <linux/slab.h>
-> > >>>>> +#include <linux/spinlock.h>
-> > >>>>>  #include <linux/types.h>
-> > >>>>>  #include <linux/units.h>
-> > >>>>>
-> > >>>>> @@ -256,6 +256,9 @@ struct asus_wmi {
-> > >>>>>       int tpd_led_wk;
-> > >>>>>       struct led_classdev kbd_led;
-> > >>>>>       int kbd_led_wk;
-> > >>>>> +     bool kbd_led_notify;
-> > >>>>> +     bool kbd_led_avail;
-> > >>>>> +     bool kbd_led_registered;
-> > >>>>>       struct led_classdev lightbar_led;
-> > >>>>>       int lightbar_led_wk;
-> > >>>>>       struct led_classdev micmute_led;
-> > >>>>> @@ -264,6 +267,7 @@ struct asus_wmi {
-> > >>>>>       struct work_struct tpd_led_work;
-> > >>>>>       struct work_struct wlan_led_work;
-> > >>>>>       struct work_struct lightbar_led_work;
-> > >>>>> +     struct work_struct kbd_led_work;
-> > >>>>>
-> > >>>>>       struct asus_rfkill wlan;
-> > >>>>>       struct asus_rfkill bluetooth;
-> > >>>>> @@ -1615,6 +1619,106 @@ static void asus_wmi_battery_exit(struct =
-asus_wmi *asus)
-> > >>>>>
-> > >>>>>  /* LEDs ********************************************************=
-***************/
-> > >>>>>
-> > >>>>> +struct asus_hid_ref {
-> > >>>>> +     struct list_head listeners;
-> > >>>>> +     struct asus_wmi *asus;
-> > >>>>> +     /* Protects concurrent access from hid-asus and asus-wmi to=
- leds */
-> > >>>>> +     spinlock_t lock;
-> > >>>>> +};
-> > >>>>> +
-> > >>>>> +static struct asus_hid_ref asus_ref =3D {
-> > >>>>> +     .listeners =3D LIST_HEAD_INIT(asus_ref.listeners),
-> > >>>>> +     .asus =3D NULL,
-> > >>>>> +     /*
-> > >>>>> +      * Protects .asus, .asus.kbd_led_{wk,notify}, and .listener=
- refs. Other
-> > >>>>> +      * asus variables are read-only after .asus is set.
-> > >>>>> +      *
-> > >>>>> +      * The led cdev device is not protected because it calls ba=
-cklight_get
-> > >>>>> +      * during initialization, which would result in a nested lo=
-ck attempt.
-> > >>>>> +      *
-> > >>>>> +      * The led cdev is safe to access without a lock because if
-> > >>>>> +      * kbd_led_avail is true it is initialized before .asus is =
-set and never
-> > >>>>> +      * changed until .asus is dropped. If kbd_led_avail is fals=
-e, the led
-> > >>>>> +      * cdev is registered by the workqueue, which is single-thr=
-eaded and
-> > >>>>> +      * cancelled before asus-wmi would access the led cdev to u=
-nregister it.
-> > >>>>> +      *
-> > >>>>> +      * A spinlock is used, because the protected variables can =
-be accessed
-> > >>>>> +      * from an IRQ context from asus-hid.
-> > >>>>> +      */
-> > >>>>> +     .lock =3D __SPIN_LOCK_UNLOCKED(asus_ref.lock),
-> > >>>>> +};
-> > >>>>> +
-> > >>>>> +/*
-> > >>>>> + * Allows registering hid-asus listeners that want to be notifie=
-d of
-> > >>>>> + * keyboard backlight changes.
-> > >>>>> + */
-> > >>>>> +int asus_hid_register_listener(struct asus_hid_listener *bdev)
-> > >>>>> +{
-> > >>>>> +     struct asus_wmi *asus;
-> > >>>>> +
-> > >>>>> +     guard(spinlock_irqsave)(&asus_ref.lock);
-> > >>>>> +     list_add_tail(&bdev->list, &asus_ref.listeners);
-> > >>>>> +     asus =3D asus_ref.asus;
-> > >>>>> +     if (asus)
-> > >>>>> +             queue_work(asus->led_workqueue, &asus->kbd_led_work=
-);
-> > >>>>> +     return 0;
-> > >>>>> +}
-> > >>>>> +EXPORT_SYMBOL_GPL(asus_hid_register_listener);
-> > >>>>> +
-> > >>>>> +/*
-> > >>>>> + * Allows unregistering hid-asus listeners that were added with
-> > >>>>> + * asus_hid_register_listener().
-> > >>>>> + */
-> > >>>>> +void asus_hid_unregister_listener(struct asus_hid_listener *bdev=
-)
-> > >>>>> +{
-> > >>>>> +     guard(spinlock_irqsave)(&asus_ref.lock);
-> > >>>>> +     list_del(&bdev->list);
-> > >>>>> +}
-> > >>>>> +EXPORT_SYMBOL_GPL(asus_hid_unregister_listener);
-> > >>>>> +
-> > >>>>> +static void do_kbd_led_set(struct led_classdev *led_cdev, int va=
-lue);
-> > >>>>> +
-> > >>>>> +static void kbd_led_update_all(struct work_struct *work)
-> > >>>>> +{
-> > >>>>> +     struct asus_wmi *asus;
-> > >>>>> +     bool registered, notify;
-> > >>>>> +     int ret, value;
-> > >>>>> +
-> > >>>>> +     asus =3D container_of(work, struct asus_wmi, kbd_led_work);
-> > >>>>> +
-> > >>>>> +     scoped_guard(spinlock_irqsave, &asus_ref.lock) {
-> > >>>>> +             registered =3D asus->kbd_led_registered;
-> > >>>>> +             value =3D asus->kbd_led_wk;
-> > >>>>> +             notify =3D asus->kbd_led_notify;
-> > >>>>> +     }
-> > >>>>> +
-> > >>>>> +     if (!registered) {
-> > >>>>> +             /*
-> > >>>>> +              * This workqueue runs under asus-wmi, which means =
-probe has
-> > >>>>> +              * completed and asus-wmi will keep running until i=
-t finishes.
-> > >>>>> +              * Therefore, we can safely register the LED withou=
-t holding
-> > >>>>> +              * a spinlock.
-> > >>>>> +              */
-> > >>>>> +             ret =3D devm_led_classdev_register(&asus->platform_=
-device->dev,
-> > >>>>> +                                              &asus->kbd_led);
-> > >>>>> +             if (!ret) {
-> > >>>>> +                     scoped_guard(spinlock_irqsave, &asus_ref.lo=
-ck)
-> > >>>>> +                             asus->kbd_led_registered =3D true;
-> > >>>>> +             } else {
-> > >>>>> +                     pr_warn("Failed to register keyboard backli=
-ght LED: %d\n", ret);
-> > >>>>> +                     return;
-> > >>>>> +             }
-> > >>>>> +     }
-> > >>>>> +
-> > >>>>> +     if (value >=3D 0)
-> > >>>>> +             do_kbd_led_set(&asus->kbd_led, value);
-> > >>>>> +     if (notify) {
-> > >>>>> +             scoped_guard(spinlock_irqsave, &asus_ref.lock)
-> > >>>>> +                     asus->kbd_led_notify =3D false;
-> > >>>>> +             led_classdev_notify_brightness_hw_changed(&asus->kb=
-d_led, value);
-> > >>>>> +     }
-> > >>>>> +}
-> > >>>>> +
-> > >>>>>  /*
-> > >>>>>   * These functions actually update the LED's, and are called fro=
-m a
-> > >>>>>   * workqueue. By doing this as separate work rather than when th=
-e LED
-> > >>>>> @@ -1661,7 +1765,8 @@ static void kbd_led_update(struct asus_wmi =
-*asus)
-> > >>>>>  {
-> > >>>>>       int ctrl_param =3D 0;
-> > >>>>>
-> > >>>>> -     ctrl_param =3D 0x80 | (asus->kbd_led_wk & 0x7F);
-> > >>>>> +     scoped_guard(spinlock_irqsave, &asus_ref.lock)
-> > >>>>> +             ctrl_param =3D 0x80 | (asus->kbd_led_wk & 0x7F);
-> > >>>>>       asus_wmi_set_devstate(ASUS_WMI_DEVID_KBD_BACKLIGHT, ctrl_pa=
-ram, NULL);
-> > >>>>>  }
-> > >>>>>
-> > >>>>> @@ -1694,14 +1799,23 @@ static int kbd_led_read(struct asus_wmi *=
-asus, int *level, int *env)
-> > >>>>>
-> > >>>>>  static void do_kbd_led_set(struct led_classdev *led_cdev, int va=
-lue)
-> > >>>>>  {
-> > >>>>> +     struct asus_hid_listener *listener;
-> > >>>>>       struct asus_wmi *asus;
-> > >>>>>       int max_level;
-> > >>>>>
-> > >>>>>       asus =3D container_of(led_cdev, struct asus_wmi, kbd_led);
-> > >>>>>       max_level =3D asus->kbd_led.max_brightness;
-> > >>>>>
-> > >>>>> -     asus->kbd_led_wk =3D clamp_val(value, 0, max_level);
-> > >>>>> -     kbd_led_update(asus);
-> > >>>>> +     scoped_guard(spinlock_irqsave, &asus_ref.lock)
-> > >>>>> +             asus->kbd_led_wk =3D clamp_val(value, 0, max_level)=
-;
-> > >>>>> +
-> > >>>>> +     if (asus->kbd_led_avail)
-> > >>>>> +             kbd_led_update(asus);
-> > >>>>> +
-> > >>>>> +     scoped_guard(spinlock_irqsave, &asus_ref.lock) {
-> > >>>>> +             list_for_each_entry(listener, &asus_ref.listeners, =
-list)
-> > >>>>> +                     listener->brightness_set(listener, asus->kb=
-d_led_wk);
-> > >>>>> +     }
-> > >>>>>  }
-> > >>>>>
-> > >>>>>  static int kbd_led_set(struct led_classdev *led_cdev, enum led_b=
-rightness value)
-> > >>>>> @@ -1716,10 +1830,11 @@ static int kbd_led_set(struct led_classde=
-v *led_cdev, enum led_brightness value)
-> > >>>>>
-> > >>>>>  static void kbd_led_set_by_kbd(struct asus_wmi *asus, enum led_b=
-rightness value)
-> > >>>>>  {
-> > >>>>> -     struct led_classdev *led_cdev =3D &asus->kbd_led;
-> > >>>>> -
-> > >>>>> -     do_kbd_led_set(led_cdev, value);
-> > >>>>> -     led_classdev_notify_brightness_hw_changed(led_cdev, asus->k=
-bd_led_wk);
-> > >>>>> +     scoped_guard(spinlock_irqsave, &asus_ref.lock) {
-> > >>>>> +             asus->kbd_led_wk =3D value;
-> > >>>>> +             asus->kbd_led_notify =3D true;
-> > >>>>> +     }
-> > >>>>> +     queue_work(asus->led_workqueue, &asus->kbd_led_work);
-> > >>>>>  }
-> > >>>>>
-> > >>>>>  static enum led_brightness kbd_led_get(struct led_classdev *led_=
-cdev)
-> > >>>>> @@ -1729,10 +1844,18 @@ static enum led_brightness kbd_led_get(st=
-ruct led_classdev *led_cdev)
-> > >>>>>
-> > >>>>>       asus =3D container_of(led_cdev, struct asus_wmi, kbd_led);
-> > >>>>>
-> > >>>>> +     scoped_guard(spinlock_irqsave, &asus_ref.lock) {
-> > >>>>> +             if (!asus->kbd_led_avail)
-> > >>>>> +                     return asus->kbd_led_wk;
-> > >>>>> +     }
-> > >>>>> +
-> > >>>>>       retval =3D kbd_led_read(asus, &value, NULL);
-> > >>>>>       if (retval < 0)
-> > >>>>>               return retval;
-> > >>>>>
-> > >>>>> +     scoped_guard(spinlock_irqsave, &asus_ref.lock)
-> > >>>>> +             asus->kbd_led_wk =3D value;
-> > >>>>> +
-> > >>>>>       return value;
-> > >>>>>  }
-> > >>>>>
-> > >>>>> @@ -1844,7 +1967,9 @@ static int camera_led_set(struct led_classd=
-ev *led_cdev,
-> > >>>>>
-> > >>>>>  static void asus_wmi_led_exit(struct asus_wmi *asus)
-> > >>>>>  {
-> > >>>>> -     led_classdev_unregister(&asus->kbd_led);
-> > >>>>> +     scoped_guard(spinlock_irqsave, &asus_ref.lock)
-> > >>>>> +             asus_ref.asus =3D NULL;
-> > >>>>> +
-> > >>>>>       led_classdev_unregister(&asus->tpd_led);
-> > >>>>>       led_classdev_unregister(&asus->wlan_led);
-> > >>>>>       led_classdev_unregister(&asus->lightbar_led);
-> > >>>>> @@ -1882,22 +2007,26 @@ static int asus_wmi_led_init(struct asus_=
-wmi *asus)
-> > >>>>>                       goto error;
-> > >>>>>       }
-> > >>>>>
-> > >>>>> -     if (!kbd_led_read(asus, &led_val, NULL) && !dmi_check_syste=
-m(asus_use_hid_led_dmi_ids)) {
-> > >>>>> -             pr_info("using asus-wmi for asus::kbd_backlight\n")=
-;
-> > >>>>> -             asus->kbd_led_wk =3D led_val;
-> > >>>>> -             asus->kbd_led.name =3D "asus::kbd_backlight";
-> > >>>>> -             asus->kbd_led.flags =3D LED_BRIGHT_HW_CHANGED;
-> > >>>>> -             asus->kbd_led.brightness_set_blocking =3D kbd_led_s=
-et;
-> > >>>>> -             asus->kbd_led.brightness_get =3D kbd_led_get;
-> > >>>>> -             asus->kbd_led.max_brightness =3D 3;
-> > >>>>> +     asus->kbd_led.name =3D "asus::kbd_backlight";
-> > >>>>> +     asus->kbd_led.flags =3D LED_BRIGHT_HW_CHANGED;
-> > >>>>> +     asus->kbd_led.brightness_set_blocking =3D kbd_led_set;
-> > >>>>> +     asus->kbd_led.brightness_get =3D kbd_led_get;
-> > >>>>> +     asus->kbd_led.max_brightness =3D 3;
-> > >>>>> +     asus->kbd_led_avail =3D !kbd_led_read(asus, &led_val, NULL)=
-;
-> > >>>>> +     INIT_WORK(&asus->kbd_led_work, kbd_led_update_all);
-> > >>>>>
-> > >>>>> +     if (asus->kbd_led_avail) {
-> > >>>>> +             asus->kbd_led_wk =3D led_val;
-> > >>>>>               if (num_rgb_groups !=3D 0)
-> > >>>>>                       asus->kbd_led.groups =3D kbd_rgb_mode_group=
-s;
-> > >>>>> +     } else {
-> > >>>>> +             asus->kbd_led_wk =3D -1;
-> > >>>>> +     }
-> > >>>>>
-> > >>>>> -             rv =3D led_classdev_register(&asus->platform_device=
-->dev,
-> > >>>>> -                                        &asus->kbd_led);
-> > >>>>> -             if (rv)
-> > >>>>> -                     goto error;
-> > >>>>> +     scoped_guard(spinlock_irqsave, &asus_ref.lock) {
-> > >>>>> +             asus_ref.asus =3D asus;
-> > >>>>> +             if (asus->kbd_led_avail || !list_empty(&asus_ref.li=
-steners))
-> > >>>>> +                     queue_work(asus->led_workqueue, &asus->kbd_=
-led_work);
-> > >>>>>       }
-> > >>>>>
-> > >>>>>       if (asus_wmi_dev_is_present(asus, ASUS_WMI_DEVID_WIRELESS_L=
-ED)
-> > >>>>> @@ -4372,6 +4501,7 @@ static int asus_wmi_get_event_code(union ac=
-pi_object *obj)
-> > >>>>>
-> > >>>>>  static void asus_wmi_handle_event_code(int code, struct asus_wmi=
- *asus)
-> > >>>>>  {
-> > >>>>> +     enum led_brightness led_value;
-> > >>>>>       unsigned int key_value =3D 1;
-> > >>>>>       bool autorelease =3D 1;
-> > >>>>>
-> > >>>>> @@ -4388,19 +4518,22 @@ static void asus_wmi_handle_event_code(in=
-t code, struct asus_wmi *asus)
-> > >>>>>               return;
-> > >>>>>       }
-> > >>>>>
-> > >>>>> +     scoped_guard(spinlock_irqsave, &asus_ref.lock)
-> > >>>>> +             led_value =3D asus->kbd_led_wk;
-> > >>>>> +
-> > >>>>>       if (code =3D=3D NOTIFY_KBD_BRTUP) {
-> > >>>>> -             kbd_led_set_by_kbd(asus, asus->kbd_led_wk + 1);
-> > >>>>> +             kbd_led_set_by_kbd(asus, led_value + 1);
-> > >>>>>               return;
-> > >>>>>       }
-> > >>>>>       if (code =3D=3D NOTIFY_KBD_BRTDWN) {
-> > >>>>> -             kbd_led_set_by_kbd(asus, asus->kbd_led_wk - 1);
-> > >>>>> +             kbd_led_set_by_kbd(asus, led_value - 1);
-> > >>>>>               return;
-> > >>>>>       }
-> > >>>>>       if (code =3D=3D NOTIFY_KBD_BRTTOGGLE) {
-> > >>>>> -             if (asus->kbd_led_wk =3D=3D asus->kbd_led.max_brigh=
-tness)
-> > >>>>> +             if (led_value =3D=3D asus->kbd_led.max_brightness)
-> > >>>>>                       kbd_led_set_by_kbd(asus, 0);
-> > >>>> This is the toggle leds button, right? I would expect that pressin=
-g the toggle
-> > >>>> button turns off leds if they are on and turns them on if they are=
- off.
-> > >>>>
-> > >>>> so if (led_value > 0) { .... }.
-> > >>>>
-> > >>>> I see the previous code was equivalent to yours but is that what w=
-e want?
-> > >>> It is common to do 0->1->2->3->0 for the toggle. This is what is
-> > >>> currently done for WMI Asus keyboards and e.g., Thinkpads. This pat=
-ch
-> > >>> unifies the behavior for USB keyboards too.
-> > >>>
-> > >>> I would argue it is better, as you do not need to reach for a
-> > >>> userspace slider to set a lower brightness.
-> > >>>
-> > >>> The current behavior of KDE is 0->3->0 and if the event goes to
-> > >>> userspace this is what happens currently. Unless the keyboard
-> > >>> reconnects, where brightness just stops working afterwards because
-> > >>> upower only probes at boot (I have a follow patch to fix this for
-> > >>> Duos).
-> > >> Whatever goes for me if hid and wmi handles them the same,
-> > >> especially if userspace does the same thing.
-> > >>
-> > >> In 11/11 you do:
-> > >>
-> > >> caseASUS_EV_BRTTOGGLE:
-> > >> if(brightness >=3DASUS_EV_MAX_BRIGHTNESS)
-> > >> brightness =3D0;
-> > >> else
-> > >> brightness +=3D1;
-> > >> break;
-> > >> }
-> > >>
-> > >> So perhaps here you should do
-> > >>
-> > >> if (led_value >=3D asus->kbd_led.max_brightness)
-> > >>
-> > >>
-> > >> purely for consistency?
-> > > If I reroll the series I will do it, otherwise you can do a followup
-> >
-> > The current version is functionally okay.
-> >
-> > I would only change the name of _LEGACY and see this series merged.
-> >
-> > Or I can do it after it has been merged together with this change,
-> > whatever maintainers think it's best.
->
-> In general, I'd prefer we address all known things right away. This is
-> kind of same as we prefer not to do back-and-forth changes within a
-> series. But since this is equivalent to existing code, it would be nice t=
-o
-> finally get this series merged so this particular thing can be addressed
-> later.
->
-> Also, having lots of back-and-forth emails over some small thing usually
-> consumes considerable amount of time from multiple people who have to
-> read all the discussion through (including me), so if a review request is
-> not unreasonable, it often would be the path of least resistance and leas=
-t
-> burdensome to just act upon the feedback instead of arguing whether it ca=
-n
-> be delayed.
+On 1/15/26 22:11, Mario Limonciello (AMD) wrote:
+> tee_init_ring() only declares PSP dead if the command times out.
+> If there is any other failure it is still considered fatal though.
+> Set psp_dead for other failures as well.
+> 
+> Fixes: 949a0c8dd3c2 ("crypto: ccp - Move direct access to some PSP registers out of TEE")
+> Tested-by: Yijun Shen <Yijun.Shen@Dell.com>
+> Signed-off-by: Mario Limonciello (AMD) <superm1@kernel.org>
 
-Hi,
-I agree. As for the name, my reasoning for legacy is that this init
-only affects legacy devices (pre 2022) as far as I know (some devices
-might refuse RGB commands without an ID1 init, but this driver does
-not provide RGB currently). Denis has a (modern) device with one of
-the affected PIDs, but he did not test if his device malfunctions or
-if it does in which way. He also did not suggest an alternative name
+Acked-by: Tom Lendacky <thomas.lendacky@amd.com>
 
-So I am stuck from my side.
-
-Best,
-Antheas
-
-> --
->  i.
->
->
+> ---
+>  drivers/crypto/ccp/tee-dev.c | 1 +
+>  1 file changed, 1 insertion(+)
+> 
+> diff --git a/drivers/crypto/ccp/tee-dev.c b/drivers/crypto/ccp/tee-dev.c
+> index 5e1d80724678d..af881daa5855b 100644
+> --- a/drivers/crypto/ccp/tee-dev.c
+> +++ b/drivers/crypto/ccp/tee-dev.c
+> @@ -125,6 +125,7 @@ static int tee_init_ring(struct psp_tee_device *tee)
+>  		dev_err(tee->dev, "tee: ring init command failed (%#010lx)\n",
+>  			FIELD_GET(PSP_CMDRESP_STS, reg));
+>  		tee_free_ring(tee);
+> +		psp_dead = true;
+>  		ret = -EIO;
+>  	}
+>  
 
