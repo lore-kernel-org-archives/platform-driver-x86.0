@@ -1,112 +1,101 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.18])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.16])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4A70531A7E1
-	for <platform-driver-x86@vger.kernel.org>; Mon, 19 Jan 2026 17:17:01 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.18
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9995932E696;
+	Mon, 19 Jan 2026 17:45:42 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.16
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1768843022; cv=none; b=pET8tRR5J35MudNAAKQHwsMMs4D/JcJ5s1Ak5PUYXyjBeMafMnA0y7s1byKyBkT37NeatUwi9ZEDKAw8ziKMTU2vZuY0FlRbqbz6AhOLUW7TskmxqmTc2BI4L+bJJP4cug87pVcwoICta1Mr6F5NR2e9I0B+kso79EuSqQKYBD8=
+	t=1768844744; cv=none; b=OEwGrnBgRbY5BCcS8a3z7D/O962MMdbBQ6H54W/mWk2m5Ib55gIgKv+gSkZkB7p8M6zutDFXqil5AOEYUvHXIJYz+oXI82QfCUB89xe8tHc6HC16gqojPWYqoWXIygHmSPfFC9Ep16pYEs7kP6i/UmafgHL9rJO7Ga4Z3WIRArk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1768843022; c=relaxed/simple;
-	bh=850qbRuBbBdaw4ijSQS91DiOznEZRZNKN3AuEuwXUT8=;
-	h=From:Date:To:cc:Subject:In-Reply-To:Message-ID:References:
-	 MIME-Version:Content-Type; b=IschVv8oo2W1IyHh5JOsBzkNe0L97F/9/V4XFRZqPIf13w1Mzl9jhwkNmTeK00jp2Q3FHUcgQI4y+tNyIXa2o8QnwEX2nNueT5U3J4XkevG3Jbouz6HAVgGDM7Hpgc7iCA73G0BL0sOzHBj9a0gXvpfyM36yog/gdCN5DjqzuKc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=pass smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=mB8f/oGu; arc=none smtp.client-ip=192.198.163.18
+	s=arc-20240116; t=1768844744; c=relaxed/simple;
+	bh=7kBtTZUveJUoz2sXEx04XehLYnMRSs0aoi0VcwAJs3E=;
+	h=From:To:Cc:In-Reply-To:References:Subject:Message-Id:Date:
+	 MIME-Version:Content-Type; b=TF0Ngmr5Ww4KHNtRcq3McVU+Paer7t+7KGZ6CIbo5E3M3D9a7KH//Wno7Jzw/XUPohmbb4Ebp4Wo1X1OEj6Dxv1lhYquKVaMjOgpNRsmjhTU9bvcIxIvTJcMT93gXqqeyvxD51zhGwjrG0KiUwUyrXc5QQnEbO7YERGM/gK51jA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=pass smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=AZmjAOcu; arc=none smtp.client-ip=198.175.65.16
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="mB8f/oGu"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="AZmjAOcu"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1768843021; x=1800379021;
-  h=from:date:to:cc:subject:in-reply-to:message-id:
-   references:mime-version;
-  bh=850qbRuBbBdaw4ijSQS91DiOznEZRZNKN3AuEuwXUT8=;
-  b=mB8f/oGuD+3tFf9Cfwp9CYRlHk8Qa2qFDCQvfkU+6RRMnA9XEDorkAer
-   w6loenQkiVaLABOS65uxX+kKnRrE2GDLApdxRxEC2D/FFQH7Ajdoth0Yv
-   jlQUg6Wvku0/vGLCSTq2qECvyK7j+I8MOSV0Uek2e14iCsp0mXhw8OOo3
-   zoFZiATMVGA8kSo4+DXXxIcNlR8Awt/whczYmYEjYmNtnib5/LcGkUqx8
-   JsN72QoE09hDpSZfa42ek8BA4JgCZEiEk3apD372Ja5LlKTN16qQ0qk9J
-   S9JADzYj7DO2mwTap6KJ39GT4yXm883jpWGk88wQEuIIS8uoqPYYuIMK6
-   g==;
-X-CSE-ConnectionGUID: J1RM6jQ+QGqCd6h0h5KT7A==
-X-CSE-MsgGUID: lHJMXk0AQaK6YCek5zpJrw==
-X-IronPort-AV: E=McAfee;i="6800,10657,11676"; a="69258002"
+  t=1768844743; x=1800380743;
+  h=from:to:cc:in-reply-to:references:subject:message-id:
+   date:mime-version:content-transfer-encoding;
+  bh=7kBtTZUveJUoz2sXEx04XehLYnMRSs0aoi0VcwAJs3E=;
+  b=AZmjAOcufcrC3/PDovT1/j2tqUNr7++oKTBQIk92thVukI8Ps0vcfViu
+   gjXvBeyYx87JhAmb119LKSSbLtcB8EeUFp5AscDfyFNTFeImC2GEbToD1
+   64Dul5QAd/OMIp8mHrtIxO9x0yLdqAS9FxaFmC8RuBumLE8Chx1fQRi+l
+   xourn19pdyVIu0BhrU/v5eUangdROl70n/YkAosW0FUFCkfoUYKTz26qG
+   zpTH47OKxdkkQuR/ogwoG9+EeCKYW3qQxWQ4mut2rn1flc9QeBc2bj0Kz
+   o6vRzKeqSnfhE5NvcRFVUCmiuV/AtjoKvMNs9QrL7kYHhO0Y+TuXNOw6/
+   w==;
+X-CSE-ConnectionGUID: dMh9fcq/QB2FKoO9zRSX8Q==
+X-CSE-MsgGUID: yWPBz2MWRwKYmJCwssWy3g==
+X-IronPort-AV: E=McAfee;i="6800,10657,11676"; a="70220967"
 X-IronPort-AV: E=Sophos;i="6.21,238,1763452800"; 
-   d="scan'208";a="69258002"
-Received: from orviesa003.jf.intel.com ([10.64.159.143])
-  by fmvoesa112.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 19 Jan 2026 09:17:01 -0800
-X-CSE-ConnectionGUID: 47D97J8wSn6qvvx2OMVfEA==
-X-CSE-MsgGUID: 2ldoa+0FSt+/5QohvOIrWA==
+   d="scan'208";a="70220967"
+Received: from orviesa004.jf.intel.com ([10.64.159.144])
+  by orvoesa108.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 19 Jan 2026 09:45:42 -0800
+X-CSE-ConnectionGUID: b5OK/LUwR9e6nUyBXv5mFA==
+X-CSE-MsgGUID: qVFqscwlQuy7bLPxS440sg==
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="6.21,238,1763452800"; 
-   d="scan'208";a="210045508"
+   d="scan'208";a="210421335"
 Received: from ijarvine-mobl1.ger.corp.intel.com (HELO localhost) ([10.245.244.93])
-  by ORVIESA003-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 19 Jan 2026 09:16:59 -0800
+  by orviesa004-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 19 Jan 2026 09:45:38 -0800
 From: =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
-Date: Mon, 19 Jan 2026 19:16:55 +0200 (EET)
-To: "Pandruvada, Srinivas" <srinivas.pandruvada@intel.com>
-cc: "hansg@kernel.org" <hansg@kernel.org>, 
-    "srinivas.pandruvada@linux.intel.com" <srinivas.pandruvada@linux.intel.com>, 
-    "platform-driver-x86@vger.kernel.org" <platform-driver-x86@vger.kernel.org>
-Subject: Re: [GIT PULL]: tools/power/x86/intel-speed-select pull request for
- 6.20-rc1
-In-Reply-To: <ffe8dca9514f0ddc1135840644b0986b48972cd0.camel@intel.com>
-Message-ID: <ddabf3f0-030d-37bc-4fb2-8fb6169b14d5@linux.intel.com>
-References: <ffe8dca9514f0ddc1135840644b0986b48972cd0.camel@intel.com>
+To: linux-kernel@vger.kernel.org, Denis Benato <denis.benato@linux.dev>
+Cc: platform-driver-x86@vger.kernel.org, Hans de Goede <hansg@kernel.org>, 
+ "Luke D . Jones" <luke@ljones.dev>, Mateusz Schyboll <dragonn@op.pl>, 
+ Denis Benato <benato.denis96@gmail.com>
+In-Reply-To: <20260116180637.859803-1-denis.benato@linux.dev>
+References: <20260116180637.859803-1-denis.benato@linux.dev>
+Subject: Re: [PATCH 0/4] platform/x86: asus-armoury: ppt fixes and new
+ models
+Message-Id: <176884473407.11570.10302080754836334650.b4-ty@linux.intel.com>
+Date: Mon, 19 Jan 2026 19:45:34 +0200
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+X-Mailer: b4 0.13.0
 
-On Sat, 17 Jan 2026, Pandruvada, Srinivas wrote:
+On Fri, 16 Jan 2026 19:06:33 +0100, Denis Benato wrote:
 
-> Hi Ilpo,
+> this patch series includes some fixes to the PPT data table and adds
+> support for two new models: G835L and GA403WW.
 > 
-> This pull request is based on
-> https://kernel.googlesource.com/pub/scm/linux/kernel/git/pdx86/platform-drivers-x86
-> for-next
-> as of today.
+> Cheers,
+> Denis
 > 
-> The following changes since commit
-> 8ca7515d3c76a8b629f703ff8301a75f503bcc50:
+> Denis Benato (4):
+>   platform/x86: asus-armoury: fix ppt data for FA608UM
+>   platform/x86: asus-armoury: add support for G835L
+>   platform/x86: asus-armoury: keep the list ordered alphabetically
+>   platform/x86: asus-armoury: add support for GA403WW
 > 
->   platform/x86: hp-wmi: fix platform profile values for Omen 16-wf1xxx
-> (2026-01-15 14:27:25 +0200)
-> 
-> are available in the Git repository at:
-> 
->   https://github.com/spandruvada/linux-kernel.git intel-sst
-> 
-> for you to fetch changes up to
-> 6142b726e6e64870ab0c7ffb158bffa141f83bb6:
-> 
->   tools/power/x86/intel-speed-select: v1.25 release (2026-01-16
-> 16:03:21 -0800)
-> 
-> ----------------------------------------------------------------
-> Khem Raj (1):
->       tools/power/x86/intel-speed-select: Use pkg-config for libnl-3.0
-> detection
-> 
-> Malaya Kumar Rout (1):
->       tools/power/x86/intel-speed-select: Fix file descriptor leak in
-> isolate_cpus()
-> 
-> Srinivas Pandruvada (2):
->       tools/power/x86/intel-speed-select: Allow non root users
->       tools/power/x86/intel-speed-select: v1.25 release
-> 
->  tools/power/x86/intel-speed-select/Makefile      |  8 +++++++-
->  tools/power/x86/intel-speed-select/isst-config.c | 43
-> ++++++++++++++++++++++++++++++++++++++++---
->  2 files changed, 47 insertions(+), 4 deletions(-)
+> [...]
 
-Thanks, pulled into the review-ilpo-next branch.
 
--- 
+Thank you for your contribution, it has been applied to my local
+review-ilpo-fixes branch. Note it will show up in the public
+platform-drivers-x86/review-ilpo-fixes branch only once I've pushed my
+local branch there, which might take a while.
+
+The list of commits applied:
+[1/4] platform/x86: asus-armoury: fix ppt data for FA608UM
+      commit: 66f26bcc8aba2f3e6ae4af2f3c7eb72b5e3918b8
+[2/4] platform/x86: asus-armoury: add support for G835L
+      commit: 1dfc441140ede4f19b7c135664452465fb6a95d4
+[3/4] platform/x86: asus-armoury: keep the list ordered alphabetically
+      commit: 3072c1c919aeca8a09cada4465c32f1e933c6c5e
+[4/4] platform/x86: asus-armoury: add support for GA403WW
+      commit: 9b8e78f78056080ef91802ab44b0145262f34599
+
+--
  i.
 
