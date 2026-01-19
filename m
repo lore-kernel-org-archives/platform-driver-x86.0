@@ -1,101 +1,127 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.16])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-lf1-f51.google.com (mail-lf1-f51.google.com [209.85.167.51])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9995932E696;
-	Mon, 19 Jan 2026 17:45:42 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.16
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 988C82DB7AF
+	for <platform-driver-x86@vger.kernel.org>; Mon, 19 Jan 2026 20:22:03 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.51
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1768844744; cv=none; b=OEwGrnBgRbY5BCcS8a3z7D/O962MMdbBQ6H54W/mWk2m5Ib55gIgKv+gSkZkB7p8M6zutDFXqil5AOEYUvHXIJYz+oXI82QfCUB89xe8tHc6HC16gqojPWYqoWXIygHmSPfFC9Ep16pYEs7kP6i/UmafgHL9rJO7Ga4Z3WIRArk=
+	t=1768854125; cv=none; b=lL+u05OhlaHSAvIm1XZRzEw6lFDjdot9yo3CuKAgQ8tvzbH+bVxJIOp4TQ/azSWbgHhbxWt2utHe3qkHyE4ktzxJrzW8rI9/vZECbPSk7zE/kjXKzT+eG0wbJoA+TuqUopftdjzKZYNHtMHliYo4tdfVKsaDesh80tubLNFu0Uw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1768844744; c=relaxed/simple;
-	bh=7kBtTZUveJUoz2sXEx04XehLYnMRSs0aoi0VcwAJs3E=;
-	h=From:To:Cc:In-Reply-To:References:Subject:Message-Id:Date:
-	 MIME-Version:Content-Type; b=TF0Ngmr5Ww4KHNtRcq3McVU+Paer7t+7KGZ6CIbo5E3M3D9a7KH//Wno7Jzw/XUPohmbb4Ebp4Wo1X1OEj6Dxv1lhYquKVaMjOgpNRsmjhTU9bvcIxIvTJcMT93gXqqeyvxD51zhGwjrG0KiUwUyrXc5QQnEbO7YERGM/gK51jA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=pass smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=AZmjAOcu; arc=none smtp.client-ip=198.175.65.16
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.intel.com
+	s=arc-20240116; t=1768854125; c=relaxed/simple;
+	bh=1+ATMbfh4i8Fx2ZKhiRLK3SENQT3d/ijvIS3iYHK0Bo=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=IKUdGmJ533xFCu4I/fE+Wx8TPYFktTW6v8Pj4cNBiy396nHGjx56owTp0NHRCJNxmJDDVQLSE5m77lsYeBD3WL/yGWGttbk6j0eXjg/vrbMQ8KStiJOcRoRcsusmBSLbsdvI+x+x+hXfs9JXodR4pInJ3gQnPWbL79xHNeex7kU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=UW7BJIpO; arc=none smtp.client-ip=209.85.167.51
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="AZmjAOcu"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1768844743; x=1800380743;
-  h=from:to:cc:in-reply-to:references:subject:message-id:
-   date:mime-version:content-transfer-encoding;
-  bh=7kBtTZUveJUoz2sXEx04XehLYnMRSs0aoi0VcwAJs3E=;
-  b=AZmjAOcufcrC3/PDovT1/j2tqUNr7++oKTBQIk92thVukI8Ps0vcfViu
-   gjXvBeyYx87JhAmb119LKSSbLtcB8EeUFp5AscDfyFNTFeImC2GEbToD1
-   64Dul5QAd/OMIp8mHrtIxO9x0yLdqAS9FxaFmC8RuBumLE8Chx1fQRi+l
-   xourn19pdyVIu0BhrU/v5eUangdROl70n/YkAosW0FUFCkfoUYKTz26qG
-   zpTH47OKxdkkQuR/ogwoG9+EeCKYW3qQxWQ4mut2rn1flc9QeBc2bj0Kz
-   o6vRzKeqSnfhE5NvcRFVUCmiuV/AtjoKvMNs9QrL7kYHhO0Y+TuXNOw6/
-   w==;
-X-CSE-ConnectionGUID: dMh9fcq/QB2FKoO9zRSX8Q==
-X-CSE-MsgGUID: yWPBz2MWRwKYmJCwssWy3g==
-X-IronPort-AV: E=McAfee;i="6800,10657,11676"; a="70220967"
-X-IronPort-AV: E=Sophos;i="6.21,238,1763452800"; 
-   d="scan'208";a="70220967"
-Received: from orviesa004.jf.intel.com ([10.64.159.144])
-  by orvoesa108.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 19 Jan 2026 09:45:42 -0800
-X-CSE-ConnectionGUID: b5OK/LUwR9e6nUyBXv5mFA==
-X-CSE-MsgGUID: qVFqscwlQuy7bLPxS440sg==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.21,238,1763452800"; 
-   d="scan'208";a="210421335"
-Received: from ijarvine-mobl1.ger.corp.intel.com (HELO localhost) ([10.245.244.93])
-  by orviesa004-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 19 Jan 2026 09:45:38 -0800
-From: =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
-To: linux-kernel@vger.kernel.org, Denis Benato <denis.benato@linux.dev>
-Cc: platform-driver-x86@vger.kernel.org, Hans de Goede <hansg@kernel.org>, 
- "Luke D . Jones" <luke@ljones.dev>, Mateusz Schyboll <dragonn@op.pl>, 
- Denis Benato <benato.denis96@gmail.com>
-In-Reply-To: <20260116180637.859803-1-denis.benato@linux.dev>
-References: <20260116180637.859803-1-denis.benato@linux.dev>
-Subject: Re: [PATCH 0/4] platform/x86: asus-armoury: ppt fixes and new
- models
-Message-Id: <176884473407.11570.10302080754836334650.b4-ty@linux.intel.com>
-Date: Mon, 19 Jan 2026 19:45:34 +0200
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="UW7BJIpO"
+Received: by mail-lf1-f51.google.com with SMTP id 2adb3069b0e04-59b67388c9cso5777338e87.2
+        for <platform-driver-x86@vger.kernel.org>; Mon, 19 Jan 2026 12:22:03 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1768854121; x=1769458921; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=xDBK20VPaxSq0MCDY5hKGxl3s141opvsvW0EECGHPsU=;
+        b=UW7BJIpOtAnbhWX13KI00KEbpom/nopRS4YUB6a2iX8+m2u7yD8QWewIQAk5B0W328
+         q0B/SkkgjHe8+QZqK0U0he7hPDun8yjDVOa7oBjb5aTrZaIBSox+0qPvDcEw5ghE400T
+         ZvtIC9WQJRuWJDuwt8MNZUXi5exAy8UP2yzMCMM24fICiciXrnkcbUeVNGywdO3jB9rF
+         W3cbiOKtluF4/r36+tF/3xEJ2YbxDDcCxYg0QGhLoOx2Mbd0PiBWVnec/aZaw9wxS8j8
+         qHcf/GOI+iJWWXV5lTgyItlLUDNPZaExwTntY7k5Dsqp6DgkbHMS+P6WeiMDZU6o50VU
+         HLkw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1768854121; x=1769458921;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-gg:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=xDBK20VPaxSq0MCDY5hKGxl3s141opvsvW0EECGHPsU=;
+        b=X28i7ATCrIBvfCuU2IdrkOpt2BCa2cH6NdAbN2Ihwe7/uxIHR2xwfdsadKLS3kw/9n
+         ikGqSe/r0N7i9oNgAhW5AT8rhhPQq9S0xw7hxu/KSYVNvbMPLVc7fJU1iRAiGZaw7xh2
+         kjnFzKYU8kG+mKLrnbNpOceyC64Dt3NQcjOZngYGQVfeo63RS8OG0oa9kglsvq5P/X/S
+         Nqmsdfcyy1TzVXkz4PZQNmaymVEnLTtjAehouRI1pwyQsfMtYePluoUEcUNEZRr1wLzE
+         MOPoNbSqfiPV5otZBa6rebmZmGhxWnE1+25+31FhnOsJm/SS1XdIGk/kg/Pu0XFCEIK+
+         7p0A==
+X-Gm-Message-State: AOJu0Yx5z9vFc/xkrNOJy9OuZnOtbNP2tUKrGcYtrgg1mgZLeFiMGpEk
+	jLvYuIjKT9X1MdXZJnMMu67CMC/ru6cENgG3UDVRavbB26vd3o+4/2gd10tPn3If
+X-Gm-Gg: AY/fxX7BiDymCHrlc+qe6njU+jqnRmFgn0Z1EDO2WGbh2Oe14r0smQ6Ud3NQLNNKazC
+	048J+BZ0aHhdDiB4B2mwX2ghGitiy0qZTy7/m0U7Kq0kZQSMnUPKx3HGhxe4EHGBCchhzxslkC0
+	iAX1NyMC2W44SP2HyoH0cH9BCMd/RrkY+5fACxIhuCGBXHwAV1dLci2lX5yyK276JQqsdIqVFlT
+	FB29bOsgjjMbHz0eIFhDpsx81DEYMDW7WTj3WlGA+qD00qToXv2vD6Pxn8dvTdDOG6hopBHfDzv
+	7nQLE8DXOcY+4hEzjwAE+Ezb66kPamc/fS3/knCfb5wdiePCsNtRL8DvBwBAN/tTZGa7Qh23tf1
+	wDfTzhXjNLwQG5CHDkoqJ8WHVcB+JHxd7usFEfZPoxjg8GjzDmzz5TQg8mKfm3w9qC6wUj0XP+k
+	x9DVI=
+X-Received: by 2002:a05:6512:132a:b0:59b:7c26:13b0 with SMTP id 2adb3069b0e04-59baeed4bdamr3652321e87.18.1768854121161;
+        Mon, 19 Jan 2026 12:22:01 -0800 (PST)
+Received: from gl-laptop.flowwow.loc ([2a0c:9a40:8950:800::67d])
+        by smtp.gmail.com with ESMTPSA id 2adb3069b0e04-59baf9d442dsm3678659e87.94.2026.01.19.12.21.59
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 19 Jan 2026 12:22:00 -0800 (PST)
+From: Alexey Zagorodnikov <xglooom@gmail.com>
+To: platform-driver-x86@vger.kernel.org
+Cc: Alexey Zagorodnikov <xglooom@gmail.com>,
+	Shyam Sundar S K <Shyam-sundar.S-k@amd.com>,
+	Hans de Goede <hansg@kernel.org>,
+	=?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>,
+	linux-kernel@vger.kernel.org
+Subject: [PATCH 1/1] platform/x86/amd/pmf: Added a module parameter to disable the Smart PC function
+Date: Tue, 20 Jan 2026 01:20:34 +0500
+Message-ID: <20260119202100.785129-1-xglooom@gmail.com>
+X-Mailer: git-send-email 2.52.0
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-X-Mailer: b4 0.13.0
+Content-Transfer-Encoding: 8bit
 
-On Fri, 16 Jan 2026 19:06:33 +0100, Denis Benato wrote:
+Addresses a low power limits issue on HP ZBook Ultra G1a
+https://gitlab.freedesktop.org/drm/amd/-/issues/4868
 
-> this patch series includes some fixes to the PPT data table and adds
-> support for two new models: G835L and GA403WW.
-> 
-> Cheers,
-> Denis
-> 
-> Denis Benato (4):
->   platform/x86: asus-armoury: fix ppt data for FA608UM
->   platform/x86: asus-armoury: add support for G835L
->   platform/x86: asus-armoury: keep the list ordered alphabetically
->   platform/x86: asus-armoury: add support for GA403WW
-> 
-> [...]
+If vendor firmware capped APU power limits with 3rd-party AC adapters,
+the user can disable the Smart PC function via the module parameter
 
+Signed-off-by: Alexey Zagorodnikov <xglooom@gmail.com>
+---
+ drivers/platform/x86/amd/pmf/core.c | 19 ++++++++++++++-----
+ 1 file changed, 14 insertions(+), 5 deletions(-)
 
-Thank you for your contribution, it has been applied to my local
-review-ilpo-fixes branch. Note it will show up in the public
-platform-drivers-x86/review-ilpo-fixes branch only once I've pushed my
-local branch there, which might take a while.
-
-The list of commits applied:
-[1/4] platform/x86: asus-armoury: fix ppt data for FA608UM
-      commit: 66f26bcc8aba2f3e6ae4af2f3c7eb72b5e3918b8
-[2/4] platform/x86: asus-armoury: add support for G835L
-      commit: 1dfc441140ede4f19b7c135664452465fb6a95d4
-[3/4] platform/x86: asus-armoury: keep the list ordered alphabetically
-      commit: 3072c1c919aeca8a09cada4465c32f1e933c6c5e
-[4/4] platform/x86: asus-armoury: add support for GA403WW
-      commit: 9b8e78f78056080ef91802ab44b0145262f34599
-
---
- i.
+diff --git a/drivers/platform/x86/amd/pmf/core.c b/drivers/platform/x86/amd/pmf/core.c
+index 8fc293c9c5380..00a4fc899c727 100644
+--- a/drivers/platform/x86/amd/pmf/core.c
++++ b/drivers/platform/x86/amd/pmf/core.c
+@@ -53,6 +53,11 @@ static bool force_load;
+ module_param(force_load, bool, 0444);
+ MODULE_PARM_DESC(force_load, "Force load this driver on supported older platforms (experimental)");
+ 
++/* Force to disable Smart PC Solution */
++static bool disable_smart_pc;
++module_param(disable_smart_pc, bool, 0444);
++MODULE_PARM_DESC(disable_smart_pc, "Disable Smart PC Solution");
++
+ static int amd_pmf_pwr_src_notify_call(struct notifier_block *nb, unsigned long event, void *data)
+ {
+ 	struct amd_pmf_dev *pmf = container_of(nb, struct amd_pmf_dev, pwr_src_notifier);
+@@ -362,11 +367,15 @@ static void amd_pmf_init_features(struct amd_pmf_dev *dev)
+ 		dev_dbg(dev->dev, "SPS enabled and Platform Profiles registered\n");
+ 	}
+ 
+-	amd_pmf_init_smart_pc(dev);
+-	if (dev->smart_pc_enabled) {
+-		dev_dbg(dev->dev, "Smart PC Solution Enabled\n");
+-		/* If Smart PC is enabled, no need to check for other features */
+-		return;
++	if (disable_smart_pc) {
++		dev->smart_pc_enabled = false;
++	} else {
++		amd_pmf_init_smart_pc(dev);
++		if (dev->smart_pc_enabled) {
++			dev_dbg(dev->dev, "Smart PC Solution Enabled\n");
++			/* If Smart PC is enabled, no need to check for other features */
++			return;
++		}
+ 	}
+ 
+ 	if (is_apmf_func_supported(dev, APMF_FUNC_AUTO_MODE)) {
+-- 
+2.52.0
 
