@@ -1,261 +1,137 @@
-Received: from relay13.grserver.gr (relay13.grserver.gr [178.156.171.147])
+Received: from sender4-op-o15.zoho.com (sender4-op-o15.zoho.com [136.143.188.15])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 23FEC428821
-	for <platform-driver-x86@vger.kernel.org>; Tue, 20 Jan 2026 17:41:24 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=178.156.171.147
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1768930888; cv=none; b=uzNW0L9y9VZalgFJC2dzfJ8xlvgFdHMVUB5xMjFQ1bR+AKsS0dDuEY4pqeEsLlQNBfUsifF2IfJp4W8t0mNFQUtI4TY+5r+xPxn27qapHjzld7f+23faRAZd1Fj1674uE3TtBRQ4Gvbf2Qg54/t//Kwuf8MEvzDWk+iPf1qj2k0=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1768930888; c=relaxed/simple;
-	bh=JizZcOH1B59z/BEuSGyxQHQy75nqetjkDll7IQnabYg=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=DqHXsxUCWRdOdq7z5WrOecikYXqcyGuEGCJ4zzfJ8gn7dDXSVJd66K+fvx2FjW+0cpsk4WrD/Hm8PP6S1FSIytB+k6w1VjsMEKUs8eVm7aE8HB0+b0xATM/PUdz9BjDzRjSL5rl3iRhXKBSj2QI8AOgI6u2z/GcQSZXtiD4/tkE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=antheas.dev; spf=pass smtp.mailfrom=antheas.dev; dkim=pass (2048-bit key) header.d=antheas.dev header.i=@antheas.dev header.b=Ztezy4Jj; arc=none smtp.client-ip=178.156.171.147
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=antheas.dev
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=antheas.dev
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 482623A89A8;
+	Tue, 20 Jan 2026 18:21:36 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=136.143.188.15
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1768933298; cv=pass; b=S5BZadonrzdkk2xe+LGVvH6elGiPedy0NKR93XttuqdRTnOVkZPc1UANxFH+pA5g1OK2WAaAGVAtVZWV+tMBtZhqtdZ7vQDS53YyvP832WXIyNzYTdjcQEf4usMQCnlKXMtbBaqesYdws+zdaNeFqrUUbVNvxnO1UkjlZYhoxyc=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1768933298; c=relaxed/simple;
+	bh=bJxx+BBuu5wOpM8I7XOoLpP/fg4e7MsHw458WiZKB8U=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=YE2sPFhtN+AXC1G3QJp2CN53sDAcCXCDiA96iAvAE6EQx0/SvDC6sryrNDkvKiOHQio0IAaZRjyrOIzdYzZWX0d0KzyzJsSI4440c4ZLQNfBnES3XXQPW+n5eFQVEUi60SHAdugNSdkM57ALayGIi3tVNMPkXqojxIOjBPHHXJY=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=rong.moe; spf=pass smtp.mailfrom=rong.moe; dkim=pass (1024-bit key) header.d=rong.moe header.i=i@rong.moe header.b=lQD+WX8u; arc=pass smtp.client-ip=136.143.188.15
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=rong.moe
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=rong.moe
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=antheas.dev header.i=@antheas.dev header.b="Ztezy4Jj"
-Received: from relay13 (localhost [127.0.0.1])
-	by relay13.grserver.gr (Proxmox) with ESMTP id 660E55E6A1
-	for <platform-driver-x86@vger.kernel.org>; Tue, 20 Jan 2026 19:41:18 +0200 (EET)
-Received: from linux3247.grserver.gr (linux3247.grserver.gr [213.158.90.240])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by relay13.grserver.gr (Proxmox) with ESMTPS id 2CED25E4DE
-	for <platform-driver-x86@vger.kernel.org>; Tue, 20 Jan 2026 19:41:17 +0200 (EET)
-Received: from mail-lj1-f181.google.com (mail-lj1-f181.google.com [209.85.208.181])
-	by linux3247.grserver.gr (Postfix) with ESMTPSA id 2431A201C63
-	for <platform-driver-x86@vger.kernel.org>; Tue, 20 Jan 2026 19:41:16 +0200 (EET)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=antheas.dev;
-	s=default; t=1768930876;
-	bh=4geqtX4gL4tOtZvzUVjlcfn+Z393ztWYdisAf+X0wVc=;
-	h=Received:From:Subject:To;
-	b=Ztezy4JjzvLhra9v+dYht+JtcIEJ8G17vNKi86bkVjC3PQONrGxXyLIhC4HhemDnk
-	 XDb1WaXYmlIR8IpTnS4F4j+s4GSUUtZNfquq6QVvvdNgdLIMCcG3wCHPTSgS+REi46
-	 MEV/Ucylj16YoqmpVK+XyWCdy9FNklAknIIX/hvl/D/7sjf3Kt/Po0kocGVtb6cbz0
-	 VG2e5MNqr1AaPizevZxYlpRNiNVeXACdtoPGvrdzKhf4GRTx7Im+vikHGVTdtZB4Qu
-	 Kt4HhINe0H3CuWlMI4AhqOZyjDvWLJlx33PEXWoug8NOE3jn66WWnj0v71ZNxIp9uK
-	 8Nwd/8UMJOCHg==
-Authentication-Results: linux3247.grserver.gr;
-        spf=pass (sender IP is 209.85.208.181) smtp.mailfrom=lkml@antheas.dev smtp.helo=mail-lj1-f181.google.com
-Received-SPF: pass (linux3247.grserver.gr: connection is authenticated)
-Received: by mail-lj1-f181.google.com with SMTP id
- 38308e7fff4ca-382fa66fa9dso43018141fa.0
-        for <platform-driver-x86@vger.kernel.org>;
- Tue, 20 Jan 2026 09:41:16 -0800 (PST)
-X-Forwarded-Encrypted: i=1;
- AJvYcCUiqPrjpi6Q21JkrQUhV0WLrEtqeul3MuFsBSAKf3BgeaNXHC51c8h+PG361ONmNHtx8aGZ/ot98HL3qUqwrAih24JK@vger.kernel.org
-X-Gm-Message-State: AOJu0YxB1sj34DnTnm083zSt2m/SsOoDgnmM2MXDG1tgm89ZKReutcOb
-	cEgkJbQgUWns+HEm+IkCKLlDVV3kxPmmuOGkrgZov8Yxbv+dW9xOjkAyAT5tTd44d1E19RoMzm2
-	QE16xT5w8Giv2RbNuQo6aEVus9al6AZY=
-X-Received: by 2002:a05:651c:4213:b0:37e:884f:b6b4 with SMTP id
- 38308e7fff4ca-385a5496c2bmr9508911fa.26.1768930875597; Tue, 20 Jan 2026
- 09:41:15 -0800 (PST)
+	dkim=pass (1024-bit key) header.d=rong.moe header.i=i@rong.moe header.b="lQD+WX8u"
+ARC-Seal: i=1; a=rsa-sha256; t=1768933274; cv=none; 
+	d=zohomail.com; s=zohoarc; 
+	b=nd+nxB2DQIEq74vI0hu2cD91wtSTmlu6Fc965g9QDTntrhRF2jIRiYD2DUQLYCT5aYN1hi91+tpX5p4DCyNhq2JdEpzH5ewMEkcgP30i+LjZ8OcU4a2D0jRyR7HXDHDqPk+MnB4w9/7CH4tfz0MtRi3ZET0iCUktxPp3bZOwIgA=
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=zohomail.com; s=zohoarc; 
+	t=1768933274; h=Content-Transfer-Encoding:Cc:Cc:Date:Date:From:From:In-Reply-To:MIME-Version:Message-ID:References:Subject:Subject:To:To:Message-Id:Reply-To; 
+	bh=ONW/Kjo4Iy8zIk9zApmrQ4M3TAi6EzH5b9Jv+iGr0Ys=; 
+	b=d6JXMX3eeUzOWvv2DcM/l09yn0WwYaQRIJ0JWr7TkR7GpKmznzjeWpNfJ+z/77FONcc2seW4VqVCUf3HAzOTY4xFC6fSDqWPYtlQ8COq7uwsiLMTeF2C2/VUBDt5p77MXyuxlcLQDASXyHegqiNnQKRbBdk8rRtyvFtqW5UtqqM=
+ARC-Authentication-Results: i=1; mx.zohomail.com;
+	dkim=pass  header.i=rong.moe;
+	spf=pass  smtp.mailfrom=i@rong.moe;
+	dmarc=pass header.from=<i@rong.moe>
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; t=1768933274;
+	s=zmail; d=rong.moe; i=i@rong.moe;
+	h=From:From:To:To:Cc:Cc:Subject:Subject:Date:Date:Message-ID:In-Reply-To:References:MIME-Version:Content-Transfer-Encoding:Message-Id:Reply-To;
+	bh=ONW/Kjo4Iy8zIk9zApmrQ4M3TAi6EzH5b9Jv+iGr0Ys=;
+	b=lQD+WX8udZm0hskZrY0kitHVANNQ4UiJEquR3TwtOrKDELwc9DkI82ZjGzMpQaPV
+	HzOF8BIyYQ6ALAeOinjVHqdX+sPlKjx57BDkOi8KZ62hxS2vBJDwr2sdS+qLYFZ3P5v
+	69XFT9orVMLnjmsR69n/5Z0NwiR0h1iyoUT8ZFwI=
+Received: by mx.zohomail.com with SMTPS id 176893327357812.052566890538174;
+	Tue, 20 Jan 2026 10:21:13 -0800 (PST)
+From: Rong Zhang <i@rong.moe>
+To: Mark Pearson <mpearson-lenovo@squebb.ca>,
+	"Derek J. Clark" <derekjohn.clark@gmail.com>,
+	Armin Wolf <W_Armin@gmx.de>,
+	Hans de Goede <hansg@kernel.org>,
+	=?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
+Cc: Rong Zhang <i@rong.moe>,
+	Guenter Roeck <linux@roeck-us.net>,
+	Kurt Borja <kuurtb@gmail.com>,
+	platform-driver-x86@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	linux-hwmon@vger.kernel.org
+Subject: [PATCH v11 1/7] platform/x86: lenovo-wmi-helpers: Convert returned buffer into u32
+Date: Wed, 21 Jan 2026 02:20:02 +0800
+Message-ID: <20260120182104.163424-2-i@rong.moe>
+X-Mailer: git-send-email 2.51.0
+In-Reply-To: <20260120182104.163424-1-i@rong.moe>
+References: <20260120182104.163424-1-i@rong.moe>
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20260116133150.5606-1-lkml@antheas.dev>
- <20260116133150.5606-3-lkml@antheas.dev>
- <14407ba9-34f1-4114-bfb3-043b53ea7769@linux.dev>
- <CAGwozwGyUpBq4GGvyDHj089a9-vxNOnqgSBys3-CC_+tKDywaA@mail.gmail.com>
- <fe66c416-161c-489e-a38f-9dc7729c6ed7@linux.dev>
- <CAGwozwESNrQZ240_qDMf1pdpCRXooxstGcqP10cGp=q-F_SrAQ@mail.gmail.com>
- <8102eb26-5206-49e6-a994-a9d3ea480255@linux.dev>
- <CAGwozwH71LDiBFM-Ro9UpZNy29C6HHwCNZjwCS3F1hMfuUXZ4g@mail.gmail.com>
- <be8ba636-ae07-4d42-88ca-57ecf10b7dae@linux.dev>
- <CAGwozwGdhu_chetK6uQ=FXctC1D8LABj5QxVff1B486EKYSLug@mail.gmail.com>
- <e4349b27-86e1-41d6-864f-5ad6d353dc46@linux.dev>
- <CAGwozwF--y3vsqhdqYFV_x1ff7jfSkYaQHeV1OV70yue7Huk=A@mail.gmail.com>
- <89a67ace-6fef-72e0-4ef3-be828dd85e3d@linux.intel.com>
-In-Reply-To: <89a67ace-6fef-72e0-4ef3-be828dd85e3d@linux.intel.com>
-From: Antheas Kapenekakis <lkml@antheas.dev>
-Date: Tue, 20 Jan 2026 18:41:03 +0100
-X-Gmail-Original-Message-ID: 
- <CAGwozwGdDe+M36RE_CMjXePBX-CVRORjHZbOroS+e_Dc_Am2vg@mail.gmail.com>
-X-Gm-Features: AZwV_Qi25ZW_QcCR7nSysemxGk1bdY8nNbkSrCIeox5V_wnw7O-3LM6S0ASZ9xs
-Message-ID: 
- <CAGwozwGdDe+M36RE_CMjXePBX-CVRORjHZbOroS+e_Dc_Am2vg@mail.gmail.com>
-Subject: Re: [PATCH v11 02/11] HID: asus: initialize additional endpoints only
- for legacy devices
-To: =?UTF-8?Q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
-Cc: Denis Benato <denis.benato@linux.dev>,
- platform-driver-x86@vger.kernel.org,
-	linux-input@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>,
-	Jiri Kosina <jikos@kernel.org>, Benjamin Tissoires <bentiss@kernel.org>,
-	Corentin Chary <corentin.chary@gmail.com>,
- "Luke D . Jones" <luke@ljones.dev>,
-	Hans de Goede <hansg@kernel.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-X-PPP-Message-ID: 
- <176893087631.3974467.1292892316938585981@linux3247.grserver.gr>
-X-PPP-Vhost: antheas.dev
-X-Virus-Scanned: clamav-milter 1.4.3 at linux3247.grserver.gr
-X-Virus-Status: Clean
+Content-Transfer-Encoding: 8bit
+X-ZohoMailClient: External
 
-On Tue, 20 Jan 2026 at 14:56, Ilpo J=C3=A4rvinen
-<ilpo.jarvinen@linux.intel.com> wrote:
->
-> On Sat, 17 Jan 2026, Antheas Kapenekakis wrote:
-> > On Sat, 17 Jan 2026 at 18:05, Denis Benato <denis.benato@linux.dev> wro=
-te:
-> > > On 1/17/26 17:16, Antheas Kapenekakis wrote:
-> > > > On Sat, 17 Jan 2026 at 17:12, Denis Benato <denis.benato@linux.dev>=
- wrote:
-> > > >> On 1/17/26 17:10, Antheas Kapenekakis wrote:
-> > > >>> On Sat, 17 Jan 2026 at 16:13, Denis Benato <denis.benato@linux.de=
-v> wrote:
-> > > >>>> On 1/17/26 16:07, Antheas Kapenekakis wrote:
-> > > >>>>> On Sat, 17 Jan 2026 at 14:51, Denis Benato <denis.benato@linux.=
-dev> wrote:
-> > > >>>>>> On 1/17/26 00:10, Antheas Kapenekakis wrote:
-> > > >>>>>>> On Fri, 16 Jan 2026 at 21:44, Denis Benato <denis.benato@linu=
-x.dev> wrote:
-> > > >>>>>>>> On 1/16/26 14:31, Antheas Kapenekakis wrote:
-> > > >>>>>>>>
-> > > >>>>>>>>> Currently, ID1/ID2 initializations are performed for all NK=
-EY devices.
-> > > >>>>>>>>> However, ID1 initializations are only required for RGB cont=
-rol and are
-> > > >>>>>>>>> only supported for RGB capable devices. ID2 initializations=
- are only
-> > > >>>>>>>>> required for initializing the Anime display endpoint which =
-is only
-> > > >>>>>>>>> supported on devices with an Anime display. Both of these
-> > > >>>>>>>>> initializations are out of scope for this driver (this is a=
- brightness
-> > > >>>>>>>>> control and keyboard shortcut driver) and they should not b=
-e performed
-> > > >>>>>>>>> for devices that do not support them in any case.
-> > > >>>>>>>>>
-> > > >>>>>>>>> At the same time, there are older NKEY devices that have on=
-ly been
-> > > >>>>>>>>> tested with these initializations in the kernel and it is n=
-ot possible
-> > > >>>>>>>>> to recheck them. There is a possibility that especially wit=
-h the ID1
-> > > >>>>>>>>> initialization, certain laptop models might have their shor=
-tcuts stop
-> > > >>>>>>>>> working (currently unproven).
-> > > >>>>>>>>>
-> > > >>>>>>>>> For an abundance of caution, only initialize ID1/ID2 for th=
-ose older
-> > > >>>>>>>>> NKEY devices by introducing a quirk for them and replacing =
-the NKEY
-> > > >>>>>>>>> quirk in the block that performs the inits with that.
-> > > >>>>>>>>>
-> > > >>>>>>>>> In addition, as these initializations might not be supporte=
-d by the
-> > > >>>>>>>>> affected devices, change the function to not bail if they f=
-ail.
-> > > >>>>>>>>>
-> > > >>>>>>>>> Acked-by: Benjamin Tissoires <bentiss@kernel.org>
-> > > >>>>>>>>> Signed-off-by: Antheas Kapenekakis <lkml@antheas.dev>
-> > > >>>>>>>>> ---
-> > > >>>>>>>>>  drivers/hid/hid-asus.c | 16 ++++++----------
-> > > >>>>>>>>>  1 file changed, 6 insertions(+), 10 deletions(-)
-> > > >>>>>>>>>
-> > > >>>>>>>>> diff --git a/drivers/hid/hid-asus.c b/drivers/hid/hid-asus.=
-c
-> > > >>>>>>>>> index 323e6302bac5..dc7af12cf31a 100644
-> > > >>>>>>>>> --- a/drivers/hid/hid-asus.c
-> > > >>>>>>>>> +++ b/drivers/hid/hid-asus.c
-> > > >>>>>>>>> @@ -90,6 +90,7 @@ MODULE_DESCRIPTION("Asus HID Keyboard and=
- TouchPad");
-> > > >>>>>>>>>  #define QUIRK_ROG_NKEY_KEYBOARD              BIT(11)
-> > > >>>>>>>>>  #define QUIRK_ROG_CLAYMORE_II_KEYBOARD BIT(12)
-> > > >>>>>>>>>  #define QUIRK_ROG_ALLY_XPAD          BIT(13)
-> > > >>>>>>>>> +#define QUIRK_ROG_NKEY_LEGACY                BIT(14)
-> > > >>>>>>>> These past days I have taken a look at new 2025 models and t=
-hey do make use of ID2,
-> > > >>>>>>>> and won't do harm sending ID1 either. I think you can safely=
- remove the if and send regardless.
-> > > >>>>>>> Hi Denis,
-> > > >>>>>>> it is not the responsibility of this driver. ID2 is used by A=
-nime
-> > > >>>>>>> models. It is a concession to make sure that we do not cause =
-a
-> > > >>>>>>> regression that will cause warnings for a lot of users.
-> > > >>>>>> Who decided it is a concession?
-> > > >>>>> I would rather remove the extra calls unless they are shown to =
-be
-> > > >>>>> needed, which they might be for these PIDs.
-> > > >>>> They are needed on older laptop and to not regress userspace.
-> > > >>>>
-> > > >>>> You just named _LEGACY an usb pid that is not legacy.
-> > > >>>>> The quirk is named legacy because we can't retest these devices=
-. If we
-> > > >>>>> can, then we could remove the quirk and the inits if not needed=
-.
-> > > >>>> We can't retest every device, and that pid is used in pre-2021 m=
-odels,
-> > > >>>> and these are the unknown, I am criticizing the name of the quir=
-k here,
-> > > >>>> not what it does.
-> > > >>> If you can test whether your device needs them that would be grea=
-t.
-> > > >> That is pointless.
-> > > >>>> I am also questioning if the quirk is even needed since sending
-> > > >>>> those commands to (at least) recent hardware that doesn't use
-> > > >>>> those endpoints carries no downsides, while removing them
-> > > >>>> surely does.
-> > > >>> We have not found a device yet that needs them. I do not want to =
-keep
-> > > >>> sending unneeded commands. It could cause obscure bugs or interfe=
-re
-> > > >>> with userspace software such as the one you maintain. So at least=
- for
-> > > >>> new hardware that is possible to test we should remove them.
-> > > >> There is new hardware that needs them, as I said, including 2025 m=
-odels.
-> > > > I was not aware of that. As far as I know they are not needed. Do y=
-ou
-> > > > have a bug report with a specific laptop model I can look at?
-> > > There is current effort to integrate commands that requires those
-> > > initializations on 2025 laptop, why would I strip out a command
-> > > that I already know is required anyway?
-> >
-> > Hi,
-> > yes ID1 is required for RGB, I have a draft patch for it that would
-> > lazily do it if RGB is supported.
-> >
-> > I recall now a previous discussion about it being required for some
-> > laptop shortcuts but we never found a laptop that needs it so I forgot
-> >
-> > > No, this is not the way to go to knowingly and willingly cause
-> > > troubles (both known and unknown) to others just because
-> > > you think it's better this way.
-> > >
-> > > Change the name of _LEGACY to something else, have this accepted
-> > > and then if I see it's appropriate  to remove the if and send those
-> > > regardless I will.
-> >
-> > Sure, up to you if you want to change the name. What would you like it
-> > be? I would like this series to merge
->
-> Can you name it e.g. something that should be neutral such as:
->
-> QUIRK_ROG_NKEY_ID1_ID2_INIT
->
-> I'm not sure if ROG NKEY should still be included into the name based on
-> what Denis mentioned about recent models but at least it gets rid of the
-> "legacy" connotation. If wider scope is necessary you could use just
-> QUIRK_ID1_ID2_INIT.
+The Windows WMI-ACPI driver converts all ACPI objects into a common
+buffer format, so returning a buffer with four bytes will look like an
+integer for WMI consumers under Windows.
 
-It's NKEY only so QUIRK_ROG_NKEY_ID1ID2_INIT would be more appropriate
-(all recent models are NKEY)
+Therefore, some devices may simply implement the corresponding ACPI
+methods to always return a buffer. While lwmi_dev_evaluate_int() expects
+an integer (u32), convert returned >=4B buffer into u32 to support these
+devices.
 
-Sounds like a plan, I will resend tomorrow. If anyone wants to leave
-any more comments now is the time.
+Suggested-by: Armin Wolf <W_Armin@gmx.de>
+Link: https://lore.kernel.org/r/f1787927-b655-4321-b9d9-bc12353c72db@gmx.de/
+Signed-off-by: Rong Zhang <i@rong.moe>
+Reviewed-by: Derek J. Clark <derekjohn.clark@gmail.com>
+Tested-by: Derek J. Clark <derekjohn.clark@gmail.com>
+Reviewed-by: Armin Wolf <W_Armin@gmx.de>
+---
+Changes in v7:
+- Fix mistakenly inverted boundary check
 
-Antheas
+Changes in v4:
+- Accept oversized buffer (thanks Armin Wolf)
+- Use get_unaligned_le32() (ditto)
 
-> --
->  i.
->
+Changes in v2:
+- New patch (thanks Armin Wolf)
+---
+ drivers/platform/x86/lenovo/wmi-helpers.c | 21 ++++++++++++++++++---
+ 1 file changed, 18 insertions(+), 3 deletions(-)
+
+diff --git a/drivers/platform/x86/lenovo/wmi-helpers.c b/drivers/platform/x86/lenovo/wmi-helpers.c
+index f6fef6296251e..7379defac5002 100644
+--- a/drivers/platform/x86/lenovo/wmi-helpers.c
++++ b/drivers/platform/x86/lenovo/wmi-helpers.c
+@@ -21,6 +21,7 @@
+ #include <linux/errno.h>
+ #include <linux/export.h>
+ #include <linux/module.h>
++#include <linux/unaligned.h>
+ #include <linux/wmi.h>
+ 
+ #include "wmi-helpers.h"
+@@ -59,10 +60,24 @@ int lwmi_dev_evaluate_int(struct wmi_device *wdev, u8 instance, u32 method_id,
+ 		if (!ret_obj)
+ 			return -ENODATA;
+ 
+-		if (ret_obj->type != ACPI_TYPE_INTEGER)
+-			return -ENXIO;
++		switch (ret_obj->type) {
++		/*
++		 * The ACPI method may simply return a buffer when a u32
++		 * is expected. This is valid on Windows as its WMI-ACPI
++		 * driver converts everything to a common buffer.
++		 */
++		case ACPI_TYPE_BUFFER:
++			if (ret_obj->buffer.length < sizeof(u32))
++				return -ENXIO;
+ 
+-		*retval = (u32)ret_obj->integer.value;
++			*retval = get_unaligned_le32(ret_obj->buffer.pointer);
++			return 0;
++		case ACPI_TYPE_INTEGER:
++			*retval = (u32)ret_obj->integer.value;
++			return 0;
++		default:
++			return -ENXIO;
++		}
+ 	}
+ 
+ 	return 0;
+-- 
+2.51.0
 
