@@ -1,162 +1,261 @@
-Received: from mail-dl1-f53.google.com (mail-dl1-f53.google.com [74.125.82.53])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from relay13.grserver.gr (relay13.grserver.gr [178.156.171.147])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5525833EB19
-	for <platform-driver-x86@vger.kernel.org>; Tue, 20 Jan 2026 17:01:52 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=74.125.82.53
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 23FEC428821
+	for <platform-driver-x86@vger.kernel.org>; Tue, 20 Jan 2026 17:41:24 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=178.156.171.147
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1768928514; cv=none; b=cuUfpwEzR8bph71kwve2eX3l396hQqqeghE+lmJQ4ISiPfWcdZXV9w1nYtRW7kgTkLE1+6NeOOnN/BOCaeFNbaOeboGgwRoxujPod3I2B3c6CMPAdiSCz+KgzjangDtwpP/DqcwBRjpnLQRcNtPdEKgNYK1+Dge24rt4idZd/ew=
+	t=1768930888; cv=none; b=uzNW0L9y9VZalgFJC2dzfJ8xlvgFdHMVUB5xMjFQ1bR+AKsS0dDuEY4pqeEsLlQNBfUsifF2IfJp4W8t0mNFQUtI4TY+5r+xPxn27qapHjzld7f+23faRAZd1Fj1674uE3TtBRQ4Gvbf2Qg54/t//Kwuf8MEvzDWk+iPf1qj2k0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1768928514; c=relaxed/simple;
-	bh=PEGw9xBw4ogKYTSJT9z89Z7FQh9KBbg44pnlT/18sxI=;
-	h=Date:From:To:CC:Subject:In-Reply-To:References:Message-ID:
-	 MIME-Version:Content-Type; b=g8r3gk2KaqqB1dJ5UXYfsZ8tgzb4z6HLFmSDFmjGkYUytLQTut98GZSE0sBptM7+6Sd43tfUpPjgrrvW/2frt8CDQ9MVvZEgEnZ5sTdZrfjNV4T/w5DQqCTclrutr8aYp5lCb/ri0gnxMGZ5I4AYWjQw4+9Rrer88DB79m2jGSc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=VRf33NAZ; arc=none smtp.client-ip=74.125.82.53
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1768930888; c=relaxed/simple;
+	bh=JizZcOH1B59z/BEuSGyxQHQy75nqetjkDll7IQnabYg=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=DqHXsxUCWRdOdq7z5WrOecikYXqcyGuEGCJ4zzfJ8gn7dDXSVJd66K+fvx2FjW+0cpsk4WrD/Hm8PP6S1FSIytB+k6w1VjsMEKUs8eVm7aE8HB0+b0xATM/PUdz9BjDzRjSL5rl3iRhXKBSj2QI8AOgI6u2z/GcQSZXtiD4/tkE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=antheas.dev; spf=pass smtp.mailfrom=antheas.dev; dkim=pass (2048-bit key) header.d=antheas.dev header.i=@antheas.dev header.b=Ztezy4Jj; arc=none smtp.client-ip=178.156.171.147
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=antheas.dev
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=antheas.dev
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="VRf33NAZ"
-Received: by mail-dl1-f53.google.com with SMTP id a92af1059eb24-12336c0a8b6so11791887c88.1
-        for <platform-driver-x86@vger.kernel.org>; Tue, 20 Jan 2026 09:01:52 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1768928511; x=1769533311; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:references
-         :in-reply-to:user-agent:subject:cc:to:from:date:from:to:cc:subject
-         :date:message-id:reply-to;
-        bh=IUailGl3hB666dLaMWG2vrzy3Z8fMukkGgQryLbTNW4=;
-        b=VRf33NAZuwZlZrDrhC7+EaIjHs01BeBpR2rh523c5lXap450HZptdPEyAbHGNMJyff
-         or5GrNV9DnfYNtlxsi6gXaxOt0geFiNbg5Iv3s4uu5ud+t5yARRHQjxN4rNUCaL+MDJ1
-         sxm66FJkxHA1M8xC46B3kdQ/wMsEkTHxCZMQACt5w4rDgGdZnOTdXAx5GtnuGoqSeXAf
-         MqxtGqeKRWwBUd43OrpQW/ILy2uqH+P89YAml4tzM15AQCKog9GXnFSQrOB0xCCNhUA0
-         YW9rktJyU1TDO4oWLLkZWOlbXUj0V9USF+nmg8wNhmo2pCuYD1ber+R9baoogL6Jlr/2
-         nkXg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1768928511; x=1769533311;
-        h=content-transfer-encoding:mime-version:message-id:references
-         :in-reply-to:user-agent:subject:cc:to:from:date:x-gm-gg
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=IUailGl3hB666dLaMWG2vrzy3Z8fMukkGgQryLbTNW4=;
-        b=J4bbn21iyWxW5CyI3hXQ8jj5T6lcyoqSzRkQljBimXboILyphaoVeZF+QbF1Jnv00C
-         zfrJQKRegqCvdX5/H/4huFf+oGq7xLAkcYvcYW9zAAO15CX9Z1iAPPzlOvHVquoTbCkf
-         pLUo5uBjnHL4ZxXbeK81ObPex/TBRrAltxmmxXsJG4/DeQ54atNjYMsbHm0b0271PnoD
-         4lOAuy7dWoFjO2aTLn4jgvf2+IOscaFR83GsajoonbeS2iIqv5wNJYS+OA/laWpuCZ1T
-         yY0K0O8slyMIwlpD7m9pF9aF4m5QfqkqIDRx3/EibTmGWTi3Lvs1YshR9qVuMVFORyqN
-         M8bQ==
-X-Forwarded-Encrypted: i=1; AJvYcCU0BUOD0DcPXTgAC1a2DT3itbpFwZqJVxTtx4NvzfBivJhWzqAgO5xtxiP5rYSWat5BP51X/DIL8qaalJgATsr2xV/4@vger.kernel.org
-X-Gm-Message-State: AOJu0YzGZqecDmioaXvnJjUIL5HAYJAQ5eDManV0SfBwJTCmvl7dSKq6
-	3kR4xz2FOiaXV4Dou7ngpBjL5uxcBF9bfy05BzYrWb2bmXkMWqighCdS
-X-Gm-Gg: AY/fxX7f5n9xYQXzX1Q0Nof+IdheIHEV1bX/rVYZnozWia3UW4PSpgh+CAu8OowZOLl
-	9Q9sUM6cvFTKXwH5Ew34gjLdCh6NZzjRPGbZ4ef30eiQm5Wwd2IRtHzBRwfu4RdDFasDILL9PtA
-	zrID/ncAH3F62DY221DN5kKx1nVOpS8kwHLun4RIyeqDVvhBO3fXKHgHEb3ib7rCeajKkoZUE33
-	dlXMGEfx5jXC68zBpSqDQ/VJagoI4XoIUa1brJy2z9eq+x4ZkOi0VxJPlKJqg3GCCwNI9jvsi2q
-	hkwRk6DZ4UoesX1HZ8Qii7vVNo+lRY8EQzXTLc4rXu71Lct+rcAZCvyF0CFMG91dtTkQlg1gNp+
-	AIsIJ8dp2khjtjbwxcu/Sw1qdjeKqmjrQbdJ6xYzx/kdWGI0KODL9WGea82REsFauf5Yz8Zrqbn
-	NXl0g1d8XfvD/BTCdKXBfE9t0VL5CAnuWBOjq6R6O76Gh4iPZ65f6L5cW8c8Pka8aV3pgcLk8X/
-	kxfPsNNxg==
-X-Received: by 2002:a05:7022:418c:b0:119:e569:fb9d with SMTP id a92af1059eb24-1244a70c431mr12808662c88.12.1768928510832;
-        Tue, 20 Jan 2026 09:01:50 -0800 (PST)
-Received: from ehlo.thunderbird.net (108-228-232-20.lightspeed.sndgca.sbcglobal.net. [108.228.232.20])
-        by smtp.gmail.com with ESMTPSA id a92af1059eb24-1244af108absm19903798c88.13.2026.01.20.09.01.50
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 20 Jan 2026 09:01:50 -0800 (PST)
-Date: Tue, 20 Jan 2026 09:01:48 -0800
-From: "Derek J. Clark" <derekjohn.clark@gmail.com>
-To: Rong Zhang <i@rong.moe>,
- =?ISO-8859-1?Q?Ilpo_J=E4rvinen?= <ilpo.jarvinen@linux.intel.com>
-CC: Mark Pearson <mpearson-lenovo@squebb.ca>, Armin Wolf <W_Armin@gmx.de>,
- Hans de Goede <hansg@kernel.org>, Guenter Roeck <linux@roeck-us.net>,
- Kurt Borja <kuurtb@gmail.com>, platform-driver-x86@vger.kernel.org,
- LKML <linux-kernel@vger.kernel.org>, linux-hwmon@vger.kernel.org
-Subject: =?US-ASCII?Q?Re=3A_=5BPATCH_v10_2/7=5D_platform/x86=3A_Rename_?=
- =?US-ASCII?Q?lenovo-wmi-capdata01_to_lenovo-wmi-capdata?=
-User-Agent: Thunderbird for Android
-In-Reply-To: <c437e6e73d74b7aedd269328e1b0411a110444d3.camel@rong.moe>
-References: <20260117210051.108988-1-i@rong.moe> <20260117210051.108988-3-i@rong.moe> <dc356678-4be6-3ba8-dd9e-18ba910f5e62@linux.intel.com> <c437e6e73d74b7aedd269328e1b0411a110444d3.camel@rong.moe>
-Message-ID: <E7E469E6-8C93-4DB8-82E3-5CB82653984B@gmail.com>
+	dkim=pass (2048-bit key) header.d=antheas.dev header.i=@antheas.dev header.b="Ztezy4Jj"
+Received: from relay13 (localhost [127.0.0.1])
+	by relay13.grserver.gr (Proxmox) with ESMTP id 660E55E6A1
+	for <platform-driver-x86@vger.kernel.org>; Tue, 20 Jan 2026 19:41:18 +0200 (EET)
+Received: from linux3247.grserver.gr (linux3247.grserver.gr [213.158.90.240])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by relay13.grserver.gr (Proxmox) with ESMTPS id 2CED25E4DE
+	for <platform-driver-x86@vger.kernel.org>; Tue, 20 Jan 2026 19:41:17 +0200 (EET)
+Received: from mail-lj1-f181.google.com (mail-lj1-f181.google.com [209.85.208.181])
+	by linux3247.grserver.gr (Postfix) with ESMTPSA id 2431A201C63
+	for <platform-driver-x86@vger.kernel.org>; Tue, 20 Jan 2026 19:41:16 +0200 (EET)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=antheas.dev;
+	s=default; t=1768930876;
+	bh=4geqtX4gL4tOtZvzUVjlcfn+Z393ztWYdisAf+X0wVc=;
+	h=Received:From:Subject:To;
+	b=Ztezy4JjzvLhra9v+dYht+JtcIEJ8G17vNKi86bkVjC3PQONrGxXyLIhC4HhemDnk
+	 XDb1WaXYmlIR8IpTnS4F4j+s4GSUUtZNfquq6QVvvdNgdLIMCcG3wCHPTSgS+REi46
+	 MEV/Ucylj16YoqmpVK+XyWCdy9FNklAknIIX/hvl/D/7sjf3Kt/Po0kocGVtb6cbz0
+	 VG2e5MNqr1AaPizevZxYlpRNiNVeXACdtoPGvrdzKhf4GRTx7Im+vikHGVTdtZB4Qu
+	 Kt4HhINe0H3CuWlMI4AhqOZyjDvWLJlx33PEXWoug8NOE3jn66WWnj0v71ZNxIp9uK
+	 8Nwd/8UMJOCHg==
+Authentication-Results: linux3247.grserver.gr;
+        spf=pass (sender IP is 209.85.208.181) smtp.mailfrom=lkml@antheas.dev smtp.helo=mail-lj1-f181.google.com
+Received-SPF: pass (linux3247.grserver.gr: connection is authenticated)
+Received: by mail-lj1-f181.google.com with SMTP id
+ 38308e7fff4ca-382fa66fa9dso43018141fa.0
+        for <platform-driver-x86@vger.kernel.org>;
+ Tue, 20 Jan 2026 09:41:16 -0800 (PST)
+X-Forwarded-Encrypted: i=1;
+ AJvYcCUiqPrjpi6Q21JkrQUhV0WLrEtqeul3MuFsBSAKf3BgeaNXHC51c8h+PG361ONmNHtx8aGZ/ot98HL3qUqwrAih24JK@vger.kernel.org
+X-Gm-Message-State: AOJu0YxB1sj34DnTnm083zSt2m/SsOoDgnmM2MXDG1tgm89ZKReutcOb
+	cEgkJbQgUWns+HEm+IkCKLlDVV3kxPmmuOGkrgZov8Yxbv+dW9xOjkAyAT5tTd44d1E19RoMzm2
+	QE16xT5w8Giv2RbNuQo6aEVus9al6AZY=
+X-Received: by 2002:a05:651c:4213:b0:37e:884f:b6b4 with SMTP id
+ 38308e7fff4ca-385a5496c2bmr9508911fa.26.1768930875597; Tue, 20 Jan 2026
+ 09:41:15 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain;
- charset=utf-8
+References: <20260116133150.5606-1-lkml@antheas.dev>
+ <20260116133150.5606-3-lkml@antheas.dev>
+ <14407ba9-34f1-4114-bfb3-043b53ea7769@linux.dev>
+ <CAGwozwGyUpBq4GGvyDHj089a9-vxNOnqgSBys3-CC_+tKDywaA@mail.gmail.com>
+ <fe66c416-161c-489e-a38f-9dc7729c6ed7@linux.dev>
+ <CAGwozwESNrQZ240_qDMf1pdpCRXooxstGcqP10cGp=q-F_SrAQ@mail.gmail.com>
+ <8102eb26-5206-49e6-a994-a9d3ea480255@linux.dev>
+ <CAGwozwH71LDiBFM-Ro9UpZNy29C6HHwCNZjwCS3F1hMfuUXZ4g@mail.gmail.com>
+ <be8ba636-ae07-4d42-88ca-57ecf10b7dae@linux.dev>
+ <CAGwozwGdhu_chetK6uQ=FXctC1D8LABj5QxVff1B486EKYSLug@mail.gmail.com>
+ <e4349b27-86e1-41d6-864f-5ad6d353dc46@linux.dev>
+ <CAGwozwF--y3vsqhdqYFV_x1ff7jfSkYaQHeV1OV70yue7Huk=A@mail.gmail.com>
+ <89a67ace-6fef-72e0-4ef3-be828dd85e3d@linux.intel.com>
+In-Reply-To: <89a67ace-6fef-72e0-4ef3-be828dd85e3d@linux.intel.com>
+From: Antheas Kapenekakis <lkml@antheas.dev>
+Date: Tue, 20 Jan 2026 18:41:03 +0100
+X-Gmail-Original-Message-ID: 
+ <CAGwozwGdDe+M36RE_CMjXePBX-CVRORjHZbOroS+e_Dc_Am2vg@mail.gmail.com>
+X-Gm-Features: AZwV_Qi25ZW_QcCR7nSysemxGk1bdY8nNbkSrCIeox5V_wnw7O-3LM6S0ASZ9xs
+Message-ID: 
+ <CAGwozwGdDe+M36RE_CMjXePBX-CVRORjHZbOroS+e_Dc_Am2vg@mail.gmail.com>
+Subject: Re: [PATCH v11 02/11] HID: asus: initialize additional endpoints only
+ for legacy devices
+To: =?UTF-8?Q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
+Cc: Denis Benato <denis.benato@linux.dev>,
+ platform-driver-x86@vger.kernel.org,
+	linux-input@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>,
+	Jiri Kosina <jikos@kernel.org>, Benjamin Tissoires <bentiss@kernel.org>,
+	Corentin Chary <corentin.chary@gmail.com>,
+ "Luke D . Jones" <luke@ljones.dev>,
+	Hans de Goede <hansg@kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
+X-PPP-Message-ID: 
+ <176893087631.3974467.1292892316938585981@linux3247.grserver.gr>
+X-PPP-Vhost: antheas.dev
+X-Virus-Scanned: clamav-milter 1.4.3 at linux3247.grserver.gr
+X-Virus-Status: Clean
 
-On January 20, 2026 7:20:56 AM PST, Rong Zhang <i@rong=2Emoe> wrote:
->On Tue, 2026-01-20 at 16:48 +0200, Ilpo J=C3=A4rvinen wrote:
->> On Sun, 18 Jan 2026, Rong Zhang wrote:
->>=20
->> > Prepare for the upcoming changes to make it suitable to retrieve
->> > and provide other Capability Data as well=2E
->> >=20
->> > Signed-off-by: Rong Zhang <i@rong=2Emoe>
->> > Reviewed-by: Derek J=2E Clark <derekjohn=2Eclark@gmail=2Ecom>
->> > Tested-by: Derek J=2E Clark <derekjohn=2Eclark@gmail=2Ecom>
->> > ---
->> >  drivers/platform/x86/lenovo/Kconfig           |   4 +-
->> >  drivers/platform/x86/lenovo/Makefile          |   2 +-
->> >  =2E=2E=2E/lenovo/{wmi-capdata01=2Ec =3D> wmi-capdata=2Ec} | 124 ++++=
-+++++---------
->> >  =2E=2E=2E/lenovo/{wmi-capdata01=2Eh =3D> wmi-capdata=2Eh} |  10 +-
->> >  drivers/platform/x86/lenovo/wmi-other=2Ec       |  11 +-
->> >  5 files changed, 78 insertions(+), 73 deletions(-)
->> >  rename drivers/platform/x86/lenovo/{wmi-capdata01=2Ec =3D> wmi-capda=
-ta=2Ec} (60%)
->> >  rename drivers/platform/x86/lenovo/{wmi-capdata01=2Eh =3D> wmi-capda=
-ta=2Eh} (60%)
->> >=20
->> > diff --git a/drivers/platform/x86/lenovo/Kconfig b/drivers/platform/x=
-86/lenovo/Kconfig
->> > index d22b774e0236f=2E=2Efb96a0f908f03 100644
->> > --- a/drivers/platform/x86/lenovo/Kconfig
->> > +++ b/drivers/platform/x86/lenovo/Kconfig
->> > @@ -233,7 +233,7 @@ config YT2_1380
->> >  	  To compile this driver as a module, choose M here: the module wil=
-l
->> >  	  be called lenovo-yogabook=2E
->> > =20
->> > -config LENOVO_WMI_DATA01
->> > +config LENOVO_WMI_DATA
->> >  	tristate
->> >  	depends on ACPI_WMI
->>=20
->> This series is in the review-ilpo-next branch now=2E Thanks to all who =
-have=20
->> participated in getting it into shape!
+On Tue, 20 Jan 2026 at 14:56, Ilpo J=C3=A4rvinen
+<ilpo.jarvinen@linux.intel.com> wrote:
 >
->Thank you for review and merging too! And thanks to Armin, Derek and
->Kurt for review and testing! ;-)
+> On Sat, 17 Jan 2026, Antheas Kapenekakis wrote:
+> > On Sat, 17 Jan 2026 at 18:05, Denis Benato <denis.benato@linux.dev> wro=
+te:
+> > > On 1/17/26 17:16, Antheas Kapenekakis wrote:
+> > > > On Sat, 17 Jan 2026 at 17:12, Denis Benato <denis.benato@linux.dev>=
+ wrote:
+> > > >> On 1/17/26 17:10, Antheas Kapenekakis wrote:
+> > > >>> On Sat, 17 Jan 2026 at 16:13, Denis Benato <denis.benato@linux.de=
+v> wrote:
+> > > >>>> On 1/17/26 16:07, Antheas Kapenekakis wrote:
+> > > >>>>> On Sat, 17 Jan 2026 at 14:51, Denis Benato <denis.benato@linux.=
+dev> wrote:
+> > > >>>>>> On 1/17/26 00:10, Antheas Kapenekakis wrote:
+> > > >>>>>>> On Fri, 16 Jan 2026 at 21:44, Denis Benato <denis.benato@linu=
+x.dev> wrote:
+> > > >>>>>>>> On 1/16/26 14:31, Antheas Kapenekakis wrote:
+> > > >>>>>>>>
+> > > >>>>>>>>> Currently, ID1/ID2 initializations are performed for all NK=
+EY devices.
+> > > >>>>>>>>> However, ID1 initializations are only required for RGB cont=
+rol and are
+> > > >>>>>>>>> only supported for RGB capable devices. ID2 initializations=
+ are only
+> > > >>>>>>>>> required for initializing the Anime display endpoint which =
+is only
+> > > >>>>>>>>> supported on devices with an Anime display. Both of these
+> > > >>>>>>>>> initializations are out of scope for this driver (this is a=
+ brightness
+> > > >>>>>>>>> control and keyboard shortcut driver) and they should not b=
+e performed
+> > > >>>>>>>>> for devices that do not support them in any case.
+> > > >>>>>>>>>
+> > > >>>>>>>>> At the same time, there are older NKEY devices that have on=
+ly been
+> > > >>>>>>>>> tested with these initializations in the kernel and it is n=
+ot possible
+> > > >>>>>>>>> to recheck them. There is a possibility that especially wit=
+h the ID1
+> > > >>>>>>>>> initialization, certain laptop models might have their shor=
+tcuts stop
+> > > >>>>>>>>> working (currently unproven).
+> > > >>>>>>>>>
+> > > >>>>>>>>> For an abundance of caution, only initialize ID1/ID2 for th=
+ose older
+> > > >>>>>>>>> NKEY devices by introducing a quirk for them and replacing =
+the NKEY
+> > > >>>>>>>>> quirk in the block that performs the inits with that.
+> > > >>>>>>>>>
+> > > >>>>>>>>> In addition, as these initializations might not be supporte=
+d by the
+> > > >>>>>>>>> affected devices, change the function to not bail if they f=
+ail.
+> > > >>>>>>>>>
+> > > >>>>>>>>> Acked-by: Benjamin Tissoires <bentiss@kernel.org>
+> > > >>>>>>>>> Signed-off-by: Antheas Kapenekakis <lkml@antheas.dev>
+> > > >>>>>>>>> ---
+> > > >>>>>>>>>  drivers/hid/hid-asus.c | 16 ++++++----------
+> > > >>>>>>>>>  1 file changed, 6 insertions(+), 10 deletions(-)
+> > > >>>>>>>>>
+> > > >>>>>>>>> diff --git a/drivers/hid/hid-asus.c b/drivers/hid/hid-asus.=
+c
+> > > >>>>>>>>> index 323e6302bac5..dc7af12cf31a 100644
+> > > >>>>>>>>> --- a/drivers/hid/hid-asus.c
+> > > >>>>>>>>> +++ b/drivers/hid/hid-asus.c
+> > > >>>>>>>>> @@ -90,6 +90,7 @@ MODULE_DESCRIPTION("Asus HID Keyboard and=
+ TouchPad");
+> > > >>>>>>>>>  #define QUIRK_ROG_NKEY_KEYBOARD              BIT(11)
+> > > >>>>>>>>>  #define QUIRK_ROG_CLAYMORE_II_KEYBOARD BIT(12)
+> > > >>>>>>>>>  #define QUIRK_ROG_ALLY_XPAD          BIT(13)
+> > > >>>>>>>>> +#define QUIRK_ROG_NKEY_LEGACY                BIT(14)
+> > > >>>>>>>> These past days I have taken a look at new 2025 models and t=
+hey do make use of ID2,
+> > > >>>>>>>> and won't do harm sending ID1 either. I think you can safely=
+ remove the if and send regardless.
+> > > >>>>>>> Hi Denis,
+> > > >>>>>>> it is not the responsibility of this driver. ID2 is used by A=
+nime
+> > > >>>>>>> models. It is a concession to make sure that we do not cause =
+a
+> > > >>>>>>> regression that will cause warnings for a lot of users.
+> > > >>>>>> Who decided it is a concession?
+> > > >>>>> I would rather remove the extra calls unless they are shown to =
+be
+> > > >>>>> needed, which they might be for these PIDs.
+> > > >>>> They are needed on older laptop and to not regress userspace.
+> > > >>>>
+> > > >>>> You just named _LEGACY an usb pid that is not legacy.
+> > > >>>>> The quirk is named legacy because we can't retest these devices=
+. If we
+> > > >>>>> can, then we could remove the quirk and the inits if not needed=
+.
+> > > >>>> We can't retest every device, and that pid is used in pre-2021 m=
+odels,
+> > > >>>> and these are the unknown, I am criticizing the name of the quir=
+k here,
+> > > >>>> not what it does.
+> > > >>> If you can test whether your device needs them that would be grea=
+t.
+> > > >> That is pointless.
+> > > >>>> I am also questioning if the quirk is even needed since sending
+> > > >>>> those commands to (at least) recent hardware that doesn't use
+> > > >>>> those endpoints carries no downsides, while removing them
+> > > >>>> surely does.
+> > > >>> We have not found a device yet that needs them. I do not want to =
+keep
+> > > >>> sending unneeded commands. It could cause obscure bugs or interfe=
+re
+> > > >>> with userspace software such as the one you maintain. So at least=
+ for
+> > > >>> new hardware that is possible to test we should remove them.
+> > > >> There is new hardware that needs them, as I said, including 2025 m=
+odels.
+> > > > I was not aware of that. As far as I know they are not needed. Do y=
+ou
+> > > > have a bug report with a specific laptop model I can look at?
+> > > There is current effort to integrate commands that requires those
+> > > initializations on 2025 laptop, why would I strip out a command
+> > > that I already know is required anyway?
+> >
+> > Hi,
+> > yes ID1 is required for RGB, I have a draft patch for it that would
+> > lazily do it if RGB is supported.
+> >
+> > I recall now a previous discussion about it being required for some
+> > laptop shortcuts but we never found a laptop that needs it so I forgot
+> >
+> > > No, this is not the way to go to knowingly and willingly cause
+> > > troubles (both known and unknown) to others just because
+> > > you think it's better this way.
+> > >
+> > > Change the name of _LEGACY to something else, have this accepted
+> > > and then if I see it's appropriate  to remove the if and send those
+> > > regardless I will.
+> >
+> > Sure, up to you if you want to change the name. What would you like it
+> > be? I would like this series to merge
 >
->> While reading it through once again while applying, I start to wonder i=
-f=20
->> this config would be better named as LENOVO_WMI_CAPDATA ?
+> Can you name it e.g. something that should be neutral such as:
 >
->I didn't thought of that when I substituted all occurrences of
->data01/cd01 with data/cd, but it's definitely a better name for me when
->it pops out=2E
+> QUIRK_ROG_NKEY_ID1_ID2_INIT
 >
->Hmm=2E=2E=2E Wait, we have
->
-> 	=2Edriver =3D {
->-		=2Ename =3D "lenovo_wmi_cd01",
->+		=2Ename =3D "lenovo_wmi_cd",
-> 		=2Eprobe_type =3D PROBE_PREFER_ASYNCHRONOUS,
-> 	},
->
->What about adopting the same name here to make everything more
->consistent? Having a unified name will be neater=2E @Derek, what do you
->think?
+> I'm not sure if ROG NKEY should still be included into the name based on
+> what Denis mentioned about recent models but at least it gets rid of the
+> "legacy" connotation. If wider scope is necessary you could use just
+> QUIRK_ID1_ID2_INIT.
 
-No preference personally, nobody is going to see the config option really =
-since we just select it when we enable the others=2E Consistent naming prob=
-ably helps folks who are unfamiliar with the different drivers for this int=
-erface I suppose=2E
+It's NKEY only so QUIRK_ROG_NKEY_ID1ID2_INIT would be more appropriate
+(all recent models are NKEY)
 
-Thanks,
-Derek
+Sounds like a plan, I will resend tomorrow. If anyone wants to leave
+any more comments now is the time.
 
+Antheas
 
->Thank you all,
->Rong
+> --
+>  i.
+>
 
