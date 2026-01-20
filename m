@@ -1,180 +1,121 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.16])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-qt1-f171.google.com (mail-qt1-f171.google.com [209.85.160.171])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 84E2E42980D;
-	Tue, 20 Jan 2026 13:56:45 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.16
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 12EE242E002
+	for <platform-driver-x86@vger.kernel.org>; Tue, 20 Jan 2026 14:18:42 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.171
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1768917409; cv=none; b=pI8vq+/dIj1dN6bxAIdoMFr5eo2Vkem38fHHPoqp4MKx1KV1kQWkW+oFWY2f9Ggb7cJLg2TaIkP4FIS5lyPKyxZru9DKnMa8QEqLlEXpdl1GJ0sh9DumliM26HDofQ9lRHhBiQWalR5OUPYKcIX1LI3jswqTWIUvKhtnR1mtAvo=
+	t=1768918724; cv=none; b=i9lNy4Uj1Xpa7O8yC+xCRRD+Xp+RCZohPKcamwZ9CYcuUjvqT1Dzs1g1D8fAZIO5wQEVgnz3ZY+8PakENKvTa9gemWLFiDD8z2eRSxXwvxuMCSqyRO9UHMu5SS4SHl0ZWMVyJd0/10mKib9GzVFz0zQrH2QKBldsAyh7iN4jD3E=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1768917409; c=relaxed/simple;
-	bh=ysV0jAr5+ezx4+/u76UogfGXVT+d99ZUDvuUIgUVcdM=;
-	h=From:Date:To:cc:Subject:In-Reply-To:Message-ID:References:
-	 MIME-Version:Content-Type; b=IL1CC/jbbC9evBpV4UTFPYzvY4THg2OxkVM/K8Z0mlIDxQxO+k43kX/iv++VL/pn2modCYNFtWbXGfH7qO5V//4CLSuABbxofwwVmbxNxXe0ohIs558IqrLwGaRuSnHjXd7tSiG1Hx9FS+BtKcc/UzL7kf083PIWGPd04Acxn2A=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=pass smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=mn8xyyqk; arc=none smtp.client-ip=192.198.163.16
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.intel.com
+	s=arc-20240116; t=1768918724; c=relaxed/simple;
+	bh=JfypU5NoSVLxTmCc6m3bhRZsIW0owE++/8JRrOiHfKk=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=fKNRsdBLxAxNesb3HoX+qOgoxDwzV0LVje/vuoCLuGGbgd1w2XN480xfkFlzRTdKkGnwPglgypOs7na5hWGObvw12WEQUPlUn5P1UHVn7kSb5g+SZiHfLqrS0ukPVm233VslQIG91rN58XAsRVWe27Ky06S5MotPBjisIO91554=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=hFqZykvh; arc=none smtp.client-ip=209.85.160.171
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="mn8xyyqk"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1768917406; x=1800453406;
-  h=from:date:to:cc:subject:in-reply-to:message-id:
-   references:mime-version;
-  bh=ysV0jAr5+ezx4+/u76UogfGXVT+d99ZUDvuUIgUVcdM=;
-  b=mn8xyyqklXF+I2VDxOtt9+2ruJqQosO7Fa4X8KwY3lCyDqapuuENg8op
-   oKddnC8jXmCfMZSOmnmbIR6fGcI0trFGoULVVSEhmd5+b1OJ30xx41nxd
-   IOrkvD0asj0EQrXty/qrmQnR5kgZ+ILZ+gWZGqqdlItktykO19TOsAbwx
-   FQ0JF9DkVW1hqCiyyO3MERLPXT7elHHANzaWbIzwbsP+C5XWbMGUfO3QK
-   SvOhJ/an9KPcfSC5B5ZAvIQ9qDLn8i/z7IQJF4+IysIk2g/Jt75HKPlk4
-   KHSeszRcONgLgsCLY9HmTPtExFPitfleTfZmONS6wpGuSNO2hNH+F6Kn9
-   w==;
-X-CSE-ConnectionGUID: TKjfhFH3Sx6Ttv9ISKxq3g==
-X-CSE-MsgGUID: KXbLVrCnQsOknvICMIS3RA==
-X-IronPort-AV: E=McAfee;i="6800,10657,11676"; a="57682686"
-X-IronPort-AV: E=Sophos;i="6.21,240,1763452800"; 
-   d="scan'208";a="57682686"
-Received: from orviesa009.jf.intel.com ([10.64.159.149])
-  by fmvoesa110.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 20 Jan 2026 05:56:45 -0800
-X-CSE-ConnectionGUID: 81MHjegjT6O8l7hbLOc2jw==
-X-CSE-MsgGUID: RY29hClxS/G7wPRZyFgkAw==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.21,240,1763452800"; 
-   d="scan'208";a="205932811"
-Received: from ijarvine-mobl1.ger.corp.intel.com (HELO localhost) ([10.245.245.10])
-  by orviesa009-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 20 Jan 2026 05:56:40 -0800
-From: =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
-Date: Tue, 20 Jan 2026 15:56:37 +0200 (EET)
-To: Antheas Kapenekakis <lkml@antheas.dev>
-cc: Denis Benato <denis.benato@linux.dev>, platform-driver-x86@vger.kernel.org, 
-    linux-input@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>, 
-    Jiri Kosina <jikos@kernel.org>, Benjamin Tissoires <bentiss@kernel.org>, 
-    Corentin Chary <corentin.chary@gmail.com>, 
-    "Luke D . Jones" <luke@ljones.dev>, Hans de Goede <hansg@kernel.org>
-Subject: Re: [PATCH v11 02/11] HID: asus: initialize additional endpoints
- only for legacy devices
-In-Reply-To: <CAGwozwF--y3vsqhdqYFV_x1ff7jfSkYaQHeV1OV70yue7Huk=A@mail.gmail.com>
-Message-ID: <89a67ace-6fef-72e0-4ef3-be828dd85e3d@linux.intel.com>
-References: <20260116133150.5606-1-lkml@antheas.dev> <20260116133150.5606-3-lkml@antheas.dev> <14407ba9-34f1-4114-bfb3-043b53ea7769@linux.dev> <CAGwozwGyUpBq4GGvyDHj089a9-vxNOnqgSBys3-CC_+tKDywaA@mail.gmail.com> <fe66c416-161c-489e-a38f-9dc7729c6ed7@linux.dev>
- <CAGwozwESNrQZ240_qDMf1pdpCRXooxstGcqP10cGp=q-F_SrAQ@mail.gmail.com> <8102eb26-5206-49e6-a994-a9d3ea480255@linux.dev> <CAGwozwH71LDiBFM-Ro9UpZNy29C6HHwCNZjwCS3F1hMfuUXZ4g@mail.gmail.com> <be8ba636-ae07-4d42-88ca-57ecf10b7dae@linux.dev>
- <CAGwozwGdhu_chetK6uQ=FXctC1D8LABj5QxVff1B486EKYSLug@mail.gmail.com> <e4349b27-86e1-41d6-864f-5ad6d353dc46@linux.dev> <CAGwozwF--y3vsqhdqYFV_x1ff7jfSkYaQHeV1OV70yue7Huk=A@mail.gmail.com>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="hFqZykvh"
+Received: by mail-qt1-f171.google.com with SMTP id d75a77b69052e-5029fb0b977so38305641cf.0
+        for <platform-driver-x86@vger.kernel.org>; Tue, 20 Jan 2026 06:18:42 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1768918721; x=1769523521; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=X1is6XRlm0ZQ0xwWLUS14cuBkkKeXRGoTHcBmEUlITU=;
+        b=hFqZykvhjCZStUnT34LruKenZrDbSEwOId1NYhni4Z5VvUkcddAUW5OEVlj0xqoloC
+         B5mPCCU1M4dzTMipA0fhIFcQtmNyWjStUyOMNpIMFkGxz0Cqr7KuWI7w/JbDvqnFriXY
+         OBmIu7JS+6bh17sSITDlEIKUnr/e/N98syX2AULg3cmsQ0bg9zondbTC5JDZcf+qOUjw
+         GS7ohGFqN22ZW7kvQyx0o1U0n1MODAX+nPDuUCNl5VhBmBbVZmW363uDWfh2BgRW0YIg
+         Pk6hUVsPef0EyqsoA6eU4u1++9RJQEG+D3AkeUwSkdSin5bTYv3Cdx6u5hTjk2k0EOZi
+         70Rw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1768918722; x=1769523522;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-gg:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=X1is6XRlm0ZQ0xwWLUS14cuBkkKeXRGoTHcBmEUlITU=;
+        b=UhsxeDAfcIW4/pXu6TXqTuNXQ8eu636yicpPeI/5hgRnqg/7wr1XtSgmL1aQVnzUfb
+         wzpgKOH8kzzemIk6oi74URW7ZcOynHNJTRfXvkX7P2xb6eAtzSWDr8bTSaagK56cW+rt
+         O4weGQXhN7Y6pTeGW9uUprvdcMIdaMJpdNVmLwapcWsCl0CSYhK+gLvXwwEAPdaQXUpR
+         rh9nUvpB8bcnFOeJ4vvkPlQuzSlQJ2B/MyPhcPO3H/rCyBAPq/CsxpE8Tx1vajRQ7yCT
+         T0qQU+lVK2hUgdA/IJytnel8AdSxLU3x+4OFbk5TSKQPcXd6PjCO8Z3ZqwXH1dKNYRAB
+         FnWQ==
+X-Gm-Message-State: AOJu0YzM/ynoaEUJsP65KQG/6UqPEVEQlV/O1FwC/j1zj1QNU4sXqngU
+	dowh3wU19ty6KfZExOUFjMwex7wVM6HD4vLq2IKn1misF4Nn7bTRR09gYklI40zp
+X-Gm-Gg: AY/fxX4pXvdhmtBEh5Yzc1Bbtwd+sc3byMgF1NN23UtGGAUqvErGwmQZCTQeX78CDs9
+	vNUub4cmblO86qh8jgklQkuvGjCbs7kbxVFoB95jq/1hvatKqYkrhOsY4Rhnldk9OZa1lZHcqiO
+	tlVWOU2bZ4zVMDIhOr3Wk968hfdLMYHXN0FB68wm3HDv8PoJwlZZxWDArNj4HcBL6dKNNtD6jm9
+	ou4NLdd23pSg7/3HZb6Q69b6WDydiBQe3r9ARXWeiUA8WFvmi0e0aQzdWlzKsR/SFk66P+9H0D+
+	LWDTjgV3kRqS0DHLFTGrAZbuMhY+2hV4PVhvaPz4LGo7ZEILmnjmmlKLPyqI8WC0Hga6r9JTsRZ
+	QxxbbNUv/8qhGjSlKu2EBP9QYZtwc8n2x0WVZSmOtvj7MLzL8KnBdQwXeXMGCACDHjat7bydZKq
+	qjo1rjVOOjZbj5KzBue8PulcphSi4RgubH7GQDvQhJLtFmN6kCqDKRJAoIJLN/nxvqIOpuOBa9f
+	/9WOFgQoQ1iT4gHVz4=
+X-Received: by 2002:a05:622a:208:b0:4e8:b446:c023 with SMTP id d75a77b69052e-502a17581f8mr177998841cf.49.1768918721388;
+        Tue, 20 Jan 2026 06:18:41 -0800 (PST)
+Received: from office-nix.home (hlfxns018gw-134-41-57-104.dhcp-dynamic.fibreop.ns.bellaliant.net. [134.41.57.104])
+        by smtp.gmail.com with ESMTPSA id d75a77b69052e-502a1d77d30sm93461581cf.6.2026.01.20.06.18.40
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 20 Jan 2026 06:18:40 -0800 (PST)
+From: David McFarland <corngood@gmail.com>
+To: platform-driver-x86@vger.kernel.org
+Cc: David McFarland <corngood@gmail.com>
+Subject: [PATCH] platform/x86/intel: disable wakeup_mode during hibernation
+Date: Tue, 20 Jan 2026 10:17:26 -0400
+Message-ID: <20260120141758.3496-1-corngood@gmail.com>
+X-Mailer: git-send-email 2.52.0
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 8bit
 
-On Sat, 17 Jan 2026, Antheas Kapenekakis wrote:
-> On Sat, 17 Jan 2026 at 18:05, Denis Benato <denis.benato@linux.dev> wrote:
-> > On 1/17/26 17:16, Antheas Kapenekakis wrote:
-> > > On Sat, 17 Jan 2026 at 17:12, Denis Benato <denis.benato@linux.dev> wrote:
-> > >> On 1/17/26 17:10, Antheas Kapenekakis wrote:
-> > >>> On Sat, 17 Jan 2026 at 16:13, Denis Benato <denis.benato@linux.dev> wrote:
-> > >>>> On 1/17/26 16:07, Antheas Kapenekakis wrote:
-> > >>>>> On Sat, 17 Jan 2026 at 14:51, Denis Benato <denis.benato@linux.dev> wrote:
-> > >>>>>> On 1/17/26 00:10, Antheas Kapenekakis wrote:
-> > >>>>>>> On Fri, 16 Jan 2026 at 21:44, Denis Benato <denis.benato@linux.dev> wrote:
-> > >>>>>>>> On 1/16/26 14:31, Antheas Kapenekakis wrote:
-> > >>>>>>>>
-> > >>>>>>>>> Currently, ID1/ID2 initializations are performed for all NKEY devices.
-> > >>>>>>>>> However, ID1 initializations are only required for RGB control and are
-> > >>>>>>>>> only supported for RGB capable devices. ID2 initializations are only
-> > >>>>>>>>> required for initializing the Anime display endpoint which is only
-> > >>>>>>>>> supported on devices with an Anime display. Both of these
-> > >>>>>>>>> initializations are out of scope for this driver (this is a brightness
-> > >>>>>>>>> control and keyboard shortcut driver) and they should not be performed
-> > >>>>>>>>> for devices that do not support them in any case.
-> > >>>>>>>>>
-> > >>>>>>>>> At the same time, there are older NKEY devices that have only been
-> > >>>>>>>>> tested with these initializations in the kernel and it is not possible
-> > >>>>>>>>> to recheck them. There is a possibility that especially with the ID1
-> > >>>>>>>>> initialization, certain laptop models might have their shortcuts stop
-> > >>>>>>>>> working (currently unproven).
-> > >>>>>>>>>
-> > >>>>>>>>> For an abundance of caution, only initialize ID1/ID2 for those older
-> > >>>>>>>>> NKEY devices by introducing a quirk for them and replacing the NKEY
-> > >>>>>>>>> quirk in the block that performs the inits with that.
-> > >>>>>>>>>
-> > >>>>>>>>> In addition, as these initializations might not be supported by the
-> > >>>>>>>>> affected devices, change the function to not bail if they fail.
-> > >>>>>>>>>
-> > >>>>>>>>> Acked-by: Benjamin Tissoires <bentiss@kernel.org>
-> > >>>>>>>>> Signed-off-by: Antheas Kapenekakis <lkml@antheas.dev>
-> > >>>>>>>>> ---
-> > >>>>>>>>>  drivers/hid/hid-asus.c | 16 ++++++----------
-> > >>>>>>>>>  1 file changed, 6 insertions(+), 10 deletions(-)
-> > >>>>>>>>>
-> > >>>>>>>>> diff --git a/drivers/hid/hid-asus.c b/drivers/hid/hid-asus.c
-> > >>>>>>>>> index 323e6302bac5..dc7af12cf31a 100644
-> > >>>>>>>>> --- a/drivers/hid/hid-asus.c
-> > >>>>>>>>> +++ b/drivers/hid/hid-asus.c
-> > >>>>>>>>> @@ -90,6 +90,7 @@ MODULE_DESCRIPTION("Asus HID Keyboard and TouchPad");
-> > >>>>>>>>>  #define QUIRK_ROG_NKEY_KEYBOARD              BIT(11)
-> > >>>>>>>>>  #define QUIRK_ROG_CLAYMORE_II_KEYBOARD BIT(12)
-> > >>>>>>>>>  #define QUIRK_ROG_ALLY_XPAD          BIT(13)
-> > >>>>>>>>> +#define QUIRK_ROG_NKEY_LEGACY                BIT(14)
-> > >>>>>>>> These past days I have taken a look at new 2025 models and they do make use of ID2,
-> > >>>>>>>> and won't do harm sending ID1 either. I think you can safely remove the if and send regardless.
-> > >>>>>>> Hi Denis,
-> > >>>>>>> it is not the responsibility of this driver. ID2 is used by Anime
-> > >>>>>>> models. It is a concession to make sure that we do not cause a
-> > >>>>>>> regression that will cause warnings for a lot of users.
-> > >>>>>> Who decided it is a concession?
-> > >>>>> I would rather remove the extra calls unless they are shown to be
-> > >>>>> needed, which they might be for these PIDs.
-> > >>>> They are needed on older laptop and to not regress userspace.
-> > >>>>
-> > >>>> You just named _LEGACY an usb pid that is not legacy.
-> > >>>>> The quirk is named legacy because we can't retest these devices. If we
-> > >>>>> can, then we could remove the quirk and the inits if not needed.
-> > >>>> We can't retest every device, and that pid is used in pre-2021 models,
-> > >>>> and these are the unknown, I am criticizing the name of the quirk here,
-> > >>>> not what it does.
-> > >>> If you can test whether your device needs them that would be great.
-> > >> That is pointless.
-> > >>>> I am also questioning if the quirk is even needed since sending
-> > >>>> those commands to (at least) recent hardware that doesn't use
-> > >>>> those endpoints carries no downsides, while removing them
-> > >>>> surely does.
-> > >>> We have not found a device yet that needs them. I do not want to keep
-> > >>> sending unneeded commands. It could cause obscure bugs or interfere
-> > >>> with userspace software such as the one you maintain. So at least for
-> > >>> new hardware that is possible to test we should remove them.
-> > >> There is new hardware that needs them, as I said, including 2025 models.
-> > > I was not aware of that. As far as I know they are not needed. Do you
-> > > have a bug report with a specific laptop model I can look at?
-> > There is current effort to integrate commands that requires those
-> > initializations on 2025 laptop, why would I strip out a command
-> > that I already know is required anyway?
-> 
-> Hi,
-> yes ID1 is required for RGB, I have a draft patch for it that would
-> lazily do it if RGB is supported.
-> 
-> I recall now a previous discussion about it being required for some
-> laptop shortcuts but we never found a laptop that needs it so I forgot
-> 
-> > No, this is not the way to go to knowingly and willingly cause
-> > troubles (both known and unknown) to others just because
-> > you think it's better this way.
-> >
-> > Change the name of _LEGACY to something else, have this accepted
-> > and then if I see it's appropriate  to remove the if and send those
-> > regardless I will.
-> 
-> Sure, up to you if you want to change the name. What would you like it
-> be? I would like this series to merge
+Without this change I get the problem described in the linked bug:
 
-Can you name it e.g. something that should be neutral such as:
+> Wakeup event detected during hibernation, rolling back
 
-QUIRK_ROG_NKEY_ID1_ID2_INIT
+The docs for the 'freeze' event say:
 
-I'm not sure if ROG NKEY should still be included into the name based on 
-what Denis mentioned about recent models but at least it gets rid of the 
-"legacy" connotation. If wider scope is necessary you could use just
-QUIRK_ID1_ID2_INIT.
+> Analogous to @suspend(), but it should not enable the device to signal wakeup
+> events or change its power state.
 
---
- i.
+I've been running with this change for several months on my Dell
+Precision 3680.  I haven't tested on any other systems.
+
+Closes: https://bugzilla.openanolis.cn/show_bug.cgi?id=27328
+---
+ drivers/platform/x86/intel/hid.c | 10 +++++++++-
+ 1 file changed, 9 insertions(+), 1 deletion(-)
+
+diff --git a/drivers/platform/x86/intel/hid.c b/drivers/platform/x86/intel/hid.c
+index 560cc063198e..3a9561665b9b 100644
+--- a/drivers/platform/x86/intel/hid.c
++++ b/drivers/platform/x86/intel/hid.c
+@@ -419,6 +419,14 @@ static int intel_hid_pl_suspend_handler(struct device *device)
+ 	return 0;
+ }
+ 
++static int intel_hid_pl_freeze_handler(struct device *device)
++{
++	struct intel_hid_priv *priv = dev_get_drvdata(device);
++
++	priv->wakeup_mode = false;
++	return intel_hid_pl_suspend_handler(device);
++}
++
+ static int intel_hid_pl_resume_handler(struct device *device)
+ {
+ 	intel_hid_pm_complete(device);
+@@ -433,7 +441,7 @@ static int intel_hid_pl_resume_handler(struct device *device)
+ static const struct dev_pm_ops intel_hid_pl_pm_ops = {
+ 	.prepare = intel_hid_pm_prepare,
+ 	.complete = intel_hid_pm_complete,
+-	.freeze  = intel_hid_pl_suspend_handler,
++	.freeze  = intel_hid_pl_freeze_handler,
+ 	.thaw  = intel_hid_pl_resume_handler,
+ 	.restore  = intel_hid_pl_resume_handler,
+ 	.suspend  = intel_hid_pl_suspend_handler,
+-- 
+2.52.0
+
