@@ -1,121 +1,108 @@
-Received: from mail-qt1-f171.google.com (mail-qt1-f171.google.com [209.85.160.171])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.16])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 12EE242E002
-	for <platform-driver-x86@vger.kernel.org>; Tue, 20 Jan 2026 14:18:42 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.171
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9BAAD45BD6E;
+	Tue, 20 Jan 2026 14:45:10 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.16
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1768918724; cv=none; b=i9lNy4Uj1Xpa7O8yC+xCRRD+Xp+RCZohPKcamwZ9CYcuUjvqT1Dzs1g1D8fAZIO5wQEVgnz3ZY+8PakENKvTa9gemWLFiDD8z2eRSxXwvxuMCSqyRO9UHMu5SS4SHl0ZWMVyJd0/10mKib9GzVFz0zQrH2QKBldsAyh7iN4jD3E=
+	t=1768920312; cv=none; b=bIBzznXLRnwuU0VaDDz+nWgcY6+2Dyz64wp3UDon/SJM+dgZWHSycNDnPib0MyMy1A0q+zAfR5wnQDY1bavFw4WS5z6P9hLDWjTDIscqUrK2Pdt8uupynz+A80kBrP5Rz07aNPTr2Mh2gjqfp+WgnOphaMB2I3kbjC1SJTfFtXk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1768918724; c=relaxed/simple;
-	bh=JfypU5NoSVLxTmCc6m3bhRZsIW0owE++/8JRrOiHfKk=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=fKNRsdBLxAxNesb3HoX+qOgoxDwzV0LVje/vuoCLuGGbgd1w2XN480xfkFlzRTdKkGnwPglgypOs7na5hWGObvw12WEQUPlUn5P1UHVn7kSb5g+SZiHfLqrS0ukPVm233VslQIG91rN58XAsRVWe27Ky06S5MotPBjisIO91554=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=hFqZykvh; arc=none smtp.client-ip=209.85.160.171
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1768920312; c=relaxed/simple;
+	bh=KQREYVz7L+nRv7TuspyCDs8ESUN5d6lYEJobIShQo4A=;
+	h=From:To:Cc:In-Reply-To:References:Subject:Message-Id:Date:
+	 MIME-Version:Content-Type; b=gpPDPsefy90X94VV/qLH5EuRbM90WRXiUQUcMiD1PE56lAabx1Y8E4PzMjk5XGgGpgVont/Q8vuhVflFZbiGFvGJpqLNo2M+MDjkKcGVQR6KxbfSLygU2LYmX4naVUxIZsmOa+YIBw+HMw9vRLKgx69+H1ZHAT9v8KzvTvXw3mE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=pass smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=DG3Y485N; arc=none smtp.client-ip=192.198.163.16
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="hFqZykvh"
-Received: by mail-qt1-f171.google.com with SMTP id d75a77b69052e-5029fb0b977so38305641cf.0
-        for <platform-driver-x86@vger.kernel.org>; Tue, 20 Jan 2026 06:18:42 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1768918721; x=1769523521; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=X1is6XRlm0ZQ0xwWLUS14cuBkkKeXRGoTHcBmEUlITU=;
-        b=hFqZykvhjCZStUnT34LruKenZrDbSEwOId1NYhni4Z5VvUkcddAUW5OEVlj0xqoloC
-         B5mPCCU1M4dzTMipA0fhIFcQtmNyWjStUyOMNpIMFkGxz0Cqr7KuWI7w/JbDvqnFriXY
-         OBmIu7JS+6bh17sSITDlEIKUnr/e/N98syX2AULg3cmsQ0bg9zondbTC5JDZcf+qOUjw
-         GS7ohGFqN22ZW7kvQyx0o1U0n1MODAX+nPDuUCNl5VhBmBbVZmW363uDWfh2BgRW0YIg
-         Pk6hUVsPef0EyqsoA6eU4u1++9RJQEG+D3AkeUwSkdSin5bTYv3Cdx6u5hTjk2k0EOZi
-         70Rw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1768918722; x=1769523522;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-gg:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=X1is6XRlm0ZQ0xwWLUS14cuBkkKeXRGoTHcBmEUlITU=;
-        b=UhsxeDAfcIW4/pXu6TXqTuNXQ8eu636yicpPeI/5hgRnqg/7wr1XtSgmL1aQVnzUfb
-         wzpgKOH8kzzemIk6oi74URW7ZcOynHNJTRfXvkX7P2xb6eAtzSWDr8bTSaagK56cW+rt
-         O4weGQXhN7Y6pTeGW9uUprvdcMIdaMJpdNVmLwapcWsCl0CSYhK+gLvXwwEAPdaQXUpR
-         rh9nUvpB8bcnFOeJ4vvkPlQuzSlQJ2B/MyPhcPO3H/rCyBAPq/CsxpE8Tx1vajRQ7yCT
-         T0qQU+lVK2hUgdA/IJytnel8AdSxLU3x+4OFbk5TSKQPcXd6PjCO8Z3ZqwXH1dKNYRAB
-         FnWQ==
-X-Gm-Message-State: AOJu0YzM/ynoaEUJsP65KQG/6UqPEVEQlV/O1FwC/j1zj1QNU4sXqngU
-	dowh3wU19ty6KfZExOUFjMwex7wVM6HD4vLq2IKn1misF4Nn7bTRR09gYklI40zp
-X-Gm-Gg: AY/fxX4pXvdhmtBEh5Yzc1Bbtwd+sc3byMgF1NN23UtGGAUqvErGwmQZCTQeX78CDs9
-	vNUub4cmblO86qh8jgklQkuvGjCbs7kbxVFoB95jq/1hvatKqYkrhOsY4Rhnldk9OZa1lZHcqiO
-	tlVWOU2bZ4zVMDIhOr3Wk968hfdLMYHXN0FB68wm3HDv8PoJwlZZxWDArNj4HcBL6dKNNtD6jm9
-	ou4NLdd23pSg7/3HZb6Q69b6WDydiBQe3r9ARXWeiUA8WFvmi0e0aQzdWlzKsR/SFk66P+9H0D+
-	LWDTjgV3kRqS0DHLFTGrAZbuMhY+2hV4PVhvaPz4LGo7ZEILmnjmmlKLPyqI8WC0Hga6r9JTsRZ
-	QxxbbNUv/8qhGjSlKu2EBP9QYZtwc8n2x0WVZSmOtvj7MLzL8KnBdQwXeXMGCACDHjat7bydZKq
-	qjo1rjVOOjZbj5KzBue8PulcphSi4RgubH7GQDvQhJLtFmN6kCqDKRJAoIJLN/nxvqIOpuOBa9f
-	/9WOFgQoQ1iT4gHVz4=
-X-Received: by 2002:a05:622a:208:b0:4e8:b446:c023 with SMTP id d75a77b69052e-502a17581f8mr177998841cf.49.1768918721388;
-        Tue, 20 Jan 2026 06:18:41 -0800 (PST)
-Received: from office-nix.home (hlfxns018gw-134-41-57-104.dhcp-dynamic.fibreop.ns.bellaliant.net. [134.41.57.104])
-        by smtp.gmail.com with ESMTPSA id d75a77b69052e-502a1d77d30sm93461581cf.6.2026.01.20.06.18.40
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 20 Jan 2026 06:18:40 -0800 (PST)
-From: David McFarland <corngood@gmail.com>
-To: platform-driver-x86@vger.kernel.org
-Cc: David McFarland <corngood@gmail.com>
-Subject: [PATCH] platform/x86/intel: disable wakeup_mode during hibernation
-Date: Tue, 20 Jan 2026 10:17:26 -0400
-Message-ID: <20260120141758.3496-1-corngood@gmail.com>
-X-Mailer: git-send-email 2.52.0
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="DG3Y485N"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1768920311; x=1800456311;
+  h=from:to:cc:in-reply-to:references:subject:message-id:
+   date:mime-version:content-transfer-encoding;
+  bh=KQREYVz7L+nRv7TuspyCDs8ESUN5d6lYEJobIShQo4A=;
+  b=DG3Y485NodMg+H0yXqSXWRzd8KzX3DixD3xB+yIlufsysO14TKAbrkjY
+   Xg7wwAnDISXJ+0aNNIwz/olY4p7oWSBjApA9cbfvcM0A9Qk0Q9qF0kxr5
+   BB5APQQl7Bk808pS3zRI3vo/hDsso681qguMiruhedOpqNBSWjmmltDQO
+   Td/vXNY8O58yehRKNpOLLJGQlmkijsLM1d8Ux96+YCFmVFPbBP78nTPe1
+   REaBFEyI5vED2XMRqkBSduoUcjEieuFN2eSq7MzC1n0vyfr43OulYEsuH
+   uuNNzXlT+zrm15np9QXDqsERctJ0vYR1+YXc26YtyfQ4vno5MybbpTXA7
+   w==;
+X-CSE-ConnectionGUID: YzbZyMQNTzOZrVdkT5uDPQ==
+X-CSE-MsgGUID: whcCvET9QuihNmHSvFa4Bg==
+X-IronPort-AV: E=McAfee;i="6800,10657,11677"; a="57688639"
+X-IronPort-AV: E=Sophos;i="6.21,240,1763452800"; 
+   d="scan'208";a="57688639"
+Received: from fmviesa004.fm.intel.com ([10.60.135.144])
+  by fmvoesa110.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 20 Jan 2026 06:45:10 -0800
+X-CSE-ConnectionGUID: NX9G3JkWRMurckxLuJwGag==
+X-CSE-MsgGUID: 0J4x4S4PQtqTdiB8hB8BCg==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.21,240,1763452800"; 
+   d="scan'208";a="210989903"
+Received: from ijarvine-mobl1.ger.corp.intel.com (HELO localhost) ([10.245.245.10])
+  by fmviesa004-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 20 Jan 2026 06:45:07 -0800
+From: =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
+To: hansg@kernel.org, Armin Wolf <W_Armin@gmx.de>
+Cc: platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org, 
+ linux@weissschuh.net, Dell.Client.Kernel@dell.com, corbet@lwn.net, 
+ linux-doc@vger.kernel.org
+In-Reply-To: <20260116204116.4030-1-W_Armin@gmx.de>
+References: <20260116204116.4030-1-W_Armin@gmx.de>
+Subject: Re: [PATCH v4 0/9] [PATCH v3 0/9] platform/wmi: Introduce
+ marshalling support
+Message-Id: <176892030133.15020.7666397577705687464.b4-ty@linux.intel.com>
+Date: Tue, 20 Jan 2026 16:45:01 +0200
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+X-Mailer: b4 0.13.0
 
-Without this change I get the problem described in the linked bug:
+On Fri, 16 Jan 2026 21:41:07 +0100, Armin Wolf wrote:
 
-> Wakeup event detected during hibernation, rolling back
+> The Windows WMI-ACPI driver likely uses wmilib [1] to interact with
+> the WMI service in userspace. Said library uses plain byte buffers
+> for exchanging data, so the WMI-ACPI driver has to convert between
+> those byte buffers and ACPI objects returned by the ACPI firmware.
+> 
+> The format of the byte buffer is publicly documented [2], and after
+> some reverse eingineering of the WMI-ACPI driver using a set of custom
+> ACPI tables, the following conversion rules have been discovered:
+> 
+> [...]
 
-The docs for the 'freeze' event say:
 
-> Analogous to @suspend(), but it should not enable the device to signal wakeup
-> events or change its power state.
+Thank you for your contribution, it has been applied to my local
+review-ilpo-next branch. Note it will show up in the public
+platform-drivers-x86/review-ilpo-next branch only once I've pushed my
+local branch there, which might take a while.
 
-I've been running with this change for several months on my Dell
-Precision 3680.  I haven't tested on any other systems.
+The list of commits applied:
+[1/9] platform/wmi: Introduce marshalling support
+      commit: 015b70a6ae697f5dac3562e4ab45ee275d98860b
+[2/9] platform/wmi: Add kunit test for the marshalling code
+      commit: 29dfba69c3ddb7945cd772042c6a9ce770c1ba22
+[3/9] platform/wmi: Add helper functions for WMI string conversions
+      commit: b990a06f7ec6dc3ceecd8015c3b421690f267122
+[4/9] platform/wmi: Add kunit test for the string conversion code
+      commit: 0e1a8143e79713eef7e027737fed259aa58866e7
+[5/9] platform/x86: intel-wmi-sbl-fw-update: Use new buffer-based WMI API
+      commit: 534f685d8a952371148e1374576f8ede2919ec1d
+[6/9] platform/x86/intel/wmi: thunderbolt: Use new buffer-based WMI API
+      commit: e210986f52b657301d009e23344e3effec12bbeb
+[7/9] platform/x86: xiaomi-wmi: Use new buffer-based WMI API
+      commit: bb7527c63f8567d69a22a818aa5999be47c5d479
+[8/9] platform/x86: wmi-bmof: Use new buffer-based WMI API
+      commit: 926a266575a21e96c4c0b9c16b1da1f7fda5a519
+[9/9] platform/wmi: Update driver development guide
+      commit: 2177a02246ffef9ed4a01af2942119e601312965
 
-Closes: https://bugzilla.openanolis.cn/show_bug.cgi?id=27328
----
- drivers/platform/x86/intel/hid.c | 10 +++++++++-
- 1 file changed, 9 insertions(+), 1 deletion(-)
-
-diff --git a/drivers/platform/x86/intel/hid.c b/drivers/platform/x86/intel/hid.c
-index 560cc063198e..3a9561665b9b 100644
---- a/drivers/platform/x86/intel/hid.c
-+++ b/drivers/platform/x86/intel/hid.c
-@@ -419,6 +419,14 @@ static int intel_hid_pl_suspend_handler(struct device *device)
- 	return 0;
- }
- 
-+static int intel_hid_pl_freeze_handler(struct device *device)
-+{
-+	struct intel_hid_priv *priv = dev_get_drvdata(device);
-+
-+	priv->wakeup_mode = false;
-+	return intel_hid_pl_suspend_handler(device);
-+}
-+
- static int intel_hid_pl_resume_handler(struct device *device)
- {
- 	intel_hid_pm_complete(device);
-@@ -433,7 +441,7 @@ static int intel_hid_pl_resume_handler(struct device *device)
- static const struct dev_pm_ops intel_hid_pl_pm_ops = {
- 	.prepare = intel_hid_pm_prepare,
- 	.complete = intel_hid_pm_complete,
--	.freeze  = intel_hid_pl_suspend_handler,
-+	.freeze  = intel_hid_pl_freeze_handler,
- 	.thaw  = intel_hid_pl_resume_handler,
- 	.restore  = intel_hid_pl_resume_handler,
- 	.suspend  = intel_hid_pl_suspend_handler,
--- 
-2.52.0
+--
+ i.
 
