@@ -1,188 +1,116 @@
-Received: from mail-lf1-f53.google.com (mail-lf1-f53.google.com [209.85.167.53])
+Received: from mail-pf1-f194.google.com (mail-pf1-f194.google.com [209.85.210.194])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 382B726C3BE
-	for <platform-driver-x86@vger.kernel.org>; Mon, 19 Jan 2026 23:21:22 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=209.85.167.53
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1768864884; cv=pass; b=opvkmNAgz0wgmJizxLU2pykchSHbbBwNu48BzbxWtt3rewpTVjSiMT36oIcItVJ/vHoQftv+ictkCwo1F4iRfx6vckho+zmWbjr/kK2ElF33eo6txCxlTAp5nD7N8PfItRivwwFGdixA/bjQn/wJKdf9quMoop/ElhMI9LXlg2A=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1768864884; c=relaxed/simple;
-	bh=YdLrpfctD2iaOxKslCuiUJ1fqUiNAufKSSGVvvwU4KE=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=I5JeqkfgtUg1jR15WW3Ob6mCC2IV4GfdQIf7cVYIcRaiNW1yhg6vxskg2ktYkAbGq1Al+FqQW06S0DWr9c/1RwjOKx4lJKNqNCKY9f4TquYzN0GoxxOYuxOdhQg2GGAZFe0Fh6vCcTL1PIVTrKv7W85j1nmcIqyafVP6Nz8PM/I=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=WaEVp/Om; arc=pass smtp.client-ip=209.85.167.53
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4DCFAF507
+	for <platform-driver-x86@vger.kernel.org>; Tue, 20 Jan 2026 00:04:29 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.194
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1768867470; cv=none; b=ZgVkcXbP6yE6Aymt7uSL7eQlaIaLPzCN/du/NODnAsACJCuA8iA8hV6UfgPqZDQZIjjTWTtwgZZqm3976YsLsn09gjH+xM+V9hemnnCIrvjjfSBG6b/nLQWPmUxkcqZTWr5k2wXGgSEg28P75gSffJ0jStUSooHbozwEf5mGbKY=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1768867470; c=relaxed/simple;
+	bh=cuKZQcuapQnBZVta8YkwFU3o1xEnR1bsXItHBrnjVWw=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=cev6iQ4kWZG71YC/w5aIKuwpXjBPk6hCz8RTq18/eg56Ui4PafUfqRbmOFBLicPIlwBD0Vc+sRxdwU/keorfJfarvzgm2FFn/EzotTiZ46vQ/uAehr0WrYozWUKQ0OnCRnudLbh8+wuFT4cu1QPHFi8+GYXjDjmVdRvpnc2eB2Q=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=SEg4VYDr; arc=none smtp.client-ip=209.85.210.194
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="WaEVp/Om"
-Received: by mail-lf1-f53.google.com with SMTP id 2adb3069b0e04-59b672f8ec4so5248001e87.1
-        for <platform-driver-x86@vger.kernel.org>; Mon, 19 Jan 2026 15:21:21 -0800 (PST)
-ARC-Seal: i=1; a=rsa-sha256; t=1768864880; cv=none;
-        d=google.com; s=arc-20240605;
-        b=UwzSHXryhiicykkGtRvcE79oXUp6Fbnk7001euQ/9A7BjHRT3ezBZpobWghrZKIDp8
-         0F6gjr3X5tYbZdcvsruu2BlvkIGrlaLzTMAYD+bKZ6NDtgesWtu36KP9zDdy+Ht9nDXB
-         L6lTHRj+Iv+lPVnPufHuqM/obSBaBYt84VtlXY98J3LcHHqJ+CPpvhFjJMSIvL+6oYEk
-         QFWc4QQq3aTGCpVnkQjvkc6mPwTy/FpeJmtAjQhYClu5VkRTZcffpS1u7Imu5XEmCVf/
-         L2bxtQYAvay7lc2wENMcs8/qBOVTauZHOCPTmfKHWl0N80yjDuEydOqPUxDLJhl41ba+
-         oBUQ==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20240605;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:dkim-signature;
-        bh=R6InNnz7iacJl3/TduXAj8W3uRVmL4OnpDkc9siuZ9s=;
-        fh=6K9dk1M5ZOhrOrSn7/1+CIo8Te3K2/Y3NoA3OQfBS8s=;
-        b=IwCesnqIlH/fUzcnBciW4mwJPidCOcztNlfHAKyt7DJVvPhzur+TAkOVwKI/RySaPt
-         sejiWgYXVbwrrYg1/Uw1o1soGYYgWpWwYmcQZB/Q818eL8sizWZdSTx7qOnFpl7BIkM1
-         lvgppH+8+eulMl0ZUHpXQjq1Vb9OkTyUUxIqn2OTrISZ6sptV4J8e1vzy4HC0ZZa5A8t
-         UrrkHzFpl/mnkmIjy/7l9pkfc22jPiE9dDA7//NvwGT/txWWYJ1sIAxnT7h1PrOorQLb
-         rdMSS8lZMnLodYDn5RUT6n2s7A1MTmhtRMSMJ/UffwSeb0mccbj2bN4zGg21kIDdX/cl
-         XwfA==;
-        darn=vger.kernel.org
-ARC-Authentication-Results: i=1; mx.google.com; arc=none
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="SEg4VYDr"
+Received: by mail-pf1-f194.google.com with SMTP id d2e1a72fcca58-81df6a302b1so3901315b3a.2
+        for <platform-driver-x86@vger.kernel.org>; Mon, 19 Jan 2026 16:04:29 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1768864880; x=1769469680; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=R6InNnz7iacJl3/TduXAj8W3uRVmL4OnpDkc9siuZ9s=;
-        b=WaEVp/OmqKIqk17b8S2wMU0OTXVwqstcFUjOmf8MeZnII39fn5dFpnt71GEuGKwtKX
-         KCs4kK0tEi/1Jnw7aD2Op1GCHfcEqG0cqrgmyxhNTXcvsUR8YTS4xGn1HaaR2ZxI6vTW
-         5elfb91Rk6gZ3WH1zcMf8o2vVOJLfu+9J/v3565IL2j5Ni7s0dB6pcOS8FqVtH61LHrI
-         ayiyJ0hkZ5/UQ9K7EA8ujjsKweMN6aZh69tV03q8owAamkBmtHzFt0QosbZKnpseko7D
-         4kleJo3gV4JbN2do/DB2wRRerz2u2aSiZ3yrLkDOXDGaRccTpe3dUZ6NcSSRRrxjCixq
-         WLCw==
+        d=gmail.com; s=20230601; t=1768867468; x=1769472268; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=+Wubt2tqx7SxUgLn+ubS/XLWpKCP8r4Dm/ia5St2vgU=;
+        b=SEg4VYDrKSJMyCmnOgFvsvmX7r5FsaMfTkaTXsQhLVFPGANJFzPlb3zvAENOtSJ/JM
+         zHqgi6sw+bHTRgjCynmW+ZffykQT8r+kBNvYY4wEaCZaD5w5aWYklnaVv/0XzZ09KWwF
+         N1V9+AP9hU9QoXh/64pykGR2wP2+P+vgsIOKicfx7nNeLQ/yJXdsPNTaj9eMnBwtIAWL
+         lPhX+wlpFgBnk9eJPRIpQEuGF1s37YoNk3UJGu2RidIBVJe1lCDDgoYBcot1Ty9dUmEr
+         eWeFDBcgfxPaqCu6QtAWuDRALiUgaTx5PfoJRrPUW2wEfrD6POqDszQGi9QA7SHSBgao
+         v5qQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1768864880; x=1769469680;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-gg:x-gm-message-state:from
-         :to:cc:subject:date:message-id:reply-to;
-        bh=R6InNnz7iacJl3/TduXAj8W3uRVmL4OnpDkc9siuZ9s=;
-        b=rMFDW9yC6LXktNZUYE/Im/L9q9JXTr98RLPlwGeAoTRPsLw2UzNERp1Wjn1/UQbbZY
-         kLHrziGTVV0z5WoAhCvM0lsEDcSKLv7dzeK4k5GOwUNtrKSJYZBvZn+TvOMSlvZtsFuX
-         BoGnJLUtj4X9IdEEkjtg6iwp1sopHy/uqSnmuAdXVL4Sqx6BoWuW/O+69j7s74M0Ai4f
-         m9xXJdJvqX5+xWkNJMAXs/EKhzr5vFfYEGs1w17O6ENGTYwQg22WtBlYkjy11YpE0x/J
-         A5xzsDHdAeGaksHrM/rEezybNUmolTYWzxMDJz6Jz3rkMaDw2qoLS4CG/ZnO1kYhiXSW
-         1Y3w==
-X-Forwarded-Encrypted: i=1; AJvYcCUXMqkm82Tjqx/lLkaT5BNNv49rxnxGD7gPgjTHaGcN5yd3S4wGljtmGjKVizLS9/YNSLspGvGVkDci2H4JpmzSk949@vger.kernel.org
-X-Gm-Message-State: AOJu0YyhhblzolmYZTVZiNehqlF9uqCFR11rSKxCgYBLQuMpoCHoao9q
-	EjE2TJHfDPzyC5FoquNBVGLWRHWDk05F4sjwchZ2pxTDgIlYvka4YQSaj9q1MmQ0xvzsADn2vE2
-	/Zc/RHGt5GV9wRUmLUdWEJWe0anrD2E21Sd0oHBUHEQ==
-X-Gm-Gg: AZuq6aIB8OmE8cnuqPAvuq9Hc1gLTbFrm/TBKVf/pgQeAOwegtP7VOzRz8rI8hx2rbq
-	VO6mv6/0jZvHikczRf0FDn0y6mU7cAI69IgFNj3XvTazBMM6nHnrxKSUgr1eVy38UwlMSuHS9PY
-	/NiEVBALHk3CkWx9+mLKHoQt+T1LdIKvWhWx+4RM93iK7hj+H4RuIUAzshFL8MetJ+dAv45Wuad
-	Qua7E253E+FGvxDey/Q7kHlLiJn0lZg9m3rsOIvQtpOP1426H2x6LDBvZQWmDHCMAAmUzk=
-X-Received: by 2002:a05:6512:3f0d:b0:59c:b818:c063 with SMTP id
- 2adb3069b0e04-59dc8f11cc5mr49938e87.9.1768864879748; Mon, 19 Jan 2026
- 15:21:19 -0800 (PST)
+        d=1e100.net; s=20230601; t=1768867468; x=1769472268;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-gg:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=+Wubt2tqx7SxUgLn+ubS/XLWpKCP8r4Dm/ia5St2vgU=;
+        b=btGM6s1chhqRe5t2+Hg7JGbJX0PE4a6DIr/1XfxFKg6/LrCAnT+p1UDi1mX1IMsLBD
+         VNRMPUk7L+7aamN2bih7PYU4fizxeRkzNSG7763pGFNjUnWx7zTnEuH0net8P16vI3VA
+         0FRq7ks+Ib7vc+GqeaQf1tuHZ0zzXpBLoDeyXcmQOUfHgsIemP2jIDi3t0WYFBz5FtUG
+         yFIjolC4qRosesxVXhtNlraS2Jg2jIDIOYEuAvZVOu7oU/A/7wpZxo69bQpUQosCS5Nb
+         BXqXKL1YULFWCBDhhhC8zms4giDR7Jt4pT1f0IeQoOWGJ02oFQVH3uqJ1GvN0f6r4caI
+         vqkw==
+X-Forwarded-Encrypted: i=1; AJvYcCUIy9EC+9rovcMWkiTEEJOEu5+0g2EroGf0oJmuOClLmyyJym/l2xZ3uJpbL5jH0YIhOD3jokDngf+NqmP+1pqlrvjG@vger.kernel.org
+X-Gm-Message-State: AOJu0YwuvAXXXJ9MgKT5jbfOu2SH1F0xtROCIGanzkF6mcjT1GU0uJCq
+	BvvfQ2/jrBd5yL+Dn7AxQpg2k37u1MC/TejpNTbmhUYGZRippvWMHvxr
+X-Gm-Gg: AY/fxX7AFakUwJX4/yNQMT/djVsBSPyRSYNsoGe37hXOYZ99ny/r6fN5r89SAOZUAFV
+	WKPoOW4DfPCbOInJDEWd019nJRhSIzMb+EmMfFE9YCQoNTVo7k2/xRdwsq4FIRzXMQUXO7ql72k
+	IAVfwppsoSjDb07CYu6S9VZW5Zzo7vwMCLyVSXqaOUJbAVPMhsYWZczx/c5I7nMNNwfcpkLRB1a
+	TJxyMmYSNJPrakUm6yn/invkKSbioZfhdW93ywhXJ33ZjnrF0QPEfahMYWmb6kyJ2xQ9e+rXKvD
+	CzB6l0SqkCJ4EaNutGjo4u1XdPzM3yicYPYPj8dLv6axosPVqjtwkL5jGXOBpQ/sNcdXSU4Yxbj
+	CbgpSKxXoBX0ASOJGjM7MQ/ptweuRBtN/l/SGkBhNLSrU2bJrc8hjIfLdjhrR3ND7v+0UpUiyvV
+	DtNG99meg=
+X-Received: by 2002:a05:6a21:6b05:b0:384:f573:42bf with SMTP id adf61e73a8af0-38e00d9682fmr11086386637.53.1768867468314;
+        Mon, 19 Jan 2026 16:04:28 -0800 (PST)
+Received: from archie.me ([210.87.74.117])
+        by smtp.gmail.com with ESMTPSA id 98e67ed59e1d1-3527313c2a9sm10227886a91.17.2026.01.19.16.04.26
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 19 Jan 2026 16:04:26 -0800 (PST)
+Received: by archie.me (Postfix, from userid 1000)
+	id E9AC3422053E; Tue, 20 Jan 2026 07:04:23 +0700 (WIB)
+Date: Tue, 20 Jan 2026 07:04:23 +0700
+From: Bagas Sanjaya <bagasdotme@gmail.com>
+To: Vishnu Sankar <vishnuocv@gmail.com>, dmitry.torokhov@gmail.com,
+	hmh@hmh.eng.br, hansg@kernel.org, ilpo.jarvinen@linux.intel.com,
+	corbet@lwn.net, derekjohn.clark@gmail.com
+Cc: mpearson-lenovo@squebb.ca, linux-doc@vger.kernel.org,
+	linux-input@vger.kernel.org, linux-kernel@vger.kernel.org,
+	ibm-acpi-devel@lists.sourceforge.net,
+	platform-driver-x86@vger.kernel.org, vsankar@lenovo.com
+Subject: Re: [PATCH v5 3/3] Documentation: thinkpad-acpi - Document
+ doubletap_enable attribute
+Message-ID: <aW7Gh6WsTjVo5IO_@archie.me>
+References: <20251226235101.106451-1-vishnuocv@gmail.com>
+ <20251226235101.106451-4-vishnuocv@gmail.com>
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20251226235101.106451-1-vishnuocv@gmail.com>
-In-Reply-To: <20251226235101.106451-1-vishnuocv@gmail.com>
-From: Vishnu Sankar <vishnuocv@gmail.com>
-Date: Tue, 20 Jan 2026 08:20:43 +0900
-X-Gm-Features: AZwV_Qha_AGcHlqJSZIc-uaFh5iazIYWt2QyAkghgDolNbh_GArBAIYfPOiBrsA
-Message-ID: <CABxCQKu35Gc_+axoWD6pWuyFkbgWyRc67RP4iTsP8xw3U713PA@mail.gmail.com>
-Subject: Re: [PATCH v5 0/3] TrackPoint doubletap enablement and user control
-To: dmitry.torokhov@gmail.com, hmh@hmh.eng.br, hansg@kernel.org, 
-	ilpo.jarvinen@linux.intel.com, corbet@lwn.net, derekjohn.clark@gmail.com
-Cc: mpearson-lenovo@squebb.ca, linux-doc@vger.kernel.org, 
-	linux-input@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	ibm-acpi-devel@lists.sourceforge.net, platform-driver-x86@vger.kernel.org, 
-	vsankar@lenovo.com
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: multipart/signed; micalg=pgp-sha512;
+	protocol="application/pgp-signature"; boundary="cXr86z952AoRnBdA"
+Content-Disposition: inline
+In-Reply-To: <20251226235101.106451-4-vishnuocv@gmail.com>
+
+
+--cXr86z952AoRnBdA
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
 Content-Transfer-Encoding: quoted-printable
 
-Hi All,
+On Sat, Dec 27, 2025 at 08:51:01AM +0900, Vishnu Sankar wrote:
+> +Values:
+> +	* 1 - doubletap events are processed (default)
+> +	* 0 - doubletap events are filtered out (ignored)
 
-I=E2=80=99m writing to kindly follow up on the patch series I have submitte=
-d.
+Please separate the bullet list from "Values:" paragraph.
 
-I haven=E2=80=99t seen any review feedback yet, so I just wanted to check i=
-f it might
-have been missed in the queue. If there=E2=80=99s anything I should revise,=
- test, or
-clarify, I=E2=80=99d be happy to provide it.
-
-Thank you for your time, and sorry for the inconvenience.
-
-On Sat, Dec 27, 2025 at 8:53=E2=80=AFAM Vishnu Sankar <vishnuocv@gmail.com>=
- wrote:
->
-> This patch series adds support for TrackPoint doubletap with a clear and
-> simple separation of responsibilities between drivers:
->
-> 1. Firmware enablement (trackpoint.c):
->    Automatically enables doubletap on capable hardware during device
->    detection.
->
-> 2. User control (thinkpad_acpi.c):
->    Provides a sysfs interface to enable or disable delivery of doubletap
->    events to userspace.
->
-> The approach follows the KISS principle:
-> - The TrackPoint driver enables hardware functionality by default.
-> - The thinkpad_acpi driver controls whether ACPI doubletap events are
->   delivered, using existing hotkey filtering infrastructure.
-> - No cross-driver APIs or dual filtering paths are introduced.
->
-> Changes in v5:
-> - Rename sysfs attribute from doubletap_filter to doubletap_enable to
->   reflect actual behavior.
-> - Fix inverted logic so events are delivered only when doubletap is
->   enabled.
-> - Suppress ACPI hotkey delivery instead of injecting or filtering input
->   events.
-> - Register the sysfs attribute via hotkey_attributes[] instead of
->   device_create_file().
-> - Drop unnecessary helper wrappers and debug logging.
-> - Update Documentation to reflect the new naming and semantics.
->
-> Changes in v4:
-> - Complete redesign based on reviewer feedback.
-> - trackpoint.c: Simplified to only enable doubletap by default.
-> - trackpoint.c: Removed all sysfs attributes and global variables.
-> - trackpoint.c: Uses firmware ID detection with deny list.
-> - thinkpad_acpi.c: Added sysfs interface for kernel-level event control.
-> - thinkpad_acpi.c: No cross-driver dependencies.
-> - Documentation: Updated to reflect simplified sysfs approach.
->
-> Changes in v3:
-> - No changes.
->
-> Changes in v2:
-> - Improved commit messages.
-> - Removed unnecessary comments and debug messages.
-> - Switched to strstarts() usage.
-> - Simplified firmware capability detection logic.
->
-> This version addresses the remaining review feedback by correcting the
-> naming and logic inversion, aligning sysfs semantics with behavior, and
-> fully integrating with existing thinkpad_acpi hotkey handling.
->
-> Vishnu Sankar (3):
->   input: trackpoint - Enable doubletap by default on capable devices
->   platform/x86: thinkpad_acpi: Add sysfs control for TrackPoint
->     double-tap
->   Documentation: thinkpad-acpi - Document doubletap_enable attribute
->
->  .../admin-guide/laptops/thinkpad-acpi.rst     | 20 ++++++++
->  drivers/input/mouse/trackpoint.c              | 47 +++++++++++++++++++
->  drivers/input/mouse/trackpoint.h              |  5 ++
->  drivers/platform/x86/lenovo/thinkpad_acpi.c   | 42 ++++++++++++++---
->  4 files changed, 107 insertions(+), 7 deletions(-)
->
-> --
-> 2.51.0
->
-
+Thanks.
 
 --=20
+An old man doll... just what I always wanted! - Clara
 
-Regards,
+--cXr86z952AoRnBdA
+Content-Type: application/pgp-signature; name=signature.asc
 
-      Vishnu Sankar
-     +817015150407 (Japan)
+-----BEGIN PGP SIGNATURE-----
+
+iHUEABYKAB0WIQSSYQ6Cy7oyFNCHrUH2uYlJVVFOowUCaW7GgwAKCRD2uYlJVVFO
+o5IaAP94b7MmrmseMySClfVwqN2J5VwmAmCppeUJ/3BURZkyIAD9FBUs2/yUHoyX
+mdvAzlxMyN4BFBzd/S6jJXcMr4fBwww=
+=2Yar
+-----END PGP SIGNATURE-----
+
+--cXr86z952AoRnBdA--
