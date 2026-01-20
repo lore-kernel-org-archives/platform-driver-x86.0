@@ -1,112 +1,127 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.12])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-qt1-f172.google.com (mail-qt1-f172.google.com [209.85.160.172])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9FB31466B72;
-	Tue, 20 Jan 2026 15:50:25 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.12
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 09CC931B108
+	for <platform-driver-x86@vger.kernel.org>; Tue, 20 Jan 2026 16:15:46 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1768924228; cv=none; b=AWdD3tahAExMNQLNYLVhdUevh+2zJkvLNsbb9ZC++QH9z/T1YjiN4OQJD0iEAyw3cIdN7Qr4naxTgAdhOslrxTzwcKTBL+cSRTAX4zkMdnYaCS69i6jGx5zEkv1Eit1bKNe5xWk720FMx+QL+UUK/BK1aAw+m/EmP7+sEyJAHH8=
+	t=1768925748; cv=none; b=CLkyQBEoNB+Nwn2r8uVkTl3sxvha2ZhaalcRDyUwXQ/QfdH9rgVur7Mz+HkXcWTSq5R/2rNU/PnTpUzQMyGhfnGbF2MSW746i6u5cTyll6QXGs0UmR8q+g0stwmSbetBHBcHP5SIYYai+bRv8jhSrLrBVnIm0Vq0jG7RBRSKbNU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1768924228; c=relaxed/simple;
-	bh=LKRmFLYmVpfCIH+4mOxV/Sn0Uf+Kg1tNr4flB+0XpUk=;
-	h=From:Date:To:cc:Subject:In-Reply-To:Message-ID:References:
-	 MIME-Version:Content-Type; b=B2nFZRF9eKRTAyFDzR7wh9xPC4I50xhdisCs6nte+nOIw4bscUBeUhQhF0RM5gVZs3ftrOjYUdijfZKY/UHW6/c6kDE4mloJE6afs/LsFyw7WxMY5mR1Jq1J2Kw0HnleGGn7OtmkxgOVBPx4FYiu0kBXjkdFTxDB6lamyG05Rp0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=pass smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=RmIXS04L; arc=none smtp.client-ip=192.198.163.12
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.intel.com
+	s=arc-20240116; t=1768925748; c=relaxed/simple;
+	bh=5kTMiO6eaOPZeg5Pbd1orb2vNf9F+bXf7bqsj1xJcjI=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=X7egpTMrULox4i9tl/6VcXlo9h/BZvA+o8aTbWvZ3BVqY3lvHAlowf0uWHx13yR1GaRNr8kRGHoFfiYbllJslkqfSepJNNM9/+ARj/GHEPD0pDPrmTRiVYNYqg33yb29pZFS+IAXqoe+ZDBLSI1cN/iU4OwzqX3y/+PUzu7krRU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=gSj4J1E+; arc=none smtp.client-ip=209.85.160.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="RmIXS04L"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1768924225; x=1800460225;
-  h=from:date:to:cc:subject:in-reply-to:message-id:
-   references:mime-version;
-  bh=LKRmFLYmVpfCIH+4mOxV/Sn0Uf+Kg1tNr4flB+0XpUk=;
-  b=RmIXS04LpsE9Ee0++d7rDyF7r5CMNf/FbKBf28ILhlSxY1ejxQbevoY3
-   ngrl2GJRXuzrmFE0nNVNIFe0B8STXNHcHE/qvkya3NLJwVsST9P/axQtg
-   e1v/pFIAxHN9koBfywZ+M8jyBo+LdtNZwg0ZVfItxScu/7Z5XH4PeHLhp
-   DrGBVjmupRvjiZvX9G7JxM6Dd9PFm+S5IIKKK4hv7gMFzeJLWQvazpIDH
-   pUSaNadRbeDArvsJapnfyIvgbk3FnILV1ixdZwGCzazBMyKv/uhHIccJH
-   RzSR7V+5oUdeAe9N6rzDf0WmNaQ2zN6/q/SnAtfi/AdtiJ6LYGhfj4tJ3
-   A==;
-X-CSE-ConnectionGUID: CeSPzKs7TTqaq336pfAoKQ==
-X-CSE-MsgGUID: 75Qn1GiuQUSC1SLH7cohbQ==
-X-IronPort-AV: E=McAfee;i="6800,10657,11677"; a="74004267"
-X-IronPort-AV: E=Sophos;i="6.21,240,1763452800"; 
-   d="scan'208";a="74004267"
-Received: from fmviesa002.fm.intel.com ([10.60.135.142])
-  by fmvoesa106.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 20 Jan 2026 07:50:24 -0800
-X-CSE-ConnectionGUID: so59NhtSQ6SjR7eCoEl13A==
-X-CSE-MsgGUID: XdbfPwMcRhOWpT2nMsOZ3Q==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.21,240,1763452800"; 
-   d="scan'208";a="229091953"
-Received: from ijarvine-mobl1.ger.corp.intel.com (HELO localhost) ([10.245.245.10])
-  by fmviesa002-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 20 Jan 2026 07:50:20 -0800
-From: =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
-Date: Tue, 20 Jan 2026 17:50:17 +0200 (EET)
-To: "Mario Limonciello (AMD)" <superm1@kernel.org>
-cc: Tom Lendacky <thomas.lendacky@amd.com>, 
-    Herbert Xu <herbert@gondor.apana.org.au>, 
-    Shyam Sundar S K <Shyam-sundar.S-k@amd.com>, 
-    Rijo Thomas <Rijo-john.Thomas@amd.com>, John Allen <john.allen@amd.com>, 
-    "David S . Miller" <davem@davemloft.net>, Hans de Goede <hansg@kernel.org>, 
-    "open list:AMD CRYPTOGRAPHIC COPROCESSOR (CCP) DRIVER" <linux-crypto@vger.kernel.org>, 
-    "open list:AMD PMF DRIVER" <platform-driver-x86@vger.kernel.org>, 
-    Lars Francke <lars.francke@gmail.com>, Yijun Shen <Yijun.Shen@dell.com>, 
-    Devaraj Rangasamy <Devaraj.Rangasamy@amd.com>
-Subject: Re: [PATCH v6 0/5] Fixes for PMF and CCP drivers after S4
-In-Reply-To: <20260116041132.153674-1-superm1@kernel.org>
-Message-ID: <93beb504-e6f0-00f5-d974-6293f51839d5@linux.intel.com>
-References: <20260116041132.153674-1-superm1@kernel.org>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="gSj4J1E+"
+Received: by mail-qt1-f172.google.com with SMTP id d75a77b69052e-5013c912f9fso64205241cf.2
+        for <platform-driver-x86@vger.kernel.org>; Tue, 20 Jan 2026 08:15:46 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1768925745; x=1769530545; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=mNqt/8fppsGYGnj2Tu2jRn4PRrvPiuvQkA3GokzXAvA=;
+        b=gSj4J1E+auFB4beeNL4uHTeVIfq7Vv27v87e2zS13W+XLIih8FgN9sielqp17pG3ei
+         QMyqhUdZ2RH/SyNSmShdlCkwdVqC72WKEijUD03sBGszrhPKdO2z3dESuKfaKlmS0OeN
+         1U+kDKcQcVnozIYAX1Bd6avGfqixMcqN6JkvgC03pgPIb6ztljy32aCiUqsYZ1y2d02l
+         LtrRWf+JPyq24g6LqiAPocY29G2vraWi6wzBdCJ4gHJMWAsqYgBd75KuDpp2wJQASIS/
+         HvlJ6851RuM00YZF/2nVs7O/+PREVTubzPaWRqzZ66KwQfyFIbxhO6ftLqelwPedWCkY
+         iWdw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1768925745; x=1769530545;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:x-gm-gg:x-gm-message-state:from
+         :to:cc:subject:date:message-id:reply-to;
+        bh=mNqt/8fppsGYGnj2Tu2jRn4PRrvPiuvQkA3GokzXAvA=;
+        b=DA51TJmFcc7tlHUT0DS+b5kc5/rcaSPE2sx+7tLKBAZCdSoOs4rF1nniJ7DZx0gaVe
+         9yBWQrwdo6rfSxbEV2FIahcpg1zXxNwYmZeJfEpDbbx+UWS9DOtuVK+HhfPkywvlxryQ
+         JF4hscjrTRIzcf6YJf5wqP04fMeWe1L98COSXjsfQSQHrpMBWffekmrihIZpmTBr2UVC
+         7V8G5+MoGihOWSmdJpURBGUYeoYCpSRgx3DFW47J3nlLtnECq/a6XaGiqHbPmLy42tvP
+         Ae6qwaYfv1D49BpftKVEePmDpTJGxc9MWvOEc7VDonYorAcNDnryPK3wgzTuijWytbsT
+         +x3A==
+X-Gm-Message-State: AOJu0Yw9dxvZpp87N88mmZCuGzW/pz1jxLMqQyr6MinmtsZNtH78ZQi3
+	Mo1YRxrJ8mbaWPcbUpDqYPVNt6/x3PfyNsygoegjdD1V7NoF/1ZaWS5AfQVU3A==
+X-Gm-Gg: AY/fxX71BKFcoMK8t5u/cpCSlEI8MxBQ16pljEmdpx+6uG2F6aJLJ+UfkGnvqAEMyHu
+	Occ6O2jdp3XxEda1RYyzLpudms/tENYmCNpiB72Yy+AdV444/SMM/PLgwM802fY/JC+mZuV0HWJ
+	euHVJGvxn5xznfm2Yy+B/l/iugPhFX4acGCSkhnzc7uO5vAdajifu+mf6BqgP9mXlWhHtyWy2t4
+	Owqp9aV1MMl9HYIhK0fX4R6Fo0CPo+Hcox1mIPNkQa+g6VFlhgKBnQMXnzd+dACGT1W3eZPY2Yj
+	sJpBRS5uryXqK00llDKuOvBVkcRnHo2CIwuHWF2NbOuHSHGqgjekLXl1eTFc4rQOiuytpy1BliJ
+	sx+3uVp5mv6p1fxdS1BgUIRa6U024iDWCT1Bq8NtlvfTVgPK/ObTZ8P4PYSq71IRddAbcbPo3a+
+	DCBFCCYLY8fvaM7SETVdowsmg/UN3qcr0utDKu23o9FykCMtDq0mUCAY4ECwCXN5xe4wbDm5P3t
+	ZOeHwMxV0X7SfyeNW5ohXwopkAFjQ==
+X-Received: by 2002:a05:622a:38b:b0:4ef:c4de:2ac9 with SMTP id d75a77b69052e-502a1dbcb2bmr168551171cf.17.1768925745314;
+        Tue, 20 Jan 2026 08:15:45 -0800 (PST)
+Received: from office-nix.home (hlfxns018gw-134-41-57-104.dhcp-dynamic.fibreop.ns.bellaliant.net. [134.41.57.104])
+        by smtp.gmail.com with ESMTPSA id d75a77b69052e-502a1ef8b4fsm96091311cf.27.2026.01.20.08.15.44
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 20 Jan 2026 08:15:44 -0800 (PST)
+From: David McFarland <corngood@gmail.com>
+To: platform-driver-x86@vger.kernel.org
+Cc: David McFarland <corngood@gmail.com>
+Subject: [PATCH v2] platform/x86/intel: disable wakeup_mode during hibernation
+Date: Tue, 20 Jan 2026 12:10:54 -0400
+Message-ID: <20260120161100.29342-2-corngood@gmail.com>
+X-Mailer: git-send-email 2.52.0
+In-Reply-To: <20260120141758.3496-1-corngood@gmail.com>
+References: <20260120141758.3496-1-corngood@gmail.com>
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 8bit
 
-On Thu, 15 Jan 2026, Mario Limonciello (AMD) wrote:
+Without this change I get the problem described in the linked bug:
 
-> Lars Francke reported that the PMF driver fails to work afer S4 with:
->   ccp 0000:c3:00.2: tee: command 0x5 timed out, disabling PSP
-> 
-> This is because there is a TA loaded to the TEE environment that
-> is lost during S4.  The TEE rings need to be reinitialized and the
-> TA needs to be reloaded.
-> 
-> This series adds those flows to the PMF and CCP drivers.
-> 
-> v5->v6:
->  * Fix Tom's feedback on patch 3/5
-> 
-> Mario Limonciello (AMD) (4):
->   crypto: ccp - Declare PSP dead if PSP_CMD_TEE_RING_INIT fails
->   crypto: ccp - Add an S4 restore flow
->   crypto: ccp - Factor out ring destroy handling to a helper
->   crypto: ccp - Send PSP_CMD_TEE_RING_DESTROY when PSP_CMD_TEE_RING_INIT
->     fails
-> 
-> Shyam Sundar S K (1):
->   platform/x86/amd/pmf: Prevent TEE errors after hibernate
-> 
->  drivers/crypto/ccp/psp-dev.c          | 11 +++++
->  drivers/crypto/ccp/sp-dev.c           | 12 ++++++
->  drivers/crypto/ccp/sp-dev.h           |  3 ++
->  drivers/crypto/ccp/sp-pci.c           | 16 ++++++-
->  drivers/crypto/ccp/tee-dev.c          | 56 ++++++++++++++++++------
->  drivers/crypto/ccp/tee-dev.h          |  1 +
->  drivers/platform/x86/amd/pmf/core.c   | 62 ++++++++++++++++++++++++++-
->  drivers/platform/x86/amd/pmf/pmf.h    | 10 +++++
->  drivers/platform/x86/amd/pmf/tee-if.c | 12 ++----
->  include/linux/psp.h                   |  1 +
->  10 files changed, 161 insertions(+), 23 deletions(-)
+> Wakeup event detected during hibernation, rolling back
 
-I've applied this to the review-ilpo-next branch (and reorganized the 
-NPU metrics to come after this series as these seemed to have a context 
-conflict).
+The docs for the 'freeze' event say:
 
+> Analogous to @suspend(), but it should not enable the device to signal wakeup
+> events or change its power state.
+
+I've been running with this change for several months on my Dell
+Precision 3680.  I haven't tested on any other systems.
+
+Closes: https://bugzilla.kernel.org/show_bug.cgi?id=218634
+---
+v1 -> v2: fixed bugzilla link
+
+ drivers/platform/x86/intel/hid.c | 10 +++++++++-
+ 1 file changed, 9 insertions(+), 1 deletion(-)
+
+diff --git a/drivers/platform/x86/intel/hid.c b/drivers/platform/x86/intel/hid.c
+index 560cc063198e..3a9561665b9b 100644
+--- a/drivers/platform/x86/intel/hid.c
++++ b/drivers/platform/x86/intel/hid.c
+@@ -419,6 +419,14 @@ static int intel_hid_pl_suspend_handler(struct device *device)
+ 	return 0;
+ }
+ 
++static int intel_hid_pl_freeze_handler(struct device *device)
++{
++	struct intel_hid_priv *priv = dev_get_drvdata(device);
++
++	priv->wakeup_mode = false;
++	return intel_hid_pl_suspend_handler(device);
++}
++
+ static int intel_hid_pl_resume_handler(struct device *device)
+ {
+ 	intel_hid_pm_complete(device);
+@@ -433,7 +441,7 @@ static int intel_hid_pl_resume_handler(struct device *device)
+ static const struct dev_pm_ops intel_hid_pl_pm_ops = {
+ 	.prepare = intel_hid_pm_prepare,
+ 	.complete = intel_hid_pm_complete,
+-	.freeze  = intel_hid_pl_suspend_handler,
++	.freeze  = intel_hid_pl_freeze_handler,
+ 	.thaw  = intel_hid_pl_resume_handler,
+ 	.restore  = intel_hid_pl_resume_handler,
+ 	.suspend  = intel_hid_pl_suspend_handler,
 -- 
- i.
+2.52.0
 
