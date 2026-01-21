@@ -1,72 +1,75 @@
-Received: from mail-wm1-f51.google.com (mail-wm1-f51.google.com [209.85.128.51])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from PH0PR06CU001.outbound.protection.outlook.com (mail-westus3azon11011067.outbound.protection.outlook.com [40.107.208.67])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 62FE13587C4
-	for <platform-driver-x86@vger.kernel.org>; Wed, 21 Jan 2026 14:36:04 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.51
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1769006169; cv=none; b=AW84wS3TV3d+MDX+4YjqjZDXJiETKyt1luBdmpPQS+oXDtVtc466479GIqzktV2r8gv7m6TUzLnaPyzAwxA2tCleTVZTtB4G2LxnJPaqXzQxKbeanCt7GWrfLWqYLMr0Lp2LVZtEX3so/kT79hkBiOs+jETb/SIhlZixEo7z1OQ=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1769006169; c=relaxed/simple;
-	bh=ASRWmJos2gfBH/5HHTZK+Ocn71W1XkJKwGocrnSMm/w=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=LvNCPbyLuP/TY9kmsUVEUErdPUgYeJEZNgLcIAh+JHnARUYKG8geqCO1svbEFgcL+Yb1mAAOiqSJnSBW68d4mv6M8Qu7A0vsOlX+lJHhDdC4vnGgotM8ZciZXvd84TXayssRQHOOtIO34ltf/yU4aSdK2OA0KN4YvxEIh82zQVI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=S+Z0tf6C; arc=none smtp.client-ip=209.85.128.51
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2F597217F33
+	for <platform-driver-x86@vger.kernel.org>; Wed, 21 Jan 2026 14:52:50 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.208.67
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1769007173; cv=fail; b=QhPm776Q9taYwyqeCD4J+IsSDzv7xuXxfcFzpSfkkkt0Hoat3PtMXRC0OLsgqrdQ7JoVtFxYXZIbLD5VHi+Pfd8McACJDe6vJKp+i8HjYTl8L3ZMfkkpq3zY7FwCHXI02hqc+NUyUnDCw60yv1IqcCkcu4DcZf67pyEVx+8Fw7E=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1769007173; c=relaxed/simple;
+	bh=SrCvOMe6bRIVhXcpuMQhZAezTNTLrGaH7vOQluFzsQs=;
+	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=jo20Bwb5AvSuIh77zXdsRWt3RlemUc/+uwtn1ZFt28ziS6wo46gE4GWxooDSLaTcY1MBNL1W2oWuVTk3zKbnTub951/YIWw+PJfWqrn/sxlpe75Uckged3ZGlqj6g35+Gzjxu8DN/xvh+D66BJsMTPs3YqSoNohdQkZPpHqQfrQ=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com; spf=fail smtp.mailfrom=nvidia.com; dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b=XVpKzZm5; arc=fail smtp.client-ip=40.107.208.67
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=nvidia.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="S+Z0tf6C"
-Received: by mail-wm1-f51.google.com with SMTP id 5b1f17b1804b1-47ee76e8656so79395765e9.0
-        for <platform-driver-x86@vger.kernel.org>; Wed, 21 Jan 2026 06:36:04 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1769006162; x=1769610962; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=eXjmGuYtXXzayPhEjyl7sC3E97S/R1O+zBI0ZUSLmSc=;
-        b=S+Z0tf6CPWV/lSWfV4bfiLnRbebdTicvmdDI3+0nGxuEFMZ6ePGZquM/eMjQfD7/4N
-         zJyAQPoxamxVny/vchxh4/EZQ3v06s/TjtkpcfiPF60ydEK5t4QLSzAHsCndQMMQ+5ug
-         g6i5X22eY1fz9eY/fCxlX8fcrJc7hgxcEdc3BQgGsQGroy5qrEcjMH0MRMJaNCEaM6uP
-         Gkf//QZyz91/jCUn/FtWexSBGuPkwNsoZ1Zt3u9QclTy2EwgyWo02ultdnDtMSrT0h9t
-         r9zUItHq5ELL3SSWu3BA0Uu5eTzE80Dll18LtWieom2mE/7iuBrh3MS/b3m0A6PFT/LN
-         DLHQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1769006162; x=1769610962;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-gg:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=eXjmGuYtXXzayPhEjyl7sC3E97S/R1O+zBI0ZUSLmSc=;
-        b=b+wB+mmVoTYqYnqyvgCI1YDxWvZe8wXNJxECd9pw0e3sRiRlNV7suGeIHf8IalNGjI
-         6HjT77K+pulDX3qYgS56JLhR1d3nI4xQ+e0oXhi/MrxMe/K3F8EEmzhHh/WdFL/qzIQp
-         iqAzpLjJcoxb+opiwEp5iuUkSSKY8AanKHG1MuTr6AyDLkpRHs2tthiYoS3loKeiXHko
-         231IedH26kpJZ3QeR3NiViqPp7RA5Cw772+rgtTSWD5DAO/ReoOIOIZWB49t7HquF2aK
-         t6gkQ9i0I1BwrufC83mrEhJg8E5XbrUPzMWNRtxYUE9hsUbsR8xPoLo6X/5PG+ePJL8t
-         U2NA==
-X-Gm-Message-State: AOJu0Yz10yTXEpG+Li81ASQdqZwrOtyOJF+LrduK78CAP6ablesTaGxF
-	AvYbQCb1M4V8UMwSTZK3shapBhwJfVeQxJVBm6IUvInD2+UgEm+mUEOdghSH/wg/
-X-Gm-Gg: AZuq6aKWfuN1n16yv4bk5C9/uX2Yvf84SPCUf9Wo1Zsa280BMOQQ+7DFZhtB1SWqcTi
-	HaH3IuE+7MdIPjgxP8nY7KhRlJEarMvfqzpTn5z+uAYCbFl+bISA07SeA83T+yq/cKaXnFi9pL5
-	nnYgc91ylICTSO+aFHA4YisdRffOEQGV1u0hLM2uOG3Aal+AGgn/KEVd3j3QznwbG5Xs7FfMo0J
-	OVcHIamz6B/qmDMi4AAKB74k4gSJtGz94fi2hKExlOvPvYJZWI2wbKYW37D+cNpddZkiWTuUt3z
-	K9+nOKioxTRJf+KK3JnR7Ueza/jSlmMggpZL/DKxTsCwnNWbtBwhBnMulTuZ44qlAaaAEmQdHpY
-	LWMj8o7G6iCzzrBg1C/qNMm/yg5ujLRYKyyFc1RyCR11pkUPobikvKYIBJo5Vfn5ww+3hqsgzKA
-	6pC+qJNk1KuKJsFH4=
-X-Received: by 2002:a5d:5f90:0:b0:42f:bc61:d1bd with SMTP id ffacd0b85a97d-4358ff62652mr9616330f8f.45.1769006162208;
-        Wed, 21 Jan 2026 06:36:02 -0800 (PST)
-Received: from gl-laptop.flowwow.loc ([2a0c:9a40:8950:c800::67d])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-435924ae723sm10372782f8f.41.2026.01.21.06.36.00
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 21 Jan 2026 06:36:01 -0800 (PST)
-From: Alexey Zagorodnikov <xglooom@gmail.com>
-To: platform-driver-x86@vger.kernel.org
-Cc: mario.limonciello@amd.com,
-	Alexey Zagorodnikov <xglooom@gmail.com>,
-	Shyam Sundar S K <Shyam-sundar.S-k@amd.com>,
-	Hans de Goede <hansg@kernel.org>,
-	=?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>,
-	linux-kernel@vger.kernel.org
-Subject: [PATCH 1/1] platform/x86/amd/pmf: Added a module parameter to disable the Smart PC function
-Date: Wed, 21 Jan 2026 19:35:19 +0500
-Message-ID: <20260121143519.12318-1-xglooom@gmail.com>
-X-Mailer: git-send-email 2.52.0
+	dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b="XVpKzZm5"
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=HptXoIVea6FaRnxYr5WchRunoY/kZ9wEgkCyVZmVNj+5P/D/F94Lo1/B2P2MS8qmfUhahBIU73a6Zp13PfvPjcrdTjNg6x+4AWWwlQD6P+cKadlD/gZr9HHsiPhUbi2MLR+xbzkTUeWzSXrQF60SQ16f87lgXWDp0OT7ERL1I/SqqVSjJCtV2AOrDDC02FU0y2/5qUcQCLq2NWjmt9ZUnC7pH0SZzaMpbolMVluKlDH+hizXhnwc2MgIgPXrx8wf9eZ+eMTAjwgX9Vo3bCzajOGkqbry8OSORHdI3IR70PVaNrJD+nfrvoRzQSegMTaZ445TLKkAr8bIW9jI32vL6Q==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=urNZSE2yvaxLSGSzgOqTXIq5c8f73QcXHA1Nfgj3aDU=;
+ b=jfi0lhhI2Mu0ZUhcezrK0W8DOpHiux5QIMJcub+pj24eMcPvQ0cSBW87fMh4LeNJJyt2QYg7CNyGqNLqCz1pBr9DAVYktSV5cHw4Sq1h3+mE1GPQr6i1Xvjof76kEAyEtkkHdr7aLufDyEfxMQfZc64XrAOJg0G17DXpkWvPvpS1tdkd/5nBeT0gK4JnWDhs2JFp3+7sQfElgjHhP+VolHeBoxe86K1bXbRqQMM5jkDQKrvyeWXu0caPseepRx5nbGNIUFPs9Cgo4uEB7fI6DBl35YXAXYn22g3RLPku59uGyzxrWQX/WHyNRwoN+kvW/uCkr1d+siAmZf2WV+qMRA==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
+ 216.228.117.160) smtp.rcpttodomain=linux.intel.com smtp.mailfrom=nvidia.com;
+ dmarc=pass (p=reject sp=reject pct=100) action=none header.from=nvidia.com;
+ dkim=none (message not signed); arc=none (0)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Nvidia.com;
+ s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=urNZSE2yvaxLSGSzgOqTXIq5c8f73QcXHA1Nfgj3aDU=;
+ b=XVpKzZm5Jt6hvKga7SUO39N1t5ZdnjjOjho9UoyBPpzAWcg3l5vH5fXCeAPTOUn7svT1RqO5RCIzhpZKc4dON9M489Ow/N4HrQ8L3P3hH1BR/pAIFJIk2blp9EE/2/C+YbVYrcxBun73mxf3Ke62yHPg4y5Pt7YrHn7q/y5FfY63mr2GBctE59bBsRweVg0P8gY/ldfb4bm8WcHLpgrJSyM3Brli85vAkVdJRDr9Zxy9E/9s6JOCjHs2pmeSU2bRkhVaH+rcFDrdDgWNhL+ZqWdDV5zRWnr+4ctNpaZYh6r8UGveli0R2/dwiWIafC7LC4R3Lo5db9i3h8mFgO3aTA==
+Received: from BN0PR02CA0058.namprd02.prod.outlook.com (2603:10b6:408:e5::33)
+ by SJ2PR12MB8831.namprd12.prod.outlook.com (2603:10b6:a03:4d0::15) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.9520.12; Wed, 21 Jan
+ 2026 14:52:45 +0000
+Received: from BN1PEPF00005FFF.namprd05.prod.outlook.com
+ (2603:10b6:408:e5:cafe::13) by BN0PR02CA0058.outlook.office365.com
+ (2603:10b6:408:e5::33) with Microsoft SMTP Server (version=TLS1_3,
+ cipher=TLS_AES_256_GCM_SHA384) id 15.20.9542.10 via Frontend Transport; Wed,
+ 21 Jan 2026 14:52:37 +0000
+X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 216.228.117.160)
+ smtp.mailfrom=nvidia.com; dkim=none (message not signed)
+ header.d=none;dmarc=pass action=none header.from=nvidia.com;
+Received-SPF: Pass (protection.outlook.com: domain of nvidia.com designates
+ 216.228.117.160 as permitted sender) receiver=protection.outlook.com;
+ client-ip=216.228.117.160; helo=mail.nvidia.com; pr=C
+Received: from mail.nvidia.com (216.228.117.160) by
+ BN1PEPF00005FFF.mail.protection.outlook.com (10.167.243.231) with Microsoft
+ SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.9542.4 via Frontend Transport; Wed, 21 Jan 2026 14:52:43 +0000
+Received: from rnnvmail202.nvidia.com (10.129.68.7) by mail.nvidia.com
+ (10.129.200.66) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.2562.20; Wed, 21 Jan
+ 2026 06:52:23 -0800
+Received: from rnnvmail202.nvidia.com (10.129.68.7) by rnnvmail202.nvidia.com
+ (10.129.68.7) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.2562.20; Wed, 21 Jan
+ 2026 06:52:22 -0800
+Received: from r-build-bsp-02.mtr.labs.mlnx (10.127.8.9) by mail.nvidia.com
+ (10.129.68.7) with Microsoft SMTP Server id 15.2.2562.20 via Frontend
+ Transport; Wed, 21 Jan 2026 06:52:21 -0800
+From: Oleksandr Shamray <oleksandrs@nvidia.com>
+To: <ilpo.jarvinen@linux.intel.com>
+CC: <vadimp@nvidia.com>, <platform-driver-x86@vger.kernel.org>, "Oleksandr
+ Shamray" <oleksandrs@nvidia.com>
+Subject: [PATCH 0/2] Introduce new Nvidia systems
+Date: Wed, 21 Jan 2026 16:52:12 +0200
+Message-ID: <20260121145214.4021631-1-oleksandrs@nvidia.com>
+X-Mailer: git-send-email 2.47.3
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
@@ -74,54 +77,66 @@ List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-NV-OnPremToCloud: ExternallySecured
+X-EOPAttributedMessage: 0
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: BN1PEPF00005FFF:EE_|SJ2PR12MB8831:EE_
+X-MS-Office365-Filtering-Correlation-Id: 292b48dc-b3c2-4d09-a726-08de58fcbbeb
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam:
+	BCL:0;ARA:13230040|82310400026|376014|36860700013|1800799024;
+X-Microsoft-Antispam-Message-Info:
+	=?us-ascii?Q?NlB5fjJcQxGRzvv84zGubH27MaI8y493NVTw8ah8Hj+EyTEvBiqj5kTJ/GlY?=
+ =?us-ascii?Q?C1Gt17BK/cARMvQnKp61RfVquW/xVWytPyILd7KCSJflSk+p1PlK4O7NnZXn?=
+ =?us-ascii?Q?DFUFvEgMpi9oc4sHw+lR9MZjVLceR5XquHcnqOxrrOlQ+CIUEmShBxJbXzJ4?=
+ =?us-ascii?Q?haqoNkPw/uDbX0YfWlmJDdPhvFEfYJOMmyDEDIt6dR11i2I1CffBPOUD/t0+?=
+ =?us-ascii?Q?nYl/dFLhEP11LJP+U1IWNK4mseDGJ+RV7QJKOVrZDwjWHhEChf6FijIEj6gE?=
+ =?us-ascii?Q?utVNg0KDA6YJqRG9Crw6bBHUXoEZOc8EkQ+5Fv33bqozPtRqQfNB7mrHF6Yv?=
+ =?us-ascii?Q?hNzW+fMz+XJS5ghJDH9fa2qAZTqbSn64tQlqU/nNH4eAjTf+HA0EeuX+jXlA?=
+ =?us-ascii?Q?ucJy1i08qTkHuoCFkfcPP+U80zSh8uAjyTaHRK2bJi2c5oN4KR8abp7oxzEc?=
+ =?us-ascii?Q?/b9eriXSNYc5OYYLWWGlzpIvgIvEHoV3EwoxBWKX/heNROa1mccaUcy2iuLe?=
+ =?us-ascii?Q?d84NEmMtTwJHSrAsi8b/vM3onX7Rlye/nZ8bGtTVPlrcbWo0/cUW/k3PgVFc?=
+ =?us-ascii?Q?w1gf95ba5/dYf7doqYmjl9lNfMtBsGLbPWUjb+YE7L3XsqvD8JVVKHMK5XQ+?=
+ =?us-ascii?Q?ypIsNmYYlx3+14/bmcnBuN25ZFNOQoVZCzN0JHaHCHNm35BIxptlFgWhiXFs?=
+ =?us-ascii?Q?zYgpHb6ksc+Lxq6z4T9Ma16PU1KM/gNnn+0Z1C6qRYVAMtuyfCrJr6F6UO3m?=
+ =?us-ascii?Q?tSdY0AYYyE/N5Ks0KU0cjsWvsFWLr63A6FXs/vThgPc7qEpmwvya9LAYsi+p?=
+ =?us-ascii?Q?ZqQPKVnHgq4l8T289cY5bNAyxaytsXZgedBIdtRGSmgqmjl2HuL80cyAcemf?=
+ =?us-ascii?Q?GuhecLlXHLWkZomlNz/oVdk+M0BJFV1vCIUyCOBd/vXqqS/9Uu4I9r8cxhaA?=
+ =?us-ascii?Q?/YcNb9FmxT4jF025sbQOXh4L4HPOWNjNUVQJ7wc5nUQgYWhTkW0nXz4z5O/1?=
+ =?us-ascii?Q?PgSHx2PMNXmxVT3jazNM8pTbBtUaYvr6VBx1QuLAJ98k3eWwiUN3EcFMrum1?=
+ =?us-ascii?Q?OReqcGUclXEUqNqBSTHriUAcCOmzJ301RJ4JxssY7uDcf+orVO+M6knYcv5N?=
+ =?us-ascii?Q?v3k9nAHVumfYQfRoI6IZBpQqObZQuG2KXO8wiQmd9DSwHF+jcAC07+Qs/H2n?=
+ =?us-ascii?Q?HTfT4TkHRxtQCccjzDTW8D2o3XzymOkq5xypz5kMbeJSv4HMkAg6mNT8Vs2q?=
+ =?us-ascii?Q?I7UL7aMNlAFqLytq/MTJY2W4F3Ehxj5cBaoXEFuvvJ7JYs2OFC/A2cHCDwRR?=
+ =?us-ascii?Q?ra5fckm2eWqjUWL5maTeQX5j1yFmVk4VG6AOkm8gMZ/cc76se2iQESLvBxGJ?=
+ =?us-ascii?Q?CI1yydV1+vx1VFLHEVBZcCu85inU/aXHvrtnMi2be+IO8hzKwi1+F0fabsZr?=
+ =?us-ascii?Q?iN8d689fTcWxKLDWRZ9yG/EVCM/WJd659Zhtk4ZehF2fAmf6DA/r5PbMXx4B?=
+ =?us-ascii?Q?cMUX2XBTAGpula2e/grcYd0nPbimbldn7IIumvLRPgHyVar4Xs07Q/zqF7YB?=
+ =?us-ascii?Q?TSa3G0QMIR20Eoyi9D+7vAvmrCqsrIwY+tMPVDQMSd7Lhp3DsYNjR+HolN0c?=
+ =?us-ascii?Q?fNo7CYgEm10mmibcgGm8HzzvYBOdveWYpNqPgDbInpaZZXXXBnES4/hZzrjc?=
+ =?us-ascii?Q?Ucr8gw=3D=3D?=
+X-Forefront-Antispam-Report:
+	CIP:216.228.117.160;CTRY:US;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:mail.nvidia.com;PTR:dc6edge1.nvidia.com;CAT:NONE;SFS:(13230040)(82310400026)(376014)(36860700013)(1800799024);DIR:OUT;SFP:1101;
+X-OriginatorOrg: Nvidia.com
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 21 Jan 2026 14:52:43.9097
+ (UTC)
+X-MS-Exchange-CrossTenant-Network-Message-Id: 292b48dc-b3c2-4d09-a726-08de58fcbbeb
+X-MS-Exchange-CrossTenant-Id: 43083d15-7273-40c1-b7db-39efd9ccc17a
+X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=43083d15-7273-40c1-b7db-39efd9ccc17a;Ip=[216.228.117.160];Helo=[mail.nvidia.com]
+X-MS-Exchange-CrossTenant-AuthSource:
+	BN1PEPF00005FFF.namprd05.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Anonymous
+X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: SJ2PR12MB8831
 
-Addresses a low power limits issue on HP ZBook Ultra G1a [1]
+Introduce new Nvidia systems:
+  platform: mellanox: mlx-platform: Add support for new Nvidia DGX
+    system based on class VMOD0010
+  platform: mellanox: mlx-platform: Add support DGX flavor of
+    next-generation 800GB/s ethernet switch.
 
-If vendor firmware capped APU power limits with 3rd-party AC adapters,
-the user can disable the Smart PC function via the module parameter
-
-Link: https://gitlab.freedesktop.org/drm/amd/-/issues/4868 [1]
-Signed-off-by: Alexey Zagorodnikov <xglooom@gmail.com>
----
- drivers/platform/x86/amd/pmf/core.c | 18 +++++++++++++-----
- 1 file changed, 13 insertions(+), 5 deletions(-)
-
-diff --git a/drivers/platform/x86/amd/pmf/core.c b/drivers/platform/x86/amd/pmf/core.c
-index 8fc293c9c5380..ee7b3adc63a02 100644
---- a/drivers/platform/x86/amd/pmf/core.c
-+++ b/drivers/platform/x86/amd/pmf/core.c
-@@ -53,6 +53,10 @@ static bool force_load;
- module_param(force_load, bool, 0444);
- MODULE_PARM_DESC(force_load, "Force load this driver on supported older platforms (experimental)");
- 
-+static bool smart_pc_support = true;
-+module_param(smart_pc_support, bool, 0444);
-+MODULE_PARM_DESC(smart_pc_support, "Smart PC Support (default = true)");
-+
- static int amd_pmf_pwr_src_notify_call(struct notifier_block *nb, unsigned long event, void *data)
- {
- 	struct amd_pmf_dev *pmf = container_of(nb, struct amd_pmf_dev, pwr_src_notifier);
-@@ -362,11 +366,15 @@ static void amd_pmf_init_features(struct amd_pmf_dev *dev)
- 		dev_dbg(dev->dev, "SPS enabled and Platform Profiles registered\n");
- 	}
- 
--	amd_pmf_init_smart_pc(dev);
--	if (dev->smart_pc_enabled) {
--		dev_dbg(dev->dev, "Smart PC Solution Enabled\n");
--		/* If Smart PC is enabled, no need to check for other features */
--		return;
-+	if (smart_pc_support) {
-+		amd_pmf_init_smart_pc(dev);
-+		if (dev->smart_pc_enabled) {
-+			dev_dbg(dev->dev, "Smart PC Solution Enabled\n");
-+			/* If Smart PC is enabled, no need to check for other features */
-+			return;
-+		}
-+	} else {
-+		dev->smart_pc_enabled = false;
- 	}
- 
- 	if (is_apmf_func_supported(dev, APMF_FUNC_AUTO_MODE)) {
 -- 
-2.52.0
+2.47.3
 
