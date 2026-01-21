@@ -1,78 +1,74 @@
-Received: from SN4PR0501CU005.outbound.protection.outlook.com (mail-southcentralusazon11011023.outbound.protection.outlook.com [40.93.194.23])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pl1-f179.google.com (mail-pl1-f179.google.com [209.85.214.179])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5493240F8E9
-	for <platform-driver-x86@vger.kernel.org>; Wed, 21 Jan 2026 14:52:53 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.93.194.23
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1769007179; cv=fail; b=RJSXqwApzbRnx7JL3arav8xfvZHwSkiOfML+wijSTOggguVhEjuHJWFrYWezRRb4GPAKTKEmdOdAKhpAivOIIMLvjz81KJdJtXVsRfcG6qVku4mP054GVAjHdM0ejumUI40zFA9T9MSS18t7ITki4hJ+/1xTKhvPQHfIk0ZSn3A=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1769007179; c=relaxed/simple;
-	bh=6lyYTJSFKwzvX/q/9MMxaOPvmSK1M3eSLyEOhorSMOA=;
-	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=LQYfaCdkZ0aFB2UY4WicByB+sQEBq6C/STJyPlco/OEOMlokAaJBdcFLNtfZsRtIf020d7+OQnefxScIt4vGXBVHZQAyNweqQ2p/VhKFolYZF1uEVkdoNjE3wQBAxtQJXWVm6agtQQDmiFv5xkZh8K7tvjj64wjHVUXxYJNcXyE=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com; spf=fail smtp.mailfrom=nvidia.com; dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b=dXkOGF/w; arc=fail smtp.client-ip=40.93.194.23
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com
-Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=nvidia.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A7CF1285060
+	for <platform-driver-x86@vger.kernel.org>; Wed, 21 Jan 2026 18:29:18 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.179
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1769020160; cv=none; b=gAENg054hrok48pjAHMHrOfsQrGzaq4AXd0bp/mfjm0t5g2sb4jU2OLnJP45dCVJCA8+yJd+yCzDUYetH+QKenIke8TOQJGqgnyPe2tBOnQbi0jQ3G816RGfhaWVdSmGb9Fn0qCY9BOJ/dDji2NVGINfQ7tjj4IqxiSVB1N4/nE=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1769020160; c=relaxed/simple;
+	bh=svWYAOEp6ij6g+8vL15ysVMAJrFDV6PpHu6arYfSljY=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=iyl9ACtRa2gYAdj3/uKasEJr+Wbtr90FQQ2nGmbLtiYXmws0qOYD2ZZAJGnD9yGzi6l+HXB5DAqwOkPp7ofVNEmHYNLu7/CQ5HKH9lJY8kmomg54L9eXBScSZLqHGS4QLnOGYs+o31A3y6TR+fT6r/sm6XR+PhvUWYA/7XyHe4E=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=kl4k3gWV; arc=none smtp.client-ip=209.85.214.179
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b="dXkOGF/w"
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=E2vdjyjBE61dl4Os+ZhojDwxQksTP2wfc47gb8C6pvu3oiFoms55UFi70uMvfNioSibSmVha/NlkFXAuW7mV5HBHGimzu/RgyLOPPZj66gbdwCBW9fQexFSRQn0j58Ez8/tdPY46OA3FfhrYHQUfEXwc4ykIE3CGYxg2fGAXUUWOPfCXZFf+gWcwmCQ+CRfehySMu10UQpCklrMliHsaK0nBY+5QBE/fDv9A54Tu3FM1dsgK8phEJgo5xQ/wlGQI2MYL+90OXgXrdIpAaJP1uxCiqwaH4UhN2huTdpVhaHsuXijaURUODwoSS2DuSyJzQGZBqgVf480Pj8q6EgGghg==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=jKlcjh/nBXFC9IxrwIqQU3yTK781oxMLNNy29UvdPv0=;
- b=WYh6sRO4VsBicRhEybRvNIzjEKD2HJzI4WpOYQz+JcO3gIgKu0YpQ+8JUq7zFrdbmR5WXHaOzKLzHtl5lzUp9nZ5I+KyL2/gAP+Hi0kMvZFY1NAXN8bK8KOqLQvt48ziAVnuyHg4y521VAVg9guHPo+I6tpgDg7UHmJabO/psbB3+w2Iz+B1cNes/c+yJRIko3h2iIr+hcSIfWq6oWwTcUCBRSutsC7xJo/mQV73Xt9nW1d8kPRuSU2QzzzPG6Ekzvgh4syAFUGhVqEfTXLwfOhxnuFUQYerw/PztFIkyT0MQEyAF1GCvZyAZ0Ad+DYy6HHBs7I/wTR9JB1LP1M0zQ==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
- 216.228.117.160) smtp.rcpttodomain=linux.intel.com smtp.mailfrom=nvidia.com;
- dmarc=pass (p=reject sp=reject pct=100) action=none header.from=nvidia.com;
- dkim=none (message not signed); arc=none (0)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Nvidia.com;
- s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=jKlcjh/nBXFC9IxrwIqQU3yTK781oxMLNNy29UvdPv0=;
- b=dXkOGF/wTQ7ZiwyUw5FxibIFdwZblQKnMOZaFj1VTxEGu0z+QrnTEvByQH7ToEkIfPwk+a2vBhOd6lM5qJT/um3p0QPJ1ZE+flDVHZQhVdaUOgVwxpBWce9DxLFqp/2ueYhKQHkCFIVQ0QV68O6J1INaVRxUybJnEbk9KoD1kRVz1KDXa0FdcLgL8mozMEPmxgpohLtRfoByjkDzt/AEaMYS/rPwsrrvMaDWskUqWAuK4kV0LaaWBQ+QUk/feKqsFBS5B5ue7rRbwpgZ31VonBOc0mZkGSv9g7dkw7Sdh3IN7SgG0zUj8vimcP6YWzoHTn0oI51YHsASAECEH+CJJg==
-Received: from BN0PR02CA0020.namprd02.prod.outlook.com (2603:10b6:408:e4::25)
- by CYXPR12MB9339.namprd12.prod.outlook.com (2603:10b6:930:d5::15) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.9520.12; Wed, 21 Jan
- 2026 14:52:49 +0000
-Received: from BN1PEPF00005FFE.namprd05.prod.outlook.com
- (2603:10b6:408:e4:cafe::15) by BN0PR02CA0020.outlook.office365.com
- (2603:10b6:408:e4::25) with Microsoft SMTP Server (version=TLS1_3,
- cipher=TLS_AES_256_GCM_SHA384) id 15.20.9542.10 via Frontend Transport; Wed,
- 21 Jan 2026 14:52:40 +0000
-X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 216.228.117.160)
- smtp.mailfrom=nvidia.com; dkim=none (message not signed)
- header.d=none;dmarc=pass action=none header.from=nvidia.com;
-Received-SPF: Pass (protection.outlook.com: domain of nvidia.com designates
- 216.228.117.160 as permitted sender) receiver=protection.outlook.com;
- client-ip=216.228.117.160; helo=mail.nvidia.com; pr=C
-Received: from mail.nvidia.com (216.228.117.160) by
- BN1PEPF00005FFE.mail.protection.outlook.com (10.167.243.230) with Microsoft
- SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.9542.4 via Frontend Transport; Wed, 21 Jan 2026 14:52:48 +0000
-Received: from rnnvmail202.nvidia.com (10.129.68.7) by mail.nvidia.com
- (10.129.200.66) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.2562.20; Wed, 21 Jan
- 2026 06:52:28 -0800
-Received: from rnnvmail202.nvidia.com (10.129.68.7) by rnnvmail202.nvidia.com
- (10.129.68.7) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.2562.20; Wed, 21 Jan
- 2026 06:52:26 -0800
-Received: from r-build-bsp-02.mtr.labs.mlnx (10.127.8.9) by mail.nvidia.com
- (10.129.68.7) with Microsoft SMTP Server id 15.2.2562.20 via Frontend
- Transport; Wed, 21 Jan 2026 06:52:24 -0800
-From: Oleksandr Shamray <oleksandrs@nvidia.com>
-To: <ilpo.jarvinen@linux.intel.com>
-CC: <vadimp@nvidia.com>, <platform-driver-x86@vger.kernel.org>, "Oleksandr
- Shamray" <oleksandrs@nvidia.com>
-Subject: [PATCH 1/2] platform: mellanox: mlx-platform: Add support for new Nvidia DGX system based on class VMOD0010
-Date: Wed, 21 Jan 2026 16:52:13 +0200
-Message-ID: <20260121145214.4021631-2-oleksandrs@nvidia.com>
-X-Mailer: git-send-email 2.47.3
-In-Reply-To: <20260121145214.4021631-1-oleksandrs@nvidia.com>
-References: <20260121145214.4021631-1-oleksandrs@nvidia.com>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="kl4k3gWV"
+Received: by mail-pl1-f179.google.com with SMTP id d9443c01a7336-2a07fac8aa1so1084015ad.1
+        for <platform-driver-x86@vger.kernel.org>; Wed, 21 Jan 2026 10:29:18 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1769020158; x=1769624958; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=8Xl3aa6opPUprRkwoBGqbq15zpYR77lS9AnPKKGuIhw=;
+        b=kl4k3gWV0DUMiu6q/PgEt278CRVqC8CkYxgZpfOwQkpIoU8E1vLLRPflqrBNBbJCu7
+         0J6MeEHe7bcS1EVYfFj/Pbr1jkkS190VbE3LXiFt+YaZXHJ5HSRFgG17RPBBWhWGe3rd
+         XD2tsxyAHNa0xZdVqXJSILEBrpnQZ7U6QXPzmywsQKXy6MtxQgXRZpjbh2P0oSqbSPQA
+         D38Dm1AiTjUZ+oQegZZFQdWXNoeW9mE1vIRqPZz3hPGfuqPD0z+eb3uscR4ljPPUayok
+         qHNoUm2UrQHjMCUa8iMKuSuIk7AtUOTqhmckq6B7vNVXc2+V3cmuVdH4Rz2l4qaTqnio
+         oB8Q==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1769020158; x=1769624958;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:x-gm-gg:x-gm-message-state:from
+         :to:cc:subject:date:message-id:reply-to;
+        bh=8Xl3aa6opPUprRkwoBGqbq15zpYR77lS9AnPKKGuIhw=;
+        b=lBlMJ54yaj8oNONXtrYaeSN3VemhCxYdvtwn6ZuEvemZT/LyFVrn0WjvWD9B8+sWfQ
+         4iPf+rtvdpXZ6n7ieFpNLnCCsQHP4gRYw4178I4YlogS8M9yHW1HIdqSu6Htcj8Z0Kkt
+         W6sX3woqf9Rlhl2obnMuJa2ZNj+YC9Xw2ILqF1zsnDnFpRt8Vr7WrPrZc4ALYISkg9K+
+         tIM8fQQOuEw/QCpXHJB/VU1sy04OtWg0wz6kSbn8lsZgyUBoJeL1GsWPqLN3TxOrY76O
+         nucxksGV/JgnHj2PoB2bOMz+bNviukKPWbdP0tiIIEa122T5PPejKczRl+JSdwkk4T+N
+         Tukw==
+X-Gm-Message-State: AOJu0YzkO8xHKURN1yiMkeNzIQlBEd9uEjdkGRezEekqM0666VAJM9CA
+	YpDp6EhJ37pBuHGyCJu5BmNFPrzxxxup+JyktvVQH2prNMxwvNGIAzuf
+X-Gm-Gg: AZuq6aKQZ8TrvpuAtyVX7S0N9CJ9GN5CFsm3+Dk6x8gSyznkDC7vjax8EcFQgNeO5L6
+	oZOhPIiKd/18rvGQlQ23lUVE/+Ua5X3mecqqSiEz7pdRssgehIn3ytPi/CE3CQIw7rR1J/t3LyH
+	BXY697vU1e1wtTdmzPfCLzaZOZLYQwmQVK00hc2oXMHmZHtyPFnNz6agNBz0ZlJGE6r1ngDuC8l
+	Elov3/6eQUCKcEMUieGMYU2VPZAVK844eirhePy3OHID7R9UCq/yLdFwAS5D4hqI3TfOH7xc2mx
+	+eehNDu4LG/rMWbhFeMappw+qt7/uFYLG/vmKhUvDvJ232+UKKrLvrBeTwIAyYPSOcAB1nOz0uL
+	PcaADqVEN/xG3u7zqz9JHbM0l/f2pYu0k6y06CeHFaMm/5Chz99fEwvdG5Fr9CfwB72IYygwLpd
+	IH59+lwLrFYk6Ku0qKOQg=
+X-Received: by 2002:a17:902:ecc6:b0:2a0:afeb:fbbb with SMTP id d9443c01a7336-2a768b7a743mr49195465ad.1.1769020157611;
+        Wed, 21 Jan 2026 10:29:17 -0800 (PST)
+Received: from archlinux ([2405:201:1b:225c:9e18:7101:be84:75eb])
+        by smtp.gmail.com with ESMTPSA id d9443c01a7336-2a7193dc83dsm162051195ad.50.2026.01.21.10.29.15
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 21 Jan 2026 10:29:16 -0800 (PST)
+From: Krishna Chomal <krishna.chomal108@gmail.com>
+To: ilpo.jarvinen@linux.intel.com,
+	hansg@kernel.org
+Cc: platform-driver-x86@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	Krishna Chomal <krishna.chomal108@gmail.com>
+Subject: [PATCH v6] platform/x86: hp-wmi: Add EC offsets to read Victus S thermal profile
+Date: Wed, 21 Jan 2026 23:58:58 +0530
+Message-ID: <20260121182858.66363-1-krishna.chomal108@gmail.com>
+X-Mailer: git-send-email 2.52.0
+In-Reply-To: <20260113182604.115211-1-krishna.chomal108@gmail.com>
+References: <20260113182604.115211-1-krishna.chomal108@gmail.com>
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
@@ -80,591 +76,231 @@ List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-NV-OnPremToCloud: ExternallySecured
-X-EOPAttributedMessage: 0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: BN1PEPF00005FFE:EE_|CYXPR12MB9339:EE_
-X-MS-Office365-Filtering-Correlation-Id: c49a2c80-ba1c-4452-072d-08de58fcbead
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam:
-	BCL:0;ARA:13230040|36860700013|376014|1800799024|82310400026;
-X-Microsoft-Antispam-Message-Info:
-	=?us-ascii?Q?byQtdLlHE2Ib1g4ybU+flyIJYo/P0yKfBYg6zC967adlEuc8wZ77rdv/yDvB?=
- =?us-ascii?Q?5Q/S7VHtJ2r+hX+y2kZT+ZUVizjb9w2OKqxxmo2p4IFrEtcud074B0WGjEKb?=
- =?us-ascii?Q?mVW1B+MO9gWcERsKy/wI0MCssmRZhf7V0/D8XWvSoL7FVNKna80liIXZE4CH?=
- =?us-ascii?Q?yr3At4QQT3texJfW9stmSttwFLgVhAeDhsE7eHlKCkgneWh+T81+VvmZs7oN?=
- =?us-ascii?Q?teueDOpo8T8VZcWE0IW6oBDk5X5MzDmjGA7M39pVwFa3nDZc9SIKj53DHYzH?=
- =?us-ascii?Q?Lxw1jAtY2o8Wdx9TjrQebePKzeyRW7Y6KpE3+f462gK8wF3Z6Nr5E+nNRV5J?=
- =?us-ascii?Q?7TQ7xulf+99b77L01mvXpvGIp3cH3VLyW5zfyiHmu/t/K2Kjg8P8bE6oy/ng?=
- =?us-ascii?Q?rvnermhEzixTCLJdQ0l66YltU2gJlTLZv+8YMMERbG2DszGp80upeM7UUleX?=
- =?us-ascii?Q?i0dfR2W1Nmi458MOCY01gVjRVoC04Wwprxepgl/ywdacse/1COlhLyFWL5tV?=
- =?us-ascii?Q?MubKDqgQLwGdnWUPMKnQqk4lH7rzkhgf+VeIieuQ2X5jjVpQKMGuajvBY7aU?=
- =?us-ascii?Q?BrsPbv94+H0Dv74YAD2RsgeU0/USd2R1lxPfQTZczlMks+nsAPP7T4T+kJwT?=
- =?us-ascii?Q?bDdqQQrkxIOCyk4OJFP0nWATBDQRz8FYnPTpre1VqwATOTtz/G5ACMitYpK6?=
- =?us-ascii?Q?+q0qxZjK9FSxY3Oikb2qRQJtfH/v6qvSGdocljF7sxVPXgIlk7qiwKZFmBMP?=
- =?us-ascii?Q?tikJlHphn+Sykrq6Vzpt6FZWY5AwBm4ILuDNtGx7L6d1t3o6WzilHYnH8FlA?=
- =?us-ascii?Q?WkBa9hpnPyCYz+LBuE1WL7uvgW4CPtgbGUWlV805/wcJoAhib/lQjEFLbwK8?=
- =?us-ascii?Q?qfx6cocLSUIaKF3aMoJE7t1WU969YmBrkDiCgxcT8Yv5NCe8fbn0qY37GoYS?=
- =?us-ascii?Q?7fTjDrlBYt9obAZWSJZMvzqooTc5PpqLnUr+jTpZmyShLBO40y5gSr3YFO5d?=
- =?us-ascii?Q?eqdFaDJOgwk3SqwKHKhGFftpOcn9gMBnn7C4QI0P88wgqvtgFdsRxH1teIye?=
- =?us-ascii?Q?nIBPMJDHRxBlSQSYhYB9ra00H1r68doZA34Y66zmY80eC+IQBLOzEl/K2We4?=
- =?us-ascii?Q?b45HXNR76i6/NUjMsmLaOwrth5blSfVPffTEOEB2RGDIAvZqOdc8MmxWRF8R?=
- =?us-ascii?Q?e8uy81J8gdY1Hzmh9DPhi6J0/Solp0WNXIeOclVhaTUb1n5VUdzykpv8WYOS?=
- =?us-ascii?Q?K1U2iV1Lzypd2u2XBabgNNIv/iGnh5YQ3BtGV8G/jPAcqy2MrACpp7O4n+Vz?=
- =?us-ascii?Q?KgXSML9jf6/2ocgcMvxthecxgMkuAIsvMHiZ0ZduVZnXxzrqOzQtxvQJUJUN?=
- =?us-ascii?Q?qV79ED0A7l06ifQe+j3f59vuWRarX9/V8sTP852iMROmmJVyuwVvGir0zZn0?=
- =?us-ascii?Q?0yVMyEhwWyUl66oZooTtotuotB3AxuE3L7aKcSijiU5o3S0uSdBVObMSfig/?=
- =?us-ascii?Q?CZ1ipPHDcMgFIcfyMtpNuufvyOzg4dB90EWFDqIj0mM65Tqaq/YLQf1Nw9q9?=
- =?us-ascii?Q?UvscxevIZnz/iNYVFqCd7ig1uMg/P/HqQZQvcZ4N4ulYyrRkIHYqBu19hHOp?=
- =?us-ascii?Q?Erb5bgJI8uAjmKp5IHSfLLTquUYROHsCbM86+c22jNft55rvnSNhXkH7KIIy?=
- =?us-ascii?Q?6ABRmg=3D=3D?=
-X-Forefront-Antispam-Report:
-	CIP:216.228.117.160;CTRY:US;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:mail.nvidia.com;PTR:dc6edge1.nvidia.com;CAT:NONE;SFS:(13230040)(36860700013)(376014)(1800799024)(82310400026);DIR:OUT;SFP:1101;
-X-OriginatorOrg: Nvidia.com
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 21 Jan 2026 14:52:48.5299
- (UTC)
-X-MS-Exchange-CrossTenant-Network-Message-Id: c49a2c80-ba1c-4452-072d-08de58fcbead
-X-MS-Exchange-CrossTenant-Id: 43083d15-7273-40c1-b7db-39efd9ccc17a
-X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=43083d15-7273-40c1-b7db-39efd9ccc17a;Ip=[216.228.117.160];Helo=[mail.nvidia.com]
-X-MS-Exchange-CrossTenant-AuthSource:
-	BN1PEPF00005FFE.namprd05.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Anonymous
-X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: CYXPR12MB9339
 
-This system is based on Nvidia QM9700 64x400G QTM-2 switch, with the
-following key changes:
+The current implementation for Victus S thermal profiles only supports
+setting the profile. The driver was missing the logic to read the
+hardware state, meaning it would default to "Balanced" on driver load,
+overriding the currently active profile. Furthermore, the driver could
+not detect if the firmware reset the profile on a power source change.
 
-Key changes:
-  1.Power Supply: Rack busbar input power ORv3 DC 48V-54V
-  2.Dimensions MGX/DGX 1U compliance
+Statically store the known EC offsets for reading thermal profile in the
+new .ec_tp_offset field of struct thermal_profile_params. Implement
+platform_profile_victus_s_get_ec() to use this offset to read the real
+hardware state. Additionally, update the power source event notifier to
+use the actual hardware state when re-triggering CPU power limits
+actualization.
 
-Added explicitly includes for <linux/array_size.h> and <linux/bits.h>.
+Testing on HP Omen 16-wf1xxx (board ID 8C78) confirmed that the thermal
+profile is now persistent across driver loads and power source change
+events.
 
-Signed-off-by: Oleksandr Shamray <oleksandrs@nvidia.com>
-Reviewed-by: Vadim Pasternak <vadimp@nvidia.com>
+Signed-off-by: Krishna Chomal <krishna.chomal108@gmail.com>
 ---
- drivers/platform/mellanox/mlx-platform.c | 456 +++++++++++++++++++++++
- 1 file changed, 456 insertions(+)
+NOTE: Patch 1/2 of the v5 series (platform/x86: hp-wmi: fix platform
+profile values for Omen 16-wf1xxx) is already accepted into
+pdx86/for-next. This v6 contains only the remaining logic for EC
+readback and is based on the for-next branch.
 
-diff --git a/drivers/platform/mellanox/mlx-platform.c b/drivers/platform/mellanox/mlx-platform.c
-index d0df18be93c7..af0c6f4e8c12 100644
---- a/drivers/platform/mellanox/mlx-platform.c
-+++ b/drivers/platform/mellanox/mlx-platform.c
-@@ -6,6 +6,8 @@
-  * Copyright (C) 2016-2018 Vadim Pasternak <vadimp@mellanox.com>
-  */
+Changes in v6:
+- Update struct thermal_profile_params to include .ec_tp_offset field.
+- Use this field for reading from the embedded-controller.
+- Add a pr_warn for "unknown ec layout" boards once during init.
+Changes in v5:
+- Improved platform_profile_victus_s_get_ec() to support multiple EC
+  layouts by iteratively probing offsets.
+Changes in v4:
+- Fixed platform_profile_victus_s_get_ec() to use both
+  victus_s_thermal_params and omen_v1_thermal_params instead of
+  active_thermal_params to fix regression caused in v3.
+- Handle err after calling victus_s_gpu_thermal_profile_get().
+- Fixed a wrong function call in victus_s_powersource_event().
+Changes in v3:
+- New patch in this series.
+---
+ drivers/platform/x86/hp/hp-wmi.c | 103 ++++++++++++++++++++++++++++---
+ 1 file changed, 96 insertions(+), 7 deletions(-)
+
+diff --git a/drivers/platform/x86/hp/hp-wmi.c b/drivers/platform/x86/hp/hp-wmi.c
+index 31c6cca6ec34..304d9ac63c8a 100644
+--- a/drivers/platform/x86/hp/hp-wmi.c
++++ b/drivers/platform/x86/hp/hp-wmi.c
+@@ -46,9 +46,13 @@ MODULE_ALIAS("wmi:5FB7F034-2C63-45E9-BE91-3D44E2C707E4");
+ #define HPWMI_EVENT_GUID "95F24279-4D7B-4334-9387-ACCDC67EF61C"
+ #define HPWMI_BIOS_GUID "5FB7F034-2C63-45E9-BE91-3D44E2C707E4"
  
-+#include <linux/array_size.h>
-+#include <linux/bits.h>
- #include <linux/device.h>
- #include <linux/dmi.h>
- #include <linux/i2c.h>
-@@ -727,6 +729,16 @@ static struct mlxreg_core_data mlxplat_mlxcpld_default_psu_items_data[] = {
- 	},
+-#define HP_OMEN_EC_THERMAL_PROFILE_FLAGS_OFFSET 0x62
+-#define HP_OMEN_EC_THERMAL_PROFILE_TIMER_OFFSET 0x63
+-#define HP_OMEN_EC_THERMAL_PROFILE_OFFSET 0x95
++enum hp_ec_offsets {
++	HP_EC_OFFSET_UNKNOWN				= 0x00,
++	HP_VICTUS_S_EC_THERMAL_PROFILE_OFFSET		= 0x59,
++	HP_OMEN_EC_THERMAL_PROFILE_FLAGS_OFFSET		= 0x62,
++	HP_OMEN_EC_THERMAL_PROFILE_TIMER_OFFSET		= 0x63,
++	HP_OMEN_EC_THERMAL_PROFILE_OFFSET		= 0x95,
++};
+ 
+ #define HP_FAN_SPEED_AUTOMATIC	 0x00
+ #define HP_POWER_LIMIT_DEFAULT	 0x00
+@@ -94,22 +98,26 @@ enum hp_thermal_profile {
+ 	HP_THERMAL_PROFILE_QUIET			= 0x03,
  };
  
-+/* Platform hotplug dgx data */
-+static struct mlxreg_core_data mlxplat_mlxcpld_dgx_pdb_items_data[] = {
-+	{
-+		.label = "pdb1",
-+		.reg = MLXPLAT_CPLD_LPC_REG_PSU_OFFSET,
-+		.mask = BIT(0),
-+		.hpdev.nr = MLXPLAT_CPLD_NR_NONE,
-+	},
-+};
 +
- static struct mlxreg_core_data mlxplat_mlxcpld_default_pwr_items_data[] = {
- 	{
- 		.label = "pwr1",
-@@ -776,6 +788,15 @@ static struct mlxreg_core_data mlxplat_mlxcpld_default_pwr_ng800_items_data[] =
- 	},
+ struct thermal_profile_params {
+ 	u8 performance;
+ 	u8 balanced;
+ 	u8 low_power;
++	u8 ec_tp_offset;
  };
  
-+static struct mlxreg_core_data mlxplat_mlxcpld_dgx_pwr_items_data[] = {
-+	{
-+		.label = "pwr1",
-+		.reg = MLXPLAT_CPLD_LPC_REG_PWR_OFFSET,
-+		.mask = BIT(0),
-+		.hpdev.nr = MLXPLAT_CPLD_NR_NONE,
-+	},
-+};
-+
- static struct mlxreg_core_data mlxplat_mlxcpld_default_fan_items_data[] = {
- 	{
- 		.label = "fan1",
-@@ -1399,6 +1420,45 @@ static struct mlxreg_core_item mlxplat_mlxcpld_ext_items[] = {
- 	}
+ static const struct thermal_profile_params victus_s_thermal_params = {
+ 	.performance	= HP_VICTUS_S_THERMAL_PROFILE_PERFORMANCE,
+ 	.balanced	= HP_VICTUS_S_THERMAL_PROFILE_DEFAULT,
+ 	.low_power	= HP_VICTUS_S_THERMAL_PROFILE_DEFAULT,
++	.ec_tp_offset	= HP_EC_OFFSET_UNKNOWN,
  };
  
-+static struct mlxreg_core_item mlxplat_mlxcpld_ext_dgx_items[] = {
-+	{
-+		.data = mlxplat_mlxcpld_dgx_pdb_items_data,
-+		.aggr_mask = MLXPLAT_CPLD_AGGR_PSU_MASK_DEF,
-+		.reg = MLXPLAT_CPLD_LPC_REG_PSU_OFFSET,
-+		.mask = MLXPLAT_CPLD_PSU_MASK,
-+		.count = ARRAY_SIZE(mlxplat_mlxcpld_dgx_pdb_items_data),
-+		.inversed = 1,
-+		.health = false,
-+	},
-+	{
-+		.data = mlxplat_mlxcpld_dgx_pwr_items_data,
-+		.aggr_mask = MLXPLAT_CPLD_AGGR_PWR_MASK_DEF,
-+		.reg = MLXPLAT_CPLD_LPC_REG_PWR_OFFSET,
-+		.mask = MLXPLAT_CPLD_PWR_MASK,
-+		.count = ARRAY_SIZE(mlxplat_mlxcpld_dgx_pwr_items_data),
-+		.inversed = 0,
-+		.health = false,
-+	},
-+	{
-+		.data = mlxplat_mlxcpld_default_ng_fan_items_data,
-+		.aggr_mask = MLXPLAT_CPLD_AGGR_MASK_NG_DEF,
-+		.reg = MLXPLAT_CPLD_LPC_REG_FAN_OFFSET,
-+		.mask = MLXPLAT_CPLD_FAN_NG_MASK,
-+		.count = ARRAY_SIZE(mlxplat_mlxcpld_default_ng_fan_items_data),
-+		.inversed = 1,
-+		.health = false,
-+	},
-+	{
-+		.data = mlxplat_mlxcpld_default_asic_items_data,
-+		.aggr_mask = MLXPLAT_CPLD_AGGR_MASK_NG_DEF,
-+		.reg = MLXPLAT_CPLD_LPC_REG_ASIC_HEALTH_OFFSET,
-+		.mask = MLXPLAT_CPLD_ASIC_MASK,
-+		.count = ARRAY_SIZE(mlxplat_mlxcpld_default_asic_items_data),
-+		.inversed = 0,
-+		.health = true,
-+	},
-+};
-+
- static struct mlxreg_core_item mlxplat_mlxcpld_ng800_items[] = {
- 	{
- 		.data = mlxplat_mlxcpld_default_ng_psu_items_data,
-@@ -1450,6 +1510,16 @@ struct mlxreg_core_hotplug_platform_data mlxplat_mlxcpld_ext_data = {
- 	.mask_low = MLXPLAT_CPLD_LOW_AGGR_MASK_LOW | MLXPLAT_CPLD_LOW_AGGR_MASK_ASIC2,
+ static const struct thermal_profile_params omen_v1_thermal_params = {
+ 	.performance	= HP_OMEN_V1_THERMAL_PROFILE_PERFORMANCE,
+ 	.balanced	= HP_OMEN_V1_THERMAL_PROFILE_DEFAULT,
+ 	.low_power	= HP_OMEN_V1_THERMAL_PROFILE_DEFAULT,
++	.ec_tp_offset	= HP_VICTUS_S_EC_THERMAL_PROFILE_OFFSET,
  };
  
-+static
-+struct mlxreg_core_hotplug_platform_data mlxplat_mlxcpld_dgx_ext_data = {
-+	.items = mlxplat_mlxcpld_ext_dgx_items,
-+	.count = ARRAY_SIZE(mlxplat_mlxcpld_ext_dgx_items),
-+	.cell = MLXPLAT_CPLD_LPC_REG_AGGR_OFFSET,
-+	.mask = MLXPLAT_CPLD_AGGR_MASK_NG_DEF | MLXPLAT_CPLD_AGGR_MASK_COMEX,
-+	.cell_low = MLXPLAT_CPLD_LPC_REG_AGGRLO_OFFSET,
-+	.mask_low = MLXPLAT_CPLD_LOW_AGGR_MASK_LOW | MLXPLAT_CPLD_LOW_AGGR_MASK_ASIC2,
-+};
-+
- static
- struct mlxreg_core_hotplug_platform_data mlxplat_mlxcpld_ng800_data = {
- 	.items = mlxplat_mlxcpld_ng800_items,
-@@ -4625,6 +4695,359 @@ static struct mlxreg_core_platform_data mlxplat_default_ng_regs_io_data = {
- 		.counter = ARRAY_SIZE(mlxplat_mlxcpld_default_ng_regs_io_data),
- };
- 
-+/* Platform register access for next generation systems families data */
-+static struct mlxreg_core_data mlxplat_mlxcpld_dgx_ng_regs_io_data[] = {
-+	{
-+		.label = "cpld1_version",
-+		.reg = MLXPLAT_CPLD_LPC_REG_CPLD1_VER_OFFSET,
-+		.bit = GENMASK(7, 0),
-+		.mode = 0444,
-+	},
-+	{
-+		.label = "cpld2_version",
-+		.reg = MLXPLAT_CPLD_LPC_REG_CPLD2_VER_OFFSET,
-+		.bit = GENMASK(7, 0),
-+		.mode = 0444,
-+	},
-+	{
-+		.label = "cpld3_version",
-+		.reg = MLXPLAT_CPLD_LPC_REG_CPLD3_VER_OFFSET,
-+		.bit = GENMASK(7, 0),
-+		.mode = 0444,
-+	},
-+	{
-+		.label = "cpld4_version",
-+		.reg = MLXPLAT_CPLD_LPC_REG_CPLD4_VER_OFFSET,
-+		.bit = GENMASK(7, 0),
-+		.mode = 0444,
-+	},
-+	{
-+		.label = "cpld1_pn",
-+		.reg = MLXPLAT_CPLD_LPC_REG_CPLD1_PN_OFFSET,
-+		.bit = GENMASK(15, 0),
-+		.mode = 0444,
-+		.regnum = 2,
-+	},
-+	{
-+		.label = "cpld2_pn",
-+		.reg = MLXPLAT_CPLD_LPC_REG_CPLD2_PN_OFFSET,
-+		.bit = GENMASK(15, 0),
-+		.mode = 0444,
-+		.regnum = 2,
-+	},
-+	{
-+		.label = "cpld3_pn",
-+		.reg = MLXPLAT_CPLD_LPC_REG_CPLD3_PN_OFFSET,
-+		.bit = GENMASK(15, 0),
-+		.mode = 0444,
-+		.regnum = 2,
-+	},
-+	{
-+		.label = "cpld4_pn",
-+		.reg = MLXPLAT_CPLD_LPC_REG_CPLD4_PN_OFFSET,
-+		.bit = GENMASK(15, 0),
-+		.mode = 0444,
-+		.regnum = 2,
-+	},
-+	{
-+		.label = "cpld1_version_min",
-+		.reg = MLXPLAT_CPLD_LPC_REG_CPLD1_MVER_OFFSET,
-+		.bit = GENMASK(7, 0),
-+		.mode = 0444,
-+	},
-+	{
-+		.label = "cpld2_version_min",
-+		.reg = MLXPLAT_CPLD_LPC_REG_CPLD2_MVER_OFFSET,
-+		.bit = GENMASK(7, 0),
-+		.mode = 0444,
-+	},
-+	{
-+		.label = "cpld3_version_min",
-+		.reg = MLXPLAT_CPLD_LPC_REG_CPLD3_MVER_OFFSET,
-+		.bit = GENMASK(7, 0),
-+		.mode = 0444,
-+	},
-+	{
-+		.label = "cpld4_version_min",
-+		.reg = MLXPLAT_CPLD_LPC_REG_CPLD4_MVER_OFFSET,
-+		.bit = GENMASK(7, 0),
-+		.mode = 0444,
-+	},
-+	{
-+		.label = "asic_reset",
-+		.reg = MLXPLAT_CPLD_LPC_REG_RESET_GP2_OFFSET,
-+		.mask = GENMASK(7, 0) & ~BIT(3),
-+		.mode = 0200,
-+	},
-+	{
-+		.label = "reset_long_pb",
-+		.reg = MLXPLAT_CPLD_LPC_REG_RESET_CAUSE_OFFSET,
-+		.mask = GENMASK(7, 0) & ~BIT(0),
-+		.mode = 0444,
-+	},
-+	{
-+		.label = "reset_short_pb",
-+		.reg = MLXPLAT_CPLD_LPC_REG_RESET_CAUSE_OFFSET,
-+		.mask = GENMASK(7, 0) & ~BIT(1),
-+		.mode = 0444,
-+	},
-+	{
-+		.label = "reset_aux_pwr_or_ref",
-+		.reg = MLXPLAT_CPLD_LPC_REG_RESET_CAUSE_OFFSET,
-+		.mask = GENMASK(7, 0) & ~BIT(2),
-+		.mode = 0444,
-+	},
-+	{
-+		.label = "reset_swb_dc_dc_pwr_fail",
-+		.reg = MLXPLAT_CPLD_LPC_REG_RESET_CAUSE_OFFSET,
-+		.mask = GENMASK(7, 0) & ~BIT(3),
-+		.mode = 0444,
-+	},
-+	{
-+		.label = "reset_from_asic",
-+		.reg = MLXPLAT_CPLD_LPC_REG_RESET_CAUSE_OFFSET,
-+		.mask = GENMASK(7, 0) & ~BIT(5),
-+		.mode = 0444,
-+	},
-+	{
-+		.label = "reset_swb_wd",
-+		.reg = MLXPLAT_CPLD_LPC_REG_RESET_CAUSE_OFFSET,
-+		.mask = GENMASK(7, 0) & ~BIT(6),
-+		.mode = 0444,
-+	},
-+	{
-+		.label = "reset_asic_thermal",
-+		.reg = MLXPLAT_CPLD_LPC_REG_RESET_CAUSE_OFFSET,
-+		.mask = GENMASK(7, 0) & ~BIT(7),
-+		.mode = 0444,
-+	},
-+	{
-+		.label = "reset_sw_reset",
-+		.reg = MLXPLAT_CPLD_LPC_REG_RST_CAUSE1_OFFSET,
-+		.mask = GENMASK(7, 0) & ~BIT(0),
-+		.mode = 0444,
-+	},
-+	{
-+		.label = "reset_comex_pwr_fail",
-+		.reg = MLXPLAT_CPLD_LPC_REG_RST_CAUSE1_OFFSET,
-+		.mask = GENMASK(7, 0) & ~BIT(3),
-+		.mode = 0444,
-+	},
-+	{
-+		.label = "reset_platform",
-+		.reg = MLXPLAT_CPLD_LPC_REG_RST_CAUSE1_OFFSET,
-+		.mask = GENMASK(7, 0) & ~BIT(4),
-+		.mode = 0444,
-+	},
-+	{
-+		.label = "reset_soc",
-+		.reg = MLXPLAT_CPLD_LPC_REG_RST_CAUSE1_OFFSET,
-+		.mask = GENMASK(7, 0) & ~BIT(5),
-+		.mode = 0444,
-+	},
-+	{
-+		.label = "reset_comex_wd",
-+		.reg = MLXPLAT_CPLD_LPC_REG_RST_CAUSE1_OFFSET,
-+		.mask = GENMASK(7, 0) & ~BIT(6),
-+		.mode = 0444,
-+	},
-+	{
-+		.label = "reset_system",
-+		.reg = MLXPLAT_CPLD_LPC_REG_RST_CAUSE2_OFFSET,
-+		.mask = GENMASK(7, 0) & ~BIT(1),
-+		.mode = 0444,
-+	},
-+	{
-+		.label = "reset_sw_pwr_off",
-+		.reg = MLXPLAT_CPLD_LPC_REG_RST_CAUSE2_OFFSET,
-+		.mask = GENMASK(7, 0) & ~BIT(2),
-+		.mode = 0444,
-+	},
-+	{
-+		.label = "reset_comex_thermal",
-+		.reg = MLXPLAT_CPLD_LPC_REG_RST_CAUSE2_OFFSET,
-+		.mask = GENMASK(7, 0) & ~BIT(3),
-+		.mode = 0444,
-+	},
-+	{
-+		.label = "reset_reload_bios",
-+		.reg = MLXPLAT_CPLD_LPC_REG_RST_CAUSE2_OFFSET,
-+		.mask = GENMASK(7, 0) & ~BIT(5),
-+		.mode = 0444,
-+	},
-+	{
-+		.label = "reset_pdb_pwr_fail",
-+		.reg = MLXPLAT_CPLD_LPC_REG_RST_CAUSE2_OFFSET,
-+		.mask = GENMASK(7, 0) & ~BIT(6),
-+		.mode = 0444,
-+	},
-+	{
-+		.label = "pdb_reset_stby",
-+		.reg = MLXPLAT_CPLD_LPC_REG_GP1_OFFSET,
-+		.mask = GENMASK(7, 0) & ~BIT(0),
-+		.mode = 0200,
-+	},
-+	{
-+		.label = "pwr_cycle",
-+		.reg = MLXPLAT_CPLD_LPC_REG_GP1_OFFSET,
-+		.mask = GENMASK(7, 0) & ~BIT(2),
-+		.mode = 0200,
-+	},
-+	{
-+		.label = "pwr_down",
-+		.reg = MLXPLAT_CPLD_LPC_REG_GP1_OFFSET,
-+		.mask = GENMASK(7, 0) & ~BIT(3),
-+		.mode = 0200,
-+	},
-+	{
-+		.label = "deep_pwr_cycle",
-+		.reg = MLXPLAT_CPLD_LPC_REG_GP1_OFFSET,
-+		.mask = GENMASK(7, 0) & ~BIT(5),
-+		.mode = 0200,
-+	},
-+	{
-+		.label = "latch_reset",
-+		.reg = MLXPLAT_CPLD_LPC_REG_GP1_OFFSET,
-+		.mask = GENMASK(7, 0) & ~BIT(6),
-+		.mode = 0200,
-+	},
-+	{
-+		.label = "jtag_cap",
-+		.reg = MLXPLAT_CPLD_LPC_REG_FU_CAP_OFFSET,
-+		.mask = MLXPLAT_CPLD_FU_CAP_MASK,
-+		.bit = 1,
-+		.mode = 0444,
-+	},
-+	{
-+		.label = "jtag_enable",
-+		.reg = MLXPLAT_CPLD_LPC_REG_GP2_OFFSET,
-+		.mask = GENMASK(7, 0) & ~BIT(4),
-+		.mode = 0644,
-+	},
-+	{
-+		.label = "dbg1",
-+		.reg = MLXPLAT_CPLD_LPC_REG_DBG1_OFFSET,
-+		.bit = GENMASK(7, 0),
-+		.mode = 0644,
-+	},
-+	{
-+		.label = "dbg2",
-+		.reg = MLXPLAT_CPLD_LPC_REG_DBG2_OFFSET,
-+		.bit = GENMASK(7, 0),
-+		.mode = 0644,
-+	},
-+	{
-+		.label = "dbg3",
-+		.reg = MLXPLAT_CPLD_LPC_REG_DBG3_OFFSET,
-+		.bit = GENMASK(7, 0),
-+		.mode = 0644,
-+	},
-+	{
-+		.label = "dbg4",
-+		.reg = MLXPLAT_CPLD_LPC_REG_DBG4_OFFSET,
-+		.bit = GENMASK(7, 0),
-+		.mode = 0644,
-+	},
-+	{
-+		.label = "asic_health",
-+		.reg = MLXPLAT_CPLD_LPC_REG_ASIC_HEALTH_OFFSET,
-+		.mask = MLXPLAT_CPLD_ASIC_MASK,
-+		.bit = 1,
-+		.mode = 0444,
-+	},
-+	{
-+		.label = "fan_dir",
-+		.reg = MLXPLAT_CPLD_LPC_REG_FAN_DIRECTION,
-+		.bit = GENMASK(7, 0),
-+		.mode = 0444,
-+	},
-+	{
-+		.label = "bios_safe_mode",
-+		.reg = MLXPLAT_CPLD_LPC_REG_GPCOM0_OFFSET,
-+		.mask = GENMASK(7, 0) & ~BIT(4),
-+		.mode = 0444,
-+	},
-+	{
-+		.label = "bios_active_image",
-+		.reg = MLXPLAT_CPLD_LPC_REG_GPCOM0_OFFSET,
-+		.mask = GENMASK(7, 0) & ~BIT(5),
-+		.mode = 0444,
-+	},
-+	{
-+		.label = "bios_auth_fail",
-+		.reg = MLXPLAT_CPLD_LPC_REG_GPCOM0_OFFSET,
-+		.mask = GENMASK(7, 0) & ~BIT(6),
-+		.mode = 0444,
-+	},
-+	{
-+		.label = "bios_upgrade_fail",
-+		.reg = MLXPLAT_CPLD_LPC_REG_GPCOM0_OFFSET,
-+		.mask = GENMASK(7, 0) & ~BIT(7),
-+		.mode = 0444,
-+	},
-+	{
-+		.label = "voltreg_update_status",
-+		.reg = MLXPLAT_CPLD_LPC_REG_GP0_RO_OFFSET,
-+		.mask = MLXPLAT_CPLD_VOLTREG_UPD_MASK,
-+		.bit = 5,
-+		.mode = 0444,
-+	},
-+	{
-+		.label = "pwr_converter_prog_en",
-+		.reg = MLXPLAT_CPLD_LPC_REG_GP0_OFFSET,
-+		.mask = GENMASK(7, 0) & ~BIT(0),
-+		.mode = 0644,
-+		.secured = 1,
-+	},
-+	{
-+		.label = "vpd_wp",
-+		.reg = MLXPLAT_CPLD_LPC_REG_GP0_OFFSET,
-+		.mask = GENMASK(7, 0) & ~BIT(3),
-+		.mode = 0644,
-+	},
-+	{
-+		.label = "pcie_asic_reset_dis",
-+		.reg = MLXPLAT_CPLD_LPC_REG_GP0_OFFSET,
-+		.mask = GENMASK(7, 0) & ~BIT(4),
-+		.mode = 0644,
-+	},
-+	{
-+		.label = "shutdown_unlock",
-+		.reg = MLXPLAT_CPLD_LPC_REG_GP0_OFFSET,
-+		.mask = GENMASK(7, 0) & ~BIT(5),
-+		.mode = 0644,
-+	},
-+	{
-+		.label = "config1",
-+		.reg = MLXPLAT_CPLD_LPC_REG_CONFIG1_OFFSET,
-+		.bit = GENMASK(7, 0),
-+		.mode = 0444,
-+	},
-+	{
-+		.label = "config2",
-+		.reg = MLXPLAT_CPLD_LPC_REG_CONFIG2_OFFSET,
-+		.bit = GENMASK(7, 0),
-+		.mode = 0444,
-+	},
-+	{
-+		.label = "config3",
-+		.reg = MLXPLAT_CPLD_LPC_REG_CONFIG3_OFFSET,
-+		.bit = GENMASK(7, 0),
-+		.mode = 0444,
-+	},
-+	{
-+		.label = "ufm_version",
-+		.reg = MLXPLAT_CPLD_LPC_REG_UFM_VERSION_OFFSET,
-+		.bit = GENMASK(7, 0),
-+		.mode = 0444,
-+	},
-+};
-+
-+static struct mlxreg_core_platform_data mlxplat_dgx_ng_regs_io_data = {
-+		.data = mlxplat_mlxcpld_dgx_ng_regs_io_data,
-+		.counter = ARRAY_SIZE(mlxplat_mlxcpld_dgx_ng_regs_io_data),
-+};
-+
- /* Platform register access for modular systems families data */
- static struct mlxreg_core_data mlxplat_mlxcpld_modular_regs_io_data[] = {
- 	{
-@@ -7239,6 +7662,32 @@ static int __init mlxplat_dmi_ng400_matched(const struct dmi_system_id *dmi)
- 	return mlxplat_register_platform_device();
+ /*
+@@ -1785,6 +1793,60 @@ static int victus_s_set_cpu_pl1_pl2(u8 pl1, u8 pl2)
+ 	return ret;
  }
  
-+static int __init mlxplat_dmi_ng400_dgx_matched(const struct dmi_system_id *dmi)
++static int platform_profile_victus_s_get_ec(enum platform_profile_option *profile)
 +{
-+	int i;
++	int ret = 0;
++	bool current_ctgp_state, current_ppab_state;
++	u8 current_dstate, current_gpu_slowdown_temp, tp;
++	const struct thermal_profile_params *params;
 +
-+	mlxplat_max_adap_num = MLXPLAT_CPLD_MAX_PHYS_ADAPTER_NUM;
-+	mlxplat_mux_num = ARRAY_SIZE(mlxplat_default_mux_data);
-+	mlxplat_mux_data = mlxplat_default_mux_data;
-+	for (i = 0; i < mlxplat_mux_num; i++) {
-+		mlxplat_mux_data[i].values = mlxplat_msn21xx_channels;
-+		mlxplat_mux_data[i].n_values =
-+				ARRAY_SIZE(mlxplat_msn21xx_channels);
++	params = active_thermal_profile_params;
++	if (params->ec_tp_offset == HP_EC_OFFSET_UNKNOWN) {
++		*profile = active_platform_profile;
++		return 0;
 +	}
-+	mlxplat_hotplug = &mlxplat_mlxcpld_dgx_ext_data;
-+	mlxplat_hotplug->deferred_nr =
-+		mlxplat_msn21xx_channels[MLXPLAT_CPLD_GRP_CHNL_NUM - 1];
-+	mlxplat_led = &mlxplat_default_ng_led_data;
-+	mlxplat_regs_io = &mlxplat_dgx_ng_regs_io_data;
-+	mlxplat_fan = &mlxplat_default_fan_data;
-+	for (i = 0; i < ARRAY_SIZE(mlxplat_mlxcpld_wd_set_type2); i++)
-+		mlxplat_wd_data[i] = &mlxplat_mlxcpld_wd_set_type2[i];
-+	mlxplat_i2c = &mlxplat_mlxcpld_i2c_ng_data;
-+	mlxplat_regmap_config = &mlxplat_mlxcpld_regmap_config_ng400;
 +
-+	return mlxplat_register_platform_device();
++	ret = ec_read(params->ec_tp_offset, &tp);
++	if (ret)
++		return ret;
++
++	/*
++	 * We cannot use active_thermal_profile_params here, because boards
++	 * like 8C78 have tp == 0x0 || tp == 0x1 after cold boot, but logically
++	 * it should have tp == 0x30 || tp == 0x31, as corrected by the Omen
++	 * Gaming Hub on windows. Hence accept both of these values.
++	 */
++	if (tp == victus_s_thermal_params.performance ||
++	    tp == omen_v1_thermal_params.performance) {
++		*profile = PLATFORM_PROFILE_PERFORMANCE;
++	} else if (tp == victus_s_thermal_params.balanced ||
++		   tp == omen_v1_thermal_params.balanced) {
++		/*
++		 * Since both PLATFORM_PROFILE_LOW_POWER and
++		 * PLATFORM_PROFILE_BALANCED share the same thermal profile
++		 * parameter value, hence to differentiate between them, we
++		 * query the GPU CTGP and PPAB states and compare based off of
++		 * that.
++		 */
++		ret = victus_s_gpu_thermal_profile_get(&current_ctgp_state,
++						       &current_ppab_state,
++						       &current_dstate,
++						       &current_gpu_slowdown_temp);
++		if (ret < 0)
++			return ret;
++		if (current_ctgp_state == 0 && current_ppab_state == 0)
++			*profile = PLATFORM_PROFILE_LOW_POWER;
++		else if (current_ctgp_state == 0 && current_ppab_state == 1)
++			*profile = PLATFORM_PROFILE_BALANCED;
++		else
++			return -EINVAL;
++	} else {
++		return -EINVAL;
++	}
++
++	return 0;
 +}
 +
- static int __init mlxplat_dmi_modular_matched(const struct dmi_system_id *dmi)
+ static int platform_profile_victus_s_set_ec(enum platform_profile_option profile)
  {
- 	int i;
-@@ -7458,6 +7907,13 @@ static const struct dmi_system_id mlxplat_dmi_table[] __initconst = {
- 			DMI_EXACT_MATCH(DMI_PRODUCT_SKU, "HI142"),
- 		},
- 	},
-+	{
-+		.callback = mlxplat_dmi_ng400_dgx_matched,
-+		.matches = {
-+			DMI_MATCH(DMI_BOARD_NAME, "VMOD0010"),
-+			DMI_EXACT_MATCH(DMI_PRODUCT_SKU, "HI173"),
-+		},
-+	},
- 	{
- 		.callback = mlxplat_dmi_ng400_matched,
- 		.matches = {
+ 	struct thermal_profile_params *params;
+@@ -1952,6 +2014,7 @@ static int victus_s_powersource_event(struct notifier_block *nb,
+ 				      void *data)
+ {
+ 	struct acpi_bus_event *event_entry = data;
++	enum platform_profile_option actual_profile;
+ 	int err;
+ 
+ 	if (strcmp(event_entry->device_class, ACPI_AC_CLASS) != 0)
+@@ -1959,6 +2022,17 @@ static int victus_s_powersource_event(struct notifier_block *nb,
+ 
+ 	pr_debug("Received power source device event\n");
+ 
++	guard(mutex)(&active_platform_profile_lock);
++	err = platform_profile_victus_s_get_ec(&actual_profile);
++	if (err < 0) {
++		/*
++		 * Although we failed to get the current platform profile, we
++		 * still want the other event consumers to process it.
++		 */
++		pr_warn("Failed to read current platform profile (%d)\n", err);
++		return NOTIFY_DONE;
++	}
++
+ 	/*
+ 	 * Switching to battery power source while Performance mode is active
+ 	 * needs manual triggering of CPU power limits. Same goes when switching
+@@ -1967,7 +2041,7 @@ static int victus_s_powersource_event(struct notifier_block *nb,
+ 	 * Seen on HP 16-s1034nf (board 8C9C) with F.11 and F.13 BIOS versions.
+ 	 */
+ 
+-	if (active_platform_profile == PLATFORM_PROFILE_PERFORMANCE) {
++	if (actual_profile == PLATFORM_PROFILE_PERFORMANCE) {
+ 		pr_debug("Triggering CPU PL1/PL2 actualization\n");
+ 		err = victus_s_set_cpu_pl1_pl2(HP_POWER_LIMIT_DEFAULT,
+ 					       HP_POWER_LIMIT_DEFAULT);
+@@ -2078,11 +2152,22 @@ static int thermal_profile_setup(struct platform_device *device)
+ 		ops = &platform_profile_victus_ops;
+ 	} else if (is_victus_s_thermal_profile()) {
+ 		/*
+-		 * Being unable to retrieve laptop's current thermal profile,
+-		 * during this setup, we set it to Balanced by default.
++		 * For an unknown EC layout board, platform_profile_victus_s_get_ec(),
++		 * behaves like a wrapper around active_platform_profile, to avoid using
++		 * uninitialized data, we default to PLATFORM_PROFILE_BALANCED.
+ 		 */
+-		active_platform_profile = PLATFORM_PROFILE_BALANCED;
++		if (active_thermal_profile_params->ec_tp_offset == HP_EC_OFFSET_UNKNOWN) {
++			active_platform_profile = PLATFORM_PROFILE_BALANCED;
++		} else {
++			err = platform_profile_victus_s_get_ec(&active_platform_profile);
++			if (err < 0)
++				return err;
++		}
+ 
++		/*
++		 * call thermal profile write command to ensure that the
++		 * firmware correctly sets the OEM variables
++		 */
+ 		err = platform_profile_victus_s_set_ec(active_platform_profile);
+ 		if (err < 0)
+ 			return err;
+@@ -2505,6 +2590,10 @@ static void __init setup_active_thermal_profile_params(void)
+ 		 */
+ 		is_victus_s_board = true;
+ 		active_thermal_profile_params = id->driver_data;
++		if (active_thermal_profile_params->ec_tp_offset == HP_EC_OFFSET_UNKNOWN) {
++			pr_warn("Unknown EC layout for board %s. Thermal profile readback will be disabled. Please report this to platform-driver-x86@vger.kernel.org\n",
++				dmi_get_system_info(DMI_BOARD_NAME));
++		}
+ 	}
+ }
+ 
 -- 
-2.47.3
+2.52.0
 
