@@ -1,239 +1,84 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.10])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-qk1-f178.google.com (mail-qk1-f178.google.com [209.85.222.178])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7DE89258CD9;
-	Thu, 22 Jan 2026 15:42:31 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.10
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8C7EE4A2E11
+	for <platform-driver-x86@vger.kernel.org>; Thu, 22 Jan 2026 15:46:31 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.222.178
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1769096555; cv=none; b=GcbrOuK3m9zkrrnWARlhfGn7AHgqc6XY3K0/6iraFicqEC3R9e+BDksSNAneOgChuZjJZL13t/4KUBwwgsutqw1gLDwe3OqND0B+TuWLW4ni8wecx7WsedT0vP4AO+bhu7wxlU6VI348eZu0cJoBxh5GeZimMXRkurbsL6w0Yqk=
+	t=1769096795; cv=none; b=PMpiSLXtMcFKyWkWxCFtsJM1rHuQ/34Wlv5eUFGMjKcaCdXpWJZQSGooz1LpSYklinDi4qNJ75ANjeq9wf8RevySwpMyTbaeTt2tqGVHX/n/G1XEm144kmZ1k2skdvqOYo5kH0wECIPScu9Rbo/SHV5ChEtFT69IdDSQ7QDORUI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1769096555; c=relaxed/simple;
-	bh=qxJnXYH7CkQdWMctZgubrkG6zIcN8YKKvbgciP9Zb4s=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=AC1kHasuljorkJ7bLsE5nEQRkOPFaspCZk/vSLU3eiPZ2amFYfoFxiQH/EbB99qxHRSNdzBeGS5/t5tJd4nof/FsQ3jVWJhMvEtx8C4UCiC81u+76NCZQzJoEf2f+qrYMHOrIobhUXK5kF0k/5nQPOKjrZu5qoJCBZC4C6JNl0w=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=pass smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=RubTmf5Z; arc=none smtp.client-ip=192.198.163.10
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.intel.com
+	s=arc-20240116; t=1769096795; c=relaxed/simple;
+	bh=F/yknEjVnOgXNzgaqkIW4LNMshOafNq6pbF7rAtp4ZY=;
+	h=From:To:Subject:In-Reply-To:References:Date:Message-ID:
+	 MIME-Version:Content-Type; b=GCQfmhJMlF/4Trp04XSC/KuzM1ICFmAZUomGqi/nZVttkV2Isj3nUzcKvYL/wN/8/S9BmO7+dMaHYLPTal0EwgKsQcGK/K3w7tPjZgDga2YvPi/X3IpRc/p/bgrEVETBa5JVIrnBzZMXo51j01vLFvN4GYGgI/2sua/rUfgr51o=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=l1EE4Q+i; arc=none smtp.client-ip=209.85.222.178
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="RubTmf5Z"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1769096552; x=1800632552;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:content-transfer-encoding:in-reply-to;
-  bh=qxJnXYH7CkQdWMctZgubrkG6zIcN8YKKvbgciP9Zb4s=;
-  b=RubTmf5Z3Ex0fxdFz2/6pEN78tETF8iKHEyynAOort+j1vZXNrO2pLxm
-   v30sqExCLinqOPWat/NvRR8xVtHbNokhY3f32fXH0ijWF0WGgUd856tJc
-   143o3WGyowj5OluHADRNgjunEaAxMnxLhFjIG3g5vquhwk1r4G5xLaJwA
-   vrj/Q1J8OuNizjGHAi0oKJZD8BkJGRtrz+qnyc9k0ljIlQISFVF84CVi3
-   UmjLUy5xX6bh1022+0fqKtcuBdpbCSJl0vR2Gs69voK/G+i+mHxPcEQvt
-   A9OiXX7Ww4lGar6BT13iEDY91zRAEFazKfEI5Er//NOrdz1zuFXLkiN9J
-   g==;
-X-CSE-ConnectionGUID: 5J5Dajg7TjunEBW2NiiUqA==
-X-CSE-MsgGUID: X8fPqMFFRMq3PrXBA/WWLA==
-X-IronPort-AV: E=McAfee;i="6800,10657,11679"; a="81713811"
-X-IronPort-AV: E=Sophos;i="6.21,246,1763452800"; 
-   d="scan'208";a="81713811"
-Received: from orviesa002.jf.intel.com ([10.64.159.142])
-  by fmvoesa104.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 22 Jan 2026 07:42:16 -0800
-X-CSE-ConnectionGUID: RnLqXDEFR0KIT8euSM82gw==
-X-CSE-MsgGUID: BckXCKegSxaHUfHWKxkzhQ==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.21,246,1763452800"; 
-   d="scan'208";a="237432533"
-Received: from debox1-desk4.jf.intel.com (HELO localhost) ([10.88.27.138])
-  by orviesa002-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 22 Jan 2026 07:42:15 -0800
-Date: Thu, 22 Jan 2026 07:42:15 -0800
-From: David Box <david.e.box@linux.intel.com>
-To: Ilpo =?utf-8?B?SsOkcnZpbmVu?= <ilpo.jarvinen@linux.intel.com>
-Cc: thomas.hellstrom@linux.intel.com, rodrigo.vivi@intel.com, 
-	irenic.rajneesh@gmail.com, srinivas.pandruvada@linux.intel.com, 
-	intel-xe@lists.freedesktop.org, dri-devel@lists.freedesktop.org, xi.pardee@linux.intel.com, 
-	Hans de Goede <hansg@kernel.org>, LKML <linux-kernel@vger.kernel.org>, 
-	platform-driver-x86@vger.kernel.org
-Subject: Re: [PATCH v3 6/6] platform/x86/intel/vsec: Plumb ACPI PMT discovery
- tables through vsec
-Message-ID: <tuitjp3fhclpfu4qhf7zz37yqaltqgca45ibsyhycgi7kqtzlx@i7dkq3gjwi4c>
-References: <20260122030903.3247167-1-david.e.box@linux.intel.com>
- <20260122030903.3247167-7-david.e.box@linux.intel.com>
- <a2ad65a0-7c90-45ae-bb13-e4a3e8a58dae@linux.intel.com>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="l1EE4Q+i"
+Received: by mail-qk1-f178.google.com with SMTP id af79cd13be357-8c53198a65fso108965585a.3
+        for <platform-driver-x86@vger.kernel.org>; Thu, 22 Jan 2026 07:46:30 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1769096789; x=1769701589; darn=vger.kernel.org;
+        h=mime-version:user-agent:message-id:date:references:in-reply-to
+         :subject:to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=F/yknEjVnOgXNzgaqkIW4LNMshOafNq6pbF7rAtp4ZY=;
+        b=l1EE4Q+iZjV5aJ3rlnd0YMfi8Co0KdJO880fK7ujtxKpj4u1GDR6dFHls8cGCAy9fH
+         f74K0hxC+rcPc3vQB3kfObAs06NoJMhpGGSlvtl1teSIoSuwKnvJx0pzd641mSUqUMBN
+         S83CrAERhtjKy2/DiGE412W49u9VU94VFDMbCd9D+ykZMax9XhASVCnndOk3l5QCdjNb
+         rRuTgo7T4hyVj9jym41lH8t9Rfw8AOOUY3GN8svYSyY5YWOKxbT5up27QskVNMioQyC/
+         7OIZS/mGmz6GskYMP5+DqBX2VxxpzlyRWu63LCwM05xk6se2oayriq+78BI5vqa5sCRi
+         nXew==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1769096789; x=1769701589;
+        h=mime-version:user-agent:message-id:date:references:in-reply-to
+         :subject:to:from:x-gm-gg:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=F/yknEjVnOgXNzgaqkIW4LNMshOafNq6pbF7rAtp4ZY=;
+        b=cxbxIvcGA6Ys56XiMIg2IpBEtISdbnzzTAX4Hw+U+lTW3SivPlTGeNYWjzVzL2MRZF
+         EA2IydFuiq1mpCZAYreCeOTI3LmW3zU5j40/CAAcWRelOpvtjOcEsD3+xH52UdC7vXQA
+         3y++6By5VtyPXNMQFEb88R+1F2HxHhwVAxk1AmVhjB72DO7TQ/03Q4ifcVf3rgJ1NOZL
+         NpQGGsDcSZPPyzMEneassLtCNU0RsMzYFrqt2yzzYBpY0qk8Z+8x8QbVpriauwlXHmJz
+         O3msfvbVqxivJemrvKpaODX7QoDMmv/5K9SqAqCbqkMFfK+AklGpKx/ish+m7R1ZkMFH
+         q6ng==
+X-Gm-Message-State: AOJu0YzEjg/pSEq1ZgPMhhBbA1qsRyAcmWPkrTsy7qWnPQRM8MrOMQhl
+	3oew/b7qHLxFwsR9o1zJ1XyrmNhXBylFiUl6qnB7oxQOdTbRfIwHtGq/
+X-Gm-Gg: AZuq6aIQCvq3ZzmuT9RfjBiVl2sx2OG7zNxXI5zkAupsYSWQbWGK4A8tflYa0LfGjFQ
+	ypkg6oBj9DASlQaPFxUaDvq7L0n9HabrGFT30O4q0F4fYlqGhggnLYluUDOhCg0/9hnmaOK9ilp
+	wt98+mKSFN2vgXXZ31J1guLFOqSV/bKb+BohYnyM8aHxcXR57vsTWIztpKSnO+T8luiPWch6HbM
+	tTNVXgDSpm5tSFF3NXS5WqiWAfsXpCkBsG5ytw5QPPOmPOyiK8OfhxWDwiJTsgJUvDHHn/r9L0c
+	okz8RsT74NVWYbLci4AGxC9LZhRgkY4V3BwtFvsDplF9BlUYKwuZ1O+aH/MIi7IF6btnAQIATI4
+	gouE9DMEA+ljvy4I6U5xEFLWIOjKyECI8C3z7PlScehM4TAM+1V5jst8wr+u68LSd21cwr8mx4d
+	FVCy7C6oIDWnZwz8PBx+dmk4VPTnW0sDKBOsSM6UOhC+IAinVpXurVZYzD7zHENCiTmbgPAeKUR
+	PflaJFOaWgc
+X-Received: by 2002:a05:620a:1721:b0:8b2:33f5:fa49 with SMTP id af79cd13be357-8c6a68bda73mr2935770585a.14.1769096788882;
+        Thu, 22 Jan 2026 07:46:28 -0800 (PST)
+Received: from office-nix (hlfxns018gw-134-41-57-104.dhcp-dynamic.fibreop.ns.bellaliant.net. [134.41.57.104])
+        by smtp.gmail.com with ESMTPSA id 6a1803df08f44-8942e6c9defsm157617276d6.48.2026.01.22.07.46.27
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 22 Jan 2026 07:46:28 -0800 (PST)
+From: David McFarland <corngood@gmail.com>
+To: platform-driver-x86@vger.kernel.org, Hans de Goede <hansg@kernel.org>,
+ Ilpo =?utf-8?Q?J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
+Subject: Re: [PATCH v2] platform/x86/intel: disable wakeup_mode during
+ hibernation
+In-Reply-To: <20260120161100.29342-2-corngood@gmail.com> (David McFarland's
+	message of "Tue, 20 Jan 2026 12:10:54 -0400")
+References: <20260120141758.3496-1-corngood@gmail.com>
+	<20260120161100.29342-2-corngood@gmail.com>
+Date: Thu, 22 Jan 2026 11:46:27 -0400
+Message-ID: <874iodk5v0.fsf@gmail.com>
+User-Agent: Gnus/5.13 (Gnus v5.13)
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <a2ad65a0-7c90-45ae-bb13-e4a3e8a58dae@linux.intel.com>
+Content-Type: text/plain
 
-On Thu, Jan 22, 2026 at 12:29:04PM +0200, Ilpo Järvinen wrote:
-> On Wed, 21 Jan 2026, David E. Box wrote:
-> 
-> > Some platforms expose PMT discovery via ACPI instead of PCI BARs. Add a
-> > generic discovery source flag and carry ACPI discovery entries alongside
-> > the existing PCI resource path so PMT clients can consume either.
-> > 
-> > Changes:
-> >   - Add enum intel_vsec_disc_source { _PCI, _ACPI }.
-> >   - Extend intel_vsec_platform_info and intel_vsec_device with source enum
-> >     and ACPI discovery table pointer/
-> >   - When src==ACPI, skip BAR resource setup and copy the ACPI discovery
-> >     entries into the aux device.
-> > 
-> > No user-visible behavior change yet; this only wires ACPI data through vsec
-> > in preparation for ACPI-enumerated PMT clients.
-> > 
-> > Signed-off-by: David E. Box <david.e.box@linux.intel.com>
-> > ---
-> > 
-> > v3:
-> >   - Re-send with all changes intended for v2 which was sent without them
-> >     being applied.
-> > 
-> > v2:
-> >   - Improve comment to clarify BAR resource setup doesn't apply to ACPI
-> >     discovery
-> >   - Add missing #include for kmemdup()
-> >   - Use array_size() for overflow protection
-> >     (review comments by Ilpo Järvinen)
-> > 
-> > 
-> >  drivers/platform/x86/intel/vsec.c | 24 ++++++++++++++++++++++++
-> >  include/linux/intel_vsec.h        | 20 +++++++++++++++++++-
-> >  2 files changed, 43 insertions(+), 1 deletion(-)
-> > 
-> > diff --git a/drivers/platform/x86/intel/vsec.c b/drivers/platform/x86/intel/vsec.c
-> > index 4aeb0728b435..b1465e67feef 100644
-> > --- a/drivers/platform/x86/intel/vsec.c
-> > +++ b/drivers/platform/x86/intel/vsec.c
-> > @@ -24,7 +24,9 @@
-> >  #include <linux/intel_vsec.h>
-> >  #include <linux/kernel.h>
-> >  #include <linux/module.h>
-> > +#include <linux/overflow.h>
-> >  #include <linux/pci.h>
-> > +#include <linux/string.h>
-> >  #include <linux/types.h>
-> >  
-> >  #define PMT_XA_START			0
-> > @@ -109,6 +111,7 @@ static void intel_vsec_dev_release(struct device *dev)
-> >  
-> >  	ida_free(intel_vsec_dev->ida, intel_vsec_dev->auxdev.id);
-> >  
-> > +	kfree(intel_vsec_dev->acpi_disc);
-> >  	kfree(intel_vsec_dev->resource);
-> >  	kfree(intel_vsec_dev);
-> >  }
-> > @@ -320,6 +323,13 @@ static int intel_vsec_add_dev(struct device *dev, struct intel_vsec_header *head
-> >  	 * auxiliary device driver.
-> >  	 */
-> >  	for (i = 0, tmp = res; i < header->num_entries; i++, tmp++) {
-> > +		/*
-> > +		 * Skip resource mapping check for ACPI-based discovery
-> > +		 * since those tables are read from _DSD, not MMIO.
-> > +		 */
-> > +		if (info->src == INTEL_VSEC_DISC_ACPI)
-> > +			break;
-> > +
-> >  		tmp->start = base_addr + header->offset + i * (header->entry_size * sizeof(u32));
-> >  		tmp->end = tmp->start + (header->entry_size * sizeof(u32)) - 1;
-> >  		tmp->flags = IORESOURCE_MEM;
-> > @@ -338,6 +348,20 @@ static int intel_vsec_add_dev(struct device *dev, struct intel_vsec_header *head
-> >  	intel_vsec_dev->base_addr = info->base_addr;
-> >  	intel_vsec_dev->priv_data = info->priv_data;
-> >  	intel_vsec_dev->cap_id = cap_id;
-> > +	intel_vsec_dev->src = info->src;
-> > +
-> > +	if (info->src == INTEL_VSEC_DISC_ACPI) {
-> > +		size_t bytes;
-> > +
-> > +		bytes = array_size(intel_vsec_dev->num_resources,
-> > +				   sizeof(info->acpi_disc[0]));
-> > +		if (!bytes)
-> > +			return -EOVERFLOW;
-> 
-> Is this correct as array_size() is documented to return SIZE_MAX on 
-> overflow?
 
-Yep. Went with array_size() but was thinking check_mul_overflow(). Will
-update. Thanks.
+Sorry, I should have sent to maintainers originally.
 
-David
-
-> 
-> Other than that, this series looked very straightforward now.
-> 
-> -- 
->  i.
-> 
-> > +
-> > +		intel_vsec_dev->acpi_disc = kmemdup(info->acpi_disc, bytes, GFP_KERNEL);
-> > +		if (!intel_vsec_dev->acpi_disc)
-> > +			return -ENOMEM;
-> > +	}
-> >  
-> >  	if (header->id == VSEC_ID_SDSI)
-> >  		intel_vsec_dev->ida = &intel_vsec_sdsi_ida;
-> > diff --git a/include/linux/intel_vsec.h b/include/linux/intel_vsec.h
-> > index 4eecb2a6bac4..1fe5665a9d02 100644
-> > --- a/include/linux/intel_vsec.h
-> > +++ b/include/linux/intel_vsec.h
-> > @@ -33,6 +33,11 @@ struct device;
-> >  struct pci_dev;
-> >  struct resource;
-> >  
-> > +enum intel_vsec_disc_source {
-> > +	INTEL_VSEC_DISC_PCI,	/* PCI, default */
-> > +	INTEL_VSEC_DISC_ACPI,	/* ACPI */
-> > +};
-> > +
-> >  enum intel_vsec_id {
-> >  	VSEC_ID_TELEMETRY	= 2,
-> >  	VSEC_ID_WATCHER		= 3,
-> > @@ -103,6 +108,10 @@ struct vsec_feature_dependency {
-> >   * @parent:    parent device in the auxbus chain
-> >   * @headers:   list of headers to define the PMT client devices to create
-> >   * @deps:      array of feature dependencies
-> > + * @acpi_disc: ACPI discovery tables, each entry is two QWORDs
-> > + *             in little-endian format as defined by the PMT ACPI spec.
-> > + *             Valid only when @provider == INTEL_VSEC_DISC_ACPI.
-> > + * @src:       source of discovery table data
-> >   * @priv_data: private data, usable by parent devices, currently a callback
-> >   * @caps:      bitmask of PMT capabilities for the given headers
-> >   * @quirks:    bitmask of VSEC device quirks
-> > @@ -113,6 +122,8 @@ struct intel_vsec_platform_info {
-> >  	struct device *parent;
-> >  	struct intel_vsec_header **headers;
-> >  	const struct vsec_feature_dependency *deps;
-> > +	u32 (*acpi_disc)[4];
-> > +	enum intel_vsec_disc_source src;
-> >  	void *priv_data;
-> >  	unsigned long caps;
-> >  	unsigned long quirks;
-> > @@ -124,7 +135,12 @@ struct intel_vsec_platform_info {
-> >   * struct intel_vsec_device - Auxbus specific device information
-> >   * @auxdev:        auxbus device struct for auxbus access
-> >   * @dev:           struct device associated with the device
-> > - * @resource:      any resources shared by the parent
-> > + * @resource:      PCI discovery resources (BAR windows), one per discovery
-> > + *                 instance. Valid only when @src == INTEL_VSEC_DISC_PCI
-> > + * @acpi_disc:     ACPI discovery tables, each entry is two QWORDs
-> > + *                 in little-endian format as defined by the PMT ACPI spec.
-> > + *                 Valid only when @src == INTEL_VSEC_DISC_ACPI.
-> > + * @src:           source of discovery table data
-> >   * @ida:           id reference
-> >   * @num_resources: number of resources
-> >   * @id:            xarray id
-> > @@ -138,6 +154,8 @@ struct intel_vsec_device {
-> >  	struct auxiliary_device auxdev;
-> >  	struct device *dev;
-> >  	struct resource *resource;
-> > +	u32 (*acpi_disc)[4];
-> > +	enum intel_vsec_disc_source src;
-> >  	struct ida *ida;
-> >  	int num_resources;
-> >  	int id; /* xa */
-> > 
-
+I'm especially looking for feedback on the implementation. Calling the
+suspend handler from the freeze handler could potentially be confusing.
