@@ -1,231 +1,151 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.12])
+Received: from relay15.grserver.gr (relay15.grserver.gr [46.62.234.254])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6A05D3A7DF4;
-	Thu, 22 Jan 2026 03:09:18 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.12
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C6AE43D411B;
+	Thu, 22 Jan 2026 07:51:04 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=46.62.234.254
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1769051361; cv=none; b=iHPI2g5xlbI25zbX/QZqRbRif71o2aTD5rO2okHKrP5CL7FS22PCmeIKwzj6S6IVJ/cfGaA7TqVGRXCUED9XrbV8fIF8kmhUpS/MFLDh9xaZY8nedx3EQl6Lp5k9M1yw90NkB/ciB/X/JZSsaXkPAVzAgWC9C2ogt+TF0zjKVPE=
+	t=1769068274; cv=none; b=MJqW2XPwrX9fXfvR06bRI98xzH2Zt4Plp7NHqpTN1S6QK7qT37i2QKahlBuvM/KruzDL07ySNce6/yo4xB4SZXJxHdEKHguOAeNKufrdNWevFwbhZKuO+7DgzgGRPL8IUkDKRQiihEUfk72LQqm+9yLiScOXWFJRvWF4KBoyvR0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1769051361; c=relaxed/simple;
-	bh=n1Cwwmr9V3C+h6eVfi4rilYGDktfff8Gh5kbbJ6IATQ=;
+	s=arc-20240116; t=1769068274; c=relaxed/simple;
+	bh=uFjTi0Kvj4LYyfb4c/kAh3J58DpO2Z2E6cn4t8r2/VI=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=p+OHrpEeJGP2lqyFrEadbluT9VVUiTwiu+WSYmwJxNbRl3r1ceQB3IUsmCtodEG8THlzH7VLNmjlx/6URBI2gaOSXTnBiePmNqn9v5KQczxk7XL/iMiF29zJ6/BLXzpzDNF5YEWna3sMGr/i8xfL7j2EppFxFrBLs4qiH+gDidQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=pass smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=D+4JG82h; arc=none smtp.client-ip=198.175.65.12
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.intel.com
+	 MIME-Version; b=nxrT9rIpGpCI7yKmiVjx1f/OjxVkxnzju/D0bvt4sjusZvzkiM86p1v9VqHThN0aOpa5+H6WOAYBC6xpAqDq7kA2qruOSrAWGTo8upLX4p9vv2L9fRpYS/QrrREz7cfl0nB+stcH+qHj4UChetL841i7mQRIQzU+G3jVK9XNvAA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=antheas.dev; spf=pass smtp.mailfrom=antheas.dev; dkim=pass (2048-bit key) header.d=antheas.dev header.i=@antheas.dev header.b=Yl49phjZ; arc=none smtp.client-ip=46.62.234.254
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=antheas.dev
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=antheas.dev
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="D+4JG82h"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1769051359; x=1800587359;
-  h=from:to:cc:subject:date:message-id:in-reply-to:
-   references:mime-version:content-transfer-encoding;
-  bh=n1Cwwmr9V3C+h6eVfi4rilYGDktfff8Gh5kbbJ6IATQ=;
-  b=D+4JG82h7G0zxhOjY1Vv6vcqyScVfsZdILzHJef0EHGjh4DfLM4vqh+A
-   1znwHFvusszK3i0IBx7cNIMIzM6BuuuOKoa+JtsYJbOdIWNScclY5pOOW
-   h31i6rEtGmppuZkoxnVse3zZs6wn8Yk2+EwDvdinSMwMUGMOsFzcfXEWl
-   RIO/JEWeytZX0rgQS6jhbmR7+CQTHuWR7BxYULTDDrAIVg0PYwSypf6Cb
-   Wf46AzfT9A1VyRBczNKcqBWccOpYai6jZ4Fosmnkjj82+sthNJDokFGRN
-   ASGkrAgDsPNG2Gjle0MQL1LgVyiSnx/NOJNvoOYAVec2PNt3p/I4Bh/I6
-   g==;
-X-CSE-ConnectionGUID: DFh8N8sQS/+BwC0Gqc/2LQ==
-X-CSE-MsgGUID: hUDWGPxKRdm5WZchqr0jBQ==
-X-IronPort-AV: E=McAfee;i="6800,10657,11678"; a="81733111"
-X-IronPort-AV: E=Sophos;i="6.21,245,1763452800"; 
-   d="scan'208";a="81733111"
-Received: from fmviesa005.fm.intel.com ([10.60.135.145])
-  by orvoesa104.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 21 Jan 2026 19:09:16 -0800
-X-CSE-ConnectionGUID: sdTmNE0nQburkC6eywKKFQ==
-X-CSE-MsgGUID: 3EuGZH2OQ6+k95godpkKdA==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.21,245,1763452800"; 
-   d="scan'208";a="211058847"
-Received: from debox1-desk4.jf.intel.com ([10.88.27.138])
-  by fmviesa005-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 21 Jan 2026 19:09:14 -0800
-From: "David E. Box" <david.e.box@linux.intel.com>
-To: thomas.hellstrom@linux.intel.com,
-	rodrigo.vivi@intel.com,
-	irenic.rajneesh@gmail.com,
-	ilpo.jarvinen@linux.intel.com,
-	srinivas.pandruvada@linux.intel.com,
-	intel-xe@lists.freedesktop.org,
-	dri-devel@lists.freedesktop.org,
-	xi.pardee@linux.intel.com
-Cc: "David E. Box" <david.e.box@linux.intel.com>,
-	hansg@kernel.org,
-	linux-kernel@vger.kernel.org,
-	platform-driver-x86@vger.kernel.org
-Subject: [PATCH v3 6/6] platform/x86/intel/vsec: Plumb ACPI PMT discovery tables through vsec
-Date: Wed, 21 Jan 2026 19:09:01 -0800
-Message-ID: <20260122030903.3247167-7-david.e.box@linux.intel.com>
-X-Mailer: git-send-email 2.43.0
-In-Reply-To: <20260122030903.3247167-1-david.e.box@linux.intel.com>
-References: <20260122030903.3247167-1-david.e.box@linux.intel.com>
+	dkim=pass (2048-bit key) header.d=antheas.dev header.i=@antheas.dev header.b="Yl49phjZ"
+Received: from relay15 (localhost [127.0.0.1])
+	by relay15.grserver.gr (Proxmox) with ESMTP id B396D40A56;
+	Thu, 22 Jan 2026 07:51:01 +0000 (UTC)
+Received: from linux3247.grserver.gr (linux3247.grserver.gr [213.158.90.240])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by relay15.grserver.gr (Proxmox) with ESMTPS id 2ACC940980;
+	Thu, 22 Jan 2026 07:51:01 +0000 (UTC)
+Received: from antheas-z13 (unknown [IPv6:2a05:f6c3:fefd:0:42c:a43d:2848:c282])
+	by linux3247.grserver.gr (Postfix) with ESMTPSA id 002B01FDB07;
+	Thu, 22 Jan 2026 09:50:55 +0200 (EET)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=antheas.dev;
+	s=default; t=1769068260;
+	bh=MEs/XBWAPfv9b2W5N7TYQ+94TqqTSyRIKMCnFaXB1d0=; h=From:To:Subject;
+	b=Yl49phjZcaC8npIkrRDpoGAVm63L9QnKfQMygF1NY0fWC4QqaBgGOB+uYn9HbynoB
+	 qBSM0SBwPJvFmXXCntU01ikbRBnTIA6yUaqANIkrEPvEh2Um29X6mWAi+wfghdM9xG
+	 +QVyARh/WlgOw/qDB/5wHoCe3Cl1eJd/ixfsOxAetKj6TNHuIMvRt0vKfGSI3wN0K6
+	 8Hgs68V/xNWWjdeFCOCzpIFgOHysluQ2gs9PPlvd6JQZwJrgbezFRWBZtg/YG+sgqP
+	 305scY5Z6Xe8Ez2/nNvm5ZqdpsSwHoQGmIuEFVV7yfM4GiBN7ubIbueJLgh9T10Jrq
+	 2oqBG51YNbNxg==
+Authentication-Results: linux3247.grserver.gr;
+	spf=pass (sender IP is 2a05:f6c3:fefd:0:42c:a43d:2848:c282) smtp.mailfrom=lkml@antheas.dev smtp.helo=antheas-z13
+Received-SPF: pass (linux3247.grserver.gr: connection is authenticated)
+From: Antheas Kapenekakis <lkml@antheas.dev>
+To: platform-driver-x86@vger.kernel.org,
+	linux-input@vger.kernel.org
+Cc: linux-kernel@vger.kernel.org,
+	Jiri Kosina <jikos@kernel.org>,
+	Benjamin Tissoires <bentiss@kernel.org>,
+	Corentin Chary <corentin.chary@gmail.com>,
+	"Luke D . Jones" <luke@ljones.dev>,
+	Hans de Goede <hansg@kernel.org>,
+	=?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>,
+	Denis Benato <denis.benato@linux.dev>,
+	Antheas Kapenekakis <lkml@antheas.dev>
+Subject: [PATCH v12 02/11] HID: asus: initialize additional endpoints only for
+ certain devices
+Date: Thu, 22 Jan 2026 08:50:35 +0100
+Message-ID: <20260122075044.5070-3-lkml@antheas.dev>
+X-Mailer: git-send-email 2.52.0
+In-Reply-To: <20260122075044.5070-1-lkml@antheas.dev>
+References: <20260122075044.5070-1-lkml@antheas.dev>
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 8bit
+X-PPP-Message-ID: 
+ <176906826040.712012.3894645244315568667@linux3247.grserver.gr>
+X-PPP-Vhost: antheas.dev
+X-Virus-Scanned: clamav-milter 1.4.3 at linux3247.grserver.gr
+X-Virus-Status: Clean
 
-Some platforms expose PMT discovery via ACPI instead of PCI BARs. Add a
-generic discovery source flag and carry ACPI discovery entries alongside
-the existing PCI resource path so PMT clients can consume either.
+Currently, ID1/ID2 initializations are performed for all NKEY devices.
+However, ID1 initializations are only required for RGB control and are
+only supported for RGB capable devices. ID2 initializations are only
+required for initializing the Anime display endpoint which is only
+supported on devices with an Anime display. Both of these
+initializations are for functionality that is not present on this driver
+and are performed for devices which might not support them.
 
-Changes:
-  - Add enum intel_vsec_disc_source { _PCI, _ACPI }.
-  - Extend intel_vsec_platform_info and intel_vsec_device with source enum
-    and ACPI discovery table pointer/
-  - When src=3D=3DACPI, skip BAR resource setup and copy the ACPI discovery
-    entries into the aux device.
+At the same time, there are older NKEY devices that have only been
+tested with these initializations in the kernel and it is not possible
+to recheck them. There is a possibility that especially with the ID1
+initialization, certain laptop models might have their shortcuts stop
+working (currently unproven).
 
-No user-visible behavior change yet; this only wires ACPI data through vsec
-in preparation for ACPI-enumerated PMT clients.
+To avoid sending unnecessary commands, change to only initialize ID1/ID2
+for those NKEY devices suspected to be problematic without them by
+introducing a quirk for them and replacing the NKEY quirk in the block
+that performs the inits with that. Therefore, new devices that do not
+need (and some do not support) these initializations will not have
+them performed.
 
-Signed-off-by: David E. Box <david.e.box@linux.intel.com>
+In addition, as these initializations might not be supported by the
+affected devices, change the function to not bail if they fail.
+
+Acked-by: Benjamin Tissoires <bentiss@kernel.org>
+Signed-off-by: Antheas Kapenekakis <lkml@antheas.dev>
 ---
+ drivers/hid/hid-asus.c | 16 ++++++----------
+ 1 file changed, 6 insertions(+), 10 deletions(-)
 
-v3:
-  - Re-send with all changes intended for v2 which was sent without them
-    being applied.
+diff --git a/drivers/hid/hid-asus.c b/drivers/hid/hid-asus.c
+index 323e6302bac5..92904b5a700c 100644
+--- a/drivers/hid/hid-asus.c
++++ b/drivers/hid/hid-asus.c
+@@ -90,6 +90,7 @@ MODULE_DESCRIPTION("Asus HID Keyboard and TouchPad");
+ #define QUIRK_ROG_NKEY_KEYBOARD		BIT(11)
+ #define QUIRK_ROG_CLAYMORE_II_KEYBOARD BIT(12)
+ #define QUIRK_ROG_ALLY_XPAD		BIT(13)
++#define QUIRK_ROG_NKEY_ID1ID2_INIT		BIT(14)
+ 
+ #define I2C_KEYBOARD_QUIRKS			(QUIRK_FIX_NOTEBOOK_REPORT | \
+ 						 QUIRK_NO_INIT_REPORTS | \
+@@ -652,14 +653,9 @@ static int asus_kbd_register_leds(struct hid_device *hdev)
+ 	if (!(kbd_func & SUPPORT_KBD_BACKLIGHT))
+ 		return -ENODEV;
+ 
+-	if (drvdata->quirks & QUIRK_ROG_NKEY_KEYBOARD) {
+-		ret = asus_kbd_init(hdev, FEATURE_KBD_LED_REPORT_ID1);
+-		if (ret < 0)
+-			return ret;
+-
+-		ret = asus_kbd_init(hdev, FEATURE_KBD_LED_REPORT_ID2);
+-		if (ret < 0)
+-			return ret;
++	if (drvdata->quirks & QUIRK_ROG_NKEY_ID1ID2_INIT) {
++		asus_kbd_init(hdev, FEATURE_KBD_LED_REPORT_ID1);
++		asus_kbd_init(hdev, FEATURE_KBD_LED_REPORT_ID2);
+ 	}
+ 
+ 	if (dmi_match(DMI_PRODUCT_FAMILY, "ProArt P16")) {
+@@ -1376,10 +1372,10 @@ static const struct hid_device_id asus_devices[] = {
+ 	  QUIRK_USE_KBD_BACKLIGHT },
+ 	{ HID_USB_DEVICE(USB_VENDOR_ID_ASUSTEK,
+ 	    USB_DEVICE_ID_ASUSTEK_ROG_NKEY_KEYBOARD),
+-	  QUIRK_USE_KBD_BACKLIGHT | QUIRK_ROG_NKEY_KEYBOARD },
++	  QUIRK_USE_KBD_BACKLIGHT | QUIRK_ROG_NKEY_KEYBOARD | QUIRK_ROG_NKEY_ID1ID2_INIT },
+ 	{ HID_USB_DEVICE(USB_VENDOR_ID_ASUSTEK,
+ 	    USB_DEVICE_ID_ASUSTEK_ROG_NKEY_KEYBOARD2),
+-	  QUIRK_USE_KBD_BACKLIGHT | QUIRK_ROG_NKEY_KEYBOARD },
++	  QUIRK_USE_KBD_BACKLIGHT | QUIRK_ROG_NKEY_KEYBOARD | QUIRK_ROG_NKEY_ID1ID2_INIT },
+ 	{ HID_USB_DEVICE(USB_VENDOR_ID_ASUSTEK,
+ 	    USB_DEVICE_ID_ASUSTEK_ROG_Z13_LIGHTBAR),
+ 	  QUIRK_USE_KBD_BACKLIGHT | QUIRK_ROG_NKEY_KEYBOARD },
+-- 
+2.52.0
 
-v2:
-  - Improve comment to clarify BAR resource setup doesn't apply to ACPI
-    discovery
-  - Add missing #include for kmemdup()
-  - Use array_size() for overflow protection
-    (review comments by Ilpo J=C3=A4rvinen)
-
-
- drivers/platform/x86/intel/vsec.c | 24 ++++++++++++++++++++++++
- include/linux/intel_vsec.h        | 20 +++++++++++++++++++-
- 2 files changed, 43 insertions(+), 1 deletion(-)
-
-diff --git a/drivers/platform/x86/intel/vsec.c b/drivers/platform/x86/intel=
-/vsec.c
-index 4aeb0728b435..b1465e67feef 100644
---- a/drivers/platform/x86/intel/vsec.c
-+++ b/drivers/platform/x86/intel/vsec.c
-@@ -24,7 +24,9 @@
- #include <linux/intel_vsec.h>
- #include <linux/kernel.h>
- #include <linux/module.h>
-+#include <linux/overflow.h>
- #include <linux/pci.h>
-+#include <linux/string.h>
- #include <linux/types.h>
-=20
- #define PMT_XA_START			0
-@@ -109,6 +111,7 @@ static void intel_vsec_dev_release(struct device *dev)
-=20
- 	ida_free(intel_vsec_dev->ida, intel_vsec_dev->auxdev.id);
-=20
-+	kfree(intel_vsec_dev->acpi_disc);
- 	kfree(intel_vsec_dev->resource);
- 	kfree(intel_vsec_dev);
- }
-@@ -320,6 +323,13 @@ static int intel_vsec_add_dev(struct device *dev, stru=
-ct intel_vsec_header *head
- 	 * auxiliary device driver.
- 	 */
- 	for (i =3D 0, tmp =3D res; i < header->num_entries; i++, tmp++) {
-+		/*
-+		 * Skip resource mapping check for ACPI-based discovery
-+		 * since those tables are read from _DSD, not MMIO.
-+		 */
-+		if (info->src =3D=3D INTEL_VSEC_DISC_ACPI)
-+			break;
-+
- 		tmp->start =3D base_addr + header->offset + i * (header->entry_size * si=
-zeof(u32));
- 		tmp->end =3D tmp->start + (header->entry_size * sizeof(u32)) - 1;
- 		tmp->flags =3D IORESOURCE_MEM;
-@@ -338,6 +348,20 @@ static int intel_vsec_add_dev(struct device *dev, stru=
-ct intel_vsec_header *head
- 	intel_vsec_dev->base_addr =3D info->base_addr;
- 	intel_vsec_dev->priv_data =3D info->priv_data;
- 	intel_vsec_dev->cap_id =3D cap_id;
-+	intel_vsec_dev->src =3D info->src;
-+
-+	if (info->src =3D=3D INTEL_VSEC_DISC_ACPI) {
-+		size_t bytes;
-+
-+		bytes =3D array_size(intel_vsec_dev->num_resources,
-+				   sizeof(info->acpi_disc[0]));
-+		if (!bytes)
-+			return -EOVERFLOW;
-+
-+		intel_vsec_dev->acpi_disc =3D kmemdup(info->acpi_disc, bytes, GFP_KERNEL=
-);
-+		if (!intel_vsec_dev->acpi_disc)
-+			return -ENOMEM;
-+	}
-=20
- 	if (header->id =3D=3D VSEC_ID_SDSI)
- 		intel_vsec_dev->ida =3D &intel_vsec_sdsi_ida;
-diff --git a/include/linux/intel_vsec.h b/include/linux/intel_vsec.h
-index 4eecb2a6bac4..1fe5665a9d02 100644
---- a/include/linux/intel_vsec.h
-+++ b/include/linux/intel_vsec.h
-@@ -33,6 +33,11 @@ struct device;
- struct pci_dev;
- struct resource;
-=20
-+enum intel_vsec_disc_source {
-+	INTEL_VSEC_DISC_PCI,	/* PCI, default */
-+	INTEL_VSEC_DISC_ACPI,	/* ACPI */
-+};
-+
- enum intel_vsec_id {
- 	VSEC_ID_TELEMETRY	=3D 2,
- 	VSEC_ID_WATCHER		=3D 3,
-@@ -103,6 +108,10 @@ struct vsec_feature_dependency {
-  * @parent:    parent device in the auxbus chain
-  * @headers:   list of headers to define the PMT client devices to create
-  * @deps:      array of feature dependencies
-+ * @acpi_disc: ACPI discovery tables, each entry is two QWORDs
-+ *             in little-endian format as defined by the PMT ACPI spec.
-+ *             Valid only when @provider =3D=3D INTEL_VSEC_DISC_ACPI.
-+ * @src:       source of discovery table data
-  * @priv_data: private data, usable by parent devices, currently a callback
-  * @caps:      bitmask of PMT capabilities for the given headers
-  * @quirks:    bitmask of VSEC device quirks
-@@ -113,6 +122,8 @@ struct intel_vsec_platform_info {
- 	struct device *parent;
- 	struct intel_vsec_header **headers;
- 	const struct vsec_feature_dependency *deps;
-+	u32 (*acpi_disc)[4];
-+	enum intel_vsec_disc_source src;
- 	void *priv_data;
- 	unsigned long caps;
- 	unsigned long quirks;
-@@ -124,7 +135,12 @@ struct intel_vsec_platform_info {
-  * struct intel_vsec_device - Auxbus specific device information
-  * @auxdev:        auxbus device struct for auxbus access
-  * @dev:           struct device associated with the device
-- * @resource:      any resources shared by the parent
-+ * @resource:      PCI discovery resources (BAR windows), one per discovery
-+ *                 instance. Valid only when @src =3D=3D INTEL_VSEC_DISC_P=
-CI
-+ * @acpi_disc:     ACPI discovery tables, each entry is two QWORDs
-+ *                 in little-endian format as defined by the PMT ACPI spec.
-+ *                 Valid only when @src =3D=3D INTEL_VSEC_DISC_ACPI.
-+ * @src:           source of discovery table data
-  * @ida:           id reference
-  * @num_resources: number of resources
-  * @id:            xarray id
-@@ -138,6 +154,8 @@ struct intel_vsec_device {
- 	struct auxiliary_device auxdev;
- 	struct device *dev;
- 	struct resource *resource;
-+	u32 (*acpi_disc)[4];
-+	enum intel_vsec_disc_source src;
- 	struct ida *ida;
- 	int num_resources;
- 	int id; /* xa */
---=20
-2.43.0
 
