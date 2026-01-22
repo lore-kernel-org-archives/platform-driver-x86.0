@@ -1,249 +1,104 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.9])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-dl1-f43.google.com (mail-dl1-f43.google.com [74.125.82.43])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9A7AD2FCC01;
-	Thu, 22 Jan 2026 10:29:19 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.9
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CD070436350
+	for <platform-driver-x86@vger.kernel.org>; Thu, 22 Jan 2026 12:06:52 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=74.125.82.43
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1769077762; cv=none; b=BRi1Vwoaw9bn58oQZF9g6Tp8aLsV3CltnzJnUgUTszaezdANWZuZ5igDfCJ18P8i+/oI9GbnewzNsXkXSkZfqCWoq2M+XiPJrOD6GQAkLL8G+dQbCNg6Z45snuevP3elFgzxd2JUY817q2ZTrqG1wgafk5JQ4NkcvJhrHoAqlIU=
+	t=1769083614; cv=none; b=Ia95HyrSoOdppGmPkGolnWqmGUIrD1yeHJ6dqUCscb5ItOcPYiuuUheDhkO2czHISbSue+9FigKqRxL48iycmFacZGCw193BaZpuklzWv/CGtPlL07DRpGGLmCbFm7w1GaiwbZQTJ+R5WSLa70eeKnBA4NpqqIbeFMu8ZARvIl4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1769077762; c=relaxed/simple;
-	bh=cblTEV09hHyDFC8jkM6gv28riPyAg/Gct4AQ2WAGjjE=;
-	h=From:Date:To:cc:Subject:In-Reply-To:Message-ID:References:
-	 MIME-Version:Content-Type; b=LG6TETuTWW83NtETUsAylZD/TWreXIYyGdQlny449LVTgGV/Hkcw6H7aO/D4GmrGDMkqKtoraFQ2s+1NRypcAKqUZLJNpyupPkOfPFU4DoktXdOC2l0OXFrR08cJw3PBp3Pl4y/sNDZ1/vsxjTQPM3zAu2tDMRUg9D3TGz85lro=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=pass smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=Fly5p88E; arc=none smtp.client-ip=192.198.163.9
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.intel.com
+	s=arc-20240116; t=1769083614; c=relaxed/simple;
+	bh=H5bfxjxOOybJxC9nva4c47n9uGAjokywgP+DOLiXOuk=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=owkI1A4JtNcIa/DClc1baOZtu+ijtrKitEPOK4rR+U4NSfjZQg/8GgYWbAG38/D3KSVwT6jPY8Sj1dcGAThDQgqbw6A6ccxoSHcbLnj2ocdLid1Fcgk6ZBLLbaqjLZt0fZ/pLSJuX8T/hU6zkTJZTbg8XGClOkEAD0m9LqQwEO8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=XFGfIExP; arc=none smtp.client-ip=74.125.82.43
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="Fly5p88E"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1769077759; x=1800613759;
-  h=from:date:to:cc:subject:in-reply-to:message-id:
-   references:mime-version;
-  bh=cblTEV09hHyDFC8jkM6gv28riPyAg/Gct4AQ2WAGjjE=;
-  b=Fly5p88ErsxkLYC82LLa3EJNY/4M1FdUz12XS1vRHNcnYIG1P3jITkA8
-   IGM5+jUnKTvMl+46EXWIe/wIOyofmeCpaTPkmbTzw/5ij0GL/CtbEar92
-   X70Q8gFPGOnd3zudhOi16NNypU+1yNd4WVnQklbinBiNKU1SPMEuDBTUZ
-   fK2yHZEOJsvvKUKLzy4CysvEjVdlVcZTKuhphsieIBIImgAdztcPJwHyU
-   IFgsukphsbkEY+jtbU/97FL2CoKtZmeZazbMz439I+jvMkCeQpnKvx/md
-   h1hxepQB3hgp+UWT25sWW3gqpErg66uoVMTogz/aZwZU3aDwa8cqXfwTF
-   w==;
-X-CSE-ConnectionGUID: hB0yma48S/qHmWRjr26btA==
-X-CSE-MsgGUID: 1njcaGWKS3K54m7cOheJag==
-X-IronPort-AV: E=McAfee;i="6800,10657,11678"; a="81035161"
-X-IronPort-AV: E=Sophos;i="6.21,246,1763452800"; 
-   d="scan'208";a="81035161"
-Received: from fmviesa007.fm.intel.com ([10.60.135.147])
-  by fmvoesa103.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 22 Jan 2026 02:29:19 -0800
-X-CSE-ConnectionGUID: pnG7EpKfRp6VftNnrFmYgQ==
-X-CSE-MsgGUID: V4m/dzw1SMuDhiEc9UxVtQ==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.21,246,1763452800"; 
-   d="scan'208";a="206306411"
-Received: from ijarvine-mobl1.ger.corp.intel.com (HELO localhost) ([10.245.244.15])
-  by fmviesa007-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 22 Jan 2026 02:29:07 -0800
-From: =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
-Date: Thu, 22 Jan 2026 12:29:04 +0200 (EET)
-To: "David E. Box" <david.e.box@linux.intel.com>
-cc: thomas.hellstrom@linux.intel.com, rodrigo.vivi@intel.com, 
-    irenic.rajneesh@gmail.com, srinivas.pandruvada@linux.intel.com, 
-    intel-xe@lists.freedesktop.org, dri-devel@lists.freedesktop.org, 
-    xi.pardee@linux.intel.com, Hans de Goede <hansg@kernel.org>, 
-    LKML <linux-kernel@vger.kernel.org>, platform-driver-x86@vger.kernel.org
-Subject: Re: [PATCH v3 6/6] platform/x86/intel/vsec: Plumb ACPI PMT discovery
- tables through vsec
-In-Reply-To: <20260122030903.3247167-7-david.e.box@linux.intel.com>
-Message-ID: <a2ad65a0-7c90-45ae-bb13-e4a3e8a58dae@linux.intel.com>
-References: <20260122030903.3247167-1-david.e.box@linux.intel.com> <20260122030903.3247167-7-david.e.box@linux.intel.com>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="XFGfIExP"
+Received: by mail-dl1-f43.google.com with SMTP id a92af1059eb24-121bf277922so1501968c88.0
+        for <platform-driver-x86@vger.kernel.org>; Thu, 22 Jan 2026 04:06:52 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1769083612; x=1769688412; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=ffs+w4DscJyBQZUlTQJL5EGY4HnsBlHJpHVONByfr1M=;
+        b=XFGfIExPDPuA9x5nzPU2Hi8W6tRa0gDmNYBx560uR2mwno0XZEgIGQ79TapC/RNxia
+         J9bXLL6QiHIFN6jltqmPr9ULz3vz8rwI24ltdrHnDn48FVD0m/HTEMgMNenAi2FbobW6
+         13rf+ogLxqtY5GJUhmfF2L5drLMu98oN0QZrAjSrIExLpNVFYB7BJN6sW8pvN+A3GGbe
+         qJ33dk8/ETr53jCfY+DhtOmRYtnu7E1dTJs0b0qcIIsqHqX7PAAPTtVA/D4kdo6lI0sm
+         yAhkkNX0PXoZFzegsRzjJOd/cDRvgp3kf588OM/Gcg2M5a0P9T0ZNrM4MazO1N6i+rB8
+         GA0A==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1769083612; x=1769688412;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-gg:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=ffs+w4DscJyBQZUlTQJL5EGY4HnsBlHJpHVONByfr1M=;
+        b=Pz+PAD/i6uuR1O4xldoZxR8OaZiOazHTHjiGfrLgYYhn7//wgnAp+YVg5BLbtuAuIa
+         LlopCBTyzqrgjxUXQZIJCrXlfqRFUEASUydpsOWt9ZYH269+mc4l/q2d41UkzM43jf1E
+         4Kpkbkre9CvnIfmeKB+OlQcmIdjyxgA/Dk3zCQEXZDbOi62i1RVbXWurIXyfM44e2IfK
+         KNr3nHt0TKDInohxD/ST59+PG/d8zVFnVN/M13Qvl3bqjJfQi0QlbymAHgTsH8/4e350
+         xqCpmEp9uLoARscWuw8nSLLQI2eDssU9OEZM/TqxAIPRiIERRwJQ9cKMOpqe2WNHqWAY
+         Z67Q==
+X-Gm-Message-State: AOJu0Yy1ADTLaSruwoAU5WUmAqEaaurNbl8nADTaslik+f+cC3OmW0Is
+	OHRfkx5M7zoSj/d4sQ/8WX/w5B+eOan65veVNP2I/z6NmnzowDcGxUFG
+X-Gm-Gg: AZuq6aJkdKrSBRxZ1fIfQOjIGeCqrtXpVV8AGJDV1dDYslNvLF6Ym8WPoMMOb3FIWxA
+	eNypK7hKIcPF2uUKaRHeQn4PeN4mcRoYEXydPg5zT3nduugimpMwPi2FqtguQibziUzaKma2oLw
+	Jas6CPzFZl5+Z2GDOfEDpKWsLyOd6TBFH9CQ2Lttul9TZCq3yX1o8jtU8kDGVKUqIm4VMdFRC5+
+	z7O1zIE9kftT4/szJVFoMWXjMmh0Qn/0lVA/3NlPFYJOtVV7gYmWnc3VAVGd/sSMQJtgNKJU07+
+	RbeAksiQt88MI7Kukb/pKVAJBs030CLhrSt9AlRbWz8aw9a/dwhQioK/sjAl8dMWPz4CgqxWMTB
+	zgm8BrfhlgqGRLkIA9XIxOI3I/KSJAPucgrCPAiBC+2reA2ZEtqK4PkcKtGvd1+HiqTmVM3XvMG
+	Qi47YRBjSSt8jQ/GeN6N0KEPdzkC/vL5HtE1WFL9/wO6TLT9LwtEiNMW0ifqPoJuh+
+X-Received: by 2002:a05:7022:f96:b0:11b:65e:f35 with SMTP id a92af1059eb24-1244b3050f4mr11778020c88.7.1769083611830;
+        Thu, 22 Jan 2026 04:06:51 -0800 (PST)
+Received: from gongqi-WUJIE-Series.. ([38.213.30.151])
+        by smtp.gmail.com with ESMTPSA id a92af1059eb24-1244ad7201fsm30297416c88.7.2026.01.22.04.06.49
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 22 Jan 2026 04:06:51 -0800 (PST)
+From: gongqi <550230171hxy@gmail.com>
+To: Shyam-sundar.S-k@amd.com,
+	hansg@kernel.org,
+	ilpo.jarvinen@linux.intel.com
+Cc: platform-driver-x86@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	gongqi <550230171@qq.com>
+Subject: [PATCH 3/4] platform/x86/amd/pmc: Add quirk for MECHREVO Wujie 15X Pro
+Date: Thu, 22 Jan 2026 20:06:47 +0800
+Message-ID: <20260122120647.3471893-1-550230171hxy@gmail.com>
+X-Mailer: git-send-email 2.43.0
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/mixed; boundary="8323328-2132290946-1769077744=:1059"
+Content-Transfer-Encoding: 8bit
 
-  This message is in MIME format.  The first part should be readable text,
-  while the remaining parts are likely unreadable without MIME-aware tools.
+From: gongqi <550230171@qq.com>
 
---8323328-2132290946-1769077744=:1059
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: QUOTED-PRINTABLE
+The MECHREVO Wujie 15X Pro suffers from spurious IRQ issues related to the AMD PMC. Add it to the quirk list to use the spurious_8042 fix.
+---
+ drivers/platform/x86/amd/pmc/pmc-quirks.c | 7 +++++++
+ 1 file changed, 7 insertions(+)
 
-On Wed, 21 Jan 2026, David E. Box wrote:
+diff --git a/drivers/platform/x86/amd/pmc/pmc-quirks.c b/drivers/platform/x86/amd/pmc/pmc-quirks.c
+index 404e62ad293a9..ed285afaf9b0d 100644
+--- a/drivers/platform/x86/amd/pmc/pmc-quirks.c
++++ b/drivers/platform/x86/amd/pmc/pmc-quirks.c
+@@ -302,6 +302,13 @@ static const struct dmi_system_id fwbug_list[] = {
+ 			DMI_MATCH(DMI_BOARD_NAME, "XxKK4NAx_XxSP4NAx"),
+ 		}
+ 	},
++	{
++		.ident = "MECHREVO Wujie 15X Pro",
++		.driver_data = &quirk_spurious_8042,
++		.matches = {
++			DMI_MATCH(DMI_BOARD_NAME, "WUJIE Series-X5SP4NAG"),
++		}
++	},
+ 	{}
+ };
+ 
+-- 
+2.43.0
 
-> Some platforms expose PMT discovery via ACPI instead of PCI BARs. Add a
-> generic discovery source flag and carry ACPI discovery entries alongside
-> the existing PCI resource path so PMT clients can consume either.
->=20
-> Changes:
->   - Add enum intel_vsec_disc_source { _PCI, _ACPI }.
->   - Extend intel_vsec_platform_info and intel_vsec_device with source enu=
-m
->     and ACPI discovery table pointer/
->   - When src=3D=3DACPI, skip BAR resource setup and copy the ACPI discove=
-ry
->     entries into the aux device.
->=20
-> No user-visible behavior change yet; this only wires ACPI data through vs=
-ec
-> in preparation for ACPI-enumerated PMT clients.
->=20
-> Signed-off-by: David E. Box <david.e.box@linux.intel.com>
-> ---
->=20
-> v3:
->   - Re-send with all changes intended for v2 which was sent without them
->     being applied.
->=20
-> v2:
->   - Improve comment to clarify BAR resource setup doesn't apply to ACPI
->     discovery
->   - Add missing #include for kmemdup()
->   - Use array_size() for overflow protection
->     (review comments by Ilpo J=C3=A4rvinen)
->=20
->=20
->  drivers/platform/x86/intel/vsec.c | 24 ++++++++++++++++++++++++
->  include/linux/intel_vsec.h        | 20 +++++++++++++++++++-
->  2 files changed, 43 insertions(+), 1 deletion(-)
->=20
-> diff --git a/drivers/platform/x86/intel/vsec.c b/drivers/platform/x86/int=
-el/vsec.c
-> index 4aeb0728b435..b1465e67feef 100644
-> --- a/drivers/platform/x86/intel/vsec.c
-> +++ b/drivers/platform/x86/intel/vsec.c
-> @@ -24,7 +24,9 @@
->  #include <linux/intel_vsec.h>
->  #include <linux/kernel.h>
->  #include <linux/module.h>
-> +#include <linux/overflow.h>
->  #include <linux/pci.h>
-> +#include <linux/string.h>
->  #include <linux/types.h>
-> =20
->  #define PMT_XA_START=09=09=090
-> @@ -109,6 +111,7 @@ static void intel_vsec_dev_release(struct device *dev=
-)
-> =20
->  =09ida_free(intel_vsec_dev->ida, intel_vsec_dev->auxdev.id);
-> =20
-> +=09kfree(intel_vsec_dev->acpi_disc);
->  =09kfree(intel_vsec_dev->resource);
->  =09kfree(intel_vsec_dev);
->  }
-> @@ -320,6 +323,13 @@ static int intel_vsec_add_dev(struct device *dev, st=
-ruct intel_vsec_header *head
->  =09 * auxiliary device driver.
->  =09 */
->  =09for (i =3D 0, tmp =3D res; i < header->num_entries; i++, tmp++) {
-> +=09=09/*
-> +=09=09 * Skip resource mapping check for ACPI-based discovery
-> +=09=09 * since those tables are read from _DSD, not MMIO.
-> +=09=09 */
-> +=09=09if (info->src =3D=3D INTEL_VSEC_DISC_ACPI)
-> +=09=09=09break;
-> +
->  =09=09tmp->start =3D base_addr + header->offset + i * (header->entry_siz=
-e * sizeof(u32));
->  =09=09tmp->end =3D tmp->start + (header->entry_size * sizeof(u32)) - 1;
->  =09=09tmp->flags =3D IORESOURCE_MEM;
-> @@ -338,6 +348,20 @@ static int intel_vsec_add_dev(struct device *dev, st=
-ruct intel_vsec_header *head
->  =09intel_vsec_dev->base_addr =3D info->base_addr;
->  =09intel_vsec_dev->priv_data =3D info->priv_data;
->  =09intel_vsec_dev->cap_id =3D cap_id;
-> +=09intel_vsec_dev->src =3D info->src;
-> +
-> +=09if (info->src =3D=3D INTEL_VSEC_DISC_ACPI) {
-> +=09=09size_t bytes;
-> +
-> +=09=09bytes =3D array_size(intel_vsec_dev->num_resources,
-> +=09=09=09=09   sizeof(info->acpi_disc[0]));
-> +=09=09if (!bytes)
-> +=09=09=09return -EOVERFLOW;
-
-Is this correct as array_size() is documented to return SIZE_MAX on=20
-overflow?
-
-Other than that, this series looked very straightforward now.
-
---=20
- i.
-
-> +
-> +=09=09intel_vsec_dev->acpi_disc =3D kmemdup(info->acpi_disc, bytes, GFP_=
-KERNEL);
-> +=09=09if (!intel_vsec_dev->acpi_disc)
-> +=09=09=09return -ENOMEM;
-> +=09}
-> =20
->  =09if (header->id =3D=3D VSEC_ID_SDSI)
->  =09=09intel_vsec_dev->ida =3D &intel_vsec_sdsi_ida;
-> diff --git a/include/linux/intel_vsec.h b/include/linux/intel_vsec.h
-> index 4eecb2a6bac4..1fe5665a9d02 100644
-> --- a/include/linux/intel_vsec.h
-> +++ b/include/linux/intel_vsec.h
-> @@ -33,6 +33,11 @@ struct device;
->  struct pci_dev;
->  struct resource;
-> =20
-> +enum intel_vsec_disc_source {
-> +=09INTEL_VSEC_DISC_PCI,=09/* PCI, default */
-> +=09INTEL_VSEC_DISC_ACPI,=09/* ACPI */
-> +};
-> +
->  enum intel_vsec_id {
->  =09VSEC_ID_TELEMETRY=09=3D 2,
->  =09VSEC_ID_WATCHER=09=09=3D 3,
-> @@ -103,6 +108,10 @@ struct vsec_feature_dependency {
->   * @parent:    parent device in the auxbus chain
->   * @headers:   list of headers to define the PMT client devices to creat=
-e
->   * @deps:      array of feature dependencies
-> + * @acpi_disc: ACPI discovery tables, each entry is two QWORDs
-> + *             in little-endian format as defined by the PMT ACPI spec.
-> + *             Valid only when @provider =3D=3D INTEL_VSEC_DISC_ACPI.
-> + * @src:       source of discovery table data
->   * @priv_data: private data, usable by parent devices, currently a callb=
-ack
->   * @caps:      bitmask of PMT capabilities for the given headers
->   * @quirks:    bitmask of VSEC device quirks
-> @@ -113,6 +122,8 @@ struct intel_vsec_platform_info {
->  =09struct device *parent;
->  =09struct intel_vsec_header **headers;
->  =09const struct vsec_feature_dependency *deps;
-> +=09u32 (*acpi_disc)[4];
-> +=09enum intel_vsec_disc_source src;
->  =09void *priv_data;
->  =09unsigned long caps;
->  =09unsigned long quirks;
-> @@ -124,7 +135,12 @@ struct intel_vsec_platform_info {
->   * struct intel_vsec_device - Auxbus specific device information
->   * @auxdev:        auxbus device struct for auxbus access
->   * @dev:           struct device associated with the device
-> - * @resource:      any resources shared by the parent
-> + * @resource:      PCI discovery resources (BAR windows), one per discov=
-ery
-> + *                 instance. Valid only when @src =3D=3D INTEL_VSEC_DISC=
-_PCI
-> + * @acpi_disc:     ACPI discovery tables, each entry is two QWORDs
-> + *                 in little-endian format as defined by the PMT ACPI sp=
-ec.
-> + *                 Valid only when @src =3D=3D INTEL_VSEC_DISC_ACPI.
-> + * @src:           source of discovery table data
->   * @ida:           id reference
->   * @num_resources: number of resources
->   * @id:            xarray id
-> @@ -138,6 +154,8 @@ struct intel_vsec_device {
->  =09struct auxiliary_device auxdev;
->  =09struct device *dev;
->  =09struct resource *resource;
-> +=09u32 (*acpi_disc)[4];
-> +=09enum intel_vsec_disc_source src;
->  =09struct ida *ida;
->  =09int num_resources;
->  =09int id; /* xa */
->=20
---8323328-2132290946-1769077744=:1059--
