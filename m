@@ -1,199 +1,192 @@
-Received: from fhigh-b3-smtp.messagingengine.com (fhigh-b3-smtp.messagingengine.com [202.12.124.154])
+Received: from mout.gmx.net (mout.gmx.net [212.227.15.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9EB1429D277
-	for <platform-driver-x86@vger.kernel.org>; Fri, 23 Jan 2026 19:48:53 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=202.12.124.154
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 124B33EBF3B;
+	Fri, 23 Jan 2026 21:15:50 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=212.227.15.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1769197737; cv=none; b=cHu+Edd9tvKcbWs7UTRjXPvizsVHDOPc/Ul56W/LIxjmPP4YFq7ejXn6EUqIErpJAFur+53a0JsO7xeBQD4mgAQ8+UxcYI6nxi92TrMj1+etXysJzNhsO37Xu9m63uF/bU5uyFEBSuFNlc8yXiSpF1miK2ZDWDwuE7CAuqPhMSo=
+	t=1769202953; cv=none; b=p/fSfyJwLFyo0Rl8DMTxhQ/gCOT2tsErv2TdsA0HsV1Xno86Ou5qyKd9ZJ/evd8f9TZrTEmQrWU4Dn+dDVCOIOf1E/kQv9GjcIfjga+3OxsvZTh6sHUqDaP4k77nXh+nunbibCSZSBU5kOq2T6jtEtiGG1j0Wd0twiLUtgiF6Us=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1769197737; c=relaxed/simple;
-	bh=LNJIwNah0F6kaUbvxmJagGksqE+bmMpstX4hXTPFiVo=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=GF+hQGYzsg3rEhHRpP6YxHzL8Gw8/TRQil8ApjOlggQiHkv1o/1UnjR1+iTNGPTfbCbQk/pQ9pvUD/YZEBAa+iNSc1LxPIE7Ma26wMqsj7TASd4v3Q0Xwh9eYuUD9NoghMttqWoE0ZECEd/0GS1P9DCVocGYNLtXM052+bg227s=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=vdwaa.nl; spf=pass smtp.mailfrom=vdwaa.nl; dkim=pass (2048-bit key) header.d=vdwaa.nl header.i=@vdwaa.nl header.b=hz+Lw6mb; dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b=bekvxOFb; arc=none smtp.client-ip=202.12.124.154
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=vdwaa.nl
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=vdwaa.nl
+	s=arc-20240116; t=1769202953; c=relaxed/simple;
+	bh=cMvpB3tbdx+Ir5joqBpK82ppqsjTU0DdNNRcOz88mAo=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=R4MEuL9gKLjDKZ5fmpGobTaO8nE7IXjCe3QbjwAb9Hh3y0veE64a6OsJtdc7+rvIQsVP53rINoIH6lLEeEHq8l+0Rk8XAJgOJCH/J6yMCBzjMUehNpRvXGXoXtCWV6aVy5UMqfybEmVDPwjUi77KWhwC7Be1pVEB+NXPoU+w3R8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gmx.de; spf=pass smtp.mailfrom=gmx.de; dkim=pass (2048-bit key) header.d=gmx.de header.i=w_armin@gmx.de header.b=pq0lGFfK; arc=none smtp.client-ip=212.227.15.18
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gmx.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmx.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=vdwaa.nl header.i=@vdwaa.nl header.b="hz+Lw6mb";
-	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="bekvxOFb"
-Received: from phl-compute-06.internal (phl-compute-06.internal [10.202.2.46])
-	by mailfhigh.stl.internal (Postfix) with ESMTP id 2F5CB7A0095;
-	Fri, 23 Jan 2026 14:48:52 -0500 (EST)
-Received: from phl-frontend-04 ([10.202.2.163])
-  by phl-compute-06.internal (MEProxy); Fri, 23 Jan 2026 14:48:52 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=vdwaa.nl; h=cc
-	:cc:content-transfer-encoding:content-type:content-type:date
-	:date:from:from:in-reply-to:in-reply-to:message-id:mime-version
-	:references:reply-to:subject:subject:to:to; s=fm3; t=1769197732;
-	 x=1769284132; bh=LEx+Xcs92zs495bzSFGAzIC4KYJr0WfdDd8M3dkgyw0=; b=
-	hz+Lw6mbU1yTgZoAFtB50OmgY7owwqcwZuUageeG17fEcJbzDjZeAFMDeewt7rPB
-	LBAvGs/AgijZeL2qghh/N/6MNEXjGlWxEHFMnSMT9lRbrk+yhGH/2Qy4LJro+34w
-	iFHh+Gk4MusThnA2y6YkbplATnrLUZKEF3ySgh/CzQSKubqWmoQQbRY+74aKgGDr
-	Z09kVXoEy5L2oqDf45i7SUkGJ2GBYeat7dy4hHbdBp6AO8bnwyUl3tv0yFmlvnPR
-	0bgFUJsXN6KqmgGG9TDbAXaFpI59p7N+EpAvJ8b3nNcRiK7q/l75WZpGzh18lWe6
-	8tfi3lm85n5F8On/PyRjpw==
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-	messagingengine.com; h=cc:cc:content-transfer-encoding
-	:content-type:content-type:date:date:feedback-id:feedback-id
-	:from:from:in-reply-to:in-reply-to:message-id:mime-version
-	:references:reply-to:subject:subject:to:to:x-me-proxy
-	:x-me-sender:x-me-sender:x-sasl-enc; s=fm2; t=1769197732; x=
-	1769284132; bh=LEx+Xcs92zs495bzSFGAzIC4KYJr0WfdDd8M3dkgyw0=; b=b
-	ekvxOFb27AYN/oZ+LY6pOQ0POSs6sYePJ3Dn+KZcIzHaTlo8gStUunXh+FLxT0fa
-	64sdU2AneBP9eBEfIL1ClD/kbn4qSNgxOHyzJUAL/8npX3XkEtXdUjiF51sskQ8R
-	J3aHkV4eg4R7Fnpl4N3IqQONcZ4F7GWhaP5gh0ygLCVCbWul26JK2zNPSRHl35lX
-	B6nzcjWdaHQmUYBZ5lyRgKL3vH/MhS1a7EEAUKcDCm7wvA+mpOa7K28VXBmKTbBQ
-	YLXWsQ8pNDH1MKuuYH5mWBjR2eDELhSwa4JdgYWmZjYPasPFWbUaNBmKkXcrri0F
-	HJl5fJuI1kTsoFtwm1Cbw==
-X-ME-Sender: <xms:o9BzaYfgR12ldhVQ287enveJC3_buFbU4Gic3uVb6_JJcOKqau7Fnw>
-    <xme:o9BzabsNad9AHFgkdaVnlRFn1G0GKEyZ2hgIOPNUIIYUikUrcKV2MhgCQWD3y11WG
-    OlM6TOfiFR9Dmu8ITYvDP4zVrcj9XTFOpMT3YM0ruyFrUn3O9HsWL7d>
-X-ME-Received: <xmr:o9BzaZmXiolSeABCtiPyCmnVq4YXDjtEXJ90y9vduOc-xSiaATLYRLrNcFNOcPdz4z_jolrruPXEd5gJWSf2HmvX2skNmQ>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeefgedrtddtgddugeelledvucetufdoteggodetrf
-    dotffvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdfurfetoffkrfgpnffqhgenuceu
-    rghilhhouhhtmecufedttdenucesvcftvggtihhpihgvnhhtshculddquddttddmnecujf
-    gurhepkfffgggfuffvvehfhfgjtgfgsehtkeertddtvdejnecuhfhrohhmpeflvghllhgv
-    uchvrghnucguvghrucghrggruceojhgvlhhlvgesvhgufigrrgdrnhhlqeenucggtffrrg
-    htthgvrhhnpeefhfeuudefgfeltedtvefgjeelteektdduheduiedvvdfglefhiedvhfdu
-    tdekueenucffohhmrghinhepghhithhhuhgsrdgtohhmpdhmohguvghlshdrmhgunecuve
-    hluhhsthgvrhfuihiivgeptdenucfrrghrrghmpehmrghilhhfrhhomhepjhgvlhhlvges
-    vhgufigrrgdrnhhlpdhnsggprhgtphhtthhopeehpdhmohguvgepshhmthhpohhuthdprh
-    gtphhtthhopeifpggrrhhmihhnsehgmhigrdguvgdprhgtphhtthhopehhrghnshhgsehk
-    vghrnhgvlhdrohhrghdprhgtphhtthhopehilhhpohdrjhgrrhhvihhnvghnsehlihhnuh
-    igrdhinhhtvghlrdgtohhmpdhrtghpthhtohepphhlrghtfhhorhhmqdgurhhivhgvrhdq
-    giekieesvhhgvghrrdhkvghrnhgvlhdrohhrghdprhgtphhtthhopehfrhgvuggvrhhikh
-    eshhgrrhifrghthhdrnhgrmhgv
-X-ME-Proxy: <xmx:o9BzadxbPoeyx8aHaRxPoW-fhNf8VHkGe2i5oib3YN1voIEOQJoMFg>
-    <xmx:o9BzabMMHmk1X15UIt2baoFvxFnOxPWTrZ4XPEc0w5X-FA1lKxrkTA>
-    <xmx:o9BzaZp7qad4fAuhvJLwaRHgr_GLrFziRN3yiwKIY4gXrAj4LJ6kXw>
-    <xmx:o9BzaUFX8W7XvDrveiSZMwyHtUaVGQ51OpNYTDWOnR48ItENB4JZnw>
-    <xmx:pNBzad8_pb7vurOrlLf_-HQWydikbC9MyHL4jyN2z4q24Jf0Su03wXFI>
-Feedback-ID: i2d0446dd:Fastmail
-Received: by mail.messagingengine.com (Postfix) with ESMTPA; Fri,
- 23 Jan 2026 14:48:50 -0500 (EST)
-Message-ID: <b22aaf97-063f-4f76-869a-43f2c1823d12@vdwaa.nl>
-Date: Fri, 23 Jan 2026 20:48:50 +0100
+	dkim=pass (2048-bit key) header.d=gmx.de header.i=w_armin@gmx.de header.b="pq0lGFfK"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=gmx.de;
+	s=s31663417; t=1769202949; x=1769807749; i=w_armin@gmx.de;
+	bh=4gkhjFnSq6sjTl08fgnb1tAfyFyYgO66qR2R3XB3Eik=;
+	h=X-UI-Sender-Class:From:To:Cc:Subject:Date:Message-Id:
+	 MIME-Version:Content-Transfer-Encoding:cc:
+	 content-transfer-encoding:content-type:date:from:message-id:
+	 mime-version:reply-to:subject:to;
+	b=pq0lGFfKbVrS7MSq2HDEOg7QCi9mdAjh3MylmhfTRkVg2MHwshTb4L8XofCea33W
+	 H02ceXTJ7dX+K4PEdMBtsRClBPIjFEynpLkwpTno62tuPtxjdbLxDn/D9SkdQPgwn
+	 4pS3gQia0w+ArX0Yq0/BYGHSiIRWh84/pa3bzoU52JiCwM+Vc4N+3uYGqoomJpULD
+	 h9BTtJSaS6QLsMRt2CFtShjRKYCm7SsKgSY5m5kL7miyAXvrbsOAi9v3drRi3NTbL
+	 vxuqne46Cl1FD65OUq9h9+sYzG6IQW0vX2YVnPwit6YS8bpPU4S6YRh5ZZ5rTvske
+	 NAOLubMQ8u2fVlFO0g==
+X-UI-Sender-Class: 724b4f7f-cbec-4199-ad4e-598c01a50d3a
+Received: from mx-amd-b650.fritz.box ([93.202.247.91]) by mail.gmx.net
+ (mrgmx005 [212.227.17.190]) with ESMTPSA (Nemesis) id
+ 1MIMfW-1vXH283fNM-00HUZw; Fri, 23 Jan 2026 22:15:49 +0100
+From: Armin Wolf <W_Armin@gmx.de>
+To: ilpo.jarvinen@linux.intel.com,
+	hansg@kernel.org
+Cc: nathan@kernel.org,
+	platform-driver-x86@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Subject: [PATCH] platform/wmi: string-kunit: Add missing oversized string test case
+Date: Fri, 23 Jan 2026 22:15:37 +0100
+Message-Id: <20260123211537.4448-1-W_Armin@gmx.de>
+X-Mailer: git-send-email 2.39.5
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 1/1] platform/x86: add Acer battery control driver
-To: Armin Wolf <W_Armin@gmx.de>, Hans de Goede <hansg@kernel.org>,
- =?UTF-8?Q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
-Cc: platform-driver-x86@vger.kernel.org,
- Frederik Harwath <frederik@harwath.name>
-References: <20260105171024.227758-1-jelle@vdwaa.nl>
- <20260105171024.227758-2-jelle@vdwaa.nl>
- <263a3aae-2edc-4219-af93-65e7a53ba399@gmx.de>
-Content-Language: en-US
-From: Jelle van der Waa <jelle@vdwaa.nl>
-Autocrypt: addr=jelle@vdwaa.nl;
- keydata= xsBNBE6QLAIBCAC3O6LmF+GKvOh7IV00TG+EKAQHAwjESnHGJOW58lKK7eAYn62ZM1uy0+6h
- yCMu5PD7+ND6U1gcgTTHYwNK8AaJt7yY4FRssgdcJk59uJBwROZtllotClJ893CuB6Wgr68b
- 07gIRbENYrB8rEoGfpUG//8/ep7sY8PS03jnFb4ll6mPlUE2oQVdYOlXgF4f9qkkIi4SQeE2
- MTuERaOrDuUNDlroJ7Yfx3J/rL5Qjn578/TKCAxg0pns6VIA/P9spRGmLhT4zP+OxZXeSZme
- IxcwFdJJXHr4oGaZvqe1yHlMmKR98rrIfPWhkw2Ls/XIZIxf6prT0XyczbzBnC2y1JyNABEB
- AAHNIkplbGxlIHZhbiBkZXIgV2FhIDxqZWxsZUB2ZHdhYS5ubD7CwHsEEwECACUCGwMGCwkI
- BwMCBhUIAgkKCwQWAgMBAh4BAheABQJUX8WhAhkBAAoJEMBghjN8UHc+mFwH/jjN+Qob4O36
- YiieajRwVLGuYdUDt9Z655oQYU8V4qbWf2tjUtqTYXrxLnaY6xQoYouRz9yFbh9dIKZb67ir
- 7AeVgCOtWVesGxAlGH6EY5JBZcsN0v0ScsivqQAv/Mv+4HK+XM57YlyRagD8tkprYskioWHg
- OwQfXAO6nlm4BJHWO9bHJUMgiGs7I190IKQG7iLBnJuGjsOFuy5KTLpnv+w7twmz0H+pkUPe
- jVHfJlJWdN4v1PigpgpjOR6ZepSIggMk7dHsa6GNLUOzi61yYVFe60+EGXhwyJIqSt56a4oR
- jMUcXaOugGr+JwC8Eq7Pg2+aFk+8fbe0oUzZJucHGnDOwE0ETpAsAgEIAK4Usb7B00WRxCZG
- HtM973F7V4OhOKv4kZKduxtu71bVUZsTuzn4h+m8guJ51uY/I2icUrN9gJG5aEzRqPuQi2L7
- KmZUjs3pscZWgUgiT8UZFDR6RuQ4k3CcWobsRCjYZdSblSZ8ccrLJE7xSbwKMXjAh2PEiaQT
- lS6wQbn6mHv4y3H9QVHs7+jXbmfHCxnVcwLqRmpuegSmezDaL5TlSc102voiXinhrWEZUvAB
- KDh6VuJ/60Y6zelCXVsEjRaApz90iXY1nifLhkHM8B2wG7Pum3V3X0Y0QTVD+z3EL1iq5mFu
- epKp//IOeeJN5iwHcRSJGy2s1oOzjRDyPv6v1AUAEQEAAcLAXwQYAQIACQUCTpAsAgIbDAAK
- CRDAYIYzfFB3PvDuB/0dI13hSYHW27c2Rq8BaGbIhXYYETtPD5B25/P1JJ5OQZkPmVq+vSHw
- uzUaDZHy3ZcwE+xFXzlkwXGdWos07JUGo74zV3HfeZxVEPv0HB9ACqQVU/JKjLZNj2SfhgzL
- 4F+O4Zgdsf0YaZG09F5PbMvbhoCZLfAaKWz/4fLEfhrDJLhrphUyPDXosn0UxPkDv0iiixn4
- V+bEZ5/wd8dRWi58R/iND+gRGsBREm5SpzdhnsarwoX6YdsQ449379enDNUN7jV4C3Gkon2s
- VwI2ZZbS10cY8rFSAV/CJA2E9daRoz40DI0tgXgLBAVhy7y5HWZJsDZexU0HFKJfkDi7RUPj
-In-Reply-To: <263a3aae-2edc-4219-af93-65e7a53ba399@gmx.de>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
+Content-Transfer-Encoding: quoted-printable
+X-Provags-ID: V03:K1:f3PzZHweBQvHJjyo0BOxTR3tJiKknxqHu/6lNp3upznOreW9MYL
+ 6HFuAm0UX6Puz8iN1gsZZyTWHAEfeDNaXLsdo7AWWU1OyRvhcsOlW6G8ESklzoUjPnYc1hA
+ ZTkN3QfqDrR3ZsPwX90NQdcjUyNRMe02iG7cVpqX8Glcn0+bRxD7ANpcsGsReijom+LLEZ4
+ pEjPRb/xWD96s3pp8Nx+w==
+X-Spam-Flag: NO
+UI-OutboundReport: notjunk:1;M01:P0:xcFgXHvHH0s=;dl+vmkLUorWmUXNn0rad0JKtYvZ
+ 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
 
-On 1/8/26 14:50, Armin Wolf wrote:
-> Am 05.01.26 um 18:10 schrieb Jelle van der Waa:
-> 
->> Some Acer laptops can configure battery related features through Acer
->> Care Center on Windows. This driver uses the power supply extension to
->> set a battery charge limit and exposes the battery
->> temperature.
->>
->> This driver is based on the existing acer-wmi-battery project on GitHub
->> and was tested on an Acer Aspire A315-510P.
->>
->> Signed-off-by: Jelle van der Waa <jelle@vdwaa.nl>
->> ---
->>   drivers/platform/x86/Kconfig            |  12 +
->>   drivers/platform/x86/Makefile           |   1 +
->>   drivers/platform/x86/acer-wmi-battery.c | 345 ++++++++++++++++++++++++
->>   3 files changed, 358 insertions(+)
->>   create mode 100644 drivers/platform/x86/acer-wmi-battery.c
->>
->> diff --git a/drivers/platform/x86/Kconfig b/drivers/platform/x86/Kconfig
->> index 4cb7d97a9fcc..b3de6a2827e8 100644
->> --- a/drivers/platform/x86/Kconfig
->> +++ b/drivers/platform/x86/Kconfig
->> @@ -170,6 +170,18 @@ config ACER_WMI
->>         If you have an ACPI-WMI compatible Acer/ Wistron laptop, say Y 
->> or M
->>         here.
->> +config ACER_WMI_BATTERY
->> +    tristate "Acer WMI Battery"
->> +    depends on ACPI_WMI
->> +    depends on ACPI_BATTERY
->> +    depends on HWMON
-> 
-> Hi,
-> 
-> why do you need this HWMON dependency here? AFAIK you are not using any 
-> parts
-> of the hwmon API, so please remove this.
-> 
+When compiling the WMI string kunit tests using llvm, the compiler
+will issue a warning about "oversized_test_utf8_string" being unused.
+This happens because the test case that was supposed to use said
+variable was accidentally omitted when adding the kunit tests.
 
-Ah, since the battery temperature is exposed under hwmon in sysfs I 
-thought the driver would need a dependency on it.
+Fix this by adding the aforementioned test case.
 
-<snip>
+Fixes: 0e1a8143e797 ("platform/wmi: Add kunit test for the string conversi=
+on code")
+Reported-by: Nathan Chancellor <nathan@kernel.org>
+Closes: https://lore.kernel.org/platform-driver-x86/20260122234521.GA41318=
+3@ax162/
+Signed-off-by: Armin Wolf <W_Armin@gmx.de>
+=2D--
+ drivers/platform/wmi/tests/string_kunit.c | 18 ++++++++++++++++++
+ 1 file changed, 18 insertions(+)
 
->> +static int acer_wmi_battery_get_health_control_status(struct 
->> acer_wmi_battery_data *data,
->> +                                  s8 *health_mode)
-> 
-> Please run checkpatch --strict over this source file and fix any issues.
->
-
-Thanks for this suggestion, I wasn't aware of the --strict option.
-
-<snip>
-
->> +static const enum power_supply_property acer_battery_properties[] = {
->> +    POWER_SUPPLY_PROP_CHARGE_TYPES,
-> 
-> I own a Acer notebook that only supports the temperature sensor, not the 
-> health mode feature.
-> You can detect this by looking at the embedded WMI binary MOF data, but 
-> we currently have no
-> in-kernel parser for this.
-> 
-> I am working on adding support for the binary MOF data, but for now i 
-> suggest that you use a
-> DMI whitelist before enabling access to the health mode feature.
-
-I'l look into this when sending v2, the GitHub project has a list of 
-models which work with the driver so I'll include those in the DMI table.
-
-[1] https://github.com/frederik-h/acer-wmi-battery/blob/main/MODELS.md
-
-Thanks,
-
-Jelle van der Waa
-
+diff --git a/drivers/platform/wmi/tests/string_kunit.c b/drivers/platform/=
+wmi/tests/string_kunit.c
+index 9aa3ffa85090..117f32ee26a8 100644
+=2D-- a/drivers/platform/wmi/tests/string_kunit.c
++++ b/drivers/platform/wmi/tests/string_kunit.c
+@@ -228,6 +228,23 @@ static void wmi_string_to_utf8s_oversized_test(struct=
+ kunit *test)
+ 	KUNIT_EXPECT_MEMEQ(test, result, test_utf8_string, sizeof(test_utf8_stri=
+ng));
+ }
+=20
++static void wmi_string_from_utf8s_oversized_test(struct kunit *test)
++{
++	struct wmi_string *result;
++	size_t max_chars;
++	ssize_t ret;
++
++	max_chars =3D (TEST_WMI_STRING_LENGTH - sizeof(*result)) / 2;
++	result =3D kunit_kzalloc(test, TEST_WMI_STRING_LENGTH, GFP_KERNEL);
++	KUNIT_ASSERT_NOT_ERR_OR_NULL(test, result);
++
++	ret =3D wmi_string_from_utf8s(result, max_chars, oversized_test_utf8_str=
+ing,
++				    sizeof(oversized_test_utf8_string));
++
++	KUNIT_EXPECT_EQ(test, ret, sizeof(test_utf8_string) - 1);
++	KUNIT_EXPECT_MEMEQ(test, result, &test_wmi_string, sizeof(test_wmi_strin=
+g));
++}
++
+ static void wmi_string_to_utf8s_invalid_test(struct kunit *test)
+ {
+ 	u8 result[sizeof(invalid_test_utf8_string)];
+@@ -261,6 +278,7 @@ static struct kunit_case wmi_string_test_cases[] =3D {
+ 	KUNIT_CASE(wmi_string_to_utf8s_padded_test),
+ 	KUNIT_CASE(wmi_string_from_utf8s_padded_test),
+ 	KUNIT_CASE(wmi_string_to_utf8s_oversized_test),
++	KUNIT_CASE(wmi_string_from_utf8s_oversized_test),
+ 	KUNIT_CASE(wmi_string_to_utf8s_invalid_test),
+ 	KUNIT_CASE(wmi_string_from_utf8s_invalid_test),
+ 	{}
+=2D-=20
+2.39.5
 
