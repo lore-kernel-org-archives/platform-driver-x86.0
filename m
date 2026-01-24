@@ -1,59 +1,59 @@
-Received: from mail-pl1-f175.google.com (mail-pl1-f175.google.com [209.85.214.175])
+Received: from mail-pf1-f174.google.com (mail-pf1-f174.google.com [209.85.210.174])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E913D314D15
-	for <platform-driver-x86@vger.kernel.org>; Sat, 24 Jan 2026 12:44:40 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.175
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CAF13136358
+	for <platform-driver-x86@vger.kernel.org>; Sat, 24 Jan 2026 14:39:17 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.174
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1769258682; cv=none; b=UcRSCY3fq7itus1AfcMYH8Q99mj7ey6lXMyP9oFYqAS804iz9eZBcCbq5scYdY1Xr6q9goFTy7shvZj720qbw8ogcenKxjWDu+ody29fWhlokGwmBwpjirFs4t15P9LhDNearEhl5Nu5IAOD13El99+zg4437rwoGqz/yuEbXF8=
+	t=1769265559; cv=none; b=CdLIQUiEdkTKXGiiqjhbwfXtS/yYaZlj/INlegZwd1awvDFfC2kzhWSlqA0m7134mW4uGtcXX4FKZkWyN2Krz8N9Al9mXrWDlZ/o1AuooYCxF7qK7iJy3d7VD+MS/SGmfNRiePuvzl9GvNGsCM/jdD4BOgEr7Lb5vPCt77iLT4E=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1769258682; c=relaxed/simple;
-	bh=WgRHURJogev5ucEvv/X37UukWGJbTqdUewJX4X9RodE=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=CwTsqtO1RITH33zHj6m7o6OSWp8WZzeT7w2k7DJMJ8mnquC/x4ne0rTZMXvdNugSHh2Rc+mT50IjzRrv48LMxrc5lbsEQXhC8XZtYOMe75FcY4jNa9keqgARSnIc3FPaYyreIdc7Mm/fBY5yH+bbBgeot4/xEAaElTeWl3yWCcM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=jZGLWwCY; arc=none smtp.client-ip=209.85.214.175
+	s=arc-20240116; t=1769265559; c=relaxed/simple;
+	bh=1cYS1xyGB/AQcXNesF9rdTdu+yzmUCeeuNzGa7Doioc=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=DJDtHJwXBCkLhNDASXtBDLANlnS02662oXqC8iap75QBs4dBWzVESuMeIdqG6uoHpXU2ISr15ZPXPguJyg5Bx4wfMQ3QjRBNJ7tdLlqJv0Tif6FiLOUYB63sz3GilZ3c5taIJTNAUW6P7O5q8YNjgr6JM21lBVGIdvK3YZ6Blz8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=aqZeaKHu; arc=none smtp.client-ip=209.85.210.174
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="jZGLWwCY"
-Received: by mail-pl1-f175.google.com with SMTP id d9443c01a7336-29f2676bb21so32755325ad.0
-        for <platform-driver-x86@vger.kernel.org>; Sat, 24 Jan 2026 04:44:40 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="aqZeaKHu"
+Received: by mail-pf1-f174.google.com with SMTP id d2e1a72fcca58-81f39438187so1668802b3a.2
+        for <platform-driver-x86@vger.kernel.org>; Sat, 24 Jan 2026 06:39:17 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1769258680; x=1769863480; darn=vger.kernel.org;
+        d=gmail.com; s=20230601; t=1769265557; x=1769870357; darn=vger.kernel.org;
         h=content-transfer-encoding:mime-version:message-id:date:subject:cc
          :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=vwnU3fj1/wxgu+yMrNlzvejmUp395YnpzJm4usMPFUo=;
-        b=jZGLWwCYgexs5dTFOocMf/aqTkjAu1FMcIGYM4R8FZZDDZG643bqYlG0z0LZ9xzCCE
-         Cs9qotDCU3BNbWhEERRthLEY8ObcxA34hvt9uxYTmwI9edZNZTB7tGddbQSCFRmwTwoV
-         GCSNf5GMsS2GK2ojG8Mk7DkDT6mRbM1guOeafa62ODXVzuZHURjbHhM5vK43MLB+NPVD
-         6kQUQbuy4yOvw1m/NSyvCJJ6NkuByfd/kggkKtwe30Xkdg1uEgcwhg2noSkNljlWiDUS
-         jwvlGm37uuB89Ntvkikmi7jNp5jRqnCYbs4noAh+Qol7X3euQiimcTn7H3GkOZqF4fEI
-         +W9g==
+        bh=6t5Ys5cN6UKP9ZRvvJfxm3COr2cQdHEqXbQ12fAagFY=;
+        b=aqZeaKHue2BUhpygjw6V1nOpBPn78KvSsWS2m47+4phlbtfwFYxTufNUECr0Ik3VSF
+         Ej5eIvgSQTvOuAVuDFSiih3nfq11NHHyLL7ZgT9pRMgjberyuJBvvHY4L4yT5vFefaKs
+         /Dz7S8KzzPAEn3bSfctnAfEx/KHIIICpYT8GlnkjZeUOzN/htp1RwWzz5h+k1zXl/1vi
+         CAj63S6nAuC8nM91rAlYCXLCRJpCHyeIMkaeeYuRe+/d61yH40Zjwgbx48Lfx4gRNqa7
+         pH5DDO/zwKWsdjLyuG4gDA5YHPHWZJ9A9KcSdVho6f/6BtEYQBGiKJ65DpjSFQ/X5V3d
+         +n9g==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1769258680; x=1769863480;
+        d=1e100.net; s=20230601; t=1769265557; x=1769870357;
         h=content-transfer-encoding:mime-version:message-id:date:subject:cc
          :to:from:x-gm-gg:x-gm-message-state:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=vwnU3fj1/wxgu+yMrNlzvejmUp395YnpzJm4usMPFUo=;
-        b=e6GbyqwOBwAqwEGfaf6KkysTu1UMIKNgtPh87OWnFzUVs0cD9bztjneqsCRu3Ryf5I
-         byBF5u5zvYwvzwf1MXWVFcf3eQhSNOpDexMgpBk3wjMbnIo5CtLyn1K63DFy+yCK3vA3
-         WbPMSVauyngpuGREtru8CjtOWHMQgs56yIk167VEf0A8mj7tUKwAkJjCH2tQy7Pd57lf
-         R4Jtnj2PSkP5rta2B2De2toR/zIJP7QpM6T5BskXFQ60+rDkmsCoXG05ckIyatQ3POaX
-         4DCO+9+lVuqEFJxx0IN7APFO8cec3juXLu0BaquDRT989v9dJVNu9sc+gGRdzK12c/UH
-         kHKw==
-X-Gm-Message-State: AOJu0YyCB38J5O1qVhMFli1C9PZe/ILiCn238H0IfG+cKUlknELVVxtV
-	yJaluxhq+kwirZdDQPhoe0+DerGeV9CX9XUfpI1D8DN117RUjGrfId6W
-X-Gm-Gg: AZuq6aIYuZ75RBhgt1poshk3FA0uaRrdi/C/htLrmbIHc5EfjbjB514b8YirsogO0Ny
-	31YNFMjz/9AjubuoQRPnYajNuncDywkWm5GPpHzZ8Vnqs08t/WLkCFaAnurJQOGN0jmLD2/lo8m
-	zmjDOIOpXvCPswCX5go+hn7iT7esj9JTJzpyDzeGa5isVZ2LbaxyBaD/gU0DIPLVr1hFofLYYtb
-	pcDq1VjGgvly8X+K+qN9JqH+JIv4OWpyOs9qODenKQybMT1gsMSsO6dXr9IL+rWQVz6Te5Ca3X6
-	GNO8PZ9c8iA6hESJXvZ5XiQt1g+cmVXw6R/PqaVB5NuH6qd2j+2wQuzRsGBddrYpGPM2xCfRDjP
-	vwA3hVjzBtxMMDlondyidQ+zhu0nNqFUkKGEpMjkEuczOPAfJ8uFg66QCFB+lyRhW1pCZuald
-X-Received: by 2002:a17:903:2286:b0:29d:7a96:7ba1 with SMTP id d9443c01a7336-2a7fe735629mr63920015ad.46.1769258680195;
-        Sat, 24 Jan 2026 04:44:40 -0800 (PST)
+        bh=6t5Ys5cN6UKP9ZRvvJfxm3COr2cQdHEqXbQ12fAagFY=;
+        b=ct5GH6Jvt4+IY7AV4St+yfBVihahkvusJxt3RInKhl6bNgjdBU8Edz+PwUtD7bqbwV
+         uHFgA159PkqskTgI+eucNhbEtlMIRXSpzq4Iwi9IzyGBnZqWdsGL66aYLHL7tAGhgKVq
+         oKBOJ4DcDNAxZrpvJKP6MvWfJ3Vnsc52oZjmYALywRxm5jvvGpwzWa7ehDssrN563emI
+         Ga2k4kGWbnS5ZGHh26V97uLvzNE/Igs+0xrKLlbddFOWvqCvK0CzeeQgVpwEkcg+DntP
+         VVIo2VgPLcM/Dhy6y2LK2Vry/fZcwVmSHIreNlOuhArqNnjE04b+IgrlytMD0RijeP93
+         cIhg==
+X-Gm-Message-State: AOJu0YyZkdmCoANCzSrvH2tOVgtVQiqaQOgos6MMNiOTR76pvKxFcS4+
+	T4uzSfabPAdZgGCwyCyX9i0OWoqNG5+m0ZWt3w5Por2w1qBaNujnUckI
+X-Gm-Gg: AZuq6aLD4Zkjcb+xgQUSDGTnAOjLIkTXqnUzJAN408Hk84l4K0mM7Yjbi2PvxB1LwqS
+	Ol/+ULNV0aEW+R6PyRhz7snJ6soOIIwFLog/wiZtNudXdX3ghc1fMluI+RgXtZ3SIVVVh4Wss/1
+	29Ko5y4jJTHF45CXbysgIW1HD+tzzfdEhk7hjPiRWYdUDZEeHIrAYePTYplQa2VxCrg2/3xLEdd
+	QdFfZTI6zZrcwrUv0H+1VwUT44XfMcxwUiL/10faPrSkCzZ4Lnr+byqRmfEqGMnjze109lRIZki
+	DR6imPUACDkIGyHMcAZOTkV+BpVaElRzDmo1YTIi/GZcW8cdCbsE/r+KaSoIhW0Wt+9VMPwM+sS
+	jLYmBekzrtOS/Gkfb5vH44RTU8XS3lPpUE4B6jdj241lbqHYScVaCGEkQH2jPu2ZFBiPizSKr
+X-Received: by 2002:a05:6a00:2d24:b0:822:7fd8:ffbd with SMTP id d2e1a72fcca58-82317e4c74emr6051967b3a.59.1769265556571;
+        Sat, 24 Jan 2026 06:39:16 -0800 (PST)
 Received: from qby-laptop ([2a13:edc0:18:16f::a])
-        by smtp.gmail.com with ESMTPSA id d9443c01a7336-2a802fd929asm45898425ad.90.2026.01.24.04.44.37
+        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-82339095c85sm426145b3a.67.2026.01.24.06.39.13
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sat, 24 Jan 2026 04:44:39 -0800 (PST)
+        Sat, 24 Jan 2026 06:39:15 -0800 (PST)
 From: Mingyou Chen <qby140326@gmail.com>
 To: hansg@kernel.org,
 	ilpo.jarvinen@linux.intel.com
@@ -61,9 +61,9 @@ Cc: platform-driver-x86@vger.kernel.org,
 	linux-kernel@vger.kernel.org,
 	cryolitia.pukngae@linux.dev,
 	Mingyou Chen <qby140326@gmail.com>
-Subject: [PATCH] platform/x86: tongfang-mifs-wmi: Add new Tongfang MIFS WMI driver
-Date: Sat, 24 Jan 2026 20:44:13 +0800
-Message-ID: <20260124124413.46017-1-qby140326@gmail.com>
+Subject: [PATCH v2] platform/x86: tongfang-mifs-wmi: Add new Tongfang MIFS WMI driver
+Date: Sat, 24 Jan 2026 22:39:09 +0800
+Message-ID: <20260124143909.84926-1-qby140326@gmail.com>
 X-Mailer: git-send-email 2.52.0
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
@@ -100,8 +100,8 @@ Signed-off-by: Mingyou Chen <qby140326@gmail.com>
 ---
  drivers/platform/x86/Kconfig             |  11 +
  drivers/platform/x86/Makefile            |   1 +
- drivers/platform/x86/tongfang-mifs-wmi.c | 491 +++++++++++++++++++++++
- 3 files changed, 503 insertions(+)
+ drivers/platform/x86/tongfang-mifs-wmi.c | 495 +++++++++++++++++++++++
+ 3 files changed, 507 insertions(+)
  create mode 100644 drivers/platform/x86/tongfang-mifs-wmi.c
 
 diff --git a/drivers/platform/x86/Kconfig b/drivers/platform/x86/Kconfig
@@ -140,10 +140,10 @@ index d25762f7114f..1160c726bda6 100644
  obj-$(CONFIG_ACERHDF)		+= acerhdf.o
 diff --git a/drivers/platform/x86/tongfang-mifs-wmi.c b/drivers/platform/x86/tongfang-mifs-wmi.c
 new file mode 100644
-index 000000000000..b8ac421be80c
+index 000000000000..6e1b7f4e9069
 --- /dev/null
 +++ b/drivers/platform/x86/tongfang-mifs-wmi.c
-@@ -0,0 +1,491 @@
+@@ -0,0 +1,495 @@
 +// SPDX-License-Identifier: GPL-2.0-or-later
 +#include <linux/acpi.h>
 +#include <linux/bits.h>
@@ -269,7 +269,7 @@ index 000000000000..b8ac421be80c
 +		*profile = PLATFORM_PROFILE_BALANCED;
 +		break;
 +	case 1:
-+		*profile = PLATFORM_PROFILE_PERFORMANCE;
++		*profile = PLATFORM_PROFILE_BALANCED_PERFORMANCE;
 +		break;
 +	case 2:
 +		*profile = PLATFORM_PROFILE_LOW_POWER;
@@ -300,8 +300,11 @@ index 000000000000..b8ac421be80c
 +	case PLATFORM_PROFILE_BALANCED:
 +		val = 0;
 +		break;
-+	case PLATFORM_PROFILE_PERFORMANCE:
++	case PLATFORM_PROFILE_BALANCED_PERFORMANCE:
 +		val = 1;
++		break;
++	case PLATFORM_PROFILE_PERFORMANCE:
++		val = 3; /* Fullspeed */
 +		break;
 +	default:
 +		return -EOPNOTSUPP;
@@ -318,6 +321,7 @@ index 000000000000..b8ac421be80c
 +{
 +	__set_bit(PLATFORM_PROFILE_LOW_POWER, choices);
 +	__set_bit(PLATFORM_PROFILE_BALANCED, choices);
++	__set_bit(PLATFORM_PROFILE_BALANCED_PERFORMANCE, choices);
 +	__set_bit(PLATFORM_PROFILE_PERFORMANCE, choices);
 +	return 0;
 +}
@@ -637,4 +641,5 @@ index 000000000000..b8ac421be80c
 +MODULE_LICENSE("GPL");
 -- 
 2.52.0
-
+Changes in v2:
+Add PLATFORM_PROFILE_BALANCED_PERFORMANCE platform profile support
