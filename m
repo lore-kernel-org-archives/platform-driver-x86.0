@@ -1,935 +1,1158 @@
-Received: from mout.gmx.net (mout.gmx.net [212.227.17.20])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pf1-f178.google.com (mail-pf1-f178.google.com [209.85.210.178])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 040C4EEC3;
-	Sun, 25 Jan 2026 00:29:32 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=212.227.17.20
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3BB583A1CD
+	for <platform-driver-x86@vger.kernel.org>; Sun, 25 Jan 2026 07:15:12 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.178
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1769300975; cv=none; b=sEGrkJneSFlMyhLmu+v4JLE94USetU91Uxdc7VngOa0voBqMbwS/RiChbmeAGLMje7/YS+R5Yx8rxZNxCqNhhZoY8mQK23yJu+CMBydXa7Qy7ZUrs2XRxSBy8RD5BnEYXWwRuTnz48A6e+xPxs+8QWbKgmdquCrd+0m/28087qw=
+	t=1769325314; cv=none; b=fluU4XQSyo6JMfImwTdIkIzXwOIWlLvdaiGrWyUjRcwGZxQg+Ww/cuANXRufDRDavread5vqRg/M9PLr2gzoxP8jX+XIJMJPi09dIQx8+GCgXAHjn5PTQ9NqakNHBjqwiT7cvUV3MxLoz96dN4KFmwe8OoXQF+fRaWexOgHIkAI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1769300975; c=relaxed/simple;
-	bh=j9MDJdhubS+L1p9mp5awfBFbHjyqmJWEYaHFZCpT/E4=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=LUiJEsmeQ0ebCTMYy6U2iklq/6MwA6HlefDLWBKHrKRgJ2gGWjmsFIHQs/4NOTpSnK4ovJvbXDDMWtD4Ix/XP3qQpvYd2veMrlpFGPcifegr3wY+nMPy44DH4Vasa/YuUB2aX9GmnQvO8YG9UVEDqsOWSWPsIR+Zn5Urlsq+/sM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gmx.de; spf=pass smtp.mailfrom=gmx.de; dkim=pass (2048-bit key) header.d=gmx.de header.i=w_armin@gmx.de header.b=FSbA3LLp; arc=none smtp.client-ip=212.227.17.20
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gmx.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmx.de
+	s=arc-20240116; t=1769325314; c=relaxed/simple;
+	bh=1jzKMKrKec1mhtS8m1nWPD2vIhbS2iu6ngbbu7mHd1Q=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=rLf/zTJvgqdQdtmKbUByawvoqQ7bceyvn34cLJHMdx/UPd2FCx+g7lhnsoatiWoQlsBIj3geP4FuKvmyAPahJxmSyAY3mRUp9OWa4hBPuCnOa2tb2O18x4ldyn0qhSfE7iD9FRL1kPIBpQbshTYYPnEJbmMorU2P2f6qhP5RfVY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=mRs3v0zs; arc=none smtp.client-ip=209.85.210.178
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmx.de header.i=w_armin@gmx.de header.b="FSbA3LLp"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=gmx.de;
-	s=s31663417; t=1769300945; x=1769905745; i=w_armin@gmx.de;
-	bh=/oUmiEdypOIoDmagP85I98hVhe9Z/s1cL3t7/e+o6Ng=;
-	h=X-UI-Sender-Class:Message-ID:Date:MIME-Version:Subject:To:Cc:
-	 References:From:In-Reply-To:Content-Type:
-	 Content-Transfer-Encoding:cc:content-transfer-encoding:
-	 content-type:date:from:message-id:mime-version:reply-to:subject:
-	 to;
-	b=FSbA3LLpku6gdLYRkP3SIhNfJCiL5Rluw0WvX52+rEbOK8PrvwD/ylH2u1FVKzbx
-	 qYCz6UMLHMXHGw7rERrt1GsLxE6Ri/GmxE9Dc+kHJE3Wslrp1kNCUCAHuRMYeyxV5
-	 ubAtKQpoYuDWUVhmfUVtO5SDdKl/We7v3nTES1OLKaJKnOXZSEJPr4vpcytJs5XrV
-	 pPZpXIORLdcpaMvsXN+wE3u3DcvGUWtjAkxHIXqkTepk+yq1kgoMCBXinDmWTVpCp
-	 AYuKj6oXwfIqi7xRFWs3Nl9cr77oJDlRoL2d5iR3pbS5/dDOGDvNvurpaHToyzYNE
-	 uN5r+FQrGQEdz0j5OQ==
-X-UI-Sender-Class: 724b4f7f-cbec-4199-ad4e-598c01a50d3a
-Received: from [192.168.0.69] ([93.202.247.91]) by mail.gmx.net (mrgmx105
- [212.227.17.168]) with ESMTPSA (Nemesis) id 1MulmF-1w1kBu15Zz-00wB7M; Sun, 25
- Jan 2026 01:29:05 +0100
-Message-ID: <42e2d2d7-e5d1-4f13-88f4-888e8bfb561c@gmx.de>
-Date: Sun, 25 Jan 2026 01:29:03 +0100
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="mRs3v0zs"
+Received: by mail-pf1-f178.google.com with SMTP id d2e1a72fcca58-81f4e136481so1780513b3a.3
+        for <platform-driver-x86@vger.kernel.org>; Sat, 24 Jan 2026 23:15:12 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1769325311; x=1769930111; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=1fMp1jfQD27IDFmvp3/rNhXIwXYtHNKUJHoz5s+1huM=;
+        b=mRs3v0zsqzJgwO/lWIX/c9Kafo6f6/RMRhachCdXBMQyRkuM8I93QheBHJCS2OjrtF
+         J6Ye0KZtuF1jtLubRB4V1KjZUjPMcUx8sGkrflpZq3liEgmuwX0maMnxa6rnlTUgCkGP
+         CWApgDVAZDjh7OXqcxeXoXJF1T3nhJeriieo//LrlLxY5UbeCnyHdXK73zRLnvTLNGsR
+         3hrN5FLH0mRwSb6aSjzX6ceELtICMQMt/Nj24WoTAhrrUXKM84preTyPfaF8D5hqgbQ6
+         JwsraYueVEas5diguF8P32cEvFlDqeTvVnyYN3BVGGq7aItD+sSE/1+WwbAmPLPfjq6S
+         qkGQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1769325311; x=1769930111;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-gg:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=1fMp1jfQD27IDFmvp3/rNhXIwXYtHNKUJHoz5s+1huM=;
+        b=uhUUbe1S7YUPjzCmhepozuXbSUzbB540xlzQEMQ7FrDYyOTPXPHEzNO251h6j6vHSg
+         pMhiUge+TTA6pAN7H5YgFJoyAvWV7gCp0DliDC7I+Bd6BmFT4rodJy2GfF05T52MlfZR
+         7fJDU/esHF08deHSwsEAPz3tJ15llo9r+yO0jeMGfDi6Hus6HkY/2uF+dVtmX7Tw/dov
+         bk9Jgw7gXnKaKRAzjb67nz6VXmuCBcGTs43nbZ0XKYbJn/0KXYRrDs3mXXH9SzQb9m5V
+         7FhlEruyb+r+AJOdUoO6NspD109UuoWuuu81tJuKK0YDW1hEls8sbCPq4M6XPlNFrSY3
+         BtCw==
+X-Gm-Message-State: AOJu0Yw3rjBFbXZYK5VLUnoSJeIjNKNSyYekzmjxyJM62+j5GFPL9IUo
+	tJqYGv2RAl4L/HS+IzjpK1EcrFD6WusPCzWVk1AXLkH4poEs8qyvbuW7
+X-Gm-Gg: AZuq6aJ1UOedDK9VyPHkuNcCuh9W7YVQ3XSKHi7DNvTJxlUmoVmQ8JyMbB9+1T//sZ5
+	UPdQ2dikViLv0glpucyRUnhmWLrEpXaOFzigOs3q0Pb7H5wdb13C6hK+dCZcVIBgmUa142nUMLM
+	ClIe3Rhqv62l8sQgDwoRiscptE72l30ECW8oTSoypCDzJIjSFJWn7BVemNxNwzhd0u7adDn+1Wm
+	nY5R9UznWkwuS/PjmXDlGNrbzJ6cldMyc7cofTWsh03nhtxtbhJsnjOU2VrJI2e+odcrWpPgeSn
+	8hSxekjEDxrWx2mpLsZDTMdgevWFZHYlmtt8956byRyiUDCO/xm4zr/pBKYwwI+BxrJBXujfEkT
+	rAOrNqOLncOkTCI3Moi5HSyQvS6yDvbwpdFAnWLPtvjcN5ExDuAKjYKstgvE2Ig==
+X-Received: by 2002:a05:6a00:1489:b0:822:bd7:e949 with SMTP id d2e1a72fcca58-823412a3f20mr889555b3a.57.1769325311226;
+        Sat, 24 Jan 2026 23:15:11 -0800 (PST)
+Received: from qby-laptop ([2a13:edc0:18:16f::a])
+        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-82318648dd7sm6211264b3a.3.2026.01.24.23.15.08
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sat, 24 Jan 2026 23:15:10 -0800 (PST)
+From: Mingyou Chen <qby140326@gmail.com>
+To: hansg@kernel.org,
+	ilpo.jarvinen@linux.intel.com
+Cc: platform-driver-x86@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	cryolitia.pukngae@linux.dev,
+	Mingyou Chen <qby140326@gmail.com>
+Subject: [PATCH v3] platform/x86: tongfang-mifs-wmi: Add new Tongfang MIFS WMI driver
+Date: Sun, 25 Jan 2026 15:15:01 +0800
+Message-ID: <20260125071501.12616-1-qby140326@gmail.com>
+X-Mailer: git-send-email 2.52.0
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v2] platform/x86: tongfang-mifs-wmi: Add new Tongfang MIFS
- WMI driver
-To: Mingyou Chen <qby140326@gmail.com>, hansg@kernel.org,
- ilpo.jarvinen@linux.intel.com
-Cc: platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org,
- cryolitia.pukngae@linux.dev
-References: <20260124143909.84926-1-qby140326@gmail.com>
-Content-Language: en-US
-From: Armin Wolf <W_Armin@gmx.de>
-In-Reply-To: <20260124143909.84926-1-qby140326@gmail.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: quoted-printable
-X-Provags-ID: V03:K1:j802qcQdzQjVSasN6HkUklYSzZlau8xF2EYtBSe3MTouwNMA9+Q
- dHbCtFAwJN5hhvNRiWfIYGPXpRvyywOn1FM2lGTjgU7TblIY5KO+6JL4euic5dabZYJtjQd
- LdRCNnLO8euXGEvUDKy24fJgfj0AnNQ/hHE3fNG1VK1YLJqXwhN3w9VZfzfTR272HkcZ9Vq
- 93iTvhTQuHPGl6RV8HXpA==
-X-Spam-Flag: NO
-UI-OutboundReport: notjunk:1;M01:P0:ptxNWF+oWIM=;b0k31elFtH4UA85ZgOZxwvPMtT6
- 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
-
-Am 24.01.26 um 15:39 schrieb Mingyou Chen:
-
-> platform/x86: tongfang-mifs-wmi: Add new Tongfang MIFS WMI driver
->
-> Add a WMI-based driver for Tongfang laptops that use the MIFS
-> (MiInterface) ACPI WMI interface. These laptops are commonly sold under
-> brands like Mechrevo, Schenker, XMG, and Eluktronics.
->
-> The driver implements the following features:
-> - Platform Profile support: Allows switching between Low Power,
-> Balanced,
->    and Performance modes.
-> - Hwmon support: Provides monitoring for CPU temperature and fan speeds
->    (CPU, GPU, and System fans).
-> - LED support: Standard LED class interface for controlling keyboard
->    backlight brightness.
-> - Sysfs interface:
->      - GPU mode switching (Hybrid, Discrete, UMA).
->      - Keyboard RGB mode and color control.
->      - Fan boost (Max fan speed) toggle.
->
-> The driver communicates with the BIOS via WMI GUID
-> "B60BFB48-3E5B-49E4-A0E9-8CFFE1B3434B" using method IDs 250 (GET)
-> and 251 (SET).
-
-Hi,
-
-could you write a short description of the WMI classes used by this driver
-(with the MOF description) and place it under "Documentation/wmi/devices/"=
-?
-
-This would help future developers in understanding and maintaining this dr=
-iver.
-
-> Signed-off-by: Mingyou Chen <qby140326@gmail.com>
-> ---
->   drivers/platform/x86/Kconfig             |  11 +
->   drivers/platform/x86/Makefile            |   1 +
->   drivers/platform/x86/tongfang-mifs-wmi.c | 495 +++++++++++++++++++++++
->   3 files changed, 507 insertions(+)
->   create mode 100644 drivers/platform/x86/tongfang-mifs-wmi.c
->
-> diff --git a/drivers/platform/x86/Kconfig b/drivers/platform/x86/Kconfig
-> index 4cb7d97a9fcc..ff12631561e0 100644
-> --- a/drivers/platform/x86/Kconfig
-> +++ b/drivers/platform/x86/Kconfig
-> @@ -113,6 +113,17 @@ config GIGABYTE_WMI
->   	  To compile this driver as a module, choose M here: the module will
->   	  be called gigabyte-wmi.
->  =20
-> +config TONGFANG_MIFS_WMI
-> +	tristate "Tongfang MIFS WMI temperature, fan and GPU controller driver=
-"
-> +	depends on ACPI_WMI
-> +	depends on HWMON
-> +	depends on ACPI_PLATFORM_PROFILE
-
-Please select ACPI_PLATFORM_PROFILE instead of depending on it. Also add a=
- dependency
-on LEDS_CLASS_MULTICOLOR for the rgb keyboard controls.
-
-> +	help
-> +	  The driver for Tongfang laptops
-
-Please describe here what kind of services this driver provides, and repla=
-ce the final lines
-with:
-
-	To compile this driver as a module, choose M here: the module will
-         be called tongfang-mifs-wmi.
-
-> +
-> +	  Say Y here if you want to support WMI-based features on Tongfang
-> +	  laptops, such as performance mode switching.
-> +
->   config ACERHDF
->   	tristate "Acer Aspire One temperature and fan driver"
->   	depends on ACPI_EC && THERMAL
-> diff --git a/drivers/platform/x86/Makefile b/drivers/platform/x86/Makefi=
-le
-> index d25762f7114f..1160c726bda6 100644
-> --- a/drivers/platform/x86/Makefile
-> +++ b/drivers/platform/x86/Makefile
-> @@ -14,6 +14,7 @@ obj-$(CONFIG_NVIDIA_WMI_EC_BACKLIGHT)	+=3D nvidia-wmi-=
-ec-backlight.o
->   obj-$(CONFIG_XIAOMI_WMI)		+=3D xiaomi-wmi.o
->   obj-$(CONFIG_REDMI_WMI)			+=3D redmi-wmi.o
->   obj-$(CONFIG_GIGABYTE_WMI)		+=3D gigabyte-wmi.o
-> +obj-$(CONFIG_TONGFANG_MIFS_WMI)		+=3D tongfang-mifs-wmi.o
->  =20
->   # Acer
->   obj-$(CONFIG_ACERHDF)		+=3D acerhdf.o
-> diff --git a/drivers/platform/x86/tongfang-mifs-wmi.c b/drivers/platform=
-/x86/tongfang-mifs-wmi.c
-> new file mode 100644
-> index 000000000000..6e1b7f4e9069
-> --- /dev/null
-> +++ b/drivers/platform/x86/tongfang-mifs-wmi.c
-> @@ -0,0 +1,495 @@
-> +// SPDX-License-Identifier: GPL-2.0-or-later
-> +#include <linux/acpi.h>
-> +#include <linux/bits.h>
-> +#include <linux/device.h>
-> +#include <linux/hwmon.h>
-> +#include <linux/init.h>
-> +#include <linux/kernel.h>
-> +#include <linux/leds.h>
-> +#include <linux/module.h>
-> +#include <linux/platform_profile.h>
-> +#include <linux/sysfs.h>
-> +#include <linux/wmi.h>
-> +
-> +#define DRV_NAME "tongfang-mifs-wmi"
-> +#define TONGFANG_MIFS_GUID "B60BFB48-3E5B-49E4-A0E9-8CFFE1B3434B"
-> +#define WMI_BUFFER_SIZE 32
-> +
-> +enum wmi_method_type {
-> +	WMI_METHOD_GET =3D 250,
-> +	WMI_METHOD_SET =3D 251,
-> +};
-
-The method type might be easily confused with the WMI method id, i suggest=
- you
-rename this to "mifs_operation".
-
-> +
-> +enum wmi_method_name {
-> +	WMI_FN_SYSTEM_PER_MODE =3D 8,
-> +	WMI_FN_GPU_MODE =3D 9,
-> +	WMI_FN_KBD_TYPE =3D 10,
-> +	WMI_FN_FN_LOCK =3D 11,
-> +	WMI_FN_TP_LOCK =3D 12,
-> +	WMI_FN_FAN_SPEEDS =3D 13,
-> +	WMI_FN_RGB_KB_MODE =3D 16,
-> +	WMI_FN_RGB_KB_COLOR =3D 17,
-> +	WMI_FN_RGB_KB_BRIGHTNESS =3D 18,
-> +	WMI_FN_SYSTEM_AC_TYPE =3D 19,
-> +	WMI_FN_MAX_FAN_SWITCH =3D 20,
-> +	WMI_FN_MAX_FAN_SPEED =3D 21,
-> +	WMI_FN_CPU_THERMOMETER =3D 22,
-> +	WMI_FN_CPU_POWER =3D 23,
-> +};
-
-Same as above, i suggest "mifs_function".
-
-> +
-> +struct tongfang_mifs_wmi_data {
-> +	struct wmi_device *wdev;
-> +	struct mutex lock;
-
-checkpatch complains about a struct mutex definition without a comment, pl=
-ease fix.
-
-> +	struct led_classdev kbd_led;
-> +	struct device *hwmon_dev;
-
-hwmon_dev is only used during probing, please move this field into a local=
- variable.
-
-> +};
-> +
-> +static int tongfang_mifs_wmi_call(struct tongfang_mifs_wmi_data *data, =
-u8 type,
-> +				  u8 method, u8 *payload, size_t payload_len,
-> +				  u8 *out_data)
-> +{
-> +	struct acpi_buffer input =3D { 0, NULL };
-> +	struct acpi_buffer output =3D { ACPI_ALLOCATE_BUFFER, NULL };
-> +	union acpi_object *obj;
-> +	u8 *buffer;
-> +	acpi_status status;
-> +	int ret =3D 0;
-> +
-> +	if (!data)
-> +		return -EINVAL;
-
-Unnecessary check, please remove.
-
-> +
-> +	buffer =3D kzalloc(WMI_BUFFER_SIZE, GFP_KERNEL);
-> +	if (!buffer)
-> +		return -ENOMEM;
-
-Maybe it would make sense to define the input buffer on the stack of the c=
-aller and
-just pass a pointer to it. This way you save a memory allocation.
-
-> +
-> +	buffer[1] =3D type;
-> +	buffer[3] =3D method;
-
-Why not defining a struct for those input parameters:
-
-struct mifs_input {
-	u8 reserved1;
-	u8 operation;
-	u8 reserved2;
-	u8 function;
-	u8 payload[28];
-} __packed;
-
-This way users of this function can populate the buffer as a local variabl=
-e and just pass a pointer to it.
-Also, could it be that those fields are actually 16-bit little-endian fiel=
-ds? If yes then you can model them
-like this:
-
-struct mifs_input {
-	__le16 operation;
-	__le16 function;
-	u8 payload[28];
-} __packed;
-
-> +
-> +	if (payload && payload_len > 0) {
-> +		size_t copy_len =3D
-> +			min_t(size_t, payload_len, WMI_BUFFER_SIZE - 4);
-> +		memcpy(&buffer[4], payload, copy_len);
-> +	}
-> +
-> +	input.length =3D WMI_BUFFER_SIZE;
-> +	input.pointer =3D buffer;
-> +
-> +	status =3D wmi_evaluate_method(TONGFANG_MIFS_GUID, 0, 1, &input, &outp=
-ut);
-
-Please do not use the deprecated GUID-based WMI interface, use wmidev_invo=
-ke_method()
-instead (see Documentation/wmi/driver-development-guide.rst for details). =
-Said function
-handles the ACPI stuff for you, so you can focus on parsing the output buf=
-fer content.
-
-(Please note that this function is currently only available on the for-nex=
-t branch inside
-the pdx86 kernel tree).
-
-> +	if (ACPI_FAILURE(status)) {
-> +		ret =3D -EIO;
-> +		goto out_free_in;
-> +	}
-> +
-> +	obj =3D output.pointer;
-> +	if (!obj) {
-> +		ret =3D -ENODATA;
-> +		goto out_free_in;
-> +	}
-> +
-> +	if (obj->type =3D=3D ACPI_TYPE_BUFFER &&
-> +	    obj->buffer.length >=3D WMI_BUFFER_SIZE) {
-> +		if (out_data)
-> +			memcpy(out_data, obj->buffer.pointer, WMI_BUFFER_SIZE);
-
-The MOF definition of this WMI class says that the output buffer contains =
-a return code:
-
-[WMI, Dynamic, Provider("WmiProv"), Locale("MS\\0x40A"), Description("WMI =
-Get Set Method"), guid("{b60bfb48-3e5b-49e4-a0e9-8cffe1b3434b}")]
-class MICommonInterface {
-   [key, read] string InstanceName;
-   [read] boolean Active;
-
-   [WmiMethodId(1), Implemented, read, write, Description("WMI Get Set Met=
-hod")] void MiInterface([in] uint8 InData[32], [out] uint8 OutData[30], [o=
-ut] uint16 ReturnCode);
-};
-
-I suggest that you use a struct for thist that looks like that:
-
-struct mifs_output {
-	data[30];
-	__le16 return_code;
-}
-
-You can then easily check the return code and copy the output data.
-
-> +	} else {
-> +		ret =3D -EINVAL;
-> +	}
-> +
-> +	kfree(output.pointer);
-> +out_free_in:
-> +	kfree(buffer);
-> +	return ret;
-> +}
-> +
-> +static int laptop_profile_get(struct device *dev,
-> +			      enum platform_profile_option *profile)
-> +{
-> +	struct tongfang_mifs_wmi_data *data =3D dev_get_drvdata(dev);
-> +	u8 result[WMI_BUFFER_SIZE];
-> +	int ret;
-> +
-> +	if (!data)
-> +		return -EINVAL;
-
-Unnecessary check, please remove.
-
-> +
-> +	mutex_lock(&data->lock);
-
-I think tongfang_mifs_wmi_call() should handle the locking itself, maybe y=
-ou can
-use the new guard() macro in linux/cleanup.h for this.
-
-> +	ret =3D tongfang_mifs_wmi_call(data, WMI_METHOD_GET,
-> +				     WMI_FN_SYSTEM_PER_MODE, NULL, 0, result);
-> +	mutex_unlock(&data->lock);
-> +
-> +	if (ret)
-> +		return ret;
-> +
-> +	switch (result[4]) {
-> +	case 0:
-> +		*profile =3D PLATFORM_PROFILE_BALANCED;
-> +		break;
-> +	case 1:
-> +		*profile =3D PLATFORM_PROFILE_BALANCED_PERFORMANCE;
-> +		break;
-> +	case 2:
-> +		*profile =3D PLATFORM_PROFILE_LOW_POWER;
-> +		break;
-> +	case 3:
-> +		*profile =3D PLATFORM_PROFILE_PERFORMANCE;
-> +		break; /* Fullspeed */
-> +	default:
-> +		return -EINVAL;
-> +	}
-> +	return 0;
-
-Maybe you want to use a enum for those WMI performance profiles here.
-
-> +}
-> +
-> +static int laptop_profile_set(struct device *dev,
-> +			      enum platform_profile_option profile)
-> +{
-> +	struct tongfang_mifs_wmi_data *data =3D dev_get_drvdata(dev);
-> +	u8 val;
-> +	int ret;
-> +
-> +	if (!data)
-> +		return -EINVAL;
-
-Unnecessary check, please remove.
-
-> +
-> +	switch (profile) {
-> +	case PLATFORM_PROFILE_LOW_POWER:
-> +		val =3D 2;
-> +		break;
-> +	case PLATFORM_PROFILE_BALANCED:
-> +		val =3D 0;
-> +		break;
-> +	case PLATFORM_PROFILE_BALANCED_PERFORMANCE:
-> +		val =3D 1;
-> +		break;
-> +	case PLATFORM_PROFILE_PERFORMANCE:
-> +		val =3D 3; /* Fullspeed */
-> +		break;
-> +	default:
-> +		return -EOPNOTSUPP;
-> +	}
-> +
-> +	mutex_lock(&data->lock);
-> +	ret =3D tongfang_mifs_wmi_call(data, WMI_METHOD_SET,
-> +				     WMI_FN_SYSTEM_PER_MODE, &val, 1, NULL);
-> +	mutex_unlock(&data->lock);
-
-Does the firmware keep the platform profile setting during suspend and hib=
-ernation?
-If no then please save this value during suspend and restore it during res=
-ume.
-
-> +	return ret;
-> +}
-> +
-> +static int platform_profile_probe(void *drvdata, unsigned long *choices=
-)
-> +{
-> +	__set_bit(PLATFORM_PROFILE_LOW_POWER, choices);
-> +	__set_bit(PLATFORM_PROFILE_BALANCED, choices);
-> +	__set_bit(PLATFORM_PROFILE_BALANCED_PERFORMANCE, choices);
-> +	__set_bit(PLATFORM_PROFILE_PERFORMANCE, choices);
-
-Please use set_bit() instead.
-
-> +	return 0;
-> +}
-> +
-> +static struct platform_profile_ops laptop_profile_ops =3D {
-> +	.probe =3D platform_profile_probe,
-> +	.profile_get =3D laptop_profile_get,
-> +	.profile_set =3D laptop_profile_set,
-> +};
-
-Please make this struct const.
-
-> +
-> +static int laptop_hwmon_read(struct device *dev, enum hwmon_sensor_type=
-s type,
-> +			     u32 attr, int channel, long *val)
-> +{
-> +	struct tongfang_mifs_wmi_data *data =3D dev_get_drvdata(dev);
-> +	u8 res[WMI_BUFFER_SIZE];
-> +	int ret;
-> +
-> +	if (!data)
-> +		return -EINVAL;
-
-Unnecessary check, please remove.
-
-> +
-> +	mutex_lock(&data->lock);
-> +	if (type =3D=3D hwmon_temp) {
-> +		ret =3D tongfang_mifs_wmi_call(data, WMI_METHOD_GET,
-> +					     WMI_FN_CPU_THERMOMETER, NULL, 0,
-> +					     res);
-> +		if (!ret)
-> +			*val =3D res[4] * 1000;
-> +	} else if (type =3D=3D hwmon_fan) {
-> +		ret =3D tongfang_mifs_wmi_call(data, WMI_METHOD_GET,
-> +					     WMI_FN_FAN_SPEEDS, NULL, 0, res);
-> +		if (!ret) {
-> +			if (channel =3D=3D 0) /* CPU */
-> +				*val =3D (res[5] << 8) | res[4];
-> +			else if (channel =3D=3D 1) /* GPU */
-> +				*val =3D (res[7] << 8) | res[6];
-> +			else if (channel =3D=3D 2) /* SYS */
-> +				*val =3D (res[11] << 8) | res[10];
-> +			else
-> +				ret =3D -EINVAL;
-
-Maybe you want to use a switch-case statements for that? Additionally i su=
-ggest that you
-report the labels of each fan channel ("CPU", "GPU" and "SYS") as HWMON_F_=
-LABEL to userspace.
-
-> +		}
-> +	} else {
-> +		ret =3D -EINVAL;
-> +	}
-> +	mutex_unlock(&data->lock);
-> +	return ret;
-> +}
-> +
-> +static umode_t laptop_hwmon_is_visible(const void *drvdata,
-> +				       enum hwmon_sensor_types type, u32 attr,
-> +				       int channel)
-> +{
-> +	if (type =3D=3D hwmon_temp && attr =3D=3D hwmon_temp_input && channel =
-=3D=3D 0)
-> +		return 0444;
-> +	if (type =3D=3D hwmon_fan && attr =3D=3D hwmon_fan_input && channel < =
-3)
-> +		return 0444;
-> +	return 0;
-> +}
-
-You can replace this by setting .visible to 0444 inside struct hwmon_ops.
-
-> +
-> +static const struct hwmon_channel_info *laptop_hwmon_info[] =3D {
-> +	HWMON_CHANNEL_INFO(temp, HWMON_T_INPUT),
-> +	HWMON_CHANNEL_INFO(fan, HWMON_F_INPUT, HWMON_F_INPUT, HWMON_F_INPUT),
-> +	NULL
-> +};
-> +
-> +static const struct hwmon_ops laptop_hwmon_ops =3D {
-> +	.is_visible =3D laptop_hwmon_is_visible,
-> +	.read =3D laptop_hwmon_read,
-> +};
-> +
-> +static const struct hwmon_chip_info laptop_chip_info =3D {
-> +	.ops =3D &laptop_hwmon_ops,
-> +	.info =3D laptop_hwmon_info,
-> +};
-> +
-> +static int laptop_kbd_led_set(struct led_classdev *led_cdev,
-> +			      enum led_brightness value)
-> +{
-> +	struct tongfang_mifs_wmi_data *data =3D
-> +		container_of(led_cdev, struct tongfang_mifs_wmi_data, kbd_led);
-> +	u8 val =3D (u8)value;
-> +	int ret;
-> +
-> +	mutex_lock(&data->lock);
-> +	ret =3D tongfang_mifs_wmi_call(data, WMI_METHOD_SET,
-> +				     WMI_FN_RGB_KB_BRIGHTNESS, &val, 1, NULL);
-> +	mutex_unlock(&data->lock);
-> +	return ret;
-> +}
-> +
-> +/* GPU Mode: 0:Hybrid, 1:Discrete, 2:UMA */
-
-Please output strings instead of the raw WMI numbers to make it easier for
-userspace to understand the resulting data.
-
-> +static ssize_t gpu_mode_show(struct device *dev, struct device_attribut=
-e *attr,
-> +			     char *buf)
-> +{
-> +	struct tongfang_mifs_wmi_data *data =3D dev_get_drvdata(dev);
-> +	u8 result[WMI_BUFFER_SIZE];
-> +	int ret;
-> +
-> +	if (!data)
-> +		return -EINVAL;
-
-See the previous comments on this.
-
-> +
-> +	mutex_lock(&data->lock);
-> +	ret =3D tongfang_mifs_wmi_call(data, WMI_METHOD_GET, WMI_FN_GPU_MODE,
-> +				     NULL, 0, result);
-> +	mutex_unlock(&data->lock);
-> +
-> +	if (ret)
-> +		return ret;
-> +	return sysfs_emit(buf, "%d\n", result[4]);
-> +}
-> +
-> +static ssize_t gpu_mode_store(struct device *dev, struct device_attribu=
-te *attr,
-> +			      const char *buf, size_t count)
-> +{
-> +	struct tongfang_mifs_wmi_data *data =3D dev_get_drvdata(dev);
-> +	u8 val;
-> +	int ret;
-> +
-> +	if (!data)
-> +		return -EINVAL;
-> +
-> +	if (kstrtou8(buf, 10, &val) || val > 2)
-> +		return -EINVAL;
-
-See comment above, you could use sysfs_match_string() here for this.
-
-> +
-> +	mutex_lock(&data->lock);
-> +	ret =3D tongfang_mifs_wmi_call(data, WMI_METHOD_SET, WMI_FN_GPU_MODE,
-> +				     &val, 1, NULL);
-> +	mutex_unlock(&data->lock);
-> +
-> +	if (ret)
-> +		return ret;
-> +
-> +	return count;
-> +}
-> +
-> +/* RGB Mode: 0:OFF, 1:Cyclic, 2:Fixed, 3:Custom */
-
-Same as with the GPU sysfs atrtibute, use strings instead of magic numbers=
-.
-
-> +static ssize_t kb_mode_show(struct device *dev, struct device_attribute=
- *attr,
-> +			    char *buf)
-> +{
-> +	struct tongfang_mifs_wmi_data *data =3D dev_get_drvdata(dev);
-> +	u8 result[WMI_BUFFER_SIZE];
-> +	int ret;
-> +
-> +	if (!data)
-> +		return -EINVAL;
-> +
-> +	mutex_lock(&data->lock);
-> +	ret =3D tongfang_mifs_wmi_call(data, WMI_METHOD_GET, WMI_FN_RGB_KB_MOD=
-E,
-> +				     NULL, 0, result);
-> +	mutex_unlock(&data->lock);
-> +
-> +	if (ret)
-> +		return ret;
-> +	return sysfs_emit(buf, "%d\n", result[4]);
-> +}
-> +
-> +static ssize_t kb_mode_store(struct device *dev, struct device_attribut=
-e *attr,
-> +			     const char *buf, size_t count)
-> +{
-> +	struct tongfang_mifs_wmi_data *data =3D dev_get_drvdata(dev);
-> +	u8 val;
-> +	int ret;
-> +
-> +	if (!data)
-> +		return -EINVAL;
-> +
-> +	if (kstrtou8(buf, 10, &val) || val > 3)
-> +		return -EINVAL;
-> +
-> +	mutex_lock(&data->lock);
-> +	ret =3D tongfang_mifs_wmi_call(data, WMI_METHOD_SET, WMI_FN_RGB_KB_MOD=
-E,
-> +				     &val, 1, NULL);
-> +	mutex_unlock(&data->lock);
-> +
-> +	if (ret)
-> +		return ret;
-> +
-> +	return count;
-> +}
-> +
-> +/* RGB Color: R G B */
-
-Please use the multicolor LED interface for this so that userspace applica=
-tions can use
-the standard multicolor LED API.
-
-> +static ssize_t kb_color_store(struct device *dev, struct device_attribu=
-te *attr,
-> +			      const char *buf, size_t count)
-> +{
-> +	struct tongfang_mifs_wmi_data *data =3D dev_get_drvdata(dev);
-> +	unsigned int r, g, b;
-> +	u8 color_buf[3];
-> +	u8 fixed_mode =3D 2;
-> +	int ret;
-> +
-> +	if (!data)
-> +		return -EINVAL;
-> +
-> +	if (sscanf(buf, "%u %u %u", &r, &g, &b) !=3D 3)
-> +		return -EINVAL;
-> +	if (r > 255 || g > 255 || b > 255)
-> +		return -EINVAL;
-> +
-> +	color_buf[0] =3D (u8)r;
-> +	color_buf[1] =3D (u8)g;
-> +	color_buf[2] =3D (u8)b;
-> +
-> +	mutex_lock(&data->lock);
-> +
-> +	ret =3D tongfang_mifs_wmi_call(data, WMI_METHOD_SET, WMI_FN_RGB_KB_MOD=
-E,
-> +				     &fixed_mode, 1, NULL);
-> +	if (ret)
-> +		goto unlock;
-> +
-> +	ret =3D tongfang_mifs_wmi_call(data, WMI_METHOD_SET, WMI_FN_RGB_KB_COL=
-OR,
-> +				     color_buf, 3, NULL);
-
-Should you move the mutex handling into tongfang_mifs_wmi_call(), then you=
- will
-need a separate lock here. I leave it up to you how you handle the locking=
- in this case,
-nut please try to use guard() when suitable.
-
-> +
-> +unlock:
-> +	mutex_unlock(&data->lock);
-> +
-> +	if (ret)
-> +		return ret;
-> +
-> +	return count;
-> +}
-> +
-> +/* Fan Boost: 0:Normal, 1:Max Speed */
-
-Here using binary numbers is fine, but please use kstrtobool() instead
-of kstrtou8().
-
-> +static ssize_t fan_boost_store(struct device *dev,
-> +			       struct device_attribute *attr, const char *buf,
-> +			       size_t count)
-> +{
-> +	struct tongfang_mifs_wmi_data *data =3D dev_get_drvdata(dev);
-> +	u8 val, payload[2];
-> +	int ret;
-> +
-> +	if (!data)
-> +		return -EINVAL;
-> +
-> +	if (kstrtou8(buf, 10, &val) || val > 1)
-> +		return -EINVAL;
-> +
-> +	payload[0] =3D 0; /* CPU/GPU Fan */
-> +	payload[1] =3D val;
-> +
-> +	mutex_lock(&data->lock);
-> +	ret =3D tongfang_mifs_wmi_call(data, WMI_METHOD_SET,
-> +				     WMI_FN_MAX_FAN_SWITCH, payload, 2, NULL);
-> +	mutex_unlock(&data->lock);
-> +
-> +	if (ret)
-> +		return ret;
-> +
-> +	return count;
-> +}
-> +
-> +static DEVICE_ATTR_RW(gpu_mode);
-> +static DEVICE_ATTR_RW(kb_mode);
-> +static DEVICE_ATTR_WO(kb_color);
-> +static DEVICE_ATTR_WO(fan_boost);
-
-Please mark those attributes as const. This also requires you to mark lapt=
-op_attrs as const as well.
-
-> +
-> +static struct attribute *laptop_attrs[] =3D { &dev_attr_gpu_mode.attr,
-> +					    &dev_attr_kb_mode.attr,
-> +					    &dev_attr_kb_color.attr,
-> +					    &dev_attr_fan_boost.attr, NULL };
-
-Please use the standard kernel array style:
-
-type example[] {
-	entry1,
-	entry2,
-	...
-}:
-
-> +ATTRIBUTE_GROUPS(laptop);
-> +
-> +static int tongfang_mifs_wmi_probe(struct wmi_device *wdev, const void =
-*context)
-> +{
-> +	struct tongfang_mifs_wmi_data *drv_data;
-> +	struct device *pp_dev;
-> +	int ret;
-> +
-> +	drv_data =3D devm_kzalloc(&wdev->dev, sizeof(*drv_data), GFP_KERNEL);
-> +	if (!drv_data)
-> +		return -ENOMEM;
-> +
-> +	drv_data->wdev =3D wdev;
-> +	mutex_init(&drv_data->lock);
-
-Please use devm_mutex_init() here.
-
-> +	dev_set_drvdata(&wdev->dev, drv_data);
-> +
-> +	/* Register platform profile */
-> +	pp_dev =3D devm_platform_profile_register(&wdev->dev, DRV_NAME, drv_da=
-ta,
-> +						&laptop_profile_ops);
-> +	if (IS_ERR(pp_dev))
-> +		dev_err(&wdev->dev, "Failed to register platform profile\n");
-
-Please abort probing if you cannot register this feature. The same applies=
- to the hwmon
-and LED features.
-
-> +
-> +	/* Register hwmon */
-> +	drv_data->hwmon_dev =3D devm_hwmon_device_register_with_info(
-
-Lines should not end with a '('.
-
-> +		&wdev->dev, "tongfang_mifs", drv_data, &laptop_chip_info, NULL);
-> +	if (IS_ERR(drv_data->hwmon_dev))
-> +		dev_err(&wdev->dev, "Failed to register hwmon\n");
-> +
-> +	/* Register keyboard LED */
-> +	drv_data->kbd_led.name =3D "laptop::kbd_backlight";
-> +	drv_data->kbd_led.max_brightness =3D 3;
-> +	drv_data->kbd_led.brightness_set_blocking =3D laptop_kbd_led_set;
-> +	ret =3D devm_led_classdev_register(&wdev->dev, &drv_data->kbd_led);
-> +	if (ret)
-> +		dev_err(&wdev->dev, "Failed to register keyboard LED\n");
-> +
-> +	return 0;
-> +}
-> +
-> +static const struct wmi_device_id tongfang_mifs_wmi_id_table[] =3D {
-> +	{ TONGFANG_MIFS_GUID, NULL },
-> +	{}
-> +};
-> +MODULE_DEVICE_TABLE(wmi, tongfang_mifs_wmi_id_table);
-> +
-> +static struct wmi_driver tongfang_mifs_wmi_driver =3D {
-> +	.driver =3D {
-> +		.name =3D DRV_NAME,
-> +		.dev_groups =3D laptop_groups,
-> +	},
-> +	.id_table =3D tongfang_mifs_wmi_id_table,
-> +	.probe =3D tongfang_mifs_wmi_probe,
-
-Please set .no_singleton =3D true. Also please check if the various settin=
-gs (RGB LED, platform profile and sysfs)
-need to be restored when resuming from hibernation and/or suspend.
-
-All in all the basic structure of the driver seems good, except for the WM=
-I method call handling and
-the RGB LED integration.
-
-Thanks,
-Armin Wolf
-
-> +};
-> +
-> +module_wmi_driver(tongfang_mifs_wmi_driver);
-> +
-> +MODULE_AUTHOR("Mingyou Chen <qby104326@gmail.com>");
-> +MODULE_DESCRIPTION("Tongfang MIFS (MiInterface) WMI driver");
-> +MODULE_LICENSE("GPL");
+Content-Transfer-Encoding: 8bit
+
+Add a new driver for Tongfang laptops that utilize the MIFS
+(MiInterface)
+WMI interface. This interface is commonly found in various rebranded
+laptops from manufacturers like Mechrevo, XMG, Eluktronics, and others.
+
+The driver implements several features through the WMI interface:
+
+- Platform Profile: Supports "Quiet", "Balanced", "Performance", and
+  "Full Speed" modes. The "Full Speed" mode is intelligently restricted
+  based on the AC adapter type (requires DC power, not supported on
+  USB-C charging) as required by the hardware.
+- Hwmon: Provides monitoring for CPU, GPU, and System fan speeds,
+  as well as CPU temperature sensors.
+- Keyboard Backlight: Integrated with the LED class device for
+  brightness control and provides sysfs attributes for keyboard modes
+  (cyclic, fixed, etc.).
+- GPU Mode: Allows switching between Hybrid, Discrete, and UMA
+  graphics modes via sysfs.
+- Hotkeys: Handles WMI events for system hotkeys (Calculator, Browser,
+  App launch) using sparse keymaps and reports status changes for
+  Airplane mode, Touchpad, and CapsLock.
+- Fan Boost: Provides a sysfs interface to force fans to maximum speed.
+
+The driver registers two WMI GUIDs:
+- B60BFB48-3E5B-49E4-A0E9-8CFFE1B3434B: Control methods
+- 46C93E13-EE9B-4262-8488-563BCA757FEF: Event notifications
+
+Signed-off-by: Mingyou Chen <qby140326@gmail.com>
+---
+ .../wmi/devices/tongfang-mifs-wmi.rst         | 207 +++++
+ drivers/platform/x86/Kconfig                  |  16 +
+ drivers/platform/x86/Makefile                 |   1 +
+ drivers/platform/x86/tongfang-mifs-wmi.c      | 780 ++++++++++++++++++
+ 4 files changed, 1004 insertions(+)
+ create mode 100644 Documentation/wmi/devices/tongfang-mifs-wmi.rst
+ create mode 100644 drivers/platform/x86/tongfang-mifs-wmi.c
+
+diff --git a/Documentation/wmi/devices/tongfang-mifs-wmi.rst b/Documentation/wmi/devices/tongfang-mifs-wmi.rst
+new file mode 100644
+index 000000000000..18854259ae90
+--- /dev/null
++++ b/Documentation/wmi/devices/tongfang-mifs-wmi.rst
+@@ -0,0 +1,207 @@
++.. SPDX-License-Identifier: GPL-2.0-or-later
++
++========================================
++Tongfang MIFS driver (tongfang-mifs-wmi)
++========================================
++
++Introduction
++============
++
++
++EC WMI interface description
++============================
++
++The EC WMI interface description can be decoded from the embedded binary MOF (bmof)
++data using the `bmfdec <https://github.com/pali/bmfdec>`_ utility:
++
++::
++
++  class WMIEvent : __ExtrinsicEvent {
++  };
++
++  [WMI, Dynamic, Provider("WmiProv"), Locale("MS\\0x40A"), Description("Root WMI HID_EVENT20"), guid("{46c93e13-ee9b-4262-8488-563bca757fef}")]
++  class HID_EVENT20 : WmiEvent {
++    [key, read] string InstanceName;
++    [read] boolean Active;
++    [WmiDataId(1), read, write, Description("Package Data")] uint8 EventDetail[8];
++  };
++
++  [WMI, Dynamic, Provider("WmiProv"), Locale("MS\\0x40A"), Description("Root WMI HID_EVENT21"), guid("{fa78e245-2c0f-4ca1-91cf-15f34e474850}")]
++  class HID_EVENT21 : WmiEvent {
++    [key, read] string InstanceName;
++    [read] boolean Active;
++    [WmiDataId(1), read, write, Description("Package Data")] uint8 EventDetail[8];
++  };
++
++  [WMI, Dynamic, Provider("WmiProv"), Locale("MS\\0x40A"), Description("Root WMI HID_EVENT22"), guid("{1dceaf0a-4d63-44bb-bd0c-0d6281bfddc5}")]
++  class HID_EVENT22 : WmiEvent {
++    [key, read] string InstanceName;
++    [read] boolean Active;
++    [WmiDataId(1), read, write, Description("Package Data")] uint8 EventDetail[8];
++  };
++
++  [WMI, Dynamic, Provider("WmiProv"), Locale("MS\\0x40A"), Description("Root WMI HID_EVENT23"), guid("{3f9e3c26-b077-4f86-91f5-37ff64d8c7ed}")]
++  class HID_EVENT23 : WmiEvent {
++    [key, read] string InstanceName;
++    [read] boolean Active;
++    [WmiDataId(1), read, write, Description("Package Data")] uint8 EventDetail[8];
++  };
++
++  [WMI, Dynamic, provider("WmiProv"), Locale("MS\\0x409"), Description("Class used to operate firmware interface"), guid("{b60bfb48-3e5b-49e4-a0e9-8cffe1b3434b}")]
++  class MICommonInterface {
++    [key, read] string InstanceName;
++    [read] boolean Active;
++
++    [WmiMethodId(1), Implemented, read, write, Description("Method used to support system functions.")] void MiInterface([in, Description("WMI Interface")] uint8 InData[32], [out] uint8 OutData[30], [out] uint16 Reserved);
++  };
++
++::
++
++
++Reverse-Engineering the EC WMI interface
++========================================
++
++The OEM software can be download from `this link <https://iknow.lenovo.com.cn/detail/429447>`_
++
++Nothing is obfuscated, In this case, `ILSpy <https://github.com/icsharpcode/ILSpy>`_ could be helpful.
++
++WMI Methods (MICommonInterface)
++==============================
++
++The ``MICommonInterface`` class (GUID: ``{b60bfb48-3e5b-49e4-a0e9-8cffe1b3434b}``)
++is the primary control interface. It uses a 32-byte buffer for both input
++(``InData``) and output (``OutData``).
++
++Method Structure
++----------------
++
++The data packet follows a standardized format:
++
+++----------+------------------------------------------------------------------+
++| Byte     | Description                                                      |
+++==========+==================================================================+
++| 1        | Method Type: Get (0xFA / 250) or Set (0xFB / 251)                |
+++----------+------------------------------------------------------------------+
++| 3        | Command ID (Method Name)                                         |
+++----------+------------------------------------------------------------------+
++| 4 - 31   | Arguments (for Set) or Return Data (for Get)                     |
+++----------+------------------------------------------------------------------+
++
++
++Command IDs
++-----------
++
++The following Command IDs are used in the third byte of the buffer:
++
+++----------+-----------------------+------------------------------------------+
++| ID       | Name                  | Values / Description                     |
+++==========+=======================+==========================================+
++| 8        | SystemPerMode         | 0: Balance, 1: Performance, 2: Quiet,    |
++|          |                       | 3: Full-speed                            |
+++----------+-----------------------+------------------------------------------+
++| 9        | GPUMode               | 0: Hybrid, 1: Discrete, 2: UMA           |
+++----------+-----------------------+------------------------------------------+
++| 10       | KeyboardType          | 0: White, 1: Single RGB, 2: Zone RGB     |
+++----------+-----------------------+------------------------------------------+
++| 11       | FnLock                | 0: Off, 1: On                            |
+++----------+-----------------------+------------------------------------------+
++| 12       | TPLock                | 0: Unlock, 1: Lock (Touchpad)            |
+++----------+-----------------------+------------------------------------------+
++| 13       | CPUGPUSYSFanSpeed     | Returns 12 bytes of fan data:            |
++|          |                       | Bytes 4-5: CPU Fan RPM (Little Endian)   |
++|          |                       | Bytes 6-7: GPU Fan RPM (Little Endian)   |
++|          |                       | Bytes 10-11: SYS Fan RPM (Little Endian) |
+++----------+-----------------------+------------------------------------------+
++| 16       | RGBKeyboardMode       | 0: Off, 1: Auto Cyclic, 2: Fixed,        |
++|          |                       | 3: Custom                                |
+++----------+-----------------------+------------------------------------------+
++| 17       | RGBKeyboardColor      | Bytes 4, 5, 6: Red, Green, Blue values   |
+++----------+-----------------------+------------------------------------------+
++| 18       | RGBKeyboardBrightness | 0-10: Brightness Levels, 128: Auto       |
+++----------+-----------------------+------------------------------------------+
++| 19       | SystemAcType          | 1: Type-C, 2: Circular Hole (DC)         |
+++----------+-----------------------+------------------------------------------+
++| 20       | MaxFanSpeedSwitch     | Byte 4: Fan Type (0: CPU/GPU, 1: SYS)    |
++|          |                       | Byte 5: State (0: Off, 1: On)            |
+++----------+-----------------------+------------------------------------------+
++| 21       | MaxFanSpeed           | Sets manual fan speed duty cycle         |
+++----------+-----------------------+------------------------------------------+
++| 22       | CPUThermometer        | Returns CPU Temperature                  |
+++----------+-----------------------+------------------------------------------+
++
++WMI Events (HID_EVENT20)
++========================
++
++The driver listens for events from the ``HID_EVENT20`` class
++(GUID: ``{46c93e13-ee9b-4262-8488-563bca757fef}``). These events are triggered
++by hotkeys or system state changes (e.g., plugging in AC power).
++
++Event Structure
++---------------
++
++The event data is provided in an 8-byte array (``EventDetail``):
++
+++----------+------------------------------------------------------------------+
++| Byte     | Description                                                      |
+++==========+==================================================================+
++| 0        | Event Type (Always 0x01 for HotKey/Notification)                 |
+++----------+------------------------------------------------------------------+
++| 1        | Event ID (Corresponds to the Command IDs above)                  |
+++----------+------------------------------------------------------------------+
++| 2        | Value (The new state or value of the feature)                    |
+++----------+------------------------------------------------------------------+
++
++Common Event IDs:
++-----------------
++
++Note: reserved event ids are not listed there
++
+++----------+------------------------------------------------------------------+
++| Event Id | Description                                                      |
+++==========+==================================================================+
++| 4        | AirPlane mode change                                             |
+++----------+------------------------------------------------------------------+
++| 5        | Keyboard brightness change                                       |
+++----------+------------------------------------------------------------------+
++| 6        | touchpad state (enabled/disabled) change                         |
+++----------+------------------------------------------------------------------+
++| 7        | FnLock state (enabled/disabled) change                           |
+++----------+------------------------------------------------------------------+
++| 8        | Keyboard mode change                                             |
+++----------+------------------------------------------------------------------+
++| 9        | CapsLock state change                                            |
+++----------+------------------------------------------------------------------+
++| 13       | NumLock state change                                             |
+++----------+------------------------------------------------------------------+
++| 14       | ScrollLock state change                                          |
+++----------+------------------------------------------------------------------+
++| 15       | Performance plan change                                          |
+++----------+------------------------------------------------------------------+
++| 25       | Display refresh rate change                                      |
+++----------+------------------------------------------------------------------+
++| 33       | Super key lock state (enabled/disabled) change                   |
+++----------+------------------------------------------------------------------+
++| 35       | Open control center key                                          |
+++----------+------------------------------------------------------------------+
++
++Implementation Details
++======================
++
++Performance Modes
++-----------------
++Changing the performance mode via Command ID 0x08 (SystemPerMode) affects the power limits (PL1/PL2)
++and fan curves managed by the Embedded Controller (EC). Note that the "Full-speed"
++mode (3) is typically only available when the system is connected to a DC power
++source (not USB-C/PD).
++
++Graphics Switching
++------------------
++The ``GPUMode`` (0x09) allows switching between Hybrid (Muxless) and Discrete
++(Muxed) graphics. Changing this value usually requires a system reboot to
++take effect in the BIOS/Firmware.
++
++Fan Control
++-----------
++The system supports both automatic EC control and manual overrides. Command ID
++0x14 (``MaxFanSpeedSwitch``) is used to toggle manual control, while ID 0x15
++sets the actual PWM duty cycle.
+diff --git a/drivers/platform/x86/Kconfig b/drivers/platform/x86/Kconfig
+index 4cb7d97a9fcc..f4d1c47e978a 100644
+--- a/drivers/platform/x86/Kconfig
++++ b/drivers/platform/x86/Kconfig
+@@ -113,6 +113,22 @@ config GIGABYTE_WMI
+ 	  To compile this driver as a module, choose M here: the module will
+ 	  be called gigabyte-wmi.
+ 
++
++config TONGFANG_MIFS_WMI
++	tristate "Tongfang MIFS (MiInterface) WMI driver"
++	depends on ACPI_WMI
++	depends on HWMON
++	select ACPI_PLATFORM_PROFILE
++	help
++	  This is a driver for Tongfang MiInterface based laptops.
++
++	  It provides the access to the temperature, fan speed, gpu
++	  control, keyboard backlight brightness and platform profile
++	  via hwmon and sysfs.
++
++	  To compile this driver as a module, choose M here: the module will
++          be called tongfang-mifs-wmi.
++
+ config ACERHDF
+ 	tristate "Acer Aspire One temperature and fan driver"
+ 	depends on ACPI_EC && THERMAL
+diff --git a/drivers/platform/x86/Makefile b/drivers/platform/x86/Makefile
+index d25762f7114f..1160c726bda6 100644
+--- a/drivers/platform/x86/Makefile
++++ b/drivers/platform/x86/Makefile
+@@ -14,6 +14,7 @@ obj-$(CONFIG_NVIDIA_WMI_EC_BACKLIGHT)	+= nvidia-wmi-ec-backlight.o
+ obj-$(CONFIG_XIAOMI_WMI)		+= xiaomi-wmi.o
+ obj-$(CONFIG_REDMI_WMI)			+= redmi-wmi.o
+ obj-$(CONFIG_GIGABYTE_WMI)		+= gigabyte-wmi.o
++obj-$(CONFIG_TONGFANG_MIFS_WMI)		+= tongfang-mifs-wmi.o
+ 
+ # Acer
+ obj-$(CONFIG_ACERHDF)		+= acerhdf.o
+diff --git a/drivers/platform/x86/tongfang-mifs-wmi.c b/drivers/platform/x86/tongfang-mifs-wmi.c
+new file mode 100644
+index 000000000000..016badae4025
+--- /dev/null
++++ b/drivers/platform/x86/tongfang-mifs-wmi.c
+@@ -0,0 +1,780 @@
++// SPDX-License-Identifier: GPL-2.0-or-later
++#include "asm-generic/errno-base.h"
++#include "linux/err.h"
++#include "linux/input-event-codes.h"
++#include "linux/input.h"
++#include "linux/input/sparse-keymap.h"
++#include "linux/string.h"
++#include <linux/cleanup.h>
++#include <linux/acpi.h>
++#include <linux/bits.h>
++#include <linux/device.h>
++#include <linux/hwmon.h>
++#include <linux/init.h>
++#include <linux/kernel.h>
++#include <linux/leds.h>
++#include <linux/module.h>
++#include <linux/platform_profile.h>
++#include <linux/sysfs.h>
++#include <linux/wmi.h>
++
++#define DRV_NAME "tongfang-mifs-wmi"
++#define TONGFANG_MIFS_GUID "B60BFB48-3E5B-49E4-A0E9-8CFFE1B3434B"
++#define TONGFANG_EVENT_GUID "46C93E13-EE9B-4262-8488-563BCA757FEF"
++#define WMI_BUFFER_SIZE 32
++
++enum tongfang_mifs_operation {
++	WMI_METHOD_GET = 250,
++	WMI_METHOD_SET = 251,
++};
++
++enum tongang_mifs_function {
++	WMI_FN_SYSTEM_PER_MODE = 8,
++	WMI_FN_GPU_MODE = 9,
++	WMI_FN_KBD_TYPE = 10,
++	WMI_FN_FN_LOCK = 11,
++	WMI_FN_TP_LOCK = 12,
++	WMI_FN_FAN_SPEEDS = 13,
++	WMI_FN_RGB_KB_MODE = 16,
++	WMI_FN_RGB_KB_COLOR = 17,
++	WMI_FN_RGB_KB_BRIGHTNESS = 18,
++	WMI_FN_SYSTEM_AC_TYPE = 19,
++	WMI_FN_MAX_FAN_SWITCH = 20,
++	WMI_FN_MAX_FAN_SPEED = 21,
++	WMI_FN_CPU_THERMOMETER = 22,
++	WMI_FN_CPU_POWER = 23,
++};
++
++enum tongfang_system_ac_mode {
++	WMI_SYSTEM_AC_TYPEC = 1,
++	WMI_SYSTEM_AC_CIRCULARHOLE =
++		2, /* Unknown type, this is unused in the original driver */
++};
++
++enum tongfang_mifs_power_profile {
++	WMI_PP_BALANCED = 0,
++	WMI_PP_PERFORMANCE = 1,
++	WMI_PP_QUIET = 2,
++	WMI_PP_FULL_SPEED = 3,
++};
++
++enum tongfang_mifs_event_id {
++	WMI_EVENT_RESERVED_1 = 1,
++	WMI_EVENT_RESERVED_2 = 2,
++	WMI_EVENT_RESERVED_3 = 3,
++	WMI_EVENT_AIRPLANE_MODE = 4,
++	WMI_EVENT_KBD_BRIGHTNESS = 5,
++	WMI_EVENT_TOUCHPAD_STATE = 6,
++	WMI_EVENT_FNLOCK_STATE = 7,
++	WMI_EVENT_KBD_MODE = 8,
++	WMI_EVENT_CAPSLOCK_STATE = 9,
++	WMI_EVENT_CALCULATOR_START = 11,
++	WMI_EVENT_BROWSER_START = 12,
++	WMI_EVENT_NUMLOCK_STATE = 13,
++	WMI_EVENT_SCROLLLOCK_STATE = 14,
++	WMI_EVENT_PERFORMANCE_PLAN = 15,
++	WMI_EVENT_FN_J = 16,
++	WMI_EVENT_FN_F = 17,
++	WMI_EVENT_FN_0 = 18,
++	WMI_EVENT_FN_1 = 19,
++	WMI_EVENT_FN_2 = 20,
++	WMI_EVENT_FN_3 = 21,
++	WMI_EVENT_FN_4 = 22,
++	WMI_EVENT_FN_5 = 24,
++	WMI_EVENT_REFRESH_RATE = 25,
++	WMI_EVENT_CPU_FAN_SPEED = 26,
++	WMI_EVENT_GPU_FAN_SPEED = 32,
++	WMI_EVENT_WIN_KEY_LOCK = 33,
++	WMI_EVENT_RESERVED_23 = 34,
++	WMI_EVENT_OPEN_APP = 35,
++};
++
++enum tongfang_mifs_event_type {
++	WMI_EVENT_TYPE_HOTKEY = 1,
++};
++
++enum tongfang_wmi_device_type {
++	TONGFANG_WMI_CONTROL = 0,
++	TONGFANG_WMI_EVENT = 1,
++};
++
++struct tongfang_mifs_input {
++	u8 reserved1;
++	u8 operation;
++	u8 reserved2;
++	u8 function;
++	u8 payload[28];
++} __packed;
++
++struct tongfang_mifs_output {
++	u8 reserved1;
++	u8 operation;
++	u8 reserved2;
++	u8 function;
++	u8 data[28];
++} __packed;
++
++struct tongfang_mifs_event {
++	u8 event_type;
++	u8 event_id;
++	u8 value_low; /* For most events, this is the value */
++	u8 value_high; /* For fan speed events, combined with value_low */
++	u8 reserved[4];
++} __packed;
++
++struct tongfang_mifs_wmi_data {
++	struct wmi_device *wdev;
++	struct mutex lock; /* Protects WMI calls */
++	struct led_classdev kbd_led;
++	struct input_dev *input_dev;
++};
++
++static int tongfang_mifs_wmi_call(struct tongfang_mifs_wmi_data *data,
++				  const struct tongfang_mifs_input *input,
++				  struct tongfang_mifs_output *output)
++{
++	struct wmi_buffer in_buf, out_buf;
++	int ret;
++
++	guard(mutex)(&data->lock);
++
++	in_buf.length = sizeof(*input);
++	in_buf.data = (void *)input;
++
++	if (output) {
++		out_buf.length = sizeof(*output);
++		out_buf.data = output;
++	}
++
++	ret = wmidev_invoke_method(data->wdev, 0, 1, &in_buf,
++				   output ? &out_buf : NULL);
++
++	return ret;
++}
++
++static int laptop_profile_get(struct device *dev,
++			      enum platform_profile_option *profile)
++{
++	struct tongfang_mifs_wmi_data *data = dev_get_drvdata(dev);
++	struct tongfang_mifs_input input = {
++		.reserved1 = 0,
++		.operation = WMI_METHOD_GET,
++		.reserved2 = 0,
++		.function = WMI_FN_SYSTEM_PER_MODE,
++	};
++	struct tongfang_mifs_output result;
++	int ret;
++
++	ret = tongfang_mifs_wmi_call(data, &input, &result);
++
++	if (ret)
++		return ret;
++
++	switch (result.data[0]) {
++	case WMI_PP_BALANCED:
++		*profile = PLATFORM_PROFILE_BALANCED;
++		break;
++	case WMI_PP_PERFORMANCE:
++		*profile = PLATFORM_PROFILE_BALANCED_PERFORMANCE;
++		break;
++	case WMI_PP_QUIET:
++		*profile = PLATFORM_PROFILE_LOW_POWER;
++		break;
++	case WMI_PP_FULL_SPEED:
++		*profile = PLATFORM_PROFILE_PERFORMANCE;
++		break; /* Fullspeed */
++	default:
++		return -EINVAL;
++	}
++	return 0;
++}
++
++static int laptop_profile_set(struct device *dev,
++			      enum platform_profile_option profile)
++{
++	struct tongfang_mifs_wmi_data *data = dev_get_drvdata(dev);
++	struct tongfang_mifs_input input = {
++		.reserved1 = 0,
++		.operation = WMI_METHOD_SET,
++		.reserved2 = 0,
++		.function = WMI_FN_SYSTEM_PER_MODE,
++	};
++	struct tongfang_mifs_output ac_type_res;
++	u8 val;
++	int ret;
++
++	switch (profile) {
++	case PLATFORM_PROFILE_LOW_POWER:
++		val = WMI_PP_QUIET;
++		break;
++	case PLATFORM_PROFILE_BALANCED:
++		val = WMI_PP_BALANCED;
++		break;
++	case PLATFORM_PROFILE_BALANCED_PERFORMANCE:
++		val = WMI_PP_PERFORMANCE;
++		break;
++	case PLATFORM_PROFILE_PERFORMANCE:
++		/* Check if DC power is connected for full-speed mode */
++		input.operation = WMI_METHOD_GET;
++		input.function = WMI_FN_SYSTEM_AC_TYPE;
++		ret = tongfang_mifs_wmi_call(data, &input, &ac_type_res);
++		if (ret)
++			return ret;
++
++		/* Full-speed mode requires DC power (not USB-C) */
++		if (ac_type_res.data[0] == WMI_SYSTEM_AC_TYPEC)
++			return -EOPNOTSUPP;
++
++		val = WMI_PP_FULL_SPEED;
++		/* Restore operation and function for the actual SET call */
++		input.operation = WMI_METHOD_SET;
++		input.function = WMI_FN_SYSTEM_PER_MODE;
++		break;
++	default:
++		return -EOPNOTSUPP;
++	}
++
++	input.payload[0] = val;
++
++	ret = tongfang_mifs_wmi_call(data, &input, NULL);
++	return ret;
++}
++
++static int platform_profile_probe(void *drvdata, unsigned long *choices)
++{
++	struct tongfang_mifs_wmi_data *data = drvdata;
++	struct tongfang_mifs_input input = {
++		.reserved1 = 0,
++		.operation = WMI_METHOD_GET,
++		.reserved2 = 0,
++		.function = WMI_FN_SYSTEM_AC_TYPE,
++	};
++	struct tongfang_mifs_output res;
++	int ret;
++
++	set_bit(PLATFORM_PROFILE_LOW_POWER, choices);
++	set_bit(PLATFORM_PROFILE_BALANCED, choices);
++	set_bit(PLATFORM_PROFILE_BALANCED_PERFORMANCE, choices);
++
++	/* Only enable PERFORMANCE (full-speed) if DC power is connected */
++	ret = tongfang_mifs_wmi_call(data, &input, &res);
++	if (!ret && res.data[0] != WMI_SYSTEM_AC_TYPEC)
++		set_bit(PLATFORM_PROFILE_PERFORMANCE, choices);
++
++	return 0;
++}
++
++static const struct platform_profile_ops laptop_profile_ops = {
++	.probe = platform_profile_probe,
++	.profile_get = laptop_profile_get,
++	.profile_set = laptop_profile_set,
++};
++
++static const char *const fan_labels[] = {
++	"CPU", /* 0 */
++	"GPU", /* 1 */
++	"SYS", /* 2 */
++};
++
++static int laptop_hwmon_read(struct device *dev, enum hwmon_sensor_types type,
++			     u32 attr, int channel, long *val)
++{
++	struct tongfang_mifs_wmi_data *data = dev_get_drvdata(dev);
++	struct tongfang_mifs_input input = {
++		.reserved1 = 0,
++		.operation = WMI_METHOD_GET,
++		.reserved2 = 0,
++	};
++	struct tongfang_mifs_output res;
++	int ret;
++
++	switch (type) {
++	case hwmon_temp:
++		input.function = WMI_FN_CPU_THERMOMETER;
++		ret = tongfang_mifs_wmi_call(data, &input, &res);
++		if (!ret)
++			*val = res.data[0] * 1000;
++		break;
++	case hwmon_fan:
++		input.function = WMI_FN_FAN_SPEEDS;
++		ret = tongfang_mifs_wmi_call(data, &input, &res);
++		if (ret)
++			break;
++
++		switch (channel) {
++		case 0: /* CPU */
++			*val = (res.data[1] << 8) | res.data[0];
++			break;
++		case 1: /* GPU */
++			*val = (res.data[3] << 8) | res.data[2];
++			break;
++		case 2: /* SYS */
++			*val = (res.data[7] << 8) | res.data[6];
++			break;
++		default:
++			ret = -EINVAL;
++			break;
++		}
++		break;
++	default:
++		ret = -EINVAL;
++		break;
++	}
++	return ret;
++}
++
++static int laptop_hwmon_read_string(struct device *dev,
++				    enum hwmon_sensor_types type, u32 attr,
++				    int channel, const char **str)
++{
++	if (type == hwmon_fan && attr == hwmon_fan_label) {
++		if (channel >= 0 && channel < ARRAY_SIZE(fan_labels)) {
++			*str = fan_labels[channel];
++			return 0;
++		}
++	}
++	return -EINVAL;
++}
++
++static const struct hwmon_channel_info *laptop_hwmon_info[] = {
++	HWMON_CHANNEL_INFO(temp, HWMON_T_INPUT),
++	HWMON_CHANNEL_INFO(fan, HWMON_F_INPUT | HWMON_F_LABEL,
++			   HWMON_F_INPUT | HWMON_F_LABEL,
++			   HWMON_F_INPUT | HWMON_F_LABEL),
++	NULL
++};
++
++static const struct hwmon_ops laptop_hwmon_ops = {
++	.visible = 0444,
++	.read = laptop_hwmon_read,
++	.read_string = laptop_hwmon_read_string,
++};
++
++static const struct hwmon_chip_info laptop_chip_info = {
++	.ops = &laptop_hwmon_ops,
++	.info = laptop_hwmon_info,
++};
++
++static int laptop_kbd_led_set(struct led_classdev *led_cdev,
++			      enum led_brightness value)
++{
++	struct tongfang_mifs_wmi_data *data =
++		container_of(led_cdev, struct tongfang_mifs_wmi_data, kbd_led);
++	struct tongfang_mifs_input input = {
++		.reserved1 = 0,
++		.operation = WMI_METHOD_SET,
++		.reserved2 = 0,
++		.function = WMI_FN_RGB_KB_BRIGHTNESS,
++	};
++	int ret;
++
++	input.payload[0] = (u8)value;
++
++	ret = tongfang_mifs_wmi_call(data, &input, NULL);
++	return ret;
++}
++
++static enum led_brightness laptop_kbd_led_get(struct led_classdev *led_cdev)
++{
++	struct tongfang_mifs_wmi_data *data =
++		container_of(led_cdev, struct tongfang_mifs_wmi_data, kbd_led);
++	struct tongfang_mifs_input input = {
++		.reserved1 = 0,
++		.operation = WMI_METHOD_GET,
++		.reserved2 = 0,
++		.function = WMI_FN_RGB_KB_BRIGHTNESS,
++	};
++	struct tongfang_mifs_output res;
++	u8 level_val;
++	int ret;
++
++	ret = tongfang_mifs_wmi_call(data, &input, &res);
++	if (ret)
++		return ret;
++
++	level_val = res.data[0];
++
++	return level_val;
++}
++
++static const char *const gpu_mode_strings[] = {
++	"hybrid",
++	"discrete",
++	"uma",
++};
++
++/* GPU Mode: 0:Hybrid, 1:Discrete, 2:UMA */
++static ssize_t gpu_mode_show(struct device *dev, struct device_attribute *attr,
++			     char *buf)
++{
++	struct tongfang_mifs_wmi_data *data = dev_get_drvdata(dev);
++	struct tongfang_mifs_input input = {
++		.reserved1 = 0,
++		.operation = WMI_METHOD_GET,
++		.reserved2 = 0,
++		.function = WMI_FN_GPU_MODE,
++	};
++	struct tongfang_mifs_output res;
++	u8 mode_val;
++	int ret;
++	const char *mode_str;
++
++	ret = tongfang_mifs_wmi_call(data, &input, &res);
++
++	if (ret)
++		return ret;
++
++	mode_val = res.data[0];
++
++	if (mode_val < ARRAY_SIZE(gpu_mode_strings)) {
++		mode_str = gpu_mode_strings[mode_val];
++	} else {
++		// fallback: If the value is unknown, report the raw number in wmi
++		return sysfs_emit(buf, "%d\n", mode_val);
++	}
++
++	return sysfs_emit(buf, "%s\n", mode_str);
++}
++
++static ssize_t gpu_mode_store(struct device *dev, struct device_attribute *attr,
++			      const char *buf, size_t count)
++{
++	struct tongfang_mifs_wmi_data *data = dev_get_drvdata(dev);
++	struct tongfang_mifs_input input = {
++		.reserved1 = 0,
++		.operation = WMI_METHOD_SET,
++		.reserved2 = 0,
++		.function = WMI_FN_GPU_MODE,
++	};
++	int val;
++	int ret;
++
++	val = sysfs_match_string(gpu_mode_strings, buf);
++
++	if (val < 0)
++		return -EINVAL;
++
++	input.payload[0] = (u8)val;
++
++	ret = tongfang_mifs_wmi_call(data, &input, NULL);
++
++	if (ret)
++		return ret;
++
++	return count;
++}
++
++static const char *const kb_mode_strings[] = {
++	"off", /* 0 */
++	"cyclic", /* 1 */
++	"fixed", /* 2 */
++	"custom", /* 3 */
++};
++
++static ssize_t kb_mode_show(struct device *dev, struct device_attribute *attr,
++			    char *buf)
++{
++	struct tongfang_mifs_wmi_data *data = dev_get_drvdata(dev);
++	struct tongfang_mifs_input input = {
++		.reserved1 = 0,
++		.operation = WMI_METHOD_GET,
++		.reserved2 = 0,
++		.function = WMI_FN_RGB_KB_MODE,
++	};
++	struct tongfang_mifs_output res;
++	int ret;
++	u8 mode_val;
++	const char *mode_str;
++
++	ret = tongfang_mifs_wmi_call(data, &input, &res);
++
++	if (ret)
++		return ret;
++
++	mode_val = res.data[0];
++
++	if (mode_val < ARRAY_SIZE(kb_mode_strings)) {
++		mode_str = kb_mode_strings[mode_val];
++	} else {
++		// Fallback for an unexpected/unknown mode
++		return sysfs_emit(buf, "%d\n", mode_val);
++	}
++
++	return sysfs_emit(buf, "%s\n", mode_str);
++}
++
++static ssize_t kb_mode_store(struct device *dev, struct device_attribute *attr,
++			     const char *buf, size_t count)
++{
++	struct tongfang_mifs_wmi_data *data = dev_get_drvdata(dev);
++	struct tongfang_mifs_input input = {
++		.reserved1 = 0,
++		.operation = WMI_METHOD_SET,
++		.reserved2 = 0,
++		.function = WMI_FN_RGB_KB_MODE,
++	};
++	// the wmi value (0, 1, 2 or 3)
++	int val;
++	int ret;
++
++	if (!data)
++		return -EINVAL;
++
++	val = sysfs_match_string(kb_mode_strings, buf);
++
++	if (val < 0)
++		return -EINVAL;
++
++	input.payload[0] = (u8)val;
++
++	ret = tongfang_mifs_wmi_call(data, &input, NULL);
++
++	if (ret)
++		return ret;
++
++	return count;
++}
++
++/* Fan Boost: 0:Normal, 1:Max Speed */
++static ssize_t fan_boost_store(struct device *dev,
++			       struct device_attribute *attr, const char *buf,
++			       size_t count)
++{
++	struct tongfang_mifs_wmi_data *data = dev_get_drvdata(dev);
++	struct tongfang_mifs_input input = {
++		.reserved1 = 0,
++		.operation = WMI_METHOD_SET,
++		.reserved2 = 0,
++		.function = WMI_FN_MAX_FAN_SWITCH,
++	};
++	u8 payload[2];
++	bool val;
++	int ret;
++
++	if (!data)
++		return -EINVAL;
++
++	if (kstrtobool(buf, &val))
++		return -EINVAL;
++
++	payload[0] = 0; /* CPU/GPU Fan */
++	payload[1] = val;
++
++	memcpy(input.payload, payload, sizeof(payload));
++
++	ret = tongfang_mifs_wmi_call(data, &input, NULL);
++
++	if (ret)
++		return ret;
++
++	return count;
++}
++
++static DEVICE_ATTR_RW(gpu_mode);
++static DEVICE_ATTR_RW(kb_mode);
++static DEVICE_ATTR_WO(fan_boost);
++
++static struct attribute *laptop_attrs[] = {
++	&dev_attr_gpu_mode.attr,
++	&dev_attr_kb_mode.attr,
++	&dev_attr_fan_boost.attr,
++	NULL
++};
++ATTRIBUTE_GROUPS(laptop);
++
++static const struct key_entry tongfang_mifs_wmi_keymap[] = {
++	{ KE_KEY, WMI_EVENT_OPEN_APP, { KEY_PROG1 } },
++	{ KE_KEY, WMI_EVENT_CALCULATOR_START, { KEY_CALC } },
++	{ KE_KEY, WMI_EVENT_BROWSER_START, { KEY_WWW } },
++	{ KE_IGNORE, WMI_EVENT_FN_J, { KEY_RESERVED } },
++	{ KE_IGNORE, WMI_EVENT_FN_F, { KEY_RESERVED } },
++	{ KE_IGNORE, WMI_EVENT_FN_0, { KEY_RESERVED } },
++	{ KE_IGNORE, WMI_EVENT_FN_1, { KEY_RESERVED } },
++	{ KE_IGNORE, WMI_EVENT_FN_2, { KEY_RESERVED } },
++	{ KE_IGNORE, WMI_EVENT_FN_3, { KEY_RESERVED } },
++	{ KE_IGNORE, WMI_EVENT_FN_4, { KEY_RESERVED } },
++	{ KE_IGNORE, WMI_EVENT_FN_5, { KEY_RESERVED } },
++	{ KE_END, 0 }
++};
++
++static int tongfang_mifs_wmi_probe(struct wmi_device *wdev, const void *context)
++{
++	struct tongfang_mifs_wmi_data *drv_data;
++	struct device *pp_dev;
++	struct device *hwmon_dev;
++	enum tongfang_wmi_device_type dev_type =
++		(enum tongfang_wmi_device_type)(unsigned long)context;
++
++	int ret;
++
++	drv_data = devm_kzalloc(&wdev->dev, sizeof(*drv_data), GFP_KERNEL);
++	if (!drv_data)
++		return -ENOMEM;
++
++	drv_data->wdev = wdev;
++
++	ret = devm_mutex_init(&wdev->dev, &drv_data->lock);
++	if (ret) {
++		dev_err(&wdev->dev, "failed to initialize WMI data lock: %d\n",
++			ret);
++		return ret;
++	}
++
++	dev_set_drvdata(&wdev->dev, drv_data);
++
++	if (dev_type == TONGFANG_WMI_EVENT) {
++		/* Register input device for hotkeys */
++		drv_data->input_dev = devm_input_allocate_device(&wdev->dev);
++		if (!drv_data->input_dev)
++			return -ENOMEM;
++
++		drv_data->input_dev->name = "Tongfang MIFS WMI hotkeys";
++		drv_data->input_dev->phys = "wmi/input0";
++		drv_data->input_dev->id.bustype = BUS_HOST;
++		drv_data->input_dev->dev.parent = &wdev->dev;
++
++		ret = sparse_keymap_setup(drv_data->input_dev,
++					  tongfang_mifs_wmi_keymap, NULL);
++		if (ret) {
++			dev_err(&wdev->dev, "Failed to setup sparse keymap\n");
++			return ret;
++		}
++
++		ret = input_register_device(drv_data->input_dev);
++		if (ret) {
++			dev_err(&wdev->dev,
++				"Failed to register input device\n");
++			return ret;
++		}
++
++		dev_info(&wdev->dev, "Registered WMI event device\n");
++
++		return 0;
++	}
++
++	/* Register platform profile */
++	pp_dev = devm_platform_profile_register(&wdev->dev, DRV_NAME, drv_data,
++						&laptop_profile_ops);
++	if (IS_ERR(pp_dev)) {
++		dev_err(&wdev->dev, "Failed to register platform profile\n");
++		return PTR_ERR(pp_dev);
++	}
++
++	/* Register hwmon */
++	hwmon_dev = devm_hwmon_device_register_with_info(
++		&wdev->dev, "tongfang_mifs", drv_data, &laptop_chip_info, NULL);
++	if (IS_ERR(hwmon_dev)) {
++		dev_err(&wdev->dev, "Failed to register hwmon\n");
++		return PTR_ERR(hwmon_dev);
++	}
++
++	/* Register keyboard LED */
++	drv_data->kbd_led.name = "laptop::kbd_backlight";
++
++	drv_data->kbd_led.max_brightness = 3;
++	drv_data->kbd_led.brightness_set_blocking = laptop_kbd_led_set;
++	drv_data->kbd_led.brightness_get = laptop_kbd_led_get;
++	ret = devm_led_classdev_register(&wdev->dev, &drv_data->kbd_led);
++	if (ret) {
++		dev_err(&wdev->dev, "Failed to register keyboard LED\n");
++		return ret;
++	}
++
++	return 0;
++}
++
++static void tongfang_mifs_wmi_notify(struct wmi_device *wdev,
++				     union acpi_object *obj)
++{
++	struct tongfang_mifs_wmi_data *data = dev_get_drvdata(&wdev->dev);
++	const struct tongfang_mifs_event *event;
++	u16 fan_speed;
++
++	if (!obj || obj->type != ACPI_TYPE_BUFFER)
++		return;
++
++	if (obj->buffer.length < sizeof(*event))
++		return;
++
++	event = (const struct tongfang_mifs_event *)obj->buffer.pointer;
++
++	/* Validate event type */
++	if (event->event_type != WMI_EVENT_TYPE_HOTKEY)
++		return;
++
++	dev_dbg(&wdev->dev,
++		"WMI event: id=0x%02x value_low=0x%02x value_high=0x%02x\n",
++		event->event_id, event->value_low, event->value_high);
++
++	switch (event->event_id) {
++	case WMI_EVENT_KBD_BRIGHTNESS:
++		led_classdev_notify_brightness_hw_changed(&data->kbd_led,
++							  event->value_low);
++		break;
++
++	case WMI_EVENT_PERFORMANCE_PLAN:
++		platform_profile_notify(&wdev->dev);
++		break;
++
++	case WMI_EVENT_OPEN_APP:
++	case WMI_EVENT_CALCULATOR_START:
++	case WMI_EVENT_BROWSER_START:
++		if (!sparse_keymap_report_event(data->input_dev,
++						event->event_id, 1, true))
++			dev_warn(&wdev->dev, "Unknown key pressed: 0x%02x\n",
++				 event->event_id);
++		break;
++
++	case WMI_EVENT_CPU_FAN_SPEED:
++	case WMI_EVENT_GPU_FAN_SPEED:
++		/* Fan speed is 16-bit value (value_low is LSB, value_high is MSB) */
++		fan_speed = (event->value_high << 8) | event->value_low;
++		dev_dbg(&wdev->dev, "Fan speed event: id=%d speed=%u RPM\n",
++			event->event_id, fan_speed);
++		/* These are informational, hwmon polling will read the actual values */
++		break;
++
++	case WMI_EVENT_AIRPLANE_MODE:
++	case WMI_EVENT_TOUCHPAD_STATE:
++	case WMI_EVENT_FNLOCK_STATE:
++	case WMI_EVENT_KBD_MODE:
++	case WMI_EVENT_CAPSLOCK_STATE:
++	case WMI_EVENT_NUMLOCK_STATE:
++	case WMI_EVENT_SCROLLLOCK_STATE:
++	case WMI_EVENT_REFRESH_RATE:
++	case WMI_EVENT_WIN_KEY_LOCK:
++		/* These events are informational or handled by firmware */
++		dev_dbg(&wdev->dev, "State change event: id=%d value=%d\n",
++			event->event_id, event->value_low);
++		break;
++
++	default:
++		dev_dbg(&wdev->dev, "Unknown event: id=0x%02x value=0x%02x\n",
++			event->event_id, event->value_low);
++		break;
++	}
++}
++
++static const struct wmi_device_id tongfang_mifs_wmi_id_table[] = {
++	{ TONGFANG_MIFS_GUID, (void *)TONGFANG_WMI_CONTROL },
++	{ TONGFANG_EVENT_GUID, (void *)TONGFANG_WMI_EVENT },
++	{}
++};
++MODULE_DEVICE_TABLE(wmi, tongfang_mifs_wmi_id_table);
++
++static struct wmi_driver tongfang_mifs_wmi_driver = {
++	.no_singleton = true,
++	.driver = {
++		.name = DRV_NAME,
++		.dev_groups = laptop_groups,
++	},
++	.id_table = tongfang_mifs_wmi_id_table,
++	.probe = tongfang_mifs_wmi_probe,
++	.notify = tongfang_mifs_wmi_notify,
++};
++
++module_wmi_driver(tongfang_mifs_wmi_driver);
++
++MODULE_AUTHOR("Mingyou Chen <qby140326@gmail.com>");
++MODULE_DESCRIPTION("Tongfang MIFS (MiInterface) WMI driver");
++MODULE_LICENSE("GPL");
+-- 
+2.52.0
+Changes in v3:
+- Fix email address mismatch in Signed-off-by and From headers.
+- implement the WMI event handler
+- code style improvments
+- condition on the performance platform profile switch
+- driver documentation
