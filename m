@@ -1,59 +1,59 @@
-Received: from mail-pf1-f178.google.com (mail-pf1-f178.google.com [209.85.210.178])
+Received: from mail-pg1-f179.google.com (mail-pg1-f179.google.com [209.85.215.179])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3BB583A1CD
-	for <platform-driver-x86@vger.kernel.org>; Sun, 25 Jan 2026 07:15:12 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.178
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C7F1D220F38
+	for <platform-driver-x86@vger.kernel.org>; Sun, 25 Jan 2026 09:44:30 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.179
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1769325314; cv=none; b=fluU4XQSyo6JMfImwTdIkIzXwOIWlLvdaiGrWyUjRcwGZxQg+Ww/cuANXRufDRDavread5vqRg/M9PLr2gzoxP8jX+XIJMJPi09dIQx8+GCgXAHjn5PTQ9NqakNHBjqwiT7cvUV3MxLoz96dN4KFmwe8OoXQF+fRaWexOgHIkAI=
+	t=1769334273; cv=none; b=QSdDUhY7VTtdf4cUFLYBR+Dn8mFTX2YK7LfLHmipigXJGoAvp2udXL7++LDVYDgIMSr1DDdkR4U1l/0bT9FIgq9ER4zJEszHTMrCfS5GfVfGtVey1zn+thUMny7PpqMb3VO8oa5e7sxcU+X8/Wnw11GYYQg2OeLWo2SXmMHsZqk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1769325314; c=relaxed/simple;
-	bh=1jzKMKrKec1mhtS8m1nWPD2vIhbS2iu6ngbbu7mHd1Q=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=rLf/zTJvgqdQdtmKbUByawvoqQ7bceyvn34cLJHMdx/UPd2FCx+g7lhnsoatiWoQlsBIj3geP4FuKvmyAPahJxmSyAY3mRUp9OWa4hBPuCnOa2tb2O18x4ldyn0qhSfE7iD9FRL1kPIBpQbshTYYPnEJbmMorU2P2f6qhP5RfVY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=mRs3v0zs; arc=none smtp.client-ip=209.85.210.178
+	s=arc-20240116; t=1769334273; c=relaxed/simple;
+	bh=5qsZuA2MwlrC9Y0uq1do1L9tjxogKNQgN+9LF1SzM+0=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=XHdyvOQc0P5Rwy+t8Ecx34AfGpM66xxK90UGbYS364jax1XJjHoEGbfYy6yZEZXOLxtLcHmO0AjB9Sq4OU7GX2ct1I09H0DpjP6e5OoHpYHXs+NzA4G4SgRyrTDrs0qITen3GloKJgwKlwXD+hRxFKth/hX4O1je+tnPRQVrjDU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=JlbC/uK6; arc=none smtp.client-ip=209.85.215.179
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="mRs3v0zs"
-Received: by mail-pf1-f178.google.com with SMTP id d2e1a72fcca58-81f4e136481so1780513b3a.3
-        for <platform-driver-x86@vger.kernel.org>; Sat, 24 Jan 2026 23:15:12 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="JlbC/uK6"
+Received: by mail-pg1-f179.google.com with SMTP id 41be03b00d2f7-c634bb5bd8eso605359a12.0
+        for <platform-driver-x86@vger.kernel.org>; Sun, 25 Jan 2026 01:44:30 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1769325311; x=1769930111; darn=vger.kernel.org;
+        d=gmail.com; s=20230601; t=1769334270; x=1769939070; darn=vger.kernel.org;
         h=content-transfer-encoding:mime-version:message-id:date:subject:cc
          :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=1fMp1jfQD27IDFmvp3/rNhXIwXYtHNKUJHoz5s+1huM=;
-        b=mRs3v0zsqzJgwO/lWIX/c9Kafo6f6/RMRhachCdXBMQyRkuM8I93QheBHJCS2OjrtF
-         J6Ye0KZtuF1jtLubRB4V1KjZUjPMcUx8sGkrflpZq3liEgmuwX0maMnxa6rnlTUgCkGP
-         CWApgDVAZDjh7OXqcxeXoXJF1T3nhJeriieo//LrlLxY5UbeCnyHdXK73zRLnvTLNGsR
-         3hrN5FLH0mRwSb6aSjzX6ceELtICMQMt/Nj24WoTAhrrUXKM84preTyPfaF8D5hqgbQ6
-         JwsraYueVEas5diguF8P32cEvFlDqeTvVnyYN3BVGGq7aItD+sSE/1+WwbAmPLPfjq6S
-         qkGQ==
+        bh=RvctpH0CdhOXt/YMeD+dcDyW/u30u71094n2Gb74fho=;
+        b=JlbC/uK6qYURz+UmfmdQ84P7PaAP8QFfCdzUeZ+GFOqGZ98rH+9iT3B6wcia+wrrry
+         9y1HmSxPN+lvFy4crIQ+h1rSXAAh42vfxQDcVIUS1HMJ+9nGFeApVZLYfM/Xe7hieR+E
+         dZMoBTEtxePbRX9ZgU3J/ZMB1I/2drlPLAyxPkEzIckEQZ5vfbKNOWnBuCGTGolQWue+
+         GWBzRI70q0YZ5M65B6dN9vXqwpWq9nVgxkpmhLQRi7qWk5AzYw9fFm/kEsY70fnt737G
+         9r8sG7kuoojeQDCaiqci/q2O9omBlHZ3sgRlH39jHzW9NcrhOAO1RSAK60FF0yyCWr/r
+         a4wA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1769325311; x=1769930111;
+        d=1e100.net; s=20230601; t=1769334270; x=1769939070;
         h=content-transfer-encoding:mime-version:message-id:date:subject:cc
          :to:from:x-gm-gg:x-gm-message-state:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=1fMp1jfQD27IDFmvp3/rNhXIwXYtHNKUJHoz5s+1huM=;
-        b=uhUUbe1S7YUPjzCmhepozuXbSUzbB540xlzQEMQ7FrDYyOTPXPHEzNO251h6j6vHSg
-         pMhiUge+TTA6pAN7H5YgFJoyAvWV7gCp0DliDC7I+Bd6BmFT4rodJy2GfF05T52MlfZR
-         7fJDU/esHF08deHSwsEAPz3tJ15llo9r+yO0jeMGfDi6Hus6HkY/2uF+dVtmX7Tw/dov
-         bk9Jgw7gXnKaKRAzjb67nz6VXmuCBcGTs43nbZ0XKYbJn/0KXYRrDs3mXXH9SzQb9m5V
-         7FhlEruyb+r+AJOdUoO6NspD109UuoWuuu81tJuKK0YDW1hEls8sbCPq4M6XPlNFrSY3
-         BtCw==
-X-Gm-Message-State: AOJu0Yw3rjBFbXZYK5VLUnoSJeIjNKNSyYekzmjxyJM62+j5GFPL9IUo
-	tJqYGv2RAl4L/HS+IzjpK1EcrFD6WusPCzWVk1AXLkH4poEs8qyvbuW7
-X-Gm-Gg: AZuq6aJ1UOedDK9VyPHkuNcCuh9W7YVQ3XSKHi7DNvTJxlUmoVmQ8JyMbB9+1T//sZ5
-	UPdQ2dikViLv0glpucyRUnhmWLrEpXaOFzigOs3q0Pb7H5wdb13C6hK+dCZcVIBgmUa142nUMLM
-	ClIe3Rhqv62l8sQgDwoRiscptE72l30ECW8oTSoypCDzJIjSFJWn7BVemNxNwzhd0u7adDn+1Wm
-	nY5R9UznWkwuS/PjmXDlGNrbzJ6cldMyc7cofTWsh03nhtxtbhJsnjOU2VrJI2e+odcrWpPgeSn
-	8hSxekjEDxrWx2mpLsZDTMdgevWFZHYlmtt8956byRyiUDCO/xm4zr/pBKYwwI+BxrJBXujfEkT
-	rAOrNqOLncOkTCI3Moi5HSyQvS6yDvbwpdFAnWLPtvjcN5ExDuAKjYKstgvE2Ig==
-X-Received: by 2002:a05:6a00:1489:b0:822:bd7:e949 with SMTP id d2e1a72fcca58-823412a3f20mr889555b3a.57.1769325311226;
-        Sat, 24 Jan 2026 23:15:11 -0800 (PST)
+        bh=RvctpH0CdhOXt/YMeD+dcDyW/u30u71094n2Gb74fho=;
+        b=CCcZb45a/+PWf/bSpjUnmL4C24Cqf6ZMpcQ0oDLQ4buaL349enysGloJneY0kE6X2f
+         xAjTa9xExI83FsTwD//USyFMym84/quAf5kcKVFWJ0oCiYzpn5Bov+FZWkkbxKcruaG4
+         fp48ralNPqf39uinC5u9TFdPM7T9przkYe2ONIZbwSS7hM4rLrFeH1aV+kG9YTzkTVeB
+         HQXBeJdmQnuOJYq38Isl9kK3qeDWTtUfn/gsc7jPh3Cm/TTfDwJJ2IuKx75CHgq2JHvf
+         G+Rf0yDh1VivE0Hg6BlNfQRcrNA4prLhQwd0LmEqtqw2xX++uAvh2KAzqkFub6lFNOSW
+         B4Cw==
+X-Gm-Message-State: AOJu0YzMYsMJncJxx2hSDeeAWH/18oeHrwLHOvWY6eSOzibL0fde+LZZ
+	A+aR6fGXeevTAAF3uPtdDUPJSS+/iIj17WTow+F5etUWJFuAYxcgcALV
+X-Gm-Gg: AZuq6aL6rfEMHIS4GU6ELlkbcRSvimI24mckX0bxKE/dQjZ7NFvVS5U0mc/Qsf86LKh
+	jVN0bY2gmLNPFoWfjDIXnIV4zGDQE3c2nCGBOYCR8E//P1CxHVJxpn4hlLYuhETd2XqGGOEjZOt
+	Bu3jStrzWOCxzX3hyl/y/XS26NlSg46X5znMCEkYP8sJ9m5ezecFVIduXbfDH+XeWDqH8mSjtUv
+	v/Hxni9m5tBPhSai9giGD60+KypeMOklt/FuK/4UQDwOLMjotVt+sAPd94yV9+28hFneZoc0Kvc
+	uZnyHDpPCApq7tr/8m1ffY276UzztOZrNPwhaCx+/9qm2QJZqoabws0I3qau1O9fniy2KHvpYWV
+	akTh8kql7EshLPlv3z7BSiuXNI6TW0q6Qzv/j1tqpN1IPe+sgzc/hgXKeEB71bg==
+X-Received: by 2002:a05:6a21:4c85:b0:38d:f745:4d5f with SMTP id adf61e73a8af0-38e9f1164a3mr1080641637.24.1769334269836;
+        Sun, 25 Jan 2026 01:44:29 -0800 (PST)
 Received: from qby-laptop ([2a13:edc0:18:16f::a])
-        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-82318648dd7sm6211264b3a.3.2026.01.24.23.15.08
+        by smtp.gmail.com with ESMTPSA id 98e67ed59e1d1-35335205a2fsm9014045a91.2.2026.01.25.01.44.27
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sat, 24 Jan 2026 23:15:10 -0800 (PST)
+        Sun, 25 Jan 2026 01:44:29 -0800 (PST)
 From: Mingyou Chen <qby140326@gmail.com>
 To: hansg@kernel.org,
 	ilpo.jarvinen@linux.intel.com
@@ -61,9 +61,9 @@ Cc: platform-driver-x86@vger.kernel.org,
 	linux-kernel@vger.kernel.org,
 	cryolitia.pukngae@linux.dev,
 	Mingyou Chen <qby140326@gmail.com>
-Subject: [PATCH v3] platform/x86: tongfang-mifs-wmi: Add new Tongfang MIFS WMI driver
-Date: Sun, 25 Jan 2026 15:15:01 +0800
-Message-ID: <20260125071501.12616-1-qby140326@gmail.com>
+Subject: [PATCH v4] platform/x86: tongfang-mifs-wmi: Add new Tongfang MIFS WMI driver
+Date: Sun, 25 Jan 2026 17:44:22 +0800
+Message-ID: <20260125094422.6405-1-qby140326@gmail.com>
 X-Mailer: git-send-email 2.52.0
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
@@ -102,20 +102,20 @@ The driver registers two WMI GUIDs:
 
 Signed-off-by: Mingyou Chen <qby140326@gmail.com>
 ---
- .../wmi/devices/tongfang-mifs-wmi.rst         | 207 +++++
- drivers/platform/x86/Kconfig                  |  16 +
+ .../wmi/devices/tongfang-mifs-wmi.rst         | 210 +++++
+ drivers/platform/x86/Kconfig                  |  17 +
  drivers/platform/x86/Makefile                 |   1 +
- drivers/platform/x86/tongfang-mifs-wmi.c      | 780 ++++++++++++++++++
- 4 files changed, 1004 insertions(+)
+ drivers/platform/x86/tongfang-mifs-wmi.c      | 848 ++++++++++++++++++
+ 4 files changed, 1076 insertions(+)
  create mode 100644 Documentation/wmi/devices/tongfang-mifs-wmi.rst
  create mode 100644 drivers/platform/x86/tongfang-mifs-wmi.c
 
 diff --git a/Documentation/wmi/devices/tongfang-mifs-wmi.rst b/Documentation/wmi/devices/tongfang-mifs-wmi.rst
 new file mode 100644
-index 000000000000..18854259ae90
+index 000000000000..e59873a249c1
 --- /dev/null
 +++ b/Documentation/wmi/devices/tongfang-mifs-wmi.rst
-@@ -0,0 +1,207 @@
+@@ -0,0 +1,210 @@
 +.. SPDX-License-Identifier: GPL-2.0-or-later
 +
 +========================================
@@ -309,8 +309,11 @@ index 000000000000..18854259ae90
 +-----------------
 +Changing the performance mode via Command ID 0x08 (SystemPerMode) affects the power limits (PL1/PL2)
 +and fan curves managed by the Embedded Controller (EC). Note that the "Full-speed"
-+mode (3) is typically only available when the system is connected to a DC power
++and "Performance" mode (1, 3) is typically only available when the system is connected to a DC power
 +source (not USB-C/PD).
++
++In the driver implementation, switch to performance/full-speed mode without DC power connected
++will throw the EOPNOTSUPP error.
 +
 +Graphics Switching
 +------------------
@@ -324,10 +327,10 @@ index 000000000000..18854259ae90
 +0x14 (``MaxFanSpeedSwitch``) is used to toggle manual control, while ID 0x15
 +sets the actual PWM duty cycle.
 diff --git a/drivers/platform/x86/Kconfig b/drivers/platform/x86/Kconfig
-index 4cb7d97a9fcc..f4d1c47e978a 100644
+index 4cb7d97a9fcc..8073920ae4a2 100644
 --- a/drivers/platform/x86/Kconfig
 +++ b/drivers/platform/x86/Kconfig
-@@ -113,6 +113,22 @@ config GIGABYTE_WMI
+@@ -113,6 +113,23 @@ config GIGABYTE_WMI
  	  To compile this driver as a module, choose M here: the module will
  	  be called gigabyte-wmi.
  
@@ -336,6 +339,7 @@ index 4cb7d97a9fcc..f4d1c47e978a 100644
 +	tristate "Tongfang MIFS (MiInterface) WMI driver"
 +	depends on ACPI_WMI
 +	depends on HWMON
++	depends on POWER_SUPPLY
 +	select ACPI_PLATFORM_PROFILE
 +	help
 +	  This is a driver for Tongfang MiInterface based laptops.
@@ -364,16 +368,19 @@ index d25762f7114f..1160c726bda6 100644
  obj-$(CONFIG_ACERHDF)		+= acerhdf.o
 diff --git a/drivers/platform/x86/tongfang-mifs-wmi.c b/drivers/platform/x86/tongfang-mifs-wmi.c
 new file mode 100644
-index 000000000000..016badae4025
+index 000000000000..0ab83f5d9a6e
 --- /dev/null
 +++ b/drivers/platform/x86/tongfang-mifs-wmi.c
-@@ -0,0 +1,780 @@
+@@ -0,0 +1,848 @@
 +// SPDX-License-Identifier: GPL-2.0-or-later
 +#include "asm-generic/errno-base.h"
++#include "asm-generic/errno.h"
 +#include "linux/err.h"
 +#include "linux/input-event-codes.h"
 +#include "linux/input.h"
 +#include "linux/input/sparse-keymap.h"
++#include "linux/power_supply.h"
++#include "linux/stddef.h"
 +#include "linux/string.h"
 +#include <linux/cleanup.h>
 +#include <linux/acpi.h>
@@ -392,6 +399,10 @@ index 000000000000..016badae4025
 +#define TONGFANG_MIFS_GUID "B60BFB48-3E5B-49E4-A0E9-8CFFE1B3434B"
 +#define TONGFANG_EVENT_GUID "46C93E13-EE9B-4262-8488-563BCA757FEF"
 +#define WMI_BUFFER_SIZE 32
++
++static char *profile_state_path = "/sys/firmware/acpi/platform_profile_last";
++module_param(profile_state_path, charp, 0644);
++MODULE_PARM_DESC(profile_state_path, "Path to store profile state");
 +
 +enum tongfang_mifs_operation {
 +	WMI_METHOD_GET = 250,
@@ -417,8 +428,7 @@ index 000000000000..016badae4025
 +
 +enum tongfang_system_ac_mode {
 +	WMI_SYSTEM_AC_TYPEC = 1,
-+	WMI_SYSTEM_AC_CIRCULARHOLE =
-+		2, /* Unknown type, this is unused in the original driver */
++	WMI_SYSTEM_AC_CIRCULARHOLE = 2, /* Unknown type, this is unused in the original driver */
 +};
 +
 +enum tongfang_mifs_power_profile {
@@ -497,6 +507,7 @@ index 000000000000..016badae4025
 +	struct mutex lock; /* Protects WMI calls */
 +	struct led_classdev kbd_led;
 +	struct input_dev *input_dev;
++	enum platform_profile_option saved_profile;
 +};
 +
 +static int tongfang_mifs_wmi_call(struct tongfang_mifs_wmi_data *data,
@@ -520,6 +531,23 @@ index 000000000000..016badae4025
 +				   output ? &out_buf : NULL);
 +
 +	return ret;
++}
++
++static bool is_ac_online(void)
++{
++	struct power_supply *psy;
++	union power_supply_propval val;
++	bool online = false;
++
++	psy = power_supply_get_by_name("ADP1");
++	if (!psy)
++		return false;
++
++	if (!power_supply_get_property(psy, POWER_SUPPLY_PROP_ONLINE, &val))
++		online = (val.intval == 1);
++
++	power_supply_put(psy);
++	return online;
 +}
 +
 +static int laptop_profile_get(struct device *dev,
@@ -559,6 +587,7 @@ index 000000000000..016badae4025
 +	return 0;
 +}
 +
++
 +static int laptop_profile_set(struct device *dev,
 +			      enum platform_profile_option profile)
 +{
@@ -570,6 +599,7 @@ index 000000000000..016badae4025
 +		.function = WMI_FN_SYSTEM_PER_MODE,
 +	};
 +	struct tongfang_mifs_output ac_type_res;
++
 +	u8 val;
 +	int ret;
 +
@@ -582,20 +612,21 @@ index 000000000000..016badae4025
 +		break;
 +	case PLATFORM_PROFILE_BALANCED_PERFORMANCE:
 +		val = WMI_PP_PERFORMANCE;
-+		break;
 +	case PLATFORM_PROFILE_PERFORMANCE:
-+		/* Check if DC power is connected for full-speed mode */
++		/* Check if Typec power is not connected for full-speed/performance mode */
 +		input.operation = WMI_METHOD_GET;
 +		input.function = WMI_FN_SYSTEM_AC_TYPE;
 +		ret = tongfang_mifs_wmi_call(data, &input, &ac_type_res);
 +		if (ret)
 +			return ret;
 +
-+		/* Full-speed mode requires DC power (not USB-C) */
-+		if (ac_type_res.data[0] == WMI_SYSTEM_AC_TYPEC)
++		/* Full-speed/performance mode requires DC power (not USB-C) */
++		if (ac_type_res.data[0] == WMI_SYSTEM_AC_TYPEC || !is_ac_online())
 +			return -EOPNOTSUPP;
 +
-+		val = WMI_PP_FULL_SPEED;
++		if (!val)
++			val = WMI_PP_FULL_SPEED;
++
 +		/* Restore operation and function for the actual SET call */
 +		input.operation = WMI_METHOD_SET;
 +		input.function = WMI_FN_SYSTEM_PER_MODE;
@@ -612,27 +643,43 @@ index 000000000000..016badae4025
 +
 +static int platform_profile_probe(void *drvdata, unsigned long *choices)
 +{
-+	struct tongfang_mifs_wmi_data *data = drvdata;
-+	struct tongfang_mifs_input input = {
-+		.reserved1 = 0,
-+		.operation = WMI_METHOD_GET,
-+		.reserved2 = 0,
-+		.function = WMI_FN_SYSTEM_AC_TYPE,
-+	};
-+	struct tongfang_mifs_output res;
-+	int ret;
-+
 +	set_bit(PLATFORM_PROFILE_LOW_POWER, choices);
 +	set_bit(PLATFORM_PROFILE_BALANCED, choices);
 +	set_bit(PLATFORM_PROFILE_BALANCED_PERFORMANCE, choices);
-+
-+	/* Only enable PERFORMANCE (full-speed) if DC power is connected */
-+	ret = tongfang_mifs_wmi_call(data, &input, &res);
-+	if (!ret && res.data[0] != WMI_SYSTEM_AC_TYPEC)
-+		set_bit(PLATFORM_PROFILE_PERFORMANCE, choices);
++	set_bit(PLATFORM_PROFILE_PERFORMANCE, choices);
 +
 +	return 0;
 +}
++
++static int tongfang_mifs_wmi_suspend(struct device *dev)
++{
++	struct tongfang_mifs_wmi_data *data = dev_get_drvdata(dev);
++	enum platform_profile_option profile;
++	int ret;
++
++	ret = laptop_profile_get(dev, &profile);
++	if (ret == 0)
++		data->saved_profile = profile;
++
++	return 0;
++}
++
++static int tongfang_mifs_wmi_resume(struct device *dev)
++{
++	struct tongfang_mifs_wmi_data *data = dev_get_drvdata(dev);
++
++	if (data->saved_profile != PLATFORM_PROFILE_LAST) {
++		dev_dbg(dev, "Resuming, restoring profile %d\n",
++			data->saved_profile);
++		return laptop_profile_set(dev, data->saved_profile);
++	}
++
++	return 0;
++}
++
++static DEFINE_SIMPLE_DEV_PM_OPS(tongfang_mifs_wmi_pm_ops,
++				tongfang_mifs_wmi_suspend,
++				tongfang_mifs_wmi_resume);
 +
 +static const struct platform_profile_ops laptop_profile_ops = {
 +	.probe = platform_profile_probe,
@@ -940,15 +987,37 @@ index 000000000000..016badae4025
 +	return count;
 +}
 +
++static ssize_t profile_persist_show(struct device *dev,
++					struct device_attribute *attr, char *buf)
++{
++	enum platform_profile_option profile;
++	int ret = laptop_profile_get(dev, &profile);
++
++	if (ret)
++		return ret;
++
++	return sysfs_emit(buf, "%d\n", profile);
++}
++
++static ssize_t profile_persist_store(struct device *dev,
++					struct device_attribute *attr,
++					const char *buf, size_t count)
++{
++	kobject_uevent(&dev->kobj, KOBJ_CHANGE);
++	return count;
++}
++
 +static DEVICE_ATTR_RW(gpu_mode);
 +static DEVICE_ATTR_RW(kb_mode);
 +static DEVICE_ATTR_WO(fan_boost);
++static DEVICE_ATTR_RW(profile_persist);
 +
 +static struct attribute *laptop_attrs[] = {
 +	&dev_attr_gpu_mode.attr,
 +	&dev_attr_kb_mode.attr,
 +	&dev_attr_fan_boost.attr,
-+	NULL
++	&dev_attr_profile_persist.attr,
++	NULL,
 +};
 +ATTRIBUTE_GROUPS(laptop);
 +
@@ -1029,6 +1098,8 @@ index 000000000000..016badae4025
 +		dev_err(&wdev->dev, "Failed to register platform profile\n");
 +		return PTR_ERR(pp_dev);
 +	}
++
++	drv_data->saved_profile = PLATFORM_PROFILE_LAST;
 +
 +	/* Register hwmon */
 +	hwmon_dev = devm_hwmon_device_register_with_info(
@@ -1137,6 +1208,7 @@ index 000000000000..016badae4025
 +	.driver = {
 +		.name = DRV_NAME,
 +		.dev_groups = laptop_groups,
++		.pm = pm_sleep_ptr(&tongfang_mifs_wmi_pm_ops),
 +	},
 +	.id_table = tongfang_mifs_wmi_id_table,
 +	.probe = tongfang_mifs_wmi_probe,
@@ -1150,9 +1222,6 @@ index 000000000000..016badae4025
 +MODULE_LICENSE("GPL");
 -- 
 2.52.0
-Changes in v3:
-- Fix email address mismatch in Signed-off-by and From headers.
-- implement the WMI event handler
-- code style improvments
-- condition on the performance platform profile switch
-- driver documentation
+Changed in v4:
+- check the DC power state before switching to performance/full-speed mode
+
