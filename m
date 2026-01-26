@@ -1,58 +1,60 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.17])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.11])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0A3D413A244
-	for <platform-driver-x86@vger.kernel.org>; Mon, 26 Jan 2026 14:57:11 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.17
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 02A8D155757;
+	Mon, 26 Jan 2026 14:57:21 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.11
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1769439433; cv=none; b=TsNZbF1v/Qdv0hboA/w9fQE7SQVTBgKFgEAR3Lhf8KG9aeVydzkWLhCW7ojbU5nh/k6x03KZzoK90qW/TLfxFy/eMYBlPP0UhsXpu/0Bhf7kEUc8jEwCjKxPrVqsMn2nR6rEzR0NXNjEZLzBdgZvSV/qOc9s2KD0Phsvm/5OQvw=
+	t=1769439443; cv=none; b=bimTwUayf/lektxk7n+y2N45OC/9NdHfAcXzZEes1++MoUEJMyBghsrQF7HjbWlvt1UbZo/9Vdzqs3tvBkHXd3NJYB7OfTddJUPVf4I/ZSKT34ZQlkB405unMfSAGhC+DhRmX01ns/Th5PbfsSozTP8lY804L6wYJ2ZOW0WV3w0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1769439433; c=relaxed/simple;
-	bh=Vd5otWQ1OI8+d4T7GNbLlkkknVwWy39Fy71Zs+azQPY=;
+	s=arc-20240116; t=1769439443; c=relaxed/simple;
+	bh=pV6+UeigcM+FGxdIo+s+rhMmnmFEIsga5wQGALUEZ0o=;
 	h=From:To:Cc:In-Reply-To:References:Subject:Message-Id:Date:
-	 MIME-Version:Content-Type; b=Czkw/WL1KgdUQjclblOeGpXwY9S8wcOvns/TT3o9hrdJ5MpSGO6u+fALL4UHn2jZXl9MQVO7dzDXqV5mIycxCmmxnbThdDl2xuvZgKgl+Z45RBbr2KTnoNlTaQDjVlSrpJ8Gv7WrAUa4YXihfGbAodNaw2x5a/bc19uORlG+3PI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=pass smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=QxcKQ9bN; arc=none smtp.client-ip=198.175.65.17
+	 MIME-Version:Content-Type; b=do7/74OdEWE5rSHFEMtWxKqOGeInwOqsmdsE6681M8X5iC4GnGUNMtpmkIT8NcfnIVAwVEeXKf5G02dqXFSmXLv6EhwrcI/2Gy9ZejosC9EBOC35C8YeRIpyBJVVsBLgur8iXMWQFaSk5jzQyagWU4Kj5b3d3+LpQ3EcZduIGgU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=pass smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=SB4ggybQ; arc=none smtp.client-ip=198.175.65.11
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="QxcKQ9bN"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="SB4ggybQ"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1769439432; x=1800975432;
+  t=1769439442; x=1800975442;
   h=from:to:cc:in-reply-to:references:subject:message-id:
    date:mime-version:content-transfer-encoding;
-  bh=Vd5otWQ1OI8+d4T7GNbLlkkknVwWy39Fy71Zs+azQPY=;
-  b=QxcKQ9bN5uZNMpQ3caCUcnLfbQta18JzFEY3opcYHaX28kg+Njag94Lh
-   +xHqApqT+FJ/duY4CQ0iRNMopNGTtRiK5Y/g1Nlcs4iXcSMPmevzVbReK
-   D2Tq7erRGRcF9hcta4rUA9czHaWi55sR6vrFWDtOaI9CBQyBTgzDjPmwp
-   vX9Qs8OyT/pRRNKefTyBUvobJqw7X2GbbdQxHUtqpqbWJIT4j/rSQaUg1
-   7YUsSwb3+am7qkILRZMRv4gg44qAY6ozhyaWtf58CpaDudLDrZ5rfJTwY
-   J4czRezTsZpjMglNMI1dp597o67X2Xc+Hj/E21Si+FcTc716cOdblhsZb
-   Q==;
-X-CSE-ConnectionGUID: npH5xSDlTCewgya9hpwlUw==
-X-CSE-MsgGUID: SrImnKnyQZyMdSD76tfpZg==
-X-IronPort-AV: E=McAfee;i="6800,10657,11683"; a="70584671"
+  bh=pV6+UeigcM+FGxdIo+s+rhMmnmFEIsga5wQGALUEZ0o=;
+  b=SB4ggybQUUPK0A3d9dhrTnHIG//4NaYHIJ6ZCFpoIYYe2fHkgwgVUIz9
+   44DZuMtAw8sP5s8w6AQIWY+ykZl91zFP2v+B+Hen+Sf8G6n7wA7WDUK8f
+   w9rTUOBj6pELSDjNC0kz9S0Jm1AWxfgWTkgo8/0U2Pa+evizq247WKYBL
+   SUMP/T+L80gwU+rIF3IKVuTqDU/B/zYxVi4vPBze9Sz0iV9HjvO5sNuM4
+   vrDuc/X9wVtO5g4hERZQxmDBOjdpLSuJ+cYavMcH64NegCQUxn5KEawFY
+   pQqcwHlgRmMgLkv7Bmihqz5AUvkv7TVTn0/Cu1TJQfug0te8s9DXsLJo7
+   g==;
+X-CSE-ConnectionGUID: /I40s6LmT42YNbqROoqZfQ==
+X-CSE-MsgGUID: 7JDAmYmSSIqkPlHx1I622Q==
+X-IronPort-AV: E=McAfee;i="6800,10657,11683"; a="80916134"
 X-IronPort-AV: E=Sophos;i="6.21,255,1763452800"; 
-   d="scan'208";a="70584671"
-Received: from fmviesa005.fm.intel.com ([10.60.135.145])
-  by orvoesa109.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 26 Jan 2026 06:57:11 -0800
-X-CSE-ConnectionGUID: 69HkbxhuR4O4s4yZCtWx+A==
-X-CSE-MsgGUID: f5ReoojQS9ODtqSY8A40ag==
+   d="scan'208";a="80916134"
+Received: from orviesa002.jf.intel.com ([10.64.159.142])
+  by orvoesa103.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 26 Jan 2026 06:57:22 -0800
+X-CSE-ConnectionGUID: I618nxkCQUG4ZXsJOqT5Ug==
+X-CSE-MsgGUID: CWWxrZjYQc61wLxu/E+6jw==
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="6.21,255,1763452800"; 
-   d="scan'208";a="212166379"
+   d="scan'208";a="238373084"
 Received: from ijarvine-mobl1.ger.corp.intel.com (HELO localhost) ([10.245.245.150])
-  by fmviesa005-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 26 Jan 2026 06:57:09 -0800
+  by orviesa002-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 26 Jan 2026 06:57:17 -0800
 From: =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
-To: david.e.box@linux.intel.com, hansg@kernel.org, 
- Kaushlendra Kumar <kaushlendra.kumar@intel.com>
-Cc: platform-driver-x86@vger.kernel.org
-In-Reply-To: <20251224061144.3925519-1-kaushlendra.kumar@intel.com>
-References: <20251224061144.3925519-1-kaushlendra.kumar@intel.com>
-Subject: Re: [PATCH] platform/x86: intel_telemetry: Fix PSS event register
- mask
-Message-Id: <176943942450.16098.18073684713041084.b4-ty@linux.intel.com>
-Date: Mon, 26 Jan 2026 16:57:04 +0200
+To: rafael@kernel.org, dmitry.torokhov@gmail.com, Shyam-sundar.S-k@amd.com, 
+ hansg@kernel.org, perex@perex.cz, tiwai@suse.com, 
+ gongqi <550230171hxy@gmail.com>
+Cc: linux-acpi@vger.kernel.org, linux-input@vger.kernel.org, 
+ platform-driver-x86@vger.kernel.org, linux-sound@vger.kernel.org, 
+ linux-kernel@vger.kernel.org
+In-Reply-To: <20260122155501.376199-1-550230171hxy@gmail.com>
+References: <20260122155501.376199-1-550230171hxy@gmail.com>
+Subject: Re: [PATCH v2 0/4] Add quirks for MECHREVO Wujie 15X Pro laptop
+Message-Id: <176943943168.16098.2313316993180631363.b4-ty@linux.intel.com>
+Date: Mon, 26 Jan 2026 16:57:11 +0200
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
@@ -63,17 +65,17 @@ Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
 X-Mailer: b4 0.13.0
 
-On Wed, 24 Dec 2025 11:41:44 +0530, Kaushlendra Kumar wrote:
+On Thu, 22 Jan 2026 23:54:57 +0800, gongqi wrote:
 
-> The PSS telemetry info parsing incorrectly applies
-> TELEM_INFO_SRAMEVTS_MASK when extracting event register
-> count from firmware response. This reads bits 15-8 instead
-> of the correct bits 7-0, causing misdetection of hardware
-> capabilities.
+> This series adds several quirks for the MECHREVO Wujie 15X Pro
+> (AMD Ryzen AI 9 H 365) laptop to fix issues with the keyboard,
+> touchpad, power management, and headset microphone.
 > 
-> The IOSS path correctly uses TELEM_INFO_NENABLES_MASK for
-> register count. Apply the same mask to PSS parsing for
-> consistency.
+> The laptop requires:
+> - ACPI IRQ override for the keyboard.
+> - i8042 quirks for keyboard/touchpad stability.
+> - AMD PMC quirk to fix spurious IRQs during suspend.
+> - Conexant codec quirk for the headset microphone.
 > 
 > [...]
 
@@ -84,8 +86,14 @@ platform-drivers-x86/review-ilpo-fixes branch only once I've pushed my
 local branch there, which might take a while.
 
 The list of commits applied:
-[1/1] platform/x86: intel_telemetry: Fix PSS event register mask
-      commit: 39e9c376ac42705af4ed4ae39eec028e8bced9b4
+[1/4] ACPI: resource: Add IRQ override quirk for MECHREVO Wujie 15X Pro
+      (no commit info)
+[2/4] Input: i8042: Add quirks for MECHREVO Wujie 15X Pro
+      (no commit info)
+[3/4] platform/x86/amd/pmc: Add quirk for MECHREVO Wujie 15X Pro
+      commit: 2b4e00d8e70ca8736fda82447be6a4e323c6d1f5
+[4/4] ALSA: hda/conexant: Add headset mic fix for MECHREVO Wujie 15X Pro
+      (no commit info)
 
 --
  i.
