@@ -1,62 +1,58 @@
 Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.17])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0B90E330313;
-	Mon, 26 Jan 2026 14:56:51 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C8BCA330313;
+	Mon, 26 Jan 2026 14:56:57 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.17
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1769439413; cv=none; b=oTapVa6SjOpFYSajszqGOy5mKtKQqWBv1ExUUlDOCAr5J+AedrtN8i2aiDtqBfd3Yk2n5B0W0x+VRDosahHLDuoV5ZhahcLntQBEq5BYmEL/8+ZGuva9eL8gJ7Iyv/+6X8e7leaJwQCPzZFbDxQnRWCWsuZT8QKYTB8t6FI1vXs=
+	t=1769439419; cv=none; b=SDX0YdK+mgvckmA3yvvoj7MFf1Y8mK+8VRPLG3TscgSqVXXPGyt7lspctEhUjC7N4V+B20jCqSV709C7bRuVH+CIns9kv0DwOixRDS9bhmP2mLh86O7R6F3lurHzF785ErNQ2ydeeEG4TL2kdXFDljqPgZfLNWZltBQYrsgMKTk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1769439413; c=relaxed/simple;
-	bh=ViDvoSKBIkbfAUKoHW1qK5shbTOFpzr6T+Hzqn1qWuU=;
+	s=arc-20240116; t=1769439419; c=relaxed/simple;
+	bh=bBrHqhkmSDMiv9vOf4Qw/DIdVmg1HyfNUnbQcl2lAtw=;
 	h=From:To:Cc:In-Reply-To:References:Subject:Message-Id:Date:
-	 MIME-Version:Content-Type; b=KLuuaGdYkQB7QYwvDdivQMLNelCpDvXO1gmVn6qENfeFnxxIUEK4Beyuc/ANgFaRQ4sZZcqtYNASkrPTaE/UqmgCnTBg5SDCcPMvQDXDBmE7nJLQvbgm0CVdJFnlDBX3pS2fFMtaBRf1e62LPTnZie781Gqw4GK1BNA5Uc9aqWI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=pass smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=US/KU8Nz; arc=none smtp.client-ip=198.175.65.17
+	 MIME-Version:Content-Type; b=qXPBemXXW8fyydOAcu9OXwxp6JDwLWJZwb14J2VWCMn5wRuXxiYTh7BS0p52c5APXvOpMo/SLc2JtNZC3guYwrJZYJzpoTLhlOVx+d4zDlAeossjJuMold8DZRtd+hBOQ79wciv+3QES+o6w1jwk3HnGMINr5rJb2nVPmtRC3yQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=pass smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=n6ng1JSf; arc=none smtp.client-ip=198.175.65.17
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="US/KU8Nz"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="n6ng1JSf"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1769439412; x=1800975412;
+  t=1769439418; x=1800975418;
   h=from:to:cc:in-reply-to:references:subject:message-id:
    date:mime-version:content-transfer-encoding;
-  bh=ViDvoSKBIkbfAUKoHW1qK5shbTOFpzr6T+Hzqn1qWuU=;
-  b=US/KU8Nztd7bkfLXVm5RrY8EEhks11u3/rWbNO4+0w3als2K7yQuo2ok
-   RaseYGNvxqoUzxjCkQvh3ftUF31ob1QWLzWerT9hfubjRanqObuMMW5kn
-   8p8m3pcKxECiVZ3DFiinZ+/HEb4TlGsRxviL+kiTscbIz1BsN5jOmhVTo
-   XAUgygEHr/Z5hatELqqNBRpNfP3F/npvJ508Zm+oDomCYSz4kPUoOkYEW
-   yVv4uRcEohhqopp6bzvQsX+nhrRX6hvYdHo/a3wK+A7dDXwB4S8tYoHW2
-   9OARbadsD1rOmlucfvGV4ri30WDL8P7tSh9lxH/pkgtbAA5RuzxVQjIAI
-   w==;
-X-CSE-ConnectionGUID: Ys3ShUaxSfOJPAKehlBUtw==
-X-CSE-MsgGUID: WZhq6GiCSV+q+bAz2r6y/A==
-X-IronPort-AV: E=McAfee;i="6800,10657,11683"; a="70584579"
+  bh=bBrHqhkmSDMiv9vOf4Qw/DIdVmg1HyfNUnbQcl2lAtw=;
+  b=n6ng1JSfdCVSbylnGICjmZgY+VvgdqljK8/2/VraEYaFPvo/7G4J5ORW
+   ZQ20ExeXFIZ/6TzCwaODFZLFIER2MfabunhJ5squ/D1B6+LfjLJoUvfx+
+   kgyUwmcbi6U4iZ7zfKOYKOU7Jrs5sjZa8t1Y2RsHSc5D1IXpqDFo+zWAn
+   91QHBoZtPBxd8fu2SK3ThDINI1bxgHvwzUWh2CNq3xdo6WIiHgbD8QCrh
+   gTwOv84UeBMygJvPP8Unof9AwzCIfyMJ9tSFFhaIz3U9K+hgdtlCm0IM8
+   cDE7R1Mi/F+lKT5M/xhqCQB8pLaAdmAlTFoo8HQffqxihmeFb8Tl4DS2I
+   g==;
+X-CSE-ConnectionGUID: BxzAwqqkR827I2xcH9ZTEw==
+X-CSE-MsgGUID: VH/tWMtGSOCdDuVXBO6Kwg==
+X-IronPort-AV: E=McAfee;i="6800,10657,11683"; a="70584610"
 X-IronPort-AV: E=Sophos;i="6.21,255,1763452800"; 
-   d="scan'208";a="70584579"
+   d="scan'208";a="70584610"
 Received: from fmviesa005.fm.intel.com ([10.60.135.145])
-  by orvoesa109.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 26 Jan 2026 06:56:51 -0800
-X-CSE-ConnectionGUID: 2QVpeijcQ76X3ocWtBAd4w==
-X-CSE-MsgGUID: e/mKuvoHQZuJYicVXSrlCQ==
+  by orvoesa109.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 26 Jan 2026 06:56:57 -0800
+X-CSE-ConnectionGUID: BHN6fluRRYSxsI5/nK6CXg==
+X-CSE-MsgGUID: JPAzlXj0SVWIaq7tP1C1ZQ==
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="6.21,255,1763452800"; 
-   d="scan'208";a="212166191"
+   d="scan'208";a="212166256"
 Received: from ijarvine-mobl1.ger.corp.intel.com (HELO localhost) ([10.245.245.150])
-  by fmviesa005-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 26 Jan 2026 06:56:45 -0800
+  by fmviesa005-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 26 Jan 2026 06:56:54 -0800
 From: =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
-To: Hans de Goede <hansg@kernel.org>, 
- "Rafael J. Wysocki" <rafael@kernel.org>
-Cc: LKML <linux-kernel@vger.kernel.org>, 
- Linux ACPI <linux-acpi@vger.kernel.org>, 
- Kenneth Chan <kenneth.t.chan@gmail.com>, 
- platform-driver-x86@vger.kernel.org, Azael Avalos <coproscefalo@gmail.com>, 
- Matthew Garrett <matthew.garrett@nebula.com>
-In-Reply-To: <3026924.e9J7NaK4W3@rafael.j.wysocki>
-References: <3026924.e9J7NaK4W3@rafael.j.wysocki>
-Subject: Re: [PATCH v1 0/2] platform/x86: Fixes for leaks in
- panasonic-laptop and toshiba-haps drivers
-Message-Id: <176943940108.16098.4666901319744494904.b4-ty@linux.intel.com>
-Date: Mon, 26 Jan 2026 16:56:41 +0200
+To: xi.pardee@linux.intel.com, andriy.shevchenko@linux.intel.com, 
+ "David E. Box" <david.e.box@linux.intel.com>
+Cc: hansg@kernel.org, linux-kernel@vger.kernel.org, 
+ platform-driver-x86@vger.kernel.org
+In-Reply-To: <20260122022110.3231344-1-david.e.box@linux.intel.com>
+References: <20260122022110.3231344-1-david.e.box@linux.intel.com>
+Subject: Re: [PATCH] platform/x86/intel/vsec: Add Nova Lake PUNIT support
+Message-Id: <176943941009.16098.4985456806296073303.b4-ty@linux.intel.com>
+Date: Mon, 26 Jan 2026 16:56:50 +0200
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
@@ -67,12 +63,10 @@ Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
 X-Mailer: b4 0.13.0
 
-On Tue, 20 Jan 2026 16:42:41 +0100, Rafael J. Wysocki wrote:
+On Wed, 21 Jan 2026 18:21:08 -0800, David E. Box wrote:
 
-> These are two fixes for leaks in the panasonic-laptop and toshiba-haps drivers,
-> in the "probe error" and "remove" paths.
+> Add PCI ID for Nova Lake, supporting PUNIT telemetry.
 > 
-> Thanks!
 > 
 
 
@@ -82,10 +76,8 @@ platform-drivers-x86/review-ilpo-fixes branch only once I've pushed my
 local branch there, which might take a while.
 
 The list of commits applied:
-[1/2] platform/x86: panasonic-laptop: Fix sysfs group leak in error path
-      commit: 43b0b7eff4b3fb684f257d5a24376782e9663465
-[2/2] platform/x86: toshiba_haps: Fix memory leaks in add/remove routines
-      commit: 128497456756e1b952bd5a912cd073836465109d
+[1/1] platform/x86/intel/vsec: Add Nova Lake PUNIT support
+      commit: 98bdc485b281da7e20e67b13a8cc834956d68e9c
 
 --
  i.
