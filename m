@@ -1,62 +1,62 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.14])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.17])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D8292279355;
-	Mon, 26 Jan 2026 14:30:38 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.14
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0B90E330313;
+	Mon, 26 Jan 2026 14:56:51 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.17
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1769437840; cv=none; b=elN2rX4aC2k7nrjqajG4Y8ykGpYnCOybIiJaRozwHVJ2J3SvfYetsOUDYo+qQfs9qhvzKzw72HcILPmUWeNat9zmtHIHuNfOopK9/YE8XFVv0SGsVqkxwjHa5rfSJ9jChOyKozpF66aJynhcP/DFhdfNOkM2EY/foUL1TxNZ3zc=
+	t=1769439413; cv=none; b=oTapVa6SjOpFYSajszqGOy5mKtKQqWBv1ExUUlDOCAr5J+AedrtN8i2aiDtqBfd3Yk2n5B0W0x+VRDosahHLDuoV5ZhahcLntQBEq5BYmEL/8+ZGuva9eL8gJ7Iyv/+6X8e7leaJwQCPzZFbDxQnRWCWsuZT8QKYTB8t6FI1vXs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1769437840; c=relaxed/simple;
-	bh=LuqNNRiiHfLE7d5JF1NVNI/inGMQMTeL1hDDkio1Ces=;
+	s=arc-20240116; t=1769439413; c=relaxed/simple;
+	bh=ViDvoSKBIkbfAUKoHW1qK5shbTOFpzr6T+Hzqn1qWuU=;
 	h=From:To:Cc:In-Reply-To:References:Subject:Message-Id:Date:
-	 MIME-Version:Content-Type; b=QrcJps1M/mVqCmGXmi51syVWBjxSkT5dc8KsBMsUU2tNok6fUpAy2lMC5m7c/wdswEGlKKKtNtRHRQ5jftAda2usGSv8ZLGtf+zbiWLC1IdETRiZ2wQpJCpZNsWTAMHAnl7D1B/jG9op1wU44xq28fiHRa9mwgs8J97L+QoZZdk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=pass smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=ZMDX0oXS; arc=none smtp.client-ip=198.175.65.14
+	 MIME-Version:Content-Type; b=KLuuaGdYkQB7QYwvDdivQMLNelCpDvXO1gmVn6qENfeFnxxIUEK4Beyuc/ANgFaRQ4sZZcqtYNASkrPTaE/UqmgCnTBg5SDCcPMvQDXDBmE7nJLQvbgm0CVdJFnlDBX3pS2fFMtaBRf1e62LPTnZie781Gqw4GK1BNA5Uc9aqWI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=pass smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=US/KU8Nz; arc=none smtp.client-ip=198.175.65.17
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="ZMDX0oXS"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="US/KU8Nz"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1769437839; x=1800973839;
+  t=1769439412; x=1800975412;
   h=from:to:cc:in-reply-to:references:subject:message-id:
    date:mime-version:content-transfer-encoding;
-  bh=LuqNNRiiHfLE7d5JF1NVNI/inGMQMTeL1hDDkio1Ces=;
-  b=ZMDX0oXSOxuJYtKOHAAwJhmuVGlY4ADgWLWKE0fNGUidp7h8j+1POarF
-   dsX25ZV/jRD6yRSq4ZPJ4Iy9RncoWz3SGW+6F5e+AFr+dvbOl3D6uidKl
-   VFiA7uPhVN1JAHeak4i7KpguqJBcpMagiMFogwJq1UTZ39Mke2MkBEGTy
-   VGzaSgShd3VN88G59q27+Rs93gOcC7nNbQ1KQFXkd5x3mH7n61/4BOQ1g
-   xOrIonh2UNpwn7R8eOaUMw0HPfvPGexyz2NX0fGsWrglKMavAi2E3bKf+
-   9d2bOa82dJ2IoBMVhavH0zILP077aY3A58glBQB0RaRp/Aih7/ooWn+Wg
+  bh=ViDvoSKBIkbfAUKoHW1qK5shbTOFpzr6T+Hzqn1qWuU=;
+  b=US/KU8Nztd7bkfLXVm5RrY8EEhks11u3/rWbNO4+0w3als2K7yQuo2ok
+   RaseYGNvxqoUzxjCkQvh3ftUF31ob1QWLzWerT9hfubjRanqObuMMW5kn
+   8p8m3pcKxECiVZ3DFiinZ+/HEb4TlGsRxviL+kiTscbIz1BsN5jOmhVTo
+   XAUgygEHr/Z5hatELqqNBRpNfP3F/npvJ508Zm+oDomCYSz4kPUoOkYEW
+   yVv4uRcEohhqopp6bzvQsX+nhrRX6hvYdHo/a3wK+A7dDXwB4S8tYoHW2
+   9OARbadsD1rOmlucfvGV4ri30WDL8P7tSh9lxH/pkgtbAA5RuzxVQjIAI
    w==;
-X-CSE-ConnectionGUID: gtmTfVvHTU6mvA9gAUaD/g==
-X-CSE-MsgGUID: TzZcnymrRfug0lAr31Xv6A==
-X-IronPort-AV: E=McAfee;i="6800,10657,11683"; a="74457886"
+X-CSE-ConnectionGUID: Ys3ShUaxSfOJPAKehlBUtw==
+X-CSE-MsgGUID: WZhq6GiCSV+q+bAz2r6y/A==
+X-IronPort-AV: E=McAfee;i="6800,10657,11683"; a="70584579"
 X-IronPort-AV: E=Sophos;i="6.21,255,1763452800"; 
-   d="scan'208";a="74457886"
-Received: from orviesa007.jf.intel.com ([10.64.159.147])
-  by orvoesa106.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 26 Jan 2026 06:30:39 -0800
-X-CSE-ConnectionGUID: 3vn4jibRR8iMdIgIRf3SlA==
-X-CSE-MsgGUID: Bmy20F0oTkSkSThfbPotMQ==
+   d="scan'208";a="70584579"
+Received: from fmviesa005.fm.intel.com ([10.60.135.145])
+  by orvoesa109.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 26 Jan 2026 06:56:51 -0800
+X-CSE-ConnectionGUID: 2QVpeijcQ76X3ocWtBAd4w==
+X-CSE-MsgGUID: e/mKuvoHQZuJYicVXSrlCQ==
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="6.21,255,1763452800"; 
-   d="scan'208";a="207748690"
+   d="scan'208";a="212166191"
 Received: from ijarvine-mobl1.ger.corp.intel.com (HELO localhost) ([10.245.245.150])
-  by orviesa007-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 26 Jan 2026 06:30:35 -0800
+  by fmviesa005-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 26 Jan 2026 06:56:45 -0800
 From: =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
-To: platform-driver-x86@vger.kernel.org, linux-input@vger.kernel.org, 
- Antheas Kapenekakis <lkml@antheas.dev>
-Cc: linux-kernel@vger.kernel.org, Jiri Kosina <jikos@kernel.org>, 
- Benjamin Tissoires <bentiss@kernel.org>, 
- Corentin Chary <corentin.chary@gmail.com>, 
- "Luke D . Jones" <luke@ljones.dev>, Hans de Goede <hansg@kernel.org>, 
- Denis Benato <denis.benato@linux.dev>
-In-Reply-To: <20260122075044.5070-1-lkml@antheas.dev>
-References: <20260122075044.5070-1-lkml@antheas.dev>
-Subject: Re: [PATCH v12 00/11] HID: asus: Fix ASUS ROG Laptop's Keyboard
- backlight handling
-Message-Id: <176943783022.10029.7795048356126813573.b4-ty@linux.intel.com>
-Date: Mon, 26 Jan 2026 16:30:30 +0200
+To: Hans de Goede <hansg@kernel.org>, 
+ "Rafael J. Wysocki" <rafael@kernel.org>
+Cc: LKML <linux-kernel@vger.kernel.org>, 
+ Linux ACPI <linux-acpi@vger.kernel.org>, 
+ Kenneth Chan <kenneth.t.chan@gmail.com>, 
+ platform-driver-x86@vger.kernel.org, Azael Avalos <coproscefalo@gmail.com>, 
+ Matthew Garrett <matthew.garrett@nebula.com>
+In-Reply-To: <3026924.e9J7NaK4W3@rafael.j.wysocki>
+References: <3026924.e9J7NaK4W3@rafael.j.wysocki>
+Subject: Re: [PATCH v1 0/2] platform/x86: Fixes for leaks in
+ panasonic-laptop and toshiba-haps drivers
+Message-Id: <176943940108.16098.4666901319744494904.b4-ty@linux.intel.com>
+Date: Mon, 26 Jan 2026 16:56:41 +0200
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
@@ -67,48 +67,25 @@ Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
 X-Mailer: b4 0.13.0
 
-On Thu, 22 Jan 2026 08:50:33 +0100, Antheas Kapenekakis wrote:
+On Tue, 20 Jan 2026 16:42:41 +0100, Rafael J. Wysocki wrote:
 
-> This is a two part series which does the following:
->   - Clean-up init sequence
->   - Unify backlight handling to happen under asus-wmi so that all Aura
->     devices have synced brightness controls and the backlight button works
->     properly when it is on a USB laptop keyboard instead of one w/ WMI.
+> These are two fixes for leaks in the panasonic-laptop and toshiba-haps drivers,
+> in the "probe error" and "remove" paths.
 > 
-> For more context, see cover letter of V1. Since V5, I removed some patches
-> to make this easier to merge.
+> Thanks!
 > 
-> [...]
 
 
 Thank you for your contribution, it has been applied to my local
-review-ilpo-next branch. Note it will show up in the public
-platform-drivers-x86/review-ilpo-next branch only once I've pushed my
+review-ilpo-fixes branch. Note it will show up in the public
+platform-drivers-x86/review-ilpo-fixes branch only once I've pushed my
 local branch there, which might take a while.
 
 The list of commits applied:
-[01/11] HID: asus: simplify RGB init sequence
-        commit: 0cd98ed97f1cab77822f0afea2bd4dabadd12a8b
-[02/11] HID: asus: initialize additional endpoints only for certain devices
-        commit: 3415a1beb3d876769e476cae2085bedb6b94da35
-[03/11] HID: asus: use same report_id in response
-        commit: 629771528f76df2e6d8b1d5b9297a0c95b317676
-[04/11] HID: asus: fortify keyboard handshake
-        commit: a96ec7a12e41a3f37784f3f69396facc659ec2d4
-[05/11] HID: asus: move vendor initialization to probe
-        commit: 8baca948f6aad8866b4722f527d01bb4d4e22b6f
-[06/11] HID: asus: early return for ROG devices
-        commit: ee1de467511811c71075e5750785d3c95cf45c5f
-[07/11] platform/x86: asus-wmi: Add support for multiple kbd led handlers
-        commit: efdcbec427f15e6514388c27cf5599604c95b788
-[08/11] HID: asus: listen to the asus-wmi brightness device instead of creating one
-        commit: ba374d424cdd3050d2e1864e7b18393cf3a4d06f
-[09/11] platform/x86: asus-wmi: remove unused keyboard backlight quirk
-        commit: d384a3994712ddaec10ae37549c6f0b1a10e7b98
-[10/11] platform/x86: asus-wmi: add keyboard brightness event handler
-        commit: f9a21738c6993c6720b8b82a7ead644a74497487
-[11/11] HID: asus: add support for the asus-wmi brightness handler
-        commit: 4884d4795a5ce8077bbb5b97e4c2fd51e312087f
+[1/2] platform/x86: panasonic-laptop: Fix sysfs group leak in error path
+      commit: 43b0b7eff4b3fb684f257d5a24376782e9663465
+[2/2] platform/x86: toshiba_haps: Fix memory leaks in add/remove routines
+      commit: 128497456756e1b952bd5a912cd073836465109d
 
 --
  i.
