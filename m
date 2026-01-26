@@ -1,58 +1,59 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.14])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.9])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D4C8C33372B;
-	Mon, 26 Jan 2026 11:52:23 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.14
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9FF9430EF63
+	for <platform-driver-x86@vger.kernel.org>; Mon, 26 Jan 2026 12:51:40 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.9
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1769428346; cv=none; b=Rwl5QWEwuDFg55PykwwrfpBB+UnWmN2EcZHfRY70tloOUClx9a+m6k1eMlWYadLv9+CXsWgTacT3rqHMuO3gkAFYAULUFEaadpjbGDx+TabjRyf4NzU8YZb+y+9xmvzYJoSZJn+PwPDyurAD5lKCnjMGOwCBNgJn/pVqoN7wxO8=
+	t=1769431904; cv=none; b=jhf+KV9xjEB6nXdLOf0tPXWGv6zc/GyHHO5oEUmWKxKNu4jgY4EYG2EQ2dV+7Ff2BdUzcuXl9onSpl4y2M73TU7YFhYqS4Y3aqrMSY07KxHj9jDjzwZ5mTYkelUX7x/3uDCAfXSxc4Nly4noSLNSuJr+6gID8Rp/tFxsKVkpxP0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1769428346; c=relaxed/simple;
-	bh=FLAvmJSmX/b3PhOoygPCgVvgGr3C6MU8JQMQye5MreY=;
+	s=arc-20240116; t=1769431904; c=relaxed/simple;
+	bh=LxCMn6WW2P4jSYHRpxki7npGt9U9aR9xzUzsS/Z9yas=;
 	h=From:Date:To:cc:Subject:In-Reply-To:Message-ID:References:
-	 MIME-Version:Content-Type; b=MnhhflypJrQzA8clYZ5Tg8qrdxrfm5wfjDLXmlEsJ1fm8NlquA4XI66/94vbXk4SNYcKoa11/Rr/FK/Rj95sUT/qWsKbb6Vm9GBxhAmVdBbGfVKhPRXw9OXaazUoQ9QniE6xYssJyO0gRuYT7cRJOYiuu0EnIneLLAUBp38vT2Q=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=pass smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=jVhmytt0; arc=none smtp.client-ip=192.198.163.14
+	 MIME-Version:Content-Type; b=bd09WzR8duOHTzZkerZmWD3FpUmwJtfCE8mJ1SNQLMFLyG+s5BZmEdW5+JJ7bcKlg/py6aHBxutKIeO1KzAn/dadmGwcLpVJdhjUNtWt5RTyLW2t+RFmZL81ugRFFq6DMfHxoCfv6hKT6yRrWX+o1TvxEcM61CYA2WJCnqmkYW4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=pass smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=RzF7StPB; arc=none smtp.client-ip=192.198.163.9
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="jVhmytt0"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="RzF7StPB"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1769428344; x=1800964344;
+  t=1769431901; x=1800967901;
   h=from:date:to:cc:subject:in-reply-to:message-id:
    references:mime-version;
-  bh=FLAvmJSmX/b3PhOoygPCgVvgGr3C6MU8JQMQye5MreY=;
-  b=jVhmytt05sSlofcTpE5t8SP10yOBxTd57nP59YWXMT+MTb013Zz15qs+
-   caPaWbSqpn3clYfw4FUejxMzkWxnXbc1BnXGJ6LlTfPjjFSgKWp/MXzvf
-   3heVfDEUFQyPCvFFSg5flyWP/3F64zglF62uOltvltmpD9vp7STeZSXcN
-   IXhT0drCNM9PjFjQ2W++TpJIEc1VLQSHl11YqHXtofniy8MIBgLlYO6i1
-   diYpRCOFJfOfJhO+r1NZ8l+4uAPWbNAH7Eca6as/cuwM1OMje3KeA4E4I
-   d1Ilf43ozIqRf/joGRkuZUqzValQB8U2LA27u3SMGhMpmn85boHFuhrfQ
-   w==;
-X-CSE-ConnectionGUID: GMHqEAkQT8aFhK8z8Y0jUA==
-X-CSE-MsgGUID: AfqdJP3EST2MxIkuE/E0Yg==
-X-IronPort-AV: E=McAfee;i="6800,10657,11682"; a="70659341"
+  bh=LxCMn6WW2P4jSYHRpxki7npGt9U9aR9xzUzsS/Z9yas=;
+  b=RzF7StPBnJJDxVcDLrOJ1OPIFvd9gMXUsRRY2MvV+jO15oKs8RFhK1IS
+   RDAqOBSIQmXBlsWWwv8OaHYmdcVVTo2vw0f1qmpueNoRUKHBBtiavciRM
+   /617hbbXwB73S7yEzVt1rfEjJIFbvTQWB1eLzcsoeA1UiUtPPsWeEQ+Nn
+   tHBLLu0F+kXOBh7ya4eAb6V5Wqlo+j5dVZBuwM+rySGjNbETUI3JpIzYo
+   V+ZJ1mHRomAidpFv9owX+LlEwbN3qQG/E11LWVe2PNh97kzz9gAk9lhow
+   aZ23t6Zdjhl0Fc/8XuUaklUdH9Jc3WJLlIhb7htPu0PvVjnn7m6qo+F93
+   A==;
+X-CSE-ConnectionGUID: KcuGXs+AT8aPsbBiLskAUg==
+X-CSE-MsgGUID: tonyN/AJR+CJV5jazyq1Sg==
+X-IronPort-AV: E=McAfee;i="6800,10657,11683"; a="81326151"
 X-IronPort-AV: E=Sophos;i="6.21,255,1763452800"; 
-   d="scan'208";a="70659341"
-Received: from orviesa009.jf.intel.com ([10.64.159.149])
-  by fmvoesa108.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 26 Jan 2026 03:52:23 -0800
-X-CSE-ConnectionGUID: A+g1/ySlTSKime0MEWO5fA==
-X-CSE-MsgGUID: G8UO7glFT8O9Yu9YgQzfLA==
+   d="scan'208";a="81326151"
+Received: from orviesa007.jf.intel.com ([10.64.159.147])
+  by fmvoesa103.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 26 Jan 2026 04:51:40 -0800
+X-CSE-ConnectionGUID: hFKfiJzCQvOj9egfDkBR9A==
+X-CSE-MsgGUID: Hj1bNHB9Tn2OIDm5qpXDaw==
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="6.21,255,1763452800"; 
-   d="scan'208";a="207467001"
+   d="scan'208";a="207728030"
 Received: from ijarvine-mobl1.ger.corp.intel.com (HELO localhost) ([10.245.245.150])
-  by orviesa009-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 26 Jan 2026 03:52:20 -0800
+  by orviesa007-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 26 Jan 2026 04:51:36 -0800
 From: =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
-Date: Mon, 26 Jan 2026 13:52:14 +0200 (EET)
-To: Mingyou Chen <qby140326@gmail.com>
+Date: Mon, 26 Jan 2026 14:51:33 +0200 (EET)
+To: Sharan kumar M <sharweshraajan@gmail.com>
 cc: Hans de Goede <hansg@kernel.org>, platform-driver-x86@vger.kernel.org, 
-    LKML <linux-kernel@vger.kernel.org>, cryolitia.pukngae@linux.dev
-Subject: Re: [PATCH v6] platform/x86: tongfang-mifs-wmi: Add new Tongfang
- MIFS WMI driver
-In-Reply-To: <20260126085713.48836-1-qby140326@gmail.com>
-Message-ID: <64a11a76-7f0c-ff3c-e7e9-679aa5cc7870@linux.intel.com>
-References: <20260126085713.48836-1-qby140326@gmail.com>
+    sharweshlinux@gmail.com
+Subject: Re: [PATCH] WMI: Added supported for motherboard 8BCD and cleaned
+ the driver and added support for mux switch and fan_Control for insyde
+ boards
+In-Reply-To: <20260126075522.30814-1-sharweshraajan@gmail.com>
+Message-ID: <2559b202-29e2-ff82-e480-05d4fc33bc72@linux.intel.com>
+References: <20260126075522.30814-1-sharweshraajan@gmail.com>
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
@@ -61,1266 +62,1310 @@ List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=US-ASCII
 
-On Mon, 26 Jan 2026, Mingyou Chen wrote:
+On Mon, 26 Jan 2026, Sharan kumar M wrote:
 
-> Add a new driver for Tongfang laptops that utilize the MIFS
-> (MiInterface)
-> WMI interface. This interface is commonly found in various rebranded
-> laptops from manufacturers like Mechrevo, XMG, Eluktronics, and others.
-> 
-> The driver implements several features through the WMI interface:
-> 
-> - Platform Profile: Supports "Quiet", "Balanced", "Performance", and
->   "Full Speed" modes. The "Full Speed" mode is intelligently restricted
->   based on the AC adapter type (requires DC power, not supported on
->   USB-C charging) as required by the hardware.
-> - Hwmon: Provides monitoring for CPU, GPU, and System fan speeds,
->   as well as CPU temperature sensors.
-> - Keyboard Backlight: Integrated with the LED class device for
->   brightness control and provides sysfs attributes for keyboard modes
->   (cyclic, fixed, etc.).
-> - GPU Mode: Allows switching between Hybrid, Discrete, and UMA
->   graphics modes via sysfs.
-> - Hotkeys: Handles WMI events for system hotkeys (Calculator, Browser,
->   App launch) using sparse keymaps and reports status changes for
->   Airplane mode, Touchpad, and CapsLock.
-> - Fan Boost: Provides a sysfs interface to force fans to maximum speed.
-> 
-> The driver registers two WMI GUIDs:
-> - B60BFB48-3E5B-49E4-A0E9-8CFFE1B3434B: Control methods
-> - 46C93E13-EE9B-4262-8488-563BCA757FEF: Event notifications
-> 
-> Signed-off-by: Mingyou Chen <qby140326@gmail.com>
+> This patch cleans up and refactors the existing code to improve
+> readability and maintainability. It also adds support for fan speed
+> control and MUX control.
 
-Please do not submit so many versions so fast but give reviewers time to 
-comment on your patch. You've barely started and are already at v6.
+Please separate the changes properly. And justify each change.
 
+> Additionally, support for the 8BCD motherboard has been introduced.
+
+Not "additionally" please, but in a separate patch.
+
+> Signed-off-by: Sharan Kumar M <sharweshraajan@gmail.com>
 > ---
-
-What has changed from v1 to v6? Always when poisting a new version list
-changes you've made in each version here under --- line.
-
->  .../wmi/devices/tongfang-mifs-wmi.rst         | 210 +++++
->  drivers/platform/x86/Kconfig                  |  17 +
->  drivers/platform/x86/Makefile                 |   1 +
->  drivers/platform/x86/tongfang-mifs-wmi.c      | 849 ++++++++++++++++++
->  4 files changed, 1077 insertions(+)
->  create mode 100644 Documentation/wmi/devices/tongfang-mifs-wmi.rst
->  create mode 100644 drivers/platform/x86/tongfang-mifs-wmi.c
+>  drivers/platform/x86/hp/hp-wmi.c | 727 +++++++++++++++++++++++--------
+>  1 file changed, 556 insertions(+), 171 deletions(-)
 > 
-> diff --git a/Documentation/wmi/devices/tongfang-mifs-wmi.rst b/Documentation/wmi/devices/tongfang-mifs-wmi.rst
-> new file mode 100644
-> index 000000000000..e59873a249c1
-> --- /dev/null
-> +++ b/Documentation/wmi/devices/tongfang-mifs-wmi.rst
-> @@ -0,0 +1,210 @@
-> +.. SPDX-License-Identifier: GPL-2.0-or-later
-> +
-> +========================================
-> +Tongfang MIFS driver (tongfang-mifs-wmi)
-> +========================================
-> +
-> +Introduction
-> +============
-> +
-> +
-> +EC WMI interface description
-> +============================
-> +
-> +The EC WMI interface description can be decoded from the embedded binary MOF (bmof)
-> +data using the `bmfdec <https://github.com/pali/bmfdec>`_ utility:
-> +
-> +::
-> +
-> +  class WMIEvent : __ExtrinsicEvent {
-> +  };
-> +
-> +  [WMI, Dynamic, Provider("WmiProv"), Locale("MS\\0x40A"), Description("Root WMI HID_EVENT20"), guid("{46c93e13-ee9b-4262-8488-563bca757fef}")]
-> +  class HID_EVENT20 : WmiEvent {
-> +    [key, read] string InstanceName;
-> +    [read] boolean Active;
-> +    [WmiDataId(1), read, write, Description("Package Data")] uint8 EventDetail[8];
-> +  };
-> +
-> +  [WMI, Dynamic, Provider("WmiProv"), Locale("MS\\0x40A"), Description("Root WMI HID_EVENT21"), guid("{fa78e245-2c0f-4ca1-91cf-15f34e474850}")]
-> +  class HID_EVENT21 : WmiEvent {
-> +    [key, read] string InstanceName;
-> +    [read] boolean Active;
-> +    [WmiDataId(1), read, write, Description("Package Data")] uint8 EventDetail[8];
-> +  };
-> +
-> +  [WMI, Dynamic, Provider("WmiProv"), Locale("MS\\0x40A"), Description("Root WMI HID_EVENT22"), guid("{1dceaf0a-4d63-44bb-bd0c-0d6281bfddc5}")]
-> +  class HID_EVENT22 : WmiEvent {
-> +    [key, read] string InstanceName;
-> +    [read] boolean Active;
-> +    [WmiDataId(1), read, write, Description("Package Data")] uint8 EventDetail[8];
-> +  };
-> +
-> +  [WMI, Dynamic, Provider("WmiProv"), Locale("MS\\0x40A"), Description("Root WMI HID_EVENT23"), guid("{3f9e3c26-b077-4f86-91f5-37ff64d8c7ed}")]
-> +  class HID_EVENT23 : WmiEvent {
-> +    [key, read] string InstanceName;
-> +    [read] boolean Active;
-> +    [WmiDataId(1), read, write, Description("Package Data")] uint8 EventDetail[8];
-> +  };
-> +
-> +  [WMI, Dynamic, provider("WmiProv"), Locale("MS\\0x409"), Description("Class used to operate firmware interface"), guid("{b60bfb48-3e5b-49e4-a0e9-8cffe1b3434b}")]
-> +  class MICommonInterface {
-> +    [key, read] string InstanceName;
-> +    [read] boolean Active;
-> +
-> +    [WmiMethodId(1), Implemented, read, write, Description("Method used to support system functions.")] void MiInterface([in, Description("WMI Interface")] uint8 InData[32], [out] uint8 OutData[30], [out] uint16 Reserved);
-> +  };
-> +
-> +::
-> +
-> +
-> +Reverse-Engineering the EC WMI interface
-> +========================================
-> +
-> +The OEM software can be download from `this link <https://iknow.lenovo.com.cn/detail/429447>`_
-> +
-> +Nothing is obfuscated, In this case, `ILSpy <https://github.com/icsharpcode/ILSpy>`_ could be helpful.
-> +
-> +WMI Methods (MICommonInterface)
-> +==============================
-> +
-> +The ``MICommonInterface`` class (GUID: ``{b60bfb48-3e5b-49e4-a0e9-8cffe1b3434b}``)
-> +is the primary control interface. It uses a 32-byte buffer for both input
-> +(``InData``) and output (``OutData``).
-> +
-> +Method Structure
-> +----------------
-> +
-> +The data packet follows a standardized format:
-> +
-> ++----------+------------------------------------------------------------------+
-> +| Byte     | Description                                                      |
-> ++==========+==================================================================+
-> +| 1        | Method Type: Get (0xFA / 250) or Set (0xFB / 251)                |
-> ++----------+------------------------------------------------------------------+
-> +| 3        | Command ID (Method Name)                                         |
-> ++----------+------------------------------------------------------------------+
-> +| 4 - 31   | Arguments (for Set) or Return Data (for Get)                     |
-> ++----------+------------------------------------------------------------------+
-> +
-> +
-> +Command IDs
-> +-----------
-> +
-> +The following Command IDs are used in the third byte of the buffer:
-> +
-> ++----------+-----------------------+------------------------------------------+
-> +| ID       | Name                  | Values / Description                     |
-> ++==========+=======================+==========================================+
-> +| 8        | SystemPerMode         | 0: Balance, 1: Performance, 2: Quiet,    |
-> +|          |                       | 3: Full-speed                            |
-> ++----------+-----------------------+------------------------------------------+
-> +| 9        | GPUMode               | 0: Hybrid, 1: Discrete, 2: UMA           |
-> ++----------+-----------------------+------------------------------------------+
-> +| 10       | KeyboardType          | 0: White, 1: Single RGB, 2: Zone RGB     |
-> ++----------+-----------------------+------------------------------------------+
-> +| 11       | FnLock                | 0: Off, 1: On                            |
-> ++----------+-----------------------+------------------------------------------+
-> +| 12       | TPLock                | 0: Unlock, 1: Lock (Touchpad)            |
-> ++----------+-----------------------+------------------------------------------+
-> +| 13       | CPUGPUSYSFanSpeed     | Returns 12 bytes of fan data:            |
-> +|          |                       | Bytes 4-5: CPU Fan RPM (Little Endian)   |
-> +|          |                       | Bytes 6-7: GPU Fan RPM (Little Endian)   |
-> +|          |                       | Bytes 10-11: SYS Fan RPM (Little Endian) |
-> ++----------+-----------------------+------------------------------------------+
-> +| 16       | RGBKeyboardMode       | 0: Off, 1: Auto Cyclic, 2: Fixed,        |
-> +|          |                       | 3: Custom                                |
-> ++----------+-----------------------+------------------------------------------+
-> +| 17       | RGBKeyboardColor      | Bytes 4, 5, 6: Red, Green, Blue values   |
-> ++----------+-----------------------+------------------------------------------+
-> +| 18       | RGBKeyboardBrightness | 0-10: Brightness Levels, 128: Auto       |
-> ++----------+-----------------------+------------------------------------------+
-> +| 19       | SystemAcType          | 1: Type-C, 2: Circular Hole (DC)         |
-> ++----------+-----------------------+------------------------------------------+
-> +| 20       | MaxFanSpeedSwitch     | Byte 4: Fan Type (0: CPU/GPU, 1: SYS)    |
-> +|          |                       | Byte 5: State (0: Off, 1: On)            |
-> ++----------+-----------------------+------------------------------------------+
-> +| 21       | MaxFanSpeed           | Sets manual fan speed duty cycle         |
-> ++----------+-----------------------+------------------------------------------+
-> +| 22       | CPUThermometer        | Returns CPU Temperature                  |
-> ++----------+-----------------------+------------------------------------------+
-> +
-> +WMI Events (HID_EVENT20)
-> +========================
-> +
-> +The driver listens for events from the ``HID_EVENT20`` class
-> +(GUID: ``{46c93e13-ee9b-4262-8488-563bca757fef}``). These events are triggered
-> +by hotkeys or system state changes (e.g., plugging in AC power).
-> +
-> +Event Structure
-> +---------------
-> +
-> +The event data is provided in an 8-byte array (``EventDetail``):
-> +
-> ++----------+------------------------------------------------------------------+
-> +| Byte     | Description                                                      |
-> ++==========+==================================================================+
-> +| 0        | Event Type (Always 0x01 for HotKey/Notification)                 |
-> ++----------+------------------------------------------------------------------+
-> +| 1        | Event ID (Corresponds to the Command IDs above)                  |
-> ++----------+------------------------------------------------------------------+
-> +| 2        | Value (The new state or value of the feature)                    |
-> ++----------+------------------------------------------------------------------+
-> +
-> +Common Event IDs:
-> +-----------------
-> +
-> +Note: reserved event ids are not listed there
-> +
-> ++----------+------------------------------------------------------------------+
-> +| Event Id | Description                                                      |
-> ++==========+==================================================================+
-> +| 4        | AirPlane mode change                                             |
-> ++----------+------------------------------------------------------------------+
-> +| 5        | Keyboard brightness change                                       |
-> ++----------+------------------------------------------------------------------+
-> +| 6        | touchpad state (enabled/disabled) change                         |
-> ++----------+------------------------------------------------------------------+
-> +| 7        | FnLock state (enabled/disabled) change                           |
-> ++----------+------------------------------------------------------------------+
-> +| 8        | Keyboard mode change                                             |
-> ++----------+------------------------------------------------------------------+
-> +| 9        | CapsLock state change                                            |
-> ++----------+------------------------------------------------------------------+
-> +| 13       | NumLock state change                                             |
-> ++----------+------------------------------------------------------------------+
-> +| 14       | ScrollLock state change                                          |
-> ++----------+------------------------------------------------------------------+
-> +| 15       | Performance plan change                                          |
-> ++----------+------------------------------------------------------------------+
-> +| 25       | Display refresh rate change                                      |
-> ++----------+------------------------------------------------------------------+
-> +| 33       | Super key lock state (enabled/disabled) change                   |
-> ++----------+------------------------------------------------------------------+
-> +| 35       | Open control center key                                          |
-> ++----------+------------------------------------------------------------------+
-> +
-> +Implementation Details
-> +======================
-> +
-> +Performance Modes
-> +-----------------
-> +Changing the performance mode via Command ID 0x08 (SystemPerMode) affects the power limits (PL1/PL2)
-> +and fan curves managed by the Embedded Controller (EC). Note that the "Full-speed"
-> +and "Performance" mode (1, 3) is typically only available when the system is connected to a DC power
-> +source (not USB-C/PD).
-> +
-> +In the driver implementation, switch to performance/full-speed mode without DC power connected
-> +will throw the EOPNOTSUPP error.
-> +
-> +Graphics Switching
-> +------------------
-> +The ``GPUMode`` (0x09) allows switching between Hybrid (Muxless) and Discrete
-> +(Muxed) graphics. Changing this value usually requires a system reboot to
-> +take effect in the BIOS/Firmware.
-> +
-> +Fan Control
-> +-----------
-> +The system supports both automatic EC control and manual overrides. Command ID
-> +0x14 (``MaxFanSpeedSwitch``) is used to toggle manual control, while ID 0x15
-> +sets the actual PWM duty cycle.
-> diff --git a/drivers/platform/x86/Kconfig b/drivers/platform/x86/Kconfig
-> index 4cb7d97a9fcc..8073920ae4a2 100644
-> --- a/drivers/platform/x86/Kconfig
-> +++ b/drivers/platform/x86/Kconfig
-> @@ -113,6 +113,23 @@ config GIGABYTE_WMI
->  	  To compile this driver as a module, choose M here: the module will
->  	  be called gigabyte-wmi.
+> diff --git a/drivers/platform/x86/hp/hp-wmi.c b/drivers/platform/x86/hp/hp-wmi.c
+> index f4ea1ea059..3f043c63d0 100644
+> --- a/drivers/platform/x86/hp/hp-wmi.c
+> +++ b/drivers/platform/x86/hp/hp-wmi.c
+> @@ -93,6 +93,13 @@ static const char * const omen_timed_thermal_profile_boards[] = {
+>  	"8BAD",
+>  };
 >  
+> +/* DMI board names of Omen laptops that have a thermal profile timer
+
+/*
+ * text starts here...
+
+> + * and cannot be controlled by ec
+> + */
+> +static const char * const thermal_profile_v1_boards[] = {
+> +	"8BCD"
+
+All non-terminating entries should have the trailing comma.
+
+> +};
 > +
-> +config TONGFANG_MIFS_WMI
-> +	tristate "Tongfang MIFS (MiInterface) WMI driver"
-> +	depends on ACPI_WMI
-> +	depends on HWMON
-> +	depends on POWER_SUPPLY
-> +	select ACPI_PLATFORM_PROFILE
-> +	help
-> +	  This is a driver for Tongfang MiInterface based laptops.
-> +
-> +	  It provides the access to the temperature, fan speed, gpu
-> +	  control, keyboard backlight brightness and platform profile
-> +	  via hwmon and sysfs.
-> +
-> +	  To compile this driver as a module, choose M here: the module will
-> +          be called tongfang-mifs-wmi.
-> +
->  config ACERHDF
->  	tristate "Acer Aspire One temperature and fan driver"
->  	depends on ACPI_EC && THERMAL
-> diff --git a/drivers/platform/x86/Makefile b/drivers/platform/x86/Makefile
-> index d25762f7114f..1160c726bda6 100644
-> --- a/drivers/platform/x86/Makefile
-> +++ b/drivers/platform/x86/Makefile
-> @@ -14,6 +14,7 @@ obj-$(CONFIG_NVIDIA_WMI_EC_BACKLIGHT)	+= nvidia-wmi-ec-backlight.o
->  obj-$(CONFIG_XIAOMI_WMI)		+= xiaomi-wmi.o
->  obj-$(CONFIG_REDMI_WMI)			+= redmi-wmi.o
->  obj-$(CONFIG_GIGABYTE_WMI)		+= gigabyte-wmi.o
-> +obj-$(CONFIG_TONGFANG_MIFS_WMI)		+= tongfang-mifs-wmi.o
+>  /* DMI Board names of Victus 16-d1xxx laptops */
+>  static const char * const victus_thermal_profile_boards[] = {
+>  	"8A25",
+> @@ -105,6 +112,29 @@ static const char * const victus_s_thermal_profile_boards[] = {
+>  	"8D41",
+>  };
 >  
->  # Acer
->  obj-$(CONFIG_ACERHDF)		+= acerhdf.o
-> diff --git a/drivers/platform/x86/tongfang-mifs-wmi.c b/drivers/platform/x86/tongfang-mifs-wmi.c
-> new file mode 100644
-> index 000000000000..85b626602611
-> --- /dev/null
-> +++ b/drivers/platform/x86/tongfang-mifs-wmi.c
-> @@ -0,0 +1,849 @@
-> +// SPDX-License-Identifier: GPL-2.0-or-later
-> +#include "asm-generic/errno-base.h"
-> +#include "asm-generic/errno.h"
+> +enum hp_fan_mode { //Performance Mode
+> +	FANMODE_LEGACY_DEFAULT     =  0x00, // 0b00000000
+> +	FANMODE_LEGACY_PERFORMANCE =  0x01, // 0b00000001
+> +	FANMODE_LEGACY_COOL        =  0x02, // 0b00000010
+> +	FANMODE_LEGACY_QUIET       =  0x03, // 0b00000011
+> +	FANMODE_LEGACY_EXTREME     =  0x04, // 0b00000100
+> +	FANMODE_L8                 =  0x04, // 0b00000100
+> +	FANMODE_L0                 =  0x10, // 0b00010000
+> +	FANMODE_L5                 =  0x11, // 0b00010001
+> +	FANMODE_L1                 =  0x20, // 0b00100000
+> +	FANMODE_L6                 =  0x21, // 0b00100001
+> +	FANMODE_L2                 =  0x30, // 0b00110000
+> +	FANMODE_L7                 =  0x31, // 0b00110001
+> +	FANMODE_L3                 =  0x40, // 0b01000000
+> +	FANMODE_L4                 =  0x50  // 0b01010000
 
-"..." ???
+Missing comma from the last entry.
 
-As a generic guidance, don't use asm-generic but asm/.
-
-But here you can just include <linux/errno.h> and neither of the asm 
-headers, both of those will always come through linux/errno.h (you can 
-rely on it, this is one of the exceptions).
-
-> +#include "linux/err.h"
-> +#include "linux/input-event-codes.h"
-> +#include "linux/input.h"
-> +#include "linux/input/sparse-keymap.h"
-> +#include "linux/power_supply.h"
-> +#include "linux/stddef.h"
-> +#include "linux/string.h"
-> +#include <linux/cleanup.h>
-> +#include <linux/acpi.h>
-> +#include <linux/bits.h>
-> +#include <linux/device.h>
-> +#include <linux/hwmon.h>
-> +#include <linux/init.h>
-> +#include <linux/kernel.h>
-> +#include <linux/leds.h>
-> +#include <linux/module.h>
-> +#include <linux/platform_profile.h>
-> +#include <linux/sysfs.h>
-> +#include <linux/wmi.h>
-
-Alphabetical order.
-
-> +#define DRV_NAME "tongfang-mifs-wmi"
-> +#define TONGFANG_MIFS_GUID "B60BFB48-3E5B-49E4-A0E9-8CFFE1B3434B"
-> +#define TONGFANG_EVENT_GUID "46C93E13-EE9B-4262-8488-563BCA757FEF"
-
-Align values.
-
-> +#define WMI_BUFFER_SIZE 32
-> +
-> +static char *profile_state_path = "/sys/firmware/acpi/platform_profile_last";
-> +module_param(profile_state_path, charp, 0644);
-> +MODULE_PARM_DESC(profile_state_path, "Path to store profile state");
-
-What is this for???
-
-> +enum tongfang_mifs_operation {
-> +	WMI_METHOD_GET = 250,
-> +	WMI_METHOD_SET = 251,
-> +};
-> +
-> +enum tongang_mifs_function {
-> +	WMI_FN_SYSTEM_PER_MODE = 8,
-> +	WMI_FN_GPU_MODE = 9,
-> +	WMI_FN_KBD_TYPE = 10,
-> +	WMI_FN_FN_LOCK = 11,
-> +	WMI_FN_TP_LOCK = 12,
-> +	WMI_FN_FAN_SPEEDS = 13,
-> +	WMI_FN_RGB_KB_MODE = 16,
-> +	WMI_FN_RGB_KB_COLOR = 17,
-> +	WMI_FN_RGB_KB_BRIGHTNESS = 18,
-> +	WMI_FN_SYSTEM_AC_TYPE = 19,
-> +	WMI_FN_MAX_FAN_SWITCH = 20,
-> +	WMI_FN_MAX_FAN_SPEED = 21,
-> +	WMI_FN_CPU_THERMOMETER = 22,
-> +	WMI_FN_CPU_POWER = 23,
-
-Align all values with in block like this.
+And the magic numbers (Lx) are better how? You need to justify and explain 
+this very well in the changelog if you want to pursue it.
 
 > +};
 > +
-> +enum tongfang_system_ac_mode {
-> +	WMI_SYSTEM_AC_TYPEC = 1,
-> +	WMI_SYSTEM_AC_CIRCULARHOLE = 2, /* Unknown type, this is unused in the original driver */
+> +enum hp_gpu_mode {
+> +	GPUMODE_HYBRID   = 0x01,  // 0x00 - Hybrid graphics mode (or BIOS call failed)
+> +	GPUMODE_DISCRETE = 0x01,  // 0x01 - Discrete GPU exclusive mode
+
+Is it intentional to have 0x01 appear more than once?
+
+Repeating the numbers in the comments is pointless.
+
+> +	GPUMODE_OPTIMUS  = 0x02   // 0x02 - NVIDIA Optimus mode
 > +};
 > +
-> +enum tongfang_mifs_power_profile {
-> +	WMI_PP_BALANCED = 0,
-> +	WMI_PP_PERFORMANCE = 1,
-> +	WMI_PP_QUIET = 2,
-> +	WMI_PP_FULL_SPEED = 3,
+>  enum hp_wmi_radio {
+>  	HPWMI_WIFI	= 0x0,
+>  	HPWMI_BLUETOOTH	= 0x1,
+> @@ -165,14 +195,14 @@ enum hp_wmi_commandtype {
+>  	HPWMI_THERMAL_PROFILE_QUERY	= 0x4c,
+>  };
+>  
+> -struct victus_power_limits {
+> +struct hp_power_limits {
+>  	u8 pl1;
+>  	u8 pl2;
+>  	u8 pl4;
+>  	u8 cpu_gpu_concurrent_limit;
+>  };
+>  
+> -struct victus_gpu_power_modes {
+> +struct hp_gpu_power_modes {
+>  	u8 ctgp_enable;
+>  	u8 ppab_enable;
+>  	u8 dstate;
+> @@ -180,24 +210,42 @@ struct victus_gpu_power_modes {
+>  };
+>  
+>  enum hp_wmi_gm_commandtype {
+> -	HPWMI_FAN_SPEED_GET_QUERY		= 0x11,
+> -	HPWMI_SET_PERFORMANCE_MODE		= 0x1A,
+> +	HPWMI_AMI_FAN_SPEED_GET_QUERY		= 0x11,
+
+What AMI means here?
+
+> +	HPWMI_SET_PERFORMANCE_MODE			= 0x1A,
+
+Why is this changed?
+
+>  	HPWMI_FAN_SPEED_MAX_GET_QUERY		= 0x26,
+>  	HPWMI_FAN_SPEED_MAX_SET_QUERY		= 0x27,
+>  	HPWMI_GET_SYSTEM_DESIGN_DATA		= 0x28,
+> -	HPWMI_FAN_COUNT_GET_QUERY		= 0x10,
+> +	HPWMI_INSYDE_FAN_SPEED_GET_QUERY	= 0x2D,
+> +	HPWMI_INSYDE_FAN_SPEED_SET_QUERY	= 0x2E,
+
+INSIDE ?
+
+> +	HPWMI_FAN_COUNT_GET_QUERY			= 0x10,
+>  	HPWMI_GET_GPU_THERMAL_MODES_QUERY	= 0x21,
+>  	HPWMI_SET_GPU_THERMAL_MODES_QUERY	= 0x22,
+>  	HPWMI_SET_POWER_LIMITS_QUERY		= 0x29,
+> -	HPWMI_VICTUS_S_FAN_SPEED_GET_QUERY	= 0x2D,
+> -	HPWMI_FAN_SPEED_SET_QUERY		= 0x2E,
+> +	HPWMI_GET_TEMPERATURE_QUERY			= 0x23,
+> +	HPWMI_FAN_TABLE_GET_QUERY			= 0x2F,
+> +	HPWMI_FAN_TABLE_SET_QUERY			= 0x32,
+> +	HPWMI_CPU_POWER_SET_QUERY			= 0X29,
+> +	HPWMI_GPU_POWER_QUERY				= 0X52, //MUX
+
+X -> x
+
+Comments should have a space.
+
+It's unclear what that comment really tries to tell in context of "GPU 
+power query".
+
+> +	HPWMI_ADAPTER_QUERY					= 0x0F, //Adapter
+
+0 value comment.
+
+Missing space.
+
 > +};
 > +
-> +enum tongfang_mifs_event_id {
-> +	WMI_EVENT_RESERVED_1 = 1,
-> +	WMI_EVENT_RESERVED_2 = 2,
-> +	WMI_EVENT_RESERVED_3 = 3,
-> +	WMI_EVENT_AIRPLANE_MODE = 4,
-> +	WMI_EVENT_KBD_BRIGHTNESS = 5,
-> +	WMI_EVENT_TOUCHPAD_STATE = 6,
-> +	WMI_EVENT_FNLOCK_STATE = 7,
-> +	WMI_EVENT_KBD_MODE = 8,
-> +	WMI_EVENT_CAPSLOCK_STATE = 9,
-> +	WMI_EVENT_CALCULATOR_START = 11,
-> +	WMI_EVENT_BROWSER_START = 12,
-> +	WMI_EVENT_NUMLOCK_STATE = 13,
-> +	WMI_EVENT_SCROLLLOCK_STATE = 14,
-> +	WMI_EVENT_PERFORMANCE_PLAN = 15,
-> +	WMI_EVENT_FN_J = 16,
-> +	WMI_EVENT_FN_F = 17,
-> +	WMI_EVENT_FN_0 = 18,
-> +	WMI_EVENT_FN_1 = 19,
-> +	WMI_EVENT_FN_2 = 20,
-> +	WMI_EVENT_FN_3 = 21,
-> +	WMI_EVENT_FN_4 = 22,
-> +	WMI_EVENT_FN_5 = 24,
-> +	WMI_EVENT_REFRESH_RATE = 25,
-> +	WMI_EVENT_CPU_FAN_SPEED = 26,
-> +	WMI_EVENT_GPU_FAN_SPEED = 32,
-> +	WMI_EVENT_WIN_KEY_LOCK = 33,
-> +	WMI_EVENT_RESERVED_23 = 34,
-> +	WMI_EVENT_OPEN_APP = 35,
+> +enum hp_wmi_kb_commandtype {
+> +	HPWMI_GET_BACKLIGHT = 0x04,
+> +	HPWMI_SET_BACKLIGHT = 0x05,
 > +};
 > +
-> +enum tongfang_mifs_event_type {
-> +	WMI_EVENT_TYPE_HOTKEY = 1,
-> +};
-> +
-> +enum tongfang_wmi_device_type {
-> +	TONGFANG_WMI_CONTROL = 0,
-> +	TONGFANG_WMI_EVENT = 1,
-> +};
-> +
-> +struct tongfang_mifs_input {
-> +	u8 reserved1;
-> +	u8 operation;
-> +	u8 reserved2;
-> +	u8 function;
-> +	u8 payload[28];
-> +} __packed;
-> +
-> +struct tongfang_mifs_output {
-> +	u8 reserved1;
-> +	u8 operation;
-> +	u8 reserved2;
-> +	u8 function;
-> +	u8 data[28];
-> +} __packed;
-> +
-> +struct tongfang_mifs_event {
-> +	u8 event_type;
-> +	u8 event_id;
-> +	u8 value_low; /* For most events, this is the value */
-> +	u8 value_high; /* For fan speed events, combined with value_low */
-> +	u8 reserved[4];
-> +} __packed;
-> +
-> +struct tongfang_mifs_wmi_data {
-> +	struct wmi_device *wdev;
-> +	struct mutex lock; /* Protects WMI calls */
-> +	struct led_classdev kbd_led;
-> +	struct input_dev *input_dev;
-> +	enum platform_profile_option saved_profile;
-> +};
-> +
-> +static int tongfang_mifs_wmi_call(struct tongfang_mifs_wmi_data *data,
-> +				  const struct tongfang_mifs_input *input,
-> +				  struct tongfang_mifs_output *output)
+> +enum hp_wmi_backlight {
+> +	BACKLIGHT_OFF = 0x64,  // 0b01100100 - Keyboard backlight off
+> +	BACKLIGHT_ON  = 0xE4   // 0b11100100 - Keyboard backlight on
+
+The comments seem to duplicate what names tell us already.
+
+>  };
+>  
+>  enum hp_wmi_command {
+> -	HPWMI_READ	= 0x01,
+> -	HPWMI_WRITE	= 0x02,
+> +	HPWMI_READ	= 0x01, // Earliest implemented (1)
+
+Are you submitting you personal notes!?
+
+Please don't duplicate numbers.
+
+> +	HPWMI_WRITE	= 0x02, // Graphics mode switch (2)
+>  	HPWMI_ODM	= 0x03,
+> -	HPWMI_GM	= 0x20008,
+> +	HPWMI_GM	= 0x20008, // Most commands (131080){working so running in this}
+
+Magic number in the comment?
+
+> +	HPWMI_GM_v2 = 0X20009, //Current Implementation(going on)
+> +	HPWMI_GM_v3 = 0X2000b, //typec
+>  };
+>  
+>  enum hp_wmi_hardware_mask {
+> @@ -225,42 +273,12 @@ enum hp_wireless2_bits {
+>  	HPWMI_POWER_FW_OR_HW	= HPWMI_POWER_BIOS | HPWMI_POWER_HARD,
+>  };
+>  
+> -enum hp_thermal_profile_omen_v0 {
+> -	HP_OMEN_V0_THERMAL_PROFILE_DEFAULT     = 0x00,
+> -	HP_OMEN_V0_THERMAL_PROFILE_PERFORMANCE = 0x01,
+> -	HP_OMEN_V0_THERMAL_PROFILE_COOL        = 0x02,
+> -};
+> -
+> -enum hp_thermal_profile_omen_v1 {
+> -	HP_OMEN_V1_THERMAL_PROFILE_DEFAULT	= 0x30,
+> -	HP_OMEN_V1_THERMAL_PROFILE_PERFORMANCE	= 0x31,
+> -	HP_OMEN_V1_THERMAL_PROFILE_COOL		= 0x50,
+> -};
+> -
+>  enum hp_thermal_profile_omen_flags {
+>  	HP_OMEN_EC_FLAGS_TURBO		= 0x04,
+>  	HP_OMEN_EC_FLAGS_NOTIMER	= 0x02,
+>  	HP_OMEN_EC_FLAGS_JUSTSET	= 0x01,
+>  };
+>  
+> -enum hp_thermal_profile_victus {
+> -	HP_VICTUS_THERMAL_PROFILE_DEFAULT		= 0x00,
+> -	HP_VICTUS_THERMAL_PROFILE_PERFORMANCE		= 0x01,
+> -	HP_VICTUS_THERMAL_PROFILE_QUIET			= 0x03,
+> -};
+> -
+> -enum hp_thermal_profile_victus_s {
+> -	HP_VICTUS_S_THERMAL_PROFILE_DEFAULT		= 0x00,
+> -	HP_VICTUS_S_THERMAL_PROFILE_PERFORMANCE		= 0x01,
+> -};
+> -
+> -enum hp_thermal_profile {
+> -	HP_THERMAL_PROFILE_PERFORMANCE	= 0x00,
+> -	HP_THERMAL_PROFILE_DEFAULT		= 0x01,
+> -	HP_THERMAL_PROFILE_COOL			= 0x02,
+> -	HP_THERMAL_PROFILE_QUIET		= 0x03,
+> -};
+> -
+>  #define IS_HWBLOCKED(x) ((x & HPWMI_POWER_FW_OR_HW) != HPWMI_POWER_FW_OR_HW)
+>  #define IS_SWBLOCKED(x) !(x & HPWMI_POWER_SOFT)
+>  
+> @@ -455,12 +473,14 @@ static int hp_wmi_perform_query(int query, enum hp_wmi_command command,
+>  }
+>  
+>  /*
+> - * Calling this hp_wmi_get_fan_count_userdefine_trigger function also enables
+> + * Calling this hp_wmi_get_fan_count function also enables
+>   * and/or maintains the laptop in user defined thermal and fan states, instead
+
+Reflow necessary.
+
+>   * of using a fallback state. After a 120 seconds timeout however, the laptop
+>   * goes back to its fallback state.
+> + * this is solved by creating a timer or service to call
+> + * this function every 120 seconds(from omen gaming hub)
+
+Containts wrong information (IIRC, 120 secs is wrong).
+
+Please use normal English rules when writing comments (capitalization, 
+stops, etc.).
+
+Also, don't leave lines shot like that.
+
+Vague use of "this".
+
+>   */
+> -static int hp_wmi_get_fan_count_userdefine_trigger(void)
+> +static int hp_wmi_get_fan_count(void)
+>  {
+>  	u8 fan_data[4] = {};
+>  	int ret;
+> @@ -471,15 +491,17 @@ static int hp_wmi_get_fan_count_userdefine_trigger(void)
+>  	if (ret != 0)
+>  		return -EINVAL;
+>  
+> -	return fan_data[0]; /* Others bytes aren't providing fan count */
+> +	/* to record call in dmesg */
+> +	pr_info("Bios-control off(120s) {for latest hp devices}\n");
+
+No!
+
+> +	return fan_data[0]; /* BIOS_PROTECTION-{0},OCP-{1},OTP-{2} */
+
+What's that comment is supposed to mean?
+
+You entirely lost the information given in the original comment without 
+justification, please don't do that.
+
+>  }
+>  
+> -static int hp_wmi_get_fan_speed(int fan)
+> +static int hp_wmi_get_fan_speed_ami(int fan)
+>  {
+>  	u8 fsh, fsl;
+>  	char fan_data[4] = { fan, 0, 0, 0 };
+>  
+> -	int ret = hp_wmi_perform_query(HPWMI_FAN_SPEED_GET_QUERY, HPWMI_GM,
+> +	int ret = hp_wmi_perform_query(HPWMI_AMI_FAN_SPEED_GET_QUERY, HPWMI_GM,
+>  				       &fan_data, sizeof(char),
+>  				       sizeof(fan_data));
+>  
+> @@ -492,7 +514,7 @@ static int hp_wmi_get_fan_speed(int fan)
+>  	return (fsh << 8) | fsl;
+>  }
+>  
+> -static int hp_wmi_get_fan_speed_victus_s(int fan)
+> +static int hp_wmi_get_fan_speed_insyde(int fan)
+
+inside?
+
+I suppose you really mean insyde with these (now that I've read enough 
+between lines). You have to explain the changes properly so reviewer can 
+understand your intent and not just assume we know why do a change.
+
+>  {
+>  	u8 fan_data[128] = {};
+>  	int ret;
+> @@ -500,7 +522,7 @@ static int hp_wmi_get_fan_speed_victus_s(int fan)
+>  	if (fan < 0 || fan >= sizeof(fan_data))
+>  		return -EINVAL;
+>  
+> -	ret = hp_wmi_perform_query(HPWMI_VICTUS_S_FAN_SPEED_GET_QUERY,
+> +	ret = hp_wmi_perform_query(HPWMI_INSYDE_FAN_SPEED_GET_QUERY,
+>  				   HPWMI_GM, &fan_data, sizeof(u8),
+>  				   sizeof(fan_data));
+>  	if (ret != 0)
+> @@ -509,6 +531,122 @@ static int hp_wmi_get_fan_speed_victus_s(int fan)
+>  	return fan_data[fan] * 100;
+>  }
+>  
+> +static int hp_wmi_set_fan_speed(int cpu, int gpu)
 > +{
-> +	struct wmi_buffer in_buf, out_buf;
+> +	u8 fan_speed[2] = { cpu, gpu };
 > +	int ret;
 > +
-> +	guard(mutex)(&data->lock);
-> +
-> +	in_buf.length = sizeof(*input);
-> +	in_buf.data = (void *)input;
-> +
-> +	if (output) {
-> +		out_buf.length = sizeof(*output);
-> +		out_buf.data = output;
-> +	}
-> +
-> +	ret = wmidev_invoke_method(data->wdev, 0, 1, &in_buf,
-> +				   output ? &out_buf : NULL);
+> +	ret = hp_wmi_perform_query(HPWMI_INSYDE_FAN_SPEED_SET_QUERY, HPWMI_GM,
+> +				   &fan_speed, sizeof(fan_speed), 0);
 > +
 > +	return ret;
 
-Return directly without extra var.
+Return directly.
 
 > +}
 > +
-> +static bool is_ac_online(void)
+> +static int hp_wmi_fan_speed_max_set(int enabled)
+
+Odd chose of variable name here given the function name?
+
 > +{
-> +	struct power_supply *psy;
-> +	union power_supply_propval val;
-> +	bool online = false;
-> +
-> +	psy = power_supply_get_by_name("ADP1");
-> +	if (!psy)
-> +		return false;
-> +
-> +	if (!power_supply_get_property(psy, POWER_SUPPLY_PROP_ONLINE, &val))
-> +		online = (val.intval == 1);
-> +
-> +	power_supply_put(psy);
-> +	return online;
-> +}
-> +
-> +static int laptop_profile_get(struct device *dev,
-> +			      enum platform_profile_option *profile)
-> +{
-> +	struct tongfang_mifs_wmi_data *data = dev_get_drvdata(dev);
-> +	struct tongfang_mifs_input input = {
-> +		.reserved1 = 0,
-> +		.operation = WMI_METHOD_GET,
-> +		.reserved2 = 0,
-> +		.function = WMI_FN_SYSTEM_PER_MODE,
-> +	};
-> +	struct tongfang_mifs_output result;
 > +	int ret;
 > +
-> +	ret = tongfang_mifs_wmi_call(data, &input, &result);
+> +	ret = hp_wmi_perform_query(HPWMI_FAN_SPEED_MAX_SET_QUERY, HPWMI_GM,
+> +				   &enabled, sizeof(enabled), 0);
 > +
+> +	if (ret)
+
+No empty line in between call and its error handling.
+
+> +		return ret < 0 ? ret : -EINVAL;
+
+Instead of nesting it, please split this to two if ()s on the main level 
+for clarity.
+
+> +
+> +	return enabled;
+> +}
+> +
+> +static int hp_wmi_fan_speed_max_get(void)
+> +{
+> +	int val = 0, ret;
+> +
+> +	ret = hp_wmi_perform_query(HPWMI_FAN_SPEED_MAX_GET_QUERY, HPWMI_GM,
+> +				   &val, zero_if_sup(val), sizeof(val));
+> +
+> +	if (ret)
+> +		return ret < 0 ? ret : -EINVAL;
+
+Ditto.
+
+> +
+> +	return val;
+> +}
+> +
+> +static int hp_wmi_fan_speed_reset(void)
+> +{
+> +	u8 fan_speed[2] = { HP_FAN_SPEED_AUTOMATIC, HP_FAN_SPEED_AUTOMATIC };
+> +	int ret;
+> +
+> +	ret = hp_wmi_perform_query(HPWMI_INSYDE_FAN_SPEED_SET_QUERY, HPWMI_GM,
+> +				   &fan_speed, sizeof(fan_speed), 0);
+> +
+> +	return ret;
+> +}
+> +
+> +static int hp_wmi_fan_speed_max_reset(void)
+> +{
+> +	int ret;
+> +
+> +	ret = hp_wmi_fan_speed_max_set(0);
 > +	if (ret)
 > +		return ret;
 > +
-> +	switch (result.data[0]) {
-> +	case WMI_PP_BALANCED:
-> +		*profile = PLATFORM_PROFILE_BALANCED;
-> +		break;
-> +	case WMI_PP_PERFORMANCE:
-> +		*profile = PLATFORM_PROFILE_BALANCED_PERFORMANCE;
-> +		break;
-> +	case WMI_PP_QUIET:
-> +		*profile = PLATFORM_PROFILE_LOW_POWER;
-> +		break;
-> +	case WMI_PP_FULL_SPEED:
-> +		*profile = PLATFORM_PROFILE_PERFORMANCE;
-> +		break; /* Fullspeed */
-
-Definitely wrong place for the comment, and I don't see any value in 
-that comment anyway. What I'm supposed to understand based on this 
-comment???
-
-> +	default:
-> +		return -EINVAL;
-> +	}
-> +	return 0;
-> +}
-> +
-> +
-> +static int laptop_profile_set(struct device *dev,
-> +			      enum platform_profile_option profile)
-> +{
-> +	struct tongfang_mifs_wmi_data *data = dev_get_drvdata(dev);
-> +	struct tongfang_mifs_input input = {
-> +		.reserved1 = 0,
-> +		.operation = WMI_METHOD_SET,
-> +		.reserved2 = 0,
-> +		.function = WMI_FN_SYSTEM_PER_MODE,
-> +	};
-> +	struct tongfang_mifs_output ac_type_res;
-> +
-
-Don't leave empty lines.
-
-> +	u8 val;
-> +	int ret;
-
-Change these two to reverse xmas-tree order.
-
-> +	switch (profile) {
-> +	case PLATFORM_PROFILE_LOW_POWER:
-> +		val = WMI_PP_QUIET;
-> +		break;
-> +	case PLATFORM_PROFILE_BALANCED:
-> +		val = WMI_PP_BALANCED;
-> +		break;
-> +	case PLATFORM_PROFILE_BALANCED_PERFORMANCE:
-> +		val = WMI_PP_PERFORMANCE;
-> +		fallthrough;
-> +	case PLATFORM_PROFILE_PERFORMANCE:
-> +		/* Check if Typec power is not connected for full-speed/performance mode */
-
-Limit for comments lines is at 80 to make the easier to read so make this 
-a multi-line comment.
-
-(Only relates to comments, code can go beyond 80 if it makes sense).
-
-> +		input.operation = WMI_METHOD_GET;
-> +		input.function = WMI_FN_SYSTEM_AC_TYPE;
-> +		ret = tongfang_mifs_wmi_call(data, &input, &ac_type_res);
-> +		if (ret)
-> +			return ret;
-> +
-> +		/* Full-speed/performance mode requires DC power (not USB-C) */
-> +		if (ac_type_res.data[0] == WMI_SYSTEM_AC_TYPEC || !is_ac_online())
-> +			return -EOPNOTSUPP;
-> +
-> +		if (!val)
-> +			val = WMI_PP_FULL_SPEED;
-> +
-> +		/* Restore operation and function for the actual SET call */
-> +		input.operation = WMI_METHOD_SET;
-> +		input.function = WMI_FN_SYSTEM_PER_MODE;
-> +		break;
-> +	default:
-> +		return -EOPNOTSUPP;
-> +	}
-> +
-> +	input.payload[0] = val;
-> +
-> +	ret = tongfang_mifs_wmi_call(data, &input, NULL);
-> +	return ret;
-
-return directly please.
-
-> +}
-> +
-> +static int platform_profile_probe(void *drvdata, unsigned long *choices)
-> +{
-> +	set_bit(PLATFORM_PROFILE_LOW_POWER, choices);
-> +	set_bit(PLATFORM_PROFILE_BALANCED, choices);
-> +	set_bit(PLATFORM_PROFILE_BALANCED_PERFORMANCE, choices);
-> +	set_bit(PLATFORM_PROFILE_PERFORMANCE, choices);
-> +
-> +	return 0;
-> +}
-> +
-> +static int tongfang_mifs_wmi_suspend(struct device *dev)
-> +{
-> +	struct tongfang_mifs_wmi_data *data = dev_get_drvdata(dev);
-> +	enum platform_profile_option profile;
-> +	int ret;
-> +
-> +	ret = laptop_profile_get(dev, &profile);
-> +	if (ret == 0)
-> +		data->saved_profile = profile;
-> +
-> +	return 0;
-> +}
-> +
-> +static int tongfang_mifs_wmi_resume(struct device *dev)
-> +{
-> +	struct tongfang_mifs_wmi_data *data = dev_get_drvdata(dev);
-> +
-> +	if (data->saved_profile != PLATFORM_PROFILE_LAST) {
-> +		dev_dbg(dev, "Resuming, restoring profile %d\n",
-> +			data->saved_profile);
-> +		return laptop_profile_set(dev, data->saved_profile);
-> +	}
-> +
-> +	return 0;
-> +}
-> +
-> +static DEFINE_SIMPLE_DEV_PM_OPS(tongfang_mifs_wmi_pm_ops,
-
-Missing include?
-
-> +				tongfang_mifs_wmi_suspend,
-> +				tongfang_mifs_wmi_resume);
-> +
-> +static const struct platform_profile_ops laptop_profile_ops = {
-> +	.probe = platform_profile_probe,
-> +	.profile_get = laptop_profile_get,
-> +	.profile_set = laptop_profile_set,
-> +};
-> +
-> +static const char *const fan_labels[] = {
-> +	"CPU", /* 0 */
-> +	"GPU", /* 1 */
-> +	"SYS", /* 2 */
-> +};
-> +
-> +static int laptop_hwmon_read(struct device *dev, enum hwmon_sensor_types type,
-> +			     u32 attr, int channel, long *val)
-> +{
-> +	struct tongfang_mifs_wmi_data *data = dev_get_drvdata(dev);
-> +	struct tongfang_mifs_input input = {
-> +		.reserved1 = 0,
-> +		.operation = WMI_METHOD_GET,
-> +		.reserved2 = 0,
-> +	};
-> +	struct tongfang_mifs_output res;
-> +	int ret;
-> +
-> +	switch (type) {
-> +	case hwmon_temp:
-> +		input.function = WMI_FN_CPU_THERMOMETER;
-> +		ret = tongfang_mifs_wmi_call(data, &input, &res);
-> +		if (!ret)
-> +			*val = res.data[0] * 1000;
-
-Please check if you can change the literal to something from 
-linux/units.h.
-
-> +		break;
-> +	case hwmon_fan:
-> +		input.function = WMI_FN_FAN_SPEEDS;
-> +		ret = tongfang_mifs_wmi_call(data, &input, &res);
-> +		if (ret)
-> +			break;
-> +
-> +		switch (channel) {
-> +		case 0: /* CPU */
-> +			*val = (res.data[1] << 8) | res.data[0];
-
-Is this doing endianess conversion manually? You should use endianness 
-types and conversion functions correctly if that's the case.
-
-> +			break;
-> +		case 1: /* GPU */
-> +			*val = (res.data[3] << 8) | res.data[2];
-> +			break;
-> +		case 2: /* SYS */
-> +			*val = (res.data[7] << 8) | res.data[6];
-> +			break;
-> +		default:
-> +			ret = -EINVAL;
-> +			break;
-> +		}
-> +		break;
-> +	default:
-> +		ret = -EINVAL;
-> +		break;
-> +	}
-> +	return ret;
-> +}
-> +
-> +static int laptop_hwmon_read_string(struct device *dev,
-> +				    enum hwmon_sensor_types type, u32 attr,
-> +				    int channel, const char **str)
-> +{
-> +	if (type == hwmon_fan && attr == hwmon_fan_label) {
-> +		if (channel >= 0 && channel < ARRAY_SIZE(fan_labels)) {
-> +			*str = fan_labels[channel];
-> +			return 0;
-> +		}
-> +	}
-> +	return -EINVAL;
-> +}
-> +
-> +static const struct hwmon_channel_info *laptop_hwmon_info[] = {
-> +	HWMON_CHANNEL_INFO(temp, HWMON_T_INPUT),
-> +	HWMON_CHANNEL_INFO(fan, HWMON_F_INPUT | HWMON_F_LABEL,
-> +			   HWMON_F_INPUT | HWMON_F_LABEL,
-> +			   HWMON_F_INPUT | HWMON_F_LABEL),
-> +	NULL
-> +};
-> +
-> +static const struct hwmon_ops laptop_hwmon_ops = {
-> +	.visible = 0444,
-> +	.read = laptop_hwmon_read,
-> +	.read_string = laptop_hwmon_read_string,
-> +};
-> +
-> +static const struct hwmon_chip_info laptop_chip_info = {
-> +	.ops = &laptop_hwmon_ops,
-> +	.info = laptop_hwmon_info,
-> +};
-> +
-> +static int laptop_kbd_led_set(struct led_classdev *led_cdev,
-> +			      enum led_brightness value)
-> +{
-> +	struct tongfang_mifs_wmi_data *data =
-> +		container_of(led_cdev, struct tongfang_mifs_wmi_data, kbd_led);
-> +	struct tongfang_mifs_input input = {
-> +		.reserved1 = 0,
-> +		.operation = WMI_METHOD_SET,
-> +		.reserved2 = 0,
-> +		.function = WMI_FN_RGB_KB_BRIGHTNESS,
-> +	};
-> +	int ret;
-> +
-> +	input.payload[0] = (u8)value;
-> +
-> +	ret = tongfang_mifs_wmi_call(data, &input, NULL);
+> +	/* Disabling max fan speed on Insyde laptops needs a 2nd step: */
+> +	ret = hp_wmi_fan_speed_reset();
 > +	return ret;
 
 Direct return.
 
 > +}
 > +
-> +static enum led_brightness laptop_kbd_led_get(struct led_classdev *led_cdev)
+> +static int hp_wmi_get_backlight(void)
 > +{
-> +	struct tongfang_mifs_wmi_data *data =
-> +		container_of(led_cdev, struct tongfang_mifs_wmi_data, kbd_led);
-> +	struct tongfang_mifs_input input = {
-> +		.reserved1 = 0,
-> +		.operation = WMI_METHOD_GET,
-> +		.reserved2 = 0,
-> +		.function = WMI_FN_RGB_KB_BRIGHTNESS,
-> +	};
-> +	struct tongfang_mifs_output res;
-> +	u8 level_val;
 > +	int ret;
+> +	u8 data[4] = {};
 > +
-> +	ret = tongfang_mifs_wmi_call(data, &input, &res);
-> +	if (ret)
-> +		return ret;
-> +
-> +	level_val = res.data[0];
-> +
-> +	return level_val;
-
-What's the benefit of the extra variable here?
-
-> +}
-> +
-> +static const char *const gpu_mode_strings[] = {
-> +	"hybrid",
-> +	"discrete",
-> +	"uma",
-> +};
-> +
-> +/* GPU Mode: 0:Hybrid, 1:Discrete, 2:UMA */
-> +static ssize_t gpu_mode_show(struct device *dev, struct device_attribute *attr,
-> +			     char *buf)
-> +{
-> +	struct tongfang_mifs_wmi_data *data = dev_get_drvdata(dev);
-> +	struct tongfang_mifs_input input = {
-> +		.reserved1 = 0,
-> +		.operation = WMI_METHOD_GET,
-> +		.reserved2 = 0,
-> +		.function = WMI_FN_GPU_MODE,
-> +	};
-> +	struct tongfang_mifs_output res;
-> +	u8 mode_val;
-> +	int ret;
-> +	const char *mode_str;
-> +
-> +	ret = tongfang_mifs_wmi_call(data, &input, &res);
+> +	ret = hp_wmi_perform_query(HPWMI_GET_BACKLIGHT, HPWMI_GM_v2,
+> +				   &data, sizeof(u8), sizeof(data));
 > +
 > +	if (ret)
-> +		return ret;
-> +
-> +	mode_val = res.data[0];
-> +
-> +	if (mode_val < ARRAY_SIZE(gpu_mode_strings)) {
-> +		mode_str = gpu_mode_strings[mode_val];
-> +	} else {
-> +		// fallback: If the value is unknown, report the raw number in wmi
-> +		return sysfs_emit(buf, "%d\n", mode_val);
-> +	}
-> +
-> +	return sysfs_emit(buf, "%s\n", mode_str);
-
-Consider reworking the logic such that "normal" path does is on the base 
-indentation level and the fallback is inside if (). There's no need to use 
-else here at all.
-
+> +		return ret < 0 ? ret : -EINVAL;
+> +	return (data[0] == 0x00) ? 0 : 1;
 > +}
 > +
-> +static ssize_t gpu_mode_store(struct device *dev, struct device_attribute *attr,
-> +			      const char *buf, size_t count)
+> +static int hp_wmi_set_backlight(enum hp_wmi_backlight enabled)
 > +{
-> +	struct tongfang_mifs_wmi_data *data = dev_get_drvdata(dev);
-> +	struct tongfang_mifs_input input = {
-> +		.reserved1 = 0,
-> +		.operation = WMI_METHOD_SET,
-> +		.reserved2 = 0,
-> +		.function = WMI_FN_GPU_MODE,
-> +	};
-> +	int val;
 > +	int ret;
+> +	u8 data[4] = { enabled, 0, 0, 0 };
 > +
-> +	val = sysfs_match_string(gpu_mode_strings, buf);
+> +	ret = hp_wmi_perform_query(HPWMI_SET_BACKLIGHT, HPWMI_GM_v2,
+> +				   &data, sizeof(data), 0);
 > +
-> +	if (val < 0)
+> +	if (ret)
+> +		return ret < 0 ? ret : -EINVAL;
+> +
+> +	return 1;
+> +}
 
-Plase remove any empty lines between a call and its error handling.
+It would likely make more sense to pick the BACKLIGHT_ON/OFF only in 
+this function, not at the caller.
 
+> +static int hp_wmi_get_gpumode(void)
+> +{
+> +	int ret;
+> +	u8 data[4] = { 0x00 };
+
+0 is default value so = {} suffices to initialize.
+
+> +
+> +	ret = hp_wmi_perform_query(HPWMI_GPU_POWER_QUERY, HPWMI_READ,
+> +				   &data, sizeof(data), sizeof(data));
+> +
+> +	if (ret)
+> +		return ret < 0 ? ret : -EINVAL;
+> +
+> +	return ret;
+> +}
+> +
+> +static int hp_wmi_set_gpumode(enum hp_gpu_mode enabled)
+> +{
+> +	int ret;
+> +	u8 data[4] = { enabled, 0x00, 0x00, 0x00 };
+> +
+> +	ret = hp_wmi_perform_query(HPWMI_GPU_POWER_QUERY, HPWMI_WRITE,
+> +				   &data, sizeof(data), 0);
+> +
+> +	if (ret)
+> +		return ret < 0 ? ret : -EINVAL;
+> +
+> +	return 1;
+> +}
+> +
+>  static int hp_wmi_read_int(int query)
+>  {
+>  	int val = 0, ret;
+> @@ -564,7 +702,7 @@ static int omen_thermal_profile_set(int mode)
+>  	 * 255, so let's mimic this behaviour to be as close as possible to
+>  	 * the original software.
+>  	 */
+> -	char buffer[2] = {-1, mode};
+> +	char buffer[2] = { -1, mode };
+
+No extra changes like this into any feature change. This looks very low 
+value change even as (separate) cleanup patch so I suggest you just drop 
+it.
+
+>  	int ret;
+>  
+>  	ret = hp_wmi_perform_query(HPWMI_SET_PERFORMANCE_MODE, HPWMI_GM,
+> @@ -624,56 +762,6 @@ static int omen_thermal_profile_get(void)
+>  	return data;
+>  }
+>  
+> -static int hp_wmi_fan_speed_max_set(int enabled)
+
+If you're moving code around, put that into own patch please.
+
+> -{
+> -	int ret;
+> -
+> -	ret = hp_wmi_perform_query(HPWMI_FAN_SPEED_MAX_SET_QUERY, HPWMI_GM,
+> -				   &enabled, sizeof(enabled), 0);
+> -
+> -	if (ret)
+> -		return ret < 0 ? ret : -EINVAL;
+> -
+> -	return enabled;
+> -}
+> -
+> -static int hp_wmi_fan_speed_reset(void)
+> -{
+> -	u8 fan_speed[2] = { HP_FAN_SPEED_AUTOMATIC, HP_FAN_SPEED_AUTOMATIC };
+> -	int ret;
+> -
+> -	ret = hp_wmi_perform_query(HPWMI_FAN_SPEED_SET_QUERY, HPWMI_GM,
+> -				   &fan_speed, sizeof(fan_speed), 0);
+> -
+> -	return ret;
+> -}
+> -
+> -static int hp_wmi_fan_speed_max_reset(void)
+> -{
+> -	int ret;
+> -
+> -	ret = hp_wmi_fan_speed_max_set(0);
+> -	if (ret)
+> -		return ret;
+> -
+> -	/* Disabling max fan speed on Victus s1xxx laptops needs a 2nd step: */
+> -	ret = hp_wmi_fan_speed_reset();
+> -	return ret;
+> -}
+> -
+> -static int hp_wmi_fan_speed_max_get(void)
+> -{
+> -	int val = 0, ret;
+> -
+> -	ret = hp_wmi_perform_query(HPWMI_FAN_SPEED_MAX_GET_QUERY, HPWMI_GM,
+> -				   &val, zero_if_sup(val), sizeof(val));
+> -
+> -	if (ret)
+> -		return ret < 0 ? ret : -EINVAL;
+> -
+> -	return val;
+> -}
+
+If you're
+
+> -
+>  static int __init hp_wmi_bios_2008_later(void)
+>  {
+>  	int state = 0;
+> @@ -791,6 +879,77 @@ static int hp_wmi_rfkill2_refresh(void)
+>  	return 0;
+>  }
+>  
+> +static ssize_t systemdesign_show(struct device *dev, struct device_attribute *attr,
+> +				char *buf)
+> +{
+> +	int ret, i;
+> +	u8 buffer[128];
+
+Magic number.
+
+> +	ssize_t len = 0;
+> +
+> +	ret = hp_wmi_perform_query(HPWMI_GET_SYSTEM_DESIGN_DATA, HPWMI_GM,
+> +					buffer, sizeof(buffer), sizeof(buffer));
+> +	if (ret < 0)
+> +		return ret;
+> +
+> +	for (i = 0; i < 16; i++)
+> +		len += sysfs_emit_at(buf, len, "%02x ", buffer[i]);
+
+Is this zero terminated? Using %*ph looks very much possible here.
+
+> +	buf[len - 1] = '\n';
+
+No.
+
+> +	return len;
+> +}
+> +
+> +static ssize_t adapter_show(struct device *dev, struct device_attribute *attr,
+> +				char *buf)
+> +{
+> +	int ret = hp_wmi_read_int(HPWMI_ADAPTER_QUERY);
+> +
+> +	if (ret < 0)
 > +		return -EINVAL;
 > +
-> +	input.payload[0] = (u8)val;
+> +	return sysfs_emit(buf, "%02X\n", ret);
+> +}
 > +
-> +	ret = tongfang_mifs_wmi_call(data, &input, NULL);
+> +static ssize_t mux_show(struct device *dev, struct device_attribute *attr,
+> +				char *buf)
+> +{
+> +	int ret = hp_wmi_get_gpumode();
 > +
+> +	if (ret < 0)
+> +		return ret;
+> +
+> +	return sysfs_emit(buf, "%d\n", ret);
+> +}
+> +
+> +static ssize_t fancount_show(struct device *dev, struct device_attribute *attr,
+> +				char *buf)
+> +{
+> +	int ret = hp_wmi_get_fan_count();
+> +
+> +	if (ret < 0)
+> +		return -EINVAL;
+
+Why are you shadow the return code?
+
+> +	return sysfs_emit(buf, "fancount : %d\n", ret);
+> +}
+> +
+> +static ssize_t fanspeed_show(struct device *dev, struct device_attribute *attr,
+> +				char *buf)
+> +{
+> +	int speed = hp_wmi_get_fan_speed_insyde(0);
+> +
+> +	if (speed < 0)
+> +		return -EINVAL;
+> +	return sysfs_emit(buf, "speed : %d\n", speed);
+> +}
+> +
+> +static ssize_t backlight_show(struct device *dev, struct device_attribute *attr,
+> +				char *buf)
+> +{
+> +	int ret = hp_wmi_get_backlight();
+> +
+> +	if (ret < 0)
+> +		return -EINVAL;
+> +	return sysfs_emit(buf, "%d\n", ret);
+> +}
+> +
+>  static ssize_t display_show(struct device *dev, struct device_attribute *attr,
+>  			    char *buf)
+>  {
+> @@ -852,6 +1011,67 @@ static ssize_t postcode_show(struct device *dev, struct device_attribute *attr,
+>  	return sysfs_emit(buf, "0x%x\n", value);
+>  }
+>  
+> +static ssize_t backlight_store(struct device *dev, struct device_attribute *attr,
+> +				const char *buf, size_t count)
+> +{
+> +	int ret;
+> +	bool enable;
+
+Reverse xmas-tree order.
+
+> +
+> +	hp_wmi_get_fan_count();
+
+In a backlight related function??? Surely not.
+
+> +	ret = kstrtobool(buf, &enable);
 > +	if (ret)
 > +		return ret;
 > +
+> +	if (enable)
+> +		hp_wmi_set_backlight(BACKLIGHT_ON);
+> +	else
+> +		hp_wmi_set_backlight(BACKLIGHT_OFF);
+> +
+> +	return count;
+> +	return count;
+
+??
+
+Doesn't something complain loudly about this?
+
+> +}
+> +
+> +static ssize_t mux_store(struct device *dev, struct device_attribute *attr,
+> +				const char *buf, size_t count)
+> +{
+> +	int ret;
+> +	int enable;
+> +
+> +	hp_wmi_get_fan_count();
+> +	ret = kstrtoint(buf, 10, &enable);
+> +	if (ret)
+> +		return ret;
+> +
+> +	if (ret > 2)
+> +		return ret;
+> +
+> +	hp_wmi_set_gpumode(enable);
+> +
+> +	pr_info("mux mode is now set to: %d\n", enable);
+
+Please remove any development debug prints like this.
+
 > +	return count;
 > +}
 > +
-> +static const char *const kb_mode_strings[] = {
-> +	"off", /* 0 */
-> +	"cyclic", /* 1 */
-> +	"fixed", /* 2 */
-> +	"custom", /* 3 */
-> +};
-> +
-> +static ssize_t kb_mode_show(struct device *dev, struct device_attribute *attr,
-> +			    char *buf)
+> +static ssize_t fanspeed_store(struct device *dev, struct device_attribute *attr,
+> +				const char *buf, size_t count)
 > +{
-> +	struct tongfang_mifs_wmi_data *data = dev_get_drvdata(dev);
-> +	struct tongfang_mifs_input input = {
-> +		.reserved1 = 0,
-> +		.operation = WMI_METHOD_GET,
-> +		.reserved2 = 0,
-> +		.function = WMI_FN_RGB_KB_MODE,
-> +	};
-> +	struct tongfang_mifs_output res;
+> +	int tmp;
 > +	int ret;
-> +	u8 mode_val;
-> +	const char *mode_str;
 > +
-> +	ret = tongfang_mifs_wmi_call(data, &input, &res);
-> +
-> +	if (ret)
+> +	ret = kstrtoint(buf, 16, &tmp);
+> +	if (ret < 0) {
+> +		pr_warn("Something is wrong\n");
+
+Definitely went and you should not add noise with useless prints like 
+this, the return code is good enough for the caller/userspace. Braces can 
+be removed once you remove this
+
 > +		return ret;
-> +
-> +	mode_val = res.data[0];
-> +
-> +	if (mode_val < ARRAY_SIZE(kb_mode_strings)) {
-> +		mode_str = kb_mode_strings[mode_val];
-> +	} else {
-> +		// Fallback for an unexpected/unknown mode
-> +		return sysfs_emit(buf, "%d\n", mode_val);
 > +	}
-> +
-> +	return sysfs_emit(buf, "%s\n", mode_str);
-> +}
-> +
-> +static ssize_t kb_mode_store(struct device *dev, struct device_attribute *attr,
-> +			     const char *buf, size_t count)
-> +{
-> +	struct tongfang_mifs_wmi_data *data = dev_get_drvdata(dev);
-> +	struct tongfang_mifs_input input = {
-> +		.reserved1 = 0,
-> +		.operation = WMI_METHOD_SET,
-> +		.reserved2 = 0,
-> +		.function = WMI_FN_RGB_KB_MODE,
-> +	};
-> +	// the wmi value (0, 1, 2 or 3)
-> +	int val;
-> +	int ret;
-> +
-> +	if (!data)
-> +		return -EINVAL;
-> +
-> +	val = sysfs_match_string(kb_mode_strings, buf);
-> +
-> +	if (val < 0)
+> +	if (tmp == 0)
 
-Ditto.
+Could you rename the var to something more meaningful please.
 
-> +		return -EINVAL;
-> +
-> +	input.payload[0] = (u8)val;
-> +
-> +	ret = tongfang_mifs_wmi_call(data, &input, NULL);
-> +
-> +	if (ret)
+Is 0 some auto or something? Which would warrant adding a named define 
+for it.
 
-Ditto.
+> +		hp_wmi_set_fan_speed(0, 0);
+> +	else if (tmp > 0 && tmp < 67)
+> +		hp_wmi_set_fan_speed(tmp, tmp+3);
 
-> +		return ret;
-> +
+Magic 3.
+
+Missing spaces around +
+
+> +	else
+> +		pr_info("invalid input\n");
+
+And yet you return count?? Invalid input should return -EINVAL and be 
+handled around you made the kstrtoint() call.
+
+Also, remove the print.
+
 > +	return count;
 > +}
 > +
-> +/* Fan Boost: 0:Normal, 1:Max Speed */
-> +static ssize_t fan_boost_store(struct device *dev,
-> +			       struct device_attribute *attr, const char *buf,
-> +			       size_t count)
+>  static ssize_t als_store(struct device *dev, struct device_attribute *attr,
+>  			 const char *buf, size_t count)
+>  {
+> @@ -926,8 +1146,20 @@ static DEVICE_ATTR_RW(als);
+>  static DEVICE_ATTR_RO(dock);
+>  static DEVICE_ATTR_RO(tablet);
+>  static DEVICE_ATTR_RW(postcode);
+> +static DEVICE_ATTR_RW(backlight);
+> +static DEVICE_ATTR_RO(fancount);
+> +static DEVICE_ATTR_RW(fanspeed);
+> +static DEVICE_ATTR_RO(systemdesign);
+> +static DEVICE_ATTR_RW(mux);
+> +static DEVICE_ATTR_RO(adapter);
+>  
+>  static struct attribute *hp_wmi_attrs[] = {
+> +	&dev_attr_backlight.attr,
+> +	&dev_attr_mux.attr,
+> +	&dev_attr_adapter.attr,
+> +	&dev_attr_fancount.attr,
+> +	&dev_attr_fanspeed.attr,
+> +	&dev_attr_systemdesign.attr,
+>  	&dev_attr_display.attr,
+>  	&dev_attr_hddtemp.attr,
+>  	&dev_attr_als.attr,
+> @@ -1309,16 +1541,16 @@ static int platform_profile_omen_get_ec(enum platform_profile_option *profile)
+>  		return tp;
+>  
+>  	switch (tp) {
+> -	case HP_OMEN_V0_THERMAL_PROFILE_PERFORMANCE:
+> -	case HP_OMEN_V1_THERMAL_PROFILE_PERFORMANCE:
+> +	case FANMODE_LEGACY_PERFORMANCE:
+> +	case FANMODE_L7:
+>  		*profile = PLATFORM_PROFILE_PERFORMANCE;
+>  		break;
+> -	case HP_OMEN_V0_THERMAL_PROFILE_DEFAULT:
+> -	case HP_OMEN_V1_THERMAL_PROFILE_DEFAULT:
+> +	case FANMODE_LEGACY_DEFAULT:
+> +	case FANMODE_L2:
+>  		*profile = PLATFORM_PROFILE_BALANCED;
+>  		break;
+> -	case HP_OMEN_V0_THERMAL_PROFILE_COOL:
+> -	case HP_OMEN_V1_THERMAL_PROFILE_COOL:
+> +	case FANMODE_LEGACY_COOL:
+> +	case FANMODE_L4:
+>  		*profile = PLATFORM_PROFILE_COOL;
+>  		break;
+>  	default:
+> @@ -1384,21 +1616,21 @@ static int platform_profile_omen_set_ec(enum platform_profile_option profile)
+>  	switch (profile) {
+>  	case PLATFORM_PROFILE_PERFORMANCE:
+>  		if (tp_version == 0)
+> -			tp = HP_OMEN_V0_THERMAL_PROFILE_PERFORMANCE;
+> +			tp = FANMODE_LEGACY_PERFORMANCE;
+>  		else
+> -			tp = HP_OMEN_V1_THERMAL_PROFILE_PERFORMANCE;
+> +			tp = FANMODE_L7;
+>  		break;
+>  	case PLATFORM_PROFILE_BALANCED:
+>  		if (tp_version == 0)
+> -			tp = HP_OMEN_V0_THERMAL_PROFILE_DEFAULT;
+> +			tp = FANMODE_LEGACY_DEFAULT;
+>  		else
+> -			tp = HP_OMEN_V1_THERMAL_PROFILE_DEFAULT;
+> +			tp = FANMODE_L2;
+>  		break;
+>  	case PLATFORM_PROFILE_COOL:
+>  		if (tp_version == 0)
+> -			tp = HP_OMEN_V0_THERMAL_PROFILE_COOL;
+> +			tp = FANMODE_LEGACY_COOL;
+>  		else
+> -			tp = HP_OMEN_V1_THERMAL_PROFILE_COOL;
+> +			tp = FANMODE_L4;
+>  		break;
+>  	default:
+>  		return -EOPNOTSUPP;
+> @@ -1462,16 +1694,16 @@ static int hp_wmi_platform_profile_get(struct device *dev,
+>  		return tp;
+>  
+>  	switch (tp) {
+> -	case HP_THERMAL_PROFILE_PERFORMANCE:
+> +	case FANMODE_LEGACY_DEFAULT:
+>  		*profile =  PLATFORM_PROFILE_PERFORMANCE;
+>  		break;
+> -	case HP_THERMAL_PROFILE_DEFAULT:
+> +	case FANMODE_LEGACY_PERFORMANCE:
+>  		*profile =  PLATFORM_PROFILE_BALANCED;
+>  		break;
+> -	case HP_THERMAL_PROFILE_COOL:
+> +	case FANMODE_LEGACY_COOL:
+>  		*profile =  PLATFORM_PROFILE_COOL;
+>  		break;
+> -	case HP_THERMAL_PROFILE_QUIET:
+> +	case FANMODE_LEGACY_QUIET:
+>  		*profile = PLATFORM_PROFILE_QUIET;
+>  		break;
+>  	default:
+> @@ -1488,16 +1720,16 @@ static int hp_wmi_platform_profile_set(struct device *dev,
+>  
+>  	switch (profile) {
+>  	case PLATFORM_PROFILE_PERFORMANCE:
+> -		tp =  HP_THERMAL_PROFILE_PERFORMANCE;
+> +		tp =  FANMODE_LEGACY_DEFAULT;
+>  		break;
+>  	case PLATFORM_PROFILE_BALANCED:
+> -		tp =  HP_THERMAL_PROFILE_DEFAULT;
+> +		tp =  FANMODE_LEGACY_PERFORMANCE;
+>  		break;
+>  	case PLATFORM_PROFILE_COOL:
+> -		tp =  HP_THERMAL_PROFILE_COOL;
+> +		tp =  FANMODE_LEGACY_COOL;
+>  		break;
+>  	case PLATFORM_PROFILE_QUIET:
+> -		tp = HP_THERMAL_PROFILE_QUIET;
+> +		tp = FANMODE_LEGACY_QUIET;
+>  		break;
+>  	default:
+>  		return -EOPNOTSUPP;
+> @@ -1531,13 +1763,13 @@ static int platform_profile_victus_get_ec(enum platform_profile_option *profile)
+>  		return tp;
+>  
+>  	switch (tp) {
+> -	case HP_VICTUS_THERMAL_PROFILE_PERFORMANCE:
+> +	case FANMODE_LEGACY_PERFORMANCE:
+>  		*profile = PLATFORM_PROFILE_PERFORMANCE;
+>  		break;
+> -	case HP_VICTUS_THERMAL_PROFILE_DEFAULT:
+> +	case FANMODE_LEGACY_DEFAULT:
+>  		*profile = PLATFORM_PROFILE_BALANCED;
+>  		break;
+> -	case HP_VICTUS_THERMAL_PROFILE_QUIET:
+> +	case FANMODE_LEGACY_QUIET:
+>  		*profile = PLATFORM_PROFILE_QUIET;
+>  		break;
+>  	default:
+> @@ -1560,13 +1792,13 @@ static int platform_profile_victus_set_ec(enum platform_profile_option profile)
+>  
+>  	switch (profile) {
+>  	case PLATFORM_PROFILE_PERFORMANCE:
+> -		tp = HP_VICTUS_THERMAL_PROFILE_PERFORMANCE;
+> +		tp = FANMODE_LEGACY_PERFORMANCE;
+>  		break;
+>  	case PLATFORM_PROFILE_BALANCED:
+> -		tp = HP_VICTUS_THERMAL_PROFILE_DEFAULT;
+> +		tp = FANMODE_LEGACY_DEFAULT;
+>  		break;
+>  	case PLATFORM_PROFILE_QUIET:
+> -		tp = HP_VICTUS_THERMAL_PROFILE_QUIET;
+> +		tp = FANMODE_LEGACY_QUIET;
+>  		break;
+>  	default:
+>  		return -EOPNOTSUPP;
+> @@ -1592,12 +1824,12 @@ static bool is_victus_s_thermal_profile(void)
+>  			    board_name) >= 0;
+>  }
+>  
+> -static int victus_s_gpu_thermal_profile_get(bool *ctgp_enable,
+> +static int hp_wmi_gpu_thermal_profile_get(bool *ctgp_enable,
+>  					    bool *ppab_enable,
+>  					    u8 *dstate,
+>  					    u8 *gpu_slowdown_temp)
+>  {
+> -	struct victus_gpu_power_modes gpu_power_modes;
+> +	struct hp_gpu_power_modes gpu_power_modes;
+>  	int ret;
+>  
+>  	ret = hp_wmi_perform_query(HPWMI_GET_GPU_THERMAL_MODES_QUERY, HPWMI_GM,
+> @@ -1613,18 +1845,43 @@ static int victus_s_gpu_thermal_profile_get(bool *ctgp_enable,
+>  	return ret;
+>  }
+>  
+> -static int victus_s_gpu_thermal_profile_set(bool ctgp_enable,
+> +/* Note: HP_POWER_LIMIT_DEFAULT can be used to restore default PL1 and PL2 */
+> +static int hp_wmi_set_cpu_pl1_pl2(u8 pl1, u8 pl2)
 > +{
-> +	struct tongfang_mifs_wmi_data *data = dev_get_drvdata(dev);
-> +	struct tongfang_mifs_input input = {
-> +		.reserved1 = 0,
-> +		.operation = WMI_METHOD_SET,
-> +		.reserved2 = 0,
-> +		.function = WMI_FN_MAX_FAN_SWITCH,
-> +	};
-> +	u8 payload[2];
-> +	bool val;
+> +	struct hp_power_limits power_limits;
 > +	int ret;
 > +
-> +	if (!data)
+> +	/* We need to know both PL1 and PL2 values in order to check them */
+> +	if (pl1 == HP_POWER_LIMIT_NO_CHANGE || pl2 == HP_POWER_LIMIT_NO_CHANGE)
 > +		return -EINVAL;
 > +
-> +	if (kstrtobool(buf, &val))
+> +	/* PL2 is not supposed to be lower than PL1 */
+> +	if (pl2 < pl1)
 > +		return -EINVAL;
 > +
-> +	payload[0] = 0; /* CPU/GPU Fan */
-> +	payload[1] = val;
+> +	power_limits.pl1 = pl1;
+> +	power_limits.pl2 = pl2;
+> +	power_limits.pl4 = HP_POWER_LIMIT_NO_CHANGE;
+> +	power_limits.cpu_gpu_concurrent_limit = HP_POWER_LIMIT_NO_CHANGE;
 > +
-> +	memcpy(input.payload, payload, sizeof(payload));
+> +	ret = hp_wmi_perform_query(HPWMI_CPU_POWER_SET_QUERY, HPWMI_GM,
+> +				   &power_limits, sizeof(power_limits), 0);
 > +
-> +	ret = tongfang_mifs_wmi_call(data, &input, NULL);
-> +
-> +	if (ret)
-
-Remove extra line.
-
-> +		return ret;
-> +
-> +	return count;
+> +	return ret;
 > +}
 > +
-> +static ssize_t profile_persist_show(struct device *dev,
-> +					struct device_attribute *attr, char *buf)
+> +static int hp_wmi_gpu_thermal_profile_set(bool ctgp_enable,
+>  					    bool ppab_enable,
+>  					    u8 dstate)
+>  {
+> -	struct victus_gpu_power_modes gpu_power_modes;
+> +	struct hp_gpu_power_modes gpu_power_modes;
+>  	int ret;
+>  
+>  	bool current_ctgp_state, current_ppab_state;
+>  	u8 current_dstate, current_gpu_slowdown_temp;
+>  
+>  	/* Retrieving GPU slowdown temperature, in order to keep it unchanged */
+> -	ret = victus_s_gpu_thermal_profile_get(&current_ctgp_state,
+> +	ret = hp_wmi_gpu_thermal_profile_get(&current_ctgp_state,
+>  					       &current_ppab_state,
+>  					       &current_dstate,
+>  					       &current_gpu_slowdown_temp);
+> @@ -1645,31 +1902,6 @@ static int victus_s_gpu_thermal_profile_set(bool ctgp_enable,
+>  	return ret;
+>  }
+>  
+> -/* Note: HP_POWER_LIMIT_DEFAULT can be used to restore default PL1 and PL2 */
+> -static int victus_s_set_cpu_pl1_pl2(u8 pl1, u8 pl2)
+> -{
+> -	struct victus_power_limits power_limits;
+> -	int ret;
+> -
+> -	/* We need to know both PL1 and PL2 values in order to check them */
+> -	if (pl1 == HP_POWER_LIMIT_NO_CHANGE || pl2 == HP_POWER_LIMIT_NO_CHANGE)
+> -		return -EINVAL;
+> -
+> -	/* PL2 is not supposed to be lower than PL1 */
+> -	if (pl2 < pl1)
+> -		return -EINVAL;
+> -
+> -	power_limits.pl1 = pl1;
+> -	power_limits.pl2 = pl2;
+> -	power_limits.pl4 = HP_POWER_LIMIT_NO_CHANGE;
+> -	power_limits.cpu_gpu_concurrent_limit = HP_POWER_LIMIT_NO_CHANGE;
+> -
+> -	ret = hp_wmi_perform_query(HPWMI_SET_POWER_LIMITS_QUERY, HPWMI_GM,
+> -				   &power_limits, sizeof(power_limits), 0);
+> -
+> -	return ret;
+> -}
+> -
+>  static int platform_profile_victus_s_set_ec(enum platform_profile_option profile)
+>  {
+>  	bool gpu_ctgp_enable, gpu_ppab_enable;
+> @@ -1678,19 +1910,19 @@ static int platform_profile_victus_s_set_ec(enum platform_profile_option profile
+>  
+>  	switch (profile) {
+>  	case PLATFORM_PROFILE_PERFORMANCE:
+> -		tp = HP_VICTUS_S_THERMAL_PROFILE_PERFORMANCE;
+> +		tp = FANMODE_LEGACY_PERFORMANCE;
+>  		gpu_ctgp_enable = true;
+>  		gpu_ppab_enable = true;
+>  		gpu_dstate = 1;
+>  		break;
+>  	case PLATFORM_PROFILE_BALANCED:
+> -		tp = HP_VICTUS_S_THERMAL_PROFILE_DEFAULT;
+> +		tp = FANMODE_LEGACY_DEFAULT;
+>  		gpu_ctgp_enable = false;
+>  		gpu_ppab_enable = true;
+>  		gpu_dstate = 1;
+>  		break;
+>  	case PLATFORM_PROFILE_LOW_POWER:
+> -		tp = HP_VICTUS_S_THERMAL_PROFILE_DEFAULT;
+> +		tp = FANMODE_LEGACY_DEFAULT;
+>  		gpu_ctgp_enable = false;
+>  		gpu_ppab_enable = false;
+>  		gpu_dstate = 1;
+> @@ -1699,7 +1931,7 @@ static int platform_profile_victus_s_set_ec(enum platform_profile_option profile
+>  		return -EOPNOTSUPP;
+>  	}
+>  
+> -	hp_wmi_get_fan_count_userdefine_trigger();
+> +	hp_wmi_get_fan_count();
+>  
+>  	err = omen_thermal_profile_set(tp);
+>  	if (err < 0) {
+> @@ -1707,7 +1939,7 @@ static int platform_profile_victus_s_set_ec(enum platform_profile_option profile
+>  		return err;
+>  	}
+>  
+> -	err = victus_s_gpu_thermal_profile_set(gpu_ctgp_enable,
+> +	err = hp_wmi_gpu_thermal_profile_set(gpu_ctgp_enable,
+>  					       gpu_ppab_enable,
+>  					       gpu_dstate);
+>  	if (err < 0) {
+> @@ -1750,13 +1982,89 @@ static int platform_profile_victus_set(struct device *dev,
+>  	return 0;
+>  }
+>  
+> +static bool is_omen_v1_thermal_profile(void)
 > +{
-> +	enum platform_profile_option profile;
-> +	int ret = laptop_profile_get(dev, &profile);
-
-Please place this call outside of parameter definition block as you can 
-have it with the error handling without the empty line in between.
-
+> +	const char *board_name;
 > +
-> +	if (ret)
-> +		return ret;
+> +	board_name = dmi_get_system_info(DMI_BOARD_NAME);
+> +	if (!board_name)
+> +		return false;
 > +
-> +	return sysfs_emit(buf, "%d\n", profile);
+> +	return match_string(thermal_profile_v1_boards,
+> +			    ARRAY_SIZE(thermal_profile_v1_boards),
+> +			    board_name) >= 0;
 > +}
 > +
-> +static ssize_t profile_persist_store(struct device *dev,
-> +					struct device_attribute *attr,
-> +					const char *buf, size_t count)
+> +static int platform_profile_omen_v1_set_ec(enum platform_profile_option profile)
 > +{
-> +	kobject_uevent(&dev->kobj, KOBJ_CHANGE);
-> +	return count;
-> +}
+> +	bool gpu_ctgp_enable, gpu_ppab_enable;
+> +	u8 gpu_dstate; /* Test shows 1 = 100%, 2 = 50%, 3 = 25%, 4 = 12.5% */
+> +	int err;
+> +	enum hp_fan_mode tp;
 > +
-> +static DEVICE_ATTR_RW(gpu_mode);
-> +static DEVICE_ATTR_RW(kb_mode);
-> +static DEVICE_ATTR_WO(fan_boost);
-> +static DEVICE_ATTR_RW(profile_persist);
-> +
-> +static struct attribute *laptop_attrs[] = {
-> +	&dev_attr_gpu_mode.attr,
-> +	&dev_attr_kb_mode.attr,
-> +	&dev_attr_fan_boost.attr,
-> +	&dev_attr_profile_persist.attr,
-> +	NULL,
-> +};
-> +ATTRIBUTE_GROUPS(laptop);
-> +
-> +static const struct key_entry tongfang_mifs_wmi_keymap[] = {
-> +	{ KE_KEY, WMI_EVENT_OPEN_APP, { KEY_PROG1 } },
-> +	{ KE_KEY, WMI_EVENT_CALCULATOR_START, { KEY_CALC } },
-> +	{ KE_KEY, WMI_EVENT_BROWSER_START, { KEY_WWW } },
-> +	{ KE_IGNORE, WMI_EVENT_FN_J, { KEY_RESERVED } },
-> +	{ KE_IGNORE, WMI_EVENT_FN_F, { KEY_RESERVED } },
-> +	{ KE_IGNORE, WMI_EVENT_FN_0, { KEY_RESERVED } },
-> +	{ KE_IGNORE, WMI_EVENT_FN_1, { KEY_RESERVED } },
-> +	{ KE_IGNORE, WMI_EVENT_FN_2, { KEY_RESERVED } },
-> +	{ KE_IGNORE, WMI_EVENT_FN_3, { KEY_RESERVED } },
-> +	{ KE_IGNORE, WMI_EVENT_FN_4, { KEY_RESERVED } },
-> +	{ KE_IGNORE, WMI_EVENT_FN_5, { KEY_RESERVED } },
-> +	{ KE_END, 0 }
-> +};
-> +
-> +static int tongfang_mifs_wmi_probe(struct wmi_device *wdev, const void *context)
-> +{
-> +	struct tongfang_mifs_wmi_data *drv_data;
-> +	struct device *pp_dev;
-> +	struct device *hwmon_dev;
-> +	enum tongfang_wmi_device_type dev_type =
-> +		(enum tongfang_wmi_device_type)(unsigned long)context;
-> +
-
-Remove empty line.
-
-> +	int ret;
-> +
-> +	drv_data = devm_kzalloc(&wdev->dev, sizeof(*drv_data), GFP_KERNEL);
-> +	if (!drv_data)
-> +		return -ENOMEM;
-> +
-> +	drv_data->wdev = wdev;
-> +
-> +	ret = devm_mutex_init(&wdev->dev, &drv_data->lock);
-> +	if (ret) {
-
-Bonus points from getting this right without a review having to tell you 
-about the error handling! :-)
-
-> +		dev_err(&wdev->dev, "failed to initialize WMI data lock: %d\n",
-> +			ret);
-
-One line.
-
-> +		return ret;
+> +	switch (profile) {
+> +	case PLATFORM_PROFILE_PERFORMANCE:
+> +		tp = FANMODE_L7;
+> +		gpu_ctgp_enable = true;
+> +		gpu_ppab_enable = true;
+> +		gpu_dstate = 1;
+> +		break;
+> +	case PLATFORM_PROFILE_BALANCED:
+> +		tp = FANMODE_L2;
+> +		gpu_ctgp_enable = false;
+> +		gpu_ppab_enable = true;
+> +		gpu_dstate = 1;
+> +		break;
+> +	case PLATFORM_PROFILE_LOW_POWER:
+> +		tp = FANMODE_L2;
+> +		gpu_ctgp_enable = false;
+> +		gpu_ppab_enable = false;
+> +		gpu_dstate = 1;
+> +		break;
+> +	default:
+> +		return -EOPNOTSUPP;
 > +	}
 > +
-> +	dev_set_drvdata(&wdev->dev, drv_data);
-> +
-> +	if (dev_type == TONGFANG_WMI_EVENT) {
-> +		/* Register input device for hotkeys */
-> +		drv_data->input_dev = devm_input_allocate_device(&wdev->dev);
-> +		if (!drv_data->input_dev)
-> +			return -ENOMEM;
-> +
-> +		drv_data->input_dev->name = "Tongfang MIFS WMI hotkeys";
-> +		drv_data->input_dev->phys = "wmi/input0";
-> +		drv_data->input_dev->id.bustype = BUS_HOST;
-> +		drv_data->input_dev->dev.parent = &wdev->dev;
-> +
-> +		ret = sparse_keymap_setup(drv_data->input_dev,
-> +					  tongfang_mifs_wmi_keymap, NULL);
-> +		if (ret) {
-> +			dev_err(&wdev->dev, "Failed to setup sparse keymap\n");
-
-dev_* print functions need an include too.
-
-> +			return ret;
-> +		}
-> +
-> +		ret = input_register_device(drv_data->input_dev);
-> +		if (ret) {
-> +			dev_err(&wdev->dev,
-> +				"Failed to register input device\n");
-> +			return ret;
-> +		}
-> +
-> +		dev_info(&wdev->dev, "Registered WMI event device\n");
-> +
-> +		return 0;
+> +	err = omen_thermal_profile_set(tp);
+> +	if (err < 0) {
+> +		pr_err("Failed to set platform profile %d: %d\n", profile, err);
+> +		return err;
 > +	}
 > +
-> +	/* Register platform profile */
-> +	pp_dev = devm_platform_profile_register(&wdev->dev, DRV_NAME, drv_data,
-> +						&laptop_profile_ops);
-> +	if (IS_ERR(pp_dev)) {
-> +		dev_err(&wdev->dev, "Failed to register platform profile\n");
-> +		return PTR_ERR(pp_dev);
-> +	}
-> +
-> +	drv_data->saved_profile = PLATFORM_PROFILE_LAST;
-> +
-> +	/* Register hwmon */
-> +	hwmon_dev = devm_hwmon_device_register_with_info(
-> +		&wdev->dev, "tongfang_mifs", drv_data, &laptop_chip_info, NULL);
-
-Put some of the parameters on the first line.
-
-Please align other lines to (.
-
-You can use >80 chars (for code limit is at 100).
-
-> +	if (IS_ERR(hwmon_dev)) {
-> +		dev_err(&wdev->dev, "Failed to register hwmon\n");
-> +		return PTR_ERR(hwmon_dev);
-> +	}
-> +
-> +	/* Register keyboard LED */
-> +	drv_data->kbd_led.name = "laptop::kbd_backlight";
-> +
-> +	drv_data->kbd_led.max_brightness = 3;
-> +	drv_data->kbd_led.brightness_set_blocking = laptop_kbd_led_set;
-> +	drv_data->kbd_led.brightness_get = laptop_kbd_led_get;
-> +	ret = devm_led_classdev_register(&wdev->dev, &drv_data->kbd_led);
-> +	if (ret) {
-> +		dev_err(&wdev->dev, "Failed to register keyboard LED\n");
-> +		return ret;
+> +	err = hp_wmi_gpu_thermal_profile_set(gpu_ctgp_enable,
+> +					       gpu_ppab_enable,
+> +					       gpu_dstate);
+> +	if (err < 0) {
+> +		pr_err("Failed to set GPU profile %d: %d\n", profile, err);
+> +		return err;
 > +	}
 > +
 > +	return 0;
 > +}
 > +
-> +static void tongfang_mifs_wmi_notify(struct wmi_device *wdev,
-> +				     union acpi_object *obj)
+> +static int platform_profile_omen_v1_set(struct device *dev,
+> +					 enum platform_profile_option profile)
 > +{
-> +	struct tongfang_mifs_wmi_data *data = dev_get_drvdata(&wdev->dev);
-> +	const struct tongfang_mifs_event *event;
-> +	u16 fan_speed;
+> +	int err;
 > +
-> +	if (!obj || obj->type != ACPI_TYPE_BUFFER)
-> +		return;
+> +	guard(mutex)(&active_platform_profile_lock);
 > +
-> +	if (obj->buffer.length < sizeof(*event))
-> +		return;
+> +	err = platform_profile_omen_v1_set_ec(profile);
+> +	if (err < 0)
+> +		return err;
 > +
-> +	event = (const struct tongfang_mifs_event *)obj->buffer.pointer;
+> +	active_platform_profile = profile;
 > +
-> +	/* Validate event type */
-> +	if (event->event_type != WMI_EVENT_TYPE_HOTKEY)
-> +		return;
-> +
-> +	dev_dbg(&wdev->dev,
-> +		"WMI event: id=0x%02x value_low=0x%02x value_high=0x%02x\n",
-> +		event->event_id, event->value_low, event->value_high);
-> +
-> +	switch (event->event_id) {
-> +	case WMI_EVENT_KBD_BRIGHTNESS:
-> +		led_classdev_notify_brightness_hw_changed(&data->kbd_led,
-> +							  event->value_low);
-> +		break;
-> +
-> +	case WMI_EVENT_PERFORMANCE_PLAN:
-> +		platform_profile_notify(&wdev->dev);
-> +		break;
-> +
-> +	case WMI_EVENT_OPEN_APP:
-> +	case WMI_EVENT_CALCULATOR_START:
-> +	case WMI_EVENT_BROWSER_START:
-> +		if (!sparse_keymap_report_event(data->input_dev,
-> +						event->event_id, 1, true))
-> +			dev_warn(&wdev->dev, "Unknown key pressed: 0x%02x\n",
-> +				 event->event_id);
-> +		break;
-> +
-> +	case WMI_EVENT_CPU_FAN_SPEED:
-> +	case WMI_EVENT_GPU_FAN_SPEED:
-> +		/* Fan speed is 16-bit value (value_low is LSB, value_high is MSB) */
-> +		fan_speed = (event->value_high << 8) | event->value_low;
-> +		dev_dbg(&wdev->dev, "Fan speed event: id=%d speed=%u RPM\n",
-> +			event->event_id, fan_speed);
-> +		/* These are informational, hwmon polling will read the actual values */
-> +		break;
-> +
-> +	case WMI_EVENT_AIRPLANE_MODE:
-> +	case WMI_EVENT_TOUCHPAD_STATE:
-> +	case WMI_EVENT_FNLOCK_STATE:
-> +	case WMI_EVENT_KBD_MODE:
-> +	case WMI_EVENT_CAPSLOCK_STATE:
-> +	case WMI_EVENT_NUMLOCK_STATE:
-> +	case WMI_EVENT_SCROLLLOCK_STATE:
-> +	case WMI_EVENT_REFRESH_RATE:
-> +	case WMI_EVENT_WIN_KEY_LOCK:
-> +		/* These events are informational or handled by firmware */
-> +		dev_dbg(&wdev->dev, "State change event: id=%d value=%d\n",
-> +			event->event_id, event->value_low);
-> +		break;
-> +
-> +	default:
-> +		dev_dbg(&wdev->dev, "Unknown event: id=0x%02x value=0x%02x\n",
-> +			event->event_id, event->value_low);
-> +		break;
-> +	}
+> +	return 0;
 > +}
 > +
-> +static const struct wmi_device_id tongfang_mifs_wmi_id_table[] = {
-> +	{ TONGFANG_MIFS_GUID, (void *)TONGFANG_WMI_CONTROL },
-> +	{ TONGFANG_EVENT_GUID, (void *)TONGFANG_WMI_EVENT },
-> +	{}
+>  static int hp_wmi_platform_profile_probe(void *drvdata, unsigned long *choices)
+>  {
+>  	if (is_omen_thermal_profile()) {
+>  		set_bit(PLATFORM_PROFILE_COOL, choices);
+>  	} else if (is_victus_thermal_profile()) {
+>  		set_bit(PLATFORM_PROFILE_QUIET, choices);
+> -	} else if (is_victus_s_thermal_profile()) {
+> +	} else if (is_victus_s_thermal_profile() || is_omen_v1_thermal_profile()) {
+>  		/* Adding an equivalent to HP Omen software ECO mode: */
+>  		set_bit(PLATFORM_PROFILE_LOW_POWER, choices);
+>  	} else {
+> @@ -1849,7 +2157,40 @@ static int victus_s_powersource_event(struct notifier_block *nb,
+>  
+>  	if (active_platform_profile == PLATFORM_PROFILE_PERFORMANCE) {
+>  		pr_debug("Triggering CPU PL1/PL2 actualization\n");
+> -		err = victus_s_set_cpu_pl1_pl2(HP_POWER_LIMIT_DEFAULT,
+> +		err = hp_wmi_set_cpu_pl1_pl2(HP_POWER_LIMIT_DEFAULT,
+> +					       HP_POWER_LIMIT_DEFAULT);
+
+Misaligned.
+
+> +		if (err)
+> +			pr_warn("Failed to actualize power limits: %d\n", err);
+> +
+> +		return NOTIFY_DONE;
+> +	}
+> +
+> +	return NOTIFY_OK;
+> +}
+> +
+> +static int omen_v1_powersource_event(struct notifier_block *nb,
+> +				      unsigned long value,
+> +				      void *data)
+> +{
+> +	struct acpi_bus_event *event_entry = data;
+> +	int err;
+> +
+> +	if (strcmp(event_entry->device_class, ACPI_AC_CLASS) != 0)
+> +		return NOTIFY_DONE;
+> +
+> +	pr_debug("Received power source device event\n");
+
+Kernel tracing infrastruture should provide you this kind of information 
+as needed, no need to add debug prints for things like this.
+
+> +
+> +	/*
+> +	 * Switching to battery power source while Performance mode is active
+> +	 * needs manual triggering of CPU power limits. Same goes when switching
+> +	 * to AC power source while Performance mode is active. Other modes
+> +	 * however are automatically behaving without any manual action.
+> +	 * Seen on OMEN v1 Boards.
+> +	 */
+> +
+
+Extra newline?
+
+> +	if (active_platform_profile == PLATFORM_PROFILE_PERFORMANCE) {
+> +		pr_debug("Triggering CPU PL1/PL2 actualization\n");
+> +		err = hp_wmi_set_cpu_pl1_pl2(HP_POWER_LIMIT_DEFAULT,
+>  					       HP_POWER_LIMIT_DEFAULT);
+
+Misaligned.
+
+>  		if (err)
+>  			pr_warn("Failed to actualize power limits: %d\n", err);
+> @@ -1889,6 +2230,20 @@ static int victus_s_register_powersource_event_handler(void)
+>  	return 0;
+>  }
+>  
+> +static int omen_v1_register_powersource_event_handler(void)
+> +{
+> +	int err;
+> +
+> +	platform_power_source_nb.notifier_call = omen_v1_powersource_event;
+> +	err = register_acpi_notifier(&platform_power_source_nb);
+> +	if (err < 0) {
+> +		pr_warn("Failed to install ACPI power source notify handler\n");
+> +		return err;
+> +	}
+> +
+> +	return 0;
+> +}
+> +
+>  static inline void omen_unregister_powersource_event_handler(void)
+>  {
+>  	unregister_acpi_notifier(&platform_power_source_nb);
+> @@ -1899,6 +2254,11 @@ static inline void victus_s_unregister_powersource_event_handler(void)
+>  	unregister_acpi_notifier(&platform_power_source_nb);
+>  }
+>  
+> +static inline void omen_v1_unregister_powersource_event_handler(void)
+> +{
+> +	unregister_acpi_notifier(&platform_power_source_nb);
+> +}
+
+Duplicates omen_unregister_powersource_event_handler().
+
+>  static const struct platform_profile_ops platform_profile_omen_ops = {
+>  	.probe = hp_wmi_platform_profile_probe,
+>  	.profile_get = platform_profile_omen_get,
+> @@ -1917,6 +2277,12 @@ static const struct platform_profile_ops platform_profile_victus_s_ops = {
+>  	.profile_set = platform_profile_victus_s_set,
+>  };
+>  
+> +static const struct platform_profile_ops platform_profile_omen_v1_ops = {
+> +	.probe = hp_wmi_platform_profile_probe,
+> +	.profile_get = platform_profile_omen_get,
+> +	.profile_set = platform_profile_omen_v1_set,
 > +};
-> +MODULE_DEVICE_TABLE(wmi, tongfang_mifs_wmi_id_table);
 > +
-> +static struct wmi_driver tongfang_mifs_wmi_driver = {
-> +	.no_singleton = true,
-> +	.driver = {
-> +		.name = DRV_NAME,
-> +		.dev_groups = laptop_groups,
-> +		.pm = pm_sleep_ptr(&tongfang_mifs_wmi_pm_ops),
-> +	},
-> +	.id_table = tongfang_mifs_wmi_id_table,
-> +	.probe = tongfang_mifs_wmi_probe,
-> +	.notify = tongfang_mifs_wmi_notify,
-> +};
+>  static const struct platform_profile_ops hp_wmi_platform_profile_ops = {
+>  	.probe = hp_wmi_platform_profile_probe,
+>  	.profile_get = hp_wmi_platform_profile_get,
+> @@ -1968,6 +2334,18 @@ static int thermal_profile_setup(struct platform_device *device)
+>  			return err;
+>  
+>  		ops = &platform_profile_victus_s_ops;
+> +	} else if (is_omen_v1_thermal_profile()) {
+> +		/*
+> +		 * Being unable to retrieve laptop's current thermal profile,
+> +		 * So doing the same process as above.
+> +		 */
+> +		active_platform_profile = PLATFORM_PROFILE_BALANCED;
 > +
-> +module_wmi_driver(tongfang_mifs_wmi_driver);
+> +		err = platform_profile_omen_v1_set_ec(active_platform_profile);
+> +		if (err < 0)
+> +			return err;
 > +
-> +MODULE_AUTHOR("Mingyou Chen <qby140326@gmail.com>");
-> +MODULE_DESCRIPTION("Tongfang MIFS (MiInterface) WMI driver");
-> +MODULE_LICENSE("GPL");
+> +		ops = &platform_profile_omen_v1_ops;
+>  	} else {
+>  		tp = thermal_profile_get();
+>  
+> @@ -2116,11 +2494,11 @@ static umode_t hp_wmi_hwmon_is_visible(const void *data,
+>  	case hwmon_pwm:
+>  		return 0644;
+>  	case hwmon_fan:
+> -		if (is_victus_s_thermal_profile()) {
+> -			if (hp_wmi_get_fan_speed_victus_s(channel) >= 0)
+> +		if (is_victus_s_thermal_profile() || is_omen_v1_thermal_profile()) {
+> +			if (hp_wmi_get_fan_speed_insyde(channel) >= 0)
+>  				return 0444;
+>  		} else {
+> -			if (hp_wmi_get_fan_speed(channel) >= 0)
+> +			if (hp_wmi_get_fan_speed_ami(channel) >= 0)
+>  				return 0444;
+>  		}
+>  		break;
+> @@ -2138,10 +2516,10 @@ static int hp_wmi_hwmon_read(struct device *dev, enum hwmon_sensor_types type,
+>  
+>  	switch (type) {
+>  	case hwmon_fan:
+> -		if (is_victus_s_thermal_profile())
+> -			ret = hp_wmi_get_fan_speed_victus_s(channel);
+> +		if (is_victus_s_thermal_profile() || is_omen_v1_thermal_profile())
+> +			ret = hp_wmi_get_fan_speed_insyde(channel);
+>  		else
+> -			ret = hp_wmi_get_fan_speed(channel);
+> +			ret = hp_wmi_get_fan_speed_ami(channel);
+>  		if (ret < 0)
+>  			return ret;
+>  		*val = ret;
+> @@ -2174,14 +2552,14 @@ static int hp_wmi_hwmon_write(struct device *dev, enum hwmon_sensor_types type,
+>  	case hwmon_pwm:
+>  		switch (val) {
+>  		case 0:
+> -			if (is_victus_s_thermal_profile())
+> -				hp_wmi_get_fan_count_userdefine_trigger();
+> +			if (is_victus_s_thermal_profile() || is_omen_v1_thermal_profile())
+> +				hp_wmi_get_fan_count();
+
+This function rename should be done in own patch, this change looks 
+complex even without that noise.
+
+>  			/* 0 is no fan speed control (max), which is 1 for us */
+>  			return hp_wmi_fan_speed_max_set(1);
+>  		case 2:
+>  			/* 2 is automatic speed control, which is 0 for us */
+> -			if (is_victus_s_thermal_profile()) {
+> -				hp_wmi_get_fan_count_userdefine_trigger();
+> +			if (is_victus_s_thermal_profile() || is_omen_v1_thermal_profile()) {
+> +				hp_wmi_get_fan_count();
+>  				return hp_wmi_fan_speed_max_reset();
+>  			} else
+>  				return hp_wmi_fan_speed_max_set(0);
+> @@ -2267,6 +2645,10 @@ static int __init hp_wmi_init(void)
+>  		err = victus_s_register_powersource_event_handler();
+>  		if (err)
+>  			goto err_unregister_device;
+> +	} else if (is_omen_v1_thermal_profile()) {
+> +		err = omen_v1_register_powersource_event_handler();
+> +		if (err)
+> +			goto err_unregister_device;
+>  	}
+>  
+>  	return 0;
+> @@ -2289,6 +2671,9 @@ static void __exit hp_wmi_exit(void)
+>  	if (is_victus_s_thermal_profile())
+>  		victus_s_unregister_powersource_event_handler();
+>  
+> +	if (is_omen_v1_thermal_profile())
+> +		omen_v1_unregister_powersource_event_handler();
+> +
+>  	if (wmi_has_guid(HPWMI_EVENT_GUID))
+>  		hp_wmi_input_destroy();
+>  
 > 
-> base-commit: 2ccbdb612d0d95f25c38189b83666ff0fb2bfb47
-> 
+
+Please make sure you check for similar error for each review comment as 
+there were many similar problems. With the merge window coming up soon,
+you have plenty of time to properly split this into logical changes per 
+patch and address all review comments.
 
 -- 
  i.
