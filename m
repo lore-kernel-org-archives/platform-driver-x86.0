@@ -1,229 +1,92 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.17])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9C3DB2E54D3;
-	Mon, 26 Jan 2026 18:11:48 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=192.198.163.17
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1769451112; cv=fail; b=hgoa5JAVaibIdyNSMp0jlRUNSNTKrJ7VKyZSkhoWZptgPfx1CwXgqXjtM/3THkMtYxgSkbEGdbRLLnC/gEmE0zfJ8kpt/Gl9W6g/S3nFzuksP2jN5jLJaLqPmLHMwEqbl8hNAGCgo9uKIR3Y9D8JRISW9lSzgLRKfSV7Aa9ZPKM=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1769451112; c=relaxed/simple;
-	bh=lxJCksWVgjYyZf6JiPOeT9j5oBPPn15cJin8Fvfrids=;
-	h=Date:From:To:CC:Subject:Message-ID:References:Content-Type:
-	 Content-Disposition:In-Reply-To:MIME-Version; b=U9mf0MqL7N+CyIXCM4vg/p5l3fkSkGTO9vMzDr7izAuWWSN1jOD49ygHwdy1BPdNdgaHriz5DNVisqvfbMfFN4sMGvWe2w+d2yWCw72hRirsUHS6a+6V4P1UQLF2ThmO2R8tPZ/ynQYzWplLsezPBjKFC6WNx1y/jK1dkDXSJl4=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=GNLtzCEd; arc=fail smtp.client-ip=192.198.163.17
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A7B13259C84
+	for <platform-driver-x86@vger.kernel.org>; Mon, 26 Jan 2026 19:00:37 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1769454037; cv=none; b=NRO+yNKcACevi5MpfxBJcy53SeqlPmkN/1ohlnOsCufJ8Vqo7es29swpGI1D7qM+65UI3NEYt8zBRlYpxkwgfL7S+axyYvDauf3SVzHFjNUdBuW+f5IviRVejqGpkLb5ZeyxVdXWxRLitBC81wmcpiCkU0S0apPcpX1HzhpUd8E=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1769454037; c=relaxed/simple;
+	bh=eVrGntdQNf5cOiJFbbSP5ccGU/KDAvP/EXDag5Ww/og=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=trzwlHhvAirBARu+PkIxzvP2vBA57NVLZz1ut78UiZp3CcCh33EbPpFVN4lcKQTi68qR0D2kEtSO6Emi3Wr3qdhlQUP6wlGD76ChF+rIwlYzsGpsWkGTW4AqA4qGmOR79S/uAfTZ5oVoA5cVHh0NKJdZ/B1HyD1MoO7K4gU7iVY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=uTj73llc; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="GNLtzCEd"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1769451109; x=1800987109;
-  h=date:from:to:cc:subject:message-id:references:
-   in-reply-to:mime-version;
-  bh=lxJCksWVgjYyZf6JiPOeT9j5oBPPn15cJin8Fvfrids=;
-  b=GNLtzCEdzcumsrIeMgZmL3y/MYHIjMro/5xoXrN3wRmeY4McNZxl/ogg
-   sKlAB6z6mq9zN9Ay7oF2KWsW6UYvbG9RIXqHTCDJO9LKGubYj8NmjstAu
-   xd3MM+1abFIzmTD1IMr7Igi4/KxkxJilaeKD0hdAmchB8D7F5HtNbuXKI
-   fDT7y6BVn0LQrkc9h3PVASy9t7EyaJeTO8n+X6TL2kVXnNkWTDTiYJxQt
-   M/ubmUAp+BfSxJXZqiD8qAEkb/StdplgwsWCJ6zZArx8ZmheVg/+DwOXe
-   K3OXs6Uzr7EWVPPWGQOVfcONG9MJdIIn5zfwxzoxAqgZMvayHC2nP12Zd
-   Q==;
-X-CSE-ConnectionGUID: U9AuecovRN2LJmVtaZ1qYA==
-X-CSE-MsgGUID: UtPmalKkQA2E9AmGBDW+CA==
-X-IronPort-AV: E=McAfee;i="6800,10657,11683"; a="70537453"
-X-IronPort-AV: E=Sophos;i="6.21,255,1763452800"; 
-   d="scan'208";a="70537453"
-Received: from fmviesa006.fm.intel.com ([10.60.135.146])
-  by fmvoesa111.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 26 Jan 2026 10:11:33 -0800
-X-CSE-ConnectionGUID: 5KKg+VdwSsKeyhvnIVqq5w==
-X-CSE-MsgGUID: cOlE/39xSZyZ9nodQCTv/w==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.21,255,1763452800"; 
-   d="scan'208";a="207625050"
-Received: from orsmsx901.amr.corp.intel.com ([10.22.229.23])
-  by fmviesa006.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 26 Jan 2026 10:11:32 -0800
-Received: from ORSMSX901.amr.corp.intel.com (10.22.229.23) by
- ORSMSX901.amr.corp.intel.com (10.22.229.23) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.2562.35; Mon, 26 Jan 2026 10:11:30 -0800
-Received: from ORSEDG901.ED.cps.intel.com (10.7.248.11) by
- ORSMSX901.amr.corp.intel.com (10.22.229.23) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.2562.35 via Frontend Transport; Mon, 26 Jan 2026 10:11:30 -0800
-Received: from CO1PR03CU002.outbound.protection.outlook.com (52.101.46.56) by
- edgegateway.intel.com (134.134.137.111) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.2562.35; Mon, 26 Jan 2026 10:11:30 -0800
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=l1fBX+8o9MJtefe1TgTMD/74sUOkJu2xSzAiWfcWV64N6t47/W27wuonCWTmqhJXkTtfecpa5nj8Dpdd5zTStAd/RH1AlKQ+SDKjAtmjoZGXDzLouznJfx3zZlVf2jGzS+2plQ7qlN1Mu51LeTU9jmSHBw1whUrO7WgZxRrZbrWY1maW4JY9JbvhLqMRT9uoKczqRxSZNf38ercir3ifYw0tMA7fy4XrtmUjI7oNnCdrZ0FKCrqvVhhY+iaB2GayPog13/dmPIw7+XNM8c02eG44IRfjgNH0W8Z6T/+jqD7By79Mtq0ZWZQpPgqS5wBxS567U1R8JtkvbuSZTRVY9Q==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=I5mvsjDDVbtiwXWq5ulUHql1qXcgOqkLbZw3IWa6jtM=;
- b=yBoDIq/EKLeAg2CeYrpWaf15xOiPAWnwXCWwrxscZdSnRmi2u1qkoR2dmCKmRXS32xUlo9ieRHt5splVNKNcJQ0QSb5jf+SKj+cd+ZrZHOTsxsM/iRBXbzNU9MG5y+Olxs9P/saGJ/+Is7QP51jHqd9lSGmPj0/Ff53j8DNXJq4Mn5hVhQ1tP1eMZXsb99sq/uKLvu4YT3i3VE5enaJGbGz74PkFd1epH6Mje5O17jTSpO+o90ShEq9XRqBU8iuJ9yUnG3hSWTYqH4uDrMg/oeQqSDIhMtGpmOoy1r1wZ64OzMyOCpDgTbWj3bIVV64BxdARRKZdMroh4YbfcISpfg==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=intel.com; dmarc=pass action=none header.from=intel.com;
- dkim=pass header.d=intel.com; arc=none
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=intel.com;
-Received: from CYYPR11MB8430.namprd11.prod.outlook.com (2603:10b6:930:c6::19)
- by CO1PR11MB4802.namprd11.prod.outlook.com (2603:10b6:303:94::8) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.9542.14; Mon, 26 Jan
- 2026 18:10:22 +0000
-Received: from CYYPR11MB8430.namprd11.prod.outlook.com
- ([fe80::1d86:a34:519a:3b0d]) by CYYPR11MB8430.namprd11.prod.outlook.com
- ([fe80::1d86:a34:519a:3b0d%5]) with mapi id 15.20.9542.010; Mon, 26 Jan 2026
- 18:10:21 +0000
-Date: Mon, 26 Jan 2026 13:10:17 -0500
-From: Rodrigo Vivi <rodrigo.vivi@intel.com>
-To: kernel test robot <lkp@intel.com>, "David E. Box"
-	<david.e.box@linux.intel.com>
-CC: "David E. Box" <david.e.box@linux.intel.com>,
-	<thomas.hellstrom@linux.intel.com>, <irenic.rajneesh@gmail.com>,
-	<ilpo.jarvinen@linux.intel.com>, <srinivas.pandruvada@linux.intel.com>,
-	<intel-xe@lists.freedesktop.org>, <dri-devel@lists.freedesktop.org>,
-	<xi.pardee@linux.intel.com>, <oe-kbuild-all@lists.linux.dev>,
-	<hansg@kernel.org>, <linux-kernel@vger.kernel.org>,
-	<platform-driver-x86@vger.kernel.org>
-Subject: Re: [PATCH v4 4/6] platform/x86/intel/vsec: Switch exported helpers
- from pci_dev to device
-Message-ID: <aXeuCXDQyFbUSe3Q@intel.com>
-References: <20260123025108.3772255-5-david.e.box@linux.intel.com>
- <202601260115.T3rBZhUE-lkp@intel.com>
-Content-Type: text/plain; charset="us-ascii"
-Content-Disposition: inline
-In-Reply-To: <202601260115.T3rBZhUE-lkp@intel.com>
-X-ClientProxiedBy: BY1P220CA0008.NAMP220.PROD.OUTLOOK.COM
- (2603:10b6:a03:59d::16) To CYYPR11MB8430.namprd11.prod.outlook.com
- (2603:10b6:930:c6::19)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="uTj73llc"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 5CA8DC19425
+	for <platform-driver-x86@vger.kernel.org>; Mon, 26 Jan 2026 19:00:37 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1769454037;
+	bh=eVrGntdQNf5cOiJFbbSP5ccGU/KDAvP/EXDag5Ww/og=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+	b=uTj73llcDkSxG5yIHGF5hUZ5N3eu5XbvvhFhSfK7J08tzlACGYxIn8LxQP8H/lHDq
+	 C+616LxyYC6syeG1fRtYEf3D0BLpVhtO//fAynlPHNxI47G9QieNJN66MboVxlS5RJ
+	 h1dJ/vUFh5P76vLlouqpj+/NxUuz4pvEPK78aDnHO02lLqXnmGxeuCBMF+RZaj6U8Y
+	 EPHK883QNw446TtPmcjBk8kCmtIeWrAbfrKNwuuvTPzJCeEqY12F/sOeavw5YcRyKX
+	 d+h957vJZup/HEML6y6SWGzohYGtlTEUcWmguSK/un8tc8/Ppdx1J+Yu943ud8/wTo
+	 sgH40EOLFqTxg==
+Received: by mail-oo1-f41.google.com with SMTP id 006d021491bc7-6610f407959so909615eaf.2
+        for <platform-driver-x86@vger.kernel.org>; Mon, 26 Jan 2026 11:00:37 -0800 (PST)
+X-Forwarded-Encrypted: i=1; AJvYcCUXpKyUQbp3ej7B0flCZ44EBUrMiIlaQ4piVAxq8gSbIXmtmWVvAk7UhXWl/ZbFjdyeZMev4z217nbJ/nQAmM3aNvob@vger.kernel.org
+X-Gm-Message-State: AOJu0YxM5brdNnmIjYJ2hB45Mf+m4glQeBffpco7XtyrqMMrVqBjTcVL
+	xf9jjRAmDkDq3xj/QgJ/92+yLVMzGzAUchAaYNaHO2zBsQaUCZQlitzrzAbedDVnwz5/1rBP5C+
+	msP8dBnHJZevVdFjVS7+n59lnED3ijQw=
+X-Received: by 2002:a05:6820:4cc5:b0:662:c5c5:4fab with SMTP id
+ 006d021491bc7-662e02de890mr2309055eaf.10.1769454036382; Mon, 26 Jan 2026
+ 11:00:36 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: CYYPR11MB8430:EE_|CO1PR11MB4802:EE_
-X-MS-Office365-Filtering-Correlation-Id: 073a874d-ab19-41d3-ac72-08de5d062b99
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;ARA:13230040|1800799024|7416014|376014|366016;
-X-Microsoft-Antispam-Message-Info: =?us-ascii?Q?Jz2daKOBeccxZn6sGFjJ2kiTX3ZbHnEIJF8iNJ+CnLUEJwaTPeh36UStoXzO?=
- =?us-ascii?Q?KYsO44f2Z2ldRttHOcQhHGZKPBfqdluXU7W2RZCPZ9ozJkuHTpz6Mh/RW27+?=
- =?us-ascii?Q?tqdrFlFX9KVLcTJER7KDw9QRcVCgqlmh/rA7eNHoWxdPa78pXnYZkbA3vzoH?=
- =?us-ascii?Q?3FUawChLAvkAq7cfIlMP+nSlcME/dz5JBg3AQgWo/tdzlN+Bz+NVEI8TqWJG?=
- =?us-ascii?Q?BowAn+cIGrVuXel/5Hd9a493vvsCpXzfzrf8sV7Q4ruQZbli7ie5VvXhsgrm?=
- =?us-ascii?Q?4zfWp97I6PFwG2sztx+gvV+EulDOs1jnIQn65WDg5WmZ+O+10u1IKEjCKXmd?=
- =?us-ascii?Q?dCNP/CQba46JydFrY2VFlpzLMtM92uEYPwwDrcCyyFYB87vu1dmPTnZ7C9+E?=
- =?us-ascii?Q?Aq+NoDbPjqD11IDdKG1saB5o2KwZm7vBOCa5wRUs2972KX0+8HjHOKUrwoMT?=
- =?us-ascii?Q?aVHurY9n4O9MWyemAbh3c4D7ZZVEk4PdHE3lvK0NZ5NaSdQ5XGtEtLgAqpMc?=
- =?us-ascii?Q?FEdkdyosxKynYaL1O5uis5cC1sIxYIngiZ+jEE//WOo3Qe1LtKjjfM4z9BHi?=
- =?us-ascii?Q?4jVUH0ZxFvbdITj3SZInZxUAFKfwZ+KnfKdxLbT4FMPkOlVEnl+N0rTWS7/7?=
- =?us-ascii?Q?mteVCdUhgOxZ3joWIOgjeR0dWOMh7dI2GX7xhzJHIzhF8uNRN73lM8e5pfTu?=
- =?us-ascii?Q?obMVoYbFhsgkGGEMpeY+iCctCs6NpgSnky+eaCFUIABSTNzV0IicUnKo5IBB?=
- =?us-ascii?Q?uqrMXBxgg1HqnPGvdCZzmapEmFm1UUl9gHfLh8+aBtiIJdoigRg8felNV77h?=
- =?us-ascii?Q?MiEN0M00sOLdyncslOpWsg8Sr9z3XwM+KFRJeS8PvVmGAe1vOcLQLdRhBnCK?=
- =?us-ascii?Q?LLCl1Gb4JxPxC4VRAkPtmBxUiEbWb6Qfl81auH/jj5l5iyoeMDaPbE/JWJTE?=
- =?us-ascii?Q?zGpF1bHnXvMK2m/6YFYHbxEERPO2lxb4ASQhg9ns0nVYhuQaOalAufepDuMj?=
- =?us-ascii?Q?pfYpEq785222XqQhVbK1aeDEi5HubfLhQdvpoM0JbVlLDLkxTSykhc4L/rzJ?=
- =?us-ascii?Q?OKqN1djqNRrVwwFruHoahre+OihaMtFaO0/7uVb8NxhTNRL0AUCjuJQ3m319?=
- =?us-ascii?Q?0G0zuRVOdUnjYorlEIlIccGmLekbRS2e7AggZ9lpf6pYoQjzJtGieMjfWJ2D?=
- =?us-ascii?Q?0EETlooa+1K2LzOYpo/ZeogGqErXMTSxoZxF75wMGdObxSCFMKPlfOHwBEf0?=
- =?us-ascii?Q?GC+SrkOoxLevgkQmPQHHsNN7Nec9teUQHRgxoMVG4H9Umgfb+7QVFmcm5vdn?=
- =?us-ascii?Q?mXZHJyIyC98DM7rp1oIkpCmnwevuf+z66FF88CVYX5oQWMYxvblKOqtyxbZI?=
- =?us-ascii?Q?G1R07xD2HHyfJnZVGbDw7ZKFDrOL4H9ihI911U4pqMypzARlBZKBPrbXWUAL?=
- =?us-ascii?Q?z0HxhkaNcwOnpQ1Us8cdHat2dQfdfLU3EODIv5TTBj7Gt74PASnzGkGLQKSc?=
- =?us-ascii?Q?PW6WuSJZJWtoR0nOdTYn6OWI5zqnBu4xo3f1zxxPm5BYZ1FkQGlWxWblFCgQ?=
- =?us-ascii?Q?8oPjd4Xh5IZuhdrUui1QoNPm3fh8YtiwbBjgm3Or?=
-X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:CYYPR11MB8430.namprd11.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(1800799024)(7416014)(376014)(366016);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0: =?us-ascii?Q?Q4JkAT3kI0HKaYFC/bxg2cjoADx6aKK0C/ibFN3LSzlkefrk9UOPY+eD7pIR?=
- =?us-ascii?Q?ysNbvRpfcokSecxwz4m9bIlDLYOb1dmbW9uVjBah2+A4E3A0feBszGlkH0Hm?=
- =?us-ascii?Q?c5u1KtGwT8AA6fMAL4qtPr0J8tMyzHE4xo3Ut2lH2YKAoqirFeHjq+iwnofj?=
- =?us-ascii?Q?2zSM3yGKD5FD4iqFRJrPkiJdft4YCUNv+R2BrNbE2/GD1XATKo9L1M2j1UdW?=
- =?us-ascii?Q?dUPbY0jft8H7eGT04S/4LZi/cIOORzjfTfNME9Je0jrRWVkfcr+t+nR5s9ax?=
- =?us-ascii?Q?JwmJCVjQ7R5dvGToIcTEsFPqnNo03ngzeiQni3hGYErsnEvVamJcbAiwl6/k?=
- =?us-ascii?Q?mCzChsDyxMMLGwLPJrwbiN7bXL6R0k+SHdxKFq6frkYcy+dZMOmP8LncLVjO?=
- =?us-ascii?Q?+pbUcCC6KcKfqDgxo7iKzHMgf1OB4EbXO54TUquFNqK0G3CWjx1jb+EXHBbR?=
- =?us-ascii?Q?NRRNHdUHO2eNfbSKZv97krRc2knHyaeKuk8Mpqz/U2+v2vJNqvNrSBY9M+EH?=
- =?us-ascii?Q?yX2f10ZKatDKjGqCC3mgQrYaF3P2Qf8YlNV00lp4SsPIANffo3MaXWHA4mJQ?=
- =?us-ascii?Q?WKC4lO0t7g+bBwTYTHAlH8oEBWr/VkKFGANi4OkK7Xu+ytuDgHo6++CCKC/c?=
- =?us-ascii?Q?NhVnv1JFb8T+IlrYFv4iQILLu2y6VzSOilXLJ61pjPHXsRJGBx2hD386G93A?=
- =?us-ascii?Q?IszCCChTlyARY3EWpiJ0Vw7VGF5VVSfZvpEDb64VEP9qcxygRxZssiu8u0g8?=
- =?us-ascii?Q?cu06homzeOPXG6efu+UVHrGfyq2KaxXJnxXZZKl+LO4DBQYRTlMfZOcqmJ1g?=
- =?us-ascii?Q?pahAxPqV5vNpC29OWmAHexOsgGbsjo1Q3MK7STJv2XcF5m+ZwREJNhHNWZX4?=
- =?us-ascii?Q?SWerYuShVzm2FxWXe1EuxMyqXUWP90r/9RUtFaELXa15VeaKUZCnGJRwO/2N?=
- =?us-ascii?Q?qV7eMHtuU1FiIMuyZf12eeYKi+4sH4WLiwDKeLucFV0Y/8CH5J1oU0OjqH19?=
- =?us-ascii?Q?ML6HbTBJ9yb1AI1ASPxrxAMIjZeYlmGdhQwutA+UwaJQbJ+ID4QWKhBUR2TP?=
- =?us-ascii?Q?L0iA4Gj2L6O6fiecouH3tk1RjbPH+wEiIvlXt2t/ZO1bXTDKLw1ybYHSj0vT?=
- =?us-ascii?Q?fls1ATF6SSE161WyJiQqU7yqGUUpqzQnedxCeIFnQqLG5FoxL4N2pHdNbxj6?=
- =?us-ascii?Q?V8fQeXlJMhl6nW5xU6Tfya08Tq1z83jXcX8e5xgfDGMSVcyf0W2/VBtks8PQ?=
- =?us-ascii?Q?5zwuEypXOc8sVotxx6WroVPFwVWmmusz4QmJk7QV0vnmOGQ4xCMJIEvtBQCv?=
- =?us-ascii?Q?UEkwrrf258NRKZNJgbOwB6WFOoDCS7eBa7R1N6ioBkx3xTu8OhFNDEAGhG+Y?=
- =?us-ascii?Q?CZLDnouN1OttL9IPuqbKm5A7orgEtd6VVx8LxNzjjsa6j8kA7WAT54wDL/as?=
- =?us-ascii?Q?fnlM9+CCcuo3jjxERD5fpdPgWTtohy4e6C29D7BioEHFBTVcxi1ceE2hcaJT?=
- =?us-ascii?Q?4+DjWatPAITaXQJO134hDDGeil+rCi/OGUv0s0DO/5Ik+Ny3p3eJTbOMmDe5?=
- =?us-ascii?Q?tOiHIVwiIGLOPVL1cUkeI2FM1zMNPA7WyBbRxAOvCzVJW3xl8zIstNsT5+8a?=
- =?us-ascii?Q?jvN6BzByha+rZumAIiiW3Jv5TE8eLzJqayM3/ncm0/OGwnjMhWFTYDPrP31V?=
- =?us-ascii?Q?PvwLGdqZ5jsfX4lzrHOH0+Rtt22EmG8nZ0YARTtxRaXbj9tSCaKI6lz8Lpv5?=
- =?us-ascii?Q?BoRQRS/vqQ=3D=3D?=
-X-MS-Exchange-CrossTenant-Network-Message-Id: 073a874d-ab19-41d3-ac72-08de5d062b99
-X-MS-Exchange-CrossTenant-AuthSource: CYYPR11MB8430.namprd11.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 26 Jan 2026 18:10:21.8522
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 46c98d88-e344-4ed4-8496-4ed7712e255d
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: kKPM2DwdJZElMIWfcFnUtsGwc0RcJBs2vBW649Vgg8yCh4vUEFoGW9sXf6ds13HF/Rk5Qg3gvQTG5UvFMH5eZA==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: CO1PR11MB4802
-X-OriginatorOrg: intel.com
+References: <3026924.e9J7NaK4W3@rafael.j.wysocki> <176943940108.16098.4666901319744494904.b4-ty@linux.intel.com>
+In-Reply-To: <176943940108.16098.4666901319744494904.b4-ty@linux.intel.com>
+From: "Rafael J. Wysocki" <rafael@kernel.org>
+Date: Mon, 26 Jan 2026 20:00:20 +0100
+X-Gmail-Original-Message-ID: <CAJZ5v0gY9O0A-UNtsA7YJ7Za85sDA3qFpe-phjhE_4cZ4HP4YQ@mail.gmail.com>
+X-Gm-Features: AZwV_QjTijcbNPYCQeYmXILd6sVwBzum7dfo1vgBxHC21ddBqe0sXTJvMfVf0qI
+Message-ID: <CAJZ5v0gY9O0A-UNtsA7YJ7Za85sDA3qFpe-phjhE_4cZ4HP4YQ@mail.gmail.com>
+Subject: Re: [PATCH v1 0/2] platform/x86: Fixes for leaks in panasonic-laptop
+ and toshiba-haps drivers
+To: =?UTF-8?Q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
+Cc: Hans de Goede <hansg@kernel.org>, "Rafael J. Wysocki" <rafael@kernel.org>, 
+	LKML <linux-kernel@vger.kernel.org>, Linux ACPI <linux-acpi@vger.kernel.org>, 
+	Kenneth Chan <kenneth.t.chan@gmail.com>, platform-driver-x86@vger.kernel.org, 
+	Azael Avalos <coproscefalo@gmail.com>, Matthew Garrett <matthew.garrett@nebula.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Mon, Jan 26, 2026 at 01:35:49AM +0800, kernel test robot wrote:
-> Hi David,
-> 
-> kernel test robot noticed the following build errors:
-> 
-> [auto build test ERROR on 0f61b1860cc3f52aef9036d7235ed1f017632193]
-> 
-> url:    https://github.com/intel-lab-lkp/linux/commits/David-E-Box/platform-x86-intel-vsec-Refactor-base_addr-handling/20260123-105437
-> base:   0f61b1860cc3f52aef9036d7235ed1f017632193
-> patch link:    https://lore.kernel.org/r/20260123025108.3772255-5-david.e.box%40linux.intel.com
-> patch subject: [PATCH v4 4/6] platform/x86/intel/vsec: Switch exported helpers from pci_dev to device
-> config: x86_64-randconfig-074-20251025 (https://download.01.org/0day-ci/archive/20260126/202601260115.T3rBZhUE-lkp@intel.com/config)
-> compiler: gcc-14 (Debian 14.2.0-19) 14.2.0
-> reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20260126/202601260115.T3rBZhUE-lkp@intel.com/reproduce)
-> 
-> If you fix the issue in a separate patch/commit (i.e. not just a new version of
-> the same patch/commit), kindly add following tags
-> | Reported-by: kernel test robot <lkp@intel.com>
-> | Closes: https://lore.kernel.org/oe-kbuild-all/202601260115.T3rBZhUE-lkp@intel.com/
-> 
-> All errors (new ones prefixed by >>):
-> 
->    In file included from <command-line>:
-> >> drivers/gpu/drm/xe/xe_vsec.h:13:30: error: 'struct device' declared inside parameter list will not be visible outside of this definition or declaration [-Werror]
->       13 | int xe_pmt_telem_read(struct device *dev, u32 guid, u64 *data, loff_t user_offset, u32 count);
->          |                              ^~~~~~
->    cc1: all warnings being treated as errors
-> 
-> 
-> vim +13 drivers/gpu/drm/xe/xe_vsec.h
-> 
->     11	
->     12	void xe_vsec_init(struct xe_device *xe);
->   > 13	int xe_pmt_telem_read(struct device *dev, u32 guid, u64 *data, loff_t user_offset, u32 count);
->     14	
+On Mon, Jan 26, 2026 at 3:56=E2=80=AFPM Ilpo J=C3=A4rvinen
+<ilpo.jarvinen@linux.intel.com> wrote:
+>
+> On Tue, 20 Jan 2026 16:42:41 +0100, Rafael J. Wysocki wrote:
+>
+> > These are two fixes for leaks in the panasonic-laptop and toshiba-haps =
+drivers,
+> > in the "probe error" and "remove" paths.
+> >
+> > Thanks!
+> >
+>
+>
+> Thank you for your contribution, it has been applied to my local
+> review-ilpo-fixes branch. Note it will show up in the public
+> platform-drivers-x86/review-ilpo-fixes branch only once I've pushed my
+> local branch there, which might take a while.
+>
+> The list of commits applied:
+> [1/2] platform/x86: panasonic-laptop: Fix sysfs group leak in error path
+>       commit: 43b0b7eff4b3fb684f257d5a24376782e9663465
+> [2/2] platform/x86: toshiba_haps: Fix memory leaks in add/remove routines
+>       commit: 128497456756e1b952bd5a912cd073836465109d
 
-David, you probably need a
-struct device; in the beginning of this header to shut off this build issue.
+Thanks!
 
-Thanks,
-Rodrigo.
+Just to confirm, I sent a v2 of the second patch in the meantime:
 
-> 
-> -- 
-> 0-DAY CI Kernel Test Service
-> https://github.com/intel/lkp-tests/wiki
+https://lore.kernel.org/linux-acpi/12823935.O9o76ZdvQC@rafael.j.wysocki/
+
+I gather that this is what you have applied.  In any case, it is a
+replacement for the v1.
