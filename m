@@ -1,58 +1,58 @@
 Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.17])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C8BCA330313;
-	Mon, 26 Jan 2026 14:56:57 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 01862155757;
+	Mon, 26 Jan 2026 14:57:04 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.17
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1769439419; cv=none; b=SDX0YdK+mgvckmA3yvvoj7MFf1Y8mK+8VRPLG3TscgSqVXXPGyt7lspctEhUjC7N4V+B20jCqSV709C7bRuVH+CIns9kv0DwOixRDS9bhmP2mLh86O7R6F3lurHzF785ErNQ2ydeeEG4TL2kdXFDljqPgZfLNWZltBQYrsgMKTk=
+	t=1769439426; cv=none; b=o9eRmC491P3g+FEMzYDaJGNgDh4wYzjb2KZy9LSB/A5ZPq6vxLhHVQF08jLg1GI7tgb+lGDTana0ba1mDEkenrzPTdvI/IUuyNCv/fC4bAfgFbrLBjY0XH7Fcpun4T2Ee2yw9W+m5t2N1DFq+wT7vzcFN3Mkroih426hQ7WTbos=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1769439419; c=relaxed/simple;
-	bh=bBrHqhkmSDMiv9vOf4Qw/DIdVmg1HyfNUnbQcl2lAtw=;
+	s=arc-20240116; t=1769439426; c=relaxed/simple;
+	bh=1DW4MHZA/R670yXobGmTfLhfuZe7Y2lPBeO3TUWxyYI=;
 	h=From:To:Cc:In-Reply-To:References:Subject:Message-Id:Date:
-	 MIME-Version:Content-Type; b=qXPBemXXW8fyydOAcu9OXwxp6JDwLWJZwb14J2VWCMn5wRuXxiYTh7BS0p52c5APXvOpMo/SLc2JtNZC3guYwrJZYJzpoTLhlOVx+d4zDlAeossjJuMold8DZRtd+hBOQ79wciv+3QES+o6w1jwk3HnGMINr5rJb2nVPmtRC3yQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=pass smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=n6ng1JSf; arc=none smtp.client-ip=198.175.65.17
+	 MIME-Version:Content-Type; b=T9Y+phVKeI7QIqrOgIMyYa5e4G97Cj93LO74VBp8/ZZDbI3X9Zo4EJaBSuSm65gJIWHUBLgfYD1RH46iE6U0dWdd03W2lKNt4lzPB5N51hcPFwn9VfarGobdJqJFbj053qYx+f1zvrTNrRQDps0FFTgY/SKL4PNiCbJ32Wh5GXc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=pass smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=XIkGZ/cv; arc=none smtp.client-ip=198.175.65.17
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="n6ng1JSf"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="XIkGZ/cv"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1769439418; x=1800975418;
+  t=1769439425; x=1800975425;
   h=from:to:cc:in-reply-to:references:subject:message-id:
    date:mime-version:content-transfer-encoding;
-  bh=bBrHqhkmSDMiv9vOf4Qw/DIdVmg1HyfNUnbQcl2lAtw=;
-  b=n6ng1JSfdCVSbylnGICjmZgY+VvgdqljK8/2/VraEYaFPvo/7G4J5ORW
-   ZQ20ExeXFIZ/6TzCwaODFZLFIER2MfabunhJ5squ/D1B6+LfjLJoUvfx+
-   kgyUwmcbi6U4iZ7zfKOYKOU7Jrs5sjZa8t1Y2RsHSc5D1IXpqDFo+zWAn
-   91QHBoZtPBxd8fu2SK3ThDINI1bxgHvwzUWh2CNq3xdo6WIiHgbD8QCrh
-   gTwOv84UeBMygJvPP8Unof9AwzCIfyMJ9tSFFhaIz3U9K+hgdtlCm0IM8
-   cDE7R1Mi/F+lKT5M/xhqCQB8pLaAdmAlTFoo8HQffqxihmeFb8Tl4DS2I
-   g==;
-X-CSE-ConnectionGUID: BxzAwqqkR827I2xcH9ZTEw==
-X-CSE-MsgGUID: VH/tWMtGSOCdDuVXBO6Kwg==
-X-IronPort-AV: E=McAfee;i="6800,10657,11683"; a="70584610"
+  bh=1DW4MHZA/R670yXobGmTfLhfuZe7Y2lPBeO3TUWxyYI=;
+  b=XIkGZ/cvepD+NN7+FyKuRRdrdyZ6k+ZvWUQc9W6M/ML/Jx1dsHJDUs1+
+   GxoNcfCYY4nq5dLFlw5REz/gg2I62BYHmscCA+PFkAr8DKCBi/F7LuoJX
+   urhO2LLLZvQOaSk2ye3naLmrX3nJIuQTJN+M4dr5Y7xTY3dFkZ4yDf0Vc
+   kvqZtvcAamf9QDya7avdsiIZzfa78LXrJDiy2ygjPaivQYEK6+APeON8T
+   vksHr972CB2Gbug4IzORqCx33W5EBoQcjk6PsfFv9mbU4Vtv4S4FhF2OH
+   PMr+GovmFdrcipTsNl2dhHTg15Dluwaar9NH9PfnwqzMPsZhOaAyTL7Py
+   Q==;
+X-CSE-ConnectionGUID: DEc/1jLRSJaHQtEafP2MRw==
+X-CSE-MsgGUID: 6qHxhq+JQzeIjt+NWdsQ9g==
+X-IronPort-AV: E=McAfee;i="6800,10657,11683"; a="70584635"
 X-IronPort-AV: E=Sophos;i="6.21,255,1763452800"; 
-   d="scan'208";a="70584610"
+   d="scan'208";a="70584635"
 Received: from fmviesa005.fm.intel.com ([10.60.135.145])
-  by orvoesa109.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 26 Jan 2026 06:56:57 -0800
-X-CSE-ConnectionGUID: BHN6fluRRYSxsI5/nK6CXg==
-X-CSE-MsgGUID: JPAzlXj0SVWIaq7tP1C1ZQ==
+  by orvoesa109.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 26 Jan 2026 06:57:04 -0800
+X-CSE-ConnectionGUID: OFG/43+gQ2egnuE/zCv8FQ==
+X-CSE-MsgGUID: QkO/UBiUQBqxRLozNFKlWg==
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="6.21,255,1763452800"; 
-   d="scan'208";a="212166256"
+   d="scan'208";a="212166327"
 Received: from ijarvine-mobl1.ger.corp.intel.com (HELO localhost) ([10.245.245.150])
-  by fmviesa005-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 26 Jan 2026 06:56:54 -0800
+  by fmviesa005-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 26 Jan 2026 06:57:01 -0800
 From: =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
-To: xi.pardee@linux.intel.com, andriy.shevchenko@linux.intel.com, 
- "David E. Box" <david.e.box@linux.intel.com>
-Cc: hansg@kernel.org, linux-kernel@vger.kernel.org, 
- platform-driver-x86@vger.kernel.org
-In-Reply-To: <20260122022110.3231344-1-david.e.box@linux.intel.com>
-References: <20260122022110.3231344-1-david.e.box@linux.intel.com>
-Subject: Re: [PATCH] platform/x86/intel/vsec: Add Nova Lake PUNIT support
-Message-Id: <176943941009.16098.4985456806296073303.b4-ty@linux.intel.com>
-Date: Mon, 26 Jan 2026 16:56:50 +0200
+To: david.e.box@linux.intel.com, hansg@kernel.org, 
+ Kaushlendra Kumar <kaushlendra.kumar@intel.com>
+Cc: platform-driver-x86@vger.kernel.org, stable@vger.kernel.org
+In-Reply-To: <20251224032053.3915900-1-kaushlendra.kumar@intel.com>
+References: <20251224032053.3915900-1-kaushlendra.kumar@intel.com>
+Subject: Re: [PATCH] platform/x86: intel_telemetry: Fix swapped arrays in
+ PSS output
+Message-Id: <176943941795.16098.16351611399994603049.b4-ty@linux.intel.com>
+Date: Mon, 26 Jan 2026 16:56:57 +0200
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
@@ -63,11 +63,18 @@ Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
 X-Mailer: b4 0.13.0
 
-On Wed, 21 Jan 2026 18:21:08 -0800, David E. Box wrote:
+On Wed, 24 Dec 2025 08:50:53 +0530, Kaushlendra Kumar wrote:
 
-> Add PCI ID for Nova Lake, supporting PUNIT telemetry.
+> The LTR blocking statistics and wakeup event counters are incorrectly
+> cross-referenced during debugfs output rendering. The code populates
+> pss_ltr_blkd[] with LTR blocking data and pss_s0ix_wakeup[] with wakeup
+> data, but the display loops reference the wrong arrays.
 > 
+> This causes the "LTR Blocking Status" section to print wakeup events
+> and the "Wakes Status" section to print LTR blockers, misleading power
+> management analysis and S0ix residency debugging.
 > 
+> [...]
 
 
 Thank you for your contribution, it has been applied to my local
@@ -76,8 +83,8 @@ platform-drivers-x86/review-ilpo-fixes branch only once I've pushed my
 local branch there, which might take a while.
 
 The list of commits applied:
-[1/1] platform/x86/intel/vsec: Add Nova Lake PUNIT support
-      commit: 98bdc485b281da7e20e67b13a8cc834956d68e9c
+[1/1] platform/x86: intel_telemetry: Fix swapped arrays in PSS output
+      commit: 25e9e322d2ab5c03602eff4fbf4f7c40019d8de2
 
 --
  i.
