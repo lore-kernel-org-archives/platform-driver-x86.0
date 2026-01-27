@@ -1,121 +1,111 @@
-Received: from m.foxido.dev (m.foxido.dev [81.177.217.87])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.21])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0223E354AF7;
-	Tue, 27 Jan 2026 13:50:58 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=81.177.217.87
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3980D2C0282
+	for <platform-driver-x86@vger.kernel.org>; Tue, 27 Jan 2026 18:24:30 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.21
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1769521862; cv=none; b=GYcQD7PqNBZFycBeTKHRCgn2zjPr0uOxBhtXmKsUwUO/KBOeRMPY+7Vaa76iBJ2i22BulhF1jPX9nXr9MIAVTnNozSu6e+INGIRZNWdVoFEzx6mGZMYUQcDAbGQZL5630AUxRdfwb9+Sr0IOXk4q0FUUy41d9FfTA2qJ0vmqIw0=
+	t=1769538271; cv=none; b=rqYbj9vY7fFEsSQJbW/WX3HFRi42NVRJccDJRMkyej9b4AJTLyAa49aewujM3z1WYG/Ph9rqaAgStwA/rQBEdpTkmnYy28JdN/YbygGQEOdezB+32yomMK6TXauiasf+NiulPwfmUiP4HiRqSWLnABJYblMiqGo4DfGncJ8DxZw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1769521862; c=relaxed/simple;
-	bh=MwU2ZwhubluO+lpQVkc66qxOkB7B6SyGDlFHP+HlsAo=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=DMkeIbte1Nwitv78fDDO346Z9yONycxhPA3jS8qGh7BSMq146ZBStVm/1PSsT0Y0DQ8JipMqnCiNBCguyJ0KaFZ5AszNmMm5UIYjOQp5YKZPSTGy4Fhm3LR0azrgaVOtSPkeu7OFrAssJWv0m2koJViQMZMMtUPgsopbfWnXUsQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=foxido.dev; spf=pass smtp.mailfrom=foxido.dev; dkim=pass (2048-bit key) header.d=foxido.dev header.i=@foxido.dev header.b=UaceCBMX; dkim=permerror (0-bit key) header.d=foxido.dev header.i=@foxido.dev header.b=GAQRVtJK; arc=none smtp.client-ip=81.177.217.87
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=foxido.dev
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=foxido.dev
+	s=arc-20240116; t=1769538271; c=relaxed/simple;
+	bh=bHki37h5UpeZBkcdnxRt6E91fvw1sygymEFsBL9BHpU=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=May5C+8wrgzvou9u7CwQCsey44ybS51xhF7n1Nmxc5zsYW/rbSworXs8G0TIJPUaUyxdDzWmVosTidqC6zO4R4M4o3PGRso/Nk/MmBhsHuN9c3ThModwx8k/iNzk+N7ol+p0qjoMmK9qlULQuIQJwt4vkoRwn/bMbauH15ZhTGw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=iKbFZfVX; arc=none smtp.client-ip=198.175.65.21
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=foxido.dev header.i=@foxido.dev header.b="UaceCBMX";
-	dkim=permerror (0-bit key) header.d=foxido.dev header.i=@foxido.dev header.b="GAQRVtJK"
-DKIM-Signature: v=1; a=rsa-sha256; s=202508r; d=foxido.dev; c=relaxed/relaxed;
-	h=From:To:Subject:Date:Message-ID; t=1769521851; bh=/n2R9sWTkPxsh1veowvC1Vg
-	qxbXxLfRmmspBoymhIhM=; b=UaceCBMXY6OijGNcbH/ugkYme3vkWRW7sgoakBgI09uBa3Z2HD
-	0bmts/TxGsWvvneHKyDYgvjnT9j0mZaKhOt18nNACcZj9sfKO20Ne5+NCmfBVL421njTr5tzd0W
-	jpFS2vZID1b9UcjltL9MabPSKNjdbmQ8voIwA5ZLrrV+OSHkAetgCZumrfjIhAjaV85hVTIn7Hw
-	hPAM6TPg1BtpnLLx6MmnfF2vw7brMg/REmqc8BtBFpQflw2JRYlAR6eR+BlX1R+PbNLBpIPVnjV
-	9GixbIST9FC9PCGMcsTLL3c1p5Sgd+4uG7GGUI5cHBjzkaVy6CoVzPNEhSlew8JHUeg==;
-DKIM-Signature: v=1; a=ed25519-sha256; s=202508e; d=foxido.dev; c=relaxed/relaxed;
-	h=From:To:Subject:Date:Message-ID; t=1769521851; bh=/n2R9sWTkPxsh1veowvC1Vg
-	qxbXxLfRmmspBoymhIhM=; b=GAQRVtJKFOMDGEytHa3gLk8dntypRA3b0kHCf+YoDXuMnoNZE6
-	Vu2M9zh3khzdhfEtK7LwG8FJ4N9aU7ZtdFAg==;
-Message-ID: <e0d6c973-7b00-48e6-bad6-f592b6e37a61@foxido.dev>
-Date: Tue, 27 Jan 2026 16:50:50 +0300
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="iKbFZfVX"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1769538270; x=1801074270;
+  h=from:to:cc:subject:date:message-id:mime-version:
+   content-transfer-encoding;
+  bh=bHki37h5UpeZBkcdnxRt6E91fvw1sygymEFsBL9BHpU=;
+  b=iKbFZfVX4A7Ma4BL2lOqh2iBguiZTZ5qoW1J5U6GJ3GMAv8aeapZ1+i4
+   MnSPGsGIBGoePMucqleaAkGivLCYNBTDb129Ub0iTvn2eBCCc2QLZECZM
+   c8xUgBKM7wfMbaFabXhwEBgXmi+RnI5sIxctdnkX6OIXnwEsXHr/dZQkv
+   qeyeaiRmAZryeKnLGfSZFv+63uy9AmjiZ3cKRFZj6QfiDFLUjZoO/wT7s
+   SWeeQQmEDqXQJzFrsccrtRgklQv97ef2i0Ree3TolKfX5hHp5Rsrwq4VY
+   4IAnnqM+DcWt+56Ne/SFNZYX1r1htLEzUcbYRQ/Vbv8/MyjpKP5djinNc
+   g==;
+X-CSE-ConnectionGUID: pCa4/MFwQKyoK5ZpKvyf5g==
+X-CSE-MsgGUID: SHVMiwEERFKCpA6FYZPDrg==
+X-IronPort-AV: E=McAfee;i="6800,10657,11684"; a="70644419"
+X-IronPort-AV: E=Sophos;i="6.21,257,1763452800"; 
+   d="scan'208";a="70644419"
+Received: from fmviesa009.fm.intel.com ([10.60.135.149])
+  by orvoesa113.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 27 Jan 2026 10:24:30 -0800
+X-CSE-ConnectionGUID: F6QEgK5ITJ2BIkobx9awlQ==
+X-CSE-MsgGUID: EmIq4NZXTNWL0ss4OSCLcw==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.21,257,1763452800"; 
+   d="scan'208";a="208491649"
+Received: from mjruhl-desk.amr.corp.intel.com (HELO mjruhl-desk.intel.com) ([10.124.223.176])
+  by fmviesa009-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 27 Jan 2026 10:24:28 -0800
+From: "Michael J. Ruhl" <michael.j.ruhl@intel.com>
+To: platform-driver-x86@vger.kernel.org,
+	intel-xe@lists.freedesktop.org,
+	hansg@kernel.org,
+	ilpo.jarvinen@linux.intel.com,
+	matthew.brost@intel.com,
+	rodrigo.vivi@intel.com,
+	thomas.hellstrom@linux.intel.com,
+	airlied@gmail.com,
+	simona@ffwll.ch,
+	david.e.box@linux.intel.com
+Cc: "Michael J. Ruhl" <michael.j.ruhl@intel.com>
+Subject: [PATCH 0/5] Crescent Island PMT support
+Date: Tue, 27 Jan 2026 13:24:19 -0500
+Message-ID: <20260127182418.640701-7-michael.j.ruhl@intel.com>
+X-Mailer: git-send-email 2.52.0
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v2] platform/x86: redmi-wmi: Add more hotkey mappings
-To: Jesse Guo <JesseGuoTech@outlook.com>, Hans de Goede <hansg@kernel.org>,
- =?UTF-8?Q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
-Cc: platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
-References: <TYCPR01MB6851636256C39B170F2312E5D192A@TYCPR01MB6851.jpnprd01.prod.outlook.com>
-Content-Language: en-US
-From: Gladyshev Ilya <foxido@foxido.dev>
-In-Reply-To: <TYCPR01MB6851636256C39B170F2312E5D192A@TYCPR01MB6851.jpnprd01.prod.outlook.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 
-On 1/25/26 23:48, Jesse Guo wrote:
-> This patch adds more Fn hotkeys (like Refresh rate toggle).
-> Additionally, remap the setup key from KEY_SETUP to KEY_CONFIG.
-> As KEY_CONFIG is supported by Desktop Environments for launching
-> system settings, whereas KEY_SETUP is often ignored by userspace.
-> 
-> Signed-off-by: Jesse Guo <JesseGuoTech@outlook.com>
-> ---
-> Changes in v2:
-> - Dropped Fn Lock (KEY_FN_ESC) mapping to avoid potential user confusion.
-> - The Fn Lock state is handled internally by the EC and does not require
->    a dedicated key event. (Suggested by Gladyshev Ilya)
-> - Link to v1: https://lore.kernel.org/r/20260125-redmi-wmi-hotkey-add-v1-1-d3e28568dd75@outlook.com
-> ---
->   drivers/platform/x86/redmi-wmi.c | 25 ++++++++++++++++++++++++-
->   1 file changed, 24 insertions(+), 1 deletion(-)
-> 
-> diff --git a/drivers/platform/x86/redmi-wmi.c b/drivers/platform/x86/redmi-wmi.c
-> index 949236b93a321a943a9cb8b0528d730dbaa2cd6f..e5cb348e3a39a3e17abe6b729c79a9f3220eebd6 100644
-> --- a/drivers/platform/x86/redmi-wmi.c
-> +++ b/drivers/platform/x86/redmi-wmi.c
-> @@ -20,7 +20,10 @@
->   static const struct key_entry redmi_wmi_keymap[] = {
->   	{KE_KEY, 0x00000201,	{KEY_SELECTIVE_SCREENSHOT}},
->   	{KE_KEY, 0x00000301,	{KEY_ALL_APPLICATIONS}},
-> -	{KE_KEY, 0x00001b01,	{KEY_SETUP}},
-> +	{KE_KEY, 0x00001b01,	{KEY_CONFIG}},
-> +	{KE_KEY, 0x00011b01,	{KEY_CONFIG}},
-> +	{KE_KEY, 0x00010101,	{KEY_SWITCHVIDEOMODE}},
-> +	{KE_KEY, 0x00001a01,	{KEY_REFRESH_RATE_TOGGLE}},
->   
->   	/* AI button has code for each position */
->   	{KE_KEY, 0x00011801,	{KEY_ASSISTANT}},
-> @@ -32,6 +35,26 @@ static const struct key_entry redmi_wmi_keymap[] = {
->   	{KE_IGNORE, 0x00050501, {}},
->   	{KE_IGNORE, 0x000a0501, {}},
->   
-> +	/* Xiaomi G Command Center */
-> +	{KE_KEY, 0x00010a01,	{KEY_VENDOR}},
-> +
-> +	/* OEM preset power mode */
-> +	{KE_IGNORE, 0x00011601, {}},
-> +	{KE_IGNORE, 0x00021601, {}},
-> +	{KE_IGNORE, 0x00031601, {}},
-> +	{KE_IGNORE, 0x00041601, {}},
-> +
-> +	/* Fn Lock state */
-> +	{KE_IGNORE, 0x00000701, {}},
-> +	{KE_IGNORE, 0x00010701, {}},
-> +
-> +	/* Fn+`/1/2/3/4 */
-> +	{KE_KEY, 0x00011101, {KEY_F13}},
-> +	{KE_KEY, 0x00011201, {KEY_F14}},
-> +	{KE_KEY, 0x00011301, {KEY_F15}},
-> +	{KE_KEY, 0x00011401, {KEY_F16}},
-> +	{KE_KEY, 0x00011501, {KEY_F17}},
-> +
->   	{KE_END}
->   };
->   
+The Crescent Island (CRI) GPU supports PMT from the via
+Xe driver registration.
 
-LGTM
+The CRI PMT MMIO mapping is shared for each PMT feature and it
+is necessary to set an index register value to access the correct
+memory space.
 
-Reviewed-by: Gladyshev Ilya <foxido@foxido.dev>
+The PMT driver has a callback infrastructure to access data areas
+with driver specific access. It is does not support the PMT
+control access.
 
-> ---
-> base-commit: 8f0b4cce4481fb22653697cced8d0d04027cb1e8
-> change-id: 20260125-redmi-wmi-hotkey-add-666af84b0eeb
-> 
-> Best regards,
+CRI discovery/control spaces are part of the access window so a
+driver callback is necessary to allow for the correct window to
+be exposed.
+
+Add control path callback support to the PMT driver.
+
+Add CRI PMT discovery information.
+
+Update the Xe driver to support the CRI PMT access.
+
+The crashlog access needs to be done with power enabled (telem is
+only available when the device is powered).
+Determine which access is requested, and do the appropriate power
+request.
+
+
+Michael J. Ruhl (5):
+  pmt: Add register access callbacks
+  drm/xe/vsec: Use correct pm state get
+  drm/xe/vsec: Support Crescent Island PMT
+  drm/xe/vsec: Crescent Island PMT decode
+  drm/xe/vsec: Crescent Island PMT callbacks
+
+ drivers/gpu/drm/xe/regs/xe_pmt.h          |   5 +
+ drivers/gpu/drm/xe/xe_vsec.c              | 257 +++++++++++++++++++---
+ drivers/platform/x86/intel/pmt/crashlog.c |  39 +++-
+ include/linux/intel_vsec.h                |  26 ++-
+ 4 files changed, 291 insertions(+), 36 deletions(-)
+
+-- 
+2.52.0
 
