@@ -1,112 +1,120 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.12])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-yw1-f171.google.com (mail-yw1-f171.google.com [209.85.128.171])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A1219288C25;
-	Tue, 27 Jan 2026 23:46:39 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.12
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1769557601; cv=none; b=m2dx/9AXoXUv+ZkRew4VMkKAmG5iKcCb0d3XZfK745PvdZ0nf1GqxeejFpa4tcmQxC+FbSMTv3adbGl1U1HPqVriLjwb40KosU4UI5GEKxI23XzFuLOOiynpKuRQwJL/k3qvRGKyS24NcFWREvl4I5b6lf/OFLoDdfaj7meAB48=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1769557601; c=relaxed/simple;
-	bh=5zvyV+Kaxt9fzZE1NBk4skQPAIrdRmlJtp+n7bRQo3A=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:To:Cc; b=oAEus34ITk4PyLIcwWJY1kbEPHHyfZeTk+7z+24+iZx9nHwWi9vbFCWobjkFvBYnL1+GsLWoI+a+pFVNOfzwOeUP0zHoUEat84pbLuMqRYXCuVhGdZtVtlc0dIIEvk1mqWdNSBsbB+puQyVp9S760h5P4bM/Ql/ACIg0uAoR2Xo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=pass smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=BT1ETxaA; arc=none smtp.client-ip=192.198.163.12
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.intel.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AA88C2F6168
+	for <platform-driver-x86@vger.kernel.org>; Tue, 27 Jan 2026 23:52:56 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=209.85.128.171
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1769557977; cv=pass; b=AUq2KdUoGnJ8P4H91SP35u4fNmANAmj3W8As9CKsP6R8wFyJS4gztvMbnnl17Y6tNYLuhx30d0MSHVNYibBGIEFYugg8ekQ0KavEe9iGB68JQGXaXDnCQQEnjhTsBFTfO6IM36lcTA2YonDbsYHilxrfiTP7/KDCchp8+WH9BQ0=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1769557977; c=relaxed/simple;
+	bh=wP+T1mrJ9Y7wHNPsBx6lrLracBB4b6pojwO7ayTs7IE=;
+	h=MIME-Version:From:Date:Message-ID:Subject:To:Cc:Content-Type; b=lKALrdjbsBPO29QFhLYGys90U+gWcaAbV7nqnVxDqmKWliMnJNuevLr92Ll+zvLc1JV72MUNSz+6gDsgcH3p/IMu+auCE+vjjLcKnyOidMErX3pkruL3RCHPNUySC0oZUPAeggKzRn7uQreUo8alttl19iydNFnkJmIuUchhhg0=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=fqA4aCUs; arc=pass smtp.client-ip=209.85.128.171
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="BT1ETxaA"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1769557599; x=1801093599;
-  h=from:date:subject:mime-version:content-transfer-encoding:
-   message-id:to:cc;
-  bh=5zvyV+Kaxt9fzZE1NBk4skQPAIrdRmlJtp+n7bRQo3A=;
-  b=BT1ETxaALzFIcRzY0bu2RAqcmxfEodjVTH7AWOMCrRn1XkG7X455rFyM
-   oWrG/KZFmDSrkvOEc3pDK+/XEfOnN/t2Hda/F2P6nk42JIPxHVm4kFtr5
-   UuTkqL6CauV9Mtu5IP5jhRWVZBJ4vypkA95IYCD8LNvVjx4PhLvc0XeV4
-   /ecRdiH94zPCeVAU3eZp5s1wsEQC9jnmW+/k7yBsPzF2QVtSEOt+1hp1h
-   Mp+SGWL0udfxlzbTmURdWRI/VHTIQDK6FT+85PPtdwTHp+UlAwEjgqlvQ
-   un5b3tP/3kpeuJl/8eDUtaZAo+sVmkkxITtpCMCLGtl08vnJi8Jv5Flzm
-   A==;
-X-CSE-ConnectionGUID: 3A4hWwf1S4ONiEGk35M+gQ==
-X-CSE-MsgGUID: S09vRlpjTiuya+M9ojBXrg==
-X-IronPort-AV: E=McAfee;i="6800,10657,11684"; a="74626641"
-X-IronPort-AV: E=Sophos;i="6.21,257,1763452800"; 
-   d="scan'208";a="74626641"
-Received: from fmviesa003.fm.intel.com ([10.60.135.143])
-  by fmvoesa106.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 27 Jan 2026 15:46:39 -0800
-X-CSE-ConnectionGUID: c2V8gUyPR4ydUrNCQykS7Q==
-X-CSE-MsgGUID: tRQhFvwST+SxRurlCEm+Fw==
-X-ExtLoop1: 1
-Received: from unknown (HELO [172.25.112.21]) ([172.25.112.21])
-  by fmviesa003.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 27 Jan 2026 15:46:39 -0800
-From: Ricardo Neri <ricardo.neri-calderon@linux.intel.com>
-Date: Tue, 27 Jan 2026 15:45:40 -0800
-Subject: [PATCH] platform/x86/intel/tpmi/plr: Make the file
- domain<n>/status writeable
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="fqA4aCUs"
+Received: by mail-yw1-f171.google.com with SMTP id 00721157ae682-78fc3572431so63202547b3.0
+        for <platform-driver-x86@vger.kernel.org>; Tue, 27 Jan 2026 15:52:56 -0800 (PST)
+ARC-Seal: i=1; a=rsa-sha256; t=1769557975; cv=none;
+        d=google.com; s=arc-20240605;
+        b=e6P8Lov3lXx9WBHurygDxsuGFMAHnSl45yaHW+26pUpSrmSUoZijltDbNgX0QbD5tv
+         G0r0LegQ9zW0sqSUrBj9rG38HyOzwwWgQFgpNKRrFJBiyeBSgKgzh6mg3TMXioJSH3VD
+         eekXCmWMctQfoNwJ0XpkKko03yGBxYDs0Xdr8d0B/JB3+O7DcwoPv7pSbTXqiTJKTpVB
+         7RXaxdp07Krrs4c4bJpoRUo37iWa7/gQCDqoxkCRB/xbYzAykp73Uh8UfUBNRr6Hciik
+         5K/ECb5RSk++YovKU361+GTL5pd5A/Wu0vBXRQfaoC7ud0aPkXfqtp9OhPsZ+8oIMS1Y
+         gG6w==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20240605;
+        h=cc:to:subject:message-id:date:from:mime-version:dkim-signature;
+        bh=4hZFbjAUTcnlL9BzLkg4XJcE2dojo8YnRxn3ziL51LI=;
+        fh=1jKM9RJey5aDo0MIk7/puizFMt96EWZRXkegpK5HZuY=;
+        b=HKq9R0OF2qiv9Dd6eL39rHKnuPCxDnPNkCTcDtuLnIvlhqAYCjDKPu6xNowWq5vd9O
+         xV1pTuWdtDOBDRuqaIE5ooRdviFYI7w0wiYBcHSHLXnKOyhiiZPsS+n95pje/zsXlE3p
+         sT3frxAw4AmqTunPIyYiTTB+3zMgJI+SKKnLkFMAnVEK+Vtbi9YtvGhLjMpKPiNgE5Jn
+         BvRy/gsqUldiOqN1o7OvEXYDyv+qlFVGtma+LgClMy6jRboL8zQIC882Sfs1ABy0t9ST
+         SDS/IMWd+tEUKbRKwBrvACX5lAvLgKVHf1HExBB0AWtfTSr9cefGfXPjWoKoGkRXZA5w
+         6HDA==;
+        darn=vger.kernel.org
+ARC-Authentication-Results: i=1; mx.google.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1769557975; x=1770162775; darn=vger.kernel.org;
+        h=cc:to:subject:message-id:date:from:mime-version:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=4hZFbjAUTcnlL9BzLkg4XJcE2dojo8YnRxn3ziL51LI=;
+        b=fqA4aCUsfktE2syikPpx9zUOQWClImyt5Y9CWv58Qrxvs9sBBGI1R8oZfe146XP0za
+         fgJZzOV42Um8bdGF1WrR56BhWYZd2KiiuSkW96OjjCLjsmnk/f5UiBN2q/Z+0V8m2+eE
+         VZQvURbA37BEkF4KpNRU60DIad81pJXMsffpjjUstvKMhilt4ANIgzGJD89RUDAb7izt
+         97AgykBkZxL9SwEABgFKDfsYYl7MFWoDaDpE1XwIhlepx007BbltSb9mSRggOQLH06KE
+         dRAeEhjyVGGsKR8o6ueTP6KZpnDB1p/4DGPYpnY1ABCU0AEn0z2HdrbDD6CjPkFX5Tc9
+         cFJA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1769557975; x=1770162775;
+        h=cc:to:subject:message-id:date:from:mime-version:x-gm-gg
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=4hZFbjAUTcnlL9BzLkg4XJcE2dojo8YnRxn3ziL51LI=;
+        b=bdJYbjv+08Lg/C98j47BfviFABXtx8V5QZF+V7/CMAqzoSJ7P0AYt3h8YUK7264xMl
+         AeFLJ7w/mztVghzUvjWtut5BDY+sayDIJRmKk0vxPovyMrNjW4MfYJ/Mno/U1ZtAWUdj
+         OplcPncZqfqi38YgyIO00Xw6dupCOkt9HtV6f1ijKh1GrgtIZ8WlS3K1S1DE6XUv6gJa
+         vYE6sY+MlBMzC9f9ZJSCYU3iqWlNI0JXik8ub7yKESraksYFnLHE0gczexxnEb2UXxbt
+         YrqlWCTDXa0wkMt6ChKkjH+mvQi0djEF34FVGYkg+nNvvtQuMRrDsf4P2Lv5gGOdVc2m
+         1GAw==
+X-Gm-Message-State: AOJu0YzRPo0oMDrgJtwL0+XcKvKajjxl88gd9sdU3l6cESyDKIiGA0IA
+	NF61c77Gb6ewORq7cr9ezZ3UNPRgU5nQKgU47LWHm+XnunAIc3hN5LsXLsOWXgB8WwQfPBkDG/o
+	uPDhIcwbhjmpRLAbYDbkrKoQBBzERPv63y/oc
+X-Gm-Gg: AZuq6aLGLluRkKuzZ1YCuRtHOVHxM6LuLVs72+IRC6LQkgBhbO9tE8bWJ3o3YTG56ds
+	Um1mEc9NK8F/ICe+X8qfh8jhCUlhWtaM+2YI21iLh/A+nXBPxFYT0kA5TmsLOBHJxkdbiw1/3Fa
+	qzoS/vAkODKFve5ptvNLApfor722lXtRIMY5pcWvyU6c6ApTxyTiZsReF3i3u9E5DB6/Odgiuy8
+	1l8JV57xqWnhMQx5e7qf2e2AcRDznGimIE9WdCfUoxXsG5mH3fk32jcwJ5QiBAMBx9fjetBHHyf
+	90lyUg==
+X-Received: by 2002:a05:690c:d82:b0:786:91ac:e15d with SMTP id
+ 00721157ae682-7947ab426cfmr24206557b3.27.1769557975338; Tue, 27 Jan 2026
+ 15:52:55 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Message-Id: <20260127-plr-debugfs-write-v1-1-1fffbc370b1e@linux.intel.com>
-X-B4-Tracking: v=1; b=H4sIACNOeWkC/x3MSQqAMAxA0auUrA3UKIpeRVw4pBoQLakTiHe3u
- HyL/x8IrMIBavOA8ilBtjUiTQwMc7dOjDJGA1kqbEol+kVx5P6YXMBLZWe0Li9tRX3WOYLYeWU
- n9/9s2vf9ADKd/PBjAAAA
-To: Hans de Goede <hansg@kernel.org>, 
- =?utf-8?q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
-Cc: Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>, 
- platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org, 
- Ricardo Neri <ricardo.neri-calderon@linux.intel.com>
-X-Mailer: b4 0.13.0
-X-Developer-Signature: v=1; a=ed25519-sha256; t=1769557550; l=1400;
- i=ricardo.neri-calderon@linux.intel.com; s=20250602;
- h=from:subject:message-id; bh=5zvyV+Kaxt9fzZE1NBk4skQPAIrdRmlJtp+n7bRQo3A=;
- b=9AQZzapVwnx+alVJr+saMKSIoOgeCxwOhbwZDzwuOBIU8JiCmKPcWA14Gi9WKCSyzaiAg9dYf
- kOu6I66FZ11ClMorHp9W1PQmo5PkUXM7PU03JnL98lNBHX/5CdbkJCW
-X-Developer-Key: i=ricardo.neri-calderon@linux.intel.com; a=ed25519;
- pk=NfZw5SyQ2lxVfmNMaMR6KUj3+0OhcwDPyRzFDH9gY2w=
+From: =?UTF-8?B?UmFmYcWCIMW7dWNobmlr?= <rafal.zuchnik@gmail.com>
+Date: Wed, 28 Jan 2026 00:52:44 +0100
+X-Gm-Features: AZwV_QhEYDkIsAeZZKGkJNpc21zHmMkzGzYFASsqCw0gt5UYwXGVt9abpqrvb6A
+Message-ID: <CAJ10sVKe+kV3erD-cYREV0g=r6biKm+OatPJFHncnyrYDp8wiQ@mail.gmail.com>
+Subject: [PATCH] platform/x86: touchscreen_dmi: add DMI match for ARC 11.6
+ 128GB HD
+To: platform-driver-x86@vger.kernel.org
+Cc: linux-input@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 
-The file sys/kernel/debug/tpmi-<n>/plr/domain<n>/status has store and show
-callbacks. Make it writeable.
+This device is identical to Techbite Arc 11.6, but ships with a different
+DMI_PRODUCT_NAME ("ARC 11.6 128GB HD").
 
-Fixes: 811f67c51636d ("platform/x86/intel/tpmi: Add new auxiliary driver for performance limits")
-Signed-off-by: Ricardo Neri <ricardo.neri-calderon@linux.intel.com>
----
-I tested this patch in Sierra Forest and Granite Rapids-D systems.
+Without this DMI match, the Silead touchscreen reports an incorrect coordinate
+range, resulting in partial and wrapped touch input under Wayland.
 
-$ echo 0 > /sys/kernel/debug/tpmi-<n>/plr/domain<m>/status
-$ cat /sys/kernel/debug/tpmi-<n>/plr/domain<m>/status
-cpus none
-cpu0 none
-cpu1 none
-...
----
- drivers/platform/x86/intel/plr_tpmi.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+Reuse the existing techbite_arc_11_6_data for this model.
 
-diff --git a/drivers/platform/x86/intel/plr_tpmi.c b/drivers/platform/x86/intel/plr_tpmi.c
-index 58132da47745..05727169f49c 100644
---- a/drivers/platform/x86/intel/plr_tpmi.c
-+++ b/drivers/platform/x86/intel/plr_tpmi.c
-@@ -316,7 +316,7 @@ static int intel_plr_probe(struct auxiliary_device *auxdev, const struct auxilia
- 		snprintf(name, sizeof(name), "domain%d", i);
- 
- 		dentry = debugfs_create_dir(name, plr->dbgfs_dir);
--		debugfs_create_file("status", 0444, dentry, &plr->die_info[i],
-+		debugfs_create_file("status", 0644, dentry, &plr->die_info[i],
- 				    &plr_status_fops);
- 	}
- 
+Signed-off-by: Rafal Zuchnik <rafal.zuchnik@gmail.com>
 
 ---
-base-commit: 63804fed149a6750ffd28610c5c1c98cce6bd377
-change-id: 20260127-plr-debugfs-write-0f47092b3af2
-
-Best regards,
--- 
-Ricardo Neri <ricardo.neri-calderon@linux.intel.com>
-
+diff --git a/drivers/platform/x86/touchscreen_dmi.c
+b/drivers/platform/x86/touchscreen_dmi.c
+--- a/drivers/platform/x86/touchscreen_dmi.c
++++ b/drivers/platform/x86/touchscreen_dmi.c
+@@
+     {
+         .matches = {
+             DMI_MATCH(DMI_SYS_VENDOR, "mPTech"),
+             DMI_MATCH(DMI_PRODUCT_NAME, "techBite Arc 11.6"),
+             DMI_MATCH(DMI_BOARD_NAME, "G8316_272B"),
+         },
+         .driver_data = (void *)&techbite_arc_11_6_data,
+     },
++    {
++        .matches = {
++            DMI_MATCH(DMI_SYS_VENDOR, "mPTech"),
++            DMI_MATCH(DMI_PRODUCT_NAME, "ARC 11.6 128GB HD"),
++        },
++        .driver_data = (void *)&techbite_arc_11_6_data,
++    },
+ };
