@@ -1,120 +1,115 @@
-Received: from mail-vs1-f46.google.com (mail-vs1-f46.google.com [209.85.217.46])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.16])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B5891342C92
-	for <platform-driver-x86@vger.kernel.org>; Thu, 29 Jan 2026 17:19:56 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.217.46
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 617EC946A
+	for <platform-driver-x86@vger.kernel.org>; Fri, 30 Jan 2026 13:36:53 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.16
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1769707198; cv=none; b=NdLYtM/9egBJncoK6Dbzud5i7/9wsawKIQpMZ7RX0xpxvq8mWKtS+yQc2bfOlxqhZZwEwjEvShMWSlQjUxbdfIt+cfsiqI7eMG6IPomwrCIX8kUd5T4zL6RrWbPxysUz2tzqYcRfUo7oxVhc2Bi0Ra4gUDc+KfJekViH3HHUz18=
+	t=1769780215; cv=none; b=Op4RcFn7Zh5u7X3gcA2FCnkeDYYRvVLbhwbASLI9LfruM9O+uMzAF7HmuNRPCymjbBJ3rKwEMvsGl3mtnH5olbIp0lRc/kdWR7OCKFJSG7naHdW6WmkZTyUNDwu3kxSCLlSrE0bM25oujUV723wdYphXC6myNVzZ0HeWZ7m+64Y=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1769707198; c=relaxed/simple;
-	bh=N1H694rnIB23NL5FZSIZ1GxBz254s/FfmyDM3xDVb18=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:To:Cc; b=pNImrnoDeOr5paaBIlSdW9VtM7ZcMLK3MxJ6etTLLi7bOPu/kHFdq8A35mfOFNWA7zA9KHpH0Xl/Y9e66WyWfAdEgE+4enWPZt6t9JwTo+Z6exi8ozgwkYX9Cn3uBaZoLouMj+kqvOUNDvINjHuZADJpgIglRmV5zsBrgjPw3Iw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=hgbHnIJe; arc=none smtp.client-ip=209.85.217.46
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1769780215; c=relaxed/simple;
+	bh=j/YljXsb0FmTcgaDqtS4qv/Ss9pENz4ZGh+3PWa6oPQ=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=Zr6bsZgk9kgltUHo77MIRyrRfnm/vmlRqK3RzdLcB4qWyhJ09wvoUDE+fw8C8dwLcEcJQd1xUKz999xKUQaCUK5/O9L0pRrjgxKmp8PkabTdsPqW9ekEopZsi08/siyLxVpJyBB3VND3uYWwAffv6ODBfeHf3zfG7LN5cLF0C2I=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=D4iL4SWT; arc=none smtp.client-ip=198.175.65.16
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="hgbHnIJe"
-Received: by mail-vs1-f46.google.com with SMTP id ada2fe7eead31-5f1bcdf03c6so405782137.1
-        for <platform-driver-x86@vger.kernel.org>; Thu, 29 Jan 2026 09:19:56 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1769707195; x=1770311995; darn=vger.kernel.org;
-        h=cc:to:message-id:content-transfer-encoding:mime-version:subject
-         :date:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=M4xXb7B0Ioz0Swo1DQNaF1EA4i8cqAzWN8A2le+WcD0=;
-        b=hgbHnIJeDR2NuoYRspzUcvH1rEN1hVuusOlw6nKyPcwRD1GC9zwKpWEalLFdQRcU2r
-         16S6oWL4tEHz8Zwsq6l3Ww+DQmwPhbmp8Rx874RHW1LYFQdVTaXPIDv9siFcTY7NY7yy
-         7id9j7e7E7Owd0c24wlqkCZ52duowB8AKHTxVg9ruWGNdUc8Dq1zK/GGUhchh/aBG8eD
-         zeznDNrtyT3P1J3aYZ0lHK4sdh15jELBDIrDdSsocz8P2z/Z86aJ6hJi8a0a+hDutd7h
-         trG90hgE0uHZEqlVjetPDogG04MKlhAe31VhdzFjG507Wn/hDTRk5YoNjzq3AfdVjr+m
-         XDig==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1769707195; x=1770311995;
-        h=cc:to:message-id:content-transfer-encoding:mime-version:subject
-         :date:from:x-gm-gg:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=M4xXb7B0Ioz0Swo1DQNaF1EA4i8cqAzWN8A2le+WcD0=;
-        b=YRSlMkEcJFfbob3UT8AGPzGvv7pEjuSErhtXx+VTL5DtxnrsLxaEmQNIOijXdRypgI
-         7TlRyvOuLkT25AWvL/iTBast3lyP0lh2v57GmDIR4X0nnMo1uwsagX/DfKrHpxHm7Tm+
-         6H86ylCd4tRZwVXj/eb/ZngGzKKI8zS1F6eexMDa7pzRQZ56RNrS0kHlCmJyb3owXgbh
-         Yaqdo5IvWgBjMJvdepyy+n16mT7GZ2k51jeZ8bHsAD0kdhO8jJr2pgRsh+OFMLe1nobe
-         OfQUgQnt8LBSfYt01eIHvAWN3aoayc22nKXlQIinipexGEA8mZRAv+Y+Q3ih0tb4m16X
-         c69g==
-X-Gm-Message-State: AOJu0Yz/yunSyRpy3nt7t9+8ygXUFK1QJZBrMW5ZEKg8s6FXgXY9GHdp
-	R0AAgykV/ks55vp7CBC+UyiWLwmIC9fXIPPV+6LFSPMMzP5Upol5alut
-X-Gm-Gg: AZuq6aJ09muRKVrv867DjZQSJ38bN/8wp3iJQ3a4P6zJ/FyVC997uy26Jy/ZI+u3bgJ
-	5uGQo/JKGuZ8tbtrQiBp0r2Z4AFXGE4CrWBKjskEsy4/ggZyz9sKsUTrRbsHIGIgb8kYFCU4Aw3
-	hWyzFqZRJi3TP7tuDB4/5xCwVjmPXrJeYMEjoFqjsY+3NIRfipN/n+eVVtZ22BjJZkIGgpNiHx5
-	I2HvgpPpwFLE0tS1tlO6ar3PBnRpo05RDm4gtkJcDnKcCh29nF+lE/SvAhWEojZB5efb6ASfSxJ
-	VF4J6ob0brhGWsfC/V741vIAMsPdg57MymFgb16Kndo7djCcexbQXCYYy4Ho9tgM7BtidsdePvT
-	obbMj7q1KNSM+tHkajgP72LJdykuRcCzQx6KF6rtoxj5Ux2/TKkhBuEixW5c/4ow4FUPW1HVhxA
-	QfHW0CNTLxkCSa
-X-Received: by 2002:a05:6102:d86:b0:5ef:b3fa:c89a with SMTP id ada2fe7eead31-5f8e26ffc83mr66056137.32.1769707194124;
-        Thu, 29 Jan 2026 09:19:54 -0800 (PST)
-Received: from [192.168.100.253] ([2800:bf0:82:11a2:7ac4:1f2:947b:2b6])
-        by smtp.gmail.com with ESMTPSA id a1e0cc1a2514c-948723ef486sm1307892241.5.2026.01.29.09.19.52
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 29 Jan 2026 09:19:53 -0800 (PST)
-From: Kurt Borja <kuurtb@gmail.com>
-Date: Thu, 29 Jan 2026 12:19:24 -0500
-Subject: [PATCH] platform/x86: alienware-wmi-wmax: Add G-Mode support to
- m18 laptops
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="D4iL4SWT"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1769780214; x=1801316214;
+  h=from:to:cc:subject:date:message-id:mime-version:
+   content-transfer-encoding;
+  bh=j/YljXsb0FmTcgaDqtS4qv/Ss9pENz4ZGh+3PWa6oPQ=;
+  b=D4iL4SWTuQKqfBoiV/3oaW5Z2M2aFDD6ZitCJ4L48wZWQrZh7tXi5EKd
+   dT96YGhnAGN/hAaUOXZzhpb5fE2E/eKY5/yiFZMSqWLjjMhlpWeZsNF6d
+   rp0RX0kAK97ZMZpms20pLCuVRIRQo3eDecjcmGxX1XEHoJfqndRKf1aiY
+   KB78KrnUJJFoozFTm8J+mO2Wbd8JjOVh0WHOfT0ZGP5AkUbgvYUSzUUSa
+   c5HiKr1oh0OjzBm63zk0arTtDI10rJwOYbCbRttjOHhKMXx07Yb0GCKPR
+   Dj6kho4xRZahKIY81jSP61OYEpJhMeJmBqgvEI8dn2ygYZ1VDJY1Qtnbt
+   w==;
+X-CSE-ConnectionGUID: WoV5y/9aQsedDuyoxl/Cpw==
+X-CSE-MsgGUID: lNBBAuMkT+mpkt2MGQxgtg==
+X-IronPort-AV: E=McAfee;i="6800,10657,11686"; a="71194373"
+X-IronPort-AV: E=Sophos;i="6.21,263,1763452800"; 
+   d="scan'208";a="71194373"
+Received: from orviesa006.jf.intel.com ([10.64.159.146])
+  by orvoesa108.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 30 Jan 2026 05:36:53 -0800
+X-CSE-ConnectionGUID: 1JHUBTtBQEeStWewFsciaw==
+X-CSE-MsgGUID: ty6/N1W7TlC679quscdmbw==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.21,263,1763452800"; 
+   d="scan'208";a="207983227"
+Received: from mjruhl-desk.amr.corp.intel.com (HELO mjruhl-desk.intel.com) ([10.124.220.170])
+  by orviesa006-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 30 Jan 2026 05:36:51 -0800
+From: "Michael J. Ruhl" <michael.j.ruhl@intel.com>
+To: platform-driver-x86@vger.kernel.org,
+	intel-xe@lists.freedesktop.org,
+	hansg@kernel.org,
+	ilpo.jarvinen@linux.intel.com,
+	matthew.brost@intel.com,
+	rodrigo.vivi@intel.com,
+	thomas.hellstrom@linux.intel.com,
+	airlied@gmail.com,
+	simona@ffwll.ch,
+	david.e.box@linux.intel.com
+Cc: "Michael J. Ruhl" <michael.j.ruhl@intel.com>
+Subject: [PATCH v2 0/5]  Crescent Island PMT support
+Date: Fri, 30 Jan 2026 08:36:40 -0500
+Message-ID: <20260130133639.765378-7-michael.j.ruhl@intel.com>
+X-Mailer: git-send-email 2.52.0
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Message-Id: <20260129-m18-gmode-v1-1-48be521487b9@gmail.com>
-X-B4-Tracking: v=1; b=H4sIAAAAAAAC/6tWKk4tykwtVrJSqFYqSi3LLM7MzwNyDHUUlJIzE
- vPSU3UzU4B8JSMDIzMDQyNL3VxDC9303PyUVN00A4vExDSLJMu05CQloPqCotS0zAqwWdGxtbU
- A2nXB31sAAAA=
-X-Change-ID: 20260129-m18-gmode-f08aaf8b9fcb
-To: Hans de Goede <hansg@kernel.org>, 
- =?utf-8?q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
-Cc: platform-driver-x86@vger.kernel.org, Dell.Client.Kernel@dell.com, 
- linux-kernel@vger.kernel.org, stable@vger.kernel.org, 
- Olexa Bilaniuk <obilaniu@gmail.com>, Kurt Borja <kuurtb@gmail.com>
-X-Mailer: b4 0.14.3
-X-Developer-Signature: v=1; a=openpgp-sha256; l=1005; i=kuurtb@gmail.com;
- h=from:subject:message-id; bh=N1H694rnIB23NL5FZSIZ1GxBz254s/FfmyDM3xDVb18=;
- b=owGbwMvMwCUmluBs8WX+lTTG02pJDJnV0za8s7bLDlzvlDXVdEZwjtMHhi7h5r27v+ndyve0b
- nq3a+X/jlIWBjEuBlkxRZb2hEXfHkXlvfU7EHofZg4rE8gQBi5OAZjIMWZGhpY6rrXiIirt5k8u
- uGf91/LqmPbqej1L5bYfpjUda9Z6xjP89y9j/q/p35Se/WeVi3rBjfAFXxJv2d18n1rHVpBceCS
- IGwA=
-X-Developer-Key: i=kuurtb@gmail.com; a=openpgp;
- fpr=54D3BE170AEF777983C3C63B57E3B6585920A69A
+Content-Transfer-Encoding: 8bit
 
-Alienware m18 laptops support G-Mode. Therefore, match them with
-G-Series quirks.
+The Crescent Island (CRI) GPU supports PMT from the via Xe driver
+registration.
 
-Cc: stable@vger.kernel.org
-Tested-by: Olexa Bilaniuk <obilaniu@gmail.com>
-Signed-off-by: Kurt Borja <kuurtb@gmail.com>
----
- drivers/platform/x86/dell/alienware-wmi-wmax.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+The CRI PMT MMIO mapping is shared for each PMT feature and it is
+necessary to set an index register value to access the correct memory
+space.
 
-diff --git a/drivers/platform/x86/dell/alienware-wmi-wmax.c b/drivers/platform/x86/dell/alienware-wmi-wmax.c
-index e69b50162bb1..d1b4df91401b 100644
---- a/drivers/platform/x86/dell/alienware-wmi-wmax.c
-+++ b/drivers/platform/x86/dell/alienware-wmi-wmax.c
-@@ -175,7 +175,7 @@ static const struct dmi_system_id awcc_dmi_table[] __initconst = {
- 			DMI_MATCH(DMI_SYS_VENDOR, "Alienware"),
- 			DMI_MATCH(DMI_PRODUCT_NAME, "Alienware m18"),
- 		},
--		.driver_data = &generic_quirks,
-+		.driver_data = &g_series_quirks,
- 	},
- 	{
- 		.ident = "Alienware x15",
+The PMT driver has a callback infrastructure to access data areas with
+driver specific access. It is does not support the PMT control access.
 
----
-base-commit: 662c9cb86fc322038647d8808e751f5c6c0cc13f
-change-id: 20260129-m18-gmode-f08aaf8b9fcb
+CRI discovery/control spaces are part of the access window so a driver
+callback is necessary to allow for the correct window to be exposed.
+
+Add control path callback support to the PMT driver.
+
+Add CRI PMT discovery information.
+
+Update the Xe driver to support the CRI PMT access.
+
+The crashlog access needs to be done with power enabled (telem is only
+available when the device is powered).
+
+Determine which access is requested, and do the appropriate power
+request.
+
+v2:
+ - clean up commit messages (reflow and content)
+ - remove debug usage of __func__
+ - addressed kernel-doc issue
+ - clean up some added lines 
+
+Michael J. Ruhl (5):
+  pmt: Add register access callbacks
+  drm/xe/vsec: Use correct pm state get
+  drm/xe/vsec: Support Crescent Island PMT
+  drm/xe/vsec: Crescent Island PMT decode
+  drm/xe/vsec: Crescent Island PMT callbacks
+
+ drivers/gpu/drm/xe/regs/xe_pmt.h          |   5 +
+ drivers/gpu/drm/xe/xe_vsec.c              | 255 +++++++++++++++++++---
+ drivers/platform/x86/intel/pmt/crashlog.c |  39 +++-
+ include/linux/intel_vsec.h                |  26 ++-
+ 4 files changed, 289 insertions(+), 36 deletions(-)
 
 -- 
- ~ Kurt
+2.52.0
 
