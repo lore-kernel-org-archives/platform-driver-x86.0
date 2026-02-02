@@ -1,63 +1,62 @@
-Received: from mail-vk1-f171.google.com (mail-vk1-f171.google.com [209.85.221.171])
+Received: from mail-vs1-f44.google.com (mail-vs1-f44.google.com [209.85.217.44])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 02989385EDD
-	for <platform-driver-x86@vger.kernel.org>; Mon,  2 Feb 2026 17:34:27 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.171
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 01F3D2798E5
+	for <platform-driver-x86@vger.kernel.org>; Mon,  2 Feb 2026 17:35:58 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.217.44
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1770053669; cv=none; b=BrEguVbs3ehNQyVYnp6+O2WswsJ+ouduIaVLIbdPE7sun5RdxWXhgKi0Ci4Wuf+QmJEJVMeUjgZx0d/JVZnHVtUtTtMoRJ9axFcd8ctaacvhiy4hvr8Zo22WJsd7WaQwwCoSqhMqgsIzXmew5GCr5+1wUBWeJ/QdGYRvFRZN3MQ=
+	t=1770053761; cv=none; b=M6pBzMlTSMr6Kmwr8PtHirA3UGyxVtOK0rT8KBQj0N4RR78tqf+ZKANiis2DLBtICvRFK6cQYpiLdI+7q26bT8yTD8mowHgXUM8X4ZZrBUbjSWfQFZvlPhFaO/wD9tt8kvt4Ahpa/fvinK83URR4Q2q97SHF6ZJBkzZhmilLGsM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1770053669; c=relaxed/simple;
-	bh=IRPny+KD9aBOapHWvHXo9KZ5VJ/7trQk/97xlFN9m/Q=;
-	h=Mime-Version:Content-Type:Date:Message-Id:Cc:Subject:From:To:
-	 References:In-Reply-To; b=oPfWQiGBq1yKwD7p3jG0tjl3PpyrjzQIb8h6bQRh2ezDxUJbJmSAi1H2NNFZaNw6JbReMhxUKgnFTZRXkn/gonIVT08X0WM6/MQIFXgPE89bjI4foGzyUwUPhTvhHbaV3DZlI73trMzWzUucSLKsSVGOUUlbDvvvu5n8hASxIho=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=RnC5xOKw; arc=none smtp.client-ip=209.85.221.171
+	s=arc-20240116; t=1770053761; c=relaxed/simple;
+	bh=mb25RumFzg5Dx/tWYIYWH4IWaYjutzcv4xNthKAATJ4=;
+	h=Mime-Version:Content-Type:Date:Message-Id:From:To:Cc:Subject:
+	 References:In-Reply-To; b=bDKpH04TP2Daof+nucaG3ClCjmyA4mm03f+jt5KK5GJOtU7HBgBJH0JgLoshWNM7kmoHyANA4eD6dBeo2HOa/tVQbZUF8ge9Vthesgb2bcAB/KvGKa0hyrsIh0RXRdrYo12ZnzjoMjA4ngFqar83XWzH+lzdQl8xmiFUoUuO8J8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=NKHwVSpf; arc=none smtp.client-ip=209.85.217.44
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="RnC5xOKw"
-Received: by mail-vk1-f171.google.com with SMTP id 71dfb90a1353d-56635de8acfso1557430e0c.0
-        for <platform-driver-x86@vger.kernel.org>; Mon, 02 Feb 2026 09:34:27 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="NKHwVSpf"
+Received: by mail-vs1-f44.google.com with SMTP id ada2fe7eead31-5f53ba9c548so1398778137.1
+        for <platform-driver-x86@vger.kernel.org>; Mon, 02 Feb 2026 09:35:58 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1770053667; x=1770658467; darn=vger.kernel.org;
-        h=in-reply-to:references:to:from:subject:cc:message-id:date
+        d=gmail.com; s=20230601; t=1770053758; x=1770658558; darn=vger.kernel.org;
+        h=in-reply-to:references:subject:cc:to:from:message-id:date
          :content-transfer-encoding:mime-version:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=6yAip77KwQwTJuiBtKCAzTsaGz+3iPu2gulKxWl9fbU=;
-        b=RnC5xOKwRTWZ8BtoLAGea5a0U7sDPqCGnYCrO3QfbnajuU32d6+bnsFJ8dCFSo3GAS
-         nWxT0N6umJP+q/ReqX9kjjSwIfWR2DvM3t9DG/DDSWcO3ZyaGy9DUFakCZptzDJF40OS
-         3aZSBUz/mUgziMfOqwXfevGPlcKVbGnut9p6mCbZe+LQzLFyisb9I/U3GmEh+WTj4e8q
-         jPKbm0a46EFhJ3XgZc6OGlC1pjdTHJo1EHhyjbIH7QlJcXhmw1RRqbWii/rZQz50cb9Q
-         nGHz65uLuKN63s6tkSkr/Qk6AkfWMDEQbRtrRbWr/7a3nkN/1IufWOMc0ZWJbpVRqqc9
-         DLzA==
+        bh=tG/1PYAXWKIrgLyAGPIOCcgkQWDRD4EftEQ3/HZGKk0=;
+        b=NKHwVSpfy9u1KTSFt3y0KkrIk8KcO85y5EIuELEd6lEtKO7xDlUDLrJYzVDHFNKO1W
+         gsgUlHPqkZ5TEko5aax7evUAMzKu+xYhBqGjlEuVxS8fRcNhtJLgnJ6mbVJlnl2+/3Yh
+         kOa5aTztKH/cTcj8vNeIt9/5lKSfr1ZTs46xT7XhuvHyePZQThcSy9cW4WLcYnsxSgw7
+         pnnz8yggWYZCIbSpGZjoXtrnT7VCodvQySazVFeo2uWKIZwH5RmA5DICpmzCS/FU8lCW
+         HqWQk8gJI7zXnS+DGApZ0jCSMdkoi9a7hydDJCd3IjwpvYVt5AVaFqKH8+zHIylmhdF8
+         6GWA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1770053667; x=1770658467;
-        h=in-reply-to:references:to:from:subject:cc:message-id:date
+        d=1e100.net; s=20230601; t=1770053758; x=1770658558;
+        h=in-reply-to:references:subject:cc:to:from:message-id:date
          :content-transfer-encoding:mime-version:x-gm-gg:x-gm-message-state
          :from:to:cc:subject:date:message-id:reply-to;
-        bh=6yAip77KwQwTJuiBtKCAzTsaGz+3iPu2gulKxWl9fbU=;
-        b=oO1R/KutOBjdIWZvlcEl44UAWSjp61kq3e6rygPgang+6lYxjbtVoVrt7Vn7rsY0XE
-         Q/yJPE03PEP27rV4WJIRXgHaQgP9fW+KXT56hsH+/2sQmQ+BDd1CJzm/UcXyq8QQ3cy/
-         k1Ie7B2ruoxOJXrP01rio5ta1+iToiED0k1HHW1y/efF9IWqchfsjgPTWfBzAsYif936
-         oDUO7A0NG32ehJFaq9FpCuBuIlDffme2yDmm0FfX4+Hu2RiD38JgCeC2Ia4T5BJv+Z7q
-         X4JsmQTDa+wqELiEZRVRb/+ejUfjevt8TxiCtTPu4wzPuF5DzWRbypdvTuLWSUYy4Vxh
-         qLnw==
-X-Forwarded-Encrypted: i=1; AJvYcCUI4MAU8aC6Zwu/pfYzKXm+AefZFIRJHWM1ryEYMn+rZ5RqzTrAs0cLUrO0BfOe3q56fIQDwMaV2SNlnt0NVlbVpahY@vger.kernel.org
-X-Gm-Message-State: AOJu0YxIeWp7AAfXLhKADrsmUd0tFpYhSAMA8C4JgYohx0XpOVVLhnxg
-	ncUg0u5nPx70TfzrHlFEa4mODNxzNEtTopMOrkqCGQ1UF9jdUcGZj2kV
-X-Gm-Gg: AZuq6aK0MdSD1J8/3ZdhfC6DRRpwf8ukNiOcziZZXpzpVeAFdFTNCwR54QCC8iJl4KQ
-	3uBFzg7zVDP7LJejROo9t3Aiyqn4DRRuTRisqOi9EtH/QO2CX6apVvvnf5uMO5HAH8NFWaLAXJ1
-	YToO4Lnd7yYJhx1DUPfz9zKIs2u/qevdm8o3qDkR+FMEPRPS7aC9aiqPqsaFDlutGKU+B9N+CEt
-	zAf7qeilOjKq1irybB1nRR3vHd6353tR6HOihKNJvxP+3KMrj+UeGZQwJ0BdCTVPZ6a8bfrVa07
-	9oGGvFdCxtTCPsqF1aCt7netiWokEHhUdwqotLhKosqr9mXTjANOSHaKNDILx8CiW2Ps57hZ5tu
-	Qs7ksaZGHRs4vubkFEECB10wZn9qFYJpZOY/4Eu5hUwzG3DkKGWw6voyXJMagJIw2TpdLdBB13u
-	Wpi2R1GoCWGhSp
-X-Received: by 2002:a05:6122:c155:b0:55b:305b:4e3e with SMTP id 71dfb90a1353d-566a014b651mr2712864e0c.20.1770053667039;
-        Mon, 02 Feb 2026 09:34:27 -0800 (PST)
+        bh=tG/1PYAXWKIrgLyAGPIOCcgkQWDRD4EftEQ3/HZGKk0=;
+        b=LpQUIRuNkwAq+2AzCL9/iSzZLBSQPXbRLc4WndiBrK0pyYb0ZqnAFUyewOpBomjMY/
+         gFIyRTM2R//vWKtr2tM0BVJnhDI3fv+iaa10r5c+4UhIxE2P+kfB+Ap39a3CSmaZVHI7
+         G95yrNWYI3n3eW3abKkoxW56P9bpGQrmo9zNg34yg/XKcNIuKfl5EMyNRXBJsIgIw1Nl
+         QP9HhGAaRohfrvGUPdygXK9kq2zhX8IJI2nJowtevazA6LgbA2+tAo3nPFK5+AcBnttF
+         QqGGM9hSC0TRMlaB5PChOeSuC/DUC9Q0MFyxiDkQB04zGnROxhCaroutXv2snUL1wBsA
+         on+Q==
+X-Gm-Message-State: AOJu0YxkIt2/VH76+Xk2RwB307K71ARvt1LaKCpPJKVhI5571yx0qfI4
+	v2CegL2/oCGhVRnI4OnuiKPtTGBTyCKINezBIpyPLp6olPJ+eCU4jVUB
+X-Gm-Gg: AZuq6aLZOwEsg3LlDAO2Eq3wdLMvkBaUsXVfz9wX4sfV0wns2XFE6v2A9PUg8lnVhwX
+	9LsmivZ9T9OC6rlq7DFaQgIFE53x8PHVI88u3pFeRYm9d9EcfO7h0UWKNxABDxEiRHDy6ULzYex
+	seyrUAXlFTay4wBNY/PeQrcx0qsGuTdo+5upMXZAkBKZOuVF13gx2ael4Gj/3EcH0ZQDBakdgUa
+	320FgguHqsKXYUFdquSxqHJU7g4He4pl4Z3wOFUR3ivyZ39a7JKFQT3KT9uSMfHj+oSYab/l8Fg
+	IEhd62eHrJmeY60TZAFT6YJ0qhvlxneTezMFxTU8ML/m82PZRfkBUR1I8DEuQumEahRya+WWVgz
+	uUzruQuejWC6Z1FSSMfcAusvr7e7bF8IXO5ODbsaofLLhnfi0drPSY9fNwFoJU+/r743jOmSbJE
+	PzaA==
+X-Received: by 2002:a05:6102:1611:b0:5f5:503e:c76d with SMTP id ada2fe7eead31-5f8e23760b2mr3398571137.4.1770053756470;
+        Mon, 02 Feb 2026 09:35:56 -0800 (PST)
 Received: from localhost ([2800:bf0:82:11a2:7ac4:1f2:947b:2b6])
-        by smtp.gmail.com with ESMTPSA id 71dfb90a1353d-56685becfc4sm5388725e0c.12.2026.02.02.09.34.25
+        by smtp.gmail.com with ESMTPSA id ada2fe7eead31-5f734c8ed1esm4642256137.6.2026.02.02.09.35.55
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 02 Feb 2026 09:34:26 -0800 (PST)
+        Mon, 02 Feb 2026 09:35:56 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
@@ -66,24 +65,25 @@ List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 Mime-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 Content-Type: text/plain; charset=UTF-8
-Date: Mon, 02 Feb 2026 12:34:19 -0500
-Message-Id: <DG4NNLOA8MJI.35V2HGOFN3RM8@gmail.com>
-Cc: "Matthew Garrett" <mjg59@srcf.ucam.org>, "Hans de Goede"
- <hansg@kernel.org>, =?utf-8?q?Ilpo_J=C3=A4rvinen?=
- <ilpo.jarvinen@linux.intel.com>, <platform-driver-x86@vger.kernel.org>,
- <linux-kernel@vger.kernel.org>, <stable@vger.kernel.org>, "Olexa Bilaniuk"
- <obilaniu@gmail.com>
-Subject: Re: [PATCH] platform/x86: dell-wmi: Add audio/mic mute key codes
+Date: Mon, 02 Feb 2026 12:35:49 -0500
+Message-Id: <DG4NOQRW8MOE.25YALP6C6UTWZ@gmail.com>
 From: "Kurt Borja" <kuurtb@gmail.com>
-To: =?utf-8?q?Pali_Roh=C3=A1r?= <pali@kernel.org>, "Kurt Borja"
- <kuurtb@gmail.com>
+To: "Mario Limonciello" <mario.limonciello@amd.com>, "Kurt Borja"
+ <kuurtb@gmail.com>, "Matthew Garrett" <mjg59@srcf.ucam.org>,
+ =?utf-8?q?Pali_Roh=C3=A1r?= <pali@kernel.org>, "Hans de Goede"
+ <hansg@kernel.org>, =?utf-8?q?Ilpo_J=C3=A4rvinen?=
+ <ilpo.jarvinen@linux.intel.com>
+Cc: <platform-driver-x86@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+ <stable@vger.kernel.org>, "Olexa Bilaniuk" <obilaniu@gmail.com>,
+ <Dell.Client.Kernel@dell.com>
+Subject: Re: [PATCH] platform/x86: dell-wmi: Add audio/mic mute key codes
 X-Mailer: aerc 0.21.0-0-g5549850facc2
 References: <20260201-mute-keys-v1-1-825e786732fc@gmail.com>
- <20260202081247.vpvbsapdrynr7vtf@pali>
-In-Reply-To: <20260202081247.vpvbsapdrynr7vtf@pali>
+ <9bbeae98-279d-4b8f-bc52-f535851f497d@amd.com>
+In-Reply-To: <9bbeae98-279d-4b8f-bc52-f535851f497d@amd.com>
 
-On Mon Feb 2, 2026 at 3:12 AM -05, Pali Roh=C3=A1r wrote:
-> On Sunday 01 February 2026 23:37:37 Kurt Borja wrote:
+On Mon Feb 2, 2026 at 9:17 AM -05, Mario Limonciello wrote:
+> On 2/1/26 10:37 PM, Kurt Borja wrote:
 >> Add audio/mic mute key codes found in some Alienware devices.
 >>=20
 >> Cc: stable@vger.kernel.org
@@ -91,41 +91,18 @@ On Mon Feb 2, 2026 at 3:12 AM -05, Pali Roh=C3=A1r wrote:
 >> Suggested-by: Olexa Bilaniuk <obilaniu@gmail.com>
 >> Signed-off-by: Kurt Borja <kuurtb@gmail.com>
 >> ---
->>  drivers/platform/x86/dell/dell-wmi-base.c | 3 +++
->>  1 file changed, 3 insertions(+)
->>=20
->> diff --git a/drivers/platform/x86/dell/dell-wmi-base.c b/drivers/platfor=
-m/x86/dell/dell-wmi-base.c
->> index 28076929d6af..62cf28d1fe19 100644
->> --- a/drivers/platform/x86/dell/dell-wmi-base.c
->> +++ b/drivers/platform/x86/dell/dell-wmi-base.c
->> @@ -86,6 +86,9 @@ static const struct key_entry dell_wmi_keymap_type_000=
-0[] =3D {
->>  	/* Meta key unlock */
->>  	{ KE_IGNORE, 0xe001, { KEY_RIGHTMETA } },
->> =20
->> +	{ KE_KEY,    0x0109, { KEY_MUTE } },
->> +	{ KE_KEY,    0x0150, { KEY_MICMUTE } },
+>>   drivers/platform/x86/dell/dell-wmi-base.c | 3 +++
+>>   1 file changed, 3 insertions(+)
 >
-> Hello, please keep codes in the array sorted.
-
-Hi Pali,
-
-I thought I sorted it... I'll fix it, thanks!
-
+> Make sure that you include Dell.Client.Kernel@dell.com in case they have=
+=20
+> any comments.
 >
->> +
->>  	/* Key code is followed by brightness level */
->>  	{ KE_KEY,    0xe005, { KEY_BRIGHTNESSDOWN } },
->>  	{ KE_KEY,    0xe006, { KEY_BRIGHTNESSUP } },
->>=20
->> ---
->> base-commit: 008bec8ffe6e7746588d1e12c5b3865fa478fc91
->> change-id: 20260126-mute-keys-7f8a27cd317f
->>=20
->> --=20
->>  ~ Kurt
->>=20
+> I added them to CC.
+
+Hi Mario,
+
+Thanks, I'll add it.
 
 --=20
 Thanks,
