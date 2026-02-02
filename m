@@ -1,205 +1,132 @@
-Received: from BL2PR02CU003.outbound.protection.outlook.com (mail-eastusazon11011035.outbound.protection.outlook.com [52.101.52.35])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-vk1-f171.google.com (mail-vk1-f171.google.com [209.85.221.171])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C09CD1F3B85;
-	Mon,  2 Feb 2026 14:17:27 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=52.101.52.35
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1770041849; cv=fail; b=Qj64+3QWvHz6ky+w4uiQQ0ICWOttIZGw66gFvkxQVl4Ec7N7/EpO6cTSm5FDD4QbrLdnBuzWJrJ9IJHMIVO4bkwxw95GuUVifvTfDPnIiSBi847+xR3sKNiB3/iFfahhGAr7dGTlrHcWncdjqEtOE6x2pmvRaZhELsz0fy73Pok=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1770041849; c=relaxed/simple;
-	bh=0CKzzqAjSP9nmC+mCFVls08jKx7d1z9vUlxjxeNuHGk=;
-	h=Message-ID:Date:Subject:To:Cc:References:From:In-Reply-To:
-	 Content-Type:MIME-Version; b=fs8UToa+eJzcwwIll6LC310LIkMLCwGuVbgbsNjn92WLI6aT/nxQ7wIZZzIha5NMa+T7bhlSi9UeFTGPpX4xVid7PRWnHrunyVGFch7nWBQ91MHMM/jovCQ2AmMZVWwY5EAUUX2qUFihfv/w3zA/NDwnkRNjo6ZoKkywjrFY+BA=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=wqvIWvz6; arc=fail smtp.client-ip=52.101.52.35
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com
-Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=amd.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 02989385EDD
+	for <platform-driver-x86@vger.kernel.org>; Mon,  2 Feb 2026 17:34:27 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.171
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1770053669; cv=none; b=BrEguVbs3ehNQyVYnp6+O2WswsJ+ouduIaVLIbdPE7sun5RdxWXhgKi0Ci4Wuf+QmJEJVMeUjgZx0d/JVZnHVtUtTtMoRJ9axFcd8ctaacvhiy4hvr8Zo22WJsd7WaQwwCoSqhMqgsIzXmew5GCr5+1wUBWeJ/QdGYRvFRZN3MQ=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1770053669; c=relaxed/simple;
+	bh=IRPny+KD9aBOapHWvHXo9KZ5VJ/7trQk/97xlFN9m/Q=;
+	h=Mime-Version:Content-Type:Date:Message-Id:Cc:Subject:From:To:
+	 References:In-Reply-To; b=oPfWQiGBq1yKwD7p3jG0tjl3PpyrjzQIb8h6bQRh2ezDxUJbJmSAi1H2NNFZaNw6JbReMhxUKgnFTZRXkn/gonIVT08X0WM6/MQIFXgPE89bjI4foGzyUwUPhTvhHbaV3DZlI73trMzWzUucSLKsSVGOUUlbDvvvu5n8hASxIho=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=RnC5xOKw; arc=none smtp.client-ip=209.85.221.171
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="wqvIWvz6"
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=syUiygp5Zf5lWJjy4MIicaMja712br6W4fjrgIk9pBTkn1FE/KxP+dFYFpckMoelaS1J4MvGPgGMUt3BLoW6E1LcL1sWXon+vQqAdDVWL32mGCeAa7sfpECTmDfRTv+SHPqyEtyQCJc7475L71Y/z+y3yVOZlL/RTmOxHgp+gaI8jlf7VFq0l0aX1i4orHKEnv6w8Kg/37n/AArDdQu3mQkupEAoQpMiDuKx5uYXEboe/DBDU4bmNKtIi2RCFdoBvuH1mS3nEJtgaHpoChptTF2re765QkaddniOYhqL6J46YMadJ+BXwBqE+GKYczIKwn3jq9YnTh/+1G9AqLbfEQ==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=h3KRrjBxBxgAnzp9aKYq+WKAhQiYOWXudIyygH/A/UY=;
- b=XZYhZxdI36yqYFn8Gt4iR0/XC7+90KAUblwCbUg35BBhDhUpo4kXPpDeMgrz9XxoXJpTbMrMy03JI4sj5k9FeodT9TyOTAi9nFjYgskxZMxq4eP2Uj7kUsookI9FR0DoQZwDEwYXpfeMmY0bqAx4ymlrVjSg87ZVON4fKQYwNaBO/qt9n5+w9dNSamLiXV5VLrsXMG9mHNjyQQNqrX7YjCj9Uj2/TODk4FbrZqyutFfyn4VWcHCFxK+W4/LGnUWWyqZruTJjXB289rIJVGGvqnUtgjlJx96+F3dv98lA/OLBe80sug7Pe4kE3blFmmNsQvI1DWkTKV+k04Ld+2bQgg==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=amd.com; dmarc=pass action=none header.from=amd.com; dkim=pass
- header.d=amd.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=h3KRrjBxBxgAnzp9aKYq+WKAhQiYOWXudIyygH/A/UY=;
- b=wqvIWvz6h6EuNJHHn9v4Av5xqeWSyhwUm8oJjk/w0CSiE93vZ6QelHsw4ttL17G9mCED2u7ncI2pUuv+ZHaC4JHvgjfM/uXx5IiKQTqPyu5Nhbx+j3QRKhz8/olV/xw4cFak4FQG+OpBqlTHypMim5tB7TSGUBdNamoXxj+KH64=
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=amd.com;
-Received: from MN0PR12MB6101.namprd12.prod.outlook.com (2603:10b6:208:3cb::10)
- by MW4PR12MB7466.namprd12.prod.outlook.com (2603:10b6:303:212::20) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.9564.16; Mon, 2 Feb
- 2026 14:17:23 +0000
-Received: from MN0PR12MB6101.namprd12.prod.outlook.com
- ([fe80::94eb:4bdb:4466:27ce]) by MN0PR12MB6101.namprd12.prod.outlook.com
- ([fe80::94eb:4bdb:4466:27ce%4]) with mapi id 15.20.9564.016; Mon, 2 Feb 2026
- 14:17:23 +0000
-Message-ID: <9bbeae98-279d-4b8f-bc52-f535851f497d@amd.com>
-Date: Mon, 2 Feb 2026 08:17:16 -0600
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] platform/x86: dell-wmi: Add audio/mic mute key codes
-To: Kurt Borja <kuurtb@gmail.com>, Matthew Garrett <mjg59@srcf.ucam.org>,
- =?UTF-8?Q?Pali_Roh=C3=A1r?= <pali@kernel.org>,
- Hans de Goede <hansg@kernel.org>,
- =?UTF-8?Q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
-Cc: platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org,
- stable@vger.kernel.org, Olexa Bilaniuk <obilaniu@gmail.com>,
- Dell.Client.Kernel@dell.com
-References: <20260201-mute-keys-v1-1-825e786732fc@gmail.com>
-Content-Language: en-US
-From: Mario Limonciello <mario.limonciello@amd.com>
-In-Reply-To: <20260201-mute-keys-v1-1-825e786732fc@gmail.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: SN6PR08CA0017.namprd08.prod.outlook.com
- (2603:10b6:805:66::30) To MN0PR12MB6101.namprd12.prod.outlook.com
- (2603:10b6:208:3cb::10)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="RnC5xOKw"
+Received: by mail-vk1-f171.google.com with SMTP id 71dfb90a1353d-56635de8acfso1557430e0c.0
+        for <platform-driver-x86@vger.kernel.org>; Mon, 02 Feb 2026 09:34:27 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1770053667; x=1770658467; darn=vger.kernel.org;
+        h=in-reply-to:references:to:from:subject:cc:message-id:date
+         :content-transfer-encoding:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=6yAip77KwQwTJuiBtKCAzTsaGz+3iPu2gulKxWl9fbU=;
+        b=RnC5xOKwRTWZ8BtoLAGea5a0U7sDPqCGnYCrO3QfbnajuU32d6+bnsFJ8dCFSo3GAS
+         nWxT0N6umJP+q/ReqX9kjjSwIfWR2DvM3t9DG/DDSWcO3ZyaGy9DUFakCZptzDJF40OS
+         3aZSBUz/mUgziMfOqwXfevGPlcKVbGnut9p6mCbZe+LQzLFyisb9I/U3GmEh+WTj4e8q
+         jPKbm0a46EFhJ3XgZc6OGlC1pjdTHJo1EHhyjbIH7QlJcXhmw1RRqbWii/rZQz50cb9Q
+         nGHz65uLuKN63s6tkSkr/Qk6AkfWMDEQbRtrRbWr/7a3nkN/1IufWOMc0ZWJbpVRqqc9
+         DLzA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1770053667; x=1770658467;
+        h=in-reply-to:references:to:from:subject:cc:message-id:date
+         :content-transfer-encoding:mime-version:x-gm-gg:x-gm-message-state
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=6yAip77KwQwTJuiBtKCAzTsaGz+3iPu2gulKxWl9fbU=;
+        b=oO1R/KutOBjdIWZvlcEl44UAWSjp61kq3e6rygPgang+6lYxjbtVoVrt7Vn7rsY0XE
+         Q/yJPE03PEP27rV4WJIRXgHaQgP9fW+KXT56hsH+/2sQmQ+BDd1CJzm/UcXyq8QQ3cy/
+         k1Ie7B2ruoxOJXrP01rio5ta1+iToiED0k1HHW1y/efF9IWqchfsjgPTWfBzAsYif936
+         oDUO7A0NG32ehJFaq9FpCuBuIlDffme2yDmm0FfX4+Hu2RiD38JgCeC2Ia4T5BJv+Z7q
+         X4JsmQTDa+wqELiEZRVRb/+ejUfjevt8TxiCtTPu4wzPuF5DzWRbypdvTuLWSUYy4Vxh
+         qLnw==
+X-Forwarded-Encrypted: i=1; AJvYcCUI4MAU8aC6Zwu/pfYzKXm+AefZFIRJHWM1ryEYMn+rZ5RqzTrAs0cLUrO0BfOe3q56fIQDwMaV2SNlnt0NVlbVpahY@vger.kernel.org
+X-Gm-Message-State: AOJu0YxIeWp7AAfXLhKADrsmUd0tFpYhSAMA8C4JgYohx0XpOVVLhnxg
+	ncUg0u5nPx70TfzrHlFEa4mODNxzNEtTopMOrkqCGQ1UF9jdUcGZj2kV
+X-Gm-Gg: AZuq6aK0MdSD1J8/3ZdhfC6DRRpwf8ukNiOcziZZXpzpVeAFdFTNCwR54QCC8iJl4KQ
+	3uBFzg7zVDP7LJejROo9t3Aiyqn4DRRuTRisqOi9EtH/QO2CX6apVvvnf5uMO5HAH8NFWaLAXJ1
+	YToO4Lnd7yYJhx1DUPfz9zKIs2u/qevdm8o3qDkR+FMEPRPS7aC9aiqPqsaFDlutGKU+B9N+CEt
+	zAf7qeilOjKq1irybB1nRR3vHd6353tR6HOihKNJvxP+3KMrj+UeGZQwJ0BdCTVPZ6a8bfrVa07
+	9oGGvFdCxtTCPsqF1aCt7netiWokEHhUdwqotLhKosqr9mXTjANOSHaKNDILx8CiW2Ps57hZ5tu
+	Qs7ksaZGHRs4vubkFEECB10wZn9qFYJpZOY/4Eu5hUwzG3DkKGWw6voyXJMagJIw2TpdLdBB13u
+	Wpi2R1GoCWGhSp
+X-Received: by 2002:a05:6122:c155:b0:55b:305b:4e3e with SMTP id 71dfb90a1353d-566a014b651mr2712864e0c.20.1770053667039;
+        Mon, 02 Feb 2026 09:34:27 -0800 (PST)
+Received: from localhost ([2800:bf0:82:11a2:7ac4:1f2:947b:2b6])
+        by smtp.gmail.com with ESMTPSA id 71dfb90a1353d-56685becfc4sm5388725e0c.12.2026.02.02.09.34.25
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Mon, 02 Feb 2026 09:34:26 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: MN0PR12MB6101:EE_|MW4PR12MB7466:EE_
-X-MS-Office365-Filtering-Correlation-Id: 56f17aa3-b9bd-4757-b31f-08de6265c8a8
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam:
-	BCL:0;ARA:13230040|7416014|376014|1800799024|366016|7053199007;
-X-Microsoft-Antispam-Message-Info:
-	=?utf-8?B?NUNIY1ZFQkJpb1pVVjhhMlZmeDZubFZMekFwMk1PMjZQQ1VqdWorUDB2cVln?=
- =?utf-8?B?SGN5N2xJOW12aDgwNlN2MS9tbUtsVXowMEt5RGlMeVlnMUV1Y0lId2xvNlFX?=
- =?utf-8?B?R1k4WWs1OS9QK0dDTDQvNHltY3FJQWlaN0Q3TE15ZzNZMkd2ZXJudE1uS0x6?=
- =?utf-8?B?ZjZyU1R4RlZ5QXFzYXd6UWlKWk5FY2ZqT0tPZDlQTmNuek01OWJvT1ltaTdi?=
- =?utf-8?B?Y29RS2hyemZoS09qQkVvRllINjJqd1EwTmNOZHdxRjhYYXZrZldSanlHWStZ?=
- =?utf-8?B?MzlQMVY2cXEyTzd0T0QrTHdWc21CMUxZYjkvTVVCTTNsTHBOWjJTNElHVmRS?=
- =?utf-8?B?UXYvMmp5QS9iTnpycjJBL3BCQzkvTEg5VFMzYlJnU2lmUkIyOFBvYVhIaEhD?=
- =?utf-8?B?dHZxckhFTFJqS2tPSUVKYURTZEVMa2JYclNGU1BCdkFGZFh5bWFYNDY5TTFQ?=
- =?utf-8?B?cTMwejdrd0tkWi9PV2NYcENuTXJjZnlGeWpSc2JUdnBIVDdURjd2Q3Z4aFhD?=
- =?utf-8?B?MUhSQUZjNzNzSEozN1g1Qk51WXVIaktEcHhtNUlOYkJKbkNSZHQ2NlVqSmpC?=
- =?utf-8?B?TEozVGRRWllrcmw5SkZ2WjhDUHhEajc0NmluSDVNUFpRbUNYNWx1cmo5Vm41?=
- =?utf-8?B?MGtoREhlWHphYVA0Rk8vWmVrRUNjM1M1TTIzNzVWVlRnMzc5Y0xZZzJnd0J3?=
- =?utf-8?B?akVDZkNXSXBpVkNRSDE0dGQxNWZuR0ZqWGlZaVlCYWNoSEVTTWxHd2dIZmlY?=
- =?utf-8?B?S2xmbnNsM0Q4U0kzUFF5RlVjb3NJaGRLaGhMMjYzVnlmS1ZSVkdpUDExWEsx?=
- =?utf-8?B?NDF6REp5VDZTVTlUaVY3UmdPOTIzeXN3NkdxOXA3TUZDYTJBVnBQM1Q2N1NU?=
- =?utf-8?B?Wm03TGhiWUJxdzRIbExkNlJPdEdack9CNjFRTkNHRjV6a3hFL1daK2lvb0dv?=
- =?utf-8?B?UkR1MDgvblBrUFBNeHp5NVRYV1lpdTlwY1lSTkE3WDIvZlVZeGlJUlkwc0Nv?=
- =?utf-8?B?TjZMWkRQYm9tc0trbXlQWkxWUFI2K3JESlZraEFWMGhqYVJ5U1dKVWpDbVFo?=
- =?utf-8?B?RHpsZnlxR1VLcWluN003MTRwblNBTjhTUllKQkZxeDZMOTZ4cTRRMy9sSll1?=
- =?utf-8?B?b0x2TVpSeDYzbVJramRGSmtHeEYyUDJ0ZVl4RU1iMERIbEpuclJ3bjZvUHdB?=
- =?utf-8?B?Qmg0cGlqdnVvREpyWU9GcGV1UElhN1dCd1FvMUptOHVZMWtqc1puRmNkSlBX?=
- =?utf-8?B?U1pxS2NjRDNDbEI4QXU5MFZHckN5QlNrUGl3ODl6RW9uT1FqWFJCM2pqMXVW?=
- =?utf-8?B?c3JpNjNucGtwbGpiSWwrbURNZ05LQkhSRnllZVo3bEd5c3RmUGF4WXQ4d2tI?=
- =?utf-8?B?RUROck0yOFFkT2Y3Vm9lSUY4VEN1OUY3bjlLTDRBenVFdGRBc2tlOTdmclVw?=
- =?utf-8?B?M1Uyc2dncWlxRE1hYW9zZDBUelFwdDZqNGVXd2JQM2R4TXJlYUY0UjlpOUd2?=
- =?utf-8?B?eFk5Qk8vbTdKb1IvOVh1NHE1cnlNU2pLYjRib1AxWnp1cXdHUFoxdk5LQjJu?=
- =?utf-8?B?Uy82elBuZG81QWFjOWNvUFZ4ZUhzbzBPN2w3c2ZmSGJtenUzMkdsMnpUS0Er?=
- =?utf-8?B?WXZXRDJjU3lYRm9kWEtib0hqZ0gzZzAzUHBDZldBbmhGL21CdjJTc01GVEV3?=
- =?utf-8?B?WU5BU1JtUWh3ZVRnQytva2dPR24rbHlTU0RPZjVTYXk5UXpaM1doY2sxN09D?=
- =?utf-8?B?UjlLWEZiaHliMG1FK2ZXQ0o4TFk0bGxSN3h3Q2I1MXVvLytpNW9ValFoV3dr?=
- =?utf-8?B?U01VaTVSWTRJeEkrZnVNVURIVTNvdUFxQkZ4UTh1dkh5VnNxRWJQUk1rQjJN?=
- =?utf-8?B?NWFMdGZpWWRIRTJpZ0psZlVOY1VKMW9yM3huRnRFNUdZZTNzYWlyaTlUV3hq?=
- =?utf-8?B?ZThSNTkwVGxKMXJFdXhJclhHNWlaa2lVYnR6NitBZUsvcTlHWG9GcjlGSVlj?=
- =?utf-8?B?akI0SEUvNXJPS2pWUWpNYm9iRnVscENzckJCUmVmNXRnMlI0OWp2SzcwNmZW?=
- =?utf-8?B?WHJtUlF4cUMwT3F1eWJGL2JDMm0xQ3lFSTNLeGhrR084a1JLNjBjRE1YcThp?=
- =?utf-8?Q?+Nn8=3D?=
-X-Forefront-Antispam-Report:
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:MN0PR12MB6101.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(7416014)(376014)(1800799024)(366016)(7053199007);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0:
-	=?utf-8?B?blFvU2RoQ0tJWDJxVlhVVWVTeElUd2ZHWTl1M3BOV3FLaXRNN0JTNGJZaGtv?=
- =?utf-8?B?MHhOREpqaEV5S0FRdll1TThycVdsTndjNDczVVk0UldqUE1lWGRmWitFc0RK?=
- =?utf-8?B?MXlIR3JhYmt1QVlMTERZeWxoT0tvelQ1ZVpPMTlIQUp5a2VXNGFjRmpKSDh2?=
- =?utf-8?B?Zk80MjR2YWpoTHVqd05MUEFJdFFZUnhrSisraGMzSTRKQm9obUllV1RJaDN6?=
- =?utf-8?B?UmNGT2N3S3JMZVkyNjRWcjFjaWpibjBidHVvK1NWYnpvUlBBTkZBUEppbjJt?=
- =?utf-8?B?RkJuMzMvTWN5NEgyd0hTSythY1g3aS96T0pZZXZUeWg0VDNvUHRISG55amNM?=
- =?utf-8?B?dWFCMEsvZnQxaXRYcjU0SE44ajlnMTVCTmcxdjhBWm1lRWZ0czRGa2F6WGpP?=
- =?utf-8?B?OXI2L3JtbzVMUjZWRERBalhBOEUyUDhnRFI3OTZ3bTJxRVU2UitaNUZWSFUy?=
- =?utf-8?B?d3N3bEN5Y2J4cnROVDZUdmJtSndIU1dLdFp0K0o0Y2dnRWljQ2N6bnc4azBl?=
- =?utf-8?B?c1RpTEdJWVRxTlRwU29XcEN6NmlETkxGRjE2dXNGd1pIOGt6akRIRWJWMnhy?=
- =?utf-8?B?VTRMRU5NMFJ4MC9WenBxY2V1cXlibm12aHR2b3RHVkt4WUxjbFIySStrNXVa?=
- =?utf-8?B?MFVlS2xqeHJBVDNKdk52Y0grZng3YUlONDVmemh6Yk5BR0FEcU15UFVjUGR1?=
- =?utf-8?B?SEtGUlV5Q0VuU0NKSVFYdlJIVFNNekdFRGlJZFhDWE1GMytYZHdhalRXT00w?=
- =?utf-8?B?TWJlS0NlNXRKOEliV3cvWktvRHNCUUNTVm1uSzUzWjlCVVUwZndwUGVEaGdh?=
- =?utf-8?B?QlgwTis4UDVQRDRyNnBpa28xck5Jakd5UGdBZVFDN3I0bk1mWXlWU0U2bmFq?=
- =?utf-8?B?S3o3N1ZUU3R3K01odWxWWEhMaFAxMzhHTWxERkpNM2NHUW9hT2tJVGhhbXFZ?=
- =?utf-8?B?dFgzTGdOSVJuRUdJbmJFYW9Ma1ZweXdwdzAxNkI0Nng5NzJ5TExYcnc0cDZm?=
- =?utf-8?B?ZXk3aUsxQVJJb2VzaG16TzlLM0wrd3RDQVBwL3B3RFRWRTRGNTUramh3NlhE?=
- =?utf-8?B?YUdmQkhWUFVhRUROd29oK3NsMzdGVzl6TjZOeGVYSUlWd0VtSGtRWUdMRGtD?=
- =?utf-8?B?bVNKbk1FUnNnNWFDSExTWXNxL1dCUEU5aG11dGVQNlpJYzBJeDFseVNTSGc5?=
- =?utf-8?B?aWQ5VzlGcHNHcWY0QU8vcjh3Qy9oZDAzM0NVV2dQZjUxdGRPM0hyeERIeURC?=
- =?utf-8?B?Tld5QVFCQ0lJZ2dYTVAwZjFGZDN4M2UrOVMySjJIcTVGeDZHR0d2cEhmMjNV?=
- =?utf-8?B?L1hCN0s3dTI2aGc3aUVwcHVCYzdUUzRQZ3dtamVpbzJUaWQ4RkR4VTZtL0pL?=
- =?utf-8?B?cVFFalJBUVpPRUFVRitwRi9hZm8xbTR5TlR4VlIyYWgxNjRmNFkrS0lYSkNB?=
- =?utf-8?B?N1BDQkdPZ2lCc1FFSFhjSlBhYVRSVDJvb3F6cmFENmVPd2wwMmd6OCtwbjRW?=
- =?utf-8?B?Y1loS2h2TEs2UTJQYlNjTEc3VDdqTU03bjNOVUVIS2NPTTNXaUMweldVZnl2?=
- =?utf-8?B?ZmpHcTN3S05EeXYybHc3ZzFjOW1RY1BRa2xHaHgzWWFOYk9qSXBLU0MvVThK?=
- =?utf-8?B?UGliLzgrMHhWNGpKK1FobDlYcVlFYnVWcEdUSWU2alJDMWdYbjNTSVltL0Zt?=
- =?utf-8?B?cXhaT1ZUOTZidkI2RmpYZndBUXBpOGUzNUdya24xL3Bra3d0c1ZOOVdtU1Jr?=
- =?utf-8?B?aUU3c2IyaHUwaU9WU3pzeE04dVpBdnBXbXFxWjdNM3c4NjJKaWMzdnNZQmt2?=
- =?utf-8?B?cEF4aWdSVWwvd1ErbjF6K2NrdmtFY3NSR0FhbUhFckphUGdUL3ZqSEljWkV2?=
- =?utf-8?B?UDZpQ05UVFpNQWxNYlM4WnZPQmRtV1FNaUNSOHI5WnNkZFM3UFU5ZmFiakZ2?=
- =?utf-8?B?d1lFeWxaNHlxdGdPTGxDblNXUTdNY1BsUkd1TnZJYmJaby95SXVvSzg1bllX?=
- =?utf-8?B?UlJYa25oajI4Q3JqQ3ArM0lmdzUrUUlNOGphbVlRcVU5VjdBWnAvUW9CRTA3?=
- =?utf-8?B?clc1YkRZQzlCTmJGN3NKcVduZTBTV0tPcU11S0I2SWdsVzh3RGU5RXI1eUVi?=
- =?utf-8?B?R3hTcVhUdjcxRUpvUkhTSjdZK2Q4aEJzVXhtSnhFK21uY2tCWEsycTFVQkN0?=
- =?utf-8?B?TXYzVmszWkhnWG1zUFFKUlFJMFRDTVVsQWNsU3pyekM2N1E3OSt1VFVKR20z?=
- =?utf-8?B?RjErUW85U2RkUDVkbERKMWdWcVJudGhheXMrVGVJOWxFZlpOdWhoUXBXREoy?=
- =?utf-8?Q?TY8EG/PvJ9EQvlYM42?=
-X-OriginatorOrg: amd.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 56f17aa3-b9bd-4757-b31f-08de6265c8a8
-X-MS-Exchange-CrossTenant-AuthSource: MN0PR12MB6101.namprd12.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 02 Feb 2026 14:17:23.2716
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: WnPFQDK/QQ0XOaGmBRduxRfy0nGs4EsW3j4/GJ3VIqduwgJKHAASSxQf+USIFLJtKWaiLPNAPiwtunEDDaoQgA==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: MW4PR12MB7466
+Mime-Version: 1.0
+Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=UTF-8
+Date: Mon, 02 Feb 2026 12:34:19 -0500
+Message-Id: <DG4NNLOA8MJI.35V2HGOFN3RM8@gmail.com>
+Cc: "Matthew Garrett" <mjg59@srcf.ucam.org>, "Hans de Goede"
+ <hansg@kernel.org>, =?utf-8?q?Ilpo_J=C3=A4rvinen?=
+ <ilpo.jarvinen@linux.intel.com>, <platform-driver-x86@vger.kernel.org>,
+ <linux-kernel@vger.kernel.org>, <stable@vger.kernel.org>, "Olexa Bilaniuk"
+ <obilaniu@gmail.com>
+Subject: Re: [PATCH] platform/x86: dell-wmi: Add audio/mic mute key codes
+From: "Kurt Borja" <kuurtb@gmail.com>
+To: =?utf-8?q?Pali_Roh=C3=A1r?= <pali@kernel.org>, "Kurt Borja"
+ <kuurtb@gmail.com>
+X-Mailer: aerc 0.21.0-0-g5549850facc2
+References: <20260201-mute-keys-v1-1-825e786732fc@gmail.com>
+ <20260202081247.vpvbsapdrynr7vtf@pali>
+In-Reply-To: <20260202081247.vpvbsapdrynr7vtf@pali>
 
-On 2/1/26 10:37 PM, Kurt Borja wrote:
-> Add audio/mic mute key codes found in some Alienware devices.
-> 
-> Cc: stable@vger.kernel.org
-> Tested-by: Olexa Bilaniuk <obilaniu@gmail.com>
-> Suggested-by: Olexa Bilaniuk <obilaniu@gmail.com>
-> Signed-off-by: Kurt Borja <kuurtb@gmail.com>
-> ---
->   drivers/platform/x86/dell/dell-wmi-base.c | 3 +++
->   1 file changed, 3 insertions(+)
+On Mon Feb 2, 2026 at 3:12 AM -05, Pali Roh=C3=A1r wrote:
+> On Sunday 01 February 2026 23:37:37 Kurt Borja wrote:
+>> Add audio/mic mute key codes found in some Alienware devices.
+>>=20
+>> Cc: stable@vger.kernel.org
+>> Tested-by: Olexa Bilaniuk <obilaniu@gmail.com>
+>> Suggested-by: Olexa Bilaniuk <obilaniu@gmail.com>
+>> Signed-off-by: Kurt Borja <kuurtb@gmail.com>
+>> ---
+>>  drivers/platform/x86/dell/dell-wmi-base.c | 3 +++
+>>  1 file changed, 3 insertions(+)
+>>=20
+>> diff --git a/drivers/platform/x86/dell/dell-wmi-base.c b/drivers/platfor=
+m/x86/dell/dell-wmi-base.c
+>> index 28076929d6af..62cf28d1fe19 100644
+>> --- a/drivers/platform/x86/dell/dell-wmi-base.c
+>> +++ b/drivers/platform/x86/dell/dell-wmi-base.c
+>> @@ -86,6 +86,9 @@ static const struct key_entry dell_wmi_keymap_type_000=
+0[] =3D {
+>>  	/* Meta key unlock */
+>>  	{ KE_IGNORE, 0xe001, { KEY_RIGHTMETA } },
+>> =20
+>> +	{ KE_KEY,    0x0109, { KEY_MUTE } },
+>> +	{ KE_KEY,    0x0150, { KEY_MICMUTE } },
+>
+> Hello, please keep codes in the array sorted.
 
-Make sure that you include Dell.Client.Kernel@dell.com in case they have 
-any comments.
+Hi Pali,
 
-I added them to CC.
+I thought I sorted it... I'll fix it, thanks!
 
-> 
-> diff --git a/drivers/platform/x86/dell/dell-wmi-base.c b/drivers/platform/x86/dell/dell-wmi-base.c
-> index 28076929d6af..62cf28d1fe19 100644
-> --- a/drivers/platform/x86/dell/dell-wmi-base.c
-> +++ b/drivers/platform/x86/dell/dell-wmi-base.c
-> @@ -86,6 +86,9 @@ static const struct key_entry dell_wmi_keymap_type_0000[] = {
->   	/* Meta key unlock */
->   	{ KE_IGNORE, 0xe001, { KEY_RIGHTMETA } },
->   
-> +	{ KE_KEY,    0x0109, { KEY_MUTE } },
-> +	{ KE_KEY,    0x0150, { KEY_MICMUTE } },
-> +
->   	/* Key code is followed by brightness level */
->   	{ KE_KEY,    0xe005, { KEY_BRIGHTNESSDOWN } },
->   	{ KE_KEY,    0xe006, { KEY_BRIGHTNESSUP } },
-> 
-> ---
-> base-commit: 008bec8ffe6e7746588d1e12c5b3865fa478fc91
-> change-id: 20260126-mute-keys-7f8a27cd317f
-> 
+>
+>> +
+>>  	/* Key code is followed by brightness level */
+>>  	{ KE_KEY,    0xe005, { KEY_BRIGHTNESSDOWN } },
+>>  	{ KE_KEY,    0xe006, { KEY_BRIGHTNESSUP } },
+>>=20
+>> ---
+>> base-commit: 008bec8ffe6e7746588d1e12c5b3865fa478fc91
+>> change-id: 20260126-mute-keys-7f8a27cd317f
+>>=20
+>> --=20
+>>  ~ Kurt
+>>=20
 
+--=20
+Thanks,
+ ~ Kurt
