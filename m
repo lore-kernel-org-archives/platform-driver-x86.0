@@ -1,395 +1,150 @@
-Received: from fhigh-b3-smtp.messagingengine.com (fhigh-b3-smtp.messagingengine.com [202.12.124.154])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-vk1-f178.google.com (mail-vk1-f178.google.com [209.85.221.178])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 77F8234B1A5;
-	Mon,  2 Feb 2026 22:21:42 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=202.12.124.154
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D1B8330DEC6
+	for <platform-driver-x86@vger.kernel.org>; Tue,  3 Feb 2026 02:40:55 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.178
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1770070906; cv=none; b=I3HgaRIJ2CSVCC8pq6FCPFNRERjXnacLe0Ynmdygl1sK+Qk91ddX1jP6XaJ3i/EOJw9ltvxiia+DSDnosB9vbbcFw5As0YBso4TENwTWsXY52FSfv3bSl4tfJU3LdYbKxeRZ8IS2j1jKGezB+RbBEqJlrxuyyNDBNWz6JFPIpYk=
+	t=1770086457; cv=none; b=ep/oZgmCeSUvTzQDyNuxP+HH76198+vdXz68qW+ufoaj5U52/3pgnz0QBFRr+f0+jFVk6Es+RwpZCQw3C/KUBYvjB+hU1YdjeDH2mPby+1H3YWpVWSi5ZynI1DZU0hfv1o5uJG21AF3GRn6Rk2QB5XV7Lqsb3x39MrNjgyzsoFI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1770070906; c=relaxed/simple;
-	bh=bzsZIa0g4GwfhCy3fYb2FfU5uG6BdvDO1YvmM0iWU8Q=;
-	h=MIME-Version:Date:From:To:Cc:Message-Id:In-Reply-To:References:
-	 Subject:Content-Type; b=h+6d5ec8a/ACEWMuoBKln0dg6r3k0SMO3tYF4Eb1w+8xroyZ1M/9LTTN4AnY2+PTmU2hQmO3DQTfhl2YR9DpUw8ZPuZeyGSadhKNAo6hMOuPcD2KEuEY7qgfyTTLCOi13od6Hh55E0hjZr9uRipTUP/xbIawaWgW5lNTQDvur7o=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=squebb.ca; spf=pass smtp.mailfrom=squebb.ca; dkim=pass (2048-bit key) header.d=squebb.ca header.i=@squebb.ca header.b=iCDU7uwW; dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b=PoOtQv6u; arc=none smtp.client-ip=202.12.124.154
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=squebb.ca
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=squebb.ca
+	s=arc-20240116; t=1770086457; c=relaxed/simple;
+	bh=ndaXLIpsmF2vxSgB6X+oRj8aKFBYdVhhWSbAd6S4LNI=;
+	h=Mime-Version:Content-Type:Date:Message-Id:Subject:From:To:Cc:
+	 References:In-Reply-To; b=Jl3tj4diYnJ2OgnMh9ejUf4JKevEirsaz0FSuAveOx02mT2pm+A2zIKSA6gTAsVtlFje8PVhCN+hfDL9b0PviBnLlViQSXBCMxEmL3FWHwCTzQgNLtfTQ+yGCiomaFiP3cil3zrsK41F5kX1aeJIZGK+l5O24pEzw/6KR3mLej4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=N9I6rN3C; arc=none smtp.client-ip=209.85.221.178
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=squebb.ca header.i=@squebb.ca header.b="iCDU7uwW";
-	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="PoOtQv6u"
-Received: from phl-compute-02.internal (phl-compute-02.internal [10.202.2.42])
-	by mailfhigh.stl.internal (Postfix) with ESMTP id 628F47A0033;
-	Mon,  2 Feb 2026 17:21:40 -0500 (EST)
-Received: from phl-imap-08 ([10.202.2.84])
-  by phl-compute-02.internal (MEProxy); Mon, 02 Feb 2026 17:21:41 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=squebb.ca; h=cc
-	:cc:content-transfer-encoding:content-type:content-type:date
-	:date:from:from:in-reply-to:in-reply-to:message-id:mime-version
-	:references:reply-to:subject:subject:to:to; s=fm1; t=1770070900;
-	 x=1770157300; bh=GIHhdvbgfouUqgTO6JGsJtbTO9lUUF9al1cNIIuHJ7w=; b=
-	iCDU7uwWnG/imAcXm7o6tuI4JstzAFxDpwDXTX7xRUxVpteGZ5CQUeOHfsc3+eOZ
-	RrLYE3qia20OGH2NI4OYGOdYuyMRnNHoo2GvKUdw9ubTF4WqqaX8h9FgR/sJ/5Jv
-	4qUeelAd6VZjDooRZz/wYvRksnCVnQsI71EhBciEgnT17I33IJAG7/PBZH06QzBB
-	au1+tbtUG+0CAB5NXX7f4GLsIpcZ+r9PLl/FfJfoiNpgSlk3eS85QIdPL99cV2XF
-	3q1Q0oj2dPq492kq8+BbuaF34T4IdK0C1Hneymaruf1hy03uTCM8lXxT7D9xVDMO
-	tDpcyNdWl0jtDa8ioAw4tQ==
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-	messagingengine.com; h=cc:cc:content-transfer-encoding
-	:content-type:content-type:date:date:feedback-id:feedback-id
-	:from:from:in-reply-to:in-reply-to:message-id:mime-version
-	:references:reply-to:subject:subject:to:to:x-me-proxy
-	:x-me-sender:x-me-sender:x-sasl-enc; s=fm3; t=1770070900; x=
-	1770157300; bh=GIHhdvbgfouUqgTO6JGsJtbTO9lUUF9al1cNIIuHJ7w=; b=P
-	oOtQv6u9cV4DNhEj1xx1pPZSQlERBp3G7G6CgB5Ok2hlOLomDpw7TliO+CFXSSNm
-	TiQkNDvfbvphAi8cWJKG4yqvfTH7n7LOci6IzQywXf9GIFKnCNmoFoITPny71kTT
-	6zvJiY/Mgt7wvn9W+yQRMJ1yW+qH2Da/4TOkX13LPuNQSOsVkr4mmlPgE46AanTs
-	KMXai1Q3X7rnrNwnhVuaF02MRRclH0vdGJJgIWCAwAL4rcQRrsQuPuXF+KMRRceN
-	k4u6JW3tGSbs3E6yXqOUmUwIjQo/WKtiuSW/GzeAd7gW3Yk1hQfoAn/afRRIJ0z9
-	68UzaC6KNjaYuD3/UCJUA==
-X-ME-Sender: <xms:cyOBade50CXTIj33kEk63MI-_J87lOXVSoNn7knUTtpKWwgsjYj72A>
-    <xme:cyOBaWAemUDypDhtlsOTHHuDNA9BwmUGzqXMaaJHVAeB_ftSnRVysPiXY1OJX7PSR
-    W6WmufBdlv5LLvOQauUIjrjN4YwKHVDpxSgqE54BsrjQZrvWOAiCd8>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeefgedrtddtgddujeekkedvucetufdoteggodetrf
-    dotffvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdfurfetoffkrfgpnffqhgenuceu
-    rghilhhouhhtmecufedttdenucesvcftvggtihhpihgvnhhtshculddquddttddmnecujf
-    gurhepofggfffhvfevkfgjfhfutgfgsehtjeertdertddtnecuhfhrohhmpedfofgrrhhk
-    ucfrvggrrhhsohhnfdcuoehmphgvrghrshhonhdqlhgvnhhovhhosehsqhhuvggssgdrtg
-    grqeenucggtffrrghtthgvrhhnpefhuedvheetgeehtdehtdevheduvdejjefggfeijedv
-    geekhfefleehkeehvdffheenucevlhhushhtvghrufhiiigvpedtnecurfgrrhgrmhepmh
-    grihhlfhhrohhmpehmphgvrghrshhonhdqlhgvnhhovhhosehsqhhuvggssgdrtggrpdhn
-    sggprhgtphhtthhopeekpdhmohguvgepshhmthhpohhuthdprhgtphhtthhopegtohgshi
-    essgihthgvmhgrphdrshhprggtvgdprhgtphhtthhopeguvghrvghkjhhohhhnrdgtlhgr
-    rhhksehgmhgrihhlrdgtohhmpdhrtghpthhtohephhhmhheshhhmhhdrvghnghdrsghrpd
-    hrtghpthhtohephhgrnhhsgheskhgvrhhnvghlrdhorhhgpdhrtghpthhtohepihhlphho
-    rdhjrghrvhhinhgvnheslhhinhhugidrihhnthgvlhdrtghomhdprhgtphhtthhopehisg
-    hmqdgrtghpihdquggvvhgvlheslhhishhtshdrshhouhhrtggvfhhorhhgvgdrnhgvthdp
-    rhgtphhtthhopehlihhnuhigqdhkvghrnhgvlhesvhhgvghrrdhkvghrnhgvlhdrohhrgh
-    dprhgtphhtthhopehplhgrthhfohhrmhdqughrihhvvghrqdigkeeisehvghgvrhdrkhgv
-    rhhnvghlrdhorhhg
-X-ME-Proxy: <xmx:cyOBaXuACOBKcYEdNz2TNasuo0n95lI-aNFZXV3nieTxfTrprGJOww>
-    <xmx:cyOBaY7sEjT17SS7_pNFNdX9FQlkBOkkfmotb9zbwtcK_5jM0jMq0A>
-    <xmx:cyOBabdIhSyD9iZyfYriUS2RAG1iRz45NcdnU-uNkJCSnDlcfLwlVg>
-    <xmx:cyOBadxGlObR4xYQzs7PuOw29Z8qD6JX8SDcn_G7jNYbBYfunWwblQ>
-    <xmx:dCOBaV-Z5RKxGPA1X5c5Z5L4h7DRzk6Eyqq7Lxz1hM911rslNr3u_2wH>
-Feedback-ID: ibe194615:Fastmail
-Received: by mailuser.phl.internal (Postfix, from userid 501)
-	id 0718F2CE0072; Mon,  2 Feb 2026 17:21:39 -0500 (EST)
-X-Mailer: MessagingEngine.com Webmail Interface
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="N9I6rN3C"
+Received: by mail-vk1-f178.google.com with SMTP id 71dfb90a1353d-560227999d2so1937685e0c.1
+        for <platform-driver-x86@vger.kernel.org>; Mon, 02 Feb 2026 18:40:55 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1770086455; x=1770691255; darn=vger.kernel.org;
+        h=in-reply-to:references:cc:to:from:subject:message-id:date
+         :content-transfer-encoding:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=KsqYKO57kcaexHTzdufWdg6k5lDbRhwfeK1kutGLUV8=;
+        b=N9I6rN3C+xdyq9S8fRz+kcx8LJWyskEpmJmDVr1pqvBVRzJsbJcxk7GdDAbrtUD2Eb
+         mmLqviafH55lgh2SpiyMqSADR5MUOGEet0iHFtQFHznrBvoU3k+hLaQLhPnns7VeBl8j
+         NZ8kpJBUTo7A5H0ovqBTL1ZQ2MfFHBqXWCu/mE2sbQ+AyWxnRGZsYuDNhPX8QOj6WDuw
+         9puM8coAabY2Yzh7mGrae9xs38AUlJbfb0NDM43Tj8qKYa6erotQrPUgAz8KBJe3xg1L
+         xXnylNwdfn7D/5tOC3HeiTAN1cAX7VetWOU7WoAA9KK6c6bm5yryqKmNC7UODbid7ij1
+         q9lg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1770086455; x=1770691255;
+        h=in-reply-to:references:cc:to:from:subject:message-id:date
+         :content-transfer-encoding:mime-version:x-gm-gg:x-gm-message-state
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=KsqYKO57kcaexHTzdufWdg6k5lDbRhwfeK1kutGLUV8=;
+        b=FNG64MoJbObXshhpk2HWVrSQD7FmHfpd0W56crmksL1SVNjyDPInda+yS31CovqNke
+         C4eHmg+dVKlx9uVFwtXulSnD7QNMZLFiizUIaVz/Vz4pOEfg+MHtrQtNa5hEDc9w7Us3
+         OivwXbqeIY5cTVc27trPzL6aMdXz6282RK1E31Euq6q8AW4YA04ZeZRSCXp9Q55doPuS
+         A8KMcAcVpKTkKG1u0JExA0XLuyKYfXGJHA62FoSDExUEmlIjF+5KouVodnFxvh+/2n2V
+         Skup/M1RTwtxxY8JLwYFf+bwcb8I3ADMoOTz6YTdBrRo/kbS5dggzNev6PqXz0DHWqX9
+         fP0w==
+X-Forwarded-Encrypted: i=1; AJvYcCWY7hld45x0RYW/fCGF1hHk0EGHWQen93XbSoGtx78qzTAGUPUsTICUybnIHdEumrhkeMWkSxYJ/tG+KooPNQKu8F7d@vger.kernel.org
+X-Gm-Message-State: AOJu0YzVweeOG+p/7bFW7R0zMBujAhU92KTIeH0t7ZbnM8O5MfhnD8Nc
+	2/870yGu/NgB0tw9brTdh6rPeJh0B666bA9h4ROrsiipHd5MDLn/Jdj0
+X-Gm-Gg: AZuq6aLCyOLihDgNc3FEyLEIBNa9ehfwBlm1rc+M/Qcwx0Gmvy7HCgGwzJr2oDEgLPv
+	RGFja0Yiv90/ymzrkA3dJ0RBzTCRhfydXtnakhR2B1FvlMvdbD+OgOrzIhpL3WR3vRhB82UxwOL
+	sCzy0eplzKYYjdPwllNYTVHVOUCvRVcIGryFV8k36aoOqoocApAluW4Z1MbeOf/bBUJ1026V2/4
+	Bz4nCAuKnHuvafEcjMqRzrZ1CiWKmwiL/JWOdM6aiMQHFwLJRWwN+p01edpQVAZ3kwRzq+4HLRB
+	XwZJn3sYTNMRSY9cYB2PR6cX9TkFmuZ7LIgM9WjaAcgKQYE6ZprKobUeZIq0RXK0/npFIiAf6MG
+	Pll5cOffI05WsJED3ns9SBSOfneks3KKHDMiw8tUwGTLRWibIMFmsujUPQ4QN4vAm3odnzufHMl
+	NgPg==
+X-Received: by 2002:a05:6122:1692:b0:563:702b:e2a7 with SMTP id 71dfb90a1353d-566a01437b9mr3665059e0c.19.1770086454761;
+        Mon, 02 Feb 2026 18:40:54 -0800 (PST)
+Received: from localhost ([2800:bf0:82:11a2:7ac4:1f2:947b:2b6])
+        by smtp.gmail.com with ESMTPSA id 71dfb90a1353d-56685b015e5sm5611567e0c.3.2026.02.02.18.40.53
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Mon, 02 Feb 2026 18:40:54 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-X-ThreadId: AzspBGjVLsSB
-Date: Mon, 02 Feb 2026 17:21:18 -0500
-From: "Mark Pearson" <mpearson-lenovo@squebb.ca>
-To: "Coby McKinney" <coby@bytemap.space>, "Hans de Goede" <hansg@kernel.org>,
- =?UTF-8?Q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
-Cc: "Henrique de Moraes Holschuh" <hmh@hmh.eng.br>,
- "Derek J . Clark" <derekjohn.clark@gmail.com>,
- "open list:THINKPAD ACPI EXTRAS DRIVER" <ibm-acpi-devel@lists.sourceforge.net>,
- "platform-driver-x86@vger.kernel.org" <platform-driver-x86@vger.kernel.org>,
- "open list" <linux-kernel@vger.kernel.org>
-Message-Id: <4106b16f-4537-4b14-b5ba-545e2d1e0734@app.fastmail.com>
-In-Reply-To: <20260202205214.18898-1-coby@bytemap.space>
-References: <20260202205214.18898-1-coby@bytemap.space>
-Subject: Re: [PATCH] platform/x86: thinkpad_acpi: use seq_puts() instead of
- seq_printf()
-Content-Type: text/plain
-Content-Transfer-Encoding: 7bit
+Mime-Version: 1.0
+Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=UTF-8
+Date: Mon, 02 Feb 2026 21:40:47 -0500
+Message-Id: <DG4ZA0AFOSQI.J5EJQMPYPV7K@gmail.com>
+Subject: Re: [PATCH] platform/x86: dell-wmi: Add audio/mic mute key codes
+From: "Kurt Borja" <kuurtb@gmail.com>
+To: =?utf-8?q?Pali_Roh=C3=A1r?= <pali@kernel.org>, "Kurt Borja"
+ <kuurtb@gmail.com>
+Cc: "Matthew Garrett" <mjg59@srcf.ucam.org>, "Hans de Goede"
+ <hansg@kernel.org>, =?utf-8?q?Ilpo_J=C3=A4rvinen?=
+ <ilpo.jarvinen@linux.intel.com>, <platform-driver-x86@vger.kernel.org>,
+ <linux-kernel@vger.kernel.org>, <stable@vger.kernel.org>, "Olexa Bilaniuk"
+ <obilaniu@gmail.com>
+X-Mailer: aerc 0.21.0-0-g5549850facc2
+References: <20260201-mute-keys-v1-1-825e786732fc@gmail.com>
+ <20260202081247.vpvbsapdrynr7vtf@pali>
+ <DG4NNLOA8MJI.35V2HGOFN3RM8@gmail.com>
+ <20260202174322.x6fr4atrx5vulxt7@pali>
+In-Reply-To: <20260202174322.x6fr4atrx5vulxt7@pali>
 
-On Mon, Feb 2, 2026, at 3:52 PM, Coby McKinney wrote:
-> checkpatch.pl reported warnings where seq_printf() was used for simple
-> strings with no format specifiers.
+On Mon Feb 2, 2026 at 12:43 PM -05, Pali Roh=C3=A1r wrote:
+> On Monday 02 February 2026 12:34:19 Kurt Borja wrote:
+>> On Mon Feb 2, 2026 at 3:12 AM -05, Pali Roh=C3=A1r wrote:
+>> > On Sunday 01 February 2026 23:37:37 Kurt Borja wrote:
+>> >> Add audio/mic mute key codes found in some Alienware devices.
+>> >>=20
+>> >> Cc: stable@vger.kernel.org
+>> >> Tested-by: Olexa Bilaniuk <obilaniu@gmail.com>
+>> >> Suggested-by: Olexa Bilaniuk <obilaniu@gmail.com>
+>> >> Signed-off-by: Kurt Borja <kuurtb@gmail.com>
+>> >> ---
+>> >>  drivers/platform/x86/dell/dell-wmi-base.c | 3 +++
+>> >>  1 file changed, 3 insertions(+)
+>> >>=20
+>> >> diff --git a/drivers/platform/x86/dell/dell-wmi-base.c b/drivers/plat=
+form/x86/dell/dell-wmi-base.c
+>> >> index 28076929d6af..62cf28d1fe19 100644
+>> >> --- a/drivers/platform/x86/dell/dell-wmi-base.c
+>> >> +++ b/drivers/platform/x86/dell/dell-wmi-base.c
+>> >> @@ -86,6 +86,9 @@ static const struct key_entry dell_wmi_keymap_type_=
+0000[] =3D {
+>> >>  	/* Meta key unlock */
+>> >>  	{ KE_IGNORE, 0xe001, { KEY_RIGHTMETA } },
+>> >> =20
+>> >> +	{ KE_KEY,    0x0109, { KEY_MUTE } },
+>> >> +	{ KE_KEY,    0x0150, { KEY_MICMUTE } },
+>> >
+>> > Hello, please keep codes in the array sorted.
+>>=20
+>> Hi Pali,
+>>=20
+>> I thought I sorted it... I'll fix it, thanks!
 >
-> Replace these instances with seq_puts() to avoid the overhead of runtime
-> string parsing and to conform to kernel coding standards.
->
-> Signed-off-by: Coby McKinney <coby@bytemap.space>
-> ---
->  drivers/platform/x86/lenovo/thinkpad_acpi.c | 86 ++++++++++-----------
->  1 file changed, 43 insertions(+), 43 deletions(-)
->
-> diff --git a/drivers/platform/x86/lenovo/thinkpad_acpi.c 
-> b/drivers/platform/x86/lenovo/thinkpad_acpi.c
-> index 6b0e4b4c485e..ffe71cbf3cb8 100644
-> --- a/drivers/platform/x86/lenovo/thinkpad_acpi.c
-> +++ b/drivers/platform/x86/lenovo/thinkpad_acpi.c
-> @@ -1315,7 +1315,7 @@ static ssize_t 
-> tpacpi_rfk_sysfs_enable_store(const enum tpacpi_rfk_id id,
->  static int tpacpi_rfk_procfs_read(const enum tpacpi_rfk_id id, struct 
-> seq_file *m)
->  {
->  	if (id >= TPACPI_RFK_SW_MAX)
-> -		seq_printf(m, "status:\t\tnot supported\n");
-> +		seq_puts(m, "status:\t\tnot supported\n");
->  	else {
->  		int status;
-> 
-> @@ -1330,7 +1330,7 @@ static int tpacpi_rfk_procfs_read(const enum 
-> tpacpi_rfk_id id, struct seq_file *
->  		}
-> 
->  		seq_printf(m, "status:\t\t%s\n", str_enabled_disabled(status == 
-> TPACPI_RFK_RADIO_ON));
-> -		seq_printf(m, "commands:\tenable, disable\n");
-> +		seq_puts(m, "commands:\tenable, disable\n");
->  	}
-> 
->  	return 0;
-> @@ -4017,7 +4017,7 @@ static int hotkey_read(struct seq_file *m)
->  	int res, status;
-> 
->  	if (!tp_features.hotkey) {
-> -		seq_printf(m, "status:\t\tnot supported\n");
-> +		seq_puts(m, "status:\t\tnot supported\n");
->  		return 0;
->  	}
-> 
-> @@ -4033,10 +4033,10 @@ static int hotkey_read(struct seq_file *m)
->  	seq_printf(m, "status:\t\t%s\n", str_enabled_disabled(status & BIT(0)));
->  	if (hotkey_all_mask) {
->  		seq_printf(m, "mask:\t\t0x%08x\n", hotkey_user_mask);
-> -		seq_printf(m, "commands:\tenable, disable, reset, <mask>\n");
-> +		seq_puts(m, "commands:\tenable, disable, reset, <mask>\n");
->  	} else {
-> -		seq_printf(m, "mask:\t\tnot supported\n");
-> -		seq_printf(m, "commands:\tenable, disable, reset\n");
-> +		seq_puts(m, "mask:\t\tnot supported\n");
-> +		seq_puts(m, "commands:\tenable, disable, reset\n");
->  	}
-> 
->  	return 0;
-> @@ -4933,7 +4933,7 @@ static int video_read(struct seq_file *m)
->  	int status, autosw;
-> 
->  	if (video_supported == TPACPI_VIDEO_NONE) {
-> -		seq_printf(m, "status:\t\tnot supported\n");
-> +		seq_puts(m, "status:\t\tnot supported\n");
->  		return 0;
->  	}
-> 
-> @@ -4949,18 +4949,18 @@ static int video_read(struct seq_file *m)
->  	if (autosw < 0)
->  		return autosw;
-> 
-> -	seq_printf(m, "status:\t\tsupported\n");
-> +	seq_puts(m, "status:\t\tsupported\n");
->  	seq_printf(m, "lcd:\t\t%s\n", str_enabled_disabled(status & BIT(0)));
->  	seq_printf(m, "crt:\t\t%s\n", str_enabled_disabled(status & BIT(1)));
->  	if (video_supported == TPACPI_VIDEO_NEW)
->  		seq_printf(m, "dvi:\t\t%s\n", str_enabled_disabled(status & BIT(3)));
->  	seq_printf(m, "auto:\t\t%s\n", str_enabled_disabled(autosw & BIT(0)));
-> -	seq_printf(m, "commands:\tlcd_enable, lcd_disable\n");
-> -	seq_printf(m, "commands:\tcrt_enable, crt_disable\n");
-> +	seq_puts(m, "commands:\tlcd_enable, lcd_disable\n");
-> +	seq_puts(m, "commands:\tcrt_enable, crt_disable\n");
->  	if (video_supported == TPACPI_VIDEO_NEW)
-> -		seq_printf(m, "commands:\tdvi_enable, dvi_disable\n");
-> -	seq_printf(m, "commands:\tauto_enable, auto_disable\n");
-> -	seq_printf(m, "commands:\tvideo_switch, expand_toggle\n");
-> +		seq_puts(m, "commands:\tdvi_enable, dvi_disable\n");
-> +	seq_puts(m, "commands:\tauto_enable, auto_disable\n");
-> +	seq_puts(m, "commands:\tvideo_switch, expand_toggle\n");
-> 
->  	return 0;
->  }
-> @@ -5204,14 +5204,14 @@ static int kbdlight_read(struct seq_file *m)
->  	int level;
-> 
->  	if (!tp_features.kbdlight) {
-> -		seq_printf(m, "status:\t\tnot supported\n");
-> +		seq_puts(m, "status:\t\tnot supported\n");
->  	} else {
->  		level = kbdlight_get_level();
->  		if (level < 0)
->  			seq_printf(m, "status:\t\terror %d\n", level);
->  		else
->  			seq_printf(m, "status:\t\t%d\n", level);
-> -		seq_printf(m, "commands:\t0, 1, 2\n");
-> +		seq_puts(m, "commands:\t0, 1, 2\n");
->  	}
-> 
->  	return 0;
-> @@ -5378,16 +5378,16 @@ static int light_read(struct seq_file *m)
->  	int status;
-> 
->  	if (!tp_features.light) {
-> -		seq_printf(m, "status:\t\tnot supported\n");
-> +		seq_puts(m, "status:\t\tnot supported\n");
->  	} else if (!tp_features.light_status) {
-> -		seq_printf(m, "status:\t\tunknown\n");
-> -		seq_printf(m, "commands:\ton, off\n");
-> +		seq_puts(m, "status:\t\tunknown\n");
-> +		seq_puts(m, "commands:\ton, off\n");
->  	} else {
->  		status = light_get_status();
->  		if (status < 0)
->  			return status;
->  		seq_printf(m, "status:\t\t%s\n", str_on_off(status & BIT(0)));
-> -		seq_printf(m, "commands:\ton, off\n");
-> +		seq_puts(m, "commands:\ton, off\n");
->  	}
-> 
->  	return 0;
-> @@ -5477,10 +5477,10 @@ static int cmos_read(struct seq_file *m)
->  	/* cmos not supported on 570, 600e/x, 770e, 770x, A21e, A2xm/p,
->  	   R30, R31, T20-22, X20-21 */
->  	if (!cmos_handle)
-> -		seq_printf(m, "status:\t\tnot supported\n");
-> +		seq_puts(m, "status:\t\tnot supported\n");
->  	else {
-> -		seq_printf(m, "status:\t\tsupported\n");
-> -		seq_printf(m, "commands:\t<cmd> (<cmd> is 0-21)\n");
-> +		seq_puts(m, "status:\t\tsupported\n");
-> +		seq_puts(m, "commands:\t<cmd> (<cmd> is 0-21)\n");
->  	}
-> 
->  	return 0;
-> @@ -5847,10 +5847,10 @@ static int __init led_init(struct ibm_init_struct *iibm)
->  static int led_read(struct seq_file *m)
->  {
->  	if (!led_supported) {
-> -		seq_printf(m, "status:\t\tnot supported\n");
-> +		seq_puts(m, "status:\t\tnot supported\n");
->  		return 0;
->  	}
-> -	seq_printf(m, "status:\t\tsupported\n");
-> +	seq_puts(m, "status:\t\tsupported\n");
-> 
->  	if (led_supported == TPACPI_LED_570) {
->  		/* 570 */
-> @@ -5863,7 +5863,7 @@ static int led_read(struct seq_file *m)
->  		}
->  	}
-> 
-> -	seq_printf(m, "commands:\t<led> on, <led> off, <led> blink (<led> is 
-> 0-15)\n");
-> +	seq_puts(m, "commands:\t<led> on, <led> off, <led> blink (<led> is 
-> 0-15)\n");
-> 
->  	return 0;
->  }
-> @@ -5947,10 +5947,10 @@ static int __init beep_init(struct 
-> ibm_init_struct *iibm)
->  static int beep_read(struct seq_file *m)
->  {
->  	if (!beep_handle)
-> -		seq_printf(m, "status:\t\tnot supported\n");
-> +		seq_puts(m, "status:\t\tnot supported\n");
->  	else {
-> -		seq_printf(m, "status:\t\tsupported\n");
-> -		seq_printf(m, "commands:\t<cmd> (<cmd> is 0-17)\n");
-> +		seq_puts(m, "status:\t\tsupported\n");
-> +		seq_puts(m, "commands:\t<cmd> (<cmd> is 0-17)\n");
->  	}
-> 
->  	return 0;
-> @@ -6399,14 +6399,14 @@ static int thermal_read(struct seq_file *m)
->  	if (unlikely(n < 0))
->  		return n;
-> 
-> -	seq_printf(m, "temperatures:\t");
-> +	seq_puts(m, "temperatures:\t");
-> 
->  	if (n > 0) {
->  		for (i = 0; i < (n - 1); i++)
->  			seq_printf(m, "%d ", t.temp[i] / 1000);
->  		seq_printf(m, "%d\n", t.temp[i] / 1000);
->  	} else
-> -		seq_printf(m, "not supported\n");
-> +		seq_puts(m, "not supported\n");
-> 
->  	return 0;
->  }
-> @@ -6919,10 +6919,10 @@ static int brightness_read(struct seq_file *m)
-> 
->  	level = brightness_get(NULL);
->  	if (level < 0) {
-> -		seq_printf(m, "level:\t\tunreadable\n");
-> +		seq_puts(m, "level:\t\tunreadable\n");
->  	} else {
->  		seq_printf(m, "level:\t\t%d\n", level);
-> -		seq_printf(m, "commands:\tup, down\n");
-> +		seq_puts(m, "commands:\tup, down\n");
->  		seq_printf(m, "commands:\tlevel <level> (<level> is 0-%d)\n",
->  			       bright_maxlvl);
->  	}
-> @@ -7638,10 +7638,10 @@ static int volume_read(struct seq_file *m)
->  	u8 status;
-> 
->  	if (volume_get_status(&status) < 0) {
-> -		seq_printf(m, "level:\t\tunreadable\n");
-> +		seq_puts(m, "level:\t\tunreadable\n");
->  	} else {
->  		if (tp_features.mixer_no_level_control)
-> -			seq_printf(m, "level:\t\tunsupported\n");
-> +			seq_puts(m, "level:\t\tunsupported\n");
->  		else
->  			seq_printf(m, "level:\t\t%d\n",
->  					status & TP_EC_AUDIO_LVL_MSK);
-> @@ -7649,9 +7649,9 @@ static int volume_read(struct seq_file *m)
->  		seq_printf(m, "mute:\t\t%s\n", str_on_off(status & BIT(TP_EC_AUDIO_MUTESW)));
-> 
->  		if (volume_control_allowed) {
-> -			seq_printf(m, "commands:\tunmute, mute\n");
-> +			seq_puts(m, "commands:\tunmute, mute\n");
->  			if (!tp_features.mixer_no_level_control) {
-> -				seq_printf(m, "commands:\tup, down\n");
-> +				seq_puts(m, "commands:\tup, down\n");
->  				seq_printf(m, "commands:\tlevel <level> (<level> is 0-%d)\n",
->  					      TP_EC_VOLUME_MAX);
->  			}
-> @@ -9157,9 +9157,9 @@ static int fan_read(struct seq_file *m)
->  		} else if (fan_status_access_mode == TPACPI_FAN_RD_TPEC) {
->  			if (status & TP_EC_FAN_FULLSPEED)
->  				/* Disengaged mode takes precedence */
-> -				seq_printf(m, "level:\t\tdisengaged\n");
-> +				seq_puts(m, "level:\t\tdisengaged\n");
->  			else if (status & TP_EC_FAN_AUTO)
-> -				seq_printf(m, "level:\t\tauto\n");
-> +				seq_puts(m, "level:\t\tauto\n");
->  			else
->  				seq_printf(m, "level:\t\t%d\n", status);
->  		}
-> @@ -9167,19 +9167,19 @@ static int fan_read(struct seq_file *m)
-> 
->  	case TPACPI_FAN_NONE:
->  	default:
-> -		seq_printf(m, "status:\t\tnot supported\n");
-> +		seq_puts(m, "status:\t\tnot supported\n");
->  	}
-> 
->  	if (fan_control_commands & TPACPI_FAN_CMD_LEVEL) {
-> -		seq_printf(m, "commands:\tlevel <level>");
-> +		seq_puts(m, "commands:\tlevel <level>");
-> 
->  		switch (fan_control_access_mode) {
->  		case TPACPI_FAN_WR_ACPI_SFAN:
-> -			seq_printf(m, " (<level> is 0-7)\n");
-> +			seq_puts(m, " (<level> is 0-7)\n");
->  			break;
-> 
->  		default:
-> -			seq_printf(m, " (<level> is 0-7, auto, disengaged, full-speed)\n");
-> +			seq_puts(m, " (<level> is 0-7, auto, disengaged, full-speed)\n");
->  			break;
->  		}
->  	}
-> @@ -9189,7 +9189,7 @@ static int fan_read(struct seq_file *m)
->  			       "commands:\twatchdog <timeout> (<timeout> is 0 (off), 1-120 
-> (seconds))\n");
-> 
->  	if (fan_control_commands & TPACPI_FAN_CMD_SPEED)
-> -		seq_printf(m, "commands:\tspeed <speed> (<speed> is 0-65535)\n");
-> +		seq_puts(m, "commands:\tspeed <speed> (<speed> is 0-65535)\n");
-> 
->  	return 0;
->  }
-> -- 
-> 2.52.0
+> Before is value 0xe001 and your new values are 0x01xx. Most of values
+> are 0xeXXX, so it is quite unusual that Dell allocated values with
+> different pattern.
 
-Looks good to me. Thanks!
-Reviewed-by: Mark Pearson <mpearson-lenovo@squebb.ca>
-Mark
+It is a bit unusual but it corresponds with the user report
+
+	dell_wmi: Unknown key with type 0x0000 and code 0x0109 pressed
+	dell_wmi: Unknown key with type 0x0000 and code 0x0150 pressed
+
+and I also checked the acpidump.
+
+>
+> Also, could you please include into commit message for which Alienware
+> devices is change needed? It would help to detect devices which will be
+> fixed by your change.
+
+Sure, the model is Alienware m18 r1 AMD.
+
+I said "some" in the commit message because it's very likely other
+Alienware models also use these codes.
+
+>
+> And please add some comment into source file above those two new codes
+> for which are needed, in similar way how we have commented/documented
+> other key codes.
+
+Ack.
+
+--=20
+Thanks,
+ ~ Kurt
