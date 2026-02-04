@@ -1,119 +1,283 @@
-Received: from bmailout1.hostsharing.net (bmailout1.hostsharing.net [83.223.95.100])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-vk1-f175.google.com (mail-vk1-f175.google.com [209.85.221.175])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C6DF6423162;
-	Wed,  4 Feb 2026 15:20:09 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=83.223.95.100
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0489D31B111
+	for <platform-driver-x86@vger.kernel.org>; Wed,  4 Feb 2026 16:44:03 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.175
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1770218411; cv=none; b=ecEuY2v2l4TRg7pddVcLmUyxJ311bhyxkaQ0YGccj185B5uSHKtZJ32jgEFUtiFKCzzCyxlfeJU5E4/IryAmyzCLrEH+Abvs/QYL1xJM7NTkCG+eEyxupVdJVw/6t2yf4R8WT8Fp04/TKINRuUJ4x8KH66AGtidGY0d/U9DFVEM=
+	t=1770223444; cv=none; b=BbSrhL9MOsA/Nz+oPynPhLIrxD9vuMOwEuCuySmXqNbjZA+lwmtj41chjPov+a2MFWhlHnsGMR2ic2/wlEXkwgULfgzB297B74SyyTiTfSMevjDqUlTip3m4+9xIrP1rTespf/SoH4dc9j3rXS/AdUcr2vM+3lfBOsS2qgPNuXs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1770218411; c=relaxed/simple;
-	bh=TACv5gqlwHHbQ9papC74w7E0D5NZIue8d8VErNf8QX8=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=rtIanfMt9TedFGuRjUVsP2ZMvrAXaGWxL+HBmYcX7Q3Vr2x7VGooKpGcMROIsuzJg9TKs0nhr8ziIJm8SdwyP4MhH3qGIuoYXvuPnkvrPbZsW2oD3P1OkCgpZLLZIwz5cSDJ+Y0dwOde6d3bC4Z6p5iEAKchTuSiCWl9Ml0L7U8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=wunner.de; spf=none smtp.mailfrom=h08.hostsharing.net; arc=none smtp.client-ip=83.223.95.100
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=wunner.de
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=h08.hostsharing.net
-Received: from h08.hostsharing.net (h08.hostsharing.net [IPv6:2a01:37:1000::53df:5f1c:0])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature ECDSA (secp384r1) server-digest SHA384
-	 client-signature ECDSA (secp384r1) client-digest SHA384)
-	(Client CN "*.hostsharing.net", Issuer "GlobalSign GCC R6 AlphaSSL CA 2025" (verified OK))
-	by bmailout1.hostsharing.net (Postfix) with ESMTPS id CBD5F2C04008;
-	Wed,  4 Feb 2026 16:20:01 +0100 (CET)
-Received: by h08.hostsharing.net (Postfix, from userid 100393)
-	id C267D3E55F; Wed,  4 Feb 2026 16:20:01 +0100 (CET)
-Date: Wed, 4 Feb 2026 16:20:01 +0100
-From: Lukas Wunner <lukas@wunner.de>
-To: Atharva Tiwari <atharvatiwarilinuxdev@gmail.com>
-Cc: Hans de Goede <hansg@kernel.org>,
-	Ilpo =?iso-8859-1?Q?J=E4rvinen?= <ilpo.jarvinen@linux.intel.com>,
-	platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v2] apple-gmux: preserve brightness using EFI
-Message-ID: <aYNjob2b9MTusPvO@wunner.de>
-References: <20260203100700.2223-1-atharvatiwarilinuxdev@gmail.com>
+	s=arc-20240116; t=1770223444; c=relaxed/simple;
+	bh=m0ibNfk2VpA38peHA0RLTgQOXdW7QI9MrxTV+kwDJEk=;
+	h=Content-Type:Date:Message-Id:From:To:Cc:Subject:Mime-Version:
+	 References:In-Reply-To; b=Ul44na2crg+cr0C/yV/WG7O7Gir4NF1RxjtuwlJk5sT5Yt+mUb/geXX7AtvS1FcLufYtF81Gnzb58a8LUoM/JRh5MVXVM+10u0iq0oN6/DVqBTasEw9Z0h2s5OCMEradJ0pra0dMFWHN6YTViMUATCAy1mrkucajWgTgjeoUI3Y=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=k59AY5yt; arc=none smtp.client-ip=209.85.221.175
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="k59AY5yt"
+Received: by mail-vk1-f175.google.com with SMTP id 71dfb90a1353d-55b09f54e98so24856e0c.1
+        for <platform-driver-x86@vger.kernel.org>; Wed, 04 Feb 2026 08:44:03 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1770223443; x=1770828243; darn=vger.kernel.org;
+        h=in-reply-to:references:content-transfer-encoding:mime-version
+         :subject:cc:to:from:message-id:date:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=tEZEzcXOZREs1cE7ua4SuqPTcMT1oS18cFu1rc3syQg=;
+        b=k59AY5ytdY7SJabZXVjdU22tfiiODjzqlPpJGIaPCeL9vh58UuKHweQ2ClrktVDO0V
+         NySAMNvupLD3VXxCSxSCBshTZ9f/GCW4HpFTu6KZHK7dymj5Q25C6TTMLW43qNlN55ep
+         oQ9N+M6APLtCd2AtNPAZNEw61NlSFTsBOPs3ikZUCzX5+YKomqL3triEN7pMPXOa8Ya2
+         DuYLAB5/wQ6NksPTJg22XF3Mp9QB40H6LkmOZhSdTB+T9UeRQlte97xFhsfFlmKszHYu
+         TAbjo0uxcWedr8xxl4Uo6HcyydVt26ckYJ3WdSDIHOu54Bg+T7Z4Ha7d24WaDvJnfLqU
+         FWhA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1770223443; x=1770828243;
+        h=in-reply-to:references:content-transfer-encoding:mime-version
+         :subject:cc:to:from:message-id:date:x-gm-gg:x-gm-message-state:from
+         :to:cc:subject:date:message-id:reply-to;
+        bh=tEZEzcXOZREs1cE7ua4SuqPTcMT1oS18cFu1rc3syQg=;
+        b=gYQpXS5qvClbXvF5X/ClE/d5WS2AQOBxVo+oJ19FcvQu+WpEvhizol7V4diWziPrVG
+         NelY7M9KxLsipu9/KhBghM42sYSFyLnwOzj+QfnzMYQqV6bpRBI9nfJfpKpEEXu6jFG8
+         vyTtGceELXmL9+ReDD9xYRBRcmB+ZbA/fA/54b5Ej25kij+q4B1Fi7NV/rHs+ox4DSYv
+         ejfALEs2/BJPdApXPJF8NFXumV7LbzO1Hr/8x/rRXcRqLtm3za9y0AQdMz+YgOWaN7xY
+         bblBlX/Cw2IW+wpCbc5XEB4jQ5vSTuW/jyFKXky0104rLkjdZy4/Z0qTqNXaLPxHl6w7
+         VoXQ==
+X-Gm-Message-State: AOJu0YxZtKE/aAGI/oYaC1VKxhN7gXpDUXLkgBvrDnW4/zoHeAqQO9w4
+	wMMc2/ClMfENw5cgq7PtXIzxoZ9/JgUcaqsFIW+6+8spKO1f2YUkocyV
+X-Gm-Gg: AZuq6aKfrNVEAcaNVsj2Erx1jB7YPPwcaiPwYNEp8gjBq7Wdl5Todh7EV9SO0eptvDK
+	vlAGZFbyraxW8HKtVvcUk4pkYkT/JWDCV5rGutFfm3V4okUVv51ZbQEWgR9+k+wghlCmIfu/RDG
+	tkORyHXaLi/kQrw7PSHUXNDfjRMuSaFNo3Cd6HOW6zws4uFIF0Dl/zYmk/imusVJYbLJFuvDnpy
+	n3gHaqakyUdZok1Qs+f0MtplsS1ZUVfNkB4iMOcLZKsZy1YjwDFksLmpQuldcgT/FvOc5zQmvmF
+	LnAP7wvPjvgQkoqUmLaEZyYFqP6MrAek+GAViul2jGoz7t3wLsquJkdVULva/w/wd+mCqmY6nU7
+	8C7S6xaxUg5JrLedyt1tGDQ+KC8hIFlWI4w7VHiluHiX7W+MpUBBCKBesSXcuk2Pj4eEuaV9NAs
+	cTD0ZZd6GkY2pe
+X-Received: by 2002:a05:6122:2a11:b0:559:6960:be0d with SMTP id 71dfb90a1353d-566e80b599cmr1308891e0c.13.1770223442888;
+        Wed, 04 Feb 2026 08:44:02 -0800 (PST)
+Received: from localhost ([2800:bf0:82:11a2:7ac4:1f2:947b:2b6])
+        by smtp.gmail.com with ESMTPSA id 71dfb90a1353d-566e8229dadsm1287871e0c.18.2026.02.04.08.44.01
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Wed, 04 Feb 2026 08:44:02 -0800 (PST)
+Content-Type: text/plain; charset=UTF-8
+Date: Wed, 04 Feb 2026 11:43:56 -0500
+Message-Id: <DG6BU3U96TTS.1XNHFL5NRADT5@gmail.com>
+From: "Kurt Borja" <kuurtb@gmail.com>
+To: "Derek J. Clark" <derekjohn.clark@gmail.com>, "Kurt Borja"
+ <kuurtb@gmail.com>, "Rong Zhang" <i@rong.moe>,
+ =?utf-8?q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>, "Armin
+ Wolf" <W_Armin@gmx.de>, "Mark Pearson" <mpearson-lenovo@squebb.ca>
+Cc: <platform-driver-x86@vger.kernel.org>
+Subject: Re: Report: lenovo_wmi_other FW attributes always read 0
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20260203100700.2223-1-atharvatiwarilinuxdev@gmail.com>
+Mime-Version: 1.0
+Content-Transfer-Encoding: quoted-printable
+X-Mailer: aerc 0.21.0-0-g5549850facc2
+References: <DG60P3SHXR8H.3NSEHMZ6J7XRC@gmail.com>
+ <C18EFC0C-741A-4DF3-85A9-E3DE9CBC1737@gmail.com>
+In-Reply-To: <C18EFC0C-741A-4DF3-85A9-E3DE9CBC1737@gmail.com>
 
-On Tue, Feb 03, 2026 at 10:06:58AM +0000, Atharva Tiwari wrote:
-> Make apple-gmux save the current backlight brightness to EFI on shutdown,
-> so the brightness level is preserved across reboots.
-[...]
-> +++ b/drivers/platform/x86/apple-gmux.c
-> @@ -1012,6 +1016,27 @@ static void gmux_remove(struct pnp_dev *pnp)
->  	kfree(gmux_data);
->  }
->  
-> +static void gmux_shutdown(struct pnp_dev *pnp)
-> +{
-> +	struct apple_gmux_data *gmux_data = pnp_get_drvdata(pnp);
-> +	efi_status_t status = EFI_UNSUPPORTED;
-> +	u32 efi_attr;
-> +	u16 efi_data;
-> +
-> +	gmux_remove(pnp);
-> +
-> +	efi_data = (u16)gmux_get_brightness(gmux_data->bdev);
-> +	efi_attr = EFI_VARIABLE_NON_VOLATILE | EFI_VARIABLE_BOOTSERVICE_ACCESS |
-> +		EFI_VARIABLE_RUNTIME_ACCESS;
-> +
-> +	if (efi_rt_services_supported(EFI_RT_SUPPORTED_SET_VARIABLE))
-> +		status = efi.set_variable(EFI_BRIGHTNESS_NAME, &EFI_BRIGHTNESS_GUID,
-> +				efi_attr, sizeof(efi_data), &efi_data);
-> +
-> +	if (status != EFI_SUCCESS)
-> +		pr_warn("Unable to save brightness to EFI: 0x%lx\n", status);
-> +
-> +}
+On Wed Feb 4, 2026 at 3:36 AM -05, Derek J. Clark wrote:
+> On February 4, 2026 12:00:12 AM PST, Kurt Borja <kuurtb@gmail.com> wrote:
+>>Hi all,
+>
+> Hi Kurt.
 
-Hm, isn't efivar_set_variable() the proper API to use?
-Please cc linux-efi@vger.kernel.org on future submissions so that the
-EFI maintainer gets a chance to look over your patch and confirm it's
-using the right API.
+Hi Derek,
 
-Older Intel Macs with a gmux can be booted in CSM mode (bypassing EFI).
-I'm wondering what happens on those with the above change?
-Do they only get the warning or do they crash?
-The warning is probably uncalled for on CSM-booted Macs.
+>
+>>In my system (83KY Legion 7 16IAX1) the current_value of any of the
+>>firmware attributes exposed by this driver always reads 0
+>>
+>>	$ ls /sys/class/firmware-attributes/lenovo-wmi-other-0/attributes/
+>>	ppt_pl1_spl  ppt_pl2_sppt  ppt_pl3_fppt
+>>
+>>	$ cat /sys/class/firmware-attributes/lenovo-wmi-other-0/attributes/*/cur=
+rent_value
+>>	0
+>>	0
+>>	0
+>>
+>>After investigating my acpidump [1] I found that the argument passed to
+>>the WMI method Arg2 is matched as a whole integer instead of individual
+>>bytes (L: 49203)
+>>
+>>	If ((ToInteger (Arg2) =3D=3D 0x01010000))
+>>	{
+>>		Return (^^PC00.LPCB.EC0.F5E0) /* \_SB_.PC00.LPCB.EC0_.F5E0 */
+>>	}
+>>
+>>	If ((ToInteger (Arg2) =3D=3D 0x01020000))
+>>	{
+>>		Return (^^PC00.LPCB.EC0.CCP1) /* \_SB_.PC00.LPCB.EC0_.CCP1 */
+>>	}
+>>
+>>	If ((ToInteger (Arg2) =3D=3D 0x01030000))
+>>	{
+>>		/* This case (CPU FPPT) is actually just zero... */
+>>		Return (Zero)
+>>	}
+>>
+>>...and the driver always sets the second byte of Arg2 to the current
+>>profile (mode), which is never zero!
+>>
+>>	attribute_id =3D
+>>		FIELD_PREP(LWMI_ATTR_DEV_ID_MASK, tunable_attr->device_id) |
+>>		FIELD_PREP(LWMI_ATTR_FEAT_ID_MASK, tunable_attr->feature_id) |
+>>	-->	FIELD_PREP(LWMI_ATTR_MODE_ID_MASK, mode) |
+>>		FIELD_PREP(LWMI_ATTR_TYPE_ID_MASK, tunable_attr->type_id);
+>>
+>>So it never actually matches the attribute and falls back to zero :/
+>>
+>>This is however, not the case for all tunables. As you can see in the
+>>acpidump, just bellow the block above, these are matched depending on
+>>the current mode (second byte)
+>
+> This typically means that the method is stubbed so that it returns 0 on i=
+s_supported. During development I forgot to go back and add a check for thi=
+s when adding the attributes. Per the spec, there is no profile that corres=
+ponds to 0x00, so this is working as expected when showing an unsupported a=
+ttribute. If you add a debug print to the capdata driver when it is queryin=
+g the attributes you can see the entries are empty.=20
 
-CONFIG_EFI may not even be enabled, I suspect that apple-gmux.c does not
-compile in that case with the above change.
+Hmm it's weird because if I read
 
-On my MacBookPro9,1 (which does have a gmux), the backlight-level variable
-has 6 bytes which currently contain (hexdump): 07 00 00 80 35 00
-I guess this is actually a struct of a 32-bit and a 16-bit value
-or alternatively three 16-bit values.  Yet you're only writing a
-single 16-bit value to the variable.  How many bytes does the variable
-have on your iMac and what are their contents?  I'm worried that
-your change may not be compatible with all Macs which have this variable.
+	\_SB_.PC00.LPCB.EC0_.F5E0
+	\_SB_.PC00.LPCB.EC0_.CCP1
 
-Instead of setting this variable only on shutdown, it may be better to
-set it whenever brightness is changed.  That way, if the system isn't
-properly shut down (runs out of battery or crashes), brightness is still
-saved.  I'd introduce a work_struct which gets submitted with
-queue_delayed_work() after, say, 300 msec whenever brightness is changed.
-That way, multiple brightness changes are coalesced into a single
-variable write.
+directly, they show the correct SPPT and SPL values shown in the windows
+Legion Space app (under Custom mode).
 
-Finally, there are Macs which don't have a gmux but which do have a
-backlight.  They usually control brightness through i915 I think.
-It would be nice to save brightness to the EFI variable on those as well.
-Could probably be achieved by amending the backlight subsystem to
-trigger the variable write if x86_apple_machine is true.
-The variable write would then live in the backlight subsystem as an
-x86-specific quirk, instead of in the gmux driver.  Perhaps the backlight
-subsystem could be amended with a blocking notifier chain which is invoked
-on brightness changes and the arch/x86 subsystem could then install a
-notifier_block to trigger the variable write on x86_apple_machine systems
-if EFI is enabled and used as boot mode.
+It seems like these are supported?
 
+>
+> Coincidentally, I'm planning on submitting a series this week that adds t=
+he missing check for is_supported and also adds the not yet implemented att=
+ributes. If you want to take an early preview, it can be found here:
+>
+> https://github.com/pastaq/linux/tree/pastaq/6.18/lenovo/wmi-next
+>
+> With this you should only see attributes that are supported.
+
+Same problem, see bellow
+
+	$ fwupdmgr get-bios-settings
+
+	gpu_oc_stat:
+	  Setting type:         Integer
+	  Current Value:        0
+	  Description:          Set the GPU overclocking status
+	  Read Only:            False
+	  Minimum value:        0
+	  Maximum value:        0
+	  Scalar Increment:     0
+
+	cpu_temp:
+	  Setting type:         Integer
+	  Current Value:        0
+	  Description:          Set the CPU thermal load limit
+	  Read Only:            False
+	  Minimum value:        85
+	  Maximum value:        105
+	  Scalar Increment:     1
+
+	gpu_nv_ac_offset:
+	  Setting type:         Integer
+	  Current Value:        0
+	  Description:          Set the Nvidia GPU AC total processing power basel=
+ine offset
+	  Read Only:            False
+	  Minimum value:        10
+	  Maximum value:        80
+	  Scalar Increment:     1
+
+	gpu_nv_cpu_boost:
+	  Setting type:         Integer
+	  Current Value:        0
+	  Description:          Set the Nvidia GPU to CPU dynamic boost limit
+	  Read Only:            False
+	  Minimum value:        0
+	  Maximum value:        0
+	  Scalar Increment:     0
+
+	gpu_temp:
+	  Setting type:         Integer
+	  Current Value:        0
+	  Description:          Set the GPU thermal load limit
+	  Read Only:            False
+	  Minimum value:        75
+	  Maximum value:        87
+	  Scalar Increment:     1
+
+	ppt_pl1_spl:
+	  Setting type:         Integer
+	  Current Value:        0
+	  Description:          Set the CPU sustained power limit
+	  Read Only:            False
+	  Minimum value:        50
+	  Maximum value:        110
+	  Scalar Increment:     1
+
+	cpu_oc_stat:
+	  Setting type:         Integer
+	  Current Value:        0
+	  Description:          Set the CPU overclocking status
+	  Read Only:            False
+	  Minimum value:        0
+	  Maximum value:        0
+	  Scalar Increment:     0
+
+	ppt_cpu_cl:
+	  Setting type:         Integer
+	  Current Value:        0
+	  Description:          Set the CPU cross loading power limit
+	  Read Only:            False
+	  Minimum value:        30
+	  Maximum value:        75
+	  Scalar Increment:     1
+
+	ppt_pl2_sppt:
+	  Setting type:         Integer
+	  Current Value:        0
+	  Description:          Set the CPU slow package power tracking limit
+	  Read Only:            False
+	  Minimum value:        60
+	  Maximum value:        168
+	  Scalar Increment:     1
+
+	ppt_pl1_tau:
+	  Setting type:         Integer
+	  Current Value:        0
+	  Description:          Set the CPU sustained power limit exceed duration
+	  Read Only:            False
+	  Minimum value:        0
+	  Maximum value:        0
+	  Scalar Increment:     0
+
+	gpu_nv_ppab:
+	  Setting type:         Integer
+	  Current Value:        0
+	  Description:          Set the Nvidia GPU power performance aware boost l=
+imit
+	  Read Only:            False
+	  Minimum value:        0
+	  Maximum value:        0
+	  Scalar Increment:     0
+
+	gpu_nv_ctgp:
+	  Setting type:         Integer
+	  Current Value:        0
+	  Description:          Set the GPU configurable total graphics power
+	  Read Only:            False
+	  Minimum value:        0
+	  Maximum value:        0
+	  Scalar Increment:     0
+
+Also it still shows SPPT and SPL as supported (which is coherent with
+Legion Space).
+
+--=20
 Thanks,
-
-Lukas
+ ~ Kurt
