@@ -1,1280 +1,554 @@
-Received: from mail-pl1-f178.google.com (mail-pl1-f178.google.com [209.85.214.178])
+Received: from mail-qv1-f51.google.com (mail-qv1-f51.google.com [209.85.219.51])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6A7B726CE1A
-	for <platform-driver-x86@vger.kernel.org>; Fri,  6 Feb 2026 03:55:28 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.178
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1770350128; cv=none; b=FwjqdgB3/QuMooFoxJIgYpLpT/83CNCvZNO6399VUne0rzxtJfutKGPkDlVZHavJK9hw8dQYoGJZOp30DKko1gnsNtIGGWWiLDuHNyx73WuN1bHAmyfnMwOhh8u5/ihBdEPBRFmh6csTZue/QPu8jXlwPljNBo/C3w7BFchTHzY=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1770350128; c=relaxed/simple;
-	bh=RnB6SKiXwi65QOrLGezhUr9J6Rau8f0P2UG9GrjNmjM=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=Qovlvhyp66WA3El4KTBBgiTScwm1A8NJyHQF3mb6ClLAWTnOuTHz54YLVClFCAm3zIiN6QsIeXeSNmVKDeyhZfDhPXNAvZFGueNN90AshQT7jsRozv03IEr9Fst7A/FlyaotxxM/kbNgzTOvWfbf1NRJTC6RergrSe8vAbBMVJE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=Z+EGudHG; arc=none smtp.client-ip=209.85.214.178
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A4D8A302756
+	for <platform-driver-x86@vger.kernel.org>; Fri,  6 Feb 2026 07:11:12 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=209.85.219.51
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1770361872; cv=pass; b=GaEN68XT20dNL7UeKYFEM8qrXZxSpw1pOJvARxxXLvLe9R8QeuG3FJkJaIRdAFhpo5lCqG9NTQvk1WPJIsQj4CLqUBU+L8HkYB2OLSs1fnBa2ZUJ37KUoHuJXxmWg6mhlUGvjtF2IhFlOxBhOA1+xN5aCfFE+9Ii72K26mcDxiU=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1770361872; c=relaxed/simple;
+	bh=GxefqRyblWFN4bgmmK4FMFdWq2Bn7NV8bG2YwBO5oT8=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=RUbcEY0AlaRMv9SuBQ4hNtxQSdx2zlNKvavm1ky1jNye9P5CNOv7Dxeg5e9/bAGKY7PtriOh22MT9EXeDgFRFqWYIbSKjGknIk3XgLG6d/oDHaq1y4scXThNg5ehtSy4FkDfddD+qDwmkUn7/sFap+e/lfpxe9bzwYnw3IwNOa8=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=G/If31s4; arc=pass smtp.client-ip=209.85.219.51
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Z+EGudHG"
-Received: by mail-pl1-f178.google.com with SMTP id d9443c01a7336-29efd139227so1613865ad.1
-        for <platform-driver-x86@vger.kernel.org>; Thu, 05 Feb 2026 19:55:28 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="G/If31s4"
+Received: by mail-qv1-f51.google.com with SMTP id 6a1803df08f44-895071c5527so5204076d6.1
+        for <platform-driver-x86@vger.kernel.org>; Thu, 05 Feb 2026 23:11:12 -0800 (PST)
+ARC-Seal: i=1; a=rsa-sha256; t=1770361871; cv=none;
+        d=google.com; s=arc-20240605;
+        b=hDxMTfEFAUVw/XFQYeil9kJQka4ZC+7h6GfY09cRC9U4iPNBxjOeUCgmZtR5IVR9cg
+         BAxJNj9Y4kMgvH6DWAa/SXLD0QuoqBAOO9g1hmvZ5+L0o24SQznrzlJPnbVc3DplmSiQ
+         /MsmxooN24p7H6R1fIc2YRXPIHmlJUg30PsZDMPwYL0FsG0T+UIxH6bTUz9xAy7+90qg
+         F5883ypkG3xvwlT76Tx5445jJ/EU8fgSwu/w/vlCwHKQFnx4oAaLjNbmxiR+H4TLGuR6
+         IhRKlEm0snAtfdYXer68NT3eq9Dt6bitFNwtCiUB2WbAnsWAHYroO5wP8knk8gonQrN3
+         5+Ng==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20240605;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:dkim-signature;
+        bh=4C3DhmX/fVbaJeN2CgmpsaOs/IQj0eyWcKUbiVgqAkI=;
+        fh=HhPA0SbPYBYHCn3TmchYXKWP8yU6WXmDbKKDvZBfFRk=;
+        b=dRd7Of0WBGGaItcHe5pTPYW+bgOAj2uix+RtTl/aFmqn+KlxihbaVPNlB5Pa4kGmR+
+         8DxdNflFAyBM/wJ53IOiLMwxyADoRqWc/cb5J546t+bDEwScwh6y/LQ/W93PIe6zBLpC
+         /zZNWOPdzzY/nipL4ej72M+jeeuXdhbQ24HCLsQolCujtmm4Ov3Xlnq94Cq+SdTn+x+U
+         VTW65A49BqfyDukMx4CWiCmP6xxg28OJZ+3IuXCk8se/wTiBvs4a/S0Wx1/t4ra59Kf/
+         ho0fvC7Zc/KzdngoIhhm+TsEjCiAoeEeESuZ0CVC5ye5t7GFcazKc9TjDKG0eJgFHMLq
+         Hl3A==;
+        darn=vger.kernel.org
+ARC-Authentication-Results: i=1; mx.google.com; arc=none
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1770350128; x=1770954928; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=F9sKOBoMMV30I7ff5ErvcT5E4yjGeUWMySXdPX8JOGs=;
-        b=Z+EGudHG62C4oMk7alr8r9Ubc4HJ9AZpgXBQZ9W3qDCZ9egBb/56E+4JRM0DTgDjCz
-         rxQFa94epDE5dgmX4jjxX2BX4qktlewAz0m8TTYV130fCY2uFDmJXKwflfEVmoEYIztY
-         EOgS3KuaOx7moPBfjgxjS7Z/oAdvA8mFvB77wt3uYeds5uE0LVfDKvkJllAAA32kQk1k
-         pACcff2so+Fk5oFVZQuW8diF7ko+C4e6q5cVoxzB3KEJDR9R1oATXT6s0rJWIEZNc0Yc
-         4zOw8Hr2Zpl3ligYH0QJK7v1IXWmhtIVhsOEc5Qj4iHAwlBO8Jc0KR2x4aIOGHv/9G1M
-         gZLA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1770350128; x=1770954928;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-gg:x-gm-message-state:from:to:cc:subject:date
+        d=gmail.com; s=20230601; t=1770361871; x=1770966671; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=F9sKOBoMMV30I7ff5ErvcT5E4yjGeUWMySXdPX8JOGs=;
-        b=bygUEJVXPid8RLENsJ7lJ4IawDXo1s4/moxlkLyRsOz9oc5T5dmx5SSo2T8wf28qDm
-         C00KdTMTtaUxQeJOuUVs87b04xKN+roJYeVpll/3KtpQeF+MIWtcXKffTnNXRCkrdWH2
-         qKUXjLOJbd007jLTDlqGYm+Iyt6swXpyLVpgjS+yBJDbRebFXz/0+bwpttENf6fp+VT5
-         eOt1TjLbgsjSH8nLEb3IzwoQcuQqn3sg7hR07/z+AwPHhHB2rVT07+fF4pLAz9eKPLRn
-         B+TclaRstsAgM1AWrkg+vRB4ONisc2zUGbMThGS/E8q5bU171Q8CtDDBXhSzgKICT/r5
-         k1vQ==
-X-Gm-Message-State: AOJu0Yy/DUVtiHAFntJqd8y2u0SK5xRL7EXTyC+c6REPbx9WwECTfuu5
-	NSrUQyTpZTjuJiUwPiO0ZEQBpEhmFVOLzbKvh1cJhNVtifyFFMBNP862
-X-Gm-Gg: AZuq6aKWGhgV2sqOAcQ8u7WOTrslgX5l6x8JqbU1azY5NCBg5kz2Ff11D7jE6Sb7dFI
-	3LnXdSUX6S8ofdc1P4C0o8oy5tvEiv+WwKGN3AZY1G6RyFKjHaBJoN1tos/X9IU2ciAC1mPf7lo
-	TFjoEMMY3qaDuhZfeRVgiG5Skb18T/ElBTttKuLvtj+ggysAxA8LF8mk6S1V8Zq5VoKBwgCxHlD
-	gUUBgQYnA8Q2wGvN/m3Mg/bDevi/CF2vZlKVtEwp2Alqg59bgzzZUKpaVeVeAOPy1aieH/kSP7q
-	UpKrqK9fglxQhqALMtqkmSCpPG8m9jwvDCRIZkbAzRm/oDg0QW/VZpCAF4whQihTva93EGRwidz
-	M9uKNj/4mly8qd6pdrGEm/zOJ/k2wBABZR7hlC3w89+Ywry/OD5X+8mWY22o6xQ==
-X-Received: by 2002:a17:903:120d:b0:2a3:e70d:5817 with SMTP id d9443c01a7336-2a9512df445mr15714515ad.0.1770350127494;
-        Thu, 05 Feb 2026 19:55:27 -0800 (PST)
-Received: from qby-laptop ([2a13:edc0:18:16f::a])
-        by smtp.gmail.com with ESMTPSA id d9443c01a7336-2a9521f8a50sm8801995ad.80.2026.02.05.19.55.25
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 05 Feb 2026 19:55:26 -0800 (PST)
-From: Mingyou Chen <qby140326@gmail.com>
-To: hansg@kernel.org,
-	ilpo.jarvinen@linux.intel.com
-Cc: platform-driver-x86@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	cryolitia.pukngae@linux.dev,
-	Mingyou Chen <qby140326@gmail.com>
-Subject: [PATCH v9] platform/x86: tongfang-mifs-wmi: Add new Tongfang MIFS WMI driver
-Date: Fri,  6 Feb 2026 03:54:47 +0000
-Message-ID: <20260206035447.778876-1-qby140326@gmail.com>
-X-Mailer: git-send-email 2.51.2
+        bh=4C3DhmX/fVbaJeN2CgmpsaOs/IQj0eyWcKUbiVgqAkI=;
+        b=G/If31s4qeWPaB9maWITwKqiEnS+u33Vm01Bbn2YwT9sn3Aup3oWToeDYPniFjZpzg
+         36OZBMvNg5xQu/5eQOGvEM9wd4VI8XpYyJMmoEyfto3Bk0VFtf7kzDYbo4vowP4hZLd4
+         SFQfMFruFogGh8uApOCk9P9pYhmEuFqq5AvhQZu0mH30M7LXGKmLb0J89BT+uwg8D4Al
+         /OQR2RyJl86PJ7TDmDb8KQzjEDNomQhI5Eg+SLalyqR/oZrF+4ifG4lokkIpHQucr4fm
+         340/vA4Wo+hMRQ1aAtq96+LGAq1Eu1VPw/G+UGxLO+43whdQAuFQrfzw1GPKNFtRZvd7
+         WIBw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1770361871; x=1770966671;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-gg:x-gm-message-state:from
+         :to:cc:subject:date:message-id:reply-to;
+        bh=4C3DhmX/fVbaJeN2CgmpsaOs/IQj0eyWcKUbiVgqAkI=;
+        b=WtrNrqfsKEGy7ggChB56GhEVc4rGar2J+CugLVZpGPUG3/phcUKFwFMJPeDEdndQgl
+         WILu9pMSM3GA/41qdLpN6fHKD5DJLrVfW3nrJhJ2PJzvoCj9sl5ECu38doUbLKiwviRg
+         Lzj3ds5mYxk/gS99+pxJIk+qXmb/y+jbGGVpKoaYd9C7rTuioDFDdOV6IDuFBMoXJd0v
+         Y33OhkUh+/CmFLg4giIeoFbv81nfmb9uvjoTSiCVYWTyrqavQfsrdetCHvyUvOVR066W
+         1e/2Ua5W+sHxNQgjeHl7x4Z6095c1XZQsPtUHa0hKu5Af2I4Pz8JSRQVscSJeS++ChIk
+         FaUQ==
+X-Forwarded-Encrypted: i=1; AJvYcCWH9FgM5qYEje+/K6+Nah7IwyES1pSuwZ0W10CVr9/Eb3/kiCs0P97t5qEuRgS80qYwl1BMzUFrpkKskBlBzV8VMjIm@vger.kernel.org
+X-Gm-Message-State: AOJu0YxqMamLHVGwBaPh4bAdiOIM4AHltSK2YroEp0r4qFN8u93baAPq
+	geZqgijGSW5hSzpPT8dApSpKAzd9LB196SeSALHwpiXARX1y0D1bV7RSgq+v41mbpq1CjzNbsCq
+	zdO4xtNlNZf7NP1pgV+qA/srTwtbx8N4=
+X-Gm-Gg: AZuq6aK8/aR8R9NwS0wjrwwubeX4y7l0jxgLDbTweuZxwo4JzpXG6fqAmbjrJ9Z1uiT
+	echZtFJ2ZUc4H6hF4hEs8bJZoOoXjHF9+M8B69+O0ET9BV27etFb7QtmudUrHobb4CYjcnXoLNw
+	OLFGfa43BRmizWgu3YWiI/uSHKjodzwVBVZVLuSpMakepISoo2ZRv5eGqY+ITFRF9LKfMeAKCC1
+	09o1HWOJp5fqAHCDKNaNc3Se3r2DQJxUDW4h+cNHBZeH0UeLx1zBMUufduBqqMRA/2j9Ojn
+X-Received: by 2002:a05:6214:2266:b0:888:8913:89af with SMTP id
+ 6a1803df08f44-8953c7df95fmr26147696d6.15.1770361871317; Thu, 05 Feb 2026
+ 23:11:11 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+References: <DG60P3SHXR8H.3NSEHMZ6J7XRC@gmail.com> <C18EFC0C-741A-4DF3-85A9-E3DE9CBC1737@gmail.com>
+ <DG6BU3U96TTS.1XNHFL5NRADT5@gmail.com> <4C43FF8D-A529-4645-93E8-DF5E6734328A@gmail.com>
+ <DG6KJR1FONK7.2TL5QSPZ2A4GA@gmail.com> <CAFqHKTn=0JS3jcp7FKYvfTHzG5u1kXXtavSK9hNEphagDiDdgA@mail.gmail.com>
+ <CAFqHKTnpGTRuW=HMxSu2YQ9qq7inajXOT6p3Vpc8sg0v_EGQQw@mail.gmail.com> <DG77O19JWSAH.2TC5GU5CR5U5H@gmail.com>
+In-Reply-To: <DG77O19JWSAH.2TC5GU5CR5U5H@gmail.com>
+From: Derek John Clark <derekjohn.clark@gmail.com>
+Date: Thu, 5 Feb 2026 23:11:00 -0800
+X-Gm-Features: AZwV_QjbW-QX5PFqBJr6WJjGfaVTedykYtvjcQrcGSTD_xO6BRP1WyYrEyVfsMM
+Message-ID: <CAFqHKTkHhx14rM7QTATLTq-ry1z53+D5h1y982gaBd+RbMNJAQ@mail.gmail.com>
+Subject: Re: Report: lenovo_wmi_other FW attributes always read 0
+To: Kurt Borja <kuurtb@gmail.com>
+Cc: Rong Zhang <i@rong.moe>, =?UTF-8?Q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>, 
+	Armin Wolf <W_Armin@gmx.de>, Mark Pearson <mpearson-lenovo@squebb.ca>, 
+	platform-driver-x86@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-Add a new driver for Tongfang laptops that utilize the MIFS
-(MiInterface)
-WMI interface. This interface is commonly found in various rebranded
-laptops from manufacturers like Mechrevo, XMG, Eluktronics, and others.
+On Thu, Feb 5, 2026 at 9:40=E2=80=AFAM Kurt Borja <kuurtb@gmail.com> wrote:
+>
+> On Wed Feb 4, 2026 at 10:13 PM -05, Derek John Clark wrote:
+> > On Wed, Feb 4, 2026 at 4:04=E2=80=AFPM Derek John Clark
+> > <derekjohn.clark@gmail.com> wrote:
+> >>
+> >> On February 4, 2026 3:33:34 PM PST, Kurt Borja <kuurtb@gmail.com> wrot=
+e:
+> >> >On Wed Feb 4, 2026 at 12:45 PM -05, Derek J. Clark wrote:
+> >> >> On February 4, 2026 8:43:56 AM PST, Kurt Borja <kuurtb@gmail.com> w=
+rote:
+> >> >>>On Wed Feb 4, 2026 at 3:36 AM -05, Derek J. Clark wrote:
+> >> >>>> On February 4, 2026 12:00:12 AM PST, Kurt Borja <kuurtb@gmail.com=
+> wrote:
+> >> >>>>>Hi all,
+> >> >>>>
+> >> >>>> Hi Kurt.
+> >> >>>
+> >> >>>Hi Derek,
+> >> >>>
+> >> >>>>
+> >> >>>>>In my system (83KY Legion 7 16IAX1) the current_value of any of t=
+he
+> >> >>>>>firmware attributes exposed by this driver always reads 0
+> >> >>>>>
+> >> >>>>>   $ ls /sys/class/firmware-attributes/lenovo-wmi-other-0/attribu=
+tes/
+> >> >>>>>   ppt_pl1_spl  ppt_pl2_sppt  ppt_pl3_fppt
+> >> >>>>>
+> >> >>>>>   $ cat /sys/class/firmware-attributes/lenovo-wmi-other-0/attrib=
+utes/*/current_value
+> >> >>>>>   0
+> >> >>>>>   0
+> >> >>>>>   0
+> >> >>>>>
+> >> >>>>>After investigating my acpidump [1] I found that the argument pas=
+sed to
+> >> >>>>>the WMI method Arg2 is matched as a whole integer instead of indi=
+vidual
+> >> >>>>>bytes (L: 49203)
+> >> >>>>>
+> >> >>>>>   If ((ToInteger (Arg2) =3D=3D 0x01010000))
+> >> >>>>>   {
+> >> >>>>>           Return (^^PC00.LPCB.EC0.F5E0) /* \_SB_.PC00.LPCB.EC0_.=
+F5E0 */
+> >> >>>>>   }
+> >> >>>>>
+> >> >>>>>   If ((ToInteger (Arg2) =3D=3D 0x01020000))
+> >> >>>>>   {
+> >> >>>>>           Return (^^PC00.LPCB.EC0.CCP1) /* \_SB_.PC00.LPCB.EC0_.=
+CCP1 */
+> >> >>>>>   }
+> >> >>>>>
+> >> >>>>>   If ((ToInteger (Arg2) =3D=3D 0x01030000))
+> >> >>>>>   {
+> >> >>>>>           /* This case (CPU FPPT) is actually just zero... */
+> >> >>>>>           Return (Zero)
+> >> >>>>>   }
+> >> >>>>>
+> >> >>>>>...and the driver always sets the second byte of Arg2 to the curr=
+ent
+> >> >>>>>profile (mode), which is never zero!
+> >> >>>>>
+> >> >>>>>   attribute_id =3D
+> >> >>>>>           FIELD_PREP(LWMI_ATTR_DEV_ID_MASK, tunable_attr->device=
+_id) |
+> >> >>>>>           FIELD_PREP(LWMI_ATTR_FEAT_ID_MASK, tunable_attr->featu=
+re_id) |
+> >> >>>>>   -->     FIELD_PREP(LWMI_ATTR_MODE_ID_MASK, mode) |
+> >> >>>>>           FIELD_PREP(LWMI_ATTR_TYPE_ID_MASK, tunable_attr->type_=
+id);
+> >> >>>>>
+> >> >>>>>So it never actually matches the attribute and falls back to zero=
+ :/
+> >> >>>>>
+> >> >>>>>This is however, not the case for all tunables. As you can see in=
+ the
+> >> >>>>>acpidump, just bellow the block above, these are matched dependin=
+g on
+> >> >>>>>the current mode (second byte)
+> >> >>>>
+> >> >>>> This typically means that the method is stubbed so that it return=
+s 0 on is_supported. During development I forgot to go back and add a check=
+ for this when adding the attributes. Per the spec, there is no profile tha=
+t corresponds to 0x00, so this is working as expected when showing an unsup=
+ported attribute. If you add a debug print to the capdata driver when it is=
+ querying the attributes you can see the entries are empty.
+> >> >>>
+> >> >>>Hmm it's weird because if I read
+> >> >>>
+> >> >>>     \_SB_.PC00.LPCB.EC0_.F5E0
+> >> >>>     \_SB_.PC00.LPCB.EC0_.CCP1
+> >> >>>
+> >> >>>directly, they show the correct SPPT and SPL values shown in the wi=
+ndows
+> >> >>>Legion Space app (under Custom mode).
+> >> >>>
+> >> >>>It seems like these are supported?
+> >> >>
+> >> >> Oh, that is strange, yeah. It also explains why some things just ar=
+en't working like they should. Once again the documentation is not complete=
+ly accurate for this interface, which is quite frustrating... I think I hav=
+e a device with this problem as well that I haven't yet troubleshot in the =
+new series, so I can work it locally.
+> >> >>
+> >> >> It sounds like I'll need to check if the current mode entry is pres=
+ent in the cached data, and if not check if there is a  "no mode" present. =
+Traversing the list twice seems tedious & slow, so I'll probably refactor t=
+he capdata side to check for a match in bytes 0, 1, and 3, and if byte 2 is=
+ 0 in the data then return that, but if it is missing continue to search fo=
+r the match? They have historically been in ascending order (though, at thi=
+s point I don't know if that can be trusted) I'm curious if any devices hav=
+e both a 00 entry and mode specific entries, because that pattern would pos=
+sibly break them. I could perhaps save the index of the 00 entry separately=
+ when it is seen, then keep looking for the exact match and, if not found, =
+fall back to the saved index. That guarantees a maximum O(n) search every t=
+ime, which isn't great either.
+> >> >
+> >> >I checked the captada buffers in my device and the "mode" byte is nev=
+er
+> >> >zero :/ In fact every tunable is listed once for each mode, which I
+> >> >think is just normal behavior.
+> >> >
+> >> >Can you send me an acpidump of a device which enforces the mode byte =
+for
+> >> >each tunable? I want to see how other devices do it.
+> >> >
+> >>
+> >> I attached the Legion Go 2 acpidump
+> >>
+> >> >>
+> >> >> I'd like to hear everyone else's thoughts, perhaps there's a more c=
+lever way we can do this efficiently and accurately.
+> >> >
+> >> >I think my firmware's behavior is just non-compliant with the
+> >> >specification. In that case a quirk approach should work? The only
+> >> >problem would be the tunables that DO enforce the mode byte in my
+> >> >system.
+> >>
+> >> I think doing it programmatically would be more effective if we can
+> >> get it to work. I'd imagine there are lots of models with random
+> >> attributes that behave this way.
+> >>
+> >> >Another possibility is that there are some tunables that do not enfor=
+ce
+> >> >modes (but don't necessarily reject them either).
+> >> >
+> >> >Maybe a workaround for non-compliant attributes could work. Something
+> >> >dirty like
+> >> >
+> >> >zero_fallback:
+> >> >       attribute_id =3D LWMI_ATTR_ID(tunable_attr->device_id, tunable=
+_attr->feature_id,
+> >> >                                   mode, tunable_attr->type_id);
+> >> >       ret =3D lwmi_cd01_get_data(priv->cd01_list, attribute_id, &cap=
+data);
+> >> >       if (ret)
+> >> >               return ret;
+> >> >
+> >> >       ...
+> >> >
+> >> >       if (value =3D=3D 0) {
+> >> >               mode =3D 0;
+> >> >               goto zero_fallback;
+> >> >       }
+> >>
+> >> That could work, though I'd do it like this to avoid infinite recursio=
+n:
+> >>
+> >> zero_fallback:
+> >>         attribute_id =3D LWMI_ATTR_ID(tunable_attr->device_id,
+> >> tunable_attr->feature_id,
+> >>                                     mode, tunable_attr->type_id);
+> >>         ret =3D lwmi_cd01_get_data(priv->cd01_list, attribute_id, &cap=
+data);
+> >>         if (ret)
+> >>                 return ret;
+> >>
+> >>
+> >> if (value =3D=3D 0 & mode !=3D 0) {
+> >>                 mode =3D 0;
+> >>           goto zero_fallback;
+> >>
+> >>         if (value =3D=3D 0) {
+> >>     return -EINVAL;
+> >>         }
+> >>
+> >> I'll push something to that effect to my tree and we'll see how that
+> >> works. The downside is traversing the list multiple times, and the
+> >> need to put this in multiple _show functions. As a proof of concept
+> >> I'm fine with it though.
+> >>
+> >> - Derek
+> >>
+> >>
+> >
+> > Kurt,
+> >
+> > After adding the workaround as described I got some interesting
+> > results. The attribute I have issues with in particular is cpu_temp
+> > (01040000). This attribute has capdata for custom mode & shows full
+> > set/get support, but is hard coded to return 0 in the dsdt. That means
+> > this isn't a "silver bullet" to work around a poorly implemented BIOS
+> > it seems.
+>
+> In my system FPPT is also hardcoded to zero :/
+>
+> >
+> > I did go back and recheck the documentation, and all these attributes
+> > do have a valid 00 mode in the docs that I overlooked before. It looks
+> > like an older version of the spec possibly. The notes are fairly
+> > sparse on it.
+>
+> Is the 0x00 mode actually a mode or just something like no-mode?
+>
+> I checked the acpidump you sent the SPPT tunable accepts valid modes and
+> also the 0x00 mode when reading... that's interesting.
+>
+> >
+> > I updated by branch and also included a few lazy "info" debug
+> > statements to help figure out what is going on. Let me know if that
+> > has better results for you.
+>
+> It has! Now all attributes are readable. There quite a few attributes
+> with 0 min/max/step values. I guess that's just poorly implemented BIOS
+> again.
+>
+> Here are the results
+>
+>         $ fwupdmgr get-bios-settings
+>
+>         gpu_oc_stat:
+>           Setting type:         Integer
+>           Current Value:        17
+>           Description:          Set the GPU overclocking status
+>           Read Only:            False
+>           Minimum value:        0
+>           Maximum value:        0
+>           Scalar Increment:     0
+>
+>         cpu_temp:
+>           Setting type:         Integer
+>           Current Value:        103
+>           Description:          Set the CPU thermal load limit
+>           Read Only:            False
+>           Minimum value:        85
+>           Maximum value:        105
+>           Scalar Increment:     1
+>
+>         gpu_nv_ac_offset:
+>           Setting type:         Integer
+>           Current Value:        55
+>           Description:          Set the Nvidia GPU AC total processing po=
+wer baseline offset
+>           Read Only:            False
+>           Minimum value:        10
+>           Maximum value:        80
+>           Scalar Increment:     1
+>
+>         gpu_nv_cpu_boost:
+>           Setting type:         Integer
+>           Current Value:        10
+>           Description:          Set the Nvidia GPU to CPU dynamic boost l=
+imit
+>           Read Only:            False
+>           Minimum value:        0
+>           Maximum value:        0
+>           Scalar Increment:     0
+>
+>         gpu_temp:
+>           Setting type:         Integer
+>           Current Value:        87
+>           Description:          Set the GPU thermal load limit
+>           Read Only:            False
+>           Minimum value:        75
+>           Maximum value:        87
+>           Scalar Increment:     1
+>
+>         ppt_pl1_spl:
+>           Setting type:         Integer
+>           Current Value:        70
+>           Description:          Set the CPU sustained power limit
+>           Read Only:            False
+>           Minimum value:        50
+>           Maximum value:        110
+>           Scalar Increment:     1
+>
+>         cpu_oc_stat:
+>           Setting type:         Integer
+>           Current Value:        16
+>           Description:          Set the CPU overclocking status
+>           Read Only:            False
+>           Minimum value:        0
+>           Maximum value:        0
+>           Scalar Increment:     0
+>
+>         ppt_cpu_cl:
+>           Setting type:         Integer
+>           Current Value:        65
+>           Description:          Set the CPU cross loading power limit
+>           Read Only:            False
+>           Minimum value:        30
+>           Maximum value:        75
+>           Scalar Increment:     1
+>
+>         ppt_pl2_sppt:
+>           Setting type:         Integer
+>           Current Value:        125
+>           Description:          Set the CPU slow package power tracking l=
+imit
+>           Read Only:            False
+>           Minimum value:        60
+>           Maximum value:        168
+>           Scalar Increment:     1
+>
+>         ppt_pl1_tau:
+>           Setting type:         Integer
+>           Current Value:        56
+>           Description:          Set the CPU sustained power limit exceed =
+duration
+>           Read Only:            False
+>           Minimum value:        0
+>           Maximum value:        0
+>           Scalar Increment:     0
+>
+>         gpu_nv_ppab:
+>           Setting type:         Integer
+>           Current Value:        15
+>           Description:          Set the Nvidia GPU power performance awar=
+e boost limit
+>           Read Only:            False
+>           Minimum value:        0
+>           Maximum value:        0
+>           Scalar Increment:     0
+>
+>         gpu_nv_ctgp:
+>           Setting type:         Integer
+>           Current Value:        65
+>           Description:          Set the GPU configurable total graphics p=
+ower
+>           Read Only:            False
+>           Minimum value:        0
+>           Maximum value:        0
+>           Scalar Increment:     0
 
-The driver implements several features through the WMI interface:
+That is encouraging, at least we're on the right path.
 
-- Platform Profile: Supports "Quiet", "Balanced", "Performance", and
-  "Full Speed" modes. The "Full Speed" mode is intelligently restricted
-  based on the AC adapter type (requires DC power, not supported on
-  USB-C charging) as required by the hardware.
-- Hwmon: Provides monitoring for CPU, GPU, and System fan speeds,
-  as well as CPU temperature sensors.
-- Keyboard Backlight: Integrated with the LED class device for
-  brightness control and provides sysfs attributes for keyboard modes
-  (cyclic, fixed, etc.).
-- GPU Mode: Allows switching between Hybrid, Discrete, and UMA
-  graphics modes via sysfs.
-- Hotkeys: Handles WMI events for system hotkeys (Calculator, Browser,
-  App launch) using sparse keymaps and reports status changes for
-  Airplane mode, Touchpad, and CapsLock.
-- Fan Boost: Provides a sysfs interface to force fans to maximum speed.
+> I still can't write to them though. Every write gets ignored without
+> failing
+>
+>         $ cat /sys/class/firmware-attributes/lenovo-wmi-other-0/attribute=
+s/ppt_pl2_sppt/current_value
+>         125
+>
+>         $ echo 126 | sudo tee /sys/class/firmware-attributes/lenovo-wmi-o=
+ther-0/attributes/ppt_pl2_sppt/current_value
+>         126
+>
+>         $ cat /sys/class/firmware-attributes/lenovo-wmi-other-0/attribute=
+s/ppt_pl2_sppt/current_value
+>         125
+>
+> I tried writting to them using acpi_call and it works (0x7e =3D 126)
+>
+>         $ echo '\_SB_.GZFD.WMAE 0 0x12 {0x00, 0x00, 0x01, 0x01, 0x7e, 0x0=
+0, 0x00, 0x00}' | sudo tee /proc/acpi/call
+>         \_SB_.GZFD.WMAE 0 0x12 {0x00, 0x00, 0x01, 0x01, 0x7e, 0x00, 0x00,=
+ 0x00}
+>
+>         $ sudo cat /proc/acpi/call
+>         0x0
+>
+>         $ cat /sys/class/firmware-attributes/lenovo-wmi-other-0/attribute=
+s/ppt_pl2_sppt/current_value
+>         126
 
-The driver registers two WMI GUIDs:
-- B60BFB48-3E5B-49E4-A0E9-8CFFE1B3434B: Control methods
-- 46C93E13-EE9B-4262-8488-563BCA757FEF: Event notifications
+This is very annoying. Presumably that means your device is providing
+good capdata for custom mode on some attributes? If that is the case
+then it will bee very difficult to auto-discover the no-mode.
 
-Signed-off-by: Mingyou Chen <qby140326@gmail.com>
----
-v9:
-  - Fix style issues in .rst documentation
-  - Rewrite the wmi_call func with correct usage
-  - Use power_supply_is_system_supplied in kernel instead of
-    is_ac_online
-  - Remove the PLATFORM_PROFILE_LAST check in wmi_resume function
-  - Directly return in the hwmon_temp case in hwmon_read function
-  - return -EPROTO on invalid wmi return value in gpu_mode and
-    keyboard brightness
-  - Remove thge dev_err debug messages
-  - Rewrite the wmi_notify method with .notify_new callback in
-    linux-next
-  - Call hwmon_notify_event (with a notifier) on WMI fan speed events
+> Maybe we can check if the tunable returns zero at the discovery phase
+> and add some kind of flag there `.no_mode =3D 1`. Then we can check that
+> flag when writting the attribute.
+>
+> It's getting tricky because legion go 2 does enforce 0xFF mode when
+> writting, while my device enforces 0x00. Even worse, if I pass 0xFF it
+> returns 0, like it was successful...
 
-v8:
-  - Fix coding style issues
-  - Use MILLIDEGREE_PER_DEGREE instead of MILLI to define the temperature unit more precisely.
-  - Align lines with the first occurrence of HWMON
-  - Remove the unnecessary empty line in error handling
-  - Reverse the logic of kb_mode_strings and drop the mode_str variable
+Indeed, I confirmed my device does the inverse.
 
-v7:
-  - Remove the unused includes (asm/)
-  - Align values with tab
-  - remove the previous test code which i forgot to remove
-  - return values directly with the "return" statement
-  - rmeove the wrong comment "Full-speed" since I've already use the value
-    "WMI_PP_FULL_SPEED" in the switch case
-  - remove the empty lines
-  - Change the two variables (val, ret) to reverse xmas-tree order.
-  - Add missing includes and sort them in the alphabetical order.
-  - use endianness types and conversion functions to parse temperature in
-    the wmi response
 
-v6:
-  - add base commit
+>         $ echo '\_SB_.GZFD.WMAE 0 0x12 {0x00, 0xFF, 0x01, 0x01, 0x7e, 0x0=
+0, 0x00, 0x00}' | sudo tee /proc/acpi/call
+>         \_SB_.GZFD.WMAE 0 0x12 {0x00, 0xFF, 0x01, 0x01, 0x7e, 0x00, 0x00,=
+ 0x00}
+>
+>         $ sudo cat /proc/acpi/call
+>         0x0
+>
+> IMO we should check this no_mode stuff at the discovery phase.
 
-v5:
-  - add fallthrough on the PLATFORM_PROFILE_BALANCED_PERFORMANCE switch
-    case
+I updated my branch to try and discover the GET and SET per attribute
+during the is_supported phase by doing the fail loop there, once for
+each. I store the modes that worked on new members of the tunable_attr
+to reuse if either 0xff or 0x00 worked, and report -EOPNOTSUPP if
+nothing worked. If that happens it won't create the attribute at all,
+which eliminates showing attributes with botched implementations such
+as the gpu_temp on Go 2. That will add a lot of wmi calls on init (up
+to 2 per attribute in the config), but that might be preferable as it
+eliminates the loops in the _store and _show functions for all the RO
+and RW file descriptors. I check the capdata first at least to early
+exit if the attribute isn't supported at all.
 
-v4:
-  - check the DC power state before switching to performance/full-speed mode
+To summarize the flow in is_suported is now:
+- Check if there is a capdata block for the attribute under custom mode
+- If that fails, check if there is a capdata block for the attribute
+under no mode
+- If both fail then return
+- If one of them succeed, check if the attribute is supported in the
+capdata block, return -EOPNOTSUPP if not.
+- set the tunable_attr->get_mode_id to the successful mode.
+- reset the mode var to custom, get the current value, and check if
+the return value is 0
+- if that fails, try again with no mode
+- if both fail, return -EOPNOTSUPP
+- If either pass, set the tunable_attr->set_mode_id to the successful mode.
+- return capdata->supported
 
-v3:
-  - Fix email address mismatch in Signed-off-by and From headers.
-  - implement the WMI event handler
-  - code style improvments
-  - condition on the performance platform profile switch
-  - driver documentation
+Then in the _show & _store functions I can just reuse the previously
+discovered mode values. when getting the capdata or setting/getting
+the current value itself.
 
-v2:
-  - Add PLATFORM_PROFILE_BALANCED_PERFORMANCE platform profile support
+There is some hope perhaps in using the WMI interface version for a
+quirk as well. 0x000c0000 "Get BIOS WMI Version" returns a u32 with
+bytes 015 being minor version and 16-31 being the major version. If we
+were to quirk this then presumably that would have a discernible
+pattern. It would require a large sample size to figure out which
+devices do what exactly though, which would be less than ideal.
 
- .../wmi/devices/tongfang-mifs-wmi.rst         | 207 +++++
- drivers/platform/x86/Kconfig                  |  16 +
- drivers/platform/x86/Makefile                 |   1 +
- drivers/platform/x86/tongfang-mifs-wmi.c      | 851 ++++++++++++++++++
- 4 files changed, 1075 insertions(+)
- create mode 100644 Documentation/wmi/devices/tongfang-mifs-wmi.rst
- create mode 100644 drivers/platform/x86/tongfang-mifs-wmi.c
+In any case, I've updated my branch with the changes. If that works
+for you I'll clean it up a bit and start getting ready to submit for
+review. I do have a couple more features to add on top of this issue
+so my timeline for submitting has slid right about a week.
 
-diff --git a/Documentation/wmi/devices/tongfang-mifs-wmi.rst b/Documentation/wmi/devices/tongfang-mifs-wmi.rst
-new file mode 100644
-index 000000000000..aae2629b34c9
---- /dev/null
-+++ b/Documentation/wmi/devices/tongfang-mifs-wmi.rst
-@@ -0,0 +1,207 @@
-+.. SPDX-License-Identifier: GPL-2.0-or-later
-+
-+========================================
-+Tongfang MIFS driver (tongfang-mifs-wmi)
-+========================================
-+
-+Introduction
-+============
-+
-+
-+EC WMI interface description
-+============================
-+
-+The EC WMI interface description can be decoded from the embedded binary MOF (bmof)
-+data using the `bmfdec <https://github.com/pali/bmfdec>`_ utility:
-+
-+::
-+
-+  class WMIEvent : __ExtrinsicEvent {
-+  };
-+
-+  [WMI, Dynamic, Provider("WmiProv"), Locale("MS\\0x40A"), Description("Root WMI HID_EVENT20"), guid("{46c93e13-ee9b-4262-8488-563bca757fef}")]
-+  class HID_EVENT20 : WmiEvent {
-+    [key, read] string InstanceName;
-+    [read] boolean Active;
-+    [WmiDataId(1), read, write, Description("Package Data")] uint8 EventDetail[8];
-+  };
-+
-+  [WMI, Dynamic, Provider("WmiProv"), Locale("MS\\0x40A"), Description("Root WMI HID_EVENT21"), guid("{fa78e245-2c0f-4ca1-91cf-15f34e474850}")]
-+  class HID_EVENT21 : WmiEvent {
-+    [key, read] string InstanceName;
-+    [read] boolean Active;
-+    [WmiDataId(1), read, write, Description("Package Data")] uint8 EventDetail[8];
-+  };
-+
-+  [WMI, Dynamic, Provider("WmiProv"), Locale("MS\\0x40A"), Description("Root WMI HID_EVENT22"), guid("{1dceaf0a-4d63-44bb-bd0c-0d6281bfddc5}")]
-+  class HID_EVENT22 : WmiEvent {
-+    [key, read] string InstanceName;
-+    [read] boolean Active;
-+    [WmiDataId(1), read, write, Description("Package Data")] uint8 EventDetail[8];
-+  };
-+
-+  [WMI, Dynamic, Provider("WmiProv"), Locale("MS\\0x40A"), Description("Root WMI HID_EVENT23"), guid("{3f9e3c26-b077-4f86-91f5-37ff64d8c7ed}")]
-+  class HID_EVENT23 : WmiEvent {
-+    [key, read] string InstanceName;
-+    [read] boolean Active;
-+    [WmiDataId(1), read, write, Description("Package Data")] uint8 EventDetail[8];
-+  };
-+
-+  [WMI, Dynamic, provider("WmiProv"), Locale("MS\\0x409"), Description("Class used to operate firmware interface"), guid("{b60bfb48-3e5b-49e4-a0e9-8cffe1b3434b}")]
-+  class MICommonInterface {
-+    [key, read] string InstanceName;
-+    [read] boolean Active;
-+
-+    [WmiMethodId(1), Implemented, read, write, Description("Method used to support system functions.")] void MiInterface([in, Description("WMI Interface")] uint8 InData[32], [out] uint8 OutData[30], [out] uint16 Reserved);
-+  };
-+
-+Reverse-Engineering the EC WMI interface
-+========================================
-+
-+The OEM software can be download from `this link <https://iknow.lenovo.com.cn/detail/429447>`_
-+
-+Nothing is obfuscated, In this case, `ILSpy <https://github.com/icsharpcode/ILSpy>`_ could be helpful.
-+
-+WMI Methods (MICommonInterface)
-+========================================
-+
-+The ``MICommonInterface`` class (GUID: ``{b60bfb48-3e5b-49e4-a0e9-8cffe1b3434b}``)
-+is the primary control interface. It uses a 32-byte buffer for both input
-+(``InData``) and output (``OutData``).
-+
-+Method Structure
-+----------------
-+
-+The data packet follows a standardized format:
-+
-++----------+------------------------------------------------------------------+
-+| Byte     | Description                                                      |
-++==========+==================================================================+
-+| 1        | Method Type: Get (0xFA / 250) or Set (0xFB / 251)                |
-++----------+------------------------------------------------------------------+
-+| 3        | Command ID (Method Name)                                         |
-++----------+------------------------------------------------------------------+
-+| 4 - 31   | Arguments (for Set) or Return Data (for Get)                     |
-++----------+------------------------------------------------------------------+
-+
-+
-+Command IDs
-+-----------
-+
-+The following Command IDs are used in the third byte of the buffer:
-+
-++----------+-----------------------+------------------------------------------+
-+| ID       | Name                  | Values / Description                     |
-++==========+=======================+==========================================+
-+| 8        | SystemPerMode         | 0: Balance, 1: Performance, 2: Quiet,    |
-+|          |                       | 3: Full-speed                            |
-++----------+-----------------------+------------------------------------------+
-+| 9        | GPUMode               | 0: Hybrid, 1: Discrete, 2: UMA           |
-++----------+-----------------------+------------------------------------------+
-+| 10       | KeyboardType          | 0: White, 1: Single RGB, 2: Zone RGB     |
-++----------+-----------------------+------------------------------------------+
-+| 11       | FnLock                | 0: Off, 1: On                            |
-++----------+-----------------------+------------------------------------------+
-+| 12       | TPLock                | 0: Unlock, 1: Lock (Touchpad)            |
-++----------+-----------------------+------------------------------------------+
-+| 13       | CPUGPUSYSFanSpeed     | Returns 12 bytes of fan data:            |
-+|          |                       | Bytes 4-5: CPU Fan RPM (Little Endian)   |
-+|          |                       | Bytes 6-7: GPU Fan RPM (Little Endian)   |
-+|          |                       | Bytes 10-11: SYS Fan RPM (Little Endian) |
-++----------+-----------------------+------------------------------------------+
-+| 16       | RGBKeyboardMode       | 0: Off, 1: Auto Cyclic, 2: Fixed,        |
-+|          |                       | 3: Custom                                |
-++----------+-----------------------+------------------------------------------+
-+| 17       | RGBKeyboardColor      | Bytes 4, 5, 6: Red, Green, Blue values   |
-++----------+-----------------------+------------------------------------------+
-+| 18       | RGBKeyboardBrightness | 0-10: Brightness Levels, 128: Auto       |
-++----------+-----------------------+------------------------------------------+
-+| 19       | SystemAcType          | 1: Type-C, 2: Circular Hole (DC)         |
-++----------+-----------------------+------------------------------------------+
-+| 20       | MaxFanSpeedSwitch     | Byte 4: Fan Type (0: CPU/GPU, 1: SYS)    |
-+|          |                       | Byte 5: State (0: Off, 1: On)            |
-++----------+-----------------------+------------------------------------------+
-+| 21       | MaxFanSpeed           | Sets manual fan speed duty cycle         |
-++----------+-----------------------+------------------------------------------+
-+| 22       | CPUThermometer        | Returns CPU Temperature                  |
-++----------+-----------------------+------------------------------------------+
-+
-+WMI Events (HID_EVENT20)
-+========================
-+
-+The driver listens for events from the ``HID_EVENT20`` class
-+(GUID: ``{46c93e13-ee9b-4262-8488-563bca757fef}``). These events are triggered
-+by hotkeys or system state changes (e.g., plugging in AC power).
-+
-+Event Structure
-+---------------
-+
-+The event data is provided in an 8-byte array (``EventDetail``):
-+
-++----------+------------------------------------------------------------------+
-+| Byte     | Description                                                      |
-++==========+==================================================================+
-+| 0        | Event Type (Always 0x01 for HotKey/Notification)                 |
-++----------+------------------------------------------------------------------+
-+| 1        | Event ID (Corresponds to the Command IDs above)                  |
-++----------+------------------------------------------------------------------+
-+| 2        | Value (The new state or value of the feature)                    |
-++----------+------------------------------------------------------------------+
-+
-+Common Event IDs:
-+-----------------
-+
-+Note: reserved event ids are not listed there
-+
-++----------+------------------------------------------------------------------+
-+| Event Id | Description                                                      |
-++==========+==================================================================+
-+| 4        | AirPlane mode change                                             |
-++----------+------------------------------------------------------------------+
-+| 5        | Keyboard brightness change                                       |
-++----------+------------------------------------------------------------------+
-+| 6        | touchpad state (enabled/disabled) change                         |
-++----------+------------------------------------------------------------------+
-+| 7        | FnLock state (enabled/disabled) change                           |
-++----------+------------------------------------------------------------------+
-+| 8        | Keyboard mode change                                             |
-++----------+------------------------------------------------------------------+
-+| 9        | CapsLock state change                                            |
-++----------+------------------------------------------------------------------+
-+| 13       | NumLock state change                                             |
-++----------+------------------------------------------------------------------+
-+| 14       | ScrollLock state change                                          |
-++----------+------------------------------------------------------------------+
-+| 15       | Performance plan change                                          |
-++----------+------------------------------------------------------------------+
-+| 25       | Display refresh rate change                                      |
-++----------+------------------------------------------------------------------+
-+| 33       | Super key lock state (enabled/disabled) change                   |
-++----------+------------------------------------------------------------------+
-+| 35       | Open control center key                                          |
-++----------+------------------------------------------------------------------+
-+
-+Implementation Details
-+======================
-+
-+Performance Modes
-+-----------------
-+Changing the performance mode via Command ID 0x08 (SystemPerMode) affects the power limits (PL1/PL2)
-+and fan curves managed by the Embedded Controller (EC). Note that the "Full-speed"
-+and "Performance" mode (1, 3) is typically only available when the system is connected to a DC power
-+source (not USB-C/PD).
-+
-+In the driver implementation, switch to performance/full-speed mode without DC power connected
-+will throw the EOPNOTSUPP error.
-+
-+Graphics Switching
-+------------------
-+The ``GPUMode`` (0x09) allows switching between Hybrid (Muxless) and Discrete
-+(Muxed) graphics. Changing this value usually requires a system reboot to
-+take effect in the BIOS/Firmware.
-+
-+Fan Control
-+-----------
-+The system supports both automatic EC control and manual overrides. Command ID
-+0x14 (``MaxFanSpeedSwitch``) is used to toggle manual control, while ID 0x15
-+sets the actual PWM duty cycle.
-diff --git a/drivers/platform/x86/Kconfig b/drivers/platform/x86/Kconfig
-index 4cb7d97a9fcc..cdef5924d118 100644
---- a/drivers/platform/x86/Kconfig
-+++ b/drivers/platform/x86/Kconfig
-@@ -113,6 +113,22 @@ config GIGABYTE_WMI
- 	  To compile this driver as a module, choose M here: the module will
- 	  be called gigabyte-wmi.
- 
-+config TONGFANG_MIFS_WMI
-+	tristate "Tongfang MIFS (MiInterface) WMI driver"
-+	depends on ACPI_WMI
-+	depends on HWMON
-+	depends on POWER_SUPPLY
-+	select ACPI_PLATFORM_PROFILE
-+	help
-+	  This is a driver for Tongfang MiInterface based laptops.
-+
-+	  It provides the access to the temperature, fan speed, gpu
-+	  control, keyboard backlight brightness and platform profile
-+	  via hwmon and sysfs.
-+
-+	  To compile this driver as a module, choose M here: the module will
-+          be called tongfang-mifs-wmi.
-+
- config ACERHDF
- 	tristate "Acer Aspire One temperature and fan driver"
- 	depends on ACPI_EC && THERMAL
-diff --git a/drivers/platform/x86/Makefile b/drivers/platform/x86/Makefile
-index d25762f7114f..1160c726bda6 100644
---- a/drivers/platform/x86/Makefile
-+++ b/drivers/platform/x86/Makefile
-@@ -14,6 +14,7 @@ obj-$(CONFIG_NVIDIA_WMI_EC_BACKLIGHT)	+= nvidia-wmi-ec-backlight.o
- obj-$(CONFIG_XIAOMI_WMI)		+= xiaomi-wmi.o
- obj-$(CONFIG_REDMI_WMI)			+= redmi-wmi.o
- obj-$(CONFIG_GIGABYTE_WMI)		+= gigabyte-wmi.o
-+obj-$(CONFIG_TONGFANG_MIFS_WMI)		+= tongfang-mifs-wmi.o
- 
- # Acer
- obj-$(CONFIG_ACERHDF)		+= acerhdf.o
-diff --git a/drivers/platform/x86/tongfang-mifs-wmi.c b/drivers/platform/x86/tongfang-mifs-wmi.c
-new file mode 100644
-index 000000000000..5538d7713883
---- /dev/null
-+++ b/drivers/platform/x86/tongfang-mifs-wmi.c
-@@ -0,0 +1,851 @@
-+// SPDX-License-Identifier: GPL-2.0-or-later
-+#include <linux/acpi.h>
-+#include <linux/bits.h>
-+#include <linux/cleanup.h>
-+#include <linux/dev_printk.h>
-+#include <linux/device.h>
-+#include <linux/device/devres.h>
-+#include <linux/err.h>
-+#include <linux/hwmon.h>
-+#include <linux/init.h>
-+#include <linux/input-event-codes.h>
-+#include <linux/input.h>
-+#include <linux/input/sparse-keymap.h>
-+#include <linux/kernel.h>
-+#include <linux/leds.h>
-+#include <linux/module.h>
-+#include <linux/notifier.h>
-+#include <linux/platform_profile.h>
-+#include <linux/pm.h>
-+#include <linux/power_supply.h>
-+#include <linux/stddef.h>
-+#include <linux/string.h>
-+#include <linux/sysfs.h>
-+#include <linux/unaligned.h>
-+#include <linux/units.h>
-+#include <linux/wmi.h>
-+
-+#define DRV_NAME		"tongfang-mifs-wmi"
-+#define TONGFANG_MIFS_GUID	"B60BFB48-3E5B-49E4-A0E9-8CFFE1B3434B"
-+#define TONGFANG_EVENT_GUID	"46C93E13-EE9B-4262-8488-563BCA757FEF"
-+
-+enum tongfang_mifs_operation {
-+	WMI_METHOD_GET	= 250,
-+	WMI_METHOD_SET	= 251,
-+};
-+
-+enum tongfang_mifs_function {
-+	WMI_FN_SYSTEM_PER_MODE		= 8,
-+	WMI_FN_GPU_MODE			= 9,
-+	WMI_FN_KBD_TYPE			= 10,
-+	WMI_FN_FN_LOCK			= 11,
-+	WMI_FN_TP_LOCK			= 12,
-+	WMI_FN_FAN_SPEEDS		= 13,
-+	WMI_FN_RGB_KB_MODE		= 16,
-+	WMI_FN_RGB_KB_COLOR		= 17,
-+	WMI_FN_RGB_KB_BRIGHTNESS	= 18,
-+	WMI_FN_SYSTEM_AC_TYPE		= 19,
-+	WMI_FN_MAX_FAN_SWITCH		= 20,
-+	WMI_FN_MAX_FAN_SPEED		= 21,
-+	WMI_FN_CPU_THERMOMETER		= 22,
-+	WMI_FN_CPU_POWER		= 23,
-+};
-+
-+enum tongfang_system_ac_mode {
-+	WMI_SYSTEM_AC_TYPEC		= 1,
-+	/* Unknown type, this is unused in the original driver */
-+	WMI_SYSTEM_AC_CIRCULARHOLE	= 2,
-+};
-+
-+enum tongfang_mifs_power_profile {
-+	WMI_PP_BALANCED		= 0,
-+	WMI_PP_PERFORMANCE	= 1,
-+	WMI_PP_QUIET		= 2,
-+	WMI_PP_FULL_SPEED	= 3,
-+};
-+
-+enum tongfang_mifs_event_id {
-+	WMI_EVENT_RESERVED_1		= 1,
-+	WMI_EVENT_RESERVED_2		= 2,
-+	WMI_EVENT_RESERVED_3		= 3,
-+	WMI_EVENT_AIRPLANE_MODE		= 4,
-+	WMI_EVENT_KBD_BRIGHTNESS	= 5,
-+	WMI_EVENT_TOUCHPAD_STATE	= 6,
-+	WMI_EVENT_FNLOCK_STATE		= 7,
-+	WMI_EVENT_KBD_MODE		= 8,
-+	WMI_EVENT_CAPSLOCK_STATE	= 9,
-+	WMI_EVENT_CALCULATOR_START	= 11,
-+	WMI_EVENT_BROWSER_START		= 12,
-+	WMI_EVENT_NUMLOCK_STATE		= 13,
-+	WMI_EVENT_SCROLLLOCK_STATE	= 14,
-+	WMI_EVENT_PERFORMANCE_PLAN	= 15,
-+	WMI_EVENT_FN_J			= 16,
-+	WMI_EVENT_FN_F			= 17,
-+	WMI_EVENT_FN_0			= 18,
-+	WMI_EVENT_FN_1			= 19,
-+	WMI_EVENT_FN_2			= 20,
-+	WMI_EVENT_FN_3			= 21,
-+	WMI_EVENT_FN_4			= 22,
-+	WMI_EVENT_FN_5			= 24,
-+	WMI_EVENT_REFRESH_RATE		= 25,
-+	WMI_EVENT_CPU_FAN_SPEED		= 26,
-+	WMI_EVENT_GPU_FAN_SPEED		= 32,
-+	WMI_EVENT_WIN_KEY_LOCK		= 33,
-+	WMI_EVENT_RESERVED_23		= 34,
-+	WMI_EVENT_OPEN_APP		= 35,
-+};
-+
-+enum tongfang_mifs_event_type {
-+	WMI_EVENT_TYPE_HOTKEY	= 1,
-+};
-+
-+enum tongfang_wmi_device_type {
-+	TONGFANG_WMI_CONTROL	= 0,
-+	TONGFANG_WMI_EVENT	= 1,
-+};
-+
-+struct tongfang_mifs_input {
-+	u8 reserved1;
-+	u8 operation;
-+	u8 reserved2;
-+	u8 function;
-+	u8 payload[28];
-+} __packed;
-+
-+struct tongfang_mifs_output {
-+	u8 reserved1;
-+	u8 operation;
-+	u8 reserved2;
-+	u8 function;
-+	u8 data[28];
-+} __packed;
-+
-+struct tongfang_mifs_event {
-+	u8 event_type;
-+	u8 event_id;
-+	u8 value_low;	/* For most events, this is the value */
-+	u8 value_high;	/* For fan speed events, combined with value_low */
-+	u8 reserved[4];
-+} __packed;
-+
-+static ATOMIC_NOTIFIER_HEAD(tongfang_notifier_list);
-+
-+enum tongfang_notifier_actions {
-+	TONGFANG_NOTIFY_KBD_BRIGHTNESS,
-+	TONGFANG_NOTIFY_PLATFORM_PROFILE,
-+	TONGFANG_NOTIFY_HWMON,
-+};
-+
-+struct tongfang_fan_notify_data {
-+	int channel; /* 0 = CPU, 1 = GPU */
-+	u16 speed;
-+};
-+
-+struct tongfang_mifs_wmi_data {
-+	struct wmi_device *wdev;
-+	struct mutex lock; /* Protects WMI calls */
-+	struct led_classdev kbd_led;
-+	struct notifier_block notifier;
-+	struct input_dev *input_dev;
-+	struct device *hwmon_dev;
-+	enum platform_profile_option saved_profile;
-+};
-+
-+static int tongfang_mifs_wmi_call(struct tongfang_mifs_wmi_data *data,
-+				  const struct tongfang_mifs_input *input,
-+				  struct tongfang_mifs_output *output)
-+{
-+	struct wmi_buffer in_buf = { .length = sizeof(*input), .data = (void *)input };
-+	struct wmi_buffer out_buf = { 0 };
-+	int ret;
-+
-+	guard(mutex)(&data->lock);
-+
-+	ret = wmidev_invoke_method(data->wdev, 0, 1, &in_buf, output ? &out_buf : NULL);
-+	if (ret)
-+		return ret;
-+
-+	if (output) {
-+		if (out_buf.length < sizeof(*output)) {
-+			kfree(out_buf.data);
-+			return -EIO;
-+		}
-+
-+		memcpy(output, out_buf.data, sizeof(*output));
-+
-+		kfree(out_buf.data);
-+	}
-+
-+	return 0;
-+}
-+
-+static int laptop_profile_get(struct device *dev,
-+			      enum platform_profile_option *profile)
-+{
-+	struct tongfang_mifs_wmi_data *data = dev_get_drvdata(dev);
-+	struct tongfang_mifs_input input = {
-+		.reserved1 = 0,
-+		.operation = WMI_METHOD_GET,
-+		.reserved2 = 0,
-+		.function = WMI_FN_SYSTEM_PER_MODE,
-+	};
-+	struct tongfang_mifs_output result;
-+	int ret;
-+
-+	ret = tongfang_mifs_wmi_call(data, &input, &result);
-+	if (ret)
-+		return ret;
-+
-+	switch (result.data[0]) {
-+	case WMI_PP_BALANCED:
-+		*profile = PLATFORM_PROFILE_BALANCED;
-+		break;
-+	case WMI_PP_PERFORMANCE:
-+		*profile = PLATFORM_PROFILE_BALANCED_PERFORMANCE;
-+		break;
-+	case WMI_PP_QUIET:
-+		*profile = PLATFORM_PROFILE_LOW_POWER;
-+		break;
-+	case WMI_PP_FULL_SPEED:
-+		*profile = PLATFORM_PROFILE_PERFORMANCE;
-+		break;
-+	default:
-+		return -EINVAL;
-+	}
-+	return 0;
-+}
-+
-+static int tongfang_check_performance_capability(struct tongfang_mifs_wmi_data *data)
-+{
-+	struct tongfang_mifs_input input = {
-+		.operation = WMI_METHOD_GET,
-+		.function = WMI_FN_SYSTEM_AC_TYPE,
-+	};
-+	struct tongfang_mifs_output output;
-+	int ret;
-+
-+	/* Full-speed/performance mode requires DC power (not USB-C) */
-+	if (!power_supply_is_system_supplied())
-+		return -EOPNOTSUPP;
-+
-+	ret = tongfang_mifs_wmi_call(data, &input, &output);
-+	if (ret)
-+		return ret;
-+
-+	if (output.data[0] == WMI_SYSTEM_AC_TYPEC)
-+		return -EOPNOTSUPP;
-+
-+	return 0;
-+}
-+
-+static int laptop_profile_set(struct device *dev,
-+			      enum platform_profile_option profile)
-+{
-+	struct tongfang_mifs_wmi_data *data = dev_get_drvdata(dev);
-+	struct tongfang_mifs_input input = {
-+		.reserved1 = 0,
-+		.operation = WMI_METHOD_SET,
-+		.reserved2 = 0,
-+		.function = WMI_FN_SYSTEM_PER_MODE,
-+	};
-+	int ret;
-+	u8 val;
-+
-+	switch (profile) {
-+	case PLATFORM_PROFILE_LOW_POWER:
-+		val = WMI_PP_QUIET;
-+		break;
-+	case PLATFORM_PROFILE_BALANCED:
-+		val = WMI_PP_BALANCED;
-+		break;
-+	case PLATFORM_PROFILE_BALANCED_PERFORMANCE:
-+		ret = tongfang_check_performance_capability(data);
-+		if (ret)
-+			return ret;
-+		val = WMI_PP_PERFORMANCE;
-+		break;
-+	case PLATFORM_PROFILE_PERFORMANCE:
-+		ret = tongfang_check_performance_capability(data);
-+		if (ret)
-+			return ret;
-+		val = WMI_PP_FULL_SPEED;
-+		break;
-+	default:
-+		return -EOPNOTSUPP;
-+	}
-+
-+	input.payload[0] = val;
-+
-+	return tongfang_mifs_wmi_call(data, &input, NULL);
-+}
-+
-+static int platform_profile_probe(void *drvdata, unsigned long *choices)
-+{
-+	set_bit(PLATFORM_PROFILE_LOW_POWER, choices);
-+	set_bit(PLATFORM_PROFILE_BALANCED, choices);
-+	set_bit(PLATFORM_PROFILE_BALANCED_PERFORMANCE, choices);
-+	set_bit(PLATFORM_PROFILE_PERFORMANCE, choices);
-+
-+	return 0;
-+}
-+
-+static int tongfang_mifs_wmi_suspend(struct device *dev)
-+{
-+	struct tongfang_mifs_wmi_data *data = dev_get_drvdata(dev);
-+	enum platform_profile_option profile;
-+	int ret;
-+
-+	ret = laptop_profile_get(dev, &profile);
-+	if (ret == 0)
-+		data->saved_profile = profile;
-+
-+	return ret;
-+}
-+
-+static int tongfang_mifs_wmi_resume(struct device *dev)
-+{
-+	struct tongfang_mifs_wmi_data *data = dev_get_drvdata(dev);
-+
-+	dev_dbg(dev, "Resuming, restoring profile %d\n",
-+		data->saved_profile);
-+	return laptop_profile_set(dev, data->saved_profile);
-+}
-+
-+static DEFINE_SIMPLE_DEV_PM_OPS(tongfang_mifs_wmi_pm_ops,
-+				tongfang_mifs_wmi_suspend,
-+				tongfang_mifs_wmi_resume);
-+
-+static const struct platform_profile_ops laptop_profile_ops = {
-+	.probe = platform_profile_probe,
-+	.profile_get = laptop_profile_get,
-+	.profile_set = laptop_profile_set,
-+};
-+
-+static const char *const fan_labels[] = {
-+	"CPU", /* 0 */
-+	"GPU", /* 1 */
-+	"SYS", /* 2 */
-+};
-+
-+static int laptop_hwmon_read(struct device *dev, enum hwmon_sensor_types type,
-+			     u32 attr, int channel, long *val)
-+{
-+	struct tongfang_mifs_wmi_data *data = dev_get_drvdata(dev);
-+	struct tongfang_mifs_input input = {
-+		.reserved1 = 0,
-+		.operation = WMI_METHOD_GET,
-+		.reserved2 = 0,
-+	};
-+	struct tongfang_mifs_output res;
-+	int ret;
-+
-+	switch (type) {
-+	case hwmon_temp:
-+		input.function = WMI_FN_CPU_THERMOMETER;
-+		ret = tongfang_mifs_wmi_call(data, &input, &res);
-+		if (!ret)
-+			*val = res.data[0] * MILLIDEGREE_PER_DEGREE;
-+		return ret;
-+	case hwmon_fan:
-+		input.function = WMI_FN_FAN_SPEEDS;
-+		ret = tongfang_mifs_wmi_call(data, &input, &res);
-+		if (ret)
-+			break;
-+
-+		switch (channel) {
-+		case 0: /* CPU */
-+			*val = get_unaligned_le16(&res.data[0]);
-+			break;
-+		case 1: /* GPU */
-+			*val = get_unaligned_le16(&res.data[2]);
-+			break;
-+		case 2: /* SYS */
-+			*val = get_unaligned_le16(&res.data[6]);
-+			break;
-+		default:
-+			ret = -EINVAL;
-+			break;
-+		}
-+		break;
-+	default:
-+		ret = -EINVAL;
-+		break;
-+	}
-+	return ret;
-+}
-+
-+static int laptop_hwmon_read_string(struct device *dev,
-+				    enum hwmon_sensor_types type, u32 attr,
-+				    int channel, const char **str)
-+{
-+	if (type == hwmon_fan && attr == hwmon_fan_label) {
-+		if (channel >= 0 && channel < ARRAY_SIZE(fan_labels)) {
-+			*str = fan_labels[channel];
-+			return 0;
-+		}
-+	}
-+	return -EINVAL;
-+}
-+
-+static const struct hwmon_channel_info *laptop_hwmon_info[] = {
-+	HWMON_CHANNEL_INFO(temp, HWMON_T_INPUT),
-+	HWMON_CHANNEL_INFO(fan, HWMON_F_INPUT | HWMON_F_LABEL,
-+			   HWMON_F_INPUT | HWMON_F_LABEL,
-+			   HWMON_F_INPUT | HWMON_F_LABEL),
-+	NULL
-+};
-+
-+static const struct hwmon_ops laptop_hwmon_ops = {
-+	.visible = 0444,
-+	.read = laptop_hwmon_read,
-+	.read_string = laptop_hwmon_read_string,
-+};
-+
-+static const struct hwmon_chip_info laptop_chip_info = {
-+	.ops = &laptop_hwmon_ops,
-+	.info = laptop_hwmon_info,
-+};
-+
-+static int laptop_kbd_led_set(struct led_classdev *led_cdev,
-+			      enum led_brightness value)
-+{
-+	struct tongfang_mifs_wmi_data *data =
-+		container_of(led_cdev, struct tongfang_mifs_wmi_data, kbd_led);
-+	struct tongfang_mifs_input input = {
-+		.reserved1 = 0,
-+		.operation = WMI_METHOD_SET,
-+		.reserved2 = 0,
-+		.function = WMI_FN_RGB_KB_BRIGHTNESS,
-+	};
-+
-+	input.payload[0] = (u8)value;
-+
-+	return tongfang_mifs_wmi_call(data, &input, NULL);
-+}
-+
-+static enum led_brightness laptop_kbd_led_get(struct led_classdev *led_cdev)
-+{
-+	struct tongfang_mifs_wmi_data *data =
-+		container_of(led_cdev, struct tongfang_mifs_wmi_data, kbd_led);
-+	struct tongfang_mifs_input input = {
-+		.reserved1 = 0,
-+		.operation = WMI_METHOD_GET,
-+		.reserved2 = 0,
-+		.function = WMI_FN_RGB_KB_BRIGHTNESS,
-+	};
-+	struct tongfang_mifs_output res;
-+	int ret;
-+
-+	ret = tongfang_mifs_wmi_call(data, &input, &res);
-+	if (ret)
-+		return ret;
-+
-+	return res.data[0];
-+}
-+
-+static const char *const gpu_mode_strings[] = {
-+	"hybrid",
-+	"discrete",
-+	"uma",
-+};
-+
-+/* GPU Mode: 0:Hybrid, 1:Discrete, 2:UMA */
-+static ssize_t gpu_mode_show(struct device *dev, struct device_attribute *attr,
-+			     char *buf)
-+{
-+	struct tongfang_mifs_wmi_data *data = dev_get_drvdata(dev);
-+	struct tongfang_mifs_input input = {
-+		.reserved1 = 0,
-+		.operation = WMI_METHOD_GET,
-+		.reserved2 = 0,
-+		.function = WMI_FN_GPU_MODE,
-+	};
-+	struct tongfang_mifs_output res;
-+	u8 mode_val;
-+	int ret;
-+
-+	ret = tongfang_mifs_wmi_call(data, &input, &res);
-+
-+	if (ret)
-+		return ret;
-+
-+	mode_val = res.data[0];
-+
-+	if (mode_val >= ARRAY_SIZE(gpu_mode_strings))
-+		return -EPROTO;
-+
-+	return sysfs_emit(buf, "%s\n", gpu_mode_strings[mode_val]);
-+}
-+
-+static ssize_t gpu_mode_store(struct device *dev, struct device_attribute *attr,
-+			      const char *buf, size_t count)
-+{
-+	struct tongfang_mifs_wmi_data *data = dev_get_drvdata(dev);
-+	struct tongfang_mifs_input input = {
-+		.reserved1 = 0,
-+		.operation = WMI_METHOD_SET,
-+		.reserved2 = 0,
-+		.function = WMI_FN_GPU_MODE,
-+	};
-+	int val;
-+	int ret;
-+
-+	val = sysfs_match_string(gpu_mode_strings, buf);
-+	if (val < 0)
-+		return -EINVAL;
-+
-+	input.payload[0] = (u8)val;
-+
-+	ret = tongfang_mifs_wmi_call(data, &input, NULL);
-+	if (ret)
-+		return ret;
-+
-+	return count;
-+}
-+
-+static const char *const kb_mode_strings[] = {
-+	"off",		/* 0 */
-+	"cyclic",	/* 1 */
-+	"fixed",	/* 2 */
-+	"custom",	/* 3 */
-+};
-+
-+static ssize_t kb_mode_show(struct device *dev, struct device_attribute *attr,
-+			    char *buf)
-+{
-+	struct tongfang_mifs_wmi_data *data = dev_get_drvdata(dev);
-+	struct tongfang_mifs_input input = {
-+		.reserved1 = 0,
-+		.operation = WMI_METHOD_GET,
-+		.reserved2 = 0,
-+		.function = WMI_FN_RGB_KB_MODE,
-+	};
-+	struct tongfang_mifs_output res;
-+	int ret;
-+	u8 mode_val;
-+
-+	ret = tongfang_mifs_wmi_call(data, &input, &res);
-+	if (ret)
-+		return ret;
-+
-+	mode_val = res.data[0];
-+
-+	if (mode_val >= ARRAY_SIZE(kb_mode_strings))
-+		return -EPROTO;
-+
-+	return sysfs_emit(buf, "%s\n", kb_mode_strings[mode_val]);
-+}
-+
-+static ssize_t kb_mode_store(struct device *dev, struct device_attribute *attr,
-+			     const char *buf, size_t count)
-+{
-+	struct tongfang_mifs_wmi_data *data = dev_get_drvdata(dev);
-+	struct tongfang_mifs_input input = {
-+		.reserved1 = 0,
-+		.operation = WMI_METHOD_SET,
-+		.reserved2 = 0,
-+		.function = WMI_FN_RGB_KB_MODE,
-+	};
-+	// the wmi value (0, 1, 2 or 3)
-+	int val;
-+	int ret;
-+
-+	if (!data)
-+		return -EINVAL;
-+
-+	val = sysfs_match_string(kb_mode_strings, buf);
-+	if (val < 0)
-+		return -EINVAL;
-+
-+	input.payload[0] = (u8)val;
-+
-+	ret = tongfang_mifs_wmi_call(data, &input, NULL);
-+	if (ret)
-+		return ret;
-+
-+	return count;
-+}
-+
-+/* Fan Boost: 0:Normal, 1:Max Speed */
-+static ssize_t fan_boost_store(struct device *dev,
-+			       struct device_attribute *attr, const char *buf,
-+			       size_t count)
-+{
-+	struct tongfang_mifs_wmi_data *data = dev_get_drvdata(dev);
-+	struct tongfang_mifs_input input = {
-+		.reserved1 = 0,
-+		.operation = WMI_METHOD_SET,
-+		.reserved2 = 0,
-+		.function = WMI_FN_MAX_FAN_SWITCH,
-+	};
-+	bool val;
-+	int ret;
-+
-+	if (!data)
-+		return -EINVAL;
-+
-+	if (kstrtobool(buf, &val))
-+		return -EINVAL;
-+
-+	input.payload[0] = 0;	/* CPU/GPU Fan */
-+	input.payload[1] = val;
-+
-+	ret = tongfang_mifs_wmi_call(data, &input, NULL);
-+	if (ret)
-+		return ret;
-+
-+	return count;
-+}
-+
-+static DEVICE_ATTR_RW(gpu_mode);
-+static DEVICE_ATTR_RW(kb_mode);
-+static DEVICE_ATTR_WO(fan_boost);
-+
-+static struct attribute *laptop_attrs[] = {
-+	&dev_attr_gpu_mode.attr,
-+	&dev_attr_kb_mode.attr,
-+	&dev_attr_fan_boost.attr,
-+	NULL,
-+};
-+ATTRIBUTE_GROUPS(laptop);
-+
-+static const struct key_entry tongfang_mifs_wmi_keymap[] = {
-+	{ KE_KEY, WMI_EVENT_OPEN_APP, { KEY_PROG1 } },
-+	{ KE_KEY, WMI_EVENT_CALCULATOR_START, { KEY_CALC } },
-+	{ KE_KEY, WMI_EVENT_BROWSER_START, { KEY_WWW } },
-+	{ KE_IGNORE, WMI_EVENT_FN_J, { KEY_RESERVED } },
-+	{ KE_IGNORE, WMI_EVENT_FN_F, { KEY_RESERVED } },
-+	{ KE_IGNORE, WMI_EVENT_FN_0, { KEY_RESERVED } },
-+	{ KE_IGNORE, WMI_EVENT_FN_1, { KEY_RESERVED } },
-+	{ KE_IGNORE, WMI_EVENT_FN_2, { KEY_RESERVED } },
-+	{ KE_IGNORE, WMI_EVENT_FN_3, { KEY_RESERVED } },
-+	{ KE_IGNORE, WMI_EVENT_FN_4, { KEY_RESERVED } },
-+	{ KE_IGNORE, WMI_EVENT_FN_5, { KEY_RESERVED } },
-+	{ KE_END, 0 }
-+};
-+
-+static void tongfang_notifier_unregister(void *data)
-+{
-+	struct notifier_block *nb = data;
-+
-+	atomic_notifier_chain_unregister(&tongfang_notifier_list, nb);
-+}
-+
-+static int tongfang_notifier_callback(struct notifier_block *nb,
-+				      unsigned long action, void *data)
-+{
-+	struct tongfang_mifs_wmi_data *data_ctx =
-+	container_of(nb, struct tongfang_mifs_wmi_data, notifier);
-+	struct tongfang_fan_notify_data *fan_info;
-+	u8 *brightness;
-+
-+	switch (action) {
-+	case TONGFANG_NOTIFY_KBD_BRIGHTNESS:
-+		brightness = data;
-+		led_classdev_notify_brightness_hw_changed(&data_ctx->kbd_led,
-+							  *brightness);
-+		break;
-+	case TONGFANG_NOTIFY_PLATFORM_PROFILE:
-+		platform_profile_notify(&data_ctx->wdev->dev);
-+		break;
-+	case TONGFANG_NOTIFY_HWMON:
-+		fan_info = data;
-+		if (!fan_info)
-+			return NOTIFY_DONE;
-+
-+		hwmon_notify_event(data_ctx->hwmon_dev,
-+				   hwmon_fan,
-+				   hwmon_fan_input,
-+				   fan_info->channel);
-+		break;
-+	}
-+
-+	return NOTIFY_OK;
-+}
-+
-+static int tongfang_mifs_wmi_probe(struct wmi_device *wdev, const void *context)
-+{
-+	struct tongfang_mifs_wmi_data *drv_data;
-+	struct device *pp_dev;
-+	enum tongfang_wmi_device_type dev_type =
-+		(enum tongfang_wmi_device_type)(unsigned long)context;
-+	int ret;
-+
-+	drv_data = devm_kzalloc(&wdev->dev, sizeof(*drv_data), GFP_KERNEL);
-+	if (!drv_data)
-+		return -ENOMEM;
-+
-+	drv_data->wdev = wdev;
-+
-+	ret = devm_mutex_init(&wdev->dev, &drv_data->lock);
-+	if (ret)
-+		return ret;
-+
-+	dev_set_drvdata(&wdev->dev, drv_data);
-+
-+	if (dev_type == TONGFANG_WMI_EVENT) {
-+		/* Register input device for hotkeys */
-+		drv_data->input_dev = devm_input_allocate_device(&wdev->dev);
-+		if (!drv_data->input_dev)
-+			return -ENOMEM;
-+
-+		drv_data->input_dev->name = "Tongfang MIFS WMI hotkeys";
-+		drv_data->input_dev->phys = "wmi/input0";
-+		drv_data->input_dev->id.bustype = BUS_HOST;
-+		drv_data->input_dev->dev.parent = &wdev->dev;
-+
-+		ret = sparse_keymap_setup(drv_data->input_dev,
-+					  tongfang_mifs_wmi_keymap, NULL);
-+		if (ret)
-+			return ret;
-+
-+		ret = input_register_device(drv_data->input_dev);
-+		if (ret)
-+			return ret;
-+
-+		return 0;
-+	}
-+
-+	/* Register platform profile */
-+	pp_dev = devm_platform_profile_register(&wdev->dev, DRV_NAME, drv_data,
-+						&laptop_profile_ops);
-+	if (IS_ERR(pp_dev))
-+		return PTR_ERR(pp_dev);
-+
-+	drv_data->saved_profile = PLATFORM_PROFILE_LAST;
-+
-+	/* Register hwmon */
-+	drv_data->hwmon_dev = devm_hwmon_device_register_with_info(&wdev->dev, "tongfang_mifs",
-+								   drv_data, &laptop_chip_info, NULL);
-+	if (IS_ERR(drv_data->hwmon_dev))
-+		return PTR_ERR(drv_data->hwmon_dev);
-+
-+	/* Register keyboard LED */
-+	drv_data->kbd_led.name = "laptop::kbd_backlight";
-+
-+	drv_data->kbd_led.max_brightness = 3;
-+	drv_data->kbd_led.brightness_set_blocking = laptop_kbd_led_set;
-+	drv_data->kbd_led.brightness_get = laptop_kbd_led_get;
-+	ret = devm_led_classdev_register(&wdev->dev, &drv_data->kbd_led);
-+	if (ret)
-+		return ret;
-+
-+	drv_data->notifier.notifier_call = tongfang_notifier_callback;
-+	ret = atomic_notifier_chain_register(&tongfang_notifier_list, &drv_data->notifier);
-+	if (ret)
-+		return ret;
-+
-+	ret = devm_add_action_or_reset(&wdev->dev, tongfang_notifier_unregister, &drv_data->notifier);
-+	if (ret)
-+		return ret;
-+
-+	return 0;
-+}
-+
-+static void tongfang_mifs_wmi_notify(struct wmi_device *wdev,
-+				     const struct wmi_buffer *buffer)
-+{
-+	struct tongfang_mifs_wmi_data *data = dev_get_drvdata(&wdev->dev);
-+	const struct tongfang_mifs_event *event;
-+	struct tongfang_fan_notify_data fan_data;
-+	u8 brightness;
-+
-+	if (buffer->length < sizeof(*event))
-+		return;
-+
-+	event = (const struct tongfang_mifs_event *)buffer->data;
-+
-+	/* Validate event type */
-+	if (event->event_type != WMI_EVENT_TYPE_HOTKEY)
-+		return;
-+
-+	dev_dbg(&wdev->dev,
-+		"WMI event: id=0x%02x value_low=0x%02x value_high=0x%02x\n",
-+		event->event_id, event->value_low, event->value_high);
-+
-+	switch (event->event_id) {
-+	case WMI_EVENT_KBD_BRIGHTNESS:
-+		brightness = event->value_low;
-+		atomic_notifier_call_chain(&tongfang_notifier_list,
-+					   TONGFANG_NOTIFY_KBD_BRIGHTNESS,
-+					   &brightness);
-+		break;
-+
-+	case WMI_EVENT_PERFORMANCE_PLAN:
-+		atomic_notifier_call_chain(&tongfang_notifier_list,
-+					   TONGFANG_NOTIFY_PLATFORM_PROFILE,
-+					   NULL);
-+		break;
-+
-+	case WMI_EVENT_OPEN_APP:
-+	case WMI_EVENT_CALCULATOR_START:
-+	case WMI_EVENT_BROWSER_START:
-+		if (!sparse_keymap_report_event(data->input_dev,
-+						event->event_id, 1, true))
-+			dev_warn(&wdev->dev, "Unknown key pressed: 0x%02x\n",
-+				 event->event_id);
-+		break;
-+
-+	/*
-+	 * The device has 3 fans (CPU, GPU, SYS),
-+	 * but there are only the CPU and GPU fan has events
-+	 */
-+	case WMI_EVENT_CPU_FAN_SPEED:
-+	case WMI_EVENT_GPU_FAN_SPEED:
-+		if (event->event_id == WMI_EVENT_CPU_FAN_SPEED)
-+			fan_data.channel = 0;
-+		else
-+			fan_data.channel = 1;
-+
-+		/* Fan speed is 16-bit value (value_low is LSB, value_high is MSB) */
-+		fan_data.speed = (event->value_high << 8) | event->value_low;
-+		atomic_notifier_call_chain(&tongfang_notifier_list,
-+					   TONGFANG_NOTIFY_HWMON,
-+					   &fan_data);
-+		break;
-+
-+	case WMI_EVENT_AIRPLANE_MODE:
-+	case WMI_EVENT_TOUCHPAD_STATE:
-+	case WMI_EVENT_FNLOCK_STATE:
-+	case WMI_EVENT_KBD_MODE:
-+	case WMI_EVENT_CAPSLOCK_STATE:
-+	case WMI_EVENT_NUMLOCK_STATE:
-+	case WMI_EVENT_SCROLLLOCK_STATE:
-+	case WMI_EVENT_REFRESH_RATE:
-+	case WMI_EVENT_WIN_KEY_LOCK:
-+		/* These events are informational or handled by firmware */
-+		dev_dbg(&wdev->dev, "State change event: id=%d value=%d\n",
-+			event->event_id, event->value_low);
-+		break;
-+
-+	default:
-+		dev_dbg(&wdev->dev, "Unknown event: id=0x%02x value=0x%02x\n",
-+			event->event_id, event->value_low);
-+		break;
-+	}
-+}
-+
-+static const struct wmi_device_id tongfang_mifs_wmi_id_table[] = {
-+	{ TONGFANG_MIFS_GUID, (void *)TONGFANG_WMI_CONTROL },
-+	{ TONGFANG_EVENT_GUID, (void *)TONGFANG_WMI_EVENT },
-+	{}
-+};
-+MODULE_DEVICE_TABLE(wmi, tongfang_mifs_wmi_id_table);
-+
-+static struct wmi_driver tongfang_mifs_wmi_driver = {
-+	.no_singleton = true,
-+	.driver = {
-+		.name = DRV_NAME,
-+		.dev_groups = laptop_groups,
-+		.pm = pm_sleep_ptr(&tongfang_mifs_wmi_pm_ops),
-+	},
-+	.id_table = tongfang_mifs_wmi_id_table,
-+	.probe = tongfang_mifs_wmi_probe,
-+	.notify_new = tongfang_mifs_wmi_notify,
-+};
-+
-+module_wmi_driver(tongfang_mifs_wmi_driver);
-+
-+MODULE_AUTHOR("Mingyou Chen <qby140326@gmail.com>");
-+MODULE_DESCRIPTION("Tongfang MIFS (MiInterface) WMI driver");
-+MODULE_LICENSE("GPL");
+Thanks,
+Derek
 
-base-commit: 2ccbdb612d0d95f25c38189b83666ff0fb2bfb47
--- 
-2.51.2
-
+> >
+> > Thanks,
+> > Derek
+> >
+>
+> --
+> Thanks,
+>  ~ Kurt
