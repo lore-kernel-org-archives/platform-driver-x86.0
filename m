@@ -1,33 +1,33 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A681427AC28;
-	Sun,  8 Feb 2026 10:45:59 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3CA1133D513;
+	Sun,  8 Feb 2026 10:54:50 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1770547559; cv=none; b=ogcZMDq0BrE0xhnQsU3XcVC6O/KFFdHrJtyVSe39mkVPSKzTSqfN/U8XEobTq803JUKD3Mb922efg9n361JdJVMVDDEPBhz3DvytnA+/loyzGPGYsPJPablwflp2gyjwLaZFtYoN8V2wxEh74xdo1951opkvq19OYI9CCcfqs1w=
+	t=1770548090; cv=none; b=oUscqhgmQfs2fwIt7klZm+pLRoF5kGPPJjpEoyG9ALwowneRU4ruUNfpZ6D3kI7U5EashjQw7MS8PY1RAKE+Pk2LQhRGAlJpHSddC6Cq7TWiRYvQ757cv9qBRmrC/ZJozGp9S/arJGAr41FEvDPvdMeP3EajIHSuxaOiAlAn3ks=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1770547559; c=relaxed/simple;
-	bh=oCOks4Zu7lnr+Dn0QAI7n4eMmSuai+UyfMfboMsdGlY=;
+	s=arc-20240116; t=1770548090; c=relaxed/simple;
+	bh=xetTZkxx3L3Krj+DtiixEpZQIJOi8KR6J2CczW+2qnQ=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=swt4ddwBwqQXW5WZTUvt8dI8hBnNqkZ8rogyiAXzTrtEpgPHJSIMw57RXOiLCAPdshwob2tIPainSJPczdz73CsrnSNcKKZ7yWsuPosjn8SttYDl8oxUH+C6wRtApiTkXNH/TUKNoYYIFxKMXnpUWz1jAW1vQ+zMVdjMBIfg/8U=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=szMovIaU; arc=none smtp.client-ip=10.30.226.201
+	 In-Reply-To:Content-Type; b=qK9Hglz6mT6TWhu/3rB14rXH/GsWBplhusMo75exgJZiWCbKEkvDUR5ox8aztyWlq40JtNjms+i2dzR3AV3NrZmRQRFPisUVHwuYlb6i9TVHOciGMo2vEPsPute6e3gKfnN+CmXiWblzugYaznB474SqAYMVePXqDqZOtYcvJIc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=T87FoNrs; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="szMovIaU"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id C6F83C4CEF7;
-	Sun,  8 Feb 2026 10:45:57 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="T87FoNrs"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 29823C4CEF7;
+	Sun,  8 Feb 2026 10:54:47 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1770547559;
-	bh=oCOks4Zu7lnr+Dn0QAI7n4eMmSuai+UyfMfboMsdGlY=;
+	s=k20201202; t=1770548090;
+	bh=xetTZkxx3L3Krj+DtiixEpZQIJOi8KR6J2CczW+2qnQ=;
 	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=szMovIaUZmX2u8cIlV4PbkpacHnR3bebZelZbbP1/i+8/7hUYK0VcJ+HEceivEVyt
-	 /VWx0Z+UaxQEI1PwKgNzCUGcf4J80cmIpa9c0Didmx7hqhYrxY+JIIedxH29TAcMGO
-	 jhRIqM/FNPC+BhpTfNi7RFgoNaCDbnCPuwK3LW8JvXrN0fuoNAQ8zt/2CTibJCo7a3
-	 72yXIOpAdz1hkMEH2gzlJ3yVsjXpFWOJYOVcgwwtE7p0fQ/WInFiw4ZiOnmLdjXV7U
-	 iPWXhyM6Ubuucjxf1s7hZ6w+9109n1MeoCGenz6knXhkqVutK3aghrQJR0s0DtTKh0
-	 enFrlJ1Jdj7KA==
-Message-ID: <c2d14818-1c34-47c7-a210-1f7c737f0bc9@kernel.org>
-Date: Sun, 8 Feb 2026 11:45:55 +0100
+	b=T87FoNrsr9Th+ksxIAAK+/N4zlx0JauuzjuivjjgKAIWEqSkqvJwu88x3TO/yp8q/
+	 FGagAyjK7+QTqpBF+hUb53m9J8ecidrEBCsk0pWkc5SOD2LTjS4yWxsBACG8wrZ8tc
+	 onQ3MXScDy38iFDpodP5EFbOINc7GU3tSQKoVQ6n2kld7BXM5WXV1zXHE4cmKcC4wb
+	 4YPnlAdN/7vyAAEjlAMcGbZKro+U/JPkfQrXCpsbayRvo2EbRQdxG28AuFcFazBtKh
+	 91t7KbqBB3X6kdO0Tar8K7vKOA2Be28y+WaqFFtisIRRiE040UCyWlnQuIWDMz5itN
+	 hPyYsubHCVW4A==
+Message-ID: <30354f74-91c0-4fd6-82b1-15f79ae7a60f@kernel.org>
+Date: Sun, 8 Feb 2026 11:54:46 +0100
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
@@ -35,162 +35,47 @@ List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 1/2] efi: Save Brightness using EFI on Macs
-To: Atharva Tiwari <atharvatiwarilinuxdev@gmail.com>
-Cc: Lukas Wunner <lukas@wunner.de>, Ard Biesheuvel <ardb@kernel.org>,
- =?UTF-8?Q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>,
- linux-kernel@vger.kernel.org, linux-efi@vger.kernel.org,
- platform-driver-x86@vger.kernel.org
-References: <20260206125641.12983-1-atharvatiwarilinuxdev@gmail.com>
- <20260206125641.12983-2-atharvatiwarilinuxdev@gmail.com>
+Subject: Re: [PATCH] thinkpad_acpi: Add Auto mode support with dynamic
+ max_brightness
+To: Vishnu Sankar <vishnuocv@gmail.com>, hmh@hmh.eng.br,
+ derekjohn.clark@gmail.com, ilpo.jarvinen@linux.intel.com,
+ mpearson-lenovo@squebb.ca
+Cc: ibm-acpi-devel@lists.sourceforge.net,
+ platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org,
+ vsankar@lenovo.com
+References: <20260203232219.11683-1-vishnuocv@gmail.com>
 From: Hans de Goede <hansg@kernel.org>
 Content-Language: en-US, nl
-In-Reply-To: <20260206125641.12983-2-atharvatiwarilinuxdev@gmail.com>
+In-Reply-To: <20260203232219.11683-1-vishnuocv@gmail.com>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 
-Hi,
+Hi Vishnu,
 
-On 6-Feb-26 13:56, Atharva Tiwari wrote:
-> Currently when a Mac reboots, the brightness is not the same
-> as the previous boot instead its the same as the last time the
-> Mac booted macOS.
-> 
-> We can fix this issue by saving the brightness level to the efivar
-> backlight-level.
-> 
-> We use delayed work instead of a shutdown callback,
-> as it still applies the brightness
-> even during forced shutdowns and at 0% battery.
-> 
-> (tested on iMac20,1)
-> 
-> Suggested-by: Lukas Wunner <lukas@wunner.de>
-> Signed-off-by: Atharva Tiwari <atharvatiwarilinuxdev@gmail.com>
-> ---
->  drivers/firmware/efi/Kconfig                  | 10 ++
->  drivers/firmware/efi/Makefile                 |  1 +
->  drivers/firmware/efi/apple-brightness.c       | 91 +++++++++++++++++++
->  .../linux/platform_data/apple-brightness.h    | 21 +++++
->  4 files changed, 123 insertions(+)
->  create mode 100644 drivers/firmware/efi/apple-brightness.c
->  create mode 100644 include/linux/platform_data/apple-brightness.h
-> 
-> diff --git a/drivers/firmware/efi/Kconfig b/drivers/firmware/efi/Kconfig
-> index 29e0729299f5..dd0a9c9a772a 100644
-> --- a/drivers/firmware/efi/Kconfig
-> +++ b/drivers/firmware/efi/Kconfig
-> @@ -167,6 +167,16 @@ config APPLE_PROPERTIES
->  
->  	  If unsure, say Y if you have a Mac.  Otherwise N.
->  
-> +config APPLE_BRIGHTNESS
-> +	bool "Apple Backlight control for EFI"
-> +	depends on X86
-> +	help
-> +	  This will save the brightness level to EFI, so brightness
-> +	  level is preserved across reboots and shutdows. allowing
-> +	  for improved support of Apple hardware.
-> +
-> +	  If unsure, say Y if you have a Mac, Otherwise N.
-> +
->  config RESET_ATTACK_MITIGATION
->  	bool "Reset memory attack mitigation"
->  	depends on EFI_STUB
-> diff --git a/drivers/firmware/efi/Makefile b/drivers/firmware/efi/Makefile
-> index 8efbcf699e4f..1f5705cc87a2 100644
-> --- a/drivers/firmware/efi/Makefile
-> +++ b/drivers/firmware/efi/Makefile
-> @@ -26,6 +26,7 @@ obj-$(CONFIG_EFI_BOOTLOADER_CONTROL)	+= efibc.o
->  obj-$(CONFIG_EFI_TEST)			+= test/
->  obj-$(CONFIG_EFI_DEV_PATH_PARSER)	+= dev-path-parser.o
->  obj-$(CONFIG_APPLE_PROPERTIES)		+= apple-properties.o
-> +obj-$(CONFIG_APPLE_BRIGHTNESS)		+= apple-brightness.o
->  obj-$(CONFIG_EFI_RCI2_TABLE)		+= rci2-table.o
->  obj-$(CONFIG_EFI_EMBEDDED_FIRMWARE)	+= embedded-firmware.o
->  obj-$(CONFIG_LOAD_UEFI_KEYS)		+= mokvar-table.o
-> diff --git a/drivers/firmware/efi/apple-brightness.c b/drivers/firmware/efi/apple-brightness.c
-> new file mode 100644
-> index 000000000000..c32e365dc511
-> --- /dev/null
-> +++ b/drivers/firmware/efi/apple-brightness.c
-> @@ -0,0 +1,91 @@
-> +// SPDX-License-Identifier: GPL-2.0-only OR MIT
-> +/*
-> + * apple-brightness.c - EFI brightness saver on Macs
-> + * Copyright (C) 2026 Atharva Tiwari <atharvatiwarilinuxdev@gmail.com>
-> + */
-> +
-> +#define pr_fmt(fmt) KBUILD_MODNAME ": " fmt
-> +
-> +#include <linux/backlight.h>
-> +#include <linux/cleanup.h>
-> +#include <linux/efi.h>
-> +#include <linux/mutex.h>
-> +#include <linux/workqueue.h>
-> +#include <linux/platform_data/apple-brightness.h>
-> +
-> +static DEFINE_MUTEX(apple_brightness_mutex);
-> +static struct delayed_work apple_brightness_work;
-> +
-> +static u32 efi_attr;
-> +static u16 last_saved_level;
-> +
-> +static int (*get_brightness)(struct backlight_device *bl);
-> +static struct backlight_device *bl_dev;
-> +
-> +static void apple_brightness_workfn(struct work_struct *work)
-> +{
-> +	u16 level;
-> +	efi_status_t status;
-> +
-> +	mutex_lock(&apple_brightness_mutex);
-> +
-> +	level = (u16)get_brightness(bl_dev);
-> +
-> +	if (level == last_saved_level)
-> +		goto out;
-> +
-> +	status = efivar_set_variable(APPLE_BRIGHTNESS_NAME, &APPLE_BRIGHTNESS_GUID,
-> +				efi_attr, sizeof(level), &level);
-> +	if (status != EFI_SUCCESS)
-> +		pr_debug("Unable to set brightness: 0x%lx\n", status);
-> +	else
-> +		last_saved_level = level;
-> +
-> +out:
-> +	mutex_unlock(&apple_brightness_mutex);
-> +
-> +	mod_delayed_work(system_wq, &apple_brightness_work,
-> +			msecs_to_jiffies(APPLE_BRIGHTNESS_POLL));
+On 4-Feb-26 00:22, Vishnu Sankar wrote:
+> Dynamically detect keyboard backlight capabilities and set
+> max_brightness correctly (2 for old models, 3 for new models
+> with Auto mode).
 
-Wait so this now writes an non-volatile EFI variable every
-300ms ?  I don't know how these are backed on Apple hw,
-but typically these are backed by some SPI-nor flash or
-something similar.
+Thank you for your patch.
 
-Writing this every 300ms is a sure fire way to wear out
-the flash and brick the machine real fast.
+If I understand this correctly, writing 3 as level does not
+make the backlight more bright then writing 2, but instead
+it puts the backlight in some auto mode ?
 
-So NACK.
+If I've that correct then  userspace should keep seeing
+a range of 0 - 2 and the special auto mode value should
+be reported / be made settable through a separate als_enabled
+sysfs attribute under the LED class device. See:
 
-I was already worried about the shutdown approach on v1,
-but did not say anything since I'm not that familiar
-with apple hw and other apple code is already doing
-something similar.
+Documentation/ABI/testing/sysfs-platform-dell-laptop
 
-But writing a non-volatile EFI variable every 300ms is
-just a very very bad idea.
-
-Also I do not understand why this is necessary at all?
-
-Systemd already has a service which saves the value
-of all /sys/class/backlight and /sys/class/leds/*kbd_backlight
-devices on shutdown/reboot and restores these on boot.
-
-So what is the advantage here? Only advantage I can
-see is having the old-brightness value right away
-rather then getting it restored during boot?
+You can add extra attributes there by setting the groups
+member of the struct led_classdev, see kbd_led_groups[]
+in drivers/platform/x86/dell/dell-laptop.c, except that
+you should use a .is_visible callback to only show this
+on hw which supports it and you only need 1 group with
+1 attribute.
 
 Regards,
 
@@ -200,74 +85,106 @@ Hans
 
 
 
-> +}
+
+> 
+> Suggested-by: Mark Pearson <mpearson-lenovo@squebb.ca>
+> Signed-off-by: Vishnu Sankar <vishnuocv@gmail.com>
+> ---
+>  drivers/platform/x86/lenovo/thinkpad_acpi.c | 33 ++++++++++++++++++---
+>  1 file changed, 29 insertions(+), 4 deletions(-)
+> 
+> diff --git a/drivers/platform/x86/lenovo/thinkpad_acpi.c b/drivers/platform/x86/lenovo/thinkpad_acpi.c
+> index cc19fe520ea9..f670cdd1791e 100644
+> --- a/drivers/platform/x86/lenovo/thinkpad_acpi.c
+> +++ b/drivers/platform/x86/lenovo/thinkpad_acpi.c
+> @@ -5043,6 +5043,9 @@ static struct ibm_struct video_driver_data = {
+>  static enum led_brightness kbdlight_brightness;
+>  static DEFINE_MUTEX(kbdlight_mutex);
+>  
+> +/* Maximum level supported by hardware, will be updated in init */
+> +static int kbdlight_max_level = 2;
 > +
-> +int apple_brightness_probe(struct backlight_device *bl,
-> +	int (*get_brightnessfn)(struct backlight_device *bl))
-> +{
-> +	efi_status_t status;
-> +	unsigned long size = sizeof(last_saved_level);
-> +	int ret;
+>  static int kbdlight_set_level(int level)
+>  {
+>  	int ret = 0;
+> @@ -5050,6 +5053,10 @@ static int kbdlight_set_level(int level)
+>  	if (!hkey_handle)
+>  		return -ENXIO;
+>  
+> +	/* Validate against detected max level */
+> +	if (level < 0 || level > kbdlight_max_level)
+> +		return -EINVAL;
 > +
-> +	guard(mutex)(&apple_brightness_mutex);
+>  	mutex_lock(&kbdlight_mutex);
+>  
+>  	if (!acpi_evalf(hkey_handle, NULL, "MLCS", "dd", level))
+> @@ -5075,6 +5082,7 @@ static int kbdlight_get_level(void)
+>  	if (status < 0)
+>  		return status;
+>  
+> +	/* Status can be 0, 1, 2, or 3 (Auto) */
+>  	return status & 0x3;
+>  }
+>  
+> @@ -5143,7 +5151,7 @@ static enum led_brightness kbdlight_sysfs_get(struct led_classdev *led_cdev)
+>  static struct tpacpi_led_classdev tpacpi_led_kbdlight = {
+>  	.led_classdev = {
+>  		.name		= "tpacpi::kbd_backlight",
+> -		.max_brightness	= 2,
+> +		.max_brightness	= 2,	/*Initial value, will be updated in init*/
+>  		.flags		= LED_BRIGHT_HW_CHANGED,
+>  		.brightness_set_blocking = &kbdlight_sysfs_set,
+>  		.brightness_get	= &kbdlight_sysfs_get,
+> @@ -5167,6 +5175,17 @@ static int __init kbdlight_init(struct ibm_init_struct *iibm)
+>  	kbdlight_brightness = kbdlight_sysfs_get(NULL);
+>  	tp_features.kbdlight = 1;
+>  
+> +	/* Detect hardware capabilities and set max_brightness */
+> +	if (acpi_evalf(hkey_handle, NULL, "MLCS", "dd", 3)) {
+> +		/* MLCS accepts level 3 - new ThinkPad with Auto mode */
+> +		kbdlight_max_level = 3;
+> +		tpacpi_led_kbdlight.led_classdev.max_brightness = 3;
+> +	} else {
+> +		/* MLCS rejects level 3 - old ThinkPad */
+> +		kbdlight_max_level = 2;
+> +		tpacpi_led_kbdlight.led_classdev.max_brightness = 2;
+> +	}
 > +
-> +	bl_dev = bl;
-> +	get_brightness = get_brightnessfn;
-> +
-> +	if (!efi_rt_services_supported(EFI_RT_SUPPORTED_SET_VARIABLE))
-> +		return -ENODEV;
-> +
-> +	ret = efivar_lock();
-> +	if (ret)
-> +		return ret;
-> +
-> +	status = efivar_get_variable(APPLE_BRIGHTNESS_NAME, &APPLE_BRIGHTNESS_GUID,
-> +				&efi_attr, &size, &last_saved_level);
-> +
-> +	efivar_unlock();
-> +
-> +	if (status != EFI_SUCCESS)
-> +		return -ENODEV;
-> +
-> +	bl_dev = bl;
-> +	get_brightness = get_brightnessfn;
-> +
-> +	INIT_DELAYED_WORK(&apple_brightness_work, apple_brightness_workfn);
-> +	mod_delayed_work(system_wq, &apple_brightness_work,
-> +			msecs_to_jiffies(APPLE_BRIGHTNESS_POLL));
-> +
-> +	return 0;
-> +}
-> +EXPORT_SYMBOL(apple_brightness_probe);
-> +
-> +MODULE_AUTHOR("Atharva Tiwari <atharvatiwarilinuxdev@gmail.com>");
-> +MODULE_DESCRIPTION("EFI Brightness saver for Macs");
-> +MODULE_LICENSE("Dual MIT/GPL");
-> diff --git a/include/linux/platform_data/apple-brightness.h b/include/linux/platform_data/apple-brightness.h
-> new file mode 100644
-> index 000000000000..4cf5e2d346cb
-> --- /dev/null
-> +++ b/include/linux/platform_data/apple-brightness.h
-> @@ -0,0 +1,21 @@
-> +/* SPDX-License-Identifier: GPL-2.0-only OR MIT */
-> +/*
-> + * apple-brightness.h - EFI brightness saver for Macs
-> + * Copyright (C) 2026 Atharva Tiwari <atharvatiwarilinuxdev@gmail.com>
-> + */
-> +
-> +#ifndef _APPLE_BL_H_
-> +#define _APPLE_BL_H_
-> +
-> +#include <linux/backlight.h>
-> +#include <linux/efi.h>
-> +
-> +#define APPLE_BRIGHTNESS_NAME           L"backlight-level"
-> +#define APPLE_BRIGHTNESS_GUID           EFI_GUID(0x7c436110, 0xab2a, 0x4bbb, 0xa8, 0x80, 0xfe, 0x41, 0x99, 0x5c, 0x9f, 0x82)
-> +
-> +#define APPLE_BRIGHTNESS_POLL           300
-> +
-> +int apple_brightness_probe(struct backlight_device *bl,
-> +	int (*get_brightnessfn)(struct backlight_device *bl));
-> +
-> +#endif /* _APPLE_BL_H */
+>  	rc = led_classdev_register(&tpacpi_pdev->dev,
+>  				   &tpacpi_led_kbdlight.led_classdev);
+>  	if (rc < 0) {
+> @@ -5201,6 +5220,7 @@ static int kbdlight_set_level_and_update(int level)
+>  static int kbdlight_read(struct seq_file *m)
+>  {
+>  	int level;
+> +	int i;
+>  
+>  	if (!tp_features.kbdlight) {
+>  		seq_printf(m, "status:\t\tnot supported\n");
+> @@ -5210,9 +5230,13 @@ static int kbdlight_read(struct seq_file *m)
+>  			seq_printf(m, "status:\t\terror %d\n", level);
+>  		else
+>  			seq_printf(m, "status:\t\t%d\n", level);
+> -		seq_printf(m, "commands:\t0, 1, 2\n");
+> -	}
+>  
+> +		/* Show available commands based on hardware */
+> +		seq_puts(m, "commands:\t0");
+> +		for (i = 1; i <= tpacpi_led_kbdlight.led_classdev.max_brightness; i++)
+> +			seq_printf(m, ", %d", i);
+> +		seq_puts(m, "\n");
+> +	}
+>  	return 0;
+>  }
+>  
+> @@ -5230,7 +5254,8 @@ static int kbdlight_write(char *buf)
+>  			return res;
+>  	}
+>  
+> -	if (level >= 3 || level < 0)
+> +	/* Validate against max level */
+> +	if (level < 0 || level > tpacpi_led_kbdlight.led_classdev.max_brightness)
+>  		return -EINVAL;
+>  
+>  	return kbdlight_set_level_and_update(level);
 
