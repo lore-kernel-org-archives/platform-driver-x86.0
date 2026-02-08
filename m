@@ -1,123 +1,106 @@
-Received: from sender4-op-o15.zoho.com (sender4-op-o15.zoho.com [136.143.188.15])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2B893299AAB;
-	Sat,  7 Feb 2026 17:24:01 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=136.143.188.15
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1770485042; cv=pass; b=Aj07GLLhzdtx+DAJD2SD8Fo+0u1D7dPwgobiE9YsPnJ8tXxF3ENBfI6Zz4/Qge1JdlACOfb8JILvd+sW5RDFXcevEE6qmDYwevGkoezbV/jgrOoRb3aAoB5LumKkYpFuU7G9gd5xMPBzPrOBikTJcxe+Yjv9fdjCGghgI4JqA+o=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1770485042; c=relaxed/simple;
-	bh=s41gT87dWvuzHdqIUv41leecdIo/clKsPj7uK0KyjcM=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=FVJqu/tWdEDxR+7r9KD5HFBpHQK/4WTGlbqM8/7yami4yHt68qh4LTDDlzPhmZM6eHfccZlzl/+p/dHOJVLOsnlo1CMrY59XQ3X/3l5MznFMiH2EjD+GBXJYJwFHt1AvV1mWPIcaJMUEQ7ffCrvqh8gbHxIaQ3wypJZQd9rI2wk=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=rong.moe; spf=pass smtp.mailfrom=rong.moe; dkim=pass (2048-bit key) header.d=rong.moe header.i=i@rong.moe header.b=jXLxCrBm; arc=pass smtp.client-ip=136.143.188.15
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=rong.moe
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=rong.moe
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1E38E163;
+	Sun,  8 Feb 2026 06:31:16 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1770532277; cv=none; b=hvafrqQP0qsp1IkodpimSBmADeHdYZyQejOkxRD8FKzuSdqXHh9WMHpkRzKAhiOvCHjw+meNb1hYy1db0SD1BxtoFb96670cBlj20+PuvtoyL5ZDvzslhJfxuIYJBiKx0bQ9qruFg2vhyTQ6Xz6qQyA7zY9pW5mLNMCg/GVAgMo=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1770532277; c=relaxed/simple;
+	bh=7AUya8kdOOvgoL1LtLhKe8OxWfRas8MMuwwuCMEkNL8=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=Dzm+xFE8p7WvIDSVqSdQj12+i+LSaNq9pAR8z6cHlnyA9QGzuvV0fRCoFU+iq1K3NJoRIdclWD+Hl43TUh2/YZ3unGVx+phXqYhUaP/wD3AF8j5mt732Qs0pZeYUykkNj+R3bJHOzAKUdWrJssSKpMiMpwGEmiOEJBr6HeySOI0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b=CfeyA6k9; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=rong.moe header.i=i@rong.moe header.b="jXLxCrBm"
-ARC-Seal: i=1; a=rsa-sha256; t=1770485018; cv=none; 
-	d=zohomail.com; s=zohoarc; 
-	b=A8b6ucQgsHtCFZX9QWtRpFb6BqxWFrC7T0Bu4xZ0ErtC7SV2sZDVh2AzBen9Rs0t2yfFsPJOaBTOyht0uUlKtuup4St0kDOgSuMFOO0dnJMHWQNbzeuvcGHen8NZnA10nzTkZMDIZtTphzdwSp3DKlDIbm2/pTNzN8az8+HHJpA=
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=zohomail.com; s=zohoarc; 
-	t=1770485018; h=Content-Transfer-Encoding:Cc:Cc:Date:Date:From:From:MIME-Version:Message-ID:Subject:Subject:To:To:Message-Id:Reply-To; 
-	bh=faMM77TcsvJrLJnEOJkg9GDeZL+mgoEejPqj8vRk9u8=; 
-	b=MSrhfo5ksRH3c6lxzSKC31bDbljy/MyJTTrOuqxmGU8+Mp9xM/rvQfIbtPTbUOjNj3sKyoulR0WMMz5jPTlUS+lcJlCx4YafkB/Zy1L4pzPXGDCmRckXDrapTFgg40rr0940bd05I9iX96sKvuOeCgDQwaOe1JRuYpQIKEO8+Bo=
-ARC-Authentication-Results: i=1; mx.zohomail.com;
-	dkim=pass  header.i=rong.moe;
-	spf=pass  smtp.mailfrom=i@rong.moe;
-	dmarc=pass header.from=<i@rong.moe>
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; t=1770485018;
-	s=zmail2048; d=rong.moe; i=i@rong.moe;
-	h=From:From:To:To:Cc:Cc:Subject:Subject:Date:Date:Message-ID:MIME-Version:Content-Transfer-Encoding:Message-Id:Reply-To;
-	bh=faMM77TcsvJrLJnEOJkg9GDeZL+mgoEejPqj8vRk9u8=;
-	b=jXLxCrBmwZ09vVYjcVtQ9tzkyXlXoACPj4Wuwcq63JaReciULr+1JzhFvyzXuAgu
-	JIWbtEu1OdEzLGXky6F14ck6/DAVCQwVuWCXEqvL0XUvs3QgJSuSxjNw2zGahF8ClNU
-	hXOZPt90QrWVO1QxSoEW8/l+KQsMH7FMfScWlswE+7PUBQUkpA6KbysPqynch24Vmhw
-	Ck4xNkY/NhvZHW/W/xMRxyimTq2oD05zRmQYZkG2lK5+j3/hCbNg57J7dZyv6ZVgRGx
-	5KRLq8NHTfbWibuciJRFZj8O9sb1JJGcYCz4BggPA0UHm6m4yYBs0NvYmvMLBTrZCtF
-	8/nFc239qw==
-Received: by mx.zohomail.com with SMTPS id 1770485016956754.7552455871597;
-	Sat, 7 Feb 2026 09:23:36 -0800 (PST)
-From: Rong Zhang <i@rong.moe>
-To: Mark Pearson <mpearson-lenovo@squebb.ca>,
-	"Derek J. Clark" <derekjohn.clark@gmail.com>,
-	Armin Wolf <W_Armin@gmx.de>,
+	dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b="CfeyA6k9"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 10784C4CEF7;
+	Sun,  8 Feb 2026 06:31:15 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linuxfoundation.org;
+	s=korg; t=1770532276;
+	bh=7AUya8kdOOvgoL1LtLhKe8OxWfRas8MMuwwuCMEkNL8=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=CfeyA6k9SRbZAa9xIFzMOF8QkdSZ1YK6MIpoEn1NFCdfsxciVzu8xM7mSmQ5cGDHP
+	 dtGZ1SbuudMrKB7kH2l8AuCJl/g4/Lnj78PPIJlMh+dZ8nVo+xTCsG8vv8PNLhwAO4
+	 7/rlH0M11kMy8fTDjNKhEwplEpPvTowUBlGPbYCo=
+Date: Sun, 8 Feb 2026 07:31:12 +0100
+From: Greg KH <gregkh@linuxfoundation.org>
+To: Daniel Hodges <daniel@danielhodges.dev>
+Cc: Daniel Hodges <git@danielhodges.dev>,
+	Prasanth Ksr <prasanth.ksr@dell.com>,
 	Hans de Goede <hansg@kernel.org>,
-	=?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
-Cc: Rong Zhang <i@rong.moe>,
-	Guenter Roeck <linux@roeck-us.net>,
-	platform-driver-x86@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	linux-hwmon@vger.kernel.org
-Subject: [PATCH] platform/x86: lenovo-wmi-{capdata,other}: Fix HWMON channel visibility
-Date: Sun,  8 Feb 2026 01:23:27 +0800
-Message-ID: <20260207172327.80111-1-i@rong.moe>
-X-Mailer: git-send-email 2.51.0
+	Ilpo =?iso-8859-1?Q?J=E4rvinen?= <ilpo.jarvinen@linux.intel.com>,
+	Mario Limonciello <mario.limonciello@dell.com>,
+	Divya Bharathi <divya.bharathi@dell.com>,
+	Dell.Client.Kernel@dell.com, platform-driver-x86@vger.kernel.org,
+	linux-kernel@vger.kernel.org, stable@vger.kernel.org
+Subject: Re: [PATCH] platform/x86: dell-wmi-sysman: fix kobject leak on
+ populate failure
+Message-ID: <2026020828-panther-rice-9388@gregkh>
+References: <20260206231642.30051-1-git@danielhodges.dev>
+ <2026020715-spilt-cupped-aeab@gregkh>
+ <tscj73a7jrwnncnc7flzxbymtbztnicfm2hu5rqyavmfwv7apv@5x2k2g5p3u2m>
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-ZohoMailClient: External
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <tscj73a7jrwnncnc7flzxbymtbztnicfm2hu5rqyavmfwv7apv@5x2k2g5p3u2m>
 
-The LWMI_SUPP_MAY_{GET,SET} macros are fundamentally broken. When I
-introduced them, I meant to check LWMI_SUPP_VALID *and* the
-corresponding bits for get/set capabilities. However, `supported &
-LWMI_SUPP_MAY_{GET,SET}' means *or*, so it accidentally passes the check
-when LWMI_SUPP_VALID is set.
+On Sat, Feb 07, 2026 at 11:52:11AM -0500, Daniel Hodges wrote:
+> On Sat, Feb 07, 2026 at 08:48:34AM +0100, Greg KH wrote:
+> > On Fri, Feb 06, 2026 at 06:16:42PM -0500, Daniel Hodges wrote:
+> > > When populate_enum_data(), populate_int_data(), populate_str_data(),
+> > > or populate_po_data() fails after a successful kobject_init_and_add(),
+> > > the code jumps to err_attr_init without calling kobject_put() on
+> > > attr_name_kobj, leaking the kobject and its associated memory.
+> > > 
+> > > Add the missing kobject_put() call before the goto to properly release
+> > > the kobject on error.
+> > > 
+> > > Fixes: e8a60aa7404b ("platform/x86: Introduce support for Systems Management Driver over WMI for Dell Systems")
+> > > Cc: stable@vger.kernel.org
+> > > Signed-off-by: Daniel Hodges <git@danielhodges.dev>
+> > > ---
+> > >  drivers/platform/x86/dell/dell-wmi-sysman/sysman.c | 1 +
+> > >  1 file changed, 1 insertion(+)
+> > > 
+> > > diff --git a/drivers/platform/x86/dell/dell-wmi-sysman/sysman.c b/drivers/platform/x86/dell/dell-wmi-sysman/sysman.c
+> > > index f5402b714657..d9f6d24c84d6 100644
+> > > --- a/drivers/platform/x86/dell/dell-wmi-sysman/sysman.c
+> > > +++ b/drivers/platform/x86/dell/dell-wmi-sysman/sysman.c
+> > > @@ -497,6 +497,7 @@ static int init_bios_attributes(int attr_type, const char *guid)
+> > >  		if (retval) {
+> > >  			pr_debug("failed to populate %s\n",
+> > >  				elements[ATTR_NAME].string.pointer);
+> > > +			kobject_put(attr_name_kobj);
+> > >  			goto err_attr_init;
+> > >  		}
+> > >  
+> > 
+> > The "larger" problem with this driver is its use of raw kobjects.  No
+> > driver should be doing that, it is hiding all of this information from
+> > userspace tools by doing so, and there's loads of race conditions
+> > happening with the creation of these files.  It should be fixed by just
+> > using normal device attributes and not attempting to custom create
+> > kobjects by hand like this (as it is very easy to get things wrong, as
+> > this patch shows.)
+> > 
+> > thanks,
+> > 
+> > greg k-h
+> 
+> Yeah, that makes sense. I think your point of finding "bad patterns" in
+> usage would also be really helpful for code analysis tools. If there's
+> some canonical docs on various antipatterns it would be pretty helpful.
 
-Fix them by only including the corresponding get/set bit without
-LWMI_SUPP_VALID. Meanwhile, rename them to LWMI_SUPP_{GET,SET} to make
-them less confusing.
+Huge hint, any driver that calls any sysfs_*() function or touches a
+kobject at all, is probably doing things wrong.  Start there and see
+what you find :)
 
-Fixes: 67d9a39ce85f ("platform/x86: lenovo-wmi-capdata: Wire up Fan Test Data")
-Signed-off-by: Rong Zhang <i@rong.moe>
----
- drivers/platform/x86/lenovo/wmi-capdata.h | 4 ++--
- drivers/platform/x86/lenovo/wmi-other.c   | 4 ++--
- 2 files changed, 4 insertions(+), 4 deletions(-)
+thanks,
 
-diff --git a/drivers/platform/x86/lenovo/wmi-capdata.h b/drivers/platform/x86/lenovo/wmi-capdata.h
-index 59ca3b3e5760b..8c1df3efcc553 100644
---- a/drivers/platform/x86/lenovo/wmi-capdata.h
-+++ b/drivers/platform/x86/lenovo/wmi-capdata.h
-@@ -9,8 +9,8 @@
- #include <linux/types.h>
- 
- #define LWMI_SUPP_VALID		BIT(0)
--#define LWMI_SUPP_MAY_GET	(LWMI_SUPP_VALID | BIT(1))
--#define LWMI_SUPP_MAY_SET	(LWMI_SUPP_VALID | BIT(2))
-+#define LWMI_SUPP_GET		BIT(1)
-+#define LWMI_SUPP_SET		BIT(2)
- 
- #define LWMI_ATTR_DEV_ID_MASK	GENMASK(31, 24)
- #define LWMI_ATTR_FEAT_ID_MASK	GENMASK(23, 16)
-diff --git a/drivers/platform/x86/lenovo/wmi-other.c b/drivers/platform/x86/lenovo/wmi-other.c
-index 2a9ede27e13d4..6040f45aa2b0d 100644
---- a/drivers/platform/x86/lenovo/wmi-other.c
-+++ b/drivers/platform/x86/lenovo/wmi-other.c
-@@ -216,7 +216,7 @@ static umode_t lwmi_om_hwmon_is_visible(const void *drvdata, enum hwmon_sensor_t
- 
- 		switch (attr) {
- 		case hwmon_fan_target:
--			if (!(priv->fan_info[channel].supported & LWMI_SUPP_MAY_SET))
-+			if (!(priv->fan_info[channel].supported & LWMI_SUPP_SET))
- 				return 0;
- 
- 			if (relax_fan_constraint ||
-@@ -233,7 +233,7 @@ static umode_t lwmi_om_hwmon_is_visible(const void *drvdata, enum hwmon_sensor_t
- 			return 0;
- 		case hwmon_fan_div:
- 		case hwmon_fan_input:
--			visible = priv->fan_info[channel].supported & LWMI_SUPP_MAY_GET;
-+			visible = priv->fan_info[channel].supported & LWMI_SUPP_GET;
- 			break;
- 		case hwmon_fan_min:
- 			visible = priv->fan_info[channel].min_rpm >= 0;
-
-base-commit: eeeb4c9874bb7ad11d322156443b1d3ebfaaa1cf
--- 
-2.51.0
-
+greg k-h
