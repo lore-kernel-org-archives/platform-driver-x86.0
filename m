@@ -1,134 +1,121 @@
-Received: from mail-pf1-f196.google.com (mail-pf1-f196.google.com [209.85.210.196])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 816EC2DB79E
-	for <platform-driver-x86@vger.kernel.org>; Mon,  9 Feb 2026 06:34:54 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.196
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9C6A025DB12
+	for <platform-driver-x86@vger.kernel.org>; Mon,  9 Feb 2026 07:50:48 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1770618894; cv=none; b=lbdj+Rem90C1vHkm8Aw1MhVqqXPsgBFi+nW118dlONAaDB1BEDJCFdtbxwmyK+jyfsjqF/MC1GSpRFD5tIX1M24LbsqWseZVOBh/P8JxLjyI0bzcoAGZVkq33Pi3LMOlf68NsitrP6nN3I2V+42VYNHyHETKUs+p0MxEUEmM0j8=
+	t=1770623448; cv=none; b=UM+ZtNmohEr15cvlj6XaRfOrdkySYtYq1p/swr8tXsFVt4Bfgvk1WR5T7sgpgvANU5nAhaOLw3RTtRHYHck0bxh45/nZV33vdKGss709osWfiH0gzaZUpm0bTe+b9S9iXkOWOjj/MZ7plLsW6EgwqhGkzsnasoZCsBCBnL4Adhg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1770618894; c=relaxed/simple;
-	bh=xPVSlWvaet9868GsCY1jJthXsfYn5a7/fBimRT/J9Pg=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=PDDpqM60/xbDDVXzLBI54z1oD+LIaqEu4FZCyHVNvBvgmLyuu8uW18F9OfMtP2CTd6nbskOjMfWhyKlftD9Kjl3OTRNGdyzOLfpmN4AbxIb3CIOkg6z6CRssjFm/2Jn9x2+6k+Xiq5wpZ3KWAB4c3qs1oEv+RXPTa72PVx2REo4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=kIrtZYCt; arc=none smtp.client-ip=209.85.210.196
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1770623448; c=relaxed/simple;
+	bh=lbpGWZPvlj2le6+B3XxY5VoVepX2x+r7wTlbgVF43iU=;
+	h=From:To:Subject:Date:Message-ID:Content-Type:MIME-Version; b=fkgqd/+W1N12Obkb2zPbkGYjNLjj43nyDW2dhZpeHBvlfSILSEUxeDUtjWBJM1Dr/GgfUze/LYepTa6xDBNsvD3O+vsFX6974pFo/xNRzAqg/JtelHiWFL+hn/t6CKySU/mY7Pf2k5DTiv6ZDS5iyhia5T7xD1gIPJS51yeE+r4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=GG89epYq; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="kIrtZYCt"
-Received: by mail-pf1-f196.google.com with SMTP id d2e1a72fcca58-82310b74496so2017578b3a.3
-        for <platform-driver-x86@vger.kernel.org>; Sun, 08 Feb 2026 22:34:54 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1770618894; x=1771223694; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=mxx+6jRrhPvMg9VlbKNlTg2M9XXacffYRgMnxqmD5m4=;
-        b=kIrtZYCt+ntZFLk8+m/5/ZGUGU0smEuVFkc7WEKr7raz3CxztMaozeDtXPo6Xskg44
-         NUjUwU5Pe6zC2MW4xtNwri58qJPj+io8AU5a0k25VYBeD4uYLakDBF5CCesl9y4ZEBet
-         T7K0vRAobHdBS++Z8gfYjUnBXhu+lKsRxXMr5V2iVfRovFoHm6GcI+o/XCgMqo83Ac2H
-         BjPcC98698KZX1dOuKMdzVJJYWsUfYw+kKjFAOJhNNl0UWbuFGM4TkU6HEnxcLI7C/0v
-         cCkdsEBF5RUZbZ/pldzFu+9CFqc2sk1owb+fHv14YuYOdpMeVUxtbyg931RuvPH45WuX
-         wWmQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1770618894; x=1771223694;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-gg:x-gm-message-state:from
-         :to:cc:subject:date:message-id:reply-to;
-        bh=mxx+6jRrhPvMg9VlbKNlTg2M9XXacffYRgMnxqmD5m4=;
-        b=tn/NSx5c/GMWdZ0cO9wdptmx/NGpnnVhWNjOzVoZsDDxz9yIa43IHWKMvzMPBC4JyT
-         87/G63aZfX5OVtsBoclDPyT5SVnvAuElRk9k87UwmMMbMi2RyFv010rS+lbEHf/lJmVB
-         W/Ump+Oey7PGxPPslxHV6h9c1lkI4HdJFpIcMyt5mn+0FIx8YwJhrvkgWEbPW0AQfJoX
-         JvXkRzWBZu4YrWkncATMxxXCe9LfOWL95FwvrPzdb8vvEdDgCuAwWikvjn1xCauQwSD8
-         1esSa0YSIkls+OId6WSLgAwcyY0XuxWubbjgMsSlSrq8CT0t7t30vIRvnC4p2AE6ycwi
-         qnmg==
-X-Forwarded-Encrypted: i=1; AJvYcCXFK915d3qiMVfLozyehcKfIckMhWJKX+Ce+y71voAz0Ai1tp8e4I56CihdGg4hQ4Ga0Rdu0rVxXsXIWD/o5qhOyRNv@vger.kernel.org
-X-Gm-Message-State: AOJu0Yx8m8RopQVr3xW77KKd3lv3slQdTchReAFPtKbZ0DNf+ZUA7sVk
-	FYLaC5B+pYXTDXiDIaHM9yS0hOskrNStVNJeKqa838O5vkaA5qzVNBBI
-X-Gm-Gg: AZuq6aLvkQdsbHNllnwp826rkOvlW86HzRjHQYmzG1JBHWy+f3LUFR/gQM4Ye2X8isE
-	BJDUxf9c1RD4B6B8ceQl8hhVyD+g0bWoKiEvyO5yGSf7q7Q/xMbFSRRtj+Li9dVHXJGvlhtLyhK
-	FSwLKTpVy5qv871Ryvk0FA3qVNnyQEZ42OYmZLHBD8xvS9YBhm2tFCskYCGNKH4HQ0LpI7lCjM7
-	Tm4cBnKwYVW9pSZDMTtU6qBGCbajVt3DWSxDaxyFlCI+JzPC+IU1dmEa5kzPANHmBYITSYvND4a
-	m3gKF1uNG7o6wVxBweGf2+vvyXfDBEaX8LXt/hAnG50ahJswe1a71tjmYEKey2EpI9hE9sn8UTU
-	G7lWQM1XcfPhfTXL8ysEhgc3PeQJUPfa3+F0YHf19uUIvSyrJ86ZFat/Bag2g0aX1m9/RQiZYNw
-	MbR7RCioI0tmJdfwDCfISc23tZzOH+30vsuOCUzg==
-X-Received: by 2002:a05:6a20:d703:b0:361:4ca3:e17d with SMTP id adf61e73a8af0-393acf882e8mr9701322637.13.1770618893792;
-        Sun, 08 Feb 2026 22:34:53 -0800 (PST)
-Received: from c12-ThinkPad-X1-Carbon-Gen-12 ([2400:2410:5f2b:700:e705:6ccd:6241:6a0a])
-        by smtp.gmail.com with ESMTPSA id d9443c01a7336-2aa3ec42e2asm83440455ad.53.2026.02.08.22.34.51
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 08 Feb 2026 22:34:53 -0800 (PST)
-From: Vishnu Sankar <vishnuocv@gmail.com>
-To: mpearson-lenovo@squebb.ca,
-	dmitry.torokhov@gmail.com,
-	hmh@hmh.eng.br,
-	hansg@kernel.org,
-	corbet@lwn.net,
-	derekjohn.clark@gmail.com,
-	ilpo.jarvinen@linux.intel.com
-Cc: linux-input@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	ibm-acpi-devel@lists.sourceforge.net,
-	linux-doc@vger.kernel.org,
-	platform-driver-x86@vger.kernel.org,
-	vsankar@lenovo.com,
-	Vishnu Sankar <vishnuocv@gmail.com>
-Subject: [PATCH v7 3/3] Documentation: thinkpad-acpi - Document doubletap_enable attribute
-Date: Mon,  9 Feb 2026 15:33:55 +0900
-Message-ID: <20260209063355.491189-4-vishnuocv@gmail.com>
-X-Mailer: git-send-email 2.51.0
-In-Reply-To: <20260209063355.491189-1-vishnuocv@gmail.com>
-References: <20260209063355.491189-1-vishnuocv@gmail.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="GG89epYq"
+Received: by smtp.kernel.org (Postfix) with ESMTPS id 3C07AC116C6
+	for <platform-driver-x86@vger.kernel.org>; Mon,  9 Feb 2026 07:50:48 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1770623448;
+	bh=lbpGWZPvlj2le6+B3XxY5VoVepX2x+r7wTlbgVF43iU=;
+	h=From:To:Subject:Date:From;
+	b=GG89epYqLWb/IIP8d4mXvPEnKPUMSyPduB092AtDnMqJ1EsIu/PDjlWIHDetncWlt
+	 o+hlqinuKpg5inyysVrIi+0xoog93F8KC1ZYSsWgbF3Kg8aMnOYG+ni1N5Ca+pEUww
+	 4KYmda6vUXbN3VmFyu6TBXfGEXd4E5mNo9HJGTES83A+MBIsjn9h0/U+wJQYKQCjuj
+	 wsiO8ouSjTNB6wohGXu8c489oUIZFkyrdJW9HU3BXJp9PZWrSRY7BPKbEQspllZSCt
+	 ABbYhukRYT0y40OJKjCgUFQHXU/XHe8k2RV3J60v34yn1B3dmm47QzWBznYvMotVv8
+	 uXpSU+c8/onZg==
+Received: by aws-us-west-2-korg-bugzilla-1.web.codeaurora.org (Postfix, from userid 48)
+	id 280EFC433E1; Mon,  9 Feb 2026 07:50:48 +0000 (UTC)
+From: bugzilla-daemon@kernel.org
+To: platform-driver-x86@vger.kernel.org
+Subject: [Bug 221065] New: ideapad_acpi: unexpected charge_types spam on Yoga
+ Pro 7 14ASP9
+Date: Mon, 09 Feb 2026 07:50:47 +0000
+X-Bugzilla-Reason: None
+X-Bugzilla-Type: new
+X-Bugzilla-Watch-Reason: AssignedTo drivers_platform_x86@kernel-bugs.osdl.org
+X-Bugzilla-Product: Drivers
+X-Bugzilla-Component: Platform_x86
+X-Bugzilla-Version: 2.5
+X-Bugzilla-Keywords: 
+X-Bugzilla-Severity: low
+X-Bugzilla-Who: rbitton@linux.com
+X-Bugzilla-Status: NEW
+X-Bugzilla-Resolution: 
+X-Bugzilla-Priority: P3
+X-Bugzilla-Assigned-To: drivers_platform_x86@kernel-bugs.osdl.org
+X-Bugzilla-Flags: 
+X-Bugzilla-Changed-Fields: bug_id short_desc product version rep_platform
+ op_sys bug_status bug_severity priority component assigned_to reporter
+ cf_regression
+Message-ID: <bug-221065-215701@https.bugzilla.kernel.org/>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+X-Bugzilla-URL: https://bugzilla.kernel.org/
+Auto-Submitted: auto-generated
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
 
-Document the doubletap_enable sysfs attribute for ThinkPad ACPI driver.
+https://bugzilla.kernel.org/show_bug.cgi?id=3D221065
 
-Signed-off-by: Vishnu Sankar <vishnuocv@gmail.com>
----
-Changes in v6:
-- Fix formatting of doubletap_enable sysfs documentation (separate Values list)
----
- .../admin-guide/laptops/thinkpad-acpi.rst     | 21 +++++++++++++++++++
- 1 file changed, 21 insertions(+)
+            Bug ID: 221065
+           Summary: ideapad_acpi: unexpected charge_types spam on Yoga Pro
+                    7 14ASP9
+           Product: Drivers
+           Version: 2.5
+          Hardware: AMD
+                OS: Linux
+            Status: NEW
+          Severity: low
+          Priority: P3
+         Component: Platform_x86
+          Assignee: drivers_platform_x86@kernel-bugs.osdl.org
+          Reporter: rbitton@linux.com
+        Regression: No
 
-diff --git a/Documentation/admin-guide/laptops/thinkpad-acpi.rst b/Documentation/admin-guide/laptops/thinkpad-acpi.rst
-index 4ab0fef7d440..9a660724648b 100644
---- a/Documentation/admin-guide/laptops/thinkpad-acpi.rst
-+++ b/Documentation/admin-guide/laptops/thinkpad-acpi.rst
-@@ -1521,6 +1521,27 @@ Currently 2 antenna types are supported as mentioned below:
- The property is read-only. If the platform doesn't have support the sysfs
- class is not created.
- 
-+doubletap_enable
-+----------------
-+
-+sysfs: doubletap_enable
-+
-+Controls whether TrackPoint doubletap events are filtered out. Doubletap is a
-+feature where quickly tapping the TrackPoint twice triggers a special function key event.
-+
-+The available commands are::
-+
-+                cat /sys/devices/platform/thinkpad_acpi/doubletap_enable
-+                echo 1 | sudo tee /sys/devices/platform/thinkpad_acpi/doubletap_enable
-+                echo 0 | sudo tee /sys/devices/platform/thinkpad_acpi/doubletap_enable
-+
-+Values:
-+
-+        * 1 - doubletap events are processed (default)
-+	* 0 - doubletap events are filtered out (ignored)
-+
-+	This setting can also be toggled via the Fn+doubletap hotkey.
-+
- Auxmac
- ------
- 
--- 
-2.51.0
+Hi,
 
+I'm experiencing constant dmesg spam from ideapad_acpi on my Lenovo Yoga Pr=
+o 7
+14ASP9:
+
+[  733.997072] ideapad_acpi VPC2004:00: unexpected charge_types: both [Fast]
+and [Long_Life] are enabled
+
+This started on 6.19.0 on both my distro's mainline kernel and the vanilla
+mainline kernel I compiled. The issue is not present in 6.18. It happens ab=
+out
+every minute starting about a minute after boot regardless of if I'm chargi=
+ng
+or not.
+
+Model: Lenovo Yoga Pro 7 14ASP9 (83HN)
+CPU: AMD Ryzen AI 9 365
+BIOS: PSCN17WW (up to date)
+
+The laptop appears to be reporting both Fast and Long_Life charge modes
+simultaneously, which the driver considers unexpected. Functionally everyth=
+ing
+works fine, including fast charging, but the log spam is excessive.
+
+Of note:
+zsh rbitton@rbitton-linux3 01:46 /sys/class/power_supply/BAT0 > cat
+/sys/class/power_supply/BAT*/charge_types=20=20=20=20
+[Fast] Standard Long_Life
+
+All attempts to fix it on my end have failed.Let me know if you need any
+additional information; I would be more than willing to test any fixes.
+
+Thanks,
+Raphael Bitton
+
+--=20
+You may reply to this email to add a comment.
+
+You are receiving this mail because:
+You are watching the assignee of the bug.=
