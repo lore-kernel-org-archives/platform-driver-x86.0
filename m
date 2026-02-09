@@ -1,46 +1,46 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CB2163803CB
-	for <platform-driver-x86@vger.kernel.org>; Mon,  9 Feb 2026 16:25:50 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DEDC22BE057
+	for <platform-driver-x86@vger.kernel.org>; Mon,  9 Feb 2026 16:30:28 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1770654350; cv=none; b=om/js3yMoKycv9ZGnhD11h/9dNMhWlqMl5kaASDg6DBNKwhzd5PoZKCeSUwNilXb3VYqJb+hWKRT8jU8h49p3UO+pDfTR0Nd0+zY4EbubrWkVlVGR3nI2jPxwlhOyUiBsGKhnzMdc5y/zuTg8ZQU/PzZ9NTGupiZx7pGTUFd0x8=
+	t=1770654628; cv=none; b=A+Or57HRGWa7GdiszFLUhZCC8yznnucV0ldWghFPX94yWq8NNyL8IKzh6MCduNspttYzkGwHQNka27aifjMYQpgQq53gneiEsgFhKEr9b52pz7Q0U+24CRXEUlw2O3CmQBd3BpDNPS7DKAiY5ZuCK5ysbAi/0jqGT6Zg09PDsyw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1770654350; c=relaxed/simple;
-	bh=vMgCSPFMuPYOZJ+4h75RQajyo22Akp7iye1WtO+9RrY=;
+	s=arc-20240116; t=1770654628; c=relaxed/simple;
+	bh=RwvB8i66ujJAASlrCYJH/cu8NvS0Ujw9D05NZI9HQ3Y=;
 	h=From:In-Reply-To:MIME-Version:References:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=PIY9T5bECo5JO40RiFq+TmbqGsJbfRUCmGZDtPsLXcKmjNGQIKFrGgw9sDDbvIwuK4MNtQqE/Y6u7B3gmVqNAAYTWcAqH8plqrQL3PTebz1SH9apptK9riPE/n+EubOqcE/aOx/GNabNscsGU7LBNLe1093s3rdTyhXaEtQiAd0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Vfh7QUFP; arc=none smtp.client-ip=10.30.226.201
+	 To:Cc:Content-Type; b=X/qJk0oqcEPZ4/PYXYbtC/ONg+/LKwCrq1fQ2KWln75oXb78CEbYcDeKYzUQ8YhGkcLGkPeapQSdiOopR7wuILY/IiG9D7kwsJA9haqPUEuECEPS2xeF3tTrfLyl1izI6kTvLrmXtEcGDs0yjCHKaqF7hGxRnx2Doz6CLlyWBiY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=C5YyNKlE; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Vfh7QUFP"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 65181C19425
-	for <platform-driver-x86@vger.kernel.org>; Mon,  9 Feb 2026 16:25:50 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="C5YyNKlE"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 6F44AC116C6
+	for <platform-driver-x86@vger.kernel.org>; Mon,  9 Feb 2026 16:30:28 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1770654350;
-	bh=vMgCSPFMuPYOZJ+4h75RQajyo22Akp7iye1WtO+9RrY=;
+	s=k20201202; t=1770654628;
+	bh=RwvB8i66ujJAASlrCYJH/cu8NvS0Ujw9D05NZI9HQ3Y=;
 	h=From:In-Reply-To:References:Date:Subject:To:Cc:From;
-	b=Vfh7QUFPao7nJV1umSKWHc66eHt8DXJeq6/KszG5NUDrFSWuFEfMTbiDodkCJOPFL
-	 LXRHaI3hTgbcPW4RDrLFdTP9KN4HNyud93Q49JcYL9Tn9OoaLrTWfzOx5Y8Itnbjd3
-	 CtTceiEUF8GOZmWJKJWigj5pbf6qarWC5u+CZYLu4uML+86slOpCl+lyQVmvrXbBbz
-	 C5c8+dSpslBVCake0RJ7oMUV96z2PTyuLMfoxaVqSv2v+WqUIt6HdxQt68M3DpY03g
-	 DzPIxmdpxTaDVUnFLlHKIsBVkANy8OcqnSVc29JrC731S03xN/J6UCApakqNHicTPn
-	 QdFTtAxbFO4sg==
-Received: by mail-lf1-f51.google.com with SMTP id 2adb3069b0e04-59ddf02b00aso5487963e87.0
-        for <platform-driver-x86@vger.kernel.org>; Mon, 09 Feb 2026 08:25:50 -0800 (PST)
-X-Forwarded-Encrypted: i=1; AJvYcCXSF0xNVouyMjR0XtUCMIjiZ0DQJS8ef9ehjFEvu446EwFKYK5//I3CzWCVtmkTVN6np8ewQc1Gc9M/7lsExSkFkGDZ@vger.kernel.org
-X-Gm-Message-State: AOJu0YyZBp0Z8jxqCZc484iDHr2E79H4rCUrRYuqrVvmL96qUB6yHB2b
-	JO2r8KvRs204gRBmZuipwyhHAEhjpuVFU6CR+sHXLuiFCBi1dFL+Nd3NrBp096QT3qb77Hhy9/q
-	+0cIoZRKRkZARY+MdUjhBy4ZB4d8c9UwWquV6LhKdWg==
-X-Received: by 2002:a05:6512:acf:b0:59e:179d:10ed with SMTP id
- 2adb3069b0e04-59e4504774cmr4196269e87.14.1770654348963; Mon, 09 Feb 2026
- 08:25:48 -0800 (PST)
+	b=C5YyNKlE5imqu8qk1X8x84pvnmeecXeqzhH5qRAxKctrcD7NqfD87tsgXu4umphwK
+	 WUb1KkgfPE3SikcKR7FP7/8M+1u1Lir4dhdX9H+XV7wux28+epYYOQHKZnRyDs7bBe
+	 u+vrw8zf7SLuZNb06mlbezWg5jhxkLdcdLQMoVO6WH6fngn9KfKDnT2gqoRheu8wHF
+	 CJyWN2o+YdR7W78mWhu+Dp7CEaw1GL7pJwsiCzsxZAZVv0TbupYsgMx8+l3wV8dOM1
+	 aqxKEDZFg2sjqT/gHN/5hGmUe4xXSNq2glhvOFw+cQ3mWzAvOs2LE+Lta8aDTrt2Wb
+	 CMV3/IjgCxcCQ==
+Received: by mail-lj1-f170.google.com with SMTP id 38308e7fff4ca-385c6c727fcso37526111fa.3
+        for <platform-driver-x86@vger.kernel.org>; Mon, 09 Feb 2026 08:30:28 -0800 (PST)
+X-Forwarded-Encrypted: i=1; AJvYcCU9o24KaiVA4jKMQ5PBmYIjGZX3aqT8YF+ck+a1h4Yf3vjzKqVVhES1mlih0WL6pNYviW4T1ee9RRdVIOMFiApV59l1@vger.kernel.org
+X-Gm-Message-State: AOJu0YyoKOpeOIW5eavWVxqPElsEIlM4mTh6goIO4s1fBDmJlHC1Wmfg
+	KZB2hfCK/W+kVQSRZNRIonO1HdL8mkULIy/RGFoczWaP3vpRU6yvGaA+IOhKuRyGooNo4D4Dncw
+	2U0oWHcPc6pF/H5/b2bHVIP+3/G6rupevJeLBUoCc2w==
+X-Received: by 2002:a05:651c:150e:b0:385:c21f:37f4 with SMTP id
+ 38308e7fff4ca-386b4f05d1bmr35929781fa.16.1770654627110; Mon, 09 Feb 2026
+ 08:30:27 -0800 (PST)
 Received: from 969154062570 named unknown by gmailapi.google.com with
- HTTPREST; Mon, 9 Feb 2026 10:25:47 -0600
+ HTTPREST; Mon, 9 Feb 2026 10:30:25 -0600
 Received: from 969154062570 named unknown by gmailapi.google.com with
- HTTPREST; Mon, 9 Feb 2026 10:25:47 -0600
+ HTTPREST; Mon, 9 Feb 2026 10:30:25 -0600
 From: Bartosz Golaszewski <brgl@kernel.org>
-In-Reply-To: <aYnqY4KPq2Gqj3Dv@google.com>
+In-Reply-To: <aYnycxR8nxu85Ivd@google.com>
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
@@ -50,156 +50,67 @@ MIME-Version: 1.0
 References: <20250920200713.20193-1-hansg@kernel.org> <20250920200713.20193-2-hansg@kernel.org>
  <aYkdKfP5fg6iywgr@jekhomev> <aYmV5Axyfo76D19T@smile.fi.intel.com>
  <CAMRc=MeouZAkuzynwUnZd-VsZq1nyEgbv-Bt6tNMXosApF7RDg@mail.gmail.com>
- <a285a632-4a3a-48f8-a34a-db595fa0e477@kernel.org> <aYnqY4KPq2Gqj3Dv@google.com>
-Date: Mon, 9 Feb 2026 10:25:47 -0600
-X-Gmail-Original-Message-ID: <CAMRc=McfHM62ZxKdn=QDAmpjExDZwtqhpkLU_=1GE27bbMsirg@mail.gmail.com>
-X-Gm-Features: AZwV_Qi3ESQq8BmC9S8aWrn7f1Ys7kxzIGTjW5nRWXSl1A5NkCg1k2GO8AARdLY
-Message-ID: <CAMRc=McfHM62ZxKdn=QDAmpjExDZwtqhpkLU_=1GE27bbMsirg@mail.gmail.com>
+ <a285a632-4a3a-48f8-a34a-db595fa0e477@kernel.org> <CAMRc=MfMw85D3FoX0ckAxgEyY8D3ZK5uf9sgVXg7_f+mE55dRg@mail.gmail.com>
+ <aYnycxR8nxu85Ivd@google.com>
+Date: Mon, 9 Feb 2026 10:30:25 -0600
+X-Gmail-Original-Message-ID: <CAMRc=McMOMYnGhsZS2OSeXhMcJPKnjSku2v97uAgatwEpZt0zQ@mail.gmail.com>
+X-Gm-Features: AZwV_QghfHmX8FQjGFyXfraEpd1UKLkPhx0WWJXaQNpZjyIK7BtKX94s1Ajphlw
+Message-ID: <CAMRc=McMOMYnGhsZS2OSeXhMcJPKnjSku2v97uAgatwEpZt0zQ@mail.gmail.com>
 Subject: Re: [PATCH v4 01/20] platform/x86: x86-android-tablets: convert
  Goodix devices to GPIO references
 To: Dmitry Torokhov <dmitry.torokhov@gmail.com>
-Cc: Hans de Goede <hansg@kernel.org>, Bartosz Golaszewski <brgl@kernel.org>, 
-	Andy Shevchenko <andriy.shevchenko@intel.com>, 
-	=?UTF-8?Q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>, 
+Cc: Hans de Goede <hansg@kernel.org>, =?UTF-8?Q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>, 
 	Andy Shevchenko <andy@kernel.org>, Arnd Bergmann <arnd@kernel.org>, platform-driver-x86@vger.kernel.org, 
-	Yauhen Kharuzhy <jekhor@gmail.com>
+	Yauhen Kharuzhy <jekhor@gmail.com>, Andy Shevchenko <andriy.shevchenko@intel.com>, 
+	Bartosz Golaszewski <brgl@kernel.org>
 Content-Type: text/plain; charset="UTF-8"
 
-On Mon, 9 Feb 2026 15:41:54 +0100, Dmitry Torokhov
+On Mon, 9 Feb 2026 15:46:55 +0100, Dmitry Torokhov
 <dmitry.torokhov@gmail.com> said:
-> Hi Bartosz, Hans,
->
-
-[snip]
-
->> >>>
->> >>> Could somebody advise on how to fix this, or does a fix already exist? I am
->> >>> not familiar with the swnode/fwnode framework but can do some investigation to
->> >>> resolve this.
->> >>>
+> On Mon, Feb 09, 2026 at 08:36:01AM -0600, Bartosz Golaszewski wrote:
+>> On Mon, 9 Feb 2026 15:00:40 +0100, Hans de Goede <hansg@kernel.org> said:
 >> >
->> > I really don't want to revert to the label lookup and string comparison as this
->> > is totally broken
+>> > For the drivers/platform/x86/x86-android-tablets/* I think the following
+>> > fix is both the easiest as well as the best solution is to modify:
+>> >
+>> > drivers/pinctrl/intel/pinctrl-baytrail.c
+>> > drivers/pinctrl/intel/pinctrl-cherryview.c
+>> >
+>> > To register a swnode for each GPIO controller and
+>> > then EXPORT_SYMBOL_GPL an array of fwnode pointers
+>> > which can then be used in the PROPERTY_ENTRY_GPIO()
+>> > entries replacing e.g.:
+>> >
+>> > PROPERTY_ENTRY_GPIO("reset-gpios", &cherryview_gpiochip_nodes[1], 53, GPIO_ACTIVE_HIGH)
+>> >
+>> > with:
+>> >
+>> > PROPERTY_ENTRY_GPIO("reset-gpios", cherryview_gpiochip_fwnodes[1], 53, GPIO_ACTIVE_HIGH)
+>> >
+>> > (these 2 covers pinctrl for the Bay Trail and Cherry Trail x86
+>> > SoC based Android tablets which x86-android-tablets is for).
+>> >
+>> > This should all be pretty straight forward. Assuming we are allowed
+>> > to dereference an external symbol for the property initialization
+>> > if not then this becomes significantly more complex.
+>> >
+>> > I'm not even sure if we need to add swnodes, we can probably
+>> > just use the existing ACPI fwnodes for matching even and then
+>> > we just need an array with the ACPI fwnode pointers.
+>> >
+>>
+>> Yes, we can now reference fwnodes from property entries. The entity that
+>> creates these devices should be able to retrieve the firmware nodes of
+>> the GPIO controllers (e.g.: via gpio_device_find_by_label() - finding it by
+>> labek is what it effectively tried to do now).
 >
-> I would start with explaining why exactly this is broken. So far the
-> explanation has been:
->
-> "
->     Looking up a GPIO controller by label that is the name of the software
->     node is wonky at best - the GPIO controller driver is free to set
->     a different label than the name of its firmware node. We're already being
->     passed a firmware node handle attached to the GPIO device to
->     swnode_get_gpio_device() so use it instead for a more precise lookup.
-> "
->
-> This is weak. Indeed the controller is free to select a different label,
-> breaking the link. This is a weakness of software nodes in general,
-> where we do not have a mechanism to validate the scheme.
->
-
-I would even say that if we keep comparing strings, then it's no better
-than GPIO lookup tables.
-
-> However switching to matching strictly by fwnode requires knowledge of
-> the instance of the fwnode. This may work OK-ish for some drivers but
-> breaks for the main intended users of this: legacy board files, where we
-> want to specify static mappings and do not want to "reach" into
-> individual gpiochip drivers to fish out the actual firmware node.
->
-
-I'm not sure I'm following. We can (and do a lot!) reference static struct
-software_node instances before we register them with driver core, creating
-whole trees of property nodes. I get that here we're talking about *real*
-firmware nodes but see below:
-
-> From the docs that were accepted (Documentation/driver-api/gpio/board.rst)
-
-Quick `git blame`, `git log`, ah, yes, I signed off on this. I guess it's on
-me now too. :)
-
->
-> "
->     The software node representing a GPIO controller need not be attached to the
->     GPIO controller device. The only requirement is that the node must be
->     registered and its name must match the GPIO controller's label.
-> "
->
-> Note that this is different from OF or ACPI nodes because there parsing
-> and creating nodes is a separate process. You get the whole graph
-> available to you right away, so it is possible to know the exact node
-> you are referencing.
+> How do you do that when your code happens to run first, before the
+> controller is instantiated? gpio_device_find_by_label() will not
+> find it, so what will you use as fwnode in that case?
 >
 
-The device that creates devices not tied to a real OF or ACPI node, is
-typically responsible for creating the software nodes for its children. It
-can check if given GPIO controller already exists (gpio_device_find_by_label())
-and if not - just return -EPROBE_DEFER and not create children. If it does,
-then it can pass its fwnode to the children. A bit like so:
-
-  https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree/drivers/reset/core.c#n910
-
-Just with the lookup done by label and not fwnode.
-
-I may have not paid attention to the docs and signed off on it but it doesn't
-make it correct. The strength of software nodes is that we have an actual
-fwnode link between devices. If we just fake this link, then why are we even
-using software nodes at all?
-
-> This is what I wrote to Hans when he raised his concerns:
->
-> "
->     I agree it is a bit weird, but this allows to disconnect the board file
->     from the GPIO driver and makes it easier to convert to device tree down
->     the road as it can be done in a piecemeal fashion. If you want fwnode
->     actually attached to the gpiochip then:
->
->     1. You can't really have static/const initializers in most of the cases
->     2. Fishing it out from an unrelated subsystem is much harder than
->     matching on a name.
-> "
-
-Ok but if we match names then we already have a mechanism for that: lookup
-tables. I really fail to see how creating software nodes with a specific name
-in consumer code is any better.
-
-[snip]
-
->
-> I think the hardest breakages are here:
->
-> arch/arm/mach-omap1/board-nokia770.c
-> arch/arm/mach-pxa/gumstix.c
-> arch/arm/mach-pxa/spitz.c
-> arch/arm/mach-tegra/board-paz00.c
->
-> If we check out at nokia, it uses drivers/gpio/gpio-omap.c. As far as I
-> can see it does not even have a fwnode assigned: it either does not have
-> parent or its parent is a platform device instantiated by the driver
-> itself and does not have a firmware node associated with it.
->
-
-In that case using software nodes makes absolutely no sense and users should
-stick to GPIO lookup tables. The provider does not have an fwnode attached, how
-can we just fake it in the consumer?
-
-I would rather just attach a software node to the omap controller in
-arch/arm/mach-omap1/gpio16xx.c and use its address in these board files.
-
-> So in the end name matching allows weakly referencing objects elsewhere
-> in the kernel for legacy and one-off devices.
->
-> Maybe we should allow for both? Do a fwnode lookup and when it fails
-> fall back to matching on name?
->
-
-Isn't it GPIO lookup tables with extra steps and more confusing too? Because
-that's how it works in GPIO core: if you can't find anything using the fwnode
-lookup, you fall back to comparing names in GPIO lookup tables.
-
-My point is: it only makes sense to use software nodes if we're creating
-links between them. If we fake them and compare their names instead, then
-it's just abuse of the API. It says PROPERTY_ENTRY_REF() for a reason: it's
-supposed to store an address leading you to the actual device on the other
-side.
+The device that calls gpio_device_find_by_label() (most likely a "real"
+device with an OF or ACPI node) should return -EPROBE_DEFER if that's the
+case and not create children with software nodes.
 
 Bartosz
