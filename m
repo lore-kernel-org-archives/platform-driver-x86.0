@@ -1,44 +1,44 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DBF0E2BEC55
-	for <platform-driver-x86@vger.kernel.org>; Mon,  9 Feb 2026 15:50:29 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CB2163803CB
+	for <platform-driver-x86@vger.kernel.org>; Mon,  9 Feb 2026 16:25:50 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1770652229; cv=none; b=HnwwobSgP99clwuTRG8E1rvbMRE0QMcvDkV0pzh0RqhEKoqCilunzWaV0OYepZovvBRLzwuDSk1CCsKOYleoNau4GVQCwT1w4UmvJGLTJxOIFmJubcSYb/zJpDr6SSN9IcxY5JjgjS2UCKEl515YUU0lY8/or//42z5DuYehBUA=
+	t=1770654350; cv=none; b=om/js3yMoKycv9ZGnhD11h/9dNMhWlqMl5kaASDg6DBNKwhzd5PoZKCeSUwNilXb3VYqJb+hWKRT8jU8h49p3UO+pDfTR0Nd0+zY4EbubrWkVlVGR3nI2jPxwlhOyUiBsGKhnzMdc5y/zuTg8ZQU/PzZ9NTGupiZx7pGTUFd0x8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1770652229; c=relaxed/simple;
+	s=arc-20240116; t=1770654350; c=relaxed/simple;
 	bh=vMgCSPFMuPYOZJ+4h75RQajyo22Akp7iye1WtO+9RrY=;
 	h=From:In-Reply-To:MIME-Version:References:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=j6YxZWkSu0y/8qqVemTifd0m1xxPhv7rria+ZM6jPKv0Lqge/MKz9ORcMMRdR1n5R41vI63AbMrtL8S/WF3LI/kynNh5M5XhbhICnnh8lxdYpsCAPuE4MQKT54fufvdHMpMWusO5C/WWNVs2Ofog+UpDL2F0+bO4348/VcaTDws=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=NY+cdRnQ; arc=none smtp.client-ip=10.30.226.201
+	 To:Cc:Content-Type; b=PIY9T5bECo5JO40RiFq+TmbqGsJbfRUCmGZDtPsLXcKmjNGQIKFrGgw9sDDbvIwuK4MNtQqE/Y6u7B3gmVqNAAYTWcAqH8plqrQL3PTebz1SH9apptK9riPE/n+EubOqcE/aOx/GNabNscsGU7LBNLe1093s3rdTyhXaEtQiAd0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Vfh7QUFP; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="NY+cdRnQ"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 893FAC19425
-	for <platform-driver-x86@vger.kernel.org>; Mon,  9 Feb 2026 15:50:29 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Vfh7QUFP"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 65181C19425
+	for <platform-driver-x86@vger.kernel.org>; Mon,  9 Feb 2026 16:25:50 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1770652229;
+	s=k20201202; t=1770654350;
 	bh=vMgCSPFMuPYOZJ+4h75RQajyo22Akp7iye1WtO+9RrY=;
 	h=From:In-Reply-To:References:Date:Subject:To:Cc:From;
-	b=NY+cdRnQKRmLLQn3enZpUxiOi9QsncOmoTcyVHUQY8ZuZSorAljthrnkc/8wIvAg2
-	 bkE1PD0fIIiudpxFbejAoZmmS1+MpF6kO8c94re4VKdMmubvO5oyr2Tx2ysBqEHs1J
-	 WNAWRDle0PQmNKzt6yXpPj5K5AiO6OGtJV0OYRF7GxWH85KpesZzkao7SPBvy8Ye8f
-	 8695Fsqz78B+GqXq/0zqfiiQwNEyqHYTCaNqsizOU+8ccGoE2IFFmvsJWWe0q6wNqk
-	 n43ULeKtZvCYl0HKSKBQagICyOz+v4R5F5YoL+/RHQAj3YEjQRYmeOBJI/WqC+Rup/
-	 ii1ach+GHmI3Q==
-Received: by mail-lj1-f170.google.com with SMTP id 38308e7fff4ca-385c23b88e8so42557481fa.3
-        for <platform-driver-x86@vger.kernel.org>; Mon, 09 Feb 2026 07:50:29 -0800 (PST)
-X-Forwarded-Encrypted: i=1; AJvYcCVu3bFfTtKa6ZGt+m1jwvcGQ19SSDkM2bKL2xhiCqS4KMpPUD2JPK+Ent0OHF1L5QlVYzASj/bmU942gEqxQox4DAiW@vger.kernel.org
-X-Gm-Message-State: AOJu0YzcedN/VRlsuQIP5YG/YWKZRKNAZGnzFW1xkFWNNrJvS5anH/Ou
-	OThIZYWbYEa/4aYSl3Jbl6ZhXB3yogFLZtR5OFhw3jYx18+atam2ake+lSlyFO1x8/9OQ/JJpp1
-	8ecLyyrc6mlDSnDFtEhD6K4HQ2X7DlhZWI+4+aeqL3g==
-X-Received: by 2002:a2e:a58e:0:b0:37f:cac3:c25b with SMTP id
- 38308e7fff4ca-386b6958270mr38046261fa.28.1770652228088; Mon, 09 Feb 2026
- 07:50:28 -0800 (PST)
+	b=Vfh7QUFPao7nJV1umSKWHc66eHt8DXJeq6/KszG5NUDrFSWuFEfMTbiDodkCJOPFL
+	 LXRHaI3hTgbcPW4RDrLFdTP9KN4HNyud93Q49JcYL9Tn9OoaLrTWfzOx5Y8Itnbjd3
+	 CtTceiEUF8GOZmWJKJWigj5pbf6qarWC5u+CZYLu4uML+86slOpCl+lyQVmvrXbBbz
+	 C5c8+dSpslBVCake0RJ7oMUV96z2PTyuLMfoxaVqSv2v+WqUIt6HdxQt68M3DpY03g
+	 DzPIxmdpxTaDVUnFLlHKIsBVkANy8OcqnSVc29JrC731S03xN/J6UCApakqNHicTPn
+	 QdFTtAxbFO4sg==
+Received: by mail-lf1-f51.google.com with SMTP id 2adb3069b0e04-59ddf02b00aso5487963e87.0
+        for <platform-driver-x86@vger.kernel.org>; Mon, 09 Feb 2026 08:25:50 -0800 (PST)
+X-Forwarded-Encrypted: i=1; AJvYcCXSF0xNVouyMjR0XtUCMIjiZ0DQJS8ef9ehjFEvu446EwFKYK5//I3CzWCVtmkTVN6np8ewQc1Gc9M/7lsExSkFkGDZ@vger.kernel.org
+X-Gm-Message-State: AOJu0YyZBp0Z8jxqCZc484iDHr2E79H4rCUrRYuqrVvmL96qUB6yHB2b
+	JO2r8KvRs204gRBmZuipwyhHAEhjpuVFU6CR+sHXLuiFCBi1dFL+Nd3NrBp096QT3qb77Hhy9/q
+	+0cIoZRKRkZARY+MdUjhBy4ZB4d8c9UwWquV6LhKdWg==
+X-Received: by 2002:a05:6512:acf:b0:59e:179d:10ed with SMTP id
+ 2adb3069b0e04-59e4504774cmr4196269e87.14.1770654348963; Mon, 09 Feb 2026
+ 08:25:48 -0800 (PST)
 Received: from 969154062570 named unknown by gmailapi.google.com with
- HTTPREST; Mon, 9 Feb 2026 09:50:26 -0600
+ HTTPREST; Mon, 9 Feb 2026 10:25:47 -0600
 Received: from 969154062570 named unknown by gmailapi.google.com with
- HTTPREST; Mon, 9 Feb 2026 09:50:26 -0600
+ HTTPREST; Mon, 9 Feb 2026 10:25:47 -0600
 From: Bartosz Golaszewski <brgl@kernel.org>
 In-Reply-To: <aYnqY4KPq2Gqj3Dv@google.com>
 Precedence: bulk
@@ -51,10 +51,10 @@ References: <20250920200713.20193-1-hansg@kernel.org> <20250920200713.20193-2-ha
  <aYkdKfP5fg6iywgr@jekhomev> <aYmV5Axyfo76D19T@smile.fi.intel.com>
  <CAMRc=MeouZAkuzynwUnZd-VsZq1nyEgbv-Bt6tNMXosApF7RDg@mail.gmail.com>
  <a285a632-4a3a-48f8-a34a-db595fa0e477@kernel.org> <aYnqY4KPq2Gqj3Dv@google.com>
-Date: Mon, 9 Feb 2026 09:50:26 -0600
-X-Gmail-Original-Message-ID: <CAMRc=MdDiPaSBRZKXDODv3iOqZMcK2xacsgBqjek=O0SLyvpag@mail.gmail.com>
-X-Gm-Features: AZwV_QiA6ipn3dGiY-tufdJVG0LJgwVxvG_cjDl8EbiEIdsQ4nckp7GWLzWSluQ
-Message-ID: <CAMRc=MdDiPaSBRZKXDODv3iOqZMcK2xacsgBqjek=O0SLyvpag@mail.gmail.com>
+Date: Mon, 9 Feb 2026 10:25:47 -0600
+X-Gmail-Original-Message-ID: <CAMRc=McfHM62ZxKdn=QDAmpjExDZwtqhpkLU_=1GE27bbMsirg@mail.gmail.com>
+X-Gm-Features: AZwV_Qi3ESQq8BmC9S8aWrn7f1Ys7kxzIGTjW5nRWXSl1A5NkCg1k2GO8AARdLY
+Message-ID: <CAMRc=McfHM62ZxKdn=QDAmpjExDZwtqhpkLU_=1GE27bbMsirg@mail.gmail.com>
 Subject: Re: [PATCH v4 01/20] platform/x86: x86-android-tablets: convert
  Goodix devices to GPIO references
 To: Dmitry Torokhov <dmitry.torokhov@gmail.com>
