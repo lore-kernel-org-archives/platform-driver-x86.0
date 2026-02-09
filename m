@@ -1,112 +1,188 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.12])
+Received: from fout-b8-smtp.messagingengine.com (fout-b8-smtp.messagingengine.com [202.12.124.151])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C1ED529A9C3
-	for <platform-driver-x86@vger.kernel.org>; Mon,  9 Feb 2026 15:23:00 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.12
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 873423803C8;
+	Mon,  9 Feb 2026 15:46:26 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=202.12.124.151
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1770650580; cv=none; b=k4aCaxFTI9HIYR3ZuDGmN4MgWZVJALiOHD9rmPYpKJi/Mcd7f6ZGCHXK1xNcrHUZo6plNbea9apldff4d0lRTXydxQP4I4R6j1qzB5RvLG0kJT5g7XBQHrE0mXCPRM1MOdAphWgof9ni3K8eIdSgSvp83hHq0y+O4V9yxKGAumI=
+	t=1770651987; cv=none; b=kgDbEsJcykEErre4QIo7KxWYXKpMPGFqTcA7kIs5HofhOq2EKCDfdvK3vFYB00IRy5ZT/7TWEQRv7pMlOuoGxu3VfgoPTXkjKYZy9yBs6I2OOF5kNsd4DE/E/IdJkOhE+qOz4K8aXawwQyErWNLbRMba3xGfUxu+JND2trmo4ro=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1770650580; c=relaxed/simple;
-	bh=1TYnMOgczOhF3B24434+hgNXGvrkZKy3oORPu4/5vd4=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=kDEhA7oyOnCJfk3KbfyccndzTigWzx81zW2KW3jtqywXTfG8o5dFQnL+zaAYQG2a1SoeGnrr0pmYC8r62b/D9G3GphSP/TPtqBWw7M+PrShAqdaLX5+KZEDqy5ZB8F0CyC26AO+E0WZJxH90jFAuEAP14DQOZvk0mYdpyyDjqug=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=DMx2JxUi; arc=none smtp.client-ip=198.175.65.12
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	s=arc-20240116; t=1770651987; c=relaxed/simple;
+	bh=JMDIcfFDR87A2uq9pvjZ7ncSMzYVCb/WpGvYQk3gvTY=;
+	h=MIME-Version:Date:From:To:Cc:Message-Id:In-Reply-To:References:
+	 Subject:Content-Type; b=FGjbEom7XTgV0XLR/HuXOhjV1W8o2nAdEVBAZKEVd6RXIwPCeqdU3FHTloAxFJ1sJ243ms/FCRymlxegpEcn6IVgNsG9mPIxHFL9YOU6LRJUTh+S34s7OPwwg9MEhlLtCTHv4zDYttNijS2+fVxvtXHi1Rxy7+Ng7na+J7Ui4fc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=squebb.ca; spf=pass smtp.mailfrom=squebb.ca; dkim=pass (2048-bit key) header.d=squebb.ca header.i=@squebb.ca header.b=vZ0GNnr7; dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b=bJNW5ZCc; arc=none smtp.client-ip=202.12.124.151
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=squebb.ca
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=squebb.ca
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="DMx2JxUi"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1770650580; x=1802186580;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=1TYnMOgczOhF3B24434+hgNXGvrkZKy3oORPu4/5vd4=;
-  b=DMx2JxUiXAssDQSaBGHGUAOqLwdYhfmvgmsmef10t9DkA9MOkJTq+q5X
-   qEZnrML8QDeNBBqlcpCWeg0SIzK9PFl9MyLK7ooAVO6bP0VjwQaLrFkxF
-   5xXsgJW7tJWpKcVyukMOZf1fQ6Jxsy205+e+fUrzK1IWPKSU+NrhseYA4
-   vVYbpRDxuc/Yxb7Oh2BQBdGokbji1FV7sdF3sJnKHEhQldWfbx7wZBxu3
-   bF064Sacf7UUhwtVF9wRTj+rBtDK5qCFsMBb3X1R5Uz2OCIafzCypdCdh
-   miJZMuNzy2k2KypzpaaUl+GJX1+/mEx7wgKlRu/uMjAiKBx7BGyyGRiRs
-   A==;
-X-CSE-ConnectionGUID: 7VeS0/F9TBaRDiFcxxX0lw==
-X-CSE-MsgGUID: QUKkDRIMRdKBG2+GbYWg2Q==
-X-IronPort-AV: E=McAfee;i="6800,10657,11696"; a="83203917"
-X-IronPort-AV: E=Sophos;i="6.21,282,1763452800"; 
-   d="scan'208";a="83203917"
-Received: from fmviesa010.fm.intel.com ([10.60.135.150])
-  by orvoesa104.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 09 Feb 2026 07:23:00 -0800
-X-CSE-ConnectionGUID: 8PqHQmrMTTyCj8M2JGs21w==
-X-CSE-MsgGUID: E1BBc5LzR2eYdlRaE8sMWw==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.21,282,1763452800"; 
-   d="scan'208";a="211226486"
-Received: from pgcooper-mobl3.ger.corp.intel.com (HELO localhost) ([10.245.245.128])
-  by fmviesa010-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 09 Feb 2026 07:22:57 -0800
-Date: Mon, 9 Feb 2026 17:22:55 +0200
-From: Andy Shevchenko <andriy.shevchenko@intel.com>
-To: Arnd Bergmann <arnd@kernel.org>, Aaro Koskinen <aaro.koskinen@iki.fi>
-Cc: Dmitry Torokhov <dmitry.torokhov@gmail.com>,
-	Hans de Goede <hansg@kernel.org>,
-	Bartosz Golaszewski <brgl@kernel.org>,
-	Ilpo =?iso-8859-1?Q?J=E4rvinen?= <ilpo.jarvinen@linux.intel.com>,
-	Andy Shevchenko <andy@kernel.org>,
-	platform-driver-x86@vger.kernel.org,
-	Yauhen Kharuzhy <jekhor@gmail.com>
-Subject: Re: [PATCH v4 01/20] platform/x86: x86-android-tablets: convert
- Goodix devices to GPIO references
-Message-ID: <aYn7z_J0jEOktGt8@smile.fi.intel.com>
-References: <20250920200713.20193-1-hansg@kernel.org>
- <20250920200713.20193-2-hansg@kernel.org>
- <aYkdKfP5fg6iywgr@jekhomev>
- <aYmV5Axyfo76D19T@smile.fi.intel.com>
- <CAMRc=MeouZAkuzynwUnZd-VsZq1nyEgbv-Bt6tNMXosApF7RDg@mail.gmail.com>
- <a285a632-4a3a-48f8-a34a-db595fa0e477@kernel.org>
- <aYnqY4KPq2Gqj3Dv@google.com>
- <a38ad0ec-e72b-4667-bd5b-f12bf147016e@app.fastmail.com>
+	dkim=pass (2048-bit key) header.d=squebb.ca header.i=@squebb.ca header.b="vZ0GNnr7";
+	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="bJNW5ZCc"
+Received: from phl-compute-02.internal (phl-compute-02.internal [10.202.2.42])
+	by mailfout.stl.internal (Postfix) with ESMTP id B82591D0017E;
+	Mon,  9 Feb 2026 10:46:24 -0500 (EST)
+Received: from phl-imap-08 ([10.202.2.84])
+  by phl-compute-02.internal (MEProxy); Mon, 09 Feb 2026 10:46:25 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=squebb.ca; h=cc
+	:cc:content-transfer-encoding:content-type:content-type:date
+	:date:from:from:in-reply-to:in-reply-to:message-id:mime-version
+	:references:reply-to:subject:subject:to:to; s=fm1; t=1770651984;
+	 x=1770738384; bh=VVTc8AFxFWprNshjFgBiGVbkOhoCEuBZq1vKIvtqqc4=; b=
+	vZ0GNnr7OqjFqy4Gc4Kw+WFrJMUwEEfUbnySGUUicV2VJBU6aoBHzDCiCro30UHA
+	pA6PCxfULP+DSaMWffVMDe96OVtTEaJiKg2vyoUtyDyHGPeEVlXdGP0Wec0pQg4Z
+	8Y7HDf1//63t5BCIRWrtAij3eXED4Ih4OOoeirv+DYPRlIGwoCT128HK1fSG0RpR
+	5brgFdkR6y4In7M2uhj8R01F9yJpDBmZfw64aeVzlWvFHTUpkkPV8npnHZJWMC41
+	B9sUKHlQOKSHrkd7g7n0Leh29vaRt4IOLKuYIkpVIE+FYkXkuU9oeRj99y2OMQrd
+	5yrjDUyvXwBvumd5ryUVXA==
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
+	messagingengine.com; h=cc:cc:content-transfer-encoding
+	:content-type:content-type:date:date:feedback-id:feedback-id
+	:from:from:in-reply-to:in-reply-to:message-id:mime-version
+	:references:reply-to:subject:subject:to:to:x-me-proxy
+	:x-me-sender:x-me-sender:x-sasl-enc; s=fm3; t=1770651984; x=
+	1770738384; bh=VVTc8AFxFWprNshjFgBiGVbkOhoCEuBZq1vKIvtqqc4=; b=b
+	JNW5ZCcehcbZZd7h9cnsv7vsor1Yvp0qaEaLccCQqqGgWDlZmfqO0TSME1bVNZZ3
+	N9EwQ/fTLFzlyddjeP0ybwNtbZ0qu9kWos/YgiBXs0uflG0L4ekhu3rbiOMAny5n
+	5hTycWr2jy05u0tCN+4rlbecPef5H7mEzg//f6BKsXvxAuiLOAOps9dHJ13XgMpq
+	49dz1hu7WFWf7J+H3kDLNShifegGd36alelOJay37pUQXmr6L02vNngCsnhIg2RM
+	lhSaadDx7YrEBwxFDnAmlzylK0g7yQnX2PWsxDGb8CFTOOvdMdKcJT/4A66d335B
+	GeoxB6Rw1M6fr7rvABSlA==
+X-ME-Sender: <xms:TwGKafUOeAXTPjo5h30KoyHDpN6LpQd06csgr2RFxIOOijZPNPaNXA>
+    <xme:TwGKaSZQ-UzFPaecghBjArpQ1cQ5aY1t-6RLNOvWg_MxMAilo_6zXX0ChpEeezqP0
+    zJO3WHE0qttPxSzDlwA0kx2L4kmG1GcY2EugG4Z-RlXW-sUWfT46V8>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeefgedrtddtgdduleejvddtucetufdoteggodetrf
+    dotffvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdfurfetoffkrfgpnffqhgenuceu
+    rghilhhouhhtmecufedttdenucesvcftvggtihhpihgvnhhtshculddquddttddmnecujf
+    gurhepofggfffhvfevkfgjfhfutgfgsehtqhertdertdejnecuhfhrohhmpedfofgrrhhk
+    ucfrvggrrhhsohhnfdcuoehmphgvrghrshhonhdqlhgvnhhovhhosehsqhhuvggssgdrtg
+    grqeenucggtffrrghtthgvrhhnpeelvddvleeuieevhefgudekleetheffvdejiedtkedv
+    tdefffehhfdvfffffeffveenucffohhmrghinhepkhgvrhhnvghlrdhorhhgpdhgihhthh
+    husgdrtghomhenucevlhhushhtvghrufhiiigvpedtnecurfgrrhgrmhepmhgrihhlfhhr
+    ohhmpehmphgvrghrshhonhdqlhgvnhhovhhosehsqhhuvggssgdrtggrpdhnsggprhgtph
+    htthhopedutddpmhhouggvpehsmhhtphhouhhtpdhrtghpthhtohepuggvrhgvkhhjohhh
+    nhdrtghlrghrkhesghhmrghilhdrtghomhdprhgtphhtthhopehvihhshhhnuhhotghvse
+    hgmhgrihhlrdgtohhmpdhrtghpthhtohephhhmhheshhhmhhdrvghnghdrsghrpdhrtghp
+    thhtohephhgrnhhsgheskhgvrhhnvghlrdhorhhgpdhrtghpthhtohepvhhsrghnkhgrrh
+    eslhgvnhhovhhordgtohhmpdhrtghpthhtohepihhlphhordhjrghrvhhinhgvnheslhhi
+    nhhugidrihhnthgvlhdrtghomhdprhgtphhtthhopehisghmqdgrtghpihdquggvvhgvlh
+    eslhhishhtshdrshhouhhrtggvfhhorhhgvgdrnhgvthdprhgtphhtthhopehisehrohhn
+    ghdrmhhovgdprhgtphhtthhopehlihhnuhigqdhkvghrnhgvlhesvhhgvghrrdhkvghrnh
+    gvlhdrohhrgh
+X-ME-Proxy: <xmx:TwGKaW7yretjjeVZBcjR8kBFLhcNCXN1O0TDnanUfQGHDTsrCFZRpw>
+    <xmx:TwGKabzfK3lSFmVhC4tGUjM5DjTq-QlvcDWOcIeKMRijHmc68l97cA>
+    <xmx:TwGKaSdGzBtcHRaaGitw1z6RWZKJ3GGXsE0762YKR4n598iJRhwY6w>
+    <xmx:TwGKaYBTJpgEN93Ul1xug3778KuBEggK7Vo3FRkqf_a4mCDqdiS-9w>
+    <xmx:UAGKaQNZcCH3s6ozmFa-nJl1eKBV3hdC5qPnNgEq_OnhEyzJbppUeE0->
+Feedback-ID: ibe194615:Fastmail
+Received: by mailuser.phl.internal (Postfix, from userid 501)
+	id 4EEF72CE0072; Mon,  9 Feb 2026 10:46:23 -0500 (EST)
+X-Mailer: MessagingEngine.com Webmail Interface
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <a38ad0ec-e72b-4667-bd5b-f12bf147016e@app.fastmail.com>
-Organization: Intel Finland Oy - BIC 0357606-4 - c/o Alberga Business Park, 6
- krs, Bertel Jungin Aukio 5, 02600 Espoo
+X-ThreadId: ASaOPSC57OEF
+Date: Mon, 09 Feb 2026 10:46:03 -0500
+From: "Mark Pearson" <mpearson-lenovo@squebb.ca>
+To: "Rong Zhang" <i@rong.moe>, "Hans de Goede" <hansg@kernel.org>,
+ "Vishnu Sankar" <vishnuocv@gmail.com>
+Cc: "Henrique de Moraes Holschuh" <hmh@hmh.eng.br>,
+ "Derek J . Clark" <derekjohn.clark@gmail.com>,
+ =?UTF-8?Q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>,
+ ibm-acpi-devel@lists.sourceforge.net,
+ "platform-driver-x86@vger.kernel.org" <platform-driver-x86@vger.kernel.org>,
+ linux-kernel@vger.kernel.org, "Vishnu Sankar" <vsankar@lenovo.com>
+Message-Id: <255c1844-4992-4a7d-9519-39071a208a98@app.fastmail.com>
+In-Reply-To: <1dbfcf656cdb4af0299f90d7426d2ec7e2b8ac9e.camel@rong.moe>
+References: <20260203232219.11683-1-vishnuocv@gmail.com>
+ <30354f74-91c0-4fd6-82b1-15f79ae7a60f@kernel.org>
+ <1dbfcf656cdb4af0299f90d7426d2ec7e2b8ac9e.camel@rong.moe>
+Subject: Re: [PATCH] thinkpad_acpi: Add Auto mode support with dynamic max_brightness
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: quoted-printable
 
-+ Cc: Aaro for N770 case.
 
-On Mon, Feb 09, 2026 at 04:13:26PM +0100, Arnd Bergmann wrote:
-> On Mon, Feb 9, 2026, at 15:41, Dmitry Torokhov wrote:
-> > On Mon, Feb 09, 2026 at 03:00:40PM +0100, Hans de Goede wrote:
-> >> On 9-Feb-26 12:52, Bartosz Golaszewski wrote:
-> >> > On Mon, 9 Feb 2026 09:08:04 +0100, Andy Shevchenko <andriy.shevchenko@intel.com> said:
-> >
-> > I think the hardest breakages are here:
-> >
-> > arch/arm/mach-omap1/board-nokia770.c
-> > arch/arm/mach-pxa/gumstix.c
-> > arch/arm/mach-pxa/spitz.c
-> > arch/arm/mach-tegra/board-paz00.c
-> >
-> > If we check out at nokia, it uses drivers/gpio/gpio-omap.c. As far as I
-> > can see it does not even have a fwnode assigned: it either does not have
-> > parent or its parent is a platform device instantiated by the driver
-> > itself and does not have a firmware node associated with it.
-> 
-> I've been meaning to drop support for mach-pxa board files including
-> gumstix and spitz for a while, I should probably just do it sooner
-> than later.
-> 
-> I don't know why paz00.c still contains the fwnode entries, I believe
-> that should have been converted to a device node in
-> arch/arm/boot/dts/nvidia/tegra20-paz00.dts after d64c732dfc9e
-> ("net: rfkill: gpio: add DT support").
 
--- 
-With Best Regards,
-Andy Shevchenko
+On Sun, Feb 8, 2026, at 3:58 PM, Rong Zhang wrote:
+> Hi Hans, Vishnu and Mark,
+>
+> On Sun, 2026-02-08 at 11:54 +0100, Hans de Goede wrote:
+>> Hi Vishnu,
+>>=20
+>> On 4-Feb-26 00:22, Vishnu Sankar wrote:
+>> > Dynamically detect keyboard backlight capabilities and set
+>> > max_brightness correctly (2 for old models, 3 for new models
+>> > with Auto mode).
+>>=20
+>> Thank you for your patch.
+>>=20
+>> If I understand this correctly, writing 3 as level does not
+>> make the backlight more bright then writing 2, but instead
+>> it puts the backlight in some auto mode ?
+>>=20
+>> If I've that correct then  userspace should keep seeing
+>> a range of 0 - 2 and the special auto mode value should
+>> be reported / be made settable through a separate als_enabled
+>> sysfs attribute under the LED class device. See:
+>>=20
+>> Documentation/ABI/testing/sysfs-platform-dell-laptop
+>>=20
+>> You can add extra attributes there by setting the groups
+>> member of the struct led_classdev, see kbd_led_groups[]
+>> in drivers/platform/x86/dell/dell-laptop.c, except that
+>> you should use a .is_visible callback to only show this
+>> on hw which supports it and you only need 1 group with
+>> 1 attribute.
+>
+> When I implemented "als_enabled" for ideapad-laptop, Mark Pearson
+> suggested it'd better to introduce "something similar to
+> LED_BRIGHT_HW_CHANGED"=C2=A0rather than using custom attributes, as "t=
+his is
+> going to be a common feature across multiple vendors it might need
+> doing at a common layer". Also, auto mode can be activated by HW as a
+> result of user input, so we need an approach to notify userspace just
+> like what LED_BRIGHT_HW_CHANGED does. More importantly, the read value
+> of the brightness attribute becomes nonsense when auto mode is on. This
+> matches the semantic of hw control trigger.
+>
+> I agreed with Mark and had a proposal of allowing HW to initiate a
+> transition from "none" to hw control trigger and vice versa. See the
+> thread in
+> https://lore.kernel.org/all/08580ec5-1d7b-4612-8a3f-75bc2f40aad2@app.f=
+astmail.com/
+>
+> I hadn't push it further due to other things taking the priority,
+> though I already had a PoC back to then. I quickly rebased the PoC with
+> some cleanups and put it here for preview:
+>
+> https://github.com/Rongronggg9/linux/tree/leds-trigger-hw-changed
+>
+> I will find some time to refine it and send an RFC series.
+>
+Hi Rong,
+
+Thanks for highlighting this (have to be honest - I'd forgotten we'd dis=
+cussed it).
+I think my suggestion may have been understood and I wonder your approac=
+h is more complicated than needed.
+
+I was thinking we add a new flag to the led_classdev. e.g
+#define LED_AUTO_BRIGHTNESS         BIT(26)
+
+Then the platform driver can set this flag and in led_classdev_register_=
+ext we'd handle it appropriately to create a sysfs (e.g. auto_brightness=
+_capable) node so user space knows auto is supported.
+Other than that:
+ - When the brightness is read and auton is being used - return "auto" i=
+nstead of a value. Hopefully that doesn't break anything for user space?
+ - When the brightness is set, you can use a value or 'auto" as you desi=
+re (Documentation would need updating to allow this)
+
+Really I was just looking for a way to advertise to user space that a au=
+to option would be supported :)
+
+Mark
+
 
 
