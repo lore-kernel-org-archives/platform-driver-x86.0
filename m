@@ -1,131 +1,118 @@
-Received: from mail-dl1-f51.google.com (mail-dl1-f51.google.com [74.125.82.51])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5FFF625DB1C
-	for <platform-driver-x86@vger.kernel.org>; Mon,  9 Feb 2026 14:46:59 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=74.125.82.51
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3F61D37E304
+	for <platform-driver-x86@vger.kernel.org>; Mon,  9 Feb 2026 15:15:07 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1770648419; cv=none; b=c/Tfrg8+lMnDVcjOWFUgxjTARlTaEShOQenKyO7Vly8SoK3DKs8akuC8cLqIWK9l4z4cg1bukhGEautE8S0OyalMNVxwjeD91eOrko50JVf9wjPsu3pwPny5qwn/EXQIBYLkXL2BlMJd4KPlE/mUSqVtTT66EUirE0n7qvSrDp4=
+	t=1770650108; cv=none; b=Hmc96vu1PzZRtEJJHQVD67wpzUVQ6SvdRPu1+TYViUvxd4vEcp+NwXQg1Y+sbH/s17Ds030KKfqa8Pss2FkvV0NLS52NW9d4K9xEQbtSYZ/BuHIAaYpalD3ySmdF/qnEQ5WdZ6yQ0W/tsj0N3JzoO3X6+sIM+tr3CKbmkN+kpjc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1770648419; c=relaxed/simple;
-	bh=g/IegFTnTc0rOPtJkTHPz33+Ct7gpFXjh5a/DHenQw8=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=WfRoet4s3WK2MA/h1fFu5Jx9rNB+M2LnrmHyFPnmsmBk/jT+DvurNlvYEy4I8yrO6BbiS2HJvd3MJlgw+ZzFSG9eqxptBL28q4Hz4eDAiyk8IPR5OincUTjdq7MluCx/yTNnPVw83L3ehJIlQ7p+GHqS/yTAcPoMMFDM2AhEHgU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=XJhXOKga; arc=none smtp.client-ip=74.125.82.51
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1770650108; c=relaxed/simple;
+	bh=vyY7HAiVUEWLqm5b3xl2bxK8NP84E7p/BAV8KJ8ZIIs=;
+	h=MIME-Version:Date:From:To:Cc:Message-Id:In-Reply-To:References:
+	 Subject:Content-Type; b=tZoV0lHYG61tr6KDU8tupCOPLEX0Plsz1wXBawHRBwk91hYGCAnKTUzGiXbQBh4gxIUDYsfz5DAf3N/a7kIBgIo+DsjDkhcQLidYUha6XX2OabP3FRzxr6WEvONKSGiJo0o8vVn99huhPrr5Xxopqq4OemvvvDC6tMrhrEl1KfU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=KmdnAGKU; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="XJhXOKga"
-Received: by mail-dl1-f51.google.com with SMTP id a92af1059eb24-124a95e592fso525072c88.0
-        for <platform-driver-x86@vger.kernel.org>; Mon, 09 Feb 2026 06:46:59 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1770648418; x=1771253218; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=loGhkNw9hQnX7iCGay6BncEbLnIomhfI/manI8U4kQQ=;
-        b=XJhXOKgadGGbhmpmez4bSZbsO00duJyzFw4UkFCoZ+K5nWIA5d3mCGvU3aQfhn6HJx
-         a7zmO4DOeKi2taOEh6LDX0oAylfI6wVkVYZW+aUjPW0yaR3XyxExJoNkeUyn5Ycdkb4A
-         eLcXNnzB08FQmzJx8j4o/Y7p58JESdL4DrPbSerjqQniZyd6Dqw+bM243+rMdFyvWOW6
-         QVl41W35JqvzY4XeZZTq7mZQKUHDFmV0mBjG/vj2sP7UM+Z+uo9rYYqRe+7KIFNN4fQu
-         cPNNF9/3WmSgmaFDjen4HgZ6Qq9kYb9ISalBsf8w8Zo7Pt4NTrHvV3mNsYuY6gxkhQhM
-         ug4Q==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1770648418; x=1771253218;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-gg:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=loGhkNw9hQnX7iCGay6BncEbLnIomhfI/manI8U4kQQ=;
-        b=SllMTFOutYdk+idQ51qewMg58ifcjKSqMFzKyY225Rcjlo/RAJnBDCYw9YFn/90830
-         9QtBpsi1lzZyvkChxoIzWIgrWeT6BoZWSJEWviQHYCWic6YP0hqgDMToZ4fdKqQL39sM
-         OTZZA6mjzfH7Mh4t3wnILp9ZIh7bw4xbScOFNkrbw6j4yyLIfPdqWGlbFqVMJUH08Gxn
-         mJbQe645ePxMMLfsjZytNPtjIhHprqmM+2WpSamMEkkzXugp6SiEu5wFW5CkmZyNRkPQ
-         CLbnKur360m1XJ9hxIRBBmfpAx6bQvTCMTAbrrPXjx3AvL6YKYSADBqGG7zDf4i9JuM0
-         APgQ==
-X-Forwarded-Encrypted: i=1; AJvYcCWzWc2/lH7+fzDmXKmmqY5YaenL0MZq2WZ+K92zBRq07fZJcemQe1q2NFWJsoXpqO7R1dlpKgaGzY19dILtv02cq/1m@vger.kernel.org
-X-Gm-Message-State: AOJu0YwCXnzjQ+bdV//uP2s/WAIzvv9deRjzUtvgs8JxPEYszxdfSP4a
-	bHO+nkrsOjwxbD7w3+WhJgX76FFKjpHhr5E1seZomBrcAOAqtjj/XCsr
-X-Gm-Gg: AZuq6aK5nFueSEG3BeY8wef6Kl/JY7y3+YusyL8m/uT4128FwdXSSGWgsLL3YDFmQmx
-	oouH9l7khPKtc6qkP93+mnu9QnEKe7BIJVEyhlKSkw4z8iBzKMz1Jg0VaOnSWzNf0MQ9CMlespl
-	3wztaPnbNZ5otWVgfLQvg05Kp1J9eTpI6IS+P3WJCepcDsTeHTJzptDqRGICUATpEdl7Tu7GZop
-	FZ/b+7KVSc6HpwR90RC5PYLkOFgwk+1wHznapmzQCKEbiZexm0V9PZc1miGTuh7MrxaMyUBKqAU
-	WYLCb884NiUPvRPxj2C1YncAUeDztsM4XGr1Gtp4zlQ92Gdbg1yTHGRXpgeZ3FO1DdDDkeybax0
-	BcVqDZOwZChBUJZ8LNwhsDEVaJ75WaL5HJCPve8MnZP0sCsCmPMzUOdfcmtbEcd+mzL1lPUJics
-	fy8w3dB2mid/GvMfT/yDmkhH3fNhYnev2FJfJGvtpuRh9/I27gdw==
-X-Received: by 2002:a05:7022:2484:b0:11b:ca88:c503 with SMTP id a92af1059eb24-1270411beacmr6196648c88.3.1770648418248;
-        Mon, 09 Feb 2026 06:46:58 -0800 (PST)
-Received: from google.com ([2a00:79e0:2ebe:8:d70d:15:1011:7b14])
-        by smtp.gmail.com with ESMTPSA id 5a478bee46e88-2b95505b8d2sm4328486eec.6.2026.02.09.06.46.57
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 09 Feb 2026 06:46:57 -0800 (PST)
-Date: Mon, 9 Feb 2026 06:46:55 -0800
-From: Dmitry Torokhov <dmitry.torokhov@gmail.com>
-To: Bartosz Golaszewski <brgl@kernel.org>
-Cc: Hans de Goede <hansg@kernel.org>, 
-	Ilpo =?utf-8?B?SsOkcnZpbmVu?= <ilpo.jarvinen@linux.intel.com>, Andy Shevchenko <andy@kernel.org>, 
-	Arnd Bergmann <arnd@kernel.org>, platform-driver-x86@vger.kernel.org, 
-	Yauhen Kharuzhy <jekhor@gmail.com>, Andy Shevchenko <andriy.shevchenko@intel.com>
-Subject: Re: [PATCH v4 01/20] platform/x86: x86-android-tablets: convert
- Goodix devices to GPIO references
-Message-ID: <aYnycxR8nxu85Ivd@google.com>
-References: <20250920200713.20193-1-hansg@kernel.org>
- <20250920200713.20193-2-hansg@kernel.org>
- <aYkdKfP5fg6iywgr@jekhomev>
- <aYmV5Axyfo76D19T@smile.fi.intel.com>
- <CAMRc=MeouZAkuzynwUnZd-VsZq1nyEgbv-Bt6tNMXosApF7RDg@mail.gmail.com>
- <a285a632-4a3a-48f8-a34a-db595fa0e477@kernel.org>
- <CAMRc=MfMw85D3FoX0ckAxgEyY8D3ZK5uf9sgVXg7_f+mE55dRg@mail.gmail.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="KmdnAGKU"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 693C7C116C6;
+	Mon,  9 Feb 2026 15:15:07 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1770650107;
+	bh=vyY7HAiVUEWLqm5b3xl2bxK8NP84E7p/BAV8KJ8ZIIs=;
+	h=Date:From:To:Cc:In-Reply-To:References:Subject:From;
+	b=KmdnAGKU05jq+HRvf43orkhIwM5iQ2VMmNuPWoOFzCj3R7g1PlXiQ9ylBWHswpxv7
+	 5gjNrjf1tOCOkQQBEk5EoiyzsY0usu7THIHlA+4GxHcmmCPQCCMaY3UZnG9zt8z6Pn
+	 mEUAe/W/hQXjmvaYf++dMWtpcuaVn4gcVkrzfQu5wvHf0I1s7a9fJ0CP544C+NYHaC
+	 8qOtkPQrjIjhwMIgsOnQp1pYqjnscl/bbLePvZMFv/kqZIuNJ2aTHgIbQ1vnP+KEuH
+	 5dtkfGh/SF9MOhi9nCK4vq0iYit9hqvM8gVqGHtCJKebWhvcGpODUrDuBDWRN5YoaU
+	 KmIIDRVR8TFPA==
+Received: from phl-compute-04.internal (phl-compute-04.internal [10.202.2.44])
+	by mailfauth.phl.internal (Postfix) with ESMTP id 61241F40068;
+	Mon,  9 Feb 2026 10:15:06 -0500 (EST)
+Received: from phl-imap-02 ([10.202.2.81])
+  by phl-compute-04.internal (MEProxy); Mon, 09 Feb 2026 10:15:06 -0500
+X-ME-Sender: <xms:-vmJaYVI7EInedda9rF-W42ecZAEGlNEdHQ6E9YDZN2eMSfGUN-j9g>
+    <xme:-vmJaXYy7dNb-HSqUAO7Yq5PHDWYj2BbOuucuNQogACetb-MPT8icPXL5lZauvCDM
+    XRlDcn-YtSNEbC2sjUukvBHbkMZ4sAg5_X-i4YmR3nfIEZeI-9DLY8>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeefgedrtddtgdduleejudegucetufdoteggodetrf
+    dotffvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdfurfetoffkrfgpnffqhgenuceu
+    rghilhhouhhtmecufedttdenucesvcftvggtihhpihgvnhhtshculddquddttddmnecujf
+    gurhepofggfffhvfevkfgjfhfutgfgsehtjeertdertddtnecuhfhrohhmpedftehrnhgu
+    uceuvghrghhmrghnnhdfuceorghrnhgusehkvghrnhgvlhdrohhrgheqnecuggftrfgrth
+    htvghrnhepjeejffetteefteekieejudeguedvgfeffeeitdduieekgeegfeekhfduhfel
+    hfevnecuvehluhhsthgvrhfuihiivgeptdenucfrrghrrghmpehmrghilhhfrhhomheprg
+    hrnhguodhmvghsmhhtphgruhhthhhpvghrshhonhgrlhhithihqdduvdekhedujedtvdeg
+    qddvkeejtddtvdeigedqrghrnhgupeepkhgvrhhnvghlrdhorhhgsegrrhhnuggsrdguvg
+    dpnhgspghrtghpthhtohepkedpmhhouggvpehsmhhtphhouhhtpdhrtghpthhtohepughm
+    ihhtrhihrdhtohhrohhkhhhovhesghhmrghilhdrtghomhdprhgtphhtthhopehjvghkhh
+    horhesghhmrghilhdrtghomhdprhgtphhtthhopegrnhgurhhihidrshhhvghvtghhvghn
+    khhosehinhhtvghlrdgtohhmpdhrtghpthhtoheprghnugihsehkvghrnhgvlhdrohhrgh
+    dprhgtphhtthhopegsrhhglheskhgvrhhnvghlrdhorhhgpdhrtghpthhtohephhgrnhhs
+    gheskhgvrhhnvghlrdhorhhgpdhrtghpthhtohepihhlphhordhjrghrvhhinhgvnheslh
+    hinhhugidrihhnthgvlhdrtghomhdprhgtphhtthhopehplhgrthhfohhrmhdqughrihhv
+    vghrqdigkeeisehvghgvrhdrkhgvrhhnvghlrdhorhhg
+X-ME-Proxy: <xmx:-vmJae3fq17MVP2SvxgHTXAI3r4f-KBsthdF4AHs3J1XGyykTOdEnA>
+    <xmx:-vmJadFDkY8fLA_NqwthJ7CCMrq8Wclf6HXaYi6yNg9koeYNRo58FA>
+    <xmx:-vmJaZH2NulyxGQQ8cXlCHRa_DphMMAjPMLmBILNg4GpYFzaYa8hfQ>
+    <xmx:-vmJaQ4iTewilo6cBI6bz9Bqp3kN0V5MOUuaWqi6igRiw8zu2Rexkg>
+    <xmx:-vmJaezodfnVFz9uncqzpTRDfJRS_yT-ZBoxSl5xZaN4VEjneIn9ZOkh>
+Feedback-ID: i36794607:Fastmail
+Received: by mailuser.phl.internal (Postfix, from userid 501)
+	id 3D0CC700063; Mon,  9 Feb 2026 10:15:06 -0500 (EST)
+X-Mailer: MessagingEngine.com Webmail Interface
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CAMRc=MfMw85D3FoX0ckAxgEyY8D3ZK5uf9sgVXg7_f+mE55dRg@mail.gmail.com>
+X-ThreadId: AuWteFS6Yydg
+Date: Mon, 09 Feb 2026 16:13:26 +0100
+From: "Arnd Bergmann" <arnd@kernel.org>
+To: "Dmitry Torokhov" <dmitry.torokhov@gmail.com>,
+ "Hans de Goede" <hansg@kernel.org>
+Cc: "Bartosz Golaszewski" <brgl@kernel.org>,
+ "Andy Shevchenko" <andriy.shevchenko@intel.com>,
+ =?UTF-8?Q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>,
+ "Andy Shevchenko" <andy@kernel.org>, platform-driver-x86@vger.kernel.org,
+ "Yauhen Kharuzhy" <jekhor@gmail.com>
+Message-Id: <a38ad0ec-e72b-4667-bd5b-f12bf147016e@app.fastmail.com>
+In-Reply-To: <aYnqY4KPq2Gqj3Dv@google.com>
+References: <20250920200713.20193-1-hansg@kernel.org>
+ <20250920200713.20193-2-hansg@kernel.org> <aYkdKfP5fg6iywgr@jekhomev>
+ <aYmV5Axyfo76D19T@smile.fi.intel.com>
+ <CAMRc=MeouZAkuzynwUnZd-VsZq1nyEgbv-Bt6tNMXosApF7RDg@mail.gmail.com>
+ <a285a632-4a3a-48f8-a34a-db595fa0e477@kernel.org>
+ <aYnqY4KPq2Gqj3Dv@google.com>
+Subject: Re: [PATCH v4 01/20] platform/x86: x86-android-tablets: convert Goodix devices
+ to GPIO references
+Content-Type: text/plain
+Content-Transfer-Encoding: 7bit
 
-On Mon, Feb 09, 2026 at 08:36:01AM -0600, Bartosz Golaszewski wrote:
-> On Mon, 9 Feb 2026 15:00:40 +0100, Hans de Goede <hansg@kernel.org> said:
-> >
-> > For the drivers/platform/x86/x86-android-tablets/* I think the following
-> > fix is both the easiest as well as the best solution is to modify:
-> >
-> > drivers/pinctrl/intel/pinctrl-baytrail.c
-> > drivers/pinctrl/intel/pinctrl-cherryview.c
-> >
-> > To register a swnode for each GPIO controller and
-> > then EXPORT_SYMBOL_GPL an array of fwnode pointers
-> > which can then be used in the PROPERTY_ENTRY_GPIO()
-> > entries replacing e.g.:
-> >
-> > PROPERTY_ENTRY_GPIO("reset-gpios", &cherryview_gpiochip_nodes[1], 53, GPIO_ACTIVE_HIGH)
-> >
-> > with:
-> >
-> > PROPERTY_ENTRY_GPIO("reset-gpios", cherryview_gpiochip_fwnodes[1], 53, GPIO_ACTIVE_HIGH)
-> >
-> > (these 2 covers pinctrl for the Bay Trail and Cherry Trail x86
-> > SoC based Android tablets which x86-android-tablets is for).
-> >
-> > This should all be pretty straight forward. Assuming we are allowed
-> > to dereference an external symbol for the property initialization
-> > if not then this becomes significantly more complex.
-> >
-> > I'm not even sure if we need to add swnodes, we can probably
-> > just use the existing ACPI fwnodes for matching even and then
-> > we just need an array with the ACPI fwnode pointers.
-> >
-> 
-> Yes, we can now reference fwnodes from property entries. The entity that
-> creates these devices should be able to retrieve the firmware nodes of
-> the GPIO controllers (e.g.: via gpio_device_find_by_label() - finding it by
-> labek is what it effectively tried to do now).
+On Mon, Feb 9, 2026, at 15:41, Dmitry Torokhov wrote:
+> On Mon, Feb 09, 2026 at 03:00:40PM +0100, Hans de Goede wrote:
+>> On 9-Feb-26 12:52, Bartosz Golaszewski wrote:
+>> > On Mon, 9 Feb 2026 09:08:04 +0100, Andy Shevchenko <andriy.shevchenko@intel.com> said:
+>
+> I think the hardest breakages are here:
+>
+> arch/arm/mach-omap1/board-nokia770.c
+> arch/arm/mach-pxa/gumstix.c
+> arch/arm/mach-pxa/spitz.c
+> arch/arm/mach-tegra/board-paz00.c
+>
+> If we check out at nokia, it uses drivers/gpio/gpio-omap.c. As far as I
+> can see it does not even have a fwnode assigned: it either does not have
+> parent or its parent is a platform device instantiated by the driver
+> itself and does not have a firmware node associated with it.
 
-How do you do that when your code happens to run first, before the
-controller is instantiated? gpio_device_find_by_label() will not
-find it, so what will you use as fwnode in that case?
+I've been meaning to drop support for mach-pxa board files including
+gumstix and spitz for a while, I should probably just do it sooner
+than later.
 
-Thanks.
+I don't know why paz00.c still contains the fwnode entries, I believe
+that should have been converted to a device node in
+arch/arm/boot/dts/nvidia/tegra20-paz00.dts after d64c732dfc9e
+("net: rfkill: gpio: add DT support").
 
--- 
-Dmitry
+      Arnd
