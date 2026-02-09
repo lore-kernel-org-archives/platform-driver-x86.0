@@ -1,118 +1,112 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.12])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3F61D37E304
-	for <platform-driver-x86@vger.kernel.org>; Mon,  9 Feb 2026 15:15:07 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C1ED529A9C3
+	for <platform-driver-x86@vger.kernel.org>; Mon,  9 Feb 2026 15:23:00 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.12
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1770650108; cv=none; b=Hmc96vu1PzZRtEJJHQVD67wpzUVQ6SvdRPu1+TYViUvxd4vEcp+NwXQg1Y+sbH/s17Ds030KKfqa8Pss2FkvV0NLS52NW9d4K9xEQbtSYZ/BuHIAaYpalD3ySmdF/qnEQ5WdZ6yQ0W/tsj0N3JzoO3X6+sIM+tr3CKbmkN+kpjc=
+	t=1770650580; cv=none; b=k4aCaxFTI9HIYR3ZuDGmN4MgWZVJALiOHD9rmPYpKJi/Mcd7f6ZGCHXK1xNcrHUZo6plNbea9apldff4d0lRTXydxQP4I4R6j1qzB5RvLG0kJT5g7XBQHrE0mXCPRM1MOdAphWgof9ni3K8eIdSgSvp83hHq0y+O4V9yxKGAumI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1770650108; c=relaxed/simple;
-	bh=vyY7HAiVUEWLqm5b3xl2bxK8NP84E7p/BAV8KJ8ZIIs=;
-	h=MIME-Version:Date:From:To:Cc:Message-Id:In-Reply-To:References:
-	 Subject:Content-Type; b=tZoV0lHYG61tr6KDU8tupCOPLEX0Plsz1wXBawHRBwk91hYGCAnKTUzGiXbQBh4gxIUDYsfz5DAf3N/a7kIBgIo+DsjDkhcQLidYUha6XX2OabP3FRzxr6WEvONKSGiJo0o8vVn99huhPrr5Xxopqq4OemvvvDC6tMrhrEl1KfU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=KmdnAGKU; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1770650580; c=relaxed/simple;
+	bh=1TYnMOgczOhF3B24434+hgNXGvrkZKy3oORPu4/5vd4=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=kDEhA7oyOnCJfk3KbfyccndzTigWzx81zW2KW3jtqywXTfG8o5dFQnL+zaAYQG2a1SoeGnrr0pmYC8r62b/D9G3GphSP/TPtqBWw7M+PrShAqdaLX5+KZEDqy5ZB8F0CyC26AO+E0WZJxH90jFAuEAP14DQOZvk0mYdpyyDjqug=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=DMx2JxUi; arc=none smtp.client-ip=198.175.65.12
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="KmdnAGKU"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 693C7C116C6;
-	Mon,  9 Feb 2026 15:15:07 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1770650107;
-	bh=vyY7HAiVUEWLqm5b3xl2bxK8NP84E7p/BAV8KJ8ZIIs=;
-	h=Date:From:To:Cc:In-Reply-To:References:Subject:From;
-	b=KmdnAGKU05jq+HRvf43orkhIwM5iQ2VMmNuPWoOFzCj3R7g1PlXiQ9ylBWHswpxv7
-	 5gjNrjf1tOCOkQQBEk5EoiyzsY0usu7THIHlA+4GxHcmmCPQCCMaY3UZnG9zt8z6Pn
-	 mEUAe/W/hQXjmvaYf++dMWtpcuaVn4gcVkrzfQu5wvHf0I1s7a9fJ0CP544C+NYHaC
-	 8qOtkPQrjIjhwMIgsOnQp1pYqjnscl/bbLePvZMFv/kqZIuNJ2aTHgIbQ1vnP+KEuH
-	 5dtkfGh/SF9MOhi9nCK4vq0iYit9hqvM8gVqGHtCJKebWhvcGpODUrDuBDWRN5YoaU
-	 KmIIDRVR8TFPA==
-Received: from phl-compute-04.internal (phl-compute-04.internal [10.202.2.44])
-	by mailfauth.phl.internal (Postfix) with ESMTP id 61241F40068;
-	Mon,  9 Feb 2026 10:15:06 -0500 (EST)
-Received: from phl-imap-02 ([10.202.2.81])
-  by phl-compute-04.internal (MEProxy); Mon, 09 Feb 2026 10:15:06 -0500
-X-ME-Sender: <xms:-vmJaYVI7EInedda9rF-W42ecZAEGlNEdHQ6E9YDZN2eMSfGUN-j9g>
-    <xme:-vmJaXYy7dNb-HSqUAO7Yq5PHDWYj2BbOuucuNQogACetb-MPT8icPXL5lZauvCDM
-    XRlDcn-YtSNEbC2sjUukvBHbkMZ4sAg5_X-i4YmR3nfIEZeI-9DLY8>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeefgedrtddtgdduleejudegucetufdoteggodetrf
-    dotffvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdfurfetoffkrfgpnffqhgenuceu
-    rghilhhouhhtmecufedttdenucesvcftvggtihhpihgvnhhtshculddquddttddmnecujf
-    gurhepofggfffhvfevkfgjfhfutgfgsehtjeertdertddtnecuhfhrohhmpedftehrnhgu
-    uceuvghrghhmrghnnhdfuceorghrnhgusehkvghrnhgvlhdrohhrgheqnecuggftrfgrth
-    htvghrnhepjeejffetteefteekieejudeguedvgfeffeeitdduieekgeegfeekhfduhfel
-    hfevnecuvehluhhsthgvrhfuihiivgeptdenucfrrghrrghmpehmrghilhhfrhhomheprg
-    hrnhguodhmvghsmhhtphgruhhthhhpvghrshhonhgrlhhithihqdduvdekhedujedtvdeg
-    qddvkeejtddtvdeigedqrghrnhgupeepkhgvrhhnvghlrdhorhhgsegrrhhnuggsrdguvg
-    dpnhgspghrtghpthhtohepkedpmhhouggvpehsmhhtphhouhhtpdhrtghpthhtohepughm
-    ihhtrhihrdhtohhrohhkhhhovhesghhmrghilhdrtghomhdprhgtphhtthhopehjvghkhh
-    horhesghhmrghilhdrtghomhdprhgtphhtthhopegrnhgurhhihidrshhhvghvtghhvghn
-    khhosehinhhtvghlrdgtohhmpdhrtghpthhtoheprghnugihsehkvghrnhgvlhdrohhrgh
-    dprhgtphhtthhopegsrhhglheskhgvrhhnvghlrdhorhhgpdhrtghpthhtohephhgrnhhs
-    gheskhgvrhhnvghlrdhorhhgpdhrtghpthhtohepihhlphhordhjrghrvhhinhgvnheslh
-    hinhhugidrihhnthgvlhdrtghomhdprhgtphhtthhopehplhgrthhfohhrmhdqughrihhv
-    vghrqdigkeeisehvghgvrhdrkhgvrhhnvghlrdhorhhg
-X-ME-Proxy: <xmx:-vmJae3fq17MVP2SvxgHTXAI3r4f-KBsthdF4AHs3J1XGyykTOdEnA>
-    <xmx:-vmJadFDkY8fLA_NqwthJ7CCMrq8Wclf6HXaYi6yNg9koeYNRo58FA>
-    <xmx:-vmJaZH2NulyxGQQ8cXlCHRa_DphMMAjPMLmBILNg4GpYFzaYa8hfQ>
-    <xmx:-vmJaQ4iTewilo6cBI6bz9Bqp3kN0V5MOUuaWqi6igRiw8zu2Rexkg>
-    <xmx:-vmJaezodfnVFz9uncqzpTRDfJRS_yT-ZBoxSl5xZaN4VEjneIn9ZOkh>
-Feedback-ID: i36794607:Fastmail
-Received: by mailuser.phl.internal (Postfix, from userid 501)
-	id 3D0CC700063; Mon,  9 Feb 2026 10:15:06 -0500 (EST)
-X-Mailer: MessagingEngine.com Webmail Interface
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="DMx2JxUi"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1770650580; x=1802186580;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=1TYnMOgczOhF3B24434+hgNXGvrkZKy3oORPu4/5vd4=;
+  b=DMx2JxUiXAssDQSaBGHGUAOqLwdYhfmvgmsmef10t9DkA9MOkJTq+q5X
+   qEZnrML8QDeNBBqlcpCWeg0SIzK9PFl9MyLK7ooAVO6bP0VjwQaLrFkxF
+   5xXsgJW7tJWpKcVyukMOZf1fQ6Jxsy205+e+fUrzK1IWPKSU+NrhseYA4
+   vVYbpRDxuc/Yxb7Oh2BQBdGokbji1FV7sdF3sJnKHEhQldWfbx7wZBxu3
+   bF064Sacf7UUhwtVF9wRTj+rBtDK5qCFsMBb3X1R5Uz2OCIafzCypdCdh
+   miJZMuNzy2k2KypzpaaUl+GJX1+/mEx7wgKlRu/uMjAiKBx7BGyyGRiRs
+   A==;
+X-CSE-ConnectionGUID: 7VeS0/F9TBaRDiFcxxX0lw==
+X-CSE-MsgGUID: QUKkDRIMRdKBG2+GbYWg2Q==
+X-IronPort-AV: E=McAfee;i="6800,10657,11696"; a="83203917"
+X-IronPort-AV: E=Sophos;i="6.21,282,1763452800"; 
+   d="scan'208";a="83203917"
+Received: from fmviesa010.fm.intel.com ([10.60.135.150])
+  by orvoesa104.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 09 Feb 2026 07:23:00 -0800
+X-CSE-ConnectionGUID: 8PqHQmrMTTyCj8M2JGs21w==
+X-CSE-MsgGUID: E1BBc5LzR2eYdlRaE8sMWw==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.21,282,1763452800"; 
+   d="scan'208";a="211226486"
+Received: from pgcooper-mobl3.ger.corp.intel.com (HELO localhost) ([10.245.245.128])
+  by fmviesa010-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 09 Feb 2026 07:22:57 -0800
+Date: Mon, 9 Feb 2026 17:22:55 +0200
+From: Andy Shevchenko <andriy.shevchenko@intel.com>
+To: Arnd Bergmann <arnd@kernel.org>, Aaro Koskinen <aaro.koskinen@iki.fi>
+Cc: Dmitry Torokhov <dmitry.torokhov@gmail.com>,
+	Hans de Goede <hansg@kernel.org>,
+	Bartosz Golaszewski <brgl@kernel.org>,
+	Ilpo =?iso-8859-1?Q?J=E4rvinen?= <ilpo.jarvinen@linux.intel.com>,
+	Andy Shevchenko <andy@kernel.org>,
+	platform-driver-x86@vger.kernel.org,
+	Yauhen Kharuzhy <jekhor@gmail.com>
+Subject: Re: [PATCH v4 01/20] platform/x86: x86-android-tablets: convert
+ Goodix devices to GPIO references
+Message-ID: <aYn7z_J0jEOktGt8@smile.fi.intel.com>
+References: <20250920200713.20193-1-hansg@kernel.org>
+ <20250920200713.20193-2-hansg@kernel.org>
+ <aYkdKfP5fg6iywgr@jekhomev>
+ <aYmV5Axyfo76D19T@smile.fi.intel.com>
+ <CAMRc=MeouZAkuzynwUnZd-VsZq1nyEgbv-Bt6tNMXosApF7RDg@mail.gmail.com>
+ <a285a632-4a3a-48f8-a34a-db595fa0e477@kernel.org>
+ <aYnqY4KPq2Gqj3Dv@google.com>
+ <a38ad0ec-e72b-4667-bd5b-f12bf147016e@app.fastmail.com>
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-ThreadId: AuWteFS6Yydg
-Date: Mon, 09 Feb 2026 16:13:26 +0100
-From: "Arnd Bergmann" <arnd@kernel.org>
-To: "Dmitry Torokhov" <dmitry.torokhov@gmail.com>,
- "Hans de Goede" <hansg@kernel.org>
-Cc: "Bartosz Golaszewski" <brgl@kernel.org>,
- "Andy Shevchenko" <andriy.shevchenko@intel.com>,
- =?UTF-8?Q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>,
- "Andy Shevchenko" <andy@kernel.org>, platform-driver-x86@vger.kernel.org,
- "Yauhen Kharuzhy" <jekhor@gmail.com>
-Message-Id: <a38ad0ec-e72b-4667-bd5b-f12bf147016e@app.fastmail.com>
-In-Reply-To: <aYnqY4KPq2Gqj3Dv@google.com>
-References: <20250920200713.20193-1-hansg@kernel.org>
- <20250920200713.20193-2-hansg@kernel.org> <aYkdKfP5fg6iywgr@jekhomev>
- <aYmV5Axyfo76D19T@smile.fi.intel.com>
- <CAMRc=MeouZAkuzynwUnZd-VsZq1nyEgbv-Bt6tNMXosApF7RDg@mail.gmail.com>
- <a285a632-4a3a-48f8-a34a-db595fa0e477@kernel.org>
- <aYnqY4KPq2Gqj3Dv@google.com>
-Subject: Re: [PATCH v4 01/20] platform/x86: x86-android-tablets: convert Goodix devices
- to GPIO references
-Content-Type: text/plain
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <a38ad0ec-e72b-4667-bd5b-f12bf147016e@app.fastmail.com>
+Organization: Intel Finland Oy - BIC 0357606-4 - c/o Alberga Business Park, 6
+ krs, Bertel Jungin Aukio 5, 02600 Espoo
 
-On Mon, Feb 9, 2026, at 15:41, Dmitry Torokhov wrote:
-> On Mon, Feb 09, 2026 at 03:00:40PM +0100, Hans de Goede wrote:
->> On 9-Feb-26 12:52, Bartosz Golaszewski wrote:
->> > On Mon, 9 Feb 2026 09:08:04 +0100, Andy Shevchenko <andriy.shevchenko@intel.com> said:
->
-> I think the hardest breakages are here:
->
-> arch/arm/mach-omap1/board-nokia770.c
-> arch/arm/mach-pxa/gumstix.c
-> arch/arm/mach-pxa/spitz.c
-> arch/arm/mach-tegra/board-paz00.c
->
-> If we check out at nokia, it uses drivers/gpio/gpio-omap.c. As far as I
-> can see it does not even have a fwnode assigned: it either does not have
-> parent or its parent is a platform device instantiated by the driver
-> itself and does not have a firmware node associated with it.
++ Cc: Aaro for N770 case.
 
-I've been meaning to drop support for mach-pxa board files including
-gumstix and spitz for a while, I should probably just do it sooner
-than later.
+On Mon, Feb 09, 2026 at 04:13:26PM +0100, Arnd Bergmann wrote:
+> On Mon, Feb 9, 2026, at 15:41, Dmitry Torokhov wrote:
+> > On Mon, Feb 09, 2026 at 03:00:40PM +0100, Hans de Goede wrote:
+> >> On 9-Feb-26 12:52, Bartosz Golaszewski wrote:
+> >> > On Mon, 9 Feb 2026 09:08:04 +0100, Andy Shevchenko <andriy.shevchenko@intel.com> said:
+> >
+> > I think the hardest breakages are here:
+> >
+> > arch/arm/mach-omap1/board-nokia770.c
+> > arch/arm/mach-pxa/gumstix.c
+> > arch/arm/mach-pxa/spitz.c
+> > arch/arm/mach-tegra/board-paz00.c
+> >
+> > If we check out at nokia, it uses drivers/gpio/gpio-omap.c. As far as I
+> > can see it does not even have a fwnode assigned: it either does not have
+> > parent or its parent is a platform device instantiated by the driver
+> > itself and does not have a firmware node associated with it.
+> 
+> I've been meaning to drop support for mach-pxa board files including
+> gumstix and spitz for a while, I should probably just do it sooner
+> than later.
+> 
+> I don't know why paz00.c still contains the fwnode entries, I believe
+> that should have been converted to a device node in
+> arch/arm/boot/dts/nvidia/tegra20-paz00.dts after d64c732dfc9e
+> ("net: rfkill: gpio: add DT support").
 
-I don't know why paz00.c still contains the fwnode entries, I believe
-that should have been converted to a device node in
-arch/arm/boot/dts/nvidia/tegra20-paz00.dts after d64c732dfc9e
-("net: rfkill: gpio: add DT support").
+-- 
+With Best Regards,
+Andy Shevchenko
 
-      Arnd
+
