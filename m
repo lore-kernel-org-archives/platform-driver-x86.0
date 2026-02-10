@@ -1,81 +1,136 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mail-43171.protonmail.ch (mail-43171.protonmail.ch [185.70.43.171])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0FE93311587
-	for <platform-driver-x86@vger.kernel.org>; Tue, 10 Feb 2026 11:03:58 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3B8B33EBF28
+	for <platform-driver-x86@vger.kernel.org>; Tue, 10 Feb 2026 13:21:36 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.70.43.171
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1770721439; cv=none; b=k9SXR+7Bi0UVxdHNHU1jCDrQN6J/5diNYFMxAXaHr6kvVOLRMg7ZNu+Oz9edxHzaNsnK1GB3SleUcWdRhJOX49HpnprYe+nxKKVKKMo+lSpgUcUOPvMIO5+gZDpqr+YibYBpN+/88y1rYTbrPot2cOnAMlWadDA9j1Q+GgjTOrw=
+	t=1770729701; cv=none; b=UaNclEAH7j2qDDIxSscm76VbwmVmU1XqfQNhbm9jH8dLdRmt80o9Q/4/tcRuJiuByzRK03/GQwx5q6cQ/3PbcOM9EBxyE2HuxjSRnGPp4gkBHIGfhzBwMx09CvA0IJ//p0BYDpbegEV6azr/13WhuLsC8MgYr/cfan0tyf3bIQc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1770721439; c=relaxed/simple;
-	bh=uC+2mdgwah0SPfnZ9NFYUlLItAL+iyA1tdQXc62eQt4=;
-	h=From:To:Subject:Date:Message-ID:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=kvHLuaMXLL5wMKI7R0vDMEBXS1XXdhrw5nKE6JWU3PskSDNvQGAqAe/MQwFY7w/POMGIEnnJrtPfsMUk4Tj9vSnzljqHxXX/clDen9x0XlRcL5P1kQ3qAnffRkMtS6+sNnCvhLrBAsMzkvOeAbvmbBoxQX3dxEmTxI1MQTWnsJk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=AtzQX5co; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1770729701; c=relaxed/simple;
+	bh=YpCbSebCbgtoJKzaFR+lTQoOLjMR3pAzhchGu/p9IDk=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=KefJPCZoF6DTPwUwRpCXueHZMUygZVoOkuDgTdIDHethsBve2QJZKplkHuGpEmvLjQOHbgc2thrxCCFeF4RuOzsMf6ZbQe2FlVFh64o5Lp5Wv4cZce/rQNQz+NU/IoMPXZeEy3108jO6gG+JmkzAW7jmQ1c51wxVBpW+BykwvCA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=cohunt.app; spf=fail smtp.mailfrom=cohunt.app; dkim=pass (2048-bit key) header.d=cohunt.app header.i=@cohunt.app header.b=XeI65nzv; arc=none smtp.client-ip=185.70.43.171
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=cohunt.app
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=cohunt.app
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="AtzQX5co"
-Received: by smtp.kernel.org (Postfix) with ESMTPS id A5FDAC116C6
-	for <platform-driver-x86@vger.kernel.org>; Tue, 10 Feb 2026 11:03:58 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1770721438;
-	bh=uC+2mdgwah0SPfnZ9NFYUlLItAL+iyA1tdQXc62eQt4=;
-	h=From:To:Subject:Date:In-Reply-To:References:From;
-	b=AtzQX5co+Z2j1JieyrZyQ7kjwH/0tbjqO3tahF4BAT0ucSmqxb6OpqoIxN8PffceW
-	 cursBbuzLdaaGrJpjYmIqoBSIaLtz5AjP+5KZkrISjTgTvpPilMN1GhLcX5iFQCbYZ
-	 B6XBWsf4ZoYpIH9DqjVnOFHydsI13mNYhoYlJr/jXE6O90E8OC7eVkOrOY9kLaYSIL
-	 Ng114Q3VGChtPndAf/5zytE4zkrHM55EPzGQchLYsRx+DG/CnV6Z7CdEuvUIHwmjZY
-	 tQTyt+H8h1Eo8QpwFNoJ9ReVVP05glTZqSLThXQNawZ1QZf7RUSmVlPGh4EfKqUrO2
-	 TeMrQqsAA7crg==
-Received: by aws-us-west-2-korg-bugzilla-1.web.codeaurora.org (Postfix, from userid 48)
-	id 97AC1C3279F; Tue, 10 Feb 2026 11:03:58 +0000 (UTC)
-From: bugzilla-daemon@kernel.org
-To: platform-driver-x86@vger.kernel.org
-Subject: [Bug 220566] Lenovo Ideapad laptops wrongly assign "Cut" intstead of
- "Selective_screenshot" to the corresponding hardware key
-Date: Tue, 10 Feb 2026 11:03:58 +0000
-X-Bugzilla-Reason: None
-X-Bugzilla-Type: changed
-X-Bugzilla-Watch-Reason: AssignedTo drivers_platform_x86@kernel-bugs.osdl.org
-X-Bugzilla-Product: Drivers
-X-Bugzilla-Component: Platform_x86
-X-Bugzilla-Version: 2.5
-X-Bugzilla-Keywords: 
-X-Bugzilla-Severity: normal
-X-Bugzilla-Who: tomashnyk@gmail.com
-X-Bugzilla-Status: RESOLVED
-X-Bugzilla-Resolution: CODE_FIX
-X-Bugzilla-Priority: P3
-X-Bugzilla-Assigned-To: drivers_platform_x86@kernel-bugs.osdl.org
-X-Bugzilla-Flags: 
-X-Bugzilla-Changed-Fields: bug_status resolution
-Message-ID: <bug-220566-215701-QxhJJMjAxq@https.bugzilla.kernel.org/>
-In-Reply-To: <bug-220566-215701@https.bugzilla.kernel.org/>
-References: <bug-220566-215701@https.bugzilla.kernel.org/>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-X-Bugzilla-URL: https://bugzilla.kernel.org/
-Auto-Submitted: auto-generated
+	dkim=pass (2048-bit key) header.d=cohunt.app header.i=@cohunt.app header.b="XeI65nzv"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=cohunt.app;
+	s=protonmail2; t=1770729694; x=1770988894;
+	bh=VrLbUzzVgJYvbn0ZQLliJls69dkRfpZ9geGXY8CX5yg=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:From:To:
+	 Cc:Date:Subject:Reply-To:Feedback-ID:Message-ID:BIMI-Selector;
+	b=XeI65nzvD08p269+MZYOpSDWPYhjDjfz4G4+E8YnvFYwcvktmlAGdESaxFubdujVY
+	 84Slj9ewcAp6j9LEnb58pICblpTz+SYYsHVYZJ+97y55BdU9hk1dVt0eJn93xN45ca
+	 hrmCQh7pwZasE3dtQ8ShhQFtDVwQIaHdGaWdM366Bx2Ymr8aVwCTO/DRYy20KpQlt5
+	 ba+vtzHKrdbr2jNx3wWkLXLWeR8le6qL0YIADjpZBmD3BWLRIR6q9Mvgyg4pS8XYFu
+	 uDXQuNc7JxXHC9C2hW0z41ouH6lwVzwp+wZ35N0bJCjbJjGSkKksTZ0xPnGKSUIjEp
+	 Az7bGlIJFc7sg==
+X-Pm-Submission-Id: 4f9Mf43J6zz2Sct7
+From: Leif Skunberg <diamondback@cohunt.app>
+To: dan.scally@ideasonboard.com,
+	sakari.ailus@linux.intel.com
+Cc: hansg@kernel.org,
+	ilpo.jarvinen@linux.intel.com,
+	platform-driver-x86@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	Leif Skunberg <diamondback@cohunt.app>
+Subject: [PATCH v2] platform/x86: int3472: Handle GPIO type 0x10 (DOVDD)
+Date: Tue, 10 Feb 2026 14:21:29 +0100
+Message-ID: <20260210132129.17943-1-diamondback@cohunt.app>
+X-Mailer: git-send-email 2.53.0
+In-Reply-To: <20260210085615.34257-1-diamondback@cohunt.app>
+References: <20260210085615.34257-1-diamondback@cohunt.app>
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
 
-https://bugzilla.kernel.org/show_bug.cgi?id=3D220566
+The Lenovo ThinkPad X1 Fold 16 Gen 1 has an OV5675 sensor (ACPI HID
+OVTI5675) behind an INT3472 discrete PMIC controller. The INT3472
+_DSM returns GPIO type 0x10 for one of the pins, which controls the
+DOVDD (digital I/O power) regulator enable.
 
-Tom=C3=A1=C5=A1 Hnyk (tomashnyk@gmail.com) changed:
+Type 0x10 is not currently handled by the driver, causing the GPIO to
+be ignored with a warning. Add INT3472_GPIO_TYPE_DOVDD (0x10) and
+handle it as a regulator with con_id "dovdd" to match the supply name
+used by sensor drivers (e.g. ov5675).
 
-           What    |Removed                     |Added
-----------------------------------------------------------------------------
-             Status|NEW                         |RESOLVED
-         Resolution|---                         |CODE_FIX
+Also increase GPIO_SUPPLY_NAME_LENGTH from 5 to 6 to accommodate
+the "dovdd" name (5 chars + null terminator).
 
---- Comment #3 from Tom=C3=A1=C5=A1 Hnyk (tomashnyk@gmail.com) ---
-My patch was accepted and released in 6.19, so closing this.
+Signed-off-by: Leif Skunberg <diamondback@cohunt.app>
+---
+ drivers/platform/x86/intel/int3472/discrete.c | 7 +++++++
+ include/linux/platform_data/x86/int3472.h     | 5 +++--
+ 2 files changed, 10 insertions(+), 2 deletions(-)
 
---=20
-You may reply to this email to add a comment.
+diff --git a/drivers/platform/x86/intel/int3472/discrete.c b/drivers/platform/x86/intel/int3472/discrete.c
+index 1505fc3ef..fec8a899c 100644
+--- a/drivers/platform/x86/intel/int3472/discrete.c
++++ b/drivers/platform/x86/intel/int3472/discrete.c
+@@ -223,6 +223,10 @@ static void int3472_get_con_id_and_polarity(struct int3472_discrete_device *int3
+ 		*con_id = "avdd";
+ 		*gpio_flags = GPIO_ACTIVE_HIGH;
+ 		break;
++	case INT3472_GPIO_TYPE_DOVDD:
++		*con_id = "dovdd";
++		*gpio_flags = GPIO_ACTIVE_HIGH;
++		break;
+ 	case INT3472_GPIO_TYPE_HANDSHAKE:
+ 		*con_id = "dvdd";
+ 		*gpio_flags = GPIO_ACTIVE_HIGH;
+@@ -251,6 +255,7 @@ static void int3472_get_con_id_and_polarity(struct int3472_discrete_device *int3
+  * 0x0b Power enable
+  * 0x0c Clock enable
+  * 0x0d Privacy LED
++ * 0x10 DOVDD (digital I/O voltage)
+  * 0x13 Hotplug detect
+  *
+  * There are some known platform specific quirks where that does not quite
+@@ -332,6 +337,7 @@ static int skl_int3472_handle_gpio_resources(struct acpi_resource *ares,
+ 	case INT3472_GPIO_TYPE_CLK_ENABLE:
+ 	case INT3472_GPIO_TYPE_PRIVACY_LED:
+ 	case INT3472_GPIO_TYPE_POWER_ENABLE:
++	case INT3472_GPIO_TYPE_DOVDD:
+ 	case INT3472_GPIO_TYPE_HANDSHAKE:
+ 		gpio = skl_int3472_gpiod_get_from_temp_lookup(int3472, agpio, con_id, gpio_flags);
+ 		if (IS_ERR(gpio)) {
+@@ -356,6 +362,7 @@ static int skl_int3472_handle_gpio_resources(struct acpi_resource *ares,
+ 		case INT3472_GPIO_TYPE_POWER_ENABLE:
+ 			second_sensor = int3472->quirks.avdd_second_sensor;
+ 			fallthrough;
++		case INT3472_GPIO_TYPE_DOVDD:
+ 		case INT3472_GPIO_TYPE_HANDSHAKE:
+ 			ret = skl_int3472_register_regulator(int3472, gpio, enable_time_us,
+ 							     con_id, second_sensor);
+diff --git a/include/linux/platform_data/x86/int3472.h b/include/linux/platform_data/x86/int3472.h
+index b1b837583..dbe745dc8 100644
+--- a/include/linux/platform_data/x86/int3472.h
++++ b/include/linux/platform_data/x86/int3472.h
+@@ -26,6 +26,7 @@
+ #define INT3472_GPIO_TYPE_POWER_ENABLE				0x0b
+ #define INT3472_GPIO_TYPE_CLK_ENABLE				0x0c
+ #define INT3472_GPIO_TYPE_PRIVACY_LED				0x0d
++#define INT3472_GPIO_TYPE_DOVDD					0x10
+ #define INT3472_GPIO_TYPE_HANDSHAKE				0x12
+ #define INT3472_GPIO_TYPE_HOTPLUG_DETECT			0x13
+ 
+@@ -33,8 +34,8 @@
+ #define INT3472_MAX_SENSOR_GPIOS				3
+ #define INT3472_MAX_REGULATORS					3
+ 
+-/* E.g. "avdd\0" */
+-#define GPIO_SUPPLY_NAME_LENGTH				5
++/* E.g. "dovdd\0" */
++#define GPIO_SUPPLY_NAME_LENGTH				6
+ /* 12 chars for acpi_dev_name() + "-", e.g. "ABCD1234:00-" */
+ #define GPIO_REGULATOR_NAME_LENGTH				(12 + GPIO_SUPPLY_NAME_LENGTH)
+ /* lower- and upper-case mapping */
+-- 
+2.53.0
 
-You are receiving this mail because:
-You are watching the assignee of the bug.=
