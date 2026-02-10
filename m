@@ -1,38 +1,38 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D52A3277C88
-	for <platform-driver-x86@vger.kernel.org>; Tue, 10 Feb 2026 21:42:28 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D11CE330B2B
+	for <platform-driver-x86@vger.kernel.org>; Tue, 10 Feb 2026 21:43:26 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1770759748; cv=none; b=SN2umeNdMj1TgOZKa3KFcSbQXhHzqiHUiGwumgD4hHVauqwNUuoZ7knX+OqFfmDjLqcBB09R83lUGVIw/IYa2mSNOMpUWYLt7ak2QeFm05edt7IsALbGwrt/t6jkpAISSSwQ3RTRuwbqexxzgTI74AusH6RWpaimZSSkjPIHbDM=
+	t=1770759806; cv=none; b=Uyjm6fXTamVUEd0uKZFCL/HndeOWWekBMtbmWEnGVpPyioa2QlUeMbtYtZff/p6H8Mr7L3hoZZLfAuk2SkmM6vZGKyc+qGW2+0Qw0dyCuyUKIPdea57QMZ8XFDlensCrr16ak3XRmdjTpnNLmbYd5pScHplkcyHqar1E8X1KkGs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1770759748; c=relaxed/simple;
-	bh=WyF3CdoZ9NfaGUXiI+j1O5B1SvSQci/wjKDXWSs01vQ=;
+	s=arc-20240116; t=1770759806; c=relaxed/simple;
+	bh=VkurPBmkhjW98W48kH+rzVzbSttPthissffWy5yLcS0=;
 	h=From:To:Subject:Date:Message-ID:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=R+W27+rrX6/ypkGLwxNjlvOsQscancqCDnLIhqro68pwBfnJ5BBdeJOXCri4lgH1A3qeK7z38+EIZzTVGNlOJ5M/GBtlgqtfv9/eC9qdLwNGtOngO6rxIo8HR25Mm6XbYtc/9T+4StcxqwERrs1QVT5z6FA+l/KopXTKlUj8+xE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ZVO9YiVB; arc=none smtp.client-ip=10.30.226.201
+	 Content-Type:MIME-Version; b=ssERsSii1yQQPiGLPNPPXU8EHgxcx+QDjyuTiVP2iRdoYt0Mh/dtDCVu9AaN9ajvZy/pm8TjhZlCoNVffP1fH7QYFkslk9Q1yNSy59YNCHNo8HVO/gtcNCOxOxJ2+kjNdp+sw1/bEpEoYwKLaR/fc1quE0i63IM7zKqi5rGyNoM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=MJzNZDov; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ZVO9YiVB"
-Received: by smtp.kernel.org (Postfix) with ESMTPS id 72321C116C6
-	for <platform-driver-x86@vger.kernel.org>; Tue, 10 Feb 2026 21:42:28 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="MJzNZDov"
+Received: by smtp.kernel.org (Postfix) with ESMTPS id 6D341C116C6
+	for <platform-driver-x86@vger.kernel.org>; Tue, 10 Feb 2026 21:43:26 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1770759748;
-	bh=WyF3CdoZ9NfaGUXiI+j1O5B1SvSQci/wjKDXWSs01vQ=;
+	s=k20201202; t=1770759806;
+	bh=VkurPBmkhjW98W48kH+rzVzbSttPthissffWy5yLcS0=;
 	h=From:To:Subject:Date:In-Reply-To:References:From;
-	b=ZVO9YiVBHjSUEORpmcTMC7KO2Ll/PFjwwM2sD2Rf0/qjsjAcovRQ0+r3DSnlPV5Ay
-	 RFvBhtnMJnLU5JwNV6e431hXlY2SYhaXHiTQL+2bmsh1F5oGyvuTk10H+9dWMRiBUW
-	 k+Qa0ZwBN2SzmGR02o4SaQ+ZcEe68tW1Mp7j+ciw4reFNnvxPcisU9rmCer95Pxku4
-	 QY1zOx76Vj9hM6h08I558DBJ3Fn58pfHJZki7+GT45Fh6P/pN7wqd8MC/2bXcCfijB
-	 dL1BjiPfmt8NzF/SuAQgB0BuUHdznX/HvYhbwd/BQEKCmN7D7JDlxiWpPhUPbbzTBH
-	 6uhn+nq3r7oAA==
+	b=MJzNZDovL+QxKlx0lkAA510l0j+SybEdy6SLb/kI7pPkvD37LOFMZkUwX1Iaism5u
+	 V5QxfHkxyhhT2DHKRwKyN5xeyJUnhW6l8WjkRZDQBFB+TsbkpHmIZzNAS6TF6kuFGu
+	 NMt5IqB1FJ0Rp3T8wAaVJ/D94Fjm0cYpgz+NS2ByBgo565S/Iig6bWbeR0QD8//1K3
+	 /Auwp1ecQPbyp34UonJrwdfxUR9in9cwtPzWc11yuzRlhhVRARyy4yAs25ujBSNWpX
+	 EgFL/33/x/mSNTnypxvzdFBvlwOL2CYVGpsM+gLX9i4sYyrRBxtFCcMYzqeIADwZnD
+	 oSwKbgKLky24w==
 Received: by aws-us-west-2-korg-bugzilla-1.web.codeaurora.org (Postfix, from userid 48)
-	id 60FA0C433E1; Tue, 10 Feb 2026 21:42:28 +0000 (UTC)
+	id 64B03C433E1; Tue, 10 Feb 2026 21:43:26 +0000 (UTC)
 From: bugzilla-daemon@kernel.org
 To: platform-driver-x86@vger.kernel.org
 Subject: [Bug 221065] ideapad_acpi: unexpected charge_types spam on Yoga Pro
  7 14ASP9
-Date: Tue, 10 Feb 2026 21:42:28 +0000
+Date: Tue, 10 Feb 2026 21:43:26 +0000
 X-Bugzilla-Reason: None
 X-Bugzilla-Type: changed
 X-Bugzilla-Watch-Reason: AssignedTo drivers_platform_x86@kernel-bugs.osdl.org
@@ -48,7 +48,7 @@ X-Bugzilla-Priority: P3
 X-Bugzilla-Assigned-To: drivers_platform_x86@kernel-bugs.osdl.org
 X-Bugzilla-Flags: 
 X-Bugzilla-Changed-Fields: 
-Message-ID: <bug-221065-215701-L3X3qzILLF@https.bugzilla.kernel.org/>
+Message-ID: <bug-221065-215701-jvblsobPVs@https.bugzilla.kernel.org/>
 In-Reply-To: <bug-221065-215701@https.bugzilla.kernel.org/>
 References: <bug-221065-215701@https.bugzilla.kernel.org/>
 Content-Type: text/plain; charset="UTF-8"
@@ -64,16 +64,12 @@ MIME-Version: 1.0
 
 https://bugzilla.kernel.org/show_bug.cgi?id=3D221065
 
---- Comment #19 from Avraham Hollander (anhollander516@gmail.com) ---
-(In reply to Armin Wolf from comment #16)
-> Also, do receive a notification when pluggin in your charger? If yes, how
-> long does it take for said notification to arrive?
+--- Comment #20 from Avraham Hollander (anhollander516@gmail.com) ---
+(In reply to Armin Wolf from comment #17)
+> Also, can you read your current battery status successfully?
 
-Usually it only takes a second, but sometimes it takes a little longer. Oft=
-en
-times when unplugging the charger too. It took around 6 seconds when the er=
-rors
-showed up just now.
+Yes, battery and charger reporting works just fine, other than it sometimes
+taking a little longer to detect a change in charger state.
 
 --=20
 You may reply to this email to add a comment.
