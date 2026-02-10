@@ -1,38 +1,38 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 318E32DE6FF
-	for <platform-driver-x86@vger.kernel.org>; Tue, 10 Feb 2026 19:23:55 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B25D422B5AC
+	for <platform-driver-x86@vger.kernel.org>; Tue, 10 Feb 2026 19:25:57 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1770751436; cv=none; b=TGeNHBFDCDFtFCqJhvtu8nQ4tQdhuft5/2pbeCWYuGaRviuK0q2HPu1GptfTxD7CAuphq/Vg4sh1HdYvL/N2+PP1iiWNOiym24gMFN2sU+5BNQEnh3kVzMQLUzb/ep66soylBjcedRXqWKWQ8Dqs1HXtHXVeDb4+fHboTu6PEKg=
+	t=1770751557; cv=none; b=hlgWD7ndxWmzVlAiTx5ii7CPzy9Pe/NUkiPHMkbdhfzuMFqoLpXmm8mwj1ieCgWVCmm2/USpj8wlZiUZUuIkY2781pJI0bt3xO9ZbQDU1HcSyHNN8nLzM/NTs0I0edpWBYuPuYjqEEjslm1p0ywC+RNbgf30TEyuql6BKK44R7M=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1770751436; c=relaxed/simple;
-	bh=4Ew+qlm/C94YNMME5ut6adJhNRe4YR8LFXsbvxxUAKE=;
+	s=arc-20240116; t=1770751557; c=relaxed/simple;
+	bh=fJ7rVhwOuc1ccnP30WuxKym3PVc/lVmpNjAGreMj4ps=;
 	h=From:To:Subject:Date:Message-ID:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=UC3Oi+tlcyEQqUqbBxuhFKCW2vFlrWt0y9Nu247ydlkOFQXoCK8z10sY8H0FpZc9Y+jpFONGrEmA977YlxGAax5p4EudbPNC2hbixUznErvJVVWbfKnzabc4WjVCRPsL8OEUDmsOhJYZWfggj7DyLPsPUbyNu/ZojcH4z/W6LoU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=H1VQFWuE; arc=none smtp.client-ip=10.30.226.201
+	 Content-Type:MIME-Version; b=jL9GbNTZlWAfdhuyvuI0ze+6KwIGqDDh9RWXPmWtLdNkjpM4oj/b9Ruu/kJMgvGStWEhjwcRSOE8P0ruYUilq6xWAN+g9RmrOt78Yfpb0vkT45fswnMlVUju0QpNL/IAdKjjq5nMiTjh62QWXCk0SJzo35vxn90Q0Z9L7K2hFuY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=L6VHyohs; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="H1VQFWuE"
-Received: by smtp.kernel.org (Postfix) with ESMTPS id BCFF4C116C6
-	for <platform-driver-x86@vger.kernel.org>; Tue, 10 Feb 2026 19:23:55 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="L6VHyohs"
+Received: by smtp.kernel.org (Postfix) with ESMTPS id 49B5EC19421
+	for <platform-driver-x86@vger.kernel.org>; Tue, 10 Feb 2026 19:25:57 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1770751435;
-	bh=4Ew+qlm/C94YNMME5ut6adJhNRe4YR8LFXsbvxxUAKE=;
+	s=k20201202; t=1770751557;
+	bh=fJ7rVhwOuc1ccnP30WuxKym3PVc/lVmpNjAGreMj4ps=;
 	h=From:To:Subject:Date:In-Reply-To:References:From;
-	b=H1VQFWuEecx8hk+/feQ5rQe4hV1R2RLXTw4+us5eSAI9bZlErV1tEI8UKnBMnDPGl
-	 vhLY3PHLrlmfcmk/2uXT9in24wmPOzSqn00xT5zMspoCkCzep5V0f0ZhUueoNCgfW+
-	 cuUjX+mxGqx99PN9qlWZ4n+0ArMFacYpxMZQ9K2D7urynfzLm1Hrx1C56sdHIIjCl9
-	 Bd7BLRJ95dLdNs7fMzbAdQje2i0m1zDouARzoiY8YY3ZIoU5FdPIks6P5zGOVhaiau
-	 5mYJjuuVKdmLJmPUjRGsfcGUnnrGsX3bf4fAwGZVVFJYnhptC96ObVFT6bc/X4xfbw
-	 0VB01gksVZ8Ew==
+	b=L6VHyohs45E85P50hYRKwYvZghOwI/JqO834NphktXNt1e83ELcErkNQei8sr4AN0
+	 62uyykXVx+Nt6lHkbKiU17dgz6gqtJaAPV0wHIa9JLIYpSbOQMlVfT0H7myuav61sT
+	 RB+M0VwI5N/OB61tB06WZERRzxW0yzvlGjGuC7P8BGrUC9DwE55WSd4Yiz8ae4BBm+
+	 M7QrHHOy/VvAQ7lCmQ2p5oHzXxiJZ3RrwBxBz99Vf45t5boZMdjs3+6Jrwta0Jz3a4
+	 Q0A8PjxwR4/OuHRBfCSAHCDygX7UTx0G9Wx3BhJVy0hHTdv6nP+LQ8URFJVo/Vs52E
+	 zmK1w5fc9TFSQ==
 Received: by aws-us-west-2-korg-bugzilla-1.web.codeaurora.org (Postfix, from userid 48)
-	id B0725C433E1; Tue, 10 Feb 2026 19:23:55 +0000 (UTC)
+	id 38BC5C3279F; Tue, 10 Feb 2026 19:25:57 +0000 (UTC)
 From: bugzilla-daemon@kernel.org
 To: platform-driver-x86@vger.kernel.org
 Subject: [Bug 221065] ideapad_acpi: unexpected charge_types spam on Yoga Pro
  7 14ASP9
-Date: Tue, 10 Feb 2026 19:23:55 +0000
+Date: Tue, 10 Feb 2026 19:25:57 +0000
 X-Bugzilla-Reason: None
 X-Bugzilla-Type: changed
 X-Bugzilla-Watch-Reason: AssignedTo drivers_platform_x86@kernel-bugs.osdl.org
@@ -48,7 +48,7 @@ X-Bugzilla-Priority: P3
 X-Bugzilla-Assigned-To: drivers_platform_x86@kernel-bugs.osdl.org
 X-Bugzilla-Flags: 
 X-Bugzilla-Changed-Fields: 
-Message-ID: <bug-221065-215701-z640cqoeLM@https.bugzilla.kernel.org/>
+Message-ID: <bug-221065-215701-g268e2E6hr@https.bugzilla.kernel.org/>
 In-Reply-To: <bug-221065-215701@https.bugzilla.kernel.org/>
 References: <bug-221065-215701@https.bugzilla.kernel.org/>
 Content-Type: text/plain; charset="UTF-8"
@@ -64,54 +64,52 @@ MIME-Version: 1.0
 
 https://bugzilla.kernel.org/show_bug.cgi?id=3D221065
 
---- Comment #11 from Avraham Hollander (anhollander516@gmail.com) ---
-It seems also that after writing something to charge_types, the ucsi-acpi
-driver complains too, along with an ACPI error whenever the charger is plug=
-ged
-in:
+--- Comment #12 from Avraham Hollander (anhollander516@gmail.com) ---
+(In reply to Avraham Hollander from comment #11)
+> It seems also that after writing something to charge_types, the ucsi-acpi
+> driver complains too, along with an ACPI error whenever the charger is
+> plugged in:
+>=20
+> ACPI Error: Thread 2157330176 cannot release Mutex [ECMT] acquired by thr=
+ead
+> 2188863744 (20250807/exmutex-378)
+> ACPI Error: Aborting method \_SB.PCI0.LPC0.EC0.ECCC due to previous error
+> (AE_AML_NOT_OWNER) (20250807/psparse-531)
+> ACPI Error: Aborting method \_SB.PCI0.LPC0.EC0.RPAM due to previous error
+> (AE_AML_NOT_OWNER) (20250807/psparse-531)
+> ACPI Error: Aborting method \_SB.PCI0.LPC0.EC0._Q92 due to previous error
+> (AE_AML_NOT_OWNER) (20250807/psparse-531)
+> ideapad_acpi VPC2004:00: unexpected charge_types: both [Fast] and
+> [Long_Life] are enabled
+> ucsi_acpi USBC000:00: ucsi_handle_connector_change: GET_CONNECTOR_STATUS
+> failed (-5)
+> ucsi_acpi USBC000:00: ucsi_handle_connector_change: GET_CONNECTOR_STATUS
+> failed (-5)
+> ucsi_acpi USBC000:00: GET_CONNECTOR_STATUS failed (-5)
+> ACPI Error: Thread 2156041472 cannot release Mutex [ECMT] acquired by thr=
+ead
+> 2188863744 (20250807/exmutex-378)
+> ACPI Error: Aborting method \_SB.PCI0.LPC0.EC0.ECCC due to previous error
+> (AE_AML_NOT_OWNER) (20250807/psparse-531)
+> ACPI Error: Aborting method \_SB.PCI0.LPC0.EC0.RPAM due to previous error
+> (AE_AML_NOT_OWNER) (20250807/psparse-531)
+> ACPI Error: Aborting method \_SB.PCI0.LPC0.EC0._Q9E due to previous error
+> (AE_AML_NOT_OWNER) (20250807/psparse-531)
+> ideapad_acpi VPC2004:00: unexpected charge_types: both [Fast] and
+> [Long_Life] are enabled
+> ucsi_acpi USBC000:00: ucsi_handle_connector_change: GET_CONNECTOR_STATUS
+> failed (-110)
+> ucsi_acpi USBC000:00: ucsi_handle_connector_change entered without
+> EVENT_PENDING
+> ucsi_acpi USBC000:00: ucsi_handle_connector_change: GET_CONNECTOR_STATUS
+> failed (-110)
+>=20
+>=20
+> The ideapad_acpi driver's behavior doesn't seem to be affected by plugging
+> in or unplugging the charger.
 
-ACPI Error: Thread 2157330176 cannot release Mutex [ECMT] acquired by thread
-2188863744 (20250807/exmutex-378)
-ACPI Error: Aborting method \_SB.PCI0.LPC0.EC0.ECCC due to previous error
-(AE_AML_NOT_OWNER) (20250807/psparse-531)
-ACPI Error: Aborting method \_SB.PCI0.LPC0.EC0.RPAM due to previous error
-(AE_AML_NOT_OWNER) (20250807/psparse-531)
-ACPI Error: Aborting method \_SB.PCI0.LPC0.EC0._Q92 due to previous error
-(AE_AML_NOT_OWNER) (20250807/psparse-531)
-ideapad_acpi VPC2004:00: unexpected charge_types: both [Fast] and [Long_Lif=
-e]
-are enabled
-ucsi_acpi USBC000:00: ucsi_handle_connector_change: GET_CONNECTOR_STATUS fa=
-iled
-(-5)
-ucsi_acpi USBC000:00: ucsi_handle_connector_change: GET_CONNECTOR_STATUS fa=
-iled
-(-5)
-ucsi_acpi USBC000:00: GET_CONNECTOR_STATUS failed (-5)
-ACPI Error: Thread 2156041472 cannot release Mutex [ECMT] acquired by thread
-2188863744 (20250807/exmutex-378)
-ACPI Error: Aborting method \_SB.PCI0.LPC0.EC0.ECCC due to previous error
-(AE_AML_NOT_OWNER) (20250807/psparse-531)
-ACPI Error: Aborting method \_SB.PCI0.LPC0.EC0.RPAM due to previous error
-(AE_AML_NOT_OWNER) (20250807/psparse-531)
-ACPI Error: Aborting method \_SB.PCI0.LPC0.EC0._Q9E due to previous error
-(AE_AML_NOT_OWNER) (20250807/psparse-531)
-ideapad_acpi VPC2004:00: unexpected charge_types: both [Fast] and [Long_Lif=
-e]
-are enabled
-ucsi_acpi USBC000:00: ucsi_handle_connector_change: GET_CONNECTOR_STATUS fa=
-iled
-(-110)
-ucsi_acpi USBC000:00: ucsi_handle_connector_change entered without
-EVENT_PENDING
-ucsi_acpi USBC000:00: ucsi_handle_connector_change: GET_CONNECTOR_STATUS fa=
-iled
-(-110)
-
-
-The ideapad_acpi driver's behavior doesn't seem to be affected by plugging =
-in
-or unplugging the charger.
+Actually, I take that back. All of this is triggerable without writing to
+charge_types.
 
 --=20
 You may reply to this email to add a comment.
