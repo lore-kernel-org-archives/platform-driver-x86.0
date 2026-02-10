@@ -1,181 +1,552 @@
-Received: from mout.gmx.net (mout.gmx.net [212.227.17.21])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ua1-f53.google.com (mail-ua1-f53.google.com [209.85.222.53])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 63171333448;
-	Tue, 10 Feb 2026 23:30:14 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=212.227.17.21
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CA9B132E745
+	for <platform-driver-x86@vger.kernel.org>; Tue, 10 Feb 2026 23:38:55 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.222.53
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1770766217; cv=none; b=eODrxEr+Ib8rrA3mLJkNjsiqHN7UebIbLXDT4VP33wmj2hUIkjUDs+XWaXkAnbKjPG3Zol4LiQalb38S0QOEk0YMLsbWlDSo36DEzehPwmqZ/BS2pt3o8083B02/go1lBjmsstAbXzrq73wwAPwVE8Thy1qWI27bu6qfvbvvQaw=
+	t=1770766737; cv=none; b=ESxtjGEg3lDtMGRaFGB5oZa7cOMRcaLWB4vr21tUZo2SYP1kR2j4aKHOnACeZpm5FRyaIMC+faNj6AIuK6CYI732J6Y9dfBK3G+0hSY1GiJRwdk0aAs+oH6X0OQjSS/d2P6nGE5pSo9iKouZ5CacUP/ApIpZdwylKDhkLnoeZA8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1770766217; c=relaxed/simple;
-	bh=pQoG88jV7mEdEhVKU+etXqUr9H7ljQz5YkoRYnTHSss=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=a7gIdj6wHga1IRuMll+oTr2acrv8oFVAtfv1S0vQSsUPjJQnbIXxzISHNPElX0HjAjA7FcvCjE6ooh8n6ezNHjnwO8MGtCeQKzTHH58pFSkDELcb7pPu9abu4rQwWZ3Y9c24QGqsFqq8F9BJJ7nUPRjM+91n99pNyttuphQoxmQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gmx.de; spf=pass smtp.mailfrom=gmx.de; dkim=pass (2048-bit key) header.d=gmx.de header.i=w_armin@gmx.de header.b=LPY4tYIw; arc=none smtp.client-ip=212.227.17.21
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gmx.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmx.de
+	s=arc-20240116; t=1770766737; c=relaxed/simple;
+	bh=8c7HGPwcuSrW3EMPHi5d3r9OUVE0BJLOQO3enTCAeKA=;
+	h=Mime-Version:Content-Type:Date:Message-Id:To:Cc:Subject:From:
+	 References:In-Reply-To; b=JpYVdFilrw2/krv2TfY7jX1kFqBaqHFWckLiFkG86HPbOopjVy00b3VhhfZABCGY4vILdbbrE+pZK9K4cUCV501sqZF2Oy1LNPuLx948Go2DaNkRoggFRNu0oLxFCWd/stZYtZAAAuzOAr8B89WzVDDsBcmSX1BwKjwxXDNaDgk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=O87rCBI9; arc=none smtp.client-ip=209.85.222.53
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmx.de header.i=w_armin@gmx.de header.b="LPY4tYIw"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=gmx.de;
-	s=s31663417; t=1770766206; x=1771371006; i=w_armin@gmx.de;
-	bh=ivRcoZ05eLq3QaGF2INQXAAfXk0viYFYVkQjYMzIxPE=;
-	h=X-UI-Sender-Class:From:To:Cc:Subject:Date:Message-Id:In-Reply-To:
-	 References:MIME-Version:Content-Transfer-Encoding:cc:
-	 content-transfer-encoding:content-type:date:from:message-id:
-	 mime-version:reply-to:subject:to;
-	b=LPY4tYIw3mvTgK4n2eUbqM89LTpRGyxfpZnD87MQm8X+m1GCwMmRFgoE8IH0sv+r
-	 o/SgmMB37MSm2WubFfC2P7vUEGN1az0eTe0/wKDHVXD4eOofllaxvh16JNYQOUUlp
-	 svAkiHRUIZzTy99BdZH4lO043YMr2xvx7HDgRRIiCW1RXnPk5KOY7nwGKMQ+WDKka
-	 I7xRSU+4SvvEngUkBt6+X/WFdyS7B1kCBQmSMVy0tlf8ejH+AGAOws/vCW5nZWefB
-	 JQRxaQQlmjM+7149Up+hcJ2x1nFBsVLCKE/yj9xn4DramTWo4/UtknBDUKpnqYOGt
-	 NOzhJK4Ru0EhxH76Ow==
-X-UI-Sender-Class: 724b4f7f-cbec-4199-ad4e-598c01a50d3a
-Received: from mx-amd-b650.fritz.box ([93.202.242.224]) by mail.gmx.net
- (mrgmx104 [212.227.17.168]) with ESMTPSA (Nemesis) id
- 1MhlGq-1vL08r2Noe-00bJn9; Wed, 11 Feb 2026 00:30:05 +0100
-From: Armin Wolf <W_Armin@gmx.de>
-To: hansg@kernel.org,
-	ilpo.jarvinen@linux.intel.com
-Cc: wse@tuxedocomputers.com,
-	platform-driver-x86@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Subject: [PATCH 5/5] platform/x86: uniwill-laptop: Handle super key lock events
-Date: Wed, 11 Feb 2026 00:29:46 +0100
-Message-Id: <20260210232946.302936-6-W_Armin@gmx.de>
-X-Mailer: git-send-email 2.39.5
-In-Reply-To: <20260210232946.302936-1-W_Armin@gmx.de>
-References: <20260210232946.302936-1-W_Armin@gmx.de>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="O87rCBI9"
+Received: by mail-ua1-f53.google.com with SMTP id a1e0cc1a2514c-94aca174532so767715241.3
+        for <platform-driver-x86@vger.kernel.org>; Tue, 10 Feb 2026 15:38:55 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1770766735; x=1771371535; darn=vger.kernel.org;
+        h=in-reply-to:references:from:subject:cc:to:message-id:date
+         :content-transfer-encoding:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=nKIIiy30Kc97CWx9ufHLK1yyykeIpNTrfY4AKx1fIWE=;
+        b=O87rCBI9k1yqhQrVg0q7oifW4ZA1kU6PZ9LpQcab1ZSlyoVOT3WHbMLU0Rr8MLhFpi
+         wECFA+ybSK3uXbyX/bBCwL7Q1SdP1jjWEft6zqrmHmsBLWjYfp6cJvNlcaomkylfUjOf
+         nijSweXUZu62Mp94KuDRhms0xKNrbpA1Nxgyp710b6bhkevRXYO1q0/Q25z9/fXglAHX
+         Mw+B8NW8L55O/pwGSi5ZhzBqYi0ff7niY3SyvpWBtJImurstDF1alkkfEoJDxQAZbVmY
+         IvEdDtkuMu5yXWF5V2x2GmtFgGIzEtbgdK7sYbsoDKCNIkAAmLPQNfmRbOBjCsKsRV0t
+         rVMA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1770766735; x=1771371535;
+        h=in-reply-to:references:from:subject:cc:to:message-id:date
+         :content-transfer-encoding:mime-version:x-gm-gg:x-gm-message-state
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=nKIIiy30Kc97CWx9ufHLK1yyykeIpNTrfY4AKx1fIWE=;
+        b=Jql80f8gOPkOYpD+1GPeYxIRAnkxcFSTTGlCROSqgj0qi8Nx9HKmDuFC+W4WkdVsAX
+         um7j/wi8yn35PfN+wPPBrQ1RpgyuDQN7fukgcjo3AZmJxNdv/6Q5sJ73apPx0yh3O9tc
+         QOeCn8PSA46702ypAHD157aCzpYuKGUiRFiGt5H445hK/1EN8d1EMlTYSfA1rzZot1GC
+         GclQAWSwoQSSiOSe/g70B7UzfJlrgTtpfC4ocwZZK0Q+Dx9ydgXJyjX8QHuIuKvWXY8A
+         6sSzPy6gttUVuFM6sK6J902gPzlO2meAH2SBIzuzD3NIbFiu4581WOOZRsiLbKvC6wVh
+         /dSw==
+X-Forwarded-Encrypted: i=1; AJvYcCXoHqYYKzHIFDdyYcSotPZ1ATvyLu1uNwBZg+PQoj7Gc3P21SDY8NXh+m85roeG2WdJ0SpACDE5MMJSZe7f9uXeCnic@vger.kernel.org
+X-Gm-Message-State: AOJu0Yx8ik9JVm/wUuTqlT12KDE4PJ1dFhmT3J6l5l6Rgzy6sCBoIfny
+	G2n2z9OF2EdQiXLHpLbASdF81pULYk59nxuIy2x96NBPY7OAk3u3Gvlj
+X-Gm-Gg: AZuq6aIR6PL4V9HA89jOEb+d93DwRTc+qctTd8ZPtzk0LXwjls3ggckOmSpQgS5KLi/
+	rBgHqrd/3rDY0mUAjPuandUyXwywQ197ojblc1fadH9txNfGx2VXNjWRvHjdF3gR0W+5q5V1rFO
+	Bs+J6n1Rj4YK/848TLIPGZ+i4qRXALoYZuhClWtTNfCXK7XwntmihbPC1KcelK1Mkec3/i8wHpA
+	AHWlFnAMLw2RLoiClaULrRdisNwls3gC5XpL1OUuySLgRhUxhWXH7Cf9Mcc0vzjsc3ozYxzCnnp
+	yETV5Hkuzn8fBEy9C0MLyvwmFwrGFGnkWEtetXnlEclLZiFVOtJf9UFr4rja1hc5KGgR09QQV3N
+	z61/bpAPYMzNX6iWS/wV6xG5YqlwvWQnwG9RW+4E13tmBVLY4X3LeQ8g08FQLPpp/3gS2zqzlq4
+	3NWUjkDlynbGdNC4b9yqI=
+X-Received: by 2002:a05:6102:4191:b0:5fc:ea57:d1ca with SMTP id ada2fe7eead31-5fde43ad8bbmr237972137.30.1770766734459;
+        Tue, 10 Feb 2026 15:38:54 -0800 (PST)
+Received: from localhost ([2800:bf0:4580:3149:c903:2904:3cc3:8b4c])
+        by smtp.gmail.com with ESMTPSA id a1e0cc1a2514c-94afd14d749sm125307241.1.2026.02.10.15.38.53
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 10 Feb 2026 15:38:53 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
+Mime-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
-X-Provags-ID: V03:K1:FiIDtqET+ZstP2srIn4xugpPLNZw7aclTpQZKhTQ3mkqd/jK64H
- LE9aj6bLkyABV5yHrPRnG28AZMYzSxfSaQsfwfuScYFP7t0+4eURYLfthJO67LYIq1+xXBv
- 3qY/WXyWrpxJjk7uhRwTayN/jZEDLRNRalaQ04YHX7bAyxnVJpAgS2OI68ipdgYHAe6GKG2
- 9B18kZl8pCmijlb4p7UYw==
-X-Spam-Flag: NO
-UI-OutboundReport: notjunk:1;M01:P0:owpcdnurq9s=;iIdxtfwmu4GhOu+lvJwAQP7q2Sb
- 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
- mqaiI6AU=
+Content-Type: text/plain; charset=UTF-8
+Date: Tue, 10 Feb 2026 18:38:52 -0500
+Message-Id: <DGBOF2O43IUT.1EJ7X7L00993R@gmail.com>
+To: "Derek John Clark" <derekjohn.clark@gmail.com>, "Kurt Borja"
+ <kuurtb@gmail.com>
+Cc: "Rong Zhang" <i@rong.moe>, =?utf-8?q?Ilpo_J=C3=A4rvinen?=
+ <ilpo.jarvinen@linux.intel.com>, "Armin Wolf" <W_Armin@gmx.de>, "Mark
+ Pearson" <mpearson-lenovo@squebb.ca>, <platform-driver-x86@vger.kernel.org>
+Subject: Re: Report: lenovo_wmi_other FW attributes always read 0
+From: "Kurt Borja" <kuurtb@gmail.com>
+X-Mailer: aerc 0.21.0-0-g5549850facc2
+References: <DG60P3SHXR8H.3NSEHMZ6J7XRC@gmail.com>
+ <C18EFC0C-741A-4DF3-85A9-E3DE9CBC1737@gmail.com>
+ <DG6BU3U96TTS.1XNHFL5NRADT5@gmail.com>
+ <4C43FF8D-A529-4645-93E8-DF5E6734328A@gmail.com>
+ <DG6KJR1FONK7.2TL5QSPZ2A4GA@gmail.com>
+ <CAFqHKTn=0JS3jcp7FKYvfTHzG5u1kXXtavSK9hNEphagDiDdgA@mail.gmail.com>
+ <CAFqHKTnpGTRuW=HMxSu2YQ9qq7inajXOT6p3Vpc8sg0v_EGQQw@mail.gmail.com>
+ <DG77O19JWSAH.2TC5GU5CR5U5H@gmail.com>
+ <CAFqHKTkHhx14rM7QTATLTq-ry1z53+D5h1y982gaBd+RbMNJAQ@mail.gmail.com>
+In-Reply-To: <CAFqHKTkHhx14rM7QTATLTq-ry1z53+D5h1y982gaBd+RbMNJAQ@mail.gmail.com>
 
-On many devices, the user can toggle the super key lock state by
-pressing Fn + F9. Forward the associated events to the super_key_lock
-sysfs attribute as a poll notification.
+On Fri Feb 6, 2026 at 2:11 AM -05, Derek John Clark wrote:
+> On Thu, Feb 5, 2026 at 9:40=E2=80=AFAM Kurt Borja <kuurtb@gmail.com> wrot=
+e:
+>>
+>> On Wed Feb 4, 2026 at 10:13 PM -05, Derek John Clark wrote:
+>> > On Wed, Feb 4, 2026 at 4:04=E2=80=AFPM Derek John Clark
+>> > <derekjohn.clark@gmail.com> wrote:
+>> >>
+>> >> On February 4, 2026 3:33:34 PM PST, Kurt Borja <kuurtb@gmail.com> wro=
+te:
+>> >> >On Wed Feb 4, 2026 at 12:45 PM -05, Derek J. Clark wrote:
+>> >> >> On February 4, 2026 8:43:56 AM PST, Kurt Borja <kuurtb@gmail.com> =
+wrote:
+>> >> >>>On Wed Feb 4, 2026 at 3:36 AM -05, Derek J. Clark wrote:
+>> >> >>>> On February 4, 2026 12:00:12 AM PST, Kurt Borja <kuurtb@gmail.co=
+m> wrote:
+>> >> >>>>>Hi all,
+>> >> >>>>
+>> >> >>>> Hi Kurt.
+>> >> >>>
+>> >> >>>Hi Derek,
+>> >> >>>
+>> >> >>>>
+>> >> >>>>>In my system (83KY Legion 7 16IAX1) the current_value of any of =
+the
+>> >> >>>>>firmware attributes exposed by this driver always reads 0
+>> >> >>>>>
+>> >> >>>>>   $ ls /sys/class/firmware-attributes/lenovo-wmi-other-0/attrib=
+utes/
+>> >> >>>>>   ppt_pl1_spl  ppt_pl2_sppt  ppt_pl3_fppt
+>> >> >>>>>
+>> >> >>>>>   $ cat /sys/class/firmware-attributes/lenovo-wmi-other-0/attri=
+butes/*/current_value
+>> >> >>>>>   0
+>> >> >>>>>   0
+>> >> >>>>>   0
+>> >> >>>>>
+>> >> >>>>>After investigating my acpidump [1] I found that the argument pa=
+ssed to
+>> >> >>>>>the WMI method Arg2 is matched as a whole integer instead of ind=
+ividual
+>> >> >>>>>bytes (L: 49203)
+>> >> >>>>>
+>> >> >>>>>   If ((ToInteger (Arg2) =3D=3D 0x01010000))
+>> >> >>>>>   {
+>> >> >>>>>           Return (^^PC00.LPCB.EC0.F5E0) /* \_SB_.PC00.LPCB.EC0_=
+.F5E0 */
+>> >> >>>>>   }
+>> >> >>>>>
+>> >> >>>>>   If ((ToInteger (Arg2) =3D=3D 0x01020000))
+>> >> >>>>>   {
+>> >> >>>>>           Return (^^PC00.LPCB.EC0.CCP1) /* \_SB_.PC00.LPCB.EC0_=
+.CCP1 */
+>> >> >>>>>   }
+>> >> >>>>>
+>> >> >>>>>   If ((ToInteger (Arg2) =3D=3D 0x01030000))
+>> >> >>>>>   {
+>> >> >>>>>           /* This case (CPU FPPT) is actually just zero... */
+>> >> >>>>>           Return (Zero)
+>> >> >>>>>   }
+>> >> >>>>>
+>> >> >>>>>...and the driver always sets the second byte of Arg2 to the cur=
+rent
+>> >> >>>>>profile (mode), which is never zero!
+>> >> >>>>>
+>> >> >>>>>   attribute_id =3D
+>> >> >>>>>           FIELD_PREP(LWMI_ATTR_DEV_ID_MASK, tunable_attr->devic=
+e_id) |
+>> >> >>>>>           FIELD_PREP(LWMI_ATTR_FEAT_ID_MASK, tunable_attr->feat=
+ure_id) |
+>> >> >>>>>   -->     FIELD_PREP(LWMI_ATTR_MODE_ID_MASK, mode) |
+>> >> >>>>>           FIELD_PREP(LWMI_ATTR_TYPE_ID_MASK, tunable_attr->type=
+_id);
+>> >> >>>>>
+>> >> >>>>>So it never actually matches the attribute and falls back to zer=
+o :/
+>> >> >>>>>
+>> >> >>>>>This is however, not the case for all tunables. As you can see i=
+n the
+>> >> >>>>>acpidump, just bellow the block above, these are matched dependi=
+ng on
+>> >> >>>>>the current mode (second byte)
+>> >> >>>>
+>> >> >>>> This typically means that the method is stubbed so that it retur=
+ns 0 on is_supported. During development I forgot to go back and add a chec=
+k for this when adding the attributes. Per the spec, there is no profile th=
+at corresponds to 0x00, so this is working as expected when showing an unsu=
+pported attribute. If you add a debug print to the capdata driver when it i=
+s querying the attributes you can see the entries are empty.
+>> >> >>>
+>> >> >>>Hmm it's weird because if I read
+>> >> >>>
+>> >> >>>     \_SB_.PC00.LPCB.EC0_.F5E0
+>> >> >>>     \_SB_.PC00.LPCB.EC0_.CCP1
+>> >> >>>
+>> >> >>>directly, they show the correct SPPT and SPL values shown in the w=
+indows
+>> >> >>>Legion Space app (under Custom mode).
+>> >> >>>
+>> >> >>>It seems like these are supported?
+>> >> >>
+>> >> >> Oh, that is strange, yeah. It also explains why some things just a=
+ren't working like they should. Once again the documentation is not complet=
+ely accurate for this interface, which is quite frustrating... I think I ha=
+ve a device with this problem as well that I haven't yet troubleshot in the=
+ new series, so I can work it locally.
+>> >> >>
+>> >> >> It sounds like I'll need to check if the current mode entry is pre=
+sent in the cached data, and if not check if there is a  "no mode" present.=
+ Traversing the list twice seems tedious & slow, so I'll probably refactor =
+the capdata side to check for a match in bytes 0, 1, and 3, and if byte 2 i=
+s 0 in the data then return that, but if it is missing continue to search f=
+or the match? They have historically been in ascending order (though, at th=
+is point I don't know if that can be trusted) I'm curious if any devices ha=
+ve both a 00 entry and mode specific entries, because that pattern would po=
+ssibly break them. I could perhaps save the index of the 00 entry separatel=
+y when it is seen, then keep looking for the exact match and, if not found,=
+ fall back to the saved index. That guarantees a maximum O(n) search every =
+time, which isn't great either.
+>> >> >
+>> >> >I checked the captada buffers in my device and the "mode" byte is ne=
+ver
+>> >> >zero :/ In fact every tunable is listed once for each mode, which I
+>> >> >think is just normal behavior.
+>> >> >
+>> >> >Can you send me an acpidump of a device which enforces the mode byte=
+ for
+>> >> >each tunable? I want to see how other devices do it.
+>> >> >
+>> >>
+>> >> I attached the Legion Go 2 acpidump
+>> >>
+>> >> >>
+>> >> >> I'd like to hear everyone else's thoughts, perhaps there's a more =
+clever way we can do this efficiently and accurately.
+>> >> >
+>> >> >I think my firmware's behavior is just non-compliant with the
+>> >> >specification. In that case a quirk approach should work? The only
+>> >> >problem would be the tunables that DO enforce the mode byte in my
+>> >> >system.
+>> >>
+>> >> I think doing it programmatically would be more effective if we can
+>> >> get it to work. I'd imagine there are lots of models with random
+>> >> attributes that behave this way.
+>> >>
+>> >> >Another possibility is that there are some tunables that do not enfo=
+rce
+>> >> >modes (but don't necessarily reject them either).
+>> >> >
+>> >> >Maybe a workaround for non-compliant attributes could work. Somethin=
+g
+>> >> >dirty like
+>> >> >
+>> >> >zero_fallback:
+>> >> >       attribute_id =3D LWMI_ATTR_ID(tunable_attr->device_id, tunabl=
+e_attr->feature_id,
+>> >> >                                   mode, tunable_attr->type_id);
+>> >> >       ret =3D lwmi_cd01_get_data(priv->cd01_list, attribute_id, &ca=
+pdata);
+>> >> >       if (ret)
+>> >> >               return ret;
+>> >> >
+>> >> >       ...
+>> >> >
+>> >> >       if (value =3D=3D 0) {
+>> >> >               mode =3D 0;
+>> >> >               goto zero_fallback;
+>> >> >       }
+>> >>
+>> >> That could work, though I'd do it like this to avoid infinite recursi=
+on:
+>> >>
+>> >> zero_fallback:
+>> >>         attribute_id =3D LWMI_ATTR_ID(tunable_attr->device_id,
+>> >> tunable_attr->feature_id,
+>> >>                                     mode, tunable_attr->type_id);
+>> >>         ret =3D lwmi_cd01_get_data(priv->cd01_list, attribute_id, &ca=
+pdata);
+>> >>         if (ret)
+>> >>                 return ret;
+>> >>
+>> >>
+>> >> if (value =3D=3D 0 & mode !=3D 0) {
+>> >>                 mode =3D 0;
+>> >>           goto zero_fallback;
+>> >>
+>> >>         if (value =3D=3D 0) {
+>> >>     return -EINVAL;
+>> >>         }
+>> >>
+>> >> I'll push something to that effect to my tree and we'll see how that
+>> >> works. The downside is traversing the list multiple times, and the
+>> >> need to put this in multiple _show functions. As a proof of concept
+>> >> I'm fine with it though.
+>> >>
+>> >> - Derek
+>> >>
+>> >>
+>> >
+>> > Kurt,
+>> >
+>> > After adding the workaround as described I got some interesting
+>> > results. The attribute I have issues with in particular is cpu_temp
+>> > (01040000). This attribute has capdata for custom mode & shows full
+>> > set/get support, but is hard coded to return 0 in the dsdt. That means
+>> > this isn't a "silver bullet" to work around a poorly implemented BIOS
+>> > it seems.
+>>
+>> In my system FPPT is also hardcoded to zero :/
+>>
+>> >
+>> > I did go back and recheck the documentation, and all these attributes
+>> > do have a valid 00 mode in the docs that I overlooked before. It looks
+>> > like an older version of the spec possibly. The notes are fairly
+>> > sparse on it.
+>>
+>> Is the 0x00 mode actually a mode or just something like no-mode?
+>>
+>> I checked the acpidump you sent the SPPT tunable accepts valid modes and
+>> also the 0x00 mode when reading... that's interesting.
+>>
+>> >
+>> > I updated by branch and also included a few lazy "info" debug
+>> > statements to help figure out what is going on. Let me know if that
+>> > has better results for you.
+>>
+>> It has! Now all attributes are readable. There quite a few attributes
+>> with 0 min/max/step values. I guess that's just poorly implemented BIOS
+>> again.
+>>
+>> Here are the results
+>>
+>>         $ fwupdmgr get-bios-settings
+>>
+>>         gpu_oc_stat:
+>>           Setting type:         Integer
+>>           Current Value:        17
+>>           Description:          Set the GPU overclocking status
+>>           Read Only:            False
+>>           Minimum value:        0
+>>           Maximum value:        0
+>>           Scalar Increment:     0
+>>
+>>         cpu_temp:
+>>           Setting type:         Integer
+>>           Current Value:        103
+>>           Description:          Set the CPU thermal load limit
+>>           Read Only:            False
+>>           Minimum value:        85
+>>           Maximum value:        105
+>>           Scalar Increment:     1
+>>
+>>         gpu_nv_ac_offset:
+>>           Setting type:         Integer
+>>           Current Value:        55
+>>           Description:          Set the Nvidia GPU AC total processing p=
+ower baseline offset
+>>           Read Only:            False
+>>           Minimum value:        10
+>>           Maximum value:        80
+>>           Scalar Increment:     1
+>>
+>>         gpu_nv_cpu_boost:
+>>           Setting type:         Integer
+>>           Current Value:        10
+>>           Description:          Set the Nvidia GPU to CPU dynamic boost =
+limit
+>>           Read Only:            False
+>>           Minimum value:        0
+>>           Maximum value:        0
+>>           Scalar Increment:     0
+>>
+>>         gpu_temp:
+>>           Setting type:         Integer
+>>           Current Value:        87
+>>           Description:          Set the GPU thermal load limit
+>>           Read Only:            False
+>>           Minimum value:        75
+>>           Maximum value:        87
+>>           Scalar Increment:     1
+>>
+>>         ppt_pl1_spl:
+>>           Setting type:         Integer
+>>           Current Value:        70
+>>           Description:          Set the CPU sustained power limit
+>>           Read Only:            False
+>>           Minimum value:        50
+>>           Maximum value:        110
+>>           Scalar Increment:     1
+>>
+>>         cpu_oc_stat:
+>>           Setting type:         Integer
+>>           Current Value:        16
+>>           Description:          Set the CPU overclocking status
+>>           Read Only:            False
+>>           Minimum value:        0
+>>           Maximum value:        0
+>>           Scalar Increment:     0
+>>
+>>         ppt_cpu_cl:
+>>           Setting type:         Integer
+>>           Current Value:        65
+>>           Description:          Set the CPU cross loading power limit
+>>           Read Only:            False
+>>           Minimum value:        30
+>>           Maximum value:        75
+>>           Scalar Increment:     1
+>>
+>>         ppt_pl2_sppt:
+>>           Setting type:         Integer
+>>           Current Value:        125
+>>           Description:          Set the CPU slow package power tracking =
+limit
+>>           Read Only:            False
+>>           Minimum value:        60
+>>           Maximum value:        168
+>>           Scalar Increment:     1
+>>
+>>         ppt_pl1_tau:
+>>           Setting type:         Integer
+>>           Current Value:        56
+>>           Description:          Set the CPU sustained power limit exceed=
+ duration
+>>           Read Only:            False
+>>           Minimum value:        0
+>>           Maximum value:        0
+>>           Scalar Increment:     0
+>>
+>>         gpu_nv_ppab:
+>>           Setting type:         Integer
+>>           Current Value:        15
+>>           Description:          Set the Nvidia GPU power performance awa=
+re boost limit
+>>           Read Only:            False
+>>           Minimum value:        0
+>>           Maximum value:        0
+>>           Scalar Increment:     0
+>>
+>>         gpu_nv_ctgp:
+>>           Setting type:         Integer
+>>           Current Value:        65
+>>           Description:          Set the GPU configurable total graphics =
+power
+>>           Read Only:            False
+>>           Minimum value:        0
+>>           Maximum value:        0
+>>           Scalar Increment:     0
+>
+> That is encouraging, at least we're on the right path.
+>
+>> I still can't write to them though. Every write gets ignored without
+>> failing
+>>
+>>         $ cat /sys/class/firmware-attributes/lenovo-wmi-other-0/attribut=
+es/ppt_pl2_sppt/current_value
+>>         125
+>>
+>>         $ echo 126 | sudo tee /sys/class/firmware-attributes/lenovo-wmi-=
+other-0/attributes/ppt_pl2_sppt/current_value
+>>         126
+>>
+>>         $ cat /sys/class/firmware-attributes/lenovo-wmi-other-0/attribut=
+es/ppt_pl2_sppt/current_value
+>>         125
+>>
+>> I tried writting to them using acpi_call and it works (0x7e =3D 126)
+>>
+>>         $ echo '\_SB_.GZFD.WMAE 0 0x12 {0x00, 0x00, 0x01, 0x01, 0x7e, 0x=
+00, 0x00, 0x00}' | sudo tee /proc/acpi/call
+>>         \_SB_.GZFD.WMAE 0 0x12 {0x00, 0x00, 0x01, 0x01, 0x7e, 0x00, 0x00=
+, 0x00}
+>>
+>>         $ sudo cat /proc/acpi/call
+>>         0x0
+>>
+>>         $ cat /sys/class/firmware-attributes/lenovo-wmi-other-0/attribut=
+es/ppt_pl2_sppt/current_value
+>>         126
+>
+> This is very annoying. Presumably that means your device is providing
+> good capdata for custom mode on some attributes? If that is the case
+> then it will bee very difficult to auto-discover the no-mode.
+>
+>> Maybe we can check if the tunable returns zero at the discovery phase
+>> and add some kind of flag there `.no_mode =3D 1`. Then we can check that
+>> flag when writting the attribute.
+>>
+>> It's getting tricky because legion go 2 does enforce 0xFF mode when
+>> writting, while my device enforces 0x00. Even worse, if I pass 0xFF it
+>> returns 0, like it was successful...
+>
+> Indeed, I confirmed my device does the inverse.
+>
+>
+>>         $ echo '\_SB_.GZFD.WMAE 0 0x12 {0x00, 0xFF, 0x01, 0x01, 0x7e, 0x=
+00, 0x00, 0x00}' | sudo tee /proc/acpi/call
+>>         \_SB_.GZFD.WMAE 0 0x12 {0x00, 0xFF, 0x01, 0x01, 0x7e, 0x00, 0x00=
+, 0x00}
+>>
+>>         $ sudo cat /proc/acpi/call
+>>         0x0
+>>
+>> IMO we should check this no_mode stuff at the discovery phase.
+>
+> I updated my branch to try and discover the GET and SET per attribute
+> during the is_supported phase by doing the fail loop there, once for
+> each. I store the modes that worked on new members of the tunable_attr
+> to reuse if either 0xff or 0x00 worked, and report -EOPNOTSUPP if
+> nothing worked. If that happens it won't create the attribute at all,
+> which eliminates showing attributes with botched implementations such
+> as the gpu_temp on Go 2. That will add a lot of wmi calls on init (up
+> to 2 per attribute in the config), but that might be preferable as it
+> eliminates the loops in the _store and _show functions for all the RO
+> and RW file descriptors. I check the capdata first at least to early
+> exit if the attribute isn't supported at all.
+>
+> To summarize the flow in is_suported is now:
+> - Check if there is a capdata block for the attribute under custom mode
+> - If that fails, check if there is a capdata block for the attribute
+> under no mode
+> - If both fail then return
+> - If one of them succeed, check if the attribute is supported in the
+> capdata block, return -EOPNOTSUPP if not.
+> - set the tunable_attr->get_mode_id to the successful mode.
+> - reset the mode var to custom, get the current value, and check if
+> the return value is 0
+> - if that fails, try again with no mode
+> - if both fail, return -EOPNOTSUPP
+> - If either pass, set the tunable_attr->set_mode_id to the successful mod=
+e.
+> - return capdata->supported
+>
+> Then in the _show & _store functions I can just reuse the previously
+> discovered mode values. when getting the capdata or setting/getting
+> the current value itself.
+>
+> There is some hope perhaps in using the WMI interface version for a
+> quirk as well. 0x000c0000 "Get BIOS WMI Version" returns a u32 with
+> bytes 015 being minor version and 16-31 being the major version. If we
+> were to quirk this then presumably that would have a discernible
+> pattern. It would require a large sample size to figure out which
+> devices do what exactly though, which would be less than ideal.
+>
+> In any case, I've updated my branch with the changes. If that works
+> for you I'll clean it up a bit and start getting ready to submit for
+> review. I do have a couple more features to add on top of this issue
+> so my timeline for submitting has slid right about a week.
+>
+> Thanks,
+> Derek
 
-Signed-off-by: Armin Wolf <W_Armin@gmx.de>
-=2D--
- drivers/platform/x86/uniwill/uniwill-acpi.c | 11 ++++++++---
- 1 file changed, 8 insertions(+), 3 deletions(-)
+Hi Derek,
 
-diff --git a/drivers/platform/x86/uniwill/uniwill-acpi.c b/drivers/platfor=
-m/x86/uniwill/uniwill-acpi.c
-index e162af1d9118..26ee21a95a8b 100644
-=2D-- a/drivers/platform/x86/uniwill/uniwill-acpi.c
-+++ b/drivers/platform/x86/uniwill/uniwill-acpi.c
-@@ -378,9 +378,6 @@ static const struct key_entry uniwill_keymap[] =3D {
- 	{ KE_IGNORE,    UNIWILL_OSD_CAPSLOCK,                   { KEY_CAPSLOCK }=
-},
- 	{ KE_IGNORE,    UNIWILL_OSD_NUMLOCK,                    { KEY_NUMLOCK }}=
-,
-=20
--	/* Reported when the user locks/unlocks the super key */
--	{ KE_IGNORE,    UNIWILL_OSD_SUPER_KEY_LOCK_ENABLE,      { KEY_UNKNOWN }}=
-,
--	{ KE_IGNORE,    UNIWILL_OSD_SUPER_KEY_LOCK_DISABLE,     { KEY_UNKNOWN }}=
-,
- 	/* Optional, might not be reported by all devices */
- 	{ KE_IGNORE,	UNIWILL_OSD_SUPER_KEY_LOCK_CHANGED,	{ KEY_UNKNOWN }},
-=20
-@@ -1353,6 +1350,14 @@ static int uniwill_notifier_call(struct notifier_bl=
-ock *nb, unsigned long action
- 	struct uniwill_battery_entry *entry;
-=20
- 	switch (action) {
-+	case UNIWILL_OSD_SUPER_KEY_LOCK_ENABLE:
-+	case UNIWILL_OSD_SUPER_KEY_LOCK_DISABLE:
-+		if (!uniwill_device_supports(data, UNIWILL_FEATURE_SUPER_KEY))
-+			return NOTIFY_DONE;
-+
-+		sysfs_notify(&data->dev->kobj, NULL, "super_key_enable");
-+
-+		return NOTIFY_OK;
- 	case UNIWILL_OSD_BATTERY_ALERT:
- 		if (!uniwill_device_supports(data, UNIWILL_FEATURE_BATTERY))
- 			return NOTIFY_DONE;
-=2D-=20
-2.39.5
+The procedure above does fix reading and modifying tunables :)
 
+I had a bit of hope the patch would be short enough for stable inclusion
+but I think that may not be possible.
+
+Thanks for working on this!
+
+--=20
+Thanks,
+ ~ Kurt
