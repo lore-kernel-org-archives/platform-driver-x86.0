@@ -1,33 +1,33 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 220AB3164A5;
-	Tue, 10 Feb 2026 10:41:43 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EAF3E2FB965
+	for <platform-driver-x86@vger.kernel.org>; Tue, 10 Feb 2026 10:46:51 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1770720104; cv=none; b=AKCyGCzio00LdkUk2TeOBT9HLfLAASbEZuLxLaSrx8P1HMC+DlahJb9J2cWB2onGl+mR1umMaPSOk9fgGJ6/HR5R0e1Df3vs42WTG3G8ZvqUjQE4sIj6NhYb9lbFvT5db60y4Q351sf9WXjv6IR4XvoQBLPp523IAeuD++7czzY=
+	t=1770720412; cv=none; b=trEkJqm1lUnvC94NETcG7x9eD5HWWF41JQ0J+jpZ9pDzd6dHyMBO50M/ER4hAWSiZCp6YrmdLEAXgh/UkFm/qVFC5c6bZ16vVHZWIl97Js7imgilMj16VfhYjL+uPjjzpBNv4qFLq03lxESFEkQTfWCHvdpuaCyuqshxfTCb6Ik=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1770720104; c=relaxed/simple;
-	bh=b2GOcGwn5DzDpShBURk8TYAQ9YVP1nK5iYwXXc1HUCw=;
+	s=arc-20240116; t=1770720412; c=relaxed/simple;
+	bh=PvvDrKoCm9vCba8nGqCrUkMLcPwd/Iq3zgvWamQuAxE=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=tQbGO4psvNyhrcxHjmZ3t412D110ehuBGckdBBN2g6pldcNwhKnLGRo8x+iqC7j76a1A4K9S2ZkIWgL6wKl7G46/oyg2DMr8IJaqQwAZbI7WKk8cM1gM30q4o81XTc++otkknSApfZirzqUqMnpPJZ05zFQUd3r5aYWx9ik0RSM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=D1XLD7df; arc=none smtp.client-ip=10.30.226.201
+	 In-Reply-To:Content-Type; b=DQh7tPT/ZDgZxl2vahH+gd6hS6sHfvqXHR1o/8Sh1cuuoTTGh8jfOguT6IRwRkH2tFdjZA7fSRATnlyMixq+XEHKShHrz2Ex4q6sA3KBOjsYa0AnqMhGtH3ecmQeTxlnC0BleswAAKiQ1L8I3OXxSalAWoyx5fjyX7HgGkyFQ2Y=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=gQD+QlNQ; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="D1XLD7df"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 82270C116C6;
-	Tue, 10 Feb 2026 10:41:41 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="gQD+QlNQ"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 0E01FC116C6;
+	Tue, 10 Feb 2026 10:46:49 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1770720103;
-	bh=b2GOcGwn5DzDpShBURk8TYAQ9YVP1nK5iYwXXc1HUCw=;
+	s=k20201202; t=1770720411;
+	bh=PvvDrKoCm9vCba8nGqCrUkMLcPwd/Iq3zgvWamQuAxE=;
 	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=D1XLD7df9wGt3WGmpnFj2sTKRNleRcQridocbYNT+S2bnNoZZLvNciE4jmYJS+KCs
-	 lvyRdkNDTdLUhZPGvu3l8LiIuR1aZQ5ZsLRaozZ7RTlj9TP7nlmZKEHHE10PsV0wy6
-	 RDuWuG3kx2/vp5nNLwcHzCASpEyPrk1M1hqwrDqFhm0rAvNUCj8YIXBMZ0NRhQBeZ0
-	 2xoQ8zxzZc+hVo0U8ne4SYUB10JxYMPE+ME7PccvWIgqg/S633I+eGDcPvUVoYjj1M
-	 GVEIkTQq1f5PRhbah/uIZCkIdEd6lyWtuD5LcWhA0kPSFumf7om5x7H+D6+n2Ub0rt
-	 AC4fWjQzIYy6g==
-Message-ID: <75e26353-2704-4dda-9537-5d22a4887553@kernel.org>
-Date: Tue, 10 Feb 2026 11:41:39 +0100
+	b=gQD+QlNQeI22PTDmP/Zg4P4MlUxanRDkiM+1zo8ZM5vKe/x04Aek9/9nLQqQ6i1aL
+	 KX4ijoRco0oz0qU/YN+OtZ74FvIjruJ4y7qjwSyGfDZxjCbLlNSZtwcTjszzeRrgtD
+	 91YtMa4w8LWrm/K/YlFSaB2gw6avnatFBGIdqPeWO2oPWAGVsYpJczukCK672BYeE6
+	 37Rm9Ih8fO9nGSYbYqF5N3WUjSvJ5C6jTfUoEmGhRC4Crb8SjNIaLSNKY6ER5m6/l7
+	 1JOA3EqAG1Bn2l815Q7xbizLpsj72YWuXKhYPG6uOVpXNcipvkIE+iInnUfUmOvzGn
+	 /RP1yQEd0g5mw==
+Message-ID: <43eb01af-a1b5-42e7-ac55-53343a630143@kernel.org>
+Date: Tue, 10 Feb 2026 11:46:48 +0100
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
@@ -35,68 +35,83 @@ List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] gpio: swnode: restore the swnode-name-against-chip-label
- matching
-To: Bartosz Golaszewski <bartosz.golaszewski@oss.qualcomm.com>,
- Linus Walleij <linusw@kernel.org>, Bartosz Golaszewski <brgl@kernel.org>,
- Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
- Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+Subject: Re: [PATCH v4 01/20] platform/x86: x86-android-tablets: convert
+ Goodix devices to GPIO references
+To: Yauhen Kharuzhy <jekhor@gmail.com>
+Cc: Bartosz Golaszewski <brgl@kernel.org>,
+ Andy Shevchenko <andriy.shevchenko@intel.com>,
+ =?UTF-8?Q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>,
+ Andy Shevchenko <andy@kernel.org>,
  Dmitry Torokhov <dmitry.torokhov@gmail.com>, Arnd Bergmann
- <arnd@kernel.org>, =?UTF-8?Q?Ilpo_J=C3=A4rvinen?=
- <ilpo.jarvinen@linux.intel.com>
-Cc: linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org,
- platform-driver-x86@vger.kernel.org, stable@vger.kernel.org
-References: <20260210094806.38146-1-bartosz.golaszewski@oss.qualcomm.com>
+ <arnd@kernel.org>, platform-driver-x86@vger.kernel.org
+References: <20250920200713.20193-1-hansg@kernel.org>
+ <20250920200713.20193-2-hansg@kernel.org> <aYkdKfP5fg6iywgr@jekhomev>
+ <aYmV5Axyfo76D19T@smile.fi.intel.com>
+ <CAMRc=MeouZAkuzynwUnZd-VsZq1nyEgbv-Bt6tNMXosApF7RDg@mail.gmail.com>
+ <a285a632-4a3a-48f8-a34a-db595fa0e477@kernel.org>
+ <978f0855-7d77-413c-892b-7ca9cb78e9ce@kernel.org> <aYpp_u5R9JefpLwG@jekhomev>
 From: Hans de Goede <hansg@kernel.org>
 Content-Language: en-US, nl
-In-Reply-To: <20260210094806.38146-1-bartosz.golaszewski@oss.qualcomm.com>
+In-Reply-To: <aYpp_u5R9JefpLwG@jekhomev>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 
-Hi,
+Hi Yauhen,
 
-On 10-Feb-26 10:48, Bartosz Golaszewski wrote:
-> Using the remote firmware node for software node lookup is the right
-> thing to do. The GPIO controller we want to resolve should have the
-> software node we scooped out of the reference attached to it. However,
-> there are existing users who abuse the software node API by creating
-> dummy swnodes whose name is set to the expected label string of the GPIO
-> controller whose pins they want to control and use them in their local
-> swnode references as GPIO properties.
+Thank you for bringing this problem to our attention.
+
+On 10-Feb-26 00:13, Yauhen Kharuzhy wrote:
+
+...
+
+> OK, but what about additional GPIO chips?
+
+You could look those up by label and then manually
+attach the swnode to the GPIO-controller device before
+using the properties.
+
+But since you are then still doing matching by label that
+would be a bit silly and for now at least we are going with
+restoring name based GPIO-controller swnode matching as
+a fallback:
+
+https://lore.kernel.org/linux-gpio/20260210094806.38146-1-bartosz.golaszewski@oss.qualcomm.com/
+
+> For example, on Lenovo YB1-X9*,
+> sound codec controls additional signals like speaker amplifier
+> enablling. I did such trick but it looks very... weird: codec device
+> properties reference fake node for gpiochip which will be created at
+> driver instantiation (these properties are used by ASoC machine driver
+> actually):
 > 
-> This used to work when we compared the software node's name to the
-> chip's label. When we switched to using a real fwnode lookup, these
-> users broke down because the firmware nodes in question were never
-> attached to the controllers they were looking for.
+> static const struct property_entry lenovo_yb1_x9x_rt5677_props[] = {
+> ...
+> 	PROPERTY_ENTRY_GPIO("realtek,reset-gpios", &cherryview_gpiochip_nodes[3], 25, GPIO_ACTIVE_LOW),
+> 	PROPERTY_ENTRY_GPIO("realtek,pow-ldo2-gpios", &cherryview_gpiochip_nodes[3], 18, GPIO_ACTIVE_HIGH),
+> 	PROPERTY_ENTRY_GPIO("speaker-enable-gpios", &cherryview_gpiochip_nodes[3], 48, GPIO_ACTIVE_HIGH),
+> 	PROPERTY_ENTRY_GPIO("speaker-enable2-gpios", &lenovo_yb1_rt5677_gpiochip_node, 2, GPIO_ACTIVE_HIGH),
+> 	PROPERTY_ENTRY_GPIO("headphone-enable-gpios", &lenovo_yb1_rt5677_gpiochip_node, 4, GPIO_ACTIVE_HIGH),
+> 	{}
+> };
 > 
-> Restore the label matching as a fallback to fix the broken users but add
-> a big FIXME urging for a better solution.
+> static const struct software_node lenovo_yb1_x90_rt5677_node = {
+> 	.properties = lenovo_yb1_x9x_rt5677_props,
+> };
 > 
-> Link: https://lore.kernel.org/all/aYmV5Axyfo76D19T@smile.fi.intel.com/
-> Cc: stable@vger.kernel.org # v6.18, v6.19
-> Fixes: 216c12047571 ("gpio: swnode: allow referencing GPIO chips by firmware nodes")
-> Signed-off-by: Bartosz Golaszewski <bartosz.golaszewski@oss.qualcomm.com>
-> ---
->  drivers/gpio/gpiolib-swnode.c | 19 +++++++++++++++++++
->  1 file changed, 19 insertions(+)
+> ...
+> 		.board_info = {
+> 			.type = "rt5677",
+> 			.addr = 0x2c,
+> 			.dev_name = "rt5677",
+> 			.swnode = &lenovo_yb1_x90_rt5677_node,
+> 		},
+> ...
 > 
-> diff --git a/drivers/gpio/gpiolib-swnode.c b/drivers/gpio/gpiolib-swnode.c
-> index 21478b45c127d..c88313b0026b9 100644
-> --- a/drivers/gpio/gpiolib-swnode.c
-> +++ b/drivers/gpio/gpiolib-swnode.c
-> @@ -42,6 +42,25 @@ static struct gpio_device *swnode_get_gpio_device(struct fwnode_handle *fwnode)
->  
->  fwnode_lookup:
->  	gdev = gpio_device_find_by_fwnode(fwnode);
-> +	if (!gdev)
+> https://github.com/jekhor/yogabook-linux-kernel/commit/538313b69483c23afc455571ef638efcea767031#diff-282276fa1330b08656b929c6e956308a122423888b8f07a1d1045e61a813d8c2R159
 
-This needs to be:
+Oh nice you've patches for sound now :)
 
-	if (!gdev && gdev_node->name)
-
-
-gdev_node->name may be NULL and calling gpio_device_find_by_label()
-with a NULL pointer does not end well.
+Is this working ?  Any plans to upstream this ?
 
 Regards,
 
@@ -104,26 +119,4 @@ Hans
 
 
 
-
-> +		/*
-> +		 * FIXME: We shouldn't need to compare the GPIO controller's
-> +		 * label against the software node that is supposedly attached
-> +		 * to it. However there are currently GPIO users that - knowing
-> +		 * the expected label of the GPIO chip whose pins they want to
-> +		 * control - set up dummy software nodes named after those GPIO
-> +		 * controllers, which aren't actually attached to them. In this
-> +		 * case gpio_device_find_by_fwnode() will fail as no device on
-> +		 * the GPIO bus is actually associated with the fwnode we're
-> +		 * looking for.
-> +		 *
-> +		 * As a fallback: continue checking the label if we have no
-> +		 * match. However, the situation described above is an abuse
-> +		 * of the software node API and should be phased out and the
-> +		 * following line - eventually removed.
-> +		 */
-> +		gdev = gpio_device_find_by_label(gdev_node->name);
-> +
->  	return gdev ?: ERR_PTR(-EPROBE_DEFER);
->  }
->  
 
