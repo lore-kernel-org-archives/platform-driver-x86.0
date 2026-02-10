@@ -1,84 +1,140 @@
-Received: from mail-244123.protonmail.ch (mail-244123.protonmail.ch [109.224.244.123])
+Received: from mail-08.mail-europe.com (mail-08.mail-europe.com [57.129.93.249])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CBE311E89C
-	for <platform-driver-x86@vger.kernel.org>; Tue, 10 Feb 2026 00:01:06 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=109.224.244.123
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4823E3033CC
+	for <platform-driver-x86@vger.kernel.org>; Tue, 10 Feb 2026 08:18:49 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=57.129.93.249
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1770681671; cv=none; b=M5z6fBpBKcc4i0DI2V0MXnCoG2kMcZqsiM8Tg051Y7u/m8FcU9Wo9vw9CpZH/BtJDIo1z/yIDnhLmijqCbuMeUnAU/yIGrV8fqgPv8jGCVEgjwP2YLS0ATuWX3OsdIQhzqkfwwTNIbyUEwvz8dtc9Y2f7lsctF4G+HdcDSO7Pmw=
+	t=1770711531; cv=none; b=FQVFcHPRaMPnGWHr8+yj3Vc1wyJKWCrufuFVS2G23sDvY48r8kc3LxIdsjY00U/VkAwhfRB7fxkp1lGc3ZsRCxPbw5FVKpnp+dyBOxspNWIk6m0MlchOT4JmeZp4/osXirLxldTJSHRw3xOocX9ZO61LE0Z1jLmHrCWeHEIlhnE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1770681671; c=relaxed/simple;
-	bh=swnMOuokBgdfc8xuwFWJzIUkyKnARUrXll2N6kNyugY=;
-	h=Date:To:From:Cc:Subject:Message-ID:MIME-Version:Content-Type; b=ZO9HiNk1I/nPEHQVSfOlrG3+cxTHoZAHdjl5TjUyC6kKGUDoVxXZip8MXucbQNm2c+fMJACSAg+cFGV7W4/SLuY1HXOQfXbmg4KRIYFPwUjpjKB0md6liBMYrAYWeQs6siTnKvpn3XYEiVBdKA75F9fJmHye2YOW0E4xt0t7ut0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=proton.me; spf=pass smtp.mailfrom=proton.me; dkim=pass (2048-bit key) header.d=proton.me header.i=@proton.me header.b=FpnH0X1g; arc=none smtp.client-ip=109.224.244.123
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=proton.me
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=proton.me
+	s=arc-20240116; t=1770711531; c=relaxed/simple;
+	bh=XdQInsIer+/WuRe8ywPJgqHdnMnep2OAuYle7cQEk/4=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=VfLb4waLpL3GK0/lzKOxwjmIAAWHRECpBTsYey+nDOwYqzi33EVxOKTuVXmAzs5KT+R9opFvo4ZY7wrV6WGz3pP1lMBtqDgVYkIZ5BBSRF1UmmGjL/Pt6tgc8QDAdqggnVsQ+KLGaW30QWhdIENpz0mph6OIdEq6jkcvLN+slac=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=cohunt.app; spf=fail smtp.mailfrom=cohunt.app; dkim=pass (2048-bit key) header.d=cohunt.app header.i=@cohunt.app header.b=XaWJiwx4; arc=none smtp.client-ip=57.129.93.249
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=cohunt.app
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=cohunt.app
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=proton.me header.i=@proton.me header.b="FpnH0X1g"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=proton.me;
-	s=protonmail; t=1770681658; x=1770940858;
-	bh=Zrg0+Of9LG4+hPfONAJEGlVfjk4ItTHSgygsTs9+1VQ=;
-	h=Date:To:From:Cc:Subject:Message-ID:Feedback-ID:From:To:Cc:Date:
-	 Subject:Reply-To:Feedback-ID:Message-ID:BIMI-Selector;
-	b=FpnH0X1gDP+2vUIwnUTq4JbiIBCWIUFEcujyTtuEZ1TzXkE0D36Yx0cQOPq7Dk/Ld
-	 HS4Z1JWvTJ0gm2vpJxi6yf3pJ0c5rneRITOB9NJdNtxqC7MK5lOhBeqj50GOLKWZdf
-	 W/cWmVnkDR2lzADabj7Eu8jYb6ivZ79LJdIQN5lDo+PXrMc/0VK0klgMg9nc9eoUVO
-	 210IgQdrcKSal0uhXLIiGNU09+kwWJBIlZf2OpeCguS17yrxptb+M35z8d+andt5QC
-	 tXdViMopVD2mhM9ybL9dKTKEhiyTTV6nj3oXkTMCcy2jtRXYpl1gvOAQ5vzeYV2ayx
-	 P+CCxU5JVW5zg==
-Date: Tue, 10 Feb 2026 00:00:52 +0000
-To: Hans de Goede <hansg@kernel.org>, =?utf-8?Q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
-From: Victor Lattaro Volpini <victorlattaro@proton.me>
-Cc: platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org, Victor Lattaro Volpini <victorlattaro@proton.me>
-Subject: [PATCH] platform/x86: hp-wmi: Add Victus 16-d0xxx support
-Message-ID: <20260210000048.250280-1-victorlattaro@proton.me>
-Feedback-ID: 124909426:user:proton
-X-Pm-Message-ID: a93cef06e0225a84e2849016587fd8d24402def1
+	dkim=pass (2048-bit key) header.d=cohunt.app header.i=@cohunt.app header.b="XaWJiwx4"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=cohunt.app;
+	s=protonmail2; t=1770711514; x=1770970714;
+	bh=Xi659j3t1TvZYU2rXAviFM5LIKUcnDnvDwI9tiBHXHk=;
+	h=From:To:Cc:Subject:Date:Message-ID:From:To:Cc:Date:Subject:
+	 Reply-To:Feedback-ID:Message-ID:BIMI-Selector;
+	b=XaWJiwx4dD7MNJUNcwXCTVgu4kxyyvzIrynbSeP+AiB9EA+uOq5IjmGuppa9hFxyP
+	 2duOB89yBmVXld8FxNNK1CBbwK9alx7O+5XDoeS0g7xu4+T6uUYQjeyAvj6+faVICn
+	 k/R6UapS9TUX9pw2ycik8c3QIPXOrdjH5mqlLAF7V6vvl0hedtzTMy4rPenzSloZdM
+	 IKXoCfj7vyk80tiL1xKqSnuB4U0JVmJxsPLFHqk4eBbzzdqFbf8LWgPSsc0gCqh9CF
+	 gPMm2i2WR3MGLsnVVdU6UdcbmvE6kCCXM/nWz0kZeKn2WYvItVBQuZ0eRnAJtPKF8l
+	 LOHGHOyvQvTGw==
+X-Pm-Submission-Id: 4f9DwS3p4lz2Scj7
+From: Leif Skunberg <diamondback@cohunt.app>
+To: hdegoede@redhat.com
+Cc: platform-driver-x86@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	Leif Skunberg <diamondback@cohunt.app>
+Subject: [PATCH 2/2] platform/x86: int3472: Handle GPIO type 0x10 (DOVDD) for OV5675
+Date: Tue, 10 Feb 2026 09:18:30 +0100
+Message-ID: <20260210081830.29581-1-diamondback@cohunt.app>
+X-Mailer: git-send-email 2.53.0
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 8bit
 
-This patch enables Victus thermal profile support for the HP
-Victus 16-d0xxx. It does so by adding model's DMI board name 88F8 to
-victus_thermal_profile_boards.
+The Lenovo ThinkPad X1 Fold 16 Gen 1 has an OV5675 sensor (ACPI HID
+OVTI5675) behind an INT3472 discrete PMIC controller. The INT3472
+_DSM returns GPIO type 0x10 for one of the pins, which controls the
+DOVDD (digital I/O power) regulator enable.
 
-Tested on a Victus 16-d0xxx:
-  - Victus thermal profile choices available (quiet, balanced, performance)
-    instead of the default ones (cool, quiet, balanced, performance);
-  - Profile switching works correctly;
-  - About 4% increase in FPS using benchmark Cyberpunk 2077 on
-  performance profile;
-  - No noticeable regressions.
+Type 0x10 is not currently handled by the driver, causing the GPIO to
+be ignored with a warning. Add INT3472_GPIO_TYPE_DOVDD (0x10) and
+handle it by:
 
-Signed-off-by: Victor Lattaro Volpini <victorlattaro@proton.me>
+1. Adding an entry to int3472_gpio_map[] that maps the DOVDD type to
+   INT3472_GPIO_TYPE_POWER_ENABLE for the OVTI5675 HID. The con_id
+   is set to "vio" because "dovdd" exceeds GPIO_SUPPLY_NAME_LENGTH.
+
+2. Adding a fallback case in int3472_get_con_id_and_polarity() so
+   devices without a gpio_map match still get a valid con_id.
+
+3. Adding INT3472_GPIO_TYPE_DOVDD to both switch statements in
+   skl_int3472_handle_gpio_resources() so the GPIO is acquired via
+   temp lookup and registered as a regulator.
+
+Signed-off-by: Leif Skunberg <diamondback@cohunt.app>
 ---
- drivers/platform/x86/hp/hp-wmi.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+ drivers/platform/x86/intel/int3472/discrete.c | 14 ++++++++++++++
+ include/linux/platform_data/x86/int3472.h     |  1 +
+ 2 files changed, 15 insertions(+)
 
-diff --git a/drivers/platform/x86/hp/hp-wmi.c b/drivers/platform/x86/hp/hp-=
-wmi.c
-index f4ea1ea05997..837c7024be9e 100644
---- a/drivers/platform/x86/hp/hp-wmi.c
-+++ b/drivers/platform/x86/hp/hp-wmi.c
-@@ -93,9 +93,9 @@ static const char * const omen_timed_thermal_profile_boar=
-ds[] =3D {
- =09"8BAD",
+diff --git a/drivers/platform/x86/intel/int3472/discrete.c b/drivers/platform/x86/intel/int3472/discrete.c
+index 1505fc3ef..0a293e73c 100644
+--- a/drivers/platform/x86/intel/int3472/discrete.c
++++ b/drivers/platform/x86/intel/int3472/discrete.c
+@@ -164,6 +164,13 @@ static const struct int3472_gpio_map int3472_gpio_map[] = {
+ 		.con_id = "dvdd",
+ 		.enable_time_us = 45 * USEC_PER_MSEC,
+ 	},
++	{	/* ov5675: DOVDD is a power regulator enable */
++		.hid = "OVTI5675",
++		.type_from = INT3472_GPIO_TYPE_DOVDD,
++		.type_to = INT3472_GPIO_TYPE_POWER_ENABLE,
++		.con_id = "vio",
++		.enable_time_us = GPIO_REGULATOR_ENABLE_TIME,
++	},
  };
-=20
--/* DMI Board names of Victus 16-d1xxx laptops */
-+/* DMI Board names of Victus 16-d laptops */
- static const char * const victus_thermal_profile_boards[] =3D {
--=09"8A25",
-+=09"88F8", "8A25",
- };
-=20
- /* DMI Board names of Victus 16-r and Victus 16-s laptops */
---=20
-2.43.0
-
+ 
+ static void int3472_get_con_id_and_polarity(struct int3472_discrete_device *int3472, u8 *type,
+@@ -223,6 +230,10 @@ static void int3472_get_con_id_and_polarity(struct int3472_discrete_device *int3
+ 		*con_id = "avdd";
+ 		*gpio_flags = GPIO_ACTIVE_HIGH;
+ 		break;
++	case INT3472_GPIO_TYPE_DOVDD:
++		*con_id = "vio";
++		*gpio_flags = GPIO_ACTIVE_HIGH;
++		break;
+ 	case INT3472_GPIO_TYPE_HANDSHAKE:
+ 		*con_id = "dvdd";
+ 		*gpio_flags = GPIO_ACTIVE_HIGH;
+@@ -251,6 +262,7 @@ static void int3472_get_con_id_and_polarity(struct int3472_discrete_device *int3
+  * 0x0b Power enable
+  * 0x0c Clock enable
+  * 0x0d Privacy LED
++ * 0x10 DOVDD (digital I/O voltage)
+  * 0x13 Hotplug detect
+  *
+  * There are some known platform specific quirks where that does not quite
+@@ -332,6 +344,7 @@ static int skl_int3472_handle_gpio_resources(struct acpi_resource *ares,
+ 	case INT3472_GPIO_TYPE_CLK_ENABLE:
+ 	case INT3472_GPIO_TYPE_PRIVACY_LED:
+ 	case INT3472_GPIO_TYPE_POWER_ENABLE:
++	case INT3472_GPIO_TYPE_DOVDD:
+ 	case INT3472_GPIO_TYPE_HANDSHAKE:
+ 		gpio = skl_int3472_gpiod_get_from_temp_lookup(int3472, agpio, con_id, gpio_flags);
+ 		if (IS_ERR(gpio)) {
+@@ -356,6 +369,7 @@ static int skl_int3472_handle_gpio_resources(struct acpi_resource *ares,
+ 		case INT3472_GPIO_TYPE_POWER_ENABLE:
+ 			second_sensor = int3472->quirks.avdd_second_sensor;
+ 			fallthrough;
++		case INT3472_GPIO_TYPE_DOVDD:
+ 		case INT3472_GPIO_TYPE_HANDSHAKE:
+ 			ret = skl_int3472_register_regulator(int3472, gpio, enable_time_us,
+ 							     con_id, second_sensor);
+diff --git a/include/linux/platform_data/x86/int3472.h b/include/linux/platform_data/x86/int3472.h
+index b1b837583..d72c621f7 100644
+--- a/include/linux/platform_data/x86/int3472.h
++++ b/include/linux/platform_data/x86/int3472.h
+@@ -26,6 +26,7 @@
+ #define INT3472_GPIO_TYPE_POWER_ENABLE				0x0b
+ #define INT3472_GPIO_TYPE_CLK_ENABLE				0x0c
+ #define INT3472_GPIO_TYPE_PRIVACY_LED				0x0d
++#define INT3472_GPIO_TYPE_DOVDD					0x10
+ #define INT3472_GPIO_TYPE_HANDSHAKE				0x12
+ #define INT3472_GPIO_TYPE_HOTPLUG_DETECT			0x13
+ 
+-- 
+2.53.0
 
