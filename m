@@ -1,70 +1,91 @@
-Received: from bmailout2.hostsharing.net (bmailout2.hostsharing.net [83.223.78.240])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A53053542FA;
-	Wed, 11 Feb 2026 12:48:40 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=83.223.78.240
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 510A4126C03
+	for <platform-driver-x86@vger.kernel.org>; Wed, 11 Feb 2026 14:13:06 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1770814122; cv=none; b=CH9A1UxXPhNL/QU78HsX7duZLDWpLign8as0qA5D0zQlK7KHXZShWjsrQpftaPZccE0jkLMke2/1ZVG26XiEeYzG0Yy9eGyvOU6j3mFa3pICLwA2stYGKKEYhRtc9S/CPMF85ZElBS7CeQvuukzQ32uf5nLSzZZAQvdgMRi9N2g=
+	t=1770819186; cv=none; b=qr/iIp6LGohmw+bD3mg5szvyCzr2rlRdWX7AZ2epWPvBTSaiB/7PgNEUxbNGJ+gIhWaGOgZHaKWF1Z7H6LW0Ikq/L4fAbIMzPf416SxPZM+Es6LaM59bbEhGp5MNx0RwFB0vLat28AEy38hlCaWzwh4yiirayEbzQf+CS+lixjY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1770814122; c=relaxed/simple;
-	bh=PDlauqv//TSpFrzdLs1GawOFkZaiS1JkRXFER4lpuJk=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=GlLh1WEprHRy9tLt7jSteQe/+0KfPiLwcnXzvZ58S4RCl4xgOpeO3WnYvT4ZO3oAbxzVMZazWCWsPx3efb8EjQYjGLzByUf/PfC8wow33MzF38qJJ0dXG2A72QMGDKEa31P5a7SztSmxy9j7tX5Ux7rhHbgyXVCfWXRidsQNcvQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=wunner.de; spf=none smtp.mailfrom=h08.hostsharing.net; arc=none smtp.client-ip=83.223.78.240
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=wunner.de
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=h08.hostsharing.net
-Received: from h08.hostsharing.net (h08.hostsharing.net [IPv6:2a01:37:1000::53df:5f1c:0])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature ECDSA (secp384r1) server-digest SHA384
-	 client-signature ECDSA (secp384r1) client-digest SHA384)
-	(Client CN "*.hostsharing.net", Issuer "GlobalSign GCC R6 AlphaSSL CA 2025" (verified OK))
-	by bmailout2.hostsharing.net (Postfix) with ESMTPS id 3DAD82009D28;
-	Wed, 11 Feb 2026 13:48:33 +0100 (CET)
-Received: by h08.hostsharing.net (Postfix, from userid 100393)
-	id 3A3381E6EF; Wed, 11 Feb 2026 13:48:33 +0100 (CET)
-Date: Wed, 11 Feb 2026 13:48:33 +0100
-From: Lukas Wunner <lukas@wunner.de>
-To: Atharva Tiwari <atharvatiwarilinuxdev@gmail.com>
-Cc: Hans de Goede <hansg@kernel.org>,
-	Ilpo =?iso-8859-1?Q?J=E4rvinen?= <ilpo.jarvinen@linux.intel.com>,
-	platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v3] apple-gmux: preserve brightness using EFI
-Message-ID: <aYx6ocvaFHunfP5f@wunner.de>
-References: <20260211092640.3231-1-atharvatiwarilinuxdev@gmail.com>
+	s=arc-20240116; t=1770819186; c=relaxed/simple;
+	bh=1pQR9BXpz8z+nBi6ls91rNZ68VbyV52QHLedgXcjWAI=;
+	h=From:To:Subject:Date:Message-ID:In-Reply-To:References:
+	 Content-Type:MIME-Version; b=Ki81SrEogwXR4772/b2P8iwGwOi4CSEZnNr+aF7mptja59XwhpJc4RgBeTT+MUmLhqovz2bye8DHWM7WFyEuMpl09E28qOX25FWmpIvkYOhNHPCXdVaphn35HECtdTvR9uk9a8IPsr4+zweswJMDb3To7safZ5m1KMcO8qmj+ts=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=jG/1RVH2; arc=none smtp.client-ip=10.30.226.201
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="jG/1RVH2"
+Received: by smtp.kernel.org (Postfix) with ESMTPS id CE553C19424
+	for <platform-driver-x86@vger.kernel.org>; Wed, 11 Feb 2026 14:13:05 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1770819185;
+	bh=1pQR9BXpz8z+nBi6ls91rNZ68VbyV52QHLedgXcjWAI=;
+	h=From:To:Subject:Date:In-Reply-To:References:From;
+	b=jG/1RVH2zzxqPpr+kYELQUs9vvOgGmo+R3gA7GZom9kpPjZdlzk4/S1RcZlku72RK
+	 DHsHZcEvh3sC5BNJMSKQVtk1kjo4tjB908uPJ/aARQLYUDsnYb/UFe+nUGj7nAS5VI
+	 A9s0hl9bElys/mspKPfauVl2P2vUGpTMvs7lV2RSc4ALlMsjFy+jQk01jADBiKkNWf
+	 G7PyiGMlZXulI3TkMcjmIjgCCWMNEgiEYCYqzzVgMyynL6gHKO9R688yomtQ0vxZj5
+	 sAvI5zNcRU7N9/nhl1DqgDqX2VLZBl2Jp6D4u0EDMko9mHbkgm14s+YbsDBpiX83AY
+	 hjurB5eoQl2+w==
+Received: by aws-us-west-2-korg-bugzilla-1.web.codeaurora.org (Postfix, from userid 48)
+	id BD4FDC433E1; Wed, 11 Feb 2026 14:13:05 +0000 (UTC)
+From: bugzilla-daemon@kernel.org
+To: platform-driver-x86@vger.kernel.org
+Subject: [Bug 221065] ideapad_acpi: unexpected charge_types spam on Yoga Pro
+ 7 14ASP9
+Date: Wed, 11 Feb 2026 14:13:05 +0000
+X-Bugzilla-Reason: None
+X-Bugzilla-Type: changed
+X-Bugzilla-Watch-Reason: AssignedTo drivers_platform_x86@kernel-bugs.osdl.org
+X-Bugzilla-Product: Drivers
+X-Bugzilla-Component: Platform_x86
+X-Bugzilla-Version: 2.5
+X-Bugzilla-Keywords: 
+X-Bugzilla-Severity: low
+X-Bugzilla-Who: i@rong.moe
+X-Bugzilla-Status: NEW
+X-Bugzilla-Resolution: 
+X-Bugzilla-Priority: P3
+X-Bugzilla-Assigned-To: drivers_platform_x86@kernel-bugs.osdl.org
+X-Bugzilla-Flags: 
+X-Bugzilla-Changed-Fields: cc
+Message-ID: <bug-221065-215701-y45seMKwxR@https.bugzilla.kernel.org/>
+In-Reply-To: <bug-221065-215701@https.bugzilla.kernel.org/>
+References: <bug-221065-215701@https.bugzilla.kernel.org/>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+X-Bugzilla-URL: https://bugzilla.kernel.org/
+Auto-Submitted: auto-generated
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20260211092640.3231-1-atharvatiwarilinuxdev@gmail.com>
 
-On Wed, Feb 11, 2026 at 02:56:38PM +0530, Atharva Tiwari wrote:
-> Make apple-gmux save the current backlight brightness to EFI on shutdown,
-> so the brightness level is preserved across reboots.
+https://bugzilla.kernel.org/show_bug.cgi?id=3D221065
 
-This version moves the EFI handling back to the gmux driver.  Why?
+Rong Zhang (i@rong.moe) changed:
 
-I found version 2 (which separated EFI handling into a separate component)
-much better because it will allow other drivers such as i915 and amdgpu
-to update the brightness if they're the ones driving the backlight,
-instead of gmux.
+           What    |Removed                     |Added
+----------------------------------------------------------------------------
+                 CC|                            |i@rong.moe,
+                   |                            |mpearson-lenovo@squebb.ca
 
-> +static void gmux_shutdown(struct pnp_dev *pnp)
-> +{
-> +	struct apple_gmux_data *gmux_data = pnp_get_drvdata(pnp);
-> +	u16 brightness = (u16)gmux_get_brightness(gmux_data->bdev);
-> +
-> +#ifdef CONFIG_EFI
-> +	if (gmux_data->efi_status == EFI_SUCCESS && gmux_data->efi_data != brightness) {
-> +		gmux_data->efi_status = efivar_set_variable(EFI_BRIGHTNESS_NAME,
+--- Comment #22 from Rong Zhang (i@rong.moe) ---
++CC Mark Pearson.
 
-Per section 21 of Documentation/process/coding-style.rst, #ifdef inside
-functions should be avoided.
+Thanks for Armin's insight!
 
-Thanks,
+Yeah, the root cause should lie in the ACPI table. It's super broken as I e=
+ven
+found more ECMT issues...
 
-Lukas
+I've noticed these methods are broken while glancing at all occurrences of =
+ECMT
+in DSDT: WTER, ECCC, _BTP.
+
+--=20
+You may reply to this email to add a comment.
+
+You are receiving this mail because:
+You are watching the assignee of the bug.=
