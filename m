@@ -1,189 +1,145 @@
-Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from smtp-out1.suse.de (smtp-out1.suse.de [195.135.223.130])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DAFA9309DDC
-	for <platform-driver-x86@vger.kernel.org>; Wed, 11 Feb 2026 08:53:18 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.168.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id ECA2E3328E0
+	for <platform-driver-x86@vger.kernel.org>; Wed, 11 Feb 2026 09:01:11 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.130
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1770800001; cv=none; b=ikgV5NTJk5/ySJFYtCGbveyoBrX7E03DAMbz7+RZe49mKWMJDc3ZlWbAWxPXX69uFRSoukf+HJYbgs4i0ucH+tAZfMHmDQdeKGNu1bHMjOoM3ZeSa+o6q+LwqWMEA8xwx7jdaocKVXtvQWggxssYNopzy79ASCGvBH50o/qKkGU=
+	t=1770800473; cv=none; b=ObU7wIr8l4cDdd8ab0vpbe0bSNlXPRQvoWfHt2DbG9xGaozlGG6KBIbTJdLcMN3RXnbcRn81dlwqMYVGt86Kp0FCvPGaaEXAoChvof+aU4xadwffkePknqDEnov3sVoTEfe8u6WJG5JR8UW3R10h2zUZcWwiYFno+0HyH5s4iW8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1770800001; c=relaxed/simple;
-	bh=a/2liInywBiVyvZH5ZSy1dS+BQtS66ZsSM51lFDwn+A=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=aER78/inMkiaqGYcG0BDwcTpJjFKUZX25XsG2nbvWRcbOqTkp5pCw8Ti/n5JucBk/utzkaOucIl+4Ip37N3JTwPstNz7QH3Xyr7flVak4vacGfRB6BWp99B20PMiVCRkbnHUeau2wsiLwT+nOFsZ8Eg6FgNDxb3dhlvPR9OxwFE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com; spf=pass smtp.mailfrom=oss.qualcomm.com; dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b=EK8IO9yE; dkim=pass (2048-bit key) header.d=oss.qualcomm.com header.i=@oss.qualcomm.com header.b=L+vXxfyC; arc=none smtp.client-ip=205.220.168.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oss.qualcomm.com
+	s=arc-20240116; t=1770800473; c=relaxed/simple;
+	bh=62zEXBYExhhZbdpNw6d3qOYHqN+cK0QpCLMD+zQm8Ps=;
+	h=Date:Message-ID:From:To:Cc:Subject:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=GJVG3L6chZtXj77Z1phGdPMQuBldfQ3SGNAn+5HGJ9hBx7GRtCRAAA1vQNV9DOzYYuf/6v+weKos4mSIYUY0FeVIaHQQACgoj7Py1JvuVOehvEm8fHQjO/9tU6lLrHg2OhYzAvWpHPRgV4BpDC84mRziCNCLqlP2hHO3u2q4LTY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de; spf=pass smtp.mailfrom=suse.de; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=ztcBwBlO; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=yJT0gBRZ; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=bD/i24RE; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=cfEQ80qV; arc=none smtp.client-ip=195.135.223.130
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b="EK8IO9yE";
-	dkim=pass (2048-bit key) header.d=oss.qualcomm.com header.i=@oss.qualcomm.com header.b="L+vXxfyC"
-Received: from pps.filterd (m0279862.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.18.1.11/8.18.1.11) with ESMTP id 61B3cTus837953
-	for <platform-driver-x86@vger.kernel.org>; Wed, 11 Feb 2026 08:53:18 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=qualcomm.com; h=
-	cc:content-transfer-encoding:date:from:message-id:mime-version
-	:subject:to; s=qcppdkim1; bh=RS3ATQIauI/NfFT2FuRblu0XJKn0tBFCAKh
-	Kp+3IEVY=; b=EK8IO9yEaUISZAP/8Hx+3MVpdMudQy9iNwnfn209xbur03M3zVf
-	l0ylx1ASlmbdDSs4l0c9SIywwwGHA1xtE9E/xSHiiddHpcgTpJhJQefeiDco188G
-	zWIRGWvklXPW+2rNS9Ta/zPwdJBYKX24IyCybqpZ8g+AWT/0emUlPo8oWBfA7smZ
-	/Dp5cYeCNFTMizCz3pm9S5WDJ3+WC5mgwkx+FJiBu4mPCOo/OT7FPvKH7bXA5h6m
-	c4q0Zape8+ZZ/+Vzgavp43StdOIAHDBUeP+TfmTfCrBv2xIMsYfR/oyZYfIU1QIv
-	COXV24C1Er2i4EYIp+mIcstloxBUUW9jGSw==
-Received: from mail-qk1-f199.google.com (mail-qk1-f199.google.com [209.85.222.199])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 4c8j1t8v4b-1
-	(version=TLSv1.3 cipher=TLS_AES_128_GCM_SHA256 bits=128 verify=NOT)
-	for <platform-driver-x86@vger.kernel.org>; Wed, 11 Feb 2026 08:53:18 +0000 (GMT)
-Received: by mail-qk1-f199.google.com with SMTP id af79cd13be357-8c70fadd9a3so1910099785a.0
-        for <platform-driver-x86@vger.kernel.org>; Wed, 11 Feb 2026 00:53:17 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=oss.qualcomm.com; s=google; t=1770799997; x=1771404797; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=RS3ATQIauI/NfFT2FuRblu0XJKn0tBFCAKhKp+3IEVY=;
-        b=L+vXxfyCGfTpdkbZmdQE4xNC/g3vFNCere3a65U0cRbB+inMgKMfo/BbENfjoNgyX2
-         W5pZ8xkOzrI4X9dKrf6Q+TZkYEUXvz0MqK1r1r2yn9ArMsqa+LJQQUDdSMzC2N7J/++4
-         U5r+w19A7sg759TmJ8oNJRRB1FnUpjRgyYwxes5a13XsTpw6L2s6iyXvdxGQdRQaJkhT
-         8rCGUUeRDmvAp3uE4DJM2ZtC3ZHLz29HCzzq5KrfMQ6+w4OcgATnKcJtX1ROjYitncFP
-         6u9yL89XYYUQUDywiuPTcAZH2mOVss+l9IE5H8stA8z+zx1AyJipmlhavHiKlTC3AfLE
-         gAoA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1770799997; x=1771404797;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-gg:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=RS3ATQIauI/NfFT2FuRblu0XJKn0tBFCAKhKp+3IEVY=;
-        b=irhfDHesAv+POWPv+yM4/DzvfcRxGEYrGMe4WDSCgjuHAD3mPlnbDq8MpeVeAdXEJa
-         pv4mzdSmJ4ZjK9dZMRMt3UYmA7Up4VLdCwkzwiZbYaLkhBzMFt9+afvqlToIkmyN9Rb1
-         PbYJ8Z8sFmyv+KULPraBIymfT82uJanYhh+jdBoApwydCpZgI7c7WgT4Jn7B4leM7mAu
-         Ho/jWUr1hmv45R4IVaHrPmWF9nUEe/yWPWMoWcCi6/gpH6r/kilTf1Jdv8oJmQ1COtmJ
-         cRh/bEWDfnXrMaxAqO9p4sQlNeXaMh8ObxPUJsHJ/UQzMjzj8iN3K2JgeyqxFIQgOA7m
-         bLEw==
-X-Forwarded-Encrypted: i=1; AJvYcCUjrMyKCIxxh2a2htrNbDNwRHcNTGr1q8BxAdpYwCgML7o5lRzwHBGFRT4zzKmArVNLqXn2abU2WobxJGXaxzUXfzct@vger.kernel.org
-X-Gm-Message-State: AOJu0Yy3tPoocznlNjM6X9pcWF6fuRecN1mligGusXX8cHOwoWlfRCHf
-	pqjAkR+G141hteaukOBYknrSmM5wyQDtpEHbVNODT92mEdxOUG7/Cz6cHVNt0Ab+w1jwDYFcf2P
-	WYUcVI/+fPW5EsszKCgiIwTUvU9+GdtNhsz9IaQeHXSyr3ksErLhZzWXcOFULZ2Oh0CBK13TSKU
-	O3
-X-Gm-Gg: AZuq6aLSzsYUGTIbH5LlT4QKl7HLyK2vf4jkaul4eduLpS9eGQ9Oi9T2u3s9dFB3sqU
-	AGd29r0b4KzZQv5aLc+14umDZAtHtdFLA5l5eCEKV8AYNRBfC/Bt6Gs2yrxdW4+JA9OadRUypDr
-	efM0JSD7qlcH53eTJdStLtpZJKv/HPJCYccke+QwElsimlsV90Lx2eFNrxhYyvyKmXPEeIGNMPy
-	44F+aWmM6nifJgr8nzNeiL5cn9JVm/8TGkTcQ12HZrILqso1Z/5HX21cdq13R0zZWMPc4Gk7GyR
-	kDtdQ7RumF9mkuykxrT5AE06aUYVFoKxDhRcaiRaDdL1o0K/NKbriroODpBedbSpwgjr9HL9V1U
-	kU4kI62WEe8eSTeZi2c3LK42GMEsTU92Ce/3BpZ5PKM2wH1iWLac=
-X-Received: by 2002:a05:620a:288c:b0:8cb:16:d936 with SMTP id af79cd13be357-8cb2808f823mr256762185a.77.1770799996894;
-        Wed, 11 Feb 2026 00:53:16 -0800 (PST)
-X-Received: by 2002:a05:620a:288c:b0:8cb:16:d936 with SMTP id af79cd13be357-8cb2808f823mr256759085a.77.1770799996369;
-        Wed, 11 Feb 2026 00:53:16 -0800 (PST)
-Received: from brgl-qcom.home ([2a01:cb1d:dc:7e00:d772:ba4c:782c:2fd6])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-43783e3a9acsm3100770f8f.30.2026.02.11.00.53.15
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 11 Feb 2026 00:53:15 -0800 (PST)
-From: Bartosz Golaszewski <bartosz.golaszewski@oss.qualcomm.com>
-To: Linus Walleij <linusw@kernel.org>, Bartosz Golaszewski <brgl@kernel.org>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Dmitry Torokhov <dmitry.torokhov@gmail.com>,
-        Arnd Bergmann <arnd@kernel.org>, Hans de Goede <hansg@kernel.org>,
-        =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>,
-        Dan Carpenter <dan.carpenter@linaro.org>
-Cc: linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org,
-        platform-driver-x86@vger.kernel.org,
-        Bartosz Golaszewski <bartosz.golaszewski@oss.qualcomm.com>,
-        stable@vger.kernel.org
-Subject: [PATCH v2] gpio: swnode: restore the swnode-name-against-chip-label matching
-Date: Wed, 11 Feb 2026 09:53:13 +0100
-Message-ID: <20260211085313.16792-1-bartosz.golaszewski@oss.qualcomm.com>
-X-Mailer: git-send-email 2.47.3
+	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="ztcBwBlO";
+	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="yJT0gBRZ";
+	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="bD/i24RE";
+	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="cfEQ80qV"
+Received: from imap1.dmz-prg2.suse.org (imap1.dmz-prg2.suse.org [IPv6:2a07:de40:b281:104:10:150:64:97])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by smtp-out1.suse.de (Postfix) with ESMTPS id 79A643E714;
+	Wed, 11 Feb 2026 09:00:58 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
+	t=1770800468; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=n6mg1AgJ/Zv/uMqqj8vXv/O6j+UTAjREDyNqAY++xKU=;
+	b=ztcBwBlOLa5fjUx7NF22AT3t1hIq28na22M0Gjcnl1WgVaKaD6yjR1CtHJZur9ddGzBUag
+	g9kPFmz9z+35fR+fgoQ+d3pBWU0J5Z6xpCBax3OdSWVt8uM3du3PhaKBucMO8k+4UlMtAd
+	LGPlJfCijK+W5fcr87JzNThB7NWZq78=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
+	s=susede2_ed25519; t=1770800468;
+	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=n6mg1AgJ/Zv/uMqqj8vXv/O6j+UTAjREDyNqAY++xKU=;
+	b=yJT0gBRZObxHhdIjr2Qm3lIF68BvBkzFMqtE4IfQVpGCPYL0ilHntfx+DG/8bfAINbtLvT
+	0OW4LAF4wY+YPvAw==
+Authentication-Results: smtp-out1.suse.de;
+	dkim=pass header.d=suse.de header.s=susede2_rsa header.b="bD/i24RE";
+	dkim=pass header.d=suse.de header.s=susede2_ed25519 header.b=cfEQ80qV
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
+	t=1770800463; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=n6mg1AgJ/Zv/uMqqj8vXv/O6j+UTAjREDyNqAY++xKU=;
+	b=bD/i24REOcf1dsLvVAH+lVvO6aVPcKjM4xyt6bYiqpfl6v2LA0bBqJQrnVsJLk1o2YgkTa
+	i8amorA02CsXcMqEpAm+WN3V0HDR4dnDELcPD2NbJUhSgtxCaVyc+PcxYvDvmBuezv2f6H
+	PW6Mue6cYAQjeJeYgfJlZZKGRwDfkLg=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
+	s=susede2_ed25519; t=1770800463;
+	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=n6mg1AgJ/Zv/uMqqj8vXv/O6j+UTAjREDyNqAY++xKU=;
+	b=cfEQ80qVX81hwIsIqA3tFAziQkz+kbj2oh/2r+mdhd6fMletQp/7I4vkTyuQ1sT97xZc1m
+	gVkTGjsvCcC2rNCg==
+Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id 1149B3EA62;
+	Wed, 11 Feb 2026 09:00:58 +0000 (UTC)
+Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
+	by imap1.dmz-prg2.suse.org with ESMTPSA
+	id PDC9AkpFjGnOfQAAD6G6ig
+	(envelope-from <tiwai@suse.de>); Wed, 11 Feb 2026 09:00:58 +0000
+Date: Wed, 11 Feb 2026 10:00:57 +0100
+Message-ID: <87ms1fu01i.wl-tiwai@suse.de>
+From: Takashi Iwai <tiwai@suse.de>
+To: Baojun Xu <baojun.xu@ti.com>
+Cc: <tiwai@suse.de>,
+	<hansg@kernel.org>,
+	<ilpo.jarvinen@linux.intel.com>,
+	<broonie@kernel.org>,
+	<andriy.shevchenko@linux.intel.com>,
+	<shenghao-ding@ti.com>,
+	<13916275206@139.com>,
+	<platform-driver-x86@vger.kernel.org>,
+	<linux-sound@vger.kernel.org>,
+	<linux-kernel@vger.kernel.org>,
+	<letitia.tsai@hp.com>,
+	<bill.yu@canonical.com>
+Subject: Re: [PATCH v2] ALSA: hda/tas2781: Ignore reset check for SPI device
+In-Reply-To: <20260211030946.2330-1-baojun.xu@ti.com>
+References: <20260211030946.2330-1-baojun.xu@ti.com>
+User-Agent: Wanderlust/2.15.9 (Almost Unreal) Emacs/30.2 Mule/6.0
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Proofpoint-Spam-Details-Enc: AW1haW4tMjYwMjExMDA3MSBTYWx0ZWRfXxlcv4GyGPYK7
- oPN46oWUYnhcplpWiW+m83JiPWyVoPlj2P5Z2Dx+BjYPLcD/4tLw0FwZ70p+2eeVBzXg6luDukd
- 71YIJJHW9VSj7j6Hrv5gIy+4lJFIAdFewjjrYHxzyFSlS3DwSdDk6JIMpYkITH/Fk89h6qLsccb
- 8GYXltI17lJ4NnweP+yHmnWzIgiZ0+O28Q0yjwdZLDsmTEEWwIBo+UFp0Eo4rfVbgAmzw7mPlwW
- YIOYLgabQ894L2yww1gE5ydtyYgC+P7adg1+JYfugPm4G0losGmUKsiN84OjYBojQUUHIqV7mcT
- uAO6Ay2bBegRsMkGmWMI0tEJZCX24XIIrf6bezQ2592RekKMaLqAwi/hRD0KKhxzGy1ex3vJPxt
- 4uQcHIgfo6+iiTlak1ITlNzNcYnt+J+o2OYb7r3h1EXIuRpquNEIpbqdfGFHJxrdZ1n7EpB71S8
- SFPjLBspLM4SpHR+R2Q==
-X-Proofpoint-ORIG-GUID: F-BKRvxaVGyhB855oe5F83kUzRYD4CRS
-X-Authority-Analysis: v=2.4 cv=cabfb3DM c=1 sm=1 tr=0 ts=698c437e cx=c_pps
- a=HLyN3IcIa5EE8TELMZ618Q==:117 a=xqWC_Br6kY4A:10 a=HzLeVaNsDn8A:10
- a=s4-Qcg_JpJYA:10 a=VkNPw1HP01LnGYTKEx00:22 a=Mpw57Om8IfrbqaoTuvik:22
- a=GgsMoib0sEa3-_RKJdDe:22 a=VwQbUJbxAAAA:8 a=QyXUC8HyAAAA:8 a=EUspDBNiAAAA:8
- a=9y8YAwuLlfTazgfakgcA:9 a=bTQJ7kPSJx9SKPbeHEYW:22
-X-Proofpoint-GUID: F-BKRvxaVGyhB855oe5F83kUzRYD4CRS
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1121,Hydra:6.1.51,FMLib:17.12.100.49
- definitions=2026-02-10_03,2026-02-10_03,2025-10-01_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
- malwarescore=0 impostorscore=0 adultscore=0 clxscore=1015 phishscore=0
- bulkscore=0 spamscore=0 lowpriorityscore=0 suspectscore=0 priorityscore=1501
- classifier=typeunknown authscore=0 authtc= authcc= route=outbound adjust=0
- reason=mlx scancount=1 engine=8.22.0-2601150000 definitions=main-2602110071
+MIME-Version: 1.0 (generated by SEMI-EPG 1.14.7 - "Harue")
+Content-Type: text/plain; charset=US-ASCII
+X-Spamd-Result: default: False [-3.51 / 50.00];
+	BAYES_HAM(-3.00)[99.99%];
+	MID_CONTAINS_FROM(1.00)[];
+	NEURAL_HAM_LONG(-1.00)[-1.000];
+	R_DKIM_ALLOW(-0.20)[suse.de:s=susede2_rsa,suse.de:s=susede2_ed25519];
+	NEURAL_HAM_SHORT(-0.20)[-1.000];
+	MIME_GOOD(-0.10)[text/plain];
+	MX_GOOD(-0.01)[];
+	MIME_TRACE(0.00)[0:+];
+	RCPT_COUNT_TWELVE(0.00)[13];
+	ARC_NA(0.00)[];
+	RCVD_TLS_ALL(0.00)[];
+	FUZZY_RATELIMITED(0.00)[rspamd.com];
+	ASN_FAIL(0.00)[7.9.0.0.4.6.0.0.0.5.1.0.0.1.0.0.4.0.1.0.1.8.2.b.0.4.e.d.7.0.a.2.asn6.rspamd.com:server fail];
+	RCVD_VIA_SMTP_AUTH(0.00)[];
+	FREEMAIL_ENVRCPT(0.00)[139.com];
+	DKIM_SIGNED(0.00)[suse.de:s=susede2_rsa,suse.de:s=susede2_ed25519];
+	FROM_EQ_ENVFROM(0.00)[];
+	FROM_HAS_DN(0.00)[];
+	FREEMAIL_CC(0.00)[suse.de,kernel.org,linux.intel.com,ti.com,139.com,vger.kernel.org,hp.com,canonical.com];
+	TO_DN_SOME(0.00)[];
+	RCVD_COUNT_TWO(0.00)[2];
+	TO_MATCH_ENVRCPT_ALL(0.00)[];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[imap1.dmz-prg2.suse.org:helo,imap1.dmz-prg2.suse.org:rdns,suse.de:dkim,suse.de:mid];
+	URIBL_BLOCKED(0.00)[ti.com:email,imap1.dmz-prg2.suse.org:helo,imap1.dmz-prg2.suse.org:rdns,suse.de:dkim,suse.de:mid];
+	DKIM_TRACE(0.00)[suse.de:+]
+X-Spam-Flag: NO
+X-Spam-Score: -3.51
+X-Rspamd-Queue-Id: 79A643E714
+X-Rspamd-Action: no action
+X-Rspamd-Server: rspamd2.dmz-prg2.suse.org
+X-Spam-Level: 
 
-Using the remote firmware node for software node lookup is the right
-thing to do. The GPIO controller we want to resolve should have the
-software node we scooped out of the reference attached to it. However,
-there are existing users who abuse the software node API by creating
-dummy swnodes whose name is set to the expected label string of the GPIO
-controller whose pins they want to control and use them in their local
-swnode references as GPIO properties.
+On Wed, 11 Feb 2026 04:09:46 +0100,
+Baojun Xu wrote:
+> 
+> In the SPI driver probe, the device should be in the default state, so the
+> device status check is not necessary. It should be forced to do the
+> firmware download as I2C device.
+> 
+> Signed-off-by: Baojun Xu <baojun.xu@ti.com>
 
-This used to work when we compared the software node's name to the
-chip's label. When we switched to using a real fwnode lookup, these
-users broke down because the firmware nodes in question were never
-attached to the controllers they were looking for.
+Thanks, applied now.
 
-Restore the label matching as a fallback to fix the broken users but add
-a big FIXME urging for a better solution.
 
-Cc: stable@vger.kernel.org # v6.18, v6.19
-Fixes: 216c12047571 ("gpio: swnode: allow referencing GPIO chips by firmware nodes")
-Link: https://lore.kernel.org/all/aYkdKfP5fg6iywgr@jekhomev/
-Acked-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Signed-off-by: Bartosz Golaszewski <bartosz.golaszewski@oss.qualcomm.com>
----
-Changes in v2:
-- check if gdev_node and gdev_node->name are not NULL before trying to
-  match the label (Hans & Dan)
-- use the right link
-- collect tags
-
- drivers/gpio/gpiolib-swnode.c | 19 +++++++++++++++++++
- 1 file changed, 19 insertions(+)
-
-diff --git a/drivers/gpio/gpiolib-swnode.c b/drivers/gpio/gpiolib-swnode.c
-index 21478b45c127d..0d7f3f09a0b4b 100644
---- a/drivers/gpio/gpiolib-swnode.c
-+++ b/drivers/gpio/gpiolib-swnode.c
-@@ -42,6 +42,25 @@ static struct gpio_device *swnode_get_gpio_device(struct fwnode_handle *fwnode)
- 
- fwnode_lookup:
- 	gdev = gpio_device_find_by_fwnode(fwnode);
-+	if (!gdev && gdev_node && gdev_node->name)
-+		/*
-+		 * FIXME: We shouldn't need to compare the GPIO controller's
-+		 * label against the software node that is supposedly attached
-+		 * to it. However there are currently GPIO users that - knowing
-+		 * the expected label of the GPIO chip whose pins they want to
-+		 * control - set up dummy software nodes named after those GPIO
-+		 * controllers, which aren't actually attached to them. In this
-+		 * case gpio_device_find_by_fwnode() will fail as no device on
-+		 * the GPIO bus is actually associated with the fwnode we're
-+		 * looking for.
-+		 *
-+		 * As a fallback: continue checking the label if we have no
-+		 * match. However, the situation described above is an abuse
-+		 * of the software node API and should be phased out and the
-+		 * following line - eventually removed.
-+		 */
-+		gdev = gpio_device_find_by_label(gdev_node->name);
-+
- 	return gdev ?: ERR_PTR(-EPROBE_DEFER);
- }
- 
--- 
-2.47.3
-
+Takashi
