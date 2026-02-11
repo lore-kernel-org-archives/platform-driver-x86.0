@@ -1,81 +1,97 @@
-Received: from CY3PR05CU001.outbound.protection.outlook.com (mail-westcentralusazon11013048.outbound.protection.outlook.com [40.93.201.48])
+Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 211FB33FE06;
-	Wed, 11 Feb 2026 03:10:14 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.93.201.48
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1770779416; cv=fail; b=snE0lblbu/r0G6BpJ1zRwww+Q+avz2hE58spa3gG7YMc1QzmxJ9B/zNh1XIc2Iz0/EvbTRXzaCuUOPQP8cGwVKrXHZUttIzXm6gD6+8gRKdwtFqlM/O/diIDko0AvGt63Z445bTdr/SxaN2qiQkiVKYHt42OMLWLfBUNGISH5Uk=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1770779416; c=relaxed/simple;
-	bh=F4cT2cDpQYmIp9uDSPogd72ieMzLzj8uVxdLYXyEwQU=;
-	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=bki4FJhDVqHk0MgQMqKu4rs0/rPyeI63/ElqN1qIIkHtOUvGwnZBFZ6X6om20bqrX3ZlkyBT6Znh4dgDn6wsJ6gnbFobZhiyeMqy+9xZnLDT8YOtbBV1/DuhUUATxG4AOuxe8BZPgCZDPYnN3g+G+WDJ6r9GcClO9MCGKenNvCo=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com; spf=pass smtp.mailfrom=ti.com; dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b=wgXNEERw; arc=fail smtp.client-ip=40.93.201.48
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ti.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DAFA9309DDC
+	for <platform-driver-x86@vger.kernel.org>; Wed, 11 Feb 2026 08:53:18 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.168.131
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1770800001; cv=none; b=ikgV5NTJk5/ySJFYtCGbveyoBrX7E03DAMbz7+RZe49mKWMJDc3ZlWbAWxPXX69uFRSoukf+HJYbgs4i0ucH+tAZfMHmDQdeKGNu1bHMjOoM3ZeSa+o6q+LwqWMEA8xwx7jdaocKVXtvQWggxssYNopzy79ASCGvBH50o/qKkGU=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1770800001; c=relaxed/simple;
+	bh=a/2liInywBiVyvZH5ZSy1dS+BQtS66ZsSM51lFDwn+A=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=aER78/inMkiaqGYcG0BDwcTpJjFKUZX25XsG2nbvWRcbOqTkp5pCw8Ti/n5JucBk/utzkaOucIl+4Ip37N3JTwPstNz7QH3Xyr7flVak4vacGfRB6BWp99B20PMiVCRkbnHUeau2wsiLwT+nOFsZ8Eg6FgNDxb3dhlvPR9OxwFE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com; spf=pass smtp.mailfrom=oss.qualcomm.com; dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b=EK8IO9yE; dkim=pass (2048-bit key) header.d=oss.qualcomm.com header.i=@oss.qualcomm.com header.b=L+vXxfyC; arc=none smtp.client-ip=205.220.168.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oss.qualcomm.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="wgXNEERw"
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=jVcCqWggLvvXGL73a8pFFJmPXYKEs26Eesje0tdoted+fm2cnX/Cv12ss96MM312n/8faY4umKNNAY2v7Slx2wWsMaYmOPriHV6GdFJXoEG0OcsTFQPRbfK5lTW6n0NWOfA+qFlkqsvCuZZWuDrQzOMG4nmFGus+dmpypDW7yb820K3uApyuRzvb5yLVJUsdfq0kNf+JjR8Sh8y/Jtu/gdWTPp3KYqFr2/WiP5TgbFQaYdkq4qFUI3nPAnb5MeujSToc61kneEC5U31wrs5e2j2q3kycSWqJCADmeyPHbFL5P0b3vJuDFCcsa2DFWsGRthZz8kfRsz8M+V+M2x2thQ==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=EpUP8L2xhj6l0nmm8XQ0GyP25fssvq1KZAgBcsqhTsU=;
- b=G5BnXEI1DXhhXt6Kf7JZtA0E7mXO4tMXcF8g2wjGDlyo/XGO8EXzkUbOgASP5XPz8a0eh/bAMB56tkjvblQZZuoqrFu2o18ch8La3zeW8n1Ay/5Fj1qGn5EzZGZoWIYwXb6Uw67xGSVISLkkftOEzdzxRwFVZF2QEiRN2iOSrMKHpTwI4WcSrrhqpLPVk/PiWqcWP5dhJ2YUVvSOQcW+PIi8G9rj6ggT6cQxJzSeXO0KI3faM3G9jDqw/LcW3yz40IKR7xTNDeynQWI6pdPl817jtUJhEJQae8H5Tm5wMJ/YKpLyySTT6kVVA/NOZvDkksO3XRedkIUrD3KZSEgv3Q==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
- 198.47.23.194) smtp.rcpttodomain=canonical.com smtp.mailfrom=ti.com;
- dmarc=pass (p=quarantine sp=none pct=100) action=none header.from=ti.com;
- dkim=none (message not signed); arc=none (0)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com; s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=EpUP8L2xhj6l0nmm8XQ0GyP25fssvq1KZAgBcsqhTsU=;
- b=wgXNEERwh6NfQ0ptuWcwikD5ZbUm5VZYyxQi1UAzZ6eBjt/CBtBmbw0a8Egux4+pfgFDdpydrR3PplLpqa49hlfnusSEeQcw8AHthrqLqxtoEM6rlskn5RqDvg8YK2+6BUAYCFQ4yGhFCNxlpCFHJeboF1m4IskfiLHqJxcwqZI=
-Received: from SJ0PR05CA0055.namprd05.prod.outlook.com (2603:10b6:a03:33f::30)
- by IA3PR10MB8758.namprd10.prod.outlook.com (2603:10b6:208:579::20) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.9587.18; Wed, 11 Feb
- 2026 03:10:12 +0000
-Received: from MWH0EPF000971E9.namprd02.prod.outlook.com
- (2603:10b6:a03:33f:cafe::23) by SJ0PR05CA0055.outlook.office365.com
- (2603:10b6:a03:33f::30) with Microsoft SMTP Server (version=TLS1_3,
- cipher=TLS_AES_256_GCM_SHA384) id 15.20.9611.6 via Frontend Transport; Wed,
- 11 Feb 2026 03:10:12 +0000
-X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 198.47.23.194)
- smtp.mailfrom=ti.com; dkim=none (message not signed) header.d=none;dmarc=pass
- action=none header.from=ti.com;
-Received-SPF: Pass (protection.outlook.com: domain of ti.com designates
- 198.47.23.194 as permitted sender) receiver=protection.outlook.com;
- client-ip=198.47.23.194; helo=lewvzet200.ext.ti.com; pr=C
-Received: from lewvzet200.ext.ti.com (198.47.23.194) by
- MWH0EPF000971E9.mail.protection.outlook.com (10.167.243.71) with Microsoft
- SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.9611.8 via Frontend Transport; Wed, 11 Feb 2026 03:10:11 +0000
-Received: from DLEE208.ent.ti.com (157.170.170.97) by lewvzet200.ext.ti.com
- (10.4.14.103) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.2562.20; Tue, 10 Feb
- 2026 21:10:10 -0600
-Received: from DLEE209.ent.ti.com (157.170.170.98) by DLEE208.ent.ti.com
- (157.170.170.97) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.2562.20; Tue, 10 Feb
- 2026 21:10:10 -0600
-Received: from lelvem-mr05.itg.ti.com (10.180.75.9) by DLEE209.ent.ti.com
- (157.170.170.98) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.2562.20 via Frontend
- Transport; Tue, 10 Feb 2026 21:10:10 -0600
-Received: from lelvem-mr05.itg.ti.com ([10.250.165.138])
-	by lelvem-mr05.itg.ti.com (8.18.1/8.18.1) with ESMTP id 61B3A5vi893642;
-	Tue, 10 Feb 2026 21:10:05 -0600
-From: Baojun Xu <baojun.xu@ti.com>
-To: <tiwai@suse.de>, <hansg@kernel.org>
-CC: <ilpo.jarvinen@linux.intel.com>, <broonie@kernel.org>,
-	<andriy.shevchenko@linux.intel.com>, <shenghao-ding@ti.com>,
-	<13916275206@139.com>, <platform-driver-x86@vger.kernel.org>,
-	<linux-sound@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-	<baojun.xu@ti.com>, <letitia.tsai@hp.com>, <bill.yu@canonical.com>
-Subject: [PATCH v2] ALSA: hda/tas2781: Ignore reset check for SPI device
-Date: Wed, 11 Feb 2026 11:09:46 +0800
-Message-ID: <20260211030946.2330-1-baojun.xu@ti.com>
-X-Mailer: git-send-email 2.43.0.windows.1
+	dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b="EK8IO9yE";
+	dkim=pass (2048-bit key) header.d=oss.qualcomm.com header.i=@oss.qualcomm.com header.b="L+vXxfyC"
+Received: from pps.filterd (m0279862.ppops.net [127.0.0.1])
+	by mx0a-0031df01.pphosted.com (8.18.1.11/8.18.1.11) with ESMTP id 61B3cTus837953
+	for <platform-driver-x86@vger.kernel.org>; Wed, 11 Feb 2026 08:53:18 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=qualcomm.com; h=
+	cc:content-transfer-encoding:date:from:message-id:mime-version
+	:subject:to; s=qcppdkim1; bh=RS3ATQIauI/NfFT2FuRblu0XJKn0tBFCAKh
+	Kp+3IEVY=; b=EK8IO9yEaUISZAP/8Hx+3MVpdMudQy9iNwnfn209xbur03M3zVf
+	l0ylx1ASlmbdDSs4l0c9SIywwwGHA1xtE9E/xSHiiddHpcgTpJhJQefeiDco188G
+	zWIRGWvklXPW+2rNS9Ta/zPwdJBYKX24IyCybqpZ8g+AWT/0emUlPo8oWBfA7smZ
+	/Dp5cYeCNFTMizCz3pm9S5WDJ3+WC5mgwkx+FJiBu4mPCOo/OT7FPvKH7bXA5h6m
+	c4q0Zape8+ZZ/+Vzgavp43StdOIAHDBUeP+TfmTfCrBv2xIMsYfR/oyZYfIU1QIv
+	COXV24C1Er2i4EYIp+mIcstloxBUUW9jGSw==
+Received: from mail-qk1-f199.google.com (mail-qk1-f199.google.com [209.85.222.199])
+	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 4c8j1t8v4b-1
+	(version=TLSv1.3 cipher=TLS_AES_128_GCM_SHA256 bits=128 verify=NOT)
+	for <platform-driver-x86@vger.kernel.org>; Wed, 11 Feb 2026 08:53:18 +0000 (GMT)
+Received: by mail-qk1-f199.google.com with SMTP id af79cd13be357-8c70fadd9a3so1910099785a.0
+        for <platform-driver-x86@vger.kernel.org>; Wed, 11 Feb 2026 00:53:17 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=oss.qualcomm.com; s=google; t=1770799997; x=1771404797; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=RS3ATQIauI/NfFT2FuRblu0XJKn0tBFCAKhKp+3IEVY=;
+        b=L+vXxfyCGfTpdkbZmdQE4xNC/g3vFNCere3a65U0cRbB+inMgKMfo/BbENfjoNgyX2
+         W5pZ8xkOzrI4X9dKrf6Q+TZkYEUXvz0MqK1r1r2yn9ArMsqa+LJQQUDdSMzC2N7J/++4
+         U5r+w19A7sg759TmJ8oNJRRB1FnUpjRgyYwxes5a13XsTpw6L2s6iyXvdxGQdRQaJkhT
+         8rCGUUeRDmvAp3uE4DJM2ZtC3ZHLz29HCzzq5KrfMQ6+w4OcgATnKcJtX1ROjYitncFP
+         6u9yL89XYYUQUDywiuPTcAZH2mOVss+l9IE5H8stA8z+zx1AyJipmlhavHiKlTC3AfLE
+         gAoA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1770799997; x=1771404797;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-gg:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=RS3ATQIauI/NfFT2FuRblu0XJKn0tBFCAKhKp+3IEVY=;
+        b=irhfDHesAv+POWPv+yM4/DzvfcRxGEYrGMe4WDSCgjuHAD3mPlnbDq8MpeVeAdXEJa
+         pv4mzdSmJ4ZjK9dZMRMt3UYmA7Up4VLdCwkzwiZbYaLkhBzMFt9+afvqlToIkmyN9Rb1
+         PbYJ8Z8sFmyv+KULPraBIymfT82uJanYhh+jdBoApwydCpZgI7c7WgT4Jn7B4leM7mAu
+         Ho/jWUr1hmv45R4IVaHrPmWF9nUEe/yWPWMoWcCi6/gpH6r/kilTf1Jdv8oJmQ1COtmJ
+         cRh/bEWDfnXrMaxAqO9p4sQlNeXaMh8ObxPUJsHJ/UQzMjzj8iN3K2JgeyqxFIQgOA7m
+         bLEw==
+X-Forwarded-Encrypted: i=1; AJvYcCUjrMyKCIxxh2a2htrNbDNwRHcNTGr1q8BxAdpYwCgML7o5lRzwHBGFRT4zzKmArVNLqXn2abU2WobxJGXaxzUXfzct@vger.kernel.org
+X-Gm-Message-State: AOJu0Yy3tPoocznlNjM6X9pcWF6fuRecN1mligGusXX8cHOwoWlfRCHf
+	pqjAkR+G141hteaukOBYknrSmM5wyQDtpEHbVNODT92mEdxOUG7/Cz6cHVNt0Ab+w1jwDYFcf2P
+	WYUcVI/+fPW5EsszKCgiIwTUvU9+GdtNhsz9IaQeHXSyr3ksErLhZzWXcOFULZ2Oh0CBK13TSKU
+	O3
+X-Gm-Gg: AZuq6aLSzsYUGTIbH5LlT4QKl7HLyK2vf4jkaul4eduLpS9eGQ9Oi9T2u3s9dFB3sqU
+	AGd29r0b4KzZQv5aLc+14umDZAtHtdFLA5l5eCEKV8AYNRBfC/Bt6Gs2yrxdW4+JA9OadRUypDr
+	efM0JSD7qlcH53eTJdStLtpZJKv/HPJCYccke+QwElsimlsV90Lx2eFNrxhYyvyKmXPEeIGNMPy
+	44F+aWmM6nifJgr8nzNeiL5cn9JVm/8TGkTcQ12HZrILqso1Z/5HX21cdq13R0zZWMPc4Gk7GyR
+	kDtdQ7RumF9mkuykxrT5AE06aUYVFoKxDhRcaiRaDdL1o0K/NKbriroODpBedbSpwgjr9HL9V1U
+	kU4kI62WEe8eSTeZi2c3LK42GMEsTU92Ce/3BpZ5PKM2wH1iWLac=
+X-Received: by 2002:a05:620a:288c:b0:8cb:16:d936 with SMTP id af79cd13be357-8cb2808f823mr256762185a.77.1770799996894;
+        Wed, 11 Feb 2026 00:53:16 -0800 (PST)
+X-Received: by 2002:a05:620a:288c:b0:8cb:16:d936 with SMTP id af79cd13be357-8cb2808f823mr256759085a.77.1770799996369;
+        Wed, 11 Feb 2026 00:53:16 -0800 (PST)
+Received: from brgl-qcom.home ([2a01:cb1d:dc:7e00:d772:ba4c:782c:2fd6])
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-43783e3a9acsm3100770f8f.30.2026.02.11.00.53.15
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 11 Feb 2026 00:53:15 -0800 (PST)
+From: Bartosz Golaszewski <bartosz.golaszewski@oss.qualcomm.com>
+To: Linus Walleij <linusw@kernel.org>, Bartosz Golaszewski <brgl@kernel.org>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Dmitry Torokhov <dmitry.torokhov@gmail.com>,
+        Arnd Bergmann <arnd@kernel.org>, Hans de Goede <hansg@kernel.org>,
+        =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>,
+        Dan Carpenter <dan.carpenter@linaro.org>
+Cc: linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org,
+        platform-driver-x86@vger.kernel.org,
+        Bartosz Golaszewski <bartosz.golaszewski@oss.qualcomm.com>,
+        stable@vger.kernel.org
+Subject: [PATCH v2] gpio: swnode: restore the swnode-name-against-chip-label matching
+Date: Wed, 11 Feb 2026 09:53:13 +0100
+Message-ID: <20260211085313.16792-1-bartosz.golaszewski@oss.qualcomm.com>
+X-Mailer: git-send-email 2.47.3
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
@@ -83,115 +99,91 @@ List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-C2ProcessedOrg: 333ef613-75bf-4e12-a4b1-8e3623f5dcea
-X-EOPAttributedMessage: 0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: MWH0EPF000971E9:EE_|IA3PR10MB8758:EE_
-X-MS-Office365-Filtering-Correlation-Id: b643cc60-cd52-4bbe-d5d6-08de691b1191
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam:
-	BCL:0;ARA:13230040|7416014|1800799024|82310400026|376014|36860700013;
-X-Microsoft-Antispam-Message-Info:
-	=?us-ascii?Q?+pZRVdRnyCy3drUNTJRQWQSvima9vK4o/QIW22qRl8DvmH1YTuIHlUHsSXEI?=
- =?us-ascii?Q?lf+GBIsQJV9HPrpOpiIT9Ux1vWn0CvOYNSbb0vS8pyeqIYLx6OPpicWFw9CJ?=
- =?us-ascii?Q?G0kULoPVLviHOze67WAhJW0Uvjbd3HeKkz/O+mBj6L0PGBjjqe5a3SEyH8LJ?=
- =?us-ascii?Q?FBCAe7iiSiTnCIXlq/x8ifD86awb4IB9nlzxFBK8VSZ4Z7PZ5zbSdlXCVs5u?=
- =?us-ascii?Q?SRKDijmB0RScAOJErHf8jZVky9jJa4a1z/O1KRIj0s4d0i1cHHpCBUNI4Xof?=
- =?us-ascii?Q?q4WY3dK29AWV2fuvntjloEl3QD34TFzX+GB1lDtnkvMWhG6Q4AYeAGx1tD06?=
- =?us-ascii?Q?tMObu3H3ZxhT179CIAQTii9Pf8mpoyWlmiAwru4NPxNSMvJO5THgUqPakpHS?=
- =?us-ascii?Q?CkVvvZdiZ8Dugb1fSsh6+XJuDRAwzIuX8WJurOhNuyegW/iJxvHYNsbrFcyI?=
- =?us-ascii?Q?oNLjsyaVexBWoAEKDGSYirJXp07PYsdJs0TbKMcAe40NoXFtZE55Gf1dNM/+?=
- =?us-ascii?Q?SB2DDmZ6MAqBea/XXg7jkH+zH1tRNv3iWICHNTKz86kFuWtNAhwKBWI1lFRH?=
- =?us-ascii?Q?/K6y/JzPp0uamDGzWeLFj8EDF2sndscmPHnJM7A5n/jgfgZLTbW+hp5Sa0Vi?=
- =?us-ascii?Q?LKhd/sS6YZpq4nc49meh2sWYGDkm/YkXilADKC2W9TPwWaLkGyWaRdHui/CS?=
- =?us-ascii?Q?hk8NxnReFTbjZGHKg4CT7BOg/3IM5osEIFyd1UuwJHZg2oiMm1jC8Or6wJBq?=
- =?us-ascii?Q?/Qlv0Ij1T+MDxsfl9ctj3h2XggQNjwX5LkHSb6BqVwyIA4e2WnyPpz7Gfbap?=
- =?us-ascii?Q?X3jEz3YR5xhLY0Qgi0fnBoZtzf+jwzJvHnMhNcj+s9Eeh6R3NQUSNFzkIgFT?=
- =?us-ascii?Q?vU1eVT3hzfIkeH6On2vXpLiaRECEvKV7RUAFbsrgWpFVA0E0Rhx7URk1UEiE?=
- =?us-ascii?Q?11KXK4GZ1yY3qVUr6SdfVFpxVxUTtsbIdLagWSUQlklVZb0uKr5wVXb/zGvH?=
- =?us-ascii?Q?F3T3NaQUhqGJuP4eYsUCjGVtyRsKuijkR9L3XzTfiIrIz75utsVeziIeBvGp?=
- =?us-ascii?Q?OaH0QWysBGVn+ye4xUSy7sdINpTrWHhEwbKnFpuWbc2t+qc58VoVoyj9MoBT?=
- =?us-ascii?Q?bsc7sxCae07QBtT2FcKGaWrczbbFrbSYVXg+5fUeQ7PlAVoeg9Ksy/HJC/VX?=
- =?us-ascii?Q?S2TZj/1wLqJuiVL0+nulhLsYCTIu8JSrTmO/w4zvYA4JniiqzC5FEJj6VnPC?=
- =?us-ascii?Q?Itrh7kh51Va1gDkz0S2wrPPp+CDRHz6oqSwDhRCDFL7b1Ca22vaHApVfAAmC?=
- =?us-ascii?Q?WXojCfC7p9C55NOrZ2n+GSmBXNQUVYNUj6zhqZ+YfYhXsQ0pJ11r7+jsxir9?=
- =?us-ascii?Q?pvgSYMgaBoHgDIgsIqt1hwli2mLYc/T+yD37Bfk+iTQ6J1GY5c/2zJlg3bRS?=
- =?us-ascii?Q?epZceZZYSRqsFo8ELNNRcOwfhLNvXj6kJRlkNtvMt8/RQe5B4wRjQD4kji6Y?=
- =?us-ascii?Q?0TNY369kvuPdeBV82Sr94fdYDPEC+LNGQdilCTPVfqKKp2voPFbkc2OofSHi?=
- =?us-ascii?Q?/QAhalFxQi+3s3eJveH6dJT5k5vgO2Ak/KqCq4Ku61D2ZrrKVtic2oxXXpmj?=
- =?us-ascii?Q?/FPtosHHg3I7e1CfE6JC4gNT84tp7/mN9kVcTLXY2/zwJpieIRO6pmcg7LM/?=
- =?us-ascii?Q?fn6FMA=3D=3D?=
-X-Forefront-Antispam-Report:
-	CIP:198.47.23.194;CTRY:US;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:lewvzet200.ext.ti.com;PTR:InfoDomainNonexistent;CAT:NONE;SFS:(13230040)(7416014)(1800799024)(82310400026)(376014)(36860700013);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0:
-	X3OylGUbms3d4iRJnoT7kqHUswRGl+3EmIWkJfakELvRgQ0U6w8sTcGvvUGa9CUH6Bapt909vRdFeyzqriKeBsrO9zRAZpzhgu6s874a+H9Ci73jdt4QpKThTiskGZXECj/uZIiN2CCl2EEThiSO68mxWtuhy8ekQioQHaLSfPp87vl6Qx1EvXp94tcnvP3ap3Asckg7iLk+b3QSj1IUVMhic+TLp/iEjuLyg+UHTRfYvE9+UUUkmdkkp1SsZH84TSgbhVTuz7T3a0nI64540K3hIW4DcmBAyeFrAoUqJUPKI/MlENbaimJA4zlYvjwRt3vybtFsuF7uuKC9TlpafABIsdoScDZ1O2CrXUnxtKsXgLGg5PFQiEt3zFRedvfX2r3MSKPR/7Rf2B3lVQhV9nG0cciO3xCnz28XY3s8KZeuaeaQ+OVJ3NqkruQ/Ri4b
-X-OriginatorOrg: ti.com
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 11 Feb 2026 03:10:11.1604
- (UTC)
-X-MS-Exchange-CrossTenant-Network-Message-Id: b643cc60-cd52-4bbe-d5d6-08de691b1191
-X-MS-Exchange-CrossTenant-Id: e5b49634-450b-4709-8abb-1e2b19b982b7
-X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=e5b49634-450b-4709-8abb-1e2b19b982b7;Ip=[198.47.23.194];Helo=[lewvzet200.ext.ti.com]
-X-MS-Exchange-CrossTenant-AuthSource:
-	MWH0EPF000971E9.namprd02.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Anonymous
-X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: IA3PR10MB8758
+X-Proofpoint-Spam-Details-Enc: AW1haW4tMjYwMjExMDA3MSBTYWx0ZWRfXxlcv4GyGPYK7
+ oPN46oWUYnhcplpWiW+m83JiPWyVoPlj2P5Z2Dx+BjYPLcD/4tLw0FwZ70p+2eeVBzXg6luDukd
+ 71YIJJHW9VSj7j6Hrv5gIy+4lJFIAdFewjjrYHxzyFSlS3DwSdDk6JIMpYkITH/Fk89h6qLsccb
+ 8GYXltI17lJ4NnweP+yHmnWzIgiZ0+O28Q0yjwdZLDsmTEEWwIBo+UFp0Eo4rfVbgAmzw7mPlwW
+ YIOYLgabQ894L2yww1gE5ydtyYgC+P7adg1+JYfugPm4G0losGmUKsiN84OjYBojQUUHIqV7mcT
+ uAO6Ay2bBegRsMkGmWMI0tEJZCX24XIIrf6bezQ2592RekKMaLqAwi/hRD0KKhxzGy1ex3vJPxt
+ 4uQcHIgfo6+iiTlak1ITlNzNcYnt+J+o2OYb7r3h1EXIuRpquNEIpbqdfGFHJxrdZ1n7EpB71S8
+ SFPjLBspLM4SpHR+R2Q==
+X-Proofpoint-ORIG-GUID: F-BKRvxaVGyhB855oe5F83kUzRYD4CRS
+X-Authority-Analysis: v=2.4 cv=cabfb3DM c=1 sm=1 tr=0 ts=698c437e cx=c_pps
+ a=HLyN3IcIa5EE8TELMZ618Q==:117 a=xqWC_Br6kY4A:10 a=HzLeVaNsDn8A:10
+ a=s4-Qcg_JpJYA:10 a=VkNPw1HP01LnGYTKEx00:22 a=Mpw57Om8IfrbqaoTuvik:22
+ a=GgsMoib0sEa3-_RKJdDe:22 a=VwQbUJbxAAAA:8 a=QyXUC8HyAAAA:8 a=EUspDBNiAAAA:8
+ a=9y8YAwuLlfTazgfakgcA:9 a=bTQJ7kPSJx9SKPbeHEYW:22
+X-Proofpoint-GUID: F-BKRvxaVGyhB855oe5F83kUzRYD4CRS
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1121,Hydra:6.1.51,FMLib:17.12.100.49
+ definitions=2026-02-10_03,2026-02-10_03,2025-10-01_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
+ malwarescore=0 impostorscore=0 adultscore=0 clxscore=1015 phishscore=0
+ bulkscore=0 spamscore=0 lowpriorityscore=0 suspectscore=0 priorityscore=1501
+ classifier=typeunknown authscore=0 authtc= authcc= route=outbound adjust=0
+ reason=mlx scancount=1 engine=8.22.0-2601150000 definitions=main-2602110071
 
-In the SPI driver probe, the device should be in the default state, so the
-device status check is not necessary. It should be forced to do the
-firmware download as I2C device.
+Using the remote firmware node for software node lookup is the right
+thing to do. The GPIO controller we want to resolve should have the
+software node we scooped out of the reference attached to it. However,
+there are existing users who abuse the software node API by creating
+dummy swnodes whose name is set to the expected label string of the GPIO
+controller whose pins they want to control and use them in their local
+swnode references as GPIO properties.
 
-Signed-off-by: Baojun Xu <baojun.xu@ti.com>
+This used to work when we compared the software node's name to the
+chip's label. When we switched to using a real fwnode lookup, these
+users broke down because the firmware nodes in question were never
+attached to the controllers they were looking for.
+
+Restore the label matching as a fallback to fix the broken users but add
+a big FIXME urging for a better solution.
+
+Cc: stable@vger.kernel.org # v6.18, v6.19
+Fixes: 216c12047571 ("gpio: swnode: allow referencing GPIO chips by firmware nodes")
+Link: https://lore.kernel.org/all/aYkdKfP5fg6iywgr@jekhomev/
+Acked-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Signed-off-by: Bartosz Golaszewski <bartosz.golaszewski@oss.qualcomm.com>
 ---
-v2:
- - No update, re-send.
----
- .../hda/codecs/side-codecs/tas2781_hda_spi.c  | 20 +++++++------------
- 1 file changed, 7 insertions(+), 13 deletions(-)
+Changes in v2:
+- check if gdev_node and gdev_node->name are not NULL before trying to
+  match the label (Hans & Dan)
+- use the right link
+- collect tags
 
-diff --git a/sound/hda/codecs/side-codecs/tas2781_hda_spi.c b/sound/hda/codecs/side-codecs/tas2781_hda_spi.c
-index 0c9b57b6ff55..f860e0eb7602 100644
---- a/sound/hda/codecs/side-codecs/tas2781_hda_spi.c
-+++ b/sound/hda/codecs/side-codecs/tas2781_hda_spi.c
-@@ -631,7 +631,7 @@ static void tasdev_fw_ready(const struct firmware *fmw, void *context)
- 	struct tasdevice_priv *tas_priv = context;
- 	struct tas2781_hda *tas_hda = dev_get_drvdata(tas_priv->dev);
- 	struct hda_codec *codec = tas_priv->codec;
--	int ret, val;
-+	int ret;
+ drivers/gpio/gpiolib-swnode.c | 19 +++++++++++++++++++
+ 1 file changed, 19 insertions(+)
+
+diff --git a/drivers/gpio/gpiolib-swnode.c b/drivers/gpio/gpiolib-swnode.c
+index 21478b45c127d..0d7f3f09a0b4b 100644
+--- a/drivers/gpio/gpiolib-swnode.c
++++ b/drivers/gpio/gpiolib-swnode.c
+@@ -42,6 +42,25 @@ static struct gpio_device *swnode_get_gpio_device(struct fwnode_handle *fwnode)
  
- 	guard(pm_runtime_active_auto)(tas_priv->dev);
- 	guard(mutex)(&tas_priv->codec_lock);
-@@ -670,20 +670,14 @@ static void tasdev_fw_ready(const struct firmware *fmw, void *context)
- 	tas_priv->rcabin.profile_cfg_id = 0;
- 
- 	tas_priv->fw_state = TASDEVICE_DSP_FW_ALL_OK;
--	ret = tasdevice_spi_dev_read(tas_priv, tas_priv->index,
--		TAS2781_REG_CLK_CONFIG, &val);
--	if (ret < 0)
--		goto out;
- 
--	if (val == TAS2781_REG_CLK_CONFIG_RESET) {
--		ret = tasdevice_prmg_load(tas_priv, 0);
--		if (ret < 0) {
--			dev_err(tas_priv->dev, "FW download failed = %d\n",
--				ret);
--			goto out;
--		}
--		tas_priv->fw_state = TASDEVICE_DSP_FW_ALL_OK;
-+	ret = tasdevice_prmg_load(tas_priv, 0);
-+	if (ret < 0) {
-+		dev_err(tas_priv->dev, "FW download failed = %d\n", ret);
-+		goto out;
- 	}
-+	tas_priv->fw_state = TASDEVICE_DSP_FW_ALL_OK;
+ fwnode_lookup:
+ 	gdev = gpio_device_find_by_fwnode(fwnode);
++	if (!gdev && gdev_node && gdev_node->name)
++		/*
++		 * FIXME: We shouldn't need to compare the GPIO controller's
++		 * label against the software node that is supposedly attached
++		 * to it. However there are currently GPIO users that - knowing
++		 * the expected label of the GPIO chip whose pins they want to
++		 * control - set up dummy software nodes named after those GPIO
++		 * controllers, which aren't actually attached to them. In this
++		 * case gpio_device_find_by_fwnode() will fail as no device on
++		 * the GPIO bus is actually associated with the fwnode we're
++		 * looking for.
++		 *
++		 * As a fallback: continue checking the label if we have no
++		 * match. However, the situation described above is an abuse
++		 * of the software node API and should be phased out and the
++		 * following line - eventually removed.
++		 */
++		gdev = gpio_device_find_by_label(gdev_node->name);
 +
- 	if (tas_priv->fmw->nr_programs > 0)
- 		tas_priv->tasdevice[tas_priv->index].cur_prog = 0;
- 	if (tas_priv->fmw->nr_configurations > 0)
+ 	return gdev ?: ERR_PTR(-EPROBE_DEFER);
+ }
+ 
 -- 
-2.25.1
+2.47.3
 
