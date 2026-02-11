@@ -1,173 +1,253 @@
-Received: from mail-dy1-f177.google.com (mail-dy1-f177.google.com [74.125.82.177])
+Received: from mail.tuxedocomputers.com (mail.tuxedocomputers.com [157.90.84.7])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B4D55311979
-	for <platform-driver-x86@vger.kernel.org>; Tue, 10 Feb 2026 23:49:52 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=74.125.82.177
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2E45417D2;
+	Wed, 11 Feb 2026 00:16:16 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=157.90.84.7
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1770767393; cv=none; b=GQBL3roesvKWqUPr+iBhUQrQICAFz7nL/3P7A8YuPaBJCSgJddX80TC+CQ2FjhP41SyJ26vTGjHbzs7NR8Gf2BNcqLh+NtaC7MkT4XxbTowVwENc28JhKdzwHzAXtiAIDJuYLVeh77DaZ2DNpc+S7Erd6LxXZKhHkzmpNw7XKTY=
+	t=1770768980; cv=none; b=tO1mBwn/dapBhC/vCl+ktRK0Kvf7hJemGMa7xg1XDvgt1TVQqTqajE08e9c7vwqDqI3GRoGbkScxtBo4zonxOWbWXEmCdY+RjjMY4+PPb0d6vEQhxLMZfRdd6MT7sSzzHIcanVtQOsvlyb/MRWqSt3jr0d5sPVG9tDU2ZN9NL/8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1770767393; c=relaxed/simple;
-	bh=DVyxsOEeTvxswSt+sQzXHW5KmD9yhMogBlB8ZzY0UBo=;
-	h=Date:From:To:CC:Subject:In-Reply-To:References:Message-ID:
-	 MIME-Version:Content-Type; b=Si7w/t0alE5NqYQv+AVmEEsq1JUpyrGqK4A92XTGWbhdV/9heeQXGIB26ZBbx6hqcbJ1qSNbNIvk2Bt1FVlAnBfwVkNwZtUQXDmXuFvUuMYzTWylgSnw6oN/B+Y577ek19c13sZzW0NCfvTHNxqqzOAlDBcWXW5VQ6PDiJNgnzc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=UR/v5rkp; arc=none smtp.client-ip=74.125.82.177
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1770768980; c=relaxed/simple;
+	bh=y44yhVcVfzRIJD3UCoZE4Anbm39Gx9T2jcR+6QS+MtI=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=k7j96XmRN78tNbF8+MdW3LgICxuh+cDMn05+ZBuNs7jLmt1EhK1gdDx3ouvUgDqUvw78CCCqBwQLOrTSHBP8evSpdUwZdOK0EVGMX+SnDF6GCMNUjZgnDNbQ2SKLh/L9TMNEzcS6jzyYFnzNp3rvqEaYoEaTNBVKGGGjsXvKrTQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=tuxedocomputers.com; spf=pass smtp.mailfrom=tuxedocomputers.com; dkim=pass (1024-bit key) header.d=tuxedocomputers.com header.i=@tuxedocomputers.com header.b=uPJgtgkb; arc=none smtp.client-ip=157.90.84.7
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=tuxedocomputers.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=tuxedocomputers.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="UR/v5rkp"
-Received: by mail-dy1-f177.google.com with SMTP id 5a478bee46e88-2b86ce04c5cso514926eec.1
-        for <platform-driver-x86@vger.kernel.org>; Tue, 10 Feb 2026 15:49:52 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1770767392; x=1771372192; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:references
-         :in-reply-to:user-agent:subject:cc:to:from:date:from:to:cc:subject
-         :date:message-id:reply-to;
-        bh=P+IY8et5FX8tT7f6jNZ9oxllW/bQ2oAsdfX91k7IYLs=;
-        b=UR/v5rkpmW1mWI9nEFG+WQtHaAkBHwZplMVTqcv7XibVu6JspQ1fr4EDhWyNP51bxS
-         0ngO3G0wbTqUIOQi0+lpPP6pZ3uvvPj45G6T+ERE01Udnqm+fesAWdp6f1f+gusZJXM7
-         rYkHJ0qF/hvNxmxu5872mXZQwpF1rbOshd5X+CP4Tjoziu7PGRdesAaYCZETcjomr8s8
-         Oz4/NZmlm8yZmU5An+aTeU1XWtCD29onrTgZZx9iUG6gDkVBegLUNG05E/GEMpCE3wP6
-         7bmRm7Io2o8E1XFaENOnafgHLHtZ2Arf03HJny3J0JHUhtH2FPPDnMLDF1yBh0t9md86
-         9eGQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1770767392; x=1771372192;
-        h=content-transfer-encoding:mime-version:message-id:references
-         :in-reply-to:user-agent:subject:cc:to:from:date:x-gm-gg
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=P+IY8et5FX8tT7f6jNZ9oxllW/bQ2oAsdfX91k7IYLs=;
-        b=lCmvM9QsVIy5rI7qOYHaZ6dgxdNNTlbmvikiZVbBTfIJs8sa86un9VozPVXzj35o8G
-         un9+fVcVrwyntJvMSWrGFCwunxBLcJNmRfZkHdAm6BTVIn9K+gwsGf0S9jAfpGivevJD
-         M7aeNmB9bVRl/xYkY1kxS4Ut2moyzsOVupgXvc2Qm2zADo1TP5JPu23HrYpnzQ9nn/7O
-         +NaC+y+aWlAfx+1Mpr4NUE8MFczadAxcgO97qk9K0Ogq0C094XhINJ06pat6REBxr/Dw
-         PeMDu73340swMpLx8aX+Mc9eQRSwJ7BzaXAhIOxvPkVZUOYgH5FvR5yh4nneTgwNk/f6
-         5lYA==
-X-Gm-Message-State: AOJu0YzNk+QE2nUwEJYSy2qDP2MhwibN9Wnkv2B/rInXIeR7Aca+PjIE
-	W/fcrB7EJvjDqJHjw/JNdv2EZAq028dhyyKTZPaqzxj5hCcIGWSwCTFG
-X-Gm-Gg: AZuq6aJrkenURswTvJlqupoNxHts11aGI5yG5cb8gBo/K+uy5SSehWUNL4QazU06yiI
-	U9q5WTsSwijUqefjLAJBGHAbw2gABYvpp0mUlISacKz6x3LjN4ZQVMzAPDoj+dg+1gxJMNeCHYo
-	FCyBlsb1PcIWM6FzqMouwsXT3w91wWNfEZw8ZlK4cy8MCuz33ObN1YM/dmLKnambRiRX1GBiy0p
-	H5IYr8g6CfA6jRVsHDbCepW2gHSq08fmr+6jGpCblR7WtHAOdUsqaM/ccamhCuDqPLSX4LVUHAc
-	FePs2tLQB2C0vFx582s7hoBOeDSTHC7tv70jsPIUQ6p0HWSqmWVEwpvbf6Mm7K1pujJhPMPEjB4
-	uwLQJtsRum39BnD9yTLL2Bm2Cw/128eUKEKyJoryNPxfSNT/iD0Zre/S2lfo+j7AYQGiI71KQRK
-	fOJpotB93EZ6unGWUZ7E9La1qVCqZ6/9exvAMGF2784R2zfkqCQEnRoq7pjhotjw9m9q2r1ULTf
-	4cw34NC70Dv+5r7v2o/+2gC3r6O7elb
-X-Received: by 2002:a05:7301:1008:b0:2b7:f522:992f with SMTP id 5a478bee46e88-2ba8a73eb74mr1264938eec.10.1770767391649;
-        Tue, 10 Feb 2026 15:49:51 -0800 (PST)
-Received: from ehlo.thunderbird.net (108-228-232-20.lightspeed.sndgca.sbcglobal.net. [108.228.232.20])
-        by smtp.gmail.com with ESMTPSA id 5a478bee46e88-2ba9dcead76sm42004eec.27.2026.02.10.15.49.51
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 10 Feb 2026 15:49:51 -0800 (PST)
-Date: Tue, 10 Feb 2026 15:49:51 -0800
-From: "Derek J. Clark" <derekjohn.clark@gmail.com>
-To: Kurt Borja <kuurtb@gmail.com>, Rong Zhang <i@rong.moe>,
- Mark Pearson <mpearson-lenovo@squebb.ca>, Armin Wolf <W_Armin@gmx.de>,
- Hans de Goede <hansg@kernel.org>,
- =?ISO-8859-1?Q?Ilpo_J=E4rvinen?= <ilpo.jarvinen@linux.intel.com>
-CC: platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: =?US-ASCII?Q?Re=3A_=5BPATCH_0/2=5D_platform/x86=3A_lenovo-wmi-ca?=
- =?US-ASCII?Q?pdata=3A_Add_debugfs_file_for_dumping_capdata?=
-User-Agent: Thunderbird for Android
-In-Reply-To: <DGBOH3NPCWFS.5SUAX6FZNZZ8@gmail.com>
-References: <20260210191938.137234-1-i@rong.moe> <DGBOH3NPCWFS.5SUAX6FZNZZ8@gmail.com>
-Message-ID: <2A78CD4B-9D1D-4E7E-BEC9-E567A1DBE089@gmail.com>
+	dkim=pass (1024-bit key) header.d=tuxedocomputers.com header.i=@tuxedocomputers.com header.b="uPJgtgkb"
+Received: from [192.168.178.24] (i5C75F6C0.versanet.de [92.117.246.192])
+	(Authenticated sender: wse@tuxedocomputers.com)
+	by mail.tuxedocomputers.com (Postfix) with ESMTPSA id 0D6DA2FC006C;
+	Wed, 11 Feb 2026 01:16:09 +0100 (CET)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=tuxedocomputers.com;
+	s=default; t=1770768969;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=bYfF3iirvlBNMssXAQuldhrW98qkd3h9CcNuCyRADB0=;
+	b=uPJgtgkb1uyS2GdBJh1F+vvjCyx0gYQuX7LD8Fpy1Nv6TixpvNRWurdsWIJxp2qbhJWrel
+	T9UjVY4maRTUUfpYinXPoUnEYssbOLS9gwEvX/Tx9NJ/GpPuv3T0g1DJ3qn9HEp7Vj6/rL
+	dyecLR434q0nXvy5voIInqRwQuXA5wY=
+Authentication-Results: mail.tuxedocomputers.com;
+	auth=pass smtp.auth=wse@tuxedocomputers.com smtp.mailfrom=wse@tuxedocomputers.com
+Message-ID: <b9abe4fc-198f-45c6-9b7b-732d3c53983f@tuxedocomputers.com>
+Date: Wed, 11 Feb 2026 01:16:08 +0100
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain;
- charset=utf-8
-Content-Transfer-Encoding: quoted-printable
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH 1/5] platform/x86: uniwill-laptop: Rename FN lock and
+ super key lock attrs
+To: Armin Wolf <W_Armin@gmx.de>, hansg@kernel.org,
+ ilpo.jarvinen@linux.intel.com
+Cc: platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <20260210232946.302936-1-W_Armin@gmx.de>
+ <20260210232946.302936-2-W_Armin@gmx.de>
+Content-Language: en-US
+From: Werner Sembach <wse@tuxedocomputers.com>
+In-Reply-To: <20260210232946.302936-2-W_Armin@gmx.de>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-On February 10, 2026 3:41:31 PM PST, Kurt Borja <kuurtb@gmail=2Ecom> wrote:
->On Tue Feb 10, 2026 at 2:19 PM -05, Rong Zhang wrote:
->> The Lenovo GameZone/Other interfaces have some delicate divergences
->> among different devices=2E When making a bug report or adding support f=
-or
->> new devices/interfaces, capdata is the most important information to
->> cross-check with=2E
->>
->> Add a debugfs file (lenovo_wmi/<device_name>/capdata), so that users ca=
-n
->> dump capdata and include it in their reports=2E
->>
->> The output is like:
->>
->>   LENOVO_CAPABILITY_DATA_00[0]:
->>     id:             0x00010000 [dev:  0, feat:  1, mode:  0, type:  0]
->>     supported:      0x00000007 [ RWV]
->>     default_value:  0
->>
->>   LENOVO_CAPABILITY_DATA_01[0]:
->>     id:             0x00000000 [dev:  0, feat:  0, mode:  0, type:  0]
->>     supported:      0x00000000 [    ]
->>     default_value:  0
->>     step:           0
->>     min_value:      0
->>     max_value:      0
->>
->>   LENOVO_FAN_TEST_DATA[0]:
->>     id:             1
->>     min_rpm:        2200
->>     max_rpm:        5000
->>
->> A helper function for creating per-devcie debugfs directories is also
->> introduced into lenovo-wmi-helpers in order that we can maintain a tidy
->> directory structure in debugfs=2E
->>
->> The series is based on platform-drivers-x86/review-ilpo-next since it
->> depends on a commit there=2E I am OK to wait until the next cycle=2E
->>
->> Rong Zhang (2):
->>   platform/x86: lenovo-wmi-helpers: Add helper for creating per-device
->>     debugfs dir
->>   platform/x86: lenovo-wmi-capdata: Add debugfs file for dumping capdat=
-a
->>
->>  drivers/platform/x86/lenovo/Kconfig       |   1 +
->>  drivers/platform/x86/lenovo/wmi-capdata=2Ec | 121 ++++++++++++++++++++=
-++
->>  drivers/platform/x86/lenovo/wmi-capdata=2Eh |   4 +-
->>  drivers/platform/x86/lenovo/wmi-helpers=2Ec |  34 ++++++
->>  drivers/platform/x86/lenovo/wmi-helpers=2Eh |   2 +
->>  5 files changed, 159 insertions(+), 3 deletions(-)
->>
->>
->> base-commit: 5a5203a45b063a594e89a2aeaf9e4923893a5b4c
+Hi,
+
+Am 11.02.26 um 00:29 schrieb Armin Wolf:
+> It turns out that both sysfs attributes actually directly control
+> the FN lock status/super key enable status, rather than the
+> triggering of the associated events. This behavior was first observed
+> on a Tuxedo notebook and was belived to be a hardware quirk.
+> However, it seems that i simply misunderstood the manual of the
+> OEM software for Intel NUC devices. The correct behavior is:
 >
->Hi Rong,
+> - fn_lock_toggle_enable enables/disables FN lock mode
+> - super_key_toggle_enable enables/disables the super key
 >
->This is indeed very useful debug information=2E
+> Rename both sysfs attributes to avoid confusing users.
 >
->Once you and Derek agree on the approach for this series, I'll add my
->Tested-by tag=2E
+> Fixes: d050479693bb ("platform/x86: Add Uniwill laptop driver")
+> Signed-off-by: Armin Wolf <W_Armin@gmx.de>
+> ---
+>   .../ABI/testing/sysfs-driver-uniwill-laptop   | 10 ++--
+>   drivers/platform/x86/uniwill/uniwill-acpi.c   | 46 +++++++++----------
+>   2 files changed, 27 insertions(+), 29 deletions(-)
 >
->One more thing though=2E Can you please explain the "supported" byte? Wha=
-t
->is `+` and `V` supposed to mean?
->
+> diff --git a/Documentation/ABI/testing/sysfs-driver-uniwill-laptop b/Documentation/ABI/testing/sysfs-driver-uniwill-laptop
+> index eaeb659793d2..2df70792968f 100644
+> --- a/Documentation/ABI/testing/sysfs-driver-uniwill-laptop
+> +++ b/Documentation/ABI/testing/sysfs-driver-uniwill-laptop
+> @@ -1,4 +1,4 @@
+> -What:		/sys/bus/platform/devices/INOU0000:XX/fn_lock_toggle_enable
+> +What:		/sys/bus/platform/devices/INOU0000:XX/fn_lock
+>   Date:		November 2025
+>   KernelVersion:	6.19
+>   Contact:	Armin Wolf <W_Armin@gmx.de>
+> @@ -8,15 +8,15 @@ Description:
+>   
+>   		Reading this file returns the current enable status of the FN lock functionality.
+>   
+> -What:		/sys/bus/platform/devices/INOU0000:XX/super_key_toggle_enable
+> +What:		/sys/bus/platform/devices/INOU0000:XX/super_key_enable
+>   Date:		November 2025
+>   KernelVersion:	6.19
+>   Contact:	Armin Wolf <W_Armin@gmx.de>
+>   Description:
+> -                Allows userspace applications to enable/disable the super key functionality
+> -                of the integrated keyboard by writing "1"/"0" into this file.
+> +		Allows userspace applications to enable/disable the super key of the integrated
+> +		keyboard by writing "1"/"0" into this file.
+>   
+> -		Reading this file returns the current enable status of the super key functionality.
+> +		Reading this file returns the current enable status of the super key.
+>   
+>   What:		/sys/bus/platform/devices/INOU0000:XX/touchpad_toggle_enable
+>   Date:		November 2025
+> diff --git a/drivers/platform/x86/uniwill/uniwill-acpi.c b/drivers/platform/x86/uniwill/uniwill-acpi.c
+> index 3c9af441d133..856d5e38e045 100644
+> --- a/drivers/platform/x86/uniwill/uniwill-acpi.c
+> +++ b/drivers/platform/x86/uniwill/uniwill-acpi.c
+> @@ -314,8 +314,8 @@
+>   #define LED_CHANNELS		3
+>   #define LED_MAX_BRIGHTNESS	200
+>   
+> -#define UNIWILL_FEATURE_FN_LOCK_TOGGLE		BIT(0)
+> -#define UNIWILL_FEATURE_SUPER_KEY_TOGGLE	BIT(1)
+> +#define UNIWILL_FEATURE_FN_LOCK			BIT(0)
+> +#define UNIWILL_FEATURE_SUPER_KEY		BIT(1)
+>   #define UNIWILL_FEATURE_TOUCHPAD_TOGGLE		BIT(2)
+>   #define UNIWILL_FEATURE_LIGHTBAR		BIT(3)
+>   #define UNIWILL_FEATURE_BATTERY			BIT(4)
 
-Kurt,
+Maybe also rename UNIWILL_OSD_SUPER_KEY_LOCK_ENABLE and 
+UNIWILL_OSD_SUPER_KEY_LOCK_DISABLE
 
-It's enumerated in the patch:
+Best regards,
 
-+       seq_printf(s, "  supported:      0x%08x [%c%c%c%c]\n", cd00->suppo=
-rted,
-+                  extra ? '+' : ' ',
-+                  get   ? 'R' : ' ',
-+                  set   ? 'W' : ' ',
-+                  valid ? 'V' : ' ');
+Werner
 
-
-From=20the documentation:
-uint32 Capability //7:by project=20
-bit 2:  0: not support SetFeatureValue(),  1: support SetFeatureValue()=20
-bit 1:  0: not support GetFeatureValue(),  1: support GetFeatureValue()
-bit 0:  0: not support feature,  1: support feature=20
-
-I don't see any examples of the "extra" bit in the docs=2E
-
-Thanks,
-Derek
+> @@ -600,8 +600,8 @@ static const struct regmap_config uniwill_ec_config = {
+>   	.use_single_write = true,
+>   };
+>   
+> -static ssize_t fn_lock_toggle_enable_store(struct device *dev, struct device_attribute *attr,
+> -					   const char *buf, size_t count)
+> +static ssize_t fn_lock_store(struct device *dev, struct device_attribute *attr, const char *buf,
+> +			     size_t count)
+>   {
+>   	struct uniwill_data *data = dev_get_drvdata(dev);
+>   	unsigned int value;
+> @@ -624,8 +624,7 @@ static ssize_t fn_lock_toggle_enable_store(struct device *dev, struct device_att
+>   	return count;
+>   }
+>   
+> -static ssize_t fn_lock_toggle_enable_show(struct device *dev, struct device_attribute *attr,
+> -					  char *buf)
+> +static ssize_t fn_lock_show(struct device *dev, struct device_attribute *attr, char *buf)
+>   {
+>   	struct uniwill_data *data = dev_get_drvdata(dev);
+>   	unsigned int value;
+> @@ -638,10 +637,10 @@ static ssize_t fn_lock_toggle_enable_show(struct device *dev, struct device_attr
+>   	return sysfs_emit(buf, "%d\n", !!(value & FN_LOCK_STATUS));
+>   }
+>   
+> -static DEVICE_ATTR_RW(fn_lock_toggle_enable);
+> +static DEVICE_ATTR_RW(fn_lock);
+>   
+> -static ssize_t super_key_toggle_enable_store(struct device *dev, struct device_attribute *attr,
+> -					     const char *buf, size_t count)
+> +static ssize_t super_key_enable_store(struct device *dev, struct device_attribute *attr,
+> +				      const char *buf, size_t count)
+>   {
+>   	struct uniwill_data *data = dev_get_drvdata(dev);
+>   	unsigned int value;
+> @@ -673,8 +672,7 @@ static ssize_t super_key_toggle_enable_store(struct device *dev, struct device_a
+>   	return count;
+>   }
+>   
+> -static ssize_t super_key_toggle_enable_show(struct device *dev, struct device_attribute *attr,
+> -					    char *buf)
+> +static ssize_t super_key_enable_show(struct device *dev, struct device_attribute *attr, char *buf)
+>   {
+>   	struct uniwill_data *data = dev_get_drvdata(dev);
+>   	unsigned int value;
+> @@ -687,7 +685,7 @@ static ssize_t super_key_toggle_enable_show(struct device *dev, struct device_at
+>   	return sysfs_emit(buf, "%d\n", !(value & SUPER_KEY_LOCK_STATUS));
+>   }
+>   
+> -static DEVICE_ATTR_RW(super_key_toggle_enable);
+> +static DEVICE_ATTR_RW(super_key_enable);
+>   
+>   static ssize_t touchpad_toggle_enable_store(struct device *dev, struct device_attribute *attr,
+>   					    const char *buf, size_t count)
+> @@ -881,8 +879,8 @@ static int uniwill_nvidia_ctgp_init(struct uniwill_data *data)
+>   
+>   static struct attribute *uniwill_attrs[] = {
+>   	/* Keyboard-related */
+> -	&dev_attr_fn_lock_toggle_enable.attr,
+> -	&dev_attr_super_key_toggle_enable.attr,
+> +	&dev_attr_fn_lock.attr,
+> +	&dev_attr_super_key_enable.attr,
+>   	&dev_attr_touchpad_toggle_enable.attr,
+>   	/* Lightbar-related */
+>   	&dev_attr_rainbow_animation.attr,
+> @@ -897,13 +895,13 @@ static umode_t uniwill_attr_is_visible(struct kobject *kobj, struct attribute *a
+>   	struct device *dev = kobj_to_dev(kobj);
+>   	struct uniwill_data *data = dev_get_drvdata(dev);
+>   
+> -	if (attr == &dev_attr_fn_lock_toggle_enable.attr) {
+> -		if (uniwill_device_supports(data, UNIWILL_FEATURE_FN_LOCK_TOGGLE))
+> +	if (attr == &dev_attr_fn_lock.attr) {
+> +		if (uniwill_device_supports(data, UNIWILL_FEATURE_FN_LOCK))
+>   			return attr->mode;
+>   	}
+>   
+> -	if (attr == &dev_attr_super_key_toggle_enable.attr) {
+> -		if (uniwill_device_supports(data, UNIWILL_FEATURE_SUPER_KEY_TOGGLE))
+> +	if (attr == &dev_attr_super_key_enable.attr) {
+> +		if (uniwill_device_supports(data, UNIWILL_FEATURE_SUPER_KEY))
+>   			return attr->mode;
+>   	}
+>   
+> @@ -1505,7 +1503,7 @@ static void uniwill_shutdown(struct platform_device *pdev)
+>   
+>   static int uniwill_suspend_keyboard(struct uniwill_data *data)
+>   {
+> -	if (!uniwill_device_supports(data, UNIWILL_FEATURE_SUPER_KEY_TOGGLE))
+> +	if (!uniwill_device_supports(data, UNIWILL_FEATURE_SUPER_KEY))
+>   		return 0;
+>   
+>   	/*
+> @@ -1565,7 +1563,7 @@ static int uniwill_resume_keyboard(struct uniwill_data *data)
+>   	unsigned int value;
+>   	int ret;
+>   
+> -	if (!uniwill_device_supports(data, UNIWILL_FEATURE_SUPER_KEY_TOGGLE))
+> +	if (!uniwill_device_supports(data, UNIWILL_FEATURE_SUPER_KEY))
+>   		return 0;
+>   
+>   	ret = regmap_read(data->regmap, EC_ADDR_SWITCH_STATUS, &value);
+> @@ -1643,16 +1641,16 @@ static struct platform_driver uniwill_driver = {
+>   };
+>   
+>   static struct uniwill_device_descriptor lapac71h_descriptor __initdata = {
+> -	.features = UNIWILL_FEATURE_FN_LOCK_TOGGLE |
+> -		    UNIWILL_FEATURE_SUPER_KEY_TOGGLE |
+> +	.features = UNIWILL_FEATURE_FN_LOCK |
+> +		    UNIWILL_FEATURE_SUPER_KEY |
+>   		    UNIWILL_FEATURE_TOUCHPAD_TOGGLE |
+>   		    UNIWILL_FEATURE_BATTERY |
+>   		    UNIWILL_FEATURE_HWMON,
+>   };
+>   
+>   static struct uniwill_device_descriptor lapkc71f_descriptor __initdata = {
+> -	.features = UNIWILL_FEATURE_FN_LOCK_TOGGLE |
+> -		    UNIWILL_FEATURE_SUPER_KEY_TOGGLE |
+> +	.features = UNIWILL_FEATURE_FN_LOCK |
+> +		    UNIWILL_FEATURE_SUPER_KEY |
+>   		    UNIWILL_FEATURE_TOUCHPAD_TOGGLE |
+>   		    UNIWILL_FEATURE_LIGHTBAR |
+>   		    UNIWILL_FEATURE_BATTERY |
