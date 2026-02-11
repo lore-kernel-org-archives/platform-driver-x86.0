@@ -1,38 +1,38 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 04924260565
-	for <platform-driver-x86@vger.kernel.org>; Wed, 11 Feb 2026 15:03:35 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4FAEF19E819
+	for <platform-driver-x86@vger.kernel.org>; Wed, 11 Feb 2026 15:17:02 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1770822216; cv=none; b=bah58ltNtoB0Z8O4iWTDYWB4V1A+yTyZf/STZGIxfN9neqMjhxkTo96XfBDMZDRzFMHRC/isgUTnqIvt3dImeziT5oQo8bZTb/R36CCqoPyBab992OyDTEu7J9bvS9tK/jSOT3Hrqo02+d6FjBy7dobLYfYFrzLjdxsy9NGLElo=
+	t=1770823022; cv=none; b=mFRjXcEV/8CLmPQ+kntTPgNbWgx7iODoLP5hmNOixqIsNgZs94hlz6CfcTVAftvjeSlhHKvllZyswWgxA7piuVT3xgJdG7VFaViq5vwDaxPXbQcO6TmAhYI0+LZ+9AYXRuHrNGJ8so4B+m/FzE/fWZ6exa2fEoA2r6cEg59Eshc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1770822216; c=relaxed/simple;
-	bh=V7rAXgBGm+w3ijhnHxmc2NCEICwvEK0YaNsIBUNAPCE=;
+	s=arc-20240116; t=1770823022; c=relaxed/simple;
+	bh=ILLhj1O1am8LXSq7ittctk4OzJYllH3O/+RX1i0BXWA=;
 	h=From:To:Subject:Date:Message-ID:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=fSL5VnoeG+0wUJuW75T70FuEKdl3lNahHF6AMkmbyHIB6AJjj4EVbaYbE5Kk7tHUJQJdCBRKI13yTYwSTAbtaFYz+UAbnS6wWC7L0zJ5dPFdb6w5hZdkUne3Vjqe7cnpBzsHHxLEyIY0XFNGzcICNTNWKaNxhprtw/f4J7xLm1Y=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=bVvOF+RS; arc=none smtp.client-ip=10.30.226.201
+	 Content-Type:MIME-Version; b=SDE5D0W+mkO8oCGQQGriImSIFo+6+PFd68k3APFjUXBiqAsHbmrfj5Ys5HCRckBNmDDoYjknJquabz1e2EKSTrpG5RKNS4uKGKT5c2+9V5fjzof8MhBKJnEhsX8Seq7yitojDxTBPc1K1gBTtvFYOrRa7gXy5YYS9u9hQWRFHFE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=L0UIchCG; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="bVvOF+RS"
-Received: by smtp.kernel.org (Postfix) with ESMTPS id A4887C4CEF7
-	for <platform-driver-x86@vger.kernel.org>; Wed, 11 Feb 2026 15:03:35 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="L0UIchCG"
+Received: by smtp.kernel.org (Postfix) with ESMTPS id EF6A7C16AAE
+	for <platform-driver-x86@vger.kernel.org>; Wed, 11 Feb 2026 15:17:01 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1770822215;
-	bh=V7rAXgBGm+w3ijhnHxmc2NCEICwvEK0YaNsIBUNAPCE=;
+	s=k20201202; t=1770823022;
+	bh=ILLhj1O1am8LXSq7ittctk4OzJYllH3O/+RX1i0BXWA=;
 	h=From:To:Subject:Date:In-Reply-To:References:From;
-	b=bVvOF+RSaso080kGz8ge4E7KMrIiKhv7bLIAhqZs6NOhetQ72FXsMd613lqTjoRsR
-	 OwiCdnHnGFLwJ51C3Vhhe74vy9KgMDHAZQhGBxHrms3GTFQcliCtBU5zmrCNrNx+S5
-	 93xPjR9wVYr8UyDJM/QViRU+Dhq+aczk1jWfneB/GK4T48xJ1VkNRdIyUqzpjkQLCQ
-	 AJ6gEjRWh6b05tI0bgMOJjvzNV/X71MLqueNsD/BVj5ibDI9eSn3U5OwQWbQZGACf3
-	 T2BMH65Ton99A6F0bzYtv6KeFpCIC6gXRa5sj2tY+yYWQf89Ega6tLOmMX8f/1v/R3
-	 DiAsWOORsXQNg==
+	b=L0UIchCGRWTNTqWu9veD6w8820s1n57X1Jw9QBb5WiIG3YgfaOgEL2EWECEmi/9S0
+	 Rpyt4dGZt1P4n9yUffxgnpLbQ1CnaGuxXqdQklp/ft7q5yjcu4VMOMCOklrWGCu1+M
+	 qM1g8YesllnNNnnBdfI/PYdrayJNcn1jwVVw08tUIITFv7rpHhHg9oBr3KrV9HjA4J
+	 Hoz4eib55S83yPhsPK750FdjzZxUfDHjf7DcDS7YwWjCdQvqrFtpeZhNdLSM8bpwXA
+	 c5Ocna7bm9lqojJKrpXwfvgxrTEsVza1BNvViQ0vtHI4Aifhus9aiAWomCNQuiby3T
+	 YDB23z1cCareA==
 Received: by aws-us-west-2-korg-bugzilla-1.web.codeaurora.org (Postfix, from userid 48)
-	id 9DD21C433E1; Wed, 11 Feb 2026 15:03:35 +0000 (UTC)
+	id DB1F6C433E1; Wed, 11 Feb 2026 15:17:01 +0000 (UTC)
 From: bugzilla-daemon@kernel.org
 To: platform-driver-x86@vger.kernel.org
 Subject: [Bug 221065] ideapad_acpi: unexpected charge_types spam on Yoga Pro
  7 14ASP9
-Date: Wed, 11 Feb 2026 15:03:35 +0000
+Date: Wed, 11 Feb 2026 15:17:01 +0000
 X-Bugzilla-Reason: None
 X-Bugzilla-Type: changed
 X-Bugzilla-Watch-Reason: AssignedTo drivers_platform_x86@kernel-bugs.osdl.org
@@ -41,14 +41,14 @@ X-Bugzilla-Component: Platform_x86
 X-Bugzilla-Version: 2.5
 X-Bugzilla-Keywords: 
 X-Bugzilla-Severity: low
-X-Bugzilla-Who: anhollander516@gmail.com
+X-Bugzilla-Who: i@rong.moe
 X-Bugzilla-Status: NEW
 X-Bugzilla-Resolution: 
 X-Bugzilla-Priority: P3
 X-Bugzilla-Assigned-To: drivers_platform_x86@kernel-bugs.osdl.org
 X-Bugzilla-Flags: 
-X-Bugzilla-Changed-Fields: 
-Message-ID: <bug-221065-215701-nAEdm5uqxl@https.bugzilla.kernel.org/>
+X-Bugzilla-Changed-Fields: attachments.created
+Message-ID: <bug-221065-215701-1cJPOHMefb@https.bugzilla.kernel.org/>
 In-Reply-To: <bug-221065-215701@https.bugzilla.kernel.org/>
 References: <bug-221065-215701@https.bugzilla.kernel.org/>
 Content-Type: text/plain; charset="UTF-8"
@@ -64,22 +64,10 @@ MIME-Version: 1.0
 
 https://bugzilla.kernel.org/show_bug.cgi?id=3D221065
 
---- Comment #24 from Avraham Hollander (anhollander516@gmail.com) ---
-(In reply to Rong Zhang from comment #22)
-> +CC Mark Pearson.
->=20
-> Thanks for Armin's insight!
->=20
-> Yeah, the root cause should lie in the ACPI table. It's super broken as I
-> even found more ECMT issues...
->=20
-> I've noticed these methods are broken while glancing at all occurrences of
-> ECMT in DSDT: WTER, ECCC, _BTP.
-
-Raphael Bitton can you post your acpidump as well? You have a different mod=
-el
-laptop, it would help to show that they both have the same ACPI table probl=
-ems.
+--- Comment #25 from Rong Zhang (i@rong.moe) ---
+Created attachment 309348
+  --> https://bugzilla.kernel.org/attachment.cgi?id=3D309348&action=3Dedit
+workaround for the FW bug
 
 --=20
 You may reply to this email to add a comment.
