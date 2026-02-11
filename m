@@ -1,1233 +1,351 @@
-Received: from mail-pf1-f175.google.com (mail-pf1-f175.google.com [209.85.210.175])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from sender4-op-o15.zoho.com (sender4-op-o15.zoho.com [136.143.188.15])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BB75A309DDC
-	for <platform-driver-x86@vger.kernel.org>; Wed, 11 Feb 2026 10:40:08 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.175
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1770806412; cv=none; b=oNldEDDoCMOeV2glPfmCK4TRrhhPD7sS0JXB2HHRpGUixkljJi35uiZfX1loqOQgyTd8h9tNEuebi77zSeg2qvupdlDtCL2jaiEbW/vedXx2kKERiseUWSm/BpjZaPm9j+gRz7kguTTLVXnGwfPgj4yYG8+1TyNmKxScB4cN0sI=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1770806412; c=relaxed/simple;
-	bh=BZuOFcJC0Dc76gKzfHHgZtaTzTbc22WXADdS5MtiWuo=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=mHN1mlf9jX2hzN6pz0ETTwCMdk31IoYIn6t7MBl6QUnLOhD9z7vinkjFz675fg98jkJa9N2euGs/AgqglyKmQJFlMUJcCdnhw5o6eByyivaqwtvPHvBa3rhwjt9XAAJ+mU5H1fP/TN6sYjwIHjro43E5h/KSkSblxXtFRfb/ZYU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=Z/S35ARf; arc=none smtp.client-ip=209.85.210.175
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1ECDC280A5B;
+	Wed, 11 Feb 2026 11:52:22 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=136.143.188.15
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1770810744; cv=pass; b=inUyYDIbH6dt6jW1l5wZKNabk4eczhJQAThWcWelNVlicPlewApq2+7KKff23832h8ZzLcVKbtpaWvaISk+bZX7S+o6Lznx2mf6WO4bmJnYrUKA24/bqzLl2/T4lgvpptJc0JQRozxLyacg1xlM9nSBLXqYoBhzUbpkAqqw6eN8=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1770810744; c=relaxed/simple;
+	bh=CClFUj25gYZeLS2bZ1XouRVb2qIpknHZKq3O+yMciec=;
+	h=Message-ID:Subject:From:To:Cc:In-Reply-To:References:Content-Type:
+	 Date:MIME-Version; b=Oj1NR+PdKd2TugUECh2uihoc9yDjSAJFtaQcTeoZqw4z2/8UVWyNqQdQ9Sx0vqt9x7g4zOAGLZtdHtFa39FzkDnjEXyQdc+/ioR8SWjOTAAXTtAwY/CcHDsxx2Tpvcf1nS1lthzTCoBSqeJH1Qt6GX2qdYCk3ezezD1MGug2/9I=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=rong.moe; spf=pass smtp.mailfrom=rong.moe; dkim=pass (2048-bit key) header.d=rong.moe header.i=i@rong.moe header.b=aECz0LdO; arc=pass smtp.client-ip=136.143.188.15
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=rong.moe
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=rong.moe
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Z/S35ARf"
-Received: by mail-pf1-f175.google.com with SMTP id d2e1a72fcca58-8230d228372so3959996b3a.1
-        for <platform-driver-x86@vger.kernel.org>; Wed, 11 Feb 2026 02:40:08 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1770806408; x=1771411208; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=ExNQa2p0NdjHKe2CmnJIMvRRbuW5xlux2JAjtvC5BIo=;
-        b=Z/S35ARfjbuB0qNTrBHf0RX/A/Y/bdnLWRTnbNftjL7Ds00PtNihDlb/vVHShE7nj4
-         kyBASig/9bgWHah8eDCSu195HNQSXHVmKYYWAnYuizi5HvELQOyaK73ABi5g0zBCKTQU
-         K3QeozkiQTfhT8xH7LZxEWJZ0Kz7+kZGTcLbyrCbk/ZDlDYDAfCY9YF319U5qZ0mjPGR
-         kQYTNcQTHjIGg1pJucsiX8ru+BmxHCiKqLJxW2QdyheOQTkjo+a4tWYk2k4C+J73fppC
-         ZiLVhIPvfOmy5kohbjqrfpK3wTDaap7/VL4dDjwC5tzK31bpQMOqtK3nmrpgHJmCVn4G
-         NOqw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1770806408; x=1771411208;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-gg:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=ExNQa2p0NdjHKe2CmnJIMvRRbuW5xlux2JAjtvC5BIo=;
-        b=Py4MrBKsi2Dd28N2vExIEceM/xAwmM5TL/X4LnkP+kKHc6C4NgYXRWQGVfdMPERq1c
-         DLnHa1XYQb9/bQGtmXnwF887MY+piUDF7LkJlf1OOd8dHdEzRpuSajgRZu0NJZeBT4F8
-         kmi3bsYzg4jRWuzmkoygq2ZuZD70UHj9rkztJGEEsvf/wfEKgWsbjuT30d9cgjy4dMvg
-         BMTHU7c2TbUnJ7Rir1wHk4AmMibjVoZJp3xLl66uzFXP6PT5cyC4EmNZcXZls1fdKopQ
-         JcusmTfSQM3RspXOeanBSmQOR8xDhyF9749RKgMDcfwKYXeIqdCqb5cI5Asj3yazG/Lz
-         YsSQ==
-X-Gm-Message-State: AOJu0Yw2s8uirSgMOhvLQuvS5vTW+aUcKkFwKNOiOEz99W6q7Etqe6oa
-	6joiRLaSyuC8DfpRz5ZqebqtZVRjfRPJMqgx1jp5kZI3FyXWH3qez2yooH63wA==
-X-Gm-Gg: AZuq6aIcHOItCPVCiZA4DihYfZ9XM2FUhXhJwsIRS1IDZdCnawxpzJ1zAtJD2eXUUKw
-	VYFYjOrHBe6V8qBF/5jMM11b0zK/uW9qWI9wktB9WbC9UV5Pcd16vjxqk/q6+21I45Ov+85BPnF
-	is6LhFRFGzAhe/H68ZqUHUHerUN7+j7VTofx/FJ53wiETMQ64Iua9GmJTxh8tM4jgKuaJ1eLx0/
-	WSELCqjo6+mLsVma/RovcyFMEcmVmmEzxRcscNZuP30Zr6M9mh6TdqpRJn+d4G7tZFskCqPHtQA
-	sDT0C692WKBuhHcqdahtSiilPlUFGEvmuIOmBuxC0c09Fgpv5Znf9L2qRH1gmCT1O7kzCM+FQsP
-	QaX9AXdQkt1db52Irn3dgapJYOu4Pvh8wtuSxTQZ0QA6IGjGSUKI75zJGk/3TQZezbD8VUV12V0
-	b1WIXE6TihXv22ltKWnVwpapamvgvPYbXI2ZAm0728rQ==
-X-Received: by 2002:a05:6a00:3928:b0:821:7ee2:b692 with SMTP id d2e1a72fcca58-8249fc33b4bmr1356341b3a.2.1770806407863;
-        Wed, 11 Feb 2026 02:40:07 -0800 (PST)
-Received: from localhost ([2401:4900:8901:8797:10b0:e747:14f1:1482])
-        by smtp.gmail.com with UTF8SMTPSA id d2e1a72fcca58-8249e366f7asm1717103b3a.13.2026.02.11.02.40.06
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 11 Feb 2026 02:40:07 -0800 (PST)
-From: Sharwesh05 <sharweshraajan@gmail.com>
-To: hansg@kernel.org
-Cc: platform-driver-x86@vger.kernel.org,
-	sharweshlinux@gmail.com,
-	Sharan Kumar M <sharweshraajan@gmail.com>
-Subject: [PATCH]	platform/x86: hp-wmi: add OMEN v1 (8BCD) Insyde firmware support
-Date: Wed, 11 Feb 2026 16:09:39 +0530
-Message-ID: <20260211103939.23067-1-sharweshraajan@gmail.com>
-X-Mailer: git-send-email 2.47.3
+	dkim=pass (2048-bit key) header.d=rong.moe header.i=i@rong.moe header.b="aECz0LdO"
+ARC-Seal: i=1; a=rsa-sha256; t=1770810732; cv=none; 
+	d=zohomail.com; s=zohoarc; 
+	b=ky6NeQaBq3PrTr7uSQil6rfkTIVduMulgRJz6pCvLyBqEZO/KWgq2VPYe8y/tmOSglSvRasaWeG6eYIvCSZpKxrIcz1n5HAwdjp3hqPfYuQNhS2LQoD2WfcL5EndjHLDJW63br6e+uSLXe3iN+sEMtqLQuWj8MAEIwK0FrogyhI=
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=zohomail.com; s=zohoarc; 
+	t=1770810732; h=Content-Type:Content-Transfer-Encoding:Cc:Cc:Date:Date:From:From:In-Reply-To:MIME-Version:Message-ID:References:Subject:Subject:To:To:Message-Id:Reply-To; 
+	bh=g75cHajuH2vGJRvbLxhZi2YZJzPBLq2+gs4Pk14YHBQ=; 
+	b=LRueYKlsqGYG/WBvK3a1+TaqqpIe0yblO/E+Pevux90yr38HDsqbqB07uctnAXORADHv5gVxjKLssET2IpD5esRUcsquieeBN7hhTf34Xsj1aWb6FspkoUc4HBDVj/3xADJhgRX0gwO9BpCIzwSUSnPW8wTbyfD44z+gXUGSjuM=
+ARC-Authentication-Results: i=1; mx.zohomail.com;
+	dkim=pass  header.i=rong.moe;
+	spf=pass  smtp.mailfrom=i@rong.moe;
+	dmarc=pass header.from=<i@rong.moe>
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; t=1770810732;
+	s=zmail2048; d=rong.moe; i=i@rong.moe;
+	h=Message-ID:Subject:Subject:From:From:To:To:Cc:Cc:In-Reply-To:References:Content-Type:Content-Transfer-Encoding:Date:Date:MIME-Version:Message-Id:Reply-To;
+	bh=g75cHajuH2vGJRvbLxhZi2YZJzPBLq2+gs4Pk14YHBQ=;
+	b=aECz0LdOHp3eOUBdIS7E1Zi2qLnB0WEx3YLHPpDvT5WsxvTfOhTeqJV/tuqGUM8x
+	K4fRdqbe0OuSG3PLERdtW2TvL0f3T2jfs03xi1gKLFfUZ2RQLUb/iTWV75kMAjsQXVF
+	BKCSBOWUBkVTpdOxYMjoZTcppNK4YpU9UHWWADLRuV9zfwVGpm/7QiiL3BBAzsiIVfw
+	lZjIIcTjnvqLqQ9TN3c0yhkaU0Q5DIeyJTwMHGozdpY8bhhtNPAGzMK2HdtihGxm56Z
+	95xKPfzmrOKRID6mqbLPjkI025McGZd9x0s4cv5s8DIPYmHUdyulqxpwi68FvgOX4fl
+	neUJ3lS/wA==
+Received: by mx.zohomail.com with SMTPS id 1770810730390488.4656423740504;
+	Wed, 11 Feb 2026 03:52:10 -0800 (PST)
+Message-ID: <c557a3646d43fce65c51c0061443386699f1f320.camel@rong.moe>
+Subject: Re: [PATCH 2/2] platform/x86: lenovo-wmi-capdata: Add debugfs file
+ for dumping capdata
+From: Rong Zhang <i@rong.moe>
+To: "Derek J. Clark" <derekjohn.clark@gmail.com>
+Cc: Kurt Borja <kuurtb@gmail.com>, Mark Pearson
+ <mpearson-lenovo@squebb.ca>,  Armin Wolf <W_Armin@gmx.de>, Hans de Goede
+ <hansg@kernel.org>, Ilpo =?ISO-8859-1?Q?J=E4rvinen?=	
+ <ilpo.jarvinen@linux.intel.com>, platform-driver-x86@vger.kernel.org, 
+	linux-kernel@vger.kernel.org
+In-Reply-To: <34161A06-2732-4819-B986-4B471B98EF44@gmail.com>
+References: <20260210191938.137234-1-i@rong.moe>
+				 <20260210191938.137234-3-i@rong.moe>
+				 <34161A06-2732-4819-B986-4B471B98EF44@gmail.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+Date: Wed, 11 Feb 2026 19:47:03 +0800
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+User-Agent: Evolution 3.56.2-8 
+X-ZohoMailClient: External
 
-From: Sharan Kumar M <sharweshraajan@gmail.com>
+Hi Derek,
 
-This patch integrates BIOS-specific command handling and
-platform detection for newer Insyde-based systems, along
-with minor related cleanups.
+On Tue, 2026-02-10 at 12:38 -0800, Derek J. Clark wrote:
+> On February 10, 2026 11:19:37 AM PST, Rong Zhang <i@rong.moe> wrote:
+> > The Lenovo GameZone/Other interfaces have some delicate divergences
+> > among different devices. When making a bug report or adding support for
+> > new devices/interfaces, capdata is the most important information to
+> > cross-check with.
+> >=20
+> > Add a debugfs file (lenovo_wmi/<device_name>/capdata), so that users ca=
+n
+> > dump capdata and include it in their reports.
+> >=20
+> > Since `struct capdata01' is just an extension to `struct capdata00',
+> > also converts the former to include the latter anonymously
+> > (-fms-extensions, since v6.19). In this manner type casting won't be
+> > confusing.
+> >=20
+> > Signed-off-by: Rong Zhang <i@rong.moe>
+> > ---
+> > drivers/platform/x86/lenovo/Kconfig       |   1 +
+> > drivers/platform/x86/lenovo/wmi-capdata.c | 121 ++++++++++++++++++++++
+> > drivers/platform/x86/lenovo/wmi-capdata.h |   4 +-
+> > 3 files changed, 123 insertions(+), 3 deletions(-)
+> >=20
+> > diff --git a/drivers/platform/x86/lenovo/Kconfig b/drivers/platform/x86=
+/lenovo/Kconfig
+> > index f885127b007f1..8357971c76d80 100644
+> > --- a/drivers/platform/x86/lenovo/Kconfig
+> > +++ b/drivers/platform/x86/lenovo/Kconfig
+> > @@ -236,6 +236,7 @@ config YT2_1380
+> > config LENOVO_WMI_CAPDATA
+> > 	tristate
+> > 	depends on ACPI_WMI
+> > +	depends on LENOVO_WMI_HELPERS
+> >=20
+> > config LENOVO_WMI_EVENTS
+> > 	tristate
+> > diff --git a/drivers/platform/x86/lenovo/wmi-capdata.c b/drivers/platfo=
+rm/x86/lenovo/wmi-capdata.c
+> > index ee1fb02d8e31e..ca478b45119bc 100644
+> > --- a/drivers/platform/x86/lenovo/wmi-capdata.c
+> > +++ b/drivers/platform/x86/lenovo/wmi-capdata.c
+> > @@ -32,6 +32,7 @@
+> > #include <linux/cleanup.h>
+> > #include <linux/component.h>
+> > #include <linux/container_of.h>
+> > +#include <linux/debugfs.h>
+> > #include <linux/device.h>
+> > #include <linux/dev_printk.h>
+> > #include <linux/err.h>
+> > @@ -43,11 +44,13 @@
+> > #include <linux/mutex_types.h>
+> > #include <linux/notifier.h>
+> > #include <linux/overflow.h>
+> > +#include <linux/seq_file.h>
+> > #include <linux/stddef.h>
+> > #include <linux/types.h>
+> > #include <linux/wmi.h>
+> >=20
+> > #include "wmi-capdata.h"
+> > +#include "wmi-helpers.h"
+> >=20
+> > #define LENOVO_CAPABILITY_DATA_00_GUID "362A3AFE-3D96-4665-8530-96DAD5B=
+B300E"
+> > #define LENOVO_CAPABILITY_DATA_01_GUID "7A8F5407-CB67-4D6E-B547-39B3BE0=
+18154"
+> > @@ -88,6 +91,7 @@ struct lwmi_cd_priv {
+> > 	struct notifier_block acpi_nb; /* ACPI events */
+> > 	struct wmi_device *wdev;
+> > 	struct cd_list *list;
+> > +	struct dentry *debugfs_dir;
+> >=20
+> > 	/*
+> > 	 * A capdata device may be a component master of another capdata devic=
+e.
+> > @@ -118,6 +122,8 @@ struct cd_list {
+> >=20
+> > static struct wmi_driver lwmi_cd_driver;
+> >=20
+> > +/* =3D=3D=3D=3D=3D=3D=3D=3D Device components =3D=3D=3D=3D=3D=3D=3D=3D=
+ */
+> > +
+> > /**
+> >  * lwmi_cd_match() - Match rule for the master driver.
+> >  * @dev: Pointer to the capability data parent device.
+> > @@ -471,6 +477,116 @@ EXPORT_SYMBOL_NS_GPL(lwmi_cd01_get_data, "LENOVO_=
+WMI_CAPDATA");
+> > DEF_LWMI_CDXX_GET_DATA(cd_fan, LENOVO_FAN_TEST_DATA, struct capdata_fan=
+);
+> > EXPORT_SYMBOL_NS_GPL(lwmi_cd_fan_get_data, "LENOVO_WMI_CAPDATA");
+> >=20
+> > +/* =3D=3D=3D=3D=3D=3D=3D=3D debugfs =3D=3D=3D=3D=3D=3D=3D=3D */
+> > +
+> > +/**
+> > + * lwmi_cd00_show() - Dump capdata00
+> > + * @s: Pointer to seq_file where the capdata00 is dumped.
+> > + * @cd00: Pointer to a capdata00 struct to be dumped.
+> > + */
+> > +static void lwmi_cd00_show(struct seq_file *s, struct capdata00 *cd00)
+> > +{
+> > +	u8 dev =3D FIELD_GET(LWMI_ATTR_DEV_ID_MASK, cd00->id);
+> > +	u8 feat =3D FIELD_GET(LWMI_ATTR_FEAT_ID_MASK, cd00->id);
+> > +	u8 mode =3D FIELD_GET(LWMI_ATTR_MODE_ID_MASK, cd00->id);
+> > +	u8 type =3D FIELD_GET(LWMI_ATTR_TYPE_ID_MASK, cd00->id);
+> > +	bool extra =3D cd00->supported & ~(LWMI_SUPP_GET | LWMI_SUPP_SET | LW=
+MI_SUPP_VALID);
+> > +	bool get =3D cd00->supported & LWMI_SUPP_GET;
+> > +	bool set =3D cd00->supported & LWMI_SUPP_SET;
+> > +	bool valid =3D cd00->supported & LWMI_SUPP_VALID;
+>=20
+> Hi Rong,
+>=20
+> I have something that will clean this up in the series I'm working on, LW=
+MI_ATTR_ID, that pushes all the FIELD_PREP into a macro. Perhaps it would b=
+e worth combining this series into mine that so we can use it here as well.=
+=20
+>=20
+> My series also addresses some fairly significant bugs, so I'd prefer to n=
+ot have to wait for this series to get approved to post it as it currently =
+conflicts in other areas.
 
+Feel free to integrate this series into yours :)
 
-Signed-off-by: Sharan Kumar M <sharweshraajan@gmail.com>
+I have zero experience in doing so but I guess git-send-email should
+handle the author field well.
 
----
- drivers/platform/x86/hp/hp-wmi.c | 758 ++++++++++++++++++++++++-------
- 1 file changed, 584 insertions(+), 174 deletions(-)
+> > +	seq_printf(s, "  id:             0x%08x [dev: %2u, feat: %2u, mode: %=
+2u, type: %2u]\n",
+> > +		   cd00->id, dev, feat, mode, type);
+> > +
+> > +	seq_printf(s, "  supported:      0x%08x [%c%c%c%c]\n", cd00->supporte=
+d,
+> > +		   extra ? '+' : ' ',
+> > +		   get   ? 'R' : ' ',
+> > +		   set   ? 'W' : ' ',
+> > +		   valid ? 'V' : ' ');
+> > +
+> > +	seq_printf(s, "  default_value:  %u\n", cd00->default_value);
+> > +}
+> > +
+> > +/**
+> > + * lwmi_cd01_show() - Dump capdata01
+> > + * @s: Pointer to seq_file where the capdata01 is dumped.
+> > + * @cd01: Pointer to a capdata01 struct to be dumped.
+> > + */
+> > +static void lwmi_cd01_show(struct seq_file *s, struct capdata01 *cd01)
+> > +{
+> > +	/* capdata01 is an extension to capdata00. */
+> > +	lwmi_cd00_show(s, (struct capdata00 *)cd01);
+> > +
+> > +	seq_printf(s, "  step:           %u\n", cd01->step);
+> > +	seq_printf(s, "  min_value:      %u\n", cd01->min_value);
+> > +	seq_printf(s, "  max_value:      %u\n", cd01->max_value);
+> > +}
+> > +
+> > +/**
+> > + * lwmi_cd_fan_show() - Dump capdata_fan
+> > + * @s: Pointer to seq_file where the capdata_fan is dumped.
+> > + * @cd_fan: Pointer to a capdata_fan struct to be dumped.
+> > + */
+> > +static void lwmi_cd_fan_show(struct seq_file *s, struct capdata_fan *c=
+d_fan)
+> > +{
+> > +	seq_printf(s, "  id:             %u\n", cd_fan->id);
+> > +	seq_printf(s, "  min_rpm:        %u\n", cd_fan->min_rpm);
+> > +	seq_printf(s, "  max_rpm:        %u\n", cd_fan->max_rpm);
+> > +}
+> > +
+> > +/**
+> > + * lwmi_cd_debugfs_show() - Dump capability data to debugfs
+> > + * @s: Pointer to seq_file where the capability data is dumped.
+> > + * @data: unused.
+> > + *
+> > + * Return: 0
+> > + */
+> > +static int lwmi_cd_debugfs_show(struct seq_file *s, void *data)
+> > +{
+> > +	struct lwmi_cd_priv *priv =3D s->private;
+> > +	u8 idx;
+> > +
+> > +	guard(mutex)(&priv->list->list_mutex);
+> > +
+> > +	/* lwmi_cd_alloc() ensured priv->list->type must be a valid type. */
+> > +	for (idx =3D 0; idx < priv->list->count; idx++) {
+> > +		seq_printf(s, "%s[%u]:\n", lwmi_cd_table[priv->list->type].name, idx=
+);
+> > +
+> > +		if (priv->list->type =3D=3D LENOVO_CAPABILITY_DATA_00)
+> > +			lwmi_cd00_show(s, &priv->list->cd00[idx]);
+> > +		else if (priv->list->type =3D=3D LENOVO_CAPABILITY_DATA_01)
+> > +			lwmi_cd01_show(s, &priv->list->cd01[idx]);
+> > +		else if (priv->list->type =3D=3D LENOVO_FAN_TEST_DATA)
+> > +			lwmi_cd_fan_show(s, &priv->list->cd_fan[idx]);
+> > +	}
+> > +
+> > +	return 0;
+> > +}
+> > +DEFINE_SHOW_ATTRIBUTE(lwmi_cd_debugfs);
+> > +
+> > +/**
+> > + * lwmi_cd_debugfs_add() - Create debugfs directory and files for a de=
+vice
+> > + * @priv: lenovo-wmi-capdata driver data.
+> > + */
+> > +static void lwmi_cd_debugfs_add(struct lwmi_cd_priv *priv)
+> > +{
+> > +	priv->debugfs_dir =3D lwmi_debugfs_create_dir(priv->wdev);
+> > +
+> > +	debugfs_create_file("capdata", 0444, priv->debugfs_dir, priv, &lwmi_c=
+d_debugfs_fops);
+> > +}
+> > +
+> > +/**
+> > + * lwmi_cd_debugfs_remove() - Remove debugfs directory for a device
+> > + * @priv: lenovo-wmi-capdata driver data.
+> > + */
+> > +static void lwmi_cd_debugfs_remove(struct lwmi_cd_priv *priv)
+> > +{
+> > +	debugfs_remove_recursive(priv->debugfs_dir);
+> > +	priv->debugfs_dir =3D NULL;
+> > +}
+> > +
+> > +/* =3D=3D=3D=3D=3D=3D=3D=3D WMI interface =3D=3D=3D=3D=3D=3D=3D=3D */
+> > +
+> > /**
+> >  * lwmi_cd_cache() - Cache all WMI data block information
+> >  * @priv: lenovo-wmi-capdata driver data.
+> > @@ -773,6 +889,8 @@ static int lwmi_cd_probe(struct wmi_device *wdev, c=
+onst void *context)
+> > 		dev_err(&wdev->dev, "failed to register %s: %d\n",
+> > 			info->name, ret);
+> > 	} else {
+> > +		lwmi_cd_debugfs_add(priv);
+> > +
+> > 		dev_dbg(&wdev->dev, "registered %s with %u items\n",
+> > 			info->name, priv->list->count);
+> > 	}
+> > @@ -783,6 +901,8 @@ static void lwmi_cd_remove(struct wmi_device *wdev)
+> > {
+> > 	struct lwmi_cd_priv *priv =3D dev_get_drvdata(&wdev->dev);
+> >=20
+> > +	lwmi_cd_debugfs_remove(priv);
+> > +
+> > 	switch (priv->list->type) {
+> > 	case LENOVO_CAPABILITY_DATA_00:
+> > 		lwmi_cd_sub_master_del(priv);
+> > @@ -822,6 +942,7 @@ static struct wmi_driver lwmi_cd_driver =3D {
+> >=20
+> > module_wmi_driver(lwmi_cd_driver);
+> >=20
+> > +MODULE_IMPORT_NS("LENOVO_WMI_HELPERS");
+> > MODULE_DEVICE_TABLE(wmi, lwmi_cd_id_table);
+> > MODULE_AUTHOR("Derek J. Clark <derekjohn.clark@gmail.com>");
+> > MODULE_AUTHOR("Rong Zhang <i@rong.moe>");
+> > diff --git a/drivers/platform/x86/lenovo/wmi-capdata.h b/drivers/platfo=
+rm/x86/lenovo/wmi-capdata.h
+> > index 8c1df3efcc553..034a6e48be071 100644
+> > --- a/drivers/platform/x86/lenovo/wmi-capdata.h
+> > +++ b/drivers/platform/x86/lenovo/wmi-capdata.h
+> > @@ -30,9 +30,7 @@ struct capdata00 {
+> > };
+> >=20
+> > struct capdata01 {
+> > -	u32 id;
+> > -	u32 supported;
+> > -	u32 default_value;
+> > +	struct capdata00;
+>=20
+> Doesn't this also require some significant changes to the usage in wmi-ot=
+her and in the query function? We're accessing these members directly.
 
-diff --git a/drivers/platform/x86/hp/hp-wmi.c b/drivers/platform/x86/hp/hp-wmi.c
-index f4ea1ea059..e31a55c75c 100644
---- a/drivers/platform/x86/hp/hp-wmi.c
-+++ b/drivers/platform/x86/hp/hp-wmi.c
-@@ -45,6 +45,7 @@ MODULE_ALIAS("wmi:5FB7F034-2C63-45E9-BE91-3D44E2C707E4");
- #define HP_OMEN_EC_THERMAL_PROFILE_TIMER_OFFSET 0x63
- #define HP_OMEN_EC_THERMAL_PROFILE_OFFSET 0x95
- 
-+#define HP_WMI_FAN_SPEED_LIMIT 67
- #define HP_FAN_SPEED_AUTOMATIC	 0x00
- #define HP_POWER_LIMIT_DEFAULT	 0x00
- #define HP_POWER_LIMIT_NO_CHANGE 0xFF
-@@ -93,6 +94,13 @@ static const char * const omen_timed_thermal_profile_boards[] = {
- 	"8BAD",
- };
- 
-+/* DMI board names of Omen laptops that have a thermal profile timer
-+ * and cannot be controlled by ec
-+ */
-+static const char * const thermal_profile_v1_boards[] = {
-+	"8BCD",
-+};
-+
- /* DMI Board names of Victus 16-d1xxx laptops */
- static const char * const victus_thermal_profile_boards[] = {
- 	"8A25",
-@@ -105,6 +113,33 @@ static const char * const victus_s_thermal_profile_boards[] = {
- 	"8D41",
- };
- 
-+/*
-+ * FANMODE_Lx values were reverse-engineered by observing EC/WMI
-+ * calls made by HP Omen Gaming Hub under Windows.
-+ */
-+enum hp_fan_mode {
-+	FANMODE_LEGACY_DEFAULT     =  0x00,
-+	FANMODE_LEGACY_PERFORMANCE =  0x01,
-+	FANMODE_LEGACY_COOL        =  0x02,
-+	FANMODE_LEGACY_QUIET       =  0x03,
-+	FANMODE_LEGACY_EXTREME     =  0x04,
-+	FANMODE_L8                 =  0x04,
-+	FANMODE_L0                 =  0x10,
-+	FANMODE_L5                 =  0x11,
-+	FANMODE_L1                 =  0x20,
-+	FANMODE_L6                 =  0x21,
-+	FANMODE_L2                 =  0x30,
-+	FANMODE_L7                 =  0x31,
-+	FANMODE_L3                 =  0x40,
-+	FANMODE_L4                 =  0x50,
-+};
-+
-+enum hp_gpu_mode {
-+	GPUMODE_HYBRID   = 0x00,  // 0x00 - Hybrid graphics mode (or BIOS call failed)
-+	GPUMODE_DISCRETE = 0x01,  // 0x01 - Discrete GPU exclusive mode
-+	GPUMODE_OPTIMUS  = 0x02   // 0x02 - NVIDIA Optimus mode
-+};
-+
- enum hp_wmi_radio {
- 	HPWMI_WIFI	= 0x0,
- 	HPWMI_BLUETOOTH	= 0x1,
-@@ -165,39 +200,70 @@ enum hp_wmi_commandtype {
- 	HPWMI_THERMAL_PROFILE_QUERY	= 0x4c,
- };
- 
--struct victus_power_limits {
-+/* these hp_power_limits and hp_gpu_power_modes
-+ * functions are standard for all hp laptops
-+ */
-+struct hp_power_limits {
- 	u8 pl1;
- 	u8 pl2;
- 	u8 pl4;
- 	u8 cpu_gpu_concurrent_limit;
- };
- 
--struct victus_gpu_power_modes {
-+struct hp_gpu_power_modes {
- 	u8 ctgp_enable;
- 	u8 ppab_enable;
- 	u8 dstate;
- 	u8 gpu_slowdown_temp;
- };
- 
-+/*
-+ * HPWMI GM (General Method) command identifiers.
-+ *
-+ * HP laptops ship with different firmware implementations depending
-+ * on the BIOS vendor. In practice, HP mainly uses:
-+ *
-+ *  - AMI-based BIOS: common on older and some consumer platforms
-+ *  - Insyde-based BIOS: common on newer OMEN / Victus platforms
-+ *
-+ * While the WMI GUID remains the same, the command IDs and payload
-+ * formats differ between these firmware implementations. The command
-+ * names below reflect the firmware variant they are known to work with.
-+ */
- enum hp_wmi_gm_commandtype {
--	HPWMI_FAN_SPEED_GET_QUERY		= 0x11,
-+	HPWMI_AMI_FAN_SPEED_GET_QUERY		= 0x11,
- 	HPWMI_SET_PERFORMANCE_MODE		= 0x1A,
- 	HPWMI_FAN_SPEED_MAX_GET_QUERY		= 0x26,
- 	HPWMI_FAN_SPEED_MAX_SET_QUERY		= 0x27,
- 	HPWMI_GET_SYSTEM_DESIGN_DATA		= 0x28,
-+	HPWMI_INSYDE_FAN_SPEED_GET_QUERY	= 0x2D,
-+	HPWMI_INSYDE_FAN_SPEED_SET_QUERY	= 0x2E,
- 	HPWMI_FAN_COUNT_GET_QUERY		= 0x10,
- 	HPWMI_GET_GPU_THERMAL_MODES_QUERY	= 0x21,
- 	HPWMI_SET_GPU_THERMAL_MODES_QUERY	= 0x22,
- 	HPWMI_SET_POWER_LIMITS_QUERY		= 0x29,
--	HPWMI_VICTUS_S_FAN_SPEED_GET_QUERY	= 0x2D,
--	HPWMI_FAN_SPEED_SET_QUERY		= 0x2E,
-+	HPWMI_GET_TEMPERATURE_QUERY		= 0x23,
-+	HPWMI_FAN_TABLE_GET_QUERY		= 0x2F,
-+	HPWMI_FAN_TABLE_SET_QUERY		= 0x32,
-+	HPWMI_CPU_POWER_SET_QUERY		= 0X29,
-+	HPWMI_GPU_POWER_QUERY			= 0X52, //mux status
-+	HPWMI_ADAPTER_QUERY			= 0x0F,
-+	HPWMI_GET_BACKLIGHT			= 0x04,
-+	HPWMI_SET_BACKLIGHT			= 0x05,
-+};
-+
-+enum hp_wmi_backlight {
-+	BACKLIGHT_OFF = 0x64,
-+	BACKLIGHT_ON  = 0xE4,
- };
- 
- enum hp_wmi_command {
--	HPWMI_READ	= 0x01,
--	HPWMI_WRITE	= 0x02,
-+	HPWMI_READ	= 0x01, // Earliest implemented
-+	HPWMI_WRITE	= 0x02, // Graphics mode switch
- 	HPWMI_ODM	= 0x03,
--	HPWMI_GM	= 0x20008,
-+	HPWMI_GM	= 0x20008, // Most commands {working so running in this}
-+	HPWMI_GM_v2 = 0X20009, //Current Implementation {development going on}
-+	HPWMI_GM_v3 = 0X2000b, //typeC status
- };
- 
- enum hp_wmi_hardware_mask {
-@@ -225,42 +291,12 @@ enum hp_wireless2_bits {
- 	HPWMI_POWER_FW_OR_HW	= HPWMI_POWER_BIOS | HPWMI_POWER_HARD,
- };
- 
--enum hp_thermal_profile_omen_v0 {
--	HP_OMEN_V0_THERMAL_PROFILE_DEFAULT     = 0x00,
--	HP_OMEN_V0_THERMAL_PROFILE_PERFORMANCE = 0x01,
--	HP_OMEN_V0_THERMAL_PROFILE_COOL        = 0x02,
--};
--
--enum hp_thermal_profile_omen_v1 {
--	HP_OMEN_V1_THERMAL_PROFILE_DEFAULT	= 0x30,
--	HP_OMEN_V1_THERMAL_PROFILE_PERFORMANCE	= 0x31,
--	HP_OMEN_V1_THERMAL_PROFILE_COOL		= 0x50,
--};
--
- enum hp_thermal_profile_omen_flags {
- 	HP_OMEN_EC_FLAGS_TURBO		= 0x04,
- 	HP_OMEN_EC_FLAGS_NOTIMER	= 0x02,
- 	HP_OMEN_EC_FLAGS_JUSTSET	= 0x01,
- };
- 
--enum hp_thermal_profile_victus {
--	HP_VICTUS_THERMAL_PROFILE_DEFAULT		= 0x00,
--	HP_VICTUS_THERMAL_PROFILE_PERFORMANCE		= 0x01,
--	HP_VICTUS_THERMAL_PROFILE_QUIET			= 0x03,
--};
--
--enum hp_thermal_profile_victus_s {
--	HP_VICTUS_S_THERMAL_PROFILE_DEFAULT		= 0x00,
--	HP_VICTUS_S_THERMAL_PROFILE_PERFORMANCE		= 0x01,
--};
--
--enum hp_thermal_profile {
--	HP_THERMAL_PROFILE_PERFORMANCE	= 0x00,
--	HP_THERMAL_PROFILE_DEFAULT		= 0x01,
--	HP_THERMAL_PROFILE_COOL			= 0x02,
--	HP_THERMAL_PROFILE_QUIET		= 0x03,
--};
--
- #define IS_HWBLOCKED(x) ((x & HPWMI_POWER_FW_OR_HW) != HPWMI_POWER_FW_OR_HW)
- #define IS_SWBLOCKED(x) !(x & HPWMI_POWER_SOFT)
- 
-@@ -455,12 +491,17 @@ static int hp_wmi_perform_query(int query, enum hp_wmi_command command,
- }
- 
- /*
-- * Calling this hp_wmi_get_fan_count_userdefine_trigger function also enables
-- * and/or maintains the laptop in user defined thermal and fan states, instead
-- * of using a fallback state. After a 120 seconds timeout however, the laptop
-- * goes back to its fallback state.
-+ * Calling this function queries the firmware for the number of fans.
-+ *
-+ * On some HP platforms, issuing this query also enables and maintains
-+ * user-selected thermal and fan control modes, preventing the firmware
-+ * from falling back to its default thermal behavior.
-+ *
-+ * On new systems, the firmware has been observed to revert to the
-+ * fallback state if this query is not issued for approximately 120
-+ * seconds. This timeout is firmware-defined and undocumented.
-  */
--static int hp_wmi_get_fan_count_userdefine_trigger(void)
-+static int hp_wmi_get_fan_count(void)
- {
- 	u8 fan_data[4] = {};
- 	int ret;
-@@ -471,15 +512,26 @@ static int hp_wmi_get_fan_count_userdefine_trigger(void)
- 	if (ret != 0)
- 		return -EINVAL;
- 
--	return fan_data[0]; /* Others bytes aren't providing fan count */
-+	pr_debug("Refreshing firmware fan/thermal control state\n");
-+	/*
-+	 * fan_data[0] returns a firmware-defined status value.
-+	 *
-+	 * Observed values:
-+	 *   0 - Normal operation / no protection active
-+	 *   1 - OCP (Over-Current Protection) active
-+	 *   2 - OTP (Over-Temperature Protection) active
-+	 *
-+	 * Exact semantics are undocumented and may vary by platform.
-+	 */
-+	return fan_data[0];
- }
- 
--static int hp_wmi_get_fan_speed(int fan)
-+static int hp_wmi_get_fan_speed_ami(int fan)
- {
- 	u8 fsh, fsl;
- 	char fan_data[4] = { fan, 0, 0, 0 };
- 
--	int ret = hp_wmi_perform_query(HPWMI_FAN_SPEED_GET_QUERY, HPWMI_GM,
-+	int ret = hp_wmi_perform_query(HPWMI_AMI_FAN_SPEED_GET_QUERY, HPWMI_GM,
- 				       &fan_data, sizeof(char),
- 				       sizeof(fan_data));
- 
-@@ -492,7 +544,7 @@ static int hp_wmi_get_fan_speed(int fan)
- 	return (fsh << 8) | fsl;
- }
- 
--static int hp_wmi_get_fan_speed_victus_s(int fan)
-+static int hp_wmi_get_fan_speed_insyde(int fan)
- {
- 	u8 fan_data[128] = {};
- 	int ret;
-@@ -500,15 +552,139 @@ static int hp_wmi_get_fan_speed_victus_s(int fan)
- 	if (fan < 0 || fan >= sizeof(fan_data))
- 		return -EINVAL;
- 
--	ret = hp_wmi_perform_query(HPWMI_VICTUS_S_FAN_SPEED_GET_QUERY,
--				   HPWMI_GM, &fan_data, sizeof(u8),
--				   sizeof(fan_data));
-+	ret = hp_wmi_perform_query(HPWMI_INSYDE_FAN_SPEED_GET_QUERY, HPWMI_GM,
-+					&fan_data, sizeof(u8), sizeof(fan_data));
-+
- 	if (ret != 0)
- 		return -EINVAL;
- 
- 	return fan_data[fan] * 100;
- }
- 
-+static int hp_wmi_set_fan_speed(int cpu, int gpu)
-+{
-+	u8 fan_speed[2] = { cpu, gpu };
-+	int ret;
-+
-+	ret = hp_wmi_perform_query(HPWMI_INSYDE_FAN_SPEED_SET_QUERY, HPWMI_GM,
-+				   &fan_speed, sizeof(fan_speed), 0);
-+
-+	if (ret)
-+		return ret < 0 ? ret : -EINVAL;
-+
-+	return ret;
-+}
-+
-+static int hp_wmi_fan_speed_max_set(int enabled)
-+{
-+	int ret;
-+
-+	ret = hp_wmi_perform_query(HPWMI_FAN_SPEED_MAX_SET_QUERY, HPWMI_GM,
-+				   &enabled, sizeof(enabled), 0);
-+
-+	if (ret)
-+		return ret < 0 ? ret : -EINVAL;
-+
-+	return enabled;
-+}
-+
-+static int hp_wmi_fan_speed_max_get(void)
-+{
-+	int val = 0, ret;
-+
-+	ret = hp_wmi_perform_query(HPWMI_FAN_SPEED_MAX_GET_QUERY, HPWMI_GM,
-+				   &val, zero_if_sup(val), sizeof(val));
-+
-+	if (ret)
-+		return ret < 0 ? ret : -EINVAL;
-+
-+	return val;
-+}
-+
-+static int hp_wmi_fan_speed_reset(void)
-+{
-+	u8 fan_speed[2] = { HP_FAN_SPEED_AUTOMATIC, HP_FAN_SPEED_AUTOMATIC };
-+	int ret;
-+
-+	ret = hp_wmi_perform_query(HPWMI_INSYDE_FAN_SPEED_SET_QUERY, HPWMI_GM,
-+				   &fan_speed, sizeof(fan_speed), 0);
-+
-+	if (ret)
-+		return ret < 0 ? ret : -EINVAL;
-+
-+	return ret;
-+}
-+
-+static int hp_wmi_fan_speed_max_reset(void)
-+{
-+	int ret;
-+
-+	ret = hp_wmi_fan_speed_max_set(0);
-+	if (ret)
-+		return ret;
-+
-+	/* Disabling max fan speed on Insyde laptops needs a 2nd step: */
-+	ret = hp_wmi_fan_speed_reset();
-+
-+	return ret;
-+}
-+
-+static int hp_wmi_get_backlight(void)
-+{
-+	int ret;
-+	u8 data[4] = {};
-+
-+	ret = hp_wmi_perform_query(HPWMI_GET_BACKLIGHT, HPWMI_GM_v2,
-+				   &data, sizeof(u8), sizeof(data));
-+
-+	if (ret)
-+		return ret < 0 ? ret : -EINVAL;
-+
-+	return (data[0] == 0x00) ? 0 : 1;
-+}
-+
-+static int hp_wmi_set_backlight(enum hp_wmi_backlight enabled)
-+{
-+	int ret;
-+	u8 data[4] = { enabled, 0, 0, 0 };
-+
-+	ret = hp_wmi_perform_query(HPWMI_SET_BACKLIGHT, HPWMI_GM_v2,
-+				   &data, sizeof(data), 0);
-+
-+	if (ret)
-+		return ret < 0 ? ret : -EINVAL;
-+
-+	return ret;
-+}
-+
-+static int hp_wmi_get_gpumode(void)
-+{
-+	int ret;
-+	u8 data[4] = {};
-+
-+	ret = hp_wmi_perform_query(HPWMI_GPU_POWER_QUERY, HPWMI_READ,
-+				   &data, sizeof(data), sizeof(data));
-+
-+	if (ret)
-+		return ret < 0 ? ret : -EINVAL;
-+
-+	return ret;
-+}
-+
-+static int hp_wmi_set_gpumode(enum hp_gpu_mode enabled)
-+{
-+	int ret;
-+	u8 data[4] = { enabled, 0x00, 0x00, 0x00 };
-+
-+	ret = hp_wmi_perform_query(HPWMI_GPU_POWER_QUERY, HPWMI_WRITE,
-+				   &data, sizeof(data), 0);
-+
-+	if (ret)
-+		return ret < 0 ? ret : -EINVAL;
-+
-+	return 1;
-+}
-+
- static int hp_wmi_read_int(int query)
- {
- 	int val = 0, ret;
-@@ -564,7 +740,7 @@ static int omen_thermal_profile_set(int mode)
- 	 * 255, so let's mimic this behaviour to be as close as possible to
- 	 * the original software.
- 	 */
--	char buffer[2] = {-1, mode};
-+	char buffer[2] = { -1, mode };
- 	int ret;
- 
- 	ret = hp_wmi_perform_query(HPWMI_SET_PERFORMANCE_MODE, HPWMI_GM,
-@@ -624,56 +800,6 @@ static int omen_thermal_profile_get(void)
- 	return data;
- }
- 
--static int hp_wmi_fan_speed_max_set(int enabled)
--{
--	int ret;
--
--	ret = hp_wmi_perform_query(HPWMI_FAN_SPEED_MAX_SET_QUERY, HPWMI_GM,
--				   &enabled, sizeof(enabled), 0);
--
--	if (ret)
--		return ret < 0 ? ret : -EINVAL;
--
--	return enabled;
--}
--
--static int hp_wmi_fan_speed_reset(void)
--{
--	u8 fan_speed[2] = { HP_FAN_SPEED_AUTOMATIC, HP_FAN_SPEED_AUTOMATIC };
--	int ret;
--
--	ret = hp_wmi_perform_query(HPWMI_FAN_SPEED_SET_QUERY, HPWMI_GM,
--				   &fan_speed, sizeof(fan_speed), 0);
--
--	return ret;
--}
--
--static int hp_wmi_fan_speed_max_reset(void)
--{
--	int ret;
--
--	ret = hp_wmi_fan_speed_max_set(0);
--	if (ret)
--		return ret;
--
--	/* Disabling max fan speed on Victus s1xxx laptops needs a 2nd step: */
--	ret = hp_wmi_fan_speed_reset();
--	return ret;
--}
--
--static int hp_wmi_fan_speed_max_get(void)
--{
--	int val = 0, ret;
--
--	ret = hp_wmi_perform_query(HPWMI_FAN_SPEED_MAX_GET_QUERY, HPWMI_GM,
--				   &val, zero_if_sup(val), sizeof(val));
--
--	if (ret)
--		return ret < 0 ? ret : -EINVAL;
--
--	return val;
--}
--
- static int __init hp_wmi_bios_2008_later(void)
- {
- 	int state = 0;
-@@ -791,6 +917,69 @@ static int hp_wmi_rfkill2_refresh(void)
- 	return 0;
- }
- 
-+static ssize_t systemdesign_show(struct device *dev, struct device_attribute *attr,
-+				char *buf)
-+{
-+	int ret;
-+	u8 buffer[128];
-+
-+	ret = hp_wmi_perform_query(HPWMI_GET_SYSTEM_DESIGN_DATA, HPWMI_GM,
-+					buffer, sizeof(buffer), sizeof(buffer));
-+	if (ret < 0)
-+		return ret;
-+	return sysfs_emit(buf, "%*ph\n", (int)sizeof(buffer), buffer);
-+}
-+
-+static ssize_t adapter_show(struct device *dev, struct device_attribute *attr,
-+				char *buf)
-+{
-+	int ret = hp_wmi_read_int(HPWMI_ADAPTER_QUERY);
-+
-+	if (ret < 0)
-+		return -EINVAL;
-+	return sysfs_emit(buf, "%02X\n", ret);
-+}
-+
-+static ssize_t mux_show(struct device *dev, struct device_attribute *attr,
-+				char *buf)
-+{
-+	int ret = hp_wmi_get_gpumode();
-+
-+	if (ret < 0)
-+		return ret;
-+	return sysfs_emit(buf, "%d\n", ret);
-+}
-+
-+static ssize_t fancount_show(struct device *dev, struct device_attribute *attr,
-+				char *buf)
-+{
-+	int ret = hp_wmi_get_fan_count();
-+
-+	if (ret < 0)
-+		return ret;
-+	return sysfs_emit(buf, "fancount : %d\n", ret);
-+}
-+
-+static ssize_t fanspeed_show(struct device *dev, struct device_attribute *attr,
-+				char *buf)
-+{
-+	int speed = hp_wmi_get_fan_speed_insyde(0);
-+
-+	if (speed < 0)
-+		return speed;
-+	return sysfs_emit(buf, "speed : %d\n", speed);
-+}
-+
-+static ssize_t backlight_show(struct device *dev, struct device_attribute *attr,
-+				char *buf)
-+{
-+	int ret = hp_wmi_get_backlight();
-+
-+	if (ret < 0)
-+		return ret;
-+	return sysfs_emit(buf, "backlight : %d\n", ret);
-+}
-+
- static ssize_t display_show(struct device *dev, struct device_attribute *attr,
- 			    char *buf)
- {
-@@ -852,6 +1041,69 @@ static ssize_t postcode_show(struct device *dev, struct device_attribute *attr,
- 	return sysfs_emit(buf, "0x%x\n", value);
- }
- 
-+static ssize_t backlight_store(struct device *dev, struct device_attribute *attr,
-+				const char *buf, size_t count)
-+{
-+	bool enable;
-+	int ret;
-+
-+	/* To set bios-protection state to 0 */
-+	hp_wmi_get_fan_count();
-+	ret = kstrtobool(buf, &enable);
-+	if (ret)
-+		return ret;
-+
-+	if (enable)
-+		hp_wmi_set_backlight(BACKLIGHT_ON);
-+	else
-+		hp_wmi_set_backlight(BACKLIGHT_OFF);
-+
-+	return count;
-+}
-+
-+static ssize_t mux_store(struct device *dev, struct device_attribute *attr,
-+				const char *buf, size_t count)
-+{
-+	int ret;
-+	int enable;
-+
-+	/* To set bios-protection state to 0 */
-+	hp_wmi_get_fan_count();
-+
-+	ret = kstrtoint(buf, 10, &enable);
-+	if (ret)
-+		return ret;
-+
-+	if (ret > 2)
-+		return ret;
-+
-+	ret = hp_wmi_set_gpumode(enable);
-+	if (ret)
-+		return ret;
-+	pr_debug("mux mode is now set to: %d\n", enable);
-+	return count;
-+}
-+
-+static ssize_t fanspeed_store(struct device *dev, struct device_attribute *attr,
-+				const char *buf, size_t count)
-+{
-+	int fan;
-+	int ret;
-+
-+	ret = kstrtoint(buf, 16, &fan);
-+	if (ret < 0)
-+		return ret;
-+
-+	if (fan == 0)
-+		hp_wmi_set_fan_speed(0, 0);
-+
-+	/* 67*100 is the maximum RPM known for HP laptops */
-+	if (fan > 0 && fan < HP_WMI_FAN_SPEED_LIMIT-3)
-+		/* The GPU fan RPM is 300 RPM higher than the CPU fan RPM. */
-+		hp_wmi_set_fan_speed(fan, fan+3);
-+	return count;
-+}
-+
- static ssize_t als_store(struct device *dev, struct device_attribute *attr,
- 			 const char *buf, size_t count)
- {
-@@ -926,8 +1178,20 @@ static DEVICE_ATTR_RW(als);
- static DEVICE_ATTR_RO(dock);
- static DEVICE_ATTR_RO(tablet);
- static DEVICE_ATTR_RW(postcode);
-+static DEVICE_ATTR_RW(backlight);
-+static DEVICE_ATTR_RO(fancount);
-+static DEVICE_ATTR_RW(fanspeed);
-+static DEVICE_ATTR_RO(systemdesign);
-+static DEVICE_ATTR_RW(mux);
-+static DEVICE_ATTR_RO(adapter);
- 
- static struct attribute *hp_wmi_attrs[] = {
-+	&dev_attr_backlight.attr,
-+	&dev_attr_mux.attr,
-+	&dev_attr_adapter.attr,
-+	&dev_attr_fancount.attr,
-+	&dev_attr_fanspeed.attr,
-+	&dev_attr_systemdesign.attr,
- 	&dev_attr_display.attr,
- 	&dev_attr_hddtemp.attr,
- 	&dev_attr_als.attr,
-@@ -1309,16 +1573,16 @@ static int platform_profile_omen_get_ec(enum platform_profile_option *profile)
- 		return tp;
- 
- 	switch (tp) {
--	case HP_OMEN_V0_THERMAL_PROFILE_PERFORMANCE:
--	case HP_OMEN_V1_THERMAL_PROFILE_PERFORMANCE:
-+	case FANMODE_LEGACY_PERFORMANCE:
-+	case FANMODE_L7:
- 		*profile = PLATFORM_PROFILE_PERFORMANCE;
- 		break;
--	case HP_OMEN_V0_THERMAL_PROFILE_DEFAULT:
--	case HP_OMEN_V1_THERMAL_PROFILE_DEFAULT:
-+	case FANMODE_LEGACY_DEFAULT:
-+	case FANMODE_L2:
- 		*profile = PLATFORM_PROFILE_BALANCED;
- 		break;
--	case HP_OMEN_V0_THERMAL_PROFILE_COOL:
--	case HP_OMEN_V1_THERMAL_PROFILE_COOL:
-+	case FANMODE_LEGACY_COOL:
-+	case FANMODE_L4:
- 		*profile = PLATFORM_PROFILE_COOL;
- 		break;
- 	default:
-@@ -1384,21 +1648,21 @@ static int platform_profile_omen_set_ec(enum platform_profile_option profile)
- 	switch (profile) {
- 	case PLATFORM_PROFILE_PERFORMANCE:
- 		if (tp_version == 0)
--			tp = HP_OMEN_V0_THERMAL_PROFILE_PERFORMANCE;
-+			tp = FANMODE_LEGACY_PERFORMANCE;
- 		else
--			tp = HP_OMEN_V1_THERMAL_PROFILE_PERFORMANCE;
-+			tp = FANMODE_L7;
- 		break;
- 	case PLATFORM_PROFILE_BALANCED:
- 		if (tp_version == 0)
--			tp = HP_OMEN_V0_THERMAL_PROFILE_DEFAULT;
-+			tp = FANMODE_LEGACY_DEFAULT;
- 		else
--			tp = HP_OMEN_V1_THERMAL_PROFILE_DEFAULT;
-+			tp = FANMODE_L2;
- 		break;
- 	case PLATFORM_PROFILE_COOL:
- 		if (tp_version == 0)
--			tp = HP_OMEN_V0_THERMAL_PROFILE_COOL;
-+			tp = FANMODE_LEGACY_COOL;
- 		else
--			tp = HP_OMEN_V1_THERMAL_PROFILE_COOL;
-+			tp = FANMODE_L4;
- 		break;
- 	default:
- 		return -EOPNOTSUPP;
-@@ -1462,16 +1726,16 @@ static int hp_wmi_platform_profile_get(struct device *dev,
- 		return tp;
- 
- 	switch (tp) {
--	case HP_THERMAL_PROFILE_PERFORMANCE:
-+	case FANMODE_LEGACY_DEFAULT:
- 		*profile =  PLATFORM_PROFILE_PERFORMANCE;
- 		break;
--	case HP_THERMAL_PROFILE_DEFAULT:
-+	case FANMODE_LEGACY_PERFORMANCE:
- 		*profile =  PLATFORM_PROFILE_BALANCED;
- 		break;
--	case HP_THERMAL_PROFILE_COOL:
-+	case FANMODE_LEGACY_COOL:
- 		*profile =  PLATFORM_PROFILE_COOL;
- 		break;
--	case HP_THERMAL_PROFILE_QUIET:
-+	case FANMODE_LEGACY_QUIET:
- 		*profile = PLATFORM_PROFILE_QUIET;
- 		break;
- 	default:
-@@ -1488,16 +1752,16 @@ static int hp_wmi_platform_profile_set(struct device *dev,
- 
- 	switch (profile) {
- 	case PLATFORM_PROFILE_PERFORMANCE:
--		tp =  HP_THERMAL_PROFILE_PERFORMANCE;
-+		tp =  FANMODE_LEGACY_DEFAULT;
- 		break;
- 	case PLATFORM_PROFILE_BALANCED:
--		tp =  HP_THERMAL_PROFILE_DEFAULT;
-+		tp =  FANMODE_LEGACY_PERFORMANCE;
- 		break;
- 	case PLATFORM_PROFILE_COOL:
--		tp =  HP_THERMAL_PROFILE_COOL;
-+		tp =  FANMODE_LEGACY_COOL;
- 		break;
- 	case PLATFORM_PROFILE_QUIET:
--		tp = HP_THERMAL_PROFILE_QUIET;
-+		tp = FANMODE_LEGACY_QUIET;
- 		break;
- 	default:
- 		return -EOPNOTSUPP;
-@@ -1531,13 +1795,13 @@ static int platform_profile_victus_get_ec(enum platform_profile_option *profile)
- 		return tp;
- 
- 	switch (tp) {
--	case HP_VICTUS_THERMAL_PROFILE_PERFORMANCE:
-+	case FANMODE_LEGACY_PERFORMANCE:
- 		*profile = PLATFORM_PROFILE_PERFORMANCE;
- 		break;
--	case HP_VICTUS_THERMAL_PROFILE_DEFAULT:
-+	case FANMODE_LEGACY_DEFAULT:
- 		*profile = PLATFORM_PROFILE_BALANCED;
- 		break;
--	case HP_VICTUS_THERMAL_PROFILE_QUIET:
-+	case FANMODE_LEGACY_QUIET:
- 		*profile = PLATFORM_PROFILE_QUIET;
- 		break;
- 	default:
-@@ -1560,13 +1824,13 @@ static int platform_profile_victus_set_ec(enum platform_profile_option profile)
- 
- 	switch (profile) {
- 	case PLATFORM_PROFILE_PERFORMANCE:
--		tp = HP_VICTUS_THERMAL_PROFILE_PERFORMANCE;
-+		tp = FANMODE_LEGACY_PERFORMANCE;
- 		break;
- 	case PLATFORM_PROFILE_BALANCED:
--		tp = HP_VICTUS_THERMAL_PROFILE_DEFAULT;
-+		tp = FANMODE_LEGACY_DEFAULT;
- 		break;
- 	case PLATFORM_PROFILE_QUIET:
--		tp = HP_VICTUS_THERMAL_PROFILE_QUIET;
-+		tp = FANMODE_LEGACY_QUIET;
- 		break;
- 	default:
- 		return -EOPNOTSUPP;
-@@ -1592,12 +1856,12 @@ static bool is_victus_s_thermal_profile(void)
- 			    board_name) >= 0;
- }
- 
--static int victus_s_gpu_thermal_profile_get(bool *ctgp_enable,
-+static int hp_wmi_gpu_thermal_profile_get(bool *ctgp_enable,
- 					    bool *ppab_enable,
- 					    u8 *dstate,
- 					    u8 *gpu_slowdown_temp)
- {
--	struct victus_gpu_power_modes gpu_power_modes;
-+	struct hp_gpu_power_modes gpu_power_modes;
- 	int ret;
- 
- 	ret = hp_wmi_perform_query(HPWMI_GET_GPU_THERMAL_MODES_QUERY, HPWMI_GM,
-@@ -1613,18 +1877,43 @@ static int victus_s_gpu_thermal_profile_get(bool *ctgp_enable,
- 	return ret;
- }
- 
--static int victus_s_gpu_thermal_profile_set(bool ctgp_enable,
-+/* Note: HP_POWER_LIMIT_DEFAULT can be used to restore default PL1 and PL2 */
-+static int hp_wmi_set_cpu_pl1_pl2(u8 pl1, u8 pl2)
-+{
-+	struct hp_power_limits power_limits;
-+	int ret;
-+
-+	/* We need to know both PL1 and PL2 values in order to check them */
-+	if (pl1 == HP_POWER_LIMIT_NO_CHANGE || pl2 == HP_POWER_LIMIT_NO_CHANGE)
-+		return -EINVAL;
-+
-+	/* PL2 is not supposed to be lower than PL1 */
-+	if (pl2 < pl1)
-+		return -EINVAL;
-+
-+	power_limits.pl1 = pl1;
-+	power_limits.pl2 = pl2;
-+	power_limits.pl4 = HP_POWER_LIMIT_NO_CHANGE;
-+	power_limits.cpu_gpu_concurrent_limit = HP_POWER_LIMIT_NO_CHANGE;
-+
-+	ret = hp_wmi_perform_query(HPWMI_CPU_POWER_SET_QUERY, HPWMI_GM,
-+				   &power_limits, sizeof(power_limits), 0);
-+
-+	return ret;
-+}
-+
-+static int hp_wmi_gpu_thermal_profile_set(bool ctgp_enable,
- 					    bool ppab_enable,
- 					    u8 dstate)
- {
--	struct victus_gpu_power_modes gpu_power_modes;
-+	struct hp_gpu_power_modes gpu_power_modes;
- 	int ret;
- 
- 	bool current_ctgp_state, current_ppab_state;
- 	u8 current_dstate, current_gpu_slowdown_temp;
- 
- 	/* Retrieving GPU slowdown temperature, in order to keep it unchanged */
--	ret = victus_s_gpu_thermal_profile_get(&current_ctgp_state,
-+	ret = hp_wmi_gpu_thermal_profile_get(&current_ctgp_state,
- 					       &current_ppab_state,
- 					       &current_dstate,
- 					       &current_gpu_slowdown_temp);
-@@ -1645,31 +1934,6 @@ static int victus_s_gpu_thermal_profile_set(bool ctgp_enable,
- 	return ret;
- }
- 
--/* Note: HP_POWER_LIMIT_DEFAULT can be used to restore default PL1 and PL2 */
--static int victus_s_set_cpu_pl1_pl2(u8 pl1, u8 pl2)
--{
--	struct victus_power_limits power_limits;
--	int ret;
--
--	/* We need to know both PL1 and PL2 values in order to check them */
--	if (pl1 == HP_POWER_LIMIT_NO_CHANGE || pl2 == HP_POWER_LIMIT_NO_CHANGE)
--		return -EINVAL;
--
--	/* PL2 is not supposed to be lower than PL1 */
--	if (pl2 < pl1)
--		return -EINVAL;
--
--	power_limits.pl1 = pl1;
--	power_limits.pl2 = pl2;
--	power_limits.pl4 = HP_POWER_LIMIT_NO_CHANGE;
--	power_limits.cpu_gpu_concurrent_limit = HP_POWER_LIMIT_NO_CHANGE;
--
--	ret = hp_wmi_perform_query(HPWMI_SET_POWER_LIMITS_QUERY, HPWMI_GM,
--				   &power_limits, sizeof(power_limits), 0);
--
--	return ret;
--}
--
- static int platform_profile_victus_s_set_ec(enum platform_profile_option profile)
- {
- 	bool gpu_ctgp_enable, gpu_ppab_enable;
-@@ -1678,19 +1942,19 @@ static int platform_profile_victus_s_set_ec(enum platform_profile_option profile
- 
- 	switch (profile) {
- 	case PLATFORM_PROFILE_PERFORMANCE:
--		tp = HP_VICTUS_S_THERMAL_PROFILE_PERFORMANCE;
-+		tp = FANMODE_LEGACY_PERFORMANCE;
- 		gpu_ctgp_enable = true;
- 		gpu_ppab_enable = true;
- 		gpu_dstate = 1;
- 		break;
- 	case PLATFORM_PROFILE_BALANCED:
--		tp = HP_VICTUS_S_THERMAL_PROFILE_DEFAULT;
-+		tp = FANMODE_LEGACY_DEFAULT;
- 		gpu_ctgp_enable = false;
- 		gpu_ppab_enable = true;
- 		gpu_dstate = 1;
- 		break;
- 	case PLATFORM_PROFILE_LOW_POWER:
--		tp = HP_VICTUS_S_THERMAL_PROFILE_DEFAULT;
-+		tp = FANMODE_LEGACY_DEFAULT;
- 		gpu_ctgp_enable = false;
- 		gpu_ppab_enable = false;
- 		gpu_dstate = 1;
-@@ -1699,7 +1963,7 @@ static int platform_profile_victus_s_set_ec(enum platform_profile_option profile
- 		return -EOPNOTSUPP;
- 	}
- 
--	hp_wmi_get_fan_count_userdefine_trigger();
-+	hp_wmi_get_fan_count();
- 
- 	err = omen_thermal_profile_set(tp);
- 	if (err < 0) {
-@@ -1707,7 +1971,7 @@ static int platform_profile_victus_s_set_ec(enum platform_profile_option profile
- 		return err;
- 	}
- 
--	err = victus_s_gpu_thermal_profile_set(gpu_ctgp_enable,
-+	err = hp_wmi_gpu_thermal_profile_set(gpu_ctgp_enable,
- 					       gpu_ppab_enable,
- 					       gpu_dstate);
- 	if (err < 0) {
-@@ -1750,13 +2014,89 @@ static int platform_profile_victus_set(struct device *dev,
- 	return 0;
- }
- 
-+static bool is_omen_v1_thermal_profile(void)
-+{
-+	const char *board_name;
-+
-+	board_name = dmi_get_system_info(DMI_BOARD_NAME);
-+	if (!board_name)
-+		return false;
-+
-+	return match_string(thermal_profile_v1_boards,
-+			    ARRAY_SIZE(thermal_profile_v1_boards),
-+			    board_name) >= 0;
-+}
-+
-+static int platform_profile_omen_v1_set_ec(enum platform_profile_option profile)
-+{
-+	bool gpu_ctgp_enable, gpu_ppab_enable;
-+	u8 gpu_dstate; /* Test shows 1 = 100%, 2 = 50%, 3 = 25%, 4 = 12.5% */
-+	int err;
-+	enum hp_fan_mode tp;
-+
-+	switch (profile) {
-+	case PLATFORM_PROFILE_PERFORMANCE:
-+		tp = FANMODE_L7;
-+		gpu_ctgp_enable = true;
-+		gpu_ppab_enable = true;
-+		gpu_dstate = 1;
-+		break;
-+	case PLATFORM_PROFILE_BALANCED:
-+		tp = FANMODE_L2;
-+		gpu_ctgp_enable = false;
-+		gpu_ppab_enable = true;
-+		gpu_dstate = 1;
-+		break;
-+	case PLATFORM_PROFILE_LOW_POWER:
-+		tp = FANMODE_L2;
-+		gpu_ctgp_enable = false;
-+		gpu_ppab_enable = false;
-+		gpu_dstate = 1;
-+		break;
-+	default:
-+		return -EOPNOTSUPP;
-+	}
-+
-+	err = omen_thermal_profile_set(tp);
-+	if (err < 0) {
-+		pr_err("Failed to set platform profile %d: %d\n", profile, err);
-+		return err;
-+	}
-+
-+	err = hp_wmi_gpu_thermal_profile_set(gpu_ctgp_enable,
-+					       gpu_ppab_enable,
-+					       gpu_dstate);
-+	if (err < 0) {
-+		pr_err("Failed to set GPU profile %d: %d\n", profile, err);
-+		return err;
-+	}
-+
-+	return 0;
-+}
-+
-+static int platform_profile_omen_v1_set(struct device *dev,
-+					 enum platform_profile_option profile)
-+{
-+	int err;
-+
-+	guard(mutex)(&active_platform_profile_lock);
-+
-+	err = platform_profile_omen_v1_set_ec(profile);
-+	if (err < 0)
-+		return err;
-+
-+	active_platform_profile = profile;
-+
-+	return 0;
-+}
-+
- static int hp_wmi_platform_profile_probe(void *drvdata, unsigned long *choices)
- {
- 	if (is_omen_thermal_profile()) {
- 		set_bit(PLATFORM_PROFILE_COOL, choices);
- 	} else if (is_victus_thermal_profile()) {
- 		set_bit(PLATFORM_PROFILE_QUIET, choices);
--	} else if (is_victus_s_thermal_profile()) {
-+	} else if (is_victus_s_thermal_profile() || is_omen_v1_thermal_profile()) {
- 		/* Adding an equivalent to HP Omen software ECO mode: */
- 		set_bit(PLATFORM_PROFILE_LOW_POWER, choices);
- 	} else {
-@@ -1849,7 +2189,7 @@ static int victus_s_powersource_event(struct notifier_block *nb,
- 
- 	if (active_platform_profile == PLATFORM_PROFILE_PERFORMANCE) {
- 		pr_debug("Triggering CPU PL1/PL2 actualization\n");
--		err = victus_s_set_cpu_pl1_pl2(HP_POWER_LIMIT_DEFAULT,
-+		err = hp_wmi_set_cpu_pl1_pl2(HP_POWER_LIMIT_DEFAULT,
- 					       HP_POWER_LIMIT_DEFAULT);
- 		if (err)
- 			pr_warn("Failed to actualize power limits: %d\n", err);
-@@ -1860,6 +2200,32 @@ static int victus_s_powersource_event(struct notifier_block *nb,
- 	return NOTIFY_OK;
- }
- 
-+static int omen_v1_powersource_event(struct notifier_block *nb,
-+				      unsigned long value,
-+				      void *data)
-+{
-+	struct acpi_bus_event *event_entry = data;
-+	int err;
-+
-+	if (strcmp(event_entry->device_class, ACPI_AC_CLASS) != 0)
-+		return NOTIFY_DONE;
-+
-+	pr_debug("Received power source device event\n");
-+
-+	/*
-+	 * Switching to battery power source while any mode is active
-+	 * needs manual triggering of CPU power limits. Same goes when switching
-+	 * to AC power source.
-+	 * Observed on OMEN v1 boards.
-+	 */
-+	err = hp_wmi_set_cpu_pl1_pl2(HP_POWER_LIMIT_DEFAULT,
-+						HP_POWER_LIMIT_DEFAULT);
-+	if (err)
-+		pr_warn("Failed to actualize power limits: %d\n", err);
-+
-+	return NOTIFY_OK;
-+}
-+
- static int omen_register_powersource_event_handler(void)
- {
- 	int err;
-@@ -1889,6 +2255,20 @@ static int victus_s_register_powersource_event_handler(void)
- 	return 0;
- }
- 
-+static int omen_v1_register_powersource_event_handler(void)
-+{
-+	int err;
-+
-+	platform_power_source_nb.notifier_call = omen_v1_powersource_event;
-+	err = register_acpi_notifier(&platform_power_source_nb);
-+	if (err < 0) {
-+		pr_warn("Failed to install ACPI power source notify handler\n");
-+		return err;
-+	}
-+
-+	return 0;
-+}
-+
- static inline void omen_unregister_powersource_event_handler(void)
- {
- 	unregister_acpi_notifier(&platform_power_source_nb);
-@@ -1899,6 +2279,11 @@ static inline void victus_s_unregister_powersource_event_handler(void)
- 	unregister_acpi_notifier(&platform_power_source_nb);
- }
- 
-+static inline void omen_v1_unregister_powersource_event_handler(void)
-+{
-+	unregister_acpi_notifier(&platform_power_source_nb);
-+}
-+
- static const struct platform_profile_ops platform_profile_omen_ops = {
- 	.probe = hp_wmi_platform_profile_probe,
- 	.profile_get = platform_profile_omen_get,
-@@ -1917,6 +2302,12 @@ static const struct platform_profile_ops platform_profile_victus_s_ops = {
- 	.profile_set = platform_profile_victus_s_set,
- };
- 
-+static const struct platform_profile_ops platform_profile_omen_v1_ops = {
-+	.probe = hp_wmi_platform_profile_probe,
-+	.profile_get = platform_profile_omen_get,
-+	.profile_set = platform_profile_omen_v1_set,
-+};
-+
- static const struct platform_profile_ops hp_wmi_platform_profile_ops = {
- 	.probe = hp_wmi_platform_profile_probe,
- 	.profile_get = hp_wmi_platform_profile_get,
-@@ -1968,6 +2359,18 @@ static int thermal_profile_setup(struct platform_device *device)
- 			return err;
- 
- 		ops = &platform_profile_victus_s_ops;
-+	} else if (is_omen_v1_thermal_profile()) {
-+		/*
-+		 * Being unable to retrieve laptop's current thermal profile,
-+		 * So doing the same process as above.
-+		 */
-+		active_platform_profile = PLATFORM_PROFILE_BALANCED;
-+
-+		err = platform_profile_omen_v1_set_ec(active_platform_profile);
-+		if (err < 0)
-+			return err;
-+
-+		ops = &platform_profile_omen_v1_ops;
- 	} else {
- 		tp = thermal_profile_get();
- 
-@@ -2116,11 +2519,11 @@ static umode_t hp_wmi_hwmon_is_visible(const void *data,
- 	case hwmon_pwm:
- 		return 0644;
- 	case hwmon_fan:
--		if (is_victus_s_thermal_profile()) {
--			if (hp_wmi_get_fan_speed_victus_s(channel) >= 0)
-+		if (is_victus_s_thermal_profile() || is_omen_v1_thermal_profile()) {
-+			if (hp_wmi_get_fan_speed_insyde(channel) >= 0)
- 				return 0444;
- 		} else {
--			if (hp_wmi_get_fan_speed(channel) >= 0)
-+			if (hp_wmi_get_fan_speed_ami(channel) >= 0)
- 				return 0444;
- 		}
- 		break;
-@@ -2138,10 +2541,10 @@ static int hp_wmi_hwmon_read(struct device *dev, enum hwmon_sensor_types type,
- 
- 	switch (type) {
- 	case hwmon_fan:
--		if (is_victus_s_thermal_profile())
--			ret = hp_wmi_get_fan_speed_victus_s(channel);
-+		if (is_victus_s_thermal_profile() || is_omen_v1_thermal_profile())
-+			ret = hp_wmi_get_fan_speed_insyde(channel);
- 		else
--			ret = hp_wmi_get_fan_speed(channel);
-+			ret = hp_wmi_get_fan_speed_ami(channel);
- 		if (ret < 0)
- 			return ret;
- 		*val = ret;
-@@ -2174,14 +2577,14 @@ static int hp_wmi_hwmon_write(struct device *dev, enum hwmon_sensor_types type,
- 	case hwmon_pwm:
- 		switch (val) {
- 		case 0:
--			if (is_victus_s_thermal_profile())
--				hp_wmi_get_fan_count_userdefine_trigger();
-+			if (is_victus_s_thermal_profile() || is_omen_v1_thermal_profile())
-+				hp_wmi_get_fan_count();
- 			/* 0 is no fan speed control (max), which is 1 for us */
- 			return hp_wmi_fan_speed_max_set(1);
- 		case 2:
- 			/* 2 is automatic speed control, which is 0 for us */
--			if (is_victus_s_thermal_profile()) {
--				hp_wmi_get_fan_count_userdefine_trigger();
-+			if (is_victus_s_thermal_profile() || is_omen_v1_thermal_profile()) {
-+				hp_wmi_get_fan_count();
- 				return hp_wmi_fan_speed_max_reset();
- 			} else
- 				return hp_wmi_fan_speed_max_set(0);
-@@ -2267,6 +2670,10 @@ static int __init hp_wmi_init(void)
- 		err = victus_s_register_powersource_event_handler();
- 		if (err)
- 			goto err_unregister_device;
-+	} else if (is_omen_v1_thermal_profile()) {
-+		err = omen_v1_register_powersource_event_handler();
-+		if (err)
-+			goto err_unregister_device;
- 	}
- 
- 	return 0;
-@@ -2289,6 +2696,9 @@ static void __exit hp_wmi_exit(void)
- 	if (is_victus_s_thermal_profile())
- 		victus_s_unregister_powersource_event_handler();
- 
-+	if (is_omen_v1_thermal_profile())
-+		omen_v1_unregister_powersource_event_handler();
-+
- 	if (wmi_has_guid(HPWMI_EVENT_GUID))
- 		hp_wmi_input_destroy();
- 
--- 
-2.47.3
+No. As Kurt said, it utilizes a relatively new (since v6.19-rc1) change
+to kbuild. See commit c4781dc3d1cf ("Kbuild: enable -fms-extensions").
 
+Thanks,
+Rong
+
+> Thanks,=20
+> Derek
+>=20
+> > 	u32 step;
+> > 	u32 min_value;
+> > 	u32 max_value;
