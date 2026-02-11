@@ -1,191 +1,132 @@
-Received: from sender4-op-o15.zoho.com (sender4-op-o15.zoho.com [136.143.188.15])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 63A0B28D850;
-	Wed, 11 Feb 2026 11:55:29 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=136.143.188.15
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1770810930; cv=pass; b=qN+MiXaISv8rpieKA51HF0LD0yQ7P739oxMXP+2LY4vUi9uQrViWznsSIwPrBFkVPljWPaKFYDkaKmUCoEa73sB8UPch2rTbbxulblYj8bIkI4JqxGO8iuhEnQfUlR0FbHp2p6/9pUp8JIhgE+W8XX54O3zRi0f+Ld07MfND9mM=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1770810930; c=relaxed/simple;
-	bh=BlUL40zymoazRH4lIEhZV9eUA/yHmZiVFkdacOfbSZs=;
-	h=Message-ID:Subject:From:To:Cc:In-Reply-To:References:Content-Type:
-	 Date:MIME-Version; b=mV8aqXjacefXBUBLlXoeoNKrYm8ktkdvPHxlkJBJ314S6IEWhfJoNnz51lwVEc7iOTrF4x7Cx3u4xpdgPtWlLIHjiI1C1sexh9UxKxrx3o5N/qfcllAUs+CFg5xkDUwH6Rd+UncWnyMsqCQfG+5ChjweEc3tEJwKf1sOpXmxFn4=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=rong.moe; spf=pass smtp.mailfrom=rong.moe; dkim=pass (2048-bit key) header.d=rong.moe header.i=i@rong.moe header.b=de7YiSUq; arc=pass smtp.client-ip=136.143.188.15
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=rong.moe
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=rong.moe
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 43D14126BF1;
+	Wed, 11 Feb 2026 11:57:38 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1770811058; cv=none; b=db7C0/l3jV05EKHM88QDa/iq58CEo/Zm0tpu8t1/wocmTzZiqNtzERovI5zrppx3otfgBD+i8lIP0EgAOmws7zzFIyhSoR2fsNjMdkTxrcn+jw1+ZmKnCY987LfVa4AZRPmFhS8uPhZfvYDyiTqVIwLfaHJZHHIhX5SUjvOKKOw=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1770811058; c=relaxed/simple;
+	bh=26YmqgO7UsbUJ3HaLMu0X+jT+eQcTYSWMWUL9GyJV+g=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=T8SDUv7Y6I9gfREmF9WzZJxYXa9KBUN07pKcSn/c1ytNp2QDCU/6RYoiX1LHVS9AcvEvmkDGmdt7uOk6uo4qodU2qzk1mNHExxRhQG0EFt3jxu+D7Qu6F+P6OZw4Jj5WgwGZsIeovW9/iFv9Od9XZ1yxlmk01DqbHabTXV3FHC0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ZjBh7nw/; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=rong.moe header.i=i@rong.moe header.b="de7YiSUq"
-ARC-Seal: i=1; a=rsa-sha256; t=1770810920; cv=none; 
-	d=zohomail.com; s=zohoarc; 
-	b=m/huszTxo5Suw2Zm6ujjhcIkDixjVyivXtdENRJl/ZSRcVacOHP1ovGQbVShKzLUtOUVkOFYJfTRR/43isj0idkeaUBMcQqQVqlyG6CBQXs3EB0AywNUNs0xB7bINK9+vtPVhMoJKAAIxZ2HR6tBSDH4VvLbTxmQIW74NpN7wDA=
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=zohomail.com; s=zohoarc; 
-	t=1770810920; h=Content-Type:Content-Transfer-Encoding:Cc:Cc:Date:Date:From:From:In-Reply-To:MIME-Version:Message-ID:References:Subject:Subject:To:To:Message-Id:Reply-To; 
-	bh=Kb6/qRa0YDVdSZgwqHQLDIq5zZTM+PupyBgPz9x3cEg=; 
-	b=cNcl2ylp+L1O3jhVmsnDhdMOyCHAEyzmy0Lb4f/vUsxa7prwDO+kgYGjyqBxV820yevGSgH5Ewbx1dmczJ/Ja2aEb9pErjhuyy6XHKhkC4f26TBOns28Gqo37ryAuSx3FtfjJ64reAP097mHXED58oA0ABlnc5Uz67j3JKxnf/w=
-ARC-Authentication-Results: i=1; mx.zohomail.com;
-	dkim=pass  header.i=rong.moe;
-	spf=pass  smtp.mailfrom=i@rong.moe;
-	dmarc=pass header.from=<i@rong.moe>
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; t=1770810920;
-	s=zmail2048; d=rong.moe; i=i@rong.moe;
-	h=Message-ID:Subject:Subject:From:From:To:To:Cc:Cc:In-Reply-To:References:Content-Type:Content-Transfer-Encoding:Date:Date:MIME-Version:Message-Id:Reply-To;
-	bh=Kb6/qRa0YDVdSZgwqHQLDIq5zZTM+PupyBgPz9x3cEg=;
-	b=de7YiSUqoxEUggdsdnRJSkxDz2HjyUNeE/S2tmgmFbaJ4KcLyGMwIDBL7angNK+m
-	lmIUDZ3e9taSrLPaUuGdlf12ebD9dQg+rR2UQHGRlkQcVP66sq+pgAn/t/rMWG2dm3X
-	LpGvlM6NNGuSu5oW+GvWf6vnPNkuwxKEFxTUFGrIJlVOuKBQBK8RYgLkmIbOusTbJR1
-	QY/wxP0poceKi0JGp3s4RMB2oHKOpGxhbS8cGZnfY3+J9wlNYPUq8vMU4X91pZkZEeW
-	+uien3PqpREcGiul79dBvunW3uA64j/n4u995ADzf/TBoLGPZgFX1OE5plRjcORtmZI
-	db6TrOX5Zg==
-Received: by mx.zohomail.com with SMTPS id 1770810918138515.5101214592495;
-	Wed, 11 Feb 2026 03:55:18 -0800 (PST)
-Message-ID: <06772053d9ea324117c78f83bad49e4f49222ff2.camel@rong.moe>
-Subject: Re: [PATCH 0/2] platform/x86: lenovo-wmi-capdata: Add debugfs file
- for dumping capdata
-From: Rong Zhang <i@rong.moe>
-To: "Derek J. Clark" <derekjohn.clark@gmail.com>, Kurt Borja
- <kuurtb@gmail.com>
-Cc: Mark Pearson <mpearson-lenovo@squebb.ca>, Armin Wolf <W_Armin@gmx.de>, 
- Hans de Goede <hansg@kernel.org>, Ilpo =?ISO-8859-1?Q?J=E4rvinen?=
- <ilpo.jarvinen@linux.intel.com>, 	platform-driver-x86@vger.kernel.org,
- linux-kernel@vger.kernel.org
-In-Reply-To: <2A78CD4B-9D1D-4E7E-BEC9-E567A1DBE089@gmail.com>
-References: <20260210191938.137234-1-i@rong.moe>
-				 <DGBOH3NPCWFS.5SUAX6FZNZZ8@gmail.com>
-				 <2A78CD4B-9D1D-4E7E-BEC9-E567A1DBE089@gmail.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-Date: Wed, 11 Feb 2026 19:49:43 +0800
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ZjBh7nw/"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 7AB25C4CEF7;
+	Wed, 11 Feb 2026 11:57:35 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1770811057;
+	bh=26YmqgO7UsbUJ3HaLMu0X+jT+eQcTYSWMWUL9GyJV+g=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=ZjBh7nw/Wxsg0JwL+sk8cP2LcP7pKK8O9uMofqDAMVuxoN5GLYcOOJIikLmrujFj9
+	 7q4DXnb1c2oNO9Edg+WIx9LjKqMymcfYvu+UrSSwH+ItSj4EjoycOaogBA63gc3/jL
+	 seUDRLQY6t/zxgDjD/OWvvgogkRui2AdOORr0V3ShKMNhYVIL9ozBuC0gu/9Kkm8SI
+	 0Ya02Y4TCLx2i0YyOZt3NCr3Q0ttsAStwHUcTOJUVdJCqCg/iL39SiS3JgPurxQbMk
+	 o1D58uTw2HnZFHgLHBL1dxdKMbomhIlYp/qxEqcPwCCIRp0x4yhuPUWrL75gqbcxlq
+	 VXPN2IpO6d7mg==
+Message-ID: <94683609-5a52-494c-9041-85c2ef40da34@kernel.org>
+Date: Wed, 11 Feb 2026 12:57:33 +0100
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Evolution 3.56.2-8 
-X-ZohoMailClient: External
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v2] gpio: swnode: restore the
+ swnode-name-against-chip-label matching
+To: Bartosz Golaszewski <bartosz.golaszewski@oss.qualcomm.com>,
+ Linus Walleij <linusw@kernel.org>, Bartosz Golaszewski <brgl@kernel.org>,
+ Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+ Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+ Dmitry Torokhov <dmitry.torokhov@gmail.com>, Arnd Bergmann
+ <arnd@kernel.org>, =?UTF-8?Q?Ilpo_J=C3=A4rvinen?=
+ <ilpo.jarvinen@linux.intel.com>, Dan Carpenter <dan.carpenter@linaro.org>
+Cc: linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org,
+ platform-driver-x86@vger.kernel.org, stable@vger.kernel.org
+References: <20260211085313.16792-1-bartosz.golaszewski@oss.qualcomm.com>
+From: Hans de Goede <hansg@kernel.org>
+Content-Language: en-US, nl
+In-Reply-To: <20260211085313.16792-1-bartosz.golaszewski@oss.qualcomm.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-Hi Derek and Kurt,
+Hi,
 
-On Tue, 2026-02-10 at 15:49 -0800, Derek J. Clark wrote:
-> On February 10, 2026 3:41:31 PM PST, Kurt Borja <kuurtb@gmail.com> wrote:
-> > On Tue Feb 10, 2026 at 2:19 PM -05, Rong Zhang wrote:
-> > > The Lenovo GameZone/Other interfaces have some delicate divergences
-> > > among different devices. When making a bug report or adding support f=
-or
-> > > new devices/interfaces, capdata is the most important information to
-> > > cross-check with.
-> > >=20
-> > > Add a debugfs file (lenovo_wmi/<device_name>/capdata), so that users =
-can
-> > > dump capdata and include it in their reports.
-> > >=20
-> > > The output is like:
-> > >=20
-> > >   LENOVO_CAPABILITY_DATA_00[0]:
-> > >     id:             0x00010000 [dev:  0, feat:  1, mode:  0, type:  0=
-]
-> > >     supported:      0x00000007 [ RWV]
-> > >     default_value:  0
-> > >=20
-> > >   LENOVO_CAPABILITY_DATA_01[0]:
-> > >     id:             0x00000000 [dev:  0, feat:  0, mode:  0, type:  0=
-]
-> > >     supported:      0x00000000 [    ]
-> > >     default_value:  0
-> > >     step:           0
-> > >     min_value:      0
-> > >     max_value:      0
-> > >=20
-> > >   LENOVO_FAN_TEST_DATA[0]:
-> > >     id:             1
-> > >     min_rpm:        2200
-> > >     max_rpm:        5000
-> > >=20
-> > > A helper function for creating per-devcie debugfs directories is also
-> > > introduced into lenovo-wmi-helpers in order that we can maintain a ti=
-dy
-> > > directory structure in debugfs.
-> > >=20
-> > > The series is based on platform-drivers-x86/review-ilpo-next since it
-> > > depends on a commit there. I am OK to wait until the next cycle.
-> > >=20
-> > > Rong Zhang (2):
-> > >   platform/x86: lenovo-wmi-helpers: Add helper for creating per-devic=
-e
-> > >     debugfs dir
-> > >   platform/x86: lenovo-wmi-capdata: Add debugfs file for dumping capd=
-ata
-> > >=20
-> > >  drivers/platform/x86/lenovo/Kconfig       |   1 +
-> > >  drivers/platform/x86/lenovo/wmi-capdata.c | 121 ++++++++++++++++++++=
-++
-> > >  drivers/platform/x86/lenovo/wmi-capdata.h |   4 +-
-> > >  drivers/platform/x86/lenovo/wmi-helpers.c |  34 ++++++
-> > >  drivers/platform/x86/lenovo/wmi-helpers.h |   2 +
-> > >  5 files changed, 159 insertions(+), 3 deletions(-)
-> > >=20
-> > >=20
-> > > base-commit: 5a5203a45b063a594e89a2aeaf9e4923893a5b4c
-> >=20
-> > Hi Rong,
-> >=20
-> > This is indeed very useful debug information.
-> >=20
-> > Once you and Derek agree on the approach for this series, I'll add my
-> > Tested-by tag.
-> >=20
-> > One more thing though. Can you please explain the "supported" byte? Wha=
-t
-> > is `+` and `V` supposed to mean?
+On 11-Feb-26 09:53, Bartosz Golaszewski wrote:
+> Using the remote firmware node for software node lookup is the right
+> thing to do. The GPIO controller we want to resolve should have the
+> software node we scooped out of the reference attached to it. However,
+> there are existing users who abuse the software node API by creating
+> dummy swnodes whose name is set to the expected label string of the GPIO
+> controller whose pins they want to control and use them in their local
+> swnode references as GPIO properties.
+> 
+> This used to work when we compared the software node's name to the
+> chip's label. When we switched to using a real fwnode lookup, these
+> users broke down because the firmware nodes in question were never
+> attached to the controllers they were looking for.
+> 
+> Restore the label matching as a fallback to fix the broken users but add
+> a big FIXME urging for a better solution.
+> 
+> Cc: stable@vger.kernel.org # v6.18, v6.19
+> Fixes: 216c12047571 ("gpio: swnode: allow referencing GPIO chips by firmware nodes")
+> Link: https://lore.kernel.org/all/aYkdKfP5fg6iywgr@jekhomev/
+> Acked-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+> Signed-off-by: Bartosz Golaszewski <bartosz.golaszewski@oss.qualcomm.com>
 
-"V" means valid. It's consistent with the corresponding macro name.
+Thanks, patch looks good to me:
 
-> Kurt,
->=20
-> It's enumerated in the patch:
->=20
-> +       seq_printf(s, "  supported:      0x%08x [%c%c%c%c]\n", cd00->supp=
-orted,
-> +                  extra ? '+' : ' ',
-> +                  get   ? 'R' : ' ',
-> +                  set   ? 'W' : ' ',
-> +                  valid ? 'V' : ' ');
->=20
->=20
-> From the documentation:
-> uint32 Capability //7:by project=20
-> bit 2:  0: not support SetFeatureValue(),  1: support SetFeatureValue()=
-=20
-> bit 1:  0: not support GetFeatureValue(),  1: support GetFeatureValue()
-> bit 0:  0: not support feature,  1: support feature=20
->=20
-> I don't see any examples of the "extra" bit in the docs.
+Reviewed-by: Hans de Goede <johannes.goede@oss.qualcomm.com>
 
-It's not a single bit. Instead, it's printed out when any bit other
-than RWV is set. I added this when I recalled the definition of
-capability 0x04050000, which has an extra bit defined:
+Regards,
 
-   Fan Test For Diagnostic Software
-   uint32 IDs //0x04050000
-   uint32 Capability //9:by project
-   bit 3: 0: not support LENOVO_FAN_TEST_DATA, 1 support LENOVO_FAN_TEST_DA=
-TA
-   bit 2: 0: not support SetFeatureValue(), 1: support SetFeatureValue()
-   bit 1: 0: not support GetFeatureValue(), 1: support GetFeatureValue()
-   bit 0: 0: not support fan test for diagnostic software, 1: support an te=
-st for diagnostic software
+Hans
 
-(from https://lore.kernel.org/r/CAFqHKTkOZUfDb8cGbGnVPCS9wNbOBsiyOk_MkZR-2_=
-Za6ZPMng@mail.gmail.com/ )
 
-I assume extra bits are not standardized, and some (current or future)
-capabilities may have multiple extra bits defined. Hence, I simply
-named it "+". After all, it's just a reminder for us to check the
-documentation (I don't have any, though).
 
-Thanks,
-Rong
 
-> Thanks,
-> Derek
+> ---
+> Changes in v2:
+> - check if gdev_node and gdev_node->name are not NULL before trying to
+>   match the label (Hans & Dan)
+> - use the right link
+> - collect tags
+> 
+>  drivers/gpio/gpiolib-swnode.c | 19 +++++++++++++++++++
+>  1 file changed, 19 insertions(+)
+> 
+> diff --git a/drivers/gpio/gpiolib-swnode.c b/drivers/gpio/gpiolib-swnode.c
+> index 21478b45c127d..0d7f3f09a0b4b 100644
+> --- a/drivers/gpio/gpiolib-swnode.c
+> +++ b/drivers/gpio/gpiolib-swnode.c
+> @@ -42,6 +42,25 @@ static struct gpio_device *swnode_get_gpio_device(struct fwnode_handle *fwnode)
+>  
+>  fwnode_lookup:
+>  	gdev = gpio_device_find_by_fwnode(fwnode);
+> +	if (!gdev && gdev_node && gdev_node->name)
+> +		/*
+> +		 * FIXME: We shouldn't need to compare the GPIO controller's
+> +		 * label against the software node that is supposedly attached
+> +		 * to it. However there are currently GPIO users that - knowing
+> +		 * the expected label of the GPIO chip whose pins they want to
+> +		 * control - set up dummy software nodes named after those GPIO
+> +		 * controllers, which aren't actually attached to them. In this
+> +		 * case gpio_device_find_by_fwnode() will fail as no device on
+> +		 * the GPIO bus is actually associated with the fwnode we're
+> +		 * looking for.
+> +		 *
+> +		 * As a fallback: continue checking the label if we have no
+> +		 * match. However, the situation described above is an abuse
+> +		 * of the software node API and should be phased out and the
+> +		 * following line - eventually removed.
+> +		 */
+> +		gdev = gpio_device_find_by_label(gdev_node->name);
+> +
+>  	return gdev ?: ERR_PTR(-EPROBE_DEFER);
+>  }
+>  
+
