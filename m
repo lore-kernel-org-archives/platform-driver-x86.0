@@ -1,91 +1,70 @@
-Received: from mail.tuxedocomputers.com (mail.tuxedocomputers.com [157.90.84.7])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from bmailout2.hostsharing.net (bmailout2.hostsharing.net [83.223.78.240])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2B5D330E0F2;
-	Wed, 11 Feb 2026 12:37:11 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=157.90.84.7
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A53053542FA;
+	Wed, 11 Feb 2026 12:48:40 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=83.223.78.240
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1770813434; cv=none; b=JOe2DSXXj6WW8QiDXDR9RiuGEDdlVDlBhyj1votwE2ewu+YGwo/VTOfJV6pik85RONB1rap3XYxxKhzPTgLqdNJX6foWZUlN4d5KzRbvOf2GDmlG+qoUXB5W54b1uk30WlAk/7bUgnCbtTuJm1zq5OYu2vfXGwGn7Lhh5rA5clQ=
+	t=1770814122; cv=none; b=CH9A1UxXPhNL/QU78HsX7duZLDWpLign8as0qA5D0zQlK7KHXZShWjsrQpftaPZccE0jkLMke2/1ZVG26XiEeYzG0Yy9eGyvOU6j3mFa3pICLwA2stYGKKEYhRtc9S/CPMF85ZElBS7CeQvuukzQ32uf5nLSzZZAQvdgMRi9N2g=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1770813434; c=relaxed/simple;
-	bh=pMsR9ekDbDohh0ZTgxUocLwK4eD5XKZc/1q+gvYt81A=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=UF847++IZIcVps1q9eDmeLWOzQzFtHDZkhPkP3Rv/KiR0M0X3rJFqpzMwTUuBvpVxOBctUCuFc4O6gp3chi56wqcOY7uzY50DpjBrDPv9gHbQ8qprOVEsHwvf2MTh6zcVT5PAIZoO9TTL742t9vdr4nv2J7iCPEMwYRwi9Th2Xg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=tuxedocomputers.com; spf=pass smtp.mailfrom=tuxedocomputers.com; dkim=pass (1024-bit key) header.d=tuxedocomputers.com header.i=@tuxedocomputers.com header.b=MVnDmSoi; arc=none smtp.client-ip=157.90.84.7
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=tuxedocomputers.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=tuxedocomputers.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=tuxedocomputers.com header.i=@tuxedocomputers.com header.b="MVnDmSoi"
-Received: from [192.168.178.24] (i5C75F5CC.versanet.de [92.117.245.204])
-	(Authenticated sender: wse@tuxedocomputers.com)
-	by mail.tuxedocomputers.com (Postfix) with ESMTPSA id AD5382FC006C;
-	Wed, 11 Feb 2026 13:37:09 +0100 (CET)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=tuxedocomputers.com;
-	s=default; t=1770813430;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=RekqSuim2koJ8w/CUmPYEG1sSupn66Fz5NVwIY3uvqM=;
-	b=MVnDmSoifZk4xLnpvvgQVtWEqn22MtWyiu/WXbEN5KCmZBd+XRmMuFxm59QfLWQXlicGJG
-	H6YkebL/msz9CKRNiE6UZE7f4wZVW/99l7G989Hfz1+ntIlqGMW7v/7Tqmdba81ObHj060
-	Y2A+9kzX0yCXQdY6vXUvzg6dSPz4KTs=
-Authentication-Results: mail.tuxedocomputers.com;
-	auth=pass smtp.auth=wse@tuxedocomputers.com smtp.mailfrom=wse@tuxedocomputers.com
-Message-ID: <1a302ede-5198-47a0-a714-ddb9b7796760@tuxedocomputers.com>
-Date: Wed, 11 Feb 2026 13:37:09 +0100
+	s=arc-20240116; t=1770814122; c=relaxed/simple;
+	bh=PDlauqv//TSpFrzdLs1GawOFkZaiS1JkRXFER4lpuJk=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=GlLh1WEprHRy9tLt7jSteQe/+0KfPiLwcnXzvZ58S4RCl4xgOpeO3WnYvT4ZO3oAbxzVMZazWCWsPx3efb8EjQYjGLzByUf/PfC8wow33MzF38qJJ0dXG2A72QMGDKEa31P5a7SztSmxy9j7tX5Ux7rhHbgyXVCfWXRidsQNcvQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=wunner.de; spf=none smtp.mailfrom=h08.hostsharing.net; arc=none smtp.client-ip=83.223.78.240
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=wunner.de
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=h08.hostsharing.net
+Received: from h08.hostsharing.net (h08.hostsharing.net [IPv6:2a01:37:1000::53df:5f1c:0])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature ECDSA (secp384r1) server-digest SHA384
+	 client-signature ECDSA (secp384r1) client-digest SHA384)
+	(Client CN "*.hostsharing.net", Issuer "GlobalSign GCC R6 AlphaSSL CA 2025" (verified OK))
+	by bmailout2.hostsharing.net (Postfix) with ESMTPS id 3DAD82009D28;
+	Wed, 11 Feb 2026 13:48:33 +0100 (CET)
+Received: by h08.hostsharing.net (Postfix, from userid 100393)
+	id 3A3381E6EF; Wed, 11 Feb 2026 13:48:33 +0100 (CET)
+Date: Wed, 11 Feb 2026 13:48:33 +0100
+From: Lukas Wunner <lukas@wunner.de>
+To: Atharva Tiwari <atharvatiwarilinuxdev@gmail.com>
+Cc: Hans de Goede <hansg@kernel.org>,
+	Ilpo =?iso-8859-1?Q?J=E4rvinen?= <ilpo.jarvinen@linux.intel.com>,
+	platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v3] apple-gmux: preserve brightness using EFI
+Message-ID: <aYx6ocvaFHunfP5f@wunner.de>
+References: <20260211092640.3231-1-atharvatiwarilinuxdev@gmail.com>
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 0/5] uniwill-laptop: Input-related improvements
-To: Armin Wolf <W_Armin@gmx.de>, hansg@kernel.org,
- ilpo.jarvinen@linux.intel.com
-Cc: platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
-References: <20260210232946.302936-1-W_Armin@gmx.de>
-Content-Language: en-US
-From: Werner Sembach <wse@tuxedocomputers.com>
-In-Reply-To: <20260210232946.302936-1-W_Armin@gmx.de>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20260211092640.3231-1-atharvatiwarilinuxdev@gmail.com>
 
-Hi,
+On Wed, Feb 11, 2026 at 02:56:38PM +0530, Atharva Tiwari wrote:
+> Make apple-gmux save the current backlight brightness to EFI on shutdown,
+> so the brightness level is preserved across reboots.
 
-Am 11.02.26 um 00:29 schrieb Armin Wolf:
-> This patch series contains a set of input-related improvements
-> for the uniwill-laptop driver. The first patch renames the
-> "fn_lock_toggle_enable" and "super_key_toggle_enable" sysfs attributes
-> after it was discovered that the underlying hardware works differently
-> than previously thought. This technically breaks user space
-> applications using those sysfs attributes, but AFAIK no such users
-> currently exist.
+This version moves the EFI handling back to the gmux driver.  Why?
 
-Just to note it down somewhere: Not every Uniwill device hast a shortcut to 
-enable/disable the super key, but the programmatic switch seems to work on all 
-devices (at least the ones I tested so far).
+I found version 2 (which separated EFI handling into a separate component)
+much better because it will allow other drivers such as i915 and amdgpu
+to update the brightness if they're the ones driving the backlight,
+instead of gmux.
 
-Best regards,
+> +static void gmux_shutdown(struct pnp_dev *pnp)
+> +{
+> +	struct apple_gmux_data *gmux_data = pnp_get_drvdata(pnp);
+> +	u16 brightness = (u16)gmux_get_brightness(gmux_data->bdev);
+> +
+> +#ifdef CONFIG_EFI
+> +	if (gmux_data->efi_status == EFI_SUCCESS && gmux_data->efi_data != brightness) {
+> +		gmux_data->efi_status = efivar_set_variable(EFI_BRIGHTNESS_NAME,
 
-Werner
+Per section 21 of Documentation/process/coding-style.rst, #ifdef inside
+functions should be avoided.
 
->
-> The next two patches fix a potential crash and an issue with the fn
-> lock status not being updated when using a key combination. The
-> remaining patches ensure that when the users changes the fn lock
-> status or enables/disables the super key using a key combination, a
-> poll notification is being issued on the appropriate sysfs attr.
->
-> Armin Wolf (5):
->    platform/x86: uniwill-laptop: Rename FN lock and super key lock attrs
->    platform/x86: uniwill-laptop: Fix crash on unexpected battery event
->    platform/x86: uniwill-laptop: Mark FN lock status as being volatile
->    platform/x86: uniwill-laptop: Handle FN lock event
->    platform/x86: uniwill-laptop: Handle super key lock events
->
->   .../ABI/testing/sysfs-driver-uniwill-laptop   |  10 +-
->   drivers/platform/x86/uniwill/uniwill-acpi.c   | 109 ++++++++++++------
->   2 files changed, 80 insertions(+), 39 deletions(-)
->
+Thanks,
+
+Lukas
