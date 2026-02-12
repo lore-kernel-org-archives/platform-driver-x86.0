@@ -1,47 +1,47 @@
-Received: from mout.gmx.net (mout.gmx.net [212.227.17.21])
+Received: from mout.gmx.net (mout.gmx.net [212.227.17.20])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 24F9BBA34;
-	Thu, 12 Feb 2026 07:02:54 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=212.227.17.21
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C1E4521FF26;
+	Thu, 12 Feb 2026 07:02:55 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=212.227.17.20
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1770879776; cv=none; b=hWBMYGxXooyCJtXA07ZyoO7ABi2+t77AFRH2VRRInNO7Gr8NmSKoK6/PXN7HYkMknKQc2oWA3/9Y+X7RwFRv+eOySzq76zFisQvrxWzhWh1aAZjZZTBzkbvOmIPGFJR+Ybc/nQlhlhNbKDMt5cgqk121O5nkIB8phOm4SFe0dww=
+	t=1770879777; cv=none; b=CqhB6InOYPo8og/4qTsKLz5MU5hCfs8gdjdSfZN7DhZi8iB+pkWHcLtJoVbskddCF3OQe/u1UGfswgAg5Ef6RQ7z8zVOVMcse1fzHB+cqNCaRkFpZAY51rkuLbGaGOH7WBg9L5loRAIhywQn9GbEnn332ils6ykIKjt/BJcGlJo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1770879776; c=relaxed/simple;
-	bh=37nR4fMidhFiBaPoF36iozZr4tqKD/V/bHy1eOB9bmg=;
+	s=arc-20240116; t=1770879777; c=relaxed/simple;
+	bh=SE7gEoZ+dEfHGRInNcKWsKvv5KuSq2wDxg4nC8t0YGc=;
 	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=rKjlgSSBpvYgCC0YGPkx1SCZ12tGD8gPRIo5LhdcKA8klcySJPoOuoL0HzzEq15q5e7lZQKUttvjdd/lOkRH1NO3r0/aiQzo5vdWTmRJDvaWe8I3joMRN3EZwtT6RCaT9xJx86Z+4lD+r0LSrEMl6RfisGD2vVVOAbMPJLEJ4E8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gmx.de; spf=pass smtp.mailfrom=gmx.de; dkim=pass (2048-bit key) header.d=gmx.de header.i=w_armin@gmx.de header.b=gDptQUsO; arc=none smtp.client-ip=212.227.17.21
+	 MIME-Version; b=mhU5CNySAar4aHL4sB4bQtY/XeYHU5aLda43gw7HU+Cm8R8zSwZ2F+oNQnL4yqMh34ekjZHlq6rdFaKBv3hVhEwS38RBBdgAbZqYwEV28r8mZN7BzkXMT3ISojxktszgHGmhFK1Mh3oXuLcox/Y8pzAb8YfWjrMHY2nmNxpdTz4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gmx.de; spf=pass smtp.mailfrom=gmx.de; dkim=pass (2048-bit key) header.d=gmx.de header.i=w_armin@gmx.de header.b=i90FMVOp; arc=none smtp.client-ip=212.227.17.20
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gmx.de
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmx.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmx.de header.i=w_armin@gmx.de header.b="gDptQUsO"
+	dkim=pass (2048-bit key) header.d=gmx.de header.i=w_armin@gmx.de header.b="i90FMVOp"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=gmx.de;
-	s=s31663417; t=1770879769; x=1771484569; i=w_armin@gmx.de;
-	bh=azcG0NDpxMJZHFPjxRLnijLybw5rz9BsVUnYNy4ZCj4=;
+	s=s31663417; t=1770879772; x=1771484572; i=w_armin@gmx.de;
+	bh=bJB6e1RTr/AUgGx1Y0uId8bipyTX8qUIJ3ZoRPdGMIk=;
 	h=X-UI-Sender-Class:From:To:Cc:Subject:Date:Message-Id:In-Reply-To:
 	 References:MIME-Version:Content-Transfer-Encoding:cc:
 	 content-transfer-encoding:content-type:date:from:message-id:
 	 mime-version:reply-to:subject:to;
-	b=gDptQUsOSAOl4qjkZwi1jX0YvD5d+k5sGOk9rMZ1Ym6IAc8z6B5T5iomaexGelXT
-	 jAPj6nL+tmr1N3Xxo7CXpWAJr0tgz9I4Sq4Tu6NrQO9wG1FZh6Hds1sdb+zIucKad
-	 fsJjVYTWaEsZZQanrP/M4pbs5RG5hz4Li0wn8SO3lZi0AOmBIK5z7w9uKRq+Hxv6Z
-	 fwGzFSrHPWFGfsLj2RwecsoS108Y+X8M+f/lrOxDSKn9W2pBFVs5HJs4Zc5uAfRxU
-	 mFAIEWZMt+ln8MC0TUICJAXdd9rqOKnGl6PuRB0UPNQr6iEkA/mZQxBVLDpo91D/3
-	 uNCApd821Scjq/rmGQ==
+	b=i90FMVOpkmHQtiYlc776FzbKTZnC7cQHXQ4OmCl3z5Ns9oRqsMoQszrk7SIijWdz
+	 vuNxGtqnjHXSQlBq09c6e6WjtN5LaxxPNQ6ZrSZUhyQ+o8dw8xViWiK9qZ8pVrTMi
+	 rV+R/6XsEqqHcEVVXhquRdYQDVxqZ69Q97rZRyNjHu7lEmpsdCwmFLcqyriqnjWdF
+	 3CMqohMoxEs+fmHd1R2AP5FdN8X5JsKXHmv9zWeHffjo897JhuPZfIjZknOwiw7vK
+	 HbZw7MI/4wZYUQGnb6zTvE3IpMMmyJP1+v+vpWOgngV9RwxOCHROIUbk91oTuvAvE
+	 FWKQME5XDKAcfJh5VA==
 X-UI-Sender-Class: 724b4f7f-cbec-4199-ad4e-598c01a50d3a
 Received: from mx-amd-b650.fritz.box ([93.202.242.224]) by mail.gmx.net
  (mrgmx105 [212.227.17.168]) with ESMTPSA (Nemesis) id
- 1N3KTy-1viDJS3cI6-00vRMs; Thu, 12 Feb 2026 08:02:49 +0100
+ 1MOiDX-1w9JJb1ru3-00U3wb; Thu, 12 Feb 2026 08:02:52 +0100
 From: Armin Wolf <W_Armin@gmx.de>
 To: hansg@kernel.org,
 	ilpo.jarvinen@linux.intel.com
 Cc: wse@tuxedocomputers.com,
 	platform-driver-x86@vger.kernel.org,
 	linux-kernel@vger.kernel.org
-Subject: [PATCH v2 3/5] platform/x86: uniwill-laptop: Mark FN lock status as being volatile
-Date: Thu, 12 Feb 2026 08:02:34 +0100
-Message-Id: <20260212070236.17296-4-W_Armin@gmx.de>
+Subject: [PATCH v2 5/5] platform/x86: uniwill-laptop: Handle super key enable/disable events
+Date: Thu, 12 Feb 2026 08:02:36 +0100
+Message-Id: <20260212070236.17296-6-W_Armin@gmx.de>
 X-Mailer: git-send-email 2.39.5
 In-Reply-To: <20260212070236.17296-1-W_Armin@gmx.de>
 References: <20260212070236.17296-1-W_Armin@gmx.de>
@@ -52,188 +52,128 @@ List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
-X-Provags-ID: V03:K1:gZnJbDobw5H2Lnc1wNnj5ajy7p+qcrZJAx3QCJwbyl9On/28Sgh
- sAOi3hDyOQApM4L16DTAFIvXxcPKGr4cfXv74waX1Ofh38chMBHpupWz6LWrHWm+OEVWmFh
- Rvz5K0Dlv1tShrHk0OJtnRZPu3gfOdJzVg7Wt0yoCLVPEdzeLVVsX9ssn/ASxaXKmOVcfjU
- uLg5Pb5POEZBm7mOYKHTw==
+X-Provags-ID: V03:K1:eCZgZe47HOrai0k8sf5uFYscLbk730RWg6T6V9+qdnglY0N/kwG
+ dcceoiMR79ur1oeHzJezRZdi/syoF8Ps7KJ9SQIn9MTuzigP+U0F6yAaPvddEXaPzoKHHiZ
+ U5QcQs0rX/G+qLoQl+IWoAyGaJJFhu0KLefidDRcMGcmz//IvLwlcovuyjufuTztYYPZ6Dh
+ kx29lwH35WPCyjatGjRPQ==
 X-Spam-Flag: NO
-UI-OutboundReport: notjunk:1;M01:P0:m7Mw61CB7hQ=;1A39xs3AzdKhKA4dX3dHypnFSD4
- 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
+UI-OutboundReport: notjunk:1;M01:P0:MRmMSU8jNR0=;HiNiBruWviORm/SEPyo71FSoNlR
+ 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
 
-It turns out that the FN lock status can be changed by the underlying
-hardware when the user presses a special key combination. Mark the
-associated register as volatile to prevent regmap from caching said
-value. Also add the necessary suspend/resume handling.
+On many devices, the user can enable/disable the super key by
+pressing Fn + F9. Forward the associated events to the
+super_key_enable sysfs attribute as a poll notification.
 
-Fixes: d050479693bb ("platform/x86: Add Uniwill laptop driver")
 Signed-off-by: Armin Wolf <W_Armin@gmx.de>
 =2D--
- drivers/platform/x86/uniwill/uniwill-acpi.c | 39 ++++++++++++++++++---
- 1 file changed, 35 insertions(+), 4 deletions(-)
+ drivers/platform/x86/uniwill/uniwill-acpi.c | 11 ++++++++---
+ 1 file changed, 8 insertions(+), 3 deletions(-)
 
 diff --git a/drivers/platform/x86/uniwill/uniwill-acpi.c b/drivers/platfor=
 m/x86/uniwill/uniwill-acpi.c
-index ca66288e0d5d..5ff8fcec9d9e 100644
+index afa534da6d57..d97a1e050740 100644
 =2D-- a/drivers/platform/x86/uniwill/uniwill-acpi.c
 +++ b/drivers/platform/x86/uniwill/uniwill-acpi.c
-@@ -330,6 +330,7 @@ struct uniwill_data {
- 	struct acpi_battery_hook hook;
- 	unsigned int last_charge_ctrl;
- 	struct mutex battery_lock;	/* Protects the list of currently registered =
-batteries */
-+	unsigned int last_status;
- 	unsigned int last_switch_status;
- 	struct mutex super_key_lock;	/* Protects the toggling of the super key l=
-ock state */
- 	struct list_head batteries;
-@@ -576,6 +577,7 @@ static bool uniwill_volatile_reg(struct device *dev, u=
-nsigned int reg)
- 	case EC_ADDR_SECOND_FAN_RPM_1:
- 	case EC_ADDR_SECOND_FAN_RPM_2:
- 	case EC_ADDR_BAT_ALERT:
-+	case EC_ADDR_BIOS_OEM:
- 	case EC_ADDR_PWM_1:
- 	case EC_ADDR_PWM_2:
- 	case EC_ADDR_TRIGGER:
-@@ -1504,7 +1506,19 @@ static void uniwill_shutdown(struct platform_device=
- *pdev)
- 	regmap_clear_bits(data->regmap, EC_ADDR_AP_OEM, ENABLE_MANUAL_CTRL);
- }
-=20
--static int uniwill_suspend_keyboard(struct uniwill_data *data)
-+static int uniwill_suspend_fn_lock(struct uniwill_data *data)
-+{
-+	if (!uniwill_device_supports(data, UNIWILL_FEATURE_FN_LOCK))
-+		return 0;
-+
-+	/*
-+	 * The EC_ADDR_BIOS_OEM is marked as volatile, so we have to restore it
-+	 * ourselves.
-+	 */
-+	return regmap_read(data->regmap, EC_ADDR_BIOS_OEM, &data->last_status);
-+}
-+
-+static int uniwill_suspend_super_key(struct uniwill_data *data)
- {
- 	if (!uniwill_device_supports(data, UNIWILL_FEATURE_SUPER_KEY))
- 		return 0;
-@@ -1543,7 +1557,11 @@ static int uniwill_suspend(struct device *dev)
- 	struct uniwill_data *data =3D dev_get_drvdata(dev);
- 	int ret;
-=20
--	ret =3D uniwill_suspend_keyboard(data);
-+	ret =3D uniwill_suspend_fn_lock(data);
-+	if (ret < 0)
-+		return ret;
-+
-+	ret =3D uniwill_suspend_super_key(data);
- 	if (ret < 0)
- 		return ret;
-=20
-@@ -1561,7 +1579,16 @@ static int uniwill_suspend(struct device *dev)
- 	return 0;
- }
-=20
--static int uniwill_resume_keyboard(struct uniwill_data *data)
-+static int uniwill_resume_fn_lock(struct uniwill_data *data)
-+{
-+	if (!uniwill_device_supports(data, UNIWILL_FEATURE_FN_LOCK))
-+		return 0;
-+
-+	return regmap_update_bits(data->regmap, EC_ADDR_BIOS_OEM, FN_LOCK_STATUS=
+@@ -378,9 +378,6 @@ static const struct key_entry uniwill_keymap[] =3D {
+ 	{ KE_IGNORE,    UNIWILL_OSD_CAPSLOCK,                   { KEY_CAPSLOCK }=
+},
+ 	{ KE_IGNORE,    UNIWILL_OSD_NUMLOCK,                    { KEY_NUMLOCK }}=
 ,
-+				  data->last_status);
-+}
-+
-+static int uniwill_resume_super_key(struct uniwill_data *data)
- {
- 	unsigned int value;
- 	int ret;
-@@ -1609,7 +1636,11 @@ static int uniwill_resume(struct device *dev)
- 	if (ret < 0)
- 		return ret;
 =20
--	ret =3D uniwill_resume_keyboard(data);
-+	ret =3D uniwill_resume_fn_lock(data);
-+	if (ret < 0)
-+		return ret;
-+
-+	ret =3D uniwill_resume_super_key(data);
- 	if (ret < 0)
- 		return ret;
+-	/* Reported when the user enables/disables the super key */
+-	{ KE_IGNORE,    UNIWILL_OSD_SUPER_KEY_DISABLE,		{ KEY_UNKNOWN }},
+-	{ KE_IGNORE,    UNIWILL_OSD_SUPER_KEY_ENABLE,		{ KEY_UNKNOWN }},
+ 	/* Optional, might not be reported by all devices */
+ 	{ KE_IGNORE,	UNIWILL_OSD_SUPER_KEY_LOCK_CHANGED,	{ KEY_UNKNOWN }},
 =20
+@@ -1353,6 +1350,14 @@ static int uniwill_notifier_call(struct notifier_bl=
+ock *nb, unsigned long action
+ 	struct uniwill_battery_entry *entry;
+=20
+ 	switch (action) {
++	case UNIWILL_OSD_SUPER_KEY_DISABLE:
++	case UNIWILL_OSD_SUPER_KEY_ENABLE:
++		if (!uniwill_device_supports(data, UNIWILL_FEATURE_SUPER_KEY))
++			return NOTIFY_DONE;
++
++		sysfs_notify(&data->dev->kobj, NULL, "super_key_enable");
++
++		return NOTIFY_OK;
+ 	case UNIWILL_OSD_BATTERY_ALERT:
+ 		if (!uniwill_device_supports(data, UNIWILL_FEATURE_BATTERY))
+ 			return NOTIFY_DONE;
 =2D-=20
 2.39.5
 
