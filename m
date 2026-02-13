@@ -1,66 +1,65 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.10])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.10])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A11D12857FA;
-	Fri, 13 Feb 2026 19:26:46 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.10
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A78B5221F0C;
+	Fri, 13 Feb 2026 20:29:49 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.10
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1771010809; cv=none; b=rL6eFf0qDZfSYapoNuUxEqFQKgm0h73c5X112xea0YX4QhM4dLuV5d+Y53Nyciu6dS2x6ICBdbIvwkNmuujS0a6AbSv9AbT1xyhziE3Pcuyz9s+2arcXAlA4KfgYdLpLDCIwm4Cve7pVsymtIjcb3sjRaKKWw0UcpVH29Yn9yYk=
+	t=1771014591; cv=none; b=nLTmfhqb/tPKJkFKkNsGcwteJBDQj9EDx9fUf4AObjJKUZPaRD8yLoN+xbnM4QXPpd/3opE927VHaLvVlNwU3fv4lEgGR88l9nORpV3ebKkZZWW1emNbWucst4CxCVH2GTGG7tMgV7y9aOUWLXVWwBiqOMJmE7qy+6IOqxPGjSw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1771010809; c=relaxed/simple;
-	bh=WeceQRIeyxqSKayYLb09tilArUTubzmnTCzfo0fONAc=;
+	s=arc-20240116; t=1771014591; c=relaxed/simple;
+	bh=MdCH6WZTVm+iWo48HWRm5dDAmuy5vwlAvFhNnCWqxJw=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=sPQ1wZIiE15P5MPc6i4mcf2FTIkkNnijvCrVto4AjX9g4qEyWTycRiZDQTQiMU7MBO6iWe7dwIfRHHLStqsLWwcC8l195A3D1qeUODDH8gBl4c2V6nxcxNrbwTmVfCTj4cQWBD3mtErOa8jxhs6N5mSWLuvv+HApC3W+Iz6fZjY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=MDjzIofA; arc=none smtp.client-ip=192.198.163.10
+	 Content-Type:Content-Disposition:In-Reply-To; b=L5OPZOLNSekOX0HPWyqdgIG+ZPDS0i/tCAcMTivdgWhZWok99O8rSPPsHJTgSlPCvrtfeHNRZ/bYrP2rw5SLqMUjfG9godF/IXCnOfLqeYEHqScYXLJ20nk/C/XGWWH7ELK8M3MpboB2fi8YXue80B8OfDvJqO6JBLZSbKP0/Wo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=D+ZAR0qD; arc=none smtp.client-ip=198.175.65.10
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="MDjzIofA"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="D+ZAR0qD"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1771010807; x=1802546807;
+  t=1771014590; x=1802550590;
   h=date:from:to:cc:subject:message-id:references:
    mime-version:in-reply-to;
-  bh=WeceQRIeyxqSKayYLb09tilArUTubzmnTCzfo0fONAc=;
-  b=MDjzIofAguZCLTjTn5m1srd9wK1N5GY7pZFg//jojZUJIpt7+dfTVH6Y
-   h5e3jYBeiyeTNe+Gvwm3XqP+rXFZWCvL3XXYjE35hJxB0XtwZhlXWyXkV
-   xQzue6ql7TsQbulzb8HocVVQxjRmWmE2DNkpABkqKnvQXyTgBBSaAC00t
-   J5t6l8lXyrfmUaXCAa2wvidQIUKv4Jrpnf0Q0JZFiv6Vv51BshbYFsa40
-   T4GDdx9Bf6GhGBFSS2iPgMjF55T40OR6rMSKfCZJplM0K8Cy47oYR/EFa
-   wscizdo47FEYFZH6UuokVNqVKxukPsvbzTS5fJ5XgmYaJlMyRrCgl7tAZ
+  bh=MdCH6WZTVm+iWo48HWRm5dDAmuy5vwlAvFhNnCWqxJw=;
+  b=D+ZAR0qD1oKpl0GFlFW9UB7vLqASd2m61423V2Wfnx0YaZXTlH7LoYgE
+   5DgZAm0PcYHkjG37yA1s/pXHxCGq/M8NG+QtD8+Exru65oDtCGkA1aJ7K
+   9XlYtxOCI1in5ckU6FbUL7xo+ICLQmSSghVeHpMcQ/T4NaaUWS5hmeD2Z
+   5+eEg23ZYHK5gjLAilrPPWCoewY3pSU/17KHEecpD9leqVMswnZuGbzd6
+   zuw6kN/vXbO0hRAf1vzjB4ntXdZM98AElkHFJMKzDhY4qkxpg6L5P8yq9
+   bPyDz0Ny/C2BontV3rsbntPABTsYebPuSIiz+z8p0VXH6mW5pbxHfR3sG
    Q==;
-X-CSE-ConnectionGUID: sS9mMq7GTzq3HWFlhQiXfw==
-X-CSE-MsgGUID: hTiAqyPuSDKFxh9KG+EtpA==
-X-IronPort-AV: E=McAfee;i="6800,10657,11700"; a="83566133"
+X-CSE-ConnectionGUID: EjmyeDrQRiCousVP6Pw1qw==
+X-CSE-MsgGUID: 1w4T6QgATu+jOKs6M3tNGQ==
+X-IronPort-AV: E=McAfee;i="6800,10657,11700"; a="89617765"
 X-IronPort-AV: E=Sophos;i="6.21,289,1763452800"; 
-   d="scan'208";a="83566133"
-Received: from orviesa006.jf.intel.com ([10.64.159.146])
-  by fmvoesa104.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 13 Feb 2026 11:26:46 -0800
-X-CSE-ConnectionGUID: YFUeTU9XRYKeGNoFB10LYw==
-X-CSE-MsgGUID: 9ZUHMaDUTCugSwXjppkG4g==
+   d="scan'208";a="89617765"
+Received: from orviesa008.jf.intel.com ([10.64.159.148])
+  by orvoesa102.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 13 Feb 2026 12:29:50 -0800
+X-CSE-ConnectionGUID: 4IptJvqYSwu5aeOahKdflw==
+X-CSE-MsgGUID: P7lO7+aiSuGlmwYsvXUS6Q==
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="6.21,289,1763452800"; 
-   d="scan'208";a="212096873"
+   d="scan'208";a="213033562"
 Received: from lkp-server01.sh.intel.com (HELO 765f4a05e27f) ([10.239.97.150])
-  by orviesa006.jf.intel.com with ESMTP; 13 Feb 2026 11:26:42 -0800
+  by orviesa008.jf.intel.com with ESMTP; 13 Feb 2026 12:29:46 -0800
 Received: from kbuild by 765f4a05e27f with local (Exim 4.98.2)
 	(envelope-from <lkp@intel.com>)
-	id 1vqyoK-00000000vmC-1FSs;
-	Fri, 13 Feb 2026 19:26:40 +0000
-Date: Sat, 14 Feb 2026 03:26:22 +0800
+	id 1vqznK-00000000vo8-2T9R;
+	Fri, 13 Feb 2026 20:29:42 +0000
+Date: Sat, 14 Feb 2026 04:28:51 +0800
 From: kernel test robot <lkp@intel.com>
 To: "Derek J. Clark" <derekjohn.clark@gmail.com>,
 	Ilpo =?iso-8859-1?Q?J=E4rvinen?= <ilpo.jarvinen@linux.intel.com>,
 	Hans de Goede <hansg@kernel.org>
-Cc: llvm@lists.linux.dev, oe-kbuild-all@lists.linux.dev,
-	Mark Pearson <mpearson-lenovo@squebb.ca>,
+Cc: oe-kbuild-all@lists.linux.dev, Mark Pearson <mpearson-lenovo@squebb.ca>,
 	Armin Wolf <W_Armin@gmx.de>, Jonathan Corbet <corbet@lwn.net>,
 	Rong Zhang <i@rong.moe>, Kurt Borja <kuurtb@gmail.com>,
 	"Derek J . Clark" <derekjohn.clark@gmail.com>,
 	platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
 Subject: Re: [PATCH 4/5] platform/x86: lenovo-wmi-other: Add GPU tunable
  attributes
-Message-ID: <202602140321.pfFQKWKX-lkp@intel.com>
+Message-ID: <202602140438.FqccdLwp-lkp@intel.com>
 References: <20260213081243.794288-5-derekjohn.clark@gmail.com>
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
@@ -86,29 +85,23 @@ url:    https://github.com/intel-lab-lkp/linux/commits/Derek-J-Clark/platform-x8
 base:   next-20260212
 patch link:    https://lore.kernel.org/r/20260213081243.794288-5-derekjohn.clark%40gmail.com
 patch subject: [PATCH 4/5] platform/x86: lenovo-wmi-other: Add GPU tunable attributes
-config: x86_64-randconfig-011-20260214 (https://download.01.org/0day-ci/archive/20260214/202602140321.pfFQKWKX-lkp@intel.com/config)
-compiler: clang version 20.1.8 (https://github.com/llvm/llvm-project 87f0227cb60147a26a1eeb4fb06e3b505e9c7261)
-reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20260214/202602140321.pfFQKWKX-lkp@intel.com/reproduce)
+config: i386-randconfig-003-20260213 (https://download.01.org/0day-ci/archive/20260214/202602140438.FqccdLwp-lkp@intel.com/config)
+compiler: gcc-14 (Debian 14.2.0-19) 14.2.0
+reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20260214/202602140438.FqccdLwp-lkp@intel.com/reproduce)
 
 If you fix the issue in a separate patch/commit (i.e. not just a new version of
 the same patch/commit), kindly add following tags
 | Reported-by: kernel test robot <lkp@intel.com>
-| Closes: https://lore.kernel.org/oe-kbuild-all/202602140321.pfFQKWKX-lkp@intel.com/
+| Closes: https://lore.kernel.org/oe-kbuild-all/202602140438.FqccdLwp-lkp@intel.com/
 
 All warnings (new ones prefixed by >>):
 
->> drivers/platform/x86/lenovo/wmi-other.c:1202:1: warning: unused variable 'gpu_mode_attr_group' [-Wunused-const-variable]
+>> drivers/platform/x86/lenovo/wmi-other.c:1202:31: warning: 'gpu_mode_attr_group' defined but not used [-Wunused-const-variable=]
     1202 | LWMI_ATTR_GROUP_TUNABLE_CAP01(gpu_mode, "gpu_mode",
-         | ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-    1203 |                               "Set the GPU mode by power limit");
-         |                               ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-   drivers/platform/x86/lenovo/wmi-other.c:1155:38: note: expanded from macro 'LWMI_ATTR_GROUP_TUNABLE_CAP01'
+         |                               ^~~~~~~~
+   drivers/platform/x86/lenovo/wmi-other.c:1155:45: note: in definition of macro 'LWMI_ATTR_GROUP_TUNABLE_CAP01'
     1155 |         static const struct attribute_group _attrname##_attr_group = {    \
-         |                                             ^~~~~~~~~~~~~~~~~~~~~~
-   <scratch space>:155:1: note: expanded from here
-     155 | gpu_mode_attr_group
-         | ^~~~~~~~~~~~~~~~~~~
-   1 warning generated.
+         |                                             ^~~~~~~~~
 
 
 vim +/gpu_mode_attr_group +1202 drivers/platform/x86/lenovo/wmi-other.c
