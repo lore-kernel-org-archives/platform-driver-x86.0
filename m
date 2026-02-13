@@ -1,70 +1,77 @@
-Received: from mail-qv1-f45.google.com (mail-qv1-f45.google.com [209.85.219.45])
+Received: from mail-dy1-f176.google.com (mail-dy1-f176.google.com [74.125.82.176])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 71CD67E0FF
-	for <platform-driver-x86@vger.kernel.org>; Fri, 13 Feb 2026 04:46:37 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.45
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9DFA031A571
+	for <platform-driver-x86@vger.kernel.org>; Fri, 13 Feb 2026 08:12:51 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=74.125.82.176
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1770957998; cv=none; b=HMfJPAEqCPBtKHFq9AXdXDUOGsgV0FlvuCt2tkqxd7C+wUPk9Moh3dabt1SmSgrhpF7Uy/9KoFgsKoJ/l8Ee9l/lF9BPAw8/ArXspeF1/pdIEOoEF869UIpbJ8sqPM7e4Ey5SRzPj/eGwJ9sSRsYH2mIn6Y8zuqmdPcsWOiEbZE=
+	t=1770970372; cv=none; b=R2vT4sD8RhgW030BTzSsBQ8OZS9H7HZjPtcIHO9lOQ7GRN0K4i0x1oSVZdm4/9BneDSc3LMGkTpErQRpgs2W9wTIGSeejPxevQGG3g9ZXmBXjg47/WC61aP6THu1LBU2lNDQKUUXyCM5TDrjXFw4wTkb+OSCig1xLyj8jVcsbgQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1770957998; c=relaxed/simple;
-	bh=KU5V7tM+QvFVuM+zAwo7t3DRn3XHvlRjvUyGN8XVV78=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=ZzHSSohBhOyVqBrprD5AIHSTNExcXWN4I3bp1QJSAG1fuXDX74EtLTJChZBE+xJY5icKsLyemDpeEgJQTpQZ3oSKVktvq54Xyr+FjjU+kMNVxlpSqntpYnaXzKX0zWc5gSdYu/L7FoHDuDeqoieZN1simksXURnnzgFqnQiLNRw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=unarin.com; spf=pass smtp.mailfrom=unarin.com; dkim=pass (2048-bit key) header.d=unarin-com.20230601.gappssmtp.com header.i=@unarin-com.20230601.gappssmtp.com header.b=Sj+greZ6; arc=none smtp.client-ip=209.85.219.45
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=unarin.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=unarin.com
+	s=arc-20240116; t=1770970372; c=relaxed/simple;
+	bh=lz4sXla5iaXzYaYKO6dVoB67iPEdfhhgbRea96jUVA0=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=leGrKaj/1LlBsa5MRxHoofFtYV4mychkDurR9dzIWDY6kq2T1RrAhdQbb1G6doOk8cXBjIjbTiktoL+Yp0Lnt4tpNN6JydCe/WqYjzsbxg8h3vQfeAxcOqOeYFmf0M4RR9kmIjQtAfdisJ/K7su9BV3vLSUYMFavYUTVYknBsKE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=clpZ+HhM; arc=none smtp.client-ip=74.125.82.176
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=unarin-com.20230601.gappssmtp.com header.i=@unarin-com.20230601.gappssmtp.com header.b="Sj+greZ6"
-Received: by mail-qv1-f45.google.com with SMTP id 6a1803df08f44-896f5256181so1030436d6.2
-        for <platform-driver-x86@vger.kernel.org>; Thu, 12 Feb 2026 20:46:37 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="clpZ+HhM"
+Received: by mail-dy1-f176.google.com with SMTP id 5a478bee46e88-2ba9d13f10eso1201349eec.0
+        for <platform-driver-x86@vger.kernel.org>; Fri, 13 Feb 2026 00:12:51 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=unarin-com.20230601.gappssmtp.com; s=20230601; t=1770957996; x=1771562796; darn=vger.kernel.org;
+        d=gmail.com; s=20230601; t=1770970371; x=1771575171; darn=vger.kernel.org;
         h=content-transfer-encoding:mime-version:message-id:date:subject:cc
          :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=eXQUPpgnTtDZsit/fco7M8saQBikAjm2HkquLwiGwio=;
-        b=Sj+greZ6p5rgXsAwk/w5sqQj4Zaem5aqm3DGU/1qR1QdLDVFX5izFKHijZgD+G2BKI
-         gYLCcXhmqA5L8iecx78MnrSQiduWXm+wBOyvoX9fCCBVwsCrxa3HfjGymUd49xafbVFt
-         ABRQUVgXTbLeXRiaPAx+yigwIJ+y3KqTUTQeqaOuLih3IbReHR6kd71YkjqeavJBziPC
-         ZPehitZq04+Sa1Y8tLvpd7WCDeeETBIOnT/oh2x1OWYH+q2G/41C6JmcLsBHTAHQja62
-         ayu0FbtmuolPToBWX65xzfk/YPSIsw4h0XGyjqCuVy7O0hYlq/3uc4BjVDnLrx+OtVA5
-         VN0w==
+        bh=vNf3v4qpsTMWnVnNf0YVxXfe92u+FC0r54wXd3NTaBA=;
+        b=clpZ+HhMhkDCXQA1EqFZ3Jp44kAzrvME6y4pA7cpEEmzc4LWO5o163dzTlhfPoFvPm
+         tMmPNZoUauf8QQYlfhMBbiblLfhiP6LAMHDcHJV84IYf2avsvB/i179fB9FzwUvUMxog
+         bxavk8GV3unxQujRvJdPuxWUV7260sq5B6jDKzNM3VDgu3ufW6fnxk1Q5ZBOXkwsuSex
+         hFkYBcFEpUkJKXHvs2Ldcbm8CcPdeVAxTeEXLGS2CfPA2j1y29/0Bo5UlAhazAae6+b3
+         GvR6jjo+ppPU1fOoSH8VGd2z+WXsLpUFztYiN+sRkJjj0v3LPYevV+DSvJbQJYG+gkPQ
+         2AoQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1770957996; x=1771562796;
+        d=1e100.net; s=20230601; t=1770970371; x=1771575171;
         h=content-transfer-encoding:mime-version:message-id:date:subject:cc
          :to:from:x-gm-gg:x-gm-message-state:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=eXQUPpgnTtDZsit/fco7M8saQBikAjm2HkquLwiGwio=;
-        b=PFcWWaBc6qI5s3/qMXWfs1Jqx3Ah6IY/SaGjZq/i7jVYt5mxZ1/6KuynT9muHdabCn
-         8z9UCocRvkvQmZnPSl6WPnfieg5m37UPj8ZGPRstu2BNWlaV4lNMXT7XcY+AtJBuWdoX
-         9kTWCK7R01X+6vnx6vcU4/d1qd3ITMu7OwZt7eKkpTMqhPsS17y5a4OvIPmXSJazn2m+
-         /w7GjqvOKiMnTAhln1OSC+MOmwdLXR9i6cXkGv+B8v1/hsMz5pFnrfbjPNegIf8q0Ya1
-         Tw0NheKatNK88pItBxRG3Nbnre3hjpsi280WrV0BeULSTA/huio+MheT/ca1bwfxpJj6
-         3S5Q==
-X-Gm-Message-State: AOJu0YzrKOcfSPgmIzDA/BNeh6+VZMDYtY8EvBO54QCw21MR/Npr5nr/
-	QAE6XREdoAG9L0b6WGmOEtaf98Nd+SiqFjnr+jl+rz47Wks2EI41gBacnTUvzQ8uQXg=
-X-Gm-Gg: AZuq6aIVs0DcRoWoaJmZbtgusTvXQgJX4ksSBUJYHSdErkaQA/9FXYNc1O3xV8qtHvQ
-	9PNPnwCohxHitaGqpezYEOBfzmfERIuGXXPOfM6f3XV7wuVN0KCSPowGfza9qtIillHFJQwEVtH
-	MlwhOarPsgQLzDEF+g/5L9cMoeUPETwjl7r9Zjur8Qw8tXW4s5iLQpNZZWc23d9G1nqH3eSzpLY
-	N2ZuLf2yu9ZSBIy/fYRl+dWlSDSvKG5rlLD9BLqkK9vlHurmyHyKlGwFunyqFnW6/yZfwEuFJT1
-	w3HX1zdpRiSIp0WTcq6RIClhCtm71JjBapCqMP4IBQCfXipyPmsBRyDt57QO+5KgC9RZXLGpb5W
-	BPQfnA8G7XW+fqlji1LlzIsiKw3JebGmMgIun1VHt84PnXzx8idnxX6WCWCWV/L1Iais96tIjeh
-	GjlIvl6Ra7CDCwIzIoNeqJt8Y1QupSnZfRsL7fr/NuEhqJkSn1XONYcw==
-X-Received: by 2002:a05:6214:601a:b0:897:2556:d963 with SMTP id 6a1803df08f44-897346f2bf7mr15856046d6.2.1770957996320;
-        Thu, 12 Feb 2026 20:46:36 -0800 (PST)
-Received: from samu (c-73-141-215-85.hsd1.pa.comcast.net. [73.141.215.85])
-        by smtp.gmail.com with ESMTPSA id 6a1803df08f44-8971cdc050esm65612216d6.45.2026.02.12.20.46.35
+        bh=vNf3v4qpsTMWnVnNf0YVxXfe92u+FC0r54wXd3NTaBA=;
+        b=SzZIeUSXohi1UETq3xxMWX5jfCzkQrBqad4BQB/MQ7OaCW3BIaYqZp9QxrGjmCb1hm
+         Dsd/eZDh0EVU/oQulYmxuyRWzgC9NlDZoVJYG24q3Fe9EstKtuguoUl1CPelwt3wTqU+
+         rGacsDFyKsnpHznKMKyOtrz/029J4cBYf2utac+c80TYIIi+09QOQWjWt36eaUy+XHjB
+         Wt176VYndDubQAbvbO2RGlApbP0GNHocvdITC0z8kpJXA8oODYnRg2s3ElEMnPlqtft3
+         f+SmpTxAbDWf/TBwFlb30NpsmeozHFUXKIEsVZ6CuBJIyRNg856TOJ1FjRoUP1LZtiTo
+         /ejg==
+X-Forwarded-Encrypted: i=1; AJvYcCXVqzKQbZ8/kGFdyv0+rEaPL5aON9+ID9YOnInBsZbi8jtvXgEUJiOLGJOzHaIVa2QCBp4rqQQz8amSAG/z5zzcNd0D@vger.kernel.org
+X-Gm-Message-State: AOJu0Yw1Hiy5UZDXMlGKbRvo/3ZuEQYWLgtMYqbmmAeSRaIVOBD0OIDo
+	kKzy8v12aNQrZLLytkeNSoLpnemHCpTcvS8NwUKLhGaPya8dKqmcuHtS
+X-Gm-Gg: AZuq6aIUe5wprC+DniZvk/K2kt544u5xU9s7EEYNYbzK4SitR8pMronux7l+zgULdnz
+	FL44pP2a1bqPd6hiyojzUrFlE5u9r0XXbvLKUUCcKYiLZ1FR4QAnqeJNynn7bh1MbzQ7BKPzU7Q
+	Yd1xx6WBCX0V7wLw5TSLNOI3em1fpAaEzes/cKNaWX9hONaIE/Jrij6IAQHYKF/xP4ZVi1U+Itz
+	emdZ860vkq2hfhFNcjrgBVo08dg7zTKhQ/GOcJ+UeZHQyxjcmKhVb/2XRO2whFa0cQB6Yq9r+VQ
+	Y4Ip9XOX1KOev0T82PbewEPROHdtwDJmqBqGeztjrUAkX3hQicQ4H5bIFW7Felmw3rpXqgElRbY
+	13OlKkyl+ZNoLOrFXi4IjlSeIYQsI1AvY6z0bLqZV1uTEbGUrkoDNBsGngOVKjR7XLqjOZYmCQN
+	nHwKqI5PMc+32eo66GNC5NwoBZzBmbkmEoDeUps9TJ1aQRxWwCnPdJovNuC3ZnaBBhqwg5252Hh
+	2c=
+X-Received: by 2002:a05:7301:168e:b0:2b8:6573:2d35 with SMTP id 5a478bee46e88-2babc42e1f4mr473844eec.2.1770970370681;
+        Fri, 13 Feb 2026 00:12:50 -0800 (PST)
+Received: from lappy (108-228-232-20.lightspeed.sndgca.sbcglobal.net. [108.228.232.20])
+        by smtp.gmail.com with ESMTPSA id 5a478bee46e88-2ba9dd0a04csm4975052eec.33.2026.02.13.00.12.49
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 12 Feb 2026 20:46:35 -0800 (PST)
-From: Peter Metz <peter.metz@unarin.com>
-To: alexhung@gmail.com,
-	hansg@kernel.org,
-	ilpo.jarvinen@linux.intel.com
-Cc: platform-driver-x86@vger.kernel.org,
+        Fri, 13 Feb 2026 00:12:49 -0800 (PST)
+From: "Derek J. Clark" <derekjohn.clark@gmail.com>
+To: =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>,
+	Hans de Goede <hansg@kernel.org>
+Cc: Mark Pearson <mpearson-lenovo@squebb.ca>,
+	Armin Wolf <W_Armin@gmx.de>,
+	Jonathan Corbet <corbet@lwn.net>,
+	Rong Zhang <i@rong.moe>,
+	Kurt Borja <kuurtb@gmail.com>,
+	"Derek J . Clark" <derekjohn.clark@gmail.com>,
+	platform-driver-x86@vger.kernel.org,
 	linux-kernel@vger.kernel.org
-Subject: [PATCH] platform/x86: intel-hid: Add Dell 14 Plus 2-in-1 to dmi_vgbs_allow_list
-Date: Thu, 12 Feb 2026 23:46:27 -0500
-Message-ID: <20260213044627.203638-1-peter.metz@unarin.com>
-X-Mailer: git-send-email 2.53.0
+Subject: [PATCH 0/5] platform-x86: lenovo-wmi: Add fixes and enhancement
+Date: Fri, 13 Feb 2026 08:02:52 +0000
+Message-ID: <20260213081243.794288-1-derekjohn.clark@gmail.com>
+X-Mailer: git-send-email 2.52.0
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
@@ -73,37 +80,41 @@ List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-The Dell 14 Plus 2-in-1 (model DB04250) requires the VGBS allow list
-entry to correctly enable the tablet mode switch. Without this, the
-chassis state is not reported, and the hinge rotation only emits
-unknown scancodes.
+This series adds many much needed features and fixes to the lenovo-wmi
+drivers.
 
-Verified on Dell 14 Plus 2-in-1 DB04250.
+Patch 1 adds a macro to make assigning attribute ID's for capdata
+cleaner and easier.
+Patch 2 addresses a bug where devices that don't support exposed
+attributes would still create the attribute, and also attempts to
+identify the correct capdata and set/get methods as some legacy
+interfaces don't use the custom mode in the method or capdata ID.
+Patch 3 adds the remaining CPU attributes that weren't previously
+exposed.
+Patch 4 adds the GPU attributes that weren't previously exposed.
+Patch 5 adds battery charge-type limiting when supported by WMI.
 
-Closes: https://bugzilla.kernel.org/show_bug.cgi?id=221090
-Signed-off-by: Peter Metz <peter.metz@unarin.com>
----
- drivers/platform/x86/intel/hid.c | 6 ++++++
- 1 file changed, 6 insertions(+)
+After applying Rong's series from
+https://lore.kernel.org/platform-driver-x86/20260210191938.137234-1-i@rong.moe/
+I found that there weren't any conflicts, so rather than combine
+the series we can just review each separately.
 
-diff --git a/drivers/platform/x86/intel/hid.c b/drivers/platform/x86/intel/hid.c
-index 560cc0631..5b475a096 100644
---- a/drivers/platform/x86/intel/hid.c
-+++ b/drivers/platform/x86/intel/hid.c
-@@ -189,6 +189,12 @@ static const struct dmi_system_id dmi_vgbs_allow_list[] = {
- 			DMI_MATCH(DMI_PRODUCT_NAME, "Dell Pro Rugged 12 Tablet RA02260"),
- 		},
- 	},
-+	{
-+		.matches = {
-+			DMI_MATCH(DMI_SYS_VENDOR, "Dell Inc."),
-+			DMI_MATCH(DMI_PRODUCT_NAME, "Dell 14 Plus 2-in-1 DB04250"),
-+		},
-+	},
- 	{ }
- };
- 
+Signed-off-by: Derek J. Clark <derekjohn.clark@gmail.com>
+
+Derek J. Clark (5):
+  platform/x86: lenovo-wmi-other: Add LWMI_ATTR_ID Macro
+  platform/x86: lenovo-wmi-other: Limit adding attributes to supported
+    devices
+  platform/x86: lenovo-wmi-other: Add missing CPU tunable attributes
+  platform/x86: lenovo-wmi-other: Add GPU tunable attributes
+  platform/x86: lenovo-wmi-other: Add WMI battery charge limiting.
+
+ .../wmi/devices/lenovo-wmi-other.rst          |  21 +
+ drivers/platform/x86/lenovo/wmi-capdata.h     |  13 +-
+ drivers/platform/x86/lenovo/wmi-gamezone.h    |   1 +
+ drivers/platform/x86/lenovo/wmi-other.c       | 605 ++++++++++++++++--
+ 4 files changed, 591 insertions(+), 49 deletions(-)
+
 -- 
-Cheers,
-Peter Metz
+2.52.0
 
