@@ -1,33 +1,33 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DDCA8299A87;
-	Fri, 13 Feb 2026 16:52:05 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1C76D16CD33;
+	Fri, 13 Feb 2026 16:54:24 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1771001525; cv=none; b=EKjoOWVHufXfWGyIqbVQOAuvpp8X34G2wqfk2c7Pi3PfmL0Z2RXE+4Mhd+9M/f0HTsZarO3AFwdER19j1ryf9VlaUjyJxDDGRg0GKedJsECgQTQHKArcnt6vf5mflrfPuvC6y8LEGnayyE5LnmbdT3UtAEwtwjDYZN/dPj5DI6s=
+	t=1771001665; cv=none; b=qVsX25wuLjZ2RLiN/Rue8XkkcVIMSzZwh+nKP54mJp8t0NoPi7+OsOF4j+AhEsyRdBeFzQIiLCb/ZRl6kKIwMHiTLt4iBcgLoNNivdTO+AAxQ0YatBqx8sX3IlAkvA2X4kATxR61/JWlX9BuntgNTuwJrxFuo53ul+exzmg6d+o=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1771001525; c=relaxed/simple;
-	bh=wWrV3LC4eFJWkMMAXZdPfVe6l73sx48idXwDk7w9Lfw=;
+	s=arc-20240116; t=1771001665; c=relaxed/simple;
+	bh=Qn8/iSLa1BFVZO3aUiXhPAL9i05+CEivLw+cpGHSaSw=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=SK2Qs5cvRu9wv+9v7rSBVRqDF2gTcRXSdnFFfiOgURAKeKhdSKQlvDzJKPhFoXtizkNcDwv1F1mZICY/WZXJgOLwE/bSUDEU64aMlqXfUZ0/xUJwvPSTgV+AC/4FTczcNZ7e24/3xNnPtC3JMZaLJYDbZYe/6FzuieR/iNqYvFg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=I+11uzOA; arc=none smtp.client-ip=10.30.226.201
+	 In-Reply-To:Content-Type; b=L6/Kjrsodi4eZJUnCv68IdAzlXR+l3tpnQyFam7+GnsnivO1G1YiHshs2ozr/2sgZwUNyljJHNxLPILouyeoCjFOp5onCYsmG5queFi8Rvjs3K2iFhkbAhP7CuApSGubwhmPOAf75WfkDNgeS0BRqoQ9vo7Nfb2oCuZT+rAQwVM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=HB9GO8Id; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="I+11uzOA"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 84E21C116C6;
-	Fri, 13 Feb 2026 16:52:04 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="HB9GO8Id"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id AA112C116C6;
+	Fri, 13 Feb 2026 16:54:23 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1771001525;
-	bh=wWrV3LC4eFJWkMMAXZdPfVe6l73sx48idXwDk7w9Lfw=;
+	s=k20201202; t=1771001664;
+	bh=Qn8/iSLa1BFVZO3aUiXhPAL9i05+CEivLw+cpGHSaSw=;
 	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=I+11uzOAPdHi40ahmzFeK+tjuqknFD2DAhz7puhQSDYVN6aLyuiSU2j1s3mwiOvmJ
-	 a3bJHO3gZO0QHL8s/Ql4otWps3dLN4NIjqszHvCqjYf5tjRdeivEn/ZATKrteiiwK3
-	 r70uSXVvoUSBY4Nrk5de2yr02Uu04RwPCFHu+tG7QQGXtm3WhHOQvn4o5QiJLIQk8b
-	 y9mZATj9ZrE25/Gx6tnxBIJqGwL6WK1THgQOoocnMYOeb/uTFr/e+9fdhcakVs5gwH
-	 df6xLIO0AWCWl9nT3/iS2dGpgBj/YMc2c3dcOozi1INrg5LkZKQ5OoT2L084KuhWeA
-	 Ge3n2GWgtQVpg==
-Message-ID: <614aea0f-d17b-4a6b-8b2a-168fb387541e@kernel.org>
-Date: Fri, 13 Feb 2026 17:52:02 +0100
+	b=HB9GO8IdYtMLcXc+zBwk7syv5wE9DnBLW7n0vEuJFpRqEzuXDevj/M4rsKvNCVgLC
+	 +UKGr+ksn8LTcBqNgPPm/y1K6tXHwmKunUMKC5DtCvcVizUG1gmGy5CtmLtdq/eHIv
+	 OkXV2GYSndylo6Yg5Ol5Nb+L5lQDqoUqiJVZ1+bYf4X3c33mRzGS/GlpdsNctD0+fF
+	 qFathlg/AVkCOL8clBxAy8y0Mhms4e3a+5dzjqnSK72PggU6zs0iPgF7nvyTmUokUa
+	 Y3wyL4JrirfTFn1eSNctAAuXrmPW5RAZyUoHW0b5qXwNqAstL5ZVhwFXAjoQ1Cbme5
+	 U0B5ILx2N+T9g==
+Message-ID: <21babe2b-89ed-419c-ac08-e9130ba576b4@kernel.org>
+Date: Fri, 13 Feb 2026 17:54:21 +0100
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
@@ -60,14 +60,19 @@ On 13-Feb-26 05:46, Peter Metz wrote:
 > Closes: https://bugzilla.kernel.org/show_bug.cgi?id=221090
 > Signed-off-by: Peter Metz <peter.metz@unarin.com>
 
-Thanks, patch looks good to me:
+p.s.
 
-Reviewed-by: Hans de Goede <johannes.goede@oss.qualcomm.com>
+If you feel up to it, there is a similar bug-report of a related
+Dell model here:
+
+https://lore.kernel.org/platform-driver-x86/CAP3yi-BWm0LqkhfzTrGy5n-KQ=3+T8eRMoR+Z+7Ke2VJB43kTA@mail.gmail.com/
+
+it would be great if you can write a follow-up patch fixing
+that one too.
 
 Regards,
 
 Hans
-
 
 
 
