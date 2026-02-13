@@ -1,84 +1,48 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4DD7D3B28D
-	for <platform-driver-x86@vger.kernel.org>; Fri, 13 Feb 2026 14:04:19 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 560BC2737F9
+	for <platform-driver-x86@vger.kernel.org>; Fri, 13 Feb 2026 16:05:18 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1770991459; cv=none; b=ShhT6S7Iqp61FgeFhbOsnmCrHiePD07U3Cl4zyo0VL7rZAhvZgThx0WH0nyOkiShgRz5zw4nDp80YmwOj77IspXNkgSxLq+LSH2psdquoGZi+4AZwsdnz//E2MOt2Eum84KOkqXfwMdhPvz6aZpRME/Fr/6W+zeD4Z+eJYgHXJM=
+	t=1770998718; cv=none; b=MCeax7UcAM1x0QUpZsJmN22ZpscJadln3EsypKZUHj5JJau+RZEw+gyIkUdWfofLK/ezr8QhCFIWkh0Lqcsy4GOQG1SLB8wKCsMkgPQehoXqhwxvspdYN95nWXaGO7cNf2Z1gSf+xnzfhgaTuvNijvCKcNqIjLE1ZQMwAa8qPvQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1770991459; c=relaxed/simple;
-	bh=KL+7VKOZcopP5D/peBYFW+8wtbaLAFvpv+KKBB2KvCQ=;
-	h=MIME-Version:Date:From:To:Cc:Message-Id:In-Reply-To:References:
-	 Subject:Content-Type; b=FkLt2J/6JVXlwJWtBo3JxGfBjp//BmEYd6TyBpwk5Je33meFhUTdfgNPknCNGZVLqbxnWqH/BetfYO1GRh0vUGkVeEOncJHRINp0ajtab2UVTnj7VID6R0cm/wZn7LObD7+3H7yAshCzV5WG31Y4bNUeWp8knRPSp42fEceAV7A=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=E7sy2tL/; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1770998718; c=relaxed/simple;
+	bh=42xwYSBq3vgchejRNNafzFRp47DUiA653bWte/vKJuk=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=ZdeW5MTuG2OVNOFCOPG1MC4tAQMJm9BqoCskgux5OKfst076PYeQYOu9VhqJDkNv7SuFSay7nXNYRRzj2ABtXeXIROPYZ2PEVIhEhlibxU3LLFvUtT50bkcunKh57i18uCW6vUUrHp/qjA4klZ8bcM2F/7hVjo/EtZ5WrlXxOz0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=oNPhWnMd; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="E7sy2tL/"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 98A6BC4AF0B;
-	Fri, 13 Feb 2026 14:04:18 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="oNPhWnMd"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 72DD5C116C6;
+	Fri, 13 Feb 2026 16:05:16 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1770991458;
-	bh=KL+7VKOZcopP5D/peBYFW+8wtbaLAFvpv+KKBB2KvCQ=;
-	h=Date:From:To:Cc:In-Reply-To:References:Subject:From;
-	b=E7sy2tL/SKzG+fr3yIPVyPUz8EFtWelTLw3GcxVKYhq314WrMPyxVqr9pbtUp6oLB
-	 Wor7CwqdupO63qhXpfPjmvlnSNpSdjP99GvTQzKs4wO1ytGBpm76HJ44AenmSgwQnH
-	 ZkiOSykTt8awcDc4SMOriAI70KMz+EBxivW2u0FW8HQsrpW+uc5m0VCYqVKfQSdPXS
-	 q62B5iySkjwMQKZ2grNBz7dnCElOsL2NCyeQmWQsAn03APSC6XV93JrkiymQHfRrdR
-	 VjR7Ujx9iw9FbFFPyBrp1vZr5a0utnwNCXdm8zWlmEacTHPP4trTo/tOB1Dk9tedLu
-	 75RaxSRT+ineQ==
-Received: from phl-compute-04.internal (phl-compute-04.internal [10.202.2.44])
-	by mailfauth.phl.internal (Postfix) with ESMTP id 77E4AF4006F;
-	Fri, 13 Feb 2026 09:04:17 -0500 (EST)
-Received: from phl-imap-02 ([10.202.2.81])
-  by phl-compute-04.internal (MEProxy); Fri, 13 Feb 2026 09:04:17 -0500
-X-ME-Sender: <xms:YS-PaSNQ1AeQMD-FpNoOVBu9Ji1SL1M6Yu4HYP5duKejZ6m_VWtQuw>
-    <xme:YS-PabxkOCuCCMpj38VxqRR43Vq5xGzkgtIP26_d0ubYJlSOgzAHvAIkDTicU8_Rc
-    LrJlwuLqiOyItWpfvoFM8e8v4UC_55iRMnogr0iSSYgsJWfIMYMyko>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeefgedrtddtgddvtdekgeegucetufdoteggodetrf
-    dotffvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdfurfetoffkrfgpnffqhgenuceu
-    rghilhhouhhtmecufedttdenucesvcftvggtihhpihgvnhhtshculddquddttddmnecujf
-    gurhepofggfffhvfevkfgjfhfutgfgsehtqhertdertdejnecuhfhrohhmpedftehrnhgu
-    uceuvghrghhmrghnnhdfuceorghrnhgusehkvghrnhgvlhdrohhrgheqnecuggftrfgrth
-    htvghrnhepudefjeetteelhfegudekhfetffehtefhtdevkeehfefgtdehheeghfektdek
-    vdefnecuvehluhhsthgvrhfuihiivgeptdenucfrrghrrghmpehmrghilhhfrhhomheprg
-    hrnhguodhmvghsmhhtphgruhhthhhpvghrshhonhgrlhhithihqdduvdekhedujedtvdeg
-    qddvkeejtddtvdeigedqrghrnhgupeepkhgvrhhnvghlrdhorhhgsegrrhhnuggsrdguvg
-    dpnhgspghrtghpthhtohepkedpmhhouggvpehsmhhtphhouhhtpdhrtghpthhtohepughm
-    ihhtrhihrdhtohhrohhkhhhovhesghhmrghilhdrtghomhdprhgtphhtthhopehjvghkhh
-    horhesghhmrghilhdrtghomhdprhgtphhtthhopegrnhgurhhihidrshhhvghvtghhvghn
-    khhosehinhhtvghlrdgtohhmpdhrtghpthhtoheprghnugihsehkvghrnhgvlhdrohhrgh
-    dprhgtphhtthhopegsrhhglheskhgvrhhnvghlrdhorhhgpdhrtghpthhtohephhgrnhhs
-    gheskhgvrhhnvghlrdhorhhgpdhrtghpthhtohepihhlphhordhjrghrvhhinhgvnheslh
-    hinhhugidrihhnthgvlhdrtghomhdprhgtphhtthhopehplhgrthhfohhrmhdqughrihhv
-    vghrqdigkeeisehvghgvrhdrkhgvrhhnvghlrdhorhhg
-X-ME-Proxy: <xmx:YS-PaRsREC55I0QhQ4uSwUQ0Bv1KYyLBXcQo9VRN5wrJgzkL9iEI3Q>
-    <xmx:YS-PaWeI0RtEIH1eQ1A1LYj4PpNwoerm9BSaMGTO6fo0Iu19UfRZcg>
-    <xmx:YS-PaW_ueqyPSA5k8Ov5iw5YiUgEQ8JmoHWn0OWrZeARrX8Luby4UQ>
-    <xmx:YS-PaZQflyU8B0wP9PVqY6NFy-OYtRvKbpoYZI1FYzblyzVv_w71ag>
-    <xmx:YS-Pafo-RcMPKiVuTLPMdd-gMAPkHjW0K7TcFyr320JB9ttiPXhzvSZy>
-Feedback-ID: i36794607:Fastmail
-Received: by mailuser.phl.internal (Postfix, from userid 501)
-	id 54C2A700069; Fri, 13 Feb 2026 09:04:17 -0500 (EST)
-X-Mailer: MessagingEngine.com Webmail Interface
+	s=k20201202; t=1770998718;
+	bh=42xwYSBq3vgchejRNNafzFRp47DUiA653bWte/vKJuk=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=oNPhWnMd3u5hVk/xdja3l70WPJ1wVu0kHTm+FUB6sG169wEwT7sR/a+dfdL+MqnUj
+	 1hbvjQLA4HjvaxlclkOX8WNwz+lbml1rs/s4mGeW80ohFC3pPA+pxciN7ghHuJKxny
+	 xVcQUpHp+shO6cwUPBzHtCrZjiUpqtGxe6LXHIvM8jvE7EL59HBFcChl9laEwzxpqf
+	 yJ8y0nWwB+p2CZ6HYyedGAk+MN8cbwlkwcs2bs4ffi8SUMgZLwHJT1jCoWZz879S2W
+	 fHoHTcL5uMBpcuaiiCdbZ8saMEBCCGhumux+XoloFse7l/XHxx4j33obctZ04eiDYE
+	 1vG0DIsZ7o8Hg==
+Message-ID: <4db8b222-c80b-4333-bacc-25c1422c8e94@kernel.org>
+Date: Fri, 13 Feb 2026 17:05:14 +0100
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-ThreadId: AuWteFS6Yydg
-Date: Fri, 13 Feb 2026 15:03:56 +0100
-From: "Arnd Bergmann" <arnd@kernel.org>
-To: "Bartosz Golaszewski" <brgl@kernel.org>,
- "Dmitry Torokhov" <dmitry.torokhov@gmail.com>
-Cc: "Andy Shevchenko" <andriy.shevchenko@intel.com>,
- "Hans de Goede" <hansg@kernel.org>,
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v4 01/20] platform/x86: x86-android-tablets: convert
+ Goodix devices to GPIO references
+To: Bartosz Golaszewski <brgl@kernel.org>,
+ Dmitry Torokhov <dmitry.torokhov@gmail.com>
+Cc: Andy Shevchenko <andriy.shevchenko@intel.com>,
  =?UTF-8?Q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>,
- "Andy Shevchenko" <andy@kernel.org>, platform-driver-x86@vger.kernel.org,
- "Yauhen Kharuzhy" <jekhor@gmail.com>
-Message-Id: <04f903e1-8197-41c9-b5de-f16c6781be57@app.fastmail.com>
-In-Reply-To: 
- <CAMRc=MeekJ=-OeqjUV-_WZ9g=tsNb-6XrKMi_6gPgbhGCf49KA@mail.gmail.com>
+ Andy Shevchenko <andy@kernel.org>, Arnd Bergmann <arnd@kernel.org>,
+ platform-driver-x86@vger.kernel.org, Yauhen Kharuzhy <jekhor@gmail.com>
 References: <aYpC_XWNXiRmEdzo@google.com>
  <CAMRc=MecKXHOZSpKfeWzEQLgcddsstbhRQHahD8Hky=3KP4QHA@mail.gmail.com>
  <aY1K7z5oYFmwMy2b@google.com>
@@ -89,36 +53,69 @@ References: <aYpC_XWNXiRmEdzo@google.com>
  <CAMRc=MfmYw0oSkc7Td=Pzwb97DzA4ym23gcqZPSKxHuQQhAx_A@mail.gmail.com>
  <aY4K2qbxNmsotwu3@google.com>
  <CAMRc=MeekJ=-OeqjUV-_WZ9g=tsNb-6XrKMi_6gPgbhGCf49KA@mail.gmail.com>
-Subject: Re: [PATCH v4 01/20] platform/x86: x86-android-tablets: convert Goodix devices
- to GPIO references
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: quoted-printable
+From: Hans de Goede <hansg@kernel.org>
+Content-Language: en-US, nl
+In-Reply-To: <CAMRc=MeekJ=-OeqjUV-_WZ9g=tsNb-6XrKMi_6gPgbhGCf49KA@mail.gmail.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 
-On Fri, Feb 13, 2026, at 14:41, Bartosz Golaszewski wrote:
-> On Thu, Feb 12, 2026 at 6:19=E2=80=AFPM Dmitry Torokhov <dmitry.torokh=
-ov@gmail.com> wrote:
+Hi,
+
+On 13-Feb-26 14:41, Bartosz Golaszewski wrote:
+> On Thu, Feb 12, 2026 at 6:19 PM Dmitry Torokhov
+> <dmitry.torokhov@gmail.com> wrote:
+>>>>>
+>>>>> OTOH, if there are more than one of a such controllers in the system...
+>>>>> And it can be found by reading the links that one of them related to
+>>>>> a certain GPIO device. So no insisting on this.
+>>>>
+>>>> If there are multiple such controllers we cannot use a static software
+>>>> node anyway as it should not be shared between them.
+>>>>
+>>>
+>>> In such case they should do what OF nodes do (and I'm sure ACPI too):
+>>> use some ID to tell them apart.
 >>
->> That is inherent weakness in identity matching - the rigid coupling -
->> and that is why I originally implemented name matching which allows f=
-or
->> weak references.
+>> You are missing the point. You will not be able to use a static node and
+>> export it. You will need to create a dedicated software node per
+>> instance and the provide a lookup mechanism for whoever wants to use
+>> them to locate the right one.
 >>
->
-> How does this name matching work for multiple instances? You still
-> need to have the number of software nodes correspond with the number
-> of devices and their names need to match the labels.
->
-> Anyway, that's purely theoretical for now, let's cross that bridge
-> when we get there.
+> 
+> That depends on whether you know the number of instances, doesn't it?
+> If that number is static, you create an equivalent number of software
+> nodes.
 
-Right, and we already have cases where a PCIe card contains a complex
-SoC such as drivers/misc/lan966x_pci.c. In that case they chose to
-use a DT overlay, which is more work initially than doing the same
-thing with software nodes, but should scale to multiple identical
-cards.
+I think there is some miscommunication happening here.
 
-The cases I see of software nodes being used in mainline today
-all seem to be for a fixed number of devices, either on an SoC
-or on a specific board.
+I _believe_ the troublesome case Dmitry is trying to point out
+is the following:
 
-      Arnd
+1. A single GPIO controller
+
+2. 2 different drivers which need to manually add GPIO info
+using a swnode with a properties array with  PROPERTY_ENTRY_GPIO()
+entries
+
+A (so far theoretical) example of this might be both the infamous
+x86-android-tablets code referring to this single GPIO controller
+as well as some ASoC board file under sound/soc/intel/boards/
+referring to it. In that case having them both declare a swnode
+for the GPIO controller and then both have them attach that
+to the GPIO controller themselves (*) will lead to a problem
+because only 1 swnode can be attach to the GPIO controller.
+
+The obvious solution is to have the GPIO controller driver
+create and attach a swnode and have it export that swnode
+so that it can be used in PROPERTY_ENTRY_GPIO() declerations
+in multiple drivers consuming GPIOs from that controller.
+
+Note, I'm not entirely sure this is what Dmitry is trying
+to say but I think it is. Regardless this is a case which
+I've been thinking about how to handle myself :)
+
+Regards,
+
+Hans
+
+
