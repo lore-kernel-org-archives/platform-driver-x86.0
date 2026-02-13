@@ -1,107 +1,122 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.7])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-qv1-f41.google.com (mail-qv1-f41.google.com [209.85.219.41])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 21BBE315D5B;
-	Fri, 13 Feb 2026 22:59:52 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.7
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CD3C630F931
+	for <platform-driver-x86@vger.kernel.org>; Fri, 13 Feb 2026 23:03:35 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.41
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1771023594; cv=none; b=s58BuJsGl5XzyUCTEAwul+QmMc2aT6MXpBy0rejQ/MrdfChXLZr0Lsrc/2mi/JuqRoADggsRGiaQ98NVzkof4J2lhQ1GEniEADsbRpkYHuZq5yK6sUTb5dvAeIl0D6T3LHKV1CP2UQ3EajE88Ab2diq8ZyCFDjY0jsUGC6Oaifk=
+	t=1771023817; cv=none; b=HBe1h8OGWqS+vS9mRL7qLA41gaYlHKqDKuVk4PJ3X3mZfTAS0URLJOn2HGoMzgMDbvju1IPM0Ok9JER+cs8iGixmHfPEGpEw25pewHLS4aFngZ+BDjyMHNkP6vMj04xdc/Eo0PIH/2jVikf1Wi710JLjjJp1ObGKz0hGGgt7FAY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1771023594; c=relaxed/simple;
-	bh=qML0Nd8SpJXbFma6GrKZKUPrYJ8nJ5+enIlspLn7Q7g=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=UqqIR0IedHCz5dCDWvkKTYcYZ7L5Z2mJbHPrK1q8NMEepzPe6y2dy0US9UY5VHngmqbJF0i/kasdyWtelQDGvJN9dYeGXifxVaUi9slJpBui7sm4zgboM9C58Yr71OxR3dLnsWzDFTKYOgAUIztZgnCcOkenQ8l/PUvMvG0GMxQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=WnA2EIGF; arc=none smtp.client-ip=192.198.163.7
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	s=arc-20240116; t=1771023817; c=relaxed/simple;
+	bh=79jOn7zuIWKZbCnOjJ8/5EJ6nEOSGdC/ic23Voq/Gqg=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=KJYynK1D/hlN3Js7PYJ1UR5szB/rn3JqfdnGVW6IvPn7O4BDa6MIWY0B6T21l5kUq/SKuIREZwyOVF+Ynx66uNekMSZ7G5cMRMzS2d5GTgckJjaiLomZkRWBWR7ZlKl47e0Vmd35c5w2ODhkH23YQl1lhJmF9EGvth+IHSyiowM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=unarin.com; spf=pass smtp.mailfrom=unarin.com; dkim=pass (2048-bit key) header.d=unarin-com.20230601.gappssmtp.com header.i=@unarin-com.20230601.gappssmtp.com header.b=PiAhQEJR; arc=none smtp.client-ip=209.85.219.41
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=unarin.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=unarin.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="WnA2EIGF"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1771023593; x=1802559593;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=qML0Nd8SpJXbFma6GrKZKUPrYJ8nJ5+enIlspLn7Q7g=;
-  b=WnA2EIGFk6FSGMrlSWyCdp0WKZRJLkZxwgXj2QQbBzejSyn94nCde6bF
-   TITNoY5iSHtBjwU5nz7QxJafyEbVfGUbHd3fEiGNeBO3ybiE1CSufc60/
-   zwMJt03Fa8jVh/OJu5/VJmstNws+lp7XEpfuYw3Q/DHD2CzBuI4D8Ri0J
-   lTCd7BbyTGsZVIuFhIcKkRBEzW/VSsLxTmMchTcx1nOp06wQlzU0FPz0K
-   TgMhe4zLkWgNqZVqx4GvLzUnEsPA4oCiVZvqmNiTOyYQPDh/dQRuC61Ts
-   qcmlF+7efdCsmWiGm43ULfxXbizqeCH+k+ywOcr+CYe8EYcCFyGBmYTvl
-   w==;
-X-CSE-ConnectionGUID: eQEZFJNjTMSUYELjfzM2Fw==
-X-CSE-MsgGUID: imfjEkRbSNaHTCOrmqiVMw==
-X-IronPort-AV: E=McAfee;i="6800,10657,11700"; a="97672928"
-X-IronPort-AV: E=Sophos;i="6.21,289,1763452800"; 
-   d="scan'208";a="97672928"
-Received: from orviesa007.jf.intel.com ([10.64.159.147])
-  by fmvoesa101.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 13 Feb 2026 14:59:52 -0800
-X-CSE-ConnectionGUID: eSKSbor3TJS5yO0yvEpiVg==
-X-CSE-MsgGUID: 0Kw5WoMOSwen17rfTMT4Ag==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.21,289,1763452800"; 
-   d="scan'208";a="213151501"
-Received: from lkp-server01.sh.intel.com (HELO 765f4a05e27f) ([10.239.97.150])
-  by orviesa007.jf.intel.com with ESMTP; 13 Feb 2026 14:59:49 -0800
-Received: from kbuild by 765f4a05e27f with local (Exim 4.98.2)
-	(envelope-from <lkp@intel.com>)
-	id 1vr28Z-00000000vsy-1Oow;
-	Fri, 13 Feb 2026 22:59:47 +0000
-Date: Sat, 14 Feb 2026 06:59:34 +0800
-From: kernel test robot <lkp@intel.com>
-To: "Derek J. Clark" <derekjohn.clark@gmail.com>,
-	Ilpo =?iso-8859-1?Q?J=E4rvinen?= <ilpo.jarvinen@linux.intel.com>,
-	Hans de Goede <hansg@kernel.org>
-Cc: oe-kbuild-all@lists.linux.dev, Mark Pearson <mpearson-lenovo@squebb.ca>,
-	Armin Wolf <W_Armin@gmx.de>, Jonathan Corbet <corbet@lwn.net>,
-	Rong Zhang <i@rong.moe>, Kurt Borja <kuurtb@gmail.com>,
-	"Derek J . Clark" <derekjohn.clark@gmail.com>,
-	platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 5/5] platform/x86: lenovo-wmi-other: Add WMI battery
- charge limiting.
-Message-ID: <202602140643.fEZnDqbv-lkp@intel.com>
-References: <20260213081243.794288-6-derekjohn.clark@gmail.com>
+	dkim=pass (2048-bit key) header.d=unarin-com.20230601.gappssmtp.com header.i=@unarin-com.20230601.gappssmtp.com header.b="PiAhQEJR"
+Received: by mail-qv1-f41.google.com with SMTP id 6a1803df08f44-895498f3819so2149246d6.3
+        for <platform-driver-x86@vger.kernel.org>; Fri, 13 Feb 2026 15:03:35 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=unarin-com.20230601.gappssmtp.com; s=20230601; t=1771023815; x=1771628615; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=klgM8kzrDwzRwxI4/IcSZIgUAjPmyxVzgNBSPEvMCXg=;
+        b=PiAhQEJR7WgHhAHgh0/yPYqe0bnd8vbQb2XzEbXcPvY7AkbsejtKRYKvgyI1NFs089
+         Kfqx/jappRxvX0ia5s7Bq3+lA/rrNarumoRiON2NMtVgdU8MJJ/Cukkm7T+7mb7i5Eik
+         n+C06TxKB/yxvbdwZ9Tq7YiGYiCyjSyfEWJzBLjUdN0AMk20U+RZttEirkMC0eKhrNs+
+         yWHdL6Exif30UPXOJpFZSH5lDcqTC7L0yfCMLjVysnYm/h16yz9EM5eBgatlZP86n6LW
+         RLghsoh5eBW8McHN5NE1YC8MtmMFbGxyw2Wf1ZgvWc/P9eTtsfAghMI+BVcqaHVuVnje
+         Xh3A==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1771023815; x=1771628615;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:x-gm-gg:x-gm-message-state:from
+         :to:cc:subject:date:message-id:reply-to;
+        bh=klgM8kzrDwzRwxI4/IcSZIgUAjPmyxVzgNBSPEvMCXg=;
+        b=IuyJw3AXyA+PTqD4uoVbZfWocc51c+PUCqACGTvTPFxNyBnAukv5+Y5qTmU3kUPyAg
+         OmQ95w8lHC7D8F1GFxOJGiQ6J3uzvLAkGIbCjO01vFX0dmaQ4Ck1OHnC953/baJDWAPt
+         xfO93RNvXeIEOGEI96+Dvr3vRqqE9CoyJqB3Xh1og0OYU/Ppx0J9t1a2pskDLkFmoafb
+         Bsbr3mlXo6OzTIQW+aymqBvmsDSNfoDZBctgzSENfD/FBhYdIopFVbBAbDgmHdAPVgA3
+         Vv9JIZBmL/IYPEdkwXuAepAVgel1/GqxmF4HlO1e++AZhI2FIA6qgapaS1gUw361JKQe
+         1tMQ==
+X-Forwarded-Encrypted: i=1; AJvYcCVR0zBgWgBNW+ItPhyPmxFM38Gmt9pfaMylNeemo6hVqqXZrS55u2Hg3pFXQXGf49SRSFmJmfyddZ0eFwmvVl+Snhjk@vger.kernel.org
+X-Gm-Message-State: AOJu0Yw59HZiaRowdGAT6pIdrnoNeIcuGR2uXPW9WKM+twE4Vzgn5eev
+	yUI1L7VxD1CYO3eJiCfmcepM0WP2TtAaDyotpJj1DrmnJH5povdctQl/n3YemzgrYGQ=
+X-Gm-Gg: AZuq6aJkU3TxUubaL1dbMNzAgm0ZcvGt5hTrY1JmVaC2h+hhWC6xofV+awDuccjkONi
+	EK+8xHOrK6aQfm6EfieZPAIXeR9PFZOcnLsAQkHi+a8O/x9ZkpQMizT9BnbBWAhe2qNpE1LKPhZ
+	BbYvqa+lmyLFIBjqCfne4uuGHY37P15auB/QQX1DA+C7F8Dt/SwxPONk9kQlAQoHZdL2imFGpDI
+	YCH1WpQarhtjpLALQZ7RX+LYeN/dTz2f7YcToz8E4Bz25HKW7RDtz41TmjtysyObMIebkZmRvg6
+	D1oL7rF2VgyqkKjkl1TDVs9bmMCs0NtOXkBVTKtrnLI7O6RycILINZ1sS7NwMpmEFJVF5HVEU/a
+	2C0AWgDSntfIuUsV2/VvZmjdgN5qeI+OwCuA//R0/768BT8OTeJrq/6nyMEqwBTMb/VM0JwwX4w
+	oiP4FxxLKGDd/dzJph9wWnJaJWPrAYBAwPZIl+PedgiO/9udWs1BKsfA==
+X-Received: by 2002:a05:620a:4415:b0:8cb:3fa7:c4f0 with SMTP id af79cd13be357-8cb40876003mr417363385a.5.1771023814652;
+        Fri, 13 Feb 2026 15:03:34 -0800 (PST)
+Received: from samu (c-73-141-215-85.hsd1.pa.comcast.net. [73.141.215.85])
+        by smtp.gmail.com with ESMTPSA id af79cd13be357-8cb2b0bda6fsm705921685a.9.2026.02.13.15.03.33
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 13 Feb 2026 15:03:34 -0800 (PST)
+From: Peter Metz <peter.metz@unarin.com>
+To: hansg@kernel.org
+Cc: alexhung@gmail.com,
+	ilpo.jarvinen@linux.intel.com,
+	platform-driver-x86@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	23edip@gmail.com
+Subject: [PATCH 2/2] platform/x86: intel-hid: Add Dell 16 Plus 2-in-1 to dmi_vgbs_allow_list
+Date: Fri, 13 Feb 2026 17:58:02 -0500
+Message-ID: <20260213230310.299974-1-peter.metz@unarin.com>
+X-Mailer: git-send-email 2.53.0
+In-Reply-To: <21babe2b-89ed-419c-ac08-e9130ba576b4@kernel.org>
+References: <21babe2b-89ed-419c-ac08-e9130ba576b4@kernel.org>
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20260213081243.794288-6-derekjohn.clark@gmail.com>
+Content-Transfer-Encoding: 8bit
 
-Hi Derek,
+The Dell 16 Plus 2-in-1 (model DB06250) requires the VGBS allow list
+entry to correctly enable the tablet mode switch. Without this, the
+chassis state is not reported, and the hinge rotation only emits
+unknown scancodes.
 
-kernel test robot noticed the following build warnings:
+Link: https://lore.kernel.org/platform-driver-x86/CAP3yi-BWm0LqkhfzTrGy5n-KQ=3+T8eRMoR+Z+7Ke2VJB43kTA@mail.gmail.com/
+Signed-off-by: Peter Metz <peter.metz@unarin.com>
+---
+Hi Hans,
 
-[auto build test WARNING on next-20260212]
-[cannot apply to linus/master v6.19 v6.19-rc8 v6.19-rc7 v6.19]
-[If your patch is applied to the wrong git tree, kindly drop us a note.
-And when submitting patch, we suggest to use '--base' as documented in
-https://git-scm.com/docs/git-format-patch#_base_tree_information]
+Thanks for the review! I'd be happy to help out with more fixes.
+Here is the follow-up patch for the Dell 16 Plus (DB06250)
+to address that report.
 
-url:    https://github.com/intel-lab-lkp/linux/commits/Derek-J-Clark/platform-x86-lenovo-wmi-other-Add-LWMI_ATTR_ID-Macro/20260213-161603
-base:   next-20260212
-patch link:    https://lore.kernel.org/r/20260213081243.794288-6-derekjohn.clark%40gmail.com
-patch subject: [PATCH 5/5] platform/x86: lenovo-wmi-other: Add WMI battery charge limiting.
-config: i386-randconfig-003-20260213 (https://download.01.org/0day-ci/archive/20260214/202602140643.fEZnDqbv-lkp@intel.com/config)
-compiler: gcc-14 (Debian 14.2.0-19) 14.2.0
-reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20260214/202602140643.fEZnDqbv-lkp@intel.com/reproduce)
+Cheers,
+Peter
 
-If you fix the issue in a separate patch/commit (i.e. not just a new version of
-the same patch/commit), kindly add following tags
-| Reported-by: kernel test robot <lkp@intel.com>
-| Closes: https://lore.kernel.org/oe-kbuild-all/202602140643.fEZnDqbv-lkp@intel.com/
+ drivers/platform/x86/intel/hid.c | 6 ++++++
+ 1 file changed, 6 insertions(+)
 
-All warnings (new ones prefixed by >>):
-
->> Warning: drivers/platform/x86/lenovo/wmi-other.c:600 function parameter 'data' not described in 'lwmi_psy_ext_get_prop'
->> Warning: drivers/platform/x86/lenovo/wmi-other.c:600 expecting prototype for lwmi_psy_prop_is_writeable(). Prototype was for lwmi_psy_ext_get_prop() instead
->> Warning: drivers/platform/x86/lenovo/wmi-other.c:641 expecting prototype for lwmi_psy_prop_is_writeable(). Prototype was for lwmi_psy_ext_set_prop() instead
->> Warning: drivers/platform/x86/lenovo/wmi-other.c:745 function parameter 'handle' not described in 'lwmi_acpi_match'
->> Warning: drivers/platform/x86/lenovo/wmi-other.c:745 function parameter 'handle' not described in 'lwmi_acpi_match'
-
+diff --git a/drivers/platform/x86/intel/hid.c b/drivers/platform/x86/intel/hid.c
+index 60ce32f591ff..a8ae2dba7ffd 100644
+--- a/drivers/platform/x86/intel/hid.c
++++ b/drivers/platform/x86/intel/hid.c
+@@ -195,6 +195,12 @@ static const struct dmi_system_id dmi_vgbs_allow_list[] = {
+ 			DMI_MATCH(DMI_PRODUCT_NAME, "Dell 14 Plus 2-in-1 DB04250"),
+ 		},
+ 	},
++	{
++		.matches = {
++			DMI_MATCH(DMI_SYS_VENDOR, "Dell Inc."),
++			DMI_MATCH(DMI_PRODUCT_NAME, "Dell 16 Plus 2-in-1 DB06250"),
++		},
++	},
+ 	{ }
+ };
+ 
 -- 
-0-DAY CI Kernel Test Service
-https://github.com/intel/lkp-tests/wiki
+Cheers,
+Peter Metz
+
