@@ -1,88 +1,88 @@
-Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
+Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 666CE2D97A5
-	for <platform-driver-x86@vger.kernel.org>; Fri, 13 Feb 2026 08:26:05 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.180.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0E77D2D97A5
+	for <platform-driver-x86@vger.kernel.org>; Fri, 13 Feb 2026 08:26:06 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.168.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1770971166; cv=none; b=uQoXrULVUMfMmMjfehzZRCBdOgzqoYugeTRNox81U1dYPUGk6+zsxjEOI8kDhsxk2l+UYAyxS3MOqo3P2PcyHdYh7qt0ZGSObqcEGxT5+pb/blS7+OI64/zLKu0C/CT2lmByTb9Zv0NAXYRlOOfNP/CF40rawteA88qszRu39JI=
+	t=1770971168; cv=none; b=P/yE2IOJ5T7DIPYGZ0lYwHhnOqHtc11o2vv9zKC6yrCNOKp/Dy/vv5J8U4X21GZlQJm9hQ0wQrcp78AphCZ1UrBG4Nhj6DV8Qtb3K5UIdWGafgtFSfQFQZxJS+L8Q6wGKGfoq+SGG7v31PqIlQeBLM1BggU3qxUpXv0eoBvYQM8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1770971166; c=relaxed/simple;
-	bh=X2KFxDDLT4tUMXyiAQnfFl7oMpITlCcd8o6K86Gecng=;
+	s=arc-20240116; t=1770971168; c=relaxed/simple;
+	bh=5Q7SdkbTMle0m4+HfUBeV0NMkxzBwcTxtXfzJqxazXQ=;
 	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=Dcr0CYYpfY5pugT/jgku+Gwxug0OMJI4byLdO59jEH/0G2HaNeXcglZNLRZsRTobP/ZoaDLHuEbF51qblTAdnwowCWfOTLfdL0jay9c9c6e4WrdkP8Ma290HexwJqipMw4cfoMktmSwRuhCeR3SAIMC1xwTLZJQEomnt3uBOKx8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com; spf=pass smtp.mailfrom=oss.qualcomm.com; dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b=XK1hoibH; dkim=pass (2048-bit key) header.d=oss.qualcomm.com header.i=@oss.qualcomm.com header.b=Yqdci1e8; arc=none smtp.client-ip=205.220.180.131
+	 In-Reply-To:To:Cc; b=lJv2Y+aG9r1cSVu750Y8KpjssEWa2i6IHYa/Fs/b52Ym01rRMrNFtSEkT94XLE7H9Jkn1UiM4HUzOA3r/3iUofMFpC3rvdX6xAkBdF+iExBK+P0ZPHyIX9qH9i9T2b0bXYNmmrg0vsWQYXjm/yxPgLyqGOAjXFaur62D1kHKbwk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com; spf=pass smtp.mailfrom=oss.qualcomm.com; dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b=m7FTH0FY; dkim=pass (2048-bit key) header.d=oss.qualcomm.com header.i=@oss.qualcomm.com header.b=RZC6Xlbt; arc=none smtp.client-ip=205.220.168.131
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oss.qualcomm.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b="XK1hoibH";
-	dkim=pass (2048-bit key) header.d=oss.qualcomm.com header.i=@oss.qualcomm.com header.b="Yqdci1e8"
-Received: from pps.filterd (m0279869.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.18.1.11/8.18.1.11) with ESMTP id 61D2jXkc2093498
-	for <platform-driver-x86@vger.kernel.org>; Fri, 13 Feb 2026 08:26:04 GMT
+	dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b="m7FTH0FY";
+	dkim=pass (2048-bit key) header.d=oss.qualcomm.com header.i=@oss.qualcomm.com header.b="RZC6Xlbt"
+Received: from pps.filterd (m0279862.ppops.net [127.0.0.1])
+	by mx0a-0031df01.pphosted.com (8.18.1.11/8.18.1.11) with ESMTP id 61D0BsnV2733859
+	for <platform-driver-x86@vger.kernel.org>; Fri, 13 Feb 2026 08:26:06 GMT
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=qualcomm.com; h=
 	cc:content-transfer-encoding:content-type:date:from:in-reply-to
 	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
-	8mzj/BvqnnG7xrUDC4Rq9s+yW9whephqWvMv7jrUvxk=; b=XK1hoibHG6cpmW3+
-	UnYscOfdlswgaifYMj+aK7P6cRZdRou7e3CKguPw58rXGzAFGWcaL6AY6DZiblTU
-	po9H0+2Puv1UcI0y2rFs8+ujYDpSTOMwe2mpWdVSEXGrT7MYPGe1Dam9yGwUbdH5
-	c68U9o2w/AD5Q/zaSTtPSLwzwf04lJUOjixtS6YbjJBYF+v4alFj/mVgpLv24Uls
-	UWJz3s61hzIV94lLpoWJ+mAXmAjyGa0EVdLdPnTrvI47u7PLOjKwavubRQVqO2ak
-	mrkS1+kA/PiIY3TW0ugZC5izbz0HjONkwOGCABgGuw7f0PKYW9CxzpPJTW5INryv
-	0H+IFw==
+	34wRrCzuqbK+ysVU9RW5vE+7z2lDW+77OV63uWI6j1M=; b=m7FTH0FYgyko00UA
+	oEUhppje16+2/cz76Ac59/VxdeXAgB5FBLXPnvs5Fv8moO77zKIL/lk+f9Mq4KO3
+	v6UFhs4xMSsk5muao6WxrJJt2BBv+jWUPESMvWHjiAoB3mS5WcLDdyGuexkcCTht
+	MZFGiPSw2jdwuDm1yh4SAOnoJJga6J4nHcN3V5sGQktJq2GjOFY+X005Ycpi4t6+
+	sVkUdHJ4ZSe1h0XtVNcZvnkPEeSeTc46hu8+HKRymz/e2nUAlZJpOjWg5UN/jmyC
+	+w10D6iFM2tLbF4ibcZCdNiR++U1yMF3n1tnouLyVeTzuhBc+H9b78Qc8veHJ8uR
+	0k7Stg==
 Received: from mail-qk1-f200.google.com (mail-qk1-f200.google.com [209.85.222.200])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 4c9k6y2tgf-1
+	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 4c9s6wsfg6-1
 	(version=TLSv1.3 cipher=TLS_AES_128_GCM_SHA256 bits=128 verify=NOT)
-	for <platform-driver-x86@vger.kernel.org>; Fri, 13 Feb 2026 08:26:04 +0000 (GMT)
-Received: by mail-qk1-f200.google.com with SMTP id af79cd13be357-8c71500f274so74985985a.1
-        for <platform-driver-x86@vger.kernel.org>; Fri, 13 Feb 2026 00:26:04 -0800 (PST)
+	for <platform-driver-x86@vger.kernel.org>; Fri, 13 Feb 2026 08:26:06 +0000 (GMT)
+Received: by mail-qk1-f200.google.com with SMTP id af79cd13be357-8cb3ad1b81aso284479285a.2
+        for <platform-driver-x86@vger.kernel.org>; Fri, 13 Feb 2026 00:26:06 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=oss.qualcomm.com; s=google; t=1770971164; x=1771575964; darn=vger.kernel.org;
+        d=oss.qualcomm.com; s=google; t=1770971165; x=1771575965; darn=vger.kernel.org;
         h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
          :mime-version:subject:date:from:from:to:cc:subject:date:message-id
          :reply-to;
-        bh=8mzj/BvqnnG7xrUDC4Rq9s+yW9whephqWvMv7jrUvxk=;
-        b=Yqdci1e8ma4w9nALydFu//WWUqXD1PoKAJwIO1DmT4NBybORMuFvwDLAlfStIfQiYP
-         wbgdSRnngcJCOE4HlaTzdZqGYNbp2gApWFjz5cOVtrwFABFjDR8E2a4ZAOsitbulO9YA
-         1tzYuWV7Y7aY/k0oNO1u7urEbNPMS7Jp1WKNJqPt5tSqXAnI9clmTOLUsDcav7zTdG/l
-         cxHlCmnif5xlS1OBBqDT2J62VmKoFiBAQfQTsVKDgH0raaRCB7sUeFScyasnVBEN9Mvt
-         55UgaZ/GxCIaizOsqHBl1OK/3qu9tqC7emeOsUK37ru371sxnrSMeEaQX5NfTD7FAvT1
-         KNjA==
+        bh=34wRrCzuqbK+ysVU9RW5vE+7z2lDW+77OV63uWI6j1M=;
+        b=RZC6XlbtBR3a/5/eakQxKb90+7G2d2LiD2ZOQqwqJQAHQ3EwnKSV+G3Ar65NMS/+yV
+         wC0gttSR51AETlG0RXG9NJFq9ifkjzS/awm4OVShykfCJzQBZar/4w5uYNSbHK4A0Cu0
+         7Gl6QyejPnj6vB1bgi0sBQ+R3Zl932uynHbde/HEwvcMEF3yrxb8NUg0ggEozd1jdHsA
+         objZG2gAajTPuQY4wi5C3zZywx0sxSNcqO8ht8vnPXJ1GLQGJZKUiYbTViaE6W+/AxUV
+         m+cfZOnZJ1UH9yWNIpsUbwV+pNuKCwHLwG/12CnlEhwVVA1rzjIcm1kysAiHp2qfMh4G
+         Janw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1770971164; x=1771575964;
+        d=1e100.net; s=20230601; t=1770971165; x=1771575965;
         h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
          :mime-version:subject:date:from:x-gm-gg:x-gm-message-state:from:to
          :cc:subject:date:message-id:reply-to;
-        bh=8mzj/BvqnnG7xrUDC4Rq9s+yW9whephqWvMv7jrUvxk=;
-        b=FUkP0DO24Gu6tmXHEQ+xcaY1Xr4p2nDi9FmJyZz9IbDdcok84fmYuC06tv9T0cxULF
-         3bY8QmDHClLZeELJfWKP84E4W/jML3qfCAFomvZ3RYip9D0ut4uJO2HyEWOBYeyxe0VE
-         fuHqocXemyX5OAzaNpZXnjhZp/4UJUvj99+Sh8X5OA9+bqpVuLHTs19Iw6DXMayaYvnX
-         uD9Hz7npFXVSDSNOhDmBNbz64TuO21KKzmyci+Ig3AslieL6a+NEsHbChm1lcLp+ujHj
-         Eozb7ihcQyjOwTO30zgZ45goNpOV7+ypwXa9BsTdnyF0tWD00sMFA1+OVAF604eooos+
-         aiBQ==
-X-Forwarded-Encrypted: i=1; AJvYcCU0yuAlr+/+DJd5kjpciozIDlougnmrD2Ca3U/oK3UWVJPxq8xPGPJOpkm25mQ6GcUe/nhGd1vj6GVzl7XZVCHCO2Sc@vger.kernel.org
-X-Gm-Message-State: AOJu0YzsEl7XUaAUjAiwSPE9tEZKNvy0ZRSQqRWT9PRzofhdtzTkNBnw
-	keVoplIlW6cL4RtCRLXAYekmyhz+HBfnEAN78XoLTx13kYKSlNK7wct+FMz1Uuw5SyFi7k+eDyO
-	DGCNbAulp2ZcQmZ6LSjqxYbv8oBSjQV/yYzBRddy04DUjRqOZDUUKDpTEQuEi332+zcSfo8V5oX
-	ap
-X-Gm-Gg: AZuq6aLvmM3kcmw5/MBQtDh2LITjkEPvMoYu1iTpMnGAOxWfiyBFd84URSoVbqkc9n6
-	YzdaYuuCX2JVJjRn6/SW1tTd09Ogz96eX86F62CysvG6bGFyROmcmWAB/8IgcC1nw1Nyv4PmSxR
-	IHL3U9K6ufS2biJNvTjizmNhG4cZUqDFqldtfco5v98DZoWv3fNLRcQzKNhhSlqJPQf1aJZtpxz
-	/gqQsZb3cCeQ7BTKjgTR8EGEwxdBGmPi1PXQLuH5D3+SbS1h92+jaCPL/vehy+PwKtt12jbqpbp
-	zN3dtMiSwQErE1xAQKCqZ1cmddknWgpR4YY++g2SJd5AFHlD1i5TeGZp+qmmlAz2AJjGRN7FwDg
-	W+orgCWTmY/eRoCk8a0yxgSvnkbpXs18OWd2yf4/3Wqn7Na+mgt+r
-X-Received: by 2002:a05:620a:1aa0:b0:88f:e620:21cd with SMTP id af79cd13be357-8cb424afaccmr114530785a.62.1770971163768;
-        Fri, 13 Feb 2026 00:26:03 -0800 (PST)
-X-Received: by 2002:a05:620a:1aa0:b0:88f:e620:21cd with SMTP id af79cd13be357-8cb424afaccmr114528985a.62.1770971163283;
-        Fri, 13 Feb 2026 00:26:03 -0800 (PST)
+        bh=34wRrCzuqbK+ysVU9RW5vE+7z2lDW+77OV63uWI6j1M=;
+        b=cj1xRPWOArrov6M8wnNOjAmHGbxwtSdMjosggC9CoC95A6Cqd/l44BH6Yo1n5u5jJM
+         kdb+WD6YcHwfe35ihV4nndKuQbZdhpNk4KvQBrKQBqkWMStSeGch4WfbTf4qQPSoh/49
+         JTnQe/w6wovppuiKzu9lpuGDIyL5Vl3Fg+bgSz5jgbL1QaDhhcE1s8ebgNSnVp4Crl8T
+         FoFf7unfG+I5Nv8K8Keass7AapdP5B1v5qocd/V4zbuROz7z8y9VGGUfN3Nu9jUdsQQk
+         0JbU8WcT6Xq/quiF8znwYkgp4dOBEewjcfXxpp+lrhmDMVRIfI8ogSTu0xuu84PaCCfw
+         CRbw==
+X-Forwarded-Encrypted: i=1; AJvYcCXEbtqcR1sMhJ37UAKqPR9uAo4E/ilf4zwZjn3BIc3i6F8TlRf+0kIPK+1TDciW6ZiLfcMOJ8orXVULVSU/gglN7K1l@vger.kernel.org
+X-Gm-Message-State: AOJu0YyJHUwhiUJboQB/NCoKQ44eY69oVEVQCBjO1bQj23qBW6QgkWLY
+	+kRilx1uaLk1lJ8QTco4eZzHLGqslvlUoPTAtGgYnl9FpppL26Ww7emdDfwrRyaQoPgHUW0y1zN
+	sfK/COinKNzF4HEiSUbx1egKzmCJBT/+XqLGcZILxGh3q9VsaVR0Q1elKKH5sp0uLDclnB8w3ua
+	mp
+X-Gm-Gg: AZuq6aLIOKS9y/EnkG0eaeO/QU/TvzCOtJsYNy4KEXfLYg7w0JE2BxmFKP9RF6z7g8P
+	NTkdVIG1dX1d6ByWGuitsDxjOWaEnLBIBWE/KevBukyy8O64E5jIXMuq+rncMtucXouDFxrsVwx
+	zPzCbNRYtQAbv8IYEv2xbfrhwAw5ro/pdpxTNAx2a9EpIPbh50kOmQvddtRT2u7WEEcCVL5BOy2
+	w5cW5GBgEis83buJm7GQx7mBG6wFOUEQ/PZSgW+yH4KxCFyzgywblrA/eQhk8WrB+YWZOLA/YDE
+	dyiWmxhADOBu8za3/OwWDzyjZGzt6RbVmYGN5Mqyn7rhiIYtrpnBiPVo1tr1/f1Fsc64Bn+6b92
+	eg9i1eHpEJkyI6lxRxDEobx1D/GTmKp63EnWf9cmNtJboUgdSi7PD
+X-Received: by 2002:a05:620a:29c9:b0:8c7:10cc:758e with SMTP id af79cd13be357-8cb42407c6amr101488985a.45.1770971165254;
+        Fri, 13 Feb 2026 00:26:05 -0800 (PST)
+X-Received: by 2002:a05:620a:29c9:b0:8c7:10cc:758e with SMTP id af79cd13be357-8cb42407c6amr101487085a.45.1770971164793;
+        Fri, 13 Feb 2026 00:26:04 -0800 (PST)
 Received: from brgl-qcom.local ([2a01:cb1d:dc:7e00:6de6:6c0f:d493:4a7a])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-48370a78c89sm43075025e9.5.2026.02.13.00.26.02
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-48370a78c89sm43075025e9.5.2026.02.13.00.26.03
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 13 Feb 2026 00:26:02 -0800 (PST)
+        Fri, 13 Feb 2026 00:26:04 -0800 (PST)
 From: Bartosz Golaszewski <bartosz.golaszewski@oss.qualcomm.com>
-Date: Fri, 13 Feb 2026 09:25:24 +0100
-Subject: [PATCH 1/2] mfd: lpc_ich: expose the GPIO controller cell's
- software node
+Date: Fri, 13 Feb 2026 09:25:25 +0100
+Subject: [PATCH 2/2] platform/x86: meraki-mx100: use real software node
+ references
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
@@ -91,7 +91,7 @@ List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-Message-Id: <20260213-meraki-swnodes-v1-1-8e032693456c@oss.qualcomm.com>
+Message-Id: <20260213-meraki-swnodes-v1-2-8e032693456c@oss.qualcomm.com>
 References: <20260213-meraki-swnodes-v1-0-8e032693456c@oss.qualcomm.com>
 In-Reply-To: <20260213-meraki-swnodes-v1-0-8e032693456c@oss.qualcomm.com>
 To: Peter Tyser <ptyser@xes-inc.com>, Lee Jones <lee@kernel.org>,
@@ -104,104 +104,230 @@ Cc: linux-kernel@vger.kernel.org, platform-driver-x86@vger.kernel.org,
         brgl@kernel.org,
         Bartosz Golaszewski <bartosz.golaszewski@oss.qualcomm.com>
 X-Mailer: b4 0.14.2
-X-Developer-Signature: v=1; a=openpgp-sha256; l=2087;
+X-Developer-Signature: v=1; a=openpgp-sha256; l=7433;
  i=bartosz.golaszewski@oss.qualcomm.com; h=from:subject:message-id;
- bh=X2KFxDDLT4tUMXyiAQnfFl7oMpITlCcd8o6K86Gecng=;
- b=owEBbQKS/ZANAwAKAQWdLsv/NoTDAcsmYgBpjuAVGcYjNFKeEt7GSH2Y78QD73sImjacrfFky
- 6j2fUYA0iGJAjMEAAEKAB0WIQSR5RMt5bVGHXuiZfwFnS7L/zaEwwUCaY7gFQAKCRAFnS7L/zaE
- w9SwD/0WVVdku3ukkznVyaO60kCSZE1wEhRef14WJybpkEfnih5cdk93f8GlzzIFJvXFoihlEgi
- 4tYSA3efVfWhcAL3S/fCBybVxr4J0yxyKO3Ev0dLAWevkYL0podlLxKs4buQ5s5j02ubbdPBuFR
- 38m1vy4ddcClJqYQjB+tYE/GXrMYhQWeGjOulpcOWN7VUgEAnAmAu7C91sb85LNu7kGVJ7ncnla
- 1qXKInXTnnUFrXYnf+LTUZXq4SU0kh8/KlWHQFySN+2sSrxv+locQeHZ203/gnoaw3etkoxoiCV
- 1Y23KA4dx8+h8siv7GU7pZHC1GdVIas+jwbnWqeshKIdNictkR0u3usuDTScLnVn/Vh4zjHviSJ
- zpRUgC5xSdyPNMPT1NF7k1W7PP8OdxpqGvvVBHb/5ucAcvYlJUcJ4euy4tQi+UIVAovEI+KPCkr
- 7qhX7RaowFFGmjqFXq6ykmhyaN+ji+Q4TZvHes4JMTUpu01/bKoM+a5sWgbUpawJ6ukxdzsOO1g
- FVECl7+1tr81E4KS6PPtlw0VIis2zevHaOfX57ORSb4IGXePR6oAMBV+Vu3ze8XgOtJ9RnqdOfl
- Lx28y6X6yBTGdHS16wSoB5DjkCUOz6PniNtonAuQoM2xIII4nQezQ5kdN9ik5aEgXLaPegrBcHU
- abYl/6EVgPjDrBA==
+ bh=5Q7SdkbTMle0m4+HfUBeV0NMkxzBwcTxtXfzJqxazXQ=;
+ b=owEBbQKS/ZANAwAKAQWdLsv/NoTDAcsmYgBpjuAXxD1DU8alBGCuJx7ykvQhSIio1TF2shjcs
+ r5ZMYdBnFSJAjMEAAEKAB0WIQSR5RMt5bVGHXuiZfwFnS7L/zaEwwUCaY7gFwAKCRAFnS7L/zaE
+ w5z3D/9TpYaWS/nADb74kcMIB7kOdc5L4Y3SV+6/dqySZCyKIY95VxHOXJk0Dj3E+PpeWWOZwqF
+ L3khYJRZ5pCz/jVIBnH0a8nNKf2K261i0ircpl9YyhqTsPWsPUAOHdpiqUK5QF8s+HIQNNNn/my
+ BQJeZYFlDytJkoEl81ibhxiy0sEHASFJgyvWlGPe8EQH3Mh2clsRTomcpKNo/CcT4En7n5Swuj4
+ ENIEKx2Dy8V+YoEf5py3kqJtuF2U3eCRZ5si2DwxkLlFsBnUrnNqQikFguah7XBMMp7UjAs8QIv
+ 95NyJuX7aaYKzqbxBFVY4wd0yB8gLX357qyNm37TiA7bCgzbvuP4VWbp7BCpV0aKCLiCls1YO0C
+ iNQbEtFGsqzYXiAdAwPdDSkW83Ed+vmpR9YqiSk9AnBpIefJRb6IwHIp/AiQgvd8FIJ4nl9CVq5
+ 9irJHBhS2jeU67gB4Fmg11BOKt5TwguF9mEzocSOC2ptgBIGhHxr7CzmDokyGvqT8/8lBntvvod
+ Pe21xpdj3zJEQBxi6Dqv13EF1DXukU9QcH361nQDasWss7QVCy45V3cORjOVCGx0ITpE9BQq8eJ
+ McJLmssmDaIDg4jBqEaEwnILo8HddQWdrBXgueQnTvHy1U0PAfniSBhSuGzOo3lbbIDPoWsifd6
+ I/L7b4l9cMlNo3Q==
 X-Developer-Key: i=bartosz.golaszewski@oss.qualcomm.com; a=openpgp;
  fpr=169DEB6C0BC3C46013D2C79F11A72EA01471D772
-X-Authority-Analysis: v=2.4 cv=NsTcssdJ c=1 sm=1 tr=0 ts=698ee01c cx=c_pps
+X-Proofpoint-ORIG-GUID: hULDAEqBgm1C_NNIekj-o1iULan9M-qr
+X-Proofpoint-Spam-Details-Enc: AW1haW4tMjYwMjEzMDA2NCBTYWx0ZWRfXwfo/fe4VkbKn
+ Q0M8W3zzdxEDWCVClJguLbNgEk6VJs8QuITjd2vAOGvi4XNUjjsWNBgiw5ZCoNfSYhHRbkSPcKV
+ nQgQsOoczw20qFP2HpBcw5de1QftKvzsnOwOh7g3oDSHpzSM7LeqnUH1CPB8xmj9LyyFXlxOs9N
+ TgFdpRAZYUmhEQYvn5rZ1lP555sD05ToRyPis/y2t2t18FSue3HBwAzSVBmn8A+g/Q8qV8ArWDu
+ 0OcFG8rvggjApuptLW5ckd9lPR1lRczh+84rZ6QK7v6f9n+GHedvus+3ChFNpSxSe6jSHDbbv5b
+ 4f72hu3UEQaLFjWVJqFg0Quqkk6sY6bxMur2mgyKoeZ8f+WMfkbwo0MMbLdgCQtFxPE8wrNxtLO
+ JK57vdZaxPxbywoSW2pH5jeAOooPt+N94jwqY5yWgzhwdrikwl4vmKW32BwyYaYfFLarTBsuJ2p
+ MBmQ6wehilg+Lf8bZ9A==
+X-Proofpoint-GUID: hULDAEqBgm1C_NNIekj-o1iULan9M-qr
+X-Authority-Analysis: v=2.4 cv=CLInnBrD c=1 sm=1 tr=0 ts=698ee01e cx=c_pps
  a=hnmNkyzTK/kJ09Xio7VxxA==:117 a=xqWC_Br6kY4A:10 a=IkcTkHD0fZMA:10
  a=HzLeVaNsDn8A:10 a=s4-Qcg_JpJYA:10 a=VkNPw1HP01LnGYTKEx00:22
  a=Mpw57Om8IfrbqaoTuvik:22 a=GgsMoib0sEa3-_RKJdDe:22 a=EUspDBNiAAAA:8
- a=gkop4zNMY9-1AnXrjugA:9 a=QEXdDO2ut3YA:10 a=PEH46H7Ffwr30OY-TuGO:22
-X-Proofpoint-Spam-Details-Enc: AW1haW4tMjYwMjEzMDA2NCBTYWx0ZWRfX6nmH+WWUIkvI
- zCSBhF3qrqekC5xnMRh+0FX3MzB7hHPvHMlGxseoli+GwZjTr4ntCgMXXnkplwV9abJIc/YRiI+
- O4NivvVWVxVJ++JU/TaQ8axfpYj4R7Dt4B3Jgy/zlnU0euKqGigg7xdCI2aG8a6hSaB5Bj9oqXw
- a5KcdOqfUDFyWQcX7hn6V7w4rAo21QTgSwINz2FmV/qgE/fSSxntGr4wA7/2UdBu8xyhPjYi51B
- QT27//NMtTjwPJkV6cPWT1jZSCfTgvn0c+XHbDjJj0j7D63/4zNvqdSSIX/2osf6av5UbIVfR0v
- QTghWfiv7Zl9XstwttIwMBNFnG/EPBG7dkJKmyj1dzIuwJUtnW3o/wmtH6kmtFziQzf33kykoqv
- zuog8vdVMlI9+5Ff1S8K+QK0io9LZcf/UErOJE5LzWT+3PsB+dZbDJ45sNM2t0jKGUF95x4Rgsq
- w4vl+HbCrGtkkCJ1OqQ==
-X-Proofpoint-GUID: VnX97FOBC1w1D2s7APsZuK1f8nYb0aR4
-X-Proofpoint-ORIG-GUID: VnX97FOBC1w1D2s7APsZuK1f8nYb0aR4
+ a=8uK6cGLCw7B09FO9iJsA:9 a=QEXdDO2ut3YA:10 a=PEH46H7Ffwr30OY-TuGO:22
 X-Proofpoint-Virus-Version: vendor=baseguard
  engine=ICAP:2.0.293,Aquarius:18.0.1121,Hydra:6.1.51,FMLib:17.12.100.49
  definitions=2026-02-13_01,2026-02-12_03,2025-10-01_01
 X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
- bulkscore=0 impostorscore=0 spamscore=0 suspectscore=0 priorityscore=1501
- lowpriorityscore=0 adultscore=0 phishscore=0 malwarescore=0 clxscore=1015
+ spamscore=0 adultscore=0 suspectscore=0 clxscore=1015 lowpriorityscore=0
+ malwarescore=0 phishscore=0 priorityscore=1501 impostorscore=0 bulkscore=0
  classifier=typeunknown authscore=0 authtc= authcc= route=outbound adjust=0
  reason=mlx scancount=1 engine=8.22.0-2601150000 definitions=main-2602130064
 
-One of the users of this driver - meraki-mx100 - abuses the software
-node API by setting up a dummy software node without any logical link to
-this GPIO controller and uses the fact that the GPIO core matches the
-controller's label against the swnode's name to make the lookup work.
-
-We want to remove this behavior from GPIOLIB in favor of actual matching
-of firmware nodes but that would break this user. To facilitate that:
-create a software node for the GPIO controller cell and expose its
-address in the provided MFD header.
+The lpc_ich MFD driver now exposes the software node associated with the
+its GPIO controller cell. Remove the dummy software node from the
+meraki-mx100 driver and reference the real one instead.
 
 Signed-off-by: Bartosz Golaszewski <bartosz.golaszewski@oss.qualcomm.com>
 ---
- drivers/mfd/lpc_ich.c       | 7 +++++++
- include/linux/mfd/lpc_ich.h | 2 ++
- 2 files changed, 9 insertions(+)
+ drivers/platform/x86/meraki-mx100.c | 40 ++++++++++++++++---------------------
+ 1 file changed, 17 insertions(+), 23 deletions(-)
 
-diff --git a/drivers/mfd/lpc_ich.c b/drivers/mfd/lpc_ich.c
-index 4b7d0cb9340f1ac51bf3845427ba1dee8cad5667..ffef785e86d34c4302f7f88a472e969c47616c9a 100644
---- a/drivers/mfd/lpc_ich.c
-+++ b/drivers/mfd/lpc_ich.c
-@@ -45,6 +45,7 @@
- #include <linux/acpi.h>
- #include <linux/pci.h>
- #include <linux/pinctrl/pinctrl.h>
-+#include <linux/property.h>
- #include <linux/mfd/core.h>
- #include <linux/mfd/lpc_ich.h>
- #include <linux/platform_data/itco_wdt.h>
-@@ -125,11 +126,17 @@ static struct mfd_cell lpc_ich_wdt_cell = {
- 	.ignore_resource_conflicts = true,
+diff --git a/drivers/platform/x86/meraki-mx100.c b/drivers/platform/x86/meraki-mx100.c
+index 8c5276d98512390effcc9f2258a6061684420d11..170ae969bf014edb780fcbace16e50ead59dae71 100644
+--- a/drivers/platform/x86/meraki-mx100.c
++++ b/drivers/platform/x86/meraki-mx100.c
+@@ -20,16 +20,11 @@
+ #include <linux/input-event-codes.h>
+ #include <linux/io.h>
+ #include <linux/kernel.h>
++#include <linux/mfd/lpc_ich.h>
+ #include <linux/module.h>
+ #include <linux/platform_device.h>
+ #include <linux/property.h>
+ 
+-#define TINK_GPIO_DRIVER_NAME "gpio_ich"
+-
+-static const struct software_node gpio_ich_node = {
+-	.name = TINK_GPIO_DRIVER_NAME,
+-};
+-
+ /* LEDs */
+ static const struct software_node tink_gpio_leds_node = {
+ 	.name = "meraki-mx100-leds",
+@@ -38,7 +33,7 @@ static const struct software_node tink_gpio_leds_node = {
+ static const struct property_entry tink_internet_led_props[] = {
+ 	PROPERTY_ENTRY_STRING("label", "mx100:green:internet"),
+ 	PROPERTY_ENTRY_STRING("linux,default-trigger", "default-on"),
+-	PROPERTY_ENTRY_GPIO("gpios", &gpio_ich_node, 11, GPIO_ACTIVE_LOW),
++	PROPERTY_ENTRY_GPIO("gpios", &lpc_ich_gpio_swnode, 11, GPIO_ACTIVE_LOW),
+ 	{ }
  };
  
-+const struct software_node lpc_ich_gpio_swnode = {
-+	.name = "gpio_ich",
-+};
-+EXPORT_SYMBOL(lpc_ich_gpio_swnode);
-+
- static struct mfd_cell lpc_ich_gpio_cell = {
- 	.name = "gpio_ich",
- 	.num_resources = ARRAY_SIZE(gpio_ich_res),
- 	.resources = gpio_ich_res,
- 	.ignore_resource_conflicts = true,
-+	.swnode = &lpc_ich_gpio_swnode,
+@@ -50,7 +45,7 @@ static const struct software_node tink_internet_led_node = {
+ 
+ static const struct property_entry tink_lan2_led_props[] = {
+ 	PROPERTY_ENTRY_STRING("label", "mx100:green:lan2"),
+-	PROPERTY_ENTRY_GPIO("gpios", &gpio_ich_node, 18, GPIO_ACTIVE_HIGH),
++	PROPERTY_ENTRY_GPIO("gpios", &lpc_ich_gpio_swnode, 18, GPIO_ACTIVE_HIGH),
+ 	{ }
  };
  
- #define INTEL_GPIO_RESOURCE_SIZE	0x1000
-diff --git a/include/linux/mfd/lpc_ich.h b/include/linux/mfd/lpc_ich.h
-index 1fbda1f8967db41ba3bacd331e5d18dfa8ebca3c..1819aa743c5c9aa1ac51710bbdbbefab50670ebe 100644
---- a/include/linux/mfd/lpc_ich.h
-+++ b/include/linux/mfd/lpc_ich.h
-@@ -37,4 +37,6 @@ struct lpc_ich_info {
- 	u8 use_gpio;
+@@ -62,7 +57,7 @@ static const struct software_node tink_lan2_led_node = {
+ 
+ static const struct property_entry tink_lan3_led_props[] = {
+ 	PROPERTY_ENTRY_STRING("label", "mx100:green:lan3"),
+-	PROPERTY_ENTRY_GPIO("gpios", &gpio_ich_node, 20, GPIO_ACTIVE_HIGH),
++	PROPERTY_ENTRY_GPIO("gpios", &lpc_ich_gpio_swnode, 20, GPIO_ACTIVE_HIGH),
+ 	{ }
  };
  
-+extern const struct software_node lpc_ich_gpio_swnode;
-+
- #endif
+@@ -74,7 +69,7 @@ static const struct software_node tink_lan3_led_node = {
+ 
+ static const struct property_entry tink_lan4_led_props[] = {
+ 	PROPERTY_ENTRY_STRING("label", "mx100:green:lan4"),
+-	PROPERTY_ENTRY_GPIO("gpios", &gpio_ich_node, 22, GPIO_ACTIVE_HIGH),
++	PROPERTY_ENTRY_GPIO("gpios", &lpc_ich_gpio_swnode, 22, GPIO_ACTIVE_HIGH),
+ 	{ }
+ };
+ 
+@@ -86,7 +81,7 @@ static const struct software_node tink_lan4_led_node = {
+ 
+ static const struct property_entry tink_lan5_led_props[] = {
+ 	PROPERTY_ENTRY_STRING("label", "mx100:green:lan5"),
+-	PROPERTY_ENTRY_GPIO("gpios", &gpio_ich_node, 23, GPIO_ACTIVE_HIGH),
++	PROPERTY_ENTRY_GPIO("gpios", &lpc_ich_gpio_swnode, 23, GPIO_ACTIVE_HIGH),
+ 	{ }
+ };
+ 
+@@ -98,7 +93,7 @@ static const struct software_node tink_lan5_led_node = {
+ 
+ static const struct property_entry tink_lan6_led_props[] = {
+ 	PROPERTY_ENTRY_STRING("label", "mx100:green:lan6"),
+-	PROPERTY_ENTRY_GPIO("gpios", &gpio_ich_node, 32, GPIO_ACTIVE_HIGH),
++	PROPERTY_ENTRY_GPIO("gpios", &lpc_ich_gpio_swnode, 32, GPIO_ACTIVE_HIGH),
+ 	{ }
+ };
+ 
+@@ -110,7 +105,7 @@ static const struct software_node tink_lan6_led_node = {
+ 
+ static const struct property_entry tink_lan7_led_props[] = {
+ 	PROPERTY_ENTRY_STRING("label", "mx100:green:lan7"),
+-	PROPERTY_ENTRY_GPIO("gpios", &gpio_ich_node, 34, GPIO_ACTIVE_HIGH),
++	PROPERTY_ENTRY_GPIO("gpios", &lpc_ich_gpio_swnode, 34, GPIO_ACTIVE_HIGH),
+ 	{ }
+ };
+ 
+@@ -122,7 +117,7 @@ static const struct software_node tink_lan7_led_node = {
+ 
+ static const struct property_entry tink_lan8_led_props[] = {
+ 	PROPERTY_ENTRY_STRING("label", "mx100:green:lan8"),
+-	PROPERTY_ENTRY_GPIO("gpios", &gpio_ich_node, 35, GPIO_ACTIVE_HIGH),
++	PROPERTY_ENTRY_GPIO("gpios", &lpc_ich_gpio_swnode, 35, GPIO_ACTIVE_HIGH),
+ 	{ }
+ };
+ 
+@@ -134,7 +129,7 @@ static const struct software_node tink_lan8_led_node = {
+ 
+ static const struct property_entry tink_lan9_led_props[] = {
+ 	PROPERTY_ENTRY_STRING("label", "mx100:green:lan9"),
+-	PROPERTY_ENTRY_GPIO("gpios", &gpio_ich_node, 36, GPIO_ACTIVE_HIGH),
++	PROPERTY_ENTRY_GPIO("gpios", &lpc_ich_gpio_swnode, 36, GPIO_ACTIVE_HIGH),
+ 	{ }
+ };
+ 
+@@ -146,7 +141,7 @@ static const struct software_node tink_lan9_led_node = {
+ 
+ static const struct property_entry tink_lan10_led_props[] = {
+ 	PROPERTY_ENTRY_STRING("label", "mx100:green:lan10"),
+-	PROPERTY_ENTRY_GPIO("gpios", &gpio_ich_node, 37, GPIO_ACTIVE_HIGH),
++	PROPERTY_ENTRY_GPIO("gpios", &lpc_ich_gpio_swnode, 37, GPIO_ACTIVE_HIGH),
+ 	{ }
+ };
+ 
+@@ -158,7 +153,7 @@ static const struct software_node tink_lan10_led_node = {
+ 
+ static const struct property_entry tink_lan11_led_props[] = {
+ 	PROPERTY_ENTRY_STRING("label", "mx100:green:lan11"),
+-	PROPERTY_ENTRY_GPIO("gpios", &gpio_ich_node, 48, GPIO_ACTIVE_HIGH),
++	PROPERTY_ENTRY_GPIO("gpios", &lpc_ich_gpio_swnode, 48, GPIO_ACTIVE_HIGH),
+ 	{ }
+ };
+ 
+@@ -170,7 +165,7 @@ static const struct software_node tink_lan11_led_node = {
+ 
+ static const struct property_entry tink_ha_green_led_props[] = {
+ 	PROPERTY_ENTRY_STRING("label", "mx100:green:ha"),
+-	PROPERTY_ENTRY_GPIO("gpios", &gpio_ich_node, 16, GPIO_ACTIVE_LOW),
++	PROPERTY_ENTRY_GPIO("gpios", &lpc_ich_gpio_swnode, 16, GPIO_ACTIVE_LOW),
+ 	{ }
+ };
+ 
+@@ -182,7 +177,7 @@ static const struct software_node tink_ha_green_led_node = {
+ 
+ static const struct property_entry tink_ha_orange_led_props[] = {
+ 	PROPERTY_ENTRY_STRING("label", "mx100:orange:ha"),
+-	PROPERTY_ENTRY_GPIO("gpios", &gpio_ich_node, 7, GPIO_ACTIVE_LOW),
++	PROPERTY_ENTRY_GPIO("gpios", &lpc_ich_gpio_swnode, 7, GPIO_ACTIVE_LOW),
+ 	{ }
+ };
+ 
+@@ -194,7 +189,7 @@ static const struct software_node tink_ha_orange_led_node = {
+ 
+ static const struct property_entry tink_usb_green_led_props[] = {
+ 	PROPERTY_ENTRY_STRING("label", "mx100:green:usb"),
+-	PROPERTY_ENTRY_GPIO("gpios", &gpio_ich_node, 21, GPIO_ACTIVE_LOW),
++	PROPERTY_ENTRY_GPIO("gpios", &lpc_ich_gpio_swnode, 21, GPIO_ACTIVE_LOW),
+ 	{ }
+ };
+ 
+@@ -206,7 +201,7 @@ static const struct software_node tink_usb_green_led_node = {
+ 
+ static const struct property_entry tink_usb_orange_led_props[] = {
+ 	PROPERTY_ENTRY_STRING("label", "mx100:orange:usb"),
+-	PROPERTY_ENTRY_GPIO("gpios", &gpio_ich_node, 19, GPIO_ACTIVE_LOW),
++	PROPERTY_ENTRY_GPIO("gpios", &lpc_ich_gpio_swnode, 19, GPIO_ACTIVE_LOW),
+ 	{ }
+ };
+ 
+@@ -230,7 +225,7 @@ static const struct software_node tink_gpio_keys_node = {
+ static const struct property_entry tink_reset_key_props[] = {
+ 	PROPERTY_ENTRY_U32("linux,code", KEY_RESTART),
+ 	PROPERTY_ENTRY_STRING("label", "Reset"),
+-	PROPERTY_ENTRY_GPIO("gpios", &gpio_ich_node, 60, GPIO_ACTIVE_LOW),
++	PROPERTY_ENTRY_GPIO("gpios", &lpc_ich_gpio_swnode, 60, GPIO_ACTIVE_LOW),
+ 	PROPERTY_ENTRY_U32("linux,input-type", EV_KEY),
+ 	PROPERTY_ENTRY_U32("debounce-interval", 100),
+ 	{ }
+@@ -243,7 +238,6 @@ static const struct software_node tink_reset_key_node = {
+ };
+ 
+ static const struct software_node *tink_swnodes[] = {
+-	&gpio_ich_node,
+ 	/* LEDs nodes */
+ 	&tink_gpio_leds_node,
+ 	&tink_internet_led_node,
 
 -- 
 2.47.3
