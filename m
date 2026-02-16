@@ -1,88 +1,92 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3568F2E6CD8
-	for <platform-driver-x86@vger.kernel.org>; Mon, 16 Feb 2026 07:33:36 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3378D26FD93
+	for <platform-driver-x86@vger.kernel.org>; Mon, 16 Feb 2026 08:51:32 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1771227217; cv=none; b=FpssdvjV07lfL1SLYogipd0FVqTBKveCAdyzJiErdoISSRWd6g/KZutX5N8pI/z95bST5Jha5J3MF2jQEJL3nXh6XZP98NrKTUjCgOxLojFXOFdqOOixsb2Iy+Suj8M92bsMLXfkcIZsB/gbG2kXb34D5mwt9FA+8fyxqtO3sKk=
+	t=1771231893; cv=none; b=O1e4S4UnhP+eZZMx9L8WaBLnRaSCROh/+u/7MTZTHTHFhurh/DSUiBMwk8bsD3eEpVxZwQNRFNiZH6UFCv6zu2MhDS0f68piNruYxwx1DOeiR1/ckM8o5Js4fPWUcDFOy7BNmgnvjK+Yo/uTihwk1kOwn0VYbew3MBWq9pWPpXk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1771227217; c=relaxed/simple;
-	bh=QYtjyk4uFPDukE7zdLeRAH97JhgulXQu8xaXrrd5S6Y=;
-	h=From:To:Subject:Date:Message-ID:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=V3Zi7L+5k2REeSrHNNiPkqWJUtmc8Lp1V3mj2FZP8QjQIiiJxpFfcAxfCPeMHhUtVn+x3XQC+2edpFupB+2/r99qsEakkGZ+tXPxiPfWbPXPNk14I2jG3zQyDoHi43rA+PFenBPqVW8hKTTBcPGzVOrctt+SZcM4BgC/M/I8TCE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=dIWI3say; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1771231893; c=relaxed/simple;
+	bh=95BSoRLY2EGuYIFg9tft4LiQpwsyprVI5w8pWhacX10=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=JCk51i4Iu3eW/CXeMV0oOC7cS9a/3gQa2BD4QEWeFN1kgPusju2LzeFZu6DM5JA/46eDdXTAZ6FizAaYbof7zh4x1CMFguKUto9qGJFDCT+I6H35/wKNGaTnHJqs8m7Zon4FwYfNohywbXlfW4Nw6ZVewSw2x0FW18mOem8F+H0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=nlJsV2V0; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="dIWI3say"
-Received: by smtp.kernel.org (Postfix) with ESMTPS id CED17C116C6
-	for <platform-driver-x86@vger.kernel.org>; Mon, 16 Feb 2026 07:33:36 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="nlJsV2V0"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id BDA7FC2BC9E
+	for <platform-driver-x86@vger.kernel.org>; Mon, 16 Feb 2026 08:51:32 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1771227216;
-	bh=QYtjyk4uFPDukE7zdLeRAH97JhgulXQu8xaXrrd5S6Y=;
-	h=From:To:Subject:Date:In-Reply-To:References:From;
-	b=dIWI3saySbWi0nrn/oPkmssFLDLtRuUicCwfUZCbDAG118vCGm1Dk0P3kswajM9JH
-	 PVMDRRxIpWl1rDV9sYcNrRw+04srZmV/LM4XxYcljKFxucAY+ROgGZuypWzRdWPJIz
-	 G5+YKbQ+rG+OaJv9KQryqFDgrX9aVhrf1md38GM41qFjI33fe33scPdvMYO5xLaeK8
-	 Kb9QPO9D23SR84ZB7eBk/H2seJTV4/oMZZmIGn0SI9An/IDylvRUs2bi+8irdzUBX8
-	 2wATIkeHmE/1iEciMzwpkF6GUcItcn4adbIlHTHs46qbsqvjVCW76VU8T1hDdeVp3n
-	 lN0L6/eJf+cvw==
-Received: by aws-us-west-2-korg-bugzilla-1.web.codeaurora.org (Postfix, from userid 48)
-	id B5C28C3279F; Mon, 16 Feb 2026 07:33:36 +0000 (UTC)
-From: bugzilla-daemon@kernel.org
-To: platform-driver-x86@vger.kernel.org
-Subject: =?UTF-8?B?W0J1ZyAyMjA2MzldIFtCVUddIGhwLXdtaTogT01FTiAxNi13ZjB4?=
- =?UTF-8?B?eHggKGJvYXJkIDhCQUIpIOKAkyBmYW5zIHN0dWNrIGF0IDAgUlBNLCBCb29z?=
- =?UTF-8?B?dC9XTUkgcXVlcmllcyByZWplY3RlZCAoaHBfd21pOiBxdWVyeSAweDRjIGVy?=
- =?UTF-8?B?cm9yIDB4Nik=?=
-Date: Mon, 16 Feb 2026 07:33:36 +0000
-X-Bugzilla-Reason: None
-X-Bugzilla-Type: changed
-X-Bugzilla-Watch-Reason: AssignedTo drivers_platform_x86@kernel-bugs.osdl.org
-X-Bugzilla-Product: Drivers
-X-Bugzilla-Component: Platform_x86
-X-Bugzilla-Version: 2.5
-X-Bugzilla-Keywords: 
-X-Bugzilla-Severity: high
-X-Bugzilla-Who: krishna.chomal108@gmail.com
-X-Bugzilla-Status: NEW
-X-Bugzilla-Resolution: 
-X-Bugzilla-Priority: P3
-X-Bugzilla-Assigned-To: drivers_platform_x86@kernel-bugs.osdl.org
-X-Bugzilla-Flags: 
-X-Bugzilla-Changed-Fields: 
-Message-ID: <bug-220639-215701-zxpydGczOZ@https.bugzilla.kernel.org/>
-In-Reply-To: <bug-220639-215701@https.bugzilla.kernel.org/>
-References: <bug-220639-215701@https.bugzilla.kernel.org/>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-X-Bugzilla-URL: https://bugzilla.kernel.org/
-Auto-Submitted: auto-generated
+	s=k20201202; t=1771231892;
+	bh=95BSoRLY2EGuYIFg9tft4LiQpwsyprVI5w8pWhacX10=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+	b=nlJsV2V0zA5b1xB5ICDKCbGUx5Njascw8G40H/po5QA/kGj6NkKzC0/sv41bjz5t1
+	 qos+DGMNipt7bfldvq3tmMR6QIfb/wvpl7ydOYaNumwuhbf+0KdnM798p/20OIZctz
+	 4nRmo/qltskQC4LrSkVU3NJHov153RWSyIrzl6tYIgy6d6/bFAkacWBZatxRlIxdCX
+	 XiAil/XOsxGL6UZzACvUBxJwCFFrz1QjyQyfom5DqLTMBdYQaCMkruPsRIB7fS3QlR
+	 qTg3jmesF9r1lfpQ8PiDGNEeY2l9CgjVYzvsmHoaF9lZSSQE6bHq+xS9wnGJKWA8md
+	 YGPID/bYWwpnA==
+Received: by mail-lf1-f54.google.com with SMTP id 2adb3069b0e04-59e6253b16bso3071977e87.1
+        for <platform-driver-x86@vger.kernel.org>; Mon, 16 Feb 2026 00:51:32 -0800 (PST)
+X-Forwarded-Encrypted: i=1; AJvYcCXqxEtShUT2/zfGdD/pTAtcaV6ZtwmhUxSdM56UFKWOj3tyZfDGw+HVcpd+8FkP6ozO89uvs/gtL837gtmULOOhgIVE@vger.kernel.org
+X-Gm-Message-State: AOJu0YzEHz/+kdBBJgSsCxX/ODfJQGI6bSCRSvMrBMl2VZLwf0Z+ZjA+
+	89QGa2OySMCIqQYI5KlgCnFBsA7GMwIPp/mZbgyhbdcruThDVYhf2+LdSiSs3/SSWzijtBKwaLo
+	aNJi31LyG4KRD6EzxmcZ7JUxBeV+WOGI3duExUM0o4Q==
+X-Received: by 2002:a05:6512:3349:b0:59e:1663:941 with SMTP id
+ 2adb3069b0e04-59ef97e8962mr4431369e87.3.1771231891364; Mon, 16 Feb 2026
+ 00:51:31 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+References: <20260213-meraki-swnodes-v1-0-8e032693456c@oss.qualcomm.com>
+ <20260213-meraki-swnodes-v1-1-8e032693456c@oss.qualcomm.com> <aY7r9qr-ngFSw7MC@smile.fi.intel.com>
+In-Reply-To: <aY7r9qr-ngFSw7MC@smile.fi.intel.com>
+From: Bartosz Golaszewski <brgl@kernel.org>
+Date: Mon, 16 Feb 2026 09:51:18 +0100
+X-Gmail-Original-Message-ID: <CAMRc=Md5sPd=20=mM7H3qM8TQm0kqjoRnKdnBipjY7nbWu8Xpw@mail.gmail.com>
+X-Gm-Features: AaiRm510_XxM7l2zcP7qLr82EYQRK-5-nrIaw3kGqxxz5TcMb4JW506DQB-PKsU
+Message-ID: <CAMRc=Md5sPd=20=mM7H3qM8TQm0kqjoRnKdnBipjY7nbWu8Xpw@mail.gmail.com>
+Subject: Re: [PATCH 1/2] mfd: lpc_ich: expose the GPIO controller cell's
+ software node
+To: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Cc: Bartosz Golaszewski <bartosz.golaszewski@oss.qualcomm.com>, Peter Tyser <ptyser@xes-inc.com>, 
+	Lee Jones <lee@kernel.org>, Hans de Goede <hansg@kernel.org>, 
+	=?UTF-8?Q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>, 
+	Dmitry Torokhov <dmitry.torokhov@gmail.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, 
+	linux-kernel@vger.kernel.org, platform-driver-x86@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-https://bugzilla.kernel.org/show_bug.cgi?id=3D220639
+On Fri, Feb 13, 2026 at 10:16=E2=80=AFAM Andy Shevchenko
+<andriy.shevchenko@linux.intel.com> wrote:
+>
+> On Fri, Feb 13, 2026 at 09:25:24AM +0100, Bartosz Golaszewski wrote:
+> > One of the users of this driver - meraki-mx100 - abuses the software
+> > node API by setting up a dummy software node without any logical link t=
+o
+> > this GPIO controller and uses the fact that the GPIO core matches the
+> > controller's label against the swnode's name to make the lookup work.
+> >
+> > We want to remove this behavior from GPIOLIB in favor of actual matchin=
+g
+> > of firmware nodes but that would break this user. To facilitate that:
+> > create a software node for the GPIO controller cell and expose its
+> > address in the provided MFD header.
+>
+> ...
+>
+> > +const struct software_node lpc_ich_gpio_swnode =3D {
+> > +     .name =3D "gpio_ich",
+> > +};
+> > +EXPORT_SYMBOL(lpc_ich_gpio_swnode);
+>
+> Can we export in a dedicated namespace? Perhaps "LPC_ICH"?
+>
 
---- Comment #14 from Krishna Chomal (krishna.chomal108@gmail.com) ---
-(In reply to Juan Martin Morales from comment #13)
-> Thank you for this patch, Krishna! I'm also glad to see your hp-wmi patch=
-es
-> in the for-next branch; they are very helpful.
+I can't test it so I would prefer to reduce the amount of runtime risk
+introduced by this change. We can do it separately later.
 
-Thanks for the kind words! As promised, I have submitted the patch for Board
-8BAB to the maintainers. You can track its progress and the mailing list
-discussion here:
-https://lore.kernel.org/all/20260216072003.90151-1-krishna.chomal108@gmail.=
-com/
-
-I've included you in the Reported-by and Tested-by tags to credit your
-contribution.
-
---=20
-You may reply to this email to add a comment.
-
-You are receiving this mail because:
-You are watching the assignee of the bug.=
+Bartosz
