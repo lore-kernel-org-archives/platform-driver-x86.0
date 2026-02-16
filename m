@@ -1,143 +1,100 @@
-Received: from master.debian.org (master.debian.org [82.195.75.110])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ej1-f44.google.com (mail-ej1-f44.google.com [209.85.218.44])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 05F403D544
-	for <platform-driver-x86@vger.kernel.org>; Mon, 16 Feb 2026 16:04:14 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=82.195.75.110
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5BC5F33290B
+	for <platform-driver-x86@vger.kernel.org>; Mon, 16 Feb 2026 16:18:41 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.44
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1771257856; cv=none; b=j1Z/Tj9hI5RA+tBgDYBPCQI9qBTePyz6Kg+5ExArcYJJnSymDS1tSkJBomPzv8YRZg+UmgBiOgnI7EozLoOvvnlvRcS1Gxn24ussi2sbPkHoDcL8+YhNKU17xeZq4s2TjtlJhZXjITYaO2CCpHA20kJqJCpbnTf5Fn9YxWyFEfQ=
+	t=1771258724; cv=none; b=Y6sXNDi61FtH5sYTItFnoAL7ZloSK9AvYp7Dtaea5yBgQm7VI2ReazcxHYaMB588k3fMEPBPun1ASQT83JeFliYD7UcyP6KoDcMObUv+83jXOZZyJCMsnRD9YyzbCMtd5Aa+mKs6V7oaavFFR+vFLpI9BjEEPNZBRKU8XKcAEDw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1771257856; c=relaxed/simple;
-	bh=xAEiCEGy1ukqJRRjd5pyKMCVGPfix/yhUFowP0rVoaU=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=iScV9HwaZ5NhIPGK14yYQk8tfOrnHsCTXf6SRuPza0XYQyJQHTU3Lnd8FU7lv2YYkDAA8o8Owy9lOiZpi57Upddfme+VO9q/lD23jQ6QOCCOjswD8C3qB81sk3OtK+PBHvsi1ZFuxhJwPX1J2cC1OBVXbQ/YSPfxsDdsiQM3aRs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=debian.org; spf=none smtp.mailfrom=master.debian.org; dkim=pass (2048-bit key) header.d=debian.org header.i=@debian.org header.b=rijJVYcY; arc=none smtp.client-ip=82.195.75.110
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=debian.org
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=master.debian.org
+	s=arc-20240116; t=1771258724; c=relaxed/simple;
+	bh=kEffM/BM7lnDkFFKYJoHsGOMHHFxomN8GjRQ9HOK0jI=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=Xr9bYnsbpbiFZykR8yyZUHs8ZTuS2JD16xgFPiuTG/k/Z5banc4ULOLkOkz/yO2XoBsxh666na/17N9m45pN3f56YPuv9IZ6KYeMDzIWBomskpbUPZTMeLD72dN0KPQrIJLLjc+ntDCTbmeJim7oaUEQtRaMlpC8T8rRHFuuDS8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=sheffield.ac.uk; spf=pass smtp.mailfrom=sheffield.ac.uk; dkim=pass (2048-bit key) header.d=sheffield.ac.uk header.i=@sheffield.ac.uk header.b=dL62nMyE; arc=none smtp.client-ip=209.85.218.44
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=sheffield.ac.uk
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=sheffield.ac.uk
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=debian.org header.i=@debian.org header.b="rijJVYcY"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=debian.org;
-	s=smtpauto.master; h=In-Reply-To:Content-Type:MIME-Version:References:
-	Message-ID:Subject:Cc:To:From:Date:Reply-To:Content-Transfer-Encoding:
-	Content-ID:Content-Description;
-	bh=FW8csEJNcE/VnBJ7ybDkpUlbyzrLedHDeU/cuXm6UDg=; b=rijJVYcYX9UCXMFEX2m8Ifmiiu
-	U5BWvBT0vo1N9scP8SP8LB+pIq3XcJG0DPJisoBSsIL5ouFNoVYMn0Ymop1J5v5IhFzRX2tePaMph
-	rZ7bB2yTD3P4SSPyErIsSPr+jpGZLBAXMpaOwphx2aJ8Cp+MFM4V8V49WWQT3JJiiXT+IypAIDAGB
-	+r2bEiVNoJGjm2AmenIuU50inxMB5jlpq5OCLdqIFrU+62puDDJg1K3XINtuWafKqsONeAxQspzGW
-	vVv9nHPCZDhlv3pZmU/tygSXEpmoJlFTdnPvgmH14TqVOacjAz++8UXJac6iopjbJXZ8HumKycj3C
-	QfIu09GQ==;
-Received: from ukleinek by master.debian.org with local (Exim 4.96)
-	(envelope-from <ukleinek@master.debian.org>)
-	id 1vs0c2-0093O5-0D;
-	Mon, 16 Feb 2026 15:34:14 +0000
-Date: Mon, 16 Feb 2026 16:34:08 +0100
-From: Uwe =?utf-8?Q?Kleine-K=C3=B6nig?= <ukleinek@debian.org>
-To: Paul Kerry <p.kerry@sheffield.ac.uk>, 1127612@bugs.debian.org
-Cc: Jorge Lopez <jorge.lopez2@hp.com>, platform-driver-x86@vger.kernel.org, 
-	Mario Limonciello <mario.limonciello@amd.com>
-Subject: Re: Bug#1127612: linux-image-6.12.69+deb13-amd64: hp_bioscfg
- mm/page_alloc.c:4802 warning
-Message-ID: <aZMt6sSlpKK_JAdT@monoceros>
-References: <dafda4bd-87cb-4fbd-a811-66d629a10c70@sheffield.ac.uk>
+	dkim=pass (2048-bit key) header.d=sheffield.ac.uk header.i=@sheffield.ac.uk header.b="dL62nMyE"
+Received: by mail-ej1-f44.google.com with SMTP id a640c23a62f3a-b8842e5a2a1so413865266b.2
+        for <platform-driver-x86@vger.kernel.org>; Mon, 16 Feb 2026 08:18:41 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=sheffield.ac.uk; s=170424.google; t=1771258720; x=1771863520; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=kEffM/BM7lnDkFFKYJoHsGOMHHFxomN8GjRQ9HOK0jI=;
+        b=dL62nMyENljfSv2XZyzjJVmUZmrQQsy31zQlRIEx6BqiAyeHU5pN5fzj8EzQ2EbiiY
+         VFgvvR9Gcb7elAgC+NwLDiRIjM+YfS2y1stLjtIxq1JV9jYFfCXx6IwzjB6gZtJvV6iL
+         dK8OCs89BU5CeZpbomngl6vlhuRNeslT9idTWEcFXKB3ivxrifY47oj6IkpNO/lEU2mZ
+         tv87DYDqiywIjBdmUFF4mMOMiPXgqT06GwZ2KGhr25Y0cIWWyS7jCa7CF1yKHKERMFhP
+         pEGxklj38oR3aV4UV6Jw9X6aTfANY1ip6sMv0QeEBOL1s6YWlGcZ1+/AYJXeCNHD4ySr
+         5obg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1771258720; x=1771863520;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-gg:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=kEffM/BM7lnDkFFKYJoHsGOMHHFxomN8GjRQ9HOK0jI=;
+        b=t1l5lgPF3q9NIvnHloPYutdGRtop09IbKS7nrTwWHUCsEfvcqUTJIqdS0IpgrjXTm7
+         /dLZR7eLbhfjAqhgSncuJ00lg02+KwM5MqpFUaOXwZ/biHOPeH+kQrPMRN3nSnI2VFV2
+         pjOA9rNsaDB4vrLXqjXRDNorsG6OElvTbKhNquzbNBgdlfzW7Ie9IZlYAg66T7BTmsJ8
+         a73a+WOAPOt2oKDJeXWb6QvNCaHnh0n9coZOE8teBJ0RJTwNjDsuFrGv8m+YC6CCWC5M
+         lvFfo4F4w+8ex62A2Kpx3/Nd3PS2YRiUrnnlUVzTVMZNIKUiClipDJ6y9Cks0R4UHZw2
+         LzvA==
+X-Forwarded-Encrypted: i=1; AJvYcCVKjS0oALP6/C8lI4XRZLed8Z52mLprhC2T9RXmCxLbDKF0haH9fftF25z60O/Qb5eUIToyguMLfzuKmOxRsg3gz4kK@vger.kernel.org
+X-Gm-Message-State: AOJu0Yw84uVNNJ7n8Lllpo1Z5i/5hYuwCOcXx0cU6iZyXhSNY7jm5bCd
+	wFQbNp6pcip6bRLwHRdNcPcAyi14R7FccF6uUwScXBpwrSKgnux6Xr8Z21JAghNboXsvOlT6Kae
+	6bS+KeJBmDG3vOvS7MAhki6RoER2hTG77wASpaUyDKDBqNeARtogVdELgrXtUaro4qO0AGrlzES
+	6pt9waJ9vMRY5uk+PSN3BOx/LeV1BGXhTYe+kZwLm1PljQiZHGvJwSLLzR45gM9bxEbIsxfRV2y
+	RYANrqg9mu6DA==
+X-Gm-Gg: AZuq6aLlwsiG1D5UtvQLFnZy6SGpS1l8AUFF/Mzc7Mdanmsh28fe2nMe0lxIK/CekPd
+	WTa0qIBzbuXg4JjklWo2GZU6lmkpKMkig0SFlYFyUsPIMmRVXUQontS4gadTwzVxasKIioCYhgH
+	B7uBMLSGDFdOriJjMUQzABIwzOfufDzFwW+scDuuKSsbohQzShZqnwmOS448f3RYhrAoR9EsN/Y
+	jm96QFGTpnfrRMDqLRdT9vq1LekarPXYiu2OqUKFcoFhPh7MQwZFC1BmflgF06F1byA4ed06bi/
+	CZAU1uz8079ffaSYDNFyiApvFakZbA5IFjsWjnqInCTaOuvj+t00Px1VJCTCp2GZb9uUHfmy4Mt
+	lQ71KLL6XjNXDt+kDA+PEcyIghdJEInBlJM8UACDixwTLAPpj+xNKH1T5P54Xq/fUzpAlE+OOgU
+	ZW/4gVC0IHrD1wXiZoPRdaxkXU3f/c189NY5rV3sMFS4vHIQ==
+X-Received: by 2002:a17:907:9692:b0:b88:646b:ae32 with SMTP id a640c23a62f3a-b8fb424c27amr577260366b.22.1771258719580;
+        Mon, 16 Feb 2026 08:18:39 -0800 (PST)
+Received: from [143.167.4.104] (hubble.shef.ac.uk. [143.167.4.104])
+        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-b8fc7627f98sm268124966b.34.2026.02.16.08.18.38
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Mon, 16 Feb 2026 08:18:38 -0800 (PST)
+Message-ID: <4ddfa94c-5cb5-4c7a-a0b4-9b9ff5e4cc85@sheffield.ac.uk>
+Date: Mon, 16 Feb 2026 16:18:38 +0000
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-	protocol="application/pgp-signature"; boundary="7pcynfimjzdg7ckr"
-Content-Disposition: inline
-In-Reply-To: <dafda4bd-87cb-4fbd-a811-66d629a10c70@sheffield.ac.uk>
-
-
---7pcynfimjzdg7ckr
-Content-Type: text/plain; protected-headers=v1; charset=us-ascii
-Content-Disposition: inline
+User-Agent: Mozilla Thunderbird
 Subject: Re: Bug#1127612: linux-image-6.12.69+deb13-amd64: hp_bioscfg
  mm/page_alloc.c:4802 warning
-MIME-Version: 1.0
+To: =?UTF-8?Q?Uwe_Kleine-K=C3=B6nig?= <ukleinek@debian.org>,
+ 1127612@bugs.debian.org
+Cc: Jorge Lopez <jorge.lopez2@hp.com>, platform-driver-x86@vger.kernel.org,
+ Mario Limonciello <mario.limonciello@amd.com>
+References: <dafda4bd-87cb-4fbd-a811-66d629a10c70@sheffield.ac.uk>
+ <aZMt6sSlpKK_JAdT@monoceros>
+Content-Language: en-GB
+From: Paul Kerry <p.kerry@sheffield.ac.uk>
+In-Reply-To: <aZMt6sSlpKK_JAdT@monoceros>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-Control: forwarded -1 https://lore.kernel.org/all/aZMt6sSlpKK_JAdT@monoceros
 
-Hello Paul,
+Hi Uwe
 
-On Tue, Feb 10, 2026 at 12:19:45PM +0000, Paul Kerry wrote:
-> Subject: linux-image-6.12.69+deb13-amd64: hp_bioscfg mm/page_alloc.c:4802 warning
-> Package: src:linux
-> Version: 6.12.69-1
-> Severity: normal
-> X-Debbugs-Cc: p.kerry@sheffield.ac.uk
-> Dear Maintainer,
-> *** Reporter, please consider answering these questions, where appropriate ***
->    * What led up to the situation?
-> Booting a system into the recent debian 6.12.69+deb13-amd64 kernel upgrade from 6.12.63+deb13-amd64
+Thanks for the reply and information.
 
-Probably the relevant difference between these two kernel versions is
-commit b2e79963525205707c87391a01435cfdc9fc2d1e
-(https://git.kernel.org/pub/scm/linux/kernel/git/stable/linux.git/commit/?h=linux-6.12.y&id=b2e79963525205707c87391a01435cfdc9fc2d1e).
+You are correct: when I boot the HP Z2 Tower G9 into the older 6.12.63+deb13-amd64 kernel, the hp_bioscfg module is not loaded which I had not noticed, and running a "modprobe hp_bioscfg" on that older 6.12.63+deb13-amd64 kernel does indeed generate the same dmesg warnings as 6.12.69+deb13-amd64 does, which auto-loads the hp_bioscfg module.
 
-Can you confirm that when booting the older kernel, running
-
-	modprobe hp_bioscfg
-
-will break in the same way as the new kernel? If so, the driver was
-broken already before and just unused. You can achieve this behaviour
-with 6.12.69, too, by blacklisting the hp_bioscfg module. Either by
-adding:
-
-	module_blacklist=hp_bioscfg
-
-on the kernel command line, or
-
-	echo blacklist hp_bioscfg >> /etc/modprobe.d/broken-hp-bioscfg.conf
-	update-initramfs -k all -u
-
->    * What exactly did you do (or not do) that was effective (or
->      ineffective)?
-> n/a
->    * What was the outcome of this action?
-> dmesg under 6.12.69+deb13-amd64 is now displaying the following...
-> [    3.346704] ------------[ cut here ]------------
-> [    3.347194] WARNING: CPU: 11 PID: 606 at mm/page_alloc.c:4802 __alloc_pages_noprof+0x2a7/0x310
-
-This is
-
-        if (WARN_ON_ONCE_GFP(order > MAX_PAGE_ORDER, gfp))
-                return NULL;
-
-which is probably triggered by
-
-        bioscfg_drv.enumeration_data = kcalloc(bioscfg_drv.enumeration_instances_count,
-                                               sizeof(*bioscfg_drv.enumeration_data), GFP_KERNEL);
-
-I manually determined sizeof(*bioscfg_drv.enumeration_data) to be around
-20K. I have no idea about what the driver does here, but it seems to
-request more than 2**10 pages continuous pages here which suggests that
-bioscfg_drv.enumeration_instances_count, is bigger than 200.
-
-@Jorge: Is that expected?
-
-I dropped much context (mostly automatically collected information about
-the machine where this triggered). If you're intested in that, check out
-https://bugs.debian.org/1127612.
+I've not had any noticeable problems caused by this issue since 6.12.69+deb13-amd64 came out.
 
 Best regards
-Uwe
+Paul
 
---7pcynfimjzdg7ckr
-Content-Type: application/pgp-signature; name="signature.asc"
 
------BEGIN PGP SIGNATURE-----
-
-iQEzBAABCgAdFiEEP4GsaTp6HlmJrf7Tj4D7WH0S/k4FAmmTOOIACgkQj4D7WH0S
-/k655gf7BYwadASf0/z9WnkbUgSemPpovHXczhrSVMORilULBVZntwMijweu1QQJ
-B4JDDRu777kdrkfLcW13LKDuzBa64bFWGWSv0qk9xQuF28CVLKVj+z2VjSzGR1fV
-l9rVV51pw7fvRtHdg5T66dqTsORILC1hpHxW/CXIFGThhTNfV+bDKITDAFYAvjpC
-1lDuUtD3yhpfJZKKGqBEKtDNqDBzCAQ1l44oEEn70ARs5EEhAx+Ob7XBx6bguWU/
-x3Vz7HeHvsBlk6ksDEqCniwwm59/v8fGQx6/UVSd2/Qge4nZFWZk+Wc0LI0SKKgK
-tw2l414dKBpzZK9IBADzugCRd89t0A==
-=3xX1
------END PGP SIGNATURE-----
-
---7pcynfimjzdg7ckr--
