@@ -1,218 +1,108 @@
-Received: from mail-08.mail-europe.com (mail-08.mail-europe.com [57.129.93.249])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ed1-f54.google.com (mail-ed1-f54.google.com [209.85.208.54])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 51A66339866
-	for <platform-driver-x86@vger.kernel.org>; Tue, 17 Feb 2026 19:35:13 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=57.129.93.249
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0C0D131D750
+	for <platform-driver-x86@vger.kernel.org>; Tue, 17 Feb 2026 23:36:28 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.54
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1771356919; cv=none; b=NPyFWZ5E88VT6Bg/XXJb9GOBj/0dHr9BBF0aFhG2EF7q2yHL1kHyvpZWdPJTqB7lhPA9rOoiRoNgya4xBZh8/5/sOAxsbv7XgBMykhzFhDjTfeTprvmWWjtXAKp2ZDZn0sn8wXr/fPZbhLSIwGEwerglTgxPe3NAtiiDBnapudw=
+	t=1771371402; cv=none; b=YyqTY/IHINd4VcUATUuQUmhHLow0U8HR6SXwQRRy85Cpyd5GZCtHbDx/gMar2d8EpF64C/COQIq7Jkf8HkOQYD+J/Z4RAI5/ItQhuttS+Ai9wBaQFWxvBTSkIFGwpYd7zpPG9tuMXZERHGhBLGwAf4C54zRJ38ec4WUZvYbCzls=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1771356919; c=relaxed/simple;
-	bh=ZltLO/GI5Z7wMtPjpUxq6iHauTkBgUe/juFlz14hY6c=;
-	h=Date:To:From:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=ofakLPdpvvU1W432O7vAO5rXrSpznCR7zdqOEiwAbQeEhRThv6T3EXIk2ETIN2KpP/C3PSvLF9ba7yh2XtYtgtVzQ8IBuwZPsULu8BfiiDgnkdlNUnXo3OHolRj1pn5TEhU8kcn5Hc2UgQYJn57xfm7G1nrVpgICeCZQzNwsaTs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=proton.me; spf=pass smtp.mailfrom=proton.me; dkim=pass (2048-bit key) header.d=proton.me header.i=@proton.me header.b=XVxI6Jtn; arc=none smtp.client-ip=57.129.93.249
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=proton.me
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=proton.me
+	s=arc-20240116; t=1771371402; c=relaxed/simple;
+	bh=sgIpvh+m9Wz9/nz+rdz9lGzM13kJCd3D4TAIzE6Rl6w=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=byltDgGqQBg9Y9sKIFb3zpE5RDfmFWmb72CKE0imasA9S9xEJWDoDv87LBPwtGDopn8Gb8odm/IOcpzn/4oOHxZyLNyDb+SiHteGt2pqqHM2uJZ3xOwLXCFUIqvDJeDxl78ur63EC5X6Nojuupe9+fwvrNwWRvtfcSjUD8gOCUU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=Cn5xeq78; arc=none smtp.client-ip=209.85.208.54
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=proton.me header.i=@proton.me header.b="XVxI6Jtn"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=proton.me;
-	s=protonmail; t=1771356902; x=1771616102;
-	bh=aREtzqrKK6NOGP3/eHIpv84T4xBD8O8Qv1V4XNSVvZ4=;
-	h=Date:To:From:Cc:Subject:Message-ID:In-Reply-To:References:
-	 Feedback-ID:From:To:Cc:Date:Subject:Reply-To:Feedback-ID:
-	 Message-ID:BIMI-Selector;
-	b=XVxI6JtnMdP0iZ6hrYy8IXXJEjjAea2vTJM8fwIPu/R9oyMQ3dWwdNSDnHj1KbEx+
-	 oy4wm3HK4IkaGKpi0PYIFrxMWlV7ICgzNdlnA7b6+Mvsjz+WGG3knWoidTl/PoRazn
-	 js7+gg0T8Qiz27VjMDMkfKNhMaTRbY0exU/BMq8JPix5M0pmsj5iVxyzv7dgoAOFEC
-	 UFIQEt76Q46CKO8bowzAg4eEa1wgeGFMxiqUwOsBRwrQf+6V0WBlukPFYT5wzuAjlY
-	 J4mT9TiRsMmB2IzOwhTPiQh67EEheKSxaNdjZIz2U6DSoHGK6d9HZW6ZyNh0Sx9Ax+
-	 wyt47MWWF9cbg==
-Date: Tue, 17 Feb 2026 19:34:59 +0000
-To: Dmitry Torokhov <dmitry.torokhov@gmail.com>
-From: Tj <tj.iam.tj@proton.me>
-Cc: Hans de Goede <hansg@kernel.org>, "metux IT consult\"" <info@metux.net>, platform-driver-x86@vger.kernel.org, Bartosz Golaszewski <brgl@kernel.org>
-Subject: Re: pcengines_apuv2: LEDs/Input fails since v6.18
-Message-ID: <e8c222ce-4d1e-4747-8122-bb570d423c04@proton.me>
-In-Reply-To: <aZSkqGTqMp_57qC7@google.com>
-References: <b553243c-9ec6-4016-9fd6-d33f549a3dad@proton.me> <ef96006e-ca94-4525-9727-4a6011fde7e1@kernel.org> <54082217-0eff-49f6-b4f1-0daed58c2568@proton.me> <aZSkqGTqMp_57qC7@google.com>
-Feedback-ID: 113488376:user:proton
-X-Pm-Message-ID: 0f93a664bc501da17410e08b7325a1fe1510bf2b
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Cn5xeq78"
+Received: by mail-ed1-f54.google.com with SMTP id 4fb4d7f45d1cf-65808d08423so6897388a12.1
+        for <platform-driver-x86@vger.kernel.org>; Tue, 17 Feb 2026 15:36:28 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1771371386; x=1771976186; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=QA6h+mIm/9IU+L7HW2ojSJobzTYQGIQhMs1G/Btbfyg=;
+        b=Cn5xeq78JPYL4CUmEXyNpkN30s1qVW4G/epPPpCMeorKcZecmWLJz2proUXUWoc4VW
+         lw1QqrIZiqNY1X9hjXhmRj1QQ7ukEIq4Xyb9gfkHocE4+SbMrWM4rqg8I+LqdysV7tpj
+         hv/+3WagvSsDGKcuK5EekCw4B+A+9hyLGZhsserd7e64QsfLJ+l3XL8yYPV+L/QsWVO5
+         bfYc//LJJpL8ADxrLympPbEq+tYwC5a32TFjKj0aOnX9TZcLq+ay3j5FoVj5wEVpwNWD
+         ckzJq0jTsgEiGD434W4SSCdzTt4GiEeZ2RlXjSaDA63NWnk2tDONOucWn+47y/kCC6Q4
+         WwgQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1771371386; x=1771976186;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-gg:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=QA6h+mIm/9IU+L7HW2ojSJobzTYQGIQhMs1G/Btbfyg=;
+        b=D4btyxAbUvETUUOibqqdiAFMgbcG5hMg3WS71P20+JbJ47Wu6YjK8HyahAvs39Zsl/
+         x61nFG2tsZZZEfF8LVaAEnQx7cCYgnD40Zd1WQwp0reK8iGH68fXquVsCl7zm539hEu9
+         PGQeGjBSvR46H7aU3UOhpjn/iL5P5vJZI+pLu2sRnE2TpQD+fRePtMKQgIbvBHL8sQfr
+         U0jsajYIzdEIo5DNOws37ifliPN9w5k6BeuyXavvE6Ap9SOLE612J7ak3rxTIgubcEtN
+         8yI7pEW2RRC+ifm312ofW3p/V5ZV3+IISgx4F58ECFvphQPz4ruk6ac9REfOjuxnLdWh
+         EmEA==
+X-Gm-Message-State: AOJu0YxXPCaom3RNtjIIbkpBXZvWMvbdv2L1QXvh2xmPCmGMoSCFCBNC
+	vh7BYStFEvjr35roE/yWdYdfS+SaYZxL1KG/QZ/UJocJQ68WGfYmIyzZRVVBNQ==
+X-Gm-Gg: AZuq6aJTi82Wxqcj0N7xjHxQ9qzxuoK2LJN5ewr5LQ6OngA0u/2B49t/eBgTHhAktL6
+	KomW7HcwbfdEoY8l0xSYJHwC1ln6IFZH5O+OSriEGGMoDvkpukECBVKUz4jV++SXpZQoeZYvPvE
+	fIb7lGkjtQPI7f9mO8Jxo3rMTeH4eWW2KEunWL9yCD6KEvbI/5l+rSo2XjxSIypy5gtWYn9ZdXE
+	kATXFYH9hVl+pji/6/h+5aWbEnl36ug+wHgqBr25HwPBjMbb9Qc0XH0RxEMHeIV7f/oG/Fh0ip2
+	kS/3QlAmO4FVs4ziDsB/OePrjzSmzBMkqKFyXDIkiX4nVhV9ODiMBXcSEMcqT+ZGpDSzoQI8QlD
+	M0l1XC4P6hTtzu/crfqAV5bhfmASGiXA+kFNf6FXEvtRcypN877o90wk3LKehAg8xZG0qNlgqLT
+	kxjzwxcA8lZiCxbs9ocu1b0mEM
+X-Received: by 2002:a05:6402:1cc1:b0:65b:ec2d:e60e with SMTP id 4fb4d7f45d1cf-65c76a484e4mr93756a12.34.1771371386420;
+        Tue, 17 Feb 2026 15:36:26 -0800 (PST)
+Received: from jekhomev ([46.251.53.180])
+        by smtp.gmail.com with ESMTPSA id 4fb4d7f45d1cf-65bad19bfd3sm2858775a12.2.2026.02.17.15.36.22
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 17 Feb 2026 15:36:23 -0800 (PST)
+From: Yauhen Kharuzhy <jekhor@gmail.com>
+To: platform-driver-x86@vger.kernel.org,
+	Hans de Goede <hansg@kernel.org>,
+	=?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
+Cc: linux-kernel@vger.kernel.org,
+	Yauhen Kharuzhy <jekhor@gmail.com>
+Subject: [PATCH v1 0/2] x86-android-tablets: Add sound and haptics support for Lenovo YB1-X9*
+Date: Wed, 18 Feb 2026 01:36:16 +0200
+Message-ID: <20260217233618.1324550-1-jekhor@gmail.com>
+X-Mailer: git-send-email 2.51.0
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 8bit
 
-On 17/02/2026 17:29, Dmitry Torokhov wrote:
-> On Tue, Feb 17, 2026 at 03:25:01PM +0000, Tj wrote:
->> On 17/02/2026 11:42, Hans de Goede wrote:
->>> On 16-Feb-26 20:01, Tj wrote:
->>>> Installed v6.19 recently and realised the heartbeat/network LED
->>>> configuration I'd set wasn't working. Checking the log I see:
->>>>
->>>> kernel: platform gpio-keys-polled: deferred probe pending:
->>>> gpio-keys-polled: failed to get gpio
->>>> kernel: platform leds-gpio: deferred probe pending: leds-gpio: Failed =
-to
->>>> get GPIO 'apu2-leds/led-1'
->>>>
->>>> Looking through commits I found b8754092dfed4fc2fc
->>>>
->>>> platform/x86: pcengines-apuv2: Use static device properties
->>>>
->>>> After reverting it the LEDs operate as expected.=C2=A0This entered in =
-v6.18
->>>> so will affect it as well.
->>>>
->>>> In v6.17 I see:
->>>>
->>>> kernel: platform gpio-keys-polled: deferred probe pending:
->>>> gpio-keys-polled: unable to claim gpio 0
->>>>
->>>> that is a slight variation on the v6.19 report. I've not pin-pointed t=
-he
->>>> cause yet.
->>> This should be fixed by this patch:
->>>
->>> https://lore.kernel.org/linux-gpio/20260211085313.16792-1-bartosz.golas=
-zewski@oss.qualcomm.com/
->>>
->>> If possible, please give a kernel with that patch added a spin
->>> and confirm if it fixes things.
->> It fixes the LED issue but causes massive log spamming (10's per second)
->> related to the gpio-keys-polled:
->>
->> [=C2=A0 =C2=A0 0.000000] Linux version 6.19.2+debian+tj (linux@iam.tj) (=
-gcc
->> (Debian 12.2.0-14) 12.2.0, GNU ld (GNU Binutils for Debian) 2.40) #404
->> SMP PREEMPT_DYNAMIC Tue Feb 17 14:19:16 UTC 2026
->> ...
->> [=C2=A0 =C2=A0 0.000000] DMI: PC Engines apu2/apu2, BIOS v4.19.0.1 01/31=
-/2023
->> ...
->> [=C2=A0 =C2=A0 6.025741] input: gpio-keys-polled as
->> /devices/platform/gpio-keys-polled/input/input0
->> [=C2=A0 =C2=A0 6.035231] gpio-keys-polled gpio-keys-polled: failed to ge=
-t gpio
->> state: -52
->> ...
->> [=C2=A0 =C2=A019.545273] input: Power Button as
->> /devices/LNXSYSTM:00/LNXPWRBN:00/input/input1
->> ...
->> [=C2=A0 =C2=A021.742226] input: PC Speaker as /devices/platform/pcspkr/i=
-nput/input2
->> ...
->> [=C2=A0 OK=C2=A0 ] Started dbus.service - D-Bus System Message Bus.
->> [=C2=A0 OK=C2=A0 ] Finished e2scrub_reap.service - Re=E2=80=A6line ext4 =
-Metadata Check
->> Snapshots.
->> [=C2=A0 OK=C2=A0 ] Started virtlockd.service - libvirt locking daemon.
->> [=C2=A0 OK=C2=A0 ] Started 819142] gpio=C2=A0 =C2=A032.-keys-polled gpio=
- =C2=A032.-keys-polled:
->> failed to get gpio=C2=A0 =C2=A032. state: -52
->> 1;39msystemd-machined.service -=E2=80=A6and Container Registration Servi=
-ce.
->> [=C2=A0 OK=C2=A0 ] Started systemd-logind.service - User Login Managemen=
-t.
->> [=C2=A0 =C2=A032.930711] gpio-keys-polled gpio-keys-polled: failed to ge=
-t gpio
->> state: -52
->> [=C2=A0 OK=C2=A0 ] Finished grub2-common.service - Record successful boo=
-t for GRUB.
->> [=C2=A0 =C2=A033.050784] gpio-keys-polled gpio-keys-polled: failed to ge=
-t gpio
->> state: -52
->> [=C2=A0 OK=C2=A0 ] Started polkit.service - Authorization Manager.
->>   =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0Starting ModemManager.service - Mode=
-m Manager...
->> [=C2=A0 OK=C2=A0 ] Started virtlogd.service - libvirt logging daemon.
->> [=C2=A0 =C2=A033.158927] gpio-keys-polled gpio-keys-polled: failed to ge=
-t gpio
->> state: -52
-> I think the patch below should fix it.
->
-> Bartosz, I think you should revert
-> 86ef402d805d606a10e6da8e5a64a51f6f5fb7e2 until after you audit all
-> existing gpio drivers. Breakign the kernel like that is not great.
->
-> Thanks.
->
-> --
-> Dmitry
->
->
-> diff --git a/drivers/gpio/gpio-amd-fch.c b/drivers/gpio/gpio-amd-fch.c
-> index e6c6c3ec7656..9f329938202b 100644
-> --- a/drivers/gpio/gpio-amd-fch.c
-> +++ b/drivers/gpio/gpio-amd-fch.c
-> @@ -8,6 +8,7 @@
->    *
->    */
->
-> +#include <linux/bitfield.h>
->   #include <linux/err.h>
->   #include <linux/io.h>
->   #include <linux/kernel.h>
-> @@ -120,15 +121,15 @@ static int amd_fch_gpio_get(struct gpio_chip *gc,
->   =09=09=09    unsigned int offset)
->   {
->   =09unsigned long flags;
-> -=09int ret;
-> +=09u32 val;
->   =09struct amd_fch_gpio_priv *priv =3D gpiochip_get_data(gc);
->   =09void __iomem *ptr =3D amd_fch_gpio_addr(priv, offset);
->
->   =09spin_lock_irqsave(&priv->lock, flags);
-> -=09ret =3D (readl_relaxed(ptr) & AMD_FCH_GPIO_FLAG_READ);
-> +=09val =3D readl_relaxed(ptr);
->   =09spin_unlock_irqrestore(&priv->lock, flags);
->
-> -=09return ret;
-> +=09return FIELD_GET(AMD_FCH_GPIO_FLAG_READ, val);
->   }
->
->   static int amd_fch_gpio_request(struct gpio_chip *chip,
+Defines I2C board info and properties for the DRV2604L haptics driver used in
+Lenovo Yoga Book YB1-X90/X91 tablets.
 
-Thank-you - that does appear to have cleared the errors. I've now got to=20
-find the docs and remind myself what the GPIO inputs actually do!
+Depends on the drv260x patch series [1] for enabling ACPI support in the
+driver.
 
-tj@apu2:~$ journalctl --boot 0 --grep 'gpio'
-Feb 17 19:28:57 apu2 kernel: input: gpio-keys-polled as=20
-/devices/platform/gpio-keys-polled/input/input0
-Feb 17 19:29:13 apu2 systemd-logind[821]: Watching system buttons on=20
-/dev/input/event0 (gpio-keys-polled)
-tj@apu2:~$ journalctl --boot 0 --grep 'input'
-Feb 17 19:28:57 apu2 kernel: input: gpio-keys-polled as=20
-/devices/platform/gpio-keys-polled/input/input0
-Feb 17 19:29:01 apu2 kernel: input: Power Button as=20
-/devices/LNXSYSTM:00/LNXPWRBN:00/input/input1
-Feb 17 19:29:02 apu2 kernel: input: PC Speaker as=20
-/devices/platform/pcspkr/input/input2
-Feb 17 19:29:13 apu2 systemd-logind[821]: Watching system buttons on=20
-/dev/input/event1 (Power Button)
-Feb 17 19:29:13 apu2 systemd-logind[821]: Watching system buttons on=20
-/dev/input/event0 (gpio-keys-polled)
-tj@apu2:~$ journalctl --boot 0 --grep 'apu2'
-Feb 17 19:28:57 apu2 kernel: DMI: PC Engines apu2/apu2, BIOS v4.19.0.1=20
-01/31/2023
-Feb 17 19:28:57 apu2 systemd[1]: Hostname set to <apu2>.
-Feb 17 19:28:58 apu2 systemd[1]: Mounting srv-NAS-Apu2-rootfs.mount -=20
-/srv/NAS/Apu2/rootfs...
-Feb 17 19:28:58 apu2 systemd[1]: Mounted srv-NAS-Apu2-rootfs.mount -=20
-/srv/NAS/Apu2/rootfs.
-Feb 17 19:28:59 apu2 systemd-resolved[436]: Using system hostname 'apu2'.
-Feb 17 19:29:01 apu2 systemd[1]: Mounting=20
-srv-NAS-Apu2-current\x2dcost.mount - /srv/NAS/Apu2/current-cost...
-Feb 17 19:29:02 apu2 systemd[1]: Mounted=20
-srv-NAS-Apu2-current\x2dcost.mount - /srv/NAS/Apu2/current-cost.
-Feb 17 19:29:12 apu2 systemd[1]: Starting apu2-led-triggers.service -=20
-Enable system performance feedback via the 3 front LEDs on PC Engines=20
-APU2...
-Feb 17 19:29:15 apu2 systemd[1]: Finished apu2-led-triggers.service -=20
-Enable system performance feedback via the 3 front LEDs on PC Engines APU2.
+Defines sound devices for both models: rt5677 codec and TS3A227E jack
+detection IC. Depends on [2], machine sound driver implemented in [3].
 
+To simplify the sound driver, the same set of properties is used for both
+the X91 and X90 versions. For X91, software nodes with such properties are
+attached to the ACPI nodes.
+
+1. https://lore.kernel.org/linux-input/20260215141435.727872-1-jekhor@gmail.com/
+2. https://lore.kernel.org/linux-sound/20260211002255.4090440-1-jekhor@gmail.com/
+3. https://lore.kernel.org/linux-sound/20260217231324.1319392-1-jekhor@gmail.com/
+
+
+Yauhen Kharuzhy (2):
+  platform: x86-android-tablets: lenovo: Add Yoga Book haptics entries
+  platform: x86-android-tablets: lenovo: Add Yoga Book YB1 sound card
+    info
+
+ .../platform/x86/x86-android-tablets/lenovo.c | 223 ++++++++++++++++++
+ 1 file changed, 223 insertions(+)
+
+base-commit: 635c467cc14ebdffab3f77610217c1dacaf88e8c
+message-id: <20260215141435.727872-1-jekhor@gmail.com>
+message-id: <20260211002255.4090440-1-jekhor@gmail.com>
+message-id: <20260217231324.1319392-1-jekhor@gmail.com>
+-- 
+2.51.0
 
