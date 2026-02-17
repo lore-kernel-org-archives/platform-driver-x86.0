@@ -1,79 +1,79 @@
-Received: from fhigh-b2-smtp.messagingengine.com (fhigh-b2-smtp.messagingengine.com [202.12.124.153])
+Received: from fout-b5-smtp.messagingengine.com (fout-b5-smtp.messagingengine.com [202.12.124.148])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 43A05330679;
-	Tue, 17 Feb 2026 23:50:10 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=202.12.124.153
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7167B18A6CF;
+	Tue, 17 Feb 2026 23:54:32 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=202.12.124.148
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1771372213; cv=none; b=f6e8RFwMlqxlygq1XRKUBqb2En89l1pmKS/dpCpEanfQcx0oVyTvkoY1DwR2izwZUJUjs7MewPDhPuCSGdm6bghN4EEz341aMVGvydcj18YTCZwYZDz1yPmhNcUJdmH9ZlT1r1gSdeVnJ7DX8SuMDf2BROb9xgJDB3OnVxG3s+Q=
+	t=1771372474; cv=none; b=d50g53EqPSQ297mEUG7Z6SoRA/9g+RlZHsYbqbYI/wvx3gojmTlN3dM0JUQruPOHIiZwgQwIdugPCIwI9maWJ14/7zW4roVjJDm91gFsTGF+StEODQPUtngobSCvFtPcmBg1OnHDvyulWTD5ab6lgT43LGmGTkgwu9mjdGtP6dk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1771372213; c=relaxed/simple;
-	bh=v+E2LWYGeO83JOCJ9365NiHuZGD4xJj/jb8iklpvk74=;
+	s=arc-20240116; t=1771372474; c=relaxed/simple;
+	bh=zgL0Xbh8fc1DxvnDCRMe+FbpCEchJIplB6RsPY/l2gA=;
 	h=MIME-Version:Date:From:To:Cc:Message-Id:In-Reply-To:References:
-	 Subject:Content-Type; b=haG90uuarNtAGebTmhub7QmSyN9S+KfCXXfUk4BPTtuTHWv0y/VgwgPm4/rFzDkxvaoq44HhqCuxd8RCg6wZ5Xbz9EfYL/Sjo7RfHZs2IBtJXappXyRD0qGrrR+6mGXzcABDLSjw/hmIXioMbXsaFuzSG7IfRWwSq/YHln+3m8o=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=squebb.ca; spf=pass smtp.mailfrom=squebb.ca; dkim=pass (2048-bit key) header.d=squebb.ca header.i=@squebb.ca header.b=dWP60zFk; dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b=pRRQkt6q; arc=none smtp.client-ip=202.12.124.153
+	 Subject:Content-Type; b=msPROdhzvdkqBHTOB9+eBdL+5IxJUeoelurbPATqPLvApkcZu27JrK0v8FGa/T5XQzo8orqkm1gBmwUn3bQVQXCW9IZzqkabK8HJ9b8bcpcoHr4+xrAZPwPwmBeVYP4RhfP/3GiudxygUWJUuxEsQdCtCi5HETjKlsADjIJo9U0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=squebb.ca; spf=pass smtp.mailfrom=squebb.ca; dkim=pass (2048-bit key) header.d=squebb.ca header.i=@squebb.ca header.b=FwmicgWN; dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b=OYLm/KP4; arc=none smtp.client-ip=202.12.124.148
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=squebb.ca
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=squebb.ca
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=squebb.ca header.i=@squebb.ca header.b="dWP60zFk";
-	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="pRRQkt6q"
+	dkim=pass (2048-bit key) header.d=squebb.ca header.i=@squebb.ca header.b="FwmicgWN";
+	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="OYLm/KP4"
 Received: from phl-compute-02.internal (phl-compute-02.internal [10.202.2.42])
-	by mailfhigh.stl.internal (Postfix) with ESMTP id D0F8C7A00BC;
-	Tue, 17 Feb 2026 18:50:09 -0500 (EST)
+	by mailfout.stl.internal (Postfix) with ESMTP id 66AC91D0010B;
+	Tue, 17 Feb 2026 18:54:31 -0500 (EST)
 Received: from phl-imap-08 ([10.202.2.84])
-  by phl-compute-02.internal (MEProxy); Tue, 17 Feb 2026 18:50:10 -0500
+  by phl-compute-02.internal (MEProxy); Tue, 17 Feb 2026 18:54:31 -0500
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=squebb.ca; h=cc
 	:cc:content-transfer-encoding:content-type:content-type:date
 	:date:from:from:in-reply-to:in-reply-to:message-id:mime-version
-	:references:reply-to:subject:subject:to:to; s=fm1; t=1771372209;
-	 x=1771458609; bh=mlkY45oMijt5ANfhaBa9ZE6nCGaxTKqGJLkwzPfSxUA=; b=
-	dWP60zFk8WXgdydlqcw/GI6L0WXWfUkYXt95X066OIvMdO/57txJf1PgE22hzPzS
-	4BV9z0AdzF7S498NQgD2rrD9kTO4t7JWmeN+lE3vA+pSJfrpLchQC6razOarVz/9
-	esmkA3kUFCyi6Z34iJXer91qVB+GwpEFWrjrhEhclbzCUuD0D3JWA1RM4TyMOc6W
-	W1QrcJfPvqJsRbnk1ClTOzu95JwiWC1OseX2XScpNDjBmL2roVg6jZFatGfkIqXa
-	DzRo87lL0QgNP3Uri0uc4u8DHLKVOvnYHFAOv1sCP2Q5cuIN6is31fKnKj1IRwrk
-	OSGEWF/WhIhpF1r7IFo6xw==
+	:references:reply-to:subject:subject:to:to; s=fm1; t=1771372471;
+	 x=1771458871; bh=1fpRyiuEp0pbWihj/fEdnLrfzwis75ZEhBYv5grRlfs=; b=
+	FwmicgWNpwtRgViD3NvBZ3kIV2/WrjlndCDd8MPiEPru5eNpZOyEXu2Uoj16AelA
+	bTNqumaBtoYerpFKxSt/yAVazEnSqR+1XGFmAOZsft0DmFyu9OoZSW4ecLbyRgcP
+	PuTYC4M4RxUuxKvIMzOv6WTyiFiXPRmcAhLZTirgLr7F7j3pj1ptvWqip4FyVoib
+	Ww8wsi48Kh6oP7fuIkzb+g28BohyHrmq8UGAPGML43Ol1HQVI71Fr67TazVUxyX/
+	v81L/mqHL/CTETN2yWaGfL6HMAP6MN5wdIWCgD/vxG3ILWUnxZ7NhX6dyHUIU7hA
+	6cahTXRqhFv3e/6nMqJ5kA==
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
 	messagingengine.com; h=cc:cc:content-transfer-encoding
 	:content-type:content-type:date:date:feedback-id:feedback-id
 	:from:from:in-reply-to:in-reply-to:message-id:mime-version
 	:references:reply-to:subject:subject:to:to:x-me-proxy
-	:x-me-sender:x-me-sender:x-sasl-enc; s=fm3; t=1771372209; x=
-	1771458609; bh=mlkY45oMijt5ANfhaBa9ZE6nCGaxTKqGJLkwzPfSxUA=; b=p
-	RRQkt6qtgTfRS3G75N9tPEUU+EU9gXfxPhO52+FQx4bjHBpG2QXokwiK2Z3iaba2
-	X3Na2oHaJCboCpM6v2pvUwLqScA/TWLujhydaisxTUfyAzH8r0CH9dknN28AH7Pi
-	PXhyZr7cN1XbMsRuFm4uYYg0QG0imMfbRnSgARybPsguPCYRc/Jfu5P3T/Db2vdm
-	LMzrRQa2Lh/Zp6v+IAGiOthYxTe53noVXNdt4FNr0IIEcCF9SfXNDIp+t0nHhmUp
-	qjIVIcBI0goVKBZl2vvnXjwSfXgqWSTwOdI4nObQ/yR7or028MT5BwdUtS219v0n
-	HuttfcT32hHLfKQpskcGQ==
-X-ME-Sender: <xms:sf6UackjhdQ6MXOu_fV9itsSBGA06hWpUR9HpXm0l-gI6yYzvy8Img>
-    <xme:sf6UaWqmsUF1pBPKmeTdDF0dL05pNbRO9STVLbFUAqvVggEfUPrzsaKuuTbnRvC-r
-    rWEB6P8h8hWteG6psTb-6IboFqypW28nEvgO14rgBJ6H6TojGbaUF8>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeefgedrtddtgddvvdduuddvucetufdoteggodetrf
+	:x-me-sender:x-me-sender:x-sasl-enc; s=fm3; t=1771372471; x=
+	1771458871; bh=1fpRyiuEp0pbWihj/fEdnLrfzwis75ZEhBYv5grRlfs=; b=O
+	YLm/KP4vyJdzgJOUlAtq2cPzc39Rxpn2YPN7x63hkPM0raX/K3epzfsZMC1VBdlm
+	l79USDVbSnW6c5ICsrvPZdga4EZ3u18NN/bJ2o+EkWgJeDZxQ7lrktlfG+h6hRlc
+	isfjf/fD4K0EljOB5c68JLxZBJ+0pkAr9LygAiAJLqdhqrt2DcrUokq7pEcgGkMw
+	CnfIOxRdpMc5aG7vz/9MQ83c6zTco0OljYeu4WfsDj46iuFxPkSNMw40NjnbwcHY
+	hkM3QCol/Ul7cCmWyGGDcTHZyuplg1HxlOBPIzW3lYU5BLMGWB4o64DwJtrf68AX
+	4aJjY4g6sIKhIQTSwdIiA==
+X-ME-Sender: <xms:tv-UaQhwZMbV0zVE5A2A5x-cYgzSJjW_L4dH4YG1MbBg7UmavEs2yw>
+    <xme:tv-UaT23WcjRvoTfktx2_qV3Zx9DnN-VMH7CkTYr-hEWU5efW_w7xn9Adm6cwYUvj
+    sIuI6n3L6IoWhaGidJXUI1VywSpwinP98O39UVy5mAoCrYbhR5SDDza>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeefgedrtddtgddvvdduudefucetufdoteggodetrf
     dotffvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdfurfetoffkrfgpnffqhgenuceu
     rghilhhouhhtmecufedttdenucesvcftvggtihhpihgvnhhtshculddquddttddmnecujf
     gurhepofggfffhvfevkfgjfhfutgfgsehtjeertdertddtnecuhfhrohhmpedfofgrrhhk
     ucfrvggrrhhsohhnfdcuoehmphgvrghrshhonhdqlhgvnhhovhhosehsqhhuvggssgdrtg
-    grqeenucggtffrrghtthgvrhhnpedtffevgfethfevteduvdefleevkedtuddvlefghefg
-    ieekffejteejveffkedthfenucffohhmrghinhepkhgvrhhnvghlrdhorhhgnecuvehluh
-    hsthgvrhfuihiivgeptdenucfrrghrrghmpehmrghilhhfrhhomhepmhhpvggrrhhsohhn
-    qdhlvghnohhvohesshhquhgvsggsrdgtrgdpnhgspghrtghpthhtohepledpmhhouggvpe
-    hsmhhtphhouhhtpdhrtghpthhtohepuggvrhgvkhhjohhhnhdrtghlrghrkhesghhmrghi
-    lhdrtghomhdprhgtphhtthhopehkuhhurhhtsgesghhmrghilhdrtghomhdprhgtphhtth
-    hopeifpggrrhhmihhnsehgmhigrdguvgdprhgtphhtthhopehhrghnshhgsehkvghrnhgv
-    lhdrohhrghdprhgtphhtthhopehilhhpohdrjhgrrhhvihhnvghnsehlihhnuhigrdhinh
-    htvghlrdgtohhmpdhrtghpthhtoheptghorhgsvghtsehlfihnrdhnvghtpdhrtghpthht
-    ohepihesrhhonhhgrdhmohgvpdhrtghpthhtoheplhhinhhugidqkhgvrhhnvghlsehvgh
-    gvrhdrkhgvrhhnvghlrdhorhhgpdhrtghpthhtohepphhlrghtfhhorhhmqdgurhhivhgv
-    rhdqgiekieesvhhgvghrrdhkvghrnhgvlhdrohhrgh
-X-ME-Proxy: <xmx:sf6UadkCgVdF0HuRcjm_ljkAG6GCN1RWYHYiES8nHBZWw1Ys1F1n_w>
-    <xmx:sf6UaVYTVXBA4U6I7g5AKa0fa_6G46ViAmGXoahII1P1rySYDWdWzg>
-    <xmx:sf6UaYG4hh5B0ttpOh1VcaVxQXPtaoSGCqa5T-fUzMGr_zCTJzIyfw>
-    <xmx:sf6UaUZ2gS5qq4iiiOXe0S9KS6R6PoPLrFqqgRVCs4-Eon1T0AbXOg>
-    <xmx:sf6UaSp4wKQKx0ZrKy_CH2ScHbVCLn72zOfqLIC8sKefRH11ndufwcE7>
+    grqeenucggtffrrghtthgvrhhnpefhuedvheetgeehtdehtdevheduvdejjefggfeijedv
+    geekhfefleehkeehvdffheenucevlhhushhtvghrufhiiigvpedtnecurfgrrhgrmhepmh
+    grihhlfhhrohhmpehmphgvrghrshhonhdqlhgvnhhovhhosehsqhhuvggssgdrtggrpdhn
+    sggprhgtphhtthhopeelpdhmohguvgepshhmthhpohhuthdprhgtphhtthhopeguvghrvg
+    hkjhhohhhnrdgtlhgrrhhksehgmhgrihhlrdgtohhmpdhrtghpthhtohepkhhuuhhrthgs
+    sehgmhgrihhlrdgtohhmpdhrtghpthhtohepfigprghrmhhinhesghhmgidruggvpdhrtg
+    hpthhtohephhgrnhhsgheskhgvrhhnvghlrdhorhhgpdhrtghpthhtohepihhlphhordhj
+    rghrvhhinhgvnheslhhinhhugidrihhnthgvlhdrtghomhdprhgtphhtthhopegtohhrsg
+    gvtheslhifnhdrnhgvthdprhgtphhtthhopehisehrohhnghdrmhhovgdprhgtphhtthho
+    pehlihhnuhigqdhkvghrnhgvlhesvhhgvghrrdhkvghrnhgvlhdrohhrghdprhgtphhtth
+    hopehplhgrthhfohhrmhdqughrihhvvghrqdigkeeisehvghgvrhdrkhgvrhhnvghlrdho
+    rhhg
+X-ME-Proxy: <xmx:tv-UaUD-n7XJ-CcdCbxL3zfNy3Om1zJde6HEo_-E4wtbs2YLeBZ-ig>
+    <xmx:t_-UaTGoWG6lA6R8hbfYDgxkLT0jSu0o6RqZIYi60yqfHW3Bd07bxw>
+    <xmx:t_-UacDbraHwXc3YDtHeqPFboOiKGk6QLUk10APwsHplyOPgfrnEoQ>
+    <xmx:t_-UaRkS6k9vNTiOzAZlND3mFpaHHO0MOv0H391xxpjhI4jV7F-Njw>
+    <xmx:t_-UaXEXLuB08whsj20fs_NVcLYxOCFnmICIrUVhFNmke5DtKkrmpWkU>
 Feedback-ID: ibe194615:Fastmail
 Received: by mailuser.phl.internal (Postfix, from userid 501)
-	id 14A4F2CE0072; Tue, 17 Feb 2026 18:50:09 -0500 (EST)
+	id E1B6F2CE0078; Tue, 17 Feb 2026 18:54:30 -0500 (EST)
 X-Mailer: MessagingEngine.com Webmail Interface
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
@@ -81,8 +81,8 @@ List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-ThreadId: AHYBVvpqSUWZ
-Date: Tue, 17 Feb 2026 18:49:48 -0500
+X-ThreadId: APCKaercSQrV
+Date: Tue, 17 Feb 2026 18:54:09 -0500
 From: "Mark Pearson" <mpearson-lenovo@squebb.ca>
 To: "Derek J . Clark" <derekjohn.clark@gmail.com>,
  =?UTF-8?Q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>,
@@ -91,69 +91,36 @@ Cc: "Armin Wolf" <W_Armin@gmx.de>, "Jonathan Corbet" <corbet@lwn.net>,
  "Rong Zhang" <i@rong.moe>, "Kurt Borja" <kuurtb@gmail.com>,
  "platform-driver-x86@vger.kernel.org" <platform-driver-x86@vger.kernel.org>,
  linux-kernel@vger.kernel.org
-Message-Id: <72f2005b-b1bc-45a0-9ac1-2863fcbda1cc@app.fastmail.com>
-In-Reply-To: <20260215061339.2842486-1-derekjohn.clark@gmail.com>
+Message-Id: <d6ff122a-1ccc-422f-9c24-b95106469d9e@app.fastmail.com>
+In-Reply-To: <20260215061339.2842486-3-derekjohn.clark@gmail.com>
 References: <20260215061339.2842486-1-derekjohn.clark@gmail.com>
-Subject: Re: [PATCH v2 0/6] platform-x86: lenovo-wmi: Add fixes and enhancement
+ <20260215061339.2842486-3-derekjohn.clark@gmail.com>
+Subject: Re: [PATCH v2 2/6] platform/x86: lenovo-wmi-other: Limit adding attributes to
+ supported devices
 Content-Type: text/plain
 Content-Transfer-Encoding: 7bit
 
-
-
 On Sun, Feb 15, 2026, at 1:12 AM, Derek J. Clark wrote:
-> This series adds many much needed features and fixes to the lenovo-wmi
-> drivers.
+> Adds lwmi_is_attr_01_supported, and only creates the attribute subfolder
+> if the attribute is supported by the hardware. Due to some poorly
+> implemented BIOS, this is a multi-step sequence of events. This is
+> because:
+> - Some BIOS support getting the capability data from custom mode (0xff),
+>   while others only support it in no-mode (0x00).
+> - Similarly, some BIOS support get/set for the current value from custom
+>   mode (0xff), while others only support it in no-mode (0x00).
+> - Some BIOS report capability data for a method that is not fully
+>   implemented.
+> - Some BIOS have methods fully implemented, but no complimentary
+>   capability data.
 >
-> Patch 1 adds a macro to make assigning attribute ID's for capdata
-> cleaner and easier.
-> Patch 2 addresses bugs where devices that don't support exposed
-> attributes would still create the attribute, and also attempts to
-> identify the correct capdata and set/get methods as some legacy
-> interfaces don't use the custom mode in the method or capdata ID.
-> Patch 3 adds the remaining CPU attributes that weren't previously
-> exposed.
-> Patch 4 adds the GPU attributes that weren't previously exposed.
-> Patch 5 consolidates name constants in preparation for patch 6.
-> Patch 6 adds battery charge-type limiting when supported only by WMI.
+> To ensure we only expose fully implemented methods with corresponding
+> capability data, we check each outcome before reporting that an
+> attribute can be supported.
 >
-> After applying Rong's series from
-> https://lore.kernel.org/platform-driver-x86/20260210191938.137234-1-i@rong.moe/
-> I found that there weren't any conflicts, so rather than combine
-> the series we can just review each separately.
->
-> Signed-off-by: Derek J. Clark <derekjohn.clark@gmail.com>
-> ---
-> v2:
->  - Fix gpu_mode misisng from attributes list.
->  - Fix prototypes for power suppy patch.
->  - Reorganize CPU and GPU attributes alphabetically.
->  - Break out the patch consolidating the driver name cost.
->  - Move some of the refactoring of attribute_id back to into patch 1
->    where it belongs.
->  - Fix some additional typos in function prototypes.
-> v1: 
-> https://lore.kernel.org/platform-driver-x86/20260213081243.794288-1-derekjohn.clark@gmail.com/
->
-> Derek J. Clark (6):
->   platform/x86: lenovo-wmi-other: Add LWMI_ATTR_ID Macro
->   platform/x86: lenovo-wmi-other: Limit adding attributes to supported
->     devices
->   platform/x86: lenovo-wmi-other: Add missing CPU tunable attributes
->   platform/x86: lenovo-wmi-other: Add GPU tunable attributes
->   platform-x86: lenovo-wmi-other: Consolidate name into single const
->   platform/x86: lenovo-wmi-other: Add WMI battery charge limiting.
->
->  .../wmi/devices/lenovo-wmi-other.rst          |  21 +
->  drivers/platform/x86/lenovo/wmi-capdata.h     |  13 +-
->  drivers/platform/x86/lenovo/wmi-gamezone.h    |   1 +
->  drivers/platform/x86/lenovo/wmi-other.c       | 606 ++++++++++++++++--
->  4 files changed, 592 insertions(+), 49 deletions(-)
->
->
-> base-commit: 5a5203a45b063a594e89a2aeaf9e4923893a5b4c
-> -- 
-> 2.52.0
 
-For the series - looked good to me (I didn't know the hwmon limitation Kurt highlighted)
-Reviewed-by: Mark Pearson <mpearson-lenovo@squebb.ca>
+The Legion's aren't in the Linux program (with an asterisk for the Legion Go/Go2) - but if there's anywhere it's tracked or highlighted which platforms differ/have issues let me know. Not sure how widespread the issues is?
+
+I can try and let the Legion team know that there are platforms which (likely) aren't following the internal specs. It might be possible to improve things for future platforms?
+
 Mark
