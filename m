@@ -1,111 +1,121 @@
-Received: from mail-pg1-f182.google.com (mail-pg1-f182.google.com [209.85.215.182])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A15F94CB5B
-	for <platform-driver-x86@vger.kernel.org>; Wed, 18 Feb 2026 05:03:07 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.182
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 29D59315D48
+	for <platform-driver-x86@vger.kernel.org>; Wed, 18 Feb 2026 08:42:42 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1771390988; cv=none; b=EEMiiFadQqMXUBNtaESoS4MQdA+yYyhKkLUj6LRxKoLjSChnch0KOPX/yobYK9tg6iSH9iu2mSC7qbG9MOlge27i8tL464G93t8o6GBfnGaUz+IrW4S4XXPFHM9l6u9hSRBCC5GWt2q80QveNChBRgzSkKkghH4vdX5iztE75hc=
+	t=1771404162; cv=none; b=cuO743JSoFUx9W838ITXGLJAHVou/gkbrFE58NGxKpr1RGtp+D+f3VyiIXKKuJlzW/tbw/I55RMFpo3NUnmLGhjld8tVb4q/wjpc4g7FfuuY9nGiNIO9tGwwt8ye+ZH5h8f4NEetTb53dosH8VOLCG21i+fFVwcq21/ckjiy1bU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1771390988; c=relaxed/simple;
-	bh=7fwbTCmADhdvyhhHvedDBuUM6m8RxKFoPTdFJWXwtxY=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=jyu5TL9Btn7mvs/ponyIiWk+yyr04dFKlmeOP4V8prua9r/J9yUdi5E0PI4BKKv1IemD6JUB719/lKPFWbpOl2o+26vXOOZkMsvxiyDG9hhy+VKRGn2lIZgbxTMfCRxPkuk0j0xQiDqViQzaeuYxctggJD5OGB2VkGuR1HOJUU8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=VIZr/QKZ; arc=none smtp.client-ip=209.85.215.182
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1771404162; c=relaxed/simple;
+	bh=LFVa+bPFu8B7yQthwOHDkUQHzURrFzuOs+tqnZdoRmQ=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=IG5+FNVYo7yrRyDE+CGevsqUC+I3n9F5Lccu4Oxzez8nrqn7xQ72CgUtD6s8DSiKGAw6uIrcwqx1DEWtyvuYB+fFPPnLMv2CQ/hgdwviH5nDuqu4beycqMzvy1ifx1tke5F91XnXkd0hq1hK9+nIhpvzG2S9xANEHZmrDJsdgsw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=nAsncozs; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="VIZr/QKZ"
-Received: by mail-pg1-f182.google.com with SMTP id 41be03b00d2f7-c6e2a8db928so1923097a12.1
-        for <platform-driver-x86@vger.kernel.org>; Tue, 17 Feb 2026 21:03:07 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1771390987; x=1771995787; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=GAf1Jqs66+l5ETuC/olHedrsCdG5IJLtle7NgFXOSPw=;
-        b=VIZr/QKZNVUEYgaOxFIVS1Po+ytW7nbEUroBwp1IMyU1HvmOZUf+GDzW1hnw/wLC/B
-         5I2uwRlBoTXG+zD36jtv3TYYjKc+raGrJKVZJbDcop6M3eR+DEBc181nGP9GLy8Te7qw
-         KLXXOo57HoieMV/LZiZQA6uO4dgVMaplefU47WxEe8lxaBajkps3HZ/HZmDZf8WF6lo9
-         CaD7pi/bA4MC28XE4xw3i2I9iAT9EcOT+7IqE5c4JKoQiMhqA0Zb3kl6wRukX/SJN/s6
-         sGZqaWU/GFZJljoi5xRF9pIm+HwCc69T8/j+u2fQ47goC0Bp5lY09gbwB9gcQ6ovwfql
-         kchQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1771390987; x=1771995787;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-gg:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=GAf1Jqs66+l5ETuC/olHedrsCdG5IJLtle7NgFXOSPw=;
-        b=IRH2H1hllH9EJ/jmhdb3YUqoOHviEuMHXHUV+i6K8Hqa7FMRJa03CO+XbrN6n/SZed
-         ajD19YhxbYldrHlpTARsJejtiYZLb/N5B4kvBYzeuOj+NHQzS/opEZ76JuICZU0vEvOV
-         Fehgd7v+MB4KKXm3NRtDoEB5ACViNz7180myOzfapvmMYEcDk0WwSpGzugPcBjhooiHm
-         6mGKtR5oU2srhfLA2g0MyVcj57/fAmk5riWq1M1NujplBTKNDH+VkQjdQ2IcpzHUzehL
-         RjWYnivYJAY7aSbIXD4NfkT1uiOaHIb7jfWchNH2G+XfiH/Ikr0vy+Ve0ViZFpp7jSos
-         RRXw==
-X-Gm-Message-State: AOJu0YwQ2tRtgnfGVJlovSjPK+N8XLd5S7xxfBNHJ5qhVyuO/5u0ZXDF
-	vIFH5IVcqMNfDRCSVAux5KTJYmGxUiy4SZsIBqsKj+1Lmp1zL/MmmFvw
-X-Gm-Gg: AZuq6aJPrAtcT5AOEB3DkvGsol/k39e4FRBGbQXPYFluuwN19SxQDEvI/FICoCOFMVP
-	YcgwuKpsyDi3NuIKJFBGn8wckx9eTu+2fbRhtLmXLVwx6h0AHIB8n4NyxaLwNfcYuv4iPFvkElK
-	ZW+PraEq3WFi30PlOn22tUEIbexK3muAyKNsNjiGZ0GJUhfVb1x974W6mmQ35IC/TMUnOHfh8MS
-	MHwuExmHD5+yDQjTQtxBoXanztqPjiAGTxRB/bUs+gtGuB/qkzI7W+y14jhumatK5qKcpNcDGDP
-	/zZnlpT2TJgFXSK0dtN+MYTw40BJHKdMGltPMuE9zhTTRIVpRy7K5E7dTGSxN+DrZhF2NeM8Ahy
-	w2igfPhol/h9I8+SVldNlVGdX6raz8vaQRfq9zEnOThH0y/+zWIrtqh+Xl9L9Ftxkl3AH7PYsQQ
-	d1R1maTM8CYo0NXUaIdDdhJJmmymHTQfnCbBMZhcMZQ/1dPHH/veFR29SczmiI5ivL195mJM/pS
-	P7v9LXzoXJC7B1v03M=
-X-Received: by 2002:a17:903:1965:b0:2a9:5b48:2b38 with SMTP id d9443c01a7336-2ad1729c113mr122927605ad.0.1771390986839;
-        Tue, 17 Feb 2026 21:03:06 -0800 (PST)
-Received: from archlinux ([45.112.144.43])
-        by smtp.gmail.com with ESMTPSA id d9443c01a7336-2ad1a73c6easm156494475ad.39.2026.02.17.21.03.03
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 17 Feb 2026 21:03:06 -0800 (PST)
-From: Krishna Chomal <krishna.chomal108@gmail.com>
-To: ilpo.jarvinen@linux.intel.com,
-	hansg@kernel.org
-Cc: platform-driver-x86@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	varadpisale.work@gmail.com,
-	Krishna Chomal <krishna.chomal108@gmail.com>
-Subject: [PATCH] platform/x86: hp-wmi: Add Omen 16-xd0xxx fan and thermal support
-Date: Wed, 18 Feb 2026 10:32:35 +0530
-Message-ID: <20260218050235.94687-1-krishna.chomal108@gmail.com>
-X-Mailer: git-send-email 2.53.0
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="nAsncozs"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id EB979C2BCAF
+	for <platform-driver-x86@vger.kernel.org>; Wed, 18 Feb 2026 08:42:41 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1771404162;
+	bh=LFVa+bPFu8B7yQthwOHDkUQHzURrFzuOs+tqnZdoRmQ=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+	b=nAsncozs/SRBao44LLdJY4CMDItykdHUveA28eA+av605Zpb/O7M6O6BeWvYuPhd1
+	 jfZUMSp4KNlizD1s7gD8bRX6uWRt9ITtATdLntPsIhbA/o+nVuwxo2iA3YwEWF4FJS
+	 Yj017qejjeAAZ6dGCmAjNj6MEa7VKDocNc6EjOBwLT5pMSRMzjUfGs9+cUhCvcc9d8
+	 WYzUFM4Ae7Hf4q6Sc/6kMWKMHIdyNJiCb2hian/BQtAq5+3g7rZ/K4MinsQhqYV/Xq
+	 PF2gzG0U5Lqo+Vf3WrUuorybX9nWdGVbfH1BPsGt1yX53yF1G/8RX/lR/Nsal1QA4Y
+	 zkwNaInWDSSkQ==
+Received: by mail-lf1-f42.google.com with SMTP id 2adb3069b0e04-59e607a3824so5231077e87.1
+        for <platform-driver-x86@vger.kernel.org>; Wed, 18 Feb 2026 00:42:41 -0800 (PST)
+X-Forwarded-Encrypted: i=1; AJvYcCWKiBEiZjNns2vzAVuRBOFfOd8gbMrF6MAgXDYw2OP9xyd1c5hjVv96ayT8dEBwZANzHzxY671DHIN1emhIba4ES1Jr@vger.kernel.org
+X-Gm-Message-State: AOJu0Yx129Jp5EChQ0Z2XMYBNhZ2+03PDw8x1F//Bf2GCjDy7RW/KTt5
+	d0n4CyXeHJe3oKbUc4BjvPp1JStSh3JBMrr7bjAM8MaREbrP84udgMrQx6kZmfkePopPnq4tcCF
+	+E14rqLSK/O8lIxXYmJwyTRPrJOQwiPNKWk18moLC1A==
+X-Received: by 2002:a05:6512:2211:b0:59f:8158:d7d3 with SMTP id
+ 2adb3069b0e04-59f83bbc410mr321854e87.36.1771404160483; Wed, 18 Feb 2026
+ 00:42:40 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+References: <20260211085313.16792-1-bartosz.golaszewski@oss.qualcomm.com> <aZUIFiOYt6GOlDQx@google.com>
+In-Reply-To: <aZUIFiOYt6GOlDQx@google.com>
+From: Bartosz Golaszewski <brgl@kernel.org>
+Date: Wed, 18 Feb 2026 09:42:28 +0100
+X-Gmail-Original-Message-ID: <CAMRc=Md_x+DxmW742HRUW-jeg9_AW-stKkHUP9z13+M+POd4Tw@mail.gmail.com>
+X-Gm-Features: AaiRm52ASOTlVFSy1KcC7rXVpTj3xLDZLyVk9gEaUjX0icBzUhT7rA9yV7re9uY
+Message-ID: <CAMRc=Md_x+DxmW742HRUW-jeg9_AW-stKkHUP9z13+M+POd4Tw@mail.gmail.com>
+Subject: Re: [PATCH v2] gpio: swnode: restore the swnode-name-against-chip-label
+ matching
+To: Dmitry Torokhov <dmitry.torokhov@gmail.com>
+Cc: Bartosz Golaszewski <bartosz.golaszewski@oss.qualcomm.com>, Linus Walleij <linusw@kernel.org>, 
+	Andy Shevchenko <andriy.shevchenko@linux.intel.com>, 
+	Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Arnd Bergmann <arnd@kernel.org>, 
+	Hans de Goede <hansg@kernel.org>, =?UTF-8?Q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>, 
+	Dan Carpenter <dan.carpenter@linaro.org>, linux-gpio@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, platform-driver-x86@vger.kernel.org, 
+	stable@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-The HP Omen 16-xd0xxx (board ID: 8BCD) has the same WMI interface as
-other Victus S boards, but requires quirks for correctly switching
-thermal profile (similar to HP Omen 16-wf1xxx, board ID: 8C78).
+On Wed, Feb 18, 2026 at 1:31=E2=80=AFAM Dmitry Torokhov
+<dmitry.torokhov@gmail.com> wrote:
+>
+> On Wed, Feb 11, 2026 at 09:53:13AM +0100, Bartosz Golaszewski wrote:
+> > Using the remote firmware node for software node lookup is the right
+> > thing to do. The GPIO controller we want to resolve should have the
+> > software node we scooped out of the reference attached to it. However,
+> > there are existing users who abuse the software node API by creating
+> > dummy swnodes whose name is set to the expected label string of the GPI=
+O
+> > controller whose pins they want to control and use them in their local
+> > swnode references as GPIO properties.
+> >
+> > This used to work when we compared the software node's name to the
+> > chip's label. When we switched to using a real fwnode lookup, these
+> > users broke down because the firmware nodes in question were never
+> > attached to the controllers they were looking for.
+> >
+> > Restore the label matching as a fallback to fix the broken users but ad=
+d
+> > a big FIXME urging for a better solution.
+> >
+> > Cc: stable@vger.kernel.org # v6.18, v6.19
+> > Fixes: 216c12047571 ("gpio: swnode: allow referencing GPIO chips by fir=
+mware nodes")
+> > Link: https://lore.kernel.org/all/aYkdKfP5fg6iywgr@jekhomev/
+> > Acked-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+> > Signed-off-by: Bartosz Golaszewski <bartosz.golaszewski@oss.qualcomm.co=
+m>
+> > ---
+> > Changes in v2:
+> > - check if gdev_node and gdev_node->name are not NULL before trying to
+> >   match the label (Hans & Dan)
+> > - use the right link
+> > - collect tags
+> >
+> >  drivers/gpio/gpiolib-swnode.c | 19 +++++++++++++++++++
+> >  1 file changed, 19 insertions(+)
+> >
+> > diff --git a/drivers/gpio/gpiolib-swnode.c b/drivers/gpio/gpiolib-swnod=
+e.c
+> > index 21478b45c127d..0d7f3f09a0b4b 100644
+> > --- a/drivers/gpio/gpiolib-swnode.c
+> > +++ b/drivers/gpio/gpiolib-swnode.c
+> > @@ -42,6 +42,25 @@ static struct gpio_device *swnode_get_gpio_device(st=
+ruct fwnode_handle *fwnode)
+> >
+> >  fwnode_lookup:
+> >       gdev =3D gpio_device_find_by_fwnode(fwnode);
+>
+> By the way, should we extend gpio_device_find_by_fwnode() to use both
+> primary and secondary nodes?
+>
 
-Add the DMI board name to victus_s_thermal_profile_boards[] table and
-map it to omen_v1_thermal_params.
+That's already done on a higher lever for all fwnodes in gpiod_fwnode_looku=
+p().
 
-Testing on HP Omen 16-xd0xxx confirmed that platform profile is
-registered successfully and fan RPMs are readable and controllable.
-
-Tested-by: Varad Amol Pisale <varadpisale.work@gmail.com>
-Signed-off-by: Krishna Chomal <krishna.chomal108@gmail.com>
----
- drivers/platform/x86/hp/hp-wmi.c | 4 ++++
- 1 file changed, 4 insertions(+)
-
-diff --git a/drivers/platform/x86/hp/hp-wmi.c b/drivers/platform/x86/hp/hp-wmi.c
-index 304d9ac63c8a..b91965117edd 100644
---- a/drivers/platform/x86/hp/hp-wmi.c
-+++ b/drivers/platform/x86/hp/hp-wmi.c
-@@ -177,6 +177,10 @@ static const struct dmi_system_id victus_s_thermal_profile_boards[] __initconst
- 		.matches = { DMI_MATCH(DMI_BOARD_NAME, "8BBE") },
- 		.driver_data = (void *)&victus_s_thermal_params,
- 	},
-+	{
-+		.matches = { DMI_MATCH(DMI_BOARD_NAME, "8BCD") },
-+		.driver_data = (void *)&omen_v1_thermal_params,
-+	},
- 	{
- 		.matches = { DMI_MATCH(DMI_BOARD_NAME, "8BD4") },
- 		.driver_data = (void *)&victus_s_thermal_params,
--- 
-2.53.0
-
+Bartosz
