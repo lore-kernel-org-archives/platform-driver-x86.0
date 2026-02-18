@@ -1,128 +1,99 @@
-Received: from mail-dl1-f50.google.com (mail-dl1-f50.google.com [74.125.82.50])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from relay13.grserver.gr (relay13.grserver.gr [178.156.171.147])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CB2A9347FC8
-	for <platform-driver-x86@vger.kernel.org>; Wed, 18 Feb 2026 21:04:52 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=74.125.82.50
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 92CD42DB7B3;
+	Wed, 18 Feb 2026 21:49:31 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=178.156.171.147
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1771448694; cv=none; b=Hcurc1xI9F6g60ImIWnhO7CliSVmgC/O49J7XAMe6YiDpshAKAAuz3CuQ8D8zE7VgxzGwa6ZdRFQDRA86MX5J7jIQHA2R4dLpjaTdPl4b4vOYJ3nXYka67qj+F24+EWFUx1JM+nTsln3GiL0uLBPYhnOYCByyKqIy/+s95rJr7A=
+	t=1771451372; cv=none; b=fiXddo+xyde/Nk/iWv15M9pRh48UvLzhrHXHIrB8nWEpCQol+65fBsbigDeFRJFgBWhxzIYzLZOC3gjfIHmA9Ulj0KDud8ihaRBWQ/2x6+mY3DcKmIn0jCxS4DfLthvLff/BT3FikkBNmRKXaOhdB+n5TKDNTrVRfRhDDQVJBGw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1771448694; c=relaxed/simple;
-	bh=HplSw9dy/qWgqPqX1mcyfcb4JSrW1j9OaR/ZWiFzi78=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=G5qKHMqtyfx36iw6V1UsY2+YWZnbC/uUsiS6NGFR294cZqSHtRgNz130k97idfQK73mVpC3Q7w2NlEZ2oczvVu3STrZPx9wwAcE7mUMptAV29TpZb2SR9wm+63Zsgm8w2jcxz7FUy6o1+YBF9YgU+ktmDwIgDgulc2nH7cO3trI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=FLvAQE7Y; arc=none smtp.client-ip=74.125.82.50
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1771451372; c=relaxed/simple;
+	bh=a+QTjQcq93UeZIJfPRHlltoM1hi1L1M/xrgAjtzR1ZA=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=c2TPqO199OIKjeL/JAolDypG9OuRA4Wv2g/cs3MqfcwunOSD7z6EijOM/0azerhXQVzegMXDSRZ39FCUAwZ/TZd5ioyUl9dSg5ZdGr7ScIxkWZxAVA5O2A6/a8n8SQFdnv99WeawgQWo8JtGm7vObMk4Y3Cy4CwRwVIYbtUHfQo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=antheas.dev; spf=pass smtp.mailfrom=antheas.dev; dkim=pass (2048-bit key) header.d=antheas.dev header.i=@antheas.dev header.b=nPZtzwNU; arc=none smtp.client-ip=178.156.171.147
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=antheas.dev
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=antheas.dev
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="FLvAQE7Y"
-Received: by mail-dl1-f50.google.com with SMTP id a92af1059eb24-12732165d1eso236233c88.1
-        for <platform-driver-x86@vger.kernel.org>; Wed, 18 Feb 2026 13:04:52 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1771448692; x=1772053492; darn=vger.kernel.org;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date:from:to
-         :cc:subject:date:message-id:reply-to;
-        bh=IjjayYR1g8KtZVuRZH/Ka4VPUUbcT2/C4S4r4Kniljo=;
-        b=FLvAQE7YaKPY9+/XhhBqtsLvWBL/JIkbKEMfbC5jasmki/qFsBQ4YXkC//p+rhWmB9
-         mLS0eYTahO8QjAiM2RtmjHrSEEdNFigSXC6RO6XHRZcin2+mR2/+ewrZkbBQHDztmlwS
-         akfNezAQIh9PoNW6P9QMdtTgWwN4oirN7pnbkv9+OzrXlU+J6oibx4aTQSNYIQwiz4ib
-         iHmGVpzcb5dbuAXAcWEU/x8Yp63NnNm8o7Whkg6EWfc28yiSnmtnf0xviThckH5qUfzR
-         gwV4u+poHUPwWaac4VZdJZCZnYdi4qKN70AtoSX0M9ZIGDtmjknUMFGBw1DN/FdfW7U8
-         JHaQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1771448692; x=1772053492;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date:x-gm-gg
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=IjjayYR1g8KtZVuRZH/Ka4VPUUbcT2/C4S4r4Kniljo=;
-        b=ubvCIja/ixFTMhchuo3E52Vk7xwKPlROF7V/1B7W/Tb0RdII6yHCROUYbBXYrpEOYY
-         GI8AqqecsvqoWojncoJEaAYS3jCoQtlbCqzuQRsHFnPLoMv7TE/isU7bKqrKmGVcOEF/
-         WnWweqNW82nXDDERqALHbuWRS0aXYqIpq9L4Qv0I9RO3u0ObC+vHdOlDJDOXHHvByevB
-         POioqKcx7GG295waXICLQa2TspFlNMzzs9UnuzEKhskUoRzJHbVpQQuqgCWeY8h1IUaL
-         oRYafWPdw/IcXVF7d5U3mUocAoAaNGoFE4YRh0ks4LTvoiM+AwV30qZKBmYzswiAnrny
-         xoxg==
-X-Forwarded-Encrypted: i=1; AJvYcCW0zo6YNAsxnOixDdEhdjb8o4l0ICPmIUw5/VOXSW8vzJhD1HYJSr6vXNUYlMQ89ZhpqEefWLMFXfhrmobmVnIWGB1U@vger.kernel.org
-X-Gm-Message-State: AOJu0Yyd1Ia1evRopsmULRGzkozbObf6V5ATb6eG5iFKatgPuk574SzF
-	KeRV4UUhA5vfgYoIxVYlIptD1XSJ0gXQdGS9oTIbibhv3FJQ60tNMryr
-X-Gm-Gg: AZuq6aK+4cTdQNsccDyvm+UV8c1pYP/cr2zNoHyctPW4Ajo4aQUmgJgd0vera83fsUB
-	o+i3dIsg1D+eRZ6zhGpPk/xwPmLl+KB3i1eamHibsQYNou97SfXB1larjME3OJAB3UQVFj2gxQF
-	Zo+fvzuMra4q2RAI6KafhPstU5bhMo+SQxo09XUR689iPdwxsqTzxjSd+SURtp9zCZUnpoMSG3A
-	Oy/sznlEOdgUtyn0VYsf6OYAAFSMy4JVSeJq2p9lZ+6psPPsMcghZdAGdk+vOij3wwf0YfqLtdt
-	9I48SfnWXEyGPe3uc6948RPDEFIsBwpjDMW44Cqgp1ZEZAE0koRJ6b9HAheJCm3+sV+WcgQVjwB
-	ZYifjbqRP+nZ6vALg3yRY2SD8Oz39cimkSz7byEC0V+tOSVZXrkOflg2l3XCtz/JjK+AA6ZI0Qh
-	lYr6TKUaSlRM+ycL5s3MeWtrMlZ3+KqKQF3uT63lRUwRwiUV1vbS+pMMJybvLWBdNt
-X-Received: by 2002:a05:7022:51b:b0:127:15cd:9f52 with SMTP id a92af1059eb24-12759a0482dmr1521312c88.5.1771448691865;
-        Wed, 18 Feb 2026 13:04:51 -0800 (PST)
-Received: from google.com ([2a00:79e0:2ebe:8:265b:f5ad:9e03:677e])
-        by smtp.gmail.com with ESMTPSA id a92af1059eb24-12742c63feesm24214274c88.4.2026.02.18.13.04.51
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 18 Feb 2026 13:04:51 -0800 (PST)
-Date: Wed, 18 Feb 2026 13:04:48 -0800
-From: Dmitry Torokhov <dmitry.torokhov@gmail.com>
-To: Bartosz Golaszewski <brgl@kernel.org>
-Cc: Linus Walleij <linusw@kernel.org>, Tj <tj.iam.tj@proton.me>, 
-	Hans de Goede <hansg@kernel.org>, metux IT consult <info@metux.net>, 
-	platform-driver-x86@vger.kernel.org
-Subject: Re: pcengines_apuv2: LEDs/Input fails since v6.18
-Message-ID: <aZYpArgUKvxtibzS@google.com>
-References: <b553243c-9ec6-4016-9fd6-d33f549a3dad@proton.me>
- <ef96006e-ca94-4525-9727-4a6011fde7e1@kernel.org>
- <54082217-0eff-49f6-b4f1-0daed58c2568@proton.me>
- <aZSkqGTqMp_57qC7@google.com>
- <CAMRc=Mfd1dD7XL4smPtRTVD8vhGR=PmLLcNz2t1Q8+jwKbm5Mg@mail.gmail.com>
- <aZX0EynAKvqXWzq2@google.com>
- <CAMRc=Md3kUVOEshvPiwv=xvRRNwQndcP=hsbyMOJn4c2=+CaiA@mail.gmail.com>
+	dkim=pass (2048-bit key) header.d=antheas.dev header.i=@antheas.dev header.b="nPZtzwNU"
+Received: from relay13 (localhost [127.0.0.1])
+	by relay13.grserver.gr (Proxmox) with ESMTP id 7459D5E647;
+	Wed, 18 Feb 2026 23:49:25 +0200 (EET)
+Received: from linux3247.grserver.gr (linux3247.grserver.gr [213.158.90.240])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by relay13.grserver.gr (Proxmox) with ESMTPS id 1A7735E63B;
+	Wed, 18 Feb 2026 23:49:25 +0200 (EET)
+Received: from antheas-z13 (unknown [IPv6:2a05:f6c5:43c3:0:378a:d3f6:f8b0:bed1])
+	by linux3247.grserver.gr (Postfix) with ESMTPSA id AE2B51FE9E7;
+	Wed, 18 Feb 2026 23:49:23 +0200 (EET)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=antheas.dev;
+	s=default; t=1771451364;
+	bh=DWCGS6uMDm31zuaBfOZ/L8KknCrtj2ttCofgBxYesy0=; h=From:To:Subject;
+	b=nPZtzwNUbReviV7eR5StgqoKoZee2g5eVhyaqgbiBgUD8vltNz95QuEJcLfPWWI1u
+	 RQo4G9VICTbiYnWmr1ZW3Dop6yAtrc2jp7I+YJw2PPNXlLDIXSyR99vWnupfzkhl1q
+	 e/DGpWKJtqBzxlG0wKwJYGiP341drs0It3kS7xzGdoFDeMpxQO0X2qL8fumOrab6lN
+	 J00MSaG18jja2Ha1UIIlwa8NT8fV5UPq3l/MNHDlKovsq15ocjOvektB2Fd3Z/3oj9
+	 pgb3FbckcrM53IoOyr1hxvXE4Fzd3pgCmE8Jn5LYN5ewBk/uKIyYw5mZlVOjQkQAuD
+	 L66FNPNVzQi5g==
+Authentication-Results: linux3247.grserver.gr;
+	spf=pass (sender IP is 2a05:f6c5:43c3:0:378a:d3f6:f8b0:bed1) smtp.mailfrom=lkml@antheas.dev smtp.helo=antheas-z13
+Received-SPF: pass (linux3247.grserver.gr: connection is authenticated)
+From: Antheas Kapenekakis <lkml@antheas.dev>
+To: platform-driver-x86@vger.kernel.org
+Cc: linux-kernel@vger.kernel.org,
+	Derek John Clark <derekjohn.clark@gmail.com>,
+	=?UTF-8?q?Joaqu=C3=ADn=20Ignacio=20Aramend=C3=ADa?= <samsagax@gmail.com>,
+	Hans de Goede <hansg@kernel.org>,
+	=?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>,
+	Eileen <eileen@one-netbook.com>,
+	Antheas Kapenekakis <lkml@antheas.dev>
+Subject: [PATCH v1 3/4] platform/x86: oxpec: Add support for OneXPlayer X1 Air
+Date: Wed, 18 Feb 2026 22:49:04 +0100
+Message-ID: <20260218214919.449636-4-lkml@antheas.dev>
+X-Mailer: git-send-email 2.52.0
+In-Reply-To: <20260218214919.449636-1-lkml@antheas.dev>
+References: <20260218214919.449636-1-lkml@antheas.dev>
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <CAMRc=Md3kUVOEshvPiwv=xvRRNwQndcP=hsbyMOJn4c2=+CaiA@mail.gmail.com>
+X-PPP-Message-ID: 
+ <177145136418.2900493.15263682106986794672@linux3247.grserver.gr>
+X-PPP-Vhost: antheas.dev
+X-Virus-Scanned: clamav-milter 1.4.3 at linux3247.grserver.gr
+X-Virus-Status: Clean
 
-On Wed, Feb 18, 2026 at 09:21:14PM +0100, Bartosz Golaszewski wrote:
-> On Wed, Feb 18, 2026 at 6:25 PM Dmitry Torokhov
-> <dmitry.torokhov@gmail.com> wrote:
-> >
-> > > >
-> > > > I think the patch below should fix it.
-> > > >
-> > > > Bartosz, I think you should revert
-> > > > 86ef402d805d606a10e6da8e5a64a51f6f5fb7e2 until after you audit all
-> > > > existing gpio drivers. Breakign the kernel like that is not great.
-> > > >
-> > >
-> > > Hi Dmitry!
-> > >
-> > > This change has been upstream for close to a year - it first appeared
-> > > in v6.15-rc1. There have been very few reports (I think a couple
-> > > initially and then none for months) and fixing this is typically
-> > > trivial. It addressed an actual problem where these retvals would be
-> > > propagated to user-space and misinterpreted. I think we should fix
-> > > this driver and keep this change. "Auditing" typically means never
-> > > fixing things entirely.
-> >
-> > [+LinusW as co-maintainer]
-> >
-> > That's ... an interesting stance. You couldn't even bother going
-> > through your own subsystem before applying a change that could break
-> > user's systems.
-> >
-> 
-> My stance is that I don't want a knee-jerk reaction of reverting a
-> valid change after one report (with a fix queued) several months after
-> the change was made. If more people start complaining then I won't
-> oppose a revert.
+X1 variant with a newer Intel chipset. Uses the same registers as the X1.
 
-I think you are witnessing that outside of "common" x86 devices there is
-significant lag between the latest kernel release and what people are
-actually using on their systems.
+Signed-off-by: Antheas Kapenekakis <lkml@antheas.dev>
+---
+ drivers/platform/x86/oxpec.c | 7 +++++++
+ 1 file changed, 7 insertions(+)
 
-Thanks.
-
+diff --git a/drivers/platform/x86/oxpec.c b/drivers/platform/x86/oxpec.c
+index 623d9a452c46..d6ef8dbf568e 100644
+--- a/drivers/platform/x86/oxpec.c
++++ b/drivers/platform/x86/oxpec.c
+@@ -240,6 +240,13 @@ static const struct dmi_system_id dmi_table[] = {
+ 		},
+ 		.driver_data = (void *)oxp_x1,
+ 	},
++	{
++		.matches = {
++			DMI_MATCH(DMI_BOARD_VENDOR, "ONE-NETBOOK"),
++			DMI_EXACT_MATCH(DMI_BOARD_NAME, "ONEXPLAYER X1Air"),
++		},
++		.driver_data = (void *)oxp_x1,
++	},
+ 	{
+ 		.matches = {
+ 			DMI_MATCH(DMI_BOARD_VENDOR, "ONE-NETBOOK"),
 -- 
-Dmitry
+2.52.0
+
+
