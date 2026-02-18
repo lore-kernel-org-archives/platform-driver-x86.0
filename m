@@ -1,151 +1,159 @@
-Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 00D8B320A33
-	for <platform-driver-x86@vger.kernel.org>; Wed, 18 Feb 2026 08:43:45 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.180.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 90FD633D6CB
+	for <platform-driver-x86@vger.kernel.org>; Wed, 18 Feb 2026 09:55:59 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1771404227; cv=none; b=lzyPIJXYa5BGL0KFS/Tg5Qdx+5EtPbhOC6CFo6PQoClkmFauxrAOnyGarX5MlP+t9JNABzuDyr8Y8wqxr9+y82ACgjxdhCGt/FT//RfkFWhCO5akWohpPCw+NEZWI6huHRxHR4sonkI39kFD1ppPwNmk5AOrSSWCrOHY8pwmf3A=
+	t=1771408559; cv=none; b=hijSlrYH5tWyzeHCSGh8a/k0kUPh4ouDqbpFgES/x8KtYbK7F4CMi9lUa+ZfjdyiroZI1vsSYIULhQnTgYVpjYKJ+bYtKJegQ4z0MPuNMxtD+Z0NrBtYn4QHtivZfeVmSr4ajcV7/JaN+BsSdrH6+4U6dx2pDd3XNT5r+vkeDVc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1771404227; c=relaxed/simple;
-	bh=t8MZQ/ZZEwlyiwhBvjBltm4YE5vk7TMCaSJCZpqS7hQ=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=GxeQYRBpzqM2kasdbKzwcnMlyEIQ/W0iDFw3o83G3pt8lUo/FQKInx/JMzKPt2Ig8+Px77ltheBVP/Zgf75nIHr2zh0JgF6LX26aUZYT0AUb5Nc0gKQGhZN2KcnmklojHUYRmdK787PGu+qoRvt2FIUDH8Xpjy3nxOTJvkE6rRc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com; spf=pass smtp.mailfrom=oss.qualcomm.com; dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b=lTY2qGB0; dkim=pass (2048-bit key) header.d=oss.qualcomm.com header.i=@oss.qualcomm.com header.b=LV063I2p; arc=none smtp.client-ip=205.220.180.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oss.qualcomm.com
+	s=arc-20240116; t=1771408559; c=relaxed/simple;
+	bh=NRpQhMohh6WsKxrrSGq1M9D/siF1vRsTHqItwmavLvg=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=Yyt4hR7hJ+K2XFOqHSdcuffFIc8NcerrrcTpiG8i4rJ1TuL7y5GAXc75lsvffbRuX3i/bvxdKOL+svd9F23OvJ0pUvKFQY4ToFCi/pJZEzbjz86/NK69MzR6f2PJpcApDJtRtHQ9fz9QP9Y9HbzXuuTPWIWWUg7KNeMewVjizfY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=um22DUfD; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b="lTY2qGB0";
-	dkim=pass (2048-bit key) header.d=oss.qualcomm.com header.i=@oss.qualcomm.com header.b="LV063I2p"
-Received: from pps.filterd (m0279868.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.18.1.11/8.18.1.11) with ESMTP id 61HKX0P83694037
-	for <platform-driver-x86@vger.kernel.org>; Wed, 18 Feb 2026 08:43:45 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=qualcomm.com; h=
-	cc:content-transfer-encoding:content-type:date:from:in-reply-to
-	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
-	D11DLbhgRQAYOxcXhcBA1YEKOPZKFRqaz0G263o14M4=; b=lTY2qGB0pm8qVZ7D
-	Fqgvtie5yySSJlMnMA8Bwje+H/xaeXNYaeEFVN6n740mGv+fNlohPt2hSbBEy+Km
-	B6QQ3OxcekZXYLHYAyfY9lqvRfNln4zc59SOxgdTrm+YaLlqie/2DZ2ITya7dJgm
-	TyV/QxY891Q3KN1SIC7WxadItCfNKd0XzFYkssvECN6wzJ3utH4ZADZ7XpzH4z3b
-	KjO9HhGBNeexDhVBLcl0Y6f8ldvr2zWAiOR3MqZLVTsKPbhvPsoS9jyZ2o4bTaXp
-	iWrQAH70QRRh/gs+yMneXHPZhHn5wRUSN86KPSWxfMIXg+k/nhlgRS0D+0Ylap6n
-	wuJoVg==
-Received: from mail-qt1-f200.google.com (mail-qt1-f200.google.com [209.85.160.200])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 4ccyfb1nm9-1
-	(version=TLSv1.3 cipher=TLS_AES_128_GCM_SHA256 bits=128 verify=NOT)
-	for <platform-driver-x86@vger.kernel.org>; Wed, 18 Feb 2026 08:43:44 +0000 (GMT)
-Received: by mail-qt1-f200.google.com with SMTP id d75a77b69052e-506a07740bdso787795741cf.2
-        for <platform-driver-x86@vger.kernel.org>; Wed, 18 Feb 2026 00:43:44 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=oss.qualcomm.com; s=google; t=1771404224; x=1772009024; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=D11DLbhgRQAYOxcXhcBA1YEKOPZKFRqaz0G263o14M4=;
-        b=LV063I2p0LlYz/eqwKEbSZ6iCVslTNfnUjoozxj4OzMNuAUsB4yFhjz9nSgTKub2+w
-         aBCbzw6L2o2xVXs4XlOp2GOPCf+jmSjRAFF4b0BUoghdFxw7RLOCVuL3+d499ZFoQExP
-         m7LHU/Nq1T8i0T1wqEVjZ3eRCNvWSwvuxzU/pTSQO3XluMVB+2YW3BEQ8//OK1Bf0bPt
-         mpCLYLaA1f3q0hEMSQGvnkEGhXCEm1er2Tru/k0K/ZzdQYmbYi3yg6607gYKaTQAXO+t
-         fmY7nKgyx4l7U/zoZ6FnVHZIw2Ql7B7DGktWkA65/H2iuwlS7oWe4wacWgBD5LGlRFzs
-         NI9Q==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1771404224; x=1772009024;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-gg:x-gm-message-state:from
-         :to:cc:subject:date:message-id:reply-to;
-        bh=D11DLbhgRQAYOxcXhcBA1YEKOPZKFRqaz0G263o14M4=;
-        b=jo1kupMPMJIhh7nEIq5/2mb9Uy91gt+pBgB/YItrmK2CyRWuuu4jd0pi5PGxN0Yqu2
-         iKKpx1cova/fWM51WkyVE7wPpILiissvXN0ElAseBw3RmIcCxR+xUK8JL6b4cAwub/X8
-         FHNgqCbD/8f4h3O+fkj0qInYIEICuL9FxlRRRThWxKxF1C81WffuefzORcHW6024Jdvu
-         0nUA/nnjIEWZeFgIwnsp0UPoioJjkXZLQMWbOXShj5KP5MClAqmKQXW+Gpu1peZZVzpK
-         Dl8dtPaeMHYh4nJCduM7MeYiFYLZVRjuJlEueJumN/o8YZLUo+iIHdkGX1kHEdHXl1P+
-         L1zw==
-X-Forwarded-Encrypted: i=1; AJvYcCVKKKL9yVX+j5uaXB4Cz7G9aeSrlk9WNEQWvVw+ze2v/A03P/d9ynwCRRGtk/xdpC2270/HlN00anWceXGddym6lB0F@vger.kernel.org
-X-Gm-Message-State: AOJu0YyeggK38vC4uoQscFO855IT2lZgTf6xLlsWEHa0oL4W5/a6WNJF
-	Eaqks7x2Md6qiNTYRbFsXtt+66qCsZi7cBU05iu8x+sCmE6j3+7OA8Q+istaqC7kMuE9Chet56w
-	BijzsEjKoY8qon/zyeoms5F2nutlwLcpOTVB33fWi1Xi4J1XOF2gSi790NPLbFjHqCRf53Zp5pP
-	XM
-X-Gm-Gg: AZuq6aIgjFh2EjIqyKMGZXk09Yk6/GUSiL+C031115oVSfDs6Bq1SBu+GUtb9i4exgF
-	i2KRza37hIYXpUcaSzkOgzQzOcAlYnXvtCoobJuBEPUnv1Bzn02o69hcHNeTp8pqv4379zeeBAQ
-	9+4Hooq0Jn/wgNVGVpNDD2+UfTzRp+bs1fhnL99oQDzAO+6FimAAEyy0hJQ5HgZ8hFzuOX2wRM6
-	dvA8YeSHD1cNb+kMSCKrAQwicfo04kagaU02WHVUUdeMietE6rTKcbNfuh7bwr5YbMB/+R4Hq2A
-	MbuYslGM8Zh4W/4c41Od6F2II6vPcwK1clVwugVOwO9UHBWJ9CtmEGV5eEs8Y/pN8keZ+VKeFX8
-	bC1Fg5KdqC8SartuMexbQaFl/slu7dmVNIXydYbIauhnr3bjZaI8=
-X-Received: by 2002:a05:620a:2683:b0:8ca:55:ac72 with SMTP id af79cd13be357-8cb4c024fbamr1719913785a.61.1771404224352;
-        Wed, 18 Feb 2026 00:43:44 -0800 (PST)
-X-Received: by 2002:a05:620a:2683:b0:8ca:55:ac72 with SMTP id af79cd13be357-8cb4c024fbamr1719911885a.61.1771404223856;
-        Wed, 18 Feb 2026 00:43:43 -0800 (PST)
-Received: from brgl-qcom.home ([2a01:cb1d:dc:7e00:6f70:9a29:d138:f5ff])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-4834d5e11f5sm583750455e9.4.2026.02.18.00.43.42
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 18 Feb 2026 00:43:43 -0800 (PST)
-From: Bartosz Golaszewski <bartosz.golaszewski@oss.qualcomm.com>
-To: Linus Walleij <linusw@kernel.org>, Bartosz Golaszewski <brgl@kernel.org>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Dmitry Torokhov <dmitry.torokhov@gmail.com>,
-        Arnd Bergmann <arnd@kernel.org>, Hans de Goede <hansg@kernel.org>,
-        =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>,
-        Dan Carpenter <dan.carpenter@linaro.org>,
-        Bartosz Golaszewski <bartosz.golaszewski@oss.qualcomm.com>
-Cc: linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org,
-        platform-driver-x86@vger.kernel.org, stable@vger.kernel.org
-Subject: Re: [PATCH v2] gpio: swnode: restore the swnode-name-against-chip-label matching
-Date: Wed, 18 Feb 2026 09:43:38 +0100
-Message-ID: <177140420873.51570.16441963571525422397.b4-ty@oss.qualcomm.com>
-X-Mailer: git-send-email 2.47.3
-In-Reply-To: <20260211085313.16792-1-bartosz.golaszewski@oss.qualcomm.com>
-References: <20260211085313.16792-1-bartosz.golaszewski@oss.qualcomm.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="um22DUfD"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 351CEC2BC86
+	for <platform-driver-x86@vger.kernel.org>; Wed, 18 Feb 2026 09:55:59 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1771408559;
+	bh=NRpQhMohh6WsKxrrSGq1M9D/siF1vRsTHqItwmavLvg=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+	b=um22DUfD5TcqAsKNXhDGaYG1sbtAI8KOuwKJ+NBtaZPCOaCeuBc3uZ8IIJkZJzVnj
+	 M2/3uaaLpmNPNpr1nN5tg00iP6/te9txpu0yv7vecqfI/OUUV4KfKs1Uqaje3/Cgsc
+	 CvQtRdg2PmqstZtLcbvcolNukcLZ1uTjz/VhsZd13WGFYNu1gGilOv7voJbO0FnfDD
+	 rfBfe9qkFKCKm5uJ0MCtVBYzbRl3OkKrhQBTFG70+MGmDBkzCN0I1stqbjTunJj2kN
+	 tRg4o+hN9HiUbd9MNNULVDNQeQ2a/RS3jEsiethnvfR8ntr7tRkbVuh0MxAWSMHWWn
+	 PoPEbTuHAWnIA==
+Received: by mail-lj1-f182.google.com with SMTP id 38308e7fff4ca-3871017fea2so6578701fa.0
+        for <platform-driver-x86@vger.kernel.org>; Wed, 18 Feb 2026 01:55:59 -0800 (PST)
+X-Forwarded-Encrypted: i=1; AJvYcCWt/5F5xdp58HaK/i3kAAoCeXxWaqoT7e4oHeh+YBctgCMmdqtMKgBJP2CY4b1ePgEuMCpchlZtirhdebXBWBh3wgb0@vger.kernel.org
+X-Gm-Message-State: AOJu0YzVjU7P9HIdpCZDOoafrPqz+AE/ZOfa9GrjerwcHb4PSNLqS00j
+	ibsIJ+uBoBHGZ4cQt8icbMnu5HaZ9i9et7baEx+/tNhBhesVAmRM6VPQqRJlDfZH9Cmn07ASN9g
+	Djn4D1Rx6/trwRSrBAaay0ntdKvItKY8RpH82cWCb/Q==
+X-Received: by 2002:a05:6512:3415:b0:59e:6312:bf31 with SMTP id
+ 2adb3069b0e04-59f83b0bbf8mr531389e87.19.1771408557828; Wed, 18 Feb 2026
+ 01:55:57 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 8bit
-X-Proofpoint-GUID: gOs3ADjubOeZjj7vTE6DIFoch1V43yqy
-X-Proofpoint-Spam-Details-Enc: AW1haW4tMjYwMjE4MDA3NiBTYWx0ZWRfX/6E1R+r6ueEC
- C/ifsb65yrWYsnYMUOEQbSEiveKCWx2kFwVV3IhXjBoC54dmOqLpQxyXn7aZRyROB0fUzIUGBK7
- 7xwaVYd+kVQTfhptuLrQ5VWn2ZACVWV4cbziTFB+F8SMgh0w3ZF5IG+QqvoGtcv6FdihWNIVr7d
- QqnwAQFnYcCkELEoaxbKV436lJub+fHgfXwwB7OFEXE/UItuOd3s3/aioVVrCS0V9R5bw9KmVHX
- EGCGygw/tTZ8YzzCduliqEEy1+OBgJsKc97iIkOFqGQPTQL2tQoysPjgT4Z0AE7sZlsS4W55GJM
- KyZxB9onBnLPTFQJ4jJZJ6bH3K/2oLLBRdT0N8QRKPZRO0DUdOnJObrnNwPAaihN2YGjZuVSPUW
- gjcHyGI7CFDft6YKTylhwc+zYAy8w1co2VshIXGIQghH2emA1MJBtugwUz+cbjHj23/3X4azoA1
- eWY7gMeiOu8rRXqC/nQ==
-X-Authority-Analysis: v=2.4 cv=JNo2csKb c=1 sm=1 tr=0 ts=69957bc0 cx=c_pps
- a=JbAStetqSzwMeJznSMzCyw==:117 a=xqWC_Br6kY4A:10 a=IkcTkHD0fZMA:10
- a=HzLeVaNsDn8A:10 a=s4-Qcg_JpJYA:10 a=VkNPw1HP01LnGYTKEx00:22
- a=Mpw57Om8IfrbqaoTuvik:22 a=GgsMoib0sEa3-_RKJdDe:22 a=VwQbUJbxAAAA:8
- a=EUspDBNiAAAA:8 a=10r_2F6UnNXIiLmb3qwA:9 a=QEXdDO2ut3YA:10
- a=uxP6HrT_eTzRwkO_Te1X:22
-X-Proofpoint-ORIG-GUID: gOs3ADjubOeZjj7vTE6DIFoch1V43yqy
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1121,Hydra:6.1.51,FMLib:17.12.100.49
- definitions=2026-02-17_04,2026-02-16_04,2025-10-01_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
- adultscore=0 malwarescore=0 priorityscore=1501 impostorscore=0 suspectscore=0
- spamscore=0 clxscore=1015 bulkscore=0 phishscore=0 lowpriorityscore=0
- classifier=typeunknown authscore=0 authtc= authcc= route=outbound adjust=0
- reason=mlx scancount=1 engine=8.22.0-2601150000 definitions=main-2602180076
+References: <b553243c-9ec6-4016-9fd6-d33f549a3dad@proton.me>
+ <ef96006e-ca94-4525-9727-4a6011fde7e1@kernel.org> <54082217-0eff-49f6-b4f1-0daed58c2568@proton.me>
+ <aZSkqGTqMp_57qC7@google.com>
+In-Reply-To: <aZSkqGTqMp_57qC7@google.com>
+From: Bartosz Golaszewski <brgl@kernel.org>
+Date: Wed, 18 Feb 2026 10:55:46 +0100
+X-Gmail-Original-Message-ID: <CAMRc=Mfd1dD7XL4smPtRTVD8vhGR=PmLLcNz2t1Q8+jwKbm5Mg@mail.gmail.com>
+X-Gm-Features: AaiRm524czFdjlNwe0i51ZfItUOgkJpBREFIZiJy6HIsyqOh-P53W_BgxqN4b3c
+Message-ID: <CAMRc=Mfd1dD7XL4smPtRTVD8vhGR=PmLLcNz2t1Q8+jwKbm5Mg@mail.gmail.com>
+Subject: Re: pcengines_apuv2: LEDs/Input fails since v6.18
+To: Dmitry Torokhov <dmitry.torokhov@gmail.com>
+Cc: Tj <tj.iam.tj@proton.me>, Hans de Goede <hansg@kernel.org>, 
+	metux IT consult <info@metux.net>, platform-driver-x86@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
+On Tue, Feb 17, 2026 at 6:29=E2=80=AFPM Dmitry Torokhov
+<dmitry.torokhov@gmail.com> wrote:
+>
+> On Tue, Feb 17, 2026 at 03:25:01PM +0000, Tj wrote:
+> > On 17/02/2026 11:42, Hans de Goede wrote:
+> > > On 16-Feb-26 20:01, Tj wrote:
+> > >> Installed v6.19 recently and realised the heartbeat/network LED
+> > >> configuration I'd set wasn't working. Checking the log I see:
+> > >>
+> > >> kernel: platform gpio-keys-polled: deferred probe pending:
+> > >> gpio-keys-polled: failed to get gpio
+> > >> kernel: platform leds-gpio: deferred probe pending: leds-gpio: Faile=
+d to
+> > >> get GPIO 'apu2-leds/led-1'
+> > >>
+> > >> Looking through commits I found b8754092dfed4fc2fc
+> > >>
+> > >> platform/x86: pcengines-apuv2: Use static device properties
+> > >>
+> > >> After reverting it the LEDs operate as expected. This entered in v6.=
+18
+> > >> so will affect it as well.
+> > >>
+> > >> In v6.17 I see:
+> > >>
+> > >> kernel: platform gpio-keys-polled: deferred probe pending:
+> > >> gpio-keys-polled: unable to claim gpio 0
+> > >>
+> > >> that is a slight variation on the v6.19 report. I've not pin-pointed=
+ the
+> > >> cause yet.
+> > > This should be fixed by this patch:
+> > >
+> > > https://lore.kernel.org/linux-gpio/20260211085313.16792-1-bartosz.gol=
+aszewski@oss.qualcomm.com/
+> > >
+> > > If possible, please give a kernel with that patch added a spin
+> > > and confirm if it fixes things.
+> >
+> > It fixes the LED issue but causes massive log spamming (10's per second=
+)
+> > related to the gpio-keys-polled:
+> >
+> > [    0.000000] Linux version 6.19.2+debian+tj (linux@iam.tj) (gcc
+> > (Debian 12.2.0-14) 12.2.0, GNU ld (GNU Binutils for Debian) 2.40) #404
+> > SMP PREEMPT_DYNAMIC Tue Feb 17 14:19:16 UTC 2026
+> > ...
+> > [    0.000000] DMI: PC Engines apu2/apu2, BIOS v4.19.0.1 01/31/2023
+> > ...
+> > [    6.025741] input: gpio-keys-polled as
+> > /devices/platform/gpio-keys-polled/input/input0
+> > [    6.035231] gpio-keys-polled gpio-keys-polled: failed to get gpio
+> > state: -52
+> > ...
+> > [   19.545273] input: Power Button as
+> > /devices/LNXSYSTM:00/LNXPWRBN:00/input/input1
+> > ...
+> > [   21.742226] input: PC Speaker as /devices/platform/pcspkr/input/inpu=
+t2
+> > ...
+> > [  OK  ] Started dbus.service - D-Bus System Message Bus.
+> > [  OK  ] Finished e2scrub_reap.service - Re=E2=80=A6line ext4 Metadata =
+Check
+> > Snapshots.
+> > [  OK  ] Started virtlockd.service - libvirt locking daemon.
+> > [  OK  ] Started 819142] gpio   32.-keys-polled gpio  32.-keys-polled:
+> > failed to get gpio   32. state: -52
+> > 1;39msystemd-machined.service -=E2=80=A6and Container Registration Serv=
+ice.
+> > [  OK  ] Started systemd-logind.service - User Login Management.
+> > [   32.930711] gpio-keys-polled gpio-keys-polled: failed to get gpio
+> > state: -52
+> > [  OK  ] Finished grub2-common.service - Record successful boot for GRU=
+B.
+> > [   33.050784] gpio-keys-polled gpio-keys-polled: failed to get gpio
+> > state: -52
+> > [  OK  ] Started polkit.service - Authorization Manager.
+> >           Starting ModemManager.service - Modem Manager...
+> > [  OK  ] Started virtlogd.service - libvirt logging daemon.
+> > [   33.158927] gpio-keys-polled gpio-keys-polled: failed to get gpio
+> > state: -52
+>
+> I think the patch below should fix it.
+>
+> Bartosz, I think you should revert
+> 86ef402d805d606a10e6da8e5a64a51f6f5fb7e2 until after you audit all
+> existing gpio drivers. Breakign the kernel like that is not great.
+>
 
-On Wed, 11 Feb 2026 09:53:13 +0100, Bartosz Golaszewski wrote:
-> Using the remote firmware node for software node lookup is the right
-> thing to do. The GPIO controller we want to resolve should have the
-> software node we scooped out of the reference attached to it. However,
-> there are existing users who abuse the software node API by creating
-> dummy swnodes whose name is set to the expected label string of the GPIO
-> controller whose pins they want to control and use them in their local
-> swnode references as GPIO properties.
-> 
-> [...]
+Hi Dmitry!
 
-Applied, thanks!
+This change has been upstream for close to a year - it first appeared
+in v6.15-rc1. There have been very few reports (I think a couple
+initially and then none for months) and fixing this is typically
+trivial. It addressed an actual problem where these retvals would be
+propagated to user-space and misinterpreted. I think we should fix
+this driver and keep this change. "Auditing" typically means never
+fixing things entirely.
 
-[1/1] gpio: swnode: restore the swnode-name-against-chip-label matching
-      https://git.kernel.org/brgl/c/ff91965ad8b214e0771bc5a15253f14f583a7649
-
-Best regards,
--- 
-Bartosz Golaszewski <bartosz.golaszewski@oss.qualcomm.com>
+Bartosz
