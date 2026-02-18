@@ -1,121 +1,110 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-dy1-f171.google.com (mail-dy1-f171.google.com [74.125.82.171])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 676502DF6F6
-	for <platform-driver-x86@vger.kernel.org>; Wed, 18 Feb 2026 20:21:29 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1570A34A3D9
+	for <platform-driver-x86@vger.kernel.org>; Wed, 18 Feb 2026 20:59:02 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=74.125.82.171
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1771446089; cv=none; b=rsQrpigZ/St6XlbdVJvt5+79kvaBGdNZ6tJP6/3KPGiIToxN6i1HGVtDREHtDJpvPKRrI4AYE3mKEH/amTBtyvRwuRq1tOozv80t/W+u41alqUBA00NLMOPEMj2JTWys+V3snmscWC1/xN99HZJ/uRpCSrcP0B2c0C0mppRFYtQ=
+	t=1771448345; cv=none; b=TeQurLdLNNntFcoU8hOMlMIe5puSZCFHizqqjABz9lTixSUD6sMwKEQmVrwDAFycmx0IBuqaKDKqlystSfRxozqXt2fHKeoTUiaNouZc11uxM7hgHjJkOudmHdojQnJSgC6Pifa3Umw3jBpjSWv/rg1xYU016+XnTGWYAjfQtSM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1771446089; c=relaxed/simple;
-	bh=c54sKX0Ba/Rbm5H0lVYNc8FfjUZyZetYxz9fBemIu3c=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=jxDgsxXd2bV9raPmIiMn+gVegpE1+Ee82jhYI79/DOJ4+yyROtqbOB7VY+nqQjJDGJvpLhQKgAHz/Ey61SPrtrNrHow6DSjNbd6iBMoY9lFhGtRKpvcXp+YNo6Jw5Rcmqca1C+HxJ2/9Hx1VBI1rLeShz7w9w5fdpo6zByFeX4o=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=OpGlx1m+; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1771448345; c=relaxed/simple;
+	bh=pnl7tVGSI/jbazZU1HXqvEWLoN/pFhNyqDP8Iv9cFkI=;
+	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
+	 Content-Disposition; b=m6KkCLur/AhRbE0N1oX3SirzyaF7VhKA0Ci0j0TGnBQ4PSKVWB9aRK+iRWdjhLVkOuv2+qJkQTcMQPoVreIW9Wl00N6imohMRyCQdpuPamhVYvVwMvs4Y4Me0s/T2DE+JkViI5jFJiO/j0aczhjutS8I5ABNa6qAmLMGXET8CP4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=kCaiypTY; arc=none smtp.client-ip=74.125.82.171
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="OpGlx1m+"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 012F2C19423
-	for <platform-driver-x86@vger.kernel.org>; Wed, 18 Feb 2026 20:21:28 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1771446089;
-	bh=c54sKX0Ba/Rbm5H0lVYNc8FfjUZyZetYxz9fBemIu3c=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-	b=OpGlx1m+LTrCn3IXYG63TipSMs/ks1VG3ZzRZaC7ixXr8oZji1An7yJvlbEeQ+cpf
-	 OsMRAjjtyf64TZj1FVR/LBI6XdQcARwi7PFOyNCMKCAPd/3z8ZBkV9X9lqMjsElme0
-	 2DKmEqAHTsbeibeev1WsyaFJCI12uo9YDQlD3v9Vphkq21sGDn527wULBs4ECrQq0l
-	 3KZzHk3CMp13X+XbOfPzfDoZ+OLmA/mBeZE03kbUI0REAOdnnvHHvC7DwynkUo5MNv
-	 ugW1W+s4tV4s6rgAKtk8TemyV4AyIg3CSPba78ffdJZTLSZZKeSubLGm6IoUVzxG9C
-	 R9WXjksfZqH0w==
-Received: by mail-lj1-f174.google.com with SMTP id 38308e7fff4ca-387097ae2e3so2550001fa.2
-        for <platform-driver-x86@vger.kernel.org>; Wed, 18 Feb 2026 12:21:28 -0800 (PST)
-X-Forwarded-Encrypted: i=1; AJvYcCWjiEY8qZNLn37ZU1O5L0SgXXsU8R1wq7PATPqiwX98/uz59jNCBAXnMiegP+UG7hysLall9TqDQTCf+ioyZhv1YNd9@vger.kernel.org
-X-Gm-Message-State: AOJu0Yz+Tq6B+qvMM2l9Y4FzU8itTzndtXe5xqj5/2O694OdeFYvM7Pb
-	XuvWVOKy2RMU6qedozsGov8TViYaeyStXMZP//Kq+rx9gVYFdS/R9gKiCcCCFbyxr4t4qUjSPLM
-	JfVSn6fU1bXeiHGuKPHq0EOQsw0N9DKLHaIgfZ0/BhQ==
-X-Received: by 2002:a05:651c:1988:b0:387:176e:68f4 with SMTP id
- 38308e7fff4ca-3881b9a2558mr43425761fa.44.1771446087615; Wed, 18 Feb 2026
- 12:21:27 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="kCaiypTY"
+Received: by mail-dy1-f171.google.com with SMTP id 5a478bee46e88-2ba88e53b46so716530eec.1
+        for <platform-driver-x86@vger.kernel.org>; Wed, 18 Feb 2026 12:59:02 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1771448342; x=1772053142; darn=vger.kernel.org;
+        h=content-disposition:mime-version:message-id:subject:cc:to:from:date
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=4I9ASmF9ljQ0NQCC/MWXj1TYs/qTEfdHfffzqvwGNaA=;
+        b=kCaiypTYIN39DkNr98m9nMVSKK0VfL0lsxS2xPHKJDNbj8ngmolzpIBTLjwfC4d3Ac
+         spE25HqX41n9LbteZABxYrpIFCjbEVFILU+V+ZlXI3FR2Vj90QfcdkLiSJccmuc1AoCM
+         HFzy3vnOOkOwmh4xW6CbMlEqt2rVdk2oSG9g1DDSuqbmgrDziopSLK9hEQh0qc5uthDH
+         pDNAKv8/i3JqUT5eTQidd1rjrlZJJpY4kWN1/emzWsA6c3xo01MgMER8mrirAf51FpEz
+         SI6c96zRWugZwGcW1fkrBFoDLDnvXA9O7FvHbQ7fN3GBeT0uAFkIL92Wrw4AkY3chtPh
+         bzFQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1771448342; x=1772053142;
+        h=content-disposition:mime-version:message-id:subject:cc:to:from:date
+         :x-gm-gg:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=4I9ASmF9ljQ0NQCC/MWXj1TYs/qTEfdHfffzqvwGNaA=;
+        b=PvRwJBsfDG8IXH69gFM82THjiT2PLJV+pHC5yI82HZ+yuRSP0qnAmekpmGjvL+dt8t
+         HyS0zqyvgTMdu3DkAVWGDRtTcUePJGdR7vDB5QYcjxF4NVrx2nCwjJ5F9oO3vWBo+jyf
+         4elVKdXxoIaVkSXaNdFG5qxR/ApEoZoDrqq7NHxF9KbQz9ycZoz7GBkU59zfrGeubvnm
+         27ulfL6mkNBSDLyMFqZKKT5kRUx8S4Ahcyc9Mk01ECx7piK4P8EACn0dMK7vILqSIff0
+         LROUlEfppf1ckAxOwzWEkkeViHtyF7iYsRDjOfRoFm3PrHFvmk6mIAgSl/criDwf00WG
+         kmJw==
+X-Forwarded-Encrypted: i=1; AJvYcCVRIruGBbLteWzLUMu4Dvhk9f5BiK1w0RlU+nuisrMiJURqp7rfAORhz3GZDVVNsGHCKaoVHvgV/9RTpBpBz5lZWsnM@vger.kernel.org
+X-Gm-Message-State: AOJu0Yxhcn48Nfs5a1yodhxyE+JdcZM2Ya2npBK5sq5eBUhdov8p5mt9
+	/tKcxMq3EZ7wy0EnZlStg6nFVo18vYO8J1Rv1/wIUnsIfRF13OjAv8pk
+X-Gm-Gg: AZuq6aKJdcCqCZpkPvn50H+//yhg0VNEMLQob4LvCztgT+P2MYCKpFGTS+iOyFJoU3W
+	SfL/OIamDSJCL2NtggpLZT3n62ixSoZ7VujdUrm+ZtAnm+AK6yCoy84Tyz30nNp0QPF2m7CHCwB
+	H0aurFNEs/EgJcINfaSg4xLv4UYByiLQ6IXMu+hIYlde/qxdkE45pgIUZMyZ/VPHhczbedtcsLT
+	hd9YBQ9Cieo2z6qxCn7AwW9AMrPbcIo5Eneq/DzpFeD1gpIpXT7Wttr7wsrjXqskrNpujBZWlFw
+	zMzJgtGXtv5FUY1auX84chJ2I374zj5mjjmUtFxFoQM0cPc372k3+sz07JeGX4L0Y1VBhtlRUuy
+	D/xbh+6hq7jsFN200aApzDsGOUGqbMS13Z6OXervJvW8l+SkRni3Tsl7gvVNta/qBPjsqeMqLj3
+	x+LL68HEJtf9sOPrJyBaUSmS7mt5oFbd8KABrD8MNoAsk3gdc5jSgGTFsTHStTSYUC
+X-Received: by 2002:a05:7301:5f04:b0:2b7:4f83:9a84 with SMTP id 5a478bee46e88-2bd50a9aa9fmr1215235eec.17.1771448342097;
+        Wed, 18 Feb 2026 12:59:02 -0800 (PST)
+Received: from google.com ([2a00:79e0:2ebe:8:265b:f5ad:9e03:677e])
+        by smtp.gmail.com with ESMTPSA id a92af1059eb24-12742cad9desm19386182c88.11.2026.02.18.12.59.01
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 18 Feb 2026 12:59:01 -0800 (PST)
+Date: Wed, 18 Feb 2026 12:58:59 -0800
+From: Dmitry Torokhov <dmitry.torokhov@gmail.com>
+To: Santosh Kumar Yadav <santoshkumar.yadav@barco.com>
+Cc: Peter Korsgaard <peter.korsgaard@barco.com>, 
+	Hans de Goede <hansg@kernel.org>, Ilpo =?utf-8?B?SsOkcnZpbmVu?= <ilpo.jarvinen@linux.intel.com>, 
+	Linus Walleij <linusw@kernel.org>, Bartosz Golaszewski <brgl@kernel.org>, 
+	platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org
+Subject: [PATCH] platform/x86: barco-p50-gpio: normalize return value of
+ gpio_get
+Message-ID: <aZYn_xDxBXn_Ijem@google.com>
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <b553243c-9ec6-4016-9fd6-d33f549a3dad@proton.me>
- <ef96006e-ca94-4525-9727-4a6011fde7e1@kernel.org> <54082217-0eff-49f6-b4f1-0daed58c2568@proton.me>
- <aZSkqGTqMp_57qC7@google.com> <CAMRc=Mfd1dD7XL4smPtRTVD8vhGR=PmLLcNz2t1Q8+jwKbm5Mg@mail.gmail.com>
- <aZX0EynAKvqXWzq2@google.com>
-In-Reply-To: <aZX0EynAKvqXWzq2@google.com>
-From: Bartosz Golaszewski <brgl@kernel.org>
-Date: Wed, 18 Feb 2026 21:21:14 +0100
-X-Gmail-Original-Message-ID: <CAMRc=Md3kUVOEshvPiwv=xvRRNwQndcP=hsbyMOJn4c2=+CaiA@mail.gmail.com>
-X-Gm-Features: AaiRm53FFX7xhATLtBiNhJUuaem1VvZB6egqhtvvKfYRgp4q-QicxWWcSil6WQQ
-Message-ID: <CAMRc=Md3kUVOEshvPiwv=xvRRNwQndcP=hsbyMOJn4c2=+CaiA@mail.gmail.com>
-Subject: Re: pcengines_apuv2: LEDs/Input fails since v6.18
-To: Dmitry Torokhov <dmitry.torokhov@gmail.com>
-Cc: Linus Walleij <linusw@kernel.org>, Tj <tj.iam.tj@proton.me>, 
-	Hans de Goede <hansg@kernel.org>, metux IT consult <info@metux.net>, platform-driver-x86@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-On Wed, Feb 18, 2026 at 6:25=E2=80=AFPM Dmitry Torokhov
-<dmitry.torokhov@gmail.com> wrote:
->
-> > >
-> > > I think the patch below should fix it.
-> > >
-> > > Bartosz, I think you should revert
-> > > 86ef402d805d606a10e6da8e5a64a51f6f5fb7e2 until after you audit all
-> > > existing gpio drivers. Breakign the kernel like that is not great.
-> > >
-> >
-> > Hi Dmitry!
-> >
-> > This change has been upstream for close to a year - it first appeared
-> > in v6.15-rc1. There have been very few reports (I think a couple
-> > initially and then none for months) and fixing this is typically
-> > trivial. It addressed an actual problem where these retvals would be
-> > propagated to user-space and misinterpreted. I think we should fix
-> > this driver and keep this change. "Auditing" typically means never
-> > fixing things entirely.
->
-> [+LinusW as co-maintainer]
->
-> That's ... an interesting stance. You couldn't even bother going
-> through your own subsystem before applying a change that could break
-> user's systems.
->
+The GPIO get callback is expected to return 0 or 1 (or a negative error
+code). Ensure that the value returned by p50_gpio_get() is normalized
+to the [0, 1] range.
 
-My stance is that I don't want a knee-jerk reaction of reverting a
-valid change after one report (with a fix queued) several months after
-the change was made. If more people start complaining then I won't
-oppose a revert.
+Signed-off-by: Dmitry Torokhov <dmitry.torokhov@gmail.com>
+---
+ drivers/platform/x86/barco-p50-gpio.c | 5 ++++-
+ 1 file changed, 4 insertions(+), 1 deletion(-)
 
-> Here is your first approximation from gemini:
->
-> Based on my analysis of the drivers in kernel/linux-next/drivers/gpio/, t=
-he following drivers have GPIO line getters that return values outside
->   the expected [0, 1] range (when they should return normalized boolean v=
-alues) or a negative error code:
->
->
->    1. `gpio-bd9571mwv.c`: bd9571mwv_gpio_get() returns val & BIT(offset),=
- which can be any power of 2 depending on the offset.
->    2. `gpio-cgbc.c`: cgbc_gpio_get() returns (int)(val & (u8)BIT(offset))=
-, which is not normalized to 0 or 1.
->    3. `gpio-da9055.c`: da9055_gpio_get() returns ret & (1 << offset), whi=
-ch is not normalized.
->    4. `gpio-lp873x.c`: lp873x_gpio_get() returns val & BIT(offset * BITS_=
-PER_GPO), which is not normalized.
->    5. `gpio-stp-xway.c`: xway_stp_get() returns (xway_stp_r32(chip->virt,=
- XWAY_STP_CPU0) & BIT(gpio)), which is not normalized.
->    6. `gpio-tps65086.c`: tps65086_gpio_get() returns val & BIT(4 + offset=
-), which is not normalized.
->    7. `gpio-viperboard.c`: vprbrd_gpiob_get() returns gpio->gpiob_val & (=
-1 << offset) in the branch where the GPIO is configured as an output.
->
+diff --git a/drivers/platform/x86/barco-p50-gpio.c b/drivers/platform/x86/barco-p50-gpio.c
+index 6f13e81f98fb..360ffd8505d6 100644
+--- a/drivers/platform/x86/barco-p50-gpio.c
++++ b/drivers/platform/x86/barco-p50-gpio.c
+@@ -275,8 +275,11 @@ static int p50_gpio_get(struct gpio_chip *gc, unsigned int offset)
+ 	mutex_lock(&p50->lock);
+ 
+ 	ret = p50_send_mbox_cmd(p50, P50_MBOX_CMD_READ_GPIO, gpio_params[offset], 0);
+-	if (ret == 0)
++	if (ret == 0) {
+ 		ret = p50_read_mbox_reg(p50, P50_MBOX_REG_DATA);
++		if (ret >= 0)
++			ret = !!ret;
++	}
+ 
+ 	mutex_unlock(&p50->lock);
+ 
+-- 
+2.53.0.335.g19a08e0c02-goog
 
-Touch=C3=A9. I will go through these and fix them instead of reverting the
-patch, does it sound good?
 
-Bartosz
+-- 
+Dmitry
