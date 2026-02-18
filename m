@@ -1,158 +1,130 @@
-Received: from fhigh-b2-smtp.messagingengine.com (fhigh-b2-smtp.messagingengine.com [202.12.124.153])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-dl1-f53.google.com (mail-dl1-f53.google.com [74.125.82.53])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BDB20487BE;
-	Wed, 18 Feb 2026 00:27:13 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=202.12.124.153
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8FF871F8AC5
+	for <platform-driver-x86@vger.kernel.org>; Wed, 18 Feb 2026 00:31:09 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=74.125.82.53
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1771374435; cv=none; b=kgfyDa2k/CkYWaT8UpSqJjI8tqEB4uqeYrgSSjjqGZdeo92nHIIIIUZHRrZa/YSNwomx/2SvSo2eCfdzrPDAkh+DP9iykeOKVwGJdvqMYNPHxMkPmdgQlAUnws48jU1j94S5W6YvCaXEuaJDOkjBiT1c8ARKexmiRzdpHAdXW78=
+	t=1771374670; cv=none; b=GYdSG6xh9RxXQFKUdLJDfFAc1IWNZyay1x3N8ADLHSbtKXDYaKnLgeixW2E3Pnva0YnJSa0Rm4EuOg9ATzOXkKpPI7KJUKMD1p49qA2fgK63M7hpWOE9Q4JKUkXL4YUgXnPjuCYf3A0ZSbXqq1UOELc3pUCu6PzTfNybQYAEPpA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1771374435; c=relaxed/simple;
-	bh=TkDFHJPpEz2tchtFI9/HxFQeOm+Z59HFiNL8ev24LcM=;
-	h=MIME-Version:Date:From:To:Cc:Message-Id:In-Reply-To:References:
-	 Subject:Content-Type; b=UkdbiiBLp3tqLhHFYLs2R7tnvSLxskFH1eA/iDoPUXjycRvlL8+HWQfxLucnsRTNjcQCshXxhHas+waT+dqdik0+HHHXVhSvH+7f/Ye5T16JsHbfOVEfictHRH6bDoFOoK0eG8JOwkxznqZEZ8EyqboAj3gfGxDWa+5VQxPljQI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=squebb.ca; spf=pass smtp.mailfrom=squebb.ca; dkim=pass (2048-bit key) header.d=squebb.ca header.i=@squebb.ca header.b=oWNX4C2l; dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b=wpJcMzfp; arc=none smtp.client-ip=202.12.124.153
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=squebb.ca
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=squebb.ca
+	s=arc-20240116; t=1771374670; c=relaxed/simple;
+	bh=Y2Fa0g/eiWnBGtl7TW6Y8Fxqa981wFYoJqnEQ9J5DTI=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=CvYw/A/IBh9cHLfj1Bekq2buaRij6rfwNtig6RI9LknE8KJ97lpcnNMZinA9hEEW8/ugm5qehDtPJKw89/mU2ZzUf1g4jVE6TTllvqTQY6//MPH6bTH6VVKdM79rzPVbKlPCS1+XF06+LCm5kv0GLg5kl1DOzOsY7KFMWb/s190=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=H7EHxQCQ; arc=none smtp.client-ip=74.125.82.53
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=squebb.ca header.i=@squebb.ca header.b="oWNX4C2l";
-	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="wpJcMzfp"
-Received: from phl-compute-02.internal (phl-compute-02.internal [10.202.2.42])
-	by mailfhigh.stl.internal (Postfix) with ESMTP id AD5F57A007C;
-	Tue, 17 Feb 2026 19:27:12 -0500 (EST)
-Received: from phl-imap-08 ([10.202.2.84])
-  by phl-compute-02.internal (MEProxy); Tue, 17 Feb 2026 19:27:13 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=squebb.ca; h=cc
-	:cc:content-transfer-encoding:content-type:content-type:date
-	:date:from:from:in-reply-to:in-reply-to:message-id:mime-version
-	:references:reply-to:subject:subject:to:to; s=fm1; t=1771374432;
-	 x=1771460832; bh=luuMj7AruSDdHPt+p8wk2WOL4dgaL0k7gqiVYtWP0lk=; b=
-	oWNX4C2lhBowsAugv2sscghZ+LdDcFv0RmyL69MxFAc6k0oaBYQrPV3OawwTixtS
-	JQ1l+NhRisgQcTIsK9x2fBvcF5X2D5fPR6Ukw4Lrzbf1qnqd5t6OeBS70IDCGx5N
-	2dpPBbOFPLRKuUn82mMVt3p8Z5DNuDUGddQ3CQLMFwIx7hb/DxWo68AabcP0d5IS
-	DAE2r9GCwdfSuyMWVk1x0nN+yqoDrOpxToa/EOb6DaAxlh+DPiO/dZdGiI0PpSxy
-	WLwX8kw+4XIEIexusrJU+ckQRq8GzUq3iIfWaq2/KsFYr+nK961cL5YLPBee8UnS
-	YFk0xmDSBXkMR6ajdRKOuA==
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-	messagingengine.com; h=cc:cc:content-transfer-encoding
-	:content-type:content-type:date:date:feedback-id:feedback-id
-	:from:from:in-reply-to:in-reply-to:message-id:mime-version
-	:references:reply-to:subject:subject:to:to:x-me-proxy
-	:x-me-sender:x-me-sender:x-sasl-enc; s=fm3; t=1771374432; x=
-	1771460832; bh=luuMj7AruSDdHPt+p8wk2WOL4dgaL0k7gqiVYtWP0lk=; b=w
-	pJcMzfpJ5xbWf969xUxj0bYasR8XwTup9Denl72CjK8TfVVZ9li8JutTU4dCGrVp
-	o+V65bYTCi3u6wgAa7l7x5I+BzEAtlpqgtmPcTx1FPDjYHxTnI9meiIjSKXD1Dd0
-	HChdKkrqkt4mgggh21nYRnf6jWf6EfeaPlGIAqP5frZIs6qYdnj4x5Q0wQ4ZD01t
-	EIlk4u5AJBujf4BcMr56MZOImmFQoEQlXhfz5pA2dA94ioeut1WKTXfK5u29DNAW
-	Iy+3WfIqi1M7ScCsAgWhM7/Wjk/6WeN5JEhHGuLnwsOgLxElM1qcQmd7dPuZCFFu
-	+jidvGQgw4I5Xu3WcMYDw==
-X-ME-Sender: <xms:XweVaR_amm90TiYLOcWOniXnDTT1Hs6FzcQi0okM9Rt447A3D_NDzQ>
-    <xme:XweVaQiNCXdXnkkcof9hODfG0Ueol36uISd5FWCVZcSUSQsWHqoUhgoQZ4ciymowd
-    ZZJwR8PwOHfLZMpjI_bp7pP10UiY5GdVi-gYlXHCnyDfU2KL3CTaLk>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeefgedrtddtgddvvdduudelucetufdoteggodetrf
-    dotffvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdfurfetoffkrfgpnffqhgenuceu
-    rghilhhouhhtmecufedttdenucesvcftvggtihhpihgvnhhtshculddquddttddmnecujf
-    gurhepofggfffhvfevkfgjfhfutgfgsehtjeertdertddtnecuhfhrohhmpedfofgrrhhk
-    ucfrvggrrhhsohhnfdcuoehmphgvrghrshhonhdqlhgvnhhovhhosehsqhhuvggssgdrtg
-    grqeenucggtffrrghtthgvrhhnpefhuedvheetgeehtdehtdevheduvdejjefggfeijedv
-    geekhfefleehkeehvdffheenucevlhhushhtvghrufhiiigvpedtnecurfgrrhgrmhepmh
-    grihhlfhhrohhmpehmphgvrghrshhonhdqlhgvnhhovhhosehsqhhuvggssgdrtggrpdhn
-    sggprhgtphhtthhopeelpdhmohguvgepshhmthhpohhuthdprhgtphhtthhopeguvghrvg
-    hkjhhohhhnrdgtlhgrrhhksehgmhgrihhlrdgtohhmpdhrtghpthhtohepkhhuuhhrthgs
-    sehgmhgrihhlrdgtohhmpdhrtghpthhtohepfigprghrmhhinhesghhmgidruggvpdhrtg
-    hpthhtohephhgrnhhsgheskhgvrhhnvghlrdhorhhgpdhrtghpthhtohepihhlphhordhj
-    rghrvhhinhgvnheslhhinhhugidrihhnthgvlhdrtghomhdprhgtphhtthhopegtohhrsg
-    gvtheslhifnhdrnhgvthdprhgtphhtthhopehisehrohhnghdrmhhovgdprhgtphhtthho
-    pehlihhnuhigqdhkvghrnhgvlhesvhhgvghrrdhkvghrnhgvlhdrohhrghdprhgtphhtth
-    hopehplhgrthhfohhrmhdqughrihhvvghrqdigkeeisehvghgvrhdrkhgvrhhnvghlrdho
-    rhhg
-X-ME-Proxy: <xmx:XweVab9V9RdXyJ5l2ehQaxxDGcKsLjLi0ruGdkGV0eYfwHKS_zUDhg>
-    <xmx:XweVaUQDX8T5dOmSO-WZBcbMGNpesmaf8ZXY7p17rMrSG2M7DJZzsQ>
-    <xmx:XweVade0uWcoDOfy8n0QIU05xy0TEPUiMnlTWsYLI9YzD60Hi3bEfg>
-    <xmx:XweVaeQqNFs1mcSWEatkglHOJhtEUk_zHa8x6xRrrtH22-oUacjU0g>
-    <xmx:YAeVadAt0ngz8lODgO5-CdvucdTTlYyPBXMVehhKNIhIrYpZh0dpnz9P>
-Feedback-ID: ibe194615:Fastmail
-Received: by mailuser.phl.internal (Postfix, from userid 501)
-	id C5D512CE0072; Tue, 17 Feb 2026 19:27:11 -0500 (EST)
-X-Mailer: MessagingEngine.com Webmail Interface
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="H7EHxQCQ"
+Received: by mail-dl1-f53.google.com with SMTP id a92af1059eb24-12721cd256bso5879545c88.1
+        for <platform-driver-x86@vger.kernel.org>; Tue, 17 Feb 2026 16:31:09 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1771374669; x=1771979469; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=Sg0v5gzcAHvCWeUv8SrWGgkElA1mA5SgiIxc3XoTrGs=;
+        b=H7EHxQCQzO0WfhvoxtJjCdHi3nZgfw6X0lMl76bjBN+ISxt8UIMRJXOgOclTRkvAiS
+         KIjaFFBIwXZQXJsdC+C0/Ir7YEatWth1NPmPVvFZMw1kBq8tVrL4On0Lyjb9zuXM9ASu
+         WstOqUzxXOfgibQuEO+7WZDykWdDJJNpb7XSvzvIqQOiObLPRGBhiO17cseYCgWdGE8B
+         KHVQL8yKMYH5SPtMymKssb2Y4drPGU/s9ipDzOH/kwfB2XR9OU/4baSn7yhmTzNWaahc
+         S+bhmQDXzgixCo31wkGk7PRQLg6hWjqHtsMMZT9z2wLc6wOBRSuwe6gKZWT+uqIg70I4
+         KrUg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1771374669; x=1771979469;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-gg:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=Sg0v5gzcAHvCWeUv8SrWGgkElA1mA5SgiIxc3XoTrGs=;
+        b=b59N6GZ7iwOUS6NqjDXjmQD/nZXX9gcyKTPMArZNdpF2VI3MiH678TpOp5lOG4fbBw
+         gXPcOnajZz5ZRSV8UKpuvoX0ao5WrYcqibC8/tYkYh0bM6hzD5UzLIzUaQ/kELBAhXNM
+         yDzwvz+6pgQD+1aw/a2M4gKHccfmlzSaeQFPAjo2/QsTJb/ZKT/aWw7aeaBVxhDfuHjL
+         X7YCa9o2d49xb6KqTSLkfa8bR4Y1HfjBC84d7o3caUmd9szCQ8h/N9pWoEQWEt4Hb8Xu
+         WwAR9aakxkw14SztbTFxP5+F0XeygcXeQG9bsETkCOZJ1CVP976uCGJhhfrX5HIkbmkK
+         IkIw==
+X-Forwarded-Encrypted: i=1; AJvYcCWr/2jrX75aNXvRgs09gjnh3iuWRQA994eHID7AOBO1/yjLWG4kyVo6pcRTcdEFcW8Rv0buG+1UppC7/HX6gA3r1kcv@vger.kernel.org
+X-Gm-Message-State: AOJu0Yxq4oodSIXtgMYRJeJoiC1ahD8J7k2d+zhayrT5lV0UaBXd5lJP
+	drqp+dTRcvB0/EzYFsWll+eIMYfv1rMeoNqI/JiXUEBWVZVVG+Gnh2Ij
+X-Gm-Gg: AZuq6aJYfY2G13q3ShphWNsOPb43BN10N/VkLTU8GmQttylnZ6GArde2tIWdGrTzxq5
+	m59ER6mmPJ7RPYs80nzlkzVTGd9uT18LdXqJUeAPviemaHicy6LaKUDbiZRSilZQp9J6V0l95b5
+	QZSGjKOlElzR3h2LrVElX+t4+tphMhZ8DIRapqiIvMs850ZZJXkFE9e1UvuF1h04lDdo8CQZGaW
+	dfI1lkhMuKH82teIw/5dgVPm/xn/XfCeQGLFXZU96FxSETFQide6OFb4w3IW1ReifiNT2Z5vP0g
+	5BdERgdBwfHGJLo1TBUmwomqaiC+9WcF2RxGa8AOv5R5WSnvSUMfPj+fbo7efh6jCIffJiHbqF3
+	aKX7UnPBgzCLq69dW1qBjBxBBUEBBRYpnr4LkHLHUWyACpYDji58aGlSfvfPomF90EZDAI+rtNo
+	mJM4Sv5x3hJV0NyfT01D5j6RNo6cdk/382BM0PGWj61i+39HDt8oQxN7kZjEuX2wlN
+X-Received: by 2002:a05:7022:2393:b0:127:369e:5d54 with SMTP id a92af1059eb24-12741b71059mr5293643c88.13.1771374668482;
+        Tue, 17 Feb 2026 16:31:08 -0800 (PST)
+Received: from google.com ([2a00:79e0:2ebe:8:968c:f102:3683:408a])
+        by smtp.gmail.com with ESMTPSA id 5a478bee46e88-2bacb66bd17sm17035569eec.28.2026.02.17.16.31.07
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 17 Feb 2026 16:31:08 -0800 (PST)
+Date: Tue, 17 Feb 2026 16:31:05 -0800
+From: Dmitry Torokhov <dmitry.torokhov@gmail.com>
+To: Bartosz Golaszewski <bartosz.golaszewski@oss.qualcomm.com>
+Cc: Linus Walleij <linusw@kernel.org>, 
+	Bartosz Golaszewski <brgl@kernel.org>, Andy Shevchenko <andriy.shevchenko@linux.intel.com>, 
+	Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Arnd Bergmann <arnd@kernel.org>, 
+	Hans de Goede <hansg@kernel.org>, Ilpo =?utf-8?B?SsOkcnZpbmVu?= <ilpo.jarvinen@linux.intel.com>, 
+	Dan Carpenter <dan.carpenter@linaro.org>, linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	platform-driver-x86@vger.kernel.org, stable@vger.kernel.org
+Subject: Re: [PATCH v2] gpio: swnode: restore the
+ swnode-name-against-chip-label matching
+Message-ID: <aZUIFiOYt6GOlDQx@google.com>
+References: <20260211085313.16792-1-bartosz.golaszewski@oss.qualcomm.com>
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-ThreadId: APCKaercSQrV
-Date: Tue, 17 Feb 2026 19:26:50 -0500
-From: "Mark Pearson" <mpearson-lenovo@squebb.ca>
-To: "Derek J . Clark" <derekjohn.clark@gmail.com>,
- =?UTF-8?Q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>,
- "Hans de Goede" <hansg@kernel.org>
-Cc: "Armin Wolf" <W_Armin@gmx.de>, "Jonathan Corbet" <corbet@lwn.net>,
- "Rong Zhang" <i@rong.moe>, "Kurt Borja" <kuurtb@gmail.com>,
- "platform-driver-x86@vger.kernel.org" <platform-driver-x86@vger.kernel.org>,
- linux-kernel@vger.kernel.org
-Message-Id: <b97310a0-0e3d-4ab4-a488-18d6211b8a1b@app.fastmail.com>
-In-Reply-To: <71066F1E-9310-490E-BE72-48D0547C9539@gmail.com>
-References: <20260215061339.2842486-1-derekjohn.clark@gmail.com>
- <20260215061339.2842486-3-derekjohn.clark@gmail.com>
- <d6ff122a-1ccc-422f-9c24-b95106469d9e@app.fastmail.com>
- <71066F1E-9310-490E-BE72-48D0547C9539@gmail.com>
-Subject: Re: [PATCH v2 2/6] platform/x86: lenovo-wmi-other: Limit adding attributes to
- supported devices
-Content-Type: text/plain
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20260211085313.16792-1-bartosz.golaszewski@oss.qualcomm.com>
 
+On Wed, Feb 11, 2026 at 09:53:13AM +0100, Bartosz Golaszewski wrote:
+> Using the remote firmware node for software node lookup is the right
+> thing to do. The GPIO controller we want to resolve should have the
+> software node we scooped out of the reference attached to it. However,
+> there are existing users who abuse the software node API by creating
+> dummy swnodes whose name is set to the expected label string of the GPIO
+> controller whose pins they want to control and use them in their local
+> swnode references as GPIO properties.
+> 
+> This used to work when we compared the software node's name to the
+> chip's label. When we switched to using a real fwnode lookup, these
+> users broke down because the firmware nodes in question were never
+> attached to the controllers they were looking for.
+> 
+> Restore the label matching as a fallback to fix the broken users but add
+> a big FIXME urging for a better solution.
+> 
+> Cc: stable@vger.kernel.org # v6.18, v6.19
+> Fixes: 216c12047571 ("gpio: swnode: allow referencing GPIO chips by firmware nodes")
+> Link: https://lore.kernel.org/all/aYkdKfP5fg6iywgr@jekhomev/
+> Acked-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+> Signed-off-by: Bartosz Golaszewski <bartosz.golaszewski@oss.qualcomm.com>
+> ---
+> Changes in v2:
+> - check if gdev_node and gdev_node->name are not NULL before trying to
+>   match the label (Hans & Dan)
+> - use the right link
+> - collect tags
+> 
+>  drivers/gpio/gpiolib-swnode.c | 19 +++++++++++++++++++
+>  1 file changed, 19 insertions(+)
+> 
+> diff --git a/drivers/gpio/gpiolib-swnode.c b/drivers/gpio/gpiolib-swnode.c
+> index 21478b45c127d..0d7f3f09a0b4b 100644
+> --- a/drivers/gpio/gpiolib-swnode.c
+> +++ b/drivers/gpio/gpiolib-swnode.c
+> @@ -42,6 +42,25 @@ static struct gpio_device *swnode_get_gpio_device(struct fwnode_handle *fwnode)
+>  
+>  fwnode_lookup:
+>  	gdev = gpio_device_find_by_fwnode(fwnode);
 
+By the way, should we extend gpio_device_find_by_fwnode() to use both
+primary and secondary nodes?
 
-On Tue, Feb 17, 2026, at 7:20 PM, Derek J. Clark wrote:
-> On February 17, 2026 3:54:09 PM PST, Mark Pearson 
-> <mpearson-lenovo@squebb.ca> wrote:
->>On Sun, Feb 15, 2026, at 1:12 AM, Derek J. Clark wrote:
->>> Adds lwmi_is_attr_01_supported, and only creates the attribute subfolder
->>> if the attribute is supported by the hardware. Due to some poorly
->>> implemented BIOS, this is a multi-step sequence of events. This is
->>> because:
->>> - Some BIOS support getting the capability data from custom mode (0xff),
->>>   while others only support it in no-mode (0x00).
->>> - Similarly, some BIOS support get/set for the current value from custom
->>>   mode (0xff), while others only support it in no-mode (0x00).
->>> - Some BIOS report capability data for a method that is not fully
->>>   implemented.
->>> - Some BIOS have methods fully implemented, but no complimentary
->>>   capability data.
->>>
->>> To ensure we only expose fully implemented methods with corresponding
->>> capability data, we check each outcome before reporting that an
->>> attribute can be supported.
->>>
->>
->>The Legion's aren't in the Linux program (with an asterisk for the Legion Go/Go2) - but if there's anywhere it's tracked or highlighted which platforms differ/have issues let me know. Not sure how widespread the issues is?
->>
->>I can try and let the Legion team know that there are platforms which (likely) aren't following the internal specs. It might be possible to improve things for future platforms?
->>
->>Mark
->
-> It's a mixture of different generations and models with different 
-> issues, I'm not really tracking it anywhere. Part of the issue is the 
-> spec has added/updated methods over time and the deprecated ones are 
-> still being used by hardware out in the world. I think this pattern is 
-> fairly good for most things. TBS I've recently found (from testers) 
-> that some things just need dedicated methods instead of the generic 
-> macros (CPU/GPU OC status for example) so I'll drop any of those in the 
-> series for now and add them back later. All in all IDK if there is much 
-> value in tracking these issues outside bug reports, as fixing them 
-> would likely require BIOS updates for hardware that is 2-4 generations 
-> old at this point and I highly doubt Lenovo intends to do something 
-> like that.
->
-> It's a fairly complicated and evolving spec, so my goal is to be at 
-> least 95% compatible. I don't think we'll be at 100% ever due to the 
-> wide array of different hardware that's available. I.e. the latest spec 
-> has ARM specific capdata as well so we may need to eventually move the 
-> driver to somewhere else, maybe platform/wmi? That's a discussion for 
-> later though as I have no experience with DT/ARM or a device that has 
-> it.
->
-Got it - thanks!
-(and yeah - chances of getting changes done to older platforms is.....small)
-Mark
+Thanks.
+
+-- 
+Dmitry
