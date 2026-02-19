@@ -1,159 +1,73 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.18])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5C815275AEB;
-	Thu, 19 Feb 2026 06:53:42 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.18
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AF35C34A3DA
+	for <platform-driver-x86@vger.kernel.org>; Thu, 19 Feb 2026 17:27:54 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1771484024; cv=none; b=IZFKUqJ4hhLrcw8FukgYqjmKFfgKyTbATGNlThAMnz2VbNBfBL/6AGSEPKdppmuR+SsAMfo7zdK/8BFcTDDtJ/aVz0fkbSc/qGTBhIWzvWF9SwjvRlRhZlC/goTHZmuZTpQgZiiPCkvG3PTyI9jZ2GIYPdmog8DgAevZpMjFHT0=
+	t=1771522074; cv=none; b=q8mHSVik45kvHkMJcm51ouMqn2r6cmM6AFllfyAGMOThr+SsL1fVbryR3W83Z9j3VuEO4Jwjy0AhfETWLFzzWA2wnx91kimlDguFcnHDTMaOFLgB0jzAYofDSG7JRREvovjeExs4wd5IFyjPC3m8Hg95g7o3scuRMLGPToOl9AY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1771484024; c=relaxed/simple;
-	bh=mUGtpDtI+pYLvLN8/jlVVukzx+jkyFh+aZPyBC0yMZA=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=deQFLN1n1JdQ9XhC4MVFG/hUJR/gtVt+pNpAvFt75AWRCqF01xGTTa8GbTau/dAhOR2MjViN2N2SSI7rOxZ3tf/CJP1SjbJshX9ouFz/DuRA7ETzgi/I9W7bdzQFEm+jQ7VZNCNIKTN0EB5tMOPbHcew+Aim26OXqUqakykR4IE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=pass smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=XGKkeM6U; arc=none smtp.client-ip=192.198.163.18
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.intel.com
+	s=arc-20240116; t=1771522074; c=relaxed/simple;
+	bh=pjZdu3iMGYegQatEghEpfjyHO0E7peTei/NrUF1U2qo=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=MMQL4YUMjeg1Ma46nV9xDdg5gj6+B4e01H4JC/xocYSh8VWPMtmDgvyuocHq0idokwyaI7cPNK3JneK20SPOjRDXl+WvuesUosjzcvb4U3B7od5qcXoirnsk9OtGSQwna3fnPHoZlAaWisdDUAFrPUEhvwfD9T05uwSuH9ul+t4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=HP9aGihG; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="XGKkeM6U"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1771484022; x=1803020022;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:content-transfer-encoding:in-reply-to;
-  bh=mUGtpDtI+pYLvLN8/jlVVukzx+jkyFh+aZPyBC0yMZA=;
-  b=XGKkeM6UMw+gLWVWF3Q1jfPAiTD1yUnOtwOxykfBjHn9c7ROVcNZtrIN
-   JgLCfrcmyCiSNeXO8TsaKMcM/Mfz6+3lcmceeXlJp+vYyFvmiFlg8EXaS
-   EHrH3A6nY7SXAPKy0Pa67vVCURuAnlr3HwII0pUPENoC+cfnAWYAz622i
-   KwsJpKgKuKkHPZMOUZihoAbMTI1wXTAYTJM9VQNqYpFd9PCAKHq8Dggg5
-   vxjbz7ZxBSdoOfx6+5qE1UhWrjacsSLDB+rBq4BHXQ63/ipGi2KQKY2t/
-   i3Rzo9vFVVis1juqVTumm0+f/L3Mm8n047HibrDk6v9QSsRpEO4I/+i26
-   Q==;
-X-CSE-ConnectionGUID: S2BFEkJAT4+zwqtrg8EjLw==
-X-CSE-MsgGUID: JYPu20ACT9akGKpwC2j0dw==
-X-IronPort-AV: E=McAfee;i="6800,10657,11705"; a="71767545"
-X-IronPort-AV: E=Sophos;i="6.21,299,1763452800"; 
-   d="scan'208";a="71767545"
-Received: from fmviesa002.fm.intel.com ([10.60.135.142])
-  by fmvoesa112.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 18 Feb 2026 22:53:41 -0800
-X-CSE-ConnectionGUID: fBOxgcIqQrGwlkAnkpsWMg==
-X-CSE-MsgGUID: eHrtIraeQwmaEuDaaHFNSw==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.21,299,1763452800"; 
-   d="scan'208";a="237418777"
-Received: from vpanait-mobl.ger.corp.intel.com (HELO localhost) ([10.245.244.114])
-  by fmviesa002-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 18 Feb 2026 22:53:38 -0800
-Date: Thu, 19 Feb 2026 08:53:36 +0200
-From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-To: Dmitry Torokhov <dmitry.torokhov@gmail.com>
-Cc: Bartosz Golaszewski <brgl@kernel.org>,
-	Bartosz Golaszewski <bartosz.golaszewski@oss.qualcomm.com>,
-	Linus Walleij <linusw@kernel.org>,
-	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-	Arnd Bergmann <arnd@kernel.org>, Hans de Goede <hansg@kernel.org>,
-	Ilpo =?iso-8859-1?Q?J=E4rvinen?= <ilpo.jarvinen@linux.intel.com>,
-	Dan Carpenter <dan.carpenter@linaro.org>,
-	linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org,
-	platform-driver-x86@vger.kernel.org, stable@vger.kernel.org
-Subject: Re: [PATCH v2] gpio: swnode: restore the
- swnode-name-against-chip-label matching
-Message-ID: <aZazcDYdoZBzuH6f@smile.fi.intel.com>
-References: <20260211085313.16792-1-bartosz.golaszewski@oss.qualcomm.com>
- <aZUIFiOYt6GOlDQx@google.com>
- <CAMRc=Md_x+DxmW742HRUW-jeg9_AW-stKkHUP9z13+M+POd4Tw@mail.gmail.com>
- <aZXyPjIjIDKCBLvs@google.com>
- <CAMRc=MdQmR-_Yqdh4TiHSzjmGVJY+0guDpFEM6F1QD_SJ2+T0Q@mail.gmail.com>
- <aZYPv1_kWQd9OdHD@google.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="HP9aGihG"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 6A755C4CEF7
+	for <platform-driver-x86@vger.kernel.org>; Thu, 19 Feb 2026 17:27:54 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1771522074;
+	bh=pjZdu3iMGYegQatEghEpfjyHO0E7peTei/NrUF1U2qo=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+	b=HP9aGihGVW30ypRqz92c6sTyBAg3RzU9RkOFsBHiHUl7blPGd4WlTHe9P7J6oI7hG
+	 zQy6E6cYfCXPpo//PRQ8M8tc4YjcK4Y+8TMFnwskAD8FmIbWh7EP93mOZrAnySwbRG
+	 NBHNxH2tKie9TNqFqiPhOmaTqm3LHASGs8VXxY8BJTHw/yrEQ5Ge76syjquhi21rf+
+	 eIcPVZvIOAoJmNQecu7Y/YtrJ6ZB/nNjUNE/eoGVXyhnWjRpF2j2uQuPmI0yCqQldL
+	 huLW2sqX7Tv06S2khuHdOuaJIOzhRjghdeFabc7XO8CeL+a9+KZT2oqW/UaizSJUbj
+	 MWt1ATOJ1QAzQ==
+Received: by mail-yw1-f180.google.com with SMTP id 00721157ae682-78fc4425b6bso10762057b3.1
+        for <platform-driver-x86@vger.kernel.org>; Thu, 19 Feb 2026 09:27:54 -0800 (PST)
+X-Forwarded-Encrypted: i=1; AJvYcCXnkkpddhkrSXUkqA8+blCS0J2phaB9YfDRGb5Ibt0Emx6HnjclkXgbEAXe+R1FLNcacsk2KAbabYfE6ATmPjTZt1Bv@vger.kernel.org
+X-Gm-Message-State: AOJu0YypBsxLC3ldfZQGHTJQPAw7dBcxL0ybSch6tKkoGzRI2QTX6Wqv
+	wwIA+K+g8kV/AB2wrGWA5gurVJwzdRNefywBaLjpy1/Z0uyPihiwXjAmqoWxhLmg9hAoGFnoPjF
+	tx4l+eRm/6ftKyc5V0ma3MSVw4GZJx3g=
+X-Received: by 2002:a05:690c:389:b0:796:3079:adb with SMTP id
+ 00721157ae682-797f71c5461mr51393367b3.19.1771522073732; Thu, 19 Feb 2026
+ 09:27:53 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <aZYPv1_kWQd9OdHD@google.com>
-Organization: Intel Finland Oy - BIC 0357606-4 - c/o Alberga Business Park, 6
- krs, Bertel Jungin Aukio 5, 02600 Espoo
+References: <aZYn_xDxBXn_Ijem@google.com>
+In-Reply-To: <aZYn_xDxBXn_Ijem@google.com>
+From: Linus Walleij <linusw@kernel.org>
+Date: Thu, 19 Feb 2026 18:27:42 +0100
+X-Gmail-Original-Message-ID: <CAD++jLnasBwVgR6LYeMjGEh1L=vcwsrY8o0ffEq4qNE_854LSA@mail.gmail.com>
+X-Gm-Features: AaiRm5376XrQnfqlnPI1YrAR3lvO_M6sy9UPF55mdrF_uGBuroNHsaWYxciYvuE
+Message-ID: <CAD++jLnasBwVgR6LYeMjGEh1L=vcwsrY8o0ffEq4qNE_854LSA@mail.gmail.com>
+Subject: Re: [PATCH] platform/x86: barco-p50-gpio: normalize return value of gpio_get
+To: Dmitry Torokhov <dmitry.torokhov@gmail.com>
+Cc: Santosh Kumar Yadav <santoshkumar.yadav@barco.com>, 
+	Peter Korsgaard <peter.korsgaard@barco.com>, Hans de Goede <hansg@kernel.org>, 
+	=?UTF-8?Q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>, 
+	Bartosz Golaszewski <brgl@kernel.org>, platform-driver-x86@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Wed, Feb 18, 2026 at 11:22:07AM -0800, Dmitry Torokhov wrote:
-> On Wed, Feb 18, 2026 at 07:08:22PM +0100, Bartosz Golaszewski wrote:
-> > On Wed, Feb 18, 2026 at 6:15 PM Dmitry Torokhov
-> > <dmitry.torokhov@gmail.com> wrote:
-> > > On Wed, Feb 18, 2026 at 09:42:28AM +0100, Bartosz Golaszewski wrote:
-> > > > On Wed, Feb 18, 2026 at 1:31 AM Dmitry Torokhov
-> > > > <dmitry.torokhov@gmail.com> wrote:
-> > > > > On Wed, Feb 11, 2026 at 09:53:13AM +0100, Bartosz Golaszewski wrote:
-> > > > > > Using the remote firmware node for software node lookup is the right
-> > > > > > thing to do. The GPIO controller we want to resolve should have the
-> > > > > > software node we scooped out of the reference attached to it. However,
-> > > > > > there are existing users who abuse the software node API by creating
-> > > > > > dummy swnodes whose name is set to the expected label string of the GPIO
-> > > > > > controller whose pins they want to control and use them in their local
-> > > > > > swnode references as GPIO properties.
-> > > > > >
-> > > > > > This used to work when we compared the software node's name to the
-> > > > > > chip's label. When we switched to using a real fwnode lookup, these
-> > > > > > users broke down because the firmware nodes in question were never
-> > > > > > attached to the controllers they were looking for.
-> > > > > >
-> > > > > > Restore the label matching as a fallback to fix the broken users but add
-> > > > > > a big FIXME urging for a better solution.
-> > > > > >
-> > > > > > Cc: stable@vger.kernel.org # v6.18, v6.19
-> > > > > > Fixes: 216c12047571 ("gpio: swnode: allow referencing GPIO chips by firmware nodes")
-> > > > > > Link: https://lore.kernel.org/all/aYkdKfP5fg6iywgr@jekhomev/
-> > > > > > Acked-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-> > > > > > Signed-off-by: Bartosz Golaszewski <bartosz.golaszewski@oss.qualcomm.com>
-> > > > > > ---
-> > > > > > Changes in v2:
-> > > > > > - check if gdev_node and gdev_node->name are not NULL before trying to
-> > > > > >   match the label (Hans & Dan)
-> > > > > > - use the right link
-> > > > > > - collect tags
-> > > > > >
-> > > > > >  drivers/gpio/gpiolib-swnode.c | 19 +++++++++++++++++++
-> > > > > >  1 file changed, 19 insertions(+)
-> > > > > >
-> > > > > > diff --git a/drivers/gpio/gpiolib-swnode.c b/drivers/gpio/gpiolib-swnode.c
-> > > > > > index 21478b45c127d..0d7f3f09a0b4b 100644
-> > > > > > --- a/drivers/gpio/gpiolib-swnode.c
-> > > > > > +++ b/drivers/gpio/gpiolib-swnode.c
-> > > > > > @@ -42,6 +42,25 @@ static struct gpio_device *swnode_get_gpio_device(struct fwnode_handle *fwnode)
-> > > > > >
-> > > > > >  fwnode_lookup:
-> > > > > >       gdev = gpio_device_find_by_fwnode(fwnode);
-> > > > >
-> > > > > By the way, should we extend gpio_device_find_by_fwnode() to use both
-> > > > > primary and secondary nodes?
-> > > > >
-> > > >
-> > > > That's already done on a higher lever for all fwnodes in gpiod_fwnode_lookup().
-> > >
-> > > How exactly? I am not talking about checking secondary node for the
-> > > fwnode that is used in the reference, I am talking about secondary
-> > > fwnode that might be assigned to the gpio chip and you need to check
-> > > both primary and secondary if they match with the fwnode that you call
-> > > gpio_device_find_by_fwnode() with.
-> > >
-> > 
-> > Right, I didn't quite get it. I was surprised to find out
-> > device_match_fwnode() - which we use in gpiolib - does not do it
-> > already. I'm wondering if this is something we should change in device
-> > core or only locally.
-> 
-> Yes, I think so (change in driver core). There is only a handful of
-> calls to device_match_fwnode() that they can be audited to make sure the
-> conversion is safe.
+On Wed, Feb 18, 2026 at 9:59=E2=80=AFPM Dmitry Torokhov
+<dmitry.torokhov@gmail.com> wrote:
 
-I believe there was already similar discussion and IIRC conclusion was to
-distinguish current device_match_fwnode() with something new that will check
-also secondary one. This way we can in a usual way convert drivers one-by-one
-if even required.
+> The GPIO get callback is expected to return 0 or 1 (or a negative error
+> code). Ensure that the value returned by p50_gpio_get() is normalized
+> to the [0, 1] range.
+>
+> Signed-off-by: Dmitry Torokhov <dmitry.torokhov@gmail.com>
 
--- 
-With Best Regards,
-Andy Shevchenko
+Reviewed-by: Linus Walleij <linusw@kernel.org>
 
-
+Yours,
+Linus Walleij
