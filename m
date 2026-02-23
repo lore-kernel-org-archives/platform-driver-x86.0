@@ -1,213 +1,117 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.12])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wr1-f42.google.com (mail-wr1-f42.google.com [209.85.221.42])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8350F155757;
-	Mon, 23 Feb 2026 14:26:30 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.12
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 27C66285C8E
+	for <platform-driver-x86@vger.kernel.org>; Mon, 23 Feb 2026 14:26:45 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.42
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1771856792; cv=none; b=J/GqWQXPH6QiwPbNy6Ir3b9vtDJojzbGXG1t5d+eLpEpwbp1XMfjwBEHnPpsnhWdzwbxo2fQvQFGsmKgT17EoGcSH+9vzeSMWbzg2NGphMZuJbMzV64969/lVnvyADmPXUxAgCQT1J/T9hFZUSsZJIGR57f0gHLd8an9gTXp0No=
+	t=1771856809; cv=none; b=etz3VUdCoBMkU6OP0AV13CRsNceVU4tSg4+yLC6htCY7oGPchZQX+9BaoTwoDskV6XSgE6cysCshuyCV1Qr7C80FL3yIIuy2b4e69o1uVt99FWHuPYVHhmnfc8Sv4ae25CS7+rsDPmLndjJQdF3sKXEcHVMBIY4k0mbEsiQuBtE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1771856792; c=relaxed/simple;
-	bh=THm2YjanHi/NW6jtN3MgnNNVAN3sGyyXJV+hKHS5Zws=;
-	h=From:Date:To:cc:Subject:In-Reply-To:Message-ID:References:
-	 MIME-Version:Content-Type; b=Zy3geaoAQl+lpce9XQMSk6hhaNpJi6FZlHa6lABm71d1tIyMqYwpAanp4RgXZ52ZAcySbLE4RsJjtd8cB+xMVCj1iA+2ExRFVrc8ty5HdHDR7UCPzhuj7s6202r/T2vf1Rud3VnUh5NfUKlXtRqKYwx9+L43v6I1FSuamoQW92A=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=pass smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=AUVy4hoU; arc=none smtp.client-ip=192.198.163.12
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.intel.com
+	s=arc-20240116; t=1771856809; c=relaxed/simple;
+	bh=BAx/sqSxmP9wJO5u8pT1N7rOIxxnAX7jnoOvquHzPpI=;
+	h=Message-ID:Date:MIME-Version:To:References:Subject:Cc:From:
+	 In-Reply-To:Content-Type; b=k/Z4F/0z7g3pKFobDvhYzLVfaprhshlhKYb9ZU6lOg89BJs76mgUGbQkOPvO/DTn0k51DNe4jY6gtDaRJPjyEKkM6WzFE7N54aoTq24oq8ntcHx1tHZEk5aDbkWudE32CBpip2mAnmANV2gQ5BSGFR71qFWXq7161In/oe83XrQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=sheffield.ac.uk; spf=pass smtp.mailfrom=sheffield.ac.uk; dkim=pass (2048-bit key) header.d=sheffield.ac.uk header.i=@sheffield.ac.uk header.b=Bb92kMoX; arc=none smtp.client-ip=209.85.221.42
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=sheffield.ac.uk
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=sheffield.ac.uk
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="AUVy4hoU"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1771856791; x=1803392791;
-  h=from:date:to:cc:subject:in-reply-to:message-id:
-   references:mime-version;
-  bh=THm2YjanHi/NW6jtN3MgnNNVAN3sGyyXJV+hKHS5Zws=;
-  b=AUVy4hoUKG0ubHiNnUnjyjbuxnZRWYCqGzvnT7+nHc3yfkxkitoByQre
-   a9JNuhmzZn9H3bIYObxJg581Ug+xxsQMaEqFuR9vGne0B2QGl8gIU5ht8
-   Pz6OQ8xwYOHyqre8Gf6xyCp3bT7q3XViw8FgE97HHVYOEvZ6OT82BN99U
-   eZbXG7mO3tGgyEO8t6rR953fn8MyBbkbFUxJUQfiMCWHWoNObDMnRr1gZ
-   4pgVXT/r8IjcYx0epE276AkuucpMxdMs8BjikDsP/rrCGgN23ZYpQ+upk
-   kQrnxSPd97Huf5Wumw48hGUts2AROu7JRpVpAbF1l7BKiurZShKN3fz6X
-   Q==;
-X-CSE-ConnectionGUID: ibbv+YRPQX2hhndI7ib4tQ==
-X-CSE-MsgGUID: zAqzpee4T7C0eNM6tA6BbA==
-X-IronPort-AV: E=McAfee;i="6800,10657,11710"; a="76714386"
-X-IronPort-AV: E=Sophos;i="6.21,306,1763452800"; 
-   d="scan'208";a="76714386"
-Received: from fmviesa006.fm.intel.com ([10.60.135.146])
-  by fmvoesa106.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 23 Feb 2026 06:26:30 -0800
-X-CSE-ConnectionGUID: IPRjigWhSr2G/5m9tL9mYA==
-X-CSE-MsgGUID: TUezAOJhS4mF30Pcew3qtg==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.21,306,1763452800"; 
-   d="scan'208";a="213513516"
-Received: from ijarvine-mobl1.ger.corp.intel.com (HELO localhost) ([10.245.244.30])
-  by fmviesa006-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 23 Feb 2026 06:26:28 -0800
-From: =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
-Date: Mon, 23 Feb 2026 16:26:25 +0200 (EET)
-To: Yauhen Kharuzhy <jekhor@gmail.com>
-cc: platform-driver-x86@vger.kernel.org, Hans de Goede <hansg@kernel.org>, 
-    LKML <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH v1 1/2] platform: x86-android-tablets: lenovo: Add Yoga
- Book haptics entries
-In-Reply-To: <20260217233618.1324550-2-jekhor@gmail.com>
-Message-ID: <181e4409-7bbf-e207-0c54-1f817c1c35ed@linux.intel.com>
-References: <20260217233618.1324550-1-jekhor@gmail.com> <20260217233618.1324550-2-jekhor@gmail.com>
+	dkim=pass (2048-bit key) header.d=sheffield.ac.uk header.i=@sheffield.ac.uk header.b="Bb92kMoX"
+Received: by mail-wr1-f42.google.com with SMTP id ffacd0b85a97d-43626796202so3780254f8f.3
+        for <platform-driver-x86@vger.kernel.org>; Mon, 23 Feb 2026 06:26:45 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=sheffield.ac.uk; s=170424.google; t=1771856804; x=1772461604; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:from:cc:content-language
+         :subject:references:to:user-agent:mime-version:date:message-id:from
+         :to:cc:subject:date:message-id:reply-to;
+        bh=ZmOA1PhmFcd2mJlrhiZgT9nXBjce6PFT/SVDOBDGpIY=;
+        b=Bb92kMoXz1YrMzxELH7xutzW08fNg3YYfCvMBI3jwPCpriTjyG36zuR841dr9dRU60
+         85ifUwBObiYLfDW0CfEygiL5mvu02e+8H8O6lYQJTAHVArIQedZUYFvJ7zWtSZNPF1k9
+         tKjkiLVabHJorEzR9uExe6Qth/bXvay9sj20NMlXmrJl14N+asm/f4FdgBCdeODFXKHu
+         gO9E2auByl5428qmCaTF2fELHS4xy4npSqo90xFwFkYA6Z0v922M4uweW9bs1oWTAkEl
+         h/eooS5/5X2Bd/7qUNR759xtLX0qvxkke12AVrbKgpUxZSN2wWOzakK1vcSWj6x7PaII
+         uWSA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1771856804; x=1772461604;
+        h=content-transfer-encoding:in-reply-to:from:cc:content-language
+         :subject:references:to:user-agent:mime-version:date:message-id
+         :x-gm-gg:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=ZmOA1PhmFcd2mJlrhiZgT9nXBjce6PFT/SVDOBDGpIY=;
+        b=hzl3+pHYI/Pmzx1xi5pzXxa+eXKtQOnhOBpcKignz9C40tA69lk5b3sVBwhmx8y0b+
+         2Rh5psx6KwScIaD60dbKsd4BiIHdndP+oidV2l7r0oekkm495JrZqi+oK9knjwOik2/Z
+         mw9LOj1uW/D02CauNfcF/maCnhZdfAtwLvx5sN1pr/DreHAawcngYLlZWFnrbpNJPTRa
+         YrJVWf1lsKAxwpoWcrKII5PdkkH7Ea3pce73F9iEc2TGgoea+muYRdjf6uMYoczfycIP
+         Nl0nKGzC0taFljxxkvv7+oWEFXfOyHkHSJv6+quaPUE4dRNtsXKGDk8rrdyoMEF/5Yyp
+         OOww==
+X-Forwarded-Encrypted: i=1; AJvYcCWC5ZSpmMl28aLNUzoJuBKb2+vPRj0IuGmfFl7eWE8/489rcPLmZr17shQHWHMmsGiR4B03Udn9cPDW0vvWmmHP4t8e@vger.kernel.org
+X-Gm-Message-State: AOJu0YzKo7kjaPpqM3dLVJL0/z/P0cKOgd47lOVHSuYNNiedZR0G1Fmv
+	eLEOn63owo6fc0rujLEVIt5rZf2VnYBD9KDKSwzZG3I8UF7GFqRh8WkFHU8RBai9YJbkjcU1oiC
+	17all5KQsIRnn15H4jWxwy1swiFQFbqr17Mjp0A9P+wOrK4zysbZo9LIYeJjbWrIoWfbVglRIso
+	EWJqKQ38FF9rHFkaOMEfeRoMZxGba128N1uyLKtEm6dkFBFO1EIUSffZ2oFTV00lrxlNBPuaPOE
+	TencHG8HiBL4A==
+X-Gm-Gg: ATEYQzxstr/aAvLB09qRfyeclzbkzmKn8YvPDGf9vUEaVmFfDdmhJzIFebHjYO5aKm1
+	BrFT2/vrsx4Kdgw53SFWe0QvBEGXJ0yvWP9jUIJ68vEyrLSIZoPmkcaYMNMtQWEAlUawXHMdgW8
+	XLmLZb1RU6RVjOUinCohztUm51eezNafwfN8ttbNewCUlSadKTVfPXth4D0WmH6yjExLex/d6pl
+	8CsusTPk4Juw+osmt4iFof7qetCZuqHkUt06vlNy+Ci+d4ZB0A+39AzLdWc6JFCk/C0Kt2TRTXZ
+	a4EMzVK6DfovwWEthq7wWpTB5hRtUKDn4f7S/8OX/JfCzwzKZNQT1c1mfpvDFlLIEWuurmmiZT4
+	PnsbpyKKfcVzQp74AjKwwH0gSvwBKvp1A5sLbkCY34lBJN7Q6lOfJwObhxxWehLS9KbmJCmXno9
+	fRGF2tlQ7r1ANHWO24+jAgjWPD28+HgvAsIPD66yWoItqR7ZTja6Fm
+X-Received: by 2002:a05:6000:26c2:b0:436:8058:449 with SMTP id ffacd0b85a97d-4396f17b48dmr16337143f8f.45.1771856804231;
+        Mon, 23 Feb 2026 06:26:44 -0800 (PST)
+Received: from [143.167.4.104] (hubble.ddns.shef.ac.uk. [143.167.4.104])
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-43970d3ff27sm21261148f8f.22.2026.02.23.06.26.43
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Mon, 23 Feb 2026 06:26:43 -0800 (PST)
+Message-ID: <3167b808-1fc9-4b73-9bd3-b76b149d2b65@sheffield.ac.uk>
+Date: Mon, 23 Feb 2026 14:26:43 +0000
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+User-Agent: Mozilla Thunderbird
+To: =?UTF-8?Q?Uwe_Kleine-K=C3=B6nig?= <ukleinek@debian.org>,
+ 1127612@bugs.debian.org
+References: <dafda4bd-87cb-4fbd-a811-66d629a10c70@sheffield.ac.uk>
+ <aZMt6sSlpKK_JAdT@monoceros>
+ <4ddfa94c-5cb5-4c7a-a0b4-9b9ff5e4cc85@sheffield.ac.uk>
+ <dafda4bd-87cb-4fbd-a811-66d629a10c70@sheffield.ac.uk>
+ <4faeb5e7-e56e-429e-88fa-a1fefa4d1034@amd.com> <aZnNu_AphE78MIoY@monoceros>
+ <d152f056-8583-49c9-a943-494325031d8f@amd.com>
+ <d152f056-8583-49c9-a943-494325031d8f@amd.com>
+ <7599e019-5c25-4bce-8308-05d53699a2f5@sheffield.ac.uk>
+ <7599e019-5c25-4bce-8308-05d53699a2f5@sheffield.ac.uk>
+Subject: Re: Bug#1127612: linux-image-6.12.69+deb13-amd64: hp_bioscfg
+ mm/page_alloc.c:4802 warning
+Content-Language: en-GB
+Cc: Jorge Lopez <jorge.lopez2@hp.com>, platform-driver-x86@vger.kernel.org,
+ Mario Limonciello <mario.limonciello@amd.com>
+From: Paul Kerry <p.kerry@sheffield.ac.uk>
+In-Reply-To: <7599e019-5c25-4bce-8308-05d53699a2f5@sheffield.ac.uk>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-On Wed, 18 Feb 2026, Yauhen Kharuzhy wrote:
-
-> Add drv2604l i2c_board_info for drv2604l haptics drivers present in
-> Lenovo Yoga Book YB1-X90 and YB1-X91. Set properties required for device
-> initialization and self-calibration.
+On Mon, 23 Feb 2026 12:46:54 +0000 Paul Kerry <p.kerry@sheffield.ac.uk> wrote:
+> Hi Uwe and Mario
 > 
-> Signed-off-by: Yauhen Kharuzhy <jekhor@gmail.com>
-> ---
->  .../platform/x86/x86-android-tablets/lenovo.c | 96 +++++++++++++++++++
->  1 file changed, 96 insertions(+)
-> 
-> diff --git a/drivers/platform/x86/x86-android-tablets/lenovo.c b/drivers/platform/x86/x86-android-tablets/lenovo.c
-> index 8d825e0b4661..926a5e292c4f 100644
-> --- a/drivers/platform/x86/x86-android-tablets/lenovo.c
-> +++ b/drivers/platform/x86/x86-android-tablets/lenovo.c
-> @@ -114,6 +114,32 @@ static const struct software_node lenovo_yb1_x90_hideep_ts_node = {
->  	.properties = lenovo_yb1_x90_hideep_ts_props,
->  };
->  
-> +static const struct property_entry lenovo_yb1_x9x_drv2604l_0_props[] = {
-> +	PROPERTY_ENTRY_U32("vib-rated-mv", 1500),
-> +	PROPERTY_ENTRY_U32("vib-overdrive-mv", 2100),
-> +	PROPERTY_ENTRY_U32("mode", 0), /* LRA */
-> +	PROPERTY_ENTRY_U32("library-sel", 0), /* DRV260X_LIB_EMPTY */
-> +	PROPERTY_ENTRY_GPIO("enable-gpios", &cherryview_gpiochip_nodes[0], 79, GPIO_ACTIVE_HIGH),
-> +	{}
-> +};
-> +
-> +static const struct software_node lenovo_yb1_x9x_drv2604l_0_node = {
-> +	.properties = lenovo_yb1_x9x_drv2604l_0_props,
-> +};
-> +
-> +static const struct property_entry lenovo_yb1_x9x_drv2604l_1_props[] = {
-> +	PROPERTY_ENTRY_U32("vib-rated-mv", 1500),
-> +	PROPERTY_ENTRY_U32("vib-overdrive-mv", 2100),
-> +	PROPERTY_ENTRY_U32("mode", 0), /* LRA */
-> +	PROPERTY_ENTRY_U32("library-sel", 0), /* DRV260X_LIB_EMPTY */
-> +	PROPERTY_ENTRY_GPIO("enable-gpios", &cherryview_gpiochip_nodes[1], 47, GPIO_ACTIVE_HIGH),
-> +	{}
-> +};
-> +
-> +static const struct software_node lenovo_yb1_x9x_drv2604l_1_node = {
-> +	.properties = lenovo_yb1_x9x_drv2604l_1_props,
-> +};
-> +
->  static const struct x86_i2c_client_info lenovo_yb1_x90_i2c_clients[] __initconst = {
->  	{
->  		/* BQ27542 fuel-gauge */
-> @@ -159,6 +185,24 @@ static const struct x86_i2c_client_info lenovo_yb1_x90_i2c_clients[] __initconst
->  			.polarity = ACPI_ACTIVE_LOW,
->  			.con_id = "wacom_irq",
->  		},
-> +	}, {
-> +		/* Keyboard haptics driver */
-> +		.board_info = {
-> +			.type = "drv2604l",
-> +			.addr = 0x5a,
-> +			.dev_name = "drv2604l.0",
-> +			.swnode = &lenovo_yb1_x9x_drv2604l_0_node,
-> +		},
-> +		.adapter_path = "\\_SB_.PCI0.I2C1",
-> +	}, {
-> +		/* Keyboard haptics driver */
-> +		.board_info = {
-> +			.type = "drv2604l",
-> +			.addr = 0x5a,
-> +			.dev_name = "drv2604l.1",
-> +			.swnode = &lenovo_yb1_x9x_drv2604l_1_node,
-> +		},
-> +		.adapter_path = "\\_SB_.PCI0.I2C4",
->  	}, {
->  		/* LP8557 Backlight controller */
->  		.board_info = {
-> @@ -283,9 +327,61 @@ static const struct x86_i2c_client_info lenovo_yogabook_x91_i2c_clients[] __init
->  	},
->  };
->  
-> +#define YB1_X91_DRV2604L_0_DEVICE "i2c-DRV2604:00"
-> +#define YB1_X91_DRV2604L_1_DEVICE "i2c-DRV2604:01"
-> +
-> +static int __init lenovo_yb1_x91_init(struct device *dev)
-> +{
-> +	struct device *drv2604l_0_dev = NULL, *drv2604l_1_dev = NULL;
-> +	int ret = 0;
-> +
-> +	drv2604l_0_dev = bus_find_device_by_name(&i2c_bus_type, NULL,
-> +						 YB1_X91_DRV2604L_0_DEVICE);
-> +	if (!drv2604l_0_dev) {
-> +		pr_err("error: cannot find %s device\n",
-> +		       YB1_X91_DRV2604L_0_DEVICE);
-> +		return -ENODEV;
-> +	}
-> +
-> +	ret = device_create_managed_software_node(drv2604l_0_dev,
-> +					lenovo_yb1_x9x_drv2604l_0_props, NULL);
-> +	if (ret) {
-> +		pr_err("error: cannot create software node for %s: %d\n",
-> +		       YB1_X91_DRV2604L_0_DEVICE, ret);
-> +		goto put_drv2604l_0;
-> +	}
-> +
-> +	drv2604l_1_dev = bus_find_device_by_name(&i2c_bus_type, NULL,
-> +						 YB1_X91_DRV2604L_1_DEVICE);
-> +	if (!drv2604l_1_dev) {
-> +		pr_err("error: cannot find %s device\n",
-> +		       YB1_X91_DRV2604L_1_DEVICE);
-> +		ret = -ENODEV;
-> +		goto put_drv2604l_0;
-> +	}
-> +
-> +	ret = device_create_managed_software_node(drv2604l_1_dev,
-> +					lenovo_yb1_x9x_drv2604l_1_props, NULL);
-> +	if (ret) {
-> +		pr_err("error: cannot create software node for %s\n",
-> +		       YB1_X91_DRV2604L_1_DEVICE);
-> +		ret = -EINVAL;
-> +		goto put_drv2604l_1;
-> +	}
-> +
-> +put_drv2604l_0:
-> +	put_device(drv2604l_0_dev);
-> +put_drv2604l_1:
-> +	put_device(drv2604l_1_dev);
+> Thanks, and yes I should be able to incorporate the patch and create a kernel image: I've now moved up to the recently released 6.12.73+deb13-amd64 kernel and the same warning occurs, so would you like me to try to build the patched version against that or on 6.12.69+deb13-amd64 ?
 
-This looks like a case that would benefit from using cleanup.h 
-(__free(put_device)).
+[apologies - I didn't include all email addresses into my previous reply]
 
-Remember to declare variables that use __free() mid-function as per the 
-usage pattern in documented cleanup.h.
+Hi Uwe
 
-Please also make sure you have all necessary includes for using it (not 
-through some obscure indirect include path).
+I'm following...
+https://kernel-team.pages.debian.net/kernel-handbook/ch-common-tasks.html#s-common-official
 
--- 
- i.
+and I've tried to patch things using debian/bin/test-patches but am getting...
 
+patch: **** malformed patch at line 11: kcalloc(bioscfg_drv.enumeration_instances_count,
 
-> +
-> +	return ret;
-> +}
-> +
->  const struct x86_dev_info lenovo_yogabook_x91_info __initconst = {
->  	.i2c_client_info = lenovo_yogabook_x91_i2c_clients,
->  	.i2c_client_count = ARRAY_SIZE(lenovo_yogabook_x91_i2c_clients),
-> +	.gpiochip_type = X86_GPIOCHIP_CHERRYVIEW,
-> +	.init = lenovo_yb1_x91_init,
->  };
->  
->  /* Lenovo Yoga Tablet 2 1050F/L's Android factory image has everything hardcoded */
-> 
+so perhaps it is how I am copying/pasting the lines from the earlier post into a file that is then causing the problem?
+
+It's also been quite some time since I built a kernel and a debian patched one at that, so I'm more than likely doing something wrong, so if you could create a test package instead of me having to build things, that would be a big help thank you.
+
+Best regards
+Paul
+
