@@ -1,165 +1,89 @@
-Received: from CY7PR03CU001.outbound.protection.outlook.com (mail-westcentralusazon11010012.outbound.protection.outlook.com [40.93.198.12])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.13])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 723463148DA;
-	Mon, 23 Feb 2026 16:33:16 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.93.198.12
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1771864398; cv=fail; b=JuLVjBdAD49l8Nakn7ksLihAciYQgX0E/Z1zIyiScJboBFBlmvBIM+7VuceFD0JBay2Bl54/CSPF+0Uf6HH1V2i8//4I9YiP8uIl2CDf1bZ7GlewxW8Im1rIg61Pk7OjZDt0ZsV3zYmfoLB6omWCwKT/SySvGCZ9ooqt9lt7s5c=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1771864398; c=relaxed/simple;
-	bh=AvrBDQJh4vYhzTR/p/Ovyl6R+2leAdfbyxOM7jJql9M=;
-	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=V0z91EhlERiIBkoOfmanJaqkice+dADhC5DKiojz7LjloQYkl8RW0LJxraeil0A/wf2bQDzzXKS+Y4q2mi5quDFT1S4ZXLJDLkMJxPJ/X5ANQiHDXBhWI1yhOdc8438XQD6mCUB/1w3eD4wyh6FDqCHI2hBjjsLe5FiA77eUiXI=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=YN7yIQXv; arc=fail smtp.client-ip=40.93.198.12
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com
-Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=amd.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 383B2313539;
+	Mon, 23 Feb 2026 16:33:39 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.13
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1771864421; cv=none; b=UDMW/NscTiwZ43rjyZiJsVqI9nlZNh3lI3gIeE9NvdtksmXfMuJ4FYELxULo5Y5gPTKYlvUw82xpTXOn4rW8fRetyAArpzR58L9Po6sb7BpE8nVFG2gizgpjDltM559ka/HsxoBrRASdm+pn3ttKFEJtLKOURH1iDSG3KeqMgJE=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1771864421; c=relaxed/simple;
+	bh=0S3qkxhToXLVI4rWSRVgSliROJcSmIRtmsCgYAB/WfU=;
+	h=From:To:Cc:In-Reply-To:References:Subject:Message-Id:Date:
+	 MIME-Version:Content-Type; b=hGuK0JdR6VZsJuR4MRKXVyUshSm8UMWeVSl6ExRQqinWuJDd13A4q+drLf2lt/wg3SClKr1wimiXTrkZwscr6o3+WC6C4Eex65tzgiILrcaUplOxCe7qgJsDL04qLMSnWmwgtYRqaaKMD++riwW2Sv5DJnHoq4T/Bjvb8p2o/6g=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=pass smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=TD5b3tCg; arc=none smtp.client-ip=192.198.163.13
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="YN7yIQXv"
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=EQWXOGJp/6zz24G6tMnL3PuSFfFHjGNEZnRWvqiUzjx4k/uKLwbEZeJAbjeNp8ecaqQFgK+Oo0rPQNE5P/3+gZEhApeNmGVzCYhcmpg3rmI5oV2KQYciy4r1vxcdH81w4zrW+SQro5OFKceSF5QqBWgEdgGWdmre2ZDQ9gL1kyIT8ZDHivQ/XgRY+oe7RLvMfNHEkaEDUqeZhMaryfWooHMI2HLK15VKMwEO1/FmDsAjQkQQxu3y+zcdoR4cIHJF8q3EdJuUSboTi5o5RaifADUXylLp79ZcYErJMAQfGs9yR8GZLeCKsOI0go7kMgAxvSgUEfxeiO1pbU4l5kXXSA==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=kni4uOcgxNe5e9RTxB8djc7/ZAvrR/gl8m4B2bZjmV0=;
- b=TbcOSpWOvhAm9kt4x+4lzrUBaylsUw+AIKm5e4xJfiOa1hiAOa9dCBXPZSnaOKs9d7u+XebpzvRW00E6o4Ec5Vt5jQJzYc6/q97i3iXC3eQHSg+52LZDmpkFhnsidr5HjcV2+FXVD3WmkClX7aSVxlLXEv5pirSv+FqXOxluUbsEeaIHfPTQW1GMpa9LNr5NKDfMkEUBG6SUrVCMdP+DgzmBNaRsBzRr0uVKf8Oywytl8i3wbOESS6q4cHbsw3BCxXm+up0MGwvqXDHFwV/xaNqBRzGShSP+mXNk90h1FFrVOYR9dpsDOGDpUMmty+AJj+srIqolv1bmoe0E14bS3g==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
- 165.204.84.17) smtp.rcpttodomain=hp.com smtp.mailfrom=amd.com; dmarc=pass
- (p=quarantine sp=quarantine pct=100) action=none header.from=amd.com;
- dkim=none (message not signed); arc=none (0)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=kni4uOcgxNe5e9RTxB8djc7/ZAvrR/gl8m4B2bZjmV0=;
- b=YN7yIQXvJ3/aZZc7ePNllRIFt2VwHeLHkZ5/KTRWgadLfEGpDih8gMjSjm+d+P3Iw1ANiBoUylQXuf/9nArhER4EPRZg/2HZf5PDZqW1qX7leg4vey3SCrw6UnC2hz2nUWbyleVsPCFk24JbPrVlSbIds9VMYztLuBi1yBCB0b0=
-Received: from BY3PR10CA0028.namprd10.prod.outlook.com (2603:10b6:a03:255::33)
- by CYXPR12MB9443.namprd12.prod.outlook.com (2603:10b6:930:db::9) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.9632.21; Mon, 23 Feb
- 2026 16:33:12 +0000
-Received: from SJ1PEPF000026CA.namprd04.prod.outlook.com
- (2603:10b6:a03:255:cafe::6) by BY3PR10CA0028.outlook.office365.com
- (2603:10b6:a03:255::33) with Microsoft SMTP Server (version=TLS1_3,
- cipher=TLS_AES_256_GCM_SHA384) id 15.20.9632.21 via Frontend Transport; Mon,
- 23 Feb 2026 16:33:13 +0000
-X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 165.204.84.17)
- smtp.mailfrom=amd.com; dkim=none (message not signed)
- header.d=none;dmarc=pass action=none header.from=amd.com;
-Received-SPF: Pass (protection.outlook.com: domain of amd.com designates
- 165.204.84.17 as permitted sender) receiver=protection.outlook.com;
- client-ip=165.204.84.17; helo=satlexmb07.amd.com; pr=C
-Received: from satlexmb07.amd.com (165.204.84.17) by
- SJ1PEPF000026CA.mail.protection.outlook.com (10.167.244.107) with Microsoft
- SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.9632.12 via Frontend Transport; Mon, 23 Feb 2026 16:33:11 +0000
-Received: from dogwood-dvt-marlim.amd.com (10.180.168.240) by
- satlexmb07.amd.com (10.181.42.216) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.2562.17; Mon, 23 Feb 2026 10:33:10 -0600
-From: Mario Limonciello <mario.limonciello@amd.com>
-To: <mario.limonciello@amd.com>, <jorge.lopez2@hp.com>, <hansg@kernel.org>,
-	<ilpo.jarvinen@linux.intel.com>, <linux@weissschuh.net>
-CC: <stable@vger.kernel.org>, Paul Kerry <p.kerry@sheffield.ac.uk>,
-	<platform-driver-x86@vger.kernel.org>
-Subject: [PATCH] platform/x86: hp-bioscfg: Support allocations of larger data
-Date: Mon, 23 Feb 2026 10:32:42 -0600
-Message-ID: <20260223163245.3294630-1-mario.limonciello@amd.com>
-X-Mailer: git-send-email 2.53.0
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="TD5b3tCg"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1771864420; x=1803400420;
+  h=from:to:cc:in-reply-to:references:subject:message-id:
+   date:mime-version:content-transfer-encoding;
+  bh=0S3qkxhToXLVI4rWSRVgSliROJcSmIRtmsCgYAB/WfU=;
+  b=TD5b3tCglNPPGcKLb2g0MouMX5QG/ONg3XHM2AzGYVrm3xbbHBM3JaYL
+   Ygj34rWS8oF23whBFwo39oWozr/Ck+jY0xHV2xtnt04l8yQhJNW38jbbS
+   tH8wdq/4ZvYze7fFZvbjRq81Y40myfDv6Y8+3VAcyuz7Iz091jBlMGeId
+   Zuiw+o3jiTML+dnPXCmqQ+gNvAiSAoMrLRiVzp3B91JZwUGcrR1aqglfH
+   Dgl5Fns3KDCBl2LthDP63GOdkNT2EDukNFsMGUIW+9LEG00Uqgan/luQB
+   ZYQP2OehdBol7rr20B+dQZbZEEWd3Pg1APt9jR1BlM1ZmQXHNkB8lSQRI
+   g==;
+X-CSE-ConnectionGUID: 0jMjW8yBTLabWzKcVTVr1g==
+X-CSE-MsgGUID: 7rAMF1rhQFajw6NV2JJ+zA==
+X-IronPort-AV: E=McAfee;i="6800,10657,11710"; a="75473100"
+X-IronPort-AV: E=Sophos;i="6.21,307,1763452800"; 
+   d="scan'208";a="75473100"
+Received: from orviesa002.jf.intel.com ([10.64.159.142])
+  by fmvoesa107.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 23 Feb 2026 08:33:39 -0800
+X-CSE-ConnectionGUID: 2uuXYOy+SOSZ3n/lOqefWw==
+X-CSE-MsgGUID: VM2TTZNRQdWekHIUtrMNnA==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.21,307,1763452800"; 
+   d="scan'208";a="246205082"
+Received: from ijarvine-mobl1.ger.corp.intel.com (HELO localhost) ([10.245.244.30])
+  by orviesa002-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 23 Feb 2026 08:33:37 -0800
+From: =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
+To: hansg@kernel.org, Krishna Chomal <krishna.chomal108@gmail.com>
+Cc: platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org, 
+ varadpisale.work@gmail.com
+In-Reply-To: <20260218050235.94687-1-krishna.chomal108@gmail.com>
+References: <20260218050235.94687-1-krishna.chomal108@gmail.com>
+Subject: Re: [PATCH] platform/x86: hp-wmi: Add Omen 16-xd0xxx fan and
+ thermal support
+Message-Id: <177186441134.17917.7317200179348523595.b4-ty@linux.intel.com>
+Date: Mon, 23 Feb 2026 18:33:31 +0200
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-ClientProxiedBy: satlexmb07.amd.com (10.181.42.216) To satlexmb07.amd.com
- (10.181.42.216)
-X-EOPAttributedMessage: 0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: SJ1PEPF000026CA:EE_|CYXPR12MB9443:EE_
-X-MS-Office365-Filtering-Correlation-Id: 09ae7f53-64e1-431f-e4d3-08de72f93c76
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam:
-	BCL:0;ARA:13230040|1800799024|82310400026|36860700013|376014|13003099007;
-X-Microsoft-Antispam-Message-Info:
-	=?us-ascii?Q?+ebc1RFX6bUKP65eVyRNCeN88XMu4Mv32HZYsurF+CjQq5aC/KjxrPr0GBRB?=
- =?us-ascii?Q?grxRU8GCU5B7BmI9KrFwLCVSpMk3T1HWXUIVS/yFtr5awEJ6p2gdNjAko0E/?=
- =?us-ascii?Q?+UxU9Cg42ND1v/ct9wfvixBG/U8VkaZMnY3juEzqu7xrQyukrS1b5eFI6RlZ?=
- =?us-ascii?Q?CSArZEN6aFOnD2QQvWS9jvhckwzjA7E3PnPSCQfeDsi9ooqLq84Og6T02RkB?=
- =?us-ascii?Q?Oh5L6rEVT8c4bJ8wJjgAfKooOogVkzPFJDPFLB06MpT1ZlTiyhr4SDA72Mi4?=
- =?us-ascii?Q?Dl7s22eh2at0EYikxTt4Cb5h+KVGmuleMnvWI9NJDJxwhq8WaEXRf3xSJ1k+?=
- =?us-ascii?Q?c1PQ/apVDDdg01/G3GjWihStAb3agmZDVpwsXnAs/7TjpiegvugSIOqoFLmu?=
- =?us-ascii?Q?zSVOPEs5KMqBrYi7OUoSNesE6dd8GZViOk/mV02URq87wWPznJjMqPtOpdjh?=
- =?us-ascii?Q?mQ/HBNaVoo/sAGLPhlp8Wsv9L5xB6OnoUXT2oVGm1CwobXtevqDR73CiZoSZ?=
- =?us-ascii?Q?iti3aVLADad1OS485dEWmP1ZAh/xEcbhAq8da73Gi9eOpk3QeqKVlInAaeZU?=
- =?us-ascii?Q?i/O6XklGH7oOBwC4emN/VwlJuvUrzuwyY1viBFDSi/Q9VR/BUfplcuK8PWg5?=
- =?us-ascii?Q?tmVsZmuf7DjdFhP9qj8UxYqOMaAQIeP1xa427pCdpmM9buirYJCUu5bgRs2C?=
- =?us-ascii?Q?FALrNNP4ebiSGMzFUUhaj4COxjDT3vcQklpbE1HeXl8W6Q8wfgwIa6NlrUYq?=
- =?us-ascii?Q?B2MdM4lKdwEq8tH+F4MpdWXx2CPUs3AAuP2zO1QqjOXV47rnv11QoiyUtvQC?=
- =?us-ascii?Q?J6v4nq/JgDcDJUtmA9ykXIVi+4RxGMTnNZS2wrwjpW976CIBTpkD7DhqnPm4?=
- =?us-ascii?Q?dz3U+UEjS/Uoe2U6htvbBpd/zopXc1twnOiG0h9B6zQJ+fTRTbUJKzDjTPn4?=
- =?us-ascii?Q?msBDHr7gmHspt7QoAK/dC4hxY3kXmH+GOmPf/jrkPFI4eHti0o7z9T7th2U9?=
- =?us-ascii?Q?Hy3kcOZmZUfDRIAWuTNnXpWbyL32udFSyXjqkGcwBtHxALRNXGnWPWfcsr56?=
- =?us-ascii?Q?bmx8QYuOcscEtzkvfBaLRWKSAtm3PZVEXkzCHrPWe+nX8cwPy6019h++DIXn?=
- =?us-ascii?Q?DWn20H8pGk/sygMor7IDJXY/So2P8IbFguSQQIEl4BtoiXTZpo16yFdiMEHz?=
- =?us-ascii?Q?cZ5yuP+H1TPAx0WkXHqdw/HYMoPAKXn47QloRdnUXpUjIrMpBVXxU+2eXcBp?=
- =?us-ascii?Q?TNPvT9aDVlJT9gpKHspIihaFndWr45PCV+itzWBG90WGltjqm8VpRR7MmATb?=
- =?us-ascii?Q?Jv9y6+i5SxdPpeaoRWykOGyVr7TxYghcZZs2LnOlSbkz0EZbbIc+BP8q1Yjc?=
- =?us-ascii?Q?T3y9DK3vh+KZqm0aZk/Zs0UZhnzooAzuJGs5ci3V0xQVCKFnAiH+Pd038gI5?=
- =?us-ascii?Q?mDOd43ar2Dk+E2xf4Q/t0+PoVf1C2blmMv0mXpNqttc42K14v088mSXMQU6g?=
- =?us-ascii?Q?lGoEGZqjSfJHIIg3t/T1qhcODaDwpvy1XpgQMfWqZ47p5D/yHapAu4Tj8z5Z?=
- =?us-ascii?Q?rNzozwyNgsFnnuccgIlFpVK7C4tO660w3Rdh0YKtnf8OSw4yjreZ+/D5WyDy?=
- =?us-ascii?Q?ZvgFPAWAVOz3CGrM326JK8Hh76FFDpFWSdnjeRrH5y7o0jY4krmVN+Mfh+3B?=
- =?us-ascii?Q?rYlWIA=3D=3D?=
-X-Forefront-Antispam-Report:
-	CIP:165.204.84.17;CTRY:US;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:satlexmb07.amd.com;PTR:InfoDomainNonexistent;CAT:NONE;SFS:(13230040)(1800799024)(82310400026)(36860700013)(376014)(13003099007);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0:
-	BfB+5gchryllL/e4qSOrR+npeQ7dTBLjCsOVn0H2eRojn+PJPWzFlzT2I6IMqxRMxk7Wz70YJAjS+oLnim6EYw4WEHotP23eaUXZZhgNQRfZggNO+7M96+6vrydarkDVgP3mqxIaikt1X4Kl6vfCSCswTZiS/wmkUjfRDesJHadmXmYwbIUT5lofvE+YDVwvYxqGnBfTBzhmpNWvV7NtfmVVr19XUcy990SVKANTVg5LW24wuw44cUmXgTTJMmBs7hHUbFSRHbndW36fZkto/7TO1C91rhoTpmjcbjVbG9BVyf6DkWIc/zVjH4hxpoODOlv1GOwgn0n4IJ7Y6UKQpxFLqc+EVXIqvF19RKjXH6cJLUKWOfLiQV3XcSfXEzGEzEWPU1M+6upCT+RWu/KYktj24wTG24OkLqn48CqiYcu/OTSy3lZM50EWB9ISRpj2
-X-OriginatorOrg: amd.com
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 23 Feb 2026 16:33:11.8658
- (UTC)
-X-MS-Exchange-CrossTenant-Network-Message-Id: 09ae7f53-64e1-431f-e4d3-08de72f93c76
-X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
-X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=3dd8961f-e488-4e60-8e11-a82d994e183d;Ip=[165.204.84.17];Helo=[satlexmb07.amd.com]
-X-MS-Exchange-CrossTenant-AuthSource:
-	SJ1PEPF000026CA.namprd04.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Anonymous
-X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: CYXPR12MB9443
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+X-Mailer: b4 0.13.0
 
-Some systems have much larger amounts of enumeration attributes
-than have been previously encountered. This can lead to page allocation
-failures when using kcalloc().  Switch over to using kvcalloc() to
-allow larger allocations.
+On Wed, 18 Feb 2026 10:32:35 +0530, Krishna Chomal wrote:
 
-Fixes: 6b2770bfd6f92 ("platform/x86: hp-bioscfg: enum-attributes")
-Cc: stable@vger.kernel.org
-Reported-by: Paul Kerry <p.kerry@sheffield.ac.uk>
-Closes: https://bugs.debian.org/1127612
-Signed-off-by: Mario Limonciello <mario.limonciello@amd.com>
----
- drivers/platform/x86/hp/hp-bioscfg/enum-attributes.c | 7 +++++--
- 1 file changed, 5 insertions(+), 2 deletions(-)
+> The HP Omen 16-xd0xxx (board ID: 8BCD) has the same WMI interface as
+> other Victus S boards, but requires quirks for correctly switching
+> thermal profile (similar to HP Omen 16-wf1xxx, board ID: 8C78).
+> 
+> Add the DMI board name to victus_s_thermal_profile_boards[] table and
+> map it to omen_v1_thermal_params.
+> 
+> [...]
 
-diff --git a/drivers/platform/x86/hp/hp-bioscfg/enum-attributes.c b/drivers/platform/x86/hp/hp-bioscfg/enum-attributes.c
-index 470b9f44ed7aa..af24313d078db 100644
---- a/drivers/platform/x86/hp/hp-bioscfg/enum-attributes.c
-+++ b/drivers/platform/x86/hp/hp-bioscfg/enum-attributes.c
-@@ -94,8 +94,11 @@ int hp_alloc_enumeration_data(void)
- 	bioscfg_drv.enumeration_instances_count =
- 		hp_get_instance_count(HP_WMI_BIOS_ENUMERATION_GUID);
- 
--	bioscfg_drv.enumeration_data = kzalloc_objs(*bioscfg_drv.enumeration_data,
--						    bioscfg_drv.enumeration_instances_count);
-+	if (!bioscfg_drv.enumeration_instances_count)
-+		return -EINVAL;
-+	bioscfg_drv.enumeration_data = kvcalloc(bioscfg_drv.enumeration_instances_count,
-+						sizeof(*bioscfg_drv.enumeration_data), GFP_KERNEL);
-+
- 	if (!bioscfg_drv.enumeration_data) {
- 		bioscfg_drv.enumeration_instances_count = 0;
- 		return -ENOMEM;
--- 
-2.53.0
+
+Thank you for your contribution, it has been applied to my local
+review-ilpo-fixes branch. Note it will show up in the public
+platform-drivers-x86/review-ilpo-fixes branch only once I've pushed my
+local branch there, which might take a while.
+
+The list of commits applied:
+[1/1] platform/x86: hp-wmi: Add Omen 16-xd0xxx fan and thermal support
+      commit: 3c99a545b372c77b5d39715968a141f523eccbf2
+
+--
+ i.
 
