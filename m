@@ -1,193 +1,154 @@
-Received: from mail-lj1-f169.google.com (mail-lj1-f169.google.com [209.85.208.169])
+Received: from mail-ed1-f43.google.com (mail-ed1-f43.google.com [209.85.208.43])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C40F937F8C5
-	for <platform-driver-x86@vger.kernel.org>; Mon, 23 Feb 2026 23:29:32 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=209.85.208.169
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1771889374; cv=pass; b=cGqwawsBsAb6pnq9DlsC+csQ9DheKwU58vQKtrCklyCknb57K2f6ciz0dmToOU8XRwOGEUKZCBIiH9hqlF4NwPpVqqBnuMlt89gXNQbLlyxY0ZV+N/s5hXPQazSu1Dmm1OL+RPeJTZMEDklxCRN8FPLv1ObCiMhp65jjC2PSeoU=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1771889374; c=relaxed/simple;
-	bh=J6zBSnuv2VUk6bsTnE+sg32kVJnVvTzg2RryFVDgAJA=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=lyBQMEkynLMoA43TW8HdC/WapanLGGNf08jEZdQtIise0l7NiQROfo8exD+4AJWL0cWhAgsp+MRzZT4JD0ol+WF8OF4KY1U+BLvdxBpuADuY7YdYQDNZ4umSbDMiuN1PyU5FeLYKkNt4IyqInBmGf9PNzJ1gAet6rFHrxnpFAvA=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=nevCftR9; arc=pass smtp.client-ip=209.85.208.169
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 571E237F8DC
+	for <platform-driver-x86@vger.kernel.org>; Mon, 23 Feb 2026 23:41:15 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.43
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1771890078; cv=none; b=ex4z6jnGR6SIFoY5xPZQZaw+d8CHMBv+HOZXw2NN+bzTjOVRKBpTw37Lzwvo6VYJRo1BZJXsLEDJ4v2gtoPxzNGDZuIZ2vBw79wPuhnSRuN8+d1d9UiBnAoVy0i3JPQ0kO2OE6MQhMB7aoweR3aAgC2ZI/OarqAheC8ofgFfTHQ=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1771890078; c=relaxed/simple;
+	bh=5dyQAM6IPulAUhrvclETJjiYmTwjjWw3Y1o1DldlJaA=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=dpy7e+bUY41xvdNm/b0UjM9WPmkUIiBqcayCI64lgCuvsBxG519i7Z2JaQ3beVGg4g570VT78MqTfiCIcSRKqwpfWzhPOaa8rDcwUhO4jI9+pGNqUWN1cIeShWSVC70K73Xv/Gvud3Xiq/CIZBAoaDj17h9D62GKOQcskOjAVqk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=FUTxeLLn; arc=none smtp.client-ip=209.85.208.43
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="nevCftR9"
-Received: by mail-lj1-f169.google.com with SMTP id 38308e7fff4ca-3878de20527so42012251fa.3
-        for <platform-driver-x86@vger.kernel.org>; Mon, 23 Feb 2026 15:29:32 -0800 (PST)
-ARC-Seal: i=1; a=rsa-sha256; t=1771889371; cv=none;
-        d=google.com; s=arc-20240605;
-        b=VExjlTLIY4aRxL4Nf+Z4mkB/kDVt7+tWe36E+IV+IyIYs31Sbb8UHuUXdSA9GqB8JF
-         ML7aGIqyaTaKEMefk7Cvf4yLkcwXn+u75gMYB0QeKcmAkw6Yaz1fqfXWwZlk2DcC8KGR
-         /2QQBdYPXDBN/k1jM3tRsHRs264slvVxfjlIYhp2d5HRjEWRGqSDIE5YGZ+6HR28FpNW
-         5U2jl0etwuSld/VLjJZx2F1s5ocCNaoaZvypkGXlH59ZIjYoNL1jcF/YiLtSotQDjS3f
-         j5Ps4nCIOlzzDP64gpHEsaC3sIDV3S928IAPHyGXxmFpeH48MGvgy7SVcRhpARKHpknu
-         jUqw==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20240605;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:dkim-signature;
-        bh=8WfeWRTrku2bTr2EuWBQJnzZIlU4RzO3uGEG8JLabpE=;
-        fh=o+7F7tNPk46eVSyGARnMEgfudNO5dy1J25HmqDD01zA=;
-        b=k7I1i0nTB4x7u72bHs3njdw3qF490P/5CbIX9Ueu+E2m3Nx0/7v9bw7KO1Z8MqMadE
-         +0+Af/gZyg5xDSR4WFLaGyinFUAEL8wey73HERTDa7lwlkYJ+u5nt3h19O1DJvIb6bc9
-         51SCIty9p17EQLGu1vGse1UQ+GoYISXJo0YHeNgADroN7xJ22DgWXpish7C/3VU3bE2d
-         LuBf2f2kjbUZ7weXrNDei3GTW7V7bSdZmck9AZQElsTnGVu+zPGP+Lr82myRIMy3iMHh
-         5NdazfwxN6GbMOfqxS+niJgpdSf2GYeNU465WIhlaAs82Bl0Kx1ZQ5852NV+pv4wjULY
-         YTYA==;
-        darn=vger.kernel.org
-ARC-Authentication-Results: i=1; mx.google.com; arc=none
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="FUTxeLLn"
+Received: by mail-ed1-f43.google.com with SMTP id 4fb4d7f45d1cf-65a2fea1a1eso9418453a12.0
+        for <platform-driver-x86@vger.kernel.org>; Mon, 23 Feb 2026 15:41:15 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1771889371; x=1772494171; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=8WfeWRTrku2bTr2EuWBQJnzZIlU4RzO3uGEG8JLabpE=;
-        b=nevCftR9AcRWGqYXWI1CDNO1KT1FavHDqplGfOdrQb0TohoQ+k1wd3vOxTBAvAlyJC
-         tctF1YKqAQZzPABDHpC3Wq2cDvUOMrpa0ojmKtAFDX+9sUWrBgNFOs66mYFmvxRB/+sj
-         2TMzAFFNsVscY+aHVp8lnOA1tSBqSUN0BJAPG3YoLoK2f1BQhmGEZrD7fYGc1qF/1h8o
-         GwwTzzsIb3iBosONx0fA5jD+gFh6e/pQKAHFzKcFzXw5zEe/VrYaElIWJ8s6C1lgtVQb
-         F7ruXjWis8DvjzYLlwV0vshL87NkxsGEm5Wt3cZUBYUhjFSQivzlD+q1B2aGCqWO9FZh
-         JgYA==
+        d=gmail.com; s=20230601; t=1771890074; x=1772494874; darn=vger.kernel.org;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date:from:to
+         :cc:subject:date:message-id:reply-to;
+        bh=ajc9uru2ZAYEp7H15z+ZpBl2mnUqL3fUnLNpXdHs2Xc=;
+        b=FUTxeLLnA5bTMY2nnhqNG53tFYie+ooiOUPem+mifxV3fy58AhgjZONzGJQPjJgH8z
+         2cLZpoPpUND9xeIHNgDfrlsT2ukx1yR91E83Sv6ITJdr1ImBXGht7P+iKlEvoIWgRcST
+         KIE71T3h8YAqvNcxRfgcMB+wypKIwR3JAaEtBWRLNUnFbfzj/vp9u+JFA49n44s6k5AJ
+         vhv6iAwvAzMVS3uyqHY7AwrUOhtAVvydXRz0Vlv7k1CYTycaubSwuBAIxsB2/TzYLQFH
+         nOOorDb3fqY77Y5ONVhHBKP14DGWBwinVdYJewthyzsdCNbsgVIksZKg5D67nLS+WYvS
+         Z7WQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1771889371; x=1772494171;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-gg:x-gm-message-state:from
-         :to:cc:subject:date:message-id:reply-to;
-        bh=8WfeWRTrku2bTr2EuWBQJnzZIlU4RzO3uGEG8JLabpE=;
-        b=Y6xJIiVuHoClLYcwOGtGrEyZZXNY2zBV6vuKI+X7HHJmOb8bXm3WjhAqiKHpQbjREQ
-         l1vbeIb0kKGqOl+bH7Idzs3VTL7PMFQ2xS395Imn7hTCSl0fpnzqEtFAFCAjQItFI64R
-         9hYDqC3dxI93fiW2bNDRpLmi27tXvg+2zPBE0p08VKnb9d/jYB8lLYmJaA+2SaxSvTI1
-         7SXu04gGe2HuNZ1JXZa6FCiqyBPvl/KTSrHmz9CHr+pse21Jyr2UyseFPPzSyXTd0X5X
-         yJ0xCU1WGLz2C2MLEBUs3XUQeD4d0XudsPt47UwOVlfUiGg6P4i+UIM3Jh5bubssUIuY
-         H0EQ==
-X-Forwarded-Encrypted: i=1; AJvYcCXg/TqqPS1YYc2xxx/Lt/Dh0yq9uycLY21T5gEum1q8t+ScT6zRh7tI0G1wIlYwkXMSDgrugDInUKM2f5QqLcPdIVYp@vger.kernel.org
-X-Gm-Message-State: AOJu0Yy2eCyl0FL9bHn2zXQhpoLqrggRir9S4AIxQApqvK5LWsW1tsPm
-	RCXKaAG5vRuuLe0LMHqgkctE5JCFqQGV7PfwxizxFRfHU017Hcy1VxE7QUTI9jTmLAtB23nGyBM
-	iwgs5h9UsS2W9bmsKfUV3vqHRxnLsYCM=
-X-Gm-Gg: ATEYQzzpCqWJfTGKMoLUpkS6TmTIVuMfarRvG1dJ0JE39hbHuZ4B6fDc9+9nG8PmVWz
-	ziQU/E32YH537IJYiCbUMieNs4GuH/v0G0WuYElaBrQ9/8GHIrBGqFpNEh6NJx5jTqAeSs/rxu4
-	mVfZj6KyXdwH04ZiFfSN9ES3M9+rXsxCvdzOHPxh3imU6cc9TzxEKAl48vHX3LxuZuArrj2Ezh2
-	K0O5VK4Qis9h3YU9T71FxE+L1MXG3nug7SeaREvYYDac5gAssXz15wl30aOSATgu0S/Fu9Ob07A
-	yZeCR1UqBvsaZkeSGQ==
-X-Received: by 2002:a05:651c:31cb:b0:383:2537:f121 with SMTP id
- 38308e7fff4ca-389a5dae7a4mr30229781fa.26.1771889370676; Mon, 23 Feb 2026
- 15:29:30 -0800 (PST)
+        d=1e100.net; s=20230601; t=1771890074; x=1772494874;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date:x-gm-gg
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=ajc9uru2ZAYEp7H15z+ZpBl2mnUqL3fUnLNpXdHs2Xc=;
+        b=bZjb2TroSmyRSVRWqc14mTsftQCbfwjvREOQsNCQhXpKZv3Ni+Vgrd0UmMrWPhvuqd
+         GOyULUmkR46tUAC8/SkDyYmVa0z5XQ7CTckFRbjzOxs+PyXTKF3Z0bTQ3fsGHq9tSUjL
+         YPnnweVmMSgJYv9yjloVq4BObcmY0FefUCWzDXGqWbCzdFuHX5boEwGZog4OFu1/udAw
+         JkcPYFWoKm/ZigU0z3sNaMrKLInM+yqKL8hprgVCvIh26Xx5jJA/sLGa1lgw2/y7cihV
+         4EM7CTb/r7Dut/73laq6lBBkNca4fPG2rRqccvnEw0ujQtnNIT8MZb8dJI2cCzl2FjLi
+         8/Vg==
+X-Gm-Message-State: AOJu0YziX3LzN9plclXwkYky7NG4juKbP/95ykQOeGTAJXiXnIC+0JGJ
+	t7R1BZJz/+B5SniQvkETd8+7kt5JFSp0J7SEYVIdUMP/QKuQsRDPu6+i
+X-Gm-Gg: AZuq6aK/l+wfr2kv9f1V9pAXKadvUrm2mbS1pg195vUqwX2M/aS7Pj0K45ntAsRVygD
+	vbS0ewcvQOhJSm+u25RbEyrX2hXOqnN10oHa/qqesknCaYkRo42zZv9PG2CdnUn2gwlGoX0U8s3
+	ls6Af7lj7uy8GrrRksvOpn5eiglRjGiCN1Lyr15gR3SuiTPKaGF3N7bNvBQ7hSegJBTPaqInm/T
+	j/jaJUDRteCr+v9W/xh6wklgTxL0B4oJVTPEdDyKYOxOUGtw05SG1sv5AAzT3G7nYtMEiaoaKT3
+	nSlCxCJAn4QmAPiExpnf4D1is9Vxg1Ds9vk8PB2tGjalcVLiaG2nUZ4hRbtgzgP8g6PsZhOezkm
+	HU0J+uUrgCqfqV2x3xZMoPLQEIUMtQHXXrqO0QQjyAZwFLZckUmclT64UMC23aH1zxhd/FZK30K
+	UvmCl0itKcppCMDQ==
+X-Received: by 2002:a17:907:7ba0:b0:b84:3fab:4251 with SMTP id a640c23a62f3a-b9081089408mr696042166b.15.1771890073435;
+        Mon, 23 Feb 2026 15:41:13 -0800 (PST)
+Received: from jekhomev ([46.251.53.180])
+        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-b9084e8cb3fsm380362766b.48.2026.02.23.15.41.12
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 23 Feb 2026 15:41:12 -0800 (PST)
+Date: Tue, 24 Feb 2026 01:41:12 +0200
+From: Yauhen Kharuzhy <jekhor@gmail.com>
+To: Ilpo =?utf-8?B?SsOkcnZpbmVu?= <ilpo.jarvinen@linux.intel.com>
+Cc: platform-driver-x86@vger.kernel.org, Hans de Goede <hansg@kernel.org>, 
+	LKML <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH v1 1/2] platform: x86-android-tablets: lenovo: Add Yoga
+ Book haptics entries
+Message-ID: <aZzlQWTkm0RaPaXV@jekhomev>
+References: <20260217233618.1324550-1-jekhor@gmail.com>
+ <20260217233618.1324550-2-jekhor@gmail.com>
+ <181e4409-7bbf-e207-0c54-1f817c1c35ed@linux.intel.com>
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20260209063355.491189-1-vishnuocv@gmail.com>
-In-Reply-To: <20260209063355.491189-1-vishnuocv@gmail.com>
-From: Vishnu Sankar <vishnuocv@gmail.com>
-Date: Tue, 24 Feb 2026 08:28:51 +0900
-X-Gm-Features: AaiRm52DBKb5bl7l5Bo_mvwDqKR1GnB0ZMS9OrdzJgEL0ePOj09NuELgOXAuIX4
-Message-ID: <CABxCQKvNO78SeVp9pAnBOSAF=x0eFn03F33ftW-x-rZCG0-84Q@mail.gmail.com>
-Subject: Re: [PATCH v7 0/3] TrackPoint doubletap enablement and user control
-To: mpearson-lenovo@squebb.ca, dmitry.torokhov@gmail.com, hmh@hmh.eng.br, 
-	hansg@kernel.org, corbet@lwn.net, derekjohn.clark@gmail.com, 
-	ilpo.jarvinen@linux.intel.com
-Cc: linux-input@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	ibm-acpi-devel@lists.sourceforge.net, linux-doc@vger.kernel.org, 
-	platform-driver-x86@vger.kernel.org, vsankar@lenovo.com
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <181e4409-7bbf-e207-0c54-1f817c1c35ed@linux.intel.com>
 
-Hi,
+On Mon, Feb 23, 2026 at 04:26:25PM +0200, Ilpo Järvinen wrote:
+> On Wed, 18 Feb 2026, Yauhen Kharuzhy wrote:
+> 
+> > Add drv2604l i2c_board_info for drv2604l haptics drivers present in
+> > Lenovo Yoga Book YB1-X90 and YB1-X91. Set properties required for device
+> > initialization and self-calibration.
+> > 
+> > Signed-off-by: Yauhen Kharuzhy <jekhor@gmail.com>
+> > ---
+> >  .../platform/x86/x86-android-tablets/lenovo.c | 96 +++++++++++++++++++
+> >  1 file changed, 96 insertions(+)
+> > 
+> >  
+> > +#define YB1_X91_DRV2604L_0_DEVICE "i2c-DRV2604:00"
+> > +#define YB1_X91_DRV2604L_1_DEVICE "i2c-DRV2604:01"
+> > +
+> > +static int __init lenovo_yb1_x91_init(struct device *dev)
+> > +{
+> > +	struct device *drv2604l_0_dev = NULL, *drv2604l_1_dev = NULL;
+> > +	int ret = 0;
+> > +
+> > +	drv2604l_0_dev = bus_find_device_by_name(&i2c_bus_type, NULL,
+> > +						 YB1_X91_DRV2604L_0_DEVICE);
+> > +	if (!drv2604l_0_dev) {
+> > +		pr_err("error: cannot find %s device\n",
+> > +		       YB1_X91_DRV2604L_0_DEVICE);
+> > +		return -ENODEV;
+> > +	}
+> > +
+> > +	ret = device_create_managed_software_node(drv2604l_0_dev,
+> > +					lenovo_yb1_x9x_drv2604l_0_props, NULL);
+> > +	if (ret) {
+> > +		pr_err("error: cannot create software node for %s: %d\n",
+> > +		       YB1_X91_DRV2604L_0_DEVICE, ret);
+> > +		goto put_drv2604l_0;
+> > +	}
+> > +
+> > +	drv2604l_1_dev = bus_find_device_by_name(&i2c_bus_type, NULL,
+> > +						 YB1_X91_DRV2604L_1_DEVICE);
+> > +	if (!drv2604l_1_dev) {
+> > +		pr_err("error: cannot find %s device\n",
+> > +		       YB1_X91_DRV2604L_1_DEVICE);
+> > +		ret = -ENODEV;
+> > +		goto put_drv2604l_0;
+> > +	}
+> > +
+> > +	ret = device_create_managed_software_node(drv2604l_1_dev,
+> > +					lenovo_yb1_x9x_drv2604l_1_props, NULL);
+> > +	if (ret) {
+> > +		pr_err("error: cannot create software node for %s\n",
+> > +		       YB1_X91_DRV2604L_1_DEVICE);
+> > +		ret = -EINVAL;
+> > +		goto put_drv2604l_1;
+> > +	}
+> > +
+> > +put_drv2604l_0:
+> > +	put_device(drv2604l_0_dev);
+> > +put_drv2604l_1:
+> > +	put_device(drv2604l_1_dev);
+> 
+> This looks like a case that would benefit from using cleanup.h 
+> (__free(put_device)).
+> 
+> Remember to declare variables that use __free() mid-function as per the 
+> usage pattern in documented cleanup.h.
+> 
+> Please also make sure you have all necessary includes for using it (not 
+> through some obscure indirect include path).
 
-Gentle ping on this series.
+A good point, thanks!
 
-This is v7 addressing all previous review comments.
-Please let me know if any further changes are needed.
-
-Thanks,
-Vishnu
-
-
-On Mon, Feb 9, 2026 at 3:34=E2=80=AFPM Vishnu Sankar <vishnuocv@gmail.com> =
-wrote:
->
-> This patch series adds support for TrackPoint doubletap with a clear and
-> simple separation of responsibilities between drivers:
->
-> 1. Firmware enablement (trackpoint.c):
->    Automatically enables doubletap on capable hardware during device
->    detection.
->
-> 2. User control (thinkpad_acpi.c):
->    Provides a sysfs interface to enable or disable delivery of doubletap
->    events to userspace.
->
-> The approach follows the KISS principle:
-> - The TrackPoint driver enables hardware functionality by default.
-> - The thinkpad_acpi driver controls whether ACPI doubletap events are
->   delivered, using existing hotkey filtering infrastructure.
-> - No cross-driver APIs or dual filtering paths are introduced.
->
-> Changes in v7:
-> - Removed unwanted comments and logs
->
-> Changes in v6:
-> - Documentation: fix formatting of the doubletap_enable sysfs attribute
->   description (separate "Values" list)
->
-> Changes in v5:
-> - Rename sysfs attribute from doubletap_filter to doubletap_enable to
->   reflect actual behavior.
-> - Fix inverted logic so events are delivered only when doubletap is
->   enabled.
-> - Suppress ACPI hotkey delivery instead of injecting or filtering input
->   events.
-> - Register the sysfs attribute via hotkey_attributes[] instead of
->   device_create_file().
-> - Drop unnecessary helper wrappers and debug logging.
-> - Update Documentation to reflect the new naming and semantics.
->
-> Changes in v4:
-> - Complete redesign based on reviewer feedback.
-> - trackpoint.c: Simplified to only enable doubletap by default.
-> - trackpoint.c: Removed all sysfs attributes and global variables.
-> - trackpoint.c: Uses firmware ID detection with deny list.
-> - thinkpad_acpi.c: Added sysfs interface for kernel-level event control.
-> - thinkpad_acpi.c: No cross-driver dependencies.
-> - Documentation: Updated to reflect simplified sysfs approach.
->
-> Changes in v3:
-> - No changes.
->
-> Changes in v2:
-> - Improved commit messages.
-> - Removed unnecessary comments and debug messages.
-> - Switched to strstarts() usage.
-> - Simplified firmware capability detection logic.
->
-> This version addresses the remaining review feedback by correcting the
-> naming and logic inversion, aligning sysfs semantics with behavior, and
-> fully integrating with existing thinkpad_acpi hotkey handling.
->
-> Vishnu Sankar (3):
->   input: trackpoint - Enable doubletap by default on capable devices
->   platform/x86: thinkpad_acpi: Add sysfs control for TrackPoint
->     double-tap
->   Documentation: thinkpad-acpi - Document doubletap_enable attribute
->
->  .../admin-guide/laptops/thinkpad-acpi.rst     | 21 +++++++++
->  drivers/input/mouse/trackpoint.c              | 45 +++++++++++++++++++
->  drivers/input/mouse/trackpoint.h              |  5 +++
->  drivers/platform/x86/lenovo/thinkpad_acpi.c   | 42 ++++++++++++++---
->  4 files changed, 106 insertions(+), 7 deletions(-)
->
-> --
-> 2.51.0
->
-
-
---
-
-Regards,
-
-      Vishnu Sankar
+-- 
+Yauhen Kharuzhy
