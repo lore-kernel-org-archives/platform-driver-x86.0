@@ -1,41 +1,42 @@
-Received: from relay12.grserver.gr (relay12.grserver.gr [88.99.38.195])
+Received: from relay13.grserver.gr (relay13.grserver.gr [178.156.171.147])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 77E0D36682B;
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CFD9C366DAC;
 	Mon, 23 Feb 2026 18:30:22 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=88.99.38.195
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=178.156.171.147
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1771871423; cv=none; b=MDUqGsTzJAmaxCMLZZjSJRJRzwdtLp5bbNrmXs0QjLQDKR2UyEoJSbf1KZM18sXhD4aCMlTO5XYfe28F+o/Bar1lJAjIvW0DLjRDp1qIlNsZXVuRo4+/YeJ7oIFPxVjdGwFNY7aHViX7TuUbqs539GB34+2EH9iU+VBjYiYzU0s=
+	t=1771871424; cv=none; b=QqREkqU+axsAMzWJe7KjK5J3lOh8CD9QnW8BAmcMMM7vVYwR3XmiXQY1ulhRPrwOl8Kc92cilG42WMR425wlYZpwEJsN3Y0pUFAAWHpbUACqIbWRE9r2O1CP4/zQ3WLhMwwuswcfjSpjtB8/JLfetewz6bfBQecYTBxeb51plME=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1771871423; c=relaxed/simple;
-	bh=5n9k55j3CT5598K8B8vBY6stMjcEOsdS7hN9ikgR2CI=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=EHkFttg3N2MkE1R1bqgImaoGfeHpFJaHyrV4dHH2uLY+KCvAUuPZ6ThuPR7Rh2zuvscmu39otAsfWQk5lMjZ0aCWmrvJf8mTDmjp+U/mK94KefMvwPQw/AFEH9rRanV+NxBzLwvGDg8iQz46ccNT/b2ULoMEUa1eaW77BJSzvbY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=antheas.dev; spf=pass smtp.mailfrom=antheas.dev; dkim=pass (2048-bit key) header.d=antheas.dev header.i=@antheas.dev header.b=L8KLk6Xh; arc=none smtp.client-ip=88.99.38.195
+	s=arc-20240116; t=1771871424; c=relaxed/simple;
+	bh=ui/3meh9IYKOUrjEwdJGjFvZ1IHxPc95RBHGj8R/5rU=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=G+KMAjOWKpqKrv26VHWEomHvii+ByM++5bwFoIRoIb2a5lfNtCE8Udb6aD+JoWYtHayyab/fvFe73blFPwVmREgrwK/PbM4JjJGNZ1lwyg0vOwIMUTNEv1mLuItfB6PUjRSNAyc75gMYi77PihlM/xKKjgMx6p1pq8jwqgzLfQs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=antheas.dev; spf=pass smtp.mailfrom=antheas.dev; dkim=pass (2048-bit key) header.d=antheas.dev header.i=@antheas.dev header.b=f5F2Ohd2; arc=none smtp.client-ip=178.156.171.147
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=antheas.dev
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=antheas.dev
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=antheas.dev header.i=@antheas.dev header.b="L8KLk6Xh"
-Received: from relay12 (localhost [127.0.0.1])
-	by relay12.grserver.gr (Proxmox) with ESMTP id C1977BBEF1;
-	Mon, 23 Feb 2026 20:30:14 +0200 (EET)
+	dkim=pass (2048-bit key) header.d=antheas.dev header.i=@antheas.dev header.b="f5F2Ohd2"
+Received: from relay13 (localhost [127.0.0.1])
+	by relay13.grserver.gr (Proxmox) with ESMTP id C15F95E5E8;
+	Mon, 23 Feb 2026 20:30:16 +0200 (EET)
 Received: from linux3247.grserver.gr (linux3247.grserver.gr [213.158.90.240])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
 	(No client certificate requested)
-	by relay12.grserver.gr (Proxmox) with ESMTPS id DE560BBF79;
-	Mon, 23 Feb 2026 20:30:13 +0200 (EET)
+	by relay13.grserver.gr (Proxmox) with ESMTPS id 427EE5E5F2;
+	Mon, 23 Feb 2026 20:30:16 +0200 (EET)
 Received: from antheas-z13 (unknown [IPv6:2a05:f6c5:43c3:0:378a:d3f6:f8b0:bed1])
-	by linux3247.grserver.gr (Postfix) with ESMTPSA id 0032B1FD767;
-	Mon, 23 Feb 2026 20:30:12 +0200 (EET)
+	by linux3247.grserver.gr (Postfix) with ESMTPSA id C50B91FDBF8;
+	Mon, 23 Feb 2026 20:30:14 +0200 (EET)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=antheas.dev;
-	s=default; t=1771871413;
-	bh=1JBdONbi6warzMOeIa5vSjfM2wmhAX+qQZoGlS61TUA=; h=From:To:Subject;
-	b=L8KLk6XhxzKrY+XtRmbDi7KOWK79HCuyrdn4xCYzT+8FbVqVPDwmtp8UnZkYjQ4Xg
-	 X1l55ltokaTXfYld0MlwEWboycol1JMF2zmPG02UqEYS/IWbkQfxVRJbT9vIYKw48N
-	 aanLlQ6R54zMlm4pyj60XMK7sbrXhmYS1bRRs1Puh9VtPe2jJw/X7QwH3z5lDiMzh8
-	 gJWn6DGIc8Qw14/QwxB0oNmeud1W8lTNCvmYT7wbzbDDej90FcAOyIHMpQTYtmBtYy
-	 U8u8ZnqlOQW8ssLCL+qkNY4Z4i5dPSx0Mgokt5C+lvC3IbohrK186LWS3lryPe4XHG
-	 u9JuOt0cWXsnw==
+	s=default; t=1771871415;
+	bh=f9gjjAW6bZsh3n9/FU1mGkfTCS/QN29CND7qhH63w7k=; h=From:To:Subject;
+	b=f5F2Ohd2ZrH7/5/DUMmGTBwmB+9dnssOi+9fQO1bAoHyySvuFQbOGwCz+drx2bEGF
+	 xZBQUUe5iycXcRO+YgrIMExK3++TI8ivASGnGVl4bTJYBb4BTw8J2iXoSEulEzFzcf
+	 Lk6e0bS/kMWR+sleUqGYsz8+H9wIy94+SFo8lJkuuXGvopm/P4y3FlElHwfRWCU7Dx
+	 4aqHxGHyYFkkELLl5C1F18FIZBWktP5oIWUOq4tuc3T8R3NutndSSjiNxODZwPZK6W
+	 nB6+wE3mVpS8biHUIGke8KXmRamtMkULr4ofyzWGCpw+H7w5Ak6Not327pUfNumKIz
+	 TitgKtnTxCnrQ==
 Authentication-Results: linux3247.grserver.gr;
 	spf=pass (sender IP is 2a05:f6c5:43c3:0:378a:d3f6:f8b0:bed1) smtp.mailfrom=lkml@antheas.dev smtp.helo=antheas-z13
 Received-SPF: pass (linux3247.grserver.gr: connection is authenticated)
@@ -48,10 +49,12 @@ Cc: linux-kernel@vger.kernel.org,
 	=?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>,
 	Eileen <eileen@one-netbook.com>,
 	Antheas Kapenekakis <lkml@antheas.dev>
-Subject: [PATCH v2 0/4] platform/x86: oxpec: Add more devices
-Date: Mon, 23 Feb 2026 19:29:49 +0100
-Message-ID: <20260223183004.2696892-1-lkml@antheas.dev>
+Subject: [PATCH v2 2/4] platform/x86: oxpec: Add support for OneXPlayer X1z
+Date: Mon, 23 Feb 2026 19:29:51 +0100
+Message-ID: <20260223183004.2696892-3-lkml@antheas.dev>
 X-Mailer: git-send-email 2.52.0
+In-Reply-To: <20260223183004.2696892-1-lkml@antheas.dev>
+References: <20260223183004.2696892-1-lkml@antheas.dev>
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
@@ -60,31 +63,37 @@ List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 X-PPP-Message-ID: 
- <177187141355.873602.9625271989191255355@linux3247.grserver.gr>
+ <177187141538.873860.6502432769397980060@linux3247.grserver.gr>
 X-PPP-Vhost: antheas.dev
 X-Virus-Scanned: clamav-milter 1.4.3 at linux3247.grserver.gr
 X-Virus-Status: Clean
 
-Adds support for the new APEX model by OneXPlayer, as well as some other
-devices that I have collected over the last part of 2025.
+X1z is a variant of OneXPlayer X1 A with 8840U. It seems that only one
+user has this one. Add a quirk for it to the oxpec driver.
 
+Signed-off-by: Antheas Kapenekakis <lkml@antheas.dev>
 ---
-V1: https://lore.kernel.org/lkml/20260218214919.449636-1-lkml@antheas.dev/
+ drivers/platform/x86/oxpec.c | 7 +++++++
+ 1 file changed, 7 insertions(+)
 
-Changes since V1:
-  - Reword changelogs to be clearer
-
-Antheas Kapenekakis (4):
-  platform/x86: oxpec: Add support for OneXPlayer APEX
-  platform/x86: oxpec: Add support for OneXPlayer X1z
-  platform/x86: oxpec: Add support for OneXPlayer X1 Air
-  platform/x86: oxpec: Add support for Aokzoe A2 Pro
-
- drivers/platform/x86/oxpec.c | 30 +++++++++++++++++++++++++++++-
- 1 file changed, 29 insertions(+), 1 deletion(-)
-
-
-base-commit: 57d76ceccee4b497eb835831206b50e72915a501
+diff --git a/drivers/platform/x86/oxpec.c b/drivers/platform/x86/oxpec.c
+index 59d6f9d9a905..623d9a452c46 100644
+--- a/drivers/platform/x86/oxpec.c
++++ b/drivers/platform/x86/oxpec.c
+@@ -219,6 +219,13 @@ static const struct dmi_system_id dmi_table[] = {
+ 		},
+ 		.driver_data = (void *)oxp_mini_amd_pro,
+ 	},
++	{
++		.matches = {
++			DMI_MATCH(DMI_BOARD_VENDOR, "ONE-NETBOOK"),
++			DMI_EXACT_MATCH(DMI_BOARD_NAME, "ONEXPLAYER X1z"),
++		},
++		.driver_data = (void *)oxp_x1,
++	},
+ 	{
+ 		.matches = {
+ 			DMI_MATCH(DMI_BOARD_VENDOR, "ONE-NETBOOK"),
 -- 
 2.52.0
 
