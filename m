@@ -1,61 +1,58 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.18])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.12])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D9F883148C9;
-	Mon, 23 Feb 2026 16:34:53 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.18
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 76147312829;
+	Mon, 23 Feb 2026 16:35:01 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.12
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1771864496; cv=none; b=gKBZRuj3r9x/7+cd+O7xhjJ/vHFKsA3PUHid98kpAhkUBiTbL+3q3o2UgJYpGewzpdzJjybyV9Kk8UhJzarrbOZvsW8h/HNyHg3by9N+D+6bKkQl8gtKc8yK7q4/AJzK86b1RnlrVrQVq43aX4lCeLlNY5YAsOsSEi0fdTeuq20=
+	t=1771864503; cv=none; b=NCMBnl7D3ddqasq5Yj+2KSO3XzLN1xo0juDW8FrpWtjNCpN5RI4FBvu6U7WnpEBO94W65ihj7VJ5gpOl/msJRJ6s+NZELP0noYbUuhiBiLpMTE/0UIVA/nQqs/nXzn9vlKCqd8Oksu4+cA5UnmHcNN48ogniXzQR/FDP914AuM4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1771864496; c=relaxed/simple;
-	bh=Dd4ILjpFF5yGEltH6vR7kNjeuhrSo2+XMUu8Vds8ezs=;
+	s=arc-20240116; t=1771864503; c=relaxed/simple;
+	bh=+QXIBfgzHIWmpSF1ZiqZ0tQdtXVDPAv9XGqmo7q04co=;
 	h=From:To:Cc:In-Reply-To:References:Subject:Message-Id:Date:
-	 MIME-Version:Content-Type; b=YU/EgqzVOOjsMPEJn11977gXa0H2ytJ7loqykH3sqxHLcb8dRRcz/56grY72vkAG8mMSppauHiEyjtlkY8UsolkKZNDJFN5b39GES80CirpAGBZb+QMXxGJv/haFhS8Pjz2GyiDofUiH1ZLk2wI5XD6D7/tE7gsLMLgdO25Yct8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=pass smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=iAUth5fU; arc=none smtp.client-ip=192.198.163.18
+	 MIME-Version:Content-Type; b=TuIUJaVaHHvM+WV7FZYACwTFgSYo95kjDtVpVsjXLfZXQRUcYhTwHDY2cd0FWHisp6s7NXZ5le2r84kTovDhNI4nvVfb0JCHgmx00cfXYq+p/jiw5AR94Fomofd1sHTcA9rOd2nScVdCmMR2bMxKrbiPNji6OKtzpz6Iyns6apw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=pass smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=e6BuDQLv; arc=none smtp.client-ip=198.175.65.12
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="iAUth5fU"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="e6BuDQLv"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1771864494; x=1803400494;
+  t=1771864501; x=1803400501;
   h=from:to:cc:in-reply-to:references:subject:message-id:
    date:mime-version:content-transfer-encoding;
-  bh=Dd4ILjpFF5yGEltH6vR7kNjeuhrSo2+XMUu8Vds8ezs=;
-  b=iAUth5fU4yOko3fxZc1nh5pYC9LeI63b0Bgp+tqNvmCrPr15RuU/e2cu
-   O69FoxayQWglhKTdetYFXH3SLt5z4BBWha1zc2GVywF3mhBR6FyWdxCVf
-   D/WIwBM5TtIeV10jZlqSrILjlIt4hw2fuZNi7Q51Ty2FoyzrczgK4O/cf
-   anO3lgZ1rT+hzNX1CHLz3HiS4ZTNbiUgYyHaHgKYmnQWF8aTg/dLKebtp
-   1hnXAj/9AAOd1P5AJ1zac6r3cQ9nnB6VCzVGLKuSGpTl1yrlrls/2e6Fa
-   3loC2AjQOHRwTI67CQ221vO2AX73h/kCMXdBg2AuiNsKJbxihG2CWLexh
-   Q==;
-X-CSE-ConnectionGUID: jntEQoJwT8enOI+e0eYw5A==
-X-CSE-MsgGUID: WK+FcRXxTL6PVnCMPsUn6w==
-X-IronPort-AV: E=McAfee;i="6800,10657,11710"; a="72073954"
+  bh=+QXIBfgzHIWmpSF1ZiqZ0tQdtXVDPAv9XGqmo7q04co=;
+  b=e6BuDQLvl9EANG0fsTZleGw6qyNxkS1EkmPav9MMGuAB40DFwRlKfPt+
+   upPCOsjKoyrES+2wA2dAsyac7yUZHPjx7XppDNSSHzpvDPgUXjG58q77s
+   Riy4gQ77Tn2eLTJq+GeF0YWkYSAWYChdfeAJcNfbuBD22nHOd/CMFriqa
+   DG205BTqcdbpoO0zkO8wKd3nrQ1U5S1MxfEkFKzV3icaQ5/V97p4pmh7a
+   73DtgcjxBoJYsKJGUsJGoKat8SXRSb87ZU2jMNGQz50MjPra5eqkYUa5H
+   Ab9cGHQW+7jDxRWZ+k+74L+MzJpWJ9aFCl0u2U1pkA1Xtpd5q2zjOXWxo
+   g==;
+X-CSE-ConnectionGUID: ISgyEEGgR/OYBw9t2zXvmw==
+X-CSE-MsgGUID: 14FqAkvZSqKwENHKCygj5A==
+X-IronPort-AV: E=McAfee;i="6800,10657,11710"; a="84315851"
 X-IronPort-AV: E=Sophos;i="6.21,307,1763452800"; 
-   d="scan'208";a="72073954"
+   d="scan'208";a="84315851"
 Received: from fmviesa005.fm.intel.com ([10.60.135.145])
-  by fmvoesa112.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 23 Feb 2026 08:34:53 -0800
-X-CSE-ConnectionGUID: wjzdFDvgQHK8aN+8kmfKdw==
-X-CSE-MsgGUID: G425xzCeQbGEZvfF2XBpJA==
+  by orvoesa104.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 23 Feb 2026 08:35:01 -0800
+X-CSE-ConnectionGUID: SSPJYTD+T+WPOl+UDoQ3/w==
+X-CSE-MsgGUID: 6NGc23CiSoyJuzkrtncAXQ==
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="6.21,307,1763452800"; 
-   d="scan'208";a="220163280"
+   d="scan'208";a="220163290"
 Received: from ijarvine-mobl1.ger.corp.intel.com (HELO localhost) ([10.245.244.30])
-  by fmviesa005-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 23 Feb 2026 08:34:50 -0800
+  by fmviesa005-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 23 Feb 2026 08:34:59 -0800
 From: =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
-To: Matthew Garrett <mjg59@srcf.ucam.org>, 
- =?utf-8?q?Pali_Roh=C3=A1r?= <pali@kernel.org>, 
- Hans de Goede <hansg@kernel.org>, Kurt Borja <kuurtb@gmail.com>
-Cc: platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org, 
- Dell.Client.Kernel@dell.com, stable@vger.kernel.org, 
- Olexa Bilaniuk <obilaniu@gmail.com>
-In-Reply-To: <20260207-mute-keys-v2-1-c55e5471c9c1@gmail.com>
-References: <20260207-mute-keys-v2-1-c55e5471c9c1@gmail.com>
-Subject: Re: [PATCH v2] platform/x86: dell-wmi: Add audio/mic mute key
- codes
-Message-Id: <177186448386.17917.11463936555512509695.b4-ty@linux.intel.com>
-Date: Mon, 23 Feb 2026 18:34:43 +0200
+To: Hans de Goede <hansg@kernel.org>, 
+ Anton Plotnikov <plotnikovanton@gmail.com>
+Cc: platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
+In-Reply-To: <20260203164832.40514-1-plotnikovanton@gmail.com>
+References: <20260203164832.40514-1-plotnikovanton@gmail.com>
+Subject: Re: [PATCH] platform/x86: hp-wmi: add Omen 14-fb1xxx (board 8E41)
+ support
+Message-Id: <177186449286.17917.4214250076194289272.b4-ty@linux.intel.com>
+Date: Mon, 23 Feb 2026 18:34:52 +0200
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
@@ -66,11 +63,17 @@ Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
 X-Mailer: b4 0.13.0
 
-On Sat, 07 Feb 2026 12:16:34 -0500, Kurt Borja wrote:
+On Tue, 03 Feb 2026 18:48:32 +0200, Anton Plotnikov wrote:
 
-> Add audio/mic mute key codes found in Alienware m18 r1 AMD.
+> Reverse engineering of the HP Omen Windows utility shows that for performance
+> mode it uses the same codes listed in hp_thermal_profile_omen_v1. Therefore it
+> seems sufficient to add the board model name to omen_thermal_profile_boards.
 > 
+> Tested on Omen 14-fb1xxx: CPU power in performance profile reaches the Windows
+> limit (65W), instead of 45W in automatic BIOS mode. Max fan speed was reached
+> as well.
 > 
+> [...]
 
 
 Thank you for your contribution, it has been applied to my local
@@ -79,8 +82,8 @@ platform-drivers-x86/review-ilpo-fixes branch only once I've pushed my
 local branch there, which might take a while.
 
 The list of commits applied:
-[1/1] platform/x86: dell-wmi: Add audio/mic mute key codes
-      commit: 26a7601471f62b95d56a81c3a8ccb551b5a6630f
+[1/1] platform/x86: hp-wmi: add Omen 14-fb1xxx (board 8E41) support
+      commit: 729ffcffa73069cb066fd54a2bc7b09e5f782d48
 
 --
  i.
