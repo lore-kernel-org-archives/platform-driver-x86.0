@@ -1,137 +1,86 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mail-m19731105.qiye.163.com (mail-m19731105.qiye.163.com [220.197.31.105])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C76FB1A9F8C;
-	Mon, 23 Feb 2026 15:59:17 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8BF0B1EFFA1;
+	Mon, 23 Feb 2026 16:06:25 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=220.197.31.105
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1771862357; cv=none; b=izDNT6oDVj8/wOzFqeyrXtHybkruxv0sKAkzQvnrznE/m+WlNXmoViKmxsNVyef2FfaBWpxpLBtHCl2a22VCj4ghW1aN0PGkwcz0PApbMTQGnRSsemggCCBbN9XDgh0XVqc1BsZFTJ0t4eda86Og8StM8bYn0GL5RxYsMo07FIg=
+	t=1771862789; cv=none; b=j/+tTVnnmnAkluLu41pTyONydZOuL1vaZukDotjJSEZ2yVhf36eAIZ52cFA6E53GZklcUU7afwvDehoTJyuJGNU3LYnXr6NXMKabUYtLgCZ/KKhJb1860xIp5lnW4z9yDIOMJuKFFb6L89JU8MtNubNMqbfQIGiOgLj0DfVSQKI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1771862357; c=relaxed/simple;
-	bh=2N/FdQKEE3Szhdo+CUlbRkqeqFLbqMjU46LA0027/Gc=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version:Content-Type; b=SqDyJpFWuTgbNkFpuU8y+784TPC6iAJ7Tqad2BnJnewq6dOL5/qbjaHjGi27TGdkkJOM4SLeAcWZMCpYBP/QmeYzPIqqt3YpNlE9KnZ9KBrm11c0GLLIFZ/aK0nlbF5X6fosxauy2DzcIAS/3Vz4y5vgnZnY/mkTg5rdvcJtqQk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=NbykNgGu; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1771862789; c=relaxed/simple;
+	bh=Esie7xcoMylOfNRzCrDkUMrZzm3fjFxynP7Ruo4q6vQ=;
+	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=hmdJo7wHCfYFlnO0rgx951k/yOu1KOcq6ONV3WSCnbApKvXFu3DQuYgKr+cqqjr0w4l+r3PIu4fAlbiMKvv1ZgeVzGpiFQpD/mfnC6yHKBVlxWZqh275KwKA7ITmLGRs8WXvuSl2fm6RPDIytMeO9k2JKQic4BIAxbZMgRm9LCU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=rock-chips.com; spf=pass smtp.mailfrom=rock-chips.com; dkim=pass (1024-bit key) header.d=rock-chips.com header.i=@rock-chips.com header.b=goJ5v1Ur; arc=none smtp.client-ip=220.197.31.105
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=rock-chips.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=rock-chips.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="NbykNgGu"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 2FB71C116C6;
-	Mon, 23 Feb 2026 15:59:15 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1771862357;
-	bh=2N/FdQKEE3Szhdo+CUlbRkqeqFLbqMjU46LA0027/Gc=;
-	h=From:To:Cc:Subject:Date:From;
-	b=NbykNgGuG73gCO6HKxWqufR7k7K6sdq9m5GUHyp9qfx71Bh1Lrlrt6lFhQiqb3H+R
-	 UjbczyuHKpUhjoU3ia0+L1xzrro+pDQzKWh494F+D+IpIYj254GVG80XhXHKJQ3H2T
-	 v6vbjiZRuNMd8O83QY4B/1ybB2HtNHCC65GkGeWXMH5EbjS5WXeBLIpt09o/51bM5/
-	 k0inMVmWDSbOHUnBrWg53MGIyftbROXVjO++zi+EhUOJKSglvHweMeKFtqPw3Vb5ub
-	 sN7hIo8975nixZtPJgsWn8fo0vb064ah5bgrWaG//0mf6EJT2YTrIgEOilpnZEGH6Y
-	 6a5AUAwU2mNcg==
-From: "Rafael J. Wysocki" <rafael@kernel.org>
-To: Mattia Dongili <malattia@linux.it>
-Cc: Linux ACPI <linux-acpi@vger.kernel.org>,
- LKML <linux-kernel@vger.kernel.org>,
- Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
- Arnd Bergmann <arnd@arndb.de>, platform-driver-x86@vger.kernel.org
-Subject: [PATCH v1] sonypi: Convert ACPI driver to a platform one
-Date: Mon, 23 Feb 2026 16:59:14 +0100
-Message-ID: <2277493.Mh6RI2rZIc@rafael.j.wysocki>
-Organization: Linux Kernel Development
+	dkim=pass (1024-bit key) header.d=rock-chips.com header.i=@rock-chips.com header.b="goJ5v1Ur"
+Received: from localhost.localdomain (unknown [58.22.7.114])
+	by smtp.qiye.163.com (Hmail) with ESMTP id 34b404565;
+	Mon, 23 Feb 2026 23:51:05 +0800 (GMT+08:00)
+From: Shawn Lin <shawn.lin@rock-chips.com>
+To: Raag Jadav <raag.jadav@intel.com>,
+	Hans de Goede <hansg@kernel.org>
+Cc: platform-driver-x86@vger.kernel.org,
+	Bjorn Helgaas <bhelgaas@google.com>,
+	Philipp Stanner <phasta@kernel.org>,
+	linux-pci@vger.kernel.org,
+	Shawn Lin <shawn.lin@rock-chips.com>
+Subject: [PATCH 16/37] platform/x86/intel: Replace pci_alloc_irq_vectors() with pcim_alloc_irq_vectors()
+Date: Mon, 23 Feb 2026 23:50:54 +0800
+Message-Id: <1771861854-87838-1-git-send-email-shawn.lin@rock-chips.com>
+X-Mailer: git-send-email 2.7.4
+In-Reply-To: <1771860581-82092-1-git-send-email-shawn.lin@rock-chips.com>
+References: <1771860581-82092-1-git-send-email-shawn.lin@rock-chips.com>
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7Bit
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+X-HM-Tid: 0a9c8b32720009cckunm2d986085987997
+X-HM-MType: 1
+X-HM-Spam-Status: e1kfGhgUHx5ZQUpXWQgPGg8OCBgUHx5ZQUlOS1dZFg8aDwILHllBWSg2Ly
+	tZV1koWUFDSUNOT01LS0k3V1ktWUFJV1kPCRoVCBIfWUFZGkIYQ1ZJGk4dQ01OQxgZQk9WFRQJFh
+	oXVRMBExYaEhckFA4PWVdZGBILWUFZTkNVSUlVTFVKSk9ZV1kWGg8SFR0UWUFZT0tIVUpLSU9PT0
+	hVSktLVUpCS0tZBg++
+DKIM-Signature: a=rsa-sha256;
+	b=goJ5v1UrSqYMk5e3LjWhqXfJ+pUI69/X9t4NYutBQGajh12xYACPi8qoFt7kDcdTmeQDhqJVoKg2z0BK5HzoC3iDvIX9HeM+XebrkEMONh4KecowUOvavBzgvx6nAiXaUk+TZtvrzDjJyTzUhjLvBnLGRc4gjopwsnhGsuJbKNQ=; s=default; c=relaxed/relaxed; d=rock-chips.com; v=1;
+	bh=UdvKYkUzhrfzUok6eM1TIEx31WQdYNSN2+4X6rygYV8=;
+	h=date:mime-version:subject:message-id:from;
 
-From: "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>
+pcim_enable_device() no longer automatically manages IRQ vectors via devres.
+Drivers must now manually call pci_free_irq_vectors() for cleanup. Alternatively,
+pcim_alloc_irq_vectors() should be used.
 
-In all cases in which a struct acpi_driver is used for binding a driver
-to an ACPI device object, a corresponding platform device is created by
-the ACPI core and that device is regarded as a proper representation of
-underlying hardware.  Accordingly, a struct platform_driver should be
-used by driver code to bind to that device.  There are multiple reasons
-why drivers should not bind directly to ACPI device objects [1].
-
-Overall, it is better to bind drivers to platform devices than to their
-ACPI companions, so convert the sonypi ACPI driver to a platform one.
-
-While this is not expected to alter functionality, it changes sysfs
-layout and so it will be visible to user space.
-
-Link: https://lore.kernel.org/all/2396510.ElGaqSPkdT@rafael.j.wysocki/ [1]
-Signed-off-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
+To: Raag Jadav <raag.jadav@intel.com>
+To: Hans de Goede <hansg@kernel.org>
+Cc: platform-driver-x86@vger.kernel.org
+Cc: Bjorn Helgaas <bhelgaas@google.com>
+Cc: Philipp Stanner <phasta@kernel.org>
+Cc: linux-pci@vger.kernel.org
+Signed-off-by: Shawn Lin <shawn.lin@rock-chips.com>
 ---
- drivers/char/sonypi.c | 25 +++++++++++++------------
- 1 file changed, 13 insertions(+), 12 deletions(-)
 
-diff --git a/drivers/char/sonypi.c b/drivers/char/sonypi.c
-index 677bb5ac950a..ccda997a9098 100644
---- a/drivers/char/sonypi.c
-+++ b/drivers/char/sonypi.c
-@@ -1115,15 +1115,17 @@ static int sonypi_disable(void)
- }
+ drivers/platform/x86/intel/ehl_pse_io.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/drivers/platform/x86/intel/ehl_pse_io.c b/drivers/platform/x86/intel/ehl_pse_io.c
+index 861e148..d554ba9 100644
+--- a/drivers/platform/x86/intel/ehl_pse_io.c
++++ b/drivers/platform/x86/intel/ehl_pse_io.c
+@@ -56,7 +56,7 @@ static int ehl_pse_io_probe(struct pci_dev *pci, const struct pci_device_id *id)
  
- #ifdef CONFIG_ACPI
--static int sonypi_acpi_add(struct acpi_device *device)
-+static int sonypi_acpi_probe(struct platform_device *pdev)
- {
-+	struct acpi_device *device = ACPI_COMPANION(&pdev->dev);
-+
- 	sonypi_acpi_device = device;
- 	strcpy(acpi_device_name(device), "Sony laptop hotkeys");
- 	strcpy(acpi_device_class(device), "sony/hotkey");
- 	return 0;
- }
+ 	pci_set_master(pci);
  
--static void sonypi_acpi_remove(struct acpi_device *device)
-+static void sonypi_acpi_remove(struct platform_device *pdev)
- {
- 	sonypi_acpi_device = NULL;
- }
-@@ -1133,13 +1135,12 @@ static const struct acpi_device_id sonypi_device_ids[] = {
- 	{"", 0},
- };
+-	ret = pci_alloc_irq_vectors(pci, 2, 2, PCI_IRQ_MSI);
++	ret = pcim_alloc_irq_vectors(pci, 2, 2, PCI_IRQ_MSI);
+ 	if (ret < 0)
+ 		return ret;
  
--static struct acpi_driver sonypi_acpi_driver = {
--	.name           = "sonypi",
--	.class          = "hkey",
--	.ids            = sonypi_device_ids,
--	.ops            = {
--		           .add = sonypi_acpi_add,
--			   .remove = sonypi_acpi_remove,
-+static struct platform_driver sonypi_acpi_driver = {
-+	.probe = sonypi_acpi_probe,
-+	.remove = sonypi_acpi_remove,
-+	.driver = {
-+		.name = "sonypi_acpi",
-+		.acpi_match_table = sonypi_device_ids,
- 	},
- };
- #endif
-@@ -1518,8 +1519,8 @@ static int __init sonypi_init(void)
- 		goto err_free_device;
- 
- #ifdef CONFIG_ACPI
--	if (acpi_bus_register_driver(&sonypi_acpi_driver) >= 0)
--		acpi_driver_registered = 1;
-+	error = platform_driver_register(&sonypi_acpi_driver);
-+	acpi_driver_registered = !error;
- #endif
- 
- 	return 0;
-@@ -1535,7 +1536,7 @@ static void __exit sonypi_exit(void)
- {
- #ifdef CONFIG_ACPI
- 	if (acpi_driver_registered)
--		acpi_bus_unregister_driver(&sonypi_acpi_driver);
-+		platform_driver_unregister(&sonypi_acpi_driver);
- #endif
- 	platform_device_unregister(sonypi_platform_device);
- 	platform_driver_unregister(&sonypi_driver);
 -- 
-2.51.0
-
-
-
+2.7.4
 
