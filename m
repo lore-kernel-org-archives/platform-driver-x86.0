@@ -1,176 +1,165 @@
-Received: from mail-m3274.qiye.163.com (mail-m3274.qiye.163.com [220.197.32.74])
+Received: from CY7PR03CU001.outbound.protection.outlook.com (mail-westcentralusazon11010012.outbound.protection.outlook.com [40.93.198.12])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4044C3090C1;
-	Mon, 23 Feb 2026 16:09:47 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=220.197.32.74
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1771862993; cv=none; b=NZWiBPIlGdmnFAg3C+bwqlesBjeaxNCoVhpHyuSf2OVtmR+7ETv2ehkBtOlM8nm9C/Y0z/FIqBhUNWU03Ftq+uIpEXP9vlMzI4Yxp/TBXr2H5/pFrUN0p7ijiRuQEM/RE4i+RGp0g22jfwirHwZn+Yht4hon1Pm+npx1SmvTnno=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1771862993; c=relaxed/simple;
-	bh=AHx0h1hO5knesFXxZVApDK1swS5oE7zMU5mMkaIob88=;
-	h=Cc:Subject:To:References:From:Message-ID:Date:MIME-Version:
-	 In-Reply-To:Content-Type; b=gZPtP7sBDWcXNLShBalb+Y2iEoEZxwfbJ8Bi48jQEm+hWXxoddw8cWJT49xKfIkcajFyx/rzcHN/UE6ytJau09R6W7AqO9sb80tUHdNfe/a63OdFKgXbYdgPlGGd0dReAEhrN+ZZI6Lo3e3PyFRdJsUmd0dL00girDGCcY3r/2o=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=rock-chips.com; spf=pass smtp.mailfrom=rock-chips.com; dkim=pass (1024-bit key) header.d=rock-chips.com header.i=@rock-chips.com header.b=QIa8w6+m; arc=none smtp.client-ip=220.197.32.74
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=rock-chips.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=rock-chips.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 723463148DA;
+	Mon, 23 Feb 2026 16:33:16 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.93.198.12
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1771864398; cv=fail; b=JuLVjBdAD49l8Nakn7ksLihAciYQgX0E/Z1zIyiScJboBFBlmvBIM+7VuceFD0JBay2Bl54/CSPF+0Uf6HH1V2i8//4I9YiP8uIl2CDf1bZ7GlewxW8Im1rIg61Pk7OjZDt0ZsV3zYmfoLB6omWCwKT/SySvGCZ9ooqt9lt7s5c=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1771864398; c=relaxed/simple;
+	bh=AvrBDQJh4vYhzTR/p/Ovyl6R+2leAdfbyxOM7jJql9M=;
+	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=V0z91EhlERiIBkoOfmanJaqkice+dADhC5DKiojz7LjloQYkl8RW0LJxraeil0A/wf2bQDzzXKS+Y4q2mi5quDFT1S4ZXLJDLkMJxPJ/X5ANQiHDXBhWI1yhOdc8438XQD6mCUB/1w3eD4wyh6FDqCHI2hBjjsLe5FiA77eUiXI=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=YN7yIQXv; arc=fail smtp.client-ip=40.93.198.12
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=amd.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=rock-chips.com header.i=@rock-chips.com header.b="QIa8w6+m"
-Received: from [172.16.12.14] (unknown [58.22.7.114])
-	by smtp.qiye.163.com (Hmail) with ESMTP id 34b44f421;
-	Tue, 24 Feb 2026 00:09:40 +0800 (GMT+08:00)
-Cc: shawn.lin@rock-chips.com, Bjorn Helgaas <bhelgaas@google.com>,
- "Vaibhaav Ram T . L" <vaibhaavram.tl@microchip.com>,
- Kumaravel Thiagarajan <kumaravel.thiagarajan@microchip.com>,
- Even Xu <even.xu@intel.com>, Xinpeng Sun <xinpeng.sun@intel.com>,
- Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>,
- Jiri Kosina <jikos@kernel.org>,
- Alexandre Belloni <alexandre.belloni@bootlin.com>,
- Zhou Wang <wangzhou1@hisilicon.com>, Longfang Liu <liulongfang@huawei.com>,
- Vinod Koul <vkoul@kernel.org>, Lee Jones <lee@kernel.org>,
- Jijie Shao <shaojijie@huawei.com>, Jian Shen <shenjian15@huawei.com>,
- Sunil Goutham <sgoutham@marvell.com>, Andrew Lunn <andrew+netdev@lunn.ch>,
- Heiner Kallweit <hkallweit1@gmail.com>,
- "David S . Miller" <davem@davemloft.net>,
- Jeff Hugo <jeff.hugo@oss.qualcomm.com>, Oded Gabbay <ogabbay@kernel.org>,
- Maciej Falkowski <maciej.falkowski@linux.intel.com>,
- Karol Wachowski <karol.wachowski@linux.intel.com>,
- Min Ma <mamin506@gmail.com>, Lizhi Hou <lizhi.hou@amd.com>,
- Andreas Noever <andreas.noever@gmail.com>,
- Mika Westerberg <westeri@kernel.org>, Tomasz Jeznach
- <tjeznach@rivosinc.com>, Will Deacon <will@kernel.org>,
- Xinliang Liu <xinliang.liu@linaro.org>, Tian Tao <tiantao6@hisilicon.com>,
- Davidlohr Bueso <dave@stgolabs.net>,
- Jonathan Cameron <jonathan.cameron@huawei.com>,
- Srujana Challa <schalla@marvell.com>, Bharat Bhushan
- <bbhushan2@marvell.com>, Antoine Tenart <atenart@kernel.org>,
- Herbert Xu <herbert@gondor.apana.org.au>, Raag Jadav <raag.jadav@intel.com>,
- Hans de Goede <hansg@kernel.org>,
- Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
- Jiri Slaby <jirislaby@kernel.org>, Andy Shevchenko <andy@kernel.org>,
- Manivannan Sadhasivam <mani@kernel.org>,
- Mika Westerberg <mika.westerberg@linux.intel.com>,
- Andi Shyti <andi.shyti@kernel.org>, Robert Richter <rric@kernel.org>,
- Mark Brown <broonie@kernel.org>, Nirmal Patel
- <nirmal.patel@linux.intel.com>, Kurt Schwemmer
- <kurt.schwemmer@microsemi.com>, Logan Gunthorpe <logang@deltatee.com>,
- Linus Walleij <linusw@kernel.org>, Bartosz Golaszewski <brgl@kernel.org>,
- Sakari Ailus <sakari.ailus@linux.intel.com>,
- Bingbu Cao <bingbu.cao@intel.com>, Ulf Hansson <ulf.hansson@linaro.org>,
- Arnd Bergmann <arnd@arndb.de>, Benjamin Tissoires <bentiss@kernel.org>,
- linux-input@vger.kernel.org, linux-i3c@lists.infradead.org,
- dmaengine@vger.kernel.org, Philipp Stanner <phasta@kernel.org>,
- netdev@vger.kernel.org, nic_swsd@realtek.com, linux-arm-msm@vger.kernel.org,
- dri-devel@lists.freedesktop.org, linux-usb@vger.kernel.org,
- iommu@lists.linux.dev, linux-riscv@lists.infradead.org,
- David Airlie <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>,
- linux-cxl@vger.kernel.org, linux-crypto@vger.kernel.org,
- platform-driver-x86@vger.kernel.org, linux-serial@vger.kernel.org,
- mhi@lists.linux.dev, Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
- Jan Dabros <jsd@semihalf.com>, linux-i2c@vger.kernel.org,
- Daniel Mack <daniel@zonque.org>, Haojian Zhuang <haojian.zhuang@gmail.com>,
- linux-spi@vger.kernel.org, Jonathan Derrick <jonathan.derrick@linux.dev>,
- linux-pci@vger.kernel.org, linux-gpio@vger.kernel.org,
- Mauro Carvalho Chehab <mchehab@kernel.org>, linux-media@vger.kernel.org,
- linux-mmc@vger.kernel.org
-Subject: Re: [PATCH 0/37] PCI/MSI: Enforce explicit IRQ vector management by
- removing devres auto-free
-To: Andy Shevchenko <andy.shevchenko@gmail.com>
-References: <1771860581-82092-1-git-send-email-shawn.lin@rock-chips.com>
- <CAHp75VeWD5A0r7-Uayyte1ZXXxdhLixd+z_y0xNeki0N+Ro=jQ@mail.gmail.com>
-From: Shawn Lin <shawn.lin@rock-chips.com>
-Message-ID: <cb878741-7b61-b72c-5a72-6ed6d5091b1f@rock-chips.com>
-Date: Tue, 24 Feb 2026 00:09:37 +0800
-User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:78.0) Gecko/20100101
- Thunderbird/78.11.0
+	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="YN7yIQXv"
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=EQWXOGJp/6zz24G6tMnL3PuSFfFHjGNEZnRWvqiUzjx4k/uKLwbEZeJAbjeNp8ecaqQFgK+Oo0rPQNE5P/3+gZEhApeNmGVzCYhcmpg3rmI5oV2KQYciy4r1vxcdH81w4zrW+SQro5OFKceSF5QqBWgEdgGWdmre2ZDQ9gL1kyIT8ZDHivQ/XgRY+oe7RLvMfNHEkaEDUqeZhMaryfWooHMI2HLK15VKMwEO1/FmDsAjQkQQxu3y+zcdoR4cIHJF8q3EdJuUSboTi5o5RaifADUXylLp79ZcYErJMAQfGs9yR8GZLeCKsOI0go7kMgAxvSgUEfxeiO1pbU4l5kXXSA==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=kni4uOcgxNe5e9RTxB8djc7/ZAvrR/gl8m4B2bZjmV0=;
+ b=TbcOSpWOvhAm9kt4x+4lzrUBaylsUw+AIKm5e4xJfiOa1hiAOa9dCBXPZSnaOKs9d7u+XebpzvRW00E6o4Ec5Vt5jQJzYc6/q97i3iXC3eQHSg+52LZDmpkFhnsidr5HjcV2+FXVD3WmkClX7aSVxlLXEv5pirSv+FqXOxluUbsEeaIHfPTQW1GMpa9LNr5NKDfMkEUBG6SUrVCMdP+DgzmBNaRsBzRr0uVKf8Oywytl8i3wbOESS6q4cHbsw3BCxXm+up0MGwvqXDHFwV/xaNqBRzGShSP+mXNk90h1FFrVOYR9dpsDOGDpUMmty+AJj+srIqolv1bmoe0E14bS3g==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
+ 165.204.84.17) smtp.rcpttodomain=hp.com smtp.mailfrom=amd.com; dmarc=pass
+ (p=quarantine sp=quarantine pct=100) action=none header.from=amd.com;
+ dkim=none (message not signed); arc=none (0)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=kni4uOcgxNe5e9RTxB8djc7/ZAvrR/gl8m4B2bZjmV0=;
+ b=YN7yIQXvJ3/aZZc7ePNllRIFt2VwHeLHkZ5/KTRWgadLfEGpDih8gMjSjm+d+P3Iw1ANiBoUylQXuf/9nArhER4EPRZg/2HZf5PDZqW1qX7leg4vey3SCrw6UnC2hz2nUWbyleVsPCFk24JbPrVlSbIds9VMYztLuBi1yBCB0b0=
+Received: from BY3PR10CA0028.namprd10.prod.outlook.com (2603:10b6:a03:255::33)
+ by CYXPR12MB9443.namprd12.prod.outlook.com (2603:10b6:930:db::9) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.9632.21; Mon, 23 Feb
+ 2026 16:33:12 +0000
+Received: from SJ1PEPF000026CA.namprd04.prod.outlook.com
+ (2603:10b6:a03:255:cafe::6) by BY3PR10CA0028.outlook.office365.com
+ (2603:10b6:a03:255::33) with Microsoft SMTP Server (version=TLS1_3,
+ cipher=TLS_AES_256_GCM_SHA384) id 15.20.9632.21 via Frontend Transport; Mon,
+ 23 Feb 2026 16:33:13 +0000
+X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 165.204.84.17)
+ smtp.mailfrom=amd.com; dkim=none (message not signed)
+ header.d=none;dmarc=pass action=none header.from=amd.com;
+Received-SPF: Pass (protection.outlook.com: domain of amd.com designates
+ 165.204.84.17 as permitted sender) receiver=protection.outlook.com;
+ client-ip=165.204.84.17; helo=satlexmb07.amd.com; pr=C
+Received: from satlexmb07.amd.com (165.204.84.17) by
+ SJ1PEPF000026CA.mail.protection.outlook.com (10.167.244.107) with Microsoft
+ SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.9632.12 via Frontend Transport; Mon, 23 Feb 2026 16:33:11 +0000
+Received: from dogwood-dvt-marlim.amd.com (10.180.168.240) by
+ satlexmb07.amd.com (10.181.42.216) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.2562.17; Mon, 23 Feb 2026 10:33:10 -0600
+From: Mario Limonciello <mario.limonciello@amd.com>
+To: <mario.limonciello@amd.com>, <jorge.lopez2@hp.com>, <hansg@kernel.org>,
+	<ilpo.jarvinen@linux.intel.com>, <linux@weissschuh.net>
+CC: <stable@vger.kernel.org>, Paul Kerry <p.kerry@sheffield.ac.uk>,
+	<platform-driver-x86@vger.kernel.org>
+Subject: [PATCH] platform/x86: hp-bioscfg: Support allocations of larger data
+Date: Mon, 23 Feb 2026 10:32:42 -0600
+Message-ID: <20260223163245.3294630-1-mario.limonciello@amd.com>
+X-Mailer: git-send-email 2.53.0
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-In-Reply-To: <CAHp75VeWD5A0r7-Uayyte1ZXXxdhLixd+z_y0xNeki0N+Ro=jQ@mail.gmail.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
 Content-Transfer-Encoding: 8bit
-X-HM-Tid: 0a9c8b4376c609cckunm3fddd3f4988fc3
-X-HM-MType: 1
-X-HM-Spam-Status: e1kfGhgUHx5ZQUpXWQgPGg8OCBgUHx5ZQUlOS1dZFg8aDwILHllBWSg2Ly
-	tZV1koWUFDSUNOT01LS0k3V1ktWUFJV1kPCRoVCBIfWUFZQh9CQlYeGUkeS01CTB5IS0tWFRQJFh
-	oXVRMBExYaEhckFA4PWVdZGBILWUFZTkNVSUlVTFVKSk9ZV1kWGg8SFR0UWUFZT0tIVUpLSUJNS0
-	pVSktLVUtZBg++
-DKIM-Signature: a=rsa-sha256;
-	b=QIa8w6+mvkPs5yiMg8fVRt+gi3F6m/qkhqhjD+6XgiSvEJjtpIRJHvdkclp/pXy7G5fSEbf/NetLr/rXCYIFm/CQEBB6zjl+aiz8R4JS9N+fvFShWzFTgOlhNPDfffXHGWPxdi8/iAaZQWZ16BNVBWgFXcFRVBUKCW34Wu0UCFI=; s=default; c=relaxed/relaxed; d=rock-chips.com; v=1;
-	bh=scr8hCA+aPfGKwMjupeE8viSs7WuDndPG1pZF3mByMQ=;
-	h=date:mime-version:subject:message-id:from;
+Content-Type: text/plain
+X-ClientProxiedBy: satlexmb07.amd.com (10.181.42.216) To satlexmb07.amd.com
+ (10.181.42.216)
+X-EOPAttributedMessage: 0
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: SJ1PEPF000026CA:EE_|CYXPR12MB9443:EE_
+X-MS-Office365-Filtering-Correlation-Id: 09ae7f53-64e1-431f-e4d3-08de72f93c76
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam:
+	BCL:0;ARA:13230040|1800799024|82310400026|36860700013|376014|13003099007;
+X-Microsoft-Antispam-Message-Info:
+	=?us-ascii?Q?+ebc1RFX6bUKP65eVyRNCeN88XMu4Mv32HZYsurF+CjQq5aC/KjxrPr0GBRB?=
+ =?us-ascii?Q?grxRU8GCU5B7BmI9KrFwLCVSpMk3T1HWXUIVS/yFtr5awEJ6p2gdNjAko0E/?=
+ =?us-ascii?Q?+UxU9Cg42ND1v/ct9wfvixBG/U8VkaZMnY3juEzqu7xrQyukrS1b5eFI6RlZ?=
+ =?us-ascii?Q?CSArZEN6aFOnD2QQvWS9jvhckwzjA7E3PnPSCQfeDsi9ooqLq84Og6T02RkB?=
+ =?us-ascii?Q?Oh5L6rEVT8c4bJ8wJjgAfKooOogVkzPFJDPFLB06MpT1ZlTiyhr4SDA72Mi4?=
+ =?us-ascii?Q?Dl7s22eh2at0EYikxTt4Cb5h+KVGmuleMnvWI9NJDJxwhq8WaEXRf3xSJ1k+?=
+ =?us-ascii?Q?c1PQ/apVDDdg01/G3GjWihStAb3agmZDVpwsXnAs/7TjpiegvugSIOqoFLmu?=
+ =?us-ascii?Q?zSVOPEs5KMqBrYi7OUoSNesE6dd8GZViOk/mV02URq87wWPznJjMqPtOpdjh?=
+ =?us-ascii?Q?mQ/HBNaVoo/sAGLPhlp8Wsv9L5xB6OnoUXT2oVGm1CwobXtevqDR73CiZoSZ?=
+ =?us-ascii?Q?iti3aVLADad1OS485dEWmP1ZAh/xEcbhAq8da73Gi9eOpk3QeqKVlInAaeZU?=
+ =?us-ascii?Q?i/O6XklGH7oOBwC4emN/VwlJuvUrzuwyY1viBFDSi/Q9VR/BUfplcuK8PWg5?=
+ =?us-ascii?Q?tmVsZmuf7DjdFhP9qj8UxYqOMaAQIeP1xa427pCdpmM9buirYJCUu5bgRs2C?=
+ =?us-ascii?Q?FALrNNP4ebiSGMzFUUhaj4COxjDT3vcQklpbE1HeXl8W6Q8wfgwIa6NlrUYq?=
+ =?us-ascii?Q?B2MdM4lKdwEq8tH+F4MpdWXx2CPUs3AAuP2zO1QqjOXV47rnv11QoiyUtvQC?=
+ =?us-ascii?Q?J6v4nq/JgDcDJUtmA9ykXIVi+4RxGMTnNZS2wrwjpW976CIBTpkD7DhqnPm4?=
+ =?us-ascii?Q?dz3U+UEjS/Uoe2U6htvbBpd/zopXc1twnOiG0h9B6zQJ+fTRTbUJKzDjTPn4?=
+ =?us-ascii?Q?msBDHr7gmHspt7QoAK/dC4hxY3kXmH+GOmPf/jrkPFI4eHti0o7z9T7th2U9?=
+ =?us-ascii?Q?Hy3kcOZmZUfDRIAWuTNnXpWbyL32udFSyXjqkGcwBtHxALRNXGnWPWfcsr56?=
+ =?us-ascii?Q?bmx8QYuOcscEtzkvfBaLRWKSAtm3PZVEXkzCHrPWe+nX8cwPy6019h++DIXn?=
+ =?us-ascii?Q?DWn20H8pGk/sygMor7IDJXY/So2P8IbFguSQQIEl4BtoiXTZpo16yFdiMEHz?=
+ =?us-ascii?Q?cZ5yuP+H1TPAx0WkXHqdw/HYMoPAKXn47QloRdnUXpUjIrMpBVXxU+2eXcBp?=
+ =?us-ascii?Q?TNPvT9aDVlJT9gpKHspIihaFndWr45PCV+itzWBG90WGltjqm8VpRR7MmATb?=
+ =?us-ascii?Q?Jv9y6+i5SxdPpeaoRWykOGyVr7TxYghcZZs2LnOlSbkz0EZbbIc+BP8q1Yjc?=
+ =?us-ascii?Q?T3y9DK3vh+KZqm0aZk/Zs0UZhnzooAzuJGs5ci3V0xQVCKFnAiH+Pd038gI5?=
+ =?us-ascii?Q?mDOd43ar2Dk+E2xf4Q/t0+PoVf1C2blmMv0mXpNqttc42K14v088mSXMQU6g?=
+ =?us-ascii?Q?lGoEGZqjSfJHIIg3t/T1qhcODaDwpvy1XpgQMfWqZ47p5D/yHapAu4Tj8z5Z?=
+ =?us-ascii?Q?rNzozwyNgsFnnuccgIlFpVK7C4tO660w3Rdh0YKtnf8OSw4yjreZ+/D5WyDy?=
+ =?us-ascii?Q?ZvgFPAWAVOz3CGrM326JK8Hh76FFDpFWSdnjeRrH5y7o0jY4krmVN+Mfh+3B?=
+ =?us-ascii?Q?rYlWIA=3D=3D?=
+X-Forefront-Antispam-Report:
+	CIP:165.204.84.17;CTRY:US;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:satlexmb07.amd.com;PTR:InfoDomainNonexistent;CAT:NONE;SFS:(13230040)(1800799024)(82310400026)(36860700013)(376014)(13003099007);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0:
+	BfB+5gchryllL/e4qSOrR+npeQ7dTBLjCsOVn0H2eRojn+PJPWzFlzT2I6IMqxRMxk7Wz70YJAjS+oLnim6EYw4WEHotP23eaUXZZhgNQRfZggNO+7M96+6vrydarkDVgP3mqxIaikt1X4Kl6vfCSCswTZiS/wmkUjfRDesJHadmXmYwbIUT5lofvE+YDVwvYxqGnBfTBzhmpNWvV7NtfmVVr19XUcy990SVKANTVg5LW24wuw44cUmXgTTJMmBs7hHUbFSRHbndW36fZkto/7TO1C91rhoTpmjcbjVbG9BVyf6DkWIc/zVjH4hxpoODOlv1GOwgn0n4IJ7Y6UKQpxFLqc+EVXIqvF19RKjXH6cJLUKWOfLiQV3XcSfXEzGEzEWPU1M+6upCT+RWu/KYktj24wTG24OkLqn48CqiYcu/OTSy3lZM50EWB9ISRpj2
+X-OriginatorOrg: amd.com
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 23 Feb 2026 16:33:11.8658
+ (UTC)
+X-MS-Exchange-CrossTenant-Network-Message-Id: 09ae7f53-64e1-431f-e4d3-08de72f93c76
+X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
+X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=3dd8961f-e488-4e60-8e11-a82d994e183d;Ip=[165.204.84.17];Helo=[satlexmb07.amd.com]
+X-MS-Exchange-CrossTenant-AuthSource:
+	SJ1PEPF000026CA.namprd04.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Anonymous
+X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: CYXPR12MB9443
 
-Hi Andy
+Some systems have much larger amounts of enumeration attributes
+than have been previously encountered. This can lead to page allocation
+failures when using kcalloc().  Switch over to using kvcalloc() to
+allow larger allocations.
 
-在 2026/02/23 星期一 23:50, Andy Shevchenko 写道:
-> On Mon, Feb 23, 2026 at 5:32 PM Shawn Lin <shawn.lin@rock-chips.com> wrote:
->>
->> This patch series addresses a long-standing design issue in the PCI/MSI
->> subsystem where the implicit, automatic management of IRQ vectors by
->> the devres framework conflicts with explicit driver cleanup, creating
->> ambiguity and potential resource management bugs.
->>
->> ==== The Problem: Implicit vs. Explicit Management ====
->> Historically, `pcim_enable_device()` not only manages standard PCI resources
->> (BARs) via devres but also implicitly triggers automatic IRQ vector management
->> by setting a flag that registers `pcim_msi_release()` as a cleanup action.
->>
->> This creates an ambiguous ownership model. Many drivers follow a pattern of:
->> 1. Calling `pci_alloc_irq_vectors()` to allocate interrupts.
->> 2. Also calling `pci_free_irq_vectors()` in their error paths or remove routines.
->>
->> When such a driver also uses `pcim_enable_device()`, the devres framework may
->> attempt to free the IRQ vectors a second time upon device release, leading to
->> a double-free. Analysis of the tree shows this hazardous pattern exists widely,
->> while 35 other drivers correctly rely solely on the implicit cleanup.
-> 
-> Is this confirmed? What I read from the cover letter, this series was
-> only compile-tested, so how can you prove the problem exists in the
-> first place?
+Fixes: 6b2770bfd6f92 ("platform/x86: hp-bioscfg: enum-attributes")
+Cc: stable@vger.kernel.org
+Reported-by: Paul Kerry <p.kerry@sheffield.ac.uk>
+Closes: https://bugs.debian.org/1127612
+Signed-off-by: Mario Limonciello <mario.limonciello@amd.com>
+---
+ drivers/platform/x86/hp/hp-bioscfg/enum-attributes.c | 7 +++++--
+ 1 file changed, 5 insertions(+), 2 deletions(-)
 
-Yes, it's confirmed. My debug of a double free issue of a out-of-tree
-PCIe wifi driver which uses
-pcim_enable_device + pci_alloc_irq_vectors + pci_free_irq_vectors expose
-it. And we did have a TODO to cleanup this hybrid usage, targeted in
-this cycle[1] suggested by Philipp:
+diff --git a/drivers/platform/x86/hp/hp-bioscfg/enum-attributes.c b/drivers/platform/x86/hp/hp-bioscfg/enum-attributes.c
+index 470b9f44ed7aa..af24313d078db 100644
+--- a/drivers/platform/x86/hp/hp-bioscfg/enum-attributes.c
++++ b/drivers/platform/x86/hp/hp-bioscfg/enum-attributes.c
+@@ -94,8 +94,11 @@ int hp_alloc_enumeration_data(void)
+ 	bioscfg_drv.enumeration_instances_count =
+ 		hp_get_instance_count(HP_WMI_BIOS_ENUMERATION_GUID);
+ 
+-	bioscfg_drv.enumeration_data = kzalloc_objs(*bioscfg_drv.enumeration_data,
+-						    bioscfg_drv.enumeration_instances_count);
++	if (!bioscfg_drv.enumeration_instances_count)
++		return -EINVAL;
++	bioscfg_drv.enumeration_data = kvcalloc(bioscfg_drv.enumeration_instances_count,
++						sizeof(*bioscfg_drv.enumeration_data), GFP_KERNEL);
++
+ 	if (!bioscfg_drv.enumeration_data) {
+ 		bioscfg_drv.enumeration_instances_count = 0;
+ 		return -ENOMEM;
+-- 
+2.53.0
 
-[1] https://git.kernel.org/pub/scm/linux/kernel/git/pci/pci.git/log/?h=msi
-
-> 
->> ==== The Solution: Making Management Explicit ====
->> This series enforces a clear, predictable model:
->> 1.  New Managed API (Patch 1/37): Introduces pcim_alloc_irq_vectors() and
->>      pcim_alloc_irq_vectors_affinity(). Drivers that desire devres-managed IRQ
->>      vectors should use these functions, which set the is_msi_managed flag and
->>      ensure automatic cleanup.
->> 2.  Patches 2 through 36 convert each driver that uses pcim_enable_device() alongside
->>      pci_alloc_irq_vectors() and relies on devres for IRQ vector cleanup to instead
->>      make an explicit call to pcim_alloc_irq_vectors().
->> 3.  Core Change (Patch 37/37): With the former cleanup, now modifies pcim_setup_msi_release()
->>      to check only the is_msi_managed flag. This decouples automatic IRQ cleanup from
->>      pcim_enable_device(). IRQ vectors allocated via pci_alloc_irq_vectors*()
->>      are now solely the driver's responsibility to free with pci_free_irq_vectors().
->>
->> With these changes, we clear ownership model: Explicit resource management eliminates
->> ambiguity and follows the "principle of least surprise." New drivers choose one model and
->> be consistent.
->> - Use `pci_alloc_irq_vectors()` + `pci_free_irq_vectors()` for explicit control.
->> - Use `pcim_alloc_irq_vectors()` for devres-managed, automatic cleanup.
-> 
-> Have you checked previous attempts? Why is your series better than those?
-
-There seems not previous attempts.
-
-> 
->> ==== Testing And Review ====
->> 1. This series is only compiled test with allmodconfig.
->> 2. Given the substantial size of this patch series, I have structured the mailing
->>     to facilitate efficient review. The cover letter, the first patch and the last one will be sent
->>     to all relevant mailing lists and key maintainers to ensure broad visibility and
->>     initial feedback on the overall approach. The remaining subsystem-specific patches
->>     will be sent only to the respective subsystem maintainers and their associated
->>     mailing lists, reducing noise.
-> 
