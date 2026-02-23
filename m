@@ -1,42 +1,41 @@
-Received: from relay11.grserver.gr (relay11.grserver.gr [78.46.171.57])
+Received: from relay12.grserver.gr (relay12.grserver.gr [88.99.38.195])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B48023612D6;
-	Mon, 23 Feb 2026 18:30:19 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=78.46.171.57
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 77E0D36682B;
+	Mon, 23 Feb 2026 18:30:22 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=88.99.38.195
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1771871422; cv=none; b=Z1AOJ66GBCvwHWsuuAuZfbdQT6UYGKpHAMy/BG33Xmf+YdyHpGlb7l5bOMvUW2PwR4i2zqrJqttJpiScieiZc55ke2r61en15e9tFfvv8PaO6c6/XIpSTzwb/KXg3EX6Kw3LenacTeznugIfvOvYP5G9jLY8ihA/UwXgaYnMwhQ=
+	t=1771871423; cv=none; b=MDUqGsTzJAmaxCMLZZjSJRJRzwdtLp5bbNrmXs0QjLQDKR2UyEoJSbf1KZM18sXhD4aCMlTO5XYfe28F+o/Bar1lJAjIvW0DLjRDp1qIlNsZXVuRo4+/YeJ7oIFPxVjdGwFNY7aHViX7TuUbqs539GB34+2EH9iU+VBjYiYzU0s=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1771871422; c=relaxed/simple;
-	bh=RuCYhouHXTeKNE/fGCPiYgnUD7FM7H/u1CDu0RqRKSI=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=oL07pf/WH+O5AD0UY5HlTMu7leW/CiSYV4HII4Fo7C3t2BpsQTmU99o+ipy3Nf+eSF/Ipjhe9K6dHYcp/jIa4PkM9iXJ3ec+MNlXeXucMius56tJgt2ZK83GvjdYz/agl3z6y2AkxjYLTJbKkivQ7uxhTQykKhAGr5lvCWiLALk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=antheas.dev; spf=pass smtp.mailfrom=antheas.dev; dkim=pass (2048-bit key) header.d=antheas.dev header.i=@antheas.dev header.b=ZFF17PFn; arc=none smtp.client-ip=78.46.171.57
+	s=arc-20240116; t=1771871423; c=relaxed/simple;
+	bh=5n9k55j3CT5598K8B8vBY6stMjcEOsdS7hN9ikgR2CI=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=EHkFttg3N2MkE1R1bqgImaoGfeHpFJaHyrV4dHH2uLY+KCvAUuPZ6ThuPR7Rh2zuvscmu39otAsfWQk5lMjZ0aCWmrvJf8mTDmjp+U/mK94KefMvwPQw/AFEH9rRanV+NxBzLwvGDg8iQz46ccNT/b2ULoMEUa1eaW77BJSzvbY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=antheas.dev; spf=pass smtp.mailfrom=antheas.dev; dkim=pass (2048-bit key) header.d=antheas.dev header.i=@antheas.dev header.b=L8KLk6Xh; arc=none smtp.client-ip=88.99.38.195
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=antheas.dev
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=antheas.dev
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=antheas.dev header.i=@antheas.dev header.b="ZFF17PFn"
-Received: from relay11 (localhost.localdomain [127.0.0.1])
-	by relay11.grserver.gr (Proxmox) with ESMTP id C25E0C1242;
-	Mon, 23 Feb 2026 20:30:17 +0200 (EET)
+	dkim=pass (2048-bit key) header.d=antheas.dev header.i=@antheas.dev header.b="L8KLk6Xh"
+Received: from relay12 (localhost [127.0.0.1])
+	by relay12.grserver.gr (Proxmox) with ESMTP id C1977BBEF1;
+	Mon, 23 Feb 2026 20:30:14 +0200 (EET)
 Received: from linux3247.grserver.gr (linux3247.grserver.gr [213.158.90.240])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
 	(No client certificate requested)
-	by relay11.grserver.gr (Proxmox) with ESMTPS id 5F0CDBD497;
-	Mon, 23 Feb 2026 20:30:17 +0200 (EET)
+	by relay12.grserver.gr (Proxmox) with ESMTPS id DE560BBF79;
+	Mon, 23 Feb 2026 20:30:13 +0200 (EET)
 Received: from antheas-z13 (unknown [IPv6:2a05:f6c5:43c3:0:378a:d3f6:f8b0:bed1])
-	by linux3247.grserver.gr (Postfix) with ESMTPSA id 83D2D1FDAAF;
-	Mon, 23 Feb 2026 20:30:16 +0200 (EET)
+	by linux3247.grserver.gr (Postfix) with ESMTPSA id 0032B1FD767;
+	Mon, 23 Feb 2026 20:30:12 +0200 (EET)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=antheas.dev;
-	s=default; t=1771871417;
-	bh=AKE4s+tYM/l7y9CIb185DAIMomBBYh/eQd3Qu/YHPf4=; h=From:To:Subject;
-	b=ZFF17PFnrq3cUCwZWWjudhjaZQOF3+WAm/5hrdy7n/irssuGJ+Wuw/3nSH9l5hjXT
-	 QSmm98C2SMssFJVZnqPhflXLOOH9i2Wb/tbhrhRTEv82P3pngJNqpqB8haYEzSwpzR
-	 uFecMGobhvFJjD4SYv9rZ1nIQC+WGPnSwQ57mkq1IChowlGmW4kWliXx2vSivpi5Zd
-	 yAWT8jKYxrnhON7mYb4Zg4Q4nWxmoWiTFfCX8vROv6fqQdFibAsI/p9CRYvDQhNO+f
-	 7dqN75esBvOHf821ZRuGlgxioHd9kIB5s2N9hcYRarGBB5DSfcacVVaAlqx+dylZs2
-	 AzffxeTU2ZsuA==
+	s=default; t=1771871413;
+	bh=1JBdONbi6warzMOeIa5vSjfM2wmhAX+qQZoGlS61TUA=; h=From:To:Subject;
+	b=L8KLk6XhxzKrY+XtRmbDi7KOWK79HCuyrdn4xCYzT+8FbVqVPDwmtp8UnZkYjQ4Xg
+	 X1l55ltokaTXfYld0MlwEWboycol1JMF2zmPG02UqEYS/IWbkQfxVRJbT9vIYKw48N
+	 aanLlQ6R54zMlm4pyj60XMK7sbrXhmYS1bRRs1Puh9VtPe2jJw/X7QwH3z5lDiMzh8
+	 gJWn6DGIc8Qw14/QwxB0oNmeud1W8lTNCvmYT7wbzbDDej90FcAOyIHMpQTYtmBtYy
+	 U8u8ZnqlOQW8ssLCL+qkNY4Z4i5dPSx0Mgokt5C+lvC3IbohrK186LWS3lryPe4XHG
+	 u9JuOt0cWXsnw==
 Authentication-Results: linux3247.grserver.gr;
 	spf=pass (sender IP is 2a05:f6c5:43c3:0:378a:d3f6:f8b0:bed1) smtp.mailfrom=lkml@antheas.dev smtp.helo=antheas-z13
 Received-SPF: pass (linux3247.grserver.gr: connection is authenticated)
@@ -49,12 +48,10 @@ Cc: linux-kernel@vger.kernel.org,
 	=?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>,
 	Eileen <eileen@one-netbook.com>,
 	Antheas Kapenekakis <lkml@antheas.dev>
-Subject: [PATCH v2 4/4] platform/x86: oxpec: Add support for Aokzoe A2 Pro
-Date: Mon, 23 Feb 2026 19:29:53 +0100
-Message-ID: <20260223183004.2696892-5-lkml@antheas.dev>
+Subject: [PATCH v2 0/4] platform/x86: oxpec: Add more devices
+Date: Mon, 23 Feb 2026 19:29:49 +0100
+Message-ID: <20260223183004.2696892-1-lkml@antheas.dev>
 X-Mailer: git-send-email 2.52.0
-In-Reply-To: <20260223183004.2696892-1-lkml@antheas.dev>
-References: <20260223183004.2696892-1-lkml@antheas.dev>
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
@@ -63,38 +60,31 @@ List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 X-PPP-Message-ID: 
- <177187141706.873973.17697439456927662006@linux3247.grserver.gr>
+ <177187141355.873602.9625271989191255355@linux3247.grserver.gr>
 X-PPP-Vhost: antheas.dev
 X-Virus-Scanned: clamav-milter 1.4.3 at linux3247.grserver.gr
 X-Virus-Status: Clean
 
-Aokzoe A2 Pro is an older device that the oxpec driver is missing the
-quirk for. It has the same behavior as the AOKZOE A1 devices. Add a
-quirk for it to the oxpec driver.
+Adds support for the new APEX model by OneXPlayer, as well as some other
+devices that I have collected over the last part of 2025.
 
-Signed-off-by: Antheas Kapenekakis <lkml@antheas.dev>
 ---
- drivers/platform/x86/oxpec.c | 7 +++++++
- 1 file changed, 7 insertions(+)
+V1: https://lore.kernel.org/lkml/20260218214919.449636-1-lkml@antheas.dev/
 
-diff --git a/drivers/platform/x86/oxpec.c b/drivers/platform/x86/oxpec.c
-index d6ef8dbf568e..6d4a53a2ed60 100644
---- a/drivers/platform/x86/oxpec.c
-+++ b/drivers/platform/x86/oxpec.c
-@@ -114,6 +114,13 @@ static const struct dmi_system_id dmi_table[] = {
- 		},
- 		.driver_data = (void *)aok_zoe_a1,
- 	},
-+	{
-+		.matches = {
-+			DMI_MATCH(DMI_BOARD_VENDOR, "AOKZOE"),
-+			DMI_EXACT_MATCH(DMI_BOARD_NAME, "AOKZOE A2 Pro"),
-+		},
-+		.driver_data = (void *)aok_zoe_a1,
-+	},
- 	{
- 		.matches = {
- 			DMI_MATCH(DMI_BOARD_VENDOR, "AOKZOE"),
+Changes since V1:
+  - Reword changelogs to be clearer
+
+Antheas Kapenekakis (4):
+  platform/x86: oxpec: Add support for OneXPlayer APEX
+  platform/x86: oxpec: Add support for OneXPlayer X1z
+  platform/x86: oxpec: Add support for OneXPlayer X1 Air
+  platform/x86: oxpec: Add support for Aokzoe A2 Pro
+
+ drivers/platform/x86/oxpec.c | 30 +++++++++++++++++++++++++++++-
+ 1 file changed, 29 insertions(+), 1 deletion(-)
+
+
+base-commit: 57d76ceccee4b497eb835831206b50e72915a501
 -- 
 2.52.0
 
