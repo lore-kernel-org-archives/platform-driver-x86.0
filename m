@@ -1,154 +1,103 @@
-Received: from mail-ed1-f43.google.com (mail-ed1-f43.google.com [209.85.208.43])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 571E237F8DC
-	for <platform-driver-x86@vger.kernel.org>; Mon, 23 Feb 2026 23:41:15 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.43
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AB3473EBF3A;
+	Tue, 24 Feb 2026 00:04:07 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1771890078; cv=none; b=ex4z6jnGR6SIFoY5xPZQZaw+d8CHMBv+HOZXw2NN+bzTjOVRKBpTw37Lzwvo6VYJRo1BZJXsLEDJ4v2gtoPxzNGDZuIZ2vBw79wPuhnSRuN8+d1d9UiBnAoVy0i3JPQ0kO2OE6MQhMB7aoweR3aAgC2ZI/OarqAheC8ofgFfTHQ=
+	t=1771891447; cv=none; b=IZhNJnfHSwRwgEeBoyhtx/43E80eSQkLqvXAExdXib7UlrgcV1cESIdEnVFg4flNCsdQXWRhKOSGuvxzegrj+smCRAT7RD9GW7pBbjEdPiMykd9ma7YxoPrKiTaH6TFWv2WJnsGQt61gpm27n2EZN92qwa4zJPNN9Kn4yFNPAew=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1771890078; c=relaxed/simple;
-	bh=5dyQAM6IPulAUhrvclETJjiYmTwjjWw3Y1o1DldlJaA=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=dpy7e+bUY41xvdNm/b0UjM9WPmkUIiBqcayCI64lgCuvsBxG519i7Z2JaQ3beVGg4g570VT78MqTfiCIcSRKqwpfWzhPOaa8rDcwUhO4jI9+pGNqUWN1cIeShWSVC70K73Xv/Gvud3Xiq/CIZBAoaDj17h9D62GKOQcskOjAVqk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=FUTxeLLn; arc=none smtp.client-ip=209.85.208.43
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1771891447; c=relaxed/simple;
+	bh=eSEVzSG1u7kDX0qIB57v1bGEdvuxp7q/644aS2mjq3Y=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=EUWhWVfdRsZ9Quo3bUn6Vo+FlBriw+gEfnVK9MtfSoow7SkR/FBrUN2FPNGDok1FeyKeJcbQwZYYOhvDb46X9nSr7xyUHXM0Oiugx0fhQw8f/wUbPBGzDnJZ8SOLvEOe5eqEUT/E+tC1RCHRl0T0JpDL80/J2Yam9Uoffkwb3YY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=BiCxi3L9; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="FUTxeLLn"
-Received: by mail-ed1-f43.google.com with SMTP id 4fb4d7f45d1cf-65a2fea1a1eso9418453a12.0
-        for <platform-driver-x86@vger.kernel.org>; Mon, 23 Feb 2026 15:41:15 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1771890074; x=1772494874; darn=vger.kernel.org;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date:from:to
-         :cc:subject:date:message-id:reply-to;
-        bh=ajc9uru2ZAYEp7H15z+ZpBl2mnUqL3fUnLNpXdHs2Xc=;
-        b=FUTxeLLnA5bTMY2nnhqNG53tFYie+ooiOUPem+mifxV3fy58AhgjZONzGJQPjJgH8z
-         2cLZpoPpUND9xeIHNgDfrlsT2ukx1yR91E83Sv6ITJdr1ImBXGht7P+iKlEvoIWgRcST
-         KIE71T3h8YAqvNcxRfgcMB+wypKIwR3JAaEtBWRLNUnFbfzj/vp9u+JFA49n44s6k5AJ
-         vhv6iAwvAzMVS3uyqHY7AwrUOhtAVvydXRz0Vlv7k1CYTycaubSwuBAIxsB2/TzYLQFH
-         nOOorDb3fqY77Y5ONVhHBKP14DGWBwinVdYJewthyzsdCNbsgVIksZKg5D67nLS+WYvS
-         Z7WQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1771890074; x=1772494874;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date:x-gm-gg
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=ajc9uru2ZAYEp7H15z+ZpBl2mnUqL3fUnLNpXdHs2Xc=;
-        b=bZjb2TroSmyRSVRWqc14mTsftQCbfwjvREOQsNCQhXpKZv3Ni+Vgrd0UmMrWPhvuqd
-         GOyULUmkR46tUAC8/SkDyYmVa0z5XQ7CTckFRbjzOxs+PyXTKF3Z0bTQ3fsGHq9tSUjL
-         YPnnweVmMSgJYv9yjloVq4BObcmY0FefUCWzDXGqWbCzdFuHX5boEwGZog4OFu1/udAw
-         JkcPYFWoKm/ZigU0z3sNaMrKLInM+yqKL8hprgVCvIh26Xx5jJA/sLGa1lgw2/y7cihV
-         4EM7CTb/r7Dut/73laq6lBBkNca4fPG2rRqccvnEw0ujQtnNIT8MZb8dJI2cCzl2FjLi
-         8/Vg==
-X-Gm-Message-State: AOJu0YziX3LzN9plclXwkYky7NG4juKbP/95ykQOeGTAJXiXnIC+0JGJ
-	t7R1BZJz/+B5SniQvkETd8+7kt5JFSp0J7SEYVIdUMP/QKuQsRDPu6+i
-X-Gm-Gg: AZuq6aK/l+wfr2kv9f1V9pAXKadvUrm2mbS1pg195vUqwX2M/aS7Pj0K45ntAsRVygD
-	vbS0ewcvQOhJSm+u25RbEyrX2hXOqnN10oHa/qqesknCaYkRo42zZv9PG2CdnUn2gwlGoX0U8s3
-	ls6Af7lj7uy8GrrRksvOpn5eiglRjGiCN1Lyr15gR3SuiTPKaGF3N7bNvBQ7hSegJBTPaqInm/T
-	j/jaJUDRteCr+v9W/xh6wklgTxL0B4oJVTPEdDyKYOxOUGtw05SG1sv5AAzT3G7nYtMEiaoaKT3
-	nSlCxCJAn4QmAPiExpnf4D1is9Vxg1Ds9vk8PB2tGjalcVLiaG2nUZ4hRbtgzgP8g6PsZhOezkm
-	HU0J+uUrgCqfqV2x3xZMoPLQEIUMtQHXXrqO0QQjyAZwFLZckUmclT64UMC23aH1zxhd/FZK30K
-	UvmCl0itKcppCMDQ==
-X-Received: by 2002:a17:907:7ba0:b0:b84:3fab:4251 with SMTP id a640c23a62f3a-b9081089408mr696042166b.15.1771890073435;
-        Mon, 23 Feb 2026 15:41:13 -0800 (PST)
-Received: from jekhomev ([46.251.53.180])
-        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-b9084e8cb3fsm380362766b.48.2026.02.23.15.41.12
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 23 Feb 2026 15:41:12 -0800 (PST)
-Date: Tue, 24 Feb 2026 01:41:12 +0200
-From: Yauhen Kharuzhy <jekhor@gmail.com>
-To: Ilpo =?utf-8?B?SsOkcnZpbmVu?= <ilpo.jarvinen@linux.intel.com>
-Cc: platform-driver-x86@vger.kernel.org, Hans de Goede <hansg@kernel.org>, 
-	LKML <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH v1 1/2] platform: x86-android-tablets: lenovo: Add Yoga
- Book haptics entries
-Message-ID: <aZzlQWTkm0RaPaXV@jekhomev>
-References: <20260217233618.1324550-1-jekhor@gmail.com>
- <20260217233618.1324550-2-jekhor@gmail.com>
- <181e4409-7bbf-e207-0c54-1f817c1c35ed@linux.intel.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="BiCxi3L9"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 9E022C116C6;
+	Tue, 24 Feb 2026 00:04:03 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1771891447;
+	bh=eSEVzSG1u7kDX0qIB57v1bGEdvuxp7q/644aS2mjq3Y=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+	b=BiCxi3L9JoXgkrh8SC5MAkJMhbY/Gt/ee8dkTYQlEReSuB4BTdHAinqlJ2OFDp6yS
+	 K2IocFIKpN9ibOJpRL9+VOLTSUbH7qQsPiBKrovipxTbo9eajt0gUvhxCDhwVDhO+8
+	 5Rlxa1CWbGyQ9Q36KM5NC+FfklyKper67d1Qv2aJIuTZ7s4KnLHKQM7iB0zRPc84mq
+	 jsXCWBPoX2cNDpVLYgAQmic4uvU8sr2uc48rEwfkKkj6Mxf3f1OBn5Wx+AaROlWqSn
+	 ntIjCz+6RR634lgigRfzRx83aoqzpm4WdYAuAXJwSFy0UCaudKb02bX6tegaaBV0nb
+	 MfkMoAbVPBZkQ==
+Date: Mon, 23 Feb 2026 16:04:02 -0800
+From: Jakub Kicinski <kuba@kernel.org>
+To: Shawn Lin <shawn.lin@rock-chips.com>
+Cc: Bjorn Helgaas <bhelgaas@google.com>, "Vaibhaav Ram T . L"
+ <vaibhaavram.tl@microchip.com>, Kumaravel Thiagarajan
+ <kumaravel.thiagarajan@microchip.com>, Even Xu <even.xu@intel.com>, Xinpeng
+ Sun <xinpeng.sun@intel.com>, Srinivas Pandruvada
+ <srinivas.pandruvada@linux.intel.com>, Jiri Kosina <jikos@kernel.org>,
+ Alexandre Belloni <alexandre.belloni@bootlin.com>, Zhou Wang
+ <wangzhou1@hisilicon.com>, Longfang Liu <liulongfang@huawei.com>, Vinod
+ Koul <vkoul@kernel.org>, Lee Jones <lee@kernel.org>, Jijie Shao
+ <shaojijie@huawei.com>, Jian Shen <shenjian15@huawei.com>, Sunil Goutham
+ <sgoutham@marvell.com>, Andrew Lunn <andrew+netdev@lunn.ch>, Heiner
+ Kallweit <hkallweit1@gmail.com>, "David S . Miller" <davem@davemloft.net>,
+ Jeff Hugo <jeff.hugo@oss.qualcomm.com>, Oded Gabbay <ogabbay@kernel.org>,
+ Maciej Falkowski <maciej.falkowski@linux.intel.com>, Karol Wachowski
+ <karol.wachowski@linux.intel.com>, Min Ma <mamin506@gmail.com>, Lizhi Hou
+ <lizhi.hou@amd.com>, Andreas Noever <andreas.noever@gmail.com>, Mika
+ Westerberg <westeri@kernel.org>, Tomasz Jeznach <tjeznach@rivosinc.com>,
+ Will Deacon <will@kernel.org>, Xinliang Liu <xinliang.liu@linaro.org>, Tian
+ Tao <tiantao6@hisilicon.com>, Davidlohr Bueso <dave@stgolabs.net>, Jonathan
+ Cameron <jonathan.cameron@huawei.com>, Srujana Challa
+ <schalla@marvell.com>, Bharat Bhushan <bbhushan2@marvell.com>, Antoine
+ Tenart <atenart@kernel.org>, Herbert Xu <herbert@gondor.apana.org.au>, Raag
+ Jadav <raag.jadav@intel.com>, Hans de Goede <hansg@kernel.org>, Greg
+ Kroah-Hartman <gregkh@linuxfoundation.org>, Jiri Slaby
+ <jirislaby@kernel.org>, Andy Shevchenko <andy@kernel.org>, Manivannan
+ Sadhasivam <mani@kernel.org>, Mika Westerberg
+ <mika.westerberg@linux.intel.com>, Andi Shyti <andi.shyti@kernel.org>,
+ Robert Richter <rric@kernel.org>, Mark Brown <broonie@kernel.org>, Nirmal
+ Patel <nirmal.patel@linux.intel.com>, Kurt Schwemmer
+ <kurt.schwemmer@microsemi.com>, Logan Gunthorpe <logang@deltatee.com>,
+ Linus Walleij <linusw@kernel.org>, Bartosz Golaszewski <brgl@kernel.org>,
+ Sakari Ailus <sakari.ailus@linux.intel.com>, Bingbu Cao
+ <bingbu.cao@intel.com>, Ulf Hansson <ulf.hansson@linaro.org>, Arnd Bergmann
+ <arnd@arndb.de>, Benjamin Tissoires <bentiss@kernel.org>,
+ linux-input@vger.kernel.org, linux-i3c@lists.infradead.org,
+ dmaengine@vger.kernel.org, Philipp Stanner <phasta@kernel.org>,
+ netdev@vger.kernel.org, nic_swsd@realtek.com,
+ linux-arm-msm@vger.kernel.org, dri-devel@lists.freedesktop.org,
+ linux-usb@vger.kernel.org, iommu@lists.linux.dev,
+ linux-riscv@lists.infradead.org, David Airlie <airlied@gmail.com>, Simona
+ Vetter <simona@ffwll.ch>, linux-cxl@vger.kernel.org,
+ linux-crypto@vger.kernel.org, platform-driver-x86@vger.kernel.org,
+ linux-serial@vger.kernel.org, mhi@lists.linux.dev, Andy Shevchenko
+ <andriy.shevchenko@linux.intel.com>, Jan Dabros <jsd@semihalf.com>,
+ linux-i2c@vger.kernel.org, Daniel Mack <daniel@zonque.org>, Haojian Zhuang
+ <haojian.zhuang@gmail.com>, linux-spi@vger.kernel.org, Jonathan Derrick
+ <jonathan.derrick@linux.dev>, linux-pci@vger.kernel.org,
+ linux-gpio@vger.kernel.org, Mauro Carvalho Chehab <mchehab@kernel.org>,
+ linux-media@vger.kernel.org, linux-mmc@vger.kernel.org
+Subject: Re: [PATCH 01/37] PCI/MSI: Add Devres managed IRQ vectors
+ allocation
+Message-ID: <20260223160402.3ad8f079@kernel.org>
+In-Reply-To: <1771860581-82092-2-git-send-email-shawn.lin@rock-chips.com>
+References: <1771860581-82092-1-git-send-email-shawn.lin@rock-chips.com>
+	<1771860581-82092-2-git-send-email-shawn.lin@rock-chips.com>
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <181e4409-7bbf-e207-0c54-1f817c1c35ed@linux.intel.com>
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 
-On Mon, Feb 23, 2026 at 04:26:25PM +0200, Ilpo Järvinen wrote:
-> On Wed, 18 Feb 2026, Yauhen Kharuzhy wrote:
-> 
-> > Add drv2604l i2c_board_info for drv2604l haptics drivers present in
-> > Lenovo Yoga Book YB1-X90 and YB1-X91. Set properties required for device
-> > initialization and self-calibration.
-> > 
-> > Signed-off-by: Yauhen Kharuzhy <jekhor@gmail.com>
-> > ---
-> >  .../platform/x86/x86-android-tablets/lenovo.c | 96 +++++++++++++++++++
-> >  1 file changed, 96 insertions(+)
-> > 
-> >  
-> > +#define YB1_X91_DRV2604L_0_DEVICE "i2c-DRV2604:00"
-> > +#define YB1_X91_DRV2604L_1_DEVICE "i2c-DRV2604:01"
-> > +
-> > +static int __init lenovo_yb1_x91_init(struct device *dev)
-> > +{
-> > +	struct device *drv2604l_0_dev = NULL, *drv2604l_1_dev = NULL;
-> > +	int ret = 0;
-> > +
-> > +	drv2604l_0_dev = bus_find_device_by_name(&i2c_bus_type, NULL,
-> > +						 YB1_X91_DRV2604L_0_DEVICE);
-> > +	if (!drv2604l_0_dev) {
-> > +		pr_err("error: cannot find %s device\n",
-> > +		       YB1_X91_DRV2604L_0_DEVICE);
-> > +		return -ENODEV;
-> > +	}
-> > +
-> > +	ret = device_create_managed_software_node(drv2604l_0_dev,
-> > +					lenovo_yb1_x9x_drv2604l_0_props, NULL);
-> > +	if (ret) {
-> > +		pr_err("error: cannot create software node for %s: %d\n",
-> > +		       YB1_X91_DRV2604L_0_DEVICE, ret);
-> > +		goto put_drv2604l_0;
-> > +	}
-> > +
-> > +	drv2604l_1_dev = bus_find_device_by_name(&i2c_bus_type, NULL,
-> > +						 YB1_X91_DRV2604L_1_DEVICE);
-> > +	if (!drv2604l_1_dev) {
-> > +		pr_err("error: cannot find %s device\n",
-> > +		       YB1_X91_DRV2604L_1_DEVICE);
-> > +		ret = -ENODEV;
-> > +		goto put_drv2604l_0;
-> > +	}
-> > +
-> > +	ret = device_create_managed_software_node(drv2604l_1_dev,
-> > +					lenovo_yb1_x9x_drv2604l_1_props, NULL);
-> > +	if (ret) {
-> > +		pr_err("error: cannot create software node for %s\n",
-> > +		       YB1_X91_DRV2604L_1_DEVICE);
-> > +		ret = -EINVAL;
-> > +		goto put_drv2604l_1;
-> > +	}
-> > +
-> > +put_drv2604l_0:
-> > +	put_device(drv2604l_0_dev);
-> > +put_drv2604l_1:
-> > +	put_device(drv2604l_1_dev);
-> 
-> This looks like a case that would benefit from using cleanup.h 
-> (__free(put_device)).
-> 
-> Remember to declare variables that use __free() mid-function as per the 
-> usage pattern in documented cleanup.h.
-> 
-> Please also make sure you have all necessary includes for using it (not 
-> through some obscure indirect include path).
+On Mon, 23 Feb 2026 23:29:40 +0800 Shawn Lin wrote:
+> pcim_alloc_irq_vectors() and pcim_alloc_irq_vectors_affinity() are created for
+> pci device drivers which rely on the devres machinery to help cleanup the IRQ
+> vectors.
 
-A good point, thanks!
-
--- 
-Yauhen Kharuzhy
+If you can please add this API with just a few users, and then convert
+remaining users via the subsystem trees in the next cycle.
+There's no need to risk wasting maintainer time on conflicts with
+conversions like this.
