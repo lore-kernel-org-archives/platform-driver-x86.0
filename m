@@ -1,74 +1,165 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.20])
+Received: from mout-p-201.mailbox.org (mout-p-201.mailbox.org [80.241.56.171])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3F7CD2C21EC
-	for <platform-driver-x86@vger.kernel.org>; Tue, 24 Feb 2026 08:25:36 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.20
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 504021DFDB8;
+	Tue, 24 Feb 2026 08:33:22 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=80.241.56.171
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1771921537; cv=none; b=Y1H520nWtFgXOXmBUpWYbzl1uZ6OtQc1scikwFx5pypbKqArL/WM7BU6y6rB9P3mtP/kkwXMeRD4i5JLGmtS5DJUDK/1GcyLNNmKtuOdZXEwYRXtCrWN4vkzMG4cU/qno7zaDo62tYyyDIOivVA6BL0n8ub61WyXTJ/TPRGiOGw=
+	t=1771922004; cv=none; b=nbQ2/uCUgp9QZBVSrJptxHleqA8dFTbM7/FYKEvb6PPxZUnN0D1BhwRzOY2U4ZFuQH9T3i0sDDDWPEjXT+IqGBuEeCZ8xrATCcmSLBM79mLOoJ//pyfI8vdfDJr6U0g3XjJSj5sXeOoYyc6oYTA1Qas0nlgz40bj7DfP2pVfdxw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1771921537; c=relaxed/simple;
-	bh=hbuz87GtgcUdJzsaMWSCs3NnPyvyzpGU2X6nniRdWTo=;
-	h=From:Date:To:cc:Subject:In-Reply-To:Message-ID:References:
-	 MIME-Version:Content-Type; b=no6UEFBuulu+yCGEm3B7mtPecnUlmLhnlLNF502yNnkU6DcSKJDeCjRziGQrUpn2lHuHtTIZP5tZC7VJdtvMKIEtVxUz6nfqn2hM1R+9rS/26JO3tF7dEm8NJAZZOuYMqcGhgSj9JdtQ/Qso4dhnbMpFJlb5pZGOr/aq5duzTI8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=pass smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=VD8EXGkB; arc=none smtp.client-ip=198.175.65.20
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.intel.com
+	s=arc-20240116; t=1771922004; c=relaxed/simple;
+	bh=jbJfsDf/AFVBkWOy7rSA4AaZdHLzv8lJvtIZjuKCFtE=;
+	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
+	 Content-Type:MIME-Version; b=EVf9aGxuXIcgilZMvncrDKL8sy8rQMUpPk83/EANmYRE+zOBqUqjNk38gUY1tx6dnuiF5c0LRCjZprClLlgD9Wl36Tnhy+ZBQagmEtPjrrYfC2NjaivYsrUhc9FT61FJ1OpQ6eD2Ezl4gWHK3InAKL9ZbHKFdyRfTiYE0KlqhzI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=mailbox.org; spf=pass smtp.mailfrom=mailbox.org; dkim=pass (2048-bit key) header.d=mailbox.org header.i=@mailbox.org header.b=ed6RPlZl; arc=none smtp.client-ip=80.241.56.171
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=mailbox.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=mailbox.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="VD8EXGkB"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1771921536; x=1803457536;
-  h=from:date:to:cc:subject:in-reply-to:message-id:
-   references:mime-version;
-  bh=hbuz87GtgcUdJzsaMWSCs3NnPyvyzpGU2X6nniRdWTo=;
-  b=VD8EXGkBEkvx2Ky68qScwrxMUFUtoO/r+ylnvDt5NcJ8l0ui5+gzoRkP
-   HzLWu9KRJgEobU6uUiW5s6OcNwdj/j0WoRq1KWP3nXnheFmPOStHBgAIv
-   3ZQ4PPUWy0sOUUJrYd2cplB4J2CvDB03kBt4DUmDAy41WnM7iUptG2lcW
-   rMCilL1dy3y5UEcXu89Qo0u9Zd6vWnwkUhPuE4r+W0TGKDhYvJ0P7Xe6l
-   ijz3p0V5AuLnsz8LfkdFXBlnR9pkaV5AHWmwR1XiIW4dMQ3KolC0AVVCe
-   WajpdvPuMDkFQXYyPDcWAuWuoFAmnvjnhvZ59ArKK1BDqTS5WsmFSr05m
-   g==;
-X-CSE-ConnectionGUID: ZvZb52zZQcyuMCJ60OGLlg==
-X-CSE-MsgGUID: W982D6I4TFmAFKn4zZLCrg==
-X-IronPort-AV: E=McAfee;i="6800,10657,11710"; a="72633781"
-X-IronPort-AV: E=Sophos;i="6.21,308,1763452800"; 
-   d="scan'208";a="72633781"
-Received: from fmviesa005.fm.intel.com ([10.60.135.145])
-  by orvoesa112.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 24 Feb 2026 00:25:35 -0800
-X-CSE-ConnectionGUID: VPrT5hdHSZGyi2PHDXmx6Q==
-X-CSE-MsgGUID: UkD7OdOeSRiIzWqrxMiqxw==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.21,308,1763452800"; 
-   d="scan'208";a="220396267"
-Received: from ijarvine-mobl1.ger.corp.intel.com (HELO localhost) ([10.245.244.133])
-  by fmviesa005-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 24 Feb 2026 00:25:33 -0800
-From: =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
-Date: Tue, 24 Feb 2026 10:25:29 +0200 (EET)
-To: Daniel Kamil Kozar <dkk089@gmail.com>
-cc: Hans de Goede <hansg@kernel.org>, jorge.lopez2@hp.com, 
-    mario.limonciello@amd.com, platform-driver-x86@vger.kernel.org
-Subject: Re: [hp-bioscfg] warning from kobject on module load, OmniBook 7
- 14-fr0220
-In-Reply-To: <20260223224947.12052-1-dkk089@gmail.com>
-Message-ID: <2534dbeb-857b-75c9-4f72-76de278cb8d5@linux.intel.com>
-References: <42962490-6817-d7b2-c6ae-a300676a001a@linux.intel.com> <20260223224947.12052-1-dkk089@gmail.com>
+	dkim=pass (2048-bit key) header.d=mailbox.org header.i=@mailbox.org header.b="ed6RPlZl"
+Received: from smtp202.mailbox.org (smtp202.mailbox.org [IPv6:2001:67c:2050:b231:465::202])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by mout-p-201.mailbox.org (Postfix) with ESMTPS id 4fKrZw3WpFz9vHN;
+	Tue, 24 Feb 2026 09:33:12 +0100 (CET)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=mailbox.org; s=mail20150812;
+	t=1771921992; h=from:from:reply-to:reply-to:subject:subject:date:date:
+	 message-id:message-id:to:to:cc:cc:mime-version:mime-version:
+	 content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=BYg4q6UpxC9QuXXiNNDVGkJ25zHrTtqhRQuiGoCwbvc=;
+	b=ed6RPlZlOUibWHwOocSfYTbtNmFVbXwAr31lgxNkh51bR+5xZFRh30ChM/VGa7gukLud7Z
+	gjTbJ0LWe52KAN52GeHh8bJ/s/WoNKVXWlvSRa1yRizbR3EpzoiYW3Wbfme/2w9YFsXFEw
+	1Sfja1+XOBY3ofP3UjIRgt036+qwuwuFFrM+HEUlokbyx8ydCENU7J4uyTEkj1BUrJue4J
+	99L7hKKIyf8MBC9C72PvXh5nuwMG3ygnRsPehMi1rXkCt72nSQ/Sw/iY4BR8htDmahaWW7
+	ev+dgehPQrgSupmjoTGs4VKws0G0Lm/uzKdxtzYsBciIbPjnvhapWs+EIlsL6g==
+Message-ID: <3014988f8a26dbac18a32ec22e0da3f5a383fd97.camel@mailbox.org>
+Subject: Re: [PATCH 01/37] PCI/MSI: Add Devres managed IRQ vectors allocation
+From: Philipp Stanner <phasta@mailbox.org>
+Reply-To: phasta@kernel.org
+To: Shawn Lin <shawn.lin@rock-chips.com>, phasta@kernel.org
+Cc: Bjorn Helgaas <bhelgaas@google.com>, "Vaibhaav Ram T . L"
+ <vaibhaavram.tl@microchip.com>, Kumaravel Thiagarajan
+ <kumaravel.thiagarajan@microchip.com>, Even Xu <even.xu@intel.com>, Xinpeng
+ Sun <xinpeng.sun@intel.com>, Srinivas Pandruvada
+ <srinivas.pandruvada@linux.intel.com>, Jiri Kosina <jikos@kernel.org>, 
+ Alexandre Belloni <alexandre.belloni@bootlin.com>, Zhou Wang
+ <wangzhou1@hisilicon.com>, Longfang Liu <liulongfang@huawei.com>, Vinod
+ Koul <vkoul@kernel.org>, Lee Jones <lee@kernel.org>, Jijie Shao
+ <shaojijie@huawei.com>, Jian Shen <shenjian15@huawei.com>, Sunil Goutham
+ <sgoutham@marvell.com>, Andrew Lunn <andrew+netdev@lunn.ch>, Heiner
+ Kallweit <hkallweit1@gmail.com>, "David S . Miller" <davem@davemloft.net>,
+ Jeff Hugo <jeff.hugo@oss.qualcomm.com>, Oded Gabbay <ogabbay@kernel.org>,
+ Maciej Falkowski <maciej.falkowski@linux.intel.com>,  Karol Wachowski
+ <karol.wachowski@linux.intel.com>, Min Ma <mamin506@gmail.com>, Lizhi Hou
+ <lizhi.hou@amd.com>,  Andreas Noever <andreas.noever@gmail.com>, Mika
+ Westerberg <westeri@kernel.org>, Tomasz Jeznach <tjeznach@rivosinc.com>,
+ Will Deacon <will@kernel.org>, Xinliang Liu <xinliang.liu@linaro.org>, Tian
+ Tao <tiantao6@hisilicon.com>, Davidlohr Bueso <dave@stgolabs.net>, Jonathan
+ Cameron <jonathan.cameron@huawei.com>, Srujana Challa
+ <schalla@marvell.com>, Bharat Bhushan <bbhushan2@marvell.com>, Antoine
+ Tenart <atenart@kernel.org>, Herbert Xu <herbert@gondor.apana.org.au>, Raag
+ Jadav <raag.jadav@intel.com>, Hans de Goede <hansg@kernel.org>, Greg
+ Kroah-Hartman <gregkh@linuxfoundation.org>, Jiri Slaby
+ <jirislaby@kernel.org>, Andy Shevchenko <andy@kernel.org>, Manivannan
+ Sadhasivam <mani@kernel.org>, Mika Westerberg
+ <mika.westerberg@linux.intel.com>, Andi Shyti <andi.shyti@kernel.org>, 
+ Robert Richter <rric@kernel.org>, Mark Brown <broonie@kernel.org>, Nirmal
+ Patel <nirmal.patel@linux.intel.com>, Kurt Schwemmer
+ <kurt.schwemmer@microsemi.com>,  Logan Gunthorpe <logang@deltatee.com>,
+ Linus Walleij <linusw@kernel.org>, Bartosz Golaszewski <brgl@kernel.org>, 
+ Sakari Ailus <sakari.ailus@linux.intel.com>, Bingbu Cao
+ <bingbu.cao@intel.com>, Ulf Hansson <ulf.hansson@linaro.org>, Arnd Bergmann
+ <arnd@arndb.de>, Benjamin Tissoires <bentiss@kernel.org>,
+ linux-input@vger.kernel.org,  linux-i3c@lists.infradead.org,
+ dmaengine@vger.kernel.org, netdev@vger.kernel.org,  nic_swsd@realtek.com,
+ linux-arm-msm@vger.kernel.org,  dri-devel@lists.freedesktop.org,
+ linux-usb@vger.kernel.org,  iommu@lists.linux.dev,
+ linux-riscv@lists.infradead.org, David Airlie <airlied@gmail.com>, Simona
+ Vetter <simona@ffwll.ch>, linux-cxl@vger.kernel.org, 
+ linux-crypto@vger.kernel.org, platform-driver-x86@vger.kernel.org, 
+ linux-serial@vger.kernel.org, mhi@lists.linux.dev, Andy Shevchenko
+ <andriy.shevchenko@linux.intel.com>, Jan Dabros <jsd@semihalf.com>, 
+ linux-i2c@vger.kernel.org, Daniel Mack <daniel@zonque.org>, Haojian Zhuang
+ <haojian.zhuang@gmail.com>, linux-spi@vger.kernel.org, Jonathan Derrick
+ <jonathan.derrick@linux.dev>, linux-pci@vger.kernel.org, 
+ linux-gpio@vger.kernel.org, Mauro Carvalho Chehab <mchehab@kernel.org>, 
+ linux-media@vger.kernel.org, linux-mmc@vger.kernel.org, Jakub Kicinski
+ <kuba@kernel.org>
+Date: Tue, 24 Feb 2026 09:32:39 +0100
+In-Reply-To: <d601ec05-ef38-5e8e-c643-c05010717ebe@rock-chips.com>
+References: <1771860581-82092-1-git-send-email-shawn.lin@rock-chips.com>
+	 <1771860581-82092-2-git-send-email-shawn.lin@rock-chips.com>
+	 <20260223160402.3ad8f079@kernel.org>
+	 <ec226aa1-5cc8-855f-8f90-1d7f89efe766@rock-chips.com>
+	 <07fc896007d86b731cbfb3cf6bbdf4e5315d7a77.camel@mailbox.org>
+	 <d601ec05-ef38-5e8e-c643-c05010717ebe@rock-chips.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+X-MBO-RS-META: 9xmyhhcgdmozckmn6yfrqrcxte8ryx4p
+X-MBO-RS-ID: 6c93f1b6d9c4844e3a5
 
-On Mon, 23 Feb 2026, Daniel Kamil Kozar wrote:
+On Tue, 2026-02-24 at 16:21 +0800, Shawn Lin wrote:
+> =E5=9C=A8 2026/02/24 =E6=98=9F=E6=9C=9F=E4=BA=8C 15:47, Philipp Stanner =
+=E5=86=99=E9=81=93:
+> > On Tue, 2026-02-24 at 10:08 +0800, Shawn Lin wrote:
+> > > =E5=9C=A8 2026/02/24 =E6=98=9F=E6=9C=9F=E4=BA=8C 8:04, Jakub Kicinski=
+ =E5=86=99=E9=81=93:
+> > > > On Mon, 23 Feb 2026 23:29:40 +0800 Shawn Lin wrote:
+> > > > > pcim_alloc_irq_vectors() and pcim_alloc_irq_vectors_affinity() ar=
+e created for
+> > > > > pci device drivers which rely on the devres machinery to help cle=
+anup the IRQ
+> > > > > vectors.
+> > > >=20
+> > > > If you can please add this API with just a few users, and then conv=
+ert
+> > > > remaining users via the subsystem trees in the next cycle.
+> > > > There's no need to risk wasting maintainer time on conflicts with
+> > > > conversions like this.
+> > >=20
+> > > Thanks for the suggestion, Jakub. I have little experience with
+> > > cross-subsystem cleanups like this, so your suggestion is very helpfu=
+l.
+> >=20
+> >=20
+> > When I removed the hybrid nature of pci_request_region() et al., I
+> > concluded that there were so few users that doing them all in one run
+> > was sufficient.
+> >=20
+> > For larger reworks, like removing pcim_iomap_table(), a slower step-by-
+> > step strategy is necessary for the reasons that Jakub details.
+> >=20
+> > It is then smart to omit an easy to port subsystem / driver for the
+> > ultimate patch series where one then removes the hybrid behavior from
+> > PCI itself, after porting the last driver.
+> >=20
+> > In general,=C2=A0 as Jakub details, those step-by-step cleanups are a b=
+it
+> > safer, since you can proof valid behavior early on and in case of an
+> > explosion they are very easy to revert.
+> >=20
+>=20
+> Thank you, Philipp. I wish I had attended your talk at FOSDEM 2025 on
+> removing pcim_iomap_table earlier. This first version was perhaps a bit=
+=20
+> too aggressive.
 
-> Hi Ilpo.
-> Thanks. I can confirm that these messages are gone when using 6.18.13. Sorry
-> about the false alarm.
+No worries at all, it's very cool that you pick this work up!
 
-No problem at all. Thanks for testing!
+>  For v2, I think the plan should start with addressing
+> the switchtec and vmd drivers, since both of those, along with the new=
+=20
+> API additions, can be handled entirely within the PCI subsystem scope.
 
--- 
- i.
+Sounds reasonable to me.
 
+Regards
+Philipp
