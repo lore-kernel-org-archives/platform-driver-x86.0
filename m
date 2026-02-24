@@ -1,191 +1,105 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from frasgout.his.huawei.com (frasgout.his.huawei.com [185.176.79.56])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 611A4396D14
-	for <platform-driver-x86@vger.kernel.org>; Tue, 24 Feb 2026 15:43:38 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 289643806B8;
+	Tue, 24 Feb 2026 16:20:06 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.176.79.56
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1771947818; cv=none; b=VeYyKg7frl5Gfevmn58cXzsZdc9x+RnLjPoIUY39hIZvSTTr7uNdoUZFLf14PIdz0THVcvHKAOWaZ3zEnQxrBN3WeB/kFHe28Tt4Pi2XOoF7xMOAQtNNyW6SQN/LTPrbMGa24N8hiQMdb83lra7FtuntTzvhNaBfSOM35zVxWF8=
+	t=1771950009; cv=none; b=a/3p31JN+Ln/iVhYClMUdHR3BEsDFxCHW96XzI3tyXtY5LCkp2vrLjg86/BEWyjuipZvFv2s1Y0cqe8joQM+E2YLtk7p5dsjrQ890aFqnxiJG1LiGX7PXqsqORj6ZDEm+02lyVU/bnFW4xDNumuejjzP9warqWLYpTsupDig0IA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1771947818; c=relaxed/simple;
-	bh=WRV3mPzePWOz5LDtIMXaDNNP9F7G/JBRcfLuawgcihc=;
-	h=From:To:Subject:Date:Message-ID:Content-Type:MIME-Version; b=CFaEpsKXPZaZEQ2luD9+G42d14We9YFSCeL/mISNLDSqTuVPouSErYkwQCEKzthuZ75Ntjz7EHgcS4BjMj4I1xiRWnx7sE8Mwib4PnWabzDZURPAlraNAZIEhn936MmjgbiqPCCD5aM5bQfXlRpNXmLdwM93YIKxDaG5UifTdx0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=u0mxIUjO; arc=none smtp.client-ip=10.30.226.201
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="u0mxIUjO"
-Received: by smtp.kernel.org (Postfix) with ESMTPS id 07155C116D0
-	for <platform-driver-x86@vger.kernel.org>; Tue, 24 Feb 2026 15:43:38 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1771947818;
-	bh=WRV3mPzePWOz5LDtIMXaDNNP9F7G/JBRcfLuawgcihc=;
-	h=From:To:Subject:Date:From;
-	b=u0mxIUjOteY+jG47XL5atIQ1sC5LiwaUCgfEE3HCcKO+b5SvvDJou7IcdHOYF+HGT
-	 pikFHVX1jiKoZ7VRY4RWo2s1nOWE5pTmtLlYRn6YpP3q59UmhNR3RlQ0Y646CoU1Pz
-	 usneT2BQv5LCrY/y934Jcun57+sRj/8Kaq3VwLx+RHmL1vvbt+OC/xZGuukeQuUpBo
-	 /saHU74ZMj0OMtIv66R9o5RZUN0MP3wIZaXh4ivwVYhh5dcZDMhKaAwaVoLEPeixnh
-	 hY+BkFRQY9W7rfsBNU3tYZhmXMfWFBvq1ud056G6Thx7l5JkEgzSylMwUUkYj+3sSB
-	 IEeTMDdSFXZQw==
-Received: by aws-us-west-2-korg-bugzilla-1.web.codeaurora.org (Postfix, from userid 48)
-	id 01D68C41613; Tue, 24 Feb 2026 15:43:38 +0000 (UTC)
-From: bugzilla-daemon@kernel.org
-To: platform-driver-x86@vger.kernel.org
-Subject: [Bug 221133] New: asus-wmi: keyboard backlight not detected on ASUS
- Zenbook S 14 UX5406SA due to KBLC flag not set in BIOS
-Date: Tue, 24 Feb 2026 15:43:37 +0000
-X-Bugzilla-Reason: None
-X-Bugzilla-Type: new
-X-Bugzilla-Watch-Reason: AssignedTo drivers_platform_x86@kernel-bugs.osdl.org
-X-Bugzilla-Product: Drivers
-X-Bugzilla-Component: Platform_x86
-X-Bugzilla-Version: 2.5
-X-Bugzilla-Keywords: 
-X-Bugzilla-Severity: normal
-X-Bugzilla-Who: keithpsu03@gmail.com
-X-Bugzilla-Status: NEW
-X-Bugzilla-Resolution: 
-X-Bugzilla-Priority: P3
-X-Bugzilla-Assigned-To: drivers_platform_x86@kernel-bugs.osdl.org
-X-Bugzilla-Flags: 
-X-Bugzilla-Changed-Fields: bug_id short_desc product version rep_platform
- op_sys bug_status bug_severity priority component assigned_to reporter
- cf_regression
-Message-ID: <bug-221133-215701@https.bugzilla.kernel.org/>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-X-Bugzilla-URL: https://bugzilla.kernel.org/
-Auto-Submitted: auto-generated
+	s=arc-20240116; t=1771950009; c=relaxed/simple;
+	bh=6G91BbTqFSYq68w6yhfkl+JDGrXisXHtlEgCseE/wwo=;
+	h=Date:From:To:CC:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=USqOVO1G8thfgen45iXNVM6Ww1j0fmbiTNzRg5c7dxMz8bF4y4wQ0aLX+j9GyfK2JA3wIrVqkYLQdlrzBkNRCizxSSmBL4mlSz2rAAu5ju1vSO5mAI3PlnyzZd0LFo3AZFrEeaA2khoswtV2yxqdIflZTG4g0REjoy8UHhwRGjY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=185.176.79.56
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
+Received: from mail.maildlp.com (unknown [172.18.224.107])
+	by frasgout.his.huawei.com (SkyGuard) with ESMTPS id 4fL2xC01QGzJ46C2;
+	Wed, 25 Feb 2026 00:19:43 +0800 (CST)
+Received: from dubpeml500005.china.huawei.com (unknown [7.214.145.207])
+	by mail.maildlp.com (Postfix) with ESMTPS id C0C2D40570;
+	Wed, 25 Feb 2026 00:20:04 +0800 (CST)
+Received: from localhost (10.203.177.15) by dubpeml500005.china.huawei.com
+ (7.214.145.207) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.11; Tue, 24 Feb
+ 2026 16:20:01 +0000
+Date: Tue, 24 Feb 2026 16:20:00 +0000
+From: Jonathan Cameron <jonathan.cameron@huawei.com>
+To: Shawn Lin <shawn.lin@rock-chips.com>
+CC: Bjorn Helgaas <bhelgaas@google.com>, "Vaibhaav Ram T . L"
+	<vaibhaavram.tl@microchip.com>, Kumaravel Thiagarajan
+	<kumaravel.thiagarajan@microchip.com>, Even Xu <even.xu@intel.com>, Xinpeng
+ Sun <xinpeng.sun@intel.com>, Srinivas Pandruvada
+	<srinivas.pandruvada@linux.intel.com>, Jiri Kosina <jikos@kernel.org>,
+	Alexandre Belloni <alexandre.belloni@bootlin.com>, Zhou Wang
+	<wangzhou1@hisilicon.com>, Longfang Liu <liulongfang@huawei.com>, "Vinod
+ Koul" <vkoul@kernel.org>, Lee Jones <lee@kernel.org>, Jijie Shao
+	<shaojijie@huawei.com>, Jian Shen <shenjian15@huawei.com>, Sunil Goutham
+	<sgoutham@marvell.com>, Andrew Lunn <andrew+netdev@lunn.ch>, "Heiner
+ Kallweit" <hkallweit1@gmail.com>, "David S . Miller" <davem@davemloft.net>,
+	Jeff Hugo <jeff.hugo@oss.qualcomm.com>, Oded Gabbay <ogabbay@kernel.org>,
+	Maciej Falkowski <maciej.falkowski@linux.intel.com>, Karol Wachowski
+	<karol.wachowski@linux.intel.com>, Min Ma <mamin506@gmail.com>, Lizhi Hou
+	<lizhi.hou@amd.com>, Andreas Noever <andreas.noever@gmail.com>, "Mika
+ Westerberg" <westeri@kernel.org>, Tomasz Jeznach <tjeznach@rivosinc.com>,
+	Will Deacon <will@kernel.org>, Xinliang Liu <xinliang.liu@linaro.org>, Tian
+ Tao <tiantao6@hisilicon.com>, Davidlohr Bueso <dave@stgolabs.net>, Srujana
+ Challa <schalla@marvell.com>, Bharat Bhushan <bbhushan2@marvell.com>, Antoine
+ Tenart <atenart@kernel.org>, Herbert Xu <herbert@gondor.apana.org.au>, Raag
+ Jadav <raag.jadav@intel.com>, "Hans de Goede" <hansg@kernel.org>, Greg
+ Kroah-Hartman <gregkh@linuxfoundation.org>, Jiri Slaby
+	<jirislaby@kernel.org>, Andy Shevchenko <andy@kernel.org>, Manivannan
+ Sadhasivam <mani@kernel.org>, Mika Westerberg
+	<mika.westerberg@linux.intel.com>, Andi Shyti <andi.shyti@kernel.org>, Robert
+ Richter <rric@kernel.org>, Mark Brown <broonie@kernel.org>, "Nirmal Patel"
+	<nirmal.patel@linux.intel.com>, Kurt Schwemmer
+	<kurt.schwemmer@microsemi.com>, Logan Gunthorpe <logang@deltatee.com>, Linus
+ Walleij <linusw@kernel.org>, Bartosz Golaszewski <brgl@kernel.org>, Sakari
+ Ailus <sakari.ailus@linux.intel.com>, Bingbu Cao <bingbu.cao@intel.com>, Ulf
+ Hansson <ulf.hansson@linaro.org>, Arnd Bergmann <arnd@arndb.de>, Benjamin
+ Tissoires <bentiss@kernel.org>, <linux-input@vger.kernel.org>,
+	<linux-i3c@lists.infradead.org>, <dmaengine@vger.kernel.org>, Philipp Stanner
+	<phasta@kernel.org>, <netdev@vger.kernel.org>, <nic_swsd@realtek.com>,
+	<linux-arm-msm@vger.kernel.org>, <dri-devel@lists.freedesktop.org>,
+	<linux-usb@vger.kernel.org>, <iommu@lists.linux.dev>,
+	<linux-riscv@lists.infradead.org>, David Airlie <airlied@gmail.com>, Simona
+ Vetter <simona@ffwll.ch>, <linux-cxl@vger.kernel.org>,
+	<linux-crypto@vger.kernel.org>, <platform-driver-x86@vger.kernel.org>,
+	<linux-serial@vger.kernel.org>, <mhi@lists.linux.dev>, Andy Shevchenko
+	<andriy.shevchenko@linux.intel.com>, Jan Dabros <jsd@semihalf.com>,
+	<linux-i2c@vger.kernel.org>, Daniel Mack <daniel@zonque.org>, "Haojian
+ Zhuang" <haojian.zhuang@gmail.com>, <linux-spi@vger.kernel.org>, "Jonathan
+ Derrick" <jonathan.derrick@linux.dev>, <linux-pci@vger.kernel.org>,
+	<linux-gpio@vger.kernel.org>, Mauro Carvalho Chehab <mchehab@kernel.org>,
+	<linux-media@vger.kernel.org>, <linux-mmc@vger.kernel.org>
+Subject: Re: [PATCH 01/37] PCI/MSI: Add Devres managed IRQ vectors
+ allocation
+Message-ID: <20260224162000.000001a5@huawei.com>
+In-Reply-To: <1771860581-82092-2-git-send-email-shawn.lin@rock-chips.com>
+References: <1771860581-82092-1-git-send-email-shawn.lin@rock-chips.com>
+	<1771860581-82092-2-git-send-email-shawn.lin@rock-chips.com>
+X-Mailer: Claws Mail 4.3.0 (GTK 3.24.42; x86_64-w64-mingw32)
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset="US-ASCII"
+Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: lhrpeml500009.china.huawei.com (7.191.174.84) To
+ dubpeml500005.china.huawei.com (7.214.145.207)
 
-https://bugzilla.kernel.org/show_bug.cgi?id=3D221133
+On Mon, 23 Feb 2026 23:29:40 +0800
+Shawn Lin <shawn.lin@rock-chips.com> wrote:
 
-            Bug ID: 221133
-           Summary: asus-wmi: keyboard backlight not detected on ASUS
-                    Zenbook S 14 UX5406SA due to KBLC flag not set in BIOS
-           Product: Drivers
-           Version: 2.5
-          Hardware: Intel
-                OS: Linux
-            Status: NEW
-          Severity: normal
-          Priority: P3
-         Component: Platform_x86
-          Assignee: drivers_platform_x86@kernel-bugs.osdl.org
-          Reporter: keithpsu03@gmail.com
-        Regression: No
+> pcim_alloc_irq_vectors() and pcim_alloc_irq_vectors_affinity() are created for
+> pci device drivers which rely on the devres machinery to help cleanup the IRQ
+> vectors.
 
-System:
-=E2=80=A2  Device: ASUS Zenbook S 14 UX5406SA
-=E2=80=A2  Board: UX5406SA
-=E2=80=A2  BIOS: UX5406SA.308 (06/05/2025)
-=E2=80=A2  Kernel: 6.17.0-14-generic (Ubuntu)
-=E2=80=A2  Platform: Intel Lunar Lake
+It might be worth adding some details on why we need the is_msi_managed
+flag in the first place vs just doing conventional devm_add_action_or_reset()
+with pci_free_irq_vectors().
 
-Bug:
-The asus-wmi driver does not create asus::kbd_backlight on this laptop, even
-though the keyboard backlight hardware works. GNOME cannot display a bright=
-ness
-OSD or manage auto-timeout on inactivity.
 
-Root cause:
-The WMI DSTS handler for ASUS_WMI_DEVID_KBD_BACKLIGHT (0x00050021) calls th=
-e EC
-method GLKB(1), which checks KBLC & 0x80. On this laptop, the BIOS does not=
- set
-bit 7 of the KBLC ACPI variable, so GLKB(1) returns 0, and the driver's
-kbd_led_init() sees -ENODEV from asus_wmi_get_devstate_simple().
-
-However, the DEVS handler for 0x00050021 calls SLKB() unconditionally (no K=
-BLC
-check), and the hardware responds correctly:
-
-# Confirm GLKB(1) returns 0 (backlight reported as not present):
-echo "\_SB.PC00.LPCB.EC0.GLKB 1" > /proc/acpi/call
-cat /proc/acpi/call
-# Result: 0x0
-
-# But calling SLKB directly turns on the backlight:
-echo "\_SB.PC00.LPCB.EC0.SLKB 0x83" > /proc/acpi/call
-cat /proc/acpi/call
-# Result: 0x1 (success, backlight turns on)
-
-Relevant DSDT excerpts (BIOS UX5406SA.308):
-
-KBLC is an 8-bit field in the AECO SystemMemory region:
-
-OperationRegion (AECO, SystemMemory, AECB, 0x1F)
-Field (AECO, AnyAcc, NoLock, Preserve)
-{
-    AECS, 32, ACPF, 8, DCPF, 8, TPSV, 8, TCRT, 8,
-    PPSV, 8, DSYN, 8, WOLO, 8, EGBF, 32,
-    KBLC, 8,   // <-- bit 7 gates kbd backlight presence
-    KBLV, 8,
-    ...
-}
-
-GLKB (get keyboard backlight state):
-
-Method (GLKB, 1, NotSerialized)
-{
-    If ((Arg0 =3D=3D One))
-    {
-        Local0 =3D (KBLC & 0x80)
-        If (Local0) { Return (One) }
-        Else        { Return (Zero) }  // <-- always hits this path
-    }
-    ElseIf ((Arg0 =3D=3D 0x02)) { Return (KBLV) }
-    ElseIf ((Arg0 =3D=3D 0x03)) { Return (0x80) }
-    Return (Ones)
-}
-
-SLKB (set keyboard backlight) =E2=80=94 works unconditionally:
-
-Method (SLKB, 1, NotSerialized)
-{
-    KBLV =3D (Arg0 & 0x7F)
-    If ((Arg0 & 0x80)) { Local0 =3D DerefOf (PWKB [KBLV]) }
-    Else               { Local0 =3D Zero }
-    ST9E (0x1F, 0xFF, Local0)
-    Return (One)
-}
-
-Additional context:
-An earlier unit of this same model (before RMA replacement) had the keyboard
-backlight working correctly under Linux, suggesting a BIOS update removed or
-broke the KBLC bit 7 initialization.
-
-Proposed fix:
-Add a DMI quirk for the UX5406SA that skips the KBLC presence check and for=
-ces
-keyboard backlight support, since the hardware and SLKB setter work correct=
-ly
-regardless. Something like:
-
-static const struct dmi_system_id asus_wmi_force_kbd_backlight[] =3D {
-    {
-        .matches =3D {
-            DMI_MATCH(DMI_BOARD_NAME, "UX5406SA"),
-        },
-    },
-    { }
-};
-
-And in kbd_led_init(), if the DMI matches, proceed with backlight setup eve=
-n if
-asus_wmi_get_devstate_simple() returns -ENODEV.
-
-Workaround:
-Using acpi_call to directly invoke SLKB:
-
-modprobe acpi_call
-echo "\_SB.PC00.LPCB.EC0.SLKB 0x83" > /proc/acpi/call
-
---=20
-You may reply to this email to add a comment.
-
-You are receiving this mail because:
-You are watching the assignee of the bug.=
