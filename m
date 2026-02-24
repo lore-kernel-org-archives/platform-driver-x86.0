@@ -1,50 +1,50 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.11])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.14])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E390F1F30A9;
-	Tue, 24 Feb 2026 08:42:16 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.11
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E4E351F30A9;
+	Tue, 24 Feb 2026 08:43:23 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.14
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1771922538; cv=none; b=q8gHdtl0+LZKWsbkXJ8xbK9dN6IefoqHNa7rXWW7xwuFBYMYwJ07FrCfk4zG4guikY1r6N3yVR15cRwnLw127VayrEI9xB5wUQtyzpcc1uGlZWQr8gocEJpvIoUZfnoWLPXGQWDvWrnoG1unUbruOmAojPTtHSFcuoGgOlfei58=
+	t=1771922605; cv=none; b=eolJf1W5dXCKQ6f0pWvNCLrVkIApSG7Ck/e3PKQH6TIswbcsBFyOhrrJv3l4hT1Ue+WYIDiK7SjyRqDnRce1LrLTDSGanlKAVPQ0MANFxiRL/GDyyEczRb0JnabFtEMdpu9xvMcXiqg4oWGHSkGDm5d1gR0tYadXqqvuXKvF9OM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1771922538; c=relaxed/simple;
-	bh=4vIe/QMBKYy5kpIqRPd3ZXsHx5eF0dAE61BCdYJemEM=;
+	s=arc-20240116; t=1771922605; c=relaxed/simple;
+	bh=epa8n7bI2oc+37tykzo2bvlxYxLaXOwl5T2Kl+g4c+o=;
 	h=From:Date:To:cc:Subject:In-Reply-To:Message-ID:References:
-	 MIME-Version:Content-Type; b=pTPxbwSuKU8qst3QEaw3RwSMUyItJwBEcN31sDWbuPHsjGOG4q/ywQe7eDKTd6yy4VadK7OkAN9HZYcyJQz15Q0yYUinj142ABCM0zGP5fd5kGvQ5y5scUaVZDowYZ6isxiwDz7YbhEDPDzjX8Emz7MPEkX685lGn47wsGSnCDo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=pass smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=bfxhCKbV; arc=none smtp.client-ip=192.198.163.11
+	 MIME-Version:Content-Type; b=CIw2QznbnxHAsmsr8ZuknHL5falDF37lDIEUEa+vfwslkhhUb5FkHjaPNdNny6XtFYDeW6CYcijbywE8EKtO9953dTV+jaByqPEBxXPp8kPvrwcFbTuueP1NI12/9TDe8cmSMjl5X1B42eNos1lRVj7zHPGNQQXrR27PBLsjkMc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=pass smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=iThm6WCO; arc=none smtp.client-ip=192.198.163.14
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="bfxhCKbV"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="iThm6WCO"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1771922537; x=1803458537;
+  t=1771922604; x=1803458604;
   h=from:date:to:cc:subject:in-reply-to:message-id:
    references:mime-version;
-  bh=4vIe/QMBKYy5kpIqRPd3ZXsHx5eF0dAE61BCdYJemEM=;
-  b=bfxhCKbVw6HEU8ukhy7ahg6X7imXh6kdNeCBLguEdn56SRY8Z94hN8x5
-   mLgIg77wctU0oRAfcXwLl6P0j/5L0uMuFHfWZmRRFO2gZCNGUCGMlJy/L
-   BGSX/7zGeCmAHnUz4AYuUAmPZ94xs/G9tZz8HdG9obgpdrs1wHUxqfjky
-   Srg00AtxriUg0t1dByT2oBgY8L5wbaBsyjiLdI8LJNXeN3OxKE22eGlWb
-   0ldElbEaYLjx4fdgIGx4jcHpt5QpcB4SRpM9osfJtykLGxW2DDU4njHsV
-   rDf01MiiqV7yFuKMHgEK6NUo5gGvcH3VfUEHRaKdyBxwyseIC7KmNbJ7P
-   A==;
-X-CSE-ConnectionGUID: dC9Vro4FSYyUgJSHOgFi2Q==
-X-CSE-MsgGUID: CXiby3H9TZ2IRybIfCwa6A==
-X-IronPort-AV: E=McAfee;i="6800,10657,11710"; a="83553391"
+  bh=epa8n7bI2oc+37tykzo2bvlxYxLaXOwl5T2Kl+g4c+o=;
+  b=iThm6WCOHTyJDNnPkIuWe1GyAwi8KAwjn1hgcHiqqecOZ+ffpzYsQqQQ
+   KnNHiYiq5u6dAqO0ZGg43clyrP7TzxDgL7CL4SGP8atqugGRFdkMb9ciF
+   Kt4kzhJHLzXrqjS0TYzgQ8V6j9QKW6R+SHs5vU/SWpK6CDUa/jph1WyOy
+   m1VaO0sAh45x6L4suHlRd1k8aFDwP+7yQ57XrWFvz8XucDKuLImHwcKI7
+   tThM8lXwVGKlJhsqTnjdHiR+sFiQhD+2D77Orur/jAyt5oX4McYcjMn02
+   sfpsYL8MhjXnKrvMB1T7DJpMwMR0FF+EKcxYto2mX6JL4FpupccKW9sPr
+   Q==;
+X-CSE-ConnectionGUID: hqzsH+sBQGSUzlZyo2XlDA==
+X-CSE-MsgGUID: RQ5wC4p7RHaQFsL/G11iCg==
+X-IronPort-AV: E=McAfee;i="6800,10657,11710"; a="72996117"
 X-IronPort-AV: E=Sophos;i="6.21,308,1763452800"; 
-   d="scan'208";a="83553391"
-Received: from orviesa004.jf.intel.com ([10.64.159.144])
-  by fmvoesa105.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 24 Feb 2026 00:42:15 -0800
-X-CSE-ConnectionGUID: 3wVL7pDrRheG5tikFQf7fw==
-X-CSE-MsgGUID: dVV4d19sS2G3JRWT8TKJHA==
+   d="scan'208";a="72996117"
+Received: from orviesa007.jf.intel.com ([10.64.159.147])
+  by fmvoesa108.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 24 Feb 2026 00:43:23 -0800
+X-CSE-ConnectionGUID: wqWufaUHTMSYV9St7zeqIw==
+X-CSE-MsgGUID: 3fef2OQ/QSSEPbAPDUqr1A==
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="6.21,308,1763452800"; 
-   d="scan'208";a="220355817"
+   d="scan'208";a="215997914"
 Received: from ijarvine-mobl1.ger.corp.intel.com (HELO localhost) ([10.245.244.133])
-  by orviesa004-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 24 Feb 2026 00:42:11 -0800
+  by orviesa007-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 24 Feb 2026 00:43:20 -0800
 From: =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
-Date: Tue, 24 Feb 2026 10:42:08 +0200 (EET)
+Date: Tue, 24 Feb 2026 10:43:16 +0200 (EET)
 To: "Derek J. Clark" <derekjohn.clark@gmail.com>
 cc: Hans de Goede <hansg@kernel.org>, Mark Pearson <mpearson-lenovo@squebb.ca>, 
     Armin Wolf <W_Armin@gmx.de>, Jonathan Corbet <corbet@lwn.net>, 
@@ -53,7 +53,7 @@ cc: Hans de Goede <hansg@kernel.org>, Mark Pearson <mpearson-lenovo@squebb.ca>,
 Subject: Re: [PATCH v3 1/6] platform/x86: lenovo-wmi-other: Add LWMI_ATTR_ID
  Macro
 In-Reply-To: <20260224043200.2680384-2-derekjohn.clark@gmail.com>
-Message-ID: <c8031935-0dab-59d0-a23f-b93c203ef95f@linux.intel.com>
+Message-ID: <9dac08fc-594a-cea4-f92c-69a55dbe7a42@linux.intel.com>
 References: <20260224043200.2680384-1-derekjohn.clark@gmail.com> <20260224043200.2680384-2-derekjohn.clark@gmail.com>
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
@@ -66,6 +66,9 @@ Content-Type: text/plain; charset=US-ASCII
 On Tue, 24 Feb 2026, Derek J. Clark wrote:
 
 > Adds LWMI_ATTR_ID macro. In the same vein as LWMI_ATTR_ID_FAN_RPM,
+
+Add () after any function (or like).
+
 > but as a generic, to de-duplicate attribute_id assignment biolerplate.
 > 
 > Reviewed-by: Mark Pearson <mpearson-lenovo@squebb.ca>
@@ -89,9 +92,6 @@ On Tue, 24 Feb 2026, Derek J. Clark wrote:
 > +	 FIELD_PREP(LWMI_ATTR_FEAT_ID_MASK, feat) | \
 > +	 FIELD_PREP(LWMI_ATTR_MODE_ID_MASK, mode) | \
 > +	 FIELD_PREP(LWMI_ATTR_TYPE_ID_MASK, type))
-
-Why does this need to be macro? Static inline would have proper types.
-
 > +
 >  #define LWMI_DEVICE_ID_FAN	0x04
 >  
