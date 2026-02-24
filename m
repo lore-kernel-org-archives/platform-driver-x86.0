@@ -1,105 +1,151 @@
-Received: from frasgout.his.huawei.com (frasgout.his.huawei.com [185.176.79.56])
+Received: from out-172.mta0.migadu.com (out-172.mta0.migadu.com [91.218.175.172])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 289643806B8;
-	Tue, 24 Feb 2026 16:20:06 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.176.79.56
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id ADE7033A9C2
+	for <platform-driver-x86@vger.kernel.org>; Tue, 24 Feb 2026 20:42:27 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.218.175.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1771950009; cv=none; b=a/3p31JN+Ln/iVhYClMUdHR3BEsDFxCHW96XzI3tyXtY5LCkp2vrLjg86/BEWyjuipZvFv2s1Y0cqe8joQM+E2YLtk7p5dsjrQ890aFqnxiJG1LiGX7PXqsqORj6ZDEm+02lyVU/bnFW4xDNumuejjzP9warqWLYpTsupDig0IA=
+	t=1771965749; cv=none; b=XG2k1JnTQGfDEv4MJuGYmYvczzFiBxzUilXDHT9fmdQoHZH7hlFwYgGQSVRNzmudcg+qsjHtpjwR0dt6yOnFSPS8SQUNBjjtTF0BDkKdRku+JHiUF69BqThCEnaqHGH3zAtrPLJ9fLgRxQPpAXjDuZKblUS8E8K3wyAyN+yeK3Q=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1771950009; c=relaxed/simple;
-	bh=6G91BbTqFSYq68w6yhfkl+JDGrXisXHtlEgCseE/wwo=;
-	h=Date:From:To:CC:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=USqOVO1G8thfgen45iXNVM6Ww1j0fmbiTNzRg5c7dxMz8bF4y4wQ0aLX+j9GyfK2JA3wIrVqkYLQdlrzBkNRCizxSSmBL4mlSz2rAAu5ju1vSO5mAI3PlnyzZd0LFo3AZFrEeaA2khoswtV2yxqdIflZTG4g0REjoy8UHhwRGjY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=185.176.79.56
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
-Received: from mail.maildlp.com (unknown [172.18.224.107])
-	by frasgout.his.huawei.com (SkyGuard) with ESMTPS id 4fL2xC01QGzJ46C2;
-	Wed, 25 Feb 2026 00:19:43 +0800 (CST)
-Received: from dubpeml500005.china.huawei.com (unknown [7.214.145.207])
-	by mail.maildlp.com (Postfix) with ESMTPS id C0C2D40570;
-	Wed, 25 Feb 2026 00:20:04 +0800 (CST)
-Received: from localhost (10.203.177.15) by dubpeml500005.china.huawei.com
- (7.214.145.207) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.11; Tue, 24 Feb
- 2026 16:20:01 +0000
-Date: Tue, 24 Feb 2026 16:20:00 +0000
-From: Jonathan Cameron <jonathan.cameron@huawei.com>
-To: Shawn Lin <shawn.lin@rock-chips.com>
-CC: Bjorn Helgaas <bhelgaas@google.com>, "Vaibhaav Ram T . L"
-	<vaibhaavram.tl@microchip.com>, Kumaravel Thiagarajan
-	<kumaravel.thiagarajan@microchip.com>, Even Xu <even.xu@intel.com>, Xinpeng
- Sun <xinpeng.sun@intel.com>, Srinivas Pandruvada
-	<srinivas.pandruvada@linux.intel.com>, Jiri Kosina <jikos@kernel.org>,
-	Alexandre Belloni <alexandre.belloni@bootlin.com>, Zhou Wang
-	<wangzhou1@hisilicon.com>, Longfang Liu <liulongfang@huawei.com>, "Vinod
- Koul" <vkoul@kernel.org>, Lee Jones <lee@kernel.org>, Jijie Shao
-	<shaojijie@huawei.com>, Jian Shen <shenjian15@huawei.com>, Sunil Goutham
-	<sgoutham@marvell.com>, Andrew Lunn <andrew+netdev@lunn.ch>, "Heiner
- Kallweit" <hkallweit1@gmail.com>, "David S . Miller" <davem@davemloft.net>,
-	Jeff Hugo <jeff.hugo@oss.qualcomm.com>, Oded Gabbay <ogabbay@kernel.org>,
-	Maciej Falkowski <maciej.falkowski@linux.intel.com>, Karol Wachowski
-	<karol.wachowski@linux.intel.com>, Min Ma <mamin506@gmail.com>, Lizhi Hou
-	<lizhi.hou@amd.com>, Andreas Noever <andreas.noever@gmail.com>, "Mika
- Westerberg" <westeri@kernel.org>, Tomasz Jeznach <tjeznach@rivosinc.com>,
-	Will Deacon <will@kernel.org>, Xinliang Liu <xinliang.liu@linaro.org>, Tian
- Tao <tiantao6@hisilicon.com>, Davidlohr Bueso <dave@stgolabs.net>, Srujana
- Challa <schalla@marvell.com>, Bharat Bhushan <bbhushan2@marvell.com>, Antoine
- Tenart <atenart@kernel.org>, Herbert Xu <herbert@gondor.apana.org.au>, Raag
- Jadav <raag.jadav@intel.com>, "Hans de Goede" <hansg@kernel.org>, Greg
- Kroah-Hartman <gregkh@linuxfoundation.org>, Jiri Slaby
-	<jirislaby@kernel.org>, Andy Shevchenko <andy@kernel.org>, Manivannan
- Sadhasivam <mani@kernel.org>, Mika Westerberg
-	<mika.westerberg@linux.intel.com>, Andi Shyti <andi.shyti@kernel.org>, Robert
- Richter <rric@kernel.org>, Mark Brown <broonie@kernel.org>, "Nirmal Patel"
-	<nirmal.patel@linux.intel.com>, Kurt Schwemmer
-	<kurt.schwemmer@microsemi.com>, Logan Gunthorpe <logang@deltatee.com>, Linus
- Walleij <linusw@kernel.org>, Bartosz Golaszewski <brgl@kernel.org>, Sakari
- Ailus <sakari.ailus@linux.intel.com>, Bingbu Cao <bingbu.cao@intel.com>, Ulf
- Hansson <ulf.hansson@linaro.org>, Arnd Bergmann <arnd@arndb.de>, Benjamin
- Tissoires <bentiss@kernel.org>, <linux-input@vger.kernel.org>,
-	<linux-i3c@lists.infradead.org>, <dmaengine@vger.kernel.org>, Philipp Stanner
-	<phasta@kernel.org>, <netdev@vger.kernel.org>, <nic_swsd@realtek.com>,
-	<linux-arm-msm@vger.kernel.org>, <dri-devel@lists.freedesktop.org>,
-	<linux-usb@vger.kernel.org>, <iommu@lists.linux.dev>,
-	<linux-riscv@lists.infradead.org>, David Airlie <airlied@gmail.com>, Simona
- Vetter <simona@ffwll.ch>, <linux-cxl@vger.kernel.org>,
-	<linux-crypto@vger.kernel.org>, <platform-driver-x86@vger.kernel.org>,
-	<linux-serial@vger.kernel.org>, <mhi@lists.linux.dev>, Andy Shevchenko
-	<andriy.shevchenko@linux.intel.com>, Jan Dabros <jsd@semihalf.com>,
-	<linux-i2c@vger.kernel.org>, Daniel Mack <daniel@zonque.org>, "Haojian
- Zhuang" <haojian.zhuang@gmail.com>, <linux-spi@vger.kernel.org>, "Jonathan
- Derrick" <jonathan.derrick@linux.dev>, <linux-pci@vger.kernel.org>,
-	<linux-gpio@vger.kernel.org>, Mauro Carvalho Chehab <mchehab@kernel.org>,
-	<linux-media@vger.kernel.org>, <linux-mmc@vger.kernel.org>
-Subject: Re: [PATCH 01/37] PCI/MSI: Add Devres managed IRQ vectors
- allocation
-Message-ID: <20260224162000.000001a5@huawei.com>
-In-Reply-To: <1771860581-82092-2-git-send-email-shawn.lin@rock-chips.com>
-References: <1771860581-82092-1-git-send-email-shawn.lin@rock-chips.com>
-	<1771860581-82092-2-git-send-email-shawn.lin@rock-chips.com>
-X-Mailer: Claws Mail 4.3.0 (GTK 3.24.42; x86_64-w64-mingw32)
+	s=arc-20240116; t=1771965749; c=relaxed/simple;
+	bh=0tWKDLXH5pjJjdm4JUmWcf2poAKaDppQaV5hVxPlS9U=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=aDooykfiHz0liPVXFcAYEdm7owoaUy3Dmic8C+1eh8mswxOo1AHSJKC36PvTxM8merolEJt8p4rUCvYencSkjgkp3b94pGu1TpPC1wj/Kk4CE+Gih4KTfBPqsNJtwvIxoTy/G8+lhBMevTdCgtZF2bO+9+/i8WRqeNABRSVsqqk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=M6fEORoN; arc=none smtp.client-ip=91.218.175.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="M6fEORoN"
+Message-ID: <970c8b24-5653-44b1-9e3b-147b88402b5e@linux.dev>
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
+	t=1771965745;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=FTEfofeNEQ5tW/+zbDFfgCF9+qBwObxXv1T9PObcjIM=;
+	b=M6fEORoNny7ZD/F//JJSpJTV3OORUkByUBVyqWES1a1wmrDb6G0NVermiXmEzPRe6F4MOx
+	/kXH7eDKsRVXoAsgoeIXLnPVbyPX8keFdNfzjl4z0efe96ePeVs4Sm7AHzIxNhhIr894rO
+	a8E4QljiG2g3HyWxmNlMqmv6wJ36MVs=
+Date: Tue, 24 Feb 2026 21:42:22 +0100
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="US-ASCII"
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: lhrpeml500009.china.huawei.com (7.191.174.84) To
- dubpeml500005.china.huawei.com (7.214.145.207)
+Subject: Re: [PATCH 1/2] platform/x86: asus-wmi: adjust screenpad
+ power/brightness handling
+To: luke@ljones.dev
+Cc: =?UTF-8?Q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>,
+ LKML <linux-kernel@vger.kernel.org>, platform-driver-x86@vger.kernel.org,
+ Hans de Goede <hansg@kernel.org>, Mateusz Schyboll <dragonn@op.pl>,
+ Denis Benato <benato.denis96@gmail.com>
+References: <20260212220252.1526337-1-denis.benato@linux.dev>
+ <20260212220252.1526337-2-denis.benato@linux.dev>
+ <71a3278d-d814-87cf-40cc-95bca45146e9@linux.intel.com>
+ <d42c4be9-5c2b-498a-b2dd-ac672c926c9b@linux.dev>
+ <A9EAA5AA-4B79-4B66-9B24-A0178D365F64@ljones.dev>
+Content-Language: en-US, it-IT, en-US-large
+X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
+From: Denis Benato <denis.benato@linux.dev>
+In-Reply-To: <A9EAA5AA-4B79-4B66-9B24-A0178D365F64@ljones.dev>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+X-Migadu-Flow: FLOW_OUT
 
-On Mon, 23 Feb 2026 23:29:40 +0800
-Shawn Lin <shawn.lin@rock-chips.com> wrote:
 
-> pcim_alloc_irq_vectors() and pcim_alloc_irq_vectors_affinity() are created for
-> pci device drivers which rely on the devres machinery to help cleanup the IRQ
-> vectors.
+On 2/24/26 05:15, luke@ljones.dev wrote:
+>> On 24 Feb 2026, at 07:15, Denis Benato <denis.benato@linux.dev> wrote:
+>>
+>>
+>> On 2/23/26 15:38, Ilpo Järvinen wrote:
+>>> On Thu, 12 Feb 2026, Denis Benato wrote:
+>>>
+>>>> Fix illogical screen off control by hardcoding 0 and 1 depending on the
+>>>> requested brightness and also do not rely on the last screenpad
+>>>> power state to issue screen brightness commands.
+>>> Should this have a Fixes tag?
+>>>
+>> Same for the other patch: I am not sure.
+> It probably should be a fixes tag. Though there is no reference bug report or
+> other relating to it - only my discovery that the previously written code was in 
+> fact not right.
+>
+> I had written the initial version that is in the kernel based on some limited testing
+> feedback from a user who was not able to clearly articulate what the issues
+> were and was happy with the final result.
+>
+> I was able to get my hands on a Zenbook Duo and fully test this, which is how
+> I discovered the issues.
+Actually... my bad. I confused "Closes" with "Fixes". Ilpo meant to reference the original commit.
 
-It might be worth adding some details on why we need the is_msi_managed
-flag in the first place vs just doing conventional devm_add_action_or_reset()
-with pci_free_irq_vectors().
-
-
+Sorry for the noise. I will dig those two tags.
+>> What I know for certain is that Luke had an asus DUO to test this patch with
+>> and most certainly it was because someone contacted him about these bugs.
+>>
+>> I split up commits found int the previous version of this patch:
+>> https://lore.kernel.org/all/20250525204214.104030-1-luke@ljones.dev/
+> Thanks for doing this. I just have not had any time to do it myself, very low on
+> the priority list but I would wager getting this all fixed correctly will enable both
+> Older and newer models to function how they should.
+>
+>> I changed nothing else beside removing a redundant variable assignment.
+>>>> Signed-off-by: Denis Benato <denis.benato@linux.dev>
+>>>> Signed-off-by: Luke Jones <luke@ljones.dev>
+>>>> ---
+>>>> drivers/platform/x86/asus-wmi.c | 34 +++++++++++++--------------------
+>>>> 1 file changed, 13 insertions(+), 21 deletions(-)
+>>>>
+>>>> diff --git a/drivers/platform/x86/asus-wmi.c b/drivers/platform/x86/asus-wmi.c
+>>>> index 0775fadedd10..4130dae37e15 100644
+>>>> --- a/drivers/platform/x86/asus-wmi.c
+>>>> +++ b/drivers/platform/x86/asus-wmi.c
+>>>> @@ -4254,32 +4254,24 @@ static int read_screenpad_brightness(struct backlight_device *bd)
+>>>>
+>>>> static int update_screenpad_bl_status(struct backlight_device *bd)
+>>>> {
+>>>> - struct asus_wmi *asus = bl_get_data(bd);
+>>>> - int power, err = 0;
+>>>> - u32 ctrl_param;
+>>>> + int err = 0;
+>>>> + u32 ctrl_param = bd->props.brightness;
+>>> Please retain reverse xmas-tree order.
+>>>
+>>>> - power = read_screenpad_backlight_power(asus);
+>>>> - if (power < 0)
+>>>> - return power;
+>>>> + if (ctrl_param >= 0 && bd->props.power) {
+>>>> + err = asus_wmi_set_devstate(ASUS_WMI_DEVID_SCREENPAD_POWER, 1, NULL);
+>>>> + if (err < 0)
+>>>> + return err;
+>>>>
+>>>> - if (bd->props.power != power) {
+>>>> - if (power != BACKLIGHT_POWER_ON) {
+>>>> - /* Only brightness > 0 can power it back on */
+>>>> - ctrl_param = asus->driver->screenpad_brightness - ASUS_SCREENPAD_BRIGHT_MIN;
+>>>> - err = asus_wmi_set_devstate(ASUS_WMI_DEVID_SCREENPAD_LIGHT,
+>>>> -    ctrl_param, NULL);
+>>>> - } else {
+>>>> - err = asus_wmi_set_devstate(ASUS_WMI_DEVID_SCREENPAD_POWER, 0, NULL);
+>>>> - }
+>>>> - } else if (power == BACKLIGHT_POWER_ON) {
+>>>> - /* Only set brightness if powered on or we get invalid/unsync state */
+>>>> - ctrl_param = bd->props.brightness + ASUS_SCREENPAD_BRIGHT_MIN;
+>>>> err = asus_wmi_set_devstate(ASUS_WMI_DEVID_SCREENPAD_LIGHT, ctrl_param, NULL);
+>>>> + if (err < 0)
+>>>> + return err;
+>>>> }
+>>>>
+>>>> - /* Ensure brightness is stored to turn back on with */
+>>>> - if (err == 0)
+>>>> - asus->driver->screenpad_brightness = bd->props.brightness + ASUS_SCREENPAD_BRIGHT_MIN;
+>>>> + if (!bd->props.power) {
+>>>> + err = asus_wmi_set_devstate(ASUS_WMI_DEVID_SCREENPAD_POWER, 0, NULL);
+>>>> + if (err < 0)
+>>>> + return err;
+>>>> + }
+>>>>
+>>>> return err;
+>>>> }
+>>>>
