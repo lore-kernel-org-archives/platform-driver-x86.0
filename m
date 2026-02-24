@@ -1,96 +1,83 @@
-Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 94D58329E62;
-	Tue, 24 Feb 2026 07:13:11 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.137.202.133
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1809124E4A8;
+	Tue, 24 Feb 2026 07:20:27 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1771917196; cv=none; b=A1VSqkdGrj3jj/P9fEp7Mau3ECMStu3Qpd+z0y9Ktb7NvtT88w8any7awMoo7TUOVjqKaozt0FPb9BPJnXORKKeP1B2r7vn4gWas+oGUcahbTEMHi2+DeSAsiEjzPBvRnwreNTgnmvNEuKT6O6aigN9cC7rjq8cEnmE8HlIe9mY=
+	t=1771917628; cv=none; b=MDIXz+BRQJiwo3HozFhmAHq00XWeitH5uXV18+Q7nr8X+njpiO15CTvuFuCzGPLCUpv/MxICKEmu/kXPPE1/LY9NMPwoq8yUEC/mmgE0JS1Jy27HQcqt2G+jBXi3kUKVIWRXEY6YScIpTA7zQUvjSqdYbTTmYzZCeyBwcGy8XGI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1771917196; c=relaxed/simple;
-	bh=gT3Z9VwacZLiPojVKV1a555VltfgJdVLIdkkGbn0zUg=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=aauMHT2UDM06N0BZubk1G+gc6OFENv060bTst/Lywgi0RWomJs1hJhgwBb9P4pQypSuBPoe99rYGrePx1HEjyIrJ8E1wzmUqM417oi3jbaGNxhlBu4ZMi9rge6TIumSKvQVtam9VzaZb/L3DXMVNfXrLGp9Q5BwuEAR9Bm+Bh4k=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=to8P4uko; arc=none smtp.client-ip=198.137.202.133
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=infradead.org
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=infradead.org
+	s=arc-20240116; t=1771917628; c=relaxed/simple;
+	bh=kBzq8KMP7val1p5xI4CESezdEo4yOCLfz3X2Wfw1N4I=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=TCz28axzIQaMk22xEgBPAr6SMlZYHfzA8P9RK9DRJLVaT2vjMyvPX5bT2q15IPVoR4RgLn1Tx67Eibu8SLiilvPFXB45+7jfIAFD1Lv4YaquzttATKUv8FhKbivZyp7Y1+P2LAtsntV0qYm8//6/3dNdEPmuh8nRuBK4OJrbADE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=g76zi9AW; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="to8P4uko"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=infradead.org; s=bombadil.20210309; h=Content-Transfer-Encoding:
-	Content-Type:In-Reply-To:From:References:Cc:To:Subject:MIME-Version:Date:
-	Message-ID:Sender:Reply-To:Content-ID:Content-Description;
-	bh=iiGyVPiVaNs3lC363rqu96E2n22OG530jrIJC4IgC24=; b=to8P4ukoTLZi9W5jUBXQeG5TwC
-	T7Njbi6xQr8t7OeusqPNE7WdZejtJ14bXPwGJ5r124xHTuWnYnwM2dAyDDOpIo3v8btZ1OmeHg1O9
-	Lt6ibXFGVU94Cq9nRH2HWZY4ZTxzuqXsbRDTFYtBp2txHmQ0DS3fPSKYNWt9PwB7+GE3s4qIY0uOz
-	0JIwm+GxpmMeo7lCrZTRLgxwwC1fQK/gv45khcdCQ1zBG0xC+EAIeZ+bbDjpdPt9FlrgwK6vrkcUG
-	XvZBeg6nROoinU48VoM5Rk3yrbEjZJlmC36N12f3AAeWC8t6rjQMrlncbbO7tK3J9VZFAihikDIF7
-	s6/mInnw==;
-Received: from [50.53.43.113] (helo=[192.168.254.34])
-	by bombadil.infradead.org with esmtpsa (Exim 4.98.2 #2 (Red Hat Linux))
-	id 1vumbV-00000001Z9Y-3GhX;
-	Tue, 24 Feb 2026 07:13:09 +0000
-Message-ID: <baa318b3-e3b5-4320-828f-dc41c3a5f9da@infradead.org>
-Date: Mon, 23 Feb 2026 23:13:06 -0800
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="g76zi9AW"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 83940C116D0;
+	Tue, 24 Feb 2026 07:20:17 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1771917627;
+	bh=kBzq8KMP7val1p5xI4CESezdEo4yOCLfz3X2Wfw1N4I=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=g76zi9AWaRL22GcB1ov0eE6v8L3z27l5KSQVxeYxuwnYTUnNyZV+r8nQ18i5UNkQT
+	 WtzSVuqWUfwQ6Sn9ss27TRukoIpX9ej9mbrynGIO5gZ0IXxlejfFHQHonGz8HmjFan
+	 wXdIAkhfDzAQbjgQdE0Rn6PPfsPn4CCHnnycTLzfenzeO2V/7S76/WxZTppa6FIMra
+	 g8Lx9hcvEnaJtjnw1GCPhMWDs4CmEdci7audwJ/s/d/ckb2jnSWuTR0c6jmF/cwJb+
+	 cmCsSRMlw/Aj1kPVs8RU5HY3IibTQPJVedU5E7yFeNkSQIbaWfOghfZbD8ScVv64Y1
+	 hG5Kvo5fmiQXg==
+Date: Tue, 24 Feb 2026 12:50:12 +0530
+From: Manivannan Sadhasivam <mani@kernel.org>
+To: Krzysztof Kozlowski <krzk@kernel.org>
+Cc: Manivannan Sadhasivam <manivannan.sadhasivam@oss.qualcomm.com>, 
+	Rob Herring <robh@kernel.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, 
+	Jiri Slaby <jirislaby@kernel.org>, Nathan Chancellor <nathan@kernel.org>, 
+	Nicolas Schier <nicolas.schier@linux.dev>, Hans de Goede <hansg@kernel.org>, 
+	Ilpo =?utf-8?B?SsOkcnZpbmVu?= <ilpo.jarvinen@linux.intel.com>, Mark Pearson <mpearson-lenovo@squebb.ca>, 
+	"Derek J. Clark" <derekjohn.clark@gmail.com>, Krzysztof Kozlowski <krzk+dt@kernel.org>, 
+	Conor Dooley <conor+dt@kernel.org>, Marcel Holtmann <marcel@holtmann.org>, 
+	Luiz Augusto von Dentz <luiz.dentz@gmail.com>, Bartosz Golaszewski <brgl@bgdev.pl>, 
+	Andy Shevchenko <andriy.shevchenko@linux.intel.com>, Bartosz Golaszewski <brgl@kernel.org>, 
+	linux-serial@vger.kernel.org, linux-kernel@vger.kernel.org, linux-kbuild@vger.kernel.org, 
+	platform-driver-x86@vger.kernel.org, linux-pci@vger.kernel.org, devicetree@vger.kernel.org, 
+	linux-arm-msm@vger.kernel.org, linux-bluetooth@vger.kernel.org, linux-pm@vger.kernel.org, 
+	Stephan Gerhold <stephan.gerhold@linaro.org>, Dmitry Baryshkov <dmitry.baryshkov@oss.qualcomm.com>, 
+	linux-acpi@vger.kernel.org, Hans de Goede <johannes.goede@oss.qualcomm.com>, 
+	Bartosz Golaszewski <bartosz.golaszewski@oss.qualcomm.com>
+Subject: Re: [PATCH v5 4/9] dt-bindings: serial: Document the graph port
+Message-ID: <z42xyou35nuyt2f3rxxzzndleir66w3nxeidjmgxg6l4uem6st@fj473jdiau3p>
+References: <20260224-pci-m2-e-v5-0-dd9b9501d33c@oss.qualcomm.com>
+ <20260224-pci-m2-e-v5-4-dd9b9501d33c@oss.qualcomm.com>
+ <20260224-peacock-of-improbable-poetry-b4cfdc@quoll>
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] treewide: fix duplicated word "the" in comments
-To: Yousef El Bouzidi <elbouzidyyousef@gmail.com>,
- linux-kernel@vger.kernel.org
-Cc: gregkh@linuxfoundation.org, rafael@kernel.org, dakr@kernel.org,
- tglx@kernel.org, herbert@gondor.apana.org.au, davem@davemloft.net,
- lee@kernel.org, hansg@kernel.org, ilpo.jarvinen@linux.intel.com,
- ansuelsmth@gmail.com, atenart@kernel.org, wens@kernel.org, hauke@hauke-m.de,
- andrew+netdev@lunn.ch, kuba@kernel.org, david.e.box@linux.intel.com,
- akrowiak@linux.ibm.com, pasic@linux.ibm.com, jjherne@linux.ibm.com,
- hca@linux.ibm.com, driver-core@lists.linux.dev,
- linux-crypto@vger.kernel.org, netdev@vger.kernel.org,
- platform-driver-x86@vger.kernel.org, linux-s390@vger.kernel.org
-References: <20260224065300.454633-1-elbouzidyyousef@gmail.com>
-Content-Language: en-US
-From: Randy Dunlap <rdunlap@infradead.org>
-In-Reply-To: <20260224065300.454633-1-elbouzidyyousef@gmail.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20260224-peacock-of-improbable-poetry-b4cfdc@quoll>
 
-
-
-On 2/23/26 10:52 PM, Yousef El Bouzidi wrote:
-> Remove duplicated word "the" from comments across various subsystems.
-> All instances are clear typos where "the" appeared twice in
-> succession, often merged with the following word (e.g. "the they",
-> "the there", "the these", "the them").
+On Tue, Feb 24, 2026 at 08:09:17AM +0100, Krzysztof Kozlowski wrote:
+> On Tue, Feb 24, 2026 at 11:00:50AM +0530, Manivannan Sadhasivam wrote:
+> > A serial controller could be connected to an external connector like PCIe
+> > M.2 for controlling the serial interface of the card. Hence, document the
+> > OF graph port.
+> > 
+> > Tested-by: Hans de Goede <johannes.goede@oss.qualcomm.com> # ThinkPad T14s gen6 (arm64)
 > 
-> Files fixed:
->   - drivers/base/platform.c
->   - drivers/crypto/inside-secure/eip93/eip93-hash.c
->   - drivers/mfd/axp20x.c
->   - drivers/net/ethernet/lantiq_xrx200.c
->   - drivers/platform/x86/intel/chtwc_int33fe.c
->   - drivers/platform/x86/intel/pmt/class.c
->   - drivers/s390/crypto/vfio_ap_ops.c
->   - kernel/irq/migration.c
+> Please drop. The binding is not being sent to the device during testing,
+> thus it is impossible to test it.
 > 
-> Signed-off-by: Yousef El Bouzidi <elbouzidyyousef@gmail.com>
 
-Reviewed-by: Randy Dunlap <rdunlap@infradead.org>
+b4 picked it up since the tag was given in the cover letter and I forgot to
+remove it while sending.
 
-> ---
->  drivers/base/platform.c                         | 2 +-
->  drivers/crypto/inside-secure/eip93/eip93-hash.c | 2 +-
->  drivers/mfd/axp20x.c                            | 2 +-
->  drivers/net/ethernet/lantiq_xrx200.c            | 2 +-
->  drivers/platform/x86/intel/chtwc_int33fe.c      | 2 +-
->  drivers/platform/x86/intel/pmt/class.c          | 2 +-
->  drivers/s390/crypto/vfio_ap_ops.c               | 2 +-
->  kernel/irq/migration.c                          | 2 +-
->  8 files changed, 8 insertions(+), 8 deletions(-)
-> 
+If I happen to send next version, I will drop it from all bindings patches.
+
+- Mani
 
 -- 
-~Randy
+மணிவண்ணன் சதாசிவம்
