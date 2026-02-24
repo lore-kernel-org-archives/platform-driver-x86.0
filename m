@@ -1,233 +1,76 @@
-Received: from mail-wr1-f44.google.com (mail-wr1-f44.google.com [209.85.221.44])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 75F75304BBD
-	for <platform-driver-x86@vger.kernel.org>; Tue, 24 Feb 2026 06:53:06 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.44
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 66D711494C3;
+	Tue, 24 Feb 2026 07:08:22 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1771915988; cv=none; b=U3/Y25o/h8QZOZ+4lHv3KgwBu7CikHmFn4HCZNk4LBXLAFN30eYMd7tfpQAPEsE3EU/L2eIR8dMcxDvxDLG8wzRgI+QYs7xj9IoZwKFxQOgEdAIqvDNTEWgnUgu5wPP2tkKhtHMHWdTTpbAVrdK/6R46gcS9uAOllnWRbqYdUWw=
+	t=1771916902; cv=none; b=JyxmjNEpei/49sntIhQhGOFnDm5JkxEwawjgFJmzzJ3U0Bgtt+THWh+XT79DfkLQrQIdiX3vP3tJK/rOQx7M5IGsSycHe9YJxL1aExMxgKoy791ywyu4MFsCM/CEMDnJ21VKjGTO2qRDW360eID/9ppOkvxhkwf2HL3NNfiB67I=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1771915988; c=relaxed/simple;
-	bh=Q6pUjI0RLoqFpaTePFMSPCib2kDkUwktCKJi72ESlY0=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version:Content-Type; b=IIfWQTsMh8no0Hi/OUrWhNL3gWhff1jk+8bUwiQnX8X8xaikQfaXuDsG5QGngSb7Ee/YDimvlsf17JJRXMkZVwKHDsmanEAHVtlUtUFqLuc1mKBT4kAIW9HYto57bC9MXRarvojvGizcj96ajV8OJMeOIE0bc7jIUzOr66uvF1U=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=fT860j2t; arc=none smtp.client-ip=209.85.221.44
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1771916902; c=relaxed/simple;
+	bh=siLJw2A0f62cJlgh+YOYFnZcJEatTZTiHAV7JLbKcWo=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=caet5Idv9zVC9L2Q58v7VW9rFYCDe2pbf/6Mybq8rFgho2RYoDOKr/chdsLbV0yvWArGK89XkxWoYiF3+oaxpyXlgyTYrI1/eAB5TI8HClEt4SId5jJlxjRKMMwgywiqQA39n7QtA4adNvqb5WmTbBwLCwczlFcG73mnWR2TUgk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=eOZlD083; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="fT860j2t"
-Received: by mail-wr1-f44.google.com with SMTP id ffacd0b85a97d-43638a33157so4775711f8f.1
-        for <platform-driver-x86@vger.kernel.org>; Mon, 23 Feb 2026 22:53:06 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1771915985; x=1772520785; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=qQVpfXtyFGdivv9D9qL1lZIFEzO3kt1eLPHHoCbWwhk=;
-        b=fT860j2tLSX2Pei/KHylbUDV65+CJVbZ3ncXgi7DBXfykBpRe1ZzYPfHleY695Jgcm
-         p9LaKQuqoEeXDobiHnHyFk2VzHQbUWCm4ivCucoppWu4xD5MzEqe/rcrX+dE1k1dvzj5
-         JlY5tiuhHv9NcAI3p6ABor/iz0lIurIelUe42Nn005auZX51mJe0GISe9VqPgs0QJhLq
-         1WiPEcenEzJTTrlM3fJiX722nWuhb9fJTW1Xg+EyWS67o9osAYdJHN933PvfsN/9tbQE
-         lO+hGvAT/hO8gxEQgVgJj7c1q2vqzRtxmq2qCkJyO/D6uxW+UBg/0zl5wZIeHMXN8edD
-         EolQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1771915985; x=1772520785;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-gg:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=qQVpfXtyFGdivv9D9qL1lZIFEzO3kt1eLPHHoCbWwhk=;
-        b=dPBQJ+LdvM4CddYEgg9goq71+ly2LFuKhPhOViAU4rCztdGE1pq75NRWCXHP5TBo/m
-         D8WmIzCRWFH+ysekKVvQYpEYUcQwG3+tnvs/GdLPBOSM3+xX4FxiTEbhc627rHpb56KC
-         QBBgrX7t9+Q/1oIovJ8P/ZOeDw6IJrXIkN/LVCAe0x1KHAXSTSIBE5r4bADAtOE93R7h
-         PBi7nHTSHLyBJHuJon7aH+bLGJZtHXOJ4vD7XJMyyqk8/0b3+mr1kOY8bEMfW01v13hL
-         n+WK1NgvpNcATs/YIiLIbXZt3onDo09W3fpppxtep5TE8u+kkDhnuiIDQhWbKO4knXCW
-         YBVQ==
-X-Forwarded-Encrypted: i=1; AJvYcCUHoEggVW8I4wK3FI5l/qzF7R55bvXq9tQ0UexNlPRMePr6/Iz2dlzsV3aJI3tHvznZKDk1jQT+IboahMGxSHygL48S@vger.kernel.org
-X-Gm-Message-State: AOJu0Yw+iWgG06wqbBU4+b0q72BPp2PAhXM7tuUBhzMGljHRCNI17hg+
-	ie4Lke76IlA8NDsoBSIniCwVhi8RBHZMtq1tKcCKwIzHLanYfLlfzu+6
-X-Gm-Gg: ATEYQzyHjGS5A2VpkiJYbSGJj2SZ3RXjhNZgj7JBV76v1Lbj7FBbdRpX9TzWbF7vlQj
-	pX5bY1e3dAVaKhc4ayT8NLNQpc4kKJFXgzaWk+ixonyS7Vd8GpW8ER2Y1944eyLPYE5BAAU0MJs
-	FSlBrGr7FD+NmSrpbAk1nJ9ovi/X7O/V8vuqPwMOsjAW6P+O0AevpIPsbdQ8o5IgG+1Xv2TE6n2
-	AAKQI2mmCrHYL0vzy2Ci4LzZ4XB3UiMekD7TkJ6O0yrj13eQ+8bHVSMUI3ITQXppfwgmWH3ud2E
-	cSaUkV4PQ0HbD1YFw84ngYsek5VoGwyMJrIGPDN1jHEs7FkpO9zyTtUqs6FrSyjLadncTl66xc2
-	goWbAsyM9vYztmJyPXgq48AUp1UoVBCvRMSrPIIqUVKSvN1DCKyYQjBAKVq+6Gd6rZBBvTwPRDz
-	HEjR5S0TjukIwspV1epNC2UT3Ys8c=
-X-Received: by 2002:a5d:588b:0:b0:437:6839:d5e with SMTP id ffacd0b85a97d-4396f153aacmr18288101f8f.13.1771915984464;
-        Mon, 23 Feb 2026 22:53:04 -0800 (PST)
-Received: from x-factory.. ([105.74.5.105])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-43970d4c977sm25403023f8f.32.2026.02.23.22.53.01
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 23 Feb 2026 22:53:04 -0800 (PST)
-From: Yousef El Bouzidi <elbouzidyyousef@gmail.com>
-To: linux-kernel@vger.kernel.org
-Cc: gregkh@linuxfoundation.org,
-	rafael@kernel.org,
-	dakr@kernel.org,
-	tglx@kernel.org,
-	herbert@gondor.apana.org.au,
-	davem@davemloft.net,
-	lee@kernel.org,
-	hansg@kernel.org,
-	ilpo.jarvinen@linux.intel.com,
-	ansuelsmth@gmail.com,
-	atenart@kernel.org,
-	wens@kernel.org,
-	hauke@hauke-m.de,
-	andrew+netdev@lunn.ch,
-	kuba@kernel.org,
-	david.e.box@linux.intel.com,
-	akrowiak@linux.ibm.com,
-	pasic@linux.ibm.com,
-	jjherne@linux.ibm.com,
-	hca@linux.ibm.com,
-	driver-core@lists.linux.dev,
-	linux-crypto@vger.kernel.org,
-	netdev@vger.kernel.org,
-	platform-driver-x86@vger.kernel.org,
-	linux-s390@vger.kernel.org,
-	Yousef El Bouzidi <elbouzidyyousef@gmail.com>
-Subject: [PATCH] treewide: fix duplicated word "the" in comments
-Date: Tue, 24 Feb 2026 06:52:45 +0000
-Message-ID: <20260224065300.454633-1-elbouzidyyousef@gmail.com>
-X-Mailer: git-send-email 2.43.0
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="eOZlD083"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 75FF9C116D0;
+	Tue, 24 Feb 2026 07:08:21 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1771916902;
+	bh=siLJw2A0f62cJlgh+YOYFnZcJEatTZTiHAV7JLbKcWo=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=eOZlD083B/DGOpAprjcHeUB65aH90SMO89jFdeFYasoxgqZ4vd42DgnnJccFivv7r
+	 QOQp2JBzvjBjvi3lLzOGgOQwjwsIkVOF2ijRmBhuPyduOIGl/o+gKevb7Jyln96CYD
+	 bZDnRoEYjgHP6/jIxkp0AVc1f4IFOvJ7EY1S4dNOmvWwweyD9P7P5AFE9FpoMttzm7
+	 7XHW6yVEXqYUrGh6dcOQ5EUXpwvFKQbULLmPlUbLixxaZ+0OAQZGUyjixjQdEfOXWI
+	 1OdcBK0aGbEW6a5jdobGaHGvdMIEbyqLvUMCtMEj8ZWsao+AqoVWjjy371bTj8e00Y
+	 e+lNzjZoqCsdA==
+Date: Tue, 24 Feb 2026 08:08:19 +0100
+From: Krzysztof Kozlowski <krzk@kernel.org>
+To: Manivannan Sadhasivam <manivannan.sadhasivam@oss.qualcomm.com>
+Cc: Rob Herring <robh@kernel.org>, 
+	Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Jiri Slaby <jirislaby@kernel.org>, 
+	Nathan Chancellor <nathan@kernel.org>, Nicolas Schier <nicolas.schier@linux.dev>, 
+	Hans de Goede <hansg@kernel.org>, Ilpo =?utf-8?B?SsOkcnZpbmVu?= <ilpo.jarvinen@linux.intel.com>, 
+	Mark Pearson <mpearson-lenovo@squebb.ca>, "Derek J. Clark" <derekjohn.clark@gmail.com>, 
+	Manivannan Sadhasivam <mani@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>, 
+	Conor Dooley <conor+dt@kernel.org>, Marcel Holtmann <marcel@holtmann.org>, 
+	Luiz Augusto von Dentz <luiz.dentz@gmail.com>, Bartosz Golaszewski <brgl@bgdev.pl>, 
+	Andy Shevchenko <andriy.shevchenko@linux.intel.com>, Bartosz Golaszewski <brgl@kernel.org>, 
+	linux-serial@vger.kernel.org, linux-kernel@vger.kernel.org, linux-kbuild@vger.kernel.org, 
+	platform-driver-x86@vger.kernel.org, linux-pci@vger.kernel.org, devicetree@vger.kernel.org, 
+	linux-arm-msm@vger.kernel.org, linux-bluetooth@vger.kernel.org, linux-pm@vger.kernel.org, 
+	Stephan Gerhold <stephan.gerhold@linaro.org>, Dmitry Baryshkov <dmitry.baryshkov@oss.qualcomm.com>, 
+	linux-acpi@vger.kernel.org, Hans de Goede <johannes.goede@oss.qualcomm.com>
+Subject: Re: [PATCH v5 6/9] dt-bindings: connector: m2: Add M.2 1620 LGA
+ soldered down connector
+Message-ID: <20260224-bold-dalmatian-of-weather-d86259@quoll>
+References: <20260224-pci-m2-e-v5-0-dd9b9501d33c@oss.qualcomm.com>
+ <20260224-pci-m2-e-v5-6-dd9b9501d33c@oss.qualcomm.com>
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <20260224-pci-m2-e-v5-6-dd9b9501d33c@oss.qualcomm.com>
 
-Remove duplicated word "the" from comments across various subsystems.
-All instances are clear typos where "the" appeared twice in
-succession, often merged with the following word (e.g. "the they",
-"the there", "the these", "the them").
+On Tue, Feb 24, 2026 at 11:00:52AM +0530, Manivannan Sadhasivam wrote:
+> Lenovo Thinkpad T14s is found to have a soldered down version of M.2 1620
+> LGA connector. Though, there is no 1620 LGA form factor defined in the M.2
+> spec, it looks very similar to the M.2 Key E connector. So add the
+> "pcie-m2-1620-lga-connector" compatible with "pcie-m2-e-connector" fallback
+> to reuse the Key E binding.
+> 
+> Tested-by: Hans de Goede <johannes.goede@oss.qualcomm.com> # ThinkPad T14s gen6 (arm64)
 
-Files fixed:
-  - drivers/base/platform.c
-  - drivers/crypto/inside-secure/eip93/eip93-hash.c
-  - drivers/mfd/axp20x.c
-  - drivers/net/ethernet/lantiq_xrx200.c
-  - drivers/platform/x86/intel/chtwc_int33fe.c
-  - drivers/platform/x86/intel/pmt/class.c
-  - drivers/s390/crypto/vfio_ap_ops.c
-  - kernel/irq/migration.c
+Please drop. You cannot test a binding. It's IMPOSSIBLE.
 
-Signed-off-by: Yousef El Bouzidi <elbouzidyyousef@gmail.com>
----
- drivers/base/platform.c                         | 2 +-
- drivers/crypto/inside-secure/eip93/eip93-hash.c | 2 +-
- drivers/mfd/axp20x.c                            | 2 +-
- drivers/net/ethernet/lantiq_xrx200.c            | 2 +-
- drivers/platform/x86/intel/chtwc_int33fe.c      | 2 +-
- drivers/platform/x86/intel/pmt/class.c          | 2 +-
- drivers/s390/crypto/vfio_ap_ops.c               | 2 +-
- kernel/irq/migration.c                          | 2 +-
- 8 files changed, 8 insertions(+), 8 deletions(-)
+> Signed-off-by: Manivannan Sadhasivam <manivannan.sadhasivam@oss.qualcomm.com>
 
-diff --git a/drivers/base/platform.c b/drivers/base/platform.c
-index b45d41b018ca..3e3b6fcfa194 100644
---- a/drivers/base/platform.c
-+++ b/drivers/base/platform.c
-@@ -565,7 +565,7 @@ struct platform_object {
- };
- 
- /*
-- * Set up default DMA mask for platform devices if the they weren't
-+ * Set up default DMA mask for platform devices if they weren't
-  * previously set by the architecture / DT.
-  */
- static void setup_pdev_dma_masks(struct platform_device *pdev)
-diff --git a/drivers/crypto/inside-secure/eip93/eip93-hash.c b/drivers/crypto/inside-secure/eip93/eip93-hash.c
-index 2705855475b2..d91a1ac152f0 100644
---- a/drivers/crypto/inside-secure/eip93/eip93-hash.c
-+++ b/drivers/crypto/inside-secure/eip93/eip93-hash.c
-@@ -432,7 +432,7 @@ static int eip93_hash_update(struct ahash_request *req)
- 
- /*
-  * With map_data true, we map the sa_record and sa_state. This is needed
-- * for finup() as the they are mapped before calling update()
-+ * for finup() as they are mapped before calling update()
-  */
- static int __eip93_hash_final(struct ahash_request *req, bool map_dma)
- {
-diff --git a/drivers/mfd/axp20x.c b/drivers/mfd/axp20x.c
-index 679364189ea5..0c6e93eb3955 100644
---- a/drivers/mfd/axp20x.c
-+++ b/drivers/mfd/axp20x.c
-@@ -1417,7 +1417,7 @@ int axp20x_device_probe(struct axp20x_dev *axp20x)
- 	 * 1 bit customizable at the factory, and 1 bit depending on the
- 	 * state of an external pin. The latter is writable. The device
- 	 * will only respond to operations to its other registers when
--	 * the these device addressing bits (in the upper 4 bits of the
-+	 * these device addressing bits (in the upper 4 bits of the
- 	 * registers) match.
- 	 *
- 	 * By default we support an AXP806 chained to an AXP809 in slave
-diff --git a/drivers/net/ethernet/lantiq_xrx200.c b/drivers/net/ethernet/lantiq_xrx200.c
-index b8766fb7a844..dde651d901c8 100644
---- a/drivers/net/ethernet/lantiq_xrx200.c
-+++ b/drivers/net/ethernet/lantiq_xrx200.c
-@@ -157,7 +157,7 @@ static int xrx200_open(struct net_device *net_dev)
- 	/* The boot loader does not always deactivate the receiving of frames
- 	 * on the ports and then some packets queue up in the PPE buffers.
- 	 * They already passed the PMAC so they do not have the tags
--	 * configured here. Read the these packets here and drop them.
-+	 * configured here. Read these packets here and drop them.
- 	 * The HW should have written them into memory after 10us
- 	 */
- 	usleep_range(20, 40);
-diff --git a/drivers/platform/x86/intel/chtwc_int33fe.c b/drivers/platform/x86/intel/chtwc_int33fe.c
-index d183aa53c318..1fca9fdd8f5b 100644
---- a/drivers/platform/x86/intel/chtwc_int33fe.c
-+++ b/drivers/platform/x86/intel/chtwc_int33fe.c
-@@ -14,7 +14,7 @@
-  *
-  * So this driver is a stub / pseudo driver whose only purpose is to
-  * instantiate I²C clients for chips 2 - 4, so that standard I²C drivers
-- * for these chips can bind to the them.
-+ * for these chips can bind to them.
-  */
- 
- #include <linux/dmi.h>
-diff --git a/drivers/platform/x86/intel/pmt/class.c b/drivers/platform/x86/intel/pmt/class.c
-index be3c8d9e4fff..99bf7e0afdf1 100644
---- a/drivers/platform/x86/intel/pmt/class.c
-+++ b/drivers/platform/x86/intel/pmt/class.c
-@@ -239,7 +239,7 @@ static int intel_pmt_populate_entry(struct intel_pmt_entry *entry,
- 
- 		/*
- 		 * Some hardware use a different calculation for the base address
--		 * when access_type == ACCESS_LOCAL. On the these systems
-+		 * when access_type == ACCESS_LOCAL. On these systems
- 		 * ACCESS_LOCAL refers to an address in the same BAR as the
- 		 * header but at a fixed offset. But as the header address was
- 		 * supplied to the driver, we don't know which BAR it was in.
-diff --git a/drivers/s390/crypto/vfio_ap_ops.c b/drivers/s390/crypto/vfio_ap_ops.c
-index 44b3a1dcc1b3..334aaa2d97b2 100644
---- a/drivers/s390/crypto/vfio_ap_ops.c
-+++ b/drivers/s390/crypto/vfio_ap_ops.c
-@@ -610,7 +610,7 @@ static int handle_pqap(struct kvm_vcpu *vcpu)
- 	matrix_mdev = container_of(vcpu->kvm->arch.crypto.pqap_hook,
- 				   struct ap_matrix_mdev, pqap_hook);
- 
--	/* If the there is no guest using the mdev, there is nothing to do */
-+	/* If there is no guest using the mdev, there is nothing to do */
- 	if (!matrix_mdev->kvm) {
- 		vfio_ap_le_guid_to_be_uuid(&matrix_mdev->mdev->uuid, uuid);
- 		VFIO_AP_DBF_WARN("%s: mdev %08lx-%04lx-%04lx-%04lx-%04lx%08lx not in use: apqn=0x%04x\n",
-diff --git a/kernel/irq/migration.c b/kernel/irq/migration.c
-index f2b2929986ff..b29d13baee55 100644
---- a/kernel/irq/migration.c
-+++ b/kernel/irq/migration.c
-@@ -89,7 +89,7 @@ void irq_move_masked_irq(struct irq_data *idata)
- 
- 		ret = irq_do_set_affinity(data, desc->pending_mask, false);
- 		/*
--		 * If the there is a cleanup pending in the underlying
-+		 * If there is a cleanup pending in the underlying
- 		 * vector management, reschedule the move for the next
- 		 * interrupt. Leave desc->pending_mask intact.
- 		 */
--- 
-2.43.0
+Best regards,
+Krzysztof
 
