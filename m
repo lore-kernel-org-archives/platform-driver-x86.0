@@ -1,60 +1,60 @@
 Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.11])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9EDCF36681D;
-	Tue, 24 Feb 2026 08:49:43 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 664FE368276;
+	Tue, 24 Feb 2026 08:51:16 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.11
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1771922985; cv=none; b=BfCzI7dOn7k0IRx82q29O/vBZrcmn72hil9/NA4dKw/nl0XT3H6q98UA+UjwuZBiX0nSU/aAVtlV7BzaGXsSwI3vJaeZr8hboGsirrJ5N5hU+UkwzflFZsgHK5/xiAPYcIg109CCdra6Eji0WUeejMo0Z/sFuE4H6IgqoF0FNoQ=
+	t=1771923077; cv=none; b=jFsrKx8QWQPIvEfSNCKJLXzJKxS3OUklRx5ateuTpZwvhqzQ8kgxi8gm9xoGJRUW76MuJefyEZhWiyQTLu4kJtOr8gf84+PDBXkyyBud24imDCBnCw1tqNJR11sKRRgR8j4LA++mMvZwsI8Odiegz+E0CoiigPgbzJwx3W6Za+0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1771922985; c=relaxed/simple;
-	bh=3ily3prtKRT44t13mhSjTNdqEGt1DOdK+cMjgBHU3Iw=;
+	s=arc-20240116; t=1771923077; c=relaxed/simple;
+	bh=aIutRQHoucjMHHa3N8jUu8kQoy0zU+7dzeNs1KnKmAc=;
 	h=From:Date:To:cc:Subject:In-Reply-To:Message-ID:References:
-	 MIME-Version:Content-Type; b=VVrhdlTvY4AdB4qzm4KjiS246SRjCQ+KGRz5bR+Ptbzxd7oFEPSsiqswnSHGApMx9dV6byufH/fwkIrhkQioSDZezW3XbjjpVErn8K+VK44C1hssK8ow7DTr+QRYSR7DEm+xGqaonXbubJMpwCC9NYLTuJTwJ4wbL35vOAoMhZM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=pass smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=QlaL7qLi; arc=none smtp.client-ip=192.198.163.11
+	 MIME-Version:Content-Type; b=mIfkHxeJ3r/jai777WQPVYl0d/Z0ViVt6v/TvWBjnJkEoQ/Re+NbP28T6SCFOvK2k0JFNgMHFRVSatVh7WO62CGsxASpJFVLjsHJtAW/Jt6v1wrtRrim0IyX6pbBv5R6x0EpR5YuFzuCD2NTafh7AXf6/Z9cS1pEeZlAT436b9E=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=pass smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=dPWKIAed; arc=none smtp.client-ip=192.198.163.11
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="QlaL7qLi"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="dPWKIAed"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1771922983; x=1803458983;
+  t=1771923076; x=1803459076;
   h=from:date:to:cc:subject:in-reply-to:message-id:
    references:mime-version;
-  bh=3ily3prtKRT44t13mhSjTNdqEGt1DOdK+cMjgBHU3Iw=;
-  b=QlaL7qLi9Y6WrVPlS+d3Q4ThExx1GoS+c1nJEZrLJsclh+MazcqGRakz
-   VFguN/8Vk632s6TPmR9rRCPABlwISICSdnLvB7FZ4nlWmGnyHhrOvRdwH
-   8/an13atWeoQ8uOKx9K9Q4VlHZH5wWbgHxWLAtx/MZANQiEqxmy4yOIpW
-   SZa9AUyIYiTyFgCgUuCBtguuMJPfIWD/MYs1qZsmzbKpGKwrUjuclsV04
-   homYpZEVzWve40IitOeKdWrWX9evFJpEKiXSmmC+pbW98If3uR86inDwC
-   jDTYuQ3S49JikYQixViyIlspU76seiK+rABMAcSrip54rBge8lyvma/2d
-   w==;
-X-CSE-ConnectionGUID: hAvvfx5GR5uOjFuDPZoUxw==
-X-CSE-MsgGUID: Af+6VVz9SW2EovPWImj0pQ==
-X-IronPort-AV: E=McAfee;i="6800,10657,11710"; a="83554131"
+  bh=aIutRQHoucjMHHa3N8jUu8kQoy0zU+7dzeNs1KnKmAc=;
+  b=dPWKIAedf2qYmKrR8aqkKIVO/YIjeIl8y7JQ9XICwlCFxiEb46uQSkmL
+   GCBoCZieB8k0gLCm5oNFs/GX3r+bZvIyW/GJtmpanDNSXImIdVAMnbl3/
+   jFvh+mMSFJ8MP8Tb9T8ocwalLmNriKwe0thSjv/srO2gULiFOBywosZEE
+   nWsHO7EzxBoAU9skcHfS73mLBgCFQGbjoGCa1vhDZIAZHPBPyrtmAkojN
+   Us5TWZ/Kkmes2kFYe2H/He7WOYjt8CP1P1fdTd1J4uFzuMg9keHul7ZIH
+   XZS2qBMm+1UsuHR/PcZgublowaiTTzuBx+iew0/9/EDMfY3d+wp0/1H6f
+   A==;
+X-CSE-ConnectionGUID: kvhq+ZoAQcyTq1arJyQLwA==
+X-CSE-MsgGUID: mLrxoGiMRTeezwHw+Igcdw==
+X-IronPort-AV: E=McAfee;i="6800,10657,11710"; a="83554219"
 X-IronPort-AV: E=Sophos;i="6.21,308,1763452800"; 
-   d="scan'208";a="83554131"
-Received: from orviesa004.jf.intel.com ([10.64.159.144])
-  by fmvoesa105.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 24 Feb 2026 00:49:43 -0800
-X-CSE-ConnectionGUID: 4AjK3Q/fR62kJqBkEexpzA==
-X-CSE-MsgGUID: mmtYBclZTlqvZ6CARM4P4w==
+   d="scan'208";a="83554219"
+Received: from orviesa002.jf.intel.com ([10.64.159.142])
+  by fmvoesa105.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 24 Feb 2026 00:51:16 -0800
+X-CSE-ConnectionGUID: AhE97jWwRwKBuyQel0CsdQ==
+X-CSE-MsgGUID: umhkQOHSTLmcjIh+dcd2Uw==
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="6.21,308,1763452800"; 
-   d="scan'208";a="220357884"
+   d="scan'208";a="246419031"
 Received: from ijarvine-mobl1.ger.corp.intel.com (HELO localhost) ([10.245.244.133])
-  by orviesa004-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 24 Feb 2026 00:49:40 -0800
+  by orviesa002-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 24 Feb 2026 00:51:12 -0800
 From: =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
-Date: Tue, 24 Feb 2026 10:49:36 +0200 (EET)
+Date: Tue, 24 Feb 2026 10:51:09 +0200 (EET)
 To: "Derek J. Clark" <derekjohn.clark@gmail.com>
 cc: Hans de Goede <hansg@kernel.org>, Mark Pearson <mpearson-lenovo@squebb.ca>, 
     Armin Wolf <W_Armin@gmx.de>, Jonathan Corbet <corbet@lwn.net>, 
     Rong Zhang <i@rong.moe>, Kurt Borja <kuurtb@gmail.com>, 
     platform-driver-x86@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH v3 4/6] platform/x86: lenovo-wmi-other: Add GPU tunable
- attributes
-In-Reply-To: <20260224043200.2680384-5-derekjohn.clark@gmail.com>
-Message-ID: <b8d291d0-8425-91d8-d241-637030b332f5@linux.intel.com>
-References: <20260224043200.2680384-1-derekjohn.clark@gmail.com> <20260224043200.2680384-5-derekjohn.clark@gmail.com>
+Subject: Re: [PATCH v3 5/6] platform-x86: lenovo-wmi-other: Rename
+ LWMI_OM_FW_ATTR_BASE_PATH
+In-Reply-To: <20260224043200.2680384-6-derekjohn.clark@gmail.com>
+Message-ID: <feffe361-7013-14a2-093a-8e2d826b2282@linux.intel.com>
+References: <20260224043200.2680384-1-derekjohn.clark@gmail.com> <20260224043200.2680384-6-derekjohn.clark@gmail.com>
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
@@ -65,193 +65,55 @@ Content-Type: text/plain; charset=US-ASCII
 
 On Tue, 24 Feb 2026, Derek J. Clark wrote:
 
-> Use an enum for all GPU attribute feature ID's and add GPU attributes.
+> In the next patch a power supply extension is added which requires
+> a name attribute. Instead of creating another const macro with the
+> same information, replace LWMI_OM_FW_ATTR_BASE_PATH with
+> LWMI_OM_NAME and use that for firmware attributes and power supply
+
+This doesn't match the code change??
+
+> extension.
 > 
 > Reviewed-by: Mark Pearson <mpearson-lenovo@squebb.ca>
 > Signed-off-by: Derek J. Clark <derekjohn.clark@gmail.com>
 > ---
->  .../wmi/devices/lenovo-wmi-other.rst          |  11 ++
->  drivers/platform/x86/lenovo/wmi-capdata.h     |   1 +
->  drivers/platform/x86/lenovo/wmi-other.c       | 105 ++++++++++++++++++
->  3 files changed, 117 insertions(+)
+>  drivers/platform/x86/lenovo/wmi-other.c | 9 ++++-----
+>  1 file changed, 4 insertions(+), 5 deletions(-)
 > 
-> diff --git a/Documentation/wmi/devices/lenovo-wmi-other.rst b/Documentation/wmi/devices/lenovo-wmi-other.rst
-> index f4763ed66cc6..f7564b23bb7f 100644
-> --- a/Documentation/wmi/devices/lenovo-wmi-other.rst
-> +++ b/Documentation/wmi/devices/lenovo-wmi-other.rst
-> @@ -70,6 +70,17 @@ Each attribute has the following properties:
->  The following firmware-attributes are implemented:
->   - cpu_oc_stat: CPU Overlocking Status
->   - cpu_temp: CPU Thermal Load Limit
-> + - dgpu_boost_clk: Dedicated GPU Boost Clock
-> + - dgpu_enable: Dedicated GPU Enabled Status
-> + - gpu_didvid: GPU Device Identifier and Vendor Identifier
-> + - gpu_mode: GPU Mode by Power Limit
-> + - gpu_nv_ac_offset: Nvidia GPU AC Total Processing Power Baseline Offset
-> + - gpu_nv_bpl: Nvidia GPU Base Power Limit
-> + - gpu_nv_cpu_boost: Nvidia GPU to CPU Dynamic Boost Limit
-> + - gpu_nv_ctgp: Nvidia GPU Configurable Total Graphics Power
-> + - gpu_nv_ppab: Nvidia GPU Power Performance Aware Boost Limit
-> + - gpu_oc_stat: GPU Overclocking Status
-> + - gpu_temp: GPU Thermal Load Limit
->   - ppt_cpu_cl: CPU Cross Loading Power Limit
->   - ppt_pl1_apu_spl: Platform Profile Tracking APU Sustained Power Limit
->   - ppt_pl1_spl: Platform Profile Tracking Sustained Power Limit
-> diff --git a/drivers/platform/x86/lenovo/wmi-capdata.h b/drivers/platform/x86/lenovo/wmi-capdata.h
-> index aa48f43cbb43..b7f9ee7b301a 100644
-> --- a/drivers/platform/x86/lenovo/wmi-capdata.h
-> +++ b/drivers/platform/x86/lenovo/wmi-capdata.h
-> @@ -25,6 +25,7 @@
->  
->  enum lwmi_device_id {
->  	LWMI_DEVICE_ID_CPU = 0x01,
-> +	LWMI_DEVICE_ID_GPU = 0x02,
->  	LWMI_DEVICE_ID_FAN = 0x04,
->  };
->  
 > diff --git a/drivers/platform/x86/lenovo/wmi-other.c b/drivers/platform/x86/lenovo/wmi-other.c
-> index 87aba244da84..67768f6a50e0 100644
+> index 67768f6a50e0..7f0d5a17b44f 100644
 > --- a/drivers/platform/x86/lenovo/wmi-other.c
 > +++ b/drivers/platform/x86/lenovo/wmi-other.c
-> @@ -65,6 +65,19 @@ enum lwmi_feature_id_cpu {
->  	LWMI_FEATURE_ID_CPU_IPL = 0x09,
->  };
+> @@ -90,13 +90,13 @@ enum lwmi_feature_id_gpu {
+>  #define LWMI_FAN_NR 4
+>  #define LWMI_FAN_ID(x) ((x) + LWMI_FAN_ID_BASE)
 >  
-> +enum lwmi_feature_id_gpu {
-> +	LWMI_FEATURE_ID_GPU_NV_PPAB = 0x01,
-> +	LWMI_FEATURE_ID_GPU_NV_CTGP = 0x02,
-> +	LWMI_FEATURE_ID_GPU_TEMP = 0x03,
-> +	LWMI_FEATURE_ID_GPU_AC_OFFSET = 0x04,
-> +	LWMI_FEATURE_ID_DGPU_BOOST_CLK = 0x06,
-> +	LWMI_FEATURE_ID_DGPU_EN = 0x07,
-> +	LWMI_FEATURE_ID_GPU_MODE = 0x08,
-> +	LWMI_FEATURE_ID_DGPU_DIDVID = 0x09,
-> +	LWMI_FEATURE_ID_GPU_NV_BPL = 0x0a,
-> +	LWMI_FEATURE_ID_GPU_NV_CPU_BOOST = 0x0b,
+> +#define LWMI_FAN_DIV 100
+> +
+>  #define LWMI_ATTR_ID_FAN_RPM(x)                                   \
+>  	LWMI_ATTR_ID(LWMI_DEVICE_ID_FAN, LWMI_FEATURE_ID_FAN_RPM, \
+>  		     LWMI_GZ_THERMAL_MODE_NONE, LWMI_FAN_ID(x))
+>  
+> -#define LWMI_FAN_DIV 100
 
-Align values.
+Unrelated change.
 
-> +};
-> +
->  #define LWMI_FEATURE_ID_FAN_RPM 0x03
+> -
+> -#define LWMI_OM_FW_ATTR_BASE_PATH "lenovo-wmi-other"
+> +#define LWMI_OM_SYSFS_NAME "lenovo-wmi-other"
+>  #define LWMI_OM_HWMON_NAME "lenovo_wmi_other"
 >  
->  #define LWMI_TYPE_ID_NONE 0x00
-> @@ -631,6 +644,66 @@ static struct tunable_attr_01 ppt_pl4_ipl_cl = {
->  	.type_id = LWMI_TYPE_ID_CROSSLOAD,
->  };
+>  static BLOCKING_NOTIFIER_HEAD(om_chain_head);
+> @@ -1233,8 +1233,7 @@ static int lwmi_om_fw_attr_add(struct lwmi_om_priv *priv)
 >  
-> +static struct tunable_attr_01 gpu_nv_ppab = {
-> +	.device_id = LWMI_DEVICE_ID_GPU,
-> +	.feature_id = LWMI_FEATURE_ID_GPU_NV_PPAB,
-> +	.type_id = LWMI_TYPE_ID_NONE,
-> +};
-> +
-> +static struct tunable_attr_01 gpu_nv_ctgp = {
-> +	.device_id = LWMI_DEVICE_ID_GPU,
-> +	.feature_id = LWMI_FEATURE_ID_GPU_NV_CTGP,
-> +	.type_id = LWMI_TYPE_ID_NONE,
-> +};
-> +
-> +static struct tunable_attr_01 gpu_temp = {
-> +	.device_id = LWMI_DEVICE_ID_GPU,
-> +	.feature_id = LWMI_FEATURE_ID_GPU_TEMP,
-> +	.type_id = LWMI_TYPE_ID_NONE,
-> +};
-> +
-> +static struct tunable_attr_01 gpu_nv_ac_offset = {
-> +	.device_id = LWMI_DEVICE_ID_GPU,
-> +	.feature_id = LWMI_FEATURE_ID_GPU_AC_OFFSET,
-> +	.type_id = LWMI_TYPE_ID_NONE,
-> +};
-> +
-> +static struct tunable_attr_01 dgpu_boost_clk = {
-> +	.device_id = LWMI_DEVICE_ID_GPU,
-> +	.feature_id = LWMI_FEATURE_ID_DGPU_BOOST_CLK,
-> +	.type_id = LWMI_TYPE_ID_NONE,
-> +};
-> +
-> +static struct tunable_attr_01 dgpu_enable = {
-> +	.device_id = LWMI_DEVICE_ID_GPU,
-> +	.feature_id = LWMI_FEATURE_ID_DGPU_EN,
-> +	.type_id = LWMI_TYPE_ID_NONE,
-> +};
-> +
-> +static struct tunable_attr_01 gpu_mode = {
-> +	.device_id = LWMI_DEVICE_ID_GPU,
-> +	.feature_id = LWMI_FEATURE_ID_GPU_MODE,
-> +	.type_id = LWMI_TYPE_ID_NONE,
-> +};
-> +
-> +static struct tunable_attr_01 dgpu_didvid = {
-> +	.device_id = LWMI_DEVICE_ID_GPU,
-> +	.feature_id = LWMI_FEATURE_ID_DGPU_DIDVID,
-> +	.type_id = LWMI_TYPE_ID_NONE,
-> +};
-> +
-> +static struct tunable_attr_01 gpu_nv_bpl = {
-> +	.device_id = LWMI_DEVICE_ID_GPU,
-> +	.feature_id = LWMI_FEATURE_ID_GPU_NV_BPL,
-> +	.type_id = LWMI_TYPE_ID_NONE,
-> +};
-> +
-> +static struct tunable_attr_01 gpu_nv_cpu_boost = {
-> +	.device_id = LWMI_DEVICE_ID_GPU,
-> +	.feature_id = LWMI_FEATURE_ID_GPU_NV_CPU_BOOST,
-> +	.type_id = LWMI_TYPE_ID_NONE,
-> +};
-> +
->  struct capdata01_attr_group {
->  	const struct attribute_group *attr_group;
->  	struct tunable_attr_01 *tunable_attr;
-> @@ -1069,6 +1142,7 @@ static int lwmi_attr_01_is_supported(struct tunable_attr_01 *tunable_attr)
->  		.name = _fsname, .attrs = _attrname##_attrs               \
->  	}
->  
-> +/* CPU tunable attributes */
->  LWMI_ATTR_GROUP_TUNABLE_CAP01(cpu_temp, "cpu_temp",
->  			      "Set the CPU thermal load limit");
->  LWMI_ATTR_GROUP_TUNABLE_CAP01(ppt_cpu_cl, "ppt_cpu_cl",
-> @@ -1094,9 +1168,40 @@ LWMI_ATTR_GROUP_TUNABLE_CAP01(ppt_pl4_ipl, "ppt_pl4_ipl",
->  LWMI_ATTR_GROUP_TUNABLE_CAP01(ppt_pl4_ipl_cl, "ppt_pl4_ipl_cl",
->  			      "Set the CPU cross loading instantaneous power limit");
->  
-> +/* GPU tunable attributes */
-> +LWMI_ATTR_GROUP_TUNABLE_CAP01(dgpu_boost_clk, "gpu_boost_clk",
-> +			      "Set the dedicated GPU boost clock");
-> +LWMI_ATTR_GROUP_TUNABLE_CAP01(dgpu_didvid, "gpu_didvid",
-> +			      "Get the GPU device identifier and vendor identifier");
-> +LWMI_ATTR_GROUP_TUNABLE_CAP01(dgpu_enable, "dgpu_enable",
-> +			      "Set the dedicated Nvidia GPU enabled status");
-> +LWMI_ATTR_GROUP_TUNABLE_CAP01(gpu_mode, "gpu_mode",
-> +			      "Set the GPU mode by power limit");
-> +LWMI_ATTR_GROUP_TUNABLE_CAP01(gpu_nv_ac_offset, "gpu_nv_ac_offset",
-> +			      "Set the Nvidia GPU AC total processing power baseline offset");
-> +LWMI_ATTR_GROUP_TUNABLE_CAP01(gpu_nv_bpl, "gpu_nv_bpl",
-> +			      "Set the Nvidia GPU base power limit");
-> +LWMI_ATTR_GROUP_TUNABLE_CAP01(gpu_nv_cpu_boost, "gpu_nv_cpu_boost",
-> +			      "Set the Nvidia GPU to CPU dynamic boost limit");
-> +LWMI_ATTR_GROUP_TUNABLE_CAP01(gpu_nv_ctgp, "gpu_nv_ctgp",
-> +			      "Set the GPU configurable total graphics power");
-> +LWMI_ATTR_GROUP_TUNABLE_CAP01(gpu_nv_ppab, "gpu_nv_ppab",
-> +			      "Set the Nvidia GPU power performance aware boost limit");
-> +LWMI_ATTR_GROUP_TUNABLE_CAP01(gpu_temp, "gpu_temp",
-> +			      "Set the GPU thermal load limit");
->  
->  static struct capdata01_attr_group cd01_attr_groups[] = {
->  	{ &cpu_temp_attr_group, &cpu_temp },
-> +	{ &dgpu_boost_clk_attr_group, &dgpu_boost_clk },
-> +	{ &dgpu_didvid_attr_group, &dgpu_didvid },
-> +	{ &dgpu_enable_attr_group, &dgpu_enable },
-> +	{ &gpu_mode_attr_group, &gpu_mode },
-> +	{ &gpu_nv_ac_offset_attr_group, &gpu_nv_ac_offset },
-> +	{ &gpu_nv_bpl_attr_group, &gpu_nv_bpl },
-> +	{ &gpu_nv_cpu_boost_attr_group, &gpu_nv_cpu_boost },
-> +	{ &gpu_nv_ctgp_attr_group, &gpu_nv_ctgp },
-> +	{ &gpu_nv_ppab_attr_group, &gpu_nv_ppab },
-> +	{ &gpu_temp_attr_group, &gpu_temp },
->  	{ &ppt_cpu_cl_attr_group, &ppt_cpu_cl },
->  	{ &ppt_pl1_apu_spl_attr_group, &ppt_pl1_apu_spl },
->  	{ &ppt_pl1_spl_attr_group, &ppt_pl1_spl },
+>  	priv->fw_attr_dev = device_create(&firmware_attributes_class, NULL,
+>  					  MKDEV(0, 0), NULL, "%s-%u",
+> -					  LWMI_OM_FW_ATTR_BASE_PATH,
+> -					  priv->ida_id);
+> +					  LWMI_OM_SYSFS_NAME, priv->ida_id);
+>  	if (IS_ERR(priv->fw_attr_dev)) {
+>  		err = PTR_ERR(priv->fw_attr_dev);
+>  		goto err_free_ida;
 > 
 
 -- 
