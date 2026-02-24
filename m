@@ -1,288 +1,233 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wr1-f44.google.com (mail-wr1-f44.google.com [209.85.221.44])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 76AE22C11CD;
-	Tue, 24 Feb 2026 05:30:53 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 75F75304BBD
+	for <platform-driver-x86@vger.kernel.org>; Tue, 24 Feb 2026 06:53:06 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.44
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1771911053; cv=none; b=LpnouZ5oovrg3m0zbkvot1QHuOuiDBdtfVIbo9fARFiTOiwco3ZcTnzEp9u8KIRKwSCIdUsEFMEBtMq8F9NzG5R89i6B4mdclx+6svUAt3tCxoVoIDrO20H8oWK6/gOdfQL2qmqeuuFyjjLwTJUnbNEhtg7jJkXtkJ2fKZrRSEs=
+	t=1771915988; cv=none; b=U3/Y25o/h8QZOZ+4lHv3KgwBu7CikHmFn4HCZNk4LBXLAFN30eYMd7tfpQAPEsE3EU/L2eIR8dMcxDvxDLG8wzRgI+QYs7xj9IoZwKFxQOgEdAIqvDNTEWgnUgu5wPP2tkKhtHMHWdTTpbAVrdK/6R46gcS9uAOllnWRbqYdUWw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1771911053; c=relaxed/simple;
-	bh=QPg5ucT2J9JR6E3rS7caTqzm372tAM2YlgwRdg7/hwg=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=VAlPnk6mqqhy77o2lPtZnahn8Jr4qnQ9SPPPPnSqysSOWp3R3EPkYDvJbWQgOB7k4TQRUEPqyi8rK+kCJIaVEoB7jZVM9nr6YIdrBvaBIDzSxG5CjmgkWG7Lm9pySwr1oIfQCujU/l2l9DxJSTU2OtLk0cUN71gE+7+5vBXH3FI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=gGOSD87k; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1771915988; c=relaxed/simple;
+	bh=Q6pUjI0RLoqFpaTePFMSPCib2kDkUwktCKJi72ESlY0=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version:Content-Type; b=IIfWQTsMh8no0Hi/OUrWhNL3gWhff1jk+8bUwiQnX8X8xaikQfaXuDsG5QGngSb7Ee/YDimvlsf17JJRXMkZVwKHDsmanEAHVtlUtUFqLuc1mKBT4kAIW9HYto57bC9MXRarvojvGizcj96ajV8OJMeOIE0bc7jIUzOr66uvF1U=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=fT860j2t; arc=none smtp.client-ip=209.85.221.44
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="gGOSD87k"
-Received: by smtp.kernel.org (Postfix) with ESMTPS id 4018EC2BCB7;
-	Tue, 24 Feb 2026 05:30:53 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1771911053;
-	bh=QPg5ucT2J9JR6E3rS7caTqzm372tAM2YlgwRdg7/hwg=;
-	h=From:Date:Subject:References:In-Reply-To:To:Cc:Reply-To:From;
-	b=gGOSD87kmjgj/DMgg9IC79SFDxvfsMj6anIsTW3UTfT6yXg4NROB0yMZgrNwpB+rF
-	 LTnABVeyQxHm5jEow88K8FlUoL9owmQcb9d8T8jtcXXJUUoZqyRcs+Gtb7Qi+xzduf
-	 G79nrhFTJYc+h8DizDOVMx1V4u0ylTRERO0lRo3uJMxmy1A+g0r+0g8I67hnA0Itvk
-	 Ai+YMZ8fx13z2IgOWQOTKus6urQfreU+NaoIpZ/s21Mqk2P0TiclqMeR6ifSuoBge/
-	 XXZp8MKFMEQ5guCUbKNzkh3J2CGhwXRQqMnA2PN8fK4RXyzxrspOyTFiENHt1sFWG7
-	 Lj0eJgqglsGqA==
-Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2409EEFB800;
-	Tue, 24 Feb 2026 05:30:53 +0000 (UTC)
-From: Manivannan Sadhasivam via B4 Relay <devnull+manivannan.sadhasivam.oss.qualcomm.com@kernel.org>
-Date: Tue, 24 Feb 2026 11:00:54 +0530
-Subject: [PATCH v5 8/9] power: sequencing: pcie-m2: Add support for PCIe
- M.2 Key E connectors
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="fT860j2t"
+Received: by mail-wr1-f44.google.com with SMTP id ffacd0b85a97d-43638a33157so4775711f8f.1
+        for <platform-driver-x86@vger.kernel.org>; Mon, 23 Feb 2026 22:53:06 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1771915985; x=1772520785; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=qQVpfXtyFGdivv9D9qL1lZIFEzO3kt1eLPHHoCbWwhk=;
+        b=fT860j2tLSX2Pei/KHylbUDV65+CJVbZ3ncXgi7DBXfykBpRe1ZzYPfHleY695Jgcm
+         p9LaKQuqoEeXDobiHnHyFk2VzHQbUWCm4ivCucoppWu4xD5MzEqe/rcrX+dE1k1dvzj5
+         JlY5tiuhHv9NcAI3p6ABor/iz0lIurIelUe42Nn005auZX51mJe0GISe9VqPgs0QJhLq
+         1WiPEcenEzJTTrlM3fJiX722nWuhb9fJTW1Xg+EyWS67o9osAYdJHN933PvfsN/9tbQE
+         lO+hGvAT/hO8gxEQgVgJj7c1q2vqzRtxmq2qCkJyO/D6uxW+UBg/0zl5wZIeHMXN8edD
+         EolQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1771915985; x=1772520785;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-gg:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=qQVpfXtyFGdivv9D9qL1lZIFEzO3kt1eLPHHoCbWwhk=;
+        b=dPBQJ+LdvM4CddYEgg9goq71+ly2LFuKhPhOViAU4rCztdGE1pq75NRWCXHP5TBo/m
+         D8WmIzCRWFH+ysekKVvQYpEYUcQwG3+tnvs/GdLPBOSM3+xX4FxiTEbhc627rHpb56KC
+         QBBgrX7t9+Q/1oIovJ8P/ZOeDw6IJrXIkN/LVCAe0x1KHAXSTSIBE5r4bADAtOE93R7h
+         PBi7nHTSHLyBJHuJon7aH+bLGJZtHXOJ4vD7XJMyyqk8/0b3+mr1kOY8bEMfW01v13hL
+         n+WK1NgvpNcATs/YIiLIbXZt3onDo09W3fpppxtep5TE8u+kkDhnuiIDQhWbKO4knXCW
+         YBVQ==
+X-Forwarded-Encrypted: i=1; AJvYcCUHoEggVW8I4wK3FI5l/qzF7R55bvXq9tQ0UexNlPRMePr6/Iz2dlzsV3aJI3tHvznZKDk1jQT+IboahMGxSHygL48S@vger.kernel.org
+X-Gm-Message-State: AOJu0Yw+iWgG06wqbBU4+b0q72BPp2PAhXM7tuUBhzMGljHRCNI17hg+
+	ie4Lke76IlA8NDsoBSIniCwVhi8RBHZMtq1tKcCKwIzHLanYfLlfzu+6
+X-Gm-Gg: ATEYQzyHjGS5A2VpkiJYbSGJj2SZ3RXjhNZgj7JBV76v1Lbj7FBbdRpX9TzWbF7vlQj
+	pX5bY1e3dAVaKhc4ayT8NLNQpc4kKJFXgzaWk+ixonyS7Vd8GpW8ER2Y1944eyLPYE5BAAU0MJs
+	FSlBrGr7FD+NmSrpbAk1nJ9ovi/X7O/V8vuqPwMOsjAW6P+O0AevpIPsbdQ8o5IgG+1Xv2TE6n2
+	AAKQI2mmCrHYL0vzy2Ci4LzZ4XB3UiMekD7TkJ6O0yrj13eQ+8bHVSMUI3ITQXppfwgmWH3ud2E
+	cSaUkV4PQ0HbD1YFw84ngYsek5VoGwyMJrIGPDN1jHEs7FkpO9zyTtUqs6FrSyjLadncTl66xc2
+	goWbAsyM9vYztmJyPXgq48AUp1UoVBCvRMSrPIIqUVKSvN1DCKyYQjBAKVq+6Gd6rZBBvTwPRDz
+	HEjR5S0TjukIwspV1epNC2UT3Ys8c=
+X-Received: by 2002:a5d:588b:0:b0:437:6839:d5e with SMTP id ffacd0b85a97d-4396f153aacmr18288101f8f.13.1771915984464;
+        Mon, 23 Feb 2026 22:53:04 -0800 (PST)
+Received: from x-factory.. ([105.74.5.105])
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-43970d4c977sm25403023f8f.32.2026.02.23.22.53.01
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 23 Feb 2026 22:53:04 -0800 (PST)
+From: Yousef El Bouzidi <elbouzidyyousef@gmail.com>
+To: linux-kernel@vger.kernel.org
+Cc: gregkh@linuxfoundation.org,
+	rafael@kernel.org,
+	dakr@kernel.org,
+	tglx@kernel.org,
+	herbert@gondor.apana.org.au,
+	davem@davemloft.net,
+	lee@kernel.org,
+	hansg@kernel.org,
+	ilpo.jarvinen@linux.intel.com,
+	ansuelsmth@gmail.com,
+	atenart@kernel.org,
+	wens@kernel.org,
+	hauke@hauke-m.de,
+	andrew+netdev@lunn.ch,
+	kuba@kernel.org,
+	david.e.box@linux.intel.com,
+	akrowiak@linux.ibm.com,
+	pasic@linux.ibm.com,
+	jjherne@linux.ibm.com,
+	hca@linux.ibm.com,
+	driver-core@lists.linux.dev,
+	linux-crypto@vger.kernel.org,
+	netdev@vger.kernel.org,
+	platform-driver-x86@vger.kernel.org,
+	linux-s390@vger.kernel.org,
+	Yousef El Bouzidi <elbouzidyyousef@gmail.com>
+Subject: [PATCH] treewide: fix duplicated word "the" in comments
+Date: Tue, 24 Feb 2026 06:52:45 +0000
+Message-ID: <20260224065300.454633-1-elbouzidyyousef@gmail.com>
+X-Mailer: git-send-email 2.43.0
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Message-Id: <20260224-pci-m2-e-v5-8-dd9b9501d33c@oss.qualcomm.com>
-References: <20260224-pci-m2-e-v5-0-dd9b9501d33c@oss.qualcomm.com>
-In-Reply-To: <20260224-pci-m2-e-v5-0-dd9b9501d33c@oss.qualcomm.com>
-To: Rob Herring <robh@kernel.org>, 
- Greg Kroah-Hartman <gregkh@linuxfoundation.org>, 
- Jiri Slaby <jirislaby@kernel.org>, Nathan Chancellor <nathan@kernel.org>, 
- Nicolas Schier <nicolas.schier@linux.dev>, Hans de Goede <hansg@kernel.org>, 
- =?utf-8?q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>, 
- Mark Pearson <mpearson-lenovo@squebb.ca>, 
- "Derek J. Clark" <derekjohn.clark@gmail.com>, 
- Manivannan Sadhasivam <mani@kernel.org>, 
- Krzysztof Kozlowski <krzk+dt@kernel.org>, 
- Conor Dooley <conor+dt@kernel.org>, Marcel Holtmann <marcel@holtmann.org>, 
- Luiz Augusto von Dentz <luiz.dentz@gmail.com>, 
- Bartosz Golaszewski <brgl@bgdev.pl>, 
- Andy Shevchenko <andriy.shevchenko@linux.intel.com>, 
- Bartosz Golaszewski <brgl@kernel.org>
-Cc: linux-serial@vger.kernel.org, linux-kernel@vger.kernel.org, 
- linux-kbuild@vger.kernel.org, platform-driver-x86@vger.kernel.org, 
- linux-pci@vger.kernel.org, devicetree@vger.kernel.org, 
- linux-arm-msm@vger.kernel.org, linux-bluetooth@vger.kernel.org, 
- linux-pm@vger.kernel.org, Stephan Gerhold <stephan.gerhold@linaro.org>, 
- Dmitry Baryshkov <dmitry.baryshkov@oss.qualcomm.com>, 
- linux-acpi@vger.kernel.org, 
- Manivannan Sadhasivam <manivannan.sadhasivam@oss.qualcomm.com>, 
- Hans de Goede <johannes.goede@oss.qualcomm.com>
-X-Mailer: b4 0.14.3
-X-Developer-Signature: v=1; a=openpgp-sha256; l=6901;
- i=manivannan.sadhasivam@oss.qualcomm.com; h=from:subject:message-id;
- bh=HRGptE1JIyA395dlxkM3raRO8gPG2oSfeqDUBhjL6YY=;
- b=owEBbAGT/pANAwAKAVWfEeb+kc71AcsmYgBpnTeItvqqUYlI77jr1d50XlgHPzuXBe67DzZVK
- P+f6NZxPmyJATIEAAEKAB0WIQRnpUMqgUjL2KRYJ5dVnxHm/pHO9QUCaZ03iAAKCRBVnxHm/pHO
- 9YDFB/iDOYQLM8wTzHJ09bYyH2+5hIcEt9ZXbw1+VABhHFVw0OhHOj4DSQEVkqudUucAEXfNOB1
- H1tyiKxRFelDbG0MUQ597KkeErAh3uzenKEUYihryAuk+V2IKdfm4M0H3+bKT7EQSHeXm+YY/Wy
- vfji1zMNgsV9ls+Ozsms8YkuF46uWOU7To1nZWvXMw6ZPRSiYeIi+JwJnhhX3Ajr7nhvNuoBuus
- zSy6iHTcgDdYjmNU1u5G1MSZwtq5Qm2qy8Gbh1lgpsjRtwGUKDTdyQXaaTiHP2ilmWoB+PonejY
- BuWWz8X2JjoBEsFXMmSo/JhIAYMiulCadZ4Oap7EAE1yRnE=
-X-Developer-Key: i=manivannan.sadhasivam@oss.qualcomm.com; a=openpgp;
- fpr=C668AEC3C3188E4C611465E7488550E901166008
-X-Endpoint-Received: by B4 Relay for
- manivannan.sadhasivam@oss.qualcomm.com/default with auth_id=461
-X-Original-From: Manivannan Sadhasivam <manivannan.sadhasivam@oss.qualcomm.com>
-Reply-To: manivannan.sadhasivam@oss.qualcomm.com
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 
-From: Manivannan Sadhasivam <manivannan.sadhasivam@oss.qualcomm.com>
+Remove duplicated word "the" from comments across various subsystems.
+All instances are clear typos where "the" appeared twice in
+succession, often merged with the following word (e.g. "the they",
+"the there", "the these", "the them").
 
-Add support for handling the power sequence of the PCIe M.2 Key E
-connectors. These connectors are used to attach the Wireless Connectivity
-devices to the host machine including combinations of WiFi, BT, NFC using
-interfaces such as PCIe/SDIO for WiFi, USB/UART for BT and I2C for NFC.
+Files fixed:
+  - drivers/base/platform.c
+  - drivers/crypto/inside-secure/eip93/eip93-hash.c
+  - drivers/mfd/axp20x.c
+  - drivers/net/ethernet/lantiq_xrx200.c
+  - drivers/platform/x86/intel/chtwc_int33fe.c
+  - drivers/platform/x86/intel/pmt/class.c
+  - drivers/s390/crypto/vfio_ap_ops.c
+  - kernel/irq/migration.c
 
-Currently, this driver supports only the PCIe interface for WiFi and UART
-interface for BT. The driver also only supports driving the 3.3v/1.8v power
-supplies and W_DISABLE{1/2}# GPIOs. The optional signals of the Key E
-connectors are not currently supported.
-
-Tested-by: Hans de Goede <johannes.goede@oss.qualcomm.com> # ThinkPad T14s gen6 (arm64)
-Signed-off-by: Manivannan Sadhasivam <manivannan.sadhasivam@oss.qualcomm.com>
+Signed-off-by: Yousef El Bouzidi <elbouzidyyousef@gmail.com>
 ---
- drivers/power/sequencing/pwrseq-pcie-m2.c | 107 ++++++++++++++++++++++++++++--
- 1 file changed, 101 insertions(+), 6 deletions(-)
+ drivers/base/platform.c                         | 2 +-
+ drivers/crypto/inside-secure/eip93/eip93-hash.c | 2 +-
+ drivers/mfd/axp20x.c                            | 2 +-
+ drivers/net/ethernet/lantiq_xrx200.c            | 2 +-
+ drivers/platform/x86/intel/chtwc_int33fe.c      | 2 +-
+ drivers/platform/x86/intel/pmt/class.c          | 2 +-
+ drivers/s390/crypto/vfio_ap_ops.c               | 2 +-
+ kernel/irq/migration.c                          | 2 +-
+ 8 files changed, 8 insertions(+), 8 deletions(-)
 
-diff --git a/drivers/power/sequencing/pwrseq-pcie-m2.c b/drivers/power/sequencing/pwrseq-pcie-m2.c
-index d31a7dd8b35c..3507cdcb1e7b 100644
---- a/drivers/power/sequencing/pwrseq-pcie-m2.c
-+++ b/drivers/power/sequencing/pwrseq-pcie-m2.c
-@@ -5,10 +5,13 @@
+diff --git a/drivers/base/platform.c b/drivers/base/platform.c
+index b45d41b018ca..3e3b6fcfa194 100644
+--- a/drivers/base/platform.c
++++ b/drivers/base/platform.c
+@@ -565,7 +565,7 @@ struct platform_object {
+ };
+ 
+ /*
+- * Set up default DMA mask for platform devices if the they weren't
++ * Set up default DMA mask for platform devices if they weren't
+  * previously set by the architecture / DT.
+  */
+ static void setup_pdev_dma_masks(struct platform_device *pdev)
+diff --git a/drivers/crypto/inside-secure/eip93/eip93-hash.c b/drivers/crypto/inside-secure/eip93/eip93-hash.c
+index 2705855475b2..d91a1ac152f0 100644
+--- a/drivers/crypto/inside-secure/eip93/eip93-hash.c
++++ b/drivers/crypto/inside-secure/eip93/eip93-hash.c
+@@ -432,7 +432,7 @@ static int eip93_hash_update(struct ahash_request *req)
+ 
+ /*
+  * With map_data true, we map the sa_record and sa_state. This is needed
+- * for finup() as the they are mapped before calling update()
++ * for finup() as they are mapped before calling update()
+  */
+ static int __eip93_hash_final(struct ahash_request *req, bool map_dma)
+ {
+diff --git a/drivers/mfd/axp20x.c b/drivers/mfd/axp20x.c
+index 679364189ea5..0c6e93eb3955 100644
+--- a/drivers/mfd/axp20x.c
++++ b/drivers/mfd/axp20x.c
+@@ -1417,7 +1417,7 @@ int axp20x_device_probe(struct axp20x_dev *axp20x)
+ 	 * 1 bit customizable at the factory, and 1 bit depending on the
+ 	 * state of an external pin. The latter is writable. The device
+ 	 * will only respond to operations to its other registers when
+-	 * the these device addressing bits (in the upper 4 bits of the
++	 * these device addressing bits (in the upper 4 bits of the
+ 	 * registers) match.
+ 	 *
+ 	 * By default we support an AXP806 chained to an AXP809 in slave
+diff --git a/drivers/net/ethernet/lantiq_xrx200.c b/drivers/net/ethernet/lantiq_xrx200.c
+index b8766fb7a844..dde651d901c8 100644
+--- a/drivers/net/ethernet/lantiq_xrx200.c
++++ b/drivers/net/ethernet/lantiq_xrx200.c
+@@ -157,7 +157,7 @@ static int xrx200_open(struct net_device *net_dev)
+ 	/* The boot loader does not always deactivate the receiving of frames
+ 	 * on the ports and then some packets queue up in the PPE buffers.
+ 	 * They already passed the PMAC so they do not have the tags
+-	 * configured here. Read the these packets here and drop them.
++	 * configured here. Read these packets here and drop them.
+ 	 * The HW should have written them into memory after 10us
+ 	 */
+ 	usleep_range(20, 40);
+diff --git a/drivers/platform/x86/intel/chtwc_int33fe.c b/drivers/platform/x86/intel/chtwc_int33fe.c
+index d183aa53c318..1fca9fdd8f5b 100644
+--- a/drivers/platform/x86/intel/chtwc_int33fe.c
++++ b/drivers/platform/x86/intel/chtwc_int33fe.c
+@@ -14,7 +14,7 @@
+  *
+  * So this driver is a stub / pseudo driver whose only purpose is to
+  * instantiate I²C clients for chips 2 - 4, so that standard I²C drivers
+- * for these chips can bind to the them.
++ * for these chips can bind to them.
   */
  
- #include <linux/device.h>
-+#include <linux/delay.h>
-+#include <linux/gpio/consumer.h>
- #include <linux/mod_devicetable.h>
- #include <linux/module.h>
- #include <linux/of.h>
- #include <linux/of_graph.h>
-+#include <linux/of_platform.h>
- #include <linux/platform_device.h>
- #include <linux/pwrseq/provider.h>
- #include <linux/regulator/consumer.h>
-@@ -25,16 +28,18 @@ struct pwrseq_pcie_m2_ctx {
- 	struct regulator_bulk_data *regs;
- 	size_t num_vregs;
- 	struct notifier_block nb;
-+	struct gpio_desc *w_disable1_gpio;
-+	struct gpio_desc *w_disable2_gpio;
- };
+ #include <linux/dmi.h>
+diff --git a/drivers/platform/x86/intel/pmt/class.c b/drivers/platform/x86/intel/pmt/class.c
+index be3c8d9e4fff..99bf7e0afdf1 100644
+--- a/drivers/platform/x86/intel/pmt/class.c
++++ b/drivers/platform/x86/intel/pmt/class.c
+@@ -239,7 +239,7 @@ static int intel_pmt_populate_entry(struct intel_pmt_entry *entry,
  
--static int pwrseq_pcie_m2_m_vregs_enable(struct pwrseq_device *pwrseq)
-+static int pwrseq_pcie_m2_vregs_enable(struct pwrseq_device *pwrseq)
- {
- 	struct pwrseq_pcie_m2_ctx *ctx = pwrseq_device_get_drvdata(pwrseq);
+ 		/*
+ 		 * Some hardware use a different calculation for the base address
+-		 * when access_type == ACCESS_LOCAL. On the these systems
++		 * when access_type == ACCESS_LOCAL. On these systems
+ 		 * ACCESS_LOCAL refers to an address in the same BAR as the
+ 		 * header but at a fixed offset. But as the header address was
+ 		 * supplied to the driver, we don't know which BAR it was in.
+diff --git a/drivers/s390/crypto/vfio_ap_ops.c b/drivers/s390/crypto/vfio_ap_ops.c
+index 44b3a1dcc1b3..334aaa2d97b2 100644
+--- a/drivers/s390/crypto/vfio_ap_ops.c
++++ b/drivers/s390/crypto/vfio_ap_ops.c
+@@ -610,7 +610,7 @@ static int handle_pqap(struct kvm_vcpu *vcpu)
+ 	matrix_mdev = container_of(vcpu->kvm->arch.crypto.pqap_hook,
+ 				   struct ap_matrix_mdev, pqap_hook);
  
- 	return regulator_bulk_enable(ctx->num_vregs, ctx->regs);
- }
+-	/* If the there is no guest using the mdev, there is nothing to do */
++	/* If there is no guest using the mdev, there is nothing to do */
+ 	if (!matrix_mdev->kvm) {
+ 		vfio_ap_le_guid_to_be_uuid(&matrix_mdev->mdev->uuid, uuid);
+ 		VFIO_AP_DBF_WARN("%s: mdev %08lx-%04lx-%04lx-%04lx-%04lx%08lx not in use: apqn=0x%04x\n",
+diff --git a/kernel/irq/migration.c b/kernel/irq/migration.c
+index f2b2929986ff..b29d13baee55 100644
+--- a/kernel/irq/migration.c
++++ b/kernel/irq/migration.c
+@@ -89,7 +89,7 @@ void irq_move_masked_irq(struct irq_data *idata)
  
--static int pwrseq_pcie_m2_m_vregs_disable(struct pwrseq_device *pwrseq)
-+static int pwrseq_pcie_m2_vregs_disable(struct pwrseq_device *pwrseq)
- {
- 	struct pwrseq_pcie_m2_ctx *ctx = pwrseq_device_get_drvdata(pwrseq);
- 
-@@ -43,18 +48,84 @@ static int pwrseq_pcie_m2_m_vregs_disable(struct pwrseq_device *pwrseq)
- 
- static const struct pwrseq_unit_data pwrseq_pcie_m2_vregs_unit_data = {
- 	.name = "regulators-enable",
--	.enable = pwrseq_pcie_m2_m_vregs_enable,
--	.disable = pwrseq_pcie_m2_m_vregs_disable,
-+	.enable = pwrseq_pcie_m2_vregs_enable,
-+	.disable = pwrseq_pcie_m2_vregs_disable,
- };
- 
--static const struct pwrseq_unit_data *pwrseq_pcie_m2_m_unit_deps[] = {
-+static const struct pwrseq_unit_data *pwrseq_pcie_m2_unit_deps[] = {
- 	&pwrseq_pcie_m2_vregs_unit_data,
- 	NULL
- };
- 
-+static int pwrseq_pci_m2_e_uart_enable(struct pwrseq_device *pwrseq)
-+{
-+	struct pwrseq_pcie_m2_ctx *ctx = pwrseq_device_get_drvdata(pwrseq);
-+
-+	return gpiod_set_value_cansleep(ctx->w_disable2_gpio, 0);
-+}
-+
-+static int pwrseq_pci_m2_e_uart_disable(struct pwrseq_device *pwrseq)
-+{
-+	struct pwrseq_pcie_m2_ctx *ctx = pwrseq_device_get_drvdata(pwrseq);
-+
-+	return gpiod_set_value_cansleep(ctx->w_disable2_gpio, 1);
-+}
-+
-+static const struct pwrseq_unit_data pwrseq_pcie_m2_e_uart_unit_data = {
-+	.name = "uart-enable",
-+	.deps = pwrseq_pcie_m2_unit_deps,
-+	.enable = pwrseq_pci_m2_e_uart_enable,
-+	.disable = pwrseq_pci_m2_e_uart_disable,
-+};
-+
-+static int pwrseq_pci_m2_e_pcie_enable(struct pwrseq_device *pwrseq)
-+{
-+	struct pwrseq_pcie_m2_ctx *ctx = pwrseq_device_get_drvdata(pwrseq);
-+
-+	return gpiod_set_value_cansleep(ctx->w_disable1_gpio, 0);
-+}
-+
-+static int pwrseq_pci_m2_e_pcie_disable(struct pwrseq_device *pwrseq)
-+{
-+	struct pwrseq_pcie_m2_ctx *ctx = pwrseq_device_get_drvdata(pwrseq);
-+
-+	return gpiod_set_value_cansleep(ctx->w_disable1_gpio, 1);
-+}
-+
-+static const struct pwrseq_unit_data pwrseq_pcie_m2_e_pcie_unit_data = {
-+	.name = "pcie-enable",
-+	.deps = pwrseq_pcie_m2_unit_deps,
-+	.enable = pwrseq_pci_m2_e_pcie_enable,
-+	.disable = pwrseq_pci_m2_e_pcie_disable,
-+};
-+
- static const struct pwrseq_unit_data pwrseq_pcie_m2_m_pcie_unit_data = {
- 	.name = "pcie-enable",
--	.deps = pwrseq_pcie_m2_m_unit_deps,
-+	.deps = pwrseq_pcie_m2_unit_deps,
-+};
-+
-+static int pwrseq_pcie_m2_e_pwup_delay(struct pwrseq_device *pwrseq)
-+{
-+	/*
-+	 * FIXME: This delay is only required for some Qcom WLAN/BT cards like
-+	 * WCN7850 and not for all devices. But currently, there is no way to
-+	 * identify the device model before enumeration.
-+	 */
-+	msleep(50);
-+
-+	return 0;
-+}
-+
-+static const struct pwrseq_target_data pwrseq_pcie_m2_e_uart_target_data = {
-+	.name = "uart",
-+	.unit = &pwrseq_pcie_m2_e_uart_unit_data,
-+	.post_enable = pwrseq_pcie_m2_e_pwup_delay,
-+};
-+
-+static const struct pwrseq_target_data pwrseq_pcie_m2_e_pcie_target_data = {
-+	.name = "pcie",
-+	.unit = &pwrseq_pcie_m2_e_pcie_unit_data,
-+	.post_enable = pwrseq_pcie_m2_e_pwup_delay,
- };
- 
- static const struct pwrseq_target_data pwrseq_pcie_m2_m_pcie_target_data = {
-@@ -62,11 +133,21 @@ static const struct pwrseq_target_data pwrseq_pcie_m2_m_pcie_target_data = {
- 	.unit = &pwrseq_pcie_m2_m_pcie_unit_data,
- };
- 
-+static const struct pwrseq_target_data *pwrseq_pcie_m2_e_targets[] = {
-+	&pwrseq_pcie_m2_e_pcie_target_data,
-+	&pwrseq_pcie_m2_e_uart_target_data,
-+	NULL
-+};
-+
- static const struct pwrseq_target_data *pwrseq_pcie_m2_m_targets[] = {
- 	&pwrseq_pcie_m2_m_pcie_target_data,
- 	NULL
- };
- 
-+static const struct pwrseq_pcie_m2_pdata pwrseq_pcie_m2_e_of_data = {
-+	.targets = pwrseq_pcie_m2_e_targets,
-+};
-+
- static const struct pwrseq_pcie_m2_pdata pwrseq_pcie_m2_m_of_data = {
- 	.targets = pwrseq_pcie_m2_m_targets,
- };
-@@ -125,6 +206,16 @@ static int pwrseq_pcie_m2_probe(struct platform_device *pdev)
- 		return dev_err_probe(dev, ret,
- 				     "Failed to get all regulators\n");
- 
-+	ctx->w_disable1_gpio = devm_gpiod_get_optional(dev, "w-disable1", GPIOD_OUT_HIGH);
-+	if (IS_ERR(ctx->w_disable1_gpio))
-+		return dev_err_probe(dev, PTR_ERR(ctx->w_disable1_gpio),
-+				     "Failed to get the W_DISABLE_1# GPIO\n");
-+
-+	ctx->w_disable2_gpio = devm_gpiod_get_optional(dev, "w-disable2", GPIOD_OUT_HIGH);
-+	if (IS_ERR(ctx->w_disable2_gpio))
-+		return dev_err_probe(dev, PTR_ERR(ctx->w_disable2_gpio),
-+				     "Failed to get the W_DISABLE_2# GPIO\n");
-+
- 	ctx->num_vregs = ret;
- 
- 	ret = devm_add_action_or_reset(dev, pwrseq_pcie_m2_free_regulators, ctx);
-@@ -150,6 +241,10 @@ static const struct of_device_id pwrseq_pcie_m2_of_match[] = {
- 		.compatible = "pcie-m2-m-connector",
- 		.data = &pwrseq_pcie_m2_m_of_data,
- 	},
-+	{
-+		.compatible = "pcie-m2-e-connector",
-+		.data = &pwrseq_pcie_m2_e_of_data,
-+	},
- 	{ }
- };
- MODULE_DEVICE_TABLE(of, pwrseq_pcie_m2_of_match);
-
+ 		ret = irq_do_set_affinity(data, desc->pending_mask, false);
+ 		/*
+-		 * If the there is a cleanup pending in the underlying
++		 * If there is a cleanup pending in the underlying
+ 		 * vector management, reschedule the move for the next
+ 		 * interrupt. Leave desc->pending_mask intact.
+ 		 */
 -- 
-2.51.0
-
+2.43.0
 
