@@ -1,479 +1,342 @@
-Received: from mail-dy1-f175.google.com (mail-dy1-f175.google.com [74.125.82.175])
+Received: from mail-ua1-f51.google.com (mail-ua1-f51.google.com [209.85.222.51])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6365D277026
-	for <platform-driver-x86@vger.kernel.org>; Wed, 25 Feb 2026 18:23:42 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=74.125.82.175
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4F698267B90
+	for <platform-driver-x86@vger.kernel.org>; Wed, 25 Feb 2026 18:24:23 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.222.51
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1772043823; cv=none; b=doSI52bvd1xR7r0n6w3drIHhuRgIag/xVQ9PS/AC4CSRJNVldZqdJ3uKK4APRIA+AGqb2gaj/fNmQXS5pEu0z/sP50ZFasYtNNZatEk6pJRNOp1Cz92OfJx4vjZrFVofDBHKG75EGVSrjwTRQvk6MBXViR7gVy1h0vxnTrPu4/g=
+	t=1772043864; cv=none; b=XzHKJeVmhlM9qObGs2Ka0/O0vrzlNk5IggYodeTyAhOHHXaenD4cWufXPk38uJ6R2zLktk3djv/9p7pImz4UcRjvyoGqAr1dQS37JsDqnh4g7UW+ffbk5iEb9pWPvFc3iDpQWssIvA4nbH3JnieHm8j7OQ7KNJQzwyTD0BwZnRc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1772043823; c=relaxed/simple;
-	bh=neXJ2P5nrEqGg1oIrc4fnPALOrQIjBPSsr5hmDuZedM=;
-	h=Date:From:To:CC:Subject:In-Reply-To:References:Message-ID:
-	 MIME-Version:Content-Type; b=I2EPuPvIxNhLWfK7Yc/ZAuG5JpAUSyldKGM5pU/oGI72D+GznoxIK9+HEpKglRLK2+xJZsb9jKU4X7LR4p31cnCrI/6rbQLNc4fe1TJHfbBZSK7GzRW5pwDJMitwHfAVakDeo9WZBVnttULxCnLaiuIJLhjMKWaOQCkoTWYKNh0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=k/Ar+EKa; arc=none smtp.client-ip=74.125.82.175
+	s=arc-20240116; t=1772043864; c=relaxed/simple;
+	bh=HTWOKx0rqG8+VQ4IOyztotn7esv+T3Hu/FUNNqdH2uo=;
+	h=Mime-Version:Content-Type:Date:Message-Id:Subject:From:To:Cc:
+	 References:In-Reply-To; b=doN0FloBD8qLQNEWpRsJwdLQy/JF//u4W97fICkPgcmYG6I94JAJx7eGBU7bmiqBCSJGWFsj44MzTzYKo0tEkhkC0/quLRm5HJs2Ra5W9dBs7AAU16YM6hSKkYXT4JdCEMy7HQfXb7aFSW/OBEPqGNTbDU5qegq49QZYGn3i31E=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=M08P1HVX; arc=none smtp.client-ip=209.85.222.51
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="k/Ar+EKa"
-Received: by mail-dy1-f175.google.com with SMTP id 5a478bee46e88-2bdbd13ca01so2806159eec.0
-        for <platform-driver-x86@vger.kernel.org>; Wed, 25 Feb 2026 10:23:42 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="M08P1HVX"
+Received: by mail-ua1-f51.google.com with SMTP id a1e0cc1a2514c-94acd026e45so2137241.3
+        for <platform-driver-x86@vger.kernel.org>; Wed, 25 Feb 2026 10:24:23 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1772043821; x=1772648621; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:references
-         :in-reply-to:user-agent:subject:cc:to:from:date:from:to:cc:subject
-         :date:message-id:reply-to;
-        bh=MSZ5Lac5Qha5eoVR2OvD4Cps84q/S3JUf96fLFshFyQ=;
-        b=k/Ar+EKad41YhLF3QMDIC4C5DwkOAm/w8Aeo6EPAs8lfH1R2x2u5unoJkiBFKRvqmK
-         So1+P8HnK+rOBUr1Q7+XWhiKEZlDXid+63X3+Oct/1/GDUSizgRmMjDmYDbK5kr5jRei
-         tkw07KPwcJoRXpScXGvTuUtsfePtsOZ+arF8XUW+iqIge0CmddhgPmHTrzQNS0Bt6r2h
-         +2UJiOq+6R5XR1vhU8EklO8rsU8cZ+iJlKah+sB1ofFc49tH/wH82cC3paiAcPMRL+XB
-         FH4RQQNmHQs6/MVU1PwmHFkHzQ5Hqopcp/BJ282EN+OlRZKXpK52OGydNZoJTFZYsLOx
-         RztA==
+        d=gmail.com; s=20230601; t=1772043862; x=1772648662; darn=vger.kernel.org;
+        h=in-reply-to:references:cc:to:from:subject:message-id:date
+         :content-transfer-encoding:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=H3R5Zy/MntrRZzTSxL18xHWODXzvXj+FyrYGSVV0yBs=;
+        b=M08P1HVXbYUTHiVZzqjhbhXDSVzLSy3ZZHsaO8oIh/IJGpYx5qZvTR4/4oCLgwkLME
+         kTlbBOr3CNXl4lzCbDPMlEjdRRY5dgyOhKDinRWsf5xJaBFWlMHL2rp3mnukiysv2Syk
+         4agSoVE+CqvUh5UhLBhPnuLgDdTKvC8HMy3XkDD+r7JJbuY/N4IT5fiHmv2DmU8TZi07
+         PwkDNuLk3P0u4cFZ6Hosgn62rc7bcz0GLy388820NFpT7Y1k6Bhkf2CYmQPmo2FeOMCB
+         R9VfJuVIK8B2n1PJVFDrIv+PU8+A3VYRrrP3+5gshNDHP7L8wUy2/Q3kU9MmWFZgBzdp
+         DELA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1772043821; x=1772648621;
-        h=content-transfer-encoding:mime-version:message-id:references
-         :in-reply-to:user-agent:subject:cc:to:from:date:x-gm-gg
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=MSZ5Lac5Qha5eoVR2OvD4Cps84q/S3JUf96fLFshFyQ=;
-        b=GjZGST4tg4vEk38gIhBEEdEeeXLw9SfpOdMxaSpUKruitN+dvB7EK8AYuCosFrlDte
-         G2kVIHp1c0b2wLHfFFAnMH/knTIPr4ErK/aKD10TksvxZOndxH34EpztvSBcAJnmsMS7
-         M3nrYLVnd66RpV5gAJ/R5MdbEXynv6p0KuG8438m1NAbCZkIH2N8h+cfXjfHwFMpKlMk
-         BCpOkfeufOdT2ocJETx+QZv6VWjn1tLqEGuEQxfPOLcZvCHfiJLFrdkLD5jj+cUbgnpB
-         bqoulQXG7Fq4apfYiiEsCNETaaDlizc1sySClaYhiAdGX9FiWze602T+B4crmTFZ8le8
-         lUfg==
-X-Forwarded-Encrypted: i=1; AJvYcCUaXtn1i0iyr0FsgKHuDOX3afzjK68CEEf2YJRp9ymFk8luN9p84+OQSmYCipljh3ZH4KdXqyEai4nDdsrf6gCAeRio@vger.kernel.org
-X-Gm-Message-State: AOJu0Yz1Aga4YK/llQubxOoCWFQA6xqiMtw9vbfitnjTzzzHtGxkf1G5
-	2v/uUN7TVyVHITxc8L6iqpVDwSq+rRmjvqX37hS8Dz5z9mKHDAMbHx1F
-X-Gm-Gg: ATEYQzxoY8ureQohwkhw5XZUD3UfXkatPwBZN3WPXCkDq8/0GuBwI4E84JcA6o9IC3D
-	mwbInjHYS2JU5CTcm7y24XLbocy3kK7MTaoXDTYilXQsD7bVePsQj2l2J6akSNOXuM0XtJC/M2e
-	4zmXPiGpAMI7AVMx7lesNIKK/RoarcmnQh1tEjqKKRozrvV1hqwi3qZNEgzRb9zwtneubZrIexm
-	bnARwMpIW5gdGVyq9qlc5+eeK04Q7/AVCnx06CZtIsnpKbxU9rb0aVTVuDbq3XljPtcHQWl1rXi
-	HaBU42f9k0QuKMOj0Isb6hXFRLECGK84iLmq2cpJH9MWjKGJKlumtBzh898eKuSCpSo7pe6z5eQ
-	PopEf9ZrqT/wVb9IKiRZAv4uIJXefZnBpUAJXI3FPkwTYpufXiTyve0ju1s9HSNy+z70Ot0/oUB
-	5XlYNgQgM1Vr5hihNxXTfoPNZa3Cv42HZBmixHZz45xPR6cp/aTnWU6Vt8Rc2TVOEt14l3jqbLr
-	oPnWAMlRcn1rUQpIv8gAA==
-X-Received: by 2002:a05:7300:c608:b0:2bd:b961:7e8b with SMTP id 5a478bee46e88-2bdcc0585edmr622781eec.24.1772043821227;
-        Wed, 25 Feb 2026 10:23:41 -0800 (PST)
-Received: from ehlo.thunderbird.net (108-228-232-20.lightspeed.sndgca.sbcglobal.net. [108.228.232.20])
-        by smtp.gmail.com with ESMTPSA id 5a478bee46e88-2bd7daa37e9sm9373105eec.11.2026.02.25.10.23.40
+        d=1e100.net; s=20230601; t=1772043862; x=1772648662;
+        h=in-reply-to:references:cc:to:from:subject:message-id:date
+         :content-transfer-encoding:mime-version:x-gm-gg:x-gm-message-state
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=H3R5Zy/MntrRZzTSxL18xHWODXzvXj+FyrYGSVV0yBs=;
+        b=gpfSPYSqizJf0PPwGxhrc7KNWkwKk0yeF/FI2c/uUxaHlfEVfesDAu/NYbskmRLaGK
+         GnBPtuPFypXeRZQPy0pM1SkLyo7t+MszCG4dnKGfm1NCDID3MpKtTLRIjDojyFGLNj+W
+         JZtbLvV9kOXvuOaSukPr92YWOTiLViDhKCiwODahdTCKIUIr5wh779ka0bYgveJpf/sy
+         kGZZIqti+M1E00T3+LeTvxhWsC1cWwC7SzAHrBVF7MCC0ntqjLMBYpLqmW8zg2FimTry
+         QIL5nSiMkDI4SX8UtXRd+HQy/NCG4BSaIYxemIqg1KVQE3pSsgmobQnGpRhWftI62jUV
+         XEJQ==
+X-Forwarded-Encrypted: i=1; AJvYcCUcvGY6IXTb7pJUBMnoLdm0m8MMIPFLwuJq60mTtHkKqhnvaW+oD8j0fizKSqJeGQiJSgHHXLj0CplJ/hXCJTOdQ42E@vger.kernel.org
+X-Gm-Message-State: AOJu0YwyRN0dWTzannwKWp/Otiy03JD7oDvfxSX/b2L+8p9RhTuN3P5B
+	45QXNJawO8G5kD3y/DWUkvnh2uGYRN1w9+6oVFi1oBlJNjmxkjJ3JJIo
+X-Gm-Gg: ATEYQzzmJ3NxcE2OJz13jedTUexIcX1pN/rJ0mi9iJhHRl4L3cqAKRTyjzJ0WzCz9f0
+	N7AGbCLmo5kp8FgKFtIn8W05M0llsmYuOzdOm1UuTFvXEWP1lrpd79TEgukmf8MhXjoyWSM14r8
+	rOAnJiRVsQdHnQe5TWvLmezrAp9m34fe8e3wozs4SAe/Y++nEtAduK8SZaILzuMjlZpQltLEXJZ
+	UVT217Fj/APYlOkFcGIQN5sfi/+hzxrTFd0RT7iSVAc9LIdZ8Gv9tSnAfiuAVCi96a4yqq/VsAU
+	CsLsb8aF/MIshdd4p3tPP5Zk0lAf6vc6uPLoU/M/bOIWriZTek3aO/uXmLPVBUW/JrIXrWnRcWx
+	EvLkffp0tYwSLjEwy8q7+dqX01F4w6M7c1uOX7pqmLdEr7oBgM4MSjUDpcgyYA7HsZ5N2sZzLIy
+	HYbVflMdNzybjROSs=
+X-Received: by 2002:a05:6102:32c4:b0:5ef:24aa:986f with SMTP id ada2fe7eead31-5feb2e5f0c8mr6925729137.2.1772043862098;
+        Wed, 25 Feb 2026 10:24:22 -0800 (PST)
+Received: from localhost ([181.91.18.156])
+        by smtp.gmail.com with ESMTPSA id ada2fe7eead31-5feb648a89esm14799048137.13.2026.02.25.10.24.19
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 25 Feb 2026 10:23:40 -0800 (PST)
-Date: Wed, 25 Feb 2026 10:23:41 -0800
-From: "Derek J. Clark" <derekjohn.clark@gmail.com>
-To: Rong Zhang <i@rong.moe>,
- =?ISO-8859-1?Q?Ilpo_J=E4rvinen?= <ilpo.jarvinen@linux.intel.com>,
- Hans de Goede <hansg@kernel.org>
-CC: Mark Pearson <mpearson-lenovo@squebb.ca>, Armin Wolf <W_Armin@gmx.de>,
- Jonathan Corbet <corbet@lwn.net>, Kurt Borja <kuurtb@gmail.com>,
- platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: =?US-ASCII?Q?Re=3A_=5BPATCH_v3_6/6=5D_platform/x86=3A_lenovo-w?=
- =?US-ASCII?Q?mi-other=3A_Add_WMI_battery_charge_limiting=2E?=
-User-Agent: Thunderbird for Android
-In-Reply-To: <222fa8dd3e465aaea2f3ca7ff91bf7ff224278d7.camel@rong.moe>
-References: <20260224043200.2680384-1-derekjohn.clark@gmail.com> <20260224043200.2680384-7-derekjohn.clark@gmail.com> <222fa8dd3e465aaea2f3ca7ff91bf7ff224278d7.camel@rong.moe>
-Message-ID: <DC0A1067-42C8-4514-8546-A6E13F54CEA6@gmail.com>
+        Wed, 25 Feb 2026 10:24:21 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Type: text/plain;
- charset=utf-8
+Mime-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=UTF-8
+Date: Wed, 25 Feb 2026 13:24:18 -0500
+Message-Id: <DGO94E8PJT90.XQ4CA7J4GYV0@gmail.com>
+Subject: Re: [PATCH 2/2] platform/x86: lenovo-wmi-capdata: Add debugfs file
+ for dumping capdata
+From: "Kurt Borja" <kuurtb@gmail.com>
+To: "Rong Zhang" <i@rong.moe>, "Mark Pearson" <mpearson-lenovo@squebb.ca>,
+ "Derek J. Clark" <derekjohn.clark@gmail.com>, "Armin Wolf"
+ <W_Armin@gmx.de>, "Hans de Goede" <hansg@kernel.org>,
+ =?utf-8?q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
+Cc: "Kurt Borja" <kuurtb@gmail.com>, <platform-driver-x86@vger.kernel.org>,
+ <linux-kernel@vger.kernel.org>
+X-Mailer: aerc 0.21.0-0-g5549850facc2
+References: <20260210191938.137234-1-i@rong.moe>
+ <20260210191938.137234-3-i@rong.moe>
+In-Reply-To: <20260210191938.137234-3-i@rong.moe>
 
-On February 25, 2026 9:55:40 AM PST, Rong Zhang <i@rong=2Emoe> wrote:
->Hi Derek,
+On Tue Feb 10, 2026 at 2:19 PM -05, Rong Zhang wrote:
+> The Lenovo GameZone/Other interfaces have some delicate divergences
+> among different devices. When making a bug report or adding support for
+> new devices/interfaces, capdata is the most important information to
+> cross-check with.
 >
->There is an extra dot (period) in the title=2E Please remove it=2E
+> Add a debugfs file (lenovo_wmi/<device_name>/capdata), so that users can
+> dump capdata and include it in their reports.
 >
->On Tue, 2026-02-24 at 04:32 +0000, Derek J=2E Clark wrote:
->> Add charge-type power supply extension for devices that support WMI bas=
-ed
->> charge enable/disable=2E Lenovo Legion devices that implement function =
-ID
->> and capdata 00 ID 0x03010001 are able to enable or disable charging
->> through the lenovo-wmi-other interface=2E
+> Since `struct capdata01' is just an extension to `struct capdata00',
+> also converts the former to include the latter anonymously
+> (-fms-extensions, since v6.19). In this manner type casting won't be
+> confusing.
 >
->"disable charging"=2E=2E=2E
->
->I'd expect it pauses charging immediately and unconditionally instead
->of setting a threshold, especially considering the its name
->"INSTANT_MODE"=2E If this is the case, I don't think it fits the
->definition of POWER_SUPPLY_CHARGE_TYPE_LONGLIFE=2E It'd better to use
->POWER_SUPPLY_CHARGE_TYPE_NONE=2E
+> Signed-off-by: Rong Zhang <i@rong.moe>
 
-It really just sets a charge threshold of 80% and lowers the charge speed =
-a bit=2E I'll come up with a better name than the one Lenovo uses in their =
-docs=2E
+Tested-by: Kurt Borja <kuurtb@gmail.com>
 
->> The ideapad_laptop driver
->> conflicts with this if it can also provide the attribute, so we have to
->> get the acpi_handle and check for the same ACPI methods that enable the
->> feature in that driver=2E The ACPI method is more reliable from my test=
-ing
->> when both are present, so there is no need to modify the ideapad_laptop
->> driver instead=2E
+> ---
+>  drivers/platform/x86/lenovo/Kconfig       |   1 +
+>  drivers/platform/x86/lenovo/wmi-capdata.c | 121 ++++++++++++++++++++++
+>  drivers/platform/x86/lenovo/wmi-capdata.h |   4 +-
+>  3 files changed, 123 insertions(+), 3 deletions(-)
 >
->When ideapad-laptop is blacklisted, there should be no conflict=2E I
->would suggest adding a module parameter to force wmi-other to register
->psy_ext anyway so that users can have their own choice=2E
->
-
-That should be fine=2E I've found the WMI interface is a little buggy on d=
-evices that support the ACPI method=2E I=2Ee=2E on the Go S and Go 2 it alw=
-ays reports the "Enabled" status, but changing it shows the ACPI method rep=
-orting the correct value=2E (I used a different attr name to test this)
-
->> Reviewed-by: Mark Pearson <mpearson-lenovo@squebb=2Eca>
->> Signed-off-by: Derek J=2E Clark <derekjohn=2Eclark@gmail=2Ecom>
->> ---
->>  drivers/platform/x86/lenovo/wmi-capdata=2Eh |   1 +
->>  drivers/platform/x86/lenovo/wmi-other=2Ec   | 230 ++++++++++++++++++++=
-++
->>  2 files changed, 231 insertions(+)
->>=20
->> diff --git a/drivers/platform/x86/lenovo/wmi-capdata=2Eh b/drivers/plat=
-form/x86/lenovo/wmi-capdata=2Eh
->> index b7f9ee7b301a=2E=2E00471551e7d6 100644
->> --- a/drivers/platform/x86/lenovo/wmi-capdata=2Eh
->> +++ b/drivers/platform/x86/lenovo/wmi-capdata=2Eh
->> @@ -26,6 +26,7 @@
->>  enum lwmi_device_id {
->>  	LWMI_DEVICE_ID_CPU =3D 0x01,
->>  	LWMI_DEVICE_ID_GPU =3D 0x02,
->> +	LWMI_DEVICE_ID_PSU =3D 0x03,
->>  	LWMI_DEVICE_ID_FAN =3D 0x04,
->>  };
->> =20
->> diff --git a/drivers/platform/x86/lenovo/wmi-other=2Ec b/drivers/platfo=
-rm/x86/lenovo/wmi-other=2Ec
->> index 7f0d5a17b44f=2E=2Eb2daff1b45c2 100644
->> --- a/drivers/platform/x86/lenovo/wmi-other=2Ec
->> +++ b/drivers/platform/x86/lenovo/wmi-other=2Ec
->> @@ -42,9 +42,12 @@
->>  #include <linux/module=2Eh>
->>  #include <linux/notifier=2Eh>
->>  #include <linux/platform_profile=2Eh>
->> +#include <linux/power_supply=2Eh>
->>  #include <linux/types=2Eh>
->>  #include <linux/wmi=2Eh>
->> =20
->> +#include <acpi/battery=2Eh>
->> +
->>  #include "wmi-capdata=2Eh"
->>  #include "wmi-events=2Eh"
->>  #include "wmi-gamezone=2Eh"
->> @@ -78,10 +81,17 @@ enum lwmi_feature_id_gpu {
->>  	LWMI_FEATURE_ID_GPU_NV_CPU_BOOST =3D 0x0b,
->>  };
->> =20
->> +enum lwmi_feature_id_psu {
->> +	LWMI_FEATURE_ID_PSU_INSTANT_MODE =3D 0x01,
->> +	LWMI_FEATURE_ID_PSU_CHARGE_MODE =3D 0x02,
->
->I see no code referencing LWMI_FEATURE_ID_PSU_CHARGE_MODE=2E What's the
->mode for?
-
-It's another option exposed by some BIOS that is supposed to have similar =
-functionality=2E None of my devices support it properly so I removed it but=
- forgot to clean up this define=2E
-
->> +};
->> +
->>  #define LWMI_FEATURE_ID_FAN_RPM 0x03
->> =20
->>  #define LWMI_TYPE_ID_NONE 0x00
->>  #define LWMI_TYPE_ID_CROSSLOAD 0x01
->> +#define LWMI_TYPE_ID_PSU_AC 0x01
->> +#define LWMI_TYPE_ID_PSU_PD 0x02
->> =20
->>  #define LWMI_FEATURE_VALUE_GET 17
->>  #define LWMI_FEATURE_VALUE_SET 18
->> @@ -92,10 +102,17 @@ enum lwmi_feature_id_gpu {
->> =20
->>  #define LWMI_FAN_DIV 100
->> =20
->> +#define LWMI_CHARGE_MODE_ENABLED	0x00
->> +#define LWMI_CHARGE_MODE_DISABLED	0x01
->> +
->>  #define LWMI_ATTR_ID_FAN_RPM(x)                                   \
->>  	LWMI_ATTR_ID(LWMI_DEVICE_ID_FAN, LWMI_FEATURE_ID_FAN_RPM, \
->>  		     LWMI_GZ_THERMAL_MODE_NONE, LWMI_FAN_ID(x))
->> =20
->> +#define LWMI_ATTR_ID_PSU(feat, type)		\
->> +	LWMI_ATTR_ID(LWMI_DEVICE_ID_PSU, feat,		\
->> +		     LWMI_GZ_THERMAL_MODE_NONE, type)
->> +
->
->Unaligned backslashes=2E
->
->>  #define LWMI_OM_SYSFS_NAME "lenovo-wmi-other"
->>  #define LWMI_OM_HWMON_NAME "lenovo_wmi_other"
->> =20
->> @@ -137,6 +154,8 @@ struct lwmi_om_priv {
->>  		bool capdata00_collected : 1;
->>  		bool capdata_fan_collected : 1;
->>  	} fan_flags;
->> +
->> +	struct acpi_battery_hook battery_hook;
->>  };
->> =20
->>  /*
->> @@ -561,6 +580,216 @@ static void lwmi_om_fan_info_collect_cd_fan(struc=
-t device *dev, struct cd_list *
->>  	lwmi_om_hwmon_add(priv);
->>  }
->> =20
->> +/* =3D=3D=3D=3D=3D=3D=3D=3D Power Supply Extension (component: lenovo-=
-wmi-capdata 00) =3D=3D=3D=3D=3D=3D=3D=3D */
->> +
->> +/**
->> + * lwmi_psy_ext_get_prop() - Get a power_supply_ext property
->> + * @ps: The battery that was extended
->> + * @ext: The extension
->> + * @ext_data: Pointer the lwmi_om_priv drvdata
->> + * @prop: The property to read
->> + * @val: The value to return
->> + *
->> + * Writes the given value to the power_supply_ext property
->> + *
->> + * Return: 0 on success, or an error
->> + */
->> +static int lwmi_psy_ext_get_prop(struct power_supply *ps,
->> +				 const struct power_supply_ext *ext,
->> +				 void *ext_data,
->> +				 enum power_supply_property prop,
->> +				 union power_supply_propval *val)
->> +{
->> +	struct lwmi_om_priv *priv =3D ext_data;
->> +	struct wmi_method_args_32 args;
->> +	u32 retval;
->> +	int ret;
->> +
->> +	args=2Earg0 =3D LWMI_ATTR_ID_PSU(LWMI_FEATURE_ID_PSU_INSTANT_MODE, LW=
-MI_TYPE_ID_PSU_AC);
->> +
->> +	ret =3D lwmi_dev_evaluate_int(priv->wdev, 0x0, LWMI_FEATURE_VALUE_GET=
-,
->> +				    (unsigned char *)&args, sizeof(args),
->> +				    &retval);
->> +	if (ret)
->> +		return ret;
->> +
->> +	dev_dbg(&priv->wdev->dev, "Got return value %x for property %x\n", re=
-tval, prop);
->> +
->> +	if (retval =3D=3D LWMI_CHARGE_MODE_DISABLED)
->> +		val->intval =3D POWER_SUPPLY_CHARGE_TYPE_LONGLIFE;
->> +	else
->> +		val->intval =3D POWER_SUPPLY_CHARGE_TYPE_STANDARD;
->> +
->> +	return 0;
->> +}
->> +
->> +/**
->> + * lwmi_psy_ext_set_prop() - Set a power_supply_ext property
->> + * @ps: The battery that was extended
->> + * @ext: The extension
->> + * @ext_data: Pointer the lwmi_om_priv drvdata
->> + * @prop: The property to write
->> + * @val: The value to write
->> + *
->> + * Writes the given value to the power_supply_ext property
->> + *
->> + * Return: 0 on success, or an error
->> + */
->> +static int lwmi_psy_ext_set_prop(struct power_supply *ps,
->> +				 const struct power_supply_ext *ext,
->> +				 void *ext_data,
->> +				 enum power_supply_property prop,
->> +				 const union power_supply_propval *val)
->> +{
->> +	struct lwmi_om_priv *priv =3D ext_data;
->> +	struct wmi_method_args_32 args;
->> +
->> +	args=2Earg0 =3D LWMI_ATTR_ID_PSU(LWMI_FEATURE_ID_PSU_INSTANT_MODE, LW=
-MI_TYPE_ID_PSU_AC);
->> +	if (val->intval =3D=3D POWER_SUPPLY_CHARGE_TYPE_LONGLIFE)
->> +		args=2Earg1 =3D LWMI_CHARGE_MODE_DISABLED;
->> +	else
->> +		args=2Earg1 =3D LWMI_CHARGE_MODE_ENABLED;
->> +
->> +	dev_dbg(&priv->wdev->dev, "Attempting to set %#08x for property %x to=
- %x\n",
->> +		args=2Earg0, prop, args=2Earg1);
->> +
->> +	return lwmi_dev_evaluate_int(priv->wdev, 0x0, LWMI_FEATURE_VALUE_SET,
->> +				     (unsigned char *)&args, sizeof(args), NULL);
->> +}
->> +
->> +/**
->> + * lwmi_psy_prop_is_writeable() - Determine if the property is support=
-ed
->> + * @ps: The battery that was extended
->> + * @ext: The extension
->> + * @ext_data: Pointer the lwmi_om_priv drvdata
->> + * @prop: The property to check
->> + *
->> + * Checks capdata 00 to determine if the property is supported=2E
->> + *
->> + * Return: Support level, or false
->> + */
->> +static int lwmi_psy_prop_is_writeable(struct power_supply *ps,
->> +				      const struct power_supply_ext *ext,
->> +				      void *ext_data,
->> +				      enum power_supply_property prop)
->> +{
->> +	struct lwmi_om_priv *priv =3D ext_data;
->> +	struct capdata00 capdata;
->> +	u32 attribute_id =3D LWMI_ATTR_ID_PSU(LWMI_FEATURE_ID_PSU_INSTANT_MOD=
-E, LWMI_TYPE_ID_PSU_AC);
->> +	int ret;
->> +
->> +	ret =3D lwmi_cd00_get_data(priv->cd00_list, attribute_id, &capdata);
->> +	if (ret)
->> +		return false;
->> +
->> +	dev_dbg(&priv->wdev->dev, "Battery charge mode (%#08x) support level:=
- %x\n",
->> +		attribute_id, capdata=2Esupported);
->> +
->> +	return capdata=2Esupported;
->> +}
->> +
->> +static const enum power_supply_property lwmi_psy_ext_props[] =3D {
->> +	POWER_SUPPLY_PROP_CHARGE_TYPES,
->> +};
->> +
->> +static const struct power_supply_ext lwmi_psy_ext =3D {
->> +	=2Ename			=3D LWMI_OM_SYSFS_NAME,
->> +	=2Eproperties		=3D lwmi_psy_ext_props,
->> +	=2Enum_properties		=3D ARRAY_SIZE(lwmi_psy_ext_props),
->> +	=2Echarge_types		=3D (BIT(POWER_SUPPLY_CHARGE_TYPE_STANDARD) |
->> +				   BIT(POWER_SUPPLY_CHARGE_TYPE_LONGLIFE)),
->> +	=2Eget_property		=3D lwmi_psy_ext_get_prop,
->> +	=2Eset_property		=3D lwmi_psy_ext_set_prop,
->> +	=2Eproperty_is_writeable	=3D lwmi_psy_prop_is_writeable,
->> +};
->> +
->> +/**
->> + * lwmi_add_battery() - Connect the power_supply_ext
->> + * @battery: The battery to extend
->> + * @hook: The driver hook used to extend the battery
->> + *
->> + * Return: 0 on success, or an error=2E
->> + */
->> +static int lwmi_add_battery(struct power_supply *battery, struct acpi_=
-battery_hook *hook)
->> +{
->> +	struct lwmi_om_priv *priv =3D container_of(hook, struct lwmi_om_priv,=
- battery_hook);
->> +
->> +	return power_supply_register_extension(battery, &lwmi_psy_ext, &priv-=
->wdev->dev, priv);
->> +}
->> +
->> +/**
->> + * lwmi_remove_battery() - Disconnect the power_supply_ext
->> + * @battery: The battery that was extended
->> + * @hook: The driver hook used to extend the battery
->> + *
->> + * Return: 0 on success, or an error=2E
->> + */
->> +static int lwmi_remove_battery(struct power_supply *battery, struct ac=
-pi_battery_hook *hook)
->> +{
->> +	power_supply_unregister_extension(battery, &lwmi_psy_ext);
->> +	return 0;
->> +}
->> +
->> +/**
->> + * lwmi_acpi_match() - Attempts to return the ideapad acpi handle
->> + * @handle: The ACPI handle that manages battery charging
->> + * @lvl: Unused
->> + * @context: Void pointer to the acpi_handle object to return
->> + * @retval: Unused
->> + *
->> + * Checks if the ideapad_laptop driver is going to manage charge_type =
-first,
->> + * then if not, hooks the battery to our WMI methods=2E
->> + *
->> + * Return: AE_CTRL_TERMINATE if found, AE_OK if not found=2E
->> + */
->> +static acpi_status lwmi_acpi_match(acpi_handle handle, u32 lvl,
->> +				   void *context, void **retval)
->> +{
->> +	if (!handle)
->> +		return AE_OK;
->> +
->> +	acpi_handle *ahand =3D context;
->> +	*ahand =3D handle;
->> +
->> +	return AE_CTRL_TERMINATE;
->> +}
->> +
->> +/**
->> + * lwmi_om_ps_ext_init() - Hooks power supply extension to device batt=
-ery
->> + * @priv: Driver private data
->> + *
->> + * Checks if the ideapad_laptop driver is going to manage charge_type =
-first,
->> + * then if not, hooks the battery to our WMI methods=2E
->> + */
->> +static void lwmi_om_ps_ext_init(struct lwmi_om_priv *priv)
->> +{
->> +	static const char * const ideapad_hid =3D "VPC2004";
->> +	acpi_handle handle =3D NULL;
->> +	int ret;
->> +
->> +	/* Deconflict ideapad_laptop driver */
->> +	ret =3D acpi_get_devices(ideapad_hid, lwmi_acpi_match, &handle, NULL)=
+> diff --git a/drivers/platform/x86/lenovo/Kconfig b/drivers/platform/x86/l=
+enovo/Kconfig
+> index f885127b007f1..8357971c76d80 100644
+> --- a/drivers/platform/x86/lenovo/Kconfig
+> +++ b/drivers/platform/x86/lenovo/Kconfig
+> @@ -236,6 +236,7 @@ config YT2_1380
+>  config LENOVO_WMI_CAPDATA
+>  	tristate
+>  	depends on ACPI_WMI
+> +	depends on LENOVO_WMI_HELPERS
+> =20
+>  config LENOVO_WMI_EVENTS
+>  	tristate
+> diff --git a/drivers/platform/x86/lenovo/wmi-capdata.c b/drivers/platform=
+/x86/lenovo/wmi-capdata.c
+> index ee1fb02d8e31e..ca478b45119bc 100644
+> --- a/drivers/platform/x86/lenovo/wmi-capdata.c
+> +++ b/drivers/platform/x86/lenovo/wmi-capdata.c
+> @@ -32,6 +32,7 @@
+>  #include <linux/cleanup.h>
+>  #include <linux/component.h>
+>  #include <linux/container_of.h>
+> +#include <linux/debugfs.h>
+>  #include <linux/device.h>
+>  #include <linux/dev_printk.h>
+>  #include <linux/err.h>
+> @@ -43,11 +44,13 @@
+>  #include <linux/mutex_types.h>
+>  #include <linux/notifier.h>
+>  #include <linux/overflow.h>
+> +#include <linux/seq_file.h>
+>  #include <linux/stddef.h>
+>  #include <linux/types.h>
+>  #include <linux/wmi.h>
+> =20
+>  #include "wmi-capdata.h"
+> +#include "wmi-helpers.h"
+> =20
+>  #define LENOVO_CAPABILITY_DATA_00_GUID "362A3AFE-3D96-4665-8530-96DAD5BB=
+300E"
+>  #define LENOVO_CAPABILITY_DATA_01_GUID "7A8F5407-CB67-4D6E-B547-39B3BE01=
+8154"
+> @@ -88,6 +91,7 @@ struct lwmi_cd_priv {
+>  	struct notifier_block acpi_nb; /* ACPI events */
+>  	struct wmi_device *wdev;
+>  	struct cd_list *list;
+> +	struct dentry *debugfs_dir;
+> =20
+>  	/*
+>  	 * A capdata device may be a component master of another capdata device=
+.
+> @@ -118,6 +122,8 @@ struct cd_list {
+> =20
+>  static struct wmi_driver lwmi_cd_driver;
+> =20
+> +/* =3D=3D=3D=3D=3D=3D=3D=3D Device components =3D=3D=3D=3D=3D=3D=3D=3D *=
+/
+> +
+>  /**
+>   * lwmi_cd_match() - Match rule for the master driver.
+>   * @dev: Pointer to the capability data parent device.
+> @@ -471,6 +477,116 @@ EXPORT_SYMBOL_NS_GPL(lwmi_cd01_get_data, "LENOVO_WM=
+I_CAPDATA");
+>  DEF_LWMI_CDXX_GET_DATA(cd_fan, LENOVO_FAN_TEST_DATA, struct capdata_fan)=
 ;
->> +	if (ret)
->> +		return;
->> +
->> +	if (!handle)
->> +		return;
->
->I am a bit confused here=2E If VPC2004 is not found, handle should remain
->NULL=2E In this case we have no conflict, right?
->
->Thanks,
->Rong
->
->> +
->> +	if (acpi_has_method(handle, "GBMD") && acpi_has_method(handle, "SBMC"=
-)) {
->> +		dev_dbg(&priv->wdev->dev, "ideapad_laptop driver manages battery for=
- device=2E\n");
->> +		return;
->> +	}
->> +
->> +	/* Add battery hooks */
->> +	priv->battery_hook=2Eadd_battery	=3D lwmi_add_battery,
->> +	priv->battery_hook=2Eremove_battery	=3D lwmi_remove_battery,
->> +	priv->battery_hook=2Ename		=3D "Lenovo WMI Other Battery Extension",
->> +
->> +	ret =3D devm_battery_hook_register(&priv->wdev->dev, &priv->battery_h=
-ook);
->> +	if (ret)
->> +		dev_err(&priv->wdev->dev, "Error during battery hook: %i\n", ret);
->> +}
->> +
->>  /* =3D=3D=3D=3D=3D=3D=3D=3D fw_attributes (component: lenovo-wmi-capda=
-ta 01) =3D=3D=3D=3D=3D=3D=3D=3D */
->> =20
->>  struct tunable_attr_01 {
->> @@ -1325,6 +1554,7 @@ static int lwmi_om_master_bind(struct device *dev=
-)
->>  		return -ENODEV;
->> =20
->>  	lwmi_om_fan_info_collect_cd00(priv);
->> +	lwmi_om_ps_ext_init(priv);
->> =20
->>  	return lwmi_om_fw_attr_add(priv);
->>  }
+>  EXPORT_SYMBOL_NS_GPL(lwmi_cd_fan_get_data, "LENOVO_WMI_CAPDATA");
+> =20
+> +/* =3D=3D=3D=3D=3D=3D=3D=3D debugfs =3D=3D=3D=3D=3D=3D=3D=3D */
+> +
+> +/**
+> + * lwmi_cd00_show() - Dump capdata00
+> + * @s: Pointer to seq_file where the capdata00 is dumped.
+> + * @cd00: Pointer to a capdata00 struct to be dumped.
+> + */
+> +static void lwmi_cd00_show(struct seq_file *s, struct capdata00 *cd00)
+> +{
+> +	u8 dev =3D FIELD_GET(LWMI_ATTR_DEV_ID_MASK, cd00->id);
+> +	u8 feat =3D FIELD_GET(LWMI_ATTR_FEAT_ID_MASK, cd00->id);
+> +	u8 mode =3D FIELD_GET(LWMI_ATTR_MODE_ID_MASK, cd00->id);
+> +	u8 type =3D FIELD_GET(LWMI_ATTR_TYPE_ID_MASK, cd00->id);
+> +	bool extra =3D cd00->supported & ~(LWMI_SUPP_GET | LWMI_SUPP_SET | LWMI=
+_SUPP_VALID);
+> +	bool get =3D cd00->supported & LWMI_SUPP_GET;
+> +	bool set =3D cd00->supported & LWMI_SUPP_SET;
+> +	bool valid =3D cd00->supported & LWMI_SUPP_VALID;
+> +
+> +	seq_printf(s, "  id:             0x%08x [dev: %2u, feat: %2u, mode: %2u=
+, type: %2u]\n",
+> +		   cd00->id, dev, feat, mode, type);
+> +
+> +	seq_printf(s, "  supported:      0x%08x [%c%c%c%c]\n", cd00->supported,
+> +		   extra ? '+' : ' ',
+> +		   get   ? 'R' : ' ',
+> +		   set   ? 'W' : ' ',
+> +		   valid ? 'V' : ' ');
+> +
+> +	seq_printf(s, "  default_value:  %u\n", cd00->default_value);
+> +}
+> +
+> +/**
+> + * lwmi_cd01_show() - Dump capdata01
+> + * @s: Pointer to seq_file where the capdata01 is dumped.
+> + * @cd01: Pointer to a capdata01 struct to be dumped.
+> + */
+> +static void lwmi_cd01_show(struct seq_file *s, struct capdata01 *cd01)
+> +{
+> +	/* capdata01 is an extension to capdata00. */
+> +	lwmi_cd00_show(s, (struct capdata00 *)cd01);
+> +
+> +	seq_printf(s, "  step:           %u\n", cd01->step);
+> +	seq_printf(s, "  min_value:      %u\n", cd01->min_value);
+> +	seq_printf(s, "  max_value:      %u\n", cd01->max_value);
+> +}
+> +
+> +/**
+> + * lwmi_cd_fan_show() - Dump capdata_fan
+> + * @s: Pointer to seq_file where the capdata_fan is dumped.
+> + * @cd_fan: Pointer to a capdata_fan struct to be dumped.
+> + */
+> +static void lwmi_cd_fan_show(struct seq_file *s, struct capdata_fan *cd_=
+fan)
+> +{
+> +	seq_printf(s, "  id:             %u\n", cd_fan->id);
+> +	seq_printf(s, "  min_rpm:        %u\n", cd_fan->min_rpm);
+> +	seq_printf(s, "  max_rpm:        %u\n", cd_fan->max_rpm);
+> +}
+> +
+> +/**
+> + * lwmi_cd_debugfs_show() - Dump capability data to debugfs
+> + * @s: Pointer to seq_file where the capability data is dumped.
+> + * @data: unused.
+> + *
+> + * Return: 0
+> + */
+> +static int lwmi_cd_debugfs_show(struct seq_file *s, void *data)
+> +{
+> +	struct lwmi_cd_priv *priv =3D s->private;
+> +	u8 idx;
+> +
+> +	guard(mutex)(&priv->list->list_mutex);
+> +
+> +	/* lwmi_cd_alloc() ensured priv->list->type must be a valid type. */
+> +	for (idx =3D 0; idx < priv->list->count; idx++) {
+> +		seq_printf(s, "%s[%u]:\n", lwmi_cd_table[priv->list->type].name, idx);
+> +
+> +		if (priv->list->type =3D=3D LENOVO_CAPABILITY_DATA_00)
+> +			lwmi_cd00_show(s, &priv->list->cd00[idx]);
+> +		else if (priv->list->type =3D=3D LENOVO_CAPABILITY_DATA_01)
+> +			lwmi_cd01_show(s, &priv->list->cd01[idx]);
+> +		else if (priv->list->type =3D=3D LENOVO_FAN_TEST_DATA)
+> +			lwmi_cd_fan_show(s, &priv->list->cd_fan[idx]);
+> +	}
+> +
+> +	return 0;
+> +}
+> +DEFINE_SHOW_ATTRIBUTE(lwmi_cd_debugfs);
+> +
+> +/**
+> + * lwmi_cd_debugfs_add() - Create debugfs directory and files for a devi=
+ce
+> + * @priv: lenovo-wmi-capdata driver data.
+> + */
+> +static void lwmi_cd_debugfs_add(struct lwmi_cd_priv *priv)
+> +{
+> +	priv->debugfs_dir =3D lwmi_debugfs_create_dir(priv->wdev);
+> +
+> +	debugfs_create_file("capdata", 0444, priv->debugfs_dir, priv, &lwmi_cd_=
+debugfs_fops);
+> +}
+> +
+> +/**
+> + * lwmi_cd_debugfs_remove() - Remove debugfs directory for a device
+> + * @priv: lenovo-wmi-capdata driver data.
+> + */
+> +static void lwmi_cd_debugfs_remove(struct lwmi_cd_priv *priv)
+> +{
+> +	debugfs_remove_recursive(priv->debugfs_dir);
+> +	priv->debugfs_dir =3D NULL;
+> +}
+> +
+> +/* =3D=3D=3D=3D=3D=3D=3D=3D WMI interface =3D=3D=3D=3D=3D=3D=3D=3D */
+> +
+>  /**
+>   * lwmi_cd_cache() - Cache all WMI data block information
+>   * @priv: lenovo-wmi-capdata driver data.
+> @@ -773,6 +889,8 @@ static int lwmi_cd_probe(struct wmi_device *wdev, con=
+st void *context)
+>  		dev_err(&wdev->dev, "failed to register %s: %d\n",
+>  			info->name, ret);
+>  	} else {
+> +		lwmi_cd_debugfs_add(priv);
+> +
+>  		dev_dbg(&wdev->dev, "registered %s with %u items\n",
+>  			info->name, priv->list->count);
+>  	}
+> @@ -783,6 +901,8 @@ static void lwmi_cd_remove(struct wmi_device *wdev)
+>  {
+>  	struct lwmi_cd_priv *priv =3D dev_get_drvdata(&wdev->dev);
+> =20
+> +	lwmi_cd_debugfs_remove(priv);
+> +
+>  	switch (priv->list->type) {
+>  	case LENOVO_CAPABILITY_DATA_00:
+>  		lwmi_cd_sub_master_del(priv);
+> @@ -822,6 +942,7 @@ static struct wmi_driver lwmi_cd_driver =3D {
+> =20
+>  module_wmi_driver(lwmi_cd_driver);
+> =20
+> +MODULE_IMPORT_NS("LENOVO_WMI_HELPERS");
+>  MODULE_DEVICE_TABLE(wmi, lwmi_cd_id_table);
+>  MODULE_AUTHOR("Derek J. Clark <derekjohn.clark@gmail.com>");
+>  MODULE_AUTHOR("Rong Zhang <i@rong.moe>");
+> diff --git a/drivers/platform/x86/lenovo/wmi-capdata.h b/drivers/platform=
+/x86/lenovo/wmi-capdata.h
+> index 8c1df3efcc553..034a6e48be071 100644
+> --- a/drivers/platform/x86/lenovo/wmi-capdata.h
+> +++ b/drivers/platform/x86/lenovo/wmi-capdata.h
+> @@ -30,9 +30,7 @@ struct capdata00 {
+>  };
+> =20
+>  struct capdata01 {
+> -	u32 id;
+> -	u32 supported;
+> -	u32 default_value;
+> +	struct capdata00;
+>  	u32 step;
+>  	u32 min_value;
+>  	u32 max_value;
+
+
+--=20
+Thanks,
+ ~ Kurt
 
