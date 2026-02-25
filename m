@@ -1,387 +1,368 @@
-Received: from mail-dy1-f176.google.com (mail-dy1-f176.google.com [74.125.82.176])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from sender4-op-o15.zoho.com (sender4-op-o15.zoho.com [136.143.188.15])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C9ACE3A1A45
-	for <platform-driver-x86@vger.kernel.org>; Wed, 25 Feb 2026 18:28:42 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=74.125.82.176
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1772044124; cv=none; b=Afpy94ceFrfvOAYjJ8Tm7JE+AveS1an6j2bc0flimsAn0NOvKn5JBKjg41/PrFSaX1uywhDK3adz0vlgnIeey8A3zXmFM++3QFspBYV6Z0vvHYX4vGDSRc1dWtHmRGBjSJSEAlfRcjTRBQVno7m5O02/Ej20Bz+wie/etQFaN3k=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1772044124; c=relaxed/simple;
-	bh=EKGNQblCTrM8yNIQxtP3tW9uFVx3Gb5XGlLX2hIE6Eo=;
-	h=Date:From:To:CC:Subject:In-Reply-To:References:Message-ID:
-	 MIME-Version:Content-Type; b=sMi8p2Pe5Iie+xYFfhIht3HXCft5J6BH4dkd+uRsRu5PsOStIy6WBHARRIKVJOYJqC9s4EfR2ifn8RbFhNo55fzFNbLibSjobBrcgaVU/e6LumgytrENT1QS40vB/RXpoXhxsVgCNUMZ7bSUBfeyPekODbyzMrVKngVNJEcG0p4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=l9l4ORU8; arc=none smtp.client-ip=74.125.82.176
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BD2083ED11D;
+	Wed, 25 Feb 2026 18:39:16 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=136.143.188.15
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1772044759; cv=pass; b=ZMLBgFHdc6PSoiL8P5tuddtz158kjT3jM1qHAfn0jIryDGvgCDZ/JAWnWWMrpmGm7A2LvTIg2MSMx+R4+lHb/rsgtZnfEQspA0ebOyyKw909cXPyTTGPZIwLEg2QkCWQ7ToKmxp/7rpH9zzzZ+H/HM/Bn8ZF4ICTgKYScwMKlyc=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1772044759; c=relaxed/simple;
+	bh=1XsTpEFvxkipGhqQo1mrEBmu3ii0s1bCuUVQ9VGcxMc=;
+	h=Message-ID:Subject:From:To:Cc:In-Reply-To:References:Content-Type:
+	 Date:MIME-Version; b=ebKEkBgU92abKo3QEDV+aD5AT0zgdBaB6XTY1TjF4ZOIO86n/HJxiM3/ox77iI7MxfuDWSyBGBI3+ZwycydmNEGKftCYpw1w0+m0E6oANuW3PSFeh7eKeG10IVYyeHIMaeLNo6c5QJNu565NLH4JYnjEGSSR0vJJBIzUXMCZEqE=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=rong.moe; spf=pass smtp.mailfrom=rong.moe; dkim=pass (2048-bit key) header.d=rong.moe header.i=i@rong.moe header.b=YaZM+GdX; arc=pass smtp.client-ip=136.143.188.15
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=rong.moe
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=rong.moe
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="l9l4ORU8"
-Received: by mail-dy1-f176.google.com with SMTP id 5a478bee46e88-2ba6aa57d5fso6626290eec.1
-        for <platform-driver-x86@vger.kernel.org>; Wed, 25 Feb 2026 10:28:42 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1772044122; x=1772648922; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:references
-         :in-reply-to:user-agent:subject:cc:to:from:date:from:to:cc:subject
-         :date:message-id:reply-to;
-        bh=1jCiA+Oy5t6uMS+QrrihtlPt/gqQhS8m2TEmNyPnDKM=;
-        b=l9l4ORU8XAOWNXF6oc66CGZBU99WMuJQtEIxKTH5JMcJDlVKSLNCFZzMFfg6TLcwcg
-         CLg7XfVBUZKEEe/WQmoEe4ARoGCpjzho24BXSA7/7jAQ95iuk3t/02X3kaBbyDxkGBrJ
-         RxQncikq3v5xhSEDiHA2NVYoYpVZPjivlWnUSPBiaJU7HM5j5s83RofF5By/AcQ7q5RR
-         6Ik+n3SqZ8C4EtViZORZHpY3kxcHYKJSPpQU2kjaFLj3iVNrz0ftW88XPj6pCXnnfkV6
-         FwP4ZUoCmj7uudOoV9OSjnMqbpKHz0otrrVJQ56z0r3jvvizn2v7QCvacp6Nd9UYCFFQ
-         PmrA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1772044122; x=1772648922;
-        h=content-transfer-encoding:mime-version:message-id:references
-         :in-reply-to:user-agent:subject:cc:to:from:date:x-gm-gg
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=1jCiA+Oy5t6uMS+QrrihtlPt/gqQhS8m2TEmNyPnDKM=;
-        b=aPj2rgKlKLDhWUca/cLKHndzFASFRyHZ8SPFSEAst7NtEH+1/ccBsTHcaUfaztBm+S
-         obuf2JB+00jUXnVCU4q8tnDLfMY54WIZV9se7OJidj13Vkfkuki0+arj8UxMWhvld9+Z
-         5W8K0jUE5MEVd32yP5stNi3Rmvi1UOFI+o4K8z23la0zA4uulu/haey6gj0e9lAJesUy
-         HRkCVOzNpBM2xeXX6PRGLkq8keKPTk7TByiTOSPSiZ1I/fCoMxGKQxTdBF1Oq6ZPr9dI
-         1o/zTh9hHeE1IWUthyEvxY3n6bsUjJiZCfrU/WiRxwLvWZTn7QQu9EdWkQJU8ZL6Lodi
-         QCow==
-X-Forwarded-Encrypted: i=1; AJvYcCVhbrmEm8RsVoJwJTfYf2IQP7qkQisOGbc4zxHekUH+uKrZQcjSFn101V7P28qM52yczNMJ9LUkNvG6a5GUbqkV0FaH@vger.kernel.org
-X-Gm-Message-State: AOJu0YysqHaKe7j7k0YqU0k/eXZo4WFOA3SscNyp/wlT68qjJwXKGsSb
-	rQEYuHNoaMv4uJ9mniFopOHY8nNWSe47oMHqWRLZiCsDEJijrZ41YIxz
-X-Gm-Gg: ATEYQzz56448eEk+0B5Pmxsr0X9zTACa4eGnaJbJ+8Le5Uj1XX9KyrloxX/p1FEuTtH
-	xa78HUKjYYTYUo/NL3gf5WEfyHBqlDIfAVwQ3TMtpwrBEdcF7VOmjU7vLcwdc7CLuykNOhOIO6J
-	KB/3Ll7v2RTIxAtS7aDU0EbtdWSlXEzzzurFeYpj7gp6wUBPbXdef3UsanPoJUn24dD5GfSwGp9
-	dkbPrcRgGGbN33qvUybRVq0y+qTiqxf8PPW7Pdp4ueEIkSziR7MuEWUvrJeffsjvJbMx0Nn9vEr
-	E9Kp3NyjtmbWtiunBtqLHcD1g2CC1DQZzyCRVUawMdwRWr2dAwEW91lex6tWV1R0CUwqjBvjmrU
-	dIXbET2WmBYhQp7uKD++x6YJZHDByjRiXkZthdfGeRKGwhKRKCY0I470PZZm1KLkZL6ytBSq5fi
-	FULfI7OyRDljAKaUf8dKezfJKtBbj3JpsIISL+L/GmXp3HlbnoVqykBM+zkDYaVZeSRJDs1/dlG
-	H4fyqeM5PtMOykQr+BBAQ==
-X-Received: by 2002:a05:7300:cb11:b0:2b8:209d:5983 with SMTP id 5a478bee46e88-2bdcc075ec6mr521208eec.29.1772044121882;
-        Wed, 25 Feb 2026 10:28:41 -0800 (PST)
-Received: from ehlo.thunderbird.net (108-228-232-20.lightspeed.sndgca.sbcglobal.net. [108.228.232.20])
-        by smtp.gmail.com with ESMTPSA id 5a478bee46e88-2bd7daa027fsm11180985eec.9.2026.02.25.10.28.41
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 25 Feb 2026 10:28:41 -0800 (PST)
-Date: Wed, 25 Feb 2026 10:28:43 -0800
-From: "Derek J. Clark" <derekjohn.clark@gmail.com>
-To: Rong Zhang <i@rong.moe>
-CC: Kurt Borja <kuurtb@gmail.com>, Mark Pearson <mpearson-lenovo@squebb.ca>,
- Armin Wolf <W_Armin@gmx.de>, Hans de Goede <hansg@kernel.org>,
- =?ISO-8859-1?Q?Ilpo_J=E4rvinen?= <ilpo.jarvinen@linux.intel.com>,
- platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: =?US-ASCII?Q?Re=3A_=5BPATCH_2/2=5D_platform/x86=3A_lenovo-wmi-ca?=
- =?US-ASCII?Q?pdata=3A_Add_debugfs_file_for_dumping_capdata?=
-User-Agent: Thunderbird for Android
-In-Reply-To: <c557a3646d43fce65c51c0061443386699f1f320.camel@rong.moe>
-References: <20260210191938.137234-1-i@rong.moe> <20260210191938.137234-3-i@rong.moe> <34161A06-2732-4819-B986-4B471B98EF44@gmail.com> <c557a3646d43fce65c51c0061443386699f1f320.camel@rong.moe>
-Message-ID: <48AF1724-9E89-465E-A6C7-E8F903144529@gmail.com>
+	dkim=pass (2048-bit key) header.d=rong.moe header.i=i@rong.moe header.b="YaZM+GdX"
+ARC-Seal: i=1; a=rsa-sha256; t=1772044745; cv=none; 
+	d=zohomail.com; s=zohoarc; 
+	b=hgk2NUWRO5hM9zmRCgdQ0PM+WLwwRaGro5Om80iR2l5gjgzzxKuHddIFq2HcospUuqTMtKs7ZzjZHQ+XbY4Nmg+FutiHNXldDOifdsfL4HmZOCko+o1Ik6o2PrueW8aZ9WNx/I23v8iztJrmeXJ5DmFQkKBYjuqyfd45guJDmUI=
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=zohomail.com; s=zohoarc; 
+	t=1772044745; h=Content-Type:Content-Transfer-Encoding:Cc:Cc:Date:Date:From:From:In-Reply-To:MIME-Version:Message-ID:References:Subject:Subject:To:To:Message-Id:Reply-To; 
+	bh=Y0RPu1ErzzYerERm5INgE3jJSZFWT5v5+fQ2w5soeT4=; 
+	b=DClO4cTr6N79GJByssRQl627jYa4zzC7ZHg0R3jBv1dhaodQ7y5qUzGBvnGQHtLVeiPgwGA/KqbytplvcnHXiGx4BORvRrGR3c/B6Ej2mWhHP5jhVAylwaWM7FAUdahBPsuCmWP+KqjxGcSXZtyiNVh711gucaUeOsYLceapv0g=
+ARC-Authentication-Results: i=1; mx.zohomail.com;
+	dkim=pass  header.i=rong.moe;
+	spf=pass  smtp.mailfrom=i@rong.moe;
+	dmarc=pass header.from=<i@rong.moe>
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; t=1772044745;
+	s=zmail2048; d=rong.moe; i=i@rong.moe;
+	h=Message-ID:Subject:Subject:From:From:To:To:Cc:Cc:In-Reply-To:References:Content-Type:Content-Transfer-Encoding:Date:Date:MIME-Version:Message-Id:Reply-To;
+	bh=Y0RPu1ErzzYerERm5INgE3jJSZFWT5v5+fQ2w5soeT4=;
+	b=YaZM+GdXt3jf3gIP2485ApCKNXL+6t+oN2cW/PDCOTxKH4VAd7bFp9+xyX8mb+ge
+	yCKgOWyeu0ih9Q73DvC/hhM+MepvP3SXOZ6+E0wLbhk5vgu+hHuN3/F4+pGQ6VYzEMb
+	Qss3f/TLZx88riDBFaIpRzb7rauubB8Xywh0GqppTPjOiYLfLKwFd+SM/JARkGkXn/B
+	7c9Hjvh8+RUFVu4i6j0YzC3AUMjnJ7SDckjUzX8bZR4UO3eoRFfv97SdgF2jmHoYJHN
+	rXSsuo0x0wir/1zGinNr6GSYd7JG4jPhPolA1WITWXpIFFxVMAVC6F6RuBbOcRaI6p+
+	3NmFZc+OwQ==
+Received: by mx.zohomail.com with SMTPS id 1772044744082650.8700241248469;
+	Wed, 25 Feb 2026 10:39:04 -0800 (PST)
+Message-ID: <c8da7583f184b39d08cb6579de0f74aa72130083.camel@rong.moe>
+Subject: Re: [PATCH v3 2/6] platform/x86: lenovo-wmi-other: Limit adding
+ attributes to supported devices
+From: Rong Zhang <i@rong.moe>
+To: "Derek J. Clark" <derekjohn.clark@gmail.com>, Ilpo
+ =?ISO-8859-1?Q?J=E4rvinen?= <ilpo.jarvinen@linux.intel.com>, Hans de Goede
+ <hansg@kernel.org>
+Cc: Mark Pearson <mpearson-lenovo@squebb.ca>, Armin Wolf <W_Armin@gmx.de>, 
+ Jonathan Corbet
+	 <corbet@lwn.net>, Kurt Borja <kuurtb@gmail.com>, 
+	platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
+In-Reply-To: <F8B109A3-BC8C-4F7C-9790-FC6A841B5B7D@gmail.com>
+References: <20260224043200.2680384-1-derekjohn.clark@gmail.com>
+	 <20260224043200.2680384-3-derekjohn.clark@gmail.com>
+	 <4544a2214c9851d2cf0c5515245d9b0a08e942b4.camel@rong.moe>
+	 <F8B109A3-BC8C-4F7C-9790-FC6A841B5B7D@gmail.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+Date: Thu, 26 Feb 2026 02:33:56 +0800
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain;
- charset=utf-8
-Content-Transfer-Encoding: quoted-printable
+User-Agent: Evolution 3.56.2-8 
+X-ZohoMailClient: External
 
-On February 11, 2026 3:47:03 AM PST, Rong Zhang <i@rong=2Emoe> wrote:
->Hi Derek,
->
->On Tue, 2026-02-10 at 12:38 -0800, Derek J=2E Clark wrote:
->> On February 10, 2026 11:19:37 AM PST, Rong Zhang <i@rong=2Emoe> wrote:
->> > The Lenovo GameZone/Other interfaces have some delicate divergences
->> > among different devices=2E When making a bug report or adding support=
- for
->> > new devices/interfaces, capdata is the most important information to
->> > cross-check with=2E
->> >=20
->> > Add a debugfs file (lenovo_wmi/<device_name>/capdata), so that users =
-can
->> > dump capdata and include it in their reports=2E
->> >=20
->> > Since `struct capdata01' is just an extension to `struct capdata00',
->> > also converts the former to include the latter anonymously
->> > (-fms-extensions, since v6=2E19)=2E In this manner type casting won't=
- be
->> > confusing=2E
->> >=20
->> > Signed-off-by: Rong Zhang <i@rong=2Emoe>
->> > ---
->> > drivers/platform/x86/lenovo/Kconfig       |   1 +
->> > drivers/platform/x86/lenovo/wmi-capdata=2Ec | 121 +++++++++++++++++++=
-+++
->> > drivers/platform/x86/lenovo/wmi-capdata=2Eh |   4 +-
->> > 3 files changed, 123 insertions(+), 3 deletions(-)
->> >=20
->> > diff --git a/drivers/platform/x86/lenovo/Kconfig b/drivers/platform/x=
-86/lenovo/Kconfig
->> > index f885127b007f1=2E=2E8357971c76d80 100644
->> > --- a/drivers/platform/x86/lenovo/Kconfig
->> > +++ b/drivers/platform/x86/lenovo/Kconfig
->> > @@ -236,6 +236,7 @@ config YT2_1380
->> > config LENOVO_WMI_CAPDATA
->> > 	tristate
->> > 	depends on ACPI_WMI
->> > +	depends on LENOVO_WMI_HELPERS
->> >=20
->> > config LENOVO_WMI_EVENTS
->> > 	tristate
->> > diff --git a/drivers/platform/x86/lenovo/wmi-capdata=2Ec b/drivers/pl=
-atform/x86/lenovo/wmi-capdata=2Ec
->> > index ee1fb02d8e31e=2E=2Eca478b45119bc 100644
->> > --- a/drivers/platform/x86/lenovo/wmi-capdata=2Ec
->> > +++ b/drivers/platform/x86/lenovo/wmi-capdata=2Ec
->> > @@ -32,6 +32,7 @@
->> > #include <linux/cleanup=2Eh>
->> > #include <linux/component=2Eh>
->> > #include <linux/container_of=2Eh>
->> > +#include <linux/debugfs=2Eh>
->> > #include <linux/device=2Eh>
->> > #include <linux/dev_printk=2Eh>
->> > #include <linux/err=2Eh>
->> > @@ -43,11 +44,13 @@
->> > #include <linux/mutex_types=2Eh>
->> > #include <linux/notifier=2Eh>
->> > #include <linux/overflow=2Eh>
->> > +#include <linux/seq_file=2Eh>
->> > #include <linux/stddef=2Eh>
->> > #include <linux/types=2Eh>
->> > #include <linux/wmi=2Eh>
->> >=20
->> > #include "wmi-capdata=2Eh"
->> > +#include "wmi-helpers=2Eh"
->> >=20
->> > #define LENOVO_CAPABILITY_DATA_00_GUID "362A3AFE-3D96-4665-8530-96DAD=
-5BB300E"
->> > #define LENOVO_CAPABILITY_DATA_01_GUID "7A8F5407-CB67-4D6E-B547-39B3B=
-E018154"
->> > @@ -88,6 +91,7 @@ struct lwmi_cd_priv {
->> > 	struct notifier_block acpi_nb; /* ACPI events */
->> > 	struct wmi_device *wdev;
->> > 	struct cd_list *list;
->> > +	struct dentry *debugfs_dir;
->> >=20
->> > 	/*
->> > 	 * A capdata device may be a component master of another capdata dev=
-ice=2E
->> > @@ -118,6 +122,8 @@ struct cd_list {
->> >=20
->> > static struct wmi_driver lwmi_cd_driver;
->> >=20
->> > +/* =3D=3D=3D=3D=3D=3D=3D=3D Device components =3D=3D=3D=3D=3D=3D=3D=
-=3D */
->> > +
->> > /**
->> >  * lwmi_cd_match() - Match rule for the master driver=2E
->> >  * @dev: Pointer to the capability data parent device=2E
->> > @@ -471,6 +477,116 @@ EXPORT_SYMBOL_NS_GPL(lwmi_cd01_get_data, "LENOV=
-O_WMI_CAPDATA");
->> > DEF_LWMI_CDXX_GET_DATA(cd_fan, LENOVO_FAN_TEST_DATA, struct capdata_f=
-an);
->> > EXPORT_SYMBOL_NS_GPL(lwmi_cd_fan_get_data, "LENOVO_WMI_CAPDATA");
->> >=20
->> > +/* =3D=3D=3D=3D=3D=3D=3D=3D debugfs =3D=3D=3D=3D=3D=3D=3D=3D */
->> > +
->> > +/**
->> > + * lwmi_cd00_show() - Dump capdata00
->> > + * @s: Pointer to seq_file where the capdata00 is dumped=2E
->> > + * @cd00: Pointer to a capdata00 struct to be dumped=2E
->> > + */
->> > +static void lwmi_cd00_show(struct seq_file *s, struct capdata00 *cd0=
+Hi Derek,
+
+On Wed, 2026-02-25 at 10:09 -0800, Derek J. Clark wrote:
+> On February 25, 2026 9:14:12 AM PST, Rong Zhang <i@rong.moe> wrote:
+> > Hi Derek,
+> >=20
+> > On Tue, 2026-02-24 at 04:31 +0000, Derek J. Clark wrote:
+> > > Adds lwmi_is_attr_01_supported, and only creates the attribute subfol=
+der
+> > > if the attribute is supported by the hardware. Due to some poorly
+> > > implemented BIOS, this is a multi-step sequence of events. This is
+> > > because:
+> > > - Some BIOS support getting the capability data from custom mode (0xf=
+f),
+> > >   while others only support it in no-mode (0x00).
+> > > - Similarly, some BIOS support get/set for the current value from cus=
+tom
+> > >   mode (0xff), while others only support it in no-mode (0x00).
+> > > - Some BIOS report capability data for a method that is not fully
+> > >   implemented.
+> > > - Some BIOS have methods fully implemented, but no complimentary
+> > >   capability data.
+> > >=20
+> > > To ensure we only expose fully implemented methods with corresponding
+> > > capability data, we check each outcome before reporting that an
+> > > attribute can be supported.
+> > >=20
+> > > Checking for lwmi_is_attr_01_supported during remove is not done to
+> > > ensure that we don't attempt to call cd01 or send WMI events if one o=
+f
+> > > the interfaces being removed was the cause of the driver unloading.
+> > >=20
+> > > While adding members to tunable_attr_01, remove unused capdata pointe=
+r
+> > > and limit size of all ID's to the appropriate size.
+> > >=20
+> > > Reviewed-by: Mark Pearson <mpearson-lenovo@squebb.ca>
+> > > Reported-by: Kurt Borja <kuurtb@gmail.com>
+> > > Closes: https://lore.kernel.org/platform-driver-x86/DG60P3SHXR8H.3NSE=
+HMZ6J7XRC@gmail.com/
+> > > Signed-off-by: Derek J. Clark <derekjohn.clark@gmail.com>
+> > > ---
+> > >  drivers/platform/x86/lenovo/wmi-other.c | 117 +++++++++++++++++++++-=
+--
+> > >  1 file changed, 102 insertions(+), 15 deletions(-)
+> > >=20
+> > > diff --git a/drivers/platform/x86/lenovo/wmi-other.c b/drivers/platfo=
+rm/x86/lenovo/wmi-other.c
+> > > index 95886df39c8d..f3f12303e379 100644
+> > > --- a/drivers/platform/x86/lenovo/wmi-other.c
+> > > +++ b/drivers/platform/x86/lenovo/wmi-other.c
+> > > @@ -545,11 +545,12 @@ static void lwmi_om_fan_info_collect_cd_fan(str=
+uct device *dev, struct cd_list *
+> > >  /* =3D=3D=3D=3D=3D=3D=3D=3D fw_attributes (component: lenovo-wmi-cap=
+data 01) =3D=3D=3D=3D=3D=3D=3D=3D */
+> > > =20
+> > >  struct tunable_attr_01 {
+> > > -	struct capdata01 *capdata;
+> > >  	struct device *dev;
+> > > -	u32 feature_id;
+> > > -	u32 device_id;
+> > > -	u32 type_id;
+> > > +	u8 feature_id;
+> > > +	u8 device_id;
+> > > +	u8 type_id;
+> > > +	u8 cd_mode_id; /* mode arg for searching capdata */
+> > > +	u8 cv_mode_id; /* mode arg for set/get current_value */
+> > >  };
+> > > =20
+> > >  static struct tunable_attr_01 ppt_pl1_spl =3D {
+> > > @@ -716,7 +717,7 @@ static ssize_t attr_capdata01_show(struct kobject=
+ *kobj,
+> > >  	int value, ret;
+> > > =20
+> > >  	attribute_id =3D LWMI_ATTR_ID(tunable_attr->device_id, tunable_attr=
+->feature_id,
+> > > -				    LWMI_GZ_THERMAL_MODE_CUSTOM, tunable_attr->type_id);
+> > > +				    tunable_attr->cd_mode_id, tunable_attr->type_id);
+> > > =20
+> > >  	ret =3D lwmi_cd01_get_data(priv->cd01_list, attribute_id, &capdata)=
+;
+> > >  	if (ret)
+> > > @@ -782,7 +783,7 @@ static ssize_t attr_current_value_store(struct ko=
+bject *kobj,
+> > >  		return -EBUSY;
+> > > =20
+> > >  	args.arg0 =3D LWMI_ATTR_ID(tunable_attr->device_id, tunable_attr->f=
+eature_id,
+> > > -				 mode, tunable_attr->type_id);
+> > > +				 tunable_attr->cd_mode_id, tunable_attr->type_id);
+> > > =20
+> > >  	ret =3D lwmi_cd01_get_data(priv->cd01_list, args.arg0, &capdata);
+> > >  	if (ret)
+> > > @@ -795,6 +796,8 @@ static ssize_t attr_current_value_store(struct ko=
+bject *kobj,
+> > >  	if (value < capdata.min_value || value > capdata.max_value)
+> > >  		return -EINVAL;
+> > > =20
+> > > +	args.arg0 =3D LWMI_ATTR_ID(tunable_attr->device_id, tunable_attr->f=
+eature_id,
+> > > +				 tunable_attr->cv_mode_id, tunable_attr->type_id);
+> > >  	args.arg1 =3D value;
+> > > =20
+> > >  	ret =3D lwmi_dev_evaluate_int(priv->wdev, 0x0, LWMI_FEATURE_VALUE_S=
+ET,
+> > > @@ -828,13 +831,16 @@ static ssize_t attr_current_value_show(struct k=
+object *kobj,
+> > >  	struct lwmi_om_priv *priv =3D dev_get_drvdata(tunable_attr->dev);
+> > >  	struct wmi_method_args_32 args;
+> > >  	enum thermal_mode mode;
+> > > -	int retval;
+> > > -	int ret;
+> > > +	int retval, ret;
+> > > =20
+> > >  	ret =3D lwmi_om_notifier_call(&mode);
+> > >  	if (ret)
+> > >  		return ret;
+> > > =20
+> > > +	/* If "no-mode" is the supported mode, ensure we never send current=
+ mode */
+> > > +	if (tunable_attr->cv_mode_id =3D=3D LWMI_GZ_THERMAL_MODE_NONE)
+> > > +		mode =3D tunable_attr->cv_mode_id;
+> > > +
+> > >  	args.arg0 =3D LWMI_ATTR_ID(tunable_attr->device_id, tunable_attr->f=
+eature_id,
+> > >  				 mode, tunable_attr->type_id);
+> > > =20
+> > > @@ -847,6 +853,85 @@ static ssize_t attr_current_value_show(struct ko=
+bject *kobj,
+> > >  	return sysfs_emit(buf, "%d\n", retval);
+> > >  }
+> > > =20
+> > > +/**
+> > > + * lwmi_attr_01_is_supported() - Determine if the given attribute is=
+ supported.
+> > > + * @tunable_attr: The attribute to verify.
+> > > + *
+> > > + * First check if the attribute has a corresponding capdata01 table =
+in the cd01
+> > > + * module under the "custom" mode (0xff). If that is not present the=
+n check if
+> > > + * there is a corresponding "no-mode" (0x00) entry. If either of tho=
+se passes,
+> > > + * check capdata->supported for values > 0. If capdata is available,=
+ attempt to
+> > > + * determine the set/get mode for the current value property using a=
+ similar
+> > > + * pattern. If the value returned by either custom or no-mode is 0, =
+or we get
+> > > + * an error, we assume that mode is not supported. If any of the abo=
+ve checks
+> > > + * fail then the attribute is not fully supported.
+> > > + *
+> > > + * The probed cd_mode_id/cv_mode_id are stored on the tunable_attr f=
+or later
+> > > + * reference.
+> > > + *
+> > > + * Return: Support level, or an error code.
+> > > + */
+> > > +static int lwmi_attr_01_is_supported(struct tunable_attr_01 *tunable=
+_attr)
+> > > +{
+> > > +	struct lwmi_om_priv *priv =3D dev_get_drvdata(tunable_attr->dev);
+> > > +	u8 mode =3D LWMI_GZ_THERMAL_MODE_CUSTOM;
+> > > +	struct wmi_method_args_32 args;
+> > > +	struct capdata01 capdata;
+> > > +	int retval, ret;
+> > > +
+> > > +	/* Determine tunable_attr->cd_mode_id */
+> > > +no_mode_fallback_1:
+> > > +	args.arg0 =3D LWMI_ATTR_ID(tunable_attr->device_id, tunable_attr->f=
+eature_id,
+> > > +				 mode, tunable_attr->type_id);
+> > > +
+> > > +	ret =3D lwmi_cd01_get_data(priv->cd01_list, args.arg0, &capdata);
+> > > +	if (ret && mode) {
+> > > +		dev_dbg(tunable_attr->dev, "Attribute id %x not supported\n", args=
+.arg0);
+> > > +		mode =3D LWMI_GZ_THERMAL_MODE_NONE;
+> > > +		goto no_mode_fallback_1;
+> > > +	}
+> > > +	if (ret)
+> > > +		goto not_supported;
+> > > +	if (!capdata.supported) {
+> > > +		ret =3D -EOPNOTSUPP;
+> > > +		goto not_supported;
+> > > +	}
+> > > +
+> > > +	tunable_attr->cd_mode_id =3D mode;
+> > > +
+> > > +	/* Determine tunable_attr->cv_mode_id */
+> > > +	mode =3D LWMI_GZ_THERMAL_MODE_CUSTOM;
+> > > +no_mode_fallback_2:
+> > > +	args.arg0 =3D LWMI_ATTR_ID(tunable_attr->device_id, tunable_attr->f=
+eature_id,
+> > > +				 mode, tunable_attr->type_id);
+> > > +
+> > > +	ret =3D lwmi_dev_evaluate_int(priv->wdev, 0x0, LWMI_FEATURE_VALUE_G=
+ET,
+> > > +				    (unsigned char *)&args, sizeof(args),
+> > > +				    &retval);
+> > > +	if ((ret && mode) || (!retval && mode)) {
+> > > +		dev_dbg(tunable_attr->dev, "Attribute id %x not supported\n", args=
+.arg0);
+> > > +		mode =3D LWMI_GZ_THERMAL_MODE_NONE;
+> > > +		goto no_mode_fallback_2;
+> > > +	}
+> > > +	if (ret)
+> > > +		goto not_supported;
+> > > +	if (retval =3D=3D 0) {
+> > > +		ret =3D -EOPNOTSUPP;
+> > > +		goto not_supported;
+> > > +	}
+> > > +
+> >=20
+> > I agree with Ilpo that backward gotos are hard to read and should be
+> > avoided if possible.
+> >=20
+> > > +	tunable_attr->cv_mode_id =3D mode;
+> > > +	dev_dbg(tunable_attr->dev, "cd_mode_id: %02x%02x%02x%02x, cv_mode_i=
+d: %#08x attribute support level: %x\n",
+> >=20
+> > It's a long line. Wrap at the first comma?
+> >=20
+> > > +		tunable_attr->device_id, tunable_attr->feature_id, tunable_attr->c=
+d_mode_id,
+> > > +		tunable_attr->type_id, args.arg0, capdata.supported);
+> > > +
+> > > +	return capdata.supported;
+> > > +
+> > > +not_supported:
+> > > +	dev_dbg(tunable_attr->dev, "Attribute id %x not supported\n", args.=
+arg0);
+> > > +	return ret;
+> > > +}
+> > > +
+> > >  /* Lenovo WMI Other Mode Attribute macros */
+> > >  #define __LWMI_ATTR_RO(_func, _name)                                =
+  \
+> > >  	{                                                             \
+> > > @@ -970,19 +1055,21 @@ static int lwmi_om_fw_attr_add(struct lwmi_om_=
+priv *priv)
+> > >  	}
+> > > =20
+> > >  	for (i =3D 0; i < ARRAY_SIZE(cd01_attr_groups) - 1; i++) {
+> > > -		err =3D sysfs_create_group(&priv->fw_attr_kset->kobj,
+> > > -					 cd01_attr_groups[i].attr_group);
+> > > -		if (err)
+> > > -			goto err_remove_groups;
+> > > -
+> > >  		cd01_attr_groups[i].tunable_attr->dev =3D &priv->wdev->dev;
+> > > +		if (lwmi_attr_01_is_supported(cd01_attr_groups[i].tunable_attr) > =
+0) {
+> > > +			err =3D sysfs_create_group(&priv->fw_attr_kset->kobj,
+> > > +						 cd01_attr_groups[i].attr_group);
+> > > +			if (err)
+> > > +				goto err_remove_groups;
+> > > +		}
+> > >  	}
+> > >  	return 0;
+> > > =20
+> > >  err_remove_groups:
+> > >  	while (i--)
+> > > -		sysfs_remove_group(&priv->fw_attr_kset->kobj,
+> > > -				   cd01_attr_groups[i].attr_group);
+> > > +		if (lwmi_attr_01_is_supported(cd01_attr_groups[i].tunable_attr) > =
 0)
->> > +{
->> > +	u8 dev =3D FIELD_GET(LWMI_ATTR_DEV_ID_MASK, cd00->id);
->> > +	u8 feat =3D FIELD_GET(LWMI_ATTR_FEAT_ID_MASK, cd00->id);
->> > +	u8 mode =3D FIELD_GET(LWMI_ATTR_MODE_ID_MASK, cd00->id);
->> > +	u8 type =3D FIELD_GET(LWMI_ATTR_TYPE_ID_MASK, cd00->id);
->> > +	bool extra =3D cd00->supported & ~(LWMI_SUPP_GET | LWMI_SUPP_SET | =
-LWMI_SUPP_VALID);
->> > +	bool get =3D cd00->supported & LWMI_SUPP_GET;
->> > +	bool set =3D cd00->supported & LWMI_SUPP_SET;
->> > +	bool valid =3D cd00->supported & LWMI_SUPP_VALID;
->>=20
->> Hi Rong,
->>=20
->> I have something that will clean this up in the series I'm working on, =
-LWMI_ATTR_ID, that pushes all the FIELD_PREP into a macro=2E Perhaps it wou=
-ld be worth combining this series into mine that so we can use it here as w=
-ell=2E=20
->>=20
->> My series also addresses some fairly significant bugs, so I'd prefer to=
- not have to wait for this series to get approved to post it as it currentl=
-y conflicts in other areas=2E
->
->Feel free to integrate this series into yours :)
->
->I have zero experience in doing so but I guess git-send-email should
->handle the author field well=2E
->
+> >=20
+> > I don't see lwmi_om_fw_attr_remove() doing the same. If we care about
+> > symmetric cleanup, I would imagine a bitmap or so recording what have
+> > been created is used there.
+> >=20
+> > Also it's doubtful if the firmware always return the same result on the
+> > same parameters. If a broken firmware somehow returns different results
+> > here, some attributes may be left uncleaned.
+> >=20
+> > That being said, I am not sure if we really need symmetric cleanup.
+> > IIUC, sysfs_remove_group() is a no-op if we pass an attr_group that has
+> > not been created.
+>=20
+> Hi Rong,
+> We don't want to query the interface if it was removed, and the no-op is =
+harmless. It doesn't seem worth it to me to retain that in memory to achiev=
+e the same results.
 
-Just to follow up in this thread as well, after finding there weren't any =
-conflicts I'm fine with this being an independent series=2E
+Makes sense. Then I would suggest drop the lwmi_attr_01_is_supported()
+check here so that we don't need to worry about broken firmware.
 
-Thanks,=20
-Derek
+Thanks,
+Rong
 
->> > +	seq_printf(s, "  id:             0x%08x [dev: %2u, feat: %2u, mode:=
- %2u, type: %2u]\n",
->> > +		   cd00->id, dev, feat, mode, type);
->> > +
->> > +	seq_printf(s, "  supported:      0x%08x [%c%c%c%c]\n", cd00->suppor=
-ted,
->> > +		   extra ? '+' : ' ',
->> > +		   get   ? 'R' : ' ',
->> > +		   set   ? 'W' : ' ',
->> > +		   valid ? 'V' : ' ');
->> > +
->> > +	seq_printf(s, "  default_value:  %u\n", cd00->default_value);
->> > +}
->> > +
->> > +/**
->> > + * lwmi_cd01_show() - Dump capdata01
->> > + * @s: Pointer to seq_file where the capdata01 is dumped=2E
->> > + * @cd01: Pointer to a capdata01 struct to be dumped=2E
->> > + */
->> > +static void lwmi_cd01_show(struct seq_file *s, struct capdata01 *cd0=
-1)
->> > +{
->> > +	/* capdata01 is an extension to capdata00=2E */
->> > +	lwmi_cd00_show(s, (struct capdata00 *)cd01);
->> > +
->> > +	seq_printf(s, "  step:           %u\n", cd01->step);
->> > +	seq_printf(s, "  min_value:      %u\n", cd01->min_value);
->> > +	seq_printf(s, "  max_value:      %u\n", cd01->max_value);
->> > +}
->> > +
->> > +/**
->> > + * lwmi_cd_fan_show() - Dump capdata_fan
->> > + * @s: Pointer to seq_file where the capdata_fan is dumped=2E
->> > + * @cd_fan: Pointer to a capdata_fan struct to be dumped=2E
->> > + */
->> > +static void lwmi_cd_fan_show(struct seq_file *s, struct capdata_fan =
-*cd_fan)
->> > +{
->> > +	seq_printf(s, "  id:             %u\n", cd_fan->id);
->> > +	seq_printf(s, "  min_rpm:        %u\n", cd_fan->min_rpm);
->> > +	seq_printf(s, "  max_rpm:        %u\n", cd_fan->max_rpm);
->> > +}
->> > +
->> > +/**
->> > + * lwmi_cd_debugfs_show() - Dump capability data to debugfs
->> > + * @s: Pointer to seq_file where the capability data is dumped=2E
->> > + * @data: unused=2E
->> > + *
->> > + * Return: 0
->> > + */
->> > +static int lwmi_cd_debugfs_show(struct seq_file *s, void *data)
->> > +{
->> > +	struct lwmi_cd_priv *priv =3D s->private;
->> > +	u8 idx;
->> > +
->> > +	guard(mutex)(&priv->list->list_mutex);
->> > +
->> > +	/* lwmi_cd_alloc() ensured priv->list->type must be a valid type=2E=
- */
->> > +	for (idx =3D 0; idx < priv->list->count; idx++) {
->> > +		seq_printf(s, "%s[%u]:\n", lwmi_cd_table[priv->list->type]=2Ename,=
- idx);
->> > +
->> > +		if (priv->list->type =3D=3D LENOVO_CAPABILITY_DATA_00)
->> > +			lwmi_cd00_show(s, &priv->list->cd00[idx]);
->> > +		else if (priv->list->type =3D=3D LENOVO_CAPABILITY_DATA_01)
->> > +			lwmi_cd01_show(s, &priv->list->cd01[idx]);
->> > +		else if (priv->list->type =3D=3D LENOVO_FAN_TEST_DATA)
->> > +			lwmi_cd_fan_show(s, &priv->list->cd_fan[idx]);
->> > +	}
->> > +
->> > +	return 0;
->> > +}
->> > +DEFINE_SHOW_ATTRIBUTE(lwmi_cd_debugfs);
->> > +
->> > +/**
->> > + * lwmi_cd_debugfs_add() - Create debugfs directory and files for a =
-device
->> > + * @priv: lenovo-wmi-capdata driver data=2E
->> > + */
->> > +static void lwmi_cd_debugfs_add(struct lwmi_cd_priv *priv)
->> > +{
->> > +	priv->debugfs_dir =3D lwmi_debugfs_create_dir(priv->wdev);
->> > +
->> > +	debugfs_create_file("capdata", 0444, priv->debugfs_dir, priv, &lwmi=
-_cd_debugfs_fops);
->> > +}
->> > +
->> > +/**
->> > + * lwmi_cd_debugfs_remove() - Remove debugfs directory for a device
->> > + * @priv: lenovo-wmi-capdata driver data=2E
->> > + */
->> > +static void lwmi_cd_debugfs_remove(struct lwmi_cd_priv *priv)
->> > +{
->> > +	debugfs_remove_recursive(priv->debugfs_dir);
->> > +	priv->debugfs_dir =3D NULL;
->> > +}
->> > +
->> > +/* =3D=3D=3D=3D=3D=3D=3D=3D WMI interface =3D=3D=3D=3D=3D=3D=3D=3D *=
-/
->> > +
->> > /**
->> >  * lwmi_cd_cache() - Cache all WMI data block information
->> >  * @priv: lenovo-wmi-capdata driver data=2E
->> > @@ -773,6 +889,8 @@ static int lwmi_cd_probe(struct wmi_device *wdev,=
- const void *context)
->> > 		dev_err(&wdev->dev, "failed to register %s: %d\n",
->> > 			info->name, ret);
->> > 	} else {
->> > +		lwmi_cd_debugfs_add(priv);
->> > +
->> > 		dev_dbg(&wdev->dev, "registered %s with %u items\n",
->> > 			info->name, priv->list->count);
->> > 	}
->> > @@ -783,6 +901,8 @@ static void lwmi_cd_remove(struct wmi_device *wde=
-v)
->> > {
->> > 	struct lwmi_cd_priv *priv =3D dev_get_drvdata(&wdev->dev);
->> >=20
->> > +	lwmi_cd_debugfs_remove(priv);
->> > +
->> > 	switch (priv->list->type) {
->> > 	case LENOVO_CAPABILITY_DATA_00:
->> > 		lwmi_cd_sub_master_del(priv);
->> > @@ -822,6 +942,7 @@ static struct wmi_driver lwmi_cd_driver =3D {
->> >=20
->> > module_wmi_driver(lwmi_cd_driver);
->> >=20
->> > +MODULE_IMPORT_NS("LENOVO_WMI_HELPERS");
->> > MODULE_DEVICE_TABLE(wmi, lwmi_cd_id_table);
->> > MODULE_AUTHOR("Derek J=2E Clark <derekjohn=2Eclark@gmail=2Ecom>");
->> > MODULE_AUTHOR("Rong Zhang <i@rong=2Emoe>");
->> > diff --git a/drivers/platform/x86/lenovo/wmi-capdata=2Eh b/drivers/pl=
-atform/x86/lenovo/wmi-capdata=2Eh
->> > index 8c1df3efcc553=2E=2E034a6e48be071 100644
->> > --- a/drivers/platform/x86/lenovo/wmi-capdata=2Eh
->> > +++ b/drivers/platform/x86/lenovo/wmi-capdata=2Eh
->> > @@ -30,9 +30,7 @@ struct capdata00 {
->> > };
->> >=20
->> > struct capdata01 {
->> > -	u32 id;
->> > -	u32 supported;
->> > -	u32 default_value;
->> > +	struct capdata00;
->>=20
->> Doesn't this also require some significant changes to the usage in wmi-=
-other and in the query function? We're accessing these members directly=2E
->
->No=2E As Kurt said, it utilizes a relatively new (since v6=2E19-rc1) chan=
-ge
->to kbuild=2E See commit c4781dc3d1cf ("Kbuild: enable -fms-extensions")=
-=2E
->
->Thanks,
->Rong
->
->> Thanks,=20
->> Derek
->>=20
->> > 	u32 step;
->> > 	u32 min_value;
->> > 	u32 max_value;
-
+> > > +			sysfs_remove_group(&priv->fw_attr_kset->kobj,
+> > > +					   cd01_attr_groups[i].attr_group);
+> > > =20
+> > >  	kset_unregister(priv->fw_attr_kset);
+> > > =20
+> >=20
+> > Thanks,
+> > Rong
