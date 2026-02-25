@@ -1,235 +1,227 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.15])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.11])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DD6F826E6F4;
-	Wed, 25 Feb 2026 01:50:25 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.15
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D9E74322749;
+	Wed, 25 Feb 2026 10:47:52 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.11
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1771984227; cv=none; b=hhOiG2gZULfRbh2PHy9sv/6DCtlnZQREZI9pR7m3GDI/cGbrygo0XH5qLKkYCjWW1aJNp9Ko+AtwKyqjSPkOJ9yXHrWiw9RsDegiLGcoXnsGhGKDam25BTCNSBzuZEwjUqKYY8zHOMzLZXcmKxQQejyii+6zbPYmtMIWxSppPMk=
+	t=1772016474; cv=none; b=oJl2uJ3NPi8a76c8Y7x3yPeHAREVdFAXQB4evonEch1bsx+GL8Deq1DExLheVkG9+dJnKNHHQh/WVVpkzbF06JoADYXhWNMEayduG4yxQJjPYj+rkXSsuMBTbZWTGpXLZZ96Up+F5C5hIN65wL410sUwFgoX/CeOHTn4IcJIDDY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1771984227; c=relaxed/simple;
-	bh=c8tQnAuBGs7bM67IBBJmoizCB0seMcK4yaQsJbqR4Jk=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=Sh9m7pwWBLzAS8DiISf4zRyOmkXwtslMrDgHoYoft7+/lrnxyLsFHQNLNAYOyOirWVN9tVtx3MUcCXvAn3wtUA+55KHD3l1I1MMMkRKVI5ovhD+VYo2JXJBPzNdqlwgu0iVcVUFb3j8c3NUKqKsBWz5QziVj+61MG15pnREu1uc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=pass smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=WVfn4UEo; arc=none smtp.client-ip=198.175.65.15
+	s=arc-20240116; t=1772016474; c=relaxed/simple;
+	bh=cdNmUmhcmZQBGEU1ipHKoVWvZyXrEYcW7YA/Sr0Ewmw=;
+	h=From:Date:To:cc:Subject:In-Reply-To:Message-ID:References:
+	 MIME-Version:Content-Type; b=W037S85q6Dy3LaXefFP2M5/2rM1C5kACovgd8BfQUDOCGDU5G+VSOh/bQ0gjDsS+sfpTHWY5AqTDWc//jQNTHBjGb03yIHpjmThF3kKEOcFB4mO7VwqBDVrKn+/Kq3uwtZppQQRfW6FPwSRba6h/BNGwTo7OWatA0n7HdTTrU1Q=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=pass smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=POJaZQTX; arc=none smtp.client-ip=192.198.163.11
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="WVfn4UEo"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="POJaZQTX"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1771984226; x=1803520226;
-  h=from:to:cc:subject:date:message-id:in-reply-to:
-   references:mime-version:content-transfer-encoding;
-  bh=c8tQnAuBGs7bM67IBBJmoizCB0seMcK4yaQsJbqR4Jk=;
-  b=WVfn4UEo/Rcfy7678odPB05EAt1uX6M6QOJjHNaMgVDXHFz4JkQKAOXn
-   JyHdkeB5C8q82Xg5rdbApqDjFrIs/q8IUIml1V7WwAAil24W7X6OYl67e
-   6R1BYYbTqM0nVDdfHbachkWQE3LpyqOhbzeVo+cKSha/wTH8Qq6cC9rrN
-   ms/P2ZzylYnovTpfa8l+6gsYgrmAJpOWpyesTx9c/ar0IJLFdPJRr2Cht
-   1H/EihTtQrwdEknjCE34bT/bjJGtoScmsecyFBQ3wMHHxjLYoIV/hGfPI
-   Ez8hGF9/BUS1Pnei433kDT6XwhERzOor7aEx+h1K6iEyIajFJS95IgxM4
-   Q==;
-X-CSE-ConnectionGUID: 6Z1Fe/3gS9SmxOeTBQboUA==
-X-CSE-MsgGUID: FO3TUfz+Q/ywUqJb24Hgfw==
-X-IronPort-AV: E=McAfee;i="6800,10657,11711"; a="76622923"
-X-IronPort-AV: E=Sophos;i="6.21,309,1763452800"; 
-   d="scan'208";a="76622923"
-Received: from orviesa008.jf.intel.com ([10.64.159.148])
-  by orvoesa107.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 24 Feb 2026 17:50:22 -0800
-X-CSE-ConnectionGUID: hWWpPTLcTiO0vRDRld4vhg==
-X-CSE-MsgGUID: yikhzuInQUGs7uEmCt1mFQ==
+  t=1772016473; x=1803552473;
+  h=from:date:to:cc:subject:in-reply-to:message-id:
+   references:mime-version;
+  bh=cdNmUmhcmZQBGEU1ipHKoVWvZyXrEYcW7YA/Sr0Ewmw=;
+  b=POJaZQTXrgiCC1pandmiOvs3ivPCmMVgoJLbn8fmrwV8wc5NDZoSj+Mg
+   HRlv3g++hID49ptfvs/+ONjpkYLac5gBS5CjyY4bnc1o+VmYRElZ9tr2t
+   dxY5WDT7lU2ap2oLMRahTWHlWJN7I8Dg7nWWHLn+ON0tOQrNCQCz7Pdb2
+   fhpWAtxDXJKup42URX++UYsnB6RS3Flj5c/XjGf2kzuRbmig39dEXWXEI
+   KBV8Y32W00WMdo0DwGo6s3fw+jBo7+nA6Ck3aRg0kY8+HlIwAdBLKMCe5
+   mgSwd47h3hXWUVKIpMPSBiq1uQPGAhJYN0CL3dV8RQAFglj5BAXZ7QAsZ
+   g==;
+X-CSE-ConnectionGUID: ec+fVfpORv+fvOlLDs/OsA==
+X-CSE-MsgGUID: 0/p/1LM/S5m0X7HgCFCxrg==
+X-IronPort-AV: E=McAfee;i="6800,10657,11711"; a="83676796"
+X-IronPort-AV: E=Sophos;i="6.21,310,1763452800"; 
+   d="scan'208";a="83676796"
+Received: from orviesa002.jf.intel.com ([10.64.159.142])
+  by fmvoesa105.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 25 Feb 2026 02:47:52 -0800
+X-CSE-ConnectionGUID: xwD0Tc7jS6ufXYR1F/Sbvg==
+X-CSE-MsgGUID: Nuyj1HjKSc6B59UgfCXJuw==
 X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.21,309,1763452800"; 
-   d="scan'208";a="216096189"
-Received: from debox1-desk4.jf.intel.com ([10.88.27.138])
-  by orviesa008-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 24 Feb 2026 17:50:21 -0800
-From: "David E. Box" <david.e.box@linux.intel.com>
-To: thomas.hellstrom@linux.intel.com,
-	rodrigo.vivi@intel.com,
-	irenic.rajneesh@gmail.com,
-	ilpo.jarvinen@linux.intel.com,
-	srinivas.pandruvada@linux.intel.com,
-	intel-xe@lists.freedesktop.org,
-	dri-devel@lists.freedesktop.org,
-	xi.pardee@linux.intel.com
-Cc: david.e.box@linux.intel.com,
-	hansg@kernel.org,
-	linux-kernel@vger.kernel.org,
-	platform-driver-x86@vger.kernel.org
-Subject: [PATCH v5 6/6] platform/x86/intel/vsec: Plumb ACPI PMT discovery tables through vsec
-Date: Tue, 24 Feb 2026 17:50:12 -0800
-Message-ID: <20260224-upstream-pmt-acpi-v5-v5-6-8dd73bcf049c@linux.intel.com>
-X-Mailer: git-send-email 2.43.0
-In-Reply-To: <20260224-upstream-pmt-acpi-v5-v5-0-8dd73bcf049c@linux.intel.com>
-References: <20260224-upstream-pmt-acpi-v5-v5-0-8dd73bcf049c@linux.intel.com>
+X-IronPort-AV: E=Sophos;i="6.21,310,1763452800"; 
+   d="scan'208";a="246749746"
+Received: from amilburn-desk.amilburn-desk (HELO localhost) ([10.245.244.86])
+  by orviesa002-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 25 Feb 2026 02:47:44 -0800
+From: =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
+Date: Wed, 25 Feb 2026 12:47:40 +0200 (EET)
+To: Yousef El Bouzidi <elbouzidyyousef@gmail.com>
+cc: LKML <linux-kernel@vger.kernel.org>, 
+    Greg Kroah-Hartman <gregkh@linuxfoundation.org>, 
+    "Rafael J. Wysocki" <rafael@kernel.org>, dakr@kernel.org, tglx@kernel.org, 
+    herbert@gondor.apana.org.au, davem@davemloft.net, lee@kernel.org, 
+    Hans de Goede <hansg@kernel.org>, ansuelsmth@gmail.com, atenart@kernel.org, 
+    wens@kernel.org, hauke@hauke-m.de, andrew+netdev@lunn.ch, kuba@kernel.org, 
+    david.e.box@linux.intel.com, akrowiak@linux.ibm.com, pasic@linux.ibm.com, 
+    jjherne@linux.ibm.com, hca@linux.ibm.com, driver-core@lists.linux.dev, 
+    linux-crypto@vger.kernel.org, Netdev <netdev@vger.kernel.org>, 
+    platform-driver-x86@vger.kernel.org, linux-s390@vger.kernel.org
+Subject: Re: [PATCH] treewide: fix duplicated word "the" in comments
+In-Reply-To: <20260224065300.454633-1-elbouzidyyousef@gmail.com>
+Message-ID: <a443446b-709b-804e-8c64-b18c5d63cdaf@linux.intel.com>
+References: <20260224065300.454633-1-elbouzidyyousef@gmail.com>
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: multipart/mixed; boundary="8323328-1317487302-1772016460=:992"
 
-Some platforms expose PMT discovery via ACPI instead of PCI BARs. Add a
-generic discovery source flag and carry ACPI discovery entries alongside
-the existing PCI resource path so PMT clients can consume either.
+  This message is in MIME format.  The first part should be readable text,
+  while the remaining parts are likely unreadable without MIME-aware tools.
 
-Changes:
-  - Add enum intel_vsec_disc_source { _PCI, _ACPI }.
-  - Extend intel_vsec_platform_info and intel_vsec_device with source enum
-    and ACPI discovery table pointer/
-  - When src=3D=3DACPI, skip BAR resource setup and copy the ACPI discovery
-    entries into the aux device.
+--8323328-1317487302-1772016460=:992
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: QUOTED-PRINTABLE
 
-No user-visible behavior change yet; this only wires ACPI data through vsec
-in preparation for ACPI-enumerated PMT clients.
+On Tue, 24 Feb 2026, Yousef El Bouzidi wrote:
 
-Signed-off-by: David E. Box <david.e.box@linux.intel.com>
----
-Changes in v5:
-- No change
+> Remove duplicated word "the" from comments across various subsystems.
+> All instances are clear typos where "the" appeared twice in
+> succession, often merged with the following word (e.g. "the they",
+> "the there", "the these", "the them").
+>=20
+> Files fixed:
+>   - drivers/base/platform.c
+>   - drivers/crypto/inside-secure/eip93/eip93-hash.c
+>   - drivers/mfd/axp20x.c
+>   - drivers/net/ethernet/lantiq_xrx200.c
+>   - drivers/platform/x86/intel/chtwc_int33fe.c
+>   - drivers/platform/x86/intel/pmt/class.c
+>   - drivers/s390/crypto/vfio_ap_ops.c
+>   - kernel/irq/migration.c
+>=20
+> Signed-off-by: Yousef El Bouzidi <elbouzidyyousef@gmail.com>
+> ---
+>  drivers/base/platform.c                         | 2 +-
+>  drivers/crypto/inside-secure/eip93/eip93-hash.c | 2 +-
+>  drivers/mfd/axp20x.c                            | 2 +-
+>  drivers/net/ethernet/lantiq_xrx200.c            | 2 +-
+>  drivers/platform/x86/intel/chtwc_int33fe.c      | 2 +-
+>  drivers/platform/x86/intel/pmt/class.c          | 2 +-
+>  drivers/s390/crypto/vfio_ap_ops.c               | 2 +-
+>  kernel/irq/migration.c                          | 2 +-
+>  8 files changed, 8 insertions(+), 8 deletions(-)
+>=20
+> diff --git a/drivers/base/platform.c b/drivers/base/platform.c
+> index b45d41b018ca..3e3b6fcfa194 100644
+> --- a/drivers/base/platform.c
+> +++ b/drivers/base/platform.c
+> @@ -565,7 +565,7 @@ struct platform_object {
+>  };
+> =20
+>  /*
+> - * Set up default DMA mask for platform devices if the they weren't
+> + * Set up default DMA mask for platform devices if they weren't
+>   * previously set by the architecture / DT.
+>   */
+>  static void setup_pdev_dma_masks(struct platform_device *pdev)
+> diff --git a/drivers/crypto/inside-secure/eip93/eip93-hash.c b/drivers/cr=
+ypto/inside-secure/eip93/eip93-hash.c
+> index 2705855475b2..d91a1ac152f0 100644
+> --- a/drivers/crypto/inside-secure/eip93/eip93-hash.c
+> +++ b/drivers/crypto/inside-secure/eip93/eip93-hash.c
+> @@ -432,7 +432,7 @@ static int eip93_hash_update(struct ahash_request *re=
+q)
+> =20
+>  /*
+>   * With map_data true, we map the sa_record and sa_state. This is needed
+> - * for finup() as the they are mapped before calling update()
+> + * for finup() as they are mapped before calling update()
+>   */
+>  static int __eip93_hash_final(struct ahash_request *req, bool map_dma)
+>  {
+> diff --git a/drivers/mfd/axp20x.c b/drivers/mfd/axp20x.c
+> index 679364189ea5..0c6e93eb3955 100644
+> --- a/drivers/mfd/axp20x.c
+> +++ b/drivers/mfd/axp20x.c
+> @@ -1417,7 +1417,7 @@ int axp20x_device_probe(struct axp20x_dev *axp20x)
+>  =09 * 1 bit customizable at the factory, and 1 bit depending on the
+>  =09 * state of an external pin. The latter is writable. The device
+>  =09 * will only respond to operations to its other registers when
+> -=09 * the these device addressing bits (in the upper 4 bits of the
+> +=09 * these device addressing bits (in the upper 4 bits of the
+>  =09 * registers) match.
+>  =09 *
+>  =09 * By default we support an AXP806 chained to an AXP809 in slave
+> diff --git a/drivers/net/ethernet/lantiq_xrx200.c b/drivers/net/ethernet/=
+lantiq_xrx200.c
+> index b8766fb7a844..dde651d901c8 100644
+> --- a/drivers/net/ethernet/lantiq_xrx200.c
+> +++ b/drivers/net/ethernet/lantiq_xrx200.c
+> @@ -157,7 +157,7 @@ static int xrx200_open(struct net_device *net_dev)
+>  =09/* The boot loader does not always deactivate the receiving of frames
+>  =09 * on the ports and then some packets queue up in the PPE buffers.
+>  =09 * They already passed the PMAC so they do not have the tags
+> -=09 * configured here. Read the these packets here and drop them.
+> +=09 * configured here. Read these packets here and drop them.
+>  =09 * The HW should have written them into memory after 10us
+>  =09 */
+>  =09usleep_range(20, 40);
+> diff --git a/drivers/platform/x86/intel/chtwc_int33fe.c b/drivers/platfor=
+m/x86/intel/chtwc_int33fe.c
+> index d183aa53c318..1fca9fdd8f5b 100644
+> --- a/drivers/platform/x86/intel/chtwc_int33fe.c
+> +++ b/drivers/platform/x86/intel/chtwc_int33fe.c
+> @@ -14,7 +14,7 @@
+>   *
+>   * So this driver is a stub / pseudo driver whose only purpose is to
+>   * instantiate I=C2=B2C clients for chips 2 - 4, so that standard I=C2=
+=B2C drivers
+> - * for these chips can bind to the them.
+> + * for these chips can bind to them.
+>   */
+> =20
+>  #include <linux/dmi.h>
+> diff --git a/drivers/platform/x86/intel/pmt/class.c b/drivers/platform/x8=
+6/intel/pmt/class.c
+> index be3c8d9e4fff..99bf7e0afdf1 100644
+> --- a/drivers/platform/x86/intel/pmt/class.c
+> +++ b/drivers/platform/x86/intel/pmt/class.c
+> @@ -239,7 +239,7 @@ static int intel_pmt_populate_entry(struct intel_pmt_=
+entry *entry,
+> =20
+>  =09=09/*
+>  =09=09 * Some hardware use a different calculation for the base address
+> -=09=09 * when access_type =3D=3D ACCESS_LOCAL. On the these systems
+> +=09=09 * when access_type =3D=3D ACCESS_LOCAL. On these systems
+>  =09=09 * ACCESS_LOCAL refers to an address in the same BAR as the
+>  =09=09 * header but at a fixed offset. But as the header address was
+>  =09=09 * supplied to the driver, we don't know which BAR it was in.
+> diff --git a/drivers/s390/crypto/vfio_ap_ops.c b/drivers/s390/crypto/vfio=
+_ap_ops.c
+> index 44b3a1dcc1b3..334aaa2d97b2 100644
+> --- a/drivers/s390/crypto/vfio_ap_ops.c
+> +++ b/drivers/s390/crypto/vfio_ap_ops.c
+> @@ -610,7 +610,7 @@ static int handle_pqap(struct kvm_vcpu *vcpu)
+>  =09matrix_mdev =3D container_of(vcpu->kvm->arch.crypto.pqap_hook,
+>  =09=09=09=09   struct ap_matrix_mdev, pqap_hook);
+> =20
+> -=09/* If the there is no guest using the mdev, there is nothing to do */
+> +=09/* If there is no guest using the mdev, there is nothing to do */
+>  =09if (!matrix_mdev->kvm) {
+>  =09=09vfio_ap_le_guid_to_be_uuid(&matrix_mdev->mdev->uuid, uuid);
+>  =09=09VFIO_AP_DBF_WARN("%s: mdev %08lx-%04lx-%04lx-%04lx-%04lx%08lx not =
+in use: apqn=3D0x%04x\n",
+> diff --git a/kernel/irq/migration.c b/kernel/irq/migration.c
+> index f2b2929986ff..b29d13baee55 100644
+> --- a/kernel/irq/migration.c
+> +++ b/kernel/irq/migration.c
+> @@ -89,7 +89,7 @@ void irq_move_masked_irq(struct irq_data *idata)
+> =20
+>  =09=09ret =3D irq_do_set_affinity(data, desc->pending_mask, false);
+>  =09=09/*
+> -=09=09 * If the there is a cleanup pending in the underlying
+> +=09=09 * If there is a cleanup pending in the underlying
+>  =09=09 * vector management, reschedule the move for the next
+>  =09=09 * interrupt. Leave desc->pending_mask intact.
+>  =09=09 */
+>=20
 
-Changes in v4:
-- Use check_mul_overflow() instead of array_size() which was
-  incorrectly checking for 0 anyway.
-
-Changes in v3:
-- Re-send with all changes intended for v2 which was sent without them
-  being applied.
-
-Changes in v2:
-- Improve comment to clarify BAR resource setup doesn't apply to ACPI
-  discovery
-- Add missing #include for kmemdup()
-- Use array_size() for overflow protection
-  (review comments by Ilpo J=C3=A4rvinen)
-
- drivers/platform/x86/intel/vsec.c | 23 +++++++++++++++++++++++
- include/linux/intel_vsec.h        | 20 +++++++++++++++++++-
- 2 files changed, 42 insertions(+), 1 deletion(-)
-
-diff --git a/drivers/platform/x86/intel/vsec.c b/drivers/platform/x86/intel=
-/vsec.c
-index 34b2c19ecff0..7907505a365c 100644
---- a/drivers/platform/x86/intel/vsec.c
-+++ b/drivers/platform/x86/intel/vsec.c
-@@ -24,7 +24,9 @@
- #include <linux/intel_vsec.h>
- #include <linux/kernel.h>
- #include <linux/module.h>
-+#include <linux/overflow.h>
- #include <linux/pci.h>
-+#include <linux/string.h>
- #include <linux/types.h>
-=20
- #define PMT_XA_START			0
-@@ -109,6 +111,7 @@ static void intel_vsec_dev_release(struct device *dev)
-=20
- 	ida_free(intel_vsec_dev->ida, intel_vsec_dev->auxdev.id);
-=20
-+	kfree(intel_vsec_dev->acpi_disc);
- 	kfree(intel_vsec_dev->resource);
- 	kfree(intel_vsec_dev);
- }
-@@ -320,6 +323,13 @@ static int intel_vsec_add_dev(struct device *dev, stru=
-ct intel_vsec_header *head
- 	 * auxiliary device driver.
- 	 */
- 	for (i =3D 0, tmp =3D res; i < header->num_entries; i++, tmp++) {
-+		/*
-+		 * Skip resource mapping check for ACPI-based discovery
-+		 * since those tables are read from _DSD, not MMIO.
-+		 */
-+		if (info->src =3D=3D INTEL_VSEC_DISC_ACPI)
-+			break;
-+
- 		tmp->start =3D base_addr + header->offset + i * (header->entry_size * si=
-zeof(u32));
- 		tmp->end =3D tmp->start + (header->entry_size * sizeof(u32)) - 1;
- 		tmp->flags =3D IORESOURCE_MEM;
-@@ -338,6 +348,19 @@ static int intel_vsec_add_dev(struct device *dev, stru=
-ct intel_vsec_header *head
- 	intel_vsec_dev->base_addr =3D info->base_addr;
- 	intel_vsec_dev->priv_data =3D info->priv_data;
- 	intel_vsec_dev->cap_id =3D cap_id;
-+	intel_vsec_dev->src =3D info->src;
-+
-+	if (info->src =3D=3D INTEL_VSEC_DISC_ACPI) {
-+		size_t bytes;
-+
-+		if (check_mul_overflow(intel_vsec_dev->num_resources,
-+			sizeof(*info->acpi_disc), &bytes))
-+			return -EOVERFLOW;
-+
-+		intel_vsec_dev->acpi_disc =3D kmemdup(info->acpi_disc, bytes, GFP_KERNEL=
-);
-+		if (!intel_vsec_dev->acpi_disc)
-+			return -ENOMEM;
-+	}
-=20
- 	if (header->id =3D=3D VSEC_ID_SDSI)
- 		intel_vsec_dev->ida =3D &intel_vsec_sdsi_ida;
-diff --git a/include/linux/intel_vsec.h b/include/linux/intel_vsec.h
-index 4eecb2a6bac4..1fe5665a9d02 100644
---- a/include/linux/intel_vsec.h
-+++ b/include/linux/intel_vsec.h
-@@ -33,6 +33,11 @@ struct device;
- struct pci_dev;
- struct resource;
-=20
-+enum intel_vsec_disc_source {
-+	INTEL_VSEC_DISC_PCI,	/* PCI, default */
-+	INTEL_VSEC_DISC_ACPI,	/* ACPI */
-+};
-+
- enum intel_vsec_id {
- 	VSEC_ID_TELEMETRY	=3D 2,
- 	VSEC_ID_WATCHER		=3D 3,
-@@ -103,6 +108,10 @@ struct vsec_feature_dependency {
-  * @parent:    parent device in the auxbus chain
-  * @headers:   list of headers to define the PMT client devices to create
-  * @deps:      array of feature dependencies
-+ * @acpi_disc: ACPI discovery tables, each entry is two QWORDs
-+ *             in little-endian format as defined by the PMT ACPI spec.
-+ *             Valid only when @provider =3D=3D INTEL_VSEC_DISC_ACPI.
-+ * @src:       source of discovery table data
-  * @priv_data: private data, usable by parent devices, currently a callback
-  * @caps:      bitmask of PMT capabilities for the given headers
-  * @quirks:    bitmask of VSEC device quirks
-@@ -113,6 +122,8 @@ struct intel_vsec_platform_info {
- 	struct device *parent;
- 	struct intel_vsec_header **headers;
- 	const struct vsec_feature_dependency *deps;
-+	u32 (*acpi_disc)[4];
-+	enum intel_vsec_disc_source src;
- 	void *priv_data;
- 	unsigned long caps;
- 	unsigned long quirks;
-@@ -124,7 +135,12 @@ struct intel_vsec_platform_info {
-  * struct intel_vsec_device - Auxbus specific device information
-  * @auxdev:        auxbus device struct for auxbus access
-  * @dev:           struct device associated with the device
-- * @resource:      any resources shared by the parent
-+ * @resource:      PCI discovery resources (BAR windows), one per discovery
-+ *                 instance. Valid only when @src =3D=3D INTEL_VSEC_DISC_P=
-CI
-+ * @acpi_disc:     ACPI discovery tables, each entry is two QWORDs
-+ *                 in little-endian format as defined by the PMT ACPI spec.
-+ *                 Valid only when @src =3D=3D INTEL_VSEC_DISC_ACPI.
-+ * @src:           source of discovery table data
-  * @ida:           id reference
-  * @num_resources: number of resources
-  * @id:            xarray id
-@@ -138,6 +154,8 @@ struct intel_vsec_device {
- 	struct auxiliary_device auxdev;
- 	struct device *dev;
- 	struct resource *resource;
-+	u32 (*acpi_disc)[4];
-+	enum intel_vsec_disc_source src;
- 	struct ida *ida;
- 	int num_resources;
- 	int id; /* xa */
+Acked-by: Ilpo J=C3=A4rvinen <ilpo.jarvinen@linux.intel.com> # For pdx86
 
 --=20
-2.43.0
+ i.
+
+--8323328-1317487302-1772016460=:992--
