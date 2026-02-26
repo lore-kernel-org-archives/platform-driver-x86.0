@@ -1,33 +1,35 @@
 Received: from mail.tuxedocomputers.com (mail.tuxedocomputers.com [157.90.84.7])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C5D732BCF45;
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C72002DF138;
 	Thu, 26 Feb 2026 00:34:37 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=157.90.84.7
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1772066081; cv=none; b=mAQXR2n6IZtz3sBNsLuV+aaTmtc8TxRRjiKv7JkbATRi2NKITpEkXAEjzK1Umr8h2cLJC9Q/sHf9JwAmda00vPYo5ui6pF/vWkVvbqcuzvHz3qd92N4i5ydE+awqwQXFVVUVP652u4wtvogkW2lqrzTBoTx4J0XEe3+kiBhiNYA=
+	t=1772066081; cv=none; b=EmMUmXG2KA/0lReYVHgjnu6qjUEoC42IGJPSa6S3OiBan+oVZrHPzyPsZD/pEFT5hlBIY0YIHjT7jzo5DSkkqNoIYjWRG6HbGCDQD4Vhyb9dbvkJaFp2Y13N7ozQ+FMKgVgT5LOgThSduLRr29vE1qjv6jekPDgj6xfF5VmTezc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1772066081; c=relaxed/simple;
-	bh=g/YxkbAoL6RVnjN/gHfSHvr2wR8NgFjkML8MissOkug=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=h/kRy+ErkAmcL7yC8IN1GICKNlL2yOk7SycRKxlc2+vFsPzVCCmwZ2OD12Vxqm4KSdkqTxbpGHvOPvYwQNvdi37Ug0qykwtGyCyILofdt4irQGQWvDUTcf+e7bSsUwwbu33nPii+T20XJgANC6ZcLM83y+U9OeiCtdZqFL90OdY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=tuxedocomputers.com; spf=pass smtp.mailfrom=tuxedocomputers.com; dkim=pass (1024-bit key) header.d=tuxedocomputers.com header.i=@tuxedocomputers.com header.b=F489gfgN; arc=none smtp.client-ip=157.90.84.7
+	bh=zdbnmz/3U1y5wZ/HVdei+juzvhgk2ZbDkKr+fLNYwsY=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=tP9A/I3Gve/m86ijOLRdHe2GubTSDlq+OKrBdeKXzHrBy90NdUsnTf4z9iEKLskdxily3s/YcvdHtgdyXJLPPOA4A481TpaBbDXsasjYFZ4b/ugs56s6TkD0PaYiKfqDiWLWVt+hHzgaxfah1MwO7hatabygkFZI4caUS6n72ik=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=tuxedocomputers.com; spf=pass smtp.mailfrom=tuxedocomputers.com; dkim=pass (1024-bit key) header.d=tuxedocomputers.com header.i=@tuxedocomputers.com header.b=fXcdJyLt; arc=none smtp.client-ip=157.90.84.7
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=tuxedocomputers.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=tuxedocomputers.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=tuxedocomputers.com header.i=@tuxedocomputers.com header.b="F489gfgN"
+	dkim=pass (1024-bit key) header.d=tuxedocomputers.com header.i=@tuxedocomputers.com header.b="fXcdJyLt"
 Received: from wse-pc.fritz.box (i5C75F712.versanet.de [92.117.247.18])
 	(Authenticated sender: wse@tuxedocomputers.com)
-	by mail.tuxedocomputers.com (Postfix) with ESMTPA id E664E2FC004D;
-	Thu, 26 Feb 2026 01:34:28 +0100 (CET)
+	by mail.tuxedocomputers.com (Postfix) with ESMTPA id 237CD2FC0050;
+	Thu, 26 Feb 2026 01:34:30 +0100 (CET)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=tuxedocomputers.com;
-	s=default; t=1772066069;
+	s=default; t=1772066070;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:
-	 content-transfer-encoding:content-transfer-encoding;
-	bh=nZdwkTKegxiZwyIzsjXKt0wrvNPQTN7YQUL0u2OgArw=;
-	b=F489gfgNtEGC0etaADLTXYnTk7ZuboiKW2B10Wmo16SXaMxsD6nPQe3fmm/0Wf/WHfegea
-	tzp7Ix7RhKx95flmlCVGeTQSG2kNbm7elwfl9ozV/FFz4MgwSOSKtT1IBExZk2ahDq5Xyh
-	dnrDtrqIgvBLFetoUrWsA8bFgZWTfqM=
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=czq+w5ESAMIoy3PLaoKx0DwAjxzcTrPfTufywz69GhM=;
+	b=fXcdJyLt+9pjuVfEbZM0XEybwQmZ40gUE11FT8g/mNwbujD7ULH6cbUVOoK3BBZwwEQtRe
+	efcwRxQzuBaqZi8wBDO483ou/9mI6s6VMgMpKY5b2LT7/GwEtSrYTStq8AxMmwxkLmqM+Z
+	uYCFdpZ50ZJZUXAnkVBZPmWiw3ki/EE=
 Authentication-Results: mail.tuxedocomputers.com;
 	auth=pass smtp.auth=wse@tuxedocomputers.com smtp.mailfrom=wse@tuxedocomputers.com
 From: Werner Sembach <wse@tuxedocomputers.com>
@@ -37,10 +39,12 @@ To: Armin Wolf <W_Armin@gmx.de>,
 Cc: Werner Sembach <wse@tuxedocomputers.com>,
 	platform-driver-x86@vger.kernel.org,
 	linux-kernel@vger.kernel.org
-Subject: [PATCH 1/4] platform/x86/uniwill: uniwill-laptop: Rework hwmon feature defines
-Date: Thu, 26 Feb 2026 01:31:37 +0100
-Message-ID: <20260226003408.1623547-1-wse@tuxedocomputers.com>
+Subject: [PATCH 2/4] platform/x86/uniwill: Implement USB-C power priority setting
+Date: Thu, 26 Feb 2026 01:31:38 +0100
+Message-ID: <20260226003408.1623547-2-wse@tuxedocomputers.com>
 X-Mailer: git-send-email 2.43.0
+In-Reply-To: <20260226003408.1623547-1-wse@tuxedocomputers.com>
+References: <20260226003408.1623547-1-wse@tuxedocomputers.com>
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
@@ -49,139 +53,188 @@ List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-From: Armin Wolf <W_Armin@gmx.de>
+On some devices Uniwill offers the option to set the USB-C port to
+prioritise charging or performance. This patch exposes this setting to the
+userspace via sysfs for all TUXEDO devices supporting it.
 
-Split hwmon feature define in smaller parts to accommodate for diverse
-hardware. You can now specify the presence of a cpu and/or a gpu temp
-sensor separately and if one or 2 fans exists.
-
-Signed-off-by: Armin Wolf <W_Armin@gmx.de>
 Signed-off-by: Werner Sembach <wse@tuxedocomputers.com>
 ---
- drivers/platform/x86/uniwill/uniwill-acpi.c | 68 ++++++++++++++++++---
- 1 file changed, 61 insertions(+), 7 deletions(-)
+ drivers/platform/x86/uniwill/uniwill-acpi.c | 99 +++++++++++++++++++--
+ 1 file changed, 94 insertions(+), 5 deletions(-)
 
 diff --git a/drivers/platform/x86/uniwill/uniwill-acpi.c b/drivers/platform/x86/uniwill/uniwill-acpi.c
-index 6341dca20b76a..7ab82cf16f388 100644
+index 7ab82cf16f388..4d9657a3b8c10 100644
 --- a/drivers/platform/x86/uniwill/uniwill-acpi.c
 +++ b/drivers/platform/x86/uniwill/uniwill-acpi.c
-@@ -319,8 +319,11 @@
- #define UNIWILL_FEATURE_TOUCHPAD_TOGGLE		BIT(2)
- #define UNIWILL_FEATURE_LIGHTBAR		BIT(3)
- #define UNIWILL_FEATURE_BATTERY			BIT(4)
--#define UNIWILL_FEATURE_HWMON			BIT(5)
--#define UNIWILL_FEATURE_NVIDIA_CTGP_CONTROL	BIT(6)
-+#define UNIWILL_FEATURE_CPU_TEMP		BIT(5)
-+#define UNIWILL_FEATURE_GPU_TEMP		BIT(6)
-+#define UNIWILL_FEATURE_PRIMARY_FAN		BIT(7)
-+#define UNIWILL_FEATURE_SECONDARY_FAN		BIT(8)
-+#define UNIWILL_FEATURE_NVIDIA_CTGP_CONTROL	BIT(9)
+@@ -266,8 +266,8 @@
+ #define BATTERY_CHARGE_FULL_OVER_24H	BIT(3)
+ #define BATTERY_ERM_STATUS_REACHED	BIT(4)
+ 
+-#define EC_ADDR_CHARGE_PRIO		0x07CC
+-#define CHARGING_PERFORMANCE		BIT(7)
++#define EC_ADDR_USB_C_POWER_PRIORITY	0x07CC
++#define USB_C_POWER_PRIORITY		BIT(7)
+ 
+ /* Same bits as EC_ADDR_LIGHTBAR_AC_CTRL except LIGHTBAR_S3_OFF */
+ #define EC_ADDR_LIGHTBAR_BAT_CTRL	0x07E2
+@@ -324,6 +324,7 @@
+ #define UNIWILL_FEATURE_PRIMARY_FAN		BIT(7)
+ #define UNIWILL_FEATURE_SECONDARY_FAN		BIT(8)
+ #define UNIWILL_FEATURE_NVIDIA_CTGP_CONTROL	BIT(9)
++#define UNIWILL_FEATURE_USB_C_POWER_PRIORITY	BIT(10)
  
  struct uniwill_data {
  	struct device *dev;
-@@ -427,7 +430,7 @@ static const struct key_entry uniwill_keymap[] = {
- 	{ KE_END }
+@@ -343,6 +344,7 @@ struct uniwill_data {
+ 	struct mutex input_lock;	/* Protects input sequence during notify */
+ 	struct input_dev *input_device;
+ 	struct notifier_block nb;
++	unsigned int last_usb_c_power_priority;
  };
  
--static inline bool uniwill_device_supports(struct uniwill_data *data,
-+static inline bool uniwill_device_supports(const struct uniwill_data *data,
- 					   unsigned int features)
- {
- 	return (data->features & features) == features;
-@@ -937,6 +940,48 @@ static const struct attribute_group *uniwill_groups[] = {
+ struct uniwill_battery_entry {
+@@ -527,6 +529,7 @@ static bool uniwill_writeable_reg(struct device *dev, unsigned int reg)
+ 	case EC_ADDR_CTGP_DB_CTGP_OFFSET:
+ 	case EC_ADDR_CTGP_DB_TPP_OFFSET:
+ 	case EC_ADDR_CTGP_DB_DB_OFFSET:
++	case EC_ADDR_USB_C_POWER_PRIORITY:
+ 		return true;
+ 	default:
+ 		return false;
+@@ -565,6 +568,7 @@ static bool uniwill_readable_reg(struct device *dev, unsigned int reg)
+ 	case EC_ADDR_CTGP_DB_CTGP_OFFSET:
+ 	case EC_ADDR_CTGP_DB_TPP_OFFSET:
+ 	case EC_ADDR_CTGP_DB_DB_OFFSET:
++	case EC_ADDR_USB_C_POWER_PRIORITY:
+ 		return true;
+ 	default:
+ 		return false;
+@@ -587,6 +591,7 @@ static bool uniwill_volatile_reg(struct device *dev, unsigned int reg)
+ 	case EC_ADDR_TRIGGER:
+ 	case EC_ADDR_SWITCH_STATUS:
+ 	case EC_ADDR_CHARGE_CTRL:
++	case EC_ADDR_USB_C_POWER_PRIORITY:
+ 		return true;
+ 	default:
+ 		return false;
+@@ -883,6 +888,86 @@ static int uniwill_nvidia_ctgp_init(struct uniwill_data *data)
+ 	return 0;
+ }
+ 
++enum usb_c_power_priority_options {
++	USB_C_POWER_PRIORITY_OPTIONS_CHARGING = 0,
++	USB_C_POWER_PRIORITY_OPTIONS_PERFORMANCE,
++};
++
++static const char * const USB_C_POWER_PRIORITY_OPTIONS_TEXT[] = {
++	[USB_C_POWER_PRIORITY_OPTIONS_CHARGING]		= "charging",
++	[USB_C_POWER_PRIORITY_OPTIONS_PERFORMANCE]	= "performance",
++};
++
++static const u8 USB_C_POWER_PRIORITY_OPTIONS_VALUE[] = {
++	[USB_C_POWER_PRIORITY_OPTIONS_CHARGING]		= 0,
++	[USB_C_POWER_PRIORITY_OPTIONS_PERFORMANCE]	= USB_C_POWER_PRIORITY,
++};
++
++static ssize_t usb_c_power_priority_store(struct device *dev,
++					  struct device_attribute *attr,
++					  const char *buf, size_t count)
++{
++	struct uniwill_data *data = dev_get_drvdata(dev);
++	unsigned int value;
++	int ret;
++
++	ret = sysfs_match_string(USB_C_POWER_PRIORITY_OPTIONS_TEXT, buf);
++	if (ret < 0)
++		return ret;
++	value = USB_C_POWER_PRIORITY_OPTIONS_VALUE[ret];
++
++	ret = regmap_update_bits(data->regmap, EC_ADDR_USB_C_POWER_PRIORITY,
++				 USB_C_POWER_PRIORITY, value);
++	if (ret < 0)
++		return ret;
++
++	data->last_usb_c_power_priority = value;
++
++	return count;
++}
++
++static ssize_t usb_c_power_priority_show(struct device *dev,
++					 struct device_attribute *attr,
++					 char *buf)
++{
++	struct uniwill_data *data = dev_get_drvdata(dev);
++	unsigned int value;
++	ssize_t count = 0;
++	int ret;
++
++	ret = regmap_read(data->regmap, EC_ADDR_USB_C_POWER_PRIORITY, &value);
++	if (ret < 0)
++		return ret;
++	value &= USB_C_POWER_PRIORITY;
++
++	for (int i = 0; i < ARRAY_SIZE(USB_C_POWER_PRIORITY_OPTIONS_VALUE); ++i) {
++		if (USB_C_POWER_PRIORITY_OPTIONS_VALUE[i] == value)
++			count += sysfs_emit_at(buf, count, "[%s] ",
++					       USB_C_POWER_PRIORITY_OPTIONS_TEXT[i]);
++		else
++			count += sysfs_emit_at(buf, count, "%s ",
++					       USB_C_POWER_PRIORITY_OPTIONS_TEXT[i]);
++	}
++	if (count)
++		buf[count - 1] = '\n';
++
++	return count;
++}
++
++static DEVICE_ATTR_RW(usb_c_power_priority);
++
++static int usb_c_power_priority_restore(struct uniwill_data *data)
++{
++	int ret;
++
++	ret = regmap_update_bits(data->regmap, EC_ADDR_OEM_4, USB_C_POWER_PRIORITY,
++				 data->last_usb_c_power_priority);
++	if (ret < 0)
++		return ret;
++
++	return ret;
++}
++
+ static struct attribute *uniwill_attrs[] = {
+ 	/* Keyboard-related */
+ 	&dev_attr_fn_lock.attr,
+@@ -893,6 +978,7 @@ static struct attribute *uniwill_attrs[] = {
+ 	&dev_attr_breathing_in_suspend.attr,
+ 	/* Power-management-related */
+ 	&dev_attr_ctgp_offset.attr,
++	&dev_attr_usb_c_power_priority.attr,
  	NULL
  };
  
-+static umode_t uniwill_is_visible(const void *drvdata, enum hwmon_sensor_types type, u32 attr,
-+				  int channel)
-+{
-+	const struct uniwill_data *data = drvdata;
-+	unsigned int feature;
-+
-+	switch (type) {
-+	case hwmon_temp:
-+		switch (channel) {
-+		case 0:
-+			feature = UNIWILL_FEATURE_CPU_TEMP;
-+			break;
-+		case 1:
-+			feature = UNIWILL_FEATURE_GPU_TEMP;
-+			break;
-+		default:
-+			return 0;
-+		}
-+		break;
-+	case hwmon_fan:
-+	case hwmon_pwm:
-+		switch (channel) {
-+		case 0:
-+			feature = UNIWILL_FEATURE_PRIMARY_FAN;
-+			break;
-+		case 1:
-+			feature = UNIWILL_FEATURE_SECONDARY_FAN;
-+			break;
-+		default:
-+			return 0;
-+		}
-+		break;
-+	default:
-+		return 0;
+@@ -927,6 +1013,11 @@ static umode_t uniwill_attr_is_visible(struct kobject *kobj, struct attribute *a
+ 			return attr->mode;
+ 	}
+ 
++	if (attr == &dev_attr_usb_c_power_priority.attr) {
++		if (uniwill_device_supports(data, UNIWILL_FEATURE_USB_C_POWER_PRIORITY))
++			return attr->mode;
 +	}
 +
-+	if (uniwill_device_supports(data, feature))
-+		return 0440;
-+
-+	return 0;
-+}
-+
- static int uniwill_read(struct device *dev, enum hwmon_sensor_types type, u32 attr, int channel,
- 			long *val)
- {
-@@ -1020,7 +1065,7 @@ static int uniwill_read_string(struct device *dev, enum hwmon_sensor_types type,
+ 	return 0;
  }
  
- static const struct hwmon_ops uniwill_ops = {
--	.visible = 0444,
-+	.is_visible = uniwill_is_visible,
- 	.read = uniwill_read,
- 	.read_string = uniwill_read_string,
- };
-@@ -1048,7 +1093,10 @@ static int uniwill_hwmon_init(struct uniwill_data *data)
- {
- 	struct device *hdev;
+@@ -1417,9 +1508,7 @@ static int uniwill_notifier_call(struct notifier_block *nb, unsigned long action
  
--	if (!uniwill_device_supports(data, UNIWILL_FEATURE_HWMON))
-+	if (!uniwill_device_supports(data, UNIWILL_FEATURE_CPU_TEMP) &&
-+	    !uniwill_device_supports(data, UNIWILL_FEATURE_GPU_TEMP) &&
-+	    !uniwill_device_supports(data, UNIWILL_FEATURE_PRIMARY_FAN) &&
-+	    !uniwill_device_supports(data, UNIWILL_FEATURE_SECONDARY_FAN))
- 		return 0;
+ 		return NOTIFY_OK;
+ 	case UNIWILL_OSD_DC_ADAPTER_CHANGED:
+-		/* noop for the time being, will change once charging priority
+-		 * gets implemented.
+-		 */
++		usb_c_power_priority_restore(data);
  
- 	hdev = devm_hwmon_device_register_with_info(data->dev, "uniwill", data,
-@@ -1687,7 +1735,10 @@ static struct uniwill_device_descriptor lapac71h_descriptor __initdata = {
- 		    UNIWILL_FEATURE_SUPER_KEY |
- 		    UNIWILL_FEATURE_TOUCHPAD_TOGGLE |
- 		    UNIWILL_FEATURE_BATTERY |
--		    UNIWILL_FEATURE_HWMON,
-+		    UNIWILL_FEATURE_CPU_TEMP |
-+		    UNIWILL_FEATURE_GPU_TEMP |
-+		    UNIWILL_FEATURE_PRIMARY_FAN |
-+		    UNIWILL_FEATURE_SECONDARY_FAN,
- };
- 
- static struct uniwill_device_descriptor lapkc71f_descriptor __initdata = {
-@@ -1696,7 +1747,10 @@ static struct uniwill_device_descriptor lapkc71f_descriptor __initdata = {
- 		    UNIWILL_FEATURE_TOUCHPAD_TOGGLE |
- 		    UNIWILL_FEATURE_LIGHTBAR |
- 		    UNIWILL_FEATURE_BATTERY |
--		    UNIWILL_FEATURE_HWMON,
-+		    UNIWILL_FEATURE_CPU_TEMP |
-+		    UNIWILL_FEATURE_GPU_TEMP |
-+		    UNIWILL_FEATURE_PRIMARY_FAN |
-+		    UNIWILL_FEATURE_SECONDARY_FAN,
- };
- 
- static int phxarx1_phxaqf1_probe(struct uniwill_data *data)
+ 		return NOTIFY_OK;
+ 	case UNIWILL_OSD_FN_LOCK:
 -- 
 2.43.0
 
