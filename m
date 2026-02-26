@@ -1,114 +1,134 @@
-Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 54D9C2DEA75;
-	Thu, 26 Feb 2026 05:12:34 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.137.202.133
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DC5EE38A733
+	for <platform-driver-x86@vger.kernel.org>; Thu, 26 Feb 2026 07:23:59 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1772082756; cv=none; b=XNc1zKt96/A0KUZZSw4EWGMusTmaVWCdAJmJvVFEbsM8mUh39/zdkHiHICGX1fS2tFz5koDuX+xHwVH2eGKiJN5tO4mdXmmQ5YBqyTM1gtbEpJvGkoRzh4k48kkzMAgDO7Dm9xbhCKJjjNPqFl+2d6Ue+i4XiX54pCmZ7eay8zI=
+	t=1772090639; cv=none; b=OBMHFYRn91yHEk7qsSMcPsjE2mEx9fLukWJreAiWRXKHaWVfVp3UYznN0U/3vppP+GEkiQ9zV9rn8N+h4b3+/5k9gYQ3u05Ahr9e6Vz1vKuR7QP4ZAW1sxiVjAZE5Kkd4Y/39jiou8UIUFCAsL+u+pvj1kyieJYu4xKOYsmOJG4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1772082756; c=relaxed/simple;
-	bh=hNSUKCt1mpkkhC/gzoSBv7TrlM9O6+knuI5kUAph2AA=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version:Content-Type; b=GQF47JVRvN0ISEKyZUVVtFNwz2l8PF0MYMPr4SAwS5Ah8uNIoAm7tcqR8zPNFTJ+7f/XA7z34OOvxUa1inW8mMwEU81ud6CtnxLyQBUTsl4pCVdCUwUtdKL3qJwxxGXl6ruoon9grOrRDjyP8ouRgNA4VsiwgiUod2Q0//y06e8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=B0bfb1sY; arc=none smtp.client-ip=198.137.202.133
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=infradead.org
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=infradead.org
+	s=arc-20240116; t=1772090639; c=relaxed/simple;
+	bh=k9USkNmVGSoCODr28JmMXE7WT+zVoaOYxJj8X0RX+m8=;
+	h=From:To:Subject:Date:Message-ID:In-Reply-To:References:
+	 Content-Type:MIME-Version; b=NRQ/RjSPs71cHsK+V+t1kmm807DcSY9qGzqcJAPDbxZnWWG0EPXL+xMr5Ov9PlDsZ0zXbCT8rk/VWvzMbNAV69OAtdg+0ClWP1BmLEtOiAJ8kW1L7q3WXK7WtKWftpYxfYfMha+txBVe1ZlgGSzS1/xizDc7b7+WnBVT15RndY4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=i5AQ+cRX; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="B0bfb1sY"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=infradead.org; s=bombadil.20210309; h=Content-Transfer-Encoding:
-	Content-Type:MIME-Version:Message-ID:Date:Subject:Cc:To:From:Sender:Reply-To:
-	Content-ID:Content-Description:In-Reply-To:References;
-	bh=//aRfj10FWul1n2+qh2SvIxKDnye5KU8q1k1CwkVak4=; b=B0bfb1sYiGYOkXh5VX7go/HUQJ
-	EKrVuzn/4ST3ylpwznCvr94YArp5VYyf1fDqUVOq9JKyhvT6zuu/3Es3S9aKiZGpVJyjt8LO+qC2m
-	RfYNJBi2mhhTpZk0wPm8X+LtgPXJ9q1Z7c7F9stgOvKIlj0fCXTfmf2vXdq7Z5iUNMHFcp6vbUNC7
-	6p0eq76xIeADJbqpeb6JTwEorBaLi33AuIf5AaMEXdhUhsk/kqWmarWCtbTUboAiY+BIiz0RCvsyM
-	cUQBeDS2ATUxsCtTqBoghyWapTXeClK9y1kBnQzSRQ/K5f83V7lvfZ3SvKK0gLitB/XEGRcSUQww2
-	3OBfyNxA==;
-Received: from [50.53.43.113] (helo=bombadil.infradead.org)
-	by bombadil.infradead.org with esmtpsa (Exim 4.98.2 #2 (Red Hat Linux))
-	id 1vvTft-00000005PL6-1s58;
-	Thu, 26 Feb 2026 05:12:33 +0000
-From: Randy Dunlap <rdunlap@infradead.org>
-To: linux-kernel@vger.kernel.org
-Cc: Randy Dunlap <rdunlap@infradead.org>,
-	Hans de Goede <hansg@kernel.org>,
-	=?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>,
-	Vadim Pasternak <vadimp@nvidia.com>,
-	platform-driver-x86@vger.kernel.org
-Subject: [PATCH] platform_data/mlxreg: mlxreg.h: fix all kernel-doc warnings
-Date: Wed, 25 Feb 2026 21:12:29 -0800
-Message-ID: <20260226051232.549537-1-rdunlap@infradead.org>
-X-Mailer: git-send-email 2.53.0
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="i5AQ+cRX"
+Received: by smtp.kernel.org (Postfix) with ESMTPS id 2D13BC19424
+	for <platform-driver-x86@vger.kernel.org>; Thu, 26 Feb 2026 07:23:59 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1772090639;
+	bh=k9USkNmVGSoCODr28JmMXE7WT+zVoaOYxJj8X0RX+m8=;
+	h=From:To:Subject:Date:In-Reply-To:References:From;
+	b=i5AQ+cRXbN+UDZvB6qof5lfqSZks3emOS25TFXOPhMybStiGC3dJ3K2lJxBcchMPF
+	 IG93ERzZOlir8LgQWsEfJXhRpY0R8SRHkhbN2GBV2AJqabpFPJy/XjnEmcnbE8dfTg
+	 eWg7gx8PhvcLbdZ1f+dqvKCCPT+G0+uoClm3KdbpiDczbeKInmUzSCG/P5SPY1bDWC
+	 Ji7rSaDVpmqs2GGQ5EOl+3XqB4M7bbzrcpCou8y1RGmAedes13S/eD41GhLAyDelNG
+	 PXk8DGUxzu6RW2acGMrryA/k0RTMsCKhDskoS4+uCrs3ugZkknRJQgP+0Y6O7hPhdW
+	 okCIDXe+bXz8g==
+Received: by aws-us-west-2-korg-bugzilla-1.web.codeaurora.org (Postfix, from userid 48)
+	id 28931C41612; Thu, 26 Feb 2026 07:23:59 +0000 (UTC)
+From: bugzilla-daemon@kernel.org
+To: platform-driver-x86@vger.kernel.org
+Subject: =?UTF-8?B?W0J1ZyAyMjA2MzldIFtCVUddIGhwLXdtaTogT01FTiAxNi13ZjB4?=
+ =?UTF-8?B?eHggKGJvYXJkIDhCQUIpIOKAkyBmYW5zIHN0dWNrIGF0IDAgUlBNLCBCb29z?=
+ =?UTF-8?B?dC9XTUkgcXVlcmllcyByZWplY3RlZCAoaHBfd21pOiBxdWVyeSAweDRjIGVy?=
+ =?UTF-8?B?cm9yIDB4Nik=?=
+Date: Thu, 26 Feb 2026 07:23:58 +0000
+X-Bugzilla-Reason: None
+X-Bugzilla-Type: changed
+X-Bugzilla-Watch-Reason: AssignedTo drivers_platform_x86@kernel-bugs.osdl.org
+X-Bugzilla-Product: Drivers
+X-Bugzilla-Component: Platform_x86
+X-Bugzilla-Version: 2.5
+X-Bugzilla-Keywords: 
+X-Bugzilla-Severity: high
+X-Bugzilla-Who: Jie7172585@gmail.com
+X-Bugzilla-Status: NEW
+X-Bugzilla-Resolution: 
+X-Bugzilla-Priority: P3
+X-Bugzilla-Assigned-To: drivers_platform_x86@kernel-bugs.osdl.org
+X-Bugzilla-Flags: 
+X-Bugzilla-Changed-Fields: cc
+Message-ID: <bug-220639-215701-omNzyKMctU@https.bugzilla.kernel.org/>
+In-Reply-To: <bug-220639-215701@https.bugzilla.kernel.org/>
+References: <bug-220639-215701@https.bugzilla.kernel.org/>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+X-Bugzilla-URL: https://bugzilla.kernel.org/
+Auto-Submitted: auto-generated
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
 
-Use the correct kernel-doc format & notation to eliminate
-kernel-doc warnings:
+https://bugzilla.kernel.org/show_bug.cgi?id=3D220639
 
-Warning: include/linux/platform_data/mlxreg.h:24 Enum value
- 'MLX_WDT_TYPE1' not described in enum 'mlxreg_wdt_type'
-Warning: include/linux/platform_data/mlxreg.h:24 Enum value
- 'MLX_WDT_TYPE2' not described in enum 'mlxreg_wdt_type'
-Warning: include/linux/platform_data/mlxreg.h:24 Enum value
- 'MLX_WDT_TYPE3' not described in enum 'mlxreg_wdt_type'
-Warning: include/linux/platform_data/mlxreg.h:37 bad line:
- PHYs ready / unready state;
-Warning: include/linux/platform_data/mlxreg.h:153 struct member 'np'
- not described in 'mlxreg_core_data'
-Warning: include/linux/platform_data/mlxreg.h:153 struct member 'hpdev'
- not described in 'mlxreg_core_data'
+Jie7172585@gmail.com changed:
 
-Signed-off-by: Randy Dunlap <rdunlap@infradead.org>
----
-Cc: Hans de Goede <hansg@kernel.org>
-Cc: Ilpo Järvinen <ilpo.jarvinen@linux.intel.com>
-Cc: Vadim Pasternak <vadimp@nvidia.com>
-Cc: platform-driver-x86@vger.kernel.org
+           What    |Removed                     |Added
+----------------------------------------------------------------------------
+                 CC|                            |Jie7172585@gmail.com
 
- include/linux/platform_data/mlxreg.h |   14 +++++++-------
- 1 file changed, 7 insertions(+), 7 deletions(-)
+--- Comment #15 from Jie7172585@gmail.com ---
+Hi,
 
---- linux-next-20260225.orig/include/linux/platform_data/mlxreg.h
-+++ linux-next-20260225/include/linux/platform_data/mlxreg.h
-@@ -13,10 +13,10 @@
- /**
-  * enum mlxreg_wdt_type - type of HW watchdog
-  *
-- * TYPE1 HW watchdog implementation exist in old systems.
-- * All new systems have TYPE2 HW watchdog.
-- * TYPE3 HW watchdog can exist on all systems with new CPLD.
-- * TYPE3 is selected by WD capability bit.
-+ * @MLX_WDT_TYPE1: HW watchdog implementation in old systems.
-+ * @MLX_WDT_TYPE2: All new systems have TYPE2 HW watchdog.
-+ * @MLX_WDT_TYPE3: HW watchdog that can exist on all systems with new CPLD.
-+ *   TYPE3 is selected by WD capability bit.
-  */
- enum mlxreg_wdt_type {
- 	MLX_WDT_TYPE1,
-@@ -35,7 +35,7 @@ enum mlxreg_wdt_type {
-  * @MLXREG_HOTPLUG_LC_SYNCED: entry for line card synchronization events, coming
-  *			      after hardware-firmware synchronization handshake;
-  * @MLXREG_HOTPLUG_LC_READY: entry for line card ready events, indicating line card
--			     PHYs ready / unready state;
-+ *			     PHYs ready / unready state;
-  * @MLXREG_HOTPLUG_LC_ACTIVE: entry for line card active events, indicating firmware
-  *			      availability / unavailability for the ports on line card;
-  * @MLXREG_HOTPLUG_LC_THERMAL: entry for line card thermal shutdown events, positive
-@@ -123,8 +123,8 @@ struct mlxreg_hotplug_device {
-  * @reg_pwr: attribute power register;
-  * @reg_ena: attribute enable register;
-  * @mode: access mode;
-- * @np - pointer to node platform associated with attribute;
-- * @hpdev - hotplug device data;
-+ * @np: pointer to node platform associated with attribute;
-+ * @hpdev: hotplug device data;
-  * @notifier: pointer to event notifier block;
-  * @health_cntr: dynamic device health indication counter;
-  * @attached: true if device has been attached after good health indication;
+I am testing the Linux 7.0-rc1 kernel on my HP OMEN 16-wf1xxx and noticed t=
+hat
+the fan control and thermal profile features do not work.
+
+When attempting to change the platform profile or fan speed, nothing happens
+physically, and dmesg outputs the following errors:
+  hp_wmi: query 0x4c returned error 0x6
+  ACPI BIOS Error (bug): Attempt to CreateField of length zero
+  ACPI Error: Aborting method \_SB.WMID.WMAA
+
+I saw that Krishna recently added support for the OMEN 16-wf0xxx (Board 8BA=
+B)
+via a DMI quirk list. It appears my specific board ID (8C76) is also missing
+from the victus_s_thermal_profile_boards list, causing the driver to use the
+wrong fallback thermal parameters.
+
+Hardware Info:
+- Laptop: OMEN by HP Gaming Laptop 16-wf1xxx
+- DMI Board ID: 8C76
+
+Following the debugging steps from Bugzilla, here is the EC register dump f=
+or
+my 8C76 board. As you can see, register 0x59 is also holding the thermal
+profile state:
+
+$ sudo modprobe ec_sys
+$ sudo xxd /sys/kernel/debug/ec/ec0/io
+00000000: 0000 0000 0001 48aa 0f84 fa71 0ffa 1c01  ......H....q....
+00000010: 0129 251e ff00 ffff ffff ffff 00fa ac24  .)%............$
+00000020: 0000 0000 0000 f900 350f 2000 0036 4b59  ........5. ..6KY
+00000030: 5844 304b 3831 4a38 324a 5400 0100 00ff  XD0K81J82JT.....
+00000040: ffff ff01 00ff ffff ff4c 494f 4e00 0000  .........LION...
+00000050: 0009 ffff 3100 000f 4301 2d41 0000 0000  ....1...C.-A....
+00000060: 0080 1620 3333 332d 4143 2d31 322d 4100  ... 333-AC-12-A.
+00000070: 0000 0000 0000 0000 0000 0000 0000 0000  ................
+00000080: 0000 0000 0b00 0000 0000 0000 0000 0000  ................
+00000090: 3333 332d 4143 2d31 3257 4b30 3630 3833  333-AC-12WK06083
+000000a0: 0001 00d8 4500 004c 0000 0008 642a 0078  ....E..L....d*.x
+000000b0: 4d4d 3c5b 4100 3232 008c 0800 f242 1111  MM<[A.22.....B..
+000000c0: 0000 7e1b 8505 0c32 3c2d 6c20 7e1b 6421  ..~....2<-l ~.d!
+000000d0: 0000 0000 0000 7e1b bf02 5b11 0000 e000  ......~...[.....
+000000e0: 0000 00af 10ad 10af 1000 0083 430b 0080  ............C...
+000000f0: 0009 0200 0000 0000 5000 0061 580b 0000  ........P..aX...
+
+Could you please consider adding the "8C76" board ID to the quirk list in y=
+our
+upcoming patches? I am already on the 7.0-rc1 kernel and am fully available=
+ to
+test any patches you send my way.
+
+Thanks for your work!
+
+--=20
+You may reply to this email to add a comment.
+
+You are receiving this mail because:
+You are watching the assignee of the bug.=
