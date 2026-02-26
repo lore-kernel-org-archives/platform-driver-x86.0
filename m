@@ -1,41 +1,41 @@
-Received: from mout.gmx.net (mout.gmx.net [212.227.15.15])
+Received: from mout.gmx.net (mout.gmx.net [212.227.15.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BD0D44A21;
-	Thu, 26 Feb 2026 00:58:25 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=212.227.15.15
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 49D62286D70;
+	Thu, 26 Feb 2026 01:11:26 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=212.227.15.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1772067507; cv=none; b=ZESux/vQFr+7r+YSKwHIhAC1ZCKXzjVQMAcQXqh+1J/h0ZjKPLagvgIF2JeuhKXUmxv7Jy5n1QLk/JclQEvsSOTiBhDl5PmXXoi0x/Tar/IfP6g4zxRvz4PnNvfz+STU3Xse/A+WdaTZKiuwNwfWUGHJHIIzTiA167sK7F08788=
+	t=1772068289; cv=none; b=XxBPjn34OSTqIaXqaYLHPKisff1tm5kWj6K2GNdt26WG4vRmJu0aMF8ML7g2Un0OgMZ4QYNW6s7XoHzfY2TIgHJgxdfKr6xfuq7DqWNtsCbGh7I/XJXnscAf6XwbEGbOKl72GCHcw7bwvsFoTcF5r2SVLAVzfwj3il3mPYnJ1Iw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1772067507; c=relaxed/simple;
-	bh=1PYdRuiph+I3TNZkJQs8u9GjYt7EWjakH/Te9PaygAY=;
+	s=arc-20240116; t=1772068289; c=relaxed/simple;
+	bh=C0at+c31rgtCebKMEsnjWXQwiW2afrRRGHCx1WSJKtE=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=qo2uRVBpbtGg7abJkkUXVQ12MSDdM7u4XHHAjtcHu5jN3pQn+j+PRpHGfVo1eLa7DkixT+PeKROD1XoMrim5ZTb3rb+Ua/DPrrjS6tGIMorqUZIw4DH/N8sZ7+9ymQsbE/qtqBR2p4Kv00Y/5xNoO5ooBCZQh0RcheGo/KAtdYY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gmx.de; spf=pass smtp.mailfrom=gmx.de; dkim=pass (2048-bit key) header.d=gmx.de header.i=w_armin@gmx.de header.b=CABx4Fqm; arc=none smtp.client-ip=212.227.15.15
+	 In-Reply-To:Content-Type; b=sAR0c0Ec7wDtAgKpM0bH89CWRxOIYbTxOajh3LBAn5ocOceJg4LFGBD7sJFduZqRhqfofCppFQBCgjjv3lXX86RfDF4Ig+j5XrSLPXCZQ/gtCF1VKkURnE2/EycvxBJ/AzlTpE7YPywlURv/krg/wly2Yg5S4XVGQ/2BJVbRxQw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gmx.de; spf=pass smtp.mailfrom=gmx.de; dkim=pass (2048-bit key) header.d=gmx.de header.i=w_armin@gmx.de header.b=laoCScrd; arc=none smtp.client-ip=212.227.15.18
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gmx.de
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmx.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmx.de header.i=w_armin@gmx.de header.b="CABx4Fqm"
+	dkim=pass (2048-bit key) header.d=gmx.de header.i=w_armin@gmx.de header.b="laoCScrd"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=gmx.de;
-	s=s31663417; t=1772067500; x=1772672300; i=w_armin@gmx.de;
-	bh=yIdivZqdMr6FSC3c6bg93XIN8P1Q/xtzfuoI/ZGWw1M=;
+	s=s31663417; t=1772068277; x=1772673077; i=w_armin@gmx.de;
+	bh=Q0MK6rkb6/okY49dDmejFwQnJ1c5pM8mikYYwiPFZ4w=;
 	h=X-UI-Sender-Class:Message-ID:Date:MIME-Version:Subject:To:Cc:
 	 References:From:In-Reply-To:Content-Type:
 	 Content-Transfer-Encoding:cc:content-transfer-encoding:
 	 content-type:date:from:message-id:mime-version:reply-to:subject:
 	 to;
-	b=CABx4FqmaIjjKsxjjmonOty2FriQsIpVeP9IE9VUUdg2c3DDRRO900PMeDFdEo6C
-	 L2k9copimnKYdCqdJOtIwF85UYdhPo/6j3M6Uf7MrD+9iZxf3clx6/OousKKwHxTF
-	 HkFA+F0N2TjjWm7GgoW4CE1pVzUlNLqBwl2tZWGmbD0ZfTKzNRmZ3a0+YxPE2LxjG
-	 QM0EDIdrcD204BLUPtKjAcovPjCErx7hU3n+sbPVIZaCgxWfTNTPZSqdACogOSyjl
-	 F8940c89PilDVpWZp40mtYZ7U9SfxWBYRDOwkB2YU+8Zbd/TwrbHTY5/k+nKRQnqs
-	 ufgj2Im2hXmEfufOyQ==
+	b=laoCScrdZvcx3EUAGfNj6kn4CEA0zi5fxyWocQLSZ/oC9Y8twXnYClsz8n+m/IyM
+	 CgSwEHmElIpriHpRdcbYvERr8cT2WLkfw6SKsbqM9/aI6S50voBU06AE2poO0uWB8
+	 dRLoFclqWL9+0rs8KStbHKvSu25+CM/Yy19m8ubsvnNJFO7OXgd4v3qej5el5i6bK
+	 UNceG6fx8m/VGqjv9iesXPMGP9c24gpwsoEuN2ZtR8+4obNVe+gefre72tikpqqEy
+	 q3LBd0VmZ2/tm9tU6tIcOfJrCRS6cLFlMjP4qZzbFmg0uCYRBHNE0QdX9dm3Npwln
+	 I5W5uCXylke3WkxdnQ==
 X-UI-Sender-Class: 724b4f7f-cbec-4199-ad4e-598c01a50d3a
 Received: from client.hidden.invalid by mail.gmx.net (mrgmx005
- [212.227.17.190]) with ESMTPSA (Nemesis) id 1MybGh-1vVkcI3jPp-0154nn; Thu, 26
- Feb 2026 01:58:20 +0100
-Message-ID: <18069b04-d68f-419c-9704-5b017cb3e72d@gmx.de>
-Date: Thu, 26 Feb 2026 01:58:17 +0100
+ [212.227.17.190]) with ESMTPSA (Nemesis) id 1N2V0H-1viRit3Mdz-00rJH1; Thu, 26
+ Feb 2026 02:11:17 +0100
+Message-ID: <fb265a61-df38-472e-b155-c19f4dea2049@gmx.de>
+Date: Thu, 26 Feb 2026 02:11:15 +0100
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
@@ -43,256 +43,324 @@ List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 1/4] platform/x86/uniwill: uniwill-laptop: Rework hwmon
- feature defines
+Subject: Re: [PATCH 2/4] platform/x86/uniwill: Implement USB-C power priority
+ setting
 To: Werner Sembach <wse@tuxedocomputers.com>, Hans de Goede
  <hansg@kernel.org>, =?UTF-8?Q?Ilpo_J=C3=A4rvinen?=
  <ilpo.jarvinen@linux.intel.com>
 Cc: platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
 References: <20260226003408.1623547-1-wse@tuxedocomputers.com>
+ <20260226003408.1623547-2-wse@tuxedocomputers.com>
 Content-Language: en-US
 From: Armin Wolf <W_Armin@gmx.de>
-In-Reply-To: <20260226003408.1623547-1-wse@tuxedocomputers.com>
+In-Reply-To: <20260226003408.1623547-2-wse@tuxedocomputers.com>
 Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: quoted-printable
-X-Provags-ID: V03:K1:72MvATgRfL9Nl3Z7lOtiS4vafEXUHMSSbjclgcDZEiYyyR7zRHt
- o+21vgcLNTZXDoFjcBOfQYAfnGVTlIFdOHg0VyQbi6mm5CuFgm8fo7Zzn0HUjoeMw7+rTZt
- gDSDotVfqZAtlAtti/5pPaaR55YgTqLqmkUugCGAuQH1T9h5Ikt1OEwSx1Yk9WDvlXLfTRw
- mF13iHhJDXm8SKTZ4qRZQ==
+X-Provags-ID: V03:K1:Mfk5LXfpGjCGwmfmYR/cz3ZRadV/pecPGXoyi8r8ObMUmql4tNl
+ Fi2JMTr3QOM0/9CeTlYVch3a7im3ZNHtF+3qLrXfwcZIWezYfotLwDKCMgS50G9j2JyWJdk
+ RbP322VMLuF+KDivifJHpNIh0PMjYo4w67x6ep4NLCEcuA0b++GCGQSgkOOKF+dS/zrAUdb
+ eNaWrCi+fjGn2wc0SiOkw==
 X-Spam-Flag: NO
-UI-OutboundReport: notjunk:1;M01:P0:OdFGj+0/mLM=;hYuq0zS0sQNIlNiBVdR0m1nx2pG
- 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
+UI-OutboundReport: notjunk:1;M01:P0:ExPkbisC2Ms=;khmgrrTFOZF4cZxYYOU+Mrx+zX9
+ ehEbcER7jjdhG+BJ5PQ6hfT0sONaFhHKEB18UO4Wsym+LHdaR2C+CL4tEqhGFxL6s+YdhKkBV
+ 7GPZ+SW+yvLXLfXXUq2sygsTmXlej2PGqfCa3pI5WtAfMy1kKZH7ZWq0y5VkcHRUodHsL+mHK
+ fa5PV0YzUOAM6gWxenEI0YRMInVuuXRawGEhpnu8JbWuTtg7jLXSOyua9+BI8Eq3A3cjL+l0r
+ KIDSilL59mSsZnNJD7HmLSvLQUsG5YyDKqTa7VxWqMNxbxzSnxnp201v/UZlnjtWjkXyRfWLw
+ ziS4Uz4bF1OztK8xYAqsPRfKqwbsRspiDNQoGG6lZFlInY8j8e8KEjRojG3pnJPbKChE5J2u5
+ nDssMXFfugBtbBHv6Gzc0uL54D7Qk4m3dfveX68hbx/x41bfCY+EmzelgeA3Ban014TY8Qrs2
+ GxpRLau3EEpGje7vX1zAifQENKdjTtfa3Q/lewn1OsaHh3C2dhhXRIfQkdpTWxBkUGsSGYjzL
+ z3K2N459NrOUbIp4JP/E19jBSRCoVSv5zZ0pzY3U7RLIimAFb3WCzLNEPCiD/ouDZCne+4JVn
+ dCpYOl2+Pxf6uVQjT9FWycKvQvZBSN8S432489DfYGmUXUcOuoZ2ZnylThlnaiNPjGDWWHfZZ
+ 5s1VRe368iVvdT8jwl9/nIYKx/Oqz++5EoQdxmMf/x9rutDjKMcuRE0X5tsVDOPaL4gqi5e5U
+ SfZ2BIaJFgMYxox4B8AjzDEt5owT5/2NtRJ7uLt9Lokke75l4eeW1DLJyPc2hQI0n3hjjLgjn
+ uVCD5jvBdx8Zcm5cU4MSJwuuG1Iz/dlZAbYPrvo+VI/0TkE+7kazsWgI80U2RCVHF+fQSAlKx
+ QCEVZ0WanCMx3L8Bgi9umC6gJ1KpjOtKjD1xqSJ7ZMSAKIkZNLK5A0+f8ETRuwHrH7mosO1H6
+ /5/tXZhS+5TdoCA7OsPP/5vMehG+xWvMbM0bQkNydemDmDLizFyN2bbIOK+9xyL1k+hF3ann7
+ d3cGD6kyh1QRPjea/WajxKF0gJqktNa39IJM31zA0aDPaERi8rtEdTDlVc8mEyST6n/HxnYx9
+ wuhcaXALCCio4tIL+jwTFPGas8WC9XWKcmNZ7+I5xytROJ1+9omFQtIG6Mwk9mHO+Qyp00qFD
+ by3WP7HkgQRVlWVQ7vkOH4qC1Kh2+KHATjUaNBsbigPclafhdlch3yRX2aHn2upiEJPUxnNzF
+ wYUd9M5dfUks35BdSDt+wfW5hEOhpxFXYQCgAR2Y2l0yh6BgoDjZvHlqCct4UzfgS5G3B+YU9
+ D3hpy4rbMuFXLiuhEBZFakdFhYTIKqn90jt17hRGrOakokkg4bsDBiW8gD0hNml3osvo+fFmi
+ +GM1DMeSibXPn8Kev/bLpgU3e/m3D4cFWew1vCQShIqdmMXEPUtJ3tvqStiel3R72XdGQT93+
+ w2KzyT7s0iYiLHVWbENpTjq1M55y/rWa3HytWV+JtytzmjjgqhQL7Hy4ctequLO9tz6CaB4pC
+ /vmULxbmU+TlN5xrs8CM9BidJBwVbv8MHKFNM9G9sx+/sH5hC7yfWfkhZvcSNw5wxtZCSSOXL
+ 2md/uf7IbbK/qC6csD2/VoqJJagpKSW9lmaf26V33TkzpOM52ILTiOaEIOqTcI3rRq4GJzQ8c
+ +76DbzZV9Es0jBlpytm73YiaOGFnwqdVDPjV7GrGLg2c++CV4MvALvZ60M25hQzzKl345JuXy
+ FVXazVvmL2eHAk1mBuZ+mxcA1w5DinmNCK2QOrWdpPxYusm3Y5fP78ICvPlxnfzhqb8ycrUj5
+ ufZ0TDLN7IOqJN71wQK29GTsxFIc1RoIJyaus6a1FzdJy5MYWCaIHC3mqBXS6o59bNyRzwFPJ
+ AdJ4Yob/Y7Wb7UINYtrdVFyzDugyMvDL7t2Fp7hXa3Wuiwisek2WklNCbdySgWxqKhyX8Zilt
+ 5mG9l2gxe3opOKUohAZ9h48zeJMErU/V71IrFJ/SlWTAQLLe6lEwPvCsBlz9cYTL3QGrjRBUw
+ MYRUqP9SXnM77odvczuLchdZL7HqaPq/jKYoXa918Q2Am1W/6mp4f0SUYMhLMkCicmiwuHWWu
+ 9/NmR1MUCQv5llAY6662OQPLTpmWLGl9P6YakzErxE8G2WQYv2BDGsNUb5KYKTa1ShVNN9h10
+ F86BEYK5KYx+jzVL87Yn3H0x9k2FZabXzk0QTkHWkBWgxXvQOdooFojbJWL4ICeg/hYycevBT
+ agSU83NxbiPELm6ckSg/BmXnWkG8Gt2U/llBX/3yPLud/gkBQPxLN0kvscuoBE3VzdMcL3N1E
+ /KEX6GX1yGvTB1y/2YMvDkDZJ8BwBYPUwIscP+cTgDxkbjD5y73QERHOu/yhGwP+y6w5yxv8I
+ yk5QUgznoUPg/WvSVcAkuf9YoW7yw0PHJ5KU9XUXHSWXX0GyQJg/6OQVdvyAbNR03EhGrFduN
+ aKefOFraCgF1AUFABA4CB5RzzWwKJMBaa1U1ZkMDLWmu0latkKYGrXJskadKLWYRY4gldqkfX
+ mYdeZkstlAdQ36EFgc5Tc98oc49Y0vMreGtmc+WwlzuAZqhUQ64DAqCpcb7hO++f2cyT5PaZJ
+ +qXfadGgrnrkSqOeP2uDK3HfhHh+4voXBISum0Qrb7zl8a8bt7v5Lw2xZGI/zqVGEDqgtNAO9
+ AXwPdT7nyZWEFu0Tox8rybvIx15nOnyl0J1L4/sLUbl7KJkKmutNrTWNVTNKb+uFtlV7vYanr
+ TjkWIRkx238fgJd83vx+jF2F47+TWTpmAcFZA+kJUtEJyrmuRahChl+rGesx6sQOw/gvm9UzN
+ gXz9YcadTjH7GprjFq9/D6YKnawqpNEsfnyfWgxIj2y540f3PQqCT2Ad5bhbrnJPGt7sQ1tw/
+ 4VWf5lVyn/i7jQFcpracko823U2FSV0MNUiRrDKMbgboeNBhPHQ5ag11b6yPHxQBEJg2Ax4Cv
+ eUIa3cBYHUMOKjLM1WrAUezpgNTwo+4S5a34vXXLRFKjx+K85mD1ZeragdMkbzSxoX+y66Mdo
+ /ZKHHgvmDCYg7vwD/bK29G1q3+KPvBQ99lkN2oTmRvH/U1wYjBBhoct431ZdB75QKstiuOVRA
+ 3I7y7/wobl+uFC0KtGG1WYaVybBmWLa1bLHNLTQsKiyugY2qK0pQRNPw8o7TIsp9eMhOyvtjF
+ uLCqP6Xkt+kTXlWCcYGyoy7Zwqhj/Ax18/Pg0nEaTD6nCD9rHneKYDt/ed7Z4TEMapplXF0cT
+ RrneoDN0NzwhcMuwu4TgoNgt8ECjQnYULq9K3f2705qLyEWdL6AA7ZArr7h2HzTXzJMuRPsIi
+ RKTbrz6m8XIaHqrOVZtGMloBtzhs3jnFDnvllemWtufyDS4WkybHhuWSZ7WhyVQOWBS4qsOdE
+ YCfVBo/lqLuf35reLmY9NLQlVlf+ndrWQzVisk9Kul4StbY/OTYEWlQ76Qv7hxrH7FoP+hLTW
+ M/g5gtY+JcgWi0ISdhgZy+4O4+rq4vBX4hiGpNRnI7Ry6n7SJkd7NETTELy41sgREpJCnm5zz
+ Bfk9f3n/aUq2Joy1cBak1DU/oqprzSYxFYn//p8Kqd2ZkLRUNhOVu0TZ5gpDxh+KcR/nheRUY
+ SmHVXmzLMnqstYJkybnypAJCmrkfPfCxJp2ixsKaxN/MCNsbpbZdiJZc7gOZUUjZ/oEI4XMH9
+ SP3WeKpkxt94C9aFtE39SOBISWMfFfhEyfTcL4iRlMCYS0xPYaAeDj5LdhKe9Ta2EM5TTgt4U
+ On2XoX4DY1M9hTGT4j2moPebl2P3QCgqu4emDpe6LoHD6/XUIErqRSSTXc2ZHcwXSIqCZukpo
+ PpCZWlg03xoQaoEKMG2WEkWEQjYtw5yzsMDjsvXsER3VNb87g/SOsi6SU0h+gJ1zDlXGFMmo3
+ jfgxMW5HKXNgrM0rbhS4OY7rIPDGi07VQTNPlmpOQCCxPWwnEME9uSB5Rks6FyQsrA9uIoXQn
+ rlPCExmFyV62Y9OyPBtNXNVjMR8PL6cRLzvBzxhFuhp8mOM6FA9n3C7H7//Q+CVFy2kWXuszG
+ uKhg/rEVNZyLPlV44XB0vSH2q87JEqzgp3HErkKIOrOWKrqIJt58NqQlSfjh2VWkkfWuLxLA/
+ 0Lecg1HdQDLokVGJnHJJvvErav4HTtRqU05AFiPHoBayyCt3YDDNJDE0Dwyj6Y0ZiBJcGmu8u
+ LkhaVkWKKhuQeA68SDBzrgvPjsKvKdCEFAZ1Ydl873GniEq7FGTon9Oa3KFvTN5m5sdy+oW/n
+ pjUFi9EUJARs36fqdl7X89ghyRHHxLR4GZxv0JsBzk6NYLM50242LNdZO+3/VMN0iaT9++rp2
+ p4olwac8SLIcV1zpK6+DkKkj0E73PRHsvw4wDn9xITfxS3qeuJtzLJLU2HHWjkz719QlvIMmO
+ pbWbZEVv2yqkJgU6UNxwQy4jX4P82vQW8FrB22diaSfC+I0qHZz3AvvESaJRpWQxpVy8Ds5GR
+ GXYMWn5yo9Jt8vB9Lo4VWIsNRNJqefGtSWRorWa4dNOMtUI9PUWqzkluyGMdjjgfjMIVgPJyh
+ Z1MquzoeyyC3cjdDxoDZ1Akz19RJyUDc3UGw1FnrLzXYBFBP/CFOHnRwjB8AeuimxEbTRxMpK
+ /JHUPOr3eNseE+bqkgJSJVHKApw7+rhJXZy8gfQl5/EAE2H8uX2h/KLyf+HiaO8zJkov5WO57
+ Rh8TXuZ+72PwrWb1bV4Xv/NkfKlr/iVdVz/pPGiF77F/toPY0I0J/FhYl7Q24wgHnpPhpwLlN
+ 1lG5X/PY5bgKnzQNuzgwKW5HIVj6Tx2l3mOWVtujUJpUk8XWUk6QLKM4W4+a0rwZjpGGa/8Wh
+ LKYdb0szj99ADPN+kAiMvJlgHT9evFhVVhLt2XFybALB3ltLNSThtYYkejKiaG9rEACDnKsGR
+ 7ntJ9Lfg3B4KvZrieWAChuvsRM0aUXMOjdJcTmWD9aBlWYU6WVy6JoZRrA/7/4hD4MyuoUE4w
+ dzLxHGvLfEi+rMlRWJpvsp0rIz195CD58LsBiT+5a2Giy0dpXzNY+arNFmeXN8R8x/e11y3V1
+ RNtaSLcVursv/sBQ6VZsnoU1Avd4Skvas8JMYxdX4S8glpq75dBXIQEDQcOIBgEkPSWlyPXlk
+ UeUmnbQaH5op41wAlewaalVbd+SlS4ju7u/ma+hoF5O9QNWG2kJhhAPaA47gXdFWYoD/yEKJX
+ LFkfe1Wpyuu7tBZCM2Cdpv9fuvDOUwLcwQ9bqhwNQbSwGvmd0dxAasHV7SSWCL9uVdfJJ4nwb
+ H4rQekDiY8wVkIxTkkSs
 
 Am 26.02.26 um 01:31 schrieb Werner Sembach:
 
-> From: Armin Wolf <W_Armin@gmx.de>
+> On some devices Uniwill offers the option to set the USB-C port to
+> prioritise charging or performance. This patch exposes this setting to t=
+he
+> userspace via sysfs for all TUXEDO devices supporting it.
 >
-> Split hwmon feature define in smaller parts to accommodate for diverse
-> hardware. You can now specify the presence of a cpu and/or a gpu temp
-> sensor separately and if one or 2 fans exists.
-
-Hi,
-
-it would be nice if you could tell people that this series currently only =
-applies
-onto review-ilpo-fixes.
-
-> Signed-off-by: Armin Wolf <W_Armin@gmx.de>
 > Signed-off-by: Werner Sembach <wse@tuxedocomputers.com>
 > ---
->   drivers/platform/x86/uniwill/uniwill-acpi.c | 68 ++++++++++++++++++---
->   1 file changed, 61 insertions(+), 7 deletions(-)
+>   drivers/platform/x86/uniwill/uniwill-acpi.c | 99 +++++++++++++++++++--
+>   1 file changed, 94 insertions(+), 5 deletions(-)
 >
 > diff --git a/drivers/platform/x86/uniwill/uniwill-acpi.c b/drivers/platf=
 orm/x86/uniwill/uniwill-acpi.c
-> index 6341dca20b76a..7ab82cf16f388 100644
+> index 7ab82cf16f388..4d9657a3b8c10 100644
 > --- a/drivers/platform/x86/uniwill/uniwill-acpi.c
 > +++ b/drivers/platform/x86/uniwill/uniwill-acpi.c
-> @@ -319,8 +319,11 @@
->   #define UNIWILL_FEATURE_TOUCHPAD_TOGGLE		BIT(2)
->   #define UNIWILL_FEATURE_LIGHTBAR		BIT(3)
->   #define UNIWILL_FEATURE_BATTERY			BIT(4)
-> -#define UNIWILL_FEATURE_HWMON			BIT(5)
-> -#define UNIWILL_FEATURE_NVIDIA_CTGP_CONTROL	BIT(6)
-> +#define UNIWILL_FEATURE_CPU_TEMP		BIT(5)
-> +#define UNIWILL_FEATURE_GPU_TEMP		BIT(6)
-> +#define UNIWILL_FEATURE_PRIMARY_FAN		BIT(7)
-> +#define UNIWILL_FEATURE_SECONDARY_FAN		BIT(8)
-> +#define UNIWILL_FEATURE_NVIDIA_CTGP_CONTROL	BIT(9)
+> @@ -266,8 +266,8 @@
+>   #define BATTERY_CHARGE_FULL_OVER_24H	BIT(3)
+>   #define BATTERY_ERM_STATUS_REACHED	BIT(4)
+>  =20
+> -#define EC_ADDR_CHARGE_PRIO		0x07CC
+> -#define CHARGING_PERFORMANCE		BIT(7)
+> +#define EC_ADDR_USB_C_POWER_PRIORITY	0x07CC
+> +#define USB_C_POWER_PRIORITY		BIT(7)
+>  =20
+>   /* Same bits as EC_ADDR_LIGHTBAR_AC_CTRL except LIGHTBAR_S3_OFF */
+>   #define EC_ADDR_LIGHTBAR_BAT_CTRL	0x07E2
+> @@ -324,6 +324,7 @@
+>   #define UNIWILL_FEATURE_PRIMARY_FAN		BIT(7)
+>   #define UNIWILL_FEATURE_SECONDARY_FAN		BIT(8)
+>   #define UNIWILL_FEATURE_NVIDIA_CTGP_CONTROL	BIT(9)
+> +#define UNIWILL_FEATURE_USB_C_POWER_PRIORITY	BIT(10)
 >  =20
 >   struct uniwill_data {
 >   	struct device *dev;
-> @@ -427,7 +430,7 @@ static const struct key_entry uniwill_keymap[] =3D {
->   	{ KE_END }
+> @@ -343,6 +344,7 @@ struct uniwill_data {
+>   	struct mutex input_lock;	/* Protects input sequence during notify */
+>   	struct input_dev *input_device;
+>   	struct notifier_block nb;
+> +	unsigned int last_usb_c_power_priority;
 >   };
 >  =20
-> -static inline bool uniwill_device_supports(struct uniwill_data *data,
-> +static inline bool uniwill_device_supports(const struct uniwill_data *d=
-ata,
->   					   unsigned int features)
->   {
->   	return (data->features & features) =3D=3D features;
-> @@ -937,6 +940,48 @@ static const struct attribute_group *uniwill_groups=
-[] =3D {
+>   struct uniwill_battery_entry {
+> @@ -527,6 +529,7 @@ static bool uniwill_writeable_reg(struct device *dev=
+, unsigned int reg)
+>   	case EC_ADDR_CTGP_DB_CTGP_OFFSET:
+>   	case EC_ADDR_CTGP_DB_TPP_OFFSET:
+>   	case EC_ADDR_CTGP_DB_DB_OFFSET:
+> +	case EC_ADDR_USB_C_POWER_PRIORITY:
+>   		return true;
+>   	default:
+>   		return false;
+> @@ -565,6 +568,7 @@ static bool uniwill_readable_reg(struct device *dev,=
+ unsigned int reg)
+>   	case EC_ADDR_CTGP_DB_CTGP_OFFSET:
+>   	case EC_ADDR_CTGP_DB_TPP_OFFSET:
+>   	case EC_ADDR_CTGP_DB_DB_OFFSET:
+> +	case EC_ADDR_USB_C_POWER_PRIORITY:
+>   		return true;
+>   	default:
+>   		return false;
+> @@ -587,6 +591,7 @@ static bool uniwill_volatile_reg(struct device *dev,=
+ unsigned int reg)
+>   	case EC_ADDR_TRIGGER:
+>   	case EC_ADDR_SWITCH_STATUS:
+>   	case EC_ADDR_CHARGE_CTRL:
+> +	case EC_ADDR_USB_C_POWER_PRIORITY:
+>   		return true;
+>   	default:
+>   		return false;
+> @@ -883,6 +888,86 @@ static int uniwill_nvidia_ctgp_init(struct uniwill_=
+data *data)
+>   	return 0;
+>   }
+>  =20
+> +enum usb_c_power_priority_options {
+> +	USB_C_POWER_PRIORITY_OPTIONS_CHARGING =3D 0,
+> +	USB_C_POWER_PRIORITY_OPTIONS_PERFORMANCE,
+> +};
+> +
+> +static const char * const USB_C_POWER_PRIORITY_OPTIONS_TEXT[] =3D {
+> +	[USB_C_POWER_PRIORITY_OPTIONS_CHARGING]		=3D "charging",
+> +	[USB_C_POWER_PRIORITY_OPTIONS_PERFORMANCE]	=3D "performance",
+> +};
+> +
+> +static const u8 USB_C_POWER_PRIORITY_OPTIONS_VALUE[] =3D {
+> +	[USB_C_POWER_PRIORITY_OPTIONS_CHARGING]		=3D 0,
+> +	[USB_C_POWER_PRIORITY_OPTIONS_PERFORMANCE]	=3D USB_C_POWER_PRIORITY,
+> +};
+> +
+> +static ssize_t usb_c_power_priority_store(struct device *dev,
+> +					  struct device_attribute *attr,
+> +					  const char *buf, size_t count)
+> +{
+> +	struct uniwill_data *data =3D dev_get_drvdata(dev);
+> +	unsigned int value;
+> +	int ret;
+> +
+> +	ret =3D sysfs_match_string(USB_C_POWER_PRIORITY_OPTIONS_TEXT, buf);
+> +	if (ret < 0)
+> +		return ret;
+
+Please put a blank line here.
+
+> +	value =3D USB_C_POWER_PRIORITY_OPTIONS_VALUE[ret];
+> +
+> +	ret =3D regmap_update_bits(data->regmap, EC_ADDR_USB_C_POWER_PRIORITY,
+> +				 USB_C_POWER_PRIORITY, value);
+> +	if (ret < 0)
+> +		return ret;
+> +
+
+I think you need a mutex here, so concurrent writes to the charging priori=
+ty
+sysfs attribute are serialized. This mutex would then also protect concurr=
+ent
+access to data->last_usb_c_power_priority by the event handler.
+
+> +	data->last_usb_c_power_priority =3D value;
+> +
+> +	return count;
+> +}
+> +
+> +static ssize_t usb_c_power_priority_show(struct device *dev,
+> +					 struct device_attribute *attr,
+> +					 char *buf)
+> +{
+> +	struct uniwill_data *data =3D dev_get_drvdata(dev);
+> +	unsigned int value;
+> +	ssize_t count =3D 0;
+> +	int ret;
+> +
+> +	ret =3D regmap_read(data->regmap, EC_ADDR_USB_C_POWER_PRIORITY, &value=
+);
+> +	if (ret < 0)
+> +		return ret;
+> +	value &=3D USB_C_POWER_PRIORITY;
+> +
+> +	for (int i =3D 0; i < ARRAY_SIZE(USB_C_POWER_PRIORITY_OPTIONS_VALUE); =
+++i) {
+> +		if (USB_C_POWER_PRIORITY_OPTIONS_VALUE[i] =3D=3D value)
+> +			count +=3D sysfs_emit_at(buf, count, "[%s] ",
+> +					       USB_C_POWER_PRIORITY_OPTIONS_TEXT[i]);
+> +		else
+> +			count +=3D sysfs_emit_at(buf, count, "%s ",
+> +					       USB_C_POWER_PRIORITY_OPTIONS_TEXT[i]);
+> +	}
+> +	if (count)
+> +		buf[count - 1] =3D '\n';
+
+Please just emit USB_C_POWER_PRIORITY_OPTIONS_VALUE[USB_C_POWER_PRIORITY_O=
+PTIONS_PERFORMANCE] directly
+when the bit is set, and USB_C_POWER_PRIORITY_OPTIONS_VALUE[USB_C_POWER_PR=
+IORITY_OPTIONS_CHARGING] otherwise.
+This for loop provides no real value.
+
+> +
+> +	return count;
+> +}
+> +
+> +static DEVICE_ATTR_RW(usb_c_power_priority);
+> +
+> +static int usb_c_power_priority_restore(struct uniwill_data *data)
+> +{
+> +	int ret;
+> +
+> +	ret =3D regmap_update_bits(data->regmap, EC_ADDR_OEM_4, USB_C_POWER_PR=
+IORITY,
+> +				 data->last_usb_c_power_priority);
+> +	if (ret < 0)
+> +		return ret;
+> +
+> +	return ret;
+
+Please check the feature flag here before performing the register access. =
+You should also
+omit "ret" and instead return the result directly.
+
+Maybe you also need to add the appropriate suspend/resume functions for th=
+is?
+
+> +}
+> +
+>   static struct attribute *uniwill_attrs[] =3D {
+>   	/* Keyboard-related */
+>   	&dev_attr_fn_lock.attr,
+> @@ -893,6 +978,7 @@ static struct attribute *uniwill_attrs[] =3D {
+>   	&dev_attr_breathing_in_suspend.attr,
+>   	/* Power-management-related */
+>   	&dev_attr_ctgp_offset.attr,
+> +	&dev_attr_usb_c_power_priority.attr,
 >   	NULL
 >   };
 >  =20
-> +static umode_t uniwill_is_visible(const void *drvdata, enum hwmon_senso=
-r_types type, u32 attr,
-> +				  int channel)
-> +{
-> +	const struct uniwill_data *data =3D drvdata;
-> +	unsigned int feature;
-> +
-> +	switch (type) {
-> +	case hwmon_temp:
-> +		switch (channel) {
-> +		case 0:
-> +			feature =3D UNIWILL_FEATURE_CPU_TEMP;
-> +			break;
-> +		case 1:
-> +			feature =3D UNIWILL_FEATURE_GPU_TEMP;
-> +			break;
-> +		default:
-> +			return 0;
-> +		}
-> +		break;
-> +	case hwmon_fan:
-> +	case hwmon_pwm:
-> +		switch (channel) {
-> +		case 0:
-> +			feature =3D UNIWILL_FEATURE_PRIMARY_FAN;
-> +			break;
-> +		case 1:
-> +			feature =3D UNIWILL_FEATURE_SECONDARY_FAN;
-> +			break;
-> +		default:
-> +			return 0;
-> +		}
-> +		break;
-> +	default:
-> +		return 0;
+> @@ -927,6 +1013,11 @@ static umode_t uniwill_attr_is_visible(struct kobj=
+ect *kobj, struct attribute *a
+>   			return attr->mode;
+>   	}
+>  =20
+> +	if (attr =3D=3D &dev_attr_usb_c_power_priority.attr) {
+> +		if (uniwill_device_supports(data, UNIWILL_FEATURE_USB_C_POWER_PRIORIT=
+Y))
+> +			return attr->mode;
 > +	}
 > +
-> +	if (uniwill_device_supports(data, feature))
-> +		return 0440;
+>   	return 0;
+>   }
+>  =20
+> @@ -1417,9 +1508,7 @@ static int uniwill_notifier_call(struct notifier_b=
+lock *nb, unsigned long action
+>  =20
+>   		return NOTIFY_OK;
+>   	case UNIWILL_OSD_DC_ADAPTER_CHANGED:
+> -		/* noop for the time being, will change once charging priority
+> -		 * gets implemented.
+> -		 */
+> +		usb_c_power_priority_restore(data);
 
-I just noticed that i made a mistake here, 0444 should be the correct perm=
-ission setting.
-
-Otherwise, the patch looks good to me.
+Please use notifier_from_errno() here.
 
 Thanks,
 Armin Wolf
 
-> +
-> +	return 0;
-> +}
-> +
->   static int uniwill_read(struct device *dev, enum hwmon_sensor_types ty=
-pe, u32 attr, int channel,
->   			long *val)
->   {
-> @@ -1020,7 +1065,7 @@ static int uniwill_read_string(struct device *dev,=
- enum hwmon_sensor_types type,
->   }
 >  =20
->   static const struct hwmon_ops uniwill_ops =3D {
-> -	.visible =3D 0444,
-> +	.is_visible =3D uniwill_is_visible,
->   	.read =3D uniwill_read,
->   	.read_string =3D uniwill_read_string,
->   };
-> @@ -1048,7 +1093,10 @@ static int uniwill_hwmon_init(struct uniwill_data=
- *data)
->   {
->   	struct device *hdev;
->  =20
-> -	if (!uniwill_device_supports(data, UNIWILL_FEATURE_HWMON))
-> +	if (!uniwill_device_supports(data, UNIWILL_FEATURE_CPU_TEMP) &&
-> +	    !uniwill_device_supports(data, UNIWILL_FEATURE_GPU_TEMP) &&
-> +	    !uniwill_device_supports(data, UNIWILL_FEATURE_PRIMARY_FAN) &&
-> +	    !uniwill_device_supports(data, UNIWILL_FEATURE_SECONDARY_FAN))
->   		return 0;
->  =20
->   	hdev =3D devm_hwmon_device_register_with_info(data->dev, "uniwill", d=
-ata,
-> @@ -1687,7 +1735,10 @@ static struct uniwill_device_descriptor lapac71h_=
-descriptor __initdata =3D {
->   		    UNIWILL_FEATURE_SUPER_KEY |
->   		    UNIWILL_FEATURE_TOUCHPAD_TOGGLE |
->   		    UNIWILL_FEATURE_BATTERY |
-> -		    UNIWILL_FEATURE_HWMON,
-> +		    UNIWILL_FEATURE_CPU_TEMP |
-> +		    UNIWILL_FEATURE_GPU_TEMP |
-> +		    UNIWILL_FEATURE_PRIMARY_FAN |
-> +		    UNIWILL_FEATURE_SECONDARY_FAN,
->   };
->  =20
->   static struct uniwill_device_descriptor lapkc71f_descriptor __initdata=
- =3D {
-> @@ -1696,7 +1747,10 @@ static struct uniwill_device_descriptor lapkc71f_=
-descriptor __initdata =3D {
->   		    UNIWILL_FEATURE_TOUCHPAD_TOGGLE |
->   		    UNIWILL_FEATURE_LIGHTBAR |
->   		    UNIWILL_FEATURE_BATTERY |
-> -		    UNIWILL_FEATURE_HWMON,
-> +		    UNIWILL_FEATURE_CPU_TEMP |
-> +		    UNIWILL_FEATURE_GPU_TEMP |
-> +		    UNIWILL_FEATURE_PRIMARY_FAN |
-> +		    UNIWILL_FEATURE_SECONDARY_FAN,
->   };
->  =20
->   static int phxarx1_phxaqf1_probe(struct uniwill_data *data)
+>   		return NOTIFY_OK;
+>   	case UNIWILL_OSD_FN_LOCK:
