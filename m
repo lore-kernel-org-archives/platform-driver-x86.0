@@ -1,68 +1,46 @@
-Received: from CO1PR03CU002.outbound.protection.outlook.com (mail-westus2azon11010012.outbound.protection.outlook.com [52.101.46.12])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail.tuxedocomputers.com (mail.tuxedocomputers.com [157.90.84.7])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 21E8930F53C;
-	Wed, 25 Feb 2026 21:07:04 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=52.101.46.12
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1772053626; cv=fail; b=nRBDYtH3hIrPm4ePqSFh6+Oso+lEvoAQv+LGmR+Jps5bxjvkXDCeASvB0LDHjkV/Jz3k0RJMdjjvHmMBRxtGCyV4opOgaV2Uqtb7BjjsIkqXut7bucR4zPUhgcjf/oXQJKoEL5oENi4wz3d8rSj11ZC+ybq1WHamBa0hJgbYrlI=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1772053626; c=relaxed/simple;
-	bh=YpoL+0/q767793zzyz2Q9Sh4rd3ejmq/8CFYiolGyXk=;
-	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=SHjdYs1MaZF0VDj4POp8r/29U7JwSfyOBlBAOgHD15siNmtyvNrK3C7TfKSFlw5rLX7THjgaeiefKypsWtvRL3DtIhF4GWcuQ3jhAEJK7MYHhk3FtNxEIN/+q9nECYTWQ2XEIx72kkmcPOwAGGESiQB9LFMYu2mEY+FIgFryIXQ=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=tC92aA5+; arc=fail smtp.client-ip=52.101.46.12
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com
-Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=amd.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C5D732BCF45;
+	Thu, 26 Feb 2026 00:34:37 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=157.90.84.7
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1772066081; cv=none; b=mAQXR2n6IZtz3sBNsLuV+aaTmtc8TxRRjiKv7JkbATRi2NKITpEkXAEjzK1Umr8h2cLJC9Q/sHf9JwAmda00vPYo5ui6pF/vWkVvbqcuzvHz3qd92N4i5ydE+awqwQXFVVUVP652u4wtvogkW2lqrzTBoTx4J0XEe3+kiBhiNYA=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1772066081; c=relaxed/simple;
+	bh=g/YxkbAoL6RVnjN/gHfSHvr2wR8NgFjkML8MissOkug=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=h/kRy+ErkAmcL7yC8IN1GICKNlL2yOk7SycRKxlc2+vFsPzVCCmwZ2OD12Vxqm4KSdkqTxbpGHvOPvYwQNvdi37Ug0qykwtGyCyILofdt4irQGQWvDUTcf+e7bSsUwwbu33nPii+T20XJgANC6ZcLM83y+U9OeiCtdZqFL90OdY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=tuxedocomputers.com; spf=pass smtp.mailfrom=tuxedocomputers.com; dkim=pass (1024-bit key) header.d=tuxedocomputers.com header.i=@tuxedocomputers.com header.b=F489gfgN; arc=none smtp.client-ip=157.90.84.7
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=tuxedocomputers.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=tuxedocomputers.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="tC92aA5+"
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=tR0VpjER7CPT6i+CWWPABj2AyyDY4ZQO4VFWKl5r89Vnj6Mo/7ov040hc/Pgcco9RBoOaHVjKWEBn/gg5By2GmbR1EZ8rA3kdvtr8NWdU77kXtYNYqLkNcxhzHMtvIboQsLz061UmaMCZCAIQ3DNaLuSeF3UADnRhEyGnS0GJqZM9S86hPuvOGARsWSjmns8Xo9x/QyLTnFx0QwAUk+X7QTi0W8myO2m82TNLbCqG4P3Z/hUSXlvny3cZwmFMXDl9YEfDAAbtP3o6ZK6u+TnP/qv8HU4QWMqaZJf0JumBGMe/Izbw/VjdSTBptRIC89w43y8tqRyvZITYu3kedGtWg==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=53VIzc1K8fwU/UyHe/dSXtq0mYwKPo85msdmUVwt8b4=;
- b=lf1Ks1FoGkFlnTj+/DDlcVtRyr8DpfyS+XchCTrpRHsykdf2+rbY4qcfaNfXeZYxadd8kb8iQ3rNQmWrDH5Y7A2cirLdv5I60uVlT4njgl6jnnda2DIwvtY6sfV1S9Mpc93BFzn/ydvN0mKh08Sq9mgG/7CGd06Xecl/wA3WQxAGUpkx2P+wm1sv9NyGBRhorlBuQ0ootPhxwp3BcLWZBV/F96VYrWPyzNWD6zXEWR6+Al+qRsd75Diusr8NFSBAqy0JO8KLRqbeG4HposJGHH8hG9q4s6AH9zqkZQ+Ueg6xE5sUxk+LN80eZMYHrV/NJDqn/85FnBLPEET3Fh4A6A==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
- 165.204.84.17) smtp.rcpttodomain=hp.com smtp.mailfrom=amd.com; dmarc=pass
- (p=quarantine sp=quarantine pct=100) action=none header.from=amd.com;
- dkim=none (message not signed); arc=none (0)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=53VIzc1K8fwU/UyHe/dSXtq0mYwKPo85msdmUVwt8b4=;
- b=tC92aA5+76GARLX1BkO723xQ3Vrd+byw/Jxb9acnhr6R1MH4U7HlCqha48ciaMD9UmelT1J5C7opOR3xq0y1N6OFdMoZtPxgdd08Ew5oOzYXvJdoJh5gwKQg9uj9qk/IqoSnqzY3Dfk22ZovjZbN/TsagAx8j2qtJgOZdgbDGQo=
-Received: from PH8P220CA0001.NAMP220.PROD.OUTLOOK.COM (2603:10b6:510:345::9)
- by DM4PR12MB9735.namprd12.prod.outlook.com (2603:10b6:8:225::8) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.9654.11; Wed, 25 Feb
- 2026 21:07:02 +0000
-Received: from SN1PEPF000397B2.namprd05.prod.outlook.com
- (2603:10b6:510:345:cafe::12) by PH8P220CA0001.outlook.office365.com
- (2603:10b6:510:345::9) with Microsoft SMTP Server (version=TLS1_3,
- cipher=TLS_AES_256_GCM_SHA384) id 15.20.9632.23 via Frontend Transport; Wed,
- 25 Feb 2026 21:06:54 +0000
-X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 165.204.84.17)
- smtp.mailfrom=amd.com; dkim=none (message not signed)
- header.d=none;dmarc=pass action=none header.from=amd.com;
-Received-SPF: Pass (protection.outlook.com: domain of amd.com designates
- 165.204.84.17 as permitted sender) receiver=protection.outlook.com;
- client-ip=165.204.84.17; helo=satlexmb07.amd.com; pr=C
-Received: from satlexmb07.amd.com (165.204.84.17) by
- SN1PEPF000397B2.mail.protection.outlook.com (10.167.248.56) with Microsoft
- SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.9632.12 via Frontend Transport; Wed, 25 Feb 2026 21:07:01 +0000
-Received: from dogwood-dvt-marlim.amd.com (10.180.168.240) by
- satlexmb07.amd.com (10.181.42.216) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.2562.17; Wed, 25 Feb 2026 15:07:00 -0600
-From: Mario Limonciello <mario.limonciello@amd.com>
-To: <mario.limonciello@amd.com>, <jorge.lopez2@hp.com>, <hansg@kernel.org>,
-	<ilpo.jarvinen@linux.intel.com>, <linux@weissschuh.net>
-CC: <stable@vger.kernel.org>, Paul Kerry <p.kerry@sheffield.ac.uk>, "Ben
- Hutchings" <ben@decadent.org.uk>, <platform-driver-x86@vger.kernel.org>
-Subject: [PATCH v2] platform/x86: hp-bioscfg: Support allocations of larger data
-Date: Wed, 25 Feb 2026 15:06:46 -0600
-Message-ID: <20260225210646.59381-1-mario.limonciello@amd.com>
-X-Mailer: git-send-email 2.53.0
+	dkim=pass (1024-bit key) header.d=tuxedocomputers.com header.i=@tuxedocomputers.com header.b="F489gfgN"
+Received: from wse-pc.fritz.box (i5C75F712.versanet.de [92.117.247.18])
+	(Authenticated sender: wse@tuxedocomputers.com)
+	by mail.tuxedocomputers.com (Postfix) with ESMTPA id E664E2FC004D;
+	Thu, 26 Feb 2026 01:34:28 +0100 (CET)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=tuxedocomputers.com;
+	s=default; t=1772066069;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:
+	 content-transfer-encoding:content-transfer-encoding;
+	bh=nZdwkTKegxiZwyIzsjXKt0wrvNPQTN7YQUL0u2OgArw=;
+	b=F489gfgNtEGC0etaADLTXYnTk7ZuboiKW2B10Wmo16SXaMxsD6nPQe3fmm/0Wf/WHfegea
+	tzp7Ix7RhKx95flmlCVGeTQSG2kNbm7elwfl9ozV/FFz4MgwSOSKtT1IBExZk2ahDq5Xyh
+	dnrDtrqIgvBLFetoUrWsA8bFgZWTfqM=
+Authentication-Results: mail.tuxedocomputers.com;
+	auth=pass smtp.auth=wse@tuxedocomputers.com smtp.mailfrom=wse@tuxedocomputers.com
+From: Werner Sembach <wse@tuxedocomputers.com>
+To: Armin Wolf <W_Armin@gmx.de>,
+	Hans de Goede <hansg@kernel.org>,
+	=?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
+Cc: Werner Sembach <wse@tuxedocomputers.com>,
+	platform-driver-x86@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Subject: [PATCH 1/4] platform/x86/uniwill: uniwill-laptop: Rework hwmon feature defines
+Date: Thu, 26 Feb 2026 01:31:37 +0100
+Message-ID: <20260226003408.1623547-1-wse@tuxedocomputers.com>
+X-Mailer: git-send-email 2.43.0
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
@@ -70,80 +48,140 @@ List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-ClientProxiedBy: satlexmb08.amd.com (10.181.42.217) To satlexmb07.amd.com
- (10.181.42.216)
-X-EOPAttributedMessage: 0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: SN1PEPF000397B2:EE_|DM4PR12MB9735:EE_
-X-MS-Office365-Filtering-Correlation-Id: e989c3d0-1b6e-436e-0547-08de74b1d218
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam:
-	BCL:0;ARA:13230040|36860700013|376014|82310400026|1800799024|13003099007;
-X-Microsoft-Antispam-Message-Info:
-	FXpyvL9XkIZe871Tj9pke2ZVIMyYiMAALY74QslmG9VnGLTWY5SlHuDmyeuQ3rrsdavosvjkrLJBSIL4PWNxdVkRK4PY3RBhVm+HpMJAe8V7tQPK4HvNmpSMvGFwhSj6sOUja3zZ3hDDdVThdtosFcVIVBTI2M2a0CRLcXiR99ahlI1goTbgtl5R08wY9fMuYbD/ckEN9OKQgMI0RSWPGp6eELMqscztkREvXe2X5Pe0LN0Nx9IV2BtBGlv36ahrQaXzAHq2ufFanyFsew+GPy3dDoTgPm4elfVUg0cjC8S9xj6eCWdjb4rZF8lYkTFbmfHp9zoJ3qbm6APJ/vWvShSYlUkcvLX7TG6WSKfU8y2+gWY2s2tu0QUCpQjtBLOQKpoiuCVDR+f7CytX/oDJx3hf8cAVPlIJe/Lz2Y10Ti1PBPCFvE7Odtvik/g8TSdMmE0To5cMpvyLCFiB2V3OuJ0VGWFUNNmWkRtGKHnJkHNE0gFICjrxucJrU3pXjT0WiNtA1bqGzT+Pn4+AgjEVVZGY4joS/+AuKH1z/7uuxouls5hNoUoHXpulugknwn9Ocih3m1yG4QVBosQvt38vAO/sCpx1TUcy/iXu515dOv6VeU3PIDpwcTH4zIrNbonj3m/tJeqsKqCxt26fAaGFIGGsXHVS7rsIrpP/tDMH3V2lqkco8HfP1HCSQ48dFtjjSk/4f/JUsN7cWBWcH8VdcJ3h7Ei2QBcBNOKzEoN9SzAGKgKaRV0ycBdkHbD4IZUDF66kw6n3MR5amC4dGR8GFn3mlbAB4CFP39XPArAgdX8D+M8fsQBAG488f6mT7xoJXgveOnh5R/NDYnX6kAiZpg==
-X-Forefront-Antispam-Report:
-	CIP:165.204.84.17;CTRY:US;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:satlexmb07.amd.com;PTR:InfoDomainNonexistent;CAT:NONE;SFS:(13230040)(36860700013)(376014)(82310400026)(1800799024)(13003099007);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0:
-	GYayAQ4m6ao+POwAsG2IQiJSs8NgO1MTbE8d10n9OfDPFWJ/tRhPRaVoS7JZ/5FfBhOJegkT8+lPfBGhW1BCEA+WY4EhpfBdaIGqiOL/KMLMeBzgKtrhzcTVK9uYBxqDsA9WuDFbVngejFfwkGjkoi/oma1kJ4Iga6ORdWjLuGymKQjD2nJpnjm9XLzsCIAGqghDPAL3ieTUV3G1ZJuLQw0CZsVEUh0wfOUK8HFh5CWTQmaiz5JY6Y1Yqar/mpECgEavSSesH9NYEiDdO+OipSrn2xzS8sAalTx+1oudfqJ6ZtMVMHRBnSn+OprLWSmAFQlcZlYXPXusAFIclPl17y41mGaWi/9uQSrUfoo5OapSF0tHANwzuynYvNEm5xZFbZHgsb0M9IZhlQfYRedanUNhMNBiiPTC2tD8PPsN3ogizrJ83nj4xQnErvdfZloJ
-X-OriginatorOrg: amd.com
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 25 Feb 2026 21:07:01.5606
- (UTC)
-X-MS-Exchange-CrossTenant-Network-Message-Id: e989c3d0-1b6e-436e-0547-08de74b1d218
-X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
-X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=3dd8961f-e488-4e60-8e11-a82d994e183d;Ip=[165.204.84.17];Helo=[satlexmb07.amd.com]
-X-MS-Exchange-CrossTenant-AuthSource:
-	SN1PEPF000397B2.namprd05.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Anonymous
-X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM4PR12MB9735
 
-Some systems have much larger amounts of enumeration attributes
-than have been previously encountered. This can lead to page allocation
-failures when using kcalloc().  Switch over to using kvcalloc() to
-allow larger allocations.
+From: Armin Wolf <W_Armin@gmx.de>
 
-Fixes: 6b2770bfd6f92 ("platform/x86: hp-bioscfg: enum-attributes")
-Cc: stable@vger.kernel.org
-Reported-by: Paul Kerry <p.kerry@sheffield.ac.uk>
-Tested-by: Paul Kerry <p.kerry@sheffield.ac.uk>
-Closes: https://bugs.debian.org/1127612
-Signed-off-by: Mario Limonciello <mario.limonciello@amd.com>
+Split hwmon feature define in smaller parts to accommodate for diverse
+hardware. You can now specify the presence of a cpu and/or a gpu temp
+sensor separately and if one or 2 fans exists.
+
+Signed-off-by: Armin Wolf <W_Armin@gmx.de>
+Signed-off-by: Werner Sembach <wse@tuxedocomputers.com>
 ---
-Cc: Ben Hutchings <ben@decadent.org.uk>
-v2: Add matching kvfree() (Ben)
----
- drivers/platform/x86/hp/hp-bioscfg/enum-attributes.c | 9 ++++++---
- 1 file changed, 6 insertions(+), 3 deletions(-)
+ drivers/platform/x86/uniwill/uniwill-acpi.c | 68 ++++++++++++++++++---
+ 1 file changed, 61 insertions(+), 7 deletions(-)
 
-diff --git a/drivers/platform/x86/hp/hp-bioscfg/enum-attributes.c b/drivers/platform/x86/hp/hp-bioscfg/enum-attributes.c
-index 470b9f44ed7aa..af4d1920d4880 100644
---- a/drivers/platform/x86/hp/hp-bioscfg/enum-attributes.c
-+++ b/drivers/platform/x86/hp/hp-bioscfg/enum-attributes.c
-@@ -94,8 +94,11 @@ int hp_alloc_enumeration_data(void)
- 	bioscfg_drv.enumeration_instances_count =
- 		hp_get_instance_count(HP_WMI_BIOS_ENUMERATION_GUID);
+diff --git a/drivers/platform/x86/uniwill/uniwill-acpi.c b/drivers/platform/x86/uniwill/uniwill-acpi.c
+index 6341dca20b76a..7ab82cf16f388 100644
+--- a/drivers/platform/x86/uniwill/uniwill-acpi.c
++++ b/drivers/platform/x86/uniwill/uniwill-acpi.c
+@@ -319,8 +319,11 @@
+ #define UNIWILL_FEATURE_TOUCHPAD_TOGGLE		BIT(2)
+ #define UNIWILL_FEATURE_LIGHTBAR		BIT(3)
+ #define UNIWILL_FEATURE_BATTERY			BIT(4)
+-#define UNIWILL_FEATURE_HWMON			BIT(5)
+-#define UNIWILL_FEATURE_NVIDIA_CTGP_CONTROL	BIT(6)
++#define UNIWILL_FEATURE_CPU_TEMP		BIT(5)
++#define UNIWILL_FEATURE_GPU_TEMP		BIT(6)
++#define UNIWILL_FEATURE_PRIMARY_FAN		BIT(7)
++#define UNIWILL_FEATURE_SECONDARY_FAN		BIT(8)
++#define UNIWILL_FEATURE_NVIDIA_CTGP_CONTROL	BIT(9)
  
--	bioscfg_drv.enumeration_data = kzalloc_objs(*bioscfg_drv.enumeration_data,
--						    bioscfg_drv.enumeration_instances_count);
-+	if (!bioscfg_drv.enumeration_instances_count)
-+		return -EINVAL;
-+	bioscfg_drv.enumeration_data = kvcalloc(bioscfg_drv.enumeration_instances_count,
-+						sizeof(*bioscfg_drv.enumeration_data), GFP_KERNEL);
+ struct uniwill_data {
+ 	struct device *dev;
+@@ -427,7 +430,7 @@ static const struct key_entry uniwill_keymap[] = {
+ 	{ KE_END }
+ };
+ 
+-static inline bool uniwill_device_supports(struct uniwill_data *data,
++static inline bool uniwill_device_supports(const struct uniwill_data *data,
+ 					   unsigned int features)
+ {
+ 	return (data->features & features) == features;
+@@ -937,6 +940,48 @@ static const struct attribute_group *uniwill_groups[] = {
+ 	NULL
+ };
+ 
++static umode_t uniwill_is_visible(const void *drvdata, enum hwmon_sensor_types type, u32 attr,
++				  int channel)
++{
++	const struct uniwill_data *data = drvdata;
++	unsigned int feature;
 +
- 	if (!bioscfg_drv.enumeration_data) {
- 		bioscfg_drv.enumeration_instances_count = 0;
- 		return -ENOMEM;
-@@ -444,6 +447,6 @@ void hp_exit_enumeration_attributes(void)
- 	}
- 	bioscfg_drv.enumeration_instances_count = 0;
- 
--	kfree(bioscfg_drv.enumeration_data);
-+	kvfree(bioscfg_drv.enumeration_data);
- 	bioscfg_drv.enumeration_data = NULL;
++	switch (type) {
++	case hwmon_temp:
++		switch (channel) {
++		case 0:
++			feature = UNIWILL_FEATURE_CPU_TEMP;
++			break;
++		case 1:
++			feature = UNIWILL_FEATURE_GPU_TEMP;
++			break;
++		default:
++			return 0;
++		}
++		break;
++	case hwmon_fan:
++	case hwmon_pwm:
++		switch (channel) {
++		case 0:
++			feature = UNIWILL_FEATURE_PRIMARY_FAN;
++			break;
++		case 1:
++			feature = UNIWILL_FEATURE_SECONDARY_FAN;
++			break;
++		default:
++			return 0;
++		}
++		break;
++	default:
++		return 0;
++	}
++
++	if (uniwill_device_supports(data, feature))
++		return 0440;
++
++	return 0;
++}
++
+ static int uniwill_read(struct device *dev, enum hwmon_sensor_types type, u32 attr, int channel,
+ 			long *val)
+ {
+@@ -1020,7 +1065,7 @@ static int uniwill_read_string(struct device *dev, enum hwmon_sensor_types type,
  }
+ 
+ static const struct hwmon_ops uniwill_ops = {
+-	.visible = 0444,
++	.is_visible = uniwill_is_visible,
+ 	.read = uniwill_read,
+ 	.read_string = uniwill_read_string,
+ };
+@@ -1048,7 +1093,10 @@ static int uniwill_hwmon_init(struct uniwill_data *data)
+ {
+ 	struct device *hdev;
+ 
+-	if (!uniwill_device_supports(data, UNIWILL_FEATURE_HWMON))
++	if (!uniwill_device_supports(data, UNIWILL_FEATURE_CPU_TEMP) &&
++	    !uniwill_device_supports(data, UNIWILL_FEATURE_GPU_TEMP) &&
++	    !uniwill_device_supports(data, UNIWILL_FEATURE_PRIMARY_FAN) &&
++	    !uniwill_device_supports(data, UNIWILL_FEATURE_SECONDARY_FAN))
+ 		return 0;
+ 
+ 	hdev = devm_hwmon_device_register_with_info(data->dev, "uniwill", data,
+@@ -1687,7 +1735,10 @@ static struct uniwill_device_descriptor lapac71h_descriptor __initdata = {
+ 		    UNIWILL_FEATURE_SUPER_KEY |
+ 		    UNIWILL_FEATURE_TOUCHPAD_TOGGLE |
+ 		    UNIWILL_FEATURE_BATTERY |
+-		    UNIWILL_FEATURE_HWMON,
++		    UNIWILL_FEATURE_CPU_TEMP |
++		    UNIWILL_FEATURE_GPU_TEMP |
++		    UNIWILL_FEATURE_PRIMARY_FAN |
++		    UNIWILL_FEATURE_SECONDARY_FAN,
+ };
+ 
+ static struct uniwill_device_descriptor lapkc71f_descriptor __initdata = {
+@@ -1696,7 +1747,10 @@ static struct uniwill_device_descriptor lapkc71f_descriptor __initdata = {
+ 		    UNIWILL_FEATURE_TOUCHPAD_TOGGLE |
+ 		    UNIWILL_FEATURE_LIGHTBAR |
+ 		    UNIWILL_FEATURE_BATTERY |
+-		    UNIWILL_FEATURE_HWMON,
++		    UNIWILL_FEATURE_CPU_TEMP |
++		    UNIWILL_FEATURE_GPU_TEMP |
++		    UNIWILL_FEATURE_PRIMARY_FAN |
++		    UNIWILL_FEATURE_SECONDARY_FAN,
+ };
+ 
+ static int phxarx1_phxaqf1_probe(struct uniwill_data *data)
 -- 
-2.53.0
+2.43.0
 
