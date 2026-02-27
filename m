@@ -1,274 +1,195 @@
-Received: from mail.tuxedocomputers.com (mail.tuxedocomputers.com [157.90.84.7])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from sender4-op-o15.zoho.com (sender4-op-o15.zoho.com [136.143.188.15])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BA90E3A1D06;
-	Fri, 27 Feb 2026 18:48:15 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=157.90.84.7
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1772218099; cv=none; b=tgKHh0LZecJDE7Agm7t1HmGSHPl/+xHk0Y5kDX4iBRzzC54Q5JnX+CR3n5wPE3ZOqKaBXEgsh/g0My9/CJvWji0ZXqyZTIqUHqU9fvuwjUvm0wZka94DyKMz1duxzQ+YpoS0U88L3ZS4bZytPtUKPpNBNXFKfrgD68Xm2Gv8+qE=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1772218099; c=relaxed/simple;
-	bh=TtZszQ4IMN11ChuB+7Yv8hUqoRu135gefi49qkXCEBU=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=SJPPnAQxHtdXk5q+sHh9vllCzn2EIdcvfTGLSf2unUvck4/0NBNS17Y/r67RXpSfrinAOrwn5lZ0jgJ9Pz3xUwvc1O687vnWvLAjfJft2O9EEWbKK7YwCe2Drpacyxfw4rxuqA9c1myZMO+MU4UxFV1SlR+qmYqw5xSz8c1jj9k=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=tuxedocomputers.com; spf=pass smtp.mailfrom=tuxedocomputers.com; dkim=pass (1024-bit key) header.d=tuxedocomputers.com header.i=@tuxedocomputers.com header.b=G3inbhGN; arc=none smtp.client-ip=157.90.84.7
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=tuxedocomputers.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=tuxedocomputers.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CE8A831618B;
+	Fri, 27 Feb 2026 19:06:49 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=136.143.188.15
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1772219211; cv=pass; b=FKgX2jvPfdHcf8qouf2VNkJvt+nZDpDa3g6lcEL1SVyjDkx4S8dV2ab1GMp5qHdUiOQcwWoZ4lyRhTpF5BYmI1j7L9nTMKtA7yBdKJzpkN54QLzJYkVmBbLJ/8+kOuA4PyY3zQ73fO333q2OEOPaAex/sMZOtpfG55Io0YrS/5I=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1772219211; c=relaxed/simple;
+	bh=Ucy7XAZZO4/8HWFzYkIyCLLhG908Cm/XxzdahSNiIQg=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=XY0wJszU4ajpykAqFEhnifSoSL51Td/lxee0o9o8z+BC62gQ4lX50sJDthfYt7Uo8rh/q7lDorSEDdg/5+pHY12Gow+CuSgLUqOBc6AVDC2dh3uZsDfBlnWty+DiDhvhVaZr8J/iuP9hox9cZSipe8fPjX233m6ToYY9SonswNk=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=rong.moe; spf=pass smtp.mailfrom=rong.moe; dkim=pass (2048-bit key) header.d=rong.moe header.i=i@rong.moe header.b=oTSbW2lM; arc=pass smtp.client-ip=136.143.188.15
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=rong.moe
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=rong.moe
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=tuxedocomputers.com header.i=@tuxedocomputers.com header.b="G3inbhGN"
-Received: from [192.168.178.24] (i5C75F712.versanet.de [92.117.247.18])
-	(Authenticated sender: wse@tuxedocomputers.com)
-	by mail.tuxedocomputers.com (Postfix) with ESMTPSA id 745372FC004D;
-	Fri, 27 Feb 2026 19:48:13 +0100 (CET)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=tuxedocomputers.com;
-	s=default; t=1772218093;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=MQ0C/7rCOuT329cladohpccoxsCpR5D3AjlP5sC3s2Q=;
-	b=G3inbhGN0yGnpWaSwOIo1ilQCvkjx394Xbx8aEG1GEC43D4zkGGlwZ6Q4brhh6zVpCx0U2
-	2Zi+c/aJfbx6SAzc4zskkl65nYBHsPLcYWs0qCtJh89exUpzBuxzTJxJt7iKwcMb7lcvk+
-	GygdexpIvW8K34TawrfeWzB8tYIsZTM=
-Authentication-Results: mail.tuxedocomputers.com;
-	auth=pass smtp.auth=wse@tuxedocomputers.com smtp.mailfrom=wse@tuxedocomputers.com
-Message-ID: <ac3abd10-4036-48e5-95dc-637658acc03a@tuxedocomputers.com>
-Date: Fri, 27 Feb 2026 19:48:13 +0100
+	dkim=pass (2048-bit key) header.d=rong.moe header.i=i@rong.moe header.b="oTSbW2lM"
+ARC-Seal: i=1; a=rsa-sha256; t=1772219185; cv=none; 
+	d=zohomail.com; s=zohoarc; 
+	b=HoH4Dxxbzhw7dePTntIXeQZkXak7CuBfb2XIWZPt0Uyq5kChWSrrL39qaSO4CUfhxkW0lHing+6UQswjQofhqyO9/r+eay0B1mMyOXenGKDdYlPDhXSmIry2a9ucIVYpGqaG8n6Gi9UkQvZmzrw2twTLfXdyWpy0YeJ/4jGFZMA=
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=zohomail.com; s=zohoarc; 
+	t=1772219185; h=Content-Transfer-Encoding:Cc:Cc:Date:Date:From:From:MIME-Version:Message-ID:Subject:Subject:To:To:Message-Id:Reply-To; 
+	bh=Xy17tU33w1xzCJldc+joPucIJEv6DyWFIT0d2bdInMI=; 
+	b=JRmtYTP4HNrDo3qTduQjo8qxg98IASuJp+yy8mbv5FJJmfPEwALP9CeaZ5uRzYYXIc1PEPF1ep/S/YZ9DChwx9vmM9tSViCKG3fV2iNaSg+X0zSfVV24YI7/CBE1vRiPVHG2f3sB8g6Ja2Dcm5xqxra17CamEq7qszK1itDMZcE=
+ARC-Authentication-Results: i=1; mx.zohomail.com;
+	dkim=pass  header.i=rong.moe;
+	spf=pass  smtp.mailfrom=i@rong.moe;
+	dmarc=pass header.from=<i@rong.moe>
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; t=1772219185;
+	s=zmail2048; d=rong.moe; i=i@rong.moe;
+	h=From:From:To:To:Cc:Cc:Subject:Subject:Date:Date:Message-ID:MIME-Version:Content-Transfer-Encoding:Message-Id:Reply-To;
+	bh=Xy17tU33w1xzCJldc+joPucIJEv6DyWFIT0d2bdInMI=;
+	b=oTSbW2lMGF3WJc+A6YiYg++8i7FasKD5s844kwb6lTnrT5SyFeZDjakiz6K0h5f6
+	58ycwC7yv9+H3iqbxOuJ2bxXhfhrG7JTfJ6xA0lNSrTO153S5fbP9F8CGGvWQ7pS0+o
+	k498D4mo2yr8DBQYxd3JNPIFhYhifFvhLSPCcl0xr4wRmJz4uQR0exl+eVKYlyuDkhL
+	030nbTP/dkKVFhx4x6DXk/ZOGUK6/H+64q216IZWdQz5qEPt1nBNPOpPBSaQ1DDfuwz
+	D3bwrKiDiQ9Cl4TsQxD7bxd1e/2ZD7rIwW65Qa04Ed7f0/i9g1i6lEashXInKmsgQI6
+	zyF/zz7kgA==
+Received: by mx.zohomail.com with SMTPS id 1772219184087993.5636808454385;
+	Fri, 27 Feb 2026 11:06:24 -0800 (PST)
+From: Rong Zhang <i@rong.moe>
+To: Lee Jones <lee@kernel.org>,
+	Pavel Machek <pavel@kernel.org>,
+	=?UTF-8?q?Thomas=20Wei=C3=9Fschuh?= <linux@weissschuh.net>,
+	Benson Leung <bleung@chromium.org>,
+	Guenter Roeck <groeck@chromium.org>,
+	=?UTF-8?q?Marek=20Beh=C3=BAn?= <kabel@kernel.org>,
+	Mark Pearson <mpearson-lenovo@squebb.ca>,
+	"Derek J. Clark" <derekjohn.clark@gmail.com>,
+	Hans de Goede <hansg@kernel.org>,
+	=?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>,
+	Ike Panhc <ikepanhc@gmail.com>
+Cc: Rong Zhang <i@rong.moe>,
+	Vishnu Sankar <vishnuocv@gmail.com>,
+	vsankar@lenovo.com,
+	linux-kernel@vger.kernel.org,
+	linux-leds@vger.kernel.org,
+	chrome-platform@lists.linux.dev,
+	platform-driver-x86@vger.kernel.org
+Subject: [RFC PATCH 0/9] leds: Add support for hw initiated hw control trigger transition
+Date: Sat, 28 Feb 2026 03:05:57 +0800
+Message-ID: <20260227190617.271388-1-i@rong.moe>
+X-Mailer: git-send-email 2.51.0
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v2 2/4] platform/x86/uniwill: Implement USB-C power
- priority setting
-To: Armin Wolf <W_Armin@gmx.de>, Hans de Goede <hansg@kernel.org>,
- =?UTF-8?Q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
-Cc: platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
-References: <20260226205302.123782-1-wse@tuxedocomputers.com>
- <20260226205302.123782-3-wse@tuxedocomputers.com>
- <3123878e-d791-418f-af3c-29076afd6ddc@gmx.de>
-Content-Language: en-US
-From: Werner Sembach <wse@tuxedocomputers.com>
-In-Reply-To: <3123878e-d791-418f-af3c-29076afd6ddc@gmx.de>
-Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 8bit
+X-ZohoMailClient: External
+
+Hi all,
+
+Some laptops can tune their keyboard backlight according to ambient
+light sensors (auto mode). This capability is essentially a hw control
+trigger. Meanwhile, such laptops also offer a shrotcut for cycling
+through brightness levels and auto mode. For example, on ThinkBook,
+pressing Fn+Space cycles keyboard backlight levels in the following
+sequence:
+
+  1 => 2 => 0 => auto => 1 ...
+
+Recent ThinkPad models should have similar sequence too.
+
+However, there are some issues preventing us from using hw control
+trigger:
+
+1. We want a mechanism to tell userspace which trigger is the hw control
+   trigger, so that userspace can determine if auto mode is on/off or
+   turing it on/off programmatically without obtaining the hw control
+   trigger's name via other channels
+2. Turing on/off auto mode via the shortcut cannot activate/deactivate
+   the hw control trigger, making the software state out-of-sync
+3. Even with #1 resolved, deactivating the hw control trigger after
+   receiving the event indicating "auto => 1" has a side effect of
+   emitting LED_OFF, breaking the shortcut cycle
+
+This RFC series tries to demonstrate a path on solving these issues:
+
+- Introduce an attribute called trigger_may_offload, so that userspace
+   can determine:
+   - if the LED device supports hw control (supported => visible)
+   - which trigger is the hw control trigger
+   - if the hw control trigger is selected
+   - if the hw control trigger is in hw control (i.e., offloaded)
+     - A callback offloaded() is added so that LED triggers can report
+       their hw control state
+- Add led_trigger_notify_hw_control_changed() interface, so that LED
+  drivers can notify the LED core about hardware initiated hw control
+  state transitions. The LED core will then determine if the transition
+  is allowed and turning on/off the hw control trigger accordingly
+- Tune the logic of trigger deactivation so that it won't emit LED_OFF
+  when the deactivation is triggered by hardware
+
+The last two patches are included into the RFC series to demonstrate how
+to utilize these interfaces to add support for auto keyboard backlight
+to ThinkBook. They will be submitted separately once the dust settles.
+
+Currently no Kconfig entry is provided to disable either interface. If
+needed, I will add one later.
+
+[ Summary of other approaches ]
+
+< custom attribute >
+
+Pros:
+- simplicity, KISS
+- no need to touch the LED core
+- extensible as long as it has a sensor-neutral name
+  - a sensor-related name could potentially lead to a mess if a future
+    device implements auto mode based on multiple different sensors
+
+Cons:
+- must have zero influence on brightness_set[_blocking] callbacks
+  in order not to break triggers
+  - potential interference with triggers and the brightness attribute
+- weird semantic (an attribute other than "brightness" and "trigger"
+  changes the brightness)
+
+< hw control trigger (this series) >
+
+Pros:
+- mutually exclusive with other triggers (hence less chaos)
+- semantic correctness
+- acts as an aggregate switch to turn on/off auto mode even a future
+  device implements auto mode based on multiple different sensors
+  - extensibility (through trigger attributes)
+
+Cons:
+- complexity
+
+[ Previous discussion threads ]
+
+https://lore.kernel.org/r/08580ec5-1d7b-4612-8a3f-75bc2f40aad2@app.fastmail.com
+
+https://lore.kernel.org/r/1dbfcf656cdb4af0299f90d7426d2ec7e2b8ac9e.camel@rong.moe
+
+Thanks,
+Rong
+
+Rong Zhang (9):
+  leds: Load trigger modules on-demand if used as hw control trigger
+  leds: Add callback offloaded() to query the state of hw control
+    trigger
+  leds: cros_ec: Implement offloaded() callback for trigger
+  leds: turris-omnia: Implement offloaded() callback for trigger
+  leds: trigger: netdev: Implement offloaded() callback
+  leds: Add trigger_may_offload attribute
+  leds: trigger: Add led_trigger_notify_hw_control_changed() interface
+  platform/x86: ideapad-laptop: Decouple HW & cdev brightness for kbd
+    backlight
+  platform/x86: ideapad-laptop: Fully support auto kbd backlight
+
+ .../obsolete/sysfs-class-led-trigger-netdev   |  15 ++
+ Documentation/ABI/testing/sysfs-class-led     |  22 ++
+ .../testing/sysfs-class-led-trigger-netdev    |  13 --
+ Documentation/leds/leds-class.rst             |  72 ++++++-
+ drivers/leds/led-class.c                      |  23 +++
+ drivers/leds/led-triggers.c                   | 176 +++++++++++++++-
+ drivers/leds/leds-cros_ec.c                   |   6 +
+ drivers/leds/leds-turris-omnia.c              |   7 +
+ drivers/leds/leds.h                           |   3 +
+ drivers/leds/trigger/ledtrig-netdev.c         |  10 +
+ drivers/platform/x86/lenovo/Kconfig           |   1 +
+ drivers/platform/x86/lenovo/ideapad-laptop.c  | 194 ++++++++++++++----
+ include/linux/leds.h                          |   6 +
+ 13 files changed, 492 insertions(+), 56 deletions(-)
+ create mode 100644 Documentation/ABI/obsolete/sysfs-class-led-trigger-netdev
 
 
-Am 27.02.26 um 10:31 schrieb Armin Wolf:
-> Am 26.02.26 um 21:50 schrieb Werner Sembach:
->
->> On some devices Uniwill offers the option to set the USB-C port to
->> prioritise charging or performance. This patch exposes this setting to the
->> userspace via sysfs for all TUXEDO devices supporting it.
->>
->> Signed-off-by: Werner Sembach <wse@tuxedocomputers.com>
->> ---
->>   drivers/platform/x86/uniwill/uniwill-acpi.c | 103 ++++++++++++++++++--
->>   1 file changed, 97 insertions(+), 6 deletions(-)
->>
->> diff --git a/drivers/platform/x86/uniwill/uniwill-acpi.c 
->> b/drivers/platform/x86/uniwill/uniwill-acpi.c
->> index 7ab82cf16f388..a34b1eed74eb2 100644
->> --- a/drivers/platform/x86/uniwill/uniwill-acpi.c
->> +++ b/drivers/platform/x86/uniwill/uniwill-acpi.c
->> @@ -266,8 +266,8 @@
->>   #define BATTERY_CHARGE_FULL_OVER_24H    BIT(3)
->>   #define BATTERY_ERM_STATUS_REACHED    BIT(4)
->>   -#define EC_ADDR_CHARGE_PRIO        0x07CC
->> -#define CHARGING_PERFORMANCE        BIT(7)
->> +#define EC_ADDR_USB_C_POWER_PRIORITY    0x07CC
->> +#define USB_C_POWER_PRIORITY        BIT(7)
->>     /* Same bits as EC_ADDR_LIGHTBAR_AC_CTRL except LIGHTBAR_S3_OFF */
->>   #define EC_ADDR_LIGHTBAR_BAT_CTRL    0x07E2
->> @@ -324,6 +324,7 @@
->>   #define UNIWILL_FEATURE_PRIMARY_FAN        BIT(7)
->>   #define UNIWILL_FEATURE_SECONDARY_FAN        BIT(8)
->>   #define UNIWILL_FEATURE_NVIDIA_CTGP_CONTROL    BIT(9)
->> +#define UNIWILL_FEATURE_USB_C_POWER_PRIORITY    BIT(10)
->>     struct uniwill_data {
->>       struct device *dev;
->> @@ -343,6 +344,8 @@ struct uniwill_data {
->>       struct mutex input_lock;    /* Protects input sequence during notify */
->>       struct input_dev *input_device;
->>       struct notifier_block nb;
->> +    struct mutex usb_c_power_priority_lock; /* Protects dependent bit write 
->> and state safe */
->> +    unsigned int last_usb_c_power_priority;
->>   };
->>     struct uniwill_battery_entry {
->> @@ -527,6 +530,7 @@ static bool uniwill_writeable_reg(struct device *dev, 
->> unsigned int reg)
->>       case EC_ADDR_CTGP_DB_CTGP_OFFSET:
->>       case EC_ADDR_CTGP_DB_TPP_OFFSET:
->>       case EC_ADDR_CTGP_DB_DB_OFFSET:
->> +    case EC_ADDR_USB_C_POWER_PRIORITY:
->>           return true;
->>       default:
->>           return false;
->> @@ -565,6 +569,7 @@ static bool uniwill_readable_reg(struct device *dev, 
->> unsigned int reg)
->>       case EC_ADDR_CTGP_DB_CTGP_OFFSET:
->>       case EC_ADDR_CTGP_DB_TPP_OFFSET:
->>       case EC_ADDR_CTGP_DB_DB_OFFSET:
->> +    case EC_ADDR_USB_C_POWER_PRIORITY:
->>           return true;
->>       default:
->>           return false;
->> @@ -587,6 +592,7 @@ static bool uniwill_volatile_reg(struct device *dev, 
->> unsigned int reg)
->>       case EC_ADDR_TRIGGER:
->>       case EC_ADDR_SWITCH_STATUS:
->>       case EC_ADDR_CHARGE_CTRL:
->> +    case EC_ADDR_USB_C_POWER_PRIORITY:
->>           return true;
->>       default:
->>           return false;
->> @@ -883,6 +889,78 @@ static int uniwill_nvidia_ctgp_init(struct uniwill_data 
->> *data)
->>       return 0;
->>   }
->>   +enum usb_c_power_priority_options {
->> +    USB_C_POWER_PRIORITY_OPTIONS_CHARGING = 0,
->> +    USB_C_POWER_PRIORITY_OPTIONS_PERFORMANCE,
->> +};
->> +
->> +static const char * const USB_C_POWER_PRIORITY_OPTIONS_TEXT[] = {
->> +    [USB_C_POWER_PRIORITY_OPTIONS_CHARGING]        = "charging",
->> +    [USB_C_POWER_PRIORITY_OPTIONS_PERFORMANCE]    = "performance",
->> +};
->> +
->> +static const u8 USB_C_POWER_PRIORITY_OPTIONS_VALUE[] = {
->> +    [USB_C_POWER_PRIORITY_OPTIONS_CHARGING]        = 0,
->> +    [USB_C_POWER_PRIORITY_OPTIONS_PERFORMANCE]    = USB_C_POWER_PRIORITY,
->> +};
->> +
->> +static ssize_t usb_c_power_priority_store(struct device *dev,
->> +                      struct device_attribute *attr,
->> +                      const char *buf, size_t count)
->> +{
->> +    struct uniwill_data *data = dev_get_drvdata(dev);
->> +    unsigned int value;
->> +    int ret;
->> +
->> +    ret = sysfs_match_string(USB_C_POWER_PRIORITY_OPTIONS_TEXT, buf);
->> +    if (ret < 0)
->> +        return ret;
->> +
->> +    value = USB_C_POWER_PRIORITY_OPTIONS_VALUE[ret];
->> +
->> +    guard(mutex)(&data->usb_c_power_priority_lock);
->> +
->> +    ret = regmap_update_bits(data->regmap, EC_ADDR_USB_C_POWER_PRIORITY,
->> +                 USB_C_POWER_PRIORITY, value);
->> +    if (ret < 0)
->> +        return ret;
->> +
->> +    data->last_usb_c_power_priority = value;
->> +
->> +    return count;
->> +}
->> +
->> +static ssize_t usb_c_power_priority_show(struct device *dev,
->> +                     struct device_attribute *attr,
->> +                     char *buf)
->> +{
->> +    struct uniwill_data *data = dev_get_drvdata(dev);
->> +    unsigned int value;
->> +    ssize_t count = 0;
->> +    int ret;
->> +
->> +    ret = regmap_read(data->regmap, EC_ADDR_USB_C_POWER_PRIORITY, &value);
->> +    if (ret < 0)
->> +        return ret;
->> +
->> +    value &= USB_C_POWER_PRIORITY;
->> +
->> +    for (int i = 0; i < ARRAY_SIZE(USB_C_POWER_PRIORITY_OPTIONS_VALUE); ++i) {
->> +        if (USB_C_POWER_PRIORITY_OPTIONS_VALUE[i] == value)
->> +            count += sysfs_emit_at(buf, count, "[%s] ",
->> + USB_C_POWER_PRIORITY_OPTIONS_TEXT[i]);
->> +        else
->> +            count += sysfs_emit_at(buf, count, "%s ",
->> + USB_C_POWER_PRIORITY_OPTIONS_TEXT[i]);
->> +    }
->> +    if (count)
->> +        buf[count - 1] = '\n';
->> +
->> +    return count;
->> +}
->> +
->> +static DEVICE_ATTR_RW(usb_c_power_priority);
->> +
->>   static struct attribute *uniwill_attrs[] = {
->>       /* Keyboard-related */
->>       &dev_attr_fn_lock.attr,
->> @@ -893,6 +971,7 @@ static struct attribute *uniwill_attrs[] = {
->>       &dev_attr_breathing_in_suspend.attr,
->>       /* Power-management-related */
->>       &dev_attr_ctgp_offset.attr,
->> +    &dev_attr_usb_c_power_priority.attr,
->>       NULL
->>   };
->>   @@ -927,6 +1006,11 @@ static umode_t uniwill_attr_is_visible(struct kobject 
->> *kobj, struct attribute *a
->>               return attr->mode;
->>       }
->>   +    if (attr == &dev_attr_usb_c_power_priority.attr) {
->> +        if (uniwill_device_supports(data, 
->> UNIWILL_FEATURE_USB_C_POWER_PRIORITY))
->> +            return attr->mode;
->> +    }
->> +
->>       return 0;
->>   }
->>   @@ -1417,11 +1501,13 @@ static int uniwill_notifier_call(struct 
->> notifier_block *nb, unsigned long action
->>             return NOTIFY_OK;
->>       case UNIWILL_OSD_DC_ADAPTER_CHANGED:
->> -        /* noop for the time being, will change once charging priority
->> -         * gets implemented.
->> -         */
->> +        if (!uniwill_device_supports(data, 
->> UNIWILL_FEATURE_USB_C_POWER_PRIORITY))
->> +            return NOTIFY_DONE;
->>   -        return NOTIFY_OK;
->> +        return notifier_from_errno(regmap_update_bits(data->regmap,
->> +                                  EC_ADDR_OEM_4,
->> +                                  USB_C_POWER_PRIORITY,
->> + data->last_usb_c_power_priority));
->
-> You need to lock the associated mutex here before accessing 
-> last_usb_c_power_priority. Since this
-> is not possible inside a switch statement when using guard(), i suggest that 
-> you move this code
-> (feature check + register access) into a small helper function.
->
->>       case UNIWILL_OSD_FN_LOCK:
->>           if (!uniwill_device_supports(data, UNIWILL_FEATURE_FN_LOCK))
->>               return NOTIFY_DONE;
->> @@ -1515,10 +1601,15 @@ static int uniwill_probe(struct platform_device *pdev)
->>           return PTR_ERR(regmap);
->>         data->regmap = regmap;
->> +
->>       ret = devm_mutex_init(&pdev->dev, &data->super_key_lock);
->>       if (ret < 0)
->>           return ret;
->>   +    ret = devm_mutex_init(&pdev->dev, &data->usb_c_power_priority_lock);
->> +    if (ret < 0)
->> +        return ret;
->
-> last_usb_c_power_priority still needs to be initialized with the value of 
-> USB_C_POWER_PRIORITY here.
-> I suggest that you move all of this (feature check + mutex + init) into a 
-> small helper function.
-ack
->
-> Thanks,
-> Armin Wolf
->
->> +
->>       ret = uniwill_ec_init(data);
->>       if (ret < 0)
->>           return ret;
+base-commit: a75cb869a8ccc88b0bc7a44e1597d9c7995c56e5
+-- 
+2.51.0
+
