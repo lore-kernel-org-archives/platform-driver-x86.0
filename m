@@ -1,138 +1,311 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail.tuxedocomputers.com (mail.tuxedocomputers.com [157.90.84.7])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8E43C2EB5AF
-	for <platform-driver-x86@vger.kernel.org>; Fri, 27 Feb 2026 17:06:24 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E6AC137FF72;
+	Fri, 27 Feb 2026 18:40:44 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=157.90.84.7
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1772211984; cv=none; b=Nvwb6E3Mj6TADBL80Uo0U3HW1kgezeUybcmixk7Qvt/9AFLIdbWmgwCo3TYkmmP7ahEaeDjVr5SAggrcu9L8jqqV4ukhKAQnMQlhV5m9DaCgQYAelvcsgFLZm+jUQGN83feN5vLmAnnbpELBTBFUW4LxWz7GD+FHki4Psy6KM8Q=
+	t=1772217648; cv=none; b=DU/6EDSLKy8iM7MovJj02CE+kQpehqdwI5RvKfQMJFdOFMlbN9n+KpzpChn9Jc/vxEWDyjk//rMc0mazw31+Eh5/DTpBVhxfBpfTMzU9EN0gE0Rej/55edAiVvCzfhg8Qyv0SZnEDBrz25Byp7hIHVybc8EUOhYVbRPDu6pbHG4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1772211984; c=relaxed/simple;
-	bh=cwcx35gQosYkkPk9w9kUGTfQm9ojhon0uiue+8X9X/U=;
-	h=From:To:Subject:Date:Message-ID:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=ZI1q2oHPI6+N1Ji/k9H7PAm5UYYCc4AhB9N6iKHjCdjvIVQ7XjpBrwht4laNPm53lAgHDPqBeMHBz3cVk40vG8SXav/j4Xp1uMcQJ6vf8LDWH3vTG6R1g9p7IlV54RitiMP64Xg8n6TIEMXetu6b2Zr+swtChV3eQGdpx/VUJ8Y=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=DFmUJsOl; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1772217648; c=relaxed/simple;
+	bh=RBghPjuvLp5pQbjsyiPJcdEq6+15INP1PRqKrS6CE1Y=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=YdDDp4HKlbGSzTNvl4mn9gfDPLT93G8exjUABPq8oukeXayoe98ZBWVNnYCu1PeRBpIrKkfy7cEhvYRiXVx0w1ZyPXYg4SHDBG5duT160XQ2c0SEKh+amWmpr6QfpQETJKEG/iMUwk1jBgMXQIlBtWKV3OSwDOWaWzILLScPFY8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=tuxedocomputers.com; spf=pass smtp.mailfrom=tuxedocomputers.com; dkim=pass (1024-bit key) header.d=tuxedocomputers.com header.i=@tuxedocomputers.com header.b=VqCB6Nwn; arc=none smtp.client-ip=157.90.84.7
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=tuxedocomputers.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=tuxedocomputers.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="DFmUJsOl"
-Received: by smtp.kernel.org (Postfix) with ESMTPS id 38C57C19423
-	for <platform-driver-x86@vger.kernel.org>; Fri, 27 Feb 2026 17:06:24 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1772211984;
-	bh=cwcx35gQosYkkPk9w9kUGTfQm9ojhon0uiue+8X9X/U=;
-	h=From:To:Subject:Date:In-Reply-To:References:From;
-	b=DFmUJsOlKyOthpL/8oCna3auo5YiQ52ioWNDF5Htb3D2dCXUW1agfGDuCH5K/ahwW
-	 iVm0j1y1/GURXPzIrx1nYNR5EjVlS4hNLOqWO8ZkWsDTXaUcKEHQJJdWMHrQc21vo7
-	 vhfL+XLSGsYNdrNUISFuA7klADxcy3Aj1BuIDHMW0y56+DXEap/QM699wrIkdLLzB/
-	 d/E//dm+QgNyvetoHKupYMnClZ8n2oOBcGenTzrFoxbq41Lfr9beIOEIPlx9DRUcCM
-	 NGabueqKT/DrVO2a/e4uidPD6ZDzk9GKOjan+xs1JhMNhOdYgVuj0IyuZUtHp5LsKq
-	 KBTkrrqi+Nutw==
-Received: by aws-us-west-2-korg-bugzilla-1.web.codeaurora.org (Postfix, from userid 48)
-	id 2A918C433E1; Fri, 27 Feb 2026 17:06:24 +0000 (UTC)
-From: bugzilla-daemon@kernel.org
-To: platform-driver-x86@vger.kernel.org
-Subject: =?UTF-8?B?W0J1ZyAyMjExNTBdIFtCVUddIGhwLXdtaTogT01FTiAxNi1rMHh4?=
- =?UTF-8?B?eCAoYm9hcmQgOEE0RCkg4oCTIHZlcmlmaWNhdGlvbiBvZiBwbGF0Zm9ybV9w?=
- =?UTF-8?B?cm9maWxlIGFuZCBFQyByZWdpc3RlciBiZWhhdmlvcg==?=
-Date: Fri, 27 Feb 2026 17:06:24 +0000
-X-Bugzilla-Reason: None
-X-Bugzilla-Type: changed
-X-Bugzilla-Watch-Reason: AssignedTo drivers_platform_x86@kernel-bugs.osdl.org
-X-Bugzilla-Product: Drivers
-X-Bugzilla-Component: Platform_x86
-X-Bugzilla-Version: 2.5
-X-Bugzilla-Keywords: 
-X-Bugzilla-Severity: low
-X-Bugzilla-Who: krishna.chomal108@gmail.com
-X-Bugzilla-Status: NEW
-X-Bugzilla-Resolution: 
-X-Bugzilla-Priority: P3
-X-Bugzilla-Assigned-To: drivers_platform_x86@kernel-bugs.osdl.org
-X-Bugzilla-Flags: 
-X-Bugzilla-Changed-Fields: cc
-Message-ID: <bug-221150-215701-8EYwxXukEh@https.bugzilla.kernel.org/>
-In-Reply-To: <bug-221150-215701@https.bugzilla.kernel.org/>
-References: <bug-221150-215701@https.bugzilla.kernel.org/>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-X-Bugzilla-URL: https://bugzilla.kernel.org/
-Auto-Submitted: auto-generated
+	dkim=pass (1024-bit key) header.d=tuxedocomputers.com header.i=@tuxedocomputers.com header.b="VqCB6Nwn"
+Received: from [192.168.178.24] (i5C75F712.versanet.de [92.117.247.18])
+	(Authenticated sender: wse@tuxedocomputers.com)
+	by mail.tuxedocomputers.com (Postfix) with ESMTPSA id 250AC2FC004D;
+	Fri, 27 Feb 2026 19:40:36 +0100 (CET)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=tuxedocomputers.com;
+	s=default; t=1772217636;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=vnyNWvcXRvxmRWNWZ/eHkt26TfhluSQKgmLrD2q4d4Q=;
+	b=VqCB6Nwn60XFyODmbi0TZDUw31POLh6pbzZ5insq+lGxgmaKNzGNZ3ILY0ovhqNun3+Tvz
+	ogXCljeU1HHUBPQ8jgdxI/6uHSzbzyDn5kWflt6ZqoyjfSlBnJEZfsB7hPrsUf/i+1HjOb
+	Q9St4plJmL7EjrIE+wr8acj8MQMpadI=
+Authentication-Results: mail.tuxedocomputers.com;
+	auth=pass smtp.auth=wse@tuxedocomputers.com smtp.mailfrom=wse@tuxedocomputers.com
+Message-ID: <8c407a1e-6f86-4978-9fbf-05f53cbe690e@tuxedocomputers.com>
+Date: Fri, 27 Feb 2026 19:40:35 +0100
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-
-https://bugzilla.kernel.org/show_bug.cgi?id=3D221150
-
-Krishna Chomal (krishna.chomal108@gmail.com) changed:
-
-           What    |Removed                     |Added
-----------------------------------------------------------------------------
-                 CC|                            |krishna.chomal108@gmail.com
-
---- Comment #4 from Krishna Chomal (krishna.chomal108@gmail.com) ---
-Hi,
-
-Your board, 8A4D is not currently present in any whitelist in the hp-wmi
-driver. As a result, it defaults to legacy Omen WMI interface to register t=
-he
-platform-profile.
-
-From your Omen Gaming Hub logs and EC dump, it is evident that your board
-requires the newer Victus S style WMI queries for platform-profile switching
-(and fan related activities), instead of the legacy queries.
-
-Can you please apply the below patch and test the following:
-1. Check dmesg for successful registration message:
-   "hp_wmi: Registered as platform profile handler"
-
-2. Verify that fan RPM is readable and controllable via sysfs
-(/sys/devices/platform/hp-wmi/hwmon/*).
-
-3. Verify that on changing platform profile, and it does physically change =
-the
-amount of power drawn in the CPU/GPU.
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH 2/4] platform/x86/uniwill: Implement USB-C power priority
+ setting
+To: Armin Wolf <W_Armin@gmx.de>, Hans de Goede <hansg@kernel.org>,
+ =?UTF-8?Q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
+Cc: platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <20260226003408.1623547-1-wse@tuxedocomputers.com>
+ <20260226003408.1623547-2-wse@tuxedocomputers.com>
+ <fb265a61-df38-472e-b155-c19f4dea2049@gmx.de>
+ <42df9fcf-2037-41a0-aac7-f255e9e46c82@tuxedocomputers.com>
+ <d83daeac-0655-4c14-b6b7-75a7b3ed0f05@gmx.de>
+Content-Language: en-US
+From: Werner Sembach <wse@tuxedocomputers.com>
+In-Reply-To: <d83daeac-0655-4c14-b6b7-75a7b3ed0f05@gmx.de>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
 
 
-
-diff --git a/drivers/platform/x86/hp/hp-wmi.c
-b/drivers/platform/x86/hp/hp-wmi.c
-index 304d9ac63c8a..756b94ac4a35 100644
---- a/drivers/platform/x86/hp/hp-wmi.c
-+++ b/drivers/platform/x86/hp/hp-wmi.c
-@@ -120,6 +120,13 @@ static const struct thermal_profile_params
-omen_v1_thermal_params =3D {
-        .ec_tp_offset   =3D HP_VICTUS_S_EC_THERMAL_PROFILE_OFFSET,
- };
-
-+static const struct thermal_profile_params omen_hybrid_thermal_params =3D {
-+       .performance    =3D HP_OMEN_V1_THERMAL_PROFILE_PERFORMANCE,
-+       .balanced       =3D HP_OMEN_V1_THERMAL_PROFILE_DEFAULT,
-+       .low_power      =3D HP_OMEN_V1_THERMAL_PROFILE_DEFAULT,
-+       .ec_tp_offset   =3D HP_OMEN_EC_THERMAL_PROFILE_OFFSET,
-+};
-+
- /*
-  * A generic pointer for the currently-active board's thermal profile
-  * parameters.
-@@ -173,6 +180,10 @@ static const char * const victus_thermal_profile_board=
-s[]
-=3D {
-
- /* DMI Board names of Victus 16-r and Victus 16-s laptops */
- static const struct dmi_system_id victus_s_thermal_profile_boards[]
-__initconst =3D {
-+       {
-+               .matches =3D { DMI_MATCH(DMI_BOARD_NAME, "8A4D") },
-+               .driver_data =3D (void *)&omen_hybrid_thermal_params,
-+       },
-        {
-                .matches =3D { DMI_MATCH(DMI_BOARD_NAME, "8BBE") },
-                .driver_data =3D (void *)&victus_s_thermal_params,
-
---=20
-You may reply to this email to add a comment.
-
-You are receiving this mail because:
-You are watching the assignee of the bug.=
+Am 27.02.26 um 10:27 schrieb Armin Wolf:
+> Am 26.02.26 um 16:55 schrieb Werner Sembach:
+>
+>>
+>> Am 26.02.26 um 02:11 schrieb Armin Wolf:
+>>> Am 26.02.26 um 01:31 schrieb Werner Sembach:
+>>>
+>>>> On some devices Uniwill offers the option to set the USB-C port to
+>>>> prioritise charging or performance. This patch exposes this setting to the
+>>>> userspace via sysfs for all TUXEDO devices supporting it.
+>>>>
+>>>> Signed-off-by: Werner Sembach <wse@tuxedocomputers.com>
+>>>> ---
+>>>>   drivers/platform/x86/uniwill/uniwill-acpi.c | 99 +++++++++++++++++++--
+>>>>   1 file changed, 94 insertions(+), 5 deletions(-)
+>>>>
+>>>> diff --git a/drivers/platform/x86/uniwill/uniwill-acpi.c 
+>>>> b/drivers/platform/x86/uniwill/uniwill-acpi.c
+>>>> index 7ab82cf16f388..4d9657a3b8c10 100644
+>>>> --- a/drivers/platform/x86/uniwill/uniwill-acpi.c
+>>>> +++ b/drivers/platform/x86/uniwill/uniwill-acpi.c
+>>>> @@ -266,8 +266,8 @@
+>>>>   #define BATTERY_CHARGE_FULL_OVER_24H    BIT(3)
+>>>>   #define BATTERY_ERM_STATUS_REACHED    BIT(4)
+>>>>   -#define EC_ADDR_CHARGE_PRIO        0x07CC
+>>>> -#define CHARGING_PERFORMANCE        BIT(7)
+>>>> +#define EC_ADDR_USB_C_POWER_PRIORITY    0x07CC
+>>>> +#define USB_C_POWER_PRIORITY        BIT(7)
+>>>>     /* Same bits as EC_ADDR_LIGHTBAR_AC_CTRL except LIGHTBAR_S3_OFF */
+>>>>   #define EC_ADDR_LIGHTBAR_BAT_CTRL    0x07E2
+>>>> @@ -324,6 +324,7 @@
+>>>>   #define UNIWILL_FEATURE_PRIMARY_FAN        BIT(7)
+>>>>   #define UNIWILL_FEATURE_SECONDARY_FAN        BIT(8)
+>>>>   #define UNIWILL_FEATURE_NVIDIA_CTGP_CONTROL    BIT(9)
+>>>> +#define UNIWILL_FEATURE_USB_C_POWER_PRIORITY    BIT(10)
+>>>>     struct uniwill_data {
+>>>>       struct device *dev;
+>>>> @@ -343,6 +344,7 @@ struct uniwill_data {
+>>>>       struct mutex input_lock;    /* Protects input sequence during notify */
+>>>>       struct input_dev *input_device;
+>>>>       struct notifier_block nb;
+>>>> +    unsigned int last_usb_c_power_priority;
+>>>>   };
+>>>>     struct uniwill_battery_entry {
+>>>> @@ -527,6 +529,7 @@ static bool uniwill_writeable_reg(struct device *dev, 
+>>>> unsigned int reg)
+>>>>       case EC_ADDR_CTGP_DB_CTGP_OFFSET:
+>>>>       case EC_ADDR_CTGP_DB_TPP_OFFSET:
+>>>>       case EC_ADDR_CTGP_DB_DB_OFFSET:
+>>>> +    case EC_ADDR_USB_C_POWER_PRIORITY:
+>>>>           return true;
+>>>>       default:
+>>>>           return false;
+>>>> @@ -565,6 +568,7 @@ static bool uniwill_readable_reg(struct device *dev, 
+>>>> unsigned int reg)
+>>>>       case EC_ADDR_CTGP_DB_CTGP_OFFSET:
+>>>>       case EC_ADDR_CTGP_DB_TPP_OFFSET:
+>>>>       case EC_ADDR_CTGP_DB_DB_OFFSET:
+>>>> +    case EC_ADDR_USB_C_POWER_PRIORITY:
+>>>>           return true;
+>>>>       default:
+>>>>           return false;
+>>>> @@ -587,6 +591,7 @@ static bool uniwill_volatile_reg(struct device *dev, 
+>>>> unsigned int reg)
+>>>>       case EC_ADDR_TRIGGER:
+>>>>       case EC_ADDR_SWITCH_STATUS:
+>>>>       case EC_ADDR_CHARGE_CTRL:
+>>>> +    case EC_ADDR_USB_C_POWER_PRIORITY:
+>>>>           return true;
+>>>>       default:
+>>>>           return false;
+>>>> @@ -883,6 +888,86 @@ static int uniwill_nvidia_ctgp_init(struct 
+>>>> uniwill_data *data)
+>>>>       return 0;
+>>>>   }
+>>>>   +enum usb_c_power_priority_options {
+>>>> +    USB_C_POWER_PRIORITY_OPTIONS_CHARGING = 0,
+>>>> +    USB_C_POWER_PRIORITY_OPTIONS_PERFORMANCE,
+>>>> +};
+>>>> +
+>>>> +static const char * const USB_C_POWER_PRIORITY_OPTIONS_TEXT[] = {
+>>>> +    [USB_C_POWER_PRIORITY_OPTIONS_CHARGING]        = "charging",
+>>>> +    [USB_C_POWER_PRIORITY_OPTIONS_PERFORMANCE]    = "performance",
+>>>> +};
+>>>> +
+>>>> +static const u8 USB_C_POWER_PRIORITY_OPTIONS_VALUE[] = {
+>>>> +    [USB_C_POWER_PRIORITY_OPTIONS_CHARGING]        = 0,
+>>>> +    [USB_C_POWER_PRIORITY_OPTIONS_PERFORMANCE]    = USB_C_POWER_PRIORITY,
+>>>> +};
+>>>> +
+>>>> +static ssize_t usb_c_power_priority_store(struct device *dev,
+>>>> +                      struct device_attribute *attr,
+>>>> +                      const char *buf, size_t count)
+>>>> +{
+>>>> +    struct uniwill_data *data = dev_get_drvdata(dev);
+>>>> +    unsigned int value;
+>>>> +    int ret;
+>>>> +
+>>>> +    ret = sysfs_match_string(USB_C_POWER_PRIORITY_OPTIONS_TEXT, buf);
+>>>> +    if (ret < 0)
+>>>> +        return ret;
+>>>
+>>> Please put a blank line here.
+>> ack
+>>>
+>>>> +    value = USB_C_POWER_PRIORITY_OPTIONS_VALUE[ret];
+>>>> +
+>>>> +    ret = regmap_update_bits(data->regmap, EC_ADDR_USB_C_POWER_PRIORITY,
+>>>> +                 USB_C_POWER_PRIORITY, value);
+>>>> +    if (ret < 0)
+>>>> +        return ret;
+>>>> +
+>>>
+>>> I think you need a mutex here, so concurrent writes to the charging priority
+>>> sysfs attribute are serialized. This mutex would then also protect concurrent
+>>> access to data->last_usb_c_power_priority by the event handler.
+>> ack
+>>>
+>>>> + data->last_usb_c_power_priority = value;
+>>>> +
+>>>> +    return count;
+>>>> +}
+>>>> +
+>>>> +static ssize_t usb_c_power_priority_show(struct device *dev,
+>>>> +                     struct device_attribute *attr,
+>>>> +                     char *buf)
+>>>> +{
+>>>> +    struct uniwill_data *data = dev_get_drvdata(dev);
+>>>> +    unsigned int value;
+>>>> +    ssize_t count = 0;
+>>>> +    int ret;
+>>>> +
+>>>> +    ret = regmap_read(data->regmap, EC_ADDR_USB_C_POWER_PRIORITY, &value);
+>>>> +    if (ret < 0)
+>>>> +        return ret;
+>>>> +    value &= USB_C_POWER_PRIORITY;
+>>>> +
+>>>> +    for (int i = 0; i < ARRAY_SIZE(USB_C_POWER_PRIORITY_OPTIONS_VALUE); 
+>>>> ++i) {
+>>>> +        if (USB_C_POWER_PRIORITY_OPTIONS_VALUE[i] == value)
+>>>> +            count += sysfs_emit_at(buf, count, "[%s] ",
+>>>> + USB_C_POWER_PRIORITY_OPTIONS_TEXT[i]);
+>>>> +        else
+>>>> +            count += sysfs_emit_at(buf, count, "%s ",
+>>>> + USB_C_POWER_PRIORITY_OPTIONS_TEXT[i]);
+>>>> +    }
+>>>> +    if (count)
+>>>> +        buf[count - 1] = '\n';
+>>>
+>>> Please just emit 
+>>> USB_C_POWER_PRIORITY_OPTIONS_VALUE[USB_C_POWER_PRIORITY_OPTIONS_PERFORMANCE] 
+>>> directly
+>>> when the bit is set, and 
+>>> USB_C_POWER_PRIORITY_OPTIONS_VALUE[USB_C_POWER_PRIORITY_OPTIONS_CHARGING] 
+>>> otherwise.
+>>> This for loop provides no real value.
+>>
+>> It does give context on which values are available. It it is otherwise not 
+>> easily deduceable without referring to the documentation.
+>>
+>> Also USB_C_POWER_PRIORITY_OPTIONS_VALUE[USB_C_POWER_PRIORITY_OPTIONS_PERFORMANCE] 
+>> is BIT(7) which is a kinda random number when expressed as an integer.
+>>
+> Sorry, i meant USB_C_POWER_PRIORITY_OPTIONS_TEXT[].
+>
+> I do not think that using the "option1 [option2]" syntax provides any real 
+> benefit here. The users need to read the documentation
+> anyway in order to even find this attribute, and the set of available options 
+> is always the same.
+>
+> Please drop this.
+ok
+>
+>>>
+>>>> +
+>>>> +    return count;
+>>>> +}
+>>>> +
+>>>> +static DEVICE_ATTR_RW(usb_c_power_priority);
+>>>> +
+>>>> +static int usb_c_power_priority_restore(struct uniwill_data *data)
+>>>> +{
+>>>> +    int ret;
+>>>> +
+>>>> +    ret = regmap_update_bits(data->regmap, EC_ADDR_OEM_4, 
+>>>> USB_C_POWER_PRIORITY,
+>>>> +                 data->last_usb_c_power_priority);
+>>>> +    if (ret < 0)
+>>>> +        return ret;
+>>>> +
+>>>> +    return ret;
+>>>
+>>> Please check the feature flag here before performing the register access. 
+>>> You should also
+>>> omit "ret" and instead return the result directly.
+>> ack
+>>>
+>>> Maybe you also need to add the appropriate suspend/resume functions for this?
+>> tuxedo-drivers doesn't have it for this, so it's probably not necessary
+>
+> Please add the appropriate suspend/resume functions anyway, just in case the 
+> user has
+> connected the charger while the system was suspended.
+ok, suspend is actually not necessary because last value is already saved on write
+>
+> Thanks,
+> Armin Wolf
+>
+>>>
+>>>> +}
+>>>> +
+>>>>   static struct attribute *uniwill_attrs[] = {
+>>>>       /* Keyboard-related */
+>>>>       &dev_attr_fn_lock.attr,
+>>>> @@ -893,6 +978,7 @@ static struct attribute *uniwill_attrs[] = {
+>>>>       &dev_attr_breathing_in_suspend.attr,
+>>>>       /* Power-management-related */
+>>>>       &dev_attr_ctgp_offset.attr,
+>>>> +    &dev_attr_usb_c_power_priority.attr,
+>>>>       NULL
+>>>>   };
+>>>>   @@ -927,6 +1013,11 @@ static umode_t uniwill_attr_is_visible(struct 
+>>>> kobject *kobj, struct attribute *a
+>>>>               return attr->mode;
+>>>>       }
+>>>>   +    if (attr == &dev_attr_usb_c_power_priority.attr) {
+>>>> +        if (uniwill_device_supports(data, 
+>>>> UNIWILL_FEATURE_USB_C_POWER_PRIORITY))
+>>>> +            return attr->mode;
+>>>> +    }
+>>>> +
+>>>>       return 0;
+>>>>   }
+>>>>   @@ -1417,9 +1508,7 @@ static int uniwill_notifier_call(struct 
+>>>> notifier_block *nb, unsigned long action
+>>>>             return NOTIFY_OK;
+>>>>       case UNIWILL_OSD_DC_ADAPTER_CHANGED:
+>>>> -        /* noop for the time being, will change once charging priority
+>>>> -         * gets implemented.
+>>>> -         */
+>>>> +        usb_c_power_priority_restore(data);
+>>>
+>>> Please use notifier_from_errno() here.
+>> ack
+>>>
+>>> Thanks,
+>>> Armin Wolf
+>>>
+>>>>             return NOTIFY_OK;
+>>>>       case UNIWILL_OSD_FN_LOCK:
+>>
