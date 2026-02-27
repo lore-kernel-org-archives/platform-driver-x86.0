@@ -1,69 +1,50 @@
-Received: from sender4-op-o12.zoho.com (sender4-op-o12.zoho.com [136.143.188.12])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail.tuxedocomputers.com (mail.tuxedocomputers.com [157.90.84.7])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D459E3ACA75;
-	Fri, 27 Feb 2026 19:07:27 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=136.143.188.12
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1772219249; cv=pass; b=NT8byINMMGUmkgJO/AV9uc3EyelT3MeNAD+KAFIHBJmpCjV+7Rqsc6KbEo70L0LLBYlyQ0uHFW++Gg1XCQNDTLB5KKphgW11H8iGJm40IwJfT5e694NpD82dG0B+jmKpRv7/PJEDklyI3VgLfLgc5RqapaLcQ2l/2Lybr6bEyCo=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1772219249; c=relaxed/simple;
-	bh=LHdlgbZdlT4nP6fQoLCZOUarUM7jZ8R1s47iOhbszmY=;
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 50C2246AF1A;
+	Fri, 27 Feb 2026 20:09:12 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=157.90.84.7
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1772222955; cv=none; b=u2xwzcoxgx3A4BqF7o1PhvoQUk79CgYCxszCRRq1j5KWzEkGdaurEV3d5e11TZST5usEVBrS72M2m8yS4Z0gmNwuXGKPlwvoS1N5l2e+yoS5KmCeUsfglRuGgjNu47M0kc/ewg3ufSov0Ta/t1jOTMvbXOKsY9Dys26Hd5Q/wKY=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1772222955; c=relaxed/simple;
+	bh=BtfgAX806hp8B8lp7yuOg9CujqKe/fSm7TBosXKnIAo=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=mdMkNRmfhMLdFpxZ9T7AZFR9coD/0C8qjPVYBFGiF3L147tcIMuIecuhCM4tHu700WcZKxQJttkytXriKJ6H4WahZghjHrDA3LbazkFa1oj4q3ueccamto4Cd+dbok8HIskA/T0dDmirmUFu7GnBT6pfWiTgrrfi5y4eu+4ix8I=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=rong.moe; spf=pass smtp.mailfrom=rong.moe; dkim=pass (2048-bit key) header.d=rong.moe header.i=i@rong.moe header.b=iMVRizpU; arc=pass smtp.client-ip=136.143.188.12
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=rong.moe
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=rong.moe
+	 MIME-Version; b=JBiAb0e9tfUOaZvFggv+WD4uVXZuDloP4GLk7SwMASU8XC12JwM8sb/fpJSoZwdhXwNf1sq9q46nrg46PphQhk8ZytlSN+A2BxaxvBzXic99cC6lmKZlZ0ghTiXg7V3atfUWt1NdTB5Pvi7hQa4Xv+atxf53jzEe1HfhLC51sp4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=tuxedocomputers.com; spf=pass smtp.mailfrom=tuxedocomputers.com; dkim=pass (1024-bit key) header.d=tuxedocomputers.com header.i=@tuxedocomputers.com header.b=sIA915mR; arc=none smtp.client-ip=157.90.84.7
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=tuxedocomputers.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=tuxedocomputers.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=rong.moe header.i=i@rong.moe header.b="iMVRizpU"
-ARC-Seal: i=1; a=rsa-sha256; t=1772219229; cv=none; 
-	d=zohomail.com; s=zohoarc; 
-	b=bypRroFizliXTlL+3DwxNDvTi+uaA/T627nGOVuWCEXjaV6DLS7E9xdHXEgfuoskeBgLtRV1aAJhrk1dHAJwWAVYZPvkU/uLAsi8tVd4fCsG0ZAlQKug9opc0cg0GfSAOrVQjqoXsVwyiwsxbE9LUtwN+ZNptu7wBqrEumdQK4E=
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=zohomail.com; s=zohoarc; 
-	t=1772219229; h=Content-Transfer-Encoding:Cc:Cc:Date:Date:From:From:In-Reply-To:MIME-Version:Message-ID:References:Subject:Subject:To:To:Message-Id:Reply-To; 
-	bh=8wOh/AymQVXYTDItmjH7CdiSiuTr2WE8bT2ZCK9KUvk=; 
-	b=fjNdjaow6ZQVAbBJOPVtRR8krApYC693HnPV4p8Uf//fhR92qID/UOv72yMdv5IBoLVw3KcZeqXMEykft+GPj/6p73f+5sODllZ13jji637f3Z47RVdRdjoXGpxbYlSOTLlbCgn251h4alLOb9AOL52woFcA5Cevjg40OVnJJIU=
-ARC-Authentication-Results: i=1; mx.zohomail.com;
-	dkim=pass  header.i=rong.moe;
-	spf=pass  smtp.mailfrom=i@rong.moe;
-	dmarc=pass header.from=<i@rong.moe>
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; t=1772219229;
-	s=zmail2048; d=rong.moe; i=i@rong.moe;
-	h=From:From:To:To:Cc:Cc:Subject:Subject:Date:Date:Message-ID:In-Reply-To:References:MIME-Version:Content-Transfer-Encoding:Message-Id:Reply-To;
-	bh=8wOh/AymQVXYTDItmjH7CdiSiuTr2WE8bT2ZCK9KUvk=;
-	b=iMVRizpURyijzScdidaH3jeC5uqhkd6dDRb8NDDZf9M3zmLvMEvc5IgzD0GZpKgt
-	nJv4f1jGI/u6n17pCb/6umcf9/FfcW5pwghoVt2vmBJVWWUwYKWMUesMcROdRrMLSuU
-	0lWABWXOyKR0+Zh64d72F38zFlk8KNKllMQPZUvoP/6bCfxmNJRYq7o7gtCc9PvGL6Y
-	v+HDXTVJbEFjAdb1vjbYicHngaw8fZxFRWZy2H+jVnbcXVrEPAqCTVXQV+PiP8NOtA0
-	ETTriz5gWKTn6xyOR9bQkBeUeJ/ww/aH0wT/m/EFocY4LrOg+Uvk36p0q4TWWtYjLOr
-	Q3vy2BUykw==
-Received: by mx.zohomail.com with SMTPS id 1772219227158191.8325362377376;
-	Fri, 27 Feb 2026 11:07:07 -0800 (PST)
-From: Rong Zhang <i@rong.moe>
-To: Lee Jones <lee@kernel.org>,
-	Pavel Machek <pavel@kernel.org>,
-	=?UTF-8?q?Thomas=20Wei=C3=9Fschuh?= <linux@weissschuh.net>,
-	Benson Leung <bleung@chromium.org>,
-	Guenter Roeck <groeck@chromium.org>,
-	=?UTF-8?q?Marek=20Beh=C3=BAn?= <kabel@kernel.org>,
-	Mark Pearson <mpearson-lenovo@squebb.ca>,
-	"Derek J. Clark" <derekjohn.clark@gmail.com>,
+	dkim=pass (1024-bit key) header.d=tuxedocomputers.com header.i=@tuxedocomputers.com header.b="sIA915mR"
+Received: from wse-pc.fritz.box (i5C75F712.versanet.de [92.117.247.18])
+	(Authenticated sender: wse@tuxedocomputers.com)
+	by mail.tuxedocomputers.com (Postfix) with ESMTPA id 8E9572FC0050;
+	Fri, 27 Feb 2026 21:09:10 +0100 (CET)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=tuxedocomputers.com;
+	s=default; t=1772222950;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=xMxYpjHzk0pGU9dKBsq9VoPdDPFeLmZkkOqA6je8rPU=;
+	b=sIA915mR196ZifiQqhjbTxNgacccNAoZlFMXdEV/R0WJstISAQtixL7rf3c/n5oNXmoJ1B
+	HjByKbhemnR2RnzgLczcnnIZO0uZu+qRVMwDdywv/4uOTnyaV7cNKu2U/gtj4tejPOro02
+	bYcJDA50i6BdrGmBpHuO40WXxYWWN54=
+Authentication-Results: mail.tuxedocomputers.com;
+	auth=pass smtp.auth=wse@tuxedocomputers.com smtp.mailfrom=wse@tuxedocomputers.com
+From: Werner Sembach <wse@tuxedocomputers.com>
+To: Armin Wolf <W_Armin@gmx.de>,
 	Hans de Goede <hansg@kernel.org>,
-	=?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>,
-	Ike Panhc <ikepanhc@gmail.com>
-Cc: Rong Zhang <i@rong.moe>,
-	Vishnu Sankar <vishnuocv@gmail.com>,
-	vsankar@lenovo.com,
-	linux-kernel@vger.kernel.org,
-	linux-leds@vger.kernel.org,
-	chrome-platform@lists.linux.dev,
-	platform-driver-x86@vger.kernel.org
-Subject: [RFC PATCH 9/9] platform/x86: ideapad-laptop: Fully support auto kbd backlight
-Date: Sat, 28 Feb 2026 03:06:06 +0800
-Message-ID: <20260227190617.271388-10-i@rong.moe>
-X-Mailer: git-send-email 2.51.0
-In-Reply-To: <20260227190617.271388-1-i@rong.moe>
-References: <20260227190617.271388-1-i@rong.moe>
+	=?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
+Cc: Werner Sembach <wse@tuxedocomputers.com>,
+	platform-driver-x86@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Subject: [PATCH v3 2/4] platform/x86/uniwill: Implement USB-C power priority setting
+Date: Fri, 27 Feb 2026 21:07:15 +0100
+Message-ID: <20260227200906.514928-3-wse@tuxedocomputers.com>
+X-Mailer: git-send-email 2.43.0
+In-Reply-To: <20260227200906.514928-1-wse@tuxedocomputers.com>
+References: <20260227200906.514928-1-wse@tuxedocomputers.com>
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
@@ -71,196 +52,263 @@ List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-X-ZohoMailClient: External
 
-Currently, the auto brightness mode of keyboard backlight maps to
-brightness=0 in LED classdev. The only method to switch to such a mode
-is by pressing the manufacturer-defined shortcut (Fn+Space). However, 0
-is a multiplexed brightness value; writing 0 simply results in the
-backlight being turned off.
+On some devices Uniwill offers the option to set the USB-C port to
+prioritise charging or performance. This patch exposes this setting to the
+userspace via sysfs for all TUXEDO devices supporting it.
 
-With brightness processing code decoupled from LED classdev, we can now
-fully support the auto brightness mode. In this mode, the keyboard
-backlight is controlled by the EC according to the ambient light sensor
-(ALS).
-
-To utilize this, a private hw control trigger "ideapad-auto" is added,
-with the event handling procedure calling the
-led_trigger_notify_hw_control_changed() interface to activate/deactivate
-the private trigger according to the current LED trigger state.
-
-Meanwhile, block brightness changes on exit to prevent the side effect
-of LED device unregistration when the private trigger is active from
-resetting the brightness to zero, so that we can retain the state of
-auto mode among boots.
-
-Signed-off-by: Rong Zhang <i@rong.moe>
+Signed-off-by: Werner Sembach <wse@tuxedocomputers.com>
 ---
- drivers/platform/x86/lenovo/Kconfig          |  1 +
- drivers/platform/x86/lenovo/ideapad-laptop.c | 86 ++++++++++++++++++--
- 2 files changed, 79 insertions(+), 8 deletions(-)
+ drivers/platform/x86/uniwill/uniwill-acpi.c | 147 +++++++++++++++++++-
+ 1 file changed, 140 insertions(+), 7 deletions(-)
 
-diff --git a/drivers/platform/x86/lenovo/Kconfig b/drivers/platform/x86/lenovo/Kconfig
-index f885127b007f1..626180370add4 100644
---- a/drivers/platform/x86/lenovo/Kconfig
-+++ b/drivers/platform/x86/lenovo/Kconfig
-@@ -16,6 +16,7 @@ config IDEAPAD_LAPTOP
- 	select INPUT_SPARSEKMAP
- 	select NEW_LEDS
- 	select LEDS_CLASS
-+	select LEDS_TRIGGERS
- 	help
- 	  This is a driver for Lenovo IdeaPad netbooks contains drivers for
- 	  rfkill switch, hotkey, fan control and backlight control.
-diff --git a/drivers/platform/x86/lenovo/ideapad-laptop.c b/drivers/platform/x86/lenovo/ideapad-laptop.c
-index b9af0294fc933..99cdd18cc1a5d 100644
---- a/drivers/platform/x86/lenovo/ideapad-laptop.c
-+++ b/drivers/platform/x86/lenovo/ideapad-laptop.c
-@@ -26,6 +26,7 @@
- #include <linux/kernel.h>
- #include <linux/leds.h>
- #include <linux/module.h>
-+#include <linux/mutex.h>
- #include <linux/platform_device.h>
- #include <linux/platform_profile.h>
- #include <linux/power_supply.h>
-@@ -166,6 +167,8 @@ enum {
- 	KBD_BL_TRISTATE_AUTO = 3,
+diff --git a/drivers/platform/x86/uniwill/uniwill-acpi.c b/drivers/platform/x86/uniwill/uniwill-acpi.c
+index 048b265bff374..f92c24d64160b 100644
+--- a/drivers/platform/x86/uniwill/uniwill-acpi.c
++++ b/drivers/platform/x86/uniwill/uniwill-acpi.c
+@@ -266,8 +266,8 @@
+ #define BATTERY_CHARGE_FULL_OVER_24H	BIT(3)
+ #define BATTERY_ERM_STATUS_REACHED	BIT(4)
+ 
+-#define EC_ADDR_CHARGE_PRIO		0x07CC
+-#define CHARGING_PERFORMANCE		BIT(7)
++#define EC_ADDR_USB_C_POWER_PRIORITY	0x07CC
++#define USB_C_POWER_PRIORITY		BIT(7)
+ 
+ /* Same bits as EC_ADDR_LIGHTBAR_AC_CTRL except LIGHTBAR_S3_OFF */
+ #define EC_ADDR_LIGHTBAR_BAT_CTRL	0x07E2
+@@ -324,6 +324,12 @@
+ #define UNIWILL_FEATURE_PRIMARY_FAN		BIT(7)
+ #define UNIWILL_FEATURE_SECONDARY_FAN		BIT(8)
+ #define UNIWILL_FEATURE_NVIDIA_CTGP_CONTROL	BIT(9)
++#define UNIWILL_FEATURE_USB_C_POWER_PRIORITY	BIT(10)
++
++enum usb_c_power_priority_options {
++	USB_C_POWER_PRIORITY_OPTIONS_CHARGING = 0,
++	USB_C_POWER_PRIORITY_OPTIONS_PERFORMANCE,
++};
+ 
+ struct uniwill_data {
+ 	struct device *dev;
+@@ -343,6 +349,8 @@ struct uniwill_data {
+ 	struct mutex input_lock;	/* Protects input sequence during notify */
+ 	struct input_dev *input_device;
+ 	struct notifier_block nb;
++	struct mutex usb_c_power_priority_lock; /* Protects dependent bit write and state safe */
++	enum usb_c_power_priority_options last_usb_c_power_priority_option;
  };
  
-+#define KBD_BL_AUTO_MODE_HW_BRIGHTNESS	3
-+
- #define KBD_BL_QUERY_TYPE		0x1
- #define KBD_BL_TRISTATE_TYPE		0x5
- #define KBD_BL_TRISTATE_AUTO_TYPE	0x7
-@@ -1620,8 +1623,9 @@ static int ideapad_kbd_bl_brightness_parse(struct ideapad_private *priv,
- 	if (hw_brightness <= priv->kbd_bl.led.max_brightness)
- 		return hw_brightness;
- 
--	/* Auto, report as off */
--	if (hw_brightness == priv->kbd_bl.led.max_brightness + 1)
-+	/* Auto (controlled by EC according to ALS), report as off */
-+	if (priv->kbd_bl.type == KBD_BL_TRISTATE_AUTO &&
-+	    hw_brightness == KBD_BL_AUTO_MODE_HW_BRIGHTNESS)
- 		return 0;
- 
- 	/* Unknown value */
-@@ -1709,9 +1713,39 @@ static int ideapad_kbd_bl_led_cdev_brightness_set(struct led_classdev *led_cdev,
- {
- 	struct ideapad_private *priv = container_of(led_cdev, struct ideapad_private, kbd_bl.led);
- 
-+	/*
-+	 * When deinitializing: It must be the side effect of led_cdev
-+	 * unregistration when our private trigger is active. We've set
-+	 * LED_RETAIN_AT_SHUTDOWN to retain led_cdev brightness level. To do the
-+	 * same for auto mode, gate changes and return early.
-+	 */
-+	if (unlikely(!priv->kbd_bl.initialized))
-+		return 0;
-+
- 	return ideapad_kbd_bl_brightness_set(priv, brightness);
+ struct uniwill_battery_entry {
+@@ -527,6 +535,7 @@ static bool uniwill_writeable_reg(struct device *dev, unsigned int reg)
+ 	case EC_ADDR_CTGP_DB_CTGP_OFFSET:
+ 	case EC_ADDR_CTGP_DB_TPP_OFFSET:
+ 	case EC_ADDR_CTGP_DB_DB_OFFSET:
++	case EC_ADDR_USB_C_POWER_PRIORITY:
+ 		return true;
+ 	default:
+ 		return false;
+@@ -565,6 +574,7 @@ static bool uniwill_readable_reg(struct device *dev, unsigned int reg)
+ 	case EC_ADDR_CTGP_DB_CTGP_OFFSET:
+ 	case EC_ADDR_CTGP_DB_TPP_OFFSET:
+ 	case EC_ADDR_CTGP_DB_DB_OFFSET:
++	case EC_ADDR_USB_C_POWER_PRIORITY:
+ 		return true;
+ 	default:
+ 		return false;
+@@ -587,6 +597,7 @@ static bool uniwill_volatile_reg(struct device *dev, unsigned int reg)
+ 	case EC_ADDR_TRIGGER:
+ 	case EC_ADDR_SWITCH_STATUS:
+ 	case EC_ADDR_CHARGE_CTRL:
++	case EC_ADDR_USB_C_POWER_PRIORITY:
+ 		return true;
+ 	default:
+ 		return false;
+@@ -883,6 +894,106 @@ static int uniwill_nvidia_ctgp_init(struct uniwill_data *data)
+ 	return 0;
  }
  
-+static int ideapad_kbd_bl_auto_trigger_activate(struct led_classdev *led_cdev)
-+{
-+	struct ideapad_private *priv = container_of(led_cdev, struct ideapad_private, kbd_bl.led);
-+
-+	return ideapad_kbd_bl_hw_brightness_set(priv, KBD_BL_AUTO_MODE_HW_BRIGHTNESS);
-+}
-+
-+static bool ideapad_kbd_bl_auto_trigger_offloaded(struct led_classdev *led_cdev)
-+{
-+	return true;
-+}
-+
-+static struct led_hw_trigger_type ideapad_kbd_bl_auto_trigger_type;
-+
-+static struct led_trigger ideapad_kbd_bl_auto_trigger = {
-+	.name = "ideapad-auto",
-+	.trigger_type = &ideapad_kbd_bl_auto_trigger_type,
-+	.activate = ideapad_kbd_bl_auto_trigger_activate,
-+	.offloaded = ideapad_kbd_bl_auto_trigger_offloaded,
++static const char * const USB_C_POWER_PRIORITY_OPTIONS_TEXT[] = {
++	[USB_C_POWER_PRIORITY_OPTIONS_CHARGING]		= "charging",
++	[USB_C_POWER_PRIORITY_OPTIONS_PERFORMANCE]	= "performance",
 +};
 +
- static void ideapad_kbd_bl_notify_known(struct ideapad_private *priv, unsigned int brightness)
- {
- 	if (brightness == priv->kbd_bl.last_brightness)
-@@ -1724,12 +1758,23 @@ static void ideapad_kbd_bl_notify_known(struct ideapad_private *priv, unsigned i
- 
- static void ideapad_kbd_bl_notify(struct ideapad_private *priv)
- {
--	int brightness;
-+	int hw_brightness, brightness;
- 
- 	if (!priv->kbd_bl.initialized)
- 		return;
- 
--	brightness = ideapad_kbd_bl_brightness_get(priv);
-+	hw_brightness = ideapad_kbd_bl_hw_brightness_get(priv);
-+	if (hw_brightness < 0)
-+		return;
++static const u8 USB_C_POWER_PRIORITY_OPTIONS_VALUE[] = {
++	[USB_C_POWER_PRIORITY_OPTIONS_CHARGING]		= 0,
++	[USB_C_POWER_PRIORITY_OPTIONS_PERFORMANCE]	= USB_C_POWER_PRIORITY,
++};
 +
-+	if (priv->kbd_bl.type == KBD_BL_TRISTATE_AUTO) {
-+		bool activate = hw_brightness == KBD_BL_AUTO_MODE_HW_BRIGHTNESS;
++static ssize_t usb_c_power_priority_store(struct device *dev,
++					  struct device_attribute *attr,
++					  const char *buf, size_t count)
++{
++	struct uniwill_data *data = dev_get_drvdata(dev);
++	enum usb_c_power_priority_options option;
++	unsigned int value;
++	int ret;
 +
-+		led_trigger_notify_hw_control_changed(&priv->kbd_bl.led, activate,
-+						      &ideapad_kbd_bl_auto_trigger);
++	option = sysfs_match_string(USB_C_POWER_PRIORITY_OPTIONS_TEXT, buf);
++	if (option < 0)
++		return option;
++
++	value = USB_C_POWER_PRIORITY_OPTIONS_VALUE[option];
++
++	guard(mutex)(&data->usb_c_power_priority_lock);
++
++	ret = regmap_update_bits(data->regmap, EC_ADDR_USB_C_POWER_PRIORITY,
++				 USB_C_POWER_PRIORITY, value);
++	if (ret < 0)
++		return ret;
++
++	data->last_usb_c_power_priority_option = option;
++
++	return count;
++}
++
++static ssize_t usb_c_power_priority_show(struct device *dev,
++					 struct device_attribute *attr,
++					 char *buf)
++{
++	struct uniwill_data *data = dev_get_drvdata(dev);
++	unsigned int value, i;
++	int ret;
++
++	ret = regmap_read(data->regmap, EC_ADDR_USB_C_POWER_PRIORITY, &value);
++	if (ret < 0)
++		return ret;
++
++	value &= USB_C_POWER_PRIORITY;
++
++	for (i = 0; i < ARRAY_SIZE(USB_C_POWER_PRIORITY_OPTIONS_VALUE); ++i)
++		if (USB_C_POWER_PRIORITY_OPTIONS_VALUE[i] == value)
++			return sysfs_emit(buf, "%s\n",
++					  USB_C_POWER_PRIORITY_OPTIONS_TEXT[i]);
++
++	/* Since all possible values are valid, this should be unreachable. */
++	return -EINVAL;
++}
++
++static DEVICE_ATTR_RW(usb_c_power_priority);
++
++static int usb_c_power_priority_restore(struct uniwill_data *data)
++{
++	unsigned int value;
++
++	value = USB_C_POWER_PRIORITY_OPTIONS_VALUE[data->last_usb_c_power_priority_option];
++
++	return regmap_update_bits(data->regmap, EC_ADDR_USB_C_POWER_PRIORITY,
++				  USB_C_POWER_PRIORITY, value);
++}
++
++static int usb_c_power_priority_init(struct uniwill_data *data)
++{
++	unsigned int value, i;
++	int ret;
++
++	if (!uniwill_device_supports(data, UNIWILL_FEATURE_USB_C_POWER_PRIORITY))
++		return 0;
++
++	ret = devm_mutex_init(data->dev, &data->usb_c_power_priority_lock);
++	if (ret < 0)
++		return ret;
++
++	ret = regmap_read(data->regmap, EC_ADDR_USB_C_POWER_PRIORITY, &value);
++	if (ret < 0)
++		return ret;
++
++	value &= USB_C_POWER_PRIORITY;
++
++	for (i = 0; i < ARRAY_SIZE(USB_C_POWER_PRIORITY_OPTIONS_VALUE); ++i)
++		if (USB_C_POWER_PRIORITY_OPTIONS_VALUE[i] == value) {
++			data->last_usb_c_power_priority_option = i;
++			return 0;
++		}
++
++	/* Since all possible values are valid, this should be unreachable. */
++	return -EINVAL;
++}
++
+ static struct attribute *uniwill_attrs[] = {
+ 	/* Keyboard-related */
+ 	&dev_attr_fn_lock.attr,
+@@ -893,6 +1004,7 @@ static struct attribute *uniwill_attrs[] = {
+ 	&dev_attr_breathing_in_suspend.attr,
+ 	/* Power-management-related */
+ 	&dev_attr_ctgp_offset.attr,
++	&dev_attr_usb_c_power_priority.attr,
+ 	NULL
+ };
+ 
+@@ -927,6 +1039,11 @@ static umode_t uniwill_attr_is_visible(struct kobject *kobj, struct attribute *a
+ 			return attr->mode;
+ 	}
+ 
++	if (attr == &dev_attr_usb_c_power_priority.attr) {
++		if (uniwill_device_supports(data, UNIWILL_FEATURE_USB_C_POWER_PRIORITY))
++			return attr->mode;
 +	}
 +
-+	brightness = ideapad_kbd_bl_brightness_parse(priv, hw_brightness);
- 	if (brightness < 0)
- 		return;
+ 	return 0;
+ }
  
-@@ -1738,7 +1783,7 @@ static void ideapad_kbd_bl_notify(struct ideapad_private *priv)
+@@ -1417,11 +1534,10 @@ static int uniwill_notifier_call(struct notifier_block *nb, unsigned long action
  
- static int ideapad_kbd_bl_init(struct ideapad_private *priv)
+ 		return NOTIFY_OK;
+ 	case UNIWILL_OSD_DC_ADAPTER_CHANGED:
+-		/* noop for the time being, will change once charging priority
+-		 * gets implemented.
+-		 */
++		if (!uniwill_device_supports(data, UNIWILL_FEATURE_USB_C_POWER_PRIORITY))
++			return NOTIFY_DONE;
+ 
+-		return NOTIFY_OK;
++		return notifier_from_errno(usb_c_power_priority_restore(data));
+ 	case UNIWILL_OSD_FN_LOCK:
+ 		if (!uniwill_device_supports(data, UNIWILL_FEATURE_FN_LOCK))
+ 			return NOTIFY_DONE;
+@@ -1515,10 +1631,15 @@ static int uniwill_probe(struct platform_device *pdev)
+ 		return PTR_ERR(regmap);
+ 
+ 	data->regmap = regmap;
++
+ 	ret = devm_mutex_init(&pdev->dev, &data->super_key_lock);
+ 	if (ret < 0)
+ 		return ret;
+ 
++	ret = usb_c_power_priority_init(data);
++	if (ret < 0)
++		return ret;
++
+ 	ret = uniwill_ec_init(data);
+ 	if (ret < 0)
+ 		return ret;
+@@ -1681,6 +1802,14 @@ static int uniwill_resume_nvidia_ctgp(struct uniwill_data *data)
+ 			       CTGP_DB_DB_ENABLE | CTGP_DB_CTGP_ENABLE);
+ }
+ 
++static int uniwill_resume_usb_c_power_priority(struct uniwill_data *data)
++{
++	if (!uniwill_device_supports(data, UNIWILL_FEATURE_USB_C_POWER_PRIORITY))
++		return 0;
++
++	return usb_c_power_priority_restore(data);
++}
++
+ static int uniwill_resume(struct device *dev)
  {
--	int brightness, err;
-+	int hw_brightness, brightness, err;
+ 	struct uniwill_data *data = dev_get_drvdata(dev);
+@@ -1704,7 +1833,11 @@ static int uniwill_resume(struct device *dev)
+ 	if (ret < 0)
+ 		return ret;
  
- 	if (!priv->features.kbd_bl)
- 		return -ENODEV;
-@@ -1746,12 +1791,37 @@ static int ideapad_kbd_bl_init(struct ideapad_private *priv)
- 	if (WARN_ON(priv->kbd_bl.initialized))
- 		return -EEXIST;
+-	return uniwill_resume_nvidia_ctgp(data);
++	ret = uniwill_resume_nvidia_ctgp(data);
++	if (ret < 0)
++		return ret;
++
++	return uniwill_resume_usb_c_power_priority(data);
+ }
  
--	if (ideapad_kbd_bl_check_tristate(priv->kbd_bl.type))
-+	hw_brightness = ideapad_kbd_bl_hw_brightness_get(priv);
-+	if (hw_brightness < 0)
-+		return hw_brightness;
-+
-+	switch (priv->kbd_bl.type) {
-+	case KBD_BL_TRISTATE_AUTO:
-+		err = devm_led_trigger_register(&priv->platform_device->dev,
-+						&ideapad_kbd_bl_auto_trigger);
-+		if (err)
-+			return err;
-+
-+		priv->kbd_bl.led.trigger_type       = &ideapad_kbd_bl_auto_trigger_type;
-+		priv->kbd_bl.led.hw_control_trigger = ideapad_kbd_bl_auto_trigger.name;
-+
-+		/* HW remembers the last brightness level, including auto mode. */
-+		if (hw_brightness == KBD_BL_AUTO_MODE_HW_BRIGHTNESS)
-+			priv->kbd_bl.led.default_trigger = ideapad_kbd_bl_auto_trigger.name;
-+
-+		fallthrough;
-+	case KBD_BL_TRISTATE:
- 		priv->kbd_bl.led.max_brightness = 2;
--	else
-+		break;
-+	case KBD_BL_STANDARD:
- 		priv->kbd_bl.led.max_brightness = 1;
-+		break;
-+	default:
-+		/* This has already been validated by ideapad_check_features(). */
-+		unreachable();
-+	}
- 
--	brightness = ideapad_kbd_bl_brightness_get(priv);
-+	brightness = ideapad_kbd_bl_brightness_parse(priv, hw_brightness);
- 	if (brightness < 0)
- 		return brightness;
- 
+ static DEFINE_SIMPLE_DEV_PM_OPS(uniwill_pm_ops, uniwill_suspend, uniwill_resume);
 -- 
-2.51.0
+2.43.0
 
