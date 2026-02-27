@@ -1,38 +1,38 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D924E3A1E6C
-	for <platform-driver-x86@vger.kernel.org>; Fri, 27 Feb 2026 12:14:41 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AC85E330334
+	for <platform-driver-x86@vger.kernel.org>; Fri, 27 Feb 2026 12:59:08 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1772194481; cv=none; b=W4u5AtNDYwBcfYMP+3UOIYMuNrqsKb2y/LysUhis2EpJWRx4AXPBC1g+ARI9hsNFdigbmZkkRXdv0sCl4rIZplOTD6gZ8W6fxWrzooqMjGVQ81RoX7RdPPeAzSmHED0eDukv8NbyIB1zWIuMChbuWsUmu5ld5RwdSw6p0mSgLjo=
+	t=1772197148; cv=none; b=MaZo8V0K6Sv/IGmMAfu4IB+3wt6PPp6NnvzUzvbpR+m5IfOOaXGqFqHL+lbMZVtJ1+IWfmp0KqgCSj7ACNJYedW6X2o1WLwmYfOorlNvH72TYhSPhdPHmJcnTH0KDkesfJo4s3yYiK6i1KLTEWXc+dbIH1l9co3gRWZEOVfJ3fY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1772194481; c=relaxed/simple;
-	bh=Yx33czid6bp142YSy3Jhv4oozeOyIbUltoUtm+WYXO0=;
+	s=arc-20240116; t=1772197148; c=relaxed/simple;
+	bh=+mSvZCLKJSiLonx2Vp25fJf9pvWFev49SDQ4hLw8eFQ=;
 	h=From:To:Subject:Date:Message-ID:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=Wm6DAtg8xdt8yA6pgeyi2XlD1ecCpBEb4UfI0GnmoSx52Qx2QFecBHKi1azbG0bK5itABE/K1hXhoowyaB0Gh2w6W3CWrcQJ0ZS56YXEnl0a5aSQrvcJYEYbs4OJSxmC/heKZsq00TzcVtEUVqG/cBiqTpNcKMKmNo8EkuFACZA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=qHv8qzTq; arc=none smtp.client-ip=10.30.226.201
+	 Content-Type:MIME-Version; b=COYxMRya9UKKPJstap/fVDGy5fYBWytWBXmFiE4Wi53yIW7VNsioiubl27XEPoBne2YYaaguSvc2juIeO+/Y1odClmO2Jp6LJIu/4DVCDC4fPTdbyFNverQVRgLAmWcH6P4SaKNiod9nEE2TBE4mzRyhCLHrdN3T6eS2LEevA1s=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=WkVP3dk3; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="qHv8qzTq"
-Received: by smtp.kernel.org (Postfix) with ESMTPS id 72ABDC116C6
-	for <platform-driver-x86@vger.kernel.org>; Fri, 27 Feb 2026 12:14:41 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="WkVP3dk3"
+Received: by smtp.kernel.org (Postfix) with ESMTPS id 52F3AC2BC87
+	for <platform-driver-x86@vger.kernel.org>; Fri, 27 Feb 2026 12:59:08 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1772194481;
-	bh=Yx33czid6bp142YSy3Jhv4oozeOyIbUltoUtm+WYXO0=;
+	s=k20201202; t=1772197148;
+	bh=+mSvZCLKJSiLonx2Vp25fJf9pvWFev49SDQ4hLw8eFQ=;
 	h=From:To:Subject:Date:In-Reply-To:References:From;
-	b=qHv8qzTqz6N41aNwzx/Fwcx8x4TpmAYA48Qi7d5426hAMUvma6OvMAbNM59QPHvaI
-	 8YgZk1q05ku5tZQ+0Z0ka+pcf09ml2TsyTGrv4u8itvqw6LLVf+QFi1el6fObh1yxH
-	 4sg+Bz1RjrvcdBjZhYpgug/2jeh5K9ZXzZMuwSG6a8Fk7Bs0pcBY3HXNbiFQ0WrPh3
-	 9dTro+6XxIGM+fdBr55kax1Nogh0JiQqkAx49EKcFNcjUG8i/x1QZGNoylXaulk9iV
-	 3jNpVe8vhE/dy8xKxZP2YE6JX3M/6M/5oWRiz6v2ZFjNJKi16/0IJNWhHWdp75ez+v
-	 tybMVDcVE2T2Q==
+	b=WkVP3dk3mT7UebX/QcSBjgHMhsx5WRN0pAcpkcmXh/ACA+g4BFVLn6/ckaJEUHV7p
+	 8fpsJf2YXUBFHIQjFT1jN1GBUCBA/Mr1uHSuDLH6GO9/q2/FltdfDaqBHO8l8xCwZ/
+	 DIVih2VsPipMKTqmPfZeDE4dOaCj+DbGoWBF2gFNTly76g7pfz5O7H6iht2fXF77yx
+	 Y6D1Jn+0Ehek6eFLRokg3ZWil3ZEh2w3Zm+GrULX4ytEGmF/k2qqo9Q/wePTXskkl6
+	 AT0y964iHT8F3+oc6jZNQUoukEaXDtFJ51AHdtZGbGSfwpMu0r9LJi6qPaHSEguc4X
+	 Woj2XszVxGGFA==
 Received: by aws-us-west-2-korg-bugzilla-1.web.codeaurora.org (Postfix, from userid 48)
-	id 60506C433E1; Fri, 27 Feb 2026 12:14:41 +0000 (UTC)
+	id 3633AC4160E; Fri, 27 Feb 2026 12:59:08 +0000 (UTC)
 From: bugzilla-daemon@kernel.org
 To: platform-driver-x86@vger.kernel.org
 Subject: [Bug 221149] hp-wmi: Fan control fails and RPM always reads as zero
  on HP OMEN 16-wf1xxx (Board 8C76)
-Date: Fri, 27 Feb 2026 12:14:41 +0000
+Date: Fri, 27 Feb 2026 12:59:07 +0000
 X-Bugzilla-Reason: None
 X-Bugzilla-Type: changed
 X-Bugzilla-Watch-Reason: AssignedTo drivers_platform_x86@kernel-bugs.osdl.org
@@ -41,14 +41,14 @@ X-Bugzilla-Component: Platform_x86
 X-Bugzilla-Version: 2.5
 X-Bugzilla-Keywords: 
 X-Bugzilla-Severity: normal
-X-Bugzilla-Who: Jie7172585@gmail.com
+X-Bugzilla-Who: krishna.chomal108@gmail.com
 X-Bugzilla-Status: NEW
 X-Bugzilla-Resolution: 
 X-Bugzilla-Priority: P3
 X-Bugzilla-Assigned-To: drivers_platform_x86@kernel-bugs.osdl.org
 X-Bugzilla-Flags: 
-X-Bugzilla-Changed-Fields: cc
-Message-ID: <bug-221149-215701-uYt2Hi8HYE@https.bugzilla.kernel.org/>
+X-Bugzilla-Changed-Fields: 
+Message-ID: <bug-221149-215701-xRsUNHEXpO@https.bugzilla.kernel.org/>
 In-Reply-To: <bug-221149-215701@https.bugzilla.kernel.org/>
 References: <bug-221149-215701@https.bugzilla.kernel.org/>
 Content-Type: text/plain; charset="UTF-8"
@@ -64,39 +64,82 @@ MIME-Version: 1.0
 
 https://bugzilla.kernel.org/show_bug.cgi?id=3D221149
 
-Enderlava (Jie7172585@gmail.com) changed:
+--- Comment #3 from Krishna Chomal (krishna.chomal108@gmail.com) ---
+(In reply to Enderlava from comment #2)
+> Hi Krishna,
+>=20
+> I successfully applied your patch to the 7.0-rc1 source and recompiled the
+> kernel. Here are the test results for Board 8C76:
+>=20
+> 1. Registration: success
+> `dmesg` shows `hp_wmi: Registered as platform profile handler`. The previ=
+ous
+> ACPI/WMI errors (error 0x6) are completely gone.
+>=20
+> 2. Fan Control (Write): success
+> Writing 0 to `pwm1_enable` successfully ramps the fans to maximum speed, =
+and
+> writing 2 returns them to auto mode. The physical fan control works
+> perfectly.
+>=20
+> 3. Thermal Profile / Power Limits: success
+> Switching to the performance profile successfully raises the PL1 limit to
+> 130W, unlocking the CPU:
+> Profile: low-power    ->  PL1: 55 W  |  PL2: 130 W
+> Profile: balanced     ->  PL1: 55 W  |  PL2: 130 W
+> Profile: performance  ->  PL1: 130 W |  PL2: 130 W
+>=20
 
-           What    |Removed                     |Added
-----------------------------------------------------------------------------
-                 CC|                            |Jie7172585@gmail.com
+Great! I see that you tested AUTO and MAX fan modes, however with recent
+improvements you can now use MANUAL mode as well by writing 1 to pwm1_enable
+and using pwm1 file for the fan speed (0 being off and 255 being 100%), ple=
+ase
+let me know if that works as well.
 
---- Comment #2 from Enderlava (Jie7172585@gmail.com) ---
-Hi Krishna,
+> 4. Fan RPM Reading (Read): fails
+> Although the fans physically spin up and the control works, reading the
+> hwmon nodes (`cat fan1_input`) constantly returns 0 RPM.
 
-I successfully applied your patch to the 7.0-rc1 source and recompiled the
-kernel. Here are the test results for Board 8C76:
+This is really strange, could you also try the below patch, read from
+fan1_input (when you feel that the fans are spinning and the RPM should not=
+ be
+0) and paste the dmesg logs.
 
-1. Registration: success
-`dmesg` shows `hp_wmi: Registered as platform profile handler`. The previous
-ACPI/WMI errors (error 0x6) are completely gone.
+# dmesg | grep hp_wmi
 
-2. Fan Control (Write): success
-Writing 0 to `pwm1_enable` successfully ramps the fans to maximum speed, and
-writing 2 returns them to auto mode. The physical fan control works perfect=
-ly.
+Thanks
 
-3. Thermal Profile / Power Limits: success
-Switching to the performance profile successfully raises the PL1 limit to 1=
-30W,
-unlocking the CPU:
-Profile: low-power    ->  PL1: 55 W  |  PL2: 130 W
-Profile: balanced     ->  PL1: 55 W  |  PL2: 130 W
-Profile: performance  ->  PL1: 130 W |  PL2: 130 W
 
-4. Fan RPM Reading (Read): fails
-Although the fans physically spin up and the control works, reading the hwm=
-on
-nodes (`cat fan1_input`) constantly returns 0 RPM.
+diff --git a/drivers/platform/x86/hp/hp-wmi.c
+b/drivers/platform/x86/hp/hp-wmi.c
+index 304d9ac63c8a..e58c5f0dfe8e 100644
+--- a/drivers/platform/x86/hp/hp-wmi.c
++++ b/drivers/platform/x86/hp/hp-wmi.c
+@@ -185,6 +185,10 @@ static const struct dmi_system_id
+victus_s_thermal_profile_boards[] __initconst
+                .matches =3D { DMI_MATCH(DMI_BOARD_NAME, "8BD5") },
+                .driver_data =3D (void *)&victus_s_thermal_params,
+        },
++       {
++               .matches =3D { DMI_MATCH(DMI_BOARD_NAME, "8C76") },
++               .driver_data =3D (void *)&omen_v1_thermal_params,
++       },
+        {
+                .matches =3D { DMI_MATCH(DMI_BOARD_NAME, "8C78") },
+                .driver_data =3D (void *)&omen_v1_thermal_params,
+@@ -621,9 +625,12 @@ static int hp_wmi_get_fan_speed_victus_s(int fan)
+        ret =3D hp_wmi_perform_query(HPWMI_VICTUS_S_FAN_SPEED_GET_QUERY,
+                                   HPWMI_GM, &fan_data, sizeof(u8),
+                                   sizeof(fan_data));
+-       if (ret !=3D 0)
++       if (ret !=3D 0) {
++               pr_info("[read] fan query failed with ret: %#x\n", ret);
+                return -EINVAL;
++       }
+
++       pr_info("[read] fan_data: %*ph\n", (int)sizeof(fan_data), fan_data);
+        return fan_data[fan] * 100;
+ }
 
 --=20
 You may reply to this email to add a comment.
