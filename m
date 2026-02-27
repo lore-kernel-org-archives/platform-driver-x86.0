@@ -1,48 +1,47 @@
 Received: from mail.tuxedocomputers.com (mail.tuxedocomputers.com [157.90.84.7])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AA0C346AF30;
-	Fri, 27 Feb 2026 20:09:13 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 501E546AF19;
+	Fri, 27 Feb 2026 20:09:11 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=157.90.84.7
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1772222955; cv=none; b=O4DYYaREeDs5uZXZMPUzKpF3RTGPRuYF5kP5qQLTYWoWtQKUlJmJGZGFKUST9uQcqo4AIBQ+sReYLUYQ8ajYpdQlzGrxsjDQhgMSvJQHSD6y2rpcXMmoSWy2vM1o40hrD/pG35uurHY1oQmU4mtX1P/K0lD2Inzx6bIX4WYiZe4=
+	t=1772222958; cv=none; b=ZaDn5WrmLiLa0HyIqvxrtYrbfY+VkgUMLLPclg8oTN0E8qfpiE+ny2nyYiM37q2Yx98OUsBRyP0wBgP78vSrNEP8Pz4mOtxBiH9QSS8amEg81mgGfjylHGR+fwmnSSnWEj/cdJ78xR5CQiwmErgkOLYDkFcgbb9zsP6JI7SJJOg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1772222955; c=relaxed/simple;
-	bh=EAaOXPyqmqUhcKP/oFE45gbdUh+zHhzi//bEmNmP/20=;
+	s=arc-20240116; t=1772222958; c=relaxed/simple;
+	bh=+oqvDMQ9XSzsuNWpARVCExmSbbYPfpikdb5WgjgK0vo=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=Ja30ZK1ndYis5THlKj4GA4rkY7z3y6IwNB7xHz+iOaRBsWWc+p0F7PqscezbgDdcOgjPZoANo6Wox+rvT6HHRJrKIyaii19Jo9x55Ia8ESbEQOc3zbarqA2EVaI+LuYHejRGjMMQ7TaVxIBCT9rXPvyj4fXOtpNaX4/yHE8P1o8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=tuxedocomputers.com; spf=pass smtp.mailfrom=tuxedocomputers.com; dkim=pass (1024-bit key) header.d=tuxedocomputers.com header.i=@tuxedocomputers.com header.b=BogyQmnp; arc=none smtp.client-ip=157.90.84.7
+	 MIME-Version; b=ofcFEBoPCyp8lR4QMu/5+azIiJwUzHE/XNPvsFr3LwYMF6bV8hh/xkjeBzkVohHjsVJzjA3NknQK6/jFPXDVimZg8oznDY1NPM37gDav6H8ClXW2FCwqjWJi+CwXoNFItMwwIH0rKv3DqXGolcjQ0GaHn5k2AxQSCNtMoNT1evo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=tuxedocomputers.com; spf=pass smtp.mailfrom=tuxedocomputers.com; dkim=pass (1024-bit key) header.d=tuxedocomputers.com header.i=@tuxedocomputers.com header.b=N6oqQFB1; arc=none smtp.client-ip=157.90.84.7
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=tuxedocomputers.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=tuxedocomputers.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=tuxedocomputers.com header.i=@tuxedocomputers.com header.b="BogyQmnp"
+	dkim=pass (1024-bit key) header.d=tuxedocomputers.com header.i=@tuxedocomputers.com header.b="N6oqQFB1"
 Received: from wse-pc.fritz.box (i5C75F712.versanet.de [92.117.247.18])
 	(Authenticated sender: wse@tuxedocomputers.com)
-	by mail.tuxedocomputers.com (Postfix) with ESMTPA id 054492FC0057;
-	Fri, 27 Feb 2026 21:09:12 +0100 (CET)
+	by mail.tuxedocomputers.com (Postfix) with ESMTPA id 531102FC004D;
+	Fri, 27 Feb 2026 21:09:09 +0100 (CET)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=tuxedocomputers.com;
-	s=default; t=1772222952;
+	s=default; t=1772222949;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=0vLp4brTcqKPguCCOAVct3VOIP0KbOI4TypSo5vsCp4=;
-	b=BogyQmnp+nDhUIF6xDOpzjhyUC+QZyHcGuYRjXHtbfqGBzQX6/DF4PJOfzUaxnAjFn4cqd
-	yKCbGoYKeDMeKk8lNelOyMguWlZ8EIyIBq90l1Sdf9plMiWj9fpzUewzHSJU0D8/uCK8PY
-	wGKMYgNp7l7Nzkk4eoPkNsh8HMbhWy4=
+	bh=p/HHTG2vPwSAzAa4toGW3SUmcPyhA668D39ku9Q2zug=;
+	b=N6oqQFB1X7PD/9+sacRHFn2xgRDy9FknoVedkITNgbT/7Nk6uKC3ChgIMzLBt+BYV48vTz
+	8BIEbQxPFZ9ZKnvL1IXcJV0MXYXXCHQq8j+PQk9YC9IJkDxnHgJt7gmWMw3SEww9voc46y
+	XC3mHUnU8QFhUgw+9yeZnHKPIQcyjDE=
 Authentication-Results: mail.tuxedocomputers.com;
 	auth=pass smtp.auth=wse@tuxedocomputers.com smtp.mailfrom=wse@tuxedocomputers.com
 From: Werner Sembach <wse@tuxedocomputers.com>
 To: Armin Wolf <W_Armin@gmx.de>,
-	Jonathan Corbet <corbet@lwn.net>,
-	Shuah Khan <skhan@linuxfoundation.org>
+	Hans de Goede <hansg@kernel.org>,
+	=?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
 Cc: Werner Sembach <wse@tuxedocomputers.com>,
 	platform-driver-x86@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	linux-doc@vger.kernel.org
-Subject: [PATCH v3 4/4] Documentation: laptops: Update documentation for uniwill laptops
-Date: Fri, 27 Feb 2026 21:07:17 +0100
-Message-ID: <20260227200906.514928-5-wse@tuxedocomputers.com>
+	linux-kernel@vger.kernel.org
+Subject: [PATCH v3 1/4] platform/x86/uniwill: uniwill-laptop: Rework hwmon feature defines
+Date: Fri, 27 Feb 2026 21:07:14 +0100
+Message-ID: <20260227200906.514928-2-wse@tuxedocomputers.com>
 X-Mailer: git-send-email 2.43.0
 In-Reply-To: <20260227200906.514928-1-wse@tuxedocomputers.com>
 References: <20260227200906.514928-1-wse@tuxedocomputers.com>
@@ -54,75 +53,139 @@ List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-Adds short description for two new sysfs entries, ctgp_offset and
-usb_c_power_priority, to the documentation of uniwill laptops.
+From: Armin Wolf <W_Armin@gmx.de>
 
+Split hwmon feature define in smaller parts to accommodate for diverse
+hardware. You can now specify the presence of a cpu and/or a gpu temp
+sensor separately and if one or 2 fans exists.
+
+Signed-off-by: Armin Wolf <W_Armin@gmx.de>
 Signed-off-by: Werner Sembach <wse@tuxedocomputers.com>
 ---
- .../ABI/testing/sysfs-driver-uniwill-laptop   | 25 +++++++++++++++++++
- .../admin-guide/laptops/uniwill-laptop.rst    | 12 +++++++++
- 2 files changed, 37 insertions(+)
+ drivers/platform/x86/uniwill/uniwill-acpi.c | 68 ++++++++++++++++++---
+ 1 file changed, 61 insertions(+), 7 deletions(-)
 
-diff --git a/Documentation/ABI/testing/sysfs-driver-uniwill-laptop b/Documentation/ABI/testing/sysfs-driver-uniwill-laptop
-index 2df70792968f3..70b4bc97d91a8 100644
---- a/Documentation/ABI/testing/sysfs-driver-uniwill-laptop
-+++ b/Documentation/ABI/testing/sysfs-driver-uniwill-laptop
-@@ -51,3 +51,28 @@ Description:
+diff --git a/drivers/platform/x86/uniwill/uniwill-acpi.c b/drivers/platform/x86/uniwill/uniwill-acpi.c
+index 6341dca20b76a..048b265bff374 100644
+--- a/drivers/platform/x86/uniwill/uniwill-acpi.c
++++ b/drivers/platform/x86/uniwill/uniwill-acpi.c
+@@ -319,8 +319,11 @@
+ #define UNIWILL_FEATURE_TOUCHPAD_TOGGLE		BIT(2)
+ #define UNIWILL_FEATURE_LIGHTBAR		BIT(3)
+ #define UNIWILL_FEATURE_BATTERY			BIT(4)
+-#define UNIWILL_FEATURE_HWMON			BIT(5)
+-#define UNIWILL_FEATURE_NVIDIA_CTGP_CONTROL	BIT(6)
++#define UNIWILL_FEATURE_CPU_TEMP		BIT(5)
++#define UNIWILL_FEATURE_GPU_TEMP		BIT(6)
++#define UNIWILL_FEATURE_PRIMARY_FAN		BIT(7)
++#define UNIWILL_FEATURE_SECONDARY_FAN		BIT(8)
++#define UNIWILL_FEATURE_NVIDIA_CTGP_CONTROL	BIT(9)
  
- 		Reading this file returns the current status of the breathing animation
- 		functionality.
-+
-+What:		/sys/bus/platform/devices/INOU0000:XX/ctgp_offset
-+Date:		January 2026
-+KernelVersion:	7.0
-+Contact:	Werner Sembach <wse@tuxedocomputers.com>
-+Description:
-+		Allows userspace applications to set the configurable TGP offset on top of the base
-+		TGP. Base TGP and max TGP and therefore the max cTGP offset are device specific.
-+		Note that setting the maximal cTGP leaves no window open for Dynamic Boost,
-+		effectifly disabling that feature for the GPU to always be prioritized.
-+
-+		Reading this file returns the current configurable TGP offset.
-+
-+What:		/sys/bus/platform/devices/INOU0000:XX/usb_c_power_priority
-+Date:		February 2026
-+KernelVersion:	7.1
-+Contact:	Werner Sembach <wse@tuxedocomputers.com>
-+Description:
-+		Allows userspace applications to choose the USB-C power distribution profile between
-+		one that offers a bigger share of the power to the battery and one that offers more
-+		of it to the CPU. Writing "charging"/"performance" into this file selects the
-+		respective profile.
-+
-+		Reading this file returns the profile names with the currently active one in
-+		brackets.
-diff --git a/Documentation/admin-guide/laptops/uniwill-laptop.rst b/Documentation/admin-guide/laptops/uniwill-laptop.rst
-index aff5f57a6bd47..c89b8b3756f84 100644
---- a/Documentation/admin-guide/laptops/uniwill-laptop.rst
-+++ b/Documentation/admin-guide/laptops/uniwill-laptop.rst
-@@ -50,6 +50,10 @@ between 1 and 100 percent are supported.
- Additionally the driver signals the presence of battery charging issues through the standard
- ``health`` power supply sysfs attribute.
+ struct uniwill_data {
+ 	struct device *dev;
+@@ -427,7 +430,7 @@ static const struct key_entry uniwill_keymap[] = {
+ 	{ KE_END }
+ };
  
-+It also let you set whether an USB-C power source should prioritise charging the battery or
-+delivering immediate power to the cpu. See Documentation/ABI/testing/sysfs-driver-uniwill-laptop for
-+details.
-+
- Lightbar
- --------
+-static inline bool uniwill_device_supports(struct uniwill_data *data,
++static inline bool uniwill_device_supports(const struct uniwill_data *data,
+ 					   unsigned int features)
+ {
+ 	return (data->features & features) == features;
+@@ -937,6 +940,48 @@ static const struct attribute_group *uniwill_groups[] = {
+ 	NULL
+ };
  
-@@ -58,3 +62,11 @@ LED class device. The default name of this LED class device is ``uniwill:multico
++static umode_t uniwill_is_visible(const void *drvdata, enum hwmon_sensor_types type, u32 attr,
++				  int channel)
++{
++	const struct uniwill_data *data = drvdata;
++	unsigned int feature;
++
++	switch (type) {
++	case hwmon_temp:
++		switch (channel) {
++		case 0:
++			feature = UNIWILL_FEATURE_CPU_TEMP;
++			break;
++		case 1:
++			feature = UNIWILL_FEATURE_GPU_TEMP;
++			break;
++		default:
++			return 0;
++		}
++		break;
++	case hwmon_fan:
++	case hwmon_pwm:
++		switch (channel) {
++		case 0:
++			feature = UNIWILL_FEATURE_PRIMARY_FAN;
++			break;
++		case 1:
++			feature = UNIWILL_FEATURE_SECONDARY_FAN;
++			break;
++		default:
++			return 0;
++		}
++		break;
++	default:
++		return 0;
++	}
++
++	if (uniwill_device_supports(data, feature))
++		return 0444;
++
++	return 0;
++}
++
+ static int uniwill_read(struct device *dev, enum hwmon_sensor_types type, u32 attr, int channel,
+ 			long *val)
+ {
+@@ -1020,7 +1065,7 @@ static int uniwill_read_string(struct device *dev, enum hwmon_sensor_types type,
+ }
  
- See Documentation/ABI/testing/sysfs-driver-uniwill-laptop for details on how to control the various
- animation modes of the lightbar.
-+
-+Configurable TGP
-+--------
-+
-+The ``uniwill-laptop`` driver allows to set the configurable TGP for devices with NVIDIA GPUs that
-+allow it.
-+
-+See Documentation/ABI/testing/sysfs-driver-uniwill-laptop for details.
+ static const struct hwmon_ops uniwill_ops = {
+-	.visible = 0444,
++	.is_visible = uniwill_is_visible,
+ 	.read = uniwill_read,
+ 	.read_string = uniwill_read_string,
+ };
+@@ -1048,7 +1093,10 @@ static int uniwill_hwmon_init(struct uniwill_data *data)
+ {
+ 	struct device *hdev;
+ 
+-	if (!uniwill_device_supports(data, UNIWILL_FEATURE_HWMON))
++	if (!uniwill_device_supports(data, UNIWILL_FEATURE_CPU_TEMP) &&
++	    !uniwill_device_supports(data, UNIWILL_FEATURE_GPU_TEMP) &&
++	    !uniwill_device_supports(data, UNIWILL_FEATURE_PRIMARY_FAN) &&
++	    !uniwill_device_supports(data, UNIWILL_FEATURE_SECONDARY_FAN))
+ 		return 0;
+ 
+ 	hdev = devm_hwmon_device_register_with_info(data->dev, "uniwill", data,
+@@ -1687,7 +1735,10 @@ static struct uniwill_device_descriptor lapac71h_descriptor __initdata = {
+ 		    UNIWILL_FEATURE_SUPER_KEY |
+ 		    UNIWILL_FEATURE_TOUCHPAD_TOGGLE |
+ 		    UNIWILL_FEATURE_BATTERY |
+-		    UNIWILL_FEATURE_HWMON,
++		    UNIWILL_FEATURE_CPU_TEMP |
++		    UNIWILL_FEATURE_GPU_TEMP |
++		    UNIWILL_FEATURE_PRIMARY_FAN |
++		    UNIWILL_FEATURE_SECONDARY_FAN,
+ };
+ 
+ static struct uniwill_device_descriptor lapkc71f_descriptor __initdata = {
+@@ -1696,7 +1747,10 @@ static struct uniwill_device_descriptor lapkc71f_descriptor __initdata = {
+ 		    UNIWILL_FEATURE_TOUCHPAD_TOGGLE |
+ 		    UNIWILL_FEATURE_LIGHTBAR |
+ 		    UNIWILL_FEATURE_BATTERY |
+-		    UNIWILL_FEATURE_HWMON,
++		    UNIWILL_FEATURE_CPU_TEMP |
++		    UNIWILL_FEATURE_GPU_TEMP |
++		    UNIWILL_FEATURE_PRIMARY_FAN |
++		    UNIWILL_FEATURE_SECONDARY_FAN,
+ };
+ 
+ static int phxarx1_phxaqf1_probe(struct uniwill_data *data)
 -- 
 2.43.0
 
