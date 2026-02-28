@@ -1,201 +1,117 @@
-Received: from mail-wm1-f44.google.com (mail-wm1-f44.google.com [209.85.128.44])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.17])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 131222F49F6
-	for <platform-driver-x86@vger.kernel.org>; Sat, 28 Feb 2026 17:04:36 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.44
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 081FD361DDF
+	for <platform-driver-x86@vger.kernel.org>; Sat, 28 Feb 2026 23:01:56 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.17
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1772298278; cv=none; b=NtE1IK/1XiD6TxMvJJyt9vZO1QkJ0tnz/44R3xhvSu5yccD0uaVU0xh6jQx+R4Yxz5GoimfkPRm8DvAEVLBLiQ2kDP7I0OT+BOUj5XhZVVzwMfvluYn70NjIXSsZwcphfuewqWKAGva+ibePkKyKHKXPf5N1NKT159LCTRt1jkM=
+	t=1772319718; cv=none; b=NmSQz/Q/h3PDN113FhO+AwgDvqFv1gQ+ioRbyKnPbke/al+72RHdnxVbsa3gdyhSFLhwTOnQscQyGYxI3lMG6qV/ko9H+e9vMDNWSdvzp1JTFmSfvPWuxizOKO0jAzbQo4uRNPQouAiUKqtNzrXwVjeN7R5K8PbwEFpb7eZCHgY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1772298278; c=relaxed/simple;
-	bh=vfk5oWr6+MC3tbftUpoDnEcCStih+EdR8IGYQq3G6+U=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=dNQGwuudyk0JtX90dAtGd4DtZ/06l9Cwf2vi5wLCCYrFE4YR2mhQJXzQkzilgvxWlGV+4438d/W9prF/yZLAHg539hUFRx89kveWo4erOlzQzR/A5rTDgKGO2bH0ZbSmhpkq5q6aEKdgWl88W/QX9CDTC0ZLWOqetAyUMo9VWZ0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=g+80QtgC; arc=none smtp.client-ip=209.85.128.44
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1772319718; c=relaxed/simple;
+	bh=hv2IPK471gAwfud3SVuplnWKG6v6Ov2fiKRG1ISd4hc=;
+	h=Message-ID:Subject:From:To:Date:In-Reply-To:References:
+	 Content-Type:MIME-Version; b=lm4r+kN5XAuPEyptc+EGml5f0e8AcZl5gqy10aVvknyJi2XGCgm5kT3Hn+k2qu7M+cj41wt1e62zO7e6Vx4g/9sfNHB3PX0rgbWKkIdf1fbrUVi23joWqx/CMrznwyRDS5jBWjTkm692UKndwRPAsTqB8nnWQTgMv+HqAmNdF7I=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=pass smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=YO13zOAd; arc=none smtp.client-ip=192.198.163.17
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="g+80QtgC"
-Received: by mail-wm1-f44.google.com with SMTP id 5b1f17b1804b1-48069a48629so33453895e9.0
-        for <platform-driver-x86@vger.kernel.org>; Sat, 28 Feb 2026 09:04:36 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1772298275; x=1772903075; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=ipIyvKGS8RA5V5Uwrv0KbmHM1BtJzJk2sHameAMPWss=;
-        b=g+80QtgCIOmHLcCi8YxMfoEbT6hlVCTHChygTphK/D/NxqiOsjebfEYmQ8ecoIKYCa
-         4x60B4Dq9Q+cnn8YIMiSPoUyCyda+zC7F/VhtPo88jWQUcFkft1Dy6f2dRL4u8TsjY3J
-         yWK6YkKaRLn9nEpKWHLQCCu4DGAsKQVAKmXvnANmYuWUSvnbop4d0v0OgcyhTnv2GqwP
-         4hCRl0PEDDBNVrkIbkPN1rJvfPV9i8243EAiqKbTGJuC5WKQWaYHaZ5L2jO7UgLedwge
-         S6yDNYHtOJPoaOTOS4ZnnM8sf7P/eO3PktT+XOstwvdzNXs9j/WkJE2tsEg31NFogFI1
-         gC7Q==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1772298275; x=1772903075;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-gg:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=ipIyvKGS8RA5V5Uwrv0KbmHM1BtJzJk2sHameAMPWss=;
-        b=Y5s7r7Sj0wFdDoGvMuUFP2HktSytmJFmXD+JXUYCjav0eAC9VPgv3Czo0zCMBU7sdH
-         42RNC/IvMgD61SaRJ+WhS5OBRaJbV97z/3zSSWTHgIj3nXC9sZZfuXnpsaMUB+bg1X0L
-         3d3upTHPWRl4yJZ0ULOWDxi4pRC1O/lPemlmv1Cm8kxuSe6aOdHHpFoX2u8XDlvPTU1Q
-         Yk9PUnDrZKByqm5QapWHvciY5q1E043XacacF9YhnkO/jeRj1N1fdrzSRuCV2fdHjLHv
-         Zhl5RCllXGZC2/VGw7MM1onpke63kFJByfA8c0Zbpxhfw/fXof0PdeKD8v2Q9kFYgfQE
-         AoyQ==
-X-Forwarded-Encrypted: i=1; AJvYcCW6s0RG/Q3PQp6IyH6RW09NvZuHz4HYnb3VFi/RlCIyvYCft3ofrw6zFM63JvuHP97AKs27Z7+zI9MCbI+V1XKQGb3X@vger.kernel.org
-X-Gm-Message-State: AOJu0YxVarqZIuAFdZyXxUQFm3WoEwpUlFxj08jNwwIiGXNk8zZHfOsi
-	bq6NxCicdttptpC45i4uY1ACgFSSIWCsIKut3HcXK/TdbKkdzzUEX8Mm
-X-Gm-Gg: ATEYQzxjHq15jC+FXceMmqdKsuBM8zE4i3t53b3oYzPGWwIfcvH5iR7rFUvbAEYPrSE
-	KEJhVp0nQMunVvS4B43W/XB3qDumVxeOZOys/CwCaECNQ7+Zanlviwf6eFC0SWiur3jzFpvtAP1
-	405ROG3nIk6QkJzIYPTBOFiTHgZjDhDzmpw2dX/CqMZoMm2WPFnFK2tNpd3lvhj+gVKU9P134hi
-	atygSWVDsN0bg0qkZLE7n2fLD+vqh+Tm7Oi5btG1occPLCmPoW1v+DDyvjkkG+puHKlUrASgcVt
-	BA9sMlE3KR1nvpOrOTfKItiY2O8iZ62HxVsCWwTnq+VoWgchOj9RBS5d6hvSn1JgAfD5JBSQbyf
-	3obAMpN7Uad6EXM2PeLbHhunffCliXmAeKXTbbYRwtqzIJK6CfTaMRW/l8fF+6YEDxt2dUTRJtE
-	UASHhr5PdrvROZW1oR0ar5yPTWapo5PoftPuA=
-X-Received: by 2002:a05:600c:3b02:b0:483:6fe1:c057 with SMTP id 5b1f17b1804b1-483c9c02efcmr116143755e9.21.1772298275197;
-        Sat, 28 Feb 2026 09:04:35 -0800 (PST)
-Received: from [192.168.1.121] ([151.95.146.136])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-483c3b3474dsm167336535e9.1.2026.02.28.09.04.34
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Sat, 28 Feb 2026 09:04:34 -0800 (PST)
-Message-ID: <14eae871-5cb0-4847-963f-e3d382a3fc2b@gmail.com>
-Date: Sat, 28 Feb 2026 18:04:34 +0100
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="YO13zOAd"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1772319717; x=1803855717;
+  h=message-id:subject:from:to:date:in-reply-to:references:
+   content-transfer-encoding:mime-version;
+  bh=hv2IPK471gAwfud3SVuplnWKG6v6Ov2fiKRG1ISd4hc=;
+  b=YO13zOAdYiOQUugmcAmPn0Q3XjJ2BU7qTD4qAU7+5AESSOtFy8W2Hlbq
+   lid6VsNlyJYCCeLQ0tguadh9JOu7HQfACiRW6ouaOUctW1qlZCvRMxuPq
+   paKIOOiWasSlWC/kf4rkx1YN9uM5XxoyY1l+Fgp5nT6jckc7Wkna76Lxa
+   c1P+jPFbNdmjNdUkKhICqk9qZW8b+8jL5PqcQrY/sPFbvmbbhrxtb4Kn+
+   kPnGOjfAWGBLKvgInvHvOcBOjEZYrv8zX1V3FAKn3ta2k4Mj71nkl1Bm7
+   jd89bCRGCIZFFI27uyyig7CiW0rMveEN3yZhlVFTjbK1s5kZIlMtU7YqB
+   g==;
+X-CSE-ConnectionGUID: mGU+KnUXSuibf4A2Jp21hQ==
+X-CSE-MsgGUID: FKxceOvKTESGBKK/j9G3FQ==
+X-IronPort-AV: E=McAfee;i="6800,10657,11715"; a="73275824"
+X-IronPort-AV: E=Sophos;i="6.21,317,1763452800"; 
+   d="scan'208";a="73275824"
+Received: from fmviesa003.fm.intel.com ([10.60.135.143])
+  by fmvoesa111.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 28 Feb 2026 15:01:57 -0800
+X-CSE-ConnectionGUID: 9fYTDWsWQGSBi4Lr2jAzBA==
+X-CSE-MsgGUID: wwcBoLIlSaq2sOY8GnpyOQ==
+X-ExtLoop1: 1
+Received: from spandruv-mobl5.amr.corp.intel.com (HELO [10.125.108.21]) ([10.125.108.21])
+  by fmviesa003-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 28 Feb 2026 15:01:56 -0800
+Message-ID: <30ec4399cc038ee2471a7ba158a0139637103756.camel@linux.intel.com>
+Subject: Re: [PATCH] platform/x86: ISST: Check HWP support before MSR access
+From: srinivas pandruvada <srinivas.pandruvada@linux.intel.com>
+To: lirongqing <lirongqing@baidu.com>, Hans de Goede <hansg@kernel.org>, 
+ Ilpo =?ISO-8859-1?Q?J=E4rvinen?=
+	 <ilpo.jarvinen@linux.intel.com>, platform-driver-x86@vger.kernel.org
+Date: Sat, 28 Feb 2026 15:01:55 -0800
+In-Reply-To: <20260228122441.2284-1-lirongqing@baidu.com>
+References: <20260228122441.2284-1-lirongqing@baidu.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+User-Agent: Evolution 3.58.2 (3.58.2-1.fc43) 
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v1 2/2] platform/x86: eeepc-laptop: Convert ACPI driver to
- a platform one
-To: "Rafael J. Wysocki" <rafael@kernel.org>,
- =?UTF-8?Q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
-Cc: Hans de Goede <hansg@kernel.org>, LKML <linux-kernel@vger.kernel.org>,
- Linux ACPI <linux-acpi@vger.kernel.org>,
- platform-driver-x86@vger.kernel.org,
- Corentin Chary <corentin.chary@gmail.com>, "Luke D. Jones" <luke@ljones.dev>
-References: <7916328.EvYhyI6sBW@rafael.j.wysocki>
- <3329436.5fSG56mABF@rafael.j.wysocki>
-Content-Language: en-US, it-IT, en-US-large
-From: Denis Benato <benato.denis96@gmail.com>
-In-Reply-To: <3329436.5fSG56mABF@rafael.j.wysocki>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
 
-
-On 2/28/26 16:22, Rafael J. Wysocki wrote:
-> From: "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>
->
-> In all cases in which a struct acpi_driver is used for binding a driver
-> to an ACPI device object, a corresponding platform device is created by
-> the ACPI core and that device is regarded as a proper representation of
-> underlying hardware.  Accordingly, a struct platform_driver should be
-> used by driver code to bind to that device.  There are multiple reasons
-> why drivers should not bind directly to ACPI device objects [1].
->
-> Overall, it is better to bind drivers to platform devices than to their
-> ACPI companions, so convert the EEEPC laptop ACPI driver to a platform
-> one.
->
-> While this is not expected to alter functionality, it changes sysfs
-> layout and so it will be visible to user space.
->
-> Link: https://lore.kernel.org/all/2396510.ElGaqSPkdT@rafael.j.wysocki/ [1]
-> Signed-off-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
-Reviewed-by: Denis Benato <denis.benato@linux.dev>
+On Sat, 2026-02-28 at 07:24 -0500, lirongqing wrote:
+> From: Li RongQing <lirongqing@baidu.com>
+>=20
+> On some systems, HWP can be explicitly disabled in the BIOS settings
+> When HWP is disabled by firmware, the HWP CPUID bit is not set, and
+> attempting to read MSR_PM_ENABLE will result in a General Protection
+> (GP) fault.
+>=20
+> [=C2=A0 426.715441] unchecked MSR access error: RDMSR from 0x770 at rIP:
+> 0xffffffffc33db92e (disable_dynamic_sst_features+0xe/0x50
+> [isst_tpmi_core])
+> [=C2=A0 426.715450] Call Trace:
+> [=C2=A0 426.715453]=C2=A0 <TASK>
+> [=C2=A0 426.715454]=C2=A0 ? ex_handler_msr+0xf6/0x150
+> [=C2=A0 426.715461]=C2=A0 ? fixup_exception+0x1ad/0x340
+> [=C2=A0 426.715462]=C2=A0 ? gp_try_fixup_and_notify+0x1e/0xb0
+> [=C2=A0 426.715466]=C2=A0 ? exc_general_protection+0xc9/0x390
+> [=C2=A0 426.715470]=C2=A0 ? terminate_walk+0x64/0x100
+> [=C2=A0 426.715474]=C2=A0 ? asm_exc_general_protection+0x22/0x30
+> [=C2=A0 426.715477]=C2=A0 ? disable_dynamic_sst_features+0xe/0x50
+> [isst_tpmi_core]
+> [=C2=A0 426.715480]=C2=A0 isst_if_def_ioctl+0xece/0x1050 [isst_tpmi_core]
+> [=C2=A0 426.715484]=C2=A0 ? ioctl_has_perm.constprop.42+0xe0/0x130
+> [=C2=A0 426.715489]=C2=A0 isst_if_def_ioctl+0x10d/0x1a0 [isst_if_common]
+> [=C2=A0 426.715495]=C2=A0 __se_sys_ioctl+0x86/0xc0
+> [=C2=A0 426.715498]=C2=A0 do_syscall_64+0x8a/0x100
+> [=C2=A0 426.715500]=C2=A0 entry_SYSCALL_64_after_hwframe+0x78/0xe2
+> [=C2=A0 426.715503] RIP: 0033:0x7f36eaef54a7
+>=20
+> Add a check for X86_FEATURE_HWP before accessing the MSR. If HWP is
+> not available, return false safely.
+>=20
+> Fixes: 12a7d2cb811dd8a ("platform/x86: ISST: Add SST-CP support via
+> TPMI")
+> Signed-off-by: Li RongQing <lirongqing@baidu.com>
 > ---
->  drivers/platform/x86/eeepc-laptop.c | 32 +++++++++++++++--------------
->  1 file changed, 17 insertions(+), 15 deletions(-)
->
-> diff --git a/drivers/platform/x86/eeepc-laptop.c b/drivers/platform/x86/eeepc-laptop.c
-> index 626a99a71fce..02a71095920e 100644
-> --- a/drivers/platform/x86/eeepc-laptop.c
-> +++ b/drivers/platform/x86/eeepc-laptop.c
-> @@ -1361,8 +1361,9 @@ static void eeepc_enable_camera(struct eeepc_laptop *eeepc)
->  
->  static bool eeepc_device_present;
->  
-> -static int eeepc_acpi_add(struct acpi_device *device)
-> +static int eeepc_acpi_probe(struct platform_device *pdev)
->  {
-> +	struct acpi_device *device = ACPI_COMPANION(&pdev->dev);
->  	struct eeepc_laptop *eeepc;
->  	int result;
->  
-> @@ -1373,9 +1374,10 @@ static int eeepc_acpi_add(struct acpi_device *device)
->  	eeepc->handle = device->handle;
->  	strscpy(acpi_device_name(device), EEEPC_ACPI_DEVICE_NAME);
->  	strscpy(acpi_device_class(device), EEEPC_ACPI_CLASS);
-> -	device->driver_data = eeepc;
->  	eeepc->device = device;
->  
-> +	platform_set_drvdata(pdev, eeepc);
+> =C2=A0drivers/platform/x86/intel/speed_select_if/isst_tpmi_core.c | 3 +++
+> =C2=A01 file changed, 3 insertions(+)
+>=20
+> diff --git
+> a/drivers/platform/x86/intel/speed_select_if/isst_tpmi_core.c
+> b/drivers/platform/x86/intel/speed_select_if/isst_tpmi_core.c
+> index b8cdaa2..6f46cbb 100644
+> --- a/drivers/platform/x86/intel/speed_select_if/isst_tpmi_core.c
+> +++ b/drivers/platform/x86/intel/speed_select_if/isst_tpmi_core.c
+> @@ -558,6 +558,9 @@ static bool disable_dynamic_sst_features(void)
+> =C2=A0{
+> =C2=A0	u64 value;
+> =C2=A0
+> +	if (!static_cpu_has(X86_FEATURE_HWP))
+> +		return true;
 > +
->  	eeepc->hotplug_disabled = hotplug_disabled;
->  
->  	eeepc_dmi_check(eeepc);
-> @@ -1448,11 +1450,12 @@ static int eeepc_acpi_add(struct acpi_device *device)
->  	return result;
->  }
->  
-> -static void eeepc_acpi_remove(struct acpi_device *device)
-> +static void eeepc_acpi_remove(struct platform_device *pdev)
->  {
-> -	struct eeepc_laptop *eeepc = acpi_driver_data(device);
-> +	struct eeepc_laptop *eeepc = platform_get_drvdata(pdev);
->  
-> -	acpi_dev_remove_notify_handler(device, ACPI_ALL_NOTIFY, eeepc_acpi_notify);
-> +	acpi_dev_remove_notify_handler(ACPI_COMPANION(&pdev->dev),
-> +				       ACPI_ALL_NOTIFY, eeepc_acpi_notify);
->  	eeepc_backlight_exit(eeepc);
->  	eeepc_rfkill_exit(eeepc);
->  	eeepc_input_exit(eeepc);
-> @@ -1469,13 +1472,12 @@ static const struct acpi_device_id eeepc_device_ids[] = {
->  };
->  MODULE_DEVICE_TABLE(acpi, eeepc_device_ids);
->  
-> -static struct acpi_driver eeepc_acpi_driver = {
-> -	.name = EEEPC_LAPTOP_NAME,
-> -	.class = EEEPC_ACPI_CLASS,
-> -	.ids = eeepc_device_ids,
-> -	.ops = {
-> -		.add = eeepc_acpi_add,
-> -		.remove = eeepc_acpi_remove,
-> +static struct platform_driver eeepc_acpi_driver = {
-> +	.probe = eeepc_acpi_probe,
-> +	.remove = eeepc_acpi_remove,
-> +	.driver = {
-> +		.name = EEEPC_LAPTOP_NAME,
-> +		.acpi_match_table = eeepc_device_ids,
->  	},
->  };
->  
-> @@ -1488,7 +1490,7 @@ static int __init eeepc_laptop_init(void)
->  	if (result < 0)
->  		return result;
->  
-> -	result = acpi_bus_register_driver(&eeepc_acpi_driver);
-> +	result = platform_driver_register(&eeepc_acpi_driver);
->  	if (result < 0)
->  		goto fail_acpi_driver;
->  
-> @@ -1500,7 +1502,7 @@ static int __init eeepc_laptop_init(void)
->  	return 0;
->  
->  fail_no_device:
-> -	acpi_bus_unregister_driver(&eeepc_acpi_driver);
-> +	platform_driver_unregister(&eeepc_acpi_driver);
->  fail_acpi_driver:
->  	platform_driver_unregister(&platform_driver);
->  	return result;
-> @@ -1508,7 +1510,7 @@ static int __init eeepc_laptop_init(void)
->  
->  static void __exit eeepc_laptop_exit(void)
->  {
-> -	acpi_bus_unregister_driver(&eeepc_acpi_driver);
-> +	platform_driver_unregister(&eeepc_acpi_driver);
->  	platform_driver_unregister(&platform_driver);
->  }
->  
+> =C2=A0	rdmsrq(MSR_PM_ENABLE, value);
+> =C2=A0	return !(value & 0x1);
+> =C2=A0}
