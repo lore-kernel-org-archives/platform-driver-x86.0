@@ -1,98 +1,108 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.14])
+Received: from outbound.baidu.com (mx22.baidu.com [220.181.50.185])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6B58F25EFBE;
-	Sat, 28 Feb 2026 07:02:04 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.14
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B184736B05A;
+	Sat, 28 Feb 2026 07:22:59 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=220.181.50.185
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1772262125; cv=none; b=miBKG+e3xDGEraJK9/DbFrelXWmrCkBLCHA0usib2gHk6D/Zoo0W+PQ6FsfkK9FmVNakdKuRiKYV2WpzHnOGSCTlwuazbQQ11aUSHo89Cp8RbR0kiI818bwd6PRDl2+XxwGWg7IxcWYQuChKVIN5+76FeNvNXjf34PNbauk6fS0=
+	t=1772263382; cv=none; b=QYP0MGvaKRw+u5HTsYCsnPwadBeZVSs2ZF8++qeWmF3xGQoi4DG/TlNIHlLgxSGJjGVoBIshwnZrw31kxKayOr9hp2vlAu9hW+lKbRpBLP42E+paUKI6Q8yx77Di96ofth+6t55Ma4mG9YCYxYs1q4rCwo3pxUH/CDxlkkZRhyk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1772262125; c=relaxed/simple;
-	bh=uUAUJ/SEYhixx1AJbJBupM8reL9/nEbLspuifeMY9WM=;
-	h=Message-ID:Subject:From:To:Date:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=Gn7rXW8+SxP2HBXx6ixCvs+zNt56VXg/HwXremtTRU/qTS6pZV0L3tp6LkOnema9YeSavd1Kc2m+i7buTwx99JfD6NuBVevwb6Huv9FGsCX9wnXd+TmojxunXaPMBTfTg5ZvBv9tStMPb0L83NBDPHBn83o7ZuJE16DGGMxOIls=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=pass smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=jVD5wY52; arc=none smtp.client-ip=192.198.163.14
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="jVD5wY52"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1772262125; x=1803798125;
-  h=message-id:subject:from:to:date:in-reply-to:references:
-   content-transfer-encoding:mime-version;
-  bh=uUAUJ/SEYhixx1AJbJBupM8reL9/nEbLspuifeMY9WM=;
-  b=jVD5wY52c+6wEcgKeIFe6nYsiVmjXs+PMwk9v1NsEn0zeDaMFLbyJiJO
-   J8zxcIT4it8qTosEzFtqATDmTSa2wqGkKON1OUdJpj6od0/yOWF0RChNx
-   CGf/R7bnk3GR2nhP7ZqD0CMlR6hxS+eiqeaANcjhX1mUBJS5Wuk8A06yG
-   ERET/oIupDJ1TTxzEUZtYn2mItiLqyQd/s5ARvtLS80H9PECH7GhGLq1P
-   1H731dm14SshQvMf32uC98VE5m7DN/d8bGASgJ/UoiG69WZGpjMxjS91m
-   KePMW+M1/z/40y58hJK/qGpGjXUaO7/cMPxrjQoPUu4FWOUg/8rTVRjZ5
-   w==;
-X-CSE-ConnectionGUID: qcfUWrrzReSfGqVkp6ORiQ==
-X-CSE-MsgGUID: jN7hgNrdRTqP32dcHZBdAw==
-X-IronPort-AV: E=McAfee;i="6800,10657,11714"; a="73408296"
-X-IronPort-AV: E=Sophos;i="6.21,315,1763452800"; 
-   d="scan'208";a="73408296"
-Received: from orviesa005.jf.intel.com ([10.64.159.145])
-  by fmvoesa108.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 27 Feb 2026 23:02:04 -0800
-X-CSE-ConnectionGUID: rFqkrEcGQ3SsBBfqOuVaUQ==
-X-CSE-MsgGUID: iOOOKWgZT4umD/7Hyy7yVw==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.21,315,1763452800"; 
-   d="scan'208";a="222091311"
-Received: from spandruv-mobl5.amr.corp.intel.com (HELO [10.125.111.246]) ([10.125.111.246])
-  by orviesa005-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 27 Feb 2026 23:02:04 -0800
-Message-ID: <14c6d1ec06bde185c928e433c3d1fa2341be86b9.camel@linux.intel.com>
-Subject: Re: =?UTF-8?Q?=E7=AD=94=E5=A4=8D=3A?= [PATCH][RFC] platform/x86:
- intel_speed_select: Use static_cpu_has for HWP check
-From: srinivas pandruvada <srinivas.pandruvada@linux.intel.com>
-To: "Li,Rongqing(ACG CCN)" <lirongqing@baidu.com>, Hans de Goede
-	 <hansg@kernel.org>, Ilpo =?ISO-8859-1?Q?J=E4rvinen?=
-	 <ilpo.jarvinen@linux.intel.com>, "platform-driver-x86@vger.kernel.org"
-	 <platform-driver-x86@vger.kernel.org>, "linux-kernel@vger.kernel.org"
-	 <linux-kernel@vger.kernel.org>
-Date: Fri, 27 Feb 2026 23:02:03 -0800
-In-Reply-To: <ad6453bb815f4445bd80239e96c827e5@baidu.com>
+	s=arc-20240116; t=1772263382; c=relaxed/simple;
+	bh=pu24k7rfS43hA+8cnGMKRCs84A98J3rlzUKejGAo5vE=;
+	h=From:To:Subject:Date:Message-ID:References:In-Reply-To:
+	 Content-Type:MIME-Version; b=SfaS9o9uiCu6B7CuBxFmEjzPA6LIZXsBdlNoZ0IaYafxcHDJtjMqjfu50xiyPt31F9mqPolsECvUkzR813+eOWSfQgp5gonqEjI/W2cCzzAC9Fh36sTXEf0v+HEKRRLwWnT+WZ1XHYKnUzTuNp47sluJXd3ky8X15hqoy1pf6Og=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=baidu.com; spf=pass smtp.mailfrom=baidu.com; arc=none smtp.client-ip=220.181.50.185
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=baidu.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=baidu.com
+From: "Li,Rongqing(ACG CCN)" <lirongqing@baidu.com>
+To: srinivas pandruvada <srinivas.pandruvada@linux.intel.com>, Hans de Goede
+	<hansg@kernel.org>, =?utf-8?B?SWxwbyBKw6RydmluZW4=?=
+	<ilpo.jarvinen@linux.intel.com>, "platform-driver-x86@vger.kernel.org"
+	<platform-driver-x86@vger.kernel.org>, "linux-kernel@vger.kernel.org"
+	<linux-kernel@vger.kernel.org>
+Subject: =?utf-8?B?562U5aSNOiBb5aSW6YOo6YKu5Lu2XSBSZTogW1BBVENIXVtSRkNdIHBsYXRm?=
+ =?utf-8?B?b3JtL3g4NjogaW50ZWxfc3BlZWRfc2VsZWN0OiBVc2Ugc3RhdGljX2NwdV9o?=
+ =?utf-8?Q?as_for_HWP_check?=
+Thread-Topic: =?utf-8?B?W+WklumDqOmCruS7tl0gUmU6IFtQQVRDSF1bUkZDXSBwbGF0Zm9ybS94ODY6?=
+ =?utf-8?B?IGludGVsX3NwZWVkX3NlbGVjdDogVXNlIHN0YXRpY19jcHVfaGFzIGZvciBI?=
+ =?utf-8?Q?WP_check?=
+Thread-Index: AQHcqGWxEzg7lcqN/0+aw5YlwBCekLWXKRwAgACKG6A=
+Date: Sat, 28 Feb 2026 07:22:20 +0000
+Message-ID: <a9247ce471e940f2bb0af122277c1733@baidu.com>
 References: <20260228035108.2543-1-lirongqing@baidu.com>
-	 <ad6453bb815f4445bd80239e96c827e5@baidu.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-User-Agent: Evolution 3.58.2 (3.58.2-1.fc43) 
+ <fa10ba0b396d5c67bf1762e06869950496d85280.camel@linux.intel.com>
+In-Reply-To: <fa10ba0b396d5c67bf1762e06869950496d85280.camel@linux.intel.com>
+Accept-Language: zh-CN, en-US
+Content-Language: zh-CN
+X-MS-Has-Attach:
+X-MS-TNEF-Correlator:
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+X-FEAS-Client-IP: 172.31.3.13
+X-FE-Policy-ID: 52:10:53:SYSTEM
 
-On Sat, 2026-02-28 at 06:57 +0000, Li,Rongqing(ACG CCN) wrote:
-> > =C2=A0static bool disable_dynamic_sst_features(void)
-> > =C2=A0{
-> > -	u64 value;
-> > -
-> > -	rdmsrq(MSR_PM_ENABLE, value);
-> > -	return !(value & 0x1);
-> > +	return !static_cpu_has(X86_FEATURE_HWP);
-> > =C2=A0}
-> >=20
-> > =C2=A0#define _read_cp_info(name_str, name, offset, start, width,
-> > mult_factor)\
-> > --
->=20
->=20
-> static_cpu_has(X86_FEATURE_HWP) is different from value of
-> MSR_PM_ENABLE, when intel_pstate=3Dno_hwp is configured in kernel
-> cmdline
->=20
-> Sorry for the noise, please drop this patch;
->=20
-
-No worries.
-
--Srinivas
-
-> [Li,Rongqing]=20
->=20
->=20
-> > 2.9.4
+DQoNCj4gVGhhdCBpcyBub3Qgc2FtZS4gUHJlc2VuY2Ugb2YgSFdQIGZlYXR1cmUgbWVhbnMgdGhh
+dCBIV1AgY2FuIGJlIGVuYWJsZWQgb24NCj4gdGhpcyBTb0MuIEJ1dCB1c2VyIGNhbiBib290IHdp
+dGggb3B0aW9uIHRvIG5vdCBlbmFibGUgSFdQIGJ5IGludGVsX3BzdGF0ZQ0KPiBkcml2ZXIuDQoN
+Cj4gSWYgSFdQIGlzIG5vdCBlbmFibGVkLCB0aGVuIFNTVCBmZWF0dXJlcyBjYW4ndCBiZSBlbmFi
+bGVkLg0KPiANCg0KSWYgSFdQIGlzIG5vdCBlbmFibGVkLCBDYW4gdGhlIFBDVCBpcyBlbmFibGVk
+IGZyb20gQklPUz8gDQoNCkluIG15IG1hY2hpbmUsIEhXUCBpcyBkaXNhYmxlZCwgYnV0IFBDVCBp
+cyBlbmFibGVkOyBhbmQgY2FuIG5vdCBkaXNhYmxlIFBDVCBieSAiIC4vaW50ZWwtc3BlZWQtc2Vs
+ZWN0IGNvcmUtcG93ZXIgZGlzYWJsZSINCg0KDQpbcm9vdEB0anpqLWFjZy10Z2UyMDI2LTAxLTI4
+MXpyZmlsZC50anpqLmJhaWR1LmNvbSB+XSMgcmRtc3IgMHg3NzANCjANCltyb290QHRqemotYWNn
+LXRnZTIwMjYtMDEtMjgxenJmaWxkLnRqemouYmFpZHUuY29tIH5dIyBjcHVwb3dlciBtb25pdG9y
+DQogICAgICAgICAgICAgIHwgTmVoYWxlbSAgICAgICAgICAgICAgICAgICB8fCBNcGVyZiAgICAg
+ICAgICAgICAgfHwgSWRsZV9TdGF0cw0KIFBLR3xDT1JFfCBDUFV8IEMzICAgfCBDNiAgIHwgUEMz
+ICB8IFBDNiAgIHx8IEMwICAgfCBDeCAgIHwgRnJlcSAgfHwgUE9MTCB8IEMxDQogICAwfCAgIDB8
+ICAgMHwgIDAuMDB8ICAwLjAwfCAgMC4wMHwgIDAuMDB8fCAgMC42NHwgOTkuMzZ8ICA0NTk4fHwg
+IDAuMDB8IDk5LjUwDQogICAwfCAgIDB8IDEyOHwgIDAuMDB8ICAwLjAwfCAgMC4wMHwgIDAuMDB8
+fCAgMS45OHwgOTguMDJ8ICA0NTgxfHwgIDAuMDB8IDk4LjEwDQogICAwfCAgIDF8ICAgMXwgIDAu
+MDB8ICAwLjAwfCAgMC4wMHwgIDAuMDB8fCA5OS4zOHwgIDAuNjJ8ICAyMjk5fHwgIDAuMDB8ICAw
+LjAwDQogICAwfCAgIDF8IDEyOXwgIDAuMDB8ICAwLjAwfCAgMC4wMHwgIDAuMDB8fCA5OS4xOHwg
+IDAuODJ8ICAyMjk5fHwgIDAuMDB8ICAwLjAwDQogICAwfCAgIDJ8ICAgMnwgIDAuMDB8ICAwLjAw
+fCAgMC4wMHwgIDAuMDB8fCA5OS4zOHwgIDAuNjJ8ICAyMjk5fHwgIDAuMDB8ICAwLjAwDQogICAw
+fCAgIDJ8IDEzMHwgIDAuMDB8ICAwLjAwfCAgMC4wMHwgIDAuMDB8fCA5OS4xOHwgIDAuODJ8ICAy
+Mjk5fHwgIDAuMDB8ICAwLjAwDQogICAwfCAgIDN8ICAgM3wgIDAuMDB8ICAwLjAwfCAgMC4wMHwg
+IDAuMDB8fCAgMy4xM3wgOTYuODd8ICAyMzAwfHwgIDAuMDB8IDk2LjkwDQogICAwfCAgIDN8IDEz
+MXwgIDAuMDB8ICAwLjAwfCAgMC4wMHwgIDAuMDB8fCAgMC4wMXwgOTkuOTl8ICAyNzU0fHwgIDAu
+MDB8IDEwMC4yDQogICAwfCAgIDR8ICAgNHwgIDAuMDB8ICAwLjAwfCAgMC4wMHwgIDAuMDB8fCAg
+MS4zOHwgOTguNjJ8ICAyMzAxfHwgIDAuMDB8IDk4LjgxDQogICAwfCAgIDR8IDEzMnwgIDAuMDB8
+ICAwLjAwfCAgMC4wMHwgIDAuMDB8fCAgMC4xOHwgOTkuODJ8ICAyMzIxfHwgIDAuMDB8IDEwMC4w
+DQogICAwfCAgIDV8ICAgNXwgIDAuMDB8ICAwLjAwfCAgMC4wMHwgIDAuMDB8fCAgMC42MXwgOTku
+Mzl8ICAyMzA1fHwgIDAuMDB8IDEwMC4xDQogICAwfCAgIDV8IDEzM3wgIDAuMDB8ICAwLjAwfCAg
+MC4wMHwgIDAuMDB8fCAgNS4xM3wgOTQuODd8ICAyMjk5fHwgIDAuMDJ8IDk1LjAyDQogICAwfCAg
+IDZ8ICAgNnwgIDAuMDB8ICAwLjAwfCAgMC4wMHwgIDAuMDB8fCAgMC4xNXwgOTkuODV8ICAyMzIx
+fHwgIDAuMDB8IDEwMC41DQogICAwfCAgIDZ8IDEzNHwgIDAuMDB8ICAwLjAwfCAgMC4wMHwgIDAu
+MDB8fCAgMi4yOHwgOTcuNzJ8ICAyMzAwfHwgIDAuMDB8IDk4LjAwDQogICAwfCAgIDd8ICAgN3wg
+IDAuMDB8ICAwLjAwfCAgMC4wMHwgIDAuMDB8fCAgMC42N3wgOTkuMzN8ICAyMzA1fHwgIDAuMDB8
+IDk5Ljc2DQogICAwfCAgIDd8IDEzNXwgIDAuMDB8ICAwLjAwfCAgMC4wMHwgIDAuMDB8fCAgMC4y
+MHwgOTkuODB8ICAyMzE5fHwgIDAuMDB8IDEwMC4wDQogICAwfCAgIDh8ICAgOHwgIDAuMDB8ICAw
+LjAwfCAgMC4wMHwgIDAuMDB8fCAxMC4xNnwgODkuODR8ICAyMjk5fHwgIDAuMDJ8IDg5LjkxDQog
+ICAwfCAgIDh8IDEzNnwgIDAuMDB8ICAwLjAwfCAgMC4wMHwgIDAuMDB8fCAgMC4wMXwgOTkuOTl8
+ICAyNzg2fHwgIDAuMDB8IDEwMC4yDQogICAwfCAgIDl8ICAgOXwgIDAuMDB8ICAwLjAwfCAgMC4w
+MHwgIDAuMDB8fCAgMC4wNHwgOTkuOTZ8ICAyMzkzfHwgIDAuMDB8IDEwMC40DQogICAwfCAgIDl8
+IDEzN3wgIDAuMDB8ICAwLjAwfCAgMC4wMHwgIDAuMDB8fCAgMi4xN3wgOTcuODN8ICAyMzAwfHwg
+IDAuMDB8IDk3Ljg0DQoNCg0KDQpbTGksUm9uZ3FpbmddIA0KDQoNCg0KPiBUaGFua3MsDQo+IFNy
+aW5pdmFzDQo+IA0KPiA+IFNpZ25lZC1vZmYtYnk6IExpIFJvbmdRaW5nIDxsaXJvbmdxaW5nQGJh
+aWR1LmNvbT4NCj4gPiAtLS0NCj4gPiDCoGRyaXZlcnMvcGxhdGZvcm0veDg2L2ludGVsL3NwZWVk
+X3NlbGVjdF9pZi9pc3N0X3RwbWlfY29yZS5jIHwgNSArLS0tDQo+ID4gLQ0KPiA+IMKgMSBmaWxl
+IGNoYW5nZWQsIDEgaW5zZXJ0aW9uKCspLCA0IGRlbGV0aW9ucygtKQ0KPiA+DQo+ID4gZGlmZiAt
+LWdpdA0KPiA+IGEvZHJpdmVycy9wbGF0Zm9ybS94ODYvaW50ZWwvc3BlZWRfc2VsZWN0X2lmL2lz
+c3RfdHBtaV9jb3JlLmMNCj4gPiBiL2RyaXZlcnMvcGxhdGZvcm0veDg2L2ludGVsL3NwZWVkX3Nl
+bGVjdF9pZi9pc3N0X3RwbWlfY29yZS5jDQo+ID4gaW5kZXggYjhjZGFhMi4uNDE2NjIwYiAxMDA2
+NDQNCj4gPiAtLS0gYS9kcml2ZXJzL3BsYXRmb3JtL3g4Ni9pbnRlbC9zcGVlZF9zZWxlY3RfaWYv
+aXNzdF90cG1pX2NvcmUuYw0KPiA+ICsrKyBiL2RyaXZlcnMvcGxhdGZvcm0veDg2L2ludGVsL3Nw
+ZWVkX3NlbGVjdF9pZi9pc3N0X3RwbWlfY29yZS5jDQo+ID4gQEAgLTU1NiwxMCArNTU2LDcgQEAg
+c3RhdGljIHN0cnVjdCB0cG1pX3Blcl9wb3dlcl9kb21haW5faW5mbw0KPiA+ICpnZXRfaW5zdGFu
+Y2UoaW50IHBrZ19pZCwgaW50IHBvd2VyX2RvbQ0KPiA+DQo+ID4gwqBzdGF0aWMgYm9vbCBkaXNh
+YmxlX2R5bmFtaWNfc3N0X2ZlYXR1cmVzKHZvaWQpDQo+ID4gwqB7DQo+ID4gLQl1NjQgdmFsdWU7
+DQo+ID4gLQ0KPiA+IC0JcmRtc3JxKE1TUl9QTV9FTkFCTEUsIHZhbHVlKTsNCj4gPiAtCXJldHVy
+biAhKHZhbHVlICYgMHgxKTsNCj4gPiArCXJldHVybiAhc3RhdGljX2NwdV9oYXMoWDg2X0ZFQVRV
+UkVfSFdQKTsNCj4gPiDCoH0NCj4gPg0KPiA+IMKgI2RlZmluZSBfcmVhZF9jcF9pbmZvKG5hbWVf
+c3RyLCBuYW1lLCBvZmZzZXQsIHN0YXJ0LCB3aWR0aCwNCj4gPiBtdWx0X2ZhY3RvcilcDQo=
