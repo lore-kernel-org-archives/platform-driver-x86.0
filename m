@@ -1,108 +1,449 @@
-Received: from outbound.baidu.com (mx22.baidu.com [220.181.50.185])
+Received: from e3i429.smtp2go.com (e3i429.smtp2go.com [158.120.85.173])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B184736B05A;
-	Sat, 28 Feb 2026 07:22:59 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=220.181.50.185
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EA9B4292B2E
+	for <platform-driver-x86@vger.kernel.org>; Sat, 28 Feb 2026 12:20:20 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=158.120.85.173
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1772263382; cv=none; b=QYP0MGvaKRw+u5HTsYCsnPwadBeZVSs2ZF8++qeWmF3xGQoi4DG/TlNIHlLgxSGJjGVoBIshwnZrw31kxKayOr9hp2vlAu9hW+lKbRpBLP42E+paUKI6Q8yx77Di96ofth+6t55Ma4mG9YCYxYs1q4rCwo3pxUH/CDxlkkZRhyk=
+	t=1772281222; cv=none; b=NQGWW78YZUTUL3XJD7+B1ulc40YOzl5sgZCvMAr+ES40yjf9e43GPdlx3/7PfsjGTZAjGHAEa17F6TqZ8h5MenIA0T8ZbtbEBhSS8vVMTEwiTo7j3EhmwGqCWBZLPGvkIzCm4qqFjeg18V5aEuNMeu7z3rH4qGiT5bOesdmv58Y=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1772263382; c=relaxed/simple;
-	bh=pu24k7rfS43hA+8cnGMKRCs84A98J3rlzUKejGAo5vE=;
-	h=From:To:Subject:Date:Message-ID:References:In-Reply-To:
-	 Content-Type:MIME-Version; b=SfaS9o9uiCu6B7CuBxFmEjzPA6LIZXsBdlNoZ0IaYafxcHDJtjMqjfu50xiyPt31F9mqPolsECvUkzR813+eOWSfQgp5gonqEjI/W2cCzzAC9Fh36sTXEf0v+HEKRRLwWnT+WZ1XHYKnUzTuNp47sluJXd3ky8X15hqoy1pf6Og=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=baidu.com; spf=pass smtp.mailfrom=baidu.com; arc=none smtp.client-ip=220.181.50.185
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=baidu.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=baidu.com
-From: "Li,Rongqing(ACG CCN)" <lirongqing@baidu.com>
-To: srinivas pandruvada <srinivas.pandruvada@linux.intel.com>, Hans de Goede
-	<hansg@kernel.org>, =?utf-8?B?SWxwbyBKw6RydmluZW4=?=
-	<ilpo.jarvinen@linux.intel.com>, "platform-driver-x86@vger.kernel.org"
-	<platform-driver-x86@vger.kernel.org>, "linux-kernel@vger.kernel.org"
-	<linux-kernel@vger.kernel.org>
-Subject: =?utf-8?B?562U5aSNOiBb5aSW6YOo6YKu5Lu2XSBSZTogW1BBVENIXVtSRkNdIHBsYXRm?=
- =?utf-8?B?b3JtL3g4NjogaW50ZWxfc3BlZWRfc2VsZWN0OiBVc2Ugc3RhdGljX2NwdV9o?=
- =?utf-8?Q?as_for_HWP_check?=
-Thread-Topic: =?utf-8?B?W+WklumDqOmCruS7tl0gUmU6IFtQQVRDSF1bUkZDXSBwbGF0Zm9ybS94ODY6?=
- =?utf-8?B?IGludGVsX3NwZWVkX3NlbGVjdDogVXNlIHN0YXRpY19jcHVfaGFzIGZvciBI?=
- =?utf-8?Q?WP_check?=
-Thread-Index: AQHcqGWxEzg7lcqN/0+aw5YlwBCekLWXKRwAgACKG6A=
-Date: Sat, 28 Feb 2026 07:22:20 +0000
-Message-ID: <a9247ce471e940f2bb0af122277c1733@baidu.com>
-References: <20260228035108.2543-1-lirongqing@baidu.com>
- <fa10ba0b396d5c67bf1762e06869950496d85280.camel@linux.intel.com>
-In-Reply-To: <fa10ba0b396d5c67bf1762e06869950496d85280.camel@linux.intel.com>
-Accept-Language: zh-CN, en-US
-Content-Language: zh-CN
-X-MS-Has-Attach:
-X-MS-TNEF-Correlator:
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+	s=arc-20240116; t=1772281222; c=relaxed/simple;
+	bh=rZ39Czf0YBm+RSj9U3Uo7fqZsTxXq8qYyTd3OhhOFsM=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=MSVc7Q3/xnKmAjCzC//c4FSAxmvbsfJCB4sa1OyOMtBmljwGOX8Xc08zum1uLQr35jrZpwvG8PgOoE3RS4/dLRlQAbYTpqDbQtuyaytOD8BiTTV/bJU3nxibptHan0+22u+SNgARxEfueFcKgHTW6FTDiSt2hQDYSxJgh7gj3e8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=medip.dev; spf=pass smtp.mailfrom=em1255854.medip.dev; dkim=pass (2048-bit key) header.d=medip.dev header.i=@medip.dev header.b=eAAYenbY; arc=none smtp.client-ip=158.120.85.173
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=medip.dev
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=em1255854.medip.dev
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=medip.dev header.i=@medip.dev header.b="eAAYenbY"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=medip.dev;
+ i=@medip.dev; q=dns/txt; s=s1255854; t=1772281216; h=from : subject :
+ to : message-id : date;
+ bh=nuMYr0V3YuyjzQyJVNkQfOTohv52wXr8dimpbXi9Z6U=;
+ b=eAAYenbYyIYYEx13jdE2Au0h+/kQDmmZ/057phOELLdUy6zl6umaHitTfne2Uazb0LzC3
+ NsqZwX+1tEzFg78Z5XK4U1z+4WEi/rH625RuBv/D34o9MFiLpFwDFFMAhT1RN6Jg7qxTN9v
+ pPtEcwKD6wqZQVac4B81f+7JMS1NyeLjPW+ZGZ3FdavWPB7R8KVh8R9Giq9rGNKMtM5CHxR
+ raH9g5qXMRnbHgf+sOF5U7dvkPPSI/2dOu4RfjEBA6q7kJnj8y9naKtagZbisgj6iaS7Zeu
+ acBoxsM5Ix2lPLYgldnSwApsyDIarIM5tm8iq0f3C1oAkzUukC8U/jxcsSiA==
+Received: from [10.152.250.198] (helo=vilez)
+	by smtpcorp.com with esmtpsa (TLS1.3:ECDHE_X25519__RSA_PSS_RSAE_SHA256__AES_256_GCM:256)
+	(Exim 4.99.1-S2G)
+	(envelope-from <edip@medip.dev>)
+	id 1vwJIg-AIkwcC8z95v-DcHX;
+	Sat, 28 Feb 2026 12:20:02 +0000
+From: edip@medip.dev
+To: ilpo.jarvinen@linux.intel.com,
+	hansg@kernel.org,
+	kuba@kernel.org
+Cc: platform-driver-x86@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	Edip Hazuri <edip@medip.dev>
+Subject: [PATCH v2 1/2] platform/x86: hp-wmi: Add multicolor LED support for HP keyboard backlight
+Date: Sat, 28 Feb 2026 15:11:41 +0300
+Message-ID: <20260228121141.114443-2-edip@medip.dev>
+X-Mailer: git-send-email 2.53.0
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-FEAS-Client-IP: 172.31.3.13
-X-FE-Policy-ID: 52:10:53:SYSTEM
+Content-Transfer-Encoding: 8bit
+X-Report-Abuse: Please forward a copy of this message, including all headers, to <abuse-report@smtp2go.com>
+Feedback-ID: 1255854m:1255854ay30w_v:1255854steE-I8RcF
+X-smtpcorp-track: 6HGk6urSYph_.zWUdY9hcKFKs.-PCiawM11Xn
 
-DQoNCj4gVGhhdCBpcyBub3Qgc2FtZS4gUHJlc2VuY2Ugb2YgSFdQIGZlYXR1cmUgbWVhbnMgdGhh
-dCBIV1AgY2FuIGJlIGVuYWJsZWQgb24NCj4gdGhpcyBTb0MuIEJ1dCB1c2VyIGNhbiBib290IHdp
-dGggb3B0aW9uIHRvIG5vdCBlbmFibGUgSFdQIGJ5IGludGVsX3BzdGF0ZQ0KPiBkcml2ZXIuDQoN
-Cj4gSWYgSFdQIGlzIG5vdCBlbmFibGVkLCB0aGVuIFNTVCBmZWF0dXJlcyBjYW4ndCBiZSBlbmFi
-bGVkLg0KPiANCg0KSWYgSFdQIGlzIG5vdCBlbmFibGVkLCBDYW4gdGhlIFBDVCBpcyBlbmFibGVk
-IGZyb20gQklPUz8gDQoNCkluIG15IG1hY2hpbmUsIEhXUCBpcyBkaXNhYmxlZCwgYnV0IFBDVCBp
-cyBlbmFibGVkOyBhbmQgY2FuIG5vdCBkaXNhYmxlIFBDVCBieSAiIC4vaW50ZWwtc3BlZWQtc2Vs
-ZWN0IGNvcmUtcG93ZXIgZGlzYWJsZSINCg0KDQpbcm9vdEB0anpqLWFjZy10Z2UyMDI2LTAxLTI4
-MXpyZmlsZC50anpqLmJhaWR1LmNvbSB+XSMgcmRtc3IgMHg3NzANCjANCltyb290QHRqemotYWNn
-LXRnZTIwMjYtMDEtMjgxenJmaWxkLnRqemouYmFpZHUuY29tIH5dIyBjcHVwb3dlciBtb25pdG9y
-DQogICAgICAgICAgICAgIHwgTmVoYWxlbSAgICAgICAgICAgICAgICAgICB8fCBNcGVyZiAgICAg
-ICAgICAgICAgfHwgSWRsZV9TdGF0cw0KIFBLR3xDT1JFfCBDUFV8IEMzICAgfCBDNiAgIHwgUEMz
-ICB8IFBDNiAgIHx8IEMwICAgfCBDeCAgIHwgRnJlcSAgfHwgUE9MTCB8IEMxDQogICAwfCAgIDB8
-ICAgMHwgIDAuMDB8ICAwLjAwfCAgMC4wMHwgIDAuMDB8fCAgMC42NHwgOTkuMzZ8ICA0NTk4fHwg
-IDAuMDB8IDk5LjUwDQogICAwfCAgIDB8IDEyOHwgIDAuMDB8ICAwLjAwfCAgMC4wMHwgIDAuMDB8
-fCAgMS45OHwgOTguMDJ8ICA0NTgxfHwgIDAuMDB8IDk4LjEwDQogICAwfCAgIDF8ICAgMXwgIDAu
-MDB8ICAwLjAwfCAgMC4wMHwgIDAuMDB8fCA5OS4zOHwgIDAuNjJ8ICAyMjk5fHwgIDAuMDB8ICAw
-LjAwDQogICAwfCAgIDF8IDEyOXwgIDAuMDB8ICAwLjAwfCAgMC4wMHwgIDAuMDB8fCA5OS4xOHwg
-IDAuODJ8ICAyMjk5fHwgIDAuMDB8ICAwLjAwDQogICAwfCAgIDJ8ICAgMnwgIDAuMDB8ICAwLjAw
-fCAgMC4wMHwgIDAuMDB8fCA5OS4zOHwgIDAuNjJ8ICAyMjk5fHwgIDAuMDB8ICAwLjAwDQogICAw
-fCAgIDJ8IDEzMHwgIDAuMDB8ICAwLjAwfCAgMC4wMHwgIDAuMDB8fCA5OS4xOHwgIDAuODJ8ICAy
-Mjk5fHwgIDAuMDB8ICAwLjAwDQogICAwfCAgIDN8ICAgM3wgIDAuMDB8ICAwLjAwfCAgMC4wMHwg
-IDAuMDB8fCAgMy4xM3wgOTYuODd8ICAyMzAwfHwgIDAuMDB8IDk2LjkwDQogICAwfCAgIDN8IDEz
-MXwgIDAuMDB8ICAwLjAwfCAgMC4wMHwgIDAuMDB8fCAgMC4wMXwgOTkuOTl8ICAyNzU0fHwgIDAu
-MDB8IDEwMC4yDQogICAwfCAgIDR8ICAgNHwgIDAuMDB8ICAwLjAwfCAgMC4wMHwgIDAuMDB8fCAg
-MS4zOHwgOTguNjJ8ICAyMzAxfHwgIDAuMDB8IDk4LjgxDQogICAwfCAgIDR8IDEzMnwgIDAuMDB8
-ICAwLjAwfCAgMC4wMHwgIDAuMDB8fCAgMC4xOHwgOTkuODJ8ICAyMzIxfHwgIDAuMDB8IDEwMC4w
-DQogICAwfCAgIDV8ICAgNXwgIDAuMDB8ICAwLjAwfCAgMC4wMHwgIDAuMDB8fCAgMC42MXwgOTku
-Mzl8ICAyMzA1fHwgIDAuMDB8IDEwMC4xDQogICAwfCAgIDV8IDEzM3wgIDAuMDB8ICAwLjAwfCAg
-MC4wMHwgIDAuMDB8fCAgNS4xM3wgOTQuODd8ICAyMjk5fHwgIDAuMDJ8IDk1LjAyDQogICAwfCAg
-IDZ8ICAgNnwgIDAuMDB8ICAwLjAwfCAgMC4wMHwgIDAuMDB8fCAgMC4xNXwgOTkuODV8ICAyMzIx
-fHwgIDAuMDB8IDEwMC41DQogICAwfCAgIDZ8IDEzNHwgIDAuMDB8ICAwLjAwfCAgMC4wMHwgIDAu
-MDB8fCAgMi4yOHwgOTcuNzJ8ICAyMzAwfHwgIDAuMDB8IDk4LjAwDQogICAwfCAgIDd8ICAgN3wg
-IDAuMDB8ICAwLjAwfCAgMC4wMHwgIDAuMDB8fCAgMC42N3wgOTkuMzN8ICAyMzA1fHwgIDAuMDB8
-IDk5Ljc2DQogICAwfCAgIDd8IDEzNXwgIDAuMDB8ICAwLjAwfCAgMC4wMHwgIDAuMDB8fCAgMC4y
-MHwgOTkuODB8ICAyMzE5fHwgIDAuMDB8IDEwMC4wDQogICAwfCAgIDh8ICAgOHwgIDAuMDB8ICAw
-LjAwfCAgMC4wMHwgIDAuMDB8fCAxMC4xNnwgODkuODR8ICAyMjk5fHwgIDAuMDJ8IDg5LjkxDQog
-ICAwfCAgIDh8IDEzNnwgIDAuMDB8ICAwLjAwfCAgMC4wMHwgIDAuMDB8fCAgMC4wMXwgOTkuOTl8
-ICAyNzg2fHwgIDAuMDB8IDEwMC4yDQogICAwfCAgIDl8ICAgOXwgIDAuMDB8ICAwLjAwfCAgMC4w
-MHwgIDAuMDB8fCAgMC4wNHwgOTkuOTZ8ICAyMzkzfHwgIDAuMDB8IDEwMC40DQogICAwfCAgIDl8
-IDEzN3wgIDAuMDB8ICAwLjAwfCAgMC4wMHwgIDAuMDB8fCAgMi4xN3wgOTcuODN8ICAyMzAwfHwg
-IDAuMDB8IDk3Ljg0DQoNCg0KDQpbTGksUm9uZ3FpbmddIA0KDQoNCg0KPiBUaGFua3MsDQo+IFNy
-aW5pdmFzDQo+IA0KPiA+IFNpZ25lZC1vZmYtYnk6IExpIFJvbmdRaW5nIDxsaXJvbmdxaW5nQGJh
-aWR1LmNvbT4NCj4gPiAtLS0NCj4gPiDCoGRyaXZlcnMvcGxhdGZvcm0veDg2L2ludGVsL3NwZWVk
-X3NlbGVjdF9pZi9pc3N0X3RwbWlfY29yZS5jIHwgNSArLS0tDQo+ID4gLQ0KPiA+IMKgMSBmaWxl
-IGNoYW5nZWQsIDEgaW5zZXJ0aW9uKCspLCA0IGRlbGV0aW9ucygtKQ0KPiA+DQo+ID4gZGlmZiAt
-LWdpdA0KPiA+IGEvZHJpdmVycy9wbGF0Zm9ybS94ODYvaW50ZWwvc3BlZWRfc2VsZWN0X2lmL2lz
-c3RfdHBtaV9jb3JlLmMNCj4gPiBiL2RyaXZlcnMvcGxhdGZvcm0veDg2L2ludGVsL3NwZWVkX3Nl
-bGVjdF9pZi9pc3N0X3RwbWlfY29yZS5jDQo+ID4gaW5kZXggYjhjZGFhMi4uNDE2NjIwYiAxMDA2
-NDQNCj4gPiAtLS0gYS9kcml2ZXJzL3BsYXRmb3JtL3g4Ni9pbnRlbC9zcGVlZF9zZWxlY3RfaWYv
-aXNzdF90cG1pX2NvcmUuYw0KPiA+ICsrKyBiL2RyaXZlcnMvcGxhdGZvcm0veDg2L2ludGVsL3Nw
-ZWVkX3NlbGVjdF9pZi9pc3N0X3RwbWlfY29yZS5jDQo+ID4gQEAgLTU1NiwxMCArNTU2LDcgQEAg
-c3RhdGljIHN0cnVjdCB0cG1pX3Blcl9wb3dlcl9kb21haW5faW5mbw0KPiA+ICpnZXRfaW5zdGFu
-Y2UoaW50IHBrZ19pZCwgaW50IHBvd2VyX2RvbQ0KPiA+DQo+ID4gwqBzdGF0aWMgYm9vbCBkaXNh
-YmxlX2R5bmFtaWNfc3N0X2ZlYXR1cmVzKHZvaWQpDQo+ID4gwqB7DQo+ID4gLQl1NjQgdmFsdWU7
-DQo+ID4gLQ0KPiA+IC0JcmRtc3JxKE1TUl9QTV9FTkFCTEUsIHZhbHVlKTsNCj4gPiAtCXJldHVy
-biAhKHZhbHVlICYgMHgxKTsNCj4gPiArCXJldHVybiAhc3RhdGljX2NwdV9oYXMoWDg2X0ZFQVRV
-UkVfSFdQKTsNCj4gPiDCoH0NCj4gPg0KPiA+IMKgI2RlZmluZSBfcmVhZF9jcF9pbmZvKG5hbWVf
-c3RyLCBuYW1lLCBvZmZzZXQsIHN0YXJ0LCB3aWR0aCwNCj4gPiBtdWx0X2ZhY3RvcilcDQo=
+From: Edip Hazuri <edip@medip.dev>
+
+Add support for the HP keyboard RGB backlight found on HP OMEN and
+HP Victus laptops. These keyboards expose per-zone RGB control through
+WMI commands.
+
+Register multicolor LED class devices for each keyboard zone (up to 4
+zones, depending on the keyboard type). Each zone exposes individual
+red, green, and blue channels via the multicolor LED subsystem.
+
+Also hardware-initiated brightness changes (e.g. via the keyboard backlight
+hotkey,mostly fn+f4) are reported
+
+The color data is stored in a 128-byte color table managed by the
+firmware, with RGB values starting at offset 25, packed sequentially
+per zone.
+
+Signed-off-by: Edip Hazuri <edip@medip.dev>
+---
+v1: https://lore.kernel.org/all/20260227063122.7184-2-edip@medip.dev/
+Changes since v1:
+ - Fix mentioned style errors
+ - Add Kconfig dependencies
+
+ drivers/platform/x86/hp/hp-wmi.c | 274 +++++++++++++++++++++++++++++++
+ 1 file changed, 274 insertions(+)
+
+diff --git a/drivers/platform/x86/hp/hp-wmi.c b/drivers/platform/x86/hp/hp-wmi.c
+index 304d9ac63c8a..b418e0642854 100644
+--- a/drivers/platform/x86/hp/hp-wmi.c
++++ b/drivers/platform/x86/hp/hp-wmi.c
+@@ -14,6 +14,7 @@
+ #define pr_fmt(fmt) KBUILD_MODNAME ": " fmt
+ 
+ #include <linux/acpi.h>
++#include <linux/array_size.h>
+ #include <linux/cleanup.h>
+ #include <linux/compiler_attributes.h>
+ #include <linux/dmi.h>
+@@ -23,6 +24,8 @@
+ #include <linux/input.h>
+ #include <linux/input/sparse-keymap.h>
+ #include <linux/kernel.h>
++#include <linux/led-class-multicolor.h>
++#include <linux/leds.h>
+ #include <linux/limits.h>
+ #include <linux/minmax.h>
+ #include <linux/module.h>
+@@ -58,6 +61,8 @@ enum hp_ec_offsets {
+ #define HP_POWER_LIMIT_DEFAULT	 0x00
+ #define HP_POWER_LIMIT_NO_CHANGE 0xFF
+ 
++#define HP_COLOR_TABLE_PADDING 25
++
+ #define ACPI_AC_CLASS "ac_adapter"
+ 
+ #define zero_if_sup(tmp) (zero_insize_support?0:sizeof(tmp)) // use when zero insize is required
+@@ -98,6 +103,15 @@ enum hp_thermal_profile {
+ 	HP_THERMAL_PROFILE_QUIET			= 0x03,
+ };
+ 
++enum hp_keyboard_type {
++	HP_KEYBOARD_TYPE_NOBACKLIGHT                = 0x0,
++	HP_KEYBOARD_TYPE_FOURZONE_WITH_NUMPAD       = 0x1,
++	HP_KEYBOARD_TYPE_FOURZONE_WITHOUT_NUMPAD    = 0x2,
++	HP_KEYBOARD_TYPE_RGB_PER_KEY                = 0x3,
++	HP_KEYBOARD_TYPE_SINGLEZONE_WITH_NUMPAD     = 0x4,
++	HP_KEYBOARD_TYPE_SINGLEZONE_WITHOUT_NUMPAD  = 0x5,
++};
++
+ 
+ struct thermal_profile_params {
+ 	u8 performance;
+@@ -290,16 +304,27 @@ enum hp_wmi_gm_commandtype {
+ 	HPWMI_GET_GPU_THERMAL_MODES_QUERY	= 0x21,
+ 	HPWMI_SET_GPU_THERMAL_MODES_QUERY	= 0x22,
+ 	HPWMI_SET_POWER_LIMITS_QUERY		= 0x29,
++	HPWMI_GET_KEYBOARD_TYPE_QUERY		= 0x2b,
+ 	HPWMI_VICTUS_S_FAN_SPEED_GET_QUERY	= 0x2D,
+ 	HPWMI_VICTUS_S_FAN_SPEED_SET_QUERY	= 0x2E,
+ 	HPWMI_VICTUS_S_GET_FAN_TABLE_QUERY	= 0x2F,
+ };
+ 
++enum hp_wmi_backlight_commandtype {
++	HPWMI_BACKLIGHT_COLOR_GET_QUERY         = 0x02,
++	HPWMI_BACKLIGHT_COLOR_SET_QUERY         = 0x03,
++	HPWMI_BACKLIGHT_BRIGHTNESS_GET_QUERY    = 0x04,
++	HPWMI_BACKLIGHT_BRIGHTNESS_SET_QUERY    = 0x05,
++	HPWMI_BACKLIGHT_SET_OFF_QUERY           = 0x64,
++	HPWMI_BACKLIGHT_SET_ON_QUERY            = 0xE4,
++};
++
+ enum hp_wmi_command {
+ 	HPWMI_READ	= 0x01,
+ 	HPWMI_WRITE	= 0x02,
+ 	HPWMI_ODM	= 0x03,
+ 	HPWMI_GM	= 0x20008,
++	HPWMI_BACKLIGHT = 0x20009,
+ };
+ 
+ enum hp_wmi_hardware_mask {
+@@ -373,6 +398,16 @@ static const struct key_entry hp_wmi_keymap[] = {
+ 	{ KE_END, 0 }
+ };
+ 
++struct hp_kbd_led_priv {
++	int zone;               /* Zone index (0-3) */
++	enum led_brightness last_brightness;  /* Brightness before turning off */
++};
++
++struct hp_mc_leds {
++	struct led_classdev_mc devices[4];
++	struct hp_kbd_led_priv priv[4];
++};
++
+ /*
+  * Mutex for the active_platform_profile variable,
+  * see omen_powersource_event.
+@@ -382,6 +417,7 @@ static DEFINE_MUTEX(active_platform_profile_lock);
+ static struct input_dev *hp_wmi_input_dev;
+ static struct input_dev *camera_shutter_input_dev;
+ static struct platform_device *hp_wmi_platform_dev;
++static struct hp_mc_leds hp_multicolor_leds;
+ static struct device *platform_profile_device;
+ static struct notifier_block platform_power_source_nb;
+ static enum platform_profile_option active_platform_profile;
+@@ -1068,6 +1104,8 @@ static struct attribute *hp_wmi_attrs[] = {
+ };
+ ATTRIBUTE_GROUPS(hp_wmi);
+ 
++static void hp_kbd_brightness_set_by_hwd(u32 event_data);
++
+ static void hp_wmi_notify(union acpi_object *obj, void *context)
+ {
+ 	u32 event_id, event_data;
+@@ -1168,6 +1206,7 @@ static void hp_wmi_notify(union acpi_object *obj, void *context)
+ 	case HPWMI_PROXIMITY_SENSOR:
+ 		break;
+ 	case HPWMI_BACKLIT_KB_BRIGHTNESS:
++		hp_kbd_brightness_set_by_hwd(event_data);
+ 		break;
+ 	case HPWMI_PEAKSHIFT_PERIOD:
+ 		break;
+@@ -1430,6 +1469,237 @@ static int __init hp_wmi_rfkill2_setup(struct platform_device *device)
+ 	return err;
+ }
+ 
++static struct hp_kbd_led_priv *hp_led_get_priv(struct led_classdev *led_cdev)
++{
++	struct led_classdev_mc *mc_cdev = lcdev_to_mccdev(led_cdev);
++	int zone = mc_cdev - hp_multicolor_leds.devices;
++
++	return &hp_multicolor_leds.priv[zone];
++}
++
++static int hp_kbd_backlight_set_rgb_color(int zone, int red, int green, int blue)
++{
++	u8 color_table[128];
++	int ret;
++
++	/*
++	 * Get the current color table and then change only the relevant parts.
++	 */
++	ret = hp_wmi_perform_query(HPWMI_BACKLIGHT_COLOR_GET_QUERY,
++				   HPWMI_BACKLIGHT, color_table,
++				   zero_if_sup(color_table),
++				   sizeof(color_table));
++	if (ret)
++		return ret;
++
++	/*
++	 * RGB color data starts at offset 25 +3 per zone (r g b)
++	 * e.g. if zone 1 starts in 25 zone 2 starts in 28
++	 */
++	color_table[HP_COLOR_TABLE_PADDING + zone * 3]     = red;
++	color_table[HP_COLOR_TABLE_PADDING + zone * 3 + 1] = green;
++	color_table[HP_COLOR_TABLE_PADDING + zone * 3 + 2] = blue;
++
++	ret = hp_wmi_perform_query(HPWMI_BACKLIGHT_COLOR_SET_QUERY, HPWMI_BACKLIGHT,
++				   color_table, sizeof(color_table), sizeof(color_table));
++	if (ret < 0)
++		return ret;
++	if (ret)
++		return -EINVAL;
++
++	return 0;
++}
++
++static bool hp_kbd_backlight_is_on(void)
++{
++	u8 data;
++	int ret;
++
++	ret = hp_wmi_perform_query(HPWMI_BACKLIGHT_BRIGHTNESS_GET_QUERY, HPWMI_BACKLIGHT, &data,
++				sizeof(data), sizeof(data));
++	if (ret)
++		return false;
++
++	return data == HPWMI_BACKLIGHT_SET_ON_QUERY;
++}
++
++static int hp_kbd_set_brightness(struct led_classdev *led_cdev,
++					enum led_brightness brightness)
++{
++	struct hp_kbd_led_priv *priv = hp_led_get_priv(led_cdev);
++	struct led_classdev_mc *mc_cdev;
++	struct led_classdev_mc *device;
++	int red, green, blue;
++	int ret;
++
++	if (!hp_kbd_backlight_is_on()) {
++		u8 data = HPWMI_BACKLIGHT_SET_ON_QUERY;
++
++		ret = hp_wmi_perform_query(HPWMI_BACKLIGHT_BRIGHTNESS_SET_QUERY,
++					   HPWMI_BACKLIGHT, &data,
++					   sizeof(data), sizeof(data));
++		if (ret)
++			return ret;
++
++		/*
++		 * Turning the backlight on via WMI turns all zones,
++		 * so we need to restore the other zones' off state.
++		 */
++		for (int i = 0; i < ARRAY_SIZE(hp_multicolor_leds.devices); i++) {
++			if (i == priv->zone)
++				continue;
++
++			device = &hp_multicolor_leds.devices[i];
++			if (!device->led_cdev.name)
++				continue;
++			hp_kbd_backlight_set_rgb_color(i,
++				device->subled_info[0].brightness,
++				device->subled_info[1].brightness,
++				device->subled_info[2].brightness);
++		}
++	}
++
++	led_cdev->brightness = brightness;
++
++	mc_cdev = lcdev_to_mccdev(led_cdev);
++	led_mc_calc_color_components(mc_cdev, brightness);
++
++	red = mc_cdev->subled_info[0].brightness;
++	green = mc_cdev->subled_info[1].brightness;
++	blue = mc_cdev->subled_info[2].brightness;
++
++	return hp_kbd_backlight_set_rgb_color(priv->zone, red, green, blue);
++}
++
++static void hp_kbd_brightness_set_by_hwd(u32 event_data)
++{
++	struct device *dev = &hp_wmi_platform_dev->dev;
++	struct hp_kbd_led_priv *priv;
++	struct led_classdev *led_cdev;
++	u8 brightness;
++
++	for (int zone = 0; zone < ARRAY_SIZE(hp_multicolor_leds.devices); zone++) {
++		if (!hp_multicolor_leds.devices[zone].led_cdev.name)
++			continue;
++
++		led_cdev = &hp_multicolor_leds.devices[zone].led_cdev;
++		if (!led_cdev->dev)
++			continue;
++
++		priv = hp_led_get_priv(led_cdev);
++
++		if (event_data == 0x2) {
++			brightness = priv->last_brightness ? : LED_FULL;
++		} else if (event_data == 0x0) {
++			priv->last_brightness = led_cdev->brightness;
++			brightness = LED_OFF;
++		} else {
++			dev_warn(dev, "Unknown keyboard backlight event - 0x%x\n",
++				 event_data);
++			return;
++		}
++
++		led_cdev->brightness = brightness;
++		led_classdev_notify_brightness_hw_changed(led_cdev, brightness);
++	}
++}
++
++static int __init hp_mc_leds_register(int num_zones)
++{
++	u8 color_table[128];
++	int ret;
++
++	ret = hp_wmi_perform_query(HPWMI_BACKLIGHT_COLOR_GET_QUERY, HPWMI_BACKLIGHT,
++				   color_table, zero_if_sup(color_table),
++				   sizeof(color_table));
++	if (ret)
++		return ret;
++
++	for (int zone = 0; zone < num_zones; zone++) {
++		struct led_classdev_mc *multicolor_led_dev;
++		struct led_classdev *led_cdev;
++		struct mc_subled *mc_subled_info;
++		struct hp_kbd_led_priv *priv;
++		struct device *dev;
++
++		dev = &hp_wmi_platform_dev->dev;
++		multicolor_led_dev = &hp_multicolor_leds.devices[zone];
++		led_cdev = &multicolor_led_dev->led_cdev;
++		priv = &hp_multicolor_leds.priv[zone];
++
++		if (num_zones == 1)
++			led_cdev->name = devm_kasprintf(dev, GFP_KERNEL,
++							"hp::kbd_backlight");
++		else if (num_zones > 1)
++			led_cdev->name = devm_kasprintf(dev, GFP_KERNEL,
++							"hp::kbd_backlight_zone%d",
++							zone);
++
++		if (!led_cdev->name)
++			return -ENOMEM;
++		led_cdev->brightness = hp_kbd_backlight_is_on() ?
++				       LED_FULL : LED_OFF;
++		led_cdev->max_brightness = LED_FULL;
++		led_cdev->brightness_set_blocking = hp_kbd_set_brightness;
++		led_cdev->flags = LED_CORE_SUSPENDRESUME |
++				  LED_RETAIN_AT_SHUTDOWN |
++				  LED_BRIGHT_HW_CHANGED;
++
++		mc_subled_info = devm_kzalloc(dev,sizeof(*mc_subled_info) * 3,
++					      GFP_KERNEL);
++		if (!mc_subled_info)
++			return -ENOMEM;
++
++		mc_subled_info[0].color_index = LED_COLOR_ID_RED;
++		mc_subled_info[1].color_index = LED_COLOR_ID_GREEN;
++		mc_subled_info[2].color_index = LED_COLOR_ID_BLUE;
++
++		for (int i = 0; i < 3; i++) {
++			int off = HP_COLOR_TABLE_PADDING + zone * 3 + i;
++
++			mc_subled_info[i].channel = zone * 3 + i;
++			mc_subled_info[i].intensity = color_table[off];
++			mc_subled_info[i].brightness = LED_FULL;
++		}
++
++		multicolor_led_dev->subled_info = mc_subled_info;
++		multicolor_led_dev->num_colors = 3;
++
++		ret = devm_led_classdev_multicolor_register(dev,multicolor_led_dev);
++		if (ret) {
++			dev_err(dev, "Failed to register multicolor RGB backlight\n");
++			return ret;
++		}
++
++		/* Initialize private data */
++		priv->zone = zone;
++		priv->last_brightness = LED_FULL;
++	}
++	return 0;
++}
++
++static int __init hp_kbd_rgb_setup(void)
++{
++	u8 keyboard_type;
++	int ret;
++
++	ret = hp_wmi_perform_query(HPWMI_GET_KEYBOARD_TYPE_QUERY, HPWMI_GM, &keyboard_type,
++			 sizeof(keyboard_type), sizeof(keyboard_type));
++	if (ret)
++		return ret;
++
++	switch (keyboard_type) {
++	case HP_KEYBOARD_TYPE_FOURZONE_WITH_NUMPAD:
++	case HP_KEYBOARD_TYPE_FOURZONE_WITHOUT_NUMPAD:
++		return hp_mc_leds_register(4);
++	case HP_KEYBOARD_TYPE_SINGLEZONE_WITH_NUMPAD:
++	case HP_KEYBOARD_TYPE_SINGLEZONE_WITHOUT_NUMPAD:
++		return hp_mc_leds_register(1);
++	default:
++		return 0;
++	}
++}
++
+ static int platform_profile_omen_get_ec(enum platform_profile_option *profile)
+ {
+ 	int tp;
+@@ -2230,6 +2500,10 @@ static int __init hp_wmi_bios_setup(struct platform_device *device)
+ 
+ 	thermal_profile_setup(device);
+ 
++	err = hp_kbd_rgb_setup();
++	if (err)
++		dev_err(&device->dev, "Failed to initialize keyboard RGB\n");
++
+ 	return 0;
+ }
+ 
+-- 
+2.53.0
+
