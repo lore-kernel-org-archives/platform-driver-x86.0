@@ -1,74 +1,182 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id ABE33374173
-	for <platform-driver-x86@vger.kernel.org>; Sat, 28 Feb 2026 14:27:56 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 96F5F2D6E55;
+	Sat, 28 Feb 2026 15:13:11 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1772288876; cv=none; b=q9BMBhc9CNtHiFf57aRpxpaKwFvZx2zS1eh/AyZMJxWpT8sFmb/zTGIFEHHKCwsBl/s9nJhMinmISeW/EEXyqE6aBeamn4yzboGAMrZodD9hR2+HZFEEQ6NG+RyuU88guIyZeGnXKtylEOO/rFT/LZUahzFeVITO1kFBuxgKDag=
+	t=1772291591; cv=none; b=n1s/neR88e7btd7Ek22XHV/HeS+D07TFoufUdTolzJpuQ0tNAJej1U3PJB6nhTHJH27eFvPjONB2RHh28MXRX4qJiFEoTjRzT/Eu8+JHIGOaq4AvJFuPbbEuuX8Ixdyxj83yo596kgq8T/bh9axZcHJDrBM/DlRkNMEO4XkvscQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1772288876; c=relaxed/simple;
-	bh=4ajC+XdpGqLTZ4ra9DlmuYlwZIKpumUQ052R4IUeb8c=;
-	h=From:To:Subject:Date:Message-ID:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=d3fwpjof73kxOkSuIY1oAc2Gt02+OaghZUWn3INrCjt2+kFF64rb+Aw5sfcbaJ3JZOpIgJF85IvIEAOsI2lxVQfRJNi/4dRF1G9bQRNvu7hLrDqtrThvegMpf6IQaDK2tfU2WPTbApoIeonVeighbaYCDHwPXBYOLuKIypX4AAY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=XOMLNhjP; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1772291591; c=relaxed/simple;
+	bh=aoeMEMRii655SwLJrzFvfKxjQCC/8fuBn8cmCM6K81s=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=eFZLuuwCkOxf9Fd5HmdO5FtJpw8HcW+jXexvKMd4nI9+yvrHzg52kFv8fDFXZ+h2/2o4ByHr5prHMM1+qa9d6xEqnX/LMHj8ip7TrPBuYsAj0LeuEBaXH71flWeRsqsATx+5H9Dv1W2T9sPTgi2co9oUg/YEomQZOyI3QgsTJXY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Cj+GcvzJ; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="XOMLNhjP"
-Received: by smtp.kernel.org (Postfix) with ESMTPS id 1D0C3C19421
-	for <platform-driver-x86@vger.kernel.org>; Sat, 28 Feb 2026 14:27:56 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Cj+GcvzJ"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 5D347C116D0;
+	Sat, 28 Feb 2026 15:13:09 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1772288876;
-	bh=4ajC+XdpGqLTZ4ra9DlmuYlwZIKpumUQ052R4IUeb8c=;
-	h=From:To:Subject:Date:In-Reply-To:References:From;
-	b=XOMLNhjPOnHLX3k0xZmxU5wu+h3oh4eQhZd9ZGXky5/rvCd1YsWT23iaE3I7kT98s
-	 Ry+L25AymzR5QOVgGaZTqGSUjp7r6c8rURw9eEgDXQ1JDSlvSWxOJcaPgF59TqF0F0
-	 7VCwOgqymrMhAAIT5OrPdRlSsJ4PYfDC9HLa7CMwkr7EvsJFideWF3hHiTKCc2YL6u
-	 l2E/xvMXfY3lTV9Olp7dZMQgbvBTv1rwcU/XzXNAfVblrvFdEo1oWWqWbIBGDLCzy7
-	 YvJIdW9+kIAnNrXj8XC6IOG1Qpz2qjp4Q+mQw6st702XUml6hUrCM/e6QRGP+Q02Yr
-	 kvNjTzjjkKmGA==
-Received: by aws-us-west-2-korg-bugzilla-1.web.codeaurora.org (Postfix, from userid 48)
-	id 08912C4160E; Sat, 28 Feb 2026 14:27:56 +0000 (UTC)
-From: bugzilla-daemon@kernel.org
-To: platform-driver-x86@vger.kernel.org
-Subject: [Bug 220646] Regression: kernel 6.16.8 fails to boot on Intel Raptor
- Lake Z790 (ahci/xhci error -12)
-Date: Sat, 28 Feb 2026 14:27:55 +0000
-X-Bugzilla-Reason: None
-X-Bugzilla-Type: changed
-X-Bugzilla-Watch-Reason: AssignedTo drivers_platform_x86@kernel-bugs.osdl.org
-X-Bugzilla-Product: Drivers
-X-Bugzilla-Component: Platform_x86
-X-Bugzilla-Version: 2.5
-X-Bugzilla-Keywords: 
-X-Bugzilla-Severity: high
-X-Bugzilla-Who: jn@yaloub.com
-X-Bugzilla-Status: NEEDINFO
-X-Bugzilla-Resolution: 
-X-Bugzilla-Priority: P3
-X-Bugzilla-Assigned-To: drivers_platform_x86@kernel-bugs.osdl.org
-X-Bugzilla-Flags: 
-X-Bugzilla-Changed-Fields: 
-Message-ID: <bug-220646-215701-ghOKU0zdZD@https.bugzilla.kernel.org/>
-In-Reply-To: <bug-220646-215701@https.bugzilla.kernel.org/>
-References: <bug-220646-215701@https.bugzilla.kernel.org/>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-X-Bugzilla-URL: https://bugzilla.kernel.org/
-Auto-Submitted: auto-generated
+	s=k20201202; t=1772291591;
+	bh=aoeMEMRii655SwLJrzFvfKxjQCC/8fuBn8cmCM6K81s=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+	b=Cj+GcvzJZKWvKsH3RtLJ8fqTxV5NuJqGlx2sbkDawVuzpu/rQQiZrpI3El01oXHdm
+	 MUIw3c9eyKbTv7xNkX9XIDorS+2dKgoxbeu6yeu6PrA5Q8vuB9SFYLJGtO/kDG758x
+	 Sudmb2dyESw9pjgn4MtukrPRnSBBOrz8YJ+0j36E3HmKOZScAAqu7rLLoI7vUy/qcP
+	 sxvq3UohoOyCoLqyTU0qi9NF4XGUGgkPjyFIbEgcuyqkneTmTQ0VXX+Px16VKTeBat
+	 he8uVcwOnsxCiX1FWIxU41VHDPt6h2NjWEyxIxtVaOkjGhrDN1bX1QRCeZKoZfxY5v
+	 NZv48lBhFLGTQ==
+From: "Rafael J. Wysocki" <rafael@kernel.org>
+To: Ilpo =?ISO-8859-1?Q?J=E4rvinen?= <ilpo.jarvinen@linux.intel.com>
+Cc: Hans de Goede <hansg@kernel.org>, LKML <linux-kernel@vger.kernel.org>,
+ Linux ACPI <linux-acpi@vger.kernel.org>, platform-driver-x86@vger.kernel.org,
+ Corentin Chary <corentin.chary@gmail.com>, "Luke D. Jones" <luke@ljones.dev>,
+ Denis Benato <benato.denis96@gmail.com>,
+ =?ISO-8859-1?Q?Jo=E3o?= Paulo Rechi Vita <jprvita@gmail.com>
+Subject:
+ [PATCH v1 4/4] platform/x86: asus-wireless: Convert ACPI driver to a platform
+ one
+Date: Sat, 28 Feb 2026 16:12:48 +0100
+Message-ID: <13959361.uLZWGnKmhe@rafael.j.wysocki>
+Organization: Linux Kernel Development
+In-Reply-To: <5971620.DvuYhMxLoT@rafael.j.wysocki>
+References: <5971620.DvuYhMxLoT@rafael.j.wysocki>
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset="UTF-8"
 
-https://bugzilla.kernel.org/show_bug.cgi?id=3D220646
+=46rom: "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>
 
---- Comment #3 from Jean-Nicolas (jn@yaloub.com) ---
-From what I can tell: AHCI mode.
+In all cases in which a struct acpi_driver is used for binding a driver
+to an ACPI device object, a corresponding platform device is created by
+the ACPI core and that device is regarded as a proper representation of
+underlying hardware.  Accordingly, a struct platform_driver should be
+used by driver code to bind to that device.  There are multiple reasons
+why drivers should not bind directly to ACPI device objects [1].
 
---=20
-You may reply to this email to add a comment.
+Overall, it is better to bind drivers to platform devices than to their
+ACPI companions, so convert the Asus wireless ACPI driver to a platform
+one.
 
-You are receiving this mail because:
-You are watching the assignee of the bug.=
+After this change, the subordinate input and LED devices will be
+registered under the platform device used for driver binding instead of
+its ACPI companion.
+
+While this is not expected to alter functionality, it changes sysfs
+layout and so it will be visible to user space.
+
+Link: https://lore.kernel.org/all/2396510.ElGaqSPkdT@rafael.j.wysocki/ [1]
+Signed-off-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
+=2D--
+ drivers/platform/x86/asus-wireless.c | 39 +++++++++++++++-------------
+ 1 file changed, 21 insertions(+), 18 deletions(-)
+
+diff --git a/drivers/platform/x86/asus-wireless.c b/drivers/platform/x86/as=
+us-wireless.c
+index 45d41875c515..2b494bf3cba8 100644
+=2D-- a/drivers/platform/x86/asus-wireless.c
++++ b/drivers/platform/x86/asus-wireless.c
+@@ -12,6 +12,7 @@
+ #include <linux/acpi.h>
+ #include <linux/input.h>
+ #include <linux/pci_ids.h>
++#include <linux/platform_device.h>
+ #include <linux/leds.h>
+=20
+ struct hswc_params {
+@@ -124,19 +125,22 @@ static void asus_wireless_notify(acpi_handle handle, =
+u32 event, void *context)
+ 	input_sync(data->idev);
+ }
+=20
+=2Dstatic int asus_wireless_add(struct acpi_device *adev)
++static int asus_wireless_probe(struct platform_device *pdev)
+ {
++	struct acpi_device *adev =3D ACPI_COMPANION(&pdev->dev);
+ 	struct asus_wireless_data *data;
+ 	const struct acpi_device_id *id;
+ 	int err;
+=20
+=2D	data =3D devm_kzalloc(&adev->dev, sizeof(*data), GFP_KERNEL);
++	data =3D devm_kzalloc(&pdev->dev, sizeof(*data), GFP_KERNEL);
+ 	if (!data)
+ 		return -ENOMEM;
+=2D	adev->driver_data =3D data;
++
++	platform_set_drvdata(pdev, data);
++
+ 	data->adev =3D adev;
+=20
+=2D	data->idev =3D devm_input_allocate_device(&adev->dev);
++	data->idev =3D devm_input_allocate_device(&pdev->dev);
+ 	if (!data->idev)
+ 		return -ENOMEM;
+ 	data->idev->name =3D "Asus Wireless Radio Control";
+@@ -165,14 +169,14 @@ static int asus_wireless_add(struct acpi_device *adev)
+ 	data->led.flags =3D LED_CORE_SUSPENDRESUME;
+ 	data->led.max_brightness =3D 1;
+ 	data->led.default_trigger =3D "rfkill-none";
+=2D	err =3D devm_led_classdev_register(&adev->dev, &data->led);
++	err =3D devm_led_classdev_register(&pdev->dev, &data->led);
+ 	if (err)
+ 		goto err;
+=20
+ 	err =3D acpi_dev_install_notify_handler(adev, ACPI_DEVICE_NOTIFY,
+ 					      asus_wireless_notify, data);
+ 	if (err) {
+=2D		devm_led_classdev_unregister(&adev->dev, &data->led);
++		devm_led_classdev_unregister(&pdev->dev, &data->led);
+ 		goto err;
+ 	}
+ 	return 0;
+@@ -182,28 +186,27 @@ static int asus_wireless_add(struct acpi_device *adev)
+ 	return err;
+ }
+=20
+=2Dstatic void asus_wireless_remove(struct acpi_device *adev)
++static void asus_wireless_remove(struct platform_device *pdev)
+ {
+=2D	struct asus_wireless_data *data =3D acpi_driver_data(adev);
++	struct asus_wireless_data *data =3D platform_get_drvdata(pdev);
+=20
+=2D	acpi_dev_remove_notify_handler(adev, ACPI_DEVICE_NOTIFY,
++	acpi_dev_remove_notify_handler(data->adev, ACPI_DEVICE_NOTIFY,
+ 				       asus_wireless_notify);
+ 	if (data->wq) {
+=2D		devm_led_classdev_unregister(&adev->dev, &data->led);
++		devm_led_classdev_unregister(&pdev->dev, &data->led);
+ 		destroy_workqueue(data->wq);
+ 	}
+ }
+=20
+=2Dstatic struct acpi_driver asus_wireless_driver =3D {
+=2D	.name =3D "Asus Wireless Radio Control Driver",
+=2D	.class =3D "hotkey",
+=2D	.ids =3D device_ids,
+=2D	.ops =3D {
+=2D		.add =3D asus_wireless_add,
+=2D		.remove =3D asus_wireless_remove,
++static struct platform_driver asus_wireless_driver =3D {
++	.probe =3D asus_wireless_probe,
++	.remove =3D asus_wireless_remove,
++	.driver =3D {
++		.name =3D "Asus Wireless Radio Control Driver",
++		.acpi_match_table =3D device_ids,
+ 	},
+ };
+=2Dmodule_acpi_driver(asus_wireless_driver);
++module_platform_driver(asus_wireless_driver);
+=20
+ MODULE_DESCRIPTION("Asus Wireless Radio Control Driver");
+ MODULE_AUTHOR("Jo=C3=A3o Paulo Rechi Vita <jprvita@gmail.com>");
+=2D-=20
+2.51.0
+
+
+
+
