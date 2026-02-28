@@ -1,53 +1,55 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.17])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.14])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 081FD361DDF
-	for <platform-driver-x86@vger.kernel.org>; Sat, 28 Feb 2026 23:01:56 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.17
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 93901156F45
+	for <platform-driver-x86@vger.kernel.org>; Sat, 28 Feb 2026 23:03:46 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.14
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1772319718; cv=none; b=NmSQz/Q/h3PDN113FhO+AwgDvqFv1gQ+ioRbyKnPbke/al+72RHdnxVbsa3gdyhSFLhwTOnQscQyGYxI3lMG6qV/ko9H+e9vMDNWSdvzp1JTFmSfvPWuxizOKO0jAzbQo4uRNPQouAiUKqtNzrXwVjeN7R5K8PbwEFpb7eZCHgY=
+	t=1772319827; cv=none; b=qIqxNKz2jIf61BIQjOhjU2FZmBjSrzW353ejk3Rh6pU/uVjKE2JU07o5WIJp2cK2iWDEhJWeGylsnzPuyDBZ2Np28qsA8PxIxq2tjnGGbAJEiBD5fQg80/90z/kzU97r+dP8TeyQvoG7KX6AJvOe6es2TESmERHr5HHe/rH59ZE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1772319718; c=relaxed/simple;
-	bh=hv2IPK471gAwfud3SVuplnWKG6v6Ov2fiKRG1ISd4hc=;
+	s=arc-20240116; t=1772319827; c=relaxed/simple;
+	bh=IwKQRs90TrmNWBFh4GeqC4Bcc2kxULG1QTLJiTDv2Hk=;
 	h=Message-ID:Subject:From:To:Date:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=lm4r+kN5XAuPEyptc+EGml5f0e8AcZl5gqy10aVvknyJi2XGCgm5kT3Hn+k2qu7M+cj41wt1e62zO7e6Vx4g/9sfNHB3PX0rgbWKkIdf1fbrUVi23joWqx/CMrznwyRDS5jBWjTkm692UKndwRPAsTqB8nnWQTgMv+HqAmNdF7I=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=pass smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=YO13zOAd; arc=none smtp.client-ip=192.198.163.17
+	 Content-Type:MIME-Version; b=L2UG/569uuWnxBPd1rOXBcYa1ZqtySOtxTkiNrkQLUcJx+QB4ZPhIosr6P2Qv2x8kPrsycVTMIis8N7YhtJaJhbHtyz8Z4W4GlC7tdD/Oqi7j3SHZ0lnpwil8zVYqq6lVWxHT93Y/vDEr15oo3t9DAJiSFxuc5rUYKFvG5HTY8U=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=pass smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=V3zMVSBV; arc=none smtp.client-ip=192.198.163.14
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="YO13zOAd"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="V3zMVSBV"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1772319717; x=1803855717;
+  t=1772319827; x=1803855827;
   h=message-id:subject:from:to:date:in-reply-to:references:
    content-transfer-encoding:mime-version;
-  bh=hv2IPK471gAwfud3SVuplnWKG6v6Ov2fiKRG1ISd4hc=;
-  b=YO13zOAdYiOQUugmcAmPn0Q3XjJ2BU7qTD4qAU7+5AESSOtFy8W2Hlbq
-   lid6VsNlyJYCCeLQ0tguadh9JOu7HQfACiRW6ouaOUctW1qlZCvRMxuPq
-   paKIOOiWasSlWC/kf4rkx1YN9uM5XxoyY1l+Fgp5nT6jckc7Wkna76Lxa
-   c1P+jPFbNdmjNdUkKhICqk9qZW8b+8jL5PqcQrY/sPFbvmbbhrxtb4Kn+
-   kPnGOjfAWGBLKvgInvHvOcBOjEZYrv8zX1V3FAKn3ta2k4Mj71nkl1Bm7
-   jd89bCRGCIZFFI27uyyig7CiW0rMveEN3yZhlVFTjbK1s5kZIlMtU7YqB
+  bh=IwKQRs90TrmNWBFh4GeqC4Bcc2kxULG1QTLJiTDv2Hk=;
+  b=V3zMVSBVPFmDSVqT0tATtabPTgks3AJov90L8AQgIux08h4J7sY4hgaS
+   zjS+p9WULjccj53h+9SjxjJ85UpMtAG6OaSjf43S/WmwiSU1LVDO4BiFN
+   cgaFJWde3xuGK6assa6T94doitTNz2gFO3J6NEY94J1FEshtG6PVVJw+c
+   +Yvv6BwygW0ARt3UUBEOqNATEpHoGk9f1AZnGYuUrro/Az4bI9cybJVqw
+   6YVkXue8czQfuvb3bDhsY7rryRi4KAuKCYhhd7CqwDhiPbzoQpz14JOXk
+   cHykG6HJdzddkQgUgjynSFqipgSuEoZn4fR1vUFi4EMj+ECE0FyKpZM6b
    g==;
-X-CSE-ConnectionGUID: mGU+KnUXSuibf4A2Jp21hQ==
-X-CSE-MsgGUID: FKxceOvKTESGBKK/j9G3FQ==
-X-IronPort-AV: E=McAfee;i="6800,10657,11715"; a="73275824"
+X-CSE-ConnectionGUID: MoGgT0W0S8G4xfNHokUqAg==
+X-CSE-MsgGUID: c/wi7UtPTuuql2dIXB/3Jg==
+X-IronPort-AV: E=McAfee;i="6800,10657,11715"; a="73437058"
 X-IronPort-AV: E=Sophos;i="6.21,317,1763452800"; 
-   d="scan'208";a="73275824"
-Received: from fmviesa003.fm.intel.com ([10.60.135.143])
-  by fmvoesa111.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 28 Feb 2026 15:01:57 -0800
-X-CSE-ConnectionGUID: 9fYTDWsWQGSBi4Lr2jAzBA==
-X-CSE-MsgGUID: wwcBoLIlSaq2sOY8GnpyOQ==
+   d="scan'208";a="73437058"
+Received: from fmviesa006.fm.intel.com ([10.60.135.146])
+  by fmvoesa108.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 28 Feb 2026 15:03:46 -0800
+X-CSE-ConnectionGUID: kWp/3c5gRmC6OIl59Rs+ig==
+X-CSE-MsgGUID: aYul2Cg0RLysbx14Ww21Og==
 X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.21,317,1763452800"; 
+   d="scan'208";a="214562562"
 Received: from spandruv-mobl5.amr.corp.intel.com (HELO [10.125.108.21]) ([10.125.108.21])
-  by fmviesa003-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 28 Feb 2026 15:01:56 -0800
-Message-ID: <30ec4399cc038ee2471a7ba158a0139637103756.camel@linux.intel.com>
+  by fmviesa006-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 28 Feb 2026 15:03:36 -0800
+Message-ID: <9731cc3864c65a4c91447a7ba032555e1b117083.camel@linux.intel.com>
 Subject: Re: [PATCH] platform/x86: ISST: Check HWP support before MSR access
 From: srinivas pandruvada <srinivas.pandruvada@linux.intel.com>
 To: lirongqing <lirongqing@baidu.com>, Hans de Goede <hansg@kernel.org>, 
  Ilpo =?ISO-8859-1?Q?J=E4rvinen?=
 	 <ilpo.jarvinen@linux.intel.com>, platform-driver-x86@vger.kernel.org
-Date: Sat, 28 Feb 2026 15:01:55 -0800
+Date: Sat, 28 Feb 2026 15:03:35 -0800
 In-Reply-To: <20260228122441.2284-1-lirongqing@baidu.com>
 References: <20260228122441.2284-1-lirongqing@baidu.com>
 Content-Type: text/plain; charset="UTF-8"
@@ -95,6 +97,10 @@ On Sat, 2026-02-28 at 07:24 -0500, lirongqing wrote:
 > Fixes: 12a7d2cb811dd8a ("platform/x86: ISST: Add SST-CP support via
 > TPMI")
 > Signed-off-by: Li RongQing <lirongqing@baidu.com>
+
+Acked-by: Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>
+
+
 > ---
 > =C2=A0drivers/platform/x86/intel/speed_select_if/isst_tpmi_core.c | 3 +++
 > =C2=A01 file changed, 3 insertions(+)
