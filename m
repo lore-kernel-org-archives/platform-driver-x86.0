@@ -1,205 +1,179 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from MW6PR02CU001.outbound.protection.outlook.com (mail-westus2azon11012012.outbound.protection.outlook.com [52.101.48.12])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 654662773EE
-	for <platform-driver-x86@vger.kernel.org>; Sun,  1 Mar 2026 13:08:37 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1772370517; cv=none; b=DLPWwNyrte3R1Ni/cGp9QT1uP6TjhdxaWHChWcNjaoQVodZuZn0fRnk+WB2a629wAAtUTNVwGlVtWUveGUG7eTxknK9ohuvxAFniaNGMJRY3Tp+Po4oRgX/HRLAD9oDvYJ+A+lAsj3WvRTZU0Qi9IqPmdgG39xBD82SPlA7TGLU=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1772370517; c=relaxed/simple;
-	bh=BpmbXH4qYlEnLSdaHrN56B/2bF+uEc8ONGwaCG5rAwE=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=gJmSB6ESFzm9ExVlQY1S7UaID388ABDXDFPuyAcVe0ty4a79GoY6Xzgxovi7cQl7gjy4lWw3vl8xRFW5Q6xCWC2MRj46R/XdigjLPiRWcZwx4qVvljp1uiwXg7yYCBEfp6zCV0+h2xE+cV4itk/xI8yM58re9eWn2fY+VWFqGjI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=fE2CeKLf; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 26D28317171
+	for <platform-driver-x86@vger.kernel.org>; Sun,  1 Mar 2026 13:11:53 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=52.101.48.12
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1772370715; cv=fail; b=TW3D66T0PkXibZqgGC2v07KQy6iK/AoA6Z/D3d1Iveb+8/rxgkcwLw5t5NAm1KDFaWCCX4mQGFi67RSFKGMqH9cO8kPX8VuliJ1GQjMdRlk8PYF9makTxs33fFT1XQchrU1ftbLFvw0kgYhFViFYd+zXtMpYeRy187KJsio1nt4=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1772370715; c=relaxed/simple;
+	bh=3XtjqjPfyobRcpULNHF+Vm5iJU06aIcJ673HhxsSW0g=;
+	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=cnHMuypW/SQsL13pt728ljPtzyZDZY9s2o16gTXNi1AEi1iKcejGMwXSIYoetsRuaKqm52/hVT8zT2a2rmbBwdWV2BKxAYHafbncIs+DWuGlT51MnDCToDpZA6pWZ749A12/jD8lOTwJihs4o+XJvKP/n+YVH35LuqK2QtJXMzk=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=qN6t6FVW; arc=fail smtp.client-ip=52.101.48.12
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=amd.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="fE2CeKLf"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 1762DC2BC9E
-	for <platform-driver-x86@vger.kernel.org>; Sun,  1 Mar 2026 13:08:37 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1772370517;
-	bh=BpmbXH4qYlEnLSdaHrN56B/2bF+uEc8ONGwaCG5rAwE=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-	b=fE2CeKLfYK4zxDAZKHxzQ00vZWIX4YNk1++Fq6Sv2Y+Q+iOGoscIO4CdwjJqGFcIZ
-	 kYYM+dkBaK3XOLMAG42kmbqjf/YwfUQ2VhZ+ZCV913yJ4p0a1se+5ixpQQZrzl6uc/
-	 MXTRja7Sre+H3ClQbiDLbj3yhjn47jmj2ebTR+9k6QUMp9ev/j4SuXtKfkDvbPkhf7
-	 6xpF5R7SbEKaytGAAIliAZDVxz7FzBJtew0JxkQQPZuRVbXiqiMuVoG+dsO57f44Tj
-	 XVHPPa96vuyMTeX+6qipHVCsNS66F2kMgeFrRT9ThpNbvjVrwkt2I0jNEMo+DVu3vK
-	 lQzRFSP3iilTw==
-Received: by mail-oi1-f179.google.com with SMTP id 5614622812f47-45f015a3259so1404610b6e.2
-        for <platform-driver-x86@vger.kernel.org>; Sun, 01 Mar 2026 05:08:37 -0800 (PST)
-X-Forwarded-Encrypted: i=1; AJvYcCUGs/ChTMzLP9EhyqJe6X3BMWCzZZxg3skH7wAm3e311SoPYuZrGJCoQNbEQgHFYMoyMXtwm9opXWyi/t6/GQ/ryrLa@vger.kernel.org
-X-Gm-Message-State: AOJu0YyYMyz5iRMncVCNU1FxDuz8l2WLnLTgtL2eVFGfxpGT8DSUrxbd
-	qGDPy4HNCdnM6PKhFPho5FcmCYeC8LyL0n9No02T52HLSVLEASFqdlzkAVS4XaPFVRnm6ouRmxg
-	C649ke5fiSOCQrMrC3NbHx5armlwq2N8=
-X-Received: by 2002:a05:6808:4f23:b0:45e:a592:5903 with SMTP id
- 5614622812f47-464beea8a3amr4677465b6e.32.1772370516163; Sun, 01 Mar 2026
- 05:08:36 -0800 (PST)
+	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="qN6t6FVW"
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=pa2rMfafbE9bMq7mRDcrV/f9Cb74U5d0EO9A9U5oCsRGWgqiA5F8x/vGV0fkUtKdxozxx65sveAuPVSF+KBKWcGI0M4jLQd1e6buMhcTxjyc67u028Pyn0fY4KBqDdMr8D4Yhd2AJYWN2Q5BQwc2zmnCFBpn99KEUABp9V/KGL8FDAOia+D1GsR/lYMTkQfdwqxs+ZRkyXSmi4KLMUt6l7GEZ3zVfon9vYFu1FDSFDdqY+AoCQt+PNxiZNzKl5Hphgnu359syK5hJHVDpnQwKEv9L7BGMJHIiRJ/H60tk2IuvCS9oGWEWwtPg59iTIlgonQ6nJBhFkHj1BW+57OhRA==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=7wocGp/xycn/n4CEPdIqCnljC9XAzCLw8jFqFTuxFOo=;
+ b=JdKduqWYuXcZCq+jwBu/rWtPhDDc9Y33Zy6aQ0vlWxTm46N1T3eQvDPk++B9WyfXX9DwFUSl/XpmjWrYeYLJ2frGM7XyHoTSGq/ZBJ3miO+0OQFPYErelNX8jIpaLnHluMx9RXShxYOLNm4Qxide+rwT6+YpwNSkITbF+tkGY9+IuqgaLhFYFyqFYTwAHP320LWqmKOWvWUu0nK2qgC6Iku1BK7Tm5qrrB+jZOBHcXhqtr41ALcVq4N1mpdTlKicPMZ0XOdQXa/EcSTeJq5u7lN/Vl1yyCMd7lTt7TR6bRxBPi/ZTdk0Kc7ivm+vuFzdJumCfr5YrklFRX41ENmiiw==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
+ 165.204.84.17) smtp.rcpttodomain=kernel.org smtp.mailfrom=amd.com; dmarc=pass
+ (p=quarantine sp=quarantine pct=100) action=none header.from=amd.com;
+ dkim=none (message not signed); arc=none (0)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=7wocGp/xycn/n4CEPdIqCnljC9XAzCLw8jFqFTuxFOo=;
+ b=qN6t6FVWp0UQ4UXjFfVm1q/LRc5mihGfmwXdrK5PwM3UxJk7GnaXMPYHK5ddDUSj8xQGMF2iE/wzwGFAdtgCq/9QGl3GNZTlb7vi6CNuTWb4hyC0OT+5PY9C/hy2x3onOQ1QiqAi7+wwxBy0mylh0xEOlTqmDOnN9MqX4dCRdYI=
+Received: from BN9PR03CA0768.namprd03.prod.outlook.com (2603:10b6:408:13a::23)
+ by CY5PR12MB6108.namprd12.prod.outlook.com (2603:10b6:930:27::15) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.9654.18; Sun, 1 Mar
+ 2026 13:11:50 +0000
+Received: from BN2PEPF00004FBA.namprd04.prod.outlook.com
+ (2603:10b6:408:13a:cafe::40) by BN9PR03CA0768.outlook.office365.com
+ (2603:10b6:408:13a::23) with Microsoft SMTP Server (version=TLS1_3,
+ cipher=TLS_AES_256_GCM_SHA384) id 15.20.9654.18 via Frontend Transport; Sun,
+ 1 Mar 2026 13:11:46 +0000
+X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 165.204.84.17)
+ smtp.mailfrom=amd.com; dkim=none (message not signed)
+ header.d=none;dmarc=pass action=none header.from=amd.com;
+Received-SPF: Pass (protection.outlook.com: domain of amd.com designates
+ 165.204.84.17 as permitted sender) receiver=protection.outlook.com;
+ client-ip=165.204.84.17; helo=satlexmb07.amd.com; pr=C
+Received: from satlexmb07.amd.com (165.204.84.17) by
+ BN2PEPF00004FBA.mail.protection.outlook.com (10.167.243.180) with Microsoft
+ SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.9654.16 via Frontend Transport; Sun, 1 Mar 2026 13:11:49 +0000
+Received: from airavat.amd.com (10.180.168.240) by satlexmb07.amd.com
+ (10.181.42.216) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.2562.17; Sun, 1 Mar
+ 2026 07:11:47 -0600
+From: Shyam Sundar S K <Shyam-sundar.S-k@amd.com>
+To: <hansg@kernel.org>, <ilpo.jarvinen@linux.intel.com>
+CC: <platform-driver-x86@vger.kernel.org>, <mario.limonciello@amd.com>,
+	<Yijun.Shen@Dell.com>, <Sanket.Goswami@amd.com>, Shyam Sundar S K
+	<Shyam-sundar.S-k@amd.com>
+Subject: [PATCH v3 0/7] platform/x86/amd/pmf: Introduce PMF util layer with userspace interface
+Date: Sun, 1 Mar 2026 18:41:17 +0530
+Message-ID: <20260301131124.1370565-1-Shyam-sundar.S-k@amd.com>
+X-Mailer: git-send-email 2.34.1
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <5971620.DvuYhMxLoT@rafael.j.wysocki> <2402539.ElGaqSPkdT@rafael.j.wysocki>
- <c9697592-c70b-4ef8-864f-213b5ea4782d@linux.dev>
-In-Reply-To: <c9697592-c70b-4ef8-864f-213b5ea4782d@linux.dev>
-From: "Rafael J. Wysocki" <rafael@kernel.org>
-Date: Sun, 1 Mar 2026 14:08:25 +0100
-X-Gmail-Original-Message-ID: <CAJZ5v0j7PdCG3oi8tKHkdQ7SvfL0r6DL7J-iKrr2aoDRufnBbQ@mail.gmail.com>
-X-Gm-Features: AaiRm53APnLbCnYkEj8OOyuCyqwJIj-wOFzzdkFbpRIt_92bXALORXGiiWUdTYY
-Message-ID: <CAJZ5v0j7PdCG3oi8tKHkdQ7SvfL0r6DL7J-iKrr2aoDRufnBbQ@mail.gmail.com>
-Subject: Re: [PATCH v1 2/4] platform/x86: asus-laptop: Convert ACPI driver to
- a platform one
-To: Denis Benato <denis.benato@linux.dev>
-Cc: "Rafael J. Wysocki" <rafael@kernel.org>, =?UTF-8?Q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>, 
-	Hans de Goede <hansg@kernel.org>, LKML <linux-kernel@vger.kernel.org>, 
-	Linux ACPI <linux-acpi@vger.kernel.org>, platform-driver-x86@vger.kernel.org, 
-	Corentin Chary <corentin.chary@gmail.com>, "Luke D. Jones" <luke@ljones.dev>, 
-	=?UTF-8?Q?Jo=C3=A3o_Paulo_Rechi_Vita?= <jprvita@gmail.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-ClientProxiedBy: satlexmb07.amd.com (10.181.42.216) To satlexmb07.amd.com
+ (10.181.42.216)
+X-EOPAttributedMessage: 0
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: BN2PEPF00004FBA:EE_|CY5PR12MB6108:EE_
+X-MS-Office365-Filtering-Correlation-Id: 7e52026e-044a-4c62-1245-08de77941940
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam:
+	BCL:0;ARA:13230040|36860700013|376014|82310400026|1800799024;
+X-Microsoft-Antispam-Message-Info:
+	u/os9vCgJfSI5a7eAycJyjq/BNZk4CWdakdLP15Pg662qaL7OBKCPeEFWgd5Bjj2CznfrGFjFN9qp8xGaudBQ3wRyMqJ/LFhjz2ZKe9a5wzqLlRZv+sjsuIkn7LpGUNHInFTw9uvsqqNihj9YL+vuxBDAbmC1sRKuA01njtXheQoHaLekO8KEj3darx76AN/qujMj3lPyONx5pAr9A+kn//Xibq7t/yznx924IIbQYYLKS6jAu2o50r+dAms6A8sbuTJevyCqACvtKnvenIMlhwmJfHQylTe4SqRquyN09hhiKRq29W/AWAqd9G0PY50EotaeXyU/Tg3TYIBE/Kh9Ndy4KMpKK4+qJ1oNG8mDhlzb0MkfPrYMCEx+Akbou8WgmrJ1wEv6H508vY6C2Yrlvu9XG9nG28RKhGYqEvkCXUrz2Xpj0fAr1uOQksZKek1ejEudg4KftMtxXoH+MoxrSDxORAcZ31BWsqp7hzZhex2T3PyypJ2nRjwbig1nEMeBYUGOBas3Zktd01zhfdxgA5aRUv1+P/lRbTcgMUa2L8N+pA7ynJvpLrbsk9S2cznDVFLsFdzctzOH2ShCANn1RsZXZ6Mv7/xnIh2tX3Nh70L1FxoAtd2m5HP3Ipnpu3Cc0xyqw06Rp6xUSA8qDi0UeayoYKFeDRbwmATqmzR8IKUYkd142kJ3u8rYuJEte3WXALj5gpi3hbkXz3wN5aTM7YVv7/s2UjFKvuC1+0SjrpeRqodM3WymquX1wsbMYl622yrIgWLGeLwHBH1RyoS8R+F1P/eizan4BbUkmfkSNwlnNQgojlJTKzeEt3rlIaJ0lcEgNjER+2FrKptatM1WXMMLXqtH2bW5fqGsAJnORY=
+X-Forefront-Antispam-Report:
+	CIP:165.204.84.17;CTRY:US;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:satlexmb07.amd.com;PTR:InfoDomainNonexistent;CAT:NONE;SFS:(13230040)(36860700013)(376014)(82310400026)(1800799024);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0:
+	qEg3ulAkLQKGSwFfM9kPrsfj0w42SPpaTXF4FcUsrgZ9+Drn6Df9jk6deNMhrrTbt3k7mMhvAAe/hMBp/M7OhUR8sdr6BN/JIkVYfS2Yp+pNdWicLZQPUZi6oVPNZydvO8i5ZZ9geleeDC0NNMoKnD/b4r9pMZ7iNhO+Aj+IDxwJG0YlzuGt+/6dS9kxtjDajiMLP3+ExZpSqDuhEjdjQex7VFoGDOHdvtOrOnO0anuQ8wIPnx1KdYbm6d+5E/9ujjNCtiW0Wktv53AY7gGzawCXIF8VZXweub07G0DREcJ98/BSNuJstZVRtUqmPFiS8nr55nlJlZGpiyauGsFzEFACG74Y3unaVcM1rJv9br/sbpOihsbrCdNx22y7d5mdwlAB6MwY/sujv8EWPfoTIuyDiS93S2LBLbVdlkCLHH+Xz0Jh1uefHXwvK0601QdL
+X-OriginatorOrg: amd.com
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 01 Mar 2026 13:11:49.5276
+ (UTC)
+X-MS-Exchange-CrossTenant-Network-Message-Id: 7e52026e-044a-4c62-1245-08de77941940
+X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
+X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=3dd8961f-e488-4e60-8e11-a82d994e183d;Ip=[165.204.84.17];Helo=[satlexmb07.amd.com]
+X-MS-Exchange-CrossTenant-AuthSource:
+	BN2PEPF00004FBA.namprd04.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Anonymous
+X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: CY5PR12MB6108
 
-On Sat, Feb 28, 2026 at 6:02=E2=80=AFPM Denis Benato <denis.benato@linux.de=
-v> wrote:
->
->
-> On 2/28/26 16:11, Rafael J. Wysocki wrote:
-> > From: "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>
-> >
-> > In all cases in which a struct acpi_driver is used for binding a driver
-> > to an ACPI device object, a corresponding platform device is created by
-> > the ACPI core and that device is regarded as a proper representation of
-> > underlying hardware.  Accordingly, a struct platform_driver should be
-> > used by driver code to bind to that device.  There are multiple reasons
-> > why drivers should not bind directly to ACPI device objects [1].
-> >
-> > Overall, it is better to bind drivers to platform devices than to their
-> > ACPI companions, so convert the Asus laptop ACPI driver to a platform
-> > one.
-> >
-> > While this is not expected to alter functionality, it changes sysfs
-> > layout and so it will be visible to user space.
->
-> Alright I will take a look if asus-linux software is affected and act acc=
-ordingly.
-> How much time do I have?
+This patch series introduces a new util layer for the AMD Platform
+Management Framework (PMF) driver that exposes a minimal userspace
+interface for metrics monitoring and feature discovery.
 
-It really depends on Ilpo, but there's no rush as far as I'm concerned.
+AMD PMF currently manages power and thermal policies internally through
+Smart PC features, Auto Mode, Policy Builder, Static/Dynamic Power
+Sliders. However, system designers and OEMs need visibility into PMF
+metrics and feature status for validation, debugging, and integration
+with monitoring tools.
 
-> Thanks.
-> > Link: https://lore.kernel.org/all/2396510.ElGaqSPkdT@rafael.j.wysocki/ =
-[1]
-> > Signed-off-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
-> Reviewed-by: Denis Benato <denis.benato@linux.dev>
+This series addresses that need by adding a character device interface
+that allows controlled access to PMF metrics data while maintaining
+the driver's existing automated policy management.
 
-Thanks for all of the reviews!
+The primary use case is integration with userspace tools like AMD
+SystemDeck, which are widely used by system designers to:
+- Monitor real-time power and thermal behavior
+- Validate PMF feature operation during platform bring-up
+- Debug thermal issues by tracking skin temperature, C-state residency,
+  and socket power metrics
+- Verify BIOS input/output policy values during Smart PC operation
 
-> > ---
-> >  drivers/platform/x86/asus-laptop.c | 35 +++++++++++++++---------------
-> >  1 file changed, 18 insertions(+), 17 deletions(-)
-> >
-> > diff --git a/drivers/platform/x86/asus-laptop.c b/drivers/platform/x86/=
-asus-laptop.c
-> > index c927665dfa96..dbbb6292cd11 100644
-> > --- a/drivers/platform/x86/asus-laptop.c
-> > +++ b/drivers/platform/x86/asus-laptop.c
-> > @@ -1824,8 +1824,9 @@ static void asus_dmi_check(void)
-> >
-> >  static bool asus_device_present;
-> >
-> > -static int asus_acpi_add(struct acpi_device *device)
-> > +static int asus_acpi_probe(struct platform_device *pdev)
-> >  {
-> > +     struct acpi_device *device =3D ACPI_COMPANION(&pdev->dev);
-> >       struct asus_laptop *asus;
-> >       int result;
-> >
-> > @@ -1837,7 +1838,6 @@ static int asus_acpi_add(struct acpi_device *devi=
-ce)
-> >       asus->handle =3D device->handle;
-> >       strscpy(acpi_device_name(device), ASUS_LAPTOP_DEVICE_NAME);
-> >       strscpy(acpi_device_class(device), ASUS_LAPTOP_CLASS);
-> > -     device->driver_data =3D asus;
-> >       asus->device =3D device;
-> >
-> >       asus_dmi_check();
-> > @@ -1846,6 +1846,8 @@ static int asus_acpi_add(struct acpi_device *devi=
-ce)
-> >       if (result)
-> >               goto fail_platform;
-> >
-> > +     platform_set_drvdata(pdev, asus);
-> > +
-> >       /*
-> >        * Need platform type detection first, then the platform
-> >        * device.  It is used as a parent for the sub-devices below.
-> > @@ -1907,11 +1909,12 @@ static int asus_acpi_add(struct acpi_device *de=
-vice)
-> >       return result;
-> >  }
-> >
-> > -static void asus_acpi_remove(struct acpi_device *device)
-> > +static void asus_acpi_remove(struct platform_device *pdev)
-> >  {
-> > -     struct asus_laptop *asus =3D acpi_driver_data(device);
-> > +     struct asus_laptop *asus =3D platform_get_drvdata(pdev);
-> >
-> > -     acpi_dev_remove_notify_handler(device, ACPI_DEVICE_NOTIFY, asus_a=
-cpi_notify);
-> > +     acpi_dev_remove_notify_handler(asus->device, ACPI_DEVICE_NOTIFY,
-> > +                                    asus_acpi_notify);
-> >       asus_backlight_exit(asus);
-> >       asus_rfkill_exit(asus);
-> >       asus_led_exit(asus);
-> > @@ -1930,15 +1933,13 @@ static const struct acpi_device_id asus_device_=
-ids[] =3D {
-> >  };
-> >  MODULE_DEVICE_TABLE(acpi, asus_device_ids);
-> >
-> > -static struct acpi_driver asus_acpi_driver =3D {
-> > -     .name =3D ASUS_LAPTOP_NAME,
-> > -     .class =3D ASUS_LAPTOP_CLASS,
-> > -     .ids =3D asus_device_ids,
-> > -     .flags =3D ACPI_DRIVER_ALL_NOTIFY_EVENTS,
-> > -     .ops =3D {
-> > -             .add =3D asus_acpi_add,
-> > -             .remove =3D asus_acpi_remove,
-> > -             },
-> > +static struct platform_driver asus_acpi_driver =3D {
-> > +     .probe =3D asus_acpi_probe,
-> > +     .remove =3D asus_acpi_remove,
-> > +     .driver =3D {
-> > +             .name =3D ASUS_LAPTOP_NAME,
-> > +             .acpi_match_table =3D asus_device_ids,
-> > +     },
-> >  };
-> >
-> >  static int __init asus_laptop_init(void)
-> > @@ -1949,7 +1950,7 @@ static int __init asus_laptop_init(void)
-> >       if (result < 0)
-> >               return result;
-> >
-> > -     result =3D acpi_bus_register_driver(&asus_acpi_driver);
-> > +     result =3D platform_driver_register(&asus_acpi_driver);
-> >       if (result < 0)
-> >               goto fail_acpi_driver;
-> >       if (!asus_device_present) {
-> > @@ -1959,7 +1960,7 @@ static int __init asus_laptop_init(void)
-> >       return 0;
-> >
-> >  fail_no_device:
-> > -     acpi_bus_unregister_driver(&asus_acpi_driver);
-> > +     platform_driver_unregister(&asus_acpi_driver);
-> >  fail_acpi_driver:
-> >       platform_driver_unregister(&platform_driver);
-> >       return result;
-> > @@ -1967,7 +1968,7 @@ static int __init asus_laptop_init(void)
-> >
-> >  static void __exit asus_laptop_exit(void)
-> >  {
-> > -     acpi_bus_unregister_driver(&asus_acpi_driver);
-> > +     platform_driver_unregister(&asus_acpi_driver);
-> >       platform_driver_unregister(&platform_driver);
-> >  }
-> >
+The util layer reads from the existing Trusted Application (TA) shared
+memory buffer and cached BIOS output values, adding no new communication
+overhead with the TA.
+
+v3:
+ - Stop exporting battery information via util layer.
+ - Optimize the core logic for fetching BIOS outputs.
+ - Update the documentation patch to reflect the current util layer design.
+ - Consolidate amd-pmf-io.h changes into common UAPI header.
+ - Define a single unified uAPI structure and IOCTL.
+ - Address other v2 review remarks [1]
+
+v2:
+ - address remarks from v1
+ - add a new tool that exercises the IOCTLs from PMF interface
+
+[1] https://lore.kernel.org/platform-driver-x86/20251111071010.4179492-1-Shyam-sundar.S-k@amd.com/
+
+Shyam Sundar S K (7):
+  platform/x86/amd/pmf: Add util layer and userspace misc device
+    interface
+  platform/x86/amd/pmf: cache BIOS output values for user-space metrics
+    via util IOCTL
+  platform/x86/amd/pmf: Add feature discovery support to util interface
+  platform/x86/amd/pmf: Store commonly used enums in the header file
+  platform/x86/amd/pmf: Move debug helper functions to UAPI header
+  platform/x86/amd/pmf: Introduce AMD PMF testing tool for driver
+    metrics and features
+  Documentation/ABI: add testing entry for AMD PMF misc device interface
+
+ .../ABI/testing/misc-amdpmf_interface         |  70 ++++
+ MAINTAINERS                                   |   1 +
+ .../amd-sfh-hid/sfh1_1/amd_sfh_interface.c    |   1 +
+ drivers/platform/x86/amd/pmf/Kconfig          |  10 +
+ drivers/platform/x86/amd/pmf/Makefile         |   2 +
+ drivers/platform/x86/amd/pmf/core.c           |   8 +
+ drivers/platform/x86/amd/pmf/pmf.h            |  32 +-
+ drivers/platform/x86/amd/pmf/spc.c            |  55 +--
+ drivers/platform/x86/amd/pmf/tee-if.c         |   9 +-
+ drivers/platform/x86/amd/pmf/util.c           | 210 ++++++++++++
+ include/linux/amd-pmf-io.h                    |   9 -
+ include/uapi/linux/amd-pmf.h                  | 324 ++++++++++++++++++
+ tools/testing/selftests/Makefile              |   1 +
+ .../drivers/platform/x86/amd/pmf/Makefile     |   8 +
+ .../drivers/platform/x86/amd/pmf/test_pmf.c   | 243 +++++++++++++
+ 15 files changed, 897 insertions(+), 86 deletions(-)
+ create mode 100644 Documentation/ABI/testing/misc-amdpmf_interface
+ create mode 100644 drivers/platform/x86/amd/pmf/util.c
+ create mode 100644 include/uapi/linux/amd-pmf.h
+ create mode 100644 tools/testing/selftests/drivers/platform/x86/amd/pmf/Makefile
+ create mode 100644 tools/testing/selftests/drivers/platform/x86/amd/pmf/test_pmf.c
+
+-- 
+2.34.1
+
