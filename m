@@ -1,106 +1,91 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.11])
+Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 56B9731A567;
-	Sun,  1 Mar 2026 15:28:17 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.11
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 66F1363CB
+	for <platform-driver-x86@vger.kernel.org>; Sun,  1 Mar 2026 18:45:35 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.137.202.133
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1772378900; cv=none; b=EFbZaWCRJfhVoPX4TyS6sHB1RDplPhRVCFHujr3XT4qwUoXMgt5McrkV9PddS4sCt5f1vS85bkVRSAaeBCLa+VKE/ety0CdLVRpY1ga38scjvbsrNi79ZL4sdrTp4U9pDLr9jGOtxuSX9TwejQP4aqhpAKhf6QXho/l2+dUQQX8=
+	t=1772390739; cv=none; b=hfNjM9T/gFgjum6pX5XbdbfolnglL2zLkyKBaa4ufGiIKiZFQV8hMwpYWjXasi35UaGTZXME09kAVuk67QRR/Hk5R2yIcvZtflNZUCJYf4FNBE1u60APPivvHmfSHPDXMgqypRpwjHH4WPzEKx8sc/6RTh8UiowJ5bAnAQJ3i10=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1772378900; c=relaxed/simple;
-	bh=RsvUPthWA/MTUCpG/0kXMnn6bWz5sxvytb3HH++IFqA=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=CTplwOQ2yKx+cBIQs0lhSEiziqT4m/gEh27Oz+UJLMLUNWPZ7F7Onp06b9PQGe0JILFP93vkiP1teOuXVfejO7Hjpv9n81LTnhd9INIUbvPv35yWlGkMqh6COSy61+BAu+Bhsd4qBvfOcW7CWcG53KBFW3t3+C6g6U8eUMd8GaI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=P7fZFJkm; arc=none smtp.client-ip=192.198.163.11
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	s=arc-20240116; t=1772390739; c=relaxed/simple;
+	bh=Q6ldH1BEngFgOnhEU0bLBrOKdxHRek4CQLCW0XbAkhM=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=gh3a2j20Rb05WF6zVXQMm+YBQ8GrmE1MHR0T+9tiWs69qUDIVmziHZUPV81NmvVJClTtOfhwUsdW7lSYhxbi7V1zanja6k8MPO2PLteYNeTBls39atUpyggMcBpx9iByuhbpajGAasJncf939cgJVnjEKxahEdYf8HK67JiyCQQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=IwaEyEy0; arc=none smtp.client-ip=198.137.202.133
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=infradead.org
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=infradead.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="P7fZFJkm"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1772378898; x=1803914898;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=RsvUPthWA/MTUCpG/0kXMnn6bWz5sxvytb3HH++IFqA=;
-  b=P7fZFJkm7fmhM4eg1VQkA2+ORqP1ANhae7p4wqCZ9mh98PEN25oZ4gd7
-   Fj53apaEwRyoIsxtmchGqeRNej+jA+GLrGgy9ig14JnRbcF7ItWjbzqoJ
-   70Chz+YBt03biTVH8m9hsSh78+Vqf0B2xfLusbNTCyG+RXLtkhY+4dQD1
-   4CCGam+shja0LG98dVew0FO9P9pChSwAVOF2j9DIrojgZ7Vpqj8qyL/G3
-   RTMGG3E3Lk78HJXWhADCJPK+TOBoqPit1v2IiPBfQTVkumRL/BVOSCKbL
-   o3SJ98zFFzxRbJO9xfG8FHpXLU/gki4d0I8nBcVXKrCbUxU7qRVUOTDcX
-   w==;
-X-CSE-ConnectionGUID: k2YUiBRIT5KH7pq++dtQsA==
-X-CSE-MsgGUID: twrxAEanQLqZk1OMppgsaA==
-X-IronPort-AV: E=McAfee;i="6800,10657,11716"; a="84036170"
-X-IronPort-AV: E=Sophos;i="6.21,318,1763452800"; 
-   d="scan'208";a="84036170"
-Received: from orviesa007.jf.intel.com ([10.64.159.147])
-  by fmvoesa105.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 01 Mar 2026 07:28:17 -0800
-X-CSE-ConnectionGUID: 1NouxMwOTgKBzk5rrNe+FA==
-X-CSE-MsgGUID: IzNIf5Y2Tr6D3YPI6K2jQw==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.21,318,1763452800"; 
-   d="scan'208";a="217505437"
-Received: from lkp-server01.sh.intel.com (HELO 59784f1c7b2a) ([10.239.97.150])
-  by orviesa007.jf.intel.com with ESMTP; 01 Mar 2026 07:28:15 -0800
-Received: from kbuild by 59784f1c7b2a with local (Exim 4.98.2)
-	(envelope-from <lkp@intel.com>)
-	id 1vwiiK-000000001Wr-0HPM;
-	Sun, 01 Mar 2026 15:28:12 +0000
-Date: Sun, 1 Mar 2026 23:27:16 +0800
-From: kernel test robot <lkp@intel.com>
-To: edip@medip.dev, ilpo.jarvinen@linux.intel.com, hansg@kernel.org,
-	kuba@kernel.org
-Cc: oe-kbuild-all@lists.linux.dev, platform-driver-x86@vger.kernel.org,
-	linux-kernel@vger.kernel.org, Edip Hazuri <edip@medip.dev>
-Subject: Re: [PATCH v3 2/2] platform/x86: hp-wmi: Add missing LED Kconfig
- dependencies
-Message-ID: <202603012320.cgNlkkjB-lkp@intel.com>
-References: <20260228122143.119571-4-edip@medip.dev>
+	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="IwaEyEy0"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=infradead.org; s=bombadil.20210309; h=Content-Transfer-Encoding:
+	Content-Type:In-Reply-To:From:References:Cc:To:Subject:MIME-Version:Date:
+	Message-ID:Sender:Reply-To:Content-ID:Content-Description;
+	bh=ZlyiHLTtOYPShmfSZP3ZRUPDHND7Ji04LS9gTMatMrQ=; b=IwaEyEy0WLJVal6GzR08zxs4Zb
+	h3AJVpsYydXYPO7xP7lGOjezBGIjcAb63+cxrOsXNRdi83nY4XLbSsU4V81uXpLKRhu/yNY/BdHN1
+	camN/8T+nBJiGM8zT8XZPRtNOBSpRDEwHbFDVsZ+rOlMmxkXGK5Uaj1YSf1uFGCK36Hl7r8ekJHBG
+	32cIa9ydMlP9yStj1v9lhHT0gCJq0XL+kfMjJG/1TKLcwXgYLOTjgsDO0MtU0WsT69LUAfXir143a
+	5GvuaRAJ6/gDou56Q1mDRszwvGvR5OHmOznqavhqJ4mmphCJuzDhlCGGNWwl1G8w3piQ8Up8etMGr
+	zwBWAdwQ==;
+Received: from [50.53.43.113] (helo=[192.168.254.34])
+	by bombadil.infradead.org with esmtpsa (Exim 4.98.2 #2 (Red Hat Linux))
+	id 1vwlnK-0000000BnEn-3Xd8;
+	Sun, 01 Mar 2026 18:45:34 +0000
+Message-ID: <98a467d4-c0ac-46ca-aa59-00b392d6a30a@infradead.org>
+Date: Sun, 1 Mar 2026 10:45:33 -0800
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20260228122143.119571-4-edip@medip.dev>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v3 1/7] platform/x86/amd/pmf: Add util layer and userspace
+ misc device interface
+To: Shyam Sundar S K <Shyam-sundar.S-k@amd.com>, hansg@kernel.org,
+ ilpo.jarvinen@linux.intel.com
+Cc: platform-driver-x86@vger.kernel.org, mario.limonciello@amd.com,
+ Yijun.Shen@Dell.com, Sanket.Goswami@amd.com
+References: <20260301131124.1370565-1-Shyam-sundar.S-k@amd.com>
+ <20260301131124.1370565-2-Shyam-sundar.S-k@amd.com>
+Content-Language: en-US
+From: Randy Dunlap <rdunlap@infradead.org>
+In-Reply-To: <20260301131124.1370565-2-Shyam-sundar.S-k@amd.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-Hi,
 
-kernel test robot noticed the following build errors:
 
-[auto build test ERROR on linus/master]
-[also build test ERROR on v7.0-rc1 next-20260227]
-[If your patch is applied to the wrong git tree, kindly drop us a note.
-And when submitting patch, we suggest to use '--base' as documented in
-https://git-scm.com/docs/git-format-patch#_base_tree_information]
+On 3/1/26 5:11 AM, Shyam Sundar S K wrote:
+> diff --git a/drivers/platform/x86/amd/pmf/Kconfig b/drivers/platform/x86/amd/pmf/Kconfig
+> index 25b8f7ae3abd..ad21f679b8ab 100644
+> --- a/drivers/platform/x86/amd/pmf/Kconfig
+> +++ b/drivers/platform/x86/amd/pmf/Kconfig
+> @@ -30,3 +30,13 @@ config AMD_PMF_DEBUG
+>  	 in the PMF config store.
+>  
+>  	 Say Y here to enable more debug logs and Say N here if you are not sure.
+> +
+> +config AMD_PMF_UTIL_SUPPORT
+> +	bool "AMD PMF Util layer support"
+> +	depends on AMD_PMF
+> +	help
+> +	Enabling this option provides a character device for userspace to capture
+> +	PMF features (Smart PC Builder, Auto Mode, Static Power Slider, Dynamic
+> +	Power Slider AC/DC) along with PMF metrics from the AMD PMF driver.
+> +
+> +	Say Y here to enable it and Say N here if you are not sure.
 
-url:    https://github.com/intel-lab-lkp/linux/commits/edip-medip-dev/platform-x86-hp-wmi-Add-missing-LED-Kconfig-dependencies/20260228-202855
-base:   linus/master
-patch link:    https://lore.kernel.org/r/20260228122143.119571-4-edip%40medip.dev
-patch subject: [PATCH v3 2/2] platform/x86: hp-wmi: Add missing LED Kconfig dependencies
-config: x86_64-rhel-9.4 (attached as .config)
-compiler: gcc-14 (Debian 14.2.0-19) 14.2.0
-reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20260301/202603012320.cgNlkkjB-lkp@intel.com/reproduce)
+Missing indentation of help text.
+from coding-style.rst:
 
-If you fix the issue in a separate patch/commit (i.e. not just a new version of
-the same patch/commit), kindly add following tags
-| Reported-by: kernel test robot <lkp@intel.com>
-| Closes: https://lore.kernel.org/oe-kbuild-all/202603012320.cgNlkkjB-lkp@intel.com/
+10) Kconfig configuration files
+-------------------------------
 
-All errors (new ones prefixed by >>):
-
->> error: recursive dependency detected!
-   symbol LEDS_CLASS depends on NEW_LEDS
-   symbol NEW_LEDS is selected by SENSORS_APPLESMC
-   symbol SENSORS_APPLESMC depends on HWMON
-   symbol HWMON is selected by HP_WMI
-   symbol HP_WMI depends on LEDS_CLASS
-   For a resolution refer to Documentation/kbuild/kconfig-language.rst
-   subsection "Kconfig recursive dependency limitations"
+For all of the Kconfig* configuration files throughout the source tree,
+the indentation is somewhat different.  Lines under a ``config`` definition
+are indented with one tab, while help text is indented an additional two
+spaces.
 
 -- 
-0-DAY CI Kernel Test Service
-https://github.com/intel/lkp-tests/wiki
+~Randy
+
