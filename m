@@ -1,181 +1,80 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0F2FE25228C;
-	Sun,  1 Mar 2026 01:32:26 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1185C2C2363
+	for <platform-driver-x86@vger.kernel.org>; Sun,  1 Mar 2026 05:37:17 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1772328746; cv=none; b=mW0nz2CmFuH7YnipXF7DCK+69hvYCrRTOFgLuak+n5M0A49XDA/Z1zBgBZbByT+BGDj5UEblMM4ew0y0rX+ATmLdskXmNtc8tCnR9e0QJsdhdLbsN16Rdgvme7wdejhgQroyPVULnVrUXfLDkhR6/FAhLNXm7ipJlpDzgzME7IY=
+	t=1772343438; cv=none; b=Do8MXEHkMdCvuO1OWmCZeNI8ZpyzPLrbxpDUzBXxQ99P5TCL0gDsfk/z3/t1is9ouiUjAea3JbPCla6BzJDQ5XnGJI7Fx6qIStL4F002e7W8OuobNwCKvsIyBJ2Qjt1SXQ2xFOd0MJsSc2V2nrFtH16BYzipwDeMb/ZuL+atD3c=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1772328746; c=relaxed/simple;
-	bh=n4YZnLbkZb5vwpDS42QNlc2n5q56cQeEUVkF8yCFzdQ=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version:Content-Type; b=Yb6GUTZVWZ/N2q0VncJ1bNki+cXFgOaUnn2fQ2NQQQbMsqfZKvof6yZn5rhTuMcvV7RB1AonYx2qPkzmOqRRnP6AN2shKmXRhhx69mc1sy8OKjj+Pl86BTc/JcJbvBQAgg7Weok8lEkd/vYl1ikVN8ws7HvWlMyZvgS+sKwu0Uo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=cdv2KFpE; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1772343438; c=relaxed/simple;
+	bh=kiKdHh+ZxRNc2gseJYOvz1eRq5XLvY8qPrsAAefhiqU=;
+	h=From:To:Subject:Date:Message-ID:In-Reply-To:References:
+	 Content-Type:MIME-Version; b=klKf8Yg7cUAjek18Msd57DsuBOr3Y7OE/NPllKzq4rLH81xeZjTPAlUsUosk4/FM1HrYLLb7oTRE6VgVb/OTk0xP9JprlFuf85LFjfddDpg5HVwy3uchp4F2XHsdxo3SYXnZrr+mLnnk2LDMnDMka8i3QZFufwewp7twdYMt7p8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=X41wQ67O; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="cdv2KFpE"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 7435AC19421;
-	Sun,  1 Mar 2026 01:32:25 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="X41wQ67O"
+Received: by smtp.kernel.org (Postfix) with ESMTPS id 9B795C2BC87
+	for <platform-driver-x86@vger.kernel.org>; Sun,  1 Mar 2026 05:37:17 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1772328745;
-	bh=n4YZnLbkZb5vwpDS42QNlc2n5q56cQeEUVkF8yCFzdQ=;
-	h=From:To:Cc:Subject:Date:From;
-	b=cdv2KFpEqpyJnnv8ppKwnW2AkxomROHOMHXlQaz72S5NIpnR3wHP89VMGn/2KHQJ9
-	 pqNu3nXc2yP4j7AVYComMUdu9WftAhRyq2xFE9DCZ2CTF1C4lSb7Oq1k/NIjgUJE+C
-	 wipDDLuZwlbiyECRphyxBovx3OTGz5JJr4lN9PAWfv/vbGtHdMgmL65I5rfYc/j+cx
-	 5i7JE0lKnqUJ0YfLpQUw5HYM+xPThLcZ3sfdAVd+bnXjWxbywfKirp9G3OKzkSi9hP
-	 Dkiad8MJayK1TzJv8kX4nHyeUWOeqaAxPdxCF9h82YLmwEpzcGy5+lJbFz6dnhDKZe
-	 YOurTSK7zh8Xg==
-From: Sasha Levin <sashal@kernel.org>
-To: stable@vger.kernel.org,
-	srinivas.pandruvada@linux.intel.com
-Cc: =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>,
-	platform-driver-x86@vger.kernel.org
-Subject: FAILED: Patch "platform/x86: ISST: Store and restore all domains data" failed to apply to 6.6-stable tree
-Date: Sat, 28 Feb 2026 20:32:23 -0500
-Message-ID: <20260301013224.1691332-1-sashal@kernel.org>
-X-Mailer: git-send-email 2.51.0
+	s=k20201202; t=1772343437;
+	bh=kiKdHh+ZxRNc2gseJYOvz1eRq5XLvY8qPrsAAefhiqU=;
+	h=From:To:Subject:Date:In-Reply-To:References:From;
+	b=X41wQ67OfkQVd5RzX22uBa/PZQuLDRdIj3MODr3hIpaYknQ37rWVZ7R/TT/Ie+YOB
+	 OuGsiP2hanMXMmUS1xUxTXq3vaXKP05dQWzmZmlsGcpJFrOEb0Hi7M6lWnMecUqWQB
+	 j05Gt7tCA5gc1sNY6ZfeBQYhHYBMo49aQcMelcuVtjI32G+O6ATDgwtC4s7/ftQXUM
+	 GccEEsWeRRKHAXKVJXx8jwAE8bSPOC/7+qDTC/4dPk57ZJypxoSLC4F6/QSZB690f/
+	 5GolahT4mkOBHB9tx+0dIGwfqJfL0WyLpQyOH/71su+SjlqvMVPnfq4j3FIHQnhrjM
+	 oKc5kC8eyU70Q==
+Received: by aws-us-west-2-korg-bugzilla-1.web.codeaurora.org (Postfix, from userid 48)
+	id 88DE5C3279F; Sun,  1 Mar 2026 05:37:17 +0000 (UTC)
+From: bugzilla-daemon@kernel.org
+To: platform-driver-x86@vger.kernel.org
+Subject: =?UTF-8?B?W0J1ZyAyMjExNTBdIFtCVUddIGhwLXdtaTogT01FTiAxNi1rMHh4?=
+ =?UTF-8?B?eCAoYm9hcmQgOEE0RCkg4oCTIHZlcmlmaWNhdGlvbiBvZiBwbGF0Zm9ybV9w?=
+ =?UTF-8?B?cm9maWxlIGFuZCBFQyByZWdpc3RlciBiZWhhdmlvcg==?=
+Date: Sun, 01 Mar 2026 05:37:17 +0000
+X-Bugzilla-Reason: None
+X-Bugzilla-Type: changed
+X-Bugzilla-Watch-Reason: AssignedTo drivers_platform_x86@kernel-bugs.osdl.org
+X-Bugzilla-Product: Drivers
+X-Bugzilla-Component: Platform_x86
+X-Bugzilla-Version: 2.5
+X-Bugzilla-Keywords: 
+X-Bugzilla-Severity: low
+X-Bugzilla-Who: krishna.chomal108@gmail.com
+X-Bugzilla-Status: NEW
+X-Bugzilla-Resolution: 
+X-Bugzilla-Priority: P3
+X-Bugzilla-Assigned-To: drivers_platform_x86@kernel-bugs.osdl.org
+X-Bugzilla-Flags: 
+X-Bugzilla-Changed-Fields: 
+Message-ID: <bug-221150-215701-UHET8YZmOV@https.bugzilla.kernel.org/>
+In-Reply-To: <bug-221150-215701@https.bugzilla.kernel.org/>
+References: <bug-221150-215701@https.bugzilla.kernel.org/>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+X-Bugzilla-URL: https://bugzilla.kernel.org/
+Auto-Submitted: auto-generated
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-Patchwork-Hint: ignore
-X-stable: review
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
 
-The patch below does not apply to the 6.6-stable tree.
-If someone wants it applied there, or to any other stable or longterm
-tree, then please email the backport, including the original git commit
-id to <stable@vger.kernel.org>.
+https://bugzilla.kernel.org/show_bug.cgi?id=3D221150
 
-Thanks,
-Sasha
+--- Comment #6 from Krishna Chomal (krishna.chomal108@gmail.com) ---
+Glad to hear everything is working as intended.
 
------------------- original commit in Linus's tree ------------------
+I will send this patch to the LKML soon, could you please share your full n=
+ame
+and email ID which you would like to be shown in the patch's Reported-by and
+Tested-by tags?
 
-From dc7901b5a1563a9c9eb29b3b0b0dac3162065cd8 Mon Sep 17 00:00:00 2001
-From: Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>
-Date: Tue, 6 Jan 2026 22:02:56 -0800
-Subject: [PATCH] platform/x86: ISST: Store and restore all domains data
-MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+--=20
+You may reply to this email to add a comment.
 
-The suspend/resume callbacks currently only store and restore the
-configuration for power domain 0. However, other power domains may also
-have modified configurations that need to be preserved across suspend/
-resume cycles.
-
-Extend the store/restore functionality to handle all power domains.
-
-Fixes: 91576acab020 ("platform/x86: ISST: Add suspend/resume callbacks")
-Signed-off-by: Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>
-CC: stable@vger.kernel.org
-Link: https://patch.msgid.link/20260107060256.1634188-3-srinivas.pandruvada@linux.intel.com
-Reviewed-by: Ilpo Järvinen <ilpo.jarvinen@linux.intel.com>
-Signed-off-by: Ilpo Järvinen <ilpo.jarvinen@linux.intel.com>
----
- .../intel/speed_select_if/isst_tpmi_core.c    | 54 +++++++++++--------
- 1 file changed, 33 insertions(+), 21 deletions(-)
-
-diff --git a/drivers/platform/x86/intel/speed_select_if/isst_tpmi_core.c b/drivers/platform/x86/intel/speed_select_if/isst_tpmi_core.c
-index f587709ddd473..13b11c3a2ec4e 100644
---- a/drivers/platform/x86/intel/speed_select_if/isst_tpmi_core.c
-+++ b/drivers/platform/x86/intel/speed_select_if/isst_tpmi_core.c
-@@ -1723,55 +1723,67 @@ EXPORT_SYMBOL_NS_GPL(tpmi_sst_dev_remove, "INTEL_TPMI_SST");
- void tpmi_sst_dev_suspend(struct auxiliary_device *auxdev)
- {
- 	struct tpmi_sst_struct *tpmi_sst = auxiliary_get_drvdata(auxdev);
--	struct tpmi_per_power_domain_info *power_domain_info;
-+	struct tpmi_per_power_domain_info *power_domain_info, *pd_info;
- 	struct oobmsm_plat_info *plat_info;
- 	void __iomem *cp_base;
-+	int num_resources, i;
- 
- 	plat_info = tpmi_get_platform_data(auxdev);
- 	if (!plat_info)
- 		return;
- 
- 	power_domain_info = tpmi_sst->power_domain_info[plat_info->partition];
-+	num_resources = tpmi_sst->number_of_power_domains[plat_info->partition];
- 
--	cp_base = power_domain_info->sst_base + power_domain_info->sst_header.cp_offset;
--	power_domain_info->saved_sst_cp_control = readq(cp_base + SST_CP_CONTROL_OFFSET);
--
--	memcpy_fromio(power_domain_info->saved_clos_configs, cp_base + SST_CLOS_CONFIG_0_OFFSET,
--		      sizeof(power_domain_info->saved_clos_configs));
-+	for (i = 0; i < num_resources; i++) {
-+		pd_info = &power_domain_info[i];
-+		if (!pd_info || !pd_info->sst_base)
-+			continue;
- 
--	memcpy_fromio(power_domain_info->saved_clos_assocs, cp_base + SST_CLOS_ASSOC_0_OFFSET,
--		      sizeof(power_domain_info->saved_clos_assocs));
-+		cp_base = pd_info->sst_base + pd_info->sst_header.cp_offset;
-+		pd_info->saved_sst_cp_control = readq(cp_base + SST_CP_CONTROL_OFFSET);
-+		memcpy_fromio(pd_info->saved_clos_configs, cp_base + SST_CLOS_CONFIG_0_OFFSET,
-+			      sizeof(pd_info->saved_clos_configs));
-+		memcpy_fromio(pd_info->saved_clos_assocs, cp_base + SST_CLOS_ASSOC_0_OFFSET,
-+			      sizeof(pd_info->saved_clos_assocs));
- 
--	power_domain_info->saved_pp_control = readq(power_domain_info->sst_base +
--						    power_domain_info->sst_header.pp_offset +
--						    SST_PP_CONTROL_OFFSET);
-+		pd_info->saved_pp_control = readq(pd_info->sst_base +
-+						  pd_info->sst_header.pp_offset +
-+						  SST_PP_CONTROL_OFFSET);
-+	}
- }
- EXPORT_SYMBOL_NS_GPL(tpmi_sst_dev_suspend, "INTEL_TPMI_SST");
- 
- void tpmi_sst_dev_resume(struct auxiliary_device *auxdev)
- {
- 	struct tpmi_sst_struct *tpmi_sst = auxiliary_get_drvdata(auxdev);
--	struct tpmi_per_power_domain_info *power_domain_info;
-+	struct tpmi_per_power_domain_info *power_domain_info, *pd_info;
- 	struct oobmsm_plat_info *plat_info;
- 	void __iomem *cp_base;
-+	int num_resources, i;
- 
- 	plat_info = tpmi_get_platform_data(auxdev);
- 	if (!plat_info)
- 		return;
- 
- 	power_domain_info = tpmi_sst->power_domain_info[plat_info->partition];
-+	num_resources = tpmi_sst->number_of_power_domains[plat_info->partition];
- 
--	cp_base = power_domain_info->sst_base + power_domain_info->sst_header.cp_offset;
--	writeq(power_domain_info->saved_sst_cp_control, cp_base + SST_CP_CONTROL_OFFSET);
--
--	memcpy_toio(cp_base + SST_CLOS_CONFIG_0_OFFSET, power_domain_info->saved_clos_configs,
--		    sizeof(power_domain_info->saved_clos_configs));
-+	for (i = 0; i < num_resources; i++) {
-+		pd_info = &power_domain_info[i];
-+		if (!pd_info || !pd_info->sst_base)
-+			continue;
- 
--	memcpy_toio(cp_base + SST_CLOS_ASSOC_0_OFFSET, power_domain_info->saved_clos_assocs,
--		    sizeof(power_domain_info->saved_clos_assocs));
-+		cp_base = pd_info->sst_base + pd_info->sst_header.cp_offset;
-+		writeq(pd_info->saved_sst_cp_control, cp_base + SST_CP_CONTROL_OFFSET);
-+		memcpy_toio(cp_base + SST_CLOS_CONFIG_0_OFFSET, pd_info->saved_clos_configs,
-+			    sizeof(pd_info->saved_clos_configs));
-+		memcpy_toio(cp_base + SST_CLOS_ASSOC_0_OFFSET, pd_info->saved_clos_assocs,
-+			    sizeof(pd_info->saved_clos_assocs));
- 
--	writeq(power_domain_info->saved_pp_control, power_domain_info->sst_base +
--				power_domain_info->sst_header.pp_offset + SST_PP_CONTROL_OFFSET);
-+		writeq(pd_info->saved_pp_control, power_domain_info->sst_base +
-+		       pd_info->sst_header.pp_offset + SST_PP_CONTROL_OFFSET);
-+	}
- }
- EXPORT_SYMBOL_NS_GPL(tpmi_sst_dev_resume, "INTEL_TPMI_SST");
- 
--- 
-2.51.0
-
-
-
-
+You are receiving this mail because:
+You are watching the assignee of the bug.=
