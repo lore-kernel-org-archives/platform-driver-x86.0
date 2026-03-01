@@ -1,38 +1,38 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D12752641CA;
-	Sun,  1 Mar 2026 01:20:42 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9619F2BD0B;
+	Sun,  1 Mar 2026 01:21:01 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1772328042; cv=none; b=dmYT+yyz6C1bP7QoaoKmEd/g6k3y/+bHqw0/OVfR5PVkBz8lkf7/dnBttQ4NqNA/PNi4ycVCqQ/ePxSdElpAWxiw/sA8jCe0dTa6Jrhmvdqv8cssS+GKQCdHMPAgT20r7o7agjSAy77aOwxNbiKRhPuaL3srY+YzffQDvZbIuX4=
+	t=1772328061; cv=none; b=ccdm3+ZSzOBFibwlf0791fE+fukW6s/biPFQ8lnZPempxbBNeQzKQBd4xDp+mT7+Kh1mFly5iZjqwojaviLExEs09y3kJgmFz6bQc25RFYuK5VlyQIZy9hnSmSnzbziq4T0kzkp3iwl16QgNVpM7kqK9mQ0zFbSFZt1JhpbU1b0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1772328042; c=relaxed/simple;
-	bh=zzJqnElXXcmJLakDYERjjwoeHefYzGfayTg8nov3g/4=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version:Content-Type; b=e8h2mMcZwtEocCDcadEklZWSM9CU3qujpTCbG22ZAZjyn7J/zSltAfStfQH4ob8QXzw7AO5VXwKRVnMIOZvRaq4+y1n/FWKN6Ux9hp+zJaWl2+4jVOEOsUVxMU1TM7wA9tnofxWRmsqM8sBnRlIoonWJueuejkukM0KlE3ZOuZA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=mIyYKPm8; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1772328061; c=relaxed/simple;
+	bh=QPBUOxooTXjc7BFLpaWWMhkY29tmLr0IGVWr7sH6sUo=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version:Content-Type; b=iEoMTNfSYsviAjJBYLuP/DmjdW2X+eOd/fL1XZA0uV4Zyj2x4lmAOhRXnYijuBD05vZKpqDATcxiUnEGtgpIuFMfZTXYr2UrJ4P1q1vhMNa2zL3UQNFvv/z2Oyp1asmal1e6v+WLIscwR6k/lI1QhLqBaX7P5RsLR5CzUCbOA3c=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=t7NmNbb6; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="mIyYKPm8"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 4270BC19421;
-	Sun,  1 Mar 2026 01:20:42 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="t7NmNbb6"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 062FCC19421;
+	Sun,  1 Mar 2026 01:21:00 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1772328042;
-	bh=zzJqnElXXcmJLakDYERjjwoeHefYzGfayTg8nov3g/4=;
+	s=k20201202; t=1772328061;
+	bh=QPBUOxooTXjc7BFLpaWWMhkY29tmLr0IGVWr7sH6sUo=;
 	h=From:To:Cc:Subject:Date:From;
-	b=mIyYKPm8K5DK9VGNNysy6/5oVV/+6zFbn5tohbf4ZXjC/vdLF/po0mTznweqSQKtU
-	 2UDqwoKozWkHTDogiJl2/mFkwC6t9y25iGNdl9gaCuY96bJkW6Us1CO1gpgZ6ZMuyv
-	 wA5GOVOtFjGrn7Fd+AAVkBiTrFgEvyaTSNCzSbXA1GnbA12YwCOF3reTmgWtWZU0S5
-	 KZIHxKM5NLo7XnjiiQP6fZRd9Q1VDAhAe4FSQsOKI22XZTMdVSEWDvft3vcKsyAYPY
-	 Xxd95aiBsq6cIPS6fgtl6hXwLtO0fQmensbUp6vH9mZ0rfDNBzXp8G71qZewVO7TVG
-	 2UdF02QFpPsaw==
+	b=t7NmNbb6TC1yzLGa+4P1spj1mgjrNyKdgoE/n9B5kj74oA605NewiJmlOF1hYEnlE
+	 yPxQkOwhb5cB6q0BMngHDUhwMFnFxSAvmvkhkW0F5kwr1rK2tUaGSOjsubYtoP8TGB
+	 i+UmC8TCvIIAqjsVchxBA0kSWfOz4M9QZeiTbEjsiLb33aVPDZ7DF/yqKZ5GDre0oL
+	 s0YTMXW1KuVXAapbf6NOl5Vas6sbaVzkGw5WpenvW47vulwkWABCFX5n7rG7vl+mju
+	 Qi2qubetOs+tcWGC9kpv6YK62tkMMjQsaf70QxHAngM/g+lXZU1NkAthMqFQ03HMQa
+	 sZPHvCZmRTPfg==
 From: Sasha Levin <sashal@kernel.org>
 To: stable@vger.kernel.org,
 	srinivas.pandruvada@linux.intel.com
 Cc: =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>,
 	platform-driver-x86@vger.kernel.org
-Subject: FAILED: Patch "platform/x86: ISST: Add missing write block check" failed to apply to 6.12-stable tree
-Date: Sat, 28 Feb 2026 20:20:40 -0500
-Message-ID: <20260301012041.1676316-1-sashal@kernel.org>
+Subject: FAILED: Patch "platform/x86: ISST: Store and restore all domains data" failed to apply to 6.12-stable tree
+Date: Sat, 28 Feb 2026 20:20:59 -0500
+Message-ID: <20260301012059.1676781-1-sashal@kernel.org>
 X-Mailer: git-send-email 2.51.0
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
@@ -55,41 +55,124 @@ Sasha
 
 ------------------ original commit in Linus's tree ------------------
 
-From 0e5aef2795008c80c515f6fa04e377c6e5715958 Mon Sep 17 00:00:00 2001
+From dc7901b5a1563a9c9eb29b3b0b0dac3162065cd8 Mon Sep 17 00:00:00 2001
 From: Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>
-Date: Tue, 6 Jan 2026 22:02:55 -0800
-Subject: [PATCH] platform/x86: ISST: Add missing write block check
+Date: Tue, 6 Jan 2026 22:02:56 -0800
+Subject: [PATCH] platform/x86: ISST: Store and restore all domains data
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 
-If writes are blocked, then return error during SST-CP enable command.
-Add missing write block check in this code path.
+The suspend/resume callbacks currently only store and restore the
+configuration for power domain 0. However, other power domains may also
+have modified configurations that need to be preserved across suspend/
+resume cycles.
 
-Fixes: 8bed9ff7dbcc ("platform/x86: ISST: Process read/write blocked feature status")
+Extend the store/restore functionality to handle all power domains.
+
+Fixes: 91576acab020 ("platform/x86: ISST: Add suspend/resume callbacks")
 Signed-off-by: Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>
-Cc: stable@vger.kernel.org
-Link: https://patch.msgid.link/20260107060256.1634188-2-srinivas.pandruvada@linux.intel.com
+CC: stable@vger.kernel.org
+Link: https://patch.msgid.link/20260107060256.1634188-3-srinivas.pandruvada@linux.intel.com
 Reviewed-by: Ilpo Järvinen <ilpo.jarvinen@linux.intel.com>
 Signed-off-by: Ilpo Järvinen <ilpo.jarvinen@linux.intel.com>
 ---
- drivers/platform/x86/intel/speed_select_if/isst_tpmi_core.c | 3 +++
- 1 file changed, 3 insertions(+)
+ .../intel/speed_select_if/isst_tpmi_core.c    | 54 +++++++++++--------
+ 1 file changed, 33 insertions(+), 21 deletions(-)
 
 diff --git a/drivers/platform/x86/intel/speed_select_if/isst_tpmi_core.c b/drivers/platform/x86/intel/speed_select_if/isst_tpmi_core.c
-index 34bff2f65a835..f587709ddd473 100644
+index f587709ddd473..13b11c3a2ec4e 100644
 --- a/drivers/platform/x86/intel/speed_select_if/isst_tpmi_core.c
 +++ b/drivers/platform/x86/intel/speed_select_if/isst_tpmi_core.c
-@@ -612,6 +612,9 @@ static long isst_if_core_power_state(void __user *argp)
- 		return -EINVAL;
+@@ -1723,55 +1723,67 @@ EXPORT_SYMBOL_NS_GPL(tpmi_sst_dev_remove, "INTEL_TPMI_SST");
+ void tpmi_sst_dev_suspend(struct auxiliary_device *auxdev)
+ {
+ 	struct tpmi_sst_struct *tpmi_sst = auxiliary_get_drvdata(auxdev);
+-	struct tpmi_per_power_domain_info *power_domain_info;
++	struct tpmi_per_power_domain_info *power_domain_info, *pd_info;
+ 	struct oobmsm_plat_info *plat_info;
+ 	void __iomem *cp_base;
++	int num_resources, i;
  
- 	if (core_power.get_set) {
-+		if (power_domain_info->write_blocked)
-+			return -EPERM;
-+
- 		_write_cp_info("cp_enable", core_power.enable, SST_CP_CONTROL_OFFSET,
- 			       SST_CP_ENABLE_START, SST_CP_ENABLE_WIDTH, SST_MUL_FACTOR_NONE)
- 		_write_cp_info("cp_prio_type", core_power.priority_type, SST_CP_CONTROL_OFFSET,
+ 	plat_info = tpmi_get_platform_data(auxdev);
+ 	if (!plat_info)
+ 		return;
+ 
+ 	power_domain_info = tpmi_sst->power_domain_info[plat_info->partition];
++	num_resources = tpmi_sst->number_of_power_domains[plat_info->partition];
+ 
+-	cp_base = power_domain_info->sst_base + power_domain_info->sst_header.cp_offset;
+-	power_domain_info->saved_sst_cp_control = readq(cp_base + SST_CP_CONTROL_OFFSET);
+-
+-	memcpy_fromio(power_domain_info->saved_clos_configs, cp_base + SST_CLOS_CONFIG_0_OFFSET,
+-		      sizeof(power_domain_info->saved_clos_configs));
++	for (i = 0; i < num_resources; i++) {
++		pd_info = &power_domain_info[i];
++		if (!pd_info || !pd_info->sst_base)
++			continue;
+ 
+-	memcpy_fromio(power_domain_info->saved_clos_assocs, cp_base + SST_CLOS_ASSOC_0_OFFSET,
+-		      sizeof(power_domain_info->saved_clos_assocs));
++		cp_base = pd_info->sst_base + pd_info->sst_header.cp_offset;
++		pd_info->saved_sst_cp_control = readq(cp_base + SST_CP_CONTROL_OFFSET);
++		memcpy_fromio(pd_info->saved_clos_configs, cp_base + SST_CLOS_CONFIG_0_OFFSET,
++			      sizeof(pd_info->saved_clos_configs));
++		memcpy_fromio(pd_info->saved_clos_assocs, cp_base + SST_CLOS_ASSOC_0_OFFSET,
++			      sizeof(pd_info->saved_clos_assocs));
+ 
+-	power_domain_info->saved_pp_control = readq(power_domain_info->sst_base +
+-						    power_domain_info->sst_header.pp_offset +
+-						    SST_PP_CONTROL_OFFSET);
++		pd_info->saved_pp_control = readq(pd_info->sst_base +
++						  pd_info->sst_header.pp_offset +
++						  SST_PP_CONTROL_OFFSET);
++	}
+ }
+ EXPORT_SYMBOL_NS_GPL(tpmi_sst_dev_suspend, "INTEL_TPMI_SST");
+ 
+ void tpmi_sst_dev_resume(struct auxiliary_device *auxdev)
+ {
+ 	struct tpmi_sst_struct *tpmi_sst = auxiliary_get_drvdata(auxdev);
+-	struct tpmi_per_power_domain_info *power_domain_info;
++	struct tpmi_per_power_domain_info *power_domain_info, *pd_info;
+ 	struct oobmsm_plat_info *plat_info;
+ 	void __iomem *cp_base;
++	int num_resources, i;
+ 
+ 	plat_info = tpmi_get_platform_data(auxdev);
+ 	if (!plat_info)
+ 		return;
+ 
+ 	power_domain_info = tpmi_sst->power_domain_info[plat_info->partition];
++	num_resources = tpmi_sst->number_of_power_domains[plat_info->partition];
+ 
+-	cp_base = power_domain_info->sst_base + power_domain_info->sst_header.cp_offset;
+-	writeq(power_domain_info->saved_sst_cp_control, cp_base + SST_CP_CONTROL_OFFSET);
+-
+-	memcpy_toio(cp_base + SST_CLOS_CONFIG_0_OFFSET, power_domain_info->saved_clos_configs,
+-		    sizeof(power_domain_info->saved_clos_configs));
++	for (i = 0; i < num_resources; i++) {
++		pd_info = &power_domain_info[i];
++		if (!pd_info || !pd_info->sst_base)
++			continue;
+ 
+-	memcpy_toio(cp_base + SST_CLOS_ASSOC_0_OFFSET, power_domain_info->saved_clos_assocs,
+-		    sizeof(power_domain_info->saved_clos_assocs));
++		cp_base = pd_info->sst_base + pd_info->sst_header.cp_offset;
++		writeq(pd_info->saved_sst_cp_control, cp_base + SST_CP_CONTROL_OFFSET);
++		memcpy_toio(cp_base + SST_CLOS_CONFIG_0_OFFSET, pd_info->saved_clos_configs,
++			    sizeof(pd_info->saved_clos_configs));
++		memcpy_toio(cp_base + SST_CLOS_ASSOC_0_OFFSET, pd_info->saved_clos_assocs,
++			    sizeof(pd_info->saved_clos_assocs));
+ 
+-	writeq(power_domain_info->saved_pp_control, power_domain_info->sst_base +
+-				power_domain_info->sst_header.pp_offset + SST_PP_CONTROL_OFFSET);
++		writeq(pd_info->saved_pp_control, power_domain_info->sst_base +
++		       pd_info->sst_header.pp_offset + SST_PP_CONTROL_OFFSET);
++	}
+ }
+ EXPORT_SYMBOL_NS_GPL(tpmi_sst_dev_resume, "INTEL_TPMI_SST");
+ 
 -- 
 2.51.0
 
