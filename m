@@ -1,207 +1,228 @@
-Received: from SN4PR2101CU001.outbound.protection.outlook.com (mail-southcentralusazon11012071.outbound.protection.outlook.com [40.93.195.71])
+Received: from mout.gmx.net (mout.gmx.net [212.227.17.20])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 242823290C9
-	for <platform-driver-x86@vger.kernel.org>; Sun,  1 Mar 2026 13:12:09 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.93.195.71
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1772370731; cv=fail; b=rIjuxdOw6Z+pSdcdoezT8OTzeIfsw2OIny3Kt820IVv+2+X1I6Wa2yEddSoqykCK+H4yb8Y0tt6R3p2aLTJzwqMkcNbrA/HBvoLXJF4XbcPuAmLamKyRDMKy4dprpWnRH81ZY1LI/TLjEHJ5u0jH3dr33I8dEP6P7hSgoreUjaQ=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1772370731; c=relaxed/simple;
-	bh=Oqe7G/zzOokumAVgsZGLMYKSF/RUtPwLGqMW/kBASwc=;
-	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=kRux9mUE9RKKxzPD5TyqUAoAKVVmY1AJ9TzFWDOE5AGo4UsQ/20WoXFZ8/Y0Yr+cP9kq6+eRKh87GEURaJXD8MLo7ajY8o47oRb9ZKSpOWG3c+n+UGDPGTvvn+CWcfKCGP+ubtjjJEUDHuLiWSovyzorOxBT+amdziGRBBPMbus=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=3V2eGBmf; arc=fail smtp.client-ip=40.93.195.71
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com
-Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=amd.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9A46932720C;
+	Sun,  1 Mar 2026 13:15:58 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=212.227.17.20
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1772370960; cv=none; b=Nf39dypZo4MVxwD/E9QZ2fGSwo4zR47dQBW4F80wRa2q+7kd7NXK3IeP8Jvpoy3wlBJETyn2Zc89wDcmtTElJd13R5UljziifBTuosSv3ZO37aPSu0lHFAgwK59hSOyD1PDCz3xXKfOUIl5Yas4sDoYHqqPuBBtLgybXc5BALdQ=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1772370960; c=relaxed/simple;
+	bh=wCIEqpunTHqbzTcZgYfR+NuNXqG/eQTS5P8SoM0NNYs=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=HhVrw3EfCNePui5iW3jQNr6g3zxXG1ePiuo9T6LVMbXz6ioTggjJFKA4OheVhovyrioAM8bWvSnhiZm2jvIZxDEkKyTbwT2QO+4OudHxqVAoo01/UrRvuxCHhBFXY3Q28lxjXa9zrsJbDUWwofYqk+ihUy+PaoJSpNFox6Ro8Eg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gmx.de; spf=pass smtp.mailfrom=gmx.de; dkim=pass (2048-bit key) header.d=gmx.de header.i=w_armin@gmx.de header.b=JsRTeeJ+; arc=none smtp.client-ip=212.227.17.20
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gmx.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmx.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="3V2eGBmf"
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=wrGNwQRoTfevjDM0z+G6WTt6EIsg7fRR2Eq2Vsa9RXSMN82PD5lmldifmJRNuvUf8wOxgP9RJ17jzEVIYcwEw4iRH3D4MuWAmFEoP7R6Xgo63X2FipzGuYJHjZW9ZuEcGbU21ZecJr3ib+XriDROupj/PXkrbBAnszPBHgZArjdAQ0FxsDGZMGC5A3zecTgiamLL1Hrk4rH065VTOdz4Narq5SW7hOiT9YZSJakarY69qqW5x+JtDuDYsnvkTXZItdxsMfBc2s46qzzT8WbqIR5YueK19UEEa21SZQ4bvhyiZvwTK2LjoG+0YvV+CYwp9gEPvkfCXdAvZJ9OTXVjKQ==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=3ky2C8Eu4fsFYiw9UbCzN1wkTVrfZfuX9sZII8iGgtc=;
- b=wzJUyjvRPk4gwT3Sw7dLCWgmwFr31kzMumieJuP2T/fC3rV+PVDQI0zQWO/eET7qH5lNg++L5jHN8RSSAMwUU4md37S2HKEx5Nt2ewqljnS7no3IpDdmspd/LnplRbhN3cSBMQXTTZpQfYyEQDVtyOvSim8if64/zxbw/YmpcIik3bWkNo0O3gE41Zu9PkjgxTQ8PXTqY2zIyeNsVzMSGG9m2NRUKvbpD8pyp1lkQXFTV354u1ZJUb38RKaIBTjDH0TaZxE0NmCyPkXuGOix4iRNwEKLpf4LRU1+MMZgNuTjEerTONu50mYp/6O5oHEk+tDaVwDmYMQFwjgb2hSDCA==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
- 165.204.84.17) smtp.rcpttodomain=kernel.org smtp.mailfrom=amd.com; dmarc=pass
- (p=quarantine sp=quarantine pct=100) action=none header.from=amd.com;
- dkim=none (message not signed); arc=none (0)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=3ky2C8Eu4fsFYiw9UbCzN1wkTVrfZfuX9sZII8iGgtc=;
- b=3V2eGBmfNOJzd80T1kyQhG7dJZS86W50U1ozyV5PVsLZr6tAvs4rs7OULKkFbGflE/C8L/DsUUDkcDlF23+rN410/v1KQS26TcbB2uj1PC0QPDrPX3YexXdcUymQKPZA4aqPLikRuJo6WmXEi23+lqjDNA0i/3tU6IWlc6Hw8YY=
-Received: from BN9PR03CA0097.namprd03.prod.outlook.com (2603:10b6:408:fd::12)
- by DS0PR12MB6632.namprd12.prod.outlook.com (2603:10b6:8:d0::9) with Microsoft
- SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.9654.19; Sun, 1 Mar 2026 13:12:06 +0000
-Received: from BN2PEPF00004FBD.namprd04.prod.outlook.com
- (2603:10b6:408:fd:cafe::6f) by BN9PR03CA0097.outlook.office365.com
- (2603:10b6:408:fd::12) with Microsoft SMTP Server (version=TLS1_3,
- cipher=TLS_AES_256_GCM_SHA384) id 15.20.9654.18 via Frontend Transport; Sun,
- 1 Mar 2026 13:12:04 +0000
-X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 165.204.84.17)
- smtp.mailfrom=amd.com; dkim=none (message not signed)
- header.d=none;dmarc=pass action=none header.from=amd.com;
-Received-SPF: Pass (protection.outlook.com: domain of amd.com designates
- 165.204.84.17 as permitted sender) receiver=protection.outlook.com;
- client-ip=165.204.84.17; helo=satlexmb07.amd.com; pr=C
-Received: from satlexmb07.amd.com (165.204.84.17) by
- BN2PEPF00004FBD.mail.protection.outlook.com (10.167.243.183) with Microsoft
- SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.9654.16 via Frontend Transport; Sun, 1 Mar 2026 13:12:06 +0000
-Received: from airavat.amd.com (10.180.168.240) by satlexmb07.amd.com
- (10.181.42.216) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.2562.17; Sun, 1 Mar
- 2026 07:12:03 -0600
-From: Shyam Sundar S K <Shyam-sundar.S-k@amd.com>
-To: <hansg@kernel.org>, <ilpo.jarvinen@linux.intel.com>
-CC: <platform-driver-x86@vger.kernel.org>, <mario.limonciello@amd.com>,
-	<Yijun.Shen@Dell.com>, <Sanket.Goswami@amd.com>, Shyam Sundar S K
-	<Shyam-sundar.S-k@amd.com>
-Subject: [PATCH v3 7/7] Documentation/ABI: add testing entry for AMD PMF misc device interface
-Date: Sun, 1 Mar 2026 18:41:24 +0530
-Message-ID: <20260301131124.1370565-8-Shyam-sundar.S-k@amd.com>
-X-Mailer: git-send-email 2.34.1
-In-Reply-To: <20260301131124.1370565-1-Shyam-sundar.S-k@amd.com>
-References: <20260301131124.1370565-1-Shyam-sundar.S-k@amd.com>
+	dkim=pass (2048-bit key) header.d=gmx.de header.i=w_armin@gmx.de header.b="JsRTeeJ+"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=gmx.de;
+	s=s31663417; t=1772370956; x=1772975756; i=w_armin@gmx.de;
+	bh=E6hOSKipa291WMGCf2p3nZ3JujAHO5gZ/H/n/r1wHQk=;
+	h=X-UI-Sender-Class:Message-ID:Date:MIME-Version:Subject:To:Cc:
+	 References:From:In-Reply-To:Content-Type:
+	 Content-Transfer-Encoding:cc:content-transfer-encoding:
+	 content-type:date:from:message-id:mime-version:reply-to:subject:
+	 to;
+	b=JsRTeeJ+L1oaLz3sluxM01E1/3CaQE3eacOUZhcaLl+lFWfkaV+pwG1tTIb4mY76
+	 yiiztlKCLY2cQTjuPSKk4g0Yc0mbcm2N8yy87q/RK/qCzAISlf28oVnmtMnc+YtDD
+	 2OHpv2lKUFCMxQ766LIKuOtKUXVGKATAfoKYabxJmsM4GQLOBJ8gGVX727cfHgA8z
+	 kfE2VKGJjXFeFG62YI7aIyy+JfVbIr0UInKe9GKn05wQoZM5rD5NxZuucsRrylimX
+	 PprTVBcCLcbGS+3PeWfN0y+qDi/gdlaebUk+UW1L+9+PPmjx+sCQgBafBTfmPSI5Y
+	 27tMYd3ECwRoudwexw==
+X-UI-Sender-Class: 724b4f7f-cbec-4199-ad4e-598c01a50d3a
+Received: from client.hidden.invalid by mail.gmx.net (mrgmx104
+ [212.227.17.168]) with ESMTPSA (Nemesis) id 1McH5Q-1vOiLA2M9M-00oke9; Sun, 01
+ Mar 2026 14:15:56 +0100
+Message-ID: <5f492118-cf3d-461e-bad2-fb93504464c4@gmx.de>
+Date: Sun, 1 Mar 2026 14:15:55 +0100
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-ClientProxiedBy: satlexmb07.amd.com (10.181.42.216) To satlexmb07.amd.com
- (10.181.42.216)
-X-EOPAttributedMessage: 0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: BN2PEPF00004FBD:EE_|DS0PR12MB6632:EE_
-X-MS-Office365-Filtering-Correlation-Id: f269ed37-b197-4d97-f197-08de77942320
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam:
-	BCL:0;ARA:13230040|1800799024|82310400026|376014|36860700013;
-X-Microsoft-Antispam-Message-Info:
-	bLNaAXMqvVViYXNZmWdZBKt5S3D7O2pKcmz6QbRtI8xWR8D95wr2rcYvaDYtfUtsI+QrdOpkIo7mLgFoBe3t8DagHt+4Iq+lQiTo9OJOFz2qGr4tp0uZFMUYvs1Hpzc9q9sR1qntZ+jUAPYCNm7VNn2ICJOIIcuMeeI7dSWU04on2QyLy6xLcnRTPDcVTA60xVYCQa/3O2/uxmCHNcq1+I0SF4geXdWmFm7s3FvmNjhPpk6SrhCsPpPyNl9I5g2aaNr8w3HcaseF27msn8GEuFTAEZdaQPZw3BrZRIL34TYdeJUEe95moSy4Nbl85cCm+lcCQEBp/bVg4Qw5xohXhzy2XCUBDbDaFCSRJgcxqe7/f9/Egbl1qf3nGeOSewjiKMsJyZiqJjwoQka3jqadkevoezFLMa6zZDGyJH2eF1w1g6luMvTKKzAWgyNy8UUE8Yzl4sVvNeVbvvLHfxQRrFQrQF5+oTkRBNd7lDpyMJCXuJqeNkY370nzuGGekkux2KKGXjWER3wFJtmoFjNwxPh0jXxqvF58yW+17hvUzf344botkTA844XOhjNk5PTa3L8uDBqgXOSsqyWwYZk3VBOPofuGbMrT7Vt727FbHaJS9Wr+AbkCXFwf4NOdoPwQW7F2UODzB00BYp0ZHAtK1ZVjpO9IMoziiGFFzWIOFQZwoj+rEdbE623/1w2VKLOV3ZF40P8FJBKPH8kj7p+DQhUXKtS1bhQXqZR13E+xMvM+sqnKKWPbOQAHPSVyngpgTB6dRp9rSdZ1YSsiPzy5VUFlC01rEIoKQQ3Wsg4lL060w4+EN/gaSCIv2Tt/XbYN4FtkiIQKqUnbzsuw4SCiqA==
-X-Forefront-Antispam-Report:
-	CIP:165.204.84.17;CTRY:US;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:satlexmb07.amd.com;PTR:InfoDomainNonexistent;CAT:NONE;SFS:(13230040)(1800799024)(82310400026)(376014)(36860700013);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0:
-	aHISPtXLN5YE94BEn9eblhFALMW4dp0MEVPo4t2XYcuhZcn1IfzrU61TtR2JOpU5eKaPkoNElgLSrhzDIrVMQ3Ku0pnTKsvEFjoceTaLzQ4OfmLG1JrHWqJjiqknYYdyf/PlJH/TlFxnlor6dBAHLDm11lyAcoLmRkpUGSlK4kp1D6XGuA3bl3LOBU6HIUBB8ynsRbHe2vfh+Mmf7VFwqgxkvHnSepWof2s5nHsjrVbYjQpb4sN7IK68Bg3Hdrrf+/od+GvPKVTEamy2/6nYWezSogZ1E2M3CIRt8QrLo0wgDbIsKXQan50L3XuCpZ59TkIZPjPDG8g2TkdvBPIaCC2HdkekeSxae35sY9pxEGubaie2wiLeJ/1ypTa5ZgWGhR7OPqG0+jAjFpjEVWWZP3ldDIysczCyFT9za2IocaFUSqF+L1doRiesM4v2rhg6
-X-OriginatorOrg: amd.com
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 01 Mar 2026 13:12:06.0994
- (UTC)
-X-MS-Exchange-CrossTenant-Network-Message-Id: f269ed37-b197-4d97-f197-08de77942320
-X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
-X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=3dd8961f-e488-4e60-8e11-a82d994e183d;Ip=[165.204.84.17];Helo=[satlexmb07.amd.com]
-X-MS-Exchange-CrossTenant-AuthSource:
-	BN2PEPF00004FBD.namprd04.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Anonymous
-X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DS0PR12MB6632
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v3 4/4] Documentation: laptops: Update documentation for
+ uniwill laptops
+To: Werner Sembach <wse@tuxedocomputers.com>, Jonathan Corbet
+ <corbet@lwn.net>, Shuah Khan <skhan@linuxfoundation.org>
+Cc: platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org,
+ linux-doc@vger.kernel.org
+References: <20260227200906.514928-1-wse@tuxedocomputers.com>
+ <20260227200906.514928-5-wse@tuxedocomputers.com>
+Content-Language: en-US
+From: Armin Wolf <W_Armin@gmx.de>
+In-Reply-To: <20260227200906.514928-5-wse@tuxedocomputers.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: quoted-printable
+X-Provags-ID: V03:K1:YYYOWrzaYTpqyvNAeu0xmSq0WAMWBmH0MLiKNVj7GUbu3WT0yyk
+ g+PGnvL2/KMNF4KBkwIdKwx8DDqAaa+op4GTV5lejss7sWboe6lFPI4JZdRlbcaLvwadNtk
+ LfxG8VEK0pdjiCehbhbWGIENnUrboolocvELwA0SeqHkFBL9bd1R2a7LsI9IJJ8kFHnP75i
+ WnEPcUIT/LNYuGONycfzQ==
+X-Spam-Flag: NO
+UI-OutboundReport: notjunk:1;M01:P0:eS4lZT9x3UQ=;D6GZ7cH73oJ+V1ffzMFJZyCfmoP
+ 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
 
-Add a Documentation/ABI/testing entry describing the AMD PMF util layer
-misc device (/dev/amdpmf_interface) and the initial ioctls used to query
-feature support and metrics data information. This interface is available
-when CONFIG_AMD_PMF_UTIL_SUPPORT=y.
+Am 27.02.26 um 21:07 schrieb Werner Sembach:
 
-Signed-off-by: Shyam Sundar S K <Shyam-sundar.S-k@amd.com>
----
- .../ABI/testing/misc-amdpmf_interface         | 70 +++++++++++++++++++
- MAINTAINERS                                   |  1 +
- 2 files changed, 71 insertions(+)
- create mode 100644 Documentation/ABI/testing/misc-amdpmf_interface
+> Adds short description for two new sysfs entries, ctgp_offset and
+> usb_c_power_priority, to the documentation of uniwill laptops.
 
-diff --git a/Documentation/ABI/testing/misc-amdpmf_interface b/Documentation/ABI/testing/misc-amdpmf_interface
-new file mode 100644
-index 000000000000..62b0175e1345
---- /dev/null
-+++ b/Documentation/ABI/testing/misc-amdpmf_interface
-@@ -0,0 +1,70 @@
-+What:		/dev/amdpmf_interface
-+Date:		February 2026
-+KernelVersion:	7.1
-+Contact:	Shyam Sundar S K <Shyam-sundar.S-k@amd.com>
-+Description:
-+		The AMD Platform Management Framework (PMF) util layer exposes a
-+		minimal user-space interface via a misc character device for
-+		feature discovery and metrics monitoring.
-+
-+		When CONFIG_AMD_PMF_UTIL_SUPPORT is enabled, the driver creates
-+		a character device:
-+
-+		======================
-+		/dev/amdpmf_interface
-+		======================
-+
-+		The interface currently supports following ioctls:
-+
-+		======================== =========================================
-+		IOCTL			 Usage
-+		IOCTL_PMF_POPULATE_DATA	 User passes a struct amd_pmf_ioctl_info
-+					 with control_code set to the desired
-+					 metric or feature ID. The driver returns
-+					 the requested data in val, or feature
-+					 support status in feature_supported.
-+		======================== =========================================
-+
-+		Following are the control codes supported (enum pmf_ioctl_id):
-+
-+		============== ================================================================
-+		Control Code	Description
-+		0		IOCTL_POWER_SOURCE: AC/DC power source
-+		1		IOCTL_POWER_SLIDER_POSITION: Current power slider
-+		2		IOCTL_PLATFORM_TYPE: Platform form factor
-+		3		IOCTL_LAPTOP_PLACEMENT: Device placement (on table/lap/bag)
-+		4		IOCTL_LID_STATE: Lid open/closed status
-+		6		IOCTL_SKIN_TEMP: Skin temperature (degrees Celsius)
-+		7		IOCTL_USER_PRESENCE: User presence detection
-+		10-19		IOCTL_BIOS_INPUT_1 to IOCTL_BIOS_INPUT_10: Custom BIOS inputs
-+		20		IOCTL_GFX_WORKLOAD: Graphics workload percentage
-+		29		IOCTL_AMBIENT_LIGHT: Ambient light sensor reading
-+		36		IOCTL_AVG_C0_RES: Average C0 state residency
-+		37		IOCTL_MAX_C0_RES: Maximum C0 state residency
-+		50		IOCTL_SOCKET_POWER: Socket power consumption
-+		52-61		IOCTL_BIOS_OUTPUT_1 to IOCTL_BIOS_OUTPUT_10: BIOS output values
-+		============== ================================================================
-+
-+		Feature Discovery:
-+
-+		============== =============================================================
-+		Control Code	Description
-+		62		IOCTL_FEATURE_AUTO_MODE: Auto Mode feature support
-+		63		IOCTL_FEATURE_STATIC_POWER_SLIDER: Static Power Slider
-+		64		IOCTL_FEATURE_POLICY_BUILDER: Policy Builder (Smart PC)
-+		65		IOCTL_FEATURE_DYNAMIC_POWER_SLIDER_AC: Dynamic slider on AC
-+		66		IOCTL_FEATURE_DYNAMIC_POWER_SLIDER_DC: Dynamic slider on DC
-+		============== =============================================================
-+
-+		Following are the return codes:
-+
-+		============= ============================================================
-+		Return code	Description
-+		0		success
-+		EINVAL		control_code is not recognized or handle is not available
-+		EFAULT		copy_to_user/copy_from_user failures
-+		ENODEV		PMF device not available
-+		============= ============================================================
-+
-+		User-space tools integrating with AMD PMF to discover capabilities and
-+		monitor real-time metrics for thermal and power management validation.
-diff --git a/MAINTAINERS b/MAINTAINERS
-index 55af015174a5..78773373172c 100644
---- a/MAINTAINERS
-+++ b/MAINTAINERS
-@@ -1224,6 +1224,7 @@ AMD PMF DRIVER
- M:	Shyam Sundar S K <Shyam-sundar.S-k@amd.com>
- L:	platform-driver-x86@vger.kernel.org
- S:	Supported
-+F:	Documentation/ABI/testing/misc-amdpmf_interface
- F:	Documentation/ABI/testing/sysfs-amd-pmf
- F:	drivers/platform/x86/amd/pmf/
- 
--- 
-2.34.1
+Reviewed-by: Armin Wolf <W_Armin@gmx.de>
 
+> Signed-off-by: Werner Sembach <wse@tuxedocomputers.com>
+> ---
+>   .../ABI/testing/sysfs-driver-uniwill-laptop   | 25 +++++++++++++++++++
+>   .../admin-guide/laptops/uniwill-laptop.rst    | 12 +++++++++
+>   2 files changed, 37 insertions(+)
+>
+> diff --git a/Documentation/ABI/testing/sysfs-driver-uniwill-laptop b/Doc=
+umentation/ABI/testing/sysfs-driver-uniwill-laptop
+> index 2df70792968f3..70b4bc97d91a8 100644
+> --- a/Documentation/ABI/testing/sysfs-driver-uniwill-laptop
+> +++ b/Documentation/ABI/testing/sysfs-driver-uniwill-laptop
+> @@ -51,3 +51,28 @@ Description:
+>  =20
+>   		Reading this file returns the current status of the breathing animat=
+ion
+>   		functionality.
+> +
+> +What:		/sys/bus/platform/devices/INOU0000:XX/ctgp_offset
+> +Date:		January 2026
+> +KernelVersion:	7.0
+> +Contact:	Werner Sembach <wse@tuxedocomputers.com>
+> +Description:
+> +		Allows userspace applications to set the configurable TGP offset on t=
+op of the base
+> +		TGP. Base TGP and max TGP and therefore the max cTGP offset are devic=
+e specific.
+> +		Note that setting the maximal cTGP leaves no window open for Dynamic =
+Boost,
+> +		effectifly disabling that feature for the GPU to always be prioritize=
+d.
+> +
+> +		Reading this file returns the current configurable TGP offset.
+> +
+> +What:		/sys/bus/platform/devices/INOU0000:XX/usb_c_power_priority
+> +Date:		February 2026
+> +KernelVersion:	7.1
+> +Contact:	Werner Sembach <wse@tuxedocomputers.com>
+> +Description:
+> +		Allows userspace applications to choose the USB-C power distribution =
+profile between
+> +		one that offers a bigger share of the power to the battery and one th=
+at offers more
+> +		of it to the CPU. Writing "charging"/"performance" into this file sel=
+ects the
+> +		respective profile.
+> +
+> +		Reading this file returns the profile names with the currently active=
+ one in
+> +		brackets.
+> diff --git a/Documentation/admin-guide/laptops/uniwill-laptop.rst b/Docu=
+mentation/admin-guide/laptops/uniwill-laptop.rst
+> index aff5f57a6bd47..c89b8b3756f84 100644
+> --- a/Documentation/admin-guide/laptops/uniwill-laptop.rst
+> +++ b/Documentation/admin-guide/laptops/uniwill-laptop.rst
+> @@ -50,6 +50,10 @@ between 1 and 100 percent are supported.
+>   Additionally the driver signals the presence of battery charging issue=
+s through the standard
+>   ``health`` power supply sysfs attribute.
+>  =20
+> +It also let you set whether an USB-C power source should prioritise cha=
+rging the battery or
+> +delivering immediate power to the cpu. See Documentation/ABI/testing/sy=
+sfs-driver-uniwill-laptop for
+> +details.
+> +
+>   Lightbar
+>   --------
+>  =20
+> @@ -58,3 +62,11 @@ LED class device. The default name of this LED class =
+device is ``uniwill:multico
+>  =20
+>   See Documentation/ABI/testing/sysfs-driver-uniwill-laptop for details =
+on how to control the various
+>   animation modes of the lightbar.
+> +
+> +Configurable TGP
+> +--------
+> +
+> +The ``uniwill-laptop`` driver allows to set the configurable TGP for de=
+vices with NVIDIA GPUs that
+> +allow it.
+> +
+> +See Documentation/ABI/testing/sysfs-driver-uniwill-laptop for details.
