@@ -1,46 +1,46 @@
-Received: from PH0PR06CU001.outbound.protection.outlook.com (mail-westus3azon11011064.outbound.protection.outlook.com [40.107.208.64])
+Received: from CO1PR03CU002.outbound.protection.outlook.com (mail-westus2azon11010069.outbound.protection.outlook.com [52.101.46.69])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3606E317171
-	for <platform-driver-x86@vger.kernel.org>; Sun,  1 Mar 2026 13:12:04 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.208.64
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E8C3031DD97
+	for <platform-driver-x86@vger.kernel.org>; Sun,  1 Mar 2026 13:12:05 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=52.101.46.69
 ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1772370726; cv=fail; b=PR+dSChN/Nr+C7SpEaTd7G0f3F2/Lv+v5eA/xeXw5tQSOFoHiFCz4CtDV4nMref9wBXv1gph4uOEZTfTEWr0t8I3rg20b8QTiIVuoSKWoZpz/KdfpMVULY5PRdx+eV6QNZgMizOJSdA0+421SIdx86kBXo0zTG0I73V7tDiUB5k=
+	t=1772370727; cv=fail; b=sD7dT7+MRZThuGkSC/1YexWwekSfLuxqmEsyrnq/dEclmr5sFdjktRLUYqLZrQ/+VipoBSAZ7E9vRlwj5AeP6AB4GarH5IFnNaiAc9sMYIrb+T5e2U8ZM+fpa5HQ80W9EhQ+LK7EM6zRi2Fxfp9TheyuETI9jl18ZWnYvXO1GI0=
 ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1772370726; c=relaxed/simple;
-	bh=gCoHxumyIF2UEbeYIkqZ7zbmtW3RoF01/m3txwf7O1g=;
+	s=arc-20240116; t=1772370727; c=relaxed/simple;
+	bh=2PH77U1R4+oWzoabUF+KG87T/y3O/6EFQ6iHfQjH+vU=;
 	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=Dlfbv37S9bdALUUyK877moTTYA8evBc3iyhKvNVeiKCJFctos9zRMaLfYZMSLbYQESYuZ52/hbC6t6KdAdD/ObUbM1FLhOmudpwqhAMKQMLid39TrHSdh0YwuozHezRnU1zcAagvIz0KzgupK6JKlbF3KD8MsjXsslzhFwuqcvE=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=4jd326Po; arc=fail smtp.client-ip=40.107.208.64
+	 MIME-Version:Content-Type; b=tvAFrF3XloQJ25W5J8ClhXzELXaZ40n8hBnLPg3sc6YxyAbqXpr2HOwpPAgNQ2J/zB9py31WXiQIWoZ2Q39ESckwZIiDwl7nDsHeJwS98cDwgQHBQRJ7veOwxGXCLneLzbX2wXlNmsk5C00WxpdwYnvW/TH496FOmoFw1gksXsg=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=p2TQO60u; arc=fail smtp.client-ip=52.101.46.69
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com
 Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=amd.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="4jd326Po"
+	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="p2TQO60u"
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=MFGKRULrQeyj1Pr+bsHBLJOP/JH7DQoMaHMprn7ybmNisI93H2rF189oIQaVTOmx8x8SyTzoaDCAUsT8++dTwqBwVi9zNjW0EfXC12M7o39LKgaCKJTWRCp9W7Ac2vejBCf3HpMCblreMqCK72YQ8Wzoy0n4D2sP3NH61Rd+XRLG22RYHHh/LXSc31xoxapMlzZhVRXsVJVFRsLenJDEsw01XiBSEskErSUOiXl8vNERVvgRhGb8fSMP3YV44QdRVtwTccuhAIk085novzn4VCOsP3n7PYfJqUzzAsd8ru077a4lF3N14U+toMSQ8c7HN5dKtW2Y6sBVomr00Y3DOQ==
+ b=eYZnL87FzWhxHhpyQiwb1AZ2jqvKQfN+1IrsE9gGcMorhu+Ucd9YT/glag8A7XVSMe+aRIHtEFnuAhg3NVXDveXoUoGGlJIc9FKL/g9plLm1o6xNq40PK9Yg8fb4/5CKmOQ6p33x5LEDpa+mlFaPH8WxDnh73s1rdXTvpJCrQ7yIjfKZnZuQtcUCBDdKPVdKgOPWK/FKSA0104VDG/qY+OFczKgX7hHLcAFMVcEaZigqHboO7ObiOuAj0l1QpEcK63c6/JWzBeCKVNcXNUrFBtJ934GdHIfU3jyT6BCLKGN8iejqxNlKJ7IbUSn23I9YwOaxpPUqE0wHT9sAHnNsLQ==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector10001;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=8wDF7yiCltQQQJQyYJ54A+uuVE2PDp3NbIfanBF9vkM=;
- b=cmKEP0lZc968n/tzjfTMN1iswRnG/6OY+MqttkVF9XLa3MyO2QpJeld4xMHLrbXmMkmq1m9Bax6NA1/ZiHeVeMfb1zFYgr79FXkfDQ2wGnGZT/N/xPm/BCpz2P2Nwa6o5mIqxEVrxc+KbcYazRIAXyH+OVBkxw2rscAVASJDgD/I55JpYjlroJ9dU/FNYAzkF7DBpVnL0Q7blismUsZ7DPulENoDQLd/sHC9t5UU+o28BG1jzE31wwo1LvShdU/ac2/r8ddQQ9G+cPuJFI6mIAI607uA1UFAw3/xmB8Zh9x80C6QrvlC/mgsJB84rXXrXUYn3eG+6Ov1jXdaZBeZow==
+ bh=2P1YmLH5fvoc3sjmHZECS4of9hJdBWciFnm2VnhDDHM=;
+ b=GE97esiVl/vhbCaDLE6Bd1f+ti3sKAnqJ1ZbVaArgmW9XzOPP5O/PSqqy6ffJKPBdpIKxCUeGPztBK9bE55wOHQMcC4yS8EhqCbjRtt1/y2znKfwt7+HhtEhxv6qFPrjkX6338gSorZdv6rZKttRR1kRfjJSue5KlcgVD0oqe5ZB36SROpBMWr6SgFjZJq1C5KOzcIQr2QcZ+qjx090df/qfZnpKJ5GiW568CgKTLqwb4dnws8PWhS12AB4vVZy/ZqAOZQAdPQA2AdSopIeLLSNJiqsUh2wFBimAeLCBuaxn+BdbGcQHsS+SFf36lUvJK4x3QtUGeKUAAArzWbm6Fg==
 ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
  165.204.84.17) smtp.rcpttodomain=kernel.org smtp.mailfrom=amd.com; dmarc=pass
  (p=quarantine sp=quarantine pct=100) action=none header.from=amd.com;
  dkim=none (message not signed); arc=none (0)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=8wDF7yiCltQQQJQyYJ54A+uuVE2PDp3NbIfanBF9vkM=;
- b=4jd326Poey22UaQsq98PAF5sW39KJk8kQD+/bhrUTmly3iUwTyAfnGWDQPqb7cufV451Q3VFw13qFVQXzkfd4yMYyZlRxN45kJF+QPbvqAIdZls2ul5w4B5ZrlwlFOSA8IqhiH+aWnu6dBr2RcK0Cs/lFdzg2Gkpx9wT4AIadyQ=
-Received: from BN1PR13CA0009.namprd13.prod.outlook.com (2603:10b6:408:e2::14)
- by PH0PR12MB7906.namprd12.prod.outlook.com (2603:10b6:510:26c::10) with
+ bh=2P1YmLH5fvoc3sjmHZECS4of9hJdBWciFnm2VnhDDHM=;
+ b=p2TQO60uQUZ+FkQXZxZHb5G2HUtFUVRYwE48O63ZKbPvymJnKGHl0C5XMxwXgyrPGonZYGTSdrXAaU7FLIK1tGxLP7WU7vnvLj59O/Enz068kU9/Mtqwjx0KZ1FYdnF2WPyPWt8WHP1/jVENNBG7au3G27RtRFgPgGpLGRkRLP0=
+Received: from BN9PR03CA0078.namprd03.prod.outlook.com (2603:10b6:408:fc::23)
+ by DS0PR12MB8199.namprd12.prod.outlook.com (2603:10b6:8:de::20) with
  Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.9632.22; Sun, 1 Mar
- 2026 13:11:59 +0000
-Received: from BN2PEPF00004FBE.namprd04.prod.outlook.com
- (2603:10b6:408:e2:cafe::48) by BN1PR13CA0009.outlook.office365.com
- (2603:10b6:408:e2::14) with Microsoft SMTP Server (version=TLS1_3,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.9654.19; Sun, 1 Mar
+ 2026 13:12:01 +0000
+Received: from BN2PEPF00004FC0.namprd04.prod.outlook.com
+ (2603:10b6:408:fc:cafe::82) by BN9PR03CA0078.outlook.office365.com
+ (2603:10b6:408:fc::23) with Microsoft SMTP Server (version=TLS1_3,
  cipher=TLS_AES_256_GCM_SHA384) id 15.20.9654.18 via Frontend Transport; Sun,
- 1 Mar 2026 13:11:53 +0000
+ 1 Mar 2026 13:12:00 +0000
 X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 165.204.84.17)
  smtp.mailfrom=amd.com; dkim=none (message not signed)
  header.d=none;dmarc=pass action=none header.from=amd.com;
@@ -48,21 +48,21 @@ Received-SPF: Pass (protection.outlook.com: domain of amd.com designates
  165.204.84.17 as permitted sender) receiver=protection.outlook.com;
  client-ip=165.204.84.17; helo=satlexmb07.amd.com; pr=C
 Received: from satlexmb07.amd.com (165.204.84.17) by
- BN2PEPF00004FBE.mail.protection.outlook.com (10.167.243.184) with Microsoft
+ BN2PEPF00004FC0.mail.protection.outlook.com (10.167.243.186) with Microsoft
  SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.9654.16 via Frontend Transport; Sun, 1 Mar 2026 13:11:59 +0000
+ 15.20.9654.16 via Frontend Transport; Sun, 1 Mar 2026 13:12:01 +0000
 Received: from airavat.amd.com (10.180.168.240) by satlexmb07.amd.com
  (10.181.42.216) with Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.2562.17; Sun, 1 Mar
- 2026 07:11:56 -0600
+ 2026 07:11:59 -0600
 From: Shyam Sundar S K <Shyam-sundar.S-k@amd.com>
 To: <hansg@kernel.org>, <ilpo.jarvinen@linux.intel.com>
 CC: <platform-driver-x86@vger.kernel.org>, <mario.limonciello@amd.com>,
 	<Yijun.Shen@Dell.com>, <Sanket.Goswami@amd.com>, Shyam Sundar S K
 	<Shyam-sundar.S-k@amd.com>
-Subject: [PATCH v3 4/7] platform/x86/amd/pmf: Store commonly used enums in the header file
-Date: Sun, 1 Mar 2026 18:41:21 +0530
-Message-ID: <20260301131124.1370565-5-Shyam-sundar.S-k@amd.com>
+Subject: [PATCH v3 5/7] platform/x86/amd/pmf: Move debug helper functions to UAPI header
+Date: Sun, 1 Mar 2026 18:41:22 +0530
+Message-ID: <20260301131124.1370565-6-Shyam-sundar.S-k@amd.com>
 X-Mailer: git-send-email 2.34.1
 In-Reply-To: <20260301131124.1370565-1-Shyam-sundar.S-k@amd.com>
 References: <20260301131124.1370565-1-Shyam-sundar.S-k@amd.com>
@@ -78,216 +78,265 @@ X-ClientProxiedBy: satlexmb07.amd.com (10.181.42.216) To satlexmb07.amd.com
  (10.181.42.216)
 X-EOPAttributedMessage: 0
 X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: BN2PEPF00004FBE:EE_|PH0PR12MB7906:EE_
-X-MS-Office365-Filtering-Correlation-Id: 03d62ce6-1303-43b7-0bc1-08de77941ef2
+X-MS-TrafficTypeDiagnostic: BN2PEPF00004FC0:EE_|DS0PR12MB8199:EE_
+X-MS-Office365-Filtering-Correlation-Id: 55ce7526-aa11-4a0d-6eb5-08de77942059
 X-MS-Exchange-SenderADCheck: 1
 X-MS-Exchange-AntiSpam-Relay: 0
 X-Microsoft-Antispam:
-	BCL:0;ARA:13230040|376014|1800799024|82310400026|36860700013;
+	BCL:0;ARA:13230040|376014|82310400026|1800799024|36860700013;
 X-Microsoft-Antispam-Message-Info:
-	jamr3dCIhN+VLldTUTBzw5t90rz/lkdrX1jGD+fDQl4KWbPb6/wBLqdwerkgFVV2N8zlmSRV+0TlVZbC+m4y5K65sN16wer88PHqUspVdAOOcMnGw8ZHM4PZyimqnSefC1q1mUEdKVMfxueYUZ4r8aDKnsZSkR4ftUswHPM+YIyqDhCBpkawHdKpPlEfTBXZ34Tg8kfdUcfDQfd/KzNtPbldzNSfM3NprSm0DjBzjWuwZqxeXQgn4IOPCXavv4ZBrHfe35mRvdllaok3Bpzrz8vmZlOr26TTMTS7fPUz+2lJskHtABnyNMosJIkQW1xYNEt8T41hZ5bTXhE9CqZK3ormLd9kPTEkIILcypq2byAvUkxHGy42K53Dv1Xpde4zvu0C/nGJei2PBRTL9NSmLexTwMet/yy3tvkkyQy3j/yjQOP/ux+IWPut3aXlXO2nZbg9jfailBPHrF2ET6gHHDjKmwyR8M8KuGbGE+bQVg4fdyCNugxROaCCaNOYt9QlYaulPUKDstun1Gtd8pVLc5OXspVueptyopy6WvHCHiPD3o1JEWKiie8gRQd1JTwBUZ6HAON2+f3zx9Jce9ZugnJzMfna+uAF/GJQdZ1fQMHryZkReDEGW6T4/7eWe+7cL9N+dDDIss5IwGdGmeJbYz+tQzwtQbDMFSE8Xfnab4YPWw+ckJcHxLDagN7RR044H4aBvH5YzibvFszW6HIiaDjLTsrT+s6BVcEB3LWUZY3o/P63dC2GmQs+2yHiJEJKmWuNQwOP5+mm+owG81Qjz05f42o9BSgz877ZG461wrV9myTEMIcXTzxlGoKnBnGNWR5ccwNw+gkagMcUNPmGTA==
+	Dfsz3GNOv6TgdqTRqp3TMxeVuiQNkA+jIRF79b+mxPAPsZwer1Pj1DEMaANuNXkRImkEtWQIBDE3YE/9N/aHZJGyPeg77gz7A7EJAhU14PYZX37k6ES4YDXfwFLsjAu1+F19F795tL5X/6/2g7OolFa8JXIRYSTzeS8DaZ/gYwj4P7o1dVYVlVL9qksbOoql2H4wqY0h1GGdwdGFelVXliVPljrQ8SiBlaLk5hUwruOGL3SumnUqoLyzT/bO/xQTWDYXgbShKFSsi5HesamK0ddAKc5l2zxwLGIo3B84P24XvgxVNM4xYQDFmSoS3/l/w3EjjQb0rppMNHeCdJsUIVjNEBVn+HKF5o8sGYRERa1EQiJthF5eiYCLM/FRVrXlQpGgc+3tDwl/Eiu1VZtJEVlZQ+HIu2GaDaMHyZO4V4konnBVV5S+LfLCHrdubet/MAPOmX+hSR8aws/ixosTbrCH7euLRYVBDsyFSvWokBZJZJsvvdkfCEzgg4WzUs5aNzfPk2NT3290lt3blZ6kZcyASEL29BFpxsYNbTx/AAgAElgUrugNtnrNrmh82TGOGjFQBY+K2793qBjNF+Kh0J0kQFnmkbYF93jMChMsEmWF4OtolhmFJCWosvgh+hzyD1DAMs32iFFxGqf+7CB9TXJNnhCviQKMLPOP/qoQJjFux18m5UBiMQ3AVEKqoy2uoq9N4zvzkxTN4CynZkBzXPAHWibfklNs85LkjlBH2CMlz8NgeBOOqqUuoffgP5KsI5aFeyTqk6cYsuXAEp+MGWqp1G6rZ5xJLfmq+/5WQYRps4t6FnKHZpt0LnjHYJ1nvzwP/0uve3oIOcabsjMBSQ==
 X-Forefront-Antispam-Report:
-	CIP:165.204.84.17;CTRY:US;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:satlexmb07.amd.com;PTR:InfoDomainNonexistent;CAT:NONE;SFS:(13230040)(376014)(1800799024)(82310400026)(36860700013);DIR:OUT;SFP:1101;
+	CIP:165.204.84.17;CTRY:US;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:satlexmb07.amd.com;PTR:InfoDomainNonexistent;CAT:NONE;SFS:(13230040)(376014)(82310400026)(1800799024)(36860700013);DIR:OUT;SFP:1101;
 X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
 X-MS-Exchange-AntiSpam-MessageData-0:
-	xdo2PWbxfrVK+kC1cOtRYOu/cEcZyBO6KvVXfPk3Ygp0WaDxVUrrNBbD34jQgH4gy11C1mAk9SyiyPXfAuhALwzp9FgUZj9pFg1SZM+SOD2KAJckxVSW5ZZ9QrogJERwgp8u79zYrnim3fH62LTe7VQxRCohO5Tt0oFbax+BeyD1DpjylF69DGSzUV65QWykZPOS/2C0lOPfb4Nnn1dUo5ORJRGuMQhtMEQHGld6iz1a8RESVQnIUnoAiIjzC6ik8297PcsK1RrHtXCTETvZGba3rSQ0gRzmxVX4AUEMmnBpn08gdG7rvUzknkWgSINWsDQGFOybUDKI4Ky5897aPUnKAgkAuXuOfWplyjHb+IqcScoBNKhzkZsjh0SWag+mrAxFFjrufaV7SaoLt/NQwUu38bo9Ef12WuP43RjMeksoAZTWV5acguPvfyqzwdAk
+	CKR/RikCmvEBWew2Z7xST2rtmOKLWc8M/WCdHqMhWy9aZ9tfPdM982RX1UDXJUgW67iwYclcDoJYXBgjvufKftm3DxE5XXfqX4692Zwl+4whnHSKDeTpVVmFO/rx5TzcnPMC4eco+rtkQYNuolt/ORLJE8t8xGXVFc4HRCEON3cb+Q+5byMyheFi6VTYbQTWRjaZajYoxiHlS0On8SQsSgH5ExsAkvZZRGceWuSiN1tuy1MFJiEGDmf4jEQMkHtaW+B+QWF7ERaEjlpXS4fdqGu8YajDJZHvD2XTjigHWvf4gi3XsPRTvnOWaOlff7RVaanjB3PqJU6jOtdG4O+hOMRo+enZVfTIJorqPoFLxk8376qkNPdndGiNgeyFVJZY6CRbG5kN/0Nye/gJbiZr5l8CCuu3PvF3IuuRRwMmJtg90NCldVosXOnpmGooXPA0
 X-OriginatorOrg: amd.com
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 01 Mar 2026 13:11:59.0809
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 01 Mar 2026 13:12:01.4369
  (UTC)
-X-MS-Exchange-CrossTenant-Network-Message-Id: 03d62ce6-1303-43b7-0bc1-08de77941ef2
+X-MS-Exchange-CrossTenant-Network-Message-Id: 55ce7526-aa11-4a0d-6eb5-08de77942059
 X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
 X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=3dd8961f-e488-4e60-8e11-a82d994e183d;Ip=[165.204.84.17];Helo=[satlexmb07.amd.com]
 X-MS-Exchange-CrossTenant-AuthSource:
-	BN2PEPF00004FBE.namprd04.prod.outlook.com
+	BN2PEPF00004FC0.namprd04.prod.outlook.com
 X-MS-Exchange-CrossTenant-AuthAs: Anonymous
 X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: PH0PR12MB7906
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: DS0PR12MB8199
 
-Relocate commonly used enums from multiple source files into a shared
-header file to simplify code structure, improve readability, and
-enhance maintainability. Also, remove the initialization of the first
-enum member, since it is not needed.
+These debug helper functions convert enumerated values to appropriate
+message and can be useful for userspace tools and other kernel components
+that need to interpret AMD PMF state values.
+
+By making them inline functions in the UAPI header, they become available
+to both kernel and userspace without code duplication.
 
 Co-developed-by: Sanket Goswami <Sanket.Goswami@amd.com>
 Signed-off-by: Sanket Goswami <Sanket.Goswami@amd.com>
 Signed-off-by: Shyam Sundar S K <Shyam-sundar.S-k@amd.com>
 ---
- .../amd-sfh-hid/sfh1_1/amd_sfh_interface.c    |  1 +
- drivers/platform/x86/amd/pmf/pmf.h            | 22 ------
- drivers/platform/x86/amd/pmf/spc.c            |  1 +
- include/linux/amd-pmf-io.h                    |  9 ---
- include/uapi/linux/amd-pmf.h                  | 74 +++++++++++++++++++
- 5 files changed, 76 insertions(+), 31 deletions(-)
+ drivers/platform/x86/amd/pmf/spc.c  |  54 --------------
+ drivers/platform/x86/amd/pmf/util.c |  12 ----
+ include/uapi/linux/amd-pmf.h        | 105 ++++++++++++++++++++++++++++
+ 3 files changed, 105 insertions(+), 66 deletions(-)
 
-diff --git a/drivers/hid/amd-sfh-hid/sfh1_1/amd_sfh_interface.c b/drivers/hid/amd-sfh-hid/sfh1_1/amd_sfh_interface.c
-index 837d59e7a661..d9751c9ebfe8 100644
---- a/drivers/hid/amd-sfh-hid/sfh1_1/amd_sfh_interface.c
-+++ b/drivers/hid/amd-sfh-hid/sfh1_1/amd_sfh_interface.c
-@@ -7,6 +7,7 @@
-  *
-  * Author: Basavaraj Natikar <Basavaraj.Natikar@amd.com>
-  */
-+#include <linux/amd-pmf.h>
- #include <linux/amd-pmf-io.h>
- #include <linux/io-64-nonatomic-lo-hi.h>
- #include <linux/iopoll.h>
-diff --git a/drivers/platform/x86/amd/pmf/pmf.h b/drivers/platform/x86/amd/pmf/pmf.h
-index 0d879f0fd8e2..f668c0450457 100644
---- a/drivers/platform/x86/amd/pmf/pmf.h
-+++ b/drivers/platform/x86/amd/pmf/pmf.h
-@@ -681,14 +681,6 @@ enum system_state {
- 	SYSTEM_STATE_MAX,
- };
- 
--enum ta_slider {
--	TA_BEST_BATTERY,
--	TA_BETTER_BATTERY,
--	TA_BETTER_PERFORMANCE,
--	TA_BEST_PERFORMANCE,
--	TA_MAX,
--};
--
- struct amd_pmf_pb_bitmap {
- 	const char *name;
- 	u32 bit_mask;
-@@ -720,20 +712,6 @@ static const struct amd_pmf_pb_bitmap custom_bios_inputs_v1[] __used = {
- 	{"NOTIFY_CUSTOM_BIOS_INPUT10",    BIT(16)},
- };
- 
--enum platform_type {
--	PTYPE_UNKNOWN = 0,
--	LID_CLOSE,
--	CLAMSHELL,
--	FLAT,
--	TENT,
--	STAND,
--	TABLET,
--	BOOK,
--	PRESENTATION,
--	PULL_FWD,
--	PTYPE_INVALID = 0xf,
--};
--
- /* Command ids for TA communication */
- enum ta_pmf_command {
- 	TA_PMF_COMMAND_POLICY_BUILDER_INITIALIZE,
 diff --git a/drivers/platform/x86/amd/pmf/spc.c b/drivers/platform/x86/amd/pmf/spc.c
-index f48678a23cc7..a40419b5e1b7 100644
+index a40419b5e1b7..f91feaac5238 100644
 --- a/drivers/platform/x86/amd/pmf/spc.c
 +++ b/drivers/platform/x86/amd/pmf/spc.c
-@@ -10,6 +10,7 @@
-  */
+@@ -18,60 +18,6 @@
+ #include "pmf.h"
  
- #include <acpi/button.h>
-+#include <linux/amd-pmf.h>
- #include <linux/amd-pmf-io.h>
- #include <linux/cleanup.h>
- #include <linux/power_supply.h>
-diff --git a/include/linux/amd-pmf-io.h b/include/linux/amd-pmf-io.h
-index 55198d2875cc..e014d4ce5a20 100644
---- a/include/linux/amd-pmf-io.h
-+++ b/include/linux/amd-pmf-io.h
-@@ -52,15 +52,6 @@ struct amd_sfh_info {
- 	u32 laptop_placement;
- };
- 
--enum laptop_placement {
--	LP_UNKNOWN = 0,
--	ON_TABLE,
--	ON_LAP_MOTION,
--	IN_BAG,
--	OUT_OF_BAG,
--	LP_UNDEFINED,
--};
+ #ifdef CONFIG_AMD_PMF_DEBUG
+-static const char *platform_type_as_str(u16 platform_type)
+-{
+-	switch (platform_type) {
+-	case CLAMSHELL:
+-		return "CLAMSHELL";
+-	case FLAT:
+-		return "FLAT";
+-	case TENT:
+-		return "TENT";
+-	case STAND:
+-		return "STAND";
+-	case TABLET:
+-		return "TABLET";
+-	case BOOK:
+-		return "BOOK";
+-	case PRESENTATION:
+-		return "PRESENTATION";
+-	case PULL_FWD:
+-		return "PULL_FWD";
+-	default:
+-		return "UNKNOWN";
+-	}
+-}
 -
- /**
-  * struct amd_pmf_npu_metrics: Get NPU metrics data from PMF driver
-  * @npuclk_freq: NPU clock frequency [MHz]
+-static const char *laptop_placement_as_str(u16 device_state)
+-{
+-	switch (device_state) {
+-	case ON_TABLE:
+-		return "ON_TABLE";
+-	case ON_LAP_MOTION:
+-		return "ON_LAP_MOTION";
+-	case IN_BAG:
+-		return "IN_BAG";
+-	case OUT_OF_BAG:
+-		return "OUT_OF_BAG";
+-	default:
+-		return "UNKNOWN";
+-	}
+-}
+-
+-static const char *ta_slider_as_str(unsigned int state)
+-{
+-	switch (state) {
+-	case TA_BEST_PERFORMANCE:
+-		return "PERFORMANCE";
+-	case TA_BETTER_PERFORMANCE:
+-		return "BALANCED";
+-	case TA_BEST_BATTERY:
+-		return "POWER_SAVER";
+-	default:
+-		return "Unknown TA Slider State";
+-	}
+-}
+-
+ static u32 amd_pmf_get_ta_custom_bios_inputs(struct ta_pmf_enact_table *in, int index)
+ {
+ 	switch (index) {
+diff --git a/drivers/platform/x86/amd/pmf/util.c b/drivers/platform/x86/amd/pmf/util.c
+index 9a14467f412c..20dc7aa9f250 100644
+--- a/drivers/platform/x86/amd/pmf/util.c
++++ b/drivers/platform/x86/amd/pmf/util.c
+@@ -18,18 +18,6 @@
+ 
+ #define AMD_PMF_IOCTL_VERSION		0x02
+ 
+-/* Convert BIOS input control code to array index (0-9) */
+-static int amd_pmf_get_bios_idx(u32 control_code)
+-{
+-	if (control_code >= IOCTL_BIOS_INPUT_1 && control_code <= IOCTL_BIOS_INPUT_10)
+-		return control_code - IOCTL_BIOS_INPUT_1;
+-
+-	if (control_code >= IOCTL_BIOS_OUTPUT_1 && control_code <= IOCTL_BIOS_OUTPUT_10)
+-		return control_code - IOCTL_BIOS_OUTPUT_1;
+-
+-	return -EINVAL;
+-}
+-
+ static long long amd_pmf_populate_bios_input(struct ta_pmf_enact_table *in, u32 control_code)
+ {
+ 	u32 idx;
 diff --git a/include/uapi/linux/amd-pmf.h b/include/uapi/linux/amd-pmf.h
-index f34c5d744039..00fab9269238 100644
+index 00fab9269238..e2125b304b83 100644
 --- a/include/uapi/linux/amd-pmf.h
 +++ b/include/uapi/linux/amd-pmf.h
-@@ -32,6 +32,80 @@
-  */
- #define IOCTL_PMF_POPULATE_DATA		_IOWR(AMD_PMF_IOC_MAGIC, 0x00, struct amd_pmf_ioctl_info)
+@@ -14,6 +14,7 @@
+ #ifndef _UAPI_LINUX_AMD_PMF_H
+ #define _UAPI_LINUX_AMD_PMF_H
+ 
++#include <linux/errno.h>
+ #include <linux/ioctl.h>
+ #include <linux/types.h>
+ 
+@@ -106,6 +107,88 @@ enum platform_type {
+ 	PTYPE_INVALID = 0xf,
+ };
  
 +/**
-+ * enum laptop_placement - Describes the physical placement of the laptop
-+ * @LP_UNKNOWN: Placement cannot be determined
-+ * @ON_TABLE: Laptop is placed on a stable surface like a table or desk
-+ * @ON_LAP_MOTION: Laptop is on a lap with detected motion
-+ * @IN_BAG: Laptop is detected to be inside a bag or case
-+ * @OUT_OF_BAG: Laptop has been removed from bag or case
-+ * @LP_UNDEFINED: Placement state is undefined
++ * platform_type_as_str() - Convert platform type enum to string
++ * @platform_type: The platform type value to convert
 + *
-+ * This enumeration represents the physical placement state of the laptop
-+ * as detected by platform sensors. Used for adaptive power management
-+ * and thermal policies.
++ * Returns a human-readable string representation of the platform type.
++ *
++ * Return: Constant string describing the platform type, or "UNKNOWN"
++ *         if the value is not recognized.
 + */
-+enum laptop_placement {
-+	LP_UNKNOWN,
-+	ON_TABLE,
-+	ON_LAP_MOTION,
-+	IN_BAG,
-+	OUT_OF_BAG,
-+	LP_UNDEFINED,
-+};
++static inline const char *platform_type_as_str(unsigned int platform_type)
++{
++	switch (platform_type) {
++	case CLAMSHELL:
++		return "CLAMSHELL";
++	case FLAT:
++		return "FLAT";
++	case TENT:
++		return "TENT";
++	case STAND:
++		return "STAND";
++	case TABLET:
++		return "TABLET";
++	case BOOK:
++		return "BOOK";
++	case PRESENTATION:
++		return "PRESENTATION";
++	case PULL_FWD:
++		return "PULL_FWD";
++	default:
++		return "UNKNOWN";
++	}
++}
 +
 +/**
-+ * enum ta_slider - Trusted Application power slider positions
-+ * @TA_BEST_BATTERY: Maximum battery savings, minimal performance
-+ * @TA_BETTER_BATTERY: Balanced towards battery life
-+ * @TA_BETTER_PERFORMANCE: Balanced towards performance
-+ * @TA_BEST_PERFORMANCE: Maximum performance, higher power consumption
-+ * @TA_MAX: Sentinel value indicating maximum enum value
++ * laptop_placement_as_str() - Convert laptop placement enum to string
++ * @device_state: The laptop placement value to convert
 + *
-+ * This enumeration defines the power slider positions used by the
-+ * AMD PMF Trusted Application for dynamic power management decisions.
-+ * These correspond to the Windows power slider UI positions.
++ * Returns a human-readable string representation of the laptop placement.
++ *
++ * Return: Constant string describing the placement, or "UNKNOWN"
++ *         if the value is not recognized.
 + */
-+enum ta_slider {
-+	TA_BEST_BATTERY,
-+	TA_BETTER_BATTERY,
-+	TA_BETTER_PERFORMANCE,
-+	TA_BEST_PERFORMANCE,
-+	TA_MAX,
-+};
++static inline const char *laptop_placement_as_str(unsigned int device_state)
++{
++	switch (device_state) {
++	case ON_TABLE:
++		return "ON_TABLE";
++	case ON_LAP_MOTION:
++		return "ON_LAP_MOTION";
++	case IN_BAG:
++		return "IN_BAG";
++	case OUT_OF_BAG:
++		return "OUT_OF_BAG";
++	default:
++		return "UNKNOWN";
++	}
++}
 +
 +/**
-+ * enum platform_type - Describes the physical form factor orientation
-+ * @PTYPE_UNKNOWN: Platform type cannot be determined
-+ * @LID_CLOSE: Laptop lid is closed
-+ * @CLAMSHELL: Traditional laptop mode with keyboard and screen
-+ * @FLAT: Device is lying flat on a surface
-+ * @TENT: Device is in tent mode (keyboard folded back, standing)
-+ * @STAND: Device is propped up in stand orientation
-+ * @TABLET: Device is in tablet mode with keyboard hidden
-+ * @BOOK: Device is in book reading orientation
-+ * @PRESENTATION: Device is in presentation mode
-+ * @PULL_FWD: Screen is pulled forward towards user
-+ * @PTYPE_INVALID: Invalid platform type marker
++ * ta_slider_as_str() - Convert TA slider enum to string
++ * @state: The TA slider state value to convert
 + *
-+ * This enumeration describes the current physical orientation or form
-+ * factor of convertible/2-in-1 devices. Used for optimizing power and
-+ * thermal management based on device posture.
++ * Returns a human-readable string representation of the power slider
++ * position suitable for display purposes.
++ *
++ * Return: Constant string describing the slider state, or
++ *         "Unknown TA Slider State" if the value is not recognized.
 + */
-+enum platform_type {
-+	PTYPE_UNKNOWN,
-+	LID_CLOSE,
-+	CLAMSHELL,
-+	FLAT,
-+	TENT,
-+	STAND,
-+	TABLET,
-+	BOOK,
-+	PRESENTATION,
-+	PULL_FWD,
-+	PTYPE_INVALID = 0xf,
-+};
++static inline const char *ta_slider_as_str(unsigned int state)
++{
++	switch (state) {
++	case TA_BEST_PERFORMANCE:
++		return "PERFORMANCE";
++	case TA_BETTER_PERFORMANCE:
++		return "BALANCED";
++	case TA_BEST_BATTERY:
++		return "POWER_SAVER";
++	default:
++		return "Unknown TA Slider State";
++	}
++}
 +
  /**
   * enum pmf_ioctl_id - Control codes for PMF ioctl operations
   * @IOCTL_POWER_SOURCE: Query current power source (AC/DC)
+@@ -197,6 +280,28 @@ enum pmf_ioctl_id {
+ 	IOCTL_FEATURE_DYNAMIC_POWER_SLIDER_DC
+ };
+ 
++/**
++ * amd_pmf_get_bios_idx() - Convert BIOS control code to array index
++ * @control_code: The BIOS input or output control code
++ *
++ * Converts a BIOS input (IOCTL_BIOS_INPUT_1 to IOCTL_BIOS_INPUT_10) or
++ * BIOS output (IOCTL_BIOS_OUTPUT_1 to IOCTL_BIOS_OUTPUT_10) control code
++ * to a zero-based array index (0-9).
++ *
++ * Return: Array index (0-9) on success, -EINVAL if the control code
++ *         is not a valid BIOS input or output code.
++ */
++static inline int amd_pmf_get_bios_idx(unsigned int control_code)
++{
++	if (control_code >= IOCTL_BIOS_INPUT_1 && control_code <= IOCTL_BIOS_INPUT_10)
++		return control_code - IOCTL_BIOS_INPUT_1;
++
++	if (control_code >= IOCTL_BIOS_OUTPUT_1 && control_code <= IOCTL_BIOS_OUTPUT_10)
++		return control_code - IOCTL_BIOS_OUTPUT_1;
++
++	return -EINVAL;
++}
++
+ /**
+  * struct amd_pmf_ioctl_info - Structure for PMF ioctl data exchange
+  * @control_code: Input parameter specifying which data to query (enum pmf_ioctl_id)
 -- 
 2.34.1
 
