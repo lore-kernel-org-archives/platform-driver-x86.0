@@ -1,131 +1,244 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ed1-f44.google.com (mail-ed1-f44.google.com [209.85.208.44])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B0F4547D943
-	for <platform-driver-x86@vger.kernel.org>; Mon,  2 Mar 2026 19:36:26 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7411C282F15
+	for <platform-driver-x86@vger.kernel.org>; Mon,  2 Mar 2026 21:47:09 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.44
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1772480186; cv=none; b=HKjswKRiYEua4fypUn/tba12XJInL0subxu3WJLyIiCyc20OBBA3Pn5PRrAtEdYC4LDFib4tyylx45MmAG1G8aSp1svl/kV4Mabd2j5OG5+WurQ1eV+zRR0wOjhz7Qs+F4WxeORd/zWvPSPu+pHH+EZ0xt9GRzE+HfZzEAfyoq8=
+	t=1772488031; cv=none; b=cw5RkDfgykAJLV2IXQHY/YUfNaLacDWGaShmEUZW1baZNfLoWHPwggihDJktNup/PVn8870wI7csC1p5rb4Owt6uS15rvHeANeBmsM+ViVgszRW9UQIDn0QyXF9cy5TGQwhC07yNFhS6rpl6BYurbY7WzLuNiHJ1CwqV32cxIBw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1772480186; c=relaxed/simple;
-	bh=hykRQ85o3s1Gjn5iSxhnQfb+e01yQAaLRqtF/NC2jzw=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=Q1xcmgf/jM4pJ5PxY2i3mSgM7zAj9AcQ+PpWOp8CZJ2IVZkEaOpj2PQQInqiNEF7niEWRVEwxNFctUyzWvQPCrX2htRI9z8ZGiUU9rKnUvmf47RWF+h6xZIkVHJlSU3r3sqdtJsltRsuMT2eJYBA7vFAkcLiylGNkfY+Kv9iE6Q=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=f07F8loa; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1772488031; c=relaxed/simple;
+	bh=dT1IXpalStu+SPP9/yEyDqBe3CEMKoo1liAQefdKDQo=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=C2gU36VNxkCH6DZb4cMnSlU8az8oQ17AZ60Db/PBW+sRK6PrPslgCz/kJa72GtX6IrzMS2V5zDltfLiZVGKi7CW7X9/JIt+v7H6pnpl7BWYND6qqesXrFbzua2Nr6Vf2kBeYLhb1kU5QRT/L1H1RUJSDtY6mcvoovtEr75GyVks=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=bs5vcCy8; arc=none smtp.client-ip=209.85.208.44
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="f07F8loa"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id D9997C19423;
-	Mon,  2 Mar 2026 19:36:25 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1772480186;
-	bh=hykRQ85o3s1Gjn5iSxhnQfb+e01yQAaLRqtF/NC2jzw=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=f07F8loaDEeu7fComjbErz9dn5DwnYEbU45SqlEEuxLhZ6FJNwyJxXb4I+0htVJHT
-	 p080N5uXHn5GI+bXWfEyzb1IMmsjNGwVk94wMlKq0JnSm2y0x5tX4tpIEiwXUzO2lr
-	 gQBUPOQ75G3KHEJUIaq0nSZNNM+0SVi1VWK3R0JiB/FazSHK0IWzGonSr3wOIj1yt2
-	 hcXBSks/VXqdsAnNj90aDMS5+ahNYbUdTfE6QQf5ak4rLTIo5VAfW8S+4T/mGSj0h5
-	 oDlQmPoZepGv7wQoTYjqBfxFVQ5xbkTsg528VibV3lv4ypqb7G7mvS9T2GHq86ts7K
-	 khJs8hMnkMRMw==
-Message-ID: <ff438997-5d76-435e-a2e5-9ac6f8658eb1@kernel.org>
-Date: Mon, 2 Mar 2026 13:36:25 -0600
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="bs5vcCy8"
+Received: by mail-ed1-f44.google.com with SMTP id 4fb4d7f45d1cf-65fa4713bd3so8657634a12.3
+        for <platform-driver-x86@vger.kernel.org>; Mon, 02 Mar 2026 13:47:09 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1772488028; x=1773092828; darn=vger.kernel.org;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date:from:to
+         :cc:subject:date:message-id:reply-to;
+        bh=4Qa7Jz/rcInO9VwDsbRR68ssYjFYwIx+VKYrsv2Ktt4=;
+        b=bs5vcCy8Vr5REfVUO8T0946aFCmxUSSNSOskfC7zRh0BstpuN9YUZrxjT66p/1WFu6
+         EkjdB2cRiLnplxUbnXAbtTT1L5/qoLXa/I8ZRUgv72ZyMzHLRGfEvqWC3Rx5n6+PSbGl
+         dR2kHzbTlFOQucfBooDTSWVKUcEq8f3jYEV437msTx0VERGvRdSqNXtgjNJHYLgK1Jfv
+         0g2bNwazSasG2ob6iuhLwG00bINS4fNUHQsxm9QJZ7HuH4cDanGmn+jPO0FnwoUg5GRq
+         9X9WFcT9zb1gZJfF0QgRfpgK/GCFbCjJWIUbZUoi2r4j+lydI71Su+TqkJIOGEmIoZg5
+         Wqww==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1772488028; x=1773092828;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date:x-gm-gg
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=4Qa7Jz/rcInO9VwDsbRR68ssYjFYwIx+VKYrsv2Ktt4=;
+        b=Gkf5BxAtPJtxrHLT+qbhIe9ojFW1NaQBGZ5OlHdq8ItXbdM+dcmPDQ0goTJkLkJXZG
+         4hnqQunawRY6+U5LysCG2C3+JGI9hBkuk9zjNJMZ8MDyIlXuBK4bG9MPEq4sk0ekuiqZ
+         HQp6wAdqlU1XrZ8uiiGUD9Wf3HH5beQW7vxQM3gzoq68zaV7zw3XMJjauWUQiTu5tzhD
+         l8WJ4+5eRpiT0kCNkeGg9TNuEqdvrWD5l+3KHRjyorLI4CiAZ++zpa4W46ppS0CwUOBe
+         E6yYBoAFXAQJD9kDxWfqagibrN7DSwC3xwk3+EENau1ruxHAM0/iaVvzM+i6MdUjCCEp
+         LJrw==
+X-Forwarded-Encrypted: i=1; AJvYcCWuIUe3WPIkLrKzkABoNOEEqHm/5iKjp4wa7N30rGEvw0U1DHWc3gxwiMcBxhBuyUCXjR6Tf5oLx+gKuY4otN3uEH72@vger.kernel.org
+X-Gm-Message-State: AOJu0YzPItiDhJyzzujOhy37zfmzAueIBL43IK77oHMAVSXtWG1RqHMC
+	YFRhT0pQ9tnyqlWgh+OZqjfhf4MUc0RGmEKoPui9Aonbjn+6SKaq88jsCn/Oag==
+X-Gm-Gg: ATEYQzxepVDAB2N4e4fFiTg65EDDWN2tV4LKwQHQd7j5GmT9lbFisoOe5BWEgG7F2/N
+	53Xvq2cWn8daxuOi3b8Pq6rwU4hISdnbZJUZ0dqoNJQZC27hcKK0EZUdObsVYYMlaazt5IpaPaH
+	JqQpDJljpK+T8N1sG0WQX/B/x48kQgA+RY0WJE5Gm7tRGLq1MLVHlSKlW81GaIKnnOnnexyP1Mc
+	mhT862OesbcabzE84YxkDfDZz3VvMIhKDiGBHCMw+ofZKGWB9tSS0Llo9RR4jdzdjIV9KHXUmpc
+	dNgoBkC70SPh3qiMiK0K12qb9SrHQl/T7ctDJ5W1mw2kdUlN11kqVg9MqV4Eo4alSfKOdziuR17
+	cYt8GUakblWf1hWEREzQ7RiaJdP4dM9fVtaRD6U0MaWF/Fj3XZyVzTOCoCHFzKy5RDHdEsKv2aF
+	KOI1uMQ4hG6y0lgg==
+X-Received: by 2002:a17:907:fdca:b0:b8f:9dc5:4c83 with SMTP id a640c23a62f3a-b93763a48a8mr841871366b.13.1772488027447;
+        Mon, 02 Mar 2026 13:47:07 -0800 (PST)
+Received: from jekhomev ([46.251.53.180])
+        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-b9385836a84sm370149066b.59.2026.03.02.13.47.06
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 02 Mar 2026 13:47:06 -0800 (PST)
+Date: Mon, 2 Mar 2026 23:47:06 +0200
+From: Yauhen Kharuzhy <jekhor@gmail.com>
+To: Ilpo =?utf-8?B?SsOkcnZpbmVu?= <ilpo.jarvinen@linux.intel.com>
+Cc: Hans de Goede <hansg@kernel.org>, platform-driver-x86@vger.kernel.org, 
+	LKML <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH v2 1/2] platform: x86-android-tablets: lenovo: Add Yoga
+ Book haptics entries
+Message-ID: <aaYETFppGQHDGQ_G@jekhomev>
+References: <20260302-x86-tablets-yogabook-v2-0-061768d5c9e7@gmail.com>
+ <20260302-x86-tablets-yogabook-v2-1-061768d5c9e7@gmail.com>
+ <33d45e2e-f319-65ae-a05a-279d72411979@linux.intel.com>
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v3 0/7] platform/x86/amd/pmf: Introduce PMF util layer
- with userspace interface
-To: Shyam Sundar S K <Shyam-sundar.S-k@amd.com>, hansg@kernel.org,
- ilpo.jarvinen@linux.intel.com
-Cc: platform-driver-x86@vger.kernel.org, Yijun.Shen@Dell.com,
- Sanket.Goswami@amd.com
-References: <20260301131124.1370565-1-Shyam-sundar.S-k@amd.com>
-Content-Language: en-US
-From: Mario Limonciello <superm1@kernel.org>
-In-Reply-To: <20260301131124.1370565-1-Shyam-sundar.S-k@amd.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <33d45e2e-f319-65ae-a05a-279d72411979@linux.intel.com>
 
-On 3/1/26 7:11 AM, Shyam Sundar S K wrote:
-> This patch series introduces a new util layer for the AMD Platform
-> Management Framework (PMF) driver that exposes a minimal userspace
-> interface for metrics monitoring and feature discovery.
+On Mon, Mar 02, 2026 at 01:52:38PM +0200, Ilpo Järvinen wrote:
+> On Mon, 2 Mar 2026, Yauhen Kharuzhy wrote:
 > 
-> AMD PMF currently manages power and thermal policies internally through
-> Smart PC features, Auto Mode, Policy Builder, Static/Dynamic Power
-> Sliders. However, system designers and OEMs need visibility into PMF
-> metrics and feature status for validation, debugging, and integration
-> with monitoring tools.
+> > Add drv2604l i2c_board_info for drv2604l haptics drivers present in
+> > Lenovo Yoga Book YB1-X90 and YB1-X91. Set properties required for device
+> > initialization and self-calibration.
+> > 
+> > Signed-off-by: Yauhen Kharuzhy <jekhor@gmail.com>
+> > ---
+> >  drivers/platform/x86/x86-android-tablets/lenovo.c | 92 +++++++++++++++++++++++
+> >  1 file changed, 92 insertions(+)
+> > 
+> > diff --git a/drivers/platform/x86/x86-android-tablets/lenovo.c b/drivers/platform/x86/x86-android-tablets/lenovo.c
+> > index 8d825e0b4661..bc10f00da8c6 100644
+> > --- a/drivers/platform/x86/x86-android-tablets/lenovo.c
+> > +++ b/drivers/platform/x86/x86-android-tablets/lenovo.c
+> > @@ -10,6 +10,8 @@
+> >  
+> >  #define pr_fmt(fmt) KBUILD_MODNAME ": " fmt
+> >  
+> > +#include <linux/cleanup.h>
+> > +#include <linux/device.h>
+> >  #include <linux/efi.h>
+> >  #include <linux/gpio/machine.h>
+> >  #include <linux/gpio/property.h>
+> > @@ -114,6 +116,32 @@ static const struct software_node lenovo_yb1_x90_hideep_ts_node = {
+> >  	.properties = lenovo_yb1_x90_hideep_ts_props,
+> >  };
+> >  
+> > +static const struct property_entry lenovo_yb1_x9x_drv2604l_0_props[] = {
+> > +	PROPERTY_ENTRY_U32("vib-rated-mv", 1500),
+> > +	PROPERTY_ENTRY_U32("vib-overdrive-mv", 2100),
+> > +	PROPERTY_ENTRY_U32("mode", 0), /* LRA */
+> > +	PROPERTY_ENTRY_U32("library-sel", 0), /* DRV260X_LIB_EMPTY */
+> > +	PROPERTY_ENTRY_GPIO("enable-gpios", &cherryview_gpiochip_nodes[0], 79, GPIO_ACTIVE_HIGH),
+> > +	{}
+> > +};
+> > +
+> > +static const struct software_node lenovo_yb1_x9x_drv2604l_0_node = {
+> > +	.properties = lenovo_yb1_x9x_drv2604l_0_props,
+> > +};
+> > +
+> > +static const struct property_entry lenovo_yb1_x9x_drv2604l_1_props[] = {
+> > +	PROPERTY_ENTRY_U32("vib-rated-mv", 1500),
+> > +	PROPERTY_ENTRY_U32("vib-overdrive-mv", 2100),
+> > +	PROPERTY_ENTRY_U32("mode", 0), /* LRA */
+> > +	PROPERTY_ENTRY_U32("library-sel", 0), /* DRV260X_LIB_EMPTY */
+> > +	PROPERTY_ENTRY_GPIO("enable-gpios", &cherryview_gpiochip_nodes[1], 47, GPIO_ACTIVE_HIGH),
+> > +	{}
+> > +};
+> > +
+> > +static const struct software_node lenovo_yb1_x9x_drv2604l_1_node = {
+> > +	.properties = lenovo_yb1_x9x_drv2604l_1_props,
+> > +};
+> > +
+> >  static const struct x86_i2c_client_info lenovo_yb1_x90_i2c_clients[] __initconst = {
+> >  	{
+> >  		/* BQ27542 fuel-gauge */
+> > @@ -159,6 +187,24 @@ static const struct x86_i2c_client_info lenovo_yb1_x90_i2c_clients[] __initconst
+> >  			.polarity = ACPI_ACTIVE_LOW,
+> >  			.con_id = "wacom_irq",
+> >  		},
+> > +	}, {
+> > +		/* Keyboard haptics driver */
+> > +		.board_info = {
+> > +			.type = "drv2604l",
+> > +			.addr = 0x5a,
+> > +			.dev_name = "drv2604l.0",
+> > +			.swnode = &lenovo_yb1_x9x_drv2604l_0_node,
+> > +		},
+> > +		.adapter_path = "\\_SB_.PCI0.I2C1",
+> > +	}, {
+> > +		/* Keyboard haptics driver */
+> > +		.board_info = {
+> > +			.type = "drv2604l",
+> > +			.addr = 0x5a,
+> > +			.dev_name = "drv2604l.1",
+> > +			.swnode = &lenovo_yb1_x9x_drv2604l_1_node,
+> > +		},
+> > +		.adapter_path = "\\_SB_.PCI0.I2C4",
+> >  	}, {
+> >  		/* LP8557 Backlight controller */
+> >  		.board_info = {
+> > @@ -283,9 +329,55 @@ static const struct x86_i2c_client_info lenovo_yogabook_x91_i2c_clients[] __init
+> >  	},
+> >  };
+> >  
+> > +#define YB1_X91_DRV2604L_0_DEVICE "i2c-DRV2604:00"
+> > +#define YB1_X91_DRV2604L_1_DEVICE "i2c-DRV2604:01"
+> > +
+> > +static int __init lenovo_yb1_x91_init(struct device *dev)
+> > +{
+> > +	struct device *drv2604l_0_dev __free(put_device) = NULL;
+> > +	struct device *drv2604l_1_dev __free(put_device) = NULL;
+> > +	int ret = 0;
+> > +
+> > +	drv2604l_0_dev = bus_find_device_by_name(&i2c_bus_type, NULL,
 > 
-> This series addresses that need by adding a character device interface
-> that allows controlled access to PMF metrics data while maintaining
-> the driver's existing automated policy management.
+> Hi,
 > 
-> The primary use case is integration with userspace tools like AMD
-> SystemDeck, which are widely used by system designers to:
-> - Monitor real-time power and thermal behavior
-> - Validate PMF feature operation during platform bring-up
-> - Debug thermal issues by tracking skin temperature, C-state residency,
->    and socket power metrics
-> - Verify BIOS input/output policy values during Smart PC operation
+> Please read the long comment at the beginning of include/linux/cleanup.h
+> (in particular the part where it talks about those varname = NULL 
+> constructs).
 > 
-> The util layer reads from the existing Trusted Application (TA) shared
-> memory buffer and cached BIOS output values, adding no new communication
-> overhead with the TA.
+> While the ordering is not a problem here as is, we don't want to use 
+> patterns that are dangerous in other situations.
+
+Got it, thanks for pointing that out, I missed that nuance when I was reading
+the comment. I will move declaration from function start to real assignments.
+
 > 
-> v3:
->   - Stop exporting battery information via util layer.
->   - Optimize the core logic for fetching BIOS outputs.
->   - Update the documentation patch to reflect the current util layer design.
->   - Consolidate amd-pmf-io.h changes into common UAPI header.
->   - Define a single unified uAPI structure and IOCTL.
->   - Address other v2 review remarks [1]
+> -- 
+>  i.
 > 
-> v2:
->   - address remarks from v1
->   - add a new tool that exercises the IOCTLs from PMF interface
-> 
-> [1] https://lore.kernel.org/platform-driver-x86/20251111071010.4179492-1-Shyam-sundar.S-k@amd.com/
-> 
-> Shyam Sundar S K (7):
->    platform/x86/amd/pmf: Add util layer and userspace misc device
->      interface
->    platform/x86/amd/pmf: cache BIOS output values for user-space metrics
->      via util IOCTL
->    platform/x86/amd/pmf: Add feature discovery support to util interface
->    platform/x86/amd/pmf: Store commonly used enums in the header file
->    platform/x86/amd/pmf: Move debug helper functions to UAPI header
->    platform/x86/amd/pmf: Introduce AMD PMF testing tool for driver
->      metrics and features
->    Documentation/ABI: add testing entry for AMD PMF misc device interface
-> 
->   .../ABI/testing/misc-amdpmf_interface         |  70 ++++
->   MAINTAINERS                                   |   1 +
->   .../amd-sfh-hid/sfh1_1/amd_sfh_interface.c    |   1 +
->   drivers/platform/x86/amd/pmf/Kconfig          |  10 +
->   drivers/platform/x86/amd/pmf/Makefile         |   2 +
->   drivers/platform/x86/amd/pmf/core.c           |   8 +
->   drivers/platform/x86/amd/pmf/pmf.h            |  32 +-
->   drivers/platform/x86/amd/pmf/spc.c            |  55 +--
->   drivers/platform/x86/amd/pmf/tee-if.c         |   9 +-
->   drivers/platform/x86/amd/pmf/util.c           | 210 ++++++++++++
->   include/linux/amd-pmf-io.h                    |   9 -
->   include/uapi/linux/amd-pmf.h                  | 324 ++++++++++++++++++
->   tools/testing/selftests/Makefile              |   1 +
->   .../drivers/platform/x86/amd/pmf/Makefile     |   8 +
->   .../drivers/platform/x86/amd/pmf/test_pmf.c   | 243 +++++++++++++
->   15 files changed, 897 insertions(+), 86 deletions(-)
->   create mode 100644 Documentation/ABI/testing/misc-amdpmf_interface
->   create mode 100644 drivers/platform/x86/amd/pmf/util.c
->   create mode 100644 include/uapi/linux/amd-pmf.h
->   create mode 100644 tools/testing/selftests/drivers/platform/x86/amd/pmf/Makefile
->   create mode 100644 tools/testing/selftests/drivers/platform/x86/amd/pmf/test_pmf.c
+> > +						 YB1_X91_DRV2604L_0_DEVICE);
+> > +	if (!drv2604l_0_dev) {
+> > +		pr_err("error: cannot find %s device\n",
+> > +		       YB1_X91_DRV2604L_0_DEVICE);
+> > +		return -ENODEV;
+> > +	}
+> > +
+> > +	ret = device_create_managed_software_node(drv2604l_0_dev,
+> > +					lenovo_yb1_x9x_drv2604l_0_props, NULL);
+> > +	if (ret) {
+> > +		pr_err("error: cannot create software node for %s: %d\n",
+> > +		       YB1_X91_DRV2604L_0_DEVICE, ret);
+> > +		return ret;
+> > +	}
+> > +
+> > +	drv2604l_1_dev = bus_find_device_by_name(&i2c_bus_type, NULL,
+> > +						 YB1_X91_DRV2604L_1_DEVICE);
+> > +	if (!drv2604l_1_dev) {
+> > +		pr_err("error: cannot find %s device\n",
+> > +		       YB1_X91_DRV2604L_1_DEVICE);
+> > +		return -ENODEV;
+> > +	}
+> > +
+> > +	ret = device_create_managed_software_node(drv2604l_1_dev,
+> > +					lenovo_yb1_x9x_drv2604l_1_props, NULL);
+> > +	if (ret) {
+> > +		pr_err("error: cannot create software node for %s\n",
+> > +		       YB1_X91_DRV2604L_1_DEVICE);
+> > +		return ret;
+> > +	}
+> > +
+> > +	return 0;
+> > +}
+> > +
+> >  const struct x86_dev_info lenovo_yogabook_x91_info __initconst = {
+> >  	.i2c_client_info = lenovo_yogabook_x91_i2c_clients,
+> >  	.i2c_client_count = ARRAY_SIZE(lenovo_yogabook_x91_i2c_clients),
+> > +	.gpiochip_type = X86_GPIOCHIP_CHERRYVIEW,
+> > +	.init = lenovo_yb1_x91_init,
+> >  };
+> >  
+> >  /* Lenovo Yoga Tablet 2 1050F/L's Android factory image has everything hardcoded */
+> > 
+> > 
 > 
 
-Thanks, looks good to me.  You can add this to the next version (which 
-incorporates Randy's feedback).
-
-Reviewed-by: Mario Limonciello (AMD) <superm1@kernel.org>
-
+-- 
+Yauhen Kharuzhy
