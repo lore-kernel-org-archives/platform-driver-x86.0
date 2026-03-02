@@ -1,87 +1,75 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.12])
+Received: from out-186.mta1.migadu.com (out-186.mta1.migadu.com [95.215.58.186])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4301B42F543;
-	Mon,  2 Mar 2026 16:43:28 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.12
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 66FC7366DB7
+	for <platform-driver-x86@vger.kernel.org>; Mon,  2 Mar 2026 17:44:44 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=95.215.58.186
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1772469810; cv=none; b=MP62FT7a61GySQOuYh7SPy2BCIR74fNk3uzhe6H4Yw8TFFaXteX/TCf8A367sKc5My+i9pIjhTItivEkadY5jEdnnQOtnMzbW4El2MA8TbLkPOzjn1y4zIBpMbcdCTa91kY8quxBkr3s/t6f859SOXDceB97xqri0ll9cgTTVE0=
+	t=1772473486; cv=none; b=r0QkjZBh/jmY9fQufZaHmIntuH89QNvECmTzC9GNllInojuCgSWLpf63UxWTU9Iz4HwpvTqUSeawMW9R+1l1JbAgFD4u9GH8X/9oEwqV8oWE62Ldm1xQHvI0y/5e23sNYa8y62f/9txIsc8boaYvpjiWdsQqQ6GjDzqHkf1ValY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1772469810; c=relaxed/simple;
-	bh=OQS6J9jrqZ5GEulhqqXQeNfkKdeL38y0tjCbOyQiN1w=;
-	h=From:To:Cc:In-Reply-To:References:Subject:Message-Id:Date:
-	 MIME-Version:Content-Type; b=mi5m9Trd62A0rGpVCzyn1CWclTrtX1wBPwWbX1rxexQqeegz7VOl0qtGnkn1czSSIMhnCfP3TyWLqjvNVd3+U/uBEkx8DIithyw2Ikc6iVXFpfvG3Y20LQb4lhTW9mJMY1oywxT6SWLFGUXD319De7sbiYQdWUn+rWj7emSFpz0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=pass smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=LmcXZkhi; arc=none smtp.client-ip=192.198.163.12
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.intel.com
+	s=arc-20240116; t=1772473486; c=relaxed/simple;
+	bh=tsTLaGp9DV/gJzjbxVzmjxAtFh9U+E0n/CddRcEYTLQ=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=uxPZf8lDa06S/fSo2A7UcQrwsiNzTCMJdXjP0kRyBeTWrwTnMbNqRF84Pba7dZWkOS3H3RKYRpVM+ivJq5u6GAKnGngkSO84w78hNDZRYMkfF8vWVwTtLeinni0qTwTN0ilSmlibp95Sv6RQYWIgE+sPucToe5SPDlGgzzWIv0U=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=oyUPtFk+; arc=none smtp.client-ip=95.215.58.186
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="LmcXZkhi"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1772469808; x=1804005808;
-  h=from:to:cc:in-reply-to:references:subject:message-id:
-   date:mime-version:content-transfer-encoding;
-  bh=OQS6J9jrqZ5GEulhqqXQeNfkKdeL38y0tjCbOyQiN1w=;
-  b=LmcXZkhiPmWadNhgZxWkPLUI9//7bjLD6c9nBuATrLci8liJu1pdjFtm
-   C2vxI9XX9UaySRxMPaklxw7IPDHBQKcnVx5TSdPdY/3K7C0MUz3JK3KJY
-   DUSCtrkIz3dOlG7Oi0EXJWMFXg2BCTLVuh/m6XNHZL0/5K4grge6EFHJm
-   AQ5zjfZKj6SHLIf7dEJ9c5h53+slZ8R+V7TwK0wMcV3XPwg+jxRhZdnHw
-   18HR96Ur6s6Xknma0ZRsSlhjKzeALeCqYxWx1gJqjTdoG03JwfcGp/vdU
-   xSZnqrb9+8GQ+Vn2g9r37A0L6+s/n6gOb3UCBxfDz+4E4w54r9oHC9WdS
-   g==;
-X-CSE-ConnectionGUID: GtyMHgrVQwyZ6jlwq0jRUw==
-X-CSE-MsgGUID: tfMakWDKRUyi1w9/X4jumQ==
-X-IronPort-AV: E=McAfee;i="6800,10657,11717"; a="77349407"
-X-IronPort-AV: E=Sophos;i="6.21,320,1763452800"; 
-   d="scan'208";a="77349407"
-Received: from fmviesa010.fm.intel.com ([10.60.135.150])
-  by fmvoesa106.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 02 Mar 2026 08:42:54 -0800
-X-CSE-ConnectionGUID: X13twFrrS/27aYS6BhtjzA==
-X-CSE-MsgGUID: qgnbNoQKT7+WH0KHkF4e5A==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.21,320,1763452800"; 
-   d="scan'208";a="215322343"
-Received: from ijarvine-mobl1.ger.corp.intel.com (HELO localhost) ([10.245.244.116])
-  by fmviesa010-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 02 Mar 2026 08:42:51 -0800
-From: =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
-To: Prasanth Ksr <prasanth.ksr@dell.com>, Hans de Goede <hansg@kernel.org>, 
- =?utf-8?q?Thomas_Wei=C3=9Fschuh?= <linux@weissschuh.net>
-Cc: Dell.Client.Kernel@dell.com, platform-driver-x86@vger.kernel.org, 
- linux-kernel@vger.kernel.org
-In-Reply-To: <20260223-sysfs-const-dell-wmi-sysman-v1-1-8a690884044e@weissschuh.net>
-References: <20260223-sysfs-const-dell-wmi-sysman-v1-1-8a690884044e@weissschuh.net>
-Subject: Re: [PATCH] platform/x86: dell-wmi-sysman: Use standard
- kobj_sysfs_ops
-Message-Id: <177246976574.2818.14422510853903290469.b4-ty@linux.intel.com>
-Date: Mon, 02 Mar 2026 18:42:45 +0200
+	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="oyUPtFk+"
+X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
+	t=1772473482;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:
+	 content-transfer-encoding:content-transfer-encoding;
+	bh=nw9mOcF7BrPD3Fmaa0Ag8e0U3GwpZmyjHDFMUtoogKk=;
+	b=oyUPtFk+25nFkS+ugwez218OA7Es//a094bX5LZ/wqd4aiXlyZ8oVP0EzteRDsu9r8d2W2
+	qIFdoP5c4K4OfWWLt5FRkTorLyzct6OQnanhrH6kDl3GhfaPyms4vguZMHOOrnRi5vKUC3
+	y+/TR41TL3gf5LFiMQFtGLdIBF69ZR0=
+From: Denis Benato <denis.benato@linux.dev>
+To: linux-kernel@vger.kernel.org
+Cc: platform-driver-x86@vger.kernel.org,
+	"Hans de Goede" <hansg@kernel.org>,
+	=?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>,
+	"Luke D . Jones" <luke@ljones.dev>,
+	"Mateusz Schyboll" <dragonn@op.pl>,
+	"Denis Benato" <benato.denis96@gmail.com>,
+	"Denis Benato" <denis.benato@linux.dev>
+Subject: [PATCH v3 0/2] platform/x86: asus-wmi: fix screenpad brightness/power management
+Date: Mon,  2 Mar 2026 18:44:29 +0100
+Message-ID: <20260302174431.349816-1-denis.benato@linux.dev>
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 8bit
-X-Mailer: b4 0.13.0
+X-Migadu-Flow: FLOW_OUT
 
-On Mon, 23 Feb 2026 21:59:07 +0100, Thomas Weißschuh wrote:
+Fix up some inconsistent behaviour involving the screenpad on some
+ASUS laptops. This fixes:
+- illogical screen off control (0/1 flipped depending on WMI state)
+- bad brightness depending on the last screenpad power state
+- incorrect brightness scaling
 
-> wmi_sysman_kobj_sysfs_ops are identical to the standard kobj_sysfs_ops.
-> 
-> Drop the unnecessary custom copy.
-> 
-> 
+Changelog:
+- v1
+  - Initial submission
+- v2
+  - Split patch in two
+  - Remove a redundant variable copy
+- v3
+  - Fix variable declaration (reverse x-mas tree)
+  - Change commit message of 2/2 to reflect the actual change
+  - Add "Fixes" tag to both patches 
 
+Denis Benato (2):
+  platform/x86: asus-wmi: adjust screenpad power/brightness handling
+  platform/x86: asus-wmi: fix screenpad brightness range
 
-Thank you for your contribution, it has been applied to my local
-review-ilpo-next branch. Note it will show up in the public
-platform-drivers-x86/review-ilpo-next branch only once I've pushed my
-local branch there, which might take a while.
+ drivers/platform/x86/asus-wmi.c | 50 +++++++++++++--------------------
+ 1 file changed, 19 insertions(+), 31 deletions(-)
 
-The list of commits applied:
-[1/1] platform/x86: dell-wmi-sysman: Use standard kobj_sysfs_ops
-      commit: 1b0b124a9c41bf384f609003a97ba35a25fae130
-
---
- i.
+-- 
+2.53.0
 
