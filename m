@@ -1,60 +1,63 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.19])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A3D5F3FFADC
-	for <platform-driver-x86@vger.kernel.org>; Mon,  2 Mar 2026 14:41:01 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 061A81A2C0B
+	for <platform-driver-x86@vger.kernel.org>; Mon,  2 Mar 2026 16:16:50 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.19
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1772462461; cv=none; b=jc3pYlIxvMPRIVz/2ObrSHhNZBgMxSECkID52YE80THoIN13ldqxXQgXDwwt0cIiUnDW8FjhIF2Fwq5eTwgUqYUJ9lFKa2vS7MiHN2E8zxQNma+N/QngFKi/vBVoyxa9eVp/sui3ndVL8t+UNDWhHzKRKKq7Qz7J4odp3HALqLI=
+	t=1772468216; cv=none; b=uAb1TyFoTl+seQkPVm0J/lfMbQYMXPbcWxXixPzPqo4/q3xI0jAR61s8fB6Xe2TnaASxv3zY1UTkKLYg1MNhxG0BDfmY7nueqtM9gLg7JQuOuBmiUVIIrGuTBCUZIavrZgqU834Fi3gATPaTP7YExip2ROuOxW5oCJitdX2iIfE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1772462461; c=relaxed/simple;
-	bh=9J8LrsMBG4yNjbOmbNBoEcmiibOGq6KkCFvOpYUHfAA=;
-	h=From:To:Subject:Date:Message-ID:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=TNpieuU9+1uLbf/glcdAPQIiRZOEm0lvlwDsT8RzsoNO7wxgFsI0RzkxjNoysH+wXOzJ/a0j7HagIOrk5JB6eHCaHztogSf8OSN1FzNbaRYSpQtgO5HtJTzTMhdV68xo+Er22UHhEUXaDc8bl2AMXz/zsx5ydABClwWLqUiFYkQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=l19HtLY0; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1772468216; c=relaxed/simple;
+	bh=611EiaKpXMxVns229GJRl8GnChsrYN11L5yq4ur7dxo=;
+	h=Message-ID:Subject:From:To:Date:In-Reply-To:References:
+	 Content-Type:MIME-Version; b=ieTaj0xyFj3FV5XY7dlex8TCNmlpE0exJkAF0eOefxOgdZqycrEk+uweUZ4Pwt/xZk1hHVflmALuwBtYGSjaH7QAsipAH9/SO/zY6K+MLiVIHvGsztZLxnBFEpAy2HGW9iEAGlKWGAH4F2XbzJGNDU0v15ugEV2gUpKG71UhZRg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=pass smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=cues/0IA; arc=none smtp.client-ip=198.175.65.19
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="l19HtLY0"
-Received: by smtp.kernel.org (Postfix) with ESMTPS id 858AFC2BC87
-	for <platform-driver-x86@vger.kernel.org>; Mon,  2 Mar 2026 14:41:01 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1772462461;
-	bh=9J8LrsMBG4yNjbOmbNBoEcmiibOGq6KkCFvOpYUHfAA=;
-	h=From:To:Subject:Date:In-Reply-To:References:From;
-	b=l19HtLY0wig7/Flqqr4VcUbwSci0mA/rRD1QSQVsSYiL1V+O8UvRrv6WCgxhmxPtM
-	 WxrujaUX5xA11NgE4kO1JXyvUIPOeUwx5lmpFhAgZaM4D7EkK8WGfo3qeneWeNS/U2
-	 rQXlEVilguc1wIrQDBkSEO2tfle3F6dVCufXPUnRLn+Dzm667raOhqzI+R9NzNherl
-	 ZyxuX3KJV0vNCfeZ/pSwXYcT0GEEq+dcyH8SWxnn/y3uKaMRwAYsOsJ9WHYF6/t4ne
-	 7z2vJbDdmkHgM6PySvJj64wWaciAZmSjiP2vJx/kJzT3+VoDN1xXUzL62N6jPjeO6l
-	 UgAtK7lPtTsLg==
-Received: by aws-us-west-2-korg-bugzilla-1.web.codeaurora.org (Postfix, from userid 48)
-	id 76242C41612; Mon,  2 Mar 2026 14:41:01 +0000 (UTC)
-From: bugzilla-daemon@kernel.org
-To: platform-driver-x86@vger.kernel.org
-Subject: [Bug 221065] ideapad_acpi: unexpected charge_types spam on Yoga Pro
- 7 14ASP9
-Date: Mon, 02 Mar 2026 14:41:01 +0000
-X-Bugzilla-Reason: None
-X-Bugzilla-Type: changed
-X-Bugzilla-Watch-Reason: AssignedTo drivers_platform_x86@kernel-bugs.osdl.org
-X-Bugzilla-Product: Drivers
-X-Bugzilla-Component: Platform_x86
-X-Bugzilla-Version: 2.5
-X-Bugzilla-Keywords: 
-X-Bugzilla-Severity: low
-X-Bugzilla-Who: team@nitrosubs.live
-X-Bugzilla-Status: NEW
-X-Bugzilla-Resolution: 
-X-Bugzilla-Priority: P3
-X-Bugzilla-Assigned-To: drivers_platform_x86@kernel-bugs.osdl.org
-X-Bugzilla-Flags: 
-X-Bugzilla-Changed-Fields: 
-Message-ID: <bug-221065-215701-0MWSxiMI5r@https.bugzilla.kernel.org/>
-In-Reply-To: <bug-221065-215701@https.bugzilla.kernel.org/>
-References: <bug-221065-215701@https.bugzilla.kernel.org/>
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="cues/0IA"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1772468211; x=1804004211;
+  h=message-id:subject:from:to:date:in-reply-to:references:
+   content-transfer-encoding:mime-version;
+  bh=611EiaKpXMxVns229GJRl8GnChsrYN11L5yq4ur7dxo=;
+  b=cues/0IAF4nS9lwlVT9rqHHMm9G8SlkdmnbVh7DUN+ebX/NuZXyw3gEc
+   cY9yci9Ad2aG7fbRu7onDFidh1Ui3QRtJYkos+hSzlN70is+u77SV8Mks
+   6Q5OcGq6NjJrMOO75XuUkeGc6pvR5x6tGgwr2sdXo6A0nCsRQuUTYN/IY
+   J1Pz7/02mj4i0NBH/UcCH+AGdKvUC5BKADt6TowcHFn3Tb5ls8GP0/MoS
+   orMQGmG7bvJyUxWMNJR+mLFnpMru/ZA5/1VyebzKbk23DuPgyiYuNS8Hy
+   i2hnwHyBDdlBu+qd2irp0xry2b5IqDK2ItuWLNkWEqGkeNQR+EXrb3zpc
+   Q==;
+X-CSE-ConnectionGUID: 12q2fsXpQce8uXI/86YDGQ==
+X-CSE-MsgGUID: CxH1RcLoQAyLkcXrlytmNA==
+X-IronPort-AV: E=McAfee;i="6800,10657,11717"; a="73387883"
+X-IronPort-AV: E=Sophos;i="6.21,320,1763452800"; 
+   d="scan'208";a="73387883"
+Received: from orviesa003.jf.intel.com ([10.64.159.143])
+  by orvoesa111.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 02 Mar 2026 08:16:49 -0800
+X-CSE-ConnectionGUID: zB0kpQX7T1qDHG+rcx/GvA==
+X-CSE-MsgGUID: 4YbhfAB3QsCUAb3JIVxHEg==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.21,320,1763452800"; 
+   d="scan'208";a="221847642"
+Received: from spandruv-desk2.jf.intel.com ([10.88.27.176])
+  by ORVIESA003-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 02 Mar 2026 08:16:49 -0800
+Message-ID: <67b387d94df512d77991f370bda8384e3fd4da9f.camel@linux.intel.com>
+Subject: Re: =?UTF-8?Q?=E7=AD=94=E5=A4=8D=3A?= [PATCH] platform/x86: ISST:
+ Check HWP support before MSR access
+From: srinivas pandruvada <srinivas.pandruvada@linux.intel.com>
+To: "Li,Rongqing(ACG CCN)" <lirongqing@baidu.com>, Hans de Goede
+	 <hansg@kernel.org>, Ilpo =?ISO-8859-1?Q?J=E4rvinen?=
+	 <ilpo.jarvinen@linux.intel.com>, "platform-driver-x86@vger.kernel.org"
+	 <platform-driver-x86@vger.kernel.org>
+Date: Mon, 02 Mar 2026 08:16:49 -0800
+In-Reply-To: <2c70039312544a68adafe670b422e2bd@baidu.com>
+References: <20260228122441.2284-1-lirongqing@baidu.com>
+	 <2c70039312544a68adafe670b422e2bd@baidu.com>
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
-X-Bugzilla-URL: https://bugzilla.kernel.org/
-Auto-Submitted: auto-generated
+User-Agent: Evolution 3.56.2 (3.56.2-2.fc42) 
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
@@ -62,31 +65,79 @@ List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 
-https://bugzilla.kernel.org/show_bug.cgi?id=3D221065
+On Mon, 2026-03-02 at 02:20 +0000, Li,Rongqing(ACG CCN) wrote:
+> > On some systems, HWP can be explicitly disabled in the BIOS
+> > settings When
+> > HWP is disabled by firmware, the HWP CPUID bit is not set, and
+> > attempting to
+> > read MSR_PM_ENABLE will result in a General Protection
+> > (GP) fault.
+> >=20
+> > [=C2=A0 426.715441] unchecked MSR access error: RDMSR from 0x770 at rIP=
+:
+> > 0xffffffffc33db92e (disable_dynamic_sst_features+0xe/0x50
+> > [isst_tpmi_core])
+> > [=C2=A0 426.715450] Call Trace:
+> > [=C2=A0 426.715453]=C2=A0 <TASK>
+> > [=C2=A0 426.715454]=C2=A0 ? ex_handler_msr+0xf6/0x150 [=C2=A0 426.71546=
+1]=C2=A0 ?
+> > fixup_exception+0x1ad/0x340 [=C2=A0 426.715462]=C2=A0 ?
+> > gp_try_fixup_and_notify+0x1e/0xb0 [=C2=A0 426.715466]=C2=A0 ?
+> > exc_general_protection+0xc9/0x390 [=C2=A0 426.715470]=C2=A0 ?
+> > terminate_walk+0x64/0x100 [=C2=A0 426.715474]=C2=A0 ?
+> > asm_exc_general_protection+0x22/0x30
+> > [=C2=A0 426.715477]=C2=A0 ? disable_dynamic_sst_features+0xe/0x50
+> > [isst_tpmi_core]
+> > [=C2=A0 426.715480]=C2=A0 isst_if_def_ioctl+0xece/0x1050 [isst_tpmi_cor=
+e]
+> > [=C2=A0 426.715484]=C2=A0 ? ioctl_has_perm.constprop.42+0xe0/0x130
+> > [=C2=A0 426.715489]=C2=A0 isst_if_def_ioctl+0x10d/0x1a0 [isst_if_common=
+]
+> > [=C2=A0 426.715495]=C2=A0 __se_sys_ioctl+0x86/0xc0 [=C2=A0 426.715498]
+> > do_syscall_64+0x8a/0x100 [=C2=A0 426.715500]
+> > entry_SYSCALL_64_after_hwframe+0x78/0xe2
+> > [=C2=A0 426.715503] RIP: 0033:0x7f36eaef54a7
+> >=20
+> > Add a check for X86_FEATURE_HWP before accessing the MSR. If HWP is
+> > not
+> > available, return false safely.
+>=20
+> It returns true, not false. Could you revise this commit message in
+> the merge?
 
---- Comment #45 from fililip (team@nitrosubs.live) ---
-(In reply to Avraham Hollander from comment #44)
-> I didn't know you could do that with fwupd either. I'll have to try it ne=
-xt
-> time.
+You should submit V2.
 
-This only works for AMD platforms, I think, but all you need to do is run
+Thanks,
+Srinivas
 
-doas fwupdtool get-devices | grep -A 1 "System Firmware"
-
-get the ID, and then execute
-
-doas fwupdtool install-blob WinPSCN21WW.fd [that ID]
-
-with WinPSCN21WW.fd being that extracted update file.
-
-Then fwupd will prompt you for a reboot and install the update from the EFI.
-
-Intel platforms have an additional IME update and I'm not sure how that's
-supposed to work, so caution is advised.
-
---=20
-You may reply to this email to add a comment.
-
-You are receiving this mail because:
-You are watching the assignee of the bug.=
+>=20
+> [Li,Rongqing]=20
+>=20
+>=20
+> >=20
+> > Fixes: 12a7d2cb811dd8a ("platform/x86: ISST: Add SST-CP support via
+> > TPMI")
+> > Signed-off-by: Li RongQing <lirongqing@baidu.com>
+> > ---
+> > =C2=A0drivers/platform/x86/intel/speed_select_if/isst_tpmi_core.c | 3
+> > +++
+> > =C2=A01 file changed, 3 insertions(+)
+> >=20
+> > diff --git
+> > a/drivers/platform/x86/intel/speed_select_if/isst_tpmi_core.c
+> > b/drivers/platform/x86/intel/speed_select_if/isst_tpmi_core.c
+> > index b8cdaa2..6f46cbb 100644
+> > --- a/drivers/platform/x86/intel/speed_select_if/isst_tpmi_core.c
+> > +++ b/drivers/platform/x86/intel/speed_select_if/isst_tpmi_core.c
+> > @@ -558,6 +558,9 @@ static bool disable_dynamic_sst_features(void)
+> > =C2=A0{
+> > =C2=A0	u64 value;
+> >=20
+> > +	if (!static_cpu_has(X86_FEATURE_HWP))
+> > +		return true;
+> > +
+> > =C2=A0	rdmsrq(MSR_PM_ENABLE, value);
+> > =C2=A0	return !(value & 0x1);
+> > =C2=A0}
+> > --
+> > 2.9.4
