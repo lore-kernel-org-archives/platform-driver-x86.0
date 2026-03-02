@@ -1,39 +1,33 @@
-Received: from mail.tuxedocomputers.com (mail.tuxedocomputers.com [157.90.84.7])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 12DA12C08CF;
-	Mon,  2 Mar 2026 18:22:15 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=157.90.84.7
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B0F4547D943
+	for <platform-driver-x86@vger.kernel.org>; Mon,  2 Mar 2026 19:36:26 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1772475739; cv=none; b=CebF4RPR2sxc4Y6komOlL8vltP4zWcQnApbqiR5QTca+OcrH1uiarAD3WVzjLWnvgFdHuha42CmGVQjtBtI0W41E1pd2h2Tml56afA0/gPKda+Rc8Lt+z3Vdnytc4+HDjwYu1MumRZdW1XEwZHhi/aDBlT127q2yc4s8xgT/7LM=
+	t=1772480186; cv=none; b=HKjswKRiYEua4fypUn/tba12XJInL0subxu3WJLyIiCyc20OBBA3Pn5PRrAtEdYC4LDFib4tyylx45MmAG1G8aSp1svl/kV4Mabd2j5OG5+WurQ1eV+zRR0wOjhz7Qs+F4WxeORd/zWvPSPu+pHH+EZ0xt9GRzE+HfZzEAfyoq8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1772475739; c=relaxed/simple;
-	bh=0LYvmTLOth+EUEM83vtkGb6ATEihTJzcdPzfrW89rA4=;
+	s=arc-20240116; t=1772480186; c=relaxed/simple;
+	bh=hykRQ85o3s1Gjn5iSxhnQfb+e01yQAaLRqtF/NC2jzw=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=ezyBvssU0UHENJgCdmDWTYFFabDG6TMvPX2CkgsQpd7QF7PhoRy/FNL8EkYkAE+WmtjHPJa1bt/EgWdmfXWbpAR/+be6ke+cWxFjV/l4HyujXxMCRrYn6bZdEz/AGgt0dsuTfo76VhLgxQoD8Kf/eXQ+u+BUQWX38h4dAm7nP7U=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=tuxedocomputers.com; spf=pass smtp.mailfrom=tuxedocomputers.com; dkim=pass (1024-bit key) header.d=tuxedocomputers.com header.i=@tuxedocomputers.com header.b=UhqlnotR; arc=none smtp.client-ip=157.90.84.7
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=tuxedocomputers.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=tuxedocomputers.com
+	 In-Reply-To:Content-Type; b=Q1xcmgf/jM4pJ5PxY2i3mSgM7zAj9AcQ+PpWOp8CZJ2IVZkEaOpj2PQQInqiNEF7niEWRVEwxNFctUyzWvQPCrX2htRI9z8ZGiUU9rKnUvmf47RWF+h6xZIkVHJlSU3r3sqdtJsltRsuMT2eJYBA7vFAkcLiylGNkfY+Kv9iE6Q=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=f07F8loa; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=tuxedocomputers.com header.i=@tuxedocomputers.com header.b="UhqlnotR"
-Received: from [192.168.178.24] (i5C75F6B8.versanet.de [92.117.246.184])
-	(Authenticated sender: wse@tuxedocomputers.com)
-	by mail.tuxedocomputers.com (Postfix) with ESMTPSA id 9848D2FC0050;
-	Mon,  2 Mar 2026 19:22:07 +0100 (CET)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=tuxedocomputers.com;
-	s=default; t=1772475727;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=g5t1qxfZTDGN+H3a3eDKUrgpjHBSNW+ZTaEKXrGQYyw=;
-	b=UhqlnotRT60jVJFI+nhznmSUciozWlH8ZMpkTHCJ2C7Bt1CaEN0L+QT+wb6hR15MYdkrAY
-	YbBqY1z4OfGLw/ULMcmTACOe4e51XsVE1eCalLqGqfva601STV+x0KHOgIAAW9pWZHEZaq
-	UnaeMA5KTFNUctTtBJRbMIN50RjBAn8=
-Authentication-Results: mail.tuxedocomputers.com;
-	auth=pass smtp.auth=wse@tuxedocomputers.com smtp.mailfrom=wse@tuxedocomputers.com
-Message-ID: <2f7842c1-492c-4331-b789-7f6d0c71f792@tuxedocomputers.com>
-Date: Mon, 2 Mar 2026 19:22:06 +0100
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="f07F8loa"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id D9997C19423;
+	Mon,  2 Mar 2026 19:36:25 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1772480186;
+	bh=hykRQ85o3s1Gjn5iSxhnQfb+e01yQAaLRqtF/NC2jzw=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=f07F8loaDEeu7fComjbErz9dn5DwnYEbU45SqlEEuxLhZ6FJNwyJxXb4I+0htVJHT
+	 p080N5uXHn5GI+bXWfEyzb1IMmsjNGwVk94wMlKq0JnSm2y0x5tX4tpIEiwXUzO2lr
+	 gQBUPOQ75G3KHEJUIaq0nSZNNM+0SVi1VWK3R0JiB/FazSHK0IWzGonSr3wOIj1yt2
+	 hcXBSks/VXqdsAnNj90aDMS5+ahNYbUdTfE6QQf5ak4rLTIo5VAfW8S+4T/mGSj0h5
+	 oDlQmPoZepGv7wQoTYjqBfxFVQ5xbkTsg528VibV3lv4ypqb7G7mvS9T2GHq86ts7K
+	 khJs8hMnkMRMw==
+Message-ID: <ff438997-5d76-435e-a2e5-9ac6f8658eb1@kernel.org>
+Date: Mon, 2 Mar 2026 13:36:25 -0600
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
@@ -41,327 +35,97 @@ List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v3 2/4] platform/x86/uniwill: Implement USB-C power
- priority setting
-To: Armin Wolf <W_Armin@gmx.de>, Hans de Goede <hansg@kernel.org>,
- =?UTF-8?Q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
-Cc: platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
-References: <20260227200906.514928-1-wse@tuxedocomputers.com>
- <20260227200906.514928-3-wse@tuxedocomputers.com>
- <1f498e55-c365-4fb5-b06f-e0413774a453@gmx.de>
+Subject: Re: [PATCH v3 0/7] platform/x86/amd/pmf: Introduce PMF util layer
+ with userspace interface
+To: Shyam Sundar S K <Shyam-sundar.S-k@amd.com>, hansg@kernel.org,
+ ilpo.jarvinen@linux.intel.com
+Cc: platform-driver-x86@vger.kernel.org, Yijun.Shen@Dell.com,
+ Sanket.Goswami@amd.com
+References: <20260301131124.1370565-1-Shyam-sundar.S-k@amd.com>
 Content-Language: en-US
-From: Werner Sembach <wse@tuxedocomputers.com>
-In-Reply-To: <1f498e55-c365-4fb5-b06f-e0413774a453@gmx.de>
+From: Mario Limonciello <superm1@kernel.org>
+In-Reply-To: <20260301131124.1370565-1-Shyam-sundar.S-k@amd.com>
 Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
+Content-Transfer-Encoding: 7bit
 
+On 3/1/26 7:11 AM, Shyam Sundar S K wrote:
+> This patch series introduces a new util layer for the AMD Platform
+> Management Framework (PMF) driver that exposes a minimal userspace
+> interface for metrics monitoring and feature discovery.
+> 
+> AMD PMF currently manages power and thermal policies internally through
+> Smart PC features, Auto Mode, Policy Builder, Static/Dynamic Power
+> Sliders. However, system designers and OEMs need visibility into PMF
+> metrics and feature status for validation, debugging, and integration
+> with monitoring tools.
+> 
+> This series addresses that need by adding a character device interface
+> that allows controlled access to PMF metrics data while maintaining
+> the driver's existing automated policy management.
+> 
+> The primary use case is integration with userspace tools like AMD
+> SystemDeck, which are widely used by system designers to:
+> - Monitor real-time power and thermal behavior
+> - Validate PMF feature operation during platform bring-up
+> - Debug thermal issues by tracking skin temperature, C-state residency,
+>    and socket power metrics
+> - Verify BIOS input/output policy values during Smart PC operation
+> 
+> The util layer reads from the existing Trusted Application (TA) shared
+> memory buffer and cached BIOS output values, adding no new communication
+> overhead with the TA.
+> 
+> v3:
+>   - Stop exporting battery information via util layer.
+>   - Optimize the core logic for fetching BIOS outputs.
+>   - Update the documentation patch to reflect the current util layer design.
+>   - Consolidate amd-pmf-io.h changes into common UAPI header.
+>   - Define a single unified uAPI structure and IOCTL.
+>   - Address other v2 review remarks [1]
+> 
+> v2:
+>   - address remarks from v1
+>   - add a new tool that exercises the IOCTLs from PMF interface
+> 
+> [1] https://lore.kernel.org/platform-driver-x86/20251111071010.4179492-1-Shyam-sundar.S-k@amd.com/
+> 
+> Shyam Sundar S K (7):
+>    platform/x86/amd/pmf: Add util layer and userspace misc device
+>      interface
+>    platform/x86/amd/pmf: cache BIOS output values for user-space metrics
+>      via util IOCTL
+>    platform/x86/amd/pmf: Add feature discovery support to util interface
+>    platform/x86/amd/pmf: Store commonly used enums in the header file
+>    platform/x86/amd/pmf: Move debug helper functions to UAPI header
+>    platform/x86/amd/pmf: Introduce AMD PMF testing tool for driver
+>      metrics and features
+>    Documentation/ABI: add testing entry for AMD PMF misc device interface
+> 
+>   .../ABI/testing/misc-amdpmf_interface         |  70 ++++
+>   MAINTAINERS                                   |   1 +
+>   .../amd-sfh-hid/sfh1_1/amd_sfh_interface.c    |   1 +
+>   drivers/platform/x86/amd/pmf/Kconfig          |  10 +
+>   drivers/platform/x86/amd/pmf/Makefile         |   2 +
+>   drivers/platform/x86/amd/pmf/core.c           |   8 +
+>   drivers/platform/x86/amd/pmf/pmf.h            |  32 +-
+>   drivers/platform/x86/amd/pmf/spc.c            |  55 +--
+>   drivers/platform/x86/amd/pmf/tee-if.c         |   9 +-
+>   drivers/platform/x86/amd/pmf/util.c           | 210 ++++++++++++
+>   include/linux/amd-pmf-io.h                    |   9 -
+>   include/uapi/linux/amd-pmf.h                  | 324 ++++++++++++++++++
+>   tools/testing/selftests/Makefile              |   1 +
+>   .../drivers/platform/x86/amd/pmf/Makefile     |   8 +
+>   .../drivers/platform/x86/amd/pmf/test_pmf.c   | 243 +++++++++++++
+>   15 files changed, 897 insertions(+), 86 deletions(-)
+>   create mode 100644 Documentation/ABI/testing/misc-amdpmf_interface
+>   create mode 100644 drivers/platform/x86/amd/pmf/util.c
+>   create mode 100644 include/uapi/linux/amd-pmf.h
+>   create mode 100644 tools/testing/selftests/drivers/platform/x86/amd/pmf/Makefile
+>   create mode 100644 tools/testing/selftests/drivers/platform/x86/amd/pmf/test_pmf.c
+> 
 
-Am 01.03.26 um 14:05 schrieb Armin Wolf:
-> Am 27.02.26 um 21:07 schrieb Werner Sembach:
->
->> On some devices Uniwill offers the option to set the USB-C port to
->> prioritise charging or performance. This patch exposes this setting to the
->> userspace via sysfs for all TUXEDO devices supporting it.
->>
->> Signed-off-by: Werner Sembach <wse@tuxedocomputers.com>
->> ---
->>   drivers/platform/x86/uniwill/uniwill-acpi.c | 147 +++++++++++++++++++-
->>   1 file changed, 140 insertions(+), 7 deletions(-)
->>
->> diff --git a/drivers/platform/x86/uniwill/uniwill-acpi.c 
->> b/drivers/platform/x86/uniwill/uniwill-acpi.c
->> index 048b265bff374..f92c24d64160b 100644
->> --- a/drivers/platform/x86/uniwill/uniwill-acpi.c
->> +++ b/drivers/platform/x86/uniwill/uniwill-acpi.c
->> @@ -266,8 +266,8 @@
->>   #define BATTERY_CHARGE_FULL_OVER_24H    BIT(3)
->>   #define BATTERY_ERM_STATUS_REACHED    BIT(4)
->>   -#define EC_ADDR_CHARGE_PRIO        0x07CC
->> -#define CHARGING_PERFORMANCE        BIT(7)
->> +#define EC_ADDR_USB_C_POWER_PRIORITY    0x07CC
->> +#define USB_C_POWER_PRIORITY        BIT(7)
->>     /* Same bits as EC_ADDR_LIGHTBAR_AC_CTRL except LIGHTBAR_S3_OFF */
->>   #define EC_ADDR_LIGHTBAR_BAT_CTRL    0x07E2
->> @@ -324,6 +324,12 @@
->>   #define UNIWILL_FEATURE_PRIMARY_FAN        BIT(7)
->>   #define UNIWILL_FEATURE_SECONDARY_FAN        BIT(8)
->>   #define UNIWILL_FEATURE_NVIDIA_CTGP_CONTROL    BIT(9)
->> +#define UNIWILL_FEATURE_USB_C_POWER_PRIORITY    BIT(10)
->> +
->> +enum usb_c_power_priority_options {
->> +    USB_C_POWER_PRIORITY_OPTIONS_CHARGING = 0,
->> +    USB_C_POWER_PRIORITY_OPTIONS_PERFORMANCE,
->> +};
->>     struct uniwill_data {
->>       struct device *dev;
->> @@ -343,6 +349,8 @@ struct uniwill_data {
->>       struct mutex input_lock;    /* Protects input sequence during notify */
->>       struct input_dev *input_device;
->>       struct notifier_block nb;
->> +    struct mutex usb_c_power_priority_lock; /* Protects dependent bit write 
->> and state safe */
->> +    enum usb_c_power_priority_options last_usb_c_power_priority_option;
->>   };
->>     struct uniwill_battery_entry {
->> @@ -527,6 +535,7 @@ static bool uniwill_writeable_reg(struct device *dev, 
->> unsigned int reg)
->>       case EC_ADDR_CTGP_DB_CTGP_OFFSET:
->>       case EC_ADDR_CTGP_DB_TPP_OFFSET:
->>       case EC_ADDR_CTGP_DB_DB_OFFSET:
->> +    case EC_ADDR_USB_C_POWER_PRIORITY:
->>           return true;
->>       default:
->>           return false;
->> @@ -565,6 +574,7 @@ static bool uniwill_readable_reg(struct device *dev, 
->> unsigned int reg)
->>       case EC_ADDR_CTGP_DB_CTGP_OFFSET:
->>       case EC_ADDR_CTGP_DB_TPP_OFFSET:
->>       case EC_ADDR_CTGP_DB_DB_OFFSET:
->> +    case EC_ADDR_USB_C_POWER_PRIORITY:
->>           return true;
->>       default:
->>           return false;
->> @@ -587,6 +597,7 @@ static bool uniwill_volatile_reg(struct device *dev, 
->> unsigned int reg)
->>       case EC_ADDR_TRIGGER:
->>       case EC_ADDR_SWITCH_STATUS:
->>       case EC_ADDR_CHARGE_CTRL:
->> +    case EC_ADDR_USB_C_POWER_PRIORITY:
->>           return true;
->>       default:
->>           return false;
->> @@ -883,6 +894,106 @@ static int uniwill_nvidia_ctgp_init(struct uniwill_data 
->> *data)
->>       return 0;
->>   }
->>   +static const char * const USB_C_POWER_PRIORITY_OPTIONS_TEXT[] = {
->> +    [USB_C_POWER_PRIORITY_OPTIONS_CHARGING]        = "charging",
->> +    [USB_C_POWER_PRIORITY_OPTIONS_PERFORMANCE]    = "performance",
->> +};
->> +
->> +static const u8 USB_C_POWER_PRIORITY_OPTIONS_VALUE[] = {
->> +    [USB_C_POWER_PRIORITY_OPTIONS_CHARGING]        = 0,
->> +    [USB_C_POWER_PRIORITY_OPTIONS_PERFORMANCE]    = USB_C_POWER_PRIORITY,
->> +};
->> +
->> +static ssize_t usb_c_power_priority_store(struct device *dev,
->> +                      struct device_attribute *attr,
->> +                      const char *buf, size_t count)
->> +{
->> +    struct uniwill_data *data = dev_get_drvdata(dev);
->> +    enum usb_c_power_priority_options option;
->> +    unsigned int value;
->> +    int ret;
->> +
->> +    option = sysfs_match_string(USB_C_POWER_PRIORITY_OPTIONS_TEXT, buf);
->> +    if (option < 0)
->> +        return option;
->> +
->> +    value = USB_C_POWER_PRIORITY_OPTIONS_VALUE[option];
->> +
->> +    guard(mutex)(&data->usb_c_power_priority_lock);
->> +
->> +    ret = regmap_update_bits(data->regmap, EC_ADDR_USB_C_POWER_PRIORITY,
->> +                 USB_C_POWER_PRIORITY, value);
->> +    if (ret < 0)
->> +        return ret;
->> +
->> +    data->last_usb_c_power_priority_option = option;
->> +
->> +    return count;
->> +}
->> +
->> +static ssize_t usb_c_power_priority_show(struct device *dev,
->> +                     struct device_attribute *attr,
->> +                     char *buf)
->> +{
->> +    struct uniwill_data *data = dev_get_drvdata(dev);
->> +    unsigned int value, i;
->> +    int ret;
->> +
->> +    ret = regmap_read(data->regmap, EC_ADDR_USB_C_POWER_PRIORITY, &value);
->> +    if (ret < 0)
->> +        return ret;
->> +
->> +    value &= USB_C_POWER_PRIORITY;
->> +
->> +    for (i = 0; i < ARRAY_SIZE(USB_C_POWER_PRIORITY_OPTIONS_VALUE); ++i)
->> +        if (USB_C_POWER_PRIORITY_OPTIONS_VALUE[i] == value)
->> +            return sysfs_emit(buf, "%s\n",
->> +                      USB_C_POWER_PRIORITY_OPTIONS_TEXT[i]);
->> +
->
-> Please drop this for-loop and use a if-statement instead:
->
->     if (value & USB_C_POWER_PRIORITY)
->         return sysfs_emit(buf, "%s\n", 
-> USB_C_POWER_PRIORITY_OPTIONS_TEXT[USB_C_POWER_PRIORITY_OPTIONS_PERFORMANCE]);
->
->     return sysfs_emit(buf, "%s\n", 
-> USB_C_POWER_PRIORITY_OPTIONS_TEXT[USB_C_POWER_PRIORITY_OPTIONS_CHARGING]);
->
-> Also, i think USB_C_POWER_PRIORITY_OPTIONS_VALUE[] is unnecessary. Using an 
-> if-statement would yield more readable
-> code than using for-loops in this case.
+Thanks, looks good to me.  You can add this to the next version (which 
+incorporates Randy's feedback).
 
-I can see where the for loop is unnecessary, but 
-dropping USB_C_POWER_PRIORITY_OPTIONS_VALUE kinda obfuscates that there are 2 
-profiles, i like the clear association with the enum and stuff. the compile will 
-be optimizing it out anyway.
+Reviewed-by: Mario Limonciello (AMD) <superm1@kernel.org>
 
->
->> +    /* Since all possible values are valid, this should be unreachable. */
->> +    return -EINVAL;
->> +}
->> +
->> +static DEVICE_ATTR_RW(usb_c_power_priority);
->> +
->> +static int usb_c_power_priority_restore(struct uniwill_data *data)
->> +{
->> +    unsigned int value;
->> +
->> +    value = 
->> USB_C_POWER_PRIORITY_OPTIONS_VALUE[data->last_usb_c_power_priority_option];
->
-> You need to take the appropriate mutex here.
-ack
->
->> +
->> +    return regmap_update_bits(data->regmap, EC_ADDR_USB_C_POWER_PRIORITY,
->> +                  USB_C_POWER_PRIORITY, value);
->> +}
->> +
->> +static int usb_c_power_priority_init(struct uniwill_data *data)
->> +{
->> +    unsigned int value, i;
->> +    int ret;
->> +
->> +    if (!uniwill_device_supports(data, UNIWILL_FEATURE_USB_C_POWER_PRIORITY))
->> +        return 0;
->> +
->> +    ret = devm_mutex_init(data->dev, &data->usb_c_power_priority_lock);
->> +    if (ret < 0)
->> +        return ret;
->> +
->> +    ret = regmap_read(data->regmap, EC_ADDR_USB_C_POWER_PRIORITY, &value);
->> +    if (ret < 0)
->> +        return ret;
->> +
->> +    value &= USB_C_POWER_PRIORITY;
->> +
->> +    for (i = 0; i < ARRAY_SIZE(USB_C_POWER_PRIORITY_OPTIONS_VALUE); ++i)
->> +        if (USB_C_POWER_PRIORITY_OPTIONS_VALUE[i] == value) {
->> +            data->last_usb_c_power_priority_option = i;
->> +            return 0;
->> +        }
->
-> Please drop this for-loop and use an if-statement instead.
-ok
->
->> +
->> +    /* Since all possible values are valid, this should be unreachable. */
->> +    return -EINVAL;
->> +}
->> +
->>   static struct attribute *uniwill_attrs[] = {
->>       /* Keyboard-related */
->>       &dev_attr_fn_lock.attr,
->> @@ -893,6 +1004,7 @@ static struct attribute *uniwill_attrs[] = {
->>       &dev_attr_breathing_in_suspend.attr,
->>       /* Power-management-related */
->>       &dev_attr_ctgp_offset.attr,
->> +    &dev_attr_usb_c_power_priority.attr,
->>       NULL
->>   };
->>   @@ -927,6 +1039,11 @@ static umode_t uniwill_attr_is_visible(struct kobject 
->> *kobj, struct attribute *a
->>               return attr->mode;
->>       }
->>   +    if (attr == &dev_attr_usb_c_power_priority.attr) {
->> +        if (uniwill_device_supports(data, 
->> UNIWILL_FEATURE_USB_C_POWER_PRIORITY))
->> +            return attr->mode;
->> +    }
->> +
->>       return 0;
->>   }
->>   @@ -1417,11 +1534,10 @@ static int uniwill_notifier_call(struct 
->> notifier_block *nb, unsigned long action
->>             return NOTIFY_OK;
->>       case UNIWILL_OSD_DC_ADAPTER_CHANGED:
->> -        /* noop for the time being, will change once charging priority
->> -         * gets implemented.
->> -         */
->> +        if (!uniwill_device_supports(data, 
->> UNIWILL_FEATURE_USB_C_POWER_PRIORITY))
->> +            return NOTIFY_DONE;
->>   -        return NOTIFY_OK;
->> +        return notifier_from_errno(usb_c_power_priority_restore(data));
->>       case UNIWILL_OSD_FN_LOCK:
->>           if (!uniwill_device_supports(data, UNIWILL_FEATURE_FN_LOCK))
->>               return NOTIFY_DONE;
->> @@ -1515,10 +1631,15 @@ static int uniwill_probe(struct platform_device *pdev)
->>           return PTR_ERR(regmap);
->>         data->regmap = regmap;
->> +
->>       ret = devm_mutex_init(&pdev->dev, &data->super_key_lock);
->>       if (ret < 0)
->>           return ret;
->>   +    ret = usb_c_power_priority_init(data);
->> +    if (ret < 0)
->> +        return ret;
->> +
->>       ret = uniwill_ec_init(data);
->>       if (ret < 0)
->>           return ret;
->> @@ -1681,6 +1802,14 @@ static int uniwill_resume_nvidia_ctgp(struct 
->> uniwill_data *data)
->>                      CTGP_DB_DB_ENABLE | CTGP_DB_CTGP_ENABLE);
->>   }
->>   +static int uniwill_resume_usb_c_power_priority(struct uniwill_data *data)
->> +{
->> +    if (!uniwill_device_supports(data, UNIWILL_FEATURE_USB_C_POWER_PRIORITY))
->> +        return 0;
->
-> I think it would make sense to move the feature check into 
-> usb_c_power_priority_restore().
-> This way usb_c_power_priority_restore() can be called by both the notifier and 
-> the resume
-> code directly.
-
-How would i then distinct between returning NOTIFY_DONE and NOTIFY_OK? 
-notifier_from_errno only returns NOTIFY_OK.
-
->
-> It would also be very nice if you can include a short changelog with your next 
-> patch series.
-
-ack
-
-Best Regerds,
-
-Werner
-
->
-> Thanks,
-> Armin Wolf
->
->> +
->> +    return usb_c_power_priority_restore(data);
->> +}
->> +
->>   static int uniwill_resume(struct device *dev)
->>   {
->>       struct uniwill_data *data = dev_get_drvdata(dev);
->> @@ -1704,7 +1833,11 @@ static int uniwill_resume(struct device *dev)
->>       if (ret < 0)
->>           return ret;
->>   -    return uniwill_resume_nvidia_ctgp(data);
->> +    ret = uniwill_resume_nvidia_ctgp(data);
->> +    if (ret < 0)
->> +        return ret;
->> +
->> +    return uniwill_resume_usb_c_power_priority(data);
->>   }
->>     static DEFINE_SIMPLE_DEV_PM_OPS(uniwill_pm_ops, uniwill_suspend, 
->> uniwill_resume);
