@@ -1,82 +1,92 @@
-Received: from server.atrad.com.au (server.atrad.com.au [150.101.241.2])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3BE02267714;
-	Mon,  2 Mar 2026 13:54:21 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=150.101.241.2
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A3D5F3FFADC
+	for <platform-driver-x86@vger.kernel.org>; Mon,  2 Mar 2026 14:41:01 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1772459668; cv=none; b=mPYgt60yj8zLT3CUyIceQXkL18XPzQti1qsiXCWosiRZqHAJv83YvZSKjvVIVH6qhP1svVkLshvykEFJ5G4JVCz1hlpYGEdy3ygQKhpf7Dx5o2tK02RMrdG/zrQZRnI6MnU3HOskjd+/d1+e3kYhH3WLbZ2rstElezUU48rW8BE=
+	t=1772462461; cv=none; b=jc3pYlIxvMPRIVz/2ObrSHhNZBgMxSECkID52YE80THoIN13ldqxXQgXDwwt0cIiUnDW8FjhIF2Fwq5eTwgUqYUJ9lFKa2vS7MiHN2E8zxQNma+N/QngFKi/vBVoyxa9eVp/sui3ndVL8t+UNDWhHzKRKKq7Qz7J4odp3HALqLI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1772459668; c=relaxed/simple;
-	bh=nxoRpTYYzUPLegGVagNHODUnxFoBxuiOigsD0RQ/cLw=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=X8xA8EqA57HvWWxxnDc/R+qfYp95ub8lpCeYBFokkfQXB5aRhikXM2genD7l9Ap7b1OeXzfC8A1mtoLhEOF+ZkiRs2sbFyUaWbfpZP3RAXfWnxYA/no1BnucYrX8O1YhJa8pNnpt0jtzFtD9STvnpqn+/gzw+aU1tbM02VL951Y=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=just42.net; spf=pass smtp.mailfrom=just42.net; arc=none smtp.client-ip=150.101.241.2
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=just42.net
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=just42.net
-Received: from marvin.atrad.com.au (marvin.atrad.com.au [192.168.0.2])
-	by server.atrad.com.au (8.18.1/8.18.1) with ESMTPS id 622Dd7pm022192
-	(version=TLSv1.3 cipher=TLS_AES_256_GCM_SHA384 bits=256 verify=NO);
-	Tue, 3 Mar 2026 00:09:08 +1030
-Date: Tue, 3 Mar 2026 00:09:07 +1030
-From: Jonathan Woithe <jwoithe@just42.net>
-To: "Rafael J. Wysocki" <rafael@kernel.org>
-Cc: Ilpo =?iso-8859-1?Q?J=E4rvinen?= <ilpo.jarvinen@linux.intel.com>,
-        Robert Gerlach <khnz@gmx.de>, Hans de Goede <hansg@kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Linux ACPI <linux-acpi@vger.kernel.org>,
-        platform-driver-x86@vger.kernel.org
-Subject: Re: [PATCH v1 0/5] platform/x86: fujitsu: Bind drivers to platform
- devices instead of ACPI ones
-Message-ID: <aaWS+4jXPfec5fTG@marvin.atrad.com.au>
-References: <1968442.tdWV9SEqCh@rafael.j.wysocki>
+	s=arc-20240116; t=1772462461; c=relaxed/simple;
+	bh=9J8LrsMBG4yNjbOmbNBoEcmiibOGq6KkCFvOpYUHfAA=;
+	h=From:To:Subject:Date:Message-ID:In-Reply-To:References:
+	 Content-Type:MIME-Version; b=TNpieuU9+1uLbf/glcdAPQIiRZOEm0lvlwDsT8RzsoNO7wxgFsI0RzkxjNoysH+wXOzJ/a0j7HagIOrk5JB6eHCaHztogSf8OSN1FzNbaRYSpQtgO5HtJTzTMhdV68xo+Er22UHhEUXaDc8bl2AMXz/zsx5ydABClwWLqUiFYkQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=l19HtLY0; arc=none smtp.client-ip=10.30.226.201
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="l19HtLY0"
+Received: by smtp.kernel.org (Postfix) with ESMTPS id 858AFC2BC87
+	for <platform-driver-x86@vger.kernel.org>; Mon,  2 Mar 2026 14:41:01 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1772462461;
+	bh=9J8LrsMBG4yNjbOmbNBoEcmiibOGq6KkCFvOpYUHfAA=;
+	h=From:To:Subject:Date:In-Reply-To:References:From;
+	b=l19HtLY0wig7/Flqqr4VcUbwSci0mA/rRD1QSQVsSYiL1V+O8UvRrv6WCgxhmxPtM
+	 WxrujaUX5xA11NgE4kO1JXyvUIPOeUwx5lmpFhAgZaM4D7EkK8WGfo3qeneWeNS/U2
+	 rQXlEVilguc1wIrQDBkSEO2tfle3F6dVCufXPUnRLn+Dzm667raOhqzI+R9NzNherl
+	 ZyxuX3KJV0vNCfeZ/pSwXYcT0GEEq+dcyH8SWxnn/y3uKaMRwAYsOsJ9WHYF6/t4ne
+	 7z2vJbDdmkHgM6PySvJj64wWaciAZmSjiP2vJx/kJzT3+VoDN1xXUzL62N6jPjeO6l
+	 UgAtK7lPtTsLg==
+Received: by aws-us-west-2-korg-bugzilla-1.web.codeaurora.org (Postfix, from userid 48)
+	id 76242C41612; Mon,  2 Mar 2026 14:41:01 +0000 (UTC)
+From: bugzilla-daemon@kernel.org
+To: platform-driver-x86@vger.kernel.org
+Subject: [Bug 221065] ideapad_acpi: unexpected charge_types spam on Yoga Pro
+ 7 14ASP9
+Date: Mon, 02 Mar 2026 14:41:01 +0000
+X-Bugzilla-Reason: None
+X-Bugzilla-Type: changed
+X-Bugzilla-Watch-Reason: AssignedTo drivers_platform_x86@kernel-bugs.osdl.org
+X-Bugzilla-Product: Drivers
+X-Bugzilla-Component: Platform_x86
+X-Bugzilla-Version: 2.5
+X-Bugzilla-Keywords: 
+X-Bugzilla-Severity: low
+X-Bugzilla-Who: team@nitrosubs.live
+X-Bugzilla-Status: NEW
+X-Bugzilla-Resolution: 
+X-Bugzilla-Priority: P3
+X-Bugzilla-Assigned-To: drivers_platform_x86@kernel-bugs.osdl.org
+X-Bugzilla-Flags: 
+X-Bugzilla-Changed-Fields: 
+Message-ID: <bug-221065-215701-0MWSxiMI5r@https.bugzilla.kernel.org/>
+In-Reply-To: <bug-221065-215701@https.bugzilla.kernel.org/>
+References: <bug-221065-215701@https.bugzilla.kernel.org/>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+X-Bugzilla-URL: https://bugzilla.kernel.org/
+Auto-Submitted: auto-generated
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <1968442.tdWV9SEqCh@rafael.j.wysocki>
-X-MIMEDefang-action: accept
-X-Scanned-By: MIMEDefang 2.86 on 192.168.0.1
 
-Hi Rafael
+https://bugzilla.kernel.org/show_bug.cgi?id=3D221065
 
-On Wed, Feb 25, 2026 at 09:41:09PM +0100, Rafael J. Wysocki wrote:
-> This series is part of a larger effort to switch over all drivers using
-> the struct acpi_driver interface to the more common struct platform_driver
-> interface and eliminate the former.  The background is explained in
-> Documentation/driver-api/acpi/acpi-drivers.rst and in the changelog of
-> the patch that introduced the above document:
-> 
-> https://lore.kernel.org/all/2396510.ElGaqSPkdT@rafael.j.wysocki/
-> 
-> The bottom line is that the kernel would be better off without struct
-> acpi_driver and so it is better to get rid of it.
-> 
-> This series carries out driver conversions of the platform x86 drivers
-> for Fujitsu platforms.
-> 
-> Patch [1/5] converts the fujitsu-tablet to a proper platform one based
-> on the struct platform_driver interface.
-> 
-> Patch [2/5] rearranges the code in the fujitsu-laptop driver to avoid
-> introducing forward declarations of some functions in the subsequent
-> patches.
-> 
-> Patch [3/5] updates the fujitsu-laptop driver to install ACPI notify
-> handlers by itself instead of using .notify() callbacks from struct
-> acpi_driver, which is requisite for the driver conversion.
-> 
-> Patches [4-5/5] replaces two instances of the struct acpi_driver
-> interface in the fujitsu-laptop driver with struct platform_driver.
+--- Comment #45 from fililip (team@nitrosubs.live) ---
+(In reply to Avraham Hollander from comment #44)
+> I didn't know you could do that with fwupd either. I'll have to try it ne=
+xt
+> time.
 
-Thanks for preparing this patch series.  It looks reasonable to me.  At this
-point I have nothing to add.
+This only works for AMD platforms, I think, but all you need to do is run
 
-Acked-by: Jonathan Woithe <jwoithe@just42.net>
+doas fwupdtool get-devices | grep -A 1 "System Firmware"
 
-Regards
-  jonathan
+get the ID, and then execute
+
+doas fwupdtool install-blob WinPSCN21WW.fd [that ID]
+
+with WinPSCN21WW.fd being that extracted update file.
+
+Then fwupd will prompt you for a reboot and install the update from the EFI.
+
+Intel platforms have an additional IME update and I'm not sure how that's
+supposed to work, so caution is advised.
+
+--=20
+You may reply to this email to add a comment.
+
+You are receiving this mail because:
+You are watching the assignee of the bug.=
