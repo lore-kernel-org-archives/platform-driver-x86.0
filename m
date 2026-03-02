@@ -1,92 +1,82 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from server.atrad.com.au (server.atrad.com.au [150.101.241.2])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 19264267714
-	for <platform-driver-x86@vger.kernel.org>; Mon,  2 Mar 2026 13:45:05 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3BE02267714;
+	Mon,  2 Mar 2026 13:54:21 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=150.101.241.2
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1772459106; cv=none; b=Luqd8eE+fYoCJerqcKVg5AvmjFakoKsLsZmrThw7Ef+0gbwXCinK3dAzUYf8xWFRD618pKYBeEGDPwZc1zk0XIqGg7Io7kQFvYmWWUXOESoS1EG/oMnzWZqQmfTaj6KXXx+wM3heH/ZJo0s/B2BOiDlbrMWxLG+UhcubaEKktxI=
+	t=1772459668; cv=none; b=mPYgt60yj8zLT3CUyIceQXkL18XPzQti1qsiXCWosiRZqHAJv83YvZSKjvVIVH6qhP1svVkLshvykEFJ5G4JVCz1hlpYGEdy3ygQKhpf7Dx5o2tK02RMrdG/zrQZRnI6MnU3HOskjd+/d1+e3kYhH3WLbZ2rstElezUU48rW8BE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1772459106; c=relaxed/simple;
-	bh=giHEHrz96sgr2Xb3QaIiH2v9cZnONiDZW3XmscaoJ9s=;
-	h=From:To:Subject:Date:Message-ID:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=IWMJXsJ2ZworAD3tsUGdf92/kG5FRtszmWKGO3dtsXdtyrVB4ys+rwIQFROqFsoiT+x5PY1CGq3AdwjowRslm6PqHmL6GKYYO1xu2J34DDj2Rq3YxOurq6Ugu6DstyeZ4b9xQWW4uMAkPkLySk9EghdGpDrDPkhJKNyTdjlG03s=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=tsH3IEmO; arc=none smtp.client-ip=10.30.226.201
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="tsH3IEmO"
-Received: by smtp.kernel.org (Postfix) with ESMTPS id 96DC3C2BC87
-	for <platform-driver-x86@vger.kernel.org>; Mon,  2 Mar 2026 13:45:05 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1772459105;
-	bh=giHEHrz96sgr2Xb3QaIiH2v9cZnONiDZW3XmscaoJ9s=;
-	h=From:To:Subject:Date:In-Reply-To:References:From;
-	b=tsH3IEmOpfeM66Yju+in5s6V7GYfdRL0TWhoe8xzrGIONt4LRuCaPvKUIoKR2Wer1
-	 FOO3/GMp4N50384MaTMXetcPPVoY5DGn2C8/5dGt01I1bD5gV6cmyxF7RDTXe3njo7
-	 oT7FADfQsnLjrbF/ISlp53MRZbna0D8vtHd9tyP6X0lpUr22UQHqA3/rZgZ9nn96Aa
-	 gErCaffkKf48uVnkk3y6qoy2aHFeZB0jz/vLyC5WQ45X9QftT2ywhfn3tEP/YGRaSD
-	 dR8Q4y7wPhZ4BVXZskkfvkHFcA4MiJs+SjQD6O9nvXn0Q+TnLwaggucN0x0cwyMVm/
-	 +islkFaJSU8/A==
-Received: by aws-us-west-2-korg-bugzilla-1.web.codeaurora.org (Postfix, from userid 48)
-	id 83705C4160E; Mon,  2 Mar 2026 13:45:05 +0000 (UTC)
-From: bugzilla-daemon@kernel.org
-To: platform-driver-x86@vger.kernel.org
-Subject: [Bug 221065] ideapad_acpi: unexpected charge_types spam on Yoga Pro
- 7 14ASP9
-Date: Mon, 02 Mar 2026 13:45:05 +0000
-X-Bugzilla-Reason: None
-X-Bugzilla-Type: changed
-X-Bugzilla-Watch-Reason: AssignedTo drivers_platform_x86@kernel-bugs.osdl.org
-X-Bugzilla-Product: Drivers
-X-Bugzilla-Component: Platform_x86
-X-Bugzilla-Version: 2.5
-X-Bugzilla-Keywords: 
-X-Bugzilla-Severity: low
-X-Bugzilla-Who: anhollander516@gmail.com
-X-Bugzilla-Status: NEW
-X-Bugzilla-Resolution: 
-X-Bugzilla-Priority: P3
-X-Bugzilla-Assigned-To: drivers_platform_x86@kernel-bugs.osdl.org
-X-Bugzilla-Flags: 
-X-Bugzilla-Changed-Fields: 
-Message-ID: <bug-221065-215701-Q2X5EMYBLv@https.bugzilla.kernel.org/>
-In-Reply-To: <bug-221065-215701@https.bugzilla.kernel.org/>
-References: <bug-221065-215701@https.bugzilla.kernel.org/>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-X-Bugzilla-URL: https://bugzilla.kernel.org/
-Auto-Submitted: auto-generated
+	s=arc-20240116; t=1772459668; c=relaxed/simple;
+	bh=nxoRpTYYzUPLegGVagNHODUnxFoBxuiOigsD0RQ/cLw=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=X8xA8EqA57HvWWxxnDc/R+qfYp95ub8lpCeYBFokkfQXB5aRhikXM2genD7l9Ap7b1OeXzfC8A1mtoLhEOF+ZkiRs2sbFyUaWbfpZP3RAXfWnxYA/no1BnucYrX8O1YhJa8pNnpt0jtzFtD9STvnpqn+/gzw+aU1tbM02VL951Y=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=just42.net; spf=pass smtp.mailfrom=just42.net; arc=none smtp.client-ip=150.101.241.2
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=just42.net
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=just42.net
+Received: from marvin.atrad.com.au (marvin.atrad.com.au [192.168.0.2])
+	by server.atrad.com.au (8.18.1/8.18.1) with ESMTPS id 622Dd7pm022192
+	(version=TLSv1.3 cipher=TLS_AES_256_GCM_SHA384 bits=256 verify=NO);
+	Tue, 3 Mar 2026 00:09:08 +1030
+Date: Tue, 3 Mar 2026 00:09:07 +1030
+From: Jonathan Woithe <jwoithe@just42.net>
+To: "Rafael J. Wysocki" <rafael@kernel.org>
+Cc: Ilpo =?iso-8859-1?Q?J=E4rvinen?= <ilpo.jarvinen@linux.intel.com>,
+        Robert Gerlach <khnz@gmx.de>, Hans de Goede <hansg@kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Linux ACPI <linux-acpi@vger.kernel.org>,
+        platform-driver-x86@vger.kernel.org
+Subject: Re: [PATCH v1 0/5] platform/x86: fujitsu: Bind drivers to platform
+ devices instead of ACPI ones
+Message-ID: <aaWS+4jXPfec5fTG@marvin.atrad.com.au>
+References: <1968442.tdWV9SEqCh@rafael.j.wysocki>
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <1968442.tdWV9SEqCh@rafael.j.wysocki>
+X-MIMEDefang-action: accept
+X-Scanned-By: MIMEDefang 2.86 on 192.168.0.1
 
-https://bugzilla.kernel.org/show_bug.cgi?id=3D221065
+Hi Rafael
 
---- Comment #44 from Avraham Hollander (anhollander516@gmail.com) ---
-(In reply to fililip from comment #43)
-> I apologize, I was looking in the wrong directory.
->=20
-> cat /sys/class/power_supply/BAT0/charge_types returns:
->=20
-> Fast Standard [Long_Life]
->=20
-> So it looks like it's already set to long life for me, but the ideapad
-> driver thinks otherwise.
->=20
-> I'm on 6.19.5, running PSCN21WW firmware.
->=20
-> BTW, someone in the thread seems to be spreading misinformation, as you c=
-an
-> unpack the firmware update (PE32/exe) and use the included ~34MiB bin file
-> with fwupd which is how I have the latest firmware actually.
+On Wed, Feb 25, 2026 at 09:41:09PM +0100, Rafael J. Wysocki wrote:
+> This series is part of a larger effort to switch over all drivers using
+> the struct acpi_driver interface to the more common struct platform_driver
+> interface and eliminate the former.  The background is explained in
+> Documentation/driver-api/acpi/acpi-drivers.rst and in the changelog of
+> the patch that introduced the above document:
+> 
+> https://lore.kernel.org/all/2396510.ElGaqSPkdT@rafael.j.wysocki/
+> 
+> The bottom line is that the kernel would be better off without struct
+> acpi_driver and so it is better to get rid of it.
+> 
+> This series carries out driver conversions of the platform x86 drivers
+> for Fujitsu platforms.
+> 
+> Patch [1/5] converts the fujitsu-tablet to a proper platform one based
+> on the struct platform_driver interface.
+> 
+> Patch [2/5] rearranges the code in the fujitsu-laptop driver to avoid
+> introducing forward declarations of some functions in the subsequent
+> patches.
+> 
+> Patch [3/5] updates the fujitsu-laptop driver to install ACPI notify
+> handlers by itself instead of using .notify() callbacks from struct
+> acpi_driver, which is requisite for the driver conversion.
+> 
+> Patches [4-5/5] replaces two instances of the struct acpi_driver
+> interface in the fujitsu-laptop driver with struct platform_driver.
 
-I didn't know you could do that with fwupd either. I'll have to try it next
-time.
+Thanks for preparing this patch series.  It looks reasonable to me.  At this
+point I have nothing to add.
 
---=20
-You may reply to this email to add a comment.
+Acked-by: Jonathan Woithe <jwoithe@just42.net>
 
-You are receiving this mail because:
-You are watching the assignee of the bug.=
+Regards
+  jonathan
