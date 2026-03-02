@@ -1,46 +1,66 @@
-Received: from out-188.mta1.migadu.com (out-188.mta1.migadu.com [95.215.58.188])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.12])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4396C3FB059
-	for <platform-driver-x86@vger.kernel.org>; Mon,  2 Mar 2026 17:44:47 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=95.215.58.188
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 07DF2410D3B;
+	Mon,  2 Mar 2026 17:52:20 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.12
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1772473488; cv=none; b=WIMCGoemziDLr5/hZZGBwHqzgY+c4bRvcTHK0z3jWvhnbmRFUvgHTYUdK2vrghTobCicuMv0ennkhJLHmoUiAI6QL77GIo4fBCHiBHF5KEFXboULuPscjhqeFlFUne6c0B8HI+vmN6oBfxOATn5x11Ylx9ciAxsnap4l0a0p4to=
+	t=1772473943; cv=none; b=dH/CgctdyGMUsv98UJ7wg482Z17pYmNFaD5FGbKgCgr4L2Be7uRpLbITmqPrfG3+HM2llJLDc8gjEndiAY/9RRZi6e89rfgHOSb4q+VTwN0d61rK2UFpobOItGz039i/e5LRtZ0OPM0h5dTM2ZVSsFFsULL8tfCHIubHGN6K4eM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1772473488; c=relaxed/simple;
-	bh=1MIPsiRa8Yv9adNUzqXgh8FjwkZk06M73yufRfmTA2s=;
+	s=arc-20240116; t=1772473943; c=relaxed/simple;
+	bh=ocP+C9HfpPwTXV481DvZ35sXEaKaSA1rbLYL2fkLDFc=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=A6IkveCDizELVHmYsqsE/pkuWNH1V9USGen1jqZyxkjELS9hFBor0Gp4mWHgiIb0kvuSyAjt8T+xxZMlN2tmSJnCCLigGwdXqBYP86UovvqZQQe9OE3phminSSWLc73VoSAQ4FKCQobPoc10DDw4Rgk0ToBcTMm4Q9bXakgTm4s=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=OrR6H2mW; arc=none smtp.client-ip=95.215.58.188
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
+	 MIME-Version; b=SgOcsJDvJmfCAq6fG4k68L+H16LO+vVyl5vYt1Ick3pForGa6KdUqcu/3+FR9Perpf/XaS1hrqO1fMfqXIvz/FnCqeIHG9IXgNhrOIchoZAWevkdjTC44uHi5+4zBNU+fbS1GZfbMXpKkuQYMdd6FjYOFF0lBvUBbne17trnnX0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=d2nVBh+c; arc=none smtp.client-ip=192.198.163.12
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="OrR6H2mW"
-X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
-	t=1772473485;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=C6JYsOd8TdlbqACv3cEvQ1Kk9syE/nyQz9k47IUD4dU=;
-	b=OrR6H2mWrydhvGBZ8pshN3p207t7Yl/I95Lpv0XrNUNGdR57DDzizxn0f+kM5xBqNJ4xgT
-	n4iPFkg4mCvEDgNz5axBWHSXaUx5tOA7JEyjcLQNGkMerciocKb+kVE5l9iED1Wp9ca7ka
-	oDmFhSc1wxSHDdwwY9+cR0lMB0BrNyc=
-From: Denis Benato <denis.benato@linux.dev>
-To: linux-kernel@vger.kernel.org
-Cc: platform-driver-x86@vger.kernel.org,
-	"Hans de Goede" <hansg@kernel.org>,
-	=?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>,
-	"Luke D . Jones" <luke@ljones.dev>,
-	"Mateusz Schyboll" <dragonn@op.pl>,
-	"Denis Benato" <benato.denis96@gmail.com>,
-	"Denis Benato" <denis.benato@linux.dev>
-Subject: [PATCH v3 2/2] platform/x86: asus-wmi: fix screenpad brightness range
-Date: Mon,  2 Mar 2026 18:44:31 +0100
-Message-ID: <20260302174431.349816-3-denis.benato@linux.dev>
-In-Reply-To: <20260302174431.349816-1-denis.benato@linux.dev>
-References: <20260302174431.349816-1-denis.benato@linux.dev>
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="d2nVBh+c"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1772473941; x=1804009941;
+  h=from:to:cc:subject:date:message-id:in-reply-to:
+   references:mime-version:content-transfer-encoding;
+  bh=ocP+C9HfpPwTXV481DvZ35sXEaKaSA1rbLYL2fkLDFc=;
+  b=d2nVBh+cEkdGnfbVwOGnXADDZKEiW3HND/E7cbPisqeQuF5QSgZHMDZ1
+   rUJNQOBeVPbBA+ByUuGaBhu0YrB5ywONDEuPnvuR62A8wf8rjPpySY74Z
+   GBfHQn5r5Ht7LTukKZobUzaC894YgjbgErU1nBvWxWiH9yBAK10byPyBd
+   kUdeW80VrduQYjthoxyg3pqfrn75wrQqTIBkKUG5J4kljMdJO5zSH0Ww3
+   mYvsqv+dEiYEMdBHp1Ltme0G4Gjd2nV/Pqgm9kl8sZpQRtEpUF9p94OA9
+   f1i249gzXIch3WWaQi9SvB4w4Nxg2rU2R0JeLB6/laLndsczJK8wt3r/9
+   A==;
+X-CSE-ConnectionGUID: kmFK4bVbR+urSwrrXRjzgw==
+X-CSE-MsgGUID: PNruRpGVTIuulABUl3OJTg==
+X-IronPort-AV: E=McAfee;i="6800,10657,11717"; a="77356708"
+X-IronPort-AV: E=Sophos;i="6.21,320,1763452800"; 
+   d="scan'208";a="77356708"
+Received: from orviesa002.jf.intel.com ([10.64.159.142])
+  by fmvoesa106.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 02 Mar 2026 09:52:21 -0800
+X-CSE-ConnectionGUID: nNRUGTjeQk6S+fA4p8+jrQ==
+X-CSE-MsgGUID: B8mwo8rcSJGcPKXG1axUBw==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.21,320,1763452800"; 
+   d="scan'208";a="248238372"
+Received: from intel-nuc8i7beh.iind.intel.com ([10.223.163.35])
+  by orviesa002.jf.intel.com with ESMTP; 02 Mar 2026 09:52:17 -0800
+From: Arun T <arun.t@intel.com>
+To: arun.t@intel.com
+Cc: sakari.ailus@iki.fi,
+	sakari.ailus@intel.com,
+	sakari.ailus@linux.intel.com,
+	arec.kao@intel.com,
+	ilpo.jarvinen@linux.intel.com,
+	dan.scally@ideasonboard.com,
+	platform-driver-x86@vger.kernel.org,
+	linux-media@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	mehdi.djait@intel.com
+Subject: [PATCH v3 0/2] Add TPS68470 power supply support for ov13b10 sensor
+Date: Mon,  2 Mar 2026 23:16:42 +0530
+Message-ID: <20260302174644.1258718-1-arun.t@intel.com>
+X-Mailer: git-send-email 2.43.0
+In-Reply-To: <20260130092431.2335363-2-arun.t@intel.com>
+References: <20260130092431.2335363-2-arun.t@intel.com>
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
@@ -48,83 +68,41 @@ List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-X-Migadu-Flow: FLOW_OUT
 
-Fix screenpad brightness range being too limited without reason:
-testing this patch on a Zenbook Duo showed the hardware minimum not being
-too low, therefore allow the user to configure the entire range, and
-expose to userspace the hardware brightness range and value.
 
-Fixes: 2c97d3e55b70 ("platform/x86: asus-wmi: add support for ASUS screenpad")
-Signed-off-by: Denis Benato <denis.benato@linux.dev>
-Signed-off-by: Luke Jones <luke@ljones.dev>
----
- drivers/platform/x86/asus-wmi.c | 16 ++++++----------
- 1 file changed, 6 insertions(+), 10 deletions(-)
+This patch series adds power supply management support for the OV13B10 camera sensor when used with TPS68470 PMIC, commonly used on Intel-based camera platforms.
 
-diff --git a/drivers/platform/x86/asus-wmi.c b/drivers/platform/x86/asus-wmi.c
-index 8925a0ee26af..17e2dcaf2b4c 100644
---- a/drivers/platform/x86/asus-wmi.c
-+++ b/drivers/platform/x86/asus-wmi.c
-@@ -125,7 +125,6 @@ module_param(fnlock_default, bool, 0444);
- #define NVIDIA_TEMP_MIN		75
- #define NVIDIA_TEMP_MAX		87
- 
--#define ASUS_SCREENPAD_BRIGHT_MIN 20
- #define ASUS_SCREENPAD_BRIGHT_MAX 255
- #define ASUS_SCREENPAD_BRIGHT_DEFAULT 60
- 
-@@ -4408,13 +4407,13 @@ static int read_screenpad_brightness(struct backlight_device *bd)
- 		return err;
- 	/* The device brightness can only be read if powered, so return stored */
- 	if (err == BACKLIGHT_POWER_OFF)
--		return asus->driver->screenpad_brightness - ASUS_SCREENPAD_BRIGHT_MIN;
-+		return bd->props.brightness;
- 
- 	err = asus_wmi_get_devstate(asus, ASUS_WMI_DEVID_SCREENPAD_LIGHT, &retval);
- 	if (err < 0)
- 		return err;
- 
--	return (retval & ASUS_WMI_DSTS_BRIGHTNESS_MASK) - ASUS_SCREENPAD_BRIGHT_MIN;
-+	return (retval & ASUS_WMI_DSTS_BRIGHTNESS_MASK);
- }
- 
- static int update_screenpad_bl_status(struct backlight_device *bd)
-@@ -4454,22 +4453,19 @@ static int asus_screenpad_init(struct asus_wmi *asus)
- 	int err, power;
- 	int brightness = 0;
- 
--	power = read_screenpad_backlight_power(asus);
-+	power = asus_wmi_get_devstate_simple(asus, ASUS_WMI_DEVID_SCREENPAD_POWER);
- 	if (power < 0)
- 		return power;
- 
--	if (power != BACKLIGHT_POWER_OFF) {
-+	if (power) {
- 		err = asus_wmi_get_devstate(asus, ASUS_WMI_DEVID_SCREENPAD_LIGHT, &brightness);
- 		if (err < 0)
- 			return err;
- 	}
--	/* default to an acceptable min brightness on boot if too low */
--	if (brightness < ASUS_SCREENPAD_BRIGHT_MIN)
--		brightness = ASUS_SCREENPAD_BRIGHT_DEFAULT;
- 
- 	memset(&props, 0, sizeof(struct backlight_properties));
- 	props.type = BACKLIGHT_RAW; /* ensure this bd is last to be picked */
--	props.max_brightness = ASUS_SCREENPAD_BRIGHT_MAX - ASUS_SCREENPAD_BRIGHT_MIN;
-+	props.max_brightness = ASUS_SCREENPAD_BRIGHT_MAX;
- 	bd = backlight_device_register("asus_screenpad",
- 				       &asus->platform_device->dev, asus,
- 				       &asus_screenpad_bl_ops, &props);
-@@ -4480,7 +4476,7 @@ static int asus_screenpad_init(struct asus_wmi *asus)
- 
- 	asus->screenpad_backlight_device = bd;
- 	asus->driver->screenpad_brightness = brightness;
--	bd->props.brightness = brightness - ASUS_SCREENPAD_BRIGHT_MIN;
-+	bd->props.brightness = brightness;
- 	bd->props.power = power;
- 	backlight_update_status(bd);
- 
+The OV13B10 sensor requires three power supplies (DOVDD, AVDD, DVDD) which are provided by the TPS68470 PMIC.
+This series implements proper regulator framework integration to manage these power supplies during sensor power on/off sequences.
+
+Changes in v3:
+	- Fixed check patch errors as updated by sakari
+	- Enabled VCM regulator for ov13b10 sensor to enable autofocus to work
+
+Suggested by Sakari:
+	- Add include header file in alphabetical order 
+	- Remove extra space
+        - Asked to check vcm instance
+
+Changes in v2:
+	- Added power supply names array for the three required regulators
+	- Implement regulator handling with devm_regulator_bulk_get()
+	- Add regulator_bulk_enable() and regulator_bulk_disable() for sensor power on/off sequence
+
+Suggested by Hans:
+        - Add multiple regulators you should use the bulk regulator API
+        - Use use "reset" instead of "s_resetn" for parse gpio name.
+        - Add diffent regulator power supplies  in single array
+
+
+Arun T (2):
+  platform/x86: int3472: Add TPS68470 board data for Intel nvl
+  media: i2c: ov13b10: support tps68470 regulator and gpio
+
+ drivers/media/i2c/ov13b10.c                   |  48 +++---
+ .../x86/intel/int3472/tps68470_board_data.c   | 150 ++++++++++++++++++
+ 2 files changed, 177 insertions(+), 21 deletions(-)
+
 -- 
-2.53.0
+2.43.0
 
