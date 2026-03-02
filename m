@@ -1,290 +1,84 @@
-Received: from mail-ej1-f47.google.com (mail-ej1-f47.google.com [209.85.218.47])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from outbound.baidu.com (mx22.baidu.com [220.181.50.185])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1E081311957
-	for <platform-driver-x86@vger.kernel.org>; Sun,  1 Mar 2026 22:03:26 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.47
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 497AD430BA2
+	for <platform-driver-x86@vger.kernel.org>; Mon,  2 Mar 2026 02:20:52 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=220.181.50.185
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1772402608; cv=none; b=C+qL6uTLPQYBcg6hdESbX4h6DAnuzGcGKTYeBfxDcmFC8DGKsh30kdvrmxsAsimMJ47uDbW6Nx6jht629B9J6yZ0MLB1FhAe6Y/zWf9R0am9gfA9/FqivfubfYhika5GEqUTPnWtFGdZUGL9o+8nMpRl1rQJdYTBuY3MtEFSWGs=
+	t=1772418056; cv=none; b=Fwgqu4S7Md8emVoCsQjombxjRLxm52tAy6RcCLOvtjs2ZahGVBj/nP6oqF+/HMbQoRRPMKaHVOhWKTwVekHJcqZDAo25AQfqSuFpgZbVuBArb21/HL2i5zscNSqKcUC3k5ynv1pWKPUNLF7STI3hiRV6mbMUb0r3mpk0giWb9rc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1772402608; c=relaxed/simple;
-	bh=8CaRRVYQAWdhwxPlCQv5QyS+FWeQjLNGSv3kwyBqokA=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=kB1ZtlBGUeIjtTIn4fEsLYt1EGh5W7XOna5ihWz20pu5/gNztkjTMjyA1CFjUZjfu5PocyeBCrv3z+wQbRo52z9hJGjertV/gpeMP0d7ClpnramjkW1pq37oW0cTVllkuxoWrakyGWCHF3bLU3p3n357UChcTBZn8LARCFIrflU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=kZEPjcdM; arc=none smtp.client-ip=209.85.218.47
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="kZEPjcdM"
-Received: by mail-ej1-f47.google.com with SMTP id a640c23a62f3a-b936b85cc71so415257866b.2
-        for <platform-driver-x86@vger.kernel.org>; Sun, 01 Mar 2026 14:03:26 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1772402605; x=1773007405; darn=vger.kernel.org;
-        h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
-         :mime-version:subject:date:from:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=2vu71svIllNIZ+Xzig1JgC/nicq10GD51e1cjSo9CeI=;
-        b=kZEPjcdM6YVqtuL5dQa+aVu/BdE3YFe1Gv4kBqoGGkpRhm8m9vCw/0DO84vyqSekAB
-         pPwYqpTHyRoBsy63TesGXNfkrPjrr2epsSZ4WFZ6BmCKln9vN2ZCcfHF4JiUhUdng6zm
-         1Ws0ZqHRVnHxpiLb/wvrjYYvGyioMrQAmogHbCUyc5JXX4ne4jOFjyPsSnA4wLCqF5pQ
-         Gc+TxzM12uqrTGzj+mRKD1ns4+UdunsJGKm4xtEY4QozrTW+xMNxdE7QZcd0Tsjj883m
-         vGrGUcCCywJSorVIGlK2z+Q557t857UZXyyFoT7zslrj6yfs5bOkrzzBkBytuxJknPmi
-         N15g==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1772402605; x=1773007405;
-        h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
-         :mime-version:subject:date:from:x-gm-gg:x-gm-message-state:from:to
-         :cc:subject:date:message-id:reply-to;
-        bh=2vu71svIllNIZ+Xzig1JgC/nicq10GD51e1cjSo9CeI=;
-        b=h0fMuwC6NeZXCQw8oMDmcqoIQz6xmybFdrgfJ3T/nC+AUGy3dQhBOvS38+Xpxj9tXn
-         2crflj8gkn9U8ABJdbNgUjxFomEzju+7POfU0AK9/cu9U+/xqXKDVdyiBKTdH5yWRxIh
-         HnOnDuusn6vaG5AmT8GKTEzfNg3/zaLlC2Kwe+4jLLBmjYzwEcD3JUA+3f/1Efvl9/Ea
-         7hUDw39UK3IZC42OdkGwubb5f/5Zo0StH9ucU+EPnLaB+LD1j5B8Bn2QEGt0FqIBdy8R
-         /4om3n6kp7WBs+qvL9Iafp3aV5tg8apfoWSRVAV62dHovQoq17xhkz2pZJ/tfmTlHED1
-         sq7A==
-X-Gm-Message-State: AOJu0Yy5yNfTPBH2JA2ww4pdHO79aGFGIfy1Yg8M3CIcmfNH+8HIVgsx
-	S0P8ZKzJaK3uINGS5HZ0wPaYO7gaLFnsFK00bmI7VX9ggojOHnZGX8/1
-X-Gm-Gg: ATEYQzwmE1zdoRa3r+mqxTZgGGEgqCqMrka6tCLq7I2Hakiuqo12VgUaJ86annnKcMj
-	uiFxXL9zuxCBP6c0Qsj8fyLqVCcnNDDrthmo0chcXO6XrxpAalc2NPuC5Ha+xHGNoQ40FjuCho7
-	zcXwxzEFG8sO0MIOvB+HmGxGxhAphw0yJKFDku5zmXJas1+L6rJtW+amXAjSH9igcCaQRDS06KP
-	AJxYdExDtip70Epy23iCjw8jBSHwHtg3/6IFf412swMnNFvKclM9JbdIKnggDbMK3SMJdWrv3Vm
-	HoJVHPLPBo7/HMkb4/AYquKfjYxjNlnYzLGSajarnmO/6bKW3CxurJOERq3J/bhF9XufXUVbzkV
-	8/H3rx6KvisKz3O8cnabLGcQdaad7J4dqL04LV/hp1+xbkBzt2HhatW0wj1Z9iwJHWjMKgm0CN8
-	LWACq1SWd7lPQcmuGkCA==
-X-Received: by 2002:a17:907:3f87:b0:b8d:9bcc:9016 with SMTP id a640c23a62f3a-b93764b8182mr570180966b.37.1772402605194;
-        Sun, 01 Mar 2026 14:03:25 -0800 (PST)
-Received: from [127.0.1.1] ([46.251.53.180])
-        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-b935ab13593sm400915866b.3.2026.03.01.14.03.24
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 01 Mar 2026 14:03:24 -0800 (PST)
-From: Yauhen Kharuzhy <jekhor@gmail.com>
-Date: Mon, 02 Mar 2026 00:03:15 +0200
-Subject: [PATCH v2 2/2] platform: x86-android-tablets: lenovo: Add Yoga
- Book YB1 sound card info
+	s=arc-20240116; t=1772418056; c=relaxed/simple;
+	bh=Vcmhgp/Qbn5v3de3paQJ2uI0xPAY5iL1Z58djJ1sMNU=;
+	h=From:To:Subject:Date:Message-ID:References:In-Reply-To:
+	 Content-Type:MIME-Version; b=diK4Ytk/37+0CLHWSgSel55FY5nvMOTpndIoHfLOQ7Q0W24J7DhaPCI21p0RmJc8EQSQweisk67pi8B+lLo1/iGDwPBGLTCNH7/DL1oqct0XkHsADqdkAQSuOcEBcLpgucGRzT8uSZPIlx7NXYgpRfKv70+QjGKMcqRtdpm6B98=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=baidu.com; spf=pass smtp.mailfrom=baidu.com; arc=none smtp.client-ip=220.181.50.185
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=baidu.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=baidu.com
+From: "Li,Rongqing(ACG CCN)" <lirongqing@baidu.com>
+To: Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>, Hans de Goede
+	<hansg@kernel.org>, =?utf-8?B?SWxwbyBKw6RydmluZW4=?=
+	<ilpo.jarvinen@linux.intel.com>, "platform-driver-x86@vger.kernel.org"
+	<platform-driver-x86@vger.kernel.org>
+Subject: =?utf-8?B?562U5aSNOiBbUEFUQ0hdIHBsYXRmb3JtL3g4NjogSVNTVDogQ2hlY2sgSFdQ?=
+ =?utf-8?Q?_support_before_MSR_access?=
+Thread-Topic: [PATCH] platform/x86: ISST: Check HWP support before MSR access
+Thread-Index: AQHcqK06L9gOxSya+UyN8qnsjozNrrWahKig
+Date: Mon, 2 Mar 2026 02:20:25 +0000
+Message-ID: <2c70039312544a68adafe670b422e2bd@baidu.com>
+References: <20260228122441.2284-1-lirongqing@baidu.com>
+In-Reply-To: <20260228122441.2284-1-lirongqing@baidu.com>
+Accept-Language: zh-CN, en-US
+Content-Language: zh-CN
+X-MS-Has-Attach:
+X-MS-TNEF-Correlator:
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Message-Id: <20260302-x86-tablets-yogabook-v2-2-061768d5c9e7@gmail.com>
-References: <20260302-x86-tablets-yogabook-v2-0-061768d5c9e7@gmail.com>
-In-Reply-To: <20260302-x86-tablets-yogabook-v2-0-061768d5c9e7@gmail.com>
-To: Hans de Goede <hansg@kernel.org>, 
- =?utf-8?q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
-Cc: platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org, 
- Yauhen Kharuzhy <jekhor@gmail.com>
-X-Mailer: b4 0.14.3
-X-Developer-Signature: v=1; a=ed25519-sha256; t=1772402602; l=6856;
- i=jekhor@gmail.com; s=20260301; h=from:subject:message-id;
- bh=8CaRRVYQAWdhwxPlCQv5QyS+FWeQjLNGSv3kwyBqokA=;
- b=VA6nOfTFcDrQP7NIXIHwSUiGQ6AQ2M36xJPZeLvQKvkJVZ9ZOpTyDJ0HzEs8xhNAO4eXsXM5+
- RIZ+eIi9yzPBm3FCFva6FWzfEmxqS1f3VOjO5n0jdV50Qp9LDfAt74O
-X-Developer-Key: i=jekhor@gmail.com; a=ed25519;
- pk=C/csaZJs7UBNDgeJcUAmPu4ntqNeaZ3BKfBQiH8tuGc=
+X-FEAS-Client-IP: 172.31.3.13
+X-FE-Policy-ID: 52:10:53:SYSTEM
 
-Define I2C devices, their properties, and GPIO lookup tables for the Yoga
-Book YB1-X90 sound codec and jack detection IC. The YB1-X90 doesn't have a
-valid codec entry in the DSDT, while the YB1-X91 does.
-
-The YB1-X91 includes additional information in the ACPI _CRS method
-regarding the jack detection IC connection, but it is also defined in this
-driver to simplify the unification of the sound driver for both tablet
-versions.
-
-Signed-off-by: Yauhen Kharuzhy <jekhor@gmail.com>
----
- drivers/platform/x86/x86-android-tablets/lenovo.c | 124 ++++++++++++++++++++++
- 1 file changed, 124 insertions(+)
-
-diff --git a/drivers/platform/x86/x86-android-tablets/lenovo.c b/drivers/platform/x86/x86-android-tablets/lenovo.c
-index bc10f00da8c6..e28e1442115b 100644
---- a/drivers/platform/x86/x86-android-tablets/lenovo.c
-+++ b/drivers/platform/x86/x86-android-tablets/lenovo.c
-@@ -142,6 +142,44 @@ static const struct software_node lenovo_yb1_x9x_drv2604l_1_node = {
- 	.properties = lenovo_yb1_x9x_drv2604l_1_props,
- };
- 
-+static const struct software_node lenovo_yb1_rt5677_gpiochip_node = {
-+	.name = "rt5677",
-+};
-+
-+/*
-+ * Certain properties are used by the cht_yogabook sound platform driver. The sound
-+ * configuration is defined as the RT5677 ACPI entry on YB1-X91; hence, the same
-+ * approach is utilized for YB1-X90 as well.
-+ */
-+static const struct property_entry lenovo_yb1_x9x_rt5677_props[] = {
-+	PROPERTY_ENTRY_BOOL("realtek,lout1-differential"),
-+	PROPERTY_ENTRY_BOOL("realtek,lout2-differential"),
-+	PROPERTY_ENTRY_BOOL("realtek,lout3-differential"),
-+	PROPERTY_ENTRY_BOOL("realtek,in1-differential"),
-+	PROPERTY_ENTRY_BOOL("realtek,in2-differential"),
-+	PROPERTY_ENTRY_GPIO("realtek,reset-gpios", &cherryview_gpiochip_nodes[3], 25, GPIO_ACTIVE_LOW),
-+	PROPERTY_ENTRY_GPIO("realtek,pow-ldo2-gpios", &cherryview_gpiochip_nodes[3], 18, GPIO_ACTIVE_HIGH),
-+	PROPERTY_ENTRY_GPIO("speaker-enable-gpios", &cherryview_gpiochip_nodes[3], 48, GPIO_ACTIVE_HIGH),
-+	PROPERTY_ENTRY_GPIO("speaker-enable2-gpios", &lenovo_yb1_rt5677_gpiochip_node, 2, GPIO_ACTIVE_HIGH),
-+	PROPERTY_ENTRY_GPIO("headphone-enable-gpios", &lenovo_yb1_rt5677_gpiochip_node, 4, GPIO_ACTIVE_HIGH),
-+	{}
-+};
-+
-+static const struct software_node lenovo_yb1_x90_rt5677_node = {
-+	.properties = lenovo_yb1_x9x_rt5677_props,
-+};
-+
-+static const struct property_entry lenovo_yb1_ts3a227e_props[] = {
-+	/* MICBIAS is 2.5V */
-+	PROPERTY_ENTRY_U32("ti,micbias", 4),
-+	PROPERTY_ENTRY_U32("ti,debounce-insertion-ms", 2000),
-+	{}
-+};
-+
-+static const struct software_node lenovo_yb1_ts3a227e_node = {
-+	.properties = lenovo_yb1_ts3a227e_props,
-+};
-+
- static const struct x86_i2c_client_info lenovo_yb1_x90_i2c_clients[] __initconst = {
- 	{
- 		/* BQ27542 fuel-gauge */
-@@ -231,6 +269,40 @@ static const struct x86_i2c_client_info lenovo_yb1_x90_i2c_clients[] __initconst
- 			.polarity = ACPI_ACTIVE_LOW,
- 			.con_id = "hideep_ts_irq",
- 		},
-+	}, {
-+		/* Audio codec */
-+		.board_info = {
-+			.type = "rt5677",
-+			.addr = 0x2c,
-+			.dev_name = "rt5677",
-+			.swnode = &lenovo_yb1_x90_rt5677_node,
-+		},
-+		.adapter_path = "\\_SB_.PCI0.I2C1",
-+		.irq_data = {
-+			.type = X86_ACPI_IRQ_TYPE_GPIOINT,
-+			.chip = "INT33FF:00",
-+			.index = 91,
-+			.trigger = ACPI_EDGE_SENSITIVE,
-+			.polarity = ACPI_ACTIVE_LOW,
-+			.con_id = "rt5677_irq",
-+		},
-+	}, {
-+		/* Audio jack detection IC */
-+		.board_info = {
-+			.type = "ts3a227e",
-+			.addr = 0x3b,
-+			.dev_name = "ts3a227e",
-+			.swnode = &lenovo_yb1_ts3a227e_node,
-+		},
-+		.adapter_path = "\\_SB_.PCI0.I2C1",
-+		.irq_data = {
-+			.type = X86_ACPI_IRQ_TYPE_GPIOINT,
-+			.chip = "INT33FF:00",
-+			.index = 77,
-+			.trigger = ACPI_EDGE_SENSITIVE,
-+			.polarity = ACPI_ACTIVE_LOW,
-+			.con_id = "ts3a227e_irq",
-+		},
- 	},
- };
- 
-@@ -284,6 +356,11 @@ static const struct software_node *lenovo_yb1_x90_lid_swnodes[] = {
- 	NULL
- };
- 
-+static const struct software_node *lenovo_yb1_x90_swnodes[] = {
-+	&lenovo_yb1_rt5677_gpiochip_node,
-+	NULL
-+};
-+
- static int __init lenovo_yb1_x90_init(struct device *dev)
- {
- 	/* Enable the regulators used by the touchscreens */
-@@ -311,6 +388,7 @@ const struct x86_dev_info lenovo_yogabook_x90_info __initconst = {
- 	.serdev_info = lenovo_yb1_x90_serdevs,
- 	.serdev_count = ARRAY_SIZE(lenovo_yb1_x90_serdevs),
- 	.gpio_button_swnodes = lenovo_yb1_x90_lid_swnodes,
-+	.swnode_group = lenovo_yb1_x90_swnodes,
- 	.gpiochip_type = X86_GPIOCHIP_CHERRYVIEW,
- 	.init = lenovo_yb1_x90_init,
- };
-@@ -327,15 +405,39 @@ static const struct x86_i2c_client_info lenovo_yogabook_x91_i2c_clients[] __init
- 		},
- 		.adapter_path = "\\_SB_.PCI0.I2C1",
- 	},
-+	{
-+		/* Audio jack detection IC. Its configuration (I2C address and
-+		 * IRQ) is defined as additional resources in RTEK (10EC5677)
-+		 * ACPI node but define them here to simplify handling in
-+		 * the driver
-+		 */
-+		.board_info = {
-+			.type = "ts3a227e",
-+			.addr = 0x3b,
-+			.dev_name = "ts3a227e",
-+			.swnode = &lenovo_yb1_ts3a227e_node,
-+		},
-+		.adapter_path = "\\_SB_.PCI0.I2C1",
-+		.irq_data = {
-+			.type = X86_ACPI_IRQ_TYPE_GPIOINT,
-+			.chip = "INT33FF:00",
-+			.index = 77,
-+			.trigger = ACPI_EDGE_SENSITIVE,
-+			.polarity = ACPI_ACTIVE_LOW,
-+			.con_id = "ts3a227e_irq",
-+		},
-+	},
- };
- 
- #define YB1_X91_DRV2604L_0_DEVICE "i2c-DRV2604:00"
- #define YB1_X91_DRV2604L_1_DEVICE "i2c-DRV2604:01"
-+#define YB1_X91_RT5677_DEVICE     "i2c-10EC5677:00"
- 
- static int __init lenovo_yb1_x91_init(struct device *dev)
- {
- 	struct device *drv2604l_0_dev __free(put_device) = NULL;
- 	struct device *drv2604l_1_dev __free(put_device) = NULL;
-+	struct device *rt5677_dev __free(put_device) = NULL;
- 	int ret = 0;
- 
- 	drv2604l_0_dev = bus_find_device_by_name(&i2c_bus_type, NULL,
-@@ -370,12 +472,34 @@ static int __init lenovo_yb1_x91_init(struct device *dev)
- 		return ret;
- 	}
- 
-+	rt5677_dev = bus_find_device_by_name(&i2c_bus_type, NULL,
-+					     YB1_X91_RT5677_DEVICE);
-+	if (!rt5677_dev) {
-+		pr_err("error: cannot find %s device\n",
-+		       YB1_X91_RT5677_DEVICE);
-+		return -ENODEV;
-+	}
-+
-+	ret = device_create_managed_software_node(rt5677_dev,
-+					lenovo_yb1_x9x_rt5677_props, NULL);
-+	if (ret) {
-+		pr_err("error: cannot create software node for %s\n",
-+		       YB1_X91_RT5677_DEVICE);
-+		return ret;
-+	}
-+
- 	return 0;
- }
- 
-+static const struct software_node *lenovo_yb1_x91_swnodes[] = {
-+	&lenovo_yb1_rt5677_gpiochip_node,
-+	NULL
-+};
-+
- const struct x86_dev_info lenovo_yogabook_x91_info __initconst = {
- 	.i2c_client_info = lenovo_yogabook_x91_i2c_clients,
- 	.i2c_client_count = ARRAY_SIZE(lenovo_yogabook_x91_i2c_clients),
-+	.swnode_group = lenovo_yb1_x91_swnodes,
- 	.gpiochip_type = X86_GPIOCHIP_CHERRYVIEW,
- 	.init = lenovo_yb1_x91_init,
- };
-
--- 
-2.51.0
-
+PiBPbiBzb21lIHN5c3RlbXMsIEhXUCBjYW4gYmUgZXhwbGljaXRseSBkaXNhYmxlZCBpbiB0aGUg
+QklPUyBzZXR0aW5ncyBXaGVuDQo+IEhXUCBpcyBkaXNhYmxlZCBieSBmaXJtd2FyZSwgdGhlIEhX
+UCBDUFVJRCBiaXQgaXMgbm90IHNldCwgYW5kIGF0dGVtcHRpbmcgdG8NCj4gcmVhZCBNU1JfUE1f
+RU5BQkxFIHdpbGwgcmVzdWx0IGluIGEgR2VuZXJhbCBQcm90ZWN0aW9uDQo+IChHUCkgZmF1bHQu
+DQo+IA0KPiBbICA0MjYuNzE1NDQxXSB1bmNoZWNrZWQgTVNSIGFjY2VzcyBlcnJvcjogUkRNU1Ig
+ZnJvbSAweDc3MCBhdCBySVA6DQo+IDB4ZmZmZmZmZmZjMzNkYjkyZSAoZGlzYWJsZV9keW5hbWlj
+X3NzdF9mZWF0dXJlcysweGUvMHg1MCBbaXNzdF90cG1pX2NvcmVdKQ0KPiBbICA0MjYuNzE1NDUw
+XSBDYWxsIFRyYWNlOg0KPiBbICA0MjYuNzE1NDUzXSAgPFRBU0s+DQo+IFsgIDQyNi43MTU0NTRd
+ICA/IGV4X2hhbmRsZXJfbXNyKzB4ZjYvMHgxNTAgWyAgNDI2LjcxNTQ2MV0gID8NCj4gZml4dXBf
+ZXhjZXB0aW9uKzB4MWFkLzB4MzQwIFsgIDQyNi43MTU0NjJdICA/DQo+IGdwX3RyeV9maXh1cF9h
+bmRfbm90aWZ5KzB4MWUvMHhiMCBbICA0MjYuNzE1NDY2XSAgPw0KPiBleGNfZ2VuZXJhbF9wcm90
+ZWN0aW9uKzB4YzkvMHgzOTAgWyAgNDI2LjcxNTQ3MF0gID8NCj4gdGVybWluYXRlX3dhbGsrMHg2
+NC8weDEwMCBbICA0MjYuNzE1NDc0XSAgPw0KPiBhc21fZXhjX2dlbmVyYWxfcHJvdGVjdGlvbisw
+eDIyLzB4MzANCj4gWyAgNDI2LjcxNTQ3N10gID8gZGlzYWJsZV9keW5hbWljX3NzdF9mZWF0dXJl
+cysweGUvMHg1MCBbaXNzdF90cG1pX2NvcmVdDQo+IFsgIDQyNi43MTU0ODBdICBpc3N0X2lmX2Rl
+Zl9pb2N0bCsweGVjZS8weDEwNTAgW2lzc3RfdHBtaV9jb3JlXQ0KPiBbICA0MjYuNzE1NDg0XSAg
+PyBpb2N0bF9oYXNfcGVybS5jb25zdHByb3AuNDIrMHhlMC8weDEzMA0KPiBbICA0MjYuNzE1NDg5
+XSAgaXNzdF9pZl9kZWZfaW9jdGwrMHgxMGQvMHgxYTAgW2lzc3RfaWZfY29tbW9uXQ0KPiBbICA0
+MjYuNzE1NDk1XSAgX19zZV9zeXNfaW9jdGwrMHg4Ni8weGMwIFsgIDQyNi43MTU0OThdDQo+IGRv
+X3N5c2NhbGxfNjQrMHg4YS8weDEwMCBbICA0MjYuNzE1NTAwXQ0KPiBlbnRyeV9TWVNDQUxMXzY0
+X2FmdGVyX2h3ZnJhbWUrMHg3OC8weGUyDQo+IFsgIDQyNi43MTU1MDNdIFJJUDogMDAzMzoweDdm
+MzZlYWVmNTRhNw0KPiANCj4gQWRkIGEgY2hlY2sgZm9yIFg4Nl9GRUFUVVJFX0hXUCBiZWZvcmUg
+YWNjZXNzaW5nIHRoZSBNU1IuIElmIEhXUCBpcyBub3QNCj4gYXZhaWxhYmxlLCByZXR1cm4gZmFs
+c2Ugc2FmZWx5Lg0KDQpJdCByZXR1cm5zIHRydWUsIG5vdCBmYWxzZS4gQ291bGQgeW91IHJldmlz
+ZSB0aGlzIGNvbW1pdCBtZXNzYWdlIGluIHRoZSBtZXJnZT8NCg0KW0xpLFJvbmdxaW5nXSANCg0K
+DQo+IA0KPiBGaXhlczogMTJhN2QyY2I4MTFkZDhhICgicGxhdGZvcm0veDg2OiBJU1NUOiBBZGQg
+U1NULUNQIHN1cHBvcnQgdmlhIFRQTUkiKQ0KPiBTaWduZWQtb2ZmLWJ5OiBMaSBSb25nUWluZyA8
+bGlyb25ncWluZ0BiYWlkdS5jb20+DQo+IC0tLQ0KPiAgZHJpdmVycy9wbGF0Zm9ybS94ODYvaW50
+ZWwvc3BlZWRfc2VsZWN0X2lmL2lzc3RfdHBtaV9jb3JlLmMgfCAzICsrKw0KPiAgMSBmaWxlIGNo
+YW5nZWQsIDMgaW5zZXJ0aW9ucygrKQ0KPiANCj4gZGlmZiAtLWdpdCBhL2RyaXZlcnMvcGxhdGZv
+cm0veDg2L2ludGVsL3NwZWVkX3NlbGVjdF9pZi9pc3N0X3RwbWlfY29yZS5jDQo+IGIvZHJpdmVy
+cy9wbGF0Zm9ybS94ODYvaW50ZWwvc3BlZWRfc2VsZWN0X2lmL2lzc3RfdHBtaV9jb3JlLmMNCj4g
+aW5kZXggYjhjZGFhMi4uNmY0NmNiYiAxMDA2NDQNCj4gLS0tIGEvZHJpdmVycy9wbGF0Zm9ybS94
+ODYvaW50ZWwvc3BlZWRfc2VsZWN0X2lmL2lzc3RfdHBtaV9jb3JlLmMNCj4gKysrIGIvZHJpdmVy
+cy9wbGF0Zm9ybS94ODYvaW50ZWwvc3BlZWRfc2VsZWN0X2lmL2lzc3RfdHBtaV9jb3JlLmMNCj4g
+QEAgLTU1OCw2ICs1NTgsOSBAQCBzdGF0aWMgYm9vbCBkaXNhYmxlX2R5bmFtaWNfc3N0X2ZlYXR1
+cmVzKHZvaWQpDQo+ICB7DQo+ICAJdTY0IHZhbHVlOw0KPiANCj4gKwlpZiAoIXN0YXRpY19jcHVf
+aGFzKFg4Nl9GRUFUVVJFX0hXUCkpDQo+ICsJCXJldHVybiB0cnVlOw0KPiArDQo+ICAJcmRtc3Jx
+KE1TUl9QTV9FTkFCTEUsIHZhbHVlKTsNCj4gIAlyZXR1cm4gISh2YWx1ZSAmIDB4MSk7DQo+ICB9
+DQo+IC0tDQo+IDIuOS40DQoNCg==
