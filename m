@@ -1,96 +1,110 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.17])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.12])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0D6BC430B94;
-	Mon,  2 Mar 2026 11:10:43 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.17
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DAFA2360751;
+	Mon,  2 Mar 2026 11:21:51 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.12
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1772449845; cv=none; b=TugKzMUSdAGZXNtY2q2kyKttTATZmb/ejEvCFhy2gqnyGCMWCjRO/iHP9UBYBhBQKPDUr+pPKfQgkK1wajl6xmIsFOAj7V51KBKOTjkuhOG/wT8P2thBlPE+COd5LkjibrjhGdKsrAor/FLAOGjnRn2CkxsQPP44yt5nrKzxAKw=
+	t=1772450513; cv=none; b=vA9QnBprP8tvak6Ldg61/dutDM7Xyl3TeSpugQ2CqH0msWZXaGwpNG8lxkS38NUVGdJAqE0aHFmgJtalyWU7BiudY+T9nHivxl/BEajRfZFfG/0AhgbO9v3/VnjctRVUdTe3q9MNoLb9uSQku3h1eByZg3XJvyQmaolQ/S93iCU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1772449845; c=relaxed/simple;
-	bh=9rpzBFkLq43CW6z63B2PR+fVkTd4uRH2OklE6u+Nwps=;
+	s=arc-20240116; t=1772450513; c=relaxed/simple;
+	bh=iFbvh8tKvkPrHovLN/ghzsebmiJAP5hbMNeaXZFFXZM=;
 	h=From:Date:To:cc:Subject:In-Reply-To:Message-ID:References:
-	 MIME-Version:Content-Type; b=lQ1cHOW/xRYu4E2PPfp/9n5kTM2Ckn+Ls6NmyaKBfEKH0ZdbSXHIAE68KITrdMyXSKfIGehlyRKg3/a3b2TYYvD1Vz2WuiWh4xefQNsIdcXNoRRvCPK5MXNVzwj4R1SgcqP8ccN1SJ2m+fmgumCdYqlocJu8wu2q4EzX8WYMRBM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=pass smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=DSfDCIDh; arc=none smtp.client-ip=192.198.163.17
+	 MIME-Version:Content-Type; b=DDEmI4/tAmFFpheU2f8T076sDBAOCIN0EgqCCZcppASELmqiP3VoApjf5/10n0L1VSu5je5Pa/LAWEYarsulXYbWZsvY0JcvLebfWH/kB9zrgqcwUIOvUaNBdRneXOKlEWcNyYrSa5SaDah9KWBky7U3z82ZVshAc3BMpfmyGOk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=pass smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=Rckh1YIX; arc=none smtp.client-ip=192.198.163.12
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="DSfDCIDh"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="Rckh1YIX"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1772449844; x=1803985844;
+  t=1772450512; x=1803986512;
   h=from:date:to:cc:subject:in-reply-to:message-id:
    references:mime-version;
-  bh=9rpzBFkLq43CW6z63B2PR+fVkTd4uRH2OklE6u+Nwps=;
-  b=DSfDCIDhzGeg81flHbro8OYp866JSVK9ElU96aCtC4ytQSxn5Xp4AhC0
-   Xd4BiOOYpq5Pir7lDdDm0tpu1hbiUcWFfnrxHK2eAO0Tt9ZVlF9JUUZi5
-   RWYsht4hzxM1h+j3w9n03e3R6Qa4N0JGlUWZ213RJip/n5jDlNpM167O2
-   EJv77lzMLBSno54AXZY5ptblvaKoiBuZpVy67XBgsEFbG3UpYmwj122L1
-   jHXLfwyCUkOh76A5WARvrGEMjRH0FPNfDDS2tbiigPCOTFeBoE2IdQ85J
-   EB7k7S6xcoTQZwhJQDMh4SMYQ/yMozwrVxf9fC8nXZJ+BI4xQsMaXGJPu
-   A==;
-X-CSE-ConnectionGUID: kSHb/sRkRjmHVLby+adjfg==
-X-CSE-MsgGUID: ATz/5TTRRuWfza1csLYDxg==
-X-IronPort-AV: E=McAfee;i="6800,10657,11716"; a="73356088"
+  bh=iFbvh8tKvkPrHovLN/ghzsebmiJAP5hbMNeaXZFFXZM=;
+  b=Rckh1YIXE8w8ENqJIKV0jH1Zc3cJ56t5qpONd/7/PN9TtQIr3jrcTgG5
+   Sc4tKPl8ZW4hQpEqW/ssK970Xhe4P9xweafzG5caDGy4fREtQgb9yOq1l
+   8kZmEst93/UOOM5OKuW5Di1JFizv2Xu7BgiYPR02CML0oO9SbB/YDdRhu
+   5OZsIYvt/CylxRNF28p8muYERd/sLCJVBr/SoH/rgX+NXQTmOlcFkAzyI
+   Xi6GijmBw0co7hyPDuB/k1ZFBY8aG7otbFQ3VZYFieejVbOLGpiadPCBI
+   exLjElFB8kWE+LbQMdvI2FdEB4r9YAQwFjvTsUDMGknSYeNzcIfvtT094
+   g==;
+X-CSE-ConnectionGUID: t9d/Bk0/QNGB9rqLpSfkbg==
+X-CSE-MsgGUID: wWa+e6f8Qdqpb5yUnXON6Q==
+X-IronPort-AV: E=McAfee;i="6800,10657,11716"; a="77318135"
 X-IronPort-AV: E=Sophos;i="6.21,319,1763452800"; 
-   d="scan'208";a="73356088"
-Received: from fmviesa006.fm.intel.com ([10.60.135.146])
-  by fmvoesa111.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 02 Mar 2026 03:10:44 -0800
-X-CSE-ConnectionGUID: qky5wcxqShWnPo7PmWiPGw==
-X-CSE-MsgGUID: wgMFxtCzQcaYXeVZGZrTOw==
+   d="scan'208";a="77318135"
+Received: from fmviesa010.fm.intel.com ([10.60.135.150])
+  by fmvoesa106.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 02 Mar 2026 03:21:51 -0800
+X-CSE-ConnectionGUID: V99rOaplRqOEwKBSjrKEkQ==
+X-CSE-MsgGUID: 2deyfAciTpuAJb7xgG1hJw==
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="6.21,319,1763452800"; 
-   d="scan'208";a="214850685"
+   d="scan'208";a="215275602"
 Received: from ijarvine-mobl1.ger.corp.intel.com (HELO localhost) ([10.245.244.116])
-  by fmviesa006-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 02 Mar 2026 03:10:41 -0800
+  by fmviesa010-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 02 Mar 2026 03:21:47 -0800
 From: =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
-Date: Mon, 2 Mar 2026 13:10:37 +0200 (EET)
-To: Edip Hazuri <edip@medip.dev>
-cc: Hans de Goede <hansg@kernel.org>, kuba@kernel.org, 
-    platform-driver-x86@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH v3 2/2] platform/x86: hp-wmi: Add missing LED Kconfig
- dependencies
-In-Reply-To: <20260228122143.119571-4-edip@medip.dev>
-Message-ID: <aff14f68-0bdf-ce5b-6d04-03198e3390ab@linux.intel.com>
-References: <20260228122143.119571-2-edip@medip.dev> <20260228122143.119571-4-edip@medip.dev>
+Date: Mon, 2 Mar 2026 13:21:45 +0200 (EET)
+To: Denis Benato <denis.benato@linux.dev>
+cc: "Rafael J. Wysocki" <rafael@kernel.org>, Hans de Goede <hansg@kernel.org>, 
+    LKML <linux-kernel@vger.kernel.org>, 
+    Linux ACPI <linux-acpi@vger.kernel.org>, 
+    platform-driver-x86@vger.kernel.org, 
+    Corentin Chary <corentin.chary@gmail.com>, 
+    "Luke D. Jones" <luke@ljones.dev>, 
+    =?ISO-8859-15?Q?Jo=E3o_Paulo_Rechi_Vita?= <jprvita@gmail.com>
+Subject: Re: [PATCH v1 2/4] platform/x86: asus-laptop: Convert ACPI driver
+ to a platform one
+In-Reply-To: <c9697592-c70b-4ef8-864f-213b5ea4782d@linux.dev>
+Message-ID: <ab094189-b333-895a-7238-f20050966d37@linux.intel.com>
+References: <5971620.DvuYhMxLoT@rafael.j.wysocki> <2402539.ElGaqSPkdT@rafael.j.wysocki> <c9697592-c70b-4ef8-864f-213b5ea4782d@linux.dev>
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+Content-Type: multipart/mixed; boundary="8323328-1444050466-1772450505=:1094"
 
-On Sat, 28 Feb 2026, edip@medip.dev wrote:
+  This message is in MIME format.  The first part should be readable text,
+  while the remaining parts are likely unreadable without MIME-aware tools.
 
-> From: Edip Hazuri <edip@medip.dev>
-> 
-> Add depends on LEDS_CLASS and LEDS_CLASS_MULTICOLOR for the
-> multicolor keyboard backlight support.
-> 
-> Signed-off-by: Edip Hazuri <edip@medip.dev>
-> ---
->  drivers/platform/x86/hp/Kconfig | 2 ++
->  1 file changed, 2 insertions(+)
-> 
-> diff --git a/drivers/platform/x86/hp/Kconfig b/drivers/platform/x86/hp/Kconfig
-> index dd51491b9bcd..02668ebc3020 100644
-> --- a/drivers/platform/x86/hp/Kconfig
-> +++ b/drivers/platform/x86/hp/Kconfig
-> @@ -40,6 +40,8 @@ config HP_WMI
->  	depends on ACPI_EC
->  	depends on ACPI_WMI
->  	depends on INPUT
-> +	depends on LEDS_CLASS
-> +	depends on LEDS_CLASS_MULTICOLOR
->  	depends on RFKILL || RFKILL = n
->  	select POWER_SUPPLY
->  	select INPUT_SPARSEKMAP
+--8323328-1444050466-1772450505=:1094
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: QUOTED-PRINTABLE
 
-Doesn't this lead to a build failure if only 1/2 is applied but 2/2 is not 
-(which can happen e.g. during git bisect)? It's never acceptable to cause 
-a build failure if only a part of the series is applied.
+On Sat, 28 Feb 2026, Denis Benato wrote:
+> On 2/28/26 16:11, Rafael J. Wysocki wrote:
+> > From: "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>
+> >
+> > In all cases in which a struct acpi_driver is used for binding a driver
+> > to an ACPI device object, a corresponding platform device is created by
+> > the ACPI core and that device is regarded as a proper representation of
+> > underlying hardware.  Accordingly, a struct platform_driver should be
+> > used by driver code to bind to that device.  There are multiple reasons
+> > why drivers should not bind directly to ACPI device objects [1].
+> >
+> > Overall, it is better to bind drivers to platform devices than to their
+> > ACPI companions, so convert the Asus laptop ACPI driver to a platform
+> > one.
+> >
+> > While this is not expected to alter functionality, it changes sysfs
+> > layout and so it will be visible to user space.
+>
+> Alright I will take a look if asus-linux software is affected and act acc=
+ordingly.
+> How much time do I have?
 
--- 
+Please take your time, we don't need to rush things, especially=20
+refactoring when there are open questions to answer.
+
+> Thanks.=C2=A0
+> > Link: https://lore.kernel.org/all/2396510.ElGaqSPkdT@rafael.j.wysocki/ =
+[1]
+> > Signed-off-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
+> Reviewed-by: Denis Benato <denis.benato@linux.dev>
+
+--=20
  i.
 
+--8323328-1444050466-1772450505=:1094--
