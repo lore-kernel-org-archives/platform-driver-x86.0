@@ -1,38 +1,38 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9AE8435AC34
-	for <platform-driver-x86@vger.kernel.org>; Mon,  2 Mar 2026 10:56:34 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3B6D3331A41
+	for <platform-driver-x86@vger.kernel.org>; Mon,  2 Mar 2026 11:06:46 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1772448994; cv=none; b=EvIO8ljBRCXuri6++3iCNZl0WifGUt6rvl9353LEkQlcsszmoYeNN1zFSBBBOXAGKxGYtM16xkMR5aCGc3WEirKwsH7hA5fzs43rVFcDD9iFnw8Zc8klSDWPlG5U5H97TrAFszj6z3GemVQ4lrPlOiN3mE1i7LCflXmogcd5OO4=
+	t=1772449606; cv=none; b=fEVslomdr3sq17fIeyY4XWsKs6pGg5LtMGsQumYVGMvC64mJlsZxdsEtY6sgMPbfaH5uon9FYqcHA4n/q8tFk/OhWZmGHCKsGnhZo6I8MMhKiPOHLcfuz9R/QJBuS7abtzS/uTYtKQQkM7E2dcrLpm5Ez3hdMLEWmGyytvhPp6o=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1772448994; c=relaxed/simple;
-	bh=YRWe7n5pZ1JdGO6Th7PNJ9CwSrtDFLqiNEGy11hZF2c=;
+	s=arc-20240116; t=1772449606; c=relaxed/simple;
+	bh=gikijVcQyvVfG4kqcPmys9wffVXAWhwv9/UeGJGwmQs=;
 	h=From:To:Subject:Date:Message-ID:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=KNftq7pEmGOGaGUYYRoonpYc59EJA8e13oSeM+pUDApJSydLy5bxeAxDHYPq9l+nTTHH7MrkL5zlrrvUbzQgTMRayuTrFIN4m0VVNBRgqaBeKr1Zi9aNGGf1qchXEkRyotPrbob8fKi+YGD48M55Z3Gytm2VZmj5tvrDquWwARs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=UkpIzl7v; arc=none smtp.client-ip=10.30.226.201
+	 Content-Type:MIME-Version; b=BpD02TJuIumsn/4pJ6lhYcv9JYj0TztapwgpI8nmxa7OI42lvhx81d8/pcLi6QHyUQPcVlIC8PNpw5SHggHDQZ2HStfWi2BwxALa3hXsieFEEqlCqSQzTCh4hUXEsymLDDYxQhuRhOUnqCTRFndKuKYaZMkXRHI7J5vZXrpSdl4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Cx4vZG30; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="UkpIzl7v"
-Received: by smtp.kernel.org (Postfix) with ESMTPS id 3A360C19425
-	for <platform-driver-x86@vger.kernel.org>; Mon,  2 Mar 2026 10:56:34 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Cx4vZG30"
+Received: by smtp.kernel.org (Postfix) with ESMTPS id DCBF2C2BC86
+	for <platform-driver-x86@vger.kernel.org>; Mon,  2 Mar 2026 11:06:45 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1772448994;
-	bh=YRWe7n5pZ1JdGO6Th7PNJ9CwSrtDFLqiNEGy11hZF2c=;
+	s=k20201202; t=1772449605;
+	bh=gikijVcQyvVfG4kqcPmys9wffVXAWhwv9/UeGJGwmQs=;
 	h=From:To:Subject:Date:In-Reply-To:References:From;
-	b=UkpIzl7vXa3IcrhZWMmDx3l3Tw/snHIU/lGuCxV1y/TLXzxMG5e4hH6wVMMNoTrAC
-	 a50mlWv96+k3LPhUvDFNJ9fMB6gQd7L6Vev6ls/jeTjHCcVpldLyboLypoBS68XQFh
-	 VRptUikpVytoKInLJJk88B1M+IW3QExwN0WhTW9SoqPDq932z17QF8uGv9fDWSqFYA
-	 gY992jJ0jz6UCR1WP0tfYryw4feo5KK+uWmaMOhlTT6W5nEB7SRigsOidTVf0k3vri
-	 HljpOXDFVpHhBq/6M2lgw+/TWRhJJLYlhBCj51g5IecKtAYtEMKFNCUYgZGh5MYqe/
-	 8JNot4uXmkQKg==
+	b=Cx4vZG30pr+pjXLYf1gifwKLMXF/Ii36pgDzT5QCpg5NNoqfQvYQpvlO4iaLbuaVk
+	 0HIMw322UoU9cXnTopKXTKrl1xfUuOJdQCFim6OL3qUNS28GG+0bIWUNXQzpSVhmUQ
+	 oddfEVS1n7ySGVTQfJTHH6i7zQ0D58IYObgHtl4cw5bWGTyQLVwJ4WRuEGTFt01Xel
+	 KmSESc4uAQWnVTvgrqwUFZCIqftE34Km7hDdokvaBdDuXTYFKHTLphBRoUt8nrg6Fv
+	 Wrfw1GuOcwpu51JTDDn2mQsagxEoKfFZjKnBt9kZWzVcKChQKgrtZDPjFXT8D+G4KY
+	 GqqmmBBMa7Zpw==
 Received: by aws-us-west-2-korg-bugzilla-1.web.codeaurora.org (Postfix, from userid 48)
-	id 29012C4160E; Mon,  2 Mar 2026 10:56:34 +0000 (UTC)
+	id CA375C41612; Mon,  2 Mar 2026 11:06:45 +0000 (UTC)
 From: bugzilla-daemon@kernel.org
 To: platform-driver-x86@vger.kernel.org
 Subject: [Bug 221065] ideapad_acpi: unexpected charge_types spam on Yoga Pro
  7 14ASP9
-Date: Mon, 02 Mar 2026 10:56:33 +0000
+Date: Mon, 02 Mar 2026 11:06:45 +0000
 X-Bugzilla-Reason: None
 X-Bugzilla-Type: changed
 X-Bugzilla-Watch-Reason: AssignedTo drivers_platform_x86@kernel-bugs.osdl.org
@@ -47,8 +47,8 @@ X-Bugzilla-Resolution:
 X-Bugzilla-Priority: P3
 X-Bugzilla-Assigned-To: drivers_platform_x86@kernel-bugs.osdl.org
 X-Bugzilla-Flags: 
-X-Bugzilla-Changed-Fields: cc
-Message-ID: <bug-221065-215701-2K6mYNxW5A@https.bugzilla.kernel.org/>
+X-Bugzilla-Changed-Fields: 
+Message-ID: <bug-221065-215701-VGnPoYE8u2@https.bugzilla.kernel.org/>
 In-Reply-To: <bug-221065-215701@https.bugzilla.kernel.org/>
 References: <bug-221065-215701@https.bugzilla.kernel.org/>
 Content-Type: text/plain; charset="UTF-8"
@@ -64,32 +64,23 @@ MIME-Version: 1.0
 
 https://bugzilla.kernel.org/show_bug.cgi?id=3D221065
 
-fililip (team@nitrosubs.live) changed:
+--- Comment #43 from fililip (team@nitrosubs.live) ---
+I apologize, I was looking in the wrong directory.
 
-           What    |Removed                     |Added
-----------------------------------------------------------------------------
-                 CC|                            |team@nitrosubs.live
+cat /sys/class/power_supply/BAT0/charge_types returns:
 
---- Comment #42 from fililip (team@nitrosubs.live) ---
-I think I'm having this issue as well on my 83HN laptop.
+Fast Standard [Long_Life]
 
-dmesg says:
+So it looks like it's already set to long life for me, but the ideapad driv=
+er
+thinks otherwise.
 
-[   48.931988] ideapad_acpi VPC2004:00: unexpected charge_types: both [Fast]
-and [Long_Life] are enabled
+I'm on 6.19.5, running PSCN21WW firmware.
 
-However, listing the contents of
-/sys/bus/platform/drivers/ideapad_acpi/VPC2004:00 returns:
-
-camera_power       driver_override  fn_lock  modalias          rfkill=20=20=
-=20=20
-usb_charging
-conservation_mode  fan_mode         input    platform-profile  subsystem
-driver             firmware_node    leds     power             uevent
-
-There's no charge_types file.
-
-Is that intentional?
+BTW, someone in the thread seems to be spreading misinformation, as you can
+unpack the firmware update (PE32/exe) and use the included ~34MiB bin file =
+with
+fwupd which is how I have the latest firmware actually.
 
 --=20
 You may reply to this email to add a comment.
