@@ -1,137 +1,91 @@
-Received: from out162-62-58-211.mail.qq.com (out162-62-58-211.mail.qq.com [162.62.58.211])
+Received: from outbound.baidu.com (mx24.baidu.com [111.206.215.185])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 825F22FBDE0;
-	Tue,  3 Mar 2026 06:32:39 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=162.62.58.211
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 003E7282F26
+	for <platform-driver-x86@vger.kernel.org>; Tue,  3 Mar 2026 07:47:28 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=111.206.215.185
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1772519563; cv=none; b=hrm9Quc+F49MjXQwJ1dtCW1OyOpKiHPJgiam5tsvy3UK0tf3nDeDJ4d6qhtFruJhknH79LfAvDC4gfjePABwxh3bsEo9mI6GCkpg6fg6z6xNJQHYFNUo9yHwsflH6RHqC4jDHselDUjrqAu7vLkVueqZe5GO7fai1pizKPeLYho=
+	t=1772524052; cv=none; b=UGx35S7Y8Pu7CfIMW6NHJdL4DGOWhpk1niwJP4iMvxkkGsIYqY3yNo7H5nPFqBXkbQnhnrEAgROif10iSCOKhGFDuQhl0h4O44gQzJYoJXfF6nanhmiIHGIjlS9lFznLth/QJg3pjuTM/0CDonfQUzZZXx3PWHRsrAeVH8MdkFo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1772519563; c=relaxed/simple;
-	bh=OlwkTy8mDgS8zVjZlxJeMw7YBXXoV/wVe7vFTZWY6DE=;
-	h=Message-ID:From:To:Cc:Subject:Date:MIME-Version:Content-Type; b=otzW6GYGH5r61wwarNDljFUJvlliAs/KZgMRdANl80f+8tVPPilMFN0vIhZ98cDdmo70uA07zSuFYKLWIYEw+wI0lfoQ8I4cezqI5SS7rPC7hGX26mHrOYKYz4HVtEE+zToINB06CtYS0s67aLGkQP6HzOuh8vHiuS6B73NDUhA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=foxmail.com; spf=pass smtp.mailfrom=foxmail.com; dkim=pass (1024-bit key) header.d=foxmail.com header.i=@foxmail.com header.b=ch5LfaMv; arc=none smtp.client-ip=162.62.58.211
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=foxmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=foxmail.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=foxmail.com header.i=@foxmail.com header.b="ch5LfaMv"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=foxmail.com;
-	s=s201512; t=1772519553;
-	bh=aKvCzqlj+MiaJ1r5wT8u+m/ITsChfbuYGTLOSqRX1OY=;
-	h=From:To:Cc:Subject:Date;
-	b=ch5LfaMv19fIbe8tUeph5wpELF+LzRzEOs5PLUi8ofWOwANm/s1mVgEQCctcVG63/
-	 +gPes2P5GfJNrOy8ePUO/58QRAd29W4ZqZ7qVo5juuQwVQvi7fqAryOm97je02KZTB
-	 4bkhrIrYSoiciBSKdrKrIGi9xu1gyaqopJ37N69o=
-Received: from China-team ([60.247.85.88])
-	by newxmesmtplogicsvrsza63-0.qq.com (NewEsmtp) with SMTP
-	id 813B1214; Tue, 03 Mar 2026 14:32:19 +0800
-X-QQ-mid: xmsmtpt1772519539tksc3zgii
-Message-ID: <tencent_9AB419354F1F619209D63A382030610D4208@qq.com>
-X-QQ-XMAILINFO: NtEY5COp+2lZkhSxPhfxa6d3oi8xnzNq2SsjQwz1dpWkRdqGTr2rLZ4griqYmE
-	 aWlQkH2ib38BUDetHiYZrTglFfTh9S+EFjoY3XBdO4vhwmLfokCkbsqJ2qnSuRV9lzlAaTo0E0VW
-	 oslfCFd675j4cQcGFD+6G1wbH1f2xBuvXtk/IEti6cCQR7/RacpSnngLrQNX8NiniR+cs97377sg
-	 kXVNQesEunXbAd7nnh+4l9maczG6BoxTl6M1jcAP34D7/E7UGAYZOIU50pdFGWWgYD44alX2vMc/
-	 m+xQETfllbPxytHQI3yTuzL+lGfH7/6CMdNsBIo41h3E2w1NQ7pf5IquLstR8tFePgY3M4jbFzuz
-	 kFmLLiNhzlJHezIjcD/ixwYtcZkbHF1AMk1LcEGP39dJa4EG41NgNqHbAdaKZQZ0GS31N+/Zy4I8
-	 0I94k+Lh6dGg6pjXE5/4mxkVcNZC4idpwTAr5pXbirIFbjzA1A5fOh5VwTyAHgMQYQKTdDgByjiy
-	 PktprdXp22cyuFs0GM6xApE6Uewn03AMCAoUpQzzkTlW2NgJjH4XFqDgZmJt2npIKn65MjsUNjKS
-	 0aR7js0Y6Bxjo9DUWph+f9a6+ibnkdCq7Fi0EGJlepJCZ1Yj8hwXIxoZW2VnRss7mmwBfmdVQUbL
-	 OwyM3sZwLj2QQ/CtOo8GwdkSrDX8Sn5RE+P96MktH0fb6jWSq/ToZGF/bjb4rWfU9DdkjerFriH6
-	 oJg/iiubNm6jL8WMJGpJHFPwDCMkGiDNoXbJdWtIkVQ9LJVcbnnIHGRvpC7I0iUnyI2QEqEhc9Xp
-	 WPujNrPWgkeR9ZcGGDNvj8yDeGOKX6Z0wnSiHPmcS5rwh6wLfS83evWUFS/grzdqSfsxR7iR9alZ
-	 w3wBRTds8sKBLu2hevlozh7MOWCEqJyk4JzOqtKbVY5tQcZ40O0ZzhTxMBukuMUpWTl5L+NkBtoe
-	 sCWUtz+crrlG4aA2IKCn9sUvh1DhxnxckbZt+8tRufjuWYa+SEoowpdEUvKxwz9pbwHsGU89W/uD
-	 VpCuOEfK8U7+1Lm3KdMaDVp4sgKsozm+EFoumDHFt7Zc1RVCLF1b/ij/1fF2931AlJQ9iRNtBxmG
-	 x5jUY2JyvLWGIzetY8mUaZ8z3saIwG56n15zjW
-X-QQ-XMRINFO: MSVp+SPm3vtSI1QTLgDHQqIV1w2oNKDqfg==
-From: Alva Lan <alvalan9@foxmail.com>
-To: gregkh@linuxfoundation.org,
-	stable@vger.kernel.org
-Cc: platform-driver-x86@vger.kernel.org,
-	Antheas Kapenekakis <lkml@antheas.dev>,
-	Mario Limonciello <superm1@kernel.org>,
-	Shyam Sundar S K <Shyam-sundar.S-k@amd.com>,
-	=?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>,
-	Alva Lan <alvalan9@foxmail.com>
-Subject: [PATCH 6.6.y] platform/x86/amd/pmc: Add support for Van Gogh SoC
-Date: Tue,  3 Mar 2026 14:31:51 +0800
-X-OQ-MSGID: <20260303063151.397931-1-alvalan9@foxmail.com>
-X-Mailer: git-send-email 2.34.1
+	s=arc-20240116; t=1772524052; c=relaxed/simple;
+	bh=+QOrO1/LPx1zKqH1r+srmlmKwe7DHlEzLGS3cd6E1wY=;
+	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=kDITvH0zZTBwLaHHJ58TS2/QzROWLb0g0YlbTZe/lb9R6VdMQ+fzPLif9jKUgegaJ3s1GJqZKRF9T2yueepnUAtYkUiNwzvWqg4Iy1Bgh8+BVNPTy9acqK+GJOViwm3ZpJdy906soPmEt0t77cxNOw0kXVw3DgBstiDS2O7l6AY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=baidu.com; spf=pass smtp.mailfrom=baidu.com; arc=none smtp.client-ip=111.206.215.185
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=baidu.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=baidu.com
+From: lirongqing <lirongqing@baidu.com>
+To: Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>, Hans de Goede
+	<hansg@kernel.org>, =?UTF-8?q?Ilpo=20J=C3=A4rvinen?=
+	<ilpo.jarvinen@linux.intel.com>, <platform-driver-x86@vger.kernel.org>
+CC: Li RongQing <lirongqing@baidu.com>
+Subject: [PATCH][v2] platform/x86: ISST: Check HWP support before MSR access
+Date: Tue, 3 Mar 2026 02:46:35 -0500
+Message-ID: <20260303074635.2218-1-lirongqing@baidu.com>
+X-Mailer: git-send-email 2.17.1
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-ClientProxiedBy: bjhj-exc6.internal.baidu.com (172.31.3.16) To
+ bjkjy-exc3.internal.baidu.com (172.31.50.47)
+X-FEAS-Client-IP: 172.31.50.47
+X-FE-Policy-ID: 52:10:53:SYSTEM
 
-From: Antheas Kapenekakis <lkml@antheas.dev>
+From: Li RongQing <lirongqing@baidu.com>
 
-[ Upstream commit db4a3f0fbedb0398f77b9047e8b8bb2b49f355bb ]
+On some systems, HWP can be explicitly disabled in the BIOS settings
+When HWP is disabled by firmware, the HWP CPUID bit is not set, and
+attempting to read MSR_PM_ENABLE will result in a General Protection
+(GP) fault.
 
-The ROG Xbox Ally (non-X) SoC features a similar architecture to the
-Steam Deck. While the Steam Deck supports S3 (s2idle causes a crash),
-this support was dropped by the Xbox Ally which only S0ix suspend.
+  unchecked MSR access error: RDMSR from 0x770 at rIP: 0xffffffffc33db92e (disable_dynamic_sst_features+0xe/0x50 [isst_tpmi_core])
+  Call Trace:
+   <TASK>
+   ? ex_handler_msr+0xf6/0x150
+   ? fixup_exception+0x1ad/0x340
+   ? gp_try_fixup_and_notify+0x1e/0xb0
+   ? exc_general_protection+0xc9/0x390
+   ? terminate_walk+0x64/0x100
+   ? asm_exc_general_protection+0x22/0x30
+   ? disable_dynamic_sst_features+0xe/0x50 [isst_tpmi_core]
+   isst_if_def_ioctl+0xece/0x1050 [isst_tpmi_core]
+   ? ioctl_has_perm.constprop.42+0xe0/0x130
+   isst_if_def_ioctl+0x10d/0x1a0 [isst_if_common]
+   __se_sys_ioctl+0x86/0xc0
+   do_syscall_64+0x8a/0x100
+   entry_SYSCALL_64_after_hwframe+0x78/0xe2
+  RIP: 0033:0x7f36eaef54a7
 
-Since the handler is missing here, this causes the device to not suspend
-and the AMD GPU driver to crash while trying to resume afterwards due to
-a power hang.
+Add a check for X86_FEATURE_HWP before accessing the MSR. If HWP is
+not available, return true safely.
 
-Closes: https://gitlab.freedesktop.org/drm/amd/-/issues/4659
-Signed-off-by: Antheas Kapenekakis <lkml@antheas.dev>
-Reviewed-by: Mario Limonciello (AMD) <superm1@kernel.org>
-Acked-by: Shyam Sundar S K <Shyam-sundar.S-k@amd.com>
-Link: https://patch.msgid.link/20251024152152.3981721-2-lkml@antheas.dev
-Reviewed-by: Ilpo Järvinen <ilpo.jarvinen@linux.intel.com>
-Signed-off-by: Ilpo Järvinen <ilpo.jarvinen@linux.intel.com>
-[ Adjust context ]
-Signed-off-by: Alva Lan <alvalan9@foxmail.com>
+Fixes: 12a7d2cb811d ("platform/x86: ISST: Add SST-CP support via TPMI")
+Signed-off-by: Li RongQing <lirongqing@baidu.com>
+Acked-by: Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>
 ---
- drivers/platform/x86/amd/pmc/pmc.c | 3 +++
- drivers/platform/x86/amd/pmc/pmc.h | 1 +
- 2 files changed, 4 insertions(+)
+Diff with v1: fix commit message(return false ->return true)
+              remove timestamp in call trace
 
-diff --git a/drivers/platform/x86/amd/pmc/pmc.c b/drivers/platform/x86/amd/pmc/pmc.c
-index af5cc8aa7988..259bac3744d4 100644
---- a/drivers/platform/x86/amd/pmc/pmc.c
-+++ b/drivers/platform/x86/amd/pmc/pmc.c
-@@ -294,6 +294,7 @@ static void amd_pmc_get_ip_info(struct amd_pmc_dev *dev)
- 	switch (dev->cpu_id) {
- 	case AMD_CPU_ID_PCO:
- 	case AMD_CPU_ID_RN:
-+	case AMD_CPU_ID_VG:
- 	case AMD_CPU_ID_YC:
- 	case AMD_CPU_ID_CB:
- 		dev->num_ips = 12;
-@@ -698,6 +699,7 @@ static int amd_pmc_get_os_hint(struct amd_pmc_dev *dev)
- 	case AMD_CPU_ID_PCO:
- 		return MSG_OS_HINT_PCO;
- 	case AMD_CPU_ID_RN:
-+	case AMD_CPU_ID_VG:
- 	case AMD_CPU_ID_YC:
- 	case AMD_CPU_ID_CB:
- 	case AMD_CPU_ID_PS:
-@@ -908,6 +910,7 @@ static const struct pci_device_id pmc_pci_ids[] = {
- 	{ PCI_DEVICE(PCI_VENDOR_ID_AMD, AMD_CPU_ID_PCO) },
- 	{ PCI_DEVICE(PCI_VENDOR_ID_AMD, AMD_CPU_ID_RV) },
- 	{ PCI_DEVICE(PCI_VENDOR_ID_AMD, AMD_CPU_ID_SP) },
-+	{ PCI_DEVICE(PCI_VENDOR_ID_AMD, AMD_CPU_ID_VG) },
- 	{ PCI_DEVICE(PCI_VENDOR_ID_AMD, PCI_DEVICE_ID_AMD_1AH_M20H_ROOT) },
- 	{ }
- };
-diff --git a/drivers/platform/x86/amd/pmc/pmc.h b/drivers/platform/x86/amd/pmc/pmc.h
-index b4794f118739..88e0232592dc 100644
---- a/drivers/platform/x86/amd/pmc/pmc.h
-+++ b/drivers/platform/x86/amd/pmc/pmc.h
-@@ -47,6 +47,7 @@ void amd_pmc_quirks_init(struct amd_pmc_dev *dev);
- #define AMD_CPU_ID_RN			0x1630
- #define AMD_CPU_ID_PCO			AMD_CPU_ID_RV
- #define AMD_CPU_ID_CZN			AMD_CPU_ID_RN
-+#define AMD_CPU_ID_VG			0x1645
- #define AMD_CPU_ID_YC			0x14B5
- #define AMD_CPU_ID_CB			0x14D8
- #define AMD_CPU_ID_PS			0x14E8
+ drivers/platform/x86/intel/speed_select_if/isst_tpmi_core.c | 3 +++
+ 1 file changed, 3 insertions(+)
+
+diff --git a/drivers/platform/x86/intel/speed_select_if/isst_tpmi_core.c b/drivers/platform/x86/intel/speed_select_if/isst_tpmi_core.c
+index b8cdaa2..6f46cbb 100644
+--- a/drivers/platform/x86/intel/speed_select_if/isst_tpmi_core.c
++++ b/drivers/platform/x86/intel/speed_select_if/isst_tpmi_core.c
+@@ -558,6 +558,9 @@ static bool disable_dynamic_sst_features(void)
+ {
+ 	u64 value;
+ 
++	if (!static_cpu_has(X86_FEATURE_HWP))
++		return true;
++
+ 	rdmsrq(MSR_PM_ENABLE, value);
+ 	return !(value & 0x1);
+ }
 -- 
-2.43.0
+2.9.4
 
