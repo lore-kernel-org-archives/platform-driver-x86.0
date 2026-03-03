@@ -1,202 +1,286 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from relay10.grserver.gr (relay10.grserver.gr [37.27.248.198])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 81479372680;
-	Tue,  3 Mar 2026 18:59:30 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 16517227EB9
+	for <platform-driver-x86@vger.kernel.org>; Tue,  3 Mar 2026 19:16:45 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=37.27.248.198
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1772564370; cv=none; b=pesJm0Z+QgLPfMf9RVl6Brq7r2VO7muigvLynIgC4+2v9VPLAqk13nlB05Oe0bpWrJOTrbqKCMi9hFoSF3e0Jhc9QEzfsMtGcfEy4fG7R1uKKNzDbkcJFdcJen2jqrAoKAH+ehnZ/VSqZjGo9vSo34zWj/y8mS+UvlADtPDkWz0=
+	t=1772565408; cv=none; b=uLL+mQ2x2ndMdZsbuCsz2FjUJehoviDlH9hX7Ef50iiL4MbunhqkAz456AkGF8/nGJY2jPzlIRKvbxn8W+jNacUZmMeSnrplP6Z1/fGAxnrkRpkwQOd4WPB+nBvv6/gyDa2Khj7zvGRLlgwfHkRA2aycIUdsI+5eVNBa/r1ynV0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1772564370; c=relaxed/simple;
-	bh=Jpb4WshuK5IJlQlOqRiefOlvKN+2B/6YZEZHktxlWeI=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=SwctBIz9zHtrDfq97cYIwNpLsH6/EZuV3kenr9+jqBuS/hmaZRtepUjTKWk3ag4qP2dRhESSa0559RBVDaB+WUXzZEDXAAc/Xr1xFd1xhivyH21iZHOYZrYWUWvDUttTGWMpiPCUae3haOt8Z15CnRegq+KqT8ZzkitOc6f836Q=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=eKsh2r6J; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1772565408; c=relaxed/simple;
+	bh=i8kkLhXLPgwR1BsING3hDRjgdh4WWqzWhFv0SaMK8ls=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=r0jpTPmnWblN2Ir4JkI9DPyoe91HO2Vv7yqAvQRjhYFHl/R5uzXKtW4WtFvZdxXvBKUJMML/Mpx26lDfCVgMEUGJhRLKKw3K8M3dQL6/P0IXd4YDP01AQl4gzI5EKNjYGqyi/3a9m4CBRfocsGEnOZTr/wx/5NeWHVIfv6z58Nc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=antheas.dev; spf=pass smtp.mailfrom=antheas.dev; dkim=pass (2048-bit key) header.d=antheas.dev header.i=@antheas.dev header.b=ONuWi/W9; arc=none smtp.client-ip=37.27.248.198
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=antheas.dev
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=antheas.dev
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="eKsh2r6J"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id C4899C116C6;
-	Tue,  3 Mar 2026 18:59:29 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1772564370;
-	bh=Jpb4WshuK5IJlQlOqRiefOlvKN+2B/6YZEZHktxlWeI=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=eKsh2r6JwLlxRi6CMpfZ3R3cU9gHB4ZSnRrmV7KnEqbeLecbbMnpxnHCq/hGUKMac
-	 6Kgq589b9RUqvYm+R+cCPBe2ZP2v/r9PKZlL0Q3LIFaLqmbZ/fDUHEgbS45980qsn3
-	 SKSFZuYS7+Y4FAejSJQcaUeM/SP81Cg8AxTvhbyLtZZ6qQl32ABBnsjI7BqjDLomNu
-	 CGhn8vdneRBDibd2EMxUA7K0v8dp2axjKnRU4/2sAXl0TfVxWT7wPjJNYqE+xHBQrs
-	 Xan1kKCaFlL7CxcIjZhRLEVXQC05ZGIsU4QwqDXItHckWIN68gQrxDwTx5FEdUT6Tj
-	 46WBPYPx6aT8Q==
-Message-ID: <2af36c81-4619-4f90-a04c-c3e5ed7a0cc5@kernel.org>
-Date: Tue, 3 Mar 2026 12:59:27 -0600
+	dkim=pass (2048-bit key) header.d=antheas.dev header.i=@antheas.dev header.b="ONuWi/W9"
+Received: from relay10 (localhost.localdomain [127.0.0.1])
+	by relay10.grserver.gr (Proxmox) with ESMTP id 4C0F845EF3
+	for <platform-driver-x86@vger.kernel.org>; Tue,  3 Mar 2026 21:16:44 +0200 (EET)
+Received: from linux3247.grserver.gr (linux3247.grserver.gr [213.158.90.240])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by relay10.grserver.gr (Proxmox) with ESMTPS id 5C1FB45F65
+	for <platform-driver-x86@vger.kernel.org>; Tue,  3 Mar 2026 21:16:43 +0200 (EET)
+Received: from mail-pl1-f177.google.com (mail-pl1-f177.google.com [209.85.214.177])
+	by linux3247.grserver.gr (Postfix) with ESMTPSA id AF5401FF211
+	for <platform-driver-x86@vger.kernel.org>; Tue,  3 Mar 2026 21:16:42 +0200 (EET)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=antheas.dev;
+	s=default; t=1772565402;
+	bh=ysWjHvcxT6mPWQjb5t8evPyiioPrfgTDvPL/LgEMRb4=;
+	h=Received:From:Subject:To;
+	b=ONuWi/W9ieVKJuVvG8kZudZzeXZBSiaSj5J4EwGbkyEXL8rE6gS7kUgTD6bZQ5Fgn
+	 Ks+88nI3f5KkyxQh3Q1sQc8IqyymjltLbFzRdEfhNrnJxjHQTJlS2mT+1zPb+aP8Av
+	 d+15AgfvtKhT2B0Jf/e0+Cm9VLCizAzUCwmB5mhw9L28jhbSNN15PdEtbVAROXGv72
+	 l/TRXkKKcXGaG6bj4sArCKhLk+K2u6pQ809SyFZYup1xi8/XmFojADijeyMtnHGc/P
+	 b19bbFlJ0xo3Z9DPDBq6UOJhx6VXrRwZCTSvj5TbL1uYk0Q4D/YTgK1pJx5xULOqB3
+	 ra5Z/AmMPC9GQ==
+Authentication-Results: linux3247.grserver.gr;
+        spf=pass (sender IP is 209.85.214.177) smtp.mailfrom=lkml@antheas.dev smtp.helo=mail-pl1-f177.google.com
+Received-SPF: pass (linux3247.grserver.gr: connection is authenticated)
+Received: by mail-pl1-f177.google.com with SMTP id
+ d9443c01a7336-2ad617d5b80so39294115ad.1
+        for <platform-driver-x86@vger.kernel.org>;
+ Tue, 03 Mar 2026 11:16:42 -0800 (PST)
+X-Forwarded-Encrypted: i=1;
+ AJvYcCX95X7FWeyQrMS95szMfQJPeT8BpSNK3l1iDESqrNqynaVchZdsyzn+/Quac0M4MKN6jL5fvXaXldvopx2TgDSQbRCQ@vger.kernel.org
+X-Gm-Message-State: AOJu0Yyp21XcQn6BktFxND3PXML5nQGM3bdNuCHjR1HQb4zwrOoO0CuL
+	s++0A71T+xLvjjozQZ/9FqHjrv9b9Lk4ndyPX+GNPIMngJf80iUKfwwUbn37T4gwh4v+PgNtTnV
+	TyGmME8ybqVUWBVRBNGwurXcCqKTX9aM=
+X-Received: by 2002:a17:903:2ac7:b0:2ae:4445:f39b with SMTP id
+ d9443c01a7336-2ae4445f6cbmr95521945ad.6.1772565401275; Tue, 03 Mar 2026
+ 11:16:41 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
+References: <20260303181707.2920261-1-lkml@antheas.dev>
+ <2af36c81-4619-4f90-a04c-c3e5ed7a0cc5@kernel.org>
+In-Reply-To: <2af36c81-4619-4f90-a04c-c3e5ed7a0cc5@kernel.org>
+From: Antheas Kapenekakis <lkml@antheas.dev>
+Date: Tue, 3 Mar 2026 20:16:30 +0100
+X-Gmail-Original-Message-ID: 
+ <CAGwozwGTPKH5Lc4pEzmrNd7YhHJpZHod=YhViYVVcJTVbLX9ug@mail.gmail.com>
+X-Gm-Features: AaiRm50mFTVgCMjTPe7Yt_4bGEWN6HHb8VT315_gepuA1PID2aOTY_oCsm_nw4o
+Message-ID: 
+ <CAGwozwGTPKH5Lc4pEzmrNd7YhHJpZHod=YhViYVVcJTVbLX9ug@mail.gmail.com>
 Subject: Re: [RFC v1 0/2] platform/x86/amd: Add AMD DPTCi driver for TDP
  control in devices without vendor-specific controls
-To: Antheas Kapenekakis <lkml@antheas.dev>
+To: Mario Limonciello <superm1@kernel.org>
 Cc: linux-kernel@vger.kernel.org, platform-driver-x86@vger.kernel.org
-References: <20260303181707.2920261-1-lkml@antheas.dev>
-Content-Language: en-US
-From: Mario Limonciello <superm1@kernel.org>
-In-Reply-To: <20260303181707.2920261-1-lkml@antheas.dev>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="UTF-8"
+X-PPP-Message-ID: 
+ <177256540291.1602255.1427564525480892666@linux3247.grserver.gr>
+X-PPP-Vhost: antheas.dev
+X-Virus-Scanned: clamav-milter 1.4.3 at linux3247.grserver.gr
+X-Virus-Status: Clean
 
-A high level question - why aren't these vendors implementing PMF?  It's 
-1000% less work to enable PMF.  All the values that match the design get 
-stored in BIOS, driver pulls the information and uses it.
+On Tue, 3 Mar 2026 at 19:59, Mario Limonciello <superm1@kernel.org> wrote:
+>
+> A high level question - why aren't these vendors implementing PMF?  It's
+> 1000% less work to enable PMF.  All the values that match the design get
+> stored in BIOS, driver pulls the information and uses it.
 
-Same approach for Windows and Linux.
+From my understanding they do not implement anything and just use
+ryzenadj with their windows vendor software.
 
-More comments below.
+> Same approach for Windows and Linux.
+>
+> More comments below.
+>
+> On 3/3/26 12:17 PM, Antheas Kapenekakis wrote:
+> > Many AMD-based handheld PCs (GPD, AYANEO, OneXPlayer, AOKZOE, OrangePi)
+> > ship with the AGESA ALIB method at \_SB.ALIB, which accepts Function 0x0C
+> > (the Dynamic Power and Thermal Configuration Interface, DPTCi). This
+> > allows software to adjust APU power and thermal parameters at runtime:
+> > STAPM limit, fast/slow PPT limits, skin-temperature TDP limit, slow/STAPM
+> > time constants, and the thermal control target.
+> >
+> > Until now userspace has reached this interface through the acpi_call out-
+> > of-tree module or ryzenadj, which carry no ABI guarantees and no per-device
+> > safety limits. This driver replaces that with a proper in-kernel
+> > implementation that:
+> >
+> >    * Exposes all seven parameters through the firmware-attributes sysfs ABI,
+> >      so that standard tools (fwupd, systemd-bios-vendor, etc.) can enumerate
+>
+> What is systemd-bios-vendor?  I guess I'm not familiar with this and a
+> quick web search didn't turn anything obvious up.
 
-On 3/3/26 12:17 PM, Antheas Kapenekakis wrote:
-> Many AMD-based handheld PCs (GPD, AYANEO, OneXPlayer, AOKZOE, OrangePi)
-> ship with the AGESA ALIB method at \_SB.ALIB, which accepts Function 0x0C
-> (the Dynamic Power and Thermal Configuration Interface, DPTCi). This
-> allows software to adjust APU power and thermal parameters at runtime:
-> STAPM limit, fast/slow PPT limits, skin-temperature TDP limit, slow/STAPM
-> time constants, and the thermal control target.
-> 
-> Until now userspace has reached this interface through the acpi_call out-
-> of-tree module or ryzenadj, which carry no ABI guarantees and no per-device
-> safety limits. This driver replaces that with a proper in-kernel
-> implementation that:
-> 
->    * Exposes all seven parameters through the firmware-attributes sysfs ABI,
->      so that standard tools (fwupd, systemd-bios-vendor, etc.) can enumerate
+I used some AI assistance to compile this from my userspace
+implementation and the ASEGA pdf from the AMD site. I need to go
+through _everything_  before this moves to non-RFC. Same with
+copyright year. I focused on the implementation doing the things I
+want it to do for now.
 
-What is systemd-bios-vendor?  I guess I'm not familiar with this and a 
-quick web search didn't turn anything obvious up.
+> >      and modify them without device-specific knowledge.
+> >
+> >    * Enforces tiered per-device and per-SoC limits. The default "device"
+> >      mode restricts writes to a curated safe range (smin..smax) derived from
+> >      the device's thermal design.
+>
+> Can you please elaborate where you got all these numbers from?  I don't
+> know if they're accurate or not.  Someone would probably need to cross
+> reference them to be sure.
 
->      and modify them without device-specific knowledge.
-> 
->    * Enforces tiered per-device and per-SoC limits. The default "device"
->      mode restricts writes to a curated safe range (smin..smax) derived from
->      the device's thermal design. 
+Trial and error, research, references from Windows, etc. All of the
+devices in this driver have been tested with a userspace
+implementation using the same limits for ppt/sppt/fppt. Nobody has
+complained about them. To be honest, I usually do not set tctl slow
+and fast time limits, so those are referenced from the Legion Go and
+for tctl I go lower than what manufacturers usually set. Users like
+tctl because some of them like their device to stay cooler.
 
-Can you please elaborate where you got all these numbers from?  I don't 
-know if they're accurate or not.  Someone would probably need to cross 
-reference them to be sure.
+The big idea for this driver is to allow locking /dev/mem and ACPI.
+Other than the legion go fan curves, and the Zotac Zone driver which
+needs a cleanup, everything else is handled in the kernel now.
 
->      An "expanded" mode exposes the full
->      hardware-validated range. An optional CONFIG_AMD_DPTC_EXTENDED Kconfig
->      adds "soc" (raw ALIB_PARAMS envelope) and "unbound" tiers for advanced
->      use. The active tier is itself a firmware-attribute, switchable at
->      runtime.
-> 
->    * Stages values and commits them atomically in a single ALIB call,
->      matching the protocol's intended bulk-update semantics. A save_settings
->      attribute (per firmware-attributes ABI) controls whether writes commit
->      immediately ("single" mode) or are held until an explicit "save".
-> 
->    * When in "single" mode, re-applies staged values after system resume,
->      so suspend/resume cycles do not silently revert to firmware defaults.
+But this approach works fine for the Zotac Zone as they seem to be
+using a very simple WMI shim.
 
-This isn't the only interface for setting power limits.  How do you make 
-sure that the EC for example isn't stepping on toes on these designs?
+> >      An "expanded" mode exposes the full
+> >      hardware-validated range. An optional CONFIG_AMD_DPTC_EXTENDED Kconfig
+> >      adds "soc" (raw ALIB_PARAMS envelope) and "unbound" tiers for advanced
+> >      use. The active tier is itself a firmware-attribute, switchable at
+> >      runtime.
+> >
+> >    * Stages values and commits them atomically in a single ALIB call,
+> >      matching the protocol's intended bulk-update semantics. A save_settings
+> >      attribute (per firmware-attributes ABI) controls whether writes commit
+> >      immediately ("single" mode) or are held until an explicit "save".
+> >
+> >    * When in "single" mode, re-applies staged values after system resume,
+> >      so suspend/resume cycles do not silently revert to firmware defaults.
+>
+> This isn't the only interface for setting power limits.  How do you make
+> sure that the EC for example isn't stepping on toes on these designs?
 
-I /guess/ it always will need to be opt-in a device by device basis.
+For the DMI matched devices it is not. For the ones that are not
+matched, the driver does not autoload and needs a kconfig parameter to
+even load.
 
-What happens if the vendor enables PMF in a BIOS update?  How does this 
-avoid conflicts?
+OneXPlayer is a bit more complex with their turbo button doing TDP
+swaps but turbo takeover in oxpec takes care of that and then you are
+supposed use ryzenadj.
 
-> 
-> Device limits are supplied for GPD Win Mini / Win 4 / Win 5 / Win Max 2 /
-> Duo / Pocket 4, OrangePi NEO-01, AOKZOE A1/A2, OneXPlayer F1/2/X1/G1,
-> and numerous AYANEO models. The SoC table covers Ryzen 5000, 6000, 7040,
-> 8000, Z1, AI 9 HX 370, and the Ryzen AI MAX series.
-> 
-> Tested on a GPD Win 5 (Ryzen AI MAX+ 395). Confirmed with ryzenadj -i
-> that committed values are applied to hardware, and that fast/slow PPT
-> limits are honoured under a full-CPU stress load.
-> 
-> @Mario: can you suggest a CC list for V2? Thanks. Even if not merged, this
-> driver is still good for downstream use.
+> I /guess/ it always will need to be opt-in a device by device basis.
+>
+> What happens if the vendor enables PMF in a BIOS update?  How does this
+> avoid conflicts?
 
-You should include Shyam (AMD), Denis and Derek (community).
+Some manufacturers enable pmf without implementing the tables. From my
+understanding none of them implement pmf with limits. If a
+manufacturer wants to move to pmf, we can amend the DMI entry with a
+bios match. However, from my understanding, there is no TDP slider
+equivalent for PMF.
 
-> 
-> ---
-> Usage
-> -----
-> 
-> List all exposed attributes (read-only, no root required):
-> 
->    $ fwupdmgr get-bios-settings
-> 
-> This enumerates every attribute under /sys/class/firmware-attributes/,
-> including current_value, default_value, min_value, max_value, and
-> display_name for each DPTCi parameter.
+> >
+> > Device limits are supplied for GPD Win Mini / Win 4 / Win 5 / Win Max 2 /
+> > Duo / Pocket 4, OrangePi NEO-01, AOKZOE A1/A2, OneXPlayer F1/2/X1/G1,
+> > and numerous AYANEO models. The SoC table covers Ryzen 5000, 6000, 7040,
+> > 8000, Z1, AI 9 HX 370, and the Ryzen AI MAX series.
+> >
+> > Tested on a GPD Win 5 (Ryzen AI MAX+ 395). Confirmed with ryzenadj -i
+> > that committed values are applied to hardware, and that fast/slow PPT
+> > limits are honoured under a full-CPU stress load.
+> >
+> > @Mario: can you suggest a CC list for V2? Thanks. Even if not merged, this
+> > driver is still good for downstream use.
+>
+> You should include Shyam (AMD), Denis and Derek (community).
 
-AFAIK - fwupd doesn't understand "save_settings" today
+Sure.
 
-> 
-> Sysfs direct usage
-> ------------------
-> 
-> All paths are under:
-> 
->    ATTR=/sys/class/firmware-attributes/amd_dptc/attributes
-> 
-> Inspect a parameter (no root needed):
-> 
->    $ cat $ATTR/stapm_limit/{display_name,min_value,max_value,default_value,current_value}
->    Sustained TDP (mW)
->    4000
->    85000
->    25000
->                            <- empty: nothing staged yet
-> 
-> Stage values (held in memory, not yet sent to firmware):
-> 
->    $ echo 25000 | sudo tee $ATTR/stapm_limit/current_value
->    $ echo 40000 | sudo tee $ATTR/fast_limit/current_value
->    $ echo 27000 | sudo tee $ATTR/slow_limit/current_value
->    $ echo 25000 | sudo tee $ATTR/skin_limit/current_value
->    $ echo 85    | sudo tee $ATTR/temp_target/current_value
-> 
-> Commit all staged values in one ALIB call:
-> 
->    $ echo save | sudo tee $ATTR/save_settings
-> 
-> Switch to auto-commit (each write commits immediately):
-> 
->    $ echo single | sudo tee $ATTR/save_settings
-> 
-> Return to bulk mode:
-> 
->    $ echo bulk | sudo tee $ATTR/save_settings
-> 
-> Clear a staged value without committing:
-> 
->    $ echo | sudo tee $ATTR/stapm_limit/current_value
-> 
-> Query or change the active limit tier (device/expanded/soc/unbound):
-> 
->    $ cat $ATTR/limit_mode/possible_values
->    device;expanded;soc;unbound
->    $ echo expanded | sudo tee $ATTR/limit_mode/current_value
-> 
-> Switching tiers clears all staged values (old values may fall outside the
-> new range). Stages and commits must be redone after a mode switch.
-> 
-> Antheas Kapenekakis (2):
->    Documentation: firmware-attributes: generalize save_settings entry
->    platform/x86/amd: Add AMD DPTCi driver
-> 
->   .../testing/sysfs-class-firmware-attributes   |   41 +-
->   MAINTAINERS                                   |    6 +
->   drivers/platform/x86/amd/Kconfig              |   27 +
->   drivers/platform/x86/amd/Makefile             |    2 +
->   drivers/platform/x86/amd/dptc.c               | 1325 +++++++++++++++++
->   5 files changed, 1386 insertions(+), 15 deletions(-)
->   create mode 100644 drivers/platform/x86/amd/dptc.c
-> 
-> 
-> base-commit: c89ce241c1909d2c2bdde88334c33f3000d364fb
+> >
+> > ---
+> > Usage
+> > -----
+> >
+> > List all exposed attributes (read-only, no root required):
+> >
+> >    $ fwupdmgr get-bios-settings
+> >
+> > This enumerates every attribute under /sys/class/firmware-attributes/,
+> > including current_value, default_value, min_value, max_value, and
+> > display_name for each DPTCi parameter.
+>
+> AFAIK - fwupd doesn't understand "save_settings" today
+
+Yes, I do not expect it to even allow writing, but at least you can
+preview the values which is useful. And from what I saw defaults are
+not shown either.
+
+Antheas
+
+> >
+> > Sysfs direct usage
+> > ------------------
+> >
+> > All paths are under:
+> >
+> >    ATTR=/sys/class/firmware-attributes/amd_dptc/attributes
+> >
+> > Inspect a parameter (no root needed):
+> >
+> >    $ cat $ATTR/stapm_limit/{display_name,min_value,max_value,default_value,current_value}
+> >    Sustained TDP (mW)
+> >    4000
+> >    85000
+> >    25000
+> >                            <- empty: nothing staged yet
+> >
+> > Stage values (held in memory, not yet sent to firmware):
+> >
+> >    $ echo 25000 | sudo tee $ATTR/stapm_limit/current_value
+> >    $ echo 40000 | sudo tee $ATTR/fast_limit/current_value
+> >    $ echo 27000 | sudo tee $ATTR/slow_limit/current_value
+> >    $ echo 25000 | sudo tee $ATTR/skin_limit/current_value
+> >    $ echo 85    | sudo tee $ATTR/temp_target/current_value
+> >
+> > Commit all staged values in one ALIB call:
+> >
+> >    $ echo save | sudo tee $ATTR/save_settings
+> >
+> > Switch to auto-commit (each write commits immediately):
+> >
+> >    $ echo single | sudo tee $ATTR/save_settings
+> >
+> > Return to bulk mode:
+> >
+> >    $ echo bulk | sudo tee $ATTR/save_settings
+> >
+> > Clear a staged value without committing:
+> >
+> >    $ echo | sudo tee $ATTR/stapm_limit/current_value
+> >
+> > Query or change the active limit tier (device/expanded/soc/unbound):
+> >
+> >    $ cat $ATTR/limit_mode/possible_values
+> >    device;expanded;soc;unbound
+> >    $ echo expanded | sudo tee $ATTR/limit_mode/current_value
+> >
+> > Switching tiers clears all staged values (old values may fall outside the
+> > new range). Stages and commits must be redone after a mode switch.
+> >
+> > Antheas Kapenekakis (2):
+> >    Documentation: firmware-attributes: generalize save_settings entry
+> >    platform/x86/amd: Add AMD DPTCi driver
+> >
+> >   .../testing/sysfs-class-firmware-attributes   |   41 +-
+> >   MAINTAINERS                                   |    6 +
+> >   drivers/platform/x86/amd/Kconfig              |   27 +
+> >   drivers/platform/x86/amd/Makefile             |    2 +
+> >   drivers/platform/x86/amd/dptc.c               | 1325 +++++++++++++++++
+> >   5 files changed, 1386 insertions(+), 15 deletions(-)
+> >   create mode 100644 drivers/platform/x86/amd/dptc.c
+> >
+> >
+> > base-commit: c89ce241c1909d2c2bdde88334c33f3000d364fb
+>
+>
 
