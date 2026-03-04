@@ -1,83 +1,267 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2550D35F5E7
-	for <platform-driver-x86@vger.kernel.org>; Wed,  4 Mar 2026 18:29:33 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 35A233D5242;
+	Wed,  4 Mar 2026 18:55:41 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1772648973; cv=none; b=Bp7b/cIABoxdgJ4NNQfHGgq+SvR3H3+BmJCgb1pYrTWAbP0e0eKf0S9Hq1Dpb+deIkebcGbVyoInW21NJWcQEQGD+qVPH9UWyEGtyklP+HJcMmL3pWU+k8DRff9g4B7EEvXUNHTM6kronq3pMreGqGzlphbOajOsONLWY8B0u5s=
+	t=1772650541; cv=none; b=FS0lJattrsRNfaXMlJuhZstuQpgR/1BdaCY5aczivjeQOIKdbPTv82LBji+bmrtab25Lw3ytu4EsnvFSzwO1+gD9Aykbj0lncpYtn3tYLG4SFSWqUnCwG+V4w5IP7oN77wC9zu7Cz/1RXT0CeorsqL7DV60hen8wzObtzH3dS18=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1772648973; c=relaxed/simple;
-	bh=rsQZ/Wp4lAZyMwGTQ/b564ooVutmps4slxMPeBdh/JQ=;
-	h=From:To:Subject:Date:Message-ID:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=UlvWl5bWATiHjoCtqtmiuZ52+D2CRRO8tZjoC+ujDx60AubXxsCz0bG3mPmQnTNjFZ8MNGKfbxSffWVOiY2/hDVoYyi3O75OCrPuQGMzz9ji7AdTeViJFETdjorFpyZ0D2BTZShBwb4KO/t11LZiQ13SAl4UipNVCt8DM4M9CBs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=fczogevP; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1772650541; c=relaxed/simple;
+	bh=xlOHgIlUqmA12gHHyGdbJEDXoCNvppKOR28aBmcxNto=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=W4U43UQuactJ5012p8XWkaVRZk5dJUpCoUsPCbXzOegnXwTn8a/KHEaDY+bsmisoYpZoEmmGGtFh9KOZD/loRVvIi4+kPgFF1SuUWVFNI5xq9PIMGR0OpUazuYDQJCP+UEdfz7ZQsLS0OfHbaKFZrnYfGi4FNIVo6lf94mp5yWY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=XR4rE5tw; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="fczogevP"
-Received: by smtp.kernel.org (Postfix) with ESMTPS id 007B0C2BC86
-	for <platform-driver-x86@vger.kernel.org>; Wed,  4 Mar 2026 18:29:32 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="XR4rE5tw"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 5E8A3C2BC9E;
+	Wed,  4 Mar 2026 18:55:39 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1772648973;
-	bh=rsQZ/Wp4lAZyMwGTQ/b564ooVutmps4slxMPeBdh/JQ=;
-	h=From:To:Subject:Date:In-Reply-To:References:From;
-	b=fczogevPWXFlcR4ACyiOdEibhvcweoG4QYScxQOKsEVdlbh8zqgUE0oy7r+ZMR83F
-	 BjGuH+k01eN+wKQQtMnkmACsiqu9Uzq77UPRC1d2IJKxWFLWZral0lmwXS8TcTztZL
-	 fEx0CYUbBdg94YMCFamcX+LowbLcd1K060jtJsOQip+SFjAMaX3RDoeI49dJIIK9Tw
-	 8PqES3yWguTW0VJVv85wA05TP2JtnAQTTEWEHDfW0f21ofhB8rPFoz5TkeVlDxmZCQ
-	 WInS1zVZb8xgjLKAyfCDdYmUSc+B1H+iAfBPYAV3bovP/2ax+/VElA2yIGRtocveQu
-	 D6bib7A31+g2Q==
-Received: by aws-us-west-2-korg-bugzilla-1.web.codeaurora.org (Postfix, from userid 48)
-	id E074AC4160E; Wed,  4 Mar 2026 18:29:32 +0000 (UTC)
-From: bugzilla-daemon@kernel.org
-To: platform-driver-x86@vger.kernel.org
-Subject: [Bug 221065] ideapad_acpi: unexpected charge_types spam on Yoga Pro
- 7 14ASP9
-Date: Wed, 04 Mar 2026 18:29:32 +0000
-X-Bugzilla-Reason: None
-X-Bugzilla-Type: changed
-X-Bugzilla-Watch-Reason: AssignedTo drivers_platform_x86@kernel-bugs.osdl.org
-X-Bugzilla-Product: Drivers
-X-Bugzilla-Component: Platform_x86
-X-Bugzilla-Version: 2.5
-X-Bugzilla-Keywords: 
-X-Bugzilla-Severity: low
-X-Bugzilla-Who: team@nitrosubs.live
-X-Bugzilla-Status: NEW
-X-Bugzilla-Resolution: 
-X-Bugzilla-Priority: P3
-X-Bugzilla-Assigned-To: drivers_platform_x86@kernel-bugs.osdl.org
-X-Bugzilla-Flags: 
-X-Bugzilla-Changed-Fields: 
-Message-ID: <bug-221065-215701-XFGpeHC1Ar@https.bugzilla.kernel.org/>
-In-Reply-To: <bug-221065-215701@https.bugzilla.kernel.org/>
-References: <bug-221065-215701@https.bugzilla.kernel.org/>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-X-Bugzilla-URL: https://bugzilla.kernel.org/
-Auto-Submitted: auto-generated
+	s=k20201202; t=1772650540;
+	bh=xlOHgIlUqmA12gHHyGdbJEDXoCNvppKOR28aBmcxNto=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+	b=XR4rE5twdqlrxeFlAxql36uzHVbcFdfwcf/we7RPyn5w9gWwNGjBQrTtpqcRzu357
+	 ChcLldZdP7PTy0yy32CrzO0o74ScZ8E2Hxbxd61ufLqPK5pNGm8AknZo8NFM5lRERk
+	 thuwEArIxMNxOxwaLET/cuiV0ibudNUtDX5OBVTz5+a6aQ6jpPiPySa1LBllIib8Bw
+	 QNEhQi2aQ50L/SRXRzUuEkAaWI9IJ9CBKwAW+P4VdeZUrxJJX4HWfiLA3AAb2A0RwX
+	 zh89XS5jlR1VvKqN8o/pEj3RLPRvH1dfcFyRQA4akFCgNCeDeUKZ/LNhEZ1icFbVXF
+	 evAUrAa0H91CA==
+From: "Rafael J. Wysocki" <rafael@kernel.org>
+To: Ilpo =?ISO-8859-1?Q?J=E4rvinen?= <ilpo.jarvinen@linux.intel.com>
+Cc: LKML <linux-kernel@vger.kernel.org>,
+ Linux ACPI <linux-acpi@vger.kernel.org>, Hans de Goede <hansg@kernel.org>,
+ Maximilian Luz <luzmaximilian@gmail.com>, platform-driver-x86@vger.kernel.org
+Subject:
+ [PATCH v1 3/3] platform/surface: surfacepro3_button: Convert to a platform
+ driver
+Date: Wed, 04 Mar 2026 19:55:28 +0100
+Message-ID: <3207406.CbtlEUcBR6@rafael.j.wysocki>
+Organization: Linux Kernel Development
+In-Reply-To: <2909929.BEx9A2HvPv@rafael.j.wysocki>
+References: <2909929.BEx9A2HvPv@rafael.j.wysocki>
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Content-Transfer-Encoding: 7Bit
+Content-Type: text/plain; charset="UTF-8"
 
-https://bugzilla.kernel.org/show_bug.cgi?id=3D221065
+From: "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>
 
---- Comment #49 from fililip (team@nitrosubs.live) ---
-A thing that I noticed over the past few days is that while the laptop is
-plugged in (before boot) and in conservation mode, no errors are present in
-dmesg. Only when I try to view/change KDE power management settings or
-unplug/replug the power supply does anything happen (like ACPI errors or the
-ideapad_acpi charge type duality issue).
+In all cases in which a struct acpi_driver is used for binding a driver
+to an ACPI device object, a corresponding platform device is created by
+the ACPI core and that device is regarded as a proper representation of
+underlying hardware.  Accordingly, a struct platform_driver should be
+used by driver code to bind to that device.  There are multiple reasons
+why drivers should not bind directly to ACPI device objects [1].
 
-I've also seen problems with delayed responses to unplugging the charger
-(though plugging it in seems to make the OS react much faster) even on 6.18=
- and
-prior, but no ACPI errors were ever logged to my knowledge.
+Overall, it is better to bind drivers to platform devices than to their
+ACPI companions, so convert the Surface Pro 3 button ACPI driver to a
+platform one.
 
---=20
-You may reply to this email to add a comment.
+After this change, the subordinate input device and wakeup source class
+device will be registered under the platform device used for driver
+binding instead of its ACPI companion.
 
-You are receiving this mail because:
-You are watching the assignee of the bug.=
+While this is not expected to alter functionality, it changes sysfs
+layout and so it will be visible to user space.
+
+Link: https://lore.kernel.org/all/2396510.ElGaqSPkdT@rafael.j.wysocki/ [1]
+Signed-off-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
+---
+ drivers/platform/surface/surfacepro3_button.c | 67 +++++++++----------
+ 1 file changed, 32 insertions(+), 35 deletions(-)
+
+diff --git a/drivers/platform/surface/surfacepro3_button.c b/drivers/platform/surface/surfacepro3_button.c
+index 6d394daf5bc4..0293bc517b54 100644
+--- a/drivers/platform/surface/surfacepro3_button.c
++++ b/drivers/platform/surface/surfacepro3_button.c
+@@ -14,6 +14,7 @@
+ #include <linux/types.h>
+ #include <linux/input.h>
+ #include <linux/acpi.h>
++#include <linux/platform_device.h>
+ #include <acpi/button.h>
+ 
+ #define SURFACE_PRO3_BUTTON_HID		"MSHW0028"
+@@ -74,8 +75,8 @@ struct surface_button {
+ 
+ static void surface_button_notify(acpi_handle handle, u32 event, void *data)
+ {
+-	struct acpi_device *device = data;
+-	struct surface_button *button = acpi_driver_data(device);
++	struct device *dev = data;
++	struct surface_button *button = dev_get_drvdata(dev);
+ 	struct input_dev *input;
+ 	int key_code = KEY_RESERVED;
+ 	bool pressed = false;
+@@ -110,18 +111,17 @@ static void surface_button_notify(acpi_handle handle, u32 event, void *data)
+ 		key_code = KEY_VOLUMEDOWN;
+ 		break;
+ 	case SURFACE_BUTTON_NOTIFY_TABLET_MODE:
+-		dev_warn_once(&device->dev, "Tablet mode is not supported\n");
++		dev_warn_once(dev, "Tablet mode is not supported\n");
+ 		break;
+ 	default:
+-		dev_info_ratelimited(&device->dev,
+-				     "Unsupported event [0x%x]\n", event);
++		dev_info_ratelimited(dev, "Unsupported event [0x%x]\n", event);
+ 		break;
+ 	}
+ 	input = button->input;
+ 	if (key_code == KEY_RESERVED)
+ 		return;
+ 	if (pressed)
+-		pm_wakeup_dev_event(&device->dev, 0, button->suspended);
++		pm_wakeup_dev_event(dev, 0, button->suspended);
+ 	if (button->suspended)
+ 		return;
+ 	input_report_key(input, key_code, pressed?1:0);
+@@ -131,8 +131,7 @@ static void surface_button_notify(acpi_handle handle, u32 event, void *data)
+ #ifdef CONFIG_PM_SLEEP
+ static int surface_button_suspend(struct device *dev)
+ {
+-	struct acpi_device *device = to_acpi_device(dev);
+-	struct surface_button *button = acpi_driver_data(device);
++	struct surface_button *button = dev_get_drvdata(dev);
+ 
+ 	button->suspended = true;
+ 	return 0;
+@@ -140,8 +139,7 @@ static int surface_button_suspend(struct device *dev)
+ 
+ static int surface_button_resume(struct device *dev)
+ {
+-	struct acpi_device *device = to_acpi_device(dev);
+-	struct surface_button *button = acpi_driver_data(device);
++	struct surface_button *button = dev_get_drvdata(dev);
+ 
+ 	button->suspended = false;
+ 	return 0;
+@@ -156,9 +154,8 @@ static int surface_button_resume(struct device *dev)
+  * Returns true if the driver should bind to this device, i.e. the device is
+  * either MSWH0028 (Pro 3) or MSHW0040 on a Pro 4 or Book 1.
+  */
+-static bool surface_button_check_MSHW0040(struct acpi_device *dev)
++static bool surface_button_check_MSHW0040(struct device *dev, acpi_handle handle)
+ {
+-	acpi_handle handle = dev->handle;
+ 	union acpi_object *result;
+ 	u64 oem_platform_rev = 0;	// valid revisions are nonzero
+ 
+@@ -180,14 +177,15 @@ static bool surface_button_check_MSHW0040(struct acpi_device *dev)
+ 		ACPI_FREE(result);
+ 	}
+ 
+-	dev_dbg(&dev->dev, "OEM Platform Revision %llu\n", oem_platform_rev);
++	dev_dbg(dev, "OEM Platform Revision %llu\n", oem_platform_rev);
+ 
+ 	return oem_platform_rev == 0;
+ }
+ 
+ 
+-static int surface_button_add(struct acpi_device *device)
++static int surface_button_probe(struct platform_device *pdev)
+ {
++	struct acpi_device *device = ACPI_COMPANION(&pdev->dev);
+ 	struct surface_button *button;
+ 	struct input_dev *input;
+ 	const char *hid = acpi_device_hid(device);
+@@ -197,14 +195,14 @@ static int surface_button_add(struct acpi_device *device)
+ 	    strlen(SURFACE_BUTTON_OBJ_NAME)))
+ 		return -ENODEV;
+ 
+-	if (!surface_button_check_MSHW0040(device))
++	if (!surface_button_check_MSHW0040(&pdev->dev, device->handle))
+ 		return -ENODEV;
+ 
+ 	button = kzalloc_obj(struct surface_button);
+ 	if (!button)
+ 		return -ENOMEM;
+ 
+-	device->driver_data = button;
++	platform_set_drvdata(pdev, button);
+ 	button->input = input = input_allocate_device();
+ 	if (!input) {
+ 		error = -ENOMEM;
+@@ -217,7 +215,7 @@ static int surface_button_add(struct acpi_device *device)
+ 	input->name = acpi_device_name(device);
+ 	input->phys = button->phys;
+ 	input->id.bustype = BUS_HOST;
+-	input->dev.parent = &device->dev;
++	input->dev.parent = &pdev->dev;
+ 	input_set_capability(input, EV_KEY, KEY_POWER);
+ 	input_set_capability(input, EV_KEY, KEY_LEFTMETA);
+ 	input_set_capability(input, EV_KEY, KEY_VOLUMEUP);
+@@ -227,17 +225,17 @@ static int surface_button_add(struct acpi_device *device)
+ 	if (error)
+ 		goto err_free_input;
+ 
+-	device_init_wakeup(&device->dev, true);
++	device_init_wakeup(&pdev->dev, true);
+ 
+ 	error = acpi_dev_install_notify_handler(device, ACPI_DEVICE_NOTIFY,
+-						surface_button_notify, device);
++						surface_button_notify, &pdev->dev);
+ 	if (error) {
+-		device_init_wakeup(&device->dev, false);
++		device_init_wakeup(&pdev->dev, false);
+ 		input_unregister_device(input);
+ 		goto err_free_button;
+ 	}
+ 
+-	dev_info(&device->dev, "%s [%s]\n", acpi_device_name(device),
++	dev_info(&pdev->dev, "%s [%s]\n", acpi_device_name(device),
+ 		 acpi_device_bid(device));
+ 	return 0;
+ 
+@@ -248,13 +246,13 @@ static int surface_button_add(struct acpi_device *device)
+ 	return error;
+ }
+ 
+-static void surface_button_remove(struct acpi_device *device)
++static void surface_button_remove(struct platform_device *pdev)
+ {
+-	struct surface_button *button = acpi_driver_data(device);
++	struct surface_button *button = platform_get_drvdata(pdev);
+ 
+-	acpi_dev_remove_notify_handler(device, ACPI_DEVICE_NOTIFY,
+-				       surface_button_notify);
+-	device_init_wakeup(&device->dev, false);
++	acpi_dev_remove_notify_handler(ACPI_COMPANION(&pdev->dev),
++				       ACPI_DEVICE_NOTIFY, surface_button_notify);
++	device_init_wakeup(&pdev->dev, false);
+ 	input_unregister_device(button->input);
+ 	kfree(button);
+ }
+@@ -262,15 +260,14 @@ static void surface_button_remove(struct acpi_device *device)
+ static SIMPLE_DEV_PM_OPS(surface_button_pm,
+ 		surface_button_suspend, surface_button_resume);
+ 
+-static struct acpi_driver surface_button_driver = {
+-	.name = "surface_pro3_button",
+-	.class = "SurfacePro3",
+-	.ids = surface_button_device_ids,
+-	.ops = {
+-		.add = surface_button_add,
+-		.remove = surface_button_remove,
++static struct platform_driver surface_button_driver = {
++	.probe = surface_button_probe,
++	.remove = surface_button_remove,
++	.driver = {
++		.name = "surface_pro3_button",
++		.acpi_match_table = surface_button_device_ids,
++		.pm = &surface_button_pm,
+ 	},
+-	.drv.pm = &surface_button_pm,
+ };
+ 
+-module_acpi_driver(surface_button_driver);
++module_platform_driver(surface_button_driver);
+-- 
+2.51.0
+
+
+
+
