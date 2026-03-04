@@ -1,38 +1,38 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id ED4F3358387
-	for <platform-driver-x86@vger.kernel.org>; Wed,  4 Mar 2026 18:25:35 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2550D35F5E7
+	for <platform-driver-x86@vger.kernel.org>; Wed,  4 Mar 2026 18:29:33 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1772648736; cv=none; b=C4i817VFxyXXzXRupGvCJ1l6iGhBHtyXilChGFF3FK5itj77VWsc/VIAeRqQr/a7OaqejBS8N+h3jBp7jaVdFy/VWa1ep2pZu7Qk1Po35rcjA1jbMR4jNbh8A+sZQAVZWvo37Lb08uRpQ0gjoWBBaP7BGFaxxmv5wqRK/RNsVb0=
+	t=1772648973; cv=none; b=Bp7b/cIABoxdgJ4NNQfHGgq+SvR3H3+BmJCgb1pYrTWAbP0e0eKf0S9Hq1Dpb+deIkebcGbVyoInW21NJWcQEQGD+qVPH9UWyEGtyklP+HJcMmL3pWU+k8DRff9g4B7EEvXUNHTM6kronq3pMreGqGzlphbOajOsONLWY8B0u5s=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1772648736; c=relaxed/simple;
-	bh=JK5lIdLba8VHzZZLr8FatBGL6Pg4SFPfO2CdW+dqpZw=;
+	s=arc-20240116; t=1772648973; c=relaxed/simple;
+	bh=rsQZ/Wp4lAZyMwGTQ/b564ooVutmps4slxMPeBdh/JQ=;
 	h=From:To:Subject:Date:Message-ID:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=VDz7M3kMFdj/k2f64K5hinscl9UX5jzDWrteGA0mfwWtGvCwet77wvIC/cO/Q4SpRDyJh7CZZLdZo9vG7rC+SKYf0VeQ/xYobwhKo5Dydcc3jpFFal26hdF+An3r2ad49IQGe0CNokWzTqKr1TmW8kTjCF8SvAx9wzpx38WrB0I=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=bMnCQvy6; arc=none smtp.client-ip=10.30.226.201
+	 Content-Type:MIME-Version; b=UlvWl5bWATiHjoCtqtmiuZ52+D2CRRO8tZjoC+ujDx60AubXxsCz0bG3mPmQnTNjFZ8MNGKfbxSffWVOiY2/hDVoYyi3O75OCrPuQGMzz9ji7AdTeViJFETdjorFpyZ0D2BTZShBwb4KO/t11LZiQ13SAl4UipNVCt8DM4M9CBs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=fczogevP; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="bMnCQvy6"
-Received: by smtp.kernel.org (Postfix) with ESMTPS id A0693C2BC86
-	for <platform-driver-x86@vger.kernel.org>; Wed,  4 Mar 2026 18:25:35 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="fczogevP"
+Received: by smtp.kernel.org (Postfix) with ESMTPS id 007B0C2BC86
+	for <platform-driver-x86@vger.kernel.org>; Wed,  4 Mar 2026 18:29:32 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1772648735;
-	bh=JK5lIdLba8VHzZZLr8FatBGL6Pg4SFPfO2CdW+dqpZw=;
+	s=k20201202; t=1772648973;
+	bh=rsQZ/Wp4lAZyMwGTQ/b564ooVutmps4slxMPeBdh/JQ=;
 	h=From:To:Subject:Date:In-Reply-To:References:From;
-	b=bMnCQvy6/jZ7JIanFBftI+ZvjaL9I2A4m+acxlqMHRO4uvN4Xq6D3FZuT23gtoiY4
-	 nOMymAPqOSBJlgv5r4RQjdaOu/Xdd983kdA+oBwzbIruz48xIxXEIvdnE7+LRQvGS8
-	 sDSBob/99yatxKqnRig5pXvbQKryAWIKOukan50ikf0k2MGehXxNaE3QqHYkN9hxBw
-	 2JBzjMwyWj4yFvmxDG7E9RpjD7bbKmaiHlFQhXkm1YeMe/LYOTPCJqe9TxJ/5dJh1s
-	 8bJYwvHCb+1TZSvryaUG4GSETGimwL0gTJKrgC/H5r6Im+bxLIcBnPt2rtyC8TVbRB
-	 JYxSn7Kvi6jEA==
+	b=fczogevPWXFlcR4ACyiOdEibhvcweoG4QYScxQOKsEVdlbh8zqgUE0oy7r+ZMR83F
+	 BjGuH+k01eN+wKQQtMnkmACsiqu9Uzq77UPRC1d2IJKxWFLWZral0lmwXS8TcTztZL
+	 fEx0CYUbBdg94YMCFamcX+LowbLcd1K060jtJsOQip+SFjAMaX3RDoeI49dJIIK9Tw
+	 8PqES3yWguTW0VJVv85wA05TP2JtnAQTTEWEHDfW0f21ofhB8rPFoz5TkeVlDxmZCQ
+	 WInS1zVZb8xgjLKAyfCDdYmUSc+B1H+iAfBPYAV3bovP/2ax+/VElA2yIGRtocveQu
+	 D6bib7A31+g2Q==
 Received: by aws-us-west-2-korg-bugzilla-1.web.codeaurora.org (Postfix, from userid 48)
-	id 90480C433E1; Wed,  4 Mar 2026 18:25:35 +0000 (UTC)
+	id E074AC4160E; Wed,  4 Mar 2026 18:29:32 +0000 (UTC)
 From: bugzilla-daemon@kernel.org
 To: platform-driver-x86@vger.kernel.org
 Subject: [Bug 221065] ideapad_acpi: unexpected charge_types spam on Yoga Pro
  7 14ASP9
-Date: Wed, 04 Mar 2026 18:25:35 +0000
+Date: Wed, 04 Mar 2026 18:29:32 +0000
 X-Bugzilla-Reason: None
 X-Bugzilla-Type: changed
 X-Bugzilla-Watch-Reason: AssignedTo drivers_platform_x86@kernel-bugs.osdl.org
@@ -41,14 +41,14 @@ X-Bugzilla-Component: Platform_x86
 X-Bugzilla-Version: 2.5
 X-Bugzilla-Keywords: 
 X-Bugzilla-Severity: low
-X-Bugzilla-Who: i@rong.moe
+X-Bugzilla-Who: team@nitrosubs.live
 X-Bugzilla-Status: NEW
 X-Bugzilla-Resolution: 
 X-Bugzilla-Priority: P3
 X-Bugzilla-Assigned-To: drivers_platform_x86@kernel-bugs.osdl.org
 X-Bugzilla-Flags: 
 X-Bugzilla-Changed-Fields: 
-Message-ID: <bug-221065-215701-9fTnQ7rzqo@https.bugzilla.kernel.org/>
+Message-ID: <bug-221065-215701-XFGpeHC1Ar@https.bugzilla.kernel.org/>
 In-Reply-To: <bug-221065-215701@https.bugzilla.kernel.org/>
 References: <bug-221065-215701@https.bugzilla.kernel.org/>
 Content-Type: text/plain; charset="UTF-8"
@@ -64,14 +64,17 @@ MIME-Version: 1.0
 
 https://bugzilla.kernel.org/show_bug.cgi?id=3D221065
 
---- Comment #48 from Rong Zhang (i@rong.moe) ---
-(In reply to fililip from comment #47)
-> Created attachment 309511 [details]
-> acpidump from 83HN
+--- Comment #49 from fililip (team@nitrosubs.live) ---
+A thing that I noticed over the past few days is that while the laptop is
+plugged in (before boot) and in conservation mode, no errors are present in
+dmesg. Only when I try to view/change KDE power management settings or
+unplug/replug the power supply does anything happen (like ACPI errors or the
+ideapad_acpi charge type duality issue).
 
-Thanks. I found some time looking into it. It has exactly the same issues a=
-nd
-broken patterns as 83DR.
+I've also seen problems with delayed responses to unplugging the charger
+(though plugging it in seems to make the OS react much faster) even on 6.18=
+ and
+prior, but no ACPI errors were ever logged to my knowledge.
 
 --=20
 You may reply to this email to add a comment.
