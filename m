@@ -1,356 +1,470 @@
-Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
+Received: from e3i489.smtp2go.com (e3i489.smtp2go.com [158.120.85.233])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D517B23EA80
-	for <platform-driver-x86@vger.kernel.org>; Wed,  4 Mar 2026 09:32:52 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.180.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 887F739FCBF
+	for <platform-driver-x86@vger.kernel.org>; Wed,  4 Mar 2026 11:16:14 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=158.120.85.233
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1772616774; cv=none; b=pPem7tZmZ9PVIxFxz5oBX1YyoW2M2a22AiZw2ubJjYTXBWoVZ//n9dl3YsXS50EjFCSUdKW/nm9LVB3LF6tmhg+e/4s9FpURN5gWGi2FaCJEM0cTKnzKXjmBhVQJZkgjRXO5FOh5oCTF/PerObl9EZ4Rt+5a6pfYYWBD932dNAs=
+	t=1772622976; cv=none; b=FcAWymXIR77vKioKjDWSK99OM4s6E9QXWhtoJCaxEKa9YfewgYQ63ai4arJJZO+iizkDmCzpsEBEXNFhML9nCXSHkBmWYns6HTvuxdTrkf/pRq5i3iyczNLHgCgN1A+6Zjtoo0a4Zq6rt42BaB11Ju1SpAUz3gHc97Pk6/RdPFE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1772616774; c=relaxed/simple;
-	bh=Z/eJE9wFLrz8E+sUg7CGHUvq6+8QleCiP7NDH8UwBIY=;
-	h=Message-ID:Date:MIME-Version:From:Subject:To:Cc:References:
-	 In-Reply-To:Content-Type; b=VEmRdcy9ZqHMsdpZNs6/+a5R6Ez9iUNU6BbpdjEjA32bRpktg0NjzPjQmspkDKLxaZNHrXOpfpVWDeVeOP9pGrOWgMz6QEq1cr2C7qpPgxxZDSZYr5Kxyrx8583vNhtIYPn1MS/N6Arhon1/+8ps3DzGhbwTYgNHkxL24ktnnEw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com; spf=pass smtp.mailfrom=oss.qualcomm.com; dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b=dDo55Ke0; dkim=pass (2048-bit key) header.d=oss.qualcomm.com header.i=@oss.qualcomm.com header.b=TirpKM9g; arc=none smtp.client-ip=205.220.180.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oss.qualcomm.com
+	s=arc-20240116; t=1772622976; c=relaxed/simple;
+	bh=4acsMjBoVlLlXic+7D5BtfAzzuEPenOfXbpuwuzmsPc=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=Ctwisreqc4B6gfYv1Ac9yiTd94ySZLVwZSm7cKIPUJGRT5huTt//9aD1+na5Mv6SioOFyQaqwESDsz44a5u/uZVwS3VMpjnymnYbMXPcv/igSytV9jDmVSfEuHFuTW5eoByp/+TYy9GX2dOwX38QPbD0cusQ6HmXmMURyxG+laI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=medip.dev; spf=pass smtp.mailfrom=em1255854.medip.dev; dkim=pass (2048-bit key) header.d=medip.dev header.i=@medip.dev header.b=Fd9UR8wx; arc=none smtp.client-ip=158.120.85.233
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=medip.dev
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=em1255854.medip.dev
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b="dDo55Ke0";
-	dkim=pass (2048-bit key) header.d=oss.qualcomm.com header.i=@oss.qualcomm.com header.b="TirpKM9g"
-Received: from pps.filterd (m0279873.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.18.1.11/8.18.1.11) with ESMTP id 6245SVtA631908
-	for <platform-driver-x86@vger.kernel.org>; Wed, 4 Mar 2026 09:32:51 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=qualcomm.com; h=
-	cc:content-transfer-encoding:content-type:date:from:in-reply-to
-	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
-	bx3wpMkjZfdqRG0nPg8aof67AqNz/1s49xLwUjoGMng=; b=dDo55Ke0HYDMNGzK
-	+Jd7adVzH9AX56D2xTbafJZMtcDuD5PGwkIkzA6vZMc2IbTDxxxgk82FDLqwC4qs
-	Sp45f9qA6q1a8fVr9UkP8uros5vORMnWQkbiN4iGy/Ddri3/kaQg8VlDCXEfT3Jp
-	lfvCp932loKgmRCSloII/3AVCV9relFNZp2W0CALOlwanIlTXv6xXBxSpn81neoX
-	pH+IbzrPc4HNcCNqJsWij9UuKM84ma9gdlTjRwaZSPsjpshjK+2k4BkKvqmHTFc3
-	+xHnFNn8C8PNpNbKBlibogvyS1I4dRucwMm/4bjsqKD7Xh7iKoVv5tyxpYrx5RsT
-	i0o/0A==
-Received: from mail-qk1-f200.google.com (mail-qk1-f200.google.com [209.85.222.200])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 4cnvtucfpx-1
-	(version=TLSv1.3 cipher=TLS_AES_128_GCM_SHA256 bits=128 verify=NOT)
-	for <platform-driver-x86@vger.kernel.org>; Wed, 04 Mar 2026 09:32:51 +0000 (GMT)
-Received: by mail-qk1-f200.google.com with SMTP id af79cd13be357-8cbb8040f48so4724893685a.0
-        for <platform-driver-x86@vger.kernel.org>; Wed, 04 Mar 2026 01:32:51 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=oss.qualcomm.com; s=google; t=1772616770; x=1773221570; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:content-language:references
-         :cc:to:subject:from:user-agent:mime-version:date:message-id:from:to
-         :cc:subject:date:message-id:reply-to;
-        bh=bx3wpMkjZfdqRG0nPg8aof67AqNz/1s49xLwUjoGMng=;
-        b=TirpKM9gKYGT6qKkkWcx967quXrlmoDWK1Ooe7bHj6LzwAUKwGVSgrwuT62o0vWSZG
-         L71lC9n2I5ehd/HkKN+R9juRBLVt5EDmYQcpfVU4hsdoFynCboEaaLxBZRlxGrWeg5W6
-         tIRoHIbbfAPuLQVoARnmjyBw6uNRrpuZe+94enYMdKhPmUirTMQiayzYGBHZKvBRjZbD
-         bVEpRIb7ZlozFj0MiufGwidMhh2kiT3Cb/tZ3KvalPOToR0JKHqIaUFYHwukn8qIrH38
-         dNOiOn/VBU7vWjatPyEWaWjJFOJtaBtRScf6+qSQXm92/a2Ny6qaN2HR+U25taQUQmvv
-         nKsg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1772616770; x=1773221570;
-        h=content-transfer-encoding:in-reply-to:content-language:references
-         :cc:to:subject:from:user-agent:mime-version:date:message-id:x-gm-gg
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=bx3wpMkjZfdqRG0nPg8aof67AqNz/1s49xLwUjoGMng=;
-        b=sVVuHeICT+BIC91Qe9rhUOOufGL2jAPYLD1BhLjOU6YenRV5Dkawh9w39nb8V3ETJ+
-         t+aEoBpCgnkOXWMbCgCTeggjAnC/3Vvy9qj/zIH5LHHA6m6XPOTn7RUJtfgZ/MEiNl1d
-         a6Jj5s2//qYFEjEwls4ShJ0BnfXDgD/VBHBpnX8C4r4mwQ+lt7jEQsNunc+wQhNXHovx
-         sq9738pql7I9cH+nelLy6BrtFFOs2hGKkzoajVOm+j3SWIJND0Ra8oXI3wgmBz64MUek
-         kyvg9fybXFRrgPThJWQ68sx/eRTxEJlte25oV425X4lMEXgGHwJWDlg1RI8HbPSSd3VU
-         DLcQ==
-X-Forwarded-Encrypted: i=1; AJvYcCUJM/t96rtP57OC/vDLfqIZAGLiHFYDREPrdd+/i+o2iCQ/EZHftd1KRsdLozbA/GPhu3LVJIRIRW9J6FPgm788f1MR@vger.kernel.org
-X-Gm-Message-State: AOJu0Yy5UNTYvqvftwFexsbsxxebDbaCuIH3i7lFjGNN5acDPKWZEo/s
-	8PTLhai5zMgznnW5BrJJQrVebIoZkxUFJDN8gnGpWT7Y+zSlhMuoSd2PEcV1US/9p1oAUCHuvM7
-	lSQph8fl+u5nUDl+p+rlcEp2XTvXC/7izDlT4coh03ojqLbrtlQzpES/FreVkGvtTNnjkH1DWmB
-	Nu
-X-Gm-Gg: ATEYQzzWN8mSp7wCImyeFSQKEbgbBPDrm9MNJkHiDAuf9YDCkA3DeiK1ax26cABUxLp
-	QC9vTesJJ7Q4Fmm9r/8s/hpHGyZ+vcuPzsQIXa3vNRhu61Hh3dYaMn6yAOKbMkusAt70DWm2SFz
-	AVqg7gcCXF3IgwGgTv4vGXFvywz4JtrvtIk817iG4olwy3fuB+1fBA8VnEvu73DAEF9Ezwc+Jn5
-	Xz/OX8ZhaK4Z4XkqyoL2aKCCnZyVcausTjssRiNK/V++eaxIcudaxoeZchZ4Jyfs8QxJfcAWDO1
-	l4Vts0FK9qramYJvf6Sxv9s3ztUChABHjPEP6vf5nYyFGimjgTDKMDSnJSyb34NF5q91VqIIDjH
-	kbfRo3z+ZZZSQf7ASQtErA7I72SAAR+HVChbtfufQMdNla1Oy9PuDrJP5zniQ8M9nWsOZfD8NWa
-	8AiXqOod2B77n3u4ATbiUQ6/FjlPYLSsXb08/T4Zf3oDNu9fqIod6Vjg1eVQDAkS31gzB1M/oWg
-	wLZLC3XD3TQyNH3
-X-Received: by 2002:a05:620a:4406:b0:8b2:e5da:d317 with SMTP id af79cd13be357-8cd5afac71bmr157119385a.54.1772616770414;
-        Wed, 04 Mar 2026 01:32:50 -0800 (PST)
-X-Received: by 2002:a05:620a:4406:b0:8b2:e5da:d317 with SMTP id af79cd13be357-8cd5afac71bmr157117085a.54.1772616769914;
-        Wed, 04 Mar 2026 01:32:49 -0800 (PST)
-Received: from ?IPV6:2001:1c00:c32:7800:5bfa:a036:83f0:f9ec? (2001-1c00-0c32-7800-5bfa-a036-83f0-f9ec.cable.dynamic.v6.ziggo.nl. [2001:1c00:c32:7800:5bfa:a036:83f0:f9ec])
-        by smtp.gmail.com with ESMTPSA id 4fb4d7f45d1cf-660bf4d8249sm1168978a12.17.2026.03.04.01.32.48
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 04 Mar 2026 01:32:49 -0800 (PST)
-Message-ID: <66ac63ff-7369-4683-b802-5f5d30f3f530@oss.qualcomm.com>
-Date: Wed, 4 Mar 2026 10:32:48 +0100
+	dkim=pass (2048-bit key) header.d=medip.dev header.i=@medip.dev header.b="Fd9UR8wx"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=medip.dev;
+ i=@medip.dev; q=dns/txt; s=s1255854; t=1772622060; h=from : subject :
+ to : message-id : date;
+ bh=YL8CfOdH54DpstwkSwROFB1CqrSB1nAIhgrzHCvAXCg=;
+ b=Fd9UR8wxoURz/L+8oHGHU0n5S24Zazw7BWa4W6T8Sh3o3fLaHp0THcGoSCQb9h97uCZzw
+ d6n4zSSeZxNDG92C898avnec8wcX2vWlmyZFQdkDrzgmoQjeSvPiNYKKuLtiuRSZYpUc972
+ Vn6BIYCuVXcD/O3X5zTeCKPDHtsoLhhW8MCLKVDObnrOJaVsNK1ElzIaNVGLaLCJRUMklDR
+ qjUKL+yw97b3OzkvnAUSoTFDB1PU/Nrn5WLjfKmxSeqU5kmTrC0oxmhfZm4Tl7vtifnf7Ik
+ n1f8zSFsGP3YC96BsAQT548lFMU2dt6YvrgaIzOg1FFTv97A8KhEf/n54CAQ==
+Received: from [10.152.250.198] (helo=vilez)
+	by smtpcorp.com with esmtpsa (TLS1.3:ECDHE_X25519__RSA_PSS_RSAE_SHA256__AES_256_GCM:256)
+	(Exim 4.99.1-S2G)
+	(envelope-from <edip@medip.dev>)
+	id 1vxjyL-FnQW0hPzsYP-jKxo;
+	Wed, 04 Mar 2026 11:00:58 +0000
+From: edip@medip.dev
+To: ilpo.jarvinen@linux.intel.com,
+	hansg@kernel.org,
+	kuba@kernel.org
+Cc: platform-driver-x86@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	Edip Hazuri <edip@medip.dev>
+Subject: [PATCH v5] platform/x86: hp-wmi: Add multicolor LED support for HP keyboard backlight
+Date: Wed,  4 Mar 2026 13:58:33 +0300
+Message-ID: <20260304105831.119349-3-edip@medip.dev>
+X-Mailer: git-send-email 2.53.0
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-From: johannes.goede@oss.qualcomm.com
-Subject: Re: [PATCH v3 1/2] platform/x86: int3472: Add TPS68470 board data for
- Intel nvl
-To: Arun T <arun.t@intel.com>
-Cc: sakari.ailus@iki.fi, sakari.ailus@intel.com, sakari.ailus@linux.intel.com,
-        arec.kao@intel.com, ilpo.jarvinen@linux.intel.com,
-        dan.scally@ideasonboard.com, platform-driver-x86@vger.kernel.org,
-        linux-media@vger.kernel.org, linux-kernel@vger.kernel.org,
-        mehdi.djait@intel.com
-References: <20260130092431.2335363-2-arun.t@intel.com>
- <20260302174644.1258718-1-arun.t@intel.com>
- <20260302174644.1258718-2-arun.t@intel.com>
-Content-Language: en-US, nl
-In-Reply-To: <20260302174644.1258718-2-arun.t@intel.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-X-Proofpoint-GUID: fCLeuR4MMjB16tBldr8-4G067uShPctD
-X-Proofpoint-ORIG-GUID: fCLeuR4MMjB16tBldr8-4G067uShPctD
-X-Authority-Analysis: v=2.4 cv=A75h/qWG c=1 sm=1 tr=0 ts=69a7fc43 cx=c_pps
- a=hnmNkyzTK/kJ09Xio7VxxA==:117 a=xqWC_Br6kY4A:10 a=IkcTkHD0fZMA:10
- a=Yq5XynenixoA:10 a=s4-Qcg_JpJYA:10 a=VkNPw1HP01LnGYTKEx00:22
- a=u7WPNUs3qKkmUXheDGA7:22 a=rJkE3RaqiGZ5pbrm-msn:22 a=VwQbUJbxAAAA:8
- a=EUspDBNiAAAA:8 a=QyXUC8HyAAAA:8 a=e0fhDsDLZYdukTk1vE0A:9 a=QEXdDO2ut3YA:10
- a=PEH46H7Ffwr30OY-TuGO:22
-X-Proofpoint-Spam-Details-Enc: AW1haW4tMjYwMzA0MDA3MiBTYWx0ZWRfXzHXsYk044Wba
- KA+cmt7WvJcZDwpVxYlZBLnyH5CYW1xMqZJKtLDx9NuQRypM0jRwTWqyylQ++hWccVnNttIJTap
- HAg4zGCAkVgvxZEUNs6mJsKj+T35p/ejcZOH0yAPNwGPX3EzhrPQtk+uXgqqGppftlJngysskTG
- lJaipkhwNp3BhuMkwRAlxykjDAES1uDVZ6c42zSpwssXm1J6HbYd9/ueIPrGUxcuQGdokOtr7/z
- ggZPtqLCIKlIMy+41wpg+mu5pvJnuf9KRuY++zAIaWWliRAz9j91SPWViuHSA9zciy7G49vadDk
- NO9ewGVxDuWxw5X2T+Xuh4BifG/zpoDP393Z2N3yGIdw2Rezg8SzVAVv+46D+hZUKVG88fV1J9p
- RY9SGLIbuZg94NBOCYj+rwJ1ZgVrQNkpmpDiDq5r68yCpumOmQ3sG+FhdGB/j/0Gw3sRffStWCf
- OpwWszFyY24Bm0Yv42g==
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1143,Hydra:6.1.51,FMLib:17.12.100.49
- definitions=2026-03-04_05,2026-03-03_01,2025-10-01_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
- impostorscore=0 spamscore=0 lowpriorityscore=0 suspectscore=0 phishscore=0
- adultscore=0 clxscore=1015 bulkscore=0 malwarescore=0 priorityscore=1501
- classifier=typeunknown authscore=0 authtc= authcc= route=outbound adjust=0
- reason=mlx scancount=1 engine=8.22.0-2602130000 definitions=main-2603040072
+Content-Transfer-Encoding: 8bit
+X-Report-Abuse: Please forward a copy of this message, including all headers, to <abuse-report@smtp2go.com>
+Feedback-ID: 1255854m:1255854ay30w_v:1255854sPvly0yD6A
+X-smtpcorp-track: RHkSGrBlnGxX.LzRZ358JhwCp.Eeg3FQMlG9U
 
-Hi,
+From: Edip Hazuri <edip@medip.dev>
 
-On 2-Mar-26 18:46, Arun T wrote:
-> The Intel NVL platform uses IPU8 is powered by a TPS68470 PMIC,requiring board
-> data to configure the GPIOs and regulators for proper camera sensor operation.
-> 
-> Signed-off-by: Arun T <arun.t@intel.com>
-> ---
->  .../x86/intel/int3472/tps68470_board_data.c   | 150 ++++++++++++++++++
->  1 file changed, 150 insertions(+)
-> 
-> diff --git a/drivers/platform/x86/intel/int3472/tps68470_board_data.c b/drivers/platform/x86/intel/int3472/tps68470_board_data.c
-> index 71357a036292..1efc0f8e9ba8 100644
-> --- a/drivers/platform/x86/intel/int3472/tps68470_board_data.c
-> +++ b/drivers/platform/x86/intel/int3472/tps68470_board_data.c
-> @@ -143,6 +143,34 @@ static struct regulator_consumer_supply int3479_aux2_consumer_supplies[] = {
->  	REGULATOR_SUPPLY("dovdd", "i2c-INT3479:00"),
->  };
->  
-> +/* Settings for Intel NVL platform */
-> +
-> +static struct regulator_consumer_supply int3472_core_consumer_supplies[] = {
-> +	REGULATOR_SUPPLY("dvdd", "i2c-OVTI13B1:00"),
-> +};
-> +
-> +static struct regulator_consumer_supply int3472_ana_consumer_supplies[] = {
-> +	REGULATOR_SUPPLY("ana", "i2c-OVTI13B1:00"),
-> +};
-> +
-> +static struct regulator_consumer_supply int3472_vcm_consumer_supplies[] = {
-> +	REGULATOR_SUPPLY("vdd", "i2c-OVTI13B1:00"),
-> +};
-> +
-> +static struct regulator_consumer_supply int3472_vsio_consumer_supplies[] = {
-> +	REGULATOR_SUPPLY("dovdd", "i2c-OVTI13B1:00"),
-> +	REGULATOR_SUPPLY("vsio", "i2c-OVTI13B1:00"),
-> +	REGULATOR_SUPPLY("vddd", "i2c-OVTI13B1:00"),
-> +};
-> +
-> +static struct regulator_consumer_supply int3472_aux1_consumer_supplies[] = {
-> +	REGULATOR_SUPPLY("vdda", "i2c-OVTI13B1:00"),
-> +};
-> +
-> +static struct regulator_consumer_supply int3472_aux2_consumer_supplies[] = {
-> +	REGULATOR_SUPPLY("vdddo", "i2c-OVTI13B1:00"),
-> +};
-> +
+Add support for the HP keyboard RGB backlight found on HP OMEN and
+HP Victus laptops. These keyboards expose per-zone RGB control through
+WMI commands.
 
-I only noticed this v3 after replying to v2. As per my comment on v2:
+Register multicolor LED class devices for each keyboard zone (up to 4
+zones, depending on the keyboard type). Each zone exposes individual
+red, green, and blue channels via the multicolor LED subsystem.
 
-https://lore.kernel.org/linux-media/0f2502fb-20cd-4638-8428-9a9eb5318147@oss.qualcomm.com/
+Also hardware-initiated brightness changes (e.g. via the keyboard
+backlight hotkey, mostly fn+f4) are reported.
 
-this is still wrong.
+The color data is stored in a 128-byte color table managed by the
+firmware, with RGB values starting at offset 25, packed sequentially
+per zone.
 
-Regards,
+Signed-off-by: Edip Hazuri <edip@medip.dev>
+---
+v4: https://lore.kernel.org/all/20260303084022.7223-3-edip@medip.dev/
 
-Hans
+Changes since v4:
+ - Fix circular dependencies
 
+Changes since v3:
+ - Merge the changes into a single commit
 
+Changes since v1:
+ - Fix mentioned style errors
+ - Add Kconfig dependencies
 
+ drivers/platform/x86/hp/Kconfig  |   2 +
+ drivers/platform/x86/hp/hp-wmi.c | 274 +++++++++++++++++++++++++++++++
+ 2 files changed, 276 insertions(+)
 
-
->  static const struct regulator_init_data dell_7212_tps68470_core_reg_init_data = {
->  	.constraints = {
->  		.min_uV = 1200000,
-> @@ -220,6 +248,82 @@ static const struct regulator_init_data dell_7212_tps68470_aux2_reg_init_data =
->  	.consumer_supplies = int3479_aux2_consumer_supplies,
->  };
->  
-> +static const struct regulator_init_data intel_nvl_tps68470_core_reg_init_data = {
-> +	.constraints = {
-> +		.min_uV = 1200000,
-> +		.max_uV = 1200000,
-> +		.apply_uV = true,
-> +		.always_on = true,
-> +	},
-> +	.num_consumer_supplies = ARRAY_SIZE(int3472_core_consumer_supplies),
-> +	.consumer_supplies = int3472_core_consumer_supplies,
-> +};
-> +
-> +static const struct regulator_init_data intel_nvl_tps68470_ana_reg_init_data = {
-> +	.constraints = {
-> +		.min_uV = 2815200,
-> +		.max_uV = 2815200,
-> +		.apply_uV = true,
-> +		.always_on = true,
-> +	},
-> +	.num_consumer_supplies = ARRAY_SIZE(int3472_ana_consumer_supplies),
-> +	.consumer_supplies = int3472_ana_consumer_supplies,
-> +};
-> +
-> +static const struct regulator_init_data intel_nvl_tps68470_vcm_reg_init_data = {
-> +	.constraints = {
-> +		.min_uV = 2815200,
-> +		.max_uV = 2815200,
-> +		.apply_uV = true,
-> +		.always_on = true,
-> +	},
-> +	.num_consumer_supplies = ARRAY_SIZE(int3472_vcm_consumer_supplies),
-> +	.consumer_supplies = int3472_vcm_consumer_supplies,
-> +};
-> +
-> +/* Ensure the always-on VIO regulator has the same voltage as VSIO */
-> +static const struct regulator_init_data intel_nvl_tps68470_vio_reg_init_data = {
-> +	.constraints = {
-> +		.min_uV = 1800600,
-> +		.max_uV = 1800600,
-> +		.apply_uV = true,
-> +		.always_on = true,
-> +	},
-> +};
-> +
-> +static const struct regulator_init_data intel_nvl_tps68470_vsio_reg_init_data = {
-> +	.constraints = {
-> +		.min_uV = 1800600,
-> +		.max_uV = 1800600,
-> +		.apply_uV = true,
-> +		.always_on = true,
-> +	},
-> +	.num_consumer_supplies = ARRAY_SIZE(int3472_vsio_consumer_supplies),
-> +	.consumer_supplies = int3472_vsio_consumer_supplies,
-> +};
-> +
-> +static const struct regulator_init_data intel_nvl_tps68470_aux1_reg_init_data = {
-> +	.constraints = {
-> +		.min_uV = 2815200,
-> +		.max_uV = 2815200,
-> +		.apply_uV = 1,
-> +		.valid_ops_mask = REGULATOR_CHANGE_STATUS,
-> +	},
-> +	.num_consumer_supplies = ARRAY_SIZE(int3472_aux1_consumer_supplies),
-> +	.consumer_supplies = int3472_aux1_consumer_supplies,
-> +};
-> +
-> +static const struct regulator_init_data intel_nvl_tps68470_aux2_reg_init_data = {
-> +	.constraints = {
-> +		.min_uV = 1800600,
-> +		.max_uV = 1800600,
-> +		.apply_uV = 1,
-> +		.valid_ops_mask = REGULATOR_CHANGE_STATUS,
-> +	},
-> +	.num_consumer_supplies = ARRAY_SIZE(int3472_aux2_consumer_supplies),
-> +	.consumer_supplies = int3472_aux2_consumer_supplies,
-> +};
-> +
->  static const struct tps68470_regulator_platform_data dell_7212_tps68470_pdata = {
->  	.reg_init_data = {
->  		[TPS68470_CORE] = &dell_7212_tps68470_core_reg_init_data,
-> @@ -232,6 +336,18 @@ static const struct tps68470_regulator_platform_data dell_7212_tps68470_pdata =
->  	},
->  };
->  
-> +static const struct tps68470_regulator_platform_data intel_nvl_tps68470_pdata = {
-> +	.reg_init_data = {
-> +		[TPS68470_CORE] = &intel_nvl_tps68470_core_reg_init_data,
-> +		[TPS68470_ANA]  = &intel_nvl_tps68470_ana_reg_init_data,
-> +		[TPS68470_VCM]  = &intel_nvl_tps68470_vcm_reg_init_data,
-> +		[TPS68470_VIO] = &intel_nvl_tps68470_vio_reg_init_data,
-> +		[TPS68470_VSIO] = &intel_nvl_tps68470_vsio_reg_init_data,
-> +		[TPS68470_AUX1] = &intel_nvl_tps68470_aux1_reg_init_data,
-> +		[TPS68470_AUX2] = &intel_nvl_tps68470_aux2_reg_init_data,
-> +	},
-> +};
-> +
->  static struct gpiod_lookup_table surface_go_int347a_gpios = {
->  	.dev_id = "i2c-INT347A:00",
->  	.table = {
-> @@ -258,6 +374,23 @@ static struct gpiod_lookup_table dell_7212_int3479_gpios = {
->  	}
->  };
->  
-> +static struct gpiod_lookup_table intel_nvl_int347a_gpios = {
-> +	.dev_id = "i2c-OVTI13B1:01",
-> +	.table = {
-> +		GPIO_LOOKUP("tps68470-gpio", 9, "reset", GPIO_ACTIVE_LOW),
-> +		GPIO_LOOKUP("tps68470-gpio", 8, "s_idle", GPIO_ACTIVE_LOW),
-> +		{ }
-> +	}
-> +};
-> +
-> +static struct gpiod_lookup_table intel_nvl_int347e_gpios = {
-> +	.dev_id = "i2c-OVTI13B1:01",
-> +	.table = {
-> +	GPIO_LOOKUP("tps68470-gpio", 7, "s_enable", GPIO_ACTIVE_LOW),
-> +		{ }
-> +	}
-> +};
-> +
->  static const struct int3472_tps68470_board_data surface_go_tps68470_board_data = {
->  	.dev_name = "i2c-INT3472:05",
->  	.tps68470_regulator_pdata = &surface_go_tps68470_pdata,
-> @@ -287,6 +420,16 @@ static const struct int3472_tps68470_board_data dell_7212_tps68470_board_data =
->  	},
->  };
->  
-> +static const struct int3472_tps68470_board_data intel_nvl_tps68470_board_data = {
-> +	.dev_name = "i2c-INT3472:04",
-> +	.tps68470_regulator_pdata = &intel_nvl_tps68470_pdata,
-> +	.n_gpiod_lookups = 2,
-> +	.tps68470_gpio_lookup_tables = {
-> +		&intel_nvl_int347a_gpios,
-> +		&intel_nvl_int347e_gpios,
-> +	},
-> +};
-> +
->  static const struct dmi_system_id int3472_tps68470_board_data_table[] = {
->  	{
->  		.matches = {
-> @@ -316,6 +459,13 @@ static const struct dmi_system_id int3472_tps68470_board_data_table[] = {
->  		},
->  		.driver_data = (void *)&dell_7212_tps68470_board_data,
->  	},
-> +	{
-> +		.matches = {
-> +			DMI_EXACT_MATCH(DMI_SYS_VENDOR, "Intel Corporation"),
-> +			DMI_EXACT_MATCH(DMI_PRODUCT_NAME, "Nova Lake Client Platform"),
-> +		},
-> +	       .driver_data = (void *)&intel_nvl_tps68470_board_data,
-> +	},
->  	{ }
->  };
->  
+diff --git a/drivers/platform/x86/hp/Kconfig b/drivers/platform/x86/hp/Kconfig
+index dd51491b9bcd..2a1841cbec76 100644
+--- a/drivers/platform/x86/hp/Kconfig
++++ b/drivers/platform/x86/hp/Kconfig
+@@ -45,6 +45,8 @@ config HP_WMI
+ 	select INPUT_SPARSEKMAP
+ 	select ACPI_PLATFORM_PROFILE
+ 	select HWMON
++	select LEDS_CLASS
++	select LEDS_CLASS_MULTICOLOR
+ 	help
+ 	  Say Y here if you want to support WMI-based hotkeys on HP laptops and
+ 	  to read data from WMI such as docking or ambient light sensor state.
+diff --git a/drivers/platform/x86/hp/hp-wmi.c b/drivers/platform/x86/hp/hp-wmi.c
+index 304d9ac63c8a..4a378ebe9be4 100644
+--- a/drivers/platform/x86/hp/hp-wmi.c
++++ b/drivers/platform/x86/hp/hp-wmi.c
+@@ -14,6 +14,7 @@
+ #define pr_fmt(fmt) KBUILD_MODNAME ": " fmt
+ 
+ #include <linux/acpi.h>
++#include <linux/array_size.h>
+ #include <linux/cleanup.h>
+ #include <linux/compiler_attributes.h>
+ #include <linux/dmi.h>
+@@ -23,6 +24,8 @@
+ #include <linux/input.h>
+ #include <linux/input/sparse-keymap.h>
+ #include <linux/kernel.h>
++#include <linux/led-class-multicolor.h>
++#include <linux/leds.h>
+ #include <linux/limits.h>
+ #include <linux/minmax.h>
+ #include <linux/module.h>
+@@ -58,6 +61,8 @@ enum hp_ec_offsets {
+ #define HP_POWER_LIMIT_DEFAULT	 0x00
+ #define HP_POWER_LIMIT_NO_CHANGE 0xFF
+ 
++#define HP_COLOR_TABLE_PADDING 25
++
+ #define ACPI_AC_CLASS "ac_adapter"
+ 
+ #define zero_if_sup(tmp) (zero_insize_support?0:sizeof(tmp)) // use when zero insize is required
+@@ -98,6 +103,15 @@ enum hp_thermal_profile {
+ 	HP_THERMAL_PROFILE_QUIET			= 0x03,
+ };
+ 
++enum hp_keyboard_type {
++	HP_KEYBOARD_TYPE_NOBACKLIGHT                = 0x0,
++	HP_KEYBOARD_TYPE_FOURZONE_WITH_NUMPAD       = 0x1,
++	HP_KEYBOARD_TYPE_FOURZONE_WITHOUT_NUMPAD    = 0x2,
++	HP_KEYBOARD_TYPE_RGB_PER_KEY                = 0x3,
++	HP_KEYBOARD_TYPE_SINGLEZONE_WITH_NUMPAD     = 0x4,
++	HP_KEYBOARD_TYPE_SINGLEZONE_WITHOUT_NUMPAD  = 0x5,
++};
++
+ 
+ struct thermal_profile_params {
+ 	u8 performance;
+@@ -290,16 +304,27 @@ enum hp_wmi_gm_commandtype {
+ 	HPWMI_GET_GPU_THERMAL_MODES_QUERY	= 0x21,
+ 	HPWMI_SET_GPU_THERMAL_MODES_QUERY	= 0x22,
+ 	HPWMI_SET_POWER_LIMITS_QUERY		= 0x29,
++	HPWMI_GET_KEYBOARD_TYPE_QUERY		= 0x2b,
+ 	HPWMI_VICTUS_S_FAN_SPEED_GET_QUERY	= 0x2D,
+ 	HPWMI_VICTUS_S_FAN_SPEED_SET_QUERY	= 0x2E,
+ 	HPWMI_VICTUS_S_GET_FAN_TABLE_QUERY	= 0x2F,
+ };
+ 
++enum hp_wmi_backlight_commandtype {
++	HPWMI_BACKLIGHT_COLOR_GET_QUERY         = 0x02,
++	HPWMI_BACKLIGHT_COLOR_SET_QUERY         = 0x03,
++	HPWMI_BACKLIGHT_BRIGHTNESS_GET_QUERY    = 0x04,
++	HPWMI_BACKLIGHT_BRIGHTNESS_SET_QUERY    = 0x05,
++	HPWMI_BACKLIGHT_SET_OFF_QUERY           = 0x64,
++	HPWMI_BACKLIGHT_SET_ON_QUERY            = 0xE4,
++};
++
+ enum hp_wmi_command {
+ 	HPWMI_READ	= 0x01,
+ 	HPWMI_WRITE	= 0x02,
+ 	HPWMI_ODM	= 0x03,
+ 	HPWMI_GM	= 0x20008,
++	HPWMI_BACKLIGHT = 0x20009,
+ };
+ 
+ enum hp_wmi_hardware_mask {
+@@ -373,6 +398,16 @@ static const struct key_entry hp_wmi_keymap[] = {
+ 	{ KE_END, 0 }
+ };
+ 
++struct hp_kbd_led_priv {
++	int zone;               /* Zone index (0-3) */
++	enum led_brightness last_brightness;  /* Brightness before turning off */
++};
++
++struct hp_mc_leds {
++	struct led_classdev_mc devices[4];
++	struct hp_kbd_led_priv priv[4];
++};
++
+ /*
+  * Mutex for the active_platform_profile variable,
+  * see omen_powersource_event.
+@@ -382,6 +417,7 @@ static DEFINE_MUTEX(active_platform_profile_lock);
+ static struct input_dev *hp_wmi_input_dev;
+ static struct input_dev *camera_shutter_input_dev;
+ static struct platform_device *hp_wmi_platform_dev;
++static struct hp_mc_leds hp_multicolor_leds;
+ static struct device *platform_profile_device;
+ static struct notifier_block platform_power_source_nb;
+ static enum platform_profile_option active_platform_profile;
+@@ -1068,6 +1104,8 @@ static struct attribute *hp_wmi_attrs[] = {
+ };
+ ATTRIBUTE_GROUPS(hp_wmi);
+ 
++static void hp_kbd_brightness_set_by_hwd(u32 event_data);
++
+ static void hp_wmi_notify(union acpi_object *obj, void *context)
+ {
+ 	u32 event_id, event_data;
+@@ -1168,6 +1206,7 @@ static void hp_wmi_notify(union acpi_object *obj, void *context)
+ 	case HPWMI_PROXIMITY_SENSOR:
+ 		break;
+ 	case HPWMI_BACKLIT_KB_BRIGHTNESS:
++		hp_kbd_brightness_set_by_hwd(event_data);
+ 		break;
+ 	case HPWMI_PEAKSHIFT_PERIOD:
+ 		break;
+@@ -1430,6 +1469,237 @@ static int __init hp_wmi_rfkill2_setup(struct platform_device *device)
+ 	return err;
+ }
+ 
++static struct hp_kbd_led_priv *hp_led_get_priv(struct led_classdev *led_cdev)
++{
++	struct led_classdev_mc *mc_cdev = lcdev_to_mccdev(led_cdev);
++	int zone = mc_cdev - hp_multicolor_leds.devices;
++
++	return &hp_multicolor_leds.priv[zone];
++}
++
++static int hp_kbd_backlight_set_rgb_color(int zone, int red, int green, int blue)
++{
++	u8 color_table[128];
++	int ret;
++
++	/*
++	 * Get the current color table and then change only the relevant parts.
++	 */
++	ret = hp_wmi_perform_query(HPWMI_BACKLIGHT_COLOR_GET_QUERY,
++				   HPWMI_BACKLIGHT, color_table,
++				   zero_if_sup(color_table),
++				   sizeof(color_table));
++	if (ret)
++		return ret;
++
++	/*
++	 * RGB color data starts at offset 25 +3 per zone (r g b)
++	 * e.g. if zone 1 starts in 25 zone 2 starts in 28
++	 */
++	color_table[HP_COLOR_TABLE_PADDING + zone * 3]     = red;
++	color_table[HP_COLOR_TABLE_PADDING + zone * 3 + 1] = green;
++	color_table[HP_COLOR_TABLE_PADDING + zone * 3 + 2] = blue;
++
++	ret = hp_wmi_perform_query(HPWMI_BACKLIGHT_COLOR_SET_QUERY, HPWMI_BACKLIGHT,
++				   color_table, sizeof(color_table), sizeof(color_table));
++	if (ret < 0)
++		return ret;
++	if (ret)
++		return -EINVAL;
++
++	return 0;
++}
++
++static bool hp_kbd_backlight_is_on(void)
++{
++	u8 data;
++	int ret;
++
++	ret = hp_wmi_perform_query(HPWMI_BACKLIGHT_BRIGHTNESS_GET_QUERY, HPWMI_BACKLIGHT, &data,
++				sizeof(data), sizeof(data));
++	if (ret)
++		return false;
++
++	return data == HPWMI_BACKLIGHT_SET_ON_QUERY;
++}
++
++static int hp_kbd_set_brightness(struct led_classdev *led_cdev,
++					enum led_brightness brightness)
++{
++	struct hp_kbd_led_priv *priv = hp_led_get_priv(led_cdev);
++	struct led_classdev_mc *mc_cdev;
++	struct led_classdev_mc *device;
++	int red, green, blue;
++	int ret;
++
++	if (!hp_kbd_backlight_is_on()) {
++		u8 data = HPWMI_BACKLIGHT_SET_ON_QUERY;
++
++		ret = hp_wmi_perform_query(HPWMI_BACKLIGHT_BRIGHTNESS_SET_QUERY,
++					   HPWMI_BACKLIGHT, &data,
++					   sizeof(data), sizeof(data));
++		if (ret)
++			return ret;
++
++		/*
++		 * Turning the backlight on via WMI turns all zones,
++		 * so we need to restore the other zones' off state.
++		 */
++		for (int i = 0; i < ARRAY_SIZE(hp_multicolor_leds.devices); i++) {
++			if (i == priv->zone)
++				continue;
++
++			device = &hp_multicolor_leds.devices[i];
++			if (!device->led_cdev.name)
++				continue;
++			hp_kbd_backlight_set_rgb_color(i,
++				device->subled_info[0].brightness,
++				device->subled_info[1].brightness,
++				device->subled_info[2].brightness);
++		}
++	}
++
++	led_cdev->brightness = brightness;
++
++	mc_cdev = lcdev_to_mccdev(led_cdev);
++	led_mc_calc_color_components(mc_cdev, brightness);
++
++	red = mc_cdev->subled_info[0].brightness;
++	green = mc_cdev->subled_info[1].brightness;
++	blue = mc_cdev->subled_info[2].brightness;
++
++	return hp_kbd_backlight_set_rgb_color(priv->zone, red, green, blue);
++}
++
++static void hp_kbd_brightness_set_by_hwd(u32 event_data)
++{
++	struct device *dev = &hp_wmi_platform_dev->dev;
++	struct led_classdev *led_cdev;
++	struct hp_kbd_led_priv *priv;
++	u8 brightness;
++
++	for (int zone = 0; zone < ARRAY_SIZE(hp_multicolor_leds.devices); zone++) {
++		if (!hp_multicolor_leds.devices[zone].led_cdev.name)
++			continue;
++
++		led_cdev = &hp_multicolor_leds.devices[zone].led_cdev;
++		if (!led_cdev->dev)
++			continue;
++
++		priv = hp_led_get_priv(led_cdev);
++
++		if (event_data == 0x2) {
++			brightness = priv->last_brightness ? : LED_FULL;
++		} else if (event_data == 0x0) {
++			priv->last_brightness = led_cdev->brightness;
++			brightness = LED_OFF;
++		} else {
++			dev_warn(dev, "Unknown keyboard backlight event - 0x%x\n",
++				 event_data);
++			return;
++		}
++
++		led_cdev->brightness = brightness;
++		led_classdev_notify_brightness_hw_changed(led_cdev, brightness);
++	}
++}
++
++static int __init hp_mc_leds_register(int num_zones)
++{
++	u8 color_table[128];
++	int ret;
++
++	ret = hp_wmi_perform_query(HPWMI_BACKLIGHT_COLOR_GET_QUERY, HPWMI_BACKLIGHT,
++				   color_table, zero_if_sup(color_table),
++				   sizeof(color_table));
++	if (ret)
++		return ret;
++
++	for (int zone = 0; zone < num_zones; zone++) {
++		struct led_classdev_mc *multicolor_led_dev;
++		struct led_classdev *led_cdev;
++		struct mc_subled *mc_subled_info;
++		struct hp_kbd_led_priv *priv;
++		struct device *dev;
++
++		dev = &hp_wmi_platform_dev->dev;
++		multicolor_led_dev = &hp_multicolor_leds.devices[zone];
++		led_cdev = &multicolor_led_dev->led_cdev;
++		priv = &hp_multicolor_leds.priv[zone];
++
++		if (num_zones == 1)
++			led_cdev->name = devm_kasprintf(dev, GFP_KERNEL,
++							"hp::kbd_backlight");
++		else if (num_zones > 1)
++			led_cdev->name = devm_kasprintf(dev, GFP_KERNEL,
++							"hp::kbd_backlight_zone%d",
++							zone);
++
++		if (!led_cdev->name)
++			return -ENOMEM;
++		led_cdev->brightness = hp_kbd_backlight_is_on() ?
++				       LED_FULL : LED_OFF;
++		led_cdev->max_brightness = LED_FULL;
++		led_cdev->brightness_set_blocking = hp_kbd_set_brightness;
++		led_cdev->flags = LED_CORE_SUSPENDRESUME |
++				  LED_RETAIN_AT_SHUTDOWN |
++				  LED_BRIGHT_HW_CHANGED;
++
++		mc_subled_info = devm_kzalloc(dev, sizeof(*mc_subled_info) * 3,
++					      GFP_KERNEL);
++		if (!mc_subled_info)
++			return -ENOMEM;
++
++		mc_subled_info[0].color_index = LED_COLOR_ID_RED;
++		mc_subled_info[1].color_index = LED_COLOR_ID_GREEN;
++		mc_subled_info[2].color_index = LED_COLOR_ID_BLUE;
++
++		for (int i = 0; i < 3; i++) {
++			int off = HP_COLOR_TABLE_PADDING + zone * 3 + i;
++
++			mc_subled_info[i].channel = zone * 3 + i;
++			mc_subled_info[i].intensity = color_table[off];
++			mc_subled_info[i].brightness = LED_FULL;
++		}
++
++		multicolor_led_dev->subled_info = mc_subled_info;
++		multicolor_led_dev->num_colors = 3;
++
++		ret = devm_led_classdev_multicolor_register(dev, multicolor_led_dev);
++		if (ret) {
++			dev_err(dev, "Failed to register multicolor RGB backlight\n");
++			return ret;
++		}
++
++		/* Initialize private data */
++		priv->zone = zone;
++		priv->last_brightness = LED_FULL;
++	}
++	return 0;
++}
++
++static int __init hp_kbd_rgb_setup(void)
++{
++	u8 keyboard_type;
++	int ret;
++
++	ret = hp_wmi_perform_query(HPWMI_GET_KEYBOARD_TYPE_QUERY, HPWMI_GM, &keyboard_type,
++				   sizeof(keyboard_type), sizeof(keyboard_type));
++	if (ret)
++		return ret;
++
++	switch (keyboard_type) {
++	case HP_KEYBOARD_TYPE_FOURZONE_WITH_NUMPAD:
++	case HP_KEYBOARD_TYPE_FOURZONE_WITHOUT_NUMPAD:
++		return hp_mc_leds_register(4);
++	case HP_KEYBOARD_TYPE_SINGLEZONE_WITH_NUMPAD:
++	case HP_KEYBOARD_TYPE_SINGLEZONE_WITHOUT_NUMPAD:
++		return hp_mc_leds_register(1);
++	default:
++		return 0;
++	}
++}
++
+ static int platform_profile_omen_get_ec(enum platform_profile_option *profile)
+ {
+ 	int tp;
+@@ -2230,6 +2500,10 @@ static int __init hp_wmi_bios_setup(struct platform_device *device)
+ 
+ 	thermal_profile_setup(device);
+ 
++	err = hp_kbd_rgb_setup();
++	if (err)
++		dev_err(&device->dev, "Failed to initialize keyboard RGB\n");
++
+ 	return 0;
+ }
+ 
+-- 
+2.53.0
 
