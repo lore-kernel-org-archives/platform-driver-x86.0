@@ -1,243 +1,340 @@
-Received: from fout-a5-smtp.messagingengine.com (fout-a5-smtp.messagingengine.com [103.168.172.148])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.21])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1B75C37F750;
-	Wed,  4 Mar 2026 20:05:32 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=103.168.172.148
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1772654734; cv=none; b=dEciAVBe0s5Al0JF05OqFxjGg4Xpx388Z1wvGRYhWXBJtuDZSLT7LRJ1ah4TTbWsA5WuCLyiL4e30nXMztQ8QWqiQY+Aconv3eYbbsnU6XPJQI+XcnlbnXSZX+xFrqqcxa/jV6g19ea58VpOTpOKbWCNpB1k6oRA8tClk52MXno=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1772654734; c=relaxed/simple;
-	bh=lXR2WArOybnZJJxOnkUOeLu1GaqJNiakoc8VNdhDhws=;
-	h=MIME-Version:Date:From:To:Cc:Message-Id:In-Reply-To:References:
-	 Subject:Content-Type; b=rUciw7plpPy2p1zBIHjyeWAeq0H0IukNvQ4z6MkS4ioohJZPg2cww2V/xJnFKwUd1BXyN477KEpUgtgnCIh/s6ohH++6un5RmbIYtnKkcCltioTV4bPaNOdGMquWNQskg/nadDqaVrt6XXGRh7tBKIGSnYGaMyilaNW4tpd0/qo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=squebb.ca; spf=pass smtp.mailfrom=squebb.ca; dkim=pass (2048-bit key) header.d=squebb.ca header.i=@squebb.ca header.b=UsoFL5a3; dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b=vTSJ4q19; arc=none smtp.client-ip=103.168.172.148
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=squebb.ca
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=squebb.ca
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5140C381AF6;
+	Wed,  4 Mar 2026 20:06:19 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=198.175.65.21
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1772654782; cv=fail; b=E6KljrL9CyHsR5OrpqmFAO9yg45pE1QOGiEyevKQayWW8/HclAjDLozdzSKwAA3GlVGcP2++lqanBIuoO8qJ8DqNaZUGONYWmN6uOcSTu6iCzPXvuOBR9V/+ght1GpFsoWGuMdFLETnyCglugPhFsz7Q5y7+tyZgGE1RUXOTimg=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1772654782; c=relaxed/simple;
+	bh=4KxLfGctrAEHXjh2FvLAri3biqswiDqe3Gwy5I7uXEw=;
+	h=From:To:CC:Subject:Date:Message-ID:References:In-Reply-To:
+	 Content-Type:MIME-Version; b=PlsXA6B0UMnkoBtr6wTKo09G0bVAWm1sp3FksHg/kPIz++utKAH/87VSXYiBEWAT/1mF8NuG330dNjxTJnoYY+GiJO3lwdHmwlZZrSD331kQDwmebi7jlX7BuNPfWtfQ9ShyWVO5XF6rn34MqgO/KuwGCqrziCIIk59SUIzX8YU=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=DQzhZjqy; arc=fail smtp.client-ip=198.175.65.21
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=squebb.ca header.i=@squebb.ca header.b="UsoFL5a3";
-	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="vTSJ4q19"
-Received: from phl-compute-02.internal (phl-compute-02.internal [10.202.2.42])
-	by mailfout.phl.internal (Postfix) with ESMTP id 5822EEC066B;
-	Wed,  4 Mar 2026 15:05:32 -0500 (EST)
-Received: from phl-imap-08 ([10.202.2.84])
-  by phl-compute-02.internal (MEProxy); Wed, 04 Mar 2026 15:05:32 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=squebb.ca; h=cc
-	:cc:content-transfer-encoding:content-type:content-type:date
-	:date:from:from:in-reply-to:in-reply-to:message-id:mime-version
-	:references:reply-to:subject:subject:to:to; s=fm2; t=1772654732;
-	 x=1772741132; bh=MICzdszE7AhxtRHTx7UHE10rWAYRB5SdVRCFA4D5GWk=; b=
-	UsoFL5a39kchr2fm2n0vxBOZEFu8QtU9psmeswRIraAsTsB2N7QMo+B39AqH8rW1
-	n1z9eGhkARqdLTyJ5AWRfVWmoqUs0eRae2AAwbjFXmjdKFE8oLcmHpLs2K0y/E4T
-	elAeMxuwXmyFTqD/gy3Bewl3TWX4lRjic8cC+IcHJjY49sE4PKSFaGL980Ucf9p2
-	npSxhBLJR52hfB+0CTuvXvu2gDuFuIgfz8F17cKFDXNQJ9Im2VHO2bjEgLWJkHGa
-	oouKKuRcWyP7+Q0VaCZU+XV2vL/8Ne6g20k48u7lmZNvtc9JxnwM40ikcclRnQDO
-	L4vIoiZrpi2Ii/8HsP/sgg==
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-	messagingengine.com; h=cc:cc:content-transfer-encoding
-	:content-type:content-type:date:date:feedback-id:feedback-id
-	:from:from:in-reply-to:in-reply-to:message-id:mime-version
-	:references:reply-to:subject:subject:to:to:x-me-proxy
-	:x-me-sender:x-me-sender:x-sasl-enc; s=fm1; t=1772654732; x=
-	1772741132; bh=MICzdszE7AhxtRHTx7UHE10rWAYRB5SdVRCFA4D5GWk=; b=v
-	TSJ4q19d/PhMOhmN/e5Ra8Lif8Jb+jqLt6c9DcEK6029h8fhSx0xNWlXErHzvU0E
-	o47agh8YM4axVB+KVlXIHPpyTPHClcGwf0zN5oJ6gK/IklulTlpoWneSwjE12tbm
-	Lw+53XBgHlTODmtLKnPXTHqTxzks1JfAVnMitQE6tG55QsJC5GppsHPVk8OGXSCM
-	DoD3NkRqdNSZqJiRCVRr7mNeak0b/Latf80gf0ZaeZzhxbioMXApdLzvcb8fue9w
-	ClKMPG6re4gJ1f3geD6aZqmwpzo27KiR0KFxYxcemJ1MDzF7hlbieB8g09/0nnLM
-	0QJqtDpbKnqcGqEBF9Iwg==
-X-ME-Sender: <xms:i5CoaXZig21AmuW4-_vDZB096rTsKxALXgEHpsrq7ETMJJ5myULstw>
-    <xme:i5CoaRPEvZ-qqRmtYv8uMvBB3xaddcC9y_qXX7ZQAMAYfwJ8g3gxoOiH6-h13j49a
-    hCQk1_cDXKhCSr0Vc_hgkotK396Gz9cZ-PKwVpWezH-4SodNRc3>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeefgedrtddtgddvieeggeduucetufdoteggodetrf
-    dotffvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdfurfetoffkrfgpnffqhgenuceu
-    rghilhhouhhtmecufedttdenucesvcftvggtihhpihgvnhhtshculddquddttddmnecujf
-    gurhepofggfffhvfevkfgjfhfutgfgsehtjeertdertddtnecuhfhrohhmpedfofgrrhhk
-    ucfrvggrrhhsohhnfdcuoehmphgvrghrshhonhdqlhgvnhhovhhosehsqhhuvggssgdrtg
-    grqeenucggtffrrghtthgvrhhnpedtffevgfethfevteduvdefleevkedtuddvlefghefg
-    ieekffejteejveffkedthfenucffohhmrghinhepkhgvrhhnvghlrdhorhhgnecuvehluh
-    hsthgvrhfuihiivgeptdenucfrrghrrghmpehmrghilhhfrhhomhepmhhpvggrrhhsohhn
-    qdhlvghnohhvohesshhquhgvsggsrdgtrgdpnhgspghrtghpthhtohepudejpdhmohguvg
-    epshhmthhpohhuthdprhgtphhtthhopegslhgvuhhnghestghhrhhomhhiuhhmrdhorhhg
-    pdhrtghpthhtohepghhrohgvtghksegthhhrohhmihhumhdrohhrghdprhgtphhtthhope
-    guvghrvghkjhhohhhnrdgtlhgrrhhksehgmhgrihhlrdgtohhmpdhrtghpthhtohepihhk
-    vghprghnhhgtsehgmhgrihhlrdgtohhmpdhrtghpthhtohepvhhishhhnhhuohgtvhesgh
-    hmrghilhdrtghomhdprhgtphhtthhopehhrghnshhgsehkvghrnhgvlhdrohhrghdprhgt
-    phhtthhopehkrggsvghlsehkvghrnhgvlhdrohhrghdprhgtphhtthhopehlvggvsehkvg
-    hrnhgvlhdrohhrghdprhgtphhtthhopehprghvvghlsehkvghrnhgvlhdrohhrgh
-X-ME-Proxy: <xmx:i5CoafyxWAGbVQ1w-9fIIJw-gc7BnG6yClZUXtiHqaYV2wITvYyP9g>
-    <xmx:i5CoaR8JogF64Dku8dUHByDeEcGe1ZyFTuO9r1ASBx2oyZW1VWFQ7w>
-    <xmx:i5Coaf9ug51vJCNIyQ5c6F_6GF8T3B-ELl_C2nWnA4qQavidVkkTMw>
-    <xmx:i5CoaUf46zj4XeH8zc_YtcsBQYqcERTcTU1rI71hR88P6HtZnXVlkA>
-    <xmx:jJCoaYoGcjOAlNnejPWWnXCiriAwJ-Ro7GxfO_a-RVYBw1VKo3vI8JEV>
-Feedback-ID: ibe194615:Fastmail
-Received: by mailuser.phl.internal (Postfix, from userid 501)
-	id 5212B2CE0072; Wed,  4 Mar 2026 15:05:31 -0500 (EST)
-X-Mailer: MessagingEngine.com Webmail Interface
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="DQzhZjqy"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1772654779; x=1804190779;
+  h=from:to:cc:subject:date:message-id:references:
+   in-reply-to:content-transfer-encoding:mime-version;
+  bh=4KxLfGctrAEHXjh2FvLAri3biqswiDqe3Gwy5I7uXEw=;
+  b=DQzhZjqy7oh8qXekC3QLz/PGTSBmrQvE/vMzUVj5Up+b/m5uY4FsuQdM
+   gxWa3V5uG9ZgB6Wh1dmroJjFfe/8lEiu/Snk4tCT36U/HH0sKEofZRm3T
+   5k+KqcBbbeaUhnNoU4it+uEXV7hwAmgHlhqP8FGaZicuTOWNwX0Xu3SF2
+   N2yfxn7vHVrWd9e2e4oE7djDGkkvH5cOXAerOa/R+7kxPmiclQiYg/mYG
+   m+85pxgje0dfmoyR7ECK5jH4DH+BW+n/233Qfu7QR+pdgLM1xcfXgA6Cx
+   KQ8QM97P6dG0yb+KKrQU2gSnhEcQru8bchNQ+mCm06kyAd14YgEUnA2jm
+   w==;
+X-CSE-ConnectionGUID: Iko5cm99TpW80ZifsO1bSw==
+X-CSE-MsgGUID: 65Zv48dsQP2Z9PDqhe1ang==
+X-IronPort-AV: E=McAfee;i="6800,10657,11719"; a="73599637"
+X-IronPort-AV: E=Sophos;i="6.21,324,1763452800"; 
+   d="scan'208";a="73599637"
+Received: from orviesa005.jf.intel.com ([10.64.159.145])
+  by orvoesa113.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 04 Mar 2026 12:06:19 -0800
+X-CSE-ConnectionGUID: sm/PKdfcRKKS22W9NXQwUQ==
+X-CSE-MsgGUID: CQv8kG4kT2m0btz92SD2Uw==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.21,324,1763452800"; 
+   d="scan'208";a="223410880"
+Received: from fmsmsx902.amr.corp.intel.com ([10.18.126.91])
+  by orviesa005.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 04 Mar 2026 12:06:19 -0800
+Received: from FMSMSX902.amr.corp.intel.com (10.18.126.91) by
+ fmsmsx902.amr.corp.intel.com (10.18.126.91) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.2562.37; Wed, 4 Mar 2026 12:06:17 -0800
+Received: from fmsedg903.ED.cps.intel.com (10.1.192.145) by
+ FMSMSX902.amr.corp.intel.com (10.18.126.91) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.2562.37 via Frontend Transport; Wed, 4 Mar 2026 12:06:17 -0800
+Received: from PH0PR06CU001.outbound.protection.outlook.com (40.107.208.26) by
+ edgegateway.intel.com (192.55.55.83) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.2562.37; Wed, 4 Mar 2026 12:06:17 -0800
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=oqAD0vkpCDKtP3qNsxD/RlIt8GJg4sd4KovoTsAbj/pIElImuMksMZJmZ5xuNPVpvbrNzmPcT4CqRIA7LOuHZoLf5p/n10G5F0PWKm+qgtbOCle/L8k+ZNJPdLU7WVqZr8nrYsZhS/nHi71KM+cqOvM71wYO7pPj6CiwnLYjRB44+zJqOeR0a0Rl1ayNsOh66t34BDr5PEYOvh3EqzJi1tH5f6iYrzwFW4Et7GirK0AD343BF7f+4jmauFQ2ztRlYHr0S6OCnn5+ItGUES/gh2Ybfjnt5Ai/fQ4UYIfriejAUTfWzO5Cynp6hG8ayOvUhQxqYSxyABnL3R3u5S9Dnw==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=+Grw/2wDPeKGLmm594YyNlFFAyxKWNNVxSqNx/jazBQ=;
+ b=WrNFJIYzCUBtuRFs8XrDsaNtBIaht9eaQQCrNKt4rUr7xkG9DOe6B7SxibnO/6Dyh8zDvgyV4Ca78R0N/wsXxpyy0T4VVm/SB0cICgxW1T9OOubIgqZnU2R1cTPKtLE/P1XFD39rik2RuXa3dXAutEP//E/otT/lwMeBIXHblgRx/apZPrVhnq/LYtw8JHNfU0L0PUCBeXwn+jB8reL4N3zs0Mz+1SWKYkidMVB/lIppfI9AievjxelhAvq5zbLUjCTB50b1WqwqwHbhCVRQzK9rO7oE2xQ9bjcAiA1QCGeLpPRItVQYVzKy6jk5LaAC87+7RZKRvixlAQURLrC8YQ==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=intel.com; dmarc=pass action=none header.from=intel.com;
+ dkim=pass header.d=intel.com; arc=none
+Received: from IA1PR11MB6418.namprd11.prod.outlook.com (2603:10b6:208:3aa::18)
+ by IA3PR11MB9181.namprd11.prod.outlook.com (2603:10b6:208:571::11) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.9654.23; Wed, 4 Mar
+ 2026 20:06:15 +0000
+Received: from IA1PR11MB6418.namprd11.prod.outlook.com
+ ([fe80::b831:13bc:a1c9:2628]) by IA1PR11MB6418.namprd11.prod.outlook.com
+ ([fe80::b831:13bc:a1c9:2628%4]) with mapi id 15.20.9654.022; Wed, 4 Mar 2026
+ 20:06:15 +0000
+From: "Ruhl, Michael J" <michael.j.ruhl@intel.com>
+To: "David E. Box" <david.e.box@linux.intel.com>,
+	"thomas.hellstrom@linux.intel.com" <thomas.hellstrom@linux.intel.com>, "Vivi,
+ Rodrigo" <rodrigo.vivi@intel.com>, "irenic.rajneesh@gmail.com"
+	<irenic.rajneesh@gmail.com>, "ilpo.jarvinen@linux.intel.com"
+	<ilpo.jarvinen@linux.intel.com>, "srinivas.pandruvada@linux.intel.com"
+	<srinivas.pandruvada@linux.intel.com>, "intel-xe@lists.freedesktop.org"
+	<intel-xe@lists.freedesktop.org>, "dri-devel@lists.freedesktop.org"
+	<dri-devel@lists.freedesktop.org>, "xi.pardee@linux.intel.com"
+	<xi.pardee@linux.intel.com>
+CC: "hansg@kernel.org" <hansg@kernel.org>, "linux-kernel@vger.kernel.org"
+	<linux-kernel@vger.kernel.org>, "platform-driver-x86@vger.kernel.org"
+	<platform-driver-x86@vger.kernel.org>
+Subject: RE: [PATCH v7 1/6] platform/x86/intel/vsec: Refactor base_addr
+ handling
+Thread-Topic: [PATCH v7 1/6] platform/x86/intel/vsec: Refactor base_addr
+ handling
+Thread-Index: AQHcqs128EhPbvtpmkuCthBpeNHD8rWezgCw
+Date: Wed, 4 Mar 2026 20:06:14 +0000
+Message-ID: <IA1PR11MB6418EA8E91B1B09C87A123A2C17CA@IA1PR11MB6418.namprd11.prod.outlook.com>
+References: <20260303051953.1453372-1-david.e.box@linux.intel.com>
+ <20260303051953.1453372-2-david.e.box@linux.intel.com>
+In-Reply-To: <20260303051953.1453372-2-david.e.box@linux.intel.com>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach:
+X-MS-TNEF-Correlator:
+authentication-results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=intel.com;
+x-ms-publictraffictype: Email
+x-ms-traffictypediagnostic: IA1PR11MB6418:EE_|IA3PR11MB9181:EE_
+x-ms-office365-filtering-correlation-id: 93916992-ba8b-4ac0-ffc0-08de7a297d73
+x-ms-exchange-senderadcheck: 1
+x-ms-exchange-antispam-relay: 0
+x-microsoft-antispam: BCL:0;ARA:13230040|1800799024|7416014|376014|366016|7053199007|921020|38070700021;
+x-microsoft-antispam-message-info: WXaaTUmLjQpkX9jfs01kirW9csTXkh+ZfZ30uIx6ZDm0le5Ch125kzKLox7S9Gjhs2yHX1A9vpc6x4PA1SXFJpBaMWPQMT6x0CpQ0r4TYr+4DEbeith1/WZfR+TxYjebBiQ8Gm1Vb2xLbGeqIeSHPR5Z2VPGYspDq/vgq7tVwJE0XA8pRPXxUvXz6ZlcjOT30ET0arLwXbvQPF0xIl76k3IJpyGmjw28E0zUZwNhl/u7D17HBBVI/0ZnUMWbGEb8tWq3TxMFmut63uGSUaCfY0oNFJGkof/YYfTV1U4SYShhfA2xDmxjSbicm5f075HkSH8JMmswCynbFL+8/nRG9W/X9frGE62nhrXcFZbCTGzDMNvvEoNiMi6KBMHQl1H/z3JTID7ccqF8pO8yc1LPJ/6sbxrfb4gHlS6ZWA1v2NXqjxp5L/AU2+n0gEsE9CII1MBjdtzdgFh4aXdCDGpTYdetR4kMA7pzs1KJJRYkbsOZUEOdkxHoDDvIs3bwu5dzP+IUgLuITq0AD8NnD1htXoKYfFzxmXStcN/XFTyyYhKqMOD5cWOy5/WraptZY8b9cDvjBLKHa8vYRGD3QmPeFiKoOsLAccs0tcYn8xjzS7JehBLqUpr6Qhq1pzgQeMrl3/fkPtLZ4ZbP3a46esfadZXj1jjbcvFSSJxwEw+Rru5ZXc/zJP+pS52BwU0rhCL/FzFA/h9DHB9T/6TUQoBULH6juO7RuLAW1Raf0zO25NHywJJDwTLiAjqEaLdQ5J/6hW0RcGBUsUHmqD8spzXvI36vCWx4Fc5d5/OPmJ+ghVfG+m8qdWATZwgOkhf7Y443
+x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:IA1PR11MB6418.namprd11.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(1800799024)(7416014)(376014)(366016)(7053199007)(921020)(38070700021);DIR:OUT;SFP:1101;
+x-ms-exchange-antispam-messagedata-chunkcount: 1
+x-ms-exchange-antispam-messagedata-0: =?us-ascii?Q?Y+PNAdwDL0JPICd03qwy1MPr05O+BRlvA9KcTZmeysl0LJfyeHTu7XB0PPXW?=
+ =?us-ascii?Q?b5LwsAmackv3s9aHqRbCKzo+uDFd20Zw1otYsoya5x3if4sFTzLPawPaGigP?=
+ =?us-ascii?Q?DMj63Hap6f1LS25oWhn3L0s8t/mz2pIMPsTCMbWNL+XegCyQFMqvgEGTAc2J?=
+ =?us-ascii?Q?c8lBZCDEu/IE0bhAIrsUqWu9afuSr7UU/czckIvDNQU+y0tRM5HM66XZQjJI?=
+ =?us-ascii?Q?3f335wGZ8XsFNG2kaVKN0UbEgVPTaI7iXrDjEx9T0yE6CgKBbnkSL0FcYkzd?=
+ =?us-ascii?Q?HpSG5dTYda1qrZvWddU9r8kx4n7czeUAVmKXwzR2+tIp6GwCnQ0nuI5GRONa?=
+ =?us-ascii?Q?TieKKPYKxvlgM5bXo8cFQBPymtrUdIJ8VaYIGSjSERbZpXMYGDZ215q6fIsf?=
+ =?us-ascii?Q?IkoE4NEj/AyTISxq/smoeHO1PWLY90ryymvULjjW70tUchw/PCeZsxQId4ki?=
+ =?us-ascii?Q?7t4GA44zrFHgRp4jIQY12zHN0ywOAwed0HIwcvF6PMUC7lkpTYvBSx8dj1On?=
+ =?us-ascii?Q?PtUR17HrwVV3bZ+0QhSfMiSALnqsFZBlfKK1KYKK7qdRbHFdJD0FM7qhRYST?=
+ =?us-ascii?Q?rzOPd/2ZmH9xfgdkf38KsHBaA2wtol6xRCulrunj+COyL5tOwkOm/ffBUCWV?=
+ =?us-ascii?Q?9WI4PI8zgbDwV2N6oSLIrlIRH4hsPyt5kmKNeEueTA03R70+Z0D+WMa1eenN?=
+ =?us-ascii?Q?TvkMc+yc75QvddWeDu8QvJnWH4RDAAxT6BUGdsrjv7DhXdUoP16hM1INDQan?=
+ =?us-ascii?Q?9unOkNepK/xoONlKT8VNAVguKRIMENwYCVCF9m0QS7XQEkiKlK8lLdgJjr2z?=
+ =?us-ascii?Q?ugWjEpbg5GO3C6CL6c9oCUoZmsybXrQ9sIxNt+L1cAdesE9s63MhcXk1UeUx?=
+ =?us-ascii?Q?qt4evxWcJyRmwcHeh6GRh0R93CMX7M5p0CLJgI7Suc/oOFBA0isqUn/R7ipR?=
+ =?us-ascii?Q?xXAhCS/H7t1LOHyPKGKpTPLx4q4VlqK3d+GTRMskdiXZ5JCpQjGm1DaBA+B2?=
+ =?us-ascii?Q?AVSzKRudKzQLahG8HFR2Svxb+fYuGFJusNLWVklI8IPeXbGe50ey7/c8toXF?=
+ =?us-ascii?Q?iw9CqU8VKIQvoodGrL2pJ5t5fZkCxkm0/cJ62i91k6qavA9l+kAAWdaywfgj?=
+ =?us-ascii?Q?vt2Ta64//JO2gdAeZok5IAU6D0cvAS0GxvtuQ03tfTLRlg3IB8haa/f05dkt?=
+ =?us-ascii?Q?slAeSS2MF1lvWXXRMVdwJwDaXu9Ea4PSC0X6/LfJYzGR49uGsOzW0rP7YZAj?=
+ =?us-ascii?Q?YQp9uJI4W/RR3e9+hr9jszG1RV3zKP8d89lh8zhSHW79XFGFMGvFMwUA/0Gi?=
+ =?us-ascii?Q?hKudJGpaAiqoLR4Y3+AtLwbsnBMhvayjAwN2JIUmcmSxkbYB/Eq/KmqRt9Og?=
+ =?us-ascii?Q?f17mjkW2MOvC6gXX9MIhjg9Ntv7g3XkAe7SKxghSl/Os1JJfVbimUNplJX6m?=
+ =?us-ascii?Q?y9IllKDCqhikaiF22lUqRwq5JRn0Yk8ilnKPDuesJhga02xqPF70gwc9hATd?=
+ =?us-ascii?Q?2aa2d8DVh1Y7pu00SKG1DPjtuSUoSbt3jwrii5vtt10iebpT/LiuBIlhQZO8?=
+ =?us-ascii?Q?CdW6+uuQ6IxE/SYtGqN3vD14+Stu6MhSi/VSdfZ4PNKYkEJLI/ltlTG1dRMY?=
+ =?us-ascii?Q?dCOmvZMxQou9RLmciFWlTbAhV7STYJFy+b+rZVxVXkmVLBWzJo2tZgNjMDby?=
+ =?us-ascii?Q?TlfdfVSAeJ5jE2SdSuYbaomzlELrE4II4rFMKLbWfspaFBkTYHbh18kQbqj3?=
+ =?us-ascii?Q?a9iU4MPp/Q=3D=3D?=
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: quoted-printable
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-ThreadId: AkcZMBcLD6IV
-Date: Wed, 04 Mar 2026 15:05:11 -0500
-From: "Mark Pearson" <mpearson-lenovo@squebb.ca>
-To: "Rong Zhang" <i@rong.moe>, "Lee Jones" <lee@kernel.org>,
- "Pavel Machek" <pavel@kernel.org>,
- =?UTF-8?Q?Thomas_Wei=C3=9Fschuh?= <linux@weissschuh.net>,
- "Benson Leung" <bleung@chromium.org>, "Guenter Roeck" <groeck@chromium.org>,
- =?UTF-8?Q?Marek_Beh=C3=BAn?= <kabel@kernel.org>,
- "Derek J . Clark" <derekjohn.clark@gmail.com>,
- "Hans de Goede" <hansg@kernel.org>,
- =?UTF-8?Q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>,
- "Ike Panhc" <ikepanhc@gmail.com>
-Cc: "Vishnu Sankar" <vishnuocv@gmail.com>,
- "Vishnu Sankar" <vsankar@lenovo.com>, linux-kernel@vger.kernel.org,
- linux-leds@vger.kernel.org, chrome-platform@lists.linux.dev,
- "platform-driver-x86@vger.kernel.org" <platform-driver-x86@vger.kernel.org>
-Message-Id: <b1d43b71-38c1-48cb-91ae-4598ecd2f588@app.fastmail.com>
-In-Reply-To: <20260227190617.271388-1-i@rong.moe>
-References: <20260227190617.271388-1-i@rong.moe>
-Subject: Re: [RFC PATCH 0/9] leds: Add support for hw initiated hw control trigger
- transition
-Content-Type: text/plain
-Content-Transfer-Encoding: 7bit
+X-Exchange-RoutingPolicyChecked: hXpgta6DllJDK8gVUTBPOeBaorV2RtNfUxzoTvY3Kn9FM7bmTgihqTDkE3UFid19CkVq7l1CS3TRuq5hbj4sGqXKFnQA8qWtLyS7Nzy/trWQhPOPzGqWC24ZsRfMWRpu7MUUJVE0lOC6L76elHSkqAsA8vV7Okhkt/fobSqtj4SFu1NF4YFFlnlRpuQdyBsIm+DbfWAZiuyc4C/O/VyO9mtqEWvE+rxDwlkPv2v39esXcf7oScEp4nEevITfTs1hIdpjtLBSMRRTDJ/+90x3CPeA29eKcfiteYDoEnwpSPbnriyudAI9jWPSK5uZxvVuwn1bdwph2Uo6Y3Csd1lAIw==
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-AuthSource: IA1PR11MB6418.namprd11.prod.outlook.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 93916992-ba8b-4ac0-ffc0-08de7a297d73
+X-MS-Exchange-CrossTenant-originalarrivaltime: 04 Mar 2026 20:06:14.9884
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 46c98d88-e344-4ed4-8496-4ed7712e255d
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: TKSoj/dA3dEIqTCI9KwS/FiMmHxeA0zA9P3XPoD8yRIbWpNwTlqtfLwisedcEJW0Ux1VkRSnl48o9uoNLhrURnwiY5LMO1Vv/McY9L++V6o=
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: IA3PR11MB9181
+X-OriginatorOrg: intel.com
 
-Hi Rong,
 
-On Fri, Feb 27, 2026, at 2:05 PM, Rong Zhang wrote:
-> Hi all,
->
-> Some laptops can tune their keyboard backlight according to ambient
-> light sensors (auto mode). This capability is essentially a hw control
-> trigger. Meanwhile, such laptops also offer a shrotcut for cycling
-> through brightness levels and auto mode. For example, on ThinkBook,
-> pressing Fn+Space cycles keyboard backlight levels in the following
-> sequence:
->
->   1 => 2 => 0 => auto => 1 ...
->
-> Recent ThinkPad models should have similar sequence too.
->
-> However, there are some issues preventing us from using hw control
-> trigger:
->
-> 1. We want a mechanism to tell userspace which trigger is the hw control
->    trigger, so that userspace can determine if auto mode is on/off or
->    turing it on/off programmatically without obtaining the hw control
->    trigger's name via other channels
-> 2. Turing on/off auto mode via the shortcut cannot activate/deactivate
->    the hw control trigger, making the software state out-of-sync
-> 3. Even with #1 resolved, deactivating the hw control trigger after
->    receiving the event indicating "auto => 1" has a side effect of
->    emitting LED_OFF, breaking the shortcut cycle
->
-> This RFC series tries to demonstrate a path on solving these issues:
->
-> - Introduce an attribute called trigger_may_offload, so that userspace
->    can determine:
->    - if the LED device supports hw control (supported => visible)
->    - which trigger is the hw control trigger
->    - if the hw control trigger is selected
->    - if the hw control trigger is in hw control (i.e., offloaded)
->      - A callback offloaded() is added so that LED triggers can report
->        their hw control state
-> - Add led_trigger_notify_hw_control_changed() interface, so that LED
->   drivers can notify the LED core about hardware initiated hw control
->   state transitions. The LED core will then determine if the transition
->   is allowed and turning on/off the hw control trigger accordingly
-> - Tune the logic of trigger deactivation so that it won't emit LED_OFF
->   when the deactivation is triggered by hardware
->
-> The last two patches are included into the RFC series to demonstrate how
-> to utilize these interfaces to add support for auto keyboard backlight
-> to ThinkBook. They will be submitted separately once the dust settles.
->
-> Currently no Kconfig entry is provided to disable either interface. If
-> needed, I will add one later.
->
-> [ Summary of other approaches ]
->
-> < custom attribute >
->
-> Pros:
-> - simplicity, KISS
-> - no need to touch the LED core
-> - extensible as long as it has a sensor-neutral name
->   - a sensor-related name could potentially lead to a mess if a future
->     device implements auto mode based on multiple different sensors
->
-> Cons:
-> - must have zero influence on brightness_set[_blocking] callbacks
->   in order not to break triggers
->   - potential interference with triggers and the brightness attribute
-> - weird semantic (an attribute other than "brightness" and "trigger"
->   changes the brightness)
->
-> < hw control trigger (this series) >
->
-> Pros:
-> - mutually exclusive with other triggers (hence less chaos)
-> - semantic correctness
-> - acts as an aggregate switch to turn on/off auto mode even a future
->   device implements auto mode based on multiple different sensors
->   - extensibility (through trigger attributes)
->
-> Cons:
-> - complexity
->
-> [ Previous discussion threads ]
->
-> https://lore.kernel.org/r/08580ec5-1d7b-4612-8a3f-75bc2f40aad2@app.fastmail.com
->
-> https://lore.kernel.org/r/1dbfcf656cdb4af0299f90d7426d2ec7e2b8ac9e.camel@rong.moe
->
-> Thanks,
-> Rong
->
-> Rong Zhang (9):
->   leds: Load trigger modules on-demand if used as hw control trigger
->   leds: Add callback offloaded() to query the state of hw control
->     trigger
->   leds: cros_ec: Implement offloaded() callback for trigger
->   leds: turris-omnia: Implement offloaded() callback for trigger
->   leds: trigger: netdev: Implement offloaded() callback
->   leds: Add trigger_may_offload attribute
->   leds: trigger: Add led_trigger_notify_hw_control_changed() interface
->   platform/x86: ideapad-laptop: Decouple HW & cdev brightness for kbd
->     backlight
->   platform/x86: ideapad-laptop: Fully support auto kbd backlight
->
->  .../obsolete/sysfs-class-led-trigger-netdev   |  15 ++
->  Documentation/ABI/testing/sysfs-class-led     |  22 ++
->  .../testing/sysfs-class-led-trigger-netdev    |  13 --
->  Documentation/leds/leds-class.rst             |  72 ++++++-
->  drivers/leds/led-class.c                      |  23 +++
->  drivers/leds/led-triggers.c                   | 176 +++++++++++++++-
->  drivers/leds/leds-cros_ec.c                   |   6 +
->  drivers/leds/leds-turris-omnia.c              |   7 +
->  drivers/leds/leds.h                           |   3 +
->  drivers/leds/trigger/ledtrig-netdev.c         |  10 +
->  drivers/platform/x86/lenovo/Kconfig           |   1 +
->  drivers/platform/x86/lenovo/ideapad-laptop.c  | 194 ++++++++++++++----
->  include/linux/leds.h                          |   6 +
->  13 files changed, 492 insertions(+), 56 deletions(-)
->  create mode 100644 Documentation/ABI/obsolete/sysfs-class-led-trigger-netdev
->
->
-> base-commit: a75cb869a8ccc88b0bc7a44e1597d9c7995c56e5
-> -- 
-> 2.51.0
 
-Thanks for your work on this.
+>-----Original Message-----
+>From: Intel-xe <intel-xe-bounces@lists.freedesktop.org> On Behalf Of David=
+ E.
+>Box
+>Sent: Tuesday, March 3, 2026 12:20 AM
+>To: thomas.hellstrom@linux.intel.com; Vivi, Rodrigo <rodrigo.vivi@intel.co=
+m>;
+>irenic.rajneesh@gmail.com; ilpo.jarvinen@linux.intel.com;
+>srinivas.pandruvada@linux.intel.com; intel-xe@lists.freedesktop.org; dri-
+>devel@lists.freedesktop.org; xi.pardee@linux.intel.com
+>Cc: david.e.box@linux.intel.com; hansg@kernel.org; linux-
+>kernel@vger.kernel.org; platform-driver-x86@vger.kernel.org
+>Subject: [PATCH v7 1/6] platform/x86/intel/vsec: Refactor base_addr handli=
+ng
+>
+>The base_addr field in intel_vsec_platform_info was originally added to
+>support devices that emulate PCI VSEC capabilities in MMIO. Previously,
+>the code would check at registration time whether base_addr was set,
+>falling back to the PCI BAR if not.
 
-For the series: As it's a RFC, I'm not bothering with notes on any typo's or grammer stuff.
+It looks like this value could be set in the various static info struct (tg=
+l_info, etc).
 
-Overall I think the implementation works and I understand it better from our initial discussions. Thank you for putting this together.
+Would this be a reasonably thing to set/do?
 
-I'm not a huge fan of the term offloaded - I would lean towards just calling it hw_control (or similar). But I see it was used in the ledtrig-netdev driver so I don't feel strongly about this.
+Should the documentation be updated to specify specific use cases?
 
-Vishnu - can you check out how this would work with the Thinkpad implementation that you've been working on, please? I think that will be helpful to highlight any design issues.
+>Refactor this by making base_addr an explicit function parameter. This
+>clarifies ownership of the value and removes conditional logic from
+>intel_vsec_add_dev(). It also enables making intel_vsec_platform_info
+>const in a later patch, since the function no longer needs to write to
+>info->base_addr.
 
-Mark
+This makes the base_addr usage a lot more clear.
+
+Reviewed-by: Michael J. Ruhl <michael.j.ruhl@intel.com>
+
+M
+
+>No functional change intended.
+>
+>Signed-off-by: David E. Box <david.e.box@linux.intel.com>
+>---
+>Changes in v7:
+>  - No change
+>
+>Changes in v6:
+>  - No change
+>
+>Changes in v5:
+>  - No change
+>
+>Changes in v4:
+>  - No change
+>
+>Changes in v3:
+>  - No change
+>
+>Changes in v2:
+>  - Use pci_resource_start() macro instead of direct pdev->resource array
+>    access (suggested by Ilpo)
+>
+> drivers/platform/x86/intel/vsec.c | 23 ++++++++++-------------
+> 1 file changed, 10 insertions(+), 13 deletions(-)
+>
+>diff --git a/drivers/platform/x86/intel/vsec.c
+>b/drivers/platform/x86/intel/vsec.c
+>index 5059d320edf8..46966edca03b 100644
+>--- a/drivers/platform/x86/intel/vsec.c
+>+++ b/drivers/platform/x86/intel/vsec.c
+>@@ -271,14 +271,13 @@ EXPORT_SYMBOL_NS_GPL(intel_vsec_add_aux,
+>"INTEL_VSEC");
+>
+> static int intel_vsec_add_dev(struct pci_dev *pdev, struct intel_vsec_hea=
+der
+>*header,
+> 			      struct intel_vsec_platform_info *info,
+>-			      unsigned long cap_id)
+>+			      unsigned long cap_id, u64 base_addr)
+> {
+> 	struct intel_vsec_device __free(kfree) *intel_vsec_dev =3D NULL;
+> 	struct resource __free(kfree) *res =3D NULL;
+> 	struct resource *tmp;
+> 	struct device *parent;
+> 	unsigned long quirks =3D info->quirks;
+>-	u64 base_addr;
+> 	int i;
+>
+> 	if (info->parent)
+>@@ -310,11 +309,6 @@ static int intel_vsec_add_dev(struct pci_dev *pdev,
+>struct intel_vsec_header *he
+> 	if (quirks & VSEC_QUIRK_TABLE_SHIFT)
+> 		header->offset >>=3D TABLE_OFFSET_SHIFT;
+>
+>-	if (info->base_addr)
+>-		base_addr =3D info->base_addr;
+>-	else
+>-		base_addr =3D pdev->resource[header->tbir].start;
+>-
+> 	/*
+> 	 * The DVSEC/VSEC contains the starting offset and count for a block of
+> 	 * discovery tables. Create a resource array of these tables to the
+>@@ -412,7 +406,8 @@ static int get_cap_id(u32 header_id, unsigned long
+>*cap_id)
+>
+> static int intel_vsec_register_device(struct pci_dev *pdev,
+> 				      struct intel_vsec_header *header,
+>-				      struct intel_vsec_platform_info *info)
+>+				      struct intel_vsec_platform_info *info,
+>+				      u64 base_addr)
+> {
+> 	const struct vsec_feature_dependency *consumer_deps;
+> 	struct vsec_priv *priv;
+>@@ -428,7 +423,7 @@ static int intel_vsec_register_device(struct pci_dev
+>*pdev,
+> 	 * For others using the exported APIs, add the device directly.
+> 	 */
+> 	if (!pci_match_id(intel_vsec_pci_ids, pdev))
+>-		return intel_vsec_add_dev(pdev, header, info, cap_id);
+>+		return intel_vsec_add_dev(pdev, header, info, cap_id,
+>base_addr);
+>
+> 	priv =3D pci_get_drvdata(pdev);
+> 	if (priv->state[cap_id] =3D=3D STATE_REGISTERED ||
+>@@ -444,7 +439,7 @@ static int intel_vsec_register_device(struct pci_dev
+>*pdev,
+>
+> 	consumer_deps =3D get_consumer_dependencies(priv, cap_id);
+> 	if (!consumer_deps || suppliers_ready(priv, consumer_deps, cap_id)) {
+>-		ret =3D intel_vsec_add_dev(pdev, header, info, cap_id);
+>+		ret =3D intel_vsec_add_dev(pdev, header, info, cap_id,
+>base_addr);
+> 		if (ret)
+> 			priv->state[cap_id] =3D STATE_SKIP;
+> 		else
+>@@ -464,7 +459,7 @@ static bool intel_vsec_walk_header(struct pci_dev
+>*pdev,
+> 	int ret;
+>
+> 	for ( ; *header; header++) {
+>-		ret =3D intel_vsec_register_device(pdev, *header, info);
+>+		ret =3D intel_vsec_register_device(pdev, *header, info, info-
+>>base_addr);
+> 		if (!ret)
+> 			have_devices =3D true;
+> 	}
+>@@ -512,7 +507,8 @@ static bool intel_vsec_walk_dvsec(struct pci_dev
+>*pdev,
+> 		pci_read_config_dword(pdev, pos + PCI_DVSEC_HEADER2,
+>&hdr);
+> 		header.id =3D PCI_DVSEC_HEADER2_ID(hdr);
+>
+>-		ret =3D intel_vsec_register_device(pdev, &header, info);
+>+		ret =3D intel_vsec_register_device(pdev, &header, info,
+>+						 pci_resource_start(pdev,
+>header.tbir));
+> 		if (ret)
+> 			continue;
+>
+>@@ -557,7 +553,8 @@ static bool intel_vsec_walk_vsec(struct pci_dev *pdev,
+> 		header.tbir =3D INTEL_DVSEC_TABLE_BAR(table);
+> 		header.offset =3D INTEL_DVSEC_TABLE_OFFSET(table);
+>
+>-		ret =3D intel_vsec_register_device(pdev, &header, info);
+>+		ret =3D intel_vsec_register_device(pdev, &header, info,
+>+						 pci_resource_start(pdev,
+>header.tbir));
+> 		if (ret)
+> 			continue;
+>
+>--
+>2.43.0
+
