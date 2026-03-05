@@ -1,73 +1,71 @@
-Received: from mail-pf1-f173.google.com (mail-pf1-f173.google.com [209.85.210.173])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from CY3PR05CU001.outbound.protection.outlook.com (mail-westcentralusazon11013007.outbound.protection.outlook.com [40.93.201.7])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C2FC1202997
-	for <platform-driver-x86@vger.kernel.org>; Thu,  5 Mar 2026 09:04:12 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.173
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1772701455; cv=none; b=KuYEX1TbAWxgaGAB40seYLsak7SprmFS5vwbsuqQ7KF61lwVa4JasuA177dW3QzpoNIY75uvqGLoTyzMor9rWAxhOUMrXz0yhGk7OvvZ3sIRluEfhiZqViIVnK0Q+n337jq5Lraf5MSmwiF4mpleVLNaCflx3+dIKT9i9l/8YY8=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1772701455; c=relaxed/simple;
-	bh=xElYS88bFaK05JQ3tJajfV3WiSk2ga5Up9kJ/uq8Bbw=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=Agpq6Rd1D+FU1bGRj4bjrRGbQdB66RcWvwszcvX3QqkXC0JJwbPi/dzk3pKAe77i4zmn5k3e0M9jKfdUUMAtjSWGQEoQJIGjzVxngpUuJ+KnxxofCYEbYrry2PhgUhBrlpdRJE7myfFusxQcLWH3aNKjyiBFLFVePPd0XQDGKnE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=ZLFVbkis; arc=none smtp.client-ip=209.85.210.173
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 399322C11E2;
+	Thu,  5 Mar 2026 10:51:17 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.93.201.7
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1772707878; cv=fail; b=IQVuBENndfPhqp80qtL62F5vZk2tSCU42ezcx42JNByyMKI6ABZLMuO1UinnwZwweDdho9hheDi48rMfZbBMw5gIcwU/CbWYHoseqNkkmxnERqoZofJsT3SnddSbq6HilcXaHRd70Vl3ZEj4RGWDhzVLiwHmO5JgbbWc2g2CrdY=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1772707878; c=relaxed/simple;
+	bh=A3p6Lbe5AHN/gKgooYNmXauoYPH/WcrYjNEHfetzLZc=;
+	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=U2+gW7PYsxZkokXXnQrxtg3G5zMuhhG2HYFDD80QWaO8KjEHeIALkkHRnrb80k9lApps+u3Fm/xlMug39fY0e54qMGtLoEhha7PMweEADVGD4pxAAf9sLMCOOEp4Wf/RuNg5LP2P5SPreURLHat4vHS81uLoaxXrNYZAmZ0sEP8=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=4mo4kiKP; arc=fail smtp.client-ip=40.93.201.7
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=amd.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ZLFVbkis"
-Received: by mail-pf1-f173.google.com with SMTP id d2e1a72fcca58-829759ca646so818550b3a.2
-        for <platform-driver-x86@vger.kernel.org>; Thu, 05 Mar 2026 01:04:12 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1772701452; x=1773306252; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=Eq1+Mu0PpUqWuDxNRJnfCDGJhYbmohY8k4bPsnF02O8=;
-        b=ZLFVbkisMF19IprViM5fvEyVMHzuytZ4lzMqVCWGFt1i/8UrfoxMcpSI3wLcralxWe
-         D2El0OiCQ4ouWUzME6e+hK6tAp/+ZZ6oKGDqg4tfo9UxjDKXYlMDMP68XGc2L6vPBmOM
-         AgK+0OeyMbryksyHzyxU8oru+VFdytEoRvEPkzhgh5EbtLz6vEtGUjTf6tR/rFlk+4wH
-         nNt0JIzpnAXkMxH2s+wZSPx0/JTBsrj3jLT0sUBz0mxSuDIVW3/zcVhPdWfQONsP6JHT
-         pVdPQmE79KEUygte88HPP9+8NlqVT3NpF1Xh32NEyfpW72jJPBvykbElb0XYDDhfilN3
-         BIOg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1772701452; x=1773306252;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-gg:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=Eq1+Mu0PpUqWuDxNRJnfCDGJhYbmohY8k4bPsnF02O8=;
-        b=RTKOK89meLovjgGtjesnyqy7kdxaZTRncaylXt9uKzk0Wn8K33Ow4PkVc8/1vRa7Gf
-         KdVzDv7hGF1pRhINnEwM75rybPON9ZkfCl8Zgas7hOu8HK9qqAt2/LTEO4YGrSv5ytsS
-         o3eBVPVPfutpUmjj59Eo2+jYV1z9NUhvuzHiB9tf55i+8eg4XCUTv1S8Mc6LN+EAJzcj
-         kY0iXJ1wBqrs9t8z9/RxSmnQjM7AfkswhZqz8NPM8sqYpuw6bYyXqFCueBUaOa4lcBco
-         kCE4OIMKIYm6Qq0yYxGrJWbKhe74LcOtawpM8i3AvdIF1qBTjGXd4MpFhhcX+rZv+q8u
-         SsLA==
-X-Forwarded-Encrypted: i=1; AJvYcCV7kWXUgPhj0kSmqe1NH440zVqdBbbVopUHVWv7AXtAXsQpB43SUHoNfwuSyYCQwENs0f9axtqLUJpXIGwsHyed5QtF@vger.kernel.org
-X-Gm-Message-State: AOJu0YxsBxxgI9vCIXMSFTz1xq9tz0JE2pUFeta0b4ubpVXFUeg/BW4x
-	xJyJ/9GpL5aZ3/U5XmGQKHPP4iYrRgF2H55/x7ecG3bgOW+9RwdzjARQ6O6YrBLz
-X-Gm-Gg: ATEYQzyq47ysaZufCwdQldEgENO/UFsMvDr4uWgFIPF35LsT/jRmvaRWRQRlF27fR22
-	ePghVnTHx34ARTEdW4fG96163ZW6jQABejaPRXnGQo+CMgGv3w+VOr5Rso5Vls7ofzak3pvaEzh
-	xybcjDg4+d1KHjmwNdIZOOOFMYEuMKQEWKLWObu67vf+1u2OQZbMMgp7caLH9YTC8sIfw8Ru7Ql
-	KH5QjlldGk5sK7hceMJ6rDYe2U5zhbcW+aM5x7j5QaSel5caXV9gtHFIhib8texIUwCNg6bxj42
-	qXMnEyaZs3yS3GcvkxMWv619p6yYGPLfnPfrucvItyEb4TSVJZaUHM71zqAJpOQOci8bbIqpKYw
-	ncdNo4Wj058wTJnHKZ4pfCz7iQe6pxoY3qbWGbU8ybFHguQ1db2QeQu96yMXKQiktMs1EKCqBvg
-	==
-X-Received: by 2002:a05:6a00:1c9b:b0:81f:50ea:5d96 with SMTP id d2e1a72fcca58-82972ba65e1mr3706773b3a.18.1772701451700;
-        Thu, 05 Mar 2026 01:04:11 -0800 (PST)
-Received: from qby-laptop ([2a13:edc0:18:16f::a])
-        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-829793ae135sm2943818b3a.32.2026.03.05.01.04.09
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 05 Mar 2026 01:04:11 -0800 (PST)
-From: Mingyou Chen <qby140326@gmail.com>
-To: W_Armin@gmx.de
-Cc: hansg@kernel.org,
-	ilpo.jarvinen@linux.intel.com,
-	platform-driver-x86@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	cryolitia.pukngae@linux.dev,
-	Mingyou Chen <qby140326@gmail.com>
-Subject: [PATCH v13] platform/x86: bitland-mifs-wmi: Add new Bitland MIFS WMI driver
-Date: Thu,  5 Mar 2026 17:04:03 +0800
-Message-ID: <20260305090403.8440-1-qby140326@gmail.com>
-X-Mailer: git-send-email 2.53.0
+	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="4mo4kiKP"
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=cTa25HD1CVBHF/oAhmuPt6GE9ez/cr2frSibtnlByB3QCj2oO1a1xLWiUxW0lhh2LUx4P2xPkvptCJQD7LvHlNbqCePOAtdSG56uC8XPzO2OBVIOnv+nQaQYfIzo0VWbVJix9xHW4UCNapGENXHJoeUmip6Pdyo4VnyKhLg28s3W/qyvtsDN+VgiES+dAxG/Ny+P8Ssw8Xa1Cqi59dmDqHdYl8RB6BNGU83YjBbIl8GBOPdbV2T37hb5BtXV6AKHNom0r9dMgSDnDMAgc0SOL8dQMycJPnV8lH9TtxBSg/au7DQ+Lg7aPd8oH80e9Wos1j3dnPTcA8rD4ltzo4fj4g==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=gJMjUYFgYCKAFEuMa5IeBuTHN0eSnze9vf0OkenN+Vo=;
+ b=EaNHF1QYeg/C612MCSmqDXx9Q4rwS3DccW7HPd5PyYaWRTHrAKs2HPU/9pQyAqhz9/BgJbEmschvCK4HGILgvv9C/S0/qG5mCjrrA6ToqjhepFNQs/YyS9Q7ddL0M0xAhErLin4o4gk4SUjpwwrePpcWw7SIGRpPIS2kMu2H6Jbn4W0gfhDgagNy0fjOHSv3UZEiQIz4PaZQTWTnLBUruh+zoochGw5+Q59sMsGg+waR3+DxCGn1/06izChZNn/DzX9UznZ9q8DPyqWQStEFfIUx3juSeVvgLcLcrvANAZ6WOEQz39W90fJyCu9XuXRvpDs7RExsuJuxEFjetOLdoA==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
+ 165.204.84.17) smtp.rcpttodomain=linux.intel.com smtp.mailfrom=amd.com;
+ dmarc=pass (p=quarantine sp=quarantine pct=100) action=none
+ header.from=amd.com; dkim=none (message not signed); arc=none (0)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=gJMjUYFgYCKAFEuMa5IeBuTHN0eSnze9vf0OkenN+Vo=;
+ b=4mo4kiKPlnh9bX+0CXgtzelEf/VsxpnAOBoI7UBuYpBIlWW8IAzrNykphZL9RSHsvB1m42GftAoyAck4zwaNC30nrrJ/aUka+5G4llgG6g4O+zq4GNz09I+56DmqQRFv03zIqAGnsU3YaZbddA5jej5Grx3ooP+KPFjj2cmtlz4=
+Received: from SJ0PR03CA0004.namprd03.prod.outlook.com (2603:10b6:a03:33a::9)
+ by SJ5PPF816B88375.namprd12.prod.outlook.com (2603:10b6:a0f:fc02::99b) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.9678.18; Thu, 5 Mar
+ 2026 10:51:12 +0000
+Received: from SJ1PEPF000026C6.namprd04.prod.outlook.com
+ (2603:10b6:a03:33a:cafe::4b) by SJ0PR03CA0004.outlook.office365.com
+ (2603:10b6:a03:33a::9) with Microsoft SMTP Server (version=TLS1_3,
+ cipher=TLS_AES_256_GCM_SHA384) id 15.20.9654.21 via Frontend Transport; Thu,
+ 5 Mar 2026 10:51:12 +0000
+X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 165.204.84.17)
+ smtp.mailfrom=amd.com; dkim=none (message not signed)
+ header.d=none;dmarc=pass action=none header.from=amd.com;
+Received-SPF: Pass (protection.outlook.com: domain of amd.com designates
+ 165.204.84.17 as permitted sender) receiver=protection.outlook.com;
+ client-ip=165.204.84.17; helo=satlexmb07.amd.com; pr=C
+Received: from satlexmb07.amd.com (165.204.84.17) by
+ SJ1PEPF000026C6.mail.protection.outlook.com (10.167.244.103) with Microsoft
+ SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.9678.18 via Frontend Transport; Thu, 5 Mar 2026 10:51:12 +0000
+Received: from dcsm-trdripper1.amd.com (10.180.168.240) by satlexmb07.amd.com
+ (10.181.42.216) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.2562.17; Thu, 5 Mar
+ 2026 04:51:10 -0600
+From: Muthusamy Ramalingam <muthusamy.ramalingam@amd.com>
+To: <ilpo.jarvinen@linux.intel.com>, <hansg@kernel.org>,
+	<platform-driver-x86@vger.kernel.org>
+CC: <linux-kernel@vger.kernel.org>, Suma Hegde <suma.hegde@amd.com>,
+	"Muthusamy Ramalingam" <muthusamy.ramalingam@amd.com>
+Subject: [PATCH 1/2] platform/x86/amd/hsmp: Add new HSMP messages for Family 1Ah, Model 50h-5Fh
+Date: Thu, 5 Mar 2026 16:20:49 +0530
+Message-ID: <20260305105050.2940904-2-muthusamy.ramalingam@amd.com>
+X-Mailer: git-send-email 2.34.1
+In-Reply-To: <20260305105050.2940904-1-muthusamy.ramalingam@amd.com>
+References: <20260305105050.2940904-1-muthusamy.ramalingam@amd.com>
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
@@ -75,1226 +73,283 @@ List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-ClientProxiedBy: satlexmb07.amd.com (10.181.42.216) To satlexmb07.amd.com
+ (10.181.42.216)
+X-EOPAttributedMessage: 0
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: SJ1PEPF000026C6:EE_|SJ5PPF816B88375:EE_
+X-MS-Office365-Filtering-Correlation-Id: 4ada70ba-5465-4ba5-42a6-08de7aa51e2b
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam:
+	BCL:0;ARA:13230040|1800799024|82310400026|376014|36860700016;
+X-Microsoft-Antispam-Message-Info:
+	b0Z2vrZ2qnsBxxbons/rGX4SnDO8hCLZqJz5F259uam4kuaiyLMf+X6uuEiMfXtAB16GqrjgF4+LMxs1IN5aA9kocPEbBOZcbyKw+w3enEYqBIvRwCEwNjHaQ9+1SKL7klG0oOsaWU2MXTOKgbPaD3Db6AxiUsr94b2lZ8awbeGwA/JEhgVd4YKS8k7SY8R0drVTVTNmtDExAh4Hh6Nx0vGYGZzVFAGjjpwhk4Dncgz2qWUFhObnQpYFCCp4kYpBydOj5miOMPHS/D2kwTg+WLHMgUB251wrefNJkJBzjETCxOLqlYwXEPm5CoO7P2popl/CrzVRql9yzB1omPfdsTdmW6g4ikLk6T4WikWX5NbfjOE+mckCYS5GiMDpPkQtem1SWaCN5wesImepGR/PVBQiXGlCDulMVRIVsDMiiOgmry1kwDTcMQnTzJkEazQTwYbEDzX83tPCwMJqFDBLhb96iAz1HHzPyxcgDHpEzQtO2U2BqCRCfMBqxJVsEyNeBPtBTA1W6xUaMfGpLTcROEo41hI5FVoJBAAeXI9u8CRltZKN858D89q4CO2G0+l+eaM3XuT3uuMqtl4C2T38ks4uru0qvvnR/tPiITvrVS2JvrxUBnMd6R0goyzquHpE/Fkex6qhGEYihv1NRIcGligpVqb1hVXPw+ZNdY5QqIH0BATafk0qAeO7t3vL+pJar73wd+vi5xSflzW54eBqMduhYlQbnhTInfONrVoMarv2cXz5PcGgKb0MWLhetnLXAe+0Hw5HpNK1D7TSN8c4oQ==
+X-Forefront-Antispam-Report:
+	CIP:165.204.84.17;CTRY:US;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:satlexmb07.amd.com;PTR:InfoDomainNonexistent;CAT:NONE;SFS:(13230040)(1800799024)(82310400026)(376014)(36860700016);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0:
+	0ib4FS7ua14MC14gTh5zWi8Aocq0HQz4E06xzg6v2sG0RDUEme+/et1b3qnSFuH1gf0eyVD7NN1VQClgEqX151/7K5EFmHr0vUOLP45hzlLgjXBG+x4F6hSclSE/WbCYduOzf33CjY/2Sg9Vv9krkAjrriOfnEW5PLuFlg+bg1hzxboCFJFkCGEoa0lNw2Tl80tvBC+AlhGf9iT7QKFgQtRnj90Shn6WAIF8ztVOok3Xv05nies+7FTXO2YjuwQpAtk/PpgTonlymyXMow+5Uy+7ZDhX810R3gxGcazIbgqV5ptL/38/FYJKhQExBTjPpYil7LHF1kA+UibnCr/3NIt0TYUMZ41V75NGxlUPTXocqofJkKbCVQiJt+waeuQIk7zEXEQvBxxQ3OLlYS9wk93/lOvfO/bB/zP5N1kWze1y/E2MyY3IM4qj2on113it
+X-OriginatorOrg: amd.com
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 05 Mar 2026 10:51:12.6858
+ (UTC)
+X-MS-Exchange-CrossTenant-Network-Message-Id: 4ada70ba-5465-4ba5-42a6-08de7aa51e2b
+X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
+X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=3dd8961f-e488-4e60-8e11-a82d994e183d;Ip=[165.204.84.17];Helo=[satlexmb07.amd.com]
+X-MS-Exchange-CrossTenant-AuthSource:
+	SJ1PEPF000026C6.namprd04.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Anonymous
+X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: SJ5PPF816B88375
 
-Add a new driver for Bitland laptops that utilize the MIFS (MiInterface)
-WMI interface.
+From: Suma Hegde <suma.hegde@amd.com>
 
-The driver implements several features through the WMI interface:
+The new messages extend the HSMP interface to provide finer control over
+power states and system monitoring capabilities.
 
-- Platform Profile: Supports "Quiet", "Balanced", "Performance", and
-  "Full Speed" modes. The "Full Speed" mode is intelligently restricted
-  based on the AC adapter type (requires DC power, not supported on
-  USB-C charging) as required by the hardware.
-- Hwmon: Provides monitoring for CPU, GPU, and System fan speeds,
-  as well as CPU temperature sensors.
-- Keyboard Backlight: Integrated with the LED class device for
-  brightness control and provides sysfs attributes for keyboard modes
-  (cyclic, fixed, etc.).
-- GPU Mode: Allows switching between Hybrid, Discrete, and UMA
-  graphics modes via sysfs.
-- Hotkeys: Handles WMI events for system hotkeys (Calculator, Browser,
-  App launch) using sparse keymaps and reports status changes for
-  Airplane mode, Touchpad, and CapsLock.
-- Fan Boost: Provides a sysfs interface to force fans to maximum speed.
+Power state control:
+- Get/Set PC6 and CC6 enable/disable control (0x29, 0x2A)
 
-The driver registers two WMI GUIDs:
-- B60BFB48-3E5B-49E4-A0E9-8CFFE1B3434B: Control methods
-- 46C93E13-EE9B-4262-8488-563BCA757FEF: Event notifications
+Power and thermal monitoring:
+- Get CCD power consumption reading (0x34)
+- Get Thermal delta (Tdelta) reading (0x35)
+- Get SVI3 VR controller temperature (0x36)
 
-Signed-off-by: Mingyou Chen <qby140326@gmail.com>
+DIMM sideband operations:
+- Get/Set DIMM sideband data(0x33, 0x39)
+
+Power management:
+- Get/Set Floor limit control (0x38)
+- Get/Set SDPS limit control (0x3A)
+
+System capabilities:
+- Get enabled HSMP commands (0x37)
+
+Bump driver version to 2.6.
+
+Co-developed-by: Muthusamy Ramalingam <muthusamy.ramalingam@amd.com>
+Signed-off-by: Muthusamy Ramalingam <muthusamy.ramalingam@amd.com>
+Signed-off-by: Suma Hegde <suma.hegde@amd.com>
 ---
-v13:
-  - make laptop_attrs const
-v12:
-  - add depends on INPUT and select INPUT_SPARSEKMAP
-  - code cleanup - remove unnecessary ret variables
-  - add the copyright text and pr_fmt macro
-  - use blocking notifier instead of atomic notifier
-  - pass the platform profile device here instead of the WMI device at bitland_mifs_wmi_suspend
-  - remove unnecessary null checks
-  - pass the platform_profile dev to platform_profile_notify
-  - fetch led brightness from WMI on init led
-  - remove the (const struct bitland_mifs_event *) cast in bitland_mifs_wmi_notify
-v11:
-  - fix checkpatch reported issues
-v10:
-  - After some researches, I acknowledge my device is from Bitland, not
-    Tongfang. Rename the driver to bitland-mifs-wmi
-v9:
-  - Fix style issues in .rst documentation
-  - Rewrite the wmi_call func with correct usage
-  - Use power_supply_is_system_supplied in kernel instead of
-    is_ac_online
-  - Remove the PLATFORM_PROFILE_LAST check in wmi_resume function
-  - Directly return in the hwmon_temp case in hwmon_read function
-  - return -EPROTO on invalid wmi return value in gpu_mode and
-    keyboard brightness
-  - Remove thge dev_err debug messages
-  - Rewrite the wmi_notify method with .notify_new callback in
-    linux-next
-  - Call hwmon_notify_event (with a notifier) on WMI fan speed events
+ arch/x86/include/uapi/asm/amd_hsmp.h | 142 +++++++++++++++++++++++----
+ drivers/platform/x86/amd/hsmp/hsmp.h |   2 +-
+ 2 files changed, 126 insertions(+), 18 deletions(-)
 
-v8:
-  - Fix coding style issues
-  - Use MILLIDEGREE_PER_DEGREE instead of MILLI to define the temperature unit more precisely.
-  - Align lines with the first occurrence of HWMON
-  - Remove the unnecessary empty line in error handling
-  - Reverse the logic of kb_mode_strings and drop the mode_str variable
-
-v7:
-  - Remove the unused includes (asm/)
-  - Align values with tab
-  - remove the previous test code which i forgot to remove
-  - return values directly with the "return" statement
-  - rmeove the wrong comment "Full-speed" since I've already use the value
-    "WMI_PP_FULL_SPEED" in the switch case
-  - remove the empty lines
-  - Change the two variables (val, ret) to reverse xmas-tree order.
-  - Add missing includes and sort them in the alphabetical order.
-  - use endianness types and conversion functions to parse temperature in
-    the wmi response
-
-v6:
-  - add base commit
-
-v5:
-  - add fallthrough on the PLATFORM_PROFILE_BALANCED_PERFORMANCE switch
-    case
-
-v4:
-  - check the DC power state before switching to performance/full-speed mode
-
-v3:
-  - Fix email address mismatch in Signed-off-by and From headers.
-  - implement the WMI event handler
-  - code style improvments
-  - condition on the performance platform profile switch
-  - driver documentation
-
-v2:
-  - Add PLATFORM_PROFILE_BALANCED_PERFORMANCE platform profile support
-
- .../wmi/devices/bitland-mifs-wmi.rst          | 207 +++++
- drivers/platform/x86/Kconfig                  |  18 +
- drivers/platform/x86/Makefile                 |   1 +
- drivers/platform/x86/bitland-mifs-wmi.c       | 851 ++++++++++++++++++
- 4 files changed, 1077 insertions(+)
- create mode 100644 Documentation/wmi/devices/bitland-mifs-wmi.rst
- create mode 100644 drivers/platform/x86/bitland-mifs-wmi.c
-
-diff --git a/Documentation/wmi/devices/bitland-mifs-wmi.rst b/Documentation/wmi/devices/bitland-mifs-wmi.rst
-new file mode 100644
-index 000000000000..e0f6b4474013
---- /dev/null
-+++ b/Documentation/wmi/devices/bitland-mifs-wmi.rst
-@@ -0,0 +1,207 @@
-+.. SPDX-License-Identifier: GPL-2.0-or-later
-+
-+========================================
-+Bitland MIFS driver (bitland-mifs-wmi)
-+========================================
-+
-+Introduction
-+============
-+
-+
-+EC WMI interface description
-+============================
-+
-+The EC WMI interface description can be decoded from the embedded binary MOF (bmof)
-+data using the `bmfdec <https://github.com/pali/bmfdec>`_ utility:
-+
-+::
-+
-+  class WMIEvent : __ExtrinsicEvent {
-+  };
-+
-+  [WMI, Dynamic, Provider("WmiProv"), Locale("MS\\0x40A"), Description("Root WMI HID_EVENT20"), guid("{46c93e13-ee9b-4262-8488-563bca757fef}")]
-+  class HID_EVENT20 : WmiEvent {
-+    [key, read] string InstanceName;
-+    [read] boolean Active;
-+    [WmiDataId(1), read, write, Description("Package Data")] uint8 EventDetail[8];
-+  };
-+
-+  [WMI, Dynamic, Provider("WmiProv"), Locale("MS\\0x40A"), Description("Root WMI HID_EVENT21"), guid("{fa78e245-2c0f-4ca1-91cf-15f34e474850}")]
-+  class HID_EVENT21 : WmiEvent {
-+    [key, read] string InstanceName;
-+    [read] boolean Active;
-+    [WmiDataId(1), read, write, Description("Package Data")] uint8 EventDetail[8];
-+  };
-+
-+  [WMI, Dynamic, Provider("WmiProv"), Locale("MS\\0x40A"), Description("Root WMI HID_EVENT22"), guid("{1dceaf0a-4d63-44bb-bd0c-0d6281bfddc5}")]
-+  class HID_EVENT22 : WmiEvent {
-+    [key, read] string InstanceName;
-+    [read] boolean Active;
-+    [WmiDataId(1), read, write, Description("Package Data")] uint8 EventDetail[8];
-+  };
-+
-+  [WMI, Dynamic, Provider("WmiProv"), Locale("MS\\0x40A"), Description("Root WMI HID_EVENT23"), guid("{3f9e3c26-b077-4f86-91f5-37ff64d8c7ed}")]
-+  class HID_EVENT23 : WmiEvent {
-+    [key, read] string InstanceName;
-+    [read] boolean Active;
-+    [WmiDataId(1), read, write, Description("Package Data")] uint8 EventDetail[8];
-+  };
-+
-+  [WMI, Dynamic, provider("WmiProv"), Locale("MS\\0x409"), Description("Class used to operate firmware interface"), guid("{b60bfb48-3e5b-49e4-a0e9-8cffe1b3434b}")]
-+  class MICommonInterface {
-+    [key, read] string InstanceName;
-+    [read] boolean Active;
-+
-+    [WmiMethodId(1), Implemented, read, write, Description("Method used to support system functions.")] void MiInterface([in, Description("WMI Interface")] uint8 InData[32], [out] uint8 OutData[30], [out] uint16 Reserved);
-+  };
-+
-+Reverse-Engineering the EC WMI interface
-+========================================
-+
-+The OEM software can be download from `this link <https://iknow.lenovo.com.cn/detail/429447>`_
-+
-+Nothing is obfuscated, In this case, `ILSpy <https://github.com/icsharpcode/ILSpy>`_ could be helpful.
-+
-+WMI Methods (MICommonInterface)
-+========================================
-+
-+The ``MICommonInterface`` class (GUID: ``{b60bfb48-3e5b-49e4-a0e9-8cffe1b3434b}``)
-+is the primary control interface. It uses a 32-byte buffer for both input
-+(``InData``) and output (``OutData``).
-+
-+Method Structure
-+----------------
-+
-+The data packet follows a standardized format:
-+
-++----------+------------------------------------------------------------------+
-+| Byte     | Description                                                      |
-++==========+==================================================================+
-+| 1        | Method Type: Get (0xFA / 250) or Set (0xFB / 251)                |
-++----------+------------------------------------------------------------------+
-+| 3        | Command ID (Method Name)                                         |
-++----------+------------------------------------------------------------------+
-+| 4 - 31   | Arguments (for Set) or Return Data (for Get)                     |
-++----------+------------------------------------------------------------------+
-+
-+
-+Command IDs
-+-----------
-+
-+The following Command IDs are used in the third byte of the buffer:
-+
-++----------+-----------------------+------------------------------------------+
-+| ID       | Name                  | Values / Description                     |
-++==========+=======================+==========================================+
-+| 8        | SystemPerMode         | 0: Balance, 1: Performance, 2: Quiet,    |
-+|          |                       | 3: Full-speed                            |
-++----------+-----------------------+------------------------------------------+
-+| 9        | GPUMode               | 0: Hybrid, 1: Discrete, 2: UMA           |
-++----------+-----------------------+------------------------------------------+
-+| 10       | KeyboardType          | 0: White, 1: Single RGB, 2: Zone RGB     |
-++----------+-----------------------+------------------------------------------+
-+| 11       | FnLock                | 0: Off, 1: On                            |
-++----------+-----------------------+------------------------------------------+
-+| 12       | TPLock                | 0: Unlock, 1: Lock (Touchpad)            |
-++----------+-----------------------+------------------------------------------+
-+| 13       | CPUGPUSYSFanSpeed     | Returns 12 bytes of fan data:            |
-+|          |                       | Bytes 4-5: CPU Fan RPM (Little Endian)   |
-+|          |                       | Bytes 6-7: GPU Fan RPM (Little Endian)   |
-+|          |                       | Bytes 10-11: SYS Fan RPM (Little Endian) |
-++----------+-----------------------+------------------------------------------+
-+| 16       | RGBKeyboardMode       | 0: Off, 1: Auto Cyclic, 2: Fixed,        |
-+|          |                       | 3: Custom                                |
-++----------+-----------------------+------------------------------------------+
-+| 17       | RGBKeyboardColor      | Bytes 4, 5, 6: Red, Green, Blue values   |
-++----------+-----------------------+------------------------------------------+
-+| 18       | RGBKeyboardBrightness | 0-10: Brightness Levels, 128: Auto       |
-++----------+-----------------------+------------------------------------------+
-+| 19       | SystemAcType          | 1: Type-C, 2: Circular Hole (DC)         |
-++----------+-----------------------+------------------------------------------+
-+| 20       | MaxFanSpeedSwitch     | Byte 4: Fan Type (0: CPU/GPU, 1: SYS)    |
-+|          |                       | Byte 5: State (0: Off, 1: On)            |
-++----------+-----------------------+------------------------------------------+
-+| 21       | MaxFanSpeed           | Sets manual fan speed duty cycle         |
-++----------+-----------------------+------------------------------------------+
-+| 22       | CPUThermometer        | Returns CPU Temperature                  |
-++----------+-----------------------+------------------------------------------+
-+
-+WMI Events (HID_EVENT20)
-+========================
-+
-+The driver listens for events from the ``HID_EVENT20`` class
-+(GUID: ``{46c93e13-ee9b-4262-8488-563bca757fef}``). These events are triggered
-+by hotkeys or system state changes (e.g., plugging in AC power).
-+
-+Event Structure
-+---------------
-+
-+The event data is provided in an 8-byte array (``EventDetail``):
-+
-++----------+------------------------------------------------------------------+
-+| Byte     | Description                                                      |
-++==========+==================================================================+
-+| 0        | Event Type (Always 0x01 for HotKey/Notification)                 |
-++----------+------------------------------------------------------------------+
-+| 1        | Event ID (Corresponds to the Command IDs above)                  |
-++----------+------------------------------------------------------------------+
-+| 2        | Value (The new state or value of the feature)                    |
-++----------+------------------------------------------------------------------+
-+
-+Common Event IDs:
-+-----------------
-+
-+Note: reserved event ids are not listed there
-+
-++----------+------------------------------------------------------------------+
-+| Event Id | Description                                                      |
-++==========+==================================================================+
-+| 4        | AirPlane mode change                                             |
-++----------+------------------------------------------------------------------+
-+| 5        | Keyboard brightness change                                       |
-++----------+------------------------------------------------------------------+
-+| 6        | touchpad state (enabled/disabled) change                         |
-++----------+------------------------------------------------------------------+
-+| 7        | FnLock state (enabled/disabled) change                           |
-++----------+------------------------------------------------------------------+
-+| 8        | Keyboard mode change                                             |
-++----------+------------------------------------------------------------------+
-+| 9        | CapsLock state change                                            |
-++----------+------------------------------------------------------------------+
-+| 13       | NumLock state change                                             |
-++----------+------------------------------------------------------------------+
-+| 14       | ScrollLock state change                                          |
-++----------+------------------------------------------------------------------+
-+| 15       | Performance plan change                                          |
-++----------+------------------------------------------------------------------+
-+| 25       | Display refresh rate change                                      |
-++----------+------------------------------------------------------------------+
-+| 33       | Super key lock state (enabled/disabled) change                   |
-++----------+------------------------------------------------------------------+
-+| 35       | Open control center key                                          |
-++----------+------------------------------------------------------------------+
-+
-+Implementation Details
-+======================
-+
-+Performance Modes
-+-----------------
-+Changing the performance mode via Command ID 0x08 (SystemPerMode) affects the power limits (PL1/PL2)
-+and fan curves managed by the Embedded Controller (EC). Note that the "Full-speed"
-+and "Performance" mode (1, 3) is typically only available when the system is connected to a DC power
-+source (not USB-C/PD).
-+
-+In the driver implementation, switch to performance/full-speed mode without DC power connected
-+will throw the EOPNOTSUPP error.
-+
-+Graphics Switching
-+------------------
-+The ``GPUMode`` (0x09) allows switching between Hybrid (Muxless) and Discrete
-+(Muxed) graphics. Changing this value usually requires a system reboot to
-+take effect in the BIOS/Firmware.
-+
-+Fan Control
-+-----------
-+The system supports both automatic EC control and manual overrides. Command ID
-+0x14 (``MaxFanSpeedSwitch``) is used to toggle manual control, while ID 0x15
-+sets the actual PWM duty cycle.
-diff --git a/drivers/platform/x86/Kconfig b/drivers/platform/x86/Kconfig
-index 4cb7d97a9fcc..2ffa4ecf65b0 100644
---- a/drivers/platform/x86/Kconfig
-+++ b/drivers/platform/x86/Kconfig
-@@ -113,6 +113,24 @@ config GIGABYTE_WMI
- 	  To compile this driver as a module, choose M here: the module will
- 	  be called gigabyte-wmi.
+diff --git a/arch/x86/include/uapi/asm/amd_hsmp.h b/arch/x86/include/uapi/asm/amd_hsmp.h
+index 92d8f256d096..603d62f8d4da 100644
+--- a/arch/x86/include/uapi/asm/amd_hsmp.h
++++ b/arch/x86/include/uapi/asm/amd_hsmp.h
+@@ -53,9 +53,19 @@ enum hsmp_message_ids {
+ 	HSMP_SET_XGMI_PSTATE_RANGE,	/* 26h Set xGMI P-state range */
+ 	HSMP_CPU_RAIL_ISO_FREQ_POLICY,	/* 27h Get/Set Cpu Iso frequency policy */
+ 	HSMP_DFC_ENABLE_CTRL,		/* 28h Enable/Disable DF C-state */
++	HSMP_PC6_ENABLE,		/* 29h Get/Set PC6 enable/disable status */
++	HSMP_CC6_ENABLE,		/* 2Ah Get/Set CC6 enable/disable status */
+ 	HSMP_GET_RAPL_UNITS = 0x30,	/* 30h Get scaling factor for energy */
+ 	HSMP_GET_RAPL_CORE_COUNTER,	/* 31h Get core energy counter value */
+ 	HSMP_GET_RAPL_PACKAGE_COUNTER,	/* 32h Get package energy counter value */
++	HSMP_DIMM_SB_RD,                /* 33h Get data from a specified device on the DIMM */
++	HSMP_READ_CCD_POWER,		/* 34h Get the average power consumed by CCD */
++	HSMP_READ_TDELTA,		/* 35h Get thermal solution behaviour */
++	HSMP_GET_SVI3_VR_CTRL_TEMP,	/* 36h Get temperature of SVI3 VR controller rails */
++	HSMP_GET_ENABLED_HSMP_CMDS,	/* 37h Get/Set supported HSMP commands */
++	HSMP_SET_GET_FLOOR_LIMIT,       /* 38h Get/Set supported Floor limit commands */
++	HSMP_DIMM_SB_WR,                /* 39h Set data to a specified device on the DIMM */
++	HSMP_SDPS_LIMIT,                /* 3Ah Get/Set SDPS limit */
+ 	HSMP_MSG_ID_MAX,
+ };
  
-+config BITLAND_MIFS_WMI
-+	tristate "Bitland MIFS (MiInterface) WMI driver"
-+	depends on ACPI_WMI
-+	depends on HWMON
-+	depends on INPUT
-+	depends on POWER_SUPPLY
-+	select ACPI_PLATFORM_PROFILE
-+	select INPUT_SPARSEKMAP
-+	help
-+	  This is a driver for Bitland MiInterface based laptops.
-+
-+	  It provides the access to the temperature, fan speed, gpu
-+	  control, keyboard backlight brightness and platform profile
-+	  via hwmon and sysfs.
-+
-+	  To compile this driver as a module, choose M here: the module will
-+          be called bitland-mifs-wmi.
-+
- config ACERHDF
- 	tristate "Acer Aspire One temperature and fan driver"
- 	depends on ACPI_EC && THERMAL
-diff --git a/drivers/platform/x86/Makefile b/drivers/platform/x86/Makefile
-index d25762f7114f..872ac3842391 100644
---- a/drivers/platform/x86/Makefile
-+++ b/drivers/platform/x86/Makefile
-@@ -14,6 +14,7 @@ obj-$(CONFIG_NVIDIA_WMI_EC_BACKLIGHT)	+= nvidia-wmi-ec-backlight.o
- obj-$(CONFIG_XIAOMI_WMI)		+= xiaomi-wmi.o
- obj-$(CONFIG_REDMI_WMI)			+= redmi-wmi.o
- obj-$(CONFIG_GIGABYTE_WMI)		+= gigabyte-wmi.o
-+obj-$(CONFIG_BITLAND_MIFS_WMI)		+= bitland-mifs-wmi.o
+@@ -170,16 +180,18 @@ static const struct hsmp_msg_desc hsmp_msg_desc_table[]
+ 	{0, 1, HSMP_GET},
  
- # Acer
- obj-$(CONFIG_ACERHDF)		+= acerhdf.o
-diff --git a/drivers/platform/x86/bitland-mifs-wmi.c b/drivers/platform/x86/bitland-mifs-wmi.c
-new file mode 100644
-index 000000000000..67691c2ffaf2
---- /dev/null
-+++ b/drivers/platform/x86/bitland-mifs-wmi.c
-@@ -0,0 +1,851 @@
-+// SPDX-License-Identifier: GPL-2.0-or-later
-+/*
-+ * Linux driver for Bitland notebooks.
-+ *
-+ * Copyright (C) 2026 2 Mingyou Chen <qby140326@gmail.com>
-+ */
-+
-+#define pr_fmt(fmt) KBUILD_MODNAME ": " fmt
-+
-+#include <linux/acpi.h>
-+#include <linux/bits.h>
-+#include <linux/cleanup.h>
-+#include <linux/dev_printk.h>
-+#include <linux/device.h>
-+#include <linux/device/devres.h>
-+#include <linux/err.h>
-+#include <linux/hwmon.h>
-+#include <linux/init.h>
-+#include <linux/input-event-codes.h>
-+#include <linux/input.h>
-+#include <linux/input/sparse-keymap.h>
-+#include <linux/kernel.h>
-+#include <linux/leds.h>
-+#include <linux/module.h>
-+#include <linux/notifier.h>
-+#include <linux/platform_profile.h>
-+#include <linux/pm.h>
-+#include <linux/power_supply.h>
-+#include <linux/stddef.h>
-+#include <linux/string.h>
-+#include <linux/sysfs.h>
-+#include <linux/unaligned.h>
-+#include <linux/units.h>
-+#include <linux/wmi.h>
-+
-+#define DRV_NAME		"bitland-mifs-wmi"
-+#define BITLAND_MIFS_GUID	"B60BFB48-3E5B-49E4-A0E9-8CFFE1B3434B"
-+#define BITLAND_EVENT_GUID	"46C93E13-EE9B-4262-8488-563BCA757FEF"
-+
-+enum bitland_mifs_operation {
-+	WMI_METHOD_GET	= 250,
-+	WMI_METHOD_SET	= 251,
-+};
-+
-+enum bitland_mifs_function {
-+	WMI_FN_SYSTEM_PER_MODE		= 8,
-+	WMI_FN_GPU_MODE			= 9,
-+	WMI_FN_KBD_TYPE			= 10,
-+	WMI_FN_FN_LOCK			= 11,
-+	WMI_FN_TP_LOCK			= 12,
-+	WMI_FN_FAN_SPEEDS		= 13,
-+	WMI_FN_RGB_KB_MODE		= 16,
-+	WMI_FN_RGB_KB_COLOR		= 17,
-+	WMI_FN_RGB_KB_BRIGHTNESS	= 18,
-+	WMI_FN_SYSTEM_AC_TYPE		= 19,
-+	WMI_FN_MAX_FAN_SWITCH		= 20,
-+	WMI_FN_MAX_FAN_SPEED		= 21,
-+	WMI_FN_CPU_THERMOMETER		= 22,
-+	WMI_FN_CPU_POWER		= 23,
-+};
-+
-+enum bitland_system_ac_mode {
-+	WMI_SYSTEM_AC_TYPEC		= 1,
-+	/* Unknown type, this is unused in the original driver */
-+	WMI_SYSTEM_AC_CIRCULARHOLE	= 2,
-+};
-+
-+enum bitland_mifs_power_profile {
-+	WMI_PP_BALANCED		= 0,
-+	WMI_PP_PERFORMANCE	= 1,
-+	WMI_PP_QUIET		= 2,
-+	WMI_PP_FULL_SPEED	= 3,
-+};
-+
-+enum bitland_mifs_event_id {
-+	WMI_EVENT_RESERVED_1		= 1,
-+	WMI_EVENT_RESERVED_2		= 2,
-+	WMI_EVENT_RESERVED_3		= 3,
-+	WMI_EVENT_AIRPLANE_MODE		= 4,
-+	WMI_EVENT_KBD_BRIGHTNESS	= 5,
-+	WMI_EVENT_TOUCHPAD_STATE	= 6,
-+	WMI_EVENT_FNLOCK_STATE		= 7,
-+	WMI_EVENT_KBD_MODE		= 8,
-+	WMI_EVENT_CAPSLOCK_STATE	= 9,
-+	WMI_EVENT_CALCULATOR_START	= 11,
-+	WMI_EVENT_BROWSER_START		= 12,
-+	WMI_EVENT_NUMLOCK_STATE		= 13,
-+	WMI_EVENT_SCROLLLOCK_STATE	= 14,
-+	WMI_EVENT_PERFORMANCE_PLAN	= 15,
-+	WMI_EVENT_FN_J			= 16,
-+	WMI_EVENT_FN_F			= 17,
-+	WMI_EVENT_FN_0			= 18,
-+	WMI_EVENT_FN_1			= 19,
-+	WMI_EVENT_FN_2			= 20,
-+	WMI_EVENT_FN_3			= 21,
-+	WMI_EVENT_FN_4			= 22,
-+	WMI_EVENT_FN_5			= 24,
-+	WMI_EVENT_REFRESH_RATE		= 25,
-+	WMI_EVENT_CPU_FAN_SPEED		= 26,
-+	WMI_EVENT_GPU_FAN_SPEED		= 32,
-+	WMI_EVENT_WIN_KEY_LOCK		= 33,
-+	WMI_EVENT_RESERVED_23		= 34,
-+	WMI_EVENT_OPEN_APP		= 35,
-+};
-+
-+enum bitland_mifs_event_type {
-+	WMI_EVENT_TYPE_HOTKEY	= 1,
-+};
-+
-+enum bitland_wmi_device_type {
-+	BITLAND_WMI_CONTROL	= 0,
-+	BITLAND_WMI_EVENT	= 1,
-+};
-+
-+struct bitland_mifs_input {
-+	u8 reserved1;
-+	u8 operation;
-+	u8 reserved2;
-+	u8 function;
-+	u8 payload[28];
-+} __packed;
-+
-+struct bitland_mifs_output {
-+	u8 reserved1;
-+	u8 operation;
-+	u8 reserved2;
-+	u8 function;
-+	u8 data[28];
-+} __packed;
-+
-+struct bitland_mifs_event {
-+	u8 event_type;
-+	u8 event_id;
-+	u8 value_low;	/* For most events, this is the value */
-+	u8 value_high;	/* For fan speed events, combined with value_low */
-+	u8 reserved[4];
-+} __packed;
-+
-+static BLOCKING_NOTIFIER_HEAD(bitland_notifier_list);
-+
-+enum bitland_notifier_actions {
-+	BITLAND_NOTIFY_KBD_BRIGHTNESS,
-+	BITLAND_NOTIFY_PLATFORM_PROFILE,
-+	BITLAND_NOTIFY_HWMON,
-+};
-+
-+struct bitland_fan_notify_data {
-+	int channel; /* 0 = CPU, 1 = GPU */
-+	u16 speed;
-+};
-+
-+struct bitland_mifs_wmi_data {
-+	struct wmi_device *wdev;
-+	struct mutex lock; /* Protects WMI calls */
-+	struct led_classdev kbd_led;
-+	struct notifier_block notifier;
-+	struct input_dev *input_dev;
-+	struct device *hwmon_dev;
-+	struct device *pp_dev;
-+	enum platform_profile_option saved_profile;
-+};
-+
-+static int bitland_mifs_wmi_call(struct bitland_mifs_wmi_data *data,
-+				 const struct bitland_mifs_input *input,
-+				 struct bitland_mifs_output *output)
-+{
-+	struct wmi_buffer in_buf = { .length = sizeof(*input), .data = (void *)input };
-+	struct wmi_buffer out_buf = { 0 };
-+	int ret;
-+
-+	guard(mutex)(&data->lock);
-+
-+	ret = wmidev_invoke_method(data->wdev, 0, 1, &in_buf, output ? &out_buf : NULL);
-+	if (ret)
-+		return ret;
-+
-+	if (output) {
-+		if (out_buf.length < sizeof(*output)) {
-+			kfree(out_buf.data);
-+			return -EIO;
-+		}
-+
-+		memcpy(output, out_buf.data, sizeof(*output));
-+
-+		kfree(out_buf.data);
-+	}
-+
-+	return 0;
-+}
-+
-+static int laptop_profile_get(struct device *dev,
-+			      enum platform_profile_option *profile)
-+{
-+	struct bitland_mifs_wmi_data *data = dev_get_drvdata(dev);
-+	struct bitland_mifs_input input = {
-+		.reserved1 = 0,
-+		.operation = WMI_METHOD_GET,
-+		.reserved2 = 0,
-+		.function = WMI_FN_SYSTEM_PER_MODE,
-+	};
-+	struct bitland_mifs_output result;
-+	int ret;
-+
-+	ret = bitland_mifs_wmi_call(data, &input, &result);
-+	if (ret)
-+		return ret;
-+
-+	switch (result.data[0]) {
-+	case WMI_PP_BALANCED:
-+		*profile = PLATFORM_PROFILE_BALANCED;
-+		break;
-+	case WMI_PP_PERFORMANCE:
-+		*profile = PLATFORM_PROFILE_BALANCED_PERFORMANCE;
-+		break;
-+	case WMI_PP_QUIET:
-+		*profile = PLATFORM_PROFILE_LOW_POWER;
-+		break;
-+	case WMI_PP_FULL_SPEED:
-+		*profile = PLATFORM_PROFILE_PERFORMANCE;
-+		break;
-+	default:
-+		return -EINVAL;
-+	}
-+	return 0;
-+}
-+
-+static int bitland_check_performance_capability(struct bitland_mifs_wmi_data *data)
-+{
-+	struct bitland_mifs_input input = {
-+		.operation = WMI_METHOD_GET,
-+		.function = WMI_FN_SYSTEM_AC_TYPE,
-+	};
-+	struct bitland_mifs_output output;
-+	int ret;
-+
-+	/* Full-speed/performance mode requires DC power (not USB-C) */
-+	if (!power_supply_is_system_supplied())
-+		return -EOPNOTSUPP;
-+
-+	ret = bitland_mifs_wmi_call(data, &input, &output);
-+	if (ret)
-+		return ret;
-+
-+	if (output.data[0] != WMI_SYSTEM_AC_CIRCULARHOLE)
-+		return -EOPNOTSUPP;
-+
-+	return 0;
-+}
-+
-+static int laptop_profile_set(struct device *dev,
-+			      enum platform_profile_option profile)
-+{
-+	struct bitland_mifs_wmi_data *data = dev_get_drvdata(dev);
-+	struct bitland_mifs_input input = {
-+		.reserved1 = 0,
-+		.operation = WMI_METHOD_SET,
-+		.reserved2 = 0,
-+		.function = WMI_FN_SYSTEM_PER_MODE,
-+	};
-+	int ret;
-+	u8 val;
-+
-+	switch (profile) {
-+	case PLATFORM_PROFILE_LOW_POWER:
-+		val = WMI_PP_QUIET;
-+		break;
-+	case PLATFORM_PROFILE_BALANCED:
-+		val = WMI_PP_BALANCED;
-+		break;
-+	case PLATFORM_PROFILE_BALANCED_PERFORMANCE:
-+		ret = bitland_check_performance_capability(data);
-+		if (ret)
-+			return ret;
-+		val = WMI_PP_PERFORMANCE;
-+		break;
-+	case PLATFORM_PROFILE_PERFORMANCE:
-+		ret = bitland_check_performance_capability(data);
-+		if (ret)
-+			return ret;
-+		val = WMI_PP_FULL_SPEED;
-+		break;
-+	default:
-+		return -EOPNOTSUPP;
-+	}
-+
-+	input.payload[0] = val;
-+
-+	return bitland_mifs_wmi_call(data, &input, NULL);
-+}
-+
-+static int platform_profile_probe(void *drvdata, unsigned long *choices)
-+{
-+	set_bit(PLATFORM_PROFILE_LOW_POWER, choices);
-+	set_bit(PLATFORM_PROFILE_BALANCED, choices);
-+	set_bit(PLATFORM_PROFILE_BALANCED_PERFORMANCE, choices);
-+	set_bit(PLATFORM_PROFILE_PERFORMANCE, choices);
-+
-+	return 0;
-+}
-+
-+static int bitland_mifs_wmi_suspend(struct device *dev)
-+{
-+	struct bitland_mifs_wmi_data *data = dev_get_drvdata(dev);
-+	enum platform_profile_option profile;
-+	int ret;
-+
-+	ret = laptop_profile_get(data->pp_dev, &profile);
-+	if (ret == 0)
-+		data->saved_profile = profile;
-+
-+	return ret;
-+}
-+
-+static int bitland_mifs_wmi_resume(struct device *dev)
-+{
-+	struct bitland_mifs_wmi_data *data = dev_get_drvdata(dev);
-+
-+	dev_dbg(dev, "Resuming, restoring profile %d\n",
-+		data->saved_profile);
-+	return laptop_profile_set(dev, data->saved_profile);
-+}
-+
-+static DEFINE_SIMPLE_DEV_PM_OPS(bitland_mifs_wmi_pm_ops,
-+				bitland_mifs_wmi_suspend,
-+				bitland_mifs_wmi_resume);
-+
-+static const struct platform_profile_ops laptop_profile_ops = {
-+	.probe = platform_profile_probe,
-+	.profile_get = laptop_profile_get,
-+	.profile_set = laptop_profile_set,
-+};
-+
-+static const char *const fan_labels[] = {
-+	"CPU", /* 0 */
-+	"GPU", /* 1 */
-+	"SYS", /* 2 */
-+};
-+
-+static int laptop_hwmon_read(struct device *dev, enum hwmon_sensor_types type,
-+			     u32 attr, int channel, long *val)
-+{
-+	struct bitland_mifs_wmi_data *data = dev_get_drvdata(dev);
-+	struct bitland_mifs_input input = {
-+		.reserved1 = 0,
-+		.operation = WMI_METHOD_GET,
-+		.reserved2 = 0,
-+	};
-+	struct bitland_mifs_output res;
-+	int ret;
-+
-+	switch (type) {
-+	case hwmon_temp:
-+		input.function = WMI_FN_CPU_THERMOMETER;
-+		ret = bitland_mifs_wmi_call(data, &input, &res);
-+		if (!ret)
-+			*val = res.data[0] * MILLIDEGREE_PER_DEGREE;
-+		return ret;
-+	case hwmon_fan:
-+		input.function = WMI_FN_FAN_SPEEDS;
-+		ret = bitland_mifs_wmi_call(data, &input, &res);
-+		if (ret)
-+			return ret;
-+
-+		switch (channel) {
-+		case 0: /* CPU */
-+			*val = get_unaligned_le16(&res.data[0]);
-+			return 0;
-+		case 1: /* GPU */
-+			*val = get_unaligned_le16(&res.data[2]);
-+			return 0;
-+		case 2: /* SYS */
-+			*val = get_unaligned_le16(&res.data[6]);
-+			return 0;
-+		default:
-+			return -EINVAL;
-+		}
-+	default:
-+		return -EINVAL;
-+	}
-+}
-+
-+static int laptop_hwmon_read_string(struct device *dev,
-+				    enum hwmon_sensor_types type, u32 attr,
-+				    int channel, const char **str)
-+{
-+	if (type == hwmon_fan && attr == hwmon_fan_label) {
-+		if (channel >= 0 && channel < ARRAY_SIZE(fan_labels)) {
-+			*str = fan_labels[channel];
-+			return 0;
-+		}
-+	}
-+	return -EINVAL;
-+}
-+
-+static const struct hwmon_channel_info *laptop_hwmon_info[] = {
-+	HWMON_CHANNEL_INFO(temp, HWMON_T_INPUT),
-+	HWMON_CHANNEL_INFO(fan, HWMON_F_INPUT | HWMON_F_LABEL,
-+			   HWMON_F_INPUT | HWMON_F_LABEL,
-+			   HWMON_F_INPUT | HWMON_F_LABEL),
-+	NULL
-+};
-+
-+static const struct hwmon_ops laptop_hwmon_ops = {
-+	.visible = 0444,
-+	.read = laptop_hwmon_read,
-+	.read_string = laptop_hwmon_read_string,
-+};
-+
-+static const struct hwmon_chip_info laptop_chip_info = {
-+	.ops = &laptop_hwmon_ops,
-+	.info = laptop_hwmon_info,
-+};
-+
-+static int laptop_kbd_led_set(struct led_classdev *led_cdev,
-+			      enum led_brightness value)
-+{
-+	struct bitland_mifs_wmi_data *data =
-+		container_of(led_cdev, struct bitland_mifs_wmi_data, kbd_led);
-+	struct bitland_mifs_input input = {
-+		.reserved1 = 0,
-+		.operation = WMI_METHOD_SET,
-+		.reserved2 = 0,
-+		.function = WMI_FN_RGB_KB_BRIGHTNESS,
-+	};
-+
-+	input.payload[0] = (u8)value;
-+
-+	return bitland_mifs_wmi_call(data, &input, NULL);
-+}
-+
-+static enum led_brightness laptop_kbd_led_get(struct led_classdev *led_cdev)
-+{
-+	struct bitland_mifs_wmi_data *data =
-+		container_of(led_cdev, struct bitland_mifs_wmi_data, kbd_led);
-+	struct bitland_mifs_input input = {
-+		.reserved1 = 0,
-+		.operation = WMI_METHOD_GET,
-+		.reserved2 = 0,
-+		.function = WMI_FN_RGB_KB_BRIGHTNESS,
-+	};
-+	struct bitland_mifs_output res;
-+	int ret;
-+
-+	ret = bitland_mifs_wmi_call(data, &input, &res);
-+	if (ret)
-+		return ret;
-+
-+	return res.data[0];
-+}
-+
-+static const char *const gpu_mode_strings[] = {
-+	"hybrid",
-+	"discrete",
-+	"uma",
-+};
-+
-+/* GPU Mode: 0:Hybrid, 1:Discrete, 2:UMA */
-+static ssize_t gpu_mode_show(struct device *dev, struct device_attribute *attr,
-+			     char *buf)
-+{
-+	struct bitland_mifs_wmi_data *data = dev_get_drvdata(dev);
-+	struct bitland_mifs_input input = {
-+		.reserved1 = 0,
-+		.operation = WMI_METHOD_GET,
-+		.reserved2 = 0,
-+		.function = WMI_FN_GPU_MODE,
-+	};
-+	struct bitland_mifs_output res;
-+	u8 mode_val;
-+	int ret;
-+
-+	ret = bitland_mifs_wmi_call(data, &input, &res);
-+
-+	if (ret)
-+		return ret;
-+
-+	mode_val = res.data[0];
-+
-+	if (mode_val >= ARRAY_SIZE(gpu_mode_strings))
-+		return -EPROTO;
-+
-+	return sysfs_emit(buf, "%s\n", gpu_mode_strings[mode_val]);
-+}
-+
-+static ssize_t gpu_mode_store(struct device *dev, struct device_attribute *attr,
-+			      const char *buf, size_t count)
-+{
-+	struct bitland_mifs_wmi_data *data = dev_get_drvdata(dev);
-+	struct bitland_mifs_input input = {
-+		.reserved1 = 0,
-+		.operation = WMI_METHOD_SET,
-+		.reserved2 = 0,
-+		.function = WMI_FN_GPU_MODE,
-+	};
-+	int val;
-+	int ret;
-+
-+	val = sysfs_match_string(gpu_mode_strings, buf);
-+	if (val < 0)
-+		return -EINVAL;
-+
-+	input.payload[0] = (u8)val;
-+
-+	ret = bitland_mifs_wmi_call(data, &input, NULL);
-+	if (ret)
-+		return ret;
-+
-+	return count;
-+}
-+
-+static const char *const kb_mode_strings[] = {
-+	"off",		/* 0 */
-+	"cyclic",	/* 1 */
-+	"fixed",	/* 2 */
-+	"custom",	/* 3 */
-+};
-+
-+static ssize_t kb_mode_show(struct device *dev, struct device_attribute *attr,
-+			    char *buf)
-+{
-+	struct bitland_mifs_wmi_data *data = dev_get_drvdata(dev);
-+	struct bitland_mifs_input input = {
-+		.reserved1 = 0,
-+		.operation = WMI_METHOD_GET,
-+		.reserved2 = 0,
-+		.function = WMI_FN_RGB_KB_MODE,
-+	};
-+	struct bitland_mifs_output res;
-+	int ret;
-+	u8 mode_val;
-+
-+	ret = bitland_mifs_wmi_call(data, &input, &res);
-+	if (ret)
-+		return ret;
-+
-+	mode_val = res.data[0];
-+
-+	if (mode_val >= ARRAY_SIZE(kb_mode_strings))
-+		return -EPROTO;
-+
-+	return sysfs_emit(buf, "%s\n", kb_mode_strings[mode_val]);
-+}
-+
-+static ssize_t kb_mode_store(struct device *dev, struct device_attribute *attr,
-+			     const char *buf, size_t count)
-+{
-+	struct bitland_mifs_wmi_data *data = dev_get_drvdata(dev);
-+	struct bitland_mifs_input input = {
-+		.reserved1 = 0,
-+		.operation = WMI_METHOD_SET,
-+		.reserved2 = 0,
-+		.function = WMI_FN_RGB_KB_MODE,
-+	};
-+	// the wmi value (0, 1, 2 or 3)
-+	int val;
-+	int ret;
-+
-+	val = sysfs_match_string(kb_mode_strings, buf);
-+	if (val < 0)
-+		return -EINVAL;
-+
-+	input.payload[0] = (u8)val;
-+
-+	ret = bitland_mifs_wmi_call(data, &input, NULL);
-+	if (ret)
-+		return ret;
-+
-+	return count;
-+}
-+
-+/* Fan Boost: 0:Normal, 1:Max Speed */
-+static ssize_t fan_boost_store(struct device *dev,
-+			       struct device_attribute *attr, const char *buf,
-+			       size_t count)
-+{
-+	struct bitland_mifs_wmi_data *data = dev_get_drvdata(dev);
-+	struct bitland_mifs_input input = {
-+		.reserved1 = 0,
-+		.operation = WMI_METHOD_SET,
-+		.reserved2 = 0,
-+		.function = WMI_FN_MAX_FAN_SWITCH,
-+	};
-+	bool val;
-+	int ret;
-+
-+	if (kstrtobool(buf, &val))
-+		return -EINVAL;
-+
-+	input.payload[0] = 0;	/* CPU/GPU Fan */
-+	input.payload[1] = val;
-+
-+	ret = bitland_mifs_wmi_call(data, &input, NULL);
-+	if (ret)
-+		return ret;
-+
-+	return count;
-+}
-+
-+static const DEVICE_ATTR_RW(gpu_mode);
-+static const DEVICE_ATTR_RW(kb_mode);
-+static const DEVICE_ATTR_WO(fan_boost);
-+
-+static const struct attribute *const laptop_attrs[] = {
-+	&dev_attr_gpu_mode.attr,
-+	&dev_attr_kb_mode.attr,
-+	&dev_attr_fan_boost.attr,
-+	NULL,
-+};
-+ATTRIBUTE_GROUPS(laptop);
-+
-+static const struct key_entry bitland_mifs_wmi_keymap[] = {
-+	{ KE_KEY, WMI_EVENT_OPEN_APP, { KEY_PROG1 } },
-+	{ KE_KEY, WMI_EVENT_CALCULATOR_START, { KEY_CALC } },
-+	{ KE_KEY, WMI_EVENT_BROWSER_START, { KEY_WWW } },
-+	{ KE_IGNORE, WMI_EVENT_FN_J, { KEY_RESERVED } },
-+	{ KE_IGNORE, WMI_EVENT_FN_F, { KEY_RESERVED } },
-+	{ KE_IGNORE, WMI_EVENT_FN_0, { KEY_RESERVED } },
-+	{ KE_IGNORE, WMI_EVENT_FN_1, { KEY_RESERVED } },
-+	{ KE_IGNORE, WMI_EVENT_FN_2, { KEY_RESERVED } },
-+	{ KE_IGNORE, WMI_EVENT_FN_3, { KEY_RESERVED } },
-+	{ KE_IGNORE, WMI_EVENT_FN_4, { KEY_RESERVED } },
-+	{ KE_IGNORE, WMI_EVENT_FN_5, { KEY_RESERVED } },
-+	{ KE_END, 0 }
-+};
-+
-+static void bitland_notifier_unregister(void *data)
-+{
-+	struct notifier_block *nb = data;
-+
-+	blocking_notifier_chain_unregister(&bitland_notifier_list, nb);
-+}
-+
-+static int bitland_notifier_callback(struct notifier_block *nb,
-+				     unsigned long action, void *data)
-+{
-+	struct bitland_mifs_wmi_data *data_ctx =
-+	container_of(nb, struct bitland_mifs_wmi_data, notifier);
-+	struct bitland_fan_notify_data *fan_info;
-+	u8 *brightness;
-+
-+	switch (action) {
-+	case BITLAND_NOTIFY_KBD_BRIGHTNESS:
-+		brightness = data;
-+		led_classdev_notify_brightness_hw_changed(&data_ctx->kbd_led,
-+							  *brightness);
-+		break;
-+	case BITLAND_NOTIFY_PLATFORM_PROFILE:
-+		platform_profile_notify(data_ctx->pp_dev);
-+		break;
-+	case BITLAND_NOTIFY_HWMON:
-+		fan_info = data;
-+
-+		hwmon_notify_event(data_ctx->hwmon_dev,
-+				   hwmon_fan,
-+				   hwmon_fan_input,
-+				   fan_info->channel);
-+		break;
-+	}
-+
-+	return NOTIFY_OK;
-+}
-+
-+static int bitland_mifs_wmi_probe(struct wmi_device *wdev, const void *context)
-+{
-+	struct bitland_mifs_wmi_data *drv_data;
-+	enum bitland_wmi_device_type dev_type =
-+		(enum bitland_wmi_device_type)(unsigned long)context;
-+	struct led_init_data init_data = {
-+		.devicename = DRV_NAME,
-+		.default_label = ":" LED_FUNCTION_KBD_BACKLIGHT,
-+		.devname_mandatory = true,
-+	};
-+	int ret;
-+
-+	drv_data = devm_kzalloc(&wdev->dev, sizeof(*drv_data), GFP_KERNEL);
-+	if (!drv_data)
-+		return -ENOMEM;
-+
-+	drv_data->wdev = wdev;
-+
-+	ret = devm_mutex_init(&wdev->dev, &drv_data->lock);
-+	if (ret)
-+		return ret;
-+
-+	dev_set_drvdata(&wdev->dev, drv_data);
-+
-+	if (dev_type == BITLAND_WMI_EVENT) {
-+		/* Register input device for hotkeys */
-+		drv_data->input_dev = devm_input_allocate_device(&wdev->dev);
-+		if (!drv_data->input_dev)
-+			return -ENOMEM;
-+
-+		drv_data->input_dev->name = "Bitland MIFS WMI hotkeys";
-+		drv_data->input_dev->phys = "wmi/input0";
-+		drv_data->input_dev->id.bustype = BUS_HOST;
-+		drv_data->input_dev->dev.parent = &wdev->dev;
-+
-+		ret = sparse_keymap_setup(drv_data->input_dev,
-+					  bitland_mifs_wmi_keymap, NULL);
-+		if (ret)
-+			return ret;
-+
-+		return input_register_device(drv_data->input_dev);
-+	}
-+
-+	/* Register platform profile */
-+	drv_data->pp_dev = devm_platform_profile_register(&wdev->dev, DRV_NAME, drv_data,
-+							  &laptop_profile_ops);
-+	if (IS_ERR(drv_data->pp_dev))
-+		return PTR_ERR(drv_data->pp_dev);
-+
-+	/* Register hwmon */
-+	drv_data->hwmon_dev = devm_hwmon_device_register_with_info(&wdev->dev,
-+								   "bitland_mifs",
-+								   drv_data,
-+								   &laptop_chip_info,
-+								   NULL);
-+	if (IS_ERR(drv_data->hwmon_dev))
-+		return PTR_ERR(drv_data->hwmon_dev);
-+
-+	/* Register keyboard LED */
-+	drv_data->kbd_led.max_brightness = 3;
-+	drv_data->kbd_led.brightness_set_blocking = laptop_kbd_led_set;
-+	drv_data->kbd_led.brightness_get = laptop_kbd_led_get;
-+	drv_data->kbd_led.brightness = laptop_kbd_led_get(&drv_data->kbd_led);
-+	drv_data->kbd_led.flags = LED_CORE_SUSPENDRESUME |
-+				  LED_BRIGHT_HW_CHANGED |
-+				  LED_REJECT_NAME_CONFLICT;
-+	ret = devm_led_classdev_register_ext(&wdev->dev, &drv_data->kbd_led, &init_data);
-+	if (ret)
-+		return ret;
-+
-+	drv_data->notifier.notifier_call = bitland_notifier_callback;
-+	ret = blocking_notifier_chain_register(&bitland_notifier_list, &drv_data->notifier);
-+	if (ret)
-+		return ret;
-+
-+	return devm_add_action_or_reset(&wdev->dev,
-+				       bitland_notifier_unregister,
-+				       &drv_data->notifier);
-+}
-+
-+static void bitland_mifs_wmi_notify(struct wmi_device *wdev,
-+				    const struct wmi_buffer *buffer)
-+{
-+	struct bitland_mifs_wmi_data *data = dev_get_drvdata(&wdev->dev);
-+	const struct bitland_mifs_event *event;
-+	struct bitland_fan_notify_data fan_data;
-+	u8 brightness;
-+
-+	if (buffer->length < sizeof(*event))
-+		return;
-+
-+	event = buffer->data;
-+
-+	/* Validate event type */
-+	if (event->event_type != WMI_EVENT_TYPE_HOTKEY)
-+		return;
-+
-+	dev_dbg(&wdev->dev,
-+		"WMI event: id=0x%02x value_low=0x%02x value_high=0x%02x\n",
-+		event->event_id, event->value_low, event->value_high);
-+
-+	switch (event->event_id) {
-+	case WMI_EVENT_KBD_BRIGHTNESS:
-+		brightness = event->value_low;
-+		blocking_notifier_call_chain(&bitland_notifier_list,
-+					     BITLAND_NOTIFY_KBD_BRIGHTNESS,
-+					     &brightness);
-+		break;
-+
-+	case WMI_EVENT_PERFORMANCE_PLAN:
-+		blocking_notifier_call_chain(&bitland_notifier_list,
-+					     BITLAND_NOTIFY_PLATFORM_PROFILE,
-+					     NULL);
-+		break;
-+
-+	case WMI_EVENT_OPEN_APP:
-+	case WMI_EVENT_CALCULATOR_START:
-+	case WMI_EVENT_BROWSER_START: {
-+		guard(mutex)(&data->lock);
-+		if (!sparse_keymap_report_event(data->input_dev,
-+						event->event_id, 1, true))
-+			dev_warn(&wdev->dev, "Unknown key pressed: 0x%02x\n",
-+				 event->event_id);
-+		break;
-+	}
+ 	/*
+-	 * HSMP_SET_XGMI_LINK_WIDTH, num_args = 1, response_sz = 0
+-	 * input: args[0] = min link width[15:8] + max link width[7:0]
++	 * HSMP_SET_XGMI_LINK_WIDTH, num_args = 1, response_sz = 0/1
++	 * input: args[0] = set/get XGMI Link width[31] + min link width[15:8] + max link width[7:0]
++	 * output: args[0] = current min link width[15:8] + current max link width[7:0]
+ 	 */
+-	{1, 0, HSMP_SET},
++	{1, 1, HSMP_SET_GET},
+ 
+ 	/*
+-	 * HSMP_SET_DF_PSTATE, num_args = 1, response_sz = 0
+-	 * input: args[0] = df pstate[7:0]
++	 * HSMP_SET_DF_PSTATE, num_args = 1, response_sz = 0/1
++	 * input: args[0] = set/get df pstate[31] + df pstate[7:0]
++	 * output: args[0] = APB enabled/disabled[8] + current df pstate[7:0]
+ 	 */
+-	{1, 0, HSMP_SET},
++	{1, 1, HSMP_SET_GET},
+ 
+ 	/* HSMP_SET_AUTO_DF_PSTATE, num_args = 0, response_sz = 0 */
+ 	{0, 0, HSMP_SET},
+@@ -305,16 +317,18 @@ static const struct hsmp_msg_desc hsmp_msg_desc_table[]
+ 	{1, 1, HSMP_SET},
+ 
+ 	/*
+-	 * HSMP_SET_POWER_MODE, num_args = 1, response_sz = 0
+-	 * input: args[0] = power efficiency mode[2:0]
++	 * HSMP_SET_POWER_MODE, num_args = 1, response_sz = 0/1
++	 * input: args[0] = set/get power mode[31] + power efficiency mode[2:0]
++	 * output: args[0] = current power efficiency mode[2:0]
+ 	 */
+ 	{1, 1, HSMP_SET_GET},
+ 
+ 	/*
+-	 * HSMP_SET_PSTATE_MAX_MIN, num_args = 1, response_sz = 0
+-	 * input: args[0] = min df pstate[15:8] + max df pstate[7:0]
++	 * HSMP_SET_PSTATE_MAX_MIN, num_args = 1, response_sz = 0/1
++	 * input: args[0] = set/get DF P-state range[31] + min df pstate[15:8] + max df pstate[7:0]
++	 * output: args[0] = min df pstate[15:8] + max df pstate[7:0]
+ 	 */
+-	{1, 0, HSMP_SET},
++	{1, 1, HSMP_SET_GET},
+ 
+ 	/*
+ 	 * HSMP_GET_METRIC_TABLE_VER, num_args = 0, response_sz = 1
+@@ -335,10 +349,12 @@ static const struct hsmp_msg_desc hsmp_msg_desc_table[]
+ 	{0, 2, HSMP_GET},
+ 
+ 	/*
+-	 * HSMP_SET_XGMI_PSTATE_RANGE, num_args = 1, response_sz = 0
+-	 * input: args[0] = min xGMI p-state[15:8] + max xGMI p-state[7:0]
++	 * HSMP_SET_XGMI_PSTATE_RANGE, num_args = 1, response_sz = 0/1
++	 * input: args[0] = set/get XGMI pstate range[31] + min xGMI p-state[15:8] +
++	 *                  max xGMI p-state[7:0]
++	 * output: args[0] = min xGMI p-state[15:8] + max xGMI p-state[7:0]
+ 	 */
+-	{1, 0, HSMP_SET},
++	{1, 1, HSMP_SET_GET},
+ 
+ 	/*
+ 	 * HSMP_CPU_RAIL_ISO_FREQ_POLICY, num_args = 1, response_sz = 1
+@@ -355,9 +371,21 @@ static const struct hsmp_msg_desc hsmp_msg_desc_table[]
+ 	 */
+ 	{1, 1, HSMP_SET_GET},
+ 
+-	/* RESERVED(0x29-0x2f) */
+-	{0, 0, HSMP_RSVD},
+-	{0, 0, HSMP_RSVD},
++	/*
++	 * HSMP_PC6_ENABLE, num_args = 1, response_sz = 0/1
++	 * input: args[0] = set/get PC6 control[31] + disable/enable PC6[0]
++	 * output: args[0] = current PC6 control status[0]
++	 */
++	{1, 1, HSMP_SET_GET},
 +
 +	/*
-+	 * The device has 3 fans (CPU, GPU, SYS),
-+	 * but there are only the CPU and GPU fan has events
++	 * HSMP_CC6_ENABLE, num_args = 1, response_sz = 0/1
++	 * input: args[0] = set/get CC6 control[31] + disable/enable CC6[0]
++	 * output: args[0] = current CC6 control status[0]
 +	 */
-+	case WMI_EVENT_CPU_FAN_SPEED:
-+	case WMI_EVENT_GPU_FAN_SPEED:
-+		if (event->event_id == WMI_EVENT_CPU_FAN_SPEED)
-+			fan_data.channel = 0;
-+		else
-+			fan_data.channel = 1;
++	{1, 1, HSMP_SET_GET},
 +
-+		/* Fan speed is 16-bit value (value_low is LSB, value_high is MSB) */
-+		fan_data.speed = (event->value_high << 8) | event->value_low;
-+		blocking_notifier_call_chain(&bitland_notifier_list,
-+					     BITLAND_NOTIFY_HWMON,
-+					     &fan_data);
-+		break;
++	/* RESERVED(0x2B-0x2F) */
+ 	{0, 0, HSMP_RSVD},
+ 	{0, 0, HSMP_RSVD},
+ 	{0, 0, HSMP_RSVD},
+@@ -385,6 +413,86 @@ static const struct hsmp_msg_desc hsmp_msg_desc_table[]
+ 	 */
+ 	{0, 2, HSMP_GET},
+ 
++	/*
++	 * HSMP_DIMM_SB_RD, num_args = 1, response_sz = 1
++	 * input: args[0] =
++	 *	Register space[23]
++	 *	Register offset in given reg space[22:12]
++	 *	LID of device[11:8]
++	 *	DIMM address[7:0]
++	 * output: args[0] = [3:0] Read data byte
++	 */
++	{1, 1, HSMP_GET},
 +
-+	case WMI_EVENT_AIRPLANE_MODE:
-+	case WMI_EVENT_TOUCHPAD_STATE:
-+	case WMI_EVENT_FNLOCK_STATE:
-+	case WMI_EVENT_KBD_MODE:
-+	case WMI_EVENT_CAPSLOCK_STATE:
-+	case WMI_EVENT_NUMLOCK_STATE:
-+	case WMI_EVENT_SCROLLLOCK_STATE:
-+	case WMI_EVENT_REFRESH_RATE:
-+	case WMI_EVENT_WIN_KEY_LOCK:
-+		/* These events are informational or handled by firmware */
-+		dev_dbg(&wdev->dev, "State change event: id=%d value=%d\n",
-+			event->event_id, event->value_low);
-+		break;
++	/*
++	 * HSMP_READ_CCD_POWER, num_args = 1, response_sz = 1
++	 * input: args[0]  = apic id of core[15:0]
++	 * output: args[0] = CCD power(mWatts)[31:0]
++	 */
++	{1, 1, HSMP_GET},
 +
-+	default:
-+		dev_dbg(&wdev->dev, "Unknown event: id=0x%02x value=0x%02x\n",
-+			event->event_id, event->value_low);
-+		break;
-+	}
-+}
++	/*
++	 * HSMP_READ_TDELTA, num_args = 0, response_sz = 1
++	 * input: None
++	 * output: args[0] = thermal behaviour[31:0]
++	 */
++	{0, 1, HSMP_GET},
 +
-+static const struct wmi_device_id bitland_mifs_wmi_id_table[] = {
-+	{ BITLAND_MIFS_GUID, (void *)BITLAND_WMI_CONTROL },
-+	{ BITLAND_EVENT_GUID, (void *)BITLAND_WMI_EVENT },
-+	{}
-+};
-+MODULE_DEVICE_TABLE(wmi, bitland_mifs_wmi_id_table);
++	/*
++	 * HSMP_GET_SVI3_VR_CTRL_TEMP, num_args = 1, response_sz = 1
++	 * input: args[0] = SVI3 rail index[3:1] + Read SVI3 temperature data[0]
++	 * output: args[0] = SVI3 rail index[30:28] + SVI3 rail temperature(degree C)[27:0]
++	 */
++	{1, 1, HSMP_GET},
 +
-+static struct wmi_driver bitland_mifs_wmi_driver = {
-+	.no_singleton = true,
-+	.driver = {
-+		.name = DRV_NAME,
-+		.dev_groups = laptop_groups,
-+		.pm = pm_sleep_ptr(&bitland_mifs_wmi_pm_ops),
-+	},
-+	.id_table = bitland_mifs_wmi_id_table,
-+	.probe = bitland_mifs_wmi_probe,
-+	.notify_new = bitland_mifs_wmi_notify,
-+};
++	/*
++	 * HSMP_GET_ENABLED_HSMP_CMDS, num_args = 1, response_sz = 3
++	 * input: args[0] = HSMP command mask[0]
++	 * output: status of HSMP command = args[0], args[1], args[2]
++	 */
++	{1, 3, HSMP_GET},
 +
-+module_wmi_driver(bitland_mifs_wmi_driver);
++	/*
++	 * HSMP_SET_GET_FLOOR_LIMIT, num_args = 1, response_sz = 1
++	 * input: args[0] =
++	 *	Set or Get[31:30]
++	 *		Set the Floor frequency per core = 00
++	 *		Set the Floor frequency for all cores = 01
++	 *		Get the Floor frequency of a core = 10
++	 *		Get the Effective Floor frequency per core = 11
++	 *	Reserved[29:28]
++	 *	Apic id / Reserved[27:16]
++	 *		args[27:16] is reserved if args[31:30] = 01
++	 *	Floor frequency limit / Reserved[15:0]
++	 *		if args[31] = 0, Floor frequency limit, else reserved
++	 *
++	 * output: args[0] =
++	 *	Effective Floor frequency limit(MHz) / None / Floor frequency limit[15:0]
++	 *		Effective Floor frequency if input args[31:30] = 11
++	 *		None if input args[31] = 0
++	 *		Floor frequency limit (MHz)[15:0] if args[31:30] = 10
++	 */
++	{1, 1, HSMP_SET_GET},
 +
-+MODULE_AUTHOR("Mingyou Chen <qby140326@gmail.com>");
-+MODULE_DESCRIPTION("Bitland MIFS (MiInterface) WMI driver");
-+MODULE_LICENSE("GPL");
-
-base-commit: d9d32e5bd5a4e57675f2b70ddf73c3dc5cf44fc2
++	/*
++	 * HSMP_DIMM_SB_WR, num_args = 1, response_sz = 0
++	 * input: args[0] =
++	 *	Write Data[31:24]
++	 *	Register space[23]
++	 *	Register offset in given reg space[22:12]
++	 *	LID of device[11:8]
++	 *	DIMM address[7:0]
++	 * output: None
++	 */
++	{1, 0, HSMP_SET},
++
++	/*
++	 * HSMP_SDPS_LIMIT, num_args = 1, response_sz = 1
++	 * input: args[0] = Set/Get[31] + SDPS Limit[30:0]
++	 * output: args[0] = SDPS Limit[30:0]
++	 */
++	{1, 1, HSMP_SET_GET},
++
+ };
+ 
+ /* Metrics table (supported only with proto version 6) */
+diff --git a/drivers/platform/x86/amd/hsmp/hsmp.h b/drivers/platform/x86/amd/hsmp/hsmp.h
+index 0509a442eaae..b153527e0a0d 100644
+--- a/drivers/platform/x86/amd/hsmp/hsmp.h
++++ b/drivers/platform/x86/amd/hsmp/hsmp.h
+@@ -27,7 +27,7 @@
+ #define HSMP_DEVNODE_NAME	"hsmp"
+ #define ACPI_HSMP_DEVICE_HID    "AMDI0097"
+ 
+-#define DRIVER_VERSION		"2.5"
++#define DRIVER_VERSION		"2.6"
+ 
+ struct hsmp_mbaddr_info {
+ 	u32 base_addr;
 -- 
-2.53.0
+2.34.1
 
