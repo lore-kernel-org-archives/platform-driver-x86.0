@@ -1,108 +1,235 @@
-Received: from out-179.mta0.migadu.com (out-179.mta0.migadu.com [91.218.175.179])
+Received: from sender4-op-o12.zoho.com (sender4-op-o12.zoho.com [136.143.188.12])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B9A4237475C
-	for <platform-driver-x86@vger.kernel.org>; Thu,  5 Mar 2026 12:42:53 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.218.175.179
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1772714575; cv=none; b=uGIsMobOpXX5bmZmk0K+alVNiO/PMaErJhviiLFtpoa1fqCfUEUdTon2/kixTatXGN/OjQeYPRuF/cGLV7Zozw5tf7S4+cjBzUVQorocgtBaU6EaCTJ463HVgbsZau+5RlQPiutI/oqN84So/wmJkydK7NbfZNPpviZIvpKamSk=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1772714575; c=relaxed/simple;
-	bh=6azYBxMK/M2aRJ9a4DZgoKgw9ejS60Y+0aEornJYueY=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=LnN4GV5aFqktSER4fl6JkkNNuojjMOTJ7yWDxbYoIWoCdfnZ2pCe5zFIHeaBvYRIsKQLyyHZKqMJ7DZE9Q4H97Avu6mZw3mrvUk93KP9NHQ2W/OwsZrXPbY5lGiTJ2IP3bxlJu3MrOETEERgsEFV6dIShXXRaViLJiGqLa/5bG0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=Vw5fLIkU; arc=none smtp.client-ip=91.218.175.179
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3E06B39B4B7;
+	Thu,  5 Mar 2026 12:43:21 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=136.143.188.12
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1772714602; cv=pass; b=OG5Q24uAS3QnFXvM/Bo/U+3wl8/KjujSGvPpgT+s12dGHHuBHbrYCnrBcRP5RDjsV3NQ4H5uvqsISne3CVccCthLo9K4feRtoYBFCHD266rwOIoS1by8n1NwAFVkyGwap0tiP6pIS0bxPYjlR6B6rfNnVYXg2ohoFFIqVR8JERU=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1772714602; c=relaxed/simple;
+	bh=TBwVytHvfW3vYToRjOv22X+9+Zf2o4QIK6Y2LbSncQg=;
+	h=Message-ID:Subject:From:To:Cc:In-Reply-To:References:Content-Type:
+	 Date:MIME-Version; b=dLH6xAPb6FCIBVsxGQEdYPKAgL1hPrYMUAkYpL4Nf3YMYWX4YFHMABhnra51U2LvSGNnpH6dF1C0VMG0BTH6LrikT1C5JcfqM1K/JnV4uO/UBWvrzJ6BibYWUm11IdRMd9KgkGwVGgNvG4Hc2e/2Z79BtI1Nv5sP9VZ5a9k1Kfs=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=rong.moe; spf=pass smtp.mailfrom=rong.moe; dkim=pass (2048-bit key) header.d=rong.moe header.i=i@rong.moe header.b=LGtlNmXv; arc=pass smtp.client-ip=136.143.188.12
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=rong.moe
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=rong.moe
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="Vw5fLIkU"
-X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
-	t=1772714571;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:
-	 content-transfer-encoding:content-transfer-encoding;
-	bh=1d9SYvWb+sNYX9Fhk1tLc8SUWkZ/zy4aFtLcquSNK9U=;
-	b=Vw5fLIkU3yat4oezt6bV9ia64aczSHzs3QILxBEVdinZvzYPKB5qUbHlguGN1ug84Ec3pj
-	57tYhxZg8Dy3zqROu6T3079EPTUSwlmG97LoqD/RzbiEi0YvuiBNETW7CJ9FDDTkf/dlRw
-	YNbqahMTuixGVU7EpY0zHCBRjB5pkHA=
-From: Thorsten Blum <thorsten.blum@linux.dev>
-To: Prasanth Ksr <prasanth.ksr@dell.com>,
-	Hans de Goede <hansg@kernel.org>,
-	=?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
-Cc: Thorsten Blum <thorsten.blum@linux.dev>,
-	Dell.Client.Kernel@dell.com,
-	platform-driver-x86@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Subject: [PATCH] platform/x86: dell-wmi-sysman: Use sysfs_emit{_at} in show functions
-Date: Thu,  5 Mar 2026 13:41:27 +0100
-Message-ID: <20260305124126.255026-2-thorsten.blum@linux.dev>
+	dkim=pass (2048-bit key) header.d=rong.moe header.i=i@rong.moe header.b="LGtlNmXv"
+ARC-Seal: i=1; a=rsa-sha256; t=1772714580; cv=none; 
+	d=zohomail.com; s=zohoarc; 
+	b=AmV1cIFfm6QRS7yZBc8NmHoXKhkcBeRsnaMKO2sVEUyu8gxe0sJrFwwp7UQHptGtOMYx443HINLmKX5qAnaExPh34XVRqcHWL+gx3wv5NsbOCoN/FMV290tmMNDSrU0tLJigubBv7FKIemlLVzDg5FhS+3KWZx044Qrg2Gs8hAM=
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=zohomail.com; s=zohoarc; 
+	t=1772714580; h=Content-Type:Content-Transfer-Encoding:Cc:Cc:Date:Date:From:From:In-Reply-To:MIME-Version:Message-ID:References:Subject:Subject:To:To:Message-Id:Reply-To; 
+	bh=shsch+rUhqIdwtg8xuUvAf1mrjRPNSfpitMymyuIdq4=; 
+	b=Y2T2Dxp2MMH2rYU62nAkLbGFLjGZuzC0Jn7vh1mHW9yMfQaTWWxyLj19Pwds5cspFGiIN2LvlFEKuAON3wVE3ffNQLIOhfbU5J/7PA+xVVurjGmC8LZ2vrbib21XM4zsIRjhdhCfBT1uOJU4lUvludzskp1rsrJToJGeZpf3xwQ=
+ARC-Authentication-Results: i=1; mx.zohomail.com;
+	dkim=pass  header.i=rong.moe;
+	spf=pass  smtp.mailfrom=i@rong.moe;
+	dmarc=pass header.from=<i@rong.moe>
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; t=1772714580;
+	s=zmail2048; d=rong.moe; i=i@rong.moe;
+	h=Message-ID:Subject:Subject:From:From:To:To:Cc:Cc:In-Reply-To:References:Content-Type:Content-Transfer-Encoding:Date:Date:MIME-Version:Message-Id:Reply-To;
+	bh=shsch+rUhqIdwtg8xuUvAf1mrjRPNSfpitMymyuIdq4=;
+	b=LGtlNmXvxqFLXLhBp1qGcn3U7Folju9h+4rLpWv/zk9ZXEf714lK2goxYygkLVI9
+	HW6CPid/2QWmsBgbLJS0htEdnhbsgCkinY2d/JDXzsaA92AYVHwH0eilCF7nF1ouf/p
+	xE288LsMCffx9kl0ORL9uAEqe8ttPcs7GTTe0zTFetNGDGx1/5L5kWkrUa2T8QGqp/g
+	U1on7GquEP9XnDNCNRvqiGjoJqzbI0kW9Z3Bb3+0TghU2r0fjgoyJ8YkXqnwlcL9Zqp
+	egx3Pm4NBrjYnqJGAvW3Y0g12dXnf2qIH5UxgKONLM1NsLMUCLylIh14gmw1nspz2d4
+	wym9jBAdcw==
+Received: by mx.zohomail.com with SMTPS id 177271457706981.7443150671794;
+	Thu, 5 Mar 2026 04:42:57 -0800 (PST)
+Message-ID: <baf1e52379ffaaa284a934520b377f5c68ac76a6.camel@rong.moe>
+Subject: Re: [RFC PATCH 0/9] leds: Add support for hw initiated hw control
+ trigger transition
+From: Rong Zhang <i@rong.moe>
+To: Mark Pearson <mpearson-lenovo@squebb.ca>, Lee Jones <lee@kernel.org>, 
+ Pavel Machek <pavel@kernel.org>, Thomas =?ISO-8859-1?Q?Wei=DFschuh?=
+ <linux@weissschuh.net>, Benson Leung	 <bleung@chromium.org>, Guenter Roeck
+ <groeck@chromium.org>, Marek =?ISO-8859-1?Q?Beh=FAn?=	 <kabel@kernel.org>,
+ "Derek J . Clark" <derekjohn.clark@gmail.com>, Hans de Goede
+ <hansg@kernel.org>, Ilpo =?ISO-8859-1?Q?J=E4rvinen?=
+ <ilpo.jarvinen@linux.intel.com>,  Ike Panhc <ikepanhc@gmail.com>
+Cc: Vishnu Sankar <vishnuocv@gmail.com>, Vishnu Sankar
+ <vsankar@lenovo.com>, 	linux-kernel@vger.kernel.org,
+ linux-leds@vger.kernel.org, 	chrome-platform@lists.linux.dev,
+ "platform-driver-x86@vger.kernel.org"	 <platform-driver-x86@vger.kernel.org>
+In-Reply-To: <b1d43b71-38c1-48cb-91ae-4598ecd2f588@app.fastmail.com>
+References: <20260227190617.271388-1-i@rong.moe>
+	 <b1d43b71-38c1-48cb-91ae-4598ecd2f588@app.fastmail.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+Date: Thu, 05 Mar 2026 20:37:47 +0800
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Migadu-Flow: FLOW_OUT
+User-Agent: Evolution 3.56.2-8 
+X-ZohoMailClient: External
 
-Replace sprintf() with sysfs_emit() and sysfs_emit_at() in sysfs show
-functions. sysfs_emit() and sysfs_emit_at() are preferred for formatting
-sysfs output because they provide safer bounds checking.
+Hi Mark,
 
-In reset_bios_show(), use sysfs_emit_at() to avoid manual buffer size
-accounting.
+On Wed, 2026-03-04 at 15:05 -0500, Mark Pearson wrote:
+> Hi Rong,
+>=20
+> On Fri, Feb 27, 2026, at 2:05 PM, Rong Zhang wrote:
+> > Hi all,
+> >=20
+> > Some laptops can tune their keyboard backlight according to ambient
+> > light sensors (auto mode). This capability is essentially a hw control
+> > trigger. Meanwhile, such laptops also offer a shrotcut for cycling
+> > through brightness levels and auto mode. For example, on ThinkBook,
+> > pressing Fn+Space cycles keyboard backlight levels in the following
+> > sequence:
+> >=20
+> >   1 =3D> 2 =3D> 0 =3D> auto =3D> 1 ...
+> >=20
+> > Recent ThinkPad models should have similar sequence too.
+> >=20
+> > However, there are some issues preventing us from using hw control
+> > trigger:
+> >=20
+> > 1. We want a mechanism to tell userspace which trigger is the hw contro=
+l
+> >    trigger, so that userspace can determine if auto mode is on/off or
+> >    turing it on/off programmatically without obtaining the hw control
+> >    trigger's name via other channels
+> > 2. Turing on/off auto mode via the shortcut cannot activate/deactivate
+> >    the hw control trigger, making the software state out-of-sync
+> > 3. Even with #1 resolved, deactivating the hw control trigger after
+> >    receiving the event indicating "auto =3D> 1" has a side effect of
+> >    emitting LED_OFF, breaking the shortcut cycle
+> >=20
+> > This RFC series tries to demonstrate a path on solving these issues:
+> >=20
+> > - Introduce an attribute called trigger_may_offload, so that userspace
+> >    can determine:
+> >    - if the LED device supports hw control (supported =3D> visible)
+> >    - which trigger is the hw control trigger
+> >    - if the hw control trigger is selected
+> >    - if the hw control trigger is in hw control (i.e., offloaded)
+> >      - A callback offloaded() is added so that LED triggers can report
+> >        their hw control state
+> > - Add led_trigger_notify_hw_control_changed() interface, so that LED
+> >   drivers can notify the LED core about hardware initiated hw control
+> >   state transitions. The LED core will then determine if the transition
+> >   is allowed and turning on/off the hw control trigger accordingly
+> > - Tune the logic of trigger deactivation so that it won't emit LED_OFF
+> >   when the deactivation is triggered by hardware
+> >=20
+> > The last two patches are included into the RFC series to demonstrate ho=
+w
+> > to utilize these interfaces to add support for auto keyboard backlight
+> > to ThinkBook. They will be submitted separately once the dust settles.
+> >=20
+> > Currently no Kconfig entry is provided to disable either interface. If
+> > needed, I will add one later.
+> >=20
+> > [ Summary of other approaches ]
+> >=20
+> > < custom attribute >
+> >=20
+> > Pros:
+> > - simplicity, KISS
+> > - no need to touch the LED core
+> > - extensible as long as it has a sensor-neutral name
+> >   - a sensor-related name could potentially lead to a mess if a future
+> >     device implements auto mode based on multiple different sensors
+> >=20
+> > Cons:
+> > - must have zero influence on brightness_set[_blocking] callbacks
+> >   in order not to break triggers
+> >   - potential interference with triggers and the brightness attribute
+> > - weird semantic (an attribute other than "brightness" and "trigger"
+> >   changes the brightness)
+> >=20
+> > < hw control trigger (this series) >
+> >=20
+> > Pros:
+> > - mutually exclusive with other triggers (hence less chaos)
+> > - semantic correctness
+> > - acts as an aggregate switch to turn on/off auto mode even a future
+> >   device implements auto mode based on multiple different sensors
+> >   - extensibility (through trigger attributes)
+> >=20
+> > Cons:
+> > - complexity
+> >=20
+> > [ Previous discussion threads ]
+> >=20
+> > https://lore.kernel.org/r/08580ec5-1d7b-4612-8a3f-75bc2f40aad2@app.fast=
+mail.com
+> >=20
+> > https://lore.kernel.org/r/1dbfcf656cdb4af0299f90d7426d2ec7e2b8ac9e.came=
+l@rong.moe
+> >=20
+> > Thanks,
+> > Rong
+> >=20
+> > Rong Zhang (9):
+> >   leds: Load trigger modules on-demand if used as hw control trigger
+> >   leds: Add callback offloaded() to query the state of hw control
+> >     trigger
+> >   leds: cros_ec: Implement offloaded() callback for trigger
+> >   leds: turris-omnia: Implement offloaded() callback for trigger
+> >   leds: trigger: netdev: Implement offloaded() callback
+> >   leds: Add trigger_may_offload attribute
+> >   leds: trigger: Add led_trigger_notify_hw_control_changed() interface
+> >   platform/x86: ideapad-laptop: Decouple HW & cdev brightness for kbd
+> >     backlight
+> >   platform/x86: ideapad-laptop: Fully support auto kbd backlight
+> >=20
+> >  .../obsolete/sysfs-class-led-trigger-netdev   |  15 ++
+> >  Documentation/ABI/testing/sysfs-class-led     |  22 ++
+> >  .../testing/sysfs-class-led-trigger-netdev    |  13 --
+> >  Documentation/leds/leds-class.rst             |  72 ++++++-
+> >  drivers/leds/led-class.c                      |  23 +++
+> >  drivers/leds/led-triggers.c                   | 176 +++++++++++++++-
+> >  drivers/leds/leds-cros_ec.c                   |   6 +
+> >  drivers/leds/leds-turris-omnia.c              |   7 +
+> >  drivers/leds/leds.h                           |   3 +
+> >  drivers/leds/trigger/ledtrig-netdev.c         |  10 +
+> >  drivers/platform/x86/lenovo/Kconfig           |   1 +
+> >  drivers/platform/x86/lenovo/ideapad-laptop.c  | 194 ++++++++++++++----
+> >  include/linux/leds.h                          |   6 +
+> >  13 files changed, 492 insertions(+), 56 deletions(-)
+> >  create mode 100644 Documentation/ABI/obsolete/sysfs-class-led-trigger-=
+netdev
+> >=20
+> >=20
+> > base-commit: a75cb869a8ccc88b0bc7a44e1597d9c7995c56e5
+> > --=20
+> > 2.51.0
+>=20
+> Thanks for your work on this.
+>=20
+> For the series: As it's a RFC, I'm not bothering with notes on any typo's=
+ or grammer stuff.
+>=20
+> Overall I think the implementation works and I understand it better from =
+our initial discussions. Thank you for putting this together.
+>=20
+> I'm not a huge fan of the term offloaded - I would lean towards just call=
+ing it hw_control (or similar). But I see it was used in the ledtrig-netdev=
+ driver so I don't feel strongly about this.
+>=20
 
-Signed-off-by: Thorsten Blum <thorsten.blum@linux.dev>
----
- .../platform/x86/dell/dell-wmi-sysman/sysman.c | 18 ++++++++----------
- 1 file changed, 8 insertions(+), 10 deletions(-)
+FYI, "hw control" is a historical and internal term. I used it because
+it's used a lot in the documentation to the doc consistent. Otherwise
+"offload(ed)" should be used. See commit 44f0fb8dfe26 ("leds: trigger:
+netdev: rename 'hw_control' sysfs entry to 'offloaded'").
 
-diff --git a/drivers/platform/x86/dell/dell-wmi-sysman/sysman.c b/drivers/platform/x86/dell/dell-wmi-sysman/sysman.c
-index 9dddab6c9397..0f24cecc93fc 100644
---- a/drivers/platform/x86/dell/dell-wmi-sysman/sysman.c
-+++ b/drivers/platform/x86/dell/dell-wmi-sysman/sysman.c
-@@ -11,6 +11,7 @@
- #include <linux/dmi.h>
- #include <linux/module.h>
- #include <linux/kernel.h>
-+#include <linux/sysfs.h>
- #include <linux/wmi.h>
- #include "dell-wmi-sysman.h"
- #include "../../firmware_attributes_class.h"
-@@ -143,17 +144,14 @@ int map_wmi_error(int error_code)
-  */
- static ssize_t reset_bios_show(struct kobject *kobj, struct kobj_attribute *attr, char *buf)
- {
--	char *start = buf;
-+	ssize_t len = 0;
- 	int i;
- 
--	for (i = 0; i < MAX_TYPES; i++) {
--		if (i == reset_option)
--			buf += sprintf(buf, "[%s] ", reset_types[i]);
--		else
--			buf += sprintf(buf, "%s ", reset_types[i]);
--	}
--	buf += sprintf(buf, "\n");
--	return buf-start;
-+	for (i = 0; i < MAX_TYPES; i++)
-+		len += sysfs_emit_at(buf, len, i == reset_option ? "[%s] " : "%s ",
-+				     reset_types[i]);
-+	len += sysfs_emit_at(buf, len, "\n");
-+	return len;
- }
- 
- /**
-@@ -194,7 +192,7 @@ static ssize_t reset_bios_store(struct kobject *kobj,
- static ssize_t pending_reboot_show(struct kobject *kobj, struct kobj_attribute *attr,
- 				   char *buf)
- {
--	return sprintf(buf, "%d\n", wmi_priv.pending_changes);
-+	return sysfs_emit(buf, "%d\n", wmi_priv.pending_changes);
- }
- 
- static struct kobj_attribute reset_bios = __ATTR_RW(reset_bios);
--- 
-Thorsten Blum <thorsten.blum@linux.dev>
-GPG: 1D60 735E 8AEF 3BE4 73B6  9D84 7336 78FD 8DFE EAD4
+I admit that I was somewhat lost in the terminological soup and there
+may be some room for rephrasing in my documentation and commit
+messages.
 
+Thanks,
+Rong
+
+> Vishnu - can you check out how this would work with the Thinkpad implemen=
+tation that you've been working on, please? I think that will be helpful to=
+ highlight any design issues.
+>=20
+> Mark
