@@ -1,183 +1,75 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D936838F227
-	for <platform-driver-x86@vger.kernel.org>; Fri,  6 Mar 2026 12:49:42 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1F61F289E13;
+	Fri,  6 Mar 2026 12:53:44 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1772801382; cv=none; b=anpthRfedjbC4vTGz+ncIsMxqLp1e3AENyhrzduFSBOV7m8pMzf1bFJ3bCMEBSPiExQSdZkAbHeHTUAScOBKO1dwG4rEzXHzIxTOqjmjapRtiW9yo3Gr9Kpljeg4Ohja0xrC5tyntLqqWo/KthEK4QwQF53zg3XgXv1HeBIO4kc=
+	t=1772801625; cv=none; b=fxEme6OfMFcwn0MqX6rS4ibwYEaOXx4mzb6GqFibBh8iVvKQrDwCkO0fhXOYgyDHH5hfLkt9KDPoABmnXwEwrhi2qjgWWMcoj7oxDdhvtXUoT3FtdoddOxN2/Q8sHJMn8f7doXzUt2e+WoX51q23ptId0EVRT50FDLYBsblYlWI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1772801382; c=relaxed/simple;
-	bh=Fh+NyZlau2OdSQ/JKx9wPVCt/2AfUUmAUxF4YrxlwOs=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=RcSMU9hiAkqiU6SE2nnO+nHsRDl6DnsXUkqVw5nhWabG9OPx+aVi/3Qtwv2jcsTUlIxK1lIyoxFXZrQ7DBEN/NKBpQ6pNETaUBruws6mk5MXA8hHkUIwd2tQ81lw9TTWu1TJVMw5kJY7ZltDFTeSNF4+MHQ+wvmgEkNHKbDK3/8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=A03hPHiJ; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1772801625; c=relaxed/simple;
+	bh=6sD9DKgwgkgML8o1MlRbusuMzQH8Mhs9E1w7huiVTRs=;
+	h=From:To:Cc:In-Reply-To:References:Subject:Message-Id:Date:
+	 MIME-Version:Content-Type; b=GkU9VZzGexnR0DDbbFvwvOQaz1hwX2q/Vh++lfZYpqjLpXx278JjkW9u7BqhrCRUwQg4vnZxUsGERU43NtT1/S8ANvL64d/FfkfGsV1HpZt06fq7s9WXY5pbxABYC6eCCrzRW5L3WN2qRocfN8mprzuqC1vd4bK5nOkUbFlssJY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Z5OHHLcT; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="A03hPHiJ"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 888C5C4CEF7
-	for <platform-driver-x86@vger.kernel.org>; Fri,  6 Mar 2026 12:49:42 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Z5OHHLcT"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 51316C4CEF7;
+	Fri,  6 Mar 2026 12:53:42 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1772801382;
-	bh=Fh+NyZlau2OdSQ/JKx9wPVCt/2AfUUmAUxF4YrxlwOs=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-	b=A03hPHiJqHYOMYWJaGW+9GgNts7Id8nyZd997ggw5zBwfxIu3ebI8QEA3djxNiWig
-	 EYO0JMn+Kz99xJmgUTFhBfGpetMsdQ71lkbKejyMsyrE5ON4QbtlKenbyiFFxeUrFY
-	 WUGVQzyeIBycBOjlTSKJw+pvjVBwaGjDIwL4bCs107H8YRvtBSN+N+rcAdfmutFpQ9
-	 uFnfM+ow9cxASHGicrPOvUM6LB7z0BT+5A76HwF4USD+E/0wIEgSPf3uSJ7TVtElPW
-	 5P1Agz1f37wOb6DwKRXe/hpfZv4PYyEeWUF/vhAc1+GulJjZYOAk6XsBEAgd2TtCwE
-	 C7NULaFRfcPMA==
-Received: by mail-oa1-f44.google.com with SMTP id 586e51a60fabf-409de4132b5so2932192fac.1
-        for <platform-driver-x86@vger.kernel.org>; Fri, 06 Mar 2026 04:49:42 -0800 (PST)
-X-Forwarded-Encrypted: i=1; AJvYcCVmgA7miAozRnPi0tXShcaaP6vt4LSdaOqABrvKPq/63QztknyP0Hf49e9zQRovKYNlkY2bgolqqoj6wtq3zXOoi9pQ@vger.kernel.org
-X-Gm-Message-State: AOJu0YxX7YHkkmjMfFThBmbdkYz6DThWkRK2sJ6H2Or06c+FSxB9fOog
-	xxinb33B8d+k0b/ZrtqRtnag6JdXc9mX7f2lnHAF4sK9bJJZcVuyu49WxUr+GgZc0RQ2viPfjpb
-	rLcdbH5Ui4C8OOPUrzc/e+hLvBFrX3N0=
-X-Received: by 2002:a05:6871:783:b0:3e8:5127:e75b with SMTP id
- 586e51a60fabf-416e42a565fmr1215531fac.30.1772801381700; Fri, 06 Mar 2026
- 04:49:41 -0800 (PST)
+	s=k20201202; t=1772801624;
+	bh=6sD9DKgwgkgML8o1MlRbusuMzQH8Mhs9E1w7huiVTRs=;
+	h=From:To:Cc:In-Reply-To:References:Subject:Date:From;
+	b=Z5OHHLcTtJLfw/xaA9nt0RPGM/mzOgTZBQ2jRwlgxK8vN9MYlIwls3XDwS+ePSBx4
+	 0X7BlcLrw/ldLfkhiXxSiQWbdcrwYK89Q0HfE66HXfrPxOj2ZYqkshOzFB5Q8A4Ory
+	 Y29sjXYb0Ij/7AgMODLR6/Kblix+blmPWAu1KWQGGcIiIpa9RSpEr7bCOLZngQoXc9
+	 cM7lR5wFyTIhoniq263cg7UVrQq2gBhRCeTTUSAHk3eGaRRAYD6/EYYqJGZ8wAez+p
+	 OZ6Oj+tQh8gqBxrW1Yvw2EekvgjsxZc73AY84fxQyNDGuMxc7lH3h1KtNUPeLkPO+T
+	 NiPJXEmEVShVg==
+From: Lee Jones <lee@kernel.org>
+To: Peter Tyser <ptyser@xes-inc.com>, Lee Jones <lee@kernel.org>, 
+ Hans de Goede <hansg@kernel.org>, 
+ =?utf-8?q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>, 
+ Dmitry Torokhov <dmitry.torokhov@gmail.com>, 
+ Andy Shevchenko <andriy.shevchenko@linux.intel.com>, 
+ Greg Kroah-Hartman <gregkh@linuxfoundation.org>, 
+ Bartosz Golaszewski <bartosz.golaszewski@oss.qualcomm.com>
+Cc: linux-kernel@vger.kernel.org, platform-driver-x86@vger.kernel.org, 
+ brgl@kernel.org
+In-Reply-To: <20260218-meraki-swnodes-v2-1-92c521da241c@oss.qualcomm.com>
+References: <20260218-meraki-swnodes-v2-1-92c521da241c@oss.qualcomm.com>
+Subject: Re: (subset) [PATCH v2 1/2] mfd: lpc_ich: expose the GPIO
+ controller cell's software node
+Message-Id: <177280162204.1002992.12499935361323933725.b4-ty@kernel.org>
+Date: Fri, 06 Mar 2026 12:53:42 +0000
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <4505861.ejJDZkT8p0@rafael.j.wysocki> <2787819.X9hSmTKtgW@rafael.j.wysocki>
- <ba409fad-7b2e-6fb1-eeee-8d9cacf4cb74@linux.intel.com>
-In-Reply-To: <ba409fad-7b2e-6fb1-eeee-8d9cacf4cb74@linux.intel.com>
-From: "Rafael J. Wysocki" <rafael@kernel.org>
-Date: Fri, 6 Mar 2026 13:49:30 +0100
-X-Gmail-Original-Message-ID: <CAJZ5v0jKwerODDUO1YB1rvyWe65RNUcB4kOdoEn5Ced=n70VxQ@mail.gmail.com>
-X-Gm-Features: AaiRm53acXR3cVXZ-K6nItG1yCmOj6dnDpCyj2HRDbgUvCO4DHhrgFDpuDjvGQ0
-Message-ID: <CAJZ5v0jKwerODDUO1YB1rvyWe65RNUcB4kOdoEn5Ced=n70VxQ@mail.gmail.com>
-Subject: Re: [PATCH v1 9/9] ACPI: AC: Define ACPI_AC_CLASS in one place
-To: =?UTF-8?Q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
-Cc: "Rafael J. Wysocki" <rafael@kernel.org>, Linux ACPI <linux-acpi@vger.kernel.org>, 
-	LKML <linux-kernel@vger.kernel.org>, Hans de Goede <hansg@kernel.org>, 
-	platform-driver-x86@vger.kernel.org, amd-gfx@lists.freedesktop.org, 
-	Alex Deucher <alexander.deucher@amd.com>, =?UTF-8?Q?Christian_K=C3=B6nig?= <christian.koenig@amd.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 8bit
+X-Mailer: b4 0.15-dev-52d38
 
-On Fri, Mar 6, 2026 at 1:44=E2=80=AFPM Ilpo J=C3=A4rvinen
-<ilpo.jarvinen@linux.intel.com> wrote:
->
-> On Thu, 5 Mar 2026, Rafael J. Wysocki wrote:
->
-> > From: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
-> >
-> > The ACPI_AC_CLASS symbol is defined in several places in the same way
-> > which is rather unfortunate.
-> >
-> > Instead, define it in one common header file (acpi_bus.h) that is
-> > already included by all of its users.
->
-> It's a bit misleading to say it like that as acpi_bus.h is included only
-> through another include (at least acpi/acpi.h) for most of the
-> cases.
+On Wed, 18 Feb 2026 11:48:01 +0100, Bartosz Golaszewski wrote:
+> One of the users of this driver - meraki-mx100 - abuses the software
+> node API by setting up a dummy software node without any logical link to
+> this GPIO controller and uses the fact that the GPIO core matches the
+> controller's label against the swnode's name to make the lookup work.
+> 
+> We want to remove this behavior from GPIOLIB in favor of actual matching
+> of firmware nodes but that would break this user. To facilitate that:
+> create a software node for the GPIO controller cell and expose its
+> address in the provided MFD header.
+> 
+> [...]
 
-Well, I've cut a corner here. :-)
+Applied, thanks!
 
-I can say "that will cause it to be accessible to all of its users" instead=
-.
+[1/2] mfd: lpc_ich: expose the GPIO controller cell's software node
+      commit: a64ee7d8ddd6e04d82c06238a238b7877cbc35fc
 
-> Reviewed-by: Ilpo J=C3=A4rvinen <ilpo.jarvinen@linux.intel.com>
+--
+Lee Jones [李琼斯]
 
-Thanks!
-
-> --
->  i.
->
-> > No intentional functional impact.
-> >
-> > Signed-off-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
-> > ---
-> >  drivers/acpi/ac.c                         |    1 -
-> >  drivers/acpi/sbs.c                        |    1 -
-> >  drivers/gpu/drm/amd/include/amd_acpi.h    |    2 --
-> >  drivers/gpu/drm/radeon/radeon_acpi.c      |    2 --
-> >  drivers/platform/x86/hp/hp-wmi.c          |    2 --
-> >  drivers/platform/x86/lenovo/wmi-capdata.c |    1 -
-> >  include/acpi/acpi_bus.h                   |    2 ++
-> >  7 files changed, 2 insertions(+), 9 deletions(-)
-> >
-> > --- a/drivers/acpi/ac.c
-> > +++ b/drivers/acpi/ac.c
-> > @@ -21,7 +21,6 @@
-> >  #include <linux/acpi.h>
-> >  #include <acpi/battery.h>
-> >
-> > -#define ACPI_AC_CLASS                        "ac_adapter"
-> >  #define ACPI_AC_FILE_STATE           "state"
-> >  #define ACPI_AC_NOTIFY_STATUS                0x80
-> >  #define ACPI_AC_STATUS_OFFLINE               0x00
-> > --- a/drivers/acpi/sbs.c
-> > +++ b/drivers/acpi/sbs.c
-> > @@ -26,7 +26,6 @@
-> >
-> >  #include "sbshc.h"
-> >
-> > -#define ACPI_AC_CLASS                        "ac_adapter"
-> >  #define ACPI_SBS_DEVICE_NAME         "Smart Battery System"
-> >  #define ACPI_BATTERY_DIR_NAME                "BAT%i"
-> >  #define ACPI_AC_DIR_NAME             "AC0"
-> > --- a/drivers/gpu/drm/amd/include/amd_acpi.h
-> > +++ b/drivers/gpu/drm/amd/include/amd_acpi.h
-> > @@ -26,8 +26,6 @@
-> >
-> >  #include <linux/types.h>
-> >
-> > -#define ACPI_AC_CLASS           "ac_adapter"
-> > -
-> >  struct atif_verify_interface {
-> >       u16 size;               /* structure size in bytes (includes size=
- field) */
-> >       u16 version;            /* version */
-> > --- a/drivers/gpu/drm/radeon/radeon_acpi.c
-> > +++ b/drivers/gpu/drm/radeon/radeon_acpi.c
-> > @@ -44,8 +44,6 @@ bool radeon_atpx_dgpu_req_power_for_disp
-> >  static inline bool radeon_atpx_dgpu_req_power_for_displays(void) { ret=
-urn false; }
-> >  #endif
-> >
-> > -#define ACPI_AC_CLASS           "ac_adapter"
-> > -
-> >  struct atif_verify_interface {
-> >       u16 size;               /* structure size in bytes (includes size=
- field) */
-> >       u16 version;            /* version */
-> > --- a/drivers/platform/x86/hp/hp-wmi.c
-> > +++ b/drivers/platform/x86/hp/hp-wmi.c
-> > @@ -58,8 +58,6 @@ enum hp_ec_offsets {
-> >  #define HP_POWER_LIMIT_DEFAULT        0x00
-> >  #define HP_POWER_LIMIT_NO_CHANGE 0xFF
-> >
-> > -#define ACPI_AC_CLASS "ac_adapter"
-> > -
-> >  #define zero_if_sup(tmp) (zero_insize_support?0:sizeof(tmp)) // use wh=
-en zero insize is required
-> >
-> >  enum hp_thermal_profile_omen_v0 {
-> > --- a/drivers/platform/x86/lenovo/wmi-capdata.c
-> > +++ b/drivers/platform/x86/lenovo/wmi-capdata.c
-> > @@ -53,7 +53,6 @@
-> >  #define LENOVO_CAPABILITY_DATA_01_GUID "7A8F5407-CB67-4D6E-B547-39B3BE=
-018154"
-> >  #define LENOVO_FAN_TEST_DATA_GUID "B642801B-3D21-45DE-90AE-6E86F164FB2=
-1"
-> >
-> > -#define ACPI_AC_CLASS "ac_adapter"
-> >  #define ACPI_AC_NOTIFY_STATUS 0x80
-> >
-> >  #define LWMI_FEATURE_ID_FAN_TEST 0x05
-> > --- a/include/acpi/acpi_bus.h
-> > +++ b/include/acpi/acpi_bus.h
-> > @@ -613,6 +613,8 @@ struct acpi_bus_event {
-> >       u32 data;
-> >  };
-> >
-> > +#define ACPI_AC_CLASS        "ac_adapter"
-> > +
-> >  extern struct kobject *acpi_kobj;
-> >  extern int acpi_bus_generate_netlink_event(const char*, const char*, u=
-8, int);
-> >  void acpi_bus_private_data_handler(acpi_handle, void *);
