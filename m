@@ -1,223 +1,114 @@
-Received: from fout-b2-smtp.messagingengine.com (fout-b2-smtp.messagingengine.com [202.12.124.145])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.14])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2341C372671;
-	Fri,  6 Mar 2026 13:51:50 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=202.12.124.145
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0E195AD2C;
+	Fri,  6 Mar 2026 16:35:56 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.14
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1772805120; cv=none; b=LWt3XKj3TRHWUt15YqWdWXG30CXEJQSt+aH0TkkHQIAmkEEPyyK7W9MgqmbksCLqp7M++pLGCo4wxKCYHdg7fy9kkkKSVLBPNeIX9HvHmOei2mi14G37nHBhJ4IjXfU2BG5sPb9i32Ex0bdbguoCrMvoZkCD9C8z16EyqoZJujg=
+	t=1772814958; cv=none; b=Wm9mcpmWkZIXDAFXQ4A16GbpoeLpqj6G0R460oi6l5iMd0gm5sDyMlLyopvF9+EZBuHXEbQn2oxxIJzv7cFuJ4T0PSu5IMvl/OArORKCIse9Ed58eAQh5SqGEHlHtpDMWj7J6NJ0ewzBpvaX7o2VAMrXzGyH02UzRALq/2tchwE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1772805120; c=relaxed/simple;
-	bh=nyWdwpgttUjFe9Gx6eXPCJdCZS54q4ZmVUJNYwqHfm4=;
-	h=MIME-Version:Date:From:To:Cc:Message-Id:In-Reply-To:References:
-	 Subject:Content-Type; b=VJMHGfnUyqH1Iapzz/lwn/69VzuBlj09g309LWN3XjmrhAthIq+BDBUXcWBMhz0ZD3RY0Yb4uYK597KiS4O7I6IkiS3231Tc2fggyBnOAlXsa6QOWNJy++v7ZMoLrMgyDfucIlM6Qn9JTsj9n40yDnxAwXwG6Hs8jTJSlSPxX2A=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=squebb.ca; spf=pass smtp.mailfrom=squebb.ca; dkim=pass (2048-bit key) header.d=squebb.ca header.i=@squebb.ca header.b=TtWDTa6N; dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b=LblhBxcA; arc=none smtp.client-ip=202.12.124.145
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=squebb.ca
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=squebb.ca
+	s=arc-20240116; t=1772814958; c=relaxed/simple;
+	bh=V21srALT+hTXVqWvmCdn2I3ACewpkLe/mqQ8ZUkY9kM=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=sqNNsZE7g3MYFryTbApHjmj42wyth7LEVhempZS2EHbqMtTuoz6p77KXD9NnJnkpcNh9vnXcVFB/T04KKoPVd615maAyjcAQoT2g6m+yLwbHntlXjeuLzqhKECYiKJihRMrLDB4KjxdPQnaXdzWZpq5f/GwiG77S/y7ecAKtpc0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=KDXSRnn2; arc=none smtp.client-ip=198.175.65.14
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=squebb.ca header.i=@squebb.ca header.b="TtWDTa6N";
-	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="LblhBxcA"
-Received: from phl-compute-02.internal (phl-compute-02.internal [10.202.2.42])
-	by mailfout.stl.internal (Postfix) with ESMTP id 314491D00031;
-	Fri,  6 Mar 2026 08:51:49 -0500 (EST)
-Received: from phl-imap-08 ([10.202.2.84])
-  by phl-compute-02.internal (MEProxy); Fri, 06 Mar 2026 08:51:49 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=squebb.ca; h=cc
-	:cc:content-transfer-encoding:content-type:content-type:date
-	:date:from:from:in-reply-to:in-reply-to:message-id:mime-version
-	:references:reply-to:subject:subject:to:to; s=fm2; t=1772805108;
-	 x=1772891508; bh=KqL28PEa1gdOtcPjGDXJw5E9578ySQPb6ffvqQWlJsw=; b=
-	TtWDTa6N5XdzgvKQFRhorHPTlhV7A0q9pfvjkhQqY5fdr27du0GljCVHIslFQ3V8
-	76jLfCfN1kePsMixnpVK91d/MiXGm9c74xF/2jkVWzAVuugTi5U1Z4ccY9HCI6Aw
-	aDoWfig19yKARf+nqAGbrIP7ubgq0dhfZXqGHrEbbdbJHk1f4iplppvTrhFmUMSp
-	Noh2Y/EeL/SAm1Fe5eb4mpJIn+B1mw5yh3jKLg2Cf8jmptE5i6rCNvB1d55diKbP
-	h5Op5s0g2r9E/oaXaI+jyYUQZwb0RmB6LFb1Ay1ULn8B8r8xhWyXMFcZ5pDcah1T
-	5I53FncpVlxO/RdAr6tiHA==
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-	messagingengine.com; h=cc:cc:content-transfer-encoding
-	:content-type:content-type:date:date:feedback-id:feedback-id
-	:from:from:in-reply-to:in-reply-to:message-id:mime-version
-	:references:reply-to:subject:subject:to:to:x-me-proxy
-	:x-me-sender:x-me-sender:x-sasl-enc; s=fm1; t=1772805108; x=
-	1772891508; bh=KqL28PEa1gdOtcPjGDXJw5E9578ySQPb6ffvqQWlJsw=; b=L
-	blhBxcAshBjlo/AFGF1FaC49vbTEoasREDFsv033Yz63+tACjXJR8o28Ku5Umcrs
-	ScVRCN0ETH8eaAmnPEsGxWDJDfn0ei00bo4npe2Zy1Loea3tyiWKfiNh1sBWVyKX
-	J7IGf6J+2UXaxScTu/9e/N9ghx2YEaahlrPLJdozmuJqXPAwuTH2+Aty8Uzp/BK+
-	3B8lRTM+C54pVymwN3mTHKqK0+/wp1LOQJrUBF0dwxLOpuG6uxbZIbY2AiboH0l0
-	VuiwIKW940p79+2ZbNsceKNI7P1RCLJy2Qay84xom7NIHimIuJxoCKXpfIbNPQ4T
-	9s7rDRyEDWqKFwZH4y8lA==
-X-ME-Sender: <xms:9NuqaVa97MnFvIw0VPM7l8MSpT-LAOX5fujbs9_v92NLfutsAtZJTw>
-    <xme:9NuqaXO1vqZbBf3BhnfcCgX0jv25XbCzuACZhvtVmuB49Cxcz4R4qaXwnruiv3gWm
-    GS5uFWjAWF7sZ2kbstZMlcNPnLhE4sYs_4tTNpQZMYwyzIw3C39yUA>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeefgedrtddtgddvieelgeehucetufdoteggodetrf
-    dotffvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdfurfetoffkrfgpnffqhgenuceu
-    rghilhhouhhtmecufedttdenucesvcftvggtihhpihgvnhhtshculddquddttddmnecujf
-    gurhepofggfffhvfevkfgjfhfutgfgsehtqhertdertdejnecuhfhrohhmpedfofgrrhhk
-    ucfrvggrrhhsohhnfdcuoehmphgvrghrshhonhdqlhgvnhhovhhosehsqhhuvggssgdrtg
-    grqeenucggtffrrghtthgvrhhnpefhveekjeeuueekfefhleeljeehuedugfetffdvteek
-    ffejudelffdvjeekfeehvdenucevlhhushhtvghrufhiiigvpedtnecurfgrrhgrmhepmh
-    grihhlfhhrohhmpehmphgvrghrshhonhdqlhgvnhhovhhosehsqhhuvggssgdrtggrpdhn
-    sggprhgtphhtthhopedufedpmhhouggvpehsmhhtphhouhhtpdhrtghpthhtohepuggvrh
-    gvkhhjohhhnhdrtghlrghrkhesghhmrghilhdrtghomhdprhgtphhtthhopegumhhithhr
-    hidrthhorhhokhhhohhvsehgmhgrihhlrdgtohhmpdhrtghpthhtohepvhhishhhnhhuoh
-    gtvhesghhmrghilhdrtghomhdprhgtphhtthhopehhmhhhsehhmhhhrdgvnhhgrdgsrhdp
-    rhgtphhtthhopehhrghnshhgsehkvghrnhgvlhdrohhrghdprhgtphhtthhopehvshgrnh
-    hkrghrsehlvghnohhvohdrtghomhdprhgtphhtthhopehilhhpohdrjhgrrhhvihhnvghn
-    sehlihhnuhigrdhinhhtvghlrdgtohhmpdhrtghpthhtohepihgsmhdqrggtphhiqdguvg
-    hvvghlsehlihhsthhsrdhsohhurhgtvghfohhrghgvrdhnvghtpdhrtghpthhtoheptgho
-    rhgsvghtsehlfihnrdhnvght
-X-ME-Proxy: <xmx:9NuqaWrSg8AF5PROqsg5PnniT3zw8stMKk9h9ko_dxGZ-HlRyYnX5A>
-    <xmx:9NuqafDnGNTnFzH1MeA3TSavB_FhggH-qHeTmcBeneDnW7frsS5HTA>
-    <xmx:9NuqaRUBA003l2u1uDcXkQMBx5kHE4PpjTdg7MgckKvaJWg03RWX5A>
-    <xmx:9NuqaRB4A84c0Id_cVe7DUfEvJfaFgH2uE2Q4HvB73dX9XkfAZ0sjg>
-    <xmx:9NuqaaFxQmgVNhwslrv0vDqk3fKYErBbQn1eL1ef6aCzJxd4JJk8itiK>
-Feedback-ID: ibe194615:Fastmail
-Received: by mailuser.phl.internal (Postfix, from userid 501)
-	id 1D6CB2CE0072; Fri,  6 Mar 2026 08:51:48 -0500 (EST)
-X-Mailer: MessagingEngine.com Webmail Interface
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="KDXSRnn2"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1772814957; x=1804350957;
+  h=from:to:cc:subject:date:message-id:mime-version:
+   content-transfer-encoding;
+  bh=V21srALT+hTXVqWvmCdn2I3ACewpkLe/mqQ8ZUkY9kM=;
+  b=KDXSRnn2PqGjVuP1EjN6xA7dPxgxkd/TMhc/2Zz27MPwBdJeMP+6UvrG
+   bSGzYPeaPCZzJBqkoPT27KIVqK8TVKZbKe5zHjRbJ9Hdp/NreEDy846TC
+   Gsp875ep5ZSSMGZHDHglYSqbeMc7EVfaXpQEr02wzqx3E+4N/7Qmrj42g
+   WvyACqeqwV383KFNBFKOmuYTtyiTG7FvdTvZxjqNUFJvar1FSz5p+c93r
+   1hgq8gJTzXaZrI6o61J1BSiGBAzN7pziccYaLZHSeyBjY+rKPJ6/1r0li
+   8IaVki02HJEnrdSdr7RVnFc8I2IlXQuYrtb+gCTlHwmsIoGd8MCWzipcy
+   A==;
+X-CSE-ConnectionGUID: M6mvdvqZTmqKD6BKfa2nfg==
+X-CSE-MsgGUID: doZIe1AGSdeDULMLhisnrQ==
+X-IronPort-AV: E=McAfee;i="6800,10657,11721"; a="77773856"
+X-IronPort-AV: E=Sophos;i="6.23,105,1770624000"; 
+   d="scan'208";a="77773856"
+Received: from orviesa007.jf.intel.com ([10.64.159.147])
+  by orvoesa106.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 06 Mar 2026 08:35:56 -0800
+X-CSE-ConnectionGUID: LpAVxWNYQAWlLFW/w1pFlg==
+X-CSE-MsgGUID: eb08P6P3SY+S0+YEZxi6uA==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.23,105,1770624000"; 
+   d="scan'208";a="219180548"
+Received: from intel-nuc8i7beh.iind.intel.com ([10.223.163.35])
+  by orviesa007.jf.intel.com with ESMTP; 06 Mar 2026 08:35:54 -0800
+From: Arun T <arun.t@intel.com>
+To: arun.t@intel.com,
+	johannes.goede@oss.qualcomm.com
+Cc: sakari.ailus@linux.intel.com,
+	arec.kao@intel.com,
+	ilpo.jarvinen@linux.intel.com,
+	dan.scally@ideasonboard.com,
+	platform-driver-x86@vger.kernel.org,
+	linux-media@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	mehdi.djait@intel.com
+Subject: [PATCH v4 0/2] Add TPS68470 power supply support for ov13b10 sensor
+Date: Fri,  6 Mar 2026 22:00:17 +0530
+Message-ID: <20260306163019.1619490-1-arun.t@intel.com>
+X-Mailer: git-send-email 2.43.0
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-ThreadId: AA58JqlF_hbo
-Date: Fri, 06 Mar 2026 08:51:25 -0500
-From: "Mark Pearson" <mpearson-lenovo@squebb.ca>
-To: "Vishnu Sankar" <vishnuocv@gmail.com>,
- "Dmitry Torokhov" <dmitry.torokhov@gmail.com>,
- "Henrique de Moraes Holschuh" <hmh@hmh.eng.br>,
- "Hans de Goede" <hansg@kernel.org>, "Jonathan Corbet" <corbet@lwn.net>,
- "Derek J . Clark" <derekjohn.clark@gmail.com>,
- =?UTF-8?Q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
-Cc: linux-input@vger.kernel.org, linux-kernel@vger.kernel.org,
- ibm-acpi-devel@lists.sourceforge.net, linux-doc@vger.kernel.org,
- "platform-driver-x86@vger.kernel.org" <platform-driver-x86@vger.kernel.org>,
- "Vishnu Sankar" <vsankar@lenovo.com>
-Message-Id: <8a352a34-5ddb-4aa8-b9e1-8c5c8aafca04@app.fastmail.com>
-In-Reply-To: 
- <CABxCQKvNO78SeVp9pAnBOSAF=x0eFn03F33ftW-x-rZCG0-84Q@mail.gmail.com>
-References: <20260209063355.491189-1-vishnuocv@gmail.com>
- <CABxCQKvNO78SeVp9pAnBOSAF=x0eFn03F33ftW-x-rZCG0-84Q@mail.gmail.com>
-Subject: Re: [PATCH v7 0/3] TrackPoint doubletap enablement and user control
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 8bit
 
 
-On Mon, Feb 23, 2026, at 6:28 PM, Vishnu Sankar wrote:
-> Hi,
->
-> Gentle ping on this series.
->
-> This is v7 addressing all previous review comments.
-> Please let me know if any further changes are needed.
->
-> Thanks,
-> Vishnu
->
->
-> On Mon, Feb 9, 2026 at 3:34=E2=80=AFPM Vishnu Sankar <vishnuocv@gmail.=
-com> wrote:
->>
->> This patch series adds support for TrackPoint doubletap with a clear =
-and
->> simple separation of responsibilities between drivers:
->>
->> 1. Firmware enablement (trackpoint.c):
->>    Automatically enables doubletap on capable hardware during device
->>    detection.
->>
->> 2. User control (thinkpad_acpi.c):
->>    Provides a sysfs interface to enable or disable delivery of double=
-tap
->>    events to userspace.
->>
->> The approach follows the KISS principle:
->> - The TrackPoint driver enables hardware functionality by default.
->> - The thinkpad_acpi driver controls whether ACPI doubletap events are
->>   delivered, using existing hotkey filtering infrastructure.
->> - No cross-driver APIs or dual filtering paths are introduced.
->>
->> Changes in v7:
->> - Removed unwanted comments and logs
->>
->> Changes in v6:
->> - Documentation: fix formatting of the doubletap_enable sysfs attribu=
-te
->>   description (separate "Values" list)
->>
->> Changes in v5:
->> - Rename sysfs attribute from doubletap_filter to doubletap_enable to
->>   reflect actual behavior.
->> - Fix inverted logic so events are delivered only when doubletap is
->>   enabled.
->> - Suppress ACPI hotkey delivery instead of injecting or filtering inp=
-ut
->>   events.
->> - Register the sysfs attribute via hotkey_attributes[] instead of
->>   device_create_file().
->> - Drop unnecessary helper wrappers and debug logging.
->> - Update Documentation to reflect the new naming and semantics.
->>
->> Changes in v4:
->> - Complete redesign based on reviewer feedback.
->> - trackpoint.c: Simplified to only enable doubletap by default.
->> - trackpoint.c: Removed all sysfs attributes and global variables.
->> - trackpoint.c: Uses firmware ID detection with deny list.
->> - thinkpad_acpi.c: Added sysfs interface for kernel-level event contr=
-ol.
->> - thinkpad_acpi.c: No cross-driver dependencies.
->> - Documentation: Updated to reflect simplified sysfs approach.
->>
->> Changes in v3:
->> - No changes.
->>
->> Changes in v2:
->> - Improved commit messages.
->> - Removed unnecessary comments and debug messages.
->> - Switched to strstarts() usage.
->> - Simplified firmware capability detection logic.
->>
->> This version addresses the remaining review feedback by correcting the
->> naming and logic inversion, aligning sysfs semantics with behavior, a=
-nd
->> fully integrating with existing thinkpad_acpi hotkey handling.
->>
->> Vishnu Sankar (3):
->>   input: trackpoint - Enable doubletap by default on capable devices
->>   platform/x86: thinkpad_acpi: Add sysfs control for TrackPoint
->>     double-tap
->>   Documentation: thinkpad-acpi - Document doubletap_enable attribute
->>
->>  .../admin-guide/laptops/thinkpad-acpi.rst     | 21 +++++++++
->>  drivers/input/mouse/trackpoint.c              | 45 +++++++++++++++++=
-++
->>  drivers/input/mouse/trackpoint.h              |  5 +++
->>  drivers/platform/x86/lenovo/thinkpad_acpi.c   | 42 ++++++++++++++---
->>  4 files changed, 106 insertions(+), 7 deletions(-)
->>
->> --
->> 2.51.0
->>
->
->
-> --
->
-> Regards,
->
->       Vishnu Sankar
+This patch series adds power supply management support for the OV13B10 camera sensor when used with TPS68470 PMIC, commonly used on Intel-based camera platforms.
 
-Hi Ilpo,
+The OV13B10 sensor requires three power supplies (DOVDD, AVDD, DVDD) which are provided by the TPS68470 PMIC.
+This series implements proper regulator framework integration to manage these power supplies during sensor power on/off sequences.
 
-I was just discussing this with Vishnu and wanted to check if anything e=
-lse was needed from your perspective for this patch?
+Changes in v4:
+        - Discrete INT3472 supplying regulator to i2c-OVTI13B1:00 and tps68470 supplying regulator to i2c-OVTI13B1:01.
+	- Change Analog regulator name as avdd for tps68470 pmic
+	- Fixed regulator_consumer_supply maps to i2c-OVTI13B1:01 device.
+        - Removed vdd regulator from Power supply names list
 
-I assume at this point we're waiting for the 7.1 merge window to open. P=
-lease do let us know if there's anything you need from us in the meantim=
-e.=20
-We can't get this pulled into the distro's until it's accepted upstream =
-- and while it's not a critical feature, we'd love it to be in place for=
- the Linux preloads for the 2026 platforms (coming up soon)
+Suggested by Hans:
+        - No "avdd" found, only "vdda" and "ana" - check if "ana" should be changed to "avdd".
+        - Drop unused regulator maps. Only keep the 3 maps used by sensor-driver.
+        - For "i2c-OVTI13B1:01" consumer, only map "dovdd", "avdd", and "dvdd" supplies.
 
-Thanks
-Mark
+Changes in v3:
+        - Fixed check patch errors as updated by sakari
+        - Enabled VCM regulator for ov13b10 sensor to enable autofocus to work
+
+Suggested by Sakari:
+        - Add include header file in alphabetical order
+        - Remove extra space
+        - Asked to check vcm instance
+
+Changes in v2:
+        - Added power supply names array for the three required regulators
+        - Implement regulator handling with devm_regulator_bulk_get()
+        - Add regulator_bulk_enable() and regulator_bulk_disable() for sensor power on/off sequence
+
+Suggested by Hans:
+        - Add multiple regulators you should use the bulk regulator API
+        - Use use "reset" instead of "s_resetn" for parse gpio name.
+        - Add diffent regulator power supplies  in single array
+
+Arun T (2):
+  platform/x86: int3472: Add TPS68470 board data for Intel nvl
+  media: i2c: ov13b10: support tps68470 regulator and gpio
+
+ drivers/media/i2c/ov13b10.c                   |  47 +++---
+ .../x86/intel/int3472/tps68470_board_data.c   | 150 ++++++++++++++++++
+ 2 files changed, 176 insertions(+), 21 deletions(-)
+
+-- 
+2.43.0
+
