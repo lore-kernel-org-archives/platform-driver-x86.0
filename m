@@ -1,42 +1,42 @@
-Received: from relay14.grserver.gr (relay14.grserver.gr [157.180.73.62])
+Received: from relay13.grserver.gr (relay13.grserver.gr [178.156.171.147])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B9BB533C18B;
-	Sat,  7 Mar 2026 11:55:33 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=157.180.73.62
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BC9F3358363;
+	Sat,  7 Mar 2026 11:55:36 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=178.156.171.147
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1772884535; cv=none; b=CMUknOqpxtUnapMA63ulWVsZHsjyjOp0q6E8o3Apb0n0vxrcTTnHSjj4cl3WvZ1HCJFJ0Iw7mFjfZSLyhulx/QdVoT7VM2ZdmXAtxgPmrhitkdCobx9fzbfOA348Ogf3zNKf8I3fGrO4U3HmL7iICLLG6/5VyLJuLiMuyr515EI=
+	t=1772884539; cv=none; b=dNlVLAIyV0P3GHSNoxVonteDjAbZPJYDVkaXwGWl90RFDVF2LLGQ89Aiu2OtgdTn7eGPyON97K3J12mWGM02/c4iaUMbz4Z4W+ppqaczX/BXYi4gVY/xfCEGV6mGTwEUs8S4ghs2k4AmgzYExNuPzbfCs5k3n/i0fI7C9mOcABQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1772884535; c=relaxed/simple;
-	bh=j/2gqBgx9RYbaR8BrQe7tCgW/Et6QpCg722X4ShPrjE=;
+	s=arc-20240116; t=1772884539; c=relaxed/simple;
+	bh=mOWAfErFKq7/8Of8FDg4gx1WAEUd6ZNEnOAObgAKrfY=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=G4BuGwMwk18+NpQmZHlatI6F3xj728i/JyMJw1rCSkB7vRixEEDvnLSSmg8LlGrS+EGx7Q02YzZb0Hs6Hu2eY/7/ZBqCv1wqs4oBpcO8jJe/9Sc49TtrOgosdak72orMnwffaN1xbxUGZFhLVyRjlK+QvF8nyA3q/0AZE/l5VQE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=antheas.dev; spf=pass smtp.mailfrom=antheas.dev; dkim=pass (2048-bit key) header.d=antheas.dev header.i=@antheas.dev header.b=R8BHRZH2; arc=none smtp.client-ip=157.180.73.62
+	 MIME-Version; b=cz+KHa0F6rESgOgKncBdBVvXcxJ/pBROoNWGqJg+QEsxbmEB2WVsDfV59nAXMNxVCyEyaYqO3efiuNGK63srhrIG4kN0Kah5B2hZvcjWMwnm+0SHa7ssdan4pCeOOT/m0fbx6yB7b8Fsr+/h+dli6CpiyClHZdl7WhdK6oSqADA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=antheas.dev; spf=pass smtp.mailfrom=antheas.dev; dkim=pass (2048-bit key) header.d=antheas.dev header.i=@antheas.dev header.b=DUllSMP/; arc=none smtp.client-ip=178.156.171.147
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=antheas.dev
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=antheas.dev
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=antheas.dev header.i=@antheas.dev header.b="R8BHRZH2"
-Received: from relay14 (localhost [127.0.0.1])
-	by relay14.grserver.gr (Proxmox) with ESMTP id EDF9F409D5;
-	Sat,  7 Mar 2026 11:55:31 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=antheas.dev header.i=@antheas.dev header.b="DUllSMP/"
+Received: from relay13 (localhost [127.0.0.1])
+	by relay13.grserver.gr (Proxmox) with ESMTP id 9D4365E4E3;
+	Sat,  7 Mar 2026 13:55:35 +0200 (EET)
 Received: from linux3247.grserver.gr (linux3247.grserver.gr [213.158.90.240])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
 	(No client certificate requested)
-	by relay14.grserver.gr (Proxmox) with ESMTPS id D91E1409DC;
-	Sat,  7 Mar 2026 11:55:30 +0000 (UTC)
+	by relay13.grserver.gr (Proxmox) with ESMTPS id 9D1265E585;
+	Sat,  7 Mar 2026 13:55:33 +0200 (EET)
 Received: from antheas-z13 (unknown [IPv6:2a05:f6c5:43c3:0:ba48:cea4:a8c2:d901])
-	by linux3247.grserver.gr (Postfix) with ESMTPSA id DFF1A1FECCF;
-	Sat,  7 Mar 2026 13:55:29 +0200 (EET)
+	by linux3247.grserver.gr (Postfix) with ESMTPSA id E72801FEA7A;
+	Sat,  7 Mar 2026 13:55:30 +0200 (EET)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=antheas.dev;
-	s=default; t=1772884530;
-	bh=KdugWhgApbpYkp5ulPSM4iY1f+pLRyIvHEfY0i5KqC8=; h=From:To:Subject;
-	b=R8BHRZH2BcTQoynort/3vVVnAHkT8NJ3ThLYOZZKvI5v1A/RKircDDWtQSSY1VjTJ
-	 pwjnmOEC+crNYLhJc9ipQeDdr+8LPNGErzpJJVBMEOL6kJeOtbx5BmwTVzKffKu7Kp
-	 3sFsyNfoj7E5oIOk5I1RVQweBj0vmrzZJv/WiaNk4Z3tJu1WEyNoPkIwOdDGnTbDQm
-	 AXCYOgzI1Si9rd9mHRFTG0ECtWjv5NMPqVrNchJlBBhL7ZPpsq+irv2+4ObkBtxKuT
-	 ISh0YK1UwUBTN7Um/RWRn0wKeqYc+wSaef7ETz4PkkNcsEGmKqiTsRuSblV0v3IX3V
-	 FJSYBKArCmIUA==
+	s=default; t=1772884532;
+	bh=xv4p/PItfa/J55IOMAeSTW0ATm0Ju/bDg02xexJlFMg=; h=From:To:Subject;
+	b=DUllSMP/oKGYq5maT16pGhhOYyfTFpwVMSRWoKTyw78toAA8eq+hFbb4bZA0zpB4F
+	 sHNHUbmg86Lf82averFX6PFizsG6evMVQBMApifQ6ZjzcFILmdhPrCB3C6TPoZ/WqA
+	 Gqho1A6SJ3z58PPCxZFBHhBPGUzPprWqspwgWx7rFyyktAGITiywuKE37svDjSeaFU
+	 2faCCp1r4XCGVNQnlSaQTskRhAltyhrqcNnjWDebxDTLssqQGQCViC2NB6ph+DwMpZ
+	 0ybGVlEPn9ur8L9PchLiCAYZH4ocxKMbSJUtyuzUM4O478veZ1yJSDq/U18PRf90JJ
+	 r4ptDoBYr6JnQ==
 Authentication-Results: linux3247.grserver.gr;
 	spf=pass (sender IP is 2a05:f6c5:43c3:0:ba48:cea4:a8c2:d901) smtp.mailfrom=lkml@antheas.dev smtp.helo=antheas-z13
 Received-SPF: pass (linux3247.grserver.gr: connection is authenticated)
@@ -50,10 +50,9 @@ Cc: W_Armin@gmx.de,
 	linux-kernel@vger.kernel.org,
 	platform-driver-x86@vger.kernel.org,
 	Antheas Kapenekakis <lkml@antheas.dev>
-Subject: [RFC v3 1/4] Documentation: firmware-attributes: generalize
- save_settings entry
-Date: Sat,  7 Mar 2026 12:55:13 +0100
-Message-ID: <20260307115516.26892-2-lkml@antheas.dev>
+Subject: [RFC v3 2/4] platform/x86/amd: dptc: Add AMD DPTCi driver
+Date: Sat,  7 Mar 2026 12:55:14 +0100
+Message-ID: <20260307115516.26892-3-lkml@antheas.dev>
 X-Mailer: git-send-email 2.52.0
 In-Reply-To: <20260307115516.26892-1-lkml@antheas.dev>
 References: <20260307115516.26892-1-lkml@antheas.dev>
@@ -65,85 +64,835 @@ List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 X-PPP-Message-ID: 
- <177288453041.1270865.12008553927786162334@linux3247.grserver.gr>
+ <177288453278.1270942.11081997224885336551@linux3247.grserver.gr>
 X-PPP-Vhost: antheas.dev
 X-Virus-Scanned: clamav-milter 1.4.3 at linux3247.grserver.gr
 X-Virus-Status: Clean
 
-The save_settings interface is also implemented by amd_dptc, which
-has the same bulk/single/save semantics but no save-count limitation.
+Add a driver for AMD AGESA ALIB Function 0x0C, the Dynamic Power and
+Thermal Configuration interface (DPTCi). This exposes TDP and thermal
+parameters for AMD APU-based handheld devices via the
+firmware-attributes sysfs ABI.
 
-Generalize the description to cover both drivers: move the Lenovo
-48-save architectural constraint into a driver-specific notes section
-and add the amd_dptc behavior alongside it.
+Parameters are staged and atomically committed through ALIB. The driver
+supports two save modes: "single" (apply immediately on write) and
+"bulk" (stage values, then commit with "save"). An "expanded_limits"
+toggle widens the allowed parameter ranges beyond device defaults.
 
+Initial device support: GPD Win 5 (AMD Ryzen AI MAX).
+
+Assisted-by: Claude:claude-opus-4-6
 Signed-off-by: Antheas Kapenekakis <lkml@antheas.dev>
 ---
- .../testing/sysfs-class-firmware-attributes   | 41 ++++++++++++-------
- 1 file changed, 26 insertions(+), 15 deletions(-)
+ MAINTAINERS                       |   6 +
+ drivers/platform/x86/amd/Kconfig  |  14 +
+ drivers/platform/x86/amd/Makefile |   2 +
+ drivers/platform/x86/amd/dptc.c   | 747 ++++++++++++++++++++++++++++++
+ 4 files changed, 769 insertions(+)
+ create mode 100644 drivers/platform/x86/amd/dptc.c
 
-diff --git a/Documentation/ABI/testing/sysfs-class-firmware-attributes b/Documentation/ABI/testing/sysfs-class-firmware-attributes
-index 2713efa509b4..c762bed50de8 100644
---- a/Documentation/ABI/testing/sysfs-class-firmware-attributes
-+++ b/Documentation/ABI/testing/sysfs-class-firmware-attributes
-@@ -388,31 +388,42 @@ What:		/sys/class/firmware-attributes/*/attributes/save_settings
- Date:		August 2023
- KernelVersion:	6.6
- Contact:	Mark Pearson <mpearson-lenovo@squebb.ca>
-+		Antheas Kapenekakis <lkml@antheas.dev>
- Description:
--		On Lenovo platforms there is a limitation in the number of times an attribute can be
--		saved. This is an architectural limitation and it limits the number of attributes
--		that can be modified to 48.
--		A solution for this is instead of the attribute being saved after every modification,
--		to allow a user to bulk set the attributes, and then trigger a final save. This allows
--		unlimited attributes.
-+		Controls how writes to current_value are applied to the hardware.
+diff --git a/MAINTAINERS b/MAINTAINERS
+index e08767323763..915293594641 100644
+--- a/MAINTAINERS
++++ b/MAINTAINERS
+@@ -1096,6 +1096,12 @@ S:	Supported
+ F:	drivers/gpu/drm/amd/display/dc/dml/
+ F:	drivers/gpu/drm/amd/display/dc/dml2_0/
  
- 		Read the attribute to check what save mode is enabled (single or bulk).
- 		E.g:
--		# cat /sys/class/firmware-attributes/thinklmi/attributes/save_settings
-+		# cat /sys/class/firmware-attributes/*/attributes/save_settings
- 		single
++AMD DPTC DRIVER
++M:	Antheas Kapenekakis <lkml@antheas.dev>
++L:	platform-driver-x86@vger.kernel.org
++S:	Maintained
++F:	drivers/platform/x86/amd/dptc.c
++
+ AMD FAM15H PROCESSOR POWER MONITORING DRIVER
+ M:	Huang Rui <ray.huang@amd.com>
+ L:	linux-hwmon@vger.kernel.org
+diff --git a/drivers/platform/x86/amd/Kconfig b/drivers/platform/x86/amd/Kconfig
+index b813f9265368..d610092467fc 100644
+--- a/drivers/platform/x86/amd/Kconfig
++++ b/drivers/platform/x86/amd/Kconfig
+@@ -44,3 +44,17 @@ config AMD_ISP_PLATFORM
  
- 		Write the attribute with 'bulk' to enable bulk save mode.
--		Write the attribute with 'single' to enable saving, after every attribute set.
--		The default setting is single mode.
-+		Write the attribute with 'single' to enable saving, after every
-+		attribute set. The default setting is single mode.
- 		E.g:
--		# echo bulk > /sys/class/firmware-attributes/thinklmi/attributes/save_settings
-+		# echo bulk > /sys/class/firmware-attributes/*/attributes/save_settings
- 
--		When in bulk mode write 'save' to trigger a save of all currently modified attributes.
--		Note, once a save has been triggered, in bulk mode, attributes can no longer be set and
--		will return a permissions error. This is to prevent users hitting the 48+ save limitation
--		(which requires entering the BIOS to clear the error condition)
-+		When in bulk mode write 'save' to trigger an apply of all
-+		currently staged attributes.
- 		E.g:
--		# echo save > /sys/class/firmware-attributes/thinklmi/attributes/save_settings
-+		# echo save > /sys/class/firmware-attributes/*/attributes/save_settings
+ 	  This driver can also be built as a module. If so, the module
+ 	  will be called amd_isp4.
 +
-+		Driver-specific notes:
++config AMD_DPTC
++	tristate "AMD Dynamic Power and Thermal Configuration Interface (DPTCi)"
++	depends on X86_64 && ACPI && DMI
++	select FIRMWARE_ATTRIBUTES_CLASS
++	help
++	  Driver for AMD AGESA ALIB Function 0x0C, the Dynamic Power and
++	  Thermal Configuration Interface (DPTCi). Exposes TDP and thermal
++	  parameters for AMD APU-based handheld devices via the
++	  firmware-attributes sysfs ABI, allowing userspace tools to stage
++	  and atomically commit power limit settings. Requires a DMI match
++	  for the device and a recognized AMD SoC.
 +
-+		thinklmi (Lenovo): On Lenovo platforms there is a limitation in
-+		the number of times an attribute can be saved. This is an
-+		architectural limitation and it limits the number of attributes
-+		that can be modified to 48.
++	  If built as a module, the module will be called amd_dptc.
+diff --git a/drivers/platform/x86/amd/Makefile b/drivers/platform/x86/amd/Makefile
+index f6ff0c837f34..862a609bfe38 100644
+--- a/drivers/platform/x86/amd/Makefile
++++ b/drivers/platform/x86/amd/Makefile
+@@ -12,3 +12,5 @@ obj-$(CONFIG_AMD_PMF)		+= pmf/
+ obj-$(CONFIG_AMD_WBRF)		+= wbrf.o
+ obj-$(CONFIG_AMD_ISP_PLATFORM)	+= amd_isp4.o
+ obj-$(CONFIG_AMD_HFI)		+= hfi/
++obj-$(CONFIG_AMD_DPTC)		+= amd_dptc.o
++amd_dptc-y			:= dptc.o
+diff --git a/drivers/platform/x86/amd/dptc.c b/drivers/platform/x86/amd/dptc.c
+new file mode 100644
+index 000000000000..acfe9cc01bab
+--- /dev/null
++++ b/drivers/platform/x86/amd/dptc.c
+@@ -0,0 +1,747 @@
++// SPDX-License-Identifier: GPL-2.0-only
++/*
++ * AMD Dynamic Power and Thermal Configuration Interface (DPTCi) driver
++ *
++ * Exposes AMD APU power and thermal parameters via the firmware-attributes
++ * sysfs ABI. Parameters are staged and atomically committed through the
++ * AGESA ALIB Function 0x0C (Dynamic Power and Thermal Configuration
++ * interface).
++ *
++ * Reference: AMD AGESA Publication #44065, Appendix E.5
++ *            https://docs.amd.com/v/u/en-US/44065_Arch2008
++ *
++ * Copyright (C) 2026 Antheas Kapenekakis <lkml@antheas.dev>
++ */
 +
-+		Once a save has been triggered in bulk mode, attributes can no
-+		longer be set and will return a permissions error. This is to
-+		prevent users hitting the 48+ save limitation (which requires
-+		entering the BIOS to clear the error condition).
++#define pr_fmt(fmt) KBUILD_MODNAME ": " fmt
 +
-+		amd_dptc (AMD DPTC): No save-count limitation. 'save' can be
-+		called any number of times. Returns -EINVAL if no values have
-+		been staged. In addition, when in 'single' mode, the driver
-+		uses pm ops to trigger a save of staged attributes on resume.
- 
- What:		/sys/class/firmware-attributes/*/attributes/debug_cmd
- Date:		July 2021
++#include <linux/acpi.h>
++#include <linux/cleanup.h>
++#include <linux/dmi.h>
++#include <linux/init.h>
++#include <linux/kobject.h>
++#include <linux/module.h>
++#include <linux/mutex.h>
++#include <linux/platform_device.h>
++#include <linux/processor.h>
++#include <linux/sysfs.h>
++#include <linux/unaligned.h>
++
++#include "../firmware_attributes_class.h"
++
++#define DRIVER_NAME		"amd-dptc"
++
++#define ALIB_FUNC_DPTC		0x0C
++#define ALIB_PATH		"\\_SB.ALIB"
++
++#define ALIB_ID_TEMP_TARGET	0x03
++#define ALIB_ID_STAPM_LIMIT	0x05
++#define ALIB_ID_FAST_LIMIT	0x06
++#define ALIB_ID_SLOW_LIMIT	0x07
++#define ALIB_ID_SKIN_LIMIT	0x2E
++
++enum dptc_param_idx {
++	DPTC_PPT_PL1_SPL,	/* STAPM + skin limit (set together) */
++	DPTC_PPT_PL2_SPPT,	/* slow PPT limit */
++	DPTC_PPT_PL3_FPPT,	/* fast PPT limit */
++	DPTC_CPU_TEMP,		/* thermal control target */
++	DPTC_NUM_PARAMS,
++};
++
++struct dptc_param_limits {
++	u32 expanded_min;
++	u32 device_min;
++	u32 def;
++	u32 device_max;
++	u32 expanded_max;
++};
++
++struct dptc_device_limits {
++	struct dptc_param_limits params[DPTC_NUM_PARAMS];
++};
++
++struct dptc_param_desc {
++	const char *name;
++	const char *display_name;
++	u16 scale;	/* sysfs-to-ALIB multiplier (e.g. 1000 for W->mW) */
++	u8 param_id;
++	u8 param_id2;	/* secondary ALIB ID, 0 if none */
++};
++
++static const struct dptc_param_desc dptc_params[DPTC_NUM_PARAMS] = {
++	[DPTC_PPT_PL1_SPL]  = { "ppt_pl1_spl",  "Sustained power limit (W)",
++		1000, ALIB_ID_STAPM_LIMIT, ALIB_ID_SKIN_LIMIT },
++	[DPTC_PPT_PL2_SPPT] = { "ppt_pl2_sppt", "Slow PPT limit (W)",
++		1000, ALIB_ID_SLOW_LIMIT },
++	[DPTC_PPT_PL3_FPPT] = { "ppt_pl3_fppt", "Fast PPT limit (W)",
++		1000, ALIB_ID_FAST_LIMIT },
++	[DPTC_CPU_TEMP]     = { "cpu_temp",     "Thermal control limit (C)",
++		   1, ALIB_ID_TEMP_TARGET },
++};
++
++/* AI MAX Handheld class: GPD Win 5 */
++static const struct dptc_device_limits limits_maxhh = { .params = {
++	[DPTC_PPT_PL1_SPL]  = {  0,  4, 25,  80, 100 },
++	[DPTC_PPT_PL2_SPPT] = {  0,  4, 27,  82, 100 },
++	[DPTC_PPT_PL3_FPPT] = {  0,  4, 40,  85, 100 },
++	[DPTC_CPU_TEMP]     = { 60, 70, 95,  95, 100 },
++}};
++
++/* Substring matches against boot_cpu_data.x86_model_id; order matters. */
++static const char * const dptc_soc_table[] = {
++	/* AI MAX */
++	"AMD RYZEN AI MAX+ 395",
++	"AMD RYZEN AI MAX+ 385",
++	"AMD RYZEN AI MAX 380",
++	NULL,
++};
++
++static const struct dmi_system_id dptc_dmi_table[] = {
++	/* GPD */
++	{
++		.ident = "GPD Win 5",
++		.matches = {
++			DMI_MATCH(DMI_SYS_VENDOR, "GPD"),
++			DMI_MATCH(DMI_PRODUCT_NAME, "G1618-05"),
++		},
++		.driver_data = (void *)&limits_maxhh,
++	},
++	{ }
++};
++MODULE_DEVICE_TABLE(dmi, dptc_dmi_table);
++
++struct dptc_priv;
++
++struct dptc_attr_sysfs {
++	struct dptc_priv *priv;
++	struct kobj_attribute current_value;
++	struct kobj_attribute default_value;
++	struct kobj_attribute min_value;
++	struct kobj_attribute max_value;
++	struct kobj_attribute scalar_increment;
++	struct kobj_attribute display_name;
++	struct kobj_attribute type;
++	struct attribute *attrs[8];
++	struct attribute_group group;
++	int idx;
++};
++
++struct dptc_priv {
++	struct device *fw_attr_dev;
++	struct kset *fw_attr_kset;
++
++	const struct dptc_device_limits *dev_limits;
++
++	bool expanded;
++
++	enum dptc_save_mode { SAVE_SINGLE, SAVE_BULK } save_mode;
++
++	u32 staged[DPTC_NUM_PARAMS];
++	bool has_staged[DPTC_NUM_PARAMS];
++
++	/* Protects mutable driver state */
++	struct mutex lock;
++
++	struct dptc_attr_sysfs params[DPTC_NUM_PARAMS];
++	struct dptc_attr_sysfs expanded_attr;
++	struct kobj_attribute save_settings_attr;
++};
++
++static struct platform_device *dptc_pdev;
++
++static u32 dptc_get_min(struct dptc_priv *dptc, int idx)
++{
++	return dptc->expanded ? dptc->dev_limits->params[idx].expanded_min
++			      : dptc->dev_limits->params[idx].device_min;
++}
++
++static u32 dptc_get_max(struct dptc_priv *dptc, int idx)
++{
++	return dptc->expanded ? dptc->dev_limits->params[idx].expanded_max
++			      : dptc->dev_limits->params[idx].device_max;
++}
++
++static u32 dptc_get_default(struct dptc_priv *dptc, int idx)
++{
++	return dptc->dev_limits->params[idx].def;
++}
++
++static int dptc_alib_call(const u8 *ids, const u32 *vals, int count)
++{
++	union acpi_object in_params[2];
++	struct acpi_object_list input;
++	acpi_status status;
++	u32 buf_size;
++	int i, off;
++	u8 *buf;
++
++	if (count == 0)
++		return -EINVAL;
++
++	/* Buffer layout: WORD total_size + count * (BYTE id + DWORD value) */
++	buf_size = 2 + count * 5;
++	buf = kzalloc(buf_size, GFP_KERNEL);
++	if (!buf)
++		return -ENOMEM;
++
++	put_unaligned_le16(buf_size, buf);
++
++	for (i = 0; i < count; i++) {
++		off  = 2 + i * 5;
++		buf[off] = ids[i];
++		put_unaligned_le32(vals[i], buf + off + 1);
++	}
++
++	in_params[0].type          = ACPI_TYPE_INTEGER;
++	in_params[0].integer.value = ALIB_FUNC_DPTC;
++	in_params[1].type          = ACPI_TYPE_BUFFER;
++	in_params[1].buffer.length  = buf_size;
++	in_params[1].buffer.pointer = buf;
++
++	input.count   = 2;
++	input.pointer = in_params;
++
++	status = acpi_evaluate_object(NULL, ALIB_PATH, &input, NULL);
++	kfree(buf);
++
++	if (ACPI_FAILURE(status)) {
++		pr_err("ALIB call failed: %s\n",
++		       acpi_format_exception(status));
++		return -EIO;
++	}
++
++	pr_debug("sent %d ALIB parameter(s)\n", count);
++	return 0;
++}
++
++static int dptc_alib_send_one(int idx, u32 val)
++{
++	u32 hw_val = val * dptc_params[idx].scale;
++	u32 vals[2];
++	u8 ids[2];
++	int count = 0;
++
++	ids[count]  = dptc_params[idx].param_id;
++	vals[count] = hw_val;
++	count++;
++	if (dptc_params[idx].param_id2) {
++		ids[count]  = dptc_params[idx].param_id2;
++		vals[count] = hw_val;
++		count++;
++	}
++
++	return dptc_alib_call(ids, vals, count);
++}
++
++static int dptc_alib_save(struct dptc_priv *dptc)
++{
++	u32 vals[DPTC_NUM_PARAMS * 2];
++	u8 ids[DPTC_NUM_PARAMS * 2];
++	int i, count = 0;
++	u32 hw_val;
++
++	for (i = 0; i < DPTC_NUM_PARAMS; i++) {
++		if (!dptc->has_staged[i])
++			continue;
++
++		hw_val = dptc->staged[i] * dptc_params[i].scale;
++		ids[count]  = dptc_params[i].param_id;
++		vals[count] = hw_val;
++		count++;
++		if (dptc_params[i].param_id2) {
++			ids[count]  = dptc_params[i].param_id2;
++			vals[count] = hw_val;
++			count++;
++		}
++	}
++
++	return dptc_alib_call(ids, vals, count);
++}
++
++/* Sysfs callbacks */
++
++static ssize_t dptc_current_value_show(struct kobject *kobj,
++				       struct kobj_attribute *attr, char *buf)
++{
++	struct dptc_attr_sysfs *ps =
++		container_of(attr, struct dptc_attr_sysfs, current_value);
++	struct dptc_priv *dptc = ps->priv;
++
++	guard(mutex)(&dptc->lock);
++
++	if (!dptc->has_staged[ps->idx])
++		return sysfs_emit(buf, "\n");
++	return sysfs_emit(buf, "%u\n", dptc->staged[ps->idx]);
++}
++
++static ssize_t dptc_current_value_store(struct kobject *kobj,
++					struct kobj_attribute *attr,
++					const char *buf, size_t count)
++{
++	struct dptc_attr_sysfs *ps =
++		container_of(attr, struct dptc_attr_sysfs, current_value);
++	struct dptc_priv *dptc = ps->priv;
++	u32 val, min, max;
++	int ret;
++
++	if (count == 1 && buf[0] == '\n') {
++		guard(mutex)(&dptc->lock);
++
++		dptc->has_staged[ps->idx] = false;
++		return count;
++	}
++
++	ret = kstrtou32(buf, 10, &val);
++	if (ret)
++		return ret;
++
++	guard(mutex)(&dptc->lock);
++
++	min = dptc_get_min(dptc, ps->idx);
++	max = dptc_get_max(dptc, ps->idx);
++	if (val < min || (max && val > max))
++		return -EINVAL;
++	dptc->staged[ps->idx]    = val;
++	dptc->has_staged[ps->idx] = true;
++	if (dptc->save_mode == SAVE_SINGLE)
++		ret = dptc_alib_send_one(ps->idx, val);
++
++	return ret ? ret : count;
++}
++
++static ssize_t dptc_default_value_show(struct kobject *kobj,
++				       struct kobj_attribute *attr, char *buf)
++{
++	struct dptc_attr_sysfs *ps =
++		container_of(attr, struct dptc_attr_sysfs, default_value);
++
++	return sysfs_emit(buf, "%u\n", dptc_get_default(ps->priv, ps->idx));
++}
++
++static ssize_t dptc_min_value_show(struct kobject *kobj,
++				   struct kobj_attribute *attr, char *buf)
++{
++	struct dptc_attr_sysfs *ps =
++		container_of(attr, struct dptc_attr_sysfs, min_value);
++	struct dptc_priv *dptc = ps->priv;
++
++	guard(mutex)(&dptc->lock);
++
++	return sysfs_emit(buf, "%u\n", dptc_get_min(dptc, ps->idx));
++}
++
++static ssize_t dptc_max_value_show(struct kobject *kobj,
++				   struct kobj_attribute *attr, char *buf)
++{
++	struct dptc_attr_sysfs *ps =
++		container_of(attr, struct dptc_attr_sysfs, max_value);
++	struct dptc_priv *dptc = ps->priv;
++
++	guard(mutex)(&dptc->lock);
++
++	return sysfs_emit(buf, "%u\n", dptc_get_max(dptc, ps->idx));
++}
++
++static ssize_t dptc_scalar_increment_show(struct kobject *kobj,
++					  struct kobj_attribute *attr, char *buf)
++{
++	return sysfs_emit(buf, "1\n");
++}
++
++static ssize_t dptc_display_name_show(struct kobject *kobj,
++				      struct kobj_attribute *attr, char *buf)
++{
++	struct dptc_attr_sysfs *ps =
++		container_of(attr, struct dptc_attr_sysfs, display_name);
++	return sysfs_emit(buf, "%s\n", dptc_params[ps->idx].display_name);
++}
++
++static ssize_t dptc_type_show(struct kobject *kobj,
++			      struct kobj_attribute *attr, char *buf)
++{
++	return sysfs_emit(buf, "integer\n");
++}
++
++static ssize_t dptc_save_settings_show(struct kobject *kobj,
++				       struct kobj_attribute *attr, char *buf)
++{
++	struct dptc_priv *dptc =
++		container_of(attr, struct dptc_priv, save_settings_attr);
++
++	guard(mutex)(&dptc->lock);
++
++	if (dptc->save_mode == SAVE_SINGLE)
++		return sysfs_emit(buf, "single\n");
++	return sysfs_emit(buf, "bulk\n");
++}
++
++static ssize_t dptc_save_settings_store(struct kobject *kobj,
++					struct kobj_attribute *attr,
++					const char *buf, size_t count)
++{
++	struct dptc_priv *dptc =
++		container_of(attr, struct dptc_priv, save_settings_attr);
++	int ret = 0;
++
++	guard(mutex)(&dptc->lock);
++
++	if (sysfs_streq(buf, "save"))
++		ret = dptc_alib_save(dptc);
++	else if (sysfs_streq(buf, "single"))
++		dptc->save_mode = SAVE_SINGLE;
++	else if (sysfs_streq(buf, "bulk"))
++		dptc->save_mode = SAVE_BULK;
++	else
++		return -EINVAL;
++
++	return ret ? ret : count;
++}
++
++static ssize_t dptc_expanded_current_value_show(struct kobject *kobj,
++						struct kobj_attribute *attr,
++						char *buf)
++{
++	struct dptc_attr_sysfs *ps =
++		container_of(attr, struct dptc_attr_sysfs, current_value);
++	struct dptc_priv *dptc = ps->priv;
++
++	guard(mutex)(&dptc->lock);
++
++	return sysfs_emit(buf, "%d\n", dptc->expanded);
++}
++
++static ssize_t dptc_expanded_current_value_store(struct kobject *kobj,
++						 struct kobj_attribute *attr,
++						 const char *buf, size_t count)
++{
++	struct dptc_attr_sysfs *ps =
++		container_of(attr, struct dptc_attr_sysfs, current_value);
++	struct dptc_priv *dptc = ps->priv;
++	bool val;
++	int ret;
++
++	ret = kstrtobool(buf, &val);
++	if (ret)
++		return ret;
++
++	guard(mutex)(&dptc->lock);
++
++	dptc->expanded = val;
++	/* Clear staged values: limits changed, old values may be out of range */
++	memset(dptc->has_staged, 0, sizeof(dptc->has_staged));
++
++	return count;
++}
++
++static ssize_t dptc_expanded_default_value_show(struct kobject *kobj,
++						struct kobj_attribute *attr,
++						char *buf)
++{
++	return sysfs_emit(buf, "0\n");
++}
++
++static ssize_t dptc_expanded_min_value_show(struct kobject *kobj,
++					    struct kobj_attribute *attr,
++					    char *buf)
++{
++	return sysfs_emit(buf, "0\n");
++}
++
++static ssize_t dptc_expanded_max_value_show(struct kobject *kobj,
++					    struct kobj_attribute *attr,
++					    char *buf)
++{
++	return sysfs_emit(buf, "1\n");
++}
++
++static ssize_t dptc_expanded_scalar_increment_show(struct kobject *kobj,
++						   struct kobj_attribute *attr,
++						   char *buf)
++{
++	return sysfs_emit(buf, "1\n");
++}
++
++static ssize_t dptc_expanded_display_name_show(struct kobject *kobj,
++					       struct kobj_attribute *attr,
++					       char *buf)
++{
++	return sysfs_emit(buf, "Expanded Limits\n");
++}
++
++static ssize_t dptc_expanded_type_show(struct kobject *kobj,
++				       struct kobj_attribute *attr, char *buf)
++{
++	return sysfs_emit(buf, "integer\n");
++}
++
++/* Sysfs setup */
++
++static void dptc_setup_param_sysfs(struct dptc_priv *dptc,
++				   struct dptc_attr_sysfs *ps, int idx)
++{
++	ps->priv = dptc;
++	ps->idx = idx;
++
++	sysfs_attr_init(&ps->current_value.attr);
++	ps->current_value.attr.name  = "current_value";
++	ps->current_value.attr.mode  = 0644;
++	ps->current_value.show       = dptc_current_value_show;
++	ps->current_value.store      = dptc_current_value_store;
++
++	sysfs_attr_init(&ps->default_value.attr);
++	ps->default_value.attr.name  = "default_value";
++	ps->default_value.attr.mode  = 0444;
++	ps->default_value.show       = dptc_default_value_show;
++
++	sysfs_attr_init(&ps->min_value.attr);
++	ps->min_value.attr.name      = "min_value";
++	ps->min_value.attr.mode      = 0444;
++	ps->min_value.show           = dptc_min_value_show;
++
++	sysfs_attr_init(&ps->max_value.attr);
++	ps->max_value.attr.name      = "max_value";
++	ps->max_value.attr.mode      = 0444;
++	ps->max_value.show           = dptc_max_value_show;
++
++	sysfs_attr_init(&ps->scalar_increment.attr);
++	ps->scalar_increment.attr.name = "scalar_increment";
++	ps->scalar_increment.attr.mode = 0444;
++	ps->scalar_increment.show      = dptc_scalar_increment_show;
++
++	sysfs_attr_init(&ps->display_name.attr);
++	ps->display_name.attr.name   = "display_name";
++	ps->display_name.attr.mode   = 0444;
++	ps->display_name.show        = dptc_display_name_show;
++
++	sysfs_attr_init(&ps->type.attr);
++	ps->type.attr.name           = "type";
++	ps->type.attr.mode           = 0444;
++	ps->type.show                = dptc_type_show;
++
++	ps->attrs[0] = &ps->current_value.attr;
++	ps->attrs[1] = &ps->default_value.attr;
++	ps->attrs[2] = &ps->min_value.attr;
++	ps->attrs[3] = &ps->max_value.attr;
++	ps->attrs[4] = &ps->scalar_increment.attr;
++	ps->attrs[5] = &ps->display_name.attr;
++	ps->attrs[6] = &ps->type.attr;
++	ps->attrs[7] = NULL;
++
++	ps->group.name  = dptc_params[idx].name;
++	ps->group.attrs = ps->attrs;
++}
++
++static void dptc_setup_expanded_sysfs(struct dptc_priv *dptc,
++				      struct dptc_attr_sysfs *ps)
++{
++	ps->priv = dptc;
++	sysfs_attr_init(&ps->current_value.attr);
++	ps->current_value.attr.name  = "current_value";
++	ps->current_value.attr.mode  = 0644;
++	ps->current_value.show       = dptc_expanded_current_value_show;
++	ps->current_value.store      = dptc_expanded_current_value_store;
++
++	sysfs_attr_init(&ps->default_value.attr);
++	ps->default_value.attr.name  = "default_value";
++	ps->default_value.attr.mode  = 0444;
++	ps->default_value.show       = dptc_expanded_default_value_show;
++
++	sysfs_attr_init(&ps->min_value.attr);
++	ps->min_value.attr.name      = "min_value";
++	ps->min_value.attr.mode      = 0444;
++	ps->min_value.show           = dptc_expanded_min_value_show;
++
++	sysfs_attr_init(&ps->max_value.attr);
++	ps->max_value.attr.name      = "max_value";
++	ps->max_value.attr.mode      = 0444;
++	ps->max_value.show           = dptc_expanded_max_value_show;
++
++	sysfs_attr_init(&ps->scalar_increment.attr);
++	ps->scalar_increment.attr.name = "scalar_increment";
++	ps->scalar_increment.attr.mode = 0444;
++	ps->scalar_increment.show      = dptc_expanded_scalar_increment_show;
++
++	sysfs_attr_init(&ps->display_name.attr);
++	ps->display_name.attr.name   = "display_name";
++	ps->display_name.attr.mode   = 0444;
++	ps->display_name.show        = dptc_expanded_display_name_show;
++
++	sysfs_attr_init(&ps->type.attr);
++	ps->type.attr.name           = "type";
++	ps->type.attr.mode           = 0444;
++	ps->type.show                = dptc_expanded_type_show;
++
++	ps->attrs[0] = &ps->current_value.attr;
++	ps->attrs[1] = &ps->default_value.attr;
++	ps->attrs[2] = &ps->min_value.attr;
++	ps->attrs[3] = &ps->max_value.attr;
++	ps->attrs[4] = &ps->scalar_increment.attr;
++	ps->attrs[5] = &ps->display_name.attr;
++	ps->attrs[6] = &ps->type.attr;
++	ps->attrs[7] = NULL;
++
++	ps->group.name  = "expanded_limits";
++	ps->group.attrs = ps->attrs;
++}
++
++static void dptc_fw_dev_unregister(void *data)
++{
++	device_unregister(data);
++}
++
++static void dptc_kset_unregister(void *data)
++{
++	kset_unregister(data);
++}
++
++static int dptc_resume(struct device *dev)
++{
++	struct dptc_priv *dptc = dev_get_drvdata(dev);
++	int ret;
++
++	guard(mutex)(&dptc->lock);
++
++	if (dptc->save_mode == SAVE_SINGLE)
++		ret = dptc_alib_save(dptc);
++	else
++		ret = 0;
++
++	if (ret)
++		dev_warn(dev, "failed to restore settings on resume: %d\n", ret);
++
++	return 0;
++}
++
++static DEFINE_SIMPLE_DEV_PM_OPS(dptc_pm_ops, NULL, dptc_resume);
++
++static int dptc_probe(struct platform_device *pdev)
++{
++	const struct dmi_system_id *dmi_match = dev_get_platdata(&pdev->dev);
++	struct device *dev = &pdev->dev;
++	struct dptc_priv *dptc;
++	int i, ret;
++
++	dptc = devm_kzalloc(dev, sizeof(*dptc), GFP_KERNEL);
++	if (!dptc)
++		return -ENOMEM;
++
++	platform_set_drvdata(pdev, dptc);
++
++	ret = devm_mutex_init(dev, &dptc->lock);
++	if (ret)
++		return ret;
++
++	dptc->dev_limits = dmi_match->driver_data;
++	dev_info(dev, "%s (%s)\n", dmi_match->ident,
++		 boot_cpu_data.x86_model_id);
++
++	dptc->fw_attr_dev = device_create(&firmware_attributes_class,
++					  NULL, MKDEV(0, 0), NULL,
++					  DRIVER_NAME);
++	if (IS_ERR(dptc->fw_attr_dev))
++		return PTR_ERR(dptc->fw_attr_dev);
++
++	ret = devm_add_action_or_reset(dev, dptc_fw_dev_unregister,
++				       dptc->fw_attr_dev);
++	if (ret)
++		return ret;
++
++	dptc->fw_attr_kset = kset_create_and_add("attributes", NULL,
++						 &dptc->fw_attr_dev->kobj);
++	if (!dptc->fw_attr_kset)
++		return -ENOMEM;
++
++	ret = devm_add_action_or_reset(dev, dptc_kset_unregister,
++				       dptc->fw_attr_kset);
++	if (ret)
++		return ret;
++
++	for (i = 0; i < DPTC_NUM_PARAMS; i++) {
++		dptc_setup_param_sysfs(dptc, &dptc->params[i], i);
++		ret = sysfs_create_group(&dptc->fw_attr_kset->kobj,
++					 &dptc->params[i].group);
++		if (ret)
++			return ret;
++	}
++
++	dptc_setup_expanded_sysfs(dptc, &dptc->expanded_attr);
++	ret = sysfs_create_group(&dptc->fw_attr_kset->kobj,
++				 &dptc->expanded_attr.group);
++	if (ret)
++		return ret;
++
++	sysfs_attr_init(&dptc->save_settings_attr.attr);
++	dptc->save_settings_attr.attr.name  = "save_settings";
++	dptc->save_settings_attr.attr.mode  = 0644;
++	dptc->save_settings_attr.show       = dptc_save_settings_show;
++	dptc->save_settings_attr.store      = dptc_save_settings_store;
++	ret = sysfs_create_file(&dptc->fw_attr_kset->kobj,
++				&dptc->save_settings_attr.attr);
++	if (ret)
++		return ret;
++
++	return 0;
++}
++
++static struct platform_driver dptc_driver = {
++	.driver = {
++		.name = DRIVER_NAME,
++		.pm   = pm_sleep_ptr(&dptc_pm_ops),
++	},
++	.probe  = dptc_probe,
++};
++
++static int __init dptc_init(void)
++{
++	const struct dmi_system_id *match;
++	bool soc_found = false;
++	int i, ret;
++
++	match = dmi_first_match(dptc_dmi_table);
++	if (!match)
++		return -ENODEV;
++
++	if (!acpi_has_method(NULL, ALIB_PATH)) {
++		pr_warn("ALIB method not present\n");
++		return -ENODEV;
++	}
++
++	for (i = 0; dptc_soc_table[i]; i++) {
++		if (strstr(boot_cpu_data.x86_model_id,
++			   dptc_soc_table[i])) {
++			soc_found = true;
++			break;
++		}
++	}
++	if (!soc_found) {
++		pr_warn("unrecognized SoC '%s'\n",
++			boot_cpu_data.x86_model_id);
++		return -ENODEV;
++	}
++
++	dptc_pdev = platform_device_register_data(NULL, DRIVER_NAME, -1,
++						  match, sizeof(*match));
++	if (IS_ERR(dptc_pdev))
++		return PTR_ERR(dptc_pdev);
++
++	ret = platform_driver_register(&dptc_driver);
++	if (ret) {
++		platform_device_unregister(dptc_pdev);
++		return ret;
++	}
++
++	return 0;
++}
++
++static void __exit dptc_exit(void)
++{
++	platform_driver_unregister(&dptc_driver);
++	platform_device_unregister(dptc_pdev);
++}
++
++module_init(dptc_init);
++module_exit(dptc_exit);
++
++MODULE_AUTHOR("Antheas Kapenekakis <lkml@antheas.dev>");
++MODULE_DESCRIPTION("AMD DPTCi ACPI Driver");
++MODULE_LICENSE("GPL");
 -- 
 2.52.0
 
