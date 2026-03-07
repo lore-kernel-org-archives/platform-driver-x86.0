@@ -1,41 +1,42 @@
-Received: from relay10.grserver.gr (relay10.grserver.gr [37.27.248.198])
+Received: from relay14.grserver.gr (relay14.grserver.gr [157.180.73.62])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1885D175A95;
-	Sat,  7 Mar 2026 11:55:32 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=37.27.248.198
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B9BB533C18B;
+	Sat,  7 Mar 2026 11:55:33 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=157.180.73.62
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1772884534; cv=none; b=RXtXm2praftpRCa7KLvDT0061KvRO3ovbpVvuAOlFR8sCn0DYJm7QXLr1TPOgEE9bB3S3i89JxGxfm/9MDw86rB2Z6yGCWPfpDEwGpyirbKhdDLDsFrAnPEI0RiL0iHBmSAPhv5sYdk5DK5BYTWsaRPk6poQrp28vQ3BG3jXq/k=
+	t=1772884535; cv=none; b=CMUknOqpxtUnapMA63ulWVsZHsjyjOp0q6E8o3Apb0n0vxrcTTnHSjj4cl3WvZ1HCJFJ0Iw7mFjfZSLyhulx/QdVoT7VM2ZdmXAtxgPmrhitkdCobx9fzbfOA348Ogf3zNKf8I3fGrO4U3HmL7iICLLG6/5VyLJuLiMuyr515EI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1772884534; c=relaxed/simple;
-	bh=HRsyIzfZ9pXeuJ7q9JU7416pp44LX8y624gxhYXpkgw=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=NxxudcQ20IrmTKlKAR8+PIy41by7RuL7kUHNCoX8Z4dXy4Yj9XJXbxFDxd4c8l93ap7LSIku9NV+8VK9/00fLxmXEfXv011Z2BXx7BP5W35nklQk0beM6QXXH4KhHt6KvFkR5k0Zp8MrdSTpFRFMRrdiw+Q74DQjWThGBDEK+C0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=antheas.dev; spf=pass smtp.mailfrom=antheas.dev; dkim=pass (2048-bit key) header.d=antheas.dev header.i=@antheas.dev header.b=QGaSz7wD; arc=none smtp.client-ip=37.27.248.198
+	s=arc-20240116; t=1772884535; c=relaxed/simple;
+	bh=j/2gqBgx9RYbaR8BrQe7tCgW/Et6QpCg722X4ShPrjE=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=G4BuGwMwk18+NpQmZHlatI6F3xj728i/JyMJw1rCSkB7vRixEEDvnLSSmg8LlGrS+EGx7Q02YzZb0Hs6Hu2eY/7/ZBqCv1wqs4oBpcO8jJe/9Sc49TtrOgosdak72orMnwffaN1xbxUGZFhLVyRjlK+QvF8nyA3q/0AZE/l5VQE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=antheas.dev; spf=pass smtp.mailfrom=antheas.dev; dkim=pass (2048-bit key) header.d=antheas.dev header.i=@antheas.dev header.b=R8BHRZH2; arc=none smtp.client-ip=157.180.73.62
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=antheas.dev
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=antheas.dev
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=antheas.dev header.i=@antheas.dev header.b="QGaSz7wD"
-Received: from relay10 (localhost.localdomain [127.0.0.1])
-	by relay10.grserver.gr (Proxmox) with ESMTP id 6155A45D5D;
-	Sat,  7 Mar 2026 13:55:31 +0200 (EET)
+	dkim=pass (2048-bit key) header.d=antheas.dev header.i=@antheas.dev header.b="R8BHRZH2"
+Received: from relay14 (localhost [127.0.0.1])
+	by relay14.grserver.gr (Proxmox) with ESMTP id EDF9F409D5;
+	Sat,  7 Mar 2026 11:55:31 +0000 (UTC)
 Received: from linux3247.grserver.gr (linux3247.grserver.gr [213.158.90.240])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
 	(No client certificate requested)
-	by relay10.grserver.gr (Proxmox) with ESMTPS id 19B3345F4A;
-	Sat,  7 Mar 2026 13:55:30 +0200 (EET)
+	by relay14.grserver.gr (Proxmox) with ESMTPS id D91E1409DC;
+	Sat,  7 Mar 2026 11:55:30 +0000 (UTC)
 Received: from antheas-z13 (unknown [IPv6:2a05:f6c5:43c3:0:ba48:cea4:a8c2:d901])
-	by linux3247.grserver.gr (Postfix) with ESMTPSA id 205E11FD754;
+	by linux3247.grserver.gr (Postfix) with ESMTPSA id DFF1A1FECCF;
 	Sat,  7 Mar 2026 13:55:29 +0200 (EET)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=antheas.dev;
-	s=default; t=1772884529;
-	bh=BfwdQaYObrlWXRYzFBsgsr2es7ivZ5H/tjfPXTjCnhc=; h=From:To:Subject;
-	b=QGaSz7wD6jHYNRKg56nTVbEM0Jh6dQD3MK9jc688MLbAMY3/CFYA8nR2uq1dcdhh6
-	 PQJ97TmD1x/YOmJ+6sgOcl76jLa54ueBl02vvCQhHqUyyWcRXkR8gj9Otj9LNKRTJa
-	 TPdHh35CWFOMJHhXRI/ur6U2kymiThNSswc/4ddITJNdXUO4DlRzPtk2aEdkbDKJvv
-	 2qyAbOVxAwZzHvlAykOjDejD5wNT0S2CbTEphdXg6TAnRsd/dFyw9l5MFMvRDvz0mE
-	 +V6Ueo+Pq6NRrGbwda9Kfj1eWftWlDo7Yw5iJsv7X7FMIH+xJisT+ddCjyAyK35BEA
-	 LHEjVlXYNe7Mw==
+	s=default; t=1772884530;
+	bh=KdugWhgApbpYkp5ulPSM4iY1f+pLRyIvHEfY0i5KqC8=; h=From:To:Subject;
+	b=R8BHRZH2BcTQoynort/3vVVnAHkT8NJ3ThLYOZZKvI5v1A/RKircDDWtQSSY1VjTJ
+	 pwjnmOEC+crNYLhJc9ipQeDdr+8LPNGErzpJJVBMEOL6kJeOtbx5BmwTVzKffKu7Kp
+	 3sFsyNfoj7E5oIOk5I1RVQweBj0vmrzZJv/WiaNk4Z3tJu1WEyNoPkIwOdDGnTbDQm
+	 AXCYOgzI1Si9rd9mHRFTG0ECtWjv5NMPqVrNchJlBBhL7ZPpsq+irv2+4ObkBtxKuT
+	 ISh0YK1UwUBTN7Um/RWRn0wKeqYc+wSaef7ETz4PkkNcsEGmKqiTsRuSblV0v3IX3V
+	 FJSYBKArCmIUA==
 Authentication-Results: linux3247.grserver.gr;
 	spf=pass (sender IP is 2a05:f6c5:43c3:0:ba48:cea4:a8c2:d901) smtp.mailfrom=lkml@antheas.dev smtp.helo=antheas-z13
 Received-SPF: pass (linux3247.grserver.gr: connection is authenticated)
@@ -49,11 +50,13 @@ Cc: W_Armin@gmx.de,
 	linux-kernel@vger.kernel.org,
 	platform-driver-x86@vger.kernel.org,
 	Antheas Kapenekakis <lkml@antheas.dev>
-Subject: [RFC v3 0/4] platform/x86/amd: Add AMD DPTCi driver for TDP control
- in devices without vendor-specific controls
-Date: Sat,  7 Mar 2026 12:55:12 +0100
-Message-ID: <20260307115516.26892-1-lkml@antheas.dev>
+Subject: [RFC v3 1/4] Documentation: firmware-attributes: generalize
+ save_settings entry
+Date: Sat,  7 Mar 2026 12:55:13 +0100
+Message-ID: <20260307115516.26892-2-lkml@antheas.dev>
 X-Mailer: git-send-email 2.52.0
+In-Reply-To: <20260307115516.26892-1-lkml@antheas.dev>
+References: <20260307115516.26892-1-lkml@antheas.dev>
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
@@ -62,131 +65,85 @@ List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 X-PPP-Message-ID: 
- <177288452964.1270797.4006554245498369@linux3247.grserver.gr>
+ <177288453041.1270865.12008553927786162334@linux3247.grserver.gr>
 X-PPP-Vhost: antheas.dev
 X-Virus-Scanned: clamav-milter 1.4.3 at linux3247.grserver.gr
 X-Virus-Status: Clean
 
-Many AMD-based handheld PCs (GPD, AYANEO, OneXPlayer, AOKZOE, OrangePi)
-ship with the AGESA ALIB method at \_SB.ALIB, which accepts Function 0x0C
-(the Dynamic Power and Thermal Configuration Interface, DPTCi). This
-allows software to adjust APU power and thermal parameters at runtime:
-sustained power limit (SPL/STAPM + skin), slow PPT, fast PPT, and the
-thermal control target.
+The save_settings interface is also implemented by amd_dptc, which
+has the same bulk/single/save semantics but no save-count limitation.
 
-Unlike mainstream AMD laptops, these devices do not implement vendor-
-specific WMI or EC hooks for TDP control. The ones that do, use DPTCi
-under the hood. For these devices, ALIB is the only viable mechanism for
-the OS to adjust power limits, making a dedicated kernel driver the
-correct approach rather than relying on the out-of-tree acpi_call module
-or ryzenadj.
+Generalize the description to cover both drivers: move the Lenovo
+48-save architectural constraint into a driver-specific notes section
+and add the amd_dptc behavior alongside it.
 
-The driver provides two layers of control:
-
-  * Platform profile integration (low-power / balanced / performance /
-    custom), with per-device preset tunings derived from thermal envelope
-    data. Selecting a non-custom profile applies values immediately and
-    locks the individual tunables to read-only. The default profile is
-    "custom", leaving the device at firmware defaults until userspace
-    explicitly selects a profile. Certain profiles feature a "max_power"
-    preset when it is deemed that using the maximum values for performance
-    would lead to a degraded user experience (e.g. excessive fan noise)
-
-  * Four firmware-attributes tunables (ppt_pl1_spl, ppt_pl2_sppt,
-    ppt_pl3_fppt, cpu_temp) that become writable in "custom" mode.
-    Values are enforced against per-device limits (smin..smax), with an
-    "expanded_limits" toggle that widens the range to the full hardware-
-    validated envelope (min..max). A save_settings attribute controls
-    whether writes commit immediately ("single") or are staged for an
-    explicit bulk "save".
-
-On resume, the active profile or staged values are re-applied so that
-suspend/resume cycles do not silently revert to firmware defaults unless
-in custom and in bulk mode. In that case, defer to userspace.
-
-Device limits are supplied for GPD Win Mini / Win 4 / Win 5 / Win Max 2 /
-Duo / Pocket 4, OrangePi NEO-01, AOKZOE A1/A2, OneXPlayer F1/2/X1/G1,
-and numerous AYANEO models. The SoC table covers Ryzen 5000, 6000, 7040,
-8000, Z1, AI 9 HX 370, and the Ryzen AI MAX series.
-
-Tested on a GPD Win 5 (Ryzen AI MAX+ 395). Confirmed with ryzenadj -i
-that committed values are applied to hardware, and that fast/slow PPT
-limits are honoured under a full-CPU stress load.
-
-Responsible disclosure: The development of this driver is AI assisted.
-This includes its writing, testing, and readmes. The driver was manually
-reviewed line by line, but there still may small leftover quirks. This is
-an RFC, not a final version. Let's push these tools to their limits and
-see where it takes us.
-
-Assisted-by: Claude:claude-opus-4-6
-
+Signed-off-by: Antheas Kapenekakis <lkml@antheas.dev>
 ---
-Changes in v3:
-  - Split single driver patch into 3: core driver, platform profile,
-    device entries
-  - Rename DRIVER_NAME from "amd_dptc" to "amd-dptc" (match subsystem
-    convention for platform drivers and firmware-attributes devices)
-  - Add scale field to dptc_param_desc: sysfs values in user units (W, C),
-    driver multiplies by scale (1000 for mW) before sending to ALIB
-  - Rename struct fields: min/smin/smax/max ->
-    expanded_min/device_min/device_max/expanded_max
-  - Remove comment "ALIB parameter IDs (AGESA spec Appendix E.5, Table
-    E-52)"
-  - Move ALIB method check after SoC/DMI validation, change pr_debug to
-    pr_warn
-  - Reorder local variable declaration in dptc_init (dptc after other vars)
-  - Add commit subject prefix "dptc:" to all driver patches
-  - Remove early-return for empty save in dptc_alib_save; let
-    dptc_alib_call return -EINVAL (matches documentation)
-  - Remove max_power as we do not do DC/AC validation in the driver
-  - Fix Ayaneo AIR device matches to reflect their wattage, add 15W profile
-    for original AIR. Cheers to the AIR Plus user who had helped tune the
-    AIR Plus profile so it was correct.
+ .../testing/sysfs-class-firmware-attributes   | 41 ++++++++++++-------
+ 1 file changed, 26 insertions(+), 15 deletions(-)
 
-Changes in v2:
-  - Use a platform_device base instead of raw inits + exit, hook into devm
-    helpers referencing samsung-galaxybook
-  - Add platform_profile support (low-power / balanced / performance /
-    custom) with per-device energy presets; non-custom profiles lock
-    tunables to read-only. We default to custom to avoid writing values
-  - Reduce exposed parameters from seven to four (ppt_pl1_spl,
-    ppt_pl2_sppt, ppt_pl3_fppt, cpu_temp); drop time constants and
-    separate skin/STAPM limits in favour of a single SPL that sets both.
-    For devices where the max tdp offers thermals that are not suitable
-    for day to day use (e.g., excessive fan noise), MAX_POWER is added
-  - Remove CONFIG_AMD_DPTC_EXTENDED and the "soc"/"unbound" limit tiers;
-    keep only device (smin..smax) and expanded (min..max) and soc match
-    (certain devices ship multiple SoCs on the same motherboard/thermal
-    envelope, make sure we only hook into validated SoCs)
-  - Rename "commit" attribute to "save_settings" per firmware-attributes
-    ABI; rename limit_mode to expanded_limits
-  - Change expanded_limits attribute type from "enumeration" to "integer"
-    (min=0, max=1) since firmware-attributes has no bool type
-  - Remove all global vars, limit _dev access to init and exit
-  - Use u32 accessors to set values for ALIB call
-  - Clean up verbose comments throughout
-  - Add Ayn Loki Max / Tectoy Zeenix Pro
-
-V2: https://lore.kernel.org/all/20260305181751.3642846-1-lkml@antheas.dev/
-V1: https://lore.kernel.org/all/20260303181707.2920261-1-lkml@antheas.dev/
-
-Antheas Kapenekakis (4):
-  Documentation: firmware-attributes: generalize save_settings entry
-  platform/x86/amd: dptc: Add AMD DPTCi driver
-  platform/x86/amd: dptc: Add platform profile support
-  platform/x86/amd: dptc: Add device entries for handheld PCs
-
- .../testing/sysfs-class-firmware-attributes   |   41 +-
- MAINTAINERS                                   |    6 +
- drivers/platform/x86/amd/Kconfig              |   15 +
- drivers/platform/x86/amd/Makefile             |    2 +
- drivers/platform/x86/amd/dptc.c               | 1264 +++++++++++++++++
- 5 files changed, 1313 insertions(+), 15 deletions(-)
- create mode 100644 drivers/platform/x86/amd/dptc.c
-
-
-base-commit: 298ec5fe3c6a91f61dd971f9aa7e22e79c9ec024
+diff --git a/Documentation/ABI/testing/sysfs-class-firmware-attributes b/Documentation/ABI/testing/sysfs-class-firmware-attributes
+index 2713efa509b4..c762bed50de8 100644
+--- a/Documentation/ABI/testing/sysfs-class-firmware-attributes
++++ b/Documentation/ABI/testing/sysfs-class-firmware-attributes
+@@ -388,31 +388,42 @@ What:		/sys/class/firmware-attributes/*/attributes/save_settings
+ Date:		August 2023
+ KernelVersion:	6.6
+ Contact:	Mark Pearson <mpearson-lenovo@squebb.ca>
++		Antheas Kapenekakis <lkml@antheas.dev>
+ Description:
+-		On Lenovo platforms there is a limitation in the number of times an attribute can be
+-		saved. This is an architectural limitation and it limits the number of attributes
+-		that can be modified to 48.
+-		A solution for this is instead of the attribute being saved after every modification,
+-		to allow a user to bulk set the attributes, and then trigger a final save. This allows
+-		unlimited attributes.
++		Controls how writes to current_value are applied to the hardware.
+ 
+ 		Read the attribute to check what save mode is enabled (single or bulk).
+ 		E.g:
+-		# cat /sys/class/firmware-attributes/thinklmi/attributes/save_settings
++		# cat /sys/class/firmware-attributes/*/attributes/save_settings
+ 		single
+ 
+ 		Write the attribute with 'bulk' to enable bulk save mode.
+-		Write the attribute with 'single' to enable saving, after every attribute set.
+-		The default setting is single mode.
++		Write the attribute with 'single' to enable saving, after every
++		attribute set. The default setting is single mode.
+ 		E.g:
+-		# echo bulk > /sys/class/firmware-attributes/thinklmi/attributes/save_settings
++		# echo bulk > /sys/class/firmware-attributes/*/attributes/save_settings
+ 
+-		When in bulk mode write 'save' to trigger a save of all currently modified attributes.
+-		Note, once a save has been triggered, in bulk mode, attributes can no longer be set and
+-		will return a permissions error. This is to prevent users hitting the 48+ save limitation
+-		(which requires entering the BIOS to clear the error condition)
++		When in bulk mode write 'save' to trigger an apply of all
++		currently staged attributes.
+ 		E.g:
+-		# echo save > /sys/class/firmware-attributes/thinklmi/attributes/save_settings
++		# echo save > /sys/class/firmware-attributes/*/attributes/save_settings
++
++		Driver-specific notes:
++
++		thinklmi (Lenovo): On Lenovo platforms there is a limitation in
++		the number of times an attribute can be saved. This is an
++		architectural limitation and it limits the number of attributes
++		that can be modified to 48.
++
++		Once a save has been triggered in bulk mode, attributes can no
++		longer be set and will return a permissions error. This is to
++		prevent users hitting the 48+ save limitation (which requires
++		entering the BIOS to clear the error condition).
++
++		amd_dptc (AMD DPTC): No save-count limitation. 'save' can be
++		called any number of times. Returns -EINVAL if no values have
++		been staged. In addition, when in 'single' mode, the driver
++		uses pm ops to trigger a save of staged attributes on resume.
+ 
+ What:		/sys/class/firmware-attributes/*/attributes/debug_cmd
+ Date:		July 2021
 -- 
 2.52.0
 
