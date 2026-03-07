@@ -1,1304 +1,1697 @@
-Received: from mail-pf1-f179.google.com (mail-pf1-f179.google.com [209.85.210.179])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from relay13.grserver.gr (relay13.grserver.gr [178.156.171.147])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 75B88DF76
-	for <platform-driver-x86@vger.kernel.org>; Sat,  7 Mar 2026 01:12:37 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.179
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7D89E3016E2
+	for <platform-driver-x86@vger.kernel.org>; Sat,  7 Mar 2026 11:18:02 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=178.156.171.147
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1772845960; cv=none; b=gaJiB1yL1viZGH8avfTSNYyEzhoFZdKEQaEYVnR2DAvhleOzj3aauaSP6JATHqlXkhFPHWqacGmUsL54sSchwxXKRaWKRo+fBRAleW4gp6kkVu1uoVSfIyDS8FuoOhGHm5fPugxWPbZ5HhWgn7Sz3G0QSF4PeiTJ6D8jOMkVXy4=
+	t=1772882286; cv=none; b=iGBYChatit5B7Z2FSp+vDUFdwgd0lEUIn43gTDeT7aw+dCXqbgan7eL43qkKZdxd4u/RR5EG8spe54BRuHnNPhdsa6l2Cb61osJN5/lqMK3w4OP0Rc7Ti5Xrc0CMWAbqwvkjsTVA4Lc4EH6naiWIe2O0c1s/VhKDZwZMXlN6zYw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1772845960; c=relaxed/simple;
-	bh=L9Sc8BQfOQ1MzpjV6Tvsg7Czm9IrGfVnHkjfW9494jc=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=K2Q8QhiTd4+eKA9L6SrKNJXT4iaCL6eh6mBCxdqGI7AmSo4ArNr755S+UPk7sVfZAYAamyq5MpgtFwUpLmk2pRLIxC01k/CHt7SbnoWMDulVANQU3k+3b8kH1lnxO3KnyjaRlacNAVIdlT6/fxS0r2E1D4Jqsf9Id0TNmqLpPvE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=B2FzL2Aj; arc=none smtp.client-ip=209.85.210.179
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1772882286; c=relaxed/simple;
+	bh=Q7//JhvzttxD3u0BS0R5joWoiWzxo7s0aGPA5XgcSTA=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=FX7ccp5ZqO/uC+beg6pONfCd7fTuXzN865ZaQo7LwYQ7lZfUQo7TWPjT4bpofU2F0FCPhAyuqrZlH4iN9kPdnEsYUJ/qHWdO0lsl+iJab99w9llbRojTvT5+e3oYtlJwyITECOT3QBlI2U9LhlOfefwOeKCtFLAQwwQUwpGeke8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=antheas.dev; spf=pass smtp.mailfrom=antheas.dev; dkim=pass (2048-bit key) header.d=antheas.dev header.i=@antheas.dev header.b=Av4MsrGW; arc=none smtp.client-ip=178.156.171.147
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=antheas.dev
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=antheas.dev
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="B2FzL2Aj"
-Received: by mail-pf1-f179.google.com with SMTP id d2e1a72fcca58-8297310ce0aso2228649b3a.2
-        for <platform-driver-x86@vger.kernel.org>; Fri, 06 Mar 2026 17:12:37 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1772845957; x=1773450757; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=bJLbvFnfYWGSBzrEDbat9PQxXeIMQkM5w4yuUL/XpSU=;
-        b=B2FzL2Aj6dmqNcl4xDyMadXR7LXFywigMgW4xgXr4BrflG727fwoGeJpOftbqywYWh
-         ji9fixJN7dhy76mNoqp3zXv1OGut1JoULIWGh6268KR8+x7M0iuAhvmxh3089f5eQh1T
-         koSlqDL1SAyXP6bTuTHAQ2Si0Hv9yMjCwLEsJoHhKtRZHXOifMRht7QkNc8txTjFwW4r
-         Tn/6K347aufPeZUXIP2Ws1w7MPlk0+bAUBrJ+WH8Sz5AYMkymiSgB9GigZtFmNmBD5lk
-         S9lEpPupz7UdFXah/B7LRE+/e0AwS2XZ+oBpNCheWnstMJe5M7xOSnzi8ze9C8nafbvu
-         WTSg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1772845957; x=1773450757;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-gg:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=bJLbvFnfYWGSBzrEDbat9PQxXeIMQkM5w4yuUL/XpSU=;
-        b=tZmAbX6t8x7GUvA2PIjA1v706HkMFWTryxL50VlD2to4zOuiKItpipiRAGPfk/+Kc4
-         BR9Li3U5Efip8z3OQQlcCo/w+H06sBHdKhtdDbeEQMXRLbyFQgSYESHSJq7SsGHoT+I1
-         6fVbapMIBV8CErd/N9TvkGoARWAKQCoZ5AI5lGJsnt/pPZZwbsKEEcbROCEQcTwgZqP8
-         MQL9LH+VEo/knEnjpwM8W1xVGZso9ZvBTzMwK1udJMb1LwmyVrI61zIt9AkZgSXV0hi3
-         LaehKFNfHpr4hbx4HqyEjxtHQEzsub2cWIBys02cK5/XUaulOOZq9jSTKyuGSQc5uKiL
-         lEXQ==
-X-Forwarded-Encrypted: i=1; AJvYcCXlG2HSO0JcUDibNQwRdbRu8diowH72GvxUvgKqacvr5HYsqhRu6O1FnzGGkRPtsRK0kxiZvPdbw3grjhn+yAbpaJ6n@vger.kernel.org
-X-Gm-Message-State: AOJu0YyUkKb0fudzWCNczSIxQBc7FmRbTabBERUQIv77ztrOZnSFA038
-	bN9YG0plX6o8gEea2hXP+Bg9lchnl+myDYTWJmQuHN1yl72ZXxhQwdNK
-X-Gm-Gg: ATEYQzxLtgIszhFrcpF+bRkPVAUnmVaPJvBrhbefQYqt1/7AXYPanq/tkVc7nr8yN4c
-	Tvo3krSQcfR9m65ULiVzrrNZ3ydcone0FkxjQ/DKvv53JWr/Jn+qIk997KGVr1FEh+uWKXv1IC5
-	fxNOFXGjBmfM4bi26yxxmFSkqUctJ+D3Qd8/bmgGTW8m4EwxtS44kIAyY54KwUNq/2Ez8DVocI5
-	vDQdUxkOPYBzOBU6NrpOB5VmEC1eK0GiIhBwshQ5FRZnD6EjXwvgVyE2BJaUDK+OULBeDbHhIfu
-	ERCKJQ4oNhqiOe62hOxAE1vkTqNJULzw48KYHZpLH2mgS5RouRZgTu0wlh3aIz/czbFyVgLaL5M
-	GtmIyFiX+5BJaJNEJ4zwWnf/YagKCGPNcEuL+4x56F6oi0H3ClpuKsBssAxlMuzI13XqhojBlX7
-	aKEDUHI/KG
-X-Received: by 2002:a05:6a21:7d03:b0:398:4a5c:4252 with SMTP id adf61e73a8af0-398590d40bcmr3902322637.69.1772845956500;
-        Fri, 06 Mar 2026 17:12:36 -0800 (PST)
-Received: from qby-laptop ([2a13:edc0:18:16f::a])
-        by smtp.gmail.com with ESMTPSA id 41be03b00d2f7-c739e0a709csm3440843a12.1.2026.03.06.17.12.33
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 06 Mar 2026 17:12:35 -0800 (PST)
-From: Mingyou Chen <qby140326@gmail.com>
-To: w_armin@gmx.de
-Cc: cryolitia.pukngae@linux.dev,
-	hansg@kernel.org,
-	ilpo.jarvinen@linux.intel.com,
-	linux-kernel@vger.kernel.org,
-	platform-driver-x86@vger.kernel.org,
-	qby140326@gmail.com,
-	Armin Wolf <W_Armin@gmx.de>
-Subject: [PATCH v14] platform/x86: bitland-mifs-wmi: Add new Bitland MIFS WMI driver
-Date: Sat,  7 Mar 2026 09:12:08 +0800
-Message-ID: <20260307011208.16411-1-qby140326@gmail.com>
-X-Mailer: git-send-email 2.53.0
+	dkim=pass (2048-bit key) header.d=antheas.dev header.i=@antheas.dev header.b="Av4MsrGW"
+Received: from relay13 (localhost [127.0.0.1])
+	by relay13.grserver.gr (Proxmox) with ESMTP id 39F505E5A3
+	for <platform-driver-x86@vger.kernel.org>; Sat,  7 Mar 2026 13:17:55 +0200 (EET)
+Received: from linux3247.grserver.gr (linux3247.grserver.gr [213.158.90.240])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by relay13.grserver.gr (Proxmox) with ESMTPS id DF8FA5E5C5
+	for <platform-driver-x86@vger.kernel.org>; Sat,  7 Mar 2026 13:17:50 +0200 (EET)
+Received: from mail-pj1-f47.google.com (mail-pj1-f47.google.com [209.85.216.47])
+	by linux3247.grserver.gr (Postfix) with ESMTPSA id 69EE1200CF2
+	for <platform-driver-x86@vger.kernel.org>; Sat,  7 Mar 2026 13:17:49 +0200 (EET)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=antheas.dev;
+	s=default; t=1772882269;
+	bh=xaviHtz/NDgqw7MLBdedTB+5xVAKFAizJkpjMUxFIqE=;
+	h=Received:From:Subject:To;
+	b=Av4MsrGWMy9KOccuUZp1C8e6xJ3ozKkF21D5Wcyhvg67/3OB0TWQPibCTKx+dJflh
+	 qkWYC2TZumXPLi4kcLcYormBc6J/w+HnCspaMBFNqJCYjgdKJW4vfpDgj8ZJhl++Q2
+	 lhulQPw7ZBsU7Q1045TFvl0eEiwMMmAxAaxIkv6Wz+sfmCZZHKK/4IdWQJZVg+cl2k
+	 OAlXV5sc4jb4lb+DbV/EKUUiGQdoXy6p/rGGqVV03FwHmTuJHDTZIU6ErpH7HQIwk0
+	 w/gV6HbTZsxMIflrdxY1nAkRhY9gDpauVY5UVElDYQDV67dDJQ/B48Ufq0MM2BdYbD
+	 uiEiJA/81VFcw==
+Authentication-Results: linux3247.grserver.gr;
+        spf=pass (sender IP is 209.85.216.47) smtp.mailfrom=lkml@antheas.dev smtp.helo=mail-pj1-f47.google.com
+Received-SPF: pass (linux3247.grserver.gr: connection is authenticated)
+Received: by mail-pj1-f47.google.com with SMTP id
+ 98e67ed59e1d1-359832fc558so5322163a91.0
+        for <platform-driver-x86@vger.kernel.org>;
+ Sat, 07 Mar 2026 03:17:49 -0800 (PST)
+X-Forwarded-Encrypted: i=1;
+ AJvYcCXu6F18hLS+ADT0To2V+6boo1bQ3jbwuBZ94paWdw5A/n3M0VnF1jDoOLNVQ2meJrwbPgnaC5MRDtJrqEkytFyZfwJY@vger.kernel.org
+X-Gm-Message-State: AOJu0YwhT1jANQ1jTdZIUehG3N0LkqoPzdfPudSlxD8YGqcbyYArKN4s
+	g8yZ9L9lPCgf/ObeknxmNRx5HsZ01Z67fssEC+uCVpSObDpqnmMlydgUqYJ1OiFa+tF0UEyZYr0
+	8X+8ttDEiSmNMnlnMqWu8YTY+oAGaGwM=
+X-Received: by 2002:a17:90b:1d43:b0:356:24f0:af0c with SMTP id
+ 98e67ed59e1d1-359be30827fmr4608304a91.17.1772882267718; Sat, 07 Mar 2026
+ 03:17:47 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+References: <20260305181751.3642846-1-lkml@antheas.dev>
+ <20260305181751.3642846-3-lkml@antheas.dev>
+ <CAFqHKTkUx8KYr78dJt3tqMAbx5HpQQQbuAE04Dz2DH3RX14xGg@mail.gmail.com>
+In-Reply-To: 
+ <CAFqHKTkUx8KYr78dJt3tqMAbx5HpQQQbuAE04Dz2DH3RX14xGg@mail.gmail.com>
+From: Antheas Kapenekakis <lkml@antheas.dev>
+Date: Sat, 7 Mar 2026 12:17:37 +0100
+X-Gmail-Original-Message-ID: 
+ <CAGwozwG+Dzs6Ow_mJAEWfzCBfWYc6AraGJZr1-a88cGhDibgSg@mail.gmail.com>
+X-Gm-Features: AaiRm505zxT5T43ZX8JJ8gVPEAJu5kyBCa0f2Okxau1btZj0g3ANm8sQVhUPp6Y
+Message-ID: 
+ <CAGwozwG+Dzs6Ow_mJAEWfzCBfWYc6AraGJZr1-a88cGhDibgSg@mail.gmail.com>
+Subject: Re: [RFC v2 2/2] platform/x86/amd: Add AMD DPTCi driver
+To: Derek John Clark <derekjohn.clark@gmail.com>
+Cc: Mario.Limonciello@amd.com, W_Armin@gmx.de, sashal@kernel.org,
+	Shyam-Sundar.S-k@amd.com, denis.benato@linux.dev,
+	linux-kernel@vger.kernel.org, platform-driver-x86@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+X-PPP-Message-ID: 
+ <177288226991.1153951.551094129870315682@linux3247.grserver.gr>
+X-PPP-Vhost: antheas.dev
+X-Virus-Scanned: clamav-milter 1.4.3 at linux3247.grserver.gr
+X-Virus-Status: Clean
 
-Add a new driver for Bitland laptops that utilize the MIFS (MiInterface)
-WMI interface.
+On Fri, 6 Mar 2026 at 22:14, Derek John Clark <derekjohn.clark@gmail.com> w=
+rote:
+>
+> On Thu, Mar 5, 2026 at 10:19=E2=80=AFAM Antheas Kapenekakis <lkml@antheas=
+.dev> wrote:
+>
+> > Implement a driver for AMD AGESA ALIB Function 0x0C, the Dynamic Power
+> > and Thermal Configuration Interface (DPTCi). This function allows
+> > userspace to configure APU power and thermal parameters at runtime by
+> > calling the \_SB.ALIB ACPI method with a packed parameter buffer.
+> >
+> > Unlike mainstream AMD laptops, the handheld devices targeted by this
+> > driver do not implement vendor-specific WMI or EC hooks for TDP control=
+.
+> > The ones that do, use DPTCi under the hood. For these devices, exposing
+> > the ALIB interface is the only viable mechanism for the OS to adjust
+> > power limits, making a dedicated kernel driver the correct approach
+> > rather than relying on unrestricted access to /dev/mem or ACPI method
+> > invocation from userspace.
+>
+> Hi Antheas,
+>
+> Thanks for the CC. I've long opined the lack of having a generic
+> interface for these features in the kernel. With that being said, I
+> think very careful consideration for the interface is a necessity. We
+> never want to have the chance for an unsuspecting or inexperienced
+> user to have hardware malfunctions by misusing the interface. As a
+> general rule I think it would be good for each individual device added
+> to have a tested-by tag before it is included. That message would
+> preferably include some sort of metadata identifying the true hardware
+> limits (tech docs if available, but marketing material or OEM software
+> screenshots would be sufficient, we know how some of these companies
+> are with information)
+>
+> > The driver matches the ABI of asus-armoury, by exposing a platform
+> > profile with reasonable tunings for devices depending on their max
+> > thermal envelope, and {ppt_pl1_spl,ppt_pl2_sppt,ppt_pl3_fppt,cpu_temp}
+> > tunables which only become writable when the profile is custom,
+> > otherwise they are read-only and reflect the current profile.
+> >
+> > The default profile is custom so that we do not write to the device
+> > until userspace explicitly selects a profile, remaining at firmware
+> > defaults.
+>
+> I see what you're trying to do here, but I'm a bit conflicted on the
+> implementation. Hardware defaults are there for a reason after all...
+> Part of the original discussion with custom was that setting it would
+> taint the kernel to inform remote troubleshooters that there was a
+> non-standard change. TBS I don't see that in the actual code for
+> acpi/platform_profile.c so maybe the intention was that the drivers
+> themselves set it? If that's the case then I'll need to submit a patch
+> to add that to lenovo-wmi-gamezone so I'm compliant. I'd like Mario's
+> input on that first as IMO it makes more sense to do it as a blanket
+> in the platform class, or we don't bother as we expect drivers to
+> respect the TDP limits set by ODM/OEM. If we do end up doing that
+> though, just booting a device with this driver would automatically
+> taint the kernel, which is certainly not the desired behavior. I'm not
+> sure how to best square that circle. Do we know the BIOS defaults for
+> all the devices we're adding here? I'd expect that would correspond
+> with balanced most of the time, so perhaps making sure those match is
+> a good compromise.
+>
+>
+> > Assisted-by: Claude:claude-opus-4-6
+> > Signed-off-by: Antheas Kapenekakis <lkml@antheas.dev>
+> > ---
+> >  MAINTAINERS                       |    6 +
+> >  drivers/platform/x86/amd/Kconfig  |   16 +
+> >  drivers/platform/x86/amd/Makefile |    2 +
+> >  drivers/platform/x86/amd/dptc.c   | 1255 +++++++++++++++++++++++++++++
+> >  4 files changed, 1279 insertions(+)
+> >  create mode 100644 drivers/platform/x86/amd/dptc.c
+> >
+> > diff --git a/MAINTAINERS b/MAINTAINERS
+> > index e08767323763..915293594641 100644
+> > --- a/MAINTAINERS
+> > +++ b/MAINTAINERS
+> > @@ -1096,6 +1096,12 @@ S:       Supported
+> >  F:     drivers/gpu/drm/amd/display/dc/dml/
+> >  F:     drivers/gpu/drm/amd/display/dc/dml2_0/
+> >
+> > +AMD DPTC DRIVER
+> > +M:     Antheas Kapenekakis <lkml@antheas.dev>
+> > +L:     platform-driver-x86@vger.kernel.org
+> > +S:     Maintained
+> > +F:     drivers/platform/x86/amd/dptc.c
+> > +
+> >  AMD FAM15H PROCESSOR POWER MONITORING DRIVER
+> >  M:     Huang Rui <ray.huang@amd.com>
+> >  L:     linux-hwmon@vger.kernel.org
+> > diff --git a/drivers/platform/x86/amd/Kconfig b/drivers/platform/x86/am=
+d/Kconfig
+> > index b813f9265368..ee79a2c084a8 100644
+> > --- a/drivers/platform/x86/amd/Kconfig
+> > +++ b/drivers/platform/x86/amd/Kconfig
+> > @@ -44,3 +44,19 @@ config AMD_ISP_PLATFORM
+> >
+> >           This driver can also be built as a module. If so, the module
+> >           will be called amd_isp4.
+> > +
+> > +config AMD_DPTC
+> > +       tristate "AMD Dynamic Power and Thermal Configuration Interface=
+ (DPTCi)"
+> > +       depends on X86_64 && ACPI && DMI
+> > +       select ACPI_PLATFORM_PROFILE
+> > +       select FIRMWARE_ATTRIBUTES_CLASS
+> > +       help
+> > +         Driver for AMD AGESA ALIB Function 0x0C, the Dynamic Power an=
+d
+> > +         Thermal Configuration Interface (DPTCi). Exposes TDP and ther=
+mal
+> > +         parameters for AMD APU-based handheld devices via the
+> > +         firmware-attributes sysfs ABI, allowing userspace tools to st=
+age
+> > +         and atomically commit power limit settings. Requires a DMI ma=
+tch
+> > +         for the device and a recognized AMD SoC.
+> > +
+> > +         If built as a module, the module will be called amd_dptc.
+> > +
+> > diff --git a/drivers/platform/x86/amd/Makefile b/drivers/platform/x86/a=
+md/Makefile
+> > index f6ff0c837f34..862a609bfe38 100644
+> > --- a/drivers/platform/x86/amd/Makefile
+> > +++ b/drivers/platform/x86/amd/Makefile
+> > @@ -12,3 +12,5 @@ obj-$(CONFIG_AMD_PMF)         +=3D pmf/
+> >  obj-$(CONFIG_AMD_WBRF)         +=3D wbrf.o
+> >  obj-$(CONFIG_AMD_ISP_PLATFORM) +=3D amd_isp4.o
+> >  obj-$(CONFIG_AMD_HFI)          +=3D hfi/
+> > +obj-$(CONFIG_AMD_DPTC)         +=3D amd_dptc.o
+> > +amd_dptc-y                     :=3D dptc.o
+> > diff --git a/drivers/platform/x86/amd/dptc.c b/drivers/platform/x86/amd=
+/dptc.c
+> > new file mode 100644
+> > index 000000000000..68d9d3b85cb6
+> > --- /dev/null
+> > +++ b/drivers/platform/x86/amd/dptc.c
+> > @@ -0,0 +1,1255 @@
+> > +// SPDX-License-Identifier: GPL-2.0-only
+> > +/*
+> > + * AMD Dynamic Power and Thermal Configuration Interface (DPTCi) drive=
+r
+> > + *
+> > + * Exposes AMD APU power and thermal parameters via the firmware-attri=
+butes
+> > + * sysfs ABI. Parameters are staged and atomically committed through t=
+he
+> > + * AGESA ALIB Function 0x0C (Dynamic Power and Thermal Configuration
+> > + * interface).
+> > + *
+> > + * Reference: AMD AGESA Publication #44065, Appendix E.5
+> > + *            https://docs.amd.com/v/u/en-US/44065_Arch2008
+> > + *
+> > + * Copyright (C) 2026 Antheas Kapenekakis <lkml@antheas.dev>
+> > + */
+> > +
+> > +#define pr_fmt(fmt) KBUILD_MODNAME ": " fmt
+> > +
+> > +#include <linux/acpi.h>
+> > +#include <linux/cleanup.h>
+> > +#include <linux/dmi.h>
+> > +#include <linux/init.h>
+> > +#include <linux/kobject.h>
+> > +#include <linux/module.h>
+> > +#include <linux/mutex.h>
+> > +#include <linux/platform_device.h>
+> > +#include <linux/platform_profile.h>
+> > +#include <linux/processor.h>
+> > +#include <linux/sysfs.h>
+> > +#include <linux/unaligned.h>
+> > +
+> > +#include "../firmware_attributes_class.h"
+> > +
+> > +#define DRIVER_NAME            "amd_dptc"
+> > +
+> > +#define ALIB_FUNC_DPTC         0x0C
+> > +#define ALIB_PATH              "\\_SB.ALIB"
+> > +
+> > +/* ALIB parameter IDs (AGESA spec Appendix E.5, Table E-52) */
+> > +#define ALIB_ID_TEMP_TARGET    0x03
+> > +#define ALIB_ID_STAPM_LIMIT    0x05
+> > +#define ALIB_ID_FAST_LIMIT     0x06
+> > +#define ALIB_ID_SLOW_LIMIT     0x07
+> > +#define ALIB_ID_SKIN_LIMIT     0x2E
+> > +
+> > +enum dptc_param_idx {
+> > +       DPTC_PPT_PL1_SPL,       /* STAPM + skin limit (set together) */
+> > +       DPTC_PPT_PL2_SPPT,      /* slow PPT limit */
+> > +       DPTC_PPT_PL3_FPPT,      /* fast PPT limit */
+> > +       DPTC_CPU_TEMP,          /* thermal control target */
+> > +       DPTC_NUM_PARAMS,
+> > +};
+> > +
+> > +struct dptc_param_limits {
+> > +       u32 min;        /* expanded floor:   widest safe hardware minim=
+um */
+> > +       u32 smin;       /* device floor:     safe operating minimum */
+> > +       u32 def;        /* default hint for userspace */
+> > +       u32 smax;       /* device ceiling:   safe operating maximum */
+> > +       u32 max;        /* expanded ceiling: widest safe hardware maxim=
+um */
+> > +};
+> > +
+> > +struct dptc_profile {
+> > +       u32 vals[DPTC_NUM_PARAMS];      /* 0 =3D don't set / unstage th=
+is param */
+> > +};
+> > +
+> > +struct dptc_device_limits {
+> > +       struct dptc_param_limits params[DPTC_NUM_PARAMS];
+> > +       struct dptc_profile profiles[PLATFORM_PROFILE_LAST];
+> > +};
+> > +
+> > +struct dptc_param_desc {
+> > +       const char *name;
+> > +       const char *display_name;
+> > +       u8 param_id;
+> > +       u8 param_id2;   /* secondary ALIB ID, 0 if none */
+> > +};
+> > +
+> > +static const struct dptc_param_desc dptc_params[DPTC_NUM_PARAMS] =3D {
+> > +       [DPTC_PPT_PL1_SPL]  =3D { "ppt_pl1_spl",  "Sustained power limi=
+t (mW)",
+> > +               ALIB_ID_STAPM_LIMIT, ALIB_ID_SKIN_LIMIT },
+> > +       [DPTC_PPT_PL2_SPPT] =3D { "ppt_pl2_sppt", "Slow PPT limit (mW)"=
+,
+> > +               ALIB_ID_SLOW_LIMIT },
+> > +       [DPTC_PPT_PL3_FPPT] =3D { "ppt_pl3_fppt", "Fast PPT limit (mW)"=
+,
+> > +               ALIB_ID_FAST_LIMIT },
+> > +       [DPTC_CPU_TEMP]     =3D { "cpu_temp",     "Thermal control limi=
+t (C)",
+> > +               ALIB_ID_TEMP_TARGET },
+> > +};
+>
+> You already mentioned this elsewhere, but I agree that using W over mW
+> would make sense to keep the interfaces consistent.
+>
+> > +/* 18W class: AYANEO AIR Plus (Ryzen 5 5560U) */
+> > +static const struct dptc_device_limits limits_18w =3D { .params =3D {
+> > +       [DPTC_PPT_PL1_SPL]  =3D {     0,  5000, 15000, 18000, 22000 },
+> > +       [DPTC_PPT_PL2_SPPT] =3D {     0,  5000, 15000, 18000, 22000 },
+> > +       [DPTC_PPT_PL3_FPPT] =3D {     0,  5000, 15000, 20000, 25000 },
+> > +       [DPTC_CPU_TEMP]     =3D {    60,    70,    85,    90,   100 },
+> > +}, .profiles =3D {
+> > +       [PLATFORM_PROFILE_LOW_POWER]   =3D { .vals =3D {  5000,  5000, =
+ 8000, 0 } },
+> > +       [PLATFORM_PROFILE_BALANCED]    =3D { .vals =3D { 12000, 14000, =
+15000, 0 } },
+> > +       [PLATFORM_PROFILE_PERFORMANCE] =3D { .vals =3D { 18000, 18000, =
+20000, 0 } },
+> > +}};
+> > +
+>
+> I would personally prefer these be set directly in the DMI match per
+> device. Its more code in the end, but its more cautious, as each
+> manufacturer has a bespoke cooling solution. Assuming they're all
+> equivalent is not best practice IMO. I have quite a bit of historical
+> data on this so I can help fill in the blanks where it is missing.
 
-The driver implements several features through the WMI interface:
+I would rather keep it like this and expand for specific devices when
+there is a reason. This makes the match section 1/3 the size. The
+chips are the same, they behave the same performance-wise. And for
+lower TDPs (e.g., lower_power, balanced) where the device is
+guaranteed to handle it the behavior is exact.
 
-- Platform Profile: Supports "Quiet", "Balanced", "Performance", and
-  "Full Speed" modes. The "Full Speed" mode is intelligently restricted
-  based on the AC adapter type (requires DC power, not supported on
-  USB-C charging) as required by the hardware.
-- Hwmon: Provides monitoring for CPU, GPU, and System fan speeds,
-  as well as CPU temperature sensors.
-- Keyboard Backlight: Integrated with the LED class device for
-  brightness control and provides sysfs attributes for keyboard modes
-  (cyclic, fixed, etc.).
-- GPU Mode: Allows switching between Hybrid, Discrete, and UMA
-  graphics modes via sysfs.
-- Hotkeys: Handles WMI events for system hotkeys (Calculator, Browser,
-  App launch) using sparse keymaps and reports status changes for
-  Airplane mode, Touchpad, and CapsLock.
-- Fan Boost: Provides a sysfs interface to force fans to maximum speed.
+> > +/* 25W class: Ryzen 5000 handhelds (AYANEO NEXT, KUN) */
+> > +static const struct dptc_device_limits limits_25w =3D { .params =3D {
+> > +       [DPTC_PPT_PL1_SPL]  =3D {     0,  4000, 15000, 25000, 32000 },
+> > +       [DPTC_PPT_PL2_SPPT] =3D {     0,  4000, 20000, 27000, 35000 },
+> > +       [DPTC_PPT_PL3_FPPT] =3D {     0,  4000, 25000, 30000, 37000 },
+> > +       [DPTC_CPU_TEMP]     =3D {    60,    70,    85,    90,   100 },
+> > +}, .profiles =3D {
+> > +       [PLATFORM_PROFILE_LOW_POWER]   =3D { .vals =3D {  8000,  8000, =
+12000, 0 } },
+> > +       [PLATFORM_PROFILE_BALANCED]    =3D { .vals =3D { 15000, 17000, =
+20000, 0 } },
+> > +       [PLATFORM_PROFILE_PERFORMANCE] =3D { .vals =3D { 25000, 27000, =
+30000, 0 } },
+> > +}};
+> >
+> > +/* 28W class: GPD Win series, AYANEO 2, OrangePi NEO-01 */
+> > +static const struct dptc_device_limits limits_28w =3D { .params =3D {
+> > +       [DPTC_PPT_PL1_SPL]  =3D {     0,  4000, 15000, 28000, 32000 },
+> > +       [DPTC_PPT_PL2_SPPT] =3D {     0,  4000, 20000, 30000, 35000 },
+> > +       [DPTC_PPT_PL3_FPPT] =3D {     0,  4000, 25000, 32000, 37000 },
+> > +       [DPTC_CPU_TEMP]     =3D {    60,    70,    85,    90,   100 },
+> > +}, .profiles =3D {
+> > +       [PLATFORM_PROFILE_LOW_POWER]   =3D { .vals =3D {  8000,  8000, =
+12000, 0 } },
+> > +       [PLATFORM_PROFILE_BALANCED]    =3D { .vals =3D { 15000, 17000, =
+22000, 0 } },
+> > +       [PLATFORM_PROFILE_PERFORMANCE] =3D { .vals =3D { 25000, 28000, =
+32000, 0 } },
+> > +       [PLATFORM_PROFILE_MAX_POWER]   =3D { .vals =3D { 28000, 30000, =
+32000, 0 } },
+> > +}};
+> > +
+> > +/* 30W class: OneXPlayer, AYANEO AIR/FLIP/GEEK/SLIDE/3, AOKZOE */
+> > +static const struct dptc_device_limits limits_30w =3D { .params =3D {
+> > +       [DPTC_PPT_PL1_SPL]  =3D {     0,  4000, 15000, 30000, 40000 },
+> > +       [DPTC_PPT_PL2_SPPT] =3D {     0,  4000, 20000, 32000, 43000 },
+> > +       [DPTC_PPT_PL3_FPPT] =3D {     0,  4000, 25000, 41000, 50000 },
+> > +       [DPTC_CPU_TEMP]     =3D {    60,    70,    85,    90,   100 },
+> > +}, .profiles =3D {
+> > +       [PLATFORM_PROFILE_LOW_POWER]   =3D { .vals =3D {  8000,  8000, =
+12000, 0 } },
+> > +       [PLATFORM_PROFILE_BALANCED]    =3D { .vals =3D { 15000, 17000, =
+25000, 0 } },
+> > +       [PLATFORM_PROFILE_PERFORMANCE] =3D { .vals =3D { 25000, 28000, =
+41000, 0 } },
+> > +       [PLATFORM_PROFILE_MAX_POWER]   =3D { .vals =3D { 30000, 32000, =
+41000, 0 } },
+> > +}};
+> > +
+> > +/* AI MAX Handheld class: GPD Win 5 */
+> > +static const struct dptc_device_limits limits_maxhh =3D { .params =3D =
+{
+> This struct name seems arbitrary compared to the others. If this is
+> the eventual pattern this should just be called _80w
 
-The driver registers two WMI GUIDs:
-- B60BFB48-3E5B-49E4-A0E9-8CFFE1B3434B: Control methods
-- 46C93E13-EE9B-4262-8488-563BCA757FEF: Event notifications
+I am still not sure what the correct range is for this handheld, which
+is why it is called MAXHandHeld. The TDP range is too broad to put an
+80 on it. I am talking with users, it seems the sweet spot is 45W
 
-Reviewed-by: Armin Wolf <W_Armin@gmx.de>
-Signed-off-by: Mingyou Chen <qby140326@gmail.com>
----
-v14:
-  - Add Reviewed-by
-v13:
-  - make laptop_attrs const
-v12:
-  - add depends on INPUT and select INPUT_SPARSEKMAP
-  - code cleanup - remove unnecessary ret variables
-  - add the copyright text and pr_fmt macro
-  - use blocking notifier instead of atomic notifier
-  - pass the platform profile device here instead of the WMI device at bitland_mifs_wmi_suspend
-  - remove unnecessary null checks
-  - pass the platform_profile dev to platform_profile_notify
-  - fetch led brightness from WMI on init led
-  - remove the (const struct bitland_mifs_event *) cast in bitland_mifs_wmi_notify
-v11:
-  - fix checkpatch reported issues
-v10:
-  - After some researches, I acknowledge my device is from Bitland, not
-    Tongfang. Rename the driver to bitland-mifs-wmi
-v9:
-  - Fix style issues in .rst documentation
-  - Rewrite the wmi_call func with correct usage
-  - Use power_supply_is_system_supplied in kernel instead of
-    is_ac_online
-  - Remove the PLATFORM_PROFILE_LAST check in wmi_resume function
-  - Directly return in the hwmon_temp case in hwmon_read function
-  - return -EPROTO on invalid wmi return value in gpu_mode and
-    keyboard brightness
-  - Remove thge dev_err debug messages
-  - Rewrite the wmi_notify method with .notify_new callback in
-    linux-next
-  - Call hwmon_notify_event (with a notifier) on WMI fan speed events
+> > +       [DPTC_PPT_PL1_SPL]  =3D {      0,  4000, 25000,  80000, 100000 =
+},
+> > +       [DPTC_PPT_PL2_SPPT] =3D {      0,  4000, 27000,  82000, 100000 =
+},
+> > +       [DPTC_PPT_PL3_FPPT] =3D {      0,  4000, 40000,  85000, 100000 =
+},
+> > +       [DPTC_CPU_TEMP]     =3D {     60,    70,    95,     95,    100 =
+},
+> > +}, .profiles =3D {
+> > +       [PLATFORM_PROFILE_LOW_POWER]   =3D { .vals =3D { 15000, 15000, =
+25000, 0 } },
+> > +       [PLATFORM_PROFILE_BALANCED]    =3D { .vals =3D { 25000, 27000, =
+40000, 0 } },
+> > +       [PLATFORM_PROFILE_PERFORMANCE] =3D { .vals =3D { 60000, 63000, =
+85000, 0 } },
+> > +       [PLATFORM_PROFILE_MAX_POWER]   =3D { .vals =3D { 80000, 82000, =
+85000, 0 } },
+> > +}};
+>
+> One other thing to consider is AC vs DC power draw. Thermal load is
+> important, but we also want to avoid over-stressing the battery on
+> these devices. I would restrict MAX_POWER to when AC is plugged ad
+> return an error if on DC, and ensure PERFORMANCE is at or just below
+> peak DC power draw. I didn't do this in gamezone on Lenovo because
+> those limits are BIOS enforced and MAX_POWER will just match
+> PERFORMANCE on DC.
 
-v8:
-  - Fix coding style issues
-  - Use MILLIDEGREE_PER_DEGREE instead of MILLI to define the temperature unit more precisely.
-  - Align lines with the first occurrence of HWMON
-  - Remove the unnecessary empty line in error handling
-  - Reverse the logic of kb_mode_strings and drop the mode_str variable
+This is true. However I would like to defer AC/DC wrangling in this
+driver. The values are already conservative for the profiles except
+max power. So I think it would be best to drop MAX_POWER for now.
 
-v7:
-  - Remove the unused includes (asm/)
-  - Align values with tab
-  - remove the previous test code which i forgot to remove
-  - return values directly with the "return" statement
-  - rmeove the wrong comment "Full-speed" since I've already use the value
-    "WMI_PP_FULL_SPEED" in the switch case
-  - remove the empty lines
-  - Change the two variables (val, ret) to reverse xmas-tree order.
-  - Add missing includes and sort them in the alphabetical order.
-  - use endianness types and conversion functions to parse temperature in
-    the wmi response
+> > +/* Substring matches against boot_cpu_data.x86_model_id; order matters=
+. */
+> > +static const char * const dptc_soc_table[] =3D {
+> > +       /* AI MAX */
+> > +       "AMD RYZEN AI MAX+ 395",
+> > +       "AMD RYZEN AI MAX+ 385",
+> > +       "AMD RYZEN AI MAX 380",
+> > +       /* Ryzen AI */
+> > +       "AMD Ryzen AI 9 HX 370",
+> > +       "AMD Ryzen AI HX 360",
+> > +       /* Z1 - Extreme before plain Z1 */
+> > +       "AMD Ryzen Z1 Extreme",
+> > +       "AMD Ryzen Z1",
+> > +       /* Ryzen 8000 */
+> > +       "AMD Ryzen 7 8840U",
+> > +       /* Ryzen 7040 */
+> > +       "AMD Ryzen 7 7840U",
+> > +       /* Ryzen 6000 */
+> > +       "AMD Ryzen 7 6800U",
+> > +       "AMD Ryzen 7 6600U",
+> > +       /* Ryzen 5000 */
+> > +       "AMD Ryzen 7 5800U",
+> > +       "AMD Ryzen 7 5700U",
+> > +       "AMD Ryzen 5 5560U",
+> > +       NULL,
+> > +};
+>
+> I have some data on 4800/4800U and AMD Athelon Silver APU devices as
+> well. When I return from my conference I can post some DSDT dumps to
+> validate the interface is present on them as well.
 
-v6:
-  - add base commit
+I think I considered adding support for the Athelon Silver and that it
+did have some support. But in the end the chip is too old to make TDP
+control viable for it.
 
-v5:
-  - add fallthrough on the PLATFORM_PROFILE_BALANCED_PERFORMANCE switch
-    case
+> > +static const struct dmi_system_id dptc_dmi_table[] =3D {
+> > +       /* GPD */
+> > +       {
+> > +               .ident =3D "GPD Win Mini",
+> > +               .matches =3D {
+> > +                       DMI_MATCH(DMI_SYS_VENDOR, "GPD"),
+> > +                       DMI_MATCH(DMI_PRODUCT_NAME, "G1617-01"),
+> > +               },
+> > +               .driver_data =3D (void *)&limits_28w,
+> > +       },
+> > +       {
+> > +               .ident =3D "GPD Win Mini 2024",
+> > +               .matches =3D {
+> > +                       DMI_MATCH(DMI_SYS_VENDOR, "GPD"),
+> > +                       DMI_MATCH(DMI_PRODUCT_NAME, "G1617-02"),
+> > +               },
+> > +               .driver_data =3D (void *)&limits_28w,
+> > +       },
+> > +       {
+> > +               .ident =3D "GPD Win Mini 2024",
+> > +               .matches =3D {
+> > +                       DMI_MATCH(DMI_SYS_VENDOR, "GPD"),
+> > +                       DMI_MATCH(DMI_PRODUCT_NAME, "G1617-02-L"),
+> > +               },
+> > +               .driver_data =3D (void *)&limits_28w,
+> > +       },
+> > +       {
+> > +               .ident =3D "GPD Win 4",
+> > +               .matches =3D {
+> > +                       DMI_MATCH(DMI_SYS_VENDOR, "GPD"),
+> > +                       DMI_MATCH(DMI_PRODUCT_NAME, "G1618-04"),
+> > +               },
+> > +               .driver_data =3D (void *)&limits_28w,
+> > +       },
+> > +       {
+> > +               .ident =3D "GPD Win 5",
+> > +               .matches =3D {
+> > +                       DMI_MATCH(DMI_SYS_VENDOR, "GPD"),
+> > +                       DMI_MATCH(DMI_PRODUCT_NAME, "G1618-05"),
+> > +               },
+> > +               .driver_data =3D (void *)&limits_maxhh,
+> > +       },
+> > +       {
+> > +               .ident =3D "GPD Win Max 2",
+> > +               .matches =3D {
+> > +                       DMI_MATCH(DMI_SYS_VENDOR, "GPD"),
+> > +                       DMI_MATCH(DMI_PRODUCT_NAME, "G1619-04"),
+> > +               },
+> > +               .driver_data =3D (void *)&limits_28w,
+> > +       },
+> > +       {
+> > +               .ident =3D "GPD Win Max 2 2024",
+> > +               .matches =3D {
+> > +                       DMI_MATCH(DMI_SYS_VENDOR, "GPD"),
+> > +                       DMI_MATCH(DMI_PRODUCT_NAME, "G1619-05"),
+> > +               },
+> > +               .driver_data =3D (void *)&limits_28w,
+> > +       },
+> > +       {
+> > +               .ident =3D "GPD Duo",
+> > +               .matches =3D {
+> > +                       DMI_MATCH(DMI_SYS_VENDOR, "GPD"),
+> > +                       DMI_MATCH(DMI_PRODUCT_NAME, "G1622-01"),
+> > +               },
+> > +               .driver_data =3D (void *)&limits_28w,
+> > +       },
+> > +       {
+> > +               .ident =3D "GPD Duo",
+> > +               .matches =3D {
+> > +                       DMI_MATCH(DMI_SYS_VENDOR, "GPD"),
+> > +                       DMI_MATCH(DMI_PRODUCT_NAME, "G1622-01-L"),
+> > +               },
+> > +               .driver_data =3D (void *)&limits_28w,
+> > +       },
+> > +       {
+> > +               .ident =3D "GPD Pocket 4",
+> > +               .matches =3D {
+> > +                       DMI_MATCH(DMI_SYS_VENDOR, "GPD"),
+> > +                       DMI_MATCH(DMI_PRODUCT_NAME, "G1628-04"),
+> > +               },
+> > +               .driver_data =3D (void *)&limits_28w,
+> > +       },
+> > +       {
+> > +               .ident =3D "GPD Pocket 4",
+> > +               .matches =3D {
+> > +                       DMI_MATCH(DMI_SYS_VENDOR, "GPD"),
+> > +                       DMI_MATCH(DMI_PRODUCT_NAME, "G1628-04-L"),
+> > +               },
+> > +               .driver_data =3D (void *)&limits_28w,
+> > +       },
+> > +       /* OrangePi */
+> > +       {
+> > +               .ident =3D "OrangePi NEO-01",
+> > +               .matches =3D {
+> > +                       DMI_MATCH(DMI_BOARD_VENDOR, "OrangePi"),
+> > +                       DMI_EXACT_MATCH(DMI_BOARD_NAME, "NEO-01"),
+> > +               },
+> > +               .driver_data =3D (void *)&limits_28w,
+> > +       },
+> > +       /* AYN */
+> > +       {
+> > +               .ident =3D "AYN Loki Max",
+> > +               .matches =3D {
+> > +                       DMI_EXACT_MATCH(DMI_SYS_VENDOR, "ayn"),
+> > +                       DMI_EXACT_MATCH(DMI_PRODUCT_NAME, "Loki Max"),
+> > +               },
+> > +               .driver_data =3D (void *)&limits_30w,
+> > +       },
+> > +       /* Tectoy (Zeenix Pro =3D Loki Max) */
+> > +       {
+> > +               .ident =3D "Zeenix Pro",
+> > +               .matches =3D {
+> > +                       DMI_EXACT_MATCH(DMI_SYS_VENDOR, "Tectoy"),
+> > +                       DMI_EXACT_MATCH(DMI_PRODUCT_NAME, "Zeenix Pro")=
+,
+> > +               },
+> > +               .driver_data =3D (void *)&limits_30w,
+> > +       },
+> > +       /* AOKZOE */
+> > +       {
+> > +               .ident =3D "AOKZOE A1 AR07",
+> > +               .matches =3D {
+> > +                       DMI_MATCH(DMI_BOARD_VENDOR, "AOKZOE"),
+> > +                       DMI_EXACT_MATCH(DMI_BOARD_NAME, "AOKZOE A1 AR07=
+"),
+> > +               },
+> > +               .driver_data =3D (void *)&limits_30w,
+> > +       },
+> > +       {
+> > +               .ident =3D "AOKZOE A1 Pro",
+> > +               .matches =3D {
+> > +                       DMI_MATCH(DMI_BOARD_VENDOR, "AOKZOE"),
+> > +                       DMI_EXACT_MATCH(DMI_BOARD_NAME, "AOKZOE A1 Pro"=
+),
+> > +               },
+> > +               .driver_data =3D (void *)&limits_30w,
+> > +       },
+> > +       {
+> > +               .ident =3D "AOKZOE A1X",
+> > +               .matches =3D {
+> > +                       DMI_MATCH(DMI_BOARD_VENDOR, "AOKZOE"),
+> > +                       DMI_EXACT_MATCH(DMI_BOARD_NAME, "AOKZOE A1X"),
+> > +               },
+> > +               .driver_data =3D (void *)&limits_30w,
+> > +       },
+> > +       {
+> > +               .ident =3D "AOKZOE A2 Pro",
+> > +               .matches =3D {
+> > +                       DMI_MATCH(DMI_BOARD_VENDOR, "AOKZOE"),
+> > +                       DMI_EXACT_MATCH(DMI_BOARD_NAME, "AOKZOE A2 Pro"=
+),
+> > +               },
+> > +               .driver_data =3D (void *)&limits_30w,
+> > +       },
+> > +       /* OneXPlayer (Intel variants filtered by SoC table) */
+> > +       {
+> > +               .ident =3D "ONEXPLAYER F1Pro",
+> > +               .matches =3D {
+> > +                       DMI_MATCH(DMI_BOARD_VENDOR, "ONE-NETBOOK"),
+> > +                       DMI_EXACT_MATCH(DMI_BOARD_NAME, "ONEXPLAYER F1P=
+ro"),
+> > +               },
+> > +               .driver_data =3D (void *)&limits_30w,
+> > +       },
+> > +       {
+> > +               .ident =3D "ONEXPLAYER F1 EVA-02",
+> > +               .matches =3D {
+> > +                       DMI_MATCH(DMI_BOARD_VENDOR, "ONE-NETBOOK"),
+> > +                       DMI_EXACT_MATCH(DMI_BOARD_NAME, "ONEXPLAYER F1 =
+EVA-02"),
+> > +               },
+> > +               .driver_data =3D (void *)&limits_30w,
+> > +       },
+> > +       {
+> > +               .ident =3D "ONEXPLAYER 2",
+> > +               .matches =3D {
+> > +                       DMI_MATCH(DMI_BOARD_VENDOR, "ONE-NETBOOK"),
+> > +                       DMI_MATCH(DMI_BOARD_NAME, "ONEXPLAYER 2"),
+> > +               },
+> > +               .driver_data =3D (void *)&limits_30w,
+> > +       },
+> > +       {
+> > +               .ident =3D "ONEXPLAYER X1 A",
+> > +               .matches =3D {
+> > +                       DMI_MATCH(DMI_BOARD_VENDOR, "ONE-NETBOOK"),
+> > +                       DMI_EXACT_MATCH(DMI_BOARD_NAME, "ONEXPLAYER X1 =
+A"),
+> > +               },
+> > +               .driver_data =3D (void *)&limits_30w,
+> > +       },
+> > +       {
+> > +               .ident =3D "ONEXPLAYER X1z",
+> > +               .matches =3D {
+> > +                       DMI_MATCH(DMI_BOARD_VENDOR, "ONE-NETBOOK"),
+> > +                       DMI_EXACT_MATCH(DMI_BOARD_NAME, "ONEXPLAYER X1z=
+"),
+> > +               },
+> > +               .driver_data =3D (void *)&limits_30w,
+> > +       },
+> > +       {
+> > +               .ident =3D "ONEXPLAYER X1Pro",
+> > +               .matches =3D {
+> > +                       DMI_MATCH(DMI_BOARD_VENDOR, "ONE-NETBOOK"),
+> > +                       DMI_EXACT_MATCH(DMI_BOARD_NAME, "ONEXPLAYER X1P=
+ro"),
+> > +               },
+> > +               .driver_data =3D (void *)&limits_30w,
+> > +       },
+> > +       {
+> > +               .ident =3D "ONEXPLAYER G1 A",
+> > +               .matches =3D {
+> > +                       DMI_MATCH(DMI_BOARD_VENDOR, "ONE-NETBOOK"),
+> > +                       DMI_EXACT_MATCH(DMI_BOARD_NAME, "ONEXPLAYER G1 =
+A"),
+> > +               },
+> > +               .driver_data =3D (void *)&limits_30w,
+> > +       },
+> > +       /* AYANEO - 18W */
+> > +       {
+> > +               .ident =3D "AYANEO AIR Plus",
+> > +               .matches =3D {
+> > +                       DMI_MATCH(DMI_BOARD_VENDOR, "AYANEO"),
+> > +                       DMI_EXACT_MATCH(DMI_BOARD_NAME, "AIR Plus"),
+> > +               },
+> > +               .driver_data =3D (void *)&limits_18w,
+> > +       },
+> > +       /* AYANEO - 25W */
+> > +       {
+> > +               .ident =3D "AYANEO NEXT Advance",
+> > +               .matches =3D {
+> > +                       DMI_MATCH(DMI_BOARD_VENDOR, "AYANEO"),
+> > +                       DMI_EXACT_MATCH(DMI_BOARD_NAME, "NEXT Advance")=
+,
+> > +               },
+> > +               .driver_data =3D (void *)&limits_25w,
+> > +       },
+>
+> AYANEO went through a strange DMI phase, many of the first run of NEXT
+> devices are prefaced with AYANEO in the board name as well
 
-v4:
-  - check the DC power state before switching to performance/full-speed mode
+If you can pull up the exact name that would be good. We can dupe it.
 
-v3:
-  - Fix email address mismatch in Signed-off-by and From headers.
-  - implement the WMI event handler
-  - code style improvments
-  - condition on the performance platform profile switch
-  - driver documentation
+> > +       {
+> > +               .ident =3D "AYANEO NEXT Lite",
+> > +               .matches =3D {
+> > +                       DMI_MATCH(DMI_BOARD_VENDOR, "AYANEO"),
+> > +                       DMI_EXACT_MATCH(DMI_BOARD_NAME, "NEXT Lite"),
+> > +               },
+> > +               .driver_data =3D (void *)&limits_25w,
+> > +       },
+> > +       {
+> > +               .ident =3D "AYANEO NEXT Pro",
+> > +               .matches =3D {
+> > +                       DMI_MATCH(DMI_BOARD_VENDOR, "AYANEO"),
+> > +                       DMI_EXACT_MATCH(DMI_BOARD_NAME, "NEXT Pro"),
+> > +               },
+> > +               .driver_data =3D (void *)&limits_25w,
+> > +       },
+> > +       {
+> > +               .ident =3D "AYANEO NEXT",
+> > +               .matches =3D {
+> > +                       DMI_MATCH(DMI_BOARD_VENDOR, "AYANEO"),
+> > +                       DMI_EXACT_MATCH(DMI_BOARD_NAME, "NEXT"),
+> > +               },
+> > +               .driver_data =3D (void *)&limits_25w,
+> > +       },
+> > +       {
+> > +               .ident =3D "AYANEO KUN",
+> > +               .matches =3D {
+> > +                       DMI_MATCH(DMI_BOARD_VENDOR, "AYANEO"),
+> > +                       DMI_EXACT_MATCH(DMI_BOARD_NAME, "KUN"),
+> > +               },
+> > +               .driver_data =3D (void *)&limits_25w,
+> > +       },
+> > +       {
+> > +               .ident =3D "AYANEO KUN",
+> > +               .matches =3D {
+> > +                       DMI_MATCH(DMI_BOARD_VENDOR, "AYANEO"),
+> > +                       DMI_EXACT_MATCH(DMI_BOARD_NAME, "AYANEO KUN"),
+> > +               },
+> > +               .driver_data =3D (void *)&limits_25w,
+> > +       },
+> > +       /* AYANEO - 28W */
+> > +       {
+> > +               .ident =3D "AYANEO 2",
+> > +               .matches =3D {
+> > +                       DMI_MATCH(DMI_BOARD_VENDOR, "AYANEO"),
+> > +                       DMI_MATCH(DMI_BOARD_NAME, "AYANEO 2"),
+> > +               },
+> > +               .driver_data =3D (void *)&limits_28w,
+> > +       },
+> > +       {
+> > +               .ident =3D "SuiPlay0X1",
+> > +               .matches =3D {
+> > +                       DMI_MATCH(DMI_SYS_VENDOR, "Mysten Labs, Inc."),
+> > +                       DMI_MATCH(DMI_PRODUCT_NAME, "SuiPlay0X1"),
+> > +               },
+> > +               .driver_data =3D (void *)&limits_28w,
+> > +       },
+> > +       /* AYANEO - 30W */
+> > +       {
+> > +               /* Must come before the shorter "AIR" match */
+> > +               .ident =3D "AYANEO AIR 1S",
+> > +               .matches =3D {
+> > +                       DMI_MATCH(DMI_BOARD_VENDOR, "AYANEO"),
+> > +                       DMI_MATCH(DMI_BOARD_NAME, "AIR 1S"),
+> > +               },
+> > +               .driver_data =3D (void *)&limits_30w,
+> > +       },
+> > +       {
+> > +               .ident =3D "AYANEO AIR Pro",
+> > +               .matches =3D {
+> > +                       DMI_MATCH(DMI_BOARD_VENDOR, "AYANEO"),
+> > +                       DMI_EXACT_MATCH(DMI_BOARD_NAME, "AIR Pro"),
+> > +               },
+> > +               .driver_data =3D (void *)&limits_30w,
+> > +       },
+> > +       {
+> > +               .ident =3D "AYANEO AIR",
+> > +               .matches =3D {
+> > +                       DMI_MATCH(DMI_BOARD_VENDOR, "AYANEO"),
+> > +                       DMI_EXACT_MATCH(DMI_BOARD_NAME, "AIR"),
+> > +               },
+> > +               .driver_data =3D (void *)&limits_30w,
+> > +       },
+>
+> The original air is max 15w, air pro is 18w. I didn't scrutinize the
+> rest as closely, but these will need to be validated per device.
+> (Hence my reccomendation above)
 
-v2:
-  - Add PLATFORM_PROFILE_BALANCED_PERFORMANCE platform profile support
+These Air devices from ~2023 and before will need a closer look.
+Everything from 2024 onwards should be correct.
 
- .../wmi/devices/bitland-mifs-wmi.rst          | 207 +++++
- drivers/platform/x86/Kconfig                  |  18 +
- drivers/platform/x86/Makefile                 |   1 +
- drivers/platform/x86/bitland-mifs-wmi.c       | 851 ++++++++++++++++++
- 4 files changed, 1077 insertions(+)
- create mode 100644 Documentation/wmi/devices/bitland-mifs-wmi.rst
- create mode 100644 drivers/platform/x86/bitland-mifs-wmi.c
+> > +       {
+> > +               /* DMI_MATCH catches all FLIP variants (DS, KB, 1S DS, =
+1S KB) */
+> > +               .ident =3D "AYANEO FLIP",
+> > +               .matches =3D {
+> > +                       DMI_MATCH(DMI_BOARD_VENDOR, "AYANEO"),
+> > +                       DMI_MATCH(DMI_BOARD_NAME, "FLIP"),
+> > +               },
+> > +               .driver_data =3D (void *)&limits_30w,
+> > +       },
+> > +       {
+> > +               /* DMI_MATCH catches GEEK and GEEK 1S */
+> > +               .ident =3D "AYANEO GEEK",
+> > +               .matches =3D {
+> > +                       DMI_MATCH(DMI_BOARD_VENDOR, "AYANEO"),
+> > +                       DMI_MATCH(DMI_BOARD_NAME, "GEEK"),
+> > +               },
+> > +               .driver_data =3D (void *)&limits_30w,
+> > +       },
+> > +       {
+> > +               .ident =3D "AYANEO SLIDE",
+> > +               .matches =3D {
+> > +                       DMI_MATCH(DMI_BOARD_VENDOR, "AYANEO"),
+> > +                       DMI_EXACT_MATCH(DMI_BOARD_NAME, "SLIDE"),
+> > +               },
+> > +               .driver_data =3D (void *)&limits_30w,
+> > +       },
+> > +       {
+> > +               .ident =3D "AYANEO 3",
+> > +               .matches =3D {
+> > +                       DMI_MATCH(DMI_BOARD_VENDOR, "AYANEO"),
+> > +                       DMI_EXACT_MATCH(DMI_BOARD_NAME, "AYANEO 3"),
+> > +               },
+> > +               .driver_data =3D (void *)&limits_30w,
+> > +       },
+> > +       { }
+> > +};
+> > +MODULE_DEVICE_TABLE(dmi, dptc_dmi_table);
+> > +
+> > +struct dptc_priv;
+> > +
+> > +struct dptc_attr_sysfs {
+> > +       struct dptc_priv *priv;
+> > +       struct kobj_attribute current_value;
+> > +       struct kobj_attribute default_value;
+> > +       struct kobj_attribute min_value;
+> > +       struct kobj_attribute max_value;
+> > +       struct kobj_attribute scalar_increment;
+> > +       struct kobj_attribute display_name;
+> > +       struct kobj_attribute type;
+> > +       struct attribute *attrs[8];
+> > +       struct attribute_group group;
+> > +       int idx;
+> > +};
+> > +
+> > +struct dptc_priv {
+> > +       struct device *fw_attr_dev;
+> > +       struct kset *fw_attr_kset;
+> > +
+> > +       const struct dptc_device_limits *dev_limits;
+> > +
+> > +       bool expanded;
+> > +
+> > +       enum platform_profile_option profile;
+> > +       struct device *ppdev;
+> > +
+> > +       enum dptc_save_mode { SAVE_SINGLE, SAVE_BULK } save_mode;
+> > +
+> > +       u32 staged[DPTC_NUM_PARAMS];
+> > +       bool has_staged[DPTC_NUM_PARAMS];
+> > +
+> > +       /* Protects mutable driver state */
+> > +       struct mutex lock;
+> > +
+> > +       struct dptc_attr_sysfs params[DPTC_NUM_PARAMS];
+> > +       struct dptc_attr_sysfs expanded_attr;
+> > +       struct kobj_attribute save_settings_attr;
+> > +};
+> > +
+> > +static struct platform_device *dptc_pdev;
+> > +
+> > +static u32 dptc_get_min(struct dptc_priv *dptc, int idx)
+> > +{
+> > +       return dptc->expanded ? dptc->dev_limits->params[idx].min
+> > +                             : dptc->dev_limits->params[idx].smin;
+> > +}
+> > +
+> > +static u32 dptc_get_max(struct dptc_priv *dptc, int idx)
+> > +{
+> > +       return dptc->expanded ? dptc->dev_limits->params[idx].max
+> > +                             : dptc->dev_limits->params[idx].smax;
+> > +}
+> > +
+> > +static u32 dptc_get_default(struct dptc_priv *dptc, int idx)
+> > +{
+> > +       return dptc->dev_limits->params[idx].def;
+> > +}
+> > +
+> > +static int dptc_alib_call(const u8 *ids, const u32 *vals, int count)
+> > +{
+> > +       union acpi_object in_params[2];
+> > +       struct acpi_object_list input;
+> > +       acpi_status status;
+> > +       u32 buf_size;
+> > +       int i, off;
+> > +       u8 *buf;
+> > +
+> > +       if (count =3D=3D 0)
+> > +               return -EINVAL;
+> > +
+> > +       /* Buffer layout: WORD total_size + count * (BYTE id + DWORD va=
+lue) */
+> > +       buf_size =3D 2 + count * 5;
+> > +       buf =3D kzalloc(buf_size, GFP_KERNEL);
+> > +       if (!buf)
+> > +               return -ENOMEM;
+> > +
+> > +       put_unaligned_le16(buf_size, buf);
+> > +
+> > +       for (i =3D 0; i < count; i++) {
+> > +               off  =3D 2 + i * 5;
+> > +               buf[off] =3D ids[i];
+> > +               put_unaligned_le32(vals[i], buf + off + 1);
+> > +       }
+> > +
+> > +       in_params[0].type          =3D ACPI_TYPE_INTEGER;
+> > +       in_params[0].integer.value =3D ALIB_FUNC_DPTC;
+> > +       in_params[1].type          =3D ACPI_TYPE_BUFFER;
+> > +       in_params[1].buffer.length  =3D buf_size;
+> > +       in_params[1].buffer.pointer =3D buf;
+> > +
+> > +       input.count   =3D 2;
+> > +       input.pointer =3D in_params;
+> > +
+> > +       status =3D acpi_evaluate_object(NULL, ALIB_PATH, &input, NULL);
+> > +       kfree(buf);
+> > +
+> > +       if (ACPI_FAILURE(status)) {
+> > +               pr_err("ALIB call failed: %s\n",
+> > +                      acpi_format_exception(status));
+> > +               return -EIO;
+> > +       }
+> > +
+> > +       pr_debug("sent %d ALIB parameter(s)\n", count);
+> > +       return 0;
+> > +}
+> > +
+> > +static int dptc_alib_send_one(int idx, u32 val)
+> > +{
+> > +       u32 vals[2];
+> > +       u8 ids[2];
+> > +       int count =3D 0;
+> > +
+> > +       ids[count]  =3D dptc_params[idx].param_id;
+> > +       vals[count] =3D val;
+> > +       count++;
+> > +       if (dptc_params[idx].param_id2) {
+> > +               ids[count]  =3D dptc_params[idx].param_id2;
+> > +               vals[count] =3D val;
+> > +               count++;
+> > +       }
+> > +
+> > +       return dptc_alib_call(ids, vals, count);
+> > +}
+> > +
+> > +static int dptc_alib_save(struct dptc_priv *dptc)
+> > +{
+> > +       u32 vals[DPTC_NUM_PARAMS * 2];
+> > +       u8 ids[DPTC_NUM_PARAMS * 2];
+> > +       int i, count =3D 0;
+> > +
+> > +       for (i =3D 0; i < DPTC_NUM_PARAMS; i++) {
+> > +               if (!dptc->has_staged[i])
+> > +                       continue;
+> > +               ids[count]  =3D dptc_params[i].param_id;
+> > +               vals[count] =3D dptc->staged[i];
+> > +               count++;
+> > +               if (dptc_params[i].param_id2) {
+> > +                       ids[count]  =3D dptc_params[i].param_id2;
+> > +                       vals[count] =3D dptc->staged[i];
+> > +                       count++;
+> > +               }
+> > +       }
+> > +
+> > +       if (!count)
+> > +               return 0;
+> > +
+> > +       return dptc_alib_call(ids, vals, count);
+> > +}
+> > +
+> > +/* Sysfs callbacks */
+> > +
+> > +static ssize_t dptc_current_value_show(struct kobject *kobj,
+> > +                                      struct kobj_attribute *attr, cha=
+r *buf)
+> > +{
+> > +       struct dptc_attr_sysfs *ps =3D
+> > +               container_of(attr, struct dptc_attr_sysfs, current_valu=
+e);
+>
+> I think this can be one line.
 
-diff --git a/Documentation/wmi/devices/bitland-mifs-wmi.rst b/Documentation/wmi/devices/bitland-mifs-wmi.rst
-new file mode 100644
-index 000000000000..e0f6b4474013
---- /dev/null
-+++ b/Documentation/wmi/devices/bitland-mifs-wmi.rst
-@@ -0,0 +1,207 @@
-+.. SPDX-License-Identifier: GPL-2.0-or-later
-+
-+========================================
-+Bitland MIFS driver (bitland-mifs-wmi)
-+========================================
-+
-+Introduction
-+============
-+
-+
-+EC WMI interface description
-+============================
-+
-+The EC WMI interface description can be decoded from the embedded binary MOF (bmof)
-+data using the `bmfdec <https://github.com/pali/bmfdec>`_ utility:
-+
-+::
-+
-+  class WMIEvent : __ExtrinsicEvent {
-+  };
-+
-+  [WMI, Dynamic, Provider("WmiProv"), Locale("MS\\0x40A"), Description("Root WMI HID_EVENT20"), guid("{46c93e13-ee9b-4262-8488-563bca757fef}")]
-+  class HID_EVENT20 : WmiEvent {
-+    [key, read] string InstanceName;
-+    [read] boolean Active;
-+    [WmiDataId(1), read, write, Description("Package Data")] uint8 EventDetail[8];
-+  };
-+
-+  [WMI, Dynamic, Provider("WmiProv"), Locale("MS\\0x40A"), Description("Root WMI HID_EVENT21"), guid("{fa78e245-2c0f-4ca1-91cf-15f34e474850}")]
-+  class HID_EVENT21 : WmiEvent {
-+    [key, read] string InstanceName;
-+    [read] boolean Active;
-+    [WmiDataId(1), read, write, Description("Package Data")] uint8 EventDetail[8];
-+  };
-+
-+  [WMI, Dynamic, Provider("WmiProv"), Locale("MS\\0x40A"), Description("Root WMI HID_EVENT22"), guid("{1dceaf0a-4d63-44bb-bd0c-0d6281bfddc5}")]
-+  class HID_EVENT22 : WmiEvent {
-+    [key, read] string InstanceName;
-+    [read] boolean Active;
-+    [WmiDataId(1), read, write, Description("Package Data")] uint8 EventDetail[8];
-+  };
-+
-+  [WMI, Dynamic, Provider("WmiProv"), Locale("MS\\0x40A"), Description("Root WMI HID_EVENT23"), guid("{3f9e3c26-b077-4f86-91f5-37ff64d8c7ed}")]
-+  class HID_EVENT23 : WmiEvent {
-+    [key, read] string InstanceName;
-+    [read] boolean Active;
-+    [WmiDataId(1), read, write, Description("Package Data")] uint8 EventDetail[8];
-+  };
-+
-+  [WMI, Dynamic, provider("WmiProv"), Locale("MS\\0x409"), Description("Class used to operate firmware interface"), guid("{b60bfb48-3e5b-49e4-a0e9-8cffe1b3434b}")]
-+  class MICommonInterface {
-+    [key, read] string InstanceName;
-+    [read] boolean Active;
-+
-+    [WmiMethodId(1), Implemented, read, write, Description("Method used to support system functions.")] void MiInterface([in, Description("WMI Interface")] uint8 InData[32], [out] uint8 OutData[30], [out] uint16 Reserved);
-+  };
-+
-+Reverse-Engineering the EC WMI interface
-+========================================
-+
-+The OEM software can be download from `this link <https://iknow.lenovo.com.cn/detail/429447>`_
-+
-+Nothing is obfuscated, In this case, `ILSpy <https://github.com/icsharpcode/ILSpy>`_ could be helpful.
-+
-+WMI Methods (MICommonInterface)
-+========================================
-+
-+The ``MICommonInterface`` class (GUID: ``{b60bfb48-3e5b-49e4-a0e9-8cffe1b3434b}``)
-+is the primary control interface. It uses a 32-byte buffer for both input
-+(``InData``) and output (``OutData``).
-+
-+Method Structure
-+----------------
-+
-+The data packet follows a standardized format:
-+
-++----------+------------------------------------------------------------------+
-+| Byte     | Description                                                      |
-++==========+==================================================================+
-+| 1        | Method Type: Get (0xFA / 250) or Set (0xFB / 251)                |
-++----------+------------------------------------------------------------------+
-+| 3        | Command ID (Method Name)                                         |
-++----------+------------------------------------------------------------------+
-+| 4 - 31   | Arguments (for Set) or Return Data (for Get)                     |
-++----------+------------------------------------------------------------------+
-+
-+
-+Command IDs
-+-----------
-+
-+The following Command IDs are used in the third byte of the buffer:
-+
-++----------+-----------------------+------------------------------------------+
-+| ID       | Name                  | Values / Description                     |
-++==========+=======================+==========================================+
-+| 8        | SystemPerMode         | 0: Balance, 1: Performance, 2: Quiet,    |
-+|          |                       | 3: Full-speed                            |
-++----------+-----------------------+------------------------------------------+
-+| 9        | GPUMode               | 0: Hybrid, 1: Discrete, 2: UMA           |
-++----------+-----------------------+------------------------------------------+
-+| 10       | KeyboardType          | 0: White, 1: Single RGB, 2: Zone RGB     |
-++----------+-----------------------+------------------------------------------+
-+| 11       | FnLock                | 0: Off, 1: On                            |
-++----------+-----------------------+------------------------------------------+
-+| 12       | TPLock                | 0: Unlock, 1: Lock (Touchpad)            |
-++----------+-----------------------+------------------------------------------+
-+| 13       | CPUGPUSYSFanSpeed     | Returns 12 bytes of fan data:            |
-+|          |                       | Bytes 4-5: CPU Fan RPM (Little Endian)   |
-+|          |                       | Bytes 6-7: GPU Fan RPM (Little Endian)   |
-+|          |                       | Bytes 10-11: SYS Fan RPM (Little Endian) |
-++----------+-----------------------+------------------------------------------+
-+| 16       | RGBKeyboardMode       | 0: Off, 1: Auto Cyclic, 2: Fixed,        |
-+|          |                       | 3: Custom                                |
-++----------+-----------------------+------------------------------------------+
-+| 17       | RGBKeyboardColor      | Bytes 4, 5, 6: Red, Green, Blue values   |
-++----------+-----------------------+------------------------------------------+
-+| 18       | RGBKeyboardBrightness | 0-10: Brightness Levels, 128: Auto       |
-++----------+-----------------------+------------------------------------------+
-+| 19       | SystemAcType          | 1: Type-C, 2: Circular Hole (DC)         |
-++----------+-----------------------+------------------------------------------+
-+| 20       | MaxFanSpeedSwitch     | Byte 4: Fan Type (0: CPU/GPU, 1: SYS)    |
-+|          |                       | Byte 5: State (0: Off, 1: On)            |
-++----------+-----------------------+------------------------------------------+
-+| 21       | MaxFanSpeed           | Sets manual fan speed duty cycle         |
-++----------+-----------------------+------------------------------------------+
-+| 22       | CPUThermometer        | Returns CPU Temperature                  |
-++----------+-----------------------+------------------------------------------+
-+
-+WMI Events (HID_EVENT20)
-+========================
-+
-+The driver listens for events from the ``HID_EVENT20`` class
-+(GUID: ``{46c93e13-ee9b-4262-8488-563bca757fef}``). These events are triggered
-+by hotkeys or system state changes (e.g., plugging in AC power).
-+
-+Event Structure
-+---------------
-+
-+The event data is provided in an 8-byte array (``EventDetail``):
-+
-++----------+------------------------------------------------------------------+
-+| Byte     | Description                                                      |
-++==========+==================================================================+
-+| 0        | Event Type (Always 0x01 for HotKey/Notification)                 |
-++----------+------------------------------------------------------------------+
-+| 1        | Event ID (Corresponds to the Command IDs above)                  |
-++----------+------------------------------------------------------------------+
-+| 2        | Value (The new state or value of the feature)                    |
-++----------+------------------------------------------------------------------+
-+
-+Common Event IDs:
-+-----------------
-+
-+Note: reserved event ids are not listed there
-+
-++----------+------------------------------------------------------------------+
-+| Event Id | Description                                                      |
-++==========+==================================================================+
-+| 4        | AirPlane mode change                                             |
-++----------+------------------------------------------------------------------+
-+| 5        | Keyboard brightness change                                       |
-++----------+------------------------------------------------------------------+
-+| 6        | touchpad state (enabled/disabled) change                         |
-++----------+------------------------------------------------------------------+
-+| 7        | FnLock state (enabled/disabled) change                           |
-++----------+------------------------------------------------------------------+
-+| 8        | Keyboard mode change                                             |
-++----------+------------------------------------------------------------------+
-+| 9        | CapsLock state change                                            |
-++----------+------------------------------------------------------------------+
-+| 13       | NumLock state change                                             |
-++----------+------------------------------------------------------------------+
-+| 14       | ScrollLock state change                                          |
-++----------+------------------------------------------------------------------+
-+| 15       | Performance plan change                                          |
-++----------+------------------------------------------------------------------+
-+| 25       | Display refresh rate change                                      |
-++----------+------------------------------------------------------------------+
-+| 33       | Super key lock state (enabled/disabled) change                   |
-++----------+------------------------------------------------------------------+
-+| 35       | Open control center key                                          |
-++----------+------------------------------------------------------------------+
-+
-+Implementation Details
-+======================
-+
-+Performance Modes
-+-----------------
-+Changing the performance mode via Command ID 0x08 (SystemPerMode) affects the power limits (PL1/PL2)
-+and fan curves managed by the Embedded Controller (EC). Note that the "Full-speed"
-+and "Performance" mode (1, 3) is typically only available when the system is connected to a DC power
-+source (not USB-C/PD).
-+
-+In the driver implementation, switch to performance/full-speed mode without DC power connected
-+will throw the EOPNOTSUPP error.
-+
-+Graphics Switching
-+------------------
-+The ``GPUMode`` (0x09) allows switching between Hybrid (Muxless) and Discrete
-+(Muxed) graphics. Changing this value usually requires a system reboot to
-+take effect in the BIOS/Firmware.
-+
-+Fan Control
-+-----------
-+The system supports both automatic EC control and manual overrides. Command ID
-+0x14 (``MaxFanSpeedSwitch``) is used to toggle manual control, while ID 0x15
-+sets the actual PWM duty cycle.
-diff --git a/drivers/platform/x86/Kconfig b/drivers/platform/x86/Kconfig
-index 4cb7d97a9fcc..2ffa4ecf65b0 100644
---- a/drivers/platform/x86/Kconfig
-+++ b/drivers/platform/x86/Kconfig
-@@ -113,6 +113,24 @@ config GIGABYTE_WMI
- 	  To compile this driver as a module, choose M here: the module will
- 	  be called gigabyte-wmi.
- 
-+config BITLAND_MIFS_WMI
-+	tristate "Bitland MIFS (MiInterface) WMI driver"
-+	depends on ACPI_WMI
-+	depends on HWMON
-+	depends on INPUT
-+	depends on POWER_SUPPLY
-+	select ACPI_PLATFORM_PROFILE
-+	select INPUT_SPARSEKMAP
-+	help
-+	  This is a driver for Bitland MiInterface based laptops.
-+
-+	  It provides the access to the temperature, fan speed, gpu
-+	  control, keyboard backlight brightness and platform profile
-+	  via hwmon and sysfs.
-+
-+	  To compile this driver as a module, choose M here: the module will
-+          be called bitland-mifs-wmi.
-+
- config ACERHDF
- 	tristate "Acer Aspire One temperature and fan driver"
- 	depends on ACPI_EC && THERMAL
-diff --git a/drivers/platform/x86/Makefile b/drivers/platform/x86/Makefile
-index d25762f7114f..872ac3842391 100644
---- a/drivers/platform/x86/Makefile
-+++ b/drivers/platform/x86/Makefile
-@@ -14,6 +14,7 @@ obj-$(CONFIG_NVIDIA_WMI_EC_BACKLIGHT)	+= nvidia-wmi-ec-backlight.o
- obj-$(CONFIG_XIAOMI_WMI)		+= xiaomi-wmi.o
- obj-$(CONFIG_REDMI_WMI)			+= redmi-wmi.o
- obj-$(CONFIG_GIGABYTE_WMI)		+= gigabyte-wmi.o
-+obj-$(CONFIG_BITLAND_MIFS_WMI)		+= bitland-mifs-wmi.o
- 
- # Acer
- obj-$(CONFIG_ACERHDF)		+= acerhdf.o
-diff --git a/drivers/platform/x86/bitland-mifs-wmi.c b/drivers/platform/x86/bitland-mifs-wmi.c
-new file mode 100644
-index 000000000000..67691c2ffaf2
---- /dev/null
-+++ b/drivers/platform/x86/bitland-mifs-wmi.c
-@@ -0,0 +1,851 @@
-+// SPDX-License-Identifier: GPL-2.0-or-later
-+/*
-+ * Linux driver for Bitland notebooks.
-+ *
-+ * Copyright (C) 2026 2 Mingyou Chen <qby140326@gmail.com>
-+ */
-+
-+#define pr_fmt(fmt) KBUILD_MODNAME ": " fmt
-+
-+#include <linux/acpi.h>
-+#include <linux/bits.h>
-+#include <linux/cleanup.h>
-+#include <linux/dev_printk.h>
-+#include <linux/device.h>
-+#include <linux/device/devres.h>
-+#include <linux/err.h>
-+#include <linux/hwmon.h>
-+#include <linux/init.h>
-+#include <linux/input-event-codes.h>
-+#include <linux/input.h>
-+#include <linux/input/sparse-keymap.h>
-+#include <linux/kernel.h>
-+#include <linux/leds.h>
-+#include <linux/module.h>
-+#include <linux/notifier.h>
-+#include <linux/platform_profile.h>
-+#include <linux/pm.h>
-+#include <linux/power_supply.h>
-+#include <linux/stddef.h>
-+#include <linux/string.h>
-+#include <linux/sysfs.h>
-+#include <linux/unaligned.h>
-+#include <linux/units.h>
-+#include <linux/wmi.h>
-+
-+#define DRV_NAME		"bitland-mifs-wmi"
-+#define BITLAND_MIFS_GUID	"B60BFB48-3E5B-49E4-A0E9-8CFFE1B3434B"
-+#define BITLAND_EVENT_GUID	"46C93E13-EE9B-4262-8488-563BCA757FEF"
-+
-+enum bitland_mifs_operation {
-+	WMI_METHOD_GET	= 250,
-+	WMI_METHOD_SET	= 251,
-+};
-+
-+enum bitland_mifs_function {
-+	WMI_FN_SYSTEM_PER_MODE		= 8,
-+	WMI_FN_GPU_MODE			= 9,
-+	WMI_FN_KBD_TYPE			= 10,
-+	WMI_FN_FN_LOCK			= 11,
-+	WMI_FN_TP_LOCK			= 12,
-+	WMI_FN_FAN_SPEEDS		= 13,
-+	WMI_FN_RGB_KB_MODE		= 16,
-+	WMI_FN_RGB_KB_COLOR		= 17,
-+	WMI_FN_RGB_KB_BRIGHTNESS	= 18,
-+	WMI_FN_SYSTEM_AC_TYPE		= 19,
-+	WMI_FN_MAX_FAN_SWITCH		= 20,
-+	WMI_FN_MAX_FAN_SPEED		= 21,
-+	WMI_FN_CPU_THERMOMETER		= 22,
-+	WMI_FN_CPU_POWER		= 23,
-+};
-+
-+enum bitland_system_ac_mode {
-+	WMI_SYSTEM_AC_TYPEC		= 1,
-+	/* Unknown type, this is unused in the original driver */
-+	WMI_SYSTEM_AC_CIRCULARHOLE	= 2,
-+};
-+
-+enum bitland_mifs_power_profile {
-+	WMI_PP_BALANCED		= 0,
-+	WMI_PP_PERFORMANCE	= 1,
-+	WMI_PP_QUIET		= 2,
-+	WMI_PP_FULL_SPEED	= 3,
-+};
-+
-+enum bitland_mifs_event_id {
-+	WMI_EVENT_RESERVED_1		= 1,
-+	WMI_EVENT_RESERVED_2		= 2,
-+	WMI_EVENT_RESERVED_3		= 3,
-+	WMI_EVENT_AIRPLANE_MODE		= 4,
-+	WMI_EVENT_KBD_BRIGHTNESS	= 5,
-+	WMI_EVENT_TOUCHPAD_STATE	= 6,
-+	WMI_EVENT_FNLOCK_STATE		= 7,
-+	WMI_EVENT_KBD_MODE		= 8,
-+	WMI_EVENT_CAPSLOCK_STATE	= 9,
-+	WMI_EVENT_CALCULATOR_START	= 11,
-+	WMI_EVENT_BROWSER_START		= 12,
-+	WMI_EVENT_NUMLOCK_STATE		= 13,
-+	WMI_EVENT_SCROLLLOCK_STATE	= 14,
-+	WMI_EVENT_PERFORMANCE_PLAN	= 15,
-+	WMI_EVENT_FN_J			= 16,
-+	WMI_EVENT_FN_F			= 17,
-+	WMI_EVENT_FN_0			= 18,
-+	WMI_EVENT_FN_1			= 19,
-+	WMI_EVENT_FN_2			= 20,
-+	WMI_EVENT_FN_3			= 21,
-+	WMI_EVENT_FN_4			= 22,
-+	WMI_EVENT_FN_5			= 24,
-+	WMI_EVENT_REFRESH_RATE		= 25,
-+	WMI_EVENT_CPU_FAN_SPEED		= 26,
-+	WMI_EVENT_GPU_FAN_SPEED		= 32,
-+	WMI_EVENT_WIN_KEY_LOCK		= 33,
-+	WMI_EVENT_RESERVED_23		= 34,
-+	WMI_EVENT_OPEN_APP		= 35,
-+};
-+
-+enum bitland_mifs_event_type {
-+	WMI_EVENT_TYPE_HOTKEY	= 1,
-+};
-+
-+enum bitland_wmi_device_type {
-+	BITLAND_WMI_CONTROL	= 0,
-+	BITLAND_WMI_EVENT	= 1,
-+};
-+
-+struct bitland_mifs_input {
-+	u8 reserved1;
-+	u8 operation;
-+	u8 reserved2;
-+	u8 function;
-+	u8 payload[28];
-+} __packed;
-+
-+struct bitland_mifs_output {
-+	u8 reserved1;
-+	u8 operation;
-+	u8 reserved2;
-+	u8 function;
-+	u8 data[28];
-+} __packed;
-+
-+struct bitland_mifs_event {
-+	u8 event_type;
-+	u8 event_id;
-+	u8 value_low;	/* For most events, this is the value */
-+	u8 value_high;	/* For fan speed events, combined with value_low */
-+	u8 reserved[4];
-+} __packed;
-+
-+static BLOCKING_NOTIFIER_HEAD(bitland_notifier_list);
-+
-+enum bitland_notifier_actions {
-+	BITLAND_NOTIFY_KBD_BRIGHTNESS,
-+	BITLAND_NOTIFY_PLATFORM_PROFILE,
-+	BITLAND_NOTIFY_HWMON,
-+};
-+
-+struct bitland_fan_notify_data {
-+	int channel; /* 0 = CPU, 1 = GPU */
-+	u16 speed;
-+};
-+
-+struct bitland_mifs_wmi_data {
-+	struct wmi_device *wdev;
-+	struct mutex lock; /* Protects WMI calls */
-+	struct led_classdev kbd_led;
-+	struct notifier_block notifier;
-+	struct input_dev *input_dev;
-+	struct device *hwmon_dev;
-+	struct device *pp_dev;
-+	enum platform_profile_option saved_profile;
-+};
-+
-+static int bitland_mifs_wmi_call(struct bitland_mifs_wmi_data *data,
-+				 const struct bitland_mifs_input *input,
-+				 struct bitland_mifs_output *output)
-+{
-+	struct wmi_buffer in_buf = { .length = sizeof(*input), .data = (void *)input };
-+	struct wmi_buffer out_buf = { 0 };
-+	int ret;
-+
-+	guard(mutex)(&data->lock);
-+
-+	ret = wmidev_invoke_method(data->wdev, 0, 1, &in_buf, output ? &out_buf : NULL);
-+	if (ret)
-+		return ret;
-+
-+	if (output) {
-+		if (out_buf.length < sizeof(*output)) {
-+			kfree(out_buf.data);
-+			return -EIO;
-+		}
-+
-+		memcpy(output, out_buf.data, sizeof(*output));
-+
-+		kfree(out_buf.data);
-+	}
-+
-+	return 0;
-+}
-+
-+static int laptop_profile_get(struct device *dev,
-+			      enum platform_profile_option *profile)
-+{
-+	struct bitland_mifs_wmi_data *data = dev_get_drvdata(dev);
-+	struct bitland_mifs_input input = {
-+		.reserved1 = 0,
-+		.operation = WMI_METHOD_GET,
-+		.reserved2 = 0,
-+		.function = WMI_FN_SYSTEM_PER_MODE,
-+	};
-+	struct bitland_mifs_output result;
-+	int ret;
-+
-+	ret = bitland_mifs_wmi_call(data, &input, &result);
-+	if (ret)
-+		return ret;
-+
-+	switch (result.data[0]) {
-+	case WMI_PP_BALANCED:
-+		*profile = PLATFORM_PROFILE_BALANCED;
-+		break;
-+	case WMI_PP_PERFORMANCE:
-+		*profile = PLATFORM_PROFILE_BALANCED_PERFORMANCE;
-+		break;
-+	case WMI_PP_QUIET:
-+		*profile = PLATFORM_PROFILE_LOW_POWER;
-+		break;
-+	case WMI_PP_FULL_SPEED:
-+		*profile = PLATFORM_PROFILE_PERFORMANCE;
-+		break;
-+	default:
-+		return -EINVAL;
-+	}
-+	return 0;
-+}
-+
-+static int bitland_check_performance_capability(struct bitland_mifs_wmi_data *data)
-+{
-+	struct bitland_mifs_input input = {
-+		.operation = WMI_METHOD_GET,
-+		.function = WMI_FN_SYSTEM_AC_TYPE,
-+	};
-+	struct bitland_mifs_output output;
-+	int ret;
-+
-+	/* Full-speed/performance mode requires DC power (not USB-C) */
-+	if (!power_supply_is_system_supplied())
-+		return -EOPNOTSUPP;
-+
-+	ret = bitland_mifs_wmi_call(data, &input, &output);
-+	if (ret)
-+		return ret;
-+
-+	if (output.data[0] != WMI_SYSTEM_AC_CIRCULARHOLE)
-+		return -EOPNOTSUPP;
-+
-+	return 0;
-+}
-+
-+static int laptop_profile_set(struct device *dev,
-+			      enum platform_profile_option profile)
-+{
-+	struct bitland_mifs_wmi_data *data = dev_get_drvdata(dev);
-+	struct bitland_mifs_input input = {
-+		.reserved1 = 0,
-+		.operation = WMI_METHOD_SET,
-+		.reserved2 = 0,
-+		.function = WMI_FN_SYSTEM_PER_MODE,
-+	};
-+	int ret;
-+	u8 val;
-+
-+	switch (profile) {
-+	case PLATFORM_PROFILE_LOW_POWER:
-+		val = WMI_PP_QUIET;
-+		break;
-+	case PLATFORM_PROFILE_BALANCED:
-+		val = WMI_PP_BALANCED;
-+		break;
-+	case PLATFORM_PROFILE_BALANCED_PERFORMANCE:
-+		ret = bitland_check_performance_capability(data);
-+		if (ret)
-+			return ret;
-+		val = WMI_PP_PERFORMANCE;
-+		break;
-+	case PLATFORM_PROFILE_PERFORMANCE:
-+		ret = bitland_check_performance_capability(data);
-+		if (ret)
-+			return ret;
-+		val = WMI_PP_FULL_SPEED;
-+		break;
-+	default:
-+		return -EOPNOTSUPP;
-+	}
-+
-+	input.payload[0] = val;
-+
-+	return bitland_mifs_wmi_call(data, &input, NULL);
-+}
-+
-+static int platform_profile_probe(void *drvdata, unsigned long *choices)
-+{
-+	set_bit(PLATFORM_PROFILE_LOW_POWER, choices);
-+	set_bit(PLATFORM_PROFILE_BALANCED, choices);
-+	set_bit(PLATFORM_PROFILE_BALANCED_PERFORMANCE, choices);
-+	set_bit(PLATFORM_PROFILE_PERFORMANCE, choices);
-+
-+	return 0;
-+}
-+
-+static int bitland_mifs_wmi_suspend(struct device *dev)
-+{
-+	struct bitland_mifs_wmi_data *data = dev_get_drvdata(dev);
-+	enum platform_profile_option profile;
-+	int ret;
-+
-+	ret = laptop_profile_get(data->pp_dev, &profile);
-+	if (ret == 0)
-+		data->saved_profile = profile;
-+
-+	return ret;
-+}
-+
-+static int bitland_mifs_wmi_resume(struct device *dev)
-+{
-+	struct bitland_mifs_wmi_data *data = dev_get_drvdata(dev);
-+
-+	dev_dbg(dev, "Resuming, restoring profile %d\n",
-+		data->saved_profile);
-+	return laptop_profile_set(dev, data->saved_profile);
-+}
-+
-+static DEFINE_SIMPLE_DEV_PM_OPS(bitland_mifs_wmi_pm_ops,
-+				bitland_mifs_wmi_suspend,
-+				bitland_mifs_wmi_resume);
-+
-+static const struct platform_profile_ops laptop_profile_ops = {
-+	.probe = platform_profile_probe,
-+	.profile_get = laptop_profile_get,
-+	.profile_set = laptop_profile_set,
-+};
-+
-+static const char *const fan_labels[] = {
-+	"CPU", /* 0 */
-+	"GPU", /* 1 */
-+	"SYS", /* 2 */
-+};
-+
-+static int laptop_hwmon_read(struct device *dev, enum hwmon_sensor_types type,
-+			     u32 attr, int channel, long *val)
-+{
-+	struct bitland_mifs_wmi_data *data = dev_get_drvdata(dev);
-+	struct bitland_mifs_input input = {
-+		.reserved1 = 0,
-+		.operation = WMI_METHOD_GET,
-+		.reserved2 = 0,
-+	};
-+	struct bitland_mifs_output res;
-+	int ret;
-+
-+	switch (type) {
-+	case hwmon_temp:
-+		input.function = WMI_FN_CPU_THERMOMETER;
-+		ret = bitland_mifs_wmi_call(data, &input, &res);
-+		if (!ret)
-+			*val = res.data[0] * MILLIDEGREE_PER_DEGREE;
-+		return ret;
-+	case hwmon_fan:
-+		input.function = WMI_FN_FAN_SPEEDS;
-+		ret = bitland_mifs_wmi_call(data, &input, &res);
-+		if (ret)
-+			return ret;
-+
-+		switch (channel) {
-+		case 0: /* CPU */
-+			*val = get_unaligned_le16(&res.data[0]);
-+			return 0;
-+		case 1: /* GPU */
-+			*val = get_unaligned_le16(&res.data[2]);
-+			return 0;
-+		case 2: /* SYS */
-+			*val = get_unaligned_le16(&res.data[6]);
-+			return 0;
-+		default:
-+			return -EINVAL;
-+		}
-+	default:
-+		return -EINVAL;
-+	}
-+}
-+
-+static int laptop_hwmon_read_string(struct device *dev,
-+				    enum hwmon_sensor_types type, u32 attr,
-+				    int channel, const char **str)
-+{
-+	if (type == hwmon_fan && attr == hwmon_fan_label) {
-+		if (channel >= 0 && channel < ARRAY_SIZE(fan_labels)) {
-+			*str = fan_labels[channel];
-+			return 0;
-+		}
-+	}
-+	return -EINVAL;
-+}
-+
-+static const struct hwmon_channel_info *laptop_hwmon_info[] = {
-+	HWMON_CHANNEL_INFO(temp, HWMON_T_INPUT),
-+	HWMON_CHANNEL_INFO(fan, HWMON_F_INPUT | HWMON_F_LABEL,
-+			   HWMON_F_INPUT | HWMON_F_LABEL,
-+			   HWMON_F_INPUT | HWMON_F_LABEL),
-+	NULL
-+};
-+
-+static const struct hwmon_ops laptop_hwmon_ops = {
-+	.visible = 0444,
-+	.read = laptop_hwmon_read,
-+	.read_string = laptop_hwmon_read_string,
-+};
-+
-+static const struct hwmon_chip_info laptop_chip_info = {
-+	.ops = &laptop_hwmon_ops,
-+	.info = laptop_hwmon_info,
-+};
-+
-+static int laptop_kbd_led_set(struct led_classdev *led_cdev,
-+			      enum led_brightness value)
-+{
-+	struct bitland_mifs_wmi_data *data =
-+		container_of(led_cdev, struct bitland_mifs_wmi_data, kbd_led);
-+	struct bitland_mifs_input input = {
-+		.reserved1 = 0,
-+		.operation = WMI_METHOD_SET,
-+		.reserved2 = 0,
-+		.function = WMI_FN_RGB_KB_BRIGHTNESS,
-+	};
-+
-+	input.payload[0] = (u8)value;
-+
-+	return bitland_mifs_wmi_call(data, &input, NULL);
-+}
-+
-+static enum led_brightness laptop_kbd_led_get(struct led_classdev *led_cdev)
-+{
-+	struct bitland_mifs_wmi_data *data =
-+		container_of(led_cdev, struct bitland_mifs_wmi_data, kbd_led);
-+	struct bitland_mifs_input input = {
-+		.reserved1 = 0,
-+		.operation = WMI_METHOD_GET,
-+		.reserved2 = 0,
-+		.function = WMI_FN_RGB_KB_BRIGHTNESS,
-+	};
-+	struct bitland_mifs_output res;
-+	int ret;
-+
-+	ret = bitland_mifs_wmi_call(data, &input, &res);
-+	if (ret)
-+		return ret;
-+
-+	return res.data[0];
-+}
-+
-+static const char *const gpu_mode_strings[] = {
-+	"hybrid",
-+	"discrete",
-+	"uma",
-+};
-+
-+/* GPU Mode: 0:Hybrid, 1:Discrete, 2:UMA */
-+static ssize_t gpu_mode_show(struct device *dev, struct device_attribute *attr,
-+			     char *buf)
-+{
-+	struct bitland_mifs_wmi_data *data = dev_get_drvdata(dev);
-+	struct bitland_mifs_input input = {
-+		.reserved1 = 0,
-+		.operation = WMI_METHOD_GET,
-+		.reserved2 = 0,
-+		.function = WMI_FN_GPU_MODE,
-+	};
-+	struct bitland_mifs_output res;
-+	u8 mode_val;
-+	int ret;
-+
-+	ret = bitland_mifs_wmi_call(data, &input, &res);
-+
-+	if (ret)
-+		return ret;
-+
-+	mode_val = res.data[0];
-+
-+	if (mode_val >= ARRAY_SIZE(gpu_mode_strings))
-+		return -EPROTO;
-+
-+	return sysfs_emit(buf, "%s\n", gpu_mode_strings[mode_val]);
-+}
-+
-+static ssize_t gpu_mode_store(struct device *dev, struct device_attribute *attr,
-+			      const char *buf, size_t count)
-+{
-+	struct bitland_mifs_wmi_data *data = dev_get_drvdata(dev);
-+	struct bitland_mifs_input input = {
-+		.reserved1 = 0,
-+		.operation = WMI_METHOD_SET,
-+		.reserved2 = 0,
-+		.function = WMI_FN_GPU_MODE,
-+	};
-+	int val;
-+	int ret;
-+
-+	val = sysfs_match_string(gpu_mode_strings, buf);
-+	if (val < 0)
-+		return -EINVAL;
-+
-+	input.payload[0] = (u8)val;
-+
-+	ret = bitland_mifs_wmi_call(data, &input, NULL);
-+	if (ret)
-+		return ret;
-+
-+	return count;
-+}
-+
-+static const char *const kb_mode_strings[] = {
-+	"off",		/* 0 */
-+	"cyclic",	/* 1 */
-+	"fixed",	/* 2 */
-+	"custom",	/* 3 */
-+};
-+
-+static ssize_t kb_mode_show(struct device *dev, struct device_attribute *attr,
-+			    char *buf)
-+{
-+	struct bitland_mifs_wmi_data *data = dev_get_drvdata(dev);
-+	struct bitland_mifs_input input = {
-+		.reserved1 = 0,
-+		.operation = WMI_METHOD_GET,
-+		.reserved2 = 0,
-+		.function = WMI_FN_RGB_KB_MODE,
-+	};
-+	struct bitland_mifs_output res;
-+	int ret;
-+	u8 mode_val;
-+
-+	ret = bitland_mifs_wmi_call(data, &input, &res);
-+	if (ret)
-+		return ret;
-+
-+	mode_val = res.data[0];
-+
-+	if (mode_val >= ARRAY_SIZE(kb_mode_strings))
-+		return -EPROTO;
-+
-+	return sysfs_emit(buf, "%s\n", kb_mode_strings[mode_val]);
-+}
-+
-+static ssize_t kb_mode_store(struct device *dev, struct device_attribute *attr,
-+			     const char *buf, size_t count)
-+{
-+	struct bitland_mifs_wmi_data *data = dev_get_drvdata(dev);
-+	struct bitland_mifs_input input = {
-+		.reserved1 = 0,
-+		.operation = WMI_METHOD_SET,
-+		.reserved2 = 0,
-+		.function = WMI_FN_RGB_KB_MODE,
-+	};
-+	// the wmi value (0, 1, 2 or 3)
-+	int val;
-+	int ret;
-+
-+	val = sysfs_match_string(kb_mode_strings, buf);
-+	if (val < 0)
-+		return -EINVAL;
-+
-+	input.payload[0] = (u8)val;
-+
-+	ret = bitland_mifs_wmi_call(data, &input, NULL);
-+	if (ret)
-+		return ret;
-+
-+	return count;
-+}
-+
-+/* Fan Boost: 0:Normal, 1:Max Speed */
-+static ssize_t fan_boost_store(struct device *dev,
-+			       struct device_attribute *attr, const char *buf,
-+			       size_t count)
-+{
-+	struct bitland_mifs_wmi_data *data = dev_get_drvdata(dev);
-+	struct bitland_mifs_input input = {
-+		.reserved1 = 0,
-+		.operation = WMI_METHOD_SET,
-+		.reserved2 = 0,
-+		.function = WMI_FN_MAX_FAN_SWITCH,
-+	};
-+	bool val;
-+	int ret;
-+
-+	if (kstrtobool(buf, &val))
-+		return -EINVAL;
-+
-+	input.payload[0] = 0;	/* CPU/GPU Fan */
-+	input.payload[1] = val;
-+
-+	ret = bitland_mifs_wmi_call(data, &input, NULL);
-+	if (ret)
-+		return ret;
-+
-+	return count;
-+}
-+
-+static const DEVICE_ATTR_RW(gpu_mode);
-+static const DEVICE_ATTR_RW(kb_mode);
-+static const DEVICE_ATTR_WO(fan_boost);
-+
-+static const struct attribute *const laptop_attrs[] = {
-+	&dev_attr_gpu_mode.attr,
-+	&dev_attr_kb_mode.attr,
-+	&dev_attr_fan_boost.attr,
-+	NULL,
-+};
-+ATTRIBUTE_GROUPS(laptop);
-+
-+static const struct key_entry bitland_mifs_wmi_keymap[] = {
-+	{ KE_KEY, WMI_EVENT_OPEN_APP, { KEY_PROG1 } },
-+	{ KE_KEY, WMI_EVENT_CALCULATOR_START, { KEY_CALC } },
-+	{ KE_KEY, WMI_EVENT_BROWSER_START, { KEY_WWW } },
-+	{ KE_IGNORE, WMI_EVENT_FN_J, { KEY_RESERVED } },
-+	{ KE_IGNORE, WMI_EVENT_FN_F, { KEY_RESERVED } },
-+	{ KE_IGNORE, WMI_EVENT_FN_0, { KEY_RESERVED } },
-+	{ KE_IGNORE, WMI_EVENT_FN_1, { KEY_RESERVED } },
-+	{ KE_IGNORE, WMI_EVENT_FN_2, { KEY_RESERVED } },
-+	{ KE_IGNORE, WMI_EVENT_FN_3, { KEY_RESERVED } },
-+	{ KE_IGNORE, WMI_EVENT_FN_4, { KEY_RESERVED } },
-+	{ KE_IGNORE, WMI_EVENT_FN_5, { KEY_RESERVED } },
-+	{ KE_END, 0 }
-+};
-+
-+static void bitland_notifier_unregister(void *data)
-+{
-+	struct notifier_block *nb = data;
-+
-+	blocking_notifier_chain_unregister(&bitland_notifier_list, nb);
-+}
-+
-+static int bitland_notifier_callback(struct notifier_block *nb,
-+				     unsigned long action, void *data)
-+{
-+	struct bitland_mifs_wmi_data *data_ctx =
-+	container_of(nb, struct bitland_mifs_wmi_data, notifier);
-+	struct bitland_fan_notify_data *fan_info;
-+	u8 *brightness;
-+
-+	switch (action) {
-+	case BITLAND_NOTIFY_KBD_BRIGHTNESS:
-+		brightness = data;
-+		led_classdev_notify_brightness_hw_changed(&data_ctx->kbd_led,
-+							  *brightness);
-+		break;
-+	case BITLAND_NOTIFY_PLATFORM_PROFILE:
-+		platform_profile_notify(data_ctx->pp_dev);
-+		break;
-+	case BITLAND_NOTIFY_HWMON:
-+		fan_info = data;
-+
-+		hwmon_notify_event(data_ctx->hwmon_dev,
-+				   hwmon_fan,
-+				   hwmon_fan_input,
-+				   fan_info->channel);
-+		break;
-+	}
-+
-+	return NOTIFY_OK;
-+}
-+
-+static int bitland_mifs_wmi_probe(struct wmi_device *wdev, const void *context)
-+{
-+	struct bitland_mifs_wmi_data *drv_data;
-+	enum bitland_wmi_device_type dev_type =
-+		(enum bitland_wmi_device_type)(unsigned long)context;
-+	struct led_init_data init_data = {
-+		.devicename = DRV_NAME,
-+		.default_label = ":" LED_FUNCTION_KBD_BACKLIGHT,
-+		.devname_mandatory = true,
-+	};
-+	int ret;
-+
-+	drv_data = devm_kzalloc(&wdev->dev, sizeof(*drv_data), GFP_KERNEL);
-+	if (!drv_data)
-+		return -ENOMEM;
-+
-+	drv_data->wdev = wdev;
-+
-+	ret = devm_mutex_init(&wdev->dev, &drv_data->lock);
-+	if (ret)
-+		return ret;
-+
-+	dev_set_drvdata(&wdev->dev, drv_data);
-+
-+	if (dev_type == BITLAND_WMI_EVENT) {
-+		/* Register input device for hotkeys */
-+		drv_data->input_dev = devm_input_allocate_device(&wdev->dev);
-+		if (!drv_data->input_dev)
-+			return -ENOMEM;
-+
-+		drv_data->input_dev->name = "Bitland MIFS WMI hotkeys";
-+		drv_data->input_dev->phys = "wmi/input0";
-+		drv_data->input_dev->id.bustype = BUS_HOST;
-+		drv_data->input_dev->dev.parent = &wdev->dev;
-+
-+		ret = sparse_keymap_setup(drv_data->input_dev,
-+					  bitland_mifs_wmi_keymap, NULL);
-+		if (ret)
-+			return ret;
-+
-+		return input_register_device(drv_data->input_dev);
-+	}
-+
-+	/* Register platform profile */
-+	drv_data->pp_dev = devm_platform_profile_register(&wdev->dev, DRV_NAME, drv_data,
-+							  &laptop_profile_ops);
-+	if (IS_ERR(drv_data->pp_dev))
-+		return PTR_ERR(drv_data->pp_dev);
-+
-+	/* Register hwmon */
-+	drv_data->hwmon_dev = devm_hwmon_device_register_with_info(&wdev->dev,
-+								   "bitland_mifs",
-+								   drv_data,
-+								   &laptop_chip_info,
-+								   NULL);
-+	if (IS_ERR(drv_data->hwmon_dev))
-+		return PTR_ERR(drv_data->hwmon_dev);
-+
-+	/* Register keyboard LED */
-+	drv_data->kbd_led.max_brightness = 3;
-+	drv_data->kbd_led.brightness_set_blocking = laptop_kbd_led_set;
-+	drv_data->kbd_led.brightness_get = laptop_kbd_led_get;
-+	drv_data->kbd_led.brightness = laptop_kbd_led_get(&drv_data->kbd_led);
-+	drv_data->kbd_led.flags = LED_CORE_SUSPENDRESUME |
-+				  LED_BRIGHT_HW_CHANGED |
-+				  LED_REJECT_NAME_CONFLICT;
-+	ret = devm_led_classdev_register_ext(&wdev->dev, &drv_data->kbd_led, &init_data);
-+	if (ret)
-+		return ret;
-+
-+	drv_data->notifier.notifier_call = bitland_notifier_callback;
-+	ret = blocking_notifier_chain_register(&bitland_notifier_list, &drv_data->notifier);
-+	if (ret)
-+		return ret;
-+
-+	return devm_add_action_or_reset(&wdev->dev,
-+				       bitland_notifier_unregister,
-+				       &drv_data->notifier);
-+}
-+
-+static void bitland_mifs_wmi_notify(struct wmi_device *wdev,
-+				    const struct wmi_buffer *buffer)
-+{
-+	struct bitland_mifs_wmi_data *data = dev_get_drvdata(&wdev->dev);
-+	const struct bitland_mifs_event *event;
-+	struct bitland_fan_notify_data fan_data;
-+	u8 brightness;
-+
-+	if (buffer->length < sizeof(*event))
-+		return;
-+
-+	event = buffer->data;
-+
-+	/* Validate event type */
-+	if (event->event_type != WMI_EVENT_TYPE_HOTKEY)
-+		return;
-+
-+	dev_dbg(&wdev->dev,
-+		"WMI event: id=0x%02x value_low=0x%02x value_high=0x%02x\n",
-+		event->event_id, event->value_low, event->value_high);
-+
-+	switch (event->event_id) {
-+	case WMI_EVENT_KBD_BRIGHTNESS:
-+		brightness = event->value_low;
-+		blocking_notifier_call_chain(&bitland_notifier_list,
-+					     BITLAND_NOTIFY_KBD_BRIGHTNESS,
-+					     &brightness);
-+		break;
-+
-+	case WMI_EVENT_PERFORMANCE_PLAN:
-+		blocking_notifier_call_chain(&bitland_notifier_list,
-+					     BITLAND_NOTIFY_PLATFORM_PROFILE,
-+					     NULL);
-+		break;
-+
-+	case WMI_EVENT_OPEN_APP:
-+	case WMI_EVENT_CALCULATOR_START:
-+	case WMI_EVENT_BROWSER_START: {
-+		guard(mutex)(&data->lock);
-+		if (!sparse_keymap_report_event(data->input_dev,
-+						event->event_id, 1, true))
-+			dev_warn(&wdev->dev, "Unknown key pressed: 0x%02x\n",
-+				 event->event_id);
-+		break;
-+	}
-+
-+	/*
-+	 * The device has 3 fans (CPU, GPU, SYS),
-+	 * but there are only the CPU and GPU fan has events
-+	 */
-+	case WMI_EVENT_CPU_FAN_SPEED:
-+	case WMI_EVENT_GPU_FAN_SPEED:
-+		if (event->event_id == WMI_EVENT_CPU_FAN_SPEED)
-+			fan_data.channel = 0;
-+		else
-+			fan_data.channel = 1;
-+
-+		/* Fan speed is 16-bit value (value_low is LSB, value_high is MSB) */
-+		fan_data.speed = (event->value_high << 8) | event->value_low;
-+		blocking_notifier_call_chain(&bitland_notifier_list,
-+					     BITLAND_NOTIFY_HWMON,
-+					     &fan_data);
-+		break;
-+
-+	case WMI_EVENT_AIRPLANE_MODE:
-+	case WMI_EVENT_TOUCHPAD_STATE:
-+	case WMI_EVENT_FNLOCK_STATE:
-+	case WMI_EVENT_KBD_MODE:
-+	case WMI_EVENT_CAPSLOCK_STATE:
-+	case WMI_EVENT_NUMLOCK_STATE:
-+	case WMI_EVENT_SCROLLLOCK_STATE:
-+	case WMI_EVENT_REFRESH_RATE:
-+	case WMI_EVENT_WIN_KEY_LOCK:
-+		/* These events are informational or handled by firmware */
-+		dev_dbg(&wdev->dev, "State change event: id=%d value=%d\n",
-+			event->event_id, event->value_low);
-+		break;
-+
-+	default:
-+		dev_dbg(&wdev->dev, "Unknown event: id=0x%02x value=0x%02x\n",
-+			event->event_id, event->value_low);
-+		break;
-+	}
-+}
-+
-+static const struct wmi_device_id bitland_mifs_wmi_id_table[] = {
-+	{ BITLAND_MIFS_GUID, (void *)BITLAND_WMI_CONTROL },
-+	{ BITLAND_EVENT_GUID, (void *)BITLAND_WMI_EVENT },
-+	{}
-+};
-+MODULE_DEVICE_TABLE(wmi, bitland_mifs_wmi_id_table);
-+
-+static struct wmi_driver bitland_mifs_wmi_driver = {
-+	.no_singleton = true,
-+	.driver = {
-+		.name = DRV_NAME,
-+		.dev_groups = laptop_groups,
-+		.pm = pm_sleep_ptr(&bitland_mifs_wmi_pm_ops),
-+	},
-+	.id_table = bitland_mifs_wmi_id_table,
-+	.probe = bitland_mifs_wmi_probe,
-+	.notify_new = bitland_mifs_wmi_notify,
-+};
-+
-+module_wmi_driver(bitland_mifs_wmi_driver);
-+
-+MODULE_AUTHOR("Mingyou Chen <qby140326@gmail.com>");
-+MODULE_DESCRIPTION("Bitland MIFS (MiInterface) WMI driver");
-+MODULE_LICENSE("GPL");
+It overflows.
 
-base-commit: d9d32e5bd5a4e57675f2b70ddf73c3dc5cf44fc2
--- 
-2.53.0
+>
+> > +       struct dptc_priv *dptc =3D ps->priv;
+> > +
+> > +       guard(mutex)(&dptc->lock);
+> > +
+> > +       if (dptc->profile !=3D PLATFORM_PROFILE_CUSTOM) {
+> > +               u32 val =3D dptc->dev_limits->profiles[dptc->profile].v=
+als[ps->idx];
+>
+> Is the interface RO? If we can read the value from hardware that would
+> be preferable, in case separate userspace or PMF changes this behind
+> the scenes. If we can avoid the kernel getting out of sync with the
+> hardware that would be better.
+
+The dptc interface is strictly read only. The underlying SMU mailbox
+provides a debug table that contains these values, but that is a debug
+table and should not be relied upon by userspace. This is what
+ryzenadj -i prints
+
+The function that provides the memory address of this table is not
+implemented by ALIB afaik.
+
+> > +               if (!val)
+> > +                       return sysfs_emit(buf, "\n");
+> > +               return sysfs_emit(buf, "%u\n", val);
+> > +       }
+> > +
+> > +       if (!dptc->has_staged[ps->idx])
+> > +               return sysfs_emit(buf, "\n");
+> > +       return sysfs_emit(buf, "%u\n", dptc->staged[ps->idx]);
+> > +}
+> > +
+> > +static ssize_t dptc_current_value_store(struct kobject *kobj,
+> > +                                       struct kobj_attribute *attr,
+> > +                                       const char *buf, size_t count)
+> > +{
+> > +       struct dptc_attr_sysfs *ps =3D
+> > +               container_of(attr, struct dptc_attr_sysfs, current_valu=
+e);
+> > +       struct dptc_priv *dptc =3D ps->priv;
+> > +       u32 val, min, max;
+> > +       int ret;
+> > +
+> > +       if (count =3D=3D 1 && buf[0] =3D=3D '\n') {
+> > +               guard(mutex)(&dptc->lock);
+> > +
+> > +               if (dptc->profile !=3D PLATFORM_PROFILE_CUSTOM)
+> > +                       return -EPERM;
+>
+> Note for myself, this is a better error code than what I'm doing IIRC.
+>
+> > +               dptc->has_staged[ps->idx] =3D false;
+> > +               return count;
+> > +       }
+> > +
+> > +       ret =3D kstrtou32(buf, 10, &val);
+> > +       if (ret)
+> > +               return ret;
+> > +
+> > +       guard(mutex)(&dptc->lock);
+> > +
+> > +       if (dptc->profile !=3D PLATFORM_PROFILE_CUSTOM)
+> > +               return -EPERM;
+>
+> Why do this twice? You can check this first and then use a scoped guard.
+
+Noted. This can be moved up.
+
+> > +       min =3D dptc_get_min(dptc, ps->idx);
+> > +       max =3D dptc_get_max(dptc, ps->idx);
+> > +       if (val < min || (max && val > max))
+> > +               return -EINVAL;
+> > +       dptc->staged[ps->idx]    =3D val;
+> > +       dptc->has_staged[ps->idx] =3D true;
+> > +       if (dptc->save_mode =3D=3D SAVE_SINGLE)
+> > +               ret =3D dptc_alib_send_one(ps->idx, val);
+> > +
+> > +       return ret ? ret : count;
+> > +}
+> > +
+> > +static ssize_t dptc_default_value_show(struct kobject *kobj,
+> > +                                      struct kobj_attribute *attr, cha=
+r *buf)
+> > +{
+> > +       struct dptc_attr_sysfs *ps =3D
+> > +               container_of(attr, struct dptc_attr_sysfs, default_valu=
+e);
+> > +
+>
+> Another should be one liner, there are a few more but I'm not going to
+> tag each one. Additional note, what is ps supposed to stand for?
+> Verbose variable names improve readability.
+
+ps -> Dptc_attr_Sysfs. No, in this case the driver would read worse.
+It is a holder val. If it was verbose it would break reflowing in most
+of the driver.
+
+> > +       return sysfs_emit(buf, "%u\n", dptc_get_default(ps->priv, ps->i=
+dx));
+> > +}
+> > +
+> > +static ssize_t dptc_min_value_show(struct kobject *kobj,
+> > +                                  struct kobj_attribute *attr, char *b=
+uf)
+> > +{
+> > +       struct dptc_attr_sysfs *ps =3D
+> > +               container_of(attr, struct dptc_attr_sysfs, min_value);
+> > +       struct dptc_priv *dptc =3D ps->priv;
+> > +
+> > +       guard(mutex)(&dptc->lock);
+> > +
+> > +       return sysfs_emit(buf, "%u\n", dptc_get_min(dptc, ps->idx));
+> > +}
+> > +
+> > +static ssize_t dptc_max_value_show(struct kobject *kobj,
+> > +                                  struct kobj_attribute *attr, char *b=
+uf)
+> > +{
+> > +       struct dptc_attr_sysfs *ps =3D
+> > +               container_of(attr, struct dptc_attr_sysfs, max_value);
+> > +       struct dptc_priv *dptc =3D ps->priv;
+> > +
+> > +       guard(mutex)(&dptc->lock);
+> > +
+> > +       return sysfs_emit(buf, "%u\n", dptc_get_max(dptc, ps->idx));
+> > +}
+> > +
+> > +static ssize_t dptc_scalar_increment_show(struct kobject *kobj,
+> > +                                         struct kobj_attribute *attr, =
+char *buf)
+> > +{
+> > +       return sysfs_emit(buf, "1\n");
+> > +}
+> > +
+> > +static ssize_t dptc_display_name_show(struct kobject *kobj,
+> > +                                     struct kobj_attribute *attr, char=
+ *buf)
+> > +{
+> > +       struct dptc_attr_sysfs *ps =3D
+> > +               container_of(attr, struct dptc_attr_sysfs, display_name=
+);
+> > +       return sysfs_emit(buf, "%s\n", dptc_params[ps->idx].display_nam=
+e);
+> > +}
+> > +
+> > +static ssize_t dptc_type_show(struct kobject *kobj,
+> > +                             struct kobj_attribute *attr, char *buf)
+> > +{
+> > +       return sysfs_emit(buf, "integer\n");
+> > +}
+> > +
+> > +static ssize_t dptc_save_settings_show(struct kobject *kobj,
+> > +                                      struct kobj_attribute *attr, cha=
+r *buf)
+> > +{
+> > +       struct dptc_priv *dptc =3D
+> > +               container_of(attr, struct dptc_priv, save_settings_attr=
+);
+> > +
+> > +       guard(mutex)(&dptc->lock);
+> > +
+> > +       if (dptc->save_mode =3D=3D SAVE_SINGLE)
+> > +               return sysfs_emit(buf, "single\n");
+> > +       return sysfs_emit(buf, "bulk\n");
+> > +}
+> > +
+> > +static ssize_t dptc_save_settings_store(struct kobject *kobj,
+> > +                                       struct kobj_attribute *attr,
+> > +                                       const char *buf, size_t count)
+> > +{
+> > +       struct dptc_priv *dptc =3D
+> > +               container_of(attr, struct dptc_priv, save_settings_attr=
+);
+> > +       int ret =3D 0;
+> > +
+> > +       guard(mutex)(&dptc->lock);
+> > +
+> > +       if (sysfs_streq(buf, "save"))
+> > +               ret =3D dptc_alib_save(dptc);
+> > +       else if (sysfs_streq(buf, "single"))
+> > +               dptc->save_mode =3D SAVE_SINGLE;
+> > +       else if (sysfs_streq(buf, "bulk"))
+> > +               dptc->save_mode =3D SAVE_BULK;
+> > +       else
+> > +               return -EINVAL;
+> > +
+> > +       return ret ? ret : count;
+> > +}
+> > +
+> > +static ssize_t dptc_expanded_current_value_show(struct kobject *kobj,
+> > +                                               struct kobj_attribute *=
+attr,
+> > +                                               char *buf)
+> > +{
+> > +       struct dptc_attr_sysfs *ps =3D
+> > +               container_of(attr, struct dptc_attr_sysfs, current_valu=
+e);
+> > +       struct dptc_priv *dptc =3D ps->priv;
+> > +
+> > +       guard(mutex)(&dptc->lock);
+> > +
+> > +       return sysfs_emit(buf, "%d\n", dptc->expanded);
+> > +}
+> > +
+>
+> What is the actual purpose of these expanded attrs? IMO we should only
+> load automatically within a validated range per device. TBS, there is
+> a valid need for R&D loading, so either a debugfs as Mario suggested
+> or a module param can be used to load the driver without limits. In
+> that case, I would just set max to u16 max and min to 0 and offer a
+> very stern dev_warn in dmesg, then you can avoid duplicated
+> _show/_store functions.
+
+Some devices like the GPD Win ones can do 30W. However their casing
+can become too hot which is why they're limited to 28. This toggle is
+an escape hatch that gives them some predefined wiggle room so they do
+not resort to more extreme measures.
+
+> > +static ssize_t dptc_expanded_current_value_store(struct kobject *kobj,
+> > +                                                struct kobj_attribute =
+*attr,
+> > +                                                const char *buf, size_=
+t count)
+> > +{
+> > +       struct dptc_attr_sysfs *ps =3D
+> > +               container_of(attr, struct dptc_attr_sysfs, current_valu=
+e);
+> > +       struct dptc_priv *dptc =3D ps->priv;
+> > +       bool val;
+> > +       int ret;
+> > +
+> > +       ret =3D kstrtobool(buf, &val);
+> > +       if (ret)
+> > +               return ret;
+> > +
+> > +       guard(mutex)(&dptc->lock);
+> > +
+> > +       if (dptc->profile !=3D PLATFORM_PROFILE_CUSTOM)
+> > +               return -EPERM;
+> > +       dptc->expanded =3D val;
+> > +       /* Clear staged values: limits changed, old values may be out o=
+f range */
+> > +       memset(dptc->has_staged, 0, sizeof(dptc->has_staged));
+> > +
+> > +       return count;
+> > +}
+> > +
+> > +static ssize_t dptc_expanded_default_value_show(struct kobject *kobj,
+> > +                                               struct kobj_attribute *=
+attr,
+> > +                                               char *buf)
+> > +{
+> > +       return sysfs_emit(buf, "0\n");
+> > +}
+> > +
+> > +static ssize_t dptc_expanded_min_value_show(struct kobject *kobj,
+> > +                                           struct kobj_attribute *attr=
+,
+> > +                                           char *buf)
+> > +{
+> > +       return sysfs_emit(buf, "0\n");
+> > +}
+> > +
+> > +static ssize_t dptc_expanded_max_value_show(struct kobject *kobj,
+> > +                                           struct kobj_attribute *attr=
+,
+> > +                                           char *buf)
+> > +{
+> > +       return sysfs_emit(buf, "1\n");
+> > +}
+> > +
+> > +static ssize_t dptc_expanded_scalar_increment_show(struct kobject *kob=
+j,
+> > +                                                  struct kobj_attribut=
+e *attr,
+> > +                                                  char *buf)
+> > +{
+> > +       return sysfs_emit(buf, "1\n");
+> > +}
+> > +
+> > +static ssize_t dptc_expanded_display_name_show(struct kobject *kobj,
+> > +                                              struct kobj_attribute *a=
+ttr,
+> > +                                              char *buf)
+> > +{
+> > +       return sysfs_emit(buf, "Expanded Limits\n");
+> > +}
+> > +
+> > +static ssize_t dptc_expanded_type_show(struct kobject *kobj,
+> > +                                      struct kobj_attribute *attr, cha=
+r *buf)
+> > +{
+> > +       return sysfs_emit(buf, "integer\n");
+> > +}
+> > +
+> > +/* Sysfs setup */
+> > +
+> > +static void dptc_setup_param_sysfs(struct dptc_priv *dptc,
+> > +                                  struct dptc_attr_sysfs *ps, int idx)
+> > +{
+> > +       ps->priv =3D dptc;
+> > +       ps->idx =3D idx;
+> > +
+> > +       sysfs_attr_init(&ps->current_value.attr);
+> > +       ps->current_value.attr.name  =3D "current_value";
+> > +       ps->current_value.attr.mode  =3D 0644;
+> > +       ps->current_value.show       =3D dptc_current_value_show;
+> > +       ps->current_value.store      =3D dptc_current_value_store;
+> > +
+> > +       sysfs_attr_init(&ps->default_value.attr);
+> > +       ps->default_value.attr.name  =3D "default_value";
+> > +       ps->default_value.attr.mode  =3D 0444;
+> > +       ps->default_value.show       =3D dptc_default_value_show;
+> > +
+> > +       sysfs_attr_init(&ps->min_value.attr);
+> > +       ps->min_value.attr.name      =3D "min_value";
+> > +       ps->min_value.attr.mode      =3D 0444;
+> > +       ps->min_value.show           =3D dptc_min_value_show;
+> > +
+> > +       sysfs_attr_init(&ps->max_value.attr);
+> > +       ps->max_value.attr.name      =3D "max_value";
+> > +       ps->max_value.attr.mode      =3D 0444;
+> > +       ps->max_value.show           =3D dptc_max_value_show;
+> > +
+> > +       sysfs_attr_init(&ps->scalar_increment.attr);
+> > +       ps->scalar_increment.attr.name =3D "scalar_increment";
+> > +       ps->scalar_increment.attr.mode =3D 0444;
+> > +       ps->scalar_increment.show      =3D dptc_scalar_increment_show;
+> > +
+> > +       sysfs_attr_init(&ps->display_name.attr);
+> > +       ps->display_name.attr.name   =3D "display_name";
+> > +       ps->display_name.attr.mode   =3D 0444;
+> > +       ps->display_name.show        =3D dptc_display_name_show;
+> > +
+> > +       sysfs_attr_init(&ps->type.attr);
+> > +       ps->type.attr.name           =3D "type";
+> > +       ps->type.attr.mode           =3D 0444;
+> > +       ps->type.show                =3D dptc_type_show;
+> > +
+> > +       ps->attrs[0] =3D &ps->current_value.attr;
+> > +       ps->attrs[1] =3D &ps->default_value.attr;
+> > +       ps->attrs[2] =3D &ps->min_value.attr;
+> > +       ps->attrs[3] =3D &ps->max_value.attr;
+> > +       ps->attrs[4] =3D &ps->scalar_increment.attr;
+> > +       ps->attrs[5] =3D &ps->display_name.attr;
+> > +       ps->attrs[6] =3D &ps->type.attr;
+> > +       ps->attrs[7] =3D NULL;
+> > +
+> > +       ps->group.name  =3D dptc_params[idx].name;
+> > +       ps->group.attrs =3D ps->attrs;
+> > +}
+> > +
+>
+> Some "macro soup" could clean this up a lot.
+
+Agree to disagree, this driver is very readable and in the end that is
+what matters. The value types are different so it is not clear if the
+same macro would work for both anyway.
+
+> > +static void dptc_setup_expanded_sysfs(struct dptc_priv *dptc,
+> > +                                     struct dptc_attr_sysfs *ps)
+> > +{
+> > +       ps->priv =3D dptc;
+> > +       sysfs_attr_init(&ps->current_value.attr);
+> > +       ps->current_value.attr.name  =3D "current_value";
+> > +       ps->current_value.attr.mode  =3D 0644;
+> > +       ps->current_value.show       =3D dptc_expanded_current_value_sh=
+ow;
+> > +       ps->current_value.store      =3D dptc_expanded_current_value_st=
+ore;
+> > +
+> > +       sysfs_attr_init(&ps->default_value.attr);
+> > +       ps->default_value.attr.name  =3D "default_value";
+> > +       ps->default_value.attr.mode  =3D 0444;
+> > +       ps->default_value.show       =3D dptc_expanded_default_value_sh=
+ow;
+> > +
+> > +       sysfs_attr_init(&ps->min_value.attr);
+> > +       ps->min_value.attr.name      =3D "min_value";
+> > +       ps->min_value.attr.mode      =3D 0444;
+> > +       ps->min_value.show           =3D dptc_expanded_min_value_show;
+> > +
+> > +       sysfs_attr_init(&ps->max_value.attr);
+> > +       ps->max_value.attr.name      =3D "max_value";
+> > +       ps->max_value.attr.mode      =3D 0444;
+> > +       ps->max_value.show           =3D dptc_expanded_max_value_show;
+> > +
+> > +       sysfs_attr_init(&ps->scalar_increment.attr);
+> > +       ps->scalar_increment.attr.name =3D "scalar_increment";
+> > +       ps->scalar_increment.attr.mode =3D 0444;
+> > +       ps->scalar_increment.show      =3D dptc_expanded_scalar_increme=
+nt_show;
+> > +
+> > +       sysfs_attr_init(&ps->display_name.attr);
+> > +       ps->display_name.attr.name   =3D "display_name";
+> > +       ps->display_name.attr.mode   =3D 0444;
+> > +       ps->display_name.show        =3D dptc_expanded_display_name_sho=
+w;
+> > +
+> > +       sysfs_attr_init(&ps->type.attr);
+> > +       ps->type.attr.name           =3D "type";
+> > +       ps->type.attr.mode           =3D 0444;
+> > +       ps->type.show                =3D dptc_expanded_type_show;
+> > +
+> > +       ps->attrs[0] =3D &ps->current_value.attr;
+> > +       ps->attrs[1] =3D &ps->default_value.attr;
+> > +       ps->attrs[2] =3D &ps->min_value.attr;
+> > +       ps->attrs[3] =3D &ps->max_value.attr;
+> > +       ps->attrs[4] =3D &ps->scalar_increment.attr;
+> > +       ps->attrs[5] =3D &ps->display_name.attr;
+> > +       ps->attrs[6] =3D &ps->type.attr;
+> > +       ps->attrs[7] =3D NULL;
+> > +
+> > +       ps->group.name  =3D "expanded_limits";
+> > +       ps->group.attrs =3D ps->attrs;
+> > +}
+> > +
+> > +static void dptc_fw_dev_unregister(void *data)
+> > +{
+> > +       device_unregister(data);
+> > +}
+> > +
+> > +static void dptc_kset_unregister(void *data)
+> > +{
+> > +       kset_unregister(data);
+> > +}
+> > +
+> > +/* Platform profile */
+> > +
+> > +static void dptc_apply_profile(struct dptc_priv *dptc,
+> > +                              enum platform_profile_option profile)
+> > +{
+> > +       const struct dptc_profile *pp;
+> > +       int i;
+> > +
+> > +       memset(dptc->has_staged, 0, sizeof(dptc->has_staged));
+> > +
+> > +       if (profile =3D=3D PLATFORM_PROFILE_CUSTOM)
+> > +               return;
+> > +
+> > +       pp =3D &dptc->dev_limits->profiles[profile];
+> > +       for (i =3D 0; i < DPTC_NUM_PARAMS; i++) {
+> > +               if (!pp->vals[i])
+> > +                       continue;
+> > +               dptc->staged[i] =3D pp->vals[i];
+> > +               dptc->has_staged[i] =3D true;
+> > +       }
+> > +}
+> > +
+> > +static int dptc_pp_probe(void *drvdata, unsigned long *choices)
+> > +{
+> > +       struct dptc_priv *dptc =3D drvdata;
+> > +       int i, j;
+> > +
+> > +       set_bit(PLATFORM_PROFILE_CUSTOM, choices);
+> > +       for (i =3D 0; i < PLATFORM_PROFILE_LAST; i++) {
+> > +               for (j =3D 0; j < DPTC_NUM_PARAMS; j++) {
+> > +                       if (dptc->dev_limits->profiles[i].vals[j]) {
+> > +                               set_bit(i, choices);
+> > +                               break;
+> > +                       }
+> > +               }
+> > +       }
+> > +       return 0;
+> > +}
+> > +
+> > +static int dptc_pp_get(struct device *dev,
+> > +                      enum platform_profile_option *profile)
+> > +{
+> > +       struct dptc_priv *dptc =3D dev_get_drvdata(dev);
+> > +
+> > +       guard(mutex)(&dptc->lock);
+> > +
+> > +       *profile =3D dptc->profile;
+> > +       return 0;
+> > +}
+> > +
+> > +static int dptc_pp_set(struct device *dev,
+> > +                      enum platform_profile_option profile)
+> > +{
+> > +       struct dptc_priv *dptc =3D dev_get_drvdata(dev);
+> > +       int ret =3D 0;
+> > +
+> > +       guard(mutex)(&dptc->lock);
+> > +
+> > +       dptc->profile =3D profile;
+> > +       dptc_apply_profile(dptc, profile);
+> > +       if (profile !=3D PLATFORM_PROFILE_CUSTOM)
+> > +               ret =3D dptc_alib_save(dptc);
+> > +
+> > +       return ret;
+> > +}
+> > +
+> > +static const struct platform_profile_ops dptc_pp_ops =3D {
+> > +       .probe       =3D dptc_pp_probe,
+> > +       .profile_get =3D dptc_pp_get,
+> > +       .profile_set =3D dptc_pp_set,
+> > +};
+> > +
+> > +static int dptc_resume(struct device *dev)
+> > +{
+> > +       struct dptc_priv *dptc =3D dev_get_drvdata(dev);
+> > +       int ret;
+> > +
+> > +       guard(mutex)(&dptc->lock);
+> > +
+> > +       if (dptc->profile !=3D PLATFORM_PROFILE_CUSTOM) {
+> > +               dptc_apply_profile(dptc, dptc->profile);
+> > +               ret =3D dptc_alib_save(dptc);
+> > +       } else if (dptc->save_mode =3D=3D SAVE_SINGLE) {
+> > +               ret =3D dptc_alib_save(dptc);
+> > +       } else {
+> > +               ret =3D 0;
+> > +       }
+> > +
+> > +       if (ret)
+> > +               dev_warn(dev, "failed to restore settings on resume: %d=
+\n", ret);
+> > +
+> > +       return 0;
+> > +}
+> > +
+> > +static DEFINE_SIMPLE_DEV_PM_OPS(dptc_pm_ops, NULL, dptc_resume);
+> > +
+> > +static int dptc_probe(struct platform_device *pdev)
+> > +{
+> > +       const struct dmi_system_id *dmi_match =3D dev_get_platdata(&pde=
+v->dev);
+> > +       struct dptc_priv *dptc;
+> > +       struct device *dev =3D &pdev->dev;
+> > +       int i, ret;
+> > +
+> > +       dptc =3D devm_kzalloc(dev, sizeof(*dptc), GFP_KERNEL);
+> > +       if (!dptc)
+> > +               return -ENOMEM;
+> > +
+> > +       platform_set_drvdata(pdev, dptc);
+> > +
+> > +       ret =3D devm_mutex_init(dev, &dptc->lock);
+> > +       if (ret)
+> > +               return ret;
+> > +
+> > +       dptc->dev_limits =3D dmi_match->driver_data;
+> > +       dev_info(dev, "%s (%s)\n", dmi_match->ident,
+> > +                boot_cpu_data.x86_model_id);
+> > +
+> > +       dptc->fw_attr_dev =3D device_create(&firmware_attributes_class,
+> > +                                         NULL, MKDEV(0, 0), NULL,
+> > +                                         DRIVER_NAME);
+>
+> I think DRIVER_NAME can safely fit one line up.
+>
+> I probably missed a bunch of other nitpicky stuff. I'll look more
+> closely once this is a more readable series.
+>
+> Thanks,
+> Derek
+>
+> > +       if (IS_ERR(dptc->fw_attr_dev))
+> > +               return PTR_ERR(dptc->fw_attr_dev);
+> > +
+> > +       ret =3D devm_add_action_or_reset(dev, dptc_fw_dev_unregister,
+> > +                                      dptc->fw_attr_dev);
+> > +       if (ret)
+> > +               return ret;
+> > +
+> > +       dptc->fw_attr_kset =3D kset_create_and_add("attributes", NULL,
+> > +                                                &dptc->fw_attr_dev->ko=
+bj);
+> > +       if (!dptc->fw_attr_kset)
+> > +               return -ENOMEM;
+> > +
+> > +       ret =3D devm_add_action_or_reset(dev, dptc_kset_unregister,
+> > +                                      dptc->fw_attr_kset);
+> > +       if (ret)
+> > +               return ret;
+> > +
+> > +       for (i =3D 0; i < DPTC_NUM_PARAMS; i++) {
+> > +               dptc_setup_param_sysfs(dptc, &dptc->params[i], i);
+> > +               ret =3D sysfs_create_group(&dptc->fw_attr_kset->kobj,
+> > +                                        &dptc->params[i].group);
+> > +               if (ret)
+> > +                       return ret;
+> > +       }
+> > +
+> > +       dptc_setup_expanded_sysfs(dptc, &dptc->expanded_attr);
+> > +       ret =3D sysfs_create_group(&dptc->fw_attr_kset->kobj,
+> > +                                &dptc->expanded_attr.group);
+> > +       if (ret)
+> > +               return ret;
+> > +
+> > +       sysfs_attr_init(&dptc->save_settings_attr.attr);
+> > +       dptc->save_settings_attr.attr.name  =3D "save_settings";
+> > +       dptc->save_settings_attr.attr.mode  =3D 0644;
+> > +       dptc->save_settings_attr.show       =3D dptc_save_settings_show=
+;
+> > +       dptc->save_settings_attr.store      =3D dptc_save_settings_stor=
+e;
+> > +       ret =3D sysfs_create_file(&dptc->fw_attr_kset->kobj,
+> > +                               &dptc->save_settings_attr.attr);
+> > +       if (ret)
+> > +               return ret;
+> > +
+> > +       dptc->profile =3D PLATFORM_PROFILE_CUSTOM;
+> > +       dptc->ppdev =3D devm_platform_profile_register(dev, "amd-dptc",=
+ dptc,
+> > +                                                    &dptc_pp_ops);
+> > +       if (IS_ERR(dptc->ppdev))
+> > +               return PTR_ERR(dptc->ppdev);
+> > +
+> > +       return 0;
+> > +}
+> > +
+> > +static struct platform_driver dptc_driver =3D {
+> > +       .driver =3D {
+> > +               .name =3D DRIVER_NAME,
+> > +               .pm   =3D pm_sleep_ptr(&dptc_pm_ops),
+> > +       },
+> > +       .probe  =3D dptc_probe,
+> > +};
+> > +
+> > +static int __init dptc_init(void)
+> > +{
+> > +       const struct dmi_system_id *match;
+> > +       bool soc_found =3D false;
+> > +       int i, ret;
+> > +
+> > +       if (!acpi_has_method(NULL, ALIB_PATH)) {
+> > +               pr_debug("ALIB method not present\n");
+> > +               return -ENODEV;
+> > +       }
+> > +
+> > +       match =3D dmi_first_match(dptc_dmi_table);
+> > +       if (!match)
+> > +               return -ENODEV;
+> > +
+> > +       for (i =3D 0; dptc_soc_table[i]; i++) {
+> > +               if (strstr(boot_cpu_data.x86_model_id,
+> > +                          dptc_soc_table[i])) {
+> > +                       soc_found =3D true;
+> > +                       break;
+> > +               }
+> > +       }
+> > +       if (!soc_found) {
+> > +               pr_warn("unrecognized SoC '%s'\n",
+> > +                       boot_cpu_data.x86_model_id);
+> > +               return -ENODEV;
+> > +       }
+> > +
+> > +       dptc_pdev =3D platform_device_register_data(NULL, DRIVER_NAME, =
+-1,
+> > +                                                 match, sizeof(*match)=
+);
+> > +       if (IS_ERR(dptc_pdev))
+> > +               return PTR_ERR(dptc_pdev);
+> > +
+> > +       ret =3D platform_driver_register(&dptc_driver);
+> > +       if (ret) {
+> > +               platform_device_unregister(dptc_pdev);
+> > +               return ret;
+> > +       }
+> > +
+> > +       return 0;
+> > +}
+> > +
+> > +static void __exit dptc_exit(void)
+> > +{
+> > +       platform_driver_unregister(&dptc_driver);
+> > +       platform_device_unregister(dptc_pdev);
+> > +}
+> > +
+> > +module_init(dptc_init);
+> > +module_exit(dptc_exit);
+> > +
+> > +MODULE_AUTHOR("Antheas Kapenekakis <lkml@antheas.dev>");
+> > +MODULE_DESCRIPTION("AMD DPTCi ACPI Driver");
+> > +MODULE_LICENSE("GPL");
+> > --
+> > 2.52.0
+> >
+> >
+>
 
