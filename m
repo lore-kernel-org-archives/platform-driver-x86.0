@@ -1,58 +1,58 @@
 Received: from relay11.grserver.gr (relay11.grserver.gr [78.46.171.57])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6E7BA50276
-	for <platform-driver-x86@vger.kernel.org>; Sun,  8 Mar 2026 09:43:03 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0EBAB3358D6
+	for <platform-driver-x86@vger.kernel.org>; Sun,  8 Mar 2026 09:45:42 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=78.46.171.57
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1772962986; cv=none; b=CND3dLIMMHDau1WckJK8FtU4l6mDEtwg38lYnIVPrQoACX3TOT3dU0VUYfkg544SO7LWfUFDAvH7ilSCzQUeZM72o7bqsDJU5fMB2dI+8p0ynohQpFBnx619148N6Dtwxr0KNnRqFZ2CjAToOs4mZm4Lbfatf6nE34MLihOX7bI=
+	t=1772963144; cv=none; b=Ekgc11IUoEt2ydkjPv554oeC1mexY/bqYn+qHrr+KvArFbltaKoVyCFUF3IqXmytZpZX9IrRybwfSWGuTfehMUVVhfSLx9gmZY8oZtlhANuw27yAk8qJHP0YVZcj4Qz8V2Pv2fU1uqLS+Riqjmc7C1Du/9ix8usvE8Bc0rhAqXQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1772962986; c=relaxed/simple;
-	bh=mLO1DA/gOyuGLyfjZZCLtV8KQeKO6x0tE/89Zyadqnc=;
+	s=arc-20240116; t=1772963144; c=relaxed/simple;
+	bh=c+f7w0p/0mG9LuZ1/cE1wPBCYTT2zzYdF65G5uXx5s4=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=LTMrXpCeTx2W3yv8fFKD+vUsswQMtY46H8+eGvLMXdns9XoN/ZWZ9XAXNtH64Oh8Pid0L841RrzRm7XFxyy/pFoPwCiLkhyH7DBi8BU6iGUAfGV9W+J8LrR9SYJT6AOLPW9guHdNxUP9fvihPGk5fWal/E6ktWpYpzxPqB8Up04=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=antheas.dev; spf=pass smtp.mailfrom=antheas.dev; dkim=pass (2048-bit key) header.d=antheas.dev header.i=@antheas.dev header.b=h75HtIwf; arc=none smtp.client-ip=78.46.171.57
+	 To:Cc:Content-Type; b=DNiVFuoxCWgED72ynTJzUMcio0lmkf9ZC8Lq7awGBo/96Y43/2rk7zs1EXqrp0f8T3KG6neswO3rQtZmmVzqHJvj+i9d7LQZNhcXDvx1qmtJI1GEBE7HNiwtfcQNn7j775yUvDZv3qIveLttAFbdYPG8bJfz4Fpo6jgv0CXoeSk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=antheas.dev; spf=pass smtp.mailfrom=antheas.dev; dkim=pass (2048-bit key) header.d=antheas.dev header.i=@antheas.dev header.b=QhxvSsGc; arc=none smtp.client-ip=78.46.171.57
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=antheas.dev
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=antheas.dev
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=antheas.dev header.i=@antheas.dev header.b="h75HtIwf"
+	dkim=pass (2048-bit key) header.d=antheas.dev header.i=@antheas.dev header.b="QhxvSsGc"
 Received: from relay11 (localhost.localdomain [127.0.0.1])
-	by relay11.grserver.gr (Proxmox) with ESMTP id BB030C5868
-	for <platform-driver-x86@vger.kernel.org>; Sun,  8 Mar 2026 11:43:01 +0200 (EET)
+	by relay11.grserver.gr (Proxmox) with ESMTP id 8B93DC01A0
+	for <platform-driver-x86@vger.kernel.org>; Sun,  8 Mar 2026 11:45:41 +0200 (EET)
 Received: from linux3247.grserver.gr (linux3247.grserver.gr [213.158.90.240])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
 	(No client certificate requested)
-	by relay11.grserver.gr (Proxmox) with ESMTPS id 4587DC5861
-	for <platform-driver-x86@vger.kernel.org>; Sun,  8 Mar 2026 11:43:00 +0200 (EET)
-Received: from mail-pj1-f43.google.com (mail-pj1-f43.google.com [209.85.216.43])
-	by linux3247.grserver.gr (Postfix) with ESMTPSA id 7E907200C64
-	for <platform-driver-x86@vger.kernel.org>; Sun,  8 Mar 2026 11:42:59 +0200 (EET)
+	by relay11.grserver.gr (Proxmox) with ESMTPS id 4DD32C5880
+	for <platform-driver-x86@vger.kernel.org>; Sun,  8 Mar 2026 11:45:40 +0200 (EET)
+Received: from mail-pf1-f169.google.com (mail-pf1-f169.google.com [209.85.210.169])
+	by linux3247.grserver.gr (Postfix) with ESMTPSA id 8EADF200B8C
+	for <platform-driver-x86@vger.kernel.org>; Sun,  8 Mar 2026 11:45:39 +0200 (EET)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=antheas.dev;
-	s=default; t=1772962979;
-	bh=ayWAb2Mpw6aoSw9678gVe4WCH/og2+l1xtJRAJGUUYg=;
+	s=default; t=1772963140;
+	bh=E+uENpnNzL0ICbx07UEw+/r7IZ3dJqJyxnjN01ILNss=;
 	h=Received:From:Subject:To;
-	b=h75HtIwf/RRqUWhij8RIElh1cqPCkr6MIrs6rk1OTwUCqBfFKJrcgyS0UJsnm1e4v
-	 bwm+mxYOQzsUDfAWMgPkmdpyK8rMpw70z7o8cqdmtsWpT77newW2DsiyYZGXghXWmp
-	 UhQATQPhTFdKFIRxY+HnVRtHa+HPxFpgYnjeTfPDxUVDiTQkpPgsVcvuOPpgTMG+jh
-	 +O/mNsbnIPVsMN29Wae75GQ3z1eYwrMT/fq1m59VnnsbyWGpI3lEVIPx5ljGg++tT/
-	 B71n+9cPhjpLVt3/MAlk9T3aoLw4B3jVNG/T72g8dDCGN4VTNM7h8O/rNY5bn8SCxH
-	 uePRYBSuA5QjQ==
+	b=QhxvSsGcngdSXMiR6/V2OyIzjhmRXG4pnQM6UJnfeV4U9YpE4S2/XJhq8miEARatG
+	 Of6/+v0OVILhSuQ6kHw3zeY+eO45HtI9xl1LV0JwaFtwyQpMACQxXZAjgn7s3nZce4
+	 rvh5x2GLOt7+ThgvImkupvzY/RiL3MdZAf8au9GkcIxNpr54HHve0+B9rkolJZq48j
+	 YdcczaahDAQhsE2XTt6XAseq7p7h/gMDowSas1zT6Y3tX+I2cL7gajdUrETe2RKOa4
+	 recJ4I6NR7RaN3yVVegJePpyfWuKwvSNITVgoj8krCV8Iz0mta9UB5plPG3nMzv0GA
+	 JQCKBmFtHPoBg==
 Authentication-Results: linux3247.grserver.gr;
-        spf=pass (sender IP is 209.85.216.43) smtp.mailfrom=lkml@antheas.dev smtp.helo=mail-pj1-f43.google.com
+        spf=pass (sender IP is 209.85.210.169) smtp.mailfrom=lkml@antheas.dev smtp.helo=mail-pf1-f169.google.com
 Received-SPF: pass (linux3247.grserver.gr: connection is authenticated)
-Received: by mail-pj1-f43.google.com with SMTP id
- 98e67ed59e1d1-3567e2b4159so5988287a91.0
+Received: by mail-pf1-f169.google.com with SMTP id
+ d2e1a72fcca58-829781b2b01so2681254b3a.2
         for <platform-driver-x86@vger.kernel.org>;
- Sun, 08 Mar 2026 01:42:59 -0800 (PST)
+ Sun, 08 Mar 2026 01:45:39 -0800 (PST)
 X-Forwarded-Encrypted: i=1;
- AJvYcCU0gEbh5vfbo4T7Eb9nP/4sNDO20kRgkTGVyKDkeNSGGpo+JZRXH5afmF5W+x+xvfHlTWOaGX+Ao2oyzMM8BJo0c97j@vger.kernel.org
-X-Gm-Message-State: AOJu0Yy4Try2b+adia7ungyc1qalXMbdh2yv+zTiO1BOTAaSNyXbm90a
-	JfPTFfRb9LQy/Pd3tGXMRdZeZXnYzEct25ndAcjKamyzajkJcZTLEB9WA9b0kGeq6A3JU40EouM
-	IBbvxOmPK/7Xqx8mRKqAlEm45V/bBESE=
-X-Received: by 2002:a17:90b:3e45:b0:354:9b3f:710b with SMTP id
- 98e67ed59e1d1-359be32bc30mr6589542a91.19.1772962978068; Sun, 08 Mar 2026
- 01:42:58 -0800 (PST)
+ AJvYcCWINTxuKxOHP40VahJGUndSJGrv6q+gJAFydNIgnjv706xVeiiLiXiVmzEdjwrbeRkvH0qvUrsvhU5BJCHFVPzqpUB/@vger.kernel.org
+X-Gm-Message-State: AOJu0YxWueNOLIkP0LZAkZv1R9OIZhEBikd5rtzWT06izh0GLMfmy7wV
+	iUR0Ud4ubS+xT3kHbhR5eFUjvo8/t1MrYk2mrEDS4kBegbFUoye92iLzPmc47ziNM6Q5pKJPPJ7
+	hXQd6d5+NW1tUGg68YdtjFcjeEyzd2E4=
+X-Received: by 2002:a05:6a00:2e98:b0:81e:4476:f67c with SMTP id
+ d2e1a72fcca58-829a2d6e534mr7059310b3a.3.1772963138172; Sun, 08 Mar 2026
+ 01:45:38 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
@@ -60,552 +60,350 @@ List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 References: <20260307115516.26892-1-lkml@antheas.dev>
- <20260307115516.26892-5-lkml@antheas.dev>
- <f963610b6a159e513b146566e57a1d1de7cf78b7.camel@rong.moe>
- <CAGwozwEAdd7L85Q=uYidzR_y2ap7oZgjY3EOYgNAP-uZ7SAVvA@mail.gmail.com>
- <c4ed6c5cc789522a81deea75a5ef3a70e2dd8b5d.camel@rong.moe>
-In-Reply-To: <c4ed6c5cc789522a81deea75a5ef3a70e2dd8b5d.camel@rong.moe>
+ <20260307115516.26892-4-lkml@antheas.dev>
+ <f416507304bb4c7c179109ff10bc97a2daeb7e87.camel@rong.moe>
+ <CAGwozwH9+rcdqgTufBXBX+ocB9uYU==X5OciQijuFAVmX19YMw@mail.gmail.com>
+ <e99134fb56ec3d660a85886626be237921950d3d.camel@rong.moe>
+In-Reply-To: <e99134fb56ec3d660a85886626be237921950d3d.camel@rong.moe>
 From: Antheas Kapenekakis <lkml@antheas.dev>
-Date: Sun, 8 Mar 2026 10:42:46 +0100
+Date: Sun, 8 Mar 2026 10:45:24 +0100
 X-Gmail-Original-Message-ID: 
- <CAGwozwHY18_6F-6AVFj3XmCqX5w4SZ60ZGYoYOavUY=11agR0A@mail.gmail.com>
-X-Gm-Features: AaiRm51jn32GIrb6-koiFeE6p-peZTB0pwe9sg43OrAbY3HRtA8Eer8ktQ3RyKk
+ <CAGwozwF5OGcBJuTKV1XvuwotEVCR=LifsaXMqeJHxErE1=ebiA@mail.gmail.com>
+X-Gm-Features: AaiRm51t7g3EKf4opAonjpcjdCug-v4elV35ghvhKMkbMT9m7tfl8KgKYxOPfhE
 Message-ID: 
- <CAGwozwHY18_6F-6AVFj3XmCqX5w4SZ60ZGYoYOavUY=11agR0A@mail.gmail.com>
-Subject: Re: [RFC v3 4/4] platform/x86/amd: dptc: Add device entries for
- handheld PCs
+ <CAGwozwF5OGcBJuTKV1XvuwotEVCR=LifsaXMqeJHxErE1=ebiA@mail.gmail.com>
+Subject: Re: [RFC v3 3/4] platform/x86/amd: dptc: Add platform profile support
 To: Rong Zhang <i@rong.moe>
 Cc: Mario.Limonciello@amd.com, W_Armin@gmx.de, sashal@kernel.org,
 	Shyam-Sundar.S-k@amd.com, derekjohn.clark@gmail.com, denis.benato@linux.dev,
 	linux-kernel@vger.kernel.org, platform-driver-x86@vger.kernel.org
 Content-Type: text/plain; charset="UTF-8"
 X-PPP-Message-ID: 
- <177296297986.1806272.13514935451450998661@linux3247.grserver.gr>
+ <177296313998.1815832.724883826206696812@linux3247.grserver.gr>
 X-PPP-Vhost: antheas.dev
 X-Virus-Scanned: clamav-milter 1.4.3 at linux3247.grserver.gr
 X-Virus-Status: Clean
 
-On Sun, 8 Mar 2026 at 10:29, Rong Zhang <i@rong.moe> wrote:
+On Sun, 8 Mar 2026 at 10:36, Rong Zhang <i@rong.moe> wrote:
 >
 > Hi Antheas,
 >
-> On Sat, 2026-03-07 at 23:40 +0100, Antheas Kapenekakis wrote:
+> On Sat, 2026-03-07 at 23:45 +0100, Antheas Kapenekakis wrote:
 > > On Sat, 7 Mar 2026 at 22:57, Rong Zhang <i@rong.moe> wrote:
 > > >
 > > > Hi Antheas,
 > > >
 > > > On Sat, 2026-03-07 at 12:55 +0100, Antheas Kapenekakis wrote:
-> > > > Add limit tables and DMI entries for AMD APU-based handheld devices:
+> > > > Register a platform_profile handler so the driver exposes standard
+> > > > power profiles (low-power, balanced, performance, max-power) alongside
+> > > > the manual tunable interface. max-power is only supplied when the
+> > > > performance profile's preset values are below the tunable limits.
 > > > >
-> > > >  - 15W class: AYANEO AIR
-> > > >  - 18W class: AYANEO AIR Plus/Pro
-> > > >  - 25W class: AYANEO AIR 1S, NEXT/KUN
-> > > >  - 28W class: GPD Win Mini/4/Max 2, GPD Duo, GPD Pocket 4, AYANEO 2,
-> > > >                OrangePi NEO-01, SuiPlay0X1
-> > > >  - 30W class: AYANEO FLIP/GEEK/SLIDE/3, AOKZOE A1/A1X/A2,
-> > > >                OneXPlayer F1Pro/2/X1/G1, AYN Loki Max, Zeenix Pro
-> > > >
-> > > > Also add SoC strings for Ryzen AI, Z1, Ryzen 8000/7040/6000/5000
-> > > > families, extending support beyond the initial AI MAX series.
+> > > > When a non-custom profile is active, parameter writes are blocked
+> > > > (-EPERM) and current_value reflects the profile's preset values.
+> > > > Selecting the "custom" profile returns control to the user for manual
+> > > > staging and committing. On resume, the active profile is automatically
+> > > > re-applied.
 > > > >
 > > > > Assisted-by: Claude:claude-opus-4-6
 > > > > Signed-off-by: Antheas Kapenekakis <lkml@antheas.dev>
 > > > > ---
-> > > >  drivers/platform/x86/amd/dptc.c | 409 ++++++++++++++++++++++++++++++++
-> > > >  1 file changed, 409 insertions(+)
+> > > >  drivers/platform/x86/amd/Kconfig |   1 +
+> > > >  drivers/platform/x86/amd/dptc.c  | 116 +++++++++++++++++++++++++++++--
+> > > >  2 files changed, 113 insertions(+), 4 deletions(-)
 > > > >
+> > > > diff --git a/drivers/platform/x86/amd/Kconfig b/drivers/platform/x86/amd/Kconfig
+> > > > index d610092467fc..41ffbd722524 100644
+> > > > --- a/drivers/platform/x86/amd/Kconfig
+> > > > +++ b/drivers/platform/x86/amd/Kconfig
+> > > > @@ -48,6 +48,7 @@ config AMD_ISP_PLATFORM
+> > > >  config AMD_DPTC
+> > > >       tristate "AMD Dynamic Power and Thermal Configuration Interface (DPTCi)"
+> > > >       depends on X86_64 && ACPI && DMI
+> > > > +     select ACPI_PLATFORM_PROFILE
+> > > >       select FIRMWARE_ATTRIBUTES_CLASS
+> > > >       help
+> > > >         Driver for AMD AGESA ALIB Function 0x0C, the Dynamic Power and
 > > > > diff --git a/drivers/platform/x86/amd/dptc.c b/drivers/platform/x86/amd/dptc.c
-> > > > index 1f07e2e6f278..a3d582e48cd3 100644
+> > > > index acfe9cc01bab..1f07e2e6f278 100644
 > > > > --- a/drivers/platform/x86/amd/dptc.c
 > > > > +++ b/drivers/platform/x86/amd/dptc.c
-> > > > @@ -85,6 +85,66 @@ static const struct dptc_param_desc dptc_params[DPTC_NUM_PARAMS] = {
-> > > >                  1, ALIB_ID_TEMP_TARGET },
+> > > > @@ -23,6 +23,7 @@
+> > > >  #include <linux/module.h>
+> > > >  #include <linux/mutex.h>
+> > > >  #include <linux/platform_device.h>
+> > > > +#include <linux/platform_profile.h>
+> > > >  #include <linux/processor.h>
+> > > >  #include <linux/sysfs.h>
+> > > >  #include <linux/unaligned.h>
+> > > > @@ -56,8 +57,13 @@ struct dptc_param_limits {
+> > > >       u32 expanded_max;
 > > > >  };
 > > > >
-> > > > +/* 15W class: AYANEO AIR (Ryzen 5 5560U) */
-> > > > +static const struct dptc_device_limits limits_15w = { .params = {
-> > > > +     [DPTC_PPT_PL1_SPL]  = {  0,  5, 10, 15,  18 },
-> > > > +     [DPTC_PPT_PL2_SPPT] = {  0,  5, 10, 15,  18 },
-> > > > +     [DPTC_PPT_PL3_FPPT] = {  0,  5, 12, 18,  22 },
-> > > > +     [DPTC_CPU_TEMP]     = { 60, 70, 85, 90, 100 },
-> > > > +}, .profiles = {
-> > > > +     [PLATFORM_PROFILE_LOW_POWER]   = { .vals = {  5,  5,  8, 0 } },
-> > > > +     [PLATFORM_PROFILE_BALANCED]    = { .vals = { 10, 12, 15, 0 } },
-> > > > +     [PLATFORM_PROFILE_PERFORMANCE] = { .vals = { 15, 15, 18, 0 } },
-> > > > +}};
+> > > > +struct dptc_profile {
+> > > > +     u32 vals[DPTC_NUM_PARAMS];      /* 0 = don't set / unstage this param */
+> > > > +};
 > > > > +
-> > > > +/* 18W class: AYANEO AIR Plus/Pro (Ryzen 5 5560U, Ryzen 7 5825U) */
-> > > > +static const struct dptc_device_limits limits_18w = { .params = {
-> > > > +     [DPTC_PPT_PL1_SPL]  = {  0,  5, 15, 18,  22 },
-> > > > +     [DPTC_PPT_PL2_SPPT] = {  0,  5, 15, 18,  22 },
-> > > > +     [DPTC_PPT_PL3_FPPT] = {  0,  5, 15, 20,  25 },
-> > > > +     [DPTC_CPU_TEMP]     = { 60, 70, 85, 90, 100 },
+> > > >  struct dptc_device_limits {
+> > > >       struct dptc_param_limits params[DPTC_NUM_PARAMS];
+> > > > +     struct dptc_profile profiles[PLATFORM_PROFILE_LAST];
+> > > >  };
+> > > >
+> > > >  struct dptc_param_desc {
+> > > > @@ -85,6 +91,10 @@ static const struct dptc_device_limits limits_maxhh = { .params = {
+> > > >       [DPTC_PPT_PL2_SPPT] = {  0,  4, 27,  82, 100 },
+> > > >       [DPTC_PPT_PL3_FPPT] = {  0,  4, 40,  85, 100 },
+> > > >       [DPTC_CPU_TEMP]     = { 60, 70, 95,  95, 100 },
 > > > > +}, .profiles = {
-> > > > +     [PLATFORM_PROFILE_LOW_POWER]   = { .vals = {  5,  5,  8, 0 } },
-> > > > +     [PLATFORM_PROFILE_BALANCED]    = { .vals = { 12, 14, 15, 0 } },
-> > > > +     [PLATFORM_PROFILE_PERFORMANCE] = { .vals = { 18, 18, 20, 0 } },
-> > > > +}};
+> > > > +     [PLATFORM_PROFILE_LOW_POWER]   = { .vals = { 15, 15, 25, 0 } },
+> > > > +     [PLATFORM_PROFILE_BALANCED]    = { .vals = { 25, 27, 40, 0 } },
+> > > > +     [PLATFORM_PROFILE_PERFORMANCE] = { .vals = { 60, 63, 85, 0 } },
+> > > >  }};
+> > > >
+> > > >  /* Substring matches against boot_cpu_data.x86_model_id; order matters. */
+> > > > @@ -134,6 +144,9 @@ struct dptc_priv {
+> > > >
+> > > >       bool expanded;
+> > > >
+> > > > +     enum platform_profile_option profile;
+> > > > +     struct device *ppdev;
 > > > > +
-> > > > +/* 25W class: Ryzen 5000 handhelds (AYANEO NEXT, KUN) */
-> > > > +static const struct dptc_device_limits limits_25w = { .params = {
-> > > > +     [DPTC_PPT_PL1_SPL]  = {  0,  4, 15, 25,  32 },
-> > > > +     [DPTC_PPT_PL2_SPPT] = {  0,  4, 20, 27,  35 },
-> > > > +     [DPTC_PPT_PL3_FPPT] = {  0,  4, 25, 30,  37 },
-> > > > +     [DPTC_CPU_TEMP]     = { 60, 70, 85, 90, 100 },
-> > > > +}, .profiles = {
-> > > > +     [PLATFORM_PROFILE_LOW_POWER]   = { .vals = {  8,  8, 12, 0 } },
-> > > > +     [PLATFORM_PROFILE_BALANCED]    = { .vals = { 15, 17, 20, 0 } },
-> > > > +     [PLATFORM_PROFILE_PERFORMANCE] = { .vals = { 25, 27, 30, 0 } },
-> > > > +}};
+> > > >       enum dptc_save_mode { SAVE_SINGLE, SAVE_BULK } save_mode;
+> > > >
+> > > >       u32 staged[DPTC_NUM_PARAMS];
+> > > > @@ -269,6 +282,14 @@ static ssize_t dptc_current_value_show(struct kobject *kobj,
+> > > >
+> > > >       guard(mutex)(&dptc->lock);
+> > > >
+> > > > +     if (dptc->profile != PLATFORM_PROFILE_CUSTOM) {
+> > > > +             u32 val = dptc->dev_limits->profiles[dptc->profile].vals[ps->idx];
 > > > > +
-> > > > +/* 28W class: GPD Win series, AYANEO 2, OrangePi NEO-01 */
-> > > > +static const struct dptc_device_limits limits_28w = { .params = {
-> > > > +     [DPTC_PPT_PL1_SPL]  = {  0,  4, 15, 28,  32 },
-> > > > +     [DPTC_PPT_PL2_SPPT] = {  0,  4, 20, 30,  35 },
-> > > > +     [DPTC_PPT_PL3_FPPT] = {  0,  4, 25, 32,  37 },
-> > > > +     [DPTC_CPU_TEMP]     = { 60, 70, 85, 90, 100 },
-> > > > +}, .profiles = {
-> > > > +     [PLATFORM_PROFILE_LOW_POWER]   = { .vals = {  8,  8, 12, 0 } },
-> > > > +     [PLATFORM_PROFILE_BALANCED]    = { .vals = { 15, 17, 22, 0 } },
-> > > > +     [PLATFORM_PROFILE_PERFORMANCE] = { .vals = { 25, 28, 32, 0 } },
-> > > > +}};
+> > > > +             if (!val)
+> > > > +                     return sysfs_emit(buf, "\n");
+> > > > +             return sysfs_emit(buf, "%u\n", val);
+> > > > +     }
 > > > > +
-> > > > +/* 30W class: OneXPlayer, AYANEO FLIP/GEEK/SLIDE/3, AOKZOE */
-> > > > +static const struct dptc_device_limits limits_30w = { .params = {
-> > > > +     [DPTC_PPT_PL1_SPL]  = {  0,  4, 15, 30,  40 },
-> > > > +     [DPTC_PPT_PL2_SPPT] = {  0,  4, 20, 32,  43 },
-> > > > +     [DPTC_PPT_PL3_FPPT] = {  0,  4, 25, 41,  50 },
-> > > > +     [DPTC_CPU_TEMP]     = { 60, 70, 85, 90, 100 },
-> > > > +}, .profiles = {
-> > > > +     [PLATFORM_PROFILE_LOW_POWER]   = { .vals = {  8,  8, 12, 0 } },
-> > > > +     [PLATFORM_PROFILE_BALANCED]    = { .vals = { 15, 17, 25, 0 } },
-> > > > +     [PLATFORM_PROFILE_PERFORMANCE] = { .vals = { 25, 28, 41, 0 } },
-> > > > +}};
-> > > > +
-> > > >  /* AI MAX Handheld class: GPD Win 5 */
-> > > >  static const struct dptc_device_limits limits_maxhh = { .params = {
-> > > >       [DPTC_PPT_PL1_SPL]  = {  0,  4, 25,  80, 100 },
-> > > > @@ -103,11 +163,60 @@ static const char * const dptc_soc_table[] = {
-> > > >       "AMD RYZEN AI MAX+ 395",
-> > > >       "AMD RYZEN AI MAX+ 385",
-> > > >       "AMD RYZEN AI MAX 380",
-> > > > +     /* Ryzen AI */
-> > > > +     "AMD Ryzen AI 9 HX 370",
-> > > > +     "AMD Ryzen AI HX 360",
+> > > >       if (!dptc->has_staged[ps->idx])
+> > > >               return sysfs_emit(buf, "\n");
+> > > >       return sysfs_emit(buf, "%u\n", dptc->staged[ps->idx]);
+> > > > @@ -287,6 +308,8 @@ static ssize_t dptc_current_value_store(struct kobject *kobj,
+> > > >       if (count == 1 && buf[0] == '\n') {
+> > > >               guard(mutex)(&dptc->lock);
+> > > >
+> > > > +             if (dptc->profile != PLATFORM_PROFILE_CUSTOM)
+> > > > +                     return -EPERM;
 > > >
-> > > What's "AMD Ryzen AI HX 360"? Did you mean "AMD Ryzen AI 9 H 365"
-> > > (Chinese-specific model id) and "AMD Ryzen AI 9 365" (other regions)?
+> > > It has nothing to do with permissions. I'd prefer -EBUSY.
 > >
-> > Hm, goot point. I seem to have added this preemptively looking at my
-> > commit logs earlier this year.
-> >
-> > It might not be the exact name. Since we do SoC + DMI in this driver
-> > it might cause some devices with the chip to fail to load.
-> >
-> > Some HX360 handhelds did ship I think, but I never got bug reports
-> > about it missing. I want to say 360 is ryzen 7, at least looking
-> > online. Are you sure it's 9?
+> > I will defer to other drivers and update if necessary based on their choices.
 >
-> Did you mean asking your AI when you said "looking online"? There's no
-> *HX* 360. If you want `Ryzen AI * H* 3*', online search gives you
-> "Ryzen AI 9 HX 370" and "Ryzen AI 9/7/5 H 365/350/340/330" ("H" is
-> Chinese-specific). If you want `Ryzen AI * 360', online search gives
-> you "Ryzen AI 7 PRO 360" -- it's "PRO" instead of "HX".
+> Here it isn't about consistency, but correctness. If something has
+> nothing to do with permissions, -EPERM is confusing. -EBUSY tells users
+> that the interface is under some other thing's (i.e., platform profile)
+> control.
 
-Yes, that was what I found. I have a stale entry in my userspace
-software from last february [1]. However, no users complained about
-missing TDP controls, so I am not sure what to make of it.
+Both EBUSY and EPERM are non-ideal. I will edge towards EBUSY or
+implement the error of the other drivers if it is different as it is
+precedent.
 
-Marketing name can be different from the code name in the CPU.
+> >
+> > > To maintain readability, usually a blank line should be added after
+> > > returning early.
+> > >
+> > > >               dptc->has_staged[ps->idx] = false;
+> > > >               return count;
+> > > >       }
+> > > > @@ -297,6 +320,8 @@ static ssize_t dptc_current_value_store(struct kobject *kobj,
+> > > >
+> > > >       guard(mutex)(&dptc->lock);
+> > > >
+> > > > +     if (dptc->profile != PLATFORM_PROFILE_CUSTOM)
+> > > > +             return -EPERM;
+> > > >       min = dptc_get_min(dptc, ps->idx);
+> > > >       max = dptc_get_max(dptc, ps->idx);
+> > > >       if (val < min || (max && val > max))
+> > > > @@ -426,6 +451,8 @@ static ssize_t dptc_expanded_current_value_store(struct kobject *kobj,
+> > > >
+> > > >       guard(mutex)(&dptc->lock);
+> > > >
+> > > > +     if (dptc->profile != PLATFORM_PROFILE_CUSTOM)
+> > > > +             return -EPERM;
+> > >
+> > > IMO kstrtou32() isn't really a blocker of acquiring the mutex earlier
+> > > to prevent duplicating the same check. After all, firmware-attributes
+> > > is not a performance critical interface, and dptc_save_settings_store()
+> > > also calls sysfs_eq() with the mutex held.
+> > >
+> > > >       dptc->expanded = val;
+> > > >       /* Clear staged values: limits changed, old values may be out of range */
+> > > >       memset(dptc->has_staged, 0, sizeof(dptc->has_staged));
+> > > > @@ -594,6 +621,78 @@ static void dptc_kset_unregister(void *data)
+> > > >       kset_unregister(data);
+> > > >  }
+> > > >
+> > > > +/* Platform profile */
+> > > > +
+> > > > +static void dptc_apply_profile(struct dptc_priv *dptc,
+> > > > +                            enum platform_profile_option profile)
+> > > > +{
+> > > > +     const struct dptc_profile *pp;
+> > > > +     int i;
+> > > > +
+> > > > +     memset(dptc->has_staged, 0, sizeof(dptc->has_staged));
+> > > > +
+> > > > +     if (profile == PLATFORM_PROFILE_CUSTOM)
+> > > > +             return;
+> > > > +
+> > > > +     pp = &dptc->dev_limits->profiles[profile];
+> > > > +     for (i = 0; i < DPTC_NUM_PARAMS; i++) {
+> > > > +             if (!pp->vals[i])
+> > > > +                     continue;
+> > > > +             dptc->staged[i] = pp->vals[i];
+> > > > +             dptc->has_staged[i] = true;
+> > > > +     }
+> > > > +}
+> > > > +
+> > > > +static int dptc_pp_probe(void *drvdata, unsigned long *choices)
+> > > > +{
+> > > > +     struct dptc_priv *dptc = drvdata;
+> > > > +     int i, j;
+> > > > +
+> > > > +     set_bit(PLATFORM_PROFILE_CUSTOM, choices);
+> > > > +     for (i = 0; i < PLATFORM_PROFILE_LAST; i++) {
+> > > > +             for (j = 0; j < DPTC_NUM_PARAMS; j++) {
+> > > > +                     if (dptc->dev_limits->profiles[i].vals[j]) {
+> > > > +                             set_bit(i, choices);
+> > > > +                             break;
+> > > > +                     }
+> > > > +             }
+> > > > +     }
+> > > > +     return 0;
+> > > > +}
+> > > > +
+> > > > +static int dptc_pp_get(struct device *dev,
+> > > > +                    enum platform_profile_option *profile)
+> > > > +{
+> > > > +     struct dptc_priv *dptc = dev_get_drvdata(dev);
+> > > > +
+> > > > +     guard(mutex)(&dptc->lock);
+> > > > +
+> > > > +     *profile = dptc->profile;
+> > > > +     return 0;
+> > > > +}
+> > > > +
+> > > > +static int dptc_pp_set(struct device *dev,
+> > > > +                    enum platform_profile_option profile)
+> > > > +{
+> > > > +     struct dptc_priv *dptc = dev_get_drvdata(dev);
+> > > > +     int ret = 0;
+> > > > +
+> > > > +     guard(mutex)(&dptc->lock);
+> > > > +
+> > > > +     dptc->profile = profile;
+> > > > +     dptc_apply_profile(dptc, profile);
+> > > > +     if (profile != PLATFORM_PROFILE_CUSTOM)
+> > > > +             ret = dptc_alib_save(dptc);
+> > >
+> > > I'd prefer simply calling dptc_alib_save() in dptc_apply_profile()
+> > > since the latter already checks the profile.
+> >
+> > This way you will propagate an error because custom unstages all values.
+>
+> I meant:
+>
+> static int dptc_apply_profile(struct dptc_priv *dptc,
+>                               enum platform_profile_option profile)
+> {
+>         const struct dptc_profile *pp;
+>         int i;
+>
+>         memset(dptc->has_staged, 0, sizeof(dptc->has_staged));
+>
+>         if (profile == PLATFORM_PROFILE_CUSTOM)
+>                 return 0; /* You've checked this and returned early!
+> */
+>
+>         pp = &dptc->dev_limits->profiles[profile];
+>         for (i = 0; i < DPTC_NUM_PARAMS; i++) {
+>                 if (!pp->vals[i])
+>                         continue;
+>                 dptc->staged[i] = pp->vals[i];
+>                 dptc->has_staged[i] = true;
+>         }
+>
+>         return dptc_alib_save(dptc);
+> }
+>
+> How can an error being propagated?
 
-Since my software did hybrid SoC or DMI matching, I cannot
-disambiguate them now.
-
-This driver does SoC AND DMI for safety (most devices did SoC since as
-you can see in this driver, there are only 4 profiles and CPU matches
-are correct for devices other than GPD), so there is a chance we will
-propagate errors and some devices will miss TDP controls initially. I
-am unsure about 36X series, most users went with H370 or 8840U for
-that gen. It is very rare to see those in the wild.
+I missed that. I inferred your comment as suggesting to remove the `
+if (profile != PLATFORM_PROFILE_CUSTOM)` block, which would propagate
+an error. I will consider consolidating apply_profile.
 
 Antheas
 
-[1] https://github.com/hhd-dev/hhd/commit/c2f3fdbd1488a19deef67846bf30c33d6dcd94c8
-
-> Thanks,
-> Rong
->
 > >
 > > Antheas
 > >
-> > > > +     /* Z1 - Extreme before plain Z1 */
-> > > > +     "AMD Ryzen Z1 Extreme",
-> > > > +     "AMD Ryzen Z1",
+> > > > +
+> > > > +     return ret;
+> > > > +}
+> > > > +
+> > > > +static const struct platform_profile_ops dptc_pp_ops = {
+> > > > +     .probe       = dptc_pp_probe,
+> > > > +     .profile_get = dptc_pp_get,
+> > > > +     .profile_set = dptc_pp_set,
+> > > > +};
+> > > > +
+> > > >  static int dptc_resume(struct device *dev)
+> > > >  {
+> > > >       struct dptc_priv *dptc = dev_get_drvdata(dev);
+> > > > @@ -601,10 +700,14 @@ static int dptc_resume(struct device *dev)
+> > > >
+> > > >       guard(mutex)(&dptc->lock);
+> > > >
+> > > > -     if (dptc->save_mode == SAVE_SINGLE)
+> > > > +     if (dptc->profile != PLATFORM_PROFILE_CUSTOM) {
+> > > > +             dptc_apply_profile(dptc, dptc->profile);
+> > > >               ret = dptc_alib_save(dptc);
+> > > > -     else
+> > > > +     } else if (dptc->save_mode == SAVE_SINGLE) {
+> > > > +             ret = dptc_alib_save(dptc);
+> > > > +     } else {
+> > > >               ret = 0;
+> > > > +     }
+> > > >
+> > > >       if (ret)
+> > > >               dev_warn(dev, "failed to restore settings on resume: %d\n", ret);
+> > > > @@ -636,8 +739,7 @@ static int dptc_probe(struct platform_device *pdev)
+> > > >                boot_cpu_data.x86_model_id);
+> > > >
+> > > >       dptc->fw_attr_dev = device_create(&firmware_attributes_class,
+> > > > -                                       NULL, MKDEV(0, 0), NULL,
+> > > > -                                       DRIVER_NAME);
+> > > > +                                       NULL, MKDEV(0, 0), NULL, DRIVER_NAME);
 > > >
-> > > You don't need both since strstr("AMD Ryzen Z1") matches "AMD Ryzen Z1
-> > > Extreme".
+> > > Squash the change into the previous patch.
 > > >
 > > > Thanks,
 > > > Rong
 > > >
-> > > > +     /* Ryzen 8000 */
-> > > > +     "AMD Ryzen 7 8840U",
-> > > > +     /* Ryzen 7040 */
-> > > > +     "AMD Ryzen 7 7840U",
-> > > > +     /* Ryzen 6000 */
-> > > > +     "AMD Ryzen 7 6800U",
-> > > > +     "AMD Ryzen 7 6600U",
-> > > > +     /* Ryzen 5000 */
-> > > > +     "AMD Ryzen 7 5800U",
-> > > > +     "AMD Ryzen 7 5700U",
-> > > > +     "AMD Ryzen 5 5560U",
-> > > >       NULL,
-> > > >  };
+> > > >       if (IS_ERR(dptc->fw_attr_dev))
+> > > >               return PTR_ERR(dptc->fw_attr_dev);
 > > > >
-> > > >  static const struct dmi_system_id dptc_dmi_table[] = {
-> > > >       /* GPD */
-> > > > +     {
-> > > > +             .ident = "GPD Win Mini",
-> > > > +             .matches = {
-> > > > +                     DMI_MATCH(DMI_SYS_VENDOR, "GPD"),
-> > > > +                     DMI_MATCH(DMI_PRODUCT_NAME, "G1617-01"),
-> > > > +             },
-> > > > +             .driver_data = (void *)&limits_28w,
-> > > > +     },
-> > > > +     {
-> > > > +             .ident = "GPD Win Mini 2024",
-> > > > +             .matches = {
-> > > > +                     DMI_MATCH(DMI_SYS_VENDOR, "GPD"),
-> > > > +                     DMI_MATCH(DMI_PRODUCT_NAME, "G1617-02"),
-> > > > +             },
-> > > > +             .driver_data = (void *)&limits_28w,
-> > > > +     },
-> > > > +     {
-> > > > +             .ident = "GPD Win Mini 2024",
-> > > > +             .matches = {
-> > > > +                     DMI_MATCH(DMI_SYS_VENDOR, "GPD"),
-> > > > +                     DMI_MATCH(DMI_PRODUCT_NAME, "G1617-02-L"),
-> > > > +             },
-> > > > +             .driver_data = (void *)&limits_28w,
-> > > > +     },
-> > > > +     {
-> > > > +             .ident = "GPD Win 4",
-> > > > +             .matches = {
-> > > > +                     DMI_MATCH(DMI_SYS_VENDOR, "GPD"),
-> > > > +                     DMI_MATCH(DMI_PRODUCT_NAME, "G1618-04"),
-> > > > +             },
-> > > > +             .driver_data = (void *)&limits_28w,
-> > > > +     },
-> > > >       {
-> > > >               .ident = "GPD Win 5",
-> > > >               .matches = {
-> > > > @@ -116,6 +225,306 @@ static const struct dmi_system_id dptc_dmi_table[] = {
-> > > >               },
-> > > >               .driver_data = (void *)&limits_maxhh,
-> > > >       },
-> > > > +     {
-> > > > +             .ident = "GPD Win Max 2",
-> > > > +             .matches = {
-> > > > +                     DMI_MATCH(DMI_SYS_VENDOR, "GPD"),
-> > > > +                     DMI_MATCH(DMI_PRODUCT_NAME, "G1619-04"),
-> > > > +             },
-> > > > +             .driver_data = (void *)&limits_28w,
-> > > > +     },
-> > > > +     {
-> > > > +             .ident = "GPD Win Max 2 2024",
-> > > > +             .matches = {
-> > > > +                     DMI_MATCH(DMI_SYS_VENDOR, "GPD"),
-> > > > +                     DMI_MATCH(DMI_PRODUCT_NAME, "G1619-05"),
-> > > > +             },
-> > > > +             .driver_data = (void *)&limits_28w,
-> > > > +     },
-> > > > +     {
-> > > > +             .ident = "GPD Duo",
-> > > > +             .matches = {
-> > > > +                     DMI_MATCH(DMI_SYS_VENDOR, "GPD"),
-> > > > +                     DMI_MATCH(DMI_PRODUCT_NAME, "G1622-01"),
-> > > > +             },
-> > > > +             .driver_data = (void *)&limits_28w,
-> > > > +     },
-> > > > +     {
-> > > > +             .ident = "GPD Duo",
-> > > > +             .matches = {
-> > > > +                     DMI_MATCH(DMI_SYS_VENDOR, "GPD"),
-> > > > +                     DMI_MATCH(DMI_PRODUCT_NAME, "G1622-01-L"),
-> > > > +             },
-> > > > +             .driver_data = (void *)&limits_28w,
-> > > > +     },
-> > > > +     {
-> > > > +             .ident = "GPD Pocket 4",
-> > > > +             .matches = {
-> > > > +                     DMI_MATCH(DMI_SYS_VENDOR, "GPD"),
-> > > > +                     DMI_MATCH(DMI_PRODUCT_NAME, "G1628-04"),
-> > > > +             },
-> > > > +             .driver_data = (void *)&limits_28w,
-> > > > +     },
-> > > > +     {
-> > > > +             .ident = "GPD Pocket 4",
-> > > > +             .matches = {
-> > > > +                     DMI_MATCH(DMI_SYS_VENDOR, "GPD"),
-> > > > +                     DMI_MATCH(DMI_PRODUCT_NAME, "G1628-04-L"),
-> > > > +             },
-> > > > +             .driver_data = (void *)&limits_28w,
-> > > > +     },
-> > > > +     /* OrangePi */
-> > > > +     {
-> > > > +             .ident = "OrangePi NEO-01",
-> > > > +             .matches = {
-> > > > +                     DMI_MATCH(DMI_BOARD_VENDOR, "OrangePi"),
-> > > > +                     DMI_EXACT_MATCH(DMI_BOARD_NAME, "NEO-01"),
-> > > > +             },
-> > > > +             .driver_data = (void *)&limits_28w,
-> > > > +     },
-> > > > +     /* AYN */
-> > > > +     {
-> > > > +             .ident = "AYN Loki Max",
-> > > > +             .matches = {
-> > > > +                     DMI_EXACT_MATCH(DMI_SYS_VENDOR, "ayn"),
-> > > > +                     DMI_EXACT_MATCH(DMI_PRODUCT_NAME, "Loki Max"),
-> > > > +             },
-> > > > +             .driver_data = (void *)&limits_30w,
-> > > > +     },
-> > > > +     /* Tectoy (Zeenix Pro = Loki Max) */
-> > > > +     {
-> > > > +             .ident = "Zeenix Pro",
-> > > > +             .matches = {
-> > > > +                     DMI_EXACT_MATCH(DMI_SYS_VENDOR, "Tectoy"),
-> > > > +                     DMI_EXACT_MATCH(DMI_PRODUCT_NAME, "Zeenix Pro"),
-> > > > +             },
-> > > > +             .driver_data = (void *)&limits_30w,
-> > > > +     },
-> > > > +     /* AOKZOE */
-> > > > +     {
-> > > > +             .ident = "AOKZOE A1 AR07",
-> > > > +             .matches = {
-> > > > +                     DMI_MATCH(DMI_BOARD_VENDOR, "AOKZOE"),
-> > > > +                     DMI_EXACT_MATCH(DMI_BOARD_NAME, "AOKZOE A1 AR07"),
-> > > > +             },
-> > > > +             .driver_data = (void *)&limits_30w,
-> > > > +     },
-> > > > +     {
-> > > > +             .ident = "AOKZOE A1 Pro",
-> > > > +             .matches = {
-> > > > +                     DMI_MATCH(DMI_BOARD_VENDOR, "AOKZOE"),
-> > > > +                     DMI_EXACT_MATCH(DMI_BOARD_NAME, "AOKZOE A1 Pro"),
-> > > > +             },
-> > > > +             .driver_data = (void *)&limits_30w,
-> > > > +     },
-> > > > +     {
-> > > > +             .ident = "AOKZOE A1X",
-> > > > +             .matches = {
-> > > > +                     DMI_MATCH(DMI_BOARD_VENDOR, "AOKZOE"),
-> > > > +                     DMI_EXACT_MATCH(DMI_BOARD_NAME, "AOKZOE A1X"),
-> > > > +             },
-> > > > +             .driver_data = (void *)&limits_30w,
-> > > > +     },
-> > > > +     {
-> > > > +             .ident = "AOKZOE A2 Pro",
-> > > > +             .matches = {
-> > > > +                     DMI_MATCH(DMI_BOARD_VENDOR, "AOKZOE"),
-> > > > +                     DMI_EXACT_MATCH(DMI_BOARD_NAME, "AOKZOE A2 Pro"),
-> > > > +             },
-> > > > +             .driver_data = (void *)&limits_30w,
-> > > > +     },
-> > > > +     /* OneXPlayer (Intel variants filtered by SoC table) */
-> > > > +     {
-> > > > +             .ident = "ONEXPLAYER F1Pro",
-> > > > +             .matches = {
-> > > > +                     DMI_MATCH(DMI_BOARD_VENDOR, "ONE-NETBOOK"),
-> > > > +                     DMI_EXACT_MATCH(DMI_BOARD_NAME, "ONEXPLAYER F1Pro"),
-> > > > +             },
-> > > > +             .driver_data = (void *)&limits_30w,
-> > > > +     },
-> > > > +     {
-> > > > +             .ident = "ONEXPLAYER F1 EVA-02",
-> > > > +             .matches = {
-> > > > +                     DMI_MATCH(DMI_BOARD_VENDOR, "ONE-NETBOOK"),
-> > > > +                     DMI_EXACT_MATCH(DMI_BOARD_NAME, "ONEXPLAYER F1 EVA-02"),
-> > > > +             },
-> > > > +             .driver_data = (void *)&limits_30w,
-> > > > +     },
-> > > > +     {
-> > > > +             .ident = "ONEXPLAYER 2",
-> > > > +             .matches = {
-> > > > +                     DMI_MATCH(DMI_BOARD_VENDOR, "ONE-NETBOOK"),
-> > > > +                     DMI_MATCH(DMI_BOARD_NAME, "ONEXPLAYER 2"),
-> > > > +             },
-> > > > +             .driver_data = (void *)&limits_30w,
-> > > > +     },
-> > > > +     {
-> > > > +             .ident = "ONEXPLAYER X1 A",
-> > > > +             .matches = {
-> > > > +                     DMI_MATCH(DMI_BOARD_VENDOR, "ONE-NETBOOK"),
-> > > > +                     DMI_EXACT_MATCH(DMI_BOARD_NAME, "ONEXPLAYER X1 A"),
-> > > > +             },
-> > > > +             .driver_data = (void *)&limits_30w,
-> > > > +     },
-> > > > +     {
-> > > > +             .ident = "ONEXPLAYER X1z",
-> > > > +             .matches = {
-> > > > +                     DMI_MATCH(DMI_BOARD_VENDOR, "ONE-NETBOOK"),
-> > > > +                     DMI_EXACT_MATCH(DMI_BOARD_NAME, "ONEXPLAYER X1z"),
-> > > > +             },
-> > > > +             .driver_data = (void *)&limits_30w,
-> > > > +     },
-> > > > +     {
-> > > > +             .ident = "ONEXPLAYER X1Pro",
-> > > > +             .matches = {
-> > > > +                     DMI_MATCH(DMI_BOARD_VENDOR, "ONE-NETBOOK"),
-> > > > +                     DMI_EXACT_MATCH(DMI_BOARD_NAME, "ONEXPLAYER X1Pro"),
-> > > > +             },
-> > > > +             .driver_data = (void *)&limits_30w,
-> > > > +     },
-> > > > +     {
-> > > > +             .ident = "ONEXPLAYER G1 A",
-> > > > +             .matches = {
-> > > > +                     DMI_MATCH(DMI_BOARD_VENDOR, "ONE-NETBOOK"),
-> > > > +                     DMI_EXACT_MATCH(DMI_BOARD_NAME, "ONEXPLAYER G1 A"),
-> > > > +             },
-> > > > +             .driver_data = (void *)&limits_30w,
-> > > > +     },
-> > > > +     /* AYANEO - 15W */
-> > > > +     {
-> > > > +             .ident = "AYANEO AIR",
-> > > > +             .matches = {
-> > > > +                     DMI_MATCH(DMI_BOARD_VENDOR, "AYANEO"),
-> > > > +                     DMI_EXACT_MATCH(DMI_BOARD_NAME, "AIR"),
-> > > > +             },
-> > > > +             .driver_data = (void *)&limits_15w,
-> > > > +     },
-> > > > +     /* AYANEO - 18W */
-> > > > +     {
-> > > > +             .ident = "AYANEO AIR Plus",
-> > > > +             .matches = {
-> > > > +                     DMI_MATCH(DMI_BOARD_VENDOR, "AYANEO"),
-> > > > +                     DMI_EXACT_MATCH(DMI_BOARD_NAME, "AIR Plus"),
-> > > > +             },
-> > > > +             .driver_data = (void *)&limits_18w,
-> > > > +     },
-> > > > +     {
-> > > > +             .ident = "AYANEO AIR Pro",
-> > > > +             .matches = {
-> > > > +                     DMI_MATCH(DMI_BOARD_VENDOR, "AYANEO"),
-> > > > +                     DMI_EXACT_MATCH(DMI_BOARD_NAME, "AIR Pro"),
-> > > > +             },
-> > > > +             .driver_data = (void *)&limits_18w,
-> > > > +     },
-> > > > +     /* AYANEO - 25W */
-> > > > +     {
-> > > > +             .ident = "AYANEO AIR 1S",
-> > > > +             .matches = {
-> > > > +                     DMI_MATCH(DMI_BOARD_VENDOR, "AYANEO"),
-> > > > +                     DMI_MATCH(DMI_BOARD_NAME, "AIR 1S"),
-> > > > +             },
-> > > > +             .driver_data = (void *)&limits_25w,
-> > > > +     },
-> > > > +     {
-> > > > +             .ident = "AYANEO NEXT Advance",
-> > > > +             .matches = {
-> > > > +                     DMI_MATCH(DMI_BOARD_VENDOR, "AYANEO"),
-> > > > +                     DMI_EXACT_MATCH(DMI_BOARD_NAME, "NEXT Advance"),
-> > > > +             },
-> > > > +             .driver_data = (void *)&limits_25w,
-> > > > +     },
-> > > > +     {
-> > > > +             .ident = "AYANEO NEXT Lite",
-> > > > +             .matches = {
-> > > > +                     DMI_MATCH(DMI_BOARD_VENDOR, "AYANEO"),
-> > > > +                     DMI_EXACT_MATCH(DMI_BOARD_NAME, "NEXT Lite"),
-> > > > +             },
-> > > > +             .driver_data = (void *)&limits_25w,
-> > > > +     },
-> > > > +     {
-> > > > +             .ident = "AYANEO NEXT Pro",
-> > > > +             .matches = {
-> > > > +                     DMI_MATCH(DMI_BOARD_VENDOR, "AYANEO"),
-> > > > +                     DMI_EXACT_MATCH(DMI_BOARD_NAME, "NEXT Pro"),
-> > > > +             },
-> > > > +             .driver_data = (void *)&limits_25w,
-> > > > +     },
-> > > > +     {
-> > > > +             .ident = "AYANEO NEXT",
-> > > > +             .matches = {
-> > > > +                     DMI_MATCH(DMI_BOARD_VENDOR, "AYANEO"),
-> > > > +                     DMI_EXACT_MATCH(DMI_BOARD_NAME, "NEXT"),
-> > > > +             },
-> > > > +             .driver_data = (void *)&limits_25w,
-> > > > +     },
-> > > > +     {
-> > > > +             .ident = "AYANEO KUN",
-> > > > +             .matches = {
-> > > > +                     DMI_MATCH(DMI_BOARD_VENDOR, "AYANEO"),
-> > > > +                     DMI_EXACT_MATCH(DMI_BOARD_NAME, "KUN"),
-> > > > +             },
-> > > > +             .driver_data = (void *)&limits_25w,
-> > > > +     },
-> > > > +     {
-> > > > +             .ident = "AYANEO KUN",
-> > > > +             .matches = {
-> > > > +                     DMI_MATCH(DMI_BOARD_VENDOR, "AYANEO"),
-> > > > +                     DMI_EXACT_MATCH(DMI_BOARD_NAME, "AYANEO KUN"),
-> > > > +             },
-> > > > +             .driver_data = (void *)&limits_25w,
-> > > > +     },
-> > > > +     /* AYANEO - 28W */
-> > > > +     {
-> > > > +             .ident = "AYANEO 2",
-> > > > +             .matches = {
-> > > > +                     DMI_MATCH(DMI_BOARD_VENDOR, "AYANEO"),
-> > > > +                     DMI_MATCH(DMI_BOARD_NAME, "AYANEO 2"),
-> > > > +             },
-> > > > +             .driver_data = (void *)&limits_28w,
-> > > > +     },
-> > > > +     {
-> > > > +             .ident = "SuiPlay0X1",
-> > > > +             .matches = {
-> > > > +                     DMI_MATCH(DMI_SYS_VENDOR, "Mysten Labs, Inc."),
-> > > > +                     DMI_MATCH(DMI_PRODUCT_NAME, "SuiPlay0X1"),
-> > > > +             },
-> > > > +             .driver_data = (void *)&limits_28w,
-> > > > +     },
-> > > > +     /* AYANEO - 30W */
-> > > > +     {
-> > > > +             /* DMI_MATCH catches all FLIP variants (DS, KB, 1S DS, 1S KB) */
-> > > > +             .ident = "AYANEO FLIP",
-> > > > +             .matches = {
-> > > > +                     DMI_MATCH(DMI_BOARD_VENDOR, "AYANEO"),
-> > > > +                     DMI_MATCH(DMI_BOARD_NAME, "FLIP"),
-> > > > +             },
-> > > > +             .driver_data = (void *)&limits_30w,
-> > > > +     },
-> > > > +     {
-> > > > +             /* DMI_MATCH catches GEEK and GEEK 1S */
-> > > > +             .ident = "AYANEO GEEK",
-> > > > +             .matches = {
-> > > > +                     DMI_MATCH(DMI_BOARD_VENDOR, "AYANEO"),
-> > > > +                     DMI_MATCH(DMI_BOARD_NAME, "GEEK"),
-> > > > +             },
-> > > > +             .driver_data = (void *)&limits_30w,
-> > > > +     },
-> > > > +     {
-> > > > +             .ident = "AYANEO SLIDE",
-> > > > +             .matches = {
-> > > > +                     DMI_MATCH(DMI_BOARD_VENDOR, "AYANEO"),
-> > > > +                     DMI_EXACT_MATCH(DMI_BOARD_NAME, "SLIDE"),
-> > > > +             },
-> > > > +             .driver_data = (void *)&limits_30w,
-> > > > +     },
-> > > > +     {
-> > > > +             .ident = "AYANEO 3",
-> > > > +             .matches = {
-> > > > +                     DMI_MATCH(DMI_BOARD_VENDOR, "AYANEO"),
-> > > > +                     DMI_EXACT_MATCH(DMI_BOARD_NAME, "AYANEO 3"),
-> > > > +             },
-> > > > +             .driver_data = (void *)&limits_30w,
-> > > > +     },
-> > > >       { }
-> > > >  };
-> > > >  MODULE_DEVICE_TABLE(dmi, dptc_dmi_table);
+> > > > @@ -680,6 +782,12 @@ static int dptc_probe(struct platform_device *pdev)
+> > > >       if (ret)
+> > > >               return ret;
+> > > >
+> > > > +     dptc->profile = PLATFORM_PROFILE_CUSTOM;
+> > > > +     dptc->ppdev = devm_platform_profile_register(dev, "amd-dptc", dptc,
+> > > > +                                                  &dptc_pp_ops);
+> > > > +     if (IS_ERR(dptc->ppdev))
+> > > > +             return PTR_ERR(dptc->ppdev);
+> > > > +
+> > > >       return 0;
+> > > >  }
+> > > >
 > > >
 >
 
