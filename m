@@ -1,1062 +1,277 @@
-Received: from relay14.grserver.gr (relay14.grserver.gr [157.180.73.62])
+Received: from mout.gmx.net (mout.gmx.net [212.227.17.20])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A1E0E2DB7A0
-	for <platform-driver-x86@vger.kernel.org>; Sat,  7 Mar 2026 23:09:15 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=157.180.73.62
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 20C3F1EEE6;
+	Sun,  8 Mar 2026 00:25:33 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=212.227.17.20
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1772924958; cv=none; b=dmyzTHt+RZgwuIvVcGA/R7QijDKtdLcW8CN5hpvn8wNd5mrxPltjuEfTsqpTtu2naVDxHavGskCFrdf0JTqiXiza6uVwNLSuWiDA7u7tkiyd9wpXhAFtlkrwKIZLTfraW4jW94v9l7knAYDYWO5uvidoYoIS5VKK3qQOKaBzrng=
+	t=1772929536; cv=none; b=QLONCHJgGhMpt5AtFZBlFatvgAFOTxztkHSy5QIeGfGdEniCywIrs5cogd9LJOnAbTYkRG1s0AgBnArX/L2xtLT10gc8jVi1V/HI0zha4a1qCDuYbx9FKmZg4kP8PR3RFBucKBKvnNVzpMS2yGqFyoljalRII8rkyA2wsrfzmxE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1772924958; c=relaxed/simple;
-	bh=/SIcPIsBf6N2xXWWCY91rc6ejQb/e5LLevh5/Oz9cG4=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=MjVprq1ABSF3iL7U5t5BgtIJCNnLHImVC1RYo4+RKCGRe9t5xtlN19gFNtKDODBr7NuSGd3yck3fcoRumJBxHPjx32fDJUomSM1JnrpKUBrnWr3TgyBLbfTD/Hmyytz4t0Xb0Bxi7OSYk6QrvqGbmcs83Fuv+2asK8j11hSFmyM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=antheas.dev; spf=pass smtp.mailfrom=antheas.dev; dkim=pass (2048-bit key) header.d=antheas.dev header.i=@antheas.dev header.b=ONDYsyrJ; arc=none smtp.client-ip=157.180.73.62
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=antheas.dev
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=antheas.dev
+	s=arc-20240116; t=1772929536; c=relaxed/simple;
+	bh=4qQeuO95GLSeEuCW0l4UelYobqF6TLscPNjWun3HviI=;
+	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
+	 MIME-Version; b=XGamxGcbF0NuyNwaSM5jjGalbjIG+V2fZ9RWRnp4oyxD8zJcZ27zKY8CbQJFXuMbsmgUfbbkP4mMHC6ScpwqbcMvgq8XcSeJsfLbgvfE4V4Z/RPv/AQ7j2i0DHDmj9GoBNxsMiP/yrYy8rqHAAvxPA6AlxffdPL8l0shpwWnEJE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gmx.de; spf=pass smtp.mailfrom=gmx.de; dkim=pass (2048-bit key) header.d=gmx.de header.i=w_armin@gmx.de header.b=h3b9jxMM; arc=none smtp.client-ip=212.227.17.20
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gmx.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmx.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=antheas.dev header.i=@antheas.dev header.b="ONDYsyrJ"
-Received: from relay14 (localhost [127.0.0.1])
-	by relay14.grserver.gr (Proxmox) with ESMTP id E42EE40A54
-	for <platform-driver-x86@vger.kernel.org>; Sat,  7 Mar 2026 23:09:13 +0000 (UTC)
-Received: from linux3247.grserver.gr (linux3247.grserver.gr [213.158.90.240])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by relay14.grserver.gr (Proxmox) with ESMTPS id 3305D40834
-	for <platform-driver-x86@vger.kernel.org>; Sat,  7 Mar 2026 23:09:11 +0000 (UTC)
-Received: from mail-pj1-f44.google.com (mail-pj1-f44.google.com [209.85.216.44])
-	by linux3247.grserver.gr (Postfix) with ESMTPSA id 652E6200CEF
-	for <platform-driver-x86@vger.kernel.org>; Sun,  8 Mar 2026 01:09:10 +0200 (EET)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=antheas.dev;
-	s=default; t=1772924950;
-	bh=cMK/y7KRxkGlHtDHAtErJcKa/AGB2PXmhFpgnusNr3o=;
-	h=Received:From:Subject:To;
-	b=ONDYsyrJo6y7XkBHporNksBq4b9BfFtx6BMPHlJ6e4k3vmfHN4DCsD6p5Jn1zxv8l
-	 yUv+ZbaUCIARehIA8PtfhDtBZgLo4vET53tE3OV1k7ijT5JKqm8KMT9pQw4qtZXCp1
-	 QmIXy0adhmTplpBtRpYzb8JmLyAkMR41rYJjimkhOEpw3dRFXecj37Ux3iZE29/Cmb
-	 4flVmHFhu0HpAXvAYxUD31zvwNswbXu5JF4IAp+MdGCXXyB/mcI6C5mCAiVZ6Wqfsd
-	 Dx0OXrmf4DLvE9/V86m8KHV1DkZ2e0xk0PsjmLllf/zIzROoMj9h5vNJR2KWC+tL9H
-	 /qFWAAHtEQq9A==
-Authentication-Results: linux3247.grserver.gr;
-        spf=pass (sender IP is 209.85.216.44) smtp.mailfrom=lkml@antheas.dev smtp.helo=mail-pj1-f44.google.com
-Received-SPF: pass (linux3247.grserver.gr: connection is authenticated)
-Received: by mail-pj1-f44.google.com with SMTP id
- 98e67ed59e1d1-3591cc98871so4662569a91.3
-        for <platform-driver-x86@vger.kernel.org>;
- Sat, 07 Mar 2026 15:09:10 -0800 (PST)
-X-Forwarded-Encrypted: i=1;
- AJvYcCWNXh4kFfgLMiOzylM+y/Fjf38pTsr3u0+SVyTYaU4/JGR9vqH9bE0TlvSuOjW4dg4eXnWsV56qgLdFMFd1GCqie+on@vger.kernel.org
-X-Gm-Message-State: AOJu0YwNLNdTzpkuXpLUHc5Nsgu2oe9pUGPuK11RTj2J3182SKZm7Xa/
-	2sq3O15U1Ru1HJhmlymBv+JQvwXzEt6gAxtaf5ksBZaecldTNalNrXgGME5LAJ7NtT6VFF8ovn1
-	ekJaiDYEeLzTYevxaWEQ7B4CYSTAvroA=
-X-Received: by 2002:a17:90a:fc45:b0:359:8632:5e3a with SMTP id
- 98e67ed59e1d1-359be2f04acmr6035389a91.18.1772924949005; Sat, 07 Mar 2026
- 15:09:09 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=gmx.de header.i=w_armin@gmx.de header.b="h3b9jxMM"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=gmx.de;
+	s=s31663417; t=1772929532; x=1773534332; i=w_armin@gmx.de;
+	bh=9IkgDUTGUrN88laQfkUAHjuJjQ2/fB5RAdk3lh9Co/I=;
+	h=X-UI-Sender-Class:From:To:Cc:Subject:Date:Message-Id:In-Reply-To:
+	 References:MIME-Version:Content-Transfer-Encoding:cc:
+	 content-transfer-encoding:content-type:date:from:message-id:
+	 mime-version:reply-to:subject:to;
+	b=h3b9jxMMzQuxMoGbjZ/YNqT+0T0IC+bZ9Z162NDiY/uo8n7mR58aEabhYwgzoCPK
+	 Xg57XJRM4oGDYUWOkXeP3ColBqJAR6fQqz6VaUZoeziX/gY3wgfLVI9RMArvL0riP
+	 oZzgiSAh2qlYZaS93rRqsUKQMMcOH6U7GWm7oFVFuPX7UJPogHAL/+ocNszCVCop+
+	 epqkWH8CVxv6hdLh7GRzSxZLHg/KqtIqbaCIaUz+0MHvYNER/Q9AiS29oCf0b1HOu
+	 1Jg/tXivhFezeQCP0MRw0HCQo+SaNKWpHFo2lbOdUVoPXZlBbzYFqoUowF0c0UnAO
+	 hBhAkJgtxmvIm5nMVA==
+X-UI-Sender-Class: 724b4f7f-cbec-4199-ad4e-598c01a50d3a
+Received: from client.hidden.invalid by mail.gmx.net (mrgmx105
+ [212.227.17.168]) with ESMTPSA (Nemesis) id 1N9dsb-1vc3Rp057l-00usEV; Sun, 08
+ Mar 2026 01:25:32 +0100
+From: Armin Wolf <W_Armin@gmx.de>
+To: Dell.Client.Kernel@dell.com,
+	pali@kernel.org,
+	mjg59@srcf.ucam.org
+Cc: hansg@kernel.org,
+	ilpo.jarvinen@linux.intel.com,
+	platform-driver-x86@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	linux@roeck-us.net,
+	linux-hwmon@vger.kernel.org
+Subject: [PATCH 2/9] platform/x86: dell-privacy: Use new buffer-based WMI API
+Date: Sun,  8 Mar 2026 01:25:15 +0100
+Message-Id: <20260308002522.4185-3-W_Armin@gmx.de>
+X-Mailer: git-send-email 2.39.5
+In-Reply-To: <20260308002522.4185-1-W_Armin@gmx.de>
+References: <20260308002522.4185-1-W_Armin@gmx.de>
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20260307115516.26892-1-lkml@antheas.dev>
- <20260307115516.26892-3-lkml@antheas.dev>
- <40d0a4a2946a675a1836a576119d27d3113f2f8c.camel@rong.moe>
- <CAGwozwFndbDhZFWy97b-Fpr3SZpENL2nm5sPdcM-uXbqYaKsAA@mail.gmail.com>
-In-Reply-To: 
- <CAGwozwFndbDhZFWy97b-Fpr3SZpENL2nm5sPdcM-uXbqYaKsAA@mail.gmail.com>
-From: Antheas Kapenekakis <lkml@antheas.dev>
-Date: Sun, 8 Mar 2026 00:08:55 +0100
-X-Gmail-Original-Message-ID: 
- <CAGwozwHUU5n3jcR9mhP4rr-PxNdckfS0RNPuU_u1QRKwYPaqtA@mail.gmail.com>
-X-Gm-Features: AaiRm51scZc4jY-rBPfRKd0Pud1ntnxMa3WyjL6UPWi3pee_0C7JVQJnR9bPk7s
-Message-ID: 
- <CAGwozwHUU5n3jcR9mhP4rr-PxNdckfS0RNPuU_u1QRKwYPaqtA@mail.gmail.com>
-Subject: Re: [RFC v3 2/4] platform/x86/amd: dptc: Add AMD DPTCi driver
-To: Rong Zhang <i@rong.moe>
-Cc: Mario.Limonciello@amd.com, W_Armin@gmx.de, sashal@kernel.org,
-	Shyam-Sundar.S-k@amd.com, derekjohn.clark@gmail.com, denis.benato@linux.dev,
-	linux-kernel@vger.kernel.org, platform-driver-x86@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-X-PPP-Message-ID: 
- <177292495080.3642628.6504306457828161834@linux3247.grserver.gr>
-X-PPP-Vhost: antheas.dev
-X-Virus-Scanned: clamav-milter 1.4.3 at linux3247.grserver.gr
-X-Virus-Status: Clean
+Content-Transfer-Encoding: quoted-printable
+X-Provags-ID: V03:K1:Vfy+wIfyU/nI8K5KXwrLesE27167l5HRQjFvsw8+JPt9urP0o4D
+ 5Ix1eJ6VQG2DqGqkCX0E68iaBbzeB15zmIGvxAQd7MPuZ/R5QMCDeFni5p58HgN8ByOT5uE
+ gt0QzmGcCtiOYpkkUpMKP0UmMPhUNTbxOt3/EU1UFCoqqXaGESFRjq7vWbmgLX2H9IyouEe
+ RL+QGFzxDnZAHuKVFT7XA==
+X-Spam-Flag: NO
+UI-OutboundReport: notjunk:1;M01:P0:jzvE7ITIoSg=;R85EIHhYW9KW7iF3VEaLVMyN+5h
+ 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
+ RqqsCX+8yKoKpetg45ef
 
-On Sun, 8 Mar 2026 at 00:02, Antheas Kapenekakis <lkml@antheas.dev> wrote:
->
-> On Sat, 7 Mar 2026 at 22:56, Rong Zhang <i@rong.moe> wrote:
-> >
-> > Hi Antheas,
-> >
-> > Thanks for working on it.
-> >
-> > I think this driver is useful for me and I will see if I can test it on
-> > my devices once I find some time. They're not handhelds but I am sure
-> > at least one of them has the ALIB method. It'd better if a module
-> > option can be used to bypass the quirk table so that testing against a
-> > new device will be easier. Such an option should taint the kernel ofc.
->
-> I will defer to Mario for this one. Previous iterations of this series
-> had an override. Before I posted V2 I had a module param that allowed
-> matching by ident.
+Use the new buffer-based WMI API to also support ACPI firmware
+implementations that do not use ACPI buffers for the device state.
 
-Hi, 2 small follow-ups. Entries to this driver will only be added for
-devices without EC/amd_pmf handling. Because those interfere. So it
-does not apply to lenovo devices AFAIK.
+Signed-off-by: Armin Wolf <W_Armin@gmx.de>
+=2D--
+ drivers/platform/x86/dell/dell-wmi-privacy.c | 78 ++++++++++----------
+ 1 file changed, 38 insertions(+), 40 deletions(-)
 
-> > That being said, I have some review comments. Please see below and my
-> > following replies.
-> >
-> > On Sat, 2026-03-07 at 12:55 +0100, Antheas Kapenekakis wrote:
-> > > Add a driver for AMD AGESA ALIB Function 0x0C, the Dynamic Power and
-> > > Thermal Configuration interface (DPTCi). This exposes TDP and thermal
-> > > parameters for AMD APU-based handheld devices via the
-> > > firmware-attributes sysfs ABI.
-> > >
-> > > Parameters are staged and atomically committed through ALIB. The driver
-> > > supports two save modes: "single" (apply immediately on write) and
-> > > "bulk" (stage values, then commit with "save"). An "expanded_limits"
-> > > toggle widens the allowed parameter ranges beyond device defaults.
-> > >
-> > > Initial device support: GPD Win 5 (AMD Ryzen AI MAX).
-> > >
-> > > Assisted-by: Claude:claude-opus-4-6
-> > > Signed-off-by: Antheas Kapenekakis <lkml@antheas.dev>
-> > > ---
-> > >  MAINTAINERS                       |   6 +
-> > >  drivers/platform/x86/amd/Kconfig  |  14 +
-> > >  drivers/platform/x86/amd/Makefile |   2 +
-> > >  drivers/platform/x86/amd/dptc.c   | 747 ++++++++++++++++++++++++++++++
-> > >  4 files changed, 769 insertions(+)
-> > >  create mode 100644 drivers/platform/x86/amd/dptc.c
-> > >
-> > > diff --git a/MAINTAINERS b/MAINTAINERS
-> > > index e08767323763..915293594641 100644
-> > > --- a/MAINTAINERS
-> > > +++ b/MAINTAINERS
-> > > @@ -1096,6 +1096,12 @@ S:     Supported
-> > >  F:   drivers/gpu/drm/amd/display/dc/dml/
-> > >  F:   drivers/gpu/drm/amd/display/dc/dml2_0/
-> > >
-> > > +AMD DPTC DRIVER
-> > > +M:   Antheas Kapenekakis <lkml@antheas.dev>
-> > > +L:   platform-driver-x86@vger.kernel.org
-> > > +S:   Maintained
-> > > +F:   drivers/platform/x86/amd/dptc.c
-> > > +
-> > >  AMD FAM15H PROCESSOR POWER MONITORING DRIVER
-> > >  M:   Huang Rui <ray.huang@amd.com>
-> > >  L:   linux-hwmon@vger.kernel.org
-> > > diff --git a/drivers/platform/x86/amd/Kconfig b/drivers/platform/x86/amd/Kconfig
-> > > index b813f9265368..d610092467fc 100644
-> > > --- a/drivers/platform/x86/amd/Kconfig
-> > > +++ b/drivers/platform/x86/amd/Kconfig
-> > > @@ -44,3 +44,17 @@ config AMD_ISP_PLATFORM
-> > >
-> > >         This driver can also be built as a module. If so, the module
-> > >         will be called amd_isp4.
-> > > +
-> > > +config AMD_DPTC
-> > > +     tristate "AMD Dynamic Power and Thermal Configuration Interface (DPTCi)"
-> > > +     depends on X86_64 && ACPI && DMI
-> > > +     select FIRMWARE_ATTRIBUTES_CLASS
-> > > +     help
-> > > +       Driver for AMD AGESA ALIB Function 0x0C, the Dynamic Power and
-> > > +       Thermal Configuration Interface (DPTCi). Exposes TDP and thermal
-> > > +       parameters for AMD APU-based handheld devices via the
-> > > +       firmware-attributes sysfs ABI, allowing userspace tools to stage
-> > > +       and atomically commit power limit settings. Requires a DMI match
-> > > +       for the device and a recognized AMD SoC.
-> > > +
-> > > +       If built as a module, the module will be called amd_dptc.
-> > > diff --git a/drivers/platform/x86/amd/Makefile b/drivers/platform/x86/amd/Makefile
-> > > index f6ff0c837f34..862a609bfe38 100644
-> > > --- a/drivers/platform/x86/amd/Makefile
-> > > +++ b/drivers/platform/x86/amd/Makefile
-> > > @@ -12,3 +12,5 @@ obj-$(CONFIG_AMD_PMF)               += pmf/
-> > >  obj-$(CONFIG_AMD_WBRF)               += wbrf.o
-> > >  obj-$(CONFIG_AMD_ISP_PLATFORM)       += amd_isp4.o
-> > >  obj-$(CONFIG_AMD_HFI)                += hfi/
-> > > +obj-$(CONFIG_AMD_DPTC)               += amd_dptc.o
-> > > +amd_dptc-y                   := dptc.o
-> > > diff --git a/drivers/platform/x86/amd/dptc.c b/drivers/platform/x86/amd/dptc.c
-> > > new file mode 100644
-> > > index 000000000000..acfe9cc01bab
-> > > --- /dev/null
-> > > +++ b/drivers/platform/x86/amd/dptc.c
-> > > @@ -0,0 +1,747 @@
-> > > +// SPDX-License-Identifier: GPL-2.0-only
-> > > +/*
-> > > + * AMD Dynamic Power and Thermal Configuration Interface (DPTCi) driver
-> > > + *
-> > > + * Exposes AMD APU power and thermal parameters via the firmware-attributes
-> > > + * sysfs ABI. Parameters are staged and atomically committed through the
-> > > + * AGESA ALIB Function 0x0C (Dynamic Power and Thermal Configuration
-> > > + * interface).
-> > > + *
-> > > + * Reference: AMD AGESA Publication #44065, Appendix E.5
-> > > + *            https://docs.amd.com/v/u/en-US/44065_Arch2008
-> > > + *
-> > > + * Copyright (C) 2026 Antheas Kapenekakis <lkml@antheas.dev>
-> > > + */
-> > > +
-> > > +#define pr_fmt(fmt) KBUILD_MODNAME ": " fmt
-> > > +
-> > > +#include <linux/acpi.h>
-> > > +#include <linux/cleanup.h>
-> > > +#include <linux/dmi.h>
-> > > +#include <linux/init.h>
-> > > +#include <linux/kobject.h>
-> > > +#include <linux/module.h>
-> > > +#include <linux/mutex.h>
-> > > +#include <linux/platform_device.h>
-> > > +#include <linux/processor.h>
-> > > +#include <linux/sysfs.h>
-> > > +#include <linux/unaligned.h>
-> > > +
-> > > +#include "../firmware_attributes_class.h"
-> > > +
-> > > +#define DRIVER_NAME          "amd-dptc"
-> > > +
-> > > +#define ALIB_FUNC_DPTC               0x0C
-> > > +#define ALIB_PATH            "\\_SB.ALIB"
-> > > +
-> > > +#define ALIB_ID_TEMP_TARGET  0x03
-> > > +#define ALIB_ID_STAPM_LIMIT  0x05
-> > > +#define ALIB_ID_FAST_LIMIT   0x06
-> > > +#define ALIB_ID_SLOW_LIMIT   0x07
-> > > +#define ALIB_ID_SKIN_LIMIT   0x2E
-> > > +
-> > > +enum dptc_param_idx {
-> > > +     DPTC_PPT_PL1_SPL,       /* STAPM + skin limit (set together) */
-> > > +     DPTC_PPT_PL2_SPPT,      /* slow PPT limit */
-> > > +     DPTC_PPT_PL3_FPPT,      /* fast PPT limit */
-> > > +     DPTC_CPU_TEMP,          /* thermal control target */
-> > > +     DPTC_NUM_PARAMS,
-> > > +};
-> > > +
-> > > +struct dptc_param_limits {
-> > > +     u32 expanded_min;
-> > > +     u32 device_min;
-> > > +     u32 def;
-> > > +     u32 device_max;
-> > > +     u32 expanded_max;
-> > > +};
-> > > +
-> > > +struct dptc_device_limits {
-> > > +     struct dptc_param_limits params[DPTC_NUM_PARAMS];
-> > > +};
-> > > +
-> > > +struct dptc_param_desc {
-> > > +     const char *name;
-> > > +     const char *display_name;
-> > > +     u16 scale;      /* sysfs-to-ALIB multiplier (e.g. 1000 for W->mW) */
-> > > +     u8 param_id;
-> > > +     u8 param_id2;   /* secondary ALIB ID, 0 if none */
-> > > +};
-> > > +
-> > > +static const struct dptc_param_desc dptc_params[DPTC_NUM_PARAMS] = {
-> > > +     [DPTC_PPT_PL1_SPL]  = { "ppt_pl1_spl",  "Sustained power limit (W)",
-> > > +             1000, ALIB_ID_STAPM_LIMIT, ALIB_ID_SKIN_LIMIT },
-> > > +     [DPTC_PPT_PL2_SPPT] = { "ppt_pl2_sppt", "Slow PPT limit (W)",
-> > > +             1000, ALIB_ID_SLOW_LIMIT },
-> > > +     [DPTC_PPT_PL3_FPPT] = { "ppt_pl3_fppt", "Fast PPT limit (W)",
-> > > +             1000, ALIB_ID_FAST_LIMIT },
-> > > +     [DPTC_CPU_TEMP]     = { "cpu_temp",     "Thermal control limit (C)",
-> > > +                1, ALIB_ID_TEMP_TARGET },
-> > > +};
-> >
-> > The indent here just made me crazy :-/
-> >
-> > Align the contents after line breaks to the left braces.
->
-> I will review how to do the alignment, although I'm not happy with how
-> aligning to spaces will look. PL1 will overflow.
->
-> > > +
-> > > +/* AI MAX Handheld class: GPD Win 5 */
-> > > +static const struct dptc_device_limits limits_maxhh = { .params = {
-> >
-> > Please don't save a line by zipping braces like this. It's hard to read
-> > and likely to be missed when glancing the code (that's what happened to
-> > me and it really confused me).
-> >
-> > I found you did the same in [PATCH v3 3/4] for `.profiles'. That should
-> > be avoided too.
->
-> This is a leftover from before adding profiles. I guess it does not
-> make much sense now. I can reflow.
->
-> > > +     [DPTC_PPT_PL1_SPL]  = {  0,  4, 25,  80, 100 },
-> > > +     [DPTC_PPT_PL2_SPPT] = {  0,  4, 27,  82, 100 },
-> > > +     [DPTC_PPT_PL3_FPPT] = {  0,  4, 40,  85, 100 },
-> > > +     [DPTC_CPU_TEMP]     = { 60, 70, 95,  95, 100 },
-> > > +}};
-> > > +
-> > > +/* Substring matches against boot_cpu_data.x86_model_id; order matters. */
-> > > +static const char * const dptc_soc_table[] = {
-> > > +     /* AI MAX */
-> > > +     "AMD RYZEN AI MAX+ 395",
-> > > +     "AMD RYZEN AI MAX+ 385",
-> > > +     "AMD RYZEN AI MAX 380",
-> > > +     NULL,
-> > > +};
-> > > +
-> > > +static const struct dmi_system_id dptc_dmi_table[] = {
-> > > +     /* GPD */
-> > > +     {
-> > > +             .ident = "GPD Win 5",
-> > > +             .matches = {
-> > > +                     DMI_MATCH(DMI_SYS_VENDOR, "GPD"),
-> > > +                     DMI_MATCH(DMI_PRODUCT_NAME, "G1618-05"),
-> > > +             },
-> > > +             .driver_data = (void *)&limits_maxhh,
-> > > +     },
-> > > +     { }
-> > > +};
-> > > +MODULE_DEVICE_TABLE(dmi, dptc_dmi_table);
-> > > +
-> > > +struct dptc_priv;
-> > > +
-> > > +struct dptc_attr_sysfs {
-> > > +     struct dptc_priv *priv;
-> > > +     struct kobj_attribute current_value;
-> > > +     struct kobj_attribute default_value;
-> > > +     struct kobj_attribute min_value;
-> > > +     struct kobj_attribute max_value;
-> > > +     struct kobj_attribute scalar_increment;
-> > > +     struct kobj_attribute display_name;
-> > > +     struct kobj_attribute type;
-> > > +     struct attribute *attrs[8];
-> > > +     struct attribute_group group;
-> > > +     int idx;
-> > > +};
-> > > +
-> > > +struct dptc_priv {
-> > > +     struct device *fw_attr_dev;
-> > > +     struct kset *fw_attr_kset;
-> > > +
-> > > +     const struct dptc_device_limits *dev_limits;
-> > > +
-> > > +     bool expanded;
-> > > +
-> > > +     enum dptc_save_mode { SAVE_SINGLE, SAVE_BULK } save_mode;
-> >
-> > Defining the enumeration separately will improve readability.
-> >
-> > > +
-> > > +     u32 staged[DPTC_NUM_PARAMS];
-> > > +     bool has_staged[DPTC_NUM_PARAMS];
-> > > +
-> > > +     /* Protects mutable driver state */
-> >
-> > The comment is nonsense. To make it helpful, it should be "Protects
-> > members above/below" with properly arranged structure layout.
-> >
-> > > +     struct mutex lock;
-> > > +
-> > > +     struct dptc_attr_sysfs params[DPTC_NUM_PARAMS];
-> > > +     struct dptc_attr_sysfs expanded_attr;
-> > > +     struct kobj_attribute save_settings_attr;
-> > > +};
-> > > +
-> > > +static struct platform_device *dptc_pdev;
-> > > +
-> > > +static u32 dptc_get_min(struct dptc_priv *dptc, int idx)
-> > > +{
-> > > +     return dptc->expanded ? dptc->dev_limits->params[idx].expanded_min
-> > > +                           : dptc->dev_limits->params[idx].device_min;
-> > > +}
-> > > +
-> > > +static u32 dptc_get_max(struct dptc_priv *dptc, int idx)
-> > > +{
-> > > +     return dptc->expanded ? dptc->dev_limits->params[idx].expanded_max
-> > > +                           : dptc->dev_limits->params[idx].device_max;
-> > > +}
-> > > +
-> > > +static u32 dptc_get_default(struct dptc_priv *dptc, int idx)
-> > > +{
-> > > +     return dptc->dev_limits->params[idx].def;
-> > > +}
-> > > +
-> > > +static int dptc_alib_call(const u8 *ids, const u32 *vals, int count)
-> > > +{
-> > > +     union acpi_object in_params[2];
-> > > +     struct acpi_object_list input;
-> > > +     acpi_status status;
-> > > +     u32 buf_size;
-> > > +     int i, off;
-> > > +     u8 *buf;
-> > > +
-> > > +     if (count == 0)
-> > > +             return -EINVAL;
-> >
-> > Return -ENOENT as think-lmi does (see its save_settings_store()) and
-> > update the documentation accordingly.
-> >
-> > > +
-> > > +     /* Buffer layout: WORD total_size + count * (BYTE id + DWORD value) */
-> > > +     buf_size = 2 + count * 5;
-> > > +     buf = kzalloc(buf_size, GFP_KERNEL);
-> > > +     if (!buf)
-> > > +             return -ENOMEM;
-> > > +
-> > > +     put_unaligned_le16(buf_size, buf);
-> > > +
-> > > +     for (i = 0; i < count; i++) {
-> > > +             off  = 2 + i * 5;
-> > > +             buf[off] = ids[i];
-> > > +             put_unaligned_le32(vals[i], buf + off + 1);
-> >
-> > put_unaligned_le32(vals[i], &buf[off + 1]);
-> >
-> > > +     }
-> > > +
-> > > +     in_params[0].type          = ACPI_TYPE_INTEGER;
-> > > +     in_params[0].integer.value = ALIB_FUNC_DPTC;
-> > > +     in_params[1].type          = ACPI_TYPE_BUFFER;
-> > > +     in_params[1].buffer.length  = buf_size;
-> > > +     in_params[1].buffer.pointer = buf;
-> >
-> > Misaligned `='.
-> >
-> > > +
-> > > +     input.count   = 2;
-> > > +     input.pointer = in_params;
-> > > +
-> > > +     status = acpi_evaluate_object(NULL, ALIB_PATH, &input, NULL);
-> > > +     kfree(buf);
-> > > +
-> > > +     if (ACPI_FAILURE(status)) {
-> > > +             pr_err("ALIB call failed: %s\n",
-> > > +                    acpi_format_exception(status));
-> > > +             return -EIO;
-> > > +     }
-> > > +
-> > > +     pr_debug("sent %d ALIB parameter(s)\n", count);
-> > > +     return 0;
-> > > +}
-> > > +
-> > > +static int dptc_alib_send_one(int idx, u32 val)
-> > > +{
-> > > +     u32 hw_val = val * dptc_params[idx].scale;
-> > > +     u32 vals[2];
-> > > +     u8 ids[2];
-> > > +     int count = 0;
-> > > +
-> > > +     ids[count]  = dptc_params[idx].param_id;
-> > > +     vals[count] = hw_val;
-> > > +     count++;
-> > > +     if (dptc_params[idx].param_id2) {
-> > > +             ids[count]  = dptc_params[idx].param_id2;
-> > > +             vals[count] = hw_val;
-> > > +             count++;
-> > > +     }
-> > > +
-> > > +     return dptc_alib_call(ids, vals, count);
-> > > +}
-> > > +
-> > > +static int dptc_alib_save(struct dptc_priv *dptc)
-> > > +{
-> > > +     u32 vals[DPTC_NUM_PARAMS * 2];
-> > > +     u8 ids[DPTC_NUM_PARAMS * 2];
-> > > +     int i, count = 0;
-> > > +     u32 hw_val;
-> > > +
-> > > +     for (i = 0; i < DPTC_NUM_PARAMS; i++) {
-> > > +             if (!dptc->has_staged[i])
-> > > +                     continue;
-> > > +
-> > > +             hw_val = dptc->staged[i] * dptc_params[i].scale;
-> > > +             ids[count]  = dptc_params[i].param_id;
-> > > +             vals[count] = hw_val;
-> > > +             count++;
-> > > +             if (dptc_params[i].param_id2) {
-> > > +                     ids[count]  = dptc_params[i].param_id2;
-> > > +                     vals[count] = hw_val;
-> > > +                     count++;
-> > > +             }
-> >
-> > I could imagine a helper function to prevent replicating the same code
-> > patterns twice:
-> >
-> > static size_t dptc_alib_fill_param(u8 *ids, u32 *vals, size_t offset,
-> >                                    enum dptc_param_idx param, u32 val)
-> > {
-> >         u32 hw_val = val * dptc_params[param].scale;
-> >
-> >         ids[offset]    = dptc_params[param].param_id;
-> >         vals[offset++] = hw_val;
-> >
-> >         if (dptc_params[param].param_id2) {
-> >                 ids[offset]    = dptc_params[param].param_id2;
-> >                 vals[offset++] = hw_val;
-> >         }
-> >
-> >         return offset;
-> > }
-> >
-> > > +     }
-> > > +
-> > > +     return dptc_alib_call(ids, vals, count);
-> > > +}
-> > > +
-> > > +/* Sysfs callbacks */
-> > > +
-> > > +static ssize_t dptc_current_value_show(struct kobject *kobj,
-> > > +                                    struct kobj_attribute *attr, char *buf)
-> > > +{
-> > > +     struct dptc_attr_sysfs *ps =
-> > > +             container_of(attr, struct dptc_attr_sysfs, current_value);
-> > > +     struct dptc_priv *dptc = ps->priv;
-> > > +
-> > > +     guard(mutex)(&dptc->lock);
-> > > +
-> > > +     if (!dptc->has_staged[ps->idx])
-> > > +             return sysfs_emit(buf, "\n");
-> > > +     return sysfs_emit(buf, "%u\n", dptc->staged[ps->idx]);
-> > > +}
-> > > +
-> > > +static ssize_t dptc_current_value_store(struct kobject *kobj,
-> > > +                                     struct kobj_attribute *attr,
-> > > +                                     const char *buf, size_t count)
-> > > +{
-> > > +     struct dptc_attr_sysfs *ps =
-> > > +             container_of(attr, struct dptc_attr_sysfs, current_value);
-> > > +     struct dptc_priv *dptc = ps->priv;
-> > > +     u32 val, min, max;
-> > > +     int ret;
-> > > +
-> > > +     if (count == 1 && buf[0] == '\n') {
-> > > +             guard(mutex)(&dptc->lock);
-> > > +
-> > > +             dptc->has_staged[ps->idx] = false;
-> > > +             return count;
-> > > +     }
-> > > +
-> > > +     ret = kstrtou32(buf, 10, &val);
-> > > +     if (ret)
-> > > +             return ret;
-> > > +
-> > > +     guard(mutex)(&dptc->lock);
-> > > +
-> > > +     min = dptc_get_min(dptc, ps->idx);
-> > > +     max = dptc_get_max(dptc, ps->idx);
-> > > +     if (val < min || (max && val > max))
-> > > +             return -EINVAL;
-> > > +     dptc->staged[ps->idx]    = val;
-> > > +     dptc->has_staged[ps->idx] = true;
-> > > +     if (dptc->save_mode == SAVE_SINGLE)
-> > > +             ret = dptc_alib_send_one(ps->idx, val);
-> > > +
-> > > +     return ret ? ret : count;
-> > > +}
-> > > +
-> > > +static ssize_t dptc_default_value_show(struct kobject *kobj,
-> > > +                                    struct kobj_attribute *attr, char *buf)
-> > > +{
-> > > +     struct dptc_attr_sysfs *ps =
-> > > +             container_of(attr, struct dptc_attr_sysfs, default_value);
-> > > +
-> > > +     return sysfs_emit(buf, "%u\n", dptc_get_default(ps->priv, ps->idx));
-> > > +}
-> > > +
-> > > +static ssize_t dptc_min_value_show(struct kobject *kobj,
-> > > +                                struct kobj_attribute *attr, char *buf)
-> > > +{
-> > > +     struct dptc_attr_sysfs *ps =
-> > > +             container_of(attr, struct dptc_attr_sysfs, min_value);
-> > > +     struct dptc_priv *dptc = ps->priv;
-> > > +
-> > > +     guard(mutex)(&dptc->lock);
-> > > +
-> > > +     return sysfs_emit(buf, "%u\n", dptc_get_min(dptc, ps->idx));
-> > > +}
-> > > +
-> > > +static ssize_t dptc_max_value_show(struct kobject *kobj,
-> > > +                                struct kobj_attribute *attr, char *buf)
-> > > +{
-> > > +     struct dptc_attr_sysfs *ps =
-> > > +             container_of(attr, struct dptc_attr_sysfs, max_value);
-> > > +     struct dptc_priv *dptc = ps->priv;
-> > > +
-> > > +     guard(mutex)(&dptc->lock);
-> > > +
-> > > +     return sysfs_emit(buf, "%u\n", dptc_get_max(dptc, ps->idx));
-> > > +}
-> > > +
-> > > +static ssize_t dptc_scalar_increment_show(struct kobject *kobj,
-> > > +                                       struct kobj_attribute *attr, char *buf)
-> > > +{
-> > > +     return sysfs_emit(buf, "1\n");
-> > > +}
-> > > +
-> > > +static ssize_t dptc_display_name_show(struct kobject *kobj,
-> > > +                                   struct kobj_attribute *attr, char *buf)
-> > > +{
-> > > +     struct dptc_attr_sysfs *ps =
-> > > +             container_of(attr, struct dptc_attr_sysfs, display_name);
-> > > +     return sysfs_emit(buf, "%s\n", dptc_params[ps->idx].display_name);
-> > > +}
-> > > +
-> > > +static ssize_t dptc_type_show(struct kobject *kobj,
-> > > +                           struct kobj_attribute *attr, char *buf)
-> > > +{
-> > > +     return sysfs_emit(buf, "integer\n");
-> > > +}
-> > > +
-> > > +static ssize_t dptc_save_settings_show(struct kobject *kobj,
-> > > +                                    struct kobj_attribute *attr, char *buf)
-> > > +{
-> > > +     struct dptc_priv *dptc =
-> > > +             container_of(attr, struct dptc_priv, save_settings_attr);
-> > > +
-> > > +     guard(mutex)(&dptc->lock);
-> > > +
-> > > +     if (dptc->save_mode == SAVE_SINGLE)
-> > > +             return sysfs_emit(buf, "single\n");
-> > > +     return sysfs_emit(buf, "bulk\n");
-> > > +}
-> > > +
-> > > +static ssize_t dptc_save_settings_store(struct kobject *kobj,
-> > > +                                     struct kobj_attribute *attr,
-> > > +                                     const char *buf, size_t count)
-> > > +{
-> > > +     struct dptc_priv *dptc =
-> > > +             container_of(attr, struct dptc_priv, save_settings_attr);
-> > > +     int ret = 0;
-> > > +
-> > > +     guard(mutex)(&dptc->lock);
-> > > +
-> > > +     if (sysfs_streq(buf, "save"))
-> >
-> > Please don't rely on the `count == 0' check in dptc_alib_call(). `dptc-
-> > >save_mode == SAVE_SINGLE' should result in -EOPNOTSUPP to maintain
-> > consistency with think-lmi (update the documentation accordingly).
->
-> I will consider it. But this is subtractive behavior. We are still ABI
-> compliant even if the write goes through and it does not affect
-> functionality.
->
-> > > +             ret = dptc_alib_save(dptc);
-> > > +     else if (sysfs_streq(buf, "single"))
-> > > +             dptc->save_mode = SAVE_SINGLE;
-> > > +     else if (sysfs_streq(buf, "bulk"))
-> > > +             dptc->save_mode = SAVE_BULK;
-> > > +     else
-> > > +             return -EINVAL;
-> > > +
-> > > +     return ret ? ret : count;
-> > > +}
-> > > +
-> > > +static ssize_t dptc_expanded_current_value_show(struct kobject *kobj,
-> > > +                                             struct kobj_attribute *attr,
-> > > +                                             char *buf)
-> > > +{
-> > > +     struct dptc_attr_sysfs *ps =
-> > > +             container_of(attr, struct dptc_attr_sysfs, current_value);
-> > > +     struct dptc_priv *dptc = ps->priv;
-> > > +
-> > > +     guard(mutex)(&dptc->lock);
-> > > +
-> > > +     return sysfs_emit(buf, "%d\n", dptc->expanded);
-> > > +}
-> > > +
-> > > +static ssize_t dptc_expanded_current_value_store(struct kobject *kobj,
-> > > +                                              struct kobj_attribute *attr,
-> > > +                                              const char *buf, size_t count)
-> > > +{
-> > > +     struct dptc_attr_sysfs *ps =
-> > > +             container_of(attr, struct dptc_attr_sysfs, current_value);
-> > > +     struct dptc_priv *dptc = ps->priv;
-> > > +     bool val;
-> > > +     int ret;
-> > > +
-> > > +     ret = kstrtobool(buf, &val);
-> > > +     if (ret)
-> > > +             return ret;
-> > > +
-> > > +     guard(mutex)(&dptc->lock);
-> > > +
-> > > +     dptc->expanded = val;
-> > > +     /* Clear staged values: limits changed, old values may be out of range */
-> > > +     memset(dptc->has_staged, 0, sizeof(dptc->has_staged));
-> >
-> > I'd prefer using a bitmap so that you don't need to use memset() to
-> > clear them. It also saves some memory if more parameters are added in
-> > the future.
->
-> I will review if has_staged needs to exist. Values cannot be 0 anyway.
-> A bit map has other readability issues.
->
-> > > +
-> > > +     return count;
-> > > +}
-> > > +
-> > > +static ssize_t dptc_expanded_default_value_show(struct kobject *kobj,
-> > > +                                             struct kobj_attribute *attr,
-> > > +                                             char *buf)
-> > > +{
-> > > +     return sysfs_emit(buf, "0\n");
-> > > +}
-> > > +
-> > > +static ssize_t dptc_expanded_min_value_show(struct kobject *kobj,
-> > > +                                         struct kobj_attribute *attr,
-> > > +                                         char *buf)
-> > > +{
-> > > +     return sysfs_emit(buf, "0\n");
-> > > +}
-> > > +
-> > > +static ssize_t dptc_expanded_max_value_show(struct kobject *kobj,
-> > > +                                         struct kobj_attribute *attr,
-> > > +                                         char *buf)
-> > > +{
-> > > +     return sysfs_emit(buf, "1\n");
-> > > +}
-> > > +
-> > > +static ssize_t dptc_expanded_scalar_increment_show(struct kobject *kobj,
-> > > +                                                struct kobj_attribute *attr,
-> > > +                                                char *buf)
-> > > +{
-> > > +     return sysfs_emit(buf, "1\n");
-> > > +}
-> > > +
-> > > +static ssize_t dptc_expanded_display_name_show(struct kobject *kobj,
-> > > +                                            struct kobj_attribute *attr,
-> > > +                                            char *buf)
-> > > +{
-> > > +     return sysfs_emit(buf, "Expanded Limits\n");
-> > > +}
-> > > +
-> > > +static ssize_t dptc_expanded_type_show(struct kobject *kobj,
-> > > +                                    struct kobj_attribute *attr, char *buf)
-> > > +{
-> > > +     return sysfs_emit(buf, "integer\n");
-> > > +}
-> > > +
-> > > +/* Sysfs setup */
-> > > +
-> > > +static void dptc_setup_param_sysfs(struct dptc_priv *dptc,
-> > > +                                struct dptc_attr_sysfs *ps, int idx)
-> > > +{
-> > > +     ps->priv = dptc;
-> > > +     ps->idx = idx;
-> > > +
-> > > +     sysfs_attr_init(&ps->current_value.attr);
-> > > +     ps->current_value.attr.name  = "current_value";
-> > > +     ps->current_value.attr.mode  = 0644;
-> > > +     ps->current_value.show       = dptc_current_value_show;
-> > > +     ps->current_value.store      = dptc_current_value_store;
-> > > +
-> > > +     sysfs_attr_init(&ps->default_value.attr);
-> > > +     ps->default_value.attr.name  = "default_value";
-> > > +     ps->default_value.attr.mode  = 0444;
-> > > +     ps->default_value.show       = dptc_default_value_show;
-> > > +
-> > > +     sysfs_attr_init(&ps->min_value.attr);
-> > > +     ps->min_value.attr.name      = "min_value";
-> > > +     ps->min_value.attr.mode      = 0444;
-> > > +     ps->min_value.show           = dptc_min_value_show;
-> > > +
-> > > +     sysfs_attr_init(&ps->max_value.attr);
-> > > +     ps->max_value.attr.name      = "max_value";
-> > > +     ps->max_value.attr.mode      = 0444;
-> > > +     ps->max_value.show           = dptc_max_value_show;
-> > > +
-> > > +     sysfs_attr_init(&ps->scalar_increment.attr);
-> > > +     ps->scalar_increment.attr.name = "scalar_increment";
-> > > +     ps->scalar_increment.attr.mode = 0444;
-> > > +     ps->scalar_increment.show      = dptc_scalar_increment_show;
-> > > +
-> > > +     sysfs_attr_init(&ps->display_name.attr);
-> > > +     ps->display_name.attr.name   = "display_name";
-> > > +     ps->display_name.attr.mode   = 0444;
-> > > +     ps->display_name.show        = dptc_display_name_show;
-> > > +
-> > > +     sysfs_attr_init(&ps->type.attr);
-> > > +     ps->type.attr.name           = "type";
-> > > +     ps->type.attr.mode           = 0444;
-> > > +     ps->type.show                = dptc_type_show;
-> > > +
-> > > +     ps->attrs[0] = &ps->current_value.attr;
-> > > +     ps->attrs[1] = &ps->default_value.attr;
-> > > +     ps->attrs[2] = &ps->min_value.attr;
-> > > +     ps->attrs[3] = &ps->max_value.attr;
-> > > +     ps->attrs[4] = &ps->scalar_increment.attr;
-> > > +     ps->attrs[5] = &ps->display_name.attr;
-> > > +     ps->attrs[6] = &ps->type.attr;
-> > > +     ps->attrs[7] = NULL;
-> > > +
-> > > +     ps->group.name  = dptc_params[idx].name;
-> > > +     ps->group.attrs = ps->attrs;
-> > > +}
-> > > +
-> > > +static void dptc_setup_expanded_sysfs(struct dptc_priv *dptc,
-> > > +                                   struct dptc_attr_sysfs *ps)
-> > > +{
-> > > +     ps->priv = dptc;
-> > > +     sysfs_attr_init(&ps->current_value.attr);
-> > > +     ps->current_value.attr.name  = "current_value";
-> > > +     ps->current_value.attr.mode  = 0644;
-> > > +     ps->current_value.show       = dptc_expanded_current_value_show;
-> > > +     ps->current_value.store      = dptc_expanded_current_value_store;
-> > > +
-> > > +     sysfs_attr_init(&ps->default_value.attr);
-> > > +     ps->default_value.attr.name  = "default_value";
-> > > +     ps->default_value.attr.mode  = 0444;
-> > > +     ps->default_value.show       = dptc_expanded_default_value_show;
-> > > +
-> > > +     sysfs_attr_init(&ps->min_value.attr);
-> > > +     ps->min_value.attr.name      = "min_value";
-> > > +     ps->min_value.attr.mode      = 0444;
-> > > +     ps->min_value.show           = dptc_expanded_min_value_show;
-> > > +
-> > > +     sysfs_attr_init(&ps->max_value.attr);
-> > > +     ps->max_value.attr.name      = "max_value";
-> > > +     ps->max_value.attr.mode      = 0444;
-> > > +     ps->max_value.show           = dptc_expanded_max_value_show;
-> > > +
-> > > +     sysfs_attr_init(&ps->scalar_increment.attr);
-> > > +     ps->scalar_increment.attr.name = "scalar_increment";
-> > > +     ps->scalar_increment.attr.mode = 0444;
-> > > +     ps->scalar_increment.show      = dptc_expanded_scalar_increment_show;
-> > > +
-> > > +     sysfs_attr_init(&ps->display_name.attr);
-> > > +     ps->display_name.attr.name   = "display_name";
-> > > +     ps->display_name.attr.mode   = 0444;
-> > > +     ps->display_name.show        = dptc_expanded_display_name_show;
-> > > +
-> > > +     sysfs_attr_init(&ps->type.attr);
-> > > +     ps->type.attr.name           = "type";
-> > > +     ps->type.attr.mode           = 0444;
-> > > +     ps->type.show                = dptc_expanded_type_show;
-> > > +
-> > > +     ps->attrs[0] = &ps->current_value.attr;
-> > > +     ps->attrs[1] = &ps->default_value.attr;
-> > > +     ps->attrs[2] = &ps->min_value.attr;
-> > > +     ps->attrs[3] = &ps->max_value.attr;
-> > > +     ps->attrs[4] = &ps->scalar_increment.attr;
-> > > +     ps->attrs[5] = &ps->display_name.attr;
-> > > +     ps->attrs[6] = &ps->type.attr;
-> > > +     ps->attrs[7] = NULL;
-> > > +
-> > > +     ps->group.name  = "expanded_limits";
-> > > +     ps->group.attrs = ps->attrs;
-> > > +}
-> >
-> > As Derek has said in v2, use macros to rearrange them.
-> >
-> > It's painful to read all these things as I'll need to scroll the screen
-> > quite a lot just to read something with a low information density.
-> > That's why there are numerous macros defined in include/linux/sysfs.h.
-> > I could imagine defining macros like DPTC{,_EXPANDED}_ATTR_{RO,RW}.
->
-> This driver consists of two instantiation blocks. It is not possible
-> to dedup the initialization functions and save space because the
-> function holders and structs that would be needed undo that.
->
-> The blocks in lenovo other are significantly less readable and harder
-> to write. Perhaps you save around 20 lines. But it is not worth it
-> imo.
-
-I would consider adding them if the helper macros are centralized, but
-I am not adding macros to this driver.
-
-Antheas
-
-> > Meanwhile, I am not very sure why you would have to dynamically
-> > initialize all these attributes. I haven't notice a blocker of defining
-> > them statically at the module-level (see how lenovo-wmi-other did). Am
-> > I missing anything?
->
-> You are not missing something. There is no benefit to dynamic
-> allocation. Static allocation needs macros.
->
-> > > +
-> > > +static void dptc_fw_dev_unregister(void *data)
-> > > +{
-> > > +     device_unregister(data);
-> > > +}
-> > > +
-> > > +static void dptc_kset_unregister(void *data)
-> > > +{
-> > > +     kset_unregister(data);
-> > > +}
-> > > +
-> > > +static int dptc_resume(struct device *dev)
-> > > +{
-> > > +     struct dptc_priv *dptc = dev_get_drvdata(dev);
-> > > +     int ret;
-> > > +
-> > > +     guard(mutex)(&dptc->lock);
-> > > +
-> > > +     if (dptc->save_mode == SAVE_SINGLE)
-> > > +             ret = dptc_alib_save(dptc);
-> >
-> > I don't see why bulk mode and single mode should have divergence on
-> > resuming behavior.
->
-> This is personal preference. I'd rather bulk mode completely disengage
-> the driver handling. It also gives it a better reason to exist. After
-> all, ALIB runs a for loop inside it, there is no difference calling it
-> 3 times or 1 as far as the GPU is concerned. It is only ACPI overhead.
-> The original name was commit_mode, with manual/auto. But while working
-> on the ABI entry I found save_settings, and it was an ABI match so I
-> opted for that instead of making a new entry.
->
-> Unfortunately, naming does not match precisely.
->
-> Thanks for the review! Ack. on everything I did not comment on.
->
-> Best,
-> Antheas
->
-> > Thanks,
-> > Rong
-> >
-> > > +     else
-> > > +             ret = 0;
-> > > +
-> > > +     if (ret)
-> > > +             dev_warn(dev, "failed to restore settings on resume: %d\n", ret);
-> > > +
-> > > +     return 0;
-> > > +}
-> > > +
-> > > +static DEFINE_SIMPLE_DEV_PM_OPS(dptc_pm_ops, NULL, dptc_resume);
-> > > +
-> > > +static int dptc_probe(struct platform_device *pdev)
-> > > +{
-> > > +     const struct dmi_system_id *dmi_match = dev_get_platdata(&pdev->dev);
-> > > +     struct device *dev = &pdev->dev;
-> > > +     struct dptc_priv *dptc;
-> > > +     int i, ret;
-> > > +
-> > > +     dptc = devm_kzalloc(dev, sizeof(*dptc), GFP_KERNEL);
-> > > +     if (!dptc)
-> > > +             return -ENOMEM;
-> > > +
-> > > +     platform_set_drvdata(pdev, dptc);
-> > > +
-> > > +     ret = devm_mutex_init(dev, &dptc->lock);
-> > > +     if (ret)
-> > > +             return ret;
-> > > +
-> > > +     dptc->dev_limits = dmi_match->driver_data;
-> > > +     dev_info(dev, "%s (%s)\n", dmi_match->ident,
-> > > +              boot_cpu_data.x86_model_id);
-> > > +
-> > > +     dptc->fw_attr_dev = device_create(&firmware_attributes_class,
-> > > +                                       NULL, MKDEV(0, 0), NULL,
-> > > +                                       DRIVER_NAME);
-> > > +     if (IS_ERR(dptc->fw_attr_dev))
-> > > +             return PTR_ERR(dptc->fw_attr_dev);
-> > > +
-> > > +     ret = devm_add_action_or_reset(dev, dptc_fw_dev_unregister,
-> > > +                                    dptc->fw_attr_dev);
-> > > +     if (ret)
-> > > +             return ret;
-> > > +
-> > > +     dptc->fw_attr_kset = kset_create_and_add("attributes", NULL,
-> > > +                                              &dptc->fw_attr_dev->kobj);
-> > > +     if (!dptc->fw_attr_kset)
-> > > +             return -ENOMEM;
-> > > +
-> > > +     ret = devm_add_action_or_reset(dev, dptc_kset_unregister,
-> > > +                                    dptc->fw_attr_kset);
-> > > +     if (ret)
-> > > +             return ret;
-> > > +
-> > > +     for (i = 0; i < DPTC_NUM_PARAMS; i++) {
-> > > +             dptc_setup_param_sysfs(dptc, &dptc->params[i], i);
-> > > +             ret = sysfs_create_group(&dptc->fw_attr_kset->kobj,
-> > > +                                      &dptc->params[i].group);
-> > > +             if (ret)
-> > > +                     return ret;
-> > > +     }
-> > > +
-> > > +     dptc_setup_expanded_sysfs(dptc, &dptc->expanded_attr);
-> > > +     ret = sysfs_create_group(&dptc->fw_attr_kset->kobj,
-> > > +                              &dptc->expanded_attr.group);
-> > > +     if (ret)
-> > > +             return ret;
-> > > +
-> > > +     sysfs_attr_init(&dptc->save_settings_attr.attr);
-> > > +     dptc->save_settings_attr.attr.name  = "save_settings";
-> > > +     dptc->save_settings_attr.attr.mode  = 0644;
-> > > +     dptc->save_settings_attr.show       = dptc_save_settings_show;
-> > > +     dptc->save_settings_attr.store      = dptc_save_settings_store;
-> > > +     ret = sysfs_create_file(&dptc->fw_attr_kset->kobj,
-> > > +                             &dptc->save_settings_attr.attr);
-> > > +     if (ret)
-> > > +             return ret;
-> > > +
-> > > +     return 0;
-> > > +}
-> > > +
-> > > +static struct platform_driver dptc_driver = {
-> > > +     .driver = {
-> > > +             .name = DRIVER_NAME,
-> > > +             .pm   = pm_sleep_ptr(&dptc_pm_ops),
-> > > +     },
-> > > +     .probe  = dptc_probe,
-> > > +};
-> > > +
-> > > +static int __init dptc_init(void)
-> > > +{
-> > > +     const struct dmi_system_id *match;
-> > > +     bool soc_found = false;
-> > > +     int i, ret;
-> > > +
-> > > +     match = dmi_first_match(dptc_dmi_table);
-> > > +     if (!match)
-> > > +             return -ENODEV;
-> > > +
-> > > +     if (!acpi_has_method(NULL, ALIB_PATH)) {
-> > > +             pr_warn("ALIB method not present\n");
-> > > +             return -ENODEV;
-> > > +     }
-> > > +
-> > > +     for (i = 0; dptc_soc_table[i]; i++) {
-> > > +             if (strstr(boot_cpu_data.x86_model_id,
-> > > +                        dptc_soc_table[i])) {
-> > > +                     soc_found = true;
-> > > +                     break;
-> > > +             }
-> > > +     }
-> > > +     if (!soc_found) {
-> > > +             pr_warn("unrecognized SoC '%s'\n",
-> > > +                     boot_cpu_data.x86_model_id);
-> > > +             return -ENODEV;
-> > > +     }
-> > > +
-> > > +     dptc_pdev = platform_device_register_data(NULL, DRIVER_NAME, -1,
-> > > +                                               match, sizeof(*match));
-> > > +     if (IS_ERR(dptc_pdev))
-> > > +             return PTR_ERR(dptc_pdev);
-> > > +
-> > > +     ret = platform_driver_register(&dptc_driver);
-> > > +     if (ret) {
-> > > +             platform_device_unregister(dptc_pdev);
-> > > +             return ret;
-> > > +     }
-> > > +
-> > > +     return 0;
-> > > +}
-> > > +
-> > > +static void __exit dptc_exit(void)
-> > > +{
-> > > +     platform_driver_unregister(&dptc_driver);
-> > > +     platform_device_unregister(dptc_pdev);
-> > > +}
-> > > +
-> > > +module_init(dptc_init);
-> > > +module_exit(dptc_exit);
-> > > +
-> > > +MODULE_AUTHOR("Antheas Kapenekakis <lkml@antheas.dev>");
-> > > +MODULE_DESCRIPTION("AMD DPTCi ACPI Driver");
-> > > +MODULE_LICENSE("GPL");
-> >
+diff --git a/drivers/platform/x86/dell/dell-wmi-privacy.c b/drivers/platfo=
+rm/x86/dell/dell-wmi-privacy.c
+index ed099a431ea4..470273cc2fd2 100644
+=2D-- a/drivers/platform/x86/dell/dell-wmi-privacy.c
++++ b/drivers/platform/x86/dell/dell-wmi-privacy.c
+@@ -9,6 +9,7 @@
+=20
+ #include <linux/acpi.h>
+ #include <linux/bitops.h>
++#include <linux/compiler_attributes.h>
+ #include <linux/input.h>
+ #include <linux/input/sparse-keymap.h>
+ #include <linux/list.h>
+@@ -25,6 +26,26 @@
+ #define DELL_PRIVACY_CAMERA_EVENT 0x2
+ #define led_to_priv(c)       container_of(c, struct privacy_wmi_data, cde=
+v)
+=20
++/*
++ * Describes the Device State class exposed by BIOS which can be consumed=
+ by
++ * various applications interested in knowing the Privacy feature capabil=
+ities.
++ * class DeviceState
++ * {
++ *  [key, read] string InstanceName;
++ *  [read] boolean ReadOnly;
++ *
++ *  [WmiDataId(1), read] uint32 DevicesSupported;
++ *   0 - None; 0x1 - Microphone; 0x2 - Camera; 0x4 - ePrivacy  Screen
++ *
++ *  [WmiDataId(2), read] uint32 CurrentState;
++ *   0 - Off; 1 - On; Bit0 - Microphone; Bit1 - Camera; Bit2 - ePrivacySc=
+reen
++ * };
++ */
++struct device_state {
++	__le32 devices_supported;
++	__le32 current_state;
++} __packed;
++
+ /*
+  * The wmi_list is used to store the privacy_priv struct with mutex prote=
+cting
+  */
+@@ -185,59 +206,36 @@ static struct attribute *privacy_attrs[] =3D {
+ };
+ ATTRIBUTE_GROUPS(privacy);
+=20
+-/*
+- * Describes the Device State class exposed by BIOS which can be consumed=
+ by
+- * various applications interested in knowing the Privacy feature capabil=
+ities.
+- * class DeviceState
+- * {
+- *  [key, read] string InstanceName;
+- *  [read] boolean ReadOnly;
+- *
+- *  [WmiDataId(1), read] uint32 DevicesSupported;
+- *   0 - None; 0x1 - Microphone; 0x2 - Camera; 0x4 - ePrivacy  Screen
+- *
+- *  [WmiDataId(2), read] uint32 CurrentState;
+- *   0 - Off; 1 - On; Bit0 - Microphone; Bit1 - Camera; Bit2 - ePrivacySc=
+reen
+- * };
+- */
+ static int get_current_status(struct wmi_device *wdev)
+ {
+ 	struct privacy_wmi_data *priv =3D dev_get_drvdata(&wdev->dev);
+-	union acpi_object *obj_present;
+-	u32 *buffer;
+-	int ret =3D 0;
++	struct device_state *state;
++	struct wmi_buffer buffer;
++	int ret;
+=20
+ 	if (!priv) {
+ 		dev_err(&wdev->dev, "dell privacy priv is NULL\n");
+ 		return -EINVAL;
+ 	}
++
+ 	/* check privacy support features and device states */
+-	obj_present =3D wmidev_block_query(wdev, 0);
+-	if (!obj_present) {
+-		dev_err(&wdev->dev, "failed to read Binary MOF\n");
+-		return -EIO;
+-	}
++	ret =3D wmidev_query_block(wdev, 0, &buffer);
++	if (ret < 0)
++		return ret;
+=20
+-	if (obj_present->type !=3D ACPI_TYPE_BUFFER) {
+-		dev_err(&wdev->dev, "Binary MOF is not a buffer!\n");
+-		ret =3D -EIO;
+-		goto obj_free;
+-	}
+-	/*  Although it's not technically a failure, this would lead to
+-	 *  unexpected behavior
+-	 */
+-	if (obj_present->buffer.length !=3D 8) {
+-		dev_err(&wdev->dev, "Dell privacy buffer has unexpected length (%d)!\n"=
+,
+-				obj_present->buffer.length);
++	if (buffer.length < sizeof(*state)) {
++		dev_err(&wdev->dev, "Dell privacy buffer contains not enough data (%zu)=
+!\n",
++			buffer.length);
+ 		ret =3D -EINVAL;
+-		goto obj_free;
++		goto buffer_free;
+ 	}
+-	buffer =3D (u32 *)obj_present->buffer.pointer;
+-	priv->features_present =3D buffer[0];
+-	priv->last_status =3D buffer[1];
+=20
+-obj_free:
+-	kfree(obj_present);
++	state =3D buffer.data;
++	priv->features_present =3D le32_to_cpu(state->devices_supported);
++	priv->last_status =3D le32_to_cpu(state->current_state);
++
++buffer_free:
++	kfree(buffer.data);
+ 	return ret;
+ }
+=20
+=2D-=20
+2.39.5
 
