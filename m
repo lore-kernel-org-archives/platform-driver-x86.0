@@ -1,409 +1,273 @@
-Received: from relay11.grserver.gr (relay11.grserver.gr [78.46.171.57])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pj1-f45.google.com (mail-pj1-f45.google.com [209.85.216.45])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0EBAB3358D6
-	for <platform-driver-x86@vger.kernel.org>; Sun,  8 Mar 2026 09:45:42 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=78.46.171.57
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3041C25771
+	for <platform-driver-x86@vger.kernel.org>; Sun,  8 Mar 2026 14:52:38 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.45
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1772963144; cv=none; b=Ekgc11IUoEt2ydkjPv554oeC1mexY/bqYn+qHrr+KvArFbltaKoVyCFUF3IqXmytZpZX9IrRybwfSWGuTfehMUVVhfSLx9gmZY8oZtlhANuw27yAk8qJHP0YVZcj4Qz8V2Pv2fU1uqLS+Riqjmc7C1Du/9ix8usvE8Bc0rhAqXQ=
+	t=1772981560; cv=none; b=Vman2fPDnwJez7kHpgprs6rUIuDTOkfFKYkExVpTUSYYHN4nC9LbuET8gPO3ym9tVkXqhmcjb1W4hsQT2G4t9fqYjMp4Dlm2czlUJ5In1zRJAlBMP1nZp+48kjAo2kIhf5puxD5nuJRVKw7c9pKE4YoL/I5AFbOcMzkuDdgpJek=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1772963144; c=relaxed/simple;
-	bh=c+f7w0p/0mG9LuZ1/cE1wPBCYTT2zzYdF65G5uXx5s4=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=DNiVFuoxCWgED72ynTJzUMcio0lmkf9ZC8Lq7awGBo/96Y43/2rk7zs1EXqrp0f8T3KG6neswO3rQtZmmVzqHJvj+i9d7LQZNhcXDvx1qmtJI1GEBE7HNiwtfcQNn7j775yUvDZv3qIveLttAFbdYPG8bJfz4Fpo6jgv0CXoeSk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=antheas.dev; spf=pass smtp.mailfrom=antheas.dev; dkim=pass (2048-bit key) header.d=antheas.dev header.i=@antheas.dev header.b=QhxvSsGc; arc=none smtp.client-ip=78.46.171.57
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=antheas.dev
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=antheas.dev
+	s=arc-20240116; t=1772981560; c=relaxed/simple;
+	bh=mUxGiAvkhX06RPbeGQ8JcF69K7fuvaZ7WwxCUwyqwII=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=jqddCgeVROCPoL3VBHO6DIUYpei4oQeN92sviu5p54nv59Ow2EgpfVbMwi19docA80zlE5n03BicgHCyb0z+XwRVUAY5eMQKcbDKGP+T8BqmaTvv+OyzMO1SGV7GXOX8hydBaA/WakX5/cPlDk8fMRJ+81fXcKejpZQGWDIxDB0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=roeck-us.net; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=EtohTwQ5; arc=none smtp.client-ip=209.85.216.45
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=roeck-us.net
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=antheas.dev header.i=@antheas.dev header.b="QhxvSsGc"
-Received: from relay11 (localhost.localdomain [127.0.0.1])
-	by relay11.grserver.gr (Proxmox) with ESMTP id 8B93DC01A0
-	for <platform-driver-x86@vger.kernel.org>; Sun,  8 Mar 2026 11:45:41 +0200 (EET)
-Received: from linux3247.grserver.gr (linux3247.grserver.gr [213.158.90.240])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by relay11.grserver.gr (Proxmox) with ESMTPS id 4DD32C5880
-	for <platform-driver-x86@vger.kernel.org>; Sun,  8 Mar 2026 11:45:40 +0200 (EET)
-Received: from mail-pf1-f169.google.com (mail-pf1-f169.google.com [209.85.210.169])
-	by linux3247.grserver.gr (Postfix) with ESMTPSA id 8EADF200B8C
-	for <platform-driver-x86@vger.kernel.org>; Sun,  8 Mar 2026 11:45:39 +0200 (EET)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=antheas.dev;
-	s=default; t=1772963140;
-	bh=E+uENpnNzL0ICbx07UEw+/r7IZ3dJqJyxnjN01ILNss=;
-	h=Received:From:Subject:To;
-	b=QhxvSsGcngdSXMiR6/V2OyIzjhmRXG4pnQM6UJnfeV4U9YpE4S2/XJhq8miEARatG
-	 Of6/+v0OVILhSuQ6kHw3zeY+eO45HtI9xl1LV0JwaFtwyQpMACQxXZAjgn7s3nZce4
-	 rvh5x2GLOt7+ThgvImkupvzY/RiL3MdZAf8au9GkcIxNpr54HHve0+B9rkolJZq48j
-	 YdcczaahDAQhsE2XTt6XAseq7p7h/gMDowSas1zT6Y3tX+I2cL7gajdUrETe2RKOa4
-	 recJ4I6NR7RaN3yVVegJePpyfWuKwvSNITVgoj8krCV8Iz0mta9UB5plPG3nMzv0GA
-	 JQCKBmFtHPoBg==
-Authentication-Results: linux3247.grserver.gr;
-        spf=pass (sender IP is 209.85.210.169) smtp.mailfrom=lkml@antheas.dev smtp.helo=mail-pf1-f169.google.com
-Received-SPF: pass (linux3247.grserver.gr: connection is authenticated)
-Received: by mail-pf1-f169.google.com with SMTP id
- d2e1a72fcca58-829781b2b01so2681254b3a.2
-        for <platform-driver-x86@vger.kernel.org>;
- Sun, 08 Mar 2026 01:45:39 -0800 (PST)
-X-Forwarded-Encrypted: i=1;
- AJvYcCWINTxuKxOHP40VahJGUndSJGrv6q+gJAFydNIgnjv706xVeiiLiXiVmzEdjwrbeRkvH0qvUrsvhU5BJCHFVPzqpUB/@vger.kernel.org
-X-Gm-Message-State: AOJu0YxWueNOLIkP0LZAkZv1R9OIZhEBikd5rtzWT06izh0GLMfmy7wV
-	iUR0Ud4ubS+xT3kHbhR5eFUjvo8/t1MrYk2mrEDS4kBegbFUoye92iLzPmc47ziNM6Q5pKJPPJ7
-	hXQd6d5+NW1tUGg68YdtjFcjeEyzd2E4=
-X-Received: by 2002:a05:6a00:2e98:b0:81e:4476:f67c with SMTP id
- d2e1a72fcca58-829a2d6e534mr7059310b3a.3.1772963138172; Sun, 08 Mar 2026
- 01:45:38 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="EtohTwQ5"
+Received: by mail-pj1-f45.google.com with SMTP id 98e67ed59e1d1-3598c1ad542so4461425a91.0
+        for <platform-driver-x86@vger.kernel.org>; Sun, 08 Mar 2026 07:52:38 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1772981557; x=1773586357; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:autocrypt:from
+         :content-language:references:cc:to:subject:user-agent:mime-version
+         :date:message-id:sender:from:to:cc:subject:date:message-id:reply-to;
+        bh=OZtyD+jwbAlgTIlnkcICSaOtreatY1iW6AaKVLeO5qc=;
+        b=EtohTwQ587xmNAPBOROSERzhAEL2L1hEGGdlUjKU/rzcG99xaAPQr4WA2kjEleaj0M
+         ADf+SgsG/6bq/0rFstu6m2bKBfaeAanA5dgQ3Zx8foAdKo9DPFAj8VGrlYiBhhlyDhYx
+         1zNvWKsqIPfI9e3meOoFzLixT0K9qNc+JlzQ7KaB8dQ6zyYFzOw0oYQZVwIiQrVrU30L
+         4jujiLy2kAcimt6xpNkHwYoVBjU0dhDdBeaNWbU9IOgrtfxZ0OW0Jity+AI2UDfTHaMU
+         IIIEUl179beb+cilJ251NwEda3QmOkhvJfaqclkPvFRyk7rTruTFPe2HrFEXfdxlNj+l
+         ztwg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1772981557; x=1773586357;
+        h=content-transfer-encoding:in-reply-to:autocrypt:from
+         :content-language:references:cc:to:subject:user-agent:mime-version
+         :date:message-id:sender:x-gm-gg:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=OZtyD+jwbAlgTIlnkcICSaOtreatY1iW6AaKVLeO5qc=;
+        b=ghq1kt8akxKRKFalqk76tO9gZBBOw03s1+Nh0J14WE7csXIrx7jpMVv4Hx7gXXMefd
+         QYwcfWtF5VPDEkISjfKfAB5kdYGMtTo7uSsH+/yw6M+W0w9FxRtnifdrDh3LNaWj2Tzt
+         R5m0oPxf1CzyAG/6lEbGs+CK40kb/baUGjaDMtypxqBHeveYpxIVH6WtY9J2bRMqXPk0
+         C9zcNdb8lwUsPrPuyrhiuIEMIiV3ih+QahRe0l6QPA3eTyhwvDL/q76yFbJZeM8JHMeB
+         WlT8V4Fs1t85w3wnHnLB771telFZoV8TN4N6iB54pmIVdvc0PVdU4LfP4O3B1m+3ToNb
+         6jeA==
+X-Forwarded-Encrypted: i=1; AJvYcCU/rgFSIsxx3OYxEpFSU4vu2+DxiSRYn27dozWbSFT0ATwao177QLi0Zat8NHUxYVB2+Y/Mn4KFGr3ymRTge2Bob49q@vger.kernel.org
+X-Gm-Message-State: AOJu0YzU+rWRWnvq8r3yilkVoYkuXMwMuYrFin/RCQMO1H1O9FEGOnvr
+	xFh5XTghdRAvxwxf5FQdlxj1WrA71tetADwCHdmKSc3SdYGwbyVAiZvfsn1U26jJ
+X-Gm-Gg: ATEYQzws8Ant9Et9vajQqAhuYiC4L3YDJR72JHB48sodXyrFz+OxcuOX6/s+ms6xNCo
+	+qkL9Je5cZJ3n/QxKJf0M+RIJrBYuP7Rjiueta+EBLJDjiEHOPtjaal3WL+ny2BLPDo5Dub0K0E
+	PR2PzulXEfjh2o8j3m2bxw4aa+H+XY6KHeYAmDUjr+pgGt9xw9S7PFps46TQsjXhFjUJ6KVQf5m
+	c6Xa0pJjSbSCgZ5EPAhbWSyfECp1bVWfQO9nmUmhW/ZfflBxZ38J8KliYnXtdG8+HfUP1cYpj0e
+	7YK29Wmrg3AuCN3tg4ggZRqXsFwhIjkCnLeMzP80hGUsLbmKt3M3k9uuh/iOkApjaSzUEFlDEvU
+	L58vpyGR5GYiFZFj8ZQNk/aujcX5DIc96/rFpCpY8G9Uar3DPi0PSSgJUWxnkV1v2G6t1foelXB
+	BjA6nDVdVjLELpCpL3A/PKci/nkHv/NZJl9UMnh1Awz//36islzvjihRhZYIT1+e5X0q/25whv
+X-Received: by 2002:a17:90b:2b4e:b0:359:94af:586b with SMTP id 98e67ed59e1d1-359be3a952fmr7194499a91.33.1772981557548;
+        Sun, 08 Mar 2026 07:52:37 -0700 (PDT)
+Received: from ?IPV6:2600:1700:e321:62f0:da43:aeff:fecc:bfd5? ([2600:1700:e321:62f0:da43:aeff:fecc:bfd5])
+        by smtp.gmail.com with ESMTPSA id 98e67ed59e1d1-359c01961a4sm7919164a91.15.2026.03.08.07.52.35
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Sun, 08 Mar 2026 07:52:36 -0700 (PDT)
+Sender: Guenter Roeck <groeck7@gmail.com>
+Message-ID: <26f9b0a7-5404-48b4-a63c-cb61e7f91151@roeck-us.net>
+Date: Sun, 8 Mar 2026 07:52:34 -0700
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20260307115516.26892-1-lkml@antheas.dev>
- <20260307115516.26892-4-lkml@antheas.dev>
- <f416507304bb4c7c179109ff10bc97a2daeb7e87.camel@rong.moe>
- <CAGwozwH9+rcdqgTufBXBX+ocB9uYU==X5OciQijuFAVmX19YMw@mail.gmail.com>
- <e99134fb56ec3d660a85886626be237921950d3d.camel@rong.moe>
-In-Reply-To: <e99134fb56ec3d660a85886626be237921950d3d.camel@rong.moe>
-From: Antheas Kapenekakis <lkml@antheas.dev>
-Date: Sun, 8 Mar 2026 10:45:24 +0100
-X-Gmail-Original-Message-ID: 
- <CAGwozwF5OGcBJuTKV1XvuwotEVCR=LifsaXMqeJHxErE1=ebiA@mail.gmail.com>
-X-Gm-Features: AaiRm51t7g3EKf4opAonjpcjdCug-v4elV35ghvhKMkbMT9m7tfl8KgKYxOPfhE
-Message-ID: 
- <CAGwozwF5OGcBJuTKV1XvuwotEVCR=LifsaXMqeJHxErE1=ebiA@mail.gmail.com>
-Subject: Re: [RFC v3 3/4] platform/x86/amd: dptc: Add platform profile support
-To: Rong Zhang <i@rong.moe>
-Cc: Mario.Limonciello@amd.com, W_Armin@gmx.de, sashal@kernel.org,
-	Shyam-Sundar.S-k@amd.com, derekjohn.clark@gmail.com, denis.benato@linux.dev,
-	linux-kernel@vger.kernel.org, platform-driver-x86@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-X-PPP-Message-ID: 
- <177296313998.1815832.724883826206696812@linux3247.grserver.gr>
-X-PPP-Vhost: antheas.dev
-X-Virus-Scanned: clamav-milter 1.4.3 at linux3247.grserver.gr
-X-Virus-Status: Clean
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH 6/9] hwmon: (dell-smm) Use new buffer-based WMI API
+To: Armin Wolf <W_Armin@gmx.de>, Dell.Client.Kernel@dell.com,
+ pali@kernel.org, mjg59@srcf.ucam.org
+Cc: hansg@kernel.org, ilpo.jarvinen@linux.intel.com,
+ platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org,
+ linux-hwmon@vger.kernel.org
+References: <20260308002522.4185-1-W_Armin@gmx.de>
+ <20260308002522.4185-7-W_Armin@gmx.de>
+Content-Language: en-US
+From: Guenter Roeck <linux@roeck-us.net>
+Autocrypt: addr=linux@roeck-us.net; keydata=
+ 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
+ np3900V20aS7eD9K8GTU0TGC1pyz6IVJwIE=
+In-Reply-To: <20260308002522.4185-7-W_Armin@gmx.de>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-On Sun, 8 Mar 2026 at 10:36, Rong Zhang <i@rong.moe> wrote:
->
-> Hi Antheas,
->
-> On Sat, 2026-03-07 at 23:45 +0100, Antheas Kapenekakis wrote:
-> > On Sat, 7 Mar 2026 at 22:57, Rong Zhang <i@rong.moe> wrote:
-> > >
-> > > Hi Antheas,
-> > >
-> > > On Sat, 2026-03-07 at 12:55 +0100, Antheas Kapenekakis wrote:
-> > > > Register a platform_profile handler so the driver exposes standard
-> > > > power profiles (low-power, balanced, performance, max-power) alongside
-> > > > the manual tunable interface. max-power is only supplied when the
-> > > > performance profile's preset values are below the tunable limits.
-> > > >
-> > > > When a non-custom profile is active, parameter writes are blocked
-> > > > (-EPERM) and current_value reflects the profile's preset values.
-> > > > Selecting the "custom" profile returns control to the user for manual
-> > > > staging and committing. On resume, the active profile is automatically
-> > > > re-applied.
-> > > >
-> > > > Assisted-by: Claude:claude-opus-4-6
-> > > > Signed-off-by: Antheas Kapenekakis <lkml@antheas.dev>
-> > > > ---
-> > > >  drivers/platform/x86/amd/Kconfig |   1 +
-> > > >  drivers/platform/x86/amd/dptc.c  | 116 +++++++++++++++++++++++++++++--
-> > > >  2 files changed, 113 insertions(+), 4 deletions(-)
-> > > >
-> > > > diff --git a/drivers/platform/x86/amd/Kconfig b/drivers/platform/x86/amd/Kconfig
-> > > > index d610092467fc..41ffbd722524 100644
-> > > > --- a/drivers/platform/x86/amd/Kconfig
-> > > > +++ b/drivers/platform/x86/amd/Kconfig
-> > > > @@ -48,6 +48,7 @@ config AMD_ISP_PLATFORM
-> > > >  config AMD_DPTC
-> > > >       tristate "AMD Dynamic Power and Thermal Configuration Interface (DPTCi)"
-> > > >       depends on X86_64 && ACPI && DMI
-> > > > +     select ACPI_PLATFORM_PROFILE
-> > > >       select FIRMWARE_ATTRIBUTES_CLASS
-> > > >       help
-> > > >         Driver for AMD AGESA ALIB Function 0x0C, the Dynamic Power and
-> > > > diff --git a/drivers/platform/x86/amd/dptc.c b/drivers/platform/x86/amd/dptc.c
-> > > > index acfe9cc01bab..1f07e2e6f278 100644
-> > > > --- a/drivers/platform/x86/amd/dptc.c
-> > > > +++ b/drivers/platform/x86/amd/dptc.c
-> > > > @@ -23,6 +23,7 @@
-> > > >  #include <linux/module.h>
-> > > >  #include <linux/mutex.h>
-> > > >  #include <linux/platform_device.h>
-> > > > +#include <linux/platform_profile.h>
-> > > >  #include <linux/processor.h>
-> > > >  #include <linux/sysfs.h>
-> > > >  #include <linux/unaligned.h>
-> > > > @@ -56,8 +57,13 @@ struct dptc_param_limits {
-> > > >       u32 expanded_max;
-> > > >  };
-> > > >
-> > > > +struct dptc_profile {
-> > > > +     u32 vals[DPTC_NUM_PARAMS];      /* 0 = don't set / unstage this param */
-> > > > +};
-> > > > +
-> > > >  struct dptc_device_limits {
-> > > >       struct dptc_param_limits params[DPTC_NUM_PARAMS];
-> > > > +     struct dptc_profile profiles[PLATFORM_PROFILE_LAST];
-> > > >  };
-> > > >
-> > > >  struct dptc_param_desc {
-> > > > @@ -85,6 +91,10 @@ static const struct dptc_device_limits limits_maxhh = { .params = {
-> > > >       [DPTC_PPT_PL2_SPPT] = {  0,  4, 27,  82, 100 },
-> > > >       [DPTC_PPT_PL3_FPPT] = {  0,  4, 40,  85, 100 },
-> > > >       [DPTC_CPU_TEMP]     = { 60, 70, 95,  95, 100 },
-> > > > +}, .profiles = {
-> > > > +     [PLATFORM_PROFILE_LOW_POWER]   = { .vals = { 15, 15, 25, 0 } },
-> > > > +     [PLATFORM_PROFILE_BALANCED]    = { .vals = { 25, 27, 40, 0 } },
-> > > > +     [PLATFORM_PROFILE_PERFORMANCE] = { .vals = { 60, 63, 85, 0 } },
-> > > >  }};
-> > > >
-> > > >  /* Substring matches against boot_cpu_data.x86_model_id; order matters. */
-> > > > @@ -134,6 +144,9 @@ struct dptc_priv {
-> > > >
-> > > >       bool expanded;
-> > > >
-> > > > +     enum platform_profile_option profile;
-> > > > +     struct device *ppdev;
-> > > > +
-> > > >       enum dptc_save_mode { SAVE_SINGLE, SAVE_BULK } save_mode;
-> > > >
-> > > >       u32 staged[DPTC_NUM_PARAMS];
-> > > > @@ -269,6 +282,14 @@ static ssize_t dptc_current_value_show(struct kobject *kobj,
-> > > >
-> > > >       guard(mutex)(&dptc->lock);
-> > > >
-> > > > +     if (dptc->profile != PLATFORM_PROFILE_CUSTOM) {
-> > > > +             u32 val = dptc->dev_limits->profiles[dptc->profile].vals[ps->idx];
-> > > > +
-> > > > +             if (!val)
-> > > > +                     return sysfs_emit(buf, "\n");
-> > > > +             return sysfs_emit(buf, "%u\n", val);
-> > > > +     }
-> > > > +
-> > > >       if (!dptc->has_staged[ps->idx])
-> > > >               return sysfs_emit(buf, "\n");
-> > > >       return sysfs_emit(buf, "%u\n", dptc->staged[ps->idx]);
-> > > > @@ -287,6 +308,8 @@ static ssize_t dptc_current_value_store(struct kobject *kobj,
-> > > >       if (count == 1 && buf[0] == '\n') {
-> > > >               guard(mutex)(&dptc->lock);
-> > > >
-> > > > +             if (dptc->profile != PLATFORM_PROFILE_CUSTOM)
-> > > > +                     return -EPERM;
-> > >
-> > > It has nothing to do with permissions. I'd prefer -EBUSY.
-> >
-> > I will defer to other drivers and update if necessary based on their choices.
->
-> Here it isn't about consistency, but correctness. If something has
-> nothing to do with permissions, -EPERM is confusing. -EBUSY tells users
-> that the interface is under some other thing's (i.e., platform profile)
-> control.
+On 3/7/26 16:25, Armin Wolf wrote:
+> Use the new buffer-based WMI API to also support ACPI firmware
+> implementations that do not use ACPI buffers for returning the
+> results of a SMM call.
+> 
+> Signed-off-by: Armin Wolf <W_Armin@gmx.de>
+> ---
+>   drivers/hwmon/dell-smm-hwmon.c | 47 ++++++++++++----------------------
+>   1 file changed, 16 insertions(+), 31 deletions(-)
+> 
+> diff --git a/drivers/hwmon/dell-smm-hwmon.c b/drivers/hwmon/dell-smm-hwmon.c
+> index 038edffc1ac7..07c05a82dc26 100644
+> --- a/drivers/hwmon/dell-smm-hwmon.c
+> +++ b/drivers/hwmon/dell-smm-hwmon.c
+> @@ -12,8 +12,9 @@
+>   
+>   #define pr_fmt(fmt) KBUILD_MODNAME ": " fmt
+>   
+> -#include <linux/acpi.h>
+> +#include <linux/align.h>
+>   #include <linux/capability.h>
+> +#include <linux/compiler_attributes.h>
+>   #include <linux/cpu.h>
+>   #include <linux/ctype.h>
+>   #include <linux/delay.h>
+> @@ -36,10 +37,10 @@
+>   #include <linux/thermal.h>
+>   #include <linux/types.h>
+>   #include <linux/uaccess.h>
+> +#include <linux/unaligned.h>
+>   #include <linux/wmi.h>
+>   
+>   #include <linux/i8k.h>
+> -#include <linux/unaligned.h>
+>   
+>   #define I8K_SMM_FN_STATUS	0x0025
+>   #define I8K_SMM_POWER_STATUS	0x0069
+> @@ -232,7 +233,7 @@ static const struct dell_smm_ops i8k_smm_ops = {
+>   /*
+>    * Call the System Management Mode BIOS over WMI.
+>    */
+> -static ssize_t wmi_parse_register(u8 *buffer, u32 length, unsigned int *reg)
+> +static ssize_t wmi_parse_register(void *buffer, size_t length, unsigned int *reg)
 
-Both EBUSY and EPERM are non-ideal. I will edge towards EBUSY or
-implement the error of the other drivers if it is different as it is
-precedent.
+Later in this function:
 
-> >
-> > > To maintain readability, usually a blank line should be added after
-> > > returning early.
-> > >
-> > > >               dptc->has_staged[ps->idx] = false;
-> > > >               return count;
-> > > >       }
-> > > > @@ -297,6 +320,8 @@ static ssize_t dptc_current_value_store(struct kobject *kobj,
-> > > >
-> > > >       guard(mutex)(&dptc->lock);
-> > > >
-> > > > +     if (dptc->profile != PLATFORM_PROFILE_CUSTOM)
-> > > > +             return -EPERM;
-> > > >       min = dptc_get_min(dptc, ps->idx);
-> > > >       max = dptc_get_max(dptc, ps->idx);
-> > > >       if (val < min || (max && val > max))
-> > > > @@ -426,6 +451,8 @@ static ssize_t dptc_expanded_current_value_store(struct kobject *kobj,
-> > > >
-> > > >       guard(mutex)(&dptc->lock);
-> > > >
-> > > > +     if (dptc->profile != PLATFORM_PROFILE_CUSTOM)
-> > > > +             return -EPERM;
-> > >
-> > > IMO kstrtou32() isn't really a blocker of acquiring the mutex earlier
-> > > to prevent duplicating the same check. After all, firmware-attributes
-> > > is not a performance critical interface, and dptc_save_settings_store()
-> > > also calls sysfs_eq() with the mutex held.
-> > >
-> > > >       dptc->expanded = val;
-> > > >       /* Clear staged values: limits changed, old values may be out of range */
-> > > >       memset(dptc->has_staged, 0, sizeof(dptc->has_staged));
-> > > > @@ -594,6 +621,78 @@ static void dptc_kset_unregister(void *data)
-> > > >       kset_unregister(data);
-> > > >  }
-> > > >
-> > > > +/* Platform profile */
-> > > > +
-> > > > +static void dptc_apply_profile(struct dptc_priv *dptc,
-> > > > +                            enum platform_profile_option profile)
-> > > > +{
-> > > > +     const struct dptc_profile *pp;
-> > > > +     int i;
-> > > > +
-> > > > +     memset(dptc->has_staged, 0, sizeof(dptc->has_staged));
-> > > > +
-> > > > +     if (profile == PLATFORM_PROFILE_CUSTOM)
-> > > > +             return;
-> > > > +
-> > > > +     pp = &dptc->dev_limits->profiles[profile];
-> > > > +     for (i = 0; i < DPTC_NUM_PARAMS; i++) {
-> > > > +             if (!pp->vals[i])
-> > > > +                     continue;
-> > > > +             dptc->staged[i] = pp->vals[i];
-> > > > +             dptc->has_staged[i] = true;
-> > > > +     }
-> > > > +}
-> > > > +
-> > > > +static int dptc_pp_probe(void *drvdata, unsigned long *choices)
-> > > > +{
-> > > > +     struct dptc_priv *dptc = drvdata;
-> > > > +     int i, j;
-> > > > +
-> > > > +     set_bit(PLATFORM_PROFILE_CUSTOM, choices);
-> > > > +     for (i = 0; i < PLATFORM_PROFILE_LAST; i++) {
-> > > > +             for (j = 0; j < DPTC_NUM_PARAMS; j++) {
-> > > > +                     if (dptc->dev_limits->profiles[i].vals[j]) {
-> > > > +                             set_bit(i, choices);
-> > > > +                             break;
-> > > > +                     }
-> > > > +             }
-> > > > +     }
-> > > > +     return 0;
-> > > > +}
-> > > > +
-> > > > +static int dptc_pp_get(struct device *dev,
-> > > > +                    enum platform_profile_option *profile)
-> > > > +{
-> > > > +     struct dptc_priv *dptc = dev_get_drvdata(dev);
-> > > > +
-> > > > +     guard(mutex)(&dptc->lock);
-> > > > +
-> > > > +     *profile = dptc->profile;
-> > > > +     return 0;
-> > > > +}
-> > > > +
-> > > > +static int dptc_pp_set(struct device *dev,
-> > > > +                    enum platform_profile_option profile)
-> > > > +{
-> > > > +     struct dptc_priv *dptc = dev_get_drvdata(dev);
-> > > > +     int ret = 0;
-> > > > +
-> > > > +     guard(mutex)(&dptc->lock);
-> > > > +
-> > > > +     dptc->profile = profile;
-> > > > +     dptc_apply_profile(dptc, profile);
-> > > > +     if (profile != PLATFORM_PROFILE_CUSTOM)
-> > > > +             ret = dptc_alib_save(dptc);
-> > >
-> > > I'd prefer simply calling dptc_alib_save() in dptc_apply_profile()
-> > > since the latter already checks the profile.
-> >
-> > This way you will propagate an error because custom unstages all values.
->
-> I meant:
->
-> static int dptc_apply_profile(struct dptc_priv *dptc,
->                               enum platform_profile_option profile)
-> {
->         const struct dptc_profile *pp;
->         int i;
->
->         memset(dptc->has_staged, 0, sizeof(dptc->has_staged));
->
->         if (profile == PLATFORM_PROFILE_CUSTOM)
->                 return 0; /* You've checked this and returned early!
-> */
->
->         pp = &dptc->dev_limits->profiles[profile];
->         for (i = 0; i < DPTC_NUM_PARAMS; i++) {
->                 if (!pp->vals[i])
->                         continue;
->                 dptc->staged[i] = pp->vals[i];
->                 dptc->has_staged[i] = true;
->         }
->
->         return dptc_alib_save(dptc);
-> }
->
-> How can an error being propagated?
+         memcpy_and_pad(&value, sizeof(value), buffer + sizeof(reg_size), reg_size, 0);
 
-I missed that. I inferred your comment as suggesting to remove the `
-if (profile != PLATFORM_PROFILE_CUSTOM)` block, which would propagate
-an error. I will consider consolidating apply_profile.
+So the new code relies on pointer arithmetic on void *. This used to be invalid,
+and it seems fragile.
 
-Antheas
+>   {
+>   	__le32 value;
+>   	u32 reg_size;
+> @@ -253,7 +254,7 @@ static ssize_t wmi_parse_register(u8 *buffer, u32 length, unsigned int *reg)
+>   	return reg_size + sizeof(reg_size);
+>   }
+>   
+> -static int wmi_parse_response(u8 *buffer, u32 length, struct smm_regs *regs)
+> +static int wmi_parse_response(void *buffer, size_t length, struct smm_regs *regs)
 
-> >
-> > Antheas
-> >
-> > > > +
-> > > > +     return ret;
-> > > > +}
-> > > > +
-> > > > +static const struct platform_profile_ops dptc_pp_ops = {
-> > > > +     .probe       = dptc_pp_probe,
-> > > > +     .profile_get = dptc_pp_get,
-> > > > +     .profile_set = dptc_pp_set,
-> > > > +};
-> > > > +
-> > > >  static int dptc_resume(struct device *dev)
-> > > >  {
-> > > >       struct dptc_priv *dptc = dev_get_drvdata(dev);
-> > > > @@ -601,10 +700,14 @@ static int dptc_resume(struct device *dev)
-> > > >
-> > > >       guard(mutex)(&dptc->lock);
-> > > >
-> > > > -     if (dptc->save_mode == SAVE_SINGLE)
-> > > > +     if (dptc->profile != PLATFORM_PROFILE_CUSTOM) {
-> > > > +             dptc_apply_profile(dptc, dptc->profile);
-> > > >               ret = dptc_alib_save(dptc);
-> > > > -     else
-> > > > +     } else if (dptc->save_mode == SAVE_SINGLE) {
-> > > > +             ret = dptc_alib_save(dptc);
-> > > > +     } else {
-> > > >               ret = 0;
-> > > > +     }
-> > > >
-> > > >       if (ret)
-> > > >               dev_warn(dev, "failed to restore settings on resume: %d\n", ret);
-> > > > @@ -636,8 +739,7 @@ static int dptc_probe(struct platform_device *pdev)
-> > > >                boot_cpu_data.x86_model_id);
-> > > >
-> > > >       dptc->fw_attr_dev = device_create(&firmware_attributes_class,
-> > > > -                                       NULL, MKDEV(0, 0), NULL,
-> > > > -                                       DRIVER_NAME);
-> > > > +                                       NULL, MKDEV(0, 0), NULL, DRIVER_NAME);
-> > >
-> > > Squash the change into the previous patch.
-> > >
-> > > Thanks,
-> > > Rong
-> > >
-> > > >       if (IS_ERR(dptc->fw_attr_dev))
-> > > >               return PTR_ERR(dptc->fw_attr_dev);
-> > > >
-> > > > @@ -680,6 +782,12 @@ static int dptc_probe(struct platform_device *pdev)
-> > > >       if (ret)
-> > > >               return ret;
-> > > >
-> > > > +     dptc->profile = PLATFORM_PROFILE_CUSTOM;
-> > > > +     dptc->ppdev = devm_platform_profile_register(dev, "amd-dptc", dptc,
-> > > > +                                                  &dptc_pp_ops);
-> > > > +     if (IS_ERR(dptc->ppdev))
-> > > > +             return PTR_ERR(dptc->ppdev);
-> > > > +
-> > > >       return 0;
-> > > >  }
-> > > >
-> > >
->
+Same here.
+
+Given that those are internal functions, I don't really see the point of changing
+the parameter type.
+
+Thanks,
+Guenter
+
+>   {
+>   	unsigned int *registers[] = {
+>   		&regs->eax,
+> @@ -261,7 +262,7 @@ static int wmi_parse_response(u8 *buffer, u32 length, struct smm_regs *regs)
+>   		&regs->ecx,
+>   		&regs->edx
+>   	};
+> -	u32 offset = 0;
+> +	size_t offset = 0;
+>   	ssize_t ret;
+>   	int i;
+>   
+> @@ -273,19 +274,16 @@ static int wmi_parse_response(u8 *buffer, u32 length, struct smm_regs *regs)
+>   		if (ret < 0)
+>   			return ret;
+>   
+> -		offset += ret;
+> +		/* WMI aligns u32 integers on a 4 byte boundary */
+> +		offset = ALIGN(offset + ret, 4);
+>   	}
+>   
+> -	if (offset != length)
+> -		return -ENOMSG;
+> -
+>   	return 0;
+>   }
+>   
+>   static int wmi_smm_call(struct device *dev, struct smm_regs *regs)
+>   {
+>   	struct wmi_device *wdev = container_of(dev, struct wmi_device, dev);
+> -	struct acpi_buffer out = { ACPI_ALLOCATE_BUFFER, NULL };
+>   	u32 wmi_payload[] = {
+>   		sizeof(regs->eax),
+>   		regs->eax,
+> @@ -296,32 +294,19 @@ static int wmi_smm_call(struct device *dev, struct smm_regs *regs)
+>   		sizeof(regs->edx),
+>   		regs->edx
+>   	};
+> -	const struct acpi_buffer in = {
+> +	const struct wmi_buffer in = {
+>   		.length = sizeof(wmi_payload),
+> -		.pointer = &wmi_payload,
+> +		.data = &wmi_payload,
+>   	};
+> -	union acpi_object *obj;
+> -	acpi_status status;
+> +	struct wmi_buffer out;
+>   	int ret;
+>   
+> -	status = wmidev_evaluate_method(wdev, 0x0, DELL_SMM_LEGACY_EXECUTE, &in, &out);
+> -	if (ACPI_FAILURE(status))
+> -		return -EIO;
+> -
+> -	obj = out.pointer;
+> -	if (!obj)
+> -		return -ENODATA;
+> -
+> -	if (obj->type != ACPI_TYPE_BUFFER) {
+> -		ret = -ENOMSG;
+> -
+> -		goto err_free;
+> -	}
+> -
+> -	ret = wmi_parse_response(obj->buffer.pointer, obj->buffer.length, regs);
+> +	ret = wmidev_invoke_method(wdev, 0x0, DELL_SMM_LEGACY_EXECUTE, &in, &out);
+> +	if (ret < 0)
+> +		return ret;
+>   
+> -err_free:
+> -	kfree(obj);
+> +	ret = wmi_parse_response(out.data, out.length,  regs);
+> +	kfree(out.data);
+>   
+>   	return ret;
+>   }
 
