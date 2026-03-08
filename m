@@ -1,261 +1,310 @@
-Received: from fhigh-a2-smtp.messagingengine.com (fhigh-a2-smtp.messagingengine.com [103.168.172.153])
+Received: from mout.gmx.net (mout.gmx.net [212.227.15.15])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B015B274B46;
-	Sun,  8 Mar 2026 17:45:17 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=103.168.172.153
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 737DD227BB5;
+	Sun,  8 Mar 2026 20:02:34 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=212.227.15.15
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1772991920; cv=none; b=pJl7xnD2viDcV8RZWNtqTPoKf/hclanS947n5fcr2vwhjdkAt98pdkgQBuRz8ITLbNEP8YmgOTYXoDdWDfJNu8z0l/ehAkE4whnCy6KqPbojc4JaL5bG8IeqJLxkw4FqRCbg+LM06oKWp5x2atTZE2OKFWtCIAjkvWdNUOQsPCk=
+	t=1773000156; cv=none; b=UQpfy3PnVLlGzR7JDr+TPVq2I/v02N8frvjQdDHXgZIOb2gqlAQruyRo7jw8jPYMJGzrnUinYGLRu/35iF1zqE5lXWvHPAlmyx3cuGEbGWEp4nQz4FN11jE40UakKVTg/DXMsn8Y6AZwUE9GrJHEBTrnZngmgvtmfLVvy+gxkNQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1772991920; c=relaxed/simple;
-	bh=yrFUgIP7+VB2m83c7k5kHbOB7apeWVineCaA4kJBT5I=;
-	h=MIME-Version:Date:From:To:Cc:Message-Id:In-Reply-To:References:
-	 Subject:Content-Type; b=PpEkXM5vrZVdMTagSh4IVrACKVPajCgTCXn0OTeIdj/RRGZ5BFnc6QiulpFbddMeNCdw1ZWm5238ny9XjzdvbdLm09y9SH4ImHLYGqmTDYlFchPxWSaZGMGoCBrsU23aapxDD99LWUNvze3D+BtyB01Ztuz37SdJEVXrG2+ikgE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=squebb.ca; spf=pass smtp.mailfrom=squebb.ca; dkim=pass (2048-bit key) header.d=squebb.ca header.i=@squebb.ca header.b=M/+WkjmN; dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b=r6gUqcoh; arc=none smtp.client-ip=103.168.172.153
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=squebb.ca
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=squebb.ca
+	s=arc-20240116; t=1773000156; c=relaxed/simple;
+	bh=hX8yCnYWnHj0i6qWj2AAinoE9jeXb6HnLZTNJmXhByk=;
+	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
+	 MIME-Version; b=KtsoYjoJ5m6OlWK0k60wYbkETJ+VehIyu4UKDCpRXlhKg31515u9i79a4U2yTbCKQetXyg7XeakLvilfulKtqOmI9kIDfz3LFu/95biIICkwRfj96eeR0maLuK0H+5bc/1DeZaKGlzkx88/6NMQMrORX5Qdq88TDtxoz+abpdgI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gmx.de; spf=pass smtp.mailfrom=gmx.de; dkim=pass (2048-bit key) header.d=gmx.de header.i=w_armin@gmx.de header.b=j0cHx36v; arc=none smtp.client-ip=212.227.15.15
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gmx.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmx.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=squebb.ca header.i=@squebb.ca header.b="M/+WkjmN";
-	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="r6gUqcoh"
-Received: from phl-compute-02.internal (phl-compute-02.internal [10.202.2.42])
-	by mailfhigh.phl.internal (Postfix) with ESMTP id EA5C1140008A;
-	Sun,  8 Mar 2026 13:45:16 -0400 (EDT)
-Received: from phl-imap-08 ([10.202.2.84])
-  by phl-compute-02.internal (MEProxy); Sun, 08 Mar 2026 13:45:16 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=squebb.ca; h=cc
-	:cc:content-transfer-encoding:content-type:content-type:date
-	:date:from:from:in-reply-to:in-reply-to:message-id:mime-version
-	:references:reply-to:subject:subject:to:to; s=fm2; t=1772991916;
-	 x=1773078316; bh=2zx5exB9jHDCNoCH36/G6J4X/4kxohEZ5etYuJS51ig=; b=
-	M/+WkjmNbteN3xolkVgP6I67M1ybHCfy6aj1rZC6pU9wk9xsiTmj9LVZgKzZw3rt
-	xgcax0pKcglhTTlnHoFWcEQG9mH+MzfBp5xPVRbLoErX8+0zwXnsN6copUAXmCAl
-	3SSY8SEKZD0JetSiXEAsoElZZp4uLBXcka1E995WXRRBtDfKtIeASdDwzo5csEa3
-	OljevfQ9CQR2LHCYoqHyDF/X7eUzf9KDst09n3f8Tiz/1l2ysGSY6E6SZWloAvqV
-	xxemK5LSW9LDViMwJSeoii3LhobOtXOnnI/RNV4aJBeUi4LenJLouAIeKYDR7xCD
-	VTDf7FI/IwIQLHTx7ZLP+A==
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-	messagingengine.com; h=cc:cc:content-transfer-encoding
-	:content-type:content-type:date:date:feedback-id:feedback-id
-	:from:from:in-reply-to:in-reply-to:message-id:mime-version
-	:references:reply-to:subject:subject:to:to:x-me-proxy
-	:x-me-sender:x-me-sender:x-sasl-enc; s=fm1; t=1772991916; x=
-	1773078316; bh=2zx5exB9jHDCNoCH36/G6J4X/4kxohEZ5etYuJS51ig=; b=r
-	6gUqcohZZBJCWp736b2QhvwvvvVF244R31PCqiKOrGrMaEgnm0dLPB0gJ11zXLgL
-	XjROYXOYTXWV3SHEMbylZlZRga+ioAHmodVubmQOoHhALSxfRxqbO5N8v7p8/J+0
-	5bkL4XJ7J/SwFfsLw7N+mBz2wOaaJvqOSCXzIM963w6ZJXrrmDQBQU2+yCIuL1HD
-	ogjnDZPjZvd+Z1+ONxstgV9XoPe5ny+kFPkg7llaKqM8kVoYv5HKLwsZv4eT6ddk
-	T9vA26iASCi5wUdcJc70yzAs/9tAgFvSIP4iU8maLwDfWTOwNICDtpCI/p0tyd7Q
-	xeldNMkPj47JdVCAQRD2g==
-X-ME-Sender: <xms:rLWtac65gSKWzQ-HcFITpdXiDfber0_W_2DzOvrY6TT-fctBOjsJ3Q>
-    <xme:rLWtaYsEogfmyEWXWA5cPn1VuXGje98MVkyP9cE_rsM_58HWnnDDyK9YI2Nmgw7EG
-    wTx0XegttZg7fiCIryr87EUZ5ARDCFaiBqOwRZHyVrBv5Z1n338jQA>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeefgedrtddtgddvjeehkedvucetufdoteggodetrf
-    dotffvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdfurfetoffkrfgpnffqhgenuceu
-    rghilhhouhhtmecufedttdenucesvcftvggtihhpihgvnhhtshculddquddttddmnecujf
-    gurhepofggfffhvfevkfgjfhfutgfgsehtjeertdertddtnecuhfhrohhmpedfofgrrhhk
-    ucfrvggrrhhsohhnfdcuoehmphgvrghrshhonhdqlhgvnhhovhhosehsqhhuvggssgdrtg
-    grqeenucggtffrrghtthgvrhhnpedtffevgfethfevteduvdefleevkedtuddvlefghefg
-    ieekffejteejveffkedthfenucffohhmrghinhepkhgvrhhnvghlrdhorhhgnecuvehluh
-    hsthgvrhfuihiivgeptdenucfrrghrrghmpehmrghilhhfrhhomhepmhhpvggrrhhsohhn
-    qdhlvghnohhvohesshhquhgvsggsrdgtrgdpnhgspghrtghpthhtohepudejpdhmohguvg
-    epshhmthhpohhuthdprhgtphhtthhopegslhgvuhhnghestghhrhhomhhiuhhmrdhorhhg
-    pdhrtghpthhtohepghhrohgvtghksegthhhrohhmihhumhdrohhrghdprhgtphhtthhope
-    guvghrvghkjhhohhhnrdgtlhgrrhhksehgmhgrihhlrdgtohhmpdhrtghpthhtohepihhk
-    vghprghnhhgtsehgmhgrihhlrdgtohhmpdhrtghpthhtohepvhhishhhnhhuohgtvhesgh
-    hmrghilhdrtghomhdprhgtphhtthhopehhrghnshhgsehkvghrnhgvlhdrohhrghdprhgt
-    phhtthhopehkrggsvghlsehkvghrnhgvlhdrohhrghdprhgtphhtthhopehlvggvsehkvg
-    hrnhgvlhdrohhrghdprhgtphhtthhopehprghvvghlsehkvghrnhgvlhdrohhrgh
-X-ME-Proxy: <xmx:rLWtaRQvnMxXXCs13bauf4Z4SKTgd-fhciP6Rcjb2U_kyTi9jmQWwg>
-    <xmx:rLWtaVfc4VFyCQzKB4cB5Ojgi3rALf6IsKJKiA7y-G-8AT3DGA4HcQ>
-    <xmx:rLWtadetFGi-jLNwcwoedxJxRv7RLwtUntr9vGbyKOkeR4rW0Rxypg>
-    <xmx:rLWtaT_KWTZgqMmV8N-8H211s7xkySWdya91kG7HvxJZVnRXyUyFkg>
-    <xmx:rLWtaeLP6oigrjP0rfU98DS3AQgPS37ObvBJbTiuMrDP_XZ1GTqJZGzd>
-Feedback-ID: ibe194615:Fastmail
-Received: by mailuser.phl.internal (Postfix, from userid 501)
-	id 58B8A2CE0072; Sun,  8 Mar 2026 13:45:16 -0400 (EDT)
-X-Mailer: MessagingEngine.com Webmail Interface
+	dkim=pass (2048-bit key) header.d=gmx.de header.i=w_armin@gmx.de header.b="j0cHx36v"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=gmx.de;
+	s=s31663417; t=1773000152; x=1773604952; i=w_armin@gmx.de;
+	bh=tU5WSuU6lQeUEGa2DbWvnOAy24Q+kkPjDW6mof+dCxw=;
+	h=X-UI-Sender-Class:From:To:Cc:Subject:Date:Message-Id:In-Reply-To:
+	 References:MIME-Version:Content-Transfer-Encoding:cc:
+	 content-transfer-encoding:content-type:date:from:message-id:
+	 mime-version:reply-to:subject:to;
+	b=j0cHx36vNfgHTENP4kzu+hIKnPHkyNfvVFqzM473wW5ldXoBJ1Bb7/MmOmXQW4Qu
+	 HaCkN2NDLp1UADQCsKC52dczjMSpkv70+Hz5jf1PnPSSLZbs6UGUOXu/3lt25ZW3s
+	 s8g6CpcEJqBEJd9xSmVrtSY+uLtf7ZnGX7GlM8D2MCBwRqJMX90f+CQjtg9j7K6wk
+	 7V5Nsj0/g2ydhmNWp6IJXcCRjTrhs0P5SZCpqZJWTfpXTi4cbvOBkrvIyWCVRRn2+
+	 OpqsKUcDjtoBmhfNl8sm7RH0OPIjVDV/f7j2FT5wykbEZuDE0Au9OTJdEY8QK3zDx
+	 IpSfmr65V1kPHVL64Q==
+X-UI-Sender-Class: 724b4f7f-cbec-4199-ad4e-598c01a50d3a
+Received: from client.hidden.invalid by mail.gmx.net (mrgmx004
+ [212.227.17.190]) with ESMTPSA (Nemesis) id 1MNswE-1wJ32G10xM-00WKeN; Sun, 08
+ Mar 2026 21:02:32 +0100
+From: Armin Wolf <W_Armin@gmx.de>
+To: Dell.Client.Kernel@dell.com,
+	pali@kernel.org,
+	mjg59@srcf.ucam.org
+Cc: hansg@kernel.org,
+	ilpo.jarvinen@linux.intel.com,
+	platform-driver-x86@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	linux@roeck-us.net,
+	linux-hwmon@vger.kernel.org
+Subject: [PATCH v2 4/9] platform/x86: dell-wmi-base: Use new buffer-based WMI API
+Date: Sun,  8 Mar 2026 21:01:50 +0100
+Message-Id: <20260308200155.118950-5-W_Armin@gmx.de>
+X-Mailer: git-send-email 2.39.5
+In-Reply-To: <20260308200155.118950-1-W_Armin@gmx.de>
+References: <20260308200155.118950-1-W_Armin@gmx.de>
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-ThreadId: AkcZMBcLD6IV
-Date: Sun, 08 Mar 2026 13:44:54 -0400
-From: "Mark Pearson" <mpearson-lenovo@squebb.ca>
-To: "Rong Zhang" <i@rong.moe>, "Lee Jones" <lee@kernel.org>,
- "Pavel Machek" <pavel@kernel.org>,
- =?UTF-8?Q?Thomas_Wei=C3=9Fschuh?= <linux@weissschuh.net>,
- "Benson Leung" <bleung@chromium.org>, "Guenter Roeck" <groeck@chromium.org>,
- =?UTF-8?Q?Marek_Beh=C3=BAn?= <kabel@kernel.org>,
- "Derek J . Clark" <derekjohn.clark@gmail.com>,
- "Hans de Goede" <hansg@kernel.org>,
- =?UTF-8?Q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>,
- "Ike Panhc" <ikepanhc@gmail.com>
-Cc: "Vishnu Sankar" <vishnuocv@gmail.com>,
- "Vishnu Sankar" <vsankar@lenovo.com>, linux-kernel@vger.kernel.org,
- linux-leds@vger.kernel.org, chrome-platform@lists.linux.dev,
- "platform-driver-x86@vger.kernel.org" <platform-driver-x86@vger.kernel.org>
-Message-Id: <de19c814-c1b8-4916-a516-fdc4693d572f@app.fastmail.com>
-In-Reply-To: <baf1e52379ffaaa284a934520b377f5c68ac76a6.camel@rong.moe>
-References: <20260227190617.271388-1-i@rong.moe>
- <b1d43b71-38c1-48cb-91ae-4598ecd2f588@app.fastmail.com>
- <baf1e52379ffaaa284a934520b377f5c68ac76a6.camel@rong.moe>
-Subject: Re: [RFC PATCH 0/9] leds: Add support for hw initiated hw control trigger
- transition
-Content-Type: text/plain
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: quoted-printable
+X-Provags-ID: V03:K1:iIXXICZdEHeNLjyAxSm3PuGNIIR2WHjZYttReVBdlu7Pqq8RGgF
+ lAuA2hPOTDD3q0xeRQpY4XPSIMrfZLXMQKE9WguRAHA1acNomkTqpWNnGG0UCMsqz3xLcEH
+ N+zf2RS91dipAN8QZMnJI659A1Qbuc1M6foSWvHt86Pmq9Z3NUoMb1hnFFwd/sZz2m1a9p6
+ BLySFMt5DJ0SF+/wLnySQ==
+X-Spam-Flag: NO
+UI-OutboundReport: notjunk:1;M01:P0:YwndNc2of3g=;RWVcV+AJE9do+P50ndPWEqMpnVL
+ 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
 
+Use the new buffer-based WMI API to also support ACPI firmware
+implementations that do not use ACPI buffers for the event data.
 
+Signed-off-by: Armin Wolf <W_Armin@gmx.de>
+=2D--
+ drivers/platform/x86/dell/dell-wmi-base.c | 68 ++++++++++++-----------
+ 1 file changed, 35 insertions(+), 33 deletions(-)
 
-On Thu, Mar 5, 2026, at 7:37 AM, Rong Zhang wrote:
-> Hi Mark,
->
-> On Wed, 2026-03-04 at 15:05 -0500, Mark Pearson wrote:
->> Hi Rong,
->> 
->> On Fri, Feb 27, 2026, at 2:05 PM, Rong Zhang wrote:
->> > Hi all,
->> > 
->> > Some laptops can tune their keyboard backlight according to ambient
->> > light sensors (auto mode). This capability is essentially a hw control
->> > trigger. Meanwhile, such laptops also offer a shrotcut for cycling
->> > through brightness levels and auto mode. For example, on ThinkBook,
->> > pressing Fn+Space cycles keyboard backlight levels in the following
->> > sequence:
->> > 
->> >   1 => 2 => 0 => auto => 1 ...
->> > 
->> > Recent ThinkPad models should have similar sequence too.
->> > 
->> > However, there are some issues preventing us from using hw control
->> > trigger:
->> > 
->> > 1. We want a mechanism to tell userspace which trigger is the hw control
->> >    trigger, so that userspace can determine if auto mode is on/off or
->> >    turing it on/off programmatically without obtaining the hw control
->> >    trigger's name via other channels
->> > 2. Turing on/off auto mode via the shortcut cannot activate/deactivate
->> >    the hw control trigger, making the software state out-of-sync
->> > 3. Even with #1 resolved, deactivating the hw control trigger after
->> >    receiving the event indicating "auto => 1" has a side effect of
->> >    emitting LED_OFF, breaking the shortcut cycle
->> > 
->> > This RFC series tries to demonstrate a path on solving these issues:
->> > 
->> > - Introduce an attribute called trigger_may_offload, so that userspace
->> >    can determine:
->> >    - if the LED device supports hw control (supported => visible)
->> >    - which trigger is the hw control trigger
->> >    - if the hw control trigger is selected
->> >    - if the hw control trigger is in hw control (i.e., offloaded)
->> >      - A callback offloaded() is added so that LED triggers can report
->> >        their hw control state
->> > - Add led_trigger_notify_hw_control_changed() interface, so that LED
->> >   drivers can notify the LED core about hardware initiated hw control
->> >   state transitions. The LED core will then determine if the transition
->> >   is allowed and turning on/off the hw control trigger accordingly
->> > - Tune the logic of trigger deactivation so that it won't emit LED_OFF
->> >   when the deactivation is triggered by hardware
->> > 
->> > The last two patches are included into the RFC series to demonstrate how
->> > to utilize these interfaces to add support for auto keyboard backlight
->> > to ThinkBook. They will be submitted separately once the dust settles.
->> > 
->> > Currently no Kconfig entry is provided to disable either interface. If
->> > needed, I will add one later.
->> > 
->> > [ Summary of other approaches ]
->> > 
->> > < custom attribute >
->> > 
->> > Pros:
->> > - simplicity, KISS
->> > - no need to touch the LED core
->> > - extensible as long as it has a sensor-neutral name
->> >   - a sensor-related name could potentially lead to a mess if a future
->> >     device implements auto mode based on multiple different sensors
->> > 
->> > Cons:
->> > - must have zero influence on brightness_set[_blocking] callbacks
->> >   in order not to break triggers
->> >   - potential interference with triggers and the brightness attribute
->> > - weird semantic (an attribute other than "brightness" and "trigger"
->> >   changes the brightness)
->> > 
->> > < hw control trigger (this series) >
->> > 
->> > Pros:
->> > - mutually exclusive with other triggers (hence less chaos)
->> > - semantic correctness
->> > - acts as an aggregate switch to turn on/off auto mode even a future
->> >   device implements auto mode based on multiple different sensors
->> >   - extensibility (through trigger attributes)
->> > 
->> > Cons:
->> > - complexity
->> > 
->> > [ Previous discussion threads ]
->> > 
->> > https://lore.kernel.org/r/08580ec5-1d7b-4612-8a3f-75bc2f40aad2@app.fastmail.com
->> > 
->> > https://lore.kernel.org/r/1dbfcf656cdb4af0299f90d7426d2ec7e2b8ac9e.camel@rong.moe
->> > 
->> > Thanks,
->> > Rong
->> > 
->> > Rong Zhang (9):
->> >   leds: Load trigger modules on-demand if used as hw control trigger
->> >   leds: Add callback offloaded() to query the state of hw control
->> >     trigger
->> >   leds: cros_ec: Implement offloaded() callback for trigger
->> >   leds: turris-omnia: Implement offloaded() callback for trigger
->> >   leds: trigger: netdev: Implement offloaded() callback
->> >   leds: Add trigger_may_offload attribute
->> >   leds: trigger: Add led_trigger_notify_hw_control_changed() interface
->> >   platform/x86: ideapad-laptop: Decouple HW & cdev brightness for kbd
->> >     backlight
->> >   platform/x86: ideapad-laptop: Fully support auto kbd backlight
->> > 
->> >  .../obsolete/sysfs-class-led-trigger-netdev   |  15 ++
->> >  Documentation/ABI/testing/sysfs-class-led     |  22 ++
->> >  .../testing/sysfs-class-led-trigger-netdev    |  13 --
->> >  Documentation/leds/leds-class.rst             |  72 ++++++-
->> >  drivers/leds/led-class.c                      |  23 +++
->> >  drivers/leds/led-triggers.c                   | 176 +++++++++++++++-
->> >  drivers/leds/leds-cros_ec.c                   |   6 +
->> >  drivers/leds/leds-turris-omnia.c              |   7 +
->> >  drivers/leds/leds.h                           |   3 +
->> >  drivers/leds/trigger/ledtrig-netdev.c         |  10 +
->> >  drivers/platform/x86/lenovo/Kconfig           |   1 +
->> >  drivers/platform/x86/lenovo/ideapad-laptop.c  | 194 ++++++++++++++----
->> >  include/linux/leds.h                          |   6 +
->> >  13 files changed, 492 insertions(+), 56 deletions(-)
->> >  create mode 100644 Documentation/ABI/obsolete/sysfs-class-led-trigger-netdev
->> > 
->> > 
->> > base-commit: a75cb869a8ccc88b0bc7a44e1597d9c7995c56e5
->> > -- 
->> > 2.51.0
->> 
->> Thanks for your work on this.
->> 
->> For the series: As it's a RFC, I'm not bothering with notes on any typo's or grammer stuff.
->> 
->> Overall I think the implementation works and I understand it better from our initial discussions. Thank you for putting this together.
->> 
->> I'm not a huge fan of the term offloaded - I would lean towards just calling it hw_control (or similar). But I see it was used in the ledtrig-netdev driver so I don't feel strongly about this.
->> 
->
-> FYI, "hw control" is a historical and internal term. I used it because
-> it's used a lot in the documentation to the doc consistent. Otherwise
-> "offload(ed)" should be used. See commit 44f0fb8dfe26 ("leds: trigger:
-> netdev: rename 'hw_control' sysfs entry to 'offloaded'").
->
-> I admit that I was somewhat lost in the terminological soup and there
-> may be some room for rephrasing in my documentation and commit
-> messages.
->
-Fair enough :) I think that overrides my mild preferences.
+diff --git a/drivers/platform/x86/dell/dell-wmi-base.c b/drivers/platform/=
+x86/dell/dell-wmi-base.c
+index 4eefbade2f5e..4a7ab9fb3f81 100644
+=2D-- a/drivers/platform/x86/dell/dell-wmi-base.c
++++ b/drivers/platform/x86/dell/dell-wmi-base.c
+@@ -13,6 +13,7 @@
+=20
+ #define pr_fmt(fmt) KBUILD_MODNAME ": " fmt
+=20
++#include <linux/compiler_attributes.h>
+ #include <linux/kernel.h>
+ #include <linux/module.h>
+ #include <linux/init.h>
+@@ -408,7 +409,8 @@ static void dell_wmi_switch_event(struct input_dev **s=
+ubdev,
+ 	input_sync(*subdev);
+ }
+=20
+-static int dell_wmi_process_key(struct wmi_device *wdev, int type, int co=
+de, u16 *buffer, int remaining)
++static int dell_wmi_process_key(struct wmi_device *wdev, int type, int co=
+de, __le16 *buffer,
++				int remaining)
+ {
+ 	struct dell_wmi_priv *priv =3D dev_get_drvdata(&wdev->dev);
+ 	const struct key_entry *key;
+@@ -440,15 +442,15 @@ static int dell_wmi_process_key(struct wmi_device *w=
+dev, int type, int code, u16
+ 	} else if (type =3D=3D 0x0011 && code =3D=3D 0xe070 && remaining > 0) {
+ 		dell_wmi_switch_event(&priv->tabletswitch_dev,
+ 				      "Dell tablet mode switch",
+-				      SW_TABLET_MODE, !buffer[0]);
++				      SW_TABLET_MODE, !le16_to_cpu(buffer[0]));
+ 		return 1;
+ 	} else if (type =3D=3D 0x0012 && code =3D=3D 0x000c && remaining > 0) {
+ 		/* Eprivacy toggle, switch to "on" key entry for on events */
+-		if (buffer[0] =3D=3D 2)
++		if (le16_to_cpu(buffer[0]) =3D=3D 2)
+ 			key++;
+ 		used =3D 1;
+ 	} else if (type =3D=3D 0x0012 && code =3D=3D 0x000d && remaining > 0) {
+-		value =3D (buffer[2] =3D=3D 2);
++		value =3D (le16_to_cpu(buffer[2]) =3D=3D 2);
+ 		used =3D 1;
+ 	}
+=20
+@@ -457,24 +459,17 @@ static int dell_wmi_process_key(struct wmi_device *w=
+dev, int type, int code, u16
+ 	return used;
+ }
+=20
+-static void dell_wmi_notify(struct wmi_device *wdev,
+-			    union acpi_object *obj)
++static void dell_wmi_notify(struct wmi_device *wdev, const struct wmi_buf=
+fer *buffer)
+ {
+ 	struct dell_wmi_priv *priv =3D dev_get_drvdata(&wdev->dev);
+-	u16 *buffer_entry, *buffer_end;
+-	acpi_size buffer_size;
++	__le16 *buffer_entry, *buffer_end;
++	size_t buffer_size;
+ 	int len, i;
+=20
+-	if (obj->type !=3D ACPI_TYPE_BUFFER) {
+-		pr_warn("bad response type %x\n", obj->type);
+-		return;
+-	}
++	pr_debug("Received WMI event (%*ph)\n", (int)buffer->length, buffer->dat=
+a);
+=20
+-	pr_debug("Received WMI event (%*ph)\n",
+-		obj->buffer.length, obj->buffer.pointer);
+-
+-	buffer_entry =3D (u16 *)obj->buffer.pointer;
+-	buffer_size =3D obj->buffer.length/2;
++	buffer_entry =3D buffer->data;
++	buffer_size =3D buffer->length / 2;
+ 	buffer_end =3D buffer_entry + buffer_size;
+=20
+ 	/*
+@@ -490,12 +485,12 @@ static void dell_wmi_notify(struct wmi_device *wdev,
+ 	 * one event on devices with WMI interface version 0.
+ 	 */
+ 	if (priv->interface_version =3D=3D 0 && buffer_entry < buffer_end)
+-		if (buffer_end > buffer_entry + buffer_entry[0] + 1)
+-			buffer_end =3D buffer_entry + buffer_entry[0] + 1;
++		if (buffer_end > buffer_entry + le16_to_cpu(buffer_entry[0]) + 1)
++			buffer_end =3D buffer_entry + le16_to_cpu(buffer_entry[0]) + 1;
+=20
+ 	while (buffer_entry < buffer_end) {
+=20
+-		len =3D buffer_entry[0];
++		len =3D le16_to_cpu(buffer_entry[0]);
+ 		if (len =3D=3D 0)
+ 			break;
+=20
+@@ -508,11 +503,11 @@ static void dell_wmi_notify(struct wmi_device *wdev,
+=20
+ 		pr_debug("Process buffer (%*ph)\n", len*2, buffer_entry);
+=20
+-		switch (buffer_entry[1]) {
++		switch (le16_to_cpu(buffer_entry[1])) {
+ 		case 0x0000: /* One key pressed or event occurred */
+ 			if (len > 2)
+-				dell_wmi_process_key(wdev, buffer_entry[1],
+-						     buffer_entry[2],
++				dell_wmi_process_key(wdev, le16_to_cpu(buffer_entry[1]),
++						     le16_to_cpu(buffer_entry[2]),
+ 						     buffer_entry + 3,
+ 						     len - 3);
+ 			/* Extended data is currently ignored */
+@@ -520,22 +515,29 @@ static void dell_wmi_notify(struct wmi_device *wdev,
+ 		case 0x0010: /* Sequence of keys pressed */
+ 		case 0x0011: /* Sequence of events occurred */
+ 			for (i =3D 2; i < len; ++i)
+-				i +=3D dell_wmi_process_key(wdev, buffer_entry[1],
+-							  buffer_entry[i],
++				i +=3D dell_wmi_process_key(wdev, le16_to_cpu(buffer_entry[1]),
++							  le16_to_cpu(buffer_entry[i]),
+ 							  buffer_entry + i,
+ 							  len - i - 1);
+ 			break;
+ 		case 0x0012:
+-			if ((len > 4) && dell_privacy_process_event(buffer_entry[1], buffer_en=
+try[3],
+-								    buffer_entry[4]))
+-				/* dell_privacy_process_event has handled the event */;
+-			else if (len > 2)
+-				dell_wmi_process_key(wdev, buffer_entry[1], buffer_entry[2],
++			if (len > 4) {
++				if (dell_privacy_process_event(le16_to_cpu(buffer_entry[1]),
++							       le16_to_cpu(buffer_entry[3]),
++							       le16_to_cpu(buffer_entry[4])))
++					break;
++			}
++
++			/* dell_privacy_process_event has not handled the event */
++
++			if (len > 2)
++				dell_wmi_process_key(wdev, le16_to_cpu(buffer_entry[1]),
++						     le16_to_cpu(buffer_entry[2]),
+ 						     buffer_entry + 3, len - 3);
++
+ 			break;
+ 		default: /* Unknown event */
+-			pr_info("Unknown WMI event type 0x%x\n",
+-				(int)buffer_entry[1]);
++			pr_info("Unknown WMI event type 0x%x\n", le16_to_cpu(buffer_entry[1]))=
+;
+ 			break;
+ 		}
+=20
+@@ -821,7 +823,7 @@ static struct wmi_driver dell_wmi_driver =3D {
+ 	.id_table =3D dell_wmi_id_table,
+ 	.probe =3D dell_wmi_probe,
+ 	.remove =3D dell_wmi_remove,
+-	.notify =3D dell_wmi_notify,
++	.notify_new =3D dell_wmi_notify,
+ };
+=20
+ static int __init dell_wmi_init(void)
+=2D-=20
+2.39.5
 
-Mark
