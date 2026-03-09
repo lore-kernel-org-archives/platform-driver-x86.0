@@ -1,91 +1,105 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 83F2F3E715B;
-	Mon,  9 Mar 2026 17:11:46 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E23AB3C3C08;
+	Mon,  9 Mar 2026 17:23:13 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1773076306; cv=none; b=ivm25lRx4Mb6ld4WT8qCp1Teo0kycDZ9ZQDonQaY6ClsOzs8Eja+4deETCVWaMCVGM2byMWAdZvKHzptlMm/RLi516qFqVWW8+PBdxwurC0yjzpEwW8WC6S7F8tKQ6sWynF+ZifYTPEaaL8fzhuab98r8xiKKiu9ytftoI9ok0o=
+	t=1773076994; cv=none; b=HLd3EWSQm/n5FtwtbTBTH/8M/w9q1A4HvYtThMqXfhA6ukmVX4gfsEYYORLX21jd3RYDnHNV4AxNUR8uWVp65nlp3lp7C3uXOF8V14Clj8k1YVtyyV0tpf862tPoxNmlZEU65+eeYSb6Pj0IZ8iybWgO3orO1GqQaqzSebmiUNk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1773076306; c=relaxed/simple;
-	bh=TnPcjvTH4AeKC1qkyLrDhJZVgcEJNaHU3ank3Df4i2c=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version:Content-Type; b=Hee0x8z2Ji/psYsmyD4yA/HeWwQLcCT48YA58sWeepqvfmrvZeduUWenSroS0CwtdRsWuFxhgacyBDZrqHhw7nDVx6283dV3EytkdabAbyzBNcscPOZAzRZxFA8n8FRnh7VhUpLCd8fbq6GKeKCjS84IELawXAGyCgUP0eD8S0c=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=FUldo0Wj; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1773076994; c=relaxed/simple;
+	bh=4rOz6vSUmerTq0k7LmyDdZAnzbukgGgjBdJyWrBQ8cc=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=A2aNnUzGiZfgEff3LdR89YPuwYewG7AvuhkVKjJpe0UEg2xbdswy5RBIpWYcKTcK4jiqFEefWhHtixgOsaOKIf8R6VJ5F3Mck7odoyM7YGekH26IPaf6+M3CRSuByRpQIq1uYiZEEVu8mmIH+MA5z750WidVe1l0GfgCLPhLEpM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=knBcEnJ6; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="FUldo0Wj"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id AAC12C19423;
-	Mon,  9 Mar 2026 17:11:44 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="knBcEnJ6"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 27A60C4CEF7;
+	Mon,  9 Mar 2026 17:23:13 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1773076306;
-	bh=TnPcjvTH4AeKC1qkyLrDhJZVgcEJNaHU3ank3Df4i2c=;
-	h=From:To:Cc:Subject:Date:From;
-	b=FUldo0WjTE0QMFB6haPEUjk33WuajK4Bum8A54KazblHjfFVA28+W5WDOLSg5ncVM
-	 eeEQWh8mKG4wDhxhGpgoXz0jvRFjKNKsSQfMp6jPCepSZ0MLMrRKJ7oCaJtYju8xgt
-	 P7cFvmhWOTVQ4Zr4m+fLDmEJg8cA85iHX6Zr0DZiZdkVAX0M0HjScT0UUbsGAhhjN9
-	 QeZv1vp/H+X46O6YWuwXfizyocGo4A/gGhBymT9sUUvgvAWyHDZO+MsE3YMhz04m7O
-	 L+HDIe8syXbDq69opDlx4/ldLeM4E55auMKqr12EFd5pGptwZv0RxWD/l42McQRrV1
-	 W8aGvCXI4WW5w==
-From: "Rafael J. Wysocki" <rafael@kernel.org>
-To: Ilpo =?ISO-8859-1?Q?J=E4rvinen?= <ilpo.jarvinen@linux.intel.com>
-Cc: Robert Gerlach <khnz@gmx.de>, Hans de Goede <hansg@kernel.org>,
- LKML <linux-kernel@vger.kernel.org>, Linux ACPI <linux-acpi@vger.kernel.org>,
- platform-driver-x86@vger.kernel.org, Jonathan Woithe <jwoithe@just42.net>
-Subject:
- [PATCH v2 0/5] platform/x86: fujitsu: Bind drivers to platform devices
- instead of ACPI ones
-Date: Mon, 09 Mar 2026 18:03:02 +0100
-Message-ID: <12863082.O9o76ZdvQC@rafael.j.wysocki>
-Organization: Linux Kernel Development
+	s=k20201202; t=1773076993;
+	bh=4rOz6vSUmerTq0k7LmyDdZAnzbukgGgjBdJyWrBQ8cc=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=knBcEnJ64zpX8G5B754WiqB/pbP7C9GQk8sQoyMx2Ddz+cjqGr5S8DABc3Wyop6IJ
+	 c1OHAQ28Nr7qt49XFZErpRYjpStNz3O2LW1XSxSKzGkL3AHgYESqRC088jRlBwOpgK
+	 2dsi0Bhc3vUVDRkl8tfnAAQw9k4HANKMmJiRtbhvOhwnOkYUovZKPn5dCXvetQ4LV2
+	 kf8dnXIATK7lEP115VkdO327fUxmiAxnAhTQ0PB8+2tLTh6ZBLLgiawkdbfkRhR5/Z
+	 IV1EjkmGxAOcZzIkaJ3+HL/FEIxmvUb9mRSDeBcFow9bfP5l7hhb50uNHh/eJSbkwD
+	 PtVhPoCGMkIEg==
+Received: by pali.im (Postfix)
+	id C795B687; Mon,  9 Mar 2026 18:23:09 +0100 (CET)
+Date: Mon, 9 Mar 2026 18:23:09 +0100
+From: Pali =?utf-8?B?Um9ow6Fy?= <pali@kernel.org>
+To: Mario Limonciello <mario.limonciello@amd.com>
+Cc: Armin Wolf <W_Armin@gmx.de>, Dell.Client.Kernel@dell.com,
+	mjg59@srcf.ucam.org, hansg@kernel.org,
+	ilpo.jarvinen@linux.intel.com, platform-driver-x86@vger.kernel.org,
+	linux-kernel@vger.kernel.org, linux@roeck-us.net,
+	linux-hwmon@vger.kernel.org
+Subject: Re: [PATCH 1/9] platform/x86: dell-descriptor: Use new buffer-based
+ WMI API
+Message-ID: <20260309172309.a3ukif3bejbicywl@pali>
+References: <20260308002522.4185-1-W_Armin@gmx.de>
+ <20260308002522.4185-2-W_Armin@gmx.de>
+ <39bdcdf7-a771-4f1b-a3a0-0ecde272d914@amd.com>
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7Bit
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <39bdcdf7-a771-4f1b-a3a0-0ecde272d914@amd.com>
+User-Agent: NeoMutt/20180716
 
-Hi All,
+On Monday 09 March 2026 10:41:20 Mario Limonciello wrote:
+> On 3/7/2026 6:25 PM, Armin Wolf wrote:
+> > +	/* "DELL" */
+> > +	if (le32_to_cpu(desc->vendor_signature) != 0x4C4C4544) {
+> 
+> Do you think you could come up with a helper for matching an expected
+> "string" like this?  I /suspect/ it's going to be a common pattern that
+> vendors use and it will increase code readability going forward if a helper
+> is possible.  I see it at least twice in this patch alone.
+> 
+> Something like this prototype:
+> 
+> bool wmi_valid_signature(u32 field, const char* expected_str);
 
-This is an update of
+When I read your comment, I come to another idea. What about introducing
+a macro which will convert 4-byte string to u32 number? For example:
 
-https://lore.kernel.org/linux-acpi/1968442.tdWV9SEqCh@rafael.j.wysocki/
+  #define str_to_u32(str) ({ _Static_assert(__builtin_types_compatible_p(__typeof__(str), char[5]), "wrong type"); (u32)(u8)(str)[0] | ((u32)((u8)(str)[1]) << 8) | ((u32)((u8)(str)[2]) << 16) | ((u32)((u8)(str)[3]) << 24); })
 
-that fixes an error code path issue in patch [3/5].  That change also
-requires patch [5/5] to be modified, but the other patches are the same
-as in v1.
+The whole conversion would be done in compile time (with -O2) so should
+not cause any possible performance issues.
 
-The patch series summary below still applies.
+With it, the condition could be written as:
 
-This series is part of a larger effort to switch over all drivers using
-the struct acpi_driver interface to the more common struct platform_driver
-interface and eliminate the former.  The background is explained in
-Documentation/driver-api/acpi/acpi-drivers.rst and in the changelog of
-the patch that introduced the above document:
+  if (le32_to_cpu(desc->vendor_signature) != str_to_u32("DELL")) {
 
-https://lore.kernel.org/all/2396510.ElGaqSPkdT@rafael.j.wysocki/
+and no need to use magic number 0x4C4C4544 and write comment that this
+number in ASCII is the "DELL" string.
 
-The bottom line is that the kernel would be better off without struct
-acpi_driver and so it is better to get rid of it.
-
-This series carries out driver conversions of the platform x86 drivers
-for Fujitsu platforms.
-
-Patch [1/5] converts the fujitsu-tablet to a proper platform one based
-on the struct platform_driver interface.
-
-Patch [2/5] rearranges the code in the fujitsu-laptop driver to avoid
-introducing forward declarations of some functions in the subsequent
-patches.
-
-Patch [3/5] updates the fujitsu-laptop driver to install ACPI notify
-handlers by itself instead of using .notify() callbacks from struct
-acpi_driver, which is requisite for the driver conversion.
-
-Patches [4-5/5] replaces two instances of the struct acpi_driver
-interface in the fujitsu-laptop driver with struct platform_driver.
-
-Thanks!
-
-
-
+> 
+> > +		dev_err(&wdev->dev, "Dell descriptor buffer has invalid vendor signature (%u)\n",
+> > +			le32_to_cpu(desc->vendor_signature));
+> > +		ret = -ENOMSG;
+> >   		descriptor_valid = ret;
+> >   		goto out;
+> >   	}
+> > -	buffer = (u32 *)obj->buffer.pointer;
+> > -
+> > -	if (strncmp(obj->string.pointer, "DELL WMI", 8) != 0) {
+> > -		dev_err(&wdev->dev, "Dell descriptor buffer has invalid signature (%8ph)\n",
+> > -			buffer);
+> > -		ret = -EINVAL;
+> > +	/* " WMI" */
+> > +	if (le32_to_cpu(desc->object_signature) != 0x494D5720) {
+> > +		dev_err(&wdev->dev, "Dell descriptor buffer has invalid object signature (%u)\n",
+> > +			le32_to_cpu(desc->object_signature));
+> > +		ret = -ENOMSG;
+> >   		descriptor_valid = ret;
+> >   		goto out;
+> >   	}
