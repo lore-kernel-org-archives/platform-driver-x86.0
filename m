@@ -1,60 +1,60 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.7])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.17])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7DB5A3BFE2D;
-	Mon,  9 Mar 2026 13:00:38 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.7
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BCDFE3BED42;
+	Mon,  9 Mar 2026 14:07:06 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.17
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1773061247; cv=none; b=TgJN1KgELTjVHnp4TXbwZlqAqa2zLDmQS0qrmsmeQ6pYLUs14NpdFqyaF5uGpiLPQUqI0Xa5WvMonOn1kpD+sHXZsdmjTBHQnt09ECuzQ/eaW8dqIP8d6jDVXN/9fcXZtT0IULO0OPB5+A8jU5KE9wX8udIzhIcl2aL8wp2i+ek=
+	t=1773065228; cv=none; b=ojurA/Ea6KFXcMO6OtDQLHgPB2nIBWL6slBCxA58c08Ni8uoEFM96jAjih5moKYmsHOrGJoyisvpEsmJ6tukC+BiJd4ecOD5DduhKjMsQZq0J+6/CSIe4Y4k5pxwVKSnz0c0CHSufa0sK7I9F19DErcxXP75lWoz4EVBP4qsklU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1773061247; c=relaxed/simple;
-	bh=3TFIg0zT3ccHV8X+i3qqa/mt9RHjDBBEaeiJCi7h77I=;
+	s=arc-20240116; t=1773065228; c=relaxed/simple;
+	bh=ShIAhwVVtjh3OdHVVabqkqR3uIA8+RPqViH6SmuT9kY=;
 	h=From:Date:To:cc:Subject:In-Reply-To:Message-ID:References:
-	 MIME-Version:Content-Type; b=NUtE0dFLqYUcrNr2n4e5DY80ardVA5SUjsrkbyRGxFz/o/GOziBujGx5Ny7tb3co52V5ztoOqsy9qcb9KUN83CJXDOQdMGsFNp4oVdnZ5vbLdTq5/ZUSEPWAM1MuOi6Q8hYrNzazG/Rkadsn4gL5gNz3HsavP10auu/Ft2dGY0g=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=pass smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=CW/thMRK; arc=none smtp.client-ip=192.198.163.7
+	 MIME-Version:Content-Type; b=OrE80BOtHyLxwjzMiVss1hU2zJr5Ma1LGWMrW7Qp+/1UGnjXrnETzo/7kbF2LkhVecqCBahXEcNXstELSxn80c3ga4qPkGNk/EZa7TIOuF/iW3Lyes2FT8xBMcmBMX8fQPnCpmF8UkozBP+pyU92I3bPC9tPizZW/mnTflxEeqE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=pass smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=bb2YeIl7; arc=none smtp.client-ip=192.198.163.17
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="CW/thMRK"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="bb2YeIl7"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1773061238; x=1804597238;
+  t=1773065227; x=1804601227;
   h=from:date:to:cc:subject:in-reply-to:message-id:
    references:mime-version;
-  bh=3TFIg0zT3ccHV8X+i3qqa/mt9RHjDBBEaeiJCi7h77I=;
-  b=CW/thMRK44+/jXYUih3eL/6NMzICnoEHCSQxmksCDzob0Zu4QzoTUsbY
-   /wtNfJ8VJTAMk+6L5AEOuBToD+NTdALYgEtq5wW2jMyC/nRIoTbIK58v1
-   ddJuDxsJY1PgVKiIcX8HS8qCZpK/X+Ww7pseAEhVnX3vuv/omQ+MwQJtE
-   FvDzuzVb1FtJqjH6TjJYahKZC19giGwuy/6xjSR46Yf+8IJEMStJAz4yv
-   qvBblFEtXzXhXta990KyDxPVdeXzdtHEUJepvKfzfyLRuFA4eOGR0cvEs
-   rVmT2/qGuha4sl02ggg1ACARvEdj5ml5Q3JlqqhWnN86yXtBI3QbOtHvt
-   w==;
-X-CSE-ConnectionGUID: R5HCWKTqRGOiV+5IATf9Eg==
-X-CSE-MsgGUID: uUeGgaEcQse33qFurfYU7A==
-X-IronPort-AV: E=McAfee;i="6800,10657,11723"; a="99553422"
+  bh=ShIAhwVVtjh3OdHVVabqkqR3uIA8+RPqViH6SmuT9kY=;
+  b=bb2YeIl7/UaQA7OAUePvZ1wmtbgSdjGhdNmLckVvuwMzXsvx6Qy8NEPI
+   7DlcFOuCeYkh3+Z81Unu3+4ObTdaNnFwABeE6Tbn9dYgNAkDwvo+Fcfm/
+   fVD7CU88xmleoLrdART8438pBZ6p9lN8jw9899TFhayXnA5Ehv4H6hSJ7
+   lp0ZrwcUXkcVDkVmm5zECtyE9bBWqztWcj7dzDPsZyC3jMuBgwcG5NEdH
+   1j34lI7nxYZlcmUw8fQhweT8zRlSjjIcv2yfQumD1HxOz+kUZrMfrw4pj
+   01FyypUgUniTwL4bFqlktAana5XC3KXr2NCAVEQXOas2UsEsUmmy9Iq47
+   A==;
+X-CSE-ConnectionGUID: PsESDyQAT4+hlFRP1Dav3Q==
+X-CSE-MsgGUID: wH0+HnnQQkiOJ7WzsDuDqg==
+X-IronPort-AV: E=McAfee;i="6800,10657,11723"; a="74008256"
 X-IronPort-AV: E=Sophos;i="6.23,109,1770624000"; 
-   d="scan'208";a="99553422"
-Received: from orviesa008.jf.intel.com ([10.64.159.148])
-  by fmvoesa101.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 09 Mar 2026 06:00:37 -0700
-X-CSE-ConnectionGUID: BvK2j17KQn67v1X8CBGrOg==
-X-CSE-MsgGUID: NFNbAvXQQ4WOkDRqyxN2aQ==
+   d="scan'208";a="74008256"
+Received: from orviesa006.jf.intel.com ([10.64.159.146])
+  by fmvoesa111.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 09 Mar 2026 07:07:06 -0700
+X-CSE-ConnectionGUID: nJXXFNH9Tkiha2wn9+e6jA==
+X-CSE-MsgGUID: SBt+UGRcQi+rwoa+QbdJxg==
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="6.23,109,1770624000"; 
-   d="scan'208";a="219727916"
+   d="scan'208";a="218911885"
 Received: from ijarvine-mobl1.ger.corp.intel.com (HELO localhost) ([10.245.245.153])
-  by orviesa008-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 09 Mar 2026 06:00:35 -0700
+  by orviesa006-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 09 Mar 2026 07:07:03 -0700
 From: =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
-Date: Mon, 9 Mar 2026 15:00:31 +0200 (EET)
+Date: Mon, 9 Mar 2026 16:07:00 +0200 (EET)
 To: "Rafael J. Wysocki" <rafael@kernel.org>
-cc: Robert Gerlach <khnz@gmx.de>, Hans de Goede <hansg@kernel.org>, 
-    LKML <linux-kernel@vger.kernel.org>, 
-    Linux ACPI <linux-acpi@vger.kernel.org>, 
-    platform-driver-x86@vger.kernel.org, Jonathan Woithe <jwoithe@just42.net>
-Subject: Re: [PATCH v1 3/5] platform/x86: fujitsu: Register ACPI notify
- handlers directly
-In-Reply-To: <10828467.nUPlyArG6x@rafael.j.wysocki>
-Message-ID: <b645ebf3-6389-7255-db1c-a0322546b6dd@linux.intel.com>
-References: <1968442.tdWV9SEqCh@rafael.j.wysocki> <10828467.nUPlyArG6x@rafael.j.wysocki>
+cc: LKML <linux-kernel@vger.kernel.org>, 
+    Linux ACPI <linux-acpi@vger.kernel.org>, Hans de Goede <hansg@kernel.org>, 
+    Maximilian Luz <luzmaximilian@gmail.com>, 
+    platform-driver-x86@vger.kernel.org
+Subject: Re: [PATCH v1 2/3] platform/surface: surfacepro3_button: Register
+ ACPI notify handler
+In-Reply-To: <1881356.TLkxdtWsSY@rafael.j.wysocki>
+Message-ID: <461da326-7a86-552e-4d2e-9b7730bc1699@linux.intel.com>
+References: <2909929.BEx9A2HvPv@rafael.j.wysocki> <1881356.TLkxdtWsSY@rafael.j.wysocki>
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
@@ -63,113 +63,74 @@ List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=US-ASCII
 
-On Wed, 25 Feb 2026, Rafael J. Wysocki wrote:
+On Wed, 4 Mar 2026, Rafael J. Wysocki wrote:
 
 > From: "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>
 > 
-> To facilitate subsequent conversion of the driver to using struct
-> platform_driver instead of struct acpi_driver, make it install its ACPI
-> notify handlers directly instead of using struct acpi_driver .notify()
-> callbacks.
+> To facilitate subsequent conversion of the driver to a platform one,
+> make it install an ACPI notify handler directly instead of using
+> a .notify() callback in struct acpi_driver.
 > 
 > No intentional functional impact.
 > 
 > Signed-off-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
 > ---
->  drivers/platform/x86/fujitsu-laptop.c | 30 ++++++++++++++++++++++-----
->  1 file changed, 25 insertions(+), 5 deletions(-)
+>  drivers/platform/surface/surfacepro3_button.c | 15 +++++++++++++--
+>  1 file changed, 13 insertions(+), 2 deletions(-)
 > 
-> diff --git a/drivers/platform/x86/fujitsu-laptop.c b/drivers/platform/x86/fujitsu-laptop.c
-> index 1adce90ae3e6..cb13c06b8f35 100644
-> --- a/drivers/platform/x86/fujitsu-laptop.c
-> +++ b/drivers/platform/x86/fujitsu-laptop.c
-> @@ -502,8 +502,9 @@ static int fujitsu_backlight_register(struct acpi_device *device)
+> diff --git a/drivers/platform/surface/surfacepro3_button.c b/drivers/platform/surface/surfacepro3_button.c
+> index a6c9d4d370be..6d394daf5bc4 100644
+> --- a/drivers/platform/surface/surfacepro3_button.c
+> +++ b/drivers/platform/surface/surfacepro3_button.c
+> @@ -72,8 +72,9 @@ struct surface_button {
+>  	bool suspended;
+>  };
 >  
->  /* Brightness notify */
->  
-> -static void acpi_fujitsu_bl_notify(struct acpi_device *device, u32 event)
-> +static void acpi_fujitsu_bl_notify(acpi_handle handle, u32 event, void *data)
+> -static void surface_button_notify(struct acpi_device *device, u32 event)
+> +static void surface_button_notify(acpi_handle handle, u32 event, void *data)
 >  {
 > +	struct acpi_device *device = data;
->  	struct fujitsu_bl *priv = acpi_driver_data(device);
->  	int oldb, newb;
+>  	struct surface_button *button = acpi_driver_data(device);
+>  	struct input_dev *input;
+>  	int key_code = KEY_RESERVED;
+> @@ -227,6 +228,15 @@ static int surface_button_add(struct acpi_device *device)
+>  		goto err_free_input;
 >  
-> @@ -558,7 +559,18 @@ static int acpi_fujitsu_bl_add(struct acpi_device *device)
->  	if (ret)
->  		return ret;
+>  	device_init_wakeup(&device->dev, true);
+> +
+> +	error = acpi_dev_install_notify_handler(device, ACPI_DEVICE_NOTIFY,
+> +						surface_button_notify, device);
+> +	if (error) {
+> +		device_init_wakeup(&device->dev, false);
+> +		input_unregister_device(input);
+
+Add a new label to rollback path instead.
+
+> +		goto err_free_button;
+> +	}
+> +
+>  	dev_info(&device->dev, "%s [%s]\n", acpi_device_name(device),
+>  		 acpi_device_bid(device));
+>  	return 0;
+> @@ -242,6 +252,8 @@ static void surface_button_remove(struct acpi_device *device)
+>  {
+>  	struct surface_button *button = acpi_driver_data(device);
 >  
-> -	return fujitsu_backlight_register(device);
-> +	ret = fujitsu_backlight_register(device);
-> +	if (ret)
-> +		return ret;
-> +
-> +	return acpi_dev_install_notify_handler(device, ACPI_DEVICE_NOTIFY,
-> +					       acpi_fujitsu_bl_notify, device);
-> +}
-> +
-> +static void acpi_fujitsu_bl_remove(struct acpi_device *device)
-> +{
 > +	acpi_dev_remove_notify_handler(device, ACPI_DEVICE_NOTIFY,
-> +				       acpi_fujitsu_bl_notify);
->  }
->  
->  /* ACPI device for hotkey handling */
-> @@ -941,8 +953,9 @@ static void acpi_fujitsu_laptop_release(struct acpi_device *device)
->  	}
->  }
->  
-> -static void acpi_fujitsu_laptop_notify(struct acpi_device *device, u32 event)
-> +static void acpi_fujitsu_laptop_notify(acpi_handle handle, u32 event, void *data)
->  {
-> +	struct acpi_device *device = data;
->  	struct fujitsu_laptop *priv = acpi_driver_data(device);
->  	unsigned long flags;
->  	int scancode, i = 0;
-> @@ -1056,6 +1069,11 @@ static int acpi_fujitsu_laptop_add(struct acpi_device *device)
->  	if (ret)
->  		goto err_free_fifo;
->  
-> +	ret = acpi_dev_install_notify_handler(device, ACPI_DEVICE_NOTIFY,
-> +					      acpi_fujitsu_laptop_notify, device);
-> +	if (ret)
-> +		goto err_free_fifo;
-
-Hi Rafael,
-
-Is the rollback path still correct after adding this here?
+> +				       surface_button_notify);
+>  	device_init_wakeup(&device->dev, false);
+>  	input_unregister_device(button->input);
+>  	kfree(button);
+> @@ -257,7 +269,6 @@ static struct acpi_driver surface_button_driver = {
+>  	.ops = {
+>  		.add = surface_button_add,
+>  		.remove = surface_button_remove,
+> -		.notify = surface_button_notify,
+>  	},
+>  	.drv.pm = &surface_button_pm,
+>  };
+> 
 
 -- 
  i.
 
-> +
->  	ret = fujitsu_battery_charge_control_add(device);
->  	if (ret < 0)
->  		pr_warn("Unable to register battery charge control: %d\n", ret);
-> @@ -1074,6 +1092,9 @@ static void acpi_fujitsu_laptop_remove(struct acpi_device *device)
->  
->  	fujitsu_battery_charge_control_remove(device);
->  
-> +	acpi_dev_remove_notify_handler(device, ACPI_DEVICE_NOTIFY,
-> +				       acpi_fujitsu_laptop_notify);
-> +
->  	fujitsu_laptop_platform_remove(device);
->  
->  	kfifo_free(&priv->fifo);
-> @@ -1092,7 +1113,7 @@ static struct acpi_driver acpi_fujitsu_bl_driver = {
->  	.ids = fujitsu_bl_device_ids,
->  	.ops = {
->  		.add = acpi_fujitsu_bl_add,
-> -		.notify = acpi_fujitsu_bl_notify,
-> +		.remove = acpi_fujitsu_bl_remove,
->  		},
->  };
->  
-> @@ -1108,7 +1129,6 @@ static struct acpi_driver acpi_fujitsu_laptop_driver = {
->  	.ops = {
->  		.add = acpi_fujitsu_laptop_add,
->  		.remove = acpi_fujitsu_laptop_remove,
-> -		.notify = acpi_fujitsu_laptop_notify,
->  		},
->  };
->  
-> 
