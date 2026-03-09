@@ -1,220 +1,125 @@
-Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
+Received: from out-180.mta1.migadu.com (out-180.mta1.migadu.com [95.215.58.180])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B6D8E3B7B86
-	for <platform-driver-x86@vger.kernel.org>; Mon,  9 Mar 2026 21:13:53 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.168.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D5B2E2DC76A
+	for <platform-driver-x86@vger.kernel.org>; Mon,  9 Mar 2026 21:19:06 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=95.215.58.180
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1773090834; cv=none; b=HO2KH8rGz7Tu8XFqJPSE/Hxlqp2oawxjeS3SNZMul444tm6bSA7X4d1r0F+LulAmm4zlErL8bDcHrp69as72b3HaepmLDskupaTizBxYdFU5dohhB0MdzS7Zun7eH7dlLEg+i2iHqSu3BnCHm9HvT6NZqynUJUeZLq+ZqPIwGNc=
+	t=1773091148; cv=none; b=sE/0KwfYyGBPDdtF8PA4tjnUZcDZuPhaRKMi5Mv7hf0qg7A3RU10PWizQv6AiAGK0qSCXkauOYs9d34G2y6s39uawGBYuEaN/nWGGqWJeHDVxtu3N8PSPXDpX1vk1IbgqsyIj984i4IQdHPlloZ4jJwrIcpqyeb63+8Hi7tXCP4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1773090834; c=relaxed/simple;
-	bh=Hse/auoheHP/F3EJT+M6p+2k0KQETV70SjVAvkda0y4=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=X0706rz5l8sQb5rAtuQmUR1u2gzrRaJde1oTZUX0yUDklKB9zDUD9r1x4CrzJIFzjvHLdoo/oiV0c4/fNvtc9a6VpCXJrRo/w2PO7EFMi3gkalTKoAdIYPY+f8WUYyqR10fxWBBOtD4hGaxUYkmI/Q3NI+wtkK3ZlMv/LZx6ax4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com; spf=pass smtp.mailfrom=oss.qualcomm.com; dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b=KprJ3G0T; dkim=pass (2048-bit key) header.d=oss.qualcomm.com header.i=@oss.qualcomm.com header.b=cyFSbymc; arc=none smtp.client-ip=205.220.168.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oss.qualcomm.com
+	s=arc-20240116; t=1773091148; c=relaxed/simple;
+	bh=DmGe+WE6i417ffQf5E790g4rwEx5gkm9xAKvPM1SAPY=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=dcmAb2VcdApuuE3AKcdTR0ORxUeD0EYmjVTRA66gMNkL+fA3/flkSCZWCKtbesmh/qo9Eqhb78S+GQWX4S4Ev0LEasfgEDgRpfnhnTz+bSgh787nwWEpcSWET5sh/mOTRryvGTlTc6Mj3F5Pdnmw/vLW58RYmfjkc/lJ5WiBR0U=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=Z1l1lBQR; arc=none smtp.client-ip=95.215.58.180
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b="KprJ3G0T";
-	dkim=pass (2048-bit key) header.d=oss.qualcomm.com header.i=@oss.qualcomm.com header.b="cyFSbymc"
-Received: from pps.filterd (m0279862.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.18.1.11/8.18.1.11) with ESMTP id 629HCgmm3281678
-	for <platform-driver-x86@vger.kernel.org>; Mon, 9 Mar 2026 21:13:53 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=qualcomm.com; h=
-	cc:content-type:date:from:in-reply-to:message-id:mime-version
-	:references:subject:to; s=qcppdkim1; bh=pxaXqUQ8IgIATac/zuNxCpus
-	ECRxXly1sQuf76VmJ7g=; b=KprJ3G0TGPfMJIxHaU4Z7ND4e54DRvraRxhsgMkv
-	CKnlgOyixpDrvWLWgCHaAOJ28sywgME60xTRfFmhoT++ucXcEjrtyoH/lt2OlH2T
-	i11qrbN1HP2fErIRf3mxmmKwr+by7Lgji8ObHuvzUnlXEGuJYJxr69vwFKvQ8db5
-	+1ay472TD2p62GkfzjE2tNipV1FMUDd6vD6E8Q8q4RxFnPpfGM3JCbqeQj7HIkX/
-	UYNhHkIXI/u5u4M5DQ4fR9UIqbUtZAmtscDDuX99GOD5avNrJtjH8XtAZxDr3EMt
-	v8KPWHJC4QWOG1OSDvWstTe0Fa1ER4ptq9Z3S89voA3yzQ==
-Received: from mail-qk1-f197.google.com (mail-qk1-f197.google.com [209.85.222.197])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 4csqcyb8aw-1
-	(version=TLSv1.3 cipher=TLS_AES_128_GCM_SHA256 bits=128 verify=NOT)
-	for <platform-driver-x86@vger.kernel.org>; Mon, 09 Mar 2026 21:13:52 +0000 (GMT)
-Received: by mail-qk1-f197.google.com with SMTP id af79cd13be357-8cd827a356aso924578485a.3
-        for <platform-driver-x86@vger.kernel.org>; Mon, 09 Mar 2026 14:13:52 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=oss.qualcomm.com; s=google; t=1773090832; x=1773695632; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=pxaXqUQ8IgIATac/zuNxCpusECRxXly1sQuf76VmJ7g=;
-        b=cyFSbymcmq2o1fMBHKBFOda1z/PyihdBDl6yJ7Qss9uX0FGXYcDerN5KKg0r8qGZbg
-         iwH22KImFpEfl63fsG44jszJS+vSxnDxKpQSZphbCzDQ7qcqnKrSobg891x/TVEi5nD6
-         p14GQN+uB6MdlIyDVRpmrQ0B0Y+2pxJY9ljtCrHj8LCmIHyxppMxy0C8XdMOqmJaQvMH
-         wlpvY4Pqpx41uOk6jVOF+tS646WgkM+a0XsfCmfg3hRN8Lbu/2lidPvuQ2k81bw1Symg
-         YF0QnIqSfMUm86dDOXQOoz1b1sQqqHrJ+Z3/k0hBFBQpalvPYacdFSjkbjS+yd344b7b
-         VLsw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1773090832; x=1773695632;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-gg:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=pxaXqUQ8IgIATac/zuNxCpusECRxXly1sQuf76VmJ7g=;
-        b=DIYIe6cfrRZEtqD5wmQ+nzjbtWUlOKf4vUxDcCldi4Ie/TPfwDOQWLF55+NI4cFxd/
-         pCl3zkS67O3ksagWYjjPRWO2FuDcnT2ojDF2vCtNY+NFTxp8M/N1rBloUZaejGWhReZ5
-         wd9zbLMe8ha4UZlN5615lO9N3nJ4yVCgqhc2yQBPm2DjoML1ZimbZ3PVp0PN0rVfTFY9
-         KSq7LSxU9W1rYd6izExhBJiyZI3qLDtD5QQvvAYDQPowkYyXPcPW+fEzEl8JX7hW3rep
-         iUrlTro7y5qXuq57Kn6PxkU7msnvMXlyw+rHHdB0a/7kS4MJm9IF1GZKscj4xWILKR9B
-         Bf6w==
-X-Forwarded-Encrypted: i=1; AJvYcCXOVCuCcni+0lVHuDcEs+nvn4hqkbF7Q1xM2/L3pL0Ft/pBPeJdXXd5jeSdle1u3m7MWoBYkgApkAB3pELJFbmEsM7V@vger.kernel.org
-X-Gm-Message-State: AOJu0YxHdVfQi2ow+37a4JAz/xKOPQvESC92Yoe1j5YqeOM698MAULvU
-	cGMgzO00XxKXDM4tTvjy207d75W2yJK0Glfrgh0PbpwrxAroXDyEt/1Gvc1WVZRTYCQGYhyoRZb
-	9hTX1r7NTnRT0eL9Yeq6s6Qzx3v34KBvavWRWIcN7XVzsofblWy5p3McdwnkGfDOQkQGVdgdOp1
-	ii
-X-Gm-Gg: ATEYQzy96l9Ec+0LoT+HW1z6mG9yWSy5leQiUyXfRc2bvteL9t/qn5gHcb8lvUcmvLU
-	FhhFa6Mnu5GaV+Jh4z4Hlpu3EKiq0j090nqZffaXBjlOrRUgu+zzdZFkAoTZGXuxoti2rL+Y5oE
-	Xc/vTP99BhdryukN0YGZ49H2yNhkU9Yw8Q59zG6vWLTWkm2l8maSJZxHMTZ61F+NObWQ/aF6xUc
-	lNEHxOuxWVF8pE1j9vUS021OFTiZXty4ycrRJ33t2ic7IUP4Vw4YfzBHCxx1Lm0LvnuXKbdt3ZL
-	bLU656V7CIvPfCRr01DZVGRwo4wInGBcxHxh53M2qdIConybghf8vidF/Xh4xuP85wdO30GpmHn
-	JIxtnq5CXUAVYdyM10pEBizFakL0xDrnY1bzu+s+7/NjT1MqBl/lJxJGphFR1awuM3JN27xL2NW
-	MJv5xP4vH4uwQNkA//Q1sJPTHxvI/NPW4lWC0=
-X-Received: by 2002:a05:620a:29ca:b0:8cd:93cc:2089 with SMTP id af79cd13be357-8cd93cc283bmr138790385a.81.1773090831943;
-        Mon, 09 Mar 2026 14:13:51 -0700 (PDT)
-X-Received: by 2002:a05:620a:29ca:b0:8cd:93cc:2089 with SMTP id af79cd13be357-8cd93cc283bmr138786385a.81.1773090831486;
-        Mon, 09 Mar 2026 14:13:51 -0700 (PDT)
-Received: from umbar.lan (2001-14ba-a073-af00-264b-feff-fe8b-be8a.rev.dnainternet.fi. [2001:14ba:a073:af00:264b:feff:fe8b:be8a])
-        by smtp.gmail.com with ESMTPSA id 2adb3069b0e04-5a13d01cbfasm2322012e87.14.2026.03.09.14.13.48
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 09 Mar 2026 14:13:49 -0700 (PDT)
-Date: Mon, 9 Mar 2026 23:13:47 +0200
-From: Dmitry Baryshkov <dmitry.baryshkov@oss.qualcomm.com>
-To: Sibi Sankar <sibi.sankar@oss.qualcomm.com>
-Cc: Krzysztof Kozlowski <krzk@kernel.org>, robh@kernel.org, krzk+dt@kernel.org,
-        andersson@kernel.org, konradybcio@kernel.org,
-        bryan.odonoghue@linaro.org, ilpo.jarvinen@linux.intel.com,
-        hansg@kernel.org, conor+dt@kernel.org, linux-arm-msm@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        platform-driver-x86@vger.kernel.org
-Subject: Re: [PATCH V3 4/5] arm64: dts: qcom: x1-crd: Add Embedded controller
- node
-Message-ID: <jcjspcef7v75btwnhjzgsqndw23j3k7jyhnacxzwridjdkyize@slpzcxwyntzd>
-References: <20260308233646.2318676-1-sibi.sankar@oss.qualcomm.com>
- <20260308233646.2318676-5-sibi.sankar@oss.qualcomm.com>
- <20260309-festive-prudent-ibex-f8b601@quoll>
- <ff241b01-c7f4-433b-a822-c5cd14e3e696@oss.qualcomm.com>
- <3eaceb96-003b-47d2-9ae5-bb676dde0240@kernel.org>
- <ad3485df-5570-4631-9d6e-2f0b90a47235@oss.qualcomm.com>
+	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="Z1l1lBQR"
+X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
+	t=1773091144;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:
+	 content-transfer-encoding:content-transfer-encoding;
+	bh=mJ77ctf4/DF4Ka3YDmnuCYQeO+UWpZxArW4MNGyzckQ=;
+	b=Z1l1lBQRepUFCSU0Ga80CWHGRyv4JALTIchKFwcaUmQW22ZErksE6WzTTsPBhIlrrW+7rt
+	jK4QPORt+cxhpqW2AJDqE5BAjxSXQg9Cfu6g+Fc2LK+djo2WOVxsI+B8NUUjmfKtK4F+kV
+	ubD80zKZMx6VRKG3fMUnCi0K0uU26+s=
+From: Thorsten Blum <thorsten.blum@linux.dev>
+To: Prasanth Ksr <prasanth.ksr@dell.com>,
+	Hans de Goede <hansg@kernel.org>,
+	=?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
+Cc: Thorsten Blum <thorsten.blum@linux.dev>,
+	Dell.Client.Kernel@dell.com,
+	platform-driver-x86@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Subject: [PATCH] platform/x86: dell-wmi-sysman: Clean up security buffer helpers
+Date: Mon,  9 Mar 2026 22:18:12 +0100
+Message-ID: <20260309211811.82403-3-thorsten.blum@linux.dev>
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <ad3485df-5570-4631-9d6e-2f0b90a47235@oss.qualcomm.com>
-X-Proofpoint-Spam-Details-Enc: AW1haW4tMjYwMzA5MDE4OCBTYWx0ZWRfXzHM0t/wmc53t
- 7LHnW8lm1jBfZaENih/4oP9J2ln5W5BDoGdB8RFFvSMQqMweUShQMxEPka/jhrPkvIB2XpnlREj
- 5EHnpyO56EzXSpErUSz3Y5EVYyq+HUa0+RRbJnt5k2UG35sKxqfI6eGlrRqqBD8yoanmwusa3Nc
- T42JW/Jm5LBwynyMQZZl3/L+zF2f830x8EDDZQYFJagBV4pQE2Mj7QwUyrNFaJHM/ECxf07pT4j
- /ImHuHP99RCsctIj3rTncaEugi+SISyLIM37spO/DiB21cAJUfxJEUbuoXrbaI0SHLieY34rYFS
- 3HiWKO550V3hKEPL0MEFP+fDj2qZMwIlMRdtAaDXYDnUMUHjeNdXquyyxkMmggWg/iJ3dRmDSP1
- jULE9I8KqiVnabODn4G/mSPvJ6ne+egEBpoUIwVXDy2DJ8F2xqbn5fizriuZiqj2pUaHFfXmihA
- 7d7I0po01n/G3/aC7ng==
-X-Authority-Analysis: v=2.4 cv=QJtlhwLL c=1 sm=1 tr=0 ts=69af3811 cx=c_pps
- a=50t2pK5VMbmlHzFWWp8p/g==:117 a=xqWC_Br6kY4A:10 a=kj9zAlcOel0A:10
- a=Yq5XynenixoA:10 a=s4-Qcg_JpJYA:10 a=VkNPw1HP01LnGYTKEx00:22
- a=u7WPNUs3qKkmUXheDGA7:22 a=_K5XuSEh1TEqbUxoQ0s3:22 a=EUspDBNiAAAA:8
- a=cvBS6eF5mCKgJc5xerAA:9 a=CjuIK1q_8ugA:10 a=IoWCM6iH3mJn3m4BftBB:22
-X-Proofpoint-ORIG-GUID: CPk0HaEYOqewB0y47jflBFHf5tGLqafO
-X-Proofpoint-GUID: CPk0HaEYOqewB0y47jflBFHf5tGLqafO
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1143,Hydra:6.1.51,FMLib:17.12.100.49
- definitions=2026-03-09_06,2026-03-09_02,2025-10-01_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
- clxscore=1011 suspectscore=0 adultscore=0 spamscore=0 phishscore=0
- lowpriorityscore=0 malwarescore=0 priorityscore=1501 bulkscore=0
- impostorscore=0 classifier=typeunknown authscore=0 authtc= authcc=
- route=outbound adjust=0 reason=mlx scancount=1 engine=8.22.0-2602130000
- definitions=main-2603090188
+X-Developer-Signature: v=1; a=openpgp-sha256; l=3156; i=thorsten.blum@linux.dev; h=from:subject; bh=DmGe+WE6i417ffQf5E790g4rwEx5gkm9xAKvPM1SAPY=; b=owGbwMvMwCUWt7pQ4caZUj3G02pJDJnrLYW5VFWPJB/x7Fyc9Vv15PPXDt/Wh/za9ndhv0SB1 lnFU8b2HaUsDGJcDLJiiiwPZv2Y4VtaU7nJJGInzBxWJpAhDFycAjCR3iKG//FdL+SfHz5vz/2x SL0i98y1VAYbltUfS5e+cJ35bYq0yC6Gf9rLV3p+s1ihckGNqW+P/MXrDVJNWm+mhl0I4XKS28P 0iAMA
+X-Developer-Key: i=thorsten.blum@linux.dev; a=openpgp; fpr=1D60735E8AEF3BE473B69D84733678FD8DFEEAD4
+Content-Transfer-Encoding: 8bit
+X-Migadu-Flow: FLOW_OUT
 
-On Mon, Mar 09, 2026 at 04:21:50PM +0530, Sibi Sankar wrote:
-> 
-> On 3/9/2026 2:39 PM, Krzysztof Kozlowski wrote:
-> > On 09/03/2026 10:03, Sibi Sankar wrote:
-> > > On 3/9/2026 12:55 PM, Krzysztof Kozlowski wrote:
-> > > > On Mon, Mar 09, 2026 at 05:06:45AM +0530, Sibi Sankar wrote:
-> > > > > Add embedded controller node for Hamoa/Purwa CRDs which adds fan control,
-> > > > > temperature sensors, access to EC internal state changes and suspend
-> > > > > entry/exit notifications to the EC.
-> > > > > 
-> > > > > Signed-off-by: Sibi Sankar <sibi.sankar@oss.qualcomm.com>
-> > > > > ---
-> > > > >    arch/arm64/boot/dts/qcom/x1-crd.dtsi | 16 ++++++++++++++++
-> > > > >    1 file changed, 16 insertions(+)
-> > > > > 
-> > > > > diff --git a/arch/arm64/boot/dts/qcom/x1-crd.dtsi b/arch/arm64/boot/dts/qcom/x1-crd.dtsi
-> > > > > index ded96fb43489..29a1aeb98353 100644
-> > > > > --- a/arch/arm64/boot/dts/qcom/x1-crd.dtsi
-> > > > > +++ b/arch/arm64/boot/dts/qcom/x1-crd.dtsi
-> > > > > @@ -1042,6 +1042,16 @@ eusb6_repeater: redriver@4f {
-> > > > >    		#phy-cells = <0>;
-> > > > >    	};
-> > > > > +
-> > > > > +	embedded-controller@76 {
-> > > > > +		compatible = "qcom,hamoa-it8987-ec", "qcom,hamoa-ec";
-> > > > I don't see updates to other x1e boards, thus my arguments from v2 stay
-> > > > valid. It's wrong to call it "hamoa-ec" since only one Hamoa board has
-> > > > it. All of other Hamoa boards apparently do not have it.
-> > > 
-> > > Hey Krzysztof,
-> > > Thanks for taking time to review the series :)
-> > > 
-> > > What other Hamoa boards are you referring to? The series
-> > > mentions that the driver and bindings is meant for Qualcomm
-> > > Hamoa/Purwa/Glymur "reference" devices, so it only covers
-> > > CRD and IOT-EVK. It definitely does not cover all Hamoa boards
-> > > boards like you are assuming.
-> > hamoa-ec compatible implies that and that's something I raised in v2
-> > already. You need a specific compatible.
-> 
-> 
-> Hamoa/Glymur reference devices can have different EC MCUs
-> depending on the SKU. This introduces the need to deal with
-> possibility of quirks and bugs introduced by these differences.
-> Hamoa/Purwa CRDs and IOT EVK runs on IT8987, while Glymur
-> reference devices run on NPCX498/488. This pretty much was
-> the rationale to make the MCU part of the compatible. Anyway
-> I can keep it as qcom,hamoa-ec and qcom,glymur-ec for now
-> and add specific compatibles when we upstream those boards?
+In calculate_security_buffer(), call strlen() once and use ALIGN() to
+round up to an even size.
 
-Why do you need a generic compat at all? Glancing at the database, at
-least the following laptops seem to have similar protocol (I might be
-wrong, this is based on a very quick glance):
+In populate_security_buffer(), also avoid recomputing strlen(), rename
+the u32 pointer from 'seclen' to 'seclenp' to avoid confusion with the
+new length variable, and drop the memcpy() guard since calling it with
+size 0 is a no-op and therefore safe.
 
-acer-sfa14-11
-asus-vivobook-s-15
-asus-vivobook-s15-q5507
-asus-vivobook-s15-s5507
-honor-magicbook-art-14
-honor-mro-521
-hp-elitebook-6-g1q
-hp-omnibook-5-14-he0xxx
-lenovo-ideacentre-01q8x10
-lenovo-ideapad-slim3x-15q8x10-WCN7850
-lenovo-thinkpad-t14s-120hz-64gb
-lenovo-thinkpad-t14s
-lenovo-yoga-slim-7x
-medion-14-s1-elite-sprchrgd
-medion-14-s1-sprchrgd
-qualcomm-snapdragon-dev-kit
-tuxedo-elite-14-gen1
+Use 'const char *' for the read-only source string in both helpers.
 
-I assume that some of them might be false positives and others will use
-vendor (or device) extensions to your protocol.
+Signed-off-by: Thorsten Blum <thorsten.blum@linux.dev>
+---
+ .../dell/dell-wmi-sysman/dell-wmi-sysman.h    |  4 ++--
+ .../x86/dell/dell-wmi-sysman/sysman.c         | 20 ++++++++-----------
+ 2 files changed, 10 insertions(+), 14 deletions(-)
 
-I'd suggest implicitly using "qcom,hamoa-crd-ec" / "qcom,glymyr-crd-ec",
-because then we can use something like "asus,vivobook-s15-ec" to
-identify the EC on VivoBook S15.
-
-> 
-> > 
-> > 
-> > Best regards,
-> > Krzysztof
-
--- 
-With best wishes
-Dmitry
+diff --git a/drivers/platform/x86/dell/dell-wmi-sysman/dell-wmi-sysman.h b/drivers/platform/x86/dell/dell-wmi-sysman/dell-wmi-sysman.h
+index 817ee7ba07ca..5278a93fdaf7 100644
+--- a/drivers/platform/x86/dell/dell-wmi-sysman/dell-wmi-sysman.h
++++ b/drivers/platform/x86/dell/dell-wmi-sysman/dell-wmi-sysman.h
+@@ -189,8 +189,8 @@ void exit_bios_attr_set_interface(void);
+ int init_bios_attr_set_interface(void);
+ int map_wmi_error(int error_code);
+ size_t calculate_string_buffer(const char *str);
+-size_t calculate_security_buffer(char *authentication);
+-void populate_security_buffer(char *buffer, char *authentication);
++size_t calculate_security_buffer(const char *authentication);
++void populate_security_buffer(char *buffer, const char *authentication);
+ ssize_t populate_string_buffer(char *buffer, size_t buffer_len, const char *str);
+ int set_new_password(const char *password_type, const char *new);
+ int init_bios_attr_pass_interface(void);
+diff --git a/drivers/platform/x86/dell/dell-wmi-sysman/sysman.c b/drivers/platform/x86/dell/dell-wmi-sysman/sysman.c
+index 9dddab6c9397..aba9ef2cfc03 100644
+--- a/drivers/platform/x86/dell/dell-wmi-sysman/sysman.c
++++ b/drivers/platform/x86/dell/dell-wmi-sysman/sysman.c
+@@ -72,13 +72,9 @@ size_t calculate_string_buffer(const char *str)
+  *
+  * Currently only supported type is Admin password
+  */
+-size_t calculate_security_buffer(char *authentication)
++size_t calculate_security_buffer(const char *authentication)
+ {
+-	if (strlen(authentication) > 0) {
+-		return (sizeof(u32) * 2) + strlen(authentication) +
+-			strlen(authentication) % 2;
+-	}
+-	return sizeof(u32) * 2;
++	return sizeof(u32) * 2 + ALIGN(strlen(authentication), 2);
+ }
+ 
+ /**
+@@ -88,18 +84,18 @@ size_t calculate_security_buffer(char *authentication)
+  *
+  * Currently only supported type is PLAIN TEXT
+  */
+-void populate_security_buffer(char *buffer, char *authentication)
++void populate_security_buffer(char *buffer, const char *authentication)
+ {
++	size_t seclen = strlen(authentication);
+ 	char *auth = buffer + sizeof(u32) * 2;
+ 	u32 *sectype = (u32 *) buffer;
+-	u32 *seclen = sectype + 1;
++	u32 *seclenp = sectype + 1;
+ 
+-	*sectype = strlen(authentication) > 0 ? 1 : 0;
+-	*seclen = strlen(authentication);
++	*sectype = !!seclen;
++	*seclenp = seclen;
+ 
+ 	/* plain text */
+-	if (strlen(authentication) > 0)
+-		memcpy(auth, authentication, *seclen);
++	memcpy(auth, authentication, seclen);
+ }
+ 
+ /**
