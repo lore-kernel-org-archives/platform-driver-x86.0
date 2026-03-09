@@ -1,62 +1,59 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.18])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.16])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 77BA136CDE5;
-	Mon,  9 Mar 2026 08:04:12 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.18
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1AD8127F754
+	for <platform-driver-x86@vger.kernel.org>; Mon,  9 Mar 2026 08:18:23 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.16
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1773043454; cv=none; b=jhqPD+tWIgnpn/lP5rPRzaqLQeZvpazC1sYBgZEpkBD3/Zhd39mkcPNyAAkOqsz1bRpyUlXJOtsNt9NG3Ymx5gPKxyKauJXd9yzdEGRK9eSkaSOy8EoGJg7K0YYv4uOl5cJVrohljwzcoTWFRIKX8HcCXyd2aN0zJCfXTEYmkxc=
+	t=1773044305; cv=none; b=sxgJda11/9o9Ls5xlynCCFcL93MNa7eB8QLcmKqm92hwWBTUKipoU3ZaDR4n5tKQZHm/I/5zqTFFnEFvLfAkv3d/EUtRcgbiqwfZccIwN9t9/QMIkUlk3KveFb5rFcF1IpVaQ4MwNkBuva2t32pJlYepujRYBOZ9i9XXrV1Ufq4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1773043454; c=relaxed/simple;
-	bh=X0tGs7O6QiGQrhYYpAs9gFpBAMdmWTPYXOMZQs/6F64=;
+	s=arc-20240116; t=1773044305; c=relaxed/simple;
+	bh=QsVnZ/dKQ9V2+spbYMFmIy5EC+6S4HXM3VbyGLv7etA=;
 	h=From:Date:To:cc:Subject:In-Reply-To:Message-ID:References:
-	 MIME-Version:Content-Type; b=tkYTelF6P5cSAelWJSccNf7Xt76MG0nsbtXCqLIs89dq/1PCIph6KbeE2FDPFUBPc3V5TXSzXRwCRW4ajhch6BMCX3fYCsmhp08+68ECdYqAvX3ufRm0HU+czG3T36PI1rz7gfWN/Gl+eRe6Pfl/w3co0MO7Po0jzNKwW+0N3dA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=pass smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=cwdPXbQp; arc=none smtp.client-ip=198.175.65.18
+	 MIME-Version:Content-Type; b=jVL8cWZEslcrshfuuGb3I+C6+vXEwAyh0A2P7agGUon7YIK4jVUch61WZuxKkPIjdWidrcfqPbkczCboPXvd0rlyBYSvWEzqwOuJsBmCJI5awsp4HQwrFKFARKZre2PqkxIADMQgJ+NP6y6HJms9teJYO6qc4DTrxmtbF694m+c=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=pass smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=djpWEhD9; arc=none smtp.client-ip=198.175.65.16
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="cwdPXbQp"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="djpWEhD9"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1773043453; x=1804579453;
+  t=1773044305; x=1804580305;
   h=from:date:to:cc:subject:in-reply-to:message-id:
    references:mime-version;
-  bh=X0tGs7O6QiGQrhYYpAs9gFpBAMdmWTPYXOMZQs/6F64=;
-  b=cwdPXbQpe+6gq5ESofzLDrMFQCjRVY8dtaKJj4wmMRB/4a9HK/BJxRz2
-   rO590wh8AsU3WNY3D6+KRk5CNNdg7/uTO/z0PAx4ZQ1Kq6ueD/VvPjfno
-   bPOTrMPN6NzRmzS17ICCOFAF7QATvSunuUT8OwoUypq2ETUszrNBw0Ubu
-   lGcAZceogq5bBVynyxcXW8+5aDWfB+RU2R5jZ/m0DSUpUfhumm2SpuOzH
-   ZgrrGG8+g9apIEYvIheOP7W/epKx0ko2bOd3cculiWhEHr14bgnf+m5vN
-   Gm6mOkwV31TaL0hXt4PTYNSsBlfuOjExF/XepFHoO1JIIVU7PJhoUxTNP
-   Q==;
-X-CSE-ConnectionGUID: Q9e1zHmsRzinjPk2w2AW8A==
-X-CSE-MsgGUID: xmo4nqPxQEehP06ZFT9ubw==
-X-IronPort-AV: E=McAfee;i="6800,10657,11723"; a="74105487"
+  bh=QsVnZ/dKQ9V2+spbYMFmIy5EC+6S4HXM3VbyGLv7etA=;
+  b=djpWEhD97I4Iyi9wB/qDAioBINiDPfV/bH0XVClFE3XHrhtpIivr7T3U
+   FY0NjeFWor8L6g/rBSEvHkBdIV3yqSdOKGPGSOz3POtdxJr5ncumTzPf8
+   sj+WnGJIIEJXnsT0aM2VGKWcJF2vH9nHdplA8dW2Ydrch7mkXeSjF7+zH
+   o561WJvHgFOY+vCg37YaxzpSRLex32yCoEkhSzHh/YrLY/AS4Y/VqgxHo
+   0EyZeNrnFQDj2hEmXUXDrjBs5IdmwBFgznsgMKjfXowWSlzf1pqdTiZBM
+   skOFdSdPd3mNikLmrlzp3md+7Vty3hGDpPWfjEYzjxRKzSTNV7ubu1EzL
+   g==;
+X-CSE-ConnectionGUID: vsF8qfBmS02XZJLVyff5jg==
+X-CSE-MsgGUID: twjW/no8QB+iYJDU1hxSGQ==
+X-IronPort-AV: E=McAfee;i="6800,10657,11723"; a="74254733"
 X-IronPort-AV: E=Sophos;i="6.23,109,1770624000"; 
-   d="scan'208";a="74105487"
-Received: from orviesa004.jf.intel.com ([10.64.159.144])
-  by orvoesa110.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 09 Mar 2026 01:04:02 -0700
-X-CSE-ConnectionGUID: +L2ubFWOR3yT7PUUUDn4+A==
-X-CSE-MsgGUID: wfr1KBATQeagsjDEmfx/tg==
+   d="scan'208";a="74254733"
+Received: from orviesa006.jf.intel.com ([10.64.159.146])
+  by orvoesa108.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 09 Mar 2026 01:18:23 -0700
+X-CSE-ConnectionGUID: KWOnVxqGRQ6I6dfj4DRm6Q==
+X-CSE-MsgGUID: +h32XN0qRcmxenxZhzcQyA==
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="6.23,109,1770624000"; 
-   d="scan'208";a="224138855"
+   d="scan'208";a="218822862"
 Received: from ijarvine-mobl1.ger.corp.intel.com (HELO localhost) ([10.245.245.153])
-  by orviesa004-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 09 Mar 2026 01:03:58 -0700
+  by orviesa006-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 09 Mar 2026 01:18:20 -0700
 From: =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
-Date: Mon, 9 Mar 2026 10:03:53 +0200 (EET)
-To: Vishnu Sankar <vishnuocv@gmail.com>
-cc: Mark Pearson <mpearson-lenovo@squebb.ca>, dmitry.torokhov@gmail.com, 
-    hmh@hmh.eng.br, Hans de Goede <hansg@kernel.org>, corbet@lwn.net, 
-    derekjohn.clark@gmail.com, linux-input@vger.kernel.org, 
-    LKML <linux-kernel@vger.kernel.org>, ibm-acpi-devel@lists.sourceforge.net, 
-    linux-doc@vger.kernel.org, platform-driver-x86@vger.kernel.org, 
-    vsankar@lenovo.com
-Subject: Re: [PATCH v7 3/3] Documentation: thinkpad-acpi - Document
- doubletap_enable attribute
-In-Reply-To: <20260209063355.491189-4-vishnuocv@gmail.com>
-Message-ID: <991f8a08-7c5d-5611-7904-6c5d336a74a3@linux.intel.com>
-References: <20260209063355.491189-1-vishnuocv@gmail.com> <20260209063355.491189-4-vishnuocv@gmail.com>
+Date: Mon, 9 Mar 2026 10:18:16 +0200 (EET)
+To: Alok Tiwari <alok.a.tiwari@oracle.com>
+cc: lkundrak@v3.sk, Andy Shevchenko <andriy.shevchenko@linux.intel.com>, 
+    Hans de Goede <hansg@kernel.org>, platform-driver-x86@vger.kernel.org, 
+    alok.a.tiwarilinux@gmail.com
+Subject: Re: [PATCH] platform/olpc: olpc-xo175-ec: Fix overflow error message
+ to print inlen
+In-Reply-To: <20260307190533.3025563-1-alok.a.tiwari@oracle.com>
+Message-ID: <3a9bcb9f-b38d-1d9d-c1e5-211538aee5e8@linux.intel.com>
+References: <20260307190533.3025563-1-alok.a.tiwari@oracle.com>
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
@@ -65,17 +62,30 @@ List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=US-ASCII
 
-On Mon, 9 Feb 2026, Vishnu Sankar wrote:
+On Sat, 7 Mar 2026, Alok Tiwari wrote:
 
-> Document the doubletap_enable sysfs attribute for ThinkPad ACPI driver.
+> The command length check validates inlen (> 5), but the error message
+> incorrectly printed resp_len. Print inlen so the log reflects the
+> actual command length.
 > 
-> Signed-off-by: Vishnu Sankar <vishnuocv@gmail.com>
+> Signed-off-by: Alok Tiwari <alok.a.tiwari@oracle.com>
 > ---
+>  drivers/platform/olpc/olpc-xo175-ec.c | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+> 
+> diff --git a/drivers/platform/olpc/olpc-xo175-ec.c b/drivers/platform/olpc/olpc-xo175-ec.c
+> index fa7b3bda688a..bee271a4fda1 100644
+> --- a/drivers/platform/olpc/olpc-xo175-ec.c
+> +++ b/drivers/platform/olpc/olpc-xo175-ec.c
+> @@ -482,7 +482,7 @@ static int olpc_xo175_ec_cmd(u8 cmd, u8 *inbuf, size_t inlen, u8 *resp,
+>  	dev_dbg(dev, "CMD %x, %zd bytes expected\n", cmd, resp_len);
+>  
+>  	if (inlen > 5) {
+> -		dev_err(dev, "command len %zd too big!\n", resp_len);
+> +		dev_err(dev, "command len %zd too big!\n", inlen);
+>  		return -EOVERFLOW;
 
-> +        * 1 - doubletap events are processed (default)
-> +	* 0 - doubletap events are filtered out (ignored)
-
-There's something odd in space vs tab here.
+Wouldn't a Fixes tag be in order for this?
 
 -- 
  i.
