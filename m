@@ -1,232 +1,173 @@
-Received: from mail-lf1-f47.google.com (mail-lf1-f47.google.com [209.85.167.47])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D3D9641C310
-	for <platform-driver-x86@vger.kernel.org>; Tue, 10 Mar 2026 11:55:18 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=209.85.167.47
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1773143720; cv=pass; b=GWfgC0I/HTVad/8MqxNnqpfwDrO76UJdg2z5TXliFZ/3SquPGYBCX8P6F4gBy/mnlyWi+3fr/uEhum25XkYkapJVfuaOm2lDJfCy48XJliT0UfBmxVkNpzp9XdGsiZCm1JttFJ1y5tzFVZfTui8ZDwJEIRfXAZz+ir71BDoZX24=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1773143720; c=relaxed/simple;
-	bh=KJ34G7jXVW6vaVlUYzHj+z8DcGKlvG+6o58Yti9Gnh4=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=AYDZeKD9819l6gVmeYxqzRBBgmtgTuPdokfN+a8dbsNFHLbVJS1fJn+DLHT5CWyCUCoVknhoWPz9Ur0Pxpacz6PnzUTIHT/oN74oZcQopGL/JGpTljwcEs1HYQqun+WMY0Qfh18S5eDXdlxmmL9m+0AV86p0sgI6/LY7LCKCqsQ=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=X6wKgHzv; arc=pass smtp.client-ip=209.85.167.47
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 879674218B4;
+	Tue, 10 Mar 2026 12:01:23 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1773144083; cv=none; b=T4gP7YCZTgiWX1MAiNjYn8QdDpoHmd0SAj/jdRY6iKa2PDIbjUE4InU8/eb+e/RpRaT+vKSPE9fInqYH9vA14ewjWa9PjrWAG+IGy5ah1m35Qzn0zjy8Rq6EDlKY2oSfRa64dTsvAkWVK0LUQTHpyPsoynPtbo/bk9QZqcNDSbY=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1773144083; c=relaxed/simple;
+	bh=nX4GFlS7Ni6Bek7pIiBiRr7Oo8oPZgdFTHwAGugHpVk=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=LVe7cSdEbwZA6Jht9daSgetJPCW9ML2rrxupamaK3NV0PpS05iBRrvsLLI9AduiJKcV58und8zz1nCC0QXYV4e5KZFntxpCNK19JE0+nkcklI9IsLe/OoOHe7QpoQjm+p18052rVxlPAlk5uBYH/jvw+q+iP4A+/K9PliZc75BY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=MLnbEsoq; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="X6wKgHzv"
-Received: by mail-lf1-f47.google.com with SMTP id 2adb3069b0e04-5a12cd0bcd8so7455947e87.3
-        for <platform-driver-x86@vger.kernel.org>; Tue, 10 Mar 2026 04:55:18 -0700 (PDT)
-ARC-Seal: i=1; a=rsa-sha256; t=1773143717; cv=none;
-        d=google.com; s=arc-20240605;
-        b=I8vOwmu2JaA0qxxPPLgMHm5q7+OI73fkdfPVux1E9LM0efX7WmBXQ2UAnnlLgVduiV
-         0AH5Cp10k3YRE3e4Gy3hby0LtzorqiNVdlBIdTSHQKXdc7NyfK3NhILHbX2Tm9cqaGzC
-         s6BKwGlarTx0VGkaaO7M9FzBkyd5wQA0gIAEq+OLND5Hl9WxlA/ICQagI2snBZjEMU1h
-         +rNBcg5VdTVRVbc58yIstXFp1LhFBnBShgPJeVcVMR8DdwfiSSfxoahHNBLECS4eDR2f
-         aezfGC943i5CLumrkM7V3Adp6lLwfA2ZwG16hYz7TWVCvmZfgtGzZc8RZrCNB99Wpzb8
-         F7ZQ==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20240605;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:dkim-signature;
-        bh=W70+Vn6PejFfPeY6VWdAiMcWtVOjKl21UuQnq+3EYxE=;
-        fh=vEPli+MIlHs84zOt+64piQZffyeD3APYuO2wBnljCiA=;
-        b=e0zVHRI/e/C9bOavCA4CeMeeRBDWSt6jLDK72r5tgrxfoxiy6LZWmO3uolhbLzq1yX
-         JN0omZvNg5TLr49T3Dy4QmMC/+QY7snuOI34epu8F836lZ6JTPoFY51jJeX42V0Zq38f
-         lphF58AYbcvsCS3rN2j6lZaHhmqHwFLh68mMRJv234axmfieLCL5H0IGfiyKwZTXVphn
-         a67R10vhdgyllgn3/wRPRp7eKR1N5tcv3h18/rXF2o83MTMll8n8O6Q7sOFCKUfYgsgb
-         IQBnuAMuP4gUZD4n84rWpbTYulHi7dzcPzlRBWc02kMyMUvISIyKVjQVrohWQmXqN4AG
-         9ZUg==;
-        darn=vger.kernel.org
-ARC-Authentication-Results: i=1; mx.google.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1773143717; x=1773748517; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=W70+Vn6PejFfPeY6VWdAiMcWtVOjKl21UuQnq+3EYxE=;
-        b=X6wKgHzvGfZjbb1VVXQ4DqgxIlVZOJBD9U1LIvi4mW/O5C0P62KEy9HGblhr0BMtAM
-         npdmJAQ9sUaSzeKYQ1R7qXnh++b6/ua7hVl4hFVp1dmMq8r0++Oqq097Q+rF1V+u8b9f
-         otHVbs4H/CtAwLry9pjvlj4kY9oYBtNTzCy+mYpoBhik9xRHRdfm60SKlML/GENR9IM4
-         0BfEP69xzxRmg967Xb0piwhVLFux37sZJGAPweJxGVy4HgQqwuCrKwgyKqaSdxhMgwXH
-         5173A89GAwer+msqJZPK8tcuJETMTkmYKmMTjILAFDieO4nk2vyjiSx06I3cHXOR3ytA
-         0/QQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1773143717; x=1773748517;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-gg:x-gm-message-state:from
-         :to:cc:subject:date:message-id:reply-to;
-        bh=W70+Vn6PejFfPeY6VWdAiMcWtVOjKl21UuQnq+3EYxE=;
-        b=actj7k9NYkOSHDXjKSkX33/fNCJT2qT6+lkRSOFBWvEf8BXmtbdH4TSp3/pHYsXcsk
-         Yjg4T4ti+2n6eXuBY6ukzGa6rNGPjgSaSzK4SwK8Z//FnmnAyQ951gfrZ/OE7yDq/y4U
-         uUO/SkOjCSCSYPYIS7vZAZ909iEQXz+Wfqyt5mZA+/LM2po828AbYDKawBxZLemwqs9j
-         +rihMjaYSG0qdFaVzjf0J7eX34m/wsbOQza/iol+dOywJs6MOpV+y5njoQ8m9WkKbeem
-         8/JrlXSa2PqOG/AChlxBEkgBWnu1bpIMZGPAM/GD0P9nklh1MeLTHup2YcsC4tgERokN
-         7TaA==
-X-Forwarded-Encrypted: i=1; AJvYcCWudXFzxaXqAtyyvsnOSU8Maegn/l1u3Kr8vNh3h8zQGQea5gj2obhqN/urMXlKUjvAq1DNXnREPUOBejIejyhmsGeh@vger.kernel.org
-X-Gm-Message-State: AOJu0YywLyFA0x9+S3WGM+kXOtKwymiS5IisLtlw5ffXMplG63L30s1b
-	cImDbQOHSkKVMKrbCv37LivuCipkHncg6XnYO05gU7mICaOjnbel4g2lIOeGAbci+CQnLftpYG2
-	4YoXTiIuVkW/Qh8MjCtC1QDfrSwgaNKYMCx1pxGx+MKWz
-X-Gm-Gg: ATEYQzymcTguZtC3A3U3UeVteYJ5HWNnMvsxfgPGb+RVRVWetD+/qptEEfsbsfWgSYI
-	r4tWb9WTzGregNCgX3zaFUdyUpS+OG7rcn1/526JncQaYdGCnruHvUawV4THlQacDKrWEPPGX3W
-	mXptpu6n4b7u70r039o508Td+RjyIeT0SkjV27vL3n9CRdzv7e+zFNDJkteZ/zBmLg3kJAqv5cd
-	Ew7Q7CPUtEhcYrZsTl+aa4sFp7xK+zHE68jVTD/1oK0Oxa1QzIjbcZnoHeD3K6pyajAOsLMY7bp
-	/GDp4rU=
-X-Received: by 2002:a05:6512:6c8:b0:5a1:18f0:930b with SMTP id
- 2adb3069b0e04-5a13cd1c912mr4967420e87.42.1773143716734; Tue, 10 Mar 2026
- 04:55:16 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="MLnbEsoq"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id B556AC2BC86;
+	Tue, 10 Mar 2026 12:01:19 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1773144083;
+	bh=nX4GFlS7Ni6Bek7pIiBiRr7Oo8oPZgdFTHwAGugHpVk=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=MLnbEsoqYe5qelfPHe3UykmjiVJIgvLVC0hIikqjaIkedf7ztMnEM15m95zTKVHzi
+	 x7LJaHe/9g0UxfDtOju+/t7CM7VfaQgJYOPktJOfBCR+823kkzg5Q2e1E23+tc8NiF
+	 rFTb4bxQPT3QaV36mMYaYDbJacgqDXTcmuUsnXTh/v3Yb/PjyjODXkwcqJqgM2a6xm
+	 FpLSd3ipJNZwiD5ynnhWoIspP8NKOt4WvJSDMi52eUyZLw+e18aSDm6jALrkWB93TG
+	 GQDjEl4tST4BEQtyqaXr04yyTVJMmYukoW3jLMgrQt0cb6yMrSmsEDJ2wdxpc4zFyG
+	 zfJhaeQCrU5Ug==
+Date: Tue, 10 Mar 2026 12:01:16 +0000
+From: Lee Jones <lee@kernel.org>
+To: Rong Zhang <i@rong.moe>
+Cc: Pavel Machek <pavel@kernel.org>,
+	Thomas =?iso-8859-1?Q?Wei=DFschuh?= <linux@weissschuh.net>,
+	Benson Leung <bleung@chromium.org>,
+	Guenter Roeck <groeck@chromium.org>,
+	Marek =?iso-8859-1?Q?Beh=FAn?= <kabel@kernel.org>,
+	Mark Pearson <mpearson-lenovo@squebb.ca>,
+	"Derek J. Clark" <derekjohn.clark@gmail.com>,
+	Hans de Goede <hansg@kernel.org>,
+	Ilpo =?iso-8859-1?Q?J=E4rvinen?= <ilpo.jarvinen@linux.intel.com>,
+	Ike Panhc <ikepanhc@gmail.com>, Vishnu Sankar <vishnuocv@gmail.com>,
+	vsankar@lenovo.com, linux-kernel@vger.kernel.org,
+	linux-leds@vger.kernel.org, chrome-platform@lists.linux.dev,
+	platform-driver-x86@vger.kernel.org
+Subject: Re: [RFC PATCH 1/9] leds: Load trigger modules on-demand if used as
+ hw control trigger
+Message-ID: <20260310120116.GI183676@google.com>
+References: <20260227190617.271388-1-i@rong.moe>
+ <20260227190617.271388-2-i@rong.moe>
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20260209063355.491189-1-vishnuocv@gmail.com> <20260209063355.491189-2-vishnuocv@gmail.com>
- <fdd1d48e-61b7-2543-8a30-c7ad416f5dd3@linux.intel.com> <CABxCQKtf=RYrpgnbM0ODo3GA0oW3jgR=_erc9RCD6gEasasA+A@mail.gmail.com>
- <0df2daf8-31ee-4fe3-fc38-de138b302549@linux.intel.com> <CABxCQKt_1Hv2hPDpzQQ3TxFJWbRNHs-vRDi9hNhBq4oaoGkt3w@mail.gmail.com>
- <8216aaaf-bdaa-2a48-a7de-b0b81d49eda5@linux.intel.com>
-In-Reply-To: <8216aaaf-bdaa-2a48-a7de-b0b81d49eda5@linux.intel.com>
-From: Vishnu Sankar <vishnuocv@gmail.com>
-Date: Tue, 10 Mar 2026 20:54:40 +0900
-X-Gm-Features: AaiRm53Z7FInzVa7AHviwaQEjkqy6ucSeO9srFBPc2Ymkf_rnYJvGp7zbxxDC7Q
-Message-ID: <CABxCQKsWtmM5zJDKM35WL_bvi=01QLT0ot5fidH-9yZ70_Q5cw@mail.gmail.com>
-Subject: Re: [PATCH v7 1/3] input: trackpoint - Enable doubletap by default on
- capable devices
-To: =?UTF-8?Q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
-Cc: Mark Pearson <mpearson-lenovo@squebb.ca>, dmitry.torokhov@gmail.com, hmh@hmh.eng.br, 
-	Hans de Goede <hansg@kernel.org>, corbet@lwn.net, derekjohn.clark@gmail.com, 
-	linux-input@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>, 
-	ibm-acpi-devel@lists.sourceforge.net, linux-doc@vger.kernel.org, 
-	platform-driver-x86@vger.kernel.org, vsankar@lenovo.com
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20260227190617.271388-2-i@rong.moe>
 
-Hi Ilpo,
+On Sat, 28 Feb 2026, Rong Zhang wrote:
 
-Thanks again.
+> In the following patches, we are about to support hardware initiated
 
-On Tue, Mar 10, 2026 at 6:30=E2=80=AFPM Ilpo J=C3=A4rvinen
-<ilpo.jarvinen@linux.intel.com> wrote:
->
-> On Tue, 10 Mar 2026, Vishnu Sankar wrote:
->
-> > Hi Ilpo,
-> >
-> > Thank you.
-> >
-> > On Tue, Mar 10, 2026 at 6:15=E2=80=AFPM Ilpo J=C3=A4rvinen
-> > <ilpo.jarvinen@linux.intel.com> wrote:
-> > >
-> > > On Tue, 10 Mar 2026, Vishnu Sankar wrote:
-> > >
-> > > > Hi Ilpo,
-> > > >
-> > > > Thank you so much for the review.
-> > > >
-> > > > On Mon, Mar 9, 2026 at 5:01=E2=80=AFPM Ilpo J=C3=A4rvinen
-> > > > <ilpo.jarvinen@linux.intel.com> wrote:
-> > > > >
-> > > > > On Mon, 9 Feb 2026, Vishnu Sankar wrote:
-> > > > >
-> > > > > > Enable doubletap functionality by default on TrackPoint devices=
- that
-> > > > > > support it. The feature is detected using firmware ID pattern m=
-atching
-> > > > > > (PNP: LEN03xxx) with a deny list of incompatible devices.
-> > > > > >
-> > > > > > This provides immediate doubletap functionality without requiri=
-ng
-> > > > > > userspace configuration. The hardware is enabled during device
-> > > > > > detection, while event filtering continues to be handled by the
-> > > > > > thinkpad_acpi driver as before.
-> > > > > >
-> > > > > > Signed-off-by: Vishnu Sankar <vishnuocv@gmail.com>
-> > > > > > Suggested-by: Mark Pearson <mpearson-lenovo@squebb.ca>
-> > > > > > Acked-by: Dmitry Torokhov <dmitry.torokhov@gmail.com>
-> > > > > > ---
-> > > > > > Changes in v7:
-> > > > > > - Removed unwanted comments
-> > > > > > - Removed psmouse_info ()
-> > > > > >
-> > > > > > Changes in v6:
-> > > > > > - No Changes
-> > > > > >
-> > > > > > Changes in v5:
-> > > > > > - Renamed function to trackpoint_is_dt_capable()
-> > > > > > - Simplified string comparison without sscanf()
-> > > > > > - Removed wrapper function as suggested
-> > > > > > - Fixed missing period in comment
-> > > > > >
-> > > > > > Changes in v4:
-> > > > > > - Simplified approach: removed all sysfs attributes and user in=
-terface
-> > > > > > - Enable doubletap by default during device detection
-> > > > > > - Removed global variables and complex attribute infrastructure
-> > > > > > - Uses minimal firmware ID detection with deny list
-> > > > > > - Follows KISS principle as suggested by reviewers
-> > > > > >
-> > > > > > Changes in v3:
-> > > > > > - No changes
-> > > > > >
-> > > > > > Changes in v2:
-> > > > > > - Improve commit messages
-> > > > > > - Sysfs attributes moved to trackpoint.c
-> > > > > > - Removed unnecessary comments
-> > > > > > - Removed unnecessary debug messages
-> > > > > > - Using strstarts() instead of strcmp()
-> > > > > > - is_trackpoint_dt_capable() modified
-> > > > > > - Removed _BIT suffix and used BIT() define
-> > > > > > - Reverse the trackpoint_doubletap_status() logic to return err=
-or first
-> > > > > > - Removed export functions as a result of the design change
-> > > > > > - Changed trackpoint_dev->psmouse to parent_psmouse
-> > > > > > - The path of trackpoint.h is not changed
-> > > > > > ---
-> > > > > >  drivers/input/mouse/trackpoint.c | 45 ++++++++++++++++++++++++=
-++++++++
-> > > > > >  drivers/input/mouse/trackpoint.h |  5 ++++
-> > > > > >  2 files changed, 50 insertions(+)
-> > > > > >
-> > >
-> > > > > > diff --git a/drivers/input/mouse/trackpoint.c b/drivers/input/m=
-ouse/trackpoint.c
-> > > > > > index 5f6643b69a2c..e12d76350252 100644
-> > > > > > --- a/drivers/input/mouse/trackpoint.c
-> > > > > > +++ b/drivers/input/mouse/trackpoint.c
-> > >
-> > > > > > +     /* Must start with "PNP: LEN03" */
-> > > > > > +     if (!strstarts(pnp_id, "PNP: LEN03"))
-> > > > >
-> > > > > Missing include.
-> > > >
-> > > > Sorry, I am a bit confused here:
-> > > > strstarts() is already available through the existing
-> > > > #include <linux/string.h> in thinkpad_acpi.c.
-> > > >
-> > > > Do you think I should do anything else here?
-> > >
-> > > Yes.
-> > >
-> > > The file you're modifying in this patch is trackpoint.c which doesn't
-> > > have that include so please add it also there. :-)
-> > Aaah, Sorry!!. Got it.
-> > I=E2=80=99ll add the missing #include <linux/string.h>
-> > Thank you for pointing it out.
->
-> Thanks. Please also double check you added inux/array_size.h into the
-> correct file in case you were confused what file this patch modifies.
-Thanks, and yes =E2=80=94 I got mixed up earlier and checked the includes i=
-n
-the wrong file, which led to my confusion.
-Sorry about that.
->
-> --
->  i.
+Let's not talk about other commits.  Only tell us what's happening here.
+
+> trigger transitions to/from the device's hw control trigger. In case
+> the LED hardware switches itself to hw control mode, hw control trigger
+> must be loaded before so that the transition can be processed.
+> 
+> Load the trigger module specified by hw_control_trigger, so that
+> hardware initiated trigger transitions can be processed when the hw
+
+"hardware"
+
+> control trigger is compiled as a module.
+> 
+> Signed-off-by: Rong Zhang <i@rong.moe>
+> ---
+>  drivers/leds/led-class.c    |  1 +
+>  drivers/leds/led-triggers.c | 33 +++++++++++++++++++++++++++++++++
+>  drivers/leds/leds.h         |  1 +
+>  3 files changed, 35 insertions(+)
+> 
+> diff --git a/drivers/leds/led-class.c b/drivers/leds/led-class.c
+> index d34a194535604..0fa45f22246e3 100644
+> --- a/drivers/leds/led-class.c
+> +++ b/drivers/leds/led-class.c
+> @@ -576,6 +576,7 @@ int led_classdev_register_ext(struct device *parent,
+>  
+>  #ifdef CONFIG_LEDS_TRIGGERS
+>  	led_trigger_set_default(led_cdev);
+> +	led_load_hw_control_trigger(led_cdev);
+
+led_trigger_load_hw_control
+
+>  #endif
+>  
+>  	mutex_unlock(&led_cdev->led_access);
+> diff --git a/drivers/leds/led-triggers.c b/drivers/leds/led-triggers.c
+> index b1223218bda11..3066bc91a5f94 100644
+> --- a/drivers/leds/led-triggers.c
+> +++ b/drivers/leds/led-triggers.c
+> @@ -313,6 +313,39 @@ void led_trigger_set_default(struct led_classdev *led_cdev)
+>  }
+>  EXPORT_SYMBOL_GPL(led_trigger_set_default);
+>  
+> +static inline bool led_match_hw_control_trigger(struct led_classdev *led_cdev,
+> +						struct led_trigger *trig)
+> +{
+> +	return (!strcmp(led_cdev->hw_control_trigger, trig->name) &&
+> +		trigger_relevant(led_cdev, trig));
 
 
+This is ugly.  Break it out and provide some commentary.
 
---=20
+> +}
+> +
+> +void led_load_hw_control_trigger(struct led_classdev *led_cdev)
+> +{
+> +	struct led_trigger *trig;
+> +	bool found = false;
+> +
+> +	if (!led_cdev->hw_control_trigger)
+> +		return;
+> +
+> +	/* default_trigger is handled by led_trigger_set_default(). */
 
-Regards,
+Sentences start with uppercase chars.
 
-      Vishnu Sankar
+> +	if (led_cdev->default_trigger &&
+> +	    !strcmp(led_cdev->default_trigger, led_cdev->hw_control_trigger))
+> +		return;
+
+Do you need to check default_trigger?
+
+strcmp() should be able to handle empty strings.
+
+> +
+> +	down_read(&triggers_list_lock);
+> +	list_for_each_entry(trig, &trigger_list, next_trig) {
+> +		found = led_match_hw_control_trigger(led_cdev, trig);
+> +		if (found)
+> +			break;
+> +	}
+> +	up_read(&triggers_list_lock);
+> +
+> +	if (!found)
+> +		request_module_nowait("ledtrig:%s", led_cdev->hw_control_trigger);
+> +}
+> +EXPORT_SYMBOL_GPL(led_load_hw_control_trigger);
+> +
+>  /* LED Trigger Interface */
+>  
+>  int led_trigger_register(struct led_trigger *trig)
+> diff --git a/drivers/leds/leds.h b/drivers/leds/leds.h
+> index bee46651e068f..e85afd4d04fd0 100644
+> --- a/drivers/leds/leds.h
+> +++ b/drivers/leds/leds.h
+> @@ -21,6 +21,7 @@ void led_init_core(struct led_classdev *led_cdev);
+>  void led_stop_software_blink(struct led_classdev *led_cdev);
+>  void led_set_brightness_nopm(struct led_classdev *led_cdev, unsigned int value);
+>  void led_set_brightness_nosleep(struct led_classdev *led_cdev, unsigned int value);
+> +void led_load_hw_control_trigger(struct led_classdev *led_cdev);
+>  ssize_t led_trigger_read(struct file *filp, struct kobject *kobj,
+>  			const struct bin_attribute *attr, char *buf,
+>  			loff_t pos, size_t count);
+> -- 
+> 2.51.0
+> 
+
+-- 
+Lee Jones [李琼斯]
