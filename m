@@ -1,45 +1,45 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9D98C43DA23;
-	Tue, 10 Mar 2026 09:02:01 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1A3FD44BC9A;
+	Tue, 10 Mar 2026 09:02:12 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1773133321; cv=none; b=KGmVgpl6/Avxq3SsAHt/RsDOqrNiQGn+SYH84mTwjPNMnKCO+SaFyBJDOdmqh8tL+qEc2ZnjRR2Us/s0MkFBN31PdCJ+eJuNjRb4bFr7Z5boRsLma/9/YCJsf3+eayJLFVXLe9jhbcmq1YqXSATD2OF1ohJNRBmGo6y3Gh//lgs=
+	t=1773133332; cv=none; b=XoJ7Om8q2xLUP+jxEeDS4awVNvVEeAIc1DxyDZgPUZ0nSj7K7Ha2/2EBi1K7wlBKbf7qgUUcRcTNcwnGzGdWXx7hdmbvu5Pl/pYYz2JSoa9QRcmFvfAaDS/MKjGi0HwvWTLtph+taUCreMf18LZRWbGAEqk/CPTM69E9iiK8zls=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1773133321; c=relaxed/simple;
-	bh=hIiKjgB64+bYm08DmkXcfVhwblnyoTwHXHdIw19+yGw=;
+	s=arc-20240116; t=1773133332; c=relaxed/simple;
+	bh=uhnDnD5YsuKlqmWINLzsD9zKQLO/mP4iC+uOFUQP+LU=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=s4YdFziKYKS2QxRtyQLqXCnw3NrPm/4t6Sgqer1q+LFkrakT0qrvEJkZH5geqIzYwrO4H/5ljc4No+ZWsC3vL5smglu7KMYniEyYyTU64721ckLN3KW2kZ+X6aKpdkGcr46zW5u4P1UsIHn1tjYY+QQozu5BdwGqoAF0I+V2+Tg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=BceI+gHw; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version:Content-Type; b=YN3uAW0vMXZpkyVxNtWLNaMh0xCjnGvKpMAm5r4OAg6JiaAGRGuGDGQ0CnRbX6QVgi4lYkNZP3G8dPqN46vwcFbO9/89vTusIgTqK+HgD3/5IODnQ3cg3nUwL7tb+6HdxaL/+zPKFNJc7DGPQflcUCnI39n9rw4ZMCxNke1gaZE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=nErRSjng; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="BceI+gHw"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 48912C2BCAF;
-	Tue, 10 Mar 2026 09:02:00 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="nErRSjng"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id EA0AEC19423;
+	Tue, 10 Mar 2026 09:02:10 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1773133321;
-	bh=hIiKjgB64+bYm08DmkXcfVhwblnyoTwHXHdIw19+yGw=;
+	s=k20201202; t=1773133332;
+	bh=uhnDnD5YsuKlqmWINLzsD9zKQLO/mP4iC+uOFUQP+LU=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=BceI+gHwUVuG6aypgwH/CVIKlMI66ETymTPCufomDvpyc7ZNBQfBrj2r1WxyrRmRB
-	 zxeqWzFV/NqS/cFCLXwfeH9iQcW0xRuEvd0B/Vyonsap6Y9lLG5gJHfQf/jcY6K0hJ
-	 BtpkP8B1ffif5OAhET6hr5P5MuVumGIV/WrAoKGhP4UgiftfDkWbDB6waRUFSZDiXk
-	 oCvELLVuo9lg/oPDr1w/lIwUA6gU1GrvBy5YrMNExgWMmVxi1y3sWQhps+xQlkbNlL
-	 pxZS/wZC3qLvHc1+wiW2ir/SEXcXlvXoeGWmlDsyJtuqFdRFXuRp4Hh+5nQDqIBl4t
-	 oEU8z7UOFfUZQ==
+	b=nErRSjngIgvwJwC2G3VDbuoa42aln00JnAEwV7DJuKudLaRhtT+VM/8Nhtr7p2DbW
+	 NRBNhTyNGx+KyeeLyqqN8UczNnq1pEM3IP7PbU4yu3UVQ1V4JqrcNHOaNPQmIDm9oZ
+	 v2pxVyy9ylIfL/pAzR10qYSLrSNEyUaq0spTzpDcpF2LQYyxs/mpdEaAqna7wSRGRs
+	 AFnWpzNAK88TbYnW1cih1l9XkgIFg3QE840YC2DFNJki0dwrzpfuVfY9SoybtR+K9X
+	 L2VwJmLFZDpI7ewV3m59lUMwcKsNyBAr+LhuPXi4Kez3CXegBWmCqoWsJkC6Zh3QdS
+	 TrkFWV0bbUH2g==
 From: Sasha Levin <sashal@kernel.org>
 To: patches@lists.linux.dev,
 	stable@vger.kernel.org
-Cc: Antheas Kapenekakis <lkml@antheas.dev>,
+Cc: Peter Metz <peter.metz@unarin.com>,
+	Hans de Goede <johannes.goede@oss.qualcomm.com>,
 	=?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>,
 	Sasha Levin <sashal@kernel.org>,
-	derekjohn.clark@gmail.com,
-	samsagax@gmail.com,
+	alexhung@gmail.com,
 	hansg@kernel.org,
 	platform-driver-x86@vger.kernel.org,
 	linux-kernel@vger.kernel.org
-Subject: [PATCH AUTOSEL 6.19-6.18] platform/x86: oxpec: Add support for OneXPlayer X1z
-Date: Tue, 10 Mar 2026 05:01:10 -0400
-Message-ID: <20260310090145.2709021-10-sashal@kernel.org>
+Subject: [PATCH AUTOSEL 6.19-5.15] platform/x86: intel-hid: Add Dell 14 Plus 2-in-1 to dmi_vgbs_allow_list
+Date: Tue, 10 Mar 2026 05:01:17 -0400
+Message-ID: <20260310090145.2709021-17-sashal@kernel.org>
 X-Mailer: git-send-email 2.51.0
 In-Reply-To: <20260310090145.2709021-1-sashal@kernel.org>
 References: <20260310090145.2709021-1-sashal@kernel.org>
@@ -55,15 +55,21 @@ X-Patchwork-Hint: Ignore
 X-stable-base: Linux 6.19.6
 Content-Transfer-Encoding: 8bit
 
-From: Antheas Kapenekakis <lkml@antheas.dev>
+From: Peter Metz <peter.metz@unarin.com>
 
-[ Upstream commit 4049c46edb5d44c0de045f6f504371705dd603dd ]
+[ Upstream commit 6b3fa0615cd8432148581de62a52f83847af3d70 ]
 
-X1z is a variant of OneXPlayer X1 A with 8840U. It seems that only one
-user has this one. Add a quirk for it to the oxpec driver.
+The Dell 14 Plus 2-in-1 (model DB04250) requires the VGBS allow list
+entry to correctly enable the tablet mode switch. Without this, the
+chassis state is not reported, and the hinge rotation only emits
+unknown scancodes.
 
-Signed-off-by: Antheas Kapenekakis <lkml@antheas.dev>
-Link: https://patch.msgid.link/20260223183004.2696892-3-lkml@antheas.dev
+Verified on Dell 14 Plus 2-in-1 DB04250.
+
+Closes: https://bugzilla.kernel.org/show_bug.cgi?id=221090
+Signed-off-by: Peter Metz <peter.metz@unarin.com>
+Reviewed-by: Hans de Goede <johannes.goede@oss.qualcomm.com>
+Link: https://patch.msgid.link/20260213044627.203638-1-peter.metz@unarin.com
 Reviewed-by: Ilpo Järvinen <ilpo.jarvinen@linux.intel.com>
 Signed-off-by: Ilpo Järvinen <ilpo.jarvinen@linux.intel.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
@@ -74,98 +80,103 @@ LLM Generated explanations, may be completely bogus:
 ## Analysis
 
 ### What the commit does
-This commit adds a single DMI match entry for the "OneXPlayer X1z"
-handheld gaming device to the `oxpec` driver's DMI table. The X1z is
-described as a variant of the existing X1 A with an 8840U CPU. It reuses
-the existing `oxp_x1` driver_data, identical to the already-supported X1
-A and X1 i variants.
 
-### Classification: Hardware Quirk / Device ID Addition
+This commit adds a single DMI entry for the "Dell 14 Plus 2-in-1
+DB04250" to the `dmi_vgbs_allow_list` in
+`drivers/platform/x86/intel/hid.c`. This allow list controls which
+devices can use the VGBS (Virtual GPIO Button Status) ACPI method to
+report chassis/tablet mode state.
 
-This is a textbook **device ID addition** to an existing driver — one of
-the explicitly allowed exception categories for stable backports. The
-change:
+### Problem it solves
 
-- Adds 7 lines: a new `dmi_system_id` struct entry in the `dmi_table[]`
-  array
-- Uses entirely existing infrastructure (`oxp_x1` enum value already
-  defined)
-- Matches the exact same pattern as every other entry in the table
-- Zero new code paths, functions, or logic introduced
+Without this entry, the Dell 14 Plus 2-in-1 cannot correctly report
+tablet mode switch state. The hinge rotation only emits unknown
+scancodes, meaning the device doesn't properly switch between laptop and
+tablet modes. This is a real usability issue for owners of this specific
+2-in-1 device.
 
-### Risk Assessment
+### Classification: Hardware Quirk / Device Allow List Entry
 
-**Risk: Extremely low**
-- The DMI match is specific to one exact board name ("ONEXPLAYER X1z"
-  from vendor "ONE-NETBOOK")
-- It can only affect users with that exact hardware
-- It reuses the same driver_data as sibling variants (X1 A, X1 i)
-- No behavioral changes for any other hardware
+This falls squarely into the **"QUIRKS and WORKAROUNDS"** exception
+category for stable backports:
+- It adds a device-specific DMI match to an existing allow list
+- It fixes a real hardware issue (tablet mode not working)
+- The pattern is identical to existing entries in the same list
+  (multiple Dell, HP entries already present)
 
-### Benefit Assessment
+### Code change analysis
 
-**Benefit: Enables hardware support**
-- Without this entry, the oxpec driver won't bind on the X1z, meaning
-  the user cannot control fan speed or other EC-managed features on
-  their device
-- The commit message notes "only one user has this one" — low population
-  but a real user with a real need
+The diff is trivial — 6 lines added to insert a new `dmi_system_id`
+struct into the `dmi_vgbs_allow_list` array, matching `DMI_SYS_VENDOR =
+"Dell Inc."` and `DMI_PRODUCT_NAME = "Dell 14 Plus 2-in-1 DB04250"`. The
+change follows the exact same pattern as the surrounding entries.
 
-### Stable Criteria Check
-1. **Obviously correct and tested**: Yes — trivial DMI table addition,
-   reviewed by maintainer (Ilpo Järvinen)
-2. **Fixes a real bug**: Enables missing hardware support (device not
-   recognized by existing driver)
-3. **Small and contained**: 7 lines, single file, single table entry
-4. **No new features or APIs**: Reuses existing `oxp_x1` path entirely
-5. **No new code paths**: Just a match table entry
+### Risk assessment
+
+- **Risk: Extremely low.** The DMI match is specific to one device
+  model. It cannot affect any other hardware.
+- **Scope: Minimal.** 6 lines of declarative data, no logic changes.
+- **Testing: Verified.** The commit message states "Verified on Dell 14
+  Plus 2-in-1 DB04250."
+- **Review: Thorough.** Reviewed by both Hans de Goede (platform/x86
+  maintainer) and Ilpo Järvinen (Intel platform maintainer).
+
+### Stable criteria check
+
+1. **Obviously correct and tested**: Yes — verified on the hardware,
+   reviewed by two maintainers
+2. **Fixes a real bug**: Yes — tablet mode doesn't work without it
+   (bugzilla #221090)
+3. **Important issue**: Yes — core functionality of a 2-in-1 device is
+   broken
+4. **Small and contained**: Yes — 6 lines, single file, data-only change
+5. **No new features**: Correct — enables existing functionality on
+   specific hardware
+6. **Applies cleanly**: Should apply cleanly as long as the surrounding
+   entries exist
 
 ### Verification
 
-- Verified the diff adds only a DMI table entry with no logic changes
-- Verified `oxp_x1` driver_data is already used by X1 A and X1 i entries
-  visible in the same diff context
-- Verified the commit is reviewed by the subsystem maintainer (Ilpo
-  Järvinen, Intel)
-- The driver file `drivers/platform/x86/oxpec.c` is an existing upstream
-  driver; the change only adds a device match
+- Verified the diff is a pure data addition to an existing DMI allow
+  list array — no logic changes
+- Confirmed the pattern matches existing entries in the same list (Dell
+  Pro Rugged 10/12 Tablet entries directly above)
+- The commit references bugzilla.kernel.org bug #221090, confirming a
+  user-reported issue
+- Reviewed-by tags from Hans de Goede and Ilpo Järvinen confirm
+  maintainer approval
+- The `dmi_vgbs_allow_list` structure is used in the existing
+  `intel_hid_probe()` path — this is well-established code
 
-### Concerns
+### Conclusion
 
-- The oxpec driver may be relatively new — if it was added after the
-  stable branch point for older LTS trees, the backport wouldn't apply
-  there. But for any stable tree that already contains the oxpec driver
-  with `oxp_x1` support, this is a clean, trivial addition.
-- No dependencies on other patches needed.
-
-This is a minimal, zero-risk hardware quirk addition that enables an
-existing driver to recognize a new device variant. It is the classic
-example of what the stable kernel exception rules were designed to
-accommodate.
+This is a textbook stable backport candidate: a tiny, zero-risk hardware
+quirk addition that fixes real functionality for a specific device
+model, with user bug report, hardware verification, and maintainer
+review.
 
 **YES**
 
- drivers/platform/x86/oxpec.c | 7 +++++++
- 1 file changed, 7 insertions(+)
+ drivers/platform/x86/intel/hid.c | 6 ++++++
+ 1 file changed, 6 insertions(+)
 
-diff --git a/drivers/platform/x86/oxpec.c b/drivers/platform/x86/oxpec.c
-index 59d6f9d9a9052..623d9a452c469 100644
---- a/drivers/platform/x86/oxpec.c
-+++ b/drivers/platform/x86/oxpec.c
-@@ -219,6 +219,13 @@ static const struct dmi_system_id dmi_table[] = {
+diff --git a/drivers/platform/x86/intel/hid.c b/drivers/platform/x86/intel/hid.c
+index 560cc063198e1..5b475a09645a3 100644
+--- a/drivers/platform/x86/intel/hid.c
++++ b/drivers/platform/x86/intel/hid.c
+@@ -189,6 +189,12 @@ static const struct dmi_system_id dmi_vgbs_allow_list[] = {
+ 			DMI_MATCH(DMI_PRODUCT_NAME, "Dell Pro Rugged 12 Tablet RA02260"),
  		},
- 		.driver_data = (void *)oxp_mini_amd_pro,
  	},
 +	{
 +		.matches = {
-+			DMI_MATCH(DMI_BOARD_VENDOR, "ONE-NETBOOK"),
-+			DMI_EXACT_MATCH(DMI_BOARD_NAME, "ONEXPLAYER X1z"),
++			DMI_MATCH(DMI_SYS_VENDOR, "Dell Inc."),
++			DMI_MATCH(DMI_PRODUCT_NAME, "Dell 14 Plus 2-in-1 DB04250"),
 +		},
-+		.driver_data = (void *)oxp_x1,
 +	},
- 	{
- 		.matches = {
- 			DMI_MATCH(DMI_BOARD_VENDOR, "ONE-NETBOOK"),
+ 	{ }
+ };
+ 
 -- 
 2.51.0
 
