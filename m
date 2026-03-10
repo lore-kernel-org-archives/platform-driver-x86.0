@@ -1,186 +1,100 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.14])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B583F3AF643;
-	Tue, 10 Mar 2026 12:10:31 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6341E38AC82;
+	Tue, 10 Mar 2026 12:45:05 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.14
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1773144631; cv=none; b=o71I+eue7zFV4irrfpj3HbCccHT8UVSGjHhL8Y/znCkiUn62h1LcDi1U+TFYZecG+WubyKOp2NZ+9CQr3kCg7UgEktP/2MeUz0KiuMIfBUCNLWyh1d9OUu/9cP7xKmali2wVx0y+Tzk7hDN9ZxRn6FOeoyEisB1YrksqmsL/q8g=
+	t=1773146706; cv=none; b=GpyxX3DBeYww6QPXgwDvbZgt1aB5uAdJ7EeKbaIVqUCQ+nx5FPcJzoLQxYEUuPiTOUaIX7Wpw6mXxbO8BSv00qJEBFtQr0pJf2NlGurr7UFA59fT1j5GKz/OXrFrnIOaCQ7L0EwLnHySd/5wq19zfN8AInA6Nig2yzFf1NdQVts=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1773144631; c=relaxed/simple;
-	bh=23fDxMo4xHy1EdAru6003n7+54nLBKHhNf3N9eMsvmE=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=S8wr/Bo/0A1w0DDEKZXNOp8iRRl2X87dFQqzApIg/dEubjbqoDOXWdDcR6xW8d/yobTqgu9fSfp6loFBHnQM0g7p0yBFygYe/wclQlNvHqVMVW7PxVQ0dMZaXmiRxj1IYY/tAMtlzYrAYEwoG9i0cmyQbR4iZJ6LTyUBFiCcV7E=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=esbFHyJU; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1773146706; c=relaxed/simple;
+	bh=V/tjGRK2XwfIHYXozIh+ONiswzwZY6ml6Vm7sXIhbeo=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=LVO+Ia8EDa7N0p1qZ2K9cQm/1A2EMbk4LP0/QXkLdKS5eaU37kAVxQPx1Mv+zx+f2rqz5QC2wZmRlpZaAaYiQw7ZxJ161Thm+ajMHlcJ3dD1SdgqFc8gc8uMCA+MhoGJQv0Cc7xxSOn+r24MnREsMGAa70Wo8lViHhEdPXwBQc0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=pass smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=kcuIkrw1; arc=none smtp.client-ip=192.198.163.14
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="esbFHyJU"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 3D072C19423;
-	Tue, 10 Mar 2026 12:10:27 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1773144631;
-	bh=23fDxMo4xHy1EdAru6003n7+54nLBKHhNf3N9eMsvmE=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=esbFHyJUClN9ir49CHpIDKhs+H20RGPu+wVQFm0oPuzWgAt6b45cTzMlVhL76SN//
-	 nIyhRmvxgDLi6HslyCGD+do86TN6mO+nT5bHHCrTT9ia7oBj5zkuEZF/fZ2ziBhxcA
-	 couq0541qNncgf4ysPb3VoGDTAQqspVQwxiliQjIQPKkFhrlz2AqMThjdmTO5DPvsG
-	 ytB04eLHKQrjAMjNiqiG3oIgA9wcww5+LbNTYeWvOHoWMFC5ow6CHeNm9Ed4zGcRtO
-	 pI+NoY30AaLZ+h2BH5904jSaICxZkuIUM5u2MPT8h+dmCWOF/e3J2O2N5yvFqwTucH
-	 APH7Q4CvCGlQg==
-Date: Tue, 10 Mar 2026 12:10:24 +0000
-From: Lee Jones <lee@kernel.org>
-To: Rong Zhang <i@rong.moe>, Andrew Lunn <andrew+netdev@lunn.ch>,
-	Jakub Kicinski <kuba@kernel.org>, netdev@vger.kernel.org
-Cc: Pavel Machek <pavel@kernel.org>,
-	Thomas =?iso-8859-1?Q?Wei=DFschuh?= <linux@weissschuh.net>,
-	Benson Leung <bleung@chromium.org>,
-	Guenter Roeck <groeck@chromium.org>,
-	Marek =?iso-8859-1?Q?Beh=FAn?= <kabel@kernel.org>,
-	Mark Pearson <mpearson-lenovo@squebb.ca>,
-	"Derek J. Clark" <derekjohn.clark@gmail.com>,
-	Hans de Goede <hansg@kernel.org>,
-	Ilpo =?iso-8859-1?Q?J=E4rvinen?= <ilpo.jarvinen@linux.intel.com>,
-	Ike Panhc <ikepanhc@gmail.com>, Vishnu Sankar <vishnuocv@gmail.com>,
-	vsankar@lenovo.com, linux-kernel@vger.kernel.org,
-	linux-leds@vger.kernel.org, chrome-platform@lists.linux.dev,
-	platform-driver-x86@vger.kernel.org
-Subject: Re: [RFC PATCH 0/9] leds: Add support for hw initiated hw control
- trigger transition
-Message-ID: <20260310121024.GJ183676@google.com>
-References: <20260227190617.271388-1-i@rong.moe>
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="kcuIkrw1"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1773146705; x=1804682705;
+  h=from:to:cc:subject:date:message-id:mime-version:
+   content-transfer-encoding;
+  bh=V/tjGRK2XwfIHYXozIh+ONiswzwZY6ml6Vm7sXIhbeo=;
+  b=kcuIkrw1WfI0flgj/1R7UirbthJUklHEdk/uFwpS2tJrwKQ0IlA3CfMa
+   GBnMa2V68ViOY8vCgCALS1wGHiLxUPgt+gab/IsPCUhdctrDC93aMjvno
+   R5vc/aj72cQJxn0JUC4Gg7STmXNSnhf5/SgA3E/GA4QYzJl6Du/smpFM+
+   RxvTp+GmcaKCzjawf8xWq7JMPGr9W65QFcG5yZdfx11iDtD7vRlBvdMSX
+   /FS9xwHqt+0cjYBaOuqS7TPyCap7AnyfVQuE7XcIMOTcWLIxUpzbzcCgI
+   h41XpzndT06X9HvkeLB9V6NXjsXvXYvquEVIJql/xXAI8Q2ySx77eY20r
+   A==;
+X-CSE-ConnectionGUID: MddQbK+ETqqQ1fbSyimYaQ==
+X-CSE-MsgGUID: j6JxUlgUT5ijx9o2E3SKRw==
+X-IronPort-AV: E=McAfee;i="6800,10657,11724"; a="74268916"
+X-IronPort-AV: E=Sophos;i="6.23,112,1770624000"; 
+   d="scan'208";a="74268916"
+Received: from orviesa005.jf.intel.com ([10.64.159.145])
+  by fmvoesa108.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 10 Mar 2026 05:45:05 -0700
+X-CSE-ConnectionGUID: 3leC/Ll2SQSy2JT5fYwCwA==
+X-CSE-MsgGUID: WrAGrw+MTrSMqSyhrAl+6g==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.23,112,1770624000"; 
+   d="scan'208";a="225040186"
+Received: from kniemiec-mobl1.ger.corp.intel.com (HELO alaakso-DESK.kioski) ([10.245.246.41])
+  by orviesa005-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 10 Mar 2026 05:44:59 -0700
+From: Antti Laakso <antti.laakso@linux.intel.com>
+To: linux-media@vger.kernel.org
+Cc: linux-gpio@vger.kernel.org,
+	platform-driver-x86@vger.kernel.org,
+	linusw@kernel.org,
+	brgl@kernel.org,
+	sakari.ailus@linux.intel.com,
+	mchehab@kernel.org,
+	dan.scally@ideasonboard.com,
+	hansg@kernel.org,
+	ilpo.jarvinen@linux.intel.com,
+	hverkuil+cisco@kernel.org,
+	sre@kernel.org,
+	hao.yao@intel.com,
+	jason.z.chen@intel.com,
+	jimmy.su@intel.com,
+	miguel.vadillo@intel.com,
+	kees@kernel.org,
+	ribalda@chromium.org
+Subject: [PATCH 0/5] platform: int3472: Add MSI prestige 14 AI EVO data
+Date: Tue, 10 Mar 2026 14:44:22 +0200
+Message-ID: <20260310124427.693625-1-antti.laakso@linux.intel.com>
+X-Mailer: git-send-email 2.53.0
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <20260227190617.271388-1-i@rong.moe>
 
-I'd like for the netdev folks to take a look at this please.
+This adds camera support for the MSI Prestige 14 AI EVO laptop, which uses
+a TPS68470 PMIC to power an OV5675 sensor.
 
-> Some laptops can tune their keyboard backlight according to ambient
-> light sensors (auto mode). This capability is essentially a hw control
-> trigger. Meanwhile, such laptops also offer a shrotcut for cycling
-> through brightness levels and auto mode. For example, on ThinkBook,
-> pressing Fn+Space cycles keyboard backlight levels in the following
-> sequence:
-> 
->   1 => 2 => 0 => auto => 1 ...
-> 
-> Recent ThinkPad models should have similar sequence too.
-> 
-> However, there are some issues preventing us from using hw control
-> trigger:
-> 
-> 1. We want a mechanism to tell userspace which trigger is the hw control
->    trigger, so that userspace can determine if auto mode is on/off or
->    turing it on/off programmatically without obtaining the hw control
->    trigger's name via other channels
-> 2. Turing on/off auto mode via the shortcut cannot activate/deactivate
->    the hw control trigger, making the software state out-of-sync
-> 3. Even with #1 resolved, deactivating the hw control trigger after
->    receiving the event indicating "auto => 1" has a side effect of
->    emitting LED_OFF, breaking the shortcut cycle
-> 
-> This RFC series tries to demonstrate a path on solving these issues:
-> 
-> - Introduce an attribute called trigger_may_offload, so that userspace
->    can determine:
->    - if the LED device supports hw control (supported => visible)
->    - which trigger is the hw control trigger
->    - if the hw control trigger is selected
->    - if the hw control trigger is in hw control (i.e., offloaded)
->      - A callback offloaded() is added so that LED triggers can report
->        their hw control state
-> - Add led_trigger_notify_hw_control_changed() interface, so that LED
->   drivers can notify the LED core about hardware initiated hw control
->   state transitions. The LED core will then determine if the transition
->   is allowed and turning on/off the hw control trigger accordingly
-> - Tune the logic of trigger deactivation so that it won't emit LED_OFF
->   when the deactivation is triggered by hardware
-> 
-> The last two patches are included into the RFC series to demonstrate how
-> to utilize these interfaces to add support for auto keyboard backlight
-> to ThinkBook. They will be submitted separately once the dust settles.
-> 
-> Currently no Kconfig entry is provided to disable either interface. If
-> needed, I will add one later.
-> 
-> [ Summary of other approaches ]
-> 
-> < custom attribute >
-> 
-> Pros:
-> - simplicity, KISS
-> - no need to touch the LED core
-> - extensible as long as it has a sensor-neutral name
->   - a sensor-related name could potentially lead to a mess if a future
->     device implements auto mode based on multiple different sensors
-> 
-> Cons:
-> - must have zero influence on brightness_set[_blocking] callbacks
->   in order not to break triggers
->   - potential interference with triggers and the brightness attribute
-> - weird semantic (an attribute other than "brightness" and "trigger"
->   changes the brightness)
-> 
-> < hw control trigger (this series) >
-> 
-> Pros:
-> - mutually exclusive with other triggers (hence less chaos)
-> - semantic correctness
-> - acts as an aggregate switch to turn on/off auto mode even a future
->   device implements auto mode based on multiple different sensors
->   - extensibility (through trigger attributes)
-> 
-> Cons:
-> - complexity
-> 
-> [ Previous discussion threads ]
-> 
-> https://lore.kernel.org/r/08580ec5-1d7b-4612-8a3f-75bc2f40aad2@app.fastmail.com
-> 
-> https://lore.kernel.org/r/1dbfcf656cdb4af0299f90d7426d2ec7e2b8ac9e.camel@rong.moe
-> 
-> Thanks,
-> Rong
-> 
-> Rong Zhang (9):
->   leds: Load trigger modules on-demand if used as hw control trigger
->   leds: Add callback offloaded() to query the state of hw control
->     trigger
->   leds: cros_ec: Implement offloaded() callback for trigger
->   leds: turris-omnia: Implement offloaded() callback for trigger
->   leds: trigger: netdev: Implement offloaded() callback
->   leds: Add trigger_may_offload attribute
->   leds: trigger: Add led_trigger_notify_hw_control_changed() interface
->   platform/x86: ideapad-laptop: Decouple HW & cdev brightness for kbd
->     backlight
->   platform/x86: ideapad-laptop: Fully support auto kbd backlight
-> 
->  .../obsolete/sysfs-class-led-trigger-netdev   |  15 ++
->  Documentation/ABI/testing/sysfs-class-led     |  22 ++
->  .../testing/sysfs-class-led-trigger-netdev    |  13 --
->  Documentation/leds/leds-class.rst             |  72 ++++++-
->  drivers/leds/led-class.c                      |  23 +++
->  drivers/leds/led-triggers.c                   | 176 +++++++++++++++-
->  drivers/leds/leds-cros_ec.c                   |   6 +
->  drivers/leds/leds-turris-omnia.c              |   7 +
->  drivers/leds/leds.h                           |   3 +
->  drivers/leds/trigger/ledtrig-netdev.c         |  10 +
->  drivers/platform/x86/lenovo/Kconfig           |   1 +
->  drivers/platform/x86/lenovo/ideapad-laptop.c  | 194 ++++++++++++++----
->  include/linux/leds.h                          |   6 +
->  13 files changed, 492 insertions(+), 56 deletions(-)
->  create mode 100644 Documentation/ABI/obsolete/sysfs-class-led-trigger-netdev
-> 
-> 
-> base-commit: a75cb869a8ccc88b0bc7a44e1597d9c7995c56e5
-> -- 
-> 2.51.0
-> 
+If ok, including a GPIO patch to this series. The GPIO patch enables the
+TPS68470's I2C daisy chain functionality.
+
+Antti Laakso (5):
+  media: i2c: ov5675: Wait for endpoint
+  media:ipu-bridge: Add ov5675 sensor
+  platform: int3472: Add gpio platform data
+  gpio: tps68470: Add i2c daisy chain support
+  platform: int3472: Add MSI prestige board data
+
+ drivers/gpio/gpio-tps68470.c                  | 23 ++++-
+ drivers/media/i2c/ov5675.c                    | 16 ++-
+ drivers/media/pci/intel/ipu-bridge.c          |  2 +
+ drivers/platform/x86/intel/int3472/tps68470.c |  2 +
+ drivers/platform/x86/intel/int3472/tps68470.h |  1 +
+ .../x86/intel/int3472/tps68470_board_data.c   | 97 +++++++++++++++++++
+ include/linux/platform_data/tps68470.h        |  4 +
+ 7 files changed, 135 insertions(+), 10 deletions(-)
 
 -- 
-Lee Jones [李琼斯]
+2.53.0
+
