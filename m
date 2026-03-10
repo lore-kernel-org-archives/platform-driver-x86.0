@@ -1,211 +1,288 @@
-Received: from PH0PR06CU001.outbound.protection.outlook.com (mail-westus3azon11011042.outbound.protection.outlook.com [40.107.208.42])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-lf1-f52.google.com (mail-lf1-f52.google.com [209.85.167.52])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 33798309DCF;
-	Tue, 10 Mar 2026 01:53:51 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.208.42
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9422C3BD64F
+	for <platform-driver-x86@vger.kernel.org>; Tue, 10 Mar 2026 02:12:24 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=209.85.167.52
 ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1773107637; cv=fail; b=rLwIUfvJMF6Wb37O7dGr8t9vmv6e775KwObthjASelbbnDAAFzNHNIF9YcKqz0VDfrsx1u772asmiaiUbARqb3SP2sBxPccOFQy6oqjcUJtQnclxiFLSk+WEGVG41/tp/QgcolZVi6ATf1ymEEhdIlz1T7B0CQHM76BuPBUpEkE=
+	t=1773108746; cv=pass; b=nZgOWypq88CItSsx/9DgFzcG3g+vdTLiroP2x1NxVNP1jujQE3rWkl74EtqchkTNeRg2fJXBVeMM43lbqOxyVIe81HxzG7pv+6qIRdVdRsL3Gog8SGHVYmJFHf0Xll/aPf3a/DrfU5OZyp4W4cChYC3ddr3zUIxPz3V86hI61PE=
 ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1773107637; c=relaxed/simple;
-	bh=k8pfJkv52wIsdxgaqwsGCj60ClyZ2kTsZCfPl3N5hE0=;
-	h=Message-ID:Date:Subject:To:Cc:References:From:In-Reply-To:
-	 Content-Type:MIME-Version; b=PxLj2kHs0Aj4gT+njfjHe5SE/SUpdIwBEg8c4DOtUDkkEDCJNtgJM/TOWNnWAmVKnlCGmrX9OuOQDRuGFNVHjVqlYPPsOh6qMTvEM1e3asPZf+Kn8d/M7PILnuISKNsecbanflNt5RrCfsl0bRvZ5kz1UeNVLDqZSc/JU38RCrc=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=UPdMBlLM; arc=fail smtp.client-ip=40.107.208.42
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com
-Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=amd.com
+	s=arc-20240116; t=1773108746; c=relaxed/simple;
+	bh=qInFR7+ruku82QTeduGJJurbtW8DPI5C9OdU4RWav24=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=XXAxIYuYgazXZUXUOJrnJZzo6zIom7tywGc2BfveoxSy+Gwt/M+un74aB2WbzK7NapTPJ5QHHqX1CGZ8Oc4vGvyOqa5Qcv6u/eN95Tf0zSzm+PaS1AcLkEtWSjkm0KlA+rLzZpMVChVoe3ezgNxRIfhdD6pYTD/JgORtCV4b9aw=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=NaFVSkng; arc=pass smtp.client-ip=209.85.167.52
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="UPdMBlLM"
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=KViQGHPenulyXUGX+dMEK5rgOfltxj68bErgC/sQMoHeKfcYpbz62DbOd/KM9wdORMlBvX/1yc/pMr+8og87QBmNpvIyW5Cm0giKCYt3ozlpqHn3FN2hroGb8ORyBgHGWYODn459nCkhEhO1dMt9I/BJH4yz6IWcwWR1qE3QMIdHgDn0SbUtdodieXGuCYJ2eCI48bM0RzYIVFhFmWkDYP7s0XLOVGisYrFg0tO77ZLyoppx0zBWL4YJ2oRBBcFMc/x87PEZxtDuZR3+7JaAeA2my1ORHu4vSF64O+yRxh+tu00Enfk6dK34IMnnr65RXEi07fRXtQHdtSFbANre1A==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=nri2UTGdKzE2eUxU51AYS8dy3XdXyG54OdRBqOs+iGg=;
- b=jZfDvW/LRWQ6FMM2iPdYub7VxpGklV9+oppy5gM6eNSiVlbCies5XyiKak43rk7xX0SMFK6c2CFrYNJpfX1fTZPNO9NUTj8uFXF4QAAsNJ0O0qv1uxWhKf4u1Hd5Apti/OFhCrrKyeNld+pjtJ66PMVJT8h0rJRbdQXgKunCaEUSXIbjyewykVdJchGlHTy0kKH8zbMHLy9cX+rXo+VEhrVOXyMUD0zMi59or0AMGNnMymgWvbKFTuRPMolkL2iAk6KUB8M5oJpCdOdjx7On/HqdIis97Kydh95RI/59M4Y4UnQXUv6LvPT489+kuOF00YK3lYHcZfpQpmgKeqSJUA==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=amd.com; dmarc=pass action=none header.from=amd.com; dkim=pass
- header.d=amd.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=nri2UTGdKzE2eUxU51AYS8dy3XdXyG54OdRBqOs+iGg=;
- b=UPdMBlLMOiwwG6xXMeD9ypolyhxizvAwlT5uVaNPQjlUR46qWUrWjFQmP/FevJRi3MJ56S48v2fWyoDTcIDrZ9LdYgF2kreVsraZyHujygFw1Se8qvuxw14vwu3Av8GglhlwasnE3lb6FhGH0uzXPn2RIZShTZswY2N9g+sJlfg=
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=amd.com;
-Received: from SA0PR12MB4557.namprd12.prod.outlook.com (2603:10b6:806:9d::10)
- by CH0PR12MB8552.namprd12.prod.outlook.com (2603:10b6:610:18e::9) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.9700.8; Tue, 10 Mar
- 2026 01:53:49 +0000
-Received: from SA0PR12MB4557.namprd12.prod.outlook.com
- ([fe80::885a:79b3:8288:287]) by SA0PR12MB4557.namprd12.prod.outlook.com
- ([fe80::885a:79b3:8288:287%5]) with mapi id 15.20.9700.010; Tue, 10 Mar 2026
- 01:53:49 +0000
-Message-ID: <36dc7af6-11e8-4fd5-80fa-657b005a0b21@amd.com>
-Date: Mon, 9 Mar 2026 20:53:46 -0500
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 1/9] platform/x86: dell-descriptor: Use new buffer-based
- WMI API
-To: Armin Wolf <W_Armin@gmx.de>, =?UTF-8?Q?Pali_Roh=C3=A1r?= <pali@kernel.org>
-Cc: Dell.Client.Kernel@dell.com, mjg59@srcf.ucam.org, hansg@kernel.org,
- ilpo.jarvinen@linux.intel.com, platform-driver-x86@vger.kernel.org,
- linux-kernel@vger.kernel.org, linux@roeck-us.net, linux-hwmon@vger.kernel.org
-References: <20260308002522.4185-1-W_Armin@gmx.de>
- <20260308002522.4185-2-W_Armin@gmx.de>
- <39bdcdf7-a771-4f1b-a3a0-0ecde272d914@amd.com>
- <20260309172309.a3ukif3bejbicywl@pali>
- <c1957ff4-964c-4651-93be-056ea4d9004d@gmx.de>
-Content-Language: en-US
-From: Mario Limonciello <mario.limonciello@amd.com>
-In-Reply-To: <c1957ff4-964c-4651-93be-056ea4d9004d@gmx.de>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
-X-ClientProxiedBy: CH0PR04CA0006.namprd04.prod.outlook.com
- (2603:10b6:610:76::11) To SA0PR12MB4557.namprd12.prod.outlook.com
- (2603:10b6:806:9d::10)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="NaFVSkng"
+Received: by mail-lf1-f52.google.com with SMTP id 2adb3069b0e04-5a12f6871b2so6810943e87.1
+        for <platform-driver-x86@vger.kernel.org>; Mon, 09 Mar 2026 19:12:24 -0700 (PDT)
+ARC-Seal: i=1; a=rsa-sha256; t=1773108743; cv=none;
+        d=google.com; s=arc-20240605;
+        b=ef7KQN/kYDpGkPDfXdz+6+htobVZdaeqRNod+/ePd3GBERvfhFSP4qOISTo9qApdXd
+         UjODmGyI1q5gZt2GvwBPC/KRb0IDxqjZffVw2wiQi5q+sQvpDKxLiFv3YK4PtGpjAdCS
+         XuaQUs+BXTXAg8Kv0pCCpGtm09a/3eKr+PHTnYaoXepM1j4cOosSE0V3DZ2m0sISGTe0
+         FB7lmxNdiatPjqkGOACpMgrnXZCtlvZmasjhxkXmt3bN1tAl5FyveZX9qvbrKnta5yn6
+         l/yUIQvT9WmpYI9aZHIwlk3ffHynfXmJExnAbCO+3ccVwfwFmp1WVctO7BpgTsVJSxky
+         7IUw==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20240605;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:dkim-signature;
+        bh=KtlsLU3IPO5uqXUZY8olaTkPpadXjE8FCVLC/ftGY8Q=;
+        fh=nC63/3b6XM27PJznhq4tIgvh6CF8skyDvejZZyzU0xo=;
+        b=Y+NUAIDqDYLB2tV7kO/BET69l8M6IkFU0lgXJInwiWeX10DcmSSWRlQTjoxw7SV+X8
+         jlPb4v71ftUYjddST69uNM8g+dH5Suj+jLIxAp4urxm8JHu+tKCVc1qBoDbbPx2HG4D1
+         YgGJlVUHcPXochNNCNUygbg6nrJw9ISpREzk/1M9xkwchhnAVJbsaQ9SeoU5VW+6dUhI
+         /sZRIX8vx9fY6knaNlSYX0kgph9P9qhtHrmJbCy3Z6gzi2OcVSdjBcSMKcAR5sqsl/jx
+         tKqUb16YZPC0wX2WApWSMeemTktVQVz6gZK/o0NkZyuE4ouPunFMdMWX5rqvZN/fZ/MU
+         WOrQ==;
+        darn=vger.kernel.org
+ARC-Authentication-Results: i=1; mx.google.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1773108743; x=1773713543; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=KtlsLU3IPO5uqXUZY8olaTkPpadXjE8FCVLC/ftGY8Q=;
+        b=NaFVSkngboq1hHClKBNqJ3FuhfV0ZssRBy4ZTnxtJvCgURRChosdINNJB++x8ET3ew
+         AeiJ9xDiUY3byUaJbIGDmTTouK4gaXztLmfSw2Q4x+0sT4erJvvUBqU6o48Z4nWge674
+         DMJQyu4T2bHoxPwaxPMjKUAdQD90AYzZmPC1BG3hR16BkuV8XvI9x15N5rZLJHj1oja2
+         rbjIMuAn4xF+Q/57f15taFtBCwjNmlqO+e86ppNn7h14IRC9guKptVhqRYR8wiECu5Ri
+         UhWrk7lnr4hjxi2XPVMpmLmyaVL3H4yaZJSFSVUDfn31jM8VJh0+RRZonxU00LgWCEdL
+         bzEw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1773108743; x=1773713543;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-gg:x-gm-message-state:from
+         :to:cc:subject:date:message-id:reply-to;
+        bh=KtlsLU3IPO5uqXUZY8olaTkPpadXjE8FCVLC/ftGY8Q=;
+        b=Q/wD/aDeMoCOScBAcWAKgVp3UoPKDMmhlRuXh5BmrhKTPhETgmMEYllQ2GimoPWbfq
+         mvkfSqi0O5aJGN2Vsw/3bWSvHzJwe/JnJXpfKUJaccwO6qi2WcFT73CMv3I8KiYH6YEn
+         SSH72tVGBzkZDe/75dLNpHx9bK1Lv3RIp+JGMz/CPlYa87eCUA60mageu7MYUaPPtqUC
+         QNJEjCB1riYdr9WtA0lAghVTWwRJb5qiI/FWjFgU4gbGY+neltprPkHPV5eA/utJh3TN
+         +ffZ+f1iMVO7+EThq2s3/GZRHFKrSq4pJ4e6zeUMqGKHJJSVR51kBlchRrPdmYwz1jj9
+         zXYQ==
+X-Forwarded-Encrypted: i=1; AJvYcCVZaRv4E5yPLK1ZWMS/6iPgO3Og8OImx7Byr5dKjKhgdjieadaMMBAlnhk6+dGTqf0utcM3XbWJr5LSkDEY1M4FV3Pd@vger.kernel.org
+X-Gm-Message-State: AOJu0YwbdPU4P4KNSsPccTXXSfdKGXKwMUyvSL+Bmwot9gyHFdl9uTfh
+	e5qU/410j3aiAq6F9/woWou0c8rgqTYT4qmKy75berI0vFpQ/rnOySg39f9vx4jvHBFsFZr02kx
+	Lw43C0Pyd4KYebMEu0gHu8mC46H+byXM=
+X-Gm-Gg: ATEYQzybvtltul2jKMCbF0kBmFW8rflynXkhyRqGeBcZ0eClO/AB5Xzd3Jt/dXW5y9f
+	uYvvcAVhByeeT//bmXxYgWxlhSZDOVRYeHokGg3sbBLOfQUT3k8ICZGKQcySwo0hevsIC/uPgy2
+	AeOYsMl/Fxnj5EV34W760SVbE4QKBQWvRnOSbSl05/UwQ2wuw9UR9/8n5UTT13MZvhMzTRjkIq9
+	d8Bm/3iaIcZmGcIx/doCraYq3+AsUmSRyiUk1+Yxatf9i8CLh84/JwRAc4dNs4GmY5QAahy4+9L
+	No7qAKKg37rYCyE=
+X-Received: by 2002:a05:6512:640f:b0:5a1:2fcb:1da4 with SMTP id
+ 2adb3069b0e04-5a13cabad88mr4615178e87.11.1773108742407; Mon, 09 Mar 2026
+ 19:12:22 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: SA0PR12MB4557:EE_|CH0PR12MB8552:EE_
-X-MS-Office365-Filtering-Correlation-Id: 2494ede1-e5a6-4364-aa00-08de7e47dfb7
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;ARA:13230040|1800799024|366016|376014|7416014;
-X-Microsoft-Antispam-Message-Info:
-	jAsa9pV9EXM9yqRngqXV4Dzy2VJy79uYC8P/b0gp+Mkt5x55gqZaKn6Q9E/Uu7WXbDKPNMUlY7V5HUnEQDzv85UviJ1PCFYR6SxP72y3TrUwDhn2ydtJnjxaZeI4SEPWueop+fGFbZ6zAep9ouJy4yLFqlbuc302Wr25Vk49/ONRksQU+9wvSLE9nRZpl9vSy0TkHEXErkXtA+Hhq3fkvAIGmnJyrqlZQu8Xf+PsuVNdUAylTRgX5ESOkBE/QHbjyRT/bIxs7YorPUluwB/CS1MNxoEw7grl/Ai/PGnVgeXKlnEBPjRUWq/SAFYj32hL0nR6zu+AJjZUMhNb24DpXQIFDktOXOOtrwgjev36fr2ppSUTEK8N9hkUuq6guZJDBqc2YynFpQ2/UJK1I1euuGkbEP3T4yzXnYVlCUQ41IMjsJHzqIndfa9Pq2Vhqb3hId/8X4qKMC6QiYu0sc2ix6DjrtHS1tch8ilJ0FErAz+uut3piWXiIWiBXrG+JkXWFJzSy5wEdZPstVeUKvIwJ3sgF0pqVND1bOdKI3tvJSRrULwezP7A/E0C0/IARCSdip+Lt5gNHx0ol7m0HH4vJi+xUYvJ6qoQKEyZpKbQIb3GxFyaX+5Qp4OP9/QlMn723fxgrbVBIY47bib2w+exhQ24nKNU4/LPZYtm2/Op9kNSDcnrsTSiCFCGUxrBCG3E+wBNQoaRgFpoPyO075PXoxD+SGmjBRzEuYEcp0o6p30=
-X-Forefront-Antispam-Report:
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:SA0PR12MB4557.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(1800799024)(366016)(376014)(7416014);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0:
-	=?utf-8?B?cVBCbm1MMGFBcW9pUmZITzRlRUU1RzhEbko2NzMvNmhkb1JWeGV6TW9tdUhW?=
- =?utf-8?B?RklQUFpXajZiNXRSYUlNZ1Z1bmo3N3laYmR0bzdOOVNYWVBYbzVRUndNY0pX?=
- =?utf-8?B?RGdGQlBjN3lOU09aK2lEOGVIV2creS81akpTZmpCdVN6d2pRY1I5aFRWVldC?=
- =?utf-8?B?V1pDbklsTnkrMkk0Mmh0dU9CZTlSRUdDS2FTUWY0ZHZGK2pMM0dGZDVMbDk4?=
- =?utf-8?B?WlQxeERnaVRDNUJvZFd3UUM4R0hLZlJMYjg4Y2lFK0ZGTnIyK0xHU0tlN1Mv?=
- =?utf-8?B?bVk0TnljOUU0eG1PSXhtY3NNNVU2TlpEeFV1NjV3MVVHSWVFYkRhUVhkNkwx?=
- =?utf-8?B?dlNFWDNwV054d01IWVBHeDZnOXhEcUovamV2SUhFaXJpUHJrVzNIcEhMUmhv?=
- =?utf-8?B?aGFWL1hiT1Zlc0UxTUNGaTBBM0dHVmR1VGtwaGtpaHJzbkhpT21rVWpoYUNL?=
- =?utf-8?B?MFdDU2RMVW5saDZpRUVkSlR4ODlVK0Zid0N2RzlRZVVXKzI0Z1lTNllUeWlX?=
- =?utf-8?B?L2xtSjVlLzhsQWRUN3NnbVgvdkcxTDVvV3UzWkxRL3RDNVp6enNJTVZlbFFo?=
- =?utf-8?B?YWNrTUhaY0gxSGx5V0t5SURRQXBMd0xqYzEydDd1QWRucXZlajliUHdJMmRZ?=
- =?utf-8?B?NndwaHgyTk1QSEZWNTVJQ1lJSmh5aUZDcEdUY0t2elkvbVBwNi9MdWJ1MFFm?=
- =?utf-8?B?Qm9mTEZKWlE2eUNIY1hSR08vZytSa0htT3RoRFhEc2RmUnJpUEw5YjNwaXdZ?=
- =?utf-8?B?YTVUS1l6U0JBZjBiMUZDQ09ISnpZbk5JODd5UzB0UzNCVTFtQVloTDJ0NURx?=
- =?utf-8?B?ekU0VTN2bUFaaXVTd1NzT25TbUcwdnNldy9ncWo4RmRETDRKNmcwVTI2clAx?=
- =?utf-8?B?Mm50UU5jUzlTU0Z2eUpqbXpHSE81dktoWUJVWXMvQjAwOHoxaElUVUd5bmxE?=
- =?utf-8?B?NE5aQy9XUDgwQXJQcU5lOFRqTnpnNVFrekhiMWtiTE9JOXUyaDBRWTBPc1FS?=
- =?utf-8?B?TkRZZ0VLMXN6SDdvM0dWVUtHUzZPNWh4NW85ZWFVa3UzWjV2MG5jTkZTYzdZ?=
- =?utf-8?B?RlRvVitUUlUzaCs2RWYxNFBDLzhEbE1CeGpxMWp0M1pNTElDZHlOclVWODdS?=
- =?utf-8?B?VVVtZDBhTHN4UFZ5RFhiT05XcFRUeVZwNytEQnh4UmVyUnRDV2l1YUpKVXJO?=
- =?utf-8?B?Q0FTcHZpRnlOT1pwK2VsSnl2SlF1R04ydDI1RHl1M2pBQURDNzdwT01aUExw?=
- =?utf-8?B?c3ZKRmlERXZPVkpMTjZldys4dVowRHE0OXhBbGVsUmk0Z2h1QkhsTFo1SGRD?=
- =?utf-8?B?OU8rWk81cHJ2aXlFdDQrREJ0YkgrakRpemtuSnpwanNINm5uZisyd3Qxb3NN?=
- =?utf-8?B?dzFBMVZZUnlmZ2hNYjNGaWsvMStGZXJnbGcyNkkwQnE1bllTTzVmMFhuUE9s?=
- =?utf-8?B?MDBLNk14OWZqQnloa1c2UXFnK3FzUVQyQjdtVjlCbSt6V01tNVBKWm9hVFdw?=
- =?utf-8?B?T3h2S3U4dXlhRVZ2eExySmlDQnZtVi9Ya0psMzNtVmxvbnEzdXJwQmZKOUd3?=
- =?utf-8?B?cmxQbkxuQ3c0QzN5azVVRWZPalVpc0Nsd0xtWUZja0xTRkFKRi8yZmJ3ZEx0?=
- =?utf-8?B?V3BJV0svMVVYNTBqSGpyM29VRXd2OGNoNFkzK01vcFdQTDZjYnFWVnBWZVFs?=
- =?utf-8?B?WnJOVWxwWkFYWWtna1kxTDV1emVISFJkMGJ3Umk0ZlZZTE9td0JVdDhhRnJz?=
- =?utf-8?B?cmpBTTlneE9FNnJrWHNkT1BtRFhBV0l6VmlsZjRscTZncmtGSlZpc2oybjk3?=
- =?utf-8?B?WnRNeTBpSmpPVnA3UVJmajc3MVJWT3dKRkZuNGxJQ1NkL3NYOEw5Wml5WWdK?=
- =?utf-8?B?Z3ZFSDhLekp1TFpFRi9jOTEyWlk0djJXZnBuVHlMek1QOExUUU56ZnBpMGcy?=
- =?utf-8?B?YU1peGZOa3VBRGhaZGNDME5tbHJzSnNWU00rWDNIOVVHMVRyV2JPOEtRc0pn?=
- =?utf-8?B?cm1lckpjTFYzVUVYLzI2RmkyRWozaHFlcGFYcStKczZ4WEtoZStlSDhLRFpq?=
- =?utf-8?B?VTJWQ1U5aFNOVGhWRE9FZFJacUNXeTlvdEFObUtFcDJib2xGbmNzS1BnZVVm?=
- =?utf-8?B?WDZSeW9PbGQvZjg0UnZyemtvK0FEblhaOWVZbGtvc0w1L0VQaktPeCtWQS9k?=
- =?utf-8?B?RHJjZVFIUksyYzU3N1BEVlVFL2ZFOHBWWDV6YjAzZUlubmgrNnhqUHk4Vi9D?=
- =?utf-8?B?QkswZUM3Q0g3RHB5MmNNMWlpaXJ0RVgrR1E4NDl1My9PVGxtRVRITEgxM2hi?=
- =?utf-8?B?N3paTjNRaHh1UDJwcHRzSGQ5N0VPNi9rdXBGeDExY2U5TmpMTnRRQT09?=
-X-OriginatorOrg: amd.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 2494ede1-e5a6-4364-aa00-08de7e47dfb7
-X-MS-Exchange-CrossTenant-AuthSource: SA0PR12MB4557.namprd12.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 10 Mar 2026 01:53:49.5706
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: IskYrT3ssmxA7HNeoZQDhSxy44xLrK4mWxvFmg8kK82uRPyVe/k2bVJgrOS/VK7/HKHaJlyLVLiFUE6fZ+CLlw==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: CH0PR12MB8552
+References: <20260209063355.491189-1-vishnuocv@gmail.com> <20260209063355.491189-2-vishnuocv@gmail.com>
+ <fdd1d48e-61b7-2543-8a30-c7ad416f5dd3@linux.intel.com>
+In-Reply-To: <fdd1d48e-61b7-2543-8a30-c7ad416f5dd3@linux.intel.com>
+From: Vishnu Sankar <vishnuocv@gmail.com>
+Date: Tue, 10 Mar 2026 11:11:44 +0900
+X-Gm-Features: AaiRm50mcZVhLubnwdp-BsgTf6noF_Wn1o5ArrsQT_Cbsc-4CO86otqEZNqhq_c
+Message-ID: <CABxCQKtf=RYrpgnbM0ODo3GA0oW3jgR=_erc9RCD6gEasasA+A@mail.gmail.com>
+Subject: Re: [PATCH v7 1/3] input: trackpoint - Enable doubletap by default on
+ capable devices
+To: =?UTF-8?Q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
+Cc: Mark Pearson <mpearson-lenovo@squebb.ca>, dmitry.torokhov@gmail.com, hmh@hmh.eng.br, 
+	Hans de Goede <hansg@kernel.org>, corbet@lwn.net, derekjohn.clark@gmail.com, 
+	linux-input@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>, 
+	ibm-acpi-devel@lists.sourceforge.net, linux-doc@vger.kernel.org, 
+	platform-driver-x86@vger.kernel.org, vsankar@lenovo.com
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+
+Hi Ilpo,
+
+Thank you so much for the review.
+
+On Mon, Mar 9, 2026 at 5:01=E2=80=AFPM Ilpo J=C3=A4rvinen
+<ilpo.jarvinen@linux.intel.com> wrote:
+>
+> On Mon, 9 Feb 2026, Vishnu Sankar wrote:
+>
+> > Enable doubletap functionality by default on TrackPoint devices that
+> > support it. The feature is detected using firmware ID pattern matching
+> > (PNP: LEN03xxx) with a deny list of incompatible devices.
+> >
+> > This provides immediate doubletap functionality without requiring
+> > userspace configuration. The hardware is enabled during device
+> > detection, while event filtering continues to be handled by the
+> > thinkpad_acpi driver as before.
+> >
+> > Signed-off-by: Vishnu Sankar <vishnuocv@gmail.com>
+> > Suggested-by: Mark Pearson <mpearson-lenovo@squebb.ca>
+> > Acked-by: Dmitry Torokhov <dmitry.torokhov@gmail.com>
+> > ---
+> > Changes in v7:
+> > - Removed unwanted comments
+> > - Removed psmouse_info ()
+> >
+> > Changes in v6:
+> > - No Changes
+> >
+> > Changes in v5:
+> > - Renamed function to trackpoint_is_dt_capable()
+> > - Simplified string comparison without sscanf()
+> > - Removed wrapper function as suggested
+> > - Fixed missing period in comment
+> >
+> > Changes in v4:
+> > - Simplified approach: removed all sysfs attributes and user interface
+> > - Enable doubletap by default during device detection
+> > - Removed global variables and complex attribute infrastructure
+> > - Uses minimal firmware ID detection with deny list
+> > - Follows KISS principle as suggested by reviewers
+> >
+> > Changes in v3:
+> > - No changes
+> >
+> > Changes in v2:
+> > - Improve commit messages
+> > - Sysfs attributes moved to trackpoint.c
+> > - Removed unnecessary comments
+> > - Removed unnecessary debug messages
+> > - Using strstarts() instead of strcmp()
+> > - is_trackpoint_dt_capable() modified
+> > - Removed _BIT suffix and used BIT() define
+> > - Reverse the trackpoint_doubletap_status() logic to return error first
+> > - Removed export functions as a result of the design change
+> > - Changed trackpoint_dev->psmouse to parent_psmouse
+> > - The path of trackpoint.h is not changed
+> > ---
+> >  drivers/input/mouse/trackpoint.c | 45 ++++++++++++++++++++++++++++++++
+> >  drivers/input/mouse/trackpoint.h |  5 ++++
+> >  2 files changed, 50 insertions(+)
+> >
+> > diff --git a/drivers/input/mouse/trackpoint.c b/drivers/input/mouse/tra=
+ckpoint.c
+> > index 5f6643b69a2c..e12d76350252 100644
+> > --- a/drivers/input/mouse/trackpoint.c
+> > +++ b/drivers/input/mouse/trackpoint.c
+> > @@ -393,6 +393,45 @@ static int trackpoint_reconnect(struct psmouse *ps=
+mouse)
+> >       return 0;
+> >  }
+> >
+> > +/* List of known incapable device PNP IDs */
+> > +static const char * const dt_incompatible_devices[] =3D {
+> > +     "LEN0304",
+> > +     "LEN0306",
+> > +     "LEN0317",
+> > +     "LEN031A",
+> > +     "LEN031B",
+> > +     "LEN031C",
+> > +     "LEN031D",
+> > +};
+> > +
+> > +/*
+> > + * Checks if it's a doubletap capable device.
+> > + * The PNP ID format is "PNP: LEN030d PNP0f13".
+> > + */
+> > +static bool trackpoint_is_dt_capable(const char *pnp_id)
+> > +{
+> > +     size_t i;
+> > +
+> > +     if (!pnp_id)
+> > +             return false;
+> > +
+> > +     /* Must start with "PNP: LEN03" */
+> > +     if (!strstarts(pnp_id, "PNP: LEN03"))
+>
+> Missing include.
+Sorry, I am a bit confused here:
+strstarts() is already available through the existing
+#include <linux/string.h> in thinkpad_acpi.c.
+
+Do you think I should do anything else here?
+>
+> > +             return false;
+> > +
+> > +     /* Ensure enough length before comparing */
+> > +     if (strlen(pnp_id) < 12)
+> > +             return false;
+> > +
+> > +     /* Check deny-list */
+> > +     for (i =3D 0; i < ARRAY_SIZE(dt_incompatible_devices); i++) {
+>
+> Missing include for ARRAY_SIZE().
+Acked.
+Will add linux/array_size.h to the include list.
+>
+> > +             if (!strncmp(pnp_id + 5,
+> > +                          dt_incompatible_devices[i], 7))
+>
+> Fits to one line.
+Understood.
+will come up with v8 soon.
+>
+> > +                     return false;
+> > +     }
+> > +     return true;
+> > +}
+> > +
+> >  int trackpoint_detect(struct psmouse *psmouse, bool set_properties)
+> >  {
+> >       struct ps2dev *ps2dev =3D &psmouse->ps2dev;
+> > @@ -470,6 +509,12 @@ int trackpoint_detect(struct psmouse *psmouse, boo=
+l set_properties)
+> >                    psmouse->vendor, firmware_id,
+> >                    (button_info & 0xf0) >> 4, button_info & 0x0f);
+> >
+> > +     if (trackpoint_is_dt_capable(ps2dev->serio->firmware_id)) {
+> > +             error =3D trackpoint_write(ps2dev, TP_DOUBLETAP, TP_DOUBL=
+ETAP_ENABLE);
+> > +             if (error)
+> > +                     psmouse_warn(psmouse, "Failed to enable doubletap=
+: %d\n", error);
+> > +     }
+> > +
+> >       return 0;
+> >  }
+> >
+> > diff --git a/drivers/input/mouse/trackpoint.h b/drivers/input/mouse/tra=
+ckpoint.h
+> > index eb5412904fe0..3e03cdb39449 100644
+> > --- a/drivers/input/mouse/trackpoint.h
+> > +++ b/drivers/input/mouse/trackpoint.h
+> > @@ -69,6 +69,8 @@
+> >                                       /* (how hard it is to drag */
+> >                                       /* with Z-axis pressed) */
+> >
+> > +#define TP_DOUBLETAP         0x58    /* TrackPoint doubletap register =
+*/
+> > +
+> >  #define TP_MINDRAG           0x59    /* Minimum amount of force needed=
+ */
+> >                                       /* to trigger dragging */
+> >
+> > @@ -110,6 +112,9 @@
+> >                                          external device will be forced=
+ to 1 */
+> >  #define TP_MASK_EXT_TAG                      0x04
+> >
+> > +/* Doubletap register values */
+> > +#define TP_DOUBLETAP_ENABLE  0xFF    /* Enable value */
+> > +#define TP_DOUBLETAP_DISABLE 0xFE    /* Disable value */
+> >
+> >  /* Power on Self Test Results */
+> >  #define TP_POR_SUCCESS               0x3B
+> >
+>
+> --
+>  i.
+>
 
 
+--=20
 
-On 3/9/2026 2:45 PM, Armin Wolf wrote:
-> Am 09.03.26 um 18:23 schrieb Pali Rohár:
-> 
->> On Monday 09 March 2026 10:41:20 Mario Limonciello wrote:
->>> On 3/7/2026 6:25 PM, Armin Wolf wrote:
->>>> +    /* "DELL" */
->>>> +    if (le32_to_cpu(desc->vendor_signature) != 0x4C4C4544) {
->>> Do you think you could come up with a helper for matching an expected
->>> "string" like this?  I /suspect/ it's going to be a common pattern that
->>> vendors use and it will increase code readability going forward if a 
->>> helper
->>> is possible.  I see it at least twice in this patch alone.
->>>
->>> Something like this prototype:
->>>
->>> bool wmi_valid_signature(u32 field, const char* expected_str);
->> When I read your comment, I come to another idea. What about introducing
->> a macro which will convert 4-byte string to u32 number? For example:
->>
->>    #define str_to_u32(str) 
->> ({ _Static_assert(__builtin_types_compatible_p(__typeof__(str), 
->> char[5]), "wrong type"); (u32)(u8)(str)[0] | ((u32)((u8)(str)[1]) << 
->> 8) | ((u32)((u8)(str)[2]) << 16) | ((u32)((u8)(str)[3]) << 24); })
->>
->> The whole conversion would be done in compile time (with -O2) so should
->> not cause any possible performance issues.
->>
->> With it, the condition could be written as:
->>
->>    if (le32_to_cpu(desc->vendor_signature) != str_to_u32("DELL")) {
->>
->> and no need to use magic number 0x4C4C4544 and write comment that this
->> number in ASCII is the "DELL" string.
-> 
-> To be honest i do nothing think that having a helper function for this 
-> inside the WMI driver core
-> is useful, especially since most vendors other than Dell do not use such 
-> magic numbers.
-> 
->  From my perspective assembling the two constants ourself is fine here.
-> 
-> Thanks,
-> Armin Wolf
+Regards,
 
-Oh I didn't realize no one else is doing this.  Yeah if it's Dell only, 
-agree - meh.
-
-
-> 
->>
->>>> +        dev_err(&wdev->dev, "Dell descriptor buffer has invalid 
->>>> vendor signature (%u)\n",
->>>> +            le32_to_cpu(desc->vendor_signature));
->>>> +        ret = -ENOMSG;
->>>>            descriptor_valid = ret;
->>>>            goto out;
->>>>        }
->>>> -    buffer = (u32 *)obj->buffer.pointer;
->>>> -
->>>> -    if (strncmp(obj->string.pointer, "DELL WMI", 8) != 0) {
->>>> -        dev_err(&wdev->dev, "Dell descriptor buffer has invalid 
->>>> signature (%8ph)\n",
->>>> -            buffer);
->>>> -        ret = -EINVAL;
->>>> +    /* " WMI" */
->>>> +    if (le32_to_cpu(desc->object_signature) != 0x494D5720) {
->>>> +        dev_err(&wdev->dev, "Dell descriptor buffer has invalid 
->>>> object signature (%u)\n",
->>>> +            le32_to_cpu(desc->object_signature));
->>>> +        ret = -ENOMSG;
->>>>            descriptor_valid = ret;
->>>>            goto out;
->>>>        }
-> 
-
+      Vishnu Sankar
