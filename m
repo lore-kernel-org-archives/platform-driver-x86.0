@@ -1,84 +1,108 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from irl.hu (irl.hu [95.85.9.111])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5438343DA33
-	for <platform-driver-x86@vger.kernel.org>; Tue, 10 Mar 2026 09:48:59 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1A415372688;
+	Tue, 10 Mar 2026 10:51:13 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=95.85.9.111
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1773136139; cv=none; b=IUoZ06UBhppOqI+WOhCM/2qVWtw/bFSIwutqPfnTG/cfVuPjeZNFGq5aw+Dc8ewtpRqrAbFFNI9ucWVxfLorr3rghxSdAMtYDGb7gSm3kcFEe4ys5S+nhbpwT2irCHBl1U2HU4OnvGD2lIy4VPNaz546KQdvK1bbsF93NT6YEjg=
+	t=1773139875; cv=none; b=XBgdgh5ig4q6UgX18YAQAfSbQNsLPHthjWz4UIj9pW7wQqf8T9k8pep6JdFqQyk9iYlQ30sGZYPqh/m3KCkijZmhcTdCzBhTfupcBKmdVKScJkm5lWVM3f1+e6KXM2vCoPx4kvR96BWd7PKe/12p83yZu2NHt1EMLnN4lC27ptY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1773136139; c=relaxed/simple;
-	bh=2qs/obur14fQtCTYO2vP8eYycOQdvXQ30T0NqUMlwmE=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=MltWL0qeNeblfPXKa3bLlBEMOhGSflgK6fx884XnLbdRXElK5i2rsi2AZNBRUXTuPnZRgxWNSnNKZiPOYfP96r29jFS1TS/Q7SfOnEGQDZj6jIbrWmgp4X1tCwueJKqKmr/YgPOX+gCeEGYqHKqHLPbckrtvawaU5Da/LCWONq4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=UMmSK+cH; arc=none smtp.client-ip=10.30.226.201
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="UMmSK+cH"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 0C8C9C4AF09
-	for <platform-driver-x86@vger.kernel.org>; Tue, 10 Mar 2026 09:48:59 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1773136139;
-	bh=2qs/obur14fQtCTYO2vP8eYycOQdvXQ30T0NqUMlwmE=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-	b=UMmSK+cH+BQItUHo8xhUPY6E1CQiwXs0ji0oQwhUky+ZFGOI6LcPWpHOQkh4nL8EJ
-	 9zB1LyRelCVsnCv72qeOAqH00PpPJWiSkbyrqBvTPSUKgHirOF0CptNJsL6Q7EnNm2
-	 RGItOP+jeKuMtTLMg66cmo5cdvCmwNhvlafWtLcRheQu/MdfQvPVPyw18HX0mmWLJB
-	 b8Z1wGCD1rei3zIib+wygZ2udGUyTQExGcM5mT+1KGW8gCfN1okHwwC4dQL1I3dOtH
-	 9Rotf+NhoaRoeyhnCeVNoreUWiobwjz+pDAUv93VPOKx95ONB9G+pwQp1FzhX9t9oY
-	 YuJT2oOZ43rgw==
-Received: by mail-oi1-f174.google.com with SMTP id 5614622812f47-466ebbf7ff7so805133b6e.1
-        for <platform-driver-x86@vger.kernel.org>; Tue, 10 Mar 2026 02:48:59 -0700 (PDT)
-X-Forwarded-Encrypted: i=1; AJvYcCWxDbGhy+Clyg4rKWmNJtWb9hunIBaJDoGoaKdBWgPVeJ21cycwVgusyRXTox43Y35VEOSJ0Dyf6gDIkr2HtpUS7u9g@vger.kernel.org
-X-Gm-Message-State: AOJu0YyyohSTkBUYuxm2So93NM+dGYZ4IFoTgDd+tw2kVwpHX1oHcoTp
-	t6mXJzrY4ey4q/FGrJr7ZMcgkjTMKPVD62oUF2d9w51L0u5IMqwDqHHyv1vpNVinqKqxMoh8tf8
-	HDJkdg0ZZnnNbsqVbFx6jes9wfM3brW4=
-X-Received: by 2002:a05:6808:50a4:b0:467:fd2:69d with SMTP id
- 5614622812f47-4670fd21b99mr3224175b6e.17.1773136138192; Tue, 10 Mar 2026
- 02:48:58 -0700 (PDT)
+	s=arc-20240116; t=1773139875; c=relaxed/simple;
+	bh=IC02AFMYqql7jnfQG4E0Bo/Kylh+iDF8UrqI5S8eao8=;
+	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
+	 Content-Type:MIME-Version; b=cSL9ucLSUbc/RXsK45rAF5Bxd27QI7+Sz4WEO+OKJVccQnhObNqKjHmDUIXuu4BSVh0q/CddyVB7UpYkoJqJm8ig7+NYHVty/SwcKWiNau/O1vPrWX7NENViM7tjUbKlOw3yBAhsIefyaQRB4Cp01cyqq6Q56+AGj6vOnizpZxM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=irl.hu; spf=pass smtp.mailfrom=irl.hu; arc=none smtp.client-ip=95.85.9.111
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=irl.hu
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=irl.hu
+Received: from [192.168.2.4] (51b68cef.dsl.pool.telekom.hu [::ffff:81.182.140.239])
+  (AUTH: CRAM-MD5 soyer@irl.hu, )
+  by irl.hu with ESMTPSA
+  id 00000000000C70AA.0000000069AFF666.0005AFC6; Tue, 10 Mar 2026 11:45:58 +0100
+Message-ID: <e0fb50490d733ad35807be79b6f4b91003897d10.camel@irl.hu>
+Subject: Re: [PATCH 1/9] platform/x86: dell-descriptor: Use new buffer-based
+ WMI API
+From: Gergo Koteles <soyer@irl.hu>
+To: Armin Wolf <W_Armin@gmx.de>,
+  Pali =?ISO-8859-1?Q?Roh=E1r?= <pali@kernel.org>,
+  Mario Limonciello <mario.limonciello@amd.com>
+Cc: Dell.Client.Kernel@dell.com, mjg59@srcf.ucam.org,
+  hansg@kernel.org, ilpo.jarvinen@linux.intel.com,
+  platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org,
+  linux@roeck-us.net, linux-hwmon@vger.kernel.org
+Date: Tue, 10 Mar 2026 11:46:04 +0100
+In-Reply-To: <c1957ff4-964c-4651-93be-056ea4d9004d@gmx.de>
+References: <20260308002522.4185-1-W_Armin@gmx.de>
+	 <20260308002522.4185-2-W_Armin@gmx.de>
+	 <39bdcdf7-a771-4f1b-a3a0-0ecde272d914@amd.com>
+	 <20260309172309.a3ukif3bejbicywl@pali>
+	 <c1957ff4-964c-4651-93be-056ea4d9004d@gmx.de>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+User-Agent: Evolution 3.58.3 (3.58.3-1.fc43) 
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <12863082.O9o76ZdvQC@rafael.j.wysocki> <aa9nq0JjDVxja74d@marvin.atrad.com.au>
-In-Reply-To: <aa9nq0JjDVxja74d@marvin.atrad.com.au>
-From: "Rafael J. Wysocki" <rafael@kernel.org>
-Date: Tue, 10 Mar 2026 10:48:46 +0100
-X-Gmail-Original-Message-ID: <CAJZ5v0h4nYMGY9W8cS0UjT5Lfttrv27DP2grAwYsAJJ1YGE_RA@mail.gmail.com>
-X-Gm-Features: AaiRm50zWEG-wOGEmskTIrfFX7NHacZt64zElVK9lCHSn6fh6NapshRzyGOB7N4
-Message-ID: <CAJZ5v0h4nYMGY9W8cS0UjT5Lfttrv27DP2grAwYsAJJ1YGE_RA@mail.gmail.com>
-Subject: Re: [PATCH v2 0/5] platform/x86: fujitsu: Bind drivers to platform
- devices instead of ACPI ones
-To: Jonathan Woithe <jwoithe@just42.net>
-Cc: "Rafael J. Wysocki" <rafael@kernel.org>, =?UTF-8?Q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>, 
-	Robert Gerlach <khnz@gmx.de>, Hans de Goede <hansg@kernel.org>, LKML <linux-kernel@vger.kernel.org>, 
-	Linux ACPI <linux-acpi@vger.kernel.org>, platform-driver-x86@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
 
-On Tue, Mar 10, 2026 at 1:37=E2=80=AFAM Jonathan Woithe <jwoithe@just42.net=
-> wrote:
->
-> Hi all
->
-> On Mon, Mar 09, 2026 at 06:03:02PM +0100, Rafael J. Wysocki wrote:
-> > This is an update of
-> >
-> > https://lore.kernel.org/linux-acpi/1968442.tdWV9SEqCh@rafael.j.wysocki/
-> >
-> > that fixes an error code path issue in patch [3/5].  That change also
-> > requires patch [5/5] to be modified, but the other patches are the same
-> > as in v1.
-> >
-> > The patch series summary below still applies.
-> > :
->
-> I'm not sure if I need to explicitly ack v2 or if my earlier ack for v1
-> suffices.  If not:
->
-> Acked-by: Jonathan Woithe <jwoithe@just42.net>
->
-> This is for the entire series.
+Hi Armin,
 
-Thank you!
+On Mon, 2026-03-09 at 20:45 +0100, Armin Wolf wrote:
+> Am 09.03.26 um 18:23 schrieb Pali Roh=C3=A1r:
+>=20
+> > On Monday 09 March 2026 10:41:20 Mario Limonciello wrote:
+> > > On 3/7/2026 6:25 PM, Armin Wolf wrote:
+> > > > +	/* "DELL" */
+> > > > +	if (le32_to_cpu(desc->vendor_signature) !=3D 0x4C4C4544) {
+> > > Do you think you could come up with a helper for matching an expected
+> > > "string" like this?  I /suspect/ it's going to be a common pattern th=
+at
+> > > vendors use and it will increase code readability going forward if a =
+helper
+> > > is possible.  I see it at least twice in this patch alone.
+> > >=20
+> > > Something like this prototype:
+> > >=20
+> > > bool wmi_valid_signature(u32 field, const char* expected_str);
+> > When I read your comment, I come to another idea. What about introducin=
+g
+> > a macro which will convert 4-byte string to u32 number? For example:
+> >=20
+> >    #define str_to_u32(str) ({ _Static_assert(__builtin_types_compatible=
+_p(__typeof__(str), char[5]), "wrong type"); (u32)(u8)(str)[0] | ((u32)((u8=
+)(str)[1]) << 8) | ((u32)((u8)(str)[2]) << 16) | ((u32)((u8)(str)[3]) << 24=
+); })
+> >=20
+> > The whole conversion would be done in compile time (with -O2) so should
+> > not cause any possible performance issues.
+> >=20
+> > With it, the condition could be written as:
+> >=20
+> >    if (le32_to_cpu(desc->vendor_signature) !=3D str_to_u32("DELL")) {
+> >=20
+> > and no need to use magic number 0x4C4C4544 and write comment that this
+> > number in ASCII is the "DELL" string.
+>=20
+> To be honest i do nothing think that having a helper function for this in=
+side the WMI driver core
+> is useful, especially since most vendors other than Dell do not use such =
+magic numbers.
+>=20
+>  From my perspective assembling the two constants ourself is fine here.
+>=20
+
+But what about the other readers? :)
+
+Why don't you use a char array for the descriptors?
+
+struct descriptor {
+	char vendor_signature[4];
+	char object_signature[4];
+	__le32 interface_version;
+	__le32 buffer_length;
+	__le32 hotfix_number;
+} __packed;
+
+Best regards,
+Gergo Koteles
