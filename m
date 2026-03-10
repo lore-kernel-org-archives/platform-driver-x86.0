@@ -1,45 +1,45 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1900344DB69;
-	Tue, 10 Mar 2026 09:02:19 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B260C4508F2;
+	Tue, 10 Mar 2026 09:02:21 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1773133339; cv=none; b=NUeT7aiJAvnkErUotFDN4UT8MR/EHIjudxZe9AWp+dHjgjLmX4JwMXRGO05x4rKyyvXZRl2m9Fc9RKYQbirzNOqAKBNWPacfxlkPh2aPxI8bHABzEUhd/OCFB3XTaY9AoKKPZVu7kGSmCKqTWNAbPY9wI4cxp9r4Gzbe3GfYEQY=
+	t=1773133341; cv=none; b=hfxx4p7oogXBNFDL5sPHOKjyGumNAiEgeCqIZB4cldsVbXJrX9zZeNFoQcT9dJ2y1pz8JrN4SEZIf0mHBZCNqKO8ApdNLVRWhu1+TPq1fYIY608EK7vQzrOhM91KpsekZd2XsfeTODLDj1DKdPwd0h7o7e3+4yFRO6SECs7zgDo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1773133339; c=relaxed/simple;
-	bh=uB6pQPX2I+UNDNo4G/LNGulLPdRkxY5v9RFHFRDAvxc=;
+	s=arc-20240116; t=1773133341; c=relaxed/simple;
+	bh=oTCcKoiBg4Ndl4dFHqHelPZE7Fdxyv/0WoL9zpscZ78=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=FyY8wrVJ3yZMlP6wy7hxodsfBKlGhQXcFQF9y8n6cuAxuTfbx9u2EOs7PyTSjbuZdcrEpya8+MI98qci6iJDRv5Uq/7+x3+TVe4/GnLCxjWLx24pHFlENFGO4aG0yGL3fRn8khF8lUqZDnY2BWbIsT6Ab92wfQsb4m28y6gR6Uw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=XxA+bCvc; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version:Content-Type; b=PihLoPU7Y7Qr0MngTIUIzO1IUunC0htpYSOfFJruJffxRMgMROtgA031yyr8Q63SqSKf5wapxLNIeklWFDtzXQDuu8eMl4TArXNtz+b9IsSl/pLYKv5aAZaSxpiCnuml2m25Y6anAy400QQgj85lO6NKtfixt/Lcz2sKulUVacg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=W8P//Xyv; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="XxA+bCvc"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id EAB64C2BC86;
-	Tue, 10 Mar 2026 09:02:17 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="W8P//Xyv"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 93F85C2BC9E;
+	Tue, 10 Mar 2026 09:02:20 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1773133339;
-	bh=uB6pQPX2I+UNDNo4G/LNGulLPdRkxY5v9RFHFRDAvxc=;
+	s=k20201202; t=1773133341;
+	bh=oTCcKoiBg4Ndl4dFHqHelPZE7Fdxyv/0WoL9zpscZ78=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=XxA+bCvcai3gX7vqE9J2y6zWnZw1LTlhEdx4C9IFOYnTVLxyc4Vg/lqTfdiCMOttZ
-	 laWQ7AuV9oWq3uenaCxvvT6BccOEo3e76yidbiwGpLm8L77+ovrk9pWLGzK8Hb9p5Z
-	 EAO5dqMknySa/gpNOhBKaq61N8YAiDI4heldvC+O9EtlwDPYw3+qhxcwLszCImJdZg
-	 L7s/zozHjHVFd83dfkNs4qhWYd+n81/t/vxX6ZwLEChsuN2a+cucxEqzLDt4rTh8C+
-	 W5jgQR2dP+eaOfW5IzXi12GEs4v87KJe76jQaQStGhRsZttas16DoxX4N+sTxrZuuV
-	 prXCTsf7XfO6A==
+	b=W8P//Xyvp1IQk7GVRhDLfxjC/otAxwJJOB8efJ6W9eZL0kf2o/Hupgp/cy6lo8zAv
+	 5NE0FgWVbiFJZzJ4yMvP7st/cBtM50nk5bSK07iG3e2euVHoEwBEEO3zi/WnmKUPKD
+	 K9Tv9NGrAiFC//58rNfmBZozOIoF8PodEUz/2OjB5WtGPOfPPXkFK6tGBaCQQHFuiU
+	 uZpU/ixVXzQkrhJ0bKEODQtuPvMizeZWpTB+lwFOkswdlsHefJCFgX+ftlsEMEakwh
+	 ccNhlR4KkSCUKiRU3KCMgljUmfEMBZeGq9Le2smi4+jAcPBMZcNTN1oqe7rzrL7IRp
+	 hS1Pwlw5azf4g==
 From: Sasha Levin <sashal@kernel.org>
 To: patches@lists.linux.dev,
 	stable@vger.kernel.org
-Cc: Hans de Goede <johannes.goede@oss.qualcomm.com>,
-	Yajat Kumar <yajatapps3@gmail.com>,
+Cc: Leif Skunberg <diamondback@cohunt.app>,
+	Hans de Goede <johannes.goede@oss.qualcomm.com>,
 	=?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>,
 	Sasha Levin <sashal@kernel.org>,
+	alexhung@gmail.com,
 	hansg@kernel.org,
-	linux-input@vger.kernel.org,
 	platform-driver-x86@vger.kernel.org,
 	linux-kernel@vger.kernel.org
-Subject: [PATCH AUTOSEL 6.19-5.10] platform/x86: touchscreen_dmi: Add quirk for y-inverted Goodix touchscreen on SUPI S10
-Date: Tue, 10 Mar 2026 05:01:22 -0400
-Message-ID: <20260310090145.2709021-22-sashal@kernel.org>
+Subject: [PATCH AUTOSEL 6.19-5.10] platform/x86: intel-hid: Enable 5-button array on ThinkPad X1 Fold 16 Gen 1
+Date: Tue, 10 Mar 2026 05:01:24 -0400
+Message-ID: <20260310090145.2709021-24-sashal@kernel.org>
 X-Mailer: git-send-email 2.51.0
 In-Reply-To: <20260310090145.2709021-1-sashal@kernel.org>
 References: <20260310090145.2709021-1-sashal@kernel.org>
@@ -55,22 +55,21 @@ X-Patchwork-Hint: Ignore
 X-stable-base: Linux 6.19.6
 Content-Transfer-Encoding: 8bit
 
-From: Hans de Goede <johannes.goede@oss.qualcomm.com>
+From: Leif Skunberg <diamondback@cohunt.app>
 
-[ Upstream commit 7d87ed70fc95482c12edf9493c249b6413be485e ]
+[ Upstream commit b38d478dad79e61e8a65931021bdfd7a71741212 ]
 
-The touchscreen on the SUPI S10 tablet reports inverted Y coordinates,
-causing touch input to be mirrored vertically relative to the display.
+The Lenovo ThinkPad X1 Fold 16 Gen 1 has physical volume up/down
+buttons that are handled through the intel-hid 5-button array
+interface. The firmware does not advertise 5-button array support via
+HEBC, so the driver relies on a DMI allowlist to enable it.
 
-Add a quirk to set the "touchscreen-inverted-y" boolean device-property
-on the touchscreen device, so that the goodix_ts driver will fixup
-the coordinates.
+Add the ThinkPad X1 Fold 16 Gen 1 to the button_array_table so the
+volume buttons work out of the box.
 
-Reported-by: Yajat Kumar <yajatapps3@gmail.com>
-Closes: https://lore.kernel.org/linux-input/20251230221639.582406-1-yajatapps3@gmail.com/
-Tested-by: Yajat Kumar <yajatapps3@gmail.com>
-Signed-off-by: Hans de Goede <johannes.goede@oss.qualcomm.com>
-Link: https://patch.msgid.link/20260217132346.34535-1-johannes.goede@oss.qualcomm.com
+Signed-off-by: Leif Skunberg <diamondback@cohunt.app>
+Reviewed-by: Hans de Goede <johannes.goede@oss.qualcomm.com>
+Link: https://patch.msgid.link/20260210085625.34380-1-diamondback@cohunt.app
 Reviewed-by: Ilpo Järvinen <ilpo.jarvinen@linux.intel.com>
 Signed-off-by: Ilpo Järvinen <ilpo.jarvinen@linux.intel.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
@@ -81,107 +80,98 @@ LLM Generated explanations, may be completely bogus:
 ## Analysis
 
 ### What the commit does
-This adds a DMI-based touchscreen quirk for the SUPI S10 tablet. The
-tablet's Goodix touchscreen (GDIX1001) reports inverted Y coordinates,
-causing touch input to be vertically mirrored. The fix adds:
 
-1. A new property entry array `gdix1001_y_inverted_props[]` with
-   `touchscreen-inverted-y`
-2. A corresponding `ts_dmi_data` struct pointing to ACPI name "GDIX1001"
-3. A DMI table entry matching vendor "SUPI", product "S10"
+This commit adds a single DMI table entry for the Lenovo ThinkPad X1
+Fold 16 Gen 1 to the `button_array_table` in
+`drivers/platform/x86/intel/hid.c`. This enables the intel-hid 5-button
+array interface for physical volume up/down buttons on this specific
+laptop, whose firmware does not advertise 5-button array support via the
+HEBC ACPI method.
+
+### Classification: Hardware Quirk/Workaround
+
+This is a textbook DMI allowlist addition — one of the explicitly
+allowed exception categories for stable backporting. The pattern is
+identical to the existing entries for HP Spectre x2, ThinkPad X1 Tablet
+Gen 1/2, Microsoft Surface Go 3/4, etc.
 
 ### Stable kernel criteria assessment
 
-**Fixes a real bug:** Yes. Without this quirk, touch input is vertically
-mirrored on this tablet, making it essentially unusable for touch
-interaction.
+- **Obviously correct and tested**: Yes. The 7-line addition follows the
+  exact same `DMI_MATCH(DMI_SYS_VENDOR, "LENOVO")` +
+  `DMI_MATCH(DMI_PRODUCT_FAMILY, ...)` pattern used by the two existing
+  Lenovo entries directly above it.
+- **Fixes a real bug**: Yes. Volume buttons are non-functional without
+  this entry because firmware doesn't advertise the capability.
+- **Small and contained**: Yes. 7 lines added to a single DMI table in
+  one file. No logic changes whatsoever.
+- **No new features**: Correct. This enables an existing driver
+  interface on specific hardware — an allowed exception.
+- **No dependencies**: The `button_array_table` and its usage have been
+  in the driver for years. No prerequisite commits needed.
 
-**Hardware quirk exception:** This is a textbook DMI-based hardware
-quirk — exactly the type explicitly listed as appropriate for stable
-backporting. The `touchscreen_dmi.c` file exists solely for these
-entries; it has hundreds of similar quirks already.
+### Risk assessment
 
-**Small and contained:** Yes. ~18 lines added to a single file,
-following the exact same pattern as every other entry in the file.
+**Extremely low risk.** DMI matching is device-specific — this entry
+only activates on systems where `DMI_SYS_VENDOR == "LENOVO"` AND
+`DMI_PRODUCT_FAMILY == "ThinkPad X1 Fold 16 Gen 1"`. It cannot affect
+any other hardware. The worst-case scenario on a misidentified system
+would be the 5-button array being enabled unnecessarily, which is
+benign.
 
-**Risk of regression:** Extremely low. The DMI matching
-(`DMI_SYS_VENDOR: "SUPI"`, `DMI_PRODUCT_NAME: "S10"`) ensures this code
-only activates on the specific affected tablet. No other hardware is
-impacted.
+### Review quality
 
-**Tested and reviewed:** Yes. Has both `Tested-by: Yajat Kumar` (the
-reporter/user) and `Reviewed-by: Ilpo Järvinen` (Intel maintainer). The
-commit author Hans de Goede is the well-known x86 platform maintainer
-who handles most touchscreen quirks.
-
-**No new features:** Correct. This uses existing infrastructure
-(`ts_dmi_data`, `property_entry`, `dmi_system_id` matching) to fix a
-specific device.
-
-**Dependencies:** None. The `touchscreen_dmi.c` framework and the Goodix
-driver's handling of `touchscreen-inverted-y` have been present for many
-kernel versions.
+The patch has two `Reviewed-by` tags from Hans de Goede (former
+platform/x86 co-maintainer) and Ilpo Järvinen (current platform/x86
+maintainer who also committed it). This is strong endorsement.
 
 ### Verification
-- The commit follows the identical pattern used by all other entries in
-  `touchscreen_dmi.c` — no novel code patterns
-- The `gdix1001_y_inverted_props` is a subset of the existing
-  `gdix1001_upside_down_props` (which sets both inverted-x and
-  inverted-y), confirming this is a well-established mechanism
-- Reporter and tester are the same person (Yajat Kumar), confirming the
-  fix resolves the reported issue
-- The author (Hans de Goede) is the primary maintainer for x86
-  touchscreen quirks
-- The `Closes:` link to lore.kernel.org confirms a real user report from
-  December 2025
 
-### Risk vs benefit
-- **Benefit:** Makes touchscreen usable on SUPI S10 tablets — critical
-  for those users
-- **Risk:** Near zero — DMI-scoped to one specific device model, uses
-  existing well-tested infrastructure
+- Verified the diff adds only a DMI table entry with no logic changes —
+  confirmed by reading the patch.
+- Verified the new entry follows the identical pattern of existing
+  entries (DMI_SYS_VENDOR + DMI_PRODUCT_FAMILY matching) — confirmed
+  from the surrounding context in the diff.
+- Verified this is a DMI allowlist (not a blocklist) used to enable
+  5-button array support — confirmed from the commit message and table
+  name `button_array_table`.
+- Verified reviewers Hans de Goede and Ilpo Järvinen are established
+  platform/x86 maintainers — this is well-known in the kernel community.
+- The file `drivers/platform/x86/intel/hid.c` and the
+  `button_array_table` have existed in the kernel for years, so this
+  applies to all active stable trees.
+
+### Conclusion
+
+This is a minimal, zero-risk hardware quirk addition that makes volume
+buttons work on a specific Lenovo laptop. It meets all stable kernel
+criteria and falls into the explicitly allowed "hardware
+quirks/workarounds" category. Two maintainer reviews provide confidence
+in correctness.
 
 **YES**
 
- drivers/platform/x86/touchscreen_dmi.c | 18 ++++++++++++++++++
- 1 file changed, 18 insertions(+)
+ drivers/platform/x86/intel/hid.c | 7 +++++++
+ 1 file changed, 7 insertions(+)
 
-diff --git a/drivers/platform/x86/touchscreen_dmi.c b/drivers/platform/x86/touchscreen_dmi.c
-index bdc19cd8d3edf..d83c387821ea1 100644
---- a/drivers/platform/x86/touchscreen_dmi.c
-+++ b/drivers/platform/x86/touchscreen_dmi.c
-@@ -410,6 +410,16 @@ static const struct ts_dmi_data gdix1002_upside_down_data = {
- 	.properties	= gdix1001_upside_down_props,
- };
- 
-+static const struct property_entry gdix1001_y_inverted_props[] = {
-+	PROPERTY_ENTRY_BOOL("touchscreen-inverted-y"),
-+	{ }
-+};
-+
-+static const struct ts_dmi_data gdix1001_y_inverted_data = {
-+	.acpi_name	= "GDIX1001",
-+	.properties	= gdix1001_y_inverted_props,
-+};
-+
- static const struct property_entry gp_electronic_t701_props[] = {
- 	PROPERTY_ENTRY_U32("touchscreen-size-x", 960),
- 	PROPERTY_ENTRY_U32("touchscreen-size-y", 640),
-@@ -1658,6 +1668,14 @@ const struct dmi_system_id touchscreen_dmi_table[] = {
- 			DMI_MATCH(DMI_PRODUCT_SKU, "PN20170413488"),
+diff --git a/drivers/platform/x86/intel/hid.c b/drivers/platform/x86/intel/hid.c
+index 5b475a09645a3..f2b309f6e458a 100644
+--- a/drivers/platform/x86/intel/hid.c
++++ b/drivers/platform/x86/intel/hid.c
+@@ -135,6 +135,13 @@ static const struct dmi_system_id button_array_table[] = {
+ 			DMI_MATCH(DMI_PRODUCT_FAMILY, "ThinkPad X1 Tablet Gen 2"),
  		},
  	},
 +	{
-+		/* SUPI S10 */
-+		.driver_data = (void *)&gdix1001_y_inverted_data,
++		.ident = "Lenovo ThinkPad X1 Fold 16 Gen 1",
 +		.matches = {
-+			DMI_MATCH(DMI_SYS_VENDOR, "SUPI"),
-+			DMI_MATCH(DMI_PRODUCT_NAME, "S10"),
++			DMI_MATCH(DMI_SYS_VENDOR, "LENOVO"),
++			DMI_MATCH(DMI_PRODUCT_FAMILY, "ThinkPad X1 Fold 16 Gen 1"),
 +		},
 +	},
  	{
- 		/* Techbite Arc 11.6 */
- 		.driver_data = (void *)&techbite_arc_11_6_data,
+ 		.ident = "Microsoft Surface Go 3",
+ 		.matches = {
 -- 
 2.51.0
 
