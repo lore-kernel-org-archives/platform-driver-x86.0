@@ -1,620 +1,284 @@
-Received: from PH0PR06CU001.outbound.protection.outlook.com (mail-westus3azon11011020.outbound.protection.outlook.com [40.107.208.20])
+Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0D820279903;
-	Tue, 10 Mar 2026 04:11:24 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.208.20
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1773115886; cv=fail; b=Vz9Cx/ACEpkjWvg4I1oA/pLNGMUREeu72WTJV2IvEWWZt6LjOxj0nJ+Sxe4/o3sF8eAcfTnfzLE9d7FXmvrfqBFpXSyKUFyfPMnYuUacqU1L3mbQW6RhxJuNpGEXQsQMWTFaI8Z1iIyD+6F27OA7+sz3tvWs/G89JT/Bz1+0JsM=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1773115886; c=relaxed/simple;
-	bh=ta+Y3byiVuRDhAbNf6s1iTD1eFyb/DRbWjUfVJ+yVrU=;
-	h=Message-ID:Date:Subject:To:Cc:References:From:In-Reply-To:
-	 Content-Type:MIME-Version; b=ICk0c7xfeQIIFpGCNv9WfmbAIvoJO2s75kM5Q2uE387earPmHHlz0BzrdgLnwk5cuzxiF/NMmpIKubvOVltwMF9qBFqR9n/t8xezkQaCbSvQidDCZWQgR8O2kwcGSXtQu8gY9LDvkwFSbl0yDFKuxHcdKUDvZnzw7uvtoSP2jH8=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=kSSW41Vq; arc=fail smtp.client-ip=40.107.208.20
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com
-Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=amd.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 51DDA3CE49D
+	for <platform-driver-x86@vger.kernel.org>; Tue, 10 Mar 2026 04:58:51 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.168.131
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1773118733; cv=none; b=Krn3q0bgn0P2HEKkeJEvbWTvyRWnI80MFo0w5kIQKVe5Z3Zdd5B/ozvByz+/2NlsHiEgc2NNx9I1GAfO0o9Hl2NmvOb326DtGQbLu0dZO5oKDGu0evEVggYjU8sixVilu874WLmLagYKHlAYd6k8l7nYwvAjqrF/FbRHDBTb5rM=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1773118733; c=relaxed/simple;
+	bh=g0VZcYkbEAoWjtbUfvundH5SdWzH2JHEQ59U8vBvDZk=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=LIAikOg6aGYYYT+sD4svIJ5anx9g1HAms9c4JXBeE0wHYdK380xmXtCwESqrfk8+1z8GkLdYzkaf3hjXgyZhPqOsC7YsoMA/1kz8y1HiV7ouO7ulQh3gPzaiPMIJANTMEeDoKeT2PtSMJFhyki60WLC8bctkY42O+S9v5b1D3yM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com; spf=pass smtp.mailfrom=oss.qualcomm.com; dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b=au0E1wlE; dkim=pass (2048-bit key) header.d=oss.qualcomm.com header.i=@oss.qualcomm.com header.b=DIUHeBjG; arc=none smtp.client-ip=205.220.168.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oss.qualcomm.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="kSSW41Vq"
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=EyDSWcVipQo4DQEnjxj8CAc0Y+RMlOoqJOQfsS0HTt0buRlyEUitXcyoQfnouDOuyp/BTVcNqSsmBbdfrl2+73cAUJf+ikhPSWLIbopKPvtrZ1iJ+8j98NI1Fyl1aqBMkyI9YY5+zj18uma1/2ln0bM9edLkfy0fXm+GgqsrfJ2WqmWZYTHMvMBttlwbAjzYf9JmAyWsNg4wccu0eY7dAIckVHwuwZlofD1XXy4APGqi4FNFhs6UDddVRn9FLNOVL2g5qYCy6FRBp7klolObCY/1YaWyDVDe43LoVEO4zyPAxi1HSqu+IVC+xCbMcNiW51719aHPhcdLO4P2XzrgGQ==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=GF02zPcKo/CtG7lTLXGVHcD2iqYNZ+Qb5teNAKoCgiw=;
- b=JrwffFM7VO/JzSQHPl3fgSHD/Xicb8EhWd4+pDClbP8HqIDhObCJvN11fheNeuJRiKogyXTz2H72eDcA7kL4CuKyzqjQkGlT/tEN+Jh5YmyC2DHAW+BhdAqizvQnHoTO1F8cjYrZr2bNQfalTBDDQAXtayXaXjfEf2iGEUJOiyN1nlZQYWIhqoQ35LfzQjIUv7QEdNx2XHq9sBhNCAXNGWrm4MbBtI599zEb4XSL73h3FK4AfNzj2FVINNdZCqq84vvHaClZ3qT2dH9qIovvenTDtCG5uY/BwbqLjrnRDmb/pIVY8XwiUtrRtjEx8qVf6uETASHsHAQsipJ2IrtNnQ==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=amd.com; dmarc=pass action=none header.from=amd.com; dkim=pass
- header.d=amd.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=GF02zPcKo/CtG7lTLXGVHcD2iqYNZ+Qb5teNAKoCgiw=;
- b=kSSW41VqTRXAfvraN4h1Z9qYeP/62hiPYX0HlDDk0D5KNQjT/oZoL8Titm1XQNHaw9NncVZQFanlmqFDLsX+tvcDd5En0RrZb/kMrq8IJhUsVJE3ebWhHjs8wsZaqe4OxuWQqAipY2u1qZuWYvyMryzKJ2RpviyQiMUUKR7JdoA=
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=amd.com;
-Received: from SA0PR12MB4557.namprd12.prod.outlook.com (2603:10b6:806:9d::10)
- by PH7PR12MB6586.namprd12.prod.outlook.com (2603:10b6:510:212::21) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.9700.11; Tue, 10 Mar
- 2026 04:11:21 +0000
-Received: from SA0PR12MB4557.namprd12.prod.outlook.com
- ([fe80::885a:79b3:8288:287]) by SA0PR12MB4557.namprd12.prod.outlook.com
- ([fe80::885a:79b3:8288:287%5]) with mapi id 15.20.9700.010; Tue, 10 Mar 2026
- 04:11:21 +0000
-Message-ID: <d5c2a4e0-1263-42ac-a64a-c6218e91bc09@amd.com>
-Date: Mon, 9 Mar 2026 23:11:18 -0500
-User-Agent: Mozilla Thunderbird
-Subject: Re: [RFC v4 4/4] platform/x86/amd: dptc: Add device entries for
- handheld PCs
-To: Antheas Kapenekakis <lkml@antheas.dev>
-Cc: W_Armin@gmx.de, sashal@kernel.org, Shyam-Sundar.S-k@amd.com,
- derekjohn.clark@gmail.com, denis.benato@linux.dev, i@rong.moe,
- linux-kernel@vger.kernel.org, platform-driver-x86@vger.kernel.org
-References: <20260309205125.293148-1-lkml@antheas.dev>
- <20260309205125.293148-5-lkml@antheas.dev>
-Content-Language: en-US
-From: Mario Limonciello <mario.limonciello@amd.com>
-In-Reply-To: <20260309205125.293148-5-lkml@antheas.dev>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: SJ0PR13CA0164.namprd13.prod.outlook.com
- (2603:10b6:a03:2c7::19) To SA0PR12MB4557.namprd12.prod.outlook.com
- (2603:10b6:806:9d::10)
+	dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b="au0E1wlE";
+	dkim=pass (2048-bit key) header.d=oss.qualcomm.com header.i=@oss.qualcomm.com header.b="DIUHeBjG"
+Received: from pps.filterd (m0279865.ppops.net [127.0.0.1])
+	by mx0a-0031df01.pphosted.com (8.18.1.11/8.18.1.11) with ESMTP id 62A2Egfk3087346
+	for <platform-driver-x86@vger.kernel.org>; Tue, 10 Mar 2026 04:58:50 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=qualcomm.com; h=
+	cc:content-transfer-encoding:content-type:date:from:in-reply-to
+	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
+	H7KaqtWnt34N8j8zZfzYvdmLElwwnGFgxLWqzJwr4k4=; b=au0E1wlEt6JubJ/l
+	gRCo4Xd0JlFd2dcDfmkv+hOan6KiiiyryTPY0HFPETTnNDb2hKVlTJBhTYC46hyr
+	2OJ88vlqhobLIX+t+ZwG7DMorzkUeOVD9F+VFdw0wfHurtpLMSGDpqqXTtEfw3LQ
+	JsKa3bRQc+tX99etqm5dwUhQTRC+Sfv4gT1M+WPdQKeMIB4FgZ+YuW4zZBM1+Zgl
+	n4Un6iRz0NduSktxqRT/OxDGwwK07dVWT/tVmUhODCj9o4ar/mVfVr3r9Ja0fOxW
+	XBJd1oIiIEascQS3udyjPCnoGEFXi5xI1p2g3PKPHs0zc2R0JNPWHOjJhpQaD36D
+	YQH33w==
+Received: from mail-pg1-f200.google.com (mail-pg1-f200.google.com [209.85.215.200])
+	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 4csxy82tf8-1
+	(version=TLSv1.3 cipher=TLS_AES_128_GCM_SHA256 bits=128 verify=NOT)
+	for <platform-driver-x86@vger.kernel.org>; Tue, 10 Mar 2026 04:58:50 +0000 (GMT)
+Received: by mail-pg1-f200.google.com with SMTP id 41be03b00d2f7-c7387c70046so2608844a12.0
+        for <platform-driver-x86@vger.kernel.org>; Mon, 09 Mar 2026 21:58:50 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=oss.qualcomm.com; s=google; t=1773118730; x=1773723530; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=H7KaqtWnt34N8j8zZfzYvdmLElwwnGFgxLWqzJwr4k4=;
+        b=DIUHeBjGq+Nm0MaQFZEiSyPujQM+UjnArh8B58Mrtqc3zpniqaIIINPzAUNDTeT/9y
+         RVOIOeDn5ytnhzzrhFnjtLuKZGl48SljDpAAgODbaVurWu3x2hCbLEaxayybq4sgRPoX
+         eExwA11QmU4JdJpJBR7kTrmYjCAveHwp6LhdpIytqHWitRBiOSfWYxNCQUsUk9vmP2So
+         QVoKQWPfAkVqO3K5e2UJXNvniW2hH1yilAsAm6KWbQW/XJ/wVxJyudgV5KndfUEvq/7E
+         tlkZUx+b6HqWRSLnJ7DKtZV1gHEOS+WO5CmqrdtDtYL21J/1lY7YRpmj83Vs+J6atk4J
+         cIdA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1773118730; x=1773723530;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-gg:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=H7KaqtWnt34N8j8zZfzYvdmLElwwnGFgxLWqzJwr4k4=;
+        b=icHRlXOsXy0cUo5e2xBqAejSLV1tSTnHTzA/uonCiBqPXQtSIIWKGhhp75WgpfLAGh
+         aZiLb3ofPSu1Aeoj8JKa0TVKFjomV1sqMkx0XWtpC7H1qy0/TU8dNczoFGvNG+RKns7W
+         fM36kp/ZF/z103Z9Wb5rM426JkJGtm7aq8aiShvXEKyUFOVbqG/ePbHPfQZBwF7bodJT
+         DSR2CRx4Msv9aK9Ek2PfRPaIItPDT+A3U6dU0N0sUOyc8C4UHyXZzcNoZa8TVcoZs00v
+         b3S7z/KKuxc/iHBeJsl7y4J2CJZvxawBhG3hkvjlKsrp7uHJqtlrld0BSUZsxShVL0rI
+         bfeA==
+X-Forwarded-Encrypted: i=1; AJvYcCURI9qhvZXUaXFsrPU7LVtk64mq3xpnr7ssWdi8mj69vdvMS6r8YizxxGF8ZfEuEwwwgqKjGDK7nuDewDt358zjS8/I@vger.kernel.org
+X-Gm-Message-State: AOJu0YzlXNQ5WGfH0HU91GsqPA3qUlRWjfH4JSTtecQMhEj6uMZuqm1C
+	Bw7Dcm6ALto6div4ZlCEHmxEfl0Y4HoU6aPfDgWlzS8QWsOyOAnlKEG4WbowGIzkVpQsmgNIxeW
+	0HoEnSe1Jww3YWJUmTO7t31bN/lFHnEcRxqWdhYB9PXEB3PcrKLWJq5jj/QhbN20bhO+Zix6vSV
+	C0
+X-Gm-Gg: ATEYQzzLvOZnN+0Lk/+Xo8YhF0R3O2Xf62vV2a//eHS/buw34RB+BudEFSZT37hOHgR
+	OTdxriKHgUvA9hyThKAEGBGya1FSLNC+ezM007WnHpyukds1430LE8LgpKF85AOQydvqEZTN7LC
+	PCS/4DGuP9bYGK34ISohCQmaOL4FOMhoXWV2ivisx/6enCFM01SvWbVDBKuAshlcHV5XWb/pzX1
+	Z6sz6aiwQlOZ+KmhhWzAqron/d7Td4KAGYSPxtkf50abGHGLrt05yZp7NJOdMLpXAi7dZt8emL6
+	/jcw4gx30Odo31lnXR66zrpva9AUFC2ik/oHZkO1PnaTYe0Tl/XqGJUV1+YGr6hv0Mix3JsOCGN
+	a1031CtbB1E3Eg9RBVbd4A1RLnfA0zCWkwNvP/P2ahId+CeERkXY=
+X-Received: by 2002:a05:6a21:6da7:b0:398:7853:70ea with SMTP id adf61e73a8af0-39878537178mr8865392637.15.1773118729775;
+        Mon, 09 Mar 2026 21:58:49 -0700 (PDT)
+X-Received: by 2002:a05:6a21:6da7:b0:398:7853:70ea with SMTP id adf61e73a8af0-39878537178mr8865359637.15.1773118729137;
+        Mon, 09 Mar 2026 21:58:49 -0700 (PDT)
+Received: from [172.20.10.3] ([106.216.228.226])
+        by smtp.gmail.com with ESMTPSA id 41be03b00d2f7-c739dfbf4fesm10791464a12.0.2026.03.09.21.58.43
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Mon, 09 Mar 2026 21:58:48 -0700 (PDT)
+Message-ID: <5a60f6fd-8cd6-4936-beaf-492dfbfa5b26@oss.qualcomm.com>
+Date: Tue, 10 Mar 2026 10:28:41 +0530
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: SA0PR12MB4557:EE_|PH7PR12MB6586:EE_
-X-MS-Office365-Filtering-Correlation-Id: 75329475-e6bd-4411-a72e-08de7e5b1642
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;ARA:13230040|366016|376014|1800799024|7053199007;
-X-Microsoft-Antispam-Message-Info:
-	l4xTjYgmhOsNlSFh0+hEa6HR8t0TPTM3v1pTC94+gASAVmoDkPUTzSJs+mnQAAtiCdA4nEA/2E9JWn6yd0pmkxIQ9eFL07AjC766WTVxlLC+nOts2qHCQjACzOYLdrrMjN3JJ+c+nxp1KDNGZ1CGHE7alxnKKAxqBaiQUZRnVGh492/kLKpJ8pAynaron91vm2+pHYq5ahkQ8bupTJX6f8D5yfK84gLl4d2/K3wksjQXG00izPH0ZENlk4uuUicM/MTk7Z1wfrtYJyIpWl6olDlA2jNmoysBOHeJqzz6qgRkoQtzw+gMLh6iehK9zi+9zoV+aCok4nAQXys7OPysOLzGypniW94nzKEDUin2Ai4UinPwde3TP7VbT3OYVEE7HuLbHD0MPOwUNYLfb8ensKymaLfQ44XlE11PA76QrPn6kUvXed35zPW9bGK6AuTUFeOrSnn0w2Tj9KXiD5pPW9h9OttfCgcvd1Q2RzWOxSN4lRSv9ajMM2h97WqlJaU67hi0C8E60FZXz8Ubn7OqBaBcW6DIRiBo+GE5ca6EZ1ZxkCT3CzfSrN275w++Z9tUEIA3XWbLRjRGD2pfERuapJKnXKXQHCICsSMxiXk7ECXEa1I+i9sxS3sMFSQbFKkUZ5MGmClskeEojGdY/zeF2U9TkD7VV7YaGQlRdWW1lkWUEV4uhClxVDJLtTTJoYykz+FHSSITNMkZUxdOnTi+q0v3olQN0Yg0OrBthiXM/mo=
-X-Forefront-Antispam-Report:
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:SA0PR12MB4557.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(366016)(376014)(1800799024)(7053199007);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0:
-	=?utf-8?B?N05HZEpnWVhObWs5QjZ2T3dsTFh0d1V4V3AwMzV4c2NVUm1CWkk2SjJCaEtE?=
- =?utf-8?B?VDNMN1IvR3dHYXJTVENqUUY3M0JxNnlsWlZoc1BIRFVyUndZdWoyMFFkOXov?=
- =?utf-8?B?bVUrMU5IM2N2M0l5NjdTSjVBaWtWcG0xRUVyNFE4Yi9zOE5DNkpDdGpyem9R?=
- =?utf-8?B?OTJrNmZtL1VhVUY1Z3orTkVXT1NqaE1HYWxNUUQxenltcThNRktraXhyNmlI?=
- =?utf-8?B?V1FBNEI2RHI5OXNGNHFmQldXbU40WU05Z21NMms3emV5Q1k4eTB4QjZoR1lU?=
- =?utf-8?B?STlWMWgrOVUvZEhWaGJKb1ZVM0NaWFJZU3MyVlkyL3lhMDZCcWx5Ujgremx4?=
- =?utf-8?B?R3lMbXZUblgxcElNcEs5SVFZMG45eWJqYnJxU0tzQzlDNlFuM3FXWXJqSDUv?=
- =?utf-8?B?ckpiczVmdW9OcmM3eURXbUNuZUxMQ2prK3VkTllRanc5dkFEcU9iMTloZ3I1?=
- =?utf-8?B?SmMvRTVQUHBGUS8vYjkzUGw4YkZJaGFSUEdtWFEvdXlrVlNOQ2ZvWWh2QU1h?=
- =?utf-8?B?OFZKNUg2TlhVLzJyQXN4aWFrT25NemZJQnNEdEM3d1IxUlJuNHd2anNQb0k0?=
- =?utf-8?B?aDdkV0tXcGY2aHNPbUIvSUNGUVI4VUc3TUJMc1pxNi9NL0JEb0luL1hxREJ1?=
- =?utf-8?B?MzNMMTVqZDhWNk9SMzc5TmpCV0JlZEdNQzlidjNXVGFRdUdyd05OeG13TURo?=
- =?utf-8?B?ZGhqWmhERTdRdXRxMGQ4RDB6bGRTWDlzM1hheFlONWVTU2VZaGZEYzlIc3Rn?=
- =?utf-8?B?Z1orN2cvcW0rNmw5ZEwyU0EzUmtuNVBVWm9CbGdjdDh2cGR6TEtWS1dIRHNl?=
- =?utf-8?B?QkxyUm9wSzUzYmdpWWo4ZUhvS1FCWlFCNDErTngzSTdZNk5hTlhJUWptSjl6?=
- =?utf-8?B?b04xQjRCV1RFdjdLMituNDVYRDcxRlF0ZlRPTkNrVFRYcmNCRFFyZStwdTAr?=
- =?utf-8?B?K3hWSGxGQ2hTdmFScHVuaGlvVGxNUGpRc0NYR3BQYk4yWE81Qi9LUnErb3Rx?=
- =?utf-8?B?M1FFMzZqNEo2OGxsK3Fqb3NhZDl3OGxtdFVHdUkvM09CQkdTWlZaakZ1WVEw?=
- =?utf-8?B?UFFsVlBaNDZXTUJPNkllcjVDMHZ4MTBXcVRHUzVOQUNITFhERXdjekp3M1Rq?=
- =?utf-8?B?UnB5ZWY3RVZXcDd6SW9yZXQwRW5ETjdvckg1YnNvQVQzWm1iMGlVUTZ1aEht?=
- =?utf-8?B?cUgwRSs2VG1NYmhDSXBBMnlwLzdRSE0zbjZzQUpwaVI2Z054OVNSNkdSdEk0?=
- =?utf-8?B?L0JBaWtOTDhKV29VY2JWZGRkZzVSbXlDeGhpVW9WN01WZStuMVE3SE9MMk5u?=
- =?utf-8?B?YmlqdU5BQ2M1akhyQUxlMW1sSXhCeDZIZU9yRFBadEVvN28yNWIvakorcHFI?=
- =?utf-8?B?ZTFqbUZLMGFiaHZHUnBOVW5rbUdOM013Y05NdVBERjVzK3RBWTFkRGpyMlhx?=
- =?utf-8?B?ZlNnVUZxT1BZSjU5SURYaTdOanVBRU04SXZ6UVFVZ3VPR25zc01rc0tyTi9x?=
- =?utf-8?B?SE5wS3BsN2JUdkVodmVGY2ltRFloYUg5WmxpSkJoSHJTVlE2RjBZc1VkTjZQ?=
- =?utf-8?B?TlhZQ0xuMzNwVU1lV2Q4NGxMOXplMEhaWmpZRzVKRVFLNGg2TWdLc0xNZzhx?=
- =?utf-8?B?Nkw4WDlHN09PdG5uTktCYnVDVDlheXlKdWgyNjBBVHp3Y3ZibXpveVRwaEJQ?=
- =?utf-8?B?bXl1eXhaUlREZCtnTUw5d2pzZUVKTGhpNlAydTUrSkdxRDVSNkh0NEFBNmJk?=
- =?utf-8?B?RVUyL2Zxazg4MGxTMGgvVXMrT0tpWHFGT3p2MmRqakN2cXJBUmJIbnM2SVVX?=
- =?utf-8?B?cW5EYXdoUURsRjBCV3dkMi9zbVpySGhkK1pFYXVZYnVFbi91K0NkQmtOMG1k?=
- =?utf-8?B?ZkZuYkF4TW1GUU8ya0g1UDNkUWRoNityK0lyL041bUw4dENhM0xlOG9ZRWF1?=
- =?utf-8?B?OTl4OWp1amhrb0p3UEdOZlVoNGRWOEREUk81SmhxOW1YVzFUSUR1MHlpOWpU?=
- =?utf-8?B?cFZBTWZHVldqU3oyT2FqUU52N1hvNVo3UUNtOFJkR0lZV0pBeHJtd05OSTlo?=
- =?utf-8?B?eGxrV3NtbUlJcmJQVkhYQmNPeWoyUXR4T2Rxb1paM1kza2F5N0VOOHE4cC80?=
- =?utf-8?B?LzNCQTllTzhrYUpkRDY0bUhLcnFhMUk1alpQd2pGRUNFL1haMWVqam13L0xX?=
- =?utf-8?B?MWE2TDRMR2szWkFaeklIRjBXNE5keGtma3BNcE9HMUJuczJqbzl0dW54emJC?=
- =?utf-8?B?S1NHZXpOYzV2QXp1dmc1Y1lGdUYreTF3RHIwWWtPdXFQZCthNkREWlJmbVQ4?=
- =?utf-8?B?OGlsQnJQcFdQekFFRGhJaUNWcXdRSjFHYWtOS1JYUlVhQXVZU0grQT09?=
-X-OriginatorOrg: amd.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 75329475-e6bd-4411-a72e-08de7e5b1642
-X-MS-Exchange-CrossTenant-AuthSource: SA0PR12MB4557.namprd12.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 10 Mar 2026 04:11:21.5593
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: Nf+X3Y+hXzOoE3PqHENunB2seZJw7LNAINqEEnaRxpZu/OCBHgXAh9vyYLqwS5ya36qG5msiWEdlcoNoRF0USw==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: PH7PR12MB6586
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH V3 2/5] platform: arm64: Add driver for EC found on
+ Qualcomm reference devices
+To: Konrad Dybcio <konrad.dybcio@oss.qualcomm.com>,
+        Stephan Gerhold <stephan.gerhold@linaro.org>
+Cc: robh@kernel.org, krzk+dt@kernel.org, andersson@kernel.org,
+        konradybcio@kernel.org, bryan.odonoghue@linaro.org,
+        ilpo.jarvinen@linux.intel.com, hansg@kernel.org, conor+dt@kernel.org,
+        linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, platform-driver-x86@vger.kernel.org,
+        Maya Matuszczyk <maccraft123mc@gmail.com>
+References: <20260308233646.2318676-1-sibi.sankar@oss.qualcomm.com>
+ <20260308233646.2318676-3-sibi.sankar@oss.qualcomm.com>
+ <aa6M2QSXW72xqYiB@linaro.org>
+ <96f8738f-9baa-4528-8bc6-6ce20030e391@oss.qualcomm.com>
+ <805525cb-ef53-4bdd-a73b-6fe7513228ce@oss.qualcomm.com>
+ <aa61HZOuz42C_R7X@linaro.org>
+ <395f0607-7d6e-40fe-90b3-a7b49a6b7eea@oss.qualcomm.com>
+Content-Language: en-US
+From: Sibi Sankar <sibi.sankar@oss.qualcomm.com>
+In-Reply-To: <395f0607-7d6e-40fe-90b3-a7b49a6b7eea@oss.qualcomm.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
+X-Authority-Analysis: v=2.4 cv=SvmdKfO0 c=1 sm=1 tr=0 ts=69afa50a cx=c_pps
+ a=oF/VQ+ItUULfLr/lQ2/icg==:117 a=8nKWbjjLc7jCNgWBIcU1Yw==:17
+ a=IkcTkHD0fZMA:10 a=Yq5XynenixoA:10 a=s4-Qcg_JpJYA:10
+ a=VkNPw1HP01LnGYTKEx00:22 a=u7WPNUs3qKkmUXheDGA7:22 a=Um2Pa8k9VHT-vaBCBUpS:22
+ a=pGLkceISAAAA:8 a=EUspDBNiAAAA:8 a=Xd731h-ufghucUnmbRMA:9 a=3ZKOabzyN94A:10
+ a=QEXdDO2ut3YA:10 a=3WC7DwWrALyhR5TkjVHa:22
+X-Proofpoint-GUID: 07P-nx9UvOcZMRC8QCLnCsCgUYZe2uDT
+X-Proofpoint-ORIG-GUID: 07P-nx9UvOcZMRC8QCLnCsCgUYZe2uDT
+X-Proofpoint-Spam-Details-Enc: AW1haW4tMjYwMzEwMDAzOSBTYWx0ZWRfX94SLO/X2B2uv
+ ETo1JASgZASGXvNr0qpMF3xmha4C47wD5iVFDP1uXoFex+yA8yQoRmrwVvLLilnlJj1BLEHjdV4
+ cqUOdcH2oefAMcVpP50S7xSbIRpThEF1eOro3cyF9XEFSH5rp2jBujNVdXt/CoCoyWkm/vbrrMw
+ oEsQk4mwT7d+/2U3ROMWDwNWDk5XF2PuR1E/9nmb4k/MRuw/3bjaDk0W2E7UUIQO9f4jNn/b0Mb
+ Bt6j9I+NhvkHYmDMicKYJdyUqCJGwnLpe1Jn1v3DVuZrUjzoJTYQMSSEEa9ujc1SbxhYRaP+VT7
+ AGltsTPk/e7hXHEd8/4DUUSgKHrJ4gBvT1Cbg3Z+FYilc4b3YtoUaRnc0eP1XYRTbIy5Iy6ZvHh
+ X4hsivsKDuvp+oMeYwTzFw0/T6nEkMLP5dkyHC9K+RIQp3PFXUdfS7OVLkoNWDTbnJPppBPkv8P
+ e4nYBNlSWxNGOdBz5MQ==
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1143,Hydra:6.1.51,FMLib:17.12.100.49
+ definitions=2026-03-10_01,2026-03-09_02,2025-10-01_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
+ suspectscore=0 impostorscore=0 spamscore=0 priorityscore=1501 clxscore=1015
+ lowpriorityscore=0 adultscore=0 bulkscore=0 phishscore=0 malwarescore=0
+ classifier=typeunknown authscore=0 authtc= authcc= route=outbound adjust=0
+ reason=mlx scancount=1 engine=8.22.0-2602130000 definitions=main-2603100039
 
 
+On 3/9/2026 5:40 PM, Konrad Dybcio wrote:
+> On 3/9/26 12:55 PM, Stephan Gerhold wrote:
+>> On Mon, Mar 09, 2026 at 12:47:33PM +0100, Konrad Dybcio wrote:
+>>> On 3/9/26 11:04 AM, Sibi Sankar wrote:
+>>>> On 3/9/2026 2:33 PM, Stephan Gerhold wrote:
+>>>>> On Mon, Mar 09, 2026 at 05:06:43AM +0530, Sibi Sankar wrote:
+>>>>>> Add Embedded controller driver support for Hamoa/Purwa/Glymur qualcomm
+>>>>>> reference boards. It handles fan control, temperature sensors, access
+>>>>>> to EC state changes and supports reporting suspend entry/exit to the
+>>>>>> EC.
+>>>>>>
+>>>>>> Co-developed-by: Maya Matuszczyk <maccraft123mc@gmail.com>
+>>>>>> Signed-off-by: Maya Matuszczyk <maccraft123mc@gmail.com>
+>>>>>> Signed-off-by: Sibi Sankar <sibi.sankar@oss.qualcomm.com>
+>>>>>> ---
+>>>>>>    MAINTAINERS                            |   7 +
+>>>>>>    drivers/platform/arm64/Kconfig         |  12 +
+>>>>>>    drivers/platform/arm64/Makefile        |   1 +
+>>>>>>    drivers/platform/arm64/qcom-hamoa-ec.c | 462 +++++++++++++++++++++++++
+>>>>>>    4 files changed, 482 insertions(+)
+>>>>>>    create mode 100644 drivers/platform/arm64/qcom-hamoa-ec.c
+>>>>>>
+>>>>>> [...]
+>>>>>> diff --git a/drivers/platform/arm64/qcom-hamoa-ec.c b/drivers/platform/arm64/qcom-hamoa-ec.c
+>>>>>> new file mode 100644
+>>>>>> index 000000000000..83aa869fad8f
+>>>>>> --- /dev/null
+>>>>>> +++ b/drivers/platform/arm64/qcom-hamoa-ec.c
+>>>>>> @@ -0,0 +1,462 @@
+>>>>>> [...]
+>>>>>> +/*
+>>>>>> + * Fan Debug control command:
+>>>>>> + *
+>>>>>> + * Command Payload:
+>>>>>> + * ------------------------------------------------------------------------------
+>>>>>> + * | Offset    | Name        | Description                    |
+>>>>>> + * ------------------------------------------------------------------------------
+>>>>>> + * | 0x00    | Command    | Fan control command                |
+>>>>>> + * ------------------------------------------------------------------------------
+>>>>>> + * | 0x01    | Fan ID    | 0x1 : Fan 1                    |
+>>>>>> + * |        |        | 0x2 : Fan 2                    |
+>>>>>> + * ------------------------------------------------------------------------------
+>>>>>> + * | 0x02    | Byte count = 4| Size of data to set fan speed            |
+>>>>>> + * ------------------------------------------------------------------------------
+>>>>>> + * | 0x03    | Mode        | Bit 0: Debug Mode On/Off (0 - OFF, 1 - ON )    |
+>>>>>> + * |        |        | Bit 1: Fan On/Off (0 - Off, 1 - ON)        |
+>>>>>> + * |        |        | Bit 2: Debug Type (0 - RPM, 1 - PWM)        |
+>>>>>> + * ------------------------------------------------------------------------------
+>>>>>> + * | 0x04 (LSB)    | Speed in RPM    | RPM value, if mode selected is RPM        |
+>>>>>> + * | 0x05    |        |                        |
+>>>>>> + * ------------------------------------------------------------------------------
+>>>>>> + * | 0x06    | Speed in PWM    | PWM value, if mode selected is PWM (0 - 255)    |
+>>>>>> + * ______________________________________________________________________________
+>>>>>> + *
+>>>>>> + */
+>>>>>> +static int qcom_ec_fan_set_cur_state(struct thermal_cooling_device *cdev, unsigned long state)
+>>>>>> +{
+>>>>>> +    struct qcom_ec_cooling_dev *ec_cdev = cdev->devdata;
+>>>>>> +    struct device *dev = ec_cdev->parent_dev;
+>>>>>> +    struct i2c_client *client = to_i2c_client(dev);
+>>>>>> +
+>>>>>> +    u8 request[6] = { ec_cdev->fan_id, EC_FAN_SPEED_DATA_SIZE,
+>>>>>> +              EC_FAN_DEBUG_MODE_ON | EC_FAN_ON | EC_FAN_DEBUG_TYPE_PWM,
+>>>>>> +              0, 0, state };
+>>>>>> +    int ret;
+>>>>>> +
+>>>>>> +    ret = i2c_smbus_write_i2c_block_data(client, EC_FAN_DBG_CONTROL_CMD,
+>>>>>> +                         sizeof(request), request);
+>>>>> I think it's nice to provide users a way to override the fan speed, but
+>>>>> is this really the main interface of the EC that we want to use for
+>>>>> influencing the fan speed?
+>>>>>
+>>>>> As the name of the command suggests, this is a debug command that
+>>>>> essentially overrides the internal fan control algorithm of the EC. If
+>>>>> you use this to turn the fan off and then Linux hangs, I would expect
+>>>>> that the fan stays off until the device will eventually overheat.
+>>>>>
+>>>>> I think it would be more reliable if:
+>>>>>
+>>>>>    (1) The default mode of operation does not make use of the "debug mode"
+>>>>>        command and instead sends the internal SoC temperatures to the EC
+>>>>>        to help optimize the fan control. (This is what Windows does on
+>>>>>        Hamoa, not sure if this is still needed on Glymur?)
+>>>> That's true, Glymur already has a way to access average SoC
+>>>> temperature and even on Hamoa it can still be functional without
+>>>> SoC temperature i.e. with thermistors it has access to.
+>>>>
+>>>> The aim of the series is to expose fans as a cooling device so
+>>>> that linux has a way of fan control independent to the algorithm
+>>>> running on the EC.
+>>> I suppose the main question here is "what happens if i set the fan to zero
+>>> and put the laptop in my backpack"
+>>>
+>>> The driver for M-series Macs for example, 785205fd8139 ("hwmon: Add Apple
+>>> Silicon SMC hwmon driver") hides that behind a cmdline param, since they
+>>> have no certainty. I would *assume* that if the CPU hits thermal junction
+>>> temperatures, our boards will reset, but we should be able to get a definitive
+>>> answer here.
+>>>
+>> The CPUs should automatically throttle when reaching high temperatures
+>> and Linux should also do this for the GPU. So the chance of reaching a
+>> overtemperature state should be low as long as Linux correctly
+>> functions. The biggest risk would be probably if Linux hangs, the
+>> watchdog doesn't trigger and the machine is stuck in some state.
+>>
+>> As for the hardware shutdown temperature, see commit 03f2b8eed73
+>> ("arm64: dts: qcom: x1e80100: Apply consistent critical thermal
+>> shutdown"):
+>>
+>>   "The firmware configures the TSENS controller with a maximum
+>>    temperature of 120°C. When reaching that temperature, the hardware
+>>    automatically triggers a reset of the entire platform."
+>>
+>> The question is if you really want your device to hit 120°C. :-)
+> And whether the firmware running on *your* laptop actually configures
+> these limits.. I would imagine that to be the case for Windows products
+> where the TZ comes straight from qcom, but I think someone in some thread
+> mentioned LMH is not properly configured on Chrome/TFA.
+>
+> In any case, let's see if we can establish what/whether the EC does in
+> that case
 
-On 3/9/2026 3:51 PM, Antheas Kapenekakis wrote:
-> Add limit tables and DMI entries for AMD APU-based handheld devices:
-> 
->   - 15W class: AYANEO AIR
->   - 18W class: AYANEO AIR Plus/Pro
->   - 25W class: AYANEO AIR 1S, NEXT/KUN
->   - 28W class: GPD Win Mini/4/Max 2, GPD Duo, GPD Pocket 4, AYANEO 2,
->                 OrangePi NEO-01, SuiPlay0X1
->   - 30W class: AYANEO FLIP/GEEK/SLIDE/3, AOKZOE A1/A1X/A2,
->                 OneXPlayer F1Pro/2/X1/G1, AYN Loki Max, Zeenix Pro
-> 
-> Also add SoC strings for Ryzen AI, Ryzen 8000/7040/6000/5000
-> families, extending support beyond the initial AI MAX series.
 
-There are a lot of numbers here.  Where did they all come from?  What 
-are guesses?  What came from RE?  What came from documentation?
-How do you know these are good for the thermal design of the platform?
+The "debug mode" which is used to control fan is paused during the
+following conditions:
 
-I appreciate some of them could be cargo culted from another codebase, 
-but I think it would be a good idea to document which ones are more 
-likely to be accurate and why.
+1) When the EC receives EC_MODERN_STANDY_CMD enter cmd
+2) When SoC enters deep sleep fan pwm is turned off
+3) When external processors like soccp put fan constraints on the EC
 
-> 
-> Assisted-by: Claude:claude-opus-4-6
-> Signed-off-by: Antheas Kapenekakis <lkml@antheas.dev>
-> ---
->   drivers/platform/x86/amd/dptc.c | 420 ++++++++++++++++++++++++++++++++
->   1 file changed, 420 insertions(+)
-> 
-> diff --git a/drivers/platform/x86/amd/dptc.c b/drivers/platform/x86/amd/dptc.c
-> index f4db95affb1b..b2820f8652f1 100644
-> --- a/drivers/platform/x86/amd/dptc.c
-> +++ b/drivers/platform/x86/amd/dptc.c
-> @@ -86,6 +86,81 @@ static const struct dptc_param_desc dptc_params[DPTC_NUM_PARAMS] = {
->   				 1, ALIB_ID_TEMP_TARGET },
->   };
->   
-> +/* 15W class: AYANEO AIR (Ryzen 5 5560U) */
-> +static const struct dptc_device_limits limits_15w = {
-> +	.params = {
-> +		[DPTC_PPT_PL1_SPL]  = {  1,  5, 10, 15,  18 },
-> +		[DPTC_PPT_PL2_SPPT] = {  1,  5, 10, 15,  18 },
-> +		[DPTC_PPT_PL3_FPPT] = {  1,  5, 12, 18,  22 },
-> +		[DPTC_CPU_TEMP]     = { 60, 70, 85, 90, 100 },
-> +	},
-> +	.profiles = {
-> +		[PLATFORM_PROFILE_LOW_POWER]   = { .vals = {  5,  5,  8, 0 } },
-> +		[PLATFORM_PROFILE_BALANCED]    = { .vals = { 10, 12, 15, 0 } },
-> +		[PLATFORM_PROFILE_PERFORMANCE] = { .vals = { 15, 15, 18, 0 } },
-> +	},
-> +};
-> +
-> +/* 18W class: AYANEO AIR Plus/Pro (Ryzen 5 5560U, Ryzen 7 5825U) */
-> +static const struct dptc_device_limits limits_18w = {
-> +	.params = {
-> +		[DPTC_PPT_PL1_SPL]  = {  1,  5, 15, 18,  22 },
-> +		[DPTC_PPT_PL2_SPPT] = {  1,  5, 15, 18,  22 },
-> +		[DPTC_PPT_PL3_FPPT] = {  1,  5, 15, 20,  25 },
-> +		[DPTC_CPU_TEMP]     = { 60, 70, 85, 90, 100 },
-> +	},
-> +	.profiles = {
-> +		[PLATFORM_PROFILE_LOW_POWER]   = { .vals = {  5,  5,  8, 0 } },
-> +		[PLATFORM_PROFILE_BALANCED]    = { .vals = { 12, 14, 15, 0 } },
-> +		[PLATFORM_PROFILE_PERFORMANCE] = { .vals = { 18, 18, 20, 0 } },
-> +	},
-> +};
-> +
-> +/* 25W class: Ryzen 5000 handhelds (AYANEO NEXT, KUN) */
-> +static const struct dptc_device_limits limits_25w = {
-> +	.params = {
-> +		[DPTC_PPT_PL1_SPL]  = {  1,  4, 15, 25,  32 },
-> +		[DPTC_PPT_PL2_SPPT] = {  1,  4, 20, 27,  35 },
-> +		[DPTC_PPT_PL3_FPPT] = {  1,  4, 25, 30,  37 },
-> +		[DPTC_CPU_TEMP]     = { 60, 70, 85, 90, 100 },
-> +	},
-> +	.profiles = {
-> +		[PLATFORM_PROFILE_LOW_POWER]   = { .vals = {  8,  8, 12, 0 } },
-> +		[PLATFORM_PROFILE_BALANCED]    = { .vals = { 15, 17, 20, 0 } },
-> +		[PLATFORM_PROFILE_PERFORMANCE] = { .vals = { 25, 27, 30, 0 } },
-> +	},
-> +};
-> +
-> +/* 28W class: GPD Win series, AYANEO 2, OrangePi NEO-01 */
-> +static const struct dptc_device_limits limits_28w = {
-> +	.params = {
-> +		[DPTC_PPT_PL1_SPL]  = {  1,  4, 15, 28,  32 },
-> +		[DPTC_PPT_PL2_SPPT] = {  1,  4, 20, 30,  35 },
-> +		[DPTC_PPT_PL3_FPPT] = {  1,  4, 25, 32,  37 },
-> +		[DPTC_CPU_TEMP]     = { 60, 70, 85, 90, 100 },
-> +	},
-> +	.profiles = {
-> +		[PLATFORM_PROFILE_LOW_POWER]   = { .vals = {  8,  8, 12, 0 } },
-> +		[PLATFORM_PROFILE_BALANCED]    = { .vals = { 15, 17, 22, 0 } },
-> +		[PLATFORM_PROFILE_PERFORMANCE] = { .vals = { 25, 28, 32, 0 } },
-> +	},
-> +};
-> +
-> +/* 30W class: OneXPlayer, AYANEO FLIP/GEEK/SLIDE/3, AOKZOE */
-> +static const struct dptc_device_limits limits_30w = {
-> +	.params = {
-> +		[DPTC_PPT_PL1_SPL]  = {  1,  4, 15, 30,  40 },
-> +		[DPTC_PPT_PL2_SPPT] = {  1,  4, 20, 32,  43 },
-> +		[DPTC_PPT_PL3_FPPT] = {  1,  4, 25, 41,  50 },
-> +		[DPTC_CPU_TEMP]     = { 60, 70, 85, 90, 100 },
-> +	},
-> +	.profiles = {
-> +		[PLATFORM_PROFILE_LOW_POWER]   = { .vals = {  8,  8, 12, 0 } },
-> +		[PLATFORM_PROFILE_BALANCED]    = { .vals = { 15, 17, 25, 0 } },
-> +		[PLATFORM_PROFILE_PERFORMANCE] = { .vals = { 25, 28, 41, 0 } },
-> +	},
-> +};
-> +
->   /* AI MAX Handheld class: GPD Win 5 */
->   static const struct dptc_device_limits limits_maxhh = {
->   	.params = {
-> @@ -107,11 +182,56 @@ static const char * const dptc_soc_table[] = {
->   	"AMD RYZEN AI MAX+ 395",
->   	"AMD RYZEN AI MAX+ 385",
->   	"AMD RYZEN AI MAX 380",
-> +	/* Ryzen AI */
-> +	"AMD Ryzen AI 9 HX 370",
-> +	/* Ryzen 8000 */
-> +	"AMD Ryzen 7 8840U",
-> +	/* Ryzen 7040 */
-> +	"AMD Ryzen 7 7840U",
-> +	/* Ryzen 6000 */
-> +	"AMD Ryzen 7 6800U",
-> +	"AMD Ryzen 7 6600U",
-> +	/* Ryzen 5000 */
-> +	"AMD Ryzen 7 5800U",
-> +	"AMD Ryzen 7 5700U",
-> +	"AMD Ryzen 5 5560U",
+So when you do set the fan to 0 and put it in your backpack :P
+It would enter suspend, the EC would take back fan control.
+i.e. the LUT based flow that it follows by default. That would
+imply it would be the same behavior as seen on Windows?
 
-Still don't understand the point of this list.
+Either way I still think we all are in agreement here. This series just
+exposes fan control knobs to the kernel and doesn't set any fan
+speed by default. The LUT based EC fan control would still be the
+default, the patches to improve this are in-flight i.e. ways to send
+avg SoC temp, update LUT and select available profiles. With all
+of these in place EC would be in good shape in the Qualcomm
+reference devices.
 
->   	NULL,
->   };
->   
->   static const struct dmi_system_id dptc_dmi_table[] = {
->   	/* GPD */
-> +	{
-> +		.ident = "GPD Win Mini",
-> +		.matches = {
-> +			DMI_MATCH(DMI_SYS_VENDOR, "GPD"),
-> +			DMI_MATCH(DMI_PRODUCT_NAME, "G1617-01"),
-> +		},
-> +		.driver_data = (void *)&limits_28w,
-> +	},
-> +	{
-> +		.ident = "GPD Win Mini 2024",
-> +		.matches = {
-> +			DMI_MATCH(DMI_SYS_VENDOR, "GPD"),
-> +			DMI_MATCH(DMI_PRODUCT_NAME, "G1617-02"),
-> +		},
-> +		.driver_data = (void *)&limits_28w,
-> +	},
-> +	{
-> +		.ident = "GPD Win Mini 2024",
-> +		.matches = {
-> +			DMI_MATCH(DMI_SYS_VENDOR, "GPD"),
-> +			DMI_MATCH(DMI_PRODUCT_NAME, "G1617-02-L"),
-> +		},
-> +		.driver_data = (void *)&limits_28w,
-> +	},
-> +	{
-> +		.ident = "GPD Win 4",
-> +		.matches = {
-> +			DMI_MATCH(DMI_SYS_VENDOR, "GPD"),
-> +			DMI_MATCH(DMI_PRODUCT_NAME, "G1618-04"),
-> +		},
-> +		.driver_data = (void *)&limits_28w,
-> +	},
->   	{
->   		.ident = "GPD Win 5",
->   		.matches = {
-> @@ -120,6 +240,306 @@ static const struct dmi_system_id dptc_dmi_table[] = {
->   		},
->   		.driver_data = (void *)&limits_maxhh,
->   	},
-> +	{
-> +		.ident = "GPD Win Max 2",
-> +		.matches = {
-> +			DMI_MATCH(DMI_SYS_VENDOR, "GPD"),
-> +			DMI_MATCH(DMI_PRODUCT_NAME, "G1619-04"),
-> +		},
-> +		.driver_data = (void *)&limits_28w,
-> +	},
-> +	{
-> +		.ident = "GPD Win Max 2 2024",
-> +		.matches = {
-> +			DMI_MATCH(DMI_SYS_VENDOR, "GPD"),
-> +			DMI_MATCH(DMI_PRODUCT_NAME, "G1619-05"),
-> +		},
-> +		.driver_data = (void *)&limits_28w,
-> +	},
-> +	{
-> +		.ident = "GPD Duo",
-> +		.matches = {
-> +			DMI_MATCH(DMI_SYS_VENDOR, "GPD"),
-> +			DMI_MATCH(DMI_PRODUCT_NAME, "G1622-01"),
-> +		},
-> +		.driver_data = (void *)&limits_28w,
-> +	},
-> +	{
-> +		.ident = "GPD Duo",
-> +		.matches = {
-> +			DMI_MATCH(DMI_SYS_VENDOR, "GPD"),
-> +			DMI_MATCH(DMI_PRODUCT_NAME, "G1622-01-L"),
-> +		},
-> +		.driver_data = (void *)&limits_28w,
-> +	},
-> +	{
-> +		.ident = "GPD Pocket 4",
-> +		.matches = {
-> +			DMI_MATCH(DMI_SYS_VENDOR, "GPD"),
-> +			DMI_MATCH(DMI_PRODUCT_NAME, "G1628-04"),
-> +		},
-> +		.driver_data = (void *)&limits_28w,
-> +	},
-> +	{
-> +		.ident = "GPD Pocket 4",
-> +		.matches = {
-> +			DMI_MATCH(DMI_SYS_VENDOR, "GPD"),
-> +			DMI_MATCH(DMI_PRODUCT_NAME, "G1628-04-L"),
-> +		},
-> +		.driver_data = (void *)&limits_28w,
-> +	},
-> +	/* OrangePi */
-> +	{
-> +		.ident = "OrangePi NEO-01",
-> +		.matches = {
-> +			DMI_MATCH(DMI_BOARD_VENDOR, "OrangePi"),
-> +			DMI_EXACT_MATCH(DMI_BOARD_NAME, "NEO-01"),
-> +		},
-> +		.driver_data = (void *)&limits_28w,
-> +	},
-> +	/* AYN */
-> +	{
-> +		.ident = "AYN Loki Max",
-> +		.matches = {
-> +			DMI_EXACT_MATCH(DMI_SYS_VENDOR, "ayn"),
-> +			DMI_EXACT_MATCH(DMI_PRODUCT_NAME, "Loki Max"),
-> +		},
-> +		.driver_data = (void *)&limits_30w,
-> +	},
-> +	/* Tectoy (Zeenix Pro = Loki Max) */
-> +	{
-> +		.ident = "Zeenix Pro",
-> +		.matches = {
-> +			DMI_EXACT_MATCH(DMI_SYS_VENDOR, "Tectoy"),
-> +			DMI_EXACT_MATCH(DMI_PRODUCT_NAME, "Zeenix Pro"),
-> +		},
-> +		.driver_data = (void *)&limits_30w,
-> +	},
-> +	/* AOKZOE */
-> +	{
-> +		.ident = "AOKZOE A1 AR07",
-> +		.matches = {
-> +			DMI_MATCH(DMI_BOARD_VENDOR, "AOKZOE"),
-> +			DMI_EXACT_MATCH(DMI_BOARD_NAME, "AOKZOE A1 AR07"),
-> +		},
-> +		.driver_data = (void *)&limits_30w,
-> +	},
-> +	{
-> +		.ident = "AOKZOE A1 Pro",
-> +		.matches = {
-> +			DMI_MATCH(DMI_BOARD_VENDOR, "AOKZOE"),
-> +			DMI_EXACT_MATCH(DMI_BOARD_NAME, "AOKZOE A1 Pro"),
-> +		},
-> +		.driver_data = (void *)&limits_30w,
-> +	},
-> +	{
-> +		.ident = "AOKZOE A1X",
-> +		.matches = {
-> +			DMI_MATCH(DMI_BOARD_VENDOR, "AOKZOE"),
-> +			DMI_EXACT_MATCH(DMI_BOARD_NAME, "AOKZOE A1X"),
-> +		},
-> +		.driver_data = (void *)&limits_30w,
-> +	},
-> +	{
-> +		.ident = "AOKZOE A2 Pro",
-> +		.matches = {
-> +			DMI_MATCH(DMI_BOARD_VENDOR, "AOKZOE"),
-> +			DMI_EXACT_MATCH(DMI_BOARD_NAME, "AOKZOE A2 Pro"),
-> +		},
-> +		.driver_data = (void *)&limits_30w,
-> +	},
-> +	/* OneXPlayer (Intel variants filtered by SoC table) */
-
-Are you telling me the Intel variants actually have the same ACPI 
-methods this series looks for?
-
-> +	{
-> +		.ident = "ONEXPLAYER F1Pro",
-> +		.matches = {
-> +			DMI_MATCH(DMI_BOARD_VENDOR, "ONE-NETBOOK"),
-> +			DMI_EXACT_MATCH(DMI_BOARD_NAME, "ONEXPLAYER F1Pro"),
-> +		},
-> +		.driver_data = (void *)&limits_30w,
-> +	},
-> +	{
-> +		.ident = "ONEXPLAYER F1 EVA-02",
-> +		.matches = {
-> +			DMI_MATCH(DMI_BOARD_VENDOR, "ONE-NETBOOK"),
-> +			DMI_EXACT_MATCH(DMI_BOARD_NAME, "ONEXPLAYER F1 EVA-02"),
-> +		},
-> +		.driver_data = (void *)&limits_30w,
-> +	},
-> +	{
-> +		.ident = "ONEXPLAYER 2",
-> +		.matches = {
-> +			DMI_MATCH(DMI_BOARD_VENDOR, "ONE-NETBOOK"),
-> +			DMI_MATCH(DMI_BOARD_NAME, "ONEXPLAYER 2"),
-> +		},
-> +		.driver_data = (void *)&limits_30w,
-> +	},
-> +	{
-> +		.ident = "ONEXPLAYER X1 A",
-> +		.matches = {
-> +			DMI_MATCH(DMI_BOARD_VENDOR, "ONE-NETBOOK"),
-> +			DMI_EXACT_MATCH(DMI_BOARD_NAME, "ONEXPLAYER X1 A"),
-> +		},
-> +		.driver_data = (void *)&limits_30w,
-> +	},
-> +	{
-> +		.ident = "ONEXPLAYER X1z",
-> +		.matches = {
-> +			DMI_MATCH(DMI_BOARD_VENDOR, "ONE-NETBOOK"),
-> +			DMI_EXACT_MATCH(DMI_BOARD_NAME, "ONEXPLAYER X1z"),
-> +		},
-> +		.driver_data = (void *)&limits_30w,
-> +	},
-> +	{
-> +		.ident = "ONEXPLAYER X1Pro",
-> +		.matches = {
-> +			DMI_MATCH(DMI_BOARD_VENDOR, "ONE-NETBOOK"),
-> +			DMI_EXACT_MATCH(DMI_BOARD_NAME, "ONEXPLAYER X1Pro"),
-> +		},
-> +		.driver_data = (void *)&limits_30w,
-> +	},
-> +	{
-> +		.ident = "ONEXPLAYER G1 A",
-> +		.matches = {
-> +			DMI_MATCH(DMI_BOARD_VENDOR, "ONE-NETBOOK"),
-> +			DMI_EXACT_MATCH(DMI_BOARD_NAME, "ONEXPLAYER G1 A"),
-> +		},
-> +		.driver_data = (void *)&limits_30w,
-> +	},
-> +	/* AYANEO - 15W */
-> +	{
-> +		.ident = "AYANEO AIR",
-> +		.matches = {
-> +			DMI_MATCH(DMI_BOARD_VENDOR, "AYANEO"),
-> +			DMI_EXACT_MATCH(DMI_BOARD_NAME, "AIR"),
-> +		},
-> +		.driver_data = (void *)&limits_15w,
-> +	},
-> +	/* AYANEO - 18W */
-> +	{
-> +		.ident = "AYANEO AIR Plus",
-> +		.matches = {
-> +			DMI_MATCH(DMI_BOARD_VENDOR, "AYANEO"),
-> +			DMI_EXACT_MATCH(DMI_BOARD_NAME, "AIR Plus"),
-> +		},
-> +		.driver_data = (void *)&limits_18w,
-> +	},
-> +	{
-> +		.ident = "AYANEO AIR Pro",
-> +		.matches = {
-> +			DMI_MATCH(DMI_BOARD_VENDOR, "AYANEO"),
-> +			DMI_EXACT_MATCH(DMI_BOARD_NAME, "AIR Pro"),
-> +		},
-> +		.driver_data = (void *)&limits_18w,
-> +	},
-> +	/* AYANEO - 25W */
-> +	{
-> +		.ident = "AYANEO AIR 1S",
-> +		.matches = {
-> +			DMI_MATCH(DMI_BOARD_VENDOR, "AYANEO"),
-> +			DMI_MATCH(DMI_BOARD_NAME, "AIR 1S"),
-> +		},
-> +		.driver_data = (void *)&limits_25w,
-> +	},
-> +	{
-> +		.ident = "AYANEO NEXT Advance",
-> +		.matches = {
-> +			DMI_MATCH(DMI_BOARD_VENDOR, "AYANEO"),
-> +			DMI_EXACT_MATCH(DMI_BOARD_NAME, "NEXT Advance"),
-> +		},
-> +		.driver_data = (void *)&limits_25w,
-> +	},
-> +	{
-> +		.ident = "AYANEO NEXT Lite",
-> +		.matches = {
-> +			DMI_MATCH(DMI_BOARD_VENDOR, "AYANEO"),
-> +			DMI_EXACT_MATCH(DMI_BOARD_NAME, "NEXT Lite"),
-> +		},
-> +		.driver_data = (void *)&limits_25w,
-> +	},
-> +	{
-> +		.ident = "AYANEO NEXT Pro",
-> +		.matches = {
-> +			DMI_MATCH(DMI_BOARD_VENDOR, "AYANEO"),
-> +			DMI_EXACT_MATCH(DMI_BOARD_NAME, "NEXT Pro"),
-> +		},
-> +		.driver_data = (void *)&limits_25w,
-> +	},
-> +	{
-> +		.ident = "AYANEO NEXT",
-> +		.matches = {
-> +			DMI_MATCH(DMI_BOARD_VENDOR, "AYANEO"),
-> +			DMI_EXACT_MATCH(DMI_BOARD_NAME, "NEXT"),
-> +		},
-> +		.driver_data = (void *)&limits_25w,
-> +	},
-> +	{
-> +		.ident = "AYANEO KUN",
-> +		.matches = {
-> +			DMI_MATCH(DMI_BOARD_VENDOR, "AYANEO"),
-> +			DMI_EXACT_MATCH(DMI_BOARD_NAME, "KUN"),
-> +		},
-> +		.driver_data = (void *)&limits_25w,
-> +	},
-> +	{
-> +		.ident = "AYANEO KUN",
-> +		.matches = {
-> +			DMI_MATCH(DMI_BOARD_VENDOR, "AYANEO"),
-> +			DMI_EXACT_MATCH(DMI_BOARD_NAME, "AYANEO KUN"),
-> +		},
-> +		.driver_data = (void *)&limits_25w,
-> +	},
-> +	/* AYANEO - 28W */
-> +	{
-> +		.ident = "AYANEO 2",
-> +		.matches = {
-> +			DMI_MATCH(DMI_BOARD_VENDOR, "AYANEO"),
-> +			DMI_MATCH(DMI_BOARD_NAME, "AYANEO 2"),
-> +		},
-> +		.driver_data = (void *)&limits_28w,
-> +	},
-> +	{
-> +		.ident = "SuiPlay0X1",
-> +		.matches = {
-> +			DMI_MATCH(DMI_SYS_VENDOR, "Mysten Labs, Inc."),
-> +			DMI_MATCH(DMI_PRODUCT_NAME, "SuiPlay0X1"),
-> +		},
-> +		.driver_data = (void *)&limits_28w,
-> +	},
-> +	/* AYANEO - 30W */
-> +	{
-> +		/* DMI_MATCH catches all FLIP variants (DS, KB, 1S DS, 1S KB) */
-> +		.ident = "AYANEO FLIP",
-> +		.matches = {
-> +			DMI_MATCH(DMI_BOARD_VENDOR, "AYANEO"),
-> +			DMI_MATCH(DMI_BOARD_NAME, "FLIP"),
-> +		},
-> +		.driver_data = (void *)&limits_30w,
-> +	},
-> +	{
-> +		/* DMI_MATCH catches GEEK and GEEK 1S */
-> +		.ident = "AYANEO GEEK",
-> +		.matches = {
-> +			DMI_MATCH(DMI_BOARD_VENDOR, "AYANEO"),
-> +			DMI_MATCH(DMI_BOARD_NAME, "GEEK"),
-> +		},
-> +		.driver_data = (void *)&limits_30w,
-> +	},
-> +	{
-> +		.ident = "AYANEO SLIDE",
-> +		.matches = {
-> +			DMI_MATCH(DMI_BOARD_VENDOR, "AYANEO"),
-> +			DMI_EXACT_MATCH(DMI_BOARD_NAME, "SLIDE"),
-> +		},
-> +		.driver_data = (void *)&limits_30w,
-> +	},
-> +	{
-> +		.ident = "AYANEO 3",
-> +		.matches = {
-> +			DMI_MATCH(DMI_BOARD_VENDOR, "AYANEO"),
-> +			DMI_EXACT_MATCH(DMI_BOARD_NAME, "AYANEO 3"),
-> +		},
-> +		.driver_data = (void *)&limits_30w,
-> +	},
->   	{ }
->   };
->   MODULE_DEVICE_TABLE(dmi, dptc_dmi_table);
-
+>
+> Konrad
