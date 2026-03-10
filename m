@@ -1,33 +1,33 @@
 Received: from vps0.lunn.ch (vps0.lunn.ch [156.67.10.101])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 145B0355F3D;
-	Tue, 10 Mar 2026 19:23:08 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0266A3E2748;
+	Tue, 10 Mar 2026 19:57:15 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=156.67.10.101
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1773170590; cv=none; b=nrA998XV+yGlkYQOgfDTTrwF7qSQX0SB+pOZQRhe4rElGNjIPPD8C9Tnh3wjZsVwXT/NfDkr3T8wc1iNySG5RmGatD48xAOxYXcujBKOJ0FpkayuTV2Gjon8W5ORaJ025pLBjHZNEi7KDIcqHyMIKTkm/63zuWjhisJ15fI6nKw=
+	t=1773172638; cv=none; b=Y97W3OCxG4Yl5JNld5msGjfpa9khBw8Wpu9qd18p2vBeMox0ky5Y9O6P/598uetyq03OAoPwvUVZ1/WI0wUyi5obKcGmO4mbJDoISMzXvJV/U1aPvRKk954pObrQq64GNLk4DCCZsNJRbTd5kw/z/I58yd6TTla54kJkHx+7l0o=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1773170590; c=relaxed/simple;
-	bh=bRn5Izg5z0uAPXx0Zw671fqZIQditRDKRj46WiT7/50=;
+	s=arc-20240116; t=1773172638; c=relaxed/simple;
+	bh=M6Yyn2IqOVSyqGneisdkLZsfpP6HHVTCGxUUwPpoQG0=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=Bi6OXD5XQBZh9EFbKz4A2wsEulbErMNkoByVzpTfuEut/LdAvrwCUK69cxjHoqHVP7xy+anvMo2eL0XZ7AsumuFYva4HEkL6lgD5uIkHE1imS5iWaOvrYUaxl17FhVqGkrBCOP7tw4ubRJwuqFaj9nPgKTqRH4n8cdHLoC1U5FM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lunn.ch; spf=pass smtp.mailfrom=lunn.ch; dkim=pass (1024-bit key) header.d=lunn.ch header.i=@lunn.ch header.b=IGrKMrCA; arc=none smtp.client-ip=156.67.10.101
+	 Content-Type:Content-Disposition:In-Reply-To; b=sYIdH/2YKTk08wwuMh64jvxSm4tWyST7xz0GlGQuuKlBGtGYDyjIl6VIL4S/Capk8qSZg7ZOmx21ikCpf6m1amRk1Tn31xAk/bEUXPJeNVcVBkv5rAtjp1HEuxwyVvXRgsztvu9/g7YujtRpwexipb48JyUjqiqE6UAb4457Bjs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lunn.ch; spf=pass smtp.mailfrom=lunn.ch; dkim=pass (1024-bit key) header.d=lunn.ch header.i=@lunn.ch header.b=dB3e9HJ4; arc=none smtp.client-ip=156.67.10.101
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lunn.ch
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=lunn.ch
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=lunn.ch header.i=@lunn.ch header.b="IGrKMrCA"
+	dkim=pass (1024-bit key) header.d=lunn.ch header.i=@lunn.ch header.b="dB3e9HJ4"
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=lunn.ch;
 	s=20171124; h=In-Reply-To:Content-Disposition:Content-Type:MIME-Version:
 	References:Message-ID:Subject:Cc:To:From:Date:From:Sender:Reply-To:Subject:
 	Date:Message-ID:To:Cc:MIME-Version:Content-Type:Content-Transfer-Encoding:
 	Content-ID:Content-Description:Content-Disposition:In-Reply-To:References;
-	bh=RliMOQhbaEtUbn5MyitB9jjdBH2gZPVRZsCQWnu9BWo=; b=IGrKMrCAUbd0d793yXA8vF5u+W
-	4urMx/x/I3e96iHyAf8kVWBzTy0rA3114wtXjhK076hlpPdSJMLdnB6Qj9t2pdJN/ZqOIYJMj7CkH
-	O7Ya9LwZBawWjGUYYMba+p3d2RqbZLzJKI7yGddteY1btZBOYuG7JwwrH/SfT2HZ0OOk=;
+	bh=7TGbrStLEYKLqfIfPAJzKvS2CcoVdXYyHBaWzSAeeew=; b=dB3e9HJ4w+a2kr/vJiB15RcLX1
+	zWbSeRL1ZwdCrXchiENx2+Wwd6kAkJNUZEH+DnAD2N/fb3aeUlRx1nzlmyYKnSC4t1nVH1OmQBc/q
+	2fhMF0LLu6he9mLFky4mz67uN2tIVMn63KJZDtFI67+SRHfr9+EZbUGsU+ONfVSU68eo=;
 Received: from andrew by vps0.lunn.ch with local (Exim 4.94.2)
 	(envelope-from <andrew@lunn.ch>)
-	id 1w02fR-00B4iy-EM; Tue, 10 Mar 2026 20:22:57 +0100
-Date: Tue, 10 Mar 2026 20:22:57 +0100
+	id 1w03CO-00B4rz-0v; Tue, 10 Mar 2026 20:57:00 +0100
+Date: Tue, 10 Mar 2026 20:57:00 +0100
 From: Andrew Lunn <andrew@lunn.ch>
 To: Rong Zhang <i@rong.moe>
 Cc: Lee Jones <lee@kernel.org>, Pavel Machek <pavel@kernel.org>,
@@ -43,11 +43,10 @@ Cc: Lee Jones <lee@kernel.org>, Pavel Machek <pavel@kernel.org>,
 	vsankar@lenovo.com, linux-kernel@vger.kernel.org,
 	linux-leds@vger.kernel.org, chrome-platform@lists.linux.dev,
 	platform-driver-x86@vger.kernel.org
-Subject: Re: [RFC PATCH 1/9] leds: Load trigger modules on-demand if used as
- hw control trigger
-Message-ID: <500dfc4b-ebd7-4637-bed0-130fc571923c@lunn.ch>
+Subject: Re: [RFC PATCH 0/9] leds: Add support for hw initiated hw control
+ trigger transition
+Message-ID: <c61a58df-8211-4f6a-8f60-b66b565123e4@lunn.ch>
 References: <20260227190617.271388-1-i@rong.moe>
- <20260227190617.271388-2-i@rong.moe>
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
@@ -56,30 +55,65 @@ List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20260227190617.271388-2-i@rong.moe>
+In-Reply-To: <20260227190617.271388-1-i@rong.moe>
 
-On Sat, Feb 28, 2026 at 03:05:58AM +0800, Rong Zhang wrote:
-> In the following patches, we are about to support hardware initiated
-> trigger transitions to/from the device's hw control trigger. In case
-> the LED hardware switches itself to hw control mode, hw control trigger
-> must be loaded before so that the transition can be processed.
+On Sat, Feb 28, 2026 at 03:05:57AM +0800, Rong Zhang wrote:
+> Hi all,
+> 
+> Some laptops can tune their keyboard backlight according to ambient
+> light sensors (auto mode). This capability is essentially a hw control
+> trigger. Meanwhile, such laptops also offer a shrotcut for cycling
+> through brightness levels and auto mode. For example, on ThinkBook,
+> pressing Fn+Space cycles keyboard backlight levels in the following
+> sequence:
+> 
+>   1 => 2 => 0 => auto => 1 ...
+> 
+> Recent ThinkPad models should have similar sequence too.
 
-This sounds backwards around.
+With networking, we consider the hardware as an accelerator for what
+the Linux network stack can already do in software. We let the user
+configure the network stack however they want it, and then we ask the
+hardware, can you accelerate this, so we don't need to do it in
+software? It might say -EOPNOTSUPP, so it is left in software. It
+might say 0, and we never see the packets, because the hardware is
+doing the work. The user is not really aware acceleration is
+happening, because they just configure the network stack how they
+want, independent of acceleration or not.
 
-A Linux LED starts out life as a dumb LED. You can set its brightness
-using /sys/class/leds/<foo>/brightness.
+For PHY and MAC LEDs it is exactly the same. Generally, the LEDs in
+RJ45 connectors, or on the front panel can be turned on/off. The
+netdev LED trigger knows if the link is 10M, 100M, 1G etc. It knows if
+packets are being transmitted or received. It can make the LEDs show
+the link speed, or blink for packet activity, in software, using
+simple set_brightness calls. It will also ask the LED, can you
+accelerate this? Can you get the state directly from the PHY/MAC? The
+LED in my keyboard shift lock will say -EOPNOTSUPP, and the netdev
+trigger will keep blinking it in software. The LED driver by the PHY
+might say 0, and blink the LED itself. Or it might say -EOPNOTSUPP,
+because the vendor decided to only support RX+TX, not only RX.
 
-Userspace policy can then give additional meaning to the LED. It could
-blink a heartbeat, disk activity, show rf-kill status, activity on a
-serial port, what link speed eth42 has etc. The general design in
-Linux is that any LED can be used for any of these functions. You
-decide what an LED should indicate by selecting the trigger for it. To
-be able to select the trigger, the trigger needs to be already loaded.
+My preference is this model of accelerating what Linux can already do
+should be used everywhere.
 
-Only once you have the trigger load, and the LED using the trigger,
-then you can think about can the trigger be offloaded to hardware.
+You know how many levels the LED supports, so the trigger can easily
+implement the steps, 0, 1, 2, 0, 1, 2, based on receiving some event
+from somewhere.  You can also accelerate this, you can ask the LED,
+can you directly receive the event? -EOPNOTSUPP, keep controlling it
+from software. 0, stop driving it from software, the hardware will
+accelerate it.
 
-In linux, policy is in user space. If policy says led X is to be used
-with trigger Y, user space can get the needed trigger module loaded.
+If the system has access to a light sensor, the trigger can also
+decide on 0, 1, or 2, based on polling the light sensor every
+second. It can then ask the LED, do you have direct access to the
+light sensor, can you accelerate this?
 
-     Andrew
+The experience from networking is, once you get into the mindset of
+the hardware is there to accelerate what Linux can already do, a lot
+of problems just disappear. It might you first need to implement the
+software version, but once you have that, acceleration is easy.
+
+Does Linux already have a software version of what you want? Can you
+accelerate it?
+
+	Andrew
