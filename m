@@ -1,118 +1,218 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.12])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6261A2F532C
-	for <platform-driver-x86@vger.kernel.org>; Tue, 10 Mar 2026 14:52:35 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.12
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9E2533033F6;
+	Tue, 10 Mar 2026 15:02:36 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1773154356; cv=none; b=Ktyxeph3Ot2qsYHQEdTPACEyUco4BfcMlWx6u+NDcbnwF+8gC39X80iRQoGKPN6BVmi9t8xVUOvHxDGlDzVjnJE1541AHV+3I+xyertyXDWocfmycRqYVl02fuLn2eLrHAgiChb84quc3vOgcWgHcv56QCVz+Cc9DQ5cXfYJgi4=
+	t=1773154956; cv=none; b=V8mQcK2LZ6WaBNy3ZBgd9IOZiCRHOv0RHfmLnHc+UsHFEInZhA4qQKwrNzumZKvKktU4r88gP3gYzITk/vVC6z7pd1ciTTAt2/UTf3EhkndeUh6k6mSo/wCQnbxRkM249lMDFXWTFge7bdcpKLJ1cwj3HKQ99PMEDEIaxTdpEos=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1773154356; c=relaxed/simple;
-	bh=/TqgvRBkevBU5M5YIWX7VwgIwq1rVTzIvz69IqN6JQE=;
-	h=From:Date:To:cc:Subject:In-Reply-To:Message-ID:References:
-	 MIME-Version:Content-Type; b=rTihNAZPIRaGeMNMzfTHB9hPasYNsbTS9EFXJDA6Ty0QvkoxFq2PsNkdAW9CUPZHqlgtUe5j+UmVFew+VpI33KXee/rdsfUwGzmuPqdX4XRp9dV6crz1C6fCEqW5F/2DfSdEkOFpBfwLyHpZ1ymkdyv0FC76IB9VdyuUDUo5+y0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=pass smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=kANq5SpN; arc=none smtp.client-ip=192.198.163.12
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.intel.com
+	s=arc-20240116; t=1773154956; c=relaxed/simple;
+	bh=B3yjZ2PtytN8s2XAoFhnIPvCWCLkJ9uFzDhkRyQNxoE=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=s2td0aaQXKZsjsmX9FNYARjbPuWNuuR8kXsCfN2CFfTSviZOCTMSWKSyI4bA+gNIUpDcMmIeLi3Evy2Zw4ArbqkR0Ky7EnrGMEXTejtNSb1r4JuJWEbSP4UFfzqItgwUH/FBVs8HpLcPqYNWHaU7j4RfWLSNFR/h0H979iI9/KE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=uLvXYw4r; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="kANq5SpN"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1773154356; x=1804690356;
-  h=from:date:to:cc:subject:in-reply-to:message-id:
-   references:mime-version;
-  bh=/TqgvRBkevBU5M5YIWX7VwgIwq1rVTzIvz69IqN6JQE=;
-  b=kANq5SpNYhCrk3P9XugQO/UTYMyK/hWkOclARG/zpMWoAhoutn6cIVx9
-   F3ZEVP98OlZWKLUuaiULq4WQ2DcpybuaKcoIA0jPEBfIVprYd/dpAyLq8
-   2W9Of1TITlQ6nuo7ggS6gvwBbOsU/nAsTerOO7aPq4hB/hIDE5dxz7fYB
-   A/e0j+O+CQOGTSb0tUZWU95zdf/QG+mYimUl0fWEVOI0zSpiQvtG58+i8
-   47PHKTY8vzr1H92lzaCAfJEAUPH2OA3q9dCpyQlKr+7PIMXUxUXJvlCgv
-   X1PcGogXNN0P9WOOn2QJe5kiquoiSYnhXC/l87kEc67cJ7qrtIZpSHfCY
-   A==;
-X-CSE-ConnectionGUID: XO4UPVTsTkaoEOX3XC7qVg==
-X-CSE-MsgGUID: FGF+B6gDTzywzUYoPRgs4w==
-X-IronPort-AV: E=McAfee;i="6800,10657,11725"; a="78083341"
-X-IronPort-AV: E=Sophos;i="6.23,112,1770624000"; 
-   d="scan'208";a="78083341"
-Received: from fmviesa003.fm.intel.com ([10.60.135.143])
-  by fmvoesa106.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 10 Mar 2026 07:52:35 -0700
-X-CSE-ConnectionGUID: UnwR37UuQ+KRL1CcFU6sZw==
-X-CSE-MsgGUID: l7X73rS1Tk2WR7vEpOwLYA==
-X-ExtLoop1: 1
-Received: from ijarvine-mobl1.ger.corp.intel.com (HELO localhost) ([10.245.244.55])
-  by fmviesa003-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 10 Mar 2026 07:52:31 -0700
-From: =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
-Date: Tue, 10 Mar 2026 16:52:23 +0200 (EET)
-To: Carlos Bilbao <carlos.bilbao.osdev@gmail.com>
-cc: Alok Tiwari <alok.a.tiwari@oracle.com>, Hans de Goede <hansg@kernel.org>, 
-    carlos.bilbao@kernel.org, naveenkrishna.chatradhi@amd.com, 
-    platform-driver-x86@vger.kernel.org, alok.a.tiwarilinux@gmail.com
-Subject: Re: [PATCH] platform/x86/amd/hsmp: Fix typo in error message
-In-Reply-To: <CAOc0ha+Z3yrtpasrgPo3ZPCmBy9_N-fxzqgRqnxpmRV+q+PH=g@mail.gmail.com>
-Message-ID: <4685a998-5817-2ef8-c46f-f7967836f1b4@linux.intel.com>
-References: <20260310125307.700108-1-alok.a.tiwari@oracle.com> <CAOc0ha+Z3yrtpasrgPo3ZPCmBy9_N-fxzqgRqnxpmRV+q+PH=g@mail.gmail.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="uLvXYw4r"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 0758AC19423;
+	Tue, 10 Mar 2026 15:02:32 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1773154956;
+	bh=B3yjZ2PtytN8s2XAoFhnIPvCWCLkJ9uFzDhkRyQNxoE=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=uLvXYw4ructNr51kyC6fpYMf9FWkvdcq+POKkbbgueINM1DnoZSq+JSx0B0O1goRl
+	 h9y8MuotvH6LYAVnCyr0zVw9MvWKv11VUiJOb2rwpXR/7UgC5vZaVOl9w3TwUBuldq
+	 eio1Th41A1BAms4BHdcHTdKROjDaaLIfT+Zb+BbKcfzyVyNPlZtZsZIrr+M1t7/mh4
+	 s3Mbak+AfkCyhDYm5syG9WrFtErJuQsFBtOPm0bdolUDv2FCxPBNvseZxGf1ZTnkIA
+	 U4QJH4nwkKDdTNRfUub6EvYgQyd2RbH7Xoi0Etm0y/LplxPflK2SdW4fx/HJm/GhI+
+	 9Uk22rU9bCd9g==
+Message-ID: <cc274ba7-cae4-47b0-90d3-124ceae6a51b@kernel.org>
+Date: Tue, 10 Mar 2026 16:02:31 +0100
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/mixed; boundary="8323328-2020628314-1773154343=:975"
-
-  This message is in MIME format.  The first part should be readable text,
-  while the remaining parts are likely unreadable without MIME-aware tools.
-
---8323328-2020628314-1773154343=:975
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH 5/5] platform: int3472: Add MSI prestige board data
+To: Dan Scally <dan.scally@ideasonboard.com>,
+ Antti Laakso <antti.laakso@linux.intel.com>, linux-media@vger.kernel.org
+Cc: linux-gpio@vger.kernel.org, platform-driver-x86@vger.kernel.org,
+ linusw@kernel.org, brgl@kernel.org, sakari.ailus@linux.intel.com,
+ mchehab@kernel.org, ilpo.jarvinen@linux.intel.com,
+ hverkuil+cisco@kernel.org, sre@kernel.org, hao.yao@intel.com,
+ jimmy.su@intel.com, miguel.vadillo@intel.com, kees@kernel.org,
+ ribalda@chromium.org
+References: <20260310124427.693625-1-antti.laakso@linux.intel.com>
+ <20260310124427.693625-6-antti.laakso@linux.intel.com>
+ <db7b4eeb-1054-4b7c-9f91-810be504124d@ideasonboard.com>
+From: Hans de Goede <hansg@kernel.org>
+Content-Language: en-US, nl
+In-Reply-To: <db7b4eeb-1054-4b7c-9f91-810be504124d@ideasonboard.com>
 Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-
-On Tue, 10 Mar 2026, Carlos Bilbao wrote:
-
-> On Tue, Mar 10, 2026 at 5:53=E2=80=AFAM Alok Tiwari <alok.a.tiwari@oracle=
-=2Ecom> wrote:
->       Fix a typo in the HSMP error message where "tmeout" should be "time=
-out".
->=20
->       Signed-off-by: Alok Tiwari <alok.a.tiwari@oracle.com>
->       ---
->       =C2=A0drivers/platform/x86/amd/hsmp/hsmp.c | 2 +-
->       =C2=A01 file changed, 1 insertion(+), 1 deletion(-)
->=20
->       diff --git a/drivers/platform/x86/amd/hsmp/hsmp.c
->       b/drivers/platform/x86/amd/hsmp/hsmp.c
->       index 19f82c1d3090..631ffc0978d1 100644
->       --- a/drivers/platform/x86/amd/hsmp/hsmp.c
->       +++ b/drivers/platform/x86/amd/hsmp/hsmp.c
->       @@ -117,7 +117,7 @@ static int __hsmp_send_message(struct hsmp_sock=
-et
->       *sock, struct hsmp_message *ms
->       =C2=A0 =C2=A0 =C2=A0 =C2=A0 }
->=20
->       =C2=A0 =C2=A0 =C2=A0 =C2=A0 if (unlikely(mbox_status =3D=3D HSMP_ST=
-ATUS_NOT_READY)) {
->       -=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0dev_err(soc=
-k->dev, "Message ID 0x%X failure : SMU tmeout
->       (status =3D 0x%X)\n",
->       +=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0dev_err(soc=
-k->dev, "Message ID 0x%X failure : SMU timeout
->       (status =3D 0x%X)\n",
->       =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=
-=A0 =C2=A0 =C2=A0 msg->msg_id, mbox_status);
->       =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 return -ETI=
-MEDOUT;
->       =C2=A0 =C2=A0 =C2=A0 =C2=A0 } else if (unlikely(mbox_status =3D=3D =
-HSMP_ERR_INVALID_MSG)) {
->       --
->       2.50.1
->=20
->=20
-> Signed-off-by: Carlos Bilbao <carlos.bilbao@kernel.org>
+Content-Transfer-Encoding: 8bit
 
 Hi,
 
-Did you perhaps mean a Reviewed-by tag instead?
+On 10-Mar-26 15:32, Dan Scally wrote:
+> Hi Antti
+> 
+> On 10/03/2026 12:44, Antti Laakso wrote:
+>> Define regulators and gpios for MSI Prestige 14 AI EVO+ laptop.
+>>
+>> Signed-off-by: Antti Laakso <antti.laakso@linux.intel.com>
+>> ---
+>>   .../x86/intel/int3472/tps68470_board_data.c   | 97 +++++++++++++++++++
+>>   1 file changed, 97 insertions(+)
+>>
+>> diff --git a/drivers/platform/x86/intel/int3472/tps68470_board_data.c b/drivers/platform/x86/intel/int3472/tps68470_board_data.c
+>> index 71357a036292..fe7c23e72d66 100644
+>> --- a/drivers/platform/x86/intel/int3472/tps68470_board_data.c
+>> +++ b/drivers/platform/x86/intel/int3472/tps68470_board_data.c
+>> @@ -232,6 +232,73 @@ static const struct tps68470_regulator_platform_data dell_7212_tps68470_pdata =
+>>       },
+>>   };
+>>   +/* Settings for MSI Prestige 14 laptop. */
+>> +
+>> +static struct regulator_consumer_supply ovti5675_avdd_consumer_supplies[] = {
+>> +    REGULATOR_SUPPLY("avdd", "i2c-OVTI5675:00"),
+>> +};
+>> +
+>> +static struct regulator_consumer_supply ovti5675_dovdd_consumer_supplies[] = {
+>> +    REGULATOR_SUPPLY("dovdd", "i2c-OVTI5675:00"),
+>> +};
+>> +
+>> +static struct regulator_consumer_supply ovti5675_dvdd_consumer_supplies[] = {
+>> +    REGULATOR_SUPPLY("dvdd", "i2c-OVTI5675:00"),
+>> +};
+>> +
+>> +static const struct regulator_init_data msi_p14_ai_evo_tps68470_core_reg_init_data = {
+>> +    .constraints = {
+>> +        .min_uV = 1200000,
+>> +        .max_uV = 1200000,
+>> +        .apply_uV = 1,
+>> +        .valid_ops_mask = REGULATOR_CHANGE_STATUS,
+>> +    },
+>> +    .num_consumer_supplies = ARRAY_SIZE(ovti5675_dvdd_consumer_supplies),
+>> +    .consumer_supplies = ovti5675_dvdd_consumer_supplies,
+>> +};
+>> +
+>> +static const struct regulator_init_data msi_p14_ai_evo_tps68470_ana_reg_init_data = {
+>> +    .constraints = {
+>> +        .min_uV = 2815200,
+>> +        .max_uV = 2815200,
+>> +        .apply_uV = 1,
+>> +        .valid_ops_mask = REGULATOR_CHANGE_STATUS,
+>> +    },
+>> +    .num_consumer_supplies = ARRAY_SIZE(ovti5675_avdd_consumer_supplies),
+>> +    .consumer_supplies = ovti5675_avdd_consumer_supplies,
+>> +};
+>> +
+>> +static const struct regulator_init_data msi_p14_ai_evo_tps68470_vio_reg_init_data = {
+>> +    .constraints = {
+>> +        .min_uV = 1800600,
+>> +        .max_uV = 1800600,
+>> +        .apply_uV = 1,
+>> +        .valid_ops_mask = REGULATOR_CHANGE_STATUS,
+>> +    },
+>> +    .num_consumer_supplies = 0,
+>> +    .consumer_supplies = NULL,
+>> +};
+>> +
+>> +static const struct regulator_init_data msi_p14_ai_evo_tps68470_vsio_reg_init_data = {
+>> +    .constraints = {
+>> +        .min_uV = 1800600,
+>> +        .max_uV = 1800600,
+>> +        .apply_uV = 1,
+>> +        .valid_ops_mask = REGULATOR_CHANGE_STATUS,
+>> +    },
+>> +    .num_consumer_supplies = ARRAY_SIZE(ovti5675_dovdd_consumer_supplies),
+>> +    .consumer_supplies = ovti5675_dovdd_consumer_supplies,
+>> +};
+>> +
+>> +static const struct tps68470_regulator_platform_data msi_p14_ai_evo_tps68470_pdata = {
+>> +    .reg_init_data = {
+>> +        [TPS68470_CORE] = &msi_p14_ai_evo_tps68470_core_reg_init_data,
+>> +        [TPS68470_ANA]  = &msi_p14_ai_evo_tps68470_ana_reg_init_data,
+>> +        [TPS68470_VIO]  = &msi_p14_ai_evo_tps68470_vio_reg_init_data,
+>> +        [TPS68470_VSIO] = &msi_p14_ai_evo_tps68470_vsio_reg_init_data,
+>> +    },
+>> +};
+>> +
+>>   static struct gpiod_lookup_table surface_go_int347a_gpios = {
+>>       .dev_id = "i2c-INT347A:00",
+>>       .table = {
+>> @@ -258,6 +325,19 @@ static struct gpiod_lookup_table dell_7212_int3479_gpios = {
+>>       }
+>>   };
+>>   +static struct gpiod_lookup_table msi_p14_ai_evo_ovti5675_gpios = {
+>> +    .dev_id = "i2c-OVTI5675:00",
+>> +    .table = {
+>> +        GPIO_LOOKUP_IDX("tps68470-gpio", 9, "reset", 0, GPIO_ACTIVE_LOW),
+>> +        GPIO_LOOKUP_IDX("tps68470-gpio", 7, "reset", 1, GPIO_ACTIVE_LOW),
+> 
+> The ov5675 driver seems only to look for a single gpio, so I think the second entry would never be accessed here...should there be an accompanying driver change?
 
---=20
- i.
+Ah I missed this, yes having 2 entries mapping to the same label is not
+useful. The first entry (with index 0) will simply always be used in that
+case.
 
---8323328-2020628314-1773154343=:975--
+Also this should use plain GPIO_LOOKUP() since the index part (the only
+difference here) is never used in sensor drivers.
+
+Regards,
+
+Hans
+
+
+
+
+
+> 
+> Thanks
+> Dan
+> 
+>> +        { }
+>> +    }
+>> +};
+>> +
+>> +static const struct tps68470_gpio_platform_data msi_p14_ai_evo_tps68470_gpio_pdata = {
+>> +    .daisy_chain_enable = true,
+>> +};
+>> +
+>>   static const struct int3472_tps68470_board_data surface_go_tps68470_board_data = {
+>>       .dev_name = "i2c-INT3472:05",
+>>       .tps68470_regulator_pdata = &surface_go_tps68470_pdata,
+>> @@ -287,6 +367,16 @@ static const struct int3472_tps68470_board_data dell_7212_tps68470_board_data =
+>>       },
+>>   };
+>>   +static const struct int3472_tps68470_board_data msi_p14_ai_evo_tps68470_board_data = {
+>> +    .dev_name = "i2c-INT3472:06",
+>> +    .tps68470_regulator_pdata = &msi_p14_ai_evo_tps68470_pdata,
+>> +    .tps68470_gpio_pdata = &msi_p14_ai_evo_tps68470_gpio_pdata,
+>> +    .n_gpiod_lookups = 1,
+>> +    .tps68470_gpio_lookup_tables = {
+>> +        &msi_p14_ai_evo_ovti5675_gpios,
+>> +    },
+>> +};
+>> +
+>>   static const struct dmi_system_id int3472_tps68470_board_data_table[] = {
+>>       {
+>>           .matches = {
+>> @@ -316,6 +406,13 @@ static const struct dmi_system_id int3472_tps68470_board_data_table[] = {
+>>           },
+>>           .driver_data = (void *)&dell_7212_tps68470_board_data,
+>>       },
+>> +    {
+>> +        .matches = {
+>> +            DMI_EXACT_MATCH(DMI_SYS_VENDOR, "Micro-Star International Co., Ltd."),
+>> +            DMI_EXACT_MATCH(DMI_PRODUCT_NAME, "Prestige 14 AI+ Evo C2VMG"),
+>> +        },
+>> +        .driver_data = (void *)&msi_p14_ai_evo_tps68470_board_data,
+>> +    },
+>>       { }
+>>   };
+>>   
+> 
+
