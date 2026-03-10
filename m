@@ -1,44 +1,45 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E2BE94508F2;
-	Tue, 10 Mar 2026 09:02:24 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B0DAB4657E2;
+	Tue, 10 Mar 2026 09:02:27 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1773133345; cv=none; b=iNhkBV7SGmlmuguVnX7k4ApQNWM7um3q5FupWI0CfxlNR5FS1Q8swRzt5wfgDNh1xsyFn+Pemod4m7qota5g5ifktUXbNHNE4rkeO8mnsK/HrW19Ur0FcIpMBLH+4+onrHQWAgcdlCW5E5vX9JGNvyTW9Iv7E1WZ7lPt5CibZiQ=
+	t=1773133347; cv=none; b=sCPN6eCo3aKTZEutKMXn1j3qXTBv0WKF9E5CrmDgPI6imMlVNsmQIJS2S+wpa8Dov47CkEzrXOPBGl0ucLjGUk+7p2WkmICLVcMP8UWL+c6875UwGTHANNrt3C3+5POsrXOWk3JWhtaIfagBxzYSEqgv4PXoR1li9g8rnhi7wW0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1773133345; c=relaxed/simple;
-	bh=LR8yxGsfAO5JGNEsZtgdYEhWHG34ymOAfWN9E2eLdfA=;
+	s=arc-20240116; t=1773133347; c=relaxed/simple;
+	bh=0MgA2icHUBbmT/KIBx7rZLbF7ERnRCvPbEcb/ZFRZwc=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=OOMQ9BMaGKKZPk6iO9AqebLLe97molWl2ib8m1LbkKJEFXq/GNuFkMkHQ/DTTPAbDSGtzGHqaCn/ERYabIA2URmFYvAshbvSVLQxsrOyOOfvXMZ5gaOM8ITV9z2ollA3YJPCCmdIBsvkJULImNDokLlhm4lSKyAsrJ9kEHbBpFE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=sznofwif; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version:Content-Type; b=ZLWd3kfqgkseNPODhLVodHjQypAS7xA3Vp2e0m3nU3qADZSjSxqZup5svmdMHkNmpAA/u5A+yQWynox+o7OewcND/1/R1FARYrhadq6b3BP7my/Bo0JPPvtXDJcUEIXIyNoCkU61Q7QYL7oMOVlI+WiM3OFNvaY2tW29FwBOOWg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=bAKdLaZP; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="sznofwif"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id D40D9C19423;
-	Tue, 10 Mar 2026 09:02:23 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="bAKdLaZP"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 8F5FEC2BC87;
+	Tue, 10 Mar 2026 09:02:26 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1773133344;
-	bh=LR8yxGsfAO5JGNEsZtgdYEhWHG34ymOAfWN9E2eLdfA=;
+	s=k20201202; t=1773133347;
+	bh=0MgA2icHUBbmT/KIBx7rZLbF7ERnRCvPbEcb/ZFRZwc=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=sznofwifwPyQTC1ssSDdDpojKbSxmKl2OVlyf2K8/L2U71ukNW4hJtS37Y0ywsj5b
-	 MJMLORHPq4U07vUXKagfiQUnHFhidq9JAqXq91A9qD3dlvh2xNHndSeAr5xyDBZv0p
-	 oKdriK3XA3FoBvRJS/aseIS3JRUX5tZnOHqmBZrasQdTnOANnU/5y7amQhq7Qn8Fbk
-	 P2Cb9N1G42FtwY0VUReLkmwXSiPMBJgiaTgvzAbAGuiLpwuy8nu1XQ656PHxSen0FY
-	 hruYAAjDjKeo/7y9aedSG3BucSO2FDGTcbkyngDS6ONgledMTDl8NMAjFt4J9n0/n9
-	 zhOWURrV27koQ==
+	b=bAKdLaZP8B+K7/YxPvtxIOoNvRcfUog7I8MVBURmmuLn2uHumQzrCWm/ArMyP2T3S
+	 3dsGb034atUKQzaKFlUwamNus6f7BUSnp2pD9xtXD4XNV0HjhknoegJ+xQM6tgV7oI
+	 t7CCMfO3fUqYTLeeBUdbAGjILHqKGXkeR3zsOFJwiNcIy5l6JLPsnFc57fGZcoNdMy
+	 cWI7KHoXtm+SCs8AABp1j2w2DvawEG4gRpu25DIQcvmBysPgIk+WFKnoxLTrkFh7nj
+	 qmzk/CCh2hdaFDr4Z3oqod3PT7a8610bI7oh93+11Lwd08rDuB9p3fx2z3mM7qFulE
+	 i3YKwo9uLOmtQ==
 From: Sasha Levin <sashal@kernel.org>
 To: patches@lists.linux.dev,
 	stable@vger.kernel.org
 Cc: Krishna Chomal <krishna.chomal108@gmail.com>,
-	Varad Amol Pisale <varadpisale.work@gmail.com>,
+	Noah Provenzano <noahpro@gmail.com>,
+	Juan Martin Morales <juanm4morales@gmail.com>,
 	=?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>,
 	Sasha Levin <sashal@kernel.org>,
 	hansg@kernel.org,
 	platform-driver-x86@vger.kernel.org,
 	linux-kernel@vger.kernel.org
-Subject: [PATCH AUTOSEL 6.19-6.18] platform/x86: hp-wmi: Add Omen 16-xd0xxx fan and thermal support
-Date: Tue, 10 Mar 2026 05:01:26 -0400
-Message-ID: <20260310090145.2709021-26-sashal@kernel.org>
+Subject: [PATCH AUTOSEL 6.19-6.18] platform/x86: hp-wmi: Add Omen 16-wf0xxx fan and thermal support
+Date: Tue, 10 Mar 2026 05:01:28 -0400
+Message-ID: <20260310090145.2709021-28-sashal@kernel.org>
 X-Mailer: git-send-email 2.51.0
 In-Reply-To: <20260310090145.2709021-1-sashal@kernel.org>
 References: <20260310090145.2709021-1-sashal@kernel.org>
@@ -56,21 +57,24 @@ Content-Transfer-Encoding: 8bit
 
 From: Krishna Chomal <krishna.chomal108@gmail.com>
 
-[ Upstream commit 3c99a545b372c77b5d39715968a141f523eccbf2 ]
+[ Upstream commit 13fa3aaf02edaad9b41fc61d7f6326d2b6a4bf80 ]
 
-The HP Omen 16-xd0xxx (board ID: 8BCD) has the same WMI interface as
+The HP Omen 16-wf0xxx (board ID: 8BAB) has the same WMI interface as
 other Victus S boards, but requires quirks for correctly switching
 thermal profile (similar to HP Omen 16-wf1xxx, board ID: 8C78).
 
 Add the DMI board name to victus_s_thermal_profile_boards[] table and
 map it to omen_v1_thermal_params.
 
-Testing on HP Omen 16-xd0xxx confirmed that platform profile is
+Testing on HP Omen 16-wf0xxx confirmed that platform profile is
 registered successfully and fan RPMs are readable and controllable.
 
-Tested-by: Varad Amol Pisale <varadpisale.work@gmail.com>
+Suggested-by: Noah Provenzano <noahpro@gmail.com>
+Tested-by: Juan Martin Morales <juanm4morales@gmail.com>
+Reported-by: Juan Martin Morales <juanm4morales@gmail.com>
+Closes: https://bugzilla.kernel.org/show_bug.cgi?id=220639
 Signed-off-by: Krishna Chomal <krishna.chomal108@gmail.com>
-Link: https://patch.msgid.link/20260218050235.94687-1-krishna.chomal108@gmail.com
+Link: https://patch.msgid.link/20260216072003.90151-1-krishna.chomal108@gmail.com
 Reviewed-by: Ilpo Järvinen <ilpo.jarvinen@linux.intel.com>
 Signed-off-by: Ilpo Järvinen <ilpo.jarvinen@linux.intel.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
@@ -80,69 +84,69 @@ LLM Generated explanations, may be completely bogus:
 
 ## Analysis
 
-This commit adds a DMI board name entry ("8BCD") for the HP Omen
-16-xd0xxx laptop to the `victus_s_thermal_profile_boards[]` table,
-mapping it to `omen_v1_thermal_params`. This is a hardware quirk/device
-ID addition to an existing driver.
+### Commit Summary
+This commit adds a single DMI board name entry ("8BAB" for HP Omen
+16-wf0xxx) to the `victus_s_thermal_profile_boards[]` table in the HP
+WMI driver, mapping it to existing `omen_v1_thermal_params`. This
+enables fan RPM reading/control and thermal profile switching on this
+specific laptop model.
 
-### Change Classification
+### Classification: Hardware Quirk / Device ID Addition
 
-This is a **hardware quirk addition** — one of the explicitly allowed
-exception categories for stable backports. The change:
-- Adds exactly 4 lines to an existing DMI matching table
-- Uses an already-existing parameter set (`omen_v1_thermal_params`)
-- Only affects the specific board ID "8BCD" (HP Omen 16-xd0xxx)
-- Follows the exact same pattern as other entries in the table (e.g.,
-  board "8C78" also uses `omen_v1_thermal_params`)
+This falls squarely into the **"QUIRKS and WORKAROUNDS"** and **"NEW
+DEVICE IDs"** exception categories for stable:
 
-### Risk Assessment
-
-**Extremely low risk:**
-- The change is confined to a single DMI match table — it cannot affect
-  any other hardware
-- It uses existing infrastructure (`omen_v1_thermal_params`) that is
-  already tested with board "8C78"
-- The commit has both `Tested-by` and `Reviewed-by` tags from the
-  subsystem maintainer (Ilpo Järvinen)
-- No code logic changes, no new functions, no new data structures
+- **Change scope**: Adding 4 lines — a single new DMI match entry to an
+  existing quirk table
+- **Pattern**: Identical to how other board IDs (8BBE, 8BCD, 8BD4, 8BD5,
+  8C78) are already registered in the same table
+- **Risk**: Zero risk to other hardware — the DMI_MATCH on "8BAB" only
+  affects that specific board
+- **No new code paths**: Uses existing `omen_v1_thermal_params` (same as
+  the 8BCD and 8C78 entries already in the table)
 
 ### User Impact
+- Without this entry, the HP Omen 16-wf0xxx laptop lacks proper thermal
+  profile management and fan control via the platform profile interface
+- Real users reported this issue (bugzilla #220639)
+- Tested on actual hardware by the reporter
 
-Without this entry, HP Omen 16-xd0xxx users cannot:
-- Control fan speeds through the platform profile interface
-- Switch thermal profiles (performance/balanced/quiet)
+### Stable Criteria Assessment
+- **Obviously correct**: Yes — trivial table entry addition following
+  exact pattern of existing entries
+- **Fixes a real issue**: Yes — enables hardware support for a specific
+  laptop (hardware quirk)
+- **Small and contained**: Yes — 4 lines, single file, single table
+- **No new features/APIs**: Correct — just extends existing mechanism to
+  new hardware
+- **Tested**: Yes — `Tested-by` tag from the reporter confirms it works
+- **Reviewed**: Yes — by subsystem maintainer Ilpo Järvinen
 
-This is real hardware enablement for real users — the "Tested-by" from a
-different person than the author confirms at least two users need this.
-
-### Stable Criteria Check
-
-- **Obviously correct**: Yes — trivial table entry addition matching
-  existing patterns
-- **Fixes real issue**: Yes — enables hardware control on specific
-  laptop (quirk category)
-- **Small and contained**: Yes — 4 lines in one file
-- **No new features/APIs**: Correct — uses existing driver
-  infrastructure
-- **Tested**: Yes — explicitly tested on the hardware
+### Risk Assessment
+- **Risk**: Essentially zero. The DMI match is board-specific and cannot
+  affect any other system.
+- **Benefit**: Enables thermal/fan control for HP Omen 16-wf0xxx users
+  on stable kernels.
+- **Dependencies**: None — `omen_v1_thermal_params` and the
+  `victus_s_thermal_profile_boards[]` table infrastructure already exist
+  in any kernel version that has the other entries.
 
 ### Verification
+- Verified the diff is a trivial 4-line addition to an existing DMI
+  match table — confirmed by reading the patch
+- Verified it reuses existing `omen_v1_thermal_params` (same as 8BCD and
+  8C78 entries in the same table) — confirmed in the diff context
+- Verified the commit has Tested-by, Reported-by, and Reviewed-by tags —
+  confirmed in commit message
+- Verified bugzilla link exists (bug #220639) — present in commit
+  message
+- Verified this matches the "device ID / hardware quirk" exception
+  pattern — it's structurally identical to adding a PCI/USB device ID to
+  a driver's ID table
 
-- Verified the diff is purely a table entry addition to
-  `victus_s_thermal_profile_boards[]` — no code logic changes
-- Verified `omen_v1_thermal_params` is already used by board "8C78" in
-  the same table, confirming it's an existing, tested parameter set
-- Verified the commit has `Tested-by: Varad Amol Pisale` and `Reviewed-
-  by: Ilpo Järvinen` (subsystem maintainer)
-- Verified the change follows the exact DMI_MATCH pattern used by all
-  other entries in the table
-- The commit message explicitly states "Testing on HP Omen 16-xd0xxx
-  confirmed that platform profile is registered successfully and fan
-  RPMs are readable and controllable"
-
-This is a textbook hardware quirk addition — small, safe, tested, and
-enables real hardware for real users. It matches the stable exception
-for device quirks/IDs perfectly.
+This is a textbook example of a hardware quirk addition that is
+appropriate for stable trees: trivially small, zero risk, tested on real
+hardware, and enables functionality for real users.
 
 **YES**
 
@@ -150,19 +154,19 @@ for device quirks/IDs perfectly.
  1 file changed, 4 insertions(+)
 
 diff --git a/drivers/platform/x86/hp/hp-wmi.c b/drivers/platform/x86/hp/hp-wmi.c
-index 9fcc18635e4e7..bc550da031fa1 100644
+index 24d065ddfc6ae..9fcc18635e4e7 100644
 --- a/drivers/platform/x86/hp/hp-wmi.c
 +++ b/drivers/platform/x86/hp/hp-wmi.c
-@@ -168,6 +168,10 @@ static const struct dmi_system_id victus_s_thermal_profile_boards[] __initconst
- 		.matches = { DMI_MATCH(DMI_BOARD_NAME, "8BBE") },
- 		.driver_data = (void *)&victus_s_thermal_params,
- 	},
+@@ -160,6 +160,10 @@ static const char * const victus_thermal_profile_boards[] = {
+ 
+ /* DMI Board names of Victus 16-r and Victus 16-s laptops */
+ static const struct dmi_system_id victus_s_thermal_profile_boards[] __initconst = {
 +	{
-+		.matches = { DMI_MATCH(DMI_BOARD_NAME, "8BCD") },
++		.matches = { DMI_MATCH(DMI_BOARD_NAME, "8BAB") },
 +		.driver_data = (void *)&omen_v1_thermal_params,
 +	},
  	{
- 		.matches = { DMI_MATCH(DMI_BOARD_NAME, "8BD4") },
+ 		.matches = { DMI_MATCH(DMI_BOARD_NAME, "8BBE") },
  		.driver_data = (void *)&victus_s_thermal_params,
 -- 
 2.51.0
