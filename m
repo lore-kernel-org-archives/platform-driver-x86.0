@@ -1,45 +1,44 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B260C4508F2;
-	Tue, 10 Mar 2026 09:02:21 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E2BE94508F2;
+	Tue, 10 Mar 2026 09:02:24 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1773133341; cv=none; b=hfxx4p7oogXBNFDL5sPHOKjyGumNAiEgeCqIZB4cldsVbXJrX9zZeNFoQcT9dJ2y1pz8JrN4SEZIf0mHBZCNqKO8ApdNLVRWhu1+TPq1fYIY608EK7vQzrOhM91KpsekZd2XsfeTODLDj1DKdPwd0h7o7e3+4yFRO6SECs7zgDo=
+	t=1773133345; cv=none; b=iNhkBV7SGmlmuguVnX7k4ApQNWM7um3q5FupWI0CfxlNR5FS1Q8swRzt5wfgDNh1xsyFn+Pemod4m7qota5g5ifktUXbNHNE4rkeO8mnsK/HrW19Ur0FcIpMBLH+4+onrHQWAgcdlCW5E5vX9JGNvyTW9Iv7E1WZ7lPt5CibZiQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1773133341; c=relaxed/simple;
-	bh=oTCcKoiBg4Ndl4dFHqHelPZE7Fdxyv/0WoL9zpscZ78=;
+	s=arc-20240116; t=1773133345; c=relaxed/simple;
+	bh=LR8yxGsfAO5JGNEsZtgdYEhWHG34ymOAfWN9E2eLdfA=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=PihLoPU7Y7Qr0MngTIUIzO1IUunC0htpYSOfFJruJffxRMgMROtgA031yyr8Q63SqSKf5wapxLNIeklWFDtzXQDuu8eMl4TArXNtz+b9IsSl/pLYKv5aAZaSxpiCnuml2m25Y6anAy400QQgj85lO6NKtfixt/Lcz2sKulUVacg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=W8P//Xyv; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version:Content-Type; b=OOMQ9BMaGKKZPk6iO9AqebLLe97molWl2ib8m1LbkKJEFXq/GNuFkMkHQ/DTTPAbDSGtzGHqaCn/ERYabIA2URmFYvAshbvSVLQxsrOyOOfvXMZ5gaOM8ITV9z2ollA3YJPCCmdIBsvkJULImNDokLlhm4lSKyAsrJ9kEHbBpFE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=sznofwif; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="W8P//Xyv"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 93F85C2BC9E;
-	Tue, 10 Mar 2026 09:02:20 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="sznofwif"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id D40D9C19423;
+	Tue, 10 Mar 2026 09:02:23 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1773133341;
-	bh=oTCcKoiBg4Ndl4dFHqHelPZE7Fdxyv/0WoL9zpscZ78=;
+	s=k20201202; t=1773133344;
+	bh=LR8yxGsfAO5JGNEsZtgdYEhWHG34ymOAfWN9E2eLdfA=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=W8P//Xyvp1IQk7GVRhDLfxjC/otAxwJJOB8efJ6W9eZL0kf2o/Hupgp/cy6lo8zAv
-	 5NE0FgWVbiFJZzJ4yMvP7st/cBtM50nk5bSK07iG3e2euVHoEwBEEO3zi/WnmKUPKD
-	 K9Tv9NGrAiFC//58rNfmBZozOIoF8PodEUz/2OjB5WtGPOfPPXkFK6tGBaCQQHFuiU
-	 uZpU/ixVXzQkrhJ0bKEODQtuPvMizeZWpTB+lwFOkswdlsHefJCFgX+ftlsEMEakwh
-	 ccNhlR4KkSCUKiRU3KCMgljUmfEMBZeGq9Le2smi4+jAcPBMZcNTN1oqe7rzrL7IRp
-	 hS1Pwlw5azf4g==
+	b=sznofwifwPyQTC1ssSDdDpojKbSxmKl2OVlyf2K8/L2U71ukNW4hJtS37Y0ywsj5b
+	 MJMLORHPq4U07vUXKagfiQUnHFhidq9JAqXq91A9qD3dlvh2xNHndSeAr5xyDBZv0p
+	 oKdriK3XA3FoBvRJS/aseIS3JRUX5tZnOHqmBZrasQdTnOANnU/5y7amQhq7Qn8Fbk
+	 P2Cb9N1G42FtwY0VUReLkmwXSiPMBJgiaTgvzAbAGuiLpwuy8nu1XQ656PHxSen0FY
+	 hruYAAjDjKeo/7y9aedSG3BucSO2FDGTcbkyngDS6ONgledMTDl8NMAjFt4J9n0/n9
+	 zhOWURrV27koQ==
 From: Sasha Levin <sashal@kernel.org>
 To: patches@lists.linux.dev,
 	stable@vger.kernel.org
-Cc: Leif Skunberg <diamondback@cohunt.app>,
-	Hans de Goede <johannes.goede@oss.qualcomm.com>,
+Cc: Krishna Chomal <krishna.chomal108@gmail.com>,
+	Varad Amol Pisale <varadpisale.work@gmail.com>,
 	=?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>,
 	Sasha Levin <sashal@kernel.org>,
-	alexhung@gmail.com,
 	hansg@kernel.org,
 	platform-driver-x86@vger.kernel.org,
 	linux-kernel@vger.kernel.org
-Subject: [PATCH AUTOSEL 6.19-5.10] platform/x86: intel-hid: Enable 5-button array on ThinkPad X1 Fold 16 Gen 1
-Date: Tue, 10 Mar 2026 05:01:24 -0400
-Message-ID: <20260310090145.2709021-24-sashal@kernel.org>
+Subject: [PATCH AUTOSEL 6.19-6.18] platform/x86: hp-wmi: Add Omen 16-xd0xxx fan and thermal support
+Date: Tue, 10 Mar 2026 05:01:26 -0400
+Message-ID: <20260310090145.2709021-26-sashal@kernel.org>
 X-Mailer: git-send-email 2.51.0
 In-Reply-To: <20260310090145.2709021-1-sashal@kernel.org>
 References: <20260310090145.2709021-1-sashal@kernel.org>
@@ -55,21 +54,23 @@ X-Patchwork-Hint: Ignore
 X-stable-base: Linux 6.19.6
 Content-Transfer-Encoding: 8bit
 
-From: Leif Skunberg <diamondback@cohunt.app>
+From: Krishna Chomal <krishna.chomal108@gmail.com>
 
-[ Upstream commit b38d478dad79e61e8a65931021bdfd7a71741212 ]
+[ Upstream commit 3c99a545b372c77b5d39715968a141f523eccbf2 ]
 
-The Lenovo ThinkPad X1 Fold 16 Gen 1 has physical volume up/down
-buttons that are handled through the intel-hid 5-button array
-interface. The firmware does not advertise 5-button array support via
-HEBC, so the driver relies on a DMI allowlist to enable it.
+The HP Omen 16-xd0xxx (board ID: 8BCD) has the same WMI interface as
+other Victus S boards, but requires quirks for correctly switching
+thermal profile (similar to HP Omen 16-wf1xxx, board ID: 8C78).
 
-Add the ThinkPad X1 Fold 16 Gen 1 to the button_array_table so the
-volume buttons work out of the box.
+Add the DMI board name to victus_s_thermal_profile_boards[] table and
+map it to omen_v1_thermal_params.
 
-Signed-off-by: Leif Skunberg <diamondback@cohunt.app>
-Reviewed-by: Hans de Goede <johannes.goede@oss.qualcomm.com>
-Link: https://patch.msgid.link/20260210085625.34380-1-diamondback@cohunt.app
+Testing on HP Omen 16-xd0xxx confirmed that platform profile is
+registered successfully and fan RPMs are readable and controllable.
+
+Tested-by: Varad Amol Pisale <varadpisale.work@gmail.com>
+Signed-off-by: Krishna Chomal <krishna.chomal108@gmail.com>
+Link: https://patch.msgid.link/20260218050235.94687-1-krishna.chomal108@gmail.com
 Reviewed-by: Ilpo Järvinen <ilpo.jarvinen@linux.intel.com>
 Signed-off-by: Ilpo Järvinen <ilpo.jarvinen@linux.intel.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
@@ -79,99 +80,90 @@ LLM Generated explanations, may be completely bogus:
 
 ## Analysis
 
-### What the commit does
+This commit adds a DMI board name entry ("8BCD") for the HP Omen
+16-xd0xxx laptop to the `victus_s_thermal_profile_boards[]` table,
+mapping it to `omen_v1_thermal_params`. This is a hardware quirk/device
+ID addition to an existing driver.
 
-This commit adds a single DMI table entry for the Lenovo ThinkPad X1
-Fold 16 Gen 1 to the `button_array_table` in
-`drivers/platform/x86/intel/hid.c`. This enables the intel-hid 5-button
-array interface for physical volume up/down buttons on this specific
-laptop, whose firmware does not advertise 5-button array support via the
-HEBC ACPI method.
+### Change Classification
 
-### Classification: Hardware Quirk/Workaround
+This is a **hardware quirk addition** — one of the explicitly allowed
+exception categories for stable backports. The change:
+- Adds exactly 4 lines to an existing DMI matching table
+- Uses an already-existing parameter set (`omen_v1_thermal_params`)
+- Only affects the specific board ID "8BCD" (HP Omen 16-xd0xxx)
+- Follows the exact same pattern as other entries in the table (e.g.,
+  board "8C78" also uses `omen_v1_thermal_params`)
 
-This is a textbook DMI allowlist addition — one of the explicitly
-allowed exception categories for stable backporting. The pattern is
-identical to the existing entries for HP Spectre x2, ThinkPad X1 Tablet
-Gen 1/2, Microsoft Surface Go 3/4, etc.
+### Risk Assessment
 
-### Stable kernel criteria assessment
+**Extremely low risk:**
+- The change is confined to a single DMI match table — it cannot affect
+  any other hardware
+- It uses existing infrastructure (`omen_v1_thermal_params`) that is
+  already tested with board "8C78"
+- The commit has both `Tested-by` and `Reviewed-by` tags from the
+  subsystem maintainer (Ilpo Järvinen)
+- No code logic changes, no new functions, no new data structures
 
-- **Obviously correct and tested**: Yes. The 7-line addition follows the
-  exact same `DMI_MATCH(DMI_SYS_VENDOR, "LENOVO")` +
-  `DMI_MATCH(DMI_PRODUCT_FAMILY, ...)` pattern used by the two existing
-  Lenovo entries directly above it.
-- **Fixes a real bug**: Yes. Volume buttons are non-functional without
-  this entry because firmware doesn't advertise the capability.
-- **Small and contained**: Yes. 7 lines added to a single DMI table in
-  one file. No logic changes whatsoever.
-- **No new features**: Correct. This enables an existing driver
-  interface on specific hardware — an allowed exception.
-- **No dependencies**: The `button_array_table` and its usage have been
-  in the driver for years. No prerequisite commits needed.
+### User Impact
 
-### Risk assessment
+Without this entry, HP Omen 16-xd0xxx users cannot:
+- Control fan speeds through the platform profile interface
+- Switch thermal profiles (performance/balanced/quiet)
 
-**Extremely low risk.** DMI matching is device-specific — this entry
-only activates on systems where `DMI_SYS_VENDOR == "LENOVO"` AND
-`DMI_PRODUCT_FAMILY == "ThinkPad X1 Fold 16 Gen 1"`. It cannot affect
-any other hardware. The worst-case scenario on a misidentified system
-would be the 5-button array being enabled unnecessarily, which is
-benign.
+This is real hardware enablement for real users — the "Tested-by" from a
+different person than the author confirms at least two users need this.
 
-### Review quality
+### Stable Criteria Check
 
-The patch has two `Reviewed-by` tags from Hans de Goede (former
-platform/x86 co-maintainer) and Ilpo Järvinen (current platform/x86
-maintainer who also committed it). This is strong endorsement.
+- **Obviously correct**: Yes — trivial table entry addition matching
+  existing patterns
+- **Fixes real issue**: Yes — enables hardware control on specific
+  laptop (quirk category)
+- **Small and contained**: Yes — 4 lines in one file
+- **No new features/APIs**: Correct — uses existing driver
+  infrastructure
+- **Tested**: Yes — explicitly tested on the hardware
 
 ### Verification
 
-- Verified the diff adds only a DMI table entry with no logic changes —
-  confirmed by reading the patch.
-- Verified the new entry follows the identical pattern of existing
-  entries (DMI_SYS_VENDOR + DMI_PRODUCT_FAMILY matching) — confirmed
-  from the surrounding context in the diff.
-- Verified this is a DMI allowlist (not a blocklist) used to enable
-  5-button array support — confirmed from the commit message and table
-  name `button_array_table`.
-- Verified reviewers Hans de Goede and Ilpo Järvinen are established
-  platform/x86 maintainers — this is well-known in the kernel community.
-- The file `drivers/platform/x86/intel/hid.c` and the
-  `button_array_table` have existed in the kernel for years, so this
-  applies to all active stable trees.
+- Verified the diff is purely a table entry addition to
+  `victus_s_thermal_profile_boards[]` — no code logic changes
+- Verified `omen_v1_thermal_params` is already used by board "8C78" in
+  the same table, confirming it's an existing, tested parameter set
+- Verified the commit has `Tested-by: Varad Amol Pisale` and `Reviewed-
+  by: Ilpo Järvinen` (subsystem maintainer)
+- Verified the change follows the exact DMI_MATCH pattern used by all
+  other entries in the table
+- The commit message explicitly states "Testing on HP Omen 16-xd0xxx
+  confirmed that platform profile is registered successfully and fan
+  RPMs are readable and controllable"
 
-### Conclusion
-
-This is a minimal, zero-risk hardware quirk addition that makes volume
-buttons work on a specific Lenovo laptop. It meets all stable kernel
-criteria and falls into the explicitly allowed "hardware
-quirks/workarounds" category. Two maintainer reviews provide confidence
-in correctness.
+This is a textbook hardware quirk addition — small, safe, tested, and
+enables real hardware for real users. It matches the stable exception
+for device quirks/IDs perfectly.
 
 **YES**
 
- drivers/platform/x86/intel/hid.c | 7 +++++++
- 1 file changed, 7 insertions(+)
+ drivers/platform/x86/hp/hp-wmi.c | 4 ++++
+ 1 file changed, 4 insertions(+)
 
-diff --git a/drivers/platform/x86/intel/hid.c b/drivers/platform/x86/intel/hid.c
-index 5b475a09645a3..f2b309f6e458a 100644
---- a/drivers/platform/x86/intel/hid.c
-+++ b/drivers/platform/x86/intel/hid.c
-@@ -135,6 +135,13 @@ static const struct dmi_system_id button_array_table[] = {
- 			DMI_MATCH(DMI_PRODUCT_FAMILY, "ThinkPad X1 Tablet Gen 2"),
- 		},
+diff --git a/drivers/platform/x86/hp/hp-wmi.c b/drivers/platform/x86/hp/hp-wmi.c
+index 9fcc18635e4e7..bc550da031fa1 100644
+--- a/drivers/platform/x86/hp/hp-wmi.c
++++ b/drivers/platform/x86/hp/hp-wmi.c
+@@ -168,6 +168,10 @@ static const struct dmi_system_id victus_s_thermal_profile_boards[] __initconst
+ 		.matches = { DMI_MATCH(DMI_BOARD_NAME, "8BBE") },
+ 		.driver_data = (void *)&victus_s_thermal_params,
  	},
 +	{
-+		.ident = "Lenovo ThinkPad X1 Fold 16 Gen 1",
-+		.matches = {
-+			DMI_MATCH(DMI_SYS_VENDOR, "LENOVO"),
-+			DMI_MATCH(DMI_PRODUCT_FAMILY, "ThinkPad X1 Fold 16 Gen 1"),
-+		},
++		.matches = { DMI_MATCH(DMI_BOARD_NAME, "8BCD") },
++		.driver_data = (void *)&omen_v1_thermal_params,
 +	},
  	{
- 		.ident = "Microsoft Surface Go 3",
- 		.matches = {
+ 		.matches = { DMI_MATCH(DMI_BOARD_NAME, "8BD4") },
+ 		.driver_data = (void *)&victus_s_thermal_params,
 -- 
 2.51.0
 
