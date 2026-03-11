@@ -1,663 +1,199 @@
-Received: from relay14.grserver.gr (relay14.grserver.gr [157.180.73.62])
+Received: from mout.gmx.net (mout.gmx.net [212.227.15.15])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7A7B6346FA0
-	for <platform-driver-x86@vger.kernel.org>; Wed, 11 Mar 2026 19:14:16 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=157.180.73.62
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C87F5309DCF;
+	Wed, 11 Mar 2026 19:19:45 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=212.227.15.15
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1773256458; cv=none; b=ElEe0lY0AQeUDTf1KvATpcXIjn6BLqWc5VSn3bVy3ph6vin3rLa6+mK7pfSkXCxHbyAbcAgvdR+++d/KYbxjhNq23HxLuWdH6I9swp4G7wbdj8SAXJJ+dr3ubo3N6Pf667DA/PjKKoOGCGA5nVk5ER9+ngxYIAzaxVFKB56naak=
+	t=1773256787; cv=none; b=VGYO50DMrmJIXNDJuCK++a6wRHQakZb65mT8wK2I6Op6w2qAq7lljbqwQLsmzLFrUqCoQ8h/m6/Ig5cVeIMGqSBIg/zZ2oi4rxGUv5UMi7UYwkSRKdDP4LgVwPfpvgP3Q/yc6bOQ1spIPYbq5V3rrvBzNFHV0W2QQ7QF3KGt6P8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1773256458; c=relaxed/simple;
-	bh=77yTBNAcsD8jzb40UBRlz7jn6K4J3C5GRSwI0LEbDvM=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=g13ulxdYj6CXn94UlVOl6TlamdjhCAZ7oS5Hv8HH2eO4QglPa5jNgnVBuZvObsakQUQxakWHO/duVnAaA+PUiKiblaaITYfk2iHn2v+zyZFFWhl+O4L7tQtUUBgBOikJECyQeA3tEG8Nr8GiVA2osbC4wQzAadZrHvRzYt5uQ7Q=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=antheas.dev; spf=pass smtp.mailfrom=antheas.dev; dkim=pass (2048-bit key) header.d=antheas.dev header.i=@antheas.dev header.b=NA8m/6QC; arc=none smtp.client-ip=157.180.73.62
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=antheas.dev
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=antheas.dev
+	s=arc-20240116; t=1773256787; c=relaxed/simple;
+	bh=p8o9SPu7l/uIme7Ugq6s/pHvUhv8RwrGm9f+ToZuddE=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=pPW/fLDubSGBJFkMqY9wY+L/gXNtDQBDNPRfyvplDOrnNDOZrI+8NP5I+LkOy3bdxx3BHaJh6xiW4enT4o86R3sCI90KleU7druHbzHYU4fKYSIDxdg9xJiTLDQsNkKzT6BcpjTwvAM8sIxUTiv+R6bIn4C/cSlEFC8WqyDRl2c=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gmx.de; spf=pass smtp.mailfrom=gmx.de; dkim=pass (2048-bit key) header.d=gmx.de header.i=w_armin@gmx.de header.b=B5Zuezxs; arc=none smtp.client-ip=212.227.15.15
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gmx.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmx.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=antheas.dev header.i=@antheas.dev header.b="NA8m/6QC"
-Received: from relay14 (localhost [127.0.0.1])
-	by relay14.grserver.gr (Proxmox) with ESMTP id 238B243FA6
-	for <platform-driver-x86@vger.kernel.org>; Wed, 11 Mar 2026 19:14:09 +0000 (UTC)
-Received: from linux3247.grserver.gr (linux3247.grserver.gr [213.158.90.240])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by relay14.grserver.gr (Proxmox) with ESMTPS id 2A5DE4077D
-	for <platform-driver-x86@vger.kernel.org>; Wed, 11 Mar 2026 19:14:07 +0000 (UTC)
-Received: from mail-pg1-f180.google.com (mail-pg1-f180.google.com [209.85.215.180])
-	by linux3247.grserver.gr (Postfix) with ESMTPSA id 4ED9D1FD985
-	for <platform-driver-x86@vger.kernel.org>; Wed, 11 Mar 2026 21:14:06 +0200 (EET)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=antheas.dev;
-	s=default; t=1773256446;
-	bh=qSPvow7XbRnOyLROydmtmw6UVFX0HLx4ilHLGRxFs+U=;
-	h=Received:From:Subject:To;
-	b=NA8m/6QCijIOlfJbvG1e0D6ITY73KT9dW6RnZJ73RjZynuqnjDurmtjdXtZbsjMZF
-	 SOagkp7SbB5qeff8DkLRlUlikLMuz+dziT3slUWAnyNqhrdhV+rAsG1gi/UizH3Pko
-	 IqG9c88J5dqkAEvVumnFI6B2o7GMxWRooVU/NUATi8M8nWlAtlITiAMMhv7nDV3YEQ
-	 Ogx+yEwAPj/cRr5385NKK3vNMdd8KlQ3sjv9Ks8ue4MNOMTrBOwlUk3ntBr4iNuuv8
-	 7NFOtj/UpxZwMRDwbAL1dZphtHORCEozr+uS70xh3czgpAb2uLiPhT85nu4mepOYIB
-	 bKqfE52GYCvDg==
-Authentication-Results: linux3247.grserver.gr;
-        spf=pass (sender IP is 209.85.215.180) smtp.mailfrom=lkml@antheas.dev smtp.helo=mail-pg1-f180.google.com
-Received-SPF: pass (linux3247.grserver.gr: connection is authenticated)
-Received: by mail-pg1-f180.google.com with SMTP id
- 41be03b00d2f7-c73d251b93bso130606a12.0
-        for <platform-driver-x86@vger.kernel.org>;
- Wed, 11 Mar 2026 12:14:06 -0700 (PDT)
-X-Forwarded-Encrypted: i=1;
- AJvYcCXZYdJvqmE7rlMqGAR+asbqesJNH5hEIl97XUx0pbnIbM7sX7hbvU9pWdS7SjgKxLiZuJCpNkacr9D0f8tINz3aoFdz@vger.kernel.org
-X-Gm-Message-State: AOJu0YyCSouSWgq3/fEhsWc/Hc7DtOp19m2+cycO29clxNafW86i1kAa
-	aAQXd45B1i3r8P0VkvLDfh10pPaIZbqj34twO7Jwpok3vyWzgmxN+0HxFnuyHkCBNFtWXg9lnTP
-	oVekbHoIlTAqujnEjYrarQlRx7wS2dQ0=
-X-Received: by 2002:a05:6a21:a41:b0:398:74bb:d6ff with SMTP id
- adf61e73a8af0-398d7730fa9mr577976637.4.1773256444738; Wed, 11 Mar 2026
- 12:14:04 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmx.de header.i=w_armin@gmx.de header.b="B5Zuezxs"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=gmx.de;
+	s=s31663417; t=1773256784; x=1773861584; i=w_armin@gmx.de;
+	bh=mSnWfvqmKC90KVKSNG4iPE614TWCHLdXpZJfaVlJcxE=;
+	h=X-UI-Sender-Class:Message-ID:Date:MIME-Version:Subject:To:Cc:
+	 References:From:In-Reply-To:Content-Type:
+	 Content-Transfer-Encoding:cc:content-transfer-encoding:
+	 content-type:date:from:message-id:mime-version:reply-to:subject:
+	 to;
+	b=B5ZuezxsIX7DbXeNqKUo2Ozed89sOLf/HL3BP/+McTHUUDOeKIEYOerBFjh+H4CE
+	 pKt1PylPd/dt0O0XSx/Bp62OJ/d3fbQpIzdEyfrB9TZCkhYva2IjKPUCqk3I6AlRr
+	 5bsvbze/7VtiZf1+yB8ipUo3zld5npVBqV9LxzyBPw95lsLfUWaSpEealfBB1ycRc
+	 d5W5gz9bpGoLrp2G65NTvBfsTFLiaIpFl7aNVuyX173ctlHJje1kuVMfmdIRUNi1A
+	 pY5wSLoeXsTDKsuZIEKCElDpVuMeTMgTtm7dIF/OzGecxEK6NTkD718f+cKzJ+oPB
+	 8X7HPjQdLOIzDO/wfA==
+X-UI-Sender-Class: 724b4f7f-cbec-4199-ad4e-598c01a50d3a
+Received: from client.hidden.invalid by mail.gmx.net (mrgmx005
+ [212.227.17.190]) with ESMTPSA (Nemesis) id 1MtOKi-1vmSo52aUA-00uVZT; Wed, 11
+ Mar 2026 20:19:43 +0100
+Message-ID: <038d14cc-6ec7-4428-bd67-4e6e5139482f@gmx.de>
+Date: Wed, 11 Mar 2026 20:19:39 +0100
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20260309205125.293148-1-lkml@antheas.dev>
- <20260309205125.293148-5-lkml@antheas.dev>
- <d5c2a4e0-1263-42ac-a64a-c6218e91bc09@amd.com>
- <CAGwozwFpgGV96YjaZbVfBosBL8TqXTtYJ=Av5tHSi24zV_-SMw@mail.gmail.com>
- <6545b671-6e51-4899-af28-354e7e423056@amd.com>
-In-Reply-To: <6545b671-6e51-4899-af28-354e7e423056@amd.com>
-From: Antheas Kapenekakis <lkml@antheas.dev>
-Date: Wed, 11 Mar 2026 20:13:53 +0100
-X-Gmail-Original-Message-ID: 
- <CAGwozwF2ZxN5UF-rLP0zwyqO81P6UxY=TQ2XRby8hRdxoSRpYg@mail.gmail.com>
-X-Gm-Features: AaiRm53RiRas7VpFdK6_9U7HAQBZYqrwLBx9qifOcjNpU5-YDoaKnDEaOSOnEJo
-Message-ID: 
- <CAGwozwF2ZxN5UF-rLP0zwyqO81P6UxY=TQ2XRby8hRdxoSRpYg@mail.gmail.com>
-Subject: Re: [RFC v4 4/4] platform/x86/amd: dptc: Add device entries for
- handheld PCs
-To: Mario Limonciello <mario.limonciello@amd.com>
-Cc: W_Armin@gmx.de, sashal@kernel.org, Shyam-Sundar.S-k@amd.com,
-	derekjohn.clark@gmail.com, denis.benato@linux.dev, i@rong.moe,
-	linux-kernel@vger.kernel.org, platform-driver-x86@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-X-PPP-Message-ID: 
- <177325644668.3637608.13570570475444288911@linux3247.grserver.gr>
-X-PPP-Vhost: antheas.dev
-X-Virus-Scanned: clamav-milter 1.4.3 at linux3247.grserver.gr
-X-Virus-Status: Clean
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v5 3/5] platform/x86: uniwill-laptop: Fix XMG Fusion 15
+ (L19) entries
+To: Werner Sembach <wse@tuxedocomputers.com>, hansg@kernel.org,
+ ilpo.jarvinen@linux.intel.com
+Cc: platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <20260310234022.2085232-1-wse@tuxedocomputers.com>
+ <20260310234022.2085232-4-wse@tuxedocomputers.com>
+Content-Language: en-US
+From: Armin Wolf <W_Armin@gmx.de>
+In-Reply-To: <20260310234022.2085232-4-wse@tuxedocomputers.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: quoted-printable
+X-Provags-ID: V03:K1:xT+sHs4dfcQRfp5vQqsFhjhgsq9EqPmPtF04t6URoOCz29ocroh
+ GzqcKCab1ZJTaOyb2bbn3dlumtz0AaUl1BD3arvGcLHzBq4d0UZ6g9cTe6ffS+E761Bmfno
+ 4qIu3iBG7r7iPmNeXD/PKd3k01gW08ijEfNzB2saXElVwpS6HLOQrwtaPYerg6NhQnULGKr
+ 8ZHi+gshnT0PgsLgAb2VA==
+X-Spam-Flag: NO
+UI-OutboundReport: notjunk:1;M01:P0:oyY+A/Wai6Q=;n9c9+lACixls004P4RcQSaKw7fJ
+ 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
+ blpdaLcKrPD
 
-On Tue, 10 Mar 2026 at 17:35, Mario Limonciello
-<mario.limonciello@amd.com> wrote:
+Am 11.03.26 um 00:34 schrieb Werner Sembach:
+
+> Add alternative XMG Fusion system vendor name and clarify edition in ide=
+nt.
+
+Reviewed-by: Armin Wolf <W_Armin@gmx.de>
+
+> Signed-off-by: Werner Sembach <wse@tuxedocomputers.com>
+> ---
+>   drivers/platform/x86/uniwill/uniwill-acpi.c | 20 ++++++++++++++++++--
+>   1 file changed, 18 insertions(+), 2 deletions(-)
 >
-> On 3/10/26 3:13 AM, Antheas Kapenekakis wrote:
-> > On Tue, 10 Mar 2026 at 05:11, Mario Limonciello
-> > <mario.limonciello@amd.com> wrote:
-> >>
-> >>
-> >>
-> >> On 3/9/2026 3:51 PM, Antheas Kapenekakis wrote:
-> >>> Add limit tables and DMI entries for AMD APU-based handheld devices:
-> >>>
-> >>>    - 15W class: AYANEO AIR
-> >>>    - 18W class: AYANEO AIR Plus/Pro
-> >>>    - 25W class: AYANEO AIR 1S, NEXT/KUN
-> >>>    - 28W class: GPD Win Mini/4/Max 2, GPD Duo, GPD Pocket 4, AYANEO 2,
-> >>>                  OrangePi NEO-01, SuiPlay0X1
-> >>>    - 30W class: AYANEO FLIP/GEEK/SLIDE/3, AOKZOE A1/A1X/A2,
-> >>>                  OneXPlayer F1Pro/2/X1/G1, AYN Loki Max, Zeenix Pro
-> >>>
-> >>> Also add SoC strings for Ryzen AI, Ryzen 8000/7040/6000/5000
-> >>> families, extending support beyond the initial AI MAX series.
-> >>
-> >> There are a lot of numbers here.  Where did they all come from?  What
-> >> are guesses?  What came from RE?  What came from documentation?
-> >> How do you know these are good for the thermal design of the platform?
-> >>
-> >> I appreciate some of them could be cargo culted from another codebase,
-> >> but I think it would be a good idea to document which ones are more
-> >> likely to be accurate and why.
-> >
-> > Ok, here is the logic behind the limits.
-> >
-> > 15/18/25 are manufacturer claims by Ayaneo. Ayaneo is the only
-> > manufacturer that made devices prior to the new ones that support 30W
-> > limits.
-> >
-> > 28W is used for GPD because their devices are very portable and 30W
-> > makes e.g. the bottom pan of Win Minis too hot. It is also used for
-> > the Ayaneo 2/Sui/OPI, because these devices have a fullwidth glass
-> > front that is used for heat dissipation. So the screen gets very hot.
-> >
-> > The rest of the devices use 30W.
-> >
-> > As for which software each OEM has. GPD: GPD does not ship first party
-> > software for TDP controls. They collaborate with an independent
-> > developer developing "Motion Assistant", which they also ship with
-> > their devices and features a TDP slider. Ayaneo uses Ayaspace, which
-> > is backed by Ryzenadj, and they give slider control to users,
-> > typically with a 30W limit. They also use userspace customizable
-> > presets for some default e.g. 20W profiles. Onexplayer has oxpconsole
-> > with a slider as well that does 30W usually. Ayn exited the market on
-> > WIndows handhelds, no software. OPI, you'd need to ask Phil but this
-> > would be the primary driver for it. There is no alternative that can
-> > also go to SteamOS.
-> >
-> > The reasoning behind the profiles is simple. 8W is power savings
-> > territory. Going below can yield around 1W more, but the performance
-> > degradation is not worth it. 15W is a good sweetspot for 30W
-> > processors. Then, 25W is good for these devices as they saturate above
-> > 22ish Watts. We could even go lower to 20W, as Lenovo did on the
-> > original Go. But their newer devices use higher AC values.
-> >
-> > For their boost clocks, sPPT is set to around 2W higher than spl (what
-> > is it called now?) to give a small boost. fPPT is set to a reasonable
-> > amount for that device class and interpolated vs spl. The exception is
-> > low-power where we do not want boost
-> >
-> > Antheas
->
-> OK, each and every one of these cases needs to be documented.
->
-> I suggest that they each go in their own patches, and then if there is
-> any disagreement it's a single patch to revert or drop from the rest of
-> the series.
-
-Ok, so here is what I suggest going forward.
-
-We keep the last patch while this is an RFC and annotate it as planned
-to be dropped so the series can still be tested. Then, once we exit
-RFC we merge initially for Win 5 to reduce email bloat. After merge, I
-go through the DMIs and group them by device type, adding information
-about the devices on the commit message. Then, these go to for-fixes
-with a cc stable.
-
-While doing that, I will drop all non EXACT matches. Specifically, the
-Ayaneo 1S had a few variants with different DMIs (1S Limited being one
-of them if I recall).
-
-This will allow us to drop the CPU match with high certainty. I will
-replace it with just an is AMD check with no logs or perhaps a debug
-log, to avoid polluting Intel variant's dmesg if any.
-
-Best,
-Antheas
-
-> >
-> >>>
-> >>> Assisted-by: Claude:claude-opus-4-6
-> >>> Signed-off-by: Antheas Kapenekakis <lkml@antheas.dev>
-> >>> ---
-> >>>    drivers/platform/x86/amd/dptc.c | 420 ++++++++++++++++++++++++++++++++
-> >>>    1 file changed, 420 insertions(+)
-> >>>
-> >>> diff --git a/drivers/platform/x86/amd/dptc.c b/drivers/platform/x86/amd/dptc.c
-> >>> index f4db95affb1b..b2820f8652f1 100644
-> >>> --- a/drivers/platform/x86/amd/dptc.c
-> >>> +++ b/drivers/platform/x86/amd/dptc.c
-> >>> @@ -86,6 +86,81 @@ static const struct dptc_param_desc dptc_params[DPTC_NUM_PARAMS] = {
-> >>>                                 1, ALIB_ID_TEMP_TARGET },
-> >>>    };
-> >>>
-> >>> +/* 15W class: AYANEO AIR (Ryzen 5 5560U) */
-> >>> +static const struct dptc_device_limits limits_15w = {
-> >>> +     .params = {
-> >>> +             [DPTC_PPT_PL1_SPL]  = {  1,  5, 10, 15,  18 },
-> >>> +             [DPTC_PPT_PL2_SPPT] = {  1,  5, 10, 15,  18 },
-> >>> +             [DPTC_PPT_PL3_FPPT] = {  1,  5, 12, 18,  22 },
-> >>> +             [DPTC_CPU_TEMP]     = { 60, 70, 85, 90, 100 },
-> >>> +     },
-> >>> +     .profiles = {
-> >>> +             [PLATFORM_PROFILE_LOW_POWER]   = { .vals = {  5,  5,  8, 0 } },
-> >>> +             [PLATFORM_PROFILE_BALANCED]    = { .vals = { 10, 12, 15, 0 } },
-> >>> +             [PLATFORM_PROFILE_PERFORMANCE] = { .vals = { 15, 15, 18, 0 } },
-> >>> +     },
-> >>> +};
-> >>> +
-> >>> +/* 18W class: AYANEO AIR Plus/Pro (Ryzen 5 5560U, Ryzen 7 5825U) */
-> >>> +static const struct dptc_device_limits limits_18w = {
-> >>> +     .params = {
-> >>> +             [DPTC_PPT_PL1_SPL]  = {  1,  5, 15, 18,  22 },
-> >>> +             [DPTC_PPT_PL2_SPPT] = {  1,  5, 15, 18,  22 },
-> >>> +             [DPTC_PPT_PL3_FPPT] = {  1,  5, 15, 20,  25 },
-> >>> +             [DPTC_CPU_TEMP]     = { 60, 70, 85, 90, 100 },
-> >>> +     },
-> >>> +     .profiles = {
-> >>> +             [PLATFORM_PROFILE_LOW_POWER]   = { .vals = {  5,  5,  8, 0 } },
-> >>> +             [PLATFORM_PROFILE_BALANCED]    = { .vals = { 12, 14, 15, 0 } },
-> >>> +             [PLATFORM_PROFILE_PERFORMANCE] = { .vals = { 18, 18, 20, 0 } },
-> >>> +     },
-> >>> +};
-> >>> +
-> >>> +/* 25W class: Ryzen 5000 handhelds (AYANEO NEXT, KUN) */
-> >>> +static const struct dptc_device_limits limits_25w = {
-> >>> +     .params = {
-> >>> +             [DPTC_PPT_PL1_SPL]  = {  1,  4, 15, 25,  32 },
-> >>> +             [DPTC_PPT_PL2_SPPT] = {  1,  4, 20, 27,  35 },
-> >>> +             [DPTC_PPT_PL3_FPPT] = {  1,  4, 25, 30,  37 },
-> >>> +             [DPTC_CPU_TEMP]     = { 60, 70, 85, 90, 100 },
-> >>> +     },
-> >>> +     .profiles = {
-> >>> +             [PLATFORM_PROFILE_LOW_POWER]   = { .vals = {  8,  8, 12, 0 } },
-> >>> +             [PLATFORM_PROFILE_BALANCED]    = { .vals = { 15, 17, 20, 0 } },
-> >>> +             [PLATFORM_PROFILE_PERFORMANCE] = { .vals = { 25, 27, 30, 0 } },
-> >>> +     },
-> >>> +};
-> >>> +
-> >>> +/* 28W class: GPD Win series, AYANEO 2, OrangePi NEO-01 */
-> >>> +static const struct dptc_device_limits limits_28w = {
-> >>> +     .params = {
-> >>> +             [DPTC_PPT_PL1_SPL]  = {  1,  4, 15, 28,  32 },
-> >>> +             [DPTC_PPT_PL2_SPPT] = {  1,  4, 20, 30,  35 },
-> >>> +             [DPTC_PPT_PL3_FPPT] = {  1,  4, 25, 32,  37 },
-> >>> +             [DPTC_CPU_TEMP]     = { 60, 70, 85, 90, 100 },
-> >>> +     },
-> >>> +     .profiles = {
-> >>> +             [PLATFORM_PROFILE_LOW_POWER]   = { .vals = {  8,  8, 12, 0 } },
-> >>> +             [PLATFORM_PROFILE_BALANCED]    = { .vals = { 15, 17, 22, 0 } },
-> >>> +             [PLATFORM_PROFILE_PERFORMANCE] = { .vals = { 25, 28, 32, 0 } },
-> >>> +     },
-> >>> +};
-> >>> +
-> >>> +/* 30W class: OneXPlayer, AYANEO FLIP/GEEK/SLIDE/3, AOKZOE */
-> >>> +static const struct dptc_device_limits limits_30w = {
-> >>> +     .params = {
-> >>> +             [DPTC_PPT_PL1_SPL]  = {  1,  4, 15, 30,  40 },
-> >>> +             [DPTC_PPT_PL2_SPPT] = {  1,  4, 20, 32,  43 },
-> >>> +             [DPTC_PPT_PL3_FPPT] = {  1,  4, 25, 41,  50 },
-> >>> +             [DPTC_CPU_TEMP]     = { 60, 70, 85, 90, 100 },
-> >>> +     },
-> >>> +     .profiles = {
-> >>> +             [PLATFORM_PROFILE_LOW_POWER]   = { .vals = {  8,  8, 12, 0 } },
-> >>> +             [PLATFORM_PROFILE_BALANCED]    = { .vals = { 15, 17, 25, 0 } },
-> >>> +             [PLATFORM_PROFILE_PERFORMANCE] = { .vals = { 25, 28, 41, 0 } },
-> >>> +     },
-> >>> +};
-> >>> +
-> >>>    /* AI MAX Handheld class: GPD Win 5 */
-> >>>    static const struct dptc_device_limits limits_maxhh = {
-> >>>        .params = {
-> >>> @@ -107,11 +182,56 @@ static const char * const dptc_soc_table[] = {
-> >>>        "AMD RYZEN AI MAX+ 395",
-> >>>        "AMD RYZEN AI MAX+ 385",
-> >>>        "AMD RYZEN AI MAX 380",
-> >>> +     /* Ryzen AI */
-> >>> +     "AMD Ryzen AI 9 HX 370",
-> >>> +     /* Ryzen 8000 */
-> >>> +     "AMD Ryzen 7 8840U",
-> >>> +     /* Ryzen 7040 */
-> >>> +     "AMD Ryzen 7 7840U",
-> >>> +     /* Ryzen 6000 */
-> >>> +     "AMD Ryzen 7 6800U",
-> >>> +     "AMD Ryzen 7 6600U",
-> >>> +     /* Ryzen 5000 */
-> >>> +     "AMD Ryzen 7 5800U",
-> >>> +     "AMD Ryzen 7 5700U",
-> >>> +     "AMD Ryzen 5 5560U",
-> >>
-> >> Still don't understand the point of this list.
-> >
-> > Parallel reply.
-> >
-> >>>        NULL,
-> >>>    };
-> >>>
-> >>>    static const struct dmi_system_id dptc_dmi_table[] = {
-> >>>        /* GPD */
-> >>> +     {
-> >>> +             .ident = "GPD Win Mini",
-> >>> +             .matches = {
-> >>> +                     DMI_MATCH(DMI_SYS_VENDOR, "GPD"),
-> >>> +                     DMI_MATCH(DMI_PRODUCT_NAME, "G1617-01"),
-> >>> +             },
-> >>> +             .driver_data = (void *)&limits_28w,
-> >>> +     },
-> >>> +     {
-> >>> +             .ident = "GPD Win Mini 2024",
-> >>> +             .matches = {
-> >>> +                     DMI_MATCH(DMI_SYS_VENDOR, "GPD"),
-> >>> +                     DMI_MATCH(DMI_PRODUCT_NAME, "G1617-02"),
-> >>> +             },
-> >>> +             .driver_data = (void *)&limits_28w,
-> >>> +     },
-> >>> +     {
-> >>> +             .ident = "GPD Win Mini 2024",
-> >>> +             .matches = {
-> >>> +                     DMI_MATCH(DMI_SYS_VENDOR, "GPD"),
-> >>> +                     DMI_MATCH(DMI_PRODUCT_NAME, "G1617-02-L"),
-> >>> +             },
-> >>> +             .driver_data = (void *)&limits_28w,
-> >>> +     },
-> >>> +     {
-> >>> +             .ident = "GPD Win 4",
-> >>> +             .matches = {
-> >>> +                     DMI_MATCH(DMI_SYS_VENDOR, "GPD"),
-> >>> +                     DMI_MATCH(DMI_PRODUCT_NAME, "G1618-04"),
-> >>> +             },
-> >>> +             .driver_data = (void *)&limits_28w,
-> >>> +     },
-> >>>        {
-> >>>                .ident = "GPD Win 5",
-> >>>                .matches = {
-> >>> @@ -120,6 +240,306 @@ static const struct dmi_system_id dptc_dmi_table[] = {
-> >>>                },
-> >>>                .driver_data = (void *)&limits_maxhh,
-> >>>        },
-> >>> +     {
-> >>> +             .ident = "GPD Win Max 2",
-> >>> +             .matches = {
-> >>> +                     DMI_MATCH(DMI_SYS_VENDOR, "GPD"),
-> >>> +                     DMI_MATCH(DMI_PRODUCT_NAME, "G1619-04"),
-> >>> +             },
-> >>> +             .driver_data = (void *)&limits_28w,
-> >>> +     },
-> >>> +     {
-> >>> +             .ident = "GPD Win Max 2 2024",
-> >>> +             .matches = {
-> >>> +                     DMI_MATCH(DMI_SYS_VENDOR, "GPD"),
-> >>> +                     DMI_MATCH(DMI_PRODUCT_NAME, "G1619-05"),
-> >>> +             },
-> >>> +             .driver_data = (void *)&limits_28w,
-> >>> +     },
-> >>> +     {
-> >>> +             .ident = "GPD Duo",
-> >>> +             .matches = {
-> >>> +                     DMI_MATCH(DMI_SYS_VENDOR, "GPD"),
-> >>> +                     DMI_MATCH(DMI_PRODUCT_NAME, "G1622-01"),
-> >>> +             },
-> >>> +             .driver_data = (void *)&limits_28w,
-> >>> +     },
-> >>> +     {
-> >>> +             .ident = "GPD Duo",
-> >>> +             .matches = {
-> >>> +                     DMI_MATCH(DMI_SYS_VENDOR, "GPD"),
-> >>> +                     DMI_MATCH(DMI_PRODUCT_NAME, "G1622-01-L"),
-> >>> +             },
-> >>> +             .driver_data = (void *)&limits_28w,
-> >>> +     },
-> >>> +     {
-> >>> +             .ident = "GPD Pocket 4",
-> >>> +             .matches = {
-> >>> +                     DMI_MATCH(DMI_SYS_VENDOR, "GPD"),
-> >>> +                     DMI_MATCH(DMI_PRODUCT_NAME, "G1628-04"),
-> >>> +             },
-> >>> +             .driver_data = (void *)&limits_28w,
-> >>> +     },
-> >>> +     {
-> >>> +             .ident = "GPD Pocket 4",
-> >>> +             .matches = {
-> >>> +                     DMI_MATCH(DMI_SYS_VENDOR, "GPD"),
-> >>> +                     DMI_MATCH(DMI_PRODUCT_NAME, "G1628-04-L"),
-> >>> +             },
-> >>> +             .driver_data = (void *)&limits_28w,
-> >>> +     },
-> >>> +     /* OrangePi */
-> >>> +     {
-> >>> +             .ident = "OrangePi NEO-01",
-> >>> +             .matches = {
-> >>> +                     DMI_MATCH(DMI_BOARD_VENDOR, "OrangePi"),
-> >>> +                     DMI_EXACT_MATCH(DMI_BOARD_NAME, "NEO-01"),
-> >>> +             },
-> >>> +             .driver_data = (void *)&limits_28w,
-> >>> +     },
-> >>> +     /* AYN */
-> >>> +     {
-> >>> +             .ident = "AYN Loki Max",
-> >>> +             .matches = {
-> >>> +                     DMI_EXACT_MATCH(DMI_SYS_VENDOR, "ayn"),
-> >>> +                     DMI_EXACT_MATCH(DMI_PRODUCT_NAME, "Loki Max"),
-> >>> +             },
-> >>> +             .driver_data = (void *)&limits_30w,
-> >>> +     },
-> >>> +     /* Tectoy (Zeenix Pro = Loki Max) */
-> >>> +     {
-> >>> +             .ident = "Zeenix Pro",
-> >>> +             .matches = {
-> >>> +                     DMI_EXACT_MATCH(DMI_SYS_VENDOR, "Tectoy"),
-> >>> +                     DMI_EXACT_MATCH(DMI_PRODUCT_NAME, "Zeenix Pro"),
-> >>> +             },
-> >>> +             .driver_data = (void *)&limits_30w,
-> >>> +     },
-> >>> +     /* AOKZOE */
-> >>> +     {
-> >>> +             .ident = "AOKZOE A1 AR07",
-> >>> +             .matches = {
-> >>> +                     DMI_MATCH(DMI_BOARD_VENDOR, "AOKZOE"),
-> >>> +                     DMI_EXACT_MATCH(DMI_BOARD_NAME, "AOKZOE A1 AR07"),
-> >>> +             },
-> >>> +             .driver_data = (void *)&limits_30w,
-> >>> +     },
-> >>> +     {
-> >>> +             .ident = "AOKZOE A1 Pro",
-> >>> +             .matches = {
-> >>> +                     DMI_MATCH(DMI_BOARD_VENDOR, "AOKZOE"),
-> >>> +                     DMI_EXACT_MATCH(DMI_BOARD_NAME, "AOKZOE A1 Pro"),
-> >>> +             },
-> >>> +             .driver_data = (void *)&limits_30w,
-> >>> +     },
-> >>> +     {
-> >>> +             .ident = "AOKZOE A1X",
-> >>> +             .matches = {
-> >>> +                     DMI_MATCH(DMI_BOARD_VENDOR, "AOKZOE"),
-> >>> +                     DMI_EXACT_MATCH(DMI_BOARD_NAME, "AOKZOE A1X"),
-> >>> +             },
-> >>> +             .driver_data = (void *)&limits_30w,
-> >>> +     },
-> >>> +     {
-> >>> +             .ident = "AOKZOE A2 Pro",
-> >>> +             .matches = {
-> >>> +                     DMI_MATCH(DMI_BOARD_VENDOR, "AOKZOE"),
-> >>> +                     DMI_EXACT_MATCH(DMI_BOARD_NAME, "AOKZOE A2 Pro"),
-> >>> +             },
-> >>> +             .driver_data = (void *)&limits_30w,
-> >>> +     },
-> >>> +     /* OneXPlayer (Intel variants filtered by SoC table) */
-> >>
-> >> Are you telling me the Intel variants actually have the same ACPI
-> >> methods this series looks for?
-> >
-> > They do not.
->
-> OK then this comment appears wrong.
-
-Ack See above.
-
-> >
-> >>> +     {
-> >>> +             .ident = "ONEXPLAYER F1Pro",
-> >>> +             .matches = {
-> >>> +                     DMI_MATCH(DMI_BOARD_VENDOR, "ONE-NETBOOK"),
-> >>> +                     DMI_EXACT_MATCH(DMI_BOARD_NAME, "ONEXPLAYER F1Pro"),
-> >>> +             },
-> >>> +             .driver_data = (void *)&limits_30w,
-> >>> +     },
-> >>> +     {
-> >>> +             .ident = "ONEXPLAYER F1 EVA-02",
-> >>> +             .matches = {
-> >>> +                     DMI_MATCH(DMI_BOARD_VENDOR, "ONE-NETBOOK"),
-> >>> +                     DMI_EXACT_MATCH(DMI_BOARD_NAME, "ONEXPLAYER F1 EVA-02"),
-> >>> +             },
-> >>> +             .driver_data = (void *)&limits_30w,
-> >>> +     },
-> >>> +     {
-> >>> +             .ident = "ONEXPLAYER 2",
-> >>> +             .matches = {
-> >>> +                     DMI_MATCH(DMI_BOARD_VENDOR, "ONE-NETBOOK"),
-> >>> +                     DMI_MATCH(DMI_BOARD_NAME, "ONEXPLAYER 2"),
-> >>> +             },
-> >>> +             .driver_data = (void *)&limits_30w,
-> >>> +     },
-> >>> +     {
-> >>> +             .ident = "ONEXPLAYER X1 A",
-> >>> +             .matches = {
-> >>> +                     DMI_MATCH(DMI_BOARD_VENDOR, "ONE-NETBOOK"),
-> >>> +                     DMI_EXACT_MATCH(DMI_BOARD_NAME, "ONEXPLAYER X1 A"),
-> >>> +             },
-> >>> +             .driver_data = (void *)&limits_30w,
-> >>> +     },
-> >>> +     {
-> >>> +             .ident = "ONEXPLAYER X1z",
-> >>> +             .matches = {
-> >>> +                     DMI_MATCH(DMI_BOARD_VENDOR, "ONE-NETBOOK"),
-> >>> +                     DMI_EXACT_MATCH(DMI_BOARD_NAME, "ONEXPLAYER X1z"),
-> >>> +             },
-> >>> +             .driver_data = (void *)&limits_30w,
-> >>> +     },
-> >>> +     {
-> >>> +             .ident = "ONEXPLAYER X1Pro",
-> >>> +             .matches = {
-> >>> +                     DMI_MATCH(DMI_BOARD_VENDOR, "ONE-NETBOOK"),
-> >>> +                     DMI_EXACT_MATCH(DMI_BOARD_NAME, "ONEXPLAYER X1Pro"),
-> >>> +             },
-> >>> +             .driver_data = (void *)&limits_30w,
-> >>> +     },
-> >>> +     {
-> >>> +             .ident = "ONEXPLAYER G1 A",
-> >>> +             .matches = {
-> >>> +                     DMI_MATCH(DMI_BOARD_VENDOR, "ONE-NETBOOK"),
-> >>> +                     DMI_EXACT_MATCH(DMI_BOARD_NAME, "ONEXPLAYER G1 A"),
-> >>> +             },
-> >>> +             .driver_data = (void *)&limits_30w,
-> >>> +     },
-> >>> +     /* AYANEO - 15W */
-> >>> +     {
-> >>> +             .ident = "AYANEO AIR",
-> >>> +             .matches = {
-> >>> +                     DMI_MATCH(DMI_BOARD_VENDOR, "AYANEO"),
-> >>> +                     DMI_EXACT_MATCH(DMI_BOARD_NAME, "AIR"),
-> >>> +             },
-> >>> +             .driver_data = (void *)&limits_15w,
-> >>> +     },
-> >>> +     /* AYANEO - 18W */
-> >>> +     {
-> >>> +             .ident = "AYANEO AIR Plus",
-> >>> +             .matches = {
-> >>> +                     DMI_MATCH(DMI_BOARD_VENDOR, "AYANEO"),
-> >>> +                     DMI_EXACT_MATCH(DMI_BOARD_NAME, "AIR Plus"),
-> >>> +             },
-> >>> +             .driver_data = (void *)&limits_18w,
-> >>> +     },
-> >>> +     {
-> >>> +             .ident = "AYANEO AIR Pro",
-> >>> +             .matches = {
-> >>> +                     DMI_MATCH(DMI_BOARD_VENDOR, "AYANEO"),
-> >>> +                     DMI_EXACT_MATCH(DMI_BOARD_NAME, "AIR Pro"),
-> >>> +             },
-> >>> +             .driver_data = (void *)&limits_18w,
-> >>> +     },
-> >>> +     /* AYANEO - 25W */
-> >>> +     {
-> >>> +             .ident = "AYANEO AIR 1S",
-> >>> +             .matches = {
-> >>> +                     DMI_MATCH(DMI_BOARD_VENDOR, "AYANEO"),
-> >>> +                     DMI_MATCH(DMI_BOARD_NAME, "AIR 1S"),
-> >>> +             },
-> >>> +             .driver_data = (void *)&limits_25w,
-> >>> +     },
-> >>> +     {
-> >>> +             .ident = "AYANEO NEXT Advance",
-> >>> +             .matches = {
-> >>> +                     DMI_MATCH(DMI_BOARD_VENDOR, "AYANEO"),
-> >>> +                     DMI_EXACT_MATCH(DMI_BOARD_NAME, "NEXT Advance"),
-> >>> +             },
-> >>> +             .driver_data = (void *)&limits_25w,
-> >>> +     },
-> >>> +     {
-> >>> +             .ident = "AYANEO NEXT Lite",
-> >>> +             .matches = {
-> >>> +                     DMI_MATCH(DMI_BOARD_VENDOR, "AYANEO"),
-> >>> +                     DMI_EXACT_MATCH(DMI_BOARD_NAME, "NEXT Lite"),
-> >>> +             },
-> >>> +             .driver_data = (void *)&limits_25w,
-> >>> +     },
-> >>> +     {
-> >>> +             .ident = "AYANEO NEXT Pro",
-> >>> +             .matches = {
-> >>> +                     DMI_MATCH(DMI_BOARD_VENDOR, "AYANEO"),
-> >>> +                     DMI_EXACT_MATCH(DMI_BOARD_NAME, "NEXT Pro"),
-> >>> +             },
-> >>> +             .driver_data = (void *)&limits_25w,
-> >>> +     },
-> >>> +     {
-> >>> +             .ident = "AYANEO NEXT",
-> >>> +             .matches = {
-> >>> +                     DMI_MATCH(DMI_BOARD_VENDOR, "AYANEO"),
-> >>> +                     DMI_EXACT_MATCH(DMI_BOARD_NAME, "NEXT"),
-> >>> +             },
-> >>> +             .driver_data = (void *)&limits_25w,
-> >>> +     },
-> >>> +     {
-> >>> +             .ident = "AYANEO KUN",
-> >>> +             .matches = {
-> >>> +                     DMI_MATCH(DMI_BOARD_VENDOR, "AYANEO"),
-> >>> +                     DMI_EXACT_MATCH(DMI_BOARD_NAME, "KUN"),
-> >>> +             },
-> >>> +             .driver_data = (void *)&limits_25w,
-> >>> +     },
-> >>> +     {
-> >>> +             .ident = "AYANEO KUN",
-> >>> +             .matches = {
-> >>> +                     DMI_MATCH(DMI_BOARD_VENDOR, "AYANEO"),
-> >>> +                     DMI_EXACT_MATCH(DMI_BOARD_NAME, "AYANEO KUN"),
-> >>> +             },
-> >>> +             .driver_data = (void *)&limits_25w,
-> >>> +     },
-> >>> +     /* AYANEO - 28W */
-> >>> +     {
-> >>> +             .ident = "AYANEO 2",
-> >>> +             .matches = {
-> >>> +                     DMI_MATCH(DMI_BOARD_VENDOR, "AYANEO"),
-> >>> +                     DMI_MATCH(DMI_BOARD_NAME, "AYANEO 2"),
-> >>> +             },
-> >>> +             .driver_data = (void *)&limits_28w,
-> >>> +     },
-> >>> +     {
-> >>> +             .ident = "SuiPlay0X1",
-> >>> +             .matches = {
-> >>> +                     DMI_MATCH(DMI_SYS_VENDOR, "Mysten Labs, Inc."),
-> >>> +                     DMI_MATCH(DMI_PRODUCT_NAME, "SuiPlay0X1"),
-> >>> +             },
-> >>> +             .driver_data = (void *)&limits_28w,
-> >>> +     },
-> >>> +     /* AYANEO - 30W */
-> >>> +     {
-> >>> +             /* DMI_MATCH catches all FLIP variants (DS, KB, 1S DS, 1S KB) */
-> >>> +             .ident = "AYANEO FLIP",
-> >>> +             .matches = {
-> >>> +                     DMI_MATCH(DMI_BOARD_VENDOR, "AYANEO"),
-> >>> +                     DMI_MATCH(DMI_BOARD_NAME, "FLIP"),
-> >>> +             },
-> >>> +             .driver_data = (void *)&limits_30w,
-> >>> +     },
-> >>> +     {
-> >>> +             /* DMI_MATCH catches GEEK and GEEK 1S */
-> >>> +             .ident = "AYANEO GEEK",
-> >>> +             .matches = {
-> >>> +                     DMI_MATCH(DMI_BOARD_VENDOR, "AYANEO"),
-> >>> +                     DMI_MATCH(DMI_BOARD_NAME, "GEEK"),
-> >>> +             },
-> >>> +             .driver_data = (void *)&limits_30w,
-> >>> +     },
-> >>> +     {
-> >>> +             .ident = "AYANEO SLIDE",
-> >>> +             .matches = {
-> >>> +                     DMI_MATCH(DMI_BOARD_VENDOR, "AYANEO"),
-> >>> +                     DMI_EXACT_MATCH(DMI_BOARD_NAME, "SLIDE"),
-> >>> +             },
-> >>> +             .driver_data = (void *)&limits_30w,
-> >>> +     },
-> >>> +     {
-> >>> +             .ident = "AYANEO 3",
-> >>> +             .matches = {
-> >>> +                     DMI_MATCH(DMI_BOARD_VENDOR, "AYANEO"),
-> >>> +                     DMI_EXACT_MATCH(DMI_BOARD_NAME, "AYANEO 3"),
-> >>> +             },
-> >>> +             .driver_data = (void *)&limits_30w,
-> >>> +     },
-> >>>        { }
-> >>>    };
-> >>>    MODULE_DEVICE_TABLE(dmi, dptc_dmi_table);
-> >>
-> >>
-> >
->
->
-
+> diff --git a/drivers/platform/x86/uniwill/uniwill-acpi.c b/drivers/platf=
+orm/x86/uniwill/uniwill-acpi.c
+> index 22ae5fccd6a06..ff9d6a4921a29 100644
+> --- a/drivers/platform/x86/uniwill/uniwill-acpi.c
+> +++ b/drivers/platform/x86/uniwill/uniwill-acpi.c
+> @@ -1911,7 +1911,7 @@ static struct uniwill_device_descriptor empty_desc=
+riptor __initdata =3D {};
+>  =20
+>   static const struct dmi_system_id uniwill_dmi_table[] __initconst =3D =
+{
+>   	{
+> -		.ident =3D "XMG FUSION 15",
+> +		.ident =3D "XMG FUSION 15 (L19)",
+>   		.matches =3D {
+>   			DMI_MATCH(DMI_SYS_VENDOR, "SchenkerTechnologiesGmbH"),
+>   			DMI_EXACT_MATCH(DMI_BOARD_NAME, "LAPQC71A"),
+> @@ -1919,13 +1919,29 @@ static const struct dmi_system_id uniwill_dmi_ta=
+ble[] __initconst =3D {
+>   		.driver_data =3D &empty_descriptor,
+>   	},
+>   	{
+> -		.ident =3D "XMG FUSION 15",
+> +		.ident =3D "XMG FUSION 15 (L19)",
+>   		.matches =3D {
+>   			DMI_MATCH(DMI_SYS_VENDOR, "SchenkerTechnologiesGmbH"),
+>   			DMI_EXACT_MATCH(DMI_BOARD_NAME, "LAPQC71B"),
+>   		},
+>   		.driver_data =3D &empty_descriptor,
+>   	},
+> +	{
+> +		.ident =3D "XMG FUSION 15 (L19)",
+> +		.matches =3D {
+> +			DMI_MATCH(DMI_SYS_VENDOR, "TUXEDO"),
+> +			DMI_EXACT_MATCH(DMI_BOARD_NAME, "LAPQC71A"),
+> +		},
+> +		.driver_data =3D &empty_descriptor,
+> +	},
+> +	{
+> +		.ident =3D "XMG FUSION 15 (L19)",
+> +		.matches =3D {
+> +			DMI_MATCH(DMI_SYS_VENDOR, "TUXEDO"),
+> +			DMI_EXACT_MATCH(DMI_BOARD_NAME, "LAPQC71B"),
+> +		},
+> +		.driver_data =3D &empty_descriptor,
+> +	},
+>   	{
+>   		.ident =3D "Intel NUC x15",
+>   		.matches =3D {
