@@ -1,140 +1,221 @@
-Received: from mail-pl1-f172.google.com (mail-pl1-f172.google.com [209.85.214.172])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 946343B95F7
-	for <platform-driver-x86@vger.kernel.org>; Wed, 11 Mar 2026 14:35:03 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.172
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AE3E31EE7C6;
+	Wed, 11 Mar 2026 14:35:33 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1773239704; cv=none; b=UqX4EcsTJQQNko3YjmJGkKYfTJjMFX7FvJlZrzwwBFzTNOziM5JTvMyq5MM0EQqBvCuKV0duP9gdOmyoAq2Fso/yR2bsn9/GCGtXzNJ7+OncX8mJGcsZyduExaZ2h9Tfba7HM0b2bTtMUzrYH4lEFVHo81QaU6bNJNr7sy0/hJ4=
+	t=1773239733; cv=none; b=Q4CeyBK72EEiUpXSDgQa063lzRXTjhu2/FfYTpQvSfAMG9o3jTSxrutPLm8iK3X7hgo8gr0MsZ8s6IOgxq+9PyZ8gG7LVL4EjuA1QHG7K1p281JWW+qfnKdOGGuBCEkapIiVFG5IkPgHfsllX1NAPYezhnZh5yCSPrrjq9V3C/M=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1773239704; c=relaxed/simple;
-	bh=i2XhmUiYnFer9xzDmhFquJehlBBmC6H0pTBvtA42ATw=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=cK9IzHZBGLy6YchDod/pMFyrLdig7OI6PMPZu9qDhOjcmjz6qBAf8vgWFKSfaqg69x/hGUr1UlbCwBZtTV14O+PhtbLHaC0yQ068CE06mAjjZNRXWA5RS6FEEeD5dR2dAbSy3nHR7AWdvP+DdMvBc8Bb8uHjPetRoOSO9O5dh9Q=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=bd0WzJfU; arc=none smtp.client-ip=209.85.214.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1773239733; c=relaxed/simple;
+	bh=1wwa53fC7EmCPoUYJrbERdtPjydJ/FvxblALnh4rzyE=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=hg1MalqS1Ufk8ep9goer5vruxQ+6ZiyaM5aFQ4Z5qnFsBKi0fHskbscTTLQq4D6uhvIamWD6dOyP/72sLN2eeI2p/k/nUAdjbDFtsZE6ebO30DbPno2Gf6HRiUzkBCR4o4uxzm1t4WST2tl4Af0K1khdpcwAjkVcF7UAyO3HjCE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=kqEMFwuY; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="bd0WzJfU"
-Received: by mail-pl1-f172.google.com with SMTP id d9443c01a7336-2ae43042ea7so119127595ad.0
-        for <platform-driver-x86@vger.kernel.org>; Wed, 11 Mar 2026 07:35:03 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1773239703; x=1773844503; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=ha4kqWoqYsblto5PQkRWralkYomP/+jWSwYzX2+nEmg=;
-        b=bd0WzJfU2YhgV/2QtHlDLHeJxmJKHuWmrW6vO3qt0i9/PQVdOaJaw90O3ufkWnWSCw
-         452DraZfM+bPkqN/dn4N7C3dU33ZbarYrEeTb1mYgOmcYQkgYz5hbGN59+Hn9ZEMPf76
-         eLNKVP2bDvKIwhWtW1UWkSlWOnh5kC53S5S1k6t/1l/oycoRrBIl7yavw+hSfevv0NSH
-         ALuKPxkG1D+2S85MGA+gWQ3yHGmq5Soi4PkcDnSmDLAEPLH3zWDeW9y0z9VSyeAFhDVT
-         EhIOBiqVa8R02IlJcrwXasJDlONIe9lURmtHEucdIEL5OmHrHwQxfEYi12wJnVQcEKd/
-         z9jQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1773239703; x=1773844503;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-gg:x-gm-message-state:from
-         :to:cc:subject:date:message-id:reply-to;
-        bh=ha4kqWoqYsblto5PQkRWralkYomP/+jWSwYzX2+nEmg=;
-        b=jWHSmgWTqDSPUCE2x9s4TyYutQj9/DrVbCWQtKseIk//3BqLoQPi/9hFadrbQ4MKD9
-         ffICXkKw2fYsdFEJex3KOsvayDOVInpdQqx2paemng08e1oAuyRnZCnt1D9ozC1d9oiJ
-         NqNSBNqSunxjoW6CYsKLAlFgBR7+ZXgCMz0pTjIu9QF8SaTbKjll4F30Ida6sQJwxLQD
-         h6WdrjXvHiABWxJkQtSnIINw2m6sWdKplTQF81BHOhdEakrCRt77qrY+OlWEBWG1s23h
-         4dKpI3ihDM/oa3Xc3qqE9KXv+EnPiSQ8zlBRlOcpJRXsL0yarpZajMcBhEz8yTmgWnOB
-         mVzQ==
-X-Forwarded-Encrypted: i=1; AJvYcCWCz+rVw4zrRIKEbqI7atvRVR4M8KaNLUDabPZm1wHW6HqjhpFJSQYKKT6K1pch7xpkmHkjs8DyPWFcoAzQyScd56V5@vger.kernel.org
-X-Gm-Message-State: AOJu0YzkCC5b12m8DVw1a38CB+Fdpyjor1sbnXAP5/ES5slVRcMRr44u
-	d6swdl3Ck6UdeqGdEafr3SgBtA5eLFHGTC1EdEcIAaivBm2QUpPRCcn+
-X-Gm-Gg: ATEYQzzHazXZoYR4uukQc+BlAVpH8Ji0eYzT+JF3KjYqWcSgJYhtlfkYw75pm8C/J4M
-	3XOPJm5trlChhbGK7SKODZOHA3SFuUQUif+HjauGqVsdo2CBhW8iWEoBPgdg9QD2u2tVxnFqEai
-	x6bu52StVZwvgfM4S31FWDhz2qjxJvoK/4FIZRE/0Xx+cP7VpacMgYdFjOeiL4g/G7SuVb36GBx
-	spdfAGwZgMS7asEcCEk+8BsATtJgCFDt72cjG6xnfD7AVReHHFX0yx3ZCJO15jwShQ/Xa2Et86P
-	NG+P0brxPkKyZNgamc04L6BzBGUc8ROk6uNUZ8cgKkAllrUSc0/VKkvnR89wW4wQ+FluVIW1laa
-	F4xk/Gk2y0MbyiV5GVuxfSznTM0kf3qnGq69tEfE5dooK+NeApThg/Eo71eyTjH5aA+6BKvTPys
-	JEz37VqGOZQsIafK5TkDvt75ZGUNwURH7bO8qe0BBfUs85M7BY
-X-Received: by 2002:a17:902:e744:b0:2ae:7f7e:93a8 with SMTP id d9443c01a7336-2aeae904128mr28551575ad.51.1773239702933;
-        Wed, 11 Mar 2026 07:35:02 -0700 (PDT)
-Received: from c12-ThinkPad-X1-Carbon-Gen-12 ([2400:2410:5f2b:700:dd5:d7ff:1c94:3624])
-        by smtp.gmail.com with ESMTPSA id d9443c01a7336-2aeae34e070sm26399235ad.48.2026.03.11.07.35.00
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 11 Mar 2026 07:35:02 -0700 (PDT)
-From: Vishnu Sankar <vishnuocv@gmail.com>
-To: mpearson-lenovo@squebb.ca,
-	dmitry.torokhov@gmail.com,
-	hmh@hmh.eng.br,
-	hansg@kernel.org,
-	corbet@lwn.net,
-	derekjohn.clark@gmail.com,
-	ilpo.jarvinen@linux.intel.com
-Cc: linux-input@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	ibm-acpi-devel@lists.sourceforge.net,
-	linux-doc@vger.kernel.org,
-	platform-driver-x86@vger.kernel.org,
-	vsankar@lenovo.com,
-	Vishnu Sankar <vishnuocv@gmail.com>
-Subject: [PATCH v8 3/3] Documentation: thinkpad-acpi - Document doubletap_enable attribute
-Date: Wed, 11 Mar 2026 23:31:44 +0900
-Message-ID: <20260311143144.482145-4-vishnuocv@gmail.com>
-X-Mailer: git-send-email 2.51.0
-In-Reply-To: <20260311143144.482145-1-vishnuocv@gmail.com>
-References: <20260311143144.482145-1-vishnuocv@gmail.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="kqEMFwuY"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 80C1DC4CEF7;
+	Wed, 11 Mar 2026 14:35:30 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1773239733;
+	bh=1wwa53fC7EmCPoUYJrbERdtPjydJ/FvxblALnh4rzyE=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=kqEMFwuY6xd5hILMvSD8FhDLSd32lU5vOd1o0tYUjFKg8uJuQdXVX5yOjCQktVn8y
+	 LZkQ9zwYxvBuZp1kaLVmq1Ox0vaJK7Z3T2TkkfeTPLDBFXv72vEXeIAr68WSeeQjqC
+	 F3MUSyQgo2fgzNM9C4g4rP7Owd64HQsuW0mTmTSzBpxeuvnNKA4oTJIQPJOUtOp9Pk
+	 7m6K1qLzqF5yYGauLFNpXbhP4t4npA9rt0S6Hzc1eiN/KmboDi0eBI8ixayjIniNDL
+	 12P93uZzbHsZ75smsT9C81kPepWKvBIMYk+KMplcgbQfu6Izl9L9jJdkfMv9ABycpW
+	 n7iR8M9RK36JA==
+Message-ID: <dc7f24b2-ec57-4937-92f1-f80b1f1e785a@kernel.org>
+Date: Wed, 11 Mar 2026 15:35:28 +0100
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v2 5/5] platform: int3472: Add MSI prestige board data
+To: Antti Laakso <antti.laakso@linux.intel.com>, linux-media@vger.kernel.org
+Cc: linux-gpio@vger.kernel.org, platform-driver-x86@vger.kernel.org,
+ linusw@kernel.org, brgl@kernel.org, sakari.ailus@linux.intel.com,
+ mchehab@kernel.org, dan.scally@ideasonboard.com,
+ ilpo.jarvinen@linux.intel.com, hverkuil+cisco@kernel.org, sre@kernel.org,
+ hao.yao@intel.com, jimmy.su@intel.com, miguel.vadillo@intel.com,
+ kees@kernel.org, ribalda@chromium.org
+References: <20260311131910.835513-1-antti.laakso@linux.intel.com>
+ <20260311131910.835513-6-antti.laakso@linux.intel.com>
+From: Hans de Goede <hansg@kernel.org>
+Content-Language: en-US, nl
+In-Reply-To: <20260311131910.835513-6-antti.laakso@linux.intel.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-Document the doubletap_enable sysfs attribute for ThinkPad ACPI driver.
+Hi,
 
-Signed-off-by: Vishnu Sankar <vishnuocv@gmail.com>
----
-Changes in v8:
-- Fixes indentation
+On 11-Mar-26 14:19, Antti Laakso wrote:
+> Define regulators and gpio for ov5675 in MSI Prestige 14 AI EVO+ laptop.
+> 
+> Signed-off-by: Antti Laakso <antti.laakso@linux.intel.com>
+> ---
+>  .../x86/intel/int3472/tps68470_board_data.c   | 101 ++++++++++++++++++
+>  1 file changed, 101 insertions(+)
+> 
+> diff --git a/drivers/platform/x86/intel/int3472/tps68470_board_data.c b/drivers/platform/x86/intel/int3472/tps68470_board_data.c
+> index 71357a036292..6892d6e98072 100644
+> --- a/drivers/platform/x86/intel/int3472/tps68470_board_data.c
+> +++ b/drivers/platform/x86/intel/int3472/tps68470_board_data.c
+> @@ -12,6 +12,7 @@
+>  #include <linux/dmi.h>
+>  #include <linux/gpio/machine.h>
+>  #include <linux/platform_data/tps68470.h>
+> +#include <linux/property.h>
+>  #include <linux/regulator/machine.h>
+>  #include "tps68470.h"
+>  
+> @@ -232,6 +233,72 @@ static const struct tps68470_regulator_platform_data dell_7212_tps68470_pdata =
+>  	},
+>  };
+>  
+> +/* Settings for MSI Prestige 14 AI+ Evo C2VMG laptop. */
+> +static struct regulator_consumer_supply ovti5675_avdd_consumer_supplies[] = {
+> +	REGULATOR_SUPPLY("avdd", "i2c-OVTI5675:00"),
+> +};
+> +
+> +static struct regulator_consumer_supply ovti5675_dovdd_consumer_supplies[] = {
+> +	REGULATOR_SUPPLY("dovdd", "i2c-OVTI5675:00"),
+> +};
+> +
+> +static struct regulator_consumer_supply ovti5675_dvdd_consumer_supplies[] = {
+> +	REGULATOR_SUPPLY("dvdd", "i2c-OVTI5675:00"),
+> +};
+> +
+> +static const struct regulator_init_data msi_p14_ai_evo_tps68470_core_reg_init_data = {
+> +	.constraints = {
+> +		.min_uV = 1200000,
+> +		.max_uV = 1200000,
+> +		.apply_uV = 1,
+> +		.valid_ops_mask = REGULATOR_CHANGE_STATUS,
+> +	},
+> +	.num_consumer_supplies = ARRAY_SIZE(ovti5675_dvdd_consumer_supplies),
+> +	.consumer_supplies = ovti5675_dvdd_consumer_supplies,
+> +};
+> +
+> +static const struct regulator_init_data msi_p14_ai_evo_tps68470_ana_reg_init_data = {
+> +	.constraints = {
+> +		.min_uV = 2815200,
+> +		.max_uV = 2815200,
+> +		.apply_uV = 1,
+> +		.valid_ops_mask = REGULATOR_CHANGE_STATUS,
+> +	},
+> +	.num_consumer_supplies = ARRAY_SIZE(ovti5675_avdd_consumer_supplies),
+> +	.consumer_supplies = ovti5675_avdd_consumer_supplies,
+> +};
+> +
+> +static const struct regulator_init_data msi_p14_ai_evo_tps68470_vio_reg_init_data = {
+> +	.constraints = {
+> +		.min_uV = 1800600,
+> +		.max_uV = 1800600,
+> +		.apply_uV = 1,
+> +		.valid_ops_mask = REGULATOR_CHANGE_STATUS,
+> +	},
 
-Changes in v7:
-- Fix formatting
+> +	.num_consumer_supplies = 0,
+> +	.consumer_supplies = NULL,
 
-Changes in v6:
-- Fix formatting of doubletap_enable sysfs documentation (separate Values list)
----
- .../admin-guide/laptops/thinkpad-acpi.rst     | 21 +++++++++++++++++++
- 1 file changed, 21 insertions(+)
+Nit (no need to fix unless you need to do a v3 for other reasons),
+these 2 explicit foo = 0 initializers are not necessary and can
+be dropped.
 
-diff --git a/Documentation/admin-guide/laptops/thinkpad-acpi.rst b/Documentation/admin-guide/laptops/thinkpad-acpi.rst
-index 03951ed6b628..f874db31801d 100644
---- a/Documentation/admin-guide/laptops/thinkpad-acpi.rst
-+++ b/Documentation/admin-guide/laptops/thinkpad-acpi.rst
-@@ -1522,6 +1522,27 @@ Currently 2 antenna types are supported as mentioned below:
- The property is read-only. If the platform doesn't have support the sysfs
- class is not created.
- 
-+doubletap_enable
-+----------------
-+
-+sysfs: doubletap_enable
-+
-+Controls whether TrackPoint doubletap events are filtered out. Doubletap is a
-+feature where quickly tapping the TrackPoint twice triggers a special function key event.
-+
-+The available commands are::
-+
-+                cat /sys/devices/platform/thinkpad_acpi/doubletap_enable
-+                echo 1 | sudo tee /sys/devices/platform/thinkpad_acpi/doubletap_enable
-+                echo 0 | sudo tee /sys/devices/platform/thinkpad_acpi/doubletap_enable
-+
-+Values:
-+
-+	* 1 - doubletap events are processed (default)
-+	* 0 - doubletap events are filtered out (ignored)
-+
-+	This setting can also be toggled via the Fn+doubletap hotkey.
-+
- Auxmac
- ------
- 
--- 
-2.51.0
+Otherwise this looks good to me:
+
+Reviewed-by: Hans de Goede <johannes.goede@oss.qualcomm.com>
+
+Regards,
+
+Hans
+
+
+
+
+> +};
+> +
+> +static const struct regulator_init_data msi_p14_ai_evo_tps68470_vsio_reg_init_data = {
+> +	.constraints = {
+> +		.min_uV = 1800600,
+> +		.max_uV = 1800600,
+> +		.apply_uV = 1,
+> +		.valid_ops_mask = REGULATOR_CHANGE_STATUS,
+> +	},
+> +	.num_consumer_supplies = ARRAY_SIZE(ovti5675_dovdd_consumer_supplies),
+> +	.consumer_supplies = ovti5675_dovdd_consumer_supplies,
+> +};
+> +
+> +static const struct tps68470_regulator_platform_data msi_p14_ai_evo_tps68470_pdata = {
+> +	.reg_init_data = {
+> +		[TPS68470_CORE] = &msi_p14_ai_evo_tps68470_core_reg_init_data,
+> +		[TPS68470_ANA]  = &msi_p14_ai_evo_tps68470_ana_reg_init_data,
+> +		[TPS68470_VIO]  = &msi_p14_ai_evo_tps68470_vio_reg_init_data,
+> +		[TPS68470_VSIO] = &msi_p14_ai_evo_tps68470_vsio_reg_init_data,
+> +	},
+> +};
+> +
+>  static struct gpiod_lookup_table surface_go_int347a_gpios = {
+>  	.dev_id = "i2c-INT347A:00",
+>  	.table = {
+> @@ -258,6 +325,23 @@ static struct gpiod_lookup_table dell_7212_int3479_gpios = {
+>  	}
+>  };
+>  
+> +static struct gpiod_lookup_table msi_p14_ai_evo_ovti5675_gpios = {
+> +	.dev_id = "i2c-OVTI5675:00",
+> +	.table = {
+> +		GPIO_LOOKUP("tps68470-gpio", 9, "reset", GPIO_ACTIVE_LOW),
+> +		{ }
+> +	}
+> +};
+> +
+> +static const struct property_entry msi_p14_ai_evo_gpio_props[] = {
+> +	PROPERTY_ENTRY_BOOL("daisy-chain-enable"),
+> +	{ }
+> +};
+> +
+> +static const struct software_node msi_p14_ai_evo_tps68470_gpio_swnode = {
+> +	.properties = msi_p14_ai_evo_gpio_props,
+> +};
+> +
+>  static const struct int3472_tps68470_board_data surface_go_tps68470_board_data = {
+>  	.dev_name = "i2c-INT3472:05",
+>  	.tps68470_regulator_pdata = &surface_go_tps68470_pdata,
+> @@ -287,6 +371,16 @@ static const struct int3472_tps68470_board_data dell_7212_tps68470_board_data =
+>  	},
+>  };
+>  
+> +static const struct int3472_tps68470_board_data msi_p14_ai_evo_tps68470_board_data = {
+> +	.dev_name = "i2c-INT3472:06",
+> +	.tps68470_regulator_pdata = &msi_p14_ai_evo_tps68470_pdata,
+> +	.tps68470_gpio_swnode = &msi_p14_ai_evo_tps68470_gpio_swnode,
+> +	.n_gpiod_lookups = 1,
+> +	.tps68470_gpio_lookup_tables = {
+> +		&msi_p14_ai_evo_ovti5675_gpios,
+> +	},
+> +};
+> +
+>  static const struct dmi_system_id int3472_tps68470_board_data_table[] = {
+>  	{
+>  		.matches = {
+> @@ -316,6 +410,13 @@ static const struct dmi_system_id int3472_tps68470_board_data_table[] = {
+>  		},
+>  		.driver_data = (void *)&dell_7212_tps68470_board_data,
+>  	},
+> +	{
+> +		.matches = {
+> +			DMI_EXACT_MATCH(DMI_SYS_VENDOR, "Micro-Star International Co., Ltd."),
+> +			DMI_EXACT_MATCH(DMI_PRODUCT_NAME, "Prestige 14 AI+ Evo C2VMG"),
+> +		},
+> +		.driver_data = (void *)&msi_p14_ai_evo_tps68470_board_data,
+> +	},
+>  	{ }
+>  };
+>  
 
