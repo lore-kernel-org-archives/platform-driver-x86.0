@@ -1,70 +1,69 @@
-Received: from mail-pg1-f179.google.com (mail-pg1-f179.google.com [209.85.215.179])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.17])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8D8DE2FFF90
-	for <platform-driver-x86@vger.kernel.org>; Wed, 11 Mar 2026 13:13:52 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.179
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7BD91284896;
+	Wed, 11 Mar 2026 13:19:45 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.17
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1773234833; cv=none; b=UsAaFu+KgV5MFduvzkWvPXVJwUG3a4sOrcFnT9i5ZCOWSLBVGOQ1O2/iLxbYDiPP3lX4u35kqm+ybBdLbW61UMZVU8Wcg9Z0tVCHuXL/7bOZQwlu4qi/F1LbN8P+DdqJjpS++Z3CA3DtbBmzLmyWSb6MQTFCS9q6pygL3kTlK74=
+	t=1773235186; cv=none; b=ujoIE2ShLw4HYbonQODeMVNB5pCX7RcQ2UVLqZyCc0BYbjov/4p0Pv49U7cvmD/TS7/ioEI7RUgksenb742xemqAT93IrCbgyvZ46i2DIVSjHUUDNHbiLdBqX2S7KWNagZ/KIMVBqSlczErnZul8YmTg7QLWh2W6CdSK24LEzbs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1773234833; c=relaxed/simple;
-	bh=4pKHOLYSr2CmWSkFe34PNT2qnOpdIGQzmRnjKvMM3I0=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=FpfnAaV5SjKdpYc37nF0DvRGh2sJybgkpR5eLNTspMjdV12p85q1Ero99+Izgw+N4bOjolKz7YQRXz+/5Nkwdga48i8Lxun5oLaUIvDGyT9atfGTe1U4I1EcIwgqRSLmCV4WQOEyooTpc169fRaKRSNzeo8F+RUNYD/vvzZQ4RA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=grtUh1pG; arc=none smtp.client-ip=209.85.215.179
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1773235186; c=relaxed/simple;
+	bh=ok2ruo2GCwVrf9XIrhRhncW6ucKl+R+H4UeEBH2E8gM=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=S633PfXYm/CnG86sFAMcPQnmP8oOBD7fc/JOUCvuxTZu0o6J71vwB969EL5n8U10y5G1xAiGDiYYKO9JbOUCEQSlhxmsYiQ7BwpOpuT/N2i/K+PvD2qmSqXwl+7zvu38/xA3fKu6qRjp3+wYvOSbbW7NHwVwNmrJoY6hxN1PNaM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=pass smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=hDKKaHFp; arc=none smtp.client-ip=192.198.163.17
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="grtUh1pG"
-Received: by mail-pg1-f179.google.com with SMTP id 41be03b00d2f7-c73c990a9cdso566045a12.3
-        for <platform-driver-x86@vger.kernel.org>; Wed, 11 Mar 2026 06:13:52 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1773234832; x=1773839632; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=Xoo+myGq78Y0L6FdfU9pb8DVGTgcd/ucvRvKLUCNIWA=;
-        b=grtUh1pGv1rA4ShRGUUh/aP9YbLI7mnHYBaF2fjfcoh3hgMlbQgzK3mZ8kFnzPfFQj
-         WjhXuyeb4bPkErnHkRGe1W/xsFV4zYJMKsbZFtcX/xug4tLJuHRgwHJp2vRNaTO6ubDV
-         fsNVX8nD8nUciqTxCH+j5dT5SYs4GXsavUrrthe4YtUjNcHX3pkPsczrOA131iXijccN
-         0YSog1M9KQoqWwzm8vrqMxpli7YPBm+7HGLv5/Eh9HLj4iz0ywb6LTT7qDN+Hv9J88G4
-         NZG+QRu3i4DR2pU7AIN52PbGqeNj/Jc17k+zzXHcBL+UKuzA5iqtWm5MhZnP9C6LZlCY
-         P57A==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1773234832; x=1773839632;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-gg:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=Xoo+myGq78Y0L6FdfU9pb8DVGTgcd/ucvRvKLUCNIWA=;
-        b=v2Q8ko8T2AIlX+KdNl40ABmCaZQk1ihlx+4gkN+ruj0GtsL5vw6ssF+y5aWqmz46oZ
-         udjeZdwJClX2zcC1AvcK/gumW0JPUK0eV8ct/f3BFuL12eO8AuRgQsARlnBVuHpGB4XW
-         x3mszTMmbtoBwajFeWvlMELpDAeKrFcezKCZNFW9Jwhq00smxhg6sUTWTF58zHaECQNA
-         weL4/gsgap3LDgKfXEeLRxN0mDxcZTCqJcCPYzft6vrxASSROah1+WMBoJlHqsfcJ10N
-         klqvhpnC45Y34qELOUpsPidNRMZg7/pyMQ3SvhShZa90xl6f5O8Fc4SD1u2NvpAfijkD
-         B8lw==
-X-Gm-Message-State: AOJu0Yya84ZHLfJ1HWjiSXr/dbBq+ISH7K0RZCTf+gbgrCB6TWm9BOvT
-	ES93wvmSQy23fk2fZQrIKYUHEVzfPFlwCcuAoj1exw86OvYkFQTnZzj6AKDCBUzF
-X-Gm-Gg: ATEYQzxDHVbtYJs6BBvfLWWMo8xRqzYqFISzOld3XrypR3Hn53CiQ2+0ZeCIw0AfPNo
-	nMh+22jG5gxo49HBBNdkwZELjwBvCVNnQHmTKj3/OXT5sNR6S4syfUOOPEDG48bmdtzE0bIkRyM
-	/Zfiogt8JiXXtiA7TIe13Ka8ftEoHH6LxiVXwMpq53FKNXTMdtN43DQMUwWffrMEFzzO8Paopx9
-	Ju6snkF6uxSk4Fmtzb1vmBvoDZkKqHUj2fG+43tbYyKpZttEcJ73ujdsfMgOsxWRHARjflNE+6I
-	MfqehlbX08ehk1f7oUucpXDT1cAaiLjFFRuRoAZS2TWM1AmmlpQvtzkWlwBBuLd2CpBLCyp7QWC
-	IH7934TmPskIGoUmDa5J5RuJ1NPH1i85bzw1FxMwJL+l0M+L2TbLWIU1iMe4TFaCMsnxOcuCfoO
-	k0Bza8pmzPB/1/rfiyyAvV4lWIkHCokLlaSubbCkpq0Co=
-X-Received: by 2002:a17:903:2a8f:b0:2ae:7ed6:7d15 with SMTP id d9443c01a7336-2aeae88b2abmr28200755ad.28.1773234831590;
-        Wed, 11 Mar 2026 06:13:51 -0700 (PDT)
-Received: from omen16 ([49.207.204.204])
-        by smtp.gmail.com with ESMTPSA id 41be03b00d2f7-c73cde37ffesm2221712a12.0.2026.03.11.06.13.49
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 11 Mar 2026 06:13:51 -0700 (PDT)
-From: Raed <youaretalkingtoraed@gmail.com>
-To: platform-driver-x86@vger.kernel.org
-Cc: linux-kernel@vger.kernel.org,
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="hDKKaHFp"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1773235185; x=1804771185;
+  h=from:to:cc:subject:date:message-id:mime-version:
+   content-transfer-encoding;
+  bh=ok2ruo2GCwVrf9XIrhRhncW6ucKl+R+H4UeEBH2E8gM=;
+  b=hDKKaHFpgDD+7r2/9l/HLgv5VhNlsv069srSsUIpe/ZxGMF8R1aMuIwE
+   M0jHlVoo/SpThCBraQ5GWlzZj4YR70zTEw6kwBWuLSB0xgfEJ50nUaYm2
+   u3gYF8s13Lz1TI9EgaRi/KJb1aeoYltUf8zd/Mmb1e7ikYcO9W//7wf4O
+   nVDJ5EVeP1IbriTldTlCc69rU0kbU1wXVkO/eUbXrEiRzF8ZmLZLo99Gb
+   JllMYRK5ECBr8AtoxAfZhrzLvf9hp4zh0y/NrCAV1E9+UYwxB/+VIf+mV
+   gKwLy4CDUjguGBqDse1n4h5xCsc44T2rw27IcWZZVYyIQ4l/ldecDzaRx
+   A==;
+X-CSE-ConnectionGUID: kPiIH66PQAOS4O1QKauIPA==
+X-CSE-MsgGUID: /elWNJH0T2WsmyXElBbh9Q==
+X-IronPort-AV: E=McAfee;i="6800,10657,11726"; a="74211552"
+X-IronPort-AV: E=Sophos;i="6.23,113,1770624000"; 
+   d="scan'208";a="74211552"
+Received: from fmviesa010.fm.intel.com ([10.60.135.150])
+  by fmvoesa111.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 11 Mar 2026 06:19:44 -0700
+X-CSE-ConnectionGUID: Koz1K3+iQISBzmOVaiy0cg==
+X-CSE-MsgGUID: 89r7qE//SOeOQX/8856Alg==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.23,113,1770624000"; 
+   d="scan'208";a="217131226"
+Received: from jkrzyszt-mobl2.ger.corp.intel.com (HELO alaakso-DESK.intel.com) ([10.245.246.81])
+  by fmviesa010-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 11 Mar 2026 06:19:40 -0700
+From: Antti Laakso <antti.laakso@linux.intel.com>
+To: linux-media@vger.kernel.org
+Cc: linux-gpio@vger.kernel.org,
+	platform-driver-x86@vger.kernel.org,
+	linusw@kernel.org,
+	brgl@kernel.org,
+	sakari.ailus@linux.intel.com,
+	mchehab@kernel.org,
+	dan.scally@ideasonboard.com,
 	hansg@kernel.org,
 	ilpo.jarvinen@linux.intel.com,
-	Raed <thisisraed@outlook.com>
-Subject: [PATCH] platform/x86: hp-wmi: Add Omen 16-xf0xxx (8BCA) support
-Date: Wed, 11 Mar 2026 18:43:38 +0530
-Message-ID: <20260311131338.965249-1-youaretalkingtoraed@gmail.com>
-X-Mailer: git-send-email 2.52.0
+	hverkuil+cisco@kernel.org,
+	sre@kernel.org,
+	hao.yao@intel.com,
+	jimmy.su@intel.com,
+	miguel.vadillo@intel.com,
+	kees@kernel.org,
+	ribalda@chromium.org
+Subject: [PATCH v2 0/5] platform: int3472: Add MSI prestige 14 AI EVO data
+Date: Wed, 11 Mar 2026 15:19:05 +0200
+Message-ID: <20260311131910.835513-1-antti.laakso@linux.intel.com>
+X-Mailer: git-send-email 2.53.0
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
@@ -73,44 +72,32 @@ List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-From: Raed <thisisraed@outlook.com>
+This adds camera support for the MSI Prestige 14 AI EVO laptop, which uses
+a TPS68470 PMIC to power an OV5675 sensor.
 
-The HP Omen 16-xf0xxx board 8BCA uses the same Victus-S fan and
-thermal WMI path as other recently supported Omen/Victus boards,
-but it requires Omen v1 thermal profile parameters for correct
-platform profile behavior.
+If ok, including a GPIO patch to this series. The GPIO patch enables the
+TPS68470's I2C daisy chain functionality.
 
-Add board 8BCA to victus_s_thermal_profile_boards[] and map it
-to omen_v1_thermal_params.
+v2:
+- Add lookup only for ov5675 reset GPIO and use GPIO_LOOKUP macro.
+- Use software node for i2c daisy chain info instead of platform data.
+- ov5675: fix error path in ov5675_get_hwcfg().
 
-Validated on HP Omen 16-xf0xxx (board 8BCA):
-- /sys/firmware/acpi/platform_profile exposes
-	low-power/balanced/performance
-- fan RPM reporting works (fan1_input/fan2_input)
-- manual fan control works through hp-wmi hwmon (pwm1/pwm1_enable)
+Antti Laakso (5):
+  media: i2c: ov5675: Wait for endpoint
+  media: ipu-bridge: Add ov5675 sensor
+  platform: int3472: Add gpio software node
+  gpio: tps68470: Add i2c daisy chain support
+  platform: int3472: Add MSI prestige board data
 
-Signed-off-by: Raed <thisisraed@outlook.com>
----
- drivers/platform/x86/hp/hp-wmi.c | 4 ++++
- 1 file changed, 4 insertions(+)
+ drivers/gpio/gpio-tps68470.c                  |  21 +++-
+ drivers/media/i2c/ov5675.c                    |  32 +++---
+ drivers/media/pci/intel/ipu-bridge.c          |   2 +
+ drivers/platform/x86/intel/int3472/tps68470.c |   1 +
+ drivers/platform/x86/intel/int3472/tps68470.h |   1 +
+ .../x86/intel/int3472/tps68470_board_data.c   | 101 ++++++++++++++++++
+ 6 files changed, 141 insertions(+), 17 deletions(-)
 
-diff --git a/drivers/platform/x86/hp/hp-wmi.c b/drivers/platform/x86/hp/hp-wmi.c
-index 68ede7e57..6de701762 100644
---- a/drivers/platform/x86/hp/hp-wmi.c
-+++ b/drivers/platform/x86/hp/hp-wmi.c
-@@ -187,6 +187,10 @@ static const struct dmi_system_id victus_s_thermal_profile_boards[] __initconst
- 		.matches = { DMI_MATCH(DMI_BOARD_NAME, "8BCD") },
- 		.driver_data = (void *)&omen_v1_thermal_params,
- 	},
-+	{
-+		.matches = { DMI_MATCH(DMI_BOARD_NAME, "8BCA") },
-+		.driver_data = (void *)&omen_v1_thermal_params,
-+	},
- 	{
- 		.matches = { DMI_MATCH(DMI_BOARD_NAME, "8BD4") },
- 		.driver_data = (void *)&victus_s_thermal_params,
-
-base-commit: b29fb8829bff243512bb8c8908fd39406f9fd4c3
 -- 
-2.52.0
+2.53.0
 
