@@ -1,80 +1,160 @@
-Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.21])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5B6F528CF4A;
-	Wed, 11 Mar 2026 04:58:00 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.137.202.133
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1949E3DB654;
+	Wed, 11 Mar 2026 11:17:14 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.21
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1773205085; cv=none; b=qHbLvruA26dDDlNOwJBdv6EBtzi3PaUyzVMfaTL0caHwjJJvgNGhaosszUWqMBWKpDREZJfKjLQslG7kpyt8gOS/ZwyZBl/evK4qy0tyWxnC3kCRnnIy0+E14SDSxpuTzelXQ43KqbOgwVhRshr0GPjF+pWr0BX2cxR7MU1rUZg=
+	t=1773227838; cv=none; b=pDC9JAdGD0vxR53Au1ND9RWflt8SMapCsnVTwrCTVZBP0Ftwiot9uzOaWQVfzgr1FzHJQPILwYHZo12l9pZUzNDVwYvzWIoUM2Seaq6eX40C7bE5Bwqn76XNIPoi2LmRUGtu4Er2hkdbuPiYV97oKxxWKkQ7SrWel0OKuiEGLTo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1773205085; c=relaxed/simple;
-	bh=PPh4p9TMc+yxFwkeztcG783ewgHhUQ6b37NDTTtBG3w=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=hdMUJjYPI6g+lXmNgrsGA94tPsvSUVql7ro9F8sNoQtql3TwPb1U2L2bzqo0ko9eOoccl+zPvKrv9e8Wqqwaxevqs7X6fh/rkxxE/jgqh0sH5N6khAf0feu0nAXcPgFz4W4vFvZ01EpBBU8EzkPiRYgfesonrXt4tTXe2sjAL+o=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=hjIHq9OY; arc=none smtp.client-ip=198.137.202.133
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=infradead.org
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=infradead.org
+	s=arc-20240116; t=1773227838; c=relaxed/simple;
+	bh=ON0iASOjUIvwRmT+yIVZHWWQLT4HAk5CV1sSLTHdaqg=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=KRNsQWyFjApjNr0G6J/++UB8IsAwZtStjHDkgb703NwJElSJbrd/rZUX5P3G6bZYKlVlrZj1RMCE0Np9zTjycjM1aj6iSGMiiSN8LWNrANSp97qYvD2HVRjO9OkAZiINiqhiU0CMCjt+qgRdz5/NyryPvi55ozEFJAct/iErssE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=pass smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=CO6WEMJs; arc=none smtp.client-ip=198.175.65.21
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="hjIHq9OY"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=infradead.org; s=bombadil.20210309; h=Content-Transfer-Encoding:
-	Content-Type:In-Reply-To:From:References:Cc:To:Subject:MIME-Version:Date:
-	Message-ID:Sender:Reply-To:Content-ID:Content-Description;
-	bh=x4A282qbKiRaDxLxOFzUvZJlDLVzn+npN+jW3VDUXrE=; b=hjIHq9OYwLwYJpDalYhfPrzXgC
-	fyNofX/OBHVH67n+dAMxVVn9PSIktXrzt5b/om/maLaVIeM91UDTTAlKnlmns16dGM7ZAKe8GE3TL
-	uuKGUdja0Acc5n1UqeBzA2AANOZKsavxSPT48jll7+0DmNvkH8y5dqv8ejOUbAmbZTB9IxDs9mxIS
-	bouzsfyj0jym4IjMr8wMFzD6+UQMlDTOsf0IWXN/ZJftizUSkHSPgHEyUCakHGsVounLWaB9+9usX
-	VtTfJ8SgYcYHN3iTJspdMI7xt2+RfUPGnLDEv6rkXLoWGZo7jlp3VwSD5bxwrZcr5XotG8y/P1/24
-	KZLRLynQ==;
-Received: from [50.53.43.113] (helo=[192.168.254.34])
-	by bombadil.infradead.org with esmtpsa (Exim 4.98.2 #2 (Red Hat Linux))
-	id 1w0Bdm-0000000Ak0P-2oiL;
-	Wed, 11 Mar 2026 04:57:50 +0000
-Message-ID: <363b80db-9bf3-44d5-a756-e64d29bd36ec@infradead.org>
-Date: Tue, 10 Mar 2026 21:57:50 -0700
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="CO6WEMJs"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1773227836; x=1804763836;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=ON0iASOjUIvwRmT+yIVZHWWQLT4HAk5CV1sSLTHdaqg=;
+  b=CO6WEMJsyaSjxWP90idv+dYyUw51NZ1jXsgPqa/7zEA5YifXGjUE9VWu
+   2gjY4McWs5bo4mUIlfaEo75HXI+R+Y58plVHcG7pWoV6cTsjlORFLxFGP
+   Y3R2n6gkUto6ydy/pKc7NnV6yji4jQralyMNYrn6wxqF1IJGJoBAOAi6s
+   9khZPVqkkbfB7Jj/5jeq1G3z6E5g+VeFrOCXYLGPhpXgi5Em6pZmJSz+u
+   jIoToeKr82YLAZOtf0DFtHf7YiwJaQyR+7fmUFFIuA4H2JtbqE3l1gZuU
+   ETCr/awSLauKJY79h0qMG+rDziXTuLjlqru2Ag+k3KMomG9b5mVNCgmAl
+   g==;
+X-CSE-ConnectionGUID: Tx9t1JJaTYGcpn7Hu+rYzQ==
+X-CSE-MsgGUID: Vo6sVtRDSwKBk8ILLQg/4w==
+X-IronPort-AV: E=McAfee;i="6800,10657,11725"; a="74168335"
+X-IronPort-AV: E=Sophos;i="6.23,113,1770624000"; 
+   d="scan'208";a="74168335"
+Received: from orviesa005.jf.intel.com ([10.64.159.145])
+  by orvoesa113.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 11 Mar 2026 04:17:15 -0700
+X-CSE-ConnectionGUID: m/Qh+imgRc6xWSZgG8PzcQ==
+X-CSE-MsgGUID: O7S2MoMcTaS5C6FlPs7RJA==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.23,113,1770624000"; 
+   d="scan'208";a="225391830"
+Received: from jkrzyszt-mobl2.ger.corp.intel.com (HELO alaakso-DESK) ([10.245.246.81])
+  by orviesa005-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 11 Mar 2026 04:17:09 -0700
+Date: Wed, 11 Mar 2026 13:17:03 +0200
+From: Antti Laakso <antti.laakso@linux.intel.com>
+To: Bartosz Golaszewski <brgl@kernel.org>
+Cc: linux-gpio@vger.kernel.org, platform-driver-x86@vger.kernel.org,
+	linusw@kernel.org, sakari.ailus@linux.intel.com, mchehab@kernel.org,
+	dan.scally@ideasonboard.com, hansg@kernel.org,
+	ilpo.jarvinen@linux.intel.com, hverkuil+cisco@kernel.org,
+	sre@kernel.org, hao.yao@intel.com, jason.z.chen@intel.com,
+	jimmy.su@intel.com, miguel.vadillo@intel.com, kees@kernel.org,
+	ribalda@chromium.org, linux-media@vger.kernel.org
+Subject: Re: [PATCH 3/5] platform: int3472: Add gpio platform data
+Message-ID: <abFPL17lzDfbz9or@alaakso-DESK>
+References: <20260310124427.693625-1-antti.laakso@linux.intel.com>
+ <20260310124427.693625-4-antti.laakso@linux.intel.com>
+ <CAMRc=Me73BrokqUnPmWa59_rCnAM-cu+2Kpu8qxc7pbN6kN5+Q@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v5 5/5] Documentation: laptops: Update documentation for
- uniwill laptops
-To: Werner Sembach <wse@tuxedocomputers.com>, W_Armin@gmx.de,
- hansg@kernel.org, ilpo.jarvinen@linux.intel.com,
- Jonathan Corbet <corbet@lwn.net>, Shuah Khan <skhan@linuxfoundation.org>
-Cc: platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org,
- linux-doc@vger.kernel.org
-References: <20260310234022.2085232-1-wse@tuxedocomputers.com>
- <20260310234022.2085232-6-wse@tuxedocomputers.com>
-Content-Language: en-US
-From: Randy Dunlap <rdunlap@infradead.org>
-In-Reply-To: <20260310234022.2085232-6-wse@tuxedocomputers.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CAMRc=Me73BrokqUnPmWa59_rCnAM-cu+2Kpu8qxc7pbN6kN5+Q@mail.gmail.com>
 
-Hi Werner,
-
-On 3/10/26 4:34 PM, Werner Sembach wrote:
-> Adds short description for two new sysfs entries, ctgp_offset and
-> usb_c_power_priority, to the documentation of uniwill laptops.
+Hi Bartosz,
+On Tue, Mar 10, 2026 at 06:32:31AM -0700, Bartosz Golaszewski wrote:
+> On Tue, 10 Mar 2026 13:44:25 +0100, Antti Laakso
+> <antti.laakso@linux.intel.com> said:
+> > The tps68470 supports i2c daisy chain, which need to be configured by
+> > gpio-tps68470 driver. Add daisy chain information to platform data.
+> >
+> > Signed-off-by: Antti Laakso <antti.laakso@linux.intel.com>
+> > ---
+> >  drivers/platform/x86/intel/int3472/tps68470.c | 2 ++
+> >  drivers/platform/x86/intel/int3472/tps68470.h | 1 +
+> >  include/linux/platform_data/tps68470.h        | 4 ++++
+> >  3 files changed, 7 insertions(+)
+> >
+> > diff --git a/drivers/platform/x86/intel/int3472/tps68470.c b/drivers/platform/x86/intel/int3472/tps68470.c
+> > index a496075c0d2a..b02bc675cabe 100644
+> > --- a/drivers/platform/x86/intel/int3472/tps68470.c
+> > +++ b/drivers/platform/x86/intel/int3472/tps68470.c
+> > @@ -197,6 +197,8 @@ static int skl_int3472_tps68470_probe(struct i2c_client *client)
+> >  		cells[1].platform_data = (void *)board_data->tps68470_regulator_pdata;
+> >  		cells[1].pdata_size = sizeof(struct tps68470_regulator_platform_data);
+> >  		cells[2].name = "tps68470-gpio";
+> > +		cells[2].platform_data = (void *)board_data->tps68470_gpio_pdata;
+> > +		cells[2].pdata_size = sizeof(*board_data->tps68470_gpio_pdata);
+> >
+> >  		for (i = 0; i < board_data->n_gpiod_lookups; i++)
+> >  			gpiod_add_lookup_table(board_data->tps68470_gpio_lookup_tables[i]);
+> > diff --git a/drivers/platform/x86/intel/int3472/tps68470.h b/drivers/platform/x86/intel/int3472/tps68470.h
+> > index 35915e701593..c1c4290eb6d5 100644
+> > --- a/drivers/platform/x86/intel/int3472/tps68470.h
+> > +++ b/drivers/platform/x86/intel/int3472/tps68470.h
+> > @@ -17,6 +17,7 @@ struct tps68470_regulator_platform_data;
+> >  struct int3472_tps68470_board_data {
+> >  	const char *dev_name;
+> >  	const struct tps68470_regulator_platform_data *tps68470_regulator_pdata;
+> > +	const struct tps68470_gpio_platform_data *tps68470_gpio_pdata;
+> >  	unsigned int n_gpiod_lookups;
+> >  	struct gpiod_lookup_table *tps68470_gpio_lookup_tables[];
+> >  };
+> > diff --git a/include/linux/platform_data/tps68470.h b/include/linux/platform_data/tps68470.h
+> > index e605a2cab07f..7330dab7a711 100644
+> > --- a/include/linux/platform_data/tps68470.h
+> > +++ b/include/linux/platform_data/tps68470.h
+> > @@ -27,6 +27,10 @@ struct tps68470_regulator_platform_data {
+> >  	const struct regulator_init_data *reg_init_data[TPS68470_NUM_REGULATORS];
+> >  };
+> >
+> > +struct tps68470_gpio_platform_data {
+> > +	const bool daisy_chain_enable;
+> > +};
+> > +
+> >  struct tps68470_clk_consumer {
+> >  	const char *consumer_dev_name;
+> >  	const char *consumer_con_id;
+> > --
+> > 2.53.0
+> >
+> >
 > 
-> Signed-off-by: Werner Sembach <wse@tuxedocomputers.com>
-> Reviewed-by: Armin Wolf <W_Armin@gmx.de>
-> Reviewed-by: Randy Dunlap <rdunlap@infradead.org>
-> ---
->  .../ABI/testing/sysfs-driver-uniwill-laptop   | 25 +++++++++++++++++++
->  .../admin-guide/laptops/uniwill-laptop.rst    | 12 +++++++++
->  2 files changed, 37 insertions(+)
+> I know this is the pattern used in this driver but why not start converting
+> it gradually to more modern APIs?
 > 
+> You could do:
+> 
+> static const struct property_entry tps68470_gpio_props[] = {
+> 	PROPERTY_ENTRY_BOOL("daisy-chain-enable"),
+> 	{ }
+> };
+> 
+> static const struct software_node tps68470_gpio_swnode = {
+> 	.properties = tps68470_gpio_props,
+> };
+> 
+> static int skl_int3472_tps68470_probe(struct i2c_client *client)
+> {
+> 	...
+> 	cells[2].swnode = &tps68470_gpio_swnode;
+> 	...
+> }
+> 
+> And avoid both modifying the public header as well as using ugly platform
+> data. In the GPIO driver you'd just need:
+> 
+> 	if (device_property_present(&pdev->dev, "daisy-chain-enable"))
+> 
+> Bartosz
 
+Thanks for suggestion, I'll use software node in v2.
 
-Can you give me a lore.kernel.org URL or a message-ID in which
-I replied with a "Reviewed-by:" tag for this patch, please?
-I don't recall doing so, but I could have.
-
-thanks.
--- 
-~Randy
-
+Antti
