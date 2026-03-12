@@ -1,719 +1,1028 @@
-Received: from SN4PR0501CU005.outbound.protection.outlook.com (mail-southcentralusazon11011008.outbound.protection.outlook.com [40.93.194.8])
+Received: from relay11.grserver.gr (relay11.grserver.gr [78.46.171.57])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1D5BF1E1C02;
-	Thu, 12 Mar 2026 13:26:39 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.93.194.8
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1773322002; cv=fail; b=KLGz62MdPWY3gql088qd4GQuXs6ETelzIEQTCQ1uaLUavPiRaQJ2sT7/CtU8153qe7dV7xA3VvFFu72t/0f3dJ0Kxf6c4DYwnD2dCs6JkFZbMJc4RqejWrw68nSUY+DAO6wTZ5Kpw5Q1Rk+HkC8L+fJJYCKZvZ9K9G+ccm520GQ=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1773322002; c=relaxed/simple;
-	bh=TpUMBSkYFHK6uPAjDm0xEfUwWAOl8z3gAg0Wat8I2cg=;
-	h=Message-ID:Date:Subject:To:Cc:References:From:In-Reply-To:
-	 Content-Type:MIME-Version; b=ODXn/ueZvUNsmgA4URY1HMd/CDxGJQJ6wSPRnaQDqb12QlUSIdmsx392K9vGSIMocMbtiaUdBtoGMT5BS0XfVZE+lgowZYeu65uG6+eslzuarm1awCO/LcwCqFSOz25N7Z9m8U9km76ZoV6G12uwS2o8FTtdi2WP3ai29t6hbFM=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=nf1uTuKA; arc=fail smtp.client-ip=40.93.194.8
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com
-Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=amd.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BC2E7348469
+	for <platform-driver-x86@vger.kernel.org>; Thu, 12 Mar 2026 13:47:34 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=78.46.171.57
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1773323257; cv=none; b=nP4yxipCn+zqJeefUz72b2WDAoQ29SXANRm/1jgBb1DVQX/oZaLU3JrE8hJ0u2gEltQHgYjIJjeYkmyHqK5EUbOlbh9RjFboTi0QAxJetoQY/cMPnw6xefk/WC/dkdKpFOvIIERKwbb91YYOufDQEgDVT7kCH9SHI9BhEM8UGOg=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1773323257; c=relaxed/simple;
+	bh=Lekm6xsn52E73nCIqjI7Jy0hfQqvLE8u36o1sLQyTbs=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=C9/moiiySv296wsoThQ75kPkkG/cBl3DyA8/rhacipvH8rvLpvPJDFoPklURZB8J2dwb8N2zPlBqdKBch/iEeBPOCiePTIxe+op4CdzRXWBl6q77KntOL18YKu02Dbk6lWYFDFgj3bBrDE/4mebJqxT0wyGISbMtzazc37SWFnE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=antheas.dev; spf=pass smtp.mailfrom=antheas.dev; dkim=pass (2048-bit key) header.d=antheas.dev header.i=@antheas.dev header.b=HPZ6jvA8; arc=none smtp.client-ip=78.46.171.57
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=antheas.dev
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=antheas.dev
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="nf1uTuKA"
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=aOKlRSovQx8vKwxKcbZLhdxujMpSjspEFrWZosD/gMqFvI8i0Jf8pUBFKV8LB70/b29n3b1wuKZBku7qvfLvfA8efYYhcthIy3u+TflrI9siHsFCzP3h14Gt6c8zUzkld0Z4OlAI3sxKAgDxH1nZncUM5aNJ7xKGPCAfbbFUsUU1RvMzJVdFrrBpjAaGOHboWsn+SB87OeTefmQ8bxDJGt1yMPUFGaJRKLAyGufG6+jrCmHEHzvy6h/rDBbwZwIsFfsOoKbmDG20Mb6Myet2pz1Kzl6S0XbN85cbBzhZALXrEJbcGZ2vd58IeSXPXMpwnjrAeG8VaEMoI7MiBpld0A==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=ZeWsOCVG3YrSav9qruv+63Ro9j9cCDLta4Ej87Qdymw=;
- b=GX2+C4VExJlDXwCUylv2FHrcHfp3uhlhBjkBqra0en0KIGCMLAhpkUruclCybRKxr7a7R/ow3dUPKhXolUh8AMjQ3zlymJqdkEalin/0sdUW5YhdVL/CbGWJjRnFt9RbMx9JmL0ZlE+UTAD2CHlQb+xIXlChXxCNi1lqk8sgAk1j9anTT6LKylzXHufzbxOj+cCGfxzriGCTgo60CYQ2KjX0ujmurpTRor2xJl1qysYt5ePaKy/jQNshIJZFrfZ27bp6LLf2Xy5Zq4TNreMyqKWSl97ESOgCEOd2g757e1HSUi5r28i0cGtAvhGKDmVa6VO/He/WY4YLKEWH/Oa47w==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=amd.com; dmarc=pass action=none header.from=amd.com; dkim=pass
- header.d=amd.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=ZeWsOCVG3YrSav9qruv+63Ro9j9cCDLta4Ej87Qdymw=;
- b=nf1uTuKAm5bdiz9RiGsFnOWTjV3totjJ81txN5zQdW03gGuKHJpY+kyRyD1dQlw27NPO4gFG6XP8H+lEulhHHPMsQ7W3HaVRcEGmS2XLPKWTHKA3bmdL4DTAuLTjioWBRUcSA0CQTpzp4A2/rmR8j2Jv/bsbWWOTWSh/HhzsO10=
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=amd.com;
-Received: from SA0PR12MB4557.namprd12.prod.outlook.com (2603:10b6:806:9d::10)
- by DS2PR12MB9568.namprd12.prod.outlook.com (2603:10b6:8:27c::20) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.9723.6; Thu, 12 Mar
- 2026 13:26:37 +0000
-Received: from SA0PR12MB4557.namprd12.prod.outlook.com
- ([fe80::885a:79b3:8288:287]) by SA0PR12MB4557.namprd12.prod.outlook.com
- ([fe80::885a:79b3:8288:287%5]) with mapi id 15.20.9723.000; Thu, 12 Mar 2026
- 13:26:37 +0000
-Message-ID: <a3c34018-78fb-4652-b31e-3870a51ee35e@amd.com>
-Date: Thu, 12 Mar 2026 08:26:36 -0500
-User-Agent: Mozilla Thunderbird
-Subject: Re: [RFC v4 4/4] platform/x86/amd: dptc: Add device entries for
- handheld PCs
-To: Antheas Kapenekakis <lkml@antheas.dev>
-Cc: W_Armin@gmx.de, sashal@kernel.org, Shyam-Sundar.S-k@amd.com,
- derekjohn.clark@gmail.com, denis.benato@linux.dev, i@rong.moe,
- linux-kernel@vger.kernel.org, platform-driver-x86@vger.kernel.org
-References: <20260309205125.293148-1-lkml@antheas.dev>
- <20260309205125.293148-5-lkml@antheas.dev>
- <d5c2a4e0-1263-42ac-a64a-c6218e91bc09@amd.com>
- <CAGwozwFpgGV96YjaZbVfBosBL8TqXTtYJ=Av5tHSi24zV_-SMw@mail.gmail.com>
- <6545b671-6e51-4899-af28-354e7e423056@amd.com>
- <CAGwozwF2ZxN5UF-rLP0zwyqO81P6UxY=TQ2XRby8hRdxoSRpYg@mail.gmail.com>
-Content-Language: en-US
-From: Mario Limonciello <mario.limonciello@amd.com>
-In-Reply-To: <CAGwozwF2ZxN5UF-rLP0zwyqO81P6UxY=TQ2XRby8hRdxoSRpYg@mail.gmail.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: SN7PR04CA0213.namprd04.prod.outlook.com
- (2603:10b6:806:127::8) To SA0PR12MB4557.namprd12.prod.outlook.com
- (2603:10b6:806:9d::10)
+	dkim=pass (2048-bit key) header.d=antheas.dev header.i=@antheas.dev header.b="HPZ6jvA8"
+Received: from relay11 (localhost.localdomain [127.0.0.1])
+	by relay11.grserver.gr (Proxmox) with ESMTP id 1AD3CC8210
+	for <platform-driver-x86@vger.kernel.org>; Thu, 12 Mar 2026 15:47:27 +0200 (EET)
+Received: from linux3247.grserver.gr (linux3247.grserver.gr [213.158.90.240])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by relay11.grserver.gr (Proxmox) with ESMTPS id CC450C7C80
+	for <platform-driver-x86@vger.kernel.org>; Thu, 12 Mar 2026 15:47:24 +0200 (EET)
+Received: from mail-pl1-f177.google.com (mail-pl1-f177.google.com [209.85.214.177])
+	by linux3247.grserver.gr (Postfix) with ESMTPSA id A28BE201F07
+	for <platform-driver-x86@vger.kernel.org>; Thu, 12 Mar 2026 15:47:23 +0200 (EET)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=antheas.dev;
+	s=default; t=1773323244;
+	bh=PoQMW/233yoNanpicqlJ/8egnz1tI6ujKgIcfnahCrQ=;
+	h=Received:From:Subject:To;
+	b=HPZ6jvA8XvZG9ERl6PVHlHyXT5c/CzTucyuZItYPCQ9r1YmGrBmZpUej9fVNpmY5/
+	 ayTl07ILBj8N/csJH9G4nUhNa+klTashmC7GVAyCK8LdQp6wW5svlbSbY1d1YVqcza
+	 KjUMRWoNab8+cpxJO8ED3SNPZvg/ICMN3HM8Cf+HE4l87rVGPOIRYxgbjX2Yun08J+
+	 euAFV0HLoAN49eFyaS8y8iyr+RZm9ENv5tsn4kA1/GuPdwNDLJtNQOJbaBQlHMpqM9
+	 oObPbdQ0lCErLTME1hr+YwuWzdMvZ0jYUeHCujTYbGfDV3snqtampQZ7Z/v0BtZdPu
+	 VMNNqMmerqsLQ==
+Authentication-Results: linux3247.grserver.gr;
+        spf=pass (sender IP is 209.85.214.177) smtp.mailfrom=lkml@antheas.dev smtp.helo=mail-pl1-f177.google.com
+Received-SPF: pass (linux3247.grserver.gr: connection is authenticated)
+Received: by mail-pl1-f177.google.com with SMTP id
+ d9443c01a7336-2ad617d5b80so8226085ad.1
+        for <platform-driver-x86@vger.kernel.org>;
+ Thu, 12 Mar 2026 06:47:23 -0700 (PDT)
+X-Forwarded-Encrypted: i=1;
+ AJvYcCVnY1DR829of8jsUTMDfcDQKw1Kp0IgC3F0Az0UgDZgYAEYAVRPVL6xqKvzBMvffbwYJnk0QjZ2vPTjRafPoXqqOkS8@vger.kernel.org
+X-Gm-Message-State: AOJu0YwENeKtMdb0gfLoZJH1mlVxu8VtCLH1i3o2BevNF+LuUohbYSeP
+	KFOXVrE802qEuwTpDOAYZumGgIvTOiyfmQNH9dFXGK8yuAFBydPP/FObUTdtK3DMsVcqOp0rqdz
+	P0q84uWnw15KiTd00icOjhNMBSLU1HsI=
+X-Received: by 2002:a17:903:8c4:b0:2ae:4dce:7e92 with SMTP id
+ d9443c01a7336-2aeae7cb944mr66301915ad.14.1773323242113; Thu, 12 Mar 2026
+ 06:47:22 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: SA0PR12MB4557:EE_|DS2PR12MB9568:EE_
-X-MS-Office365-Filtering-Correlation-Id: d025dcfb-2813-4c34-954a-08de803afcfc
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam:
-	BCL:0;ARA:13230040|376014|366016|1800799024|18002099003|22082099003|56012099003;
-X-Microsoft-Antispam-Message-Info:
-	lauWCsP7dbKu9tytADgzfS7Z/TFgzk0i6VgEBrqF1/i6RW04RTploa7ROGjfxMw8Vm0GMzk/Wycgq4xO0Oo8GMUp25asJ/z4MGsPLQFJySyVQsUEbOT3/q1aB9Ns33AVveYgsIGW+y3PMSHY4eEN4JiDH+x6xMNhGirPmuO71FKcP536ctrfFI/WUnPXZmN+6rCoR+JcfVM9cnP/UTugwThjvkOmnX8uys2gh1EzXhDUsWbQOeg/OO9MLPDlFwHK0TLXB1EWEzTIYifpiGmjiETkQmwN3hL1o1y3lDnew0M5p/N/aL7gPxtKaJjeJI6S91wcoKbZ8iai1ee56EQao6+9rhOQoJ0viK8GVkWR8BSBzHnO6m8MYE9N7h5V+4zdcEeMty8GI4HG7SeVU3NgkKXTko4cbtvsFtqQDNgz90g83fKYW01KQ0Paa207e2+8smS9J3vigkYPqsMgXOVSRfSH47nsTjXxUSqV61DGfB7684djPDeVc/Rcp3X230s4PRoqj+L42v7UfAqTzbracJBvfssv0OxJGfKQ6aqw/XAfzq+9hS6u6NOPuCZgHFgxiBxvrA33U5uRtSMRD4aja24DC3MrmxvJHRfbWyv4qvLDUr95Wdt+YD00NhtlcMMn041tSk5Xl8WpZMch5BV30CTYLpxK3xA2+BUaLNBUzDQ/13vKAV+gY0MOOcBeSmw2IqQSz0FTV4IH6LqHTmMT2J0CpUFTxt8RzlHPU9MRXDk=
-X-Forefront-Antispam-Report:
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:SA0PR12MB4557.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(376014)(366016)(1800799024)(18002099003)(22082099003)(56012099003);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0:
-	=?utf-8?B?UnVWRDhQbWNYWU9mdnkzdmNEN3RaTnZpcXVYZ253UW1sVnFhRHVZZG1nWmRT?=
- =?utf-8?B?UjlwWHJYUHlzTW52MDI2NXBsTlRlcUQvUkxsSTRaQTZXa0tvT0VObDFhZXhK?=
- =?utf-8?B?K2NyM01yK0lYbnUvSHVwckFhWVRMc3N6enVyTjVLcXIrN1RvdmJjTm00Wmpq?=
- =?utf-8?B?aEJNQ0s5ZzNCdnppTUhmQ2VBVmVIMlpjOGpFeFgrN2FtdDZnaU82WlRXVDZL?=
- =?utf-8?B?ZFBMSWJPaEFRajIzeGQ2YzVydXI3RG95cjlUTW5sZEhQZG5VbDZGZmNqcnBF?=
- =?utf-8?B?bzJzT3ZvWTlYSWNiMGh4bFZnQStYS2FNTXZWeHNZZFlNMGdmbzBNK2wyVnhM?=
- =?utf-8?B?QUNRTjRrczVyYW5Mb2N2ODNwMTFtVkZnUUpBTm1iY0xNR2dLSDR0NXFGRkZH?=
- =?utf-8?B?MmNZL1BDcnI5UG5yQlcvakJ5T3JVWThqWEFqaDlTalR0NHVGRXBKNFlzcFEw?=
- =?utf-8?B?SUNoOXRIT2FuOHVnSWZFamppbVdhYnhmaC9PSHI2bVFmbXlmUzR1NUFxK2N1?=
- =?utf-8?B?YnpWMjlrK25DQjZLM2QrZ0VkdGtHNVNudy9iZzdLVU4ydTFTQ1ZMNm5IV0Rw?=
- =?utf-8?B?em14aTRpVXkxQlVwS1lzYmhEZVJuN1l5eXM4Skx6dmNJM0ZUZjc5ZCtlMnl0?=
- =?utf-8?B?eDVIcjRNUFNNaENrcnlxU3VzYlY1SEUxTHUxVXROSi9taGJGNUFkanRwZ08r?=
- =?utf-8?B?S2JJckdzaUwxTzZjUklNVlB1d0NVVjluc0VKZGNDZnRpOTdEQUw0OUJNYVM4?=
- =?utf-8?B?ZnNFN0FSR2ZmeDZrbStJSnFhWVlhT0xHaUJXK0pjMG9CYnpTMlk0eUNWOHdZ?=
- =?utf-8?B?bDZZR1VLSUZZQWVMeGl1NVJleVZaSWZRWnREOFk1SklOYTRzMnkyVlpIVkJu?=
- =?utf-8?B?UjI2N1ZKK3M3MmlwNjFLS2RiaEs1ZmhjMGlFUEhrZHJaYlVUclZVSExoRkpH?=
- =?utf-8?B?YlM1TnVnZnJpSDJ0TVc5QmNMbjMySWdEcUFwREg1L3ZXRis4b24yYzhoNzdJ?=
- =?utf-8?B?RG45eWVSUGJzWHpQOThLU0g3N1ptWVNZREU2eFlNeWJ2WTRpL0Ixb1JUUW5V?=
- =?utf-8?B?ZFB1ZEMwSjBKbHFyNkc2KzVNZmc2TmhEOWtVZWN5bTdiaFlvSEdIWWlQYVQz?=
- =?utf-8?B?K2lIQkxJVmdDTHN1YktQSnJCMksrODVHZUI2NnFyMlE0VW1lNWgrbUpEclZT?=
- =?utf-8?B?UVZNeUZjUUJYUEdESVF4aVVzOW54bkNvdTVrdFczZ0VMYzJkcFV1Zit4b1d6?=
- =?utf-8?B?T1RkbnBpTDJOZHRxb3J0aGNxS0FyNGtCYWc1ZjJkeFM0UzFyT29DMUs0akh0?=
- =?utf-8?B?amkxa2Z6TFozR2F5WWZZZDhEY0tVN09QcEpuVUxPRjlua1hsSkZYdUs4MXFp?=
- =?utf-8?B?dWtGbmxwbDlTNFUxZ0RSS2t4M1AzRTZZSGZXMlBRMlBVU2txU3hqUWRRSnF2?=
- =?utf-8?B?MjYwellTYkFOb1NnTE93L1BpLzlkRjI1eHVOYzVuNHlub0NlM2Rxa25NUGR1?=
- =?utf-8?B?OVVLQkREblgzNkMweTFINDZ0VnpELzdSWjAzOGZUemc1VVZHNno5L1JLRXk4?=
- =?utf-8?B?eWtFUGRSVUU0K1U4NHcrcjY3bHFvODBuaG5MYk1qNGhwa1ZOeDdZdjVGOTlP?=
- =?utf-8?B?bG5DaGd3L3MxdzNSSll1OGxtZmlsQVBRQm0zZlltWnZCZk4zbjhRK0lQdjMr?=
- =?utf-8?B?QjN1OWI2MnpIblRGSUxud2NRdUxLWDJwRGNzZFl1WHNKT28ybzIxdEVrbXpy?=
- =?utf-8?B?UHRjbEsweExJQUNxRmFTOS9jT2hQRk1zYUhzcStVM2E0S3NyNzRNYmx5L0ZJ?=
- =?utf-8?B?UlZZbFFIYitrdjlienRiMitieS9BbDlHZ1hXTTdCL3hCZzROYktBUjlOWEhJ?=
- =?utf-8?B?NVNMSXdjWWxrUWVYOEdmcENzT0dlQ2hpYXpnbkYzSElpeU5DWTBLMzZOU25h?=
- =?utf-8?B?b3dXRnRPeERuSC9SdVlPQ2diWWgxTXpXa0dGenVRNG9DRE9tamVKbzVHOTFs?=
- =?utf-8?B?SlhjRlowbEVXMDkxNWRNTTVCNHFGYWJ2YVR1QWxhdkFwR3dPazFsclZsSkw4?=
- =?utf-8?B?Y1dNVHkyVVVHY1dBcWgwQ21TMGdhUEtQNUllenRUblU5Q1NIV0ZwUXBJWHhD?=
- =?utf-8?B?VEZwVjVObkRReVlIVXNrZzVORE5yQUp2Mno2bG5Ga2RKK1phbVJzNnBDTDkr?=
- =?utf-8?B?dUFTZGorQzAzSGNXZUZuTzFBRU1NcWsxQ0FUWjczbUhaQjZCcTBiaUtkNDJO?=
- =?utf-8?B?SFN0bkM4OWhKVHVCVEFlM2NqanZhQitpdG9hbmpkbnFyNDJiL0RHd0JYVkpW?=
- =?utf-8?B?aXp1ODZ5czdNdjhJazJyS0tqNXl1OUhDTTZJMFJxN1B0MzFtMWNiQT09?=
-X-OriginatorOrg: amd.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: d025dcfb-2813-4c34-954a-08de803afcfc
-X-MS-Exchange-CrossTenant-AuthSource: SA0PR12MB4557.namprd12.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 12 Mar 2026 13:26:37.5290
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: 0D8WSb8ClCPzeVDe8kq2S+9M700BeyYXCD2qPJCoDrPDo224yGrKLkVP1SB3+jL9psWiMwR+oSsEsWfS25GMXg==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DS2PR12MB9568
+References: <20260309205125.293148-1-lkml@antheas.dev>
+ <20260309205125.293148-3-lkml@antheas.dev>
+ <23ee46ed-6978-40a0-9447-e7f527ec7c11@amd.com>
+ <CAGwozwFn0nUHWrF6nmba1N9-jbDx7ZpLRe8GcYJAZsQ1MO0y1w@mail.gmail.com>
+ <9a9e441c-850a-44fb-b659-f4bc135beabe@amd.com>
+ <CAGwozwE9yn0fQxUPxZa70CyTajjvyWZjRDfWRs15fa_Xtf0sGg@mail.gmail.com>
+ <8bdccd48-556e-4b9f-8f90-dfb1ec761073@amd.com>
+In-Reply-To: <8bdccd48-556e-4b9f-8f90-dfb1ec761073@amd.com>
+From: Antheas Kapenekakis <lkml@antheas.dev>
+Date: Thu, 12 Mar 2026 14:47:09 +0100
+X-Gmail-Original-Message-ID: 
+ <CAGwozwGUPuY9_wH6Bi+eSVm2o=F4Vgdv+URo9aTQ366vwptBOQ@mail.gmail.com>
+X-Gm-Features: AaiRm51XGToB8iCKpG_kOzAQSPv2LkNFp8u__nSt2OV4BBoyL93g_6KYBlLBXN8
+Message-ID: 
+ <CAGwozwGUPuY9_wH6Bi+eSVm2o=F4Vgdv+URo9aTQ366vwptBOQ@mail.gmail.com>
+Subject: Re: [RFC v4 2/4] platform/x86/amd: dptc: Add AMD DPTCi driver
+To: Mario Limonciello <mario.limonciello@amd.com>
+Cc: W_Armin@gmx.de, sashal@kernel.org, Shyam-Sundar.S-k@amd.com,
+	derekjohn.clark@gmail.com, denis.benato@linux.dev, i@rong.moe,
+	linux-kernel@vger.kernel.org, platform-driver-x86@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+X-PPP-Message-ID: 
+ <177332324432.5894.13880775368548104193@linux3247.grserver.gr>
+X-PPP-Vhost: antheas.dev
+X-Virus-Scanned: clamav-milter 1.4.3 at linux3247.grserver.gr
+X-Virus-Status: Clean
 
+On Thu, 12 Mar 2026 at 14:25, Mario Limonciello
+<mario.limonciello@amd.com> wrote:
+>
+>
+>
+> On 3/11/26 14:09, Antheas Kapenekakis wrote:
+> > On Tue, 10 Mar 2026 at 17:26, Mario Limonciello
+> > <mario.limonciello@amd.com> wrote:
+> >>
+> >> On 3/10/26 3:02 AM, Antheas Kapenekakis wrote:
+> >>> On Tue, 10 Mar 2026 at 05:01, Mario Limonciello
+> >>> <mario.limonciello@amd.com> wrote:
+> >>>>
+> >>>>
+> >>>>
+> >>>> On 3/9/2026 3:51 PM, Antheas Kapenekakis wrote:
+> >>>>> Add a driver for AMD AGESA ALIB Function 0x0C, the Dynamic Power and
+> >>>>> Thermal Configuration interface (DPTCi). This exposes TDP and thermal
+> >>>>> parameters for AMD APU-based handheld devices via the
+> >>>>> firmware-attributes sysfs ABI.
+> >>>>>
+> >>>>> Parameters are staged and atomically committed through ALIB. The driver
+> >>>>> supports two save modes: "single" (apply immediately on write) and
+> >>>>> "bulk" (stage values, then commit with "save"). An "expanded_limits"
+> >>>>> toggle widens the allowed parameter ranges beyond device defaults.
+> >>>>>
+> >>>>> Initial device support: GPD Win 5 (AMD Ryzen AI MAX).
+> >>>>>
+> >>>>> Assisted-by: Claude:claude-opus-4-6
+> >>>>> Signed-off-by: Antheas Kapenekakis <lkml@antheas.dev>
+> >>>>> ---
+> >>>>>     MAINTAINERS                       |   6 +
+> >>>>>     drivers/platform/x86/amd/Kconfig  |  14 +
+> >>>>>     drivers/platform/x86/amd/Makefile |   2 +
+> >>>>>     drivers/platform/x86/amd/dptc.c   | 746 ++++++++++++++++++++++++++++++
+> >>>>>     4 files changed, 768 insertions(+)
+> >>>>>     create mode 100644 drivers/platform/x86/amd/dptc.c
+> >>>>>
+> >>>>> diff --git a/MAINTAINERS b/MAINTAINERS
+> >>>>> index 89007f9ed35e..ebda8e82bf35 100644
+> >>>>> --- a/MAINTAINERS
+> >>>>> +++ b/MAINTAINERS
+> >>>>> @@ -1103,6 +1103,12 @@ S:     Supported
+> >>>>>     F:  drivers/gpu/drm/amd/display/dc/dml/
+> >>>>>     F:  drivers/gpu/drm/amd/display/dc/dml2_0/
+> >>>>>
+> >>>>> +AMD DPTC DRIVER
+> >>>>> +M:   Antheas Kapenekakis <lkml@antheas.dev>
+> >>>>> +L:   platform-driver-x86@vger.kernel.org
+> >>>>> +S:   Maintained
+> >>>>> +F:   drivers/platform/x86/amd/dptc.c
+> >>>>> +
+> >>>>>     AMD FAM15H PROCESSOR POWER MONITORING DRIVER
+> >>>>>     M:  Huang Rui <ray.huang@amd.com>
+> >>>>>     L:  linux-hwmon@vger.kernel.org
+> >>>>> diff --git a/drivers/platform/x86/amd/Kconfig b/drivers/platform/x86/amd/Kconfig
+> >>>>> index b813f9265368..d610092467fc 100644
+> >>>>> --- a/drivers/platform/x86/amd/Kconfig
+> >>>>> +++ b/drivers/platform/x86/amd/Kconfig
+> >>>>> @@ -44,3 +44,17 @@ config AMD_ISP_PLATFORM
+> >>>>>
+> >>>>>           This driver can also be built as a module. If so, the module
+> >>>>>           will be called amd_isp4.
+> >>>>> +
+> >>>>> +config AMD_DPTC
+> >>>>> +     tristate "AMD Dynamic Power and Thermal Configuration Interface (DPTCi)"
+> >>>>> +     depends on X86_64 && ACPI && DMI
+> >>>>> +     select FIRMWARE_ATTRIBUTES_CLASS
+> >>>>> +     help
+> >>>>> +       Driver for AMD AGESA ALIB Function 0x0C, the Dynamic Power and
+> >>>>> +       Thermal Configuration Interface (DPTCi). Exposes TDP and thermal
+> >>>>> +       parameters for AMD APU-based handheld devices via the
+> >>>>> +       firmware-attributes sysfs ABI, allowing userspace tools to stage
+> >>>>> +       and atomically commit power limit settings. Requires a DMI match
+> >>>>> +       for the device and a recognized AMD SoC.
+> >>>>> +
+> >>>>> +       If built as a module, the module will be called amd_dptc.
+> >>>>> diff --git a/drivers/platform/x86/amd/Makefile b/drivers/platform/x86/amd/Makefile
+> >>>>> index f6ff0c837f34..862a609bfe38 100644
+> >>>>> --- a/drivers/platform/x86/amd/Makefile
+> >>>>> +++ b/drivers/platform/x86/amd/Makefile
+> >>>>> @@ -12,3 +12,5 @@ obj-$(CONFIG_AMD_PMF)               += pmf/
+> >>>>>     obj-$(CONFIG_AMD_WBRF)              += wbrf.o
+> >>>>>     obj-$(CONFIG_AMD_ISP_PLATFORM)      += amd_isp4.o
+> >>>>>     obj-$(CONFIG_AMD_HFI)               += hfi/
+> >>>>> +obj-$(CONFIG_AMD_DPTC)               += amd_dptc.o
+> >>>>> +amd_dptc-y                   := dptc.o
+> >>>>> diff --git a/drivers/platform/x86/amd/dptc.c b/drivers/platform/x86/amd/dptc.c
+> >>>>> new file mode 100644
+> >>>>> index 000000000000..b884cdfa3f82
+> >>>>> --- /dev/null
+> >>>>> +++ b/drivers/platform/x86/amd/dptc.c
+> >>>>> @@ -0,0 +1,746 @@
+> >>>>> +// SPDX-License-Identifier: GPL-2.0-only
+> >>>>> +/*
+> >>>>> + * AMD Dynamic Power and Thermal Configuration Interface (DPTCi) driver
+> >>>>> + *
+> >>>>> + * Exposes AMD APU power and thermal parameters via the firmware-attributes
+> >>>>> + * sysfs ABI. Parameters are staged and atomically committed through the
+> >>>>> + * AGESA ALIB Function 0x0C (Dynamic Power and Thermal Configuration
+> >>>>> + * interface).
+> >>>>> + *
+> >>>>> + * Reference: AMD AGESA Publication #44065, Appendix E.5
+> >>>>> + *            https://docs.amd.com/v/u/en-US/44065_Arch2008
+> >>>>> + *
+> >>>>> + * Copyright (C) 2026 Antheas Kapenekakis <lkml@antheas.dev>
+> >>>>> + */
+> >>>>> +
+> >>>>> +#define pr_fmt(fmt) KBUILD_MODNAME ": " fmt
+> >>>>> +
+> >>>>> +#include <linux/acpi.h>
+> >>>>> +#include <linux/cleanup.h>
+> >>>>> +#include <linux/dmi.h>
+> >>>>> +#include <linux/init.h>
+> >>>>> +#include <linux/kobject.h>
+> >>>>> +#include <linux/module.h>
+> >>>>> +#include <linux/mutex.h>
+> >>>>> +#include <linux/platform_device.h>
+> >>>>> +#include <linux/processor.h>
+> >>>>> +#include <linux/sysfs.h>
+> >>>>> +#include <linux/unaligned.h>
+> >>>>> +
+> >>>>> +#include "../firmware_attributes_class.h"
+> >>>>> +
+> >>>>> +#define DRIVER_NAME          "amd-dptc"
+> >>>>> +
+> >>>>> +#define ALIB_FUNC_DPTC               0x0C
+> >>>>> +#define ALIB_PATH            "\\_SB.ALIB"
+> >>>>> +
+> >>>>> +#define ALIB_ID_TEMP_TARGET  0x03
+> >>>>> +#define ALIB_ID_STAPM_LIMIT  0x05
+> >>>>> +#define ALIB_ID_FAST_LIMIT   0x06
+> >>>>> +#define ALIB_ID_SLOW_LIMIT   0x07
+> >>>>> +#define ALIB_ID_SKIN_LIMIT   0x2E
+> >>>>> +
+> >>>>> +enum dptc_param_idx {
+> >>>>> +     DPTC_PPT_PL1_SPL,       /* STAPM + skin limit (set together) */
+> >>>>> +     DPTC_PPT_PL2_SPPT,      /* slow PPT limit */
+> >>>>> +     DPTC_PPT_PL3_FPPT,      /* fast PPT limit */
+> >>>>> +     DPTC_CPU_TEMP,          /* thermal control target */
+> >>>>> +     DPTC_NUM_PARAMS,
+> >>>>> +};
+> >>>>> +
+> >>>>> +struct dptc_param_limits {
+> >>>>> +     u32 expanded_min;
+> >>>>> +     u32 device_min;
+> >>>>> +     u32 def;
+> >>>>> +     u32 device_max;
+> >>>>> +     u32 expanded_max;
+> >>>>> +};
+> >>>>> +
+> >>>>> +struct dptc_device_limits {
+> >>>>> +     struct dptc_param_limits params[DPTC_NUM_PARAMS];
+> >>>>> +};
+> >>>>> +
+> >>>>> +struct dptc_param_desc {
+> >>>>> +     const char *name;
+> >>>>> +     const char *display_name;
+> >>>>> +     u16 scale;      /* sysfs-to-ALIB multiplier (e.g. 1000 for W->mW) */
+> >>>>> +     u8 param_id;
+> >>>>> +     u8 param_id2;   /* secondary ALIB ID, 0 if none */
+> >>>>> +};
+> >>>>> +
+> >>>>> +static const struct dptc_param_desc dptc_params[DPTC_NUM_PARAMS] = {
+> >>>>> +     [DPTC_PPT_PL1_SPL]  = { "ppt_pl1_spl", "Sustained power limit (W)",
+> >>>>> +                              1000, ALIB_ID_STAPM_LIMIT,
+> >>>>> +                              ALIB_ID_SKIN_LIMIT },
+> >>>>> +     [DPTC_PPT_PL2_SPPT] = { "ppt_pl2_sppt", "Slow PPT limit (W)",
+> >>>>> +                              1000, ALIB_ID_SLOW_LIMIT },
+> >>>>> +     [DPTC_PPT_PL3_FPPT] = { "ppt_pl3_fppt", "Fast PPT limit (W)",
+> >>>>> +                              1000, ALIB_ID_FAST_LIMIT },
+> >>>>> +     [DPTC_CPU_TEMP]     = { "cpu_temp", "Thermal control limit (C)",
+> >>>>> +                              1, ALIB_ID_TEMP_TARGET },
+> >>>>> +};
+> >>>>> +
+> >>>>> +/* AI MAX Handheld class: GPD Win 5 */
+> >>>>> +static const struct dptc_device_limits limits_maxhh = {
+> >>>>> +     .params = {
+> >>>>> +             [DPTC_PPT_PL1_SPL]  = {  1,  4, 25,  80, 100 },
+> >>>>> +             [DPTC_PPT_PL2_SPPT] = {  1,  4, 27,  82, 100 },
+> >>>>> +             [DPTC_PPT_PL3_FPPT] = {  1,  4, 40,  85, 100 },
+> >>>>> +             [DPTC_CPU_TEMP]     = { 60, 70, 95,  95, 100 },
+> >>>>> +     },
+> >>>>> +};
+> >>>>> +
+> >>>>> +/* Substring matches against boot_cpu_data.x86_model_id; order matters. */
+> >>>>> +static const char * const dptc_soc_table[] = {
+> >>>>> +     /* AI MAX */
+> >>>>> +     "AMD RYZEN AI MAX+ 395",
+> >>>>> +     "AMD RYZEN AI MAX+ 385",
+> >>>>> +     "AMD RYZEN AI MAX 380",
+> >>>>> +     NULL,
+> >>>>> +};
+> >>>>
+> >>>> I feel like I commented this before; but I don't really understand the
+> >>>> purpose of this table.
+> >>>>
+> >>>> If you have a system that is quirked already, why would you need to
+> >>>> cross reference this table?
+> >>>
+> >>> Yes, and I addressed it on a reply.
+> >>>
+> >>> It is an additional safety feature. A lot of these devices ship
+> >>> different SoC SKUs with the same DMI. Most of them actually. But it is
+> >>> not needed beyond that, it can be removed. I will defer to you.
+> >>>
+> >>
+> >> Exact same SMBIOS?  There are a lot of fields that can be keyed off.
+> >> Can you share a dmidecode from two such systems?
+> >
+> > Ah, it's difficult to verify currently, I don't have two spares and
+> > varies per manufacturer.
+> >
+> > What I can say for now is that it varies per manufactuer. E.g., GPD
+> > only updates their DMI data only for major revisions. For example, all
+> > GPD Win 4s, 3 years of device generations, have the same DMI (6800/
+> > 7840/ 8840u, hx 370). Same for the Win Minis, but for the 2025
+> > generation GPD switched the ODM for the controller motherboard and I
+> > assume more, so that one. However, the thermal differences are minimal
+> > so its appropriate to use the same values for all. All chips can
+> > handle more, the chassis is the limitation. Onexplayer typically
+> > changes DMI per generation, but within the same generation they can
+> > release multiple chip variants. It is unclear to me if they use the
+> > same BIOS capsule. Ayaneo is also very similar. All Ayaneo 3s are
+> > named Ayaneo 3. I have an 8840u but that device also came out with an
+> > HX 370.
+> >
+> > Antheas
+>
+> I worry about making assumptions that a chassis thermal design will be
+> the same from one device generation to the next.  Keying off SMBIOS data
+> that is generic each year will lead to innacuracies.  Again - a reason
+> why it's better to store the actual data for the platform in the BIOS or
+> EC for the PMF driver to use (notice the theme of my broken record).
 
+I do agree with manufacturers providing tunings in BIOS when possible.
+These devices are already released so it is not possible. Here I will
+also note the need for a slider for a majority of users, perhaps
+around 40%. I would not call that optional. So pmf will need some work
+to accommodate, and the faster that happens the less devices will need
+to be added to this driver.
 
-On 3/11/26 14:13, Antheas Kapenekakis wrote:
-> On Tue, 10 Mar 2026 at 17:35, Mario Limonciello
-> <mario.limonciello@amd.com> wrote:
->>
->> On 3/10/26 3:13 AM, Antheas Kapenekakis wrote:
->>> On Tue, 10 Mar 2026 at 05:11, Mario Limonciello
->>> <mario.limonciello@amd.com> wrote:
->>>>
->>>>
->>>>
->>>> On 3/9/2026 3:51 PM, Antheas Kapenekakis wrote:
->>>>> Add limit tables and DMI entries for AMD APU-based handheld devices:
->>>>>
->>>>>     - 15W class: AYANEO AIR
->>>>>     - 18W class: AYANEO AIR Plus/Pro
->>>>>     - 25W class: AYANEO AIR 1S, NEXT/KUN
->>>>>     - 28W class: GPD Win Mini/4/Max 2, GPD Duo, GPD Pocket 4, AYANEO 2,
->>>>>                   OrangePi NEO-01, SuiPlay0X1
->>>>>     - 30W class: AYANEO FLIP/GEEK/SLIDE/3, AOKZOE A1/A1X/A2,
->>>>>                   OneXPlayer F1Pro/2/X1/G1, AYN Loki Max, Zeenix Pro
->>>>>
->>>>> Also add SoC strings for Ryzen AI, Ryzen 8000/7040/6000/5000
->>>>> families, extending support beyond the initial AI MAX series.
->>>>
->>>> There are a lot of numbers here.  Where did they all come from?  What
->>>> are guesses?  What came from RE?  What came from documentation?
->>>> How do you know these are good for the thermal design of the platform?
->>>>
->>>> I appreciate some of them could be cargo culted from another codebase,
->>>> but I think it would be a good idea to document which ones are more
->>>> likely to be accurate and why.
->>>
->>> Ok, here is the logic behind the limits.
->>>
->>> 15/18/25 are manufacturer claims by Ayaneo. Ayaneo is the only
->>> manufacturer that made devices prior to the new ones that support 30W
->>> limits.
->>>
->>> 28W is used for GPD because their devices are very portable and 30W
->>> makes e.g. the bottom pan of Win Minis too hot. It is also used for
->>> the Ayaneo 2/Sui/OPI, because these devices have a fullwidth glass
->>> front that is used for heat dissipation. So the screen gets very hot.
->>>
->>> The rest of the devices use 30W.
->>>
->>> As for which software each OEM has. GPD: GPD does not ship first party
->>> software for TDP controls. They collaborate with an independent
->>> developer developing "Motion Assistant", which they also ship with
->>> their devices and features a TDP slider. Ayaneo uses Ayaspace, which
->>> is backed by Ryzenadj, and they give slider control to users,
->>> typically with a 30W limit. They also use userspace customizable
->>> presets for some default e.g. 20W profiles. Onexplayer has oxpconsole
->>> with a slider as well that does 30W usually. Ayn exited the market on
->>> WIndows handhelds, no software. OPI, you'd need to ask Phil but this
->>> would be the primary driver for it. There is no alternative that can
->>> also go to SteamOS.
->>>
->>> The reasoning behind the profiles is simple. 8W is power savings
->>> territory. Going below can yield around 1W more, but the performance
->>> degradation is not worth it. 15W is a good sweetspot for 30W
->>> processors. Then, 25W is good for these devices as they saturate above
->>> 22ish Watts. We could even go lower to 20W, as Lenovo did on the
->>> original Go. But their newer devices use higher AC values.
->>>
->>> For their boost clocks, sPPT is set to around 2W higher than spl (what
->>> is it called now?) to give a small boost. fPPT is set to a reasonable
->>> amount for that device class and interpolated vs spl. The exception is
->>> low-power where we do not want boost
->>>
->>> Antheas
->>
->> OK, each and every one of these cases needs to be documented.
->>
->> I suggest that they each go in their own patches, and then if there is
->> any disagreement it's a single patch to revert or drop from the rest of
->> the series.
-> 
-> Ok, so here is what I suggest going forward.
-> 
-> We keep the last patch while this is an RFC and annotate it as planned
-> to be dropped so the series can still be tested. Then, once we exit
-> RFC we merge initially for Win 5 to reduce email bloat. After merge, I
-> go through the DMIs and group them by device type, adding information
-> about the devices on the commit message. Then, these go to for-fixes
-> with a cc stable.
-> 
-> While doing that, I will drop all non EXACT matches. Specifically, the
-> Ayaneo 1S had a few variants with different DMIs (1S Limited being one
-> of them if I recall).
-> 
-> This will allow us to drop the CPU match with high certainty. I will
-> replace it with just an is AMD check with no logs or perhaps a debug
-> log, to avoid polluting Intel variant's dmesg if any.
+> If it does come down to the fact that SMBIOS data is totally identical
+> year to year this would be spectacularly surprising to me.  I had
+> thought *Microsoft* requires the ProductSku field to change.
+>
+> So please; do not make assumptions based on a lack of hard data.
+> If you don't have data for multiple years of a system or multiple chips
+> in the system, leave it off your quirk list.  They can always be added
+> later when the data is available.
 
-I suggest using X86_FEATURE_ZEN if you need a check to prove it's AMD.
+Specifically for GPD, the userspace implementation has been tested on
+all generations. It is fine to choose a (lower) limit that works on
+all of them. The thermals did not change between generations.
+Saturation above 20W means that there is little difference between
+22W, 25W, 28W, 30W, etc. If there is doubt, going lower is fine. Even
+if one device can do 5W more it does not matter (but the chassis,
+battery, and cooler are exactly the same; only the board was revised
+for the new SoC).
 
-> 
-> Best,
-> Antheas
-> 
->>>
->>>>>
->>>>> Assisted-by: Claude:claude-opus-4-6
->>>>> Signed-off-by: Antheas Kapenekakis <lkml@antheas.dev>
->>>>> ---
->>>>>     drivers/platform/x86/amd/dptc.c | 420 ++++++++++++++++++++++++++++++++
->>>>>     1 file changed, 420 insertions(+)
->>>>>
->>>>> diff --git a/drivers/platform/x86/amd/dptc.c b/drivers/platform/x86/amd/dptc.c
->>>>> index f4db95affb1b..b2820f8652f1 100644
->>>>> --- a/drivers/platform/x86/amd/dptc.c
->>>>> +++ b/drivers/platform/x86/amd/dptc.c
->>>>> @@ -86,6 +86,81 @@ static const struct dptc_param_desc dptc_params[DPTC_NUM_PARAMS] = {
->>>>>                                  1, ALIB_ID_TEMP_TARGET },
->>>>>     };
->>>>>
->>>>> +/* 15W class: AYANEO AIR (Ryzen 5 5560U) */
->>>>> +static const struct dptc_device_limits limits_15w = {
->>>>> +     .params = {
->>>>> +             [DPTC_PPT_PL1_SPL]  = {  1,  5, 10, 15,  18 },
->>>>> +             [DPTC_PPT_PL2_SPPT] = {  1,  5, 10, 15,  18 },
->>>>> +             [DPTC_PPT_PL3_FPPT] = {  1,  5, 12, 18,  22 },
->>>>> +             [DPTC_CPU_TEMP]     = { 60, 70, 85, 90, 100 },
->>>>> +     },
->>>>> +     .profiles = {
->>>>> +             [PLATFORM_PROFILE_LOW_POWER]   = { .vals = {  5,  5,  8, 0 } },
->>>>> +             [PLATFORM_PROFILE_BALANCED]    = { .vals = { 10, 12, 15, 0 } },
->>>>> +             [PLATFORM_PROFILE_PERFORMANCE] = { .vals = { 15, 15, 18, 0 } },
->>>>> +     },
->>>>> +};
->>>>> +
->>>>> +/* 18W class: AYANEO AIR Plus/Pro (Ryzen 5 5560U, Ryzen 7 5825U) */
->>>>> +static const struct dptc_device_limits limits_18w = {
->>>>> +     .params = {
->>>>> +             [DPTC_PPT_PL1_SPL]  = {  1,  5, 15, 18,  22 },
->>>>> +             [DPTC_PPT_PL2_SPPT] = {  1,  5, 15, 18,  22 },
->>>>> +             [DPTC_PPT_PL3_FPPT] = {  1,  5, 15, 20,  25 },
->>>>> +             [DPTC_CPU_TEMP]     = { 60, 70, 85, 90, 100 },
->>>>> +     },
->>>>> +     .profiles = {
->>>>> +             [PLATFORM_PROFILE_LOW_POWER]   = { .vals = {  5,  5,  8, 0 } },
->>>>> +             [PLATFORM_PROFILE_BALANCED]    = { .vals = { 12, 14, 15, 0 } },
->>>>> +             [PLATFORM_PROFILE_PERFORMANCE] = { .vals = { 18, 18, 20, 0 } },
->>>>> +     },
->>>>> +};
->>>>> +
->>>>> +/* 25W class: Ryzen 5000 handhelds (AYANEO NEXT, KUN) */
->>>>> +static const struct dptc_device_limits limits_25w = {
->>>>> +     .params = {
->>>>> +             [DPTC_PPT_PL1_SPL]  = {  1,  4, 15, 25,  32 },
->>>>> +             [DPTC_PPT_PL2_SPPT] = {  1,  4, 20, 27,  35 },
->>>>> +             [DPTC_PPT_PL3_FPPT] = {  1,  4, 25, 30,  37 },
->>>>> +             [DPTC_CPU_TEMP]     = { 60, 70, 85, 90, 100 },
->>>>> +     },
->>>>> +     .profiles = {
->>>>> +             [PLATFORM_PROFILE_LOW_POWER]   = { .vals = {  8,  8, 12, 0 } },
->>>>> +             [PLATFORM_PROFILE_BALANCED]    = { .vals = { 15, 17, 20, 0 } },
->>>>> +             [PLATFORM_PROFILE_PERFORMANCE] = { .vals = { 25, 27, 30, 0 } },
->>>>> +     },
->>>>> +};
->>>>> +
->>>>> +/* 28W class: GPD Win series, AYANEO 2, OrangePi NEO-01 */
->>>>> +static const struct dptc_device_limits limits_28w = {
->>>>> +     .params = {
->>>>> +             [DPTC_PPT_PL1_SPL]  = {  1,  4, 15, 28,  32 },
->>>>> +             [DPTC_PPT_PL2_SPPT] = {  1,  4, 20, 30,  35 },
->>>>> +             [DPTC_PPT_PL3_FPPT] = {  1,  4, 25, 32,  37 },
->>>>> +             [DPTC_CPU_TEMP]     = { 60, 70, 85, 90, 100 },
->>>>> +     },
->>>>> +     .profiles = {
->>>>> +             [PLATFORM_PROFILE_LOW_POWER]   = { .vals = {  8,  8, 12, 0 } },
->>>>> +             [PLATFORM_PROFILE_BALANCED]    = { .vals = { 15, 17, 22, 0 } },
->>>>> +             [PLATFORM_PROFILE_PERFORMANCE] = { .vals = { 25, 28, 32, 0 } },
->>>>> +     },
->>>>> +};
->>>>> +
->>>>> +/* 30W class: OneXPlayer, AYANEO FLIP/GEEK/SLIDE/3, AOKZOE */
->>>>> +static const struct dptc_device_limits limits_30w = {
->>>>> +     .params = {
->>>>> +             [DPTC_PPT_PL1_SPL]  = {  1,  4, 15, 30,  40 },
->>>>> +             [DPTC_PPT_PL2_SPPT] = {  1,  4, 20, 32,  43 },
->>>>> +             [DPTC_PPT_PL3_FPPT] = {  1,  4, 25, 41,  50 },
->>>>> +             [DPTC_CPU_TEMP]     = { 60, 70, 85, 90, 100 },
->>>>> +     },
->>>>> +     .profiles = {
->>>>> +             [PLATFORM_PROFILE_LOW_POWER]   = { .vals = {  8,  8, 12, 0 } },
->>>>> +             [PLATFORM_PROFILE_BALANCED]    = { .vals = { 15, 17, 25, 0 } },
->>>>> +             [PLATFORM_PROFILE_PERFORMANCE] = { .vals = { 25, 28, 41, 0 } },
->>>>> +     },
->>>>> +};
->>>>> +
->>>>>     /* AI MAX Handheld class: GPD Win 5 */
->>>>>     static const struct dptc_device_limits limits_maxhh = {
->>>>>         .params = {
->>>>> @@ -107,11 +182,56 @@ static const char * const dptc_soc_table[] = {
->>>>>         "AMD RYZEN AI MAX+ 395",
->>>>>         "AMD RYZEN AI MAX+ 385",
->>>>>         "AMD RYZEN AI MAX 380",
->>>>> +     /* Ryzen AI */
->>>>> +     "AMD Ryzen AI 9 HX 370",
->>>>> +     /* Ryzen 8000 */
->>>>> +     "AMD Ryzen 7 8840U",
->>>>> +     /* Ryzen 7040 */
->>>>> +     "AMD Ryzen 7 7840U",
->>>>> +     /* Ryzen 6000 */
->>>>> +     "AMD Ryzen 7 6800U",
->>>>> +     "AMD Ryzen 7 6600U",
->>>>> +     /* Ryzen 5000 */
->>>>> +     "AMD Ryzen 7 5800U",
->>>>> +     "AMD Ryzen 7 5700U",
->>>>> +     "AMD Ryzen 5 5560U",
->>>>
->>>> Still don't understand the point of this list.
->>>
->>> Parallel reply.
->>>
->>>>>         NULL,
->>>>>     };
->>>>>
->>>>>     static const struct dmi_system_id dptc_dmi_table[] = {
->>>>>         /* GPD */
->>>>> +     {
->>>>> +             .ident = "GPD Win Mini",
->>>>> +             .matches = {
->>>>> +                     DMI_MATCH(DMI_SYS_VENDOR, "GPD"),
->>>>> +                     DMI_MATCH(DMI_PRODUCT_NAME, "G1617-01"),
->>>>> +             },
->>>>> +             .driver_data = (void *)&limits_28w,
->>>>> +     },
->>>>> +     {
->>>>> +             .ident = "GPD Win Mini 2024",
->>>>> +             .matches = {
->>>>> +                     DMI_MATCH(DMI_SYS_VENDOR, "GPD"),
->>>>> +                     DMI_MATCH(DMI_PRODUCT_NAME, "G1617-02"),
->>>>> +             },
->>>>> +             .driver_data = (void *)&limits_28w,
->>>>> +     },
->>>>> +     {
->>>>> +             .ident = "GPD Win Mini 2024",
->>>>> +             .matches = {
->>>>> +                     DMI_MATCH(DMI_SYS_VENDOR, "GPD"),
->>>>> +                     DMI_MATCH(DMI_PRODUCT_NAME, "G1617-02-L"),
->>>>> +             },
->>>>> +             .driver_data = (void *)&limits_28w,
->>>>> +     },
->>>>> +     {
->>>>> +             .ident = "GPD Win 4",
->>>>> +             .matches = {
->>>>> +                     DMI_MATCH(DMI_SYS_VENDOR, "GPD"),
->>>>> +                     DMI_MATCH(DMI_PRODUCT_NAME, "G1618-04"),
->>>>> +             },
->>>>> +             .driver_data = (void *)&limits_28w,
->>>>> +     },
->>>>>         {
->>>>>                 .ident = "GPD Win 5",
->>>>>                 .matches = {
->>>>> @@ -120,6 +240,306 @@ static const struct dmi_system_id dptc_dmi_table[] = {
->>>>>                 },
->>>>>                 .driver_data = (void *)&limits_maxhh,
->>>>>         },
->>>>> +     {
->>>>> +             .ident = "GPD Win Max 2",
->>>>> +             .matches = {
->>>>> +                     DMI_MATCH(DMI_SYS_VENDOR, "GPD"),
->>>>> +                     DMI_MATCH(DMI_PRODUCT_NAME, "G1619-04"),
->>>>> +             },
->>>>> +             .driver_data = (void *)&limits_28w,
->>>>> +     },
->>>>> +     {
->>>>> +             .ident = "GPD Win Max 2 2024",
->>>>> +             .matches = {
->>>>> +                     DMI_MATCH(DMI_SYS_VENDOR, "GPD"),
->>>>> +                     DMI_MATCH(DMI_PRODUCT_NAME, "G1619-05"),
->>>>> +             },
->>>>> +             .driver_data = (void *)&limits_28w,
->>>>> +     },
->>>>> +     {
->>>>> +             .ident = "GPD Duo",
->>>>> +             .matches = {
->>>>> +                     DMI_MATCH(DMI_SYS_VENDOR, "GPD"),
->>>>> +                     DMI_MATCH(DMI_PRODUCT_NAME, "G1622-01"),
->>>>> +             },
->>>>> +             .driver_data = (void *)&limits_28w,
->>>>> +     },
->>>>> +     {
->>>>> +             .ident = "GPD Duo",
->>>>> +             .matches = {
->>>>> +                     DMI_MATCH(DMI_SYS_VENDOR, "GPD"),
->>>>> +                     DMI_MATCH(DMI_PRODUCT_NAME, "G1622-01-L"),
->>>>> +             },
->>>>> +             .driver_data = (void *)&limits_28w,
->>>>> +     },
->>>>> +     {
->>>>> +             .ident = "GPD Pocket 4",
->>>>> +             .matches = {
->>>>> +                     DMI_MATCH(DMI_SYS_VENDOR, "GPD"),
->>>>> +                     DMI_MATCH(DMI_PRODUCT_NAME, "G1628-04"),
->>>>> +             },
->>>>> +             .driver_data = (void *)&limits_28w,
->>>>> +     },
->>>>> +     {
->>>>> +             .ident = "GPD Pocket 4",
->>>>> +             .matches = {
->>>>> +                     DMI_MATCH(DMI_SYS_VENDOR, "GPD"),
->>>>> +                     DMI_MATCH(DMI_PRODUCT_NAME, "G1628-04-L"),
->>>>> +             },
->>>>> +             .driver_data = (void *)&limits_28w,
->>>>> +     },
->>>>> +     /* OrangePi */
->>>>> +     {
->>>>> +             .ident = "OrangePi NEO-01",
->>>>> +             .matches = {
->>>>> +                     DMI_MATCH(DMI_BOARD_VENDOR, "OrangePi"),
->>>>> +                     DMI_EXACT_MATCH(DMI_BOARD_NAME, "NEO-01"),
->>>>> +             },
->>>>> +             .driver_data = (void *)&limits_28w,
->>>>> +     },
->>>>> +     /* AYN */
->>>>> +     {
->>>>> +             .ident = "AYN Loki Max",
->>>>> +             .matches = {
->>>>> +                     DMI_EXACT_MATCH(DMI_SYS_VENDOR, "ayn"),
->>>>> +                     DMI_EXACT_MATCH(DMI_PRODUCT_NAME, "Loki Max"),
->>>>> +             },
->>>>> +             .driver_data = (void *)&limits_30w,
->>>>> +     },
->>>>> +     /* Tectoy (Zeenix Pro = Loki Max) */
->>>>> +     {
->>>>> +             .ident = "Zeenix Pro",
->>>>> +             .matches = {
->>>>> +                     DMI_EXACT_MATCH(DMI_SYS_VENDOR, "Tectoy"),
->>>>> +                     DMI_EXACT_MATCH(DMI_PRODUCT_NAME, "Zeenix Pro"),
->>>>> +             },
->>>>> +             .driver_data = (void *)&limits_30w,
->>>>> +     },
->>>>> +     /* AOKZOE */
->>>>> +     {
->>>>> +             .ident = "AOKZOE A1 AR07",
->>>>> +             .matches = {
->>>>> +                     DMI_MATCH(DMI_BOARD_VENDOR, "AOKZOE"),
->>>>> +                     DMI_EXACT_MATCH(DMI_BOARD_NAME, "AOKZOE A1 AR07"),
->>>>> +             },
->>>>> +             .driver_data = (void *)&limits_30w,
->>>>> +     },
->>>>> +     {
->>>>> +             .ident = "AOKZOE A1 Pro",
->>>>> +             .matches = {
->>>>> +                     DMI_MATCH(DMI_BOARD_VENDOR, "AOKZOE"),
->>>>> +                     DMI_EXACT_MATCH(DMI_BOARD_NAME, "AOKZOE A1 Pro"),
->>>>> +             },
->>>>> +             .driver_data = (void *)&limits_30w,
->>>>> +     },
->>>>> +     {
->>>>> +             .ident = "AOKZOE A1X",
->>>>> +             .matches = {
->>>>> +                     DMI_MATCH(DMI_BOARD_VENDOR, "AOKZOE"),
->>>>> +                     DMI_EXACT_MATCH(DMI_BOARD_NAME, "AOKZOE A1X"),
->>>>> +             },
->>>>> +             .driver_data = (void *)&limits_30w,
->>>>> +     },
->>>>> +     {
->>>>> +             .ident = "AOKZOE A2 Pro",
->>>>> +             .matches = {
->>>>> +                     DMI_MATCH(DMI_BOARD_VENDOR, "AOKZOE"),
->>>>> +                     DMI_EXACT_MATCH(DMI_BOARD_NAME, "AOKZOE A2 Pro"),
->>>>> +             },
->>>>> +             .driver_data = (void *)&limits_30w,
->>>>> +     },
->>>>> +     /* OneXPlayer (Intel variants filtered by SoC table) */
->>>>
->>>> Are you telling me the Intel variants actually have the same ACPI
->>>> methods this series looks for?
->>>
->>> They do not.
->>
->> OK then this comment appears wrong.
-> 
-> Ack See above.
-> 
->>>
->>>>> +     {
->>>>> +             .ident = "ONEXPLAYER F1Pro",
->>>>> +             .matches = {
->>>>> +                     DMI_MATCH(DMI_BOARD_VENDOR, "ONE-NETBOOK"),
->>>>> +                     DMI_EXACT_MATCH(DMI_BOARD_NAME, "ONEXPLAYER F1Pro"),
->>>>> +             },
->>>>> +             .driver_data = (void *)&limits_30w,
->>>>> +     },
->>>>> +     {
->>>>> +             .ident = "ONEXPLAYER F1 EVA-02",
->>>>> +             .matches = {
->>>>> +                     DMI_MATCH(DMI_BOARD_VENDOR, "ONE-NETBOOK"),
->>>>> +                     DMI_EXACT_MATCH(DMI_BOARD_NAME, "ONEXPLAYER F1 EVA-02"),
->>>>> +             },
->>>>> +             .driver_data = (void *)&limits_30w,
->>>>> +     },
->>>>> +     {
->>>>> +             .ident = "ONEXPLAYER 2",
->>>>> +             .matches = {
->>>>> +                     DMI_MATCH(DMI_BOARD_VENDOR, "ONE-NETBOOK"),
->>>>> +                     DMI_MATCH(DMI_BOARD_NAME, "ONEXPLAYER 2"),
->>>>> +             },
->>>>> +             .driver_data = (void *)&limits_30w,
->>>>> +     },
->>>>> +     {
->>>>> +             .ident = "ONEXPLAYER X1 A",
->>>>> +             .matches = {
->>>>> +                     DMI_MATCH(DMI_BOARD_VENDOR, "ONE-NETBOOK"),
->>>>> +                     DMI_EXACT_MATCH(DMI_BOARD_NAME, "ONEXPLAYER X1 A"),
->>>>> +             },
->>>>> +             .driver_data = (void *)&limits_30w,
->>>>> +     },
->>>>> +     {
->>>>> +             .ident = "ONEXPLAYER X1z",
->>>>> +             .matches = {
->>>>> +                     DMI_MATCH(DMI_BOARD_VENDOR, "ONE-NETBOOK"),
->>>>> +                     DMI_EXACT_MATCH(DMI_BOARD_NAME, "ONEXPLAYER X1z"),
->>>>> +             },
->>>>> +             .driver_data = (void *)&limits_30w,
->>>>> +     },
->>>>> +     {
->>>>> +             .ident = "ONEXPLAYER X1Pro",
->>>>> +             .matches = {
->>>>> +                     DMI_MATCH(DMI_BOARD_VENDOR, "ONE-NETBOOK"),
->>>>> +                     DMI_EXACT_MATCH(DMI_BOARD_NAME, "ONEXPLAYER X1Pro"),
->>>>> +             },
->>>>> +             .driver_data = (void *)&limits_30w,
->>>>> +     },
->>>>> +     {
->>>>> +             .ident = "ONEXPLAYER G1 A",
->>>>> +             .matches = {
->>>>> +                     DMI_MATCH(DMI_BOARD_VENDOR, "ONE-NETBOOK"),
->>>>> +                     DMI_EXACT_MATCH(DMI_BOARD_NAME, "ONEXPLAYER G1 A"),
->>>>> +             },
->>>>> +             .driver_data = (void *)&limits_30w,
->>>>> +     },
->>>>> +     /* AYANEO - 15W */
->>>>> +     {
->>>>> +             .ident = "AYANEO AIR",
->>>>> +             .matches = {
->>>>> +                     DMI_MATCH(DMI_BOARD_VENDOR, "AYANEO"),
->>>>> +                     DMI_EXACT_MATCH(DMI_BOARD_NAME, "AIR"),
->>>>> +             },
->>>>> +             .driver_data = (void *)&limits_15w,
->>>>> +     },
->>>>> +     /* AYANEO - 18W */
->>>>> +     {
->>>>> +             .ident = "AYANEO AIR Plus",
->>>>> +             .matches = {
->>>>> +                     DMI_MATCH(DMI_BOARD_VENDOR, "AYANEO"),
->>>>> +                     DMI_EXACT_MATCH(DMI_BOARD_NAME, "AIR Plus"),
->>>>> +             },
->>>>> +             .driver_data = (void *)&limits_18w,
->>>>> +     },
->>>>> +     {
->>>>> +             .ident = "AYANEO AIR Pro",
->>>>> +             .matches = {
->>>>> +                     DMI_MATCH(DMI_BOARD_VENDOR, "AYANEO"),
->>>>> +                     DMI_EXACT_MATCH(DMI_BOARD_NAME, "AIR Pro"),
->>>>> +             },
->>>>> +             .driver_data = (void *)&limits_18w,
->>>>> +     },
->>>>> +     /* AYANEO - 25W */
->>>>> +     {
->>>>> +             .ident = "AYANEO AIR 1S",
->>>>> +             .matches = {
->>>>> +                     DMI_MATCH(DMI_BOARD_VENDOR, "AYANEO"),
->>>>> +                     DMI_MATCH(DMI_BOARD_NAME, "AIR 1S"),
->>>>> +             },
->>>>> +             .driver_data = (void *)&limits_25w,
->>>>> +     },
->>>>> +     {
->>>>> +             .ident = "AYANEO NEXT Advance",
->>>>> +             .matches = {
->>>>> +                     DMI_MATCH(DMI_BOARD_VENDOR, "AYANEO"),
->>>>> +                     DMI_EXACT_MATCH(DMI_BOARD_NAME, "NEXT Advance"),
->>>>> +             },
->>>>> +             .driver_data = (void *)&limits_25w,
->>>>> +     },
->>>>> +     {
->>>>> +             .ident = "AYANEO NEXT Lite",
->>>>> +             .matches = {
->>>>> +                     DMI_MATCH(DMI_BOARD_VENDOR, "AYANEO"),
->>>>> +                     DMI_EXACT_MATCH(DMI_BOARD_NAME, "NEXT Lite"),
->>>>> +             },
->>>>> +             .driver_data = (void *)&limits_25w,
->>>>> +     },
->>>>> +     {
->>>>> +             .ident = "AYANEO NEXT Pro",
->>>>> +             .matches = {
->>>>> +                     DMI_MATCH(DMI_BOARD_VENDOR, "AYANEO"),
->>>>> +                     DMI_EXACT_MATCH(DMI_BOARD_NAME, "NEXT Pro"),
->>>>> +             },
->>>>> +             .driver_data = (void *)&limits_25w,
->>>>> +     },
->>>>> +     {
->>>>> +             .ident = "AYANEO NEXT",
->>>>> +             .matches = {
->>>>> +                     DMI_MATCH(DMI_BOARD_VENDOR, "AYANEO"),
->>>>> +                     DMI_EXACT_MATCH(DMI_BOARD_NAME, "NEXT"),
->>>>> +             },
->>>>> +             .driver_data = (void *)&limits_25w,
->>>>> +     },
->>>>> +     {
->>>>> +             .ident = "AYANEO KUN",
->>>>> +             .matches = {
->>>>> +                     DMI_MATCH(DMI_BOARD_VENDOR, "AYANEO"),
->>>>> +                     DMI_EXACT_MATCH(DMI_BOARD_NAME, "KUN"),
->>>>> +             },
->>>>> +             .driver_data = (void *)&limits_25w,
->>>>> +     },
->>>>> +     {
->>>>> +             .ident = "AYANEO KUN",
->>>>> +             .matches = {
->>>>> +                     DMI_MATCH(DMI_BOARD_VENDOR, "AYANEO"),
->>>>> +                     DMI_EXACT_MATCH(DMI_BOARD_NAME, "AYANEO KUN"),
->>>>> +             },
->>>>> +             .driver_data = (void *)&limits_25w,
->>>>> +     },
->>>>> +     /* AYANEO - 28W */
->>>>> +     {
->>>>> +             .ident = "AYANEO 2",
->>>>> +             .matches = {
->>>>> +                     DMI_MATCH(DMI_BOARD_VENDOR, "AYANEO"),
->>>>> +                     DMI_MATCH(DMI_BOARD_NAME, "AYANEO 2"),
->>>>> +             },
->>>>> +             .driver_data = (void *)&limits_28w,
->>>>> +     },
->>>>> +     {
->>>>> +             .ident = "SuiPlay0X1",
->>>>> +             .matches = {
->>>>> +                     DMI_MATCH(DMI_SYS_VENDOR, "Mysten Labs, Inc."),
->>>>> +                     DMI_MATCH(DMI_PRODUCT_NAME, "SuiPlay0X1"),
->>>>> +             },
->>>>> +             .driver_data = (void *)&limits_28w,
->>>>> +     },
->>>>> +     /* AYANEO - 30W */
->>>>> +     {
->>>>> +             /* DMI_MATCH catches all FLIP variants (DS, KB, 1S DS, 1S KB) */
->>>>> +             .ident = "AYANEO FLIP",
->>>>> +             .matches = {
->>>>> +                     DMI_MATCH(DMI_BOARD_VENDOR, "AYANEO"),
->>>>> +                     DMI_MATCH(DMI_BOARD_NAME, "FLIP"),
->>>>> +             },
->>>>> +             .driver_data = (void *)&limits_30w,
->>>>> +     },
->>>>> +     {
->>>>> +             /* DMI_MATCH catches GEEK and GEEK 1S */
->>>>> +             .ident = "AYANEO GEEK",
->>>>> +             .matches = {
->>>>> +                     DMI_MATCH(DMI_BOARD_VENDOR, "AYANEO"),
->>>>> +                     DMI_MATCH(DMI_BOARD_NAME, "GEEK"),
->>>>> +             },
->>>>> +             .driver_data = (void *)&limits_30w,
->>>>> +     },
->>>>> +     {
->>>>> +             .ident = "AYANEO SLIDE",
->>>>> +             .matches = {
->>>>> +                     DMI_MATCH(DMI_BOARD_VENDOR, "AYANEO"),
->>>>> +                     DMI_EXACT_MATCH(DMI_BOARD_NAME, "SLIDE"),
->>>>> +             },
->>>>> +             .driver_data = (void *)&limits_30w,
->>>>> +     },
->>>>> +     {
->>>>> +             .ident = "AYANEO 3",
->>>>> +             .matches = {
->>>>> +                     DMI_MATCH(DMI_BOARD_VENDOR, "AYANEO"),
->>>>> +                     DMI_EXACT_MATCH(DMI_BOARD_NAME, "AYANEO 3"),
->>>>> +             },
->>>>> +             .driver_data = (void *)&limits_30w,
->>>>> +     },
->>>>>         { }
->>>>>     };
->>>>>     MODULE_DEVICE_TABLE(dmi, dptc_dmi_table);
->>>>
->>>>
->>>
->>
->>
-> 
+8-20W is the sweet spot for these APUs. 8W and 15W are sane for
+low-power/balanced. The only question is how close to 30W should be
+the maximum and where performance should point to. This version does
+25W for performance. 20W might be better for daily use until AC/DC
+detection.
+
+We do not need to complicate things. All this driver needs to do is
+expose a slider from 4-30W. This covers 6800-HX370 for all vendors and
+matches user expectation. AI Max will need further research as I do
+not have a lot of data on its performance curve. Ayaneo had some drops
+between 2022-2023 that had lower TDP limits, but there is less than 1k
+units in existence.
+
+However, I do not have device duplicates in my possession or kept hand
+of exact SMBIOS data. I only monitored changes to DMI. And it is hard
+for me to collect now
+
+Microsoft can require things, but then again, a lot of these devices
+come with Secureboot disabled, and mixed setup flows for Windows. So I
+doubt changing the product sku was on the priority list.
+
+Antheas
+
+> >
+> >>>
+> >>>>> +
+> >>>>> +static const struct dmi_system_id dptc_dmi_table[] = {
+> >>>>> +     /* GPD */
+> >>>>> +     {
+> >>>>> +             .ident = "GPD Win 5",
+> >>>>> +             .matches = {
+> >>>>> +                     DMI_MATCH(DMI_SYS_VENDOR, "GPD"),
+> >>>>> +                     DMI_MATCH(DMI_PRODUCT_NAME, "G1618-05"),
+> >>>>> +             },
+> >>>>> +             .driver_data = (void *)&limits_maxhh,
+> >>>>> +     },
+> >>>>> +     { }
+> >>>>> +};
+> >>>>> +MODULE_DEVICE_TABLE(dmi, dptc_dmi_table);
+> >>>>> +
+> >>>>> +enum dptc_save_mode { SAVE_SINGLE, SAVE_BULK };
+> >>>>> +
+> >>>>> +struct dptc_priv;
+> >>>>> +
+> >>>>> +struct dptc_attr_sysfs {
+> >>>>> +     struct dptc_priv *priv;
+> >>>>> +     struct kobj_attribute current_value;
+> >>>>> +     struct kobj_attribute default_value;
+> >>>>> +     struct kobj_attribute min_value;
+> >>>>> +     struct kobj_attribute max_value;
+> >>>>> +     struct kobj_attribute scalar_increment;
+> >>>>> +     struct kobj_attribute display_name;
+> >>>>> +     struct kobj_attribute type;
+> >>>>> +     struct attribute *attrs[8];
+> >>>>> +     struct attribute_group group;
+> >>>>> +     int idx;
+> >>>>> +};
+> >>>>> +
+> >>>>> +struct dptc_priv {
+> >>>>> +     struct device *fw_attr_dev;
+> >>>>> +     struct kset *fw_attr_kset;
+> >>>>> +
+> >>>>> +     const struct dptc_device_limits *dev_limits;
+> >>>>> +
+> >>>>> +     bool expanded;
+> >>>>> +
+> >>>>> +     enum dptc_save_mode save_mode;
+> >>>>> +
+> >>>>> +     u32 staged[DPTC_NUM_PARAMS];
+> >>>>> +
+> >>>>> +     /* Protects staged, expanded, and save_mode */
+> >>>>> +     struct mutex lock;
+> >>>>> +
+> >>>>> +     struct dptc_attr_sysfs params[DPTC_NUM_PARAMS];
+> >>>>> +     struct dptc_attr_sysfs expanded_attr;
+> >>>>> +     struct kobj_attribute save_settings_attr;
+> >>>>> +};
+> >>>>> +
+> >>>>> +static struct platform_device *dptc_pdev;
+> >>>>> +
+> >>>>> +static u32 dptc_get_min(struct dptc_priv *dptc, int idx)
+> >>>>> +{
+> >>>>> +     return dptc->expanded ? dptc->dev_limits->params[idx].expanded_min
+> >>>>> +                           : dptc->dev_limits->params[idx].device_min;
+> >>>>> +}
+> >>>>> +
+> >>>>> +static u32 dptc_get_max(struct dptc_priv *dptc, int idx)
+> >>>>> +{
+> >>>>> +     return dptc->expanded ? dptc->dev_limits->params[idx].expanded_max
+> >>>>> +                           : dptc->dev_limits->params[idx].device_max;
+> >>>>> +}
+> >>>>> +
+> >>>>> +static u32 dptc_get_default(struct dptc_priv *dptc, int idx)
+> >>>>> +{
+> >>>>> +     return dptc->dev_limits->params[idx].def;
+> >>>>> +}
+> >>>>> +
+> >>>>> +static int dptc_alib_call(const u8 *ids, const u32 *vals, int count)
+> >>>>> +{
+> >>>>> +     union acpi_object in_params[2];
+> >>>>> +     struct acpi_object_list input;
+> >>>>> +     acpi_status status;
+> >>>>> +     u32 buf_size;
+> >>>>> +     int i, off;
+> >>>>> +     u8 *buf;
+> >>>>> +
+> >>>>> +     if (count == 0)
+> >>>>> +             return -ENOENT;
+> >>>>> +
+> >>>>> +     /* Buffer layout: WORD total_size + count * (BYTE id + DWORD value) */
+> >>>>> +     buf_size = 2 + count * 5;
+> >>>>> +     buf = kzalloc(buf_size, GFP_KERNEL);
+> >>>>> +     if (!buf)
+> >>>>> +             return -ENOMEM;
+> >>>>> +
+> >>>>> +     put_unaligned_le16(buf_size, buf);
+> >>>>> +
+> >>>>> +     for (i = 0; i < count; i++) {
+> >>>>> +             off  = 2 + i * 5;
+> >>>>> +             buf[off] = ids[i];
+> >>>>> +             put_unaligned_le32(vals[i], &buf[off + 1]);
+> >>>>> +     }
+> >>>>> +
+> >>>>> +     in_params[0].type           = ACPI_TYPE_INTEGER;
+> >>>>> +     in_params[0].integer.value  = ALIB_FUNC_DPTC;
+> >>>>> +     in_params[1].type           = ACPI_TYPE_BUFFER;
+> >>>>> +     in_params[1].buffer.length  = buf_size;
+> >>>>> +     in_params[1].buffer.pointer = buf;
+> >>>>> +
+> >>>>> +     input.count   = 2;
+> >>>>> +     input.pointer = in_params;
+> >>>>> +
+> >>>>> +     status = acpi_evaluate_object(NULL, ALIB_PATH, &input, NULL);
+> >>>>> +     kfree(buf);
+> >>>>> +
+> >>>>> +     if (ACPI_FAILURE(status)) {
+> >>>>> +             pr_err("ALIB call failed: %s\n",
+> >>>>> +                    acpi_format_exception(status));
+> >>>>> +             return -EIO;
+> >>>>> +     }
+> >>>>> +
+> >>>>> +     pr_debug("sent %d ALIB parameter(s)\n", count);
+> >>>>> +     return 0;
+> >>>>> +}
+> >>>>> +
+> >>>>> +static int dptc_alib_fill_param(u8 *ids, u32 *vals, int offset,
+> >>>>> +                             enum dptc_param_idx param, u32 val)
+> >>>>> +{
+> >>>>> +     u32 hw_val = val * dptc_params[param].scale;
+> >>>>> +
+> >>>>> +     ids[offset]    = dptc_params[param].param_id;
+> >>>>> +     vals[offset++] = hw_val;
+> >>>>> +
+> >>>>> +     if (dptc_params[param].param_id2) {
+> >>>>> +             ids[offset]    = dptc_params[param].param_id2;
+> >>>>> +             vals[offset++] = hw_val;
+> >>>>> +     }
+> >>>>> +
+> >>>>> +     return offset;
+> >>>>> +}
+> >>>>> +
+> >>>>> +static int dptc_alib_send_one(int idx, u32 val)
+> >>>>> +{
+> >>>>> +     u32 vals[2];
+> >>>>> +     u8 ids[2];
+> >>>>> +
+> >>>>> +     return dptc_alib_call(ids, vals,
+> >>>>> +                           dptc_alib_fill_param(ids, vals, 0, idx, val));
+> >>>>> +}
+> >>>>> +
+> >>>>> +static int dptc_alib_save(struct dptc_priv *dptc)
+> >>>>> +{
+> >>>>> +     u32 vals[DPTC_NUM_PARAMS * 2];
+> >>>>> +     u8 ids[DPTC_NUM_PARAMS * 2];
+> >>>>> +     int count = 0;
+> >>>>> +     int i;
+> >>>>> +
+> >>>>> +     for (i = 0; i < DPTC_NUM_PARAMS; i++) {
+> >>>>> +             if (!dptc->staged[i])
+> >>>>> +                     continue;
+> >>>>> +             count = dptc_alib_fill_param(ids, vals, count, i,
+> >>>>> +                                          dptc->staged[i]);
+> >>>>> +     }
+> >>>>> +
+> >>>>> +     return dptc_alib_call(ids, vals, count);
+> >>>>> +}
+> >>>>> +
+> >>>>> +/* Sysfs callbacks */
+> >>>>> +
+> >>>>> +static ssize_t dptc_current_value_show(struct kobject *kobj,
+> >>>>> +                                    struct kobj_attribute *attr, char *buf)
+> >>>>> +{
+> >>>>> +     struct dptc_attr_sysfs *ps =
+> >>>>> +             container_of(attr, struct dptc_attr_sysfs, current_value);
+> >>>>> +     struct dptc_priv *dptc = ps->priv;
+> >>>>> +
+> >>>>> +     guard(mutex)(&dptc->lock);
+> >>>>> +
+> >>>>> +     if (!dptc->staged[ps->idx])
+> >>>>> +             return sysfs_emit(buf, "\n");
+> >>>>> +     return sysfs_emit(buf, "%u\n", dptc->staged[ps->idx]);
+> >>>>> +}
+> >>>>> +
+> >>>>> +static ssize_t dptc_current_value_store(struct kobject *kobj,
+> >>>>> +                                     struct kobj_attribute *attr,
+> >>>>> +                                     const char *buf, size_t count)
+> >>>>> +{
+> >>>>> +     struct dptc_attr_sysfs *ps =
+> >>>>> +             container_of(attr, struct dptc_attr_sysfs, current_value);
+> >>>>> +     struct dptc_priv *dptc = ps->priv;
+> >>>>> +     u32 val, min, max;
+> >>>>> +     int ret;
+> >>>>> +
+> >>>>> +     guard(mutex)(&dptc->lock);
+> >>>>> +
+> >>>>> +     if (count == 1 && buf[0] == '\n') {
+> >>>>> +             dptc->staged[ps->idx] = 0;
+> >>>>> +             return count;
+> >>>>> +     }
+> >>>>> +
+> >>>>> +     ret = kstrtou32(buf, 10, &val);
+> >>>>> +     if (ret)
+> >>>>> +             return ret;
+> >>>>> +
+> >>>>> +     min = dptc_get_min(dptc, ps->idx);
+> >>>>> +     max = dptc_get_max(dptc, ps->idx);
+> >>>>> +     if (val < min || (max && val > max))
+> >>>>> +             return -EINVAL;
+> >>>>> +     dptc->staged[ps->idx]    = val;
+> >>>>> +     if (dptc->save_mode == SAVE_SINGLE)
+> >>>>> +             ret = dptc_alib_send_one(ps->idx, val);
+> >>>>> +
+> >>>>> +     return ret ? ret : count;
+> >>>>> +}
+> >>>>> +
+> >>>>> +static ssize_t dptc_default_value_show(struct kobject *kobj,
+> >>>>> +                                    struct kobj_attribute *attr, char *buf)
+> >>>>> +{
+> >>>>> +     struct dptc_attr_sysfs *ps =
+> >>>>> +             container_of(attr, struct dptc_attr_sysfs, default_value);
+> >>>>> +
+> >>>>> +     return sysfs_emit(buf, "%u\n", dptc_get_default(ps->priv, ps->idx));
+> >>>>> +}
+> >>>>> +
+> >>>>> +static ssize_t dptc_min_value_show(struct kobject *kobj,
+> >>>>> +                                struct kobj_attribute *attr, char *buf)
+> >>>>> +{
+> >>>>> +     struct dptc_attr_sysfs *ps =
+> >>>>> +             container_of(attr, struct dptc_attr_sysfs, min_value);
+> >>>>> +     struct dptc_priv *dptc = ps->priv;
+> >>>>> +
+> >>>>> +     guard(mutex)(&dptc->lock);
+> >>>>> +
+> >>>>> +     return sysfs_emit(buf, "%u\n", dptc_get_min(dptc, ps->idx));
+> >>>>> +}
+> >>>>> +
+> >>>>> +static ssize_t dptc_max_value_show(struct kobject *kobj,
+> >>>>> +                                struct kobj_attribute *attr, char *buf)
+> >>>>> +{
+> >>>>> +     struct dptc_attr_sysfs *ps =
+> >>>>> +             container_of(attr, struct dptc_attr_sysfs, max_value);
+> >>>>> +     struct dptc_priv *dptc = ps->priv;
+> >>>>> +
+> >>>>> +     guard(mutex)(&dptc->lock);
+> >>>>> +
+> >>>>> +     return sysfs_emit(buf, "%u\n", dptc_get_max(dptc, ps->idx));
+> >>>>> +}
+> >>>>> +
+> >>>>> +static ssize_t dptc_scalar_increment_show(struct kobject *kobj,
+> >>>>> +                                       struct kobj_attribute *attr, char *buf)
+> >>>>> +{
+> >>>>> +     return sysfs_emit(buf, "1\n");
+> >>>>> +}
+> >>>>> +
+> >>>>> +static ssize_t dptc_display_name_show(struct kobject *kobj,
+> >>>>> +                                   struct kobj_attribute *attr, char *buf)
+> >>>>> +{
+> >>>>> +     struct dptc_attr_sysfs *ps =
+> >>>>> +             container_of(attr, struct dptc_attr_sysfs, display_name);
+> >>>>> +     return sysfs_emit(buf, "%s\n", dptc_params[ps->idx].display_name);
+> >>>>> +}
+> >>>>> +
+> >>>>> +static ssize_t dptc_type_show(struct kobject *kobj,
+> >>>>> +                           struct kobj_attribute *attr, char *buf)
+> >>>>> +{
+> >>>>> +     return sysfs_emit(buf, "integer\n");
+> >>>>> +}
+> >>>>> +
+> >>>>> +static ssize_t dptc_save_settings_show(struct kobject *kobj,
+> >>>>> +                                    struct kobj_attribute *attr, char *buf)
+> >>>>> +{
+> >>>>> +     struct dptc_priv *dptc =
+> >>>>> +             container_of(attr, struct dptc_priv, save_settings_attr);
+> >>>>> +
+> >>>>> +     guard(mutex)(&dptc->lock);
+> >>>>> +
+> >>>>> +     if (dptc->save_mode == SAVE_SINGLE)
+> >>>>> +             return sysfs_emit(buf, "single\n");
+> >>>>> +     return sysfs_emit(buf, "bulk\n");
+> >>>>> +}
+> >>>>> +
+> >>>>> +static ssize_t dptc_save_settings_store(struct kobject *kobj,
+> >>>>> +                                     struct kobj_attribute *attr,
+> >>>>> +                                     const char *buf, size_t count)
+> >>>>> +{
+> >>>>> +     struct dptc_priv *dptc =
+> >>>>> +             container_of(attr, struct dptc_priv, save_settings_attr);
+> >>>>> +     int ret = 0;
+> >>>>> +
+> >>>>> +     guard(mutex)(&dptc->lock);
+> >>>>> +
+> >>>>> +     if (sysfs_streq(buf, "save"))
+> >>>>> +             ret = dptc_alib_save(dptc);
+> >>>>> +     else if (sysfs_streq(buf, "single"))
+> >>>>> +             dptc->save_mode = SAVE_SINGLE;
+> >>>>> +     else if (sysfs_streq(buf, "bulk"))
+> >>>>> +             dptc->save_mode = SAVE_BULK;
+> >>>>> +     else
+> >>>>> +             return -EINVAL;
+> >>>>> +
+> >>>>> +     return ret ? ret : count;
+> >>>>> +}
+> >>>>> +
+> >>>>> +static ssize_t dptc_expanded_current_value_show(struct kobject *kobj,
+> >>>>> +                                             struct kobj_attribute *attr,
+> >>>>> +                                             char *buf)
+> >>>>> +{
+> >>>>> +     struct dptc_attr_sysfs *ps =
+> >>>>> +             container_of(attr, struct dptc_attr_sysfs, current_value);
+> >>>>> +     struct dptc_priv *dptc = ps->priv;
+> >>>>> +
+> >>>>> +     guard(mutex)(&dptc->lock);
+> >>>>> +
+> >>>>> +     return sysfs_emit(buf, "%d\n", dptc->expanded);
+> >>>>> +}
+> >>>>> +
+> >>>>> +static ssize_t dptc_expanded_current_value_store(struct kobject *kobj,
+> >>>>> +                                              struct kobj_attribute *attr,
+> >>>>> +                                              const char *buf, size_t count)
+> >>>>> +{
+> >>>>> +     struct dptc_attr_sysfs *ps =
+> >>>>> +             container_of(attr, struct dptc_attr_sysfs, current_value);
+> >>>>> +     struct dptc_priv *dptc = ps->priv;
+> >>>>> +     bool val;
+> >>>>> +     int ret;
+> >>>>> +
+> >>>>> +     ret = kstrtobool(buf, &val);
+> >>>>> +     if (ret)
+> >>>>> +             return ret;
+> >>>>> +
+> >>>>> +     guard(mutex)(&dptc->lock);
+> >>>>> +
+> >>>>> +     dptc->expanded = val;
+> >>>>> +     /* Clear staged values: limits changed, old values may be out of range */
+> >>>>> +     memset(dptc->staged, 0, sizeof(dptc->staged));
+> >>>>> +
+> >>>>> +     return count;
+> >>>>> +}
+> >>>>> +
+> >>>>> +static ssize_t dptc_expanded_default_value_show(struct kobject *kobj,
+> >>>>> +                                             struct kobj_attribute *attr,
+> >>>>> +                                             char *buf)
+> >>>>> +{
+> >>>>> +     return sysfs_emit(buf, "0\n");
+> >>>>> +}
+> >>>>> +
+> >>>>> +static ssize_t dptc_expanded_min_value_show(struct kobject *kobj,
+> >>>>> +                                         struct kobj_attribute *attr,
+> >>>>> +                                         char *buf)
+> >>>>> +{
+> >>>>> +     return sysfs_emit(buf, "0\n");
+> >>>>> +}
+> >>>>> +
+> >>>>> +static ssize_t dptc_expanded_max_value_show(struct kobject *kobj,
+> >>>>> +                                         struct kobj_attribute *attr,
+> >>>>> +                                         char *buf)
+> >>>>> +{
+> >>>>> +     return sysfs_emit(buf, "1\n");
+> >>>>> +}
+> >>>>> +
+> >>>>> +static ssize_t dptc_expanded_scalar_increment_show(struct kobject *kobj,
+> >>>>> +                                                struct kobj_attribute *attr,
+> >>>>> +                                                char *buf)
+> >>>>> +{
+> >>>>> +     return sysfs_emit(buf, "1\n");
+> >>>>> +}
+> >>>>> +
+> >>>>> +static ssize_t dptc_expanded_display_name_show(struct kobject *kobj,
+> >>>>> +                                            struct kobj_attribute *attr,
+> >>>>> +                                            char *buf)
+> >>>>> +{
+> >>>>> +     return sysfs_emit(buf, "Expanded Limits\n");
+> >>>>> +}
+> >>>>> +
+> >>>>> +static ssize_t dptc_expanded_type_show(struct kobject *kobj,
+> >>>>> +                                    struct kobj_attribute *attr, char *buf)
+> >>>>> +{
+> >>>>> +     return sysfs_emit(buf, "integer\n");
+> >>>>> +}
+> >>>>> +
+> >>>>> +/* Sysfs setup */
+> >>>>> +
+> >>>>> +static void dptc_setup_param_sysfs(struct dptc_priv *dptc,
+> >>>>> +                                struct dptc_attr_sysfs *ps, int idx)
+> >>>>> +{
+> >>>>> +     ps->priv = dptc;
+> >>>>> +     ps->idx = idx;
+> >>>>> +
+> >>>>> +     sysfs_attr_init(&ps->current_value.attr);
+> >>>>> +     ps->current_value.attr.name  = "current_value";
+> >>>>> +     ps->current_value.attr.mode  = 0644;
+> >>>>> +     ps->current_value.show       = dptc_current_value_show;
+> >>>>> +     ps->current_value.store      = dptc_current_value_store;
+> >>>>> +
+> >>>>> +     sysfs_attr_init(&ps->default_value.attr);
+> >>>>> +     ps->default_value.attr.name  = "default_value";
+> >>>>> +     ps->default_value.attr.mode  = 0444;
+> >>>>> +     ps->default_value.show       = dptc_default_value_show;
+> >>>>> +
+> >>>>> +     sysfs_attr_init(&ps->min_value.attr);
+> >>>>> +     ps->min_value.attr.name      = "min_value";
+> >>>>> +     ps->min_value.attr.mode      = 0444;
+> >>>>> +     ps->min_value.show           = dptc_min_value_show;
+> >>>>> +
+> >>>>> +     sysfs_attr_init(&ps->max_value.attr);
+> >>>>> +     ps->max_value.attr.name      = "max_value";
+> >>>>> +     ps->max_value.attr.mode      = 0444;
+> >>>>> +     ps->max_value.show           = dptc_max_value_show;
+> >>>>> +
+> >>>>> +     sysfs_attr_init(&ps->scalar_increment.attr);
+> >>>>> +     ps->scalar_increment.attr.name = "scalar_increment";
+> >>>>> +     ps->scalar_increment.attr.mode = 0444;
+> >>>>> +     ps->scalar_increment.show      = dptc_scalar_increment_show;
+> >>>>> +
+> >>>>> +     sysfs_attr_init(&ps->display_name.attr);
+> >>>>> +     ps->display_name.attr.name   = "display_name";
+> >>>>> +     ps->display_name.attr.mode   = 0444;
+> >>>>> +     ps->display_name.show        = dptc_display_name_show;
+> >>>>> +
+> >>>>> +     sysfs_attr_init(&ps->type.attr);
+> >>>>> +     ps->type.attr.name           = "type";
+> >>>>> +     ps->type.attr.mode           = 0444;
+> >>>>> +     ps->type.show                = dptc_type_show;
+> >>>>> +
+> >>>>> +     ps->attrs[0] = &ps->current_value.attr;
+> >>>>> +     ps->attrs[1] = &ps->default_value.attr;
+> >>>>> +     ps->attrs[2] = &ps->min_value.attr;
+> >>>>> +     ps->attrs[3] = &ps->max_value.attr;
+> >>>>> +     ps->attrs[4] = &ps->scalar_increment.attr;
+> >>>>> +     ps->attrs[5] = &ps->display_name.attr;
+> >>>>> +     ps->attrs[6] = &ps->type.attr;
+> >>>>> +     ps->attrs[7] = NULL;
+> >>>>> +
+> >>>>> +     ps->group.name  = dptc_params[idx].name;
+> >>>>> +     ps->group.attrs = ps->attrs;
+> >>>>> +}
+> >>>>> +
+> >>>>> +static void dptc_setup_expanded_sysfs(struct dptc_priv *dptc,
+> >>>>> +                                   struct dptc_attr_sysfs *ps)
+> >>>>> +{
+> >>>>> +     ps->priv = dptc;
+> >>>>> +     sysfs_attr_init(&ps->current_value.attr);
+> >>>>> +     ps->current_value.attr.name  = "current_value";
+> >>>>> +     ps->current_value.attr.mode  = 0644;
+> >>>>> +     ps->current_value.show       = dptc_expanded_current_value_show;
+> >>>>> +     ps->current_value.store      = dptc_expanded_current_value_store;
+> >>>>> +
+> >>>>> +     sysfs_attr_init(&ps->default_value.attr);
+> >>>>> +     ps->default_value.attr.name  = "default_value";
+> >>>>> +     ps->default_value.attr.mode  = 0444;
+> >>>>> +     ps->default_value.show       = dptc_expanded_default_value_show;
+> >>>>> +
+> >>>>> +     sysfs_attr_init(&ps->min_value.attr);
+> >>>>> +     ps->min_value.attr.name      = "min_value";
+> >>>>> +     ps->min_value.attr.mode      = 0444;
+> >>>>> +     ps->min_value.show           = dptc_expanded_min_value_show;
+> >>>>> +
+> >>>>> +     sysfs_attr_init(&ps->max_value.attr);
+> >>>>> +     ps->max_value.attr.name      = "max_value";
+> >>>>> +     ps->max_value.attr.mode      = 0444;
+> >>>>> +     ps->max_value.show           = dptc_expanded_max_value_show;
+> >>>>> +
+> >>>>> +     sysfs_attr_init(&ps->scalar_increment.attr);
+> >>>>> +     ps->scalar_increment.attr.name = "scalar_increment";
+> >>>>> +     ps->scalar_increment.attr.mode = 0444;
+> >>>>> +     ps->scalar_increment.show      = dptc_expanded_scalar_increment_show;
+> >>>>> +
+> >>>>> +     sysfs_attr_init(&ps->display_name.attr);
+> >>>>> +     ps->display_name.attr.name   = "display_name";
+> >>>>> +     ps->display_name.attr.mode   = 0444;
+> >>>>> +     ps->display_name.show        = dptc_expanded_display_name_show;
+> >>>>> +
+> >>>>> +     sysfs_attr_init(&ps->type.attr);
+> >>>>> +     ps->type.attr.name           = "type";
+> >>>>> +     ps->type.attr.mode           = 0444;
+> >>>>> +     ps->type.show                = dptc_expanded_type_show;
+> >>>>> +
+> >>>>> +     ps->attrs[0] = &ps->current_value.attr;
+> >>>>> +     ps->attrs[1] = &ps->default_value.attr;
+> >>>>> +     ps->attrs[2] = &ps->min_value.attr;
+> >>>>> +     ps->attrs[3] = &ps->max_value.attr;
+> >>>>> +     ps->attrs[4] = &ps->scalar_increment.attr;
+> >>>>> +     ps->attrs[5] = &ps->display_name.attr;
+> >>>>> +     ps->attrs[6] = &ps->type.attr;
+> >>>>> +     ps->attrs[7] = NULL;
+> >>>>> +
+> >>>>> +     ps->group.name  = "expanded_limits";
+> >>>>> +     ps->group.attrs = ps->attrs;
+> >>>>> +}
+> >>>>> +
+> >>>>> +static void dptc_fw_dev_unregister(void *data)
+> >>>>> +{
+> >>>>> +     device_unregister(data);
+> >>>>> +}
+> >>>>> +
+> >>>>> +static void dptc_kset_unregister(void *data)
+> >>>>> +{
+> >>>>> +     kset_unregister(data);
+> >>>>> +}
+> >>>>> +
+> >>>>> +static int dptc_resume(struct device *dev)
+> >>>>> +{
+> >>>>> +     struct dptc_priv *dptc = dev_get_drvdata(dev);
+> >>>>> +     int ret;
+> >>>>> +
+> >>>>> +     guard(mutex)(&dptc->lock);
+> >>>>> +
+> >>>>> +     /* In bulk mode, do not use pm ops for userspace flexibility. */
+> >>>>> +     if (dptc->save_mode == SAVE_SINGLE)
+> >>>>> +             ret = dptc_alib_save(dptc);
+> >>>>> +     else
+> >>>>> +             ret = 0;
+> >>>>> +
+> >>>>> +     if (ret && ret != -ENOENT)
+> >>>>> +             dev_warn(dev, "failed to restore settings on resume: %d\n", ret);
+> >>>>> +
+> >>>>> +     return 0;
+> >>>>> +}
+> >>>>> +
+> >>>>> +static DEFINE_SIMPLE_DEV_PM_OPS(dptc_pm_ops, NULL, dptc_resume);
+> >>>>> +
+> >>>>> +static int dptc_probe(struct platform_device *pdev)
+> >>>>> +{
+> >>>>> +     const struct dmi_system_id *dmi_match = dev_get_platdata(&pdev->dev);
+> >>>>> +     struct device *dev = &pdev->dev;
+> >>>>> +     struct dptc_priv *dptc;
+> >>>>> +     int i, ret;
+> >>>>> +
+> >>>>> +     dptc = devm_kzalloc(dev, sizeof(*dptc), GFP_KERNEL);
+> >>>>> +     if (!dptc)
+> >>>>> +             return -ENOMEM;
+> >>>>> +
+> >>>>> +     platform_set_drvdata(pdev, dptc);
+> >>>>> +
+> >>>>> +     ret = devm_mutex_init(dev, &dptc->lock);
+> >>>>> +     if (ret)
+> >>>>> +             return ret;
+> >>>>> +
+> >>>>> +     dptc->dev_limits = dmi_match->driver_data;
+> >>>>> +     dev_info(dev, "%s (%s)\n", dmi_match->ident,
+> >>>>> +              boot_cpu_data.x86_model_id);
+> >>>>> +
+> >>>>> +     dptc->fw_attr_dev = device_create(&firmware_attributes_class,
+> >>>>> +                                       NULL, MKDEV(0, 0), NULL, DRIVER_NAME);
+> >>>>> +     if (IS_ERR(dptc->fw_attr_dev))
+> >>>>> +             return PTR_ERR(dptc->fw_attr_dev);
+> >>>>> +
+> >>>>> +     ret = devm_add_action_or_reset(dev, dptc_fw_dev_unregister,
+> >>>>> +                                    dptc->fw_attr_dev);
+> >>>>> +     if (ret)
+> >>>>> +             return ret;
+> >>>>> +
+> >>>>> +     dptc->fw_attr_kset = kset_create_and_add("attributes", NULL,
+> >>>>> +                                              &dptc->fw_attr_dev->kobj);
+> >>>>> +     if (!dptc->fw_attr_kset)
+> >>>>> +             return -ENOMEM;
+> >>>>> +
+> >>>>> +     ret = devm_add_action_or_reset(dev, dptc_kset_unregister,
+> >>>>> +                                    dptc->fw_attr_kset);
+> >>>>> +     if (ret)
+> >>>>> +             return ret;
+> >>>>> +
+> >>>>> +     for (i = 0; i < DPTC_NUM_PARAMS; i++) {
+> >>>>> +             dptc_setup_param_sysfs(dptc, &dptc->params[i], i);
+> >>>>> +             ret = sysfs_create_group(&dptc->fw_attr_kset->kobj,
+> >>>>> +                                      &dptc->params[i].group);
+> >>>>> +             if (ret)
+> >>>>> +                     return ret;
+> >>>>> +     }
+> >>>>> +
+> >>>>> +     dptc_setup_expanded_sysfs(dptc, &dptc->expanded_attr);
+> >>>>> +     ret = sysfs_create_group(&dptc->fw_attr_kset->kobj,
+> >>>>> +                              &dptc->expanded_attr.group);
+> >>>>> +     if (ret)
+> >>>>> +             return ret;
+> >>>>> +
+> >>>>> +     sysfs_attr_init(&dptc->save_settings_attr.attr);
+> >>>>> +     dptc->save_settings_attr.attr.name  = "save_settings";
+> >>>>> +     dptc->save_settings_attr.attr.mode  = 0644;
+> >>>>> +     dptc->save_settings_attr.show       = dptc_save_settings_show;
+> >>>>> +     dptc->save_settings_attr.store      = dptc_save_settings_store;
+> >>>>> +     ret = sysfs_create_file(&dptc->fw_attr_kset->kobj,
+> >>>>> +                             &dptc->save_settings_attr.attr);
+> >>>>> +     if (ret)
+> >>>>> +             return ret;
+> >>>>> +
+> >>>>> +     return 0;
+> >>>>> +}
+> >>>>> +
+> >>>>> +static struct platform_driver dptc_driver = {
+> >>>>> +     .driver = {
+> >>>>> +             .name = DRIVER_NAME,
+> >>>>> +             .pm   = pm_sleep_ptr(&dptc_pm_ops),
+> >>>>> +     },
+> >>>>> +     .probe  = dptc_probe,
+> >>>>> +};
+> >>>>> +
+> >>>>> +static int __init dptc_init(void)
+> >>>>> +{
+> >>>>> +     const struct dmi_system_id *match;
+> >>>>> +     bool soc_found = false;
+> >>>>> +     int i, ret;
+> >>>>> +
+> >>>>> +     match = dmi_first_match(dptc_dmi_table);
+> >>>>> +     if (!match)
+> >>>>> +             return -ENODEV;
+> >>>>> +
+> >>>>> +     if (!acpi_has_method(NULL, ALIB_PATH)) {
+> >>>>> +             pr_warn("ALIB method not present\n");
+> >>>>> +             return -ENODEV;
+> >>>>> +     }
+> >>>>> +
+> >>>>> +     for (i = 0; dptc_soc_table[i]; i++) {
+> >>>>> +             if (strstr(boot_cpu_data.x86_model_id,
+> >>>>> +                        dptc_soc_table[i])) {
+> >>>>> +                     soc_found = true;
+> >>>>> +                     break;
+> >>>>> +             }
+> >>>>> +     }
+> >>>>> +     if (!soc_found) {
+> >>>>> +             pr_warn("unrecognized SoC '%s'\n",
+> >>>>> +                     boot_cpu_data.x86_model_id);
+> >>>>> +             return -ENODEV;
+> >>>>> +     }
+> >>>>> +
+> >>>>> +     dptc_pdev = platform_device_register_data(NULL, DRIVER_NAME, -1,
+> >>>>> +                                               match, sizeof(*match));
+> >>>>> +     if (IS_ERR(dptc_pdev))
+> >>>>> +             return PTR_ERR(dptc_pdev);
+> >>>>> +
+> >>>>> +     ret = platform_driver_register(&dptc_driver);
+> >>>>> +     if (ret) {
+> >>>>> +             platform_device_unregister(dptc_pdev);
+> >>>>> +             return ret;
+> >>>>> +     }
+> >>>>> +
+> >>>>> +     return 0;
+> >>>>> +}
+> >>>>> +
+> >>>>> +static void __exit dptc_exit(void)
+> >>>>> +{
+> >>>>> +     platform_driver_unregister(&dptc_driver);
+> >>>>> +     platform_device_unregister(dptc_pdev);
+> >>>>> +}
+> >>>>> +
+> >>>>> +module_init(dptc_init);
+> >>>>> +module_exit(dptc_exit);
+> >>>>> +
+> >>>>> +MODULE_AUTHOR("Antheas Kapenekakis <lkml@antheas.dev>");
+> >>>>> +MODULE_DESCRIPTION("AMD DPTCi ACPI Driver");
+> >>>>> +MODULE_LICENSE("GPL");
+> >>>>
+> >>>>
+> >>>
+> >>
+> >>
+> >
+>
+>
 
