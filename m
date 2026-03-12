@@ -1,108 +1,72 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.15])
+Received: from out-181.mta1.migadu.com (out-181.mta1.migadu.com [95.215.58.181])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D7C0F386C04;
-	Thu, 12 Mar 2026 20:58:13 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.15
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9CD2E38B132
+	for <platform-driver-x86@vger.kernel.org>; Thu, 12 Mar 2026 21:24:56 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=95.215.58.181
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1773349095; cv=none; b=DCVu2JJDvPyB3KTWTG+aCGW2Vu6hK2MSSydDbW6McJ+LmNDj+88d54/NDalVUvZFosZo9DSYBmcueKhoST39zcfzHvMEW5lzlTt8azdn2v2Gfb9gL7q7fMEcxvdjtQFC2cCvuEse3OacH2uzIe45RVesr7QsN2lUI4Hf+xq9euM=
+	t=1773350698; cv=none; b=YrKx796ZjiS1BZXY0PeMem/jdrF6sCK6uNg22RJDur5T8RIrTKo2+aPPt/JKaZ2MsK5qEAdHi1ivaB/UkiW3/RbdEPY3LiCgFg7stmjBWT+P26Tohpjue/Rv2TXPNUCnz766IcmFVKCrx0R7Cc4ejsFPdnBmkbqFQPGhB+8CJeg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1773349095; c=relaxed/simple;
-	bh=vhOYrw/DVA2RJTCv7jox3hLnZDAXlifzBNUjQ3RzxEY=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=rEQF4ZJmjpMNvUXhHzIcpRxePBOoTd0G90XA8lkiTd/nqp4Mo9vpMGTamDlvw1cbUffBVVrJpXeV3UFhhOjojz1JhlsIUsoSM5U6g+xv8wM1jTxrV/xmJ8KDAucF1MoA8Nv7ZdhmwpVB5TnPmxMtl5PlBxBJE1dT4o6thsm9tcs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=pass smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=PkM434Hz; arc=none smtp.client-ip=198.175.65.15
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.intel.com
+	s=arc-20240116; t=1773350698; c=relaxed/simple;
+	bh=etoSAVeC4+FfGUCh9hbQJEOFAq1ZaQsXbWntHgwFXPk=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=TkfR0xkaq8zyv6agZIhVw2DOd2dJLSHY6Oh62r03923tXv69n1ldQJer6BDhgQ08Bces4vXhj0qyUriQc3Z78QLOxVydpcVh2Sr6+Z1seijc1BCVyEa47sw7W6KRnXjKjj/gmgHVEy8uym+I1kxFWOZrn1U37b3tT2BSDcXDNf8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=LcWfTt0E; arc=none smtp.client-ip=95.215.58.181
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="PkM434Hz"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1773349094; x=1804885094;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=vhOYrw/DVA2RJTCv7jox3hLnZDAXlifzBNUjQ3RzxEY=;
-  b=PkM434HzQlrhLUFzJheAZyrnQIeLEGYduXU3HooUFV+5zgBkKtqgDaMq
-   dOIdA2kEnJYtDSsYZujfkICpbEyJPgrUFx/gCTN17VdgBcpjNWZpvgSzZ
-   88DHm3vBapAvjCFW7T0DGNh2HPhHcs1hNN5rFROzePcz+8t0fRrfdi7mr
-   N5mgwDBvaBOmMIByqLT32w2MlIPp65KTmTpJQNjyn5ZxLRNuhRH6nbLHt
-   8dUZDgH+YqgtZ4eilcHTJ3I07t/pK1GCMGePB7BiQPKx5xFkWxpAY/5p3
-   yLdu+SmmY3jRy+zGCWt/LL7Aa7qlkvFXuUKFNke2m1cIcZ+vPfs+6D7/z
-   w==;
-X-CSE-ConnectionGUID: vVc4Uz4ERWSgYysdNK/enA==
-X-CSE-MsgGUID: ieXVVdHuT1WGiQegEzohYA==
-X-IronPort-AV: E=McAfee;i="6800,10657,11727"; a="78059313"
-X-IronPort-AV: E=Sophos;i="6.23,116,1770624000"; 
-   d="scan'208";a="78059313"
-Received: from fmviesa005.fm.intel.com ([10.60.135.145])
-  by orvoesa107.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 12 Mar 2026 13:58:14 -0700
-X-CSE-ConnectionGUID: CxUCfibIQBeOYVMw/D3uLA==
-X-CSE-MsgGUID: BA9fVZzwQhyvjPI767iWPQ==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.23,116,1770624000"; 
-   d="scan'208";a="225640039"
-Received: from fpallare-mobl4.ger.corp.intel.com (HELO kekkonen.fi.intel.com) ([10.245.245.184])
-  by fmviesa005-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 12 Mar 2026 13:58:09 -0700
-Received: from kekkonen.localdomain (localhost [IPv6:::1])
-	by kekkonen.fi.intel.com (Postfix) with SMTP id 57EC1120E92;
-	Thu, 12 Mar 2026 23:00:06 +0200 (EET)
-Date: Thu, 12 Mar 2026 23:00:06 +0200
-Organization: Intel Finland Oy - BIC 0357606-4 - c/o Alberga Business Park, 6 krs, Bertel Jungin Aukio 5, 02600 Espoo
-From: Sakari Ailus <sakari.ailus@linux.intel.com>
-To: Hans de Goede <hansg@kernel.org>
-Cc: Antti Laakso <antti.laakso@linux.intel.com>,
-	linux-media@vger.kernel.org, linux-gpio@vger.kernel.org,
-	platform-driver-x86@vger.kernel.org, linusw@kernel.org,
-	brgl@kernel.org, mchehab@kernel.org, dan.scally@ideasonboard.com,
-	ilpo.jarvinen@linux.intel.com, hverkuil+cisco@kernel.org,
-	sre@kernel.org, hao.yao@intel.com, jimmy.su@intel.com,
-	miguel.vadillo@intel.com, kees@kernel.org, ribalda@chromium.org
-Subject: Re: [PATCH v2 5/5] platform: int3472: Add MSI prestige board data
-Message-ID: <abMpVo1eCvtBObv_@kekkonen.localdomain>
-References: <20260311131910.835513-1-antti.laakso@linux.intel.com>
- <20260311131910.835513-6-antti.laakso@linux.intel.com>
- <dc7f24b2-ec57-4937-92f1-f80b1f1e785a@kernel.org>
+	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="LcWfTt0E"
+X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
+	t=1773350694;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:
+	 content-transfer-encoding:content-transfer-encoding;
+	bh=E/WK0PqxZWoPri8rdv9a8+9gC38bPj0ETkUmXtODS2E=;
+	b=LcWfTt0E276Sfz2XsU+fUzHcYytm/bfVcBp1AHRVHeWi11JoZ7LKjImCJ43TSc0ZnUaqpk
+	kZNlX2rPISBUKqG098cgGx70Qc6HfYkPQio1zBELGoYNo/kf8L3gpSTIOdp3VUh6UZ8w8i
+	+sQGekeWxDnJMQiBOTPJDp9I41qqto4=
+From: Matthew Schwartz <matthew.schwartz@linux.dev>
+To: Denis Benato <benato.denis96@gmail.com>,
+	Hans de Goede <hansg@kernel.org>,
+	ilpo.jarvinen@linux.intel.com
+Cc: platform-driver-x86@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	Matthew Schwartz <matthew.schwartz@linux.dev>
+Subject: [PATCH] platform/x86: asus-nb-wmi: add DMI quirk for ASUS ROG Flow Z13-KJP GZ302EAC
+Date: Thu, 12 Mar 2026 14:22:46 -0700
+Message-ID: <20260312212246.1608080-1-matthew.schwartz@linux.dev>
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <dc7f24b2-ec57-4937-92f1-f80b1f1e785a@kernel.org>
+Content-Transfer-Encoding: 8bit
+X-Migadu-Flow: FLOW_OUT
 
-Hi Hans, others,
+The ASUS ROG Flow Z13-KJP GZ302EAC model uses sys_vendor name ASUS
+rather than ASUSTeK COMPUTER INC., but it needs the same folio quirk as
+the other ROG Flow Z13. To keep things simple, just match on sys_vendor
+ASUS since it covers both.
 
-On Wed, Mar 11, 2026 at 03:35:28PM +0100, Hans de Goede wrote:
-> > +static const struct regulator_init_data msi_p14_ai_evo_tps68470_vio_reg_init_data = {
-> > +	.constraints = {
-> > +		.min_uV = 1800600,
-> > +		.max_uV = 1800600,
-> > +		.apply_uV = 1,
-> > +		.valid_ops_mask = REGULATOR_CHANGE_STATUS,
-> > +	},
-> 
-> > +	.num_consumer_supplies = 0,
-> > +	.consumer_supplies = NULL,
-> 
-> Nit (no need to fix unless you need to do a v3 for other reasons),
-> these 2 explicit foo = 0 initializers are not necessary and can
-> be dropped.
+Signed-off-by: Matthew Schwartz <matthew.schwartz@linux.dev>
+---
+ drivers/platform/x86/asus-nb-wmi.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-I can fix this while applying...
-
-> 
-> Otherwise this looks good to me:
-> 
-> Reviewed-by: Hans de Goede <johannes.goede@oss.qualcomm.com>
-
-...assuming everyone is fine with merging these via the media tree. Let me
-know if there are concerns.
-
-Thank you for the reviews.
-
+diff --git a/drivers/platform/x86/asus-nb-wmi.c b/drivers/platform/x86/asus-nb-wmi.c
+index a38a65f5c550d..b4677c5bba5b4 100644
+--- a/drivers/platform/x86/asus-nb-wmi.c
++++ b/drivers/platform/x86/asus-nb-wmi.c
+@@ -548,7 +548,7 @@ static const struct dmi_system_id asus_quirks[] = {
+ 		.callback = dmi_matched,
+ 		.ident = "ASUS ROG Z13",
+ 		.matches = {
+-			DMI_MATCH(DMI_SYS_VENDOR, "ASUSTeK COMPUTER INC."),
++			DMI_MATCH(DMI_SYS_VENDOR, "ASUS"),
+ 			DMI_MATCH(DMI_PRODUCT_NAME, "ROG Flow Z13"),
+ 		},
+ 		.driver_data = &quirk_asus_z13,
 -- 
-Kind regards,
+2.53.0
 
-Sakari Ailus
