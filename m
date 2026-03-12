@@ -1,53 +1,46 @@
 Received: from mail.tuxedocomputers.com (mail.tuxedocomputers.com [157.90.84.7])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EEC263AA51F;
-	Thu, 12 Mar 2026 19:25:08 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0E1B3367F53;
+	Thu, 12 Mar 2026 19:27:08 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=157.90.84.7
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1773343510; cv=none; b=rtBgJPL67MCfddM/xemiAKFI2mcSwdWj3ocuTp8kwRDPjeUEkprvUW+p6RuAYG8pWobt42ODmFN9KkCoc66J3tNaXuNGKIEirwrv0jcck3JGSqEbsJyyID39Wrz0IA8l7gbWYMCH5eD+8JI3gUmYbm7JnFUaszuV7XMYzNdDMCU=
+	t=1773343631; cv=none; b=oqbMrEarXBSFmtEd9aiLRZDCirCnXv+Ni0zohkNMRnAktLFTsJ+T5+6cMvIuEcdHf2X/uqXY2kZBM24ahpy4+c2Gte71OZORrIYxGGAjPeWruqNImtAmf/Cwk050StKjbJiNpMHDsDNNBbZpcfd9HI6/eojeJq8VGqLYH5tSm7Q=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1773343510; c=relaxed/simple;
-	bh=uk5ksVFtS2spYqX2rJTpinm0RDr5ENjLVeuaQXLj+Gc=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=MjC+leacIKVLLxgwDOZj1OHq9HvEgBoNILnDFialFYbE4tJiduCfI9yWxUtB+7PbnvxL0Lj6XL1x/jSabFoWuy6BZzXfMYPKDb2HJHO3LkEgOf5WYqV3y41K17G606RXGAoiLGZl5DjiWhIkZohBbSb1rTitoj/VQHEiSVw4A0A=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=tuxedocomputers.com; spf=pass smtp.mailfrom=tuxedocomputers.com; dkim=pass (1024-bit key) header.d=tuxedocomputers.com header.i=@tuxedocomputers.com header.b=JQwmJI7b; arc=none smtp.client-ip=157.90.84.7
+	s=arc-20240116; t=1773343631; c=relaxed/simple;
+	bh=Fv57+s5FN/MhboViLzQhyK6eXaJIFqplyqwsNx/zR0g=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=EYU9ACid/FIBWP7IjH1b8tCGvB9p/dVfX54YOeWBDrm3fJcl5KkUljQ+U/Bk+U1UqB3nxf1+su23zEml6RUStOqKcxEzvb2vH3LOxbPMuD1q4Yebl9FFDtSMCnQEtUQr94q3j2cFOi02cL6jh51ZuxBoxuvSCsAxUNiq0vxRTnU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=tuxedocomputers.com; spf=pass smtp.mailfrom=tuxedocomputers.com; dkim=pass (1024-bit key) header.d=tuxedocomputers.com header.i=@tuxedocomputers.com header.b=hQ1NdWA+; arc=none smtp.client-ip=157.90.84.7
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=tuxedocomputers.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=tuxedocomputers.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=tuxedocomputers.com header.i=@tuxedocomputers.com header.b="JQwmJI7b"
+	dkim=pass (1024-bit key) header.d=tuxedocomputers.com header.i=@tuxedocomputers.com header.b="hQ1NdWA+"
 Received: from wse-pc.fritz.box (i5C75F5CE.versanet.de [92.117.245.206])
 	(Authenticated sender: wse@tuxedocomputers.com)
-	by mail.tuxedocomputers.com (Postfix) with ESMTPA id 73E452FC005D;
-	Thu, 12 Mar 2026 20:25:06 +0100 (CET)
+	by mail.tuxedocomputers.com (Postfix) with ESMTPA id 189D22FC004D;
+	Thu, 12 Mar 2026 20:27:07 +0100 (CET)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=tuxedocomputers.com;
-	s=default; t=1773343506;
+	s=default; t=1773343627;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=aV5jlB/nShj+Fq2WN4nTiZNabEX3FkzI+uXE9kXBcZw=;
-	b=JQwmJI7bar4IYFoetpVQNTGQqTzrKO5NmVdEykRL122rEnQfNVi/1CxVgyxl4UppOgCecA
-	dwPUu5X58YRVIl6W5Lv63DICYE9RR0OXPuRJ4HyqBqjXaQadyv2n2cjkHnu3alF3QUlC3N
-	eOMoe8GgoWRHNshECJiTac7nGDzcpfo=
+	 content-transfer-encoding:content-transfer-encoding;
+	bh=3JMj3pzp1S+kyAhbS0A2po8jn1vGK2XzwdurrPiKmhE=;
+	b=hQ1NdWA+rFPWgGn1ul6W/3FB17tU//g463fwbOhE+HRSRDAQq7s9cWWdJ/NNLRyzezEaIb
+	zEzL1D9s1uPNa4W/KcJ6q9kDAS3H8mrH/kgS6CcNOgJtIqQA4sjpedGpieMNMXHQrP+hp1
+	rhwhSgYfh21H9j6HQcuxbsaRax6Gg90=
 Authentication-Results: mail.tuxedocomputers.com;
 	auth=pass smtp.auth=wse@tuxedocomputers.com smtp.mailfrom=wse@tuxedocomputers.com
 From: Werner Sembach <wse@tuxedocomputers.com>
 To: W_Armin@gmx.de,
 	hansg@kernel.org,
-	ilpo.jarvinen@linux.intel.com,
-	Jonathan Corbet <corbet@lwn.net>,
-	Shuah Khan <skhan@linuxfoundation.org>
+	ilpo.jarvinen@linux.intel.com
 Cc: platform-driver-x86@vger.kernel.org,
 	linux-kernel@vger.kernel.org,
-	Werner Sembach <wse@tuxedocomputers.com>,
-	linux-doc@vger.kernel.org
-Subject: [PATCH v5 5/5] Documentation: laptops: Update documentation for uniwill laptops
-Date: Thu, 12 Mar 2026 20:23:01 +0100
-Message-ID: <20260312192456.75913-6-wse@tuxedocomputers.com>
+	Werner Sembach <wse@tuxedocomputers.com>
+Subject: [PATCH v6 0/5] platform/x86: uniwill-laptop: More support for TUXEDO devices
+Date: Thu, 12 Mar 2026 20:25:23 +0100
+Message-ID: <20260312192705.76576-1-wse@tuxedocomputers.com>
 X-Mailer: git-send-email 2.43.0
-In-Reply-To: <20260312192456.75913-1-wse@tuxedocomputers.com>
-References: <20260312192456.75913-1-wse@tuxedocomputers.com>
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
@@ -56,76 +49,37 @@ List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-Adds short description for two new sysfs entries, ctgp_offset and
-usb_c_power_priority, to the documentation of uniwill laptops.
+Sorry for sending a secound time, messed up subject line (still had v5
+instead of v6).
 
-Signed-off-by: Werner Sembach <wse@tuxedocomputers.com>
-Reviewed-by: Armin Wolf <W_Armin@gmx.de>
----
- .../ABI/testing/sysfs-driver-uniwill-laptop   | 25 +++++++++++++++++++
- .../admin-guide/laptops/uniwill-laptop.rst    | 12 +++++++++
- 2 files changed, 37 insertions(+)
+v2: Incorporate Armins feedback.
+v3: Incorporate more of Armins feedback.
+    Rework USB-C power prio functions
+v4: Readd system vendor SchenkerTechnologiesGmbH for XMG FUSION (L19)
+    Replace for loops with if statements for USB-C power priority functions
+    Add missing mutex in usb_c_power_priority_restore
+v5: Restructure patch around new entry for XMG Fusion
+    Add missing Reviewed-by and Tested-by
+    Spelling fixes in documentation
+v6: Fix small format error in docs
+    Fix Reviewed-by line
 
-diff --git a/Documentation/ABI/testing/sysfs-driver-uniwill-laptop b/Documentation/ABI/testing/sysfs-driver-uniwill-laptop
-index 2df70792968f3..cba4138604601 100644
---- a/Documentation/ABI/testing/sysfs-driver-uniwill-laptop
-+++ b/Documentation/ABI/testing/sysfs-driver-uniwill-laptop
-@@ -51,3 +51,28 @@ Description:
- 
- 		Reading this file returns the current status of the breathing animation
- 		functionality.
-+
-+What:		/sys/bus/platform/devices/INOU0000:XX/ctgp_offset
-+Date:		January 2026
-+KernelVersion:	7.0
-+Contact:	Werner Sembach <wse@tuxedocomputers.com>
-+Description:
-+		Allows userspace applications to set the configurable TGP offset on top of the base
-+		TGP. Base TGP and max TGP and therefore the max cTGP offset are device specific.
-+		Note that setting the maximal cTGP leaves no window open for Dynamic Boost,
-+		effectively disabling that feature for the GPU to always be prioritized.
-+
-+		Reading this file returns the current configurable TGP offset.
-+
-+What:		/sys/bus/platform/devices/INOU0000:XX/usb_c_power_priority
-+Date:		February 2026
-+KernelVersion:	7.1
-+Contact:	Werner Sembach <wse@tuxedocomputers.com>
-+Description:
-+		Allows userspace applications to choose the USB-C power distribution profile between
-+		one that offers a bigger share of the power to the battery and one that offers more
-+		of it to the CPU. Writing "charging"/"performance" into this file selects the
-+		respective profile.
-+
-+		Reading this file returns the profile names with the currently active one in
-+		brackets.
-diff --git a/Documentation/admin-guide/laptops/uniwill-laptop.rst b/Documentation/admin-guide/laptops/uniwill-laptop.rst
-index aff5f57a6bd47..561334865feb7 100644
---- a/Documentation/admin-guide/laptops/uniwill-laptop.rst
-+++ b/Documentation/admin-guide/laptops/uniwill-laptop.rst
-@@ -50,6 +50,10 @@ between 1 and 100 percent are supported.
- Additionally the driver signals the presence of battery charging issues through the standard
- ``health`` power supply sysfs attribute.
- 
-+It also lets you set whether a USB-C power source should prioritise charging the battery or
-+delivering immediate power to the cpu. See Documentation/ABI/testing/sysfs-driver-uniwill-laptop for
-+details.
-+
- Lightbar
- --------
- 
-@@ -58,3 +62,11 @@ LED class device. The default name of this LED class device is ``uniwill:multico
- 
- See Documentation/ABI/testing/sysfs-driver-uniwill-laptop for details on how to control the various
- animation modes of the lightbar.
-+
-+Configurable TGP
-+----------------
-+
-+The ``uniwill-laptop`` driver allows to set the configurable TGP for devices with NVIDIA GPUs that
-+allow it.
-+
-+See Documentation/ABI/testing/sysfs-driver-uniwill-laptop for details.
+Armin Wolf (1):
+  platform/x86: uniwill-laptop: Rework hwmon feature defines
+
+Werner Sembach (4):
+  platform/x86: uniwill-laptop: Implement USB-C power priority setting
+  platform/x86: uniwill-laptop: Fix XMG Fusion 15 (L19) entries
+  platform/x86: uniwill-laptop: Apply features across all TUXEDO devices
+  Documentation: laptops: Update documentation for uniwill laptops
+
+ .../ABI/testing/sysfs-driver-uniwill-laptop   |  25 +
+ .../admin-guide/laptops/uniwill-laptop.rst    |  12 +
+ drivers/platform/x86/uniwill/uniwill-acpi.c   | 439 +++++++++++++++---
+ 3 files changed, 406 insertions(+), 70 deletions(-)
+
+
+base-commit: 1f318b96cc84d7c2ab792fcc0bfd42a7ca890681
 -- 
 2.43.0
 
