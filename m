@@ -1,96 +1,82 @@
 Received: from mail.tuxedocomputers.com (mail.tuxedocomputers.com [157.90.84.7])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 04CF53A9D8F;
-	Thu, 12 Mar 2026 19:18:12 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 252A73290AE;
+	Thu, 12 Mar 2026 19:25:04 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=157.90.84.7
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1773343096; cv=none; b=JljTBZr58L6/dbIkuFPClbxxfgQ+/I8NdfBop6Mxjy2N4rhillbO0PYxMqRYljbHUDA8r//w6gsX2MfYAwH7V3vPinA3WQ2ekG3lYEcUJ/XXcpTDm+24Uz3alqlE+alTjPiE3CLKDjnTF38t9aK47H6QkDmQYFdOL45NAojh944=
+	t=1773343507; cv=none; b=iqIsxlH/zYQDqfOzSbNY5IRBidLAM4KwKJVOaLwBwuBSuTR/CHeD1dcaa6D1infcycrWKHEjTXQiBMwezOxN1OqHggaUTXnzztSi0FqPBnql9W0F6TTag6UXR3ttiIvCd1Fuai6hJ9e/NWSp4Vdm9hfUqBqqkTN/W3IqyNEpDJ4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1773343096; c=relaxed/simple;
-	bh=4xoksxvNwzcqsd7pTKjnOVXyjQLNKigZ8L1boOx+ROE=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=Ew5F45Jk6G+lrpRigOKPx/OYtBk1S79dqLG59/FHJV9Aav6blIsHLlsMrveZHhdgmNbY8AiM9V59aX5XABAnFBQIzmEnp3o8S3+Mm+tspL3W73Bz3nuOYQ/hry08ikOVT60IU32EisjAfOsgQSSSy3Osh7euZdKaLoNZntEP/HQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=tuxedocomputers.com; spf=pass smtp.mailfrom=tuxedocomputers.com; dkim=pass (1024-bit key) header.d=tuxedocomputers.com header.i=@tuxedocomputers.com header.b=uqWBTKcV; arc=none smtp.client-ip=157.90.84.7
+	s=arc-20240116; t=1773343507; c=relaxed/simple;
+	bh=QkSPpYYF4MkheP1+Mc9d12nhlET5whxBOmDLGkQP7/Q=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=rSbc7NarSjsb6XRywg627f7kOJ+t8T0fbCM7RtexFjBxSmEu+iRsQaU6iOUB8Zt2mC5eF0jc2hRxLuRahx7G76o+rgqUclx/cClNjIMw6NlSUvxorTyX8JjxaYTWPbGOheQOzqqY7vOYktfn6VLAq7LTlTs+R6T56f/bc8CkpQo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=tuxedocomputers.com; spf=pass smtp.mailfrom=tuxedocomputers.com; dkim=pass (1024-bit key) header.d=tuxedocomputers.com header.i=@tuxedocomputers.com header.b=RvReuRvO; arc=none smtp.client-ip=157.90.84.7
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=tuxedocomputers.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=tuxedocomputers.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=tuxedocomputers.com header.i=@tuxedocomputers.com header.b="uqWBTKcV"
-Received: from [192.168.178.24] (i5C75F5CE.versanet.de [92.117.245.206])
+	dkim=pass (1024-bit key) header.d=tuxedocomputers.com header.i=@tuxedocomputers.com header.b="RvReuRvO"
+Received: from wse-pc.fritz.box (i5C75F5CE.versanet.de [92.117.245.206])
 	(Authenticated sender: wse@tuxedocomputers.com)
-	by mail.tuxedocomputers.com (Postfix) with ESMTPSA id 70E852FC004D;
-	Thu, 12 Mar 2026 20:18:10 +0100 (CET)
+	by mail.tuxedocomputers.com (Postfix) with ESMTPA id E24AD2FC004D;
+	Thu, 12 Mar 2026 20:25:02 +0100 (CET)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=tuxedocomputers.com;
-	s=default; t=1773343090;
+	s=default; t=1773343503;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=vmUeKXLZVIJERJ+3m5aFZr4fnjIqILcMoitvWxz+1NU=;
-	b=uqWBTKcVhgNGAIFlkAU/E4u+jZnJ8pVj76KNtlG8uTe0QVZlM3KSx/WBYPl6/cUUZHLXX+
-	IJDIlud+zFHJUg6Ii5Tur4zYug4TQXfs/uK3sNJQAsZrCwoSv7S3sntStzbAq/PLyjDHNb
-	6/CSidFcC/QSMUSc6dbTIDzPS+yGNx8=
+	 to:to:cc:cc:mime-version:mime-version:
+	 content-transfer-encoding:content-transfer-encoding;
+	bh=m0EKlEU1XAOvrc711jexLq07VIiR4kxO0/QHXGj4eJ0=;
+	b=RvReuRvOzEiJLGQav8E+tDtPpYA6rRKEm1ClhucvWpKJ2Orpm3gh5trAGS9GxPdvok8ZvV
+	uZOP2bLAZ22z6aeUsW8uhxl/+g6asjxyzewiPWVxXaCVyOqDi57WFqDB/ncul4D8g+Pbjj
+	ixpN487LRu8pyIQXnEkG/YiYYcPgBWs=
 Authentication-Results: mail.tuxedocomputers.com;
 	auth=pass smtp.auth=wse@tuxedocomputers.com smtp.mailfrom=wse@tuxedocomputers.com
-Message-ID: <8ec1978f-986d-4a13-9af4-71afdb4b9a29@tuxedocomputers.com>
-Date: Thu, 12 Mar 2026 20:18:10 +0100
+From: Werner Sembach <wse@tuxedocomputers.com>
+To: W_Armin@gmx.de,
+	hansg@kernel.org,
+	ilpo.jarvinen@linux.intel.com
+Cc: platform-driver-x86@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	Werner Sembach <wse@tuxedocomputers.com>
+Subject: [PATCH v5 0/5] platform/x86: uniwill-laptop: More support for TUXEDO devices
+Date: Thu, 12 Mar 2026 20:22:56 +0100
+Message-ID: <20260312192456.75913-1-wse@tuxedocomputers.com>
+X-Mailer: git-send-email 2.43.0
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v5 5/5] Documentation: laptops: Update documentation for
- uniwill laptops
-To: Jonathan Corbet <corbet@lwn.net>, Randy Dunlap <rdunlap@infradead.org>,
- W_Armin@gmx.de, hansg@kernel.org, ilpo.jarvinen@linux.intel.com,
- Shuah Khan <skhan@linuxfoundation.org>
-Cc: platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org,
- linux-doc@vger.kernel.org
-References: <20260310234022.2085232-1-wse@tuxedocomputers.com>
- <20260310234022.2085232-6-wse@tuxedocomputers.com>
- <363b80db-9bf3-44d5-a756-e64d29bd36ec@infradead.org>
- <5bb7a2ae-9754-4375-a1f5-ef23916e26dc@tuxedocomputers.com>
- <878qbxozd4.fsf@trenco.lwn.net>
-Content-Language: en-US
-From: Werner Sembach <wse@tuxedocomputers.com>
-In-Reply-To: <878qbxozd4.fsf@trenco.lwn.net>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
+
+v2: Incorporate Armins feedback.
+v3: Incorporate more of Armins feedback.
+    Rework USB-C power prio functions
+v4: Readd system vendor SchenkerTechnologiesGmbH for XMG FUSION (L19)
+    Replace for loops with if statements for USB-C power priority functions
+    Add missing mutex in usb_c_power_priority_restore
+v5: Restructure patch around new entry for XMG Fusion
+    Add missing Reviewed-by and Tested-by
+    Spelling fixes in documentation
+v6: Fix small format error in docs
+    Fix Reviewed-by line
+
+Armin Wolf (1):
+  platform/x86: uniwill-laptop: Rework hwmon feature defines
+
+Werner Sembach (4):
+  platform/x86: uniwill-laptop: Implement USB-C power priority setting
+  platform/x86: uniwill-laptop: Fix XMG Fusion 15 (L19) entries
+  platform/x86: uniwill-laptop: Apply features across all TUXEDO devices
+  Documentation: laptops: Update documentation for uniwill laptops
+
+ .../ABI/testing/sysfs-driver-uniwill-laptop   |  25 +
+ .../admin-guide/laptops/uniwill-laptop.rst    |  12 +
+ drivers/platform/x86/uniwill/uniwill-acpi.c   | 439 +++++++++++++++---
+ 3 files changed, 406 insertions(+), 70 deletions(-)
 
 
-Am 12.03.26 um 16:12 schrieb Jonathan Corbet:
-> Werner Sembach <wse@tuxedocomputers.com> writes:
->
->> Hi Randy,
->>
->> Am 11.03.26 um 05:57 schrieb Randy Dunlap:
->>> Hi Werner,
->>>
->>> On 3/10/26 4:34 PM, Werner Sembach wrote:
->>>> Adds short description for two new sysfs entries, ctgp_offset and
->>>> usb_c_power_priority, to the documentation of uniwill laptops.
->>>>
->>>> Signed-off-by: Werner Sembach <wse@tuxedocomputers.com>
->>>> Reviewed-by: Armin Wolf <W_Armin@gmx.de>
->>>> Reviewed-by: Randy Dunlap <rdunlap@infradead.org>
->>>> ---
->>>>    .../ABI/testing/sysfs-driver-uniwill-laptop   | 25 +++++++++++++++++++
->>>>    .../admin-guide/laptops/uniwill-laptop.rst    | 12 +++++++++
->>>>    2 files changed, 37 insertions(+)
->>>>
->>> Can you give me a lore.kernel.org URL or a message-ID in which
->>> I replied with a "Reviewed-by:" tag for this patch, please?
->>> I don't recall doing so, but I could have.
->> Thought you did go through it because you gave the spelling corrections,
->>
->> Sorry I can ofc remove it again.
-> As described in Documentation/process/submitting-patches.rst, a tag like
-> Reviewed-by must be explicitly offered by the named person; you can't
-> make them up yourself.  That's something you need to be careful about.
-Sorry, will remove it again
->
-> Thanks,
->
-> jon
+base-commit: 1f318b96cc84d7c2ab792fcc0bfd42a7ca890681
+-- 
+2.43.0
+
