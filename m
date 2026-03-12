@@ -1,131 +1,108 @@
-Received: from mail.tuxedocomputers.com (mail.tuxedocomputers.com [157.90.84.7])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.15])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D01A73AB276;
-	Thu, 12 Mar 2026 19:27:12 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=157.90.84.7
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D7C0F386C04;
+	Thu, 12 Mar 2026 20:58:13 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.15
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1773343634; cv=none; b=pXuKTtr7G8DS63eT115t4VGCVuU4Oij1uqYOhNDt3TruyXFNff9s+p1z1nTbbjkfuJsit5w/I+FO2YVHi0YWjfjMHNHSpixYWN5rCtzUG3O92UBFLkhq7GfhyJALVbCKZgK1dLrwFLMfTTmKPnXBpaIA2uyNr//zIW7ofKS+N8k=
+	t=1773349095; cv=none; b=DCVu2JJDvPyB3KTWTG+aCGW2Vu6hK2MSSydDbW6McJ+LmNDj+88d54/NDalVUvZFosZo9DSYBmcueKhoST39zcfzHvMEW5lzlTt8azdn2v2Gfb9gL7q7fMEcxvdjtQFC2cCvuEse3OacH2uzIe45RVesr7QsN2lUI4Hf+xq9euM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1773343634; c=relaxed/simple;
-	bh=uk5ksVFtS2spYqX2rJTpinm0RDr5ENjLVeuaQXLj+Gc=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=p8+hNTuWDUrV6691wA6wlTV9oR4jmLlrgg8/vvMiqu6rrPt+mdEUcHtqOQp8hXB1j7GKt+IcOgFG2wrMQSmyACPN3vUwikcGP97S5ndkG3vmDr2DZ5aJHfezWl+5/5nrnq8tEmb1AdoXgSwpI3F0f1d5CJ3w3TDX/hwt2zRl+Fg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=tuxedocomputers.com; spf=pass smtp.mailfrom=tuxedocomputers.com; dkim=pass (1024-bit key) header.d=tuxedocomputers.com header.i=@tuxedocomputers.com header.b=i14R1oqI; arc=none smtp.client-ip=157.90.84.7
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=tuxedocomputers.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=tuxedocomputers.com
+	s=arc-20240116; t=1773349095; c=relaxed/simple;
+	bh=vhOYrw/DVA2RJTCv7jox3hLnZDAXlifzBNUjQ3RzxEY=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=rEQF4ZJmjpMNvUXhHzIcpRxePBOoTd0G90XA8lkiTd/nqp4Mo9vpMGTamDlvw1cbUffBVVrJpXeV3UFhhOjojz1JhlsIUsoSM5U6g+xv8wM1jTxrV/xmJ8KDAucF1MoA8Nv7ZdhmwpVB5TnPmxMtl5PlBxBJE1dT4o6thsm9tcs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=pass smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=PkM434Hz; arc=none smtp.client-ip=198.175.65.15
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=tuxedocomputers.com header.i=@tuxedocomputers.com header.b="i14R1oqI"
-Received: from wse-pc.fritz.box (i5C75F5CE.versanet.de [92.117.245.206])
-	(Authenticated sender: wse@tuxedocomputers.com)
-	by mail.tuxedocomputers.com (Postfix) with ESMTPA id 7711B2FC005F;
-	Thu, 12 Mar 2026 20:27:10 +0100 (CET)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=tuxedocomputers.com;
-	s=default; t=1773343630;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=aV5jlB/nShj+Fq2WN4nTiZNabEX3FkzI+uXE9kXBcZw=;
-	b=i14R1oqIRvvjUMrovPf5wSSuvEbVJlqVB7dciCHhBfng9nzuq7w31/EGvAF/FG0aBhNviT
-	yCWncay2uUZhRbLk5uEW0W8dTQDRfnlrA+LyOEk9gNAC3tO5VU15FL0ud4VDVY0wHelwI5
-	S538XDwzEeV5a44gH0PALmzmaS2CWUA=
-Authentication-Results: mail.tuxedocomputers.com;
-	auth=pass smtp.auth=wse@tuxedocomputers.com smtp.mailfrom=wse@tuxedocomputers.com
-From: Werner Sembach <wse@tuxedocomputers.com>
-To: W_Armin@gmx.de,
-	hansg@kernel.org,
-	ilpo.jarvinen@linux.intel.com,
-	Jonathan Corbet <corbet@lwn.net>,
-	Shuah Khan <skhan@linuxfoundation.org>
-Cc: platform-driver-x86@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	Werner Sembach <wse@tuxedocomputers.com>,
-	linux-doc@vger.kernel.org
-Subject: [PATCH v6 5/5] Documentation: laptops: Update documentation for uniwill laptops
-Date: Thu, 12 Mar 2026 20:25:28 +0100
-Message-ID: <20260312192705.76576-6-wse@tuxedocomputers.com>
-X-Mailer: git-send-email 2.43.0
-In-Reply-To: <20260312192705.76576-1-wse@tuxedocomputers.com>
-References: <20260312192705.76576-1-wse@tuxedocomputers.com>
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="PkM434Hz"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1773349094; x=1804885094;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=vhOYrw/DVA2RJTCv7jox3hLnZDAXlifzBNUjQ3RzxEY=;
+  b=PkM434HzQlrhLUFzJheAZyrnQIeLEGYduXU3HooUFV+5zgBkKtqgDaMq
+   dOIdA2kEnJYtDSsYZujfkICpbEyJPgrUFx/gCTN17VdgBcpjNWZpvgSzZ
+   88DHm3vBapAvjCFW7T0DGNh2HPhHcs1hNN5rFROzePcz+8t0fRrfdi7mr
+   N5mgwDBvaBOmMIByqLT32w2MlIPp65KTmTpJQNjyn5ZxLRNuhRH6nbLHt
+   8dUZDgH+YqgtZ4eilcHTJ3I07t/pK1GCMGePB7BiQPKx5xFkWxpAY/5p3
+   yLdu+SmmY3jRy+zGCWt/LL7Aa7qlkvFXuUKFNke2m1cIcZ+vPfs+6D7/z
+   w==;
+X-CSE-ConnectionGUID: vVc4Uz4ERWSgYysdNK/enA==
+X-CSE-MsgGUID: ieXVVdHuT1WGiQegEzohYA==
+X-IronPort-AV: E=McAfee;i="6800,10657,11727"; a="78059313"
+X-IronPort-AV: E=Sophos;i="6.23,116,1770624000"; 
+   d="scan'208";a="78059313"
+Received: from fmviesa005.fm.intel.com ([10.60.135.145])
+  by orvoesa107.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 12 Mar 2026 13:58:14 -0700
+X-CSE-ConnectionGUID: CxUCfibIQBeOYVMw/D3uLA==
+X-CSE-MsgGUID: BA9fVZzwQhyvjPI767iWPQ==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.23,116,1770624000"; 
+   d="scan'208";a="225640039"
+Received: from fpallare-mobl4.ger.corp.intel.com (HELO kekkonen.fi.intel.com) ([10.245.245.184])
+  by fmviesa005-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 12 Mar 2026 13:58:09 -0700
+Received: from kekkonen.localdomain (localhost [IPv6:::1])
+	by kekkonen.fi.intel.com (Postfix) with SMTP id 57EC1120E92;
+	Thu, 12 Mar 2026 23:00:06 +0200 (EET)
+Date: Thu, 12 Mar 2026 23:00:06 +0200
+Organization: Intel Finland Oy - BIC 0357606-4 - c/o Alberga Business Park, 6 krs, Bertel Jungin Aukio 5, 02600 Espoo
+From: Sakari Ailus <sakari.ailus@linux.intel.com>
+To: Hans de Goede <hansg@kernel.org>
+Cc: Antti Laakso <antti.laakso@linux.intel.com>,
+	linux-media@vger.kernel.org, linux-gpio@vger.kernel.org,
+	platform-driver-x86@vger.kernel.org, linusw@kernel.org,
+	brgl@kernel.org, mchehab@kernel.org, dan.scally@ideasonboard.com,
+	ilpo.jarvinen@linux.intel.com, hverkuil+cisco@kernel.org,
+	sre@kernel.org, hao.yao@intel.com, jimmy.su@intel.com,
+	miguel.vadillo@intel.com, kees@kernel.org, ribalda@chromium.org
+Subject: Re: [PATCH v2 5/5] platform: int3472: Add MSI prestige board data
+Message-ID: <abMpVo1eCvtBObv_@kekkonen.localdomain>
+References: <20260311131910.835513-1-antti.laakso@linux.intel.com>
+ <20260311131910.835513-6-antti.laakso@linux.intel.com>
+ <dc7f24b2-ec57-4937-92f1-f80b1f1e785a@kernel.org>
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <dc7f24b2-ec57-4937-92f1-f80b1f1e785a@kernel.org>
 
-Adds short description for two new sysfs entries, ctgp_offset and
-usb_c_power_priority, to the documentation of uniwill laptops.
+Hi Hans, others,
 
-Signed-off-by: Werner Sembach <wse@tuxedocomputers.com>
-Reviewed-by: Armin Wolf <W_Armin@gmx.de>
----
- .../ABI/testing/sysfs-driver-uniwill-laptop   | 25 +++++++++++++++++++
- .../admin-guide/laptops/uniwill-laptop.rst    | 12 +++++++++
- 2 files changed, 37 insertions(+)
+On Wed, Mar 11, 2026 at 03:35:28PM +0100, Hans de Goede wrote:
+> > +static const struct regulator_init_data msi_p14_ai_evo_tps68470_vio_reg_init_data = {
+> > +	.constraints = {
+> > +		.min_uV = 1800600,
+> > +		.max_uV = 1800600,
+> > +		.apply_uV = 1,
+> > +		.valid_ops_mask = REGULATOR_CHANGE_STATUS,
+> > +	},
+> 
+> > +	.num_consumer_supplies = 0,
+> > +	.consumer_supplies = NULL,
+> 
+> Nit (no need to fix unless you need to do a v3 for other reasons),
+> these 2 explicit foo = 0 initializers are not necessary and can
+> be dropped.
 
-diff --git a/Documentation/ABI/testing/sysfs-driver-uniwill-laptop b/Documentation/ABI/testing/sysfs-driver-uniwill-laptop
-index 2df70792968f3..cba4138604601 100644
---- a/Documentation/ABI/testing/sysfs-driver-uniwill-laptop
-+++ b/Documentation/ABI/testing/sysfs-driver-uniwill-laptop
-@@ -51,3 +51,28 @@ Description:
- 
- 		Reading this file returns the current status of the breathing animation
- 		functionality.
-+
-+What:		/sys/bus/platform/devices/INOU0000:XX/ctgp_offset
-+Date:		January 2026
-+KernelVersion:	7.0
-+Contact:	Werner Sembach <wse@tuxedocomputers.com>
-+Description:
-+		Allows userspace applications to set the configurable TGP offset on top of the base
-+		TGP. Base TGP and max TGP and therefore the max cTGP offset are device specific.
-+		Note that setting the maximal cTGP leaves no window open for Dynamic Boost,
-+		effectively disabling that feature for the GPU to always be prioritized.
-+
-+		Reading this file returns the current configurable TGP offset.
-+
-+What:		/sys/bus/platform/devices/INOU0000:XX/usb_c_power_priority
-+Date:		February 2026
-+KernelVersion:	7.1
-+Contact:	Werner Sembach <wse@tuxedocomputers.com>
-+Description:
-+		Allows userspace applications to choose the USB-C power distribution profile between
-+		one that offers a bigger share of the power to the battery and one that offers more
-+		of it to the CPU. Writing "charging"/"performance" into this file selects the
-+		respective profile.
-+
-+		Reading this file returns the profile names with the currently active one in
-+		brackets.
-diff --git a/Documentation/admin-guide/laptops/uniwill-laptop.rst b/Documentation/admin-guide/laptops/uniwill-laptop.rst
-index aff5f57a6bd47..561334865feb7 100644
---- a/Documentation/admin-guide/laptops/uniwill-laptop.rst
-+++ b/Documentation/admin-guide/laptops/uniwill-laptop.rst
-@@ -50,6 +50,10 @@ between 1 and 100 percent are supported.
- Additionally the driver signals the presence of battery charging issues through the standard
- ``health`` power supply sysfs attribute.
- 
-+It also lets you set whether a USB-C power source should prioritise charging the battery or
-+delivering immediate power to the cpu. See Documentation/ABI/testing/sysfs-driver-uniwill-laptop for
-+details.
-+
- Lightbar
- --------
- 
-@@ -58,3 +62,11 @@ LED class device. The default name of this LED class device is ``uniwill:multico
- 
- See Documentation/ABI/testing/sysfs-driver-uniwill-laptop for details on how to control the various
- animation modes of the lightbar.
-+
-+Configurable TGP
-+----------------
-+
-+The ``uniwill-laptop`` driver allows to set the configurable TGP for devices with NVIDIA GPUs that
-+allow it.
-+
-+See Documentation/ABI/testing/sysfs-driver-uniwill-laptop for details.
+I can fix this while applying...
+
+> 
+> Otherwise this looks good to me:
+> 
+> Reviewed-by: Hans de Goede <johannes.goede@oss.qualcomm.com>
+
+...assuming everyone is fine with merging these via the media tree. Let me
+know if there are concerns.
+
+Thank you for the reviews.
+
 -- 
-2.43.0
+Kind regards,
 
+Sakari Ailus
