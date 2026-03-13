@@ -1,217 +1,152 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.9])
+Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B5E9E32C937;
-	Fri, 13 Mar 2026 15:03:31 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.9
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 595AB35E935
+	for <platform-driver-x86@vger.kernel.org>; Fri, 13 Mar 2026 15:49:20 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.168.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1773414213; cv=none; b=taDGeaLNZbxKyS+Pdjy972Ddx/ki4zx64Fx6Tw4PTO37/iw+LIjnrFzdf5vAib7YtnNvQ/0E7DSqRveILq+ThkedQZoGuHbQywvlI1EizHe4wHZiG+vKoDKn1ZJ7jqGP8QT3pD1hjW1mHUd2sji1e3/6p5c6QYzfaHQrGU1x1bI=
+	t=1773416962; cv=none; b=su9T0qJHSJeNxwU8rp26oS9STULyfy6Sba8caW4dX7aW/40TkPGT/KsiUNECi+tzpq23lGAqNe63ndhpRzin8rwqpV2iwUlNOfJ8wwZzZLnuTCKJAC82zjM/pwVup3x3JlA7lrDxPgnbf6njhmZmk0b3SQcLc2smAnoYMYm4lMk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1773414213; c=relaxed/simple;
-	bh=+zZrlrlLBTGlrMt43VfZN8jaxUEcD5rTLYR5cOzEnUU=;
-	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=n6yM/OD4sdllVIX/NP5DLJ4mQyC6sODY4ialUvgaiBm7Y20zumDYmHJASUXtjVuFd0GnF6j/cktQXVAG6EgiIFzUh/4kqz0kzBHiGKz8cNHhaBlHFSW3FKVw4zGUbF/Z7LMK/TECCI1yQ9VhhAZCx/8vCiN9cghhfHio9x/m9Zo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=pass smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=DGxpgQln; arc=none smtp.client-ip=192.198.163.9
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.intel.com
+	s=arc-20240116; t=1773416962; c=relaxed/simple;
+	bh=WYsK0XfUSbf9X4rYQOwsUWh43j0wPs6NcQoqe4/qIU0=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=dHGimSC6w046Xga0DlIsPU6Km6l+84StLYyN+BEqyea6Ba6e69sF2GkwpsJdusDwdvco5ftCNqUo51IAtseT6yrtmFXPtYTsQVGRPD2qUpI0dwdz0GEvSCBvTOwX0s6Ui6UzKOMf6uJo8kCobTBZQNGHSXMYLuo/uxEaTidJoy8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com; spf=pass smtp.mailfrom=oss.qualcomm.com; dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b=jfQivWv2; dkim=pass (2048-bit key) header.d=oss.qualcomm.com header.i=@oss.qualcomm.com header.b=io/OWXrL; arc=none smtp.client-ip=205.220.168.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oss.qualcomm.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="DGxpgQln"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1773414212; x=1804950212;
-  h=message-id:subject:from:to:cc:date:in-reply-to:
-   references:content-transfer-encoding:mime-version;
-  bh=+zZrlrlLBTGlrMt43VfZN8jaxUEcD5rTLYR5cOzEnUU=;
-  b=DGxpgQlnniyjgQNJZb1HJM+EmSvQkGEB89qNaH/+Fbu39sImqEV9fjb3
-   cjxw9BhEoMB2J7GfoL4fNDRWl2GvuCN62lt2zev1Milzdn+MDJGEB8TiR
-   k8CNX9yrke/1gRzi7+qvDsGiSNX58pAJRLg6G64jfYYNfpfLBezkQF3F3
-   sGmjjqxPhiypuLCAVg72xohxzgOgUwnKMYBSTlV/OdV/SIgV1urxuAvut
-   HpjzoHTWkXtRCvw5g+jLxZ2hscIedCVUvnrkyVobjOGCry02OE50NgnPo
-   m7CrAJjnV7j5r/V9l+IgmkF0PufEja5svLTavk+mR7YR9aA6vHqEjhQuv
-   g==;
-X-CSE-ConnectionGUID: EmxqrkBvQbKDljs7jyz/cA==
-X-CSE-MsgGUID: Glado51ISTS7E8AX+gK19A==
-X-IronPort-AV: E=McAfee;i="6800,10657,11728"; a="85223006"
-X-IronPort-AV: E=Sophos;i="6.23,118,1770624000"; 
-   d="scan'208";a="85223006"
-Received: from fmviesa005.fm.intel.com ([10.60.135.145])
-  by fmvoesa103.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 13 Mar 2026 08:03:31 -0700
-X-CSE-ConnectionGUID: H8QnJzp7TJqGR2uP7m3I5Q==
-X-CSE-MsgGUID: gZp0HqzWQf6QUwBSHfIraA==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.23,118,1770624000"; 
-   d="scan'208";a="225876196"
-Received: from cjhill-mobl.amr.corp.intel.com (HELO [10.125.110.231]) ([10.125.110.231])
-  by fmviesa005-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 13 Mar 2026 08:03:25 -0700
-Message-ID: <082ec14b39aa804f774003af75df407274e50d2f.camel@linux.intel.com>
-Subject: Re: [PATCH 00/22] platform/x86/intel: Add ACPI PMT discovery
- support and enable NVL PMC telemetry
-From: srinivas pandruvada <srinivas.pandruvada@linux.intel.com>
-To: "David E. Box" <david.e.box@linux.intel.com>, 
-	thomas.hellstrom@linux.intel.com, rodrigo.vivi@intel.com, 
-	irenic.rajneesh@gmail.com, ilpo.jarvinen@linux.intel.com, 
-	intel-xe@lists.freedesktop.org, dri-devel@lists.freedesktop.org, 
-	xi.pardee@linux.intel.com
-Cc: hansg@kernel.org, linux-kernel@vger.kernel.org, 
-	platform-driver-x86@vger.kernel.org
-Date: Fri, 13 Mar 2026 08:03:25 -0700
-In-Reply-To: <20260313015202.3660072-1-david.e.box@linux.intel.com>
-References: <20260313015202.3660072-1-david.e.box@linux.intel.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-User-Agent: Evolution 3.58.2 (3.58.2-1.fc43) 
+	dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b="jfQivWv2";
+	dkim=pass (2048-bit key) header.d=oss.qualcomm.com header.i=@oss.qualcomm.com header.b="io/OWXrL"
+Received: from pps.filterd (m0279865.ppops.net [127.0.0.1])
+	by mx0a-0031df01.pphosted.com (8.18.1.11/8.18.1.11) with ESMTP id 62DDZ4KN793577
+	for <platform-driver-x86@vger.kernel.org>; Fri, 13 Mar 2026 15:49:19 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=qualcomm.com; h=
+	cc:content-type:date:from:in-reply-to:message-id:mime-version
+	:references:subject:to; s=qcppdkim1; bh=eavIjI1H7Ko1yWv1fuDSHAZF
+	EzadTk271QFz6euBTIM=; b=jfQivWv2vBik1XbYMo0AlyM/iDCJf/P2bN3JkfK4
+	PWrGrcPVvnTrvdOgfbULpBDRkzHK4SlY4FqqUmF4vN1InfxCgoX8YiptTWdmj4lH
+	KJf5Y8eNq9ErM8FmklnmK43GFCmtgKldzys1hYME9uZ5jo0EKUs9zswD97txoRHT
+	AYy86SWJJ/8FHvNOcvaqYeQ9EXnFN5+E+NPB9UL3KeSBfVaBF8Y8G3/WAOux23k5
+	RNm1Z98DnFowrX1zyVeMpKHXb+BlLrEZq23qOw/i/WJ5Rd23jbqEuN7ztyZdRACs
+	phdQy5ml8WnP3vuRTuHDOZYtkpFEn2b3s+5MeCpBubRCJg==
+Received: from mail-qk1-f197.google.com (mail-qk1-f197.google.com [209.85.222.197])
+	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 4cvdnt1vkx-1
+	(version=TLSv1.3 cipher=TLS_AES_128_GCM_SHA256 bits=128 verify=NOT)
+	for <platform-driver-x86@vger.kernel.org>; Fri, 13 Mar 2026 15:49:19 +0000 (GMT)
+Received: by mail-qk1-f197.google.com with SMTP id af79cd13be357-8cd820c6a4fso1837149685a.2
+        for <platform-driver-x86@vger.kernel.org>; Fri, 13 Mar 2026 08:49:19 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=oss.qualcomm.com; s=google; t=1773416959; x=1774021759; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=eavIjI1H7Ko1yWv1fuDSHAZFEzadTk271QFz6euBTIM=;
+        b=io/OWXrLobMVEGh/xJxJdOONoCrEcQhtziKUmHuDgbvOfjNql6BT596GPZ5hQn0HE3
+         YiQj2sgfp4IpHGGuon1l9MoPaiqbQw69gFTZ5Anf0n4woGdLi+YAeVE5iJqB8mWwg7nm
+         GyqgmEwrkOAXjr+IVndWL/RSKYoi+4Swh1jRj6OYGPzDJXHP72lBc/YfNZ921/aPFBaZ
+         U3diwApofvBbdbjLPKEuuyVg2+P00ffASHfBcb3m0cKVoJ1/yhLpDyl8k2/R2gnfiD4R
+         rL+B135HAXNdoDzLQ2uF5/AFoiB1r5DCrtgcEtiRzDYmV9K8xLetRcfDloP5TjFHCElU
+         MKpw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20251104; t=1773416959; x=1774021759;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-gg:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=eavIjI1H7Ko1yWv1fuDSHAZFEzadTk271QFz6euBTIM=;
+        b=JUg5P9M/TT5vcYpxX2AF5RQsH1NRITg8wQdKkG6T8dAcEAbvpNn7tlykV2fSxZphVe
+         XcFRRHmHIQeLwPzqoUCRbUfm4wtQFMbxEWAc3/OVD/355N8cH7ZQ454X5y5b7qI4+Ub7
+         uCNZJ9uE4LdhO+n70EnwwHDaVmA2KEnR5pOTjpzddIiJOM406E9LmeTE7LNGx5xbkXlI
+         NHPHkXWUvn2g2BU4QmP9cmUgQfpIpR81UKMNExEuEWMcpFBXTBd+/RWwsJHp3KXz3Gsk
+         cRNvr/y6v1yj1tMAltxlvki5qrx+ggOmCwaAKb5qTruX9Th9RPVus5O37usQMvPh7/WB
+         FslA==
+X-Forwarded-Encrypted: i=1; AJvYcCU9+MBuVj7fLxE3r6hAKZvJ/60sT8JTjoCkSY+Ppax4XZOQqnzM6izYGhSd/mbzGhxc04Zl7hDPd7Nx55Qi5ASZgFqx@vger.kernel.org
+X-Gm-Message-State: AOJu0YzSa46DxPQahQGDJeOhjAe2qTZZeTjXOHVBInibeZZKBsIoJxT6
+	LbAKwJM6oUmRAr48L0a5Z9CYjr/tINpR6vzIOlZ4URpSut20Ok4wtQ9Qc0t/M/o8KKcBoGJJnXG
+	Lhu9KXSZNLCJJhyLvCVaNlXnVk/zJVzhna/c1Nb7EHUp3PT2/UYvWhlKL3hdamKPMvQ0NI3to/0
+	OY
+X-Gm-Gg: ATEYQzwFkyzeV4hdLL5dALGsHvd5wtRkYbZG4ZED6qFJHSb5hVW7NGJa0jTQa1/RoxJ
+	juqj0Ix6tkbVyJpOkLwbicOopTDpOntw0pobP52phu/xxSEXv98ClafUHuk3jVLALuAqgy83B38
+	9IbpcvrBG9JCBbTG9reQ3tH6eB+QC/KYQkavb0FKKqHj+XoVwmNQg4jE7pvxk7zsN1lL0MpypLG
+	uVLrtWmge+Xc/277oNvMtl8U/uAGjJqMoZev658m3XfSRlhqpMT+/hODxbgDX4Sl8NWOEXT8S92
+	STtEwrfG5KtVwd3Yu7SG/b7riNponYSt6TygpvMZeCFYn4b7Qevy3HfkaeBT1KVoDcqmRKOE/QS
+	bbJHwi5idHKE/atjJ+Iq6sarMYBww5BE+XqOAgaDMKgtNRhRnCJhm9oarRtesM8g/CGutvYSJmj
+	O9n+DZgvzEuMryO80+cCeepPeOnpfTpkXDxiA=
+X-Received: by 2002:a05:620a:6919:b0:8c8:8126:7770 with SMTP id af79cd13be357-8cdb5bafcb9mr556982685a.67.1773416958604;
+        Fri, 13 Mar 2026 08:49:18 -0700 (PDT)
+X-Received: by 2002:a05:620a:6919:b0:8c8:8126:7770 with SMTP id af79cd13be357-8cdb5bafcb9mr556978785a.67.1773416958141;
+        Fri, 13 Mar 2026 08:49:18 -0700 (PDT)
+Received: from umbar.lan (2001-14ba-a073-af00-264b-feff-fe8b-be8a.rev.dnainternet.fi. [2001:14ba:a073:af00:264b:feff:fe8b:be8a])
+        by smtp.gmail.com with ESMTPSA id 2adb3069b0e04-5a156162b08sm1565469e87.53.2026.03.13.08.49.16
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 13 Mar 2026 08:49:16 -0700 (PDT)
+Date: Fri, 13 Mar 2026 17:49:15 +0200
+From: Dmitry Baryshkov <dmitry.baryshkov@oss.qualcomm.com>
+To: Anvesh Jain P <anvesh.p@oss.qualcomm.com>
+Cc: Sibi Sankar <sibi.sankar@oss.qualcomm.com>, Rob Herring <robh@kernel.org>,
+        Krzysztof Kozlowski <krzk+dt@kernel.org>,
+        Conor Dooley <conor+dt@kernel.org>, Hans de Goede <hansg@kernel.org>,
+        Ilpo =?utf-8?B?SsOkcnZpbmVu?= <ilpo.jarvinen@linux.intel.com>,
+        Bryan O'Donoghue <bryan.odonoghue@linaro.org>,
+        Bjorn Andersson <andersson@kernel.org>,
+        Konrad Dybcio <konradybcio@kernel.org>, linux-arm-msm@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        platform-driver-x86@vger.kernel.org
+Subject: Re: [PATCH v4 5/5] arm64: dts: qcom: hamoa-iot-evk: Add Embedded
+ controller node
+Message-ID: <4o62p4iyhb6g6aa35kbs7ylet5aeeojkbqg2qboue3wbxjdzb4@k6gmkhfzukeb>
+References: <20260313-v04-add-driver-for-ec-v4-0-ca9d0efd62aa@oss.qualcomm.com>
+ <20260313-v04-add-driver-for-ec-v4-5-ca9d0efd62aa@oss.qualcomm.com>
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20260313-v04-add-driver-for-ec-v4-5-ca9d0efd62aa@oss.qualcomm.com>
+X-Authority-Analysis: v=2.4 cv=KZrfcAYD c=1 sm=1 tr=0 ts=69b431ff cx=c_pps
+ a=50t2pK5VMbmlHzFWWp8p/g==:117 a=xqWC_Br6kY4A:10 a=kj9zAlcOel0A:10
+ a=Yq5XynenixoA:10 a=s4-Qcg_JpJYA:10 a=VkNPw1HP01LnGYTKEx00:22
+ a=u7WPNUs3qKkmUXheDGA7:22 a=Um2Pa8k9VHT-vaBCBUpS:22 a=EUspDBNiAAAA:8
+ a=7wtgjnKuI7ixzQLi8VAA:9 a=CjuIK1q_8ugA:10 a=zZCYzV9kfG8A:10
+ a=IoWCM6iH3mJn3m4BftBB:22
+X-Proofpoint-GUID: IOwiTCsSHSYLWrO7-6xeTdodWccp1Vst
+X-Proofpoint-ORIG-GUID: IOwiTCsSHSYLWrO7-6xeTdodWccp1Vst
+X-Proofpoint-Spam-Details-Enc: AW1haW4tMjYwMzEzMDEyNiBTYWx0ZWRfX3JGZhJwJKB2h
+ XqWW0wKJUqKu/ClcRmfzclpKnq5Ddvw/Jaw8lEux0sJWjNG/FyGHngdLY3Ix2Mo9OY71qbNJa7E
+ EGp+nFLNuHCCgu0F+YSXwyCxMyGmUtEDLfi2aNcyYmbHTtrVBg+UKCwuL4avo87YNeURE5BwbCI
+ AsBmiJGuWH6lz/SulTUVeLegPbqLFrNaqRPRK96dNy2lIqAXbpzXEEpQixik3NFaLUD2qAAaxHf
+ 7Hm64wDJmmGjTZfu5ij68nYDG5o2TQA5xagGnDmoUJIAwYGavXAS/gbHC0d5kdgtXZ/LHb+NB+N
+ 9b1UccbARoxneLTuYs8rs0xZh66//urOB0EpSdC8tL7er4i40KGiX4bRMLv/B4JAjJT6RZVl/bL
+ JFNVcp+avMKW85K3YPs3YGF8RxTZlCK9AdbFxVLtnCHBHKhBs6gU53ZJg8hz6ZN6klRhVP2jGea
+ AY7BJylcmIIOszi+Hng==
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1143,Hydra:6.1.51,FMLib:17.12.100.49
+ definitions=2026-03-13_02,2026-03-13_01,2025-10-01_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
+ phishscore=0 spamscore=0 lowpriorityscore=0 priorityscore=1501 bulkscore=0
+ malwarescore=0 impostorscore=0 adultscore=0 clxscore=1015 suspectscore=0
+ classifier=typeunknown authscore=0 authtc= authcc= route=outbound adjust=0
+ reason=mlx scancount=1 engine=8.22.0-2603050001 definitions=main-2603130126
 
-On Thu, 2026-03-12 at 18:51 -0700, David E. Box wrote:
-> This series adds ACPI-based PMT discovery support and wires it into
-> the
-> Intel PMC telemetry stack for Nova Lake S.
+On Fri, Mar 13, 2026 at 03:59:55PM +0530, Anvesh Jain P wrote:
+> From: Sibi Sankar <sibi.sankar@oss.qualcomm.com>
+> 
+> Add embedded controller node for Hamoa IOT EVK boards which adds fan
+> control, temperature sensors, access to EC internal state changes and
+> suspend entry/exit notifications to the EC.
+> 
+> Signed-off-by: Sibi Sankar <sibi.sankar@oss.qualcomm.com>
+> Co-developed-by: Anvesh Jain P <anvesh.p@oss.qualcomm.com>
+> Signed-off-by: Anvesh Jain P <anvesh.p@oss.qualcomm.com>
+> ---
+>  arch/arm64/boot/dts/qcom/hamoa-iot-evk.dts | 16 ++++++++++++++++
+>  1 file changed, 16 insertions(+)
+> 
 
-I think this series is v7, missing patch prefix for versions.
+Reviewed-by: Dmitry Baryshkov <dmitry.baryshkov@oss.qualcomm.com>
 
-Thanks,
-Srinivas
 
->=20
-> Today, PMT discovery flow is primarily PCI-oriented. Some platforms
-> expose
-> PMT discovery via ACPI _DSD, and PMC telemetry needs to consume that
-> path
-> for both standalone and companion-device cases. This series addresses
-> that
-> in three logical steps:
->=20
-> =C2=A0=C2=A0=C2=A0 1. Prepare intel_vsec for ACPI-backed discovery
-> =C2=A0=C2=A0=C2=A0 2. Refactor PMT class handling so discovery source is
-> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 abstracted (PCI or ACPI)
-> =C2=A0=C2=A0=C2=A0 3. Add/enable PMC consumers using ACPI discovery, incl=
-uding NVL
-> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 SSRAM support
->=20
-> Patches 1=E2=80=936 were previously posted here:
-> https://lore.kernel.org/all/20260303051953.1453372-1-david.e.box@linux.in=
-tel.com/
->=20
-> Series layout
->=20
-> =C2=A0=C2=A0=C2=A0 01-06: intel_vsec cleanup/generalization for ACPI-capa=
-ble
-> discovery
-> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 plumbing. Pr=
-evious changelog up to V7 included.
-> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 Major patche=
-s:
-> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 Patch 6 - ad=
-ds ACPI support in VSEC driver
->=20
-> =C2=A0=C2=A0=C2=A0 07-12: PMT class refactor and ACPI discovery-source su=
-pport
-> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 Major patche=
-s:
-> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 Patch 12 - a=
-dds ACPI support in PMT driver
->=20
-> =C2=A0=C2=A0=C2=A0 13-22: PMC driver integration
-> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 Major patche=
-s:
-> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 Patch 14 - a=
-dds new ACPI platform driver
-> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 Patch 20 - a=
-dds ACPI discovery support in ssram driver
-> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 Patch 22 - a=
-dds NVL IDs for SSRAM discovery
->=20
-> David E. Box (20):
-> =C2=A0 platform/x86/intel/vsec: Refactor base_addr handling
-> =C2=A0 platform/x86/intel/vsec: Make driver_data info const
-> =C2=A0 platform/x86/intel/vsec: Decouple add/link helpers from PCI
-> =C2=A0 platform/x86/intel/vsec: Switch exported helpers from pci_dev to
-> =C2=A0=C2=A0=C2=A0 device
-> =C2=A0 platform/x86/intel/vsec: Return real error codes from registration
-> =C2=A0=C2=A0=C2=A0 path
-> =C2=A0 platform/x86/intel/vsec: Plumb ACPI PMT discovery tables through
-> vsec
-> =C2=A0 platform/x86/intel/pmt: Add pre/post decode hooks around header
-> =C2=A0=C2=A0=C2=A0 parsing
-> =C2=A0 platform/x86/intel/pmt/crashlog: Split init into pre-decode
-> =C2=A0 platform/x86/intel/pmt/telemetry: Move overlap check to post-decod=
-e
-> =C2=A0=C2=A0=C2=A0 hook
-> =C2=A0 platform/x86/intel/pmt: Move header decode into common helper
-> =C2=A0 platform/x86/intel/pmt: Pass discovery index instead of resource
-> =C2=A0 platform/x86/intel/pmt: Unify header fetch and add ACPI source
-> =C2=A0 platform/x86/intel/pmc: Add PMC SSRAM Kconfig description
-> =C2=A0 platform/x86/intel/pmc: Add ACPI PWRM telemetry driver for Nova
-> Lake S
-> =C2=A0 platform/x86/intel/pmc/ssram: Rename probe and PCI ID table for
-> =C2=A0=C2=A0=C2=A0 consistency
-> =C2=A0 platform/x86/intel/pmc/ssram: Refactor DEVID/PWRMBASE extraction
-> into
-> =C2=A0=C2=A0=C2=A0 helper
-> =C2=A0 platform/x86/intel/pmc/ssram: Add PCI platform data
-> =C2=A0 platform/x86/intel/pmc/ssram: Add ACPI discovery scaffolding
-> =C2=A0 platform/x86/intel/pmc/ssram: Make PMT registration optional
-> =C2=A0 platform/x86/intel/pmc: Add NVL PCI IDs for SSRAM telemetry
-> discovery
->=20
-> Xi Pardee (2):
-> =C2=A0 platform/x86/intel/pmc/ssram: Use fixed-size static pmc array
-> =C2=A0 platform/x86/intel/pmc/ssram: Refactor memory barrier for reentran=
-t
-> =C2=A0=C2=A0=C2=A0 probe
->=20
-> =C2=A0drivers/gpu/drm/xe/xe_debugfs.c=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
-=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 |=C2=A0=C2=A0 2 +-
-> =C2=A0drivers/gpu/drm/xe/xe_hwmon.c=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
-=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 |=C2=A0=C2=A0 =
-2 +-
-> =C2=A0drivers/gpu/drm/xe/xe_vsec.c=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
-=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 |=C2=A0=C2=
-=A0 7 +-
-> =C2=A0drivers/gpu/drm/xe/xe_vsec.h=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
-=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 |=C2=A0=C2=
-=A0 4 +-
-> =C2=A0drivers/platform/x86/intel/pmc/Kconfig=C2=A0=C2=A0=C2=A0=C2=A0=C2=
-=A0=C2=A0=C2=A0 |=C2=A0 25 ++
-> =C2=A0drivers/platform/x86/intel/pmc/Makefile=C2=A0=C2=A0=C2=A0=C2=A0=C2=
-=A0=C2=A0 |=C2=A0=C2=A0 2 +
-> =C2=A0drivers/platform/x86/intel/pmc/core.c=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
-=C2=A0=C2=A0=C2=A0 |=C2=A0=C2=A0 4 +-
-> =C2=A0drivers/platform/x86/intel/pmc/core.h=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
-=C2=A0=C2=A0=C2=A0 |=C2=A0 17 ++
-> =C2=A0.../platform/x86/intel/pmc/pwrm_telemetry.c=C2=A0=C2=A0 | 227 +++++=
-+++++++++++
-> =C2=A0.../platform/x86/intel/pmc/ssram_telemetry.c=C2=A0 | 254 ++++++++++=
-++++--
-> --
-> =C2=A0drivers/platform/x86/intel/pmt/class.c=C2=A0=C2=A0=C2=A0=C2=A0=C2=
-=A0=C2=A0=C2=A0 | 170 ++++++++++--
-> =C2=A0drivers/platform/x86/intel/pmt/class.h=C2=A0=C2=A0=C2=A0=C2=A0=C2=
-=A0=C2=A0=C2=A0 |=C2=A0 25 +-
-> =C2=A0drivers/platform/x86/intel/pmt/crashlog.c=C2=A0=C2=A0=C2=A0=C2=A0 |=
-=C2=A0 16 +-
-> =C2=A0drivers/platform/x86/intel/pmt/discovery.c=C2=A0=C2=A0=C2=A0 |=C2=
-=A0=C2=A0 4 +-
-> =C2=A0drivers/platform/x86/intel/pmt/telemetry.c=C2=A0=C2=A0=C2=A0 |=C2=
-=A0 45 +---
-> =C2=A0drivers/platform/x86/intel/pmt/telemetry.h=C2=A0=C2=A0=C2=A0 |=C2=
-=A0 12 +-
-> =C2=A0drivers/platform/x86/intel/sdsi.c=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
-=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 |=C2=A0=C2=A0 5 +-
-> =C2=A0drivers/platform/x86/intel/vsec.c=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
-=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 | 121 +++++----
-> =C2=A0drivers/platform/x86/intel/vsec_tpmi.c=C2=A0=C2=A0=C2=A0=C2=A0=C2=
-=A0=C2=A0=C2=A0 |=C2=A0=C2=A0 8 +-
-> =C2=A0include/linux/intel_vsec.h=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
-=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
- |=C2=A0 39 ++-
-> =C2=A020 files changed, 784 insertions(+), 205 deletions(-)
-> =C2=A0create mode 100644 drivers/platform/x86/intel/pmc/pwrm_telemetry.c
->=20
->=20
-> base-commit: 11439c4635edd669ae435eec308f4ab8a0804808
+-- 
+With best wishes
+Dmitry
