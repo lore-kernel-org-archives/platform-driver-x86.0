@@ -1,84 +1,158 @@
-Received: from mail-pg1-f174.google.com (mail-pg1-f174.google.com [209.85.215.174])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 08DD31A683D
-	for <platform-driver-x86@vger.kernel.org>; Fri, 13 Mar 2026 19:40:02 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.174
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9BAFD37418E
+	for <platform-driver-x86@vger.kernel.org>; Fri, 13 Mar 2026 20:36:08 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1773430806; cv=none; b=lPrzUDPXVukuGObVHAoeueLWrYz2i1ZYGnCVjyXL1go1HzgilHT0eoamoksaYB3spbwxm+JRkY2kvqMaamypL89GmNi0a3n9EpMwLpp3jooEBwlf/pOZ56m6RCpBa85BqrTBsTPBSZSL9FyHIrSzR+5D+iYKY2o8Z6LRIhpuJIk=
+	t=1773434168; cv=none; b=DWhrUASt2ChgPUKKvj+6Sgqq5NfOmEEu7o4swjF3r3NiHjvTLmisQVKhUj4FZHT0kTGoe77EJfNrWH2KI2++MvpAhjbdxoTvO6t8C3AL11mTBQvQCBDBIRdf2fCBNjJdWPAUBrbsrRu94yEr8FBwoP9Kzqjxr0YS3UcOsJBi3GA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1773430806; c=relaxed/simple;
-	bh=X4VxjEIWH78MtyhSZXqTaDqGtmDattYz9tNK8YYO76Q=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=Bu+kjt6ggbB9bK/9+QlDWKMlZnkLHdD+AoyAMC34mVgDkgM2Hqlj6sJftR9JLtIePfoosycjDqNmuYaCyxRvbFxQXalKELT8vLV9qj4qQ8DrG/oMs/tKXXbWbuh75nrj6o5p/BI3BLuLttz09EK5V38sVflivCJVahYcortW6W0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=Wzrln8o8; arc=none smtp.client-ip=209.85.215.174
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1773434168; c=relaxed/simple;
+	bh=7ShzbUKEWa2pMm5LdMtCprVT8Y0BmpKIFLvodmhoVRY=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=uG4gt8nU96xJkq+PSoXeDlEAm/BpOxMfGTpUrJ24IJCblpoA80EtjIG3lL5QL2bTYlRklcXzy6VNT8BCzvfFmgUQ+I5cogqk6sgvYTIezWiFeT0xze61/LXS9wixdXWuzy0poOumgqihAYlkivMGgu0bDrGaoEKYpdcVBBdCVOU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ny99/rxX; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Wzrln8o8"
-Received: by mail-pg1-f174.google.com with SMTP id 41be03b00d2f7-c73a12af63cso1536969a12.0
-        for <platform-driver-x86@vger.kernel.org>; Fri, 13 Mar 2026 12:40:02 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1773430802; x=1774035602; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=X4VxjEIWH78MtyhSZXqTaDqGtmDattYz9tNK8YYO76Q=;
-        b=Wzrln8o8V+6B44/Un7EfcubqGxv1/zJ3BuLLoZdqKZesbsstkttD2NbOk6wb3thXg/
-         Z8St9EwT+z6Xlzmw2H4SyWXifqmS/8R361mCQy5z44q7AUQPIzStVmdTsVuPiV856xHX
-         PdabnFAYKRgHWf1WTQm1+8jX3QIUvzqK5EPAsM97NOv/Srj+P+Zf+KXfxSFIizxa2U4D
-         eH2By6yEUQd3pORlF2addnadjivTSbqzjm1euhuJxGRGerK33eKSAkRF5NIQ3DvYRkbQ
-         iRB+gl4vrd0RwYgf2iQ5c4s7q8wgVbqwJMWhKcXRlTpZfBwDluTTZsAjeg599TB49zXI
-         PjJg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1773430802; x=1774035602;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-gg:x-gm-message-state:from
-         :to:cc:subject:date:message-id:reply-to;
-        bh=X4VxjEIWH78MtyhSZXqTaDqGtmDattYz9tNK8YYO76Q=;
-        b=Od9gsJBRNBmWGda5oACkTX3K/ajDBC7BokUKAW/4+3++FEyVvrUr5omTd1nOykliP6
-         8aq0QneUcKDfmZLclQBZHwF+c+zP5swNeK+I6t3dBSVULMF7T0FgbMJtQdfdixX4g44F
-         E+3uI/APcTUGk4JDu9ojswRC4ZnR6zyiYGFoz7xTzyN0vqXm2zA6+k+iMKKLCIxDRIiH
-         WbV1T947Bp4pCO5tjqPAeZF3PnmMwEFyQCDyeej2swm0nLxHJdMAtVN4H1gDGTFXXprx
-         Je6JPpnritA5cWZKQ2jsJpOloZA4Qstl8uAd5wNBJaGa5NKIf6EzcqVkj7QHyNmjE5YW
-         O+1g==
-X-Forwarded-Encrypted: i=1; AJvYcCUly/vxSy8gxCM9+COiUm1b6auyxD6yiX+oF7bFD8zMd4oL7m0zDNNAUKLMn0ZJRzzpkDEqCFUFnefCPIwlX2SIS+xm@vger.kernel.org
-X-Gm-Message-State: AOJu0YzqSOOBXalbCU/eskoQvv/mN8Cb4lVrnjt2S/KZrPmKG68Sjr6d
-	91BIZqCu0O3xU6gr5EHdyP53xvfedCqMf+DYLCrcNhXkyRf/9P+Yd68=
-X-Gm-Gg: ATEYQzzWZOAReiAN6jNSXn46NLIm5A9ndEl0E4aSj0HUuWXu0m5MRssUNzrK52Sv0b/
-	SNeYnvKEV4csWW/Fw38dm9fEXKJd63wQ+BwysmrnKmWJURgJlLyy64n/XiOac0auzfaJXEHGPS9
-	5EnENv9iS8riPWzWqnthDdGCEkfaqdNQorkgPeObI3o4OIUiFTD0cai26tFBvNMFj1p8xnceHdQ
-	yADQ5h/g7WkhUwzwyYG17H4esAEYdYmADoI2D9u7OpYEZpzkmVNJCPSSDBfa/WVaF4w0z9Fji3d
-	zf4sDBZd0lQEiTZb5dMgSWNblR7fRFJ3O25JEHT74imwsAguIlR2bZw3BTbjT0EtTJxk/8920N1
-	EF1WbLvjQiJuLznSmBjBHXmVE/P7Gmt7Edqu7iZfXxHdc7CKrR1rzK2gI7bdsmT428U4qApq9lh
-	dvldjpoiIPF9yho62HJW3enW/d9qn942+qSmAm4FMH/dd8UF2H67UbqYmGfdV6OQs=
-X-Received: by 2002:a17:902:d484:b0:2ae:d427:d3ff with SMTP id d9443c01a7336-2aed427d732mr24698955ad.36.1773430801911;
-        Fri, 13 Mar 2026 12:40:01 -0700 (PDT)
-Received: from at-Standard-PC-Q35-ICH9-2009.. ([171.61.161.137])
-        by smtp.gmail.com with ESMTPSA id d9443c01a7336-2aece62c733sm40303325ad.35.2026.03.13.12.39.59
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 13 Mar 2026 12:40:01 -0700 (PDT)
-From: Atharva Tiwari <atharvatiwarilinuxdev@gmail.com>
-To: hansg@kernel.org
-Cc: atharvatiwarilinuxdev@gmail.com,
-	ilpo.jarvinen@linux.intel.com,
-	linux-kernel@vger.kernel.org,
-	platform-driver-x86@vger.kernel.org
-Subject: Re: [PATCH v3] apple-gmux: preserve brightness using EFI
-Date: Sat, 14 Mar 2026 01:09:56 +0530
-Message-ID: <20260313193956.1375-1-atharvatiwarilinuxdev@gmail.com>
-X-Mailer: git-send-email 2.43.0
-In-Reply-To: <4ba400f8-34a1-4f00-a500-2775a09391b4@kernel.org>
-References: <4ba400f8-34a1-4f00-a500-2775a09391b4@kernel.org>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ny99/rxX"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 5D829C19425
+	for <platform-driver-x86@vger.kernel.org>; Fri, 13 Mar 2026 20:36:08 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1773434168;
+	bh=7ShzbUKEWa2pMm5LdMtCprVT8Y0BmpKIFLvodmhoVRY=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+	b=ny99/rxX3A/ucqJy1bZsMIRYDeGGlpTrKZ97m39aLT/d0rTU2OlvZYYDvvb8E9IfB
+	 5G6u+m04lg0/1xXfnvxgIm6+v3v9J7HZRNchR4zlm3TsyKQplDuPVqZSWkIW3YXKZl
+	 gzc5RjiY6JWTVk67aSypCcq6FOHNhKgwmpX0gqtqMlGUoW6/Q+gRLZ8r+kx9psNbKS
+	 wLMTPAlL9RD1JuKCJ2dzDQP6F4Y+RbRmYP8hFTzojaNwET2gNx05oHKrAxR16BQ1ol
+	 P4wstrx0sP+f8czvniNbOfugehIDuQ2xAvQHsVJ/tLqikRo7TH9xvKyykXU+/oz37/
+	 5ajoa7+UqD6mA==
+Received: by mail-oi1-f171.google.com with SMTP id 5614622812f47-467161c4a1cso1026448b6e.3
+        for <platform-driver-x86@vger.kernel.org>; Fri, 13 Mar 2026 13:36:08 -0700 (PDT)
+X-Forwarded-Encrypted: i=1; AJvYcCW/nsPqAgHWDChepPywVKF/TPP36kxMoL4+hUsaOI4Soqm5EBN8fHxSeQC9L/BJtohd+cuoA2Z02tnS1GaDDj+arYWj@vger.kernel.org
+X-Gm-Message-State: AOJu0Yyq8q/a1DPuvj9ZuKlA165hsdBee71d/3/vhIkSTAAp9EW5tDEa
+	OvBZV9rdN0KLf5ryVIN2fhARg3AIqpCRg1tybFUHohjPPEbdPFEA0KI5CMsSS05vlbLMvKRvZkJ
+	yPPyHXufE5hAVPf9DjZ8H+9GUc6gHJs8=
+X-Received: by 2002:a4a:ec49:0:b0:67b:b6be:7fee with SMTP id
+ 006d021491bc7-67bda9b4a50mr2738225eaf.22.1773434167407; Fri, 13 Mar 2026
+ 13:36:07 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+References: <2277493.Mh6RI2rZIc@rafael.j.wysocki>
+In-Reply-To: <2277493.Mh6RI2rZIc@rafael.j.wysocki>
+From: "Rafael J. Wysocki" <rafael@kernel.org>
+Date: Fri, 13 Mar 2026 21:35:55 +0100
+X-Gmail-Original-Message-ID: <CAJZ5v0j5bhEHau2siLmeBxX-X9yxxT9x6oH8AsCXF+G0B+srtA@mail.gmail.com>
+X-Gm-Features: AaiRm53dxR7r-zpe3_talVdMAyWyymTCAlVLASn2LviCyEvx-wUlSIBpeGC9EhE
+Message-ID: <CAJZ5v0j5bhEHau2siLmeBxX-X9yxxT9x6oH8AsCXF+G0B+srtA@mail.gmail.com>
+Subject: Re: [PATCH v1] sonypi: Convert ACPI driver to a platform one
+To: "Rafael J. Wysocki" <rafael@kernel.org>
+Cc: Mattia Dongili <malattia@linux.it>, Linux ACPI <linux-acpi@vger.kernel.org>, 
+	LKML <linux-kernel@vger.kernel.org>, 
+	Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Arnd Bergmann <arnd@arndb.de>, 
+	platform-driver-x86@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-> Reviewed-by: Hans de Goede <johannes.goede@oss.qualcomm.com>
+On Mon, Feb 23, 2026 at 4:59=E2=80=AFPM Rafael J. Wysocki <rafael@kernel.or=
+g> wrote:
+>
+> From: "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>
+>
+> In all cases in which a struct acpi_driver is used for binding a driver
+> to an ACPI device object, a corresponding platform device is created by
+> the ACPI core and that device is regarded as a proper representation of
+> underlying hardware.  Accordingly, a struct platform_driver should be
+> used by driver code to bind to that device.  There are multiple reasons
+> why drivers should not bind directly to ACPI device objects [1].
+>
+> Overall, it is better to bind drivers to platform devices than to their
+> ACPI companions, so convert the sonypi ACPI driver to a platform one.
+>
+> While this is not expected to alter functionality, it changes sysfs
+> layout and so it will be visible to user space.
+>
+> Link: https://lore.kernel.org/all/2396510.ElGaqSPkdT@rafael.j.wysocki/ [1=
+]
+> Signed-off-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
+> ---
+>  drivers/char/sonypi.c | 25 +++++++++++++------------
+>  1 file changed, 13 insertions(+), 12 deletions(-)
+>
+> diff --git a/drivers/char/sonypi.c b/drivers/char/sonypi.c
+> index 677bb5ac950a..ccda997a9098 100644
+> --- a/drivers/char/sonypi.c
+> +++ b/drivers/char/sonypi.c
+> @@ -1115,15 +1115,17 @@ static int sonypi_disable(void)
+>  }
+>
+>  #ifdef CONFIG_ACPI
+> -static int sonypi_acpi_add(struct acpi_device *device)
+> +static int sonypi_acpi_probe(struct platform_device *pdev)
+>  {
+> +       struct acpi_device *device =3D ACPI_COMPANION(&pdev->dev);
+> +
+>         sonypi_acpi_device =3D device;
+>         strcpy(acpi_device_name(device), "Sony laptop hotkeys");
+>         strcpy(acpi_device_class(device), "sony/hotkey");
+>         return 0;
+>  }
+>
+> -static void sonypi_acpi_remove(struct acpi_device *device)
+> +static void sonypi_acpi_remove(struct platform_device *pdev)
+>  {
+>         sonypi_acpi_device =3D NULL;
+>  }
+> @@ -1133,13 +1135,12 @@ static const struct acpi_device_id sonypi_device_=
+ids[] =3D {
+>         {"", 0},
+>  };
+>
+> -static struct acpi_driver sonypi_acpi_driver =3D {
+> -       .name           =3D "sonypi",
+> -       .class          =3D "hkey",
+> -       .ids            =3D sonypi_device_ids,
+> -       .ops            =3D {
+> -                          .add =3D sonypi_acpi_add,
+> -                          .remove =3D sonypi_acpi_remove,
+> +static struct platform_driver sonypi_acpi_driver =3D {
+> +       .probe =3D sonypi_acpi_probe,
+> +       .remove =3D sonypi_acpi_remove,
+> +       .driver =3D {
+> +               .name =3D "sonypi_acpi",
+> +               .acpi_match_table =3D sonypi_device_ids,
+>         },
+>  };
+>  #endif
+> @@ -1518,8 +1519,8 @@ static int __init sonypi_init(void)
+>                 goto err_free_device;
+>
+>  #ifdef CONFIG_ACPI
+> -       if (acpi_bus_register_driver(&sonypi_acpi_driver) >=3D 0)
+> -               acpi_driver_registered =3D 1;
+> +       error =3D platform_driver_register(&sonypi_acpi_driver);
+> +       acpi_driver_registered =3D !error;
+>  #endif
+>
+>         return 0;
+> @@ -1535,7 +1536,7 @@ static void __exit sonypi_exit(void)
+>  {
+>  #ifdef CONFIG_ACPI
+>         if (acpi_driver_registered)
+> -               acpi_bus_unregister_driver(&sonypi_acpi_driver);
+> +               platform_driver_unregister(&sonypi_acpi_driver);
+>  #endif
+>         platform_device_unregister(sonypi_platform_device);
+>         platform_driver_unregister(&sonypi_driver);
+> --
 
-Sorry to disturb, but its been 1 month since the patch,
-and it is still not applied. can you please apply it.
+
+If anyone has any objections or  concerns regarding this change,
+please let me know.
+
+In the absence of any, I'll queue it up for 7.1.
+
+Thanks!
