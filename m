@@ -1,90 +1,142 @@
-Received: from mail-dy1-f179.google.com (mail-dy1-f179.google.com [74.125.82.179])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 261ED35E920
-	for <platform-driver-x86@vger.kernel.org>; Fri, 13 Mar 2026 18:33:33 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=74.125.82.179
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5C25337F74F;
+	Fri, 13 Mar 2026 19:01:36 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1773426814; cv=none; b=H+f6jZvGtXWW5oKF1U1NRkGqCpFlwcDsQs7esRHYnBGgOfX/LtUqSYoh9ErwThTd4nn3NXC5O7QkO2Y/GyGZD0wghVoP2hwZvdQUawQx9GqDujPGtppJP4enyoe2DqK4Ve3/3ge/xqgInk99AeqYv0nuPFMlMqsweaZg1aruR+A=
+	t=1773428496; cv=none; b=j0YvPeKsorP1K9O7X1WgbAV3oXlIpmjhmcgOvkVe+82EZTJQF/7Y5f2eyvAzbc/6/guwbFgiYnpIG7cR34RoplW3Xn95IAGVicuBN2CO/LqOzdX/DDoFeNkd4thG1LVV4QMI5gSd0r/awme/yVXFt2ZPgk7gZL+CscX60DgGXF0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1773426814; c=relaxed/simple;
-	bh=EE4YMURcnrFeXffKfUY2x3rohd0IOOyU+TBMAgB6P6A=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=TtuegZKbpZeKZsWynxCWTyYglOMHTxh0cbwlailYrtnAXbjzgF5VtaceghWtG+ktT5MVKSbKKFEkfPieael9+atBQ3snGcoXatTa0uuQMtXRoX/f3sA5MPiYz3XopwWSknP8VXpe1TqQYjt1jkFCTJrf0lUeTraNTjEYCpG7eiI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=roeck-us.net; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=CSjbmovz; arc=none smtp.client-ip=74.125.82.179
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=roeck-us.net
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1773428496; c=relaxed/simple;
+	bh=t7JM9fIIXNM6OiUZarv073oEP0ElLeNWb1KjAs3Deuc=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=N7woxNhQE1gr8i8oo1ldkU8ITBMHM4tKSz1oXM0J8zp52gL58rzXPQNPfnbB2/iGdaMNxXwKknMS7ZHlGTx69oGrMwUhpaQfyO2dcjz1tK+ftfn2UgV50qgODSfnzQ9tDTVFBKh6I75YOXjbXPK3WyfST4sPNBjAyIyuSWkDBkM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=iSktqZJc; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="CSjbmovz"
-Received: by mail-dy1-f179.google.com with SMTP id 5a478bee46e88-2bdfc4b191fso2891341eec.1
-        for <platform-driver-x86@vger.kernel.org>; Fri, 13 Mar 2026 11:33:33 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1773426812; x=1774031612; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:sender:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=4pzcme6Fc7jwKa30DLKkBMP5J+l0OEb6h4cy20gevLw=;
-        b=CSjbmovzMcmIoIBVtN08uajLpziVXK0YujT0jX6y1h1tenKNsNrO0Fp7J3fpHH+n+J
-         xhaFVSYMrjB3fPsFrE8qQGRKgFu9jbzo2WHhThclX9W6RVBvufVS7XltQwZcdibhcBhH
-         w600R1DXCJvLcCjAUN5A/xHQWsnySIfYIqgpCTup/q4HdGnPQ3XLQmXz0JRGWZh5+jqI
-         6HESLjQHc9m9uOTTQ15pV1GxsZRH2aOunJT67Xlv7hL/CmmDgbWQiPIxNDrBOKN5OIXk
-         PWrYhHIhJe2ogLy007K6jz87EygVSkb8PHF22hNyjXQj/YAZhLBxpbwykr2rVyI4URq0
-         FZkw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1773426812; x=1774031612;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:sender:x-gm-gg:x-gm-message-state:from:to
-         :cc:subject:date:message-id:reply-to;
-        bh=4pzcme6Fc7jwKa30DLKkBMP5J+l0OEb6h4cy20gevLw=;
-        b=cI88gdp8O15P1F9artIhLsEaNkV9RstpTF6WM4Olc9qZVAzAed5uabrjU+bMC4FC5/
-         +KkSBWvJzYO3er7ovgI416j+CcBh/q/5+TjOCXy8+W/WYnbuTnplBdSFNbrNUGhoiqG1
-         bG8045NiMbRP/JxTmzUD7H3a7cDY+aALAsq08xWwtXYnzF+fJl/rnVlaXDfGyf2yxyhj
-         Qg6poid059mkjPHagICw4PwhzqT3UvNsLQDub4d3HB5Qz1xA2HU/e1SkzSj9e/4na29g
-         uRMW+XRAxPctITL9wnRmf3hEt0vGLnI3e5D+8LO+X+DKmOyfE1wLr4tp3OMKEjS1dEK0
-         yQGA==
-X-Forwarded-Encrypted: i=1; AJvYcCUr/TKOjuOBd5G2PX/D36cVkX6evMOk4KTccCwnzntqigJw/KkgUM5Zx7maqaKWAL4feKgb9SlpZaH8G90f8I3SCR4B@vger.kernel.org
-X-Gm-Message-State: AOJu0YwfAYKaS4VFTo+pPjB7prJcWmX8g7bdSaz1bv/JpsAHOq9dBehF
-	nYoykTO7JZM1FB3Xu0vcvZj7fkZLgmiK5fSfwFMPNZXEfZVNaGX0x9fq
-X-Gm-Gg: ATEYQzzBgOAttWWaIGVzXrzWadLiVApfQQPoP43SD2d/ZZsElEg/iPGsCXGuwHWtV2P
-	r8nfHudGzCKzpCDnquUjWSyB9ILDi8j90eexUg9p1UIVaWx+uD/C1qWfd9npp1YNnxmxRcoewWK
-	7rhe6293va5l7+eAW3+J9NclypYXBM4S/DWoCK4V8S4pJNisU1rFPbPZaSb6zSbHkkevPdDIwBM
-	HNKQNGrekXtIYE0AxiGUPW7NFl6aA4L52HEgrtoKlFiyRlNTcyCK30kKyGqEjdup8xb5zxr78jl
-	yd93frp2VfhyfGkLe0xFW10XXv0p6CMvJQbMBI7yPnVjoLPKJ0xR+o6xB5EKN1SxZUUdfrt4kus
-	P77VgqHubzVkZwtoPbNF+m9JSnIgpxxdrgujeKZhBw6TsXSouoCc9Kpr+HMq+oSSzLJhmKc2SwD
-	M1XcUSq6ARnkYBaogCo4AVx7qR4HeOdbuWQcjT
-X-Received: by 2002:a05:7300:8b83:b0:2be:2964:44c3 with SMTP id 5a478bee46e88-2bea547ccb8mr1887830eec.10.1773426812206;
-        Fri, 13 Mar 2026 11:33:32 -0700 (PDT)
-Received: from server.roeck-us.net ([2600:1700:e321:62f0:da43:aeff:fecc:bfd5])
-        by smtp.gmail.com with ESMTPSA id 5a478bee46e88-2beab3ea2cfsm4170626eec.11.2026.03.13.11.33.31
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 13 Mar 2026 11:33:31 -0700 (PDT)
-Sender: Guenter Roeck <groeck7@gmail.com>
-Date: Fri, 13 Mar 2026 11:33:30 -0700
-From: Guenter Roeck <linux@roeck-us.net>
-To: Armin Wolf <W_Armin@gmx.de>
-Cc: Dell.Client.Kernel@dell.com, pali@kernel.org, mjg59@srcf.ucam.org,
-	hansg@kernel.org, ilpo.jarvinen@linux.intel.com,
-	platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org,
-	linux-hwmon@vger.kernel.org
-Subject: Re: [PATCH v2 6/9] hwmon: (dell-smm) Use new buffer-based WMI API
-Message-ID: <07346e6f-8764-43f8-b63c-31dfa9c65add@roeck-us.net>
-References: <20260308200155.118950-1-W_Armin@gmx.de>
- <20260308200155.118950-7-W_Armin@gmx.de>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="iSktqZJc"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 93E2AC19421;
+	Fri, 13 Mar 2026 19:01:32 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1773428495;
+	bh=t7JM9fIIXNM6OiUZarv073oEP0ElLeNWb1KjAs3Deuc=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=iSktqZJcjVlBkJDRMeU3Jymnki2j6NB3oVjPbh72r6cjQ6JjrQ9qMLWpywEodY7A/
+	 +AjLFldfkmWnK+DWlCjlNiTK/PqMq+kPkDfWb14Ipg3Sw6xpgzG8+aDKedYf2Trk2+
+	 Nn1Lkqed26LmolYZNvUtYleOjtFSVS+opF6zQPYjJHpt1X5YkvY0TsDIcQOoVjxVgT
+	 Bs8Cqqt0r7/3pnKOGyBNKilMNRIVqN32+5sKugLx9E2ofO/mnnIjTSZBH7gRvH4y2F
+	 7KQcsjj1LT9l6/YUboK2G0H//aXi9wxArIBdYfCWh4nco6K9nKk4vWJQphCP/MxcMM
+	 MpsXo/k8Y5YNw==
+Message-ID: <de539038-7e9d-488b-a6a6-45396247bf63@kernel.org>
+Date: Fri, 13 Mar 2026 20:01:30 +0100
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20260308200155.118950-7-W_Armin@gmx.de>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v4 1/5] dt-bindings: embedded-controller: Add EC bindings
+ for Qualcomm reference devices
+To: Anvesh Jain P <anvesh.p@oss.qualcomm.com>,
+ Sibi Sankar <sibi.sankar@oss.qualcomm.com>, Rob Herring <robh@kernel.org>,
+ Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley
+ <conor+dt@kernel.org>, Hans de Goede <hansg@kernel.org>,
+ =?UTF-8?Q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>,
+ Bryan O'Donoghue <bryan.odonoghue@linaro.org>,
+ Bjorn Andersson <andersson@kernel.org>,
+ Konrad Dybcio <konradybcio@kernel.org>
+Cc: linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org,
+ linux-kernel@vger.kernel.org, platform-driver-x86@vger.kernel.org,
+ Maya Matuszczyk <maccraft123mc@gmail.com>
+References: <20260313-v04-add-driver-for-ec-v4-0-ca9d0efd62aa@oss.qualcomm.com>
+ <20260313-v04-add-driver-for-ec-v4-1-ca9d0efd62aa@oss.qualcomm.com>
+From: Krzysztof Kozlowski <krzk@kernel.org>
+Content-Language: en-US
+Autocrypt: addr=krzk@kernel.org; keydata=
+ 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 a/A=
+In-Reply-To: <20260313-v04-add-driver-for-ec-v4-1-ca9d0efd62aa@oss.qualcomm.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-On Sun, Mar 08, 2026 at 09:01:52PM +0100, Armin Wolf wrote:
-> Use the new buffer-based WMI API to also support ACPI firmware
-> implementations that do not use ACPI buffers for returning the
-> results of a SMM call.
+On 13/03/2026 11:29, Anvesh Jain P wrote:
+> From: Maya Matuszczyk <maccraft123mc@gmail.com>
 > 
-> Signed-off-by: Armin Wolf <W_Armin@gmx.de>
+> Add bindings for the EC firmware running on Hamoa/Purwa and Glymur
+> reference devices.
+> 
+> Signed-off-by: Maya Matuszczyk <maccraft123mc@gmail.com>
+> Co-developed-by: Sibi Sankar <sibi.sankar@oss.qualcomm.com>
+> Signed-off-by: Sibi Sankar <sibi.sankar@oss.qualcomm.com>
+> Co-developed-by: Anvesh Jain P <anvesh.p@oss.qualcomm.com>
+> Signed-off-by: Anvesh Jain P <anvesh.p@oss.qualcomm.com>
 
-Acked-by: Guenter Roeck <linux@roeck-us.net>
+A nit, subject: drop second/last, redundant "bindings for". The
+"dt-bindings" prefix is already stating that these are bindings.
+See also:
+https://elixir.bootlin.com/linux/v6.17-rc3/source/Documentation/devicetree/bindings/submitting-patches.rst#L18
+
+> ---
+>  .../embedded-controller/qcom,hamoa-ec.yaml         | 56 ++++++++++++++++++++++
+>  1 file changed, 56 insertions(+)
+> 
+> diff --git a/Documentation/devicetree/bindings/embedded-controller/qcom,hamoa-ec.yaml b/Documentation/devicetree/bindings/embedded-controller/qcom,hamoa-ec.yaml
+> new file mode 100644
+> index 000000000000..baa95f06644a
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/embedded-controller/qcom,hamoa-ec.yaml
+> @@ -0,0 +1,56 @@
+> +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
+> +%YAML 1.2
+> +---
+> +$id: http://devicetree.org/schemas/embedded-controller/qcom,hamoa-ec.yaml#
+
+Filename must match compatible.
+
+This is a standard review comment already documented in kernel and your
+internal guideline, no?
+
+
+
+Best regards,
+Krzysztof
