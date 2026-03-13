@@ -1,66 +1,66 @@
-Received: from mail-ej1-f50.google.com (mail-ej1-f50.google.com [209.85.218.50])
+Received: from mail-wr1-f48.google.com (mail-wr1-f48.google.com [209.85.221.48])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 704E46F2F2
-	for <platform-driver-x86@vger.kernel.org>; Fri, 13 Mar 2026 12:17:37 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.50
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3DEF12FD1B3
+	for <platform-driver-x86@vger.kernel.org>; Fri, 13 Mar 2026 12:18:46 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.48
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1773404258; cv=none; b=lPDzNwKe1CpQe/ql/iBOQ73KMcMaZosAy8E2KOl0hL0pEU9Z/hRhig5TvxmU/SwbZbVCo8Uoeupn628haI4LnIYC8OM1Nf7QH2XQH08rj8QGEtov+YB7lJnFRKJfOhVbCJ3+tUwDWckwtidksf3KU39gWeFhVADyeoAhMu7bZoU=
+	t=1773404327; cv=none; b=NMJDY5xtl/LRFvCFswZnSfgZfq1O0VGrnucEAe1QYtLQgzl+jqiB0yQVQCQGtAcKb+qF6epTTr7Fp6rNuQM+qAR9t7fwCv/+kkaMRvsrHNP27mk2puXXWp07Yz9SGNWF8NrkkUUM41lr7S8QzfATTu0pLVO6rOW/9TWXxkNNWQk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1773404258; c=relaxed/simple;
-	bh=dH/LRUSNBatrGwHvEX3Iy06egEiIiZiFcoxmr7F53lw=;
+	s=arc-20240116; t=1773404327; c=relaxed/simple;
+	bh=V+lC6EjJY4lOyB1rR22LNtAT1Vlotp4LU45DmHO/UY8=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=IU9FdC1dZC90skuQnU3CUX9RdqsUnwIP0jSRHrm3OKsuhcBzteTiPZqYb71jxki1rVGjQ1eUgTUYzgNlz3NQAqL5fKit5kv0ssQRZ3c9QsEpve5M5OaqMniD84s2bwLptjvBWUPi5iO1REIcO11JXMsJcP5M2NI7FsdD4NdrpLc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=S2zuPGlI; arc=none smtp.client-ip=209.85.218.50
+	 In-Reply-To:Content-Type; b=sOq19vr1/FYYYqSmhGEgui8K7ZfkmHhHpP1efppNa2lpMi1lsJSUudcsod2sSRMzj7HU3gBF4bF6g0r2r+GjxI8gx1tMOsFH9EmTv1AeC45/jW7yHc0J+WFzt0Rziv36gBz58gJIchqxNH43e1Ygwqa2rR6Kmcsq4fsCJqLrnC4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=GMR8E5Hy; arc=none smtp.client-ip=209.85.221.48
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="S2zuPGlI"
-Received: by mail-ej1-f50.google.com with SMTP id a640c23a62f3a-b941bb3e23cso363605966b.0
-        for <platform-driver-x86@vger.kernel.org>; Fri, 13 Mar 2026 05:17:37 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="GMR8E5Hy"
+Received: by mail-wr1-f48.google.com with SMTP id ffacd0b85a97d-439ac15f35fso1883013f8f.0
+        for <platform-driver-x86@vger.kernel.org>; Fri, 13 Mar 2026 05:18:46 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1773404256; x=1774009056; darn=vger.kernel.org;
+        d=linaro.org; s=google; t=1773404324; x=1774009124; darn=vger.kernel.org;
         h=content-transfer-encoding:in-reply-to:from:content-language
          :references:cc:to:subject:user-agent:mime-version:date:message-id
          :from:to:cc:subject:date:message-id:reply-to;
-        bh=3s5B4wCXYFxF46H+9RZgBJPAFEqIaUF6//FgPVVAHcY=;
-        b=S2zuPGlIvMArgiJbiTh839YX2dUIZitVPKFFfae4E4KrnUwsEU5zfTDpwC7/yPuxne
-         46IoNzj5dgBt//MxZK9J5PVdo97x0hOe90mChE0M1AXFizXkWrPyzt0tQWFUnWdFNnJW
-         2twpsABjZgr2XSOC2ytpD4qsYfhhiZnqXehNVc4QteLvDl2UiC71FbcHrpCGGIiYQbIe
-         YUNjD+leYjMZYO709jzCqiIxC7jDcuIlLG3XaMvCjRAD07ikJ7lHwOJJ6lkzmoiWkG9t
-         s4pE9n+q0NQztZiDV14T5oMHac52F2clHH/12FfXusd/ECoD63K2IuInIVl4/SZuXqEF
-         OZFQ==
+        bh=4vDJxFgdwUwROzjUq7xJrFddmidfBuen5YK8xbhB4mk=;
+        b=GMR8E5HyNWdXKxTRba2IiHoZhNE+5btYwPZDw0/cTqNmOTfNzBOpLA2F8LesAOXF+5
+         vRUgrKWQXowArBxEWDPyzs6P6Ivyqv1X7sPh31HDl7TIZuBJW1uOiesfnrEKPmm2lrl5
+         l+QR4YDjF/fSjqlzI2XCeEXkerfiEp9FQ5jJqj0DONkYgAxdRNE7Gc9RtBXH8hNnprKz
+         l3ZJYfSBAU1iscXZ0tYZmKF5Sw/Z7E3+U5fD7qTecGk7hO86iXmp7ve90H7Epq4t4wkw
+         ntiR55WsLNGl5LPMJA13FyCl1SpzhEkV7yNQBA0MFtPEVirejGA0DdnYPy7iccTYX2p5
+         OJJA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1773404256; x=1774009056;
+        d=1e100.net; s=20251104; t=1773404324; x=1774009124;
         h=content-transfer-encoding:in-reply-to:from:content-language
          :references:cc:to:subject:user-agent:mime-version:date:message-id
          :x-gm-gg:x-gm-message-state:from:to:cc:subject:date:message-id
          :reply-to;
-        bh=3s5B4wCXYFxF46H+9RZgBJPAFEqIaUF6//FgPVVAHcY=;
-        b=MMIOsuBnWPEQjuSt/rNlSNLdu8dCaxaeIK3UAOfDLG0qcLGo/BgSsgunznmQiGJQEX
-         cMkmEWTqLpl07TB6CvLkmkVTxOC3HVJXEMP+Qlg5CHVZFnsfKua44IKUhNOW3fNBj1zd
-         DL8H/Jy/LuIF625GFtGifOO6jc2RKzHgC9eyMjO6kaV3K4FP6/96sgrXv7rj//wQ4gDh
-         MIFnGSIdxkrTGX0CJPDbXCYdN1qLwZo7qe/Y4vATi/PEFXGJmOIzY3QZVqBSholjhiY9
-         k1f5O1T5Tm13Hk/eCQ7t1kt58wXSNX5OZU+clGap0juV5/a9Sv1SMHcWHBM4CbZAFASO
-         ED9g==
-X-Forwarded-Encrypted: i=1; AJvYcCViXDLXBWkTrFQ5qc4sDu3FOAq0c/b7tVqemWhTDUiv0AIdGtYoylQhplDBLT7o5oCnB/IvGKsLa23rAK5BNt+eTPbU@vger.kernel.org
-X-Gm-Message-State: AOJu0YxiNv7grCe48VIiNdrZwd4zQpAVG3tXNH+mAp4lQgusaSu73spl
-	CEm1eCuT2iT2qJ/EEJAF1g42UgTl7Z/v8+WNn6C0yCueExv02OX1HDzFOmQR1g5Pbhg=
-X-Gm-Gg: ATEYQzxCD2/v/euIcrG9cSmZYRx1TB8N3N3EASdEfBNfFccEFDYvp+8bIXbB9maxDA+
-	GSImjmjH19FCiIlbNIioWsrRm6fOYWJv7Vnw3V4tbKg0WJoAMar10H8lISU+wtTSlE7evzhN5O7
-	WYHh2ZOMkfLeMjpZ088zk9Fb3Eljo5CJ5fUjtEZlG8aGi7xP7Hj+c4XWSl2cuAAsnNv3sMlGOZZ
-	SjqDaQnmIF3Garj0ALOoUcwk051lXyIKRpazc2vvO1wamsy2w2wGV2aHvHrci3TkWj3gTRFakrY
-	jKpnpX2fMr1T1uuEWc2lZZ9NucGMfZIPRbAM1kvaF6um5TLWtgaoEZSHHFuCrX7FO3ahnXaLSXG
-	DKcEPZ0a5uZenq8G5bU7JW5nicOAEixAM5bb+LAK7i1AixVpIN5VNIteEbU7IVvL7fVZlwzDJPD
-	yVyW16XhjVUvWk9yo5XRxRSExnS7XhOPy1tII=
-X-Received: by 2002:a17:907:174a:b0:b96:7e03:166c with SMTP id a640c23a62f3a-b97651b4282mr160852266b.53.1773404255612;
-        Fri, 13 Mar 2026 05:17:35 -0700 (PDT)
+        bh=4vDJxFgdwUwROzjUq7xJrFddmidfBuen5YK8xbhB4mk=;
+        b=RP3ZZyPfBpUQ1G60a+ZAVdKzj+QXpp2aPDszsGnZVd0y/g+9S4+GxGjPag/SJuxwEN
+         98V6RYuwN+zG3iJLmIMOvMbOL0phJsdxlxGKLw9i4Gt1Zrmc/AxtdINjKGkDbXBpE7e2
+         xaX2l9FuMnwZYbxRr7/QLVuUyMkwyEn8oGAYqFyNzqCsB+fFyVv7PBRcaFa6uZ8qU2bg
+         7PLIIukgDV6A4+CSMqqHwOaIWMzpcS3e2W4J10D/UWFHFzu3Hk6RVIt+X0RC6yFJwarG
+         0QMs5GpfcTit3Tt8NMbN1xYonz1NHVjP5vws6YTpsWT7a8JsK67ttIVmjC8ElDOIxtLO
+         9Ayw==
+X-Forwarded-Encrypted: i=1; AJvYcCXK+QXu2+zgO4puCvfuVnPeoDGDSGEXbJ5QWNktU32dzrW56C8TnYXpJgRDmNzF+DF6vx8biiTHw+G8EufMEQeadCvw@vger.kernel.org
+X-Gm-Message-State: AOJu0Yza7pi+aGbdns0xHALHTt/YiV97006rfKJEL1h0EA4RPdTi4NzU
+	JsyGGwLHP7vADSLjRv7BRw8A2TUIkDXY0Qe3JI3vOelfYnb04rOc2VLxUKyvmGM7qGE=
+X-Gm-Gg: ATEYQzyt8rVppvHORPUU0FgcXm4Lm2FwMcI2vEvYxTCQdzHch+e6ZQTqP8lFRFQNLqw
+	H0nSmnH8Sv07vFzF7HzC8VB03shbEX855ComG8l6x8D7NziOHN8hNEW0kC8uvukw0o+ljUumgJJ
+	0VcOMkaKRNuhTpVw1Mhq/mI1J5bPMyFxOOBbYT8dN6HTcb44AtLl0zxJbdnOISABJVHESxDbBDD
+	nSSOdIo44QNS+wWGGR0/guaQRVl5bT8VfdVpT8y2mljLfPK8WTPV1wuNEUWEkrcuaGZAv6fdLQc
+	QQ1/1VQXznsYnV6L3sFv+0wnUP1wfswK6TrdYP6oTXJR13sGfScr3DNL5eoBgvzr7X8OePnzrF3
+	JhlsmmFhwLKLCijXuXDMoAOhQf60AyH2hPdTQ1IAQAbk0PS4oIqHRxXzxepyV4/hpZGYGRVtgUG
+	6PPe9CcfNOMhXnQUf/XeacaUMPHx6Oc15kH+c=
+X-Received: by 2002:a5d:64e7:0:b0:439:b59e:5e6a with SMTP id ffacd0b85a97d-43a04d816cemr6178617f8f.14.1773404324041;
+        Fri, 13 Mar 2026 05:18:44 -0700 (PDT)
 Received: from [192.168.0.35] ([109.76.176.163])
-        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-b97756e59c4sm23182566b.35.2026.03.13.05.17.34
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-439fe19ac5fsm17764848f8f.1.2026.03.13.05.18.42
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Fri, 13 Mar 2026 05:17:35 -0700 (PDT)
-Message-ID: <9241da21-6b02-434d-a746-6bccc25a335d@linaro.org>
-Date: Fri, 13 Mar 2026 12:17:38 +0000
+        Fri, 13 Mar 2026 05:18:43 -0700 (PDT)
+Message-ID: <132116be-2964-4b98-be2b-1baae5bfb58e@linaro.org>
+Date: Fri, 13 Mar 2026 12:18:47 +0000
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
@@ -68,8 +68,8 @@ List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v4 2/5] platform: arm64: Add driver for EC found on
- Qualcomm reference devices
+Subject: Re: [PATCH v4 0/5] Add driver for EC found on Qualcomm reference
+ devices
 To: Anvesh Jain P <anvesh.p@oss.qualcomm.com>,
  Sibi Sankar <sibi.sankar@oss.qualcomm.com>, Rob Herring <robh@kernel.org>,
  Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley
@@ -81,32 +81,74 @@ Cc: linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org,
  linux-kernel@vger.kernel.org, platform-driver-x86@vger.kernel.org,
  Maya Matuszczyk <maccraft123mc@gmail.com>
 References: <20260313-v04-add-driver-for-ec-v4-0-ca9d0efd62aa@oss.qualcomm.com>
- <20260313-v04-add-driver-for-ec-v4-2-ca9d0efd62aa@oss.qualcomm.com>
 Content-Language: en-US
 From: Bryan O'Donoghue <bryan.odonoghue@linaro.org>
-In-Reply-To: <20260313-v04-add-driver-for-ec-v4-2-ca9d0efd62aa@oss.qualcomm.com>
+In-Reply-To: <20260313-v04-add-driver-for-ec-v4-0-ca9d0efd62aa@oss.qualcomm.com>
 Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 7bit
 
 On 13/03/2026 10:29, Anvesh Jain P wrote:
-> + * Read Response:
-> + * ----------------------------------------------------------------------
-> + * | Offset	| Name		| Description				|
-> + * ----------------------------------------------------------------------
-> + * | 0x00	| Byte count	| Number of bytes in response		|
-> + * |		|		| (exluding byte count)			|
+> From: Anvesh Jain P <anvesh.p@oss.qualcomm.com>
+> 
+> Add Embedded controller driver support for Hamoa/Purwa/Glymur Qualcomm
+> reference boards. It handles fan control, temperature sensors, access
+> to EC state changes and supports reporting suspend entry/exit to the EC.
+> 
+> ---
+> Changes in v4:
+>    - Fix fan count calculation to use min() instead of max() to correctly
+>      cap fan_cnt at EC_MAX_FAN_CNT.
+>    - Remove unnecessary mutex lock/unlock.
+>    - Disable fan debug mode on ec module removal.
+>    - Fix issue reported by kernel test robot.
+>    - Consolidate hamoa-iot-evk specific changes into hamoa-iot-evk.dts.
+>    - Add board-specific compatible strings as per review comments.
+>    - Link to v3: https://lore.kernel.org/all/20260308233646.2318676-1-sibi.sankar@oss.qualcomm.com/
+> 
+> Changes in v3:
+>    - Revamp the bindings and driver to support generic ec specification
+>      that works across Qualcomm Hamoa/Purwa and Glymur reference devices.
+>    - Add ec nodes to Hamoa/Purwa CRDs and IOT-EVKs.
+>    - Add ec node to Glymur CRDs.
+>    - Link to v2: https://lore.kernel.org/lkml/20241219200821.8328-1-maccraft123mc@gmail.com/
+>    - Link to v1: https://lore.kernel.org/lkml/20240927185345.3680-1-maccraft123mc@gmail.com/
+> 
+> ---
+> Maya Matuszczyk (1):
+>        dt-bindings: embedded-controller: Add EC bindings for Qualcomm reference devices
+> 
+> Sibi Sankar (4):
+>        platform: arm64: Add driver for EC found on Qualcomm reference devices
+>        arm64: dts: qcom: glymur-crd: Add Embedded controller node
+>        arm64: dts: qcom: x1-crd: Add Embedded controller node
+>        arm64: dts: qcom: hamoa-iot-evk: Add Embedded controller node
+> 
+>   .../embedded-controller/qcom,hamoa-ec.yaml         |  56 +++
+>   MAINTAINERS                                        |   8 +
+>   arch/arm64/boot/dts/qcom/glymur-crd.dts            |  22 +
+>   arch/arm64/boot/dts/qcom/hamoa-iot-evk.dts         |  16 +
+>   arch/arm64/boot/dts/qcom/x1-crd.dtsi               |  16 +
+>   drivers/platform/arm64/Kconfig                     |  12 +
+>   drivers/platform/arm64/Makefile                    |   1 +
+>   drivers/platform/arm64/qcom-hamoa-ec.c             | 468 +++++++++++++++++++++
+>   8 files changed, 599 insertions(+)
+> ---
+> base-commit: a0ae2a256046c0c5d3778d1a194ff2e171f16e5f
+> change-id: 20260309-v04-add-driver-for-ec-3fa478f264d9
+> 
+> Best regards,
 
-Great to see this documented in the code.
 
-Please run checkpatch and take heed of what it says.
+echo 'file qcom-hamoa-ec.c +p' > /sys/kernel/debug/dynamic_debug/control
+echo 6-0076 > /sys/bus/i2c/drivers/qcom-hamoa-ec/unbind
+echo 6-0076 > /sys/bus/i2c/drivers/qcom-hamoa-ec/bind
+dmesg | tail -n 15
 
-0002-platform-arm64-Add-driver-for-EC-found-on-Qualcomm-r.patch has no 
-obvious style problems and is ready for submission.
-0002-platform-arm64-Add-driver-for-EC-found-on-Qualcomm-r.patch:184: 
-exluding ==> excluding, exuding
-0002-platform-arm64-Add-driver-for-EC-found-on-Qualcomm-r.patch:224: 
-exluding ==> excluding, exuding
-total: 0 errors, 0 warnings, 0 checks, 28 lines checked
+[   27.301126] qcom-hamoa-ec 6-0076: EC Version 0.35.0
+[   27.311768] qcom-hamoa-ec 6-0076: Fan count: 0 Fan Type: 0 Thermistor 
+Mask: 0
+
+?
 
 ---
 bod
