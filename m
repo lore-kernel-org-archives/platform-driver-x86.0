@@ -1,72 +1,76 @@
-Received: from mail-pl1-f177.google.com (mail-pl1-f177.google.com [209.85.214.177])
+Received: from mail-pf1-f176.google.com (mail-pf1-f176.google.com [209.85.210.176])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7BFFD2772D
-	for <platform-driver-x86@vger.kernel.org>; Sat, 14 Mar 2026 22:40:31 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.177
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5E40D23BCEE
+	for <platform-driver-x86@vger.kernel.org>; Sat, 14 Mar 2026 22:45:09 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.176
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1773528033; cv=none; b=YDEzn0dqaom3NjFlbeJkcJl8X6tmrTLx0Bvn5q5X7Q3nyQVnVhIZ/DUsS8QPCWAOu6q2F78sn1G3cExuWGcMIe09MgFInKqNIKgPnsIl0rbvtq5JKbcwKHvjQsavF78WmcR8Skw32yEwyssQ3NHm0tBsqzOzyfn+ZyGGVMytASM=
+	t=1773528310; cv=none; b=ZmaA57mQkc1oTmRT9VZ5bw9+hbdLiNBo7ZqjVnjeTxU6+74Y4Xh9jpgG3NezhzIZNMqZEGjEezQV2li8R0d+mQrDAEPt2b4nhwOWjDF2FE5drmnnzz7FYjTTTaNStVfUVhdglgA6bjY5K+CIHgFrgu0NeT655pBjcjBUaprXrXs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1773528033; c=relaxed/simple;
-	bh=EiECS9uS2raJald4G1Z7WH5nAju0GwEo/qx/RGKwHQk=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=Eb8oAHGebcqMUqYajai0EOw8gotbuwvwWai23tTnufJuSBPnNmPHyP0UpynsmXrjEiCFFxqEy+Dl0fjUinMXRYDtrlfymIlXsVxRGDxudMbY6efJZ7xl7iUGSUntHvYd+MrHsA5ZljpQGToG9uR6xxgVcZ59zsH5pxiMQiHsKA0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=no+oKk3b; arc=none smtp.client-ip=209.85.214.177
+	s=arc-20240116; t=1773528310; c=relaxed/simple;
+	bh=CClvsyEacqnD+WAJ8DNWjrL5ehglcPd6KX206B917EE=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=RtwZYknn3uX4PgYlXu7jdH8W9L56v6B1E/4TbFNa483ldhwOTnRLGFWhK7lAgEJZZb+jIzSMSsNF8T7Mh7YoObtQodolJb67CQUVAOnc8xX0rp/t718Y+9EtetR854uyYYlPias77MRRAgY+xhRM9kMD70k5XaDAms3Zi1tHrl0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=YRn/yC0P; arc=none smtp.client-ip=209.85.210.176
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="no+oKk3b"
-Received: by mail-pl1-f177.google.com with SMTP id d9443c01a7336-2ad9516a653so14374075ad.0
-        for <platform-driver-x86@vger.kernel.org>; Sat, 14 Mar 2026 15:40:31 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="YRn/yC0P"
+Received: by mail-pf1-f176.google.com with SMTP id d2e1a72fcca58-829a9d08644so1949467b3a.1
+        for <platform-driver-x86@vger.kernel.org>; Sat, 14 Mar 2026 15:45:09 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1773528031; x=1774132831; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=k/YNPxsCw6jxw3lcUUiuO3dmDTUsSL1Ns+YaCfsyYUE=;
-        b=no+oKk3b1Mo6QYIfMxzRdmYKW4YvBhEB2Pn+H/PnhZODcNFNGOml0o7o83FtdZt/ym
-         PwSn3A7R/eis0PR8Jdn3KrjdoL1e7Gw8XgFftfbRACARYMt4OOzThidW6+u7nKrM8iOv
-         wHlRKFCXda9F/R0z8nW7eRHQufDDLIKQYYCsDX8SfAEZ5tjkrE6dl8BEFJt+BxGXHPpX
-         KXhRLyeAQvUlggob/Tt/rGX60PfZ29me1b0TR9Cwm3vX6P7RGbXJv7gymj+lPYZD33TG
-         dO0IA64CMjSurFH9wszTtLb20jdh9ZP1f8ubpq85OwEwIcDHR1KzDGIvOB2LUv0Z0+O0
-         Y9KQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1773528031; x=1774132831;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-gg:x-gm-message-state:from:to:cc:subject:date
+        d=gmail.com; s=20230601; t=1773528309; x=1774133109; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=k/YNPxsCw6jxw3lcUUiuO3dmDTUsSL1Ns+YaCfsyYUE=;
-        b=sJ95dh4pQ1ifdoFuLgjyTShORJHvnbIJLXYCfYgrg4Is+vhaPPW/ojTxTy9C9CC1ay
-         eK2SLu5gpjJvYneJXYlROW49TtWk5IZaZHXwe66181JMhYnIl67ZHjXrzNOdJsHwh8rY
-         YbSphTAT3e8C0stuEwVbz+oVKj+qebZ0HL+InmtJUD4NZxmsFLBeQHIZcvueSL4YqKpx
-         SBM/Wq+hUgc97Z29zOhNbQc3wqLpvV7VqdH7rPEjgnoKLbzM+2lE3eRq7KLqQ9fOvgdA
-         dFH6NddnXiKyQ18DWFZTxNUVLDGxhMDJyq3zVQicVLCp8APRsXuFOMNhmtrNbcK1bbD+
-         wELA==
-X-Forwarded-Encrypted: i=1; AJvYcCV2Nf77P9ieR8MgTdoWW5VrhC/R0mNBJwCKxcKpV4Ds3WB6T3cWCUbZFr+F6jZfePnyhSd/rNW0L6+EPUHaFJiQDpOL@vger.kernel.org
-X-Gm-Message-State: AOJu0YyBTN2+35GRCexZwtxik3F7Ri5e33zDow7EE4TkUPdYnOzglin5
-	Cw6JpSeJm3XufpUvgJsHc0HZg+WfJmBXlofU2QgF0SsY9gsF7S8u+4g=
-X-Gm-Gg: ATEYQzyU3s1ucSxcEnMPLFBe5Ppm6TG+ifX/g7mps5Boh1d17WUvKaFr8iaHXC6HmyN
-	uwu52jyAo35gH9E7w6Fq5GkRVvj1H0TEAGLCXPExQCoKyx36rmQS/OCuA9k5aDN1BlnkQAjBqby
-	wYSvXfJ3aZk/KJiNTLxu+MKLQk+mpPlNKHm0e8urKiaOpuHKOEUw0KsOhhM2K+HLdxe8X1j21Je
-	fkvzazf1WQEd97vkka/UmJDGSkO0bYL/M8xVOmhT5VTgkxmu+nSfR09La4AT+nJ+wOKh2jZBz1J
-	wVAHbrRZGxVD3HjjZxtylRG/2Ia+iUXJ/jLYKsa3tJvwku6Km2CebRRQqV7NlrPtbm47umf+YBb
-	uGHQjxjW30fO4tbJVHPqO/5qHTu6ZIiZs2wpFFCNRHQSqs6QqnoCWyrIeqorE5844Rg4Ot/IgM2
-	0S4h+jMI9w3DDwmMLV5PppM1qrItdoFxbGHLPI4NG5dtFMVTzQCLUzmO4LfHWuDB4=
-X-Received: by 2002:a17:902:f601:b0:2ae:6364:e6f1 with SMTP id d9443c01a7336-2aeca940e7dmr86120365ad.1.1773528030850;
-        Sat, 14 Mar 2026 15:40:30 -0700 (PDT)
+        bh=CxRVDMRkMzVhFvS3BPCxYXWqUEN4lEbBgVIcoiT8/Ng=;
+        b=YRn/yC0PS+TyCyb4kq5Pq79ZxQlUTDVyxGDVQ2Y7DR5+aOqoWWedGsdI3bxJl4ZUEW
+         YBo+LwnYg5zUR4UMfWXaZ/T1SmALLwBxlIr8t/DNp6ItAiX0B2HbZOZZNTuCy5h3RT3L
+         zQNx7V86L5bSIaYNPcY/FO17r1aRhxoCvCsebxIvNesVjT/MSzhinZd+JSmYJi83CWfD
+         E77S62VtWcED74TTWo8KeK4vXFSVweO5KSgxn/B+e8RE7No/rlFKtysrls5glMINoOux
+         ZscS/lTRrrhCTEcakIfpzxavqiQkBpE+OWgtoFockFn490i5yrzHiCUi3WjREHGG2ZAP
+         jW6A==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20251104; t=1773528309; x=1774133109;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:x-gm-gg:x-gm-message-state:from
+         :to:cc:subject:date:message-id:reply-to;
+        bh=CxRVDMRkMzVhFvS3BPCxYXWqUEN4lEbBgVIcoiT8/Ng=;
+        b=f8c1VsQk0ZTdlJezz3c8RXBgrg/5B3eUOvFgF3InpN6HmFHgZUFEWsPNBSH1h3mfYa
+         Wwq8niFluiIE0M87MRSI+kEmExhrvEnkGv0SfVdbsydNiimO+OkiDI7sfIuiRk86Sxmw
+         abMTecvMu88txxlh2XOVGp/O6QuJlXkPdQPLut2Z9erwhCwaJzSsDuHAXRA+2AY4B1Vl
+         axQJ1VBOA94/GUgD4MJm1McuvVe1hZCcOhk1/jopq2AYj2xRKPiKAdcvi312KecIntxp
+         umj0Pzu8QEGSB13GO6ou9X/RCPBnQS72VmPX7Fe/Hd6EdjLDq6EVTFj0mR4EumPN4YIf
+         AGYQ==
+X-Forwarded-Encrypted: i=1; AJvYcCVgWlX6yRqx3MEJERSelnZcPSVqVnouhCUC4ZzcUV43CLHczH17Fzpz4/eFh0l1ChGeVT8zHipbNZzTzk1K88BKZpzL@vger.kernel.org
+X-Gm-Message-State: AOJu0Yzf75R1anayygg2x89iCX6fPmBCkCOwVsCr2szfAEza68F3lo84
+	DEkYXMKvO5cwQEA7t2huKeiiiLrovnQ3rAW5www6wx4xkLYh/CWEpck=
+X-Gm-Gg: ATEYQzxdAEcOnKhiptaOkV6qwxwKPj8OMJEbG2Aho9Y8U69HOuqpWzacQ61VvvuIJM7
+	pNNaQ8IMRkrGSBK+zaGNpCFCvQFX6o3JQc49nY6GHKkW8kdUpxZyjNEF/HOlAs1wFIRZ9ut4dol
+	YUiph/u6OP7ZQfxzPvuG+oBRna6gWCjUA2PpfVc/btFPGIsOeeih51SrGtDhlm+E52c9mF13bCy
+	DWrupPzAHyyOIKLYWBS5EJrZ3DE6lbTofE1lKJKRgREx/JU5Kn61OQ8qsHJPDsHJcMHwmed5fT2
+	2ELK2Z5l049t3pTeuBPDeiuKOrEPdfBWji2aEa778yGtJ0TsQe0E9EOEFIiPzZHuqun2hXDlkDm
+	LojFLoqOFebOqff0pFUryJj66yd5O+8KxZgnYUfSaBEBstYbiJ7P5OyxKQsBYc+01FWfO6/ihyh
+	fSwoMys9Te40+6/gBnlEjSNcdOgPUi8LudahZE7SMFy8lR5stHi54Iy5lCeiDkCIs=
+X-Received: by 2002:a05:6a00:a256:b0:829:8aa3:2ebf with SMTP id d2e1a72fcca58-82a196b502bmr7476269b3a.2.1773528308745;
+        Sat, 14 Mar 2026 15:45:08 -0700 (PDT)
 Received: from at-Standard-PC-Q35-ICH9-2009.. ([171.61.163.197])
-        by smtp.gmail.com with ESMTPSA id d9443c01a7336-2b050656d13sm2088905ad.87.2026.03.14.15.40.28
+        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-82a072422desm9743938b3a.1.2026.03.14.15.45.06
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sat, 14 Mar 2026 15:40:30 -0700 (PDT)
+        Sat, 14 Mar 2026 15:45:08 -0700 (PDT)
 From: Atharva Tiwari <atharvatiwarilinuxdev@gmail.com>
-To: 
-Cc: Atharva Tiwari <atharvatiwarilinuxdev@gmail.com>,
-	Hans de Goede <hansg@kernel.org>,
-	=?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>,
-	platform-driver-x86@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Subject: [PATCH v4] apple-gmux: preserve brightness using EFI
-Date: Sun, 15 Mar 2026 04:10:15 +0530
-Message-ID: <20260314224017.11982-1-atharvatiwarilinuxdev@gmail.com>
+To: lukas@wunner.de
+Cc: atharvatiwarilinuxdev@gmail.com,
+	hansg@kernel.org,
+	ilpo.jarvinen@linux.intel.com,
+	linux-kernel@vger.kernel.org,
+	platform-driver-x86@vger.kernel.org
+Subject: Re: [PATCH v3] apple-gmux: preserve brightness using EFI
+Date: Sun, 15 Mar 2026 04:15:03 +0530
+Message-ID: <20260314224503.12022-1-atharvatiwarilinuxdev@gmail.com>
 X-Mailer: git-send-email 2.43.0
+In-Reply-To: <aYx6ocvaFHunfP5f@wunner.de>
+References: <aYx6ocvaFHunfP5f@wunner.de>
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
@@ -75,145 +79,9 @@ List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-Make apple-gmux save the current backlight brightness to EFI on shutdown,
-so the brightness level is preserved across reboots.
+> This version moves the EFI handling back to the gmux driver.  Why?
 
-(tested on iMac20,1)
+Because the platform maintainer just NACKed the EFI backend driver, so i
+cant do anything
 
-Signed-off-by: Atharva Tiwari <atharvatiwarilinuxdev@gmail.com>
----
-v4:
-- Fix Build warnings when compiled without CONFIG_EFI
-v3:
-- Only save the brightness when it differs from the boot brightness.
-v2:
-- Used correct size for efi_data
----
- drivers/platform/x86/apple-gmux.c | 69 +++++++++++++++++++++++++++++++
- 1 file changed, 69 insertions(+)
-
-diff --git a/drivers/platform/x86/apple-gmux.c b/drivers/platform/x86/apple-gmux.c
-index 1417e230edbd..6becaf67c862 100644
---- a/drivers/platform/x86/apple-gmux.c
-+++ b/drivers/platform/x86/apple-gmux.c
-@@ -22,6 +22,7 @@
- #include <linux/pci.h>
- #include <linux/vga_switcheroo.h>
- #include <linux/debugfs.h>
-+#include <linux/efi.h>
- #include <acpi/video.h>
- #include <asm/io.h>
- 
-@@ -78,6 +79,11 @@ struct apple_gmux_data {
- 	/* debugfs data */
- 	u8 selected_port;
- 	struct dentry *debug_dentry;
-+
-+	/* efi data */
-+	efi_status_t efi_status;
-+	u32 efi_attr;
-+	u16 efi_data;
- };
- 
- static struct apple_gmux_data *apple_gmux_data;
-@@ -107,6 +113,9 @@ struct apple_gmux_config {
- 
- # define MMIO_GMUX_MAX_BRIGHTNESS	0xffff
- 
-+#define EFI_BRIGHTNESS_NAME		L"backlight-level"
-+#define EFI_BRIGHTNESS_GUID		EFI_GUID(0x7c436110, 0xab2a, 0x4bbb, 0xa8, 0x80, 0xfe, 0x41, 0x99, 0x5c, 0x9f, 0x82)
-+
- static u8 gmux_pio_read8(struct apple_gmux_data *gmux_data, int port)
- {
- 	return inb(gmux_data->iostart + port);
-@@ -751,6 +760,35 @@ static void gmux_fini_debugfs(struct apple_gmux_data *gmux_data)
- 	debugfs_remove_recursive(gmux_data->debug_dentry);
- }
- 
-+#ifdef CONFIG_EFI
-+MODULE_IMPORT_NS("EFIVAR");
-+static void gmux_init_efi(struct apple_gmux_data *gmux_data)
-+{
-+	unsigned long size = sizeof(gmux_data->efi_data);
-+
-+	gmux_data->efi_status = EFI_UNSUPPORTED;
-+
-+	if (!efi_rt_services_supported(EFI_RT_SUPPORTED_SET_VARIABLE))
-+		return;
-+
-+	if (efivar_lock())
-+		return;
-+
-+	gmux_data->efi_status = efivar_get_variable(EFI_BRIGHTNESS_NAME, &EFI_BRIGHTNESS_GUID,
-+					&gmux_data->efi_attr, &size, &gmux_data->efi_data);
-+
-+	efivar_unlock();
-+}
-+
-+#else /* CONFIG_EFI */
-+
-+static void gmux_init_efi(struct apple_gmux_data *gmux_data)
-+{
-+	return;
-+}
-+
-+#endif /* CONFIG_EFI */
-+
- static int gmux_suspend(struct device *dev)
- {
- 	struct pnp_dev *pnp = to_pnp_dev(dev);
-@@ -960,6 +998,8 @@ static int gmux_probe(struct pnp_dev *pnp, const struct pnp_device_id *id)
- 	}
- 
- 	gmux_init_debugfs(gmux_data);
-+	gmux_init_efi(gmux_data);
-+
- 	return 0;
- 
- err_register_handler:
-@@ -1012,6 +1052,34 @@ static void gmux_remove(struct pnp_dev *pnp)
- 	kfree(gmux_data);
- }
- 
-+#ifdef CONFIG_EFI
-+static void gmux_shutdown(struct pnp_dev *pnp)
-+{
-+	struct apple_gmux_data *gmux_data = pnp_get_drvdata(pnp);
-+	u16 brightness = (u16)gmux_get_brightness(gmux_data->bdev);
-+
-+	if (gmux_data->efi_status == EFI_SUCCESS && gmux_data->efi_data != brightness) {
-+		gmux_data->efi_status = efivar_set_variable(EFI_BRIGHTNESS_NAME,
-+						&EFI_BRIGHTNESS_GUID,
-+						gmux_data->efi_attr,
-+						sizeof(brightness),
-+						&brightness);
-+		if (gmux_data->efi_status != EFI_SUCCESS)
-+			pr_info("Unable to save brightness: 0x%lx\n", gmux_data->efi_status);
-+	}
-+
-+	gmux_remove(pnp);
-+}
-+
-+#else /* CONFIG_EFI */
-+
-+static void gmux_shutdown(struct pnp_dev *pnp)
-+{
-+	return;
-+}
-+
-+#endif /* CONFIG_EFI */
-+
- static const struct pnp_device_id gmux_device_ids[] = {
- 	{GMUX_ACPI_HID, 0},
- 	{"", 0}
-@@ -1026,6 +1094,7 @@ static struct pnp_driver gmux_pnp_driver = {
- 	.name		= "apple-gmux",
- 	.probe		= gmux_probe,
- 	.remove		= gmux_remove,
-+	.shutdown	= gmux_shutdown,
- 	.id_table	= gmux_device_ids,
- 	.driver		= {
- 			.pm = &gmux_dev_pm_ops,
--- 
-2.43.0
-
+https://lore.kernel.org/all/c2d14818-1c34-47c7-a210-1f7c737f0bc9@kernel.org/
