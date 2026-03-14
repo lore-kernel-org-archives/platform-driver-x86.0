@@ -1,214 +1,312 @@
-Received: from mout.gmx.net (mout.gmx.net [212.227.17.20])
+Received: from fout-a2-smtp.messagingengine.com (fout-a2-smtp.messagingengine.com [103.168.172.145])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 850432DEA62;
-	Sat, 14 Mar 2026 17:57:16 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=212.227.17.20
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id ED2D8336885;
+	Sat, 14 Mar 2026 18:24:59 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=103.168.172.145
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1773511038; cv=none; b=lZW2oVxYOyPSdjtkQogVPDkvzNh+YNB1eF0R6iQLGCm37RMi9qC2NovfA5d5HEk2IjxlOgXmdBD25He20o3vQmYNfY/jtgO2+8djvpmLOBpTq94FPqKp/NyQ/061LRhSQxsWglIvNpzMdjcRMPRAeO/W5mkfsDopJs2sBaxJoAg=
+	t=1773512702; cv=none; b=oaK1pPXSxKIqRTS6vKwgupBQ2Y/D2W36fuqGD8rc1S9KJ7//yD8o5XKTrpT0uGMPuKSBFEX3lebEyWlRkhmhnmMsTHD/osiH/nOkp9xgQvPQ6wx8QuNPk0rILZLm5ivYwNb7m4ACQaB/DJEUb4lVB3/pvkQJqcYmk4f299yMgso=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1773511038; c=relaxed/simple;
-	bh=Rj7n8RuHqzUod14XxO32l+f1cKNn2qtfR1eIJ4baVRc=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=vGUI3CeX29APFYeuu+MdNK+U7V5eOwb3kVANLUdYP0eraDz3qxcayygOI5ztG8I4wanSeEwhzVaUgnTG2R0I3aZu9skloBmJAIMdYhyVRPxXvFxjk71B9BK4vb3uUWDuGig3XnVzZDPhR5DgHWu1dZLLjhJHc7hcf7ykniGaKOo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gmx.de; spf=pass smtp.mailfrom=gmx.de; dkim=pass (2048-bit key) header.d=gmx.de header.i=w_armin@gmx.de header.b=nGftgk2Q; arc=none smtp.client-ip=212.227.17.20
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gmx.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmx.de
+	s=arc-20240116; t=1773512702; c=relaxed/simple;
+	bh=uIk/hsWYvqLG8VfQAAb/f/WYPko9v6/sFY0hMgO9yJY=;
+	h=MIME-Version:Date:From:To:Cc:Message-Id:In-Reply-To:References:
+	 Subject:Content-Type; b=vFeGoeTPrjKrGooKiZHysXkjM7j9YXsQZWWLaCaHIO/aP2SOMAcbkDPwzjkbFzpetdV9SJgzoiCB3ZzeQ3Qm2cv2lpDTeWR8dlqswIh5qNMMaQJAxp4zRod9zlT5NHhdpNCM0QYjhD3RD8NWjv9+gYx+5hdmaAoJO2mclo0ClFg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=squebb.ca; spf=pass smtp.mailfrom=squebb.ca; dkim=pass (2048-bit key) header.d=squebb.ca header.i=@squebb.ca header.b=HwmUHUa/; dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b=Ay39SnED; arc=none smtp.client-ip=103.168.172.145
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=squebb.ca
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=squebb.ca
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmx.de header.i=w_armin@gmx.de header.b="nGftgk2Q"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=gmx.de;
-	s=s31663417; t=1773511008; x=1774115808; i=w_armin@gmx.de;
-	bh=Rj7n8RuHqzUod14XxO32l+f1cKNn2qtfR1eIJ4baVRc=;
-	h=X-UI-Sender-Class:Message-ID:Date:MIME-Version:Subject:To:Cc:
-	 References:From:In-Reply-To:Content-Type:
-	 Content-Transfer-Encoding:cc:content-transfer-encoding:
-	 content-type:date:from:message-id:mime-version:reply-to:subject:
-	 to;
-	b=nGftgk2QtzA+tG/Ymp5xZwOXkZfn9hFp91MqS1mnITECYz6sC61/JWInPbUG9ci+
-	 3qpVRfvIKeRk0rZiMRQKHNwbhW4JQ4ZX4wX5ac7TS+UmYWRgCU9jD0/a881fhtFDD
-	 R6jwBnWneOUnCEDoTMgARqhFpeeFHirdiqeHztRxKSWoIfnN1Kb4bgWjRgCneR7L+
-	 T+76GD5EOYBMdD99xWZzQcr69e+SslsBGQ5Jftrx0OG8O2S7ijGf9T8tn+Jq/oFwG
-	 mTYKF4wYjwvct8g5lQ1IkbOOUnMf75eXeeqowB9RPHCIyaFrq8R+uRGHzB7PhfQWQ
-	 SEjXWAFsTLWP1qMkTw==
-X-UI-Sender-Class: 724b4f7f-cbec-4199-ad4e-598c01a50d3a
-Received: from client.hidden.invalid by mail.gmx.net (mrgmx104
- [212.227.17.168]) with ESMTPSA (Nemesis) id 1MzQgC-1vfQ8F45vE-00yvaZ; Sat, 14
- Mar 2026 18:56:48 +0100
-Message-ID: <ccc87e99-c6ca-4c4c-9981-d4b9286ea2fa@gmx.de>
-Date: Sat, 14 Mar 2026 18:56:45 +0100
+	dkim=pass (2048-bit key) header.d=squebb.ca header.i=@squebb.ca header.b="HwmUHUa/";
+	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="Ay39SnED"
+Received: from phl-compute-02.internal (phl-compute-02.internal [10.202.2.42])
+	by mailfout.phl.internal (Postfix) with ESMTP id 25C27EC0B49;
+	Sat, 14 Mar 2026 14:24:59 -0400 (EDT)
+Received: from phl-imap-08 ([10.202.2.84])
+  by phl-compute-02.internal (MEProxy); Sat, 14 Mar 2026 14:24:59 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=squebb.ca; h=cc
+	:cc:content-transfer-encoding:content-type:content-type:date
+	:date:from:from:in-reply-to:in-reply-to:message-id:mime-version
+	:references:reply-to:subject:subject:to:to; s=fm2; t=1773512699;
+	 x=1773599099; bh=uJcw/ORlbZ/GB/kovtAC5hYAfeWQWHdCStzUenjNczs=; b=
+	HwmUHUa/m/amIdONgGLN/lEUPrktkc5/vo7VUM/T0xvWsvkLuoQ684M5vbnJrSf+
+	1fKgkbo262pwxW1H17iGMuZ22HvLLGzQKPfwkMxdNXzDsAt+kORlQslDyjR1OBNN
+	A8keDPiX5jTUILFt0qDntE/jKR++xUVMo0kmonkk9MfTN12uDySOS5tKIhbDPnMF
+	GeZvD2cWCKC0xbtx561y4yw/aHSSBWyZSRS6ZHz8MNtnL3k2XkFWo0thcZ/2msQF
+	4yH8dLWFMS6v1I1FkzVsf4vQkUQBv6Qofb2vmA6XaB8Y+UL2A4sM0/zgqo9DeThM
+	oewSvEibBcoHkIoWEk8FKA==
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
+	messagingengine.com; h=cc:cc:content-transfer-encoding
+	:content-type:content-type:date:date:feedback-id:feedback-id
+	:from:from:in-reply-to:in-reply-to:message-id:mime-version
+	:references:reply-to:subject:subject:to:to:x-me-proxy
+	:x-me-sender:x-me-sender:x-sasl-enc; s=fm1; t=1773512699; x=
+	1773599099; bh=uJcw/ORlbZ/GB/kovtAC5hYAfeWQWHdCStzUenjNczs=; b=A
+	y39SnEDLDCKSoucZ93rbH9nAAX742KPwQqnOj+WFIo02NMPccd857opQywzhY8HX
+	YMKkQC3Yd6GzkhtCPQ9jspERh1+oHdAC+LvlhK5Rlne2PL/X9cY+l7wN1yVbpKNn
+	Kds+aWXPHAwCkvFWoNwU2hhuwnWyZdjumZEP2YB5XjozB0GPflO+UT7yMom4UOn6
+	RRROTjBYWcq3ZGi7tuEQdWW5fzXBiXTblcx2QKx3NUxDg1V4ZLxcZTOxYphrGil4
+	+2XpU+nx7kHznq6qQgAPCofnTcAf5T1IWfxnS7j8M6Tu9o8zjNogvZit7nYrUrHE
+	RmSvDI1cSfGUXIJgwoF7Q==
+X-ME-Sender: <xms:-ae1aaMte8oAg9P8fvLLZna0CSvjLdIU2WPCux7a7uGsr9TZkZk5BQ>
+    <xme:-ae1aTy0RSmDc2L5qeWRZPVppl1C84IHgqls3BPsTq8tWtkTG12veb-Y8SL3-EqsC
+    VWI_kmbIpsJninKcr0v6kD0fBwMkdhbH5PYhBLkp5O-MCvSQKBD5ko>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeefgedrtddtgddvleefvdekucetufdoteggodetrf
+    dotffvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdfurfetoffkrfgpnffqhgenuceu
+    rghilhhouhhtmecufedttdenucesvcftvggtihhpihgvnhhtshculddquddttddmnecujf
+    gurhepofggfffhvfevkfgjfhfutgfgsehtjeertdertddtnecuhfhrohhmpedfofgrrhhk
+    ucfrvggrrhhsohhnfdcuoehmphgvrghrshhonhdqlhgvnhhovhhosehsqhhuvggssgdrtg
+    grqeenucggtffrrghtthgvrhhnpefgjeetgeevvddtleffkeevkedugfegudejhefftefg
+    gfegleefvdffteehfeeiueenucffohhmrghinheplhgvnhhovhhordgtohhmnecuvehluh
+    hsthgvrhfuihiivgeptdenucfrrghrrghmpehmrghilhhfrhhomhepmhhpvggrrhhsohhn
+    qdhlvghnohhvohesshhquhgvsggsrdgtrgdpnhgspghrtghpthhtohepledpmhhouggvpe
+    hsmhhtphhouhhtpdhrtghpthhtohepuggvrhgvkhhjohhhnhdrtghlrghrkhesghhmrghi
+    lhdrtghomhdprhgtphhtthhopehpihhthhgvnhhrihgthhdvugesghhmrghilhdrtghomh
+    dprhgtphhtthhopehpihhthhgvnhhrihgthhdvugesghhoohhglhgvmhgrihhlrdgtohhm
+    pdhrtghpthhtohephhhmhheshhhmhhdrvghnghdrsghrpdhrtghpthhtohephhgrnhhsgh
+    eskhgvrhhnvghlrdhorhhgpdhrtghpthhtohepihhlphhordhjrghrvhhinhgvnheslhhi
+    nhhugidrihhnthgvlhdrtghomhdprhgtphhtthhopehisghmqdgrtghpihdquggvvhgvlh
+    eslhhishhtshdrshhouhhrtggvfhhorhhgvgdrnhgvthdprhgtphhtthhopehlihhnuhig
+    qdhkvghrnhgvlhesvhhgvghrrdhkvghrnhgvlhdrohhrghdprhgtphhtthhopehplhgrth
+    hfohhrmhdqughrihhvvghrqdigkeeisehvghgvrhdrkhgvrhhnvghlrdhorhhg
+X-ME-Proxy: <xmx:-ae1aTYgquRi4Li1-2OOYIpNGmbPEJxBVd4uiiTKf3MpfLuGQchudQ>
+    <xmx:-ae1aYayKpSui4PLhKb-2xnVDhZa3HxVgs1RFX-v2N2DRkKNoHnwKA>
+    <xmx:-ae1aQzQ2s1ZIdi6jQVq5x8r8e1NGBr-MY2r_werY6RecKZP6LkPwA>
+    <xmx:-ae1acdtlzK5NR5wNj0dEp6aBZ6g2Bw5h-0fKf_E99ctaRV4GgOE3w>
+    <xmx:-6e1aW_WmPDOHdhHz9uVOA6tF9mfU0qWhXzRFRB4MzgRAupPLsG7uW1o>
+Feedback-ID: ibe194615:Fastmail
+Received: by mailuser.phl.internal (Postfix, from userid 501)
+	id 00B652CE0072; Sat, 14 Mar 2026 14:24:56 -0400 (EDT)
+X-Mailer: MessagingEngine.com Webmail Interface
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 9/9] modpost: Handle malformed WMI GUID strings
-To: Mario Limonciello <mario.limonciello@amd.com>,
- Dell.Client.Kernel@dell.com, pali@kernel.org, mjg59@srcf.ucam.org
-Cc: hansg@kernel.org, ilpo.jarvinen@linux.intel.com,
- platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org,
- linux@roeck-us.net, linux-hwmon@vger.kernel.org
-References: <20260308002522.4185-1-W_Armin@gmx.de>
- <20260308002522.4185-10-W_Armin@gmx.de>
- <7f61364f-c860-49b6-91c3-9aeca6744eac@amd.com>
-Content-Language: en-US
-From: Armin Wolf <W_Armin@gmx.de>
-In-Reply-To: <7f61364f-c860-49b6-91c3-9aeca6744eac@amd.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: base64
-X-Provags-ID: V03:K1:CKikZbtgjPXdmLmwbsh2GGzbhKwEpKO71GeN+FhibeyF7I9/J48
- bQzYT8uEG/WqGfH7apnASknGiLm1kg4qFPn/+cyn3E44ubsXlaDMeIxnYkNaqwWlR7x1Sa0
- ZUD1dP0BP1GtO16z/azdzLwEHUgAKJ40lXvDvwt1pPMGxVe2qq6rCq11tV+239GQE8VBvX1
- vvqzAIoQ8U+lsa/3zw6TA==
-X-Spam-Flag: NO
-UI-OutboundReport: notjunk:1;M01:P0:N2Ojrvig6vw=;cRMLgUf5BsR24VnY2P0d3oWfhth
- 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
- 2+d2ttzsgak
+X-ThreadId: AXcetOvEVYjc
+Date: Sat, 14 Mar 2026 14:24:35 -0400
+From: "Mark Pearson" <mpearson-lenovo@squebb.ca>
+To: "Pit Henrich" <pithenrich2d@googlemail.com>,
+ "Henrique de Moraes Holschuh" <hmh@hmh.eng.br>
+Cc: "Derek J . Clark" <derekjohn.clark@gmail.com>,
+ "Hans de Goede" <hansg@kernel.org>,
+ =?UTF-8?Q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>,
+ ibm-acpi-devel@lists.sourceforge.net,
+ "platform-driver-x86@vger.kernel.org" <platform-driver-x86@vger.kernel.org>,
+ linux-kernel@vger.kernel.org, pithenrich2d@gmail.com
+Message-Id: <0b0f6ef9-ae3a-4642-85af-fbdf7ebafd1e@app.fastmail.com>
+In-Reply-To: <20260314142236.74514-1-pithenrich2d@gmail.com>
+References: <20260314142236.74514-1-pithenrich2d@gmail.com>
+Subject: Re: [PATCH] platform/x86: thinkpad-acpi: Add X1 Fold keyboard attachment
+ detection
+Content-Type: text/plain
+Content-Transfer-Encoding: 7bit
 
-QW0gMDkuMDMuMjYgdW0gMTc6MDcgc2NocmllYiBNYXJpbyBMaW1vbmNpZWxsbzoNCg0KPg0KPg0K
-PiBPbiAzLzcvMjAyNiA2OjI1IFBNLCBBcm1pbiBXb2xmIHdyb3RlOg0KPj4gU29tZSBXTUkgR1VJ
-RHMgZm91bmQgaW5zaWRlIGJpbmFyeSBNT0YgZmlsZXMgY29udGFpbiBib3RoDQo+PiB1cHBlcmNh
-c2UgYW5kIGxvd2VyY2FzZSBjaGFyYWN0ZXJzLiBCbGluZGx5IGNvcHlpbmcgc3VjaA0KPj4gR1VJ
-RHMgd2lsbCBwcmV2ZW50IHRoZSBhc3NvY2lhdGVkIFdNSSBkcml2ZXIgZnJvbSBsb2FkaW5nDQo+
-PiBhdXRvbWF0aWNhbGx5IGJlY2F1c2UgdGhlIFdNSSBHVUlEIGZvdW5kIGluc2lkZSBXTUkgZGV2
-aWNlIGlkcw0KPj4gYWx3YXlzIGNvbnRhaW5zIHVwcGVyY2FzZSBjaGFyYWN0ZXJzLg0KPj4NCj4+
-IEF2b2lkIHRoaXMgaXNzdWUgYnkgYWx3YXlzIGNvbnZlcnRpbmcgV01JIEdVSUQgc3RyaW5ncyB0
-bw0KPj4gdXBwZXJjYXNlLiBBbHNvIHZlcmlmeSB0aGF0IHRoZSBXTUkgR1VJRCBzdHJpbmcgYWN0
-dWFsbHkgbG9va3MNCj4+IGxpa2UgYSB2YWxpZCBHVUlELg0KPj4NCj4+IFNpZ25lZC1vZmYtYnk6
-IEFybWluIFdvbGYgPFdfQXJtaW5AZ214LmRlPg0KPj4gLS0tDQo+PiDCoCAuLi4vd21pL2RyaXZl
-ci1kZXZlbG9wbWVudC1ndWlkZS5yc3TCoMKgwqDCoMKgwqDCoMKgwqAgfMKgIDIgKy0NCj4+IMKg
-IHNjcmlwdHMvbW9kL2ZpbGUyYWxpYXMuY8KgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKg
-wqDCoMKgwqDCoCB8IDI4ICsrKysrKysrKysrKysrKysrKy0NCj4+IMKgIDIgZmlsZXMgY2hhbmdl
-ZCwgMjggaW5zZXJ0aW9ucygrKSwgMiBkZWxldGlvbnMoLSkNCj4+DQo+PiBkaWZmIC0tZ2l0IGEv
-RG9jdW1lbnRhdGlvbi93bWkvZHJpdmVyLWRldmVsb3BtZW50LWd1aWRlLnJzdCANCj4+IGIvRG9j
-dW1lbnRhdGlvbi93bWkvZHJpdmVyLWRldmVsb3BtZW50LWd1aWRlLnJzdA0KPj4gaW5kZXggZmJj
-MmQ5YjEyZmU5Li43NGJiMTU2YWQ5Y2MgMTAwNjQ0DQo+PiAtLS0gYS9Eb2N1bWVudGF0aW9uL3dt
-aS9kcml2ZXItZGV2ZWxvcG1lbnQtZ3VpZGUucnN0DQo+PiArKysgYi9Eb2N1bWVudGF0aW9uL3dt
-aS9kcml2ZXItZGV2ZWxvcG1lbnQtZ3VpZGUucnN0DQo+PiBAQCAtNTQsNyArNTQsNyBAQCB0byBt
-YXRjaGluZyBXTUkgZGV2aWNlcyB1c2luZyBhIHN0cnVjdCANCj4+IHdtaV9kZXZpY2VfaWQgdGFi
-bGU6DQo+PiDCoCA6Og0KPj4gwqAgwqDCoMKgIHN0YXRpYyBjb25zdCBzdHJ1Y3Qgd21pX2Rldmlj
-ZV9pZCBmb29faWRfdGFibGVbXSA9IHsNCj4+IC3CoMKgwqDCoMKgwqDCoMKgIC8qIE9ubHkgdXNl
-IHVwcGVyY2FzZSBsZXR0ZXJzISAqLw0KPj4gK8KgwqDCoMKgwqDCoMKgwqAgLyogVXNpbmcgb25s
-eSB1cHBlcmNhc2UgbGV0dGVycyBpcyByZWNvbW1lbmRlZCAqLw0KPj4gwqDCoMKgwqDCoMKgwqDC
-oMKgwqAgeyAiOTM2REEwMUYtOUFCRC00RDlELTgwQzctMDJBRjg1QzgyMkE4IiwgTlVMTCB9LA0K
-Pj4gwqDCoMKgwqDCoMKgwqDCoMKgwqAgeyB9DQo+PiDCoMKgwqAgfTsNCj4+IGRpZmYgLS1naXQg
-YS9zY3JpcHRzL21vZC9maWxlMmFsaWFzLmMgYi9zY3JpcHRzL21vZC9maWxlMmFsaWFzLmMNCj4+
-IGluZGV4IDRlOTkzOTNhMzVmMS4uMjBlNTQyYTg4OGM0IDEwMDY0NA0KPj4gLS0tIGEvc2NyaXB0
-cy9tb2QvZmlsZTJhbGlhcy5jDQo+PiArKysgYi9zY3JpcHRzL21vZC9maWxlMmFsaWFzLmMNCj4+
-IEBAIC0xMjUzLDYgKzEyNTMsOCBAQCBzdGF0aWMgdm9pZCBkb190ZWVfZW50cnkoc3RydWN0IG1v
-ZHVsZSAqbW9kLCANCj4+IHZvaWQgKnN5bXZhbCkNCj4+IMKgIHN0YXRpYyB2b2lkIGRvX3dtaV9l
-bnRyeShzdHJ1Y3QgbW9kdWxlICptb2QsIHZvaWQgKnN5bXZhbCkNCj4+IMKgIHsNCj4+IMKgwqDC
-oMKgwqAgREVGX0ZJRUxEX0FERFIoc3ltdmFsLCB3bWlfZGV2aWNlX2lkLCBndWlkX3N0cmluZyk7
-DQo+PiArwqDCoMKgIGNoYXIgcmVzdWx0W3NpemVvZigqZ3VpZF9zdHJpbmcpXTsNCj4+ICvCoMKg
-wqAgaW50IGk7DQo+PiDCoCDCoMKgwqDCoMKgIGlmIChzdHJsZW4oKmd1aWRfc3RyaW5nKSAhPSBV
-VUlEX1NUUklOR19MRU4pIHsNCj4+IMKgwqDCoMKgwqDCoMKgwqDCoCB3YXJuKCJJbnZhbGlkIFdN
-SSBkZXZpY2UgaWQgJ3dtaTolcycgaW4gJyVzJ1xuIiwNCj4+IEBAIC0xMjYwLDcgKzEyNjIsMzEg
-QEAgc3RhdGljIHZvaWQgZG9fd21pX2VudHJ5KHN0cnVjdCBtb2R1bGUgKm1vZCwgDQo+PiB2b2lk
-ICpzeW12YWwpDQo+PiDCoMKgwqDCoMKgwqDCoMKgwqAgcmV0dXJuOw0KPj4gwqDCoMKgwqDCoCB9
-DQo+PiDCoCAtwqDCoMKgIG1vZHVsZV9hbGlhc19wcmludGYobW9kLCBmYWxzZSwgV01JX01PRFVM
-RV9QUkVGSVggIiVzIiwgDQo+PiAqZ3VpZF9zdHJpbmcpOw0KPj4gK8KgwqDCoCBmb3IgKGkgPSAw
-OyBpIDwgVVVJRF9TVFJJTkdfTEVOOyBpKyspIHsNCj4+ICvCoMKgwqDCoMKgwqDCoCBjaGFyIHZh
-bHVlID0gKCpndWlkX3N0cmluZylbaV07DQo+PiArwqDCoMKgwqDCoMKgwqAgYm9vbCB2YWxpZCA9
-IGZhbHNlOw0KPj4gKw0KPj4gK8KgwqDCoMKgwqDCoMKgIGlmIChpID09IDggfHwgaSA9PSAxMyB8
-fCBpID09IDE4IHx8IGkgPT0gMjMpIHsNCj4+ICvCoMKgwqDCoMKgwqDCoMKgwqDCoMKgIGlmICh2
-YWx1ZSA9PSAnLScpDQo+PiArwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgIHZhbGlkID0g
-dHJ1ZTsNCj4+ICvCoMKgwqDCoMKgwqDCoCB9IGVsc2Ugew0KPj4gK8KgwqDCoMKgwqDCoMKgwqDC
-oMKgwqAgaWYgKGlzeGRpZ2l0KHZhbHVlKSkNCj4+ICvCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDC
-oMKgwqAgdmFsaWQgPSB0cnVlOw0KPj4gK8KgwqDCoMKgwqDCoMKgIH0NCj4+ICsNCj4+ICvCoMKg
-wqDCoMKgwqDCoCBpZiAoIXZhbGlkKSB7DQo+PiArwqDCoMKgwqDCoMKgwqDCoMKgwqDCoCB3YXJu
-KCJJbnZhbGlkIGNoYXJhY3RlciAlYyBpbnNpZGUgV01JIEdVSUQgc3RyaW5nICclcycgDQo+PiBp
-biAnJXMnXG4iLA0KPj4gK8KgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgIHZhbHVlLCAq
-Z3VpZF9zdHJpbmcsIG1vZC0+bmFtZSk7DQo+PiArwqDCoMKgwqDCoMKgwqDCoMKgwqDCoCByZXR1
-cm47DQo+PiArwqDCoMKgwqDCoMKgwqAgfQ0KPj4gKw0KPj4gK8KgwqDCoMKgwqDCoMKgIC8qIFNv
-bWUgR1VJRHMgZnJvbSBCTU9GIGRlZmluaXRpb25zIGNvbnRhaW4gbG93ZXJjYXNlIA0KPj4gY2hh
-cmFjdGVycyAqLw0KPj4gK8KgwqDCoMKgwqDCoMKgIHJlc3VsdFtpXSA9IHRvdXBwZXIodmFsdWUp
-Ow0KPj4gK8KgwqDCoCB9DQo+DQo+IE1pbm9yIGxvZ2ljIGNoYW5nZSB0aGF0IGNvdWxkIGRyb3Ag
-dGhlIGJvb2xlYW4gdmFyaWFibGUgaW4gdGhlIGZvciBsb29wOg0KPg0KPiBmb3IgKGkgPSAwOyBp
-IDwgVVVJRF9TVFJJTkdfTEVOOyBpKyspIHsNCj4gwqDCoMKgwqBjaGFyIHZhbHVlID0gKCpndWlk
-X3N0cmluZylbaV07DQo+DQo+IMKgwqDCoMKgaWYgKGlzeGRpZ2l0KHZhbHVlKSkgew0KPiDCoMKg
-wqDCoMKgwqDCoCByZXN1bHRbaV0gPSB0b3VwcGVyKHZhbHVlKTsNCj4gwqDCoMKgwqDCoMKgwqAg
-Y29udGludWU7DQo+IMKgwqDCoMKgfQ0KDQpUaGlzIHdvdWxkIG5vdCBjYXRjaCBpbnZhbGlkIEdV
-SUQgc3RyaW5ncyBjb250YWluaW5nIG9ubHkgZGlnaXRzLg0KDQpUaGFua3MsDQpBcm1pbiBXb2xm
-DQoNCj4NCj4gwqDCoMKgwqBpZiAodmFsdWUgPT0gJy0nICYmIChpID09IDggfHwgaSA9PSAxMyB8
-fCBpID09IDE4IHx8IGkgPT0gMjMpKSB7DQo+IMKgwqDCoMKgwqDCoMKgIHJlc3VsdFtpXSA9IHZh
-bHVlOw0KPiDCoMKgwqDCoMKgwqDCoCBjb250aW51ZTsNCj4gwqDCoMKgwqB9DQo+DQo+IMKgwqDC
-oMKgd2FybigiSW52YWxpZCBjaGFyYWN0ZXIgJWMgaW5zaWRlIFdNSSBHVUlEIHN0cmluZyAnJXMn
-IGluICclcydcbiIsDQo+IMKgwqDCoMKgwqDCoMKgwqAgdmFsdWUsICpndWlkX3N0cmluZywgbW9k
-LT5uYW1lKTsNCj4gwqDCoMKgwqByZXR1cm47DQo+IH0NCj4NCj4+ICsNCj4+ICvCoMKgwqAgcmVz
-dWx0W2ldID0gJ1wwJzsNCj4+ICsNCj4+ICvCoMKgwqAgbW9kdWxlX2FsaWFzX3ByaW50Zihtb2Qs
-IGZhbHNlLCBXTUlfTU9EVUxFX1BSRUZJWCAiJXMiLCByZXN1bHQpOw0KPj4gwqAgfQ0KPj4gwqAg
-wqAgLyogTG9va3MgbGlrZTogbWhpOlMgKi8NCj4NCj4NCg==
+Hi Pit,
+
+On Sat, Mar 14, 2026, at 10:22 AM, Pit Henrich wrote:
+> ThinkPad X1 Fold 16 Gen 1 firmware reports whether the keyboard is magnetically
+> attached (on the screen) via EC register 0xc1 bit 7, but thinkpad-acpi does
+> not expose this to userspace.
+>
+> Add a read-only keyboard_attached_on_screen sysfs attribute, gated by
+> a DMI match. The state is read directly from the EC.
+>
+> Cache the state and emit a sysfs notification on
+> TP_HKEY_EV_TABLET_CHANGED (0x60c0) when it changes. Initialize the cache during
+> hotkey setup and refresh it before the resume notification to keep the state
+> consistent across suspend and resume.
+>
+> Signed-off-by: Pit Henrich <pithenrich2d@gmail.com>
+> ---
+>  drivers/platform/x86/lenovo/thinkpad_acpi.c | 92 ++++++++++++++++++++-
+>  1 file changed, 90 insertions(+), 2 deletions(-)
+>
+> diff --git a/drivers/platform/x86/lenovo/thinkpad_acpi.c 
+> b/drivers/platform/x86/lenovo/thinkpad_acpi.c
+> index 8982d92dfd97..5b255062ff51 100644
+> --- a/drivers/platform/x86/lenovo/thinkpad_acpi.c
+> +++ b/drivers/platform/x86/lenovo/thinkpad_acpi.c
+> @@ -218,8 +218,9 @@ enum tpacpi_hkey_event_t {
+>  	TP_HKEY_EV_LID_OPEN		= 0x5002, /* laptop lid opened */
+>  	TP_HKEY_EV_TABLET_TABLET	= 0x5009, /* tablet swivel up */
+>  	TP_HKEY_EV_TABLET_NOTEBOOK	= 0x500a, /* tablet swivel down */
+> -	TP_HKEY_EV_TABLET_CHANGED	= 0x60c0, /* X1 Yoga (2016):
+> -						   * enter/leave tablet mode
+> +	TP_HKEY_EV_TABLET_CHANGED	= 0x60c0, /* posture change event:
+> +						   * X1 Yoga (2016): enter/leave tablet mode
+> +						   * X1 Fold 16 Gen 1: keyboard attachment state changed
+>  						   */
+>  	TP_HKEY_EV_PEN_INSERTED		= 0x500b, /* tablet pen inserted */
+>  	TP_HKEY_EV_PEN_REMOVED		= 0x500c, /* tablet pen removed */
+> @@ -375,6 +376,7 @@ static struct {
+>  	u32 has_adaptive_kbd:1;
+>  	u32 kbd_lang:1;
+>  	u32 trackpoint_doubletap:1;
+> +	u32 has_keyboard_attached_on_screen:1;
+>  	struct quirk_entry *quirks;
+>  } tp_features;
+> 
+> @@ -2928,6 +2930,70 @@ static void hotkey_tablet_mode_notify_change(void)
+>  			     "hotkey_tablet_mode");
+>  }
+> 
+> +/*
+> + * On the ThinkPad X1 Fold 16 Gen 1, EC register 0xc1 reports the 
+> keyboard
+> + * attachment state in bit 7.
+> + */
+> +#define TPACPI_X1_FOLD_KBD_EC_STATUS	0xc1
+> +#define TPACPI_X1_FOLD_KBD_ATTACHED	BIT(7)
+> +
+> +static bool keyboard_attached_on_screen;
+> +static bool keyboard_attached_on_screen_initialized;
+> +
+> +static int x1_fold_keyboard_attached_on_screen_get(bool *attached)
+> +{
+> +	u8 status;
+> +
+> +	if (!tp_features.has_keyboard_attached_on_screen)
+> +		return -ENODEV;
+> +
+> +	if (!acpi_ec_read(TPACPI_X1_FOLD_KBD_EC_STATUS, &status))
+> +		return -EIO;
+> +
+> +	*attached = status & TPACPI_X1_FOLD_KBD_ATTACHED;
+> +	return 0;
+> +}
+> +
+> +static ssize_t keyboard_attached_on_screen_show(struct device *dev,
+> +						struct device_attribute *attr,
+> +						char *buf)
+> +{
+> +	bool attached;
+> +	int res;
+> +
+> +	res = x1_fold_keyboard_attached_on_screen_get(&attached);
+> +	if (res)
+> +		return res;
+> +
+> +	return sysfs_emit(buf, "%d\n", attached);
+> +}
+> +
+> +static DEVICE_ATTR_RO(keyboard_attached_on_screen);
+> +
+> +static void keyboard_attached_on_screen_notify_change(void)
+> +{
+> +	if (tp_features.has_keyboard_attached_on_screen)
+> +		sysfs_notify(&tpacpi_pdev->dev.kobj, NULL,
+> +			     "keyboard_attached_on_screen");
+> +}
+> +
+> +static bool keyboard_attached_on_screen_update(void)
+> +{
+> +	bool attached;
+> +
+> +	if (x1_fold_keyboard_attached_on_screen_get(&attached))
+> +		return false;
+> +
+> +	if (keyboard_attached_on_screen_initialized &&
+> +	    keyboard_attached_on_screen == attached)
+> +		return false;
+> +
+> +	keyboard_attached_on_screen = attached;
+> +	keyboard_attached_on_screen_initialized = true;
+> +
+> +	return true;
+> +}
+> +
+>  /* sysfs wakeup reason (pollable) 
+> -------------------------------------- */
+>  static ssize_t hotkey_wakeup_reason_show(struct device *dev,
+>  			   struct device_attribute *attr,
+> @@ -3032,6 +3098,7 @@ static struct attribute *hotkey_attributes[] = {
+>  	&dev_attr_hotkey_adaptive_all_mask.attr,
+>  	&dev_attr_hotkey_recommended_mask.attr,
+>  	&dev_attr_hotkey_tablet_mode.attr,
+> +	&dev_attr_keyboard_attached_on_screen.attr,
+>  	&dev_attr_hotkey_radio_sw.attr,
+>  #ifdef CONFIG_THINKPAD_ACPI_HOTKEY_POLL
+>  	&dev_attr_hotkey_source_mask.attr,
+> @@ -3046,6 +3113,9 @@ static umode_t hotkey_attr_is_visible(struct 
+> kobject *kobj,
+>  	if (attr == &dev_attr_hotkey_tablet_mode.attr) {
+>  		if (!tp_features.hotkey_tablet)
+>  			return 0;
+> +	} else if (attr == &dev_attr_keyboard_attached_on_screen.attr) {
+> +		if (!tp_features.has_keyboard_attached_on_screen)
+> +			return 0;
+>  	} else if (attr == &dev_attr_hotkey_radio_sw.attr) {
+>  		if (!tp_features.hotkey_wlsw)
+>  			return 0;
+> @@ -3462,6 +3532,7 @@ static int __init hotkey_init(struct 
+> ibm_init_struct *iibm)
+>  	}
+> 
+>  	tabletsw_state = hotkey_init_tablet_mode();
+> +	keyboard_attached_on_screen_update();
+> 
+>  	/* Set up key map */
+>  	keymap_id = tpacpi_check_quirks(tpacpi_keymap_qtable,
+> @@ -3842,6 +3913,8 @@ static bool hotkey_notify_6xxx(const u32 hkey, 
+> bool *send_acpi_ev)
+>  	case TP_HKEY_EV_TABLET_CHANGED:
+>  		tpacpi_input_send_tabletsw();
+>  		hotkey_tablet_mode_notify_change();
+> +		if (keyboard_attached_on_screen_update())
+> +			keyboard_attached_on_screen_notify_change();
+>  		*send_acpi_ev = false;
+>  		return true;
+> 
+> @@ -3998,6 +4071,8 @@ static void hotkey_resume(void)
+>  	tpacpi_send_radiosw_update();
+>  	tpacpi_input_send_tabletsw();
+>  	hotkey_tablet_mode_notify_change();
+> +	keyboard_attached_on_screen_update();
+> +	keyboard_attached_on_screen_notify_change();
+>  	hotkey_wakeup_reason_notify_change();
+>  	hotkey_wakeup_hotunplug_complete_notify_change();
+>  	hotkey_poll_setup_safe(false);
+> @@ -4296,6 +4371,17 @@ static const struct dmi_system_id fwbug_list[] 
+> __initconst = {
+>  	{}
+>  };
+> 
+> +static const struct dmi_system_id keyboard_attached_on_screen_list[] 
+> __initconst = {
+> +	{
+> +		.ident = "ThinkPad X1 Fold 16 Gen 1",
+> +		.matches = {
+> +			DMI_MATCH(DMI_SYS_VENDOR, "LENOVO"),
+> +			DMI_MATCH(DMI_PRODUCT_FAMILY, "ThinkPad X1 Fold 16 Gen 1"),
+> +		},
+> +	},
+> +	{}
+> +};
+> +
+>  static const struct pci_device_id fwbug_cards_ids[] __initconst = {
+>  	{ PCI_DEVICE(PCI_VENDOR_ID_INTEL, 0x24F3) },
+>  	{ PCI_DEVICE(PCI_VENDOR_ID_INTEL, 0x24FD) },
+> @@ -12230,6 +12316,8 @@ static int __init 
+> thinkpad_acpi_module_init(void)
+>  	dmi_id = dmi_first_match(fwbug_list);
+>  	if (dmi_id)
+>  		tp_features.quirks = dmi_id->driver_data;
+> +	tp_features.has_keyboard_attached_on_screen =
+> +		dmi_check_system(keyboard_attached_on_screen_list);
+> 
+>  	/* Device initialization */
+>  	tpacpi_pdev = platform_device_register_simple(TPACPI_DRVR_NAME, 
+> PLATFORM_DEVID_NONE,
+> -- 
+> 2.43.0
+
+I'm checking to see if we have the EC spec for this platform (it's not in our Linux certification program).
+
+The code looks fine but some notes:
+ - We usually do the DMI_MATCH on the BOARD_NAME for quirks. I was checking psref.lenovo.com and there seem to be two distinct models for this platform, which is a bit confusing. I don't have a way to confirm that your changes will work for the other model so wondering if it's safer to do the quirks for 21ES/21ET or 20RL/20RK depending on what you have in hand? (I might be overthinking this too)
+ - I would have called it detachable_keyboard instead of keyboard_attached_on_screen. See what other reviewers think.
+
+If I get details back on the EC spec and confirmation it's correct I'll let you know :)
+
+Mark
+
