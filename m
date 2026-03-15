@@ -1,98 +1,109 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pj1-f44.google.com (mail-pj1-f44.google.com [209.85.216.44])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1559F202F70
-	for <platform-driver-x86@vger.kernel.org>; Sun, 15 Mar 2026 21:07:22 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 99F4E37B02B
+	for <platform-driver-x86@vger.kernel.org>; Sun, 15 Mar 2026 21:53:10 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.44
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1773608843; cv=none; b=Pw6XFL89TVDN5exrfm/5zZN8TYORLKXuhyKmDC2X4WJ6i3IZjNC8ORG+KJQyoXL35czcKwS4c05YcdWa5VZetY0py0R486SmZioAI4Y9mN+HZvG4zMtHx6zcNr466BPsKRRiVT5YCn8Bs7Lfmcb7YeEMjtXBRk3+LKZJkzI0a2E=
+	t=1773611591; cv=none; b=XEL8sRmkS1JXa/j48XDyDJHf3lz7ivPWpwvgTJjQSsKr6L4sl933+RlaVGqGHJC8N6ieZeYhgFbQlJGyJlc5D3MaaR+VUMnvUAf4Z/m5+WMOI45rqgZ9N2GoiaHw2GX8XKOVIjxqmT3KKrFO48tUBZqjvFbMfNNb/mlzpDK2NsI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1773608843; c=relaxed/simple;
-	bh=Q0VP1gkk1tIVmpZDtWlyEV1H6B+p69cbpjTjpHZhZqA=;
-	h=From:To:Subject:Date:Message-ID:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=sFNWjRi6Ah+XAsI0WPFFseohhAx5x81s5doK2VBoHrIFXznVyjGO5FpTIQ3pPLVgiKKm0+7LiHJDc4F5XzPMQELiDaECQS/INZjYB7FpPIvHbRqa3dAIng/sbd3nlmRd4aGVY0X7VnmfnZqgxhVF00fUjHqD0fdQBEVFfibQdJs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=oZKUqO5q; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1773611591; c=relaxed/simple;
+	bh=p8ZMDL0ATelD+YMbWy5VJVld5YBBFVddDlr5bIuy8jA=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=BKXCDRfeoNZhd2XusBJIeJg9RX/IbHOJq20/oiWH/96KrBr+JmfuowF0XhHvnXOaeXfkhfv8kBZEXgdZyxMDc26tobFDjst6v7N4yzHPfboEyiOCS6wC0ZAqtyZX2xG+xv0aH3vrsDCCkhWxR8dntzSU6a7ugIS1kcGXpf/YNtI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=UTmb3jm0; arc=none smtp.client-ip=209.85.216.44
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="oZKUqO5q"
-Received: by smtp.kernel.org (Postfix) with ESMTPS id AB623C4CEF7
-	for <platform-driver-x86@vger.kernel.org>; Sun, 15 Mar 2026 21:07:22 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1773608842;
-	bh=Q0VP1gkk1tIVmpZDtWlyEV1H6B+p69cbpjTjpHZhZqA=;
-	h=From:To:Subject:Date:In-Reply-To:References:From;
-	b=oZKUqO5qh46tjJreCQqCmY0jRVJOaRfnttfdgjdXHC9QjtTEKsjz/D8xakx/T1rrJ
-	 OUDcKC/c02DMBiAM3YQJjlcVvCqsws/vsVTg/pomXXgmNzoKLVlE0b6fNbvkmCB8Ee
-	 mL3bBPptUu1rFgdHGJURkZrBzvacGCYJ1S4gJOjvt4kT5W4vlfnCNs85TxEr4uQbi6
-	 skNHfbOlOJhffihfVUeqhL5qS+azjif/f1UeOrB0dmRKNYv7dQcdCBrBb3bM8NGmKX
-	 jYkMKUgxAXqteFDAlzEDj31Sg0qP8rdlsuY4QFTZwASJ1gx8aCqmHhtZDpbrPhW4Mb
-	 6n5ii4+JEkGzg==
-Received: by aws-us-west-2-korg-bugzilla-1.web.codeaurora.org (Postfix, from userid 48)
-	id 9AA54C3279F; Sun, 15 Mar 2026 21:07:22 +0000 (UTC)
-From: bugzilla-daemon@kernel.org
-To: platform-driver-x86@vger.kernel.org
-Subject: [Bug 221238] lg-laptop: Spurious ACK and dropped keystrokes caused
- by ACPI method calls conflicting with i8042 driver
-Date: Sun, 15 Mar 2026 21:07:22 +0000
-X-Bugzilla-Reason: CC
-X-Bugzilla-Type: changed
-X-Bugzilla-Watch-Reason: AssignedTo drivers_platform_x86@kernel-bugs.osdl.org
-X-Bugzilla-Product: Drivers
-X-Bugzilla-Component: Platform_x86
-X-Bugzilla-Version: 2.5
-X-Bugzilla-Keywords: 
-X-Bugzilla-Severity: normal
-X-Bugzilla-Who: alfonso.garcia.frey@gmail.com
-X-Bugzilla-Status: NEW
-X-Bugzilla-Resolution: 
-X-Bugzilla-Priority: P3
-X-Bugzilla-Assigned-To: drivers_platform_x86@kernel-bugs.osdl.org
-X-Bugzilla-Flags: 
-X-Bugzilla-Changed-Fields: 
-Message-ID: <bug-221238-215701-mof3ggIuuc@https.bugzilla.kernel.org/>
-In-Reply-To: <bug-221238-215701@https.bugzilla.kernel.org/>
-References: <bug-221238-215701@https.bugzilla.kernel.org/>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-X-Bugzilla-URL: https://bugzilla.kernel.org/
-Auto-Submitted: auto-generated
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="UTmb3jm0"
+Received: by mail-pj1-f44.google.com with SMTP id 98e67ed59e1d1-35a1f549e7eso1746927a91.0
+        for <platform-driver-x86@vger.kernel.org>; Sun, 15 Mar 2026 14:53:10 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1773611590; x=1774216390; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=ShhDALn1OVXt830iNpmwt2NWXRAroThv+VhHPtCxAKY=;
+        b=UTmb3jm0wtNM2hMgYHM8sRB5QxTjtm+tIQxjVuNLZh6EdRcKA34X4xS3R3b9PjQoxE
+         qsVJJ8OMSJ5leZmqvgbHRIgKTr6DDnjlJVX/DZ8tkQT75NrzMR6pk7CY0WhqonPzBBJ5
+         DZXjKwHIk+762BHhMGwzstdxddevwP/qdG/HSXJ7fYtJerf89+6sSRcqS+GKsw5YOXl4
+         Pgt9gM0kHcDwzOI2L92iy4drr6QXK+LUnf/X9OpJ6Wia2j6VXPxFq8IFOoOQB5E7B48i
+         mg7a7W5pZgUvIHYHXfgfbmovixd/iVQhfvvoKY/0hxova2FtUwxe6GpvZtfpmAj/9VRH
+         WdUQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20251104; t=1773611590; x=1774216390;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-gg:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=ShhDALn1OVXt830iNpmwt2NWXRAroThv+VhHPtCxAKY=;
+        b=LubiJ62d+EiwExr3LcGSq6M8aj/GoUN32TXCB8sOu8pNFdduOEPRAXryo6M+xZuXnp
+         4bo5EY5JL/nWNI5Jmut3brQQaXiOnOyy8pH/WU8kOqarmGQHoHTX/01LnRUZz3ymZP8g
+         kLrH33Wbw+Avk3ecBqp4X5LpHbGxDAyRaFy4t4WlBwh9B8YkH/R3UjksxxzkJr9kdiOX
+         ut9npH/0OeXIjbNdtvXP5aIMm48bzPmbC+dJ/AmyIvf+T849INeE2FkcFmX0G7p+WI3N
+         gku8KfVOgp+1xW+lgtywsO6RHZP57U4UdXtwRLeAt32PT8yS6PjuvwZB7H+dvOCRHdDf
+         56Yw==
+X-Forwarded-Encrypted: i=1; AJvYcCVRYMwhDqVS0VOWSwBVDGwU1v+cVCVH4kxVE+lMeER1SRPemf1CXf2tPCpef6gIKG3fNkZQ3nthLC7LKZU+VukyUlqc@vger.kernel.org
+X-Gm-Message-State: AOJu0Yzv6pVoSIxPCgqR9szm/sVJ66n86XB4SRYnfeq86M7wcKrnVdpF
+	hm2Tih2A2K36LzKbTA3ePyttLb7tbu3UiL22k5DYQK6NyioNt5oU6ZSnubo0
+X-Gm-Gg: ATEYQzyPyxPDrLFAwWbJ3VY2JTK9A7yUzkNNLx0pNPboYIootBMBVruzh0DG9iX5Hr9
+	3FyfP/czxByzVPD1ZynaLcpXS+46By8A2SsAwuXH7ea7rZ8nRxg1my5QohbD4W6cW42pRH6r7Ou
+	uvSWmcW7O19KL6W5k5KoNmeahNaNKkxXHSP394Ujq9znWkA9gc/f5HG8zV8315k8eTeQsEuVfNz
+	9sdo7ZtFu9Dxpflsgy+/FgN5qj3+qmCdOyj4WCAbuiAV4BPInMfyqCRXQSUHTTLvdZR7t9RCCEg
+	0YDaT0nfPA+ETH9a8V0R0OjdQfdPjCwusJA0wbjpEdMZMO9mNZKO8l/UK9N/RSFGDzUbNwLNMPX
+	w2oA4osiHoonUdS2mgxBLrvE65C+04C1JNu2CDX+yHl43u3xokW4bXcEXZDTlWmFAuh18XzhDPB
+	InxdJNk8ff2oRi83lJplxvNZIGyJcV5pTpOieV2wC6YZDo8y6jocXk1+pYPxC9l1w=
+X-Received: by 2002:a17:90b:39cd:b0:35b:9a95:dfb0 with SMTP id 98e67ed59e1d1-35b9a95e3afmr1981652a91.25.1773611589949;
+        Sun, 15 Mar 2026 14:53:09 -0700 (PDT)
+Received: from at-Standard-PC-Q35-ICH9-2009.. ([171.61.163.197])
+        by smtp.gmail.com with ESMTPSA id 98e67ed59e1d1-35b9303eb9bsm3074980a91.8.2026.03.15.14.53.06
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sun, 15 Mar 2026 14:53:09 -0700 (PDT)
+From: Atharva Tiwari <atharvatiwarilinuxdev@gmail.com>
+To: 
+Cc: Atharva Tiwari <atharvatiwarilinuxdev@gmail.com>,
+	Ard Biesheuvel <ardb@kernel.org>,
+	Hans de Goede <hansg@kernel.org>,
+	=?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>,
+	linux-kernel@vger.kernel.org,
+	linux-efi@vger.kernel.org,
+	platform-driver-x86@vger.kernel.org
+Subject: [PATCH v2 0/2] Save Brightness on Macs
+Date: Mon, 16 Mar 2026 03:22:40 +0530
+Message-ID: <20260315215302.24087-1-atharvatiwarilinuxdev@gmail.com>
+X-Mailer: git-send-email 2.43.0
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
 
-https://bugzilla.kernel.org/show_bug.cgi?id=3D221238
+Currently, when a Mac is rebooted, the display brightness does not reflect
+the level used during the previous boot. Instead, the brightness is
+reset to the value last stored by macOS, causing the system to
+ignore any changes made since that time.
 
---- Comment #5 from Alfonso GARCIA FREY (alfonso.garcia.frey@gmail.com) ---
-Tested battery_care_limit on kernel 5.15.0-171 with the stock lg-laptop mod=
-ule:
+We fix this by writing the brightness value to efivar 'backlight-level'
+at shutdown only, when it is changed since the last boot.
 
-  # cat /sys/devices/platform/lg-laptop/battery_care_limit
-  100
-  # echo 80 > /sys/devices/platform/lg-laptop/battery_care_limit
-  # cat /sys/devices/platform/lg-laptop/battery_care_limit
-  80
-  # echo 100 > /sys/devices/platform/lg-laptop/battery_care_limit
-  # cat /sys/devices/platform/lg-laptop/battery_care_limit
-  100
+Changes in v2:
+- Saved the brightness only when it is different than the previous boot.
 
-It looks like it works correctly for both values (80 and 100).
+Link to v1:
+https://lore.kernel.org/all/20260206125641.12983-1-atharvatiwarilinuxdev@gmail.com/
 
-I also acknowledge that my original report incorrectly stated the driver us=
-es
-"raw inb()/outb()" =E2=80=94 it actually uses acpi_evaluate_object() for
-WMAB/WMBB/GGOV. The reference to battery_hook_register() is also incorrect =
-for
-5.15. Apologies for the inaccuracies.
+Atharva Tiwari (2):
+  efi: Save Brightness using EFI on Macs
+  platform/apple-gmux: use apple_brightness to save brightness to EFI
 
-The spurious ACK messages and key drops do still occur with the stock module
-loaded and stop when the module is blacklisted (17 spurious ACKs per boot on
-5.15, 114 on 6.8).
+ drivers/firmware/efi/Kconfig                  | 10 +++
+ drivers/firmware/efi/Makefile                 |  1 +
+ drivers/firmware/efi/apple-brightness.c       | 67 +++++++++++++++++++
+ drivers/platform/x86/apple-gmux.c             | 21 ++++++
+ .../linux/platform_data/apple-brightness.h    | 20 ++++++
+ 5 files changed, 119 insertions(+)
+ create mode 100644 drivers/firmware/efi/apple-brightness.c
+ create mode 100644 include/linux/platform_data/apple-brightness.h
 
---=20
-You may reply to this email to add a comment.
+-- 
+2.43.0
 
-You are receiving this mail because:
-You are on the CC list for the bug.
-You are watching the assignee of the bug.=
