@@ -1,38 +1,38 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 919EA26FDBF
-	for <platform-driver-x86@vger.kernel.org>; Sun, 15 Mar 2026 11:34:31 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4B3661459FA
+	for <platform-driver-x86@vger.kernel.org>; Sun, 15 Mar 2026 13:56:11 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1773574471; cv=none; b=kwNzvQ0zu2LXmu/ZG/6EsMVq9m1oQ3NGQsz/jCI4+M+ZeMlr7ixpc9JXLIit/FM4d74JaNXNahmutuBDrDjqiCTnHKKY7sLeAdsL+xssXdyanzLSJ6je5nC51+puT+IKbdZCjyl92keFfZLXAMrgqLRL+TvQht+1IpwMTQiDXYA=
+	t=1773582972; cv=none; b=nsL8/9sCCWB/pc5/r1WDjftCLVXS1OFaS5ERHBS6uPpTkLErwL99YWQ0VzTdtL0DpBgBbpFhKBtC2XOK/g4gwVvy1v5jL8S76Xna9haCZeWnwldrB8ar+13rHliYI9zcEGXsdatXVswfBhzwiUxdnk0yQhiFl+WhLmvYq94rkvs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1773574471; c=relaxed/simple;
-	bh=S2mjcZHKQWD34/976E4MmeiDwou02DXKggdGv8NaAVg=;
+	s=arc-20240116; t=1773582972; c=relaxed/simple;
+	bh=SxiGsze6/GDwOh3WThETneLsfdP/31w976OZttoIMHk=;
 	h=From:To:Subject:Date:Message-ID:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=pRMrPDIP+aWVeI0TeeV6jLY2OmAvBtueBwY7l6eyVlJs3tLfwVZ5lakLCdh5S8KLaLBsLOdOy+jkHH/sqiM/PLn84G/O5mlyqiezUDsiMGZgfqxtwg8xdqJUhFKrgyuxIx1g08+cL1cKzuJDVqmbT7y+QW8N+2bj0NKEHo+qmcQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=eM8TB/La; arc=none smtp.client-ip=10.30.226.201
+	 Content-Type:MIME-Version; b=IUIuXcR2z+Joe9xSWZpDUbRB0gwEemjlVgng/4YoEoWs26DCPWp32h/xkhOtEGWsG9wp1lgj5A7ShWTdtHMmwi2ZK7VolZ6u1M+5Sz0BA0PF/eVw1dw7JYzTaZK/sirvrWnkrXDPFPQEx3wd86En4U3gxE2Uz8dhdo1+KQcquwA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=BEQl8Nq1; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="eM8TB/La"
-Received: by smtp.kernel.org (Postfix) with ESMTPS id 239ECC19424
-	for <platform-driver-x86@vger.kernel.org>; Sun, 15 Mar 2026 11:34:31 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="BEQl8Nq1"
+Received: by smtp.kernel.org (Postfix) with ESMTPS id D0A0DC19424
+	for <platform-driver-x86@vger.kernel.org>; Sun, 15 Mar 2026 13:56:11 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1773574471;
-	bh=S2mjcZHKQWD34/976E4MmeiDwou02DXKggdGv8NaAVg=;
+	s=k20201202; t=1773582971;
+	bh=SxiGsze6/GDwOh3WThETneLsfdP/31w976OZttoIMHk=;
 	h=From:To:Subject:Date:In-Reply-To:References:From;
-	b=eM8TB/LaHdMy9/8UPDAsK78BMQn97qqDmgj2ttvsM08YH0l7AzAb5udmbgMmFYmdU
-	 K7Vz6POwBUG++6ivL+ZgA16v4NjVNlBa8fPfvhGR3wiPAApU2mA4q7oUkG1UQDdDfF
-	 H8o/RFjX246SP2IYRqtQE0szNqX+ehEu3/Gx2H10mfHEBUrjsoOC6F+95jDyVH2n68
-	 rtPQpqx4BBYW2+p/CBINWaLsrgZOHsnIoRgkwSW7luLyUPD8vnQsw+GKkdQrscarm9
-	 Yh1qMgRb/fNf2XHPyuqCeO01Ph6hS7Nxg5jdqqdpTwtaJ4xThFxBSIjOGR380NlWzd
-	 rNLm0CltNSSmw==
+	b=BEQl8Nq1UzyVZLfUCuLqJfhEZfztA0eY7bXIATuDcdtg3m5o3lIihkA7g6l29XY6r
+	 u/vgd/D4mHv31nJfSXonnYnxYsRDlY2IN5Db6DRxFT1xErA2SPtrIPIdLkrTbC35BY
+	 DqxuERhJHvR5IrQY3zzTRsLlNoEhOIz8QV36XPD301VCqBv5I2Oo7+2gBLQsqbmQxn
+	 AVUYhclAMuXrVAr5Eb9+yJQLXm9yuwgbLVgn0/Z9UdvcHyJLq6SiW7CmNU4m7pY+Xg
+	 wMCelyHa2RaEuXShtEQEgcvQZPF1lVLNP+yaafVBerf1mH8fBRkXVikdqc7mT0yRPo
+	 AMipL68uBPXRw==
 Received: by aws-us-west-2-korg-bugzilla-1.web.codeaurora.org (Postfix, from userid 48)
-	id 0ED19C3279F; Sun, 15 Mar 2026 11:34:31 +0000 (UTC)
+	id C048FC3279F; Sun, 15 Mar 2026 13:56:11 +0000 (UTC)
 From: bugzilla-daemon@kernel.org
 To: platform-driver-x86@vger.kernel.org
 Subject: [Bug 221238] lg-laptop: Spurious ACK and dropped keystrokes caused
  by ACPI method calls conflicting with i8042 driver
-Date: Sun, 15 Mar 2026 11:34:30 +0000
+Date: Sun, 15 Mar 2026 13:56:11 +0000
 X-Bugzilla-Reason: CC
 X-Bugzilla-Type: changed
 X-Bugzilla-Watch-Reason: AssignedTo drivers_platform_x86@kernel-bugs.osdl.org
@@ -41,14 +41,14 @@ X-Bugzilla-Component: Platform_x86
 X-Bugzilla-Version: 2.5
 X-Bugzilla-Keywords: 
 X-Bugzilla-Severity: normal
-X-Bugzilla-Who: alfonso.garcia.frey@gmail.com
+X-Bugzilla-Who: W_Armin@gmx.de
 X-Bugzilla-Status: NEW
 X-Bugzilla-Resolution: 
 X-Bugzilla-Priority: P3
 X-Bugzilla-Assigned-To: drivers_platform_x86@kernel-bugs.osdl.org
 X-Bugzilla-Flags: 
-X-Bugzilla-Changed-Fields: 
-Message-ID: <bug-221238-215701-2cQkNhv2Bc@https.bugzilla.kernel.org/>
+X-Bugzilla-Changed-Fields: cc
+Message-ID: <bug-221238-215701-IPu2nsJYS4@https.bugzilla.kernel.org/>
 In-Reply-To: <bug-221238-215701@https.bugzilla.kernel.org/>
 References: <bug-221238-215701@https.bugzilla.kernel.org/>
 Content-Type: text/plain; charset="UTF-8"
@@ -64,28 +64,14 @@ MIME-Version: 1.0
 
 https://bugzilla.kernel.org/show_bug.cgi?id=3D221238
 
---- Comment #1 from Alfonso GARCIA FREY (alfonso.garcia.frey@gmail.com) ---
-Correction to the original description after creating a local test patch:
+Armin Wolf (W_Armin@gmx.de) changed:
 
-The original report incorrectly states the driver uses "raw inb()/outb() ca=
-lls"
-and references a battery_hook_register() function. Neither is accurate. The
-actual situation:
+           What    |Removed                     |Added
+----------------------------------------------------------------------------
+                 CC|                            |W_Armin@gmx.de
 
-The lg-laptop driver calls ACPI methods WMAB, WMBB, and GGOV via
-acpi_evaluate_object(). These firmware-defined methods internally access th=
-e EC
-through I/O ports shared with the i8042 keyboard controller, without
-coordination with the kernel's i8042 driver. This causes the race condition
-between ACPI method execution and atkbd interrupt handling, producing the
-spurious ACKs and key drops.
-
-The proposed fix remains the same =E2=80=94 wrap acpi_evaluate_object() cal=
-ls with
-i8042_lock_chip() / i8042_unlock_chip() =E2=80=94 but the reason is to seri=
-alize ACPI
-method execution (which internally touches i8042 ports) with the i8042
-interrupt handler, not to protect direct port I/O in the driver itself.
+--- Comment #2 from Armin Wolf (W_Armin@gmx.de) ---
+Can you share the output of "acpidump" on your machine?
 
 --=20
 You may reply to this email to add a comment.
