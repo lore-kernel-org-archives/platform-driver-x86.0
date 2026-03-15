@@ -1,38 +1,38 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 13A27186A
-	for <platform-driver-x86@vger.kernel.org>; Sun, 15 Mar 2026 11:18:05 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AA8A917C220
+	for <platform-driver-x86@vger.kernel.org>; Sun, 15 Mar 2026 11:29:18 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1773573486; cv=none; b=c9uad0EebosHRFhU11fyhfg/09MclGsQbuy2uTpJzAhwC1r8Yu1A8x5SedHk8oK6sjgguQhRVQhoweK2waWMHjLxQf2IeQS1B13qAx5tc/0NOSbI2SWTt4drCrAHJin+kfS9gs/4AeO6BxbthTNt2pj8buhycVrKd76LvhlBvFc=
+	t=1773574158; cv=none; b=MXIMQEMCLghZhd4ycURij5QaIE/pT4MqMDn8T43Lka1j6JjrMm9hAO1svaHNW49J522xR5AjkCae5Z6YsoeRFyY0/2gAxwXRQWOGm1wxonXilWnZLnb3dmmogB8nQGpWgx1pbC0bnrTw57wHw5jOFEdHJKdRuz6+G4aIefAo+v8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1773573486; c=relaxed/simple;
-	bh=fWfucTi3hphVwIJgj8vOHW/RduhP7ygpvhA/agh4Xt4=;
+	s=arc-20240116; t=1773574158; c=relaxed/simple;
+	bh=+vf4y7I7K6mdNQCcBbZ704vCgsgbUErcsmuZYE0gLmU=;
 	h=From:To:Subject:Date:Message-ID:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=gIZL8Vj0Ge61xdOsZWikc0+TvFm/a8eVogpXUgKoYkt35YQssR9fVS/yg0CA29X5hLvKZvYutmFQDpCaUQSNHbTFHHNDJL5DPb+zEz/HrdEHcL1QkA5hACdO17QKdKjr2UNDvQbSdhBZvngbOakogt8rr5PCc5UsWzWuu0iN+po=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=QncQIR91; arc=none smtp.client-ip=10.30.226.201
+	 Content-Type:MIME-Version; b=rhIKR+1GcOfwFius0hfyKeg0XtvNCFJjcJoHX2mz3b64YQID1wEWmPDatmei27D8TXxemWPRaWBpmeM7v5l4zIETET3RsIcBlFV5rOKMzrxM0lx8lzduu8IjkFFllmBL3Vo9J4OjEOWf77hs4D8GRTrEnwY4Vb3w8JneK5wOebk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=AbyLbbd8; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="QncQIR91"
-Received: by smtp.kernel.org (Postfix) with ESMTPS id 9F7F3C4CEF7
-	for <platform-driver-x86@vger.kernel.org>; Sun, 15 Mar 2026 11:18:05 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="AbyLbbd8"
+Received: by smtp.kernel.org (Postfix) with ESMTPS id 37D66C4CEF7
+	for <platform-driver-x86@vger.kernel.org>; Sun, 15 Mar 2026 11:29:18 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1773573485;
-	bh=fWfucTi3hphVwIJgj8vOHW/RduhP7ygpvhA/agh4Xt4=;
+	s=k20201202; t=1773574158;
+	bh=+vf4y7I7K6mdNQCcBbZ704vCgsgbUErcsmuZYE0gLmU=;
 	h=From:To:Subject:Date:In-Reply-To:References:From;
-	b=QncQIR91Sbhzkf52uh4DC68755ObuEEUp9Cq05MesUWLSKtPgiQEAtixY4d/JAzLM
-	 nHqjA4PLWlQzcxtX+HBh2PxCgNw7KQVWekRGQxZLhkjvQMs8LcKw1kTZtnmLlAVoK3
-	 kGI1i5PmG6O9VpVvWrKdti/ERlijxTDZCfvOQQv2OF4Jfi2MaZFUBttKTO1k4vHDEO
-	 E5BlJGQf9bPX8i/4kpWDTRYis0ObjMbaPLiDBQAcVFifvgtzVQdRYLXyhLPwixzbIH
-	 +BUe1+b0SMqbY8ATW6jIulZcpFjVsPH/FtigsU/1iR1r7QT168A9lhf3+btGBAqwQI
-	 ychWKivnJ//Vg==
+	b=AbyLbbd8Jgr+iLhggzhpmCNHXEQ8eRLiS2jlLeYiXGclKnryRCC6RnfIvlTf76H07
+	 tt+QpwumJ6i2TMpVk4eedb2CD8b3Bbq4/BWZ5au8fZ6PsJm0V5rj1PeteCCeU55h8h
+	 hK3QTbyWgYMa/QW6e3mVJ9+9ZbXnPLZ4P7/8XIeNjnpFy2nMrWLnlec8wjH6wIGKAO
+	 78pU60CxyL/GZ+m7OQp1nW3F/LvZk5dHGyKj9UwFpIDInHotNrR+m95gaRKVN9XTNh
+	 FIg7+1VI2MPbcgQBEnTXKUlgS+9sjdZleF2iHUzpViLaU+uWAVqlFKdqHPBrFQmhvM
+	 f9lyfJcxsAWXQ==
 Received: by aws-us-west-2-korg-bugzilla-1.web.codeaurora.org (Postfix, from userid 48)
-	id 997CAC3279F; Sun, 15 Mar 2026 11:18:05 +0000 (UTC)
+	id 26741C3279F; Sun, 15 Mar 2026 11:29:18 +0000 (UTC)
 From: bugzilla-daemon@kernel.org
 To: platform-driver-x86@vger.kernel.org
-Subject: [Bug 221238] lg-laptop: Spurious ACK and dropped keystrokes due to
- unprotected i8042 port access
-Date: Sun, 15 Mar 2026 11:18:05 +0000
+Subject: [Bug 221238] lg-laptop: Spurious ACK and dropped keystrokes caused
+ by ACPI method calls conflicting with i8042 driver
+Date: Sun, 15 Mar 2026 11:29:18 +0000
 X-Bugzilla-Reason: CC
 X-Bugzilla-Type: changed
 X-Bugzilla-Watch-Reason: AssignedTo drivers_platform_x86@kernel-bugs.osdl.org
@@ -47,8 +47,8 @@ X-Bugzilla-Resolution:
 X-Bugzilla-Priority: P3
 X-Bugzilla-Assigned-To: drivers_platform_x86@kernel-bugs.osdl.org
 X-Bugzilla-Flags: 
-X-Bugzilla-Changed-Fields: cc
-Message-ID: <bug-221238-215701-r8H8XZwLWi@https.bugzilla.kernel.org/>
+X-Bugzilla-Changed-Fields: short_desc
+Message-ID: <bug-221238-215701-vTI0iakerK@https.bugzilla.kernel.org/>
 In-Reply-To: <bug-221238-215701@https.bugzilla.kernel.org/>
 References: <bug-221238-215701@https.bugzilla.kernel.org/>
 Content-Type: text/plain; charset="UTF-8"
@@ -68,8 +68,11 @@ Alfonso GARCIA FREY (alfonso.garcia.frey@gmail.com) changed:
 
            What    |Removed                     |Added
 ----------------------------------------------------------------------------
-                 CC|                            |platform-driver-x86@vger.ke
-                   |                            |rnel.org
+            Summary|lg-laptop: Spurious ACK and |lg-laptop: Spurious ACK and
+                   |dropped keystrokes due to   |dropped keystrokes caused
+                   |unprotected i8042 port      |by ACPI method calls
+                   |access                      |conflicting with i8042
+                   |                            |driver
 
 --=20
 You may reply to this email to add a comment.
