@@ -1,37 +1,41 @@
-Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
+Received: from mout.gmx.net (mout.gmx.net [212.227.17.20])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EE0CB1B81D3;
-	Sun, 15 Mar 2026 22:47:33 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.137.202.133
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A541726ED40;
+	Sun, 15 Mar 2026 22:54:47 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=212.227.17.20
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1773614855; cv=none; b=EA44bX6LoxzV5Y8/wIniHFNOge4huiYNc/W+mtUSUHCPayBIjcmmrX55UUs1H5ckbK3/zazF20lVQ/GgQrHKwxsJgU0C8DcYpMDP4YhdJG/zZxfD49iH46EpA/lHQAxsdGh0j3zZGzF1/7NEPDsCIksUuqiD3YrmyOSFhgpGZSE=
+	t=1773615289; cv=none; b=OaTBELz4J2r6/6Ni94iLXQecHGYLfjcIYWG9G+8rqyCVu3jMtXif9Slcqqg65/ijn9MQJFtWwUUGR69BaXd7Wagpxeklqz46hO4phOwarA7dZzJc9zkdKUVx+EeRaOFKjIrztBU2MN2j7SidQXNRfQeBEgEKKTyczCsk/m4GYQw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1773614855; c=relaxed/simple;
-	bh=qCd0mzfTyx9kSm0CTmwDgmXX3my8KnJ1XBHs59mm93A=;
+	s=arc-20240116; t=1773615289; c=relaxed/simple;
+	bh=GKxjJvY+SzU2poVEtuLZBEmAVST1MZWEoJKh5FLycCQ=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=B9YtxR9R5pM1ak+XWoCUJ4xUS5pdaW+LvJ+2ehA/qLG/m1JnjEJ2MlAb15XDwiMa7lynm4Ia2tLWiWYcgvSoEZUZj1Tt66wPgDd0UhPxq9c9Cxs8xw/Rf3qh+WbiM6VZP07Juf29Od0Fbp6qgid+lpb/2XMdE8gCDNdt566NB/8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=UUBfNrz3; arc=none smtp.client-ip=198.137.202.133
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=infradead.org
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=infradead.org
+	 In-Reply-To:Content-Type; b=BzrI2fOii6iGrLVUk/vSSzZ1KgmfwbPKxzJyHlGu3tiyq20NAnzE0IdG+n4oruKdYt5nRaI0Xo4YNRPVNd56fz7+BibbGyo3dz/uVnNkHCPtr9G8O//CUtTTp4O1WfcN1W84kBfN3DUh+a+zxQO9l6Fjl7yS+sjSrdCBKwJ7lk4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gmx.de; spf=pass smtp.mailfrom=gmx.de; dkim=pass (2048-bit key) header.d=gmx.de header.i=w_armin@gmx.de header.b=pq9uu10f; arc=none smtp.client-ip=212.227.17.20
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gmx.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmx.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="UUBfNrz3"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=infradead.org; s=bombadil.20210309; h=Content-Transfer-Encoding:
-	Content-Type:In-Reply-To:From:References:Cc:To:Subject:MIME-Version:Date:
-	Message-ID:Sender:Reply-To:Content-ID:Content-Description;
-	bh=HD9oZHYyldQTz8nJeqJW1FoNAd16YVBd9jooVkYzrPU=; b=UUBfNrz3wtT9+/tlKlWhgynlFW
-	ziwn1sqTMoOX6Z3LeQaERhi7CjU4poCk96YRDx4iF9tdttRyl9NukeAhdI5WxTU3HeLbhbtcslkwK
-	zE3FA8rzbIM+FtVfuXFAlzBVTqa/jk5kACFrGuUs02x8f/LdjXiPU6Esx45Npw4w94dLLL0dpaQxc
-	o3vlLpj+dclJibe7H7fOW6RC7ASepjuKTh9bHQxPEpv4KOawvrtNNqj4i1ZX3Q8PogTnV8R1eTTkJ
-	g+in0hjMPlSwNygH9vqTGiqZ4gMLCfMa9fkb1YXJBzty5RJP+ybKESBriaByiuJarjyQ6fUm619+Y
-	Llok3j6w==;
-Received: from [50.53.43.113] (helo=[192.168.254.34])
-	by bombadil.infradead.org with esmtpsa (Exim 4.98.2 #2 (Red Hat Linux))
-	id 1w1uF7-00000002yY0-4ABl;
-	Sun, 15 Mar 2026 22:47:30 +0000
-Message-ID: <f6447530-821d-49cc-b8e4-f7a21d1305f6@infradead.org>
-Date: Sun, 15 Mar 2026 15:47:29 -0700
+	dkim=pass (2048-bit key) header.d=gmx.de header.i=w_armin@gmx.de header.b="pq9uu10f"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=gmx.de;
+	s=s31663417; t=1773615285; x=1774220085; i=w_armin@gmx.de;
+	bh=GKxjJvY+SzU2poVEtuLZBEmAVST1MZWEoJKh5FLycCQ=;
+	h=X-UI-Sender-Class:Message-ID:Date:MIME-Version:Subject:To:Cc:
+	 References:From:In-Reply-To:Content-Type:
+	 Content-Transfer-Encoding:cc:content-transfer-encoding:
+	 content-type:date:from:message-id:mime-version:reply-to:subject:
+	 to;
+	b=pq9uu10f4kG0Hv2E3GdgbVWoVe84h3p/So/vttTGWmsHbPlmHu+uLMZyp7VpF6B+
+	 znP6eYPFFMVO58ejW2uJ6N8v+/+Vonpx9NopuJClEV9KsX8fKnWeJKZLaAtcEFhx5
+	 qw0UqPdNBOuSdts1h4swWf8xTOK7honDJ+HfqsIiOQh9/3vnijOwCKmeiB6wCypZg
+	 onk8HYzIXW9qivJXif3Co9jy75CqMYUe66zZU7uEqUpBDWhIPp7TYg+MaxN/oU0cw
+	 vO70OSxDKhXomK+Efacuo7OPi26kIxPrgPINXf/Z945r/2WW/kLodCvOQ8yvAzDhs
+	 zOh4WzEaOejpjHU8cA==
+X-UI-Sender-Class: 724b4f7f-cbec-4199-ad4e-598c01a50d3a
+Received: from client.hidden.invalid by mail.gmx.net (mrgmx104
+ [212.227.17.168]) with ESMTPSA (Nemesis) id 1MryXN-1vEE7M2Lcz-00orOV; Sun, 15
+ Mar 2026 23:54:45 +0100
+Message-ID: <74508d73-07a8-432a-a106-31a40a17b141@gmx.de>
+Date: Sun, 15 Mar 2026 23:54:43 +0100
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
@@ -39,49 +43,110 @@ List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v3 1/2] efi: Save Brightness using EFI on Macs
+Subject: Re: [PATCH v3] apple-gmux: preserve brightness using EFI
 To: Atharva Tiwari <atharvatiwarilinuxdev@gmail.com>
-Cc: Lukas Wunner <lukas@wunner.de>, Ard Biesheuvel <ardb@kernel.org>,
- Hans de Goede <hansg@kernel.org>,
- =?UTF-8?Q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>,
- open list <linux-kernel@vger.kernel.org>,
- "open list:EXTENSIBLE FIRMWARE INTERFACE (EFI)" <linux-efi@vger.kernel.org>,
- "open list:X86 PLATFORM DRIVERS" <platform-driver-x86@vger.kernel.org>
-References: <20260315222020.24341-1-atharvatiwarilinuxdev@gmail.com>
- <20260315222020.24341-2-atharvatiwarilinuxdev@gmail.com>
+Cc: hansg@kernel.org, ilpo.jarvinen@linux.intel.com,
+ linux-kernel@vger.kernel.org, lukas@wunner.de,
+ platform-driver-x86@vger.kernel.org
+References: <21b44fb3-238a-417d-b414-e7903b8fdc18@gmx.de>
+ <20260315220841.24188-1-atharvatiwarilinuxdev@gmail.com>
 Content-Language: en-US
-From: Randy Dunlap <rdunlap@infradead.org>
-In-Reply-To: <20260315222020.24341-2-atharvatiwarilinuxdev@gmail.com>
-Content-Type: text/plain; charset=UTF-8
+From: Armin Wolf <W_Armin@gmx.de>
+In-Reply-To: <20260315220841.24188-1-atharvatiwarilinuxdev@gmail.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 7bit
+X-Provags-ID: V03:K1:mwFEhH2AI3YUZ4Dqk+wVP+ZCpk73+qNh5G9ESiwEvK7t2iUx+jh
+ E2yvHMzH3mTgXCbPDE4OyAAXVcE3rotE6kIEg1fcJ+icjv7cmZgmInIrW+jU4uTqRE38116
+ h1pNSfocUhwosLe+iyt91zHM0i8VA3SJt2hsCh+bf8RD7YXqWEUnAzb1Oyj3owyxkyfi61w
+ 3etQ2n97nBIPhVqGJ+2tg==
+X-Spam-Flag: NO
+UI-OutboundReport: notjunk:1;M01:P0:aEHJK9teWpQ=;ZRCQstSf8S895/EBVuSG91Pf3rI
+ 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
+ xPD5YtUC1hrFwBypZJxU
 
+Am 15.03.26 um 23:08 schrieb Atharva Tiwari:
 
+>> Systemd seems to already store the backlight brightness during shutdown/reboot, so maybe
+>> having a small oneshot service that synchronizes those values with the EFI variable during
+>> shutdown/reboot might be easier?
+> This is logical only if we assume every system uses systemd, and that isint the case, and trying
+> to port the same logical to every alternative to systemd will take more time and effort, than to just
+> embed this logic in the kernel.
 
-On 3/15/26 3:19 PM, Atharva Tiwari wrote:
-> diff --git a/drivers/firmware/efi/Kconfig b/drivers/firmware/efi/Kconfig
-> index 29e0729299f5..dd0a9c9a772a 100644
-> --- a/drivers/firmware/efi/Kconfig
-> +++ b/drivers/firmware/efi/Kconfig
-> @@ -167,6 +167,16 @@ config APPLE_PROPERTIES
->  
->  	  If unsure, say Y if you have a Mac.  Otherwise N.
->  
-> +config APPLE_BRIGHTNESS
-> +	bool "Apple Backlight control for EFI"
-> +	depends on X86
-> +	help
-> +	  This will save the brightness level to EFI, so brightness
-> +	  level is preserved across reboots and shutdows. allowing
+Such a daemon should also work with other init systems, it only needs to handle SIGTERM.
 
-	                                        shutdowns, allowing
-
-> +	  for improved support of Apple hardware.
-> +
-> +	  If unsure, say Y if you have a Mac, Otherwise N.
-
-	                                      otherwise N.
-
-
--- 
-~Randy
+Thanks,
+Armin Wolf
 
