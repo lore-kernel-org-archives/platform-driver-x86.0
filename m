@@ -1,45 +1,45 @@
 Received: from sender4-op-o15.zoho.com (sender4-op-o15.zoho.com [136.143.188.15])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E3C8F224B1E
-	for <platform-driver-x86@vger.kernel.org>; Sun, 15 Mar 2026 04:11:50 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D9C98625
+	for <platform-driver-x86@vger.kernel.org>; Sun, 15 Mar 2026 04:17:09 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=136.143.188.15
 ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1773547912; cv=pass; b=usST/fJwOVRiYBKZ7HF3v7ppVFP0nTD9YVhc5KPoqCxobLvk9qeIO43XJSpjKhG+ed7p+BfPsWQTpEX/ZIEnL1fFK67jOlwv4kQe1kYhStLxXiurkOIHo1EN4VuUbV/BKY0OUVYiXN1Mx2IoI0lpvMcWH0AtuEMvH+XZtGbrkEo=
+	t=1773548231; cv=pass; b=bscuW/zc9szTeMp6TKLwdGELWrr4+d4UQr6E7gC/LqdgNKEE5nlHurfiI1rnDhDT68HlNFWgcM6hGP4ZphjV2McUmU5rDj2kGw3H3UMyz1JoUN0RpFxTf1333l2cU1ez4N6nlXFqtmgHycLlPV3cx3h3+YC83tynlZslYp4J6W0=
 ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1773547912; c=relaxed/simple;
-	bh=ecN09Z5Eq8JjXqEic0J9H4Gqxa1IiW8Zcjonec0TxrE=;
+	s=arc-20240116; t=1773548231; c=relaxed/simple;
+	bh=7btbLjU/6kxNPvgoN5lmc13gNM3TV1O/pDSf+gAEQ5c=;
 	h=Message-ID:Subject:From:To:Cc:In-Reply-To:References:Content-Type:
-	 Date:MIME-Version; b=ZOYkBU6AjjAnUVgln8DgvExBs89pegVjsaHjFKGaQ3uyaBcHnInenuw5XNpLCosAvMKROc6DpZMKBS3QpTDOeS7IS9WOIxuqTYBjIUg1yoL78nnr7cQ6RoLhgdmhpmBJ+PNUg9csQLpDkTDGSWn3eSEP/1a8eSpsKpcA/ogfPq4=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=rong.moe; spf=pass smtp.mailfrom=rong.moe; dkim=pass (2048-bit key) header.d=rong.moe header.i=i@rong.moe header.b=e0UNTK2E; arc=pass smtp.client-ip=136.143.188.15
+	 Date:MIME-Version; b=I6dCmAFVHGZtRlBL5nKYWHBAimfmlqbRXvXq7tf+jBhyg/Bmi8yCD82pjiW+BYfb/+129C+AeaWQye4QXoSXp+s2s61gbAd94hDx69qdshoZcZpZNwgkc58sdsUEI5m8vCrnzkrZ5zVI5Vv0Bb1LTdMMG6f0eDTXFH1xMAf/8Tw=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=rong.moe; spf=pass smtp.mailfrom=rong.moe; dkim=pass (2048-bit key) header.d=rong.moe header.i=i@rong.moe header.b=hycEJ3F6; arc=pass smtp.client-ip=136.143.188.15
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=rong.moe
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=rong.moe
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=rong.moe header.i=i@rong.moe header.b="e0UNTK2E"
-ARC-Seal: i=1; a=rsa-sha256; t=1773537243; cv=none; 
+	dkim=pass (2048-bit key) header.d=rong.moe header.i=i@rong.moe header.b="hycEJ3F6"
+ARC-Seal: i=1; a=rsa-sha256; t=1773538683; cv=none; 
 	d=zohomail.com; s=zohoarc; 
-	b=e3s4qkaGtWsbWdiWbppe3MyOODWi/RsACR/6bSOMRiGMV6XiBK5GmCZRuo98Gf05TXz7wwY0zXb6F44L6RRP14qGdfvjjFQ6UAJmqvFyLBR0+GcQT3YETbWrcF6UvArWG2tJKs9IvgwK/MtwnBsgSEoIdmjzRMBpGPaOvYnPCak=
+	b=NWFPgST0jmEiZmvzWQUSjnYTqPTrzCbjz/dswSJ4XP8/Yr4U9Nv1+9SAfUJoadKqQzSRqkYcsymyOMvEd3eqLb/tG7VjbbyuNuYi2C36xFQQT+mVEjdQOe6Nm2O0+g0RA/OvohA1q9OYCytS/Mv/N7QKcuUYWYB6Qbx7UqD3rEM=
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=zohomail.com; s=zohoarc; 
-	t=1773537243; h=Content-Type:Content-Transfer-Encoding:Cc:Cc:Date:Date:From:From:In-Reply-To:MIME-Version:Message-ID:References:Subject:Subject:To:To:Message-Id:Reply-To; 
-	bh=cLDQPMuolHTAl2XosGLFx8K8H9Ap1/fkut4cZeOgoTs=; 
-	b=J9A/IZgEh+ZV/n9mvENm6imxNre/VWRDVz09AZg9CrWT6M183yjz2JID4egaPcNV92r/ho5Wabn6TtC9JmCHECejsETSTueCVh3MMPwpLLUZ+Eot9fqJCmc9CWaRszQqqwgeRAvL6F4z/OC+I3uEgR9Ua2FnU2jZoKrBOxnq6Wc=
+	t=1773538683; h=Content-Type:Content-Transfer-Encoding:Cc:Cc:Date:Date:From:From:In-Reply-To:MIME-Version:Message-ID:References:Subject:Subject:To:To:Message-Id:Reply-To; 
+	bh=YglQ+hR8VPAMqYmCiUOUa3s15feyvRp3k24Jq13mGxE=; 
+	b=SlwZn8sOtbCR7ObZDFvzZ6CFEIQwHZoB73WcBjYjFVxHoYiiu+67+d//neCfeaNPnFA/IXI99u7jM3yB2xOVtAtZQ+kNvTAeAmG30wBEhwH5NC2WeaD5fC4mtOQezCCFmxQeGToMBOF6b4n5Nyv4ZpcrvViz/PoAyXGUw82KZQM=
 ARC-Authentication-Results: i=1; mx.zohomail.com;
 	dkim=pass  header.i=rong.moe;
 	spf=pass  smtp.mailfrom=i@rong.moe;
 	dmarc=pass header.from=<i@rong.moe>
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; t=1773537243;
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; t=1773538683;
 	s=zmail2048; d=rong.moe; i=i@rong.moe;
 	h=Message-ID:Subject:Subject:From:From:To:To:Cc:Cc:In-Reply-To:References:Content-Type:Content-Transfer-Encoding:Date:Date:MIME-Version:Message-Id:Reply-To;
-	bh=cLDQPMuolHTAl2XosGLFx8K8H9Ap1/fkut4cZeOgoTs=;
-	b=e0UNTK2E4r5EAyKoF3BQmqLxlsCThbHPzVMhlHuN7JAV6RoumYMp0X/9ttiID+9I
-	6T0kDWmX5h+FqD+KDN9TIOMk7utIwPrNFG6TeVsqPX10P6mBAuHFpDKSx4XonSCh7We
-	mmgNISB8vGUVj6fwkcXhlo2ZKaMduqSDAdFdmxDbBfwXTrglYLZxcKPmSCbvQ3zA8UH
-	RZo4SaHKi7j2g/9DGC94aag47RBDi7h6jLkrt5WpTOgj+iS8wMuwmdQ47blgzsWpG2L
-	xY6T9GOhi8ooAUNAi6naZIx1r45Iz/Z8iNk4dvpSEUNkl288GnbaCBrjfr8XOHn4Tcz
-	qtj867+mYg==
-Received: by mx.zohomail.com with SMTPS id 1773537240244643.3009665447429;
-	Sat, 14 Mar 2026 18:14:00 -0700 (PDT)
-Message-ID: <e44e31bf1f811c504d1ee199c9fd8b239731995e.camel@rong.moe>
+	bh=YglQ+hR8VPAMqYmCiUOUa3s15feyvRp3k24Jq13mGxE=;
+	b=hycEJ3F67A/kPbG/+gRCiP1X3eN9PU2ox85FebY7/jqgHIFhFIycFJQMIZguNu06
+	BBkE4q6wnURYa5ZQq068abL32ExbkTAbD4oQhuHCyU/DP0rvrUdRn9rvaZRjar5HnEw
+	ozWmmmHZB6+G9TyGFj1FDHKe7fXT4jO5KPR0DAG4hdh07TghUOlchb0CUTuBhZcVZA0
+	Vb8ywpUNxYVgR989N88DOOKmkRenwnVrn2caCjD1uNYNCy9NWWshkDXQv9Gl3OYpfx2
+	kn5WAaKd5hWfXJxCpMuuFYvF8aQUlkPf5ij+4XJwffSJnOR+HS/q2019o10959s9ZgM
+	14NGcfctrA==
+Received: by mx.zohomail.com with SMTPS id 1773538679810237.11267587085365;
+	Sat, 14 Mar 2026 18:37:59 -0700 (PDT)
+Message-ID: <ba6cc9d717923b4ad6bc906971aff1ee802ee282.camel@rong.moe>
 Subject: Re: [PATCH v4 3/8] platform/x86: lenovo-wmi-other: Add
  lwmi_attr_id() function
 From: Rong Zhang <i@rong.moe>
@@ -55,7 +55,7 @@ References: <20260312031032.3467565-1-derekjohn.clark@gmail.com>
 	 <20260312031032.3467565-4-derekjohn.clark@gmail.com>
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
-Date: Sun, 15 Mar 2026 09:08:55 +0800
+Date: Sun, 15 Mar 2026 09:32:51 +0800
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
@@ -123,6 +123,13 @@ m/x86/lenovo/wmi-gamezone.h
 > +		FIELD_PREP(LWMI_ATTR_MODE_ID_MASK, mode_id) |
 > +		FIELD_PREP(LWMI_ATTR_TYPE_ID_MASK, type_id));
 > +}
+
+Hmm, I'd suggest adding them to wmi-capdata.h so that you can refactor
+LWMI_ATTR_ID_FAN_TEST in wmi-capdata.c too.
+
+Thanks,
+Rong
+
 > +
 > +#define LWMI_ATTR_ID_FAN_RPM(x)                                   \
 > +	lwmi_attr_id(LWMI_DEVICE_ID_FAN, LWMI_FEATURE_ID_FAN_RPM, \
@@ -136,12 +143,6 @@ m/x86/lenovo/wmi-gamezone.h
 >  	u8 type_id;
 > +	u8 cd_mode_id; /* mode arg for searching capdata */
 > +	u8 cv_mode_id; /* mode arg for set/get current_value */
-
-Adding them actually depends on [PATCH v4 4/8], otherwise you always
-get 0 when accessing them in this patch. There are potential
-regressions...
-
-
 >  };
 > =20
 >  static struct tunable_attr_01 ppt_pl1_spl =3D {
@@ -199,9 +200,6 @@ t *kobj,
 > +	args.arg0 =3D lwmi_attr_id(tunable_attr->device_id, tunable_attr->featu=
 re_id,
 > +				 tunable_attr->cv_mode_id, tunable_attr->type_id);
-
-...here...
-
 >  	args.arg1 =3D value;
 > =20
 >  	ret =3D lwmi_dev_evaluate_int(priv->wdev, 0x0, LWMI_FEATURE_VALUE_SET,
@@ -228,12 +226,6 @@ ct *kobj,
 e */
 > +	if (tunable_attr->cv_mode_id =3D=3D LWMI_GZ_THERMAL_MODE_NONE)
 > +		mode =3D tunable_attr->cv_mode_id;
-
-...and here.
-
-Thanks,
-Rong
-
 > =20
 > -	args.arg0 =3D attribute_id;
 > +	args.arg0 =3D lwmi_attr_id(tunable_attr->device_id, tunable_attr->featu=
