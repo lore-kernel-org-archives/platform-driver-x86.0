@@ -1,79 +1,80 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mailout3.hostsharing.net (mailout3.hostsharing.net [144.76.133.104])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D72467080D
-	for <platform-driver-x86@vger.kernel.org>; Sun, 15 Mar 2026 13:58:44 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A73962940D;
+	Sun, 15 Mar 2026 14:35:04 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=144.76.133.104
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1773583124; cv=none; b=inNiA2ONqIhq3RBce+1zz4pludA3ieyjqntzaM0+dkkc/5OZpPuaBw0436/gfe+pvosh0C+o8CzuFeAgumW122jPPkmBcLIErwQeddeL0i4S7k0LDQ6mDgvRlphQGgpfO7InjHsWDqCQb+BBNHrgFKd1054+uh+QaEDvtKVhvYw=
+	t=1773585308; cv=none; b=UUqlO/ucCpkZnkPa9YqFfqCFVhoTP17JScB5hAJM2eI17yO0gGP7U3+YbCawQqjHoHeEQlDLE7DjB0vN6w9bxmePi0R6RcPlvt0f5FOYKIxEPYPqW7iF/ZllAgtda5BxJYQxCISd6vs4OSvmV0jt5iOZ8pEslovSucxnuPJECXc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1773583124; c=relaxed/simple;
-	bh=KSVnIits9CgpbMeAAoaImlvHovNOCLMGzA8l8icjqvk=;
-	h=From:To:Subject:Date:Message-ID:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=AlmnQ/wM+CxD1fB/1N7JSfyr8OWoY/eQVhDJPKeUpcdAwPpZ+N5at2Tq+lA5is9EUUHIDiTriVaK1zojr4XeX4TGzFBEl/kPOX1pN6XKsf6GYnS4BMNkva/Bw4lwTqjYigte8IOvYrVKR+oHkEsHcewRWkln7KH8dhGol5K2/iY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Z1MJlwSp; arc=none smtp.client-ip=10.30.226.201
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Z1MJlwSp"
-Received: by smtp.kernel.org (Postfix) with ESMTPS id 8E559C4CEF7
-	for <platform-driver-x86@vger.kernel.org>; Sun, 15 Mar 2026 13:58:44 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1773583124;
-	bh=KSVnIits9CgpbMeAAoaImlvHovNOCLMGzA8l8icjqvk=;
-	h=From:To:Subject:Date:In-Reply-To:References:From;
-	b=Z1MJlwSpZy3ky8Ov4viPsQpfED2iZjbLw3GX4U/41EY+Px5l+oy2iPfPdCZYoE4hQ
-	 ARZM/ZgIvkEZjYBEZBzAj2Vfgo8dv9/uEIXjquvgH1a3C79FD80p3cyeFwPiQHnOor
-	 HOWCI02+YilqtK71ypHsOfaTJ2Lbsgo4KsccesQ5Y54JhkytV8sgX1sEKMm0D+q7CT
-	 XPGjMsBc/8T1EGQ6DGbSEvvVSUZgt8vRh+YOA3qoFy6nzgcYwwtU9kKZ57LvXyKEZO
-	 FBEtHn4N9C2WhnoKmBL1XPuKQgtsfypmawiYQ4kWI1TXHUH267A7UjWq7ZAWy0nPyu
-	 Q587jiPV8ZjCA==
-Received: by aws-us-west-2-korg-bugzilla-1.web.codeaurora.org (Postfix, from userid 48)
-	id 7DD4DC3279F; Sun, 15 Mar 2026 13:58:44 +0000 (UTC)
-From: bugzilla-daemon@kernel.org
-To: platform-driver-x86@vger.kernel.org
-Subject: [Bug 221238] lg-laptop: Spurious ACK and dropped keystrokes caused
- by ACPI method calls conflicting with i8042 driver
-Date: Sun, 15 Mar 2026 13:58:44 +0000
-X-Bugzilla-Reason: CC
-X-Bugzilla-Type: changed
-X-Bugzilla-Watch-Reason: AssignedTo drivers_platform_x86@kernel-bugs.osdl.org
-X-Bugzilla-Product: Drivers
-X-Bugzilla-Component: Platform_x86
-X-Bugzilla-Version: 2.5
-X-Bugzilla-Keywords: 
-X-Bugzilla-Severity: normal
-X-Bugzilla-Who: alfonso.garcia.frey@gmail.com
-X-Bugzilla-Status: NEW
-X-Bugzilla-Resolution: 
-X-Bugzilla-Priority: P3
-X-Bugzilla-Assigned-To: drivers_platform_x86@kernel-bugs.osdl.org
-X-Bugzilla-Flags: 
-X-Bugzilla-Changed-Fields: attachments.created
-Message-ID: <bug-221238-215701-ytDdBHLrS8@https.bugzilla.kernel.org/>
-In-Reply-To: <bug-221238-215701@https.bugzilla.kernel.org/>
-References: <bug-221238-215701@https.bugzilla.kernel.org/>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-X-Bugzilla-URL: https://bugzilla.kernel.org/
-Auto-Submitted: auto-generated
+	s=arc-20240116; t=1773585308; c=relaxed/simple;
+	bh=3Z/vjdHZR7qBz3E8JNKq3SvB43/YayIUhuWTHxQe4SI=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=LVbLF71vgKOnEh6e+8PmsqDGuck0+pOKyWSRY9BvwSe6v6bA/rbTimJ8JIXLWE9NmArdxksQu4lOsUS0gJY+gwSBZAUcwI2gUne1hTdgL3tD8fwwmZKjp1CeowBKCnEIZEpthyUtkeYZewVrjREdJfaxQu+ZFl++EGZi4edRODk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=wunner.de; spf=pass smtp.mailfrom=wunner.de; arc=none smtp.client-ip=144.76.133.104
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=wunner.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=wunner.de
+Received: from h08.hostsharing.net (h08.hostsharing.net [83.223.95.28])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange x25519 server-signature ECDSA (secp384r1) server-digest SHA384
+	 client-signature ECDSA (secp384r1) client-digest SHA384)
+	(Client CN "*.hostsharing.net", Issuer "GlobalSign GCC R6 AlphaSSL CA 2025" (verified OK))
+	by mailout3.hostsharing.net (Postfix) with ESMTPS id 7371EC1C;
+	Sun, 15 Mar 2026 15:28:00 +0100 (CET)
+Received: by h08.hostsharing.net (Postfix, from userid 100393)
+	id 432E46031F6A; Sun, 15 Mar 2026 15:28:00 +0100 (CET)
+Date: Sun, 15 Mar 2026 15:28:00 +0100
+From: Lukas Wunner <lukas@wunner.de>
+To: Atharva Tiwari <atharvatiwarilinuxdev@gmail.com>
+Cc: hansg@kernel.org, ilpo.jarvinen@linux.intel.com,
+	linux-kernel@vger.kernel.org, platform-driver-x86@vger.kernel.org
+Subject: Re: [PATCH v3] apple-gmux: preserve brightness using EFI
+Message-ID: <abbB8F9WE0kUUzrZ@wunner.de>
+References: <aYx6ocvaFHunfP5f@wunner.de>
+ <20260314224503.12022-1-atharvatiwarilinuxdev@gmail.com>
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20260314224503.12022-1-atharvatiwarilinuxdev@gmail.com>
 
-https://bugzilla.kernel.org/show_bug.cgi?id=3D221238
+On Sun, Mar 15, 2026 at 04:15:03AM +0530, Atharva Tiwari wrote:
+> > This version moves the EFI handling back to the gmux driver.  Why?
+> 
+> Because the platform maintainer just NACKed the EFI backend driver, so i
+> cant do anything
+> 
+> https://lore.kernel.org/all/c2d14818-1c34-47c7-a210-1f7c737f0bc9@kernel.org/
 
---- Comment #3 from Alfonso GARCIA FREY (alfonso.garcia.frey@gmail.com) ---
-Created attachment 309669
-  --> https://bugzilla.kernel.org/attachment.cgi?id=3D309669&action=3Dedit
-acpidump
+The NAK was only because of writing to the EFI variable in frequent
+intervals.  I'd assume Hans is fine if it is synced only once on
+shutdown.
 
-acpidump
+Splitting out the EFI handling into a separate component in
+drivers/firmware/efi/ as you did in this version:
 
---=20
-You may reply to this email to add a comment.
+https://lore.kernel.org/all/20260206125641.12983-2-atharvatiwarilinuxdev@gmail.com/
 
-You are receiving this mail because:
-You are on the CC list for the bug.
-You are watching the assignee of the bug.=
+... is much cleaner as it allows code reuse by i915 and other drivers
+which may be controlling brightness on MacBooks or iMacs without a gmux.
+So I'd really prefer if you went back to that, but sync only on shutdown
+and only if brightness has changed, per Hans' request.
+
+BTW, I did another test on my MacBook9,1 with brightness set to maximum
+on macOS, then booting into Linux.  The EFI variable as set by macOS
+contains:
+
+07 00 00 80 ff 03
+
+... but /sys/class/backlight/gmux_backlight/brightness contains the
+value 110400 (0x1af40), which obviously exceeds USHRT_MAX.  So I'm not
+convinced that writing that raw value to the EFI variable actually yields
+correct results.
+
+Thanks,
+
+Lukas
