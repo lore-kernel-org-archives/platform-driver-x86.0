@@ -1,133 +1,141 @@
-Received: from mail-wr1-f41.google.com (mail-wr1-f41.google.com [209.85.221.41])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.7])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 589A62D6409
-	for <platform-driver-x86@vger.kernel.org>; Tue, 17 Mar 2026 21:30:23 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.41
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 02008377029;
+	Tue, 17 Mar 2026 22:17:56 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.7
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1773783026; cv=none; b=YkM6jUAIiz+0SS7Ex8yZJ/Vs6lD8t6yG7oN/wwbVJL2ASNoCPmWuw5kXH3yQaoutnkQ6pAzb3Gkvdp4AB6utXMo17qEcitBcTV2YeOdAwbDl0Wriz2dyviwCDjvEhv/jCsZaPiUbK8IzMmMFjqrG3SVuZT1He9B0ZmJX2T6tDec=
+	t=1773785879; cv=none; b=oiWKy0JGViaqI70dx9590OJuY6FVi/CgSsXI52gGfvDE7JIkCV5HiUBTiqQ0lVfYXuRq8kUMfPqlJ0YvFJoRI1kHvTa/0pEY+d0sQVj7m/LOEg2+VQPdts0yEMeCcMTVW1GLgCq0ccpNNJXHw608P+6C6Sz3/qk7jnfQ0ap7hmo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1773783026; c=relaxed/simple;
-	bh=GT+RMnUGNW3pg4KIHSqlZkJKvQO2QuJvPHUQ7LFqJUQ=;
-	h=Message-ID:Date:MIME-Version:From:Subject:To:Cc:References:
-	 In-Reply-To:Content-Type; b=tNicXSeiyspvCpGGLfxikgTdf9EsIPczmtiSd9XZhziibYw9V4GwkvN91anwEwe6rZwMz/qJAvMle3OXsr0mPszyIsbHAUq4YzGztKW8KquwUFSLgECofWbid+1XbNbXMSHilXZEnVaubYqQNhhltIodCEUHZxLN0Lyw0kJvdm0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=jguk.org; spf=pass smtp.mailfrom=jguk.org; dkim=pass (2048-bit key) header.d=jguk.org header.i=@jguk.org header.b=kFF07n2c; arc=none smtp.client-ip=209.85.221.41
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=jguk.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=jguk.org
+	s=arc-20240116; t=1773785879; c=relaxed/simple;
+	bh=FNWIPBES0YKSmK+pgav9TGtnCBJV8EEE9Co9MfCjjrI=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=LuzcaUDRCJXSyImieGDMUSKBPP84ENhVeJvIvO7mN+kwg4SMmj1bDWZvVbvLUHa2g697IqbIKRxxDWkgrpkdRkvNfnIQsstoVa5aTuTylMk1RjgSpmfDk0pusA38B7O5DBcqgr8HMM6MzL3bpZZMrjVQ4j9rKsxgS0gyi9xBlUY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=Lc+cZaHh; arc=none smtp.client-ip=192.198.163.7
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=jguk.org header.i=@jguk.org header.b="kFF07n2c"
-Received: by mail-wr1-f41.google.com with SMTP id ffacd0b85a97d-439b7c2788dso3848937f8f.1
-        for <platform-driver-x86@vger.kernel.org>; Tue, 17 Mar 2026 14:30:23 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=jguk.org; s=google; t=1773783021; x=1774387821; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:content-language:references
-         :cc:to:subject:from:user-agent:mime-version:date:message-id:from:to
-         :cc:subject:date:message-id:reply-to;
-        bh=LSPSW+zj8wRFZLpuz0wMsyIBmxuXA+r3ZWc0AIMuGL0=;
-        b=kFF07n2cAcYegzUiqM1dyBA8S7jD308h9DY8P3xA5JsnVSph/yJscg/7IWK1R1seCa
-         oLLXfo0oQDEBCO4nWNDNbNGpqRKgWSk4+6jqg/ZBwHJrEN2EyXk1fnHGWylcT7wNWljo
-         /Z5RREMWyg5PmaszmUR5g+L9SgYlwvL/2FGWl6gPYpiK+p2S/XZW4yHxUAjqOEZaJqbO
-         7seevS7jbjcmNOcoKWwQg8wy7/maaXbvCkp4kLlZp8mXkWmN6u/F/6r0o+vP2RDpLpx1
-         ERGvvtU8nFaJTkZ92Xq/cj8Odo46j42nE3ZBY0Cc4lywXt0K8HeJ4CQey8C9RJ52Da66
-         H9tw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1773783021; x=1774387821;
-        h=content-transfer-encoding:in-reply-to:content-language:references
-         :cc:to:subject:from:user-agent:mime-version:date:message-id:x-gm-gg
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=LSPSW+zj8wRFZLpuz0wMsyIBmxuXA+r3ZWc0AIMuGL0=;
-        b=MpLjSs4ozx9M5jGaBkAm6HkEDpExCC4u0lBP7HFaJZm8SnDNQeRwvIyph6w5uU3xP7
-         ASj2L+f7yHA2l9vdT86IbQDdz1s0uquFDZDTw/a6V5nhRz7udJgvrGhDgbH8aiuBnw5H
-         nNjug2b8hLt0MXVl/wsIgbuagp3f9ShpjgTpK33Js0xhaiSmZcRcPqsbO5SYah2JaAvL
-         Uy8Uo/4DBPMw9ShqPZDvaNVLyeQWVZFXDQkEEEt/iCmAGJPrwB5I8fWwvE2ayryjg07L
-         Uk9MmDnlYE9M/5u8xvGEmVEWejfy442WUltRTd2OBoHoblRWS0AZ9qnZ/OkxjHBALJMr
-         QUgg==
-X-Forwarded-Encrypted: i=1; AJvYcCVxcnfR82fy0t0dT0bptOdMn7xEFwfUlZf32EcVttF6nzXfROZg0jwworULkY62oJ4O5Yl7iyQksR66KWGyszjYKtuL@vger.kernel.org
-X-Gm-Message-State: AOJu0YwTh90FbaIs9vo/vSXgQOQCpjYaHS5ciylsJqtPvTOsaH5mBVhJ
-	nXIKaGEJw+Ip/+dPRnRxcVul9hpqMiTz01ODdCPjcbQmqC/5nhiCvvJiGgbLFFUwWZg=
-X-Gm-Gg: ATEYQzxEgQMgQ5aN4WNTAokEj3x7KnOXYSOoExK9qazYpXN7T1Z2SAM2vLoaQwUNdpV
-	vHP+afLcL1AyiNlrnf79xlZ7p51o/mB4//DYfBGtERAtHsU4sHToMSK7//UcVayi2weeGk718EC
-	PlmjZAROByFRV39e7E9lQw2bFaYy5F3Y+U+CGUyS6Wj+eJr3Ou+joiEqnBiLAwS+WLG4DYzjqeY
-	7VB1VPp0fqU8+AyMRw4I9hGeYdPCO65qAb1l250KSK8WuO8sLkzWh9ehE8gwl/F3BPqXNdlt3zy
-	o3pYfzYDD9NJY/u6MKdw71SbgCj/RQ8sd5sBIA8WrTy78KWoDHjPs+4qdpoz6lHxKvfBUnbmhhS
-	Mll7rX3U8+Bh7yDGAkgXmOaQEI39MQIfQ0I8UXsEvux834AeqKgA1o06vhXtaSk1E5lB+PyU4WQ
-	4r0CBwAGgIAN/iddsFZK5El1Yfl3+0jCBr+ysrH9tS7imfE3izGrMFIPz/3GytxiyVLGjOV9e70
-	80LokassSjdl5Yg
-X-Received: by 2002:a5d:588a:0:b0:439:ca9b:1f61 with SMTP id ffacd0b85a97d-43b527aa30cmr1462604f8f.17.1773783021167;
-        Tue, 17 Mar 2026 14:30:21 -0700 (PDT)
-Received: from [192.168.0.154] (slou-04-b2-v4wan-170873-cust220.vm28.cable.virginm.net. [86.15.56.221])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-43b5184961csm2438198f8f.6.2026.03.17.14.30.19
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 17 Mar 2026 14:30:19 -0700 (PDT)
-Message-ID: <09b38ae4-bb6a-4df1-a679-deca52edda88@jguk.org>
-Date: Tue, 17 Mar 2026 21:30:18 +0000
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="Lc+cZaHh"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1773785877; x=1805321877;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=FNWIPBES0YKSmK+pgav9TGtnCBJV8EEE9Co9MfCjjrI=;
+  b=Lc+cZaHhqwABNw5JpP6esfp9Mjcm7LJ5jFm75MurN5IWP25k/CnGAGQK
+   AdFv2uOPVMf0bq3AO0CsxGTrivfnnLryCQLf7OO+E7XufcuoMEPNGHVVO
+   F1607CFW3D7aQ3DouMJhFyo7HGcUtVOE3AYHHNNgWd21up/gZCnPz9AVF
+   RJ9nR981WrjqT9hBTI+oczTYLZCWPhzFYP6HEI0oTymrAxZo6Np5SVi8z
+   ptD+sfnUDS+LRzFbBJLfaSBdyziwTVphBmFTacWCHLsL/QbIGSS/fqgm0
+   2ZFT0e4AJ5LBEHWYeb9Wr95xvE2vric/pdCS9suNl4MQXPFOhAOwVaUD2
+   A==;
+X-CSE-ConnectionGUID: HNRMyHQCRPqoGLWYZNr5Sg==
+X-CSE-MsgGUID: UmCsiPMTSu6lyGk1ha7KCQ==
+X-IronPort-AV: E=McAfee;i="6800,10657,11732"; a="100293805"
+X-IronPort-AV: E=Sophos;i="6.23,126,1770624000"; 
+   d="scan'208";a="100293805"
+Received: from fmviesa010.fm.intel.com ([10.60.135.150])
+  by fmvoesa101.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 17 Mar 2026 15:17:56 -0700
+X-CSE-ConnectionGUID: 00Dw8TaWSC+6yJmQpnHcEQ==
+X-CSE-MsgGUID: fVwSoFFSRdiAqNVwH5HOiw==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.23,126,1770624000"; 
+   d="scan'208";a="218493195"
+Received: from lkp-server01.sh.intel.com (HELO 63737dd503cb) ([10.239.97.150])
+  by fmviesa010.fm.intel.com with ESMTP; 17 Mar 2026 15:17:49 -0700
+Received: from kbuild by 63737dd503cb with local (Exim 4.98.2)
+	(envelope-from <lkp@intel.com>)
+	id 1w2cjS-0000000026D-0zP9;
+	Tue, 17 Mar 2026 22:17:46 +0000
+Date: Wed, 18 Mar 2026 06:17:31 +0800
+From: kernel test robot <lkp@intel.com>
+To: Manivannan Sadhasivam via B4 Relay <devnull+manivannan.sadhasivam.oss.qualcomm.com@kernel.org>,
+	Rob Herring <robh@kernel.org>,
+	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+	Jiri Slaby <jirislaby@kernel.org>,
+	Nathan Chancellor <nathan@kernel.org>,
+	Nicolas Schier <nicolas.schier@linux.dev>,
+	Hans de Goede <hansg@kernel.org>,
+	Ilpo =?iso-8859-1?Q?J=E4rvinen?= <ilpo.jarvinen@linux.intel.com>,
+	Mark Pearson <mpearson-lenovo@squebb.ca>,
+	"Derek J. Clark" <derekjohn.clark@gmail.com>,
+	Manivannan Sadhasivam <mani@kernel.org>,
+	Krzysztof Kozlowski <krzk@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>,
+	Marcel Holtmann <marcel@holtmann.org>,
+	Luiz Augusto von Dentz <luiz.dentz@gmail.com>,
+	Bartosz Golaszewski <brgl@bgdev.pl>,
+	Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Cc: oe-kbuild-all@lists.linux.dev, linux-serial@vger.kernel.org,
+	linux-kernel@vger.kernel.org, linux-kbuild@vger.kernel.org,
+	platform-driver-x86@vger.kernel.org, linux-pci@vger.kernel.org,
+	devicetree@vger.kernel.org, linux-arm-msm@vger.kernel.org,
+	linux-bluetooth@vger.kernel.org, linux-pm@vger.kernel.org,
+	Stephan Gerhold <stephan.gerhold@linaro.org>,
+	Dmitry Baryshkov <lumag@kernel.org>, linux-acpi@vger.kernel.org
+Subject: Re: [PATCH v6 9/9] power: sequencing: pcie-m2: Create serdev device
+ for WCN7850 bluetooth
+Message-ID: <202603180609.ucspJefN-lkp@intel.com>
+References: <20260317-pci-m2-e-v6-9-9c898f108d3d@oss.qualcomm.com>
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-From: Jonathan Grant <jg@jguk.org>
-Subject: [PATCH v3] platform/x86: asus-wmi: log thermal notification event
-To: Mario Limonciello <mario.limonciello@amd.com>,
- platform-driver-x86@vger.kernel.org, luke@ljones.dev
-Cc: linux-kernel@vger.kernel.org
-References: <56532bb3-c604-484e-9716-edda3758f627@jguk.org>
- <50cc3d4b-5e5a-422c-9abd-556488710988@amd.com>
- <94dbe1e1-d706-47aa-abf5-f5d76aacf017@jguk.org>
- <7f2f4b15-2fad-4784-a524-7f92f6b21a94@amd.com>
-Content-Language: en-GB
-In-Reply-To: <7f2f4b15-2fad-4784-a524-7f92f6b21a94@amd.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20260317-pci-m2-e-v6-9-9c898f108d3d@oss.qualcomm.com>
 
-From 4eb1a89ef5b481a8bd85bd68735b879e4ed6cb27 Mon Sep 17 00:00:00 2001
-From: Jonathan Grant <jg@jguk.org>
-Date: Sat, 14 Mar 2026 02:11:09 +0000
-Subject: [PATCH] platform/x86: asus-wmi: log thermal notification event
+Hi Manivannan,
 
-Print a diagnostic message when the ASUS WMI interface receives event 0x6d.
-This event was observed shortly before thermal shutdown on an ASUS N56VB under
-heavy system load. The message helps diagnose unexpected thermal power-offs.
+kernel test robot noticed the following build errors:
 
-Signed-off-by: Jonathan Grant <jg@jguk.org>
----
-v3:
- - do not change unrelated whitespace
- - address -Wdangling-else by adding braces
+[auto build test ERROR on 559f264e403e4d58d56a17595c60a1de011c5e20]
 
- drivers/platform/x86/asus-wmi.c | 11 +++++++++--
- 1 file changed, 9 insertions(+), 2 deletions(-)
+url:    https://github.com/intel-lab-lkp/linux/commits/Manivannan-Sadhasivam-via-B4-Relay/serdev-Convert-to_serdev_-helpers-to-macros-and-use-container_of_const/20260317-123910
+base:   559f264e403e4d58d56a17595c60a1de011c5e20
+patch link:    https://lore.kernel.org/r/20260317-pci-m2-e-v6-9-9c898f108d3d%40oss.qualcomm.com
+patch subject: [PATCH v6 9/9] power: sequencing: pcie-m2: Create serdev device for WCN7850 bluetooth
+config: nios2-allmodconfig (https://download.01.org/0day-ci/archive/20260318/202603180609.ucspJefN-lkp@intel.com/config)
+compiler: nios2-linux-gcc (GCC) 11.5.0
+reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20260318/202603180609.ucspJefN-lkp@intel.com/reproduce)
 
-diff --git a/drivers/platform/x86/asus-wmi.c b/drivers/platform/x86/asus-wmi.c
-index 7c0915e097ba..3bdd92baac57 100644
---- a/drivers/platform/x86/asus-wmi.c
-+++ b/drivers/platform/x86/asus-wmi.c
-@@ -70,6 +70,7 @@ module_param(fnlock_default, bool, 0444);
- #define NOTIFY_KBD_TTP			0xae
- #define NOTIFY_LID_FLIP			0xfa
- #define NOTIFY_LID_FLIP_ROG		0xbd
-+#define NOTIFY_THERMAL			0x6d
- 
- #define ASUS_WMI_FNLOCK_BIOS_DISABLED	BIT(0)
- 
-@@ -4597,8 +4598,14 @@ static void asus_wmi_handle_event_code(int code, struct asus_wmi *asus)
- 		return;
- 
- 	if (!sparse_keymap_report_event(asus->inputdev, code,
--					key_value, autorelease))
--		pr_info("Unknown key code 0x%x\n", code);
-+					key_value, autorelease)) {
-+		if (code == NOTIFY_THERMAL) {
-+			pr_info("Thermal state change\n");
-+		}
-+		else {
-+			pr_info("Unknown key code 0x%x\n", code);
-+		}
-+	}
- }
- 
- static void asus_wmi_notify(union acpi_object *obj, void *context)
+If you fix the issue in a separate patch/commit (i.e. not just a new version of
+the same patch/commit), kindly add following tags
+| Reported-by: kernel test robot <lkp@intel.com>
+| Closes: https://lore.kernel.org/oe-kbuild-all/202603180609.ucspJefN-lkp@intel.com/
+
+All errors (new ones prefixed by >>):
+
+   drivers/power/sequencing/pwrseq-pcie-m2.c: In function 'pwrseq_pcie_m2_free_resources':
+>> drivers/power/sequencing/pwrseq-pcie-m2.c:185:34: error: 'pci_bus_type' undeclared (first use in this function); did you mean 'pci_pcie_type'?
+     185 |         bus_unregister_notifier(&pci_bus_type, &ctx->nb);
+         |                                  ^~~~~~~~~~~~
+         |                                  pci_pcie_type
+   drivers/power/sequencing/pwrseq-pcie-m2.c:185:34: note: each undeclared identifier is reported only once for each function it appears in
+   drivers/power/sequencing/pwrseq-pcie-m2.c: In function 'pwrseq_pcie_m2_register_notifier':
+   drivers/power/sequencing/pwrseq-pcie-m2.c:340:54: error: 'pci_bus_type' undeclared (first use in this function); did you mean 'pci_pcie_type'?
+     340 |                         ret = bus_register_notifier(&pci_bus_type, &ctx->nb);
+         |                                                      ^~~~~~~~~~~~
+         |                                                      pci_pcie_type
+
+
+vim +185 drivers/power/sequencing/pwrseq-pcie-m2.c
+
+   179	
+   180	static void pwrseq_pcie_m2_free_resources(void *data)
+   181	{
+   182		struct pwrseq_pcie_m2_ctx *ctx = data;
+   183	
+   184		serdev_device_remove(ctx->serdev);
+ > 185		bus_unregister_notifier(&pci_bus_type, &ctx->nb);
+   186		of_changeset_revert(ctx->ocs);
+   187		of_changeset_destroy(ctx->ocs);
+   188		regulator_bulk_free(ctx->num_vregs, ctx->regs);
+   189	}
+   190	
+
 -- 
-2.43.0
+0-DAY CI Kernel Test Service
+https://github.com/intel/lkp-tests/wiki
