@@ -1,38 +1,38 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4850736D4FC;
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 742DA373C1F;
 	Tue, 17 Mar 2026 04:30:03 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1773721803; cv=none; b=R7B1W5yeUZVRHM1ShHYeB4z3QLFRuYAp3Vh+nENYwFz1qz3PuAIu30JdvmIZB8FqocOcywU9IapYbQ4mw9l10AUVJaHQvzBAPf7QS/obuQ6nFoz0mnAqV69Ar4JMHX7o4IeZwez5Fvkrl3xGR4VR7pD5RSyFX3y0fN/D0jUwj9c=
+	t=1773721803; cv=none; b=qWCQDxehT6YNZAjcZSP0PzSYpG5E9Vf0MiQrlmj67KF/QS3BmNWj0EMyELUxN8SPQFHT53jrnvs4KtpNUc3cLie97KrUfQ2ECoxPm9Po1Dr6zvu934kA64PSZw5CEox9cRE49uY62L1jl5Sqyt8mb6j+nhr/knd7KJNGODFT7no=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1773721803; c=relaxed/simple;
-	bh=90rMoHNtpikEEOX4hxu7KxohYPZTjuhD8cCrdkwCho4=;
+	bh=Q2Im0iGsNsncd/5YyM8GmD6VBXA5pHhVatfrX9sHrzs=;
 	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=PhtqGCkrn9LI9Y+kYef3a8bDUuR1OmygU2krd4BZCxgapE9FOa3InxJodchcr+9FfSWph+JPexhhW6QkpPMk0NZuqKogFr4i1KmJFEebowW61WXSDfuibOwcPiGv943f6MU7qPNmkbHAAoOMrB/5WlF1J20wKYegcyZdXy4frGY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=IRsSVi1g; arc=none smtp.client-ip=10.30.226.201
+	 In-Reply-To:To:Cc; b=ot4saPkMH/TH22wd7SN1t1BpeOha5dzvB/9zXzPECgn5lqWtQCazP9zSJAymqi2+987ORYmeiPP6NszB3xtR4lmx9iJ+j+XfcKs/98B/Af55oz3kZ0eR7qxxN2/dAU0P6chqBHAU6Sv/lThZiD4CBvMVrGF+NhYPZPu0OZIbCo8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=k9Mo4wif; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="IRsSVi1g"
-Received: by smtp.kernel.org (Postfix) with ESMTPS id E18DDC2BC9E;
-	Tue, 17 Mar 2026 04:30:02 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="k9Mo4wif"
+Received: by smtp.kernel.org (Postfix) with ESMTPS id 2B294C2BCFB;
+	Tue, 17 Mar 2026 04:30:03 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
 	s=k20201202; t=1773721803;
-	bh=90rMoHNtpikEEOX4hxu7KxohYPZTjuhD8cCrdkwCho4=;
+	bh=Q2Im0iGsNsncd/5YyM8GmD6VBXA5pHhVatfrX9sHrzs=;
 	h=From:Date:Subject:References:In-Reply-To:To:Cc:Reply-To:From;
-	b=IRsSVi1g7WlEkI8pVUKi9MtaGzLiC7I8sSTHvz48V2YOrK/KM9FE22hQBcbPbryT8
-	 yA+xtK3RoFt9b0q5UmlDSbflPzrNMW0y5XkJ5RvTyh0SDZ96Q2P3LhnG4EDV16ZlXb
-	 QkRSFYlyRgZT8msPmVaN9VKkPaVrIQn51JmraxmNY6sg/4murMKamcLcQlRPVEmL3X
-	 MquB+oKcFCiXEKF9GMKGaJKDY93UvyC3loIEr8gpGuEKa68efLsBhQZtzr7k6b/BLC
-	 qDqJeIp/8w3C+JzRXTnHlZUuEzZO68q+z+h+VniCM7D2BO651XS1uqTTO7GdJWEGOc
-	 MXMenGv8zVNkg==
+	b=k9Mo4wifBARL1VCcVkOvUyVGdmtwyhGKj8TSHcmDLonGA0wTY4gszhvO0jY16xa1t
+	 7eeYAgOVN10l5WGLt0WOy7RGjPLB9Qo8Dvd3mpHXP/Ondzor28evNKqvk6YQ58fzC1
+	 0WyL8t777DT6cbgNLfwVnzx3gUuwjajc4SRrO1XrCbHZPOJJkJF8kzpgUbUQVblCiH
+	 sSLN9UxqVq8e8p0hp+GTAjr9z8zQTlCFdARU19dUtp3xDAyuzXltfO8vSZ5ZW5D25e
+	 tcvV2jCG8PxyLG7zvyJUoWB5r+P6fqeAE823V97NJFSaOVp73PwS2osimT5dJQr2kU
+	 15hb/QLZDY+RQ==
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CCDADFB5EAF;
-	Tue, 17 Mar 2026 04:30:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1EF37FB5EB2;
+	Tue, 17 Mar 2026 04:30:03 +0000 (UTC)
 From: Manivannan Sadhasivam via B4 Relay <devnull+manivannan.sadhasivam.oss.qualcomm.com@kernel.org>
-Date: Tue, 17 Mar 2026 09:59:52 +0530
-Subject: [PATCH v6 2/9] serdev: Add an API to find the serdev controller
- associated with the devicetree node
+Date: Tue, 17 Mar 2026 09:59:56 +0530
+Subject: [PATCH v6 6/9] dt-bindings: connector: m2: Add M.2 1620 LGA
+ soldered down connector
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
@@ -41,7 +41,7 @@ List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-Message-Id: <20260317-pci-m2-e-v6-2-9c898f108d3d@oss.qualcomm.com>
+Message-Id: <20260317-pci-m2-e-v6-6-9c898f108d3d@oss.qualcomm.com>
 References: <20260317-pci-m2-e-v6-0-9c898f108d3d@oss.qualcomm.com>
 In-Reply-To: <20260317-pci-m2-e-v6-0-9c898f108d3d@oss.qualcomm.com>
 To: Rob Herring <robh@kernel.org>, 
@@ -65,20 +65,18 @@ Cc: linux-serial@vger.kernel.org, linux-kernel@vger.kernel.org,
  linux-pm@vger.kernel.org, Stephan Gerhold <stephan.gerhold@linaro.org>, 
  Dmitry Baryshkov <dmitry.baryshkov@oss.qualcomm.com>, 
  linux-acpi@vger.kernel.org, 
- Manivannan Sadhasivam <manivannan.sadhasivam@oss.qualcomm.com>, 
- Hans de Goede <johannes.goede@oss.qualcomm.com>, 
- Bartosz Golaszewski <bartosz.golaszewski@oss.qualcomm.com>
+ Manivannan Sadhasivam <manivannan.sadhasivam@oss.qualcomm.com>
 X-Mailer: b4 0.14.3
-X-Developer-Signature: v=1; a=openpgp-sha256; l=2248;
+X-Developer-Signature: v=1; a=openpgp-sha256; l=1302;
  i=manivannan.sadhasivam@oss.qualcomm.com; h=from:subject:message-id;
- bh=rr2lmVP0IC6lUnB67NHw0qDXlaCs5LnvUTeOalg9qug=;
- b=owEBbQGS/pANAwAKAVWfEeb+kc71AcsmYgBpuNjHP7OTLCI2v2JEVO7b4GY8c87LN9vRLUsYb
- MkGvu6rvciJATMEAAEKAB0WIQRnpUMqgUjL2KRYJ5dVnxHm/pHO9QUCabjYxwAKCRBVnxHm/pHO
- 9ZAHB/4rn5Keq3wWhvaowq3W9YqMd9yLEZHQV886wlmogjs0wgzzh5fJUBMd3yGfKKvdjklZ/NF
- W/hl8xIId+94P5p3blvB1vN/jSKEd2eOfPveBS+ThJ3ayG8UN6cS4gen7hHfv6aVfH49jeq8cMv
- WNCnmLGtS46/uxBpjJTI2Px2y3P3N6qxUZGJ3Bz4YBBJ+fTplV0mjkr9or9oveKKSnJox08CkJx
- Xj0FOj0AzGycp8KZUOu470j3cOn60Gj8h9c708Xyd7RolCH1sx82JIYdNgh+fnVRXsyYvWwUd/q
- jk9buKNVQVfoMZwNcZBda0Ge5kv6fSdI78HEiJQWZjrTYopO
+ bh=HWiEJKBm63OoIEmGwLG8KtD+FwdBq3l9mjxxZvfnxq4=;
+ b=owEBbQGS/pANAwAKAVWfEeb+kc71AcsmYgBpuNjHuG6zami5UgFS0L37Wphd4RdB0VR7Q3rF/
+ e4gj78TW16JATMEAAEKAB0WIQRnpUMqgUjL2KRYJ5dVnxHm/pHO9QUCabjYxwAKCRBVnxHm/pHO
+ 9Xw3CACTsjM19XPUGHDmrcCsQWKDWFue5w5+1nU8rSJUWhKwotoaSalsnsuXV7kGjNyqG+JCA+m
+ g+r6iV23/G8dUOPE3nPzKvO4kavQGg/f45Xk8Bkq9FF1WlNJ/P0DPZnqEtp7KEn03QqQcYsOvo0
+ fe5tqtU5pOxTK2THt0y1qo5p/AjynWyw2xvSlJJcfSVIxMCwVlyJJbsAvdOORpxqoyt60r9yK4U
+ +pKhsnyqM5Mj40Rd+fwGkII7eIMwZyRU143kWqLSSa7ZWjIgRmli6QvnTfJG7p0se9ydivkkGem
+ Yh2p4Fq0zTjWfXoRsySEr9xhJffEyUhgHnz68nDcXYYLbHud
 X-Developer-Key: i=manivannan.sadhasivam@oss.qualcomm.com; a=openpgp;
  fpr=C668AEC3C3188E4C611465E7488550E901166008
 X-Endpoint-Received: by B4 Relay for
@@ -88,65 +86,37 @@ Reply-To: manivannan.sadhasivam@oss.qualcomm.com
 
 From: Manivannan Sadhasivam <manivannan.sadhasivam@oss.qualcomm.com>
 
-Add of_find_serdev_controller_by_node() API to find the serdev controller
-device associated with the devicetree node.
+Lenovo Thinkpad T14s is found to have a soldered down version of M.2 1620
+LGA connector. Though, there is no 1620 LGA form factor defined in the M.2
+spec, it looks very similar to the M.2 Key E connector. So add the
+"pcie-m2-1620-lga-connector" compatible with "pcie-m2-e-connector" fallback
+to reuse the Key E binding.
 
-Tested-by: Hans de Goede <johannes.goede@oss.qualcomm.com> # ThinkPad T14s gen6 (arm64)
-Reviewed-by: Bartosz Golaszewski <bartosz.golaszewski@oss.qualcomm.com>
 Signed-off-by: Manivannan Sadhasivam <manivannan.sadhasivam@oss.qualcomm.com>
 ---
- drivers/tty/serdev/core.c | 19 +++++++++++++++++++
- include/linux/serdev.h    |  9 +++++++++
- 2 files changed, 28 insertions(+)
+ .../devicetree/bindings/connector/pcie-m2-e-connector.yaml       | 9 ++++++++-
+ 1 file changed, 8 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/tty/serdev/core.c b/drivers/tty/serdev/core.c
-index 8f25510f89b6..bf88b95f7458 100644
---- a/drivers/tty/serdev/core.c
-+++ b/drivers/tty/serdev/core.c
-@@ -514,6 +514,25 @@ struct serdev_controller *serdev_controller_alloc(struct device *host,
- }
- EXPORT_SYMBOL_GPL(serdev_controller_alloc);
+diff --git a/Documentation/devicetree/bindings/connector/pcie-m2-e-connector.yaml b/Documentation/devicetree/bindings/connector/pcie-m2-e-connector.yaml
+index f7859aa9b634..d8cf9a9ec7d0 100644
+--- a/Documentation/devicetree/bindings/connector/pcie-m2-e-connector.yaml
++++ b/Documentation/devicetree/bindings/connector/pcie-m2-e-connector.yaml
+@@ -17,7 +17,14 @@ description:
  
-+#ifdef CONFIG_OF
-+/**
-+ * of_find_serdev_controller_by_node() - Find the serdev controller associated
-+ *					 with the devicetree node
-+ * @node:	Devicetree node
-+ *
-+ * Return: Pointer to the serdev controller associated with the node. NULL if
-+ * the controller is not found. Caller is responsible for calling
-+ * serdev_controller_put() to drop the reference.
-+ */
-+struct serdev_controller *of_find_serdev_controller_by_node(struct device_node *node)
-+{
-+	struct device *dev = bus_find_device_by_of_node(&serdev_bus_type, node);
-+
-+	return (dev && dev->type == &serdev_ctrl_type) ? to_serdev_controller(dev) : NULL;
-+}
-+EXPORT_SYMBOL_GPL(of_find_serdev_controller_by_node);
-+#endif
-+
- static int of_serdev_register_devices(struct serdev_controller *ctrl)
- {
- 	struct device_node *node;
-diff --git a/include/linux/serdev.h b/include/linux/serdev.h
-index 0c7d3c27d1f8..188c0ba62d50 100644
---- a/include/linux/serdev.h
-+++ b/include/linux/serdev.h
-@@ -334,4 +334,13 @@ static inline bool serdev_acpi_get_uart_resource(struct acpi_resource *ares,
- }
- #endif /* CONFIG_ACPI */
+ properties:
+   compatible:
+-    const: pcie-m2-e-connector
++    oneOf:
++      - items:
++          - enum:
++              - pcie-m2-1620-lga-connector
++          - const: pcie-m2-e-connector
++      - items:
++          - enum:
++              - pcie-m2-e-connector
  
-+#ifdef CONFIG_OF
-+struct serdev_controller *of_find_serdev_controller_by_node(struct device_node *node);
-+#else
-+static inline struct serdev_controller *of_find_serdev_controller_by_node(struct device_node *node)
-+{
-+	return NULL;
-+}
-+#endif /* CONFIG_OF */
-+
- #endif /*_LINUX_SERDEV_H */
+   vpcie3v3-supply:
+     description: A phandle to the regulator for 3.3v supply.
 
 -- 
 2.51.0
