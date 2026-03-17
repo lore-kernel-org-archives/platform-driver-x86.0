@@ -1,299 +1,162 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.14])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5EE7F3E929E;
-	Tue, 17 Mar 2026 15:42:38 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.14
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 525BC29ACFC
+	for <platform-driver-x86@vger.kernel.org>; Tue, 17 Mar 2026 15:52:26 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1773762159; cv=none; b=uXYimz5m9JOxRTuYPqfDjuozaZY93FbfvATWLV3eWwDbEQyDj2emTQWAaMM8PQX42GdkikYg23osiW3F658uZaGKoIVns8vZaHTwNNivlSF/CYq3trfuxF7E0BL7ag+KnhV67tr1D2d1xXCOxXP9tl/vPOtxfeGLc+SyVj8LnH4=
+	t=1773762746; cv=none; b=OqU52my2j6wOEZg2DkAweYEUKO5+mehFsQTpkNKbnWhzXaQslitANaof3Qi//ETd2S17V74F8YNfBW7rGg2K7CdwoiDk7GQCZyhObpv/HNJB2TglFxlXi0TBzbhSGXnyJl9Jk3afyFzHunhgUwfQJyenxZVCa+23VqfHk0Hbcks=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1773762159; c=relaxed/simple;
-	bh=iX6jD1U9gQtTUg8EF6Th7PnyhGEYgd3XdX2n0E4+RHw=;
-	h=From:Date:To:cc:Subject:In-Reply-To:Message-ID:References:
-	 MIME-Version:Content-Type; b=C9Sh/2BytUq4txgQeFl/VqzcxwlfxTQgThl38wvwhHpgJHRBXAly3TY60So4ajsD0J+GKfJWnzHZKpiGReBA3uPh4c3kiNviGU0cNzttszyiBCqUQOyFq9tisps2g9ASI9Fsnimit1KjxMPwnhmuK4Zo82G1SL1zj8htcf25of8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=pass smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=FinEDihE; arc=none smtp.client-ip=198.175.65.14
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.intel.com
+	s=arc-20240116; t=1773762746; c=relaxed/simple;
+	bh=DQCJEcDFzb2Hskg2Z+OEIUslpvySN6AUvc2IGO+f2Aw=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=nTnlCrijqnHN9As9CHTiXE30yIXDutsES3Bj+g019RA9uXLpIY613oN4vArgIqJpSAaRvarASt3vdrXODjS3Nz9WCdcn14Y47mtw5K0pUYleOEz0oBG3QXyW7sxPqiMLDQmIxl3w2AvELLcS1siy6HfVb0IqMgIoOQyHzVzC140=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=LZqaFq6Y; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="FinEDihE"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1773762159; x=1805298159;
-  h=from:date:to:cc:subject:in-reply-to:message-id:
-   references:mime-version;
-  bh=iX6jD1U9gQtTUg8EF6Th7PnyhGEYgd3XdX2n0E4+RHw=;
-  b=FinEDihEVU/nY7MChX1X/w1V26CyUZSy7YumRvRCwqQNhE9+SOi18qRi
-   QchW2EQuQkIa1m5CVqUs/tOculam4M5UY4KmpbrKvhtcsWI/2fysbcuvO
-   qERiYL33O0xittZxU4uPjhigQ5yDLWq9IRFkTNEeYtAMhryuB2OxQFSFh
-   9Ma/AV/e9LzyRndBY5H4+FTIgTkGQEybCs6QG4s5MwKF9/w2E9Nr3Txp3
-   2OC6l0WNLhZmtyBywbDd0LbfLi9N3d+90IQB2jojLr/xGZoRDBGqFw1GJ
-   /Gt9Hf9wLvc6olIucvUeZzbnnihfolR1uOieXLhgKNbApiR/xUEz+TmWX
-   A==;
-X-CSE-ConnectionGUID: yqhPafcFRpWRUvnDxQsdsA==
-X-CSE-MsgGUID: huRCiIViRdmwwjJvMMxgqw==
-X-IronPort-AV: E=McAfee;i="6800,10657,11732"; a="78651862"
-X-IronPort-AV: E=Sophos;i="6.23,126,1770624000"; 
-   d="scan'208";a="78651862"
-Received: from fmviesa005.fm.intel.com ([10.60.135.145])
-  by orvoesa106.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 17 Mar 2026 08:42:38 -0700
-X-CSE-ConnectionGUID: mW/yk7ndQGKNkDUZD61GPw==
-X-CSE-MsgGUID: IT8GJBksQWyz7A4Zk+2gJg==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.23,126,1770624000"; 
-   d="scan'208";a="226989845"
-Received: from ijarvine-mobl1.ger.corp.intel.com (HELO localhost) ([10.245.245.161])
-  by fmviesa005-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 17 Mar 2026 08:42:33 -0700
-From: =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
-Date: Tue, 17 Mar 2026 17:42:30 +0200 (EET)
-To: "David E. Box" <david.e.box@linux.intel.com>
-cc: thomas.hellstrom@linux.intel.com, rodrigo.vivi@intel.com, 
-    irenic.rajneesh@gmail.com, srinivas.pandruvada@linux.intel.com, 
-    intel-xe@lists.freedesktop.org, dri-devel@lists.freedesktop.org, 
-    xi.pardee@linux.intel.com, Hans de Goede <hansg@kernel.org>, 
-    LKML <linux-kernel@vger.kernel.org>, platform-driver-x86@vger.kernel.org
-Subject: Re: [PATCH 10/22] platform/x86/intel/pmt: Move header decode into
- common helper
-In-Reply-To: <20260313015202.3660072-11-david.e.box@linux.intel.com>
-Message-ID: <b429177a-178e-f72d-c591-4f1eaa9d8fea@linux.intel.com>
-References: <20260313015202.3660072-1-david.e.box@linux.intel.com> <20260313015202.3660072-11-david.e.box@linux.intel.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="LZqaFq6Y"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 09C90C4CEF7
+	for <platform-driver-x86@vger.kernel.org>; Tue, 17 Mar 2026 15:52:26 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1773762746;
+	bh=DQCJEcDFzb2Hskg2Z+OEIUslpvySN6AUvc2IGO+f2Aw=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+	b=LZqaFq6YH+cLIpPB2UPkY7zBWv58i+OcMXASJJGhYwGNfoLzs2e4EDJO9eKLTVWp2
+	 sPrr99RTR3Q4lCm9aFIYerT+gWPMBTHxZKOZjaYg/6gSHL5bRSLcny+nBUpZZF94X7
+	 34N9IzWC70w1pY5tTyG/Z3r/pXBjWlE9oJv/TlAKuY/bBpTb2K+eAnEOTKv2IdauWd
+	 rVAsrnbBfA82OMG+GzEfGgseSDw1rgH5K+7VGX32LgaNM5FsU9DxhwWjiylhWopluU
+	 hlFpoUrOtcxYjQ1S9DJmS0VQk6WZ8xCEbyg/Cwejtmu4XvQaj5HC42xgV+NkNXSF6p
+	 yiqccqzCKGlKg==
+Received: by mail-oo1-f48.google.com with SMTP id 006d021491bc7-67ba58c0220so17477eaf.0
+        for <platform-driver-x86@vger.kernel.org>; Tue, 17 Mar 2026 08:52:25 -0700 (PDT)
+X-Forwarded-Encrypted: i=1; AJvYcCVv5By/pK5D+1JGBuXFpr6OZbQfjNk1+wNYIDwX9p7NRz5acquEVCyk3b5NbHW7CY1Xr6fY6t7uXI04As8cateql+25@vger.kernel.org
+X-Gm-Message-State: AOJu0YyrfOWg45QPxUDQbmGcUVU+hiXhcmGVCjJ3d/8GQ/aYSaXSon8s
+	uCwlgquUdLx3KeUhF4JAeTORq6i81Mesz8R8XhFyOlDPV8FxuvJg09anv8FGgYqxKiSVtDH0MJY
+	LzeYOiwMjBUWiMTCfDuxznoXfW/x/OQA=
+X-Received: by 2002:a05:6820:f02e:b0:67b:f13d:afe8 with SMTP id
+ 006d021491bc7-67c0d04d9e0mr86167eaf.22.1773762745166; Tue, 17 Mar 2026
+ 08:52:25 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+References: <12863082.O9o76ZdvQC@rafael.j.wysocki> <1961003.tdWV9SEqCh@rafael.j.wysocki>
+ <6768d6a8-3ab5-f4c8-7e77-229fd8135f53@linux.intel.com>
+In-Reply-To: <6768d6a8-3ab5-f4c8-7e77-229fd8135f53@linux.intel.com>
+From: "Rafael J. Wysocki" <rafael@kernel.org>
+Date: Tue, 17 Mar 2026 16:52:14 +0100
+X-Gmail-Original-Message-ID: <CAJZ5v0g1M_rooYSYvFN4Chq-NovvS=gc5dhdw_BRvd-1S_tVVg@mail.gmail.com>
+X-Gm-Features: AaiRm5256R136KmY0ZvirE7tFy1qg8uIABme8T_63gQebeB8gBG1skfYTElTFlM
+Message-ID: <CAJZ5v0g1M_rooYSYvFN4Chq-NovvS=gc5dhdw_BRvd-1S_tVVg@mail.gmail.com>
+Subject: Re: [PATCH v2 3/5] platform/x86: fujitsu: Register ACPI notify
+ handlers directly
+To: =?UTF-8?Q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
+Cc: "Rafael J. Wysocki" <rafael@kernel.org>, Robert Gerlach <khnz@gmx.de>, Hans de Goede <hansg@kernel.org>, 
+	LKML <linux-kernel@vger.kernel.org>, Linux ACPI <linux-acpi@vger.kernel.org>, 
+	platform-driver-x86@vger.kernel.org, Jonathan Woithe <jwoithe@just42.net>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Thu, 12 Mar 2026, David E. Box wrote:
+On Tue, Mar 17, 2026 at 4:19=E2=80=AFPM Ilpo J=C3=A4rvinen
+<ilpo.jarvinen@linux.intel.com> wrote:
+>
+> On Mon, 9 Mar 2026, Rafael J. Wysocki wrote:
+>
+> > From: "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>
+> >
+> > To facilitate subsequent conversion of the driver to using struct
+> > platform_driver instead of struct acpi_driver, make it install its ACPI
+> > notify handlers directly instead of using struct acpi_driver .notify()
+> > callbacks.
+> >
+> > No intentional functional impact.
+> >
+> > Signed-off-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
+> > ---
+> >
+> > v1 -> v2: Call fujitsu_laptop_platform_remove() in acpi_fujitsu_laptop_=
+add()
+> >    error code path if notify handler registration fails (Ilpo)
+>
+> Hmm, did you forget to commit something as I don't see this addressed
+> below?
 
-> Unify PMT discovery table parsing by moving header decode logic into the
-> class driver. A new helper, pmt_read_header(), now fills in the standard
-> header fields from the discovery table, replacing the per-namespace
-> pmt_header_decode callbacks in telemetry and crashlog.
-> 
-> This centralizes the discovery table bit-field definitions in class.h,
-> removes duplicate decode code from telemetry and crashlog, and prepares the
-> PMT class for additional discovery sources.
-> 
-> Signed-off-by: David E. Box <david.e.box@linux.intel.com>
-> ---
->  drivers/platform/x86/intel/pmt/class.c     | 38 +++++++++++++++-------
->  drivers/platform/x86/intel/pmt/class.h     | 15 +++++++--
->  drivers/platform/x86/intel/pmt/crashlog.c  | 17 ----------
->  drivers/platform/x86/intel/pmt/telemetry.c | 26 ---------------
->  4 files changed, 40 insertions(+), 56 deletions(-)
-> 
-> diff --git a/drivers/platform/x86/intel/pmt/class.c b/drivers/platform/x86/intel/pmt/class.c
-> index 9b315334a69b..a4d6ffed2fed 100644
-> --- a/drivers/platform/x86/intel/pmt/class.c
-> +++ b/drivers/platform/x86/intel/pmt/class.c
-> @@ -8,6 +8,7 @@
->   * Author: "Alexander Duyck" <alexander.h.duyck@linux.intel.com>
->   */
->  
-> +#include <linux/bitfield.h>
->  #include <linux/kernel.h>
->  #include <linux/log2.h>
->  #include <linux/intel_vsec.h>
-> @@ -368,26 +369,41 @@ static int intel_pmt_dev_register(struct intel_pmt_entry *entry,
->  	return ret;
->  }
->  
-> -int intel_pmt_dev_create(struct intel_pmt_entry *entry, struct intel_pmt_namespace *ns,
-> -			 struct intel_vsec_device *intel_vsec_dev, int idx)
-> +static int pmt_read_header(struct intel_vsec_device *ivdev, int idx,
-> +			   struct intel_pmt_entry *entry)
->  {
-> -	struct device *dev = &intel_vsec_dev->auxdev.dev;
-> -	struct resource	*disc_res;
-> -	int ret;
-> +	struct intel_pmt_header *header = &entry->header;
-> +	struct device *dev = &ivdev->auxdev.dev;
-> +	u64 headers[2];
->  
-> -	disc_res = &intel_vsec_dev->resource[idx];
-> -
-> -	entry->disc_table = devm_ioremap_resource(dev, disc_res);
-> +	entry->disc_table = devm_ioremap_resource(dev, &ivdev->resource[idx]);
->  	if (IS_ERR(entry->disc_table))
->  		return PTR_ERR(entry->disc_table);
->  
-> +	memcpy_fromio(headers, entry->disc_table, 2 * sizeof(u64));
-> +
-> +	header->access_type = FIELD_GET(PMT_ACCESS_TYPE, headers[0]);
-> +	header->telem_type = FIELD_GET(PMT_TELEM_TYPE, headers[0]);
-> +	/* Size is measured in DWORDS, but accessor returns bytes */
-> +	header->size = PMT_GET_SIZE(FIELD_GET(PMT_SIZE, headers[0]));
+No, I didn't.  It's there, you had a comment on it below even.
 
-IMO, the FIELD_GET() could be done within the macro as the macro itself 
-is PMT SIZE specific.
+> > ---
+> >  drivers/platform/x86/fujitsu-laptop.c | 32 ++++++++++++++++++++++-----
+> >  1 file changed, 27 insertions(+), 5 deletions(-)
+> >
+> > diff --git a/drivers/platform/x86/fujitsu-laptop.c b/drivers/platform/x=
+86/fujitsu-laptop.c
+> > index 1adce90ae3e6..7816a867a60c 100644
+> > --- a/drivers/platform/x86/fujitsu-laptop.c
+> > +++ b/drivers/platform/x86/fujitsu-laptop.c
+> > @@ -502,8 +502,9 @@ static int fujitsu_backlight_register(struct acpi_d=
+evice *device)
+> >
+> >  /* Brightness notify */
+> >
+> > -static void acpi_fujitsu_bl_notify(struct acpi_device *device, u32 eve=
+nt)
+> > +static void acpi_fujitsu_bl_notify(acpi_handle handle, u32 event, void=
+ *data)
+> >  {
+> > +     struct acpi_device *device =3D data;
+> >       struct fujitsu_bl *priv =3D acpi_driver_data(device);
+> >       int oldb, newb;
+> >
+> > @@ -558,7 +559,18 @@ static int acpi_fujitsu_bl_add(struct acpi_device =
+*device)
+> >       if (ret)
+> >               return ret;
+> >
+> > -     return fujitsu_backlight_register(device);
+> > +     ret =3D fujitsu_backlight_register(device);
+> > +     if (ret)
+> > +             return ret;
+> > +
+> > +     return acpi_dev_install_notify_handler(device, ACPI_DEVICE_NOTIFY=
+,
+> > +                                            acpi_fujitsu_bl_notify, de=
+vice);
+> > +}
+> > +
+> > +static void acpi_fujitsu_bl_remove(struct acpi_device *device)
+> > +{
+> > +     acpi_dev_remove_notify_handler(device, ACPI_DEVICE_NOTIFY,
+> > +                                    acpi_fujitsu_bl_notify);
+> >  }
+> >
+> >  /* ACPI device for hotkey handling */
+> > @@ -941,8 +953,9 @@ static void acpi_fujitsu_laptop_release(struct acpi=
+_device *device)
+> >       }
+> >  }
+> >
+> > -static void acpi_fujitsu_laptop_notify(struct acpi_device *device, u32=
+ event)
+> > +static void acpi_fujitsu_laptop_notify(acpi_handle handle, u32 event, =
+void *data)
+> >  {
+> > +     struct acpi_device *device =3D data;
+> >       struct fujitsu_laptop *priv =3D acpi_driver_data(device);
+> >       unsigned long flags;
+> >       int scancode, i =3D 0;
+> > @@ -1056,6 +1069,13 @@ static int acpi_fujitsu_laptop_add(struct acpi_d=
+evice *device)
+> >       if (ret)
+> >               goto err_free_fifo;
+> >
+> > +     ret =3D acpi_dev_install_notify_handler(device, ACPI_DEVICE_NOTIF=
+Y,
+> > +                                           acpi_fujitsu_laptop_notify,=
+ device);
+> > +     if (ret) {
+> > +             fujitsu_laptop_platform_remove(device);
+>
+> Please add this into the rollback path instead and add another label
+> there.
 
-Perhaps name it such that the name indicates unit as you currently end up 
-using comments to explain that.
-
-> +	header->guid = FIELD_GET(PMT_GUID32, headers[0]);
-> +	header->base_offset = FIELD_GET(PMT_BASE_OFFSET, headers[1]);
-> +
-> +	return 0;
-> +}
-> +
-> +int intel_pmt_dev_create(struct intel_pmt_entry *entry, struct intel_pmt_namespace *ns,
-> +			 struct intel_vsec_device *intel_vsec_dev, int idx)
-> +{
-> +	int ret;
-> +
->  	if (ns->pmt_pre_decode) {
->  		ret = ns->pmt_pre_decode(intel_vsec_dev, entry);
->  		if (ret)
->  			return ret;
->  	}
->  
-> -	ret = ns->pmt_header_decode(entry, dev);
-> +	ret = pmt_read_header(intel_vsec_dev, idx, entry);
->  	if (ret)
->  		return ret;
->  
-> @@ -397,11 +413,11 @@ int intel_pmt_dev_create(struct intel_pmt_entry *entry, struct intel_pmt_namespa
->  			return ret;
->  	}
->  
-> -	ret = intel_pmt_populate_entry(entry, intel_vsec_dev, disc_res);
-> +	ret = intel_pmt_populate_entry(entry, intel_vsec_dev, &intel_vsec_dev->resource[idx]);
->  	if (ret)
->  		return ret;
->  
-> -	return intel_pmt_dev_register(entry, ns, dev);
-> +	return intel_pmt_dev_register(entry, ns, &intel_vsec_dev->auxdev.dev);
->  }
->  EXPORT_SYMBOL_NS_GPL(intel_pmt_dev_create, "INTEL_PMT");
->  
-> diff --git a/drivers/platform/x86/intel/pmt/class.h b/drivers/platform/x86/intel/pmt/class.h
-> index 8a0db0ef58c1..06f90c7ce6b3 100644
-> --- a/drivers/platform/x86/intel/pmt/class.h
-> +++ b/drivers/platform/x86/intel/pmt/class.h
-> @@ -11,6 +11,19 @@
->  
->  #include "telemetry.h"
->  
-> +/* PMT Discovery Table DWORD 1 */
-> +#define PMT_ACCESS_TYPE		GENMASK_ULL(3, 0)
-> +#define PMT_TELEM_TYPE		GENMASK_ULL(7, 4)
-> +#define PMT_SIZE		GENMASK_ULL(27, 12)
-> +#define PMT_GUID32		GENMASK_ULL(63, 32)
-> +
-> +/* PMT Discovery Table DWORD 2 */
-> +#define PMT_BASE_OFFSET		GENMASK_ULL(31, 0)
-> +#define PMT_TELE_ID		GENMASK_ULL(63, 32)
-> +
-> +/* Get size bytes from DWORDs */
-> +#define PMT_GET_SIZE(v)		((v) << 2)
-
-Use (v) * sizeof(u32) or something along those lines.
-
-> +
->  /* PMT access types */
->  #define ACCESS_BARID		2
->  #define ACCESS_LOCAL		3
-> @@ -61,8 +74,6 @@ struct intel_pmt_entry {
->  struct intel_pmt_namespace {
->  	const char *name;
->  	struct xarray *xa;
-> -	int (*pmt_header_decode)(struct intel_pmt_entry *entry,
-> -				 struct device *dev);
->  	int (*pmt_pre_decode)(struct intel_vsec_device *ivdev,
->  			      struct intel_pmt_entry *entry);
->  	int (*pmt_post_decode)(struct intel_vsec_device *ivdev,
-> diff --git a/drivers/platform/x86/intel/pmt/crashlog.c b/drivers/platform/x86/intel/pmt/crashlog.c
-> index f936daf99e4d..67795e2cb1ed 100644
-> --- a/drivers/platform/x86/intel/pmt/crashlog.c
-> +++ b/drivers/platform/x86/intel/pmt/crashlog.c
-> @@ -516,28 +516,11 @@ static int pmt_crashlog_pre_decode(struct intel_vsec_device *ivdev,
->  	return 0;
->  }
->  
-> -static int pmt_crashlog_header_decode(struct intel_pmt_entry *entry,
-> -				      struct device *dev)
-> -{
-> -	void __iomem *disc_table = entry->disc_table;
-> -	struct intel_pmt_header *header = &entry->header;
-> -
-> -	header->access_type = GET_ACCESS(readl(disc_table));
-> -	header->guid = readl(disc_table + GUID_OFFSET);
-> -	header->base_offset = readl(disc_table + BASE_OFFSET);
-> -
-> -	/* Size is measured in DWORDS, but accessor returns bytes */
-> -	header->size = GET_SIZE(readl(disc_table + SIZE_OFFSET));
-
-The macros become unused after this but were not removed?
-
-Overall, this change is nice consolidation. :-)
-
--- 
- i.
-
-> -
-> -	return 0;
-> -}
-> -
->  static DEFINE_XARRAY_ALLOC(crashlog_array);
->  static struct intel_pmt_namespace pmt_crashlog_ns = {
->  	.name = "crashlog",
->  	.xa = &crashlog_array,
->  	.pmt_pre_decode = pmt_crashlog_pre_decode,
-> -	.pmt_header_decode = pmt_crashlog_header_decode,
->  };
->  
->  /*
-> diff --git a/drivers/platform/x86/intel/pmt/telemetry.c b/drivers/platform/x86/intel/pmt/telemetry.c
-> index d22f633638be..80773e3c3efa 100644
-> --- a/drivers/platform/x86/intel/pmt/telemetry.c
-> +++ b/drivers/platform/x86/intel/pmt/telemetry.c
-> @@ -27,14 +27,6 @@
->  
->  #include "class.h"
->  
-> -#define TELEM_SIZE_OFFSET	0x0
-> -#define TELEM_GUID_OFFSET	0x4
-> -#define TELEM_BASE_OFFSET	0x8
-> -#define TELEM_ACCESS(v)		((v) & GENMASK(3, 0))
-> -#define TELEM_TYPE(v)		(((v) & GENMASK(7, 4)) >> 4)
-> -/* size is in bytes */
-> -#define TELEM_SIZE(v)		(((v) & GENMASK(27, 12)) >> 10)
-> -
->  /* Used by client hardware to identify a fixed telemetry entry*/
->  #define TELEM_CLIENT_FIXED_BLOCK_GUID	0x10000000
->  
-> @@ -69,23 +61,6 @@ static bool pmt_telem_region_overlaps(struct device *dev, u32 guid, u32 type)
->  	return false;
->  }
->  
-> -static int pmt_telem_header_decode(struct intel_pmt_entry *entry,
-> -				   struct device *dev)
-> -{
-> -	void __iomem *disc_table = entry->disc_table;
-> -	struct intel_pmt_header *header = &entry->header;
-> -
-> -	header->access_type = TELEM_ACCESS(readl(disc_table));
-> -	header->guid = readl(disc_table + TELEM_GUID_OFFSET);
-> -	header->base_offset = readl(disc_table + TELEM_BASE_OFFSET);
-> -
-> -	/* Size is measured in DWORDS, but accessor returns bytes */
-> -	header->size = TELEM_SIZE(readl(disc_table));
-> -	header->telem_type = TELEM_TYPE(readl(entry->disc_table));
-> -
-> -	return 0;
-> -}
-> -
->  static int pmt_telem_post_decode(struct intel_vsec_device *ivdev,
->  				 struct intel_pmt_entry *entry)
->  {
-> @@ -135,7 +110,6 @@ static DEFINE_XARRAY_ALLOC(telem_array);
->  static struct intel_pmt_namespace pmt_telem_ns = {
->  	.name = "telem",
->  	.xa = &telem_array,
-> -	.pmt_header_decode = pmt_telem_header_decode,
->  	.pmt_post_decode = pmt_telem_post_decode,
->  	.pmt_add_endpoint = pmt_telem_add_endpoint,
->  };
-> 
-
+OK
