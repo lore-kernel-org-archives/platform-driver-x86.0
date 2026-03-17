@@ -1,175 +1,166 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.15])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.11])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C402A1E9B1A;
-	Tue, 17 Mar 2026 17:34:14 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.15
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5389A2550CD;
+	Tue, 17 Mar 2026 17:35:42 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.11
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1773768856; cv=none; b=aI+k7ZBc/1yfOArjdKj/954GAMP/GDHOlTf+MVaPDqcBNXgjexPftoUBHVfs8m+fOhpQ2SbMNz1zHJkQs/BmoZnOH/6dHqV4AqXJxrLRljuQDSqq9ijrti49uF/R9x1An69IvCWNbLu+kMTmkZrcYpsAKBDpr7Ulfi6HenCWfWM=
+	t=1773768944; cv=none; b=GalSfvp1TNdOQ5QZhTqgEfIp4qBdizPzYi5tOvriydKl089Zm8vXuuQjWkq+KbNGUqGG5bWYfJ/WWc9Bm+KKduL22k1d7WXnUnbxKlaRq/feLkDvku2KFeJ1dAURtKMpQohieMPxADhqaZbdDduUXU+PewXGxB8/dHa9MslSJFA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1773768856; c=relaxed/simple;
-	bh=7ZccMc3Apke0eeN/KclrZzFU2rMsGhi6O8ACatsDWRc=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=CPGnNViReBxXckOwkDmYwTdab1kEaBxdO1+4jqZBJaxAxm7mHpKNb/DDMVJSAQX/0KOsqokdKaCWhwqv0wNkUMT8NSdqFdwH83tUYIECK6Mf8botxee7uCpxog/Uu0I77IHXLhGLfh3bBu/LgfPFjRZ1uQ4eybt3mwav+uc+7oc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=Zb4VmKAf; arc=none smtp.client-ip=198.175.65.15
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	s=arc-20240116; t=1773768944; c=relaxed/simple;
+	bh=GrAifgFAjjiRiECOKbD98aquxGJudPKYTMqEW+F1G+I=;
+	h=From:Date:To:cc:Subject:In-Reply-To:Message-ID:References:
+	 MIME-Version:Content-Type; b=DxTAxSDhCu/Co+xqX5tUZAC02/j3TWgG565LJBYJBAp1vrD5fPrWd1XrVrp+y4VqsHpfiRrwlQzuphpx41+O2n5jCuXkab1TXJgZKPN9dvYii5gGho7NbODzXgt82WgQEjrG3TJRllYMed23c/drgxZRWkGrwMRlq8MbTj7O+vg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=pass smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=DaCqU3w8; arc=none smtp.client-ip=192.198.163.11
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="Zb4VmKAf"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="DaCqU3w8"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1773768855; x=1805304855;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=7ZccMc3Apke0eeN/KclrZzFU2rMsGhi6O8ACatsDWRc=;
-  b=Zb4VmKAfRSFozRN4VDQJxKSbrScDJiB+BButCsaMydE6O/SFaOXwF7dF
-   r4cNOvXCEHCZi+XQloUYOyO9xogV6+GhJiDhFzoLOzmSMWlKzYKrH22Nq
-   3SDpaGZSWUoNQkcbRlf5WfpQB5J5v16/JuiWiqGWkVVwFSghCj1x8gMiB
-   ZixbWwSZB6cVXB3lupqR662ySsaknNcY3SMfvL63ESQ90ZKD6LKLpojdv
-   lbart0IaC2ly3qyg5c158abf/TCHl+CEtryoa/J+a7+nxuDI8DdNGTse+
-   ZG8X3RthMm37t+MUuXX5SNR8eXsmSlPwWVDXNRlHegpcXsLzKjKjgPYFs
-   Q==;
-X-CSE-ConnectionGUID: lN6dYW7DR4C62NWZo8Pk5Q==
-X-CSE-MsgGUID: 77V98+IbRI+LCIrd345LLg==
-X-IronPort-AV: E=McAfee;i="6800,10657,11732"; a="78418971"
+  t=1773768943; x=1805304943;
+  h=from:date:to:cc:subject:in-reply-to:message-id:
+   references:mime-version;
+  bh=GrAifgFAjjiRiECOKbD98aquxGJudPKYTMqEW+F1G+I=;
+  b=DaCqU3w896zOlBTungATXyZd9zsciObK42HLXHeBmioiF+YQZ/CDyvtE
+   RGDYfqiWedKLyHIYHl/+tUJTFqJfmvwCgWZkkLeQZcNeP4ss3z+g4EGUB
+   peghQto8k8dcjGP0fe2zsArH5hrvNFdGpcrgeij02Mt3omhMTcLY6x10i
+   9khHbkw9FMjwDmPEZR5r5r/L7o06cnTD/ZGWGuO1Q3jEZGwbabofkOEbF
+   k5mueYCcp7zY/mseQXONrdSmm4m92vA9p0bCAznlBrpuKeez6evLn/Mtt
+   eXrnukVsYlAZzGl/V6P61/j/kGFgTptm04Lo/nj2130t8lunF97imWctp
+   A==;
+X-CSE-ConnectionGUID: AiapxmTSSGSLG7bBmLdhMA==
+X-CSE-MsgGUID: tTiO9akrSBevPk2Ujd3rrw==
+X-IronPort-AV: E=McAfee;i="6800,10657,11732"; a="85438773"
 X-IronPort-AV: E=Sophos;i="6.23,126,1770624000"; 
-   d="scan'208";a="78418971"
-Received: from orviesa004.jf.intel.com ([10.64.159.144])
-  by orvoesa107.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 17 Mar 2026 10:34:14 -0700
-X-CSE-ConnectionGUID: 5z8xt1pQS9qYu7K69/8O9g==
-X-CSE-MsgGUID: n5pqkOHfQ92UoeJPAVTtjQ==
+   d="scan'208";a="85438773"
+Received: from orviesa002.jf.intel.com ([10.64.159.142])
+  by fmvoesa105.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 17 Mar 2026 10:35:42 -0700
+X-CSE-ConnectionGUID: efvndCEMRtqMfMiiVzvnkQ==
+X-CSE-MsgGUID: 7BoC8YSMQFqmzYqAhwicIg==
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="6.23,126,1770624000"; 
-   d="scan'208";a="226805129"
-Received: from lkp-server01.sh.intel.com (HELO 63737dd503cb) ([10.239.97.150])
-  by orviesa004.jf.intel.com with ESMTP; 17 Mar 2026 10:34:12 -0700
-Received: from kbuild by 63737dd503cb with local (Exim 4.98.2)
-	(envelope-from <lkp@intel.com>)
-	id 1w2YIz-000000001Yf-2b6m;
-	Tue, 17 Mar 2026 17:34:09 +0000
-Date: Wed, 18 Mar 2026 01:33:49 +0800
-From: kernel test robot <lkp@intel.com>
-To: Jonathan Grant <jg@jguk.org>,
-	Mario Limonciello <mario.limonciello@amd.com>,
-	platform-driver-x86@vger.kernel.org, luke@ljones.dev
-Cc: llvm@lists.linux.dev, oe-kbuild-all@lists.linux.dev,
-	linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v2] platform/x86: asus-wmi: log thermal notification event
-Message-ID: <202603180137.ePqnMidQ-lkp@intel.com>
-References: <94dbe1e1-d706-47aa-abf5-f5d76aacf017@jguk.org>
+   d="scan'208";a="252815425"
+Received: from ijarvine-mobl1.ger.corp.intel.com (HELO localhost) ([10.245.245.161])
+  by orviesa002-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 17 Mar 2026 10:35:38 -0700
+From: =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
+Date: Tue, 17 Mar 2026 19:35:35 +0200 (EET)
+To: "Rafael J. Wysocki" <rafael@kernel.org>
+cc: LKML <linux-kernel@vger.kernel.org>, 
+    Linux ACPI <linux-acpi@vger.kernel.org>, Hans de Goede <hansg@kernel.org>, 
+    platform-driver-x86@vger.kernel.org, 
+    Kenneth Chan <kenneth.t.chan@gmail.com>
+Subject: Re: [PATCH v1 2/3] platform/x86: panasonic-laptop: Register ACPI
+ notify handler directly
+In-Reply-To: <4508640.ejJDZkT8p0@rafael.j.wysocki>
+Message-ID: <eb4ccb62-58fc-0d1b-7f74-2b1532448056@linux.intel.com>
+References: <3616223.QJadu78ljV@rafael.j.wysocki> <4508640.ejJDZkT8p0@rafael.j.wysocki>
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <94dbe1e1-d706-47aa-abf5-f5d76aacf017@jguk.org>
+Content-Type: text/plain; charset=US-ASCII
 
-Hi Jonathan,
+On Thu, 12 Mar 2026, Rafael J. Wysocki wrote:
 
-kernel test robot noticed the following build warnings:
+> From: "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>
+> 
+> To facilitate subsequent conversion of the driver to a platform one,
+> make it install an ACPI notify handler directly instead of using
+> a .notify() callback in struct acpi_driver.
+> 
+> No intentional functional impact.
+> 
+> Signed-off-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
+> ---
+>  drivers/platform/x86/panasonic-laptop.c | 20 +++++++++++++++-----
+>  1 file changed, 15 insertions(+), 5 deletions(-)
+> 
+> diff --git a/drivers/platform/x86/panasonic-laptop.c b/drivers/platform/x86/panasonic-laptop.c
+> index 64195ff0f40e..4bd83b987761 100644
+> --- a/drivers/platform/x86/panasonic-laptop.c
+> +++ b/drivers/platform/x86/panasonic-laptop.c
+> @@ -185,7 +185,7 @@ enum SINF_BITS { SINF_NUM_BATTERIES = 0,
+>  
+>  static int acpi_pcc_hotkey_add(struct acpi_device *device);
+>  static void acpi_pcc_hotkey_remove(struct acpi_device *device);
+> -static void acpi_pcc_hotkey_notify(struct acpi_device *device, u32 event);
+> +static void acpi_pcc_hotkey_notify(acpi_handle handle, u32 event, void *data);
+>  
+>  static const struct acpi_device_id pcc_device_ids[] = {
+>  	{ "MAT0012", 0},
+> @@ -208,7 +208,6 @@ static struct acpi_driver acpi_pcc_driver = {
+>  	.ops =		{
+>  				.add =		acpi_pcc_hotkey_add,
+>  				.remove =	acpi_pcc_hotkey_remove,
+> -				.notify =	acpi_pcc_hotkey_notify,
+>  			},
+>  	.drv.pm =	&acpi_pcc_hotkey_pm,
+>  };
+> @@ -869,9 +868,9 @@ static void acpi_pcc_generate_keyinput(struct pcc_acpi *pcc)
+>  		pr_err("Unknown hotkey event: 0x%04llx\n", result);
+>  }
+>  
+> -static void acpi_pcc_hotkey_notify(struct acpi_device *device, u32 event)
+> +static void acpi_pcc_hotkey_notify(acpi_handle handle, u32 event, void *data)
+>  {
+> -	struct pcc_acpi *pcc = acpi_driver_data(device);
+> +	struct pcc_acpi *pcc = data;
+>  
+>  	switch (event) {
+>  	case HKEY_NOTIFY:
+> @@ -1073,13 +1072,18 @@ static int acpi_pcc_hotkey_add(struct acpi_device *device)
+>  	if (result)
+>  		goto out_backlight;
+>  
+> +	result = acpi_dev_install_notify_handler(device, ACPI_DEVICE_NOTIFY,
+> +						 acpi_pcc_hotkey_notify, pcc);
+> +	if (result)
+> +		goto out_sysfs;
+> +
+>  	/* optical drive initialization */
+>  	if (ACPI_SUCCESS(check_optd_present())) {
+>  		pcc->platform = platform_device_register_simple("panasonic",
+>  			PLATFORM_DEVID_NONE, NULL, 0);
+>  		if (IS_ERR(pcc->platform)) {
+>  			result = PTR_ERR(pcc->platform);
+> -			goto out_sysfs;
+> +			goto out_notify_handler;
+>  		}
+>  		result = device_create_file(&pcc->platform->dev,
+>  			&dev_attr_cdpower);
+> @@ -1095,6 +1099,9 @@ static int acpi_pcc_hotkey_add(struct acpi_device *device)
+>  
+>  out_platform:
+>  	platform_device_unregister(pcc->platform);
+> +out_notify_handler:
+> +	acpi_dev_remove_notify_handler(device, ACPI_DEVICE_NOTIFY,
+> +				       acpi_pcc_hotkey_notify);
+>  out_sysfs:
+>  	sysfs_remove_group(&device->dev.kobj, &pcc_attr_group);
+>  out_backlight:
+> @@ -1123,6 +1130,9 @@ static void acpi_pcc_hotkey_remove(struct acpi_device *device)
+>  
+>  	sysfs_remove_group(&device->dev.kobj, &pcc_attr_group);
+>  
+> +	acpi_dev_remove_notify_handler(device, ACPI_DEVICE_NOTIFY,
+> +				       acpi_pcc_hotkey_notify);
+> +
 
-[auto build test WARNING on amd-pstate/linux-next]
-[also build test WARNING on amd-pstate/bleeding-edge linus/master v7.0-rc4 next-20260316]
-[If your patch is applied to the wrong git tree, kindly drop us a note.
-And when submitting patch, we suggest to use '--base' as documented in
-https://git-scm.com/docs/git-format-patch#_base_tree_information]
+This diverges from the setup order. Is that intentional? (I can see the 
+current order is not exactly reverse of the setup order but it still 
+looks it's possible to place the added remove call better than here.)
 
-url:    https://github.com/intel-lab-lkp/linux/commits/Jonathan-Grant/platform-x86-asus-wmi-log-thermal-notification-event/20260316-204950
-base:   https://git.kernel.org/pub/scm/linux/kernel/git/superm1/linux.git linux-next
-patch link:    https://lore.kernel.org/r/94dbe1e1-d706-47aa-abf5-f5d76aacf017%40jguk.org
-patch subject: [PATCH v2] platform/x86: asus-wmi: log thermal notification event
-config: i386-randconfig-014-20260317 (https://download.01.org/0day-ci/archive/20260318/202603180137.ePqnMidQ-lkp@intel.com/config)
-compiler: clang version 20.1.8 (https://github.com/llvm/llvm-project 87f0227cb60147a26a1eeb4fb06e3b505e9c7261)
-reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20260318/202603180137.ePqnMidQ-lkp@intel.com/reproduce)
+This driver also likely has pre-existing rollback problems related to 
+pcc_register_optd_notifier/pcc_unregister_optd_notifier().
 
-If you fix the issue in a separate patch/commit (i.e. not just a new version of
-the same patch/commit), kindly add following tags
-| Reported-by: kernel test robot <lkp@intel.com>
-| Closes: https://lore.kernel.org/oe-kbuild-all/202603180137.ePqnMidQ-lkp@intel.com/
-
-All warnings (new ones prefixed by >>):
-
->> drivers/platform/x86/asus-wmi.c:4603:3: warning: add explicit braces to avoid dangling else [-Wdangling-else]
-    4603 |                 else
-         |                 ^
-   1 warning generated.
-
-
-vim +4603 drivers/platform/x86/asus-wmi.c
-
-  4538	
-  4539	static void asus_wmi_handle_event_code(int code, struct asus_wmi *asus)
-  4540	{
-  4541		enum led_brightness led_value;
-  4542		unsigned int key_value = 1;
-  4543		bool autorelease = 1;
-  4544	
-  4545		if (asus->driver->key_filter) {
-  4546			asus->driver->key_filter(asus->driver, &code, &key_value,
-  4547						 &autorelease);
-  4548			if (code == ASUS_WMI_KEY_IGNORE)
-  4549				return;
-  4550		}
-  4551	
-  4552		if (acpi_video_get_backlight_type() == acpi_backlight_vendor &&
-  4553		    code >= NOTIFY_BRNUP_MIN && code <= NOTIFY_BRNDOWN_MAX) {
-  4554			asus_wmi_backlight_notify(asus, code);
-  4555			return;
-  4556		}
-  4557	
-  4558		scoped_guard(spinlock_irqsave, &asus_ref.lock)
-  4559			led_value = asus->kbd_led_wk;
-  4560	
-  4561		if (code == NOTIFY_KBD_BRTUP) {
-  4562			kbd_led_set_by_kbd(asus, led_value + 1);
-  4563			return;
-  4564		}
-  4565		if (code == NOTIFY_KBD_BRTDWN) {
-  4566			kbd_led_set_by_kbd(asus, led_value - 1);
-  4567			return;
-  4568		}
-  4569		if (code == NOTIFY_KBD_BRTTOGGLE) {
-  4570			if (led_value >= ASUS_EV_MAX_BRIGHTNESS)
-  4571				kbd_led_set_by_kbd(asus, 0);
-  4572			else
-  4573				kbd_led_set_by_kbd(asus, led_value + 1);
-  4574			return;
-  4575		}
-  4576	
-  4577		if (code == NOTIFY_FNLOCK_TOGGLE) {
-  4578			asus->fnlock_locked = !asus->fnlock_locked;
-  4579			asus_wmi_fnlock_update(asus);
-  4580			return;
-  4581		}
-  4582	
-  4583		if (code == asus->tablet_switch_event_code) {
-  4584			asus_wmi_tablet_mode_get_state(asus);
-  4585			return;
-  4586		}
-  4587	
-  4588		if (code == NOTIFY_KBD_FBM || code == NOTIFY_KBD_TTP) {
-  4589			if (asus->fan_boost_mode_available)
-  4590				fan_boost_mode_switch_next(asus);
-  4591			if (asus->throttle_thermal_policy_dev)
-  4592				platform_profile_cycle();
-  4593			return;
-  4594		}
-  4595	
-  4596		if (is_display_toggle(code) && asus->driver->quirks->no_display_toggle)
-  4597			return;
-  4598	
-  4599		if (!sparse_keymap_report_event(asus->inputdev, code,
-  4600						key_value, autorelease))
-  4601			if (code == NOTIFY_THERMAL)
-  4602				pr_info("Thermal state change\n");
-> 4603			else
-  4604				pr_info("Unknown key code 0x%x\n", code);
-  4605	}
-  4606	
+>  	backlight_device_unregister(pcc->backlight);
+>  
+>  	input_unregister_device(pcc->input_dev);
+> 
 
 -- 
-0-DAY CI Kernel Test Service
-https://github.com/intel/lkp-tests/wiki
+ i.
+
