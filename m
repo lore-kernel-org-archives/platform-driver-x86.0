@@ -1,41 +1,67 @@
-Received: from mout.gmx.net (mout.gmx.net [212.227.17.20])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-dy1-f169.google.com (mail-dy1-f169.google.com [74.125.82.169])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D5AF237C0FD;
-	Tue, 17 Mar 2026 20:11:48 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=212.227.17.20
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7A0443845C7
+	for <platform-driver-x86@vger.kernel.org>; Tue, 17 Mar 2026 20:22:42 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=74.125.82.169
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1773778310; cv=none; b=NoAgX/rvzXTVKMpsa5d//I5WRcSPL3u0Gc+KbDk9KHJcDSWqetlaBYODxbefzfYgaB6BnkHJzbqi6Nq9/5wz2nJNXbivkoERCBt+nhqB5x93aQO2JBTSTgev4BlM0n5jav0bX12J/QA3l3F/LeobWE1G8tdVpqMhUobNr3FCRUw=
+	t=1773778963; cv=none; b=uTBze0U2lA11EHzTwLkoRoIYK9o3mTvBncn3OfTSmoGKQb+fC9iLqjcbamSri3Ily+/2h7wt17qe8DDATvCSejrlZh8gaQmr+zPisKJsjxf4j8SZA2auGujN/EZuKc2KPUD2K8BEp5G/cz+76RqMQ22CIXQjwuR9PfZRY7S6Gbg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1773778310; c=relaxed/simple;
-	bh=gsb+15dC+Fj6OcnuL2uhktCQQrcMGYUlCFtqXAckdVs=;
+	s=arc-20240116; t=1773778963; c=relaxed/simple;
+	bh=bqu2oeXykvVXrtl6W8cxQEReCOO2iASSdq4+Ii79tBY=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=ZHpl92wc1nR/RCjgj0WPMForjiTnKgGvnAUpsBR0zgS7cuz+BjzG8teilvNwb4PMhdePJvaCMqVIIkrCE5DEUDGN9t8/+AfbptxhbaEun4vpp0R2Ni2HjdD4FgPQ6DiV5gsO7QV4l+WIWCNAiNZbnFtoCJ7BP2espJn9+eaxjmg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gmx.de; spf=pass smtp.mailfrom=gmx.de; dkim=pass (2048-bit key) header.d=gmx.de header.i=w_armin@gmx.de header.b=mdQxax9Z; arc=none smtp.client-ip=212.227.17.20
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gmx.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmx.de
+	 In-Reply-To:Content-Type; b=otcR21y7F3+rXwNWKlkE4UkrMtBX41MGKxCOVJEnaOH1igA3P5tZ+ZiXHhSX7X3b8um5yCJZkl0nS8Sj1r7L3FMRycm9wjpFls3dDMDRku5gKVq4KfT5i1XtAQcdIVHDgXRV8mZdt9bsf+AKEjMC1D8bd3EoEgXnhR+MBSfduQw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=roeck-us.net; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=EKYmF/xN; arc=none smtp.client-ip=74.125.82.169
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=roeck-us.net
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmx.de header.i=w_armin@gmx.de header.b="mdQxax9Z"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=gmx.de;
-	s=s31663417; t=1773778275; x=1774383075; i=w_armin@gmx.de;
-	bh=gsb+15dC+Fj6OcnuL2uhktCQQrcMGYUlCFtqXAckdVs=;
-	h=X-UI-Sender-Class:Message-ID:Date:MIME-Version:Subject:To:Cc:
-	 References:From:In-Reply-To:Content-Type:
-	 Content-Transfer-Encoding:cc:content-transfer-encoding:
-	 content-type:date:from:message-id:mime-version:reply-to:subject:
-	 to;
-	b=mdQxax9Z/ELaGnWvucMhtrzx/k+0yAjkfrVAIy/S/h2/jGNNyH4IITWST5EPWZqA
-	 TDlMqkSjLcDglrZoxQhjMA23VgCmahsF5aSPOfglBjlqv+l646Oo3ZIBr45Fvlfg+
-	 x//h5T27DOQNFjXtaf/3eA5/3KUSkA4iDpZatDlI4edygDPo2jUWQKlyOhxWt3eh0
-	 ho7Pw5/C4pex5aTeOltv/Ejqlyn8GIMwtVhzt8L0/760Gwne5fE6UNnKb7qfJqumk
-	 lehjfcNsTErz6/g0O3xVjy3K87GSO/MeX21gCBHHGnLFzglvIVA62uYaSFPAduFz3
-	 l/7DX5a6TmY842wwxA==
-X-UI-Sender-Class: 724b4f7f-cbec-4199-ad4e-598c01a50d3a
-Received: from client.hidden.invalid by mail.gmx.net (mrgmx104
- [212.227.17.168]) with ESMTPSA (Nemesis) id 1MVNB1-1wCnTQ0eBT-00O7HW; Tue, 17
- Mar 2026 21:11:15 +0100
-Message-ID: <52dabfaa-cb3c-4c2f-92a0-efaa175bf4be@gmx.de>
-Date: Tue, 17 Mar 2026 21:11:11 +0100
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="EKYmF/xN"
+Received: by mail-dy1-f169.google.com with SMTP id 5a478bee46e88-2c0bcd8f194so4350797eec.1
+        for <platform-driver-x86@vger.kernel.org>; Tue, 17 Mar 2026 13:22:42 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1773778962; x=1774383762; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:autocrypt:from
+         :content-language:references:cc:to:subject:user-agent:mime-version
+         :date:message-id:sender:from:to:cc:subject:date:message-id:reply-to;
+        bh=0gykb+9p2pXiQe/gkOwplwhJHBFzZsDCqVbYdSMZ/7w=;
+        b=EKYmF/xNxkE1HCK3+uzI0Q5xIqmw5NlChxXAt7vNwBxGHhISU5eoCygReakeriGDcE
+         B9HdIjOTfndyrtO2CEeUUFwgAeGgiJkEjJ2YHwc9MGTegyiR28SyN8adbIZtz4STt+2a
+         B20zkC+xjoUDOHfdGn6iU6KfQspOEvdFfVZjEr1UsabQswnwMNpAZV5yvPCyhdwnhjFC
+         AqL2WiVVevGzJ9MOGhR9vR6zcSrfznUDyq4DhhKcX1GeIIw3vnB92Wl4x482u2FQnD0j
+         9l4YGqeRgXGJzAbovGg8HmCfRVwVLTXf4yqvaC0oeqT3eRW1dN4K41l9e2diDOT+858D
+         /W2Q==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20251104; t=1773778962; x=1774383762;
+        h=content-transfer-encoding:in-reply-to:autocrypt:from
+         :content-language:references:cc:to:subject:user-agent:mime-version
+         :date:message-id:sender:x-gm-gg:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=0gykb+9p2pXiQe/gkOwplwhJHBFzZsDCqVbYdSMZ/7w=;
+        b=ImYvwZS0Wc0XG44ZH1X9UPZ3cBMN4tKM+e9UTksN5E4nPwgmhfaKDgaV44zZtsBxuG
+         GC4KYMlDzIJ4/wkU4DcPPujEL+K5YFhBM7tgN0iUEPapafKlI6F2R6cWbs1kN6s9sRPH
+         XKNefdEZ3V/a0MPTCUee+tv2vl9PkmhoWOe3TmOO77EX6RdP9zy3vqYjvyE1xoCtKPlV
+         FojN7erzn1coEEqfJiRmBqzxPVzVyRsGNhOM+5RJyFw+Srfl4nQGXuo7VwTgu+fhNnVa
+         xJ7uBSZSMg3I14l4yaD11cO9qhzsTa3uiDAVr1me/zDEWiknpdF6skcEu3d/acnwVv8a
+         9zNg==
+X-Forwarded-Encrypted: i=1; AJvYcCV5ievuZ/PJ7ZGEK5fFr4EcvzKlikz+uFE4LuLIeuTQ5ax9d7mNYY/UtWR31gzXMBXB6jOA3/0mPknyp6jCFSwrQmON@vger.kernel.org
+X-Gm-Message-State: AOJu0Yz0fNR1BE7+pF70//NhV45DGTPjtXNZ2IfbK+8h6gzPh1U6akxa
+	kpE5CrNfLReYq20KlmOWoLkubhzgbPDeU7JoXHfgWPg0mgR6oRpRQ08q
+X-Gm-Gg: ATEYQzw5RiK1ft31kW1jvJDh8NQUdxy919EhVQAelzJO5g2n513tGsgdbO/bS99w099
+	ofPVlK37x172rFXAh/twFj4rQwpS7ly/OU2qBtKMGl905pQdz7MH17G8BZwYq7n/nce9Ki0JvNV
+	qJADm8tvi0MEjC6dxGxQbeFh+8kxa3m4q1+KJPxtJCcwhgUaijXoCMF8twgPGTBKARVQYQ2QfOl
+	VI9Lj4DQjgVmZNfmv4UX6ztkMn9QEcxwIAUz+oh3l+G+6otnIBCy6bVEmcZ7eSr3453lMzVHrHF
+	7gNECJgMNIiGpEm5JI6wVBUYkV8a1DrhCzM03pjoTn2LWNKX57tHFzj0lc3yRh5OVEE8nT4xcdb
+	DRXIZrScR5Xn06oJoliOqQ8NgK+rr6uPxQE+sDYHEOIBlBOMOb5uZfl7w6dfy1Ir2Zzr7pesY0N
+	JUE5pAJ0LeGfliWS5/kmLGUZjy/yMKPJIMk3j8I4Pq0DC0ntF9crfUE2uaq9wII0iEvK8Te57t
+X-Received: by 2002:a05:7300:320b:b0:2ba:a60a:15e6 with SMTP id 5a478bee46e88-2c0e5062a64mr427155eec.16.1773778961508;
+        Tue, 17 Mar 2026 13:22:41 -0700 (PDT)
+Received: from ?IPV6:2600:1700:e321:62f0:da43:aeff:fecc:bfd5? ([2600:1700:e321:62f0:da43:aeff:fecc:bfd5])
+        by smtp.gmail.com with ESMTPSA id 5a478bee46e88-2c0e56062e4sm770712eec.30.2026.03.17.13.22.40
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 17 Mar 2026 13:22:41 -0700 (PDT)
+Sender: Guenter Roeck <groeck7@gmail.com>
+Message-ID: <d491e41e-5a27-430e-b4b0-35b7e3867995@roeck-us.net>
+Date: Tue, 17 Mar 2026 13:22:39 -0700
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
@@ -45,134 +71,99 @@ MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
 Subject: Re: [PATCH v3 0/9] Convert most Dell WMI drivers to use the new
  buffer-based API
-To: Guenter Roeck <linux@roeck-us.net>, Dell.Client.Kernel@dell.com,
+To: Armin Wolf <W_Armin@gmx.de>, Dell.Client.Kernel@dell.com,
  pali@kernel.org, mjg59@srcf.ucam.org
 Cc: soyer@irl.hu, hansg@kernel.org, ilpo.jarvinen@linux.intel.com,
  platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org,
  linux-hwmon@vger.kernel.org, mario.limonciello@amd.com
 References: <20260314175249.16040-1-W_Armin@gmx.de>
  <502ea01b-e5e1-45a2-b5f8-ad236dc8f006@roeck-us.net>
+ <52dabfaa-cb3c-4c2f-92a0-efaa175bf4be@gmx.de>
 Content-Language: en-US
-From: Armin Wolf <W_Armin@gmx.de>
-In-Reply-To: <502ea01b-e5e1-45a2-b5f8-ad236dc8f006@roeck-us.net>
+From: Guenter Roeck <linux@roeck-us.net>
+Autocrypt: addr=linux@roeck-us.net; keydata=
+ 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
+ np3900V20aS7eD9K8GTU0TGC1pyz6IVJwIE=
+In-Reply-To: <52dabfaa-cb3c-4c2f-92a0-efaa175bf4be@gmx.de>
 Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: quoted-printable
-X-Provags-ID: V03:K1:udtRzCCpS8fcCG3mfxIJGWEx6m8AlhT+YDafZLfZjakk1Ex4orM
- 9TRsERlR61lSx/8WR6zIzNoC23bwGrWJI8dIMC4C7BGkkH2PqQfrVaOO/swpRngVQcbjfka
- 03ZJal6SMMX2y7PmbZ/j8y9Mq7s0lksYbOLYNs3yaZkRErudGANjmFXtSU0PaewRC4jvhd+
- Zirk1MJajTtEuHpSr5/3A==
-X-Spam-Flag: NO
-UI-OutboundReport: notjunk:1;M01:P0:97R1tnHiDOQ=;ttLBk8dfblGmzRW978PwbqzhC0Z
- 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
- XKjjCIhkdl7Kcra2fGgx
+Content-Transfer-Encoding: 7bit
 
-Am 17.03.26 um 16:52 schrieb Guenter Roeck:
+On 3/17/26 13:11, Armin Wolf wrote:
+> Am 17.03.26 um 16:52 schrieb Guenter Roeck:
+> 
+>> On 3/14/26 10:52, Armin Wolf wrote:
+>>> The new buffer-based WMI API improves the compatibility between
+>>> different ACPI firmware implementations by performing marshalling/
+>>> unmarshalling of WMI buffers like the original Windows driver.
+>>>
+>>> Convert most Dell WMI drivers to use this new API. This also
+>>> removes all ACPI-related code from those drivers because the
+>>> new buffer-based WMI API uses abstract WMI buffer objects instead
+>>> of ACPI objects.
+>>>
+>>> All drivers have been tested on a Dell Inspiron 3505 and appear
+>>> to work normally.
+>>>
+>>> The last three patches contain some misc. cleanups for the WMI
+>>> driver core itself. The most important change is a fix for modprobe
+>>> to verify any WMI GUID strings from WMI drivers and convert them
+>>> to uppercase if necessary. This should fix autoloading for WMI
+>>> drivers that use WMI GUID strings with lowercase letters.
+>>>
+>>
+>> The series doesn't give hints to maintainers if the patches should be
+>> applied on a per-subsystem basis (i.e., are independent of each other)
+>> or if they need to be applied together. I Acked the hwmon patch, assuming
+>> that it will be applied through a common branch. If the patches are
+>> supposed to be applied in subsystem branches, please let me know.
+>>
+>> Thanks,
+>> Guenter 
+> 
+> I would prefer if the whole series was applied together on the platform drivers tree.
+> 
 
-> On 3/14/26 10:52, Armin Wolf wrote:
->> The new buffer-based WMI API improves the compatibility between
->> different ACPI firmware implementations by performing marshalling/
->> unmarshalling of WMI buffers like the original Windows driver.
->>
->> Convert most Dell WMI drivers to use this new API. This also
->> removes all ACPI-related code from those drivers because the
->> new buffer-based WMI API uses abstract WMI buffer objects instead
->> of ACPI objects.
->>
->> All drivers have been tested on a Dell Inspiron 3505 and appear
->> to work normally.
->>
->> The last three patches contain some misc. cleanups for the WMI
->> driver core itself. The most important change is a fix for modprobe
->> to verify any WMI GUID strings from WMI drivers and convert them
->> to uppercase if necessary. This should fix autoloading for WMI
->> drivers that use WMI GUID strings with lowercase letters.
->>
->
-> The series doesn't give hints to maintainers if the patches should be
-> applied on a per-subsystem basis (i.e., are independent of each other)
-> or if they need to be applied together. I Acked the hwmon patch, assumin=
-g
-> that it will be applied through a common branch. If the patches are
-> supposed to be applied in subsystem branches, please let me know.
->
-> Thanks,
-> Guenter=20
+Thanks for the clarification.
 
-I would prefer if the whole series was applied together on the platform dr=
-ivers tree.
-
-Thanks,
-Armin Wolf
+Guenter
 
