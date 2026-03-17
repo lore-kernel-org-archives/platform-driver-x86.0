@@ -1,61 +1,61 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.10])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.13])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AC9033F54BC;
-	Tue, 17 Mar 2026 16:49:05 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.10
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E9BF0330B15;
+	Tue, 17 Mar 2026 16:54:47 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.13
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1773766150; cv=none; b=pg6ieue8Gxiy6TObY6VWTi3Hd0kEmyuXhxjg22Ua925TJIecaBiXHu1LbdVwE54re0sNGSWH1zk1gf1mk6E3oJpJd7VFxhk7XjKUpaoXjR04wRS7n63R2FFmd+b62iIzb3HLngiUhxHGJuA/1cH3mjnyT8Rz2MEKaJy5luDqXik=
+	t=1773766489; cv=none; b=Mx/GWYRK6KQF/hk735V+UihwpGFxfB+C2ST6brrTGhY/RpJoEK/OaELa4z6/H5J0oAGy06MwTbk8wqjYslwm2FNFGvo2R7bzqpPKKO9y5V+VXn/hFYjWChL6XAIGry8smHSlOlm+RmsOpC+xmfxabFUZJgYU7hfLiZm/UmwCnMQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1773766150; c=relaxed/simple;
-	bh=R4pN2m/SXwG2LuZKBUc3UdmdEsgUYR+Mb/Dp5rDVQSA=;
+	s=arc-20240116; t=1773766489; c=relaxed/simple;
+	bh=Ib7O5v5gA5+SZAFPTs/BlvtXcjkxiVY/HpUZ9MjdV6U=;
 	h=From:Date:To:cc:Subject:In-Reply-To:Message-ID:References:
-	 MIME-Version:Content-Type; b=X5aFnkoInTx391CTj6YDTezOkmNSR1wQOPL7ZxuavK1lfGUzRqU2fzz0HN5xeG8F7XuY4s5Lpe6UOpJKEFIC4seB7MXrWyFWXoT4JM0T+R2v4FXVDTuzk+HxyW+g2ug6/clVkYHVx3jZ89q2SbSdI70XR5V7txzrpOOD5OAc+ys=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=pass smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=SqHiFbui; arc=none smtp.client-ip=198.175.65.10
+	 MIME-Version:Content-Type; b=cfDAYHsWcWAx8vdeXkrqGm4iEGmi5u4KZTYSgdRHrUhSQlwmXxvFd8STqxCthlZbzeThVs/Bb3wnMkpUgJhjYqwgD3ibTRmw6cNLtRrkIgruOfJXwaXsbklXXPm+JPLBLMk3Hd6lxlqQSuMQWVe/bsK9M0pyUHBAUcOHB0yly/g=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=pass smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=MuOjvBJw; arc=none smtp.client-ip=192.198.163.13
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="SqHiFbui"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="MuOjvBJw"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1773766145; x=1805302145;
+  t=1773766488; x=1805302488;
   h=from:date:to:cc:subject:in-reply-to:message-id:
    references:mime-version;
-  bh=R4pN2m/SXwG2LuZKBUc3UdmdEsgUYR+Mb/Dp5rDVQSA=;
-  b=SqHiFbui6ZhlUWLSqQxsLCf7IXlFMC3ISwTLj6NFS1La4M7MqDk3CHaA
-   ZIJ/d8+ewl916smi17c4MIEAutu/QC8y3/+h2D1dUTm5afKCnxhGfy/JS
-   TB7d6hdI4M0epqXVVT9+cBQQxl8nmCagQPNK3bsA2ExkvhYubVMkxJ6mr
-   AiOK2gvyZmrtSzhA/GKKnDj+HGMcDhWGTmXCIbWP+quLb79kjj22Lal0a
-   toESt9tMxYmKeAA2xFANsMrzRbq1YaNt7UF5XbWV9adAB+9pQXv7aX/a6
-   tQzUSc+dmqTOrjwKQKP66CdPew9zQ1CxjfLFvNJg1qiQqJsX7But8evAA
-   A==;
-X-CSE-ConnectionGUID: 6j7iv/G+Q7mNVuTZFnujJg==
-X-CSE-MsgGUID: 0aNHknTpRgW5dXvOh/mwRQ==
-X-IronPort-AV: E=McAfee;i="6800,10657,11732"; a="92187518"
+  bh=Ib7O5v5gA5+SZAFPTs/BlvtXcjkxiVY/HpUZ9MjdV6U=;
+  b=MuOjvBJwaxQEXu1Q+PaD2IrDjfvWgaM7oVpcZi9ZhNBeLYiZBvmNG9Sm
+   KQZOjBbcJ8kicVdve/LnRls7iihpqI4ALgkEe88MjXYFKRaUjxTd7ohWK
+   8sF/7jpIsBWx7eUUtjEAsyEjEEG5R5pP0oW4JEDgHgr0aqIX7acD/fRbA
+   nlGPkYy6EHbon1Xef0SHPczRjpjEqlcxz6oilkGFu2aAajv3szNAn0HCR
+   G12Pu9NfXT1cWb19uuIXY/Z0h9+0gfJ/7UENEKpF+l5jpYQ358aaCZlDT
+   skBheTvrfVvXnBuI+D3taQlAE6hGajPDRKjwJlSYeDljA/GZGFRzrD+MJ
+   g==;
+X-CSE-ConnectionGUID: qsiza+0PSIeJvI+jSSeVLw==
+X-CSE-MsgGUID: StYFbuiUQTSnLPjzXerGZg==
+X-IronPort-AV: E=McAfee;i="6800,10657,11732"; a="77416582"
 X-IronPort-AV: E=Sophos;i="6.23,126,1770624000"; 
-   d="scan'208";a="92187518"
-Received: from fmviesa009.fm.intel.com ([10.60.135.149])
-  by orvoesa102.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 17 Mar 2026 09:49:05 -0700
-X-CSE-ConnectionGUID: zU3ku3HMSyGa8jesRJiPnQ==
-X-CSE-MsgGUID: 1c1akZSfRISyWMT92A6NMw==
+   d="scan'208";a="77416582"
+Received: from orviesa009.jf.intel.com ([10.64.159.149])
+  by fmvoesa107.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 17 Mar 2026 09:54:47 -0700
+X-CSE-ConnectionGUID: ltBood/0QMy4db0yfg64Ag==
+X-CSE-MsgGUID: o6tfjkHCRF2AHjT5BZfq4w==
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="6.23,126,1770624000"; 
-   d="scan'208";a="216652640"
+   d="scan'208";a="222288507"
 Received: from ijarvine-mobl1.ger.corp.intel.com (HELO localhost) ([10.245.245.161])
-  by fmviesa009-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 17 Mar 2026 09:49:01 -0700
+  by orviesa009-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 17 Mar 2026 09:54:43 -0700
 From: =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
-Date: Tue, 17 Mar 2026 18:48:58 +0200 (EET)
+Date: Tue, 17 Mar 2026 18:54:39 +0200 (EET)
 To: "David E. Box" <david.e.box@linux.intel.com>
 cc: thomas.hellstrom@linux.intel.com, rodrigo.vivi@intel.com, 
     irenic.rajneesh@gmail.com, srinivas.pandruvada@linux.intel.com, 
     intel-xe@lists.freedesktop.org, dri-devel@lists.freedesktop.org, 
     xi.pardee@linux.intel.com, Hans de Goede <hansg@kernel.org>, 
     LKML <linux-kernel@vger.kernel.org>, platform-driver-x86@vger.kernel.org
-Subject: Re: [PATCH 21/22] platform/x86/intel/pmc/ssram: Make PMT registration
- optional
-In-Reply-To: <20260313015202.3660072-22-david.e.box@linux.intel.com>
-Message-ID: <a91e9601-689f-f2b6-b90a-7abcc66a7ee4@linux.intel.com>
-References: <20260313015202.3660072-1-david.e.box@linux.intel.com> <20260313015202.3660072-22-david.e.box@linux.intel.com>
+Subject: Re: [PATCH 06/22] platform/x86/intel/vsec: Plumb ACPI PMT discovery
+ tables through vsec
+In-Reply-To: <20260313015202.3660072-7-david.e.box@linux.intel.com>
+Message-ID: <6fe39305-89cc-c83e-1f60-9807bb8996bf@linux.intel.com>
+References: <20260313015202.3660072-1-david.e.box@linux.intel.com> <20260313015202.3660072-7-david.e.box@linux.intel.com>
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
@@ -66,66 +66,26 @@ Content-Type: text/plain; charset=US-ASCII
 
 On Thu, 12 Mar 2026, David E. Box wrote:
 
-> The SSRAM telemetry driver extracts essential PMC device ID and power
-> management base address information that intel_pmc_core depends on for core
-> functionality. PMT registration failure should not prevent this critical
-> data from being available, as it would break intel_pmc_core operation
-
-Are you missing a "not" here? I find the entire sentence hard to 
-understand.
-
-> entirely.
+> Some platforms expose PMT discovery via ACPI instead of PCI BARs. Add a
+> generic discovery source flag and carry ACPI discovery entries alongside
+> the existing PCI resource path so PMT clients can consume either.
 > 
-> Change the behavior to log a warning when PMT registration fails but
-> continue with successful driver initialization, ensuring the primary
-> telemetry data remains accessible to dependent drivers.
+> Changes:
+>   - Add enum intel_vsec_disc_source { _PCI, _ACPI }.
+>   - Extend intel_vsec_platform_info and intel_vsec_device with source enum
+>     and ACPI discovery table pointer/
+>   - When src==ACPI, skip BAR resource setup and copy the ACPI discovery
+>     entries into the aux device.
+> 
+> No user-visible behavior change yet; this only wires ACPI data through vsec
+> in preparation for ACPI-enumerated PMT clients.
 > 
 > Signed-off-by: David E. Box <david.e.box@linux.intel.com>
 > ---
->  drivers/platform/x86/intel/pmc/ssram_telemetry.c | 11 ++++++++---
->  1 file changed, 8 insertions(+), 3 deletions(-)
-> 
-> diff --git a/drivers/platform/x86/intel/pmc/ssram_telemetry.c b/drivers/platform/x86/intel/pmc/ssram_telemetry.c
-> index b937ebb2322f..12b7c1299c2f 100644
-> --- a/drivers/platform/x86/intel/pmc/ssram_telemetry.c
-> +++ b/drivers/platform/x86/intel/pmc/ssram_telemetry.c
-> @@ -106,6 +106,7 @@ pmc_ssram_telemetry_get_pmc_pci(struct pci_dev *pcidev, unsigned int pmc_idx, u3
->  	void __iomem __free(pmc_ssram_telemetry_iounmap) *tmp_ssram = NULL;
->  	void __iomem __free(pmc_ssram_telemetry_iounmap) *ssram = NULL;
->  	u64 ssram_base;
-> +	int ret;
->  
->  	ssram_base = pci_resource_start(pcidev, 0);
->  	tmp_ssram = ioremap(ssram_base, SSRAM_HDR_SIZE);
-> @@ -133,7 +134,11 @@ pmc_ssram_telemetry_get_pmc_pci(struct pci_dev *pcidev, unsigned int pmc_idx, u3
->  	pmc_ssram_get_devid_pwrmbase(ssram, pmc_idx);
->  
->  	/* Find and register and PMC telemetry entries */
-> -	return pmc_ssram_telemetry_add_pmt(pcidev, ssram_base, ssram);
-> +	ret = pmc_ssram_telemetry_add_pmt(pcidev, ssram_base, ssram);
-> +	if (ret)
-> +		dev_warn(&pcidev->dev, "could not register PMT\n");
-> +
-> +	return 0;
->  }
->  
->  static int pmc_ssram_telemetry_pci_init(struct pci_dev *pcidev)
-> @@ -208,12 +213,12 @@ static int pmc_ssram_telemetry_acpi_init(struct pci_dev *pcidev,
->  
->  	ret = intel_vsec_register(&pcidev->dev, &info);
->  	if (ret)
-> -		goto cleanup_acpi_disc;
-> +		dev_warn(&pcidev->dev, "could not register PMT\n");
->  
->  	ret = pmc_ssram_telemetry_get_pmc_acpi(pcidev, index);
->  
-> -cleanup_acpi_disc:
->  	kfree(acpi_disc);
-> +
->  cleanup_acpi_buf:
->  	ACPI_FREE(buf.pointer);
->  
-> 
+
+I took patches up to this one to the review-ilpo-next branch as those are 
+basically ready and have seen enough version by now.
+
 
 -- 
  i.
