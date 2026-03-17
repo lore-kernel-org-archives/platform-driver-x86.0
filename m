@@ -1,169 +1,174 @@
-Received: from mail-dy1-f169.google.com (mail-dy1-f169.google.com [74.125.82.169])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.11])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7A0443845C7
-	for <platform-driver-x86@vger.kernel.org>; Tue, 17 Mar 2026 20:22:42 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=74.125.82.169
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 56E4F388E59;
+	Tue, 17 Mar 2026 20:31:43 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.11
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1773778963; cv=none; b=uTBze0U2lA11EHzTwLkoRoIYK9o3mTvBncn3OfTSmoGKQb+fC9iLqjcbamSri3Ily+/2h7wt17qe8DDATvCSejrlZh8gaQmr+zPisKJsjxf4j8SZA2auGujN/EZuKc2KPUD2K8BEp5G/cz+76RqMQ22CIXQjwuR9PfZRY7S6Gbg=
+	t=1773779506; cv=none; b=ICRTKQwOIBo8fYeUNOCd57kQWaYRo53bdDnRrR6bsdHSGcBO3Epr47vOM3t3Qvy4wMvZIFty4pvPnLgaKnIkUNkEyt1mqnV+5fZNdGrlRJ5OqX+05mtpPTYl6KMZPSMQ3tEhPqTLjy29VT73cCBcPil0vmMLuD6j6vc7hd4Unbc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1773778963; c=relaxed/simple;
-	bh=bqu2oeXykvVXrtl6W8cxQEReCOO2iASSdq4+Ii79tBY=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=otcR21y7F3+rXwNWKlkE4UkrMtBX41MGKxCOVJEnaOH1igA3P5tZ+ZiXHhSX7X3b8um5yCJZkl0nS8Sj1r7L3FMRycm9wjpFls3dDMDRku5gKVq4KfT5i1XtAQcdIVHDgXRV8mZdt9bsf+AKEjMC1D8bd3EoEgXnhR+MBSfduQw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=roeck-us.net; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=EKYmF/xN; arc=none smtp.client-ip=74.125.82.169
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=roeck-us.net
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1773779506; c=relaxed/simple;
+	bh=Po1ovuTZN5E7jhJSkWPq6gVqiTLmasov11Wz/ZmB0I0=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=RbNN/TPsfb8LfPDzr3V+SHcPj3CLkM9o3bZJy3hjUgLr72WzzI+ClvU1oS+6ma9Zi/xaqZtPNE1jky35BSumdQno4wySClCVPATLpV+TXte+QAwVqmSdwqQnMszyLDTAQbLmwrRoU0e+mKQtHfy/h+I/X3GYNzmFVG5F1NZWCwc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=GVAZuA9t; arc=none smtp.client-ip=192.198.163.11
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="EKYmF/xN"
-Received: by mail-dy1-f169.google.com with SMTP id 5a478bee46e88-2c0bcd8f194so4350797eec.1
-        for <platform-driver-x86@vger.kernel.org>; Tue, 17 Mar 2026 13:22:42 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1773778962; x=1774383762; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:autocrypt:from
-         :content-language:references:cc:to:subject:user-agent:mime-version
-         :date:message-id:sender:from:to:cc:subject:date:message-id:reply-to;
-        bh=0gykb+9p2pXiQe/gkOwplwhJHBFzZsDCqVbYdSMZ/7w=;
-        b=EKYmF/xNxkE1HCK3+uzI0Q5xIqmw5NlChxXAt7vNwBxGHhISU5eoCygReakeriGDcE
-         B9HdIjOTfndyrtO2CEeUUFwgAeGgiJkEjJ2YHwc9MGTegyiR28SyN8adbIZtz4STt+2a
-         B20zkC+xjoUDOHfdGn6iU6KfQspOEvdFfVZjEr1UsabQswnwMNpAZV5yvPCyhdwnhjFC
-         AqL2WiVVevGzJ9MOGhR9vR6zcSrfznUDyq4DhhKcX1GeIIw3vnB92Wl4x482u2FQnD0j
-         9l4YGqeRgXGJzAbovGg8HmCfRVwVLTXf4yqvaC0oeqT3eRW1dN4K41l9e2diDOT+858D
-         /W2Q==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1773778962; x=1774383762;
-        h=content-transfer-encoding:in-reply-to:autocrypt:from
-         :content-language:references:cc:to:subject:user-agent:mime-version
-         :date:message-id:sender:x-gm-gg:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=0gykb+9p2pXiQe/gkOwplwhJHBFzZsDCqVbYdSMZ/7w=;
-        b=ImYvwZS0Wc0XG44ZH1X9UPZ3cBMN4tKM+e9UTksN5E4nPwgmhfaKDgaV44zZtsBxuG
-         GC4KYMlDzIJ4/wkU4DcPPujEL+K5YFhBM7tgN0iUEPapafKlI6F2R6cWbs1kN6s9sRPH
-         XKNefdEZ3V/a0MPTCUee+tv2vl9PkmhoWOe3TmOO77EX6RdP9zy3vqYjvyE1xoCtKPlV
-         FojN7erzn1coEEqfJiRmBqzxPVzVyRsGNhOM+5RJyFw+Srfl4nQGXuo7VwTgu+fhNnVa
-         xJ7uBSZSMg3I14l4yaD11cO9qhzsTa3uiDAVr1me/zDEWiknpdF6skcEu3d/acnwVv8a
-         9zNg==
-X-Forwarded-Encrypted: i=1; AJvYcCV5ievuZ/PJ7ZGEK5fFr4EcvzKlikz+uFE4LuLIeuTQ5ax9d7mNYY/UtWR31gzXMBXB6jOA3/0mPknyp6jCFSwrQmON@vger.kernel.org
-X-Gm-Message-State: AOJu0Yz0fNR1BE7+pF70//NhV45DGTPjtXNZ2IfbK+8h6gzPh1U6akxa
-	kpE5CrNfLReYq20KlmOWoLkubhzgbPDeU7JoXHfgWPg0mgR6oRpRQ08q
-X-Gm-Gg: ATEYQzw5RiK1ft31kW1jvJDh8NQUdxy919EhVQAelzJO5g2n513tGsgdbO/bS99w099
-	ofPVlK37x172rFXAh/twFj4rQwpS7ly/OU2qBtKMGl905pQdz7MH17G8BZwYq7n/nce9Ki0JvNV
-	qJADm8tvi0MEjC6dxGxQbeFh+8kxa3m4q1+KJPxtJCcwhgUaijXoCMF8twgPGTBKARVQYQ2QfOl
-	VI9Lj4DQjgVmZNfmv4UX6ztkMn9QEcxwIAUz+oh3l+G+6otnIBCy6bVEmcZ7eSr3453lMzVHrHF
-	7gNECJgMNIiGpEm5JI6wVBUYkV8a1DrhCzM03pjoTn2LWNKX57tHFzj0lc3yRh5OVEE8nT4xcdb
-	DRXIZrScR5Xn06oJoliOqQ8NgK+rr6uPxQE+sDYHEOIBlBOMOb5uZfl7w6dfy1Ir2Zzr7pesY0N
-	JUE5pAJ0LeGfliWS5/kmLGUZjy/yMKPJIMk3j8I4Pq0DC0ntF9crfUE2uaq9wII0iEvK8Te57t
-X-Received: by 2002:a05:7300:320b:b0:2ba:a60a:15e6 with SMTP id 5a478bee46e88-2c0e5062a64mr427155eec.16.1773778961508;
-        Tue, 17 Mar 2026 13:22:41 -0700 (PDT)
-Received: from ?IPV6:2600:1700:e321:62f0:da43:aeff:fecc:bfd5? ([2600:1700:e321:62f0:da43:aeff:fecc:bfd5])
-        by smtp.gmail.com with ESMTPSA id 5a478bee46e88-2c0e56062e4sm770712eec.30.2026.03.17.13.22.40
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 17 Mar 2026 13:22:41 -0700 (PDT)
-Sender: Guenter Roeck <groeck7@gmail.com>
-Message-ID: <d491e41e-5a27-430e-b4b0-35b7e3867995@roeck-us.net>
-Date: Tue, 17 Mar 2026 13:22:39 -0700
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="GVAZuA9t"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1773779503; x=1805315503;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=Po1ovuTZN5E7jhJSkWPq6gVqiTLmasov11Wz/ZmB0I0=;
+  b=GVAZuA9toMT7aYPreM69iUgjZYwvP8PXOdpJCu0NoV9UbY/FvgUo7/1g
+   h3awKBTz20rXh15nQRUhfwEJHGwMCQUmekt9D/oYPR1GokgWCTSY6nq/I
+   iN9cWMAMW2/RVYayYG/eou9/jaRZPCtBU5KiG2O4pk7zbtEsntdmSt1iq
+   1VPQJ2V8z0NDaaGJXAXdUBRY2QBS4H/xiV5Y8NGK8UjzFsZjjgmJbJCQS
+   CD3pLdRTMBJXq2Rn+3JhNGBRSMrlBBMB85s/lDnzX68PKAq3f3dXH6Eoe
+   bQCJgPUoHBUgDlXf2rMExcmbXr/yWuXxHCXOtw90PvvjBA0xbo2vUhISo
+   A==;
+X-CSE-ConnectionGUID: wfTExdHgRX+96er/ussEvw==
+X-CSE-MsgGUID: ketGQFlqRFeKw6mNK3HI3Q==
+X-IronPort-AV: E=McAfee;i="6800,10657,11732"; a="85456540"
+X-IronPort-AV: E=Sophos;i="6.23,126,1770624000"; 
+   d="scan'208";a="85456540"
+Received: from orviesa007.jf.intel.com ([10.64.159.147])
+  by fmvoesa105.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 17 Mar 2026 13:31:43 -0700
+X-CSE-ConnectionGUID: tPN/+/Q8RrO8v57kd3cQbQ==
+X-CSE-MsgGUID: RckWGSokR7usMB9uyKDAhw==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.23,126,1770624000"; 
+   d="scan'208";a="222602565"
+Received: from lkp-server01.sh.intel.com (HELO 63737dd503cb) ([10.239.97.150])
+  by orviesa007.jf.intel.com with ESMTP; 17 Mar 2026 13:31:41 -0700
+Received: from kbuild by 63737dd503cb with local (Exim 4.98.2)
+	(envelope-from <lkp@intel.com>)
+	id 1w2b4j-000000001xZ-2TcD;
+	Tue, 17 Mar 2026 20:31:37 +0000
+Date: Wed, 18 Mar 2026 04:30:45 +0800
+From: kernel test robot <lkp@intel.com>
+To: Jonathan Grant <jg@jguk.org>,
+	Mario Limonciello <mario.limonciello@amd.com>,
+	platform-driver-x86@vger.kernel.org, luke@ljones.dev
+Cc: oe-kbuild-all@lists.linux.dev, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v2] platform/x86: asus-wmi: log thermal notification event
+Message-ID: <202603180450.8OGDU2sP-lkp@intel.com>
+References: <94dbe1e1-d706-47aa-abf5-f5d76aacf017@jguk.org>
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v3 0/9] Convert most Dell WMI drivers to use the new
- buffer-based API
-To: Armin Wolf <W_Armin@gmx.de>, Dell.Client.Kernel@dell.com,
- pali@kernel.org, mjg59@srcf.ucam.org
-Cc: soyer@irl.hu, hansg@kernel.org, ilpo.jarvinen@linux.intel.com,
- platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org,
- linux-hwmon@vger.kernel.org, mario.limonciello@amd.com
-References: <20260314175249.16040-1-W_Armin@gmx.de>
- <502ea01b-e5e1-45a2-b5f8-ad236dc8f006@roeck-us.net>
- <52dabfaa-cb3c-4c2f-92a0-efaa175bf4be@gmx.de>
-Content-Language: en-US
-From: Guenter Roeck <linux@roeck-us.net>
-Autocrypt: addr=linux@roeck-us.net; keydata=
- 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
- np3900V20aS7eD9K8GTU0TGC1pyz6IVJwIE=
-In-Reply-To: <52dabfaa-cb3c-4c2f-92a0-efaa175bf4be@gmx.de>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <94dbe1e1-d706-47aa-abf5-f5d76aacf017@jguk.org>
 
-On 3/17/26 13:11, Armin Wolf wrote:
-> Am 17.03.26 um 16:52 schrieb Guenter Roeck:
-> 
->> On 3/14/26 10:52, Armin Wolf wrote:
->>> The new buffer-based WMI API improves the compatibility between
->>> different ACPI firmware implementations by performing marshalling/
->>> unmarshalling of WMI buffers like the original Windows driver.
->>>
->>> Convert most Dell WMI drivers to use this new API. This also
->>> removes all ACPI-related code from those drivers because the
->>> new buffer-based WMI API uses abstract WMI buffer objects instead
->>> of ACPI objects.
->>>
->>> All drivers have been tested on a Dell Inspiron 3505 and appear
->>> to work normally.
->>>
->>> The last three patches contain some misc. cleanups for the WMI
->>> driver core itself. The most important change is a fix for modprobe
->>> to verify any WMI GUID strings from WMI drivers and convert them
->>> to uppercase if necessary. This should fix autoloading for WMI
->>> drivers that use WMI GUID strings with lowercase letters.
->>>
->>
->> The series doesn't give hints to maintainers if the patches should be
->> applied on a per-subsystem basis (i.e., are independent of each other)
->> or if they need to be applied together. I Acked the hwmon patch, assuming
->> that it will be applied through a common branch. If the patches are
->> supposed to be applied in subsystem branches, please let me know.
->>
->> Thanks,
->> Guenter 
-> 
-> I would prefer if the whole series was applied together on the platform drivers tree.
-> 
+Hi Jonathan,
 
-Thanks for the clarification.
+kernel test robot noticed the following build warnings:
 
-Guenter
+[auto build test WARNING on amd-pstate/linux-next]
+[also build test WARNING on amd-pstate/bleeding-edge linus/master v7.0-rc4 next-20260317]
+[If your patch is applied to the wrong git tree, kindly drop us a note.
+And when submitting patch, we suggest to use '--base' as documented in
+https://git-scm.com/docs/git-format-patch#_base_tree_information]
 
+url:    https://github.com/intel-lab-lkp/linux/commits/Jonathan-Grant/platform-x86-asus-wmi-log-thermal-notification-event/20260316-204950
+base:   https://git.kernel.org/pub/scm/linux/kernel/git/superm1/linux.git linux-next
+patch link:    https://lore.kernel.org/r/94dbe1e1-d706-47aa-abf5-f5d76aacf017%40jguk.org
+patch subject: [PATCH v2] platform/x86: asus-wmi: log thermal notification event
+config: x86_64-rhel-9.4 (https://download.01.org/0day-ci/archive/20260318/202603180450.8OGDU2sP-lkp@intel.com/config)
+compiler: gcc-14 (Debian 14.2.0-19) 14.2.0
+reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20260318/202603180450.8OGDU2sP-lkp@intel.com/reproduce)
+
+If you fix the issue in a separate patch/commit (i.e. not just a new version of
+the same patch/commit), kindly add following tags
+| Reported-by: kernel test robot <lkp@intel.com>
+| Closes: https://lore.kernel.org/oe-kbuild-all/202603180450.8OGDU2sP-lkp@intel.com/
+
+All warnings (new ones prefixed by >>):
+
+   drivers/platform/x86/asus-wmi.c: In function 'asus_wmi_handle_event_code':
+>> drivers/platform/x86/asus-wmi.c:4599:12: warning: suggest explicit braces to avoid ambiguous 'else' [-Wdangling-else]
+    4599 |         if (!sparse_keymap_report_event(asus->inputdev, code,
+         |            ^
+
+
+vim +/else +4599 drivers/platform/x86/asus-wmi.c
+
+8abd752bd4733e drivers/platform/x86/asus-wmi.c  Yurii Pavlovskyi    2019-05-14  4538  
+8abd752bd4733e drivers/platform/x86/asus-wmi.c  Yurii Pavlovskyi    2019-05-14  4539  static void asus_wmi_handle_event_code(int code, struct asus_wmi *asus)
+8abd752bd4733e drivers/platform/x86/asus-wmi.c  Yurii Pavlovskyi    2019-05-14  4540  {
+fac55d29581fcd drivers/platform/x86/asus-wmi.c  Antheas Kapenekakis 2026-01-22  4541  	enum led_brightness led_value;
+8abd752bd4733e drivers/platform/x86/asus-wmi.c  Yurii Pavlovskyi    2019-05-14  4542  	unsigned int key_value = 1;
+8abd752bd4733e drivers/platform/x86/asus-wmi.c  Yurii Pavlovskyi    2019-05-14  4543  	bool autorelease = 1;
+3d7b165539d417 drivers/platform/x86/eeepc-wmi.c Yong Wang           2010-04-11  4544  
+c4453f6a7ceff3 drivers/platform/x86/asus-wmi.c  Seth Forshee        2011-07-01  4545  	if (asus->driver->key_filter) {
+c4453f6a7ceff3 drivers/platform/x86/asus-wmi.c  Seth Forshee        2011-07-01  4546  		asus->driver->key_filter(asus->driver, &code, &key_value,
+c4453f6a7ceff3 drivers/platform/x86/asus-wmi.c  Seth Forshee        2011-07-01  4547  					 &autorelease);
+c4453f6a7ceff3 drivers/platform/x86/asus-wmi.c  Seth Forshee        2011-07-01  4548  		if (code == ASUS_WMI_KEY_IGNORE)
+8abd752bd4733e drivers/platform/x86/asus-wmi.c  Yurii Pavlovskyi    2019-05-14  4549  			return;
+c4453f6a7ceff3 drivers/platform/x86/asus-wmi.c  Seth Forshee        2011-07-01  4550  	}
+c4453f6a7ceff3 drivers/platform/x86/asus-wmi.c  Seth Forshee        2011-07-01  4551  
+a5b92be2482e5f drivers/platform/x86/asus-wmi.c  Hans de Goede       2023-10-17  4552  	if (acpi_video_get_backlight_type() == acpi_backlight_vendor &&
+a5b92be2482e5f drivers/platform/x86/asus-wmi.c  Hans de Goede       2023-10-17  4553  	    code >= NOTIFY_BRNUP_MIN && code <= NOTIFY_BRNDOWN_MAX) {
+a5b92be2482e5f drivers/platform/x86/asus-wmi.c  Hans de Goede       2023-10-17  4554  		asus_wmi_backlight_notify(asus, code);
+8abd752bd4733e drivers/platform/x86/asus-wmi.c  Yurii Pavlovskyi    2019-05-14  4555  		return;
+a2a96f0c722180 drivers/platform/x86/asus-wmi.c  AceLan Kao          2012-10-03  4556  	}
+a2a96f0c722180 drivers/platform/x86/asus-wmi.c  AceLan Kao          2012-10-03  4557  
+fac55d29581fcd drivers/platform/x86/asus-wmi.c  Antheas Kapenekakis 2026-01-22  4558  	scoped_guard(spinlock_irqsave, &asus_ref.lock)
+fac55d29581fcd drivers/platform/x86/asus-wmi.c  Antheas Kapenekakis 2026-01-22  4559  		led_value = asus->kbd_led_wk;
+fac55d29581fcd drivers/platform/x86/asus-wmi.c  Antheas Kapenekakis 2026-01-22  4560  
+dbb3d78f61bade drivers/platform/x86/asus-wmi.c  Chris Chiu          2018-06-20  4561  	if (code == NOTIFY_KBD_BRTUP) {
+fac55d29581fcd drivers/platform/x86/asus-wmi.c  Antheas Kapenekakis 2026-01-22  4562  		kbd_led_set_by_kbd(asus, led_value + 1);
+8abd752bd4733e drivers/platform/x86/asus-wmi.c  Yurii Pavlovskyi    2019-05-14  4563  		return;
+dbb3d78f61bade drivers/platform/x86/asus-wmi.c  Chris Chiu          2018-06-20  4564  	}
+dbb3d78f61bade drivers/platform/x86/asus-wmi.c  Chris Chiu          2018-06-20  4565  	if (code == NOTIFY_KBD_BRTDWN) {
+fac55d29581fcd drivers/platform/x86/asus-wmi.c  Antheas Kapenekakis 2026-01-22  4566  		kbd_led_set_by_kbd(asus, led_value - 1);
+8abd752bd4733e drivers/platform/x86/asus-wmi.c  Yurii Pavlovskyi    2019-05-14  4567  		return;
+dbb3d78f61bade drivers/platform/x86/asus-wmi.c  Chris Chiu          2018-06-20  4568  	}
+ed99d29b2b1562 drivers/platform/x86/asus-wmi.c  Chris Chiu          2018-06-20  4569  	if (code == NOTIFY_KBD_BRTTOGGLE) {
+7525566abd360c drivers/platform/x86/asus-wmi.c  Antheas Kapenekakis 2026-01-22  4570  		if (led_value >= ASUS_EV_MAX_BRIGHTNESS)
+29f6eb533c3be9 drivers/platform/x86/asus-wmi.c  Jian-Hong Pan       2018-10-22  4571  			kbd_led_set_by_kbd(asus, 0);
+ed99d29b2b1562 drivers/platform/x86/asus-wmi.c  Chris Chiu          2018-06-20  4572  		else
+fac55d29581fcd drivers/platform/x86/asus-wmi.c  Antheas Kapenekakis 2026-01-22  4573  			kbd_led_set_by_kbd(asus, led_value + 1);
+8abd752bd4733e drivers/platform/x86/asus-wmi.c  Yurii Pavlovskyi    2019-05-14  4574  		return;
+ed99d29b2b1562 drivers/platform/x86/asus-wmi.c  Chris Chiu          2018-06-20  4575  	}
+dbb3d78f61bade drivers/platform/x86/asus-wmi.c  Chris Chiu          2018-06-20  4576  
+487579bab867e7 drivers/platform/x86/asus-wmi.c  Chris Chiu          2019-04-18  4577  	if (code == NOTIFY_FNLOCK_TOGGLE) {
+487579bab867e7 drivers/platform/x86/asus-wmi.c  Chris Chiu          2019-04-18  4578  		asus->fnlock_locked = !asus->fnlock_locked;
+487579bab867e7 drivers/platform/x86/asus-wmi.c  Chris Chiu          2019-04-18  4579  		asus_wmi_fnlock_update(asus);
+8abd752bd4733e drivers/platform/x86/asus-wmi.c  Yurii Pavlovskyi    2019-05-14  4580  		return;
+487579bab867e7 drivers/platform/x86/asus-wmi.c  Chris Chiu          2019-04-18  4581  	}
+487579bab867e7 drivers/platform/x86/asus-wmi.c  Chris Chiu          2019-04-18  4582  
+1ea0d3b46798af drivers/platform/x86/asus-wmi.c  Hans de Goede       2022-08-24  4583  	if (code == asus->tablet_switch_event_code) {
+1ea0d3b46798af drivers/platform/x86/asus-wmi.c  Hans de Goede       2022-08-24  4584  		asus_wmi_tablet_mode_get_state(asus);
+e397c3c460bf38 drivers/platform/x86/asus-wmi.c  Luke D. Jones       2022-08-13  4585  		return;
+e397c3c460bf38 drivers/platform/x86/asus-wmi.c  Luke D. Jones       2022-08-13  4586  	}
+e397c3c460bf38 drivers/platform/x86/asus-wmi.c  Luke D. Jones       2022-08-13  4587  
+601eb4c8e15002 drivers/platform/x86/asus-wmi.c  Luke D. Jones       2022-08-26  4588  	if (code == NOTIFY_KBD_FBM || code == NOTIFY_KBD_TTP) {
+601eb4c8e15002 drivers/platform/x86/asus-wmi.c  Luke D. Jones       2022-08-26  4589  		if (asus->fan_boost_mode_available)
+9af93db9e140a4 drivers/platform/x86/asus-wmi.c  Daniel Drake        2019-07-17  4590  			fan_boost_mode_switch_next(asus);
+bcbfcebda2cbc6 drivers/platform/x86/asus-wmi.c  Mohamed Ghanmi      2024-06-09  4591  		if (asus->throttle_thermal_policy_dev)
+b0955ce555478e drivers/platform/x86/asus-wmi.c  Armin Wolf          2024-11-07  4592  			platform_profile_cycle();
+2daa86e78c494d drivers/platform/x86/asus-wmi.c  Leonid Maksymchuk   2019-12-15  4593  		return;
+2daa86e78c494d drivers/platform/x86/asus-wmi.c  Leonid Maksymchuk   2019-12-15  4594  	}
+2daa86e78c494d drivers/platform/x86/asus-wmi.c  Leonid Maksymchuk   2019-12-15  4595  
+8abd752bd4733e drivers/platform/x86/asus-wmi.c  Yurii Pavlovskyi    2019-05-14  4596  	if (is_display_toggle(code) && asus->driver->quirks->no_display_toggle)
+8abd752bd4733e drivers/platform/x86/asus-wmi.c  Yurii Pavlovskyi    2019-05-14  4597  		return;
+a2a96f0c722180 drivers/platform/x86/asus-wmi.c  AceLan Kao          2012-10-03  4598  
+a2a96f0c722180 drivers/platform/x86/asus-wmi.c  AceLan Kao          2012-10-03 @4599  	if (!sparse_keymap_report_event(asus->inputdev, code,
+c4453f6a7ceff3 drivers/platform/x86/asus-wmi.c  Seth Forshee        2011-07-01  4600  					key_value, autorelease))
+2cf4f7ebe37ac2 drivers/platform/x86/asus-wmi.c  Jonathan Grant      2026-03-16  4601  		if (code == NOTIFY_THERMAL)
+2cf4f7ebe37ac2 drivers/platform/x86/asus-wmi.c  Jonathan Grant      2026-03-16  4602  			pr_info("Thermal state change\n");
+2cf4f7ebe37ac2 drivers/platform/x86/asus-wmi.c  Jonathan Grant      2026-03-16  4603  		else
+3e70a57b659463 drivers/platform/x86/asus-wmi.c  Luca Stefani        2022-05-06  4604  			pr_info("Unknown key code 0x%x\n", code);
+8abd752bd4733e drivers/platform/x86/asus-wmi.c  Yurii Pavlovskyi    2019-05-14  4605  }
+3d7b165539d417 drivers/platform/x86/eeepc-wmi.c Yong Wang           2010-04-11  4606  
+
+-- 
+0-DAY CI Kernel Test Service
+https://github.com/intel/lkp-tests/wiki
