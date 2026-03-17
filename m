@@ -1,157 +1,189 @@
-Received: from mail-pg1-f178.google.com (mail-pg1-f178.google.com [209.85.215.178])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.16])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 237452D0C72
-	for <platform-driver-x86@vger.kernel.org>; Tue, 17 Mar 2026 15:52:29 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.178
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1BE752D063A;
+	Tue, 17 Mar 2026 15:56:57 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.16
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1773762750; cv=none; b=L+uohUj7LD3XnkLo5yW33LyhTy8N+CjKdnTZvOqDSmewe7vbM1UawaGVWfrqFNY/twa+4dIVWciSU/MPS2GlBKwmQyNfHLrFR9nOLg/7t0WqIEZoxDv4FxzioZiA+x56ikpHbzzZ4xbU/Gc/iLbikl20600BYsXkg1M2dgN11Cs=
+	t=1773763020; cv=none; b=t4vgPBwb8uuvtGlx588+Wn56QQHEYpliXK4OtZbTnxLcEKKgSpqCDf1uGI00pieyqzgGJhWUc5YWydKtvYG+XtDHAPUQOcxxGuuLZEhE4MIASaMRpin9hu/ijzg4gWYbFVUs+6l+h0JVZOa6MgqswMmmNkB/g0VGqlgtjIVKkp0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1773762750; c=relaxed/simple;
-	bh=Qafok4BcLvXX6leB3jlwOhS3uoXbRhAKVRLJJH1cOe0=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=uVY9TiCJPh+X06MKkz88qo0yn/KPQOXOr4X6omg6kmsxApNSo05FcYnculSrFktxay2X/8PFlaX2ol6ZyWSJlAlqNvLViuugb+lZ35ZM+T3WfxrSmJntx6VAW0xbM97Yn6oe3yD55r5tOCdo9Cz1wQnv99zB5e3o5Gqe1vIi7qw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=roeck-us.net; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=PbV/nJM3; arc=none smtp.client-ip=209.85.215.178
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=roeck-us.net
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1773763020; c=relaxed/simple;
+	bh=l3aen0shIsMMSxofK0sSFZ9ORdFXn6ThSmBBoz/oF34=;
+	h=From:Date:To:cc:Subject:In-Reply-To:Message-ID:References:
+	 MIME-Version:Content-Type; b=FjmaaUfABT9VsCK8Zi7s4+qjSkLyal8iP2JzxKYsAklNENLnxZPPVXlLcbsaqDP7Xsp1MPH0RnKRHA9Y8cToEVVp3SNKFgxQS1RoCNWOorgMPIIJnBV0qZ6fQkBA9ucvl8zSrahJ9/dPjB8Q9Piew3htzV8fMtjNKbt0y3YY4W0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=pass smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=B5agLADx; arc=none smtp.client-ip=192.198.163.16
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="PbV/nJM3"
-Received: by mail-pg1-f178.google.com with SMTP id 41be03b00d2f7-c6dd5b01e14so2243300a12.0
-        for <platform-driver-x86@vger.kernel.org>; Tue, 17 Mar 2026 08:52:29 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1773762748; x=1774367548; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:autocrypt:from
-         :content-language:references:cc:to:subject:user-agent:mime-version
-         :date:message-id:sender:from:to:cc:subject:date:message-id:reply-to;
-        bh=P+y9YdrogNpLoQwIFH0ytH1KlQ9rmz5lv65z1SWo2MI=;
-        b=PbV/nJM3A2rJmz9iMVCDjKMWueKHfY6ejpvljglscf+/N+i/K7NvB+m1wrrrXhOD4k
-         or0eoJRUnAY0WzSDxdfAqREKdNprtg7kN/G7qrbKS+/xGEStD5hy40n/ES9v49fNXjwr
-         rqFotO34B2W8JMJBn2d/iX/Zy7MjqeY13Kl4ThR0fgF03g8oqBrFpgvsF47bnFkhfdpZ
-         +LKrhuFC+Gx3A+BxJwgbYMLmhCX7VqkixBdSka7inpgUg2TeJHCmxkKPqJ4PTNUXHJ8d
-         yRc9zrMqyjUGq5/KiDMlJQ8JkrDXEbV4AMDGLx/D+ljESUbMv63/YeVBSxlW6HVaAsvL
-         Hlaw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1773762748; x=1774367548;
-        h=content-transfer-encoding:in-reply-to:autocrypt:from
-         :content-language:references:cc:to:subject:user-agent:mime-version
-         :date:message-id:sender:x-gm-gg:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=P+y9YdrogNpLoQwIFH0ytH1KlQ9rmz5lv65z1SWo2MI=;
-        b=DiZIDgeAz8ZcPgaC8XyL7XxhMtTc/g1rd7J+lgiN+mLf/ISDV3/94/NIvT1AKbGTs3
-         eCdC5MmAUI7qiq2R3/t4MYWGGx3roFiLNWL6xmKCKy+AaTXwGETvvF9k/evwTlbhPraN
-         GgST3nd8/6jWk+G3Ap5YuTD4/rj8oedGPs+CKCQe9XKcRzPoM2kp+bOhclS35a8Ei0cA
-         uMqsariiE/16az8Mm+1UVBhPURu7HDdghOKXE+emytQUQbekmIX+U6gMshmBf9Iv6S03
-         hBrE+cRjHiF4fL1cpPO7TnIa6dr45m+5XLp9SupsFGPPczpXt2LkARfugOYVGaN3kcxo
-         TPDw==
-X-Forwarded-Encrypted: i=1; AJvYcCUZuyWWdH8Uz+gF49+fVl986hwSX/RmtyU6TyC/hW0kbb7LpRouYGk+5MyDc0/3cARITWlGG9PIJbBBThjDb1R72qWo@vger.kernel.org
-X-Gm-Message-State: AOJu0YydNwv1MDwk5Wy2thCI1D+74AbBIIQ9ZWXwIFPlkLnoW2QqE19U
-	oMeBGsv9NCddDo7RbNDjNW1BNOkkaMQC8pqiBGkpJAUMc8WxR07hE2UI
-X-Gm-Gg: ATEYQzzzKO/Tun8NJGTmrUh/quwmY3qjtgdXboBlQxoQtlhub97zBW/rHL3T8//NtvX
-	E9WVwQxYPuPOls5+1ZloDxWSl1q/U6pNylbr2FyCtGW/w9qp+HWSbmY9GPZ7BwZVQVPXicZfgDJ
-	xQfO1fDNjNIRsjQRmpk3BpcJog3BnieTpPiLN2iW6x/Pg6mbBAEFp9jsxuGrhvHBdSgqesKmrhK
-	sJUkI+DaWJjGSP9nbm5KcRSi8gVB5TO4kB+YnYVIX4qZ3+8zXR/KiTOm6Ks9edu5IunFB9gKvhY
-	dOpFwl1HCPGJEOlxmO59GzNtgVMcd9f16hYc2wUjQZT+OS4XVdfEp5Dn/8Qz+bStr+8DUj2NMb+
-	EIyG8pDfsyIgThVKuKQIMcXR4CCQ4/3Qmz4db1gBatb4oJl2MzGhzLWQqoFyl5//1h/F982x5Db
-	EgrgabPXXPy6XcaaPVXq8kZT+clWnE0zmQmakhWcdRZNkeYojQTs2CGcqVsTi7VPwoQfuWlmlB
-X-Received: by 2002:a05:6a21:6da1:b0:398:7d6e:27f1 with SMTP id adf61e73a8af0-398ec9fe3e6mr16758219637.9.1773762748436;
-        Tue, 17 Mar 2026 08:52:28 -0700 (PDT)
-Received: from ?IPV6:2600:1700:e321:62f0:da43:aeff:fecc:bfd5? ([2600:1700:e321:62f0:da43:aeff:fecc:bfd5])
-        by smtp.gmail.com with ESMTPSA id 41be03b00d2f7-c741e0b1ffdsm43619a12.7.2026.03.17.08.52.27
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 17 Mar 2026 08:52:27 -0700 (PDT)
-Sender: Guenter Roeck <groeck7@gmail.com>
-Message-ID: <502ea01b-e5e1-45a2-b5f8-ad236dc8f006@roeck-us.net>
-Date: Tue, 17 Mar 2026 08:52:26 -0700
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="B5agLADx"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1773763019; x=1805299019;
+  h=from:date:to:cc:subject:in-reply-to:message-id:
+   references:mime-version;
+  bh=l3aen0shIsMMSxofK0sSFZ9ORdFXn6ThSmBBoz/oF34=;
+  b=B5agLADx3Tvnq4hWUF4cGIl3FF1ttUAQ7rlF7QQ2zB2faJnp10C+bfrT
+   lMUpcPb6qmB/fGyEpv5h7P1W0YLp7R+Yf6hJqWhC1qO/6FFwXtRWBJgM2
+   FBAfJxB4ET76slODnvU1VT047Pfov4My00UOmV6DUAWecmWlSSvfLxxN1
+   lPS8yD+1ZhcBrRUZ7IXyNXccRU5eQN4jU/zxXY6vLEYGf69g2P1KYS24b
+   fwUTAXkmTscI0+UDLcRE5UZpWQ1t3QcRhJau27eWgkCZyV8wodakaxgVv
+   Yd+F9LF8rgvgwvzooDEuClkhYNQWMRlYdU/KFeKFVASGS7hUrEMFNMfF0
+   g==;
+X-CSE-ConnectionGUID: kSb5jZD1SnuA7pUeIHN5ag==
+X-CSE-MsgGUID: Lu3O1IcXS/WTsrzTt/adPw==
+X-IronPort-AV: E=McAfee;i="6800,10657,11732"; a="62365203"
+X-IronPort-AV: E=Sophos;i="6.23,126,1770624000"; 
+   d="scan'208";a="62365203"
+Received: from orviesa001.jf.intel.com ([10.64.159.141])
+  by fmvoesa110.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 17 Mar 2026 08:56:39 -0700
+X-CSE-ConnectionGUID: 1NuqkNMZSeWVOFzn2CnpRA==
+X-CSE-MsgGUID: LJ1DcEEsTV2AniJhX/4zDA==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.23,126,1770624000"; 
+   d="scan'208";a="260213755"
+Received: from ijarvine-mobl1.ger.corp.intel.com (HELO localhost) ([10.245.245.161])
+  by smtpauth.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 17 Mar 2026 08:56:34 -0700
+From: =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
+Date: Tue, 17 Mar 2026 17:56:31 +0200 (EET)
+To: "Rafael J. Wysocki" <rafael@kernel.org>
+cc: Robert Gerlach <khnz@gmx.de>, Hans de Goede <hansg@kernel.org>, 
+    LKML <linux-kernel@vger.kernel.org>, 
+    Linux ACPI <linux-acpi@vger.kernel.org>, 
+    platform-driver-x86@vger.kernel.org, Jonathan Woithe <jwoithe@just42.net>
+Subject: Re: [PATCH v2 3/5] platform/x86: fujitsu: Register ACPI notify
+ handlers directly
+In-Reply-To: <CAJZ5v0g1M_rooYSYvFN4Chq-NovvS=gc5dhdw_BRvd-1S_tVVg@mail.gmail.com>
+Message-ID: <2c1378d5-7dce-2d22-6013-53e4b027d41c@linux.intel.com>
+References: <12863082.O9o76ZdvQC@rafael.j.wysocki> <1961003.tdWV9SEqCh@rafael.j.wysocki> <6768d6a8-3ab5-f4c8-7e77-229fd8135f53@linux.intel.com> <CAJZ5v0g1M_rooYSYvFN4Chq-NovvS=gc5dhdw_BRvd-1S_tVVg@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v3 0/9] Convert most Dell WMI drivers to use the new
- buffer-based API
-To: Armin Wolf <W_Armin@gmx.de>, Dell.Client.Kernel@dell.com,
- pali@kernel.org, mjg59@srcf.ucam.org
-Cc: soyer@irl.hu, hansg@kernel.org, ilpo.jarvinen@linux.intel.com,
- platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org,
- linux-hwmon@vger.kernel.org, mario.limonciello@amd.com
-References: <20260314175249.16040-1-W_Armin@gmx.de>
-Content-Language: en-US
-From: Guenter Roeck <linux@roeck-us.net>
-Autocrypt: addr=linux@roeck-us.net; keydata=
- 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
- np3900V20aS7eD9K8GTU0TGC1pyz6IVJwIE=
-In-Reply-To: <20260314175249.16040-1-W_Armin@gmx.de>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Type: multipart/mixed; boundary="8323328-357418628-1773762991=:968"
 
-On 3/14/26 10:52, Armin Wolf wrote:
-> The new buffer-based WMI API improves the compatibility between
-> different ACPI firmware implementations by performing marshalling/
-> unmarshalling of WMI buffers like the original Windows driver.
-> 
-> Convert most Dell WMI drivers to use this new API. This also
-> removes all ACPI-related code from those drivers because the
-> new buffer-based WMI API uses abstract WMI buffer objects instead
-> of ACPI objects.
-> 
-> All drivers have been tested on a Dell Inspiron 3505 and appear
-> to work normally.
-> 
-> The last three patches contain some misc. cleanups for the WMI
-> driver core itself. The most important change is a fix for modprobe
-> to verify any WMI GUID strings from WMI drivers and convert them
-> to uppercase if necessary. This should fix autoloading for WMI
-> drivers that use WMI GUID strings with lowercase letters.
-> 
+  This message is in MIME format.  The first part should be readable text,
+  while the remaining parts are likely unreadable without MIME-aware tools.
 
-The series doesn't give hints to maintainers if the patches should be
-applied on a per-subsystem basis (i.e., are independent of each other)
-or if they need to be applied together. I Acked the hwmon patch, assuming
-that it will be applied through a common branch. If the patches are
-supposed to be applied in subsystem branches, please let me know.
+--8323328-357418628-1773762991=:968
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: QUOTED-PRINTABLE
 
-Thanks,
-Guenter
+On Tue, 17 Mar 2026, Rafael J. Wysocki wrote:
 
+> On Tue, Mar 17, 2026 at 4:19=E2=80=AFPM Ilpo J=C3=A4rvinen
+> <ilpo.jarvinen@linux.intel.com> wrote:
+> >
+> > On Mon, 9 Mar 2026, Rafael J. Wysocki wrote:
+> >
+> > > From: "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>
+> > >
+> > > To facilitate subsequent conversion of the driver to using struct
+> > > platform_driver instead of struct acpi_driver, make it install its AC=
+PI
+> > > notify handlers directly instead of using struct acpi_driver .notify(=
+)
+> > > callbacks.
+> > >
+> > > No intentional functional impact.
+> > >
+> > > Signed-off-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
+> > > ---
+> > >
+> > > v1 -> v2: Call fujitsu_laptop_platform_remove() in acpi_fujitsu_lapto=
+p_add()
+> > >    error code path if notify handler registration fails (Ilpo)
+> >
+> > Hmm, did you forget to commit something as I don't see this addressed
+> > below?
+>=20
+> No, I didn't.  It's there, you had a comment on it below even.
+
+Yes, sorry, I forgot I'd already written this (and to remove it), only=20
+after having written this I noticed it was done differently than what I=20
+had expected.
+
+--=20
+ i.
+
+
+> > > ---
+> > >  drivers/platform/x86/fujitsu-laptop.c | 32 ++++++++++++++++++++++---=
+--
+> > >  1 file changed, 27 insertions(+), 5 deletions(-)
+> > >
+> > > diff --git a/drivers/platform/x86/fujitsu-laptop.c b/drivers/platform=
+/x86/fujitsu-laptop.c
+> > > index 1adce90ae3e6..7816a867a60c 100644
+> > > --- a/drivers/platform/x86/fujitsu-laptop.c
+> > > +++ b/drivers/platform/x86/fujitsu-laptop.c
+> > > @@ -502,8 +502,9 @@ static int fujitsu_backlight_register(struct acpi=
+_device *device)
+> > >
+> > >  /* Brightness notify */
+> > >
+> > > -static void acpi_fujitsu_bl_notify(struct acpi_device *device, u32 e=
+vent)
+> > > +static void acpi_fujitsu_bl_notify(acpi_handle handle, u32 event, vo=
+id *data)
+> > >  {
+> > > +     struct acpi_device *device =3D data;
+> > >       struct fujitsu_bl *priv =3D acpi_driver_data(device);
+> > >       int oldb, newb;
+> > >
+> > > @@ -558,7 +559,18 @@ static int acpi_fujitsu_bl_add(struct acpi_devic=
+e *device)
+> > >       if (ret)
+> > >               return ret;
+> > >
+> > > -     return fujitsu_backlight_register(device);
+> > > +     ret =3D fujitsu_backlight_register(device);
+> > > +     if (ret)
+> > > +             return ret;
+> > > +
+> > > +     return acpi_dev_install_notify_handler(device, ACPI_DEVICE_NOTI=
+FY,
+> > > +                                            acpi_fujitsu_bl_notify, =
+device);
+> > > +}
+> > > +
+> > > +static void acpi_fujitsu_bl_remove(struct acpi_device *device)
+> > > +{
+> > > +     acpi_dev_remove_notify_handler(device, ACPI_DEVICE_NOTIFY,
+> > > +                                    acpi_fujitsu_bl_notify);
+> > >  }
+> > >
+> > >  /* ACPI device for hotkey handling */
+> > > @@ -941,8 +953,9 @@ static void acpi_fujitsu_laptop_release(struct ac=
+pi_device *device)
+> > >       }
+> > >  }
+> > >
+> > > -static void acpi_fujitsu_laptop_notify(struct acpi_device *device, u=
+32 event)
+> > > +static void acpi_fujitsu_laptop_notify(acpi_handle handle, u32 event=
+, void *data)
+> > >  {
+> > > +     struct acpi_device *device =3D data;
+> > >       struct fujitsu_laptop *priv =3D acpi_driver_data(device);
+> > >       unsigned long flags;
+> > >       int scancode, i =3D 0;
+> > > @@ -1056,6 +1069,13 @@ static int acpi_fujitsu_laptop_add(struct acpi=
+_device *device)
+> > >       if (ret)
+> > >               goto err_free_fifo;
+> > >
+> > > +     ret =3D acpi_dev_install_notify_handler(device, ACPI_DEVICE_NOT=
+IFY,
+> > > +                                           acpi_fujitsu_laptop_notif=
+y, device);
+> > > +     if (ret) {
+> > > +             fujitsu_laptop_platform_remove(device);
+> >
+> > Please add this into the rollback path instead and add another label
+> > there.
+>=20
+> OK
+>=20
+--8323328-357418628-1773762991=:968--
