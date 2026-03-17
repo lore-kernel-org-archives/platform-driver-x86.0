@@ -1,197 +1,81 @@
-Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4BD803ACA43
-	for <platform-driver-x86@vger.kernel.org>; Tue, 17 Mar 2026 14:07:48 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.180.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 00D423E3C6A
+	for <platform-driver-x86@vger.kernel.org>; Tue, 17 Mar 2026 14:42:26 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1773756469; cv=none; b=J458x8AGIg8LRNODP1pomDY+sVPyl71Xzjg7Y9AZxQL2q/6m4ph8DOLieeMFVhluQxvbZbmbpfGF6sl82jEkb2tFJ5FMbESzIRUXk85rtqNMWT7z/+blWWmDf/Nr4Q9ihl3oyNJXH4fgeR3BQlB2WqDSSvzzUIw811CPMaYRdw0=
+	t=1773758547; cv=none; b=Jk7aTZLbu/0kDorn8zVOhTXZxu+9E+1rqYSGNCCtXJSFFUU2pGd/mm6ORDUr1cONgQSU/P780crmU2P4rOD5de6R9UW5GY/mgRTuHOD/7ER+DaQ0w+FLTosX/CEjB6XYoUNEId+vkkiCC3LkVuIyxIZ0GES2S2fkYc+eW/vznhY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1773756469; c=relaxed/simple;
-	bh=SjKY5rL+nXL4pYVVde5HOkkJzq5ZHB/znoBTF2Z5A3w=;
-	h=Message-ID:Date:MIME-Version:From:Subject:To:Cc:References:
-	 In-Reply-To:Content-Type; b=VjhEVG1FdQ86Uxy5o7AeLRToN4cyMHTUE+e90AuukZShkjt3LdE5JrITHGP77yynFqMjTlrYrQ6SS79lvyCVRoZNNT26nv2Vi0Nu+lNnnvAPutehNdWmogC5/CzJGkjl2RgpLEbpfGU2uaUZoFGrRre2OhYfCqz7dAC9TnqORFU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com; spf=pass smtp.mailfrom=oss.qualcomm.com; dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b=FSXpdnY+; dkim=pass (2048-bit key) header.d=oss.qualcomm.com header.i=@oss.qualcomm.com header.b=Ajzn2JvM; arc=none smtp.client-ip=205.220.180.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oss.qualcomm.com
+	s=arc-20240116; t=1773758547; c=relaxed/simple;
+	bh=LTp4XziqGl5Cy3RHFluRXO8Or8jNKnLB2akvBHZqwpE=;
+	h=From:To:Subject:Date:Message-ID:In-Reply-To:References:
+	 Content-Type:MIME-Version; b=KMwAKfc/KyEtcBC9IViPNAdxONOTxKN6iZGaHSQIBfKkz2oHZ4GwIvIPL53+1s48sFtaWLINxh+Tyq1iCC7i7Dj6+LQYyZXeWausVafBAIeIga7a2umJILCisdYHiYxZkTrN6Il5vVM7kHMhB+9t9MOAI3E320ahgmkxb5cyNR0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=WfH5W6QW; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b="FSXpdnY+";
-	dkim=pass (2048-bit key) header.d=oss.qualcomm.com header.i=@oss.qualcomm.com header.b="Ajzn2JvM"
-Received: from pps.filterd (m0279868.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.18.1.11/8.18.1.11) with ESMTP id 62HDG42Z3124258
-	for <platform-driver-x86@vger.kernel.org>; Tue, 17 Mar 2026 14:07:47 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=qualcomm.com; h=
-	cc:content-transfer-encoding:content-type:date:from:in-reply-to
-	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
-	LgfIYBWPJOjzoQOWNAMuyA9WL02GR4rPUnpaw9+fGZI=; b=FSXpdnY+eL/9xWle
-	/gm4urTVBVWJJKN1sPPPv3+VCdEoEVd3sQBUn2O7wjzrnTAPnsH2qLWmRqqXJ24M
-	rFTgN1z9CrtlW1sjL2gGaYEB/kF+6vJ6WqLtKk68PqrWiGcfKjRQ2dt8BZ3xQ6ir
-	mQ6xRzKduYlsOB8ScKYO1u/5NhgfCifIYQNG2Dkq2g/QZZ03g74OUVjeHxIpbk+Y
-	NZKp40XcYpzXOWdUjRZTd9W+NEUv2o5IMPpmSo4JPe+1ch8V/cgJ3TmmqYdXXYGt
-	/jIpo9vF7hjHGO3p5EKZWii/9mpJDI9IoAfVmDuqA79QZm+hHq/hX4Rl0lxb2w5h
-	L9R3Eg==
-Received: from mail-vs1-f70.google.com (mail-vs1-f70.google.com [209.85.217.70])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 4cy2fbsewh-1
-	(version=TLSv1.3 cipher=TLS_AES_128_GCM_SHA256 bits=128 verify=NOT)
-	for <platform-driver-x86@vger.kernel.org>; Tue, 17 Mar 2026 14:07:47 +0000 (GMT)
-Received: by mail-vs1-f70.google.com with SMTP id ada2fe7eead31-5ffaa511969so7973206137.1
-        for <platform-driver-x86@vger.kernel.org>; Tue, 17 Mar 2026 07:07:47 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=oss.qualcomm.com; s=google; t=1773756466; x=1774361266; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:content-language:references
-         :cc:to:subject:from:user-agent:mime-version:date:message-id:from:to
-         :cc:subject:date:message-id:reply-to;
-        bh=LgfIYBWPJOjzoQOWNAMuyA9WL02GR4rPUnpaw9+fGZI=;
-        b=Ajzn2JvMmyEg6wRSFr0+xagejCFMvgX/QPgjlcRwE+GTMggsIMB23BwMGk95OroUwi
-         g5yFCs1p6VnReXGsfWzWFP0Jo+E/xH4IpK/o0t9T6g+5s6OpZ3Nio0ivWojMkbR8R7Rq
-         tj8XVGfSPff6YsfcIc36e0uiXIcihcCbFztvQbmzCHvwyerhZ4Uea+TPhQUpNYop1zcz
-         +ubnXmtAyKcasqvBlKryMmqsyZpOf6DFVmao94rCQGPI7u8V2R7g8NRhQjETqyRGYFte
-         91FXMGf/blp/aHHUyC169R76WH7gJeDjDypVHUGgqb7tcYeR6BtDtbT8FEILzcMfH9Bo
-         wC8w==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1773756466; x=1774361266;
-        h=content-transfer-encoding:in-reply-to:content-language:references
-         :cc:to:subject:from:user-agent:mime-version:date:message-id:x-gm-gg
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=LgfIYBWPJOjzoQOWNAMuyA9WL02GR4rPUnpaw9+fGZI=;
-        b=nfJqALuTG8vJt/GOEQhaGharO86cNBvlkbvQDXeePzcGez/hHnK2g7170mGNQhf/kr
-         IM02R4R2zl1BrMe8PRY4ldHMYd0NfOJWyBLaeQRohMG1sOaMl3v8Xo+VSEQiMnNocth/
-         Fu156c3NulIvxR4KlOEJUCgvn/9BmrDXHDW995+b75jmPCtmx9qOF21pDkzFgpM3KlEx
-         luTlljtHXsoxzLn3OSd5T2RFaBlXMa1AaXqLSp0vr6d0OWoWJa+6KBWYslVbTfVSZL0f
-         z3+3MlkzDEicGkngKJF+Nr76Ou5gTzty/2x7YnJNTXi04Yy9NHhO+OjoZTCn62tUstef
-         J7nA==
-X-Forwarded-Encrypted: i=1; AJvYcCWXj8HRQaHx6kDjCsoEr1u06zP/U40zNU2vizQGo9o8XsN2m7whTMkf2WXYrOPneDY/0meXW6sNo44INaTMhTHV4a8d@vger.kernel.org
-X-Gm-Message-State: AOJu0YyMg0PjtweJUk/iND2wnQO3FxfsUhG4wKjY7g/6e3CglDd/bO+x
-	1BIK4itIAANT/VAUCve/UqcZIQQD146ln8d0kkQk/Q2apvEuZWSx1Lm82sRt5WSb6/7SVbbZ/Mz
-	70IzmxGVjqFM/ip4s9395xIT6UowH1g/4Bx9Y6aP65HBLoZnfMicvoYXIEP3ealWpCQBhysQsss
-	3g
-X-Gm-Gg: ATEYQzwc/d/a1oCnfd/n14TCf7EzpqPW6l1GqWI3qpKFvgqQlMioAiXzbQNp1ZfJYv8
-	RIbaieCxExlmNrrWH7cfaQQG2vtA14896JKhmhfo53ffMu8cKn4z+y5ud/kGRHr2QqtO6k9e83s
-	dlnVNi6Mse7N2FH/2TFwaX0DbPJXOK+s9apieZAYtVGGwpY4WLI4AUxpQEtyI/Q5AvD+U9Pjxwz
-	QX+WuQ1U5PhCiwLp5atx+tq+hVI5kc4BPhIcPtTrcX6FU8czcprErw6vEAiIO+qMnfDraf/kVG0
-	9+yPCrZ1Sy0kmrMvcaiLxAdmb07V7hU0bClZ7N0ahJycxTmsdKEA1yp1vgym6jCS6RHl19hsGeI
-	7aIj5BGI8qAiaVpBBS3wxEf52oWBiv94qQsxEegJGs4S7wV9Bl39o4wTyiBgyTLaiGXnudHJst1
-	H4e5Xvp8XhP+IebjRxgWLu8nNDHFCvU7+2OHvHjgKOWnWjU+5sZK5sjSgx87TfYMQqZgHxg5ZFI
-	XRIeVbf3lZelsIE
-X-Received: by 2002:a05:6102:442b:b0:5ff:a16b:93f0 with SMTP id ada2fe7eead31-6020e585dbdmr5264170137.22.1773756466325;
-        Tue, 17 Mar 2026 07:07:46 -0700 (PDT)
-X-Received: by 2002:a05:6102:442b:b0:5ff:a16b:93f0 with SMTP id ada2fe7eead31-6020e585dbdmr5264100137.22.1773756465573;
-        Tue, 17 Mar 2026 07:07:45 -0700 (PDT)
-Received: from ?IPV6:2001:1c00:c32:7800:5bfa:a036:83f0:f9ec? (2001-1c00-0c32-7800-5bfa-a036-83f0-f9ec.cable.dynamic.v6.ziggo.nl. [2001:1c00:c32:7800:5bfa:a036:83f0:f9ec])
-        by smtp.gmail.com with ESMTPSA id 4fb4d7f45d1cf-66350b85f3bsm6577959a12.25.2026.03.17.07.07.43
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 17 Mar 2026 07:07:44 -0700 (PDT)
-Message-ID: <459993ae-c94a-4092-b81e-dc07c7011397@oss.qualcomm.com>
-Date: Tue, 17 Mar 2026 15:07:43 +0100
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="WfH5W6QW"
+Received: by smtp.kernel.org (Postfix) with ESMTPS id 95D95C2BCB1
+	for <platform-driver-x86@vger.kernel.org>; Tue, 17 Mar 2026 14:42:26 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1773758546;
+	bh=LTp4XziqGl5Cy3RHFluRXO8Or8jNKnLB2akvBHZqwpE=;
+	h=From:To:Subject:Date:In-Reply-To:References:From;
+	b=WfH5W6QWhTq+W8O7nynll4egWoVXwPaV5gEVGfyOjQ3hafwmgY6pHEc1UHf6RWiEp
+	 IHr2kl/Bv29RR0/5rRZ5b5yKH0B0KRI/FxTz1uEp6y8nRna3X1zOS8tEvJFM5sjtAJ
+	 Gl29lNUluLmTGBcjXpfCOPQsDnjxzDKgrAWNegCiNndIIEWwOf690gBptQYLjvTFyK
+	 Zxf5VbVuvKG1F57AQRyYmee3yqLTqpnroodscPO91FMVj0Dv5h2zqFvo4rMJMzFI8b
+	 uwsaTv3odn7/zKwM7f8w/YY1p1Ymg/XRGSk/COsppCk5PcSqruO/7xN098rfqwCixa
+	 WhMdwu5ilEUaw==
+Received: by aws-us-west-2-korg-bugzilla-1.web.codeaurora.org (Postfix, from userid 48)
+	id 8F8E6C41612; Tue, 17 Mar 2026 14:42:26 +0000 (UTC)
+From: bugzilla-daemon@kernel.org
+To: platform-driver-x86@vger.kernel.org
+Subject: [Bug 199715] hp_accel: probe of HPQ6007:00 failed with error -22 (HP
+ Envy x360)
+Date: Tue, 17 Mar 2026 14:42:25 +0000
+X-Bugzilla-Reason: None
+X-Bugzilla-Type: changed
+X-Bugzilla-Watch-Reason: AssignedTo drivers_platform_x86@kernel-bugs.osdl.org
+X-Bugzilla-Product: Drivers
+X-Bugzilla-Component: Platform_x86
+X-Bugzilla-Version: 2.5
+X-Bugzilla-Keywords: 
+X-Bugzilla-Severity: normal
+X-Bugzilla-Who: andy.shevchenko@gmail.com
+X-Bugzilla-Status: NEW
+X-Bugzilla-Resolution: 
+X-Bugzilla-Priority: P1
+X-Bugzilla-Assigned-To: mario.limonciello@amd.com
+X-Bugzilla-Flags: 
+X-Bugzilla-Changed-Fields: assigned_to
+Message-ID: <bug-199715-215701-JAG07aYHbs@https.bugzilla.kernel.org/>
+In-Reply-To: <bug-199715-215701@https.bugzilla.kernel.org/>
+References: <bug-199715-215701@https.bugzilla.kernel.org/>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+X-Bugzilla-URL: https://bugzilla.kernel.org/
+Auto-Submitted: auto-generated
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-From: johannes.goede@oss.qualcomm.com
-Subject: Re: [PATCH 1/1] platform: int3472: Drop redundant initialisation to 0
- and NULL
-To: Sakari Ailus <sakari.ailus@linux.intel.com>, linux-media@vger.kernel.org
-Cc: Antti Laakso <antti.laakso@linux.intel.com>, linux-gpio@vger.kernel.org,
-        platform-driver-x86@vger.kernel.org, linusw@kernel.org,
-        brgl@kernel.org, mchehab@kernel.org, dan.scally@ideasonboard.com,
-        ilpo.jarvinen@linux.intel.com, hverkuil+cisco@kernel.org,
-        sre@kernel.org, hao.yao@intel.com, jimmy.su@intel.com,
-        miguel.vadillo@intel.com, kees@kernel.org, ribalda@chromium.org
-References: <20260317131040.215119-1-sakari.ailus@linux.intel.com>
-Content-Language: en-US, nl
-In-Reply-To: <20260317131040.215119-1-sakari.ailus@linux.intel.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-X-Proofpoint-ORIG-GUID: MxVN1PHshbG0fn7sTF1eC0RBi8wJNLOH
-X-Proofpoint-Spam-Details-Enc: AW1haW4tMjYwMzE3MDEyNSBTYWx0ZWRfX8+FAHbiL0GfK
- VK6EWg6MeITOG2QqEcfMOVHMS/5um3KPCqQqT6mx/x3FjNhSF5levurHz40TAx2d+z1YgfmsS1i
- nJ7sUHfqaVLN804JNkTDso9cpBI1w2YzGL1JEW6jmUBDTGWWp8ehdcWf2yw4dDkF+N3xRWR5HBY
- X2rFD+bryejfiRCXeehP+9GhVuKnKnTwSQIH1oHxMB9TNssj6Ii73h/v4CyMsZPi/Eym8wF0f3G
- fnyAFWYo14HffeGUTCzp5jQuLS4F057rH2nEU6DZK2ZRSWE4dKHN8Bde0n0NvE23DOj3OgtCDcl
- +LrkxQ28F9b0fShvQwuIY4R4jfv9qEW5do8e8IZz0uUosL3tuuHxNLXn5WAjRd5CsGHy6tUmBus
- AmfC05e4ulMEffQU6G/QEoWaQMEC2vZS4p9s0z/jhtkLXviXiPpvS+csh2pYAjUfkhQkuY5XsMz
- KIQP9QqS1lMMi4fQ/8Q==
-X-Authority-Analysis: v=2.4 cv=fa6gCkQF c=1 sm=1 tr=0 ts=69b96033 cx=c_pps
- a=N1BjEkVkxJi3uNfLdpvX3g==:117 a=xqWC_Br6kY4A:10 a=IkcTkHD0fZMA:10
- a=Yq5XynenixoA:10 a=s4-Qcg_JpJYA:10 a=VkNPw1HP01LnGYTKEx00:22
- a=u7WPNUs3qKkmUXheDGA7:22 a=ZpdpYltYx_vBUK5n70dp:22 a=QyXUC8HyAAAA:8
- a=EUspDBNiAAAA:8 a=z3Uast6Rtm7B2PKYKTAA:9 a=QEXdDO2ut3YA:10
- a=crWF4MFLhNY0qMRaF8an:22
-X-Proofpoint-GUID: MxVN1PHshbG0fn7sTF1eC0RBi8wJNLOH
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1143,Hydra:6.1.51,FMLib:17.12.100.49
- definitions=2026-03-17_01,2026-03-17_01,2025-10-01_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
- phishscore=0 priorityscore=1501 spamscore=0 lowpriorityscore=0
- impostorscore=0 adultscore=0 bulkscore=0 malwarescore=0 suspectscore=0
- clxscore=1015 classifier=typeunknown authscore=0 authtc= authcc=
- route=outbound adjust=0 reason=mlx scancount=1 engine=8.22.0-2603050001
- definitions=main-2603170125
 
-Hi,
+https://bugzilla.kernel.org/show_bug.cgi?id=3D199715
 
-On 17-Mar-26 14:10, Sakari Ailus wrote:
-> A few fields in structs containing regulator initialisation data for Dell
-> laptops are initialised to 0 and NULL. Drop the explicit initialisation as
-> redundant.
-> 
-> Signed-off-by: Sakari Ailus <sakari.ailus@linux.intel.com>
+Andy Shevchenko (andy.shevchenko@gmail.com) changed:
 
-Thanks, patch looks good to me:
+           What    |Removed                     |Added
+----------------------------------------------------------------------------
+           Assignee|drivers_platform_x86@kernel |mario.limonciello@amd.com
+                   |-bugs.osdl.org              |
 
-Reviewed-by: Hans de Goede <johannes.goede@oss.qualcomm.com>
+--- Comment #70 from Andy Shevchenko (andy.shevchenko@gmail.com) ---
+Reassign to AMD people.
 
-Regards,
+--=20
+You may reply to this email to add a comment.
 
-Hans
-
-
-
-> ---
->  drivers/platform/x86/intel/int3472/tps68470_board_data.c | 8 --------
->  1 file changed, 8 deletions(-)
-> 
-> diff --git a/drivers/platform/x86/intel/int3472/tps68470_board_data.c b/drivers/platform/x86/intel/int3472/tps68470_board_data.c
-> index 6bec5a910396..c1ddbf9a82c0 100644
-> --- a/drivers/platform/x86/intel/int3472/tps68470_board_data.c
-> +++ b/drivers/platform/x86/intel/int3472/tps68470_board_data.c
-> @@ -151,8 +151,6 @@ static const struct regulator_init_data dell_7212_tps68470_core_reg_init_data =
->  		.apply_uV = 1,
->  		.valid_ops_mask = REGULATOR_CHANGE_STATUS,
->  	},
-> -	.num_consumer_supplies = 0,
-> -	.consumer_supplies = NULL,
->  };
->  
->  static const struct regulator_init_data dell_7212_tps68470_ana_reg_init_data = {
-> @@ -162,8 +160,6 @@ static const struct regulator_init_data dell_7212_tps68470_ana_reg_init_data = {
->  		.apply_uV = 1,
->  		.valid_ops_mask = REGULATOR_CHANGE_STATUS,
->  	},
-> -	.num_consumer_supplies = 0,
-> -	.consumer_supplies = NULL,
->  };
->  
->  static const struct regulator_init_data dell_7212_tps68470_vcm_reg_init_data = {
-> @@ -173,8 +169,6 @@ static const struct regulator_init_data dell_7212_tps68470_vcm_reg_init_data = {
->  		.apply_uV = 1,
->  		.valid_ops_mask = REGULATOR_CHANGE_STATUS,
->  	},
-> -	.num_consumer_supplies = 0,
-> -	.consumer_supplies = NULL,
->  };
->  
->  static const struct regulator_init_data dell_7212_tps68470_vio_reg_init_data = {
-> @@ -184,8 +178,6 @@ static const struct regulator_init_data dell_7212_tps68470_vio_reg_init_data = {
->  		.apply_uV = 1,
->  		.valid_ops_mask = REGULATOR_CHANGE_STATUS,
->  	},
-> -	.num_consumer_supplies = 0,
-> -	.consumer_supplies = NULL,
->  };
->  
->  static const struct regulator_init_data dell_7212_tps68470_vsio_reg_init_data = {
-
+You are receiving this mail because:
+You are watching the assignee of the bug.=
