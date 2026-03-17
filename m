@@ -1,58 +1,59 @@
 Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.11])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B9A413C6A22;
-	Tue, 17 Mar 2026 13:00:11 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2246A3C6A2B;
+	Tue, 17 Mar 2026 13:00:18 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.11
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1773752412; cv=none; b=PKRqHqHeLUNSaG4GlBEgfmt8Fd0HiiY7ZvduzfudtIkGSfUyGpY2Pm2+MKy9dkea7HXC76StEsxuwo6lkoUpzU6E1WeSbu+uImaDo6wEgYpRGpJHDQ+Lb9BYLhm+vcZQQqU8LIZx5vaYmlCxn2myYfursfl5DlxebbpYuANVlP8=
+	t=1773752420; cv=none; b=oWHRhVDkTFmYyXsnME9rn384Y4dRoGldOQizcHywPEDyLamtKCekzvdVgutxCFGdG6eX7aFjiyk9IXxFJMuboBDdHfx0QYRCCREpgWU50zEyzU6QmzmnEYePxdyZub3GN3TPKTmyF4S3bHSGDZ1ExHmTL+IpSyO2GJitzfXJA4I=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1773752412; c=relaxed/simple;
-	bh=rbVcCCPIEzH51sClC7PqCKiUpkyuD2orXmITtnRsF/Y=;
+	s=arc-20240116; t=1773752420; c=relaxed/simple;
+	bh=+MlSoT5Q6yRIGQp9Qv9f6b63kBFjYt8pS4LghN5tfAI=;
 	h=From:To:Cc:In-Reply-To:References:Subject:Message-Id:Date:
-	 MIME-Version:Content-Type; b=UZUQfuPT83otkBjewhVyud4z5J3H9ADDdAqN/0pfAIV6lKr3giQdSSLmbP603cxwslaZN5wq2DSBVeCBACVy4exbrxf2tpZHH/pm4Th3jaXS/+qbfjCUZaAgP2aPf4eNuMSP0UJQ/XTsjgnEpLz+44HYF84hOFj8XH/jvyIB/+w=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=pass smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=FNz1TCHS; arc=none smtp.client-ip=192.198.163.11
+	 MIME-Version:Content-Type; b=IrjOOev1x0LIA/GpV4LKNENdzwl1NKsumwMenRp4DF8KPFem68i/AaBbUG5ZSKxk1VirT7BVdoDfdYkv4zcn4we0dSDj/0whg4UxVnLBiAeWMerjcdNYbLvqUa091vArJaeTHFNJVIup8DfuTCjDRn+aB4XXp5IU1B2zjHvimvs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=pass smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=G6Ody92q; arc=none smtp.client-ip=192.198.163.11
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="FNz1TCHS"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="G6Ody92q"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1773752411; x=1805288411;
+  t=1773752419; x=1805288419;
   h=from:to:cc:in-reply-to:references:subject:message-id:
    date:mime-version:content-transfer-encoding;
-  bh=rbVcCCPIEzH51sClC7PqCKiUpkyuD2orXmITtnRsF/Y=;
-  b=FNz1TCHSEuMQy+RQ0MnhPH4A0MsPsnJIK6/dHsmOTzTeIClB6HvB68VO
-   uCEVuybzx132D/snhpsIHlBJW3eCOOmZN5w6litxplb+APd39ah+5BaA3
-   oI2vJ4NcOu4XVPU0qt3kogA3roiLZvlJ4q9A1uzihgyThRoy+YbekFcEy
-   ZRtarXxIRuq4x6i5WTOcsIAGXwQLO3JpDYYBRa7kozgp3H7vFuLVAUO2i
-   IqOAVyAPBHzKudN9ltZpi6TChGXc666JVQWuIA8SCaPwiDlP4Vykstp4F
-   WWFaHDfz/3PU7UmiSLbrerrz5xnyKUag7pSIEybOhYkabhHeS9Ic18B6G
-   w==;
-X-CSE-ConnectionGUID: Cdbllia8Rhqo5BVMj3LlRw==
-X-CSE-MsgGUID: lahKWOh7TkWN6t4QLH47ww==
-X-IronPort-AV: E=McAfee;i="6800,10657,11732"; a="85409120"
+  bh=+MlSoT5Q6yRIGQp9Qv9f6b63kBFjYt8pS4LghN5tfAI=;
+  b=G6Ody92q+HWLEa9+8eqTgxfZMo/rB4RwaK0YhaJwM9QmLjBy3H+fSp0h
+   XBdSHC3mSCv6WARj4HoIFt7ziXBXdR6iTVt/tdUBY4n+ozgPM8UN+kA0X
+   Gzu+M+4vhN+P8h4k00o+5zAkHnj0f5zZNp450pzjDSc/P6o2PGJFSYLNp
+   cuQlsPmxCqHuTIbhhFfNpWZEc5DK4mwDOACVv++FrRhdUw2LFBQa6pEhV
+   BxdeUKySrd0+co+vt6tF4CZGuLq1FPL0/Sa5EJw9pSm0vb07qfF3V8jXK
+   hmtL7O5A0e+hwXaEuWkdjlH7HE3olXtWKEgkiM2AokeMNd5Qj7UswycSU
+   Q==;
+X-CSE-ConnectionGUID: /JiZj8MxQKKK7DSHV8Gv+g==
+X-CSE-MsgGUID: ZTx5kg9TSdmxGbEqbfe1Cg==
+X-IronPort-AV: E=McAfee;i="6800,10657,11732"; a="85409159"
 X-IronPort-AV: E=Sophos;i="6.23,124,1770624000"; 
-   d="scan'208";a="85409120"
+   d="scan'208";a="85409159"
 Received: from orviesa010.jf.intel.com ([10.64.159.150])
-  by fmvoesa105.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 17 Mar 2026 06:00:11 -0700
-X-CSE-ConnectionGUID: z2ryeQ5ySXKpw3rZuqIjCQ==
-X-CSE-MsgGUID: mdAJ98OCSpizbb84cQy2Eg==
+  by fmvoesa105.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 17 Mar 2026 06:00:18 -0700
+X-CSE-ConnectionGUID: KEWu9ycyQ7OXhQOzLNd0yg==
+X-CSE-MsgGUID: e/4qjOuvR2CjpcLz69U9RQ==
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="6.23,124,1770624000"; 
-   d="scan'208";a="221490634"
+   d="scan'208";a="221490683"
 Received: from ijarvine-mobl1.ger.corp.intel.com (HELO localhost) ([10.245.245.161])
-  by orviesa010-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 17 Mar 2026 06:00:08 -0700
+  by orviesa010-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 17 Mar 2026 06:00:16 -0700
 From: =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
-To: linux-kernel@vger.kernel.org, Denis Benato <denis.benato@linux.dev>
-Cc: platform-driver-x86@vger.kernel.org, Hans de Goede <hansg@kernel.org>, 
- "Luke D . Jones" <luke@ljones.dev>, Mateusz Schyboll <dragonn@op.pl>, 
- Denis Benato <benato.denis96@gmail.com>
-In-Reply-To: <20260309183559.433555-1-denis.benato@linux.dev>
-References: <20260309183559.433555-1-denis.benato@linux.dev>
-Subject: Re: [PATCH 0/2] platform/x86: asus-armoury: add more ppt data
-Message-Id: <177375240356.9137.13046791450460193020.b4-ty@linux.intel.com>
-Date: Tue, 17 Mar 2026 15:00:03 +0200
+To: platform-driver-x86@vger.kernel.org, 
+ Raed <youaretalkingtoraed@gmail.com>
+Cc: linux-kernel@vger.kernel.org, hansg@kernel.org, 
+ Raed <thisisraed@outlook.com>
+In-Reply-To: <20260311131338.965249-1-youaretalkingtoraed@gmail.com>
+References: <20260311131338.965249-1-youaretalkingtoraed@gmail.com>
+Subject: Re: [PATCH] platform/x86: hp-wmi: Add Omen 16-xf0xxx (8BCA)
+ support
+Message-Id: <177375241155.9137.8530054216519924489.b4-ty@linux.intel.com>
+Date: Tue, 17 Mar 2026 15:00:11 +0200
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
@@ -63,16 +64,15 @@ Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
 X-Mailer: b4 0.13.0
 
-On Mon, 09 Mar 2026 19:35:56 +0100, Denis Benato wrote:
+On Wed, 11 Mar 2026 18:43:38 +0530, Raed wrote:
 
-> this patch series includes PPT data for the models: GA503QM and G614FP.
+> The HP Omen 16-xf0xxx board 8BCA uses the same Victus-S fan and
+> thermal WMI path as other recently supported Omen/Victus boards,
+> but it requires Omen v1 thermal profile parameters for correct
+> platform profile behavior.
 > 
-> Cheers,
-> Denis
-> 
-> Denis Benato (2):
->   platform/x86: asus-armoury: add support for GA503QM
->   platform/x86: asus-armoury: add support for G614FP
+> Add board 8BCA to victus_s_thermal_profile_boards[] and map it
+> to omen_v1_thermal_params.
 > 
 > [...]
 
@@ -83,10 +83,8 @@ platform-drivers-x86/review-ilpo-fixes branch only once I've pushed my
 local branch there, which might take a while.
 
 The list of commits applied:
-[1/2] platform/x86: asus-armoury: add support for GA503QM
-      commit: 229a45dc893a1acbdd9083341db60d2e7d1bcef2
-[2/2] platform/x86: asus-armoury: add support for G614FP
-      commit: 94fcbfa9ddcb70d6aa59ed84f5d25c45ffc994b5
+[1/1] platform/x86: hp-wmi: Add Omen 16-xf0xxx (8BCA) support
+      commit: 78d77e548921af84e9df31a45606e1d43d09fc74
 
 --
  i.
