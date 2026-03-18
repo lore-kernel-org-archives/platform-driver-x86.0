@@ -1,98 +1,180 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.11])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 35CA336C0B7;
-	Wed, 18 Mar 2026 12:23:26 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.11
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 359343B8BCB
+	for <platform-driver-x86@vger.kernel.org>; Wed, 18 Mar 2026 12:53:49 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1773836607; cv=none; b=c8G2uYFhhXyZJN+Bh5SQRdJvxMex8F2LTa9ZiQiqRvRwar/VES8yGvuxidnV8TVwXRYmK+kqTCoo6DH9Cwy+/lyv7KDdI1OGXGOc+nLZo1MSmFk8K38NkrfeBs7488WN/W9zqSGbC3bK72bHWfQIeZkU15SLxRbr6FjOKG9Npe8=
+	t=1773838429; cv=none; b=k+lv3rlKnjBJWFJ61v47MCw8rmzISaatt6l7RNDsBYunKmOl+RwXKFg6rdHTPXhmiediTuuYzQFQ9LJJXtQqiNqNIWvFywguUWt0xYXfBbEGZqfAw0JNE4ELNiILFfLyBATAsz7UEqBxVhwaOuQTstEQneH9Dg5yadHwiXtelrM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1773836607; c=relaxed/simple;
-	bh=7jJWu/4HECELyPxQeSfNrU3tYlPhmHg7YwnSL1LakY0=;
-	h=From:To:Cc:In-Reply-To:References:Subject:Message-Id:Date:
-	 MIME-Version:Content-Type; b=aeult/06vCEd8kOlXC7yWcbFQWEZC+oEfnFs2xJ6Ld/EGyPLBcDQOVZFg1UT8Gpuva3LkkzLME2C6ExWrHQG86TbUfirz4yVUHwezI5BMAdswcPJOovjRwO8nwU6XatF/oEJTeP4RGf5nQMciZSdE5HBBEgZE8I/F+aRS+kleoE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=pass smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=RTIYpzlu; arc=none smtp.client-ip=192.198.163.11
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.intel.com
+	s=arc-20240116; t=1773838429; c=relaxed/simple;
+	bh=fpI8s6BMIIBn66z1Yt8/N7uhsCdDwhagyCfQJ8Nzc5U=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=sBBe9jl3241C59MfSNDuVFb/noluSxksVKCKrpVbIymdodT3rMP4EMIbLRbD1/egcZYi0QkTyjXci0QZMKV4xbZ6rweEB9CPQmBYzDXc4KanLmSbmkWz7ku586PYa1JUQO4P6ydAoWTNTp54BZ3+OKjFo1659LhB0DJs/AlIbd0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=XTZgRZzl; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="RTIYpzlu"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1773836606; x=1805372606;
-  h=from:to:cc:in-reply-to:references:subject:message-id:
-   date:mime-version:content-transfer-encoding;
-  bh=7jJWu/4HECELyPxQeSfNrU3tYlPhmHg7YwnSL1LakY0=;
-  b=RTIYpzluDRolHc9jb4ekbtoEHsTqt7jhII46KbEZTPiTIMqjKyv8UzWc
-   CC6oZsir1ew2mIOJt5PDA5/uVEAFFNy46Qk47e4aytyVCQoYY65ciMTSM
-   Y28huVkRojRFzEjKuFI1vxddt669A6fCLXj5CvODY3uQOaGGmU2FqwN19
-   0c7Wi9yON6IU7Hai9zw9ahy4FnqYTR8rMiSRum18/9qmzvIUxQuzhKy4G
-   1SVZD+siH1v9PgsJKWg8f3ofpdF2j3lA1RLtPv5MxfyF8E3e6d9PLdHS6
-   KqPmaZ2/7ybc+Dww3dSpqrgtNIA4awPEXIAUYJ8HgauyELjvuzrrzCAsk
-   w==;
-X-CSE-ConnectionGUID: bBp78S3FTk+IgbQtDRIeUA==
-X-CSE-MsgGUID: ohvV9NU8Qlm4r8I+lGAPTw==
-X-IronPort-AV: E=McAfee;i="6800,10657,11732"; a="85517961"
-X-IronPort-AV: E=Sophos;i="6.23,127,1770624000"; 
-   d="scan'208";a="85517961"
-Received: from fmviesa003.fm.intel.com ([10.60.135.143])
-  by fmvoesa105.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 18 Mar 2026 05:23:26 -0700
-X-CSE-ConnectionGUID: BHGtDwnWRRqSXKArIk744g==
-X-CSE-MsgGUID: tCXpIvCMTQuMOzy8IUZQAw==
-X-ExtLoop1: 1
-Received: from ijarvine-mobl1.ger.corp.intel.com (HELO localhost) ([10.245.244.55])
-  by fmviesa003-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 18 Mar 2026 05:23:23 -0700
-From: =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
-To: "Rafael J. Wysocki" <rafael@kernel.org>
-Cc: Robert Gerlach <khnz@gmx.de>, Hans de Goede <hansg@kernel.org>, 
- LKML <linux-kernel@vger.kernel.org>, 
- Linux ACPI <linux-acpi@vger.kernel.org>, 
- platform-driver-x86@vger.kernel.org, Jonathan Woithe <jwoithe@just42.net>
-In-Reply-To: <5085647.31r3eYUQgx@rafael.j.wysocki>
-References: <5085647.31r3eYUQgx@rafael.j.wysocki>
-Subject: Re: [PATCH v3 0/5] platform/x86: fujitsu: Bind drivers to platform
- devices instead of ACPI ones
-Message-Id: <177383659905.7416.12056868465212089784.b4-ty@linux.intel.com>
-Date: Wed, 18 Mar 2026 14:23:19 +0200
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="XTZgRZzl"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id D4130C2BC87
+	for <platform-driver-x86@vger.kernel.org>; Wed, 18 Mar 2026 12:53:48 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1773838428;
+	bh=fpI8s6BMIIBn66z1Yt8/N7uhsCdDwhagyCfQJ8Nzc5U=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+	b=XTZgRZzlw0NSOIjJGzHW1K+0LpUlU/6vcU66Fwy6pCneBUJUR0x0JBDlO99ZoNvUe
+	 nAKY7ASY5zoUVQ+sDydPp+lH0J3T9C/ltfc0cPpZwSXc2J8uU4g2zH3A8WAZSOi2eL
+	 ObfPCvIrOBlGWKARrAUc5XLjcmDw1vWp2fdVXommrZ9Fnxlxq1KJFsCmWk0DYC6gXh
+	 xR3Fw9ZGsg6n5TXsEkIGuXbvYXm8AUQtszwJ5RNvjgSA1Q3gmTuW8Ff4BGyD0ea77n
+	 BSc3hS8COK+IenLPNy3FnNsoLtCMm0moo40XzaP5Uu2YvrFgDSe1XDFwrdA7eYATVF
+	 cuRCG79UjQ+uw==
+Received: by mail-oi1-f179.google.com with SMTP id 5614622812f47-466ec4c6846so2095376b6e.3
+        for <platform-driver-x86@vger.kernel.org>; Wed, 18 Mar 2026 05:53:48 -0700 (PDT)
+X-Forwarded-Encrypted: i=1; AJvYcCVEtp4dJn298vhQhwP2XUvSN6IHR9pg5mv9VgGjsnnpxToNsGdnoxfK47AdESbZps9WJN+HiVbtTeUoOKK9RNjpr9en@vger.kernel.org
+X-Gm-Message-State: AOJu0YyH0/WHG7kgmWu+kCMiujSvI2Lil/h2LT81rAHFm0cUymfnwaoO
+	a7ikMt/D2rkKa77vjGDE0PBpkiHWvc1Q5XKaHWEwbG19hh4WGH3vxfyIbYmABo9ERUwZLuOU9RX
+	gS1Ln3sQtslIoJTptF7p58aeeXhx6rZc=
+X-Received: by 2002:a05:6820:4513:b0:67b:f775:e5fe with SMTP id
+ 006d021491bc7-67c0db33831mr1779513eaf.65.1773838427822; Wed, 18 Mar 2026
+ 05:53:47 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-X-Mailer: b4 0.13.0
+References: <3616223.QJadu78ljV@rafael.j.wysocki> <4508640.ejJDZkT8p0@rafael.j.wysocki>
+ <eb4ccb62-58fc-0d1b-7f74-2b1532448056@linux.intel.com>
+In-Reply-To: <eb4ccb62-58fc-0d1b-7f74-2b1532448056@linux.intel.com>
+From: "Rafael J. Wysocki" <rafael@kernel.org>
+Date: Wed, 18 Mar 2026 13:53:36 +0100
+X-Gmail-Original-Message-ID: <CAJZ5v0gFpqG7+6v_zu+mo3GVP6MZfp+1QANj8y3=Tgx0WWnrfQ@mail.gmail.com>
+X-Gm-Features: AaiRm52vU7DS_lqLR0_tLDdq76IAK5B2x8EVwdqcdS6DPPolDuMGIpKErwEuE9A
+Message-ID: <CAJZ5v0gFpqG7+6v_zu+mo3GVP6MZfp+1QANj8y3=Tgx0WWnrfQ@mail.gmail.com>
+Subject: Re: [PATCH v1 2/3] platform/x86: panasonic-laptop: Register ACPI
+ notify handler directly
+To: =?UTF-8?Q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
+Cc: "Rafael J. Wysocki" <rafael@kernel.org>, LKML <linux-kernel@vger.kernel.org>, 
+	Linux ACPI <linux-acpi@vger.kernel.org>, Hans de Goede <hansg@kernel.org>, 
+	platform-driver-x86@vger.kernel.org, Kenneth Chan <kenneth.t.chan@gmail.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Tue, 17 Mar 2026 20:38:06 +0100, Rafael J. Wysocki wrote:
+On Tue, Mar 17, 2026 at 6:35=E2=80=AFPM Ilpo J=C3=A4rvinen
+<ilpo.jarvinen@linux.intel.com> wrote:
+>
+> On Thu, 12 Mar 2026, Rafael J. Wysocki wrote:
+>
+> > From: "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>
+> >
+> > To facilitate subsequent conversion of the driver to a platform one,
+> > make it install an ACPI notify handler directly instead of using
+> > a .notify() callback in struct acpi_driver.
+> >
+> > No intentional functional impact.
+> >
+> > Signed-off-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
+> > ---
+> >  drivers/platform/x86/panasonic-laptop.c | 20 +++++++++++++++-----
+> >  1 file changed, 15 insertions(+), 5 deletions(-)
+> >
+> > diff --git a/drivers/platform/x86/panasonic-laptop.c b/drivers/platform=
+/x86/panasonic-laptop.c
+> > index 64195ff0f40e..4bd83b987761 100644
+> > --- a/drivers/platform/x86/panasonic-laptop.c
+> > +++ b/drivers/platform/x86/panasonic-laptop.c
+> > @@ -185,7 +185,7 @@ enum SINF_BITS { SINF_NUM_BATTERIES =3D 0,
+> >
+> >  static int acpi_pcc_hotkey_add(struct acpi_device *device);
+> >  static void acpi_pcc_hotkey_remove(struct acpi_device *device);
+> > -static void acpi_pcc_hotkey_notify(struct acpi_device *device, u32 eve=
+nt);
+> > +static void acpi_pcc_hotkey_notify(acpi_handle handle, u32 event, void=
+ *data);
+> >
+> >  static const struct acpi_device_id pcc_device_ids[] =3D {
+> >       { "MAT0012", 0},
+> > @@ -208,7 +208,6 @@ static struct acpi_driver acpi_pcc_driver =3D {
+> >       .ops =3D          {
+> >                               .add =3D          acpi_pcc_hotkey_add,
+> >                               .remove =3D       acpi_pcc_hotkey_remove,
+> > -                             .notify =3D       acpi_pcc_hotkey_notify,
+> >                       },
+> >       .drv.pm =3D       &acpi_pcc_hotkey_pm,
+> >  };
+> > @@ -869,9 +868,9 @@ static void acpi_pcc_generate_keyinput(struct pcc_a=
+cpi *pcc)
+> >               pr_err("Unknown hotkey event: 0x%04llx\n", result);
+> >  }
+> >
+> > -static void acpi_pcc_hotkey_notify(struct acpi_device *device, u32 eve=
+nt)
+> > +static void acpi_pcc_hotkey_notify(acpi_handle handle, u32 event, void=
+ *data)
+> >  {
+> > -     struct pcc_acpi *pcc =3D acpi_driver_data(device);
+> > +     struct pcc_acpi *pcc =3D data;
+> >
+> >       switch (event) {
+> >       case HKEY_NOTIFY:
+> > @@ -1073,13 +1072,18 @@ static int acpi_pcc_hotkey_add(struct acpi_devi=
+ce *device)
+> >       if (result)
+> >               goto out_backlight;
+> >
+> > +     result =3D acpi_dev_install_notify_handler(device, ACPI_DEVICE_NO=
+TIFY,
+> > +                                              acpi_pcc_hotkey_notify, =
+pcc);
+> > +     if (result)
+> > +             goto out_sysfs;
+> > +
+> >       /* optical drive initialization */
+> >       if (ACPI_SUCCESS(check_optd_present())) {
+> >               pcc->platform =3D platform_device_register_simple("panaso=
+nic",
+> >                       PLATFORM_DEVID_NONE, NULL, 0);
+> >               if (IS_ERR(pcc->platform)) {
+> >                       result =3D PTR_ERR(pcc->platform);
+> > -                     goto out_sysfs;
+> > +                     goto out_notify_handler;
+> >               }
+> >               result =3D device_create_file(&pcc->platform->dev,
+> >                       &dev_attr_cdpower);
+> > @@ -1095,6 +1099,9 @@ static int acpi_pcc_hotkey_add(struct acpi_device=
+ *device)
+> >
+> >  out_platform:
+> >       platform_device_unregister(pcc->platform);
+> > +out_notify_handler:
+> > +     acpi_dev_remove_notify_handler(device, ACPI_DEVICE_NOTIFY,
+> > +                                    acpi_pcc_hotkey_notify);
+> >  out_sysfs:
+> >       sysfs_remove_group(&device->dev.kobj, &pcc_attr_group);
+> >  out_backlight:
+> > @@ -1123,6 +1130,9 @@ static void acpi_pcc_hotkey_remove(struct acpi_de=
+vice *device)
+> >
+> >       sysfs_remove_group(&device->dev.kobj, &pcc_attr_group);
+> >
+> > +     acpi_dev_remove_notify_handler(device, ACPI_DEVICE_NOTIFY,
+> > +                                    acpi_pcc_hotkey_notify);
+> > +
+>
+> This diverges from the setup order. Is that intentional? (I can see the
+> current order is not exactly reverse of the setup order but it still
+> looks it's possible to place the added remove call better than here.)
+>
+> This driver also likely has pre-existing rollback problems related to
+> pcc_register_optd_notifier/pcc_unregister_optd_notifier().
 
-> This is an update of
-> 
-> https://lore.kernel.org/linux-acpi/12863082.O9o76ZdvQC@rafael.j.wysocki/
-> 
-> that updates an error code path issue in patch [3/5].  That change also
-> requires patch [5/5] to be modified, but the other patches are the same
-> as in v2 (and v1).
-> 
-> [...]
+So it would be good to fix them while at it.
 
+OK, I'll have a look.
 
-Thank you for your contribution, it has been applied to my local
-review-ilpo-next branch. Note it will show up in the public
-platform-drivers-x86/review-ilpo-next branch only once I've pushed my
-local branch there, which might take a while.
-
-The list of commits applied:
-[1/5] platform/x86: fujitsu-tablet: Convert ACPI driver to a platform one
-      commit: bd13b265d386afb15d9ee5feb4f2cb605a5770db
-[2/5] platform/x86: fujitsu: Reorder code to avoid forward declarations
-      commit: c256927c62475f222bd9fc913538dd484f88fed6
-[3/5] platform/x86: fujitsu: Register ACPI notify handlers directly
-      commit: 9b9271ac2a25f427dd38a3f486e8b4d7afe7e0ec
-[4/5] platform/x86: fujitsu: Convert backlight driver to a platform one
-      commit: d5c9212ccfaa7bd453bf4b198eb19937f5deb58b
-[5/5] platform/x86: fujitsu: Convert laptop driver to a platform one
-      commit: 6da22b031a3cf995d6488500a5edae07cae3df2d
-
---
- i.
-
+> >       backlight_device_unregister(pcc->backlight);
+> >
+> >       input_unregister_device(pcc->input_dev);
+> >
+>
+> --
+>  i.
+>
