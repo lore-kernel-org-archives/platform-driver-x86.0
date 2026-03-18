@@ -1,195 +1,144 @@
-Received: from mail-pj1-f45.google.com (mail-pj1-f45.google.com [209.85.216.45])
+Received: from mail-lf1-f43.google.com (mail-lf1-f43.google.com [209.85.167.43])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8A9027081F
-	for <platform-driver-x86@vger.kernel.org>; Wed, 18 Mar 2026 00:12:51 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.45
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1773792772; cv=none; b=URsYR3pWK3hG4yYygBJe75STDy7nRSxgwr7ityPwdHNBOiE6N7w+/eEOkn1xPa91Rakc6E9bEl4Zybkpg8aruGicGmIGJusbkiyJ0s7S3FIwXOoSGdq2YTqriGz/pqyWwNMmWBsRVo5xqEIndcIMICKwv+kKpk9IXbpymiFq+0Y=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1773792772; c=relaxed/simple;
-	bh=MWjXifQpj9hFXf0AoP6SntMDp5UQPcMWbEWb4L6sXwM=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=YkYeOCZg+gmBKwGvUGAQYJO6u11C5G8c/kcOcIhwZyjUpPWnZp8yiqS0AwGA78a1dG6ZpcWm7Wt3Odb4DSO6KYPyvVE178GuUMHhFqk35wUNTSZ8QKU3pLCfLVExusoXS9wthVFaoS9Tpb5YrhFqtTE9NukIPFL8hcSI709PZok=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=NtSttKGo; arc=none smtp.client-ip=209.85.216.45
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3C8261D9A66
+	for <platform-driver-x86@vger.kernel.org>; Wed, 18 Mar 2026 01:35:42 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=209.85.167.43
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1773797743; cv=pass; b=JBiwfSB8W1B+ZxofqZQ0FhqZH1y0hI4lPXUzDmd2QsUTwJhH78c+6bdpPXIgx2SSEUn0oHe2y4jsXpYP6r1t5EBIfkQooWA8rhKi/saGeAHAdMqlILe6pkp1RkM7I/IfdqGPpl87UXh7iKyux5dE6Y1MlNU0htTKMw4GRg4V5c8=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1773797743; c=relaxed/simple;
+	bh=r9hsKb9PfTufYzjHiq0hMbGcpfgxzO52s1Vpsdo+xGM=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=HWoL2V9xQ+0LEPh3Ka/oVO9A0oly4Xrw5mdL7kV7o5QY+y+vrNpwcsspStIYD95P3oFfyjikCaeWHzsGArFNcZzUiJp+1cC5Fi4DLvNXAp8zZ7Fw26JU1B8VD9Xid8u7nQdXL5EfuwrQAytj/CbhOK1kyisjfOkajN0QLtUG7zc=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=MJb/EnfM; arc=pass smtp.client-ip=209.85.167.43
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="NtSttKGo"
-Received: by mail-pj1-f45.google.com with SMTP id 98e67ed59e1d1-35bb7afdc38so473280a91.1
-        for <platform-driver-x86@vger.kernel.org>; Tue, 17 Mar 2026 17:12:51 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="MJb/EnfM"
+Received: by mail-lf1-f43.google.com with SMTP id 2adb3069b0e04-5a1322af04fso318679e87.2
+        for <platform-driver-x86@vger.kernel.org>; Tue, 17 Mar 2026 18:35:42 -0700 (PDT)
+ARC-Seal: i=1; a=rsa-sha256; t=1773797740; cv=none;
+        d=google.com; s=arc-20240605;
+        b=ST+lPIGyvaP/UzmRjPscBKY9+jN1SPxURAhqWwtQCavlb9g79Tg/1o9hAZ7BKrYWZQ
+         /UwblXDJe6o/Q4v8fit1+v++MTv6dsQG0Z/MJpsUsRcrPX1BIV/eWoWuTDO6qY9cSPgB
+         suEnoWnZIpMEIljaPjZTVOFb9k2teoDcBs6X5IGrl0MFJTIz097TudbC2YjRuPIBrzbG
+         uSDatIO3TXgc8LeBmtPtRwnPn4zg/IHrI5LXQJDaeMI6J8V+KFvhSKLd9pfevKUxTNFK
+         Zss76iWFceopCrXS8X0bJERCPw61Yb6i9+6fzZw66QuxKNRxDD8pNnNTun4o/jnGQm+g
+         1pZg==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20240605;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:dkim-signature;
+        bh=bnHRGZux9J8/Uki/jwcTCNraQa2a1iivTN3+HD+7Wu4=;
+        fh=urSfBeNdW0IDq/EITFYdgarxD1E1/uEKfKqKs2IKCwk=;
+        b=GCk86z3/EEJrG7ZIwj4Pfe71IqvRJN13GZqj1SEkyvNITm82s8vKGlB0Ez6+f/eTVF
+         zSPOPrCEpYPGdsCCS66T1U+Wd+ePwz5CmksR1QxdxMg8OS1DsjLTpObGabdoXyXMs0NU
+         reAJxXGaqqYlT4qIKUbwrsyfp7mzHb9YnQw49CrRPWWNTrrmGop6IBPn8tuIAfU1XwTf
+         kFCVyoXN9K2UuVUsXkkp42ek5711JY7hMYv04ga2qXXmOb7l697r48AiCGaHLEzarywA
+         9LuWwBc7p1UfWTFagZ20L4uf6FyeW90BYDF+MkX0UBKF6+PJ6OFsHA2Il8klVF9UCQkS
+         U3cw==;
+        darn=vger.kernel.org
+ARC-Authentication-Results: i=1; mx.google.com; arc=none
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1773792771; x=1774397571; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
+        d=gmail.com; s=20230601; t=1773797740; x=1774402540; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=+Za1lY/7aQh0EQCGQeO+Jd7bBG80nrCu15hfnp5dkMM=;
-        b=NtSttKGoLMNdrVFOrwO6rth15v6Gjb3GlebHRUZIUP1RnCpH7z4GAD2XQDf9TuI64Y
-         ZSRm5tnGn+dT7puagsDGIUA3bWdPIZkq+0Qhu8XmpqJZf52127b/FroPGoLu71uWDe8H
-         6SqteNTsjOpwA2+Mzyb5jwRmMrZXD4NqrC9hrAr3LXdhCQjByMh+7FVlMNZ756FXYnu9
-         rF1A2VUbYO4cgqjAXAV8G2tQ8FrzuaXP8s/dWmgswzu/PWOEaj4aovpS5TGbLUhbldOT
-         lyrlCW1EKKM2kpjqhA0ripxC3EM+o4fp5AZocEZkm0GZDgOonpCOXUm1JlmP/ksnHoj3
-         Z5GQ==
+        bh=bnHRGZux9J8/Uki/jwcTCNraQa2a1iivTN3+HD+7Wu4=;
+        b=MJb/EnfMuI8mxqMYieH9cSSAYbkj1/9JrXHzCirnzWKMiNdOd+NHuD6KqvuFBjtNmY
+         vqLqqIH6NS00QytxnujFiXf/tgxFtvPQvCHvLsIXJnJN569g0cM6ZnJPn4VdmJBDpZQE
+         hLKiA2CLtIrPhWEK/u8MPCwIGW5Oh9Q5dUAMD5E1wjg4aDxUdQPukqf/jrJmVFXc+dwS
+         hTqYsUkZLFWaJlZrSYmH4/vQ6n3S/rPodYMMR3dc3cPLb8ldk1Tnfq+K7BHjeaSpeVYY
+         bYo8ebgNfQxjDrV1wN1PvvfNWnQ3DWfz+0reXYT82J8bDzZoZFxw1YrhNX+8USWsuxFE
+         O5iA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1773792771; x=1774397571;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-gg:x-gm-message-state:from
+        d=1e100.net; s=20251104; t=1773797740; x=1774402540;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-gg:x-gm-message-state:from
          :to:cc:subject:date:message-id:reply-to;
-        bh=+Za1lY/7aQh0EQCGQeO+Jd7bBG80nrCu15hfnp5dkMM=;
-        b=QEuDh981DvVliwW42Ybtr68R+SIIhSevqMWUHTqQJ9T1DNlYCdcWEi+tv0uuY6l6/r
-         0UjYT5nDTSr0KW0MgsexqO9aB+eBTM9L5QAbvbsb34KWkrnS++axw4CEXlKcWYlQEVSw
-         IojKF+JOqGCt91jar+e9/j+A2bt+mMBWlKyogG6IO6N8eDIMnGQNXUm64W+HREtwGFSy
-         lG6Sqi6A6NHQfv1D5HTz2DORCFjmkCz5Sqh+TbDpZlPZmx4DwTX/Qf/D2W0+GrnXho3t
-         IohGIfHRIOGF95ga9CX4BC8JEDZuLfMpo4/zI0l6ZCMQXoDjKA8uIhp05rVaTwF4q+XV
-         2taQ==
-X-Forwarded-Encrypted: i=1; AJvYcCWymu4HwKR3ylLq1ECxPHnU4bQ1TxtAwFGDX/iaBHmPhIuS6w3uQsOl2fH1BCIAVpBH2KMClHZqjq+doHvhsNbyQ4Nf@vger.kernel.org
-X-Gm-Message-State: AOJu0YzmU/ndvPq50g34kgECa14rOVDIVcvMAXJAUFlxDxaHGUcEm3k1
-	E8b54VZgoTBK0mKY+DcSzOJd3qAT4Jil9v9lLhtlCnGOiIONcITXVbkBjWwoAJgm
-X-Gm-Gg: ATEYQzwFPj4hdZCbCYaHDNP5+w/z7JQ6wdSBkM0DDqt5dSRR5hIjHiEy/u3uN/mciik
-	ekBPhEyw1NeTgSJbwDwuGpneQBqLFG3MEelAHjRZCXHj3LLSqS8AxDS8uXJOD3l65Zfk+7oCNTJ
-	30688HoyJRLaKm3VdhES1/vTCneVbWKjMzuoFV63hPzpynXZxiF8Lm4lydv9z2u27f1znpNePhg
-	zHmuYaD3kohX1CHXksWHDq/Ue5IOWrPDtNuxO87PCl378xpjvWv5lfctNb8V9iAjGoon7PW9bNf
-	u56Emb6i5cHI6zItpEHCCM1uDd+IFoB2phnwEGkQsCk6UoCVmcVW53waRCG9+PdClFflIr5YAtl
-	YT8MvkHRGKZ7dx1hoZ7XLzDzsfvM0TztL4L03xvobvmnNsANHSSQ5+a49piBiA50E2jGcH7r6nK
-	ZiuvTMOScvFu/uW/ZIo1nyNUinu6zxQjb6BChJdc81/a8=
-X-Received: by 2002:a17:90b:1642:b0:359:8abc:b348 with SMTP id 98e67ed59e1d1-35bb9ef30ebmr1141198a91.18.1773792770589;
-        Tue, 17 Mar 2026 17:12:50 -0700 (PDT)
-Received: from gb5.tail50fddd.ts.net ([139.5.199.82])
-        by smtp.gmail.com with ESMTPSA id 98e67ed59e1d1-35bada5c76csm4055358a91.6.2026.03.17.17.12.47
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 17 Mar 2026 17:12:50 -0700 (PDT)
-From: Ayaan Mirza Baig <ayaanmirzabaig85@gmail.com>
-To: ilpo.jarvinen@linux.intel.com
-Cc: ayaanmirza788@gmail.com,
-	ayaanmirzabaig85@gmail.com,
-	josh@joshuagrisham.com,
-	platform-driver-x86@vger.kernel.org
-Subject: [PATCH v2] platform/x86: samsung-galaxybook: Handle ACPI hotkey notifications
-Date: Wed, 18 Mar 2026 05:42:42 +0000
-Message-ID: <20260318054242.24747-1-ayaanmirzabaig85@gmail.com>
-X-Mailer: git-send-email 2.53.0
-In-Reply-To: <44912fc0-91fb-0a85-64fa-1b0b3661f0d8@linux.intel.com>
-References: <44912fc0-91fb-0a85-64fa-1b0b3661f0d8@linux.intel.com>
+        bh=bnHRGZux9J8/Uki/jwcTCNraQa2a1iivTN3+HD+7Wu4=;
+        b=enBcJI2XtC3UuuAUhwCyfwsDQpQgWlw1KmPwngmjfGNawhE2pMbWFtSeGkJ8xxlS5V
+         8eMo3r0POqrN+37zveHt+KQs5xdD9Ch4Ic8MyPkk3e4b4R1+OezWHht3EBNUvLgomeSH
+         ua4tmKo1CaMhqSnQZE8ICODIUo0C7sTgcqS6g+ndKTNNwSlsoQIOWJlNQ9OitlJAePy9
+         8p2gNcznLblrUu6tFazxOVr2u4LSnPy79IyhotWPgJMOVKqCRMxOKU2ukPXqBpAMDj/C
+         B2ZJINP6GS6XpXTBxS/aUozKZZ/e+N54cVxSfmx6gAtifnZ3Lox8vwHfgg3JuOvihoT5
+         XlbA==
+X-Forwarded-Encrypted: i=1; AJvYcCXNvbvjkXpMNVeIBzO/4f7Oc68oX2tF1uAXmYJaGPTx5na4OKdRqBZ0DvZGR5cSi2uHSrzzaYHIPepGbqEtgyGpcI0O@vger.kernel.org
+X-Gm-Message-State: AOJu0YwTBOG7UtG73VCPJnlmt/dyWw/+RKTqWKWhDhZzuGboOvXS0pOu
+	V3CMaE04yfpw/7/nvVGBvc5g4AypufMx7M8aaV44hVHCU//aEAwWqAJXH2ZlCt+Dijdy6AMxyz3
+	P7y2gHlRp9p1LyP5K1Egswnvn6UVD7NM=
+X-Gm-Gg: ATEYQzwkBiBvERlU1ydUp+WR9J8teQgepesDdRJ3PugStJTyVzJlG+JDO/qk1ABXU11
+	z4A5HRGCFiwo56ooABQI1r1mhBotTdNv4PnGct+Afa3rcoTEJADGy4qaVkCgPZUuITawcQh+YXh
+	CVwirnicy568fr8jWGxjcAU2MuYm8R9THX6CxJZXrRA3yMfhiINKit1KT6MHj8cPOB0zM8SBIiF
+	IyVRWgaLjFrS9b0G9S6bfdvjZWMkSdtN/seHzk0ggFgFI3WmQwX7mpWxpdq9/cZsxevB0fe74/6
+	vqXFjj0=
+X-Received: by 2002:a05:6512:3258:b0:5a1:1914:2bac with SMTP id
+ 2adb3069b0e04-5a2796b0670mr475858e87.25.1773797740151; Tue, 17 Mar 2026
+ 18:35:40 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+References: <20260311143144.482145-1-vishnuocv@gmail.com> <177376698425.15640.5695107795590543274.b4-ty@linux.intel.com>
+In-Reply-To: <177376698425.15640.5695107795590543274.b4-ty@linux.intel.com>
+From: Vishnu Sankar <vishnuocv@gmail.com>
+Date: Wed, 18 Mar 2026 10:35:03 +0900
+X-Gm-Features: AaiRm53Lg5Zo2AJUp6xaTGJ_mBVnBHtnars3jJTNT9JwA8Rtk6OghHrOaVZ_8Bo
+Message-ID: <CABxCQKtNSjdj0pj_-Bt7Jrs9pEp-SbOyjGUno8xc8FpfojGpkQ@mail.gmail.com>
+Subject: Re: [PATCH v8 0/3] TrackPoint doubletap enablement and user control
+To: =?UTF-8?Q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
+Cc: mpearson-lenovo@squebb.ca, dmitry.torokhov@gmail.com, hmh@hmh.eng.br, 
+	hansg@kernel.org, corbet@lwn.net, derekjohn.clark@gmail.com, 
+	linux-input@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	ibm-acpi-devel@lists.sourceforge.net, linux-doc@vger.kernel.org, 
+	platform-driver-x86@vger.kernel.org, vsankar@lenovo.com
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Samsung Galaxy Book 5 (SAM0430), the keyboard backlight, microphone
-mute, and camera block hotkeys do not generate i8042 scancodes.
-Instead they arrive as ACPI notifications 0x7d, 0x63, and 0x6f
-respectively, all of which previously fell through to the deafult
-"unknown" warning in galaxybook_acpi_notify().
+Hi Ilpo,
 
-Add handling for these three events:
+Thank you for accepting this.
 
-- 0x7d (Fn+F9, keyboard backlight): schedule the existing
-  kbd_backlight_hotkey_work which cycles brightness.
+On Wed, Mar 18, 2026 at 2:03=E2=80=AFAM Ilpo J=C3=A4rvinen
+<ilpo.jarvinen@linux.intel.com> wrote:
+>
+> On Wed, 11 Mar 2026 23:31:41 +0900, Vishnu Sankar wrote:
+>
+> > This patch series adds support for TrackPoint doubletap with a clear an=
+d
+> > simple separation of responsibilities between drivers:
+> >
+> > 1. Firmware enablement (trackpoint.c):
+> >    Automatically enables doubletap on capable hardware during device
+> >    detection.
+> >
+> > [...]
+>
+>
+> Thank you for your contribution, it has been applied to my local
+> review-ilpo-next branch. Note it will show up in the public
+> platform-drivers-x86/review-ilpo-next branch only once I've pushed my
+> local branch there, which might take a while.
+Acked.
+>
+> The list of commits applied:
+> [1/3] input: trackpoint - Enable doubletap by default on capable devices
+>       commit: 9a98ebe630cf13c1a6063afa676d1cecc44fb2c9
+> [2/3] platform/x86: thinkpad_acpi: Add sysfs control for TrackPoint doubl=
+e-tap
+>       commit: 6227cc32fa01ffbf5bef8dcc6759743a28a2ad57
+> [3/3] Documentation: thinkpad-acpi - Document doubletap_enable attribute
+>       commit: fa5062e99b984448b7c8ca9aea47e7fc033b6e2f
+>
+> --
+>  i.
+>
 
-- 0x6e (Fn+F10, microphone mute): register a new hotkey input device
-  and emit KEY_MICMUTE.
 
-- 0x6f (Fn+F11, camera block): if block_recording is active use the
-  existing block_recording_hotkey_work; otherwise emit KEY_CAMERA via the
-  hotkey input device on models where the block_recording ACPI feature is
-  not supported
+--=20
 
-Tested on Samsung Galaxy Book 5 (SAM0430).
+Regards,
 
-Signed-off-by: Ayaan Mirza Baig <ayaanmirzabaig85@gmail.com>
----
- drivers/platform/x86/samsung-galaxybook.c | 47 +++++++++++++++++++++++
- 1 file changed, 47 insertions(+)
-
-diff --git a/drivers/platform/x86/samsung-galaxybook.c b/drivers/platform/x86/samsung-galaxybook.c
-index 755cb82bdb60..f6770ede62d2 100644
---- a/drivers/platform/x86/samsung-galaxybook.c
-+++ b/drivers/platform/x86/samsung-galaxybook.c
-@@ -54,6 +54,7 @@ struct samsung_galaxybook {
- 
- 	struct work_struct block_recording_hotkey_work;
- 	struct input_dev *camera_lens_cover_switch;
-+	struct input_dev *hotkey_dev;
- 
- 	struct acpi_battery_hook battery_hook;
- 
-@@ -197,6 +198,9 @@ static const guid_t performance_mode_guid =
- #define GB_ACPI_NOTIFY_DEVICE_ON_TABLE          0x6c
- #define GB_ACPI_NOTIFY_DEVICE_OFF_TABLE         0x6d
- #define GB_ACPI_NOTIFY_HOTKEY_PERFORMANCE_MODE  0x70
-+#define GB_ACPI_NOTIFY_HOTKEY_KBD_BACKLIGHT  	0x7d
-+#define GB_ACPI_NOTIFY_HOTKEY_CAMERA         	0x6f
-+#define GB_ACPI_NOTIFY_HOTKEY_MICMUTE        	0x6e
- 
- #define GB_KEY_KBD_BACKLIGHT_KEYDOWN    0x2c
- #define GB_KEY_KBD_BACKLIGHT_KEYUP      0xac
-@@ -1223,6 +1227,22 @@ static void galaxybook_i8042_filter_remove(void *data)
- 	cancel_work_sync(&galaxybook->block_recording_hotkey_work);
- }
- 
-+static int galaxybook_hotkey_init(struct samsung_galaxybook *galaxybook)
-+{
-+	galaxybook->hotkey_dev = devm_input_allocate_device(&galaxybook->platform->dev);
-+	if (!galaxybook->hotkey_dev)
-+		return -ENOMEM;
-+
-+	galaxybook->hotkey_dev->name = "Samsung Galaxy Book hotkeys";
-+	galaxybook->hotkey_dev->phys = DRIVER_NAME "/input1";
-+	galaxybook->hotkey_dev->id.bustype = BUS_HOST;
-+
-+	input_set_capability(galaxybook->hotkey_dev, EV_KEY, KEY_MICMUTE);
-+	input_set_capability(galaxybook->hotkey_dev, EV_KEY, KEY_CAMERA);
-+
-+	return input_register_device(galaxybook->hotkey_dev);
-+}
-+
- static int galaxybook_i8042_filter_install(struct samsung_galaxybook *galaxybook)
- {
- 	int err;
-@@ -1260,6 +1280,28 @@ static void galaxybook_acpi_notify(acpi_handle handle, u32 event, void *data)
- 		if (galaxybook->has_performance_mode)
- 			platform_profile_cycle();
- 		break;
-+	case GB_ACPI_NOTIFY_HOTKEY_KBD_BACKLIGHT:
-+		if (galaxybook->has_kbd_backlight)
-+			schedule_work(&galaxybook->kbd_backlight_hotkey_work);
-+		break;
-+	case GB_ACPI_NOTIFY_HOTKEY_MICMUTE:
-+		if (galaxybook->hotkey_dev) {
-+			input_report_key(galaxybook->hotkey_dev, KEY_MICMUTE, 1);
-+			input_sync(galaxybook->hotkey_dev);
-+			input_report_key(galaxybook->hotkey_dev, KEY_MICMUTE, 0);
-+			input_sync(galaxybook->hotkey_dev);
-+		}
-+		break;
-+	case GB_ACPI_NOTIFY_HOTKEY_CAMERA:
-+		if (galaxybook->has_block_recording)
-+			schedule_work(&galaxybook->block_recording_hotkey_work);
-+		else if (galaxybook->hotkey_dev) {
-+			input_report_key(galaxybook->hotkey_dev, KEY_CAMERA, 1);
-+			input_sync(galaxybook->hotkey_dev);
-+			input_report_key(galaxybook->hotkey_dev, KEY_CAMERA, 0);
-+			input_sync(galaxybook->hotkey_dev);
-+		}
-+		break;
- 	default:
- 		dev_warn(&galaxybook->platform->dev,
- 			 "unknown ACPI notification event: 0x%x\n", event);
-@@ -1397,6 +1439,11 @@ static int galaxybook_probe(struct platform_device *pdev)
- 		return dev_err_probe(&galaxybook->platform->dev, err,
- 				     "failed to initialize firmware-attributes\n");
- 
-+	err = galaxybook_hotkey_init(galaxybook);
-+	if (err)
-+		return dev_err_probe(&galaxybook->platform->dev, err,
-+					 "failed to initialize hotkey input device\n");
-+
- 	err = galaxybook_i8042_filter_install(galaxybook);
- 	if (err)
- 		return dev_err_probe(&galaxybook->platform->dev, err,
--- 
-2.53.0
-
+      Vishnu Sankar
