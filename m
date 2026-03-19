@@ -1,86 +1,88 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.10])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3142C36606C
-	for <platform-driver-x86@vger.kernel.org>; Thu, 19 Mar 2026 15:24:49 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4343221ABC9;
+	Thu, 19 Mar 2026 15:50:42 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.10
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1773933890; cv=none; b=fNoyyvLdH5Ku3PjT/iNWlB+sK1Dz2ZmqCscytU6szu4H+KM/UIIcG25RD7uYdRl2Xusnl4+AeFdf0vyM2Jb55GjOl9AN420FkA4UaHBBPPlB861c3Vh7y5f3uoh7zcP22mGzGcf+COW4zvpjVfcAnuId64hBfmhMJ9ub5XkFI2U=
+	t=1773935443; cv=none; b=jT72d6lfbEPYYOP6/t9/RfcYngOSwspH2Km3DvYu4p7XEDX2TxygVBtYV/d234LFpIcjDoU2gfjbmeAb3WWr9tnxTKoyEvJyvOgqUU0YzUicVUEl+oHL4J+CRb3YbVLeDwE0RJ8TSzWZovWfkhO2s/6tO4/c2aH3G7oD9NQLhYI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1773933890; c=relaxed/simple;
-	bh=R8X+0s3QU1sQWzyykWqTtxckkCUs2ZA0hROb7g7h+4A=;
-	h=From:To:Subject:Date:Message-ID:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=n2gw5GeypcaBoPXCDsTGvGI21tImSuI/eA5/bv9ViAVC00L1PlwZQQ+Uo24bYigN1Vbec8zWIjcWJRs7JL41jn/mHbqAsFhl1B+tdg6COHZEjt7wAF6JUMw/z9kDXWQn9MT6xWEuHIxLU5X+pullmm0674iT1DHbLY9MKP2I1Ws=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=lN50q3FR; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1773935443; c=relaxed/simple;
+	bh=I1SRIboeJgKb2mocsfN/M6Novf8Ur8EmTVQoD7QcYA4=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=Rv+HzGLV2XpLWNellwHlf7fDIe518+kwoagOULXB3JRtyErpjxTCoMM+3vRxB1qfLHUyAn//AeMOpJlnbrEDs5Tj9Z2H9TgsQyadF4ELk5RuCbTjds6nl4KTvV87iJ+5gbeD1A2oNrWd2PYPI6WFNmwFPlFgt34CUsdZzUV1A2M=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=pass smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=hD1Dvp4F; arc=none smtp.client-ip=192.198.163.10
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="lN50q3FR"
-Received: by smtp.kernel.org (Postfix) with ESMTPS id C7628C2BCB0
-	for <platform-driver-x86@vger.kernel.org>; Thu, 19 Mar 2026 15:24:49 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1773933889;
-	bh=R8X+0s3QU1sQWzyykWqTtxckkCUs2ZA0hROb7g7h+4A=;
-	h=From:To:Subject:Date:In-Reply-To:References:From;
-	b=lN50q3FRm+aky3cHFgNLmUzFVv+LOYwKT9jia/9v1uASTGajtG6DHN1L8QgWgG0+C
-	 zqx4WxxOIgOZbzXjvd5oQf7YwjI8f8VxiA1EbOyHBDRUntXHeuuTgrGLq/SittXCR2
-	 ei7Q6EOgZRISyRj7LCbf90SiaqCFkMVjslxfuRQbah+Sv+ZjnYX0c7BofU5uS1b9od
-	 QY2Yoy10R0HqygIRC8zk3nHlutlrG6bMhL78eScZDZ6tjYUfHm1qKCJCD8b2rUflHL
-	 Gk2LSW5T7FDkW6beArDjbnBci9OEDZhbMmuiIpbyGFFFPCMzj0VHZ+ZddTF74S4/8g
-	 IoT+4/pM2nbSw==
-Received: by aws-us-west-2-korg-bugzilla-1.web.codeaurora.org (Postfix, from userid 48)
-	id BBA9FC53BC5; Thu, 19 Mar 2026 15:24:49 +0000 (UTC)
-From: bugzilla-daemon@kernel.org
-To: platform-driver-x86@vger.kernel.org
-Subject: [Bug 220473] Linux 6.16 doesn't let me to shutdown the system and
- sometimes to boot it (lib/list_debug.c:35)
-Date: Thu, 19 Mar 2026 15:24:49 +0000
-X-Bugzilla-Reason: None
-X-Bugzilla-Type: changed
-X-Bugzilla-Watch-Reason: AssignedTo drivers_platform_x86@kernel-bugs.osdl.org
-X-Bugzilla-Product: Platform Specific/Hardware
-X-Bugzilla-Component: x86-64
-X-Bugzilla-Version: 2.5
-X-Bugzilla-Keywords: 
-X-Bugzilla-Severity: normal
-X-Bugzilla-Who: andy.shevchenko@gmail.com
-X-Bugzilla-Status: NEEDINFO
-X-Bugzilla-Resolution: 
-X-Bugzilla-Priority: P3
-X-Bugzilla-Assigned-To: drivers_platform_x86@kernel-bugs.osdl.org
-X-Bugzilla-Flags: 
-X-Bugzilla-Changed-Fields: 
-Message-ID: <bug-220473-215701-iXSqvM8wCZ@https.bugzilla.kernel.org/>
-In-Reply-To: <bug-220473-215701@https.bugzilla.kernel.org/>
-References: <bug-220473-215701@https.bugzilla.kernel.org/>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-X-Bugzilla-URL: https://bugzilla.kernel.org/
-Auto-Submitted: auto-generated
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="hD1Dvp4F"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1773935442; x=1805471442;
+  h=from:to:cc:subject:date:message-id:mime-version:
+   content-transfer-encoding;
+  bh=I1SRIboeJgKb2mocsfN/M6Novf8Ur8EmTVQoD7QcYA4=;
+  b=hD1Dvp4FP9OhC+ozn539ee7m3pcxiNzeEyD6qRB9vRxE4aJ6yt6qGlN6
+   6OxHxCUAGUAIU7zllOThaMTg7/5LpXfNau3wO5w16nmoK+ZXGAUTEPV3G
+   EJ8gYkiE8r9AAlb/dS40t6Psb1fNzjvm8Q8lxbyPcjim2unea5qhg+cc/
+   GmOWPtYRMIrTf3ktRIo13gWi7Qw1u1wSb2y8CyjzU52hC1/cHKu/LUpN4
+   AeLl7jEHBuZZgsx7rkSGB5/n8vRggVaTMu0uqNhwBTFpR1C3EyvWV/ELB
+   BhzV5UMg1psRR9B4MZqv62T9nWo4+f3+5MTaAMaj15yOXgklLZubyZVbR
+   w==;
+X-CSE-ConnectionGUID: WdcbdbNuSQWoY9OPfNcuCg==
+X-CSE-MsgGUID: TolEcpUrSQuFXMjs3DpFGA==
+X-IronPort-AV: E=McAfee;i="6800,10657,11734"; a="86374047"
+X-IronPort-AV: E=Sophos;i="6.23,129,1770624000"; 
+   d="scan'208";a="86374047"
+Received: from fmviesa006.fm.intel.com ([10.60.135.146])
+  by fmvoesa104.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 19 Mar 2026 08:50:41 -0700
+X-CSE-ConnectionGUID: LU7MQh7OTfK6r7+BbW2iQQ==
+X-CSE-MsgGUID: q3QLrI1STQuskGrq8zvImQ==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.23,129,1770624000"; 
+   d="scan'208";a="218444614"
+Received: from ettammin-mobl3.ger.corp.intel.com (HELO alaakso-DESK.kioski) ([10.245.246.104])
+  by fmviesa006-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 19 Mar 2026 08:50:39 -0700
+From: Antti Laakso <antti.laakso@linux.intel.com>
+To: linux-media@vger.kernel.org
+Cc: platform-driver-x86@vger.kernel.org,
+	sakari.ailus@linux.intel.com,
+	dan.scally@ideasonboard.com,
+	hansg@kernel.org,
+	ilpo.jarvinen@linux.intel.com,
+	antti.laakso@linux.intel.com
+Subject: [PATCH 1/2] platform/x86: int3472: Match MSI laptop board name
+Date: Thu, 19 Mar 2026 17:50:30 +0200
+Message-ID: <20260319155031.1989179-1-antti.laakso@linux.intel.com>
+X-Mailer: git-send-email 2.53.0
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
 
-https://bugzilla.kernel.org/show_bug.cgi?id=3D220473
+Ensure MSI system is correct by checking board name too.
 
---- Comment #13 from Andy Shevchenko (andy.shevchenko@gmail.com) ---
-(In reply to Artem from comment #12)
-> Linux fedora 6.16.9-200.fc42.x86_64
->=20
-> LOG:
-> oct 07 11:42:05 fedora kernel:  slab sock_inode_cache start ffff88ae0cb25=
-480
-> pointer offset 8 size 768
-> oct 07 11:42:05 fedora kernel: list_del corruption. prev->next should be
-> ffffcf5a090abb18, but was 0000000000000000. (prev=3Dffff88ae0cb25488)
-> oct 07 11:42:05 fedora kernel: ------------[ cut here ]------------
-> oct 07 11:42:05 fedora kernel: kernel BUG at lib/list_debug.c:62!
+Signed-off-by: Antti Laakso <antti.laakso@linux.intel.com>
+---
+ drivers/platform/x86/intel/int3472/tps68470_board_data.c | 1 +
+ 1 file changed, 1 insertion(+)
 
-Have you tested v6.17+ as pointed out by Mario?
+diff --git a/drivers/platform/x86/intel/int3472/tps68470_board_data.c b/drivers/platform/x86/intel/int3472/tps68470_board_data.c
+index c1ddbf9a82c0..e65067358301 100644
+--- a/drivers/platform/x86/intel/int3472/tps68470_board_data.c
++++ b/drivers/platform/x86/intel/int3472/tps68470_board_data.c
+@@ -404,6 +404,7 @@ static const struct dmi_system_id int3472_tps68470_board_data_table[] = {
+ 		.matches = {
+ 			DMI_EXACT_MATCH(DMI_SYS_VENDOR, "Micro-Star International Co., Ltd."),
+ 			DMI_EXACT_MATCH(DMI_PRODUCT_NAME, "Prestige 14 AI+ Evo C2VMG"),
++			DMI_EXACT_MATCH(DMI_BOARD_NAME, "MS-14N3"),
+ 		},
+ 		.driver_data = (void *)&msi_p14_ai_evo_tps68470_board_data,
+ 	},
 
---=20
-You may reply to this email to add a comment.
+base-commit: d29c44f16beb1219825461efab46026deb1d4af5
+-- 
+2.53.0
 
-You are receiving this mail because:
-You are watching the assignee of the bug.=
