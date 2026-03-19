@@ -1,89 +1,122 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E271A370D51;
-	Thu, 19 Mar 2026 11:33:48 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A9740387584
+	for <platform-driver-x86@vger.kernel.org>; Thu, 19 Mar 2026 11:41:39 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1773920029; cv=none; b=H+aLJxkA9oLrZIG8pM/RDchcVEwbqEgUE36hW5vY9knBtRuMbGgzCLd8CwdlKdSMRRmmo77YCFHvPK/lpORocYeEOOpLlyGbQxslZCnpSM4r0qA7tYN3MoPUBU02gy/K4/yJRITdB9zl2PHRjfANYIq1Ha5t/SG7TUf1RXVtef0=
+	t=1773920499; cv=none; b=U3zdGHGV6OMFLt6YJ0aqjREZrOOnXBJLFltzasamkBnBwkiSIZeoGY8/c73YtXTmJWXfk/+79Gy73A13yAGdj0zSU6Gtz3E3wP/sfKYoN35/eE4ij9pPp4hyAFaJsI+Ulsby3tFattQbMV18mGbayDC6U2Sc2by40uw0qM8XLfM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1773920029; c=relaxed/simple;
-	bh=bahAOU76Nprh8RdGJqEXDVlnQKGPbJJFFOMuh/ShlmE=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version:Content-Type; b=AI/nZAtfGIWANiYrp4gVN/rz+quEV04jst6eRycZ66wMz80VmErPn7Myd+mYdSn05MuHYRwHahZGfPYQMb6EBFEUbE4H0Zw8JqDPA+ETERwptswHzFg6FIIaq2oKy/XS2e1kKnEuKKySD+s9Lv5qQoV7+BHDQwUmI7DI3cQlHrA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=IBa5lcWN; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1773920499; c=relaxed/simple;
+	bh=auoiB5RfJMPo1ldliiGkRFkE5bNL7e63Cu0wy9OauDM=;
+	h=From:To:Subject:Date:Message-ID:Content-Type:MIME-Version; b=GUI++riPHvmjXhnN3q7jEBTxywlHBxXUA8pzqyClrU273wnvyj+lNc8QxJKnidCFmHZa0hJwmFXNLwhdoI0gK7YmkWU6UTkU31DuxgaffXnq56PUWnCH6XTG8ILV+5oJXNeatP92WNcfummhGv8lZMc9ZKED5ff3TO2O3IZZGDY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=G1odGNde; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="IBa5lcWN"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 5C261C2BC87;
-	Thu, 19 Mar 2026 11:33:47 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="G1odGNde"
+Received: by smtp.kernel.org (Postfix) with ESMTPS id 2D892C19424
+	for <platform-driver-x86@vger.kernel.org>; Thu, 19 Mar 2026 11:41:39 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1773920028;
-	bh=bahAOU76Nprh8RdGJqEXDVlnQKGPbJJFFOMuh/ShlmE=;
-	h=From:To:Cc:Subject:Date:From;
-	b=IBa5lcWNrFOO2T/wHdltJKRpgQDYR1cadiDc/51EoJjbbNILo0gZstp2hnIWxLuSW
-	 sdDirYQ8Z9ygMS6jHXH1mheGCfAxKAFIB/MNJclWE07aiT5w04QycUqRTONdx59dd/
-	 HW4yFaham4pV7a+Tu2RFXVA4b/gtFtAvbUpUGTnZy9D5mFxsSpwX0xAypFbOxX5PDi
-	 Z/uis8OvBTv3vtaa1acvywTAhe4fJQFjVdMdfZ4mZPPz3CbopAWdmbnw3Xu/PalimN
-	 3bLhk36l6GfrqinS9C7cb5LeBFT1zlv1Da4DaYEwMRu+G0tjXCnfM38VEa2zlD5mYS
-	 V5A2BICerMQXw==
-From: "Rafael J. Wysocki" <rafael@kernel.org>
-To: Ilpo =?ISO-8859-1?Q?J=E4rvinen?= <ilpo.jarvinen@linux.intel.com>
-Cc: LKML <linux-kernel@vger.kernel.org>,
- Linux ACPI <linux-acpi@vger.kernel.org>, Hans de Goede <hansg@kernel.org>,
- platform-driver-x86@vger.kernel.org, Kenneth Chan <kenneth.t.chan@gmail.com>
-Subject:
- [PATCH v3 0/5] platform/x86: panasonic-laptop: Bind to a platform device
- instead of an ACPI one
-Date: Thu, 19 Mar 2026 12:23:24 +0100
-Message-ID: <12863246.O9o76ZdvQC@rafael.j.wysocki>
-Organization: Linux Kernel Development
+	s=k20201202; t=1773920499;
+	bh=auoiB5RfJMPo1ldliiGkRFkE5bNL7e63Cu0wy9OauDM=;
+	h=From:To:Subject:Date:From;
+	b=G1odGNdefKp1fd8wZbui4sHfB1kje4hbOi9H2/7GQOcoEwImBYKq/68jLFilmj1KV
+	 h31ELxMhzaH6LIz7tR3ltVQ8RPiUOKWiNq4E7FTbZdEA+Gag/6YJ/48cVS8HvpmIzf
+	 TWPXYsjy2rtkAKE/qMFxLMyUk1z+aAn1i9nEkkNDuWWIAqEGoiM9vKQoVswNjxznFo
+	 KWOsQrVJw2UygnQsqy9Cf7luthbk1qx5cg39JVEUokXbU+Mfd0nyix6fig06ZBzdi8
+	 Rksz7ixE5zDGCYwetZP2MoNuPn+VL7/OyG/T2PV+knr8sJtJfThSnqVrGsa9r+j427
+	 hHnTeEo7KKkdQ==
+Received: by aws-us-west-2-korg-bugzilla-1.web.codeaurora.org (Postfix, from userid 48)
+	id 20BC2C3279F; Thu, 19 Mar 2026 11:41:39 +0000 (UTC)
+From: bugzilla-daemon@kernel.org
+To: platform-driver-x86@vger.kernel.org
+Subject: [Bug 221260] New: Tablet mode doesn't work on Medion Akoya E322X and
+ Medion Akoya E229X models.
+Date: Thu, 19 Mar 2026 11:41:38 +0000
+X-Bugzilla-Reason: None
+X-Bugzilla-Type: new
+X-Bugzilla-Watch-Reason: AssignedTo drivers_platform_x86@kernel-bugs.osdl.org
+X-Bugzilla-Product: Drivers
+X-Bugzilla-Component: Platform_x86
+X-Bugzilla-Version: 2.5
+X-Bugzilla-Keywords: 
+X-Bugzilla-Severity: normal
+X-Bugzilla-Who: alan90000@yahoo.com
+X-Bugzilla-Status: NEW
+X-Bugzilla-Resolution: 
+X-Bugzilla-Priority: P3
+X-Bugzilla-Assigned-To: drivers_platform_x86@kernel-bugs.osdl.org
+X-Bugzilla-Flags: 
+X-Bugzilla-Changed-Fields: bug_id short_desc product version rep_platform
+ op_sys bug_status bug_severity priority component assigned_to reporter
+ cf_regression
+Message-ID: <bug-221260-215701@https.bugzilla.kernel.org/>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+X-Bugzilla-URL: https://bugzilla.kernel.org/
+Auto-Submitted: auto-generated
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7Bit
-Content-Type: text/plain; charset="UTF-8"
 
-Hi All,
+https://bugzilla.kernel.org/show_bug.cgi?id=3D221260
 
-This is an update of
+            Bug ID: 221260
+           Summary: Tablet mode doesn't work on Medion Akoya E322X and
+                    Medion Akoya E229X models.
+           Product: Drivers
+           Version: 2.5
+          Hardware: All
+                OS: Linux
+            Status: NEW
+          Severity: normal
+          Priority: P3
+         Component: Platform_x86
+          Assignee: drivers_platform_x86@kernel-bugs.osdl.org
+          Reporter: alan90000@yahoo.com
+        Regression: No
 
-https://lore.kernel.org/linux-acpi/5979471.DvuYhMxLoT@rafael.j.wysocki/
+Hello,
 
-adding one patch and modifying the initial patch in v2 to retain the
-current behavior when the registration of an ACPI notify handler for
-OPTD fails.
+I'm on Fedora 43 KDE Plasma (KDE Plasma 6.6.2) with the 6.19 kernel version=
+.=20
 
-This series is part of a larger effort to switch over all drivers using
-the struct acpi_driver interface to the more common struct platform_driver
-interface and eliminate the former.  The background is explained in
-Documentation/driver-api/acpi/acpi-drivers.rst and in the changelog of
-the patch that introduced the above document:
+When I don't enable the "tablet mode only" option in KDE Plasma, there's no
+problem. I can fully fold the screen, and rotate the screen in all directio=
+ns.
+But the keyboard and the touchpad remain active. The virtual keyboard is
+available.
 
-https://lore.kernel.org/all/2396510.ElGaqSPkdT@rafael.j.wysocki/
+When I enable the "tablet mode only" option, I fold the screen, and nothing
+happens. I rotate the screen in all directions, nothing. However, the keybo=
+ard
+and the touchpad remain active. Strangely, I run the "monitor-sensor" comma=
+nd
+in the terminal, and when the "tablet mode only" option is activated, and I
+fold the screen and move it in all directions, the terminal returns
+accelerometer readings. The virtual keyboard is not available.
 
-The bottom line is that the kernel would be better off without struct
-acpi_driver and so it is better to get rid of it.
+I tested the "sudo libinput debug-events" command but I don't see
+"SWITCH_TOGGLE" or "switch tablet-mode" results. So it seems that my hardwa=
+re
+(tablet sensor ?) is not recognized for the tablet mode in the kernel. So,
+Would it be possible for you to support my device and/or the sensor at the
+kernel level for the tablet mode part ?=20
 
-This series carries out driver conversion of the platform x86 Panasonic
-hotkey and LCD brightness control driver.
+If you need information about my hardware to support it, tell me. This is a
+Medion Akoya E322X convertible laptoo model and a Medion Akoya E229X
+convertible laptop model.
 
-Patch [1/5] changes one function return type to void.
+Note: Kde bugs team told me that it is not a bug from KDE desktop but from =
+the
+kernel (part of the hardware not supported).
 
-Patch [2/5] fixes the rollback path in acpi_pcc_hotkey_add() and rearranges
-the driver removal code ordering to match it.
+Thanks a lot.
 
-Patch [3/5] removes some redundant checks from the driver.
+--=20
+You may reply to this email to add a comment.
 
-Patch [4/5] updates the driver to install an ACPI notify handler by itself
-instead of using the .notify() callback from struct acpi_driver, which is
-requisite for the driver conversion.
-
-Patch [5/5] converts the driver to using struct platform_driver for device
-binding.
-
-Thanks!
-
-
-
+You are receiving this mail because:
+You are watching the assignee of the bug.=
