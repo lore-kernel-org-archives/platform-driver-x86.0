@@ -1,614 +1,167 @@
-Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-dy1-f175.google.com (mail-dy1-f175.google.com [74.125.82.175])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B9C4D3EC2D7
-	for <platform-driver-x86@vger.kernel.org>; Thu, 19 Mar 2026 16:11:20 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.180.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0F7CA3F2106
+	for <platform-driver-x86@vger.kernel.org>; Thu, 19 Mar 2026 17:03:14 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=74.125.82.175
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1773936686; cv=none; b=VRPAmbOOM7Hutl5HgKoKBMFRphb5nDDmOggQFVkHntNmCdF52kJzJJMw+pxZmIXcJl06VkhdY2FQ4hHqqPNUwXz4ROXY2OUT1X8EFSASq8aSXU8OmzWT0va2bSYIdYGTT5qEc61aPIRMRsPVWHW9pXWDcn+U88C/wIaO1QgA5Zo=
+	t=1773939796; cv=none; b=K+rGWgo5J2/M9iOqaGpDeXBxXf/cyzTgJvl/gdj94tCJ9NrfxgQhy62Xq9t86Vq0Z3iFhfupab/E172AeE7GdIjNYxLafvygBVZzW3vMFRXpx8eCdcdXhLTDYwLkcWbCoyyqAeqGAvIRnZqzZ2HijqIOFOi9fnrGoKG0Ybn/8mQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1773936686; c=relaxed/simple;
-	bh=SuFvkZu0w4R7ZzUnSsrxLWH1/5TACM1SQa5YDDmP2pQ=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=DKg6HBjZpZmND1cO8gBYJrbq0uJLmyiMJjxOBdUVxpRoaCmLopSBQjMTE0wj539qVkn1amQt25MSHi9zgCk7m1ZtAo+IfVHH1RVpcHZ20bPyiF+SToOTm+ayIf7HnybOmYw3JfIflkAz4l8WFZFhEifEWFfc2CZCCgPd1lyi6Ew=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com; spf=pass smtp.mailfrom=oss.qualcomm.com; dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b=DszeeWBC; dkim=pass (2048-bit key) header.d=oss.qualcomm.com header.i=@oss.qualcomm.com header.b=I8Q6TG5J; arc=none smtp.client-ip=205.220.180.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oss.qualcomm.com
+	s=arc-20240116; t=1773939796; c=relaxed/simple;
+	bh=4aO8tqhKF2jkSuCny1eOF9M5ytqdAvJRGahmxX91lz8=;
+	h=Message-ID:Date:MIME-Version:Subject:From:To:Cc:References:
+	 In-Reply-To:Content-Type; b=YNP8wHucV8U+Ka8hdUshK8LLYwfeAlQMJEzStU7abn531O4lfnrsV4icBpTDYjrk8E+dhBYBVD8Qz4jxTGaL3jwKetDBh3eC0vnxeu+xoLBO8mGBNUjCFFFj/7T2b+IMDnEm9ryglo3itIgoanYzh+QsFXUtAlVLoxnv7a6W66M=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=roeck-us.net; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=QLiF6E0j; arc=none smtp.client-ip=74.125.82.175
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=roeck-us.net
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b="DszeeWBC";
-	dkim=pass (2048-bit key) header.d=oss.qualcomm.com header.i=@oss.qualcomm.com header.b="I8Q6TG5J"
-Received: from pps.filterd (m0279872.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.18.1.11/8.18.1.11) with ESMTP id 62JEXbJN3648545
-	for <platform-driver-x86@vger.kernel.org>; Thu, 19 Mar 2026 16:11:19 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=qualcomm.com; h=
-	cc:content-transfer-encoding:content-type:date:from:in-reply-to
-	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
-	tv1Us6Me9dZWqbW6Qkx0ocwvvBPp2uJQA7v4bCY1YUA=; b=DszeeWBCmzfanmtx
-	RG1/RqCTbFw8muaPbkeUckuNOKHIrNvd3i+Y4crLPS7+Xs12CXgQ2nLNROho2PiH
-	zCuYTmpUXqRWu4YRECceT9nF0BVqqg3xOF+TYWdHoJ+MpNYzE0YW4xHASEEND34i
-	ziIl2UB3A/tfTQ9xTKXgI/CIE+J37tsueZMzGRimjiAAmCkNfWnHRzyJdKFeL9Cp
-	d2XyxuYIg5Afmp0W1nqXPakZyyzlIieToeKtvo5jeRP4h+VzNcWfkh+5sNAwTobg
-	EkW6pokLRzn6bhU7NRHv2414lFFFiiwOhcohEcI2dR1m/hTUgW70dl5O9QoZCY8u
-	ndEaPA==
-Received: from mail-vs1-f71.google.com (mail-vs1-f71.google.com [209.85.217.71])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 4d0k0v8c6h-1
-	(version=TLSv1.3 cipher=TLS_AES_128_GCM_SHA256 bits=128 verify=NOT)
-	for <platform-driver-x86@vger.kernel.org>; Thu, 19 Mar 2026 16:11:19 +0000 (GMT)
-Received: by mail-vs1-f71.google.com with SMTP id ada2fe7eead31-5ffa1faa59dso1867674137.2
-        for <platform-driver-x86@vger.kernel.org>; Thu, 19 Mar 2026 09:11:19 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="QLiF6E0j"
+Received: by mail-dy1-f175.google.com with SMTP id 5a478bee46e88-2b6b0500e06so1001668eec.1
+        for <platform-driver-x86@vger.kernel.org>; Thu, 19 Mar 2026 10:03:14 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=oss.qualcomm.com; s=google; t=1773936678; x=1774541478; darn=vger.kernel.org;
-        h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
-         :mime-version:subject:date:from:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=tv1Us6Me9dZWqbW6Qkx0ocwvvBPp2uJQA7v4bCY1YUA=;
-        b=I8Q6TG5JjZtgTbc0zvMwy3A95fo+gH5vFmHk2CpBl2V8HrXKBoWD72mAQqRK4MrG/j
-         5Tdqhpbn8WVUnRZaIBTIH64lVO7vlKj2aAvqJHihBVk2XSXtQiuMz/dY8Ng/PEmucHAY
-         fBn0Qnh8jQVJQNglirmrgmKr3P+4ZhSyNi4zh29Cx/DR9m6C5RJovrRnjYVN/8KKTMOl
-         sLgWfHgWUrdSRtZuxsXhnbkidq10ZFAAVSK+kXP+14WVssXwCFmUOblEjsH+vkius433
-         kELklGfj1hF628VrGvN17Zgv780BLDiPYj4TeUOnaKAHBy3sHjUWvjQ2bxMRhbVq854O
-         +dBg==
+        d=gmail.com; s=20230601; t=1773939794; x=1774544594; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:autocrypt:content-language
+         :references:cc:to:from:subject:user-agent:mime-version:date
+         :message-id:sender:from:to:cc:subject:date:message-id:reply-to;
+        bh=8QRs1JUnj1CzqP879x0gx21vAr6VwbWLeh3iHTqqzhg=;
+        b=QLiF6E0jUEZAFHYK9WFm5mna74oZ8vYd0WbFZM36BRoFWpszwMst94Lrd4VSDLEGdm
+         6VRrc+wKGz5pqvRdMKUjaw0hZzCEJT261W56EgRtVkGod9UzbwCN0h0avwYKfx8KqYLe
+         JI5HBVdWqJ+uUSKPguu6LJIoBrX744TJic1Itq0GCs590I6OeqerNM/bFimlMyY10tgx
+         Ac/uJRdFm4TYSMGU5OZexSOuU5yWOi1CpV8Oh7ftbN9QVJXF47WJy+n90Dza/4Xi0aQN
+         KbA2PE2rQP39AVZWatVgJ/9cTT5HaAE8G8Vaf/kopHGjx7Bnu79bzF37SDsSEnUHyc6T
+         tpcQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1773936678; x=1774541478;
-        h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
-         :mime-version:subject:date:from:x-gm-gg:x-gm-message-state:from:to
-         :cc:subject:date:message-id:reply-to;
-        bh=tv1Us6Me9dZWqbW6Qkx0ocwvvBPp2uJQA7v4bCY1YUA=;
-        b=SkZrNCh/Pd9+WN8oMoVItFkIdG5UAidbpyvbDHHCArBTQoFRr0YOEWfIPFmlFjJoDT
-         nou1j6B01VvpL/DHNCO6vS7L3UfhhPt2gWZyiZwbz/EbR1EyWOfEThUlcZVHYRshWBft
-         Yqo1o7hLoAVpqVFra/m+qm7JpwX/1T1drCKwBV0YHVe/QAP7J6L4c0fqxnbzg5CqNOrW
-         cWn36VOoBwb7wynTs7pfHtC5XJxEip5tSbsRjUx06Hjws4wQPPnYuEpgjL45Ta+5kNk/
-         WYWSGfv2Qfhe5NYMfF+4Ef2rBcueSZ90iz/qYilKYaUS6fmjs3q0yg9SSglteNXA312n
-         P3kg==
-X-Forwarded-Encrypted: i=1; AJvYcCWqy+6oDgZ1nbyUvRuADAhj6Vk8dv1IHCQYsUPCvufs/AVabDOk6r7hVubZCYRlcJVr+ZLXacRk3E+nR7XYS5DtBIjc@vger.kernel.org
-X-Gm-Message-State: AOJu0Yy6sd3Rc0xCTFtD8A9dkN7uq03PzODvFYBJ7PXC8Rfiaz5wtQdF
-	1oie9ggYwmyqGrcTWBICgRf/LKAiq4qZmC3LYN7c9jD50OCG5BycUx5hFQrS3T3wJPZSPBM0UTo
-	xH5WurDGLKqseoelO/iIO8m4Fb8xTrCby9YWORojGDmjrKfXQGMs62ePceObxUjl4JgEHNfaegu
-	t5
-X-Gm-Gg: ATEYQzzmOQeCLsoYZxZP2e32Qu12a/T8ZcQvHR2rYUnnXzt59HLGodi62xX0zZ2ObwR
-	SnXaiZ1feSGzdvNiolvE+SX2pNtdaMmsCjP+Sk8io5vxFTVod+IgCj8nsYtDQP79uR+MTTxmKsT
-	PkPRXH8gNA2bjAWJwHhjGoOCF78HBCYfY3kIT93LOmWK9ZUDBXBbG6KHuioqkCGKbLOCUqAVrmC
-	w7COvUbnSYVGXTCaWD+PCQhOQoQvQ2VRqL+hyROBEwWXf2GWs3QKtfSWHMvuBAsuVRxbkgqgmpQ
-	c/buamnQn/3stk3DiaeX/d+X0eZmE2GXkVmoNA9PffoBLKWUqlIqohVrEISG2ILBdhtcBF7zisJ
-	70Yw636JYh7NLvayEBXF32AU9UY4cnDwhAWtBO8Ssa47ggcEMTS8q
-X-Received: by 2002:a05:6102:5a94:b0:5ff:cee8:6620 with SMTP id ada2fe7eead31-602aeb00f67mr62198137.11.1773936678004;
-        Thu, 19 Mar 2026 09:11:18 -0700 (PDT)
-X-Received: by 2002:a05:6102:5a94:b0:5ff:cee8:6620 with SMTP id ada2fe7eead31-602aeb00f67mr62154137.11.1773936677349;
-        Thu, 19 Mar 2026 09:11:17 -0700 (PDT)
-Received: from brgl-qcom.local ([2a01:cb1d:dc:7e00:9d74:8015:408c:d719])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-486f4e5495csm83756915e9.2.2026.03.19.09.11.15
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 19 Mar 2026 09:11:16 -0700 (PDT)
-From: Bartosz Golaszewski <bartosz.golaszewski@oss.qualcomm.com>
-Date: Thu, 19 Mar 2026 17:10:57 +0100
-Subject: [PATCH 4/4] platform/x86: x86-android-tablets: enable fwnode
- matching of GPIO chips
+        d=1e100.net; s=20251104; t=1773939794; x=1774544594;
+        h=content-transfer-encoding:in-reply-to:autocrypt:content-language
+         :references:cc:to:from:subject:user-agent:mime-version:date
+         :message-id:sender:x-gm-gg:x-gm-message-state:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=8QRs1JUnj1CzqP879x0gx21vAr6VwbWLeh3iHTqqzhg=;
+        b=mF5A58+ZObQib/rbI3mWf/7d6U+srmq/HZYjf+Ud63hk8Q5lCbkRBREatvQpU9dpsg
+         eNErALAfEraoyEUgbMSP/chxq648GlhBdU919bCDmy1Nlo8tSL4wiKJoKMJSj6b/sOOz
+         xi/oXI+6wqo+PH0s+5JBZ+UnMFGjF8D+wLSCVeE+7oDWT+wYlTCUjMrnIrHmR0Wh0sE1
+         DnB5qPOgKRrS//C+tALkOYc5sLbPtstw2pkzwFtKLTiyZFoNQrGkCglbybnZNtipOKhy
+         jb/llx8N8A4IS6HnKrmexHNz1qRUT5i5XkmjzaDLeSXPuwAM5sWVBbZBQ4DUypghAvC2
+         1cdA==
+X-Gm-Message-State: AOJu0YwE+06dg/IikDdfuobFhl8BG5y2mmwYRkRLYhy6ZqeB94zMjKde
+	m1Qe1hlC461sPr4dNCFx4H4HldbR+HN5+Yiip+oPXkqRB9LryvpJTF7D
+X-Gm-Gg: ATEYQzxFBqVXhkFzxUcxCleDkgGKGHB9jyCwB1ywm9470R23ZQJeQjDvlX5tIxtnhCC
+	Bs8tEcpFLuUIbR80lCCJsgUZm+njXzD/Dy5ETdmvZMZa6TnXyjJ8mRx6zj8OG/do4fVkarMGpjq
+	sGdJ6mo/e0F17Y0NXKJuHZeys0eKHUUtqn+MWYFaf6+Lrt0GVwuWPkkJ0pcp3TY0HzT8vw8wnd4
+	Le32qWvoRi2CRIlT148/vleZEb7JY6e0B6AaDeElXTe9x4uscyWBqmhpNlgZwS9YDp3t1Mszb4c
+	/eOtdBl3eeGl20Z/t5Gpa+z+FyOtNrP/8BjZQf347fUnIiXtnDPo2+Y0DWJxsQdfFR8o638tDxW
+	kMMJaD9KLZA+StrmcQG0H1WuBLyp9lG11hY1J0B2W6VqHK/SubedcmnYam4YqTp06Z8XAavSOI7
+	/lGk45Zl3Mb/YlQvo3gf0ccxdQhT+JwEF0TsIZCdV/TSOoGnMiC1Oe5fULTJfUSJwTGSIexnKc
+X-Received: by 2002:a05:7301:1292:b0:2be:9e34:fd24 with SMTP id 5a478bee46e88-2c10980bca7mr42291eec.34.1773939792465;
+        Thu, 19 Mar 2026 10:03:12 -0700 (PDT)
+Received: from ?IPV6:2600:1700:e321:62f0:da43:aeff:fecc:bfd5? ([2600:1700:e321:62f0:da43:aeff:fecc:bfd5])
+        by smtp.gmail.com with ESMTPSA id 5a478bee46e88-2c0e56062e4sm8998619eec.30.2026.03.19.10.03.11
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 19 Mar 2026 10:03:11 -0700 (PDT)
+Sender: Guenter Roeck <groeck7@gmail.com>
+Message-ID: <c9c003cd-4452-4ed3-9abe-3458d432a4cb@roeck-us.net>
+Date: Thu, 19 Mar 2026 10:03:09 -0700
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Message-Id: <20260319-baytrail-real-swnode-v1-4-75f2264ae49f@oss.qualcomm.com>
-References: <20260319-baytrail-real-swnode-v1-0-75f2264ae49f@oss.qualcomm.com>
-In-Reply-To: <20260319-baytrail-real-swnode-v1-0-75f2264ae49f@oss.qualcomm.com>
-To: Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Daniel Scally <djrscally@gmail.com>,
-        Heikki Krogerus <heikki.krogerus@linux.intel.com>,
-        Sakari Ailus <sakari.ailus@linux.intel.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        "Rafael J. Wysocki" <rafael@kernel.org>,
-        Danilo Krummrich <dakr@kernel.org>,
-        Mika Westerberg <mika.westerberg@linux.intel.com>,
-        Andy Shevchenko <andy@kernel.org>, Linus Walleij <linusw@kernel.org>,
-        Hans de Goede <hansg@kernel.org>,
-        =?utf-8?q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>,
-        Dmitry Torokhov <dmitry.torokhov@gmail.com>
-Cc: linux-acpi@vger.kernel.org, driver-core@lists.linux.dev,
-        linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org,
-        platform-driver-x86@vger.kernel.org,
-        Bartosz Golaszewski <bartosz.golaszewski@oss.qualcomm.com>
-X-Mailer: b4 0.14.2
-X-Developer-Signature: v=1; a=openpgp-sha256; l=22246;
- i=bartosz.golaszewski@oss.qualcomm.com; h=from:subject:message-id;
- bh=SuFvkZu0w4R7ZzUnSsrxLWH1/5TACM1SQa5YDDmP2pQ=;
- b=owEBbQKS/ZANAwAKAQWdLsv/NoTDAcsmYgBpvCAZqsPSbGlNA08Bmjvo7tguYTpJ3MBsT9gi7
- WdBlY7rnW6JAjMEAAEKAB0WIQSR5RMt5bVGHXuiZfwFnS7L/zaEwwUCabwgGQAKCRAFnS7L/zaE
- w5HMD/4nPduMHiU5usi6yhd/1uO76BKKIsYlKSwqbpX0o/68w74F/x0YE6tNrusj9Iig5D43miG
- bzkjIa45nCuHiggYdwV55ZkBDpmd00SwsVRWWqs+KFTiGFpGQPA76IKpiBsmx78kvbgjC62NgFl
- VhnN26UTt4KgjqqQc5wLk5XekPss6vLc3ecH+q+XrTBAIlUnzvHNlu2RaZtavVKVvwPQJaskmFU
- l9KB+gihTrOnBN3iu/iPScSKIRFFpEp3exk+YHD62ASOxK6clGnl7X+ZvAWQgR8FrdWfGA5vXOL
- roRRl2Fn51F1ffTCOnjtD3j3drbRPDoNtlb2jYqRZ+/s2wvkuFTnqiGePiHHS/7/93uy2PdVu09
- QGiMRq7/6tTSjc6jZkTzwh2iHlyvTr+RwNXgNbY0Yvn35+zmcobkO/Kh8HW91bURL8G7sAI5+yW
- r8l5uvddES9ln7XxaPpWRR65Q+3DLiAiAArJ7xYzobT67hnv+i9+4WCNQXqxOiSEnQcOKkznUNa
- M36e+UpA/mRIQv14IsUYQ4Vl7mM0M1j2yL55of0avZwE5FsZz7MqmJyV5lJAF7FHKSJ494VpIVe
- N5BCuvVbjkXwXWP7IxBihtPTTFJI8Gfso2nbn654brX9KzQoHADj0SRNKRWIvkXIEifs578P0SC
- ZZpGJN8d72B9aKg==
-X-Developer-Key: i=bartosz.golaszewski@oss.qualcomm.com; a=openpgp;
- fpr=169DEB6C0BC3C46013D2C79F11A72EA01471D772
-X-Proofpoint-ORIG-GUID: xnFEaFnGb6bEufUpJyJgCR8crisJtNMl
-X-Authority-Analysis: v=2.4 cv=EcjFgfmC c=1 sm=1 tr=0 ts=69bc2027 cx=c_pps
- a=P2rfLEam3zuxRRdjJWA2cw==:117 a=xqWC_Br6kY4A:10 a=IkcTkHD0fZMA:10
- a=Yq5XynenixoA:10 a=s4-Qcg_JpJYA:10 a=VkNPw1HP01LnGYTKEx00:22
- a=u7WPNUs3qKkmUXheDGA7:22 a=yx91gb_oNiZeI1HMLzn7:22 a=EUspDBNiAAAA:8
- a=VwQbUJbxAAAA:8 a=I3_DoLzjCvalTPEyn3MA:9 a=QEXdDO2ut3YA:10
- a=ODZdjJIeia2B_SHc_B0f:22
-X-Proofpoint-GUID: xnFEaFnGb6bEufUpJyJgCR8crisJtNMl
-X-Proofpoint-Spam-Details-Enc: AW1haW4tMjYwMzE5MDEyOSBTYWx0ZWRfX/oMP0rNu0KUF
- 7ejLy+WPtOEXFLttQIEth2K3zU/ymQNkQSnaR6+TlpyEUIjugWGDukALrqRT88GAtaOjlaKPnA1
- ILkwz2qYhyJ91QNQj4qu22vROzvxGdLkGGAlCpSEJ7Nft2+YVGC2ua+1546RPX1iGLGK1dA+nHa
- sLO/NYa/8z0db91toe8M4bhqZdwQ5bVGtwAxpzo2xaUnWviIiDMQhOJ9qhAQ867axHD/PQcoi/u
- hhfzXiYpl9Q239zJOKyFimWZHxJymlsvoOZcytn5703Ax4fLWqYxAdhfI2/D2nn1e5qOOe70ob5
- z3rX7EXLu5KE2OQnOhxl4jHchr5UoBZEbLHiSSyKyxisG8Vux8U3zFa24ycEyCMAGCBA68bs4lJ
- 7sDvnM2FRi6XXiJ2MqJPf54+099U4nCdKnYTVGJPx60tgEFmR7AfZGujAq/Bm9auw7a2VC9G8MA
- wt4eTfcVD5YPDr6EszQ==
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1143,Hydra:6.1.51,FMLib:17.12.100.49
- definitions=2026-03-19_02,2026-03-19_05,2025-10-01_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
- phishscore=0 bulkscore=0 malwarescore=0 lowpriorityscore=0 adultscore=0
- clxscore=1015 suspectscore=0 impostorscore=0 spamscore=0 priorityscore=1501
- classifier=typeunknown authscore=0 authtc= authcc= route=outbound adjust=0
- reason=mlx scancount=1 engine=8.22.0-2603050001 definitions=main-2603190129
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH 1/1] hwmon: (yogafan) Add universal Lenovo Yoga/Legion fan
+ driver
+From: Guenter Roeck <linux@roeck-us.net>
+To: Sergio Melas <sergiomelas@gmail.com>, linux-hwmon@vger.kernel.org,
+ groeck@gmail.com
+Cc: platform-driver-x86@vger.kernel.org, jdelvare@suse.com
+References: <20260319132920.275755-1-sergiomelas@gmail.com>
+ <20260319132920.275755-2-sergiomelas@gmail.com>
+ <221ba4ba-73ac-44b7-8663-60889ebe8e9e@roeck-us.net>
+Content-Language: en-US
+Autocrypt: addr=linux@roeck-us.net; keydata=
+ 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
+ np3900V20aS7eD9K8GTU0TGC1pyz6IVJwIE=
+In-Reply-To: <221ba4ba-73ac-44b7-8663-60889ebe8e9e@roeck-us.net>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
 
-With cherryview and baytrail drivers now exposing software nodes that
-will actually be set as secondary firmware nodes of their primary ACPI
-nodes and with GPIOLIB supporting fwnode matching for secondary fwnodes
-as well, we can finally replace the dummy software nodes defined locally
-in the x86-android-tablets driver and not attached to anything with ones
-for which true fwnode GPIO lookup will work correctly and not require
-the fallback to name matching.
+On 3/19/26 08:59, Guenter Roeck wrote:
+> Hi,
+> 
+> On 3/19/26 06:29, Sergio Melas wrote:
+>> - Support universal ACPI fan monitoring for up to 8 fans.
+>> - Support various ACPI path naming conventions (FANS, FA2S, FANX).
+>> - Implement a passive RLLag (Rate Limited Lag) filter for jumpy EC data.
+>> - Use dt-based scaling for physical consistency across read intervals.
+>> - Filter parameters verified via tachometer and FOPTD identification.
+>> - Use 10-bit fixed-point integer math to avoid floating-point registers.
+>> - Support KDE 6 Plasma Sensor compatibility and stable S3 sleep cycles.
+>>
+> 
+> Thanks for your patch. Unfortunately, that is just as wrong as before.
+> Most of what should be here is in your patch 0/1 which 1) does not have
+> a subject and 2) is unnecessary for single patches.
+> 
+>> Signed-off-by: Sergio Melas <sergiomelas@gmail.com>
+>> ---
+>>   Documentation/hwmon/yoga_fan.rst    |  36 +++++
+> 
+> Add to index.rst
+> 
+>>   auto_compile_rust_lenovo_drivers.sh | 196 -----------------------
+> 
+> ???? This doesn't look like the patch originates from an upstream
+> repository/branch.
+> 
+> I didn't look into the actual code. AI code review will be available at
+> 
+> https://sashiko.dev/#/patchset/20260319132920.275755-2-sergiomelas%40gmail.com
+> 
+> once completed.
 
-Signed-off-by: Bartosz Golaszewski <bartosz.golaszewski@oss.qualcomm.com>
----
- drivers/platform/x86/x86-android-tablets/Kconfig   |  1 +
- drivers/platform/x86/x86-android-tablets/acer.c    | 11 ++---
- drivers/platform/x86/x86-android-tablets/asus.c    |  9 +++--
- drivers/platform/x86/x86-android-tablets/core.c    | 47 +---------------------
- drivers/platform/x86/x86-android-tablets/lenovo.c  | 31 +++++++-------
- drivers/platform/x86/x86-android-tablets/other.c   | 23 ++++++-----
- .../x86/x86-android-tablets/shared-psy-info.c      |  7 ++--
- .../x86/x86-android-tablets/x86-android-tablets.h  |  4 --
- 8 files changed, 45 insertions(+), 88 deletions(-)
+The AI says "Failed to apply", which isn't surprising. Please submit a patch
+which can be applied to the upstream kernel.
 
-diff --git a/drivers/platform/x86/x86-android-tablets/Kconfig b/drivers/platform/x86/x86-android-tablets/Kconfig
-index 193da15ee01ca5943581d800d5d2f82f39aee196..18425f787e933927add436c3354460fad166f092 100644
---- a/drivers/platform/x86/x86-android-tablets/Kconfig
-+++ b/drivers/platform/x86/x86-android-tablets/Kconfig
-@@ -8,6 +8,7 @@ config X86_ANDROID_TABLETS
- 	depends on I2C && SPI && SERIAL_DEV_BUS
- 	depends on GPIOLIB && PMIC_OPREGION
- 	depends on ACPI && EFI && PCI
-+	depends on PINCTRL_BAYTRAIL && PINCTRL_CHERRYVIEW
- 	select NEW_LEDS
- 	select LEDS_CLASS
- 	select POWER_SUPPLY
-diff --git a/drivers/platform/x86/x86-android-tablets/acer.c b/drivers/platform/x86/x86-android-tablets/acer.c
-index d48c70ffd9925033ec4ab937a7e55622e3f7a374..037648a45fa78679e5e6df132433c8e6fa4e991f 100644
---- a/drivers/platform/x86/x86-android-tablets/acer.c
-+++ b/drivers/platform/x86/x86-android-tablets/acer.c
-@@ -10,6 +10,7 @@
- 
- #include <linux/gpio/machine.h>
- #include <linux/gpio/property.h>
-+#include <linux/pinctrl/intel.h>
- #include <linux/platform_device.h>
- #include <linux/property.h>
- 
-@@ -31,7 +32,7 @@ static const struct software_node acer_a1_840_bq24190_node = {
- static const struct property_entry acer_a1_840_touchscreen_props[] = {
- 	PROPERTY_ENTRY_U32("touchscreen-size-x", 800),
- 	PROPERTY_ENTRY_U32("touchscreen-size-y", 1280),
--	PROPERTY_ENTRY_GPIO("reset-gpios", &baytrail_gpiochip_nodes[1], 26, GPIO_ACTIVE_LOW),
-+	PROPERTY_ENTRY_GPIO("reset-gpios", &baytrail_gpio_node_01, 26, GPIO_ACTIVE_LOW),
- 	{ }
- };
- 
-@@ -91,8 +92,8 @@ static const struct x86_i2c_client_info acer_a1_840_i2c_clients[] __initconst =
- };
- 
- static const struct property_entry acer_a1_840_int3496_props[] __initconst = {
--	PROPERTY_ENTRY_GPIO("mux-gpios", &baytrail_gpiochip_nodes[2], 1, GPIO_ACTIVE_HIGH),
--	PROPERTY_ENTRY_GPIO("id-gpios", &baytrail_gpiochip_nodes[2], 18, GPIO_ACTIVE_HIGH),
-+	PROPERTY_ENTRY_GPIO("mux-gpios", &baytrail_gpio_node_02, 1, GPIO_ACTIVE_HIGH),
-+	PROPERTY_ENTRY_GPIO("id-gpios", &baytrail_gpio_node_02, 18, GPIO_ACTIVE_HIGH),
- 	{ }
- };
- 
-@@ -109,7 +110,7 @@ static const struct platform_device_info acer_a1_840_pdevs[] __initconst = {
- static const struct property_entry acer_a1_840_fg_props[] = {
- 	PROPERTY_ENTRY_REF("monitored-battery", &generic_lipo_4v2_battery_node),
- 	PROPERTY_ENTRY_STRING_ARRAY_LEN("supplied-from", bq24190_psy, 1),
--	PROPERTY_ENTRY_GPIO("charged-gpios", &baytrail_gpiochip_nodes[2], 10, GPIO_ACTIVE_HIGH),
-+	PROPERTY_ENTRY_GPIO("charged-gpios", &baytrail_gpio_node_02, 10, GPIO_ACTIVE_HIGH),
- 	{ }
- };
- 
-@@ -193,7 +194,7 @@ static const struct software_node acer_b1_750_bma250e_node = {
- };
- 
- static const struct property_entry acer_b1_750_novatek_props[] = {
--	PROPERTY_ENTRY_GPIO("reset-gpios", &baytrail_gpiochip_nodes[1], 26, GPIO_ACTIVE_LOW),
-+	PROPERTY_ENTRY_GPIO("reset-gpios", &baytrail_gpio_node_01, 26, GPIO_ACTIVE_LOW),
- 	{ }
- };
- 
-diff --git a/drivers/platform/x86/x86-android-tablets/asus.c b/drivers/platform/x86/x86-android-tablets/asus.c
-index 7d29c7654d214029720f444a17326851629c0342..42adf2a82bd4749f8b4c1d3ce9f733949292fd1b 100644
---- a/drivers/platform/x86/x86-android-tablets/asus.c
-+++ b/drivers/platform/x86/x86-android-tablets/asus.c
-@@ -12,13 +12,14 @@
- #include <linux/gpio/property.h>
- #include <linux/input-event-codes.h>
- #include <linux/platform_device.h>
-+#include <linux/pinctrl/intel.h>
- 
- #include "shared-psy-info.h"
- #include "x86-android-tablets.h"
- 
- /* Asus ME176C and TF103C tablets shared data */
- static const struct property_entry asus_me176c_tf103c_int3496_props[] __initconst = {
--	PROPERTY_ENTRY_GPIO("id-gpios", &baytrail_gpiochip_nodes[2], 22, GPIO_ACTIVE_HIGH),
-+	PROPERTY_ENTRY_GPIO("id-gpios", &baytrail_gpio_node_02, 22, GPIO_ACTIVE_HIGH),
- 	{ }
- };
- 
-@@ -39,7 +40,7 @@ static const struct property_entry asus_me176c_tf103c_lid_props[] = {
- 	PROPERTY_ENTRY_U32("linux,input-type", EV_SW),
- 	PROPERTY_ENTRY_U32("linux,code", SW_LID),
- 	PROPERTY_ENTRY_STRING("label", "lid_sw"),
--	PROPERTY_ENTRY_GPIO("gpios", &baytrail_gpiochip_nodes[2], 12, GPIO_ACTIVE_LOW),
-+	PROPERTY_ENTRY_GPIO("gpios", &baytrail_gpio_node_02, 12, GPIO_ACTIVE_LOW),
- 	PROPERTY_ENTRY_U32("debounce-interval", 50),
- 	PROPERTY_ENTRY_BOOL("wakeup-source"),
- 	{ }
-@@ -97,8 +98,8 @@ static const struct software_node asus_me176c_ug3105_node = {
- };
- 
- static const struct property_entry asus_me176c_touchscreen_props[] = {
--	PROPERTY_ENTRY_GPIO("reset-gpios", &baytrail_gpiochip_nodes[0], 60, GPIO_ACTIVE_HIGH),
--	PROPERTY_ENTRY_GPIO("irq-gpios", &baytrail_gpiochip_nodes[2], 28, GPIO_ACTIVE_HIGH),
-+	PROPERTY_ENTRY_GPIO("reset-gpios", &baytrail_gpio_node_00, 60, GPIO_ACTIVE_HIGH),
-+	PROPERTY_ENTRY_GPIO("irq-gpios", &baytrail_gpio_node_02, 28, GPIO_ACTIVE_HIGH),
- 	{ }
- };
- 
-diff --git a/drivers/platform/x86/x86-android-tablets/core.c b/drivers/platform/x86/x86-android-tablets/core.c
-index 021009e9085bec3db9c4daa1f6235600210a6099..7e8c0eb9792cac493268e6ecc3b3a0ecf8dccc4e 100644
---- a/drivers/platform/x86/x86-android-tablets/core.c
-+++ b/drivers/platform/x86/x86-android-tablets/core.c
-@@ -154,7 +154,6 @@ static struct platform_device **pdevs;
- static struct serdev_device **serdevs;
- static const struct software_node **gpio_button_swnodes;
- static const struct software_node **swnode_group;
--static const struct software_node **gpiochip_node_group;
- static void (*exit_handler)(void);
- 
- static __init struct i2c_adapter *
-@@ -332,34 +331,6 @@ static __init int x86_instantiate_serdev(const struct x86_dev_info *dev_info, in
- 	return ret;
- }
- 
--const struct software_node baytrail_gpiochip_nodes[] = {
--	{ .name = "INT33FC:00" },
--	{ .name = "INT33FC:01" },
--	{ .name = "INT33FC:02" },
--};
--
--static const struct software_node *baytrail_gpiochip_node_group[] = {
--	&baytrail_gpiochip_nodes[0],
--	&baytrail_gpiochip_nodes[1],
--	&baytrail_gpiochip_nodes[2],
--	NULL
--};
--
--const struct software_node cherryview_gpiochip_nodes[] = {
--	{ .name = "INT33FF:00" },
--	{ .name = "INT33FF:01" },
--	{ .name = "INT33FF:02" },
--	{ .name = "INT33FF:03" },
--};
--
--static const struct software_node *cherryview_gpiochip_node_group[] = {
--	&cherryview_gpiochip_nodes[0],
--	&cherryview_gpiochip_nodes[1],
--	&cherryview_gpiochip_nodes[2],
--	&cherryview_gpiochip_nodes[3],
--	NULL
--};
--
- static void x86_android_tablet_remove(struct platform_device *pdev)
- {
- 	int i;
-@@ -391,7 +362,6 @@ static void x86_android_tablet_remove(struct platform_device *pdev)
- 
- 	software_node_unregister_node_group(gpio_button_swnodes);
- 	software_node_unregister_node_group(swnode_group);
--	software_node_unregister_node_group(gpiochip_node_group);
- }
- 
- static __init int x86_android_tablet_probe(struct platform_device *pdev)
-@@ -415,22 +385,6 @@ static __init int x86_android_tablet_probe(struct platform_device *pdev)
- 	for (i = 0; dev_info->modules && dev_info->modules[i]; i++)
- 		request_module(dev_info->modules[i]);
- 
--	switch (dev_info->gpiochip_type) {
--	case X86_GPIOCHIP_BAYTRAIL:
--		gpiochip_node_group = baytrail_gpiochip_node_group;
--		break;
--	case X86_GPIOCHIP_CHERRYVIEW:
--		gpiochip_node_group = cherryview_gpiochip_node_group;
--		break;
--	case X86_GPIOCHIP_UNSPECIFIED:
--		gpiochip_node_group = NULL;
--		break;
--	}
--
--	ret = software_node_register_node_group(gpiochip_node_group);
--	if (ret)
--		return ret;
--
- 	ret = software_node_register_node_group(dev_info->swnode_group);
- 	if (ret) {
- 		x86_android_tablet_remove(pdev);
-@@ -563,3 +517,4 @@ module_exit(x86_android_tablet_exit);
- MODULE_AUTHOR("Hans de Goede <hansg@kernel.org>");
- MODULE_DESCRIPTION("X86 Android tablets DSDT fixups driver");
- MODULE_LICENSE("GPL");
-+MODULE_IMPORT_NS("PINCTRL_INTEL");
-diff --git a/drivers/platform/x86/x86-android-tablets/lenovo.c b/drivers/platform/x86/x86-android-tablets/lenovo.c
-index 8d825e0b4661c0be879160ea963ac167112c41ea..bd4e0ca2c1ef35ab9e6b1bf9dbb91936e2815b84 100644
---- a/drivers/platform/x86/x86-android-tablets/lenovo.c
-+++ b/drivers/platform/x86/x86-android-tablets/lenovo.c
-@@ -18,6 +18,7 @@
- #include <linux/mfd/arizona/registers.h>
- #include <linux/mfd/intel_soc_pmic.h>
- #include <linux/pinctrl/consumer.h>
-+#include <linux/pinctrl/intel.h>
- #include <linux/pinctrl/machine.h>
- #include <linux/platform_data/lp855x.h>
- #include <linux/platform_device.h>
-@@ -72,8 +73,8 @@ static const struct software_node crystalcove_gpiochip_node = {
- /* Lenovo Yoga Book X90F / X90L's Android factory image has everything hardcoded */
- 
- static const struct property_entry lenovo_yb1_x90_goodix_props[] = {
--	PROPERTY_ENTRY_GPIO("reset-gpios", &cherryview_gpiochip_nodes[1], 53, GPIO_ACTIVE_HIGH),
--	PROPERTY_ENTRY_GPIO("irq-gpios", &cherryview_gpiochip_nodes[1], 56, GPIO_ACTIVE_HIGH),
-+	PROPERTY_ENTRY_GPIO("reset-gpios", &cherryview_gpio_node_01, 53, GPIO_ACTIVE_HIGH),
-+	PROPERTY_ENTRY_GPIO("irq-gpios", &cherryview_gpio_node_01, 56, GPIO_ACTIVE_HIGH),
- 	{ }
- };
- 
-@@ -84,7 +85,7 @@ static const struct software_node lenovo_yb1_x90_goodix_node = {
- static const struct property_entry lenovo_yb1_x90_wacom_props[] = {
- 	PROPERTY_ENTRY_U32("hid-descr-addr", 0x0001),
- 	PROPERTY_ENTRY_U32("post-reset-deassert-delay-ms", 150),
--	PROPERTY_ENTRY_GPIO("reset-gpios", &cherryview_gpiochip_nodes[0], 82, GPIO_ACTIVE_LOW),
-+	PROPERTY_ENTRY_GPIO("reset-gpios", &cherryview_gpio_node_00, 82, GPIO_ACTIVE_LOW),
- 	{ }
- };
- 
-@@ -106,7 +107,7 @@ static const struct property_entry lenovo_yb1_x90_hideep_ts_props[] = {
- 	PROPERTY_ENTRY_U32("touchscreen-size-y", 1920),
- 	PROPERTY_ENTRY_U32("touchscreen-max-pressure", 16384),
- 	PROPERTY_ENTRY_BOOL("hideep,force-native-protocol"),
--	PROPERTY_ENTRY_GPIO("reset-gpios", &cherryview_gpiochip_nodes[0], 7, GPIO_ACTIVE_LOW),
-+	PROPERTY_ENTRY_GPIO("reset-gpios", &cherryview_gpio_node_00, 7, GPIO_ACTIVE_LOW),
- 	{ }
- };
- 
-@@ -221,7 +222,7 @@ static const struct property_entry lenovo_yb1_x90_lid_props[] = {
- 	PROPERTY_ENTRY_U32("linux,input-type", EV_SW),
- 	PROPERTY_ENTRY_U32("linux,code", SW_LID),
- 	PROPERTY_ENTRY_STRING("label", "lid_sw"),
--	PROPERTY_ENTRY_GPIO("gpios", &cherryview_gpiochip_nodes[2], 19, GPIO_ACTIVE_LOW),
-+	PROPERTY_ENTRY_GPIO("gpios", &cherryview_gpio_node_02, 19, GPIO_ACTIVE_LOW),
- 	PROPERTY_ENTRY_U32("debounce-interval", 50),
- 	PROPERTY_ENTRY_BOOL("wakeup-source"),
- 	{ }
-@@ -305,7 +306,7 @@ static const struct property_entry lenovo_yoga_tab2_830_1050_lid_props[] = {
- 	PROPERTY_ENTRY_U32("linux,input-type", EV_SW),
- 	PROPERTY_ENTRY_U32("linux,code", SW_LID),
- 	PROPERTY_ENTRY_STRING("label", "lid_sw"),
--	PROPERTY_ENTRY_GPIO("gpios", &baytrail_gpiochip_nodes[2], 26, GPIO_ACTIVE_LOW),
-+	PROPERTY_ENTRY_GPIO("gpios", &baytrail_gpio_node_02, 26, GPIO_ACTIVE_LOW),
- 	PROPERTY_ENTRY_U32("debounce-interval", 50),
- 	PROPERTY_ENTRY_BOOL("wakeup-source"),
- 	{ }
-@@ -400,8 +401,8 @@ static struct x86_i2c_client_info lenovo_yoga_tab2_830_1050_i2c_clients[] __init
- };
- 
- static const struct property_entry lenovo_yoga_tab2_830_1050_int3496_props[] __initconst = {
--	PROPERTY_ENTRY_GPIO("mux-gpios", &baytrail_gpiochip_nodes[2], 1, GPIO_ACTIVE_LOW),
--	PROPERTY_ENTRY_GPIO("id-gpios", &baytrail_gpiochip_nodes[2], 24, GPIO_ACTIVE_HIGH),
-+	PROPERTY_ENTRY_GPIO("mux-gpios", &baytrail_gpio_node_02, 1, GPIO_ACTIVE_LOW),
-+	PROPERTY_ENTRY_GPIO("id-gpios", &baytrail_gpio_node_02, 24, GPIO_ACTIVE_HIGH),
- 	{ }
- };
- 
-@@ -420,7 +421,7 @@ static const struct property_entry lenovo_yoga_tab2_830_1050_wm1502_props[] = {
- 	PROPERTY_ENTRY_GPIO("reset-gpios",
- 			    &crystalcove_gpiochip_node, 3, GPIO_ACTIVE_HIGH),
- 	PROPERTY_ENTRY_GPIO("wlf,ldoena-gpios",
--			    &baytrail_gpiochip_nodes[1], 23, GPIO_ACTIVE_HIGH),
-+			    &baytrail_gpio_node_01, 23, GPIO_ACTIVE_HIGH),
- 	PROPERTY_ENTRY_GPIO("wlf,spkvdd-ena-gpios",
- 			    &arizona_gpiochip_node, 2, GPIO_ACTIVE_HIGH),
- 	PROPERTY_ENTRY_GPIO("wlf,micd-pol-gpios",
-@@ -759,8 +760,8 @@ static const struct x86_i2c_client_info lenovo_yoga_tab2_1380_i2c_clients[] __in
- };
- 
- static const struct property_entry lenovo_yoga_tab2_1380_fc_props[] __initconst = {
--	PROPERTY_ENTRY_GPIO("uart3_txd-gpios", &baytrail_gpiochip_nodes[0], 57, GPIO_ACTIVE_HIGH),
--	PROPERTY_ENTRY_GPIO("uart3_rxd-gpios", &baytrail_gpiochip_nodes[0], 61, GPIO_ACTIVE_HIGH),
-+	PROPERTY_ENTRY_GPIO("uart3_txd-gpios", &baytrail_gpio_node_00, 57, GPIO_ACTIVE_HIGH),
-+	PROPERTY_ENTRY_GPIO("uart3_rxd-gpios", &baytrail_gpio_node_00, 61, GPIO_ACTIVE_HIGH),
- 	{ }
- };
- 
-@@ -850,7 +851,7 @@ static const struct property_entry lenovo_yt3_hideep_ts_props[] = {
- 	PROPERTY_ENTRY_U32("touchscreen-size-x", 1600),
- 	PROPERTY_ENTRY_U32("touchscreen-size-y", 2560),
- 	PROPERTY_ENTRY_U32("touchscreen-max-pressure", 255),
--	PROPERTY_ENTRY_GPIO("reset-gpios", &cherryview_gpiochip_nodes[0], 7, GPIO_ACTIVE_LOW),
-+	PROPERTY_ENTRY_GPIO("reset-gpios", &cherryview_gpio_node_00, 7, GPIO_ACTIVE_LOW),
- 	{ }
- };
- 
-@@ -987,10 +988,10 @@ static struct arizona_pdata lenovo_yt3_wm5102_pdata = {
- 
- static const struct property_entry lenovo_yt3_wm1502_props[] = {
- 	PROPERTY_ENTRY_GPIO("wlf,spkvdd-ena-gpios",
--			    &cherryview_gpiochip_nodes[0], 75, GPIO_ACTIVE_HIGH),
-+			    &cherryview_gpio_node_00, 75, GPIO_ACTIVE_HIGH),
- 	PROPERTY_ENTRY_GPIO("wlf,ldoena-gpios",
--			    &cherryview_gpiochip_nodes[0], 81, GPIO_ACTIVE_HIGH),
--	PROPERTY_ENTRY_GPIO("reset-gpios", &cherryview_gpiochip_nodes[0], 82, GPIO_ACTIVE_HIGH),
-+			    &cherryview_gpio_node_00, 81, GPIO_ACTIVE_HIGH),
-+	PROPERTY_ENTRY_GPIO("reset-gpios", &cherryview_gpio_node_00, 82, GPIO_ACTIVE_HIGH),
- 	PROPERTY_ENTRY_GPIO("wlf,micd-pol-gpios", &arizona_gpiochip_node, 2, GPIO_ACTIVE_HIGH),
- 	{ }
- };
-diff --git a/drivers/platform/x86/x86-android-tablets/other.c b/drivers/platform/x86/x86-android-tablets/other.c
-index 7532af2d72d1d9de807a1f371425249ac5ff86da..b61930ef51570be402df04c5c2a646217908a8fc 100644
---- a/drivers/platform/x86/x86-android-tablets/other.c
-+++ b/drivers/platform/x86/x86-android-tablets/other.c
-@@ -14,6 +14,7 @@
- #include <linux/input-event-codes.h>
- #include <linux/leds.h>
- #include <linux/pci.h>
-+#include <linux/pinctrl/intel.h>
- #include <linux/platform_device.h>
- #include <linux/pwm.h>
- 
-@@ -35,7 +36,7 @@ static const struct software_node advantech_mica_071_gpio_keys_node = {
- static const struct property_entry advantech_mica_071_prog1_key_props[] = {
- 	PROPERTY_ENTRY_U32("linux,code", KEY_PROG1),
- 	PROPERTY_ENTRY_STRING("label", "prog1_key"),
--	PROPERTY_ENTRY_GPIO("gpios", &baytrail_gpiochip_nodes[0], 2, GPIO_ACTIVE_LOW),
-+	PROPERTY_ENTRY_GPIO("gpios", &baytrail_gpio_node_00, 2, GPIO_ACTIVE_LOW),
- 	PROPERTY_ENTRY_U32("debounce-interval", 50),
- 	{ }
- };
-@@ -156,7 +157,7 @@ static const struct software_node cyberbook_t116_gpio_keys_node = {
- static const struct property_entry cyberbook_t116_prog1_key_props[] = {
- 	PROPERTY_ENTRY_U32("linux,code", KEY_PROG1),
- 	PROPERTY_ENTRY_STRING("label", "prog1_key"),
--	PROPERTY_ENTRY_GPIO("gpios", &cherryview_gpiochip_nodes[0], 30, GPIO_ACTIVE_LOW),
-+	PROPERTY_ENTRY_GPIO("gpios", &cherryview_gpio_node_00, 30, GPIO_ACTIVE_LOW),
- 	PROPERTY_ENTRY_U32("debounce-interval", 50),
- 	{ }
- };
-@@ -169,7 +170,7 @@ static const struct software_node cyberbook_t116_prog1_key_node = {
- static const struct property_entry cyberbook_t116_prog2_key_props[] = {
- 	PROPERTY_ENTRY_U32("linux,code", KEY_PROG2),
- 	PROPERTY_ENTRY_STRING("label", "prog2_key"),
--	PROPERTY_ENTRY_GPIO("gpios", &cherryview_gpiochip_nodes[3], 48, GPIO_ACTIVE_LOW),
-+	PROPERTY_ENTRY_GPIO("gpios", &cherryview_gpio_node_03, 48, GPIO_ACTIVE_LOW),
- 	PROPERTY_ENTRY_U32("debounce-interval", 50),
- 	{ }
- };
-@@ -244,8 +245,8 @@ static const struct software_node medion_lifetab_s10346_accel_node = {
- static const struct property_entry medion_lifetab_s10346_touchscreen_props[] = {
- 	PROPERTY_ENTRY_BOOL("touchscreen-inverted-x"),
- 	PROPERTY_ENTRY_BOOL("touchscreen-swapped-x-y"),
--	PROPERTY_ENTRY_GPIO("reset-gpios", &baytrail_gpiochip_nodes[1], 26, GPIO_ACTIVE_HIGH),
--	PROPERTY_ENTRY_GPIO("irq-gpios", &baytrail_gpiochip_nodes[2], 3, GPIO_ACTIVE_HIGH),
-+	PROPERTY_ENTRY_GPIO("reset-gpios", &baytrail_gpio_node_01, 26, GPIO_ACTIVE_HIGH),
-+	PROPERTY_ENTRY_GPIO("irq-gpios", &baytrail_gpio_node_02, 3, GPIO_ACTIVE_HIGH),
- 	{ }
- };
- 
-@@ -378,7 +379,7 @@ static const struct software_node nextbook_ares8a_accel_node = {
- static const struct property_entry nextbook_ares8a_ft5416_props[] = {
- 	PROPERTY_ENTRY_U32("touchscreen-size-x", 800),
- 	PROPERTY_ENTRY_U32("touchscreen-size-y", 1280),
--	PROPERTY_ENTRY_GPIO("reset-gpios", &cherryview_gpiochip_nodes[1], 25, GPIO_ACTIVE_LOW),
-+	PROPERTY_ENTRY_GPIO("reset-gpios", &cherryview_gpio_node_01, 25, GPIO_ACTIVE_LOW),
- 	{ }
- };
- 
-@@ -435,7 +436,7 @@ static const struct software_node peaq_c1010_gpio_keys_node = {
- static const struct property_entry peaq_c1010_dolby_key_props[] = {
- 	PROPERTY_ENTRY_U32("linux,code", KEY_SOUND),
- 	PROPERTY_ENTRY_STRING("label", "dolby_key"),
--	PROPERTY_ENTRY_GPIO("gpios", &baytrail_gpiochip_nodes[0], 3, GPIO_ACTIVE_LOW),
-+	PROPERTY_ENTRY_GPIO("gpios", &baytrail_gpio_node_00, 3, GPIO_ACTIVE_LOW),
- 	PROPERTY_ENTRY_U32("debounce-interval", 50),
- 	{ }
- };
-@@ -481,8 +482,8 @@ static const struct property_entry whitelabel_tm800a550l_goodix_props[] = {
- 	PROPERTY_ENTRY_STRING("firmware-name", "gt912-tm800a550l.fw"),
- 	PROPERTY_ENTRY_STRING("goodix,config-name", "gt912-tm800a550l.cfg"),
- 	PROPERTY_ENTRY_U32("goodix,main-clk", 54),
--	PROPERTY_ENTRY_GPIO("reset-gpios", &baytrail_gpiochip_nodes[1], 26, GPIO_ACTIVE_HIGH),
--	PROPERTY_ENTRY_GPIO("irq-gpios", &baytrail_gpiochip_nodes[2], 3, GPIO_ACTIVE_HIGH),
-+	PROPERTY_ENTRY_GPIO("reset-gpios", &baytrail_gpio_node_01, 26, GPIO_ACTIVE_HIGH),
-+	PROPERTY_ENTRY_GPIO("irq-gpios", &baytrail_gpio_node_02, 3, GPIO_ACTIVE_HIGH),
- 	{ }
- };
- 
-@@ -531,7 +532,7 @@ const struct x86_dev_info whitelabel_tm800a550l_info __initconst = {
- static const struct property_entry vexia_edu_atla10_5v_touchscreen_props[] = {
- 	PROPERTY_ENTRY_U32("hid-descr-addr", 0x0000),
- 	PROPERTY_ENTRY_U32("post-reset-deassert-delay-ms", 120),
--	PROPERTY_ENTRY_GPIO("reset-gpios", &baytrail_gpiochip_nodes[1], 26, GPIO_ACTIVE_LOW),
-+	PROPERTY_ENTRY_GPIO("reset-gpios", &baytrail_gpio_node_01, 26, GPIO_ACTIVE_LOW),
- 	{ }
- };
- 
-@@ -605,7 +606,7 @@ static const struct software_node vexia_edu_atla10_9v_accel_node = {
- static const struct property_entry vexia_edu_atla10_9v_touchscreen_props[] = {
- 	PROPERTY_ENTRY_U32("hid-descr-addr", 0x0000),
- 	PROPERTY_ENTRY_U32("post-reset-deassert-delay-ms", 120),
--	PROPERTY_ENTRY_GPIO("reset-gpios", &baytrail_gpiochip_nodes[0], 60, GPIO_ACTIVE_LOW),
-+	PROPERTY_ENTRY_GPIO("reset-gpios", &baytrail_gpio_node_00, 60, GPIO_ACTIVE_LOW),
- 	{ }
- };
- 
-diff --git a/drivers/platform/x86/x86-android-tablets/shared-psy-info.c b/drivers/platform/x86/x86-android-tablets/shared-psy-info.c
-index 29fc466f76fe7a99f7cb853e38f62593d7464138..f214152a9b0455089d40b977bf1116098afac764 100644
---- a/drivers/platform/x86/x86-android-tablets/shared-psy-info.c
-+++ b/drivers/platform/x86/x86-android-tablets/shared-psy-info.c
-@@ -10,6 +10,7 @@
- 
- #include <linux/gpio/machine.h>
- #include <linux/gpio/property.h>
-+#include <linux/pinctrl/intel.h>
- #include <linux/platform_device.h>
- #include <linux/power/bq24190_charger.h>
- #include <linux/property.h>
-@@ -169,9 +170,9 @@ const char * const bq24190_modules[] __initconst = {
- };
- 
- static const struct property_entry int3496_reference_props[] __initconst = {
--	PROPERTY_ENTRY_GPIO("vbus-gpios", &baytrail_gpiochip_nodes[1], 15, GPIO_ACTIVE_HIGH),
--	PROPERTY_ENTRY_GPIO("mux-gpios", &baytrail_gpiochip_nodes[2], 1, GPIO_ACTIVE_HIGH),
--	PROPERTY_ENTRY_GPIO("id-gpios", &baytrail_gpiochip_nodes[2], 18, GPIO_ACTIVE_HIGH),
-+	PROPERTY_ENTRY_GPIO("vbus-gpios", &baytrail_gpio_node_01, 15, GPIO_ACTIVE_HIGH),
-+	PROPERTY_ENTRY_GPIO("mux-gpios", &baytrail_gpio_node_02, 1, GPIO_ACTIVE_HIGH),
-+	PROPERTY_ENTRY_GPIO("id-gpios", &baytrail_gpio_node_02, 18, GPIO_ACTIVE_HIGH),
- 	{ }
- };
- 
-diff --git a/drivers/platform/x86/x86-android-tablets/x86-android-tablets.h b/drivers/platform/x86/x86-android-tablets/x86-android-tablets.h
-index 2498390958ad44e89b1c929ff46397e3f9e0c74b..cc61e49f93890e3cde16ea549d2a4f9fd11a41ac 100644
---- a/drivers/platform/x86/x86-android-tablets/x86-android-tablets.h
-+++ b/drivers/platform/x86/x86-android-tablets/x86-android-tablets.h
-@@ -103,10 +103,6 @@ int x86_android_tablet_get_gpiod(const char *chip, int pin, const char *con_id,
- 				 struct gpio_desc **desc);
- int x86_acpi_irq_helper_get(const struct x86_acpi_irq_data *data);
- 
--/* Software nodes representing GPIO chips used by various tablets */
--extern const struct software_node baytrail_gpiochip_nodes[];
--extern const struct software_node cherryview_gpiochip_nodes[];
--
- /*
-  * Extern declarations of x86_dev_info structs so there can be a single
-  * MODULE_DEVICE_TABLE(dmi, ...), while splitting the board descriptions.
-
--- 
-2.47.3
+Thanks,
+Guenter
 
