@@ -1,68 +1,68 @@
-Received: from mail-dy1-f171.google.com (mail-dy1-f171.google.com [74.125.82.171])
+Received: from mail-dy1-f174.google.com (mail-dy1-f174.google.com [74.125.82.174])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D232F38756F
-	for <platform-driver-x86@vger.kernel.org>; Thu, 19 Mar 2026 02:56:27 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=74.125.82.171
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 702F738756F
+	for <platform-driver-x86@vger.kernel.org>; Thu, 19 Mar 2026 02:56:29 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=74.125.82.174
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1773888989; cv=none; b=d9aR2p6776XkSEEQ39zqkb528rYc8YXi89oseK7OEkbLYpXgJ6HwMuorvOP/R783fRe3TJNYQnlTquMLH2X2JydN1HM+1GSskg97czgTfsECLyy+Ue+PIiYyEd975stlRBr4KD3Ci5jXWV0ku2ssDB5e8TSQAmtTFRLVP62OCSM=
+	t=1773888990; cv=none; b=CL1POeIvb3JHm1IDozyqS4kcgB6oHSmgVUnMZiauQv0q3bMQQDFsm55Aen2TTzZCbRhfmWllnIKfbyDnStIdK184rxsVRixbe8IWmPHLNEEmC6UU3N4uPDnXh+JMNVmv0Psf7NOGrigiVOBohFs7k6s6IBgjg6xGvP17Cha2yYc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1773888989; c=relaxed/simple;
-	bh=t7uiBdls3lv7OiEXA8iMgDOA6vzogD6b3u5EkKw9yBM=;
+	s=arc-20240116; t=1773888990; c=relaxed/simple;
+	bh=j+TfdR2vMLzYv/kUd6Hr5UCBSIgEc4azCMqHxSkXbWg=;
 	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=rR7TvIM6nrJqPh2Bgb8ONTpm2NpKyvDqEI7A+xcjRQlDAOQZ8q4RcB/vkOwbBVdjV5kX4EPWmQVb/UYFxgPbbaWCgCRR0tpy3l+SmupbhJOMhCOvT0akGsJE0rmqrwvnIY5vwlVOw6DnfijQ7pxa+e3rI7o8wecJFGpDel2me0E=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=AU7IP8Dd; arc=none smtp.client-ip=74.125.82.171
+	 In-Reply-To:To:Cc; b=GeU/hyW9k2v3mp6rIHZ5MkyCtFoxn5tXm7IPne/AnhgVzYVCqo9PcOvz/lZZngdZWplurNOSBLn4SOkN0RJrO9/F+tNG1QF7R/gsRTREyvTz0FxS2iyBBUxbONCHAk5hiPfZy3RaNMNwysHEdJ8w6PR7ZShw5mqjqjg6t5+bDXs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=nWqta3mO; arc=none smtp.client-ip=74.125.82.174
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="AU7IP8Dd"
-Received: by mail-dy1-f171.google.com with SMTP id 5a478bee46e88-2c0cf039a45so329633eec.0
-        for <platform-driver-x86@vger.kernel.org>; Wed, 18 Mar 2026 19:56:27 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="nWqta3mO"
+Received: by mail-dy1-f174.google.com with SMTP id 5a478bee46e88-2bdd40d3c61so576150eec.1
+        for <platform-driver-x86@vger.kernel.org>; Wed, 18 Mar 2026 19:56:29 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1773888987; x=1774493787; darn=vger.kernel.org;
+        d=gmail.com; s=20230601; t=1773888989; x=1774493789; darn=vger.kernel.org;
         h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
          :mime-version:subject:date:from:from:to:cc:subject:date:message-id
          :reply-to;
-        bh=T3xnuvBTm20lU9ioy0TlmhVylnqjZKhbjidK+UiXkzc=;
-        b=AU7IP8Ddm/hqqe4FQ88O3q5nuLLqtSKitlufs9lBPT+3RR30T28E1UeKmRojyoCVNu
-         l0Jxb/ORjxobzmNF7+kMS/cmTonfSha9RVDg0+fj1L6jH9eqK903Nt/QVUbC01gAM6T9
-         lZgW15nwV80sVoTT8030dn43PYpxsknRpqEBzjhh5R68accQFKb42JQWQynmV8XIIakb
-         D/o5Scuu5bmFtBPKJkCZEEDq9tem2fy2iyhmGG4gupirxV9rtWgPH9p2L7aiIOufm4oA
-         iL0vHv3JE7RGcMjPU5k/uh+CSvVVpRslVGPPiJoQ3uFxBEN/5Gh9iHz4P0JOjoPgRgfD
-         44Ow==
+        bh=ZgPWB+b9LbV2c18ggNpLoeCrPTB8CAkNmY8m136D6Cw=;
+        b=nWqta3mOso4lZn7+gmMBtwu8ePo40ttfPa7PjyV/mb0X9/7GWTxrSn148HqlerQB6K
+         0BfbFmv6nSBM1EenuSpTRCqZd8Zy7FSjpID1NnmJ01QeIzyGdRIw2pYChMH22S1QPowJ
+         PogNDjAfwOzAwGu8MUxVDgcF/mO7ZXEml1oU9tIu/lqC54Q6MewOjizCEiueNoflwBJK
+         ydp6VQxwQuhG3VfKzCYbYf4gOxpilCegfvYTGb9bRHux+IfeT8ylu8MyyeJ/NtboWQKI
+         3i4kRNd1YBwa0Kxr698mESatsdMzc69qBUuEU90U2BOft7dlMSe/arfKJ2AyI+bY2lF7
+         KEMA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1773888987; x=1774493787;
+        d=1e100.net; s=20251104; t=1773888989; x=1774493789;
         h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
          :mime-version:subject:date:from:x-gm-gg:x-gm-message-state:from:to
          :cc:subject:date:message-id:reply-to;
-        bh=T3xnuvBTm20lU9ioy0TlmhVylnqjZKhbjidK+UiXkzc=;
-        b=RvIelazN60qFSZXKKBo1tk7wx8TQG6tlwGvI+CWL6A2pUbrMs6YbEqXb7w11FBANaq
-         ldKmwVvtp0gkrlfaeGRjIpZQIWelgECj4d6Q4IKswdrLzKC4zkpdoTr3qz0b3eaczbBQ
-         p5u6uCVEFQ97O9SSQBnOI4iF3ghhAYR4IvS9o4gwWL/jrF8TrvxmzO8pl343A0n01p9P
-         Bpc5k7SHrkzG95yb5hdXXvo0f9QPT5KpSeGMdrW3WxWsMMb+dva0MAVUeboq3myem5Pd
-         OZ9kHjDfdVMCGB9mIYGLQ2m8YSu6MxV0xBkpFkBZ8aGLgzijut8YgixZtQ0UWRi6A6pz
-         mKfw==
-X-Forwarded-Encrypted: i=1; AJvYcCUW87PO63oQSkUtD/tjM6A+Dhhtq8VQANoiv4HVjjOmDwsoi2soRBtgWOhZpsogfSZymMEDiWPeg7p0cU9sUORs4bxx@vger.kernel.org
-X-Gm-Message-State: AOJu0YweruW0kciitDawqN89cDGTbnAHRtdD/P1IHIbLh/yzY5O5hqjk
-	ZeDpxHo3lDhZlOTxXJNHj9h/mWkunHbaa9jSsaBbv6H4QKmMEsVJpBKH
-X-Gm-Gg: ATEYQzwqoiy9i1SJ9o1WjZrg4y8qWkyHnp7QSZqiqRV8OrNuBotGxrKglV7ycO0lJzD
-	PPl4n2NsmI3Q2gTUTzKLgsawsoTn6mkocU0AOoNK1fUIjPvbWN+H3LE6pjQmV2uwLpCSKHseQZQ
-	DGKr3ZB1YDQvHv8enBuN7HzhstAgUrNcTx0dQQJNqhQnDCWVG2GRtnTRpmTlZUEKrNEb36y9N80
-	qukOzvmOkdNp12AifXt+JlJ6EAPWzA84/AZP7U1Od8ZQxeNvvMsaIwZIXWsR3pU2GToATwVu1mO
-	T/ClHAPawvQBd7DFtlsMjTvLB3/V6+UhoIs37oRdROlzuKkl4GTntAg05FQrnpZudlAKjua19sC
-	zPdlOjuPkRqNREz65glZcadY+Rw/jAARHZwtV7kF52HJf5EowPUQJeSiNxrlnWkbsu4fmBus27P
-	DRfAN0KJE5GyC5Lqu7g1uZGKTaVKSK+LeN5ZFhW9oDnK1bZyL+GwWR4RYC1nvnU+R4pZFGd4z9F
-	xcrCf+ocBpQfQ==
-X-Received: by 2002:a05:7300:a2ca:b0:2ba:a2fa:84a6 with SMTP id 5a478bee46e88-2c0e5101a34mr2974532eec.24.1773888986579;
-        Wed, 18 Mar 2026 19:56:26 -0700 (PDT)
+        bh=ZgPWB+b9LbV2c18ggNpLoeCrPTB8CAkNmY8m136D6Cw=;
+        b=IiGqi5Oplh+OnVs1yxJMETxwMW/MFViLsQUeptzRyYV9XVCDYSKyQaG0cKpGUIy4To
+         GCil8Qzfz90ZUicdDfH1af2Wq5AA6E2/QZoEDY8L6VGT3w9JjaJZ2BqG4wOb1hDz4m7D
+         GRECcqnli0yhR8NRkU3lmqLTKIK3Ea28gVGGtaeSDeONQHVtZhni1YRnPeooIrj3ka1z
+         c9dN45HVt9unt7QvfMP7VQLx3Ltrc6zOuOjbnT1q8yCXpFADnrTmjZSsVa6XcDr9iFlB
+         P8D/9Z31FJn/INYrQoXFiElZRieOzxOPSJv7VRSPDM5jPKnmUarAIrtkvHeQl6P0Ye6u
+         yATg==
+X-Forwarded-Encrypted: i=1; AJvYcCVDDV8rdbUSvnU2zto+jDouo/gJ2qTIktyH5HarwD+uy/MyvJyAFOvBxE0vLyKhI4GJadHEdUVgZXV8UQNvIwHIZJeX@vger.kernel.org
+X-Gm-Message-State: AOJu0YzLX5QxbRx0kwdwz8Hadt4DMWXOXMV6M46utOfsvdwBVXyrkc1W
+	BUuEw1L/nCH6abdp2pQq3VWDUYFYHGgSHwSYROb0VBgHs3u5yAHDrxP2
+X-Gm-Gg: ATEYQzzm0JLnr+jbS+llEa/I57/BSG1uYX8NeznrQdkvTIsyWzjxoumhalO37gZTgup
+	n1ZZDj+aI7tYsp2GoI5ipAPGky25WDlqE1kuJ/Vjnt/G7rt19QtTjjyLBuSQZhpm0rAVd37X6A8
+	Nv78e9634mZVSor5S0pN/TnhLG0QN1AZPuLzOUZNnITmxUd0CZArs2jU/biSKVUmyHb7oWOkbz0
+	flbNAON6svCnYsVTdni8IHbyKGFuUGaQZ/NJubR/Cqgljh01OBowip3D7/FPxDvSmkgkn/cXPv+
+	2NrfuJiy62TIZT/oOvfGwVx9Ta0s28Zq0k0BTAyJ+/hNU56SlkBZLqzNzM78lgFo1YQ+MinX1XV
+	iJRl3v9fPlzKh4oRSH2xB4+XswLlSW1GLOmU/5HZe0wHgNAwhKWd3Uyp3JeNcOy8DRWG0ar9zvl
+	fG50QFf3rIomsI+SMUXdy4AF3EcDNkJWsvuMw1zgC+2t4MW+y/jfdey2c6KoIU8Rg/bN6Yu+lWK
+	/KTx81dW8F85A==
+X-Received: by 2002:a05:7300:7fa2:b0:2ba:6a79:f04c with SMTP id 5a478bee46e88-2c0e50631femr2651118eec.18.1773888988115;
+        Wed, 18 Mar 2026 19:56:28 -0700 (PDT)
 Received: from dtor-ws.sjc.corp.google.com ([2a00:79e0:2ebe:8:5966:2bd9:1ed:e7c4])
-        by smtp.gmail.com with ESMTPSA id 5a478bee46e88-2c0e55a53fcsm8250983eec.24.2026.03.18.19.56.25
+        by smtp.gmail.com with ESMTPSA id 5a478bee46e88-2c0e55a53fcsm8250983eec.24.2026.03.18.19.56.26
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 18 Mar 2026 19:56:25 -0700 (PDT)
+        Wed, 18 Mar 2026 19:56:27 -0700 (PDT)
 From: Dmitry Torokhov <dmitry.torokhov@gmail.com>
-Date: Wed, 18 Mar 2026 19:56:17 -0700
-Subject: [PATCH v2 1/2] platform/x86: barco-p50-gpio: normalize return
- value of gpio_get
+Date: Wed, 18 Mar 2026 19:56:18 -0700
+Subject: [PATCH v2 2/2] platform/x86: barco-p50-gpio: convert to guard()
+ notation
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
@@ -70,8 +70,8 @@ List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Message-Id: <20260318-barco-p50-gpio-set-v2-1-c0a4a6416163@gmail.com>
+Content-Transfer-Encoding: 8bit
+Message-Id: <20260318-barco-p50-gpio-set-v2-2-c0a4a6416163@gmail.com>
 References: <20260318-barco-p50-gpio-set-v2-0-c0a4a6416163@gmail.com>
 In-Reply-To: <20260318-barco-p50-gpio-set-v2-0-c0a4a6416163@gmail.com>
 To: =?utf-8?q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>, 
@@ -82,34 +82,62 @@ Cc: Peter Korsgaard <peter.korsgaard@barco.com>,
  linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org
 X-Mailer: b4 0.15-dev-a6826
 
-The GPIO get callback is expected to return 0 or 1 (or a negative error
-code). Ensure that the value returned by p50_gpio_get() is normalized
-to the [0, 1] range.
+Using guard notation simplifies control flow and makes the code clearer.
 
-Fixes: 86ef402d805d606a ("gpiolib: sanitize the return value of gpio_chip::get()")
-Reviewed-by: Linus Walleij <linusw@kernel.org>
+Suggested-by: Ilpo Järvinen <ilpo.jarvinen@linux.intel.com>
 Signed-off-by: Dmitry Torokhov <dmitry.torokhov@gmail.com>
 ---
- drivers/platform/x86/barco-p50-gpio.c | 5 ++++-
- 1 file changed, 4 insertions(+), 1 deletion(-)
+ drivers/platform/x86/barco-p50-gpio.c | 26 ++++++++++----------------
+ 1 file changed, 10 insertions(+), 16 deletions(-)
 
 diff --git a/drivers/platform/x86/barco-p50-gpio.c b/drivers/platform/x86/barco-p50-gpio.c
-index 6f13e81f98fb..360ffd8505d6 100644
+index 360ffd8505d6..2a6d8607c402 100644
 --- a/drivers/platform/x86/barco-p50-gpio.c
 +++ b/drivers/platform/x86/barco-p50-gpio.c
-@@ -275,8 +275,11 @@ static int p50_gpio_get(struct gpio_chip *gc, unsigned int offset)
- 	mutex_lock(&p50->lock);
+@@ -272,33 +272,27 @@ static int p50_gpio_get(struct gpio_chip *gc, unsigned int offset)
+ 	struct p50_gpio *p50 = gpiochip_get_data(gc);
+ 	int ret;
+ 
+-	mutex_lock(&p50->lock);
++	guard(mutex)(&p50->lock);
  
  	ret = p50_send_mbox_cmd(p50, P50_MBOX_CMD_READ_GPIO, gpio_params[offset], 0);
--	if (ret == 0)
-+	if (ret == 0) {
- 		ret = p50_read_mbox_reg(p50, P50_MBOX_REG_DATA);
-+		if (ret >= 0)
-+			ret = !!ret;
-+	}
+-	if (ret == 0) {
+-		ret = p50_read_mbox_reg(p50, P50_MBOX_REG_DATA);
+-		if (ret >= 0)
+-			ret = !!ret;
+-	}
++	if (ret < 0)
++		return ret;
  
- 	mutex_unlock(&p50->lock);
+-	mutex_unlock(&p50->lock);
++	ret = p50_read_mbox_reg(p50, P50_MBOX_REG_DATA);
++	if (ret < 0)
++		return ret;
  
+-	return ret;
++	return !!ret;
+ }
+ 
+ static int p50_gpio_set(struct gpio_chip *gc, unsigned int offset, int value)
+ {
+ 	struct p50_gpio *p50 = gpiochip_get_data(gc);
+-	int ret;
+-
+-	mutex_lock(&p50->lock);
+ 
+-	ret = p50_send_mbox_cmd(p50, P50_MBOX_CMD_WRITE_GPIO,
+-				gpio_params[offset], value);
++	guard(mutex)(&p50->lock);
+ 
+-	mutex_unlock(&p50->lock);
+-
+-	return ret;
++	return p50_send_mbox_cmd(p50, P50_MBOX_CMD_WRITE_GPIO,
++				 gpio_params[offset], value);
+ }
+ 
+ static int p50_gpio_probe(struct platform_device *pdev)
 
 -- 
 2.53.0.851.ga537e3e6e9-goog
