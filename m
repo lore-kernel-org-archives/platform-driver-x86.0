@@ -1,86 +1,110 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-dl1-f46.google.com (mail-dl1-f46.google.com [74.125.82.46])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 790D13F2107;
-	Wed, 18 Mar 2026 19:42:05 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6428D2874E3
+	for <platform-driver-x86@vger.kernel.org>; Thu, 19 Mar 2026 02:56:26 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=74.125.82.46
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1773862925; cv=none; b=rwLEowMKXjQog3PY6UCQGbYcLFTeE09qMCHLmRQqTlT7H3bsFN48U5z47RvvoRjZTwXlkaDhNxcRiysbFDf0BO2wOUu+JVo91pXWqkRTcgUUHmjoUJD+LY8GzLuW891JbIwnPWKGGoAkdc2qYLjemOA520kv2qx9RbH0HkKCUYg=
+	t=1773888988; cv=none; b=j7NLOInAEGmJpq0fCzGd8mL5Z9ClLzX5ncUaoO+uLnXKsbRz25F/D/tp6AvoDQfM0UQwcy+v8OJInGEzGQr97NvRaWPS+iEH/ofLLLJAutToSKKG/3fV56MacFnWt5ULX+TcDMALV9/q0TH8QoMYJi4TBWY1iyXwYtt0o1nPR6g=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1773862925; c=relaxed/simple;
-	bh=HXCYjnNmWNLffvrghRShw/mNCBqk1SRIyT8c8XR4iXM=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version:Content-Type; b=XnWi8fOu1Mv0HmPfsBB8U5it0bgHK2XuMeU9/LzRMQLBBcA+jvi4uZGF6r71eU6YmP4AZZfsWMiP8f4Cev4NzEqe3Kn//lXo3JIb+SKvbl8scmzNL9VVg6sVhR388xGTAF7oq1m41r6C0jTmBGIsvx3vt9KqUP6W7/78dENCWMM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=n4mqNgAn; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1773888988; c=relaxed/simple;
+	bh=KMrCVoD5LrnOn5zkEXVr2yMChkZ1B/BYXUxvNYVU10c=;
+	h=From:Subject:Date:Message-Id:MIME-Version:Content-Type:To:Cc; b=nw4RjVlsDuVxEIYS73S7msaW53RRFCWU+rSHs0OK7C0O9kqiLBnEi4aXRP8ozFZj45iNFC19h0guIGib9Vvnll6CgfbJpJkCEMtNGWXBDOZdvSHtsWcOmOsp2rden9Lk8olsC56SHr5w6dc72AK5mhjmH2ZvesuvwuBATJ+OIZI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=BnlquoWI; arc=none smtp.client-ip=74.125.82.46
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="n4mqNgAn"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id A1795C19421;
-	Wed, 18 Mar 2026 19:42:03 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1773862925;
-	bh=HXCYjnNmWNLffvrghRShw/mNCBqk1SRIyT8c8XR4iXM=;
-	h=From:To:Cc:Subject:Date:From;
-	b=n4mqNgAnA3HP7iqN6wIxrv1fp86qb89uaFKI1yzbc24YTledvkinVJuTsRiOkWgVm
-	 +raDj0DWgtCD9+zhPq9rfEQ4NSt5AW2cn6LJMKr9ZXDrsUaUp6rZSfBz70Ex4U2lOm
-	 y/f8s6R5FcSaQiN02aJAh68bAABnLN/8TSn6JN01UYb3YECF2Z8WuJf5I6FkWGiRFR
-	 5PmImE7lVS/TMIWt3voqqzY9EA7bCI1GsSRbvM/wqGW4RpkU0oaa03T72ueq6F+EYl
-	 BRcPjkiDOdSV7bV8hVG3nLQt+wHVMt9ZR+TuSFkY5+4iZ37hr5s6Rl5aPOLE2/oShk
-	 aESwWxc1gIMHw==
-From: "Rafael J. Wysocki" <rafael@kernel.org>
-To: Ilpo =?ISO-8859-1?Q?J=E4rvinen?= <ilpo.jarvinen@linux.intel.com>
-Cc: LKML <linux-kernel@vger.kernel.org>,
- Linux ACPI <linux-acpi@vger.kernel.org>, Hans de Goede <hansg@kernel.org>,
- platform-driver-x86@vger.kernel.org, Kenneth Chan <kenneth.t.chan@gmail.com>
-Subject:
- [PATCH v2 0/4] platform/x86: panasonic-laptop: Bind to a platform device
- instead of an ACPI one
-Date: Wed, 18 Mar 2026 20:32:58 +0100
-Message-ID: <5979471.DvuYhMxLoT@rafael.j.wysocki>
-Organization: Linux Kernel Development
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="BnlquoWI"
+Received: by mail-dl1-f46.google.com with SMTP id a92af1059eb24-12776bebe9fso237888c88.1
+        for <platform-driver-x86@vger.kernel.org>; Wed, 18 Mar 2026 19:56:26 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1773888985; x=1774493785; darn=vger.kernel.org;
+        h=cc:to:content-transfer-encoding:mime-version:message-id:date
+         :subject:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=fFQ/cIHAPkT6GWASuSfr6W9xPQcgCwF/USNF67U5DTE=;
+        b=BnlquoWI/JyjHwadJP8YghI+9KTROZM0bpW+DMxlNKbL4od9nACbySrq49YcF/VH8x
+         wsS3XUM8BX0uCITrMbh+34hLg7L4DpUdDXregSJevaEKF2QV0Bwsz6NX08WhsbiqFP5e
+         zWEl6tJNBT82deGI0BJfT3HSbhmk6nD7dG60mEOYQiFsTe+mVsyXLNhgh70mqtjRZTr8
+         6iLfBW5LWNYlRkaPzIP/WbUOdUA360oeOMeeMUxpYsTTL3x+99VeHbxvGsc9OPEiZGXb
+         sdVUR04XK76I4SkmEeHSu9wItqpilosdO0Id72Dbe3w5WNj0lUYrxy6FrK6FgRDLNQY/
+         cRig==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20251104; t=1773888985; x=1774493785;
+        h=cc:to:content-transfer-encoding:mime-version:message-id:date
+         :subject:from:x-gm-gg:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=fFQ/cIHAPkT6GWASuSfr6W9xPQcgCwF/USNF67U5DTE=;
+        b=HVnVcr73spKc9WKOV3+3nHRRMh9fX/6yvnZdJZGmtx9Chgx0IuXRkGUzoCaLA/xsKk
+         6pesyKyAoCKJvr1nja+7g1k+n+ggPlJaxmEVdZh+1oRP8itgTrgpZ9ecdTC6IU2Q9xem
+         Y/jXaybVOCbYF7Wyn+RAwb+96HKH11hQ82AVJ8u7jYLY8VnKgldLaA9Buf5omi6UOj8h
+         UAriYtuDZ2H6Jem6thnhSk5rYu9blD6bhgSTFKKtGSxcPj8gFWreKZotXRJs8GJYRzIb
+         daUoh0b5kJs8CeqIzLhSXPcVodUmOHECyIchDSSxN6sYHs3rrcHA04jzm+OBrHt2ZguO
+         8Vnw==
+X-Forwarded-Encrypted: i=1; AJvYcCVdl4Kk/HXpPlavsM1/0dhDohRxCnVtDqOizC0qDXM4isn0/TBc/KMM4/LghCQV28gS78pMsQuyT74gADRB0s7079Za@vger.kernel.org
+X-Gm-Message-State: AOJu0YyWpCtfIRoNMnRyDv2gkPC3kiaT0FypJV+nI0VK48SvdI5pFaYH
+	nsi5wA2HV4veCUsW5ykOR2ZEWeFNTKkIUzpH41Bng5lf3HGzP7zYP4sv
+X-Gm-Gg: ATEYQzwBLBtU/sNhRPwNmKMAyoXzoN06dK53ojm2AxRz/3H7Kfcb2BNLZDUSZQOp1iv
+	Rpw/dLGikB/rMYHbDoryg2ziOnfEytcac6ifzk94BV7oAJ0fhRwvM6qMeAPj3nhOmCnX19tqosd
+	UZ34SpagBE/lJxzpNeR9h5zNh/b14d3iVTUEA0q5OZrs5p5IPvQIDMd7y/FNo25PvGQJ57t++xL
+	aH1sfLXRsbiY0LjovjNossxtVuHBR+HXfSwt985m7p2vuvePfW19V8r28+D7X4inmzStJxX7MsZ
+	Mv3PHHGKiKDsYA6gI93VAg15LipeVRwAtq1RcQexfy5+H7hA35mP165Ghtqtdk5AKvkdOR1ptG7
+	3fvqIzCUCXIqmXC2yFlMDJ1tK4hs56OsgQK32EsqI7bBDlhQq6PPcEbE2A2NH/iMU/9C20NxAYB
+	qVGeFsvuKnsg5DAm6czpomSYpcZ3Xl7jzJK1a2PSoTZGpJMnNxFl+uol6Kv9kfIIKFeNvOLaEkS
+	6yS/x2Gw6GCFg==
+X-Received: by 2002:a05:7022:226:b0:119:e569:f277 with SMTP id a92af1059eb24-129a718fa4bmr2987156c88.32.1773888985184;
+        Wed, 18 Mar 2026 19:56:25 -0700 (PDT)
+Received: from dtor-ws.sjc.corp.google.com ([2a00:79e0:2ebe:8:5966:2bd9:1ed:e7c4])
+        by smtp.gmail.com with ESMTPSA id 5a478bee46e88-2c0e55a53fcsm8250983eec.24.2026.03.18.19.56.23
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 18 Mar 2026 19:56:24 -0700 (PDT)
+From: Dmitry Torokhov <dmitry.torokhov@gmail.com>
+Subject: [PATCH v2 0/2] barco-p50-gpio: normalize return value of "get" and
+ convert to guard()
+Date: Wed, 18 Mar 2026 19:56:16 -0700
+Message-Id: <20260318-barco-p50-gpio-set-v2-0-c0a4a6416163@gmail.com>
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7Bit
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+X-B4-Tracking: v=1; b=H4sIANBlu2kC/x3MTQqDMBBA4avIrDslVSKlq1K66Q36Q5FpHGOkZ
+ kIiRRDv3uDyW7y3QOLoOMGpWCDyzyUnPqPcFWB68pbRtdlQqrJW1eGIH4pGMGiFNjjBxBMaXau
+ WmHRVMeQwRO7cvE1f7+wuyohTH5m2FT0fvpmv8+Xum9vA49mK2C/vjYywrn+Y4BpWkgAAAA==
+X-Change-ID: 20260318-barco-p50-gpio-set-c560daea533e
+To: =?utf-8?q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>, 
+ Santosh Kumar Yadav <santoshkumar.yadav@barco.com>
+Cc: Peter Korsgaard <peter.korsgaard@barco.com>, 
+ Hans de Goede <hansg@kernel.org>, Linus Walleij <linusw@kernel.org>, 
+ Bartosz Golaszewski <brgl@kernel.org>, platform-driver-x86@vger.kernel.org, 
+ linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org
+X-Mailer: b4 0.15-dev-a6826
 
-Hi All,
+These 2 patches fixes a regression in the driver arising from gpiolib
+tightening its API, and converts it to guard() notation when taking a
+mutex to simplify the code flow.
 
-This is an update of
+v2:
 
-https://lore.kernel.org/linux-acpi/3616223.QJadu78ljV@rafael.j.wysocki/
+- added reviiewed-by and fixes trailers
+- added new patch using guard()
 
-adding one patch and updating one patch to fix the driver removal
-code ordering.
+Signed-off-by: Dmitry Torokhov <dmitry.torokhov@gmail.com>
+---
+Dmitry Torokhov (2):
+      platform/x86: barco-p50-gpio: normalize return value of gpio_get
+      platform/x86: barco-p50-gpio: convert to guard() notation
 
-This series is part of a larger effort to switch over all drivers using
-the struct acpi_driver interface to the more common struct platform_driver
-interface and eliminate the former.  The background is explained in
-Documentation/driver-api/acpi/acpi-drivers.rst and in the changelog of
-the patch that introduced the above document:
+ drivers/platform/x86/barco-p50-gpio.c | 23 ++++++++++-------------
+ 1 file changed, 10 insertions(+), 13 deletions(-)
+---
+base-commit: b84a0ebe421ca56995ff78b66307667b62b3a900
+change-id: 20260318-barco-p50-gpio-set-c560daea533e
 
-https://lore.kernel.org/all/2396510.ElGaqSPkdT@rafael.j.wysocki/
+Thanks.
 
-The bottom line is that the kernel would be better off without struct
-acpi_driver and so it is better to get rid of it.
-
-This series carries out driver conversion of the platform x86 Panasonic
-hotkey and LCD brightness control driver.
-
-Patch [1/4] fixes the rollback path in acpi_pcc_hotkey_add() and rearranges
-the driver removal code ordering to match it.
-
-Patch [2/4] removes some redundant checks from the driver.
-
-Patch [3/4] updates the driver to install an ACPI notify handler by itself
-instead of using the .notify() callback from struct acpi_driver, which is
-requisite for the driver conversion.
-
-Patch [4/4] converts the driver to using struct platform_driver for device
-binding.
-
-Thanks!
-
-
+-- 
+Dmitry
 
