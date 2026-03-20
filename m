@@ -1,77 +1,68 @@
-Received: from mail-dy1-f178.google.com (mail-dy1-f178.google.com [74.125.82.178])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.21])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 57FB231717A
-	for <platform-driver-x86@vger.kernel.org>; Fri, 20 Mar 2026 01:49:08 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=74.125.82.178
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CDAA727B32C;
+	Fri, 20 Mar 2026 02:42:06 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.21
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1773971354; cv=none; b=YxGiUYQ9QT1TPpDZQXG967Ywyqeeeo8uIZjVJlquaw0ksjEx+y/PJWJNV77BbL90kVr94z+PlxQJsO4PxGQH0KYXLNYZWwGCVOA+HOvxk2UPLqaYrcvez5Cyyi7IasHtNwCXJukEri3VBXiAFRa4uzDekW1SazkeB4iManbsHpE=
+	t=1773974529; cv=none; b=XKk6WHKOGbxF5IRgvsqBCv8ij4Rkoaq/cE7tv2EeF3jnG9re+LDUv+CoH0CpQ6d4pQKRmHJ4EUiSd6YqZ0RQ/cH79W0f50U67PAlY7oOiVmYToUdNpmBh4jit1z7e5ZYUWXoxYvcDXgZR5sWEDhG1aCj/jdvrM4zIE4oA3LTYEY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1773971354; c=relaxed/simple;
-	bh=OQbvRykKoNa43YZcIMYkN82VceNVnbkpf9iVoiXE4Q4=;
+	s=arc-20240116; t=1773974529; c=relaxed/simple;
+	bh=W6zx62+sodyofF1NBjLkJY7GQAvhi3jFltkvnMV32Eg=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=WdhYagAPpOq0zeoT+cJMq51IgkPM5lEo+5GY+0IcpHm+NS41GNlccrtln86XkCy3T8QtX6jIcf2IrLbPBEctsTRDIH1srSwak2M0R60gPqbxyu3DYANvKtri1X87CKpE0BU2FHx2gMf1a1rXjI5F6WLKWFfma8SIyIo2zRVfXO4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=gpGGNUPe; arc=none smtp.client-ip=74.125.82.178
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	 Content-Type:Content-Disposition:In-Reply-To; b=lCUbAPwkv4BgOeOLGUQT801Z56tTyc6BlLBv9gxD019FEM2GG8nu4AesqPA1EMF4YCTDoBWp1TL/MgMicbHnGbZMD1VMGKvWbY15Z20Ml9XjlxPae9uVDN7gx5DvkRASe5417kk0Btd62NvYTUMiSKAfZrqRZ47X+29yDSfAcBA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=mZ52z1ma; arc=none smtp.client-ip=198.175.65.21
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="gpGGNUPe"
-Received: by mail-dy1-f178.google.com with SMTP id 5a478bee46e88-2c0ea57fea7so1422566eec.0
-        for <platform-driver-x86@vger.kernel.org>; Thu, 19 Mar 2026 18:49:07 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1773971347; x=1774576147; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=vDLk7kc0xKTEA1c0yQsz8nqJieDB48TiTejBd9azOR8=;
-        b=gpGGNUPefuS29PiYD9VFmqt+ecDPzbdX5Cvt2ITJZLKL9RgNu+gQtUS2oNkWcew8zn
-         e4MKuPQPD1ftGTQD+gVB7hauGCzQFn8LI8vupdZEN56xATVRpTC5j3SjA1YNLkn6hLKO
-         dedo4ZVdr/e5q2zl86/qwkSdAPXL1tfb/XqFABmUdQEBQWqUhp4iuobITEVxUIYOQOEi
-         6hJK+RmCbI+i6hyIYKU13lHH9yUCHq7xxo7HG/gBsFWAPBwI88NqZ/SCkBGBeCPwqMQt
-         48+CqTBkdp/dALIRMBPizSdgjYLB8kCKJ8yCBi84jp3KHG1Xgm5A2sUQ63o6nmrh8b9G
-         BRFA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1773971347; x=1774576147;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-gg:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=vDLk7kc0xKTEA1c0yQsz8nqJieDB48TiTejBd9azOR8=;
-        b=gcVDdxo/n1yY39eQMPYOKRnJSOL+7LFSa9aWqwLIu8+dK+pakappS3MNY9nOYmiYnJ
-         x4FSAIUWiAKesx3MfrZaaP7fhIn/2m9/ikZg77PrmuMjX25/ZIIxsKjaTp276Af1hjxA
-         oAwi3KnCifmRYEmYdU4YXjirLW64xhT2ZYlAv/6x2cCHpCq+SPsajX66+JryAcpDsLF7
-         1XQRs7QmwWkU+prF+uoIkZ7b4lQQZ7ysuEYxnGYxQcoFDrNfMs/R83z8hC/JIPrzNRSV
-         /rJvEZeJooP43NEW+U79siSG5EVHsfKDMwx81/VmflYbeU9bCLgc7fXi8xcqmeXOFnQK
-         AfpA==
-X-Forwarded-Encrypted: i=1; AJvYcCV4OOe0kYqx/gcqXXYTPgVvR0wN1XfjBudsGndGJ5ywBKYYp7e/DiaWRM2pTE2eB3Hkw8TJL97GNka9KTJyk8DzGnki@vger.kernel.org
-X-Gm-Message-State: AOJu0YyvKBg97dl1GO/wRtktw+23vH7+Xe1Ptw4dj+3Uq5qV1APbHmUt
-	ohkhCNETSc9LYBOuVSglZQrF+YGi+/4vjJ+JGhjUFa0KraAywObIoXkN
-X-Gm-Gg: ATEYQzyTMJjLoWrDrUu6Epull6xxj0ctPLHE3i+gdIWBkmTWGXTdU0YAARBDvNo8oRk
-	7Oy/5S/XPqB2J9MblJ7ZgNWcPEjlrp+BK+JNS99F892i3XBk41dXw+JbE840/7sCxBgeHdYAQFt
-	o9t+ra1sgnp6ReCjBIjjpyscJFbKG0FuR0rvsERKAlcmDFNHkkQ5MSo0gaDQgUWfRRvnTedhoTE
-	r+MVdE9OQW3IEqtResoplHalWKIo00mbgx6zH26oiEolYteiIveC8kRQsq7A1SaCkHNEeixLz0I
-	lAgxEwu+yEZwx7KS7cEBoF3t0kLyBcjIS4SUpEs7jhzzCTaZ3MZyddAcrzamao1pyPBhGLHiMtk
-	HunnvouH+BHp2u8E/DC8UVl5GhdNSQLleNaBFu5+I1iRdqlJKuru+UjV8O65ALFGp5WA0r5kOyt
-	DYn8lnWQlhm4tp8gMA9rs+wwmRDCUT4tdV5O6SsGYG7oJE5XdOuCby1pNJVYRTGa56
-X-Received: by 2002:a05:7300:d704:b0:2c0:ca48:3112 with SMTP id 5a478bee46e88-2c109625c4amr667665eec.10.1773971346674;
-        Thu, 19 Mar 2026 18:49:06 -0700 (PDT)
-Received: from google.com ([2a00:79e0:2ebe:8:8c36:d8b0:8e30:aab7])
-        by smtp.gmail.com with ESMTPSA id 5a478bee46e88-2c10b17b8f2sm2037356eec.9.2026.03.19.18.49.04
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 19 Mar 2026 18:49:05 -0700 (PDT)
-Date: Thu, 19 Mar 2026 18:49:02 -0700
-From: Dmitry Torokhov <dmitry.torokhov@gmail.com>
-To: Bartosz Golaszewski <bartosz.golaszewski@oss.qualcomm.com>
-Cc: Andy Shevchenko <andriy.shevchenko@linux.intel.com>, 
-	Daniel Scally <djrscally@gmail.com>, Heikki Krogerus <heikki.krogerus@linux.intel.com>, 
-	Sakari Ailus <sakari.ailus@linux.intel.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, 
-	"Rafael J. Wysocki" <rafael@kernel.org>, Danilo Krummrich <dakr@kernel.org>, 
-	Mika Westerberg <mika.westerberg@linux.intel.com>, Andy Shevchenko <andy@kernel.org>, 
-	Linus Walleij <linusw@kernel.org>, Hans de Goede <hansg@kernel.org>, 
-	Ilpo =?utf-8?B?SsOkcnZpbmVu?= <ilpo.jarvinen@linux.intel.com>, linux-acpi@vger.kernel.org, driver-core@lists.linux.dev, 
-	linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org, platform-driver-x86@vger.kernel.org
-Subject: Re: [PATCH 0/4] platform/x86: x86-android-tablets: use real firmware
- node references with intel drivers
-Message-ID: <abyje0mhIOtDZbxO@google.com>
-References: <20260319-baytrail-real-swnode-v1-0-75f2264ae49f@oss.qualcomm.com>
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="mZ52z1ma"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1773974526; x=1805510526;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=W6zx62+sodyofF1NBjLkJY7GQAvhi3jFltkvnMV32Eg=;
+  b=mZ52z1maHZjjVWoofrIooMbM//N/Cn1QDXHTW+OhebphZhHWucWRlmrk
+   dojG7iHZRBDr6pvLoH4s1T3ZMMVJvbYDnGxYbA2ljVdYBn9+RU6ZLWDEl
+   t73npSv3oj20vAt/kTkb5vTpJ3Tndc1EG12SnJ+kZxtMqGo+cZmt9hYns
+   rLqwBrQwTxbZT5m0TUrEp2vRDMZBbbvdDmE3cGXS83wWSSwl3C+yY8DWI
+   lJP+mL8BiIvyn2NMHBmCUuBPEFZvfeTDjD/sWKPzt57DfpSNDDT4yfhUf
+   S+8BdxTRUuREWmBNvR5VQqJ1CcJEKuDb8ECYo3wk8MSzs8jkmnhXRMhfk
+   Q==;
+X-CSE-ConnectionGUID: YMadPUimQiy4lNOszeHpEQ==
+X-CSE-MsgGUID: YMDLU1A9Tl+TaWr0YX7vYQ==
+X-IronPort-AV: E=McAfee;i="6800,10657,11734"; a="74946806"
+X-IronPort-AV: E=Sophos;i="6.23,130,1770624000"; 
+   d="scan'208";a="74946806"
+Received: from fmviesa004.fm.intel.com ([10.60.135.144])
+  by orvoesa113.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 19 Mar 2026 19:42:06 -0700
+X-CSE-ConnectionGUID: g+hk/UxXTfyAjEwquQb/Jg==
+X-CSE-MsgGUID: N8ucO9h8RIyyv/KwDaQGSQ==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.23,130,1770624000"; 
+   d="scan'208";a="225098471"
+Received: from lkp-server02.sh.intel.com (HELO a51c2a36b9df) ([10.239.97.151])
+  by fmviesa004.fm.intel.com with ESMTP; 19 Mar 2026 19:42:03 -0700
+Received: from kbuild by a51c2a36b9df with local (Exim 4.98.2)
+	(envelope-from <lkp@intel.com>)
+	id 1w3Pm7-000000001sX-2EIL;
+	Fri, 20 Mar 2026 02:40:04 +0000
+Date: Fri, 20 Mar 2026 10:32:29 +0800
+From: kernel test robot <lkp@intel.com>
+To: Bartosz Golaszewski <bartosz.golaszewski@oss.qualcomm.com>,
+	Peter Tyser <ptyser@xes-inc.com>, Lee Jones <lee@kernel.org>,
+	Hans de Goede <hansg@kernel.org>,
+	Ilpo =?iso-8859-1?Q?J=E4rvinen?= <ilpo.jarvinen@linux.intel.com>,
+	Dmitry Torokhov <dmitry.torokhov@gmail.com>,
+	Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+	Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc: oe-kbuild-all@lists.linux.dev, linux-kernel@vger.kernel.org,
+	platform-driver-x86@vger.kernel.org, brgl@kernel.org,
+	Bartosz Golaszewski <bartosz.golaszewski@oss.qualcomm.com>
+Subject: Re: [PATCH v3] platform/x86: meraki-mx100: use real software node
+ references
+Message-ID: <202603201042.shIkStw0-lkp@intel.com>
+References: <20260316-meraki-swnodes-v3-1-15501a52300e@oss.qualcomm.com>
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
@@ -80,111 +71,31 @@ List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20260319-baytrail-real-swnode-v1-0-75f2264ae49f@oss.qualcomm.com>
+In-Reply-To: <20260316-meraki-swnodes-v3-1-15501a52300e@oss.qualcomm.com>
 
 Hi Bartosz,
 
-On Thu, Mar 19, 2026 at 05:10:53PM +0100, Bartosz Golaszewski wrote:
-> Problem statement: GPIO software node lookup should rely exclusively on
-> matching the addresses of the referenced firmware nodes. I tried to
-> enforce it with commit e5d527be7e69 ("gpio: swnode: don't use the
-> swnode's name as the key for GPIO lookup") but it broke existing
-> users who abuse the software node mechanism by creating "dummy" software
-> nodes named after the device they want to get GPIOs from but never
-> attaching them to the actual GPIO devices. They rely on the current
-> behavior of GPIOLIB where it will match the label of the GPIO controller
-> against the name of the software node and does not require a true link.
-> 
-> x86-android-tablets driver is one of the abusers in that it creates
-> dummy software nodes for baytrail and cherryview GPIO controllers but
-> they don't really reference these devices. Before we can reapply
-> e5d527be7e69 and support matching by fwnode address exclusively, we need
-> to convert all the users to using actual fwnode references.
-> 
-> It's possible for drivers to reference real firmware nodes from software
-> nodes via PROPERTY_ENTRY_REF() in general or PROPERTY_ENTRY_GPIO()
-> specifically but for platform devices binding to real firmware nodes (DT
-> or ACPI) it's cumbersome as they would need to dynamically look for the
-> right nodes and create references dynamically with no way of using
-> static const software nodes.
-> 
-> This series proposes a solution in the form of automatic secondary
-> software node assignment (I'm open to better naming ideas). We extend
-> the swnode API with functions allowing to set up a behind-the-scenes bus
-> notifier for a group of named software nodes. It will wait for bus
-> events and when a device is added, it will check its name against the
-> software node's name and - on match - assign the software node as the
-> secondary firmware node of the device's *real* firmware node.
+kernel test robot noticed the following build errors:
 
-The more I think about the current approaches with strict identity
-matching the less I like them, and the reason is that strict identity
-matching establishes rigid links between consumers and producers of
-GPIOS/swnodes, and puts us into link order hell. For example, I believe
-if andoird tablets drivers were in drivers/android vs
-drivers/platform/... the current scheme would break since the nodes
-would not be registered and GPIO lookups would fail with -ENOENT vs
--EPROBE_DEFER.
+[auto build test ERROR on b84a0ebe421ca56995ff78b66307667b62b3a900]
 
-Given that this series somewhat re-introduces the name matching, I
-wonder if we can not do something like the following (the rough draft):
+url:    https://github.com/intel-lab-lkp/linux/commits/Bartosz-Golaszewski/platform-x86-meraki-mx100-use-real-software-node-references/20260316-165120
+base:   b84a0ebe421ca56995ff78b66307667b62b3a900
+patch link:    https://lore.kernel.org/r/20260316-meraki-swnodes-v3-1-15501a52300e%40oss.qualcomm.com
+patch subject: [PATCH v3] platform/x86: meraki-mx100: use real software node references
+config: i386-buildonly-randconfig-002-20260320 (https://download.01.org/0day-ci/archive/20260320/202603201042.shIkStw0-lkp@intel.com/config)
+compiler: gcc-14 (Debian 14.2.0-19) 14.2.0
+reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20260320/202603201042.shIkStw0-lkp@intel.com/reproduce)
 
-diff --git a/drivers/base/swnode.c b/drivers/base/swnode.c
-index 51320837f3a9..b0e8923a092c 100644
---- a/drivers/base/swnode.c
-+++ b/drivers/base/swnode.c
-@@ -509,6 +509,7 @@ software_node_get_reference_args(const struct fwnode_handle *fwnode,
- 	struct swnode *swnode = to_swnode(fwnode);
- 	const struct software_node_ref_args *ref_array;
- 	const struct software_node_ref_args *ref;
-+	const struct software_node *ref_swnode;
- 	const struct property_entry *prop;
- 	struct fwnode_handle *refnode;
- 	u32 nargs_prop_val;
-@@ -550,7 +551,10 @@ software_node_get_reference_args(const struct fwnode_handle *fwnode,
- 		refnode = software_node_fwnode(ref->swnode);
- 	else if (ref->fwnode)
- 		refnode = ref->fwnode;
--	else
-+	else if (ref->swnode_name) {
-+		ref_swnode = software_node_find_by_name(NULL, ref->swnode_name);
-+		refnode = ref_swnode ? software_node_fwnode(ref_swnode) : NULL;
-+	} else
- 		return -EINVAL;
- 
- 	if (!refnode)
-diff --git a/include/linux/property.h b/include/linux/property.h
-index e30ef23a9af3..44e96ee47272 100644
---- a/include/linux/property.h
-+++ b/include/linux/property.h
-@@ -363,6 +363,7 @@ struct software_node;
- struct software_node_ref_args {
- 	const struct software_node *swnode;
- 	struct fwnode_handle *fwnode;
-+	const char *swnode_name;
- 	unsigned int nargs;
- 	u64 args[NR_FWNODE_REFERENCE_ARGS];
- };
-@@ -373,6 +374,9 @@ struct software_node_ref_args {
- 			   const struct software_node *: _ref_,	\
- 			   struct software_node *: _ref_,	\
- 			   default: NULL),			\
-+	.swnode_name = _Generic(_ref_,				\
-+				const char *: _ref_,		\
-+				default: NULL),			\
- 	.fwnode = _Generic(_ref_,				\
- 			   struct fwnode_handle *: _ref_,	\
- 			   default: NULL),			\
+If you fix the issue in a separate patch/commit (i.e. not just a new version of
+the same patch/commit), kindly add following tags
+| Reported-by: kernel test robot <lkp@intel.com>
+| Closes: https://lore.kernel.org/oe-kbuild-all/202603201042.shIkStw0-lkp@intel.com/
 
-This will allow consumers specify top-level software node name instead
-of software node structure, and it will get resolved to concrete
-firmware node. GPIOLIB can continue matching on node identity.
+All errors (new ones prefixed by >>, old ones prefixed by <<):
 
-WDYT?
-
-Also, you need to update the existing documentation in order to be able
-to call the existing documented practice an "abuse" ;)
-
-Thanks.
+>> ERROR: modpost: "lpc_ich_gpio_swnode" [drivers/platform/x86/meraki-mx100.ko] undefined!
 
 -- 
-Dmitry
+0-DAY CI Kernel Test Service
+https://github.com/intel/lkp-tests/wiki
