@@ -1,211 +1,180 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.12])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C41AF35F19C;
-	Fri, 20 Mar 2026 10:27:55 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.12
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 330EB2C08AD;
+	Fri, 20 Mar 2026 10:36:34 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1774002477; cv=none; b=Gk1HXUm+j0tL1nTW55Xv5BwonSzOEqkvJijr+L4Va8VU8Ce673jTYBpbg2RK0pSRA+T0PTpR1JOsMpgHMbqMFNoSJb7h+7IbyAgQwpfOa6mLRaRhyJR3FBP1V+6/UUPD/mJ97KewyosMCh8XEnb+hdZt1IKv7TgYs6F24Eh2uo4=
+	t=1774002994; cv=none; b=NmeQi7Ca8jdpY95XIDciZ87sEWJZxJPw2ZBxGoAmOW205S0XVOiZOnKPntogiHhhQQzXLZrvovqEsM15CeYpMu5dxA4hBi6LMqimx0NflHCtZffQ5UMxMrKYKSXqlJnuZniUv480w/RFXNxGTaRqu5UhjIX+Q2QD5XKa47vL/4E=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1774002477; c=relaxed/simple;
-	bh=BsOsBC9LFbofD/uU10JIdQ8i22sp99i9Uymom+J1/IM=;
-	h=From:Date:To:cc:Subject:In-Reply-To:Message-ID:References:
-	 MIME-Version:Content-Type; b=AH2GnRRAFJJp4lLYfM09D1cMNiziOASE6qA9XU2oPVlBnWi0w9ANHIuQoyYbJBxPeuijliEaA5n+nSnJCt3Z6IFMKAEwEqdGzKsAwL1VQccw9rZNlr42xkIuUSSN8XYBs94IegA0scpPpQP+lqW8JHEO9XCuOxLfKTExJBjLvbI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=pass smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=drMt1vmv; arc=none smtp.client-ip=192.198.163.12
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.intel.com
+	s=arc-20240116; t=1774002994; c=relaxed/simple;
+	bh=51T1Y85kq2tY1wWu4pWqfkhO2W6py4pr5YHSxW+Yap4=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=Z23VXjmyoUW9LRwiFD/TCDFUFirwf/gFgKCwe+GYpuipQPnujrceWYaSdEchDdm0y6f3l44hsVcM+VFwqIPS6z+CqrytjU6R5CS0kgBch4o+zA+0epVtBFFsqy9V56pqirdSv43CNFZijQH1jkqHKqRbGeVt2EqG76F0vgVjeQc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=fKKlDbgH; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="drMt1vmv"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1774002476; x=1805538476;
-  h=from:date:to:cc:subject:in-reply-to:message-id:
-   references:mime-version;
-  bh=BsOsBC9LFbofD/uU10JIdQ8i22sp99i9Uymom+J1/IM=;
-  b=drMt1vmv4OV3LVQ8al70HMOgatvSBD9OCLfMR37J/jN7EhvP/gXocGVP
-   RgDNh3LEvvAZZPFVF2UnPPiDzQGr2RdCfvrZ3ofom9vTV3m8CFSIcTz6s
-   /JPcFgA+hBJvJbAAeYZZhMBdrpF+/bMF0ZTVQLbcq6GBxc88u8fdowrJI
-   3p7VL459umawOOi0eq4UQSnRCogqhoqLAjgzGl3IImcZQdiScoKMkQ52O
-   rqjhiVtWKGVAxArFniJJkc4nLSYmj/Mw3FEkWPOjEQkfvgKsoyWC+kJLm
-   g/4GSuY3OY+PICchfnzJpp+6RzulvOTA21GVeukF9GMGHz3L+6Q7N7veM
-   Q==;
-X-CSE-ConnectionGUID: 66lYHC9oRPWjSFsZVh6GYw==
-X-CSE-MsgGUID: 0LqufFcFQKOTlX5g/sUiSQ==
-X-IronPort-AV: E=McAfee;i="6800,10657,11734"; a="78989234"
-X-IronPort-AV: E=Sophos;i="6.23,130,1770624000"; 
-   d="scan'208";a="78989234"
-Received: from orviesa006.jf.intel.com ([10.64.159.146])
-  by fmvoesa106.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 20 Mar 2026 03:27:55 -0700
-X-CSE-ConnectionGUID: 71itVEgYRda5TFtgc/0Jhg==
-X-CSE-MsgGUID: +nfUFAiXTuKeeiFW2GS2kg==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.23,130,1770624000"; 
-   d="scan'208";a="222339260"
-Received: from ijarvine-mobl1.ger.corp.intel.com (HELO localhost) ([10.245.245.111])
-  by orviesa006-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 20 Mar 2026 03:27:52 -0700
-From: =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
-Date: Fri, 20 Mar 2026 12:27:49 +0200 (EET)
-To: Xi Pardee <xi.pardee@linux.intel.com>
-cc: irenic.rajneesh@gmail.com, david.e.box@linux.intel.com, 
-    platform-driver-x86@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>, 
-    linux-pm@vger.kernel.org
-Subject: Re: [PATCH 2/6] platform/x86/intel/pmc: Enable Pkgc blocking residency
- counter
-In-Reply-To: <20260302223214.484585-3-xi.pardee@linux.intel.com>
-Message-ID: <c78bc413-d946-9a2e-ec90-670320e3a8a0@linux.intel.com>
-References: <20260302223214.484585-1-xi.pardee@linux.intel.com> <20260302223214.484585-3-xi.pardee@linux.intel.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="fKKlDbgH"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 445B2C4CEF7;
+	Fri, 20 Mar 2026 10:36:31 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1774002993;
+	bh=51T1Y85kq2tY1wWu4pWqfkhO2W6py4pr5YHSxW+Yap4=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+	b=fKKlDbgHbL2lO/bQu4536dXP69htqvVxDli7svlju5tPtnwn59NuPT/KRhTzBSLop
+	 VmIXVysfjO8RSwabFuFTfUbSxc/G9xb4aFe331f1h//5Zhgt7uH91VujGcKHJBCzc+
+	 EvM61/BhLOmFCWHs6XgxNRpD4RTq0dgPTxJHnBJva6am2p/RsHng/FYN8XCSYaQlhZ
+	 /BKCZaiYOBtavdu/KN5QiX1mQTdRtxx25sxp/ezDuwXM+hxuBTGGmQIe+r8fw0DlHg
+	 gEE4qWAAj4Unmpmu7qK92AzOXSqMR1X4RmK/wf6llHyz7IQ14ywTdV0++U1z6/f5Du
+	 fa47BVff4P95g==
+From: "Rafael J. Wysocki" <rafael@kernel.org>
+To: Ilpo =?ISO-8859-1?Q?J=E4rvinen?= <ilpo.jarvinen@linux.intel.com>
+Cc: LKML <linux-kernel@vger.kernel.org>,
+ Linux ACPI <linux-acpi@vger.kernel.org>, Hans de Goede <hansg@kernel.org>,
+ platform-driver-x86@vger.kernel.org, Kenneth Chan <kenneth.t.chan@gmail.com>
+Subject:
+ [PATCH v4 5/5] platform/x86: panasonic-laptop: Convert ACPI driver to a
+ platform one
+Date: Fri, 20 Mar 2026 11:35:54 +0100
+Message-ID: <8664183.T7Z3S40VBb@rafael.j.wysocki>
+Organization: Linux Kernel Development
+In-Reply-To: <5983583.DvuYhMxLoT@rafael.j.wysocki>
+References: <5983583.DvuYhMxLoT@rafael.j.wysocki>
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/mixed; boundary="8323328-888350789-1774002469=:1024"
+Content-Transfer-Encoding: 7Bit
+Content-Type: text/plain; charset="UTF-8"
 
-  This message is in MIME format.  The first part should be readable text,
-  while the remaining parts are likely unreadable without MIME-aware tools.
+From: "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>
 
---8323328-888350789-1774002469=:1024
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: QUOTED-PRINTABLE
+In all cases in which a struct acpi_driver is used for binding a driver
+to an ACPI device object, a corresponding platform device is created by
+the ACPI core and that device is regarded as a proper representation of
+underlying hardware.  Accordingly, a struct platform_driver should be
+used by driver code to bind to that device.  There are multiple reasons
+why drivers should not bind directly to ACPI device objects [1].
 
-On Mon, 2 Mar 2026, Xi Pardee wrote:
+Overall, it is better to bind drivers to platform devices than to their
+ACPI companions, so convert the Panasonic laptop ACPI driver to a platform
+one.
 
-> Enable the Package C-state blocking counter in the PMT telemetry
-> region. This counter reports the number of 10=E2=80=AF=C2=B5s intervals d=
-uring
-> which a Package C-state 10.2/3 entry was blocked for the specified
-> reasons.
->=20
-> Signed-off-by: Xi Pardee <xi.pardee@linux.intel.com>
-> ---
->  drivers/platform/x86/intel/pmc/core.c | 27 +++++++++++++++++++++++++++
->  drivers/platform/x86/intel/pmc/core.h |  8 ++++++++
->  2 files changed, 35 insertions(+)
->=20
-> diff --git a/drivers/platform/x86/intel/pmc/core.c b/drivers/platform/x86=
-/intel/pmc/core.c
-> index bf95a1f2ba428..e5b48a68cf495 100644
-> --- a/drivers/platform/x86/intel/pmc/core.c
-> +++ b/drivers/platform/x86/intel/pmc/core.c
-> @@ -1093,6 +1093,28 @@ static int pmc_core_pkgc_ltr_blocker_show(struct s=
-eq_file *s, void *unused)
->  }
->  DEFINE_SHOW_ATTRIBUTE(pmc_core_pkgc_ltr_blocker);
-> =20
-> +static int pmc_core_pkgc_blocker_residency_show(struct seq_file *s, void=
- *unused)
-> +{
-> +=09struct pmc_dev *pmcdev =3D s->private;
-> +=09const char **pkgc_blocker_counters;
-> +=09u32 counter, offset;
-> +=09unsigned int i;
-> +=09int ret;
-> +
-> +=09offset =3D pmcdev->pkgc_blocker_offset;
-> +=09pkgc_blocker_counters =3D pmcdev->pkgc_blocker_counters;
-> +=09for (i =3D 0; pkgc_blocker_counters[i]; i++, offset++) {
-> +=09=09ret =3D pmt_telem_read32(pmcdev->pc_ep, offset,
-> +=09=09=09=09       &counter, 1);
-> +=09=09if (ret)
-> +=09=09=09return ret;
-> +=09=09seq_printf(s, "%-30s %-30u\n", pkgc_blocker_counters[i], counter);
-> +=09}
-> +
-> +=09return 0;
+While this is not expected to alter functionality, it changes sysfs
+layout and so it will be visible to user space.
 
-I wonder if it would be create a common helper as this looks practically=20
-the same as pmc_core_pkgc_ltr_blocker_show() added in the previous patch?
+To maintain backwards compatibility with possibly existing user space,
+the sysfs attributes created by the driver under the ACPI device object
+used by it are not relocated.  Accordingly, the driver will continue to
+use the driver_data pointer in struct acpi_device which needs to be
+cleared on driver removal.
 
-> +}
-> +DEFINE_SHOW_ATTRIBUTE(pmc_core_pkgc_blocker_residency);
-> +
->  static int pmc_core_lpm_latch_mode_show(struct seq_file *s, void *unused=
-)
->  {
->  =09struct pmc_dev *pmcdev =3D s->private;
-> @@ -1380,6 +1402,8 @@ void pmc_core_punit_pmt_init(struct pmc_dev *pmcdev=
-, struct pmc_dev_info *pmc_de
->  =09=09pmcdev->pc_ep =3D ep;
->  =09=09pmcdev->pkgc_ltr_blocker_counters =3D pmc_dev_info->pkgc_ltr_block=
-er_counters;
->  =09=09pmcdev->pkgc_ltr_blocker_offset =3D pmc_dev_info->pkgc_ltr_blocker=
-_offset;
-> +=09=09pmcdev->pkgc_blocker_counters =3D pmc_dev_info->pkgc_blocker_count=
-ers;
-> +=09=09pmcdev->pkgc_blocker_offset =3D pmc_dev_info->pkgc_blocker_offset;
->  =09}
-> =20
->  release_dev:
-> @@ -1512,6 +1536,9 @@ static void pmc_core_dbgfs_register(struct pmc_dev =
-*pmcdev, struct pmc_dev_info
->  =09=09debugfs_create_file("pkgc_ltr_blocker_show", 0444,
->  =09=09=09=09    pmcdev->dbgfs_dir, pmcdev,
->  =09=09=09=09    &pmc_core_pkgc_ltr_blocker_fops);
-> +=09=09debugfs_create_file("pkgc_blocker_residency_show", 0444,
-> +=09=09=09=09    pmcdev->dbgfs_dir, pmcdev,
-> +=09=09=09=09    &pmc_core_pkgc_blocker_residency_fops);
->  =09}
-> =20
->  }
-> diff --git a/drivers/platform/x86/intel/pmc/core.h b/drivers/platform/x86=
-/intel/pmc/core.h
-> index a20aab73c1409..829b1dee3f636 100644
-> --- a/drivers/platform/x86/intel/pmc/core.h
-> +++ b/drivers/platform/x86/intel/pmc/core.h
-> @@ -455,6 +455,8 @@ struct pmc {
->   *
->   * @pkgc_ltr_blocker_counters: Array of PKGC LTR blocker counters
->   * @pkgc_ltr_blocker_offset: Offset to PKGC LTR blockers in telemetry re=
-gion
-> + * @pkgc_blocker_counters: Array of PKGC blocker counters
-> + * @pkgc_blocker_offset: Offset to PKGC blocker in telemetry region
->   *
->   * pmc_dev contains info about power management controller device.
->   */
-> @@ -480,6 +482,8 @@ struct pmc_dev {
-> =20
->  =09const char **pkgc_ltr_blocker_counters;
->  =09u32 pkgc_ltr_blocker_offset;
-> +=09const char **pkgc_blocker_counters;
-> +=09u32 pkgc_blocker_offset;
->  };
-> =20
->  enum pmc_index {
-> @@ -495,6 +499,7 @@ enum pmc_index {
->   * @dmu_guids:=09=09List of Die Management Unit GUID
->   * @pc_guid:=09=09GUID for telemetry region to read PKGC blocker info
->   * @pkgc_ltr_blocker_offset: Offset to PKGC LTR blockers in telemetry re=
-gion
-> + * @pkgc_blocker_offset:Offset to PKGC blocker in telemetry region
->   * @regmap_list:=09Pointer to a list of pmc_info structure that could be
->   *=09=09=09available for the platform. When set, this field implies
->   *=09=09=09SSRAM support.
-> @@ -502,6 +507,7 @@ enum pmc_index {
->   *=09=09=09specific attributes of the primary PMC
->   * @sub_req_show:=09File operations to show substate requirements
->   * @pkgc_ltr_blocker_counters: Array of PKGC LTR blocker counters
-> + * @pkgc_blocker_counters: Array of PKGC blocker counters
->   * @suspend:=09=09Function to perform platform specific suspend
->   * @resume:=09=09Function to perform platform specific resume
->   * @init:=09=09Function to perform platform specific init action
-> @@ -512,10 +518,12 @@ struct pmc_dev_info {
->  =09u32 *dmu_guids;
->  =09u32 pc_guid;
->  =09u32 pkgc_ltr_blocker_offset;
-> +=09u32 pkgc_blocker_offset;
->  =09struct pmc_info *regmap_list;
->  =09const struct pmc_reg_map *map;
->  =09const struct file_operations *sub_req_show;
->  =09const char **pkgc_ltr_blocker_counters;
-> +=09const char **pkgc_blocker_counters;
->  =09void (*suspend)(struct pmc_dev *pmcdev);
->  =09int (*resume)(struct pmc_dev *pmcdev);
->  =09int (*init)(struct pmc_dev *pmcdev, struct pmc_dev_info *pmc_dev_info=
-);
->=20
+Link: https://lore.kernel.org/all/2396510.ElGaqSPkdT@rafael.j.wysocki/ [1]
+Signed-off-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
+---
 
---=20
- i.
+v3 -> v4: Clear device->driver_data in the probe rollback path
 
---8323328-888350789-1774002469=:1024--
+v1 -> v3: No changes
+
+---
+ drivers/platform/x86/panasonic-laptop.c | 34 ++++++++++++++-----------
+ 1 file changed, 19 insertions(+), 15 deletions(-)
+
+diff --git a/drivers/platform/x86/panasonic-laptop.c b/drivers/platform/x86/panasonic-laptop.c
+index e563298a6672..1337f7c49805 100644
+--- a/drivers/platform/x86/panasonic-laptop.c
++++ b/drivers/platform/x86/panasonic-laptop.c
+@@ -183,8 +183,8 @@ enum SINF_BITS { SINF_NUM_BATTERIES = 0,
+ 	};
+ /* R1 handles SINF_AC_CUR_BRIGHT as SINF_CUR_BRIGHT, doesn't know AC state */
+ 
+-static int acpi_pcc_hotkey_add(struct acpi_device *device);
+-static void acpi_pcc_hotkey_remove(struct acpi_device *device);
++static int acpi_pcc_hotkey_probe(struct platform_device *pdev);
++static void acpi_pcc_hotkey_remove(struct platform_device *pdev);
+ static void acpi_pcc_hotkey_notify(acpi_handle handle, u32 event, void *data);
+ 
+ static const struct acpi_device_id pcc_device_ids[] = {
+@@ -201,15 +201,14 @@ static int acpi_pcc_hotkey_resume(struct device *dev);
+ #endif
+ static SIMPLE_DEV_PM_OPS(acpi_pcc_hotkey_pm, NULL, acpi_pcc_hotkey_resume);
+ 
+-static struct acpi_driver acpi_pcc_driver = {
+-	.name =		ACPI_PCC_DRIVER_NAME,
+-	.class =	ACPI_PCC_CLASS,
+-	.ids =		pcc_device_ids,
+-	.ops =		{
+-				.add =		acpi_pcc_hotkey_add,
+-				.remove =	acpi_pcc_hotkey_remove,
+-			},
+-	.drv.pm =	&acpi_pcc_hotkey_pm,
++static struct platform_driver acpi_pcc_driver = {
++	.probe = acpi_pcc_hotkey_probe,
++	.remove = acpi_pcc_hotkey_remove,
++	.driver = {
++		.name = ACPI_PCC_DRIVER_NAME,
++		.acpi_match_table = pcc_device_ids,
++		.pm = &acpi_pcc_hotkey_pm,
++	},
+ };
+ 
+ static const struct key_entry panasonic_keymap[] = {
+@@ -964,7 +963,7 @@ static int acpi_pcc_init_input(struct pcc_acpi *pcc)
+ #ifdef CONFIG_PM_SLEEP
+ static int acpi_pcc_hotkey_resume(struct device *dev)
+ {
+-	struct pcc_acpi *pcc = acpi_driver_data(to_acpi_device(dev));
++	struct pcc_acpi *pcc = acpi_driver_data(ACPI_COMPANION(dev));
+ 
+ 	if (pcc->num_sifr > SINF_MUTE)
+ 		acpi_pcc_write_sset(pcc, SINF_MUTE, pcc->mute);
+@@ -980,8 +979,9 @@ static int acpi_pcc_hotkey_resume(struct device *dev)
+ }
+ #endif
+ 
+-static int acpi_pcc_hotkey_add(struct acpi_device *device)
++static int acpi_pcc_hotkey_probe(struct platform_device *pdev)
+ {
++	struct acpi_device *device = ACPI_COMPANION(&pdev->dev);
+ 	struct backlight_properties props;
+ 	struct pcc_acpi *pcc;
+ 	int num_sifr, result;
+@@ -1107,6 +1107,7 @@ static int acpi_pcc_hotkey_add(struct acpi_device *device)
+ out_input:
+ 	input_unregister_device(pcc->input_dev);
+ out_sinf:
++	device->driver_data = NULL;
+ 	kfree(pcc->sinf);
+ out_hotkey:
+ 	kfree(pcc);
+@@ -1114,8 +1115,9 @@ static int acpi_pcc_hotkey_add(struct acpi_device *device)
+ 	return result;
+ }
+ 
+-static void acpi_pcc_hotkey_remove(struct acpi_device *device)
++static void acpi_pcc_hotkey_remove(struct platform_device *pdev)
+ {
++	struct acpi_device *device = ACPI_COMPANION(&pdev->dev);
+ 	struct pcc_acpi *pcc = acpi_driver_data(device);
+ 
+ 	i8042_remove_filter(panasonic_i8042_filter);
+@@ -1135,8 +1137,10 @@ static void acpi_pcc_hotkey_remove(struct acpi_device *device)
+ 
+ 	input_unregister_device(pcc->input_dev);
+ 
++	device->driver_data = NULL;
++
+ 	kfree(pcc->sinf);
+ 	kfree(pcc);
+ }
+ 
+-module_acpi_driver(acpi_pcc_driver);
++module_platform_driver(acpi_pcc_driver);
+-- 
+2.51.0
+
+
+
+
