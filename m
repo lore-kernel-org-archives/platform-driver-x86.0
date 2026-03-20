@@ -1,101 +1,75 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.21])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CDAA727B32C;
-	Fri, 20 Mar 2026 02:42:06 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.21
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0339D40DFC0
+	for <platform-driver-x86@vger.kernel.org>; Fri, 20 Mar 2026 03:16:15 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1773974529; cv=none; b=XKk6WHKOGbxF5IRgvsqBCv8ij4Rkoaq/cE7tv2EeF3jnG9re+LDUv+CoH0CpQ6d4pQKRmHJ4EUiSd6YqZ0RQ/cH79W0f50U67PAlY7oOiVmYToUdNpmBh4jit1z7e5ZYUWXoxYvcDXgZR5sWEDhG1aCj/jdvrM4zIE4oA3LTYEY=
+	t=1773976576; cv=none; b=VrZ/EjaFoAK7aRTTDr7i04rKHCMCPFwXFt0+uTkFPAoRd9o2KRCASdY/3evLJpDxV6S9aRsV/Ll5aZYco85BAAlppPkkrlef0+U1FUTv/VGfFfFerTjIil5ov7K+yi6xCsUbtp7z4JvBSAPZtHSlwZJe7wsvZHSPLDcHK/3ZFbo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1773974529; c=relaxed/simple;
-	bh=W6zx62+sodyofF1NBjLkJY7GQAvhi3jFltkvnMV32Eg=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=lCUbAPwkv4BgOeOLGUQT801Z56tTyc6BlLBv9gxD019FEM2GG8nu4AesqPA1EMF4YCTDoBWp1TL/MgMicbHnGbZMD1VMGKvWbY15Z20Ml9XjlxPae9uVDN7gx5DvkRASe5417kk0Btd62NvYTUMiSKAfZrqRZ47X+29yDSfAcBA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=mZ52z1ma; arc=none smtp.client-ip=198.175.65.21
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	s=arc-20240116; t=1773976576; c=relaxed/simple;
+	bh=d3JQRdn1yDM+9JvBBS7yYNy8AnVajvHYQgesmO5A7bo=;
+	h=From:To:Subject:Date:Message-ID:In-Reply-To:References:
+	 Content-Type:MIME-Version; b=s41jAEMYNjg1pqtHstkvgKU/FV8OOgJv8JNEeVBZHIF3wyrIO7/nrVpy1D0CfHuyRjGCXJqWxQl8SwmTJf0FKoVrKGxXY4UNKcEzMs95oB2iG/Z53DVpLT5+WtLzjKt4UbbUxcyFSTKRmx60H7tZNlbN/mKlgpAK/9B+sYlM3yA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=aI8JlYVF; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="mZ52z1ma"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1773974526; x=1805510526;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=W6zx62+sodyofF1NBjLkJY7GQAvhi3jFltkvnMV32Eg=;
-  b=mZ52z1maHZjjVWoofrIooMbM//N/Cn1QDXHTW+OhebphZhHWucWRlmrk
-   dojG7iHZRBDr6pvLoH4s1T3ZMMVJvbYDnGxYbA2ljVdYBn9+RU6ZLWDEl
-   t73npSv3oj20vAt/kTkb5vTpJ3Tndc1EG12SnJ+kZxtMqGo+cZmt9hYns
-   rLqwBrQwTxbZT5m0TUrEp2vRDMZBbbvdDmE3cGXS83wWSSwl3C+yY8DWI
-   lJP+mL8BiIvyn2NMHBmCUuBPEFZvfeTDjD/sWKPzt57DfpSNDDT4yfhUf
-   S+8BdxTRUuREWmBNvR5VQqJ1CcJEKuDb8ECYo3wk8MSzs8jkmnhXRMhfk
-   Q==;
-X-CSE-ConnectionGUID: YMadPUimQiy4lNOszeHpEQ==
-X-CSE-MsgGUID: YMDLU1A9Tl+TaWr0YX7vYQ==
-X-IronPort-AV: E=McAfee;i="6800,10657,11734"; a="74946806"
-X-IronPort-AV: E=Sophos;i="6.23,130,1770624000"; 
-   d="scan'208";a="74946806"
-Received: from fmviesa004.fm.intel.com ([10.60.135.144])
-  by orvoesa113.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 19 Mar 2026 19:42:06 -0700
-X-CSE-ConnectionGUID: g+hk/UxXTfyAjEwquQb/Jg==
-X-CSE-MsgGUID: N8ucO9h8RIyyv/KwDaQGSQ==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.23,130,1770624000"; 
-   d="scan'208";a="225098471"
-Received: from lkp-server02.sh.intel.com (HELO a51c2a36b9df) ([10.239.97.151])
-  by fmviesa004.fm.intel.com with ESMTP; 19 Mar 2026 19:42:03 -0700
-Received: from kbuild by a51c2a36b9df with local (Exim 4.98.2)
-	(envelope-from <lkp@intel.com>)
-	id 1w3Pm7-000000001sX-2EIL;
-	Fri, 20 Mar 2026 02:40:04 +0000
-Date: Fri, 20 Mar 2026 10:32:29 +0800
-From: kernel test robot <lkp@intel.com>
-To: Bartosz Golaszewski <bartosz.golaszewski@oss.qualcomm.com>,
-	Peter Tyser <ptyser@xes-inc.com>, Lee Jones <lee@kernel.org>,
-	Hans de Goede <hansg@kernel.org>,
-	Ilpo =?iso-8859-1?Q?J=E4rvinen?= <ilpo.jarvinen@linux.intel.com>,
-	Dmitry Torokhov <dmitry.torokhov@gmail.com>,
-	Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-	Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc: oe-kbuild-all@lists.linux.dev, linux-kernel@vger.kernel.org,
-	platform-driver-x86@vger.kernel.org, brgl@kernel.org,
-	Bartosz Golaszewski <bartosz.golaszewski@oss.qualcomm.com>
-Subject: Re: [PATCH v3] platform/x86: meraki-mx100: use real software node
- references
-Message-ID: <202603201042.shIkStw0-lkp@intel.com>
-References: <20260316-meraki-swnodes-v3-1-15501a52300e@oss.qualcomm.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="aI8JlYVF"
+Received: by smtp.kernel.org (Postfix) with ESMTPS id 90BEEC19425
+	for <platform-driver-x86@vger.kernel.org>; Fri, 20 Mar 2026 03:16:15 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1773976575;
+	bh=d3JQRdn1yDM+9JvBBS7yYNy8AnVajvHYQgesmO5A7bo=;
+	h=From:To:Subject:Date:In-Reply-To:References:From;
+	b=aI8JlYVF6CFnMwLsRyBR6tJiv3HV68634wUJ9c/2qlz0bx2TQmJg/ylacefW7Vu/t
+	 OxdHIdDRv51f55hIBC458Jf4Wet2wihTHiyaA0ad9k0PefH64+46lWgMXfVokmtT+A
+	 7dokVhtPAESHzLtVjQ1PUdJUQq0+fetBkYaIGV1bWofYL2zpOHlu9Mt1VDT3q4O4b4
+	 Y63x2icH/ikVXnT3QeW2E0toW6PzmoE+0cjK0Sel77INgGFCS+eD8Id23IWtOv0bE/
+	 eXR0uJtKj0tsYR2JddFRxOykcxrTd53H8iZKk4kBkUP30eIkPjjPbp3MU6KFqvQUnY
+	 zTCVMt8gRVTaA==
+Received: by aws-us-west-2-korg-bugzilla-1.web.codeaurora.org (Postfix, from userid 48)
+	id 80742C53BC5; Fri, 20 Mar 2026 03:16:15 +0000 (UTC)
+From: bugzilla-daemon@kernel.org
+To: platform-driver-x86@vger.kernel.org
+Subject: [Bug 220473] Linux 6.16 doesn't let me to shutdown the system and
+ sometimes to boot it (lib/list_debug.c:35)
+Date: Fri, 20 Mar 2026 03:16:15 +0000
+X-Bugzilla-Reason: None
+X-Bugzilla-Type: changed
+X-Bugzilla-Watch-Reason: AssignedTo drivers_platform_x86@kernel-bugs.osdl.org
+X-Bugzilla-Product: Platform Specific/Hardware
+X-Bugzilla-Component: x86-64
+X-Bugzilla-Version: 2.5
+X-Bugzilla-Keywords: 
+X-Bugzilla-Severity: normal
+X-Bugzilla-Who: mario.limonciello@amd.com
+X-Bugzilla-Status: NEEDINFO
+X-Bugzilla-Resolution: 
+X-Bugzilla-Priority: P3
+X-Bugzilla-Assigned-To: drivers_platform_x86@kernel-bugs.osdl.org
+X-Bugzilla-Flags: 
+X-Bugzilla-Changed-Fields: 
+Message-ID: <bug-220473-215701-5GbDwfsORD@https.bugzilla.kernel.org/>
+In-Reply-To: <bug-220473-215701@https.bugzilla.kernel.org/>
+References: <bug-220473-215701@https.bugzilla.kernel.org/>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+X-Bugzilla-URL: https://bugzilla.kernel.org/
+Auto-Submitted: auto-generated
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20260316-meraki-swnodes-v3-1-15501a52300e@oss.qualcomm.com>
 
-Hi Bartosz,
+https://bugzilla.kernel.org/show_bug.cgi?id=3D220473
 
-kernel test robot noticed the following build errors:
+--- Comment #15 from Mario Limonciello (AMD) (mario.limonciello@amd.com) ---
+I don't follow.  That commit fixed list corruption; you're showing list
+corruption.
 
-[auto build test ERROR on b84a0ebe421ca56995ff78b66307667b62b3a900]
+--=20
+You may reply to this email to add a comment.
 
-url:    https://github.com/intel-lab-lkp/linux/commits/Bartosz-Golaszewski/platform-x86-meraki-mx100-use-real-software-node-references/20260316-165120
-base:   b84a0ebe421ca56995ff78b66307667b62b3a900
-patch link:    https://lore.kernel.org/r/20260316-meraki-swnodes-v3-1-15501a52300e%40oss.qualcomm.com
-patch subject: [PATCH v3] platform/x86: meraki-mx100: use real software node references
-config: i386-buildonly-randconfig-002-20260320 (https://download.01.org/0day-ci/archive/20260320/202603201042.shIkStw0-lkp@intel.com/config)
-compiler: gcc-14 (Debian 14.2.0-19) 14.2.0
-reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20260320/202603201042.shIkStw0-lkp@intel.com/reproduce)
-
-If you fix the issue in a separate patch/commit (i.e. not just a new version of
-the same patch/commit), kindly add following tags
-| Reported-by: kernel test robot <lkp@intel.com>
-| Closes: https://lore.kernel.org/oe-kbuild-all/202603201042.shIkStw0-lkp@intel.com/
-
-All errors (new ones prefixed by >>, old ones prefixed by <<):
-
->> ERROR: modpost: "lpc_ich_gpio_swnode" [drivers/platform/x86/meraki-mx100.ko] undefined!
-
--- 
-0-DAY CI Kernel Test Service
-https://github.com/intel/lkp-tests/wiki
+You are receiving this mail because:
+You are watching the assignee of the bug.=
