@@ -1,201 +1,90 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.13])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6F99735836B
-	for <platform-driver-x86@vger.kernel.org>; Fri, 20 Mar 2026 20:33:09 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 923FD3451B5;
+	Fri, 20 Mar 2026 22:11:48 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.13
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1774038789; cv=none; b=bKcLJQxgtcS1Kn53PrM/othTZbr1hc4cM6FYl1XpfD0HvJ/CjzEKL0Tyo2xH/pa/vsI66SKZrIFP+oXOiAsN4Nnbun8IDB6zg5FTFZR4go+8SRv5nqkX9VMxIcmZmtTkqGfJC2k0d46+BB9pgz9HZk9o28LTJdSHCTkxul07ChM=
+	t=1774044709; cv=none; b=m9Zy09npZtZoQCxcfJUtbtCtC2NKpAMgpsDWJAI2Ts91nNy/l+ZZ4oQeyZ+kfKbp75RCEVpSWhrpGkB9NHJeIyr6bANP+UnI4MDPLbCQVNA0xeOuu5MbRpIxJkM9odke06MDP9dARJf4jSnJKWVODk7Oj76JdX8MclGZUsvVYf8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1774038789; c=relaxed/simple;
-	bh=qs4GngI9e5bYN0yw24bfxUbRtUOKCgcW/sntol8xNSQ=;
-	h=From:In-Reply-To:MIME-Version:References:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=Heh6Fsa56Yqcd/Mq3VQI6ME/ofEQMElg7lJL11rdYPJQNbrH6UjPQfOnDVMM9xcu+xw9JyYUUirp1nm7XJB41lhHS+NfK4XA/6uKCcBgFRSMsW1NIAHLjA68yhiWVhKbrfEj4IkBSTqFvN2iqRGVtmXYhpKJS/43w70KGuMxsE0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=KH5EP67U; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1774044709; c=relaxed/simple;
+	bh=qWk5tXrIj8MQDi+BGa7ftCMkLLelJluB3u5P16T1u9E=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=cVIuNyqr51UtuYuzQ2/mZ0mP4SeVwjHrvcAYtnh6Nc281EYSUJ9xLr7Ri2qetTvDXme37ozg5O0/6uapcz8ve37u2nX0Ft2ZBuGOCVIEWr58aSPkTCtIYfms5prWYqc6WgWGRdmJts7Cgcmhk4kg9eVWa3nKpPsXd+XGBggR3r4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=pass smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=iN+0OhNP; arc=none smtp.client-ip=192.198.163.13
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="KH5EP67U"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 31721C19425
-	for <platform-driver-x86@vger.kernel.org>; Fri, 20 Mar 2026 20:33:09 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1774038789;
-	bh=qs4GngI9e5bYN0yw24bfxUbRtUOKCgcW/sntol8xNSQ=;
-	h=From:In-Reply-To:References:Date:Subject:To:Cc:From;
-	b=KH5EP67UY79Oj08pJ/NSsWWv2GlpNqo8bbgbIWxE+gFAmo75UsCFFpRySbcrG0hfX
-	 HMp5DQ1oSgdD1bWDVmW/6qQD6v7OVTetypNNVewb6hYvR84jydKw3fojXHEvQ0RZKV
-	 nGx1tUIFrndw741C8w7yd2MJVQx1thwng6GGMOCwnxHnzk6ukHTKad3STSOJ2KRGJy
-	 NbTzOaQsJWcfzGeOaO+yzidCV5VIaNTueH6Yn1YSpVQi37A/LrSqLvU7WoP4Kvd3U/
-	 ktSQYxqXomYR0O2nu+073bisDCqk0Cjsx+KCIWSgqh+DE7Co4oqGZaQ1H9G75wCN8f
-	 OQ0/bMNiVGmjQ==
-Received: by mail-lf1-f48.google.com with SMTP id 2adb3069b0e04-5a278b4c1a5so2049388e87.3
-        for <platform-driver-x86@vger.kernel.org>; Fri, 20 Mar 2026 13:33:09 -0700 (PDT)
-X-Forwarded-Encrypted: i=1; AJvYcCV0U2RxoNc5ZzGcUt7Pu9z6Q5r5icsz9fRzGpQZzI172O9SNCCUAqiE4x500iognYTVQh9WLBYWE9mTdA9fyYBjtQNv@vger.kernel.org
-X-Gm-Message-State: AOJu0YzhFAsfuZVZdATvVvkqucYQH2gtpKiREBBOEPAnDVnfYvGuDdXh
-	mQWrk7v6fcxNoJB938v6a/9wU80CHjH+i/uLnbqkAFkjPA4oaNK7HU1LyjS/8aux9JkJhvSdGUq
-	9AajnWkCXTDf14lbgQP12c+9bg8os1wAvvBZTvIedzA==
-X-Received: by 2002:a05:6512:138f:b0:5a2:7ba1:493e with SMTP id
- 2adb3069b0e04-5a285af3c08mr1422126e87.13.1774038787586; Fri, 20 Mar 2026
- 13:33:07 -0700 (PDT)
-Received: from 969154062570 named unknown by gmailapi.google.com with
- HTTPREST; Fri, 20 Mar 2026 13:33:06 -0700
-Received: from 969154062570 named unknown by gmailapi.google.com with
- HTTPREST; Fri, 20 Mar 2026 13:33:06 -0700
-From: Bartosz Golaszewski <brgl@kernel.org>
-In-Reply-To: <abyje0mhIOtDZbxO@google.com>
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="iN+0OhNP"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1774044708; x=1805580708;
+  h=from:to:cc:subject:date:message-id:mime-version:
+   content-transfer-encoding;
+  bh=qWk5tXrIj8MQDi+BGa7ftCMkLLelJluB3u5P16T1u9E=;
+  b=iN+0OhNPoD0/L/ujfn9G7ewOAD5hZBk/RYhS/xpjDwYDv/qKozDrzVyZ
+   5SMI6xdV5FK78yAVmXMRKIIaleaNS3N8ZQB8B1Thxe2nXvZyCOgQaOpij
+   pUmrahA15GK7JiBJAUdjD+rSEKwEgjlQtAAsk5ritJ6eseyYrDpEnqrZa
+   QrBfhJmaHhF1OZPox3bFxTToTdzxOF/eiuQqzpwLwvd506UPlhmyeiigH
+   UVuisAjonQKrSGk82IKlyP4nNX7g5JONLpFYwgwsoThw62cxZvIzBMLjc
+   +EHeVYmBRHKhYgP0LOzQwiVM02CPMdnQJpBRe2dr5vfMf7H/kjWUiBpuR
+   w==;
+X-CSE-ConnectionGUID: uMP9m2BGQx6SbTXE7Y8ZwA==
+X-CSE-MsgGUID: r/FZRPOJR+GnPzq6K14Zww==
+X-IronPort-AV: E=McAfee;i="6800,10657,11735"; a="77745817"
+X-IronPort-AV: E=Sophos;i="6.23,132,1770624000"; 
+   d="scan'208";a="77745817"
+Received: from fmviesa005.fm.intel.com ([10.60.135.145])
+  by fmvoesa107.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 20 Mar 2026 15:11:48 -0700
+X-CSE-ConnectionGUID: XTsigfIGTJ62vVkixAjobw==
+X-CSE-MsgGUID: 7HHflp7tSz+Fz+D1bMit6A==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.23,132,1770624000"; 
+   d="scan'208";a="228142975"
+Received: from black.igk.intel.com ([10.91.253.5])
+  by fmviesa005.fm.intel.com with ESMTP; 20 Mar 2026 15:11:46 -0700
+Received: by black.igk.intel.com (Postfix, from userid 1003)
+	id E1DC195; Fri, 20 Mar 2026 23:11:45 +0100 (CET)
+From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+To: Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+	platform-driver-x86@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Cc: Maximilian Luz <luzmaximilian@gmail.com>,
+	Hans de Goede <hansg@kernel.org>,
+	=?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
+Subject: [PATCH v1 1/1] platform/surface: hotplug: Correct inclusion for GPIO APIs
+Date: Fri, 20 Mar 2026 23:11:43 +0100
+Message-ID: <20260320221143.3237791-1-andriy.shevchenko@linux.intel.com>
+X-Mailer: git-send-email 2.50.1
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20260319-baytrail-real-swnode-v1-0-75f2264ae49f@oss.qualcomm.com> <abyje0mhIOtDZbxO@google.com>
-Date: Fri, 20 Mar 2026 13:33:06 -0700
-X-Gmail-Original-Message-ID: <CAMRc=McPQq6QxJ48zk7kxA+kwc=Em8dsFfyECJXg0asY-+pRiw@mail.gmail.com>
-X-Gm-Features: AaiRm52IPGTKs4RSoWbJCBfU_yKdF9grFXKfUYFJ8mg8u_FCJ7C66rIFHPKFtww
-Message-ID: <CAMRc=McPQq6QxJ48zk7kxA+kwc=Em8dsFfyECJXg0asY-+pRiw@mail.gmail.com>
-Subject: Re: [PATCH 0/4] platform/x86: x86-android-tablets: use real firmware
- node references with intel drivers
-To: Dmitry Torokhov <dmitry.torokhov@gmail.com>
-Cc: Andy Shevchenko <andriy.shevchenko@linux.intel.com>, Daniel Scally <djrscally@gmail.com>, 
-	Heikki Krogerus <heikki.krogerus@linux.intel.com>, 
-	Sakari Ailus <sakari.ailus@linux.intel.com>, 
-	Greg Kroah-Hartman <gregkh@linuxfoundation.org>, "Rafael J. Wysocki" <rafael@kernel.org>, 
-	Danilo Krummrich <dakr@kernel.org>, Mika Westerberg <mika.westerberg@linux.intel.com>, 
-	Andy Shevchenko <andy@kernel.org>, Linus Walleij <linusw@kernel.org>, Hans de Goede <hansg@kernel.org>, 
-	=?UTF-8?Q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>, 
-	linux-acpi@vger.kernel.org, driver-core@lists.linux.dev, 
-	linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org, 
-	platform-driver-x86@vger.kernel.org, 
-	Bartosz Golaszewski <bartosz.golaszewski@oss.qualcomm.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
 
-On Fri, 20 Mar 2026 02:49:02 +0100, Dmitry Torokhov
-<dmitry.torokhov@gmail.com> said:
-> Hi Bartosz,
->
-> On Thu, Mar 19, 2026 at 05:10:53PM +0100, Bartosz Golaszewski wrote:
->>
->> This series proposes a solution in the form of automatic secondary
->> software node assignment (I'm open to better naming ideas). We extend
->> the swnode API with functions allowing to set up a behind-the-scenes bus
->> notifier for a group of named software nodes. It will wait for bus
->> events and when a device is added, it will check its name against the
->> software node's name and - on match - assign the software node as the
->> secondary firmware node of the device's *real* firmware node.
->
-> The more I think about the current approaches with strict identity
-> matching the less I like them, and the reason is that strict identity
-> matching establishes rigid links between consumers and producers of
-> GPIOS/swnodes, and puts us into link order hell. For example, I believe
-> if andoird tablets drivers were in drivers/android vs
-> drivers/platform/... the current scheme would break since the nodes
-> would not be registered and GPIO lookups would fail with -ENOENT vs
-> -EPROBE_DEFER.
->
+The modern GPIO APIs are available for users via linux/gpio/consumer.h.
+The linux/gpio.h is legacy header that is subject to remove. Hence
+replace the latter by the former in the driver.
 
-Why would they not get registered? They get attached when the target devices
-are added in modules this module depends on. They are exported symbols so the
-prerequisite modules will get loaded before and the module's init function
-will have run by the time the software nodes are referred to by the fwnode
-interface at which point they will have been registered with the swnode
-framework.
+Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+---
+ drivers/platform/surface/surface_hotplug.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-> Given that this series somewhat re-introduces the name matching, I
-> wonder if we can not do something like the following (the rough draft):
->
+diff --git a/drivers/platform/surface/surface_hotplug.c b/drivers/platform/surface/surface_hotplug.c
+index c0d83ed5a208..33a8a9d41900 100644
+--- a/drivers/platform/surface/surface_hotplug.c
++++ b/drivers/platform/surface/surface_hotplug.c
+@@ -14,7 +14,7 @@
+  */
+ 
+ #include <linux/acpi.h>
+-#include <linux/gpio.h>
++#include <linux/gpio/consumer.h>
+ #include <linux/interrupt.h>
+ #include <linux/kernel.h>
+ #include <linux/module.h>
+-- 
+2.50.1
 
-I'm open to better ideas and possibly multiple matching mechanisms but this
-just fit in this particular case. I'm not overly attached to name matching. We
-may as well use whatever properties ACPI provides to identify the devices and
-assign them their swnodes.
-
-> diff --git a/drivers/base/swnode.c b/drivers/base/swnode.c
-> index 51320837f3a9..b0e8923a092c 100644
-> --- a/drivers/base/swnode.c
-> +++ b/drivers/base/swnode.c
-> @@ -509,6 +509,7 @@ software_node_get_reference_args(const struct fwnode_handle *fwnode,
->  	struct swnode *swnode = to_swnode(fwnode);
->  	const struct software_node_ref_args *ref_array;
->  	const struct software_node_ref_args *ref;
-> +	const struct software_node *ref_swnode;
->  	const struct property_entry *prop;
->  	struct fwnode_handle *refnode;
->  	u32 nargs_prop_val;
-> @@ -550,7 +551,10 @@ software_node_get_reference_args(const struct fwnode_handle *fwnode,
->  		refnode = software_node_fwnode(ref->swnode);
->  	else if (ref->fwnode)
->  		refnode = ref->fwnode;
-> -	else
-> +	else if (ref->swnode_name) {
-> +		ref_swnode = software_node_find_by_name(NULL, ref->swnode_name);
-> +		refnode = ref_swnode ? software_node_fwnode(ref_swnode) : NULL;
-> +	} else
->  		return -EINVAL;
->
->  	if (!refnode)
-> diff --git a/include/linux/property.h b/include/linux/property.h
-> index e30ef23a9af3..44e96ee47272 100644
-> --- a/include/linux/property.h
-> +++ b/include/linux/property.h
-> @@ -363,6 +363,7 @@ struct software_node;
->  struct software_node_ref_args {
->  	const struct software_node *swnode;
->  	struct fwnode_handle *fwnode;
-> +	const char *swnode_name;
->  	unsigned int nargs;
->  	u64 args[NR_FWNODE_REFERENCE_ARGS];
->  };
-> @@ -373,6 +374,9 @@ struct software_node_ref_args {
->  			   const struct software_node *: _ref_,	\
->  			   struct software_node *: _ref_,	\
->  			   default: NULL),			\
-> +	.swnode_name = _Generic(_ref_,				\
-> +				const char *: _ref_,		\
-> +				default: NULL),			\
->  	.fwnode = _Generic(_ref_,				\
->  			   struct fwnode_handle *: _ref_,	\
->  			   default: NULL),			\
->
-> This will allow consumers specify top-level software node name instead
-> of software node structure, and it will get resolved to concrete
-> firmware node. GPIOLIB can continue matching on node identity.
->
-> WDYT?
->
-
-I think it's bad design and even bigger abuse of the software node concept.
-What you're proposing is effectively allowing to use struct software_node as
-a misleading string wrapper. You wouldn't use it to pass any properties to
-the device you're pointing to - because how if there's no link between them -
-you would just store an arbitrary string in a structure that serves
-a completely different purpose.
-
-Which is BTW exactly what was done in GPIO and - while there's no denying that
-I signed-off on these patches - it goes to show just how misleading this design
-is - I was aware of this development and queued the patches but only really
-understood what was going on when it was too late and this pattern was
-copy-pasted all over the kernel.
-
-Software nodes are just an implementation of firmware nodes and as such should
-follow the same principles. If a software node describes a device, it should be
-attached to it so that references can be resolved by checking the address of
-the underlying firmware node handle and not by string matching. I will die on
-that hill. :)
-
-If you want to match string, use GPIO lookup tables. I remember your point about
-wanting to use PROPERTY_ENTRY_REF() for consistency and fully support it, but
-please do use *references* because otherwise it's just a lookup table with extra
-steps.
-
-Just think about it: what if we try to generalize fw_devlink to software nodes?
-It would be completely broken for the offending GPIO users because there's no
-real link between the software nodes supposedly pointing to the GPIO
-controllers and the controllers themselves.
-
-> Also, you need to update the existing documentation in order to be able
-> to call the existing documented practice an "abuse" ;)
->
-
-Yes, I should.
-
-Thanks,
-Bartosz
