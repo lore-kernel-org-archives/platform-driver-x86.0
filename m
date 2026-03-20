@@ -1,60 +1,60 @@
-Received: from mail-wm1-f50.google.com (mail-wm1-f50.google.com [209.85.128.50])
+Received: from mail-wm1-f45.google.com (mail-wm1-f45.google.com [209.85.128.45])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CC7B43F65FC
-	for <platform-driver-x86@vger.kernel.org>; Fri, 20 Mar 2026 23:54:40 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.50
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 570853DEAF1
+	for <platform-driver-x86@vger.kernel.org>; Fri, 20 Mar 2026 23:56:06 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.45
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1774050885; cv=none; b=tlrTYjJAz63Dak8Z7SXZrM54xr7pFVE8HkThCjUAog45V9qxrwlfOaSCYHmCun2D/ks1TWGj6SqyWFUNEaeM40H/tGsp+u7y9meuCGHosWGlMZ6LgNnikSBpBqgYE787Mo2JRa5fSS5qsSKpSBkIcARzKNroqO3qvP0ZWjXU+4A=
+	t=1774050980; cv=none; b=epIzYW2cwfd3lBxRKiRTNG/5ue4tO7soG5lgq62GO1TzTjk/aH3S+6bel1vqICkbTOpjOczcB4bYFVA9MCZV9iSgKcRbewkftWEIzu2QB9zpWsrla5vLOEkzLpE8tDib1MgvpmeMY7NWTkJB0hrGV7VMF4nWLBLtG0dCIEwph8k=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1774050885; c=relaxed/simple;
+	s=arc-20240116; t=1774050980; c=relaxed/simple;
 	bh=4Qv0ASzBZ/GHMP/cF0uuMSr/kHt3nxx/rYtASmNluvQ=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=LQpESnbE55aQKRN8Dp9LOliffJUZgEeT5QYI+txm4HPpSA4s1cFzjmevGEFad953xUtVK3+fPBvMGqtu9mrKyW0F3eN2VgfpiZDPl4oWjBxagu0/oWwXKZcG2X5bSsnDoqXfj764zh3TI75gJA5O+dEuSi6579QMNDpuQSQpojo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=EjqGrruv; arc=none smtp.client-ip=209.85.128.50
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=W8NxUz9IBzjcGMO5VK/FfwD5/Oh7LntExHVekcrlWr6r+OMfxe/tmReZBtKX5I90Tg1UdRdjCJrJHZoxJMjrYWmNeuZaNBu6PPkhhE6SHqV9uGSf5ayt0jV4xmfRrWZ8VGVihGwXzxtBwM7AEK5IEcEQI232mpFN92pgN21ztVE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=AcPvy8ac; arc=none smtp.client-ip=209.85.128.45
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="EjqGrruv"
-Received: by mail-wm1-f50.google.com with SMTP id 5b1f17b1804b1-483ad568d68so3619375e9.2
-        for <platform-driver-x86@vger.kernel.org>; Fri, 20 Mar 2026 16:54:40 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="AcPvy8ac"
+Received: by mail-wm1-f45.google.com with SMTP id 5b1f17b1804b1-48371104ffdso3035605e9.1
+        for <platform-driver-x86@vger.kernel.org>; Fri, 20 Mar 2026 16:56:06 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1774050879; x=1774655679; darn=vger.kernel.org;
+        d=gmail.com; s=20230601; t=1774050964; x=1774655764; darn=vger.kernel.org;
         h=content-transfer-encoding:mime-version:message-id:date:subject:cc
          :to:from:from:to:cc:subject:date:message-id:reply-to;
         bh=5s66dB2mGXA70emn3wqJCYnvCXFNfAd0Dr6Dg6TLwxg=;
-        b=EjqGrruvohtYMjfKPqKLRoxS4tc4Rn8Y7FxQu4/zuIyGMYrL4VDV73gf0tqYXl8Arv
-         xzRYRfDrzWKNSBJMvLGfrLdcy5htDwMivoixIxNR/Cp4EQmrEja5dk1ivpukixlWwCdk
-         9Rg815Z+U23RLtK7dOCObQDI1rqbVlBrmDlyRk/yNvhG3v5/JzP7Q2ZklLQQ+utUoHww
-         l6P3L59IDlqQru30K/iDHc10LJWvK8GStoyDrGJLiV3kPgjnAZA2qV1D/vLr1PCD2+hi
-         JIWiyy0ObJl5jqbrUgOBqYZfHNvmHEaCXByvhAEZhGc2iBCyzMzrCxNyVuXXmijcvr7H
-         x6rQ==
+        b=AcPvy8acuYWP1a41E9CeXTw9E0E/ePVYW45oBAgslDaj11aMP1v/pmcGKiqWPWjHo4
+         ExYwf4xlP2p7xT4k8UNtnc2HO0ZCb6tlxyoyUBiAA07pGBkBDlO93ln1NSiFVpI/S4DD
+         qvdmdegX/a5AFWRK0q4QfBOEI6mIT/EJ5UybTdbiaJxF8dDOhsDPjR32X9/yauPfyDjF
+         eOcZCNB/nL+4c1jAl8w1u+bE4YA+qJwQ8k1CZ5EwGgDA9Cja/FxDJfFHzOnVulWyonbw
+         VUK4ZmLcggw6sxnCFQTgAytRdCfpDfo2uVESYKbvBf5sRLxXeaMv0tcLuxaM91lyi8d0
+         TnjA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1774050879; x=1774655679;
+        d=1e100.net; s=20251104; t=1774050964; x=1774655764;
         h=content-transfer-encoding:mime-version:message-id:date:subject:cc
          :to:from:x-gm-gg:x-gm-message-state:from:to:cc:subject:date
          :message-id:reply-to;
         bh=5s66dB2mGXA70emn3wqJCYnvCXFNfAd0Dr6Dg6TLwxg=;
-        b=M1SWIjASiGlMDwZcy2aT698Fy4xyctiYRe8C+Dp6zQtf17NWlPEIVlyq0IYKZgYnn8
-         DKjUiygdzQkmrv/MDoIfmnf7F6DHesSPSRiDgHFMHcypsEuE/+Hp5SrAwC8I19w/UT9y
-         UVgpIo27Q2p5/pew5FoTg4PnKo1qS1J1HxgMV4d0aCyQvrS9czLJ/J8LvZpa9XBOWrzS
-         58FgB9dE2V79/otytPWr/q3xJA0btJ/po4Cn0Fati9ToVyngQNnI8r/MOENS0cqggh0S
-         Q3tjK/enuHVQOveATB+LHuiH0yeFEfwVdV/quOxwCOHFKzt3NsCvsSadUzewre174VJi
-         R2cQ==
-X-Gm-Message-State: AOJu0YwCe3UGV0mKF/3JqoaxJZowwWLFClSWYRY4O9ViaSZ7SjPbONIg
-	N7Cm3U7sZUOjfKjONxYAZ0/i+CFTnRsVWfW+bd//UNxCJUO83wclThsbJp6NFbbQfsU=
-X-Gm-Gg: ATEYQzwETddvc3REprTPyHcrOuWC7C8RAptRWNe2FMeVHqX0ouJSWzCk6BGqNZ0nTSU
-	CdNyaZuYJF+pqBTU2SjeokSesFJPtmesuqyd4F2Oz+/uiCCs2CeJUxHRS9snsOPc7vaUGx2Wvuc
-	wUlmQR24PpbWt9F8o8MP7HHHXa48SnE786msNb+A5y94xrFNxg4n+uGPDRqRwh7voMuyGcQs5wf
-	S1W91/MNTwUXSUe5FAF9Rprl0xlWc5/F/5g0PDazAlyuuqYoHZZULD98BNSVDCE+CjAIwi2M4Jw
-	sNWdag0nl/CCsWlxPcA384VgZ/mtnh6coFggxUv3iLSvZXXuK8h+S0//U4AvLDpHCf4Ccq9GvXo
-	X8Ya20y2m3q5lbJqemczfmGLYl/b9YlH7nLOo07hBOJbbjSmc//wvyDLiXYbNjxV0lLJKY+ZRxn
-	bAGzwpVOerZCltCQ4UHYetEx/K/fIeuFIxhb1G45RVb08R9w==
-X-Received: by 2002:a05:600c:a43:b0:486:fdc0:4504 with SMTP id 5b1f17b1804b1-486fee0b930mr40519965e9.4.1774050878549;
-        Fri, 20 Mar 2026 16:54:38 -0700 (PDT)
+        b=KTN85P/1yIfq5Heg32oivm6de4Oy87mhGYpgeRalJamj719EXwBzU1hJuO3V72CwXc
+         lu1rlg/mLlZ3WlRAZjx8hKtD3Pcv7ii5HhTgEZg6aDiEJLRUBoqXzY0IPtsyCjsW2NIw
+         Gxi0NInmLyD+H4kSaIWpNNaTSYp+q85b5t98+mfPlpR+1MP8pNb62Q+8s4tEfsQs+viq
+         zZgDbXJw3hWhCQtd7LcukSgdBrO9k+Mj+xxQOk25huTyV9TbxaCzGFyrKPCLh1DqP0rF
+         Nw1vjAEn3FATrVgm+Q1X41AbHdQTmyJQK0JL9QLZVuuIlimDIynB+D6ZfRbp25Ut6uoe
+         GjaQ==
+X-Gm-Message-State: AOJu0Ywn/xt6bBYzhtzzP8SpKB8vxujfnujtE3nNrlcUqq7UC85r0ojM
+	VLRkGT8RAqsCXeOts9tA4zxtb3n1lb4dHdBEUpOUUHkriUNInsJW7/sFECzhbqWxkSk=
+X-Gm-Gg: ATEYQzwlr24TAi0LL2g4TdXv+zDoJzPVXzMS9pkCMtOiNvPXFfn347wV6EaqAPSyb3M
+	3CgYwWutvhfLzF8G7RNJRpz+Y5kn/btMV3tV/Hg6KD8N9/wgzWNY0R1Tmu1cclZBoogct6XKzY6
+	eShL9F5arnsDjAskcatmqkUSBNRwA+1T036Q0T5oJtf+3j/Gqu/tPcnfS75K1zvg+vIBOgwvm4F
+	/qOE3Cyllg90KxMF02XzStzWdfZ1ZnHp2fNUSEMQB8ij2TcranjTFi8yxAFrMqjoqYUDqekawfl
+	IJbtPTeV79/bKp6/Z+Ipg6r419qh69fqTZ5QdATP36DiQKFulMQcr5xCUGLoU6JdzaZ5VZSA63y
+	MP13u7H6R6FxouAKm71K1Z/l6pu6OnJzFGT/7JZGv/p1c+zoX7KwecJLNfqv6+1viMXAidw9GX0
+	eThn733ga8gYNDsC9xevTG+x6OIrx1mh/QvB2vAVQvYEe6CA==
+X-Received: by 2002:adf:9d88:0:b0:43b:60dc:d9bb with SMTP id ffacd0b85a97d-43b63fea120mr3488270f8f.0.1774050964161;
+        Fri, 20 Mar 2026 16:56:04 -0700 (PDT)
 Received: from fridge ([195.174.58.89])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-486fe7ea44bsm95104805e9.8.2026.03.20.16.54.36
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-43b6470c239sm9663418f8f.27.2026.03.20.16.56.01
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 20 Mar 2026 16:54:38 -0700 (PDT)
+        Fri, 20 Mar 2026 16:56:03 -0700 (PDT)
 From: Emre Cecanpunar <emreleno@gmail.com>
 To: platform-driver-x86@vger.kernel.org
 Cc: hansg@kernel.org,
@@ -63,8 +63,8 @@ Cc: hansg@kernel.org,
 	linux-kernel@vger.kernel.org,
 	Emre Cecanpunar <emreleno@gmail.com>
 Subject: [PATCH 0/5] platform/x86: hp-wmi: fix bugs in Victus S fan control
-Date: Sat, 21 Mar 2026 02:54:27 +0300
-Message-ID: <20260320235432.55580-1-emreleno@gmail.com>
+Date: Sat, 21 Mar 2026 02:55:52 +0300
+Message-ID: <20260320235557.56298-1-emreleno@gmail.com>
 X-Mailer: git-send-email 2.53.0
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
