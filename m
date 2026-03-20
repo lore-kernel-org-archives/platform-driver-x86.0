@@ -1,75 +1,144 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.19])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0339D40DFC0
-	for <platform-driver-x86@vger.kernel.org>; Fri, 20 Mar 2026 03:16:15 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 99BA13346A0;
+	Fri, 20 Mar 2026 07:36:32 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.19
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1773976576; cv=none; b=VrZ/EjaFoAK7aRTTDr7i04rKHCMCPFwXFt0+uTkFPAoRd9o2KRCASdY/3evLJpDxV6S9aRsV/Ll5aZYco85BAAlppPkkrlef0+U1FUTv/VGfFfFerTjIil5ov7K+yi6xCsUbtp7z4JvBSAPZtHSlwZJe7wsvZHSPLDcHK/3ZFbo=
+	t=1773992193; cv=none; b=NBOVyfyVvjdhVvlYucUpQwjKh6ndNLfGVe5IFDOK4hrTLNGh5Ond2dXECczSQ7phhnBREdkjvmU5qyaOZNGjOHRlTsolJrKjZtw2Fq6LK8otnz6BBJ4E7dpYLwn8gEZf9Qnm2d3B7AC6VfgSuWfFQVcCa2shkUFfccLwIq8JQxk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1773976576; c=relaxed/simple;
-	bh=d3JQRdn1yDM+9JvBBS7yYNy8AnVajvHYQgesmO5A7bo=;
-	h=From:To:Subject:Date:Message-ID:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=s41jAEMYNjg1pqtHstkvgKU/FV8OOgJv8JNEeVBZHIF3wyrIO7/nrVpy1D0CfHuyRjGCXJqWxQl8SwmTJf0FKoVrKGxXY4UNKcEzMs95oB2iG/Z53DVpLT5+WtLzjKt4UbbUxcyFSTKRmx60H7tZNlbN/mKlgpAK/9B+sYlM3yA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=aI8JlYVF; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1773992193; c=relaxed/simple;
+	bh=aVjU9vB3deYFYEQRjHDO84MBFFxZKuFsTsm53223WNA=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=Rf7+vU6YrG8CtYe+u3wVlqxxvQj0CTZkxk/v8Div9wiwAMnduwtoZbDqFxBh5k2xXnGxLdhMEfQEZ5BjQLpeZ/qr8D+hp5O2V4gvB73aYENAngVKUxCs6yW/KvShPg5152B1GX2aptFsvoUvTmnbb7GRYZbPgOdpixsC+CVMkV4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=pass smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=dhmq5CEC; arc=none smtp.client-ip=192.198.163.19
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="aI8JlYVF"
-Received: by smtp.kernel.org (Postfix) with ESMTPS id 90BEEC19425
-	for <platform-driver-x86@vger.kernel.org>; Fri, 20 Mar 2026 03:16:15 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1773976575;
-	bh=d3JQRdn1yDM+9JvBBS7yYNy8AnVajvHYQgesmO5A7bo=;
-	h=From:To:Subject:Date:In-Reply-To:References:From;
-	b=aI8JlYVF6CFnMwLsRyBR6tJiv3HV68634wUJ9c/2qlz0bx2TQmJg/ylacefW7Vu/t
-	 OxdHIdDRv51f55hIBC458Jf4Wet2wihTHiyaA0ad9k0PefH64+46lWgMXfVokmtT+A
-	 7dokVhtPAESHzLtVjQ1PUdJUQq0+fetBkYaIGV1bWofYL2zpOHlu9Mt1VDT3q4O4b4
-	 Y63x2icH/ikVXnT3QeW2E0toW6PzmoE+0cjK0Sel77INgGFCS+eD8Id23IWtOv0bE/
-	 eXR0uJtKj0tsYR2JddFRxOykcxrTd53H8iZKk4kBkUP30eIkPjjPbp3MU6KFqvQUnY
-	 zTCVMt8gRVTaA==
-Received: by aws-us-west-2-korg-bugzilla-1.web.codeaurora.org (Postfix, from userid 48)
-	id 80742C53BC5; Fri, 20 Mar 2026 03:16:15 +0000 (UTC)
-From: bugzilla-daemon@kernel.org
-To: platform-driver-x86@vger.kernel.org
-Subject: [Bug 220473] Linux 6.16 doesn't let me to shutdown the system and
- sometimes to boot it (lib/list_debug.c:35)
-Date: Fri, 20 Mar 2026 03:16:15 +0000
-X-Bugzilla-Reason: None
-X-Bugzilla-Type: changed
-X-Bugzilla-Watch-Reason: AssignedTo drivers_platform_x86@kernel-bugs.osdl.org
-X-Bugzilla-Product: Platform Specific/Hardware
-X-Bugzilla-Component: x86-64
-X-Bugzilla-Version: 2.5
-X-Bugzilla-Keywords: 
-X-Bugzilla-Severity: normal
-X-Bugzilla-Who: mario.limonciello@amd.com
-X-Bugzilla-Status: NEEDINFO
-X-Bugzilla-Resolution: 
-X-Bugzilla-Priority: P3
-X-Bugzilla-Assigned-To: drivers_platform_x86@kernel-bugs.osdl.org
-X-Bugzilla-Flags: 
-X-Bugzilla-Changed-Fields: 
-Message-ID: <bug-220473-215701-5GbDwfsORD@https.bugzilla.kernel.org/>
-In-Reply-To: <bug-220473-215701@https.bugzilla.kernel.org/>
-References: <bug-220473-215701@https.bugzilla.kernel.org/>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-X-Bugzilla-URL: https://bugzilla.kernel.org/
-Auto-Submitted: auto-generated
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="dhmq5CEC"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1773992192; x=1805528192;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=aVjU9vB3deYFYEQRjHDO84MBFFxZKuFsTsm53223WNA=;
+  b=dhmq5CECdkNpALjdO83vnn6RNZ+OklnryFtJxElzOWCrUeVkd5ojR0C9
+   0OAWFYT9O9Xnrn3BCn+IOT5Os6u+XxP4zjuk8Xu3HCz43WTEf57YvF1D6
+   VVuttKFYVxpdSkYEp3bhXrSVxebq8WHoqiXZQaLdXdXeqA7Bupu5e+yb+
+   JnczT3tIgap81ASRKeuIA9+zNgV211dtkgpJYZlarCjI21vudiwOx2UP8
+   MU63jBebL5b4U340HhQhQ4s3dVx/YCQJ+CUIclsq1CHOtRqD4lOtQEgB7
+   VH72i9BWWM2r3tE6YRDqcLwM8Skfx0Fi2Gd2A0743+s3DCaDNxHtLGl/q
+   A==;
+X-CSE-ConnectionGUID: zMWtvRx+STWndnLBrI+oeA==
+X-CSE-MsgGUID: qaVc0LAQTvWIIaPqdER/oQ==
+X-IronPort-AV: E=McAfee;i="6800,10657,11734"; a="74088782"
+X-IronPort-AV: E=Sophos;i="6.23,130,1770624000"; 
+   d="scan'208";a="74088782"
+Received: from fmviesa006.fm.intel.com ([10.60.135.146])
+  by fmvoesa113.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 20 Mar 2026 00:36:32 -0700
+X-CSE-ConnectionGUID: 246dr+i8QaGlyKrDOOi8Ng==
+X-CSE-MsgGUID: QY4qFbXSSC6smiTJxZajVQ==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.23,130,1770624000"; 
+   d="scan'208";a="218590930"
+Received: from egrumbac-mobl6.ger.corp.intel.com (HELO localhost) ([10.245.245.40])
+  by fmviesa006-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 20 Mar 2026 00:36:28 -0700
+Date: Fri, 20 Mar 2026 09:36:26 +0200
+From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+To: Bartosz Golaszewski <bartosz.golaszewski@oss.qualcomm.com>
+Cc: Daniel Scally <djrscally@gmail.com>,
+	Heikki Krogerus <heikki.krogerus@linux.intel.com>,
+	Sakari Ailus <sakari.ailus@linux.intel.com>,
+	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+	"Rafael J. Wysocki" <rafael@kernel.org>,
+	Danilo Krummrich <dakr@kernel.org>,
+	Mika Westerberg <mika.westerberg@linux.intel.com>,
+	Andy Shevchenko <andy@kernel.org>,
+	Linus Walleij <linusw@kernel.org>, Hans de Goede <hansg@kernel.org>,
+	Ilpo =?iso-8859-1?Q?J=E4rvinen?= <ilpo.jarvinen@linux.intel.com>,
+	Dmitry Torokhov <dmitry.torokhov@gmail.com>,
+	linux-acpi@vger.kernel.org, driver-core@lists.linux.dev,
+	linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org,
+	platform-driver-x86@vger.kernel.org
+Subject: Re: [PATCH 1/4] software node: support automatic secondary fwnode
+ assignment
+Message-ID: <abz4-iKFBsPIJb7F@ashevche-desk.local>
+References: <20260319-baytrail-real-swnode-v1-0-75f2264ae49f@oss.qualcomm.com>
+ <20260319-baytrail-real-swnode-v1-1-75f2264ae49f@oss.qualcomm.com>
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20260319-baytrail-real-swnode-v1-1-75f2264ae49f@oss.qualcomm.com>
+Organization: Intel Finland Oy - BIC 0357606-4 - c/o Alberga Business Park, 6
+ krs, Bertel Jungin Aukio 5, 02600 Espoo
 
-https://bugzilla.kernel.org/show_bug.cgi?id=3D220473
+On Thu, Mar 19, 2026 at 05:10:54PM +0100, Bartosz Golaszewski wrote:
+> Provide a structure and a set of functions allowing to set up automatic
+> secondary firmware node assignment for platform devices. It uses
+> a behind-the-scenes bus notifier for a group of named software nodes. It
+> will wait for bus events and when a device is added, it will check its
+> name against the software node's name and - on match - assign the
+> software node as the secondary firmware node of the device's *real*
+> firmware node.
 
---- Comment #15 from Mario Limonciello (AMD) (mario.limonciello@amd.com) ---
-I don't follow.  That commit fixed list corruption; you're showing list
-corruption.
+...
 
---=20
-You may reply to this email to add a comment.
+> +/**
+> + * software_node_register_auto_secondary() - set up automatic assignment of
+> + *                                           secondary firmware nodes
+> + * @auto_sec: Context data to use.
+> + *
+> + * NOTE: All software nodes passed in @auto_sec must be named.
 
-You are receiving this mail because:
-You are watching the assignee of the bug.=
+> + * Returns:
+
+Is it with 's' in other kernel-doc? The official is "Return", the 's' variant
+is supported, but not documented.
+
+> + * 0 on success, negative error number on failure.
+
+The Return section must be last in the kernel-doc description. This is documented.
+
+> + * This registers the software node group passed in @auto_sec and sets up
+> + * automatic assignment of them as secondary firmware nodes of real nodes
+> + * attached to appropriate devices on the bus specified in @auto_sec. The
+> + * software nodes must be named and their names must be the same as the
+> + * devices they should reference. The assignment happens when the device is
+> + * first added to the bus.
+> + */
+
+...
+
+> +/**
+> + * struct software_node_auto_secondary - context data for automatic secondary
+> + *                                       fwnode assignment
+> + * @nb: Private bus notifier data - don't use
+
+Mark it with __private then.
+
+> + * @node_group: NULL-terminated array of software node addresses
+> + * @bus: Bus on which to wait for devices
+
+If bus is not compiled into kernel, this optionally has to support NULL
+in the code (I haven't checked the code, though).
+
+> + */
+> +struct software_node_auto_secondary {
+> +	struct notifier_block nb;
+
+	struct notifier_block __private nb;
+
+> +	const struct software_node * const *node_group;
+> +	const struct bus_type *bus;
+> +};
+
+-- 
+With Best Regards,
+Andy Shevchenko
+
+
