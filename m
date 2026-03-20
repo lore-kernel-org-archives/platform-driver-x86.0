@@ -1,82 +1,73 @@
-Received: from mail-dy1-f174.google.com (mail-dy1-f174.google.com [74.125.82.174])
+Received: from mail-pl1-f177.google.com (mail-pl1-f177.google.com [209.85.214.177])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8D23B13777E
-	for <platform-driver-x86@vger.kernel.org>; Fri, 20 Mar 2026 00:10:07 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=74.125.82.174
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5F3811FC110
+	for <platform-driver-x86@vger.kernel.org>; Fri, 20 Mar 2026 00:49:47 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.177
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1773965408; cv=none; b=E9grxwlkpXCRRQWZBVOuqdJRxaiu5x95yDGVIu4vlDZKmSaa37fzo7k0i4Ljugg0arO7k7VJ0wMJPrjFK4SQIV/Czq3AdgFVzWQRmXagk0DzoEzOAKh2laF38G3yHiDracWEU2LgVxuUuqomBq99KfCZj9j+3yjox+ov128LZZY=
+	t=1773967788; cv=none; b=D3oe+l7hHtQtaRUGtYcagWtpqcda6y5PWgTAmf0CJ1IRLYytqOxMYC8zSe6XXReOWHtWFXsqY62ZaDwe2+M9mTxuZurVsKWM8qiLhjekyoEBR5hee/icC3FdGfPOMOt9uK8ZCq9kAFXrp4jmkh5ah1sJHwM1aE/EvuwvvidMsIU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1773965408; c=relaxed/simple;
-	bh=kn4gRyG2CWdohr2zODJVwJLXxsAV9GOcDFXCGFJSgyU=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=dKk7k4Rh1W6TlcNV4/RNyxjBmXCtWbHjheLkKPDKMVN93DI5HkOsrodIOEsuk3R2hrTRgRCILA9OhWa/B7kKIAGdS/p2IwdazW920bGzvbXAkuPB6W0NBSxOerohx9Z3kPy0HS90ZP5fdkrnVmL6I/kDZbBIz+kqofPmPjtDrEc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=TEfI2I6i; arc=none smtp.client-ip=74.125.82.174
+	s=arc-20240116; t=1773967788; c=relaxed/simple;
+	bh=aj+amzHykz0VP8Omkgv4PdojHt+uGLfiOHMytOe5yJk=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=qzKIvINDl+tdsiMqm1oKTgIEStbJh5KtrLM1K6oPH1qupHLh4f+1JRFQcGnjNfTr1g7XcZ3/V66xM641+EAJWI3d+OeYLVYElGYSPV3A/Vm1hegDy+WZCJCJFl3bncQ/bq4GmQkX07rn6qKTAs+urDJpWXSAWtiO/HpN5hdm9W4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=YBGJqv5S; arc=none smtp.client-ip=209.85.214.177
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="TEfI2I6i"
-Received: by mail-dy1-f174.google.com with SMTP id 5a478bee46e88-2bdd40d3c61so132561eec.1
-        for <platform-driver-x86@vger.kernel.org>; Thu, 19 Mar 2026 17:10:07 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="YBGJqv5S"
+Received: by mail-pl1-f177.google.com with SMTP id d9443c01a7336-2b04fc8851cso14190185ad.0
+        for <platform-driver-x86@vger.kernel.org>; Thu, 19 Mar 2026 17:49:47 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1773965407; x=1774570207; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=fItzBPGWBSGQf6v7HfvNDUYpHiJWqdhO3Tr8TUmXrPk=;
-        b=TEfI2I6ilO80tW9Xbiu8tMde//mXla2kVH+ZKdr79mCUU/wmicYqYFKohM2U3/7uMD
-         Ef8vrHnlF1ny4vehNWkgSe31jWxUkHdPzL9v/H0VjSypv3yR2UPGCWaEHo7mDZvZ/ZKn
-         h29Az11Kp1mWgzwnSQQoDTRrJkyvBH1btq1+h7AREOOFC7mnNfmyjUc/uputGb7PSvus
-         0bKBvR2SmTRMvI4EZW2tQ+BxPcTVuetudjqNUZ8jPk4+ipSlf2zjpOZs9I1Bz2yWqrfq
-         vPOQ20rFG4T5j2C9AkK85oDiL4xeOhkHnRRgX0NRD0UuKYgfEKZNCHu/vmc19nb26YYj
-         h1rA==
+        d=gmail.com; s=20230601; t=1773967786; x=1774572586; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=IpBmk5APBUS2BhHlK8KMNZh8R0vKiaeWox7A/MEW/zg=;
+        b=YBGJqv5Ss08VGKNl6/PqnSL9fts+KjEqoZJ3BW44RhBpm6HD0hEVdu37PKeN894VwM
+         E46q+pqCEuoISqRD0DwhoHcApkb9K/kO6uCYRmGOMzKIhiD3mXsF/SRXBJm39ub/B5qR
+         rZcPPT7jnADzDohlENu0P3K12Vae45vpUMHx0GlgjdY2I6Bt0OtTNK9NCim/9TU8G9/z
+         yc9svMbqGpOp6B5GHzw9ybA+XWheAZErLS56oDLPm9zYZ+ku4n7hpTLKbkKXPCS6q4Wh
+         2pgYRhbKRRfJnr75wJNJZlzzc8vpHJLwo4eb6YHfVPcqeQh0YgJa0jHGiW10ZCmJuyZh
+         /5fA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1773965407; x=1774570207;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-gg:x-gm-message-state:from
-         :to:cc:subject:date:message-id:reply-to;
-        bh=fItzBPGWBSGQf6v7HfvNDUYpHiJWqdhO3Tr8TUmXrPk=;
-        b=VU6VORtVyJDaDcslOQM/+Z7rKFDZl9UKyDZDJ+2nzkLMX52V0DHL3sVBdjAYmph6Wc
-         oWeeZ5jDPkV0ubSifcEpf9ykLP2WQKECL/6UTkXEMVM3qaFy7KT73X924jks3CFtMGLI
-         gKDzWHg0euI2vyxnkEkRQxXJD+7+XIEFsojCwY+x3cnEYdUtKqI7Fzjv4OdBWc/OOxqw
-         0CvheV+iSzCnle7SomJjzUjOqwsQZAnuNfKpVS1jQ+TemvDbzk2nToXIXZ8isCA7SnCB
-         0x/oELAfWNgzY72gOb56Zu7sg9gydFqfnAcCjH6IOWOsYQhUSWcVbgAXPi46rMinl5Fs
-         3tJA==
-X-Forwarded-Encrypted: i=1; AJvYcCU0Syoqc+H4PEhZm+cuwikRuY6f7tqOZIff3RR3NJNKcs8wzYpBTF8vfH7tFZ8fKaArBEK8raOPfRrZgdXCpixK7jc+@vger.kernel.org
-X-Gm-Message-State: AOJu0YxZVlUFljG3OHE8JVvymjvLJrvy98mXoXxG3/676K5t0IJualYC
-	ygLdSqcKLSzqyrlvvmcNIkldb7hfze29r+EaKi1ry5XKprbllM0pNnYs
-X-Gm-Gg: ATEYQzzPl5zGJ/753Wi9IAGt+IfURxqHdxF+Zk1+VEVcUw+Lcb+4qLd/AjMu6D/7a79
-	2kmAYW+X90CXdfTT4M8dBbNENbZfg4T+V0nWVlXRQ2VO7BMPv5JE8UveFkDVuPJSe/cszq1ZIEr
-	jqxT0R/ypZyEHknCWGYZ1JApSqqkqHHQIL+0a+AZHQyEQ+CgF5nKyVYzNELm//mv5cVDJgXZAC5
-	8zC6BkKkrd24M9g2sxtcFybuo+qTLPY5A1I1cuMaqnXNOekTKcXuzXEXnV0pga6wZAJiIICdFqs
-	b+zGnt0GleVgz2+Mr+KHYKnz/seYC3HwOECdPnwnVQzaMnJznlxSALn9JnkxsKLLO1fK8NmPPxZ
-	+3b/OkJTXdCVwifvvbtVSELUw1D4vHL6AM1OGtolI+kwtumdjYjkg9GPNuyP4W2UCn4qYz7XtBM
-	ZsUCQrbNBG4QVmrYvEryd8EA==
-X-Received: by 2002:a05:7300:3252:b0:2c0:c482:805 with SMTP id 5a478bee46e88-2c1095fa724mr723316eec.15.1773965406563;
-        Thu, 19 Mar 2026 17:10:06 -0700 (PDT)
-Received: from TC-LAPTOP.lan ([209.76.64.37])
-        by smtp.gmail.com with ESMTPSA id 5a478bee46e88-2c10b3253d0sm927960eec.29.2026.03.19.17.10.05
+        d=1e100.net; s=20251104; t=1773967786; x=1774572586;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-gg:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=IpBmk5APBUS2BhHlK8KMNZh8R0vKiaeWox7A/MEW/zg=;
+        b=C3U0JCxgahzQdoJg95Bb6qBgHT3Ab8SkQEKjNuZFwkoajcJuigXsECytE6jP5hbiSC
+         W5uom9cHik+DinqanBBDmGJQEKF0qw0qCqT7VcdOQ/6MaQWzgpaf0eqYZQhR3Sx+Zbv8
+         N6MK/7SiuCpGntUSP8BB9321Yjb/18ENDCURYdZtmTH4B3E91RaTBuYG+kt7IDG3dUt3
+         ZEu1DYXTzmtgfs+6Vzuq4c+p2C8p0CroPS4LDbTYsEy/mRKc/M7d+bynUQn6ds2qJv6I
+         kjjoHycCJ6krA8b32WWlSvyt4QaFXmnLKplDSt4Vcgo2AfFTUZk+o+XPnq/0uU7g7iQ5
+         YT5Q==
+X-Gm-Message-State: AOJu0YyGeAD/i3XusepR6PeSqM9Vf3Qaici/bLfnbkurj3zg2GdOkBBQ
+	88d7hxTEN4Zb+GsCAOvo6h1YRuuM9lRnXfAC8Q686OtflvzCWc7irj4swdIAc3v8
+X-Gm-Gg: ATEYQzyd7Sk7ZY/3wQDzrHUu7QaGeBrO+AWyAqs5sOiMtjj4YLqzA4vDK7KMn+lEziv
+	v5YoMrcoVRQE2C00P5bG36Z1yYNIH1tCcoI4/3e0g7YCAd9hMXnt6SNp7Bm0pKG0uzYE1OyM4UR
+	iew0xxJJ0idpqZw/PtZ+QOcCbrosJFyFUa5zE16o4WPyUYuEGRduDcD0Ele/hTw2pOpVGezmgt+
+	vX6Kqw0RnOnlVipgo8WOTwDzXPrFweI3jE9nC95cpKKdAWqEFeYhzOWX28utrAI4d+IbUYuiDP+
+	fCbg1REoYtgd6kUAvLpC3v+4Jf2reNl8oxhbLi8Iq8UqgUnqBI9Ik73Qr0wVQSnevYKnnA3bUvp
+	roIC7P4znjXACt8xIr3KFj0z6cCNCmTwS4YYIxT0Oxj4De1JyUxpE0QxwqbPVYYMX0dlYJoJUUL
+	mWuVOV+XkBRLherYgWGsrHPcdIS5jBCn0awXFqSKExj6o+uHW9yMW+XAY=
+X-Received: by 2002:a17:903:124e:b0:2b0:5a4c:726b with SMTP id d9443c01a7336-2b0827ca665mr9999575ad.40.1773967786258;
+        Thu, 19 Mar 2026 17:49:46 -0700 (PDT)
+Received: from ryzen ([2601:644:8000:5b5d::8bd])
+        by smtp.gmail.com with ESMTPSA id d9443c01a7336-2b08353e94asm4299265ad.25.2026.03.19.17.49.45
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 19 Mar 2026 17:10:06 -0700 (PDT)
-From: Thierry Chatard <tchatard@gmail.com>
-To: linux-kernel@vger.kernel.org
-Cc: linux-media@vger.kernel.org,
-	platform-driver-x86@vger.kernel.org,
-	lee@kernel.org,
-	djrscally@gmail.com,
-	hansg@kernel.org,
-	ilpo.jarvinen@linux.intel.com,
-	mchehab@kernel.org,
-	sakari.ailus@linux.intel.com,
-	jacopo.mondi@ideasonboard.com,
-	nicholas@rothemail.net,
-	Thierry Chatard <tchatard@gmail.com>
-Subject: [PATCH 5/5] media: ov8858: add ACPI device ID INT3477 and vsio power supply
-Date: Thu, 19 Mar 2026 17:09:33 -0700
-Message-ID: <20260320000937.9177-6-tchatard@gmail.com>
-X-Mailer: git-send-email 2.51.0
-In-Reply-To: <20260320000937.9177-1-tchatard@gmail.com>
-References: <20260320000937.9177-1-tchatard@gmail.com>
+        Thu, 19 Mar 2026 17:49:45 -0700 (PDT)
+From: Rosen Penev <rosenp@gmail.com>
+To: platform-driver-x86@vger.kernel.org
+Cc: Kenneth Chan <kenneth.t.chan@gmail.com>,
+	Hans de Goede <hansg@kernel.org>,
+	=?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>,
+	Kees Cook <kees@kernel.org>,
+	"Gustavo A. R. Silva" <gustavoars@kernel.org>,
+	linux-kernel@vger.kernel.org (open list),
+	linux-hardening@vger.kernel.org (open list:KERNEL HARDENING (not covered by other areas):Keyword:\b__counted_by(_le|_be)?\b)
+Subject: [PATCH] platform/x86: panasonic-laptop: simplify allocation of sinf
+Date: Thu, 19 Mar 2026 17:49:28 -0700
+Message-ID: <20260320004928.29914-1-rosenp@gmail.com>
+X-Mailer: git-send-email 2.53.0
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
@@ -85,59 +76,86 @@ List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-The Omnivision OV8858 appears in ACPI firmware under the HID INT3477 on
-Intel IPU3-based platforms such as the Dell Latitude 5285 2-in-1. Add
-INT3477 to the ACPI match table so the driver binds when instantiated by
-ipu_bridge.
+Change to a flexible array member to allocate once instead of twice.
 
-On the Dell Latitude 5285 the OV8858 is powered through a TPS68470 PMIC.
-The TPS68470 VSIO regulator controls the S_I2C_CTL register (0x43) which
-enables I2C passthrough to the sensor. The board data for this machine
-maps VSIO to the supply name "vsio" for INT3477. Add "vsio" to
-ov8858_supply_names[] so the driver requests this regulator at probe time.
+Allows using __counted_by for extra runtime analysis. Move the counting
+variable assignment to right after allocation as required by
+__counted_by.
 
-The existing supply array had a duplicate "dvdd" entry; replace it with
-the new "vsio" entry and reorder to: avdd, dvdd, dovdd, vsio.
+Remove + 1 to allocation. It's already done in the previous line.
 
-Signed-off-by: Thierry Chatard <tchatard@gmail.com>
+Signed-off-by: Rosen Penev <rosenp@gmail.com>
 ---
- drivers/media/i2c/ov8858.c | 10 +++++++++-
- 1 file changed, 9 insertions(+), 1 deletion(-)
+ drivers/platform/x86/panasonic-laptop.c | 17 ++++-------------
+ 1 file changed, 4 insertions(+), 13 deletions(-)
 
-diff --git a/drivers/media/i2c/ov8858.c b/drivers/media/i2c/ov8858.c
-index 3f45f7fab..5bfea237b 100644
---- a/drivers/media/i2c/ov8858.c
-+++ b/drivers/media/i2c/ov8858.c
-@@ -79,8 +79,9 @@
- 
- static const char * const ov8858_supply_names[] = {
- 	"avdd",		/* Analog power */
--	"dovdd",	/* Digital I/O power */
- 	"dvdd",		/* Digital core power */
-+	"dovdd",	/* Digital I/O power */
-+	"vsio",		/* Secondary I2C / S_I2C_CTL enable */
+diff --git a/drivers/platform/x86/panasonic-laptop.c b/drivers/platform/x86/panasonic-laptop.c
+index d923ddaa4849..4d663fffbcc8 100644
+--- a/drivers/platform/x86/panasonic-laptop.c
++++ b/drivers/platform/x86/panasonic-laptop.c
+@@ -248,11 +248,11 @@ struct pcc_acpi {
+ 	int			ac_brightness;
+ 	int			dc_brightness;
+ 	int			current_brightness;
+-	u32			*sinf;
+ 	struct acpi_device	*device;
+ 	struct input_dev	*input_dev;
+ 	struct backlight_device	*backlight;
+ 	struct platform_device	*platform;
++	u32			sinf[] __counted_by(num_sifr);
  };
  
- struct regval {
-@@ -1981,11 +1982,18 @@ static const struct of_device_id ov8858_of_match[] = {
- };
- MODULE_DEVICE_TABLE(of, ov8858_of_match);
+ /*
+@@ -1017,21 +1017,15 @@ static int acpi_pcc_hotkey_add(struct acpi_device *device)
+ 	 */
+ 	num_sifr++;
  
-+static const struct acpi_device_id ov8858_acpi_ids[] = {
-+	{ "INT3477" },
-+	{ /* sentinel */ },
-+};
-+MODULE_DEVICE_TABLE(acpi, ov8858_acpi_ids);
-+
- static struct i2c_driver ov8858_i2c_driver = {
- 	.driver = {
- 		.name = "ov8858",
- 		.pm = &ov8858_pm_ops,
- 		.of_match_table = ov8858_of_match,
-+		.acpi_match_table = ACPI_PTR(ov8858_acpi_ids),
- 	},
- 	.probe		= ov8858_probe,
- 	.remove		= ov8858_remove,
+-	pcc = kzalloc_obj(struct pcc_acpi);
++	pcc = kzalloc_flex(*pcc, sinf, num_sifr);
+ 	if (!pcc) {
+ 		pr_err("Couldn't allocate mem for pcc");
+ 		return -ENOMEM;
+ 	}
+ 
+-	pcc->sinf = kcalloc(num_sifr + 1, sizeof(u32), GFP_KERNEL);
+-	if (!pcc->sinf) {
+-		result = -ENOMEM;
+-		goto out_hotkey;
+-	}
+-
++	pcc->num_sifr = num_sifr;
+ 	pcc->device = device;
+ 	pcc->handle = device->handle;
+-	pcc->num_sifr = num_sifr;
+ 	device->driver_data = pcc;
+ 	strscpy(acpi_device_name(device), ACPI_PCC_DEVICE_NAME);
+ 	strscpy(acpi_device_class(device), ACPI_PCC_CLASS);
+@@ -1039,7 +1033,7 @@ static int acpi_pcc_hotkey_add(struct acpi_device *device)
+ 	result = acpi_pcc_init_input(pcc);
+ 	if (result) {
+ 		pr_err("Error installing keyinput handler\n");
+-		goto out_sinf;
++		goto out_hotkey;
+ 	}
+ 
+ 	if (!acpi_pcc_retrieve_biosdata(pcc)) {
+@@ -1111,8 +1105,6 @@ static int acpi_pcc_hotkey_add(struct acpi_device *device)
+ 	backlight_device_unregister(pcc->backlight);
+ out_input:
+ 	input_unregister_device(pcc->input_dev);
+-out_sinf:
+-	kfree(pcc->sinf);
+ out_hotkey:
+ 	kfree(pcc);
+ 
+@@ -1140,7 +1132,6 @@ static void acpi_pcc_hotkey_remove(struct acpi_device *device)
+ 
+ 	input_unregister_device(pcc->input_dev);
+ 
+-	kfree(pcc->sinf);
+ 	kfree(pcc);
+ }
+ 
 -- 
-2.51.0
+2.53.0
 
