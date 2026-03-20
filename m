@@ -1,56 +1,49 @@
 Received: from spark.kcore.it (spark.kcore.it [49.13.27.68])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BF904378818;
-	Fri, 20 Mar 2026 09:34:57 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D91923612EC;
+	Fri, 20 Mar 2026 09:36:13 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=49.13.27.68
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1773999299; cv=none; b=jGm0ZxjHAJY6egnL3hRDbfPIeQAu3YEGMYvDJCOZm2u89yAh0MD26KnyDEAWiQzyHjLpIH174+ZQTNlUH7dtG7cb0BNlwGqTW3HW9qUhBe3hTTtmEzAtU42Mv/QSpl7ByqqGrIDuWxhc3OzZ0rA1iBLxGp5c8Dx/yfG4LxYhjbI=
+	t=1773999375; cv=none; b=r5B+GxBtafD83zRYTxHayaL6hgGvMJy9+Kh144Wa8myMHOS7cHpXxYv99PmZ8wp0fbOofJOqo1lJkIv30wWeNEGsJo28fnqKM6MxHjhzIaf5UHTonN4dNuqReW5Z42cUySbDAcPq038i7cXGP7fCJ71MSaklr3Lbt9zOKN+Mpgs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1773999299; c=relaxed/simple;
-	bh=XMXNhDB97POPdC4yYliA92xzV1XofxOKwo4AHwud5PY=;
+	s=arc-20240116; t=1773999375; c=relaxed/simple;
+	bh=dZJOCTFtJZUHOSWu4g1IyyCntjRf3+ekzG1jr2dP3Xc=;
 	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
-	 Content-Disposition; b=uiuQoe+iuPanbGDnVyyOJV8x04Td22zqkLQAgcKHa8prBLldiMktRyeW+LSZN2A7bQwNSVA5quDvjB3vo8xQIMuNHI4+7VhAegRjICJqeGhcUP5kSP8Q4ErSTS4FD6R4WAQnBiGwQ402zXPFm7tUCFFsh/ZN7ucx3wD4S7xIW5o=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kcore.it; spf=pass smtp.mailfrom=kcore.it; dkim=pass (1024-bit key) header.d=kcore.it header.i=@kcore.it header.b=ORzCi+8X; arc=none smtp.client-ip=49.13.27.68
+	 Content-Disposition; b=N6A/HQpT1iPUp33bzNq4TwpmNdrbiOh27IgKxBWHTOos8mP888UdVoyrw440lo6ebTVQbencGq1dyjomz7pMzYuqZmw26edjGeZ6I/oaYE4XEn2NUUDQhUFdOBzDxl8pxXg1ccTHjaRhU9xpulKWq63+9jIhm7JnU4/atecVv4U=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kcore.it; spf=pass smtp.mailfrom=kcore.it; dkim=pass (1024-bit key) header.d=kcore.it header.i=@kcore.it header.b=G9RuwDxk; arc=none smtp.client-ip=49.13.27.68
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kcore.it
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=kcore.it
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=kcore.it header.i=@kcore.it header.b="ORzCi+8X"
+	dkim=pass (1024-bit key) header.d=kcore.it header.i=@kcore.it header.b="G9RuwDxk"
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=kcore.it;
 	s=spark; h=Content-Type:MIME-Version:Message-ID:Subject:Cc:To:From:Date:
 	Sender:Reply-To:Content-Transfer-Encoding:Content-ID:Content-Description:
 	Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:
 	In-Reply-To:References:List-Id:List-Help:List-Unsubscribe:List-Subscribe:
 	List-Post:List-Owner:List-Archive;
-	bh=h3TmgZPZBMll2MmFRnP3PbTND06bgHNncokiFMkLotI=; b=ORzCi+8XEz1RDeJ4Nys/4VNAi1
-	uETpdk1qEILw0pXMTY8LwSg6GZoJtdYuQXmQhR9XRYQm12xl1+Zx65z+P9PVTH2cL6atvRBDOU6GJ
-	+l9ulov9Ppm0kV3SqrP8Y243gQLyJUFk5S/SH16WhWJlDjc8GjlaZau6tRFuzlGtcbec=;
+	bh=lIp77/TP6ytXFAvgPrHJFSRHfrvMY13Xe/mGpLjDEFE=; b=G9RuwDxkZqVb16y2CRVEla69DP
+	Mj/k/H7uBCmQNgJk7807x/qL2lWN8m5ZAPJmWk0qbN3pcJgG83xfBL6SO+B4hKAH3ym3g9+j0yrjE
+	r/NAK/3S2cKfZcrKIhks1OKCCtsSN6cVmloJaA5stPPHeEInRZX+5RJBb6SnZlAoHu/Y=;
 Received: from mnencia by spark.kcore.it with local (Exim 4.96)
 	(envelope-from <mnencia@kcore.it>)
-	id 1w3WFp-005YuA-0m;
-	Fri, 20 Mar 2026 10:34:53 +0100
-Date: Fri, 20 Mar 2026 10:34:53 +0100
+	id 1w3WE4-005Yta-00;
+	Fri, 20 Mar 2026 10:33:04 +0100
+Date: Fri, 20 Mar 2026 10:33:03 +0100
 From: Marco Nenciarini <mnencia@kcore.it>
 To: platform-driver-x86@vger.kernel.org, linux-media@vger.kernel.org
 Cc: hao.yao@intel.com, hdegoede@redhat.com, sakari.ailus@linux.intel.com,
 	andy@kernel.org
 Subject: [PATCH] platform/x86: int3472: Add GPIO type 0x02 (strobe) mapping
-Message-ID: <ab0UvRdDpvZBiNsC@spark.kcore.it>
+Message-ID: <ab0UT-6yR4_hpGSV@spark.kcore.it>
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-	protocol="application/pgp-signature"; boundary="TbSK3d7oWrLiek8F"
-Content-Disposition: inline
-
-
---TbSK3d7oWrLiek8F
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
 
 Some ACPI tables on Intel Meteor Lake and Arrow Lake platforms define
 GPIO resources with type 0x02 for INT3472 camera sensor power control.
@@ -81,40 +74,35 @@ Signed-off-by: Marco Nenciarini <mnencia@kcore.it>
  include/linux/platform_data/x86/int3472.h     | 1 +
  2 files changed, 4 insertions(+)
 
-diff --git a/drivers/platform/x86/intel/int3472/discrete.c b/drivers/platfo=
-rm/x86/intel/int3472/discrete.c
+diff --git a/drivers/platform/x86/intel/int3472/discrete.c b/drivers/platform/x86/intel/int3472/discrete.c
 index 1505fc3..39ca60b 100644
 --- a/drivers/platform/x86/intel/int3472/discrete.c
 +++ b/drivers/platform/x86/intel/int3472/discrete.c
-@@ -211,6 +211,7 @@ static void int3472_get_con_id_and_polarity(struct int3=
-472_discrete_device *int3
- 		*con_id =3D "clk-enable";
- 		*gpio_flags =3D GPIO_ACTIVE_HIGH;
+@@ -211,6 +211,7 @@ static void int3472_get_con_id_and_polarity(struct int3472_discrete_device *int3
+ 		*con_id = "clk-enable";
+ 		*gpio_flags = GPIO_ACTIVE_HIGH;
  		break;
 +	case INT3472_GPIO_TYPE_STROBE:
  	case INT3472_GPIO_TYPE_PRIVACY_LED:
- 		*con_id =3D "privacy-led";
- 		*gpio_flags =3D GPIO_ACTIVE_HIGH;
-@@ -330,6 +331,7 @@ static int skl_int3472_handle_gpio_resources(struct acp=
-i_resource *ares,
-=20
+ 		*con_id = "privacy-led";
+ 		*gpio_flags = GPIO_ACTIVE_HIGH;
+@@ -330,6 +331,7 @@ static int skl_int3472_handle_gpio_resources(struct acpi_resource *ares,
+ 
  		break;
  	case INT3472_GPIO_TYPE_CLK_ENABLE:
 +	case INT3472_GPIO_TYPE_STROBE:
  	case INT3472_GPIO_TYPE_PRIVACY_LED:
  	case INT3472_GPIO_TYPE_POWER_ENABLE:
  	case INT3472_GPIO_TYPE_HANDSHAKE:
-@@ -347,6 +349,7 @@ static int skl_int3472_handle_gpio_resources(struct acp=
-i_resource *ares,
- 				err_msg =3D "Failed to register clock\n";
-=20
+@@ -347,6 +349,7 @@ static int skl_int3472_handle_gpio_resources(struct acpi_resource *ares,
+ 				err_msg = "Failed to register clock\n";
+ 
  			break;
 +		case INT3472_GPIO_TYPE_STROBE:
  		case INT3472_GPIO_TYPE_PRIVACY_LED:
- 			ret =3D skl_int3472_register_pled(int3472, gpio);
+ 			ret = skl_int3472_register_pled(int3472, gpio);
  			if (ret)
-diff --git a/include/linux/platform_data/x86/int3472.h b/include/linux/plat=
-form_data/x86/int3472.h
+diff --git a/include/linux/platform_data/x86/int3472.h b/include/linux/platform_data/x86/int3472.h
 index b1b8375..85adeb0 100644
 --- a/include/linux/platform_data/x86/int3472.h
 +++ b/include/linux/platform_data/x86/int3472.h
@@ -126,32 +114,6 @@ index b1b8375..85adeb0 100644
  #define INT3472_GPIO_TYPE_POWER_ENABLE				0x0b
  #define INT3472_GPIO_TYPE_CLK_ENABLE				0x0c
  #define INT3472_GPIO_TYPE_PRIVACY_LED				0x0d
---=20
+-- 
 2.47.3
 
-
---=20
-Marco Nenciarini - mnencia@kcore.it
-7C23 B804 3E65 D298 0A21  B6E2 589F 03F0 1BA5 5038
-
---TbSK3d7oWrLiek8F
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQIzBAEBCAAdFiEEfCO4BD5l0pgKIbbiWJ8D8BulUDgFAmm9FLwACgkQWJ8D8Bul
-UDhaGQ//Z8a8steppzqhtmuqKvw2xQdoa5MNI8c/zmDITUjlF5vtfmxZprC7lKVb
-I6BJ8f/H/i86rv9nTVF8mmXthT9QP1E2lFmXdAxiKni7bntvqrzpTn1faxWxa2Xj
-jX4SQRlXv0i6SQJNjZd6UnAn+Y5TDHSicxYYjscIUMfBlB5rpe4wjEkRAceAN9zZ
-dn3e6RGKpShGLoX4QwtOSzNqPvwi4T/tdYJyrroA8S8o04bXeqHChue1EH/vWG9y
-dVNYjM28ZkULyA6e9/qxgYfkDlCsEUKAfsF7OkV0xpyGMCTGER6VbglNgw1d2eJJ
-r17B4QeuSWCeeiZQsmAoIj+bUipYXsMaRA5kcQkURE/dDXzKjWb4KiGarcq1r8UQ
-1v8cycoOSIOMHdOqWI+3o1OOoJqcN3x/PTC8PD8g06skTl6khF9yLWK7PWn/CuKy
-lU476c+3LRDgLfira8DBUU0RqP/omYrPXL29IIn/LLJaz7dvtGd20RO+ct7bIMru
-7PhBAGzfXExHaUYE05II+ajgF1hdWvRIVReZljwWCuO5wc9BGYPxXlpJbNPbZrC7
-7MfsgyloU6d9oDy8IT/8uIzWxtxkgGY6S6rkYDuc/ONOeVUoj+hHNU9cwA/v3lt7
-4hEzk9e7MWrjElwEnyS82kVR2gV60whpHPfD30Gvmp8qzmaeZRw=
-=Vysj
------END PGP SIGNATURE-----
-
---TbSK3d7oWrLiek8F--
