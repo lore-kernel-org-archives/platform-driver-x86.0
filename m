@@ -1,161 +1,190 @@
-Received: from mail-pl1-f177.google.com (mail-pl1-f177.google.com [209.85.214.177])
+Received: from mail-dy1-f178.google.com (mail-dy1-f178.google.com [74.125.82.178])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5F3811FC110
-	for <platform-driver-x86@vger.kernel.org>; Fri, 20 Mar 2026 00:49:47 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.177
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 57FB231717A
+	for <platform-driver-x86@vger.kernel.org>; Fri, 20 Mar 2026 01:49:08 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=74.125.82.178
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1773967788; cv=none; b=D3oe+l7hHtQtaRUGtYcagWtpqcda6y5PWgTAmf0CJ1IRLYytqOxMYC8zSe6XXReOWHtWFXsqY62ZaDwe2+M9mTxuZurVsKWM8qiLhjekyoEBR5hee/icC3FdGfPOMOt9uK8ZCq9kAFXrp4jmkh5ah1sJHwM1aE/EvuwvvidMsIU=
+	t=1773971354; cv=none; b=YxGiUYQ9QT1TPpDZQXG967Ywyqeeeo8uIZjVJlquaw0ksjEx+y/PJWJNV77BbL90kVr94z+PlxQJsO4PxGQH0KYXLNYZWwGCVOA+HOvxk2UPLqaYrcvez5Cyyi7IasHtNwCXJukEri3VBXiAFRa4uzDekW1SazkeB4iManbsHpE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1773967788; c=relaxed/simple;
-	bh=aj+amzHykz0VP8Omkgv4PdojHt+uGLfiOHMytOe5yJk=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=qzKIvINDl+tdsiMqm1oKTgIEStbJh5KtrLM1K6oPH1qupHLh4f+1JRFQcGnjNfTr1g7XcZ3/V66xM641+EAJWI3d+OeYLVYElGYSPV3A/Vm1hegDy+WZCJCJFl3bncQ/bq4GmQkX07rn6qKTAs+urDJpWXSAWtiO/HpN5hdm9W4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=YBGJqv5S; arc=none smtp.client-ip=209.85.214.177
+	s=arc-20240116; t=1773971354; c=relaxed/simple;
+	bh=OQbvRykKoNa43YZcIMYkN82VceNVnbkpf9iVoiXE4Q4=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=WdhYagAPpOq0zeoT+cJMq51IgkPM5lEo+5GY+0IcpHm+NS41GNlccrtln86XkCy3T8QtX6jIcf2IrLbPBEctsTRDIH1srSwak2M0R60gPqbxyu3DYANvKtri1X87CKpE0BU2FHx2gMf1a1rXjI5F6WLKWFfma8SIyIo2zRVfXO4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=gpGGNUPe; arc=none smtp.client-ip=74.125.82.178
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="YBGJqv5S"
-Received: by mail-pl1-f177.google.com with SMTP id d9443c01a7336-2b04fc8851cso14190185ad.0
-        for <platform-driver-x86@vger.kernel.org>; Thu, 19 Mar 2026 17:49:47 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="gpGGNUPe"
+Received: by mail-dy1-f178.google.com with SMTP id 5a478bee46e88-2c0ea57fea7so1422566eec.0
+        for <platform-driver-x86@vger.kernel.org>; Thu, 19 Mar 2026 18:49:07 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1773967786; x=1774572586; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=IpBmk5APBUS2BhHlK8KMNZh8R0vKiaeWox7A/MEW/zg=;
-        b=YBGJqv5Ss08VGKNl6/PqnSL9fts+KjEqoZJ3BW44RhBpm6HD0hEVdu37PKeN894VwM
-         E46q+pqCEuoISqRD0DwhoHcApkb9K/kO6uCYRmGOMzKIhiD3mXsF/SRXBJm39ub/B5qR
-         rZcPPT7jnADzDohlENu0P3K12Vae45vpUMHx0GlgjdY2I6Bt0OtTNK9NCim/9TU8G9/z
-         yc9svMbqGpOp6B5GHzw9ybA+XWheAZErLS56oDLPm9zYZ+ku4n7hpTLKbkKXPCS6q4Wh
-         2pgYRhbKRRfJnr75wJNJZlzzc8vpHJLwo4eb6YHfVPcqeQh0YgJa0jHGiW10ZCmJuyZh
-         /5fA==
+        d=gmail.com; s=20230601; t=1773971347; x=1774576147; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=vDLk7kc0xKTEA1c0yQsz8nqJieDB48TiTejBd9azOR8=;
+        b=gpGGNUPefuS29PiYD9VFmqt+ecDPzbdX5Cvt2ITJZLKL9RgNu+gQtUS2oNkWcew8zn
+         e4MKuPQPD1ftGTQD+gVB7hauGCzQFn8LI8vupdZEN56xATVRpTC5j3SjA1YNLkn6hLKO
+         dedo4ZVdr/e5q2zl86/qwkSdAPXL1tfb/XqFABmUdQEBQWqUhp4iuobITEVxUIYOQOEi
+         6hJK+RmCbI+i6hyIYKU13lHH9yUCHq7xxo7HG/gBsFWAPBwI88NqZ/SCkBGBeCPwqMQt
+         48+CqTBkdp/dALIRMBPizSdgjYLB8kCKJ8yCBi84jp3KHG1Xgm5A2sUQ63o6nmrh8b9G
+         BRFA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1773967786; x=1774572586;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-gg:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=IpBmk5APBUS2BhHlK8KMNZh8R0vKiaeWox7A/MEW/zg=;
-        b=C3U0JCxgahzQdoJg95Bb6qBgHT3Ab8SkQEKjNuZFwkoajcJuigXsECytE6jP5hbiSC
-         W5uom9cHik+DinqanBBDmGJQEKF0qw0qCqT7VcdOQ/6MaQWzgpaf0eqYZQhR3Sx+Zbv8
-         N6MK/7SiuCpGntUSP8BB9321Yjb/18ENDCURYdZtmTH4B3E91RaTBuYG+kt7IDG3dUt3
-         ZEu1DYXTzmtgfs+6Vzuq4c+p2C8p0CroPS4LDbTYsEy/mRKc/M7d+bynUQn6ds2qJv6I
-         kjjoHycCJ6krA8b32WWlSvyt4QaFXmnLKplDSt4Vcgo2AfFTUZk+o+XPnq/0uU7g7iQ5
-         YT5Q==
-X-Gm-Message-State: AOJu0YyGeAD/i3XusepR6PeSqM9Vf3Qaici/bLfnbkurj3zg2GdOkBBQ
-	88d7hxTEN4Zb+GsCAOvo6h1YRuuM9lRnXfAC8Q686OtflvzCWc7irj4swdIAc3v8
-X-Gm-Gg: ATEYQzyd7Sk7ZY/3wQDzrHUu7QaGeBrO+AWyAqs5sOiMtjj4YLqzA4vDK7KMn+lEziv
-	v5YoMrcoVRQE2C00P5bG36Z1yYNIH1tCcoI4/3e0g7YCAd9hMXnt6SNp7Bm0pKG0uzYE1OyM4UR
-	iew0xxJJ0idpqZw/PtZ+QOcCbrosJFyFUa5zE16o4WPyUYuEGRduDcD0Ele/hTw2pOpVGezmgt+
-	vX6Kqw0RnOnlVipgo8WOTwDzXPrFweI3jE9nC95cpKKdAWqEFeYhzOWX28utrAI4d+IbUYuiDP+
-	fCbg1REoYtgd6kUAvLpC3v+4Jf2reNl8oxhbLi8Iq8UqgUnqBI9Ik73Qr0wVQSnevYKnnA3bUvp
-	roIC7P4znjXACt8xIr3KFj0z6cCNCmTwS4YYIxT0Oxj4De1JyUxpE0QxwqbPVYYMX0dlYJoJUUL
-	mWuVOV+XkBRLherYgWGsrHPcdIS5jBCn0awXFqSKExj6o+uHW9yMW+XAY=
-X-Received: by 2002:a17:903:124e:b0:2b0:5a4c:726b with SMTP id d9443c01a7336-2b0827ca665mr9999575ad.40.1773967786258;
-        Thu, 19 Mar 2026 17:49:46 -0700 (PDT)
-Received: from ryzen ([2601:644:8000:5b5d::8bd])
-        by smtp.gmail.com with ESMTPSA id d9443c01a7336-2b08353e94asm4299265ad.25.2026.03.19.17.49.45
+        d=1e100.net; s=20251104; t=1773971347; x=1774576147;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-gg:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=vDLk7kc0xKTEA1c0yQsz8nqJieDB48TiTejBd9azOR8=;
+        b=gcVDdxo/n1yY39eQMPYOKRnJSOL+7LFSa9aWqwLIu8+dK+pakappS3MNY9nOYmiYnJ
+         x4FSAIUWiAKesx3MfrZaaP7fhIn/2m9/ikZg77PrmuMjX25/ZIIxsKjaTp276Af1hjxA
+         oAwi3KnCifmRYEmYdU4YXjirLW64xhT2ZYlAv/6x2cCHpCq+SPsajX66+JryAcpDsLF7
+         1XQRs7QmwWkU+prF+uoIkZ7b4lQQZ7ysuEYxnGYxQcoFDrNfMs/R83z8hC/JIPrzNRSV
+         /rJvEZeJooP43NEW+U79siSG5EVHsfKDMwx81/VmflYbeU9bCLgc7fXi8xcqmeXOFnQK
+         AfpA==
+X-Forwarded-Encrypted: i=1; AJvYcCV4OOe0kYqx/gcqXXYTPgVvR0wN1XfjBudsGndGJ5ywBKYYp7e/DiaWRM2pTE2eB3Hkw8TJL97GNka9KTJyk8DzGnki@vger.kernel.org
+X-Gm-Message-State: AOJu0YyvKBg97dl1GO/wRtktw+23vH7+Xe1Ptw4dj+3Uq5qV1APbHmUt
+	ohkhCNETSc9LYBOuVSglZQrF+YGi+/4vjJ+JGhjUFa0KraAywObIoXkN
+X-Gm-Gg: ATEYQzyTMJjLoWrDrUu6Epull6xxj0ctPLHE3i+gdIWBkmTWGXTdU0YAARBDvNo8oRk
+	7Oy/5S/XPqB2J9MblJ7ZgNWcPEjlrp+BK+JNS99F892i3XBk41dXw+JbE840/7sCxBgeHdYAQFt
+	o9t+ra1sgnp6ReCjBIjjpyscJFbKG0FuR0rvsERKAlcmDFNHkkQ5MSo0gaDQgUWfRRvnTedhoTE
+	r+MVdE9OQW3IEqtResoplHalWKIo00mbgx6zH26oiEolYteiIveC8kRQsq7A1SaCkHNEeixLz0I
+	lAgxEwu+yEZwx7KS7cEBoF3t0kLyBcjIS4SUpEs7jhzzCTaZ3MZyddAcrzamao1pyPBhGLHiMtk
+	HunnvouH+BHp2u8E/DC8UVl5GhdNSQLleNaBFu5+I1iRdqlJKuru+UjV8O65ALFGp5WA0r5kOyt
+	DYn8lnWQlhm4tp8gMA9rs+wwmRDCUT4tdV5O6SsGYG7oJE5XdOuCby1pNJVYRTGa56
+X-Received: by 2002:a05:7300:d704:b0:2c0:ca48:3112 with SMTP id 5a478bee46e88-2c109625c4amr667665eec.10.1773971346674;
+        Thu, 19 Mar 2026 18:49:06 -0700 (PDT)
+Received: from google.com ([2a00:79e0:2ebe:8:8c36:d8b0:8e30:aab7])
+        by smtp.gmail.com with ESMTPSA id 5a478bee46e88-2c10b17b8f2sm2037356eec.9.2026.03.19.18.49.04
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 19 Mar 2026 17:49:45 -0700 (PDT)
-From: Rosen Penev <rosenp@gmail.com>
-To: platform-driver-x86@vger.kernel.org
-Cc: Kenneth Chan <kenneth.t.chan@gmail.com>,
-	Hans de Goede <hansg@kernel.org>,
-	=?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>,
-	Kees Cook <kees@kernel.org>,
-	"Gustavo A. R. Silva" <gustavoars@kernel.org>,
-	linux-kernel@vger.kernel.org (open list),
-	linux-hardening@vger.kernel.org (open list:KERNEL HARDENING (not covered by other areas):Keyword:\b__counted_by(_le|_be)?\b)
-Subject: [PATCH] platform/x86: panasonic-laptop: simplify allocation of sinf
-Date: Thu, 19 Mar 2026 17:49:28 -0700
-Message-ID: <20260320004928.29914-1-rosenp@gmail.com>
-X-Mailer: git-send-email 2.53.0
+        Thu, 19 Mar 2026 18:49:05 -0700 (PDT)
+Date: Thu, 19 Mar 2026 18:49:02 -0700
+From: Dmitry Torokhov <dmitry.torokhov@gmail.com>
+To: Bartosz Golaszewski <bartosz.golaszewski@oss.qualcomm.com>
+Cc: Andy Shevchenko <andriy.shevchenko@linux.intel.com>, 
+	Daniel Scally <djrscally@gmail.com>, Heikki Krogerus <heikki.krogerus@linux.intel.com>, 
+	Sakari Ailus <sakari.ailus@linux.intel.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, 
+	"Rafael J. Wysocki" <rafael@kernel.org>, Danilo Krummrich <dakr@kernel.org>, 
+	Mika Westerberg <mika.westerberg@linux.intel.com>, Andy Shevchenko <andy@kernel.org>, 
+	Linus Walleij <linusw@kernel.org>, Hans de Goede <hansg@kernel.org>, 
+	Ilpo =?utf-8?B?SsOkcnZpbmVu?= <ilpo.jarvinen@linux.intel.com>, linux-acpi@vger.kernel.org, driver-core@lists.linux.dev, 
+	linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org, platform-driver-x86@vger.kernel.org
+Subject: Re: [PATCH 0/4] platform/x86: x86-android-tablets: use real firmware
+ node references with intel drivers
+Message-ID: <abyje0mhIOtDZbxO@google.com>
+References: <20260319-baytrail-real-swnode-v1-0-75f2264ae49f@oss.qualcomm.com>
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20260319-baytrail-real-swnode-v1-0-75f2264ae49f@oss.qualcomm.com>
 
-Change to a flexible array member to allocate once instead of twice.
+Hi Bartosz,
 
-Allows using __counted_by for extra runtime analysis. Move the counting
-variable assignment to right after allocation as required by
-__counted_by.
+On Thu, Mar 19, 2026 at 05:10:53PM +0100, Bartosz Golaszewski wrote:
+> Problem statement: GPIO software node lookup should rely exclusively on
+> matching the addresses of the referenced firmware nodes. I tried to
+> enforce it with commit e5d527be7e69 ("gpio: swnode: don't use the
+> swnode's name as the key for GPIO lookup") but it broke existing
+> users who abuse the software node mechanism by creating "dummy" software
+> nodes named after the device they want to get GPIOs from but never
+> attaching them to the actual GPIO devices. They rely on the current
+> behavior of GPIOLIB where it will match the label of the GPIO controller
+> against the name of the software node and does not require a true link.
+> 
+> x86-android-tablets driver is one of the abusers in that it creates
+> dummy software nodes for baytrail and cherryview GPIO controllers but
+> they don't really reference these devices. Before we can reapply
+> e5d527be7e69 and support matching by fwnode address exclusively, we need
+> to convert all the users to using actual fwnode references.
+> 
+> It's possible for drivers to reference real firmware nodes from software
+> nodes via PROPERTY_ENTRY_REF() in general or PROPERTY_ENTRY_GPIO()
+> specifically but for platform devices binding to real firmware nodes (DT
+> or ACPI) it's cumbersome as they would need to dynamically look for the
+> right nodes and create references dynamically with no way of using
+> static const software nodes.
+> 
+> This series proposes a solution in the form of automatic secondary
+> software node assignment (I'm open to better naming ideas). We extend
+> the swnode API with functions allowing to set up a behind-the-scenes bus
+> notifier for a group of named software nodes. It will wait for bus
+> events and when a device is added, it will check its name against the
+> software node's name and - on match - assign the software node as the
+> secondary firmware node of the device's *real* firmware node.
 
-Remove + 1 to allocation. It's already done in the previous line.
+The more I think about the current approaches with strict identity
+matching the less I like them, and the reason is that strict identity
+matching establishes rigid links between consumers and producers of
+GPIOS/swnodes, and puts us into link order hell. For example, I believe
+if andoird tablets drivers were in drivers/android vs
+drivers/platform/... the current scheme would break since the nodes
+would not be registered and GPIO lookups would fail with -ENOENT vs
+-EPROBE_DEFER.
 
-Signed-off-by: Rosen Penev <rosenp@gmail.com>
----
- drivers/platform/x86/panasonic-laptop.c | 17 ++++-------------
- 1 file changed, 4 insertions(+), 13 deletions(-)
+Given that this series somewhat re-introduces the name matching, I
+wonder if we can not do something like the following (the rough draft):
 
-diff --git a/drivers/platform/x86/panasonic-laptop.c b/drivers/platform/x86/panasonic-laptop.c
-index d923ddaa4849..4d663fffbcc8 100644
---- a/drivers/platform/x86/panasonic-laptop.c
-+++ b/drivers/platform/x86/panasonic-laptop.c
-@@ -248,11 +248,11 @@ struct pcc_acpi {
- 	int			ac_brightness;
- 	int			dc_brightness;
- 	int			current_brightness;
--	u32			*sinf;
- 	struct acpi_device	*device;
- 	struct input_dev	*input_dev;
- 	struct backlight_device	*backlight;
- 	struct platform_device	*platform;
-+	u32			sinf[] __counted_by(num_sifr);
+diff --git a/drivers/base/swnode.c b/drivers/base/swnode.c
+index 51320837f3a9..b0e8923a092c 100644
+--- a/drivers/base/swnode.c
++++ b/drivers/base/swnode.c
+@@ -509,6 +509,7 @@ software_node_get_reference_args(const struct fwnode_handle *fwnode,
+ 	struct swnode *swnode = to_swnode(fwnode);
+ 	const struct software_node_ref_args *ref_array;
+ 	const struct software_node_ref_args *ref;
++	const struct software_node *ref_swnode;
+ 	const struct property_entry *prop;
+ 	struct fwnode_handle *refnode;
+ 	u32 nargs_prop_val;
+@@ -550,7 +551,10 @@ software_node_get_reference_args(const struct fwnode_handle *fwnode,
+ 		refnode = software_node_fwnode(ref->swnode);
+ 	else if (ref->fwnode)
+ 		refnode = ref->fwnode;
+-	else
++	else if (ref->swnode_name) {
++		ref_swnode = software_node_find_by_name(NULL, ref->swnode_name);
++		refnode = ref_swnode ? software_node_fwnode(ref_swnode) : NULL;
++	} else
+ 		return -EINVAL;
+ 
+ 	if (!refnode)
+diff --git a/include/linux/property.h b/include/linux/property.h
+index e30ef23a9af3..44e96ee47272 100644
+--- a/include/linux/property.h
++++ b/include/linux/property.h
+@@ -363,6 +363,7 @@ struct software_node;
+ struct software_node_ref_args {
+ 	const struct software_node *swnode;
+ 	struct fwnode_handle *fwnode;
++	const char *swnode_name;
+ 	unsigned int nargs;
+ 	u64 args[NR_FWNODE_REFERENCE_ARGS];
  };
- 
- /*
-@@ -1017,21 +1017,15 @@ static int acpi_pcc_hotkey_add(struct acpi_device *device)
- 	 */
- 	num_sifr++;
- 
--	pcc = kzalloc_obj(struct pcc_acpi);
-+	pcc = kzalloc_flex(*pcc, sinf, num_sifr);
- 	if (!pcc) {
- 		pr_err("Couldn't allocate mem for pcc");
- 		return -ENOMEM;
- 	}
- 
--	pcc->sinf = kcalloc(num_sifr + 1, sizeof(u32), GFP_KERNEL);
--	if (!pcc->sinf) {
--		result = -ENOMEM;
--		goto out_hotkey;
--	}
--
-+	pcc->num_sifr = num_sifr;
- 	pcc->device = device;
- 	pcc->handle = device->handle;
--	pcc->num_sifr = num_sifr;
- 	device->driver_data = pcc;
- 	strscpy(acpi_device_name(device), ACPI_PCC_DEVICE_NAME);
- 	strscpy(acpi_device_class(device), ACPI_PCC_CLASS);
-@@ -1039,7 +1033,7 @@ static int acpi_pcc_hotkey_add(struct acpi_device *device)
- 	result = acpi_pcc_init_input(pcc);
- 	if (result) {
- 		pr_err("Error installing keyinput handler\n");
--		goto out_sinf;
-+		goto out_hotkey;
- 	}
- 
- 	if (!acpi_pcc_retrieve_biosdata(pcc)) {
-@@ -1111,8 +1105,6 @@ static int acpi_pcc_hotkey_add(struct acpi_device *device)
- 	backlight_device_unregister(pcc->backlight);
- out_input:
- 	input_unregister_device(pcc->input_dev);
--out_sinf:
--	kfree(pcc->sinf);
- out_hotkey:
- 	kfree(pcc);
- 
-@@ -1140,7 +1132,6 @@ static void acpi_pcc_hotkey_remove(struct acpi_device *device)
- 
- 	input_unregister_device(pcc->input_dev);
- 
--	kfree(pcc->sinf);
- 	kfree(pcc);
- }
- 
--- 
-2.53.0
+@@ -373,6 +374,9 @@ struct software_node_ref_args {
+ 			   const struct software_node *: _ref_,	\
+ 			   struct software_node *: _ref_,	\
+ 			   default: NULL),			\
++	.swnode_name = _Generic(_ref_,				\
++				const char *: _ref_,		\
++				default: NULL),			\
+ 	.fwnode = _Generic(_ref_,				\
+ 			   struct fwnode_handle *: _ref_,	\
+ 			   default: NULL),			\
 
+This will allow consumers specify top-level software node name instead
+of software node structure, and it will get resolved to concrete
+firmware node. GPIOLIB can continue matching on node identity.
+
+WDYT?
+
+Also, you need to update the existing documentation in order to be able
+to call the existing documented practice an "abuse" ;)
+
+Thanks.
+
+-- 
+Dmitry
