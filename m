@@ -1,62 +1,62 @@
-Received: from mail-wm1-f46.google.com (mail-wm1-f46.google.com [209.85.128.46])
+Received: from mail-wm1-f49.google.com (mail-wm1-f49.google.com [209.85.128.49])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DBB8D37DEB5
-	for <platform-driver-x86@vger.kernel.org>; Sun, 22 Mar 2026 19:07:16 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.46
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 47BF2372EF7
+	for <platform-driver-x86@vger.kernel.org>; Sun, 22 Mar 2026 19:07:19 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.49
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1774206438; cv=none; b=KyqHos+Xw4plgZTBQ6D/PIWV2LKWumfckYMbpkHNDblby7Y2pw4+iyc5/hIgrnaPSzxrr7tE34/3MY2RTyA5MgH7F9UAwZFBsWFZe/lM+BvaxPz1UxYkLkBGWDytssRRS6h18x21b8L5sEpc1M3cADazHM1yf4CpKr1ANj1Ckss=
+	t=1774206440; cv=none; b=MVRcyoPpNUfMH+jAWN5VNqoSwbMFBWAFYdjtPac9HsA66JUN6WDwh7pztpSnSMpkw6SWgFNb/VlNWggRstdUfim2fNqs0hrph568UKAIbDHy/XdqxjdaBUejKsJjRJ9zx4uHu1hy8s7oUN7aJiuCCNHMX/RluJ/3d9/fQQFTRDo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1774206438; c=relaxed/simple;
-	bh=oLKGlkhw2FIIbPnQj7+BVbg/ng9EcldtKCH1eAUAjOY=;
+	s=arc-20240116; t=1774206440; c=relaxed/simple;
+	bh=b2Yu4QNmTqQ7VgOgSC58XEL8/pOhTJNoN/AnRGyQ49M=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=o6/C0dkop+1t/f0ZYByURKwqChJNC/SZ6Es3+twX3UEfgmN/2W51nVlws4JokwqWhhffMpGE69Z1AUsSqwvqbbGH111MwM/GHyJp8hMRUnWg7XnL9GaO64GlNaLaM9BnLyqHWXTSAmDvw62mrapMaAWiT0tzbt6YhUtIkIGz+OY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=V12enzfM; arc=none smtp.client-ip=209.85.128.46
+	 MIME-Version; b=i5zN5iUF4644IoGSLO8W5EhpiPI5PLtQlmjtxF2huWXV/WStFyUNpsjRU4Fb8M7XSZUuaFB17qEBDzDJCNB7XVybhQEHPgXuVP9STeElCTJr00NueWOuzLH6dpB+8uqwII3elgRM0WDRTPs29EBbB627YZQ6uTP6/Ie9WDOQs3I=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=bR+p1Vu/; arc=none smtp.client-ip=209.85.128.49
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="V12enzfM"
-Received: by mail-wm1-f46.google.com with SMTP id 5b1f17b1804b1-485358f43e7so4460255e9.2
-        for <platform-driver-x86@vger.kernel.org>; Sun, 22 Mar 2026 12:07:16 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="bR+p1Vu/"
+Received: by mail-wm1-f49.google.com with SMTP id 5b1f17b1804b1-4836d9d54f6so5192285e9.1
+        for <platform-driver-x86@vger.kernel.org>; Sun, 22 Mar 2026 12:07:19 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1774206435; x=1774811235; darn=vger.kernel.org;
+        d=gmail.com; s=20230601; t=1774206437; x=1774811237; darn=vger.kernel.org;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=yHNkiyRvuF9AQ8guLO6hV3hpVtlWV/mWDZ+jV3RDgbg=;
-        b=V12enzfMJeUCA8PbnLb/J04GReoi223CpNFVd8PYSp827w4r3XYVqOPcb+drrGAhbY
-         15fBceS/prwIkCdM8O+m+bWGlN0IcJBf1AfT79FBOY96EgylEZ9TaGWVmlgneIVTqYhe
-         ksG6+VsxuNpY0i/S1R9LyK6pewoo7aeWRL6lX9YnDuYB+UEr9WeAMXpjNZGjli3N5r0r
-         2XMXPHUXCg55YDWnc9jO4kl592IO+iaztMFP1clHqogkY60rfHoVpNTVndsQ14JMqp4I
-         M2MWEDufquzB5zz7+hWsiXvWk6mZiknHUQ5m0GEUxNZyOhuVvvklMTegH/vHxtmCYCJF
-         eAoQ==
+        bh=eC4Vcl8jB5v5qB0mNZx8g21iRBAwUU3PRlx8EqzAROA=;
+        b=bR+p1Vu/bRkhme126AfZM/SUnsFPy9UNrWb4wRUYcvszF76z6NF+0I3nkwc6x2/4ID
+         Dgs9NFzguZhhxn693eVoPuN/p8u5HiYEnxgU8EhqnH0184lM1UQg9bvoIWTAESPPsRKy
+         5lsA4Et4gI4JhXQCa/za/CdaHDh8jy3RQaXaUmVsLdQDsXAIZOVaRNVs2Op8Bu3EnyhC
+         VFLrkhuEQAjaE7mT/KDRYrWGdFaMNBqXYwLsGXgAbOasc7FeIOxbYA/SoryUhb6bv8Ud
+         apAHDZE8FFqrHOrXCOerCiT4us5ux9ZnJt3xDvAIm4em1somUevVtLwaZ2mWkLwEG/Q/
+         0Piw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1774206435; x=1774811235;
+        d=1e100.net; s=20251104; t=1774206437; x=1774811237;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:x-gm-gg:x-gm-message-state:from
          :to:cc:subject:date:message-id:reply-to;
-        bh=yHNkiyRvuF9AQ8guLO6hV3hpVtlWV/mWDZ+jV3RDgbg=;
-        b=cWNamlVdDlob/JwVm8oHrWaI70Ecsj/0PKdQ42646hU3mnEkoun/4l/VanunD1h0MA
-         CYETFpixPj8LfPN085/GmVw7nZSYZJ9USCL0i/qo9oytxoSNrj5pkbEcZYBpPdhPaCi0
-         B5kCk4hLb0qm2zK9vriZ9tX3R0/FeMK7dMMGzrPMSTmpFQYPyInvz0CF3SQOeV6CXX3q
-         1OJSplHzMI1iq/fYt8UsjvL1Uwm6ZQvXJbtFyRTmvyxf5C1QF0zBxvb13Hop4KEtcGW4
-         eEoThjWi7r8jGnW/idgt/irg3rwly8YFj8spqK60B/S5FB2kewlxMHq2WwHTsGiSHRFv
-         ivVw==
-X-Gm-Message-State: AOJu0YxbDR/C4shwmZR/lYg6ptSMqdLIRr76IeI9mqRffBTxJYyOtlWf
-	32hzqZEQo9r6tvXBzUU17mRf55VVqZ7cqzrPQ9b1sGOWjoUNKKJlKOBZaJseHkTpG1LvRQ==
-X-Gm-Gg: ATEYQzwA1UZGB9M6V5+GSD6XXhVPi8AsurNnSu684D68OCvMI3xSM2K75fIq/PohEMx
-	5PgnFsEojJMvg56LDFTFTBtVJ60ImqepyywjYglfFLWyVqydFwT6AGJPBaEYabKNWyRMeFBoNqq
-	l/9YjcGk1Tvu/IOInfrxP5uMS27dZu0LGhBsQB6EMIyYUIpVIFXHSSBe1Pu4RXWrgrXbgdhkc/0
-	ASRW/h94s603+61d4eL5eOy+gUlEKxZll499n5y89CuZdBLxP130tIckuJTP6OmUC7TPuOUiKJQ
-	FEbBsJy67QHC0+EUt9s/Zi5mVnYlOF9hhzwLZ7EvmuBQ6U/xJOeV2REKCtU5b7o4hSizTgZ1enc
-	797rG5eHkM3GvMud1Bd10Y/r2Af1lgsY3dRKb2m/DwuJpK+rOCJqfIb4VT+tgJv81jQcWcuAZOD
-	uvjmr3DaYg5olLe0L1ppy/jh7E8G5YsiMf9xteJoF7iuUXGoCLsc+1eF2/TCqAAWPix6FlfeA=
-X-Received: by 2002:a05:600c:138a:b0:485:3177:d805 with SMTP id 5b1f17b1804b1-486fee29279mr81465475e9.7.1774206435068;
-        Sun, 22 Mar 2026 12:07:15 -0700 (PDT)
+        bh=eC4Vcl8jB5v5qB0mNZx8g21iRBAwUU3PRlx8EqzAROA=;
+        b=RtM+g2HndB19ixuHv39bH1seWfeefc27cw5qDNc6SN4RPRmGVbd0ch8erzhmxbsVih
+         4ORnNwNmC3Unv4wG0mXvpiO7zVAbtairoYvkAyv+D+0JHVi8eL57mJkOmm2OgtXr/Ofq
+         Vtd+YmLks8wqoIFywvOP0RuhnG+KjlblxQTrYaswkLgiIFEDIXIsJcWSJlU0HoivxmT9
+         bPrzYkq1Xr7ek5apGUM3BIsq9k1gaWHSp9YyDSto50evYVsOajDCafAMc2QhocWH5eT9
+         s+4LfK2iSaukMrnl+3aMPL1ZvQT9kRq18xto3XzLSwDxQHwd/bMTbSqrs0tfFTIYnblf
+         ji8w==
+X-Gm-Message-State: AOJu0Yyz0FgzRogeJz1HZiULUs4Kpi5zMlzF/ogTGSy2gdGQM9oogdy+
+	VBubh0WP3PpBGU28qqruqDPa2vrN65aYV/4P6F2HYri5hgvr5yYE9VbiSEw7g/t1sbeikQ==
+X-Gm-Gg: ATEYQzxsIoIAHtmy7fvUJrfDi6IYzWBvk5H73XB+uE7CkKITpjGXn1tg3nZrhxRwSa7
+	NqQfXK9kRR4L0ZyoYy871e7yCE/bSlhccLIecGzLrgBN/kCfQNn2CKuiXILJqqKapZHUQA40I0u
+	xxk9dubKnC/YLv+ZF+51eM6BET8i6rNU5J5SlVTxa3cDM/At0gwi/jUp5Nqt1balf3/s5fP7QwO
+	sVrIiaPSaQlEM36x/zHB4WJ0xE2WnZ9uWhJ3HlQ76ULuFG5U5Z3aAN2FIgE+MLKvIbfain/DMBL
+	x5y74rBB/q9WYv4b/i2W3Ro191S0q+hIHB3YezY71KFRUbpQeRHe9dSskEKUYUE2Zt48tUJ+ryb
+	+Xtibh2naccqJuusdzUE1rwpudxgzNFdC4mACOImRZ9/lyUPuOu3ikoeraMob/5wqZQ5HKIOsyN
+	8BTZ+h9u2AuhaDvyuzHB540xiW3WMi4xMVXDLiyDs9uIBOJtf6ZD65r3lc71ikWG7ada8xHOc=
+X-Received: by 2002:a05:600c:3105:b0:485:3bc7:a224 with SMTP id 5b1f17b1804b1-486ff01b279mr83078485e9.6.1774206437259;
+        Sun, 22 Mar 2026 12:07:17 -0700 (PDT)
 Received: from localhost.localdomain ([46.155.1.197])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-486fe868cb1sm63340595e9.5.2026.03.22.12.07.12
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-486fe868cb1sm63340595e9.5.2026.03.22.12.07.15
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 22 Mar 2026 12:07:14 -0700 (PDT)
+        Sun, 22 Mar 2026 12:07:16 -0700 (PDT)
 From: Emre Cecanpunar <emreleno@gmail.com>
 To: platform-driver-x86@vger.kernel.org
 Cc: hansg@kernel.org,
@@ -64,9 +64,9 @@ Cc: hansg@kernel.org,
 	linux-kernel@vger.kernel.org,
 	krishna.chomal108@gmail.com,
 	Emre Cecanpunar <emreleno@gmail.com>
-Subject: [PATCH v2 3/5] platform/x86: hp-wmi: use mod_delayed_work to reset keep-alive timer
-Date: Sun, 22 Mar 2026 22:06:22 +0300
-Message-ID: <20260322190624.35162-4-emreleno@gmail.com>
+Subject: [PATCH v2 4/5] platform/x86: hp-wmi: fix u8 underflow in gpu_delta calculation
+Date: Sun, 22 Mar 2026 22:06:23 +0300
+Message-ID: <20260322190624.35162-5-emreleno@gmail.com>
 X-Mailer: git-send-email 2.53.0
 In-Reply-To: <20260322190624.35162-1-emreleno@gmail.com>
 References: <20260322190624.35162-1-emreleno@gmail.com>
@@ -78,54 +78,64 @@ List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-The keep-alive mechanism re-applies fan settings every 90 seconds to
-prevent the firmware from reverting to automatic mode after its 120 s
-timeout. Fan settings are also applied immediately when the user writes
-to the hwmon sysfs interface.
+gpu_delta was declared as u8 and computed as the difference of two u8
+fan RPM values from the firmware fan table. If gpu_rpm < cpu_rpm, the
+subtraction wraps around modulo 256, producing a large positive value
+(e.g. 10 - 20 = 246 as u8). This value is then added to every
+requested fan speed in hp_wmi_fan_speed_set(), causing the GPU fan to
+be clamped to U8_MAX on almost every write.
 
-schedule_delayed_work() is a no-op when the work item is already
-pending. If the user updates fan settings at T=85s, the keep-alive
-still fires at T=90s (5 s after the update) instead of 90 s later.
-This shortens the effective keep-alive window and may allow the
-firmware timeout to expire between cycles.
-
-Replace schedule_delayed_work() with mod_delayed_work() in both the
-PWM_MODE_MAX and PWM_MODE_MANUAL cases. mod_delayed_work() resets the
-delay to KEEP_ALIVE_DELAY_SECS from the time of each call, whether or
-not the work is already pending, ensuring each user action and each
-keep-alive expiry restarts the full 90 s window.
+Change gpu_delta to int in both struct hp_wmi_hwmon_priv and
+hp_wmi_setup_fan_settings(), and perform the subtraction in signed
+arithmetic. hp_wmi_fan_speed_set() already uses signed arithmetic with
+clamp_val(), so a negative delta correctly results in a lower GPU fan
+speed rather than saturating at U8_MAX.
 
 Signed-off-by: Emre Cecanpunar <emreleno@gmail.com>
 ---
- drivers/platform/x86/hp/hp-wmi.c | 8 ++++----
- 1 file changed, 4 insertions(+), 4 deletions(-)
+Changes in v2:
+- Drop the if (gpu_delta < 0) guard and pr_warn. A negative delta is
+  valid firmware behavior on boards where CPU_RPM > GPU_RPM. Store
+  gpu_delta as int in struct hp_wmi_hwmon_priv so the existing signed
+  arithmetic and clamp_val() in hp_wmi_fan_speed_set() handle the
+  negative case correctly without saturating at U8_MAX.
+
+ drivers/platform/x86/hp/hp-wmi.c | 9 +++++----
+ 1 file changed, 5 insertions(+), 4 deletions(-)
 
 diff --git a/drivers/platform/x86/hp/hp-wmi.c b/drivers/platform/x86/hp/hp-wmi.c
-index 41769c0861e5..a29f34588055 100644
+index a29f34588055..af57cb0dbf9e 100644
 --- a/drivers/platform/x86/hp/hp-wmi.c
 +++ b/drivers/platform/x86/hp/hp-wmi.c
-@@ -2342,8 +2342,8 @@ static int hp_wmi_apply_fan_settings(struct hp_wmi_hwmon_priv *priv)
- 		ret = hp_wmi_fan_speed_max_set(1);
- 		if (ret < 0)
- 			return ret;
--		schedule_delayed_work(&priv->keep_alive_dwork,
--				      secs_to_jiffies(KEEP_ALIVE_DELAY_SECS));
-+		mod_delayed_work(system_wq, &priv->keep_alive_dwork,
-+				 secs_to_jiffies(KEEP_ALIVE_DELAY_SECS));
- 		return 0;
- 	case PWM_MODE_MANUAL:
- 		if (!is_victus_s_thermal_profile())
-@@ -2351,8 +2351,8 @@ static int hp_wmi_apply_fan_settings(struct hp_wmi_hwmon_priv *priv)
- 		ret = hp_wmi_fan_speed_set(priv, pwm_to_rpm(priv->pwm, priv));
- 		if (ret < 0)
- 			return ret;
--		schedule_delayed_work(&priv->keep_alive_dwork,
--				      secs_to_jiffies(KEEP_ALIVE_DELAY_SECS));
-+		mod_delayed_work(system_wq, &priv->keep_alive_dwork,
-+				 secs_to_jiffies(KEEP_ALIVE_DELAY_SECS));
- 		return 0;
- 	case PWM_MODE_AUTO:
- 		if (is_victus_s_thermal_profile()) {
--- 
-2.53.0
+@@ -436,7 +436,7 @@ enum pwm_modes {
+ struct hp_wmi_hwmon_priv {
+ 	u8 min_rpm;
+ 	u8 max_rpm;
+-	u8 gpu_delta;
++	int gpu_delta;
+ 	u8 mode;
+ 	u8 pwm;
+ 	struct delayed_work keep_alive_dwork;
+@@ -2530,8 +2530,8 @@ static int hp_wmi_setup_fan_settings(struct hp_wmi_hwmon_priv *priv)
+ {
+ 	u8 fan_data[128] = { 0 };
+ 	struct victus_s_fan_table *fan_table;
+-	u8 min_rpm, max_rpm, gpu_delta;
+-	int ret;
++	u8 min_rpm, max_rpm;
++	int gpu_delta, ret;
 
+ 	/* Default behaviour on hwmon init is automatic mode */
+ 	priv->mode = PWM_MODE_AUTO;
+@@ -2553,7 +2553,8 @@ static int hp_wmi_setup_fan_settings(struct hp_wmi_hwmon_priv *priv)
+
+ 	min_rpm = fan_table->entries[0].cpu_rpm;
+ 	max_rpm = fan_table->entries[fan_table->header.num_entries - 1].cpu_rpm;
+-	gpu_delta = fan_table->entries[0].gpu_rpm - fan_table->entries[0].cpu_rpm;
++	gpu_delta = (int)fan_table->entries[0].gpu_rpm -
++		    (int)fan_table->entries[0].cpu_rpm;
+ 	priv->min_rpm = min_rpm;
+ 	priv->max_rpm = max_rpm;
+ 	priv->gpu_delta = gpu_delta;
+--
+2.53.0
