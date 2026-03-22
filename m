@@ -1,100 +1,126 @@
-Received: from mail.alien8.de (mail.alien8.de [65.109.113.108])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 25B9838B145;
-	Sat, 21 Mar 2026 11:56:02 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=65.109.113.108
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CD8F730DED1
+	for <platform-driver-x86@vger.kernel.org>; Sun, 22 Mar 2026 12:23:17 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1774094165; cv=none; b=ARWQ9Qv3cyiHLVx8Ya062lwvvSVfR+IoXqnpsf53hD/0kcU6ABTdxGrOSjTDuL8JS66FuFKfQDqX//gLZSNgRXrFrpo5UkQdkswWlJ1eEOeiC9NlrjLj/gljUkEzRldjivs4KF1WabWS2CRxQTkyvk9k0dYbk5tSGchNHQdmYSA=
+	t=1774182197; cv=none; b=VSJXemLEiKMJSXzYjcWliYqA7tJtvqKN4CWTCm128q4jzdYK3fMHt8sucTbUz6WalaNYjXR2qPB9uDrA+DdTFMKiEqXjGw5J1f0FgTFNU3xMFnuJt4Xsanh1rBiJzgs7TFf7mg069My1AVkuflO3X46eH+dkcTKrLlxaMfrOViw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1774094165; c=relaxed/simple;
-	bh=8GHCIszmWc/x9qKDXcmd/xZnbgZeKdHnV5irkUrfisU=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=R4cNZWl8HQuxIIMxhgjD2wy+X/eEBT6Bn96iZtQZw9xyXO1WyhKks1vOSt7pJjrNkuDQIA+IepirODzrVxwnZNhFGpM+3b43qAEV9EUdL+0BzMu2KTAyeRt+JLEnrXipVzu8EA4QpV+a+o6XgM3F8gcakrmkuc/BjcRqJNWuvQs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=alien8.de; spf=pass smtp.mailfrom=alien8.de; dkim=fail (4096-bit key) header.d=alien8.de header.i=@alien8.de header.b=HGYPFcX9 reason="signature verification failed"; arc=none smtp.client-ip=65.109.113.108
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=alien8.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=alien8.de
+	s=arc-20240116; t=1774182197; c=relaxed/simple;
+	bh=K2aUJpy4ybaP7biGW6Zq8InlDEabpg6/ZYD3Fm4oeNA=;
+	h=From:To:Subject:Date:Message-ID:In-Reply-To:References:
+	 Content-Type:MIME-Version; b=qWzi2UFE/Fjr4FYFisIBdeddjRfF8heU6JtanFY+uTCjL5e6TLtDo5AGwWlHQXDngojVKZsk2LTTjWNHVTA+e37C5Twiz5dh+fZc4/GsP42qzLTXtRM6RdzP57kOCHjLmNI4ZWPljXgp8qO1lnKx08XGJZ8LINL4NLVxnEATpYI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=C/p+Cc6p; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=fail reason="signature verification failed" (4096-bit key) header.d=alien8.de header.i=@alien8.de header.b="HGYPFcX9"
-Received: from localhost (localhost.localdomain [127.0.0.1])
-	by mail.alien8.de (SuperMail on ZX Spectrum 128k) with ESMTP id D4C3340E0295;
-	Sat, 21 Mar 2026 11:56:00 +0000 (UTC)
-X-Virus-Scanned: Debian amavisd-new at mail.alien8.de
-Authentication-Results: mail.alien8.de (amavisd-new); dkim=fail (4096-bit key)
-	reason="fail (body has been altered)" header.d=alien8.de
-Received: from mail.alien8.de ([127.0.0.1])
-	by localhost (mail.alien8.de [127.0.0.1]) (amavisd-new, port 10026)
-	with ESMTP id l00uFVHnrnOJ; Sat, 21 Mar 2026 11:55:57 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alien8.de; s=alien8;
-	t=1774094156; bh=V8L49odpIjS0nz3lKeK22T+nlIAOK5Th23NLHuI5tM0=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=HGYPFcX9iE8BOUGGMlN8BI/MFPhc448d1ehzd0PPRsELPkHag7ocIuGDvBDuqEGci
-	 iEVight/2g1nVNKNjkz6QXLYV/PIDqQxzjRuv8c3nPaQsoPhhbsrp6Vv1YYMTzA7aK
-	 KLzjNFGJfCb9GzlM5B5wcIBbtG1/e6c/dlZjagZcmIFs86biO2GlYnYpk9vGI7ZaNn
-	 englthr/JjrHBdMfavdnZoVF36BUUhD3v3lu6wiTkWFCik6v3rEWJr/wyIoVMYnG2i
-	 nu80gt0y9nvdZpwfTn1o6PkqNQ9+QRn0TeHlXOmO/IuzEJ/FAehjMc9Tn57XVHUrCa
-	 Ey5Av9ZUO/U2HMbI/YX5SpCClNoWq+JwXmFbxhWYtGA8NrexgdDkyt5LIOBZSVAMhA
-	 52RvPxPpFj/Ufvu+T9vstZVJWWUJ/a+mwrmP7wL1Vtag2NS0ivFd8l0YZDQy+NB41t
-	 5Ie5wGl82hnNIhhMJ6hXdArKCGbYTVG6eVV4Geu42TWFu8pkoNUdFpXN91I1F+O4E2
-	 koUDSjLsE7NqJ75e/VsggvsJ4rOS14EJrJ20Ym0dUpzD5pg6MJFAiVxJ3bIM2Yu1Sw
-	 G4QRVLFpxHQUXhMSyZUSzFS66pi3XlTkCOtC9nSQfVUSA5LpIQiEC++cg9JYwOH+/0
-	 wdqQx/FRvLF6goZ+1Bxb296A=
-Received: from zn.tnic (p5de8e020.dip0.t-ipconnect.de [93.232.224.32])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange ECDHE (P-256) server-signature ECDSA (P-256) server-digest SHA256)
-	(No client certificate requested)
-	by mail.alien8.de (SuperMail on ZX Spectrum 128k) with UTF8SMTPSA id C12BB40E0174;
-	Sat, 21 Mar 2026 11:55:48 +0000 (UTC)
-Date: Sat, 21 Mar 2026 12:55:47 +0100
-From: Borislav Petkov <bp@alien8.de>
-To: aros@gmx.com
-Cc: bugzilla-daemon@kernel.org, Hans de Goede <hansg@kernel.org>,
-	Ilpo =?utf-8?B?SsOkcnZpbmVu?= <ilpo.jarvinen@linux.intel.com>,
-	Krishna Chomal <krishna.chomal108@gmail.com>,
-	Edip Hazuri <edip@medip.dev>, platform-driver-x86@vger.kernel.org,
-	lkml <linux-kernel@vger.kernel.org>
-Subject: Re: [Bug 221181] Kernel warning "hp_wmi: Unknown key code -
- 0x36421aa"
-Message-ID: <20260321115547.GBab6HQ8ZAo2OXxwkx@fat_crate.local>
-References: <bug-221181-6385@https.bugzilla.kernel.org/>
- <bug-221181-6385-bppD5Qfxft@https.bugzilla.kernel.org/>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="C/p+Cc6p"
+Received: by smtp.kernel.org (Postfix) with ESMTPS id 553A0C2BCB3
+	for <platform-driver-x86@vger.kernel.org>; Sun, 22 Mar 2026 12:23:17 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1774182197;
+	bh=K2aUJpy4ybaP7biGW6Zq8InlDEabpg6/ZYD3Fm4oeNA=;
+	h=From:To:Subject:Date:In-Reply-To:References:From;
+	b=C/p+Cc6pM18TnKD8Fkt2xAPA8Jl3ucNzzdWLUFmmZAxIMKsv++nca7YM9um2TTfQY
+	 RJns1jlQ/u8dKDxlNSVDFLhmpLr025tCAwsKDX7X8JnFIsq4zNmn1NLvL9nUqQ6LDc
+	 lHFSDqV0F4an7otGiz8FcOrn5m/C+dDsCDeUqGsbbq4BkCbqo/q1Fk0mzJ99Dg5zOi
+	 /PQi+vSLwukP6kfzYoPbdnA5VKOYMfgnstcaihMkyYyRHHn2H6mx2WGjQ5laq0Eso9
+	 02e3y9TnpzznZemjfRI97/OYtiDfEJkOfS9Ixc4AEbYWQuCDnwXw4V3ts2pSJXCuP8
+	 30uweX0AhZ83A==
+Received: by aws-us-west-2-korg-bugzilla-1.web.codeaurora.org (Postfix, from userid 48)
+	id 5161FC41614; Sun, 22 Mar 2026 12:23:17 +0000 (UTC)
+From: bugzilla-daemon@kernel.org
+To: platform-driver-x86@vger.kernel.org
+Subject: [Bug 204807] Hardware monitoring sensor nct6798d doesn't work unless
+ acpi_enforce_resources=lax is enabled
+Date: Sun, 22 Mar 2026 12:23:14 +0000
+X-Bugzilla-Reason: None
+X-Bugzilla-Type: changed
+X-Bugzilla-Watch-Reason: AssignedTo drivers_platform_x86@kernel-bugs.osdl.org
+X-Bugzilla-Product: Drivers
+X-Bugzilla-Component: Platform_x86
+X-Bugzilla-Version: 2.5
+X-Bugzilla-Keywords: 
+X-Bugzilla-Severity: high
+X-Bugzilla-Who: pauk.denis@gmail.com
+X-Bugzilla-Status: RESOLVED
+X-Bugzilla-Resolution: CODE_FIX
+X-Bugzilla-Priority: P1
+X-Bugzilla-Assigned-To: drivers_platform_x86@kernel-bugs.osdl.org
+X-Bugzilla-Flags: 
+X-Bugzilla-Changed-Fields: attachments.isobsolete attachments.created
+Message-ID: <bug-204807-215701-d0vruN9oZn@https.bugzilla.kernel.org/>
+In-Reply-To: <bug-204807-215701@https.bugzilla.kernel.org/>
+References: <bug-204807-215701@https.bugzilla.kernel.org/>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+X-Bugzilla-URL: https://bugzilla.kernel.org/
+Auto-Submitted: auto-generated
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <bug-221181-6385-bppD5Qfxft@https.bugzilla.kernel.org/>
-Content-Transfer-Encoding: quoted-printable
 
-On Sat, Mar 21, 2026 at 10:31:34AM +0000, bugzilla-daemon@kernel.org wrot=
-e:
-> https://bugzilla.kernel.org/show_bug.cgi?id=3D221181
->=20
-> --- Comment #5 from Artem S. Tashkinov (aros@gmx.com) ---
-> I've emailed Krishna Chomal privately a couple of times, he's unrespons=
-ive.
->=20
-> There's seemingly no one else to CC:
+https://bugzilla.kernel.org/show_bug.cgi?id=3D204807
 
-Why?
+Denis Pauk (pauk.denis@gmail.com) changed:
 
-> scripts/get_maintainer.pl -f drivers/platform/x86/hp/hp-wmi.c=20
-> Hans de Goede (maintainer:X86 PLATFORM DRIVERS)
-> Ilpo J=C3=A4rvinen (maintainer:X86 PLATFORM DRIVERS)
-> platform-driver-x86 vger (open list:X86 PLATFORM DRIVERS)
-> linux-kernel vger(open list)
+           What    |Removed                     |Added
+----------------------------------------------------------------------------
+ Attachment #307964|0                           |1
+        is obsolete|                            |
 
-You got at least 4?!
+--- Comment #356 from Denis Pauk (pauk.denis@gmail.com) ---
+Created attachment 309727
+  --> https://bugzilla.kernel.org/attachment.cgi?id=3D309727&action=3Dedit
+Asus WMI for nct6775 v6.19 base (2026.03.22)
 
-Newly CCed folks, pls have a look at this bug.
+Updated list of board, such boards could be supported:
+"B840M AYW GAMING WIFI",=20
+"B840M MAX GAMING AX",=20
+"B850 MAX GAMING WIFI W",=20
+"B850 MAX GAMING WIFI",=20
+"B850M AYW GAMING OC WIFI7 W",
+"B850M AYW GAMING WIFI",
+"B850M MAX GAMING WIFI",
+"EX-B850M-V7",
+"EX-B850M-V9",
+"PRIME B840-PLUS WIFI",
+"PRIME B840M-A WIFI",
+"PRIME B840M-A",
+"PRIME B840M-K",
+"PRIME B850-PLUS WIFI",
+"PRIME B850-PLUS",
+"PRIME B850M-A WIFI",
+"PRIME B850M-A",
+"PRIME B850M-K",
+"Pro WS B850M-ACE SE",
+"Pro WS TRX50-SAGE WIFI",
+"Pro WS W880-ACE SE",
+"ROG STRIX B850-A GAMING WIFI",
+"ROG STRIX B850-A GAMING WIFI7 NEO",
+"ROG STRIX B850-E GAMING WIFI",
+"ROG STRIX B850-F GAMING WIFI",
+"ROG STRIX B850-F GAMING WIFI7 NEO",
+"ROG STRIX B850-G GAMING WIFI",
+"ROG STRIX B850-I GAMING WIFI",
+"ROG STRIX B850-I GAMING WIFI7 W",
+"TUF GAMING B850-BTF WIFI W",
+"TUF GAMING B850-E WIFI",
+"TUF GAMING B850-PLUS WIFI",
+"TUF GAMING B850-PRO WIFI7 W NEO",
+"TUF GAMING B850M-E WIFI",
+"TUF GAMING B850M-PLUS II",
+"TUF GAMING B850M-PLUS WIFI",
+"TUF GAMING B850M-PLUS WIFI7 W",
+"TUF GAMING B850M-PLUS WIFI7",=20
+"TUF GAMING B850M-PLUS".
 
-Thx.
+if you have such, please check.
 
 --=20
-Regards/Gruss,
-    Boris.
+You may reply to this email to add a comment.
 
-https://people.kernel.org/tglx/notes-about-netiquette
+You are receiving this mail because:
+You are watching the assignee of the bug.=
