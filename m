@@ -1,110 +1,134 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.14])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C26181FE44A
-	for <platform-driver-x86@vger.kernel.org>; Mon, 23 Mar 2026 09:39:45 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 85F481A2C0B;
+	Mon, 23 Mar 2026 09:43:05 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.14
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1774258785; cv=none; b=hBAH9m019MQCP9tUqJmx3DD/sOmn1fQbiPPNCirm+y+7URLNy8NLNPdpLPjBxDtL3b+LHBjUe5UoZVP1FqYEJHYvtu5+cpRg0sYvGjiheiwlExNNAlqx9/mpbroV0TboqSp6xWtzg4rQsZHyLgsLgabmE5HS3g/Xymwan2iSnBs=
+	t=1774258986; cv=none; b=BSn04udUcT7nJEF8drOihdwgEuiMa/AonmUubRGpNdn3l7o+f/ZjAn5QjrDi7N+E9uDLqxYtbZ5PtZfS0SjTptj6MSco63S32KsFKmUWV8Syff2yMruHAPOCPvKabv1bUyI3+nLAd0EHWlq3I4hpP7ZqOFpO+b0afrgx3/rk1d8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1774258785; c=relaxed/simple;
-	bh=EJ6GA3ln3CB5rzUUR+CiHZBiRJzeKCJ2WXERmpAAfvg=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=t71B2wRuycRNHgKD2sZf2GlP/C9ecaRdxoFBoVowaGB7Q+eWBtwvFLoMPxhv1zDf3ra6rpnk/xmPzQS6Vf5ggHNynyVV3/xTplbQgODORPhQMhXr+D7rmQbY67uok+td9hDu4HlRdPFRhGzqDL8E3FuHjW5IVH6QkYmDN2wfdOc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=jhZ4POA2; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1774258986; c=relaxed/simple;
+	bh=0ScpI84KSjTwIGhwzkYAzl01i17paMZ6cw/OHe0q3M4=;
+	h=From:Date:To:cc:Subject:In-Reply-To:Message-ID:References:
+	 MIME-Version:Content-Type; b=sGSyLEvbOlHr5RhE8byyRjvGQpY7z+tQcu2SAc3o1VR5TC0hTgxorlHMyyhPH6122hfGiGydtJZzU1qiVB9iFNDqmyL7fPPvhDQMTSPybig86I3V3q8FDKxDPl+tEzGg4hU4bLND3hIEpNmp2mCD40ULQGh73Wc9OPUOflZ1WPc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=pass smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=DTcd1DVN; arc=none smtp.client-ip=192.198.163.14
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="jhZ4POA2"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 8A9C1C4CEF7
-	for <platform-driver-x86@vger.kernel.org>; Mon, 23 Mar 2026 09:39:44 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1774258785;
-	bh=EJ6GA3ln3CB5rzUUR+CiHZBiRJzeKCJ2WXERmpAAfvg=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-	b=jhZ4POA2fQITxFnyxFc1kfSyuN4JNhBEj6OnkO7fFSXamM0F85cq71a1bWMaZ5u3U
-	 LEbVpwktqDxwYe1hgsnH7hw11iq9gqBE/DoIyrygGHpb7y+omBADz9FTkrmisOx3RS
-	 SGYvZkW3U8pXUnzJRrKXao3PuXPH2TcoHuhAxjRldXSujoVkQTSfA72V7cyxTV1vH1
-	 ZKvruDDExwNGZYuzhCUIaMcZfay52XHIKrDlwcmqBOBZjvtpdNahCjfHycUbFDUa3w
-	 SRqnndm/jl9U9Utl3DprCseB5IGINS+6uzEGPsb8gwqQuv4RRkfFbRJ97UT7OQsa7c
-	 CQkwJuHtWeVRA==
-Received: by mail-lf1-f50.google.com with SMTP id 2adb3069b0e04-5a12c19affeso4901193e87.1
-        for <platform-driver-x86@vger.kernel.org>; Mon, 23 Mar 2026 02:39:44 -0700 (PDT)
-X-Forwarded-Encrypted: i=1; AJvYcCXL/3IwlLuf7WAeWPZXdk+6tyuPcoNzImLw2qqYUX3oLKOQGlrhT5OxYAo9US5I+MOgcWqISAwmiZb3qKSM6wgynDnW@vger.kernel.org
-X-Gm-Message-State: AOJu0YxPQGNL5nXNSKq20Y5/j+yBaiEa2W7D0pacUIfGx9mbYdjqN8pg
-	SI74tyf9yP53G/hX/HuSQwDaXjaPOeMjGGLK4KU5jjjBro3y8bIdo3lB3eNMFSF9MikITI+QMLZ
-	dTQrbkYDTK1ooBPs+pxaAB0tIy2AGCVg/UfjXA4bskw==
-X-Received: by 2002:a05:6512:31c7:b0:5a2:7d50:31cd with SMTP id
- 2adb3069b0e04-5a27dde2603mr4490220e87.3.1774258783209; Mon, 23 Mar 2026
- 02:39:43 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="DTcd1DVN"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1774258986; x=1805794986;
+  h=from:date:to:cc:subject:in-reply-to:message-id:
+   references:mime-version;
+  bh=0ScpI84KSjTwIGhwzkYAzl01i17paMZ6cw/OHe0q3M4=;
+  b=DTcd1DVNtDUyZxwkrdcbZ+qZNQVblm4juOgPWloeQkxbpn1HAuK9FDYQ
+   6jrMaZrb89nNPnUWTM2w9rBbboy0ScjsDHyu+tSmyXgK0Ysc9FGv0dLsV
+   2OJ76EaCsc22aUkAAf0E2DuJ1HOdy7EqpZYQfOGvTbpc9t7rHpvVe5sN8
+   PZ687yGapRY0UpqBhNp1KX2FPU5xFsZwbXzU8eFOcidxgwpoIMnkb8itl
+   c4WVDRYrTUTFwr69HG2knf8piuRQt9pUzGEY1pbgm13wshRJ5tMRVUsW7
+   QiXgnJvuv/HPcvn12X/5F+7Gt7Z2bnXoGwIiD7iLoczrLUGrMgHRfwTV4
+   g==;
+X-CSE-ConnectionGUID: nF8eYZ32TkaS+PrnWs5nag==
+X-CSE-MsgGUID: CeUz//jFR5qi825DqOkyFw==
+X-IronPort-AV: E=McAfee;i="6800,10657,11737"; a="75318626"
+X-IronPort-AV: E=Sophos;i="6.23,137,1770624000"; 
+   d="scan'208";a="75318626"
+Received: from orviesa010.jf.intel.com ([10.64.159.150])
+  by fmvoesa108.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 23 Mar 2026 02:43:05 -0700
+X-CSE-ConnectionGUID: F1h+ma9VSLG2FuAHZwrmVA==
+X-CSE-MsgGUID: L/uIQDA+QESfffRB3mEIgA==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.23,137,1770624000"; 
+   d="scan'208";a="223171559"
+Received: from ijarvine-mobl1.ger.corp.intel.com (HELO localhost) ([10.245.244.49])
+  by orviesa010-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 23 Mar 2026 02:43:03 -0700
+From: =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
+Date: Mon, 23 Mar 2026 11:42:59 +0200 (EET)
+To: Emre Cecanpunar <emreleno@gmail.com>
+cc: platform-driver-x86@vger.kernel.org, Hans de Goede <hansg@kernel.org>, 
+    LKML <linux-kernel@vger.kernel.org>, krishna.chomal108@gmail.com
+Subject: Re: [PATCH v2 4/5] platform/x86: hp-wmi: fix u8 underflow in gpu_delta
+ calculation
+In-Reply-To: <20260322190624.35162-5-emreleno@gmail.com>
+Message-ID: <f332715c-cda1-6120-7025-4cf051f45ed7@linux.intel.com>
+References: <20260322190624.35162-1-emreleno@gmail.com> <20260322190624.35162-5-emreleno@gmail.com>
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20260316-meraki-swnodes-v3-1-15501a52300e@oss.qualcomm.com> <202603201641.qJ8m8Nhn-lkp@intel.com>
-In-Reply-To: <202603201641.qJ8m8Nhn-lkp@intel.com>
-From: Bartosz Golaszewski <brgl@kernel.org>
-Date: Mon, 23 Mar 2026 10:39:30 +0100
-X-Gmail-Original-Message-ID: <CAMRc=MfWsChQc-xHiBtL6HKv6ax36szfEE8Ckjf7VUfhxzG9OA@mail.gmail.com>
-X-Gm-Features: AaiRm53YjgeM2rDX8DY1YvwLzxTXdbFkc65W0RLmdUuzN_9o_znmAtZ9xE0zG0o
-Message-ID: <CAMRc=MfWsChQc-xHiBtL6HKv6ax36szfEE8Ckjf7VUfhxzG9OA@mail.gmail.com>
-Subject: Re: [PATCH v3] platform/x86: meraki-mx100: use real software node references
-To: kernel test robot <lkp@intel.com>, Lee Jones <lee@kernel.org>, Hans de Goede <hansg@kernel.org>, 
-	=?UTF-8?Q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
-Cc: Bartosz Golaszewski <bartosz.golaszewski@oss.qualcomm.com>, Peter Tyser <ptyser@xes-inc.com>, 
-	Dmitry Torokhov <dmitry.torokhov@gmail.com>, 
-	Andy Shevchenko <andriy.shevchenko@linux.intel.com>, 
-	Greg Kroah-Hartman <gregkh@linuxfoundation.org>, oe-kbuild-all@lists.linux.dev, 
-	linux-kernel@vger.kernel.org, platform-driver-x86@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=US-ASCII
 
-On Fri, Mar 20, 2026 at 9:18=E2=80=AFAM kernel test robot <lkp@intel.com> w=
-rote:
->
-> Hi Bartosz,
->
-> kernel test robot noticed the following build errors:
->
-> [auto build test ERROR on b84a0ebe421ca56995ff78b66307667b62b3a900]
->
-> url:    https://github.com/intel-lab-lkp/linux/commits/Bartosz-Golaszewsk=
-i/platform-x86-meraki-mx100-use-real-software-node-references/20260316-1651=
-20
-> base:   b84a0ebe421ca56995ff78b66307667b62b3a900
-> patch link:    https://lore.kernel.org/r/20260316-meraki-swnodes-v3-1-155=
-01a52300e%40oss.qualcomm.com
-> patch subject: [PATCH v3] platform/x86: meraki-mx100: use real software n=
-ode references
-> config: x86_64-buildonly-randconfig-001-20260320 (https://download.01.org=
-/0day-ci/archive/20260320/202603201641.qJ8m8Nhn-lkp@intel.com/config)
-> compiler: gcc-14 (Debian 14.2.0-19) 14.2.0
-> reproduce (this is a W=3D1 build): (https://download.01.org/0day-ci/archi=
-ve/20260320/202603201641.qJ8m8Nhn-lkp@intel.com/reproduce)
->
-> If you fix the issue in a separate patch/commit (i.e. not just a new vers=
-ion of
-> the same patch/commit), kindly add following tags
-> | Reported-by: kernel test robot <lkp@intel.com>
-> | Closes: https://lore.kernel.org/oe-kbuild-all/202603201641.qJ8m8Nhn-lkp=
-@intel.com/
->
-> All errors (new ones prefixed by >>):
->
->    ld: vmlinux.o: in function `lkdtm_rodata_do_nothing':
-> >> (.rodata+0xa9b6c0): undefined reference to `lpc_ich_gpio_swnode'
-> >> ld: (.rodata+0xa9b840): undefined reference to `lpc_ich_gpio_swnode'
->    ld: (.rodata+0xa9b960): undefined reference to `lpc_ich_gpio_swnode'
->    ld: (.rodata+0xa9ba80): undefined reference to `lpc_ich_gpio_swnode'
->    ld: (.rodata+0xa9bba0): undefined reference to `lpc_ich_gpio_swnode'
->    ld: vmlinux.o:(.rodata+0xa9bcc0): more undefined references to `lpc_ic=
-h_gpio_swnode' follow
->
-> --
-> 0-DAY CI Kernel Test Service
-> https://github.com/intel/lkp-tests/wiki
+On Sun, 22 Mar 2026, Emre Cecanpunar wrote:
 
-FYI this is a false-positive - the prerequisite patch is already in Lee's t=
-ree.
+> gpu_delta was declared as u8 and computed as the difference of two u8
+> fan RPM values from the firmware fan table. If gpu_rpm < cpu_rpm, the
+> subtraction wraps around modulo 256, producing a large positive value
+> (e.g. 10 - 20 = 246 as u8). This value is then added to every
+> requested fan speed in hp_wmi_fan_speed_set(), causing the GPU fan to
+> be clamped to U8_MAX on almost every write.
+> 
+> Change gpu_delta to int in both struct hp_wmi_hwmon_priv and
+> hp_wmi_setup_fan_settings(), and perform the subtraction in signed
+> arithmetic. hp_wmi_fan_speed_set() already uses signed arithmetic with
+> clamp_val(), so a negative delta correctly results in a lower GPU fan
+> speed rather than saturating at U8_MAX.
+> 
+> Signed-off-by: Emre Cecanpunar <emreleno@gmail.com>
+> ---
+> Changes in v2:
+> - Drop the if (gpu_delta < 0) guard and pr_warn. A negative delta is
+>   valid firmware behavior on boards where CPU_RPM > GPU_RPM. Store
+>   gpu_delta as int in struct hp_wmi_hwmon_priv so the existing signed
+>   arithmetic and clamp_val() in hp_wmi_fan_speed_set() handle the
+>   negative case correctly without saturating at U8_MAX.
+> 
+>  drivers/platform/x86/hp/hp-wmi.c | 9 +++++----
+>  1 file changed, 5 insertions(+), 4 deletions(-)
+> 
+> diff --git a/drivers/platform/x86/hp/hp-wmi.c b/drivers/platform/x86/hp/hp-wmi.c
+> index a29f34588055..af57cb0dbf9e 100644
+> --- a/drivers/platform/x86/hp/hp-wmi.c
+> +++ b/drivers/platform/x86/hp/hp-wmi.c
+> @@ -436,7 +436,7 @@ enum pwm_modes {
+>  struct hp_wmi_hwmon_priv {
+>  	u8 min_rpm;
+>  	u8 max_rpm;
+> -	u8 gpu_delta;
+> +	int gpu_delta;
+>  	u8 mode;
+>  	u8 pwm;
+>  	struct delayed_work keep_alive_dwork;
+> @@ -2530,8 +2530,8 @@ static int hp_wmi_setup_fan_settings(struct hp_wmi_hwmon_priv *priv)
+>  {
+>  	u8 fan_data[128] = { 0 };
+>  	struct victus_s_fan_table *fan_table;
+> -	u8 min_rpm, max_rpm, gpu_delta;
+> -	int ret;
+> +	u8 min_rpm, max_rpm;
+> +	int gpu_delta, ret;
+> 
+>  	/* Default behaviour on hwmon init is automatic mode */
+>  	priv->mode = PWM_MODE_AUTO;
+> @@ -2553,7 +2553,8 @@ static int hp_wmi_setup_fan_settings(struct hp_wmi_hwmon_priv *priv)
+> 
+>  	min_rpm = fan_table->entries[0].cpu_rpm;
+>  	max_rpm = fan_table->entries[fan_table->header.num_entries - 1].cpu_rpm;
+> -	gpu_delta = fan_table->entries[0].gpu_rpm - fan_table->entries[0].cpu_rpm;
+> +	gpu_delta = (int)fan_table->entries[0].gpu_rpm -
+> +		    (int)fan_table->entries[0].cpu_rpm;
 
-Bart
+Hi,
+
+Doesn't C's implicit integer promotion rules already convert these to int 
+prior to doing any arithmetic on them?
+
+The underflow problem occurred only when storing that result back into u8 
+value so the type change is still required.
+
+
+-- 
+ i.
+
