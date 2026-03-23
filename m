@@ -1,124 +1,93 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.12])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DD0313BA237
-	for <platform-driver-x86@vger.kernel.org>; Mon, 23 Mar 2026 15:28:52 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A250025CC40;
+	Mon, 23 Mar 2026 15:36:45 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.12
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1774279732; cv=none; b=hgTna+k9VIra1FzCzPsHS7guK2BCVHUuJ+XkMFxfF/3J0a2t5+IgFhj63u5oiJC6mslrjf2xiR2RVic1r8lKqdqwFHRbj+6A8VQKuBBwpPniHG1aolRIrFXXVth9oBmU8XXWXDZlbSNG1AGb6d09Kui/XbqjS6ArhnZTtZC/+Tw=
+	t=1774280207; cv=none; b=n6sgeqMLwNN/xKee5Lfppc73vLMq2cE049fDfTUqpgLU97/eoaWszJzsJGStnaYkUDwjTiZhicGvRwkihR52a9lQEykKRMMddFm2eM30Fryljo/ZtkfH77qBiO/yM0Mxj3Y24WU4QczHfXmtHaJERwfi85rDodeOPNkPwq+kWgY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1774279732; c=relaxed/simple;
-	bh=IWDr2AzFuesiBMOrzgJX4wQPp9NGolKM7dspV01aC9o=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=tB2KcqIz1/KYT/i4WrwkrAGlMYgiBy0FDWHNzi8UT+zHXRL/BOzswrDkG7wWCnPF0/W/yD7yWGC0rj46xKPOFW1d4vopqh34RwZwOOWQw3GxQ6wo0GWD1K2kj6wrwkHhK9rtdJyMCyL9TCsjEwxaZP7GAdwr1iZhpS+qtqTYqAo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=r0YiaRoJ; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1774280207; c=relaxed/simple;
+	bh=uewp9v3/iCCyFlR6V+tJL+S/rV0rImHzlZjQdHwJz38=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=Sg3Fmz3+kOFs0eTZdrGxEoaK3A806c0xTOSNO576gOceCq8XLpYwg7f6Cd7sKiyaBIbPs2gw4jyJgCGJHkGGxzPsP3ZuxHWakeFJ2Wn4/kKFmZGPXUte7lRXXqqtProKAA/MmZvuByvokVoMwAnyWZD4bcfSWQXTlLyNgqHz0dg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=pass smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=DR5Bqswx; arc=none smtp.client-ip=192.198.163.12
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="r0YiaRoJ"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id C1DC8C2BD00
-	for <platform-driver-x86@vger.kernel.org>; Mon, 23 Mar 2026 15:28:52 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1774279732;
-	bh=IWDr2AzFuesiBMOrzgJX4wQPp9NGolKM7dspV01aC9o=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-	b=r0YiaRoJDmhsl6QGmGO+bFxgDg1169wOWknkL4GHVkEkkksMIw+X9REekKzaSwH0s
-	 e9T0Ei34l+exXpdCJIv/6Ngs5xyqwi1oe91Fe8QpqeloIzH5aD60vTttJFa2UvQ0yu
-	 vMmUp0+ujQtf4Phb9r6J0yFNbYOL0OllGoXbcs8+OoafmjHUayIJUsJys8wY5RHTVP
-	 itQUkGGPs4Jtmtx1OKC7hxk3rg+vw9tsem472ctY4t3ymnEdVhTHXXyCXAWm6eaHvM
-	 t5Ja/ags4IS3FLfuqQWky+8loUH8NtuUW9x+/PNYXnEJOiW44bqgX8kLjAkTpn9fBh
-	 JYuTcRfzv2+fg==
-Received: by mail-lj1-f174.google.com with SMTP id 38308e7fff4ca-386b553c70eso31668541fa.0
-        for <platform-driver-x86@vger.kernel.org>; Mon, 23 Mar 2026 08:28:52 -0700 (PDT)
-X-Forwarded-Encrypted: i=1; AJvYcCUwhr8xflq7/j2tz/NQROWEwVKOrwWZMT60SmnPXt7r+K6/u9h+LaJfRrJevPzc1Z6RDZvu5EcDGiwQygZSQwNayqWU@vger.kernel.org
-X-Gm-Message-State: AOJu0Yze6kcmh8ldOa42+P7uehXZGJ/lJGp3p8GjT33HQxWV78LQUHyH
-	O+Wc78iRht6y00mTRVeKv0SzDS4fhSKJ0HqV4FkhLjXr+l3QEfbk2oZYB5Zp0cbsd+yLCVkWVyQ
-	dlX2Y6tO3+J7XmSRuP8VSdYIwRUDeeHi3E5my7nHa4g==
-X-Received: by 2002:a2e:be11:0:b0:38a:5584:cea2 with SMTP id
- 38308e7fff4ca-38bf95f27admr41174131fa.3.1774279731307; Mon, 23 Mar 2026
- 08:28:51 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="DR5Bqswx"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1774280206; x=1805816206;
+  h=from:to:cc:subject:date:message-id:mime-version:
+   content-transfer-encoding;
+  bh=uewp9v3/iCCyFlR6V+tJL+S/rV0rImHzlZjQdHwJz38=;
+  b=DR5Bqswx5uhsFZ3QIkb3AxYKUpsHEV2M3y44SznnG1T+jbUuM1U3U3Cf
+   0r9lydueMl78oJAPy0BmRpVsgah8+xCvlxGrxONQjTcsdVfcV9yygNhdS
+   cMmF+oBgdSLJW5ycvZjDzprC8XLl9eYHC0SagwMKXetbkSJwDp8nhXE47
+   rKMrMfJskiJn5j3+C9mUi8NnsJqT6IGSyhUMYCnTACGv9vIiLoaf4rVKA
+   PtU64gUDs8a7ubkj4Ne+AG1cb1B8lvZD1bsX2/vVnimwC82wspQ78Bkap
+   5sWVlhvYmW4ztCH7c6SioiuxpvEzcUl91QrucYP5J3jleeCDfA98iFnOl
+   g==;
+X-CSE-ConnectionGUID: /czk/Gb3Sbqa7GBAQgYA5w==
+X-CSE-MsgGUID: yv0oX/CNSqyWAkbULkqtkQ==
+X-IronPort-AV: E=McAfee;i="6800,10657,11738"; a="79190013"
+X-IronPort-AV: E=Sophos;i="6.23,137,1770624000"; 
+   d="scan'208";a="79190013"
+Received: from orviesa005.jf.intel.com ([10.64.159.145])
+  by fmvoesa106.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 23 Mar 2026 08:36:45 -0700
+X-CSE-ConnectionGUID: Crw6s1wKQhOTfCJ5+Ut18A==
+X-CSE-MsgGUID: /wEisOUQQ1q5VjJYnATIug==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.23,137,1770624000"; 
+   d="scan'208";a="228987290"
+Received: from spandruv-desk.jf.intel.com ([10.54.55.20])
+  by orviesa005.jf.intel.com with ESMTP; 23 Mar 2026 08:36:45 -0700
+From: Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>
+To: hansg@kernel.org,
+	ilpo.jarvinen@linux.intel.com
+Cc: platform-driver-x86@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>,
+	stable@vger.kernel.org
+Subject: [PATCH v2] platform/x86: ISST: Correct locked bit width
+Date: Mon, 23 Mar 2026 08:36:35 -0700
+Message-ID: <20260323153635.3263828-1-srinivas.pandruvada@linux.intel.com>
+X-Mailer: git-send-email 2.52.0
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20260319-baytrail-real-swnode-v1-0-75f2264ae49f@oss.qualcomm.com>
- <20260319-baytrail-real-swnode-v1-2-75f2264ae49f@oss.qualcomm.com> <ab0jmUZGOKSjOa8C@ashevche-desk.local>
-In-Reply-To: <ab0jmUZGOKSjOa8C@ashevche-desk.local>
-From: Bartosz Golaszewski <brgl@kernel.org>
-Date: Mon, 23 Mar 2026 16:28:39 +0100
-X-Gmail-Original-Message-ID: <CAMRc=MdWxgGftNQgs8d-0xqsfgJSSncfBf+7cmWSSypu2rQrmg@mail.gmail.com>
-X-Gm-Features: AaiRm51ic1Qtd8VygdgEg9ggHSh2YPnzIUzs547kDo9m-IYHEE0JkRQaceYSUno
-Message-ID: <CAMRc=MdWxgGftNQgs8d-0xqsfgJSSncfBf+7cmWSSypu2rQrmg@mail.gmail.com>
-Subject: Re: [PATCH 2/4] pinctrl: intel: expose software nodes for baytrail
- GPIO devices
-To: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Cc: Bartosz Golaszewski <bartosz.golaszewski@oss.qualcomm.com>, 
-	Daniel Scally <djrscally@gmail.com>, Heikki Krogerus <heikki.krogerus@linux.intel.com>, 
-	Sakari Ailus <sakari.ailus@linux.intel.com>, 
-	Greg Kroah-Hartman <gregkh@linuxfoundation.org>, "Rafael J. Wysocki" <rafael@kernel.org>, 
-	Danilo Krummrich <dakr@kernel.org>, Mika Westerberg <mika.westerberg@linux.intel.com>, 
-	Andy Shevchenko <andy@kernel.org>, Linus Walleij <linusw@kernel.org>, Hans de Goede <hansg@kernel.org>, 
-	=?UTF-8?Q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>, 
-	Dmitry Torokhov <dmitry.torokhov@gmail.com>, linux-acpi@vger.kernel.org, 
-	driver-core@lists.linux.dev, linux-kernel@vger.kernel.org, 
-	linux-gpio@vger.kernel.org, platform-driver-x86@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 8bit
 
-On Fri, Mar 20, 2026 at 11:39=E2=80=AFAM Andy Shevchenko
-<andriy.shevchenko@linux.intel.com> wrote:
->
-> On Thu, Mar 19, 2026 at 05:10:55PM +0100, Bartosz Golaszewski wrote:
-> > Use the new automatic secondary fwnode API to ensure that when the
-> > baytrail pinctrl device is added to the platform bus, the static
-> > software node provided for drivers not able to use ACPI will get
-> > automatically assigned as the secondary fwnode of the primary ACPI node=
-.
-> >
-> > Create a new header under linux/pinctrl/ containing intel-specific
-> > symbols and declare the new variables there.
->
-> As I read the code, this doesn't need to be part of drivers/pinctrl/intel=
-/.
-> I.o.w. I am unable to see why we need to penetrate the certain pinctrl
-> driver for this.
->
+SST-PP locked bit width is set to three bits. It should be only one bit.
+Use SST_PP_LOCK_WIDTH define instead of SST_PP_LEVEL_WIDTH.
 
-If old board files were an analogy, the kind of information software
-nodes carry would live neither in the provider module nor in the
-consumer driver. It would be defined in a third place - the board
-file. Do we need something like this or should this logic be invoked
-from the x86 platform driver that uses these GPIOs but accesses them
-via the swnode lookup?
+Fixes: ea009e4769fa ("platform/x86: ISST: Add SST-PP support via TPMI")
+Signed-off-by: Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>
+Cc: stable@vger.kernel.org
+---
+Changes:
+v2:
+	No code or description change. Only Fixes and Cc-stable tag are added.
 
-> ...
->
-> >  static int __init byt_gpio_init(void)
-> >  {
-> > -     return platform_driver_register(&byt_gpio_driver);
-> > +     int ret;
-> > +
-> > +     ret =3D software_node_register_auto_secondary(&byt_auto_secondary=
-);
-> > +     if (ret)
-> > +             return ret;
-> > +
-> > +     ret =3D platform_driver_register(&byt_gpio_driver);
-> > +     if (ret)
-> > +             software_node_unregister_auto_secondary(&byt_auto_seconda=
-ry);
-> > +
-> > +     return ret;
-> >  }
->
-> This hack can be done in similar way on how we do ACPI LPSS for those
-> platforms, i.e. in drivers/acpi/x86/lpss.c. No?
->
+ drivers/platform/x86/intel/speed_select_if/isst_tpmi_core.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-Hey, this is not a hack! I'm coming up with a generic solution here. :)
+diff --git a/drivers/platform/x86/intel/speed_select_if/isst_tpmi_core.c b/drivers/platform/x86/intel/speed_select_if/isst_tpmi_core.c
+index b8cdaa233ea9..fa1726185d44 100644
+--- a/drivers/platform/x86/intel/speed_select_if/isst_tpmi_core.c
++++ b/drivers/platform/x86/intel/speed_select_if/isst_tpmi_core.c
+@@ -869,7 +869,7 @@ static int isst_if_get_perf_level(void __user *argp)
+ 	_read_pp_info("current_level", perf_level.current_level, SST_PP_STATUS_OFFSET,
+ 		      SST_PP_LEVEL_START, SST_PP_LEVEL_WIDTH, SST_MUL_FACTOR_NONE)
+ 	_read_pp_info("locked", perf_level.locked, SST_PP_STATUS_OFFSET,
+-		      SST_PP_LOCK_START, SST_PP_LEVEL_WIDTH, SST_MUL_FACTOR_NONE)
++		      SST_PP_LOCK_START, SST_PP_LOCK_WIDTH, SST_MUL_FACTOR_NONE)
+ 	_read_pp_info("feature_state", perf_level.feature_state, SST_PP_STATUS_OFFSET,
+ 		      SST_PP_FEATURE_STATE_START, SST_PP_FEATURE_STATE_WIDTH, SST_MUL_FACTOR_NONE)
+ 	perf_level.enabled = !!(power_domain_info->sst_header.cap_mask & BIT(1));
+-- 
+2.52.0
 
-It already is similar in that it uses a notifier. For v2 howevere, I
-want to propose a mechanism for having multiple ways of matching real
-fwnodes with software nodes.
-
-Bart
