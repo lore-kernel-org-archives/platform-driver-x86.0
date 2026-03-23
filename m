@@ -1,224 +1,292 @@
-Received: from spark.kcore.it (spark.kcore.it [49.13.27.68])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-dy1-f182.google.com (mail-dy1-f182.google.com [74.125.82.182])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CC53A37CD55
-	for <platform-driver-x86@vger.kernel.org>; Mon, 23 Mar 2026 21:35:39 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=49.13.27.68
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 751F9381B0C
+	for <platform-driver-x86@vger.kernel.org>; Mon, 23 Mar 2026 22:01:58 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=74.125.82.182
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1774301741; cv=none; b=fT/yEZKCPTrSNTx11d7I+m28xumqMx78jFLFn734LfCL1sqR/I+xVeE7296NeclocBsrnJNdR7TDehzehqOhJIaZxerHIASKju7BabeGafPnWPiaXSWNvr36bWd5Baqte8aaZDDQcnVNAxBsBuDpBUE3Kf51aHB4rEKq7ImOqLo=
+	t=1774303321; cv=none; b=qF9Br7zOAW8PQdJ8L40rwPN5wtIakC4fGdQErkVirUxa9PM/ukve070Cjq6K+us/iUffSkDZJG1fCmEQoinLjfyKaofkboGPfr97bP+eYzsAiF6oFx7uSNU6ecV0ZotNhtRPpB39kJVGSwGw0hzFbtUp4Uy6Om8rVoGi5K4wsGU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1774301741; c=relaxed/simple;
-	bh=ZCo4qVO3I2o5BjxfhH8jqqmr85nxr8LyIX9v8COtX5M=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=c1yIzCI4p+nmunGyhBtYchMkHykKu7d1mdF22/x1oxJy93hOY2rRqKDpqRCzOa8ekikURkduZpqDB0ZhBUV5/IrPIAc6yNmvlTAVmbqytqnw78XJdEEQqCaCJFZyFXN2JTmcHjOkmM9FSyOm2YxqcGUrrqotidsUm3vvbKs+4/E=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kcore.it; spf=pass smtp.mailfrom=kcore.it; dkim=pass (1024-bit key) header.d=kcore.it header.i=@kcore.it header.b=nnH8oIhl; arc=none smtp.client-ip=49.13.27.68
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kcore.it
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=kcore.it
+	s=arc-20240116; t=1774303321; c=relaxed/simple;
+	bh=DxITZ6RZN3mTPfcQetbVwCvueHrYNNqrL6pVDOX6J1k=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=bZ0Bk+jdT1EDTPIquPLb/uarG2+8CFqdLwDPePU5Q3nf4nGJ4NLXw4IcTsvDN/k/BJAjmXrfgEVHuiS4KoFz+7zphM7OxQZ2b/yL9T8m6mVInrqzUOj3scL519ESPJXNFZ6aBoK5quiRiLlrkCii3XjEcoBFAWvicsANLBqu5c0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=D2Zd751Y; arc=none smtp.client-ip=74.125.82.182
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=kcore.it header.i=@kcore.it header.b="nnH8oIhl"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=kcore.it;
-	s=spark; h=Content-Transfer-Encoding:MIME-Version:References:In-Reply-To:
-	Message-Id:Date:Subject:Cc:To:From:Sender:Reply-To:Content-Type:Content-ID:
-	Content-Description:Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc
-	:Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:List-Subscribe:
-	List-Post:List-Owner:List-Archive;
-	bh=PXMF5fV+CQJ0IY725wxeezeJvbTUbHi6aIk18e54B8o=; b=nnH8oIhlY3dUpvr503iz/O++dK
-	8jiSX33IviEpw4qzu2wJh2Hn/Rr6ghYB+FwDxL08P1Y18CQ+q5HBfO9wvCpLWdj0ZhhToYpdepf5N
-	+atNSWinirIfJsqmz//RdnE8LNnX8eUGV/rGHv8KFNPEbxA5JFTU2e5aFkYYSOw+F8YY=;
-Received: from mnencia by spark.kcore.it with local (Exim 4.96)
-	(envelope-from <mnencia@kcore.it>)
-	id 1w4mvv-005uyy-0H;
-	Mon, 23 Mar 2026 22:35:35 +0100
-From: Marco Nenciarini <mnencia@kcore.it>
-To: platform-driver-x86@vger.kernel.org
-Cc: dan.scally@ideasonboard.com,
-	sakari.ailus@linux.intel.com,
-	hdegoede@redhat.com,
-	andy@kernel.org,
-	Marco Nenciarini <mnencia@kcore.it>
-Subject: [PATCH v2] platform/x86: int3472: Handle GPIO type 0x02 (strobe) as IR  flood LED
-Date: Mon, 23 Mar 2026 22:35:35 +0100
-Message-Id: <20260323213535.1410678-1-mnencia@kcore.it>
-X-Mailer: git-send-email 2.39.5
-In-Reply-To: <ab0URIrzZPsYjWrM@spark.kcore.it>
-References: <ab0URIrzZPsYjWrM@spark.kcore.it>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="D2Zd751Y"
+Received: by mail-dy1-f182.google.com with SMTP id 5a478bee46e88-2c1092cc08cso1325265eec.1
+        for <platform-driver-x86@vger.kernel.org>; Mon, 23 Mar 2026 15:01:58 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20251104; t=1774303317; x=1774908117; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=SApLYsjj21LLEE9cSsE8+zYtkogrVJbdt7o8K1bL5zo=;
+        b=D2Zd751YyxnwlvGB7ZMrkk1o1wxHNBmXg1lgIm/p3bDtTw/XuzyQD1z+z78RgswoIp
+         WFlJsDXG3u/cGCuxUU77sSPKhaz0tNZ7geDNYKdpjydA09IoDD1YPHN6M5jJPZsToAtP
+         7SFBbZRyE3nnSKZicw0XtFyMZ3DJC7Gy+CA7O4+Z4H3+zlGeCNT2szrbohMz+ERybSiU
+         rh99XLK/cS1naQa6PDxyZvNgtqQWjHvAT63X6iBOFxhxsLszdt+oK9V5CsANfXniKFCQ
+         SVp4DRCxZ52INvdPyf2uxop2ISo7DsRCQ51ihZ0EQz4rrmZKl1aHhtd/xyb0WplRt9bJ
+         vz0Q==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20251104; t=1774303317; x=1774908117;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-gg:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=SApLYsjj21LLEE9cSsE8+zYtkogrVJbdt7o8K1bL5zo=;
+        b=X39ImhAyucCOv15Eiqhne1kRnNm0Qidallx2B2uZVQCocgnn6JXFzCl7Lmi6pEY5qS
+         N2dr/Cvfq6ZIjaGr8Q5afuS7FgikxzBcGbZveA+LIy+v6O6GCYYqIWfrDsNJN1ZdLKdj
+         NxKm8iIVz9F/+UbRFfvbOPeW1D5mpnGcWJSKJqGBho160qrsFRCnK9jO6PdW+p3vsjNm
+         gfQGV4WTbmwiAgTNctwvTEm88RYF3u34f2LeDBjZfH7mgS1yAajRLRj8oc3671xBh1LE
+         dAgQzc8HgZQkxNK5pw/0XJD30ao1npFCwlT+6O9MTKfItSCD0Vl7IMKNy2kITKEcqIMi
+         5sAQ==
+X-Forwarded-Encrypted: i=1; AJvYcCUf6zjBYfDbdJd6jv3lR1SxrwnZBz6vGSmv9X34s0wwSC9J5HH3OIdJ4ZIyC+Lxq4IIbdJFu4fAEBEcJqOvIt4Mruey@vger.kernel.org
+X-Gm-Message-State: AOJu0YzRiWfNQuc5wrOVofajOfxvVU/lbdYSuaYxY74fn70Bv3Y2o7f3
+	PDN9lQ19PrvGez9Eaddd3YwD6vyOa9MEt3/vQbda56uEhdes/MvH4AXL
+X-Gm-Gg: ATEYQzzKJ4hv69guRTxEEM0scRlGnQFOrbhl+YbF1EYkbaZfFLgee/rDEx4IjBreUvF
+	F1i0vxGqA0QIT/jCS89MnrRBCiZO6m8xYkw+A0vou2ZmiMgUhjeZcldyfX8fW+ByDrFIxMTpBDO
+	E7TnBfuUYh6Xuavs52gEQxigeaZdCUksOjhvuAsSliW66Bs3vm83I/5YFGI6C87aSK/vgkpD9/3
+	u8XG4WbJxINoNAj+dVr2I4DGrX9dijcSa570bs2tq6yvmLIs3sKASaMehoQHeOEg/D27ue1AoRC
+	/jnBvNKKIUdsa6HNNLTohISq5x8qd6FqZKQNprsZTMzQuLZDIVAOv6Z1w5RECPB9eE1sx0LkPtj
+	eaQ7NxNmHtbwRoykOMPjjW7XDimgICIymHK/AqUY6JGRvjdBUFrhWzb/MdafRZvAa582o/h3V6a
+	cOuKfoBL+o+LPXM8k/Ruks8lI80tHNB5/81V0xMx/UaBNDpGoXddZ/cejypboouc2n
+X-Received: by 2002:a05:693c:3005:b0:2b8:64ad:ad4d with SMTP id 5a478bee46e88-2c1097c1a0dmr6526721eec.26.1774303317366;
+        Mon, 23 Mar 2026 15:01:57 -0700 (PDT)
+Received: from google.com ([2a00:79e0:2ebe:8:a296:1211:5ab0:bc95])
+        by smtp.gmail.com with ESMTPSA id 5a478bee46e88-2c10b35116bsm15940178eec.30.2026.03.23.15.01.55
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 23 Mar 2026 15:01:56 -0700 (PDT)
+Date: Mon, 23 Mar 2026 15:01:52 -0700
+From: Dmitry Torokhov <dmitry.torokhov@gmail.com>
+To: Bartosz Golaszewski <brgl@kernel.org>
+Cc: Andy Shevchenko <andriy.shevchenko@linux.intel.com>, 
+	Daniel Scally <djrscally@gmail.com>, Heikki Krogerus <heikki.krogerus@linux.intel.com>, 
+	Sakari Ailus <sakari.ailus@linux.intel.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, 
+	"Rafael J. Wysocki" <rafael@kernel.org>, Danilo Krummrich <dakr@kernel.org>, 
+	Mika Westerberg <mika.westerberg@linux.intel.com>, Andy Shevchenko <andy@kernel.org>, 
+	Linus Walleij <linusw@kernel.org>, Hans de Goede <hansg@kernel.org>, 
+	Ilpo =?utf-8?B?SsOkcnZpbmVu?= <ilpo.jarvinen@linux.intel.com>, linux-acpi@vger.kernel.org, driver-core@lists.linux.dev, 
+	linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org, platform-driver-x86@vger.kernel.org, 
+	Bartosz Golaszewski <bartosz.golaszewski@oss.qualcomm.com>
+Subject: Re: [PATCH 0/4] platform/x86: x86-android-tablets: use real firmware
+ node references with intel drivers
+Message-ID: <acG2h3JxgUh6ZnyT@google.com>
+References: <20260319-baytrail-real-swnode-v1-0-75f2264ae49f@oss.qualcomm.com>
+ <abyje0mhIOtDZbxO@google.com>
+ <CAMRc=McPQq6QxJ48zk7kxA+kwc=Em8dsFfyECJXg0asY-+pRiw@mail.gmail.com>
+ <ab47QXIYCo3vNI8J@google.com>
+ <CAMRc=MdmuOS-5mHGYtsr3jz654rA9moH4Po_rAFdaPBq-5KCZA@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CAMRc=MdmuOS-5mHGYtsr3jz654rA9moH4Po_rAFdaPBq-5KCZA@mail.gmail.com>
 
-GPIO type 0x02 (strobe) appears in ACPI tables on recent Intel
-Meteor Lake and Arrow Lake platforms (e.g. Dell Pro Max 14/16) for
-controlling an IR flood LED used by infrared camera sensors. The
-INT3472 discrete driver does not handle this type, logging "GPIO type
-0x02 unknown; the sensor may not work" and potentially preventing the
-associated sensor slot from initializing cleanly.
+On Mon, Mar 23, 2026 at 04:40:11AM -0700, Bartosz Golaszewski wrote:
+> On Sat, 21 Mar 2026 08:01:30 +0100, Dmitry Torokhov
+> <dmitry.torokhov@gmail.com> said:
+> > On Fri, Mar 20, 2026 at 01:33:06PM -0700, Bartosz Golaszewski wrote:
+> >> On Fri, 20 Mar 2026 02:49:02 +0100, Dmitry Torokhov
+> >> <dmitry.torokhov@gmail.com> said:
+> >> > Hi Bartosz,
+> >> >
+> >> > On Thu, Mar 19, 2026 at 05:10:53PM +0100, Bartosz Golaszewski wrote:
+> >> >>
+> >> >> This series proposes a solution in the form of automatic secondary
+> >> >> software node assignment (I'm open to better naming ideas). We extend
+> >> >> the swnode API with functions allowing to set up a behind-the-scenes bus
+> >> >> notifier for a group of named software nodes. It will wait for bus
+> >> >> events and when a device is added, it will check its name against the
+> >> >> software node's name and - on match - assign the software node as the
+> >> >> secondary firmware node of the device's *real* firmware node.
+> >> >
+> >> > The more I think about the current approaches with strict identity
+> >> > matching the less I like them, and the reason is that strict identity
+> >> > matching establishes rigid links between consumers and producers of
+> >> > GPIOS/swnodes, and puts us into link order hell. For example, I believe
+> >> > if andoird tablets drivers were in drivers/android vs
+> >> > drivers/platform/... the current scheme would break since the nodes
+> >> > would not be registered and GPIO lookups would fail with -ENOENT vs
+> >> > -EPROBE_DEFER.
+> >> >
+> >>
+> >> Why would they not get registered? They get attached when the target devices
+> >> are added in modules this module depends on. They are exported symbols so the
+> >> prerequisite modules will get loaded before and the module's init function
+> >> will have run by the time the software nodes are referred to by the fwnode
+> >> interface at which point they will have been registered with the swnode
+> >> framework.
+> >
+> > I mentioned link order, which implies no modules are involved. When code
+> > is built into the kernel initialization follows link order, which is
+> > typically alphabetical. To ensure the order you require you either need
+> > to move targets inside makefiles or change some drivers from
+> > module_init() to <some other>_initcall(). This is known as "link order
+> > hell" that was very common before deferred probing was introduced.
+> >
+> 
+> Maybe we should return -EPROBE_DEFER in GPIO swnode lookup when
+> fwnode_property_get_reference_args() returns -ENOENT because if there's a
+> software node that's not yet been registered as a firmware node, it's not much
+> different from there being a firmware node not bound to a device yet - which
+> is grounds for probe deferral.
 
-Add support for GPIO type 0x02 by registering it as an LED through
-the existing LED framework, with the name "ir_flood_led" to
-distinguish it from the privacy LED (type 0x0d).
+Yes, I think this is a good idea.
 
-Rename skl_int3472_register_pled() and skl_int3472_unregister_pled()
-to skl_int3472_register_led() and skl_int3472_unregister_led(). The
-register function takes a name parameter and an optional LED lookup
-con_id. For the privacy LED, "privacy" is passed so sensor drivers
-can discover it via devm_led_get(). For the IR flood LED, NULL is
-passed to register only the LED classdev without a driver lookup,
-since no sensor driver currently consumes it.
+> 
+> >>
+> >> > Given that this series somewhat re-introduces the name matching, I
+> >> > wonder if we can not do something like the following (the rough draft):
+> >> >
+> >>
+> >> I'm open to better ideas and possibly multiple matching mechanisms but this
+> >> just fit in this particular case. I'm not overly attached to name matching. We
+> >> may as well use whatever properties ACPI provides to identify the devices and
+> >> assign them their swnodes.
+> >
+> > What ACPI has to do with this? Oftentimes we are dealing with non x86
+> > systems.
+> >
+> 
+> What I meant is: name matching is only one method of assigning software nodes
+> to devices. Here I went with waiting for devices but with DT we may as well
+> look up a node by compatible depending on the driver. For ACPI we may probably
+> use some mechanism that matches the devices to the software node in a more
+> specific way. That's just hypothetical, I don't know if there even is one.
+> 
+> IOW: device-name-to-software-node name matching is only one of possible methods.
 
-Link: https://lore.kernel.org/linux-media/ab0URIrzZPsYjWrM@spark.kcore.it/
-Suggested-by: Hans de Goede <hdegoede@redhat.com>
-Cc: Andy Shevchenko <andy@kernel.org>
-Cc: Sakari Ailus <sakari.ailus@linux.intel.com>
-Signed-off-by: Marco Nenciarini <mnencia@kcore.it>
----
- drivers/platform/x86/intel/int3472/discrete.c | 20 ++++++++++++++++--
- drivers/platform/x86/intel/int3472/led.c      | 21 ++++++++++++-------
- include/linux/platform_data/x86/int3472.h     |  7 +++++--
- 3 files changed, 36 insertions(+), 12 deletions(-)
+I see.
 
-diff --git a/drivers/platform/x86/intel/int3472/discrete.c b/drivers/platform/x86/intel/int3472/discrete.c
-index 1505fc3..4d5f40a 100644
---- a/drivers/platform/x86/intel/int3472/discrete.c
-+++ b/drivers/platform/x86/intel/int3472/discrete.c
-@@ -211,6 +211,10 @@ static void int3472_get_con_id_and_polarity(struct int3472_discrete_device *int3
- 		*con_id = "clk-enable";
- 		*gpio_flags = GPIO_ACTIVE_HIGH;
- 		break;
-+	case INT3472_GPIO_TYPE_STROBE:
-+		*con_id = "ir-flood-led";
-+		*gpio_flags = GPIO_ACTIVE_HIGH;
-+		break;
- 	case INT3472_GPIO_TYPE_PRIVACY_LED:
- 		*con_id = "privacy-led";
- 		*gpio_flags = GPIO_ACTIVE_HIGH;
-@@ -248,6 +252,7 @@ static void int3472_get_con_id_and_polarity(struct int3472_discrete_device *int3
-  *
-  * 0x00 Reset
-  * 0x01 Power down
-+ * 0x02 Strobe (IR flood LED)
-  * 0x0b Power enable
-  * 0x0c Clock enable
-  * 0x0d Privacy LED
-@@ -330,6 +335,7 @@ static int skl_int3472_handle_gpio_resources(struct acpi_resource *ares,
- 
- 		break;
- 	case INT3472_GPIO_TYPE_CLK_ENABLE:
-+	case INT3472_GPIO_TYPE_STROBE:
- 	case INT3472_GPIO_TYPE_PRIVACY_LED:
- 	case INT3472_GPIO_TYPE_POWER_ENABLE:
- 	case INT3472_GPIO_TYPE_HANDSHAKE:
-@@ -346,9 +352,19 @@ static int skl_int3472_handle_gpio_resources(struct acpi_resource *ares,
- 			if (ret)
- 				err_msg = "Failed to register clock\n";
- 
-+			break;
-+		case INT3472_GPIO_TYPE_STROBE:
-+			ret = skl_int3472_register_led(int3472, gpio,
-+						       "ir_flood_led",
-+						       NULL);
-+			if (ret)
-+				err_msg = "Failed to register LED\n";
-+
- 			break;
- 		case INT3472_GPIO_TYPE_PRIVACY_LED:
--			ret = skl_int3472_register_pled(int3472, gpio);
-+			ret = skl_int3472_register_led(int3472, gpio,
-+						       "privacy_led",
-+						       "privacy");
- 			if (ret)
- 				err_msg = "Failed to register LED\n";
- 
-@@ -422,7 +438,7 @@ void int3472_discrete_cleanup(struct int3472_discrete_device *int3472)
- 	gpiod_remove_lookup_table(&int3472->gpios);
- 
- 	skl_int3472_unregister_clock(int3472);
--	skl_int3472_unregister_pled(int3472);
-+	skl_int3472_unregister_led(int3472);
- 	skl_int3472_unregister_regulator(int3472);
- }
- EXPORT_SYMBOL_NS_GPL(int3472_discrete_cleanup, "INTEL_INT3472_DISCRETE");
-diff --git a/drivers/platform/x86/intel/int3472/led.c b/drivers/platform/x86/intel/int3472/led.c
-index b1d84b9..e3ab40e 100644
---- a/drivers/platform/x86/intel/int3472/led.c
-+++ b/drivers/platform/x86/intel/int3472/led.c
-@@ -16,7 +16,9 @@ static int int3472_pled_set(struct led_classdev *led_cdev,
- 	return 0;
- }
- 
--int skl_int3472_register_pled(struct int3472_discrete_device *int3472, struct gpio_desc *gpio)
-+int skl_int3472_register_led(struct int3472_discrete_device *int3472,
-+			    struct gpio_desc *gpio, const char *led_name,
-+			    const char *lookup_con_id)
- {
- 	char *p;
- 	int ret;
-@@ -28,7 +30,7 @@ int skl_int3472_register_pled(struct int3472_discrete_device *int3472, struct gp
- 
- 	/* Generate the name, replacing the ':' in the ACPI devname with '_' */
- 	snprintf(int3472->pled.name, sizeof(int3472->pled.name),
--		 "%s::privacy_led", acpi_dev_name(int3472->sensor));
-+		 "%s::%s", acpi_dev_name(int3472->sensor), led_name);
- 	p = strchr(int3472->pled.name, ':');
- 	if (p)
- 		*p = '_';
-@@ -41,20 +43,23 @@ int skl_int3472_register_pled(struct int3472_discrete_device *int3472, struct gp
- 	if (ret)
- 		return ret;
- 
--	int3472->pled.lookup.provider = int3472->pled.name;
--	int3472->pled.lookup.dev_id = int3472->sensor_name;
--	int3472->pled.lookup.con_id = "privacy";
--	led_add_lookup(&int3472->pled.lookup);
-+	if (lookup_con_id) {
-+		int3472->pled.lookup.provider = int3472->pled.name;
-+		int3472->pled.lookup.dev_id = int3472->sensor_name;
-+		int3472->pled.lookup.con_id = lookup_con_id;
-+		led_add_lookup(&int3472->pled.lookup);
-+	}
- 
- 	return 0;
- }
- 
--void skl_int3472_unregister_pled(struct int3472_discrete_device *int3472)
-+void skl_int3472_unregister_led(struct int3472_discrete_device *int3472)
- {
- 	if (IS_ERR_OR_NULL(int3472->pled.classdev.dev))
- 		return;
- 
--	led_remove_lookup(&int3472->pled.lookup);
-+	if (int3472->pled.lookup.con_id)
-+		led_remove_lookup(&int3472->pled.lookup);
- 	led_classdev_unregister(&int3472->pled.classdev);
- 	gpiod_put(int3472->pled.gpio);
- }
-diff --git a/include/linux/platform_data/x86/int3472.h b/include/linux/platform_data/x86/int3472.h
-index b1b8375..a7cf290 100644
---- a/include/linux/platform_data/x86/int3472.h
-+++ b/include/linux/platform_data/x86/int3472.h
-@@ -23,6 +23,7 @@
- /* PMIC GPIO Types */
- #define INT3472_GPIO_TYPE_RESET					0x00
- #define INT3472_GPIO_TYPE_POWERDOWN				0x01
-+#define INT3472_GPIO_TYPE_STROBE				0x02
- #define INT3472_GPIO_TYPE_POWER_ENABLE				0x0b
- #define INT3472_GPIO_TYPE_CLK_ENABLE				0x0c
- #define INT3472_GPIO_TYPE_PRIVACY_LED				0x0d
-@@ -160,7 +161,9 @@ int skl_int3472_register_regulator(struct int3472_discrete_device *int3472,
- 				   const char *second_sensor);
- void skl_int3472_unregister_regulator(struct int3472_discrete_device *int3472);
- 
--int skl_int3472_register_pled(struct int3472_discrete_device *int3472, struct gpio_desc *gpio);
--void skl_int3472_unregister_pled(struct int3472_discrete_device *int3472);
-+int skl_int3472_register_led(struct int3472_discrete_device *int3472,
-+			    struct gpio_desc *gpio, const char *led_name,
-+			    const char *lookup_con_id);
-+void skl_int3472_unregister_led(struct int3472_discrete_device *int3472);
- 
- #endif
+> 
+> >>
+> >> > diff --git a/drivers/base/swnode.c b/drivers/base/swnode.c
+> >> > index 51320837f3a9..b0e8923a092c 100644
+> >> > --- a/drivers/base/swnode.c
+> >> > +++ b/drivers/base/swnode.c
+> >> > @@ -509,6 +509,7 @@ software_node_get_reference_args(const struct fwnode_handle *fwnode,
+> >> >  	struct swnode *swnode = to_swnode(fwnode);
+> >> >  	const struct software_node_ref_args *ref_array;
+> >> >  	const struct software_node_ref_args *ref;
+> >> > +	const struct software_node *ref_swnode;
+> >> >  	const struct property_entry *prop;
+> >> >  	struct fwnode_handle *refnode;
+> >> >  	u32 nargs_prop_val;
+> >> > @@ -550,7 +551,10 @@ software_node_get_reference_args(const struct fwnode_handle *fwnode,
+> >> >  		refnode = software_node_fwnode(ref->swnode);
+> >> >  	else if (ref->fwnode)
+> >> >  		refnode = ref->fwnode;
+> >> > -	else
+> >> > +	else if (ref->swnode_name) {
+> >> > +		ref_swnode = software_node_find_by_name(NULL, ref->swnode_name);
+> >> > +		refnode = ref_swnode ? software_node_fwnode(ref_swnode) : NULL;
+> >> > +	} else
+> >> >  		return -EINVAL;
+> >> >
+> >> >  	if (!refnode)
+> >> > diff --git a/include/linux/property.h b/include/linux/property.h
+> >> > index e30ef23a9af3..44e96ee47272 100644
+> >> > --- a/include/linux/property.h
+> >> > +++ b/include/linux/property.h
+> >> > @@ -363,6 +363,7 @@ struct software_node;
+> >> >  struct software_node_ref_args {
+> >> >  	const struct software_node *swnode;
+> >> >  	struct fwnode_handle *fwnode;
+> >> > +	const char *swnode_name;
+> >> >  	unsigned int nargs;
+> >> >  	u64 args[NR_FWNODE_REFERENCE_ARGS];
+> >> >  };
+> >> > @@ -373,6 +374,9 @@ struct software_node_ref_args {
+> >> >  			   const struct software_node *: _ref_,	\
+> >> >  			   struct software_node *: _ref_,	\
+> >> >  			   default: NULL),			\
+> >> > +	.swnode_name = _Generic(_ref_,				\
+> >> > +				const char *: _ref_,		\
+> >> > +				default: NULL),			\
+> >> >  	.fwnode = _Generic(_ref_,				\
+> >> >  			   struct fwnode_handle *: _ref_,	\
+> >> >  			   default: NULL),			\
+> >> >
+> >> > This will allow consumers specify top-level software node name instead
+> >> > of software node structure, and it will get resolved to concrete
+> >> > firmware node. GPIOLIB can continue matching on node identity.
+> >> >
+> >> > WDYT?
+> >> >
+> >>
+> >> I think it's bad design and even bigger abuse of the software node concept.
+> >> What you're proposing is effectively allowing to use struct software_node as
+> >> a misleading string wrapper. You wouldn't use it to pass any properties to
+> >> the device you're pointing to - because how if there's no link between them -
+> >> you would just store an arbitrary string in a structure that serves
+> >> a completely different purpose.
+> >
+> > I think you completely misunderstood the proposal. We are not using
+> 
+> Ok, I didn't fully get that part, I was OoO on Friday and should have probably
+> not rushed a late evening answer. :)
+> 
+> > software node as a string wrapper, we give an opportunity to use
+> > software node name to resolve to the real software node at the time we
+> > try to resolve the reference. The software node is still expected to be
+> > bound to the target device (unlike the original approach that has a
+> > dangling software node which name expected to match gpiochip label).
+> >
+> > I think this actually a very good approach: it severs the tight coupling
+> > while still maintains the spirit of firmware nodes being attached to
+> > devices. The only difference we are using object's name and not its
+> > address as starting point. Similarly how you use name derived from
+> > device name to locate and assign secondary node in this patch series.
+> >
+> 
+> I still don't like it. It forces us to use names for the remote software nodes,
+> which are after all C structures that we could identify by addresses alone.
+> Even this series could be reworked to drop the names from the GPIO software
+> nodes.
+
+The whole device property business is string matching, because that is
+what device properties are. If we want strict type matching we should
+continue using per-driver platform data, it provides type safety. But I
+think the preference is to actually use properties for configuring
+devices.
+
+> 
+> software_node_find_by_name() only goes through the list of registered software
+> nodes so we'd still end up returning -ENOENT for nodes which have not been
+> registered yet and wouldn't be able to tell this situation apart from a case
+> where there's no such software node at all.
+
+Yes, we'd need to convert this to -EPROBE_DEFER similarly to what you
+proposed above.
+
+> 
+> The consumer driver still needs to know the remote device by an arbitrary
+> string.
+
+Yes, but I think this is acceptable because of increased flexibility.
+
+> 
+> I think you're exaggarating the possible problems with link order. I believe
+> that issue could be fixed by returning EPROBE_DEFER when a software node is
+> not yet known by an fwnode handle but we know it is there so it's just a matter
+> of it getting registered.
+
+You need to have the module loaded and initialized so that the address
+can be resolved. This changes link order and may produce unwanted
+changes to the device init order. 
+
+> 
+> That being said, I would like to hear from driver core maintainers in general
+> and from software node maintainers in particular.
+
+I think I'll send out a forma patch and we can discuss further.
+
+Thanks.
+
 -- 
-2.47.3
-
+Dmitry
