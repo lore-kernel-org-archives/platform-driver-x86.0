@@ -1,40 +1,40 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3957D264A9D
-	for <platform-driver-x86@vger.kernel.org>; Mon, 23 Mar 2026 15:23:50 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DD0313BA237
+	for <platform-driver-x86@vger.kernel.org>; Mon, 23 Mar 2026 15:28:52 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1774279430; cv=none; b=avehhnBBeHsvblN2ajI80JPzVSQp5bC9qXKQC+sn7abc8WJCnhOHOhzSHIF40E85CVzcF4qUGSbz/HSfJ6ybg6anyRfjvOCLMM4fTRe946cWNRIHYBxawwJTsrsS7QtPlXINNAnOUqJA3LSvUa5gvjR/LOXakk4z/UBWBvxozcg=
+	t=1774279732; cv=none; b=hgTna+k9VIra1FzCzPsHS7guK2BCVHUuJ+XkMFxfF/3J0a2t5+IgFhj63u5oiJC6mslrjf2xiR2RVic1r8lKqdqwFHRbj+6A8VQKuBBwpPniHG1aolRIrFXXVth9oBmU8XXWXDZlbSNG1AGb6d09Kui/XbqjS6ArhnZTtZC/+Tw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1774279430; c=relaxed/simple;
-	bh=v1fDbmrhGB/KQRvZCzdGtCJo9z7E0IsvXMUDNGcbEuI=;
+	s=arc-20240116; t=1774279732; c=relaxed/simple;
+	bh=IWDr2AzFuesiBMOrzgJX4wQPp9NGolKM7dspV01aC9o=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=tv1btGpcLTQm9X3V6GeQgjoOPfKkuFjT4nA8qXs1ywON0OxkvKGIoJQvc/W7zM7NBNF9FbPFQ/YJNXVfwkOAwupP90eOkyO628ZWCryrSK2etHJ0Q5zC6mMP/blJiD07aDQ4rTEhZ05lBd1prv4PK/QkxQ3w580UlwDsJPrKNW8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=EtZuqN9a; arc=none smtp.client-ip=10.30.226.201
+	 To:Cc:Content-Type; b=tB2KcqIz1/KYT/i4WrwkrAGlMYgiBy0FDWHNzi8UT+zHXRL/BOzswrDkG7wWCnPF0/W/yD7yWGC0rj46xKPOFW1d4vopqh34RwZwOOWQw3GxQ6wo0GWD1K2kj6wrwkHhK9rtdJyMCyL9TCsjEwxaZP7GAdwr1iZhpS+qtqTYqAo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=r0YiaRoJ; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="EtZuqN9a"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 0D927C2BCB5
-	for <platform-driver-x86@vger.kernel.org>; Mon, 23 Mar 2026 15:23:50 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="r0YiaRoJ"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id C1DC8C2BD00
+	for <platform-driver-x86@vger.kernel.org>; Mon, 23 Mar 2026 15:28:52 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1774279430;
-	bh=v1fDbmrhGB/KQRvZCzdGtCJo9z7E0IsvXMUDNGcbEuI=;
+	s=k20201202; t=1774279732;
+	bh=IWDr2AzFuesiBMOrzgJX4wQPp9NGolKM7dspV01aC9o=;
 	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-	b=EtZuqN9a7DTCB32dXZU79UXuE9BlMEzrI+Akiq3IS3QZY1IpLsqWrZdZERK2uqKxS
-	 QEaAYPb7FKNgdV79q554tNxx40SKQVIgNOlCOQagN77FCOXLPd7yYUDIPE54G6JEU8
-	 fxG0fvot461bCIBkIr+p2kvvArL6yh+mJ6EryaywjHzAYeAojkIJ0UdxKPVukhieJx
-	 14X1ILlSnBgUObuFbFGvt32gYeD2RyGVN1oxcyNgq5hWwhOiBWzmGJubGrfMJyIRzW
-	 YRLVypY4pZrSNTnHDYdpL0wJRMHmbtJBJjVyTSHJ2sapEWyiN/FnJIUB1J6V5MFW55
-	 H6GkQlDyCswMw==
-Received: by mail-lf1-f45.google.com with SMTP id 2adb3069b0e04-5a0faa0d15cso4167664e87.0
-        for <platform-driver-x86@vger.kernel.org>; Mon, 23 Mar 2026 08:23:49 -0700 (PDT)
-X-Forwarded-Encrypted: i=1; AJvYcCXyNsVxgDBQ3WYK06CIOy5VghrhKJ9P9v34SCihjqZMyAk4Xq46vGtBgmk7/1HgFH61BNWRk7YMdOlUEOfNS4zdao87@vger.kernel.org
-X-Gm-Message-State: AOJu0Yy/vn21xdY/RKEO8PXJTieUYINFt17/XHQ2ivE02fJ8EqC8YopC
-	ARMa94Sw4tKATbXdS7KG2kHbVd3z3qgHUs6av3qwYtH7agUSWBQCKdVODTUwPdJDGzugw5IC6Zg
-	W+YG3e0PItCBVG/d/y5uAzyV69OWEhs9sZEduUlNd8Q==
-X-Received: by 2002:a05:6512:3da2:b0:5a2:7c67:4b3 with SMTP id
- 2adb3069b0e04-5a285af54b9mr4230973e87.2.1774279428666; Mon, 23 Mar 2026
- 08:23:48 -0700 (PDT)
+	b=r0YiaRoJDmhsl6QGmGO+bFxgDg1169wOWknkL4GHVkEkkksMIw+X9REekKzaSwH0s
+	 e9T0Ei34l+exXpdCJIv/6Ngs5xyqwi1oe91Fe8QpqeloIzH5aD60vTttJFa2UvQ0yu
+	 vMmUp0+ujQtf4Phb9r6J0yFNbYOL0OllGoXbcs8+OoafmjHUayIJUsJys8wY5RHTVP
+	 itQUkGGPs4Jtmtx1OKC7hxk3rg+vw9tsem472ctY4t3ymnEdVhTHXXyCXAWm6eaHvM
+	 t5Ja/ags4IS3FLfuqQWky+8loUH8NtuUW9x+/PNYXnEJOiW44bqgX8kLjAkTpn9fBh
+	 JYuTcRfzv2+fg==
+Received: by mail-lj1-f174.google.com with SMTP id 38308e7fff4ca-386b553c70eso31668541fa.0
+        for <platform-driver-x86@vger.kernel.org>; Mon, 23 Mar 2026 08:28:52 -0700 (PDT)
+X-Forwarded-Encrypted: i=1; AJvYcCUwhr8xflq7/j2tz/NQROWEwVKOrwWZMT60SmnPXt7r+K6/u9h+LaJfRrJevPzc1Z6RDZvu5EcDGiwQygZSQwNayqWU@vger.kernel.org
+X-Gm-Message-State: AOJu0Yze6kcmh8ldOa42+P7uehXZGJ/lJGp3p8GjT33HQxWV78LQUHyH
+	O+Wc78iRht6y00mTRVeKv0SzDS4fhSKJ0HqV4FkhLjXr+l3QEfbk2oZYB5Zp0cbsd+yLCVkWVyQ
+	dlX2Y6tO3+J7XmSRuP8VSdYIwRUDeeHi3E5my7nHa4g==
+X-Received: by 2002:a2e:be11:0:b0:38a:5584:cea2 with SMTP id
+ 38308e7fff4ca-38bf95f27admr41174131fa.3.1774279731307; Mon, 23 Mar 2026
+ 08:28:51 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
@@ -42,14 +42,15 @@ List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 References: <20260319-baytrail-real-swnode-v1-0-75f2264ae49f@oss.qualcomm.com>
- <20260319-baytrail-real-swnode-v1-1-75f2264ae49f@oss.qualcomm.com> <abz4-iKFBsPIJb7F@ashevche-desk.local>
-In-Reply-To: <abz4-iKFBsPIJb7F@ashevche-desk.local>
+ <20260319-baytrail-real-swnode-v1-2-75f2264ae49f@oss.qualcomm.com> <ab0jmUZGOKSjOa8C@ashevche-desk.local>
+In-Reply-To: <ab0jmUZGOKSjOa8C@ashevche-desk.local>
 From: Bartosz Golaszewski <brgl@kernel.org>
-Date: Mon, 23 Mar 2026 16:23:36 +0100
-X-Gmail-Original-Message-ID: <CAMRc=Mee6Jdku8n0xSPJkjJGZefzs9OJscnA8Tpn41G9hXKg5A@mail.gmail.com>
-X-Gm-Features: AaiRm51K9AlGK_wY7XjZ-ErYfJVKWSHbGMymY34rMutrWSHNVzmMpb2pSbPy_9c
-Message-ID: <CAMRc=Mee6Jdku8n0xSPJkjJGZefzs9OJscnA8Tpn41G9hXKg5A@mail.gmail.com>
-Subject: Re: [PATCH 1/4] software node: support automatic secondary fwnode assignment
+Date: Mon, 23 Mar 2026 16:28:39 +0100
+X-Gmail-Original-Message-ID: <CAMRc=MdWxgGftNQgs8d-0xqsfgJSSncfBf+7cmWSSypu2rQrmg@mail.gmail.com>
+X-Gm-Features: AaiRm51ic1Qtd8VygdgEg9ggHSh2YPnzIUzs547kDo9m-IYHEE0JkRQaceYSUno
+Message-ID: <CAMRc=MdWxgGftNQgs8d-0xqsfgJSSncfBf+7cmWSSypu2rQrmg@mail.gmail.com>
+Subject: Re: [PATCH 2/4] pinctrl: intel: expose software nodes for baytrail
+ GPIO devices
 To: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
 Cc: Bartosz Golaszewski <bartosz.golaszewski@oss.qualcomm.com>, 
 	Daniel Scally <djrscally@gmail.com>, Heikki Krogerus <heikki.krogerus@linux.intel.com>, 
@@ -64,75 +65,60 @@ Cc: Bartosz Golaszewski <bartosz.golaszewski@oss.qualcomm.com>,
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-On Fri, Mar 20, 2026 at 8:39=E2=80=AFAM Andy Shevchenko
+On Fri, Mar 20, 2026 at 11:39=E2=80=AFAM Andy Shevchenko
 <andriy.shevchenko@linux.intel.com> wrote:
 >
-> On Thu, Mar 19, 2026 at 05:10:54PM +0100, Bartosz Golaszewski wrote:
-> > Provide a structure and a set of functions allowing to set up automatic
-> > secondary firmware node assignment for platform devices. It uses
-> > a behind-the-scenes bus notifier for a group of named software nodes. I=
-t
-> > will wait for bus events and when a device is added, it will check its
-> > name against the software node's name and - on match - assign the
-> > software node as the secondary firmware node of the device's *real*
-> > firmware node.
+> On Thu, Mar 19, 2026 at 05:10:55PM +0100, Bartosz Golaszewski wrote:
+> > Use the new automatic secondary fwnode API to ensure that when the
+> > baytrail pinctrl device is added to the platform bus, the static
+> > software node provided for drivers not able to use ACPI will get
+> > automatically assigned as the secondary fwnode of the primary ACPI node=
+.
+> >
+> > Create a new header under linux/pinctrl/ containing intel-specific
+> > symbols and declare the new variables there.
 >
+> As I read the code, this doesn't need to be part of drivers/pinctrl/intel=
+/.
+> I.o.w. I am unable to see why we need to penetrate the certain pinctrl
+> driver for this.
+>
+
+If old board files were an analogy, the kind of information software
+nodes carry would live neither in the provider module nor in the
+consumer driver. It would be defined in a third place - the board
+file. Do we need something like this or should this logic be invoked
+from the x86 platform driver that uses these GPIOs but accesses them
+via the swnode lookup?
+
 > ...
 >
-> > +/**
-> > + * software_node_register_auto_secondary() - set up automatic assignme=
-nt of
-> > + *                                           secondary firmware nodes
-> > + * @auto_sec: Context data to use.
-> > + *
-> > + * NOTE: All software nodes passed in @auto_sec must be named.
+> >  static int __init byt_gpio_init(void)
+> >  {
+> > -     return platform_driver_register(&byt_gpio_driver);
+> > +     int ret;
+> > +
+> > +     ret =3D software_node_register_auto_secondary(&byt_auto_secondary=
+);
+> > +     if (ret)
+> > +             return ret;
+> > +
+> > +     ret =3D platform_driver_register(&byt_gpio_driver);
+> > +     if (ret)
+> > +             software_node_unregister_auto_secondary(&byt_auto_seconda=
+ry);
+> > +
+> > +     return ret;
+> >  }
 >
-> > + * Returns:
->
-> Is it with 's' in other kernel-doc? The official is "Return", the 's' var=
-iant
-> is supported, but not documented.
->
-> > + * 0 on success, negative error number on failure.
->
-> The Return section must be last in the kernel-doc description. This is do=
-cumented.
->
-> > + * This registers the software node group passed in @auto_sec and sets=
- up
-> > + * automatic assignment of them as secondary firmware nodes of real no=
-des
-> > + * attached to appropriate devices on the bus specified in @auto_sec. =
-The
-> > + * software nodes must be named and their names must be the same as th=
-e
-> > + * devices they should reference. The assignment happens when the devi=
-ce is
-> > + * first added to the bus.
-> > + */
->
-> ...
->
-> > +/**
-> > + * struct software_node_auto_secondary - context data for automatic se=
-condary
-> > + *                                       fwnode assignment
-> > + * @nb: Private bus notifier data - don't use
->
-> Mark it with __private then.
-
-Ok for this and the ones above.
-
->
-> > + * @node_group: NULL-terminated array of software node addresses
-> > + * @bus: Bus on which to wait for devices
->
-> If bus is not compiled into kernel, this optionally has to support NULL
-> in the code (I haven't checked the code, though).
+> This hack can be done in similar way on how we do ACPI LPSS for those
+> platforms, i.e. in drivers/acpi/x86/lpss.c. No?
 >
 
-The bus type object for given bus is typically defined in whatever
-compilation unit contains the implementation of that bus. It's not
-possible to access its address if it's not enabled.
+Hey, this is not a hack! I'm coming up with a generic solution here. :)
+
+It already is similar in that it uses a notifier. For v2 howevere, I
+want to propose a mechanism for having multiple ways of matching real
+fwnodes with software nodes.
 
 Bart
