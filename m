@@ -1,226 +1,224 @@
-Received: from flow-b2-smtp.messagingengine.com (flow-b2-smtp.messagingengine.com [202.12.124.137])
+Received: from spark.kcore.it (spark.kcore.it [49.13.27.68])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CA59A3C73CA;
-	Mon, 23 Mar 2026 17:23:31 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=202.12.124.137
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CC53A37CD55
+	for <platform-driver-x86@vger.kernel.org>; Mon, 23 Mar 2026 21:35:39 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=49.13.27.68
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1774286614; cv=none; b=Z0/ddQ3qr4EjY976BgpBfF0s/pQnuSsVIsubjf+r0yvEEu04+g/v06vLldOoi19mftr998MvQ1tpAdb/jIpXfBYooNewJOTsodSSXMk1KdsFybrFOVKOWVLTrlbal4wc+bfhMKL4h4/Fmv+AS7R6GXqlBg73+IwY/sozNtzR5/s=
+	t=1774301741; cv=none; b=fT/yEZKCPTrSNTx11d7I+m28xumqMx78jFLFn734LfCL1sqR/I+xVeE7296NeclocBsrnJNdR7TDehzehqOhJIaZxerHIASKju7BabeGafPnWPiaXSWNvr36bWd5Baqte8aaZDDQcnVNAxBsBuDpBUE3Kf51aHB4rEKq7ImOqLo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1774286614; c=relaxed/simple;
-	bh=8F5DHzbZOkiE60z+INX/R3wfwDAeDzgLhwAv/Br77fM=;
-	h=MIME-Version:Date:From:To:Cc:Message-Id:In-Reply-To:References:
-	 Subject:Content-Type; b=slFg596lTpC1nIF2BSH/RRGoQFVDwioNpCm1owGA8nvqo8bJEpKJe5/Furdz7JwcPox1nWt+0wz/PiXjWUeX7Ur4b9F1F1qwqhZGqNTmfnQmms3pdjXJz/6WiOlBnaTxd/aPAYV4lyy+JIxskmX5plDVLW0DMyFZfmyQaUohkGo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=squebb.ca; spf=pass smtp.mailfrom=squebb.ca; dkim=pass (2048-bit key) header.d=squebb.ca header.i=@squebb.ca header.b=d0w2WMuA; dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b=T39gwOEy; arc=none smtp.client-ip=202.12.124.137
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=squebb.ca
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=squebb.ca
+	s=arc-20240116; t=1774301741; c=relaxed/simple;
+	bh=ZCo4qVO3I2o5BjxfhH8jqqmr85nxr8LyIX9v8COtX5M=;
+	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
+	 MIME-Version; b=c1yIzCI4p+nmunGyhBtYchMkHykKu7d1mdF22/x1oxJy93hOY2rRqKDpqRCzOa8ekikURkduZpqDB0ZhBUV5/IrPIAc6yNmvlTAVmbqytqnw78XJdEEQqCaCJFZyFXN2JTmcHjOkmM9FSyOm2YxqcGUrrqotidsUm3vvbKs+4/E=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kcore.it; spf=pass smtp.mailfrom=kcore.it; dkim=pass (1024-bit key) header.d=kcore.it header.i=@kcore.it header.b=nnH8oIhl; arc=none smtp.client-ip=49.13.27.68
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kcore.it
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=kcore.it
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=squebb.ca header.i=@squebb.ca header.b="d0w2WMuA";
-	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="T39gwOEy"
-Received: from phl-compute-02.internal (phl-compute-02.internal [10.202.2.42])
-	by mailflow.stl.internal (Postfix) with ESMTP id AEAE71300250;
-	Mon, 23 Mar 2026 13:23:29 -0400 (EDT)
-Received: from phl-imap-08 ([10.202.2.84])
-  by phl-compute-02.internal (MEProxy); Mon, 23 Mar 2026 13:23:30 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=squebb.ca; h=cc
-	:cc:content-transfer-encoding:content-type:content-type:date
-	:date:from:from:in-reply-to:in-reply-to:message-id:mime-version
-	:references:reply-to:subject:subject:to:to; s=fm2; t=1774286609;
-	 x=1774293809; bh=8F5DHzbZOkiE60z+INX/R3wfwDAeDzgLhwAv/Br77fM=; b=
-	d0w2WMuASvhIHc8a3ZfS0bSovZpUguTxsV12SkJzLl/HgFTO96E8OsN6d6PFrRYr
-	XHyKTm84Vlu7Tme/FZTaw0VGpuJ8bd9SIFnBq7bZWD1TgSXMwEt+Ap2P5Cr5y5rb
-	kh48eiYnLAe4C36R9y9XZ5Zg6lxDvpLGPh8KJGh1qX4WXsw8iq3GoopxXo0wdcIy
-	SKgjzMBKuf2OLoWajsbw2F4ld+LPm1ydhX7IWHymLKSmvFTHk5G5DuniFfqplcMy
-	65xiZdyuVFv3n4Cp6M4NViPWZR5xC134H6qqy1/2RPbWvmUWLHoufcPqtdKvun5t
-	+UoyEGPxVxwM8podnx9RfQ==
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-	messagingengine.com; h=cc:cc:content-transfer-encoding
-	:content-type:content-type:date:date:feedback-id:feedback-id
-	:from:from:in-reply-to:in-reply-to:message-id:mime-version
-	:references:reply-to:subject:subject:to:to:x-me-proxy
-	:x-me-sender:x-me-sender:x-sasl-enc; s=fm1; t=1774286609; x=
-	1774293809; bh=8F5DHzbZOkiE60z+INX/R3wfwDAeDzgLhwAv/Br77fM=; b=T
-	39gwOEyRtCyYoMOGxdB1aekPredjoXFLaW3m6i6BbkmcD3TENUY+rGnLBscpaGLD
-	pl/gY6Wad3V5npcJa+8/w3KHGhFEusITcXXc49+4OiqXWkkWqj7GgJH8XTM5yjo+
-	jKGeMvnm+u6AMx2msR1uFbO17rxuPrmWriiZvC9roJIKLpAsGlrFIxypDrEAkvQE
-	F6iQHUCna5dGO3+Oq4eQOTcYpv/U7VYXNNXsjILB4Q+VfMN88xaCKhgGUbalORTP
-	SesNWUyY8BIA+Br7/XSafGCp3A8lFxKcYM8/VZdx2BHUUeCTZCFBxS+/3nO3hbbr
-	+ysYeMBoP68cYbvX3Krdg==
-X-ME-Sender: <xms:EHfBaaVOuDeremT5Xu0AuWObJubLqQ2Wnl5vZlfNhouYJf7BwlCLnQ>
-    <xme:EHfBaRaOzMH4ETuoxDhEO01_PK1EegNYbN5kOqpTOp4DbfEiYa3UCxuGHG8QuabyD
-    S4ouWK2fowUUjV5WyYISt_lOKBh6aIkxJ0nstyLSSjysmnUY8SnNDg>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeefgedrtddtgdefudelfedtucetufdoteggodetrf
-    dotffvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdfurfetoffkrfgpnffqhgenuceu
-    rghilhhouhhtmecufedttdenucesvcftvggtihhpihgvnhhtshculddquddttddmnecujf
-    gurhepofggfffhvfevkfgjfhfutgfgsehtqhertdertdejnecuhfhrohhmpedfofgrrhhk
-    ucfrvggrrhhsohhnfdcuoehmphgvrghrshhonhdqlhgvnhhovhhosehsqhhuvggssgdrtg
-    grqeenucggtffrrghtthgvrhhnpefhveekjeeuueekfefhleeljeehuedugfetffdvteek
-    ffejudelffdvjeekfeehvdenucevlhhushhtvghrufhiiigvpedtnecurfgrrhgrmhepmh
-    grihhlfhhrohhmpehmphgvrghrshhonhdqlhgvnhhovhhosehsqhhuvggssgdrtggrpdhn
-    sggprhgtphhtthhopedvledpmhhouggvpehsmhhtphhouhhtpdhrtghpthhtohepsghrgh
-    hlsegsghguvghvrdhplhdprhgtphhtthhopeguvghrvghkjhhohhhnrdgtlhgrrhhksehg
-    mhgrihhlrdgtohhmpdhrtghpthhtoheplhhuihiirdguvghnthiisehgmhgrihhlrdgtoh
-    hmpdhrtghpthhtohepmhgrrhgtvghlsehhohhlthhmrghnnhdrohhrghdprhgtphhtthho
-    pegsrhhglheskhgvrhhnvghlrdhorhhgpdhrtghpthhtoheptghonhhorhdoughtsehkvg
-    hrnhgvlhdrohhrghdprhgtphhtthhopehhrghnshhgsehkvghrnhgvlhdrohhrghdprhgt
-    phhtthhopehjihhrihhslhgrsgihsehkvghrnhgvlhdrohhrghdprhgtphhtthhopehkrh
-    iikhdoughtsehkvghrnhgvlhdrohhrgh
-X-ME-Proxy: <xmx:EHfBaSqJKl4O8U5DXXnUHJ4ARuuLtgpyod5Zu0bYenGxtsS85upgIQ>
-    <xmx:EHfBaS_HCcsciKk7yEWlaATTUB0CHoip4D6Rvf83VxqBWMmapLm_VQ>
-    <xmx:EHfBaV5mRbon4XVx5UyVqJ7B0Up2zUVFC-vVEljM-RiIxKDNHEp84g>
-    <xmx:EHfBae0fWgVJV-sLFsw6aUUf4UNq6Juf-hZdi3M7ZrPWNpzYulPmdw>
-    <xmx:EXfBaaZiou-wWxJxEAUqaRa4s0NByc4B1hm1naWmg3Gc55SFVLDUw_Ug>
-Feedback-ID: ibe194615:Fastmail
-Received: by mailuser.phl.internal (Postfix, from userid 501)
-	id 94F912CE0078; Mon, 23 Mar 2026 13:23:28 -0400 (EDT)
-X-Mailer: MessagingEngine.com Webmail Interface
+	dkim=pass (1024-bit key) header.d=kcore.it header.i=@kcore.it header.b="nnH8oIhl"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=kcore.it;
+	s=spark; h=Content-Transfer-Encoding:MIME-Version:References:In-Reply-To:
+	Message-Id:Date:Subject:Cc:To:From:Sender:Reply-To:Content-Type:Content-ID:
+	Content-Description:Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc
+	:Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:List-Subscribe:
+	List-Post:List-Owner:List-Archive;
+	bh=PXMF5fV+CQJ0IY725wxeezeJvbTUbHi6aIk18e54B8o=; b=nnH8oIhlY3dUpvr503iz/O++dK
+	8jiSX33IviEpw4qzu2wJh2Hn/Rr6ghYB+FwDxL08P1Y18CQ+q5HBfO9wvCpLWdj0ZhhToYpdepf5N
+	+atNSWinirIfJsqmz//RdnE8LNnX8eUGV/rGHv8KFNPEbxA5JFTU2e5aFkYYSOw+F8YY=;
+Received: from mnencia by spark.kcore.it with local (Exim 4.96)
+	(envelope-from <mnencia@kcore.it>)
+	id 1w4mvv-005uyy-0H;
+	Mon, 23 Mar 2026 22:35:35 +0100
+From: Marco Nenciarini <mnencia@kcore.it>
+To: platform-driver-x86@vger.kernel.org
+Cc: dan.scally@ideasonboard.com,
+	sakari.ailus@linux.intel.com,
+	hdegoede@redhat.com,
+	andy@kernel.org,
+	Marco Nenciarini <mnencia@kcore.it>
+Subject: [PATCH v2] platform/x86: int3472: Handle GPIO type 0x02 (strobe) as IR  flood LED
+Date: Mon, 23 Mar 2026 22:35:35 +0100
+Message-Id: <20260323213535.1410678-1-mnencia@kcore.it>
+X-Mailer: git-send-email 2.39.5
+In-Reply-To: <ab0URIrzZPsYjWrM@spark.kcore.it>
+References: <ab0URIrzZPsYjWrM@spark.kcore.it>
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-ThreadId: AJPKs3BxgghB
-Date: Mon, 23 Mar 2026 13:23:07 -0400
-From: "Mark Pearson" <mpearson-lenovo@squebb.ca>
-To: "Manivannan Sadhasivam" <mani@kernel.org>,
- "Dmitry Baryshkov" <dmitry.baryshkov@oss.qualcomm.com>
-Cc: "Rob Herring" <robh@kernel.org>,
- "Manivannan Sadhasivam" <manivannan.sadhasivam@oss.qualcomm.com>,
- "Greg KH" <gregkh@linuxfoundation.org>,
- "Jiri Slaby" <jirislaby@kernel.org>,
- "Nathan Chancellor" <nathan@kernel.org>,
- "Nicolas Schier" <nicolas.schier@linux.dev>,
- "Hans de Goede" <hansg@kernel.org>,
- =?UTF-8?Q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>,
- "Derek J . Clark" <derekjohn.clark@gmail.com>,
- "Krzysztof Kozlowski" <krzk+dt@kernel.org>,
- "Conor Dooley" <conor+dt@kernel.org>,
- "Marcel Holtmann" <marcel@holtmann.org>,
- "Luiz Augusto von Dentz" <luiz.dentz@gmail.com>,
- "Bartosz Golaszewski" <brgl@bgdev.pl>,
- "Andy Shevchenko" <andriy.shevchenko@linux.intel.com>,
- "Bartosz Golaszewski" <brgl@kernel.org>, linux-serial@vger.kernel.org,
- linux-kernel@vger.kernel.org, linux-kbuild@vger.kernel.org,
- "platform-driver-x86@vger.kernel.org"
- <platform-driver-x86@vger.kernel.org>, linux-pci@vger.kernel.org,
- devicetree@vger.kernel.org, linux-arm-msm@vger.kernel.org,
- linux-bluetooth@vger.kernel.org, linux-pm@vger.kernel.org,
- "Stephan Gerhold" <stephan.gerhold@linaro.org>,
- "linux-acpi@vger.kernel.org" <linux-acpi@vger.kernel.org>
-Message-Id: <3faffec9-dc9d-4eec-a652-a84d30d85c96@app.fastmail.com>
-In-Reply-To: 
- <m44mupdmg7kgco62n4evcviagqo7wwgyt3gybugbxwesd4ekjz@o24r6v4tpezc>
-References: <20260317-pci-m2-e-v6-0-9c898f108d3d@oss.qualcomm.com>
- <20260317-pci-m2-e-v6-6-9c898f108d3d@oss.qualcomm.com>
- <20260322233713.GA98177-robh@kernel.org>
- <to2mrizprc3hjufqbiplpqyek7f4uutqtn4hx4gkmdgv2rykbc@ybwwjhdec4nm>
- <CAL_JsqJXrHCJt770bJkMmAUhirSF3kHjYwSzkG7cXp7-eys8Rg@mail.gmail.com>
- <6aef3xxjjd4nbgrfx6jc6jt6rpqmttoui6hil5zqgdpas2j6gj@ie6j72orenou>
- <fsvmmgoe5wslmxebhrrwmdg2ldcmhzvj53gjkdfnfg2m2rz2lw@dcfboaakz7ae>
- <bguhzabwryayyqkv4ilzwr3ixwv6bzxncblo3ircz2wm3fs52k@66zvcrfcb4oe>
- <blhm4csjyw6r667cleljgzd6rpwagttjo5rau7wjrlnjakq2qm@ekyhc4jvwmwf>
- <m44mupdmg7kgco62n4evcviagqo7wwgyt3gybugbxwesd4ekjz@o24r6v4tpezc>
-Subject: Re: [PATCH v6 6/9] dt-bindings: connector: m2: Add M.2 1620 LGA soldered down
- connector
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 8bit
 
+GPIO type 0x02 (strobe) appears in ACPI tables on recent Intel
+Meteor Lake and Arrow Lake platforms (e.g. Dell Pro Max 14/16) for
+controlling an IR flood LED used by infrared camera sensors. The
+INT3472 discrete driver does not handle this type, logging "GPIO type
+0x02 unknown; the sensor may not work" and potentially preventing the
+associated sensor slot from initializing cleanly.
 
+Add support for GPIO type 0x02 by registering it as an LED through
+the existing LED framework, with the name "ir_flood_led" to
+distinguish it from the privacy LED (type 0x0d).
 
-On Mon, Mar 23, 2026, at 12:52 PM, Manivannan Sadhasivam wrote:
-> On Mon, Mar 23, 2026 at 06:45:15PM +0200, Dmitry Baryshkov wrote:
->> On Mon, Mar 23, 2026 at 09:26:04PM +0530, Manivannan Sadhasivam wrote:
->> > On Mon, Mar 23, 2026 at 05:14:30PM +0200, Dmitry Baryshkov wrote:
->> > > On Mon, Mar 23, 2026 at 07:14:25PM +0530, Manivannan Sadhasivam w=
-rote:
->> > > > On Mon, Mar 23, 2026 at 08:39:55AM -0500, Rob Herring wrote:
->> > > > > On Mon, Mar 23, 2026 at 7:16=E2=80=AFAM Manivannan Sadhasivam=
- <mani@kernel.org> wrote:
->> > > > > >
->> > > > > > On Sun, Mar 22, 2026 at 06:37:13PM -0500, Rob Herring wrote:
->> > > > > > > On Tue, Mar 17, 2026 at 09:59:56AM +0530, Manivannan Sadh=
-asivam wrote:
->> > > > > > > > Lenovo Thinkpad T14s is found to have a soldered down v=
-ersion of M.2 1620
->> > > > > > > > LGA connector. Though, there is no 1620 LGA form factor=
- defined in the M.2
->> > > > > > > > spec, it looks very similar to the M.2 Key E connector.=
- So add the
->> > > > > > > > "pcie-m2-1620-lga-connector" compatible with "pcie-m2-e=
--connector" fallback
->> > > > > > > > to reuse the Key E binding.
->> > > > > > >
->> > > > > > > What is LGA?
->> > > > > > >
->> > > > > >
->> > > > > > Land Grid Array
->> > > > > >
->> > > > > > > If not in the spec, is it really something generic?
->> > > > > > >
->> > > > > >
->> > > > > > Good question. Yes and No! LGA is not something that Lenovo=
- only uses. Other
->> > > > > > vendors may also use this form factor. PCIe connectors are =
-full of innovation as
->> > > > > > the spec gives room for hardware designers to be as innovat=
-ive as possible to
->> > > > > > save the BOM cost.
->> > > > >=20
->> > > > > innovation =3D=3D incompatible changes
->> > > > >=20
->> > > >=20
->> > > > Yes, I was trying to sound nice :)
->> > > >=20
->> > > > > > This is why I do not want to make it Lenovo specific. But i=
-f you prefer that, I
->> > > > > > can name it as "lenovo,pcie-m2-1620-lga-connector".
->> > > > >=20
->> > > > > Depends if you think that s/w needs to know the differences. =
-Hard to
->> > > > > say with a sample size of 1.
->> > > > >=20
->> > > >=20
->> > > > Sure. Will add the 'lenovo' prefix then.
->> > >=20
->> > > Is it really Lenovo? Or is it some other module vendor, whose LGA=
-s are
->> > > being used by Lenovo?
->> > >=20
->> > > I remember that DB820c also used some kind of a module for the Wi=
-Fi card
->> > > (which might be M.2 compatible or might not, I can't find exact d=
-ocs at
->> > > this point).
->> > >=20
->> >=20
->> > I don't know. These kind of designs might be reused by several vend=
-ors. But
->> > considering that we should not make it generic, I'd go with Lenovo =
-as that's
->> > the only vendor we know as of now.
->>=20
->> ... and later we learn that other vendors use the same idea /pinout,
->> then nothing stops us from still telling that it's a
->> "lenovo,pcie-m2-something-lga".=20
->>=20
->
-> How do you possibly know whether a single vendor has introduced this f=
-orm factor
-> or reused by multiple ones? Atleast, I don't have access to such a sou=
-rce to
-> confirm.
->
-I've not really been following this thread/patchset in detail; but want =
-me to try and check with the T14s platform team if this device is specif=
-ically made for us (Lenovo) or not?
-I doubt it is - we just don't do that usually, but I can go and ask the =
-question if it will help resolve this (with the caveat that it could hol=
-d up the review for a bit and I may not be able to get a straight answer)
+Rename skl_int3472_register_pled() and skl_int3472_unregister_pled()
+to skl_int3472_register_led() and skl_int3472_unregister_led(). The
+register function takes a name parameter and an optional LED lookup
+con_id. For the privacy LED, "privacy" is passed so sensor drivers
+can discover it via devm_led_get(). For the IR flood LED, NULL is
+passed to register only the LED classdev without a driver lookup,
+since no sensor driver currently consumes it.
 
-My vote (for what little it's worth) would be to make it non-Lenovo spec=
-ific. Then when the same part causes issues on another vendors platform =
-I won't get asked questions about why Lenovo is breaking <other vendor> =
-:)
+Link: https://lore.kernel.org/linux-media/ab0URIrzZPsYjWrM@spark.kcore.it/
+Suggested-by: Hans de Goede <hdegoede@redhat.com>
+Cc: Andy Shevchenko <andy@kernel.org>
+Cc: Sakari Ailus <sakari.ailus@linux.intel.com>
+Signed-off-by: Marco Nenciarini <mnencia@kcore.it>
+---
+ drivers/platform/x86/intel/int3472/discrete.c | 20 ++++++++++++++++--
+ drivers/platform/x86/intel/int3472/led.c      | 21 ++++++++++++-------
+ include/linux/platform_data/x86/int3472.h     |  7 +++++--
+ 3 files changed, 36 insertions(+), 12 deletions(-)
 
-Mark
+diff --git a/drivers/platform/x86/intel/int3472/discrete.c b/drivers/platform/x86/intel/int3472/discrete.c
+index 1505fc3..4d5f40a 100644
+--- a/drivers/platform/x86/intel/int3472/discrete.c
++++ b/drivers/platform/x86/intel/int3472/discrete.c
+@@ -211,6 +211,10 @@ static void int3472_get_con_id_and_polarity(struct int3472_discrete_device *int3
+ 		*con_id = "clk-enable";
+ 		*gpio_flags = GPIO_ACTIVE_HIGH;
+ 		break;
++	case INT3472_GPIO_TYPE_STROBE:
++		*con_id = "ir-flood-led";
++		*gpio_flags = GPIO_ACTIVE_HIGH;
++		break;
+ 	case INT3472_GPIO_TYPE_PRIVACY_LED:
+ 		*con_id = "privacy-led";
+ 		*gpio_flags = GPIO_ACTIVE_HIGH;
+@@ -248,6 +252,7 @@ static void int3472_get_con_id_and_polarity(struct int3472_discrete_device *int3
+  *
+  * 0x00 Reset
+  * 0x01 Power down
++ * 0x02 Strobe (IR flood LED)
+  * 0x0b Power enable
+  * 0x0c Clock enable
+  * 0x0d Privacy LED
+@@ -330,6 +335,7 @@ static int skl_int3472_handle_gpio_resources(struct acpi_resource *ares,
+ 
+ 		break;
+ 	case INT3472_GPIO_TYPE_CLK_ENABLE:
++	case INT3472_GPIO_TYPE_STROBE:
+ 	case INT3472_GPIO_TYPE_PRIVACY_LED:
+ 	case INT3472_GPIO_TYPE_POWER_ENABLE:
+ 	case INT3472_GPIO_TYPE_HANDSHAKE:
+@@ -346,9 +352,19 @@ static int skl_int3472_handle_gpio_resources(struct acpi_resource *ares,
+ 			if (ret)
+ 				err_msg = "Failed to register clock\n";
+ 
++			break;
++		case INT3472_GPIO_TYPE_STROBE:
++			ret = skl_int3472_register_led(int3472, gpio,
++						       "ir_flood_led",
++						       NULL);
++			if (ret)
++				err_msg = "Failed to register LED\n";
++
+ 			break;
+ 		case INT3472_GPIO_TYPE_PRIVACY_LED:
+-			ret = skl_int3472_register_pled(int3472, gpio);
++			ret = skl_int3472_register_led(int3472, gpio,
++						       "privacy_led",
++						       "privacy");
+ 			if (ret)
+ 				err_msg = "Failed to register LED\n";
+ 
+@@ -422,7 +438,7 @@ void int3472_discrete_cleanup(struct int3472_discrete_device *int3472)
+ 	gpiod_remove_lookup_table(&int3472->gpios);
+ 
+ 	skl_int3472_unregister_clock(int3472);
+-	skl_int3472_unregister_pled(int3472);
++	skl_int3472_unregister_led(int3472);
+ 	skl_int3472_unregister_regulator(int3472);
+ }
+ EXPORT_SYMBOL_NS_GPL(int3472_discrete_cleanup, "INTEL_INT3472_DISCRETE");
+diff --git a/drivers/platform/x86/intel/int3472/led.c b/drivers/platform/x86/intel/int3472/led.c
+index b1d84b9..e3ab40e 100644
+--- a/drivers/platform/x86/intel/int3472/led.c
++++ b/drivers/platform/x86/intel/int3472/led.c
+@@ -16,7 +16,9 @@ static int int3472_pled_set(struct led_classdev *led_cdev,
+ 	return 0;
+ }
+ 
+-int skl_int3472_register_pled(struct int3472_discrete_device *int3472, struct gpio_desc *gpio)
++int skl_int3472_register_led(struct int3472_discrete_device *int3472,
++			    struct gpio_desc *gpio, const char *led_name,
++			    const char *lookup_con_id)
+ {
+ 	char *p;
+ 	int ret;
+@@ -28,7 +30,7 @@ int skl_int3472_register_pled(struct int3472_discrete_device *int3472, struct gp
+ 
+ 	/* Generate the name, replacing the ':' in the ACPI devname with '_' */
+ 	snprintf(int3472->pled.name, sizeof(int3472->pled.name),
+-		 "%s::privacy_led", acpi_dev_name(int3472->sensor));
++		 "%s::%s", acpi_dev_name(int3472->sensor), led_name);
+ 	p = strchr(int3472->pled.name, ':');
+ 	if (p)
+ 		*p = '_';
+@@ -41,20 +43,23 @@ int skl_int3472_register_pled(struct int3472_discrete_device *int3472, struct gp
+ 	if (ret)
+ 		return ret;
+ 
+-	int3472->pled.lookup.provider = int3472->pled.name;
+-	int3472->pled.lookup.dev_id = int3472->sensor_name;
+-	int3472->pled.lookup.con_id = "privacy";
+-	led_add_lookup(&int3472->pled.lookup);
++	if (lookup_con_id) {
++		int3472->pled.lookup.provider = int3472->pled.name;
++		int3472->pled.lookup.dev_id = int3472->sensor_name;
++		int3472->pled.lookup.con_id = lookup_con_id;
++		led_add_lookup(&int3472->pled.lookup);
++	}
+ 
+ 	return 0;
+ }
+ 
+-void skl_int3472_unregister_pled(struct int3472_discrete_device *int3472)
++void skl_int3472_unregister_led(struct int3472_discrete_device *int3472)
+ {
+ 	if (IS_ERR_OR_NULL(int3472->pled.classdev.dev))
+ 		return;
+ 
+-	led_remove_lookup(&int3472->pled.lookup);
++	if (int3472->pled.lookup.con_id)
++		led_remove_lookup(&int3472->pled.lookup);
+ 	led_classdev_unregister(&int3472->pled.classdev);
+ 	gpiod_put(int3472->pled.gpio);
+ }
+diff --git a/include/linux/platform_data/x86/int3472.h b/include/linux/platform_data/x86/int3472.h
+index b1b8375..a7cf290 100644
+--- a/include/linux/platform_data/x86/int3472.h
++++ b/include/linux/platform_data/x86/int3472.h
+@@ -23,6 +23,7 @@
+ /* PMIC GPIO Types */
+ #define INT3472_GPIO_TYPE_RESET					0x00
+ #define INT3472_GPIO_TYPE_POWERDOWN				0x01
++#define INT3472_GPIO_TYPE_STROBE				0x02
+ #define INT3472_GPIO_TYPE_POWER_ENABLE				0x0b
+ #define INT3472_GPIO_TYPE_CLK_ENABLE				0x0c
+ #define INT3472_GPIO_TYPE_PRIVACY_LED				0x0d
+@@ -160,7 +161,9 @@ int skl_int3472_register_regulator(struct int3472_discrete_device *int3472,
+ 				   const char *second_sensor);
+ void skl_int3472_unregister_regulator(struct int3472_discrete_device *int3472);
+ 
+-int skl_int3472_register_pled(struct int3472_discrete_device *int3472, struct gpio_desc *gpio);
+-void skl_int3472_unregister_pled(struct int3472_discrete_device *int3472);
++int skl_int3472_register_led(struct int3472_discrete_device *int3472,
++			    struct gpio_desc *gpio, const char *led_name,
++			    const char *lookup_con_id);
++void skl_int3472_unregister_led(struct int3472_discrete_device *int3472);
+ 
+ #endif
+-- 
+2.47.3
+
