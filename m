@@ -1,58 +1,58 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.14])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.21])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 85F481A2C0B;
-	Mon, 23 Mar 2026 09:43:05 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.14
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EFD5033EAEA;
+	Mon, 23 Mar 2026 09:51:29 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.21
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1774258986; cv=none; b=BSn04udUcT7nJEF8drOihdwgEuiMa/AonmUubRGpNdn3l7o+f/ZjAn5QjrDi7N+E9uDLqxYtbZ5PtZfS0SjTptj6MSco63S32KsFKmUWV8Syff2yMruHAPOCPvKabv1bUyI3+nLAd0EHWlq3I4hpP7ZqOFpO+b0afrgx3/rk1d8=
+	t=1774259491; cv=none; b=frwROEKOlCu1OtDaPHao9MuYJHpL+KpoNg70LhKDWrdWAEykj9pv4QnUfZ4b+RGILLjicrYwquBWaxYK9i4oUDpMG9ujRYOBnRLtRHxuX383us5nVwp+4DUQVjRWcAPKHwQ5AdPv4yvOrUJJQrcLl2JYH8SXZf8MurC6l1kL0m8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1774258986; c=relaxed/simple;
-	bh=0ScpI84KSjTwIGhwzkYAzl01i17paMZ6cw/OHe0q3M4=;
+	s=arc-20240116; t=1774259491; c=relaxed/simple;
+	bh=79OhEgTMo5HmVyKXM4S4uWNFgATWcIgOGLTBF6NE4cM=;
 	h=From:Date:To:cc:Subject:In-Reply-To:Message-ID:References:
-	 MIME-Version:Content-Type; b=sGSyLEvbOlHr5RhE8byyRjvGQpY7z+tQcu2SAc3o1VR5TC0hTgxorlHMyyhPH6122hfGiGydtJZzU1qiVB9iFNDqmyL7fPPvhDQMTSPybig86I3V3q8FDKxDPl+tEzGg4hU4bLND3hIEpNmp2mCD40ULQGh73Wc9OPUOflZ1WPc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=pass smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=DTcd1DVN; arc=none smtp.client-ip=192.198.163.14
+	 MIME-Version:Content-Type; b=pHIRlOR3MWhOSSnsphiaKaD1U3W6Aae2mQ7/aU/+btmQ3/pDnRoYqD800LzoB5M5FU+RYcY5AdgJRi41M62uFPVMKea/QpNqJp+86KuPjtn9btY+Oz+7r6+T58XU3jr9y2EiaXHpHF9oZNMr6I3zJ3M5zl/3Y02aSIXurKSBTdg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=pass smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=cgUEul12; arc=none smtp.client-ip=198.175.65.21
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="DTcd1DVN"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="cgUEul12"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1774258986; x=1805794986;
+  t=1774259490; x=1805795490;
   h=from:date:to:cc:subject:in-reply-to:message-id:
    references:mime-version;
-  bh=0ScpI84KSjTwIGhwzkYAzl01i17paMZ6cw/OHe0q3M4=;
-  b=DTcd1DVNtDUyZxwkrdcbZ+qZNQVblm4juOgPWloeQkxbpn1HAuK9FDYQ
-   6jrMaZrb89nNPnUWTM2w9rBbboy0ScjsDHyu+tSmyXgK0Ysc9FGv0dLsV
-   2OJ76EaCsc22aUkAAf0E2DuJ1HOdy7EqpZYQfOGvTbpc9t7rHpvVe5sN8
-   PZ687yGapRY0UpqBhNp1KX2FPU5xFsZwbXzU8eFOcidxgwpoIMnkb8itl
-   c4WVDRYrTUTFwr69HG2knf8piuRQt9pUzGEY1pbgm13wshRJ5tMRVUsW7
-   QiXgnJvuv/HPcvn12X/5F+7Gt7Z2bnXoGwIiD7iLoczrLUGrMgHRfwTV4
+  bh=79OhEgTMo5HmVyKXM4S4uWNFgATWcIgOGLTBF6NE4cM=;
+  b=cgUEul12g3mf5lO2V++ngdl7KRp5KCS8QnmpVOZhHTH8EAQAbMOAKpcI
+   FCbTJnu7WNali3Qp6FgBc4chSP2wHGK0BP7EP2ZB6nDhBqFnECZpDMugy
+   CQSeVmOzX9cW65EOULUQxgwx+8ZBKE3EX/uFZjdQHX2a4ZIRmGpaC2QAX
+   WD0R1snLiRW26tLNYKYV+8W0knClJfo8oUpRJCfoSKzs9mKty3WEHAtQa
+   3zlYfYobJl1zK/XHIeDUecbcgkWUfnyTxXdRxOFwJjaYDHxB36MoUpWIC
+   qH1sC0fQerVj/li2NKW8xfj6s2XaK/jVhRTYH/ZAT558amK/5AP94zV+Q
    g==;
-X-CSE-ConnectionGUID: nF8eYZ32TkaS+PrnWs5nag==
-X-CSE-MsgGUID: CeUz//jFR5qi825DqOkyFw==
-X-IronPort-AV: E=McAfee;i="6800,10657,11737"; a="75318626"
+X-CSE-ConnectionGUID: WYyv5WbdQgigJ7K6541hBg==
+X-CSE-MsgGUID: NFwi34IXRcWh9DINAK3DBQ==
+X-IronPort-AV: E=McAfee;i="6800,10657,11737"; a="75141797"
 X-IronPort-AV: E=Sophos;i="6.23,137,1770624000"; 
-   d="scan'208";a="75318626"
-Received: from orviesa010.jf.intel.com ([10.64.159.150])
-  by fmvoesa108.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 23 Mar 2026 02:43:05 -0700
-X-CSE-ConnectionGUID: F1h+ma9VSLG2FuAHZwrmVA==
-X-CSE-MsgGUID: L/uIQDA+QESfffRB3mEIgA==
+   d="scan'208";a="75141797"
+Received: from orviesa009.jf.intel.com ([10.64.159.149])
+  by orvoesa113.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 23 Mar 2026 02:51:29 -0700
+X-CSE-ConnectionGUID: 9kIsKtukTPSbAWLRCbvJEg==
+X-CSE-MsgGUID: Nkp1LdDXRACiyMwLuyR/+A==
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="6.23,137,1770624000"; 
-   d="scan'208";a="223171559"
+   d="scan'208";a="223934885"
 Received: from ijarvine-mobl1.ger.corp.intel.com (HELO localhost) ([10.245.244.49])
-  by orviesa010-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 23 Mar 2026 02:43:03 -0700
+  by orviesa009-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 23 Mar 2026 02:51:27 -0700
 From: =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
-Date: Mon, 23 Mar 2026 11:42:59 +0200 (EET)
+Date: Mon, 23 Mar 2026 11:51:23 +0200 (EET)
 To: Emre Cecanpunar <emreleno@gmail.com>
 cc: platform-driver-x86@vger.kernel.org, Hans de Goede <hansg@kernel.org>, 
     LKML <linux-kernel@vger.kernel.org>, krishna.chomal108@gmail.com
-Subject: Re: [PATCH v2 4/5] platform/x86: hp-wmi: fix u8 underflow in gpu_delta
- calculation
-In-Reply-To: <20260322190624.35162-5-emreleno@gmail.com>
-Message-ID: <f332715c-cda1-6120-7025-4cf051f45ed7@linux.intel.com>
-References: <20260322190624.35162-1-emreleno@gmail.com> <20260322190624.35162-5-emreleno@gmail.com>
+Subject: Re: [PATCH v2 3/5] platform/x86: hp-wmi: use mod_delayed_work to
+ reset keep-alive timer
+In-Reply-To: <20260322190624.35162-4-emreleno@gmail.com>
+Message-ID: <eae62ec1-ba14-6717-3c17-e6838feccda9@linux.intel.com>
+References: <20260322190624.35162-1-emreleno@gmail.com> <20260322190624.35162-4-emreleno@gmail.com>
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
@@ -63,71 +63,70 @@ Content-Type: text/plain; charset=US-ASCII
 
 On Sun, 22 Mar 2026, Emre Cecanpunar wrote:
 
-> gpu_delta was declared as u8 and computed as the difference of two u8
-> fan RPM values from the firmware fan table. If gpu_rpm < cpu_rpm, the
-> subtraction wraps around modulo 256, producing a large positive value
-> (e.g. 10 - 20 = 246 as u8). This value is then added to every
-> requested fan speed in hp_wmi_fan_speed_set(), causing the GPU fan to
-> be clamped to U8_MAX on almost every write.
+> The keep-alive mechanism re-applies fan settings every 90 seconds to
+> prevent the firmware from reverting to automatic mode after its 120 s
+> timeout. Fan settings are also applied immediately when the user writes
+> to the hwmon sysfs interface.
 > 
-> Change gpu_delta to int in both struct hp_wmi_hwmon_priv and
-> hp_wmi_setup_fan_settings(), and perform the subtraction in signed
-> arithmetic. hp_wmi_fan_speed_set() already uses signed arithmetic with
-> clamp_val(), so a negative delta correctly results in a lower GPU fan
-> speed rather than saturating at U8_MAX.
-> 
-> Signed-off-by: Emre Cecanpunar <emreleno@gmail.com>
-> ---
-> Changes in v2:
-> - Drop the if (gpu_delta < 0) guard and pr_warn. A negative delta is
->   valid firmware behavior on boards where CPU_RPM > GPU_RPM. Store
->   gpu_delta as int in struct hp_wmi_hwmon_priv so the existing signed
->   arithmetic and clamp_val() in hp_wmi_fan_speed_set() handle the
->   negative case correctly without saturating at U8_MAX.
-> 
->  drivers/platform/x86/hp/hp-wmi.c | 9 +++++----
->  1 file changed, 5 insertions(+), 4 deletions(-)
-> 
-> diff --git a/drivers/platform/x86/hp/hp-wmi.c b/drivers/platform/x86/hp/hp-wmi.c
-> index a29f34588055..af57cb0dbf9e 100644
-> --- a/drivers/platform/x86/hp/hp-wmi.c
-> +++ b/drivers/platform/x86/hp/hp-wmi.c
-> @@ -436,7 +436,7 @@ enum pwm_modes {
->  struct hp_wmi_hwmon_priv {
->  	u8 min_rpm;
->  	u8 max_rpm;
-> -	u8 gpu_delta;
-> +	int gpu_delta;
->  	u8 mode;
->  	u8 pwm;
->  	struct delayed_work keep_alive_dwork;
-> @@ -2530,8 +2530,8 @@ static int hp_wmi_setup_fan_settings(struct hp_wmi_hwmon_priv *priv)
->  {
->  	u8 fan_data[128] = { 0 };
->  	struct victus_s_fan_table *fan_table;
-> -	u8 min_rpm, max_rpm, gpu_delta;
-> -	int ret;
-> +	u8 min_rpm, max_rpm;
-> +	int gpu_delta, ret;
-> 
->  	/* Default behaviour on hwmon init is automatic mode */
->  	priv->mode = PWM_MODE_AUTO;
-> @@ -2553,7 +2553,8 @@ static int hp_wmi_setup_fan_settings(struct hp_wmi_hwmon_priv *priv)
-> 
->  	min_rpm = fan_table->entries[0].cpu_rpm;
->  	max_rpm = fan_table->entries[fan_table->header.num_entries - 1].cpu_rpm;
-> -	gpu_delta = fan_table->entries[0].gpu_rpm - fan_table->entries[0].cpu_rpm;
-> +	gpu_delta = (int)fan_table->entries[0].gpu_rpm -
-> +		    (int)fan_table->entries[0].cpu_rpm;
+> schedule_delayed_work() is a no-op when the work item is already
+> pending. If the user updates fan settings at T=85s, the keep-alive
+> still fires at T=90s (5 s after the update) instead of 90 s later.
+> This shortens the effective keep-alive window and may allow the
+> firmware timeout to expire between cycles.
 
 Hi,
 
-Doesn't C's implicit integer promotion rules already convert these to int 
-prior to doing any arithmetic on them?
+Unfortunately, I don't understand this explanation.
 
-The underflow problem occurred only when storing that result back into u8 
-value so the type change is still required.
+Won't the keepalive expiry at T=90s just result in adding the next 
+keepaline event to T=90s + 90s, and the resulting intervals never exceeds 
+120s?
 
+It may be inefficient to apply fan settings at T=85s and then fire 
+keepalive at T=90s, that much I can see but if you think there's a problem 
+beyond that, this explanation doesn't convince me so please elaborate.
+
+If the only problem is inefficiency, this explanation did not convey 
+that meaning so in that case, please rephrase.
+
+> Replace schedule_delayed_work() with mod_delayed_work() in both the
+> PWM_MODE_MAX and PWM_MODE_MANUAL cases. mod_delayed_work() resets the
+> delay to KEEP_ALIVE_DELAY_SECS from the time of each call, whether or
+> not the work is already pending, ensuring each user action and each
+> keep-alive expiry restarts the full 90 s window.
+> 
+> Signed-off-by: Emre Cecanpunar <emreleno@gmail.com>
+> ---
+>  drivers/platform/x86/hp/hp-wmi.c | 8 ++++----
+>  1 file changed, 4 insertions(+), 4 deletions(-)
+> 
+> diff --git a/drivers/platform/x86/hp/hp-wmi.c b/drivers/platform/x86/hp/hp-wmi.c
+> index 41769c0861e5..a29f34588055 100644
+> --- a/drivers/platform/x86/hp/hp-wmi.c
+> +++ b/drivers/platform/x86/hp/hp-wmi.c
+> @@ -2342,8 +2342,8 @@ static int hp_wmi_apply_fan_settings(struct hp_wmi_hwmon_priv *priv)
+>  		ret = hp_wmi_fan_speed_max_set(1);
+>  		if (ret < 0)
+>  			return ret;
+> -		schedule_delayed_work(&priv->keep_alive_dwork,
+> -				      secs_to_jiffies(KEEP_ALIVE_DELAY_SECS));
+> +		mod_delayed_work(system_wq, &priv->keep_alive_dwork,
+> +				 secs_to_jiffies(KEEP_ALIVE_DELAY_SECS));
+>  		return 0;
+>  	case PWM_MODE_MANUAL:
+>  		if (!is_victus_s_thermal_profile())
+> @@ -2351,8 +2351,8 @@ static int hp_wmi_apply_fan_settings(struct hp_wmi_hwmon_priv *priv)
+>  		ret = hp_wmi_fan_speed_set(priv, pwm_to_rpm(priv->pwm, priv));
+>  		if (ret < 0)
+>  			return ret;
+> -		schedule_delayed_work(&priv->keep_alive_dwork,
+> -				      secs_to_jiffies(KEEP_ALIVE_DELAY_SECS));
+> +		mod_delayed_work(system_wq, &priv->keep_alive_dwork,
+> +				 secs_to_jiffies(KEEP_ALIVE_DELAY_SECS));
+>  		return 0;
+>  	case PWM_MODE_AUTO:
+>  		if (is_victus_s_thermal_profile()) {
+> 
 
 -- 
  i.
