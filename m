@@ -1,115 +1,110 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.16])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5784633F588;
-	Mon, 23 Mar 2026 09:13:25 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.16
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C26181FE44A
+	for <platform-driver-x86@vger.kernel.org>; Mon, 23 Mar 2026 09:39:45 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1774257206; cv=none; b=qGt+JeY4l/xyh923hdAxz0TCkxs4oGfPcpRJTyZla0tBkZq8ttFNlPVL6g+9QvXxrdzi9/tcnpn9CM4kw4pU7bUqEUk3c0EgP6gcG4tcP7qZDSHxpQq5EPzW9obqR3ddO98zs304DlIJZ8ScuF9B41HvtryNSnnMC0+gUbm4iJM=
+	t=1774258785; cv=none; b=hBAH9m019MQCP9tUqJmx3DD/sOmn1fQbiPPNCirm+y+7URLNy8NLNPdpLPjBxDtL3b+LHBjUe5UoZVP1FqYEJHYvtu5+cpRg0sYvGjiheiwlExNNAlqx9/mpbroV0TboqSp6xWtzg4rQsZHyLgsLgabmE5HS3g/Xymwan2iSnBs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1774257206; c=relaxed/simple;
-	bh=HbFcVlLDzr7s8MAShY5kn8xSzlS4geN+9YqgsyUJxLU=;
-	h=From:Date:To:cc:Subject:In-Reply-To:Message-ID:References:
-	 MIME-Version:Content-Type; b=ocAAroBMt7R9z5RkGSyEmA/AhtTOQ+PQfwx3TRPD7cU0TATAajS2hKI+28b+3Mf7lrwgiH6qCSn2lYzue5lUArDKTgdMMioU5cZ/P4twgKUHid+b/TskqMIjFjaYwzfMsZgAaMNsKUzTgsfz1Li4GX+TzoUk/perStP0NcDwPyM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=pass smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=nzxHlZuJ; arc=none smtp.client-ip=192.198.163.16
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.intel.com
+	s=arc-20240116; t=1774258785; c=relaxed/simple;
+	bh=EJ6GA3ln3CB5rzUUR+CiHZBiRJzeKCJ2WXERmpAAfvg=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=t71B2wRuycRNHgKD2sZf2GlP/C9ecaRdxoFBoVowaGB7Q+eWBtwvFLoMPxhv1zDf3ra6rpnk/xmPzQS6Vf5ggHNynyVV3/xTplbQgODORPhQMhXr+D7rmQbY67uok+td9hDu4HlRdPFRhGzqDL8E3FuHjW5IVH6QkYmDN2wfdOc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=jhZ4POA2; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="nzxHlZuJ"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1774257205; x=1805793205;
-  h=from:date:to:cc:subject:in-reply-to:message-id:
-   references:mime-version;
-  bh=HbFcVlLDzr7s8MAShY5kn8xSzlS4geN+9YqgsyUJxLU=;
-  b=nzxHlZuJgZAsey7yAGRHDmuBmk4TtQs46w/e8i1+9k71wh3vLOZ5K2eC
-   PwjYOg1/yTY0OKCdYhwjnEOddE6m5K8HcgoD1B1lzg1F7rQSg5L8+V5Wr
-   pMZRjTvv2IbayRF/lem7Ue/Ne9aSOgHVHl0STGNLup97fkOstKeA3fFcs
-   FEde7XVWnZ6/UTf+wIbgRuymB7SFyztGMGuC0AotMArvFcat8u5ojvhRg
-   sf/Ix4k5uK6zTgAL/VT5U+jnI4GXwji+WqenVLBTlz/2GemRV+EzdHwpZ
-   f48t5kqKLppX92MMrp5t8YDizrK+BuhHRFhfF3pKJqdsd3Rti8RqrxczD
-   g==;
-X-CSE-ConnectionGUID: MhkcKoDmQYeIM8tSzAY87A==
-X-CSE-MsgGUID: 8vpd/shLS2Os/GYtJlAUVQ==
-X-IronPort-AV: E=McAfee;i="6800,10657,11737"; a="62807273"
-X-IronPort-AV: E=Sophos;i="6.23,137,1770624000"; 
-   d="scan'208";a="62807273"
-Received: from fmviesa009.fm.intel.com ([10.60.135.149])
-  by fmvoesa110.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 23 Mar 2026 02:13:24 -0700
-X-CSE-ConnectionGUID: 0zNkQR2ISzG5X/USyEDHcg==
-X-CSE-MsgGUID: haIcpTB+QjmLrnT9i4luFQ==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.23,137,1770624000"; 
-   d="scan'208";a="217490034"
-Received: from ijarvine-mobl1.ger.corp.intel.com (HELO localhost) ([10.245.244.49])
-  by fmviesa009-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 23 Mar 2026 02:13:19 -0700
-From: =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
-Date: Mon, 23 Mar 2026 11:13:15 +0200 (EET)
-To: Rosen Penev <rosenp@gmail.com>, Kees Cook <kees@kernel.org>
-cc: platform-driver-x86@vger.kernel.org, 
-    Kenneth Chan <kenneth.t.chan@gmail.com>, Hans de Goede <hansg@kernel.org>, 
-    "Gustavo A. R. Silva" <gustavoars@kernel.org>, 
-    open list <linux-kernel@vger.kernel.org>, 
-    "open list:KERNEL HARDENING (not covered by other areas):Keyword:b__counted_by(_le|_be)?b" <linux-hardening@vger.kernel.org>
-Subject: Re: [PATCH] platform/x86: panasonic-laptop: simplify allocation of
- sinf
-In-Reply-To: <CAKxU2N9fqr8XunsR+=-P8AngLbUbphTq6aFnEJ_yEGhue9d2wA@mail.gmail.com>
-Message-ID: <17effdb3-7406-d280-8d9a-e699e54dadef@linux.intel.com>
-References: <20260320004928.29914-1-rosenp@gmail.com> <202603201131.55E516E@keescook> <CAKxU2N9fqr8XunsR+=-P8AngLbUbphTq6aFnEJ_yEGhue9d2wA@mail.gmail.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="jhZ4POA2"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 8A9C1C4CEF7
+	for <platform-driver-x86@vger.kernel.org>; Mon, 23 Mar 2026 09:39:44 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1774258785;
+	bh=EJ6GA3ln3CB5rzUUR+CiHZBiRJzeKCJ2WXERmpAAfvg=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+	b=jhZ4POA2fQITxFnyxFc1kfSyuN4JNhBEj6OnkO7fFSXamM0F85cq71a1bWMaZ5u3U
+	 LEbVpwktqDxwYe1hgsnH7hw11iq9gqBE/DoIyrygGHpb7y+omBADz9FTkrmisOx3RS
+	 SGYvZkW3U8pXUnzJRrKXao3PuXPH2TcoHuhAxjRldXSujoVkQTSfA72V7cyxTV1vH1
+	 ZKvruDDExwNGZYuzhCUIaMcZfay52XHIKrDlwcmqBOBZjvtpdNahCjfHycUbFDUa3w
+	 SRqnndm/jl9U9Utl3DprCseB5IGINS+6uzEGPsb8gwqQuv4RRkfFbRJ97UT7OQsa7c
+	 CQkwJuHtWeVRA==
+Received: by mail-lf1-f50.google.com with SMTP id 2adb3069b0e04-5a12c19affeso4901193e87.1
+        for <platform-driver-x86@vger.kernel.org>; Mon, 23 Mar 2026 02:39:44 -0700 (PDT)
+X-Forwarded-Encrypted: i=1; AJvYcCXL/3IwlLuf7WAeWPZXdk+6tyuPcoNzImLw2qqYUX3oLKOQGlrhT5OxYAo9US5I+MOgcWqISAwmiZb3qKSM6wgynDnW@vger.kernel.org
+X-Gm-Message-State: AOJu0YxPQGNL5nXNSKq20Y5/j+yBaiEa2W7D0pacUIfGx9mbYdjqN8pg
+	SI74tyf9yP53G/hX/HuSQwDaXjaPOeMjGGLK4KU5jjjBro3y8bIdo3lB3eNMFSF9MikITI+QMLZ
+	dTQrbkYDTK1ooBPs+pxaAB0tIy2AGCVg/UfjXA4bskw==
+X-Received: by 2002:a05:6512:31c7:b0:5a2:7d50:31cd with SMTP id
+ 2adb3069b0e04-5a27dde2603mr4490220e87.3.1774258783209; Mon, 23 Mar 2026
+ 02:39:43 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/mixed; boundary="8323328-1296920707-1774257195=:1623"
+References: <20260316-meraki-swnodes-v3-1-15501a52300e@oss.qualcomm.com> <202603201641.qJ8m8Nhn-lkp@intel.com>
+In-Reply-To: <202603201641.qJ8m8Nhn-lkp@intel.com>
+From: Bartosz Golaszewski <brgl@kernel.org>
+Date: Mon, 23 Mar 2026 10:39:30 +0100
+X-Gmail-Original-Message-ID: <CAMRc=MfWsChQc-xHiBtL6HKv6ax36szfEE8Ckjf7VUfhxzG9OA@mail.gmail.com>
+X-Gm-Features: AaiRm53YjgeM2rDX8DY1YvwLzxTXdbFkc65W0RLmdUuzN_9o_znmAtZ9xE0zG0o
+Message-ID: <CAMRc=MfWsChQc-xHiBtL6HKv6ax36szfEE8Ckjf7VUfhxzG9OA@mail.gmail.com>
+Subject: Re: [PATCH v3] platform/x86: meraki-mx100: use real software node references
+To: kernel test robot <lkp@intel.com>, Lee Jones <lee@kernel.org>, Hans de Goede <hansg@kernel.org>, 
+	=?UTF-8?Q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
+Cc: Bartosz Golaszewski <bartosz.golaszewski@oss.qualcomm.com>, Peter Tyser <ptyser@xes-inc.com>, 
+	Dmitry Torokhov <dmitry.torokhov@gmail.com>, 
+	Andy Shevchenko <andriy.shevchenko@linux.intel.com>, 
+	Greg Kroah-Hartman <gregkh@linuxfoundation.org>, oe-kbuild-all@lists.linux.dev, 
+	linux-kernel@vger.kernel.org, platform-driver-x86@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-  This message is in MIME format.  The first part should be readable text,
-  while the remaining parts are likely unreadable without MIME-aware tools.
+On Fri, Mar 20, 2026 at 9:18=E2=80=AFAM kernel test robot <lkp@intel.com> w=
+rote:
+>
+> Hi Bartosz,
+>
+> kernel test robot noticed the following build errors:
+>
+> [auto build test ERROR on b84a0ebe421ca56995ff78b66307667b62b3a900]
+>
+> url:    https://github.com/intel-lab-lkp/linux/commits/Bartosz-Golaszewsk=
+i/platform-x86-meraki-mx100-use-real-software-node-references/20260316-1651=
+20
+> base:   b84a0ebe421ca56995ff78b66307667b62b3a900
+> patch link:    https://lore.kernel.org/r/20260316-meraki-swnodes-v3-1-155=
+01a52300e%40oss.qualcomm.com
+> patch subject: [PATCH v3] platform/x86: meraki-mx100: use real software n=
+ode references
+> config: x86_64-buildonly-randconfig-001-20260320 (https://download.01.org=
+/0day-ci/archive/20260320/202603201641.qJ8m8Nhn-lkp@intel.com/config)
+> compiler: gcc-14 (Debian 14.2.0-19) 14.2.0
+> reproduce (this is a W=3D1 build): (https://download.01.org/0day-ci/archi=
+ve/20260320/202603201641.qJ8m8Nhn-lkp@intel.com/reproduce)
+>
+> If you fix the issue in a separate patch/commit (i.e. not just a new vers=
+ion of
+> the same patch/commit), kindly add following tags
+> | Reported-by: kernel test robot <lkp@intel.com>
+> | Closes: https://lore.kernel.org/oe-kbuild-all/202603201641.qJ8m8Nhn-lkp=
+@intel.com/
+>
+> All errors (new ones prefixed by >>):
+>
+>    ld: vmlinux.o: in function `lkdtm_rodata_do_nothing':
+> >> (.rodata+0xa9b6c0): undefined reference to `lpc_ich_gpio_swnode'
+> >> ld: (.rodata+0xa9b840): undefined reference to `lpc_ich_gpio_swnode'
+>    ld: (.rodata+0xa9b960): undefined reference to `lpc_ich_gpio_swnode'
+>    ld: (.rodata+0xa9ba80): undefined reference to `lpc_ich_gpio_swnode'
+>    ld: (.rodata+0xa9bba0): undefined reference to `lpc_ich_gpio_swnode'
+>    ld: vmlinux.o:(.rodata+0xa9bcc0): more undefined references to `lpc_ic=
+h_gpio_swnode' follow
+>
+> --
+> 0-DAY CI Kernel Test Service
+> https://github.com/intel/lkp-tests/wiki
 
---8323328-1296920707-1774257195=:1623
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: QUOTED-PRINTABLE
+FYI this is a false-positive - the prerequisite patch is already in Lee's t=
+ree.
 
-On Fri, 20 Mar 2026, Rosen Penev wrote:
-> On Fri, Mar 20, 2026 at 11:32=E2=80=AFAM Kees Cook <kees@kernel.org> wrot=
-e:
-> >
-> > On Thu, Mar 19, 2026 at 05:49:28PM -0700, Rosen Penev wrote:
-> > > Change to a flexible array member to allocate once instead of twice.
-> > >
-> > > Allows using __counted_by for extra runtime analysis. Move the counti=
-ng
-> > > variable assignment to right after allocation as required by
-> > > __counted_by.
-> > >
-> > > Remove + 1 to allocation. It's already done in the previous line.
-> >
-> > Are you sure this is an accidental +1? I see the "num_sifr++" that
-> > happens earlier, but it's not immediately clear why either that or the
-> > +1 in the original allocation are needed. I'd like to understand why
-> > either/both are/aren't needed.
-
-There's a comment right before the increment:
-
-        /*
-         * Some DSDT-s have an off-by-one bug where the SINF package count =
-is
-         * one higher than the SQTY reported value, allocate 1 entry extra.
-         */
-        num_sifr++;
-
-=2E.l.which comes from 33297cef3101 ("platform/x86: panasonic-laptop:=20
-Allocate 1 entry extra in the sinf array").
-
-So I don't know why you said it's not clear why it's there.
-
-> Looks like a rebasing mistake to me honestly.
-
-In which commit?
-
-
---=20
- i.
-
---8323328-1296920707-1774257195=:1623--
+Bart
