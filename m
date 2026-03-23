@@ -1,59 +1,61 @@
 Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.9])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 20A9B391820;
-	Mon, 23 Mar 2026 10:47:02 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CDE35390C8B;
+	Mon, 23 Mar 2026 10:47:14 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.9
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1774262824; cv=none; b=AsWDpLVrfivMF9I8UTbYmQ138ynwUaGISZl0VIm9m8TvBEXRvYiEN50mXt/kyqj+GX+pl71XNGIGyIfwE2ceaE03VMcAOwNvXuxu+j90ZmZ6Gyte5v2DTMEDGmpiWu9WDZTCLt9VGNQWX7MmHITlgL6tN/ya2W/7g/TdcoApOSY=
+	t=1774262835; cv=none; b=iPbqEvw4jqdbLtSqGpn0riB6Wrbup4hxUBpcvckt65gBJvKYOy1ZQ33iw6DBuczaVpV7s7neXS12667qKT+sLl6I7Tinq2h/Rded8IK/KJvi7A4Mi7f2mPigiQ1JPx0HJX9DvaRazDMDQ9XIkDyXRDpQAN2ojrtEanxNlmH1fMA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1774262824; c=relaxed/simple;
-	bh=dl2ogdlADvpLsKxRj0yJVUTmB3NbnhkqFnMdG4Jefmg=;
+	s=arc-20240116; t=1774262835; c=relaxed/simple;
+	bh=0NUK8VRmQ4Cp9kanzBWCjpNq1JsmARXiiQF5DxHJG3s=;
 	h=From:To:Cc:In-Reply-To:References:Subject:Message-Id:Date:
-	 MIME-Version:Content-Type; b=JsjqF4gl2zNybGLrQseDYIT8H2VyaRWF6xd44Z6c2gChapRysjqweHZ0oBvTIH3HoCB5adkR9Xcfmsdz1cCwy0+DhVHTPZ3XHROL+BqbTpYvP+zdMQSOMNSj/b/Zyk7lpjtGDYcJjHzTFUsajVzuBW5lrTAePDfwKYvIT88HBYc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=pass smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=V/lJrQyc; arc=none smtp.client-ip=192.198.163.9
+	 MIME-Version:Content-Type; b=m/6FUuNcLaXqQi6OhZ4bR7Y3+IVALgPQebiqAAVJkz76FTnd7iQK74wvmtz9pdnoVAV75fMvTq9F4xgyaKVgRSAePjO7ux89JJd/FDHhjAgQ26iYV3zKghZE5VFNTJqS1BW6AOpvXrtY3bjeQr0VT0CH/5AZu1XIHFoUQ8b0LFE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=pass smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=WdTV8Pu0; arc=none smtp.client-ip=192.198.163.9
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="V/lJrQyc"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="WdTV8Pu0"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1774262823; x=1805798823;
+  t=1774262834; x=1805798834;
   h=from:to:cc:in-reply-to:references:subject:message-id:
    date:mime-version:content-transfer-encoding;
-  bh=dl2ogdlADvpLsKxRj0yJVUTmB3NbnhkqFnMdG4Jefmg=;
-  b=V/lJrQycuMyMc6iYF8mQufCsuKr6OLs7oHbKJgvAVWj5CMjqexV8i4VG
-   +YsfUtc+90Czbbrp5NKmYL0sjJu3zhyA3/xAPdCIK8+vqFGqDnd0bHc1f
-   cir8+C70kuLS/u0hY7mkzz/RaUW3R+Pln2cMaMHmDhU3hbCAUIwVfke1t
-   z1azC8lUQpxPyGF7EZokmZQRRyxlOfEEHmY4pBZPjEzyovvR8AmC11u5z
-   AOUIkcfNnzoj0WF4jM0CjXhEPBUQcossqg3mExtGusLsveWESBpH+Hoqr
-   1I0WOHMbXIL/fSq0J806MQFnis60oUyPMHSWQ5wf81ysqFpr9Oob3GZPW
-   g==;
-X-CSE-ConnectionGUID: AqzVZoyxSMmfLkHzHgxDfw==
-X-CSE-MsgGUID: IvjMZ6FeSXC/cV14RTa9Kw==
-X-IronPort-AV: E=McAfee;i="6800,10657,11737"; a="85952761"
+  bh=0NUK8VRmQ4Cp9kanzBWCjpNq1JsmARXiiQF5DxHJG3s=;
+  b=WdTV8Pu0Qh71go/2du5fFn/cwIYr/0zdxi42luZg/7KS6qy9N0/33XUS
+   Ay3+V9EpdfKmMBpOtyZcmRw64NfbuVqjOjbF3/dxvi5FhTWrCPe0c47ep
+   UljBMCNeTX0dsxWEpLLZM4cXELNxEExdIZrHT2NWECXgSyCba3KV1bxYp
+   JFeS1Pr02OJwJ40/YNvhsOItuNrK3Awzqhhsu6Ba22XGin0OSWN+rfZ43
+   EcJjCIu345nmSLroRahagkL9eTEiVThc3qCcl4BKczRH2jKffj2kCgUEa
+   vZrO/bNssxLnKHpk7lQpDOfqmkGOoG6xmTSeSWjOgYdRaA4Ia7IT+qTAh
+   Q==;
+X-CSE-ConnectionGUID: jSFxS+PPTWugN1XWijh1lw==
+X-CSE-MsgGUID: 01Sxq0mIRPGQZrZt2b35aA==
+X-IronPort-AV: E=McAfee;i="6800,10657,11737"; a="85952795"
 X-IronPort-AV: E=Sophos;i="6.23,137,1770624000"; 
-   d="scan'208";a="85952761"
+   d="scan'208";a="85952795"
 Received: from orviesa007.jf.intel.com ([10.64.159.147])
-  by fmvoesa103.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 23 Mar 2026 03:47:02 -0700
-X-CSE-ConnectionGUID: K9qnYMTPRsSmWHljd+/rzw==
-X-CSE-MsgGUID: aHUW3Q4uTgu/HlLFWxDkaQ==
+  by fmvoesa103.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 23 Mar 2026 03:47:14 -0700
+X-CSE-ConnectionGUID: YwYpkmxMTB+9arGjCnRqEg==
+X-CSE-MsgGUID: R0kEfuntT5mDG5AEER5Nlg==
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="6.23,137,1770624000"; 
-   d="scan'208";a="224203578"
+   d="scan'208";a="224203600"
 Received: from ijarvine-mobl1.ger.corp.intel.com (HELO localhost) ([10.245.244.49])
-  by orviesa007-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 23 Mar 2026 03:47:00 -0700
+  by orviesa007-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 23 Mar 2026 03:47:08 -0700
 From: =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
-To: Vadim Pasternak <vadimp@nvidia.com>, 
- platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org, 
- Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Cc: Hans de Goede <hansg@kernel.org>
-In-Reply-To: <20260320222033.3238317-1-andriy.shevchenko@linux.intel.com>
-References: <20260320222033.3238317-1-andriy.shevchenko@linux.intel.com>
-Subject: Re: [PATCH v1 1/1] platform/mellanox: nvsw-sn2201: Drop unused
- include
-Message-Id: <177426281542.8512.9145224772806764967.b4-ty@linux.intel.com>
-Date: Mon, 23 Mar 2026 12:46:55 +0200
+To: Santosh Kumar Yadav <santoshkumar.yadav@barco.com>, 
+ Dmitry Torokhov <dmitry.torokhov@gmail.com>
+Cc: Peter Korsgaard <peter.korsgaard@barco.com>, 
+ Hans de Goede <hansg@kernel.org>, Linus Walleij <linusw@kernel.org>, 
+ Bartosz Golaszewski <brgl@kernel.org>, platform-driver-x86@vger.kernel.org, 
+ linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org
+In-Reply-To: <20260318-barco-p50-gpio-set-v2-0-c0a4a6416163@gmail.com>
+References: <20260318-barco-p50-gpio-set-v2-0-c0a4a6416163@gmail.com>
+Subject: Re: [PATCH v2 0/2] barco-p50-gpio: normalize return value of "get"
+ and convert to guard()
+Message-Id: <177426282270.8512.4556036830475075786.b4-ty@linux.intel.com>
+Date: Mon, 23 Mar 2026 12:47:02 +0200
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
@@ -64,12 +66,18 @@ Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
 X-Mailer: b4 0.13.0
 
-On Fri, 20 Mar 2026 23:20:33 +0100, Andy Shevchenko wrote:
+On Wed, 18 Mar 2026 19:56:16 -0700, Dmitry Torokhov wrote:
 
-> This driver includes the legacy header <linux/gpio.h> but does
-> not use any symbols from it. Drop the inclusion.
+> These 2 patches fixes a regression in the driver arising from gpiolib
+> tightening its API, and converts it to guard() notation when taking a
+> mutex to simplify the code flow.
 > 
+> v2:
 > 
+> - added reviiewed-by and fixes trailers
+> - added new patch using guard()
+> 
+> [...]
 
 
 Thank you for your contribution, it has been applied to my local
@@ -78,8 +86,10 @@ platform-drivers-x86/review-ilpo-next branch only once I've pushed my
 local branch there, which might take a while.
 
 The list of commits applied:
-[1/1] platform/mellanox: nvsw-sn2201: Drop unused include
-      commit: 8786af7704e6289c69d2723def3ca406a15c0dff
+[1/2] platform/x86: barco-p50-gpio: normalize return value of gpio_get
+      commit: 1c9d30d37aaffe3454d70b89a77f8aaecda257bf
+[2/2] platform/x86: barco-p50-gpio: convert to guard() notation
+      commit: a5877e921389178f994a5ec15a145d7e7ba3ec65
 
 --
  i.
