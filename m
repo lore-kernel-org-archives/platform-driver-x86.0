@@ -1,159 +1,297 @@
-Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.17])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C1E723890F0
-	for <platform-driver-x86@vger.kernel.org>; Mon, 23 Mar 2026 10:06:26 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.180.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5B27232D7C7;
+	Mon, 23 Mar 2026 10:41:48 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.17
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1774260387; cv=none; b=kwg/aXNF90rtsnP7SRljKD2ewzgFtoCPxQKAmrqySy1sZhSh7OJTf1DzvCvYfOy8dHsJqqUA1qcKVBJc+TQuCy6Ua/ojHag75KO0OqSjDId0vXx0oUH8aE7Kd45qlbBYjER5MvGUpRRmgavXCgbYkwhgcRbp1nbELmuvhjDgMoo=
+	t=1774262510; cv=none; b=pvNF76Bb5bXVzI1b5uN5i6N7X9IS0MdGR7eCGftxIsOn8xKXS0g+BjZ9pdz/AfAdEO77ey4QfNws6uuB//NPHWD7vYIcX5irmqps06DN1CzRLJBblbxPYXddExPBb+hhk0fN5p/lQ8/n/cE4SJsMXiKPQ+yo/H8a9BljTMWCebw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1774260387; c=relaxed/simple;
-	bh=D7uNzZwuRI/Naa00qtBEM/2GbCAII4LHke1I9waZY68=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=QMona16x9YTTgEAp6oowiOTJ2GN8nvlomy9i0d+SRdq0Oq/yrL7WZZVaDxCxsyITDOyAGxLkhPmVYWt7FqlpPWAc201bQ3W7NshF+CJss+Lrc7waoVHEv43JAASOHDXChHCA4Mu3nKFuhZ87iAHJlMhv33iQC5ETIM5X71n9Z2A=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com; spf=pass smtp.mailfrom=oss.qualcomm.com; dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b=hQWrlwYP; dkim=pass (2048-bit key) header.d=oss.qualcomm.com header.i=@oss.qualcomm.com header.b=bnGhM41s; arc=none smtp.client-ip=205.220.180.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oss.qualcomm.com
+	s=arc-20240116; t=1774262510; c=relaxed/simple;
+	bh=S7snxdf2VC1hDQ0u8eK1jw3LmX1kVt+HDFNpCm8/tYY=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=sAHPz5pGpaeoNx6iqy3Fa0nCNhCyvk8BU3V2U34yWDCKqgHopHOEFoId4iRJsSgFTH86WB9qiU6fv4rcPH1M62H5A73AoNz/qJxg6Wbbp9nkp5dmyBvQ/EGgF+lzrU3lfIrdmj87fk4bjBJMDzvaye456hRsxjRrmA+j98e0J38=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=pass smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=Ae0OO9YP; arc=none smtp.client-ip=198.175.65.17
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b="hQWrlwYP";
-	dkim=pass (2048-bit key) header.d=oss.qualcomm.com header.i=@oss.qualcomm.com header.b="bnGhM41s"
-Received: from pps.filterd (m0279868.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.18.1.11/8.18.1.11) with ESMTP id 62NA2BFk1584129
-	for <platform-driver-x86@vger.kernel.org>; Mon, 23 Mar 2026 10:06:26 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=qualcomm.com; h=
-	cc:content-transfer-encoding:content-type:date:from:in-reply-to
-	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
-	I5yQKiNZSsYbyYyS1YJfVWczDFd4x1Y2DGvRv4gTD1g=; b=hQWrlwYPVoRbFM+p
-	LCxNxKKJxrR4mfK4Q2REdZfr/kEWXqyLZDVCjb+NWEjoylslCVtOLfbjOzAw7C4t
-	9gIs14C3rMpx4e/VtFHKHKSr9AtPfi9IkoOgxjvMjJjaQvsmpVqvHe7HJF6Uif91
-	/4soIxrETpmLrSbh8CMciDKOpqV/a9Ptowtyy/hhJCFrmKeHybwX2byPBZ5CwE4n
-	+TzFc/5NoeR01Xzo52EUfPJ8dzjuZQHo7CvgWI5LeTTtabdY2Koa5O+DVRFafqRP
-	LpTBG+sRHBWvI8m1sJF3cwJNxADRk40v01MKbzcyXZY5Av7g+XvKRmIvhgw0gmt9
-	FdKIsQ==
-Received: from mail-qt1-f198.google.com (mail-qt1-f198.google.com [209.85.160.198])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 4d1jng4vk1-1
-	(version=TLSv1.3 cipher=TLS_AES_128_GCM_SHA256 bits=128 verify=NOT)
-	for <platform-driver-x86@vger.kernel.org>; Mon, 23 Mar 2026 10:06:25 +0000 (GMT)
-Received: by mail-qt1-f198.google.com with SMTP id d75a77b69052e-50b2d15c360so31801521cf.2
-        for <platform-driver-x86@vger.kernel.org>; Mon, 23 Mar 2026 03:06:25 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=oss.qualcomm.com; s=google; t=1774260385; x=1774865185; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=I5yQKiNZSsYbyYyS1YJfVWczDFd4x1Y2DGvRv4gTD1g=;
-        b=bnGhM41sP/gWTp/AUUR6y/CnBd4sGWGt+6uNWKeKUtgrcyZgRBhuOkYpZQBScp4PDz
-         nwaD57SMqogcR+O44QQAnM3mcccn4AYZFuSq/Yqmh5ypnHofDtDP2frQz3xfkTJYO+V1
-         DOVhAgpm0Eh2trIvf9Hy474vgV1pOrb/otC5Y4Awg4BRE9B0yI6cJu2zVK6USrJ2qnN+
-         VFC7HBjPFxWCdHG2rGWqltmdKGrCJJQdnHOXQNH1r9X73NfqRtnaZJn0PhH87ZMb64Kv
-         OT6z9h8jyBhtCjtzFJkjKYnmnBEP1XJqZd1tKuT+fOG1/Q/VcKoL+kQkljSNf9+GvTJ6
-         Th+g==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1774260385; x=1774865185;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-gg:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=I5yQKiNZSsYbyYyS1YJfVWczDFd4x1Y2DGvRv4gTD1g=;
-        b=EBDqTuipTIM/4J3jf6IRDHokwP/N9nBII37eu0GMLRX2/0hf8R6me7eSKM4Qvm8SyX
-         ahziaLWF6E4L4VSOx93iwWfVeIZryFbo9+LiZhV3M6UeyYQN0qVv4C44xPvvd7TBN8j0
-         BP6IVqaUzGVdbB7bZ5HPBsQkSYBKAb0H8tjafBPMdHb/t25kgkzqznWQeOFk67wQoQ0A
-         47zkseD8KUQyc51avfguB7DUqU5lLDrGdZhZjyKYfsitfmt2GliRP/f9nbjoF4GCznyn
-         Dn+//vPy9qa/AMUBvYPe2uTqEDPaBZ+4qn+F4SsXhCPj/mr3o1SMf/lHcRmdr+4jzxjQ
-         t6pA==
-X-Forwarded-Encrypted: i=1; AJvYcCVJhIIBQpxQo7+Elnrh0YtbYW5msDbrTN7Xqlsxy3qhEFhm4a0VauhsfS1/JO2S8LOOmiNmRyPvrowuDd4DVRmLHK2r@vger.kernel.org
-X-Gm-Message-State: AOJu0YwQ8W3AIugdtmy3z2CTwFzlemG+2kqfywFUtXLGoBGqyW9AK1cL
-	Lq2KMmLq0RmLKoKc2mxFtYh0q80VzmaMyo7VUgQjUHfb/vh0+FZkZefLr+1A3whFH4fh0GUEh7v
-	r21XwV6mPkoXpPMglROJz17zIZFuV0Y7+HZqoxqsc3Hu8IfoKgIO5SrAbtPwmCkAAJtIF5JUr6b
-	OXkWQjxX07
-X-Gm-Gg: ATEYQzzjBrNyvi8K9M4VNN36gEUq4BbK1uefCHzh5qkW+e6iiPcxG3f9Y+LgUr0pDFL
-	kD3+twzW7TBQtLd7GMBaaZkkivKnzEywwnzoNpomYlY5bGGTPfw/8PfJGPKzNZ8Cj+t2SXhDsRA
-	vk+qrlPhivK9jCFE2Cf7IycoWlYwbUgxaORLnelHc/TyoKWvuuIuMu9LufNPlN9JkkWi1OxF7eV
-	FgP4XLMVxBUY3oGRBoSVVI3MsA50S2UK8HG0yON3Z2tH3Ymlt6a/OSo1Sf3K7UXpfJxKTWY6XNJ
-	yqAMB+zePEI5J29/LREUs8Xp1+JfUsLo/POaH3wn52F+s1wVvSJmJvdlgV9bzk5YSp+VU+Hbtbz
-	yBaWOnid71HuuzUr2vIs4LRBfgmLOUpYmK3x1WBDlQpUSch8ByhSQRUCEzxgz9OQgVUreCr+kt7
-	acnfE=
-X-Received: by 2002:a05:622a:4647:b0:50b:6b21:2a7f with SMTP id d75a77b69052e-50b6b213568mr1668561cf.2.1774260385030;
-        Mon, 23 Mar 2026 03:06:25 -0700 (PDT)
-X-Received: by 2002:a05:622a:4647:b0:50b:6b21:2a7f with SMTP id d75a77b69052e-50b6b213568mr1668351cf.2.1774260384633;
-        Mon, 23 Mar 2026 03:06:24 -0700 (PDT)
-Received: from [192.168.119.254] (078088045245.garwolin.vectranet.pl. [78.88.45.245])
-        by smtp.gmail.com with ESMTPSA id 4fb4d7f45d1cf-668d2677970sm3533532a12.27.2026.03.23.03.06.22
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 23 Mar 2026 03:06:23 -0700 (PDT)
-Message-ID: <74679a77-55b1-41a4-8e7b-297472b6db8e@oss.qualcomm.com>
-Date: Mon, 23 Mar 2026 11:06:21 +0100
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="Ae0OO9YP"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1774262508; x=1805798508;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=S7snxdf2VC1hDQ0u8eK1jw3LmX1kVt+HDFNpCm8/tYY=;
+  b=Ae0OO9YPxs7xcHWg2TKnlZ4uA0Z1m5YNvoJnYUK4sHlPQzqKlvihH3cB
+   SYonmwsw6T+MhWMFFhtck1QkR5XtHKo7zN9Q/GRc2XbPcTYtTHse2UJx0
+   vygR0AAn/pmKlXZIyOohm4AZJVSJrPbBd0Kbb33VmvsNqtDWjW+rzId5h
+   dnkYD1CwQnaPTHR26XS8ZJzTdgPdVVVce958zactr6wueO71YG6nb+ax4
+   M2e4dV95gt7Lj2Jz1ONEVTkNG4o4fe31BJ6goosxrnZBVxur1WrdTBUIL
+   iXMk7MsNhOTt/eDlT+GlonJfVchc3UzLXJ8GE7VZfZV/kQcySK8grTQ7o
+   g==;
+X-CSE-ConnectionGUID: yjN8jAhITFCyTQP7SkvEfA==
+X-CSE-MsgGUID: LKh1kwiYSWqyVTLyGNfbsg==
+X-IronPort-AV: E=McAfee;i="6800,10657,11737"; a="75226261"
+X-IronPort-AV: E=Sophos;i="6.23,137,1770624000"; 
+   d="scan'208";a="75226261"
+Received: from orviesa001.jf.intel.com ([10.64.159.141])
+  by orvoesa109.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 23 Mar 2026 03:41:48 -0700
+X-CSE-ConnectionGUID: totED6I+T3mhgOBfh4FqYA==
+X-CSE-MsgGUID: cLLgQdgZRSSYIGuBeitYtA==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.23,137,1770624000"; 
+   d="scan'208";a="261900753"
+Received: from pgcooper-mobl3.ger.corp.intel.com (HELO kekkonen.fi.intel.com) ([10.245.244.18])
+  by smtpauth.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 23 Mar 2026 03:41:46 -0700
+Received: from kekkonen.localdomain (localhost [IPv6:::1])
+	by kekkonen.fi.intel.com (Postfix) with SMTP id D8BC7120832;
+	Mon, 23 Mar 2026 12:41:47 +0200 (EET)
+Date: Mon, 23 Mar 2026 12:41:47 +0200
+Organization: Intel Finland Oy - BIC 0357606-4 - c/o Alberga Business Park, 6 krs, Bertel Jungin Aukio 5, 02600 Espoo
+From: "sakari.ailus@linux.intel.com" <sakari.ailus@linux.intel.com>
+To: "T, Arun" <arun.t@intel.com>
+Cc: "johannes.goede@oss.qualcomm.com" <johannes.goede@oss.qualcomm.com>,
+	"Kao, Arec" <arec.kao@intel.com>,
+	"ilpo.jarvinen@linux.intel.com" <ilpo.jarvinen@linux.intel.com>,
+	"dan.scally@ideasonboard.com" <dan.scally@ideasonboard.com>,
+	"platform-driver-x86@vger.kernel.org" <platform-driver-x86@vger.kernel.org>,
+	"linux-media@vger.kernel.org" <linux-media@vger.kernel.org>,
+	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+	"Djait, Mehdi" <mehdi.djait@intel.com>
+Subject: Re: [PATCH v4 1/2] platform/x86: int3472: Add TPS68470 board data
+ for Intel nvl
+Message-ID: <acEY6_sFAnb3aHY6@kekkonen.localdomain>
+References: <20260306163019.1619490-1-arun.t@intel.com>
+ <20260306163019.1619490-2-arun.t@intel.com>
+ <SA3PR11MB80229E0FF7B1E8B32EB35E689D4BA@SA3PR11MB8022.namprd11.prod.outlook.com>
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v5 2/5] platform: arm64: Add driver for EC found on
- Qualcomm reference devices
-To: Anvesh Jain P <anvesh.p@oss.qualcomm.com>,
-        Sibi Sankar <sibi.sankar@oss.qualcomm.com>,
-        Rob Herring <robh@kernel.org>,
-        Krzysztof Kozlowski <krzk+dt@kernel.org>,
-        Conor Dooley
- <conor+dt@kernel.org>, Hans de Goede <hansg@kernel.org>,
-        =?UTF-8?Q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>,
-        Bryan O'Donoghue <bryan.odonoghue@linaro.org>,
-        Bjorn Andersson <andersson@kernel.org>,
-        Konrad Dybcio <konradybcio@kernel.org>
-Cc: linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, platform-driver-x86@vger.kernel.org,
-        Maya Matuszczyk <maccraft123mc@gmail.com>,
-        Dmitry Baryshkov <dmitry.baryshkov@oss.qualcomm.com>
-References: <20260317-add-driver-for-ec-v5-0-38d11f524856@oss.qualcomm.com>
- <20260317-add-driver-for-ec-v5-2-38d11f524856@oss.qualcomm.com>
-Content-Language: en-US
-From: Konrad Dybcio <konrad.dybcio@oss.qualcomm.com>
-In-Reply-To: <20260317-add-driver-for-ec-v5-2-38d11f524856@oss.qualcomm.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-X-Proofpoint-GUID: 9LyTBjCm5Ch1Zy_90MQ87i1Nb_oTrVLY
-X-Authority-Analysis: v=2.4 cv=Q63fIo2a c=1 sm=1 tr=0 ts=69c110a1 cx=c_pps
- a=mPf7EqFMSY9/WdsSgAYMbA==:117 a=FpWmc02/iXfjRdCD7H54yg==:17
- a=IkcTkHD0fZMA:10 a=Yq5XynenixoA:10 a=s4-Qcg_JpJYA:10
- a=VkNPw1HP01LnGYTKEx00:22 a=u7WPNUs3qKkmUXheDGA7:22 a=ZpdpYltYx_vBUK5n70dp:22
- a=EUspDBNiAAAA:8 a=pGLkceISAAAA:8 a=lVCZqg8DjZk64FRXgSgA:9 a=QEXdDO2ut3YA:10
- a=zZCYzV9kfG8A:10 a=dawVfQjAaf238kedN5IG:22
-X-Proofpoint-ORIG-GUID: 9LyTBjCm5Ch1Zy_90MQ87i1Nb_oTrVLY
-X-Proofpoint-Spam-Details-Enc: AW1haW4tMjYwMzIzMDA3OCBTYWx0ZWRfXxTRKPmfuF7op
- ZpFTYuhQUhHu3hO5TmCE23ftLVHikmiPiR02AnbuEzqdGWuZNcEfsn8WnaV5WRGG6lJXnzR6xtE
- 1jYO8h1ydjCXza390omiecUSm5owwo4+rckTa8sFAu2XCKiP+7y84+gOecwSt+fs+y5b31uwnDP
- BaeREVs59Ya4vpJ2ie/1MmzunHeNicYiw2Uer0L/TR3xBCEoYId+l4hGue+dxtt7boQrg0+TuC6
- QQd/BAVXEBV5n9UdDmncEM05QuTi6BeWlf+TrixppLBkV0pxaPyyxUGBq6dd4aUupNkQEWoxbhF
- 9lTHPB/aHNG3VExJ2dY8NU7eUl1RTWQoDDUhImS+4ZN1FKZG8e53mS5iSi8UNDUST+duwqSZ3GB
- W3IvK6uIJA+Z56MrnjZUfiIEAdLEgzw/owbSJYh4DwjYA1f+Z/mUsF/LfdOUWrUJXRMBU5x09Q4
- QHvWAbiJ7yen0ac1+bQ==
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1143,Hydra:6.1.51,FMLib:17.12.100.49
- definitions=2026-03-23_03,2026-03-20_02,2025-10-01_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
- clxscore=1015 impostorscore=0 priorityscore=1501 bulkscore=0 spamscore=0
- malwarescore=0 adultscore=0 phishscore=0 lowpriorityscore=0 suspectscore=0
- classifier=typeunknown authscore=0 authtc= authcc= route=outbound adjust=0
- reason=mlx scancount=1 engine=8.22.0-2603050001 definitions=main-2603230078
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <SA3PR11MB80229E0FF7B1E8B32EB35E689D4BA@SA3PR11MB8022.namprd11.prod.outlook.com>
 
-On 3/17/26 1:27 PM, Anvesh Jain P wrote:
-> From: Sibi Sankar <sibi.sankar@oss.qualcomm.com>
+Hi Arun,
+
+On Mon, Mar 23, 2026 at 06:12:29AM +0000, T, Arun wrote:
+> Hi All, 
 > 
-> Add Embedded controller driver support for Hamoa/Purwa/Glymur qualcomm
-> reference boards. It handles fan control, temperature sensors, access
-> to EC state changes and supports reporting suspend entry/exit to the
-> EC.
+> There has been no reply to these below patches for quite some time. Could you please provide any feedback, comments, or suggestions on these below patches
 > 
-> Co-developed-by: Maya Matuszczyk <maccraft123mc@gmail.com>
-> Signed-off-by: Maya Matuszczyk <maccraft123mc@gmail.com>
-> Signed-off-by: Sibi Sankar <sibi.sankar@oss.qualcomm.com>
-> Reviewed-by: Dmitry Baryshkov <dmitry.baryshkov@oss.qualcomm.com>
-> Co-developed-by: Anvesh Jain P <anvesh.p@oss.qualcomm.com>
-> Signed-off-by: Anvesh Jain P <anvesh.p@oss.qualcomm.com>
+> https://lore.kernel.org/linux-media/20260306163019.1619490-2-arun.t@intel.com/
+> https://lore.kernel.org/all/20260306163019.1619490-3-arun.t@intel.com/
+
+Could you reply to my earlier reviews?
+
+First and foremost, we still have eight regulators configured for a device
+that uses three. Some of them have been declared as always_on, too, for no
+apparent reason.
+
+> 
+> -
+> Regards,
+> Arun T
+> 
+> -----Original Message-----
+> From: T, Arun <arun.t@intel.com> 
+> Sent: 06 March 2026 10:00 PM
+> To: T, Arun <arun.t@intel.com>; johannes.goede@oss.qualcomm.com
+> Cc: sakari.ailus@linux.intel.com; Kao, Arec <arec.kao@intel.com>; ilpo.jarvinen@linux.intel.com; dan.scally@ideasonboard.com; platform-driver-x86@vger.kernel.org; linux-media@vger.kernel.org; linux-kernel@vger.kernel.org; Djait, Mehdi <mehdi.djait@intel.com>
+> Subject: [PATCH v4 1/2] platform/x86: int3472: Add TPS68470 board data for Intel nvl
+> 
+> The Intel NVL platform uses IPU8 is powered by a TPS68470 PMIC,requiring board data to configure the GPIOs and regulators for proper camera sensor operation.
+> 
+> Signed-off-by: Arun T <arun.t@intel.com>
 > ---
+>  .../x86/intel/int3472/tps68470_board_data.c   | 150 ++++++++++++++++++
+>  1 file changed, 150 insertions(+)
+> 
+> diff --git a/drivers/platform/x86/intel/int3472/tps68470_board_data.c b/drivers/platform/x86/intel/int3472/tps68470_board_data.c
+> index 71357a036292..8ae5e01f6660 100644
+> --- a/drivers/platform/x86/intel/int3472/tps68470_board_data.c
+> +++ b/drivers/platform/x86/intel/int3472/tps68470_board_data.c
+> @@ -143,6 +143,34 @@ static struct regulator_consumer_supply int3479_aux2_consumer_supplies[] = {
+>  	REGULATOR_SUPPLY("dovdd", "i2c-INT3479:00"),  };
+>  
+> +/* Settings for Intel NVL platform */
+> +
+> +static struct regulator_consumer_supply int3472_core_consumer_supplies[] = {
+> +	REGULATOR_SUPPLY("dvdd", "i2c-OVTI13B1:01"), };
+> +
+> +static struct regulator_consumer_supply int3472_ana_consumer_supplies[] = {
+> +	REGULATOR_SUPPLY("avdd", "i2c-OVTI13B1:01"), };
+> +
+> +static struct regulator_consumer_supply int3472_vcm_consumer_supplies[] = {
+> +	REGULATOR_SUPPLY("vdd", "i2c-OVTI13B1:01"), };
+> +
+> +static struct regulator_consumer_supply int3472_vsio_consumer_supplies[] = {
+> +	REGULATOR_SUPPLY("dovdd", "i2c-OVTI13B1:01"),
+> +	REGULATOR_SUPPLY("vsio", "i2c-OVTI13B1:01"),
+> +	REGULATOR_SUPPLY("vddd", "i2c-OVTI13B1:01"), };
+> +
+> +static struct regulator_consumer_supply int3472_aux1_consumer_supplies[] = {
+> +	REGULATOR_SUPPLY("vdda", "i2c-OVTI13B1:01"), };
+> +
+> +static struct regulator_consumer_supply int3472_aux2_consumer_supplies[] = {
+> +	REGULATOR_SUPPLY("vdddo", "i2c-OVTI13B1:01"), };
+> +
+>  static const struct regulator_init_data dell_7212_tps68470_core_reg_init_data = {
+>  	.constraints = {
+>  		.min_uV = 1200000,
+> @@ -220,6 +248,82 @@ static const struct regulator_init_data dell_7212_tps68470_aux2_reg_init_data =
+>  	.consumer_supplies = int3479_aux2_consumer_supplies,  };
+>  
+> +static const struct regulator_init_data intel_nvl_tps68470_core_reg_init_data = {
+> +	.constraints = {
+> +		.min_uV = 1200000,
+> +		.max_uV = 1200000,
+> +		.apply_uV = true,
+> +		.always_on = true,
+> +	},
+> +	.num_consumer_supplies = ARRAY_SIZE(int3472_core_consumer_supplies),
+> +	.consumer_supplies = int3472_core_consumer_supplies, };
+> +
+> +static const struct regulator_init_data intel_nvl_tps68470_ana_reg_init_data = {
+> +	.constraints = {
+> +		.min_uV = 2815200,
+> +		.max_uV = 2815200,
+> +		.apply_uV = true,
+> +		.always_on = true,
+> +	},
+> +	.num_consumer_supplies = ARRAY_SIZE(int3472_ana_consumer_supplies),
+> +	.consumer_supplies = int3472_ana_consumer_supplies, };
+> +
+> +static const struct regulator_init_data intel_nvl_tps68470_vcm_reg_init_data = {
+> +	.constraints = {
+> +		.min_uV = 2815200,
+> +		.max_uV = 2815200,
+> +		.apply_uV = true,
+> +		.always_on = true,
+> +	},
+> +	.num_consumer_supplies = ARRAY_SIZE(int3472_vcm_consumer_supplies),
+> +	.consumer_supplies = int3472_vcm_consumer_supplies, };
+> +
+> +/* Ensure the always-on VIO regulator has the same voltage as VSIO */ 
+> +static const struct regulator_init_data intel_nvl_tps68470_vio_reg_init_data = {
+> +	.constraints = {
+> +		.min_uV = 1800600,
+> +		.max_uV = 1800600,
+> +		.apply_uV = true,
+> +		.always_on = true,
+> +	},
+> +};
+> +
+> +static const struct regulator_init_data intel_nvl_tps68470_vsio_reg_init_data = {
+> +	.constraints = {
+> +		.min_uV = 1800600,
+> +		.max_uV = 1800600,
+> +		.apply_uV = true,
+> +		.always_on = true,
+> +	},
+> +	.num_consumer_supplies = ARRAY_SIZE(int3472_vsio_consumer_supplies),
+> +	.consumer_supplies = int3472_vsio_consumer_supplies, };
+> +
+> +static const struct regulator_init_data intel_nvl_tps68470_aux1_reg_init_data = {
+> +	.constraints = {
+> +		.min_uV = 2815200,
+> +		.max_uV = 2815200,
+> +		.apply_uV = 1,
+> +		.valid_ops_mask = REGULATOR_CHANGE_STATUS,
+> +	},
+> +	.num_consumer_supplies = ARRAY_SIZE(int3472_aux1_consumer_supplies),
+> +	.consumer_supplies = int3472_aux1_consumer_supplies, };
+> +
+> +static const struct regulator_init_data intel_nvl_tps68470_aux2_reg_init_data = {
+> +	.constraints = {
+> +		.min_uV = 1800600,
+> +		.max_uV = 1800600,
+> +		.apply_uV = 1,
+> +		.valid_ops_mask = REGULATOR_CHANGE_STATUS,
+> +	},
+> +	.num_consumer_supplies = ARRAY_SIZE(int3472_aux2_consumer_supplies),
+> +	.consumer_supplies = int3472_aux2_consumer_supplies, };
+> +
+>  static const struct tps68470_regulator_platform_data dell_7212_tps68470_pdata = {
+>  	.reg_init_data = {
+>  		[TPS68470_CORE] = &dell_7212_tps68470_core_reg_init_data,
+> @@ -232,6 +336,18 @@ static const struct tps68470_regulator_platform_data dell_7212_tps68470_pdata =
+>  	},
+>  };
+>  
+> +static const struct tps68470_regulator_platform_data intel_nvl_tps68470_pdata = {
+> +	.reg_init_data = {
+> +		[TPS68470_CORE] = &intel_nvl_tps68470_core_reg_init_data,
+> +		[TPS68470_ANA]  = &intel_nvl_tps68470_ana_reg_init_data,
+> +		[TPS68470_VCM]  = &intel_nvl_tps68470_vcm_reg_init_data,
+> +		[TPS68470_VIO] = &intel_nvl_tps68470_vio_reg_init_data,
+> +		[TPS68470_VSIO] = &intel_nvl_tps68470_vsio_reg_init_data,
+> +		[TPS68470_AUX1] = &intel_nvl_tps68470_aux1_reg_init_data,
+> +		[TPS68470_AUX2] = &intel_nvl_tps68470_aux2_reg_init_data,
+> +	},
+> +};
+> +
+>  static struct gpiod_lookup_table surface_go_int347a_gpios = {
+>  	.dev_id = "i2c-INT347A:00",
+>  	.table = {
+> @@ -258,6 +374,23 @@ static struct gpiod_lookup_table dell_7212_int3479_gpios = {
+>  	}
+>  };
+>  
+> +static struct gpiod_lookup_table intel_nvl_int347a_gpios = {
+> +	.dev_id = "i2c-OVTI13B1:01",
+> +	.table = {
+> +		GPIO_LOOKUP("tps68470-gpio", 9, "reset", GPIO_ACTIVE_LOW),
+> +		GPIO_LOOKUP("tps68470-gpio", 8, "s_idle", GPIO_ACTIVE_LOW),
+> +		{ }
+> +	}
+> +};
+> +
+> +static struct gpiod_lookup_table intel_nvl_int347e_gpios = {
+> +	.dev_id = "i2c-OVTI13B1:01",
+> +	.table = {
+> +	GPIO_LOOKUP("tps68470-gpio", 7, "s_enable", GPIO_ACTIVE_LOW),
+> +		{ }
+> +	}
+> +};
+> +
+>  static const struct int3472_tps68470_board_data surface_go_tps68470_board_data = {
+>  	.dev_name = "i2c-INT3472:05",
+>  	.tps68470_regulator_pdata = &surface_go_tps68470_pdata, @@ -287,6 +420,16 @@ static const struct int3472_tps68470_board_data dell_7212_tps68470_board_data =
+>  	},
+>  };
+>  
+> +static const struct int3472_tps68470_board_data intel_nvl_tps68470_board_data = {
+> +	.dev_name = "i2c-INT3472:04",
+> +	.tps68470_regulator_pdata = &intel_nvl_tps68470_pdata,
+> +	.n_gpiod_lookups = 2,
+> +	.tps68470_gpio_lookup_tables = {
+> +		&intel_nvl_int347a_gpios,
+> +		&intel_nvl_int347e_gpios,
+> +	},
+> +};
+> +
+>  static const struct dmi_system_id int3472_tps68470_board_data_table[] = {
+>  	{
+>  		.matches = {
+> @@ -316,6 +459,13 @@ static const struct dmi_system_id int3472_tps68470_board_data_table[] = {
+>  		},
+>  		.driver_data = (void *)&dell_7212_tps68470_board_data,
+>  	},
+> +	{
+> +		.matches = {
+> +			DMI_EXACT_MATCH(DMI_SYS_VENDOR, "Intel Corporation"),
+> +			DMI_EXACT_MATCH(DMI_PRODUCT_NAME, "Nova Lake Client Platform"),
+> +		},
+> +	       .driver_data = (void *)&intel_nvl_tps68470_board_data,
+> +	},
+>  	{ }
+>  };
+>  
 
-Acked-by: Konrad Dybcio <konrad.dybcio@oss.qualcomm.com>
+-- 
+Regards,
 
-Konrad
+Sakari Ailus
