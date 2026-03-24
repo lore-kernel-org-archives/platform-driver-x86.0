@@ -1,208 +1,157 @@
-Received: from mail-ej1-f45.google.com (mail-ej1-f45.google.com [209.85.218.45])
+Received: from mail-dy1-f175.google.com (mail-dy1-f175.google.com [74.125.82.175])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B2BE02FA0C6
-	for <platform-driver-x86@vger.kernel.org>; Tue, 24 Mar 2026 21:28:01 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=209.85.218.45
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1774387683; cv=pass; b=hjxXTg3BMOVobFlgrdd29F9anvHfFASF1f/4C+Mt2gHlI1ZLmrWiet2WrFlsnM92XVDyX2J8Q+gwMQ+/ChmSL2m4Sp3sHlxoXWhS+VBJynwj8H9R7SeuAoDmGkb5+tTJFiNyCNGsQxGR0gyILEDztLE9ecaiOA98kusQFLLjDVg=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1774387683; c=relaxed/simple;
-	bh=LDyNbT07z947mAwwCU/H4seMEakotNHDyOjJ4WTP4wk=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=ITild9Etqdx+3QBVfIIw404d7ZXCFo6JTdWhBnywolQEhyI2N4zL/76i8STHLjuhdWuJcwPZ5SB1FuzRMpkfIG69pq0K9wsWOj4X7CP5xLYVoBOBbkzTrzuI4N2G9/1KTixPYkqdjb31meKrSb4PFQz72St6FBivFpc+l/9bllo=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=NhF86uHS; arc=pass smtp.client-ip=209.85.218.45
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4890735F5FB
+	for <platform-driver-x86@vger.kernel.org>; Tue, 24 Mar 2026 21:42:04 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=74.125.82.175
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1774388526; cv=none; b=XqzYDRpgry0x+cYrY8/SYi60sbKiXNYmMtYVMcPdFRu4xreCs1rcUSIPJIOT2wgQeV2uCxr8asEMuqIYqtCwLaYX8lGhzj9YVZhH/vFlYeQcyaLWUzT8sp4UQAoLbT6rF0wSemH3ZxQM8O74TyVJk7g7qxsYjOsL9eyHHDaI76o=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1774388526; c=relaxed/simple;
+	bh=d8nRjqoDIwJbqKxF5GWzJrcsC0Ax6LqGNMy61f3bzMo=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=eq1bZ8A8KiXXA+o6EIiMmeOb2giV8iF57ZY0e9cFZ8D4RRaXWTf3cqcBlncgPVbfiz41WDpzfq6lzSYHoRmV13DvIBnDat/8NDJ/yTZP688kJYjGXCSReW9uVB0GAX9Ykr2SJwAjPyCWENNUAe/ylpJmPw/zK7wAnI+JOSh+RdA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=IX46Ptnf; arc=none smtp.client-ip=74.125.82.175
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="NhF86uHS"
-Received: by mail-ej1-f45.google.com with SMTP id a640c23a62f3a-b9910707d82so132454066b.1
-        for <platform-driver-x86@vger.kernel.org>; Tue, 24 Mar 2026 14:28:01 -0700 (PDT)
-ARC-Seal: i=1; a=rsa-sha256; t=1774387680; cv=none;
-        d=google.com; s=arc-20240605;
-        b=LxAXJUZSxLVMbENWOtUYiOHov9h5WXaYDpBO6QUvpU0HB+l28oCtZTx59XNKQISx7i
-         oxK59Qu0qkw7apsD4EB3iYJ4axRtaKdqkXF7Ar7VSU937yEkAJSr3pREnl8FbPpZ8wSO
-         Grh1WO1ea9124o4eG1+Ty15zW8YFw+MMNJ7MulRvl9qk3QuaXefDLf994G5c3zceOu0U
-         DQTiyRBAm30zzfGUEHwha1CMQ28p15U86/cRbCiX4P8q17ASPcvFNMxOHXU5vhs910RJ
-         615DNMa85e0q0vuZ/DOT5beo2KHvEA/Cjea0ODkt/YizQZn4fp6oCjlDq8kho+/zOgMQ
-         ra0g==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20240605;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:dkim-signature;
-        bh=GxQi3ohN2SF498D3BGe3v0S3aNizlnyTOGo8I1Infqk=;
-        fh=bl3oaCkJqJLi1976U6daTIbmpx9cT8+79DLB542x7lw=;
-        b=T9rNkddjILS2lwuVurspnXvU5Da4TCqyop4cMD8q3LYQaXc/Gts8TrshN8lxvei4u/
-         AKyXNvSc9b6AYwvgrg+HJFDQwkVWi8BZCe7hYov+7JtQzjPqTRS3nKZDl7iu8o7iviiL
-         d51trFYITZC1slB8Fl3piiMai3h+A8Ucp9KwkWcdc34cm+oja1OuIOz6CrH+cwizPExV
-         H8XY+LwAq5J7ipCcD7398iMYMBx1boEpyv6AEgV2fSzAJu0JxoNFsN+Aycich0BaTzGE
-         l5DFzzFF0GJo2nmm5IXMjEAtepD/x3U9AaWmk0TnNOxAYhhU4FdNZ2MStSjAWBTnm4Lo
-         I1JQ==;
-        darn=vger.kernel.org
-ARC-Authentication-Results: i=1; mx.google.com; arc=none
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="IX46Ptnf"
+Received: by mail-dy1-f175.google.com with SMTP id 5a478bee46e88-2c0bb213b16so10433524eec.0
+        for <platform-driver-x86@vger.kernel.org>; Tue, 24 Mar 2026 14:42:04 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20251104; t=1774387680; x=1774992480; darn=vger.kernel.org;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:from:to:cc:subject:date:message-id:reply-to;
-        bh=GxQi3ohN2SF498D3BGe3v0S3aNizlnyTOGo8I1Infqk=;
-        b=NhF86uHSRJrOJPYdo5xMIiyOf/x5xxlwu1N/53q1xVHPJU3lccZtUxn9Zr3ObVDKvs
-         9uRATXXCZqwnaETSBL+DJj8Kh6y4Hj1twKLL9m/W8oLINrpYB32Ni8jP87D59c16nLue
-         fs7yIvxmmUJQ2tN3ypCw3rdGiYXfwKnKik6kY6Blc2w0HstEM9tSnm/0xs3D6ddSmF50
-         4+FwHqolJiWdCoC6hk0rB3VxXo8Wz1sgy2i4Qon7wPatPJbEu/+6vvfrzsqPo7Q+8Kqq
-         IR62No61K8TjGLUUzRncAs7lLelxekXSwSUaQtjYgMwgBTTxISYID/QBtSwYdnOkkWsg
-         RXpQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1774387680; x=1774992480;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-gg:x-gm-message-state:from:to:cc:subject:date
+        d=gmail.com; s=20251104; t=1774388523; x=1774993323; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=GxQi3ohN2SF498D3BGe3v0S3aNizlnyTOGo8I1Infqk=;
-        b=OQdb+A2fg9fJUe9GcUVvYKhf+D2jhqn0uZhhqS2aZBtiD1pblG/i9yjrbkfGHD35uJ
-         Cm4MsRUy740f6OdrR/x/sZwKrMWyEna50/LUk8SswKvMSbHYMm9RIC/vd3UBvqbMs9/3
-         1zpuh8qgS8BMGbnRQHIL0RUXcPz6CrC9EuXVeEGZQusxPhVCcaeGPmm4rkj181wTmVgb
-         4IZHmBEjcJadr7OyJi7BegP09OMH/VO/r1770ayqCtvtWEBx3wEfX6TRSWJos2VXgxQI
-         h+myWs+vIxSaH5otG4y+ok6VULwaRRxm6q5yi8PfFq9MhIBZb9sLoIVj+LyMoLDwf+mI
-         o/IA==
-X-Gm-Message-State: AOJu0YwmPKupBsvtSNrcy88fjxcOKvbNliKG2mIN57blhJsX3G6Tl0tu
-	AeAYnUYlgRNZY3ZvBGPxuYYqTuSyiPyRDvk/+oUcMr1YH6ZTyXckzz4RUafqclp5RDESKx5SSrQ
-	rxSk6jFSj3nMPlDRU9Xa4ilmVHyL+9QeoRqbLauE=
-X-Gm-Gg: ATEYQzxbT37veV+/Nuxi6CLOib+NdIBrwuLj7fa2nSHCGt7+DRVKW0+Av+T07t4DFC8
-	DfpNs/bU4QIVd9TsNIZ2P+YE4EchV2DWmO2XTyHfhZo9/kZ2reMgmKMgrYAhAYH3IAXDj2dz5LE
-	CZAItHYM5IUv6e4lvXyNFct1FZ8AU3LtJrSoOJOJJzbjSo0xqZsDjzf+oFp19A5aYIuGsSFrICT
-	fg7f4ypFGuJFkRy54ipvD3NYs+em84ag90VJUAGbB7otSzEGEqlks3y9tkC22trdv6hDdPntHtb
-	9PKgaA==
-X-Received: by 2002:a17:907:9304:b0:b90:8016:cfe4 with SMTP id
- a640c23a62f3a-b9a3f15ef72mr74194066b.10.1774387679760; Tue, 24 Mar 2026
- 14:27:59 -0700 (PDT)
+        bh=kZErExxVrhQfzXmsDYKwyIHQCAZOmsLcP7GeXuAtDUQ=;
+        b=IX46PtnfT/g4zjjmKPUXwSkV+a4wLeY/+FRUqC6OoCH6VzWqP2+yH/sMZUXRzKBx7n
+         p1rS1TJoMcGSUXnwbCnPDKJeQimJpJ5vVaFXvp2RGcPWmq1VK+89WLbsFY5UYrUYLRsU
+         rx3NkHrErz3Fpt6FaSpj7QaSn9rct1w88YktHeoIR/nBfDWv+AQikob8qKQ+RIcGM7+6
+         WyeLW45Ml0sH4wC8IrjUQ+qSMBhdjBK7Oh1Lx1nzGC6m1Bg3rYmeyQO7buOt+GAdq8FS
+         dDriM4FIXo2f6TO/sWePY8N06K7wXM5aIf32wyHp3TFGZZW1x3HuLJd9VzUdZlFxF5jz
+         hlfQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20251104; t=1774388523; x=1774993323;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:x-gm-gg:x-gm-message-state:from
+         :to:cc:subject:date:message-id:reply-to;
+        bh=kZErExxVrhQfzXmsDYKwyIHQCAZOmsLcP7GeXuAtDUQ=;
+        b=iW2xJM7p+LODPOpHuZE2tQBSjE7mBeyb3uPy/Sm50xxgHntmHZpFZLAip2Bgd5ggNd
+         AwWQVPXsEeit3Z6euFx1YSEsoF/y5Rw1iu3hUmhM0LLiiUCMDGivwHgnesb2uPvWdEEX
+         YXKAzy36+GpjjUIigNs1cFYzlyfMXuGTJm9VtNbXLyh8yht6bj3a8xEjzdD3QXU9YjSP
+         yX6HIVER+H6Al0X47KDKP9RCqcbEk38hEK/ZwJqcx5huyllGc3K5Qmg9FOwrv/0axlOr
+         0IrE3ZZlFgnVrhTI/tHeCK7R6oxTJJ28ZgvB//WJkWXxSjM9vSyropWOteSPsMudyG1R
+         cSCg==
+X-Forwarded-Encrypted: i=1; AJvYcCV0cBKSGOeL7xDtDJNBbljYjbZ1Yv+ygDnTJmXy9y6C07BzwcVa9GTLJ82gdXS3dDWBwZKk7LUD1EYnhdAZzrzgmFE6@vger.kernel.org
+X-Gm-Message-State: AOJu0YxuGHtSzpczXUtMdMSGUtkejHxG1pHXGEFvn26f/JtiqkkuvmZr
+	zZe1W4krPQ484ZM6HTw5qlKOJlSttVuEGWy0cACCUs33qlOIkXWLfHvR
+X-Gm-Gg: ATEYQzwoiZzq0oivWq3oqG/U/2qKsLujo+8qLoxSyr0GjqVSSpFts1UFbrWBfp+zWMN
+	+tzuNu2tgC7jDKA1TQ7BUQ1lnPJ6W0Yl2XmUdaF6H+OR8YsEyeIG3JCdTMolsb8cOzkvcGqt/EI
+	H69yDCJMj1eC4jT0ASbkGDgu4+otDWvvq/qsG5MAEp7FMdB2NGoOZ+kFMHt89LYBmKNuS+FXTc5
+	5eeTt2vx8tDQUFzQ+6e5OsvfjLMTj4eC6jPjKh2+XnLWEvI3POwxFigSiO+d1qVDvOdkRCUtUrQ
+	gL4Zf3y48kDbgEdKXvQAumKgVC16u3eA/4rzUO47vMBaJGBonu8JZfzC56u3q489wzfuz62Pc/Q
+	8CjSJvSl3I3BQMXGWw4tAnxZRhOMzk+RQBCA+HmC686rdaHNXMkAZnIyZ3fHfO8eRf0O4egHIFE
+	Uqi56jOf4P1HM6wjxeSf1U6MJnpeSJqyRH
+X-Received: by 2002:a05:7301:4e0b:b0:2c1:4b1d:a472 with SMTP id 5a478bee46e88-2c15d3fb1e1mr527524eec.29.1774388523085;
+        Tue, 24 Mar 2026 14:42:03 -0700 (PDT)
+Received: from TC-LAPTOP.lan ([209.76.64.37])
+        by smtp.gmail.com with ESMTPSA id 5a478bee46e88-2c1536aa870sm3284180eec.2.2026.03.24.14.42.01
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 24 Mar 2026 14:42:02 -0700 (PDT)
+From: Thierry Chatard <tchatard@gmail.com>
+To: linux-kernel@vger.kernel.org
+Cc: linux-media@vger.kernel.org,
+	platform-driver-x86@vger.kernel.org,
+	lee@kernel.org,
+	djrscally@gmail.com,
+	hansg@kernel.org,
+	ilpo.jarvinen@linux.intel.com,
+	mchehab@kernel.org,
+	sakari.ailus@linux.intel.com,
+	jacopo.mondi@ideasonboard.com,
+	nicholas@rothemail.net,
+	Thierry Chatard <tchatard@gmail.com>
+Subject: [PATCH v2 0/5] Enable dual cameras on Dell Latitude 5285 2-in-1
+Date: Tue, 24 Mar 2026 14:41:24 -0700
+Message-ID: <20260324214129.17300-1-tchatard@gmail.com>
+X-Mailer: git-send-email 2.51.0
+In-Reply-To: <20260320000937.9177-1-tchatard@gmail.com>
+References: <20260320000937.9177-1-tchatard@gmail.com>
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <CAJ0oKyQTEJit294y=fs2s2nzhzUs_GQzsgMswDNs==zkdiqz0g@mail.gmail.com>
- <05ae0012-db1b-4826-a466-f706d2a57cc7@gmx.de> <CAJ0oKyRU3=qBQvxaBycQYAyxCaVogzuVNv_M=4=npTkBF=X1zg@mail.gmail.com>
- <18a5bcab-84d2-4957-a053-dabbf900e85d@gmx.de> <CAJ0oKyR0VPXz887cJsF+oUZFYVD7QY3F3FXWbjAGZGTmFFV-UA@mail.gmail.com>
- <81b30359-7090-430d-8cb1-805cf2d6fcc9@gmx.de>
-In-Reply-To: <81b30359-7090-430d-8cb1-805cf2d6fcc9@gmx.de>
-From: Ian Jensen <ianmoellerjensen@gmail.com>
-Date: Tue, 24 Mar 2026 22:27:46 +0100
-X-Gm-Features: AaiRm50uG4cNqBcQoZynZ3UiLOkYQ76sE0Ucya-74srjdn3iAWo5VZMrj8AHtx8
-Message-ID: <CAJ0oKySi8dLwbjM5UAgtCBRFEGAMpWZfLth=eWcMrBc3=YQqfQ@mail.gmail.com>
-Subject: Re: Internal keyboard non-functional on linux on Medion Laptop -
- NTC816 (Intel IPF) has no driver, PS/2 fallback produces corrupted scancodes
-To: Armin Wolf <W_Armin@gmx.de>
-Cc: platform-driver-x86@vger.kernel.org
-Content-Type: multipart/mixed; boundary="00000000000058fe41064dcbd3a9"
+Content-Transfer-Encoding: 8bit
 
---00000000000058fe41064dcbd3a9
-Content-Type: multipart/alternative; boundary="00000000000058fe3f064dcbd3a7"
+Changes in v2:
+- patch 2: split trailing statements in aml_parse_int() onto separate
+  lines (checkpatch); add kernel-doc @param descriptions to
+  aml_parse_int(), dell5285_gnvs_from_table(), and dell5285_gnvs_find()
+  (kernel test robot); add Reported-by/Closes tags
+- patch 3: wrap long lines in commit message (checkpatch)
 
---00000000000058fe3f064dcbd3a7
-Content-Type: text/plain; charset="UTF-8"
+The Dell Latitude 5285 2-in-1 has two cameras (OV5670 front, OV8858
+rear) connected through a TPS68470 PMIC/clock/GPIO hub. All five patches
+are required for a working system; each is self-contained and
+bisect-safe.
 
-Yes, here
+Hardware topology
+-----------------
+  Front camera:  OV5670 (ACPI INT3479), I2C4 / INT3446
+  Rear camera:   OV8858 (ACPI INT3477), I2C2 / i2c_designware.3
+  PMIC:          TPS68470 (ACPI INT3472:05), addr 0x4D, on I2C2
+  ISP:           Intel IPU3 (ipu3_cio2 + ipu3-imgu)
 
-Den tirs. 24. mar. 2026 kl. 22.08 skrev Armin Wolf <W_Armin@gmx.de>:
+The OV8858 is daisy-chained behind the TPS68470 S_I2C passthrough port.
+The TPS68470 VSIO regulator controls S_I2C_CTL (reg 0x43); marking it
+always_on keeps the passthrough active from boot so OV8858 is reachable
+on I2C2 at probe time.
 
-> Am 24.03.26 um 21:43 schrieb Ian Jensen:
->
-> >
-> > Yes certainly, my mistake
-> > Here it is
-> >
-> Thank you. Can you share the output of "ls /sys/bus/i2c/devices/"?
->
-> Thanks,
-> Armin Wolf
->
-> > Den tirs. 24. mar. 2026 kl. 21.37 skrev Armin Wolf <W_Armin@gmx.de>:
-> >
-> >     Am 24.03.26 um 21:28 schrieb Ian Jensen:
-> >
-> >     > Yes, here it is attached (this is with no launch parameters, so
-> >     > completely dead laptop keyboard)
-> >
-> >     Thanks you.
-> >
-> >     Can you please also share the acpidump with the whole mailing list
-> >     (reply-all) so that everyone can access it?
-> >     Also, it seems that the acpidump you have provided is corrupted,
-> >     likely because use copied it manually from the
-> >     command line.
-> >
-> >     Please use this command instead:
-> >
-> >             sudo acpidump > acpidump.txt
-> >
-> >     The acpidump.txt file should then contain the full data.
-> >
-> >     Thanks,
-> >     Armin Wolf
-> >
->
+Four problems must be fixed in combination:
 
---00000000000058fe3f064dcbd3a7
-Content-Type: text/html; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+patch 1/5 - intel_lpss: The BIOS claims the same MMIO region for both
+  GEXP and INT3446 (I2C4). Without this quirk the kernel rejects INT3446
+  as a resource conflict and the front camera's I2C bus never comes up.
 
-<div dir=3D"ltr">Yes, here</div><br><div class=3D"gmail_quote gmail_quote_c=
-ontainer"><div dir=3D"ltr" class=3D"gmail_attr">Den tirs. 24. mar. 2026 kl.=
- 22.08 skrev Armin Wolf &lt;<a href=3D"mailto:W_Armin@gmx.de">W_Armin@gmx.d=
-e</a>&gt;:<br></div><blockquote class=3D"gmail_quote" style=3D"margin:0px 0=
-px 0px 0.8ex;border-left:1px solid rgb(204,204,204);padding-left:1ex">Am 24=
-.03.26 um 21:43 schrieb Ian Jensen:<br>
-<br>
-&gt;<br>
-&gt; Yes certainly, my mistake<br>
-&gt; Here it is<br>
-&gt;<br>
-Thank you. Can you share the output of &quot;ls /sys/bus/i2c/devices/&quot;=
-?<br>
-<br>
-Thanks,<br>
-Armin Wolf<br>
-<br>
-&gt; Den tirs. 24. mar. 2026 kl. 21.37 skrev Armin Wolf &lt;<a href=3D"mail=
-to:W_Armin@gmx.de" target=3D"_blank">W_Armin@gmx.de</a>&gt;:<br>
-&gt;<br>
-&gt;=C2=A0 =C2=A0 =C2=A0Am 24.03.26 um 21:28 schrieb Ian Jensen:<br>
-&gt;<br>
-&gt;=C2=A0 =C2=A0 =C2=A0&gt; Yes, here it is attached (this is with no laun=
-ch parameters, so<br>
-&gt;=C2=A0 =C2=A0 =C2=A0&gt; completely dead laptop keyboard)<br>
-&gt;<br>
-&gt;=C2=A0 =C2=A0 =C2=A0Thanks you.<br>
-&gt;<br>
-&gt;=C2=A0 =C2=A0 =C2=A0Can you please also share the acpidump with the who=
-le mailing list<br>
-&gt;=C2=A0 =C2=A0 =C2=A0(reply-all) so that everyone can access it?<br>
-&gt;=C2=A0 =C2=A0 =C2=A0Also, it seems that the acpidump you have provided =
-is corrupted,<br>
-&gt;=C2=A0 =C2=A0 =C2=A0likely because use copied it manually from the<br>
-&gt;=C2=A0 =C2=A0 =C2=A0command line.<br>
-&gt;<br>
-&gt;=C2=A0 =C2=A0 =C2=A0Please use this command instead:<br>
-&gt;<br>
-&gt;=C2=A0 =C2=A0 =C2=A0=C2=A0 =C2=A0 =C2=A0 =C2=A0 sudo acpidump &gt; acpi=
-dump.txt<br>
-&gt;<br>
-&gt;=C2=A0 =C2=A0 =C2=A0The acpidump.txt file should then contain the full =
-data.<br>
-&gt;<br>
-&gt;=C2=A0 =C2=A0 =C2=A0Thanks,<br>
-&gt;=C2=A0 =C2=A0 =C2=A0Armin Wolf<br>
-&gt;<br>
-</blockquote></div>
+patch 2/5 - GNVS fixup: With I2C4 available, ipu_bridge still does not
+  create the front camera client because _DEP on INT3479 returns the
+  root PCI bus instead of the INT3472 handle. Root cause: BIOS leaves
+  GNVS fields C0TP, L0CL, L1CL at zero. Fix: scan DSDT/SSDTs for the
+  GNVS OperationRegion at TPS68470 probe time and write 0x02 (19.2 MHz)
+  into all three fields before ipu_bridge evaluates _DEP.
 
---00000000000058fe3f064dcbd3a7--
---00000000000058fe41064dcbd3a9
-Content-Type: text/plain; charset="US-ASCII"; name="output.txt"
-Content-Disposition: attachment; filename="output.txt"
-Content-Transfer-Encoding: base64
-Content-ID: <f_mn54lcqj0>
-X-Attachment-Id: f_mn54lcqj0
+patch 3/5 - TPS68470 board data: No board data existed for this machine,
+  so no PMIC regulators or GPIOs were configured for either sensor.
 
-MTYtMDAzNgoxNi0wMDM3CjE2LTAwNTAKaTJjLTAKaTJjLTEKaTJjLTEwCmkyYy0xMQppMmMtMTIK
-aTJjLTEzCmkyYy0xNAppMmMtMTUKaTJjLTE2CmkyYy0yCmkyYy0zCmkyYy00CmkyYy01CmkyYy02
-CmkyYy03CmkyYy04CmkyYy05CmkyYy1TWU5BMzYwMjowMAo=
---00000000000058fe41064dcbd3a9--
+patch 4/5 - ipu-bridge: INT3477 (OV8858) was unknown to ipu_bridge, so
+  it was skipped at CSI-2 enumeration.
+
+patch 5/5 - ov8858 driver: No ACPI match for INT3477, and the driver did
+  not request the vsio supply needed by the S_I2C passthrough.
+
+Tested on Dell Latitude 5285 2-in-1, Ubuntu 25.10, kernel 6.17.0-19.
+Both cameras appear in libcamera and are usable in applications.
+Note: the IPU3 IMGU can only run one pipeline at a time, so front and
+rear camera use is mutually exclusive.
+
+Thierry Chatard (5):
+  platform/x86: intel_lpss: add resource conflict quirk for Dell
+    Latitude 5285
+  platform/x86: int3472: tps68470: fix GNVS clock fields for Dell
+    Latitude 5285
+  platform/x86: int3472: tps68470: add board data for Dell Latitude 5285
+  media: ipu-bridge: add sensor configuration for OV8858 (INT3477)
+  media: ov8858: add ACPI device ID INT3477 and vsio power supply
+
+ drivers/mfd/intel-lpss-acpi.c                 |  32 +++
+ drivers/media/i2c/ov8858.c                    |  10 +-
+ drivers/media/pci/intel/ipu-bridge.c          |   2 ++
+ drivers/platform/x86/intel/int3472/tps68470.c | 201 ++++++++++++++++++
+ .../x86/intel/int3472/tps68470_board_data.c   | 163 ++++++++++++++
+ 5 files changed, 407 insertions(+), 1 deletion(-)
+
+base-commit: 6de23f81a4be5ee86a4df4fde0ca0c7bf67aecd1
+--
+2.51.0
