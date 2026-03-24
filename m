@@ -1,444 +1,365 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.9])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ej1-f50.google.com (mail-ej1-f50.google.com [209.85.218.50])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F2FD1390C95;
-	Tue, 24 Mar 2026 08:27:42 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=192.198.163.9
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AD34A3D524D
+	for <platform-driver-x86@vger.kernel.org>; Tue, 24 Mar 2026 08:36:13 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=209.85.218.50
 ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1774340870; cv=fail; b=KVadn/IVaWvrE2Dz72rf6BbtUtBvzw/FAszYOHHuhANnro/wWOm8lHxxnbRCPzeYYtzVwKZY/OAyAF5uzdHSqS9zCau1ODdpVAq3gzzE//gb1U2r3X3RRDB9q+cBYJlS7mDXslpIDsErc/1y9VzGrWeqpaRkvyBwIkmXasufwKc=
+	t=1774341378; cv=pass; b=lH2hZyTLYt/8AXM8V6F1xc76RDNi9YH2NwN56awb/92XF2zDb626ZchyYh3tHYiNGQQiC9MTSxDBJSWYJkrrq88iJymSNkvJWncoTsYv8E9t/Ab0oz1+dX5ARrgQLMEYZQz8jO8Y3rTaQINwK7mMqPQlWF8fJni/C0rW+nqv05E=
 ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1774340870; c=relaxed/simple;
-	bh=eti6EnmQCZ2xMj4Tk/fhCHqo9DfAhwdHDTBb7fOeCIs=;
-	h=From:To:CC:Subject:Date:Message-ID:References:In-Reply-To:
-	 Content-Type:MIME-Version; b=XLopQCquHfIO6VFmm1KupNJGiHal27hkFu+hssWcqaXkwcmZHzLoLq9trAwlBbDHQzEUil8CUYr4zMhf6YV1sZbvt7aknvlThw/1BrrnvFeUQE6DsgQldKFbFzmN5cy7XKiIVONQf+9N5xug6u7amss4JIWTLhWun+bJQaGYZHk=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=Vk87pUTr; arc=fail smtp.client-ip=192.198.163.9
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	s=arc-20240116; t=1774341378; c=relaxed/simple;
+	bh=9lKPNX1j6QIFlq7+ZZVxX3VI01XmE2AslYdNDrc/SZY=;
+	h=MIME-Version:From:Date:Message-ID:Subject:To:Content-Type; b=iaom8Nrye35t4dQ5gsHmkLJEAarliUIEFkMEyYFgdP2M2zo8sSpLlU+SiohMsukyZgqdiSoBZzelGB7hshZAqIVVy2uKdFLNpneh4/1N7GWDAQ9IJHzAc1feMQ8TRd/1XQ2Z/bhOd2iOVLycXrSB6BGR+bEy98uJWbEKr0L6Khs=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=ZTQHgTYL; arc=pass smtp.client-ip=209.85.218.50
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="Vk87pUTr"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1774340863; x=1805876863;
-  h=from:to:cc:subject:date:message-id:references:
-   in-reply-to:content-transfer-encoding:mime-version;
-  bh=eti6EnmQCZ2xMj4Tk/fhCHqo9DfAhwdHDTBb7fOeCIs=;
-  b=Vk87pUTrCWlnOIwpbGy10109uWlraFazMOXAIHBtHCsjqe5XU6qyh1AI
-   /+lirYP7MzYGpPUcBUeE324OEsxfJGYgSdtoqZypHmfCE6W8S4STpUbBO
-   r29KdBqTWu4eFxICf5jrow5fhPZSVWpDUdfxR2XxNfl7ShmGeH6hWO8mv
-   jHUubf/X3TiOTJsQrqMTxMLkVS1SA8FsdQKT82bzqXR9Smjv4Wp2N80M9
-   5ZDjh+GLF3MVV22C/kcolXO+lsxjnzvFI8swfBybpVNLDhxRM2GWsSBbb
-   V6kcY1ANcDu4kYfU2n/2Y7SJB0vonLnlv5q+NVD9VA46tligSdhUWb1EW
-   Q==;
-X-CSE-ConnectionGUID: IH631gJuRA2Db7LDhpAFgA==
-X-CSE-MsgGUID: BIWnYecqQtqzq71NZAuIdg==
-X-IronPort-AV: E=McAfee;i="6800,10657,11738"; a="86046834"
-X-IronPort-AV: E=Sophos;i="6.23,138,1770624000"; 
-   d="scan'208";a="86046834"
-Received: from fmviesa003.fm.intel.com ([10.60.135.143])
-  by fmvoesa103.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 24 Mar 2026 01:27:42 -0700
-X-CSE-ConnectionGUID: yWQvczyqTlandXRb9gd8Ag==
-X-CSE-MsgGUID: PbmXgExUSdqjbWGDGBEwIQ==
-X-ExtLoop1: 1
-Received: from fmsmsx903.amr.corp.intel.com ([10.18.126.92])
-  by fmviesa003.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 24 Mar 2026 01:27:41 -0700
-Received: from FMSMSX901.amr.corp.intel.com (10.18.126.90) by
- fmsmsx903.amr.corp.intel.com (10.18.126.92) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.2562.37; Tue, 24 Mar 2026 01:27:41 -0700
-Received: from fmsedg902.ED.cps.intel.com (10.1.192.144) by
- FMSMSX901.amr.corp.intel.com (10.18.126.90) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.2562.37 via Frontend Transport; Tue, 24 Mar 2026 01:27:41 -0700
-Received: from BN8PR05CU002.outbound.protection.outlook.com (52.101.57.69) by
- edgegateway.intel.com (192.55.55.82) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.2562.37; Tue, 24 Mar 2026 01:27:39 -0700
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=oIDHAqsMY1expPd48y4fFFNry2sGt58PkPsN9BZJS4g3dgrvS1Xq66L98eNKTl8P966s42mnR1O4AdCofxqW9nrVxcdrqWyNtM/GGPxKvZL9+/HbSzJZicmjp/Afq7sUdnTRW/E++JVcnKC/bjAK2Vg5EFuj/736ZZRViJKCbdtTN6EABwRf0ceODr6F4pgXVyTo9toLqLiVWzDDsaWMf3FaswvxHsJBC5SbDE0FPQUYhKuTcoKdFMZwcbSf5uJrSQjUGmyjW5q+6wK4QsmaiegXFosZ1ZFbTSFSkHFImetISgKTK9NN7G4N3jd7TFHOqi4Z/XJFNZp5DpDkJFxqvw==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=Qb2zHi7IyE4ImgCQqYwMNLvLdHXtt1CUfrquttCHfNA=;
- b=FmNhSa/XzDLau88/af1EEVoORs/cPtax2Hidr/Ya7T/sVxEl2LDHlR2WRLvd8dlp9MsCRcommDabSSIqWy56fPRhBBUEqrxAFu7LqfHqrZE6e59dWuGsoy/wbZ5X9Z57KEljHQDmoZfW58uK+LR2CdLLNWIyKzHQNVqDfDaVqNJF77zirhzYjnOFTXP2plH+Y2TIdHV6Or1+6M55gpRspK2+HzJTXt35DlYRoO7VcBdvoH9ErfwkT9oXl/MJeupK36PuCS1k/VqbbPlJu/eupfyVCt6ipUI80vQmSiv0c4VYV4/u81RDhPpXOGKfhKxsz7V9dD1Pv9lsIS4+744ZnA==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=intel.com; dmarc=pass action=none header.from=intel.com;
- dkim=pass header.d=intel.com; arc=none
-Received: from SA3PR11MB8022.namprd11.prod.outlook.com (2603:10b6:806:2fe::14)
- by SJ0PR11MB6624.namprd11.prod.outlook.com (2603:10b6:a03:47a::6) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.9745.20; Tue, 24 Mar
- 2026 08:27:32 +0000
-Received: from SA3PR11MB8022.namprd11.prod.outlook.com
- ([fe80::5bc2:3dd9:94f0:21ce]) by SA3PR11MB8022.namprd11.prod.outlook.com
- ([fe80::5bc2:3dd9:94f0:21ce%4]) with mapi id 15.20.9745.019; Tue, 24 Mar 2026
- 08:27:32 +0000
-From: "T, Arun" <arun.t@intel.com>
-To: "sakari.ailus@linux.intel.com" <sakari.ailus@linux.intel.com>
-CC: "johannes.goede@oss.qualcomm.com" <johannes.goede@oss.qualcomm.com>, "Kao,
- Arec" <arec.kao@intel.com>, "ilpo.jarvinen@linux.intel.com"
-	<ilpo.jarvinen@linux.intel.com>, "dan.scally@ideasonboard.com"
-	<dan.scally@ideasonboard.com>, "platform-driver-x86@vger.kernel.org"
-	<platform-driver-x86@vger.kernel.org>, "linux-media@vger.kernel.org"
-	<linux-media@vger.kernel.org>, "linux-kernel@vger.kernel.org"
-	<linux-kernel@vger.kernel.org>, "Djait, Mehdi" <mehdi.djait@intel.com>
-Subject: RE: [PATCH v4 1/2] platform/x86: int3472: Add TPS68470 board data for
- Intel nvl
-Thread-Topic: [PATCH v4 1/2] platform/x86: int3472: Add TPS68470 board data
- for Intel nvl
-Thread-Index: AQHcrYdZgLR4y1PdOkqwcAH2m3V2krW7vJpggABLo4CAAUov8A==
-Date: Tue, 24 Mar 2026 08:27:32 +0000
-Message-ID: <SA3PR11MB802232540AF3AA7ACC64E00D9D48A@SA3PR11MB8022.namprd11.prod.outlook.com>
-References: <20260306163019.1619490-1-arun.t@intel.com>
- <20260306163019.1619490-2-arun.t@intel.com>
- <SA3PR11MB80229E0FF7B1E8B32EB35E689D4BA@SA3PR11MB8022.namprd11.prod.outlook.com>
- <acEY6_sFAnb3aHY6@kekkonen.localdomain>
-In-Reply-To: <acEY6_sFAnb3aHY6@kekkonen.localdomain>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach:
-X-MS-TNEF-Correlator:
-authentication-results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=intel.com;
-x-ms-publictraffictype: Email
-x-ms-traffictypediagnostic: SA3PR11MB8022:EE_|SJ0PR11MB6624:EE_
-x-ms-office365-filtering-correlation-id: 6c57ecd6-ef1a-4611-9878-08de897f3201
-x-ms-exchange-senderadcheck: 1
-x-ms-exchange-antispam-relay: 0
-x-microsoft-antispam: BCL:0;ARA:13230040|1800799024|376014|366016|22082099003|56012099003|7053199007|18002099003|38070700021;
-x-microsoft-antispam-message-info: V8XK2hGtvgIk7FmBWQA4eBMohTaKtm74YGvZfrf52BpZOJSq9+O8uNzYbou1Fs8jUU6yv8dJOATunkWQDBZOMZ36zrdv2+3lHpZ2NYY1pUXCneFDuv2pkgjEkubrDemIcrev1SMHlWjwgIItcDWips/ViFSY6byYZwEGwd/bgl24EBUjZzzCq3vFbgSZh27BjZ2OGiOok15OLJR98orUaqJn4CmltohYAvGnR8RnEKn90xnQ4QRE9ck7QxSKcr0dUEQr/S5zSE/Ip5gcKP/uDezgtH6U2/56xwYgC9uCl+TKLn3FnjdXAsxxa+uCJNXPWP+iBxRVz+OWjB7aK7njJq/+so1uyyFGlUEUJTt9ISEO8AEnweuwO3T1NW0A2ndmrapBHrcxlTFLmFyZnth7LO3Yp2/P0OCHFaRwIoIAtub7F13ucSRNPfukGFSplCkDahwftAiyQLbxP1KlcEeKzO/s6YHjFhZ0C+gtYj1Y/tysCn1GidHR4jRQvsHMzHQETXYbfmOFe+24tn7Z6WOHjuBuYRH7PcJ/eigsXNkGS83+C1vnWEoJRIn1SX/A55nfMq/+/eQdcUXNPDtu6/gctZg176JFJRxZ+3Qeeau0a3DcYCmluF1LI9gmtsgszap2syi1Kchv/Fxf2OZrMUvUKboMP31uLOp8mZQeE/hwut+36WBMfjxm8/rsREW5mhL7FbTJLP4TTs2MeN7e7Ip9TPMfdNUqgUIhXRxGlmK8EDUgAavy72qb0D5P8fgFsOOR+lNU4QUrkxqAKy/E5ALK5dzkyvcpfgWJUaxC+ZFnuku7wP/K5a2mw2CpqcIYEJkd
-x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:SA3PR11MB8022.namprd11.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(1800799024)(376014)(366016)(22082099003)(56012099003)(7053199007)(18002099003)(38070700021);DIR:OUT;SFP:1101;
-x-ms-exchange-antispam-messagedata-chunkcount: 1
-x-ms-exchange-antispam-messagedata-0: =?us-ascii?Q?v2VhRvrb6MTidbQMXqYVSTyq0YDcrSAg2CbeTEi4YYtDF3A5A26FERpVB+Ij?=
- =?us-ascii?Q?GMCFYLGBsuY/MmrUgJskwl2fpqdODSbJNNSgNf4S//73tYKDJtp+cpBEVxZl?=
- =?us-ascii?Q?KqXzbWKhtxNshA+qqQf3aQNBAdEfVQHRtiE37AmE3TkCWOQuHaMMBk6t7+xr?=
- =?us-ascii?Q?FVA1RMX8CUB7fzJ2a21ryEAhMosQGR+n0chu3Tnv/DbVaCMvAEuZlwjAg/hg?=
- =?us-ascii?Q?2tPsQHDlUVXgUMTWic2Wp2Umrzs0zdUSsQHjuuw7LYN2Xhvbiub1qIlOEo71?=
- =?us-ascii?Q?1XZV/GSzDoo7BKP8qrYXNasMgyEtGnr5xcoC8/AkTPENIImDgxAQH6aPzlw1?=
- =?us-ascii?Q?y2vBa5Sva49FoTaqxXzo1v12VAxK4AozfBM7mhHIxY7/TCm1F+mm/p9FUtZl?=
- =?us-ascii?Q?2UYOYxW9+2rg5+2a5y6snSlo3H5Ch6rNB/5FDTbI23IlpqUHBoG/2z8zuORF?=
- =?us-ascii?Q?00+GzeTly8eH6cdMrlviPubPPLEvoTbeppPILMHYyrw2ODOAiSdyx6W4t8dW?=
- =?us-ascii?Q?Fpn6iKE/ACwKtoP7adXR1W4/Ck1SFgp7kxgPHQ5M8I4aAXqzQY8OBt+sLY5l?=
- =?us-ascii?Q?ltzKCm30iVIj+RVpdqjfQo4mEdU0G4PMGdv4t4etw7qZMj1LW0xqe1snlZ5w?=
- =?us-ascii?Q?ceLm40tOkQjdJ2+yhqcxI9aBGPUo55NN8MDu9wuvcDR07Ao8ijqS2i5CB9uD?=
- =?us-ascii?Q?EZ3kUZqwLOqdAixl+2Lwtva9uQ+a4CWlGx2XZ/5ZTv9O9ciSvUgdesSVVN+6?=
- =?us-ascii?Q?032IhvwlpSSo9/4b9G/OiogJMUIqOP/t4GV8KttsmISdjtGOSa3RedQzrXrB?=
- =?us-ascii?Q?k9WpThqCuk8PAohpH2BnAJUFXhMcE4tqhYqQGOYdnP3L0AkffK6ykIArr24O?=
- =?us-ascii?Q?EoZ1aV2b2Bc2IvjmJckssyd+Dl9+PTWPF/A9Rczr5bfE/S6XMt6WnfPR0Nwc?=
- =?us-ascii?Q?4aQwiUH3G0wzwGrhmAoYmXLXqmIfS4rNp1hxk6K+RJoqzd+DiJTXZOYCQ0hI?=
- =?us-ascii?Q?9e14sn06iduMhC9NU0G/aiqeCOWCg20EFxxq9fQEsiPdg8CdvzRf4Tr8IpZU?=
- =?us-ascii?Q?0Tb6W7VAXlGTjDaq13Y3GtfCkxiK0HRNOuQhvaUaTt3TjgJS1cXcaczq5AhT?=
- =?us-ascii?Q?sb5UFyberzg+uxMrMthzHleSjrBdM+dCQtp91rtdo2azkoXKRTpo6CqUtWS2?=
- =?us-ascii?Q?haFO0PrvbaMXiGEkhZeKYq0R/26wbIsZftlRwnEtR9kUe17QNufesTAchgTF?=
- =?us-ascii?Q?JhaOBtPN8vqY19oXqA3isE1044wO+XnKAvK/sK8sfBuovmN0I/tgILO8mWSQ?=
- =?us-ascii?Q?9e8GzUutcCmlugeZkLAQLyx1sG4tHbAyw0KVVHBiiNIHmD7YiaX0AeiDXXAq?=
- =?us-ascii?Q?fk5NFBRN7P37Sia4Ax3qTuIvtssB6izKR/N1y4EGIkWhtHeZhKVt9/oaxxhy?=
- =?us-ascii?Q?GcDzdNjpwsIkx51wrskiS9/M8MbyFRmFD5b8uTL+C5rD9Bn2jezfsa2ppYJz?=
- =?us-ascii?Q?yaJnbos7xqnqojf/ZF10OLoIZztfc/LZpfyxpJ9GKNoUkIb7YiVsmVCsVh0v?=
- =?us-ascii?Q?8y9oxM+xqcsmelGVHEPcIT3roxWGpvaTYLuZsIagD30Z4flYdlZ0GVd/zwoZ?=
- =?us-ascii?Q?ioace2NxPE/GXAkRipYTvJiqlixmIJW9QR/zPkwMaFaPakAG71W7foVqU/+Q?=
- =?us-ascii?Q?vk/nTpEsVXikwz53ikm9eixulje2p+39046aP5H7h94AeHUY?=
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: quoted-printable
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ZTQHgTYL"
+Received: by mail-ej1-f50.google.com with SMTP id a640c23a62f3a-b9910707d82so25725666b.1
+        for <platform-driver-x86@vger.kernel.org>; Tue, 24 Mar 2026 01:36:13 -0700 (PDT)
+ARC-Seal: i=1; a=rsa-sha256; t=1774341372; cv=none;
+        d=google.com; s=arc-20240605;
+        b=EvCWVxKUGSGTS0HB06ec2lVF+FhWFq6LGFnsTPqyLEfGTcJYUmjxgu0tLXR+mOVCxG
+         f3y7m9D37cF1Avpu81E2gKWNAU7RgFvs4C268uG10xUk7xxGgoARuXOeL9PQHNIdEC5y
+         QQjE86LWLVBGIxOXR2FIKa+i6gaUvOCNqBQN/ut3CWa0WGTEg9bs5qK2Vxrod06ljfpt
+         /V0oGg2OnfkS2eHSJhPSR0yVP6emKMPHsQOBh6dWOKvwMAxEH9mqwSOefjmzOHXDbxbl
+         Ed65i8b7ZLT2zsBbNYZjdgcu1qKIVBso4YhsfXelXf1PT1UCAiO/zICWHuQH/YqHH/d3
+         1rKw==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20240605;
+        h=to:subject:message-id:date:from:mime-version:dkim-signature;
+        bh=jeSyU6NK5ZY4USXgAnEHmutj3+Zk854zZhOBA2Oaccc=;
+        fh=LAtpHtVR30q6rinFeyskR7Ff9QyURHB8q3bpp5R7hcA=;
+        b=cfl/3PV6NDsB9f/tJat+8FdpDM5OXbF2wG/Sr16zddKthp4caAs7bIYzuDuJMO//HX
+         6gHsl4LVyXtPaYTkLXCqII5JFuQz6baUSn1LsY+1K7/YUgnxiM4UwAqA2vghMllngO6e
+         CpOPllJX7/fCXoUcfixPFVsVv/Y0maSkzv3rrj56rOnSyYTeCYsc4P8IjNOHxV2ZBoTz
+         GyRYmCgUfoaOxUeoldHcpw8bZLNP+jipEDCHjheK/HrKg63Sv0RnJLctKguLUfDGh5jN
+         I8P0KDfppUdzfqUfahrV5/UmdHoeTU11dR2csn5gm5pp54UgnGLcNUvGSE4akoirwmjq
+         HhLA==;
+        darn=vger.kernel.org
+ARC-Authentication-Results: i=1; mx.google.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20251104; t=1774341372; x=1774946172; darn=vger.kernel.org;
+        h=to:subject:message-id:date:from:mime-version:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=jeSyU6NK5ZY4USXgAnEHmutj3+Zk854zZhOBA2Oaccc=;
+        b=ZTQHgTYLNSIgllMrD1fEibyQBpYbxrGwaQI9KEgqcYjda7nda8ptoQapgaDZAzJ4mA
+         ydlw7Ye/usxsEp2VBDbcEPiajWImJATbiqxwyxeIiTQturIn1fFaFeaPYzhaPwbEMn75
+         qWb+2pWpcb4c+bDBcMpokrYjCURtJXaFtw0ZM3C5uRcMb7ZTTGDprXFg1TzgXDWhitFe
+         JFxxQIRFu3rjRfes8sIGRNJD54Fnf9tJTjkzjFQ0ZwHa4yt0JTqqUwrDhodELab8k8Uj
+         yL1lX5wYZrzC3UcTFilq3TnpI3FYz4VWK14AG13BgEMqmvJ7sAIqYQ0fhiqdCNlvSlxu
+         Vt4A==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20251104; t=1774341372; x=1774946172;
+        h=to:subject:message-id:date:from:mime-version:x-gm-gg
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=jeSyU6NK5ZY4USXgAnEHmutj3+Zk854zZhOBA2Oaccc=;
+        b=UbnjAmtQivMWC0gjtgyNzBtfIe03y1kDhWXwBpz2Qf4BK5yv/LIp2i98rMpJNMp2+W
+         jwp3PJsKxd8fs/Dfk1E8r2xFkLKtSf7upvgQuK8MbnBxaBVlvhbynzSBz2poI1v/m3il
+         96STdODKHUuMtmu4tKz3ouBdMBtqPIbj88z/DpcqYVnpCR6S0aco6Si78nmMex+GZ2aV
+         J1HI5vNZ2i3tnLtkaoQrI3+jJUPnGwitoFz/RSFZ8lQGhJfCia0WraCXTO0q1nQtVm1/
+         KEEeJcZ4pxTzf8jyw/RIcByMx3se1sbjrGmuVtEgR91F/U55BqeMkC/7DuHJ7W8XUB6g
+         eC7g==
+X-Gm-Message-State: AOJu0Yx9pL/eSyucXnlVn31BfXfGcwHYFMcZvcEfiQbdyyzVh63ojn7n
+	4NwMnizv189iNh8Ld8/14Ikt+rOHwRAWrPI6cc2x5t56L8onfrlS1ZwfPIyzeUqLV8aczv/lIJF
+	oHbIJkhIpfxGYFa8PmFpjgkvkKgeHadMWbGyt+cI=
+X-Gm-Gg: ATEYQzxeXiXVmO9ZDIdSySA9aDSz6MlRAmK1U2yTS9fGc5s8FzbjsOMdgAhQp7RfuV5
+	QrvNNsVZm7cQZcYFy+2bxAb9m+r/m1Tw050yfSrotDtsdMof3p40onTE1Sh5FNgxN+Q1OEblPqy
+	J3OkWk8ZlUcSdOVx1+KToGsVjOMkFkoBu+kknA0G0XdhWykzThawSvYkeuQ3osF2lylzFv7Vdn7
+	XqmCgGogpomv72XDl+9oQqhdS6kO5pWiKKTI8qHz5PLVKc+DExWPfuEnqlob/uxldcYCDwew9cP
+	1WYMv8g=
+X-Received: by 2002:a17:907:c986:b0:b98:32c1:2496 with SMTP id
+ a640c23a62f3a-b9832c15d55mr654167466b.18.1774341371491; Tue, 24 Mar 2026
+ 01:36:11 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-Exchange-RoutingPolicyChecked: K8OmExxNfPva44L/ljDdkpGZdEugBSOjUhQ5jIkE5EnhHVGOD5oKANVrPSjrvaFePh2mYi/7GFOsTEHdBcNXkLm8XydbqZrCVyoYHuduFJ+Dz51n1Orv00TSciCvGBVp7Yu/RVeCEMAxPt+X5thKnPiCySEQkXniDMI9YvNKCQ3TYgWG9Fi/IC6WY8nbe+fKrzGlx9qhaJxl6VI8sONYBHv7g5Hjp3aCrbo2Hr37LJM/xhNc7Rya7vmMnY5PVKhTx9KWRszB5KjhBQ147Or5Huv27VQmx9iecquE79Z7YlwiDYoO4Brv0fbVp+4ZWakoSK8WcpEXDQ7CkJC9oVO08w==
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-AuthSource: SA3PR11MB8022.namprd11.prod.outlook.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 6c57ecd6-ef1a-4611-9878-08de897f3201
-X-MS-Exchange-CrossTenant-originalarrivaltime: 24 Mar 2026 08:27:32.5939
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 46c98d88-e344-4ed4-8496-4ed7712e255d
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: bm+NE9hPIgpA2ua4LzJtx/kBsO/jovWUSDR2acEQAjWG7h2dwN1Hi2l4P4RqO2uTaNvB3mBuvJNG1Y971F3Waw==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: SJ0PR11MB6624
-X-OriginatorOrg: intel.com
+From: Ian Jensen <ianmoellerjensen@gmail.com>
+Date: Tue, 24 Mar 2026 09:36:00 +0100
+X-Gm-Features: AaiRm50N0aasUnkzXC4UbP9rmsk3wMxXtscmRqnT2cJytTjO8WuleeMY2Ns1XtM
+Message-ID: <CAJ0oKyQTEJit294y=fs2s2nzhzUs_GQzsgMswDNs==zkdiqz0g@mail.gmail.com>
+Subject: Internal keyboard non-functional on linux on Medion Laptop - NTC816
+ (Intel IPF) has no driver, PS/2 fallback produces corrupted scancodes
+To: platform-driver-x86@vger.kernel.org
+Content-Type: multipart/mixed; boundary="00000000000028b904064dc10b57"
 
-Hi Sakari,=20
+--00000000000028b904064dc10b57
+Content-Type: multipart/alternative; boundary="00000000000028b902064dc10b55"
 
-The TPS68470 is providing multiple regulators. The VIO regulator is enabled=
- as default ON. The Core, Ana, VCM, and VSIO regulators are enabled to prov=
-ide power to the ov13b10 sensor. These regulators only get enabled after ad=
-ding the always_on=3Dtrue flag.
+--00000000000028b902064dc10b55
+Content-Type: text/plain; charset="UTF-8"
 
-The sensor does not get powered on without the always_on=3Dtrue flag. I thi=
-nk there is some issue in driver/regulator/tps68470-regulator.c for configu=
-ring the regulator through regulator_enable(). I think always_on=3Dtrue is =
-good for this case. Please let me know if anything needs to be done on this=
-.
--
-Regards,
-Arun T
+Hello, I have been advised to send you an email regarding an issue about a
+missing driver that causes the internal keyboard on my laptop to be totally
+useless.
 
------Original Message-----
-From: sakari.ailus@linux.intel.com <sakari.ailus@linux.intel.com>=20
-Sent: 23 March 2026 04:12 PM
-To: T, Arun <arun.t@intel.com>
-Cc: johannes.goede@oss.qualcomm.com; Kao, Arec <arec.kao@intel.com>; ilpo.j=
-arvinen@linux.intel.com; dan.scally@ideasonboard.com; platform-driver-x86@v=
-ger.kernel.org; linux-media@vger.kernel.org; linux-kernel@vger.kernel.org; =
-Djait, Mehdi <mehdi.djait@intel.com>
-Subject: Re: [PATCH v4 1/2] platform/x86: int3472: Add TPS68470 board data =
-for Intel nvl
+Hardware: Medion Signium S1 OLED (MSN 30040793)
+Kernel: 6.19.6-200.fc43.x86_64
+Distro: Fedora Workstation 43
 
-Hi Arun,
+The internal keyboard does not work at all in Linux, not even the
+capslock button works. The keyboard works in Windows and in GRUB and
+the touchpad works fine. An external keyboard also works fine.
 
-On Mon, Mar 23, 2026 at 06:12:29AM +0000, T, Arun wrote:
-> Hi All,
->=20
-> There has been no reply to these below patches for quite some time.=20
-> Could you please provide any feedback, comments, or suggestions on=20
-> these below patches
->=20
-> https://lore.kernel.org/linux-media/20260306163019.1619490-2-arun.t@in
-> tel.com/=20
-> https://lore.kernel.org/all/20260306163019.1619490-3-arun.t@intel.com/
+On Windows, the keyboard is exposed through this device chain:
 
-Could you reply to my earlier reviews?
+  INTC816 (Intel Innovation Platform Framework)
+  -> ButtonConverter\ConvertedDevice
+  -> HID keyboard (kbdhid driver)
+  DEVPKEY_Device_Service: kbdhid
+  DEVPKEY_Device_Stack: \Driver\kbdclass, \Driver\kbdhid, \Driver\mshidkmdf
 
-First and foremost, we still have eight regulators configured for a device =
-that uses three. Some of them have been declared as always_on, too, for no =
-apparent reason.
+On Linux INTC816 does not appear to have a driver. It does not appear
+in /sys/bus/acpi/devices/ or /sys/bus/ishtp/devices/. The Intel ISH
+modules are loaded (intel_ishtp_hid, intel_ish_ipc, intel_ishtp), but
+only a sensor hub (8087:0AC2) is present on the ISHTP bus. The
+keyboard is not enumerated there.
 
->=20
-> -
-> Regards,
-> Arun T
->=20
-> -----Original Message-----
-> From: T, Arun <arun.t@intel.com>
-> Sent: 06 March 2026 10:00 PM
-> To: T, Arun <arun.t@intel.com>; johannes.goede@oss.qualcomm.com
-> Cc: sakari.ailus@linux.intel.com; Kao, Arec <arec.kao@intel.com>;=20
-> ilpo.jarvinen@linux.intel.com; dan.scally@ideasonboard.com;=20
-> platform-driver-x86@vger.kernel.org; linux-media@vger.kernel.org;=20
-> linux-kernel@vger.kernel.org; Djait, Mehdi <mehdi.djait@intel.com>
-> Subject: [PATCH v4 1/2] platform/x86: int3472: Add TPS68470 board data=20
-> for Intel nvl
->=20
-> The Intel NVL platform uses IPU8 is powered by a TPS68470 PMIC,requiring =
-board data to configure the GPIOs and regulators for proper camera sensor o=
-peration.
->=20
-> Signed-off-by: Arun T <arun.t@intel.com>
-> ---
->  .../x86/intel/int3472/tps68470_board_data.c   | 150 ++++++++++++++++++
->  1 file changed, 150 insertions(+)
->=20
-> diff --git a/drivers/platform/x86/intel/int3472/tps68470_board_data.c=20
-> b/drivers/platform/x86/intel/int3472/tps68470_board_data.c
-> index 71357a036292..8ae5e01f6660 100644
-> --- a/drivers/platform/x86/intel/int3472/tps68470_board_data.c
-> +++ b/drivers/platform/x86/intel/int3472/tps68470_board_data.c
-> @@ -143,6 +143,34 @@ static struct regulator_consumer_supply int3479_aux2=
-_consumer_supplies[] =3D {
->  	REGULATOR_SUPPLY("dovdd", "i2c-INT3479:00"),  };
-> =20
-> +/* Settings for Intel NVL platform */
-> +
-> +static struct regulator_consumer_supply int3472_core_consumer_supplies[]=
- =3D {
-> +	REGULATOR_SUPPLY("dvdd", "i2c-OVTI13B1:01"), };
-> +
-> +static struct regulator_consumer_supply int3472_ana_consumer_supplies[] =
-=3D {
-> +	REGULATOR_SUPPLY("avdd", "i2c-OVTI13B1:01"), };
-> +
-> +static struct regulator_consumer_supply int3472_vcm_consumer_supplies[] =
-=3D {
-> +	REGULATOR_SUPPLY("vdd", "i2c-OVTI13B1:01"), };
-> +
-> +static struct regulator_consumer_supply int3472_vsio_consumer_supplies[]=
- =3D {
-> +	REGULATOR_SUPPLY("dovdd", "i2c-OVTI13B1:01"),
-> +	REGULATOR_SUPPLY("vsio", "i2c-OVTI13B1:01"),
-> +	REGULATOR_SUPPLY("vddd", "i2c-OVTI13B1:01"), };
-> +
-> +static struct regulator_consumer_supply int3472_aux1_consumer_supplies[]=
- =3D {
-> +	REGULATOR_SUPPLY("vdda", "i2c-OVTI13B1:01"), };
-> +
-> +static struct regulator_consumer_supply int3472_aux2_consumer_supplies[]=
- =3D {
-> +	REGULATOR_SUPPLY("vdddo", "i2c-OVTI13B1:01"), };
-> +
->  static const struct regulator_init_data dell_7212_tps68470_core_reg_init=
-_data =3D {
->  	.constraints =3D {
->  		.min_uV =3D 1200000,
-> @@ -220,6 +248,82 @@ static const struct regulator_init_data dell_7212_tp=
-s68470_aux2_reg_init_data =3D
->  	.consumer_supplies =3D int3479_aux2_consumer_supplies,  };
-> =20
-> +static const struct regulator_init_data intel_nvl_tps68470_core_reg_init=
-_data =3D {
-> +	.constraints =3D {
-> +		.min_uV =3D 1200000,
-> +		.max_uV =3D 1200000,
-> +		.apply_uV =3D true,
-> +		.always_on =3D true,
-> +	},
-> +	.num_consumer_supplies =3D ARRAY_SIZE(int3472_core_consumer_supplies),
-> +	.consumer_supplies =3D int3472_core_consumer_supplies, };
-> +
-> +static const struct regulator_init_data intel_nvl_tps68470_ana_reg_init_=
-data =3D {
-> +	.constraints =3D {
-> +		.min_uV =3D 2815200,
-> +		.max_uV =3D 2815200,
-> +		.apply_uV =3D true,
-> +		.always_on =3D true,
-> +	},
-> +	.num_consumer_supplies =3D ARRAY_SIZE(int3472_ana_consumer_supplies),
-> +	.consumer_supplies =3D int3472_ana_consumer_supplies, };
-> +
-> +static const struct regulator_init_data intel_nvl_tps68470_vcm_reg_init_=
-data =3D {
-> +	.constraints =3D {
-> +		.min_uV =3D 2815200,
-> +		.max_uV =3D 2815200,
-> +		.apply_uV =3D true,
-> +		.always_on =3D true,
-> +	},
-> +	.num_consumer_supplies =3D ARRAY_SIZE(int3472_vcm_consumer_supplies),
-> +	.consumer_supplies =3D int3472_vcm_consumer_supplies, };
-> +
-> +/* Ensure the always-on VIO regulator has the same voltage as VSIO */=20
-> +static const struct regulator_init_data intel_nvl_tps68470_vio_reg_init_=
-data =3D {
-> +	.constraints =3D {
-> +		.min_uV =3D 1800600,
-> +		.max_uV =3D 1800600,
-> +		.apply_uV =3D true,
-> +		.always_on =3D true,
-> +	},
-> +};
-> +
-> +static const struct regulator_init_data intel_nvl_tps68470_vsio_reg_init=
-_data =3D {
-> +	.constraints =3D {
-> +		.min_uV =3D 1800600,
-> +		.max_uV =3D 1800600,
-> +		.apply_uV =3D true,
-> +		.always_on =3D true,
-> +	},
-> +	.num_consumer_supplies =3D ARRAY_SIZE(int3472_vsio_consumer_supplies),
-> +	.consumer_supplies =3D int3472_vsio_consumer_supplies, };
-> +
-> +static const struct regulator_init_data intel_nvl_tps68470_aux1_reg_init=
-_data =3D {
-> +	.constraints =3D {
-> +		.min_uV =3D 2815200,
-> +		.max_uV =3D 2815200,
-> +		.apply_uV =3D 1,
-> +		.valid_ops_mask =3D REGULATOR_CHANGE_STATUS,
-> +	},
-> +	.num_consumer_supplies =3D ARRAY_SIZE(int3472_aux1_consumer_supplies),
-> +	.consumer_supplies =3D int3472_aux1_consumer_supplies, };
-> +
-> +static const struct regulator_init_data intel_nvl_tps68470_aux2_reg_init=
-_data =3D {
-> +	.constraints =3D {
-> +		.min_uV =3D 1800600,
-> +		.max_uV =3D 1800600,
-> +		.apply_uV =3D 1,
-> +		.valid_ops_mask =3D REGULATOR_CHANGE_STATUS,
-> +	},
-> +	.num_consumer_supplies =3D ARRAY_SIZE(int3472_aux2_consumer_supplies),
-> +	.consumer_supplies =3D int3472_aux2_consumer_supplies, };
-> +
->  static const struct tps68470_regulator_platform_data dell_7212_tps68470_=
-pdata =3D {
->  	.reg_init_data =3D {
->  		[TPS68470_CORE] =3D &dell_7212_tps68470_core_reg_init_data,
-> @@ -232,6 +336,18 @@ static const struct tps68470_regulator_platform_data=
- dell_7212_tps68470_pdata =3D
->  	},
->  };
-> =20
-> +static const struct tps68470_regulator_platform_data intel_nvl_tps68470_=
-pdata =3D {
-> +	.reg_init_data =3D {
-> +		[TPS68470_CORE] =3D &intel_nvl_tps68470_core_reg_init_data,
-> +		[TPS68470_ANA]  =3D &intel_nvl_tps68470_ana_reg_init_data,
-> +		[TPS68470_VCM]  =3D &intel_nvl_tps68470_vcm_reg_init_data,
-> +		[TPS68470_VIO] =3D &intel_nvl_tps68470_vio_reg_init_data,
-> +		[TPS68470_VSIO] =3D &intel_nvl_tps68470_vsio_reg_init_data,
-> +		[TPS68470_AUX1] =3D &intel_nvl_tps68470_aux1_reg_init_data,
-> +		[TPS68470_AUX2] =3D &intel_nvl_tps68470_aux2_reg_init_data,
-> +	},
-> +};
-> +
->  static struct gpiod_lookup_table surface_go_int347a_gpios =3D {
->  	.dev_id =3D "i2c-INT347A:00",
->  	.table =3D {
-> @@ -258,6 +374,23 @@ static struct gpiod_lookup_table dell_7212_int3479_g=
-pios =3D {
->  	}
->  };
-> =20
-> +static struct gpiod_lookup_table intel_nvl_int347a_gpios =3D {
-> +	.dev_id =3D "i2c-OVTI13B1:01",
-> +	.table =3D {
-> +		GPIO_LOOKUP("tps68470-gpio", 9, "reset", GPIO_ACTIVE_LOW),
-> +		GPIO_LOOKUP("tps68470-gpio", 8, "s_idle", GPIO_ACTIVE_LOW),
-> +		{ }
-> +	}
-> +};
-> +
-> +static struct gpiod_lookup_table intel_nvl_int347e_gpios =3D {
-> +	.dev_id =3D "i2c-OVTI13B1:01",
-> +	.table =3D {
-> +	GPIO_LOOKUP("tps68470-gpio", 7, "s_enable", GPIO_ACTIVE_LOW),
-> +		{ }
-> +	}
-> +};
-> +
->  static const struct int3472_tps68470_board_data surface_go_tps68470_boar=
-d_data =3D {
->  	.dev_name =3D "i2c-INT3472:05",
->  	.tps68470_regulator_pdata =3D &surface_go_tps68470_pdata, @@ -287,6 +42=
-0,16 @@ static const struct int3472_tps68470_board_data dell_7212_tps68470_=
-board_data =3D
->  	},
->  };
-> =20
-> +static const struct int3472_tps68470_board_data intel_nvl_tps68470_board=
-_data =3D {
-> +	.dev_name =3D "i2c-INT3472:04",
-> +	.tps68470_regulator_pdata =3D &intel_nvl_tps68470_pdata,
-> +	.n_gpiod_lookups =3D 2,
-> +	.tps68470_gpio_lookup_tables =3D {
-> +		&intel_nvl_int347a_gpios,
-> +		&intel_nvl_int347e_gpios,
-> +	},
-> +};
-> +
->  static const struct dmi_system_id int3472_tps68470_board_data_table[] =
-=3D {
->  	{
->  		.matches =3D {
-> @@ -316,6 +459,13 @@ static const struct dmi_system_id int3472_tps68470_b=
-oard_data_table[] =3D {
->  		},
->  		.driver_data =3D (void *)&dell_7212_tps68470_board_data,
->  	},
-> +	{
-> +		.matches =3D {
-> +			DMI_EXACT_MATCH(DMI_SYS_VENDOR, "Intel Corporation"),
-> +			DMI_EXACT_MATCH(DMI_PRODUCT_NAME, "Nova Lake Client Platform"),
-> +		},
-> +	       .driver_data =3D (void *)&intel_nvl_tps68470_board_data,
-> +	},
->  	{ }
->  };
-> =20
+ACPI devices with INTC prefix: INTC1001, INTC1046, INTC1048, INTC1055,
+INTC1078, INTC1092, INTC109C, INTC10A0-A5. No INTC816.
 
---
-Regards,
 
-Sakari Ailus
+The BIOS presents a PS/2 emulator via i8042, but it produces corrupted
+scancodes. Examples:
+  - H  shows 0x20 (Set 1: D)
+  - A shows 0x03 (undefined in Set 1)
+
+The corruption is not a simple offset and does not match any known
+scancode set. This appears to be a firmware bug in the scancode
+translation.
+
+IRQ 1 is not showing an interrupt storm (~10 interrupts per keypress),
+so this is not a stuck interrupt.
+
+Boot parameters tested:
+  i8042.nopnp=1 i8042.direct=1                         -> corrupted input
+  i8042.nopnp=1 i8042.direct=1 atkbd.set=1             -> corrupted input
+  i8042.nopnp=1 i8042.direct=1 atkbd.set=2             -> corrupted input
+  i8042.nopnp=1 i8042.nomux=1 i8042.reset=1 i8042.notimeout=1  -> no input
+  acpi_osi=! acpi_osi="Windows 2013"                   -> no input
+
+dmesg:
+
+  i8042: PNP detection disabled
+  i8042: Warning: Keylock active
+  serio: i8042 KBD port at 0x60,0x64 irq 1
+  input: AT Translated Set 2 keyboard as
+/devices/platform/i8042/serio0/input/input3
+  intel-hid INTC1078:00: failed to enable HID power button
+  ish-hid {33AECD58-B679-4E54-9BD9-A04D34F0C226}: enum_devices_done
+OK, num_hid_devices=1
+
+
+The closest existing driver in-tree is
+drivers/platform/x86/intel/hid.c (handles INTC1078 and similar).
+INTC816 would presumably need a similar ACPI driver that enumerates
+the child HID device and routes it through the input subsystem
+
+I have attached my systems info
+
+--00000000000028b902064dc10b55
+Content-Type: text/html; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+
+<div dir=3D"ltr">Hello, I have been advised to send you an email regarding =
+an issue about a missing driver that causes the internal keyboard on my lap=
+top to be totally useless.<div><br></div><div><pre class=3D"gmail-bz_commen=
+t_text" id=3D"gmail-comment_text_0" style=3D"font-size:medium;width:50em;co=
+lor:rgb(0,0,0)">Hardware: Medion Signium S1 OLED (MSN 30040793)
+Kernel: 6.19.6-200.fc43.x86_64
+Distro: Fedora Workstation 43
+
+The internal keyboard does not work at all in Linux, not even the capslock =
+button works. The keyboard works in Windows and in GRUB and the touchpad wo=
+rks fine. An external keyboard also works fine.
+
+On Windows, the keyboard is exposed through this device chain:
+
+  INTC816 (Intel Innovation Platform Framework)
+  -&gt; ButtonConverter\ConvertedDevice
+  -&gt; HID keyboard (kbdhid driver)
+  DEVPKEY_Device_Service: kbdhid
+  DEVPKEY_Device_Stack: \Driver\kbdclass, \Driver\kbdhid, \Driver\mshidkmdf
+
+On Linux INTC816 does not appear to have a driver. It does not appear in /s=
+ys/bus/acpi/devices/ or /sys/bus/ishtp/devices/. The Intel ISH modules are =
+loaded (intel_ishtp_hid, intel_ish_ipc, intel_ishtp), but only a sensor hub=
+ (8087:0AC2) is present on the ISHTP bus. The keyboard is not enumerated th=
+ere.
+
+ACPI devices with INTC prefix: INTC1001, INTC1046, INTC1048, INTC1055, INTC=
+1078, INTC1092, INTC109C, INTC10A0-A5. No INTC816.
+
+
+The BIOS presents a PS/2 emulator via i8042, but it produces corrupted scan=
+codes. Examples:
+  - H  shows 0x20 (Set 1: D)
+  - A shows 0x03 (undefined in Set 1)
+
+The corruption is not a simple offset and does not match any known scancode=
+ set. This appears to be a firmware bug in the scancode translation.
+
+IRQ 1 is not showing an interrupt storm (~10 interrupts per keypress), so t=
+his is not a stuck interrupt.
+
+Boot parameters tested:
+  i8042.nopnp=3D1 i8042.direct=3D1                         -&gt; corrupted =
+input
+  i8042.nopnp=3D1 i8042.direct=3D1 atkbd.set=3D1             -&gt; corrupte=
+d input
+  i8042.nopnp=3D1 i8042.direct=3D1 atkbd.set=3D2             -&gt; corrupte=
+d input
+  i8042.nopnp=3D1 i8042.nomux=3D1 i8042.reset=3D1 i8042.notimeout=3D1  -&gt=
+; no input
+  acpi_osi=3D! acpi_osi=3D&quot;Windows 2013&quot;                   -&gt; =
+no input
+
+dmesg:
+
+  i8042: PNP detection disabled
+  i8042: Warning: Keylock active
+  serio: i8042 KBD port at 0x60,0x64 irq 1
+  input: AT Translated Set 2 keyboard as /devices/platform/i8042/serio0/inp=
+ut/input3
+  intel-hid INTC1078:00: failed to enable HID power button
+  ish-hid {33AECD58-B679-4E54-9BD9-A04D34F0C226}: enum_devices_done OK, num=
+_hid_devices=3D1
+
+
+The closest existing driver in-tree is drivers/platform/x86/intel/hid.c (ha=
+ndles INTC1078 and similar). INTC816 would presumably need a similar ACPI d=
+river that enumerates the child HID device and routes it through the input =
+subsystem<br><br>I have attached my systems info <br><br><br></pre></div></=
+div>
+
+--00000000000028b902064dc10b55--
+--00000000000028b904064dc10b57
+Content-Type: text/plain; charset="US-ASCII"; name="System Kernel 6 19 7 200 (1).txt"
+Content-Disposition: attachment; filename="System Kernel 6 19 7 200 (1).txt"
+Content-Transfer-Encoding: base64
+Content-ID: <f_mn4d14ur0>
+X-Attachment-Id: f_mn4d14ur0
+
+U3lzdGVtOgogIEtlcm5lbDogNi4xOS43LTIwMC5mYzQzLng4Nl82NCBhcmNoOiB4ODZfNjQgYml0
+czogNjQgY29tcGlsZXI6IGdjYyB2OiAxNS4yLjEKICAgIGNsb2Nrc291cmNlOiB0c2MgYXZhaWw6
+IGFjcGlfcG0KICAgIHBhcmFtZXRlcnM6IEJPT1RfSU1BR0U9KGhkMCxncHQ2KS92bWxpbnV6LTYu
+MTkuNy0yMDAuZmM0My54ODZfNjQKICAgIHJvb3Q9VVVJRD04ZjkzMjE3Zi0wMDM1LTQzN2UtOTdm
+YS01MWUxZGEyODliZWMgcm8gcm9vdGZsYWdzPXN1YnZvbD1yb290CiAgICByaGdiIHF1aWV0CiAg
+RGVza3RvcDogR05PTUUgdjogNDkuNCB0azogR1RLIHY6IDMuMjQuNTEgd206IGdub21lLXNoZWxs
+CiAgICB0b29sczogZ3NkLXNjcmVlbnNhdmVyLXByb3h5IGRtOiBHRE0gdjogNDkuMiBEaXN0cm86
+IEZlZG9yYSBMaW51eCA0MwogICAgKFdvcmtzdGF0aW9uIEVkaXRpb24pCk1hY2hpbmU6CiAgVHlw
+ZTogTGFwdG9wIFN5c3RlbTogTUVESU9OIHByb2R1Y3Q6IDE0IFMxIE9MRUQgdjogTi9BCiAgICBz
+ZXJpYWw6IDxzdXBlcnVzZXIgcmVxdWlyZWQ+IENoYXNzaXM6IHR5cGU6IDEwIHNlcmlhbDogPHN1
+cGVydXNlciByZXF1aXJlZD4KICBNb2JvOiBNRURJT04gbW9kZWw6IE5NMTRSUEwgdjogMS4wIHNl
+cmlhbDogPHN1cGVydXNlciByZXF1aXJlZD4KICAgIHBhcnQtbnU6IE1MLTIzMDAwNyA0MDA5MTc3
+MiB1dWlkOiA8c3VwZXJ1c2VyIHJlcXVpcmVkPiBGaXJtd2FyZTogVUVGSQogICAgdmVuZG9yOiBB
+bWVyaWNhbiBNZWdhdHJlbmRzIExMQy4gdjogUlBMMzM2X1NfVjAuMTMgZGF0ZTogMDQvMTUvMjAy
+NQpCYXR0ZXJ5OgogIElELTE6IEJBVDAgY2hhcmdlOiA0Mi45IFdoICg3OCUpIGNvbmRpdGlvbjog
+NTUvNTUgV2ggKDEwMCUpIHBvd2VyOiAxNC44IFcKICAgIHZvbHRzOiAxMS41NSBtaW46IE4vQSBt
+b2RlbDogTWVkaW9uIFNSIFJlYWwgQmF0dGVyeSB0eXBlOiBVbmtub3duCiAgICBzZXJpYWw6IDxm
+aWx0ZXI+IGNoYXJnaW5nOiBzdGF0dXM6IGRpc2NoYXJnaW5nIGN5Y2xlczogTi9BCkNQVToKICBJ
+bmZvOiBtb2RlbDogSW50ZWwgQ29yZSA1IDEyMFUgYml0czogNjQgdHlwZTogTVNUIEFNQ1AgYXJj
+aDogUmFwdG9yIExha2UKICAgIGxldmVsOiB2MyBub3RlOiBjaGVjayBidWlsdDogMjAyMisgcHJv
+Y2VzczogSW50ZWwgNyAoMTBubSkgZmFtaWx5OiA2CiAgICBtb2RlbC1pZDogMHhCQSAoMTg2KSBz
+dGVwcGluZzogMyBtaWNyb2NvZGU6IDB4NjEzNAogIFRvcG9sb2d5OiBjcHVzOiAxeCBkaWVzOiAx
+IGNsdXN0ZXJzOiA0IGNvcmVzOiAxMCB0aHJlYWRzOiAxMiBtdDogMiB0cGM6IDIKICAgIHN0OiA4
+IHNtdDogZW5hYmxlZCBjYWNoZTogTDE6IDkyOCBLaUIgZGVzYzogZC04eDMyIEtpQiwgMng0OCBL
+aUI7IGktMngzMgogICAgS2lCLCA4eDY0IEtpQiBMMjogNi41IE1pQiBkZXNjOiAyeDEuMiBNaUIs
+IDJ4MiBNaUIgTDM6IDEyIE1pQgogICAgZGVzYzogMXgxMiBNaUIKICBTcGVlZCAoTUh6KTogYXZn
+OiAyMjAwIG1pbi9tYXg6IDQwMC81MDAwOjM4MDAgc2NhbGluZzoKICAgIGRyaXZlcjogaW50ZWxf
+cHN0YXRlIGdvdmVybm9yOiBwb3dlcnNhdmUgY29yZXM6IDE6IDIyMDAgMjogMjIwMCAzOiAyMjAw
+CiAgICA0OiAyMjAwIDU6IDIyMDAgNjogMjIwMCA3OiAyMjAwIDg6IDIyMDAgOTogMjIwMCAxMDog
+MjIwMCAxMTogMjIwMCAxMjogMjIwMAogICAgYm9nb21pcHM6IDU5OTA0CiAgRmxhZ3MtYmFzaWM6
+IGF2eCBhdngyIGh0IGxtIG54IHBhZSBzc2Ugc3NlMiBzc2UzIHNzZTRfMSBzc2U0XzIgc3NzZTMg
+dm14CiAgVnVsbmVyYWJpbGl0aWVzOgogIFR5cGU6IGdhdGhlcl9kYXRhX3NhbXBsaW5nIHN0YXR1
+czogTm90IGFmZmVjdGVkCiAgVHlwZTogZ2hvc3R3cml0ZSBzdGF0dXM6IE5vdCBhZmZlY3RlZAog
+IFR5cGU6IGluZGlyZWN0X3RhcmdldF9zZWxlY3Rpb24gc3RhdHVzOiBOb3QgYWZmZWN0ZWQKICBU
+eXBlOiBpdGxiX211bHRpaGl0IHN0YXR1czogTm90IGFmZmVjdGVkCiAgVHlwZTogbDF0ZiBzdGF0
+dXM6IE5vdCBhZmZlY3RlZAogIFR5cGU6IG1kcyBzdGF0dXM6IE5vdCBhZmZlY3RlZAogIFR5cGU6
+IG1lbHRkb3duIHN0YXR1czogTm90IGFmZmVjdGVkCiAgVHlwZTogbW1pb19zdGFsZV9kYXRhIHN0
+YXR1czogTm90IGFmZmVjdGVkCiAgVHlwZTogb2xkX21pY3JvY29kZSBzdGF0dXM6IE5vdCBhZmZl
+Y3RlZAogIFR5cGU6IHJlZ19maWxlX2RhdGFfc2FtcGxpbmcgbWl0aWdhdGlvbjogQ2xlYXIgUmVn
+aXN0ZXIgRmlsZQogIFR5cGU6IHJldGJsZWVkIHN0YXR1czogTm90IGFmZmVjdGVkCiAgVHlwZTog
+c3BlY19yc3RhY2tfb3ZlcmZsb3cgc3RhdHVzOiBOb3QgYWZmZWN0ZWQKICBUeXBlOiBzcGVjX3N0
+b3JlX2J5cGFzcyBtaXRpZ2F0aW9uOiBTcGVjdWxhdGl2ZSBTdG9yZSBCeXBhc3MgZGlzYWJsZWQg
+dmlhCiAgICBwcmN0bAogIFR5cGU6IHNwZWN0cmVfdjEgbWl0aWdhdGlvbjogdXNlcmNvcHkvc3dh
+cGdzIGJhcnJpZXJzIGFuZCBfX3VzZXIgcG9pbnRlcgogICAgc2FuaXRpemF0aW9uCiAgVHlwZTog
+c3BlY3RyZV92MiBtaXRpZ2F0aW9uOiBFbmhhbmNlZCAvIEF1dG9tYXRpYyBJQlJTOyBJQlBCOgog
+ICAgY29uZGl0aW9uYWw7IFBCUlNCLWVJQlJTOiBTVyBzZXF1ZW5jZTsgQkhJOiBCSElfRElTX1MK
+ICBUeXBlOiBzcmJkcyBzdGF0dXM6IE5vdCBhZmZlY3RlZAogIFR5cGU6IHRzYSBzdGF0dXM6IE5v
+dCBhZmZlY3RlZAogIFR5cGU6IHRzeF9hc3luY19hYm9ydCBzdGF0dXM6IE5vdCBhZmZlY3RlZAog
+IFR5cGU6IHZtc2NhcGUgbWl0aWdhdGlvbjogSUJQQiBiZWZvcmUgZXhpdCB0byB1c2Vyc3BhY2UK
+R3JhcGhpY3M6CiAgRGV2aWNlLTE6IEludGVsIFJhcHRvciBMYWtlLVUgW0ludGVsIEdyYXBoaWNz
+XSB2ZW5kb3I6IEVtZG9vciBEaWdpdGFsCiAgICBkcml2ZXI6IGk5MTUgdjoga2VybmVsIGFsdGVy
+bmF0ZTogeGUgYXJjaDogWGUgcHJvY2VzczogSW50ZWwgNyAoMTBubSkKICAgIGJ1aWx0OiAyMDIy
+KyBwb3J0czogYWN0aXZlOiBlRFAtMSBlbXB0eTogRFAtMSxEUC0yLEhETUktQS0xCiAgICBidXMt
+SUQ6IDAwOjAyLjAgY2hpcC1JRDogODA4NjphN2FjIGNsYXNzLUlEOiAwMzAwCiAgRGV2aWNlLTI6
+IFNvbml4IFVTQjIuMCBGSEQgVVZDIFdlYkNhbSBkcml2ZXI6IHV2Y3ZpZGVvIHR5cGU6IFVTQiBy
+ZXY6IDIuMAogICAgc3BlZWQ6IDQ4MCBNYi9zIGxhbmVzOiAxIG1vZGU6IDIuMCBidXMtSUQ6IDMt
+NToyIGNoaXAtSUQ6IDMyNzc6MDBiZQogICAgY2xhc3MtSUQ6IGZlMDEgc2VyaWFsOiA8ZmlsdGVy
+PgogIERpc3BsYXk6IHdheWxhbmQgc2VydmVyOiBYLk9yZyB2OiAyNC4xLjkgd2l0aDogWHdheWxh
+bmQgdjogMjQuMS45CiAgICBjb21wb3NpdG9yOiBnbm9tZS1zaGVsbCBkcml2ZXI6IGRyaTogaXJp
+cyBncHU6IGk5MTUgZGlzcGxheS1JRDogOjAKICAgIHNjcmVlbnM6IDEKICBTY3JlZW4tMTogMCBz
+LXJlczogMzQ1NngyMTYwIHMtZHBpOiA5NiBzLXNpemU6IDkxNHg1NzFtbSAoMzUuOTh4MjIuNDgi
+KQogICAgcy1kaWFnOiAxMDc4bW0gKDQyLjQzIikKICBNb25pdG9yLTE6IGVEUC0xIG1vZGVsLWlk
+OiBFRE8gMHgxNDI4IGJ1aWx0OiAyMDI0IHJlczogbW9kZTogMzQ1NngyMTYwCiAgICBoejogMTIw
+IHNjYWxlOiAxMDAlICgxKSBkcGk6IDI5MyBnYW1tYTogMS4yIHNpemU6IDMwMHgxOTBtbSAoMTEu
+ODF4Ny40OCIpCiAgICBkaWFnOiAzNTVtbSAoMTQiKSBtb2RlczogMjg4MHgxODAwCiAgQVBJOiBP
+cGVuR0wgdjogNC42IHZlbmRvcjogaW50ZWwgbWVzYSB2OiAyNS4zLjYgZ2x4LXY6IDEuNCBlcy12
+OiAzLjIKICAgIGRpcmVjdC1yZW5kZXI6IHllcyByZW5kZXJlcjogTWVzYSBJbnRlbCBHcmFwaGlj
+cyAoUlBMLVUpCiAgICBkZXZpY2UtSUQ6IDgwODY6YTdhYyBtZW1vcnk6IDE0Ljk5IEdpQiB1bmlm
+aWVkOiB5ZXMKICBBUEk6IEVHTCBNZXNzYWdlOiBFR0wgZGF0YSByZXF1aXJlcyBlZ2xpbmZvLiBD
+aGVjayAtLXJlY29tbWVuZHMuCiAgSW5mbzogVG9vbHM6IGFwaTogZ2x4aW5mbyB4MTE6IHhkcmlp
+bmZvLCB4ZHB5aW5mbywgeHByb3AsIHhyYW5kcgpBdWRpbzoKICBEZXZpY2UtMTogSW50ZWwgUmFw
+dG9yIExha2UtUC9VL0ggY0FWUyB2ZW5kb3I6IEVtZG9vciBEaWdpdGFsCiAgICBkcml2ZXI6IHNu
+ZF9oZGFfaW50ZWwgdjoga2VybmVsIGFsdGVybmF0ZTogc25kX3NvY19hdnMsc25kX3NvZl9wY2lf
+aW50ZWxfdGdsCiAgICBidXMtSUQ6IDAwOjFmLjMgY2hpcC1JRDogODA4Njo1MWNhIGNsYXNzLUlE
+OiAwNDAzCiAgQVBJOiBBTFNBIHY6IGs2LjE5LjctMjAwLmZjNDMueDg2XzY0IHN0YXR1czoga2Vy
+bmVsLWFwaQogICAgdG9vbHM6IGFsc2FjdGwsYWxzYW1peGVyLGFtaXhlcgogIFNlcnZlci0xOiBQ
+aXBlV2lyZSB2OiAxLjQuMTAgc3RhdHVzOiBhY3RpdmUgd2l0aDogMTogcGlwZXdpcmUtcHVsc2UK
+ICAgIHN0YXR1czogYWN0aXZlIDI6IHdpcmVwbHVtYmVyIHN0YXR1czogYWN0aXZlIDM6IHBpcGV3
+aXJlLWFsc2EgdHlwZTogcGx1Z2luCiAgICA0OiBwdy1qYWNrIHR5cGU6IHBsdWdpbiB0b29sczog
+cGFjdGwscHctY2F0LHB3LWNsaSx3cGN0bApOZXR3b3JrOgogIERldmljZS0xOiBJbnRlbCBSYXB0
+b3IgTGFrZSBQQ0ggQ05WaSBXaUZpIGRyaXZlcjogaXdsd2lmaSB2OiBrZXJuZWwKICAgIGJ1cy1J
+RDogMDA6MTQuMyBjaGlwLUlEOiA4MDg2OjUxZjEgY2xhc3MtSUQ6IDAyODAKICBJRjogd2xvMSBz
+dGF0ZTogdXAgbWFjOiA8ZmlsdGVyPgogIEluZm86IHNlcnZpY2VzOiBOZXR3b3JrTWFuYWdlcix3
+cGFfc3VwcGxpY2FudApCbHVldG9vdGg6CiAgRGV2aWNlLTE6IEludGVsIEFYMjAxIEJsdWV0b290
+aCBkcml2ZXI6IGJ0dXNiIHY6IDAuOCB0eXBlOiBVU0IgcmV2OiAyLjAKICAgIHNwZWVkOiAxMiBN
+Yi9zIGxhbmVzOiAxIG1vZGU6IDEuMSBidXMtSUQ6IDMtMTA6MyBjaGlwLUlEOiA4MDg3OjAwMjYK
+ICAgIGNsYXNzLUlEOiBlMDAxCiAgUmVwb3J0OiBidG1nbXQgSUQ6IGhjaTAgcmZrLWlkOiAwIHN0
+YXRlOiB1cCBhZGRyZXNzOiA8ZmlsdGVyPiBidC12OiA1LjIKICAgIGxtcC12OiAxMSBzdGF0dXM6
+IGRpc2NvdmVyYWJsZTogbm8gcGFpcmluZzogbm8gY2xhc3MtSUQ6IDdjMDEwYwpEcml2ZXM6CiAg
+TG9jYWwgU3RvcmFnZTogdG90YWw6IDQ3Ni45NCBHaUIgdXNlZDogNS41MyBHaUIgKDEuMiUpCiAg
+U01BUlQgTWVzc2FnZTogVW5hYmxlIHRvIHJ1biBzbWFydGN0bC4gUm9vdCBwcml2aWxlZ2VzIHJl
+cXVpcmVkLgogIElELTE6IC9kZXYvbnZtZTBuMSBtYWotbWluOiAyNTk6MCBtb2RlbDogUlM1MTJH
+U1NENzEwIHNpemU6IDQ3Ni45NCBHaUIKICAgIGJsb2NrLXNpemU6IHBoeXNpY2FsOiA1MTIgQiBs
+b2dpY2FsOiA1MTIgQiBzcGVlZDogNjMuMiBHYi9zIGxhbmVzOiA0CiAgICB0ZWNoOiBTU0Qgc2Vy
+aWFsOiA8ZmlsdGVyPiBmdy1yZXY6IFBNMDIwNzdCIHRlbXA6IDM2LjkgQyBzY2hlbWU6IEdQVApQ
+YXJ0aXRpb246CiAgSUQtMTogLyByYXctc2l6ZTogMTY4LjkgR2lCIHNpemU6IDE2OC45IEdpQiAo
+MTAwLjAwJSkgdXNlZDogNC45OCBHaUIgKDMuMCUpCiAgICBmczogYnRyZnMgZGV2OiAvZGV2L252
+bWUwbjFwNyBtYWotbWluOiAyNTk6NwogIElELTI6IC9ib290IHJhdy1zaXplOiAyIEdpQiBzaXpl
+OiAxLjkgR2lCICg5NS4wMSUpIHVzZWQ6IDUwNS43IE1pQiAoMjYuMCUpCiAgICBmczogZXh0NCBk
+ZXY6IC9kZXYvbnZtZTBuMXA2IG1hai1taW46IDI1OTo2CiAgSUQtMzogL2Jvb3QvZWZpIHJhdy1z
+aXplOiAxMDAgTWlCIHNpemU6IDk2IE1pQiAoOTYuMDAlKQogICAgdXNlZDogNTAuNyBNaUIgKDUy
+LjglKSBmczogdmZhdCBkZXY6IC9kZXYvbnZtZTBuMXAxIG1hai1taW46IDI1OToxCiAgSUQtNDog
+L2hvbWUgcmF3LXNpemU6IDE2OC45IEdpQiBzaXplOiAxNjguOSBHaUIgKDEwMC4wMCUpCiAgICB1
+c2VkOiA0Ljk4IEdpQiAoMy4wJSkgZnM6IGJ0cmZzIGRldjogL2Rldi9udm1lMG4xcDcgbWFqLW1p
+bjogMjU5OjcKU3dhcDoKICBLZXJuZWw6IHN3YXBwaW5lc3M6IDYwIChkZWZhdWx0KSBjYWNoZS1w
+cmVzc3VyZTogMTAwIChkZWZhdWx0KSB6c3dhcDogbm8KICBJRC0xOiBzd2FwLTEgdHlwZTogenJh
+bSBzaXplOiA4IEdpQiB1c2VkOiAwIEtpQiAoMC4wJSkgcHJpb3JpdHk6IDEwMAogICAgY29tcDog
+bHpvLXJsZSBhdmFpbDogbHpvLGx6NCxsejRoYyx6c3RkLGRlZmxhdGUsODQyIGRldjogL2Rldi96
+cmFtMApTZW5zb3JzOgogIFN5c3RlbSBUZW1wZXJhdHVyZXM6IGNwdTogNTMuMCBDIG1vYm86IE4v
+QQogIEZhbiBTcGVlZHMgKHJwbSk6IE4vQQpJbmZvOgogIE1lbW9yeTogdG90YWw6IDE2IEdpQiBu
+b3RlOiBlc3QuIGF2YWlsYWJsZTogMTUuMzUgR2lCIHVzZWQ6IDIuMzYgR2lCICgxNS4zJSkKICBQ
+cm9jZXNzZXM6IDM3NiBQb3dlcjogdXB0aW1lOiAxbSBzdGF0ZXM6IGZyZWV6ZSxtZW0sZGlzayBz
+dXNwZW5kOiBzMmlkbGUKICAgIGF2YWlsOiBkZWVwIHdha2V1cHM6IDAgaGliZXJuYXRlOiBwbGF0
+Zm9ybSBhdmFpbDogc2h1dGRvd24sIHJlYm9vdCwKICAgIHN1c3BlbmQsIHRlc3RfcmVzdW1lIGlt
+YWdlOiA2LjA4IEdpQiBzZXJ2aWNlczogZ3NkLXBvd2VyLHRoZXJtYWxkLHVwb3dlcmQKICAgIElu
+aXQ6IHN5c3RlbWQgdjogMjU4IGRlZmF1bHQ6IGdyYXBoaWNhbCB0b29sOiBzeXN0ZW1jdGwKICBQ
+YWNrYWdlczogcG06IHJwbSBwa2dzOiBOL0Egbm90ZTogc2VlIC0tcnBtIHRvb2xzOiBkbmYsZ25v
+bWUtc29mdHdhcmUseXVtCiAgICBwbTogZmxhdHBhayBwa2dzOiAwIENvbXBpbGVyczogTi9BIFNo
+ZWxsOiBCYXNoIHY6IDUuMy4wCiAgICBydW5uaW5nLWluOiBwdHl4aXMtYWdlbnQgaW54aTogMy4z
+LjQwCgo=
+--00000000000028b904064dc10b57--
