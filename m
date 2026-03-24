@@ -1,58 +1,58 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.13])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.17])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8811A3E025D;
-	Tue, 24 Mar 2026 13:08:52 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.13
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E1CE43DDDC2
+	for <platform-driver-x86@vger.kernel.org>; Tue, 24 Mar 2026 13:19:53 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.17
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1774357734; cv=none; b=j45HdBHtJET4MXapYpUCfpGaliBjWuKOV2vkCL1dU/w9ZpNvFczH/ILpzO9SNdh1mHWLLDOXNnWY+CPDLfEks4l+gfrTc171sUMXr0qTeM47lRW72XalwnK2tKVpzav2qi/Nnc46lGUSnoiRh2pxDn5FGRSC1Oy5rhARsrzwkaE=
+	t=1774358395; cv=none; b=pMWtKFZwkaAI2+fjC94nV1o7nFoAHb/9cSSozYLTEp+ghUNvqaWKnwGZtEogwk8BqP4jvXhxmr9cu+bfU8VKHa7FTn0udVqMDT9gfQ2fYCuL/OMpkcl3E597FdX1U7zC0S1COLlz6OIWkfL6ET94CLcz54UkglyQTS1nmVfT2P8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1774357734; c=relaxed/simple;
-	bh=m1xFUo+gLkgC8xs7hVw4dMlGVhlSrwTvtzoQ++sFUjA=;
+	s=arc-20240116; t=1774358395; c=relaxed/simple;
+	bh=MaTaNG5RL4DBGBaibc5tJft6HFKcdd4mhPZLmpwIdNk=;
 	h=From:Date:To:cc:Subject:In-Reply-To:Message-ID:References:
-	 MIME-Version:Content-Type; b=e9Q6CjQ2gERzD8+ZV5RavTjIfcIYq9jSLEK7JwlMf2axqyaq9W9DKthLxIjLsFUSMou99JGk7JePH/ywn8s22IZf/mt7hXN9KaW3uZBTqjuklH5ZVOqfPgs7s41LWjLKwl2sBA1aLduc8M46HgKGAf1O9oOggEnOo3ccxcbnOLU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=pass smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=IAGjxMmM; arc=none smtp.client-ip=198.175.65.13
+	 MIME-Version:Content-Type; b=Bzq5L4lct/C9SR4FA2airXXsUPseJ52qLM3GfdThUwKXeL7xzVOlKdGec5Ihy+DKWefMUx4yYCaRgKJfl9Mx0ceLdV8kR9uq0UoQdLVxoD2GCP7XhF6PCRWJupIvmPl3xr+jw36TDi5YDSkgkIVfHyjR/5LccBYa++loMjuJ8Uw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=pass smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=fBYKjlTf; arc=none smtp.client-ip=192.198.163.17
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="IAGjxMmM"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="fBYKjlTf"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1774357733; x=1805893733;
+  t=1774358393; x=1805894393;
   h=from:date:to:cc:subject:in-reply-to:message-id:
    references:mime-version;
-  bh=m1xFUo+gLkgC8xs7hVw4dMlGVhlSrwTvtzoQ++sFUjA=;
-  b=IAGjxMmM5A38FbUDw9E6R9IMZYT38jB/RdUGc8SnggD/zsxPJLiNFJEl
-   NQjpR7CgSEHcQLYxMtpb4PLTuGav1KHB+2dDMJMNyT9Xr5r8OkNeDxHGE
-   EvhJVvhTjyyT0sJgaSWLCJBguVl/ew5/RbWNMlVjeOx8AfqbdxE+DnyMs
-   SuUyf19wV/F3+ctm6y3miSy6Fw/8jkCbXH9OQoIx3WtLs+9fMjBiqOy/e
-   WG29GS7J5IKeed37YbGnpAgJ7ifBF/ztIVQWuKNOgZPHCv48b6bYF4eln
-   iWSiJgV5ulELqi8T1wouNS73InBSh2CLPpo5NEOxJYbCzxk2DL6RZu4xo
-   A==;
-X-CSE-ConnectionGUID: XCEHZ65XRau+boDzlAVauA==
-X-CSE-MsgGUID: fNDVLTrYQXWtAP9NyPUMOA==
-X-IronPort-AV: E=McAfee;i="6800,10657,11739"; a="86446288"
+  bh=MaTaNG5RL4DBGBaibc5tJft6HFKcdd4mhPZLmpwIdNk=;
+  b=fBYKjlTfMFw6o8CZW7rl2qR2D1Jznk7PT2tKEMERncQVN2c1h2Q+VEUa
+   p9P+hVvotK7FVmZb/BqOgMwpetl0WqdwSnYDycoUibWAhjyu7fKjfeZfi
+   mlAuoZisfcIazh0XcLo+qiNjZNnMVerDIq/BuN7gHtLQLk/6QohSMrX5P
+   gPdiMQiPeQgtc5h+dVVkBCMC7WEE3o4oQXyy2cHuQvq7v3NaD5tRovurX
+   H61DJkVq439W1qGmbsCduqItA3x0Kie+QegbXcrYWoaWLKbCAvdnIkGt4
+   /+045KFSXCGI75vApyqSungApISZxkVTlwYwQPXM9rS1oiIPRmQBhI+ju
+   w==;
+X-CSE-ConnectionGUID: H+bbeUocRjarFrIXyl1pnQ==
+X-CSE-MsgGUID: 46v42vEtSVWCAlo49FByQg==
+X-IronPort-AV: E=McAfee;i="6800,10657,11739"; a="75279288"
 X-IronPort-AV: E=Sophos;i="6.23,138,1770624000"; 
-   d="scan'208";a="86446288"
-Received: from orviesa007.jf.intel.com ([10.64.159.147])
-  by orvoesa105.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 24 Mar 2026 06:08:52 -0700
-X-CSE-ConnectionGUID: uwwGhNO9Tj2SRTBAC/p1CQ==
-X-CSE-MsgGUID: jZP74VBdT+OQ55I/ujsRfQ==
+   d="scan'208";a="75279288"
+Received: from orviesa002.jf.intel.com ([10.64.159.142])
+  by fmvoesa111.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 24 Mar 2026 06:19:53 -0700
+X-CSE-ConnectionGUID: 8d3McPvDRAKjeF62SZKfrw==
+X-CSE-MsgGUID: pRcgmYYoSrGZfU0mbQjLLA==
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="6.23,138,1770624000"; 
-   d="scan'208";a="224588079"
+   d="scan'208";a="254830620"
 Received: from ijarvine-mobl1.ger.corp.intel.com (HELO localhost) ([10.245.244.217])
-  by orviesa007-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 24 Mar 2026 06:08:50 -0700
+  by orviesa002-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 24 Mar 2026 06:19:51 -0700
 From: =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
-Date: Tue, 24 Mar 2026 15:08:46 +0200 (EET)
-To: Werner Sembach <wse@tuxedocomputers.com>
-cc: W_Armin@gmx.de, Hans de Goede <hansg@kernel.org>, 
-    platform-driver-x86@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH v6 2/5] platform/x86: uniwill-laptop: Implement USB-C
- power priority setting
-In-Reply-To: <20260312192705.76576-3-wse@tuxedocomputers.com>
-Message-ID: <fc314dee-c341-8ff3-794c-2edecefc079a@linux.intel.com>
-References: <20260312192705.76576-1-wse@tuxedocomputers.com> <20260312192705.76576-3-wse@tuxedocomputers.com>
+Date: Tue, 24 Mar 2026 15:19:48 +0200 (EET)
+To: Ayaan Mirza Baig <ayaanmirzabaig85@gmail.com>
+cc: ayaanmirza788@gmail.com, josh@joshuagrisham.com, 
+    platform-driver-x86@vger.kernel.org
+Subject: Re: [PATCH v2] platform/x86: samsung-galaxybook: Handle ACPI hotkey
+ notifications
+In-Reply-To: <20260318054242.24747-1-ayaanmirzabaig85@gmail.com>
+Message-ID: <8e55cf70-5147-849a-ad5c-24a32727e620@linux.intel.com>
+References: <44912fc0-91fb-0a85-64fa-1b0b3661f0d8@linux.intel.com> <20260318054242.24747-1-ayaanmirzabaig85@gmail.com>
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
@@ -61,91 +61,128 @@ List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=US-ASCII
 
-On Thu, 12 Mar 2026, Werner Sembach wrote:
+On Wed, 18 Mar 2026, Ayaan Mirza Baig wrote:
 
-> On some devices Uniwill offers the option to set the USB-C port to
-> prioritise charging or performance. This patch exposes this setting to the
-> userspace via sysfs for all TUXEDO devices supporting it.
+> On Samsung Galaxy Book 5 (SAM0430), the keyboard backlight, microphone
+> mute, and camera block hotkeys do not generate i8042 scancodes.
+> Instead they arrive as ACPI notifications 0x7d, 0x63, and 0x6f
+> respectively, all of which previously fell through to the deafult
+> "unknown" warning in galaxybook_acpi_notify().
 > 
-> Signed-off-by: Werner Sembach <wse@tuxedocomputers.com>
-> Reviewed-by: Armin Wolf <W_Armin@gmx.de>
+> Add handling for these three events:
+> 
+> - 0x7d (Fn+F9, keyboard backlight): schedule the existing
+>   kbd_backlight_hotkey_work which cycles brightness.
+> 
+> - 0x6e (Fn+F10, microphone mute): register a new hotkey input device
+>   and emit KEY_MICMUTE.
+> 
+> - 0x6f (Fn+F11, camera block): if block_recording is active use the
+>   existing block_recording_hotkey_work; otherwise emit KEY_CAMERA via the
+>   hotkey input device on models where the block_recording ACPI feature is
+>   not supported
+> 
+> Tested on Samsung Galaxy Book 5 (SAM0430).
+> 
+> Signed-off-by: Ayaan Mirza Baig <ayaanmirzabaig85@gmail.com>
 > ---
->  drivers/platform/x86/uniwill/uniwill-acpi.c | 145 +++++++++++++++++++-
->  1 file changed, 138 insertions(+), 7 deletions(-)
+>  drivers/platform/x86/samsung-galaxybook.c | 47 +++++++++++++++++++++++
+>  1 file changed, 47 insertions(+)
 > 
-> diff --git a/drivers/platform/x86/uniwill/uniwill-acpi.c b/drivers/platform/x86/uniwill/uniwill-acpi.c
-> index 048b265bff374..22ae5fccd6a06 100644
-> --- a/drivers/platform/x86/uniwill/uniwill-acpi.c
-> +++ b/drivers/platform/x86/uniwill/uniwill-acpi.c
-> @@ -266,8 +266,8 @@
->  #define BATTERY_CHARGE_FULL_OVER_24H	BIT(3)
->  #define BATTERY_ERM_STATUS_REACHED	BIT(4)
+> diff --git a/drivers/platform/x86/samsung-galaxybook.c b/drivers/platform/x86/samsung-galaxybook.c
+> index 755cb82bdb60..f6770ede62d2 100644
+> --- a/drivers/platform/x86/samsung-galaxybook.c
+> +++ b/drivers/platform/x86/samsung-galaxybook.c
+> @@ -54,6 +54,7 @@ struct samsung_galaxybook {
 >  
-> -#define EC_ADDR_CHARGE_PRIO		0x07CC
-> -#define CHARGING_PERFORMANCE		BIT(7)
-> +#define EC_ADDR_USB_C_POWER_PRIORITY	0x07CC
-> +#define USB_C_POWER_PRIORITY		BIT(7)
+>  	struct work_struct block_recording_hotkey_work;
+>  	struct input_dev *camera_lens_cover_switch;
+> +	struct input_dev *hotkey_dev;
 >  
->  /* Same bits as EC_ADDR_LIGHTBAR_AC_CTRL except LIGHTBAR_S3_OFF */
->  #define EC_ADDR_LIGHTBAR_BAT_CTRL	0x07E2
-> @@ -324,6 +324,12 @@
->  #define UNIWILL_FEATURE_PRIMARY_FAN		BIT(7)
->  #define UNIWILL_FEATURE_SECONDARY_FAN		BIT(8)
->  #define UNIWILL_FEATURE_NVIDIA_CTGP_CONTROL	BIT(9)
-> +#define UNIWILL_FEATURE_USB_C_POWER_PRIORITY	BIT(10)
-> +
-> +enum usb_c_power_priority_options {
-> +	USB_C_POWER_PRIORITY_CHARGING = 0,
-> +	USB_C_POWER_PRIORITY_PERFORMANCE,
-> +};
+>  	struct acpi_battery_hook battery_hook;
 >  
->  struct uniwill_data {
->  	struct device *dev;
-> @@ -343,6 +349,8 @@ struct uniwill_data {
->  	struct mutex input_lock;	/* Protects input sequence during notify */
->  	struct input_dev *input_device;
->  	struct notifier_block nb;
-> +	struct mutex usb_c_power_priority_lock; /* Protects dependent bit write and state safe */
-> +	enum usb_c_power_priority_options last_usb_c_power_priority_option;
->  };
->  
->  struct uniwill_battery_entry {
-> @@ -527,6 +535,7 @@ static bool uniwill_writeable_reg(struct device *dev, unsigned int reg)
->  	case EC_ADDR_CTGP_DB_CTGP_OFFSET:
->  	case EC_ADDR_CTGP_DB_TPP_OFFSET:
->  	case EC_ADDR_CTGP_DB_DB_OFFSET:
-> +	case EC_ADDR_USB_C_POWER_PRIORITY:
->  		return true;
->  	default:
->  		return false;
-> @@ -565,6 +574,7 @@ static bool uniwill_readable_reg(struct device *dev, unsigned int reg)
->  	case EC_ADDR_CTGP_DB_CTGP_OFFSET:
->  	case EC_ADDR_CTGP_DB_TPP_OFFSET:
->  	case EC_ADDR_CTGP_DB_DB_OFFSET:
-> +	case EC_ADDR_USB_C_POWER_PRIORITY:
->  		return true;
->  	default:
->  		return false;
-> @@ -587,6 +597,7 @@ static bool uniwill_volatile_reg(struct device *dev, unsigned int reg)
->  	case EC_ADDR_TRIGGER:
->  	case EC_ADDR_SWITCH_STATUS:
->  	case EC_ADDR_CHARGE_CTRL:
-> +	case EC_ADDR_USB_C_POWER_PRIORITY:
->  		return true;
->  	default:
->  		return false;
-> @@ -883,6 +894,104 @@ static int uniwill_nvidia_ctgp_init(struct uniwill_data *data)
->  	return 0;
+> @@ -197,6 +198,9 @@ static const guid_t performance_mode_guid =
+>  #define GB_ACPI_NOTIFY_DEVICE_ON_TABLE          0x6c
+>  #define GB_ACPI_NOTIFY_DEVICE_OFF_TABLE         0x6d
+>  #define GB_ACPI_NOTIFY_HOTKEY_PERFORMANCE_MODE  0x70
+> +#define GB_ACPI_NOTIFY_HOTKEY_KBD_BACKLIGHT  	0x7d
+> +#define GB_ACPI_NOTIFY_HOTKEY_CAMERA         	0x6f
+> +#define GB_ACPI_NOTIFY_HOTKEY_MICMUTE        	0x6e
+
+These are using tabs after space for alignment which is not allowed.
+
+>  #define GB_KEY_KBD_BACKLIGHT_KEYDOWN    0x2c
+>  #define GB_KEY_KBD_BACKLIGHT_KEYUP      0xac
+> @@ -1223,6 +1227,22 @@ static void galaxybook_i8042_filter_remove(void *data)
+>  	cancel_work_sync(&galaxybook->block_recording_hotkey_work);
 >  }
 >  
+> +static int galaxybook_hotkey_init(struct samsung_galaxybook *galaxybook)
+> +{
+> +	galaxybook->hotkey_dev = devm_input_allocate_device(&galaxybook->platform->dev);
+> +	if (!galaxybook->hotkey_dev)
+> +		return -ENOMEM;
+> +
+> +	galaxybook->hotkey_dev->name = "Samsung Galaxy Book hotkeys";
+> +	galaxybook->hotkey_dev->phys = DRIVER_NAME "/input1";
+> +	galaxybook->hotkey_dev->id.bustype = BUS_HOST;
+> +
+> +	input_set_capability(galaxybook->hotkey_dev, EV_KEY, KEY_MICMUTE);
+> +	input_set_capability(galaxybook->hotkey_dev, EV_KEY, KEY_CAMERA);
+> +
+> +	return input_register_device(galaxybook->hotkey_dev);
+> +}
+> +
+>  static int galaxybook_i8042_filter_install(struct samsung_galaxybook *galaxybook)
+>  {
+>  	int err;
+> @@ -1260,6 +1280,28 @@ static void galaxybook_acpi_notify(acpi_handle handle, u32 event, void *data)
+>  		if (galaxybook->has_performance_mode)
+>  			platform_profile_cycle();
+>  		break;
+> +	case GB_ACPI_NOTIFY_HOTKEY_KBD_BACKLIGHT:
+> +		if (galaxybook->has_kbd_backlight)
+> +			schedule_work(&galaxybook->kbd_backlight_hotkey_work);
+> +		break;
+> +	case GB_ACPI_NOTIFY_HOTKEY_MICMUTE:
+> +		if (galaxybook->hotkey_dev) {
+> +			input_report_key(galaxybook->hotkey_dev, KEY_MICMUTE, 1);
+> +			input_sync(galaxybook->hotkey_dev);
+> +			input_report_key(galaxybook->hotkey_dev, KEY_MICMUTE, 0);
+> +			input_sync(galaxybook->hotkey_dev);
+> +		}
+> +		break;
+> +	case GB_ACPI_NOTIFY_HOTKEY_CAMERA:
+> +		if (galaxybook->has_block_recording)
+> +			schedule_work(&galaxybook->block_recording_hotkey_work);
+> +		else if (galaxybook->hotkey_dev) {
 
-> +static const char * const USB_C_POWER_PRIORITY_TEXT[] = {
+Please always use balanced braces with "else" constructs so with a 
+multiline block, both need to be using braces.
 
-> +static const u8 USB_C_POWER_PRIORITY_VALUE[] = {
+> +			input_report_key(galaxybook->hotkey_dev, KEY_CAMERA, 1);
+> +			input_sync(galaxybook->hotkey_dev);
+> +			input_report_key(galaxybook->hotkey_dev, KEY_CAMERA, 0);
+> +			input_sync(galaxybook->hotkey_dev);
+> +		}
+> +		break;
+>  	default:
+>  		dev_warn(&galaxybook->platform->dev,
+>  			 "unknown ACPI notification event: 0x%x\n", event);
+> @@ -1397,6 +1439,11 @@ static int galaxybook_probe(struct platform_device *pdev)
+>  		return dev_err_probe(&galaxybook->platform->dev, err,
+>  				     "failed to initialize firmware-attributes\n");
+>  
+> +	err = galaxybook_hotkey_init(galaxybook);
+> +	if (err)
+> +		return dev_err_probe(&galaxybook->platform->dev, err,
+> +					 "failed to initialize hotkey input device\n");
+> +
+>  	err = galaxybook_i8042_filter_install(galaxybook);
+>  	if (err)
+>  		return dev_err_probe(&galaxybook->platform->dev, err,
+> 
 
-These two arrays need to be lowercase as they're not macros.
-
---
+-- 
  i.
-
 
