@@ -1,137 +1,208 @@
-Received: from BL2PR02CU003.outbound.protection.outlook.com (mail-eastusazon11011027.outbound.protection.outlook.com [52.101.52.27])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ej1-f45.google.com (mail-ej1-f45.google.com [209.85.218.45])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AB924248F6F
-	for <platform-driver-x86@vger.kernel.org>; Tue, 24 Mar 2026 21:17:29 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=52.101.52.27
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B2BE02FA0C6
+	for <platform-driver-x86@vger.kernel.org>; Tue, 24 Mar 2026 21:28:01 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=209.85.218.45
 ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1774387051; cv=fail; b=m8DRjZ5TGDt6r8pA42INO2l5yyIgltXGBJYs8jsaoVU/C7hXIxmbW+1wqF6zUxTKJYuQHCL3/8tQJZOI8YdJhm6k7/q86rInrrKuBFZBNrnTgszHCcJ1eDnDL6WlHVyqDCPIJOz7UVY7p72Fwyl7EXuBE1vWWElE7BRkoyYQ43I=
+	t=1774387683; cv=pass; b=hjxXTg3BMOVobFlgrdd29F9anvHfFASF1f/4C+Mt2gHlI1ZLmrWiet2WrFlsnM92XVDyX2J8Q+gwMQ+/ChmSL2m4Sp3sHlxoXWhS+VBJynwj8H9R7SeuAoDmGkb5+tTJFiNyCNGsQxGR0gyILEDztLE9ecaiOA98kusQFLLjDVg=
 ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1774387051; c=relaxed/simple;
-	bh=djJN0NFJKcWet7ekuXVYbmKExMR/Xh36O19+Zzakuwk=;
-	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=ZyLNUaSWXGAF7TLkk7ST5wBH9Z22t5fyjz59HleuJikkdgrMSOL6+ptTy1m66JxUQixp4WUpF6TlGy1tWBfy7Oe7wt3WBdRKwTGidrq93G89of4KMZ2xGxNb8CrnkZL5KT+/3LP7yj3pvHDtyEPvDqjXy1HmZD6tHlkFEDMOqBI=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=xGNhzrcO; arc=fail smtp.client-ip=52.101.52.27
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com
-Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=amd.com
+	s=arc-20240116; t=1774387683; c=relaxed/simple;
+	bh=LDyNbT07z947mAwwCU/H4seMEakotNHDyOjJ4WTP4wk=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=ITild9Etqdx+3QBVfIIw404d7ZXCFo6JTdWhBnywolQEhyI2N4zL/76i8STHLjuhdWuJcwPZ5SB1FuzRMpkfIG69pq0K9wsWOj4X7CP5xLYVoBOBbkzTrzuI4N2G9/1KTixPYkqdjb31meKrSb4PFQz72St6FBivFpc+l/9bllo=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=NhF86uHS; arc=pass smtp.client-ip=209.85.218.45
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="xGNhzrcO"
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=uROub9kUWx1g/JYt06eXz3goBr+S0nOf74oXAUCf1dxTsn7xN9ZBEsrkAgA/kmnu1OBwI5Va8nsEuCTx8BG+ULia0AfQym6FZrU1WRJUZDXCSFbwWDRGhCMkqRWxRybNyFEupmAbNraWOkQnJIWHZ5ITBk2zR50J9FG0GF2KZ9gOE9BXmLJFxB0+3/iPrcQ/68LmiX7iVhLzcUWErkSKc1lnWaOmeSNaVUX5KlJk7uUWkvgWJh0nEAeafi9zsEuR3QTOWU/mxEacxH3QBFKF3PuhSzJzIFN6YqSx913mjjFUTEyc1Itl7Vw+MzZaimXceJPe1iTeY09Vz2LRPwdaOQ==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=sFIJEotr1Rf28zDnIY2h7Z03GQoxIajf4zqC7oKK0mk=;
- b=K/VU/ttM28a8SJQZ7TrxjMVYr3FOfx8EdYlVH4OwHfqydb0BqtM+Gy0GYJihH25DBZHs/eok5dgFFCwpdCKWcPaD2VIoOxCDkF5iLu2bgg1g1uNckDOGjcrt2G9xJjaKLl8FSfPB/FgVpROC3edOlonPjl9FVW/svoief+7iWKWr4j6Gq7EffbmLIcNkwk4bsVBWGq37ZwXtyQ6MKL7Dup8URhs7drbyNPRgqnHKgk45TLaA6kBNWGvhf3EKNbFQfOr2dZoLVL0dytPoJyiVBYzhIg49mWfbW1jt9ct3smMx1ULUFsS4fn1s85uMF+iYvu6toO25FFyzRGXlI2rS5g==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
- 165.204.84.17) smtp.rcpttodomain=kernel.org smtp.mailfrom=amd.com; dmarc=pass
- (p=quarantine sp=quarantine pct=100) action=none header.from=amd.com;
- dkim=none (message not signed); arc=none (0)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=sFIJEotr1Rf28zDnIY2h7Z03GQoxIajf4zqC7oKK0mk=;
- b=xGNhzrcO8HrFerFgpjOXPQScIMVvnD2sXFUKgok490taJ0wXSgVTQ9TMCiXpHMtDB+0r8x/3TOyx71gh+Od2oeshHhEX3sCVZwGqvIgkRK7Y/9iPh86Vn5fqnBFomiL3xLN5YE5ByoWzRZ3sUpN/EhtXDEgD1HENPVjMdUXasr8=
-Received: from SA1P222CA0047.NAMP222.PROD.OUTLOOK.COM (2603:10b6:806:2d0::20)
- by DM6PR12MB4124.namprd12.prod.outlook.com (2603:10b6:5:221::20) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.9745.20; Tue, 24 Mar
- 2026 21:17:24 +0000
-Received: from SN1PEPF0002BA4E.namprd03.prod.outlook.com
- (2603:10b6:806:2d0:cafe::26) by SA1P222CA0047.outlook.office365.com
- (2603:10b6:806:2d0::20) with Microsoft SMTP Server (version=TLS1_3,
- cipher=TLS_AES_256_GCM_SHA384) id 15.20.9723.31 via Frontend Transport; Tue,
- 24 Mar 2026 21:17:22 +0000
-X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 165.204.84.17)
- smtp.mailfrom=amd.com; dkim=none (message not signed)
- header.d=none;dmarc=pass action=none header.from=amd.com;
-Received-SPF: Pass (protection.outlook.com: domain of amd.com designates
- 165.204.84.17 as permitted sender) receiver=protection.outlook.com;
- client-ip=165.204.84.17; helo=satlexmb07.amd.com; pr=C
-Received: from satlexmb07.amd.com (165.204.84.17) by
- SN1PEPF0002BA4E.mail.protection.outlook.com (10.167.242.71) with Microsoft
- SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.9723.19 via Frontend Transport; Tue, 24 Mar 2026 21:17:24 +0000
-Received: from dogwood-dvt-marlim.amd.com (10.180.168.240) by
- satlexmb07.amd.com (10.181.42.216) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.2562.17; Tue, 24 Mar 2026 16:17:23 -0500
-From: Mario Limonciello <mario.limonciello@amd.com>
-To: <mario.limonciello@amd.com>, <Shyam-sundar.S-k@amd.com>,
-	<hansg@kernel.org>, <ilpo.jarvinen@linux.intel.com>
-CC: Imrane <ihalim.me@gmail.com>, <platform-driver-x86@vger.kernel.org>
-Subject: [PATCH] platform/x86/amd: pmc: Add Thinkpad L14 Gen3 to quirk_s2idle_bug
-Date: Tue, 24 Mar 2026 16:16:41 -0500
-Message-ID: <20260324211647.357924-1-mario.limonciello@amd.com>
-X-Mailer: git-send-email 2.53.0
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="NhF86uHS"
+Received: by mail-ej1-f45.google.com with SMTP id a640c23a62f3a-b9910707d82so132454066b.1
+        for <platform-driver-x86@vger.kernel.org>; Tue, 24 Mar 2026 14:28:01 -0700 (PDT)
+ARC-Seal: i=1; a=rsa-sha256; t=1774387680; cv=none;
+        d=google.com; s=arc-20240605;
+        b=LxAXJUZSxLVMbENWOtUYiOHov9h5WXaYDpBO6QUvpU0HB+l28oCtZTx59XNKQISx7i
+         oxK59Qu0qkw7apsD4EB3iYJ4axRtaKdqkXF7Ar7VSU937yEkAJSr3pREnl8FbPpZ8wSO
+         Grh1WO1ea9124o4eG1+Ty15zW8YFw+MMNJ7MulRvl9qk3QuaXefDLf994G5c3zceOu0U
+         DQTiyRBAm30zzfGUEHwha1CMQ28p15U86/cRbCiX4P8q17ASPcvFNMxOHXU5vhs910RJ
+         615DNMa85e0q0vuZ/DOT5beo2KHvEA/Cjea0ODkt/YizQZn4fp6oCjlDq8kho+/zOgMQ
+         ra0g==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20240605;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:dkim-signature;
+        bh=GxQi3ohN2SF498D3BGe3v0S3aNizlnyTOGo8I1Infqk=;
+        fh=bl3oaCkJqJLi1976U6daTIbmpx9cT8+79DLB542x7lw=;
+        b=T9rNkddjILS2lwuVurspnXvU5Da4TCqyop4cMD8q3LYQaXc/Gts8TrshN8lxvei4u/
+         AKyXNvSc9b6AYwvgrg+HJFDQwkVWi8BZCe7hYov+7JtQzjPqTRS3nKZDl7iu8o7iviiL
+         d51trFYITZC1slB8Fl3piiMai3h+A8Ucp9KwkWcdc34cm+oja1OuIOz6CrH+cwizPExV
+         H8XY+LwAq5J7ipCcD7398iMYMBx1boEpyv6AEgV2fSzAJu0JxoNFsN+Aycich0BaTzGE
+         l5DFzzFF0GJo2nmm5IXMjEAtepD/x3U9AaWmk0TnNOxAYhhU4FdNZ2MStSjAWBTnm4Lo
+         I1JQ==;
+        darn=vger.kernel.org
+ARC-Authentication-Results: i=1; mx.google.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20251104; t=1774387680; x=1774992480; darn=vger.kernel.org;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:from:to:cc:subject:date:message-id:reply-to;
+        bh=GxQi3ohN2SF498D3BGe3v0S3aNizlnyTOGo8I1Infqk=;
+        b=NhF86uHSRJrOJPYdo5xMIiyOf/x5xxlwu1N/53q1xVHPJU3lccZtUxn9Zr3ObVDKvs
+         9uRATXXCZqwnaETSBL+DJj8Kh6y4Hj1twKLL9m/W8oLINrpYB32Ni8jP87D59c16nLue
+         fs7yIvxmmUJQ2tN3ypCw3rdGiYXfwKnKik6kY6Blc2w0HstEM9tSnm/0xs3D6ddSmF50
+         4+FwHqolJiWdCoC6hk0rB3VxXo8Wz1sgy2i4Qon7wPatPJbEu/+6vvfrzsqPo7Q+8Kqq
+         IR62No61K8TjGLUUzRncAs7lLelxekXSwSUaQtjYgMwgBTTxISYID/QBtSwYdnOkkWsg
+         RXpQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20251104; t=1774387680; x=1774992480;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:x-gm-gg:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=GxQi3ohN2SF498D3BGe3v0S3aNizlnyTOGo8I1Infqk=;
+        b=OQdb+A2fg9fJUe9GcUVvYKhf+D2jhqn0uZhhqS2aZBtiD1pblG/i9yjrbkfGHD35uJ
+         Cm4MsRUy740f6OdrR/x/sZwKrMWyEna50/LUk8SswKvMSbHYMm9RIC/vd3UBvqbMs9/3
+         1zpuh8qgS8BMGbnRQHIL0RUXcPz6CrC9EuXVeEGZQusxPhVCcaeGPmm4rkj181wTmVgb
+         4IZHmBEjcJadr7OyJi7BegP09OMH/VO/r1770ayqCtvtWEBx3wEfX6TRSWJos2VXgxQI
+         h+myWs+vIxSaH5otG4y+ok6VULwaRRxm6q5yi8PfFq9MhIBZb9sLoIVj+LyMoLDwf+mI
+         o/IA==
+X-Gm-Message-State: AOJu0YwmPKupBsvtSNrcy88fjxcOKvbNliKG2mIN57blhJsX3G6Tl0tu
+	AeAYnUYlgRNZY3ZvBGPxuYYqTuSyiPyRDvk/+oUcMr1YH6ZTyXckzz4RUafqclp5RDESKx5SSrQ
+	rxSk6jFSj3nMPlDRU9Xa4ilmVHyL+9QeoRqbLauE=
+X-Gm-Gg: ATEYQzxbT37veV+/Nuxi6CLOib+NdIBrwuLj7fa2nSHCGt7+DRVKW0+Av+T07t4DFC8
+	DfpNs/bU4QIVd9TsNIZ2P+YE4EchV2DWmO2XTyHfhZo9/kZ2reMgmKMgrYAhAYH3IAXDj2dz5LE
+	CZAItHYM5IUv6e4lvXyNFct1FZ8AU3LtJrSoOJOJJzbjSo0xqZsDjzf+oFp19A5aYIuGsSFrICT
+	fg7f4ypFGuJFkRy54ipvD3NYs+em84ag90VJUAGbB7otSzEGEqlks3y9tkC22trdv6hDdPntHtb
+	9PKgaA==
+X-Received: by 2002:a17:907:9304:b0:b90:8016:cfe4 with SMTP id
+ a640c23a62f3a-b9a3f15ef72mr74194066b.10.1774387679760; Tue, 24 Mar 2026
+ 14:27:59 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-ClientProxiedBy: satlexmb08.amd.com (10.181.42.217) To satlexmb07.amd.com
- (10.181.42.216)
-X-EOPAttributedMessage: 0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: SN1PEPF0002BA4E:EE_|DM6PR12MB4124:EE_
-X-MS-Office365-Filtering-Correlation-Id: 4e1c9483-7681-4772-fd22-08de89eabe59
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam:
-	BCL:0;ARA:13230040|1800799024|376014|36860700016|82310400026|13003099007|56012099003|18002099003;
-X-Microsoft-Antispam-Message-Info:
-	5Oym4Z4yx1eQZGR5ch75I7gUuEpjm5I1/j3w/pifmcSPuPDwP6/qzXIYnLJ+v1bCBBJGlDWGCE9Tqub2fqxDd7fbSRqusEQ1UtCbVKT4n30fY1x+3iNRGpuf4sREersVuFByah+U+pXb7pyR7nnq7iJqpPlQ215rgZ8fcIfPLMOJzoFGJUmruZz+qpLS3ls9T6NLGRWTkwJ34jPaQrwiYQ2E/9/gIrES8Wxmw0rad8sdjFaIyPQ8ujxUpjOhkH06h8i7qqMzKuy00YZovZour/tNEeoQt5OWYLqs1i52kaftCwe6Tw57SV34M3LnYVUvpX5Sqv60OqY5jcI9v4quEtesZl7KW8aR1WuM1kUX2YCh1fhqCELMLQjz53gc9ta9WYbuzl7T7k4+Ka2SbpBDNjtwVi96wqSRSKL42RTtNJo2AGOWKhTnLcan/2EDgIJZtP4MRrQbUgDrzQX03m9mnxcJy38Aj/nONd8nosihMb1kbWfi1fLXTxiadrrSXwaACv8u2aOKzjG4ACMbWOH+TOCqkeZehAfbjI1PAr2frpcIZ648nzBtXrdr39xA0zT3qBK2XvNdYfsKqCvo023H5OldmOfRJgZGg0PZ8AwHc3BgA9qxakU74WKT5RKzAceoZ8ZzQ35XcqX05Vb5xE6YKaqNjFHcsPu99RITsr6XqVqTkeIY7L79LliZJ8a6Xe3qYc5ohV4owOFZHhb24ahy4FX4KFiLl5whAUElvW2WOzY=
-X-Forefront-Antispam-Report:
-	CIP:165.204.84.17;CTRY:US;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:satlexmb07.amd.com;PTR:InfoDomainNonexistent;CAT:NONE;SFS:(13230040)(1800799024)(376014)(36860700016)(82310400026)(13003099007)(56012099003)(18002099003);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0:
-	6rkWBKLdjY1cj0y46eHfMRO+fpv7kXAT1vbr7tp1KKzNEKbS0Jp2w7GeDyJNoYOihI+AjsJJwT7UCGClxs4Sj5J34a8NHlTmSZIufNhjapXrJD9JyCNNH4cMq3kugoS4Hu00bQV3lNrrKBdCGcdl+SQKz3v7KWP5b8fURx8fl78VQaFvbISC6kjCrKuNKwojtOV2OUx9Asq18ybcKO+GHzavy7vsewnVlYUofiucKrR5f4M2LhHqjsdAO9GSxAtD/bC3k02QnnM6zme5J8XRtpej4Yo1tyahNeAIQ8a4CS7cyRf2KT0t9v1LeeT+QSzQb4e2bGM8fiIwr19ylpffPLLO3l5koXezugvAQCJW9MOaT0jkBP8HhlNVWwGwFQcAFSAs9/0zMi2ESk3CW3y+AZ3FxmuAHrB3sIBcDHZTD8t5yeQbfSjakZOPQwO6k3y9
-X-OriginatorOrg: amd.com
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 24 Mar 2026 21:17:24.1490
- (UTC)
-X-MS-Exchange-CrossTenant-Network-Message-Id: 4e1c9483-7681-4772-fd22-08de89eabe59
-X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
-X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=3dd8961f-e488-4e60-8e11-a82d994e183d;Ip=[165.204.84.17];Helo=[satlexmb07.amd.com]
-X-MS-Exchange-CrossTenant-AuthSource:
-	SN1PEPF0002BA4E.namprd03.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Anonymous
-X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM6PR12MB4124
+References: <CAJ0oKyQTEJit294y=fs2s2nzhzUs_GQzsgMswDNs==zkdiqz0g@mail.gmail.com>
+ <05ae0012-db1b-4826-a466-f706d2a57cc7@gmx.de> <CAJ0oKyRU3=qBQvxaBycQYAyxCaVogzuVNv_M=4=npTkBF=X1zg@mail.gmail.com>
+ <18a5bcab-84d2-4957-a053-dabbf900e85d@gmx.de> <CAJ0oKyR0VPXz887cJsF+oUZFYVD7QY3F3FXWbjAGZGTmFFV-UA@mail.gmail.com>
+ <81b30359-7090-430d-8cb1-805cf2d6fcc9@gmx.de>
+In-Reply-To: <81b30359-7090-430d-8cb1-805cf2d6fcc9@gmx.de>
+From: Ian Jensen <ianmoellerjensen@gmail.com>
+Date: Tue, 24 Mar 2026 22:27:46 +0100
+X-Gm-Features: AaiRm50uG4cNqBcQoZynZ3UiLOkYQ76sE0Ucya-74srjdn3iAWo5VZMrj8AHtx8
+Message-ID: <CAJ0oKySi8dLwbjM5UAgtCBRFEGAMpWZfLth=eWcMrBc3=YQqfQ@mail.gmail.com>
+Subject: Re: Internal keyboard non-functional on linux on Medion Laptop -
+ NTC816 (Intel IPF) has no driver, PS/2 fallback produces corrupted scancodes
+To: Armin Wolf <W_Armin@gmx.de>
+Cc: platform-driver-x86@vger.kernel.org
+Content-Type: multipart/mixed; boundary="00000000000058fe41064dcbd3a9"
 
-This platform is a similar vintage of platforms that had a BIOS bug
-leading to a 10s delay at resume from s0i3.
+--00000000000058fe41064dcbd3a9
+Content-Type: multipart/alternative; boundary="00000000000058fe3f064dcbd3a7"
 
-Add a quirk for it.
+--00000000000058fe3f064dcbd3a7
+Content-Type: text/plain; charset="UTF-8"
 
-Reported-by: Imrane <ihalim.me@gmail.com>
-Closes: https://bugzilla.kernel.org/show_bug.cgi?id=221273
-Tested-by: Imrane <ihalim.me@gmail.com>
-Signed-off-by: Mario Limonciello <mario.limonciello@amd.com>
----
- drivers/platform/x86/amd/pmc/pmc-quirks.c | 9 +++++++++
- 1 file changed, 9 insertions(+)
+Yes, here
 
-diff --git a/drivers/platform/x86/amd/pmc/pmc-quirks.c b/drivers/platform/x86/amd/pmc/pmc-quirks.c
-index ed285afaf9b0d..24506e3429430 100644
---- a/drivers/platform/x86/amd/pmc/pmc-quirks.c
-+++ b/drivers/platform/x86/amd/pmc/pmc-quirks.c
-@@ -203,6 +203,15 @@ static const struct dmi_system_id fwbug_list[] = {
- 			DMI_MATCH(DMI_PRODUCT_NAME, "82XQ"),
- 		}
- 	},
-+	/* https://bugzilla.kernel.org/show_bug.cgi?id=221273 */
-+	{
-+		.ident = "Thinkpad L14 Gen3",
-+		.driver_data = &quirk_s2idle_bug,
-+		.matches = {
-+			DMI_MATCH(DMI_BOARD_VENDOR, "LENOVO"),
-+			DMI_MATCH(DMI_PRODUCT_NAME, "21C6"),
-+		}
-+	},
- 	/* https://gitlab.freedesktop.org/drm/amd/-/issues/4434 */
- 	{
- 		.ident = "Lenovo Yoga 6 13ALC6",
--- 
-2.53.0
+Den tirs. 24. mar. 2026 kl. 22.08 skrev Armin Wolf <W_Armin@gmx.de>:
 
+> Am 24.03.26 um 21:43 schrieb Ian Jensen:
+>
+> >
+> > Yes certainly, my mistake
+> > Here it is
+> >
+> Thank you. Can you share the output of "ls /sys/bus/i2c/devices/"?
+>
+> Thanks,
+> Armin Wolf
+>
+> > Den tirs. 24. mar. 2026 kl. 21.37 skrev Armin Wolf <W_Armin@gmx.de>:
+> >
+> >     Am 24.03.26 um 21:28 schrieb Ian Jensen:
+> >
+> >     > Yes, here it is attached (this is with no launch parameters, so
+> >     > completely dead laptop keyboard)
+> >
+> >     Thanks you.
+> >
+> >     Can you please also share the acpidump with the whole mailing list
+> >     (reply-all) so that everyone can access it?
+> >     Also, it seems that the acpidump you have provided is corrupted,
+> >     likely because use copied it manually from the
+> >     command line.
+> >
+> >     Please use this command instead:
+> >
+> >             sudo acpidump > acpidump.txt
+> >
+> >     The acpidump.txt file should then contain the full data.
+> >
+> >     Thanks,
+> >     Armin Wolf
+> >
+>
+
+--00000000000058fe3f064dcbd3a7
+Content-Type: text/html; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+
+<div dir=3D"ltr">Yes, here</div><br><div class=3D"gmail_quote gmail_quote_c=
+ontainer"><div dir=3D"ltr" class=3D"gmail_attr">Den tirs. 24. mar. 2026 kl.=
+ 22.08 skrev Armin Wolf &lt;<a href=3D"mailto:W_Armin@gmx.de">W_Armin@gmx.d=
+e</a>&gt;:<br></div><blockquote class=3D"gmail_quote" style=3D"margin:0px 0=
+px 0px 0.8ex;border-left:1px solid rgb(204,204,204);padding-left:1ex">Am 24=
+.03.26 um 21:43 schrieb Ian Jensen:<br>
+<br>
+&gt;<br>
+&gt; Yes certainly, my mistake<br>
+&gt; Here it is<br>
+&gt;<br>
+Thank you. Can you share the output of &quot;ls /sys/bus/i2c/devices/&quot;=
+?<br>
+<br>
+Thanks,<br>
+Armin Wolf<br>
+<br>
+&gt; Den tirs. 24. mar. 2026 kl. 21.37 skrev Armin Wolf &lt;<a href=3D"mail=
+to:W_Armin@gmx.de" target=3D"_blank">W_Armin@gmx.de</a>&gt;:<br>
+&gt;<br>
+&gt;=C2=A0 =C2=A0 =C2=A0Am 24.03.26 um 21:28 schrieb Ian Jensen:<br>
+&gt;<br>
+&gt;=C2=A0 =C2=A0 =C2=A0&gt; Yes, here it is attached (this is with no laun=
+ch parameters, so<br>
+&gt;=C2=A0 =C2=A0 =C2=A0&gt; completely dead laptop keyboard)<br>
+&gt;<br>
+&gt;=C2=A0 =C2=A0 =C2=A0Thanks you.<br>
+&gt;<br>
+&gt;=C2=A0 =C2=A0 =C2=A0Can you please also share the acpidump with the who=
+le mailing list<br>
+&gt;=C2=A0 =C2=A0 =C2=A0(reply-all) so that everyone can access it?<br>
+&gt;=C2=A0 =C2=A0 =C2=A0Also, it seems that the acpidump you have provided =
+is corrupted,<br>
+&gt;=C2=A0 =C2=A0 =C2=A0likely because use copied it manually from the<br>
+&gt;=C2=A0 =C2=A0 =C2=A0command line.<br>
+&gt;<br>
+&gt;=C2=A0 =C2=A0 =C2=A0Please use this command instead:<br>
+&gt;<br>
+&gt;=C2=A0 =C2=A0 =C2=A0=C2=A0 =C2=A0 =C2=A0 =C2=A0 sudo acpidump &gt; acpi=
+dump.txt<br>
+&gt;<br>
+&gt;=C2=A0 =C2=A0 =C2=A0The acpidump.txt file should then contain the full =
+data.<br>
+&gt;<br>
+&gt;=C2=A0 =C2=A0 =C2=A0Thanks,<br>
+&gt;=C2=A0 =C2=A0 =C2=A0Armin Wolf<br>
+&gt;<br>
+</blockquote></div>
+
+--00000000000058fe3f064dcbd3a7--
+--00000000000058fe41064dcbd3a9
+Content-Type: text/plain; charset="US-ASCII"; name="output.txt"
+Content-Disposition: attachment; filename="output.txt"
+Content-Transfer-Encoding: base64
+Content-ID: <f_mn54lcqj0>
+X-Attachment-Id: f_mn54lcqj0
+
+MTYtMDAzNgoxNi0wMDM3CjE2LTAwNTAKaTJjLTAKaTJjLTEKaTJjLTEwCmkyYy0xMQppMmMtMTIK
+aTJjLTEzCmkyYy0xNAppMmMtMTUKaTJjLTE2CmkyYy0yCmkyYy0zCmkyYy00CmkyYy01CmkyYy02
+CmkyYy03CmkyYy04CmkyYy05CmkyYy1TWU5BMzYwMjowMAo=
+--00000000000058fe41064dcbd3a9--
