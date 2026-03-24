@@ -1,85 +1,85 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.19])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BD588296BB6
-	for <platform-driver-x86@vger.kernel.org>; Tue, 24 Mar 2026 10:41:16 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9321D241665;
+	Tue, 24 Mar 2026 11:01:31 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.19
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1774348876; cv=none; b=f032HfrnzLnRC8DeN1zA8XppxII7Atoki56sUdgSixPkcZcMLcPkEai/j2QyoqPeOjVv2GNvX/mZIhSehS2F0fTqnnKOf3iTtaS5Cy2p5ZPlHzcX9SGRMqoA4U3MNMC7/dVnz+JlD4m3TE8S+/MFUMEOPD/gPQBg1x1ylc7ooew=
+	t=1774350092; cv=none; b=p2RnH7KGfHaExvzYI1Y6iSZnaJbUVt1L44s8/g27XPQj3fZqPlgjhASWVl3znSfCioi7SCTP3Igt+URE9RaGymGKLNUsp2mWiqedniwdzEkO3Qa4W93tYbd2ubAj5yz6fyBn2qq1iZIMZRpQ1PB4IofbdsSQFxsWAq8vHDtApPM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1774348876; c=relaxed/simple;
-	bh=vm5qNaWCaWIQ5fBbvrSYyAWgOYkK/mj7UdKlt6xJKDg=;
-	h=From:To:Subject:Date:Message-ID:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=hVd4jrs1LwfQeA9dSqs4yvzcGX6vaR0awMrr8H+l/TD61lDrbbggvd08NK1MNHyNTxuwDeZGpqyjEsYoe3lAHGA2+MTYCuDtKu8DwNgbEJGXQJT2hhcJRAzwYSF1xmWPVTIZCaPL4niafObrpKWIJEHzPTfZW4xjyjld/x8rj/Y=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=oHvt/wr6; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1774350092; c=relaxed/simple;
+	bh=81Qkjpc6IbC54ykBywCu93u5JWnbfbosDGHSWk5Tyns=;
+	h=From:To:Cc:In-Reply-To:References:Subject:Message-Id:Date:
+	 MIME-Version:Content-Type; b=kMtc80DYo7Lvc9kUje3OjLH8rkEsWha48LGnKWf41zwLRDFZ5qrhgVJYAcO5/wBDgxLpLdhwx4WQNFS91UNZ2j3Zr4ZnYEN4ZtP8+NWMKK4UMkwzA1V2D2o6tokjdl8WsBIvE9zz3fmQZfa/dzood9wy4PCHCdEcfvPO4LC6D9w=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=pass smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=hW/muoDz; arc=none smtp.client-ip=198.175.65.19
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="oHvt/wr6"
-Received: by smtp.kernel.org (Postfix) with ESMTPS id 7222DC19424
-	for <platform-driver-x86@vger.kernel.org>; Tue, 24 Mar 2026 10:41:16 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1774348876;
-	bh=vm5qNaWCaWIQ5fBbvrSYyAWgOYkK/mj7UdKlt6xJKDg=;
-	h=From:To:Subject:Date:In-Reply-To:References:From;
-	b=oHvt/wr6D8y8R/PYvo1H0Vj+L2LD87FDp2mU6ZIlkhFzVAezYN7H43sZrEGHvZ5Ta
-	 Uw3G+y1jBAapQfv0hLgtLgJxM8MXyaD55yRe5oslwMDcS7JsXaYBhbarEaWq/OTGI+
-	 IT4+zo2xEjomtDNADkl9Y+4BkbQlfO3xXcRG21Qdzi7XIaYBzb8fWM5ZUD7OP8ynHc
-	 8go9oI1hniMWinq7nIeaOgY8DwhSEkDBuNLJp/6G3Kj2Y4jvxTx597uH8+kXr/Gspa
-	 62nZ0mFA1LK8akySyB2n3FjEHDU4ME178GFk2HbBdCSdZixi6quZ7/VBqKUs56cpWs
-	 pf6ytGHJfljYQ==
-Received: by aws-us-west-2-korg-bugzilla-1.web.codeaurora.org (Postfix, from userid 48)
-	id 64645C433E1; Tue, 24 Mar 2026 10:41:16 +0000 (UTC)
-From: bugzilla-daemon@kernel.org
-To: platform-driver-x86@vger.kernel.org
-Subject: [Bug 221065] ideapad_acpi: unexpected charge_types spam on Yoga Pro
- 7 14ASP9
-Date: Tue, 24 Mar 2026 10:41:16 +0000
-X-Bugzilla-Reason: None
-X-Bugzilla-Type: changed
-X-Bugzilla-Watch-Reason: AssignedTo drivers_platform_x86@kernel-bugs.osdl.org
-X-Bugzilla-Product: Drivers
-X-Bugzilla-Component: Platform_x86
-X-Bugzilla-Version: 2.5
-X-Bugzilla-Keywords: 
-X-Bugzilla-Severity: low
-X-Bugzilla-Who: jeffrey@waelti.dev
-X-Bugzilla-Status: NEW
-X-Bugzilla-Resolution: 
-X-Bugzilla-Priority: P3
-X-Bugzilla-Assigned-To: drivers_platform_x86@kernel-bugs.osdl.org
-X-Bugzilla-Flags: 
-X-Bugzilla-Changed-Fields: cc attachments.created
-Message-ID: <bug-221065-215701-NoCt3uZjfB@https.bugzilla.kernel.org/>
-In-Reply-To: <bug-221065-215701@https.bugzilla.kernel.org/>
-References: <bug-221065-215701@https.bugzilla.kernel.org/>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-X-Bugzilla-URL: https://bugzilla.kernel.org/
-Auto-Submitted: auto-generated
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="hW/muoDz"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1774350092; x=1805886092;
+  h=from:to:cc:in-reply-to:references:subject:message-id:
+   date:mime-version:content-transfer-encoding;
+  bh=81Qkjpc6IbC54ykBywCu93u5JWnbfbosDGHSWk5Tyns=;
+  b=hW/muoDzBJ23rXdlwzbFKAvygu+uK5DTw8J41pQ77xFr8pLJ4HMxR7oN
+   ExZJHDNeCPQc07o3xvkENnHd4lrhminwaiz827GR4UfZJUnMs3TJOvIct
+   y+98TVXllJMg2nexUcand98JIORSat+GbUjEgfC4R212v+ZEJwKbHwBxz
+   RUzezeylt8GWVSnsiGo+Vh3eKNOHwrgwWTUjXsOfVdHtwYCh2MkNDkVMO
+   RbTKgi7osGP1PsbBvEfNiTqQgoQwig3o2WP1zgZ+RegDiTgg/1YAE1S+k
+   JZyH23EgeVQPlw1ERKzY+VyyBRb8wNDJMuxxRrS/PknH6x+H2yG0Dsbln
+   w==;
+X-CSE-ConnectionGUID: cuVed4tsQd2fZSkQHCbGOA==
+X-CSE-MsgGUID: fpgn7KHUS+W5nZ1wS2iMfA==
+X-IronPort-AV: E=McAfee;i="6800,10657,11738"; a="75247062"
+X-IronPort-AV: E=Sophos;i="6.23,138,1770624000"; 
+   d="scan'208";a="75247062"
+Received: from orviesa004.jf.intel.com ([10.64.159.144])
+  by orvoesa111.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 24 Mar 2026 04:01:31 -0700
+X-CSE-ConnectionGUID: kM1yd7dcS7a+wY8KyNxruQ==
+X-CSE-MsgGUID: 5SgNt8dXRpCPO15kMGZP/g==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.23,138,1770624000"; 
+   d="scan'208";a="228799999"
+Received: from ijarvine-mobl1.ger.corp.intel.com (HELO localhost) ([10.245.244.217])
+  by orviesa004-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 24 Mar 2026 04:01:29 -0700
+From: =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
+To: hansg@kernel.org, 
+ Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>
+Cc: platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org, 
+ stable@vger.kernel.org
+In-Reply-To: <20260323153635.3263828-1-srinivas.pandruvada@linux.intel.com>
+References: <20260323153635.3263828-1-srinivas.pandruvada@linux.intel.com>
+Subject: Re: [PATCH v2] platform/x86: ISST: Correct locked bit width
+Message-Id: <177435008376.6571.2449558027467443175.b4-ty@linux.intel.com>
+Date: Tue, 24 Mar 2026 13:01:23 +0200
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+X-Mailer: b4 0.13.0
 
-https://bugzilla.kernel.org/show_bug.cgi?id=3D221065
+On Mon, 23 Mar 2026 08:36:35 -0700, Srinivas Pandruvada wrote:
 
-jeffrey@waelti.dev changed:
+> SST-PP locked bit width is set to three bits. It should be only one bit.
+> Use SST_PP_LOCK_WIDTH define instead of SST_PP_LEVEL_WIDTH.
+> 
+> 
 
-           What    |Removed                     |Added
-----------------------------------------------------------------------------
-                 CC|                            |jeffrey@waelti.dev
 
---- Comment #52 from jeffrey@waelti.dev ---
-Created attachment 309756
-  --> https://bugzilla.kernel.org/attachment.cgi?id=3D309756&action=3Dedit
-14AKP10 acpidump
+Thank you for your contribution, it has been applied to my local
+fixes branch. Note it will show up in the public
+platform-drivers-x86/fixes branch only once I've pushed my
+local branch there, which might take a while.
 
-I'm seeing the same behaviour on my Lenovo Yoga 7 2-in-1 14AKP10, I've added
-the ACPI dump in case this can help to diagnose the issue further.
+The list of commits applied:
+[1/1] platform/x86: ISST: Correct locked bit width
+      commit: fbddf68d7b4e1e6da7a78dd7fbd8ec376536584a
 
---=20
-You may reply to this email to add a comment.
+--
+ i.
 
-You are receiving this mail because:
-You are watching the assignee of the bug.=
