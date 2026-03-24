@@ -1,211 +1,95 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pj1-f54.google.com (mail-pj1-f54.google.com [209.85.216.54])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F3AB123EAB0;
-	Tue, 24 Mar 2026 01:01:27 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E653135A3B2
+	for <platform-driver-x86@vger.kernel.org>; Tue, 24 Mar 2026 08:06:22 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.54
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1774314088; cv=none; b=MV5ViPufvcxZLp6lYOZU9EuJXDVanlC9nKqdacvdQPVNO1sDVIZz87zvX3vp4oANRnegtkIt/BSKCr6eUvjD5CJfhJdhwWHcSix/yx2jP6mNSICquRgOPi6a/5xm54bBYpcEiC1R01mKVtt2k/WKDB664YC0GABucpDRuvuYdeo=
+	t=1774339592; cv=none; b=lLyoUxIh4ffySeggTt+yKWM3NdCfmpWstaR4JhzkXsEqVJ6nWuV3MMu9HVe4orz6Kp/U+ApW/KGj1pkxeLU1+pfoNsotIc31vBnu6Pg/3Gdp6hdgCxH1TUSR8V/ZNqGPXeq+dNajt03dq+mi+YR5xz4DOQdvuPYMOQnWLYtyAIo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1774314088; c=relaxed/simple;
-	bh=KpxTlQdpK2jKnd62P5I8EEqT3CEkSotjkNoM+lvw6Dc=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=I4LSTj0Rg4rK6KZ+W4mHDCzkVVLaCZWx3Vn9ruf1FNrfMYs3np1aZj7aA4jloOdvTe11JHey/EcXmxJOWkjsdm3CTmk3gaOAz3qKWdaKXM0+P9Cdnv1phyzymc9QgjSWTKriMQcruVXDK6lcGsIRT4UzISai3BMPJPaidC73YhY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=rLAmVR6g; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1774339592; c=relaxed/simple;
+	bh=EnjoSDfLwT7gPuPdKxN3TE+trLx0l3Kn6kafF81k/8Y=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=i9rhjlIiGOKSX6f2lbK2YAJ3CA3chtmHxqafaFNUPJMU8PRm3D1ar1oeKdO/NqfU+HKzTI9z33YINNWMCXdV9EzuKLhF2fAchspKEZKk27CgF6kPNjcwtmZt5WLtUDaCzRW3i8cjYnwfA1N7h7T5IYDIrq4EtmvVtRw3L8qlgkM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=QBcb53NO; arc=none smtp.client-ip=209.85.216.54
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="rLAmVR6g"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 9C0E8C4CEF7;
-	Tue, 24 Mar 2026 01:01:18 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1774314087;
-	bh=KpxTlQdpK2jKnd62P5I8EEqT3CEkSotjkNoM+lvw6Dc=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=rLAmVR6groUQSZRplygjMn68KJDDiLrGR9Vctd6Afc3mLDKzHEaYGbMFZ3KXs4fK4
-	 MUoXCr/h6SfvTEE4yAlc7KGjraQ8CFJXtGn8f5BkmJWMm1J/pjXgfy9qXciydDWGLj
-	 XNYlWwVjufJG5KD0z7v9ARc0FuEyAjjiYRe15HPbrYCuuNFi4/b/eyHrklVGEVsCSm
-	 lE5k5muPCMjo/9hKdfl5T5LohS8mNpZoGcTFibqf76OQzdeH43NHUrx9bEVbSisncq
-	 g/N4LXJNuBtUlzaGXa8b6D8KnPgXir5STaz/+AS+2urYkPCvbB6vpDfKREYcWyPp9d
-	 47Lib8DntPlsA==
-From: Danilo Krummrich <dakr@kernel.org>
-To: Russell King <linux@armlinux.org.uk>,
-	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-	"Rafael J. Wysocki" <rafael@kernel.org>,
-	Ioana Ciornei <ioana.ciornei@nxp.com>,
-	Nipun Gupta <nipun.gupta@amd.com>,
-	Nikhil Agarwal <nikhil.agarwal@amd.com>,
-	"K. Y. Srinivasan" <kys@microsoft.com>,
-	Haiyang Zhang <haiyangz@microsoft.com>,
-	Wei Liu <wei.liu@kernel.org>,
-	Dexuan Cui <decui@microsoft.com>,
-	Long Li <longli@microsoft.com>,
-	Bjorn Helgaas <bhelgaas@google.com>,
-	Armin Wolf <W_Armin@gmx.de>,
-	Bjorn Andersson <andersson@kernel.org>,
-	Mathieu Poirier <mathieu.poirier@linaro.org>,
-	Vineeth Vijayan <vneethv@linux.ibm.com>,
-	Peter Oberparleiter <oberpar@linux.ibm.com>,
-	Heiko Carstens <hca@linux.ibm.com>,
-	Vasily Gorbik <gor@linux.ibm.com>,
-	Alexander Gordeev <agordeev@linux.ibm.com>,
-	Christian Borntraeger <borntraeger@linux.ibm.com>,
-	Sven Schnelle <svens@linux.ibm.com>,
-	Harald Freudenberger <freude@linux.ibm.com>,
-	Holger Dengler <dengler@linux.ibm.com>,
-	Mark Brown <broonie@kernel.org>,
-	"Michael S. Tsirkin" <mst@redhat.com>,
-	Jason Wang <jasowang@redhat.com>,
-	Xuan Zhuo <xuanzhuo@linux.alibaba.com>,
-	=?UTF-8?q?Eugenio=20P=C3=A9rez?= <eperezma@redhat.com>,
-	Alex Williamson <alex@shazbot.org>,
-	Juergen Gross <jgross@suse.com>,
-	Stefano Stabellini <sstabellini@kernel.org>,
-	Oleksandr Tyshchenko <oleksandr_tyshchenko@epam.com>,
-	"Christophe Leroy (CS GROUP)" <chleroy@kernel.org>
-Cc: linux-kernel@vger.kernel.org,
-	driver-core@lists.linux.dev,
-	linuxppc-dev@lists.ozlabs.org,
-	linux-hyperv@vger.kernel.org,
-	linux-pci@vger.kernel.org,
-	platform-driver-x86@vger.kernel.org,
-	linux-arm-msm@vger.kernel.org,
-	linux-remoteproc@vger.kernel.org,
-	linux-s390@vger.kernel.org,
-	linux-spi@vger.kernel.org,
-	virtualization@lists.linux.dev,
-	kvm@vger.kernel.org,
-	xen-devel@lists.xenproject.org,
-	linux-arm-kernel@lists.infradead.org,
-	Danilo Krummrich <dakr@kernel.org>
-Subject: [PATCH 12/12] driver core: remove driver_set_override()
-Date: Tue, 24 Mar 2026 01:59:16 +0100
-Message-ID: <20260324005919.2408620-13-dakr@kernel.org>
-X-Mailer: git-send-email 2.53.0
-In-Reply-To: <20260324005919.2408620-1-dakr@kernel.org>
-References: <20260324005919.2408620-1-dakr@kernel.org>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="QBcb53NO"
+Received: by mail-pj1-f54.google.com with SMTP id 98e67ed59e1d1-359f35dfef6so2097512a91.2
+        for <platform-driver-x86@vger.kernel.org>; Tue, 24 Mar 2026 01:06:22 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20251104; t=1774339582; x=1774944382; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=EnjoSDfLwT7gPuPdKxN3TE+trLx0l3Kn6kafF81k/8Y=;
+        b=QBcb53NOFTxkMSY4fT2Tkz3WtSaZ+BWB/lzM8T1q2WNsh1Lv+WWofHqza0WicHYm75
+         JxSh0nrkBOkcTwyN/ESDUqPqbuTFTFYkEKSEQGFnwJS5a4PYC7rsMQ57g3Bua/o54Bq4
+         dB2haxcR/lDJ0+LTuciFB/9FjTt/fOgnYF8M+ARsuf/RJZsz2RoAqKL27EWF8sU4y5Oc
+         uUtkZiKcQ8/Oa2bVWLKiU1f/LcCSAP28CAaE0JcV6/C+81g1rNM9ARFQB5gOUd79WAWx
+         AMXrKXTa7fJAD8DGjCW8RyaTHMVnLXIbqSUKpfCdyJkGMHVNerq+R9y63vxXtCwrnN6I
+         1p3Q==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20251104; t=1774339582; x=1774944382;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-gg:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=EnjoSDfLwT7gPuPdKxN3TE+trLx0l3Kn6kafF81k/8Y=;
+        b=jK/0Shl3tHFZ6f8/P2ekdcEAmnEQHw+YB1ReT6AppZBbErD6eLVyYfdUpHmvDfwOzu
+         E1ieQHnv52zdczvg14BLuZSpSALwV7QGLvShOGzfh9ammCynVwa2KqCjrjCoTT8JwD8w
+         J5YRk1o6Wql3pVoBZfYikRdEAkaLh9HGrPCP0aZXnbw2EQsz+ma1uc81Kdq2AKk/UYDj
+         P7qEQgcT7nxvI10prc2Zyn/TfNcaialkTFse4Q1j3MlRHPAlqYmoWmMVFwKDj1INO7zK
+         4bYwUJfAKACeC7HvOZB+UL0mLWbS9koMHy0YLGnG1JtAqJl4ookKPeoqd9/hnqx39xtD
+         46iw==
+X-Forwarded-Encrypted: i=1; AJvYcCU1w4R2EocqgWtJS/UEgIDo5DQc3acPAFVJcx4aq+ciT6G2/kQkeEO7qORE+O25UrwVrPIdKgmD6lHfgHVVaZajO1TR@vger.kernel.org
+X-Gm-Message-State: AOJu0YzatWPhlHnQB7sDdsbLWTejWVBzkWMVg7hvlKxXxdyr5HXgEtRY
+	VZ2ja0Fe7RSp17k3Z2BGVWNSZkxyLkQuKuvpwc535g+DeWQlxEtGICPB
+X-Gm-Gg: ATEYQzwQRZU1t/eZWr/2Z9Lgf8WaBRpCfdNDiE2nBH6UJcc6I3VdPpyTpiCcS5L10xj
+	qvebM7DlX03Gbt51t01hjSh1SJbNROCurd/c3ODZs+APbz37ceNb+7RwdnVSJLYqBTVf6fHiT8w
+	kdbik3nCSZmHvnto43B2SyYBRl4areBBXOTDL7UVprqcQz7erLkP6/z04ts7OQUTkxo9085gOM7
+	iLkzee3L7yiwbC3E+uFqSsbMLee6cBnZOJwlri3ge+SfN659BakMeeZ4+pklWnMYYo9Bxz587lv
+	OD1G949p/brjezNg03rE8LzwxSI5YcIJ47NBZyLBZWYAyHutoKn6OlB5jHNOmmQwWqtFiqzTlJx
+	5zGL5JsXY4JfyTTgXOc3ohlm0Z7w11HFTW4i4o+L3ZHx/wFy60Ptumm+JoAdWqOJ1+Y2C5giXFn
+	9GU0kCGHq0hu98FXyuLPs=
+X-Received: by 2002:a17:90a:1c02:b0:35b:e51b:1935 with SMTP id 98e67ed59e1d1-35be51b1947mr4748349a91.17.1774339581783;
+        Tue, 24 Mar 2026 01:06:21 -0700 (PDT)
+Received: from gb5 ([139.5.199.69])
+        by smtp.gmail.com with ESMTPSA id 98e67ed59e1d1-35c03165c5esm1495091a91.14.2026.03.24.01.06.18
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 24 Mar 2026 01:06:20 -0700 (PDT)
+Date: Tue, 24 Mar 2026 13:36:14 +0000
+From: Ayaan Mirza Baig <ayaanmirzabaig85@gmail.com>
+To: ilpo.jarvinen@linux.intel.com
+Cc: ayaanmirza788@gmail.com, josh@joshuagrisham.com, 
+	platform-driver-x86@vger.kernel.org
+Subject: Re: [PATCH v2] platform/x86: samsung-galaxybook: Handle ACPI hotkey
+ notifications
+Message-ID: <acKSyeHQT4GS8pp2@gb5>
+References: <44912fc0-91fb-0a85-64fa-1b0b3661f0d8@linux.intel.com>
+ <20260318054242.24747-1-ayaanmirzabaig85@gmail.com>
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20260318054242.24747-1-ayaanmirzabaig85@gmail.com>
 
-All buses have been converted from driver_set_override() to the generic
-driver_override infrastructure introduced in commit cb3d1049f4ea
-("driver core: generalize driver_override in struct device").
+On Wed, Mar 18, 2026 at 05:42:42AM +0000, Ayaan Mirza Baig wrote:
+> On Samsung Galaxy Book 5 (SAM0430), the keyboard backlight, microphone
+> mute, and camera block hotkeys do not generate i8042 scancodes.
+> Instead they arrive as ACPI notifications 0x7d, 0x63, and 0x6f
+> respectively, all of which previously fell through to the deafult
+> "unknown" warning in galaxybook_acpi_notify().
 
-Buses now either opt into the generic sysfs callbacks via the
-bus_type::driver_override flag, or use device_set_driver_override() /
-__device_set_driver_override() directly.
+Hi Ilpo,
 
-Thus, remove the now-unused driver_set_override() helper.
+Just following up on this patch - I wanted to check if you had any
+feedback on v2 or if there's anything I should revise further.
 
-Link: https://bugzilla.kernel.org/show_bug.cgi?id=220789
-Signed-off-by: Danilo Krummrich <dakr@kernel.org>
----
- drivers/base/driver.c         | 75 -----------------------------------
- include/linux/device/driver.h |  2 -
- 2 files changed, 77 deletions(-)
+Happy to send a v3 if needed.
 
-diff --git a/drivers/base/driver.c b/drivers/base/driver.c
-index 8ab010ddf709..7ed834f7199c 100644
---- a/drivers/base/driver.c
-+++ b/drivers/base/driver.c
-@@ -30,81 +30,6 @@ static struct device *next_device(struct klist_iter *i)
- 	return dev;
- }
- 
--/**
-- * driver_set_override() - Helper to set or clear driver override.
-- * @dev: Device to change
-- * @override: Address of string to change (e.g. &device->driver_override);
-- *            The contents will be freed and hold newly allocated override.
-- * @s: NUL-terminated string, new driver name to force a match, pass empty
-- *     string to clear it ("" or "\n", where the latter is only for sysfs
-- *     interface).
-- * @len: length of @s
-- *
-- * Helper to set or clear driver override in a device, intended for the cases
-- * when the driver_override field is allocated by driver/bus code.
-- *
-- * Returns: 0 on success or a negative error code on failure.
-- */
--int driver_set_override(struct device *dev, const char **override,
--			const char *s, size_t len)
--{
--	const char *new, *old;
--	char *cp;
--
--	if (!override || !s)
--		return -EINVAL;
--
--	/*
--	 * The stored value will be used in sysfs show callback (sysfs_emit()),
--	 * which has a length limit of PAGE_SIZE and adds a trailing newline.
--	 * Thus we can store one character less to avoid truncation during sysfs
--	 * show.
--	 */
--	if (len >= (PAGE_SIZE - 1))
--		return -EINVAL;
--
--	/*
--	 * Compute the real length of the string in case userspace sends us a
--	 * bunch of \0 characters like python likes to do.
--	 */
--	len = strlen(s);
--
--	if (!len) {
--		/* Empty string passed - clear override */
--		device_lock(dev);
--		old = *override;
--		*override = NULL;
--		device_unlock(dev);
--		kfree(old);
--
--		return 0;
--	}
--
--	cp = strnchr(s, len, '\n');
--	if (cp)
--		len = cp - s;
--
--	new = kstrndup(s, len, GFP_KERNEL);
--	if (!new)
--		return -ENOMEM;
--
--	device_lock(dev);
--	old = *override;
--	if (cp != s) {
--		*override = new;
--	} else {
--		/* "\n" passed - clear override */
--		kfree(new);
--		*override = NULL;
--	}
--	device_unlock(dev);
--
--	kfree(old);
--
--	return 0;
--}
--EXPORT_SYMBOL_GPL(driver_set_override);
--
- /**
-  * driver_for_each_device - Iterator for devices bound to a driver.
-  * @drv: Driver we're iterating.
-diff --git a/include/linux/device/driver.h b/include/linux/device/driver.h
-index bbc67ec513ed..aa3465a369f0 100644
---- a/include/linux/device/driver.h
-+++ b/include/linux/device/driver.h
-@@ -160,8 +160,6 @@ int __must_check driver_create_file(const struct device_driver *driver,
- void driver_remove_file(const struct device_driver *driver,
- 			const struct driver_attribute *attr);
- 
--int driver_set_override(struct device *dev, const char **override,
--			const char *s, size_t len);
- int __must_check driver_for_each_device(struct device_driver *drv, struct device *start,
- 					void *data, device_iter_t fn);
- struct device *driver_find_device(const struct device_driver *drv,
--- 
-2.53.0
-
+Thanks,
+Ayaan
