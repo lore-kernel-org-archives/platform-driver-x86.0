@@ -1,177 +1,137 @@
-Received: from mout.gmx.net (mout.gmx.net [212.227.17.20])
+Received: from BL2PR02CU003.outbound.protection.outlook.com (mail-eastusazon11011027.outbound.protection.outlook.com [52.101.52.27])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D9DC42571C7
-	for <platform-driver-x86@vger.kernel.org>; Tue, 24 Mar 2026 21:08:34 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=212.227.17.20
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1774386516; cv=none; b=rQwqC93bDzW9rRLzTGZfCGQ3/wZINxKRKYUiybSrQy9ATarSUekeYHz82Xv9LjcrKpz9USTovsns4LxSd/9ZPrMs6bd4hKGdAlgLAbbShkaUeKDasHmT3hZ8lhRJ9NbTrMwj8Gpez9jmrTlzop3ki4lcHBl0qwUV5e+tv5Em9YQ=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1774386516; c=relaxed/simple;
-	bh=gR0nDdomhDDGtUiyIsM9MIcgQLz8PrhlBlxfHbFHHj0=;
-	h=Message-ID:Date:MIME-Version:Subject:To:References:From:
-	 In-Reply-To:Content-Type; b=KRpF6h+da0c+aaff+3xzt6v3p+/oJwW5W+bEfevTRSuwI5qDSgv3n9UqgcYMXpVLDRaUJMfbAo/eTwBNEElSB4PaAqTBrKRSv1diwOqOAg/kzqUI3v9QDiwcG38k1V0JUd9ha1Wb6Q7dEzph6P/AyRIbgMR1gZreRmrFqZ7THGE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gmx.de; spf=pass smtp.mailfrom=gmx.de; dkim=pass (2048-bit key) header.d=gmx.de header.i=w_armin@gmx.de header.b=F3ZEy3hZ; arc=none smtp.client-ip=212.227.17.20
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gmx.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmx.de
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AB924248F6F
+	for <platform-driver-x86@vger.kernel.org>; Tue, 24 Mar 2026 21:17:29 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=52.101.52.27
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1774387051; cv=fail; b=m8DRjZ5TGDt6r8pA42INO2l5yyIgltXGBJYs8jsaoVU/C7hXIxmbW+1wqF6zUxTKJYuQHCL3/8tQJZOI8YdJhm6k7/q86rInrrKuBFZBNrnTgszHCcJ1eDnDL6WlHVyqDCPIJOz7UVY7p72Fwyl7EXuBE1vWWElE7BRkoyYQ43I=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1774387051; c=relaxed/simple;
+	bh=djJN0NFJKcWet7ekuXVYbmKExMR/Xh36O19+Zzakuwk=;
+	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=ZyLNUaSWXGAF7TLkk7ST5wBH9Z22t5fyjz59HleuJikkdgrMSOL6+ptTy1m66JxUQixp4WUpF6TlGy1tWBfy7Oe7wt3WBdRKwTGidrq93G89of4KMZ2xGxNb8CrnkZL5KT+/3LP7yj3pvHDtyEPvDqjXy1HmZD6tHlkFEDMOqBI=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=xGNhzrcO; arc=fail smtp.client-ip=52.101.52.27
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=amd.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmx.de header.i=w_armin@gmx.de header.b="F3ZEy3hZ"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=gmx.de;
-	s=s31663417; t=1774386513; x=1774991313; i=w_armin@gmx.de;
-	bh=KCCwnLiuLtk5fmALV7/gP+B63dQg9AbA61vF4yByESM=;
-	h=X-UI-Sender-Class:Message-ID:Date:MIME-Version:Subject:To:
-	 References:From:In-Reply-To:Content-Type:
-	 Content-Transfer-Encoding:cc:content-transfer-encoding:
-	 content-type:date:from:message-id:mime-version:reply-to:subject:
-	 to;
-	b=F3ZEy3hZh0gVASnfC+PXQ68c4TuEuMJNkdVYjtKGaboRhUGY8o00wW/Lq1hYk9SV
-	 21zcijJj5ZnBj6MbY6hqzo6aP70eedehpf8DhoqLceR52CQJWYLWGOYBkFZPDs9qM
-	 vwiyP9BJUASuc8z2ToO6JfPyJxUn84L+RBULWeN8bWKzrNFjEK4pMSZlCve8NeqHL
-	 YB/GDUYIQO01mZG6tn80TcDQq1ZxYFIrMChub3Yx6dHIBdb0AbA76byJZQ7Fkg9rn
-	 xduxoPwf2LBn5NWyarvqraj2Mb0luU5hd3dJatFAfAXDGSyy+/fQem1Wn+xHmhVS/
-	 AnOJsNMfy14ECfQgSg==
-X-UI-Sender-Class: 724b4f7f-cbec-4199-ad4e-598c01a50d3a
-Received: from client.hidden.invalid by mail.gmx.net (mrgmx104
- [212.227.17.168]) with ESMTPSA (Nemesis) id 1M89L1-1w9Fid45L9-00DMeD; Tue, 24
- Mar 2026 22:08:33 +0100
-Message-ID: <81b30359-7090-430d-8cb1-805cf2d6fcc9@gmx.de>
-Date: Tue, 24 Mar 2026 22:08:32 +0100
+	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="xGNhzrcO"
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=uROub9kUWx1g/JYt06eXz3goBr+S0nOf74oXAUCf1dxTsn7xN9ZBEsrkAgA/kmnu1OBwI5Va8nsEuCTx8BG+ULia0AfQym6FZrU1WRJUZDXCSFbwWDRGhCMkqRWxRybNyFEupmAbNraWOkQnJIWHZ5ITBk2zR50J9FG0GF2KZ9gOE9BXmLJFxB0+3/iPrcQ/68LmiX7iVhLzcUWErkSKc1lnWaOmeSNaVUX5KlJk7uUWkvgWJh0nEAeafi9zsEuR3QTOWU/mxEacxH3QBFKF3PuhSzJzIFN6YqSx913mjjFUTEyc1Itl7Vw+MzZaimXceJPe1iTeY09Vz2LRPwdaOQ==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=sFIJEotr1Rf28zDnIY2h7Z03GQoxIajf4zqC7oKK0mk=;
+ b=K/VU/ttM28a8SJQZ7TrxjMVYr3FOfx8EdYlVH4OwHfqydb0BqtM+Gy0GYJihH25DBZHs/eok5dgFFCwpdCKWcPaD2VIoOxCDkF5iLu2bgg1g1uNckDOGjcrt2G9xJjaKLl8FSfPB/FgVpROC3edOlonPjl9FVW/svoief+7iWKWr4j6Gq7EffbmLIcNkwk4bsVBWGq37ZwXtyQ6MKL7Dup8URhs7drbyNPRgqnHKgk45TLaA6kBNWGvhf3EKNbFQfOr2dZoLVL0dytPoJyiVBYzhIg49mWfbW1jt9ct3smMx1ULUFsS4fn1s85uMF+iYvu6toO25FFyzRGXlI2rS5g==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
+ 165.204.84.17) smtp.rcpttodomain=kernel.org smtp.mailfrom=amd.com; dmarc=pass
+ (p=quarantine sp=quarantine pct=100) action=none header.from=amd.com;
+ dkim=none (message not signed); arc=none (0)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=sFIJEotr1Rf28zDnIY2h7Z03GQoxIajf4zqC7oKK0mk=;
+ b=xGNhzrcO8HrFerFgpjOXPQScIMVvnD2sXFUKgok490taJ0wXSgVTQ9TMCiXpHMtDB+0r8x/3TOyx71gh+Od2oeshHhEX3sCVZwGqvIgkRK7Y/9iPh86Vn5fqnBFomiL3xLN5YE5ByoWzRZ3sUpN/EhtXDEgD1HENPVjMdUXasr8=
+Received: from SA1P222CA0047.NAMP222.PROD.OUTLOOK.COM (2603:10b6:806:2d0::20)
+ by DM6PR12MB4124.namprd12.prod.outlook.com (2603:10b6:5:221::20) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.9745.20; Tue, 24 Mar
+ 2026 21:17:24 +0000
+Received: from SN1PEPF0002BA4E.namprd03.prod.outlook.com
+ (2603:10b6:806:2d0:cafe::26) by SA1P222CA0047.outlook.office365.com
+ (2603:10b6:806:2d0::20) with Microsoft SMTP Server (version=TLS1_3,
+ cipher=TLS_AES_256_GCM_SHA384) id 15.20.9723.31 via Frontend Transport; Tue,
+ 24 Mar 2026 21:17:22 +0000
+X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 165.204.84.17)
+ smtp.mailfrom=amd.com; dkim=none (message not signed)
+ header.d=none;dmarc=pass action=none header.from=amd.com;
+Received-SPF: Pass (protection.outlook.com: domain of amd.com designates
+ 165.204.84.17 as permitted sender) receiver=protection.outlook.com;
+ client-ip=165.204.84.17; helo=satlexmb07.amd.com; pr=C
+Received: from satlexmb07.amd.com (165.204.84.17) by
+ SN1PEPF0002BA4E.mail.protection.outlook.com (10.167.242.71) with Microsoft
+ SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.9723.19 via Frontend Transport; Tue, 24 Mar 2026 21:17:24 +0000
+Received: from dogwood-dvt-marlim.amd.com (10.180.168.240) by
+ satlexmb07.amd.com (10.181.42.216) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.2562.17; Tue, 24 Mar 2026 16:17:23 -0500
+From: Mario Limonciello <mario.limonciello@amd.com>
+To: <mario.limonciello@amd.com>, <Shyam-sundar.S-k@amd.com>,
+	<hansg@kernel.org>, <ilpo.jarvinen@linux.intel.com>
+CC: Imrane <ihalim.me@gmail.com>, <platform-driver-x86@vger.kernel.org>
+Subject: [PATCH] platform/x86/amd: pmc: Add Thinkpad L14 Gen3 to quirk_s2idle_bug
+Date: Tue, 24 Mar 2026 16:16:41 -0500
+Message-ID: <20260324211647.357924-1-mario.limonciello@amd.com>
+X-Mailer: git-send-email 2.53.0
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: Internal keyboard non-functional on linux on Medion Laptop -
- NTC816 (Intel IPF) has no driver, PS/2 fallback produces corrupted scancodes
-To: Ian Jensen <ianmoellerjensen@gmail.com>,
- platform-driver-x86@vger.kernel.org
-References: <CAJ0oKyQTEJit294y=fs2s2nzhzUs_GQzsgMswDNs==zkdiqz0g@mail.gmail.com>
- <05ae0012-db1b-4826-a466-f706d2a57cc7@gmx.de>
- <CAJ0oKyRU3=qBQvxaBycQYAyxCaVogzuVNv_M=4=npTkBF=X1zg@mail.gmail.com>
- <18a5bcab-84d2-4957-a053-dabbf900e85d@gmx.de>
- <CAJ0oKyR0VPXz887cJsF+oUZFYVD7QY3F3FXWbjAGZGTmFFV-UA@mail.gmail.com>
-Content-Language: en-US
-From: Armin Wolf <W_Armin@gmx.de>
-In-Reply-To: <CAJ0oKyR0VPXz887cJsF+oUZFYVD7QY3F3FXWbjAGZGTmFFV-UA@mail.gmail.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: quoted-printable
-X-Provags-ID: V03:K1:CPnuwanL7H6kM89F6algCz6pVHsM14jw8+vBYfkSgK2Qx9nRXsx
- x0Ox7Kab/rRGRRdsZikiXmGPzVzTIEwH34BFNASA9vKxo5l/uMJoJYvAijQeY2vUO1Y2em8
- hf7i4j1EWxunKj/oEiH1vFyCopNWoUi4ooK38ui9LWkkkszX+dchvXR+PhMbuUy44tcmpJw
- FRmShbFYTrmE7UtsRVDPw==
-X-Spam-Flag: NO
-UI-OutboundReport: notjunk:1;M01:P0:5pLkaLprnAQ=;Dk4J20gsoYVa5GtwEx224OLcv/d
- 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
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-ClientProxiedBy: satlexmb08.amd.com (10.181.42.217) To satlexmb07.amd.com
+ (10.181.42.216)
+X-EOPAttributedMessage: 0
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: SN1PEPF0002BA4E:EE_|DM6PR12MB4124:EE_
+X-MS-Office365-Filtering-Correlation-Id: 4e1c9483-7681-4772-fd22-08de89eabe59
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam:
+	BCL:0;ARA:13230040|1800799024|376014|36860700016|82310400026|13003099007|56012099003|18002099003;
+X-Microsoft-Antispam-Message-Info:
+	5Oym4Z4yx1eQZGR5ch75I7gUuEpjm5I1/j3w/pifmcSPuPDwP6/qzXIYnLJ+v1bCBBJGlDWGCE9Tqub2fqxDd7fbSRqusEQ1UtCbVKT4n30fY1x+3iNRGpuf4sREersVuFByah+U+pXb7pyR7nnq7iJqpPlQ215rgZ8fcIfPLMOJzoFGJUmruZz+qpLS3ls9T6NLGRWTkwJ34jPaQrwiYQ2E/9/gIrES8Wxmw0rad8sdjFaIyPQ8ujxUpjOhkH06h8i7qqMzKuy00YZovZour/tNEeoQt5OWYLqs1i52kaftCwe6Tw57SV34M3LnYVUvpX5Sqv60OqY5jcI9v4quEtesZl7KW8aR1WuM1kUX2YCh1fhqCELMLQjz53gc9ta9WYbuzl7T7k4+Ka2SbpBDNjtwVi96wqSRSKL42RTtNJo2AGOWKhTnLcan/2EDgIJZtP4MRrQbUgDrzQX03m9mnxcJy38Aj/nONd8nosihMb1kbWfi1fLXTxiadrrSXwaACv8u2aOKzjG4ACMbWOH+TOCqkeZehAfbjI1PAr2frpcIZ648nzBtXrdr39xA0zT3qBK2XvNdYfsKqCvo023H5OldmOfRJgZGg0PZ8AwHc3BgA9qxakU74WKT5RKzAceoZ8ZzQ35XcqX05Vb5xE6YKaqNjFHcsPu99RITsr6XqVqTkeIY7L79LliZJ8a6Xe3qYc5ohV4owOFZHhb24ahy4FX4KFiLl5whAUElvW2WOzY=
+X-Forefront-Antispam-Report:
+	CIP:165.204.84.17;CTRY:US;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:satlexmb07.amd.com;PTR:InfoDomainNonexistent;CAT:NONE;SFS:(13230040)(1800799024)(376014)(36860700016)(82310400026)(13003099007)(56012099003)(18002099003);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0:
+	6rkWBKLdjY1cj0y46eHfMRO+fpv7kXAT1vbr7tp1KKzNEKbS0Jp2w7GeDyJNoYOihI+AjsJJwT7UCGClxs4Sj5J34a8NHlTmSZIufNhjapXrJD9JyCNNH4cMq3kugoS4Hu00bQV3lNrrKBdCGcdl+SQKz3v7KWP5b8fURx8fl78VQaFvbISC6kjCrKuNKwojtOV2OUx9Asq18ybcKO+GHzavy7vsewnVlYUofiucKrR5f4M2LhHqjsdAO9GSxAtD/bC3k02QnnM6zme5J8XRtpej4Yo1tyahNeAIQ8a4CS7cyRf2KT0t9v1LeeT+QSzQb4e2bGM8fiIwr19ylpffPLLO3l5koXezugvAQCJW9MOaT0jkBP8HhlNVWwGwFQcAFSAs9/0zMi2ESk3CW3y+AZ3FxmuAHrB3sIBcDHZTD8t5yeQbfSjakZOPQwO6k3y9
+X-OriginatorOrg: amd.com
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 24 Mar 2026 21:17:24.1490
+ (UTC)
+X-MS-Exchange-CrossTenant-Network-Message-Id: 4e1c9483-7681-4772-fd22-08de89eabe59
+X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
+X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=3dd8961f-e488-4e60-8e11-a82d994e183d;Ip=[165.204.84.17];Helo=[satlexmb07.amd.com]
+X-MS-Exchange-CrossTenant-AuthSource:
+	SN1PEPF0002BA4E.namprd03.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Anonymous
+X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM6PR12MB4124
 
-Am 24.03.26 um 21:43 schrieb Ian Jensen:
+This platform is a similar vintage of platforms that had a BIOS bug
+leading to a 10s delay at resume from s0i3.
 
->
-> Yes certainly, my mistake
-> Here it is
->
-Thank you. Can you share the output of "ls /sys/bus/i2c/devices/"?
+Add a quirk for it.
 
-Thanks,
-Armin Wolf
+Reported-by: Imrane <ihalim.me@gmail.com>
+Closes: https://bugzilla.kernel.org/show_bug.cgi?id=221273
+Tested-by: Imrane <ihalim.me@gmail.com>
+Signed-off-by: Mario Limonciello <mario.limonciello@amd.com>
+---
+ drivers/platform/x86/amd/pmc/pmc-quirks.c | 9 +++++++++
+ 1 file changed, 9 insertions(+)
 
-> Den tirs. 24. mar. 2026 kl. 21.37 skrev Armin Wolf <W_Armin@gmx.de>:
->
->     Am 24.03.26 um 21:28 schrieb Ian Jensen:
->
->     > Yes, here it is attached (this is with no launch parameters, so
->     > completely dead laptop keyboard)
->
->     Thanks you.
->
->     Can you please also share the acpidump with the whole mailing list
->     (reply-all) so that everyone can access it?
->     Also, it seems that the acpidump you have provided is corrupted,
->     likely because use copied it manually from the
->     command line.
->
->     Please use this command instead:
->
->     =C2=A0 =C2=A0 =C2=A0 =C2=A0 sudo acpidump > acpidump.txt
->
->     The acpidump.txt file should then contain the full data.
->
->     Thanks,
->     Armin Wolf
->
+diff --git a/drivers/platform/x86/amd/pmc/pmc-quirks.c b/drivers/platform/x86/amd/pmc/pmc-quirks.c
+index ed285afaf9b0d..24506e3429430 100644
+--- a/drivers/platform/x86/amd/pmc/pmc-quirks.c
++++ b/drivers/platform/x86/amd/pmc/pmc-quirks.c
+@@ -203,6 +203,15 @@ static const struct dmi_system_id fwbug_list[] = {
+ 			DMI_MATCH(DMI_PRODUCT_NAME, "82XQ"),
+ 		}
+ 	},
++	/* https://bugzilla.kernel.org/show_bug.cgi?id=221273 */
++	{
++		.ident = "Thinkpad L14 Gen3",
++		.driver_data = &quirk_s2idle_bug,
++		.matches = {
++			DMI_MATCH(DMI_BOARD_VENDOR, "LENOVO"),
++			DMI_MATCH(DMI_PRODUCT_NAME, "21C6"),
++		}
++	},
+ 	/* https://gitlab.freedesktop.org/drm/amd/-/issues/4434 */
+ 	{
+ 		.ident = "Lenovo Yoga 6 13ALC6",
+-- 
+2.53.0
+
