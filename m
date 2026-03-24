@@ -1,188 +1,177 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.17])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.16])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E1CE43DDDC2
-	for <platform-driver-x86@vger.kernel.org>; Tue, 24 Mar 2026 13:19:53 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.17
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 34E681A681C;
+	Tue, 24 Mar 2026 13:22:01 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.16
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1774358395; cv=none; b=pMWtKFZwkaAI2+fjC94nV1o7nFoAHb/9cSSozYLTEp+ghUNvqaWKnwGZtEogwk8BqP4jvXhxmr9cu+bfU8VKHa7FTn0udVqMDT9gfQ2fYCuL/OMpkcl3E597FdX1U7zC0S1COLlz6OIWkfL6ET94CLcz54UkglyQTS1nmVfT2P8=
+	t=1774358522; cv=none; b=XuEhBO6xo1UMORjXdbkzh3ScoVn4edFTRo54Gd3vVPbPkAdgj1Qnb/0/PPlhf0/CTXrjDWzecL3YPg8q3ZRIxQTzHOzgLelu35KnC28tJ4EHngIFDiAcaKG+qKpGkjPkH87qLFP279sUpzXCBUv+3snY/EJ+7ypP20KGu+zxzwA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1774358395; c=relaxed/simple;
-	bh=MaTaNG5RL4DBGBaibc5tJft6HFKcdd4mhPZLmpwIdNk=;
+	s=arc-20240116; t=1774358522; c=relaxed/simple;
+	bh=hcis2EhU05udT8VhvaZ3z/E1UQppp0Zvw7Shn6jpB8k=;
 	h=From:Date:To:cc:Subject:In-Reply-To:Message-ID:References:
-	 MIME-Version:Content-Type; b=Bzq5L4lct/C9SR4FA2airXXsUPseJ52qLM3GfdThUwKXeL7xzVOlKdGec5Ihy+DKWefMUx4yYCaRgKJfl9Mx0ceLdV8kR9uq0UoQdLVxoD2GCP7XhF6PCRWJupIvmPl3xr+jw36TDi5YDSkgkIVfHyjR/5LccBYa++loMjuJ8Uw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=pass smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=fBYKjlTf; arc=none smtp.client-ip=192.198.163.17
+	 MIME-Version:Content-Type; b=LjSCEcDDQpISbIOLSFATe6MXezdyFqVtbZor8S0fsTonYaS/l2QjD7ToRf01BMFtW7t7zOb4bSqaYvsg0kVB5jTzMd6USRUoFEG7Djn8TMv6jkRvolCN+MsIGNlCCnIhRM8ItflGTPBa2vSP60OvCs4T96LOc34iNxKiyyA2k58=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=pass smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=a9SIeXS4; arc=none smtp.client-ip=192.198.163.16
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="fBYKjlTf"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="a9SIeXS4"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1774358393; x=1805894393;
+  t=1774358521; x=1805894521;
   h=from:date:to:cc:subject:in-reply-to:message-id:
    references:mime-version;
-  bh=MaTaNG5RL4DBGBaibc5tJft6HFKcdd4mhPZLmpwIdNk=;
-  b=fBYKjlTfMFw6o8CZW7rl2qR2D1Jznk7PT2tKEMERncQVN2c1h2Q+VEUa
-   p9P+hVvotK7FVmZb/BqOgMwpetl0WqdwSnYDycoUibWAhjyu7fKjfeZfi
-   mlAuoZisfcIazh0XcLo+qiNjZNnMVerDIq/BuN7gHtLQLk/6QohSMrX5P
-   gPdiMQiPeQgtc5h+dVVkBCMC7WEE3o4oQXyy2cHuQvq7v3NaD5tRovurX
-   H61DJkVq439W1qGmbsCduqItA3x0Kie+QegbXcrYWoaWLKbCAvdnIkGt4
-   /+045KFSXCGI75vApyqSungApISZxkVTlwYwQPXM9rS1oiIPRmQBhI+ju
-   w==;
-X-CSE-ConnectionGUID: H+bbeUocRjarFrIXyl1pnQ==
-X-CSE-MsgGUID: 46v42vEtSVWCAlo49FByQg==
-X-IronPort-AV: E=McAfee;i="6800,10657,11739"; a="75279288"
+  bh=hcis2EhU05udT8VhvaZ3z/E1UQppp0Zvw7Shn6jpB8k=;
+  b=a9SIeXS4L26sRtzwoVjQSfHGiZH+tpQ7jkU50QFH8QfWr8ctel2LPiug
+   kIUYdNU3SFytSa5ovgyoNh+n6exFciB9lFyO4hNgu5nou2DQ4covCqRpe
+   R6jU+OXWemXU4bsrlrFcA7NxRIE5YbfcVu+dpo0siLeXAOPB2Bwlt9yUQ
+   1YrT3dv3tjVjJTNEaF2Roexx48Op1yGBt06Vsng23T7zMx9bjwg2uMPa8
+   uSp5OZMAkUO4JPzcJcg5wUGoARSMaXkce1YanDtnNRRxpnoC5olwZaUI1
+   TSb+SJb/KZDaOyyzalphFi7XxrPpHVDLPVn5OsmxhG2wHtQz58yiNckkE
+   Q==;
+X-CSE-ConnectionGUID: L80nxrmQSm6GoPcJGP9deA==
+X-CSE-MsgGUID: fnC0uVxPTO6OOm/9iFwEUQ==
+X-IronPort-AV: E=McAfee;i="6800,10657,11739"; a="62924172"
 X-IronPort-AV: E=Sophos;i="6.23,138,1770624000"; 
-   d="scan'208";a="75279288"
-Received: from orviesa002.jf.intel.com ([10.64.159.142])
-  by fmvoesa111.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 24 Mar 2026 06:19:53 -0700
-X-CSE-ConnectionGUID: 8d3McPvDRAKjeF62SZKfrw==
-X-CSE-MsgGUID: pRcgmYYoSrGZfU0mbQjLLA==
+   d="scan'208";a="62924172"
+Received: from fmviesa004.fm.intel.com ([10.60.135.144])
+  by fmvoesa110.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 24 Mar 2026 06:22:00 -0700
+X-CSE-ConnectionGUID: 5U6Sg39JTKePKDnwwa9kFg==
+X-CSE-MsgGUID: i/i2U1zpRXGmMFR5a4txpw==
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="6.23,138,1770624000"; 
-   d="scan'208";a="254830620"
+   d="scan'208";a="225994834"
 Received: from ijarvine-mobl1.ger.corp.intel.com (HELO localhost) ([10.245.244.217])
-  by orviesa002-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 24 Mar 2026 06:19:51 -0700
+  by fmviesa004-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 24 Mar 2026 06:21:58 -0700
 From: =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
-Date: Tue, 24 Mar 2026 15:19:48 +0200 (EET)
-To: Ayaan Mirza Baig <ayaanmirzabaig85@gmail.com>
-cc: ayaanmirza788@gmail.com, josh@joshuagrisham.com, 
-    platform-driver-x86@vger.kernel.org
-Subject: Re: [PATCH v2] platform/x86: samsung-galaxybook: Handle ACPI hotkey
- notifications
-In-Reply-To: <20260318054242.24747-1-ayaanmirzabaig85@gmail.com>
-Message-ID: <8e55cf70-5147-849a-ad5c-24a32727e620@linux.intel.com>
-References: <44912fc0-91fb-0a85-64fa-1b0b3661f0d8@linux.intel.com> <20260318054242.24747-1-ayaanmirzabaig85@gmail.com>
+Date: Tue, 24 Mar 2026 15:21:54 +0200 (EET)
+To: Werner Sembach <wse@tuxedocomputers.com>
+cc: W_Armin@gmx.de, Hans de Goede <hansg@kernel.org>, 
+    platform-driver-x86@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH v6 2/5] platform/x86: uniwill-laptop: Implement USB-C
+ power priority setting
+In-Reply-To: <118aaa63-1050-4a98-88e1-a824c4e01315@tuxedocomputers.com>
+Message-ID: <f4678518-0bac-40f1-cc49-e8e23a8ad46a@linux.intel.com>
+References: <20260312192705.76576-1-wse@tuxedocomputers.com> <20260312192705.76576-3-wse@tuxedocomputers.com> <fc314dee-c341-8ff3-794c-2edecefc079a@linux.intel.com> <118aaa63-1050-4a98-88e1-a824c4e01315@tuxedocomputers.com>
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+Content-Type: multipart/mixed; boundary="8323328-1305642444-1774358514=:1055"
 
-On Wed, 18 Mar 2026, Ayaan Mirza Baig wrote:
+  This message is in MIME format.  The first part should be readable text,
+  while the remaining parts are likely unreadable without MIME-aware tools.
 
-> On Samsung Galaxy Book 5 (SAM0430), the keyboard backlight, microphone
-> mute, and camera block hotkeys do not generate i8042 scancodes.
-> Instead they arrive as ACPI notifications 0x7d, 0x63, and 0x6f
-> respectively, all of which previously fell through to the deafult
-> "unknown" warning in galaxybook_acpi_notify().
-> 
-> Add handling for these three events:
-> 
-> - 0x7d (Fn+F9, keyboard backlight): schedule the existing
->   kbd_backlight_hotkey_work which cycles brightness.
-> 
-> - 0x6e (Fn+F10, microphone mute): register a new hotkey input device
->   and emit KEY_MICMUTE.
-> 
-> - 0x6f (Fn+F11, camera block): if block_recording is active use the
->   existing block_recording_hotkey_work; otherwise emit KEY_CAMERA via the
->   hotkey input device on models where the block_recording ACPI feature is
->   not supported
-> 
-> Tested on Samsung Galaxy Book 5 (SAM0430).
-> 
-> Signed-off-by: Ayaan Mirza Baig <ayaanmirzabaig85@gmail.com>
-> ---
->  drivers/platform/x86/samsung-galaxybook.c | 47 +++++++++++++++++++++++
->  1 file changed, 47 insertions(+)
-> 
-> diff --git a/drivers/platform/x86/samsung-galaxybook.c b/drivers/platform/x86/samsung-galaxybook.c
-> index 755cb82bdb60..f6770ede62d2 100644
-> --- a/drivers/platform/x86/samsung-galaxybook.c
-> +++ b/drivers/platform/x86/samsung-galaxybook.c
-> @@ -54,6 +54,7 @@ struct samsung_galaxybook {
->  
->  	struct work_struct block_recording_hotkey_work;
->  	struct input_dev *camera_lens_cover_switch;
-> +	struct input_dev *hotkey_dev;
->  
->  	struct acpi_battery_hook battery_hook;
->  
-> @@ -197,6 +198,9 @@ static const guid_t performance_mode_guid =
->  #define GB_ACPI_NOTIFY_DEVICE_ON_TABLE          0x6c
->  #define GB_ACPI_NOTIFY_DEVICE_OFF_TABLE         0x6d
->  #define GB_ACPI_NOTIFY_HOTKEY_PERFORMANCE_MODE  0x70
-> +#define GB_ACPI_NOTIFY_HOTKEY_KBD_BACKLIGHT  	0x7d
-> +#define GB_ACPI_NOTIFY_HOTKEY_CAMERA         	0x6f
-> +#define GB_ACPI_NOTIFY_HOTKEY_MICMUTE        	0x6e
+--8323328-1305642444-1774358514=:1055
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: QUOTED-PRINTABLE
 
-These are using tabs after space for alignment which is not allowed.
+On Tue, 24 Mar 2026, Werner Sembach wrote:
+> Am 24.03.26 um 14:08 schrieb Ilpo J=C3=A4rvinen:
+> > On Thu, 12 Mar 2026, Werner Sembach wrote:
+> >=20
+> > > On some devices Uniwill offers the option to set the USB-C port to
+> > > prioritise charging or performance. This patch exposes this setting t=
+o the
+> > > userspace via sysfs for all TUXEDO devices supporting it.
+> > >=20
+> > > Signed-off-by: Werner Sembach <wse@tuxedocomputers.com>
+> > > Reviewed-by: Armin Wolf <W_Armin@gmx.de>
+> > > ---
+> > >   drivers/platform/x86/uniwill/uniwill-acpi.c | 145 +++++++++++++++++=
+++-
+> > >   1 file changed, 138 insertions(+), 7 deletions(-)
+> > >=20
+> > > diff --git a/drivers/platform/x86/uniwill/uniwill-acpi.c
+> > > b/drivers/platform/x86/uniwill/uniwill-acpi.c
+> > > index 048b265bff374..22ae5fccd6a06 100644
+> > > --- a/drivers/platform/x86/uniwill/uniwill-acpi.c
+> > > +++ b/drivers/platform/x86/uniwill/uniwill-acpi.c
+> > > @@ -266,8 +266,8 @@
+> > >   #define BATTERY_CHARGE_FULL_OVER_24H=09BIT(3)
+> > >   #define BATTERY_ERM_STATUS_REACHED=09BIT(4)
+> > >   -#define EC_ADDR_CHARGE_PRIO=09=090x07CC
+> > > -#define CHARGING_PERFORMANCE=09=09BIT(7)
+> > > +#define EC_ADDR_USB_C_POWER_PRIORITY=090x07CC
+> > > +#define USB_C_POWER_PRIORITY=09=09BIT(7)
+> > >     /* Same bits as EC_ADDR_LIGHTBAR_AC_CTRL except LIGHTBAR_S3_OFF *=
+/
+> > >   #define EC_ADDR_LIGHTBAR_BAT_CTRL=090x07E2
+> > > @@ -324,6 +324,12 @@
+> > >   #define UNIWILL_FEATURE_PRIMARY_FAN=09=09BIT(7)
+> > >   #define UNIWILL_FEATURE_SECONDARY_FAN=09=09BIT(8)
+> > >   #define UNIWILL_FEATURE_NVIDIA_CTGP_CONTROL=09BIT(9)
+> > > +#define UNIWILL_FEATURE_USB_C_POWER_PRIORITY=09BIT(10)
+> > > +
+> > > +enum usb_c_power_priority_options {
+> > > +=09USB_C_POWER_PRIORITY_CHARGING =3D 0,
+> > > +=09USB_C_POWER_PRIORITY_PERFORMANCE,
+> > > +};
+> > >     struct uniwill_data {
+> > >   =09struct device *dev;
+> > > @@ -343,6 +349,8 @@ struct uniwill_data {
+> > >   =09struct mutex input_lock;=09/* Protects input sequence during
+> > > notify */
+> > >   =09struct input_dev *input_device;
+> > >   =09struct notifier_block nb;
+> > > +=09struct mutex usb_c_power_priority_lock; /* Protects dependent bit
+> > > write and state safe */
+> > > +=09enum usb_c_power_priority_options last_usb_c_power_priority_optio=
+n;
+> > >   };
+> > >     struct uniwill_battery_entry {
+> > > @@ -527,6 +535,7 @@ static bool uniwill_writeable_reg(struct device *=
+dev,
+> > > unsigned int reg)
+> > >   =09case EC_ADDR_CTGP_DB_CTGP_OFFSET:
+> > >   =09case EC_ADDR_CTGP_DB_TPP_OFFSET:
+> > >   =09case EC_ADDR_CTGP_DB_DB_OFFSET:
+> > > +=09case EC_ADDR_USB_C_POWER_PRIORITY:
+> > >   =09=09return true;
+> > >   =09default:
+> > >   =09=09return false;
+> > > @@ -565,6 +574,7 @@ static bool uniwill_readable_reg(struct device *d=
+ev,
+> > > unsigned int reg)
+> > >   =09case EC_ADDR_CTGP_DB_CTGP_OFFSET:
+> > >   =09case EC_ADDR_CTGP_DB_TPP_OFFSET:
+> > >   =09case EC_ADDR_CTGP_DB_DB_OFFSET:
+> > > +=09case EC_ADDR_USB_C_POWER_PRIORITY:
+> > >   =09=09return true;
+> > >   =09default:
+> > >   =09=09return false;
+> > > @@ -587,6 +597,7 @@ static bool uniwill_volatile_reg(struct device *d=
+ev,
+> > > unsigned int reg)
+> > >   =09case EC_ADDR_TRIGGER:
+> > >   =09case EC_ADDR_SWITCH_STATUS:
+> > >   =09case EC_ADDR_CHARGE_CTRL:
+> > > +=09case EC_ADDR_USB_C_POWER_PRIORITY:
+> > >   =09=09return true;
+> > >   =09default:
+> > >   =09=09return false;
+> > > @@ -883,6 +894,104 @@ static int uniwill_nvidia_ctgp_init(struct
+> > > uniwill_data *data)
+> > >   =09return 0;
+> > >   }
+> > >   +static const char * const USB_C_POWER_PRIORITY_TEXT[] =3D {
+> > > +static const u8 USB_C_POWER_PRIORITY_VALUE[] =3D {
+> > These two arrays need to be lowercase as they're not macros.
+>=20
+> I copied a design pattern if found here for example:
+> https://elixir.bootlin.com/linux/v6.19.9/source/drivers/power/supply/powe=
+r_supply_sysfs.c#L63
+>=20
+> But ofc can lower case it.
 
->  #define GB_KEY_KBD_BACKLIGHT_KEYDOWN    0x2c
->  #define GB_KEY_KBD_BACKLIGHT_KEYUP      0xac
-> @@ -1223,6 +1227,22 @@ static void galaxybook_i8042_filter_remove(void *data)
->  	cancel_work_sync(&galaxybook->block_recording_hotkey_work);
->  }
->  
-> +static int galaxybook_hotkey_init(struct samsung_galaxybook *galaxybook)
-> +{
-> +	galaxybook->hotkey_dev = devm_input_allocate_device(&galaxybook->platform->dev);
-> +	if (!galaxybook->hotkey_dev)
-> +		return -ENOMEM;
-> +
-> +	galaxybook->hotkey_dev->name = "Samsung Galaxy Book hotkeys";
-> +	galaxybook->hotkey_dev->phys = DRIVER_NAME "/input1";
-> +	galaxybook->hotkey_dev->id.bustype = BUS_HOST;
-> +
-> +	input_set_capability(galaxybook->hotkey_dev, EV_KEY, KEY_MICMUTE);
-> +	input_set_capability(galaxybook->hotkey_dev, EV_KEY, KEY_CAMERA);
-> +
-> +	return input_register_device(galaxybook->hotkey_dev);
-> +}
-> +
->  static int galaxybook_i8042_filter_install(struct samsung_galaxybook *galaxybook)
->  {
->  	int err;
-> @@ -1260,6 +1280,28 @@ static void galaxybook_acpi_notify(acpi_handle handle, u32 event, void *data)
->  		if (galaxybook->has_performance_mode)
->  			platform_profile_cycle();
->  		break;
-> +	case GB_ACPI_NOTIFY_HOTKEY_KBD_BACKLIGHT:
-> +		if (galaxybook->has_kbd_backlight)
-> +			schedule_work(&galaxybook->kbd_backlight_hotkey_work);
-> +		break;
-> +	case GB_ACPI_NOTIFY_HOTKEY_MICMUTE:
-> +		if (galaxybook->hotkey_dev) {
-> +			input_report_key(galaxybook->hotkey_dev, KEY_MICMUTE, 1);
-> +			input_sync(galaxybook->hotkey_dev);
-> +			input_report_key(galaxybook->hotkey_dev, KEY_MICMUTE, 0);
-> +			input_sync(galaxybook->hotkey_dev);
-> +		}
-> +		break;
-> +	case GB_ACPI_NOTIFY_HOTKEY_CAMERA:
-> +		if (galaxybook->has_block_recording)
-> +			schedule_work(&galaxybook->block_recording_hotkey_work);
-> +		else if (galaxybook->hotkey_dev) {
+Yes, please use lowercase for them.
 
-Please always use balanced braces with "else" constructs so with a 
-multiline block, both need to be using braces.
+I read through the other patches of the series in the meantime. They=20
+seemed fine.
 
-> +			input_report_key(galaxybook->hotkey_dev, KEY_CAMERA, 1);
-> +			input_sync(galaxybook->hotkey_dev);
-> +			input_report_key(galaxybook->hotkey_dev, KEY_CAMERA, 0);
-> +			input_sync(galaxybook->hotkey_dev);
-> +		}
-> +		break;
->  	default:
->  		dev_warn(&galaxybook->platform->dev,
->  			 "unknown ACPI notification event: 0x%x\n", event);
-> @@ -1397,6 +1439,11 @@ static int galaxybook_probe(struct platform_device *pdev)
->  		return dev_err_probe(&galaxybook->platform->dev, err,
->  				     "failed to initialize firmware-attributes\n");
->  
-> +	err = galaxybook_hotkey_init(galaxybook);
-> +	if (err)
-> +		return dev_err_probe(&galaxybook->platform->dev, err,
-> +					 "failed to initialize hotkey input device\n");
-> +
->  	err = galaxybook_i8042_filter_install(galaxybook);
->  	if (err)
->  		return dev_err_probe(&galaxybook->platform->dev, err,
-> 
-
--- 
+--=20
  i.
 
+--8323328-1305642444-1774358514=:1055--
