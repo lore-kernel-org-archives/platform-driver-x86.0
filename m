@@ -1,102 +1,83 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.7])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail.tuxedocomputers.com (mail.tuxedocomputers.com [157.90.84.7])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5F6333750A2;
-	Tue, 24 Mar 2026 17:31:16 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.7
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 079703358B9;
+	Tue, 24 Mar 2026 18:04:41 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=157.90.84.7
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1774373477; cv=none; b=MaJ+/faCDiDfOfjGihz1ehdX91rhFIEU1dXprc7NX4oQcGgG6OdkjS80bz9Wm9e5/gi04fHRbyP9oxNi8dAEWD7O7Mk4ytOOeRMse6M0NRhut/nDPYTDESMJRJEoRaXYjdudBTYVZshLmwFHRdFT6mdni91ZQuyc2zbbisgTcTo=
+	t=1774375484; cv=none; b=PI1YPzLiR4BUxYuQDjCVvzXo38AeRsRR0Pn/WnVow9Dg7sgz6Jrsz5jeejt4FxjMLRvEKax23iQkyA18Eo66SmkUI3u5mjmq+kND3T25JjDc0uDzDhpIu1CvYpDYC+TNiKAHeUhjzOEzBusDDWmDoXbCUtmYeXEy6DytRVi+vgs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1774373477; c=relaxed/simple;
-	bh=hvx/y9o+W5PI0DlC1U4k+cqFwMw5Zao41uzcC3KinUI=;
-	h=From:To:Cc:In-Reply-To:References:Subject:Message-Id:Date:
-	 MIME-Version:Content-Type; b=l745PM2YhCn/m75mWYj6VwYlMLZG1C+GFk4hHcYOmTLp4gCH17dcuuIlTrNiz++yXXFVh1rCjrbPG/enVN2WSm/rEHiynkShBy+j+jA9y2KNWCHp7sVluvk7tmlmZXC3aoiJ+VKTECSvY4asTeqOCrDrE36bJ5swXzjAx2yPEXE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=pass smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=jbCLpeSP; arc=none smtp.client-ip=192.198.163.7
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.intel.com
+	s=arc-20240116; t=1774375484; c=relaxed/simple;
+	bh=28xuNHXrzx6rKbf9pWFUZaz/wkS2quBdkOe1CxET9I8=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=WCY/XNbS2zR/l1R/0BKiosa1ZDvtEfotyGwPEphKuAh+7zgQqPhjraQMT20knSAJ55/Z2xGH4ClRB9vZ6mPQK5isCPDq3o09kQO08g+M1DX5nCV3Lm7EJxQ/Pd0EOv8dZHPJe3Qp94VwQDIhhBaW3Y43MX7FaEn0Odq4h28vhXE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=tuxedocomputers.com; spf=pass smtp.mailfrom=tuxedocomputers.com; dkim=pass (1024-bit key) header.d=tuxedocomputers.com header.i=@tuxedocomputers.com header.b=Yej9MvWr; arc=none smtp.client-ip=157.90.84.7
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=tuxedocomputers.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=tuxedocomputers.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="jbCLpeSP"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1774373477; x=1805909477;
-  h=from:to:cc:in-reply-to:references:subject:message-id:
-   date:mime-version:content-transfer-encoding;
-  bh=hvx/y9o+W5PI0DlC1U4k+cqFwMw5Zao41uzcC3KinUI=;
-  b=jbCLpeSPOYuR9MFWMZzc9T9zIDCTWLtHK0tmRkNqmFIq7BFUe/0hBTw7
-   ZjtF6g7S+onm4Ye7ihLzAn9FMrEF4lb7FwzDS3SiN+TKsRrkgmFGpke4H
-   JPjZMROpspE16YtgcDJFbarK/nXmAk8v8rGsyMMoGR2a1wdWoKnxNV0KX
-   Lp//3mKAWLGcLYmFQtR+891wL0B6vRwOe6ArmemsJbjbac0ZNhnqRbNV0
-   5C1OxFRBjX5cycAXt1mOg4fJX7QlIzM5ohRV8Ia9sPmmqqOUu73pqiIXr
-   yplt3EPwUeDE8Jzs1QbEATkOs6zOI6+XM7VprtdcERkxNXRALA7/7kkSO
-   g==;
-X-CSE-ConnectionGUID: wjqhaUl1RoGPhqZzTKNYDg==
-X-CSE-MsgGUID: 0uQZ4yc1SU6zgSWErOIIuw==
-X-IronPort-AV: E=McAfee;i="6800,10657,11739"; a="100848088"
-X-IronPort-AV: E=Sophos;i="6.23,138,1770624000"; 
-   d="scan'208";a="100848088"
-Received: from fmviesa010.fm.intel.com ([10.60.135.150])
-  by fmvoesa101.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 24 Mar 2026 10:31:16 -0700
-X-CSE-ConnectionGUID: pEMwiVwpQIyz3qTH6qIw5A==
-X-CSE-MsgGUID: 6ye6a4x/TGeG/rG0Yv76Kg==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.23,138,1770624000"; 
-   d="scan'208";a="219996974"
-Received: from ijarvine-mobl1.ger.corp.intel.com (HELO localhost) ([10.245.244.217])
-  by fmviesa010-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 24 Mar 2026 10:31:12 -0700
-From: =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
-To: linux-kernel@vger.kernel.org, Denis Benato <denis.benato@linux.dev>
-Cc: platform-driver-x86@vger.kernel.org, Hans de Goede <hansg@kernel.org>, 
- "Luke D . Jones" <luke@ljones.dev>, Mateusz Schyboll <dragonn@op.pl>, 
- Denis Benato <benato.denis96@gmail.com>
-In-Reply-To: <20260302174431.349816-1-denis.benato@linux.dev>
-References: <20260302174431.349816-1-denis.benato@linux.dev>
-Subject: Re: [PATCH v3 0/2] platform/x86: asus-wmi: fix screenpad
- brightness/power management
-Message-Id: <177437346747.18408.2594412181035494435.b4-ty@linux.intel.com>
-Date: Tue, 24 Mar 2026 19:31:07 +0200
+	dkim=pass (1024-bit key) header.d=tuxedocomputers.com header.i=@tuxedocomputers.com header.b="Yej9MvWr"
+Received: from wse-pc.fritz.box (i5C75F50F.versanet.de [92.117.245.15])
+	(Authenticated sender: wse@tuxedocomputers.com)
+	by mail.tuxedocomputers.com (Postfix) with ESMTPA id 5D8D62FC0215;
+	Tue, 24 Mar 2026 19:04:39 +0100 (CET)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=tuxedocomputers.com;
+	s=default; t=1774375479;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:
+	 content-transfer-encoding:content-transfer-encoding;
+	bh=9G8Yj053FkHAP1q6MPHMAaoy9bRyJEsB1jRnZyLxDvE=;
+	b=Yej9MvWrFrXIW1UxrgwCcEq9MOf6OzJDoe3lxosawAuCxiAYhDba/lX7T+Mr4m81RMt/fa
+	gIeM7GgVqt/rkRL0xfSt/RRcOlklOiezMeQ88LSvyB9AAY2PKb8L2r/1Gmov0ugCPN/fA+
+	+zjJFYFZVlg5dCNuGV+E2XenSSTo6lI=
+Authentication-Results: mail.tuxedocomputers.com;
+	auth=pass smtp.auth=wse@tuxedocomputers.com smtp.mailfrom=wse@tuxedocomputers.com
+From: Werner Sembach <wse@tuxedocomputers.com>
+To: W_Armin@gmx.de,
+	hansg@kernel.org,
+	ilpo.jarvinen@linux.intel.com
+Cc: platform-driver-x86@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	Werner Sembach <wse@tuxedocomputers.com>
+Subject: [PATCH v7 0/5] platform/x86: uniwill-laptop: More support for TUXEDO devices
+Date: Tue, 24 Mar 2026 19:02:35 +0100
+Message-ID: <20260324180437.69594-1-wse@tuxedocomputers.com>
+X-Mailer: git-send-email 2.43.0
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-X-Mailer: b4 0.13.0
+Content-Transfer-Encoding: 8bit
 
-On Mon, 02 Mar 2026 18:44:29 +0100, Denis Benato wrote:
+v2: Incorporate Armins feedback.
+v3: Incorporate more of Armins feedback.
+    Rework USB-C power prio functions
+v4: Readd system vendor SchenkerTechnologiesGmbH for XMG FUSION (L19)
+    Replace for loops with if statements for USB-C power priority functions
+    Add missing mutex in usb_c_power_priority_restore
+v5: Restructure patch around new entry for XMG Fusion
+    Add missing Reviewed-by and Tested-by
+    Spelling fixes in documentation
+v6: Fix small format error in docs
+    Fix Reviewed-by line
+v7: Variable rename to lowercase
 
-> Fix up some inconsistent behaviour involving the screenpad on some
-> ASUS laptops. This fixes:
-> - illogical screen off control (0/1 flipped depending on WMI state)
-> - bad brightness depending on the last screenpad power state
-> - incorrect brightness scaling
-> 
-> Changelog:
-> - v1
->   - Initial submission
-> - v2
->   - Split patch in two
->   - Remove a redundant variable copy
-> - v3
->   - Fix variable declaration (reverse x-mas tree)
->   - Change commit message of 2/2 to reflect the actual change
->   - Add "Fixes" tag to both patches
-> 
-> [...]
+Armin Wolf (1):
+  platform/x86: uniwill-laptop: Rework hwmon feature defines
+
+Werner Sembach (4):
+  platform/x86: uniwill-laptop: Implement USB-C power priority setting
+  platform/x86: uniwill-laptop: Fix XMG Fusion 15 (L19) entries
+  platform/x86: uniwill-laptop: Apply features across all TUXEDO devices
+  Documentation: laptops: Update documentation for uniwill laptops
+
+ .../ABI/testing/sysfs-driver-uniwill-laptop   |  25 +
+ .../admin-guide/laptops/uniwill-laptop.rst    |  12 +
+ drivers/platform/x86/uniwill/uniwill-acpi.c   | 439 +++++++++++++++---
+ 3 files changed, 406 insertions(+), 70 deletions(-)
 
 
-Thank you for your contribution, it has been applied to my local
-review-ilpo-next branch. Note it will show up in the public
-platform-drivers-x86/review-ilpo-next branch only once I've pushed my
-local branch there, which might take a while.
-
-The list of commits applied:
-[1/2] platform/x86: asus-wmi: adjust screenpad power/brightness handling
-      commit: 034f5efd362fb87a3970d61eaf982664f84e6c5a
-[2/2] platform/x86: asus-wmi: fix screenpad brightness range
-      commit: fab7c51693e95aa874d6d9db22bfae7bd0b23c66
-
---
- i.
+base-commit: 1f318b96cc84d7c2ab792fcc0bfd42a7ca890681
+-- 
+2.43.0
 
