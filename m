@@ -1,122 +1,93 @@
-Received: from sender4-op-o15.zoho.com (sender4-op-o15.zoho.com [136.143.188.15])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.21])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5A88B3264E7;
-	Wed, 25 Mar 2026 18:20:34 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=136.143.188.15
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1774462835; cv=pass; b=QG0YopbkDCIuDrYKZvzva7drlEm4gogYCIt1Q0MXWwpjk0VFobh7nYEs500WayUfMMdA5sx3OYPl1na1t9ngL/CtC5QL4+withDlUlVWlt0dBaE8ijNxOVj7l+EtuFgiOhBj1UiwM4dYmYXdxz0deIsEU9B5oyqatKX4AjNFK00=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1774462835; c=relaxed/simple;
-	bh=Lh9sl+Kr8bmMxBsUHbIhrsWPFBMwvDfWgrjHu7CY12Y=;
-	h=Message-ID:Subject:From:To:Cc:In-Reply-To:References:Content-Type:
-	 Date:MIME-Version; b=VQ4teySTZnZPhiKDwVpG+XPhf6jcBSm0KJ33ksNzfufALxviG7B85ssgRKD3XD+gOjoRUyNx+MFU5ZXA8bxL/EerIEtB2nsDrnW+718M8lqdphTCkWZXFHWOadhzxk/e/i/5rNWdhUZYZR17FfB1vstWVeimeQbto+S4PqBEVMo=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=rong.moe; spf=pass smtp.mailfrom=rong.moe; dkim=pass (2048-bit key) header.d=rong.moe header.i=i@rong.moe header.b=Zr77UIw+; arc=pass smtp.client-ip=136.143.188.15
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=rong.moe
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=rong.moe
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D8F533542E5;
+	Wed, 25 Mar 2026 19:26:47 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.21
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1774466809; cv=none; b=TvfKJIru0s21xYR4h3NUwgEBEpaHb5w2QEv6OXQC44yQXyrzaBrp2IZMmhZuHddejJzkT2I5SOzTSxpa+AJdOTWNlCjy+RusgLZ2sDfLlQ7QwU+SGUbA04VieMm8EPbBDrtPwr5F9lpGeImZ4McmyIy5LCqpLYUijoiMeQX5zhA=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1774466809; c=relaxed/simple;
+	bh=EUSJ4WHhXpBP/yrcWI3vj8IKzFI1fiOhCeYVPZCdZK0=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=DJHOyzJXMYQfMvHN/CyvPSShTjerwhewEgHx37yw3uWb9zlDGiHhveMP65Ap/uPtXrtn5Vgff0K9+OQpYwQWMLVBG1A25+ULrThSRA8pI/6YgHzjPbFA9ixoWcGQRxLr8RO7eSB6yFHre1pgnE0M/jN5j+LeJsN0XKLAX1eEH6k=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=pass smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=T29qZ/V2; arc=none smtp.client-ip=198.175.65.21
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=rong.moe header.i=i@rong.moe header.b="Zr77UIw+"
-ARC-Seal: i=1; a=rsa-sha256; t=1774462826; cv=none; 
-	d=zohomail.com; s=zohoarc; 
-	b=ijd16YNxX6V3XULU5kTC0RcHIV0B+1w0rg5IsWOc1X+ZrFJtHZYaEHHy1FYCwdWv2x0ehCpXPBbDvARz5G4M/cRVhKVSgXQQ4ClTBdertFaBnqjg7rhYZ9aL92LTWLqIWUjtZDOD6oVggDknVv/PgapD5NaXNRG2wOyNU4wiEKY=
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=zohomail.com; s=zohoarc; 
-	t=1774462826; h=Content-Type:Content-Transfer-Encoding:Cc:Cc:Date:Date:From:From:In-Reply-To:MIME-Version:Message-ID:References:Subject:Subject:To:To:Message-Id:Reply-To; 
-	bh=6u/rsSi6trqHMEdV8lBGto7fHj9pSjeSdfpSIQOF7vI=; 
-	b=AHzQwmA11ZM47gD8mHWlcIm1F62quLhLkTK8nyEGoPeh4tsH4Y6TWBvfQw1cTi5Otsp7xPk36CxB2XXMGw2Gw3Fu04dPjdvyvP4zinDFZ63WwIv8f3N6HY5YJSMmbi+bSm0oLLjO6Z4AGutaROQTYeooc/JwmL9qrFbCRYebHuQ=
-ARC-Authentication-Results: i=1; mx.zohomail.com;
-	dkim=pass  header.i=rong.moe;
-	spf=pass  smtp.mailfrom=i@rong.moe;
-	dmarc=pass header.from=<i@rong.moe>
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; t=1774462826;
-	s=zmail2048; d=rong.moe; i=i@rong.moe;
-	h=Message-ID:Subject:Subject:From:From:To:To:Cc:Cc:In-Reply-To:References:Content-Type:Content-Transfer-Encoding:Date:Date:MIME-Version:Message-Id:Reply-To;
-	bh=6u/rsSi6trqHMEdV8lBGto7fHj9pSjeSdfpSIQOF7vI=;
-	b=Zr77UIw+OX10sNrJLHUSlLrMj0SxbiWzLtlPgwRJ7R5mVTfXiy59J0yzovH26xAL
-	V9TEeVTs2ws1T18RsjGU/TnNeYnBu/TcxmwCscoqYFwfO87NyNvBhr8Lex+8wBnUF/H
-	UhnQhKiuOZWYJVLQ7FH2HTlbYgaSpeugTQcy3tOWYdsJHteuQEmTjjvjmtRulpufUWj
-	CxapK/zZPYyT5xKBonlfzH2+LIQDNo8vq612o6//tnRzDwtI5ffchzp3fMp9w0S/buq
-	q1CGzoY4+upqipWSNAnOPrv9/i+l6iR/fCskof3Kk640EI7Zl4IZ13U2SZiwE3LAYVA
-	7Klr+hIN+w==
-Received: by mx.zohomail.com with SMTPS id 177446282400153.92327899687234;
-	Wed, 25 Mar 2026 11:20:24 -0700 (PDT)
-Message-ID: <73cb6e393e152190a52910d32ae4226c0629facc.camel@rong.moe>
-Subject: Re: [PATCH 0/2] platform/x86: lenovo-wmi-capdata: Add debugfs file
- for dumping capdata
-From: Rong Zhang <i@rong.moe>
-To: Mark Pearson <mpearson-lenovo@squebb.ca>, "Derek J. Clark"
-	 <derekjohn.clark@gmail.com>, Armin Wolf <W_Armin@gmx.de>, Hans de Goede
-	 <hansg@kernel.org>, Ilpo =?ISO-8859-1?Q?J=E4rvinen?=
-	 <ilpo.jarvinen@linux.intel.com>
-Cc: Kurt Borja <kuurtb@gmail.com>, platform-driver-x86@vger.kernel.org, 
-	linux-kernel@vger.kernel.org
-In-Reply-To: <20260210191938.137234-1-i@rong.moe>
-References: <20260210191938.137234-1-i@rong.moe>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-Date: Thu, 26 Mar 2026 02:15:18 +0800
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="T29qZ/V2"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1774466808; x=1806002808;
+  h=from:to:cc:subject:date:message-id:mime-version:
+   content-transfer-encoding;
+  bh=EUSJ4WHhXpBP/yrcWI3vj8IKzFI1fiOhCeYVPZCdZK0=;
+  b=T29qZ/V28G6C4fQ8Co9pvqe3e9ctR8v0go6uALxDg7TTKlRZzLP7Xl1f
+   G9xCylSHD3TNiiNFdsjoKATnQ9I9baEu6EDoSCOY3fEodGzaGk8FiJT1e
+   n1Yzbepo6+W7Jz0ZsD8Qe1UVgXFhooh0xQfn2yJoPMQXb81ICwRhsccs7
+   jbUrzth0PnGYxAHruGZgQ7VIYp6y4f7oH+JE4H96xbZVc9IiE6GQDQvU0
+   qxc5cp5ujQabmJ5BRUFi3+MXoRU+bmcQzWQl6I7+RIS2pMJp2yC2v3FyC
+   IDO8C66RyfcvNSg9tQCBNjzf+O70CNfW1Qtg05nFtRgN0dvd/8aQgXs/Y
+   A==;
+X-CSE-ConnectionGUID: iC8sDJsdToC5HXAqSLzoDg==
+X-CSE-MsgGUID: yunMiMR1SZa+2Iw30hFbrg==
+X-IronPort-AV: E=McAfee;i="6800,10657,11740"; a="75401029"
+X-IronPort-AV: E=Sophos;i="6.23,140,1770624000"; 
+   d="scan'208";a="75401029"
+Received: from fmviesa005.fm.intel.com ([10.60.135.145])
+  by orvoesa113.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 25 Mar 2026 12:26:48 -0700
+X-CSE-ConnectionGUID: 3Q1ChaFPQtyMUFUUDzbYWQ==
+X-CSE-MsgGUID: bpEpeqTBRnWqjbh447nwww==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.23,140,1770624000"; 
+   d="scan'208";a="229551188"
+Received: from spandruv-desk.jf.intel.com ([10.54.55.20])
+  by fmviesa005.fm.intel.com with ESMTP; 25 Mar 2026 12:26:47 -0700
+From: Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>
+To: hansg@kernel.org,
+	ilpo.jarvinen@linux.intel.com
+Cc: platform-driver-x86@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>,
+	stable@vger.kernel.org
+Subject: [PATCH] platform/x86: ISST: Reset core count to 0
+Date: Wed, 25 Mar 2026 12:26:38 -0700
+Message-ID: <20260325192638.3417281-1-srinivas.pandruvada@linux.intel.com>
+X-Mailer: git-send-email 2.52.0
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Evolution 3.56.2-9 
-X-ZohoMailClient: External
+Content-Transfer-Encoding: 8bit
 
-Hi all,
+Based on feature revision, number of buckets can be less than the
+TRL_MAX_BUCKETS. In that case core counts in the remaining buckets
+can be set to some invalid values.
 
-Gentle ping :-)
+Hence reset core count to 0 for all buckets before assigning correct
+values.
 
-Thanks,
-Rong
+Fixes: 885d1c2a30b7 ("platform/x86: ISST: Support SST-TF revision 2")
+Signed-off-by: Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>
+Cc: stable@vger.kernel.org
+---
+ drivers/platform/x86/intel/speed_select_if/isst_tpmi_core.c | 2 ++
+ 1 file changed, 2 insertions(+)
 
-On Wed, 2026-02-11 at 03:19 +0800, Rong Zhang wrote:
-> The Lenovo GameZone/Other interfaces have some delicate divergences
-> among different devices. When making a bug report or adding support for
-> new devices/interfaces, capdata is the most important information to
-> cross-check with.
->=20
-> Add a debugfs file (lenovo_wmi/<device_name>/capdata), so that users can
-> dump capdata and include it in their reports.
->=20
-> The output is like:
->=20
->   LENOVO_CAPABILITY_DATA_00[0]:
->     id:             0x00010000 [dev:  0, feat:  1, mode:  0, type:  0]
->     supported:      0x00000007 [ RWV]
->     default_value:  0
->=20
->   LENOVO_CAPABILITY_DATA_01[0]:
->     id:             0x00000000 [dev:  0, feat:  0, mode:  0, type:  0]
->     supported:      0x00000000 [    ]
->     default_value:  0
->     step:           0
->     min_value:      0
->     max_value:      0
->=20
->   LENOVO_FAN_TEST_DATA[0]:
->     id:             1
->     min_rpm:        2200
->     max_rpm:        5000
->=20
-> A helper function for creating per-devcie debugfs directories is also
-> introduced into lenovo-wmi-helpers in order that we can maintain a tidy
-> directory structure in debugfs.
->=20
-> The series is based on platform-drivers-x86/review-ilpo-next since it
-> depends on a commit there. I am OK to wait until the next cycle.
->=20
-> Rong Zhang (2):
->   platform/x86: lenovo-wmi-helpers: Add helper for creating per-device
->     debugfs dir
->   platform/x86: lenovo-wmi-capdata: Add debugfs file for dumping capdata
->=20
->  drivers/platform/x86/lenovo/Kconfig       |   1 +
->  drivers/platform/x86/lenovo/wmi-capdata.c | 121 ++++++++++++++++++++++
->  drivers/platform/x86/lenovo/wmi-capdata.h |   4 +-
->  drivers/platform/x86/lenovo/wmi-helpers.c |  34 ++++++
->  drivers/platform/x86/lenovo/wmi-helpers.h |   2 +
->  5 files changed, 159 insertions(+), 3 deletions(-)
->=20
->=20
-> base-commit: 5a5203a45b063a594e89a2aeaf9e4923893a5b4c
+diff --git a/drivers/platform/x86/intel/speed_select_if/isst_tpmi_core.c b/drivers/platform/x86/intel/speed_select_if/isst_tpmi_core.c
+index b8cdaa233ea9..dc22504aea32 100644
+--- a/drivers/platform/x86/intel/speed_select_if/isst_tpmi_core.c
++++ b/drivers/platform/x86/intel/speed_select_if/isst_tpmi_core.c
+@@ -1458,6 +1458,8 @@ static int isst_if_get_turbo_freq_info(void __user *argp)
+ 					    SST_MUL_FACTOR_FREQ)
+ 	}
+ 
++	memset(turbo_freq.bucket_core_counts, 0, sizeof(turbo_freq.bucket_core_counts));
++
+ 	if (feature_rev >= 2) {
+ 		bool has_tf_info_8 = false;
+ 
+-- 
+2.52.0
+
