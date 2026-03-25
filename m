@@ -1,48 +1,48 @@
 Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.21])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D367A286419;
-	Wed, 25 Mar 2026 01:48:31 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D0A8F292B2E;
+	Wed, 25 Mar 2026 01:48:32 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.21
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1774403313; cv=none; b=TkM/LXZstwJFSrzf1ivLP/0xilY8HDuT4lntcynu96wf9T74vh0bxfM1pvHzQ0yOsyi0gXIcNsSV2pI8Sk1TCNQoUAjDlH6lBPaZ/GIWHxOIa3ZBUkmtpXABW1mR0Za5if9YQcT0dh3eCiPYiTVnNooxz3PMEgKl8OsmqFoAf/U=
+	t=1774403314; cv=none; b=A8hYuhd+/JQugIsbSEfZLBeMLE+Lxt7zCkTzJL8DjWMhVMjzLmjhOiUywUsrrfeR3XzElNFHztj5KdtuxKyYD5npogLg/nVGrsx8c33vT+O8/5l8DvaN02Cs7219GB4M/u7psmcGC2kvyCi3lVHVB3XKk4t3qsl2RARF7V3Qe8c=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1774403313; c=relaxed/simple;
-	bh=zFMNEZm6Uk8EBinNcApU4GO+lYKwQ895O8e35I19Wfo=;
+	s=arc-20240116; t=1774403314; c=relaxed/simple;
+	bh=nRw6bSXUrKhDEhAXwI7i/cOnk+ZU7JITipM5DtcprZg=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=byyXIbX6Mi/lOQfWLi1kgxG2G5En0HA4LdjpyKKiIWo9eHawVrchAGuQ5SQSIUjUhrJVv83KhyDsRFCM0R6H94iVjq7/TZkdKv+CwVT1a1Q4x4/Cnf4pTqKFGHWu6ReFro9AOj+g5pqfUe7yZz8fBz4JAE7KuHBI5Pw1MDbN/x0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=pass smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=jr72sEFt; arc=none smtp.client-ip=198.175.65.21
+	 MIME-Version; b=kJgKNmf/SVS3TUPefGtwg2M2Od6YSQK6somZOtZm4InkpDFF5p2HRcfbVyC35VLEU1VFCno4tNGZeXBPmcds6PskUBJNh7oGokKgmrcqPlLq+VrCFvctQvmila50GEb0uhDR3UTvU8kbr8bqum+Q0qx4eHUAwXvsyKiYaqVdfic=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=pass smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=UoD2/lj5; arc=none smtp.client-ip=198.175.65.21
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="jr72sEFt"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="UoD2/lj5"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1774403312; x=1805939312;
+  t=1774403313; x=1805939313;
   h=from:to:cc:subject:date:message-id:in-reply-to:
    references:mime-version:content-transfer-encoding;
-  bh=zFMNEZm6Uk8EBinNcApU4GO+lYKwQ895O8e35I19Wfo=;
-  b=jr72sEFtNxodlD2zObQ43TWG6kYRhmk0RaIlhS81KWk12v2pALTO++0A
-   E1T26+mb5VwucHojJNSFL/o6rTCU32z8nXnxg0/wybqcec6QnQbxfmBG5
-   m8KSqRLY3v72W61oEn7MS8pTgeZHERU/PjQPSCE5yB9DZhq3Jmunr//Uu
-   L1sVeJz72xTpRLV9qCLhHtgLQjflolzRzDWHT0F/gVEuEA0U/W3PH8mBo
-   8t79908m8j87RdgRYsY1tM/JZvRO1YIIaRvXx82Nmz6yw7vXMR/NnWaXu
-   3/ATmHL9b8e9s65uvjjS7sKycKmpMp4DHn6Rbxv+G/OoqQQc/aP8y8whP
-   A==;
-X-CSE-ConnectionGUID: gHCkW5ffSZKpHT/b6afJqg==
-X-CSE-MsgGUID: tDTiKVa8TlKjajOexJwhGg==
-X-IronPort-AV: E=McAfee;i="6800,10657,11739"; a="75317514"
+  bh=nRw6bSXUrKhDEhAXwI7i/cOnk+ZU7JITipM5DtcprZg=;
+  b=UoD2/lj5vyBDFpHM3wclQTrOIO5ecUun1rIWdt2a5wNHZOr6jSe1g84h
+   9rxiosmvGz3OVqvBFzsYsKymNF9Kk549CUFDdW3cSdZcx83V240CePRFI
+   QyRl5WkwYqQV6ttl1BEjv/ubqK8lrUZnXlBTnY6Z9p/tuc2Nl7lfVqJeb
+   VIQjGijluKw2Jgoty3zNRqDz7PICa7WgnayJtapemfFocxx2JxK7/a0r5
+   RHsZWGFdgDHLobjuA2C5twLSOWd+gAhaueFzTar6dTH69qUNz2eJBWxTf
+   D+4tQ8XvVu4iVZAiITi3yuFxet73jcbAJ6t3W9fE37bGlY2MHn41lDKrB
+   w==;
+X-CSE-ConnectionGUID: agvIXk56SGaTioZyBNK+6g==
+X-CSE-MsgGUID: Dvr34A+sSqCx8KGRRdDNZA==
+X-IronPort-AV: E=McAfee;i="6800,10657,11739"; a="75317517"
 X-IronPort-AV: E=Sophos;i="6.23,139,1770624000"; 
-   d="scan'208";a="75317514"
+   d="scan'208";a="75317517"
 Received: from fmviesa007.fm.intel.com ([10.60.135.147])
   by orvoesa113.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 24 Mar 2026 18:48:31 -0700
-X-CSE-ConnectionGUID: rFGJj0qMRoaUM8+2OFQNpA==
-X-CSE-MsgGUID: uHc9asd6SniV9lHwmLJl5Q==
+X-CSE-ConnectionGUID: zNVDwenlROazvE5dguqZNg==
+X-CSE-MsgGUID: mBZr/UTNRd+gZH7RcokRRg==
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="6.23,139,1770624000"; 
-   d="scan'208";a="221190790"
+   d="scan'208";a="221190792"
 Received: from debox1-desk4.jf.intel.com ([10.88.27.138])
-  by fmviesa007-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 24 Mar 2026 18:48:30 -0700
+  by fmviesa007-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 24 Mar 2026 18:48:31 -0700
 From: "David E. Box" <david.e.box@linux.intel.com>
 To: irenic.rajneesh@gmail.com,
 	ilpo.jarvinen@linux.intel.com,
@@ -52,9 +52,9 @@ To: irenic.rajneesh@gmail.com,
 Cc: hansg@kernel.org,
 	linux-kernel@vger.kernel.org,
 	platform-driver-x86@vger.kernel.org
-Subject: [PATCH V2 10/17] platform/x86/intel/pmc/ssram: Use fixed-size static pmc array
-Date: Tue, 24 Mar 2026 18:48:12 -0700
-Message-ID: <20260325014819.1283566-11-david.e.box@linux.intel.com>
+Subject: [PATCH V2 11/17] platform/x86/intel/pmc/ssram: Refactor DEVID/PWRMBASE extraction into helper
+Date: Tue, 24 Mar 2026 18:48:13 -0700
+Message-ID: <20260325014819.1283566-12-david.e.box@linux.intel.com>
 X-Mailer: git-send-email 2.43.0
 In-Reply-To: <20260325014819.1283566-1-david.e.box@linux.intel.com>
 References: <20260325014819.1283566-1-david.e.box@linux.intel.com>
@@ -66,66 +66,106 @@ List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
-From: Xi Pardee <xi.pardee@linux.intel.com>
+Move DEVID/PWRMBASE extraction into pmc_ssram_get_devid_pwrmbase().
 
-Switch pmc_ssram_telems from a devm-allocated pointer to a fixed-size
-static array, eliminating per-probe allocation overhead and simplifying
-lifetime management.
+This is a preparatory refactor to place functionality in a common helper
+for reuse by a subsequent patch. Additionally add missing bits.h
+include and define SSRAM_BASE_ADDR_MASK for the address extraction mask.
 
-Correspondingly simplify pmc_ssram_telemetry_get_pmc_info() validation to
-check devid availability and tighten input bounds checking. Drop
-null-pointer checks now that the storage is static.
-
-Signed-off-by: Xi Pardee <xi.pardee@linux.intel.com>
 Signed-off-by: David E. Box <david.e.box@linux.intel.com>
 ---
 
 V2 changes:
-- Replaced hardcoded array size [3] with MAX_NUM_PMC constant
+- Added missing <linux/bits.h> include for GENMASK_ULL() used in get_base()
+- Defined SSRAM_BASE_ADDR_MASK macro to replace magic mask constant
+  GENMASK_ULL(63, 3)
 
- drivers/platform/x86/intel/pmc/ssram_telemetry.c | 10 ++--------
- 1 file changed, 2 insertions(+), 8 deletions(-)
+ .../platform/x86/intel/pmc/ssram_telemetry.c  | 33 ++++++++++++-------
+ 1 file changed, 21 insertions(+), 12 deletions(-)
 
 diff --git a/drivers/platform/x86/intel/pmc/ssram_telemetry.c b/drivers/pla=
 tform/x86/intel/pmc/ssram_telemetry.c
-index 1deb4d71da3f..4bfe60ee55ca 100644
+index 4bfe60ee55ca..779e84c724ac 100644
 --- a/drivers/platform/x86/intel/pmc/ssram_telemetry.c
 +++ b/drivers/platform/x86/intel/pmc/ssram_telemetry.c
-@@ -24,7 +24,7 @@
+@@ -5,6 +5,7 @@
+  * Copyright (c) 2023, Intel Corporation.
+  */
+=20
++#include <linux/bits.h>
+ #include <linux/cleanup.h>
+ #include <linux/intel_vsec.h>
+ #include <linux/pci.h>
+@@ -21,12 +22,30 @@
+ #define SSRAM_PCH_OFFSET	0x60
+ #define SSRAM_IOE_OFFSET	0x68
+ #define SSRAM_DEVID_OFFSET	0x70
++#define SSRAM_BASE_ADDR_MASK	GENMASK_ULL(63, 3)
 =20
  DEFINE_FREE(pmc_ssram_telemetry_iounmap, void __iomem *, if (_T) iounmap(_=
 T))
 =20
--static struct pmc_ssram_telemetry *pmc_ssram_telems;
-+static struct pmc_ssram_telemetry pmc_ssram_telems[MAX_NUM_PMC];
+ static struct pmc_ssram_telemetry pmc_ssram_telems[MAX_NUM_PMC];
  static bool device_probed;
 =20
++static inline u64 get_base(void __iomem *addr, u32 offset)
++{
++	return lo_hi_readq(addr + offset) & SSRAM_BASE_ADDR_MASK;
++}
++
++static void pmc_ssram_get_devid_pwrmbase(void __iomem *ssram, unsigned int=
+ pmc_idx)
++{
++	u64 pwrm_base;
++	u16 devid;
++
++	pwrm_base =3D get_base(ssram, SSRAM_PWRM_OFFSET);
++	devid =3D readw(ssram + SSRAM_DEVID_OFFSET);
++
++	pmc_ssram_telems[pmc_idx].devid =3D devid;
++	pmc_ssram_telems[pmc_idx].base_addr =3D pwrm_base;
++}
++
  static int
-@@ -140,7 +140,7 @@ int pmc_ssram_telemetry_get_pmc_info(unsigned int pmc_i=
-dx,
- 	if (pmc_idx >=3D MAX_NUM_PMC)
- 		return -EINVAL;
-=20
--	if (!pmc_ssram_telems || !pmc_ssram_telems[pmc_idx].devid)
-+	if (!pmc_ssram_telems[pmc_idx].devid)
- 		return -ENODEV;
-=20
- 	pmc_ssram_telemetry->devid =3D pmc_ssram_telems[pmc_idx].devid;
-@@ -153,12 +153,6 @@ static int pmc_ssram_telemetry_probe(struct pci_dev *p=
-cidev, const struct pci_de
+ pmc_ssram_telemetry_add_pmt(struct pci_dev *pcidev, u64 ssram_base, void _=
+_iomem *ssram)
  {
- 	int ret;
+@@ -63,18 +82,12 @@ pmc_ssram_telemetry_add_pmt(struct pci_dev *pcidev, u64=
+ ssram_base, void __iomem
+ 	return intel_vsec_register(&pcidev->dev, &info);
+ }
 =20
--	pmc_ssram_telems =3D devm_kzalloc(&pcidev->dev, sizeof(*pmc_ssram_telems)=
- * MAX_NUM_PMC,
--					GFP_KERNEL);
--	if (!pmc_ssram_telems) {
--		ret =3D -ENOMEM;
--		goto probe_finish;
--	}
+-static inline u64 get_base(void __iomem *addr, u32 offset)
+-{
+-	return lo_hi_readq(addr + offset) & GENMASK_ULL(63, 3);
+-}
+-
+ static int
+ pmc_ssram_telemetry_get_pmc(struct pci_dev *pcidev, unsigned int pmc_idx, =
+u32 offset)
+ {
+ 	void __iomem __free(pmc_ssram_telemetry_iounmap) *tmp_ssram =3D NULL;
+ 	void __iomem __free(pmc_ssram_telemetry_iounmap) *ssram =3D NULL;
+-	u64 ssram_base, pwrm_base;
+-	u16 devid;
++	u64 ssram_base;
 =20
- 	ret =3D pcim_enable_device(pcidev);
- 	if (ret) {
+ 	ssram_base =3D pci_resource_start(pcidev, 0);
+ 	tmp_ssram =3D ioremap(ssram_base, SSRAM_HDR_SIZE);
+@@ -99,11 +112,7 @@ pmc_ssram_telemetry_get_pmc(struct pci_dev *pcidev, uns=
+igned int pmc_idx, u32 of
+ 		ssram =3D no_free_ptr(tmp_ssram);
+ 	}
+=20
+-	pwrm_base =3D get_base(ssram, SSRAM_PWRM_OFFSET);
+-	devid =3D readw(ssram + SSRAM_DEVID_OFFSET);
+-
+-	pmc_ssram_telems[pmc_idx].devid =3D devid;
+-	pmc_ssram_telems[pmc_idx].base_addr =3D pwrm_base;
++	pmc_ssram_get_devid_pwrmbase(ssram, pmc_idx);
+=20
+ 	/* Find and register and PMC telemetry entries */
+ 	return pmc_ssram_telemetry_add_pmt(pcidev, ssram_base, ssram);
 --=20
 2.43.0
 
