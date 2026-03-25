@@ -1,57 +1,56 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.9])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.19])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F08243233ED;
-	Wed, 25 Mar 2026 19:29:11 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.9
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4F7CC221FB1;
+	Wed, 25 Mar 2026 19:30:52 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.19
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1774466953; cv=none; b=JMqF0gJUdVQRGCnJXq8i6UNukQCxYiFA4MfpJt2P8mW5utNQru7CPRtfzf2qlXebmaF/ptogSVIARrNbwWtqdvFIv0UVK14gn3zRQvFDonJFnwzupnBzFcMIh5g+AxbIhU1fTgZSok9JWZt8IWV0Im/dWRIFWve3S7E6KLxdZa0=
+	t=1774467053; cv=none; b=lvrNwcRsojCQ9g+wjQrB57h4sScam4JimOxfRrf4Mc9TdH98ls0SuvUM25j2cErM6Tq7ujCBh3lBXtc6g1C0n8FhsDIeZOq3+KpA4PyZ9Th50kWJauhBALlnafCWeagpoeWVoF7UaRvqeQPUwBqoM9dVaJxkjaA7AgBaDXpMOQ0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1774466953; c=relaxed/simple;
-	bh=L4jELdZiW+yzICSJhXuJ2ZU9mk1EByn80HKLZkT4cOA=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=M/+4mlZzRAQC8sPOOMRgOqNBsBzEyPuJae27qnvezOv3Ixj0D5+fjVBLK8fFN/e2hd1WtG9In943/DgDvvPHGRBi3YnzyQGPYvKXi6Znyo9AInMvOzHvrkbbCLQo2qBeCsM7Ebo4aNRuB1Udd++jph6+QiIKO/0RVMlYTylgPt4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=pass smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=NGEZAvwX; arc=none smtp.client-ip=198.175.65.9
+	s=arc-20240116; t=1774467053; c=relaxed/simple;
+	bh=ESzOlrHkLo+z38r1hwoVAsm1lcpzRuevpjM4P2xWRXM=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=g13H8+cw5JPjryIQkPhQeJefvv9VAq7ZNPMMMu4dfi1gZQU+attmp/v9nwvO2GruKL5nqrzaq1VmafshqE5a7Lg48FCz4+pz3ZbbQbeV7au0KUCJ739xB2xT74fR8xS8MTC7t9qyjCEJ/dnnsJKfHmtprnQmlRRe4wbjQAuB7BI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=pass smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=ClHxHVuf; arc=none smtp.client-ip=198.175.65.19
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="NGEZAvwX"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="ClHxHVuf"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1774466952; x=1806002952;
+  t=1774467053; x=1806003053;
   h=from:to:cc:subject:date:message-id:mime-version:
    content-transfer-encoding;
-  bh=L4jELdZiW+yzICSJhXuJ2ZU9mk1EByn80HKLZkT4cOA=;
-  b=NGEZAvwX8c6BGBSn5pjF4jL0HxtdI7gnjHHs0SEPtXUwTNF13dTePFDc
-   c8bH6HIZKkYxhTFeXpvYTolvCjGEejC3Gt4VvKs8ivHqQuuvK0WWMVpGu
-   nSOrhOMVbMKebE7FkzNakrrtHXpk14ziI1lvrZ8btAPa3K1MT+EdIKPkE
-   CLQ9fXp3Sx+dfANoCDLE3VV0t5orBNDa+qrQ5DESQ+a/bbhlenVQOfNDq
-   9f9HlFesb20fpHKpave7ZqP/twoQpRHHhkam/trLl6BkfDRaSTeQy6CKd
-   xV/2vq3D6ah2OeIdhLtfiRlLDVcwXRfv55/qV5ezLyCEwKGzd1VEfIwey
-   g==;
-X-CSE-ConnectionGUID: j2+32zDZTAe6FKQfQnWQEg==
-X-CSE-MsgGUID: ZQ1MGXGwRrCKSnraVJbWPg==
-X-IronPort-AV: E=McAfee;i="6800,10657,11740"; a="98136697"
+  bh=ESzOlrHkLo+z38r1hwoVAsm1lcpzRuevpjM4P2xWRXM=;
+  b=ClHxHVufkJXAkT5D1GU9dEfMoL4njq4i8OZKiedkKQ4XVfllEt/UAYTD
+   kEg4oWiRdVVYefzSRuCqjJtQJFVZlSt3w1W2B4kNaAh7/aT44Z8goMIhs
+   7r5iRnCmkXHy14wLtQncLVBgDJyIT6ayJ9GJBVMNSU9Il3fRkV0iM37zN
+   MCuWgyVuQQ4HNmHR4vPHqMqjDKQO++vceESXepHCpzeaktxnHK9qv9JBy
+   4pWikejgAOcod8mfcItGW2bzUjf3CpUqNq+Mv3UYLcl/plxHFGe3E+ZSI
+   WPDgxdef54rS6EWUKgBuL+EFGurpLHK8Tzt2Uk6Vc/NeOXog01MhzYY3R
+   Q==;
+X-CSE-ConnectionGUID: a4Gu/4+tTt+Sucp6LxUwQw==
+X-CSE-MsgGUID: fZ2ogJUzS1CshGlLuUXq1Q==
+X-IronPort-AV: E=McAfee;i="6800,10657,11740"; a="75403459"
 X-IronPort-AV: E=Sophos;i="6.23,140,1770624000"; 
-   d="scan'208";a="98136697"
-Received: from fmviesa001.fm.intel.com ([10.60.135.141])
-  by orvoesa101.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 25 Mar 2026 12:29:11 -0700
-X-CSE-ConnectionGUID: e6+Jgx5tRCKnr9KO23nptQ==
-X-CSE-MsgGUID: JynbSqVwR7Ow7e6YH5x7qw==
+   d="scan'208";a="75403459"
+Received: from orviesa003.jf.intel.com ([10.64.159.143])
+  by orvoesa111.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 25 Mar 2026 12:30:52 -0700
+X-CSE-ConnectionGUID: 1w9RTSVxSsGkgVM1vVTxEQ==
+X-CSE-MsgGUID: zSWI48xoTxyjQ/YGxFqiBg==
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="6.23,140,1770624000"; 
-   d="scan'208";a="248253996"
+   d="scan'208";a="228844396"
 Received: from spandruv-desk.jf.intel.com ([10.54.55.20])
-  by fmviesa001.fm.intel.com with ESMTP; 25 Mar 2026 12:29:11 -0700
+  by orviesa003.jf.intel.com with ESMTP; 25 Mar 2026 12:30:52 -0700
 From: Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>
 To: hansg@kernel.org,
 	ilpo.jarvinen@linux.intel.com
 Cc: platform-driver-x86@vger.kernel.org,
 	linux-kernel@vger.kernel.org,
-	Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>,
-	stable@vger.kernel.org
-Subject: [PATCH] platform/x86/intel-uncore-freq: Handle autonomous UFS status bit
-Date: Wed, 25 Mar 2026 12:29:09 -0700
-Message-ID: <20260325192909.3417322-1-srinivas.pandruvada@linux.intel.com>
+	Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>
+Subject: [PATCH] platform/x86/intel/tpmi: Use 32 bit aligned address for debugfs mem write
+Date: Wed, 25 Mar 2026 12:30:48 -0700
+Message-ID: <20260325193048.3417349-1-srinivas.pandruvada@linux.intel.com>
 X-Mailer: git-send-email 2.52.0
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
@@ -61,58 +60,32 @@ List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-When the AUTONOMOUS_UFS_DISABLED bit is set in the header, the ELC
-(Efficiency Latency Control) feature is non-functional. Hence, return
-error for read or write to ELC attributes.
+The memory write feature supports 32-bit writes to any TPMI offset.
+However, future hardware generations may not allow writes to non-32-bit
+aligned addresses due to hardware optimizations.
 
-Fixes: bb516dc79c4a ("platform/x86/intel-uncore-freq: Add support for efficiency latency control")
+Since all TPMI addresses are 64-bit aligned and correspond to 64-bit
+registers, enforce 32-bit alignment for write operations.
+
 Signed-off-by: Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>
-Cc: stable@vger.kernel.org
 ---
-Not urgent: In any current generations, it is never the case.
+ drivers/platform/x86/intel/vsec_tpmi.c | 3 +++
+ 1 file changed, 3 insertions(+)
 
- .../x86/intel/uncore-frequency/uncore-frequency-tpmi.c     | 7 ++++++-
- 1 file changed, 6 insertions(+), 1 deletion(-)
-
-diff --git a/drivers/platform/x86/intel/uncore-frequency/uncore-frequency-tpmi.c b/drivers/platform/x86/intel/uncore-frequency/uncore-frequency-tpmi.c
-index 1237d9570886..b038dbb69447 100644
---- a/drivers/platform/x86/intel/uncore-frequency/uncore-frequency-tpmi.c
-+++ b/drivers/platform/x86/intel/uncore-frequency/uncore-frequency-tpmi.c
-@@ -537,6 +537,7 @@ static void set_cdie_id(int domain_id, struct tpmi_uncore_cluster_info *cluster_
- #define UNCORE_VERSION_MASK			GENMASK_ULL(7, 0)
- #define UNCORE_LOCAL_FABRIC_CLUSTER_ID_MASK	GENMASK_ULL(15, 8)
- #define UNCORE_CLUSTER_OFF_MASK			GENMASK_ULL(7, 0)
-+#define UNCORE_AUTONOMOUS_UFS_DISABLED		BIT(32)
- #define UNCORE_MAX_CLUSTER_PER_DOMAIN		8
+diff --git a/drivers/platform/x86/intel/vsec_tpmi.c b/drivers/platform/x86/intel/vsec_tpmi.c
+index 98846e88d3d0..b70232d8ba58 100644
+--- a/drivers/platform/x86/intel/vsec_tpmi.c
++++ b/drivers/platform/x86/intel/vsec_tpmi.c
+@@ -479,6 +479,9 @@ static ssize_t mem_write(struct file *file, const char __user *userbuf, size_t l
+ 	addr = array[2];
+ 	value = array[3];
  
- static int uncore_probe(struct auxiliary_device *auxdev, const struct auxiliary_device_id *id)
-@@ -598,6 +599,7 @@ static int uncore_probe(struct auxiliary_device *auxdev, const struct auxiliary_
- 
- 	for (i = 0; i < num_resources; ++i) {
- 		struct tpmi_uncore_power_domain_info *pd_info;
-+		bool auto_ufs_enabled;
- 		struct resource *res;
- 		u64 cluster_offset;
- 		u8 cluster_mask;
-@@ -647,6 +649,8 @@ static int uncore_probe(struct auxiliary_device *auxdev, const struct auxiliary_
- 			continue;
- 		}
- 
-+		auto_ufs_enabled = !(header & UNCORE_AUTONOMOUS_UFS_DISABLED);
++	if (addr % sizeof(u32))
++		return -EINVAL;
 +
- 		/* Find out number of clusters in this resource */
- 		pd_info->cluster_count = hweight8(cluster_mask);
- 
-@@ -689,7 +693,8 @@ static int uncore_probe(struct auxiliary_device *auxdev, const struct auxiliary_
- 
- 			cluster_info->uncore_root = tpmi_uncore;
- 
--			if (TPMI_MINOR_VERSION(pd_info->ufs_header_ver) >= UNCORE_ELC_SUPPORTED_VERSION)
-+			if (TPMI_MINOR_VERSION(pd_info->ufs_header_ver) >=
-+			    UNCORE_ELC_SUPPORTED_VERSION && auto_ufs_enabled)
- 				cluster_info->elc_supported = true;
- 
- 			ret = uncore_freq_add_entry(&cluster_info->uncore_data, 0);
+ 	if (punit >= pfs->pfs_header.num_entries) {
+ 		ret = -EINVAL;
+ 		goto exit_write;
 -- 
 2.52.0
 
