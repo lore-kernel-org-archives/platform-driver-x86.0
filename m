@@ -1,59 +1,59 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.15])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.14])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 75161217704
-	for <platform-driver-x86@vger.kernel.org>; Wed, 25 Mar 2026 13:47:06 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.15
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DC25E1E4BE;
+	Wed, 25 Mar 2026 13:54:34 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.14
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1774446427; cv=none; b=EbK3+KnVJYUduN8O5DGk7qByIksxGDW5jIvog47Q0i5r4ktKEdueO3QQNus/tXEuS9tzhtcohuJyjIK8KMrNQFiXsHwrB4AF5lsZwN1H6LwbJHdYwfFT8UvIcc98Lc9w8pxCTsnmnyB6LGNfD/60oGwOgVrcdqsve/ZvJX2p6Mk=
+	t=1774446876; cv=none; b=B6VGL1yUf6rQJDmgUzIzJTsgpiK1jIbBfpheiz3qCwHEIaH0bKNavKMFP41IHNrKaEaelqgSXMN7FkxUK12EbejnNZy4n2+OiUGw06JEJWkczXSBbgo3ZZP9NuC1drbMdDDlyPD0tZsggWIR2QSo0q8aLSczY5cqUnaVAx33dF8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1774446427; c=relaxed/simple;
-	bh=8+nbT0ksKQOBSrQ/yJuJMcyyg8Z9ENY9j+Yax0YpwEo=;
+	s=arc-20240116; t=1774446876; c=relaxed/simple;
+	bh=wgp0SjYoRR44B2tHWnnq/VcMYS5qes3027AaqSIve4Y=;
 	h=From:Date:To:cc:Subject:In-Reply-To:Message-ID:References:
-	 MIME-Version:Content-Type; b=UWsO2+XE0TD5xNQUrG14tvvf87Zkt39MjJa9VUfESaoNlV9xljiHn18gPtGgXTjmcm7NYpiHlKdtnGxLtGYb+Oj3BLHAiulSk9fNsvVt1q7tJaOjr4aAVzd5fnPRAGtuA1g+9EKFWdBgNMwY/WLqkJeoc2bR4bTQH7FT/apcLVY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=pass smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=O2aJ1IhM; arc=none smtp.client-ip=198.175.65.15
+	 MIME-Version:Content-Type; b=PaMnMy/Lnzhym2IBatOEMdkBUl3dK0f+OJIx8GjD1XNO/0+/sWoJb9mO1kuIKJjoV1Ijo/0FlnxbuMgw5uE2JPDMR2xli7awntR12F4pUCyjdu63xCsQs2fevq55gcsuw0e+F3IM3W4MVWeexNg81MZid9k+m5ArsWOmIP6zmk0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=pass smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=dqUlb6jT; arc=none smtp.client-ip=198.175.65.14
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="O2aJ1IhM"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="dqUlb6jT"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1774446426; x=1805982426;
+  t=1774446875; x=1805982875;
   h=from:date:to:cc:subject:in-reply-to:message-id:
    references:mime-version;
-  bh=8+nbT0ksKQOBSrQ/yJuJMcyyg8Z9ENY9j+Yax0YpwEo=;
-  b=O2aJ1IhMj6uCIW6OiQCvTQHu9HKGSB3fmxnmth1BVUBZW2OxCgaWBIYh
-   SUI7Ud9KGd2xYIYrQgGwmVXEYDT5ZdXLOJNY3ML/fGEfwJOsHAqjInYjf
-   LVmINdb0Nuj9v/nk1GZsEmUeUa47atj5ntWa6vwla+6bHshUY0wNjlpMb
-   6O8qEmcYai9YQcOM+SWktluff7noZJCMFPvTFK/et2koNT3/l2a5nbtWv
-   ptdRr0yWk+Q9860L58akiJiWXl9HAALfbjW2lgZgS1o+KsARzGvQbtA8Q
-   MvNHgVIlkxyCtNCy57I6Drtwdr9XfgSjk+npbcHrVmJRHQl/0VB1wx+M+
-   g==;
-X-CSE-ConnectionGUID: BudNP2h0QKSl/gw2r9eJzg==
-X-CSE-MsgGUID: VcP6LIpkTZqUoCAfy5BEdQ==
-X-IronPort-AV: E=McAfee;i="6800,10657,11739"; a="79082502"
+  bh=wgp0SjYoRR44B2tHWnnq/VcMYS5qes3027AaqSIve4Y=;
+  b=dqUlb6jTlGei5BEggV+1d+1wCRt/85jfHyrhKShXsASSsdIsAY0Tt9Rr
+   7sa2OA3Ri78a7Y2OzRPDb+185SYi63ycNU2Zjz6G4HUNsM9Z1fcIlYE1L
+   fMFo+N4mBW4igyhpj+u4eE3NFt498Sbxe9a69MRTPY5ax5VjHKppDzbfF
+   3lUjPDmnlz774jvu8ggOi+EsJulkDjQJfHbgOBo5sksAe9aJIhUZGkOHJ
+   6VEr9LBJnB5yqEoF9KoNiF8H05ayYHp0uDHlTcFYzzmk9iC3JIUTpxHEV
+   pb6a2kI78QDmgdgcO4ERKhQRLa3uQvmkp6dZJrYmMzTtH86Yc+s/Jsm+P
+   Q==;
+X-CSE-ConnectionGUID: Hg05hpT7RSu9qhyP7tHv7g==
+X-CSE-MsgGUID: nvyLhTkiSCW8g8wAZ9rYfQ==
+X-IronPort-AV: E=McAfee;i="6800,10657,11739"; a="79340692"
 X-IronPort-AV: E=Sophos;i="6.23,140,1770624000"; 
-   d="scan'208";a="79082502"
-Received: from orviesa003.jf.intel.com ([10.64.159.143])
-  by orvoesa107.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 25 Mar 2026 06:40:03 -0700
-X-CSE-ConnectionGUID: aJsr03fqS2Go9FIXJaVPsA==
-X-CSE-MsgGUID: nH8kVgSWQLeyhveyKTiUCQ==
+   d="scan'208";a="79340692"
+Received: from orviesa006.jf.intel.com ([10.64.159.146])
+  by orvoesa106.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 25 Mar 2026 06:54:35 -0700
+X-CSE-ConnectionGUID: 3+Jqs4KqQ+2s0BgiwHYSSg==
+X-CSE-MsgGUID: Bo/QVUjZTUS6sA5ueMepMA==
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="6.23,140,1770624000"; 
-   d="scan'208";a="228750047"
+   d="scan'208";a="223758603"
 Received: from ijarvine-mobl1.ger.corp.intel.com (HELO localhost) ([10.245.245.125])
-  by ORVIESA003-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 25 Mar 2026 06:40:00 -0700
+  by orviesa006-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 25 Mar 2026 06:54:32 -0700
 From: =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
-Date: Wed, 25 Mar 2026 15:39:57 +0200 (EET)
-To: Shyam Sundar S K <Shyam-sundar.S-k@amd.com>, 
-    Hans de Goede <hansg@kernel.org>
-cc: platform-driver-x86@vger.kernel.org, mario.limonciello@amd.com, 
-    Yijun.Shen@Dell.com, Sanket.Goswami@amd.com
-Subject: Re: [PATCH v3 5/7] platform/x86/amd/pmf: Move debug helper functions
- to UAPI header
-In-Reply-To: <20260301131124.1370565-6-Shyam-sundar.S-k@amd.com>
-Message-ID: <c2678400-a4af-03e6-9948-33dd5a486c5c@linux.intel.com>
-References: <20260301131124.1370565-1-Shyam-sundar.S-k@amd.com> <20260301131124.1370565-6-Shyam-sundar.S-k@amd.com>
+Date: Wed, 25 Mar 2026 15:54:27 +0200 (EET)
+To: Shyam Sundar S K <Shyam-sundar.S-k@amd.com>, Shuah Khan <shuah@kernel.org>, 
+    Shuah Khan <skhan@linuxfoundation.org>, linux-kselftest@vger.kernel.org
+cc: Hans de Goede <hansg@kernel.org>, platform-driver-x86@vger.kernel.org, 
+    mario.limonciello@amd.com, Yijun.Shen@Dell.com, Sanket.Goswami@amd.com
+Subject: Re: [PATCH v3 6/7] platform/x86/amd/pmf: Introduce AMD PMF testing
+ tool for driver metrics and features
+In-Reply-To: <20260301131124.1370565-7-Shyam-sundar.S-k@amd.com>
+Message-ID: <91a389ee-2020-373a-20fa-9183d70f8684@linux.intel.com>
+References: <20260301131124.1370565-1-Shyam-sundar.S-k@amd.com> <20260301131124.1370565-7-Shyam-sundar.S-k@amd.com>
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
@@ -62,251 +62,328 @@ List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=US-ASCII
 
++ Selftest people.
+
 On Sun, 1 Mar 2026, Shyam Sundar S K wrote:
 
-> These debug helper functions convert enumerated values to appropriate
-> message and can be useful for userspace tools and other kernel components
-> that need to interpret AMD PMF state values.
+> This tool leverages amd-pmf ioctls exposed via the util layer, allowing
+> validation of its newly integrated util layer and /dev/amdpmf_interface.
+> It includes a user-space test application, test_pmf, designed to interact
+> with the PMF driver and retrieve relevant metrics for the testing and
+> analysis.
 > 
-> By making them inline functions in the UAPI header, they become available
-> to both kernel and userspace without code duplication.
+> It provides definitions for test metrics, feature IDs, and device states,
+> and includes tests for various AMD PMF metrics such as power source, skin
+> temperature, battery state, and custom BIOS inputs/outputs. It also
+> enables the testing of PMF metrics data and feature support reporting.
 > 
 > Co-developed-by: Sanket Goswami <Sanket.Goswami@amd.com>
 > Signed-off-by: Sanket Goswami <Sanket.Goswami@amd.com>
 > Signed-off-by: Shyam Sundar S K <Shyam-sundar.S-k@amd.com>
-
-Here too I'm not happy with the naming and I'm a little skeptical about 
-the sharing string conversion helpers as well.
-
-Hans,
-
-do you have something to say on having this kind of string conversions in 
-an uapi header?
-
 > ---
->  drivers/platform/x86/amd/pmf/spc.c  |  54 --------------
->  drivers/platform/x86/amd/pmf/util.c |  12 ----
->  include/uapi/linux/amd-pmf.h        | 105 ++++++++++++++++++++++++++++
->  3 files changed, 105 insertions(+), 66 deletions(-)
-> 
-> diff --git a/drivers/platform/x86/amd/pmf/spc.c b/drivers/platform/x86/amd/pmf/spc.c
-> index a40419b5e1b7..f91feaac5238 100644
-> --- a/drivers/platform/x86/amd/pmf/spc.c
-> +++ b/drivers/platform/x86/amd/pmf/spc.c
-> @@ -18,60 +18,6 @@
->  #include "pmf.h"
->  
->  #ifdef CONFIG_AMD_PMF_DEBUG
-> -static const char *platform_type_as_str(u16 platform_type)
-> -{
-> -	switch (platform_type) {
-> -	case CLAMSHELL:
-> -		return "CLAMSHELL";
-> -	case FLAT:
-> -		return "FLAT";
-> -	case TENT:
-> -		return "TENT";
-> -	case STAND:
-> -		return "STAND";
-> -	case TABLET:
-> -		return "TABLET";
-> -	case BOOK:
-> -		return "BOOK";
-> -	case PRESENTATION:
-> -		return "PRESENTATION";
-> -	case PULL_FWD:
-> -		return "PULL_FWD";
-> -	default:
-> -		return "UNKNOWN";
-> -	}
-> -}
-> -
-> -static const char *laptop_placement_as_str(u16 device_state)
-> -{
-> -	switch (device_state) {
-> -	case ON_TABLE:
-> -		return "ON_TABLE";
-> -	case ON_LAP_MOTION:
-> -		return "ON_LAP_MOTION";
-> -	case IN_BAG:
-> -		return "IN_BAG";
-> -	case OUT_OF_BAG:
-> -		return "OUT_OF_BAG";
-> -	default:
-> -		return "UNKNOWN";
-> -	}
-> -}
-> -
-> -static const char *ta_slider_as_str(unsigned int state)
-> -{
-> -	switch (state) {
-> -	case TA_BEST_PERFORMANCE:
-> -		return "PERFORMANCE";
-> -	case TA_BETTER_PERFORMANCE:
-> -		return "BALANCED";
-> -	case TA_BEST_BATTERY:
-> -		return "POWER_SAVER";
-> -	default:
-> -		return "Unknown TA Slider State";
-> -	}
-> -}
-> -
->  static u32 amd_pmf_get_ta_custom_bios_inputs(struct ta_pmf_enact_table *in, int index)
->  {
->  	switch (index) {
-> diff --git a/drivers/platform/x86/amd/pmf/util.c b/drivers/platform/x86/amd/pmf/util.c
-> index 9a14467f412c..20dc7aa9f250 100644
-> --- a/drivers/platform/x86/amd/pmf/util.c
-> +++ b/drivers/platform/x86/amd/pmf/util.c
-> @@ -18,18 +18,6 @@
->  
->  #define AMD_PMF_IOCTL_VERSION		0x02
->  
-> -/* Convert BIOS input control code to array index (0-9) */
-> -static int amd_pmf_get_bios_idx(u32 control_code)
-> -{
-> -	if (control_code >= IOCTL_BIOS_INPUT_1 && control_code <= IOCTL_BIOS_INPUT_10)
-> -		return control_code - IOCTL_BIOS_INPUT_1;
-> -
-> -	if (control_code >= IOCTL_BIOS_OUTPUT_1 && control_code <= IOCTL_BIOS_OUTPUT_10)
-> -		return control_code - IOCTL_BIOS_OUTPUT_1;
-> -
-> -	return -EINVAL;
-> -}
-> -
->  static long long amd_pmf_populate_bios_input(struct ta_pmf_enact_table *in, u32 control_code)
->  {
->  	u32 idx;
-> diff --git a/include/uapi/linux/amd-pmf.h b/include/uapi/linux/amd-pmf.h
-> index 00fab9269238..e2125b304b83 100644
-> --- a/include/uapi/linux/amd-pmf.h
-> +++ b/include/uapi/linux/amd-pmf.h
-> @@ -14,6 +14,7 @@
->  #ifndef _UAPI_LINUX_AMD_PMF_H
->  #define _UAPI_LINUX_AMD_PMF_H
->  
-> +#include <linux/errno.h>
->  #include <linux/ioctl.h>
->  #include <linux/types.h>
->  
-> @@ -106,6 +107,88 @@ enum platform_type {
->  	PTYPE_INVALID = 0xf,
->  };
->  
-> +/**
-> + * platform_type_as_str() - Convert platform type enum to string
-> + * @platform_type: The platform type value to convert
+>  tools/testing/selftests/Makefile              |   1 +
+>  .../drivers/platform/x86/amd/pmf/Makefile     |   8 +
+>  .../drivers/platform/x86/amd/pmf/test_pmf.c   | 243 ++++++++++++++++++
+>  3 files changed, 252 insertions(+)
+>  create mode 100644 tools/testing/selftests/drivers/platform/x86/amd/pmf/Makefile
+>  create mode 100644 tools/testing/selftests/drivers/platform/x86/amd/pmf/test_pmf.c
+
+Please Cc also selftest people in the next version submission! Maube you 
+should also check why your patch sending process did not capture those 
+receipient for you.
+
+To me it looks this "tool" doesn't really perform a selftest the way I've 
+understood "selftests" work. That is, it doesn't have notion of Pass/Fail 
+at all AFAICT. I'm not sure if there are other selftests like this but 
+hopefully the selftest people know.
+
+> diff --git a/tools/testing/selftests/Makefile b/tools/testing/selftests/Makefile
+> index 450f13ba4cca..d850fb09eeb9 100644
+> --- a/tools/testing/selftests/Makefile
+> +++ b/tools/testing/selftests/Makefile
+> @@ -26,6 +26,7 @@ TARGETS += drivers/net/netconsole
+>  TARGETS += drivers/net/team
+>  TARGETS += drivers/net/virtio_net
+>  TARGETS += drivers/platform/x86/intel/ifs
+> +TARGETS += drivers/platform/x86/amd/pmf
+>  TARGETS += dt
+>  TARGETS += efivarfs
+>  TARGETS += exec
+> diff --git a/tools/testing/selftests/drivers/platform/x86/amd/pmf/Makefile b/tools/testing/selftests/drivers/platform/x86/amd/pmf/Makefile
+> new file mode 100644
+> index 000000000000..876424941e83
+> --- /dev/null
+> +++ b/tools/testing/selftests/drivers/platform/x86/amd/pmf/Makefile
+> @@ -0,0 +1,8 @@
+> +# SPDX-License-Identifier: GPL-2.0-or-later
+> +CFLAGS += $(KHDR_INCLUDES)
+> +
+> +TEST_GEN_PROGS := test_pmf
+> +
+> +top_srcdir ?=../../../../..
+> +
+> +include ../../../../../lib.mk
+> diff --git a/tools/testing/selftests/drivers/platform/x86/amd/pmf/test_pmf.c b/tools/testing/selftests/drivers/platform/x86/amd/pmf/test_pmf.c
+> new file mode 100644
+> index 000000000000..a040ef01ba90
+> --- /dev/null
+> +++ b/tools/testing/selftests/drivers/platform/x86/amd/pmf/test_pmf.c
+> @@ -0,0 +1,243 @@
+> +// SPDX-License-Identifier: GPL-2.0-or-later
+> +/*
+> + * AMD Platform Management Framework Test Tool
 > + *
-> + * Returns a human-readable string representation of the platform type.
+> + * Copyright (c) 2026, Advanced Micro Devices, Inc.
+> + * All Rights Reserved.
 > + *
-> + * Return: Constant string describing the platform type, or "UNKNOWN"
-> + *         if the value is not recognized.
+> + * Authors: Shyam Sundar S K <Shyam-sundar.S-k@amd.com>
+> + *	    Sanket Goswami <Sanket.Goswami@amd.com>
 > + */
-> +static inline const char *platform_type_as_str(unsigned int platform_type)
+> +
+> +#include <errno.h>
+> +#include <fcntl.h>
+> +#include <inttypes.h>
+> +#include <stdbool.h>
+> +#include <stdint.h>
+> +#include <stdio.h>
+> +#include <string.h>
+> +#include <sys/ioctl.h>
+> +#include <unistd.h>
+> +#include <linux/amd-pmf.h>
+> +
+> +#include "../../../../../kselftest.h"
+> +
+> +#define DEVICE_NODE		"/dev/amdpmf_interface"
+> +
+> +static int pmf_open_device(void)
 > +{
-> +	switch (platform_type) {
-> +	case CLAMSHELL:
-> +		return "CLAMSHELL";
-> +	case FLAT:
-> +		return "FLAT";
-> +	case TENT:
-> +		return "TENT";
-> +	case STAND:
-> +		return "STAND";
-> +	case TABLET:
-> +		return "TABLET";
-> +	case BOOK:
-> +		return "BOOK";
-> +	case PRESENTATION:
-> +		return "PRESENTATION";
-> +	case PULL_FWD:
-> +		return "PULL_FWD";
+> +	int fd;
+> +
+> +	fd = open(DEVICE_NODE, O_RDONLY);
+> +	if (fd < 0)
+> +		fprintf(stderr, "opening PMF Device Node failed: %s\n", strerror(errno));
+> +
+> +	return fd;
+> +}
+> +
+> +/* Helper to run IOCTL_PMF_POPULATE_DATA for one control code and return 0 on success. */
+
+Reflow this comment to 80 chars.
+
+> +static int pmf_get_fd(int fd, enum pmf_ioctl_id code, struct amd_pmf_ioctl_info *out)
+> +{
+> +	struct amd_pmf_ioctl_info info = {0};
+
+= {}; should be enough to initialize to default values.
+
+> +	int ret;
+> +
+> +	if (!out)
+> +		return -EINVAL;
+> +
+> +	info.control_code = code;
+> +
+> +	ret = ioctl(fd, IOCTL_PMF_POPULATE_DATA, &info);
+> +	if (ret < 0)
+> +		return ret;
+> +
+> +	*out = info;
+> +	return 0;
+> +}
+> +
+> +static int pmf_get_data(enum pmf_ioctl_id code, struct amd_pmf_ioctl_info *out)
+> +{
+> +	int fd, ret;
+> +
+> +	fd = pmf_open_device();
+> +	if (fd < 0)
+> +		return fd;
+> +
+> +	ret = pmf_get_fd(fd, code, out);
+> +
+> +	close(fd);
+> +	return ret;
+> +}
+> +
+> +static int pmf_get_feature_status(unsigned int code)
+> +{
+> +	struct amd_pmf_ioctl_info info = {0};
+> +	int ret;
+> +
+> +	ret = pmf_get_data(code, &info);
+> +	if (ret < 0)
+> +		return ret;
+> +
+> +	switch (code) {
+> +	case IOCTL_FEATURE_AUTO_MODE:
+> +		printf("Auto Mode: %-24s\n", info.feature_supported ? "Yes" : "No");
+> +		break;
+> +	case IOCTL_FEATURE_STATIC_POWER_SLIDER:
+> +		printf("Static Power Slider: %-24s\n", info.feature_supported ? "Yes" : "No");
+> +		break;
+> +	case IOCTL_FEATURE_POLICY_BUILDER:
+> +		printf("Policy Builder: %s\n", info.feature_supported ? "Yes" : "No");
+> +		break;
+> +	case IOCTL_FEATURE_DYNAMIC_POWER_SLIDER_AC:
+> +		printf("Dynamic Power Slider AC: %s\n", info.feature_supported ? "Yes" : "No");
+> +		break;
+> +	case IOCTL_FEATURE_DYNAMIC_POWER_SLIDER_DC:
+> +		printf("Dynamic Power Slider DC: %s\n", info.feature_supported ? "Yes" : "No");
+> +		break;
 > +	default:
-> +		return "UNKNOWN";
+> +		return -1;
 > +	}
+> +
+> +	return 0;
 > +}
 > +
-> +/**
-> + * laptop_placement_as_str() - Convert laptop placement enum to string
-> + * @device_state: The laptop placement value to convert
-> + *
-> + * Returns a human-readable string representation of the laptop placement.
-> + *
-> + * Return: Constant string describing the placement, or "UNKNOWN"
-> + *         if the value is not recognized.
-> + */
-> +static inline const char *laptop_placement_as_str(unsigned int device_state)
+> +static int pmf_get_device_state(unsigned int code)
 > +{
-> +	switch (device_state) {
-> +	case ON_TABLE:
-> +		return "ON_TABLE";
-> +	case ON_LAP_MOTION:
-> +		return "ON_LAP_MOTION";
-> +	case IN_BAG:
-> +		return "IN_BAG";
-> +	case OUT_OF_BAG:
-> +		return "OUT_OF_BAG";
+> +	struct amd_pmf_ioctl_info info = {0};
+> +	int ret;
+> +
+> +	ret = pmf_get_data(code, &info);
+> +	if (ret < 0)
+> +		return ret;
+> +
+> +	switch (code) {
+> +	case IOCTL_PLATFORM_TYPE:
+> +		printf("Platform Type: %s\n", platform_type_as_str(info.val));
+> +		break;
+> +	case IOCTL_LAPTOP_PLACEMENT:
+> +		printf("Laptop placement: %s\n", laptop_placement_as_str(info.val));
+> +		break;
+> +	case IOCTL_LID_STATE:
+> +		printf("Lid State: %s\n", info.val ? "Close" : "Open");
+> +		break;
+> +	case IOCTL_USER_PRESENCE:
+> +		printf("User Presence: %s\n", info.val ? "Present" : "Away");
+> +		break;
 > +	default:
-> +		return "UNKNOWN";
+> +		return -1;
 > +	}
+> +
+> +	return 0;
 > +}
 > +
-> +/**
-> + * ta_slider_as_str() - Convert TA slider enum to string
-> + * @state: The TA slider state value to convert
-> + *
-> + * Returns a human-readable string representation of the power slider
-> + * position suitable for display purposes.
-> + *
-> + * Return: Constant string describing the slider state, or
-> + *         "Unknown TA Slider State" if the value is not recognized.
-> + */
-> +static inline const char *ta_slider_as_str(unsigned int state)
+> +static int pmf_get_custom_bios_input(unsigned int code)
 > +{
-> +	switch (state) {
-> +	case TA_BEST_PERFORMANCE:
-> +		return "PERFORMANCE";
-> +	case TA_BETTER_PERFORMANCE:
-> +		return "BALANCED";
-> +	case TA_BEST_BATTERY:
-> +		return "POWER_SAVER";
+> +	struct amd_pmf_ioctl_info info = {0};
+> +	int idx, ret;
+> +
+> +	ret = pmf_get_data(code, &info);
+> +	if (ret < 0)
+> +		return ret;
+> +
+> +	switch (code) {
+> +	case IOCTL_BIOS_INPUT_1 ... IOCTL_BIOS_INPUT_10:
+> +		idx = amd_pmf_get_bios_idx(code);
+> +		printf("Custom BIOS input%u: %lu\n", idx + 1, (int64_t)info.val);
+
+%lu is for printing unsigned long, not int64_t.
+
+> +		break;
 > +	default:
-> +		return "Unknown TA Slider State";
+> +		return -1;
 > +	}
+> +
+> +	return 0;
 > +}
 > +
->  /**
->   * enum pmf_ioctl_id - Control codes for PMF ioctl operations
->   * @IOCTL_POWER_SOURCE: Query current power source (AC/DC)
-> @@ -197,6 +280,28 @@ enum pmf_ioctl_id {
->  	IOCTL_FEATURE_DYNAMIC_POWER_SLIDER_DC
->  };
->  
-> +/**
-> + * amd_pmf_get_bios_idx() - Convert BIOS control code to array index
-> + * @control_code: The BIOS input or output control code
-> + *
-> + * Converts a BIOS input (IOCTL_BIOS_INPUT_1 to IOCTL_BIOS_INPUT_10) or
-> + * BIOS output (IOCTL_BIOS_OUTPUT_1 to IOCTL_BIOS_OUTPUT_10) control code
-> + * to a zero-based array index (0-9).
-> + *
-> + * Return: Array index (0-9) on success, -EINVAL if the control code
-> + *         is not a valid BIOS input or output code.
-> + */
-> +static inline int amd_pmf_get_bios_idx(unsigned int control_code)
+> +static int pmf_get_bios_output(unsigned int code)
 > +{
-> +	if (control_code >= IOCTL_BIOS_INPUT_1 && control_code <= IOCTL_BIOS_INPUT_10)
-> +		return control_code - IOCTL_BIOS_INPUT_1;
+> +	struct amd_pmf_ioctl_info info = {0};
+> +	int idx, ret;
 > +
-> +	if (control_code >= IOCTL_BIOS_OUTPUT_1 && control_code <= IOCTL_BIOS_OUTPUT_10)
-> +		return control_code - IOCTL_BIOS_OUTPUT_1;
+> +	ret = pmf_get_data(code, &info);
+> +	if (ret < 0)
+> +		return ret;
 > +
-> +	return -EINVAL;
+> +	switch (code) {
+> +	case IOCTL_BIOS_OUTPUT_1 ... IOCTL_BIOS_OUTPUT_10:
+> +		idx = amd_pmf_get_bios_idx(code);
+> +		printf("BIOS output%u: %lu\n", idx + 1, (int64_t)info.val);
+> +		break;
+> +	default:
+> +		return -1;
+> +	}
+> +
+> +	return 0;
 > +}
 > +
->  /**
->   * struct amd_pmf_ioctl_info - Structure for PMF ioctl data exchange
->   * @control_code: Input parameter specifying which data to query (enum pmf_ioctl_id)
+> +static int pmf_get_misc_info(unsigned int code)
+> +{
+> +	struct amd_pmf_ioctl_info info = {0};
+> +	int ret;
+> +
+> +	ret = pmf_get_data(code, &info);
+> +	if (ret < 0)
+> +		return ret;
+> +
+> +	switch (code) {
+> +	case IOCTL_POWER_SLIDER_POSITION:
+> +		printf("Slider Position: %s\n", ta_slider_as_str(info.val));
+> +		break;
+> +	case IOCTL_SKIN_TEMP:
+> +		printf("Skin Temperature: %lu\n", (int64_t)info.val);
+> +		break;
+> +	case IOCTL_GFX_WORKLOAD:
+> +		printf("GFX Busy: %lu\n", (int64_t)info.val);
+> +		break;
+> +	case IOCTL_AMBIENT_LIGHT:
+> +		printf("Ambient Light: %ld\n", (int64_t)info.val);
+> +		break;
+> +	case IOCTL_AVG_C0_RES:
+> +		printf("Avg C0 Residency: %lu\n", (int64_t)info.val);
+> +		break;
+> +	case IOCTL_MAX_C0_RES:
+> +		printf("Max C0 Residency: %lu\n", (int64_t)info.val);
+> +		break;
+> +	case IOCTL_SOCKET_POWER:
+> +		printf("Socket Power: %lu\n", (int64_t)info.val);
+
+Please think the printf formatting strings and types through.
+
+> +		break;
+> +	default:
+> +		return -1;
+> +	}
+> +
+> +	return 0;
+> +}
+> +
+> +int main(void)
+> +{
+> +	unsigned int idx;
+> +
+> +	printf("Feature Name          Supported\n");
+> +	printf("---------------------------------\n");
+> +	for (idx = IOCTL_FEATURE_AUTO_MODE; idx <= IOCTL_FEATURE_DYNAMIC_POWER_SLIDER_DC; idx++)
+> +		pmf_get_feature_status(idx);
+> +
+> +	printf("\nDevice State\n---------------\n");
+> +	for (idx = IOCTL_PLATFORM_TYPE; idx <= IOCTL_USER_PRESENCE; idx++)
+> +		pmf_get_device_state(idx);
+> +
+> +	printf("\nCustom BIOS Inputs\n-------------------\n");
+> +	for (idx = IOCTL_BIOS_INPUT_1; idx <= IOCTL_BIOS_INPUT_10; idx++)
+> +		pmf_get_custom_bios_input(idx);
+> +
+> +	printf("\nBIOS Outputs\n--------------\n");
+> +	for (idx = IOCTL_BIOS_OUTPUT_1; idx <= IOCTL_BIOS_OUTPUT_10; idx++)
+> +		pmf_get_bios_output(idx);
+> +
+> +	printf("\nMisc\n------\n");
+> +	pmf_get_misc_info(IOCTL_SKIN_TEMP);
+> +	pmf_get_misc_info(IOCTL_GFX_WORKLOAD);
+> +	pmf_get_misc_info(IOCTL_AMBIENT_LIGHT);
+> +	pmf_get_misc_info(IOCTL_AVG_C0_RES);
+> +	pmf_get_misc_info(IOCTL_MAX_C0_RES);
+> +	pmf_get_misc_info(IOCTL_SOCKET_POWER);
+> +	pmf_get_misc_info(IOCTL_POWER_SLIDER_POSITION);
+> +
+> +	return 0;
+> +}
 > 
 
 -- 
