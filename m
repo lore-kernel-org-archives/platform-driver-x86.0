@@ -1,61 +1,61 @@
-Received: from mail-yw1-f171.google.com (mail-yw1-f171.google.com [209.85.128.171])
+Received: from mail-yw1-f172.google.com (mail-yw1-f172.google.com [209.85.128.172])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3DB0833D4EE
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1881F351C10
 	for <platform-driver-x86@vger.kernel.org>; Thu, 26 Mar 2026 23:12:00 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.171
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1774566721; cv=none; b=LCUtuXCChFsY1xRVoMZ72bzLqUp/mVOxgJpCmzs22w4kneHHqUw6CKZ6HlHI70cEFBAI0/+FQaPTiJ3Pt9OT+w/cSOLgxFwOubXQOTB8MXEAN9TUgCSkWPErGzfiUkSVFQgHHFxnWEAwg8BO4MCROHHQecKVOpkkDq+nJesAuM0=
+	t=1774566722; cv=none; b=Ukzz7ho0Dc3TlYIwS9t5v9IPuyyjje0hvM1H1IM4ULa6/jV4yhKthrLwmp0sNtsbXYPor2WPrQWyfAjtuQB4JHoAf/3gDgzXJZCUIe5+xHz8dKKAwsv2ZKKN4AxX5roj7Xf6t7LVTG1KxUshxYUFZIuAZ56BPOMWYEhWVI9fyJc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1774566721; c=relaxed/simple;
-	bh=CHLw8W8no9w2IzF23NQVWCWYxh7Byp+1DM71Jw8m5R8=;
+	s=arc-20240116; t=1774566722; c=relaxed/simple;
+	bh=K+AmH6uNRG+7A1J9LZNzt7+JaTmY42V47ueykQUe/Xc=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=hXaR3pduTkkvm5j2fmJRtIJjsbCjGSXspdSKdLd7nn4tLesTuUtx9WFoYQgj/IDdPN9+yDm1kRyZ6tLG845LHnXKzhS2ol5cVayZUHTtusYRBuqVoZtI7o6aDE1rOg327QVfJelZn3afd3PFp2rjRUJiSn7s+7UuFqF9CqyXQ/s=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=UE4T8ipD; arc=none smtp.client-ip=209.85.128.171
+	 MIME-Version; b=NYYQJKkJN1BmkjKmfuwkRN5n0p9tq6DOqDWUqkiyhaq5LVktw5T9A0gNlw1KtIr7dirPwOM8D8aHuIESdWlJyEe/Ztw9oe6B/8rIKk3WyZc5idhe9dWzgLZgDKcPdYlPsDhp+RGqiH52lONjqS+zFDi9A2xgqV1R7OtVE8MkmlI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=U521ICKK; arc=none smtp.client-ip=209.85.128.172
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="UE4T8ipD"
-Received: by mail-yw1-f171.google.com with SMTP id 00721157ae682-79885f4a8ffso15323637b3.3
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="U521ICKK"
+Received: by mail-yw1-f172.google.com with SMTP id 00721157ae682-79ab3e26cceso13368907b3.3
         for <platform-driver-x86@vger.kernel.org>; Thu, 26 Mar 2026 16:12:00 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20251104; t=1774566719; x=1775171519; darn=vger.kernel.org;
+        d=gmail.com; s=20251104; t=1774566720; x=1775171520; darn=vger.kernel.org;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=qFkIExd9ilK/Mb5afUnvkOrSHhNZHUt6VUdY7xzMApc=;
-        b=UE4T8ipDl9ay8ShOO0Rmtoiv6KQyydjAhopHr/s2Wrqi+FEsL8Hqwi0fSLPkQHOg27
-         QHmobEgUxMlTAUTukhqHGp+1xU0HWRaYgGjCu6dHk8lAViJBDoMTPz9U+0bRmLiwJYCI
-         NybRIePrBuQ//lw38fYQEXdWCdIetK+PRAZqoo9sRXd7dc4jzR4CXatYqc9O0YaAisWT
-         G5E8b6SCO6nI+Xhu1OmRBGKKqGj9ZWCV0ceS9RI4EbZOFznCkdTyMpTR3FojJQSiey4u
-         4JUZ+dnxTs8LgkKCLCgZlDmxVeyQXnz+SX884qVhR1r9RhA/bvEgCECLK7Fr6iGKSzKy
-         6sag==
+        bh=1j8lzZoc0P5Ygbunqje4X/HjCJ1j8htOSchckU7Arkk=;
+        b=U521ICKKwndUr7tJVBS/ezNvE2AGZ0ASsorDneQSFNtzZWa8x3ks+xzLqpj07nTaZr
+         GJzE7X1QpRliS/B86fquZ3NI41L1lTiHJMmM+SsCsk7d6WPZTNjNcdDWMCR1Q4WIbMYM
+         d+j3tT9Ib5cyuwhiSgk4ouFrw2y2v+7qdBbBtOovO0YiI6wpPYPZcvKpGRMWe4K3/GcX
+         Zf57D6MqtCninWtQVY5SSjIfvUVBO2gZ34jqvhd53oPMFjTWW9lbS+3ynl5IRh6XlbyK
+         C0376KJbarNCi3Snarhsk0OiVRmOBs97jG3NHFAFp3UE1tSuJxlH1RxlAE9LUE1fvWgO
+         +d0A==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1774566719; x=1775171519;
+        d=1e100.net; s=20251104; t=1774566720; x=1775171520;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:x-gm-gg:x-gm-message-state:from
          :to:cc:subject:date:message-id:reply-to;
-        bh=qFkIExd9ilK/Mb5afUnvkOrSHhNZHUt6VUdY7xzMApc=;
-        b=HkFkFq5UJosCYpklbRaIeRmYTAx7F2sB287ICqV0mYKaukljcdA/G+8CoguYsXZ1XF
-         XsKU4DCwKLHMMrCyp7a4lGz/Hx5+w5rvk5YmIaMahwYRpSoxbnDkpKq1Vc1WS4bsMect
-         eSfYrzJzgv/s9N+TtgUd4XWkeaHjHxHdT3xMpxVppVT53sec2cetwSdUvObGgFPuyczu
-         qf+i6ooNI37RAdvnMDtgq/DuTh/mowyMGIUvQkwMT+b6OJ0oF2DXXsrozARLOYBEH1u3
-         QJzkn60RHM/uYXlJ9lbtwHZgBpDiypZSh5/7wTsnjcI02Mm4XnQ0MEkRKRBzz1wU9RMR
-         mXmA==
-X-Gm-Message-State: AOJu0Yy4vtxApLVI+Qy/sbmhlFbTs+Mdxf/ezNiYQ9Pl9ZLlmYIoo0Vj
-	3qhiOjUd2Ejh6q09ux5LqblgcrCcB7hA1PVr1wEhjGb/caEWRt/MzOOy
-X-Gm-Gg: ATEYQzzEnriit5FgaxnFYQwGaiSO6SqgeQl0D+PFZyoZe5CAMZE3IYwjadDx8MjJDF/
-	UgJV61x0o2F+GwQh9GEeQj3zwh/pNVxzKqVJoBQARO94EFYCgIKSxHeC6sL0ssDhDZzHi9EXn+O
-	AWo+LorWNfSg3MW+K+32qSTHe7E/maETdrEwSFNUsEa+1lTQn09isdIBASJKcLg+ZAhU4r+TrSx
-	USlBUtfX5LJQHvkxNMnF+GsHJmEDraPvs3KKU7bKsBEotRCDcHs8V/F6FOWaAVm/BAQhAfDplao
-	sH31wAzaHc6ALVsxIh2cNoAKy7G5Y0As09NSgLfBFSAuMyLTeCd0yz/FxdUsgmfr4/PyQ0umNED
-	zI/mAvy4U19tb11qGpIXW8n1woMM+pCpjkYw6tl4ufgWXAfdcKslTKQgxr6WGvuL0W+o7kRNz05
-	SLE/PwShKlqAp5oiUIB5kzprU1RHf6Sp8kzSgYMHuMjTexkQvkTr4rJTY+hR0E1f2sAcOWkFL5Y
-	k2EO92+suLmG2BlwnxTr/Bt
-X-Received: by 2002:a0d:dc86:0:b0:798:bbc8:bca9 with SMTP id 00721157ae682-79bde010a95mr1447217b3.31.1774566719323;
-        Thu, 26 Mar 2026 16:11:59 -0700 (PDT)
+        bh=1j8lzZoc0P5Ygbunqje4X/HjCJ1j8htOSchckU7Arkk=;
+        b=rCwd92dnY90MecSAfU7mRFuO5dqRr4+4AO3PqZIBBpuoVMcgaFb5F1pSdU4m9lyltj
+         tNA8hZIxxSwmSyr77LoesimQ/dRkqQTde0jTOFLWwCufhrrjObAXTMugdu+oUKAoZGIL
+         oPDuNI8FccS1RBzlcX9zPaGkOUBMh2NZhyrpYHd0ELKTHqgfGV+3Rtx+y5jnqxGxjmlR
+         G2Uv8pCdSLtS2+3kszwOM63stvKFpZaA/hrBHyVTuELEPYLVLopU0m+qbG4PSkSQ5WO6
+         n4AXSyCA8qT09oiGYnUPSx134jOht4ZHih+kmSfHksqmRmL4QZgVLHXPVqa+bARkLz6J
+         XZDg==
+X-Gm-Message-State: AOJu0YwdjEFzJkF22SJiDLK8IwITmLU/CSsTM30M103I6hrGVbCOk2ih
+	xFDgho5Vr00Q/lkqvtzG+XHN53TnZuDCvMZgqs0R+T8+ND85WkDY1Wsb
+X-Gm-Gg: ATEYQzz6ShZPfV0Rkt42NdqpGpWtlWKEW1KGLwL4PIAh8SoiN7/1uznuTdQX1cldMUL
+	+g3Bu1AYpqr6Kc5v8G1FvAVpVPir130r6VvigChVVnHwiy699lhrXHHzKxSrSbutWdHwTjCMUup
+	zv12IncXF9v7A9kjAqU4WBJUmJqCHjHjmh5Vgge/nJbEaHLKYVyf/3EdV6yBfGZCf1kr7/kecEk
+	uXEvxL1wHJhfuJH90D8goMvbPIflQmoxkZ+TmF1UGuPTngDN4Usup0oHpG0Zq5Yj1s0REocuS6f
+	HsfxzBJ252Xoe3ie0PTRnG/kruLHBRvmIODE2inT+s9yyeMu2bZIfOo6/M7NJBVUhBZads1hbxN
+	xRGjibrk47wYsQ/44lEVu6KUdeDZE+jK8Bwn/sbUOiNvIFg/pV9byXGV3WqlAtjN8DkiiZSAGEZ
+	aIAcLe26QUpuG4ver8Sbya/+tBRjHlmfMgvWA3ep3V7w0C+BtyZY99VTEWjh0TH9rrwz8WIWv93
+	PC5s/Pxx7Zlx1N6fWMwv1xb
+X-Received: by 2002:a05:690c:60c6:b0:79a:d2ba:3c24 with SMTP id 00721157ae682-79bde0e66b5mr2037137b3.41.1774566720157;
+        Thu, 26 Mar 2026 16:12:00 -0700 (PDT)
 Received: from tux ([2601:7c0:c37e:2360::17e2])
-        by smtp.gmail.com with ESMTPSA id 00721157ae682-79b1e3fc9fdsm20925527b3.38.2026.03.26.16.11.58
+        by smtp.gmail.com with ESMTPSA id 00721157ae682-79b1e3fc9fdsm20925527b3.38.2026.03.26.16.11.59
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
         Thu, 26 Mar 2026 16:11:59 -0700 (PDT)
 From: Ethan Tidmore <ethantidmore06@gmail.com>
@@ -67,9 +67,9 @@ To: Corentin Chary <corentin.chary@gmail.com>,
 Cc: platform-driver-x86@vger.kernel.org,
 	linux-kernel@vger.kernel.org,
 	Ethan Tidmore <ethantidmore06@gmail.com>
-Subject: [PATCH 1/2] platform/x86: asus-wmi: Remove redundant condition
-Date: Thu, 26 Mar 2026 18:11:53 -0500
-Message-ID: <20260326231154.856729-2-ethantidmore06@gmail.com>
+Subject: [PATCH 2/2] platform/x86: asus-wmi: Refactor control flow
+Date: Thu, 26 Mar 2026 18:11:54 -0500
+Message-ID: <20260326231154.856729-3-ethantidmore06@gmail.com>
 X-Mailer: git-send-email 2.53.0
 In-Reply-To: <20260326231154.856729-1-ethantidmore06@gmail.com>
 References: <20260326231154.856729-1-ethantidmore06@gmail.com>
@@ -81,35 +81,51 @@ List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-The condition (ctrl_param >= 0) is always true because ctrl_param is an
-unsigned integer.
+Refactor control flow in update_screenpad_bl_status() to avoid
+unnecessary if statements and error checking.
 
-Remove the redundant condition.
-
-Detected by Smatch:
-drivers/platform/x86/asus-wmi.c:4427 update_screenpad_bl_status() warn:
-always true condition '(ctrl_param >= 0) => (0-u32max >= 0)'
-
-
-Fixes: 034f5efd362fb ("platform/x86: asus-wmi: adjust screenpad power/brightness handling")
 Signed-off-by: Ethan Tidmore <ethantidmore06@gmail.com>
 ---
- drivers/platform/x86/asus-wmi.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/platform/x86/asus-wmi.c | 22 +++++++---------------
+ 1 file changed, 7 insertions(+), 15 deletions(-)
 
 diff --git a/drivers/platform/x86/asus-wmi.c b/drivers/platform/x86/asus-wmi.c
-index 0b87214ddd1b..80144c412b90 100644
+index 80144c412b90..f8e389c54fe4 100644
 --- a/drivers/platform/x86/asus-wmi.c
 +++ b/drivers/platform/x86/asus-wmi.c
-@@ -4424,7 +4424,7 @@ static int update_screenpad_bl_status(struct backlight_device *bd)
+@@ -4422,25 +4422,17 @@ static int read_screenpad_brightness(struct backlight_device *bd)
+ static int update_screenpad_bl_status(struct backlight_device *bd)
+ {
  	u32 ctrl_param = bd->props.brightness;
- 	int err = 0;
+-	int err = 0;
++	int err;
  
--	if (ctrl_param >= 0 && bd->props.power) {
-+	if (bd->props.power) {
- 		err = asus_wmi_set_devstate(ASUS_WMI_DEVID_SCREENPAD_POWER, 1, NULL);
- 		if (err < 0)
- 			return err;
+-	if (bd->props.power) {
+-		err = asus_wmi_set_devstate(ASUS_WMI_DEVID_SCREENPAD_POWER, 1, NULL);
+-		if (err < 0)
+-			return err;
++	if (!bd->props.power)
++		return asus_wmi_set_devstate(ASUS_WMI_DEVID_SCREENPAD_POWER, 0, NULL);
+ 
+-		err = asus_wmi_set_devstate(ASUS_WMI_DEVID_SCREENPAD_LIGHT, ctrl_param, NULL);
+-		if (err < 0)
+-			return err;
+-	}
+ 
+-	if (!bd->props.power) {
+-		err = asus_wmi_set_devstate(ASUS_WMI_DEVID_SCREENPAD_POWER, 0, NULL);
+-		if (err < 0)
+-			return err;
+-	}
++	err = asus_wmi_set_devstate(ASUS_WMI_DEVID_SCREENPAD_POWER, 1, NULL);
++	if (err < 0)
++		return err;
+ 
+-	return err;
++	return asus_wmi_set_devstate(ASUS_WMI_DEVID_SCREENPAD_LIGHT, ctrl_param, NULL);
+ }
+ 
+ static const struct backlight_ops asus_screenpad_bl_ops = {
 -- 
 2.53.0
 
