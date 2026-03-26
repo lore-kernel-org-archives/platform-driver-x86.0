@@ -1,57 +1,74 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.12])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-yw1-f176.google.com (mail-yw1-f176.google.com [209.85.128.176])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D999B346E47;
-	Thu, 26 Mar 2026 18:24:55 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.12
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B0CB534EEFB
+	for <platform-driver-x86@vger.kernel.org>; Thu, 26 Mar 2026 23:11:59 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.176
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1774549497; cv=none; b=MQbuhL0kSxaEYtwiTFFMY93mNnHWlcUgDSxYLTNUhHqOfXTK3x+6m1vA2ZHpPRaD8wqC7bChTBcvYRLR+2k/Ne4PjdtVuMEJ3gX8TZL1TGyf+1PG1o2SmOI6iT4MCWwe+16NIa8OrmQo7ZXLp0Tc2uGxR8d/eDaJOCGq4OJ8DVk=
+	t=1774566720; cv=none; b=FlkStiyK3Ju2GyLUS2w3Mu6ig2KEFlR6skUmDUJSne9s6EUDni077zpxBPqrp1w+zUNLMpc2gBkc1WQ81yDQVu/QrCZHtvBh8yYdgNW1nO5XQEsLv+1SJRRX7HHdpQHwFoNhF9RoHvZQm8K/Za0K8coWfXQDGipR5oH3AyD+gJw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1774549497; c=relaxed/simple;
-	bh=+5cmqVmE1jNiyGlri2CJNdNZebqHV69aKuGt5l+2ZkU=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=sh3eD6/H86URzSB3/7myhFSab00Dc4g9TiBZbnSWoOQCakIy2OT7pc/nxnC0uoz6mEvv7Wfg3bShbDweu0K+cQOdjTzp81DGC4ZxDXHQZmjf3KwEGU1vMfoap0kUgQksm9rN+U7gxGa0Ob6T2YYHmwcPxwmxZvVto0Ha3uZ9S4Y=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=pass smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=Rc2eB5Zy; arc=none smtp.client-ip=192.198.163.12
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.intel.com
+	s=arc-20240116; t=1774566720; c=relaxed/simple;
+	bh=J4eO02+QzGvfFg7I5hMKGmY2nQ01YfbM1tG4RywxB9k=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=mX8NI6y0Ceqa73Wh52oKFeqybHjzlZQb34sy9mhsn3aSI0fLUXYCIlkrIbvLJMD2kKk7JROdYU+HpXPO0CG0J6VLkjTrD0wr3VFtp/pbi22XZp6uiJiojdCCnC5eoHcpGUFyqUMLYtSIpwtbjUYigBxfybaACPt0HIwJfOvaNlQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=tMEY9Cck; arc=none smtp.client-ip=209.85.128.176
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="Rc2eB5Zy"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1774549496; x=1806085496;
-  h=from:to:cc:subject:date:message-id:mime-version:
-   content-transfer-encoding;
-  bh=+5cmqVmE1jNiyGlri2CJNdNZebqHV69aKuGt5l+2ZkU=;
-  b=Rc2eB5ZyIHKAyieJUdezHsiu9vCdJf9RcUV9bWVdA/6H1taxkkgwsEFI
-   DV7in4YB9i9BTH7GieV8cIwdjakw0Lo9A7YkfisD2oXloTOR1T4KkLsp9
-   5w3Sl0cw1pUdTSMqUfWoI76BBlySMA0X82Sk1FwVsFu2mTfIFn6HXLiro
-   HMqKScyo/93bhm1ysEShtz1nal9ObRTOurn18nhkUITY6k829CJ5Osgl1
-   gGYpwEHiWbjPmOdYGAd04XOwd2CGbMWZ5c8+cvBbrRk8CSg6//AQpgndO
-   W7GKOxHIPNv9IOr69iK2tmrJ8YtedKrUbapgAdx+vSdHeAsmKaO84E61p
-   Q==;
-X-CSE-ConnectionGUID: OF9bgTSUQTqnxg04S+7abg==
-X-CSE-MsgGUID: E3sAkQLNQVSJ4rDdUSeoWQ==
-X-IronPort-AV: E=McAfee;i="6800,10657,11741"; a="79523789"
-X-IronPort-AV: E=Sophos;i="6.23,142,1770624000"; 
-   d="scan'208";a="79523789"
-Received: from orviesa001.jf.intel.com ([10.64.159.141])
-  by fmvoesa106.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 26 Mar 2026 11:24:55 -0700
-X-CSE-ConnectionGUID: lsQ/TAdLQX6vS4UmU7GN5g==
-X-CSE-MsgGUID: UkACtNutTv2+91WCjpL9xg==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.23,142,1770624000"; 
-   d="scan'208";a="262991969"
-Received: from spandruv-desk.jf.intel.com ([10.54.55.20])
-  by orviesa001.jf.intel.com with ESMTP; 26 Mar 2026 11:24:55 -0700
-From: Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>
-To: hansg@kernel.org,
-	ilpo.jarvinen@linux.intel.com
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="tMEY9Cck"
+Received: by mail-yw1-f176.google.com with SMTP id 00721157ae682-78fc4425b6bso16184977b3.1
+        for <platform-driver-x86@vger.kernel.org>; Thu, 26 Mar 2026 16:11:59 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20251104; t=1774566719; x=1775171519; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=fxYBoEkLa1OVizV4YZ63a2ig7qDekbivfUit9dhfc2g=;
+        b=tMEY9CcknzE9Rs0NXSKZ6Zuj7xi3mRpm3nEzSUreiGM5iWLBQo1lq0XhQ718sXS4+v
+         BvgfpERzSzQeFYQYRLEkKxf+195X0SgxKL7Jyy53ZnQB0YVttAH94TMbe6OAkczuiPdH
+         CAF7CJXNU+onOmqdptwZRtI/OiW/yxpsUvw2fLPc2oNY5Ag6NTMwI80J5Xt2dTAeaz1G
+         9sHh2IhQ8iWPdT1lMuAvJaMLkZdvE+5r5CPpO0emuzQGgWseVdrUQ95okYtc0kwyt9J/
+         TQg/sb/r1kc9H2FfzGFFDT/OAnnVJezIzoe4azQ6m2PBLg2fag4+Y8Ceyp/VKoli2Ksy
+         3Nnw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20251104; t=1774566719; x=1775171519;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-gg:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=fxYBoEkLa1OVizV4YZ63a2ig7qDekbivfUit9dhfc2g=;
+        b=LuCUWTupez6dYhjNXNOCAUn5VeuEXN+PCjU+5WuiJ0KAyEyAOIZLdemEAttbMMn/vv
+         ptDDRbBXkoLgxxfNBzOgP6XaEIl25uA4thgGUWfBeQSv5Rm3RHHBscbcmQyGXxtTkIT/
+         S7iPDT24zGG55iQvI6JBO8MhYQfRSNV7Do5ipV0ofmQp7bDs1sU2h4CyCKbR5e/3PdOb
+         mJPtpWVfhU4HZ+J0YdbgGW0LTank9ZC802TK8j7QOwXKB/Tx5qO8MOS2e1mbdJoilP+Z
+         6vKOh65EbzENAVBXss0hsIwiWhdBRcL2/GEARhGg5W/TpLW+7Cv9HP6wx1LEm3QtuZqj
+         rtUw==
+X-Gm-Message-State: AOJu0YwbE4v+Vi6yJ01dUlpoZDfV/0yCZRBOZfuAjcrOQA1rGPkSwD+a
+	MmfHUjhrSNj/v81yEaLzryNkM+0axQzC4RxuMQOMR0Q/mwtE9vkWBzet
+X-Gm-Gg: ATEYQzxk0KvOA7Cu3ilnWZ+9VAZRflK8GiixHGqTZcnq+r8F6xyF84IqY7hHXbjNtOg
+	9+vpJTvij75TXh6FXJssnEf2QkiPFzMzzKqa2GmKE2c1ZvNQkuriYvV8ZLih5sETUWMUAPTogZO
+	TnssXwY97rWSHjnBg858WGd32AG2NQbMH55DB6dbrwSbot/jJzoBlj+OT5iTykbsi/92ZJ+iIro
+	8Jgg0kdn6y4e/bMsN5ucw3xoAvKKZQ1f9BlbvqyqlENQgFhsbx5dYTwwPGk3vhPebsmb9xyuSHi
+	xeivWSEt1J8o//8dqy4r9CFlJZjqcGZ53TMUnheMvNUtqbEZHN+tfWvjnRh7LgWsrpIlVl+edoC
+	dtcZOm4Bw1FHTx3FLCguBqTHkkXWUQddFhRwODOg36F92SL5jCjLKv6m/abtV2ioelgi7FMZfDj
+	7Icq39tr4QrVrSvKBmSUDH0KUFzeo3/yQpwiq8JvCDXDNbwEqH3nIQxElODeKbc4O+x5hx5UIRf
+	nudjtkFgwhxQU2bwTT3Lb7O
+X-Received: by 2002:a05:690c:1e:b0:798:138c:76de with SMTP id 00721157ae682-79bde0e71e5mr1952817b3.41.1774566718626;
+        Thu, 26 Mar 2026 16:11:58 -0700 (PDT)
+Received: from tux ([2601:7c0:c37e:2360::17e2])
+        by smtp.gmail.com with ESMTPSA id 00721157ae682-79b1e3fc9fdsm20925527b3.38.2026.03.26.16.11.57
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 26 Mar 2026 16:11:58 -0700 (PDT)
+From: Ethan Tidmore <ethantidmore06@gmail.com>
+To: Corentin Chary <corentin.chary@gmail.com>,
+	"Luke D . Jones" <luke@ljones.dev>,
+	Denis Benato <denis.benato@linux.dev>,
+	Hans de Goede <hansg@kernel.org>,
+	=?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
 Cc: platform-driver-x86@vger.kernel.org,
 	linux-kernel@vger.kernel.org,
-	Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>
-Subject: [PATCH v2] platform/x86/intel/tpmi: Use 32 bit aligned address for debugfs mem write
-Date: Thu, 26 Mar 2026 11:24:46 -0700
-Message-ID: <20260326182446.3478672-1-srinivas.pandruvada@linux.intel.com>
-X-Mailer: git-send-email 2.52.0
+	Ethan Tidmore <ethantidmore06@gmail.com>
+Subject: [PATCH 0/2] platform/x86: asus-wmi: Clean up asus_wmi_set_devstate()
+Date: Thu, 26 Mar 2026 18:11:52 -0500
+Message-ID: <20260326231154.856729-1-ethantidmore06@gmail.com>
+X-Mailer: git-send-email 2.53.0
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
@@ -60,45 +77,16 @@ List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-The memory write feature supports 32-bit writes to any TPMI offset.
-However, future hardware generations may not allow writes to non-32-bit
-aligned addresses due to hardware optimizations.
+Remove redundant control flow in asus_wmi_set_devstate() and refactor
+control flow to improve readability.
 
-Since all TPMI addresses are 64-bit aligned and correspond to 64-bit
-registers, enforce 32-bit alignment for write operations.
+Ethan Tidmore (2):
+  platform/x86: asus-wmi: Remove redundant condition
+  platform/x86: asus-wmi: Refactor control flow
 
-Signed-off-by: Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>
----
-v2:
-	Use IS_ALIGNED()
-	Here <linux/align.h> is explicitly added, but also included in
-	include chain of other included header files in this file.
+ drivers/platform/x86/asus-wmi.c | 22 +++++++---------------
+ 1 file changed, 7 insertions(+), 15 deletions(-)
 
- drivers/platform/x86/intel/vsec_tpmi.c | 4 ++++
- 1 file changed, 4 insertions(+)
-
-diff --git a/drivers/platform/x86/intel/vsec_tpmi.c b/drivers/platform/x86/intel/vsec_tpmi.c
-index 98846e88d3d0..b16968f76726 100644
---- a/drivers/platform/x86/intel/vsec_tpmi.c
-+++ b/drivers/platform/x86/intel/vsec_tpmi.c
-@@ -46,6 +46,7 @@
-  * provided by the Intel VSEC driver.
-  */
- 
-+#include <linux/align.h>
- #include <linux/auxiliary_bus.h>
- #include <linux/bitfield.h>
- #include <linux/debugfs.h>
-@@ -479,6 +480,9 @@ static ssize_t mem_write(struct file *file, const char __user *userbuf, size_t l
- 	addr = array[2];
- 	value = array[3];
- 
-+	if (!IS_ALIGNED(addr, sizeof(u32)))
-+		return -EINVAL;
-+
- 	if (punit >= pfs->pfs_header.num_entries) {
- 		ret = -EINVAL;
- 		goto exit_write;
 -- 
-2.52.0
+2.53.0
 
