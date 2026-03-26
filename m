@@ -1,93 +1,195 @@
-Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pj1-f43.google.com (mail-pj1-f43.google.com [209.85.216.43])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0DCE72C0270;
-	Wed, 25 Mar 2026 21:37:10 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.137.202.133
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B93053C9441
+	for <platform-driver-x86@vger.kernel.org>; Wed, 25 Mar 2026 21:45:20 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.43
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1774474636; cv=none; b=TU2SDCbXvcP5iCkIq4f7Tp3c2hiSVHlELG4BwyFCTAGGr4VHY19OORdSX4CiRCixOyt+Yp+TSVS5K81rGsvGHtJr0ndaUcINKSNbeIJxZgAZzw4ehwk6T3rVlu97jP30nEFHnf2TFcvxd4+LMsLwiG9RdTFCMZYmUixBzB5imLM=
+	t=1774475122; cv=none; b=jrMUau+joD0Vs2zn8IdzK9Q1za2lINUhWiM6pI9amI+/Doo+pdOJf3qIKJEv5eV/N/q3HHBF5EPMav6BmlcT5aJmveIj/vj+l+RQcCOd033psi3QY5QNhnIOktyb4GExkXMjV2MCFeyF9S64AvN25OYbarxhHaJY+kFBfC2pQoI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1774474636; c=relaxed/simple;
-	bh=QYq6hDCQE07/eY7zkfeMf3T6tS4Ol5kK/UBOk7Mtg6s=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=m7XuzQ7koWzLE2eYOkFyPYL3FdcjHe91oW77n9iMEAlCcd7OrR7/6MekYhuVzEW9fUpcR6NwySjA4dlgDWkdGXoc7cj2TgvLBL94+y7c4+Bs3m8GZmpmKY5XZ6/hULY5GNevNrkdAnQGQU9c2wLRcMQkF2BIjpQSI1UwKpPBTJ8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=OcaUFfH1; arc=none smtp.client-ip=198.137.202.133
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=infradead.org
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=infradead.org
+	s=arc-20240116; t=1774475122; c=relaxed/simple;
+	bh=6kQq0eBdfXAkv1SL5/Nq9NKsnudYGCxJ+9hkw1kl1RE=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=UWkjh0YgUXVvGEWIKA1yJkg20h7jeicZGeZzav1jnpZh2nRhpIqBjNECngTuznPQG4IZxypzEeW4M5Uc6XbTSGG1d4FCIDi4SBY1kQGl4xGS/w3lw2lTI9Vy/zS5Vjbj6C42+rZhmRbRr02LGUtXrHGg/6xJqJFJBxiGS01/EOk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=DbodKbXN; arc=none smtp.client-ip=209.85.216.43
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="OcaUFfH1"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=infradead.org; s=bombadil.20210309; h=Content-Transfer-Encoding:
-	Content-Type:In-Reply-To:From:References:Cc:To:Subject:MIME-Version:Date:
-	Message-ID:Sender:Reply-To:Content-ID:Content-Description;
-	bh=A38lUMps9DF5y3xNfXoOWbS7ysXAXmQCcp5dIehhsdE=; b=OcaUFfH186W55SS9YxoOzhT6nO
-	vDSLadi4/9jyzzjUOGduh1e4yqbjjlJyERJcrIRHFJOZuPbm+mDPtB/kegovUeMg8+qGtCijTm2C8
-	u6XhuMP6O57RPiAjzsGYpqFNsUhonttvgD41d5qQmI8w0ViuVlOxHhP/bctwe+9ubYKRk+4fUOe5c
-	HAXONjrO2J4Xq2SEF1Pc/LjiCYtXZ0nwnpGo5746TrDl0uYy7A1YplWL8THEuNzebIrQI8BBmEXYS
-	LPdXNzgZ5I3wZosI/I18z3wZ2kGfmkAdK5FzA8XVFBl2oT4AtpWytwqOrmTxRhpSsHCgP+k9FoBDO
-	xDKIkjMA==;
-Received: from [50.53.43.113] (helo=[192.168.254.34])
-	by bombadil.infradead.org with esmtpsa (Exim 4.98.2 #2 (Red Hat Linux))
-	id 1w5VuX-00000004HxL-1AC3;
-	Wed, 25 Mar 2026 21:37:09 +0000
-Message-ID: <3077792d-8ca2-4096-b198-68bad573d31f@infradead.org>
-Date: Wed, 25 Mar 2026 14:37:07 -0700
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="DbodKbXN"
+Received: by mail-pj1-f43.google.com with SMTP id 98e67ed59e1d1-35b97ed057cso233926a91.1
+        for <platform-driver-x86@vger.kernel.org>; Wed, 25 Mar 2026 14:45:20 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20251104; t=1774475120; x=1775079920; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=Au6WsPXcZDQIoCXv0m7SupOuS35o9BWi7swluP7o1Uc=;
+        b=DbodKbXN8u660spP0qtNec8jsEfGlh4740bWGbEhfuY0bWIjLbusDg91U2vrDjQUci
+         0ft90JovVuHn4gw7NTkhTIhBllndd1Ec+X8nOzruOyHG59S3WbtqmRaBa4qUF78YDunA
+         tdkJxOxY0QXUWmfo73Nr4Xq1ETHBlrwkiI/yRWhYu1UQmldi/IuDqVtC3S0GPFPzdpmg
+         PrabMzMCfOyyGCrCN2aga+QV9HeWR3xhbs4xdAjqCDpu4OuFOuY6ESSD0xNnu7WPxiO2
+         GfHyVRf5YgiQDD0HJ92F9L9yBDQfkaQ58uW/TsdIgmjgkIlufj7ZkUo/i1BCAtm8IK1W
+         jfLQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20251104; t=1774475120; x=1775079920;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:x-gm-gg:x-gm-message-state:from
+         :to:cc:subject:date:message-id:reply-to;
+        bh=Au6WsPXcZDQIoCXv0m7SupOuS35o9BWi7swluP7o1Uc=;
+        b=iJPDVaiF8PvNBY7iqiPXMtf3dn2OGk+oVRFcLHHvJ2E+OThOycdOBWhzgxRwTPebEz
+         vZEqfcNGWhn3fiyB8MbHrm3gp5i40P/60aoLKCNclrVXpnRtPp8fhMvorSVufuPaziLQ
+         UpOvDNkY6wNNTqKHKos/gpJD2VcZBkc76Un+Hp4Oqc/LUoLAN1CVFHqCp7LMHL12EAun
+         qsG3bac/T2DPIuXbvY2nZfIWQqRkfRTIaHOrANDM0SuX0LOl5wuUoBYSo9nq+0usfPFW
+         knoJFuD7zmDAIseP2jhg2+UY5EnnP+dLmW9yKS60yRliy8Im/c7rxXAFiupQztyLv9W/
+         +sgg==
+X-Forwarded-Encrypted: i=1; AJvYcCVXS8i0dUBB+mmVn5WxjT/ebYJCyrY6meN3yeJCOhNCg4bDVGIza5RBmmhNkNFfRRfQYCZbh/JDqQxusdJnVdgbqYd5@vger.kernel.org
+X-Gm-Message-State: AOJu0YwjNO+lJH9hF/ZTVevJQUIZvcSiulK565FsF7tjSUZIkslqyzda
+	Xcyla5Mcw1DPIkDd+y1jHWrU2eMs3vR1xOD/hQcEBCvkGPqSGeqLVpbW
+X-Gm-Gg: ATEYQzzcLjcvgfvG/LjD+B8n/WCYAXE+tN4NOBW0zjkAMnvvf0Kh+n9RjRYEK/QrM5n
+	drWjuV1UpUT27ULWcWnbM9KSXnri7vkiirp4Kjf9dO1UcvneS+z2y/bianT3ywCQ1pxML2/ncnr
+	7pHSEwocVhE9YR9sKD05Ghct5MN7HD3F1B4Qvaw+eVXuv4S/X6HXChVzahVUihbwpNmNAQMdHqS
+	hQowg1fVhkW9fqza/cxNVSCSOtK9k8gU79QhZbWvjnaE+OOM1Vb4BcDrR+cKFN3y6mWuU0E7cqO
+	hWRSIzps3UlEdf9dobMwOX5h7ZhKIGilAmFjk1Z7wMPcscGCihgDmhdN0X4hXweD5jA6Cd0D3ip
+	6MqumEITIQpRnSdiV7L5hJ+UPhxDm/aVpXyAKiTz78IUXcn7MEO5XJpWbVleZkwr37ZhqzdhFF7
+	Y4CT6QN0XANhjHIRRy22FVk0lZr/knUrPQFoCbGeow4J0=
+X-Received: by 2002:a17:90b:35cf:b0:359:f77f:8cff with SMTP id 98e67ed59e1d1-35c0dd6a759mr4579469a91.19.1774475118091;
+        Wed, 25 Mar 2026 14:45:18 -0700 (PDT)
+Received: from gb5.tail50fddd.ts.net ([139.5.199.95])
+        by smtp.gmail.com with ESMTPSA id 98e67ed59e1d1-35c0ac5b287sm4533982a91.4.2026.03.25.14.45.15
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 25 Mar 2026 14:45:17 -0700 (PDT)
+From: Ayaan Mirza Baig <ayaanmirzabaig85@gmail.com>
+To: ilpo.jarvinen@linux.intel.com
+Cc: ayaanmirza788@gmail.com,
+	ayaanmirzabaig85@gmail.com,
+	josh@joshuagrisham.com,
+	platform-driver-x86@vger.kernel.org
+Subject: [PATCH v3] platform/x86: samsung-galaxybook: Handle ACPI hotkey notifications
+Date: Thu, 26 Mar 2026 03:15:06 +0000
+Message-ID: <20260326031506.35280-1-ayaanmirzabaig85@gmail.com>
+X-Mailer: git-send-email 2.53.0
+In-Reply-To: <8e55cf70-5147-849a-ad5c-24a32727e620@linux.intel.com>
+References: <8e55cf70-5147-849a-ad5c-24a32727e620@linux.intel.com>
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v6 2/5] platform: arm64: Add driver for EC found on
- Qualcomm reference devices
-To: Anvesh Jain P <anvesh.p@oss.qualcomm.com>,
- Sibi Sankar <sibi.sankar@oss.qualcomm.com>, Rob Herring <robh@kernel.org>,
- Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley
- <conor+dt@kernel.org>, Hans de Goede <hansg@kernel.org>,
- =?UTF-8?Q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>,
- Bryan O'Donoghue <bryan.odonoghue@linaro.org>,
- Bjorn Andersson <andersson@kernel.org>,
- Konrad Dybcio <konradybcio@kernel.org>
-Cc: linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org,
- linux-kernel@vger.kernel.org, platform-driver-x86@vger.kernel.org,
- Maya Matuszczyk <maccraft123mc@gmail.com>,
- Dmitry Baryshkov <dmitry.baryshkov@oss.qualcomm.com>,
- Konrad Dybcio <konrad.dybcio@oss.qualcomm.com>
-References: <20260325-add-driver-for-ec-v6-0-a8e888d09f0f@oss.qualcomm.com>
- <20260325-add-driver-for-ec-v6-2-a8e888d09f0f@oss.qualcomm.com>
-Content-Language: en-US
-From: Randy Dunlap <rdunlap@infradead.org>
-In-Reply-To: <20260325-add-driver-for-ec-v6-2-a8e888d09f0f@oss.qualcomm.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 
+On Samsung Galaxy Book 5 (SAM0430), the keyboard backlight, microphone
+mute, and camera block hotkeys do not generate i8042 scancodes.
+Instead they arrive as ACPI notifications 0x7d, 0x63, and 0x6f
+respectively, all of which previously fell through to the default
+"unknown" warning in galaxybook_acpi_notify().
 
+Add handling for these three events:
 
-On 3/25/26 4:39 AM, Anvesh Jain P wrote:
-> diff --git a/MAINTAINERS b/MAINTAINERS
-> index 30ca84404976..bcd7b0729ab7 100644
-> --- a/MAINTAINERS
-> +++ b/MAINTAINERS
-> @@ -22001,6 +22001,14 @@ S:	Supported
->  W:	https://wireless.wiki.kernel.org/en/users/Drivers/wcn36xx
->  F:	drivers/net/wireless/ath/wcn36xx/
->  
-> +QUALCOMM HAMOA EMBEDDED CONTROLLER DRIVER
-> +M:	Sibi Sankar <sibi.sankar@oss.qualcomm.com>
-> +M:	Anvesh Jain P <anvesh.p@oss.qualcomm.com>
-> +L:	linux-arm-msm@vger.kernel.org
-> +S:	Maintained
-> +F:	Documentation/devicetree/bindings/embedded-controller/qcom,hamoa-ec.yaml
-> +F:	drivers/platform/arm64/qcom-hamoa-ec.c
-> +
+- 0x7d (Fn+F9, keyboard backlight): schedule the existing
+  kbd_backlight_hotkey_work which cycles brightness.
 
-Please keep the entries in the MAINTAINERS file in alphabetical order.
+- 0x6e (Fn+F10, microphone mute): register a new hotkey input device
+  and emit KEY_MICMUTE.
 
->  QUANTENNA QTNFMAC WIRELESS DRIVER
->  M:	Igor Mitsyanko <imitsyanko@quantenna.com>
->  R:	Sergey Matyukevich <geomatsi@gmail.com>
+- 0x6f (Fn+F11, camera block): if block_recording is active use the
+  existing block_recording_hotkey_work; otherwise emit KEY_CAMERA via the
+  hotkey input device on models where the block_recording ACPI feature is
+  not supported
 
+Tested on Samsung Galaxy Book 5 (SAM0430).
+
+Signed-off-by: Ayaan Mirza Baig <ayaanmirzabaig85@gmail.com>
+---
+ drivers/platform/x86/samsung-galaxybook.c | 47 +++++++++++++++++++++++
+ 1 file changed, 47 insertions(+)
+
+diff --git a/drivers/platform/x86/samsung-galaxybook.c b/drivers/platform/x86/samsung-galaxybook.c
+index 755cb82bdb60..fe549e224c17 100644
+--- a/drivers/platform/x86/samsung-galaxybook.c
++++ b/drivers/platform/x86/samsung-galaxybook.c
+@@ -54,6 +54,7 @@ struct samsung_galaxybook {
+ 
+ 	struct work_struct block_recording_hotkey_work;
+ 	struct input_dev *camera_lens_cover_switch;
++	struct input_dev *hotkey_dev;
+ 
+ 	struct acpi_battery_hook battery_hook;
+ 
+@@ -197,6 +198,9 @@ static const guid_t performance_mode_guid =
+ #define GB_ACPI_NOTIFY_DEVICE_ON_TABLE          0x6c
+ #define GB_ACPI_NOTIFY_DEVICE_OFF_TABLE         0x6d
+ #define GB_ACPI_NOTIFY_HOTKEY_PERFORMANCE_MODE  0x70
++#define GB_ACPI_NOTIFY_HOTKEY_KBD_BACKLIGHT  0x7d
++#define GB_ACPI_NOTIFY_HOTKEY_CAMERA         0x6f
++#define GB_ACPI_NOTIFY_HOTKEY_MICMUTE        0x6e
+ 
+ #define GB_KEY_KBD_BACKLIGHT_KEYDOWN    0x2c
+ #define GB_KEY_KBD_BACKLIGHT_KEYUP      0xac
+@@ -1223,6 +1227,22 @@ static void galaxybook_i8042_filter_remove(void *data)
+ 	cancel_work_sync(&galaxybook->block_recording_hotkey_work);
+ }
+ 
++static int galaxybook_hotkey_init(struct samsung_galaxybook *galaxybook)
++{
++	galaxybook->hotkey_dev = devm_input_allocate_device(&galaxybook->platform->dev);
++	if (!galaxybook->hotkey_dev)
++		return -ENOMEM;
++
++	galaxybook->hotkey_dev->name = "Samsung Galaxy Book hotkeys";
++	galaxybook->hotkey_dev->phys = DRIVER_NAME "/input1";
++	galaxybook->hotkey_dev->id.bustype = BUS_HOST;
++
++	input_set_capability(galaxybook->hotkey_dev, EV_KEY, KEY_MICMUTE);
++	input_set_capability(galaxybook->hotkey_dev, EV_KEY, KEY_CAMERA);
++
++	return input_register_device(galaxybook->hotkey_dev);
++}
++
+ static int galaxybook_i8042_filter_install(struct samsung_galaxybook *galaxybook)
+ {
+ 	int err;
+@@ -1260,6 +1280,28 @@ static void galaxybook_acpi_notify(acpi_handle handle, u32 event, void *data)
+ 		if (galaxybook->has_performance_mode)
+ 			platform_profile_cycle();
+ 		break;
++	case GB_ACPI_NOTIFY_HOTKEY_KBD_BACKLIGHT:
++		if (galaxybook->has_kbd_backlight)
++			schedule_work(&galaxybook->kbd_backlight_hotkey_work);
++		break;
++	case GB_ACPI_NOTIFY_HOTKEY_MICMUTE:
++		if (galaxybook->hotkey_dev) {
++			input_report_key(galaxybook->hotkey_dev, KEY_MICMUTE, 1);
++			input_sync(galaxybook->hotkey_dev);
++			input_report_key(galaxybook->hotkey_dev, KEY_MICMUTE, 0);
++			input_sync(galaxybook->hotkey_dev);
++		}
++		break;
++	case GB_ACPI_NOTIFY_HOTKEY_CAMERA:
++		if (galaxybook->has_block_recording) {
++			schedule_work(&galaxybook->block_recording_hotkey_work);
++		} else if (galaxybook->hotkey_dev) {
++			input_report_key(galaxybook->hotkey_dev, KEY_CAMERA, 1);
++			input_sync(galaxybook->hotkey_dev);
++			input_report_key(galaxybook->hotkey_dev, KEY_CAMERA, 0);
++			input_sync(galaxybook->hotkey_dev);
++		}
++		break;
+ 	default:
+ 		dev_warn(&galaxybook->platform->dev,
+ 			 "unknown ACPI notification event: 0x%x\n", event);
+@@ -1397,6 +1439,11 @@ static int galaxybook_probe(struct platform_device *pdev)
+ 		return dev_err_probe(&galaxybook->platform->dev, err,
+ 				     "failed to initialize firmware-attributes\n");
+ 
++	err = galaxybook_hotkey_init(galaxybook);
++	if (err)
++		return dev_err_probe(&galaxybook->platform->dev, err,
++					 "failed to initialize hotkey input device\n");
++
+ 	err = galaxybook_i8042_filter_install(galaxybook);
+ 	if (err)
+ 		return dev_err_probe(&galaxybook->platform->dev, err,
 -- 
-~Randy
+2.53.0
 
