@@ -1,43 +1,43 @@
-Received: from mail-43103.protonmail.ch (mail-43103.protonmail.ch [185.70.43.103])
+Received: from mail-10628.protonmail.ch (mail-10628.protonmail.ch [79.135.106.28])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D48053932E2
-	for <platform-driver-x86@vger.kernel.org>; Fri, 27 Mar 2026 21:03:45 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.70.43.103
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B527725A2DD;
+	Fri, 27 Mar 2026 21:06:53 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=79.135.106.28
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1774645428; cv=none; b=Iq3acePJRDDwMVe+ta1vRJGGX02/fyDTXZoWvdbxFQEF2iIgZN6ubuAi3CDDOnd/BdlpL+ylVb3qEyAfVAv9QJxKxjtMBkjwghf4a/2tv8EqBwNJfUkT+onQEi1EoDayGZzwboDQ6PM7aYe17jc/0WXhztDgJ+P3XLDoLJqvVtA=
+	t=1774645615; cv=none; b=EgLiYTHS4FjL29/uCNgrN5/nAqkeZM5NeVlNQqGNWQkjpZGty0zy8x/IqTL+7EqIFX/nET6zKgvvcRlzgvQ6iZfgDZ26PRlKhBrXN+JPej2JTKpClvdL7UgHDj8FYel8ai71rCsK7BpYSULRDlmHZgbFpJJoLg1LBS3rBcCRP0o=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1774645428; c=relaxed/simple;
-	bh=2Pvz0U8UuR4kBIu/aPz49dXcKk+u7yBOvuPdhwCPl0A=;
+	s=arc-20240116; t=1774645615; c=relaxed/simple;
+	bh=IMxsW3cYJYxbh0qR1hK59K81e48fz5YyIAZP4Q0PoTM=;
 	h=Date:To:From:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=r8nUEyBzuHYZYgE9LrTgQxevkgw4ZHODiA/dhFo1e2bGN30+oBY0Au2KemzmNT9pZWk7JAGPJC1TaNSvKgxAMsyk7kFVIKv+Vjh2rfEyG/3luHvvO4pVEOLsMOEFR23+TjqJuJOm3lzYATzWLTXnT9q6gZ96U2E8SLOzCiEKIoY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=pm.me; spf=pass smtp.mailfrom=pm.me; dkim=pass (2048-bit key) header.d=pm.me header.i=@pm.me header.b=q8oV5WDs; arc=none smtp.client-ip=185.70.43.103
+	 MIME-Version:Content-Type; b=VRDJYfomByMemgLZo6bKzVgE1a8TYL0/cRCt4ISwXU0h31+9vgEjywmIcoQpFViK3+/sppBz/tXgSzT2Y74mJmyWJm2tFhvhjuJQrarEAtPYerPHZv+5+eLrYYa0sKLnu3CaHO7jBkCdFTRsPmxAOyJEmG9VtKjyfoFXiPWddHY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=pm.me; spf=pass smtp.mailfrom=pm.me; dkim=pass (2048-bit key) header.d=pm.me header.i=@pm.me header.b=aIP88FOB; arc=none smtp.client-ip=79.135.106.28
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=pm.me
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=pm.me
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=pm.me header.i=@pm.me header.b="q8oV5WDs"
+	dkim=pass (2048-bit key) header.d=pm.me header.i=@pm.me header.b="aIP88FOB"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=pm.me;
-	s=protonmail3; t=1774645417; x=1774904617;
-	bh=2Pvz0U8UuR4kBIu/aPz49dXcKk+u7yBOvuPdhwCPl0A=;
+	s=protonmail3; t=1774645606; x=1774904806;
+	bh=IMxsW3cYJYxbh0qR1hK59K81e48fz5YyIAZP4Q0PoTM=;
 	h=Date:To:From:Cc:Subject:Message-ID:In-Reply-To:References:
 	 Feedback-ID:From:To:Cc:Date:Subject:Reply-To:Feedback-ID:
 	 Message-ID:BIMI-Selector;
-	b=q8oV5WDsDQmsl2Rb/8GkTLj2B9JfkEnI7VwIcqhYI5zwclTcWyRj+X4bRPEkIIs0a
-	 5BQAMWQmczU7od1JRZ3QAfbLMeEjaaq3qUZA+QEg0LpC4Zz32BuwA/kt6ZhGFljTGl
-	 0xI3idjyzlOEsSkApqfDM3cyLHx84KJqkI718gzxakuDQpYtvt0jwwukmIGYoZL3pm
-	 DDquCo2CmOyHDU2M4/pperYscXivD425NQIWcBEWHpZ4NEXnB+yJ8AiwR+PdNiq3O6
-	 OHN6UVRuhJWiFXx1Yublus79CGczdF4BRwDBUMvfBba7pT13AHfK/CoDox9OZ1UDK0
-	 sLVd8Evzhi+bQ==
-Date: Fri, 27 Mar 2026 21:03:34 +0000
-To: Artem Bityutskiy <dedekind1@gmail.com>
+	b=aIP88FOBrWNRl3klG1lxgckSvDtahD96Gy0YpiIvYn0uFXBTWlb+joSbQ8IjFU7O0
+	 SQRlq6ivaKl8XUUQrPVjZEgjFXLC9gdK8Tw88H3XQzBu5oIBZn1hXEIYi6pldBRDBS
+	 DSk543Bwp6H8TUtTHs1sVQn0jP8LWmuAhWfO/dZ1qGJwLQTPaHLQ2bCGZfMU/hjkWQ
+	 LfY81Kzi5Jjb5FhPbO6kBSuZ/9UlXfKWx2gBynNeCNnJnodK8SrhTFQcrn6nXbTpvd
+	 z9FHAJxKnluB8wdu6jYsq+/bNn1oppY6Wr3fBPB/10+wh0HBvICjfbAwyp8pnM0wWa
+	 KMPlFit6T9XTg==
+Date: Fri, 27 Mar 2026 21:06:43 +0000
+To: Artem Bityutskiy <artem.bityutskiy@linux.intel.com>
 From: Maciej Wieczor-Retman <m.wieczorretman@pm.me>
-Cc: hansg@kernel.org, srinivas.pandruvada@linux.intel.com, ilpo.jarvinen@linux.intel.com, linux-kernel@vger.kernel.org, platform-driver-x86@vger.kernel.org
-Subject: Re: [PATCH v1 0/2] platform/x86/intel-uncore-freq: Expose instance ID in the sysfs
-Message-ID: <acbwMA43StTa7kCM@wieczorr-mobl1.localdomain>
-In-Reply-To: <4a19dd6c2ee07bf70ac136747e1ea5bfd8e41888.camel@gmail.com>
-References: <cover.1774625521.git.m.wieczorretman@pm.me> <4a19dd6c2ee07bf70ac136747e1ea5bfd8e41888.camel@gmail.com>
+Cc: hansg@kernel.org, srinivas.pandruvada@linux.intel.com, ilpo.jarvinen@linux.intel.com, linux-kernel@vger.kernel.org, platform-driver-x86@vger.kernel.org, Maciej Wieczor-Retman <maciej.wieczor-retman@intel.com>
+Subject: Re: [PATCH v1 1/2] platform/x86/intel-uncore-freq: Rename instance_id
+Message-ID: <acbwvaoncMKURFJw@wieczorr-mobl1.localdomain>
+In-Reply-To: <91fdbcb6a8391cf945e53bccc3ae6f6f11412867.camel@linux.intel.com>
+References: <cover.1774625521.git.m.wieczorretman@pm.me> <3c02a8e3c1d4f07fa7f37740c33050c4e1d3f6ee.1774625521.git.m.wieczorretman@pm.me> <91fdbcb6a8391cf945e53bccc3ae6f6f11412867.camel@linux.intel.com>
 Feedback-ID: 164464600:user:proton
-X-Pm-Message-ID: b2533e20b530801e98ed2723057b88504eae7655
+X-Pm-Message-ID: e0f01836c59cd753834f0e1a333bc00e9ad96bea
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
@@ -47,23 +47,36 @@ MIME-Version: 1.0
 Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: quoted-printable
 
-On 2026-03-27 at 19:51:54 +0200, Artem Bityutskiy wrote:
+On 2026-03-27 at 19:56:58 +0200, Artem Bityutskiy wrote:
 >On Fri, 2026-03-27 at 15:36 +0000, Maciej Wieczor-Retman wrote:
->> on newer systems that can have multiple clusters on a single die, the
->> intel-uncore-freq driver behaves differently and the domain_id is a
->> globally unique value - unique on all TPMI devices. Therefore it's
->> difficult to match a specific instance to a set of UFS registers for
->> example visible through /sys/kernel/debug/tpmi directories.
+>> =C2=A0 * @die_id:=09=09Die id for this instance
+>> =C2=A0 * @domain_id:=09=09Power domain id for this instance
+>> =C2=A0 * @cluster_id:=09=09cluster id in a domain
+>> - * @instance_id:=09Unique instance id to append to directory name
+>> + * @seqname_id:=09=09Unique id to append to directory name
+>> =C2=A0 * @name:=09=09Sysfs entry name for this instance
+>> =C2=A0 * @agent_type_mask:=09Bit mask of all hardware agents for this do=
+main
+>> =C2=A0 * @uncore_attr_group:=09Attribute group storage
+>> @@ -71,7 +71,7 @@ struct uncore_data {
+>> =C2=A0=09int die_id;
+>> =C2=A0=09int domain_id;
+>> =C2=A0=09int cluster_id;
+>> -=09int instance_id;
+>> +=09int seqname_id;
+>> =C2=A0=09char name[32];
+>> =C2=A0=09u16=C2=A0 agent_type_mask;
 >
->Although, I'd say that the key point isn't that "domain_id is globally
->unique" (though this is true), but that it's a synthetic value
->generated by the driver rather than representing an actual HW instance
->ID.
+>Nitpick: "seqname_id" reads like "sequence name ID" rather than a
+>sequence number. Consider "seqnum" or "sequence_id" for better clarity.
+>Just a suggestion based on how the name comes across, but not big deal.
 >
 >Artem.
 
-Right, that's worth emphasizing. I'll try to rephrase it when updating the
-patches.
+sequence_id sounds good, I'll go for that. What I was going for was "seq" a=
+s in
+sequential and "name" as in directory name, but looking at it again it does
+seem a bit confusing.
 
 --=20
 Kind regards
