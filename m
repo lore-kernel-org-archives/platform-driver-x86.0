@@ -1,49 +1,62 @@
-Received: from spark.kcore.it (spark.kcore.it [49.13.27.68])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.19])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 61D82346FC6;
-	Fri, 27 Mar 2026 18:10:35 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=49.13.27.68
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B598740757D;
+	Fri, 27 Mar 2026 18:26:15 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.19
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1774635039; cv=none; b=jPSIfevWUaGFgh8uTb699wWamLfU/46Qk31UgqE0eIXmyVlxv0MJDI+BHQ1JM3m6mv/IgRlLHGpqGCa5nVsVDm6t8N5j+8ShPwv87fCybwOtC+2r49X7WX1OCXh+swSUJFRRhX8dwacgBNVJKFrRV/gUOZoiVQ3wxboXLHzbZbU=
+	t=1774635983; cv=none; b=hN0C1QyIyl1e+KMUuwW5eetZWeyGrglpRf2zwjjFhSSjhy8FWOAwcX1vmMbXyx4NYfO/3Y28Y6rlOKV84DteQSHaL/cjQJruxJErTxgw8eiB3FwORCGpQOc0dzYqWhSJrpVy12H+EkiWABnSDSDO6CaqbmOUAeDdo4MSsIwnlmo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1774635039; c=relaxed/simple;
-	bh=T/dSfo/LMkLDt4W4JkHqJv+gQtkXzGBbDcaufjbQLkM=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=rohFSZTxm9VN8aO30/ao9XTYxzvBCtrdg7b7urP56FmuN5WOC6J1czDW+ysbMi/qJCBgvdT8mo4nB7d/3IJ+vjmtYXGE61W+gsKnc9tjRl0ZsVE/MjzIO2O7vMlk1UlD0ZC/JOMhjNZJJfAl+sp8EahzK+zsIwEnkD+9RHzHI2Q=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kcore.it; spf=pass smtp.mailfrom=kcore.it; dkim=pass (1024-bit key) header.d=kcore.it header.i=@kcore.it header.b=qSpEe/gT; arc=none smtp.client-ip=49.13.27.68
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kcore.it
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=kcore.it
+	s=arc-20240116; t=1774635983; c=relaxed/simple;
+	bh=PWQFI9t/d0opqtU8cyx63qiF0qwcSm98QGOHwciPWcw=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=OgIAWgYc9AdCiD2ikTjCp9ELrjQZX8wkYyPwbotIsNJF3H8IkITWfPBratSmwSNqA+q+DJQWOcfbyKYgIhjewVmiNk0fGZry6MI2Sw2h+HK+zGxrfZUk/Q70llCQA6A90RHWcDxiHl2/aTjZiNBWidhIDjZiXJEyFtgLN4Zwt/Q=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=jVNOhPq7; arc=none smtp.client-ip=192.198.163.19
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=kcore.it header.i=@kcore.it header.b="qSpEe/gT"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=kcore.it;
-	s=spark; h=Content-Transfer-Encoding:MIME-Version:References:In-Reply-To:
-	Message-Id:Date:Subject:Cc:To:From:Sender:Reply-To:Content-Type:Content-ID:
-	Content-Description:Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc
-	:Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:List-Subscribe:
-	List-Post:List-Owner:List-Archive;
-	bh=Qt3XWHI5YmC5jcWIMY0NXX2T8UoU9QZRTYaKhKnU4YE=; b=qSpEe/gTleO6zuYrEJh7MP7DtG
-	9DDnjMkVAnfX5EgC7C14dJnazkr5v1QX4f+SX22K1BFSNynfqsnW7j3GyXwQfXNx5gZSTr7ca+1ls
-	1R+ZMb1TqUdNcCNfGgtB7wqEjH6qXhi9j43wOKOxOltTN4ZQbIf1sZCefh159k8AG/gY=;
-Received: from mnencia by spark.kcore.it with local (Exim 4.96)
-	(envelope-from <mnencia@kcore.it>)
-	id 1w6Bdf-006FSJ-2j;
-	Fri, 27 Mar 2026 19:10:31 +0100
-From: Marco Nenciarini <mnencia@kcore.it>
-To: Daniel Scally <djrscally@gmail.com>,
-	Sakari Ailus <sakari.ailus@linux.intel.com>,
-	=?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
-Cc: Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="jVNOhPq7"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1774635976; x=1806171976;
+  h=from:to:cc:subject:date:message-id:mime-version:
+   content-transfer-encoding;
+  bh=PWQFI9t/d0opqtU8cyx63qiF0qwcSm98QGOHwciPWcw=;
+  b=jVNOhPq70mGS25UcWMUvhwVBYngyBdh7lyVzQOZhWCBWih+DcS4K3rov
+   MbZATRHAi7iEWL9QSgYSMHMiumONvlbgkDhD2a971kBfTopGkIAs4Hq/B
+   Pj+eQVCg4wt/Xb2/UFYWKRlSvriUURfDcwHWyfR5HIFWRcVFnbtVG846M
+   2xlJN4hDzJ8fKf5XQSL5KkIFW2p+yxlkIAOzlVlAiwzWJKULy8KYS59ZI
+   MGqSi2wzAmGPy3+DYBqAAkXVndlfOd/clLngqhbWiOpnOZKdaYEYhov1x
+   T9zyQmKzLTrK0PWqxmYQu79js6zga345wC1VbWtSVeYoOiEHTGji3VapH
+   w==;
+X-CSE-ConnectionGUID: Jm9UtuXvT7C/WRGTy/gzlw==
+X-CSE-MsgGUID: DJ9C6bjvTZ2qEdaJ4lfCVw==
+X-IronPort-AV: E=McAfee;i="6800,10657,11742"; a="74746441"
+X-IronPort-AV: E=Sophos;i="6.23,144,1770624000"; 
+   d="scan'208";a="74746441"
+Received: from fmviesa009.fm.intel.com ([10.60.135.149])
+  by fmvoesa113.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 27 Mar 2026 11:26:13 -0700
+X-CSE-ConnectionGUID: QpKoOjKgR4mP6ZRGuK+i+A==
+X-CSE-MsgGUID: 1whYm/zdTMWpK5pgSU34KQ==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.23,144,1770624000"; 
+   d="scan'208";a="218773006"
+Received: from intel-nuc8i7beh.iind.intel.com ([10.223.163.35])
+  by fmviesa009.fm.intel.com with ESMTP; 27 Mar 2026 11:26:11 -0700
+From: Arun T <arun.t@intel.com>
+To: arun.t@intel.com,
+	johannes.goede@oss.qualcomm.com
+Cc: sakari.ailus@linux.intel.com,
+	arec.kao@intel.com,
+	ilpo.jarvinen@linux.intel.com,
+	dan.scally@ideasonboard.com,
 	platform-driver-x86@vger.kernel.org,
+	linux-media@vger.kernel.org,
 	linux-kernel@vger.kernel.org,
-	Marco Nenciarini <mnencia@kcore.it>
-Subject: [PATCH v5 4/4] platform/x86: int3472: Add support for GPIO type 0x02 (strobe)
-Date: Fri, 27 Mar 2026 19:10:31 +0100
-Message-Id: <20260327181031.1489365-5-mnencia@kcore.it>
-X-Mailer: git-send-email 2.39.5
-In-Reply-To: <20260327181031.1489365-1-mnencia@kcore.it>
-References: <ab0URIrzZPsYjWrM@spark.kcore.it>
- <20260327181031.1489365-1-mnencia@kcore.it>
+	mehdi.djait@intel.com
+Subject: [PATCH v6 0/2] Add TPS68470 power supply support for ov13b10 sensor
+Date: Fri, 27 Mar 2026 23:49:56 +0530
+Message-ID: <20260327181959.3528753-1-arun.t@intel.com>
+X-Mailer: git-send-email 2.43.0
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
@@ -52,199 +65,76 @@ List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-Add support for GPIO type 0x02, which controls an IR strobe LED used
-for face authentication on some laptops (e.g. Dell Pro Max 16 Premium).
+This patch series adds power supply management support for the OV13B10 camera sensor when used with TPS68470 PMIC, commonly used on Intel-based camera platforms.
 
-Without this patch, the kernel logs "GPIO type 0x02 unknown; the sensor
-may not work" and IR sensors paired with a strobe LED cannot function.
+The OV13B10 sensor requires three power supplies (DOVDD, AVDD, DVDD) which are provided by the TPS68470 PMIC.
+This series implements proper regulator framework integration to manage these power supplies during sensor power on/off sequences.
 
-The strobe LED is registered through the LED subsystem like the existing
-privacy LED. Unlike the privacy LED, it does not have a lookup entry
-since there is no consumer driver expecting it via led_get().
+Changes in V6:
+        - Changed consumer supply arrays from int3472_* to ovti13b1_* and update all references.
+	- Removed consumer supply zero-init fields
+	- Updated commit message for ov13b10 driver and rewritten for regulator bulk support
+	- Updated <linux/regulator/consumer.h> in alphabetical order
 
-To support multiple LEDs per INT3472 device, convert the single led
-struct member to an array with a counter.
+Suggested by Dan Scally::
+	- Rename consumer supply arrays to ovti13b1_* naming
+	- Drop explicit 0 initialization for empty consumer lists
+	- Add <linux/regulator/consumer.h> in alphabetical order
 
-This GPIO type was previously referred to as "ir_flood" in early
-versions of this patch series. It has been renamed to "strobe" to match
-the GPIO type name used in ACPI _DSM tables and align with common
-camera terminology for IR illuminators.
+Changes in V5:
+        - keep supply names to only those consumed for sensor driver like dvdd, avdd, dovdd regulators
+        - Removed always_on flag for other power sources except only VSIO power rail
+        - Removed unused gpio names (s_idle/s_enable) in gpio lookup table
+        - changed gpio lookup table name as intel_nvl_ovti13b1_gpios
 
-Signed-off-by: Marco Nenciarini <mnencia@kcore.it>
----
-Cc: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
- drivers/platform/x86/intel/int3472/discrete.c | 16 +++++++-
- drivers/platform/x86/intel/int3472/led.c      | 38 +++++++++++--------
- include/linux/platform_data/x86/int3472.h     | 11 ++++--
- 3 files changed, 44 insertions(+), 21 deletions(-)
+Suggested by Dan Scally:
+        - Limit regulator supplies to only those consumed by sensor driver: Keep only dvdd, avdd, dovdd; remove unused vdd, vsio, vddd, vdda, vdddo mapping
+        - Only VSIO should be forced always-on; drop it from CORE, ANA, VCM, and VIO rails to reduce power draw.
+        - Rename table to intel_nvl_ovti13b1_gpios, keep only reset GPIO (remove unsupported s_idle and s_enable)
+        - Remove gpio lookup table name like intel_nvl_ovti13b1_gpios
 
-diff --git a/drivers/platform/x86/intel/int3472/discrete.c b/drivers/platform/x86/intel/int3472/discrete.c
-index 57c3b2c..4c03845 100644
---- a/drivers/platform/x86/intel/int3472/discrete.c
-+++ b/drivers/platform/x86/intel/int3472/discrete.c
-@@ -215,6 +215,10 @@ static void int3472_get_con_id_and_polarity(struct int3472_discrete_device *int3
- 		*con_id = "privacy-led";
- 		*gpio_flags = GPIO_ACTIVE_HIGH;
- 		break;
-+	case INT3472_GPIO_TYPE_STROBE:
-+		*con_id = "strobe";
-+		*gpio_flags = GPIO_ACTIVE_HIGH;
-+		break;
- 	case INT3472_GPIO_TYPE_HOTPLUG_DETECT:
- 		*con_id = "hpd";
- 		*gpio_flags = GPIO_ACTIVE_HIGH;
-@@ -248,6 +252,7 @@ static void int3472_get_con_id_and_polarity(struct int3472_discrete_device *int3
-  *
-  * 0x00 Reset
-  * 0x01 Power down
-+ * 0x02 Strobe
-  * 0x0b Power enable
-  * 0x0c Clock enable
-  * 0x0d Privacy LED
-@@ -331,6 +336,7 @@ static int skl_int3472_handle_gpio_resources(struct acpi_resource *ares,
- 		break;
- 	case INT3472_GPIO_TYPE_CLK_ENABLE:
- 	case INT3472_GPIO_TYPE_PRIVACY_LED:
-+	case INT3472_GPIO_TYPE_STROBE:
- 	case INT3472_GPIO_TYPE_POWER_ENABLE:
- 	case INT3472_GPIO_TYPE_HANDSHAKE:
- 		gpio = skl_int3472_gpiod_get_from_temp_lookup(int3472, agpio, con_id, gpio_flags);
-@@ -348,7 +354,13 @@ static int skl_int3472_handle_gpio_resources(struct acpi_resource *ares,
- 
- 			break;
- 		case INT3472_GPIO_TYPE_PRIVACY_LED:
--			ret = skl_int3472_register_led(int3472, gpio, "privacy");
-+			ret = skl_int3472_register_led(int3472, gpio, "privacy", true);
-+			if (ret)
-+				err_msg = "Failed to register LED\n";
-+
-+			break;
-+		case INT3472_GPIO_TYPE_STROBE:
-+			ret = skl_int3472_register_led(int3472, gpio, "strobe", false);
- 			if (ret)
- 				err_msg = "Failed to register LED\n";
- 
-@@ -422,7 +434,7 @@ void int3472_discrete_cleanup(struct int3472_discrete_device *int3472)
- 	gpiod_remove_lookup_table(&int3472->gpios);
- 
- 	skl_int3472_unregister_clock(int3472);
--	skl_int3472_unregister_led(int3472);
-+	skl_int3472_unregister_leds(int3472);
- 	skl_int3472_unregister_regulator(int3472);
- }
- EXPORT_SYMBOL_NS_GPL(int3472_discrete_cleanup, "INTEL_INT3472_DISCRETE");
-diff --git a/drivers/platform/x86/intel/int3472/led.c b/drivers/platform/x86/intel/int3472/led.c
-index 8222550..77f61a4 100644
---- a/drivers/platform/x86/intel/int3472/led.c
-+++ b/drivers/platform/x86/intel/int3472/led.c
-@@ -16,15 +16,17 @@ static int int3472_led_set(struct led_classdev *led_cdev,
- }
- 
- int skl_int3472_register_led(struct int3472_discrete_device *int3472,
--			     struct gpio_desc *gpio, const char *name)
-+			     struct gpio_desc *gpio, const char *name,
-+			     bool has_lookup)
- {
--	struct int3472_led *led = &int3472->led;
-+	struct int3472_led *led;
- 	char *p;
- 	int ret;
- 
--	if (led->classdev.dev)
--		return -EBUSY;
-+	if (int3472->n_leds >= INT3472_MAX_LEDS)
-+		return -ENOSPC;
- 
-+	led = &int3472->leds[int3472->n_leds];
- 	led->gpio = gpio;
- 
- 	/* Generate the name, replacing the ':' in the ACPI devname with '_' */
-@@ -42,22 +44,26 @@ int skl_int3472_register_led(struct int3472_discrete_device *int3472,
- 	if (ret)
- 		return ret;
- 
--	led->lookup.provider = led->name;
--	led->lookup.dev_id = int3472->sensor_name;
--	led->lookup.con_id = "privacy";
--	led_add_lookup(&led->lookup);
-+	if (has_lookup) {
-+		led->lookup.provider = led->name;
-+		led->lookup.dev_id = int3472->sensor_name;
-+		led->lookup.con_id = name;
-+		led_add_lookup(&led->lookup);
-+		led->has_lookup = true;
-+	}
- 
-+	int3472->n_leds++;
- 	return 0;
- }
- 
--void skl_int3472_unregister_led(struct int3472_discrete_device *int3472)
-+void skl_int3472_unregister_leds(struct int3472_discrete_device *int3472)
- {
--	struct int3472_led *led = &int3472->led;
-+	for (unsigned int i = 0; i < int3472->n_leds; i++) {
-+		struct int3472_led *led = &int3472->leds[i];
- 
--	if (IS_ERR_OR_NULL(led->classdev.dev))
--		return;
--
--	led_remove_lookup(&led->lookup);
--	led_classdev_unregister(&led->classdev);
--	gpiod_put(led->gpio);
-+		if (led->has_lookup)
-+			led_remove_lookup(&led->lookup);
-+		led_classdev_unregister(&led->classdev);
-+		gpiod_put(led->gpio);
-+	}
- }
-diff --git a/include/linux/platform_data/x86/int3472.h b/include/linux/platform_data/x86/int3472.h
-index 3a077f4..540e3f2 100644
---- a/include/linux/platform_data/x86/int3472.h
-+++ b/include/linux/platform_data/x86/int3472.h
-@@ -23,6 +23,7 @@
- /* PMIC GPIO Types */
- #define INT3472_GPIO_TYPE_RESET					0x00
- #define INT3472_GPIO_TYPE_POWERDOWN				0x01
-+#define INT3472_GPIO_TYPE_STROBE				0x02
- #define INT3472_GPIO_TYPE_POWER_ENABLE				0x0b
- #define INT3472_GPIO_TYPE_CLK_ENABLE				0x0c
- #define INT3472_GPIO_TYPE_PRIVACY_LED				0x0d
-@@ -31,6 +32,7 @@
- 
- #define INT3472_PDEV_MAX_NAME_LEN				23
- #define INT3472_MAX_SENSOR_GPIOS				3
-+#define INT3472_MAX_LEDS					2
- #define INT3472_MAX_REGULATORS					3
- 
- /* E.g. "avdd\0" */
-@@ -126,12 +128,14 @@ struct int3472_discrete_device {
- 		struct led_lookup_data lookup;
- 		char name[INT3472_LED_MAX_NAME_LEN];
- 		struct gpio_desc *gpio;
--	} led;
-+		bool has_lookup;
-+	} leds[INT3472_MAX_LEDS];
- 
- 	struct int3472_discrete_quirks quirks;
- 
- 	unsigned int ngpios; /* how many GPIOs have we seen */
- 	unsigned int n_sensor_gpios; /* how many have we mapped to sensor */
-+	unsigned int n_leds; /* how many LEDs have we registered */
- 	unsigned int n_regulator_gpios; /* how many have we mapped to a regulator */
- 	struct gpiod_lookup_table gpios;
- };
-@@ -161,7 +165,8 @@ int skl_int3472_register_regulator(struct int3472_discrete_device *int3472,
- void skl_int3472_unregister_regulator(struct int3472_discrete_device *int3472);
- 
- int skl_int3472_register_led(struct int3472_discrete_device *int3472,
--			     struct gpio_desc *gpio, const char *name);
--void skl_int3472_unregister_led(struct int3472_discrete_device *int3472);
-+			     struct gpio_desc *gpio, const char *name,
-+			     bool has_lookup);
-+void skl_int3472_unregister_leds(struct int3472_discrete_device *int3472);
- 
- #endif
+Suggested by Sakari Alius:
+        - Asked to remove always_on flag for all power sources except vsio
+
+Changes in v4:
+        - Discrete INT3472 supplying regulator to i2c-OVTI13B1:00 and tps68470 supplying regulator to i2c-OVTI13B1:01.
+        - Change Analog regulator name as avdd for tps68470 pmic
+        - Fixed regulator_consumer_supply maps to i2c-OVTI13B1:01 device.
+        - Removed vdd regulator from Power supply names list
+
+Suggested by Hans:
+        - No "avdd" found, only "vdda" and "ana" - check if "ana" should be changed to "avdd".
+        - Drop unused regulator maps. Only keep the 3 maps used by sensor-driver.
+        - For "i2c-OVTI13B1:01" consumer, only map "dovdd", "avdd", and "dvdd" supplies.
+
+Changes in v3:
+        - Fixed check patch errors as updated by sakari
+        - Enabled VCM regulator for ov13b10 sensor to enable autofocus to work
+
+Suggested by Sakari:
+        - Add include header file in alphabetical order
+        - Remove extra space
+        - Asked to check vcm instance
+
+Changes in v2:
+        - Added power supply names array for the three required regulators
+        - Implement regulator handling with devm_regulator_bulk_get()
+        - Add regulator_bulk_enable() and regulator_bulk_disable() for sensor power on/off sequence
+
+Suggested by Hans:
+        - Add multiple regulators you should use the bulk regulator API
+        - Use use "reset" instead of "s_resetn" for parse gpio name.
+        - Add diffent regulator power supplies  in single array
+
+
+Arun T (2):
+  platform/x86: int3472: Add TPS68470 board data for Intel nvl
+  media: ov13b10: Support multiple regulators
+
+ drivers/media/i2c/ov13b10.c                   |  47 ++++---
+ .../x86/intel/int3472/tps68470_board_data.c   | 121 ++++++++++++++++++
+ 2 files changed, 147 insertions(+), 21 deletions(-)
+
 -- 
-2.47.3
+2.43.0
 
