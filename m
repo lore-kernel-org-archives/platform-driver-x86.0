@@ -1,192 +1,343 @@
-Received: from mail-4316.protonmail.ch (mail-4316.protonmail.ch [185.70.43.16])
+Received: from fhigh-a4-smtp.messagingengine.com (fhigh-a4-smtp.messagingengine.com [103.168.172.155])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6024830CD92;
-	Fri, 27 Mar 2026 15:36:53 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.70.43.16
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3F6603F99F5;
+	Fri, 27 Mar 2026 17:32:15 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=103.168.172.155
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1774625815; cv=none; b=O/MB+rhd29/YOnNloiA0nCQIK34wSPzYy0qrQbCX/LvH0IJmdX6NYkoaj/KMsqj/GwB724no5dhuB4UN5ih8DEztjM0FpjsfWJ90+hk+M8tmgTpO8cDpqpJP0vRuAJFVhWmzKaPOmK/jkzoDFVdohjr/AcUJKdhiAdM87b6WtOI=
+	t=1774632738; cv=none; b=u4Bgxqx23sK7tb9IIhcFJNqx74Mi8sxAYilHXorZElwRfSuHOOrY7SCfsQGmqq4Rl2r1sIJk3LEENSHh7UnuduKPXelmvCA6lqWAuH3oC3DazXLZuWtisNkWYxydfdNBj5Pc/r9HvOM/yR1i8aK6IJuns6xxUveDnkQKR6k/DE4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1774625815; c=relaxed/simple;
-	bh=MzetXQ4muZZlC6OzAg6zKKucgPcPnufVMWWJ5xdbzbc=;
-	h=Date:To:From:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=X6hWSN0gtPVtVP3pNybyUxEUHZ71dAIzV+lBh7j2lxTTVIE0pZlYwiTQLuFc25FYQWXlhrBI5X9KvgtjSnmRzlzaXHs0F+e5DR3Xzdwntou7Jt/1HLp9RfG4/UL3DW281hFlYm5qZ2O03yElZouJ1e8WihmsfdjaIxRfQhouTGA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=pm.me; spf=pass smtp.mailfrom=pm.me; dkim=pass (2048-bit key) header.d=pm.me header.i=@pm.me header.b=bZarGDYX; arc=none smtp.client-ip=185.70.43.16
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=pm.me
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=pm.me
+	s=arc-20240116; t=1774632738; c=relaxed/simple;
+	bh=w4u6VsLE/m9cNb1b+MtlFgRUjrgaTpQCuaC/M5CTrOE=;
+	h=MIME-Version:Date:From:To:Cc:Message-Id:In-Reply-To:References:
+	 Subject:Content-Type; b=BBtl8eCu2tNadnsRtt9Lya8ouVYY0dk080G+6urd8NaI4fcTrwl4u5OT5rZIaRZGL52HkhNOcvQ2ew+254LazApJg5gdgw1Gar4z4iwOKfstP9PvCgVb1SAab3s2hBWM9LoWCG3jbRkykAFmrEJv4bIKnxX76AIzo5DMp3dAQpo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=squebb.ca; spf=pass smtp.mailfrom=squebb.ca; dkim=pass (2048-bit key) header.d=squebb.ca header.i=@squebb.ca header.b=oIReDe9Z; dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b=k3d5n+OR; arc=none smtp.client-ip=103.168.172.155
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=squebb.ca
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=squebb.ca
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=pm.me header.i=@pm.me header.b="bZarGDYX"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=pm.me;
-	s=protonmail3; t=1774625805; x=1774885005;
-	bh=bkwqVcqiEdaappRCb0uou2xuF6m9qsxjhBHdURdbkOg=;
-	h=Date:To:From:Cc:Subject:Message-ID:In-Reply-To:References:
-	 Feedback-ID:From:To:Cc:Date:Subject:Reply-To:Feedback-ID:
-	 Message-ID:BIMI-Selector;
-	b=bZarGDYXaRe7yCN8nDfUXNYnCkQUthFqEwJkq6RK6AfGEFdZ4jmra7DOngwF/F5jS
-	 Yqlxtd8AlTgFq5FfeinrCAsmJDgSwzQOCZJNeWw2e8vYCAniwgjghat7Dr3iI7MgLr
-	 xUYsz2un06YQCTGpE0CXYwTSWsQdMCFO663IqYK/gp91W5/7xnvHMecO5TITo22Kol
-	 vqlrQF0ODd/LItYy9AH1lECVlAktCjW1RhrCxKxG24K4e2LK3PDwCoTjJ6CQr3ET90
-	 BB4JtX2Guh8LnkpG0art3LlbDRQy1lzRnmOzqXHtGkU/BEFXFTpr8grhIJL5NVEwc2
-	 J6ABrmgShGiZA==
-Date: Fri, 27 Mar 2026 15:36:41 +0000
-To: hansg@kernel.org, srinivas.pandruvada@linux.intel.com, ilpo.jarvinen@linux.intel.com
-From: Maciej Wieczor-Retman <m.wieczorretman@pm.me>
-Cc: linux-kernel@vger.kernel.org, platform-driver-x86@vger.kernel.org, dedekind1@gmail.com, artem.bityutskiy@linux.intel.com, m.wieczorretman@pm.me, Maciej Wieczor-Retman <maciej.wieczor-retman@intel.com>
-Subject: [PATCH v1 2/2] platform/x86/intel-uncore-freq: Expose instance ID in the sysfs
-Message-ID: <15529d14563cea09d53278c96c660a3120ad7da0.1774625521.git.m.wieczorretman@pm.me>
-In-Reply-To: <cover.1774625521.git.m.wieczorretman@pm.me>
-References: <cover.1774625521.git.m.wieczorretman@pm.me>
-Feedback-ID: 164464600:user:proton
-X-Pm-Message-ID: cfaa1ffc870e5088bbc25756cb2d0404fd3b23ac
+	dkim=pass (2048-bit key) header.d=squebb.ca header.i=@squebb.ca header.b="oIReDe9Z";
+	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="k3d5n+OR"
+Received: from phl-compute-02.internal (phl-compute-02.internal [10.202.2.42])
+	by mailfhigh.phl.internal (Postfix) with ESMTP id 55BC21400109;
+	Fri, 27 Mar 2026 13:32:15 -0400 (EDT)
+Received: from phl-imap-08 ([10.202.2.84])
+  by phl-compute-02.internal (MEProxy); Fri, 27 Mar 2026 13:32:15 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=squebb.ca; h=cc
+	:cc:content-transfer-encoding:content-type:content-type:date
+	:date:from:from:in-reply-to:in-reply-to:message-id:mime-version
+	:references:reply-to:subject:subject:to:to; s=fm2; t=1774632735;
+	 x=1774719135; bh=rhsaxwstgB8EBjGYzJKtdvccTjL8H9z66cuNA8IvK5U=; b=
+	oIReDe9ZUNqQ0d1udYCZZTLIDx3hUc0xINvvm+/F1+FtdLUoNnIYuxEsAhc1ZQHf
+	t9nL+SJbpPxYTbALMcGlDAgGnsMf8eW2RaBH64x8bfyG5qYgGLUkaY11dg8ZFu4A
+	wGAuXZd/ectoYBDjVlsJBaVcIyq0f46beKrBW0xgGNw/SpOJGFrRjCwoEuac+mDt
+	6H7dajn498NIkDTSwYMHfDSJvF8IafBE+S/+zBn25e14UYYdWjfoJwwglbHdQ4t8
+	vy06RuVuxKhUwAVZNazHmS1KuWNXI5ISihyDK2fsVclr09Ko28guCSzRQ5sDjBeI
+	sAvJ93k27Vcda6aJz9QBmQ==
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
+	messagingengine.com; h=cc:cc:content-transfer-encoding
+	:content-type:content-type:date:date:feedback-id:feedback-id
+	:from:from:in-reply-to:in-reply-to:message-id:mime-version
+	:references:reply-to:subject:subject:to:to:x-me-proxy
+	:x-me-sender:x-me-sender:x-sasl-enc; s=fm1; t=1774632735; x=
+	1774719135; bh=rhsaxwstgB8EBjGYzJKtdvccTjL8H9z66cuNA8IvK5U=; b=k
+	3d5n+ORV1zH6H1UrXtS+DKyYbzqYSkA8uzbk6VCup20XJZCbU7Ln7Qxi2Z1iSPBV
+	jSAgbYC38+ZKj0ZWNuR4sX9JWsp19zK7dzh//xNCXMOY1/raGXrsqkOaye25ouME
+	Cs53A18gi7ourTe7xnVV7ZNL6ncbxFneIKmROY5zofxM98gk8OsGVj1OxM17tjOM
+	rw0tQFVcYWPHZi4t+3j4mMpAJvkjFcGPYP0hlHCRNEp0bQVgtSlz8e3KrpE214g9
+	oPdBuInNPAy13KeJzEdA47UMIMUAWGQHelVv8Mz3biLmx+tLyz8NlLITXZ1pp2qS
+	5jp3Y2tBzeidlwsDqEXUQ==
+X-ME-Sender: <xms:Hr_GaR4zIp6ZsXZbOqYOmjiMKyfMheRwBp7BaU1KGgoaKLr5BnoWCw>
+    <xme:Hr_GaZuLsw3WXx8AB7DI58gp8NhlE7qxrY893JhR9EhqRaEPnfC6dre2h2lwPOBom
+    4n0r7lUu62Nzp3BNhARnnHaedcfN4aghAMeat1G5Fg8KCvRA76R0XQ>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeefgedrtddtgdeffedtkeekucetufdoteggodetrf
+    dotffvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdfurfetoffkrfgpnffqhgenuceu
+    rghilhhouhhtmecufedttdenucesvcftvggtihhpihgvnhhtshculddquddttddmnecujf
+    gurhepofggfffhvfevkfgjfhfutgfgsehtjeertdertddtnecuhfhrohhmpedfofgrrhhk
+    ucfrvggrrhhsohhnfdcuoehmphgvrghrshhonhdqlhgvnhhovhhosehsqhhuvggssgdrtg
+    grqeenucggtffrrghtthgvrhhnpefgjeetgeevvddtleffkeevkedugfegudejhefftefg
+    gfegleefvdffteehfeeiueenucffohhmrghinheplhgvnhhovhhordgtohhmnecuvehluh
+    hsthgvrhfuihiivgeptdenucfrrghrrghmpehmrghilhhfrhhomhepmhhpvggrrhhsohhn
+    qdhlvghnohhvohesshhquhgvsggsrdgtrgdpnhgspghrtghpthhtohepkedpmhhouggvpe
+    hsmhhtphhouhhtpdhrtghpthhtohepuggvrhgvkhhjohhhnhdrtghlrghrkhesghhmrghi
+    lhdrtghomhdprhgtphhtthhopehpihhthhgvnhhrihgthhdvugesghhoohhglhgvmhgrih
+    hlrdgtohhmpdhrtghpthhtohephhhmhheshhhmhhdrvghnghdrsghrpdhrtghpthhtohep
+    hhgrnhhsgheskhgvrhhnvghlrdhorhhgpdhrtghpthhtohepihhlphhordhjrghrvhhinh
+    gvnheslhhinhhugidrihhnthgvlhdrtghomhdprhgtphhtthhopehisghmqdgrtghpihdq
+    uggvvhgvlheslhhishhtshdrshhouhhrtggvfhhorhhgvgdrnhgvthdprhgtphhtthhope
+    hlihhnuhigqdhkvghrnhgvlhesvhhgvghrrdhkvghrnhgvlhdrohhrghdprhgtphhtthho
+    pehplhgrthhfohhrmhdqughrihhvvghrqdigkeeisehvghgvrhdrkhgvrhhnvghlrdhorh
+    hg
+X-ME-Proxy: <xmx:Hr_GaVIy3JkqXBFYvskQ2NPkLFfcEEnO7rHhS2IE6_VhfQ4PB4bY-w>
+    <xmx:Hr_GaRnPMOmYPFVmF1h1xL3__WWT-n3wj96ahud2i_zNWoW2X2Z5RQ>
+    <xmx:Hr_Gaeaf64Unsb2fVZgLVGCLvrFNMX3wXB2FvVYTUhf2UbUeVLGRDQ>
+    <xmx:Hr_Gad-fzwptuhClgPjlJ0ihwosvU07ev8CzXr8hhhiNenxD_vQMrw>
+    <xmx:H7_GaeOnoMjwBsk2maZ0F5SdOUHBI8wjmQqtDhrYXDuD7E88eIipMIs1>
+Feedback-ID: ibe194615:Fastmail
+Received: by mailuser.phl.internal (Postfix, from userid 501)
+	id 927262CE02CF; Fri, 27 Mar 2026 13:32:14 -0400 (EDT)
+X-Mailer: MessagingEngine.com Webmail Interface
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: quoted-printable
+X-ThreadId: AXcetOvEVYjc
+Date: Fri, 27 Mar 2026 13:31:54 -0400
+From: "Mark Pearson" <mpearson-lenovo@squebb.ca>
+To: "Pit Henrich" <pithenrich2d@googlemail.com>
+Cc: "Henrique de Moraes Holschuh" <hmh@hmh.eng.br>,
+ "Derek J . Clark" <derekjohn.clark@gmail.com>,
+ "Hans de Goede" <hansg@kernel.org>,
+ =?UTF-8?Q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>,
+ ibm-acpi-devel@lists.sourceforge.net,
+ "platform-driver-x86@vger.kernel.org" <platform-driver-x86@vger.kernel.org>,
+ linux-kernel@vger.kernel.org
+Message-Id: <6922cac9-de03-4aad-a710-473cb314077a@app.fastmail.com>
+In-Reply-To: 
+ <CAMBPg2fCtHoA6cX3kCGN7BUARsC5UrB1he6+eC06vfrLXTtktw@mail.gmail.com>
+References: <20260314142236.74514-1-pithenrich2d@gmail.com>
+ <0b0f6ef9-ae3a-4642-85af-fbdf7ebafd1e@app.fastmail.com>
+ <CAMBPg2fCtHoA6cX3kCGN7BUARsC5UrB1he6+eC06vfrLXTtktw@mail.gmail.com>
+Subject: Re: [PATCH] platform/x86: thinkpad-acpi: Add X1 Fold keyboard attachment
+ detection
+Content-Type: text/plain
+Content-Transfer-Encoding: 7bit
 
-From: Maciej Wieczor-Retman <maciej.wieczor-retman@intel.com>
+Hi Pit
 
-To allow userspace matching between the kernel driver and direct TPMI
-register accesses, expose the data required to identify a TPMI uncore
-frequency control register set.
+On Mon, Mar 16, 2026, at 5:24 PM, Pit Henrich wrote:
+> Heya,
+>
+>>  - We usually do the DMI_MATCH on the BOARD_NAME for quirks. I was checking psref.lenovo.com and there seem to be two distinct models for this platform, which is a bit confusing. I don't have a way to confirm that your changes will work for the other model so wondering if it's safer to do the quirks for 21ES/21ET or 20RL/20RK depending on what you have in hand? (I might be overthinking this too)
+>
+> I based this on the code in drivers/platform/x86/intel/hid.c which
+> also does a DMI_MATCH against DMI_PRODUCT_FAMILY.
+> Just for the records: I have an ES21 model, and the code in
+> drivers/platform/x86/intel/hid.c works for me too (correctly enables
+> the 5-button array).
+>
+>> If I get details back on the EC spec and confirmation it's correct I'll let you know :)
+>
+> Awesome :)
+>
+> Greetings
+> Pit
+>
+> On Sat, 14 Mar 2026 at 19:24, Mark Pearson <mpearson-lenovo@squebb.ca> wrote:
+>>
+>> Hi Pit,
+>>
+>> On Sat, Mar 14, 2026, at 10:22 AM, Pit Henrich wrote:
+>> > ThinkPad X1 Fold 16 Gen 1 firmware reports whether the keyboard is magnetically
+>> > attached (on the screen) via EC register 0xc1 bit 7, but thinkpad-acpi does
+>> > not expose this to userspace.
+>> >
+>> > Add a read-only keyboard_attached_on_screen sysfs attribute, gated by
+>> > a DMI match. The state is read directly from the EC.
+>> >
+>> > Cache the state and emit a sysfs notification on
+>> > TP_HKEY_EV_TABLET_CHANGED (0x60c0) when it changes. Initialize the cache during
+>> > hotkey setup and refresh it before the resume notification to keep the state
+>> > consistent across suspend and resume.
+>> >
+>> > Signed-off-by: Pit Henrich <pithenrich2d@gmail.com>
+>> > ---
+>> >  drivers/platform/x86/lenovo/thinkpad_acpi.c | 92 ++++++++++++++++++++-
+>> >  1 file changed, 90 insertions(+), 2 deletions(-)
+>> >
+>> > diff --git a/drivers/platform/x86/lenovo/thinkpad_acpi.c
+>> > b/drivers/platform/x86/lenovo/thinkpad_acpi.c
+>> > index 8982d92dfd97..5b255062ff51 100644
+>> > --- a/drivers/platform/x86/lenovo/thinkpad_acpi.c
+>> > +++ b/drivers/platform/x86/lenovo/thinkpad_acpi.c
+>> > @@ -218,8 +218,9 @@ enum tpacpi_hkey_event_t {
+>> >       TP_HKEY_EV_LID_OPEN             = 0x5002, /* laptop lid opened */
+>> >       TP_HKEY_EV_TABLET_TABLET        = 0x5009, /* tablet swivel up */
+>> >       TP_HKEY_EV_TABLET_NOTEBOOK      = 0x500a, /* tablet swivel down */
+>> > -     TP_HKEY_EV_TABLET_CHANGED       = 0x60c0, /* X1 Yoga (2016):
+>> > -                                                * enter/leave tablet mode
+>> > +     TP_HKEY_EV_TABLET_CHANGED       = 0x60c0, /* posture change event:
+>> > +                                                * X1 Yoga (2016): enter/leave tablet mode
+>> > +                                                * X1 Fold 16 Gen 1: keyboard attachment state changed
+>> >                                                  */
+>> >       TP_HKEY_EV_PEN_INSERTED         = 0x500b, /* tablet pen inserted */
+>> >       TP_HKEY_EV_PEN_REMOVED          = 0x500c, /* tablet pen removed */
+>> > @@ -375,6 +376,7 @@ static struct {
+>> >       u32 has_adaptive_kbd:1;
+>> >       u32 kbd_lang:1;
+>> >       u32 trackpoint_doubletap:1;
+>> > +     u32 has_keyboard_attached_on_screen:1;
+>> >       struct quirk_entry *quirks;
+>> >  } tp_features;
+>> >
+>> > @@ -2928,6 +2930,70 @@ static void hotkey_tablet_mode_notify_change(void)
+>> >                            "hotkey_tablet_mode");
+>> >  }
+>> >
+>> > +/*
+>> > + * On the ThinkPad X1 Fold 16 Gen 1, EC register 0xc1 reports the
+>> > keyboard
+>> > + * attachment state in bit 7.
+>> > + */
+>> > +#define TPACPI_X1_FOLD_KBD_EC_STATUS 0xc1
+>> > +#define TPACPI_X1_FOLD_KBD_ATTACHED  BIT(7)
+>> > +
+>> > +static bool keyboard_attached_on_screen;
+>> > +static bool keyboard_attached_on_screen_initialized;
+>> > +
+>> > +static int x1_fold_keyboard_attached_on_screen_get(bool *attached)
+>> > +{
+>> > +     u8 status;
+>> > +
+>> > +     if (!tp_features.has_keyboard_attached_on_screen)
+>> > +             return -ENODEV;
+>> > +
+>> > +     if (!acpi_ec_read(TPACPI_X1_FOLD_KBD_EC_STATUS, &status))
+>> > +             return -EIO;
+>> > +
+>> > +     *attached = status & TPACPI_X1_FOLD_KBD_ATTACHED;
+>> > +     return 0;
+>> > +}
+>> > +
+>> > +static ssize_t keyboard_attached_on_screen_show(struct device *dev,
+>> > +                                             struct device_attribute *attr,
+>> > +                                             char *buf)
+>> > +{
+>> > +     bool attached;
+>> > +     int res;
+>> > +
+>> > +     res = x1_fold_keyboard_attached_on_screen_get(&attached);
+>> > +     if (res)
+>> > +             return res;
+>> > +
+>> > +     return sysfs_emit(buf, "%d\n", attached);
+>> > +}
+>> > +
+>> > +static DEVICE_ATTR_RO(keyboard_attached_on_screen);
+>> > +
+>> > +static void keyboard_attached_on_screen_notify_change(void)
+>> > +{
+>> > +     if (tp_features.has_keyboard_attached_on_screen)
+>> > +             sysfs_notify(&tpacpi_pdev->dev.kobj, NULL,
+>> > +                          "keyboard_attached_on_screen");
+>> > +}
+>> > +
+>> > +static bool keyboard_attached_on_screen_update(void)
+>> > +{
+>> > +     bool attached;
+>> > +
+>> > +     if (x1_fold_keyboard_attached_on_screen_get(&attached))
+>> > +             return false;
+>> > +
+>> > +     if (keyboard_attached_on_screen_initialized &&
+>> > +         keyboard_attached_on_screen == attached)
+>> > +             return false;
+>> > +
+>> > +     keyboard_attached_on_screen = attached;
+>> > +     keyboard_attached_on_screen_initialized = true;
+>> > +
+>> > +     return true;
+>> > +}
+>> > +
+>> >  /* sysfs wakeup reason (pollable)
+>> > -------------------------------------- */
+>> >  static ssize_t hotkey_wakeup_reason_show(struct device *dev,
+>> >                          struct device_attribute *attr,
+>> > @@ -3032,6 +3098,7 @@ static struct attribute *hotkey_attributes[] = {
+>> >       &dev_attr_hotkey_adaptive_all_mask.attr,
+>> >       &dev_attr_hotkey_recommended_mask.attr,
+>> >       &dev_attr_hotkey_tablet_mode.attr,
+>> > +     &dev_attr_keyboard_attached_on_screen.attr,
+>> >       &dev_attr_hotkey_radio_sw.attr,
+>> >  #ifdef CONFIG_THINKPAD_ACPI_HOTKEY_POLL
+>> >       &dev_attr_hotkey_source_mask.attr,
+>> > @@ -3046,6 +3113,9 @@ static umode_t hotkey_attr_is_visible(struct
+>> > kobject *kobj,
+>> >       if (attr == &dev_attr_hotkey_tablet_mode.attr) {
+>> >               if (!tp_features.hotkey_tablet)
+>> >                       return 0;
+>> > +     } else if (attr == &dev_attr_keyboard_attached_on_screen.attr) {
+>> > +             if (!tp_features.has_keyboard_attached_on_screen)
+>> > +                     return 0;
+>> >       } else if (attr == &dev_attr_hotkey_radio_sw.attr) {
+>> >               if (!tp_features.hotkey_wlsw)
+>> >                       return 0;
+>> > @@ -3462,6 +3532,7 @@ static int __init hotkey_init(struct
+>> > ibm_init_struct *iibm)
+>> >       }
+>> >
+>> >       tabletsw_state = hotkey_init_tablet_mode();
+>> > +     keyboard_attached_on_screen_update();
+>> >
+>> >       /* Set up key map */
+>> >       keymap_id = tpacpi_check_quirks(tpacpi_keymap_qtable,
+>> > @@ -3842,6 +3913,8 @@ static bool hotkey_notify_6xxx(const u32 hkey,
+>> > bool *send_acpi_ev)
+>> >       case TP_HKEY_EV_TABLET_CHANGED:
+>> >               tpacpi_input_send_tabletsw();
+>> >               hotkey_tablet_mode_notify_change();
+>> > +             if (keyboard_attached_on_screen_update())
+>> > +                     keyboard_attached_on_screen_notify_change();
+>> >               *send_acpi_ev = false;
+>> >               return true;
+>> >
+>> > @@ -3998,6 +4071,8 @@ static void hotkey_resume(void)
+>> >       tpacpi_send_radiosw_update();
+>> >       tpacpi_input_send_tabletsw();
+>> >       hotkey_tablet_mode_notify_change();
+>> > +     keyboard_attached_on_screen_update();
+>> > +     keyboard_attached_on_screen_notify_change();
+>> >       hotkey_wakeup_reason_notify_change();
+>> >       hotkey_wakeup_hotunplug_complete_notify_change();
+>> >       hotkey_poll_setup_safe(false);
+>> > @@ -4296,6 +4371,17 @@ static const struct dmi_system_id fwbug_list[]
+>> > __initconst = {
+>> >       {}
+>> >  };
+>> >
+>> > +static const struct dmi_system_id keyboard_attached_on_screen_list[]
+>> > __initconst = {
+>> > +     {
+>> > +             .ident = "ThinkPad X1 Fold 16 Gen 1",
+>> > +             .matches = {
+>> > +                     DMI_MATCH(DMI_SYS_VENDOR, "LENOVO"),
+>> > +                     DMI_MATCH(DMI_PRODUCT_FAMILY, "ThinkPad X1 Fold 16 Gen 1"),
+>> > +             },
+>> > +     },
+>> > +     {}
+>> > +};
+>> > +
+>> >  static const struct pci_device_id fwbug_cards_ids[] __initconst = {
+>> >       { PCI_DEVICE(PCI_VENDOR_ID_INTEL, 0x24F3) },
+>> >       { PCI_DEVICE(PCI_VENDOR_ID_INTEL, 0x24FD) },
+>> > @@ -12230,6 +12316,8 @@ static int __init
+>> > thinkpad_acpi_module_init(void)
+>> >       dmi_id = dmi_first_match(fwbug_list);
+>> >       if (dmi_id)
+>> >               tp_features.quirks = dmi_id->driver_data;
+>> > +     tp_features.has_keyboard_attached_on_screen =
+>> > +             dmi_check_system(keyboard_attached_on_screen_list);
+>> >
+>> >       /* Device initialization */
+>> >       tpacpi_pdev = platform_device_register_simple(TPACPI_DRVR_NAME,
+>> > PLATFORM_DEVID_NONE,
+>> > --
+>> > 2.43.0
+>>
+>> I'm checking to see if we have the EC spec for this platform (it's not in our Linux certification program).
+>>
+>> The code looks fine but some notes:
+>>  - We usually do the DMI_MATCH on the BOARD_NAME for quirks. I was checking psref.lenovo.com and there seem to be two distinct models for this platform, which is a bit confusing. I don't have a way to confirm that your changes will work for the other model so wondering if it's safer to do the quirks for 21ES/21ET or 20RL/20RK depending on what you have in hand? (I might be overthinking this too)
+>>  - I would have called it detachable_keyboard instead of keyboard_attached_on_screen. See what other reviewers think.
+>>
+>> If I get details back on the EC spec and confirmation it's correct I'll let you know :)
+>>
 
-Specifically expose the instance ID that's unique in the scope of one
-TPMI device. The value was previously available through the domain_id
-file exported through sysfs. However on newer systems with multiple
-clusters attached to a single instance, domain_id is taking on a unique
-value, that's not local to the single TPMI device anymore.
+Sorry this took a bit - the engineer we needed to talk to was on PTO.
 
-Signed-off-by: Maciej Wieczor-Retman <maciej.wieczor-retman@intel.com>
----
- .../uncore-frequency/uncore-frequency-common.c  | 10 ++++++++++
- .../uncore-frequency/uncore-frequency-common.h  |  6 +++++-
- .../uncore-frequency/uncore-frequency-tpmi.c    | 17 ++++++++++++++++-
- 3 files changed, 31 insertions(+), 2 deletions(-)
+I got some internal details on the implementation and whilst there isn't a spec I can share, we did determine that Windows driver is using some ACPI methods instead: GDST (get device state), GDSZ (get device display occlusion) and NSMC (Notify BIOS of screen mode change).
 
-diff --git a/drivers/platform/x86/intel/uncore-frequency/uncore-frequency-c=
-ommon.c b/drivers/platform/x86/intel/uncore-frequency/uncore-frequency-comm=
-on.c
-index 71c47aa77d3c..52a62cad35de 100644
---- a/drivers/platform/x86/intel/uncore-frequency/uncore-frequency-common.c
-+++ b/drivers/platform/x86/intel/uncore-frequency/uncore-frequency-common.c
-@@ -29,6 +29,13 @@ static ssize_t show_domain_id(struct kobject *kobj, stru=
-ct kobj_attribute *attr,
- =09return sysfs_emit(buf, "%u\n", data->domain_id);
- }
-=20
-+static ssize_t show_instance_id(struct kobject *kobj, struct kobj_attribut=
-e *attr, char *buf)
-+{
-+=09struct uncore_data *data =3D container_of(attr, struct uncore_data, ins=
-tance_id_kobj_attr);
-+
-+=09return sprintf(buf, "%u\n", data->instance_id);
-+}
-+
- static ssize_t show_fabric_cluster_id(struct kobject *kobj, struct kobj_at=
-tribute *attr, char *buf)
- {
- =09struct uncore_data *data =3D container_of(attr, struct uncore_data, fab=
-ric_cluster_id_kobj_attr);
-@@ -200,6 +207,9 @@ static int create_attr_group(struct uncore_data *data, =
-char *name)
- =09if (data->domain_id !=3D UNCORE_DOMAIN_ID_INVALID) {
- =09=09init_attribute_root_ro(domain_id);
- =09=09data->uncore_attrs[index++] =3D &data->domain_id_kobj_attr.attr;
-+=09=09init_attribute_root_ro(instance_id);
-+=09=09data->uncore_attrs[index++] =3D &data->instance_id_kobj_attr.attr;
-+
- =09=09init_attribute_root_ro(fabric_cluster_id);
- =09=09data->uncore_attrs[index++] =3D &data->fabric_cluster_id_kobj_attr.a=
-ttr;
- =09=09init_attribute_root_ro(package_id);
-diff --git a/drivers/platform/x86/intel/uncore-frequency/uncore-frequency-c=
-ommon.h b/drivers/platform/x86/intel/uncore-frequency/uncore-frequency-comm=
-on.h
-index 915506de4ebf..5e00030fedc5 100644
---- a/drivers/platform/x86/intel/uncore-frequency/uncore-frequency-common.h
-+++ b/drivers/platform/x86/intel/uncore-frequency/uncore-frequency-common.h
-@@ -36,6 +36,7 @@
-  * @domain_id:=09=09Power domain id for this instance
-  * @cluster_id:=09=09cluster id in a domain
-  * @seqname_id:=09=09Unique id to append to directory name
-+ * @instance_id:=09Feature instances for a single PCI device
-  * @name:=09=09Sysfs entry name for this instance
-  * @agent_type_mask:=09Bit mask of all hardware agents for this domain
-  * @uncore_attr_group:=09Attribute group storage
-@@ -56,6 +57,7 @@
-  * @elc_floor_freq_khz_kobj_attr: Storage for kobject attribute elc_floor_=
-freq_khz
-  * @agent_types_kobj_attr: Storage for kobject attribute agent_type
-  * @die_id_kobj_attr:=09Attribute storage for die_id information
-+ * @instance_id_kobj_attr: Attribute storage for feat_instance value
-  * @uncore_attrs:=09Attribute storage for group creation
-  *
-  * This structure is used to encapsulate all data related to uncore sysfs
-@@ -72,6 +74,7 @@ struct uncore_data {
- =09int domain_id;
- =09int cluster_id;
- =09int seqname_id;
-+=09int instance_id;
- =09char name[32];
- =09u16  agent_type_mask;
-=20
-@@ -90,7 +93,8 @@ struct uncore_data {
- =09struct kobj_attribute elc_floor_freq_khz_kobj_attr;
- =09struct kobj_attribute agent_types_kobj_attr;
- =09struct kobj_attribute die_id_kobj_attr;
--=09struct attribute *uncore_attrs[15];
-+=09struct kobj_attribute instance_id_kobj_attr;
-+=09struct attribute *uncore_attrs[16];
- };
-=20
- #define UNCORE_DOMAIN_ID_INVALID=09-1
-diff --git a/drivers/platform/x86/intel/uncore-frequency/uncore-frequency-t=
-pmi.c b/drivers/platform/x86/intel/uncore-frequency/uncore-frequency-tpmi.c
-index 1237d9570886..e74e7d2e26b6 100644
---- a/drivers/platform/x86/intel/uncore-frequency/uncore-frequency-tpmi.c
-+++ b/drivers/platform/x86/intel/uncore-frequency/uncore-frequency-tpmi.c
-@@ -385,7 +385,21 @@ static u8 io_die_index_next;
- /* Lock to protect io_die_start, io_die_index_next */
- static DEFINE_MUTEX(domain_lock);
-=20
--static void set_domain_id(int id,  int num_resources,
-+static void set_instance_id(int id, struct tpmi_uncore_cluster_info *clust=
-er_info)
-+{
-+=09/*
-+=09 * In its base form the domain_id is a per-TPMI device value that lists
-+=09 * feature instances for that specific TPMI device (instances as named =
-by
-+=09 * the intel_vsec system). On newer platforms the cdie system comes int=
-o
-+=09 * effect which makes domain_id a unique identifier and there is no mor=
-e
-+=09 * correlation between the TPMI device and the domain_id number. The ol=
-d
-+=09 * version is still relevant so TPMI device scoped information can be
-+=09 * matched with the data from the TPMI driver.
-+=09 */
-+=09cluster_info->uncore_data.instance_id =3D id;
-+}
-+
-+static void set_domain_id(int id, int num_resources,
- =09=09=09  struct oobmsm_plat_info *plat_info,
- =09=09=09  struct tpmi_uncore_cluster_info *cluster_info)
- {
-@@ -686,6 +700,7 @@ static int uncore_probe(struct auxiliary_device *auxdev=
-, const struct auxiliary_
- =09=09=09set_cdie_id(i, cluster_info, plat_info);
-=20
- =09=09=09set_domain_id(i, num_resources, plat_info, cluster_info);
-+=09=09=09set_instance_id(i, cluster_info);
-=20
- =09=09=09cluster_info->uncore_root =3D tpmi_uncore;
-=20
---=20
-2.53.0
+I don't have any details on how those ACPI methods break down I'm afraid - but just wanted you to be aware that  Windows is doing things differently.
 
-
+Mark
