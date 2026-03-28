@@ -1,257 +1,322 @@
-Received: from fout-a5-smtp.messagingengine.com (fout-a5-smtp.messagingengine.com [103.168.172.148])
+Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1D7B0F4FA;
-	Sat, 28 Mar 2026 01:29:47 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=103.168.172.148
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F2447386C3E
+	for <platform-driver-x86@vger.kernel.org>; Sat, 28 Mar 2026 11:50:49 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.180.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1774661390; cv=none; b=W54VHsbyAb1rfLmrfXlghnThKbJYb7bwpOK5mk8pDmlrV56ha2V2m7hwqBDQLSJ/C1nK6VYeW9VbbJaADqoUT80u42Jt9+/tMbUZujKCXATQL/PLSYyvltjzhiQjCjQr0kOb95A+1jhz6w6udArKTHE3z94Ed3/F3hqnUwcFgwI=
+	t=1774698651; cv=none; b=u8PRV00j6d0hP0PK8JGpXfqI7UVRgUle1eqXXl8W1DpRDr3HRzS8xWZehO4L2CkmJCiWpERYaqwAkwtsANx0W1LqNdOraTY1ePKCf4Ddv2O1+OW4mL4ztILp8p7e1lZNA3UnGnhsOt85xR2iNjQutyI1QBn1I7ysR7uD+LBzFVY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1774661390; c=relaxed/simple;
-	bh=BvcGuc4I1KCE+LFTx85eOT2hFq1ul16MkebdjvqFhHE=;
-	h=MIME-Version:Date:From:To:Cc:Message-Id:In-Reply-To:References:
-	 Subject:Content-Type; b=YPOeX9WX/pa3SIRRKmlkXGBQHI6TyD1hGtnhXms3cB4Sxn8AvaFxI3MwMZM76y10ldyKkEjsJkmBcrOjgmUbPBoaHBhOsDVivKp68bCNO/ldmmNju3fbTEQViLvAC//uvgAKONHy+EL+YRjWCVL4078diylZZ85YsX2M2nsVrM8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=squebb.ca; spf=pass smtp.mailfrom=squebb.ca; dkim=pass (2048-bit key) header.d=squebb.ca header.i=@squebb.ca header.b=pTQvinE5; dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b=I0viywai; arc=none smtp.client-ip=103.168.172.148
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=squebb.ca
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=squebb.ca
+	s=arc-20240116; t=1774698651; c=relaxed/simple;
+	bh=/dlx7KWj5vhfpEv1MoSZnbLHolNpt373+6+mrG/OOs0=;
+	h=Message-ID:Date:MIME-Version:From:Subject:To:Cc:References:
+	 In-Reply-To:Content-Type; b=BXicypr6SPelCpwJHx5Fdakz5jgcUVo8I4cbSQYJXt64JZleEP955i71XG8OYMPM4hfWi5DSNOQuffUltL9XFna4Tb41v2n+hLQNRkBPaFdkmbCpvDg5iAEeQhJv9LQrC4DQmXb/ZZy/9dnAOIdmTLTN6Sp9D4AU+qxdm2kliwI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com; spf=pass smtp.mailfrom=oss.qualcomm.com; dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b=CJjIuppb; dkim=pass (2048-bit key) header.d=oss.qualcomm.com header.i=@oss.qualcomm.com header.b=jnBZzVUY; arc=none smtp.client-ip=205.220.180.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oss.qualcomm.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=squebb.ca header.i=@squebb.ca header.b="pTQvinE5";
-	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="I0viywai"
-Received: from phl-compute-02.internal (phl-compute-02.internal [10.202.2.42])
-	by mailfout.phl.internal (Postfix) with ESMTP id 3295FEC0203;
-	Fri, 27 Mar 2026 21:29:47 -0400 (EDT)
-Received: from phl-imap-08 ([10.202.2.84])
-  by phl-compute-02.internal (MEProxy); Fri, 27 Mar 2026 21:29:47 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=squebb.ca; h=cc
-	:cc:content-transfer-encoding:content-type:content-type:date
-	:date:from:from:in-reply-to:in-reply-to:message-id:mime-version
-	:references:reply-to:subject:subject:to:to; s=fm2; t=1774661387;
-	 x=1774747787; bh=RE6Z5TFp0wFLK1grHrLXT+7E4LF2z0gm/Ttg7WCsC2Y=; b=
-	pTQvinE53NdfdhGACGs4LehRqEwOnK/5FhMWqMmGr1HDbh4IIcD22+ReuUyTsR0R
-	jCZym2Qg5xXzjB3/5nN9+CHu7Fq8Lv8QUgaRk5GxYAapQ20gOHkJDKh2+DpQ47QY
-	CkL1NfmuZteWqYSJFcd2cc2SXk38wTi6E14z1JCMqvdWw2xk5KN8UzpqpPP35tMG
-	LDKTE6E6gPJno6cKmrgIAFAigB2MNZejH1DUYIggLJ97iUoAiFIR9mDKaEKs01X8
-	9WU1oSWtTjDql7vJhXkBG9cYgn3lps8GGW0P+tgaOgC5vGIKtoRMYubfnYkPMAIP
-	JsYsTlsSFEpXOz5NUu+vDQ==
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-	messagingengine.com; h=cc:cc:content-transfer-encoding
-	:content-type:content-type:date:date:feedback-id:feedback-id
-	:from:from:in-reply-to:in-reply-to:message-id:mime-version
-	:references:reply-to:subject:subject:to:to:x-me-proxy
-	:x-me-sender:x-me-sender:x-sasl-enc; s=fm1; t=1774661387; x=
-	1774747787; bh=RE6Z5TFp0wFLK1grHrLXT+7E4LF2z0gm/Ttg7WCsC2Y=; b=I
-	0viywaiT796PaPHcbGIwhqKt+50l5IOJWi7xU03Kp7A0K7j5/int561NwZx0lu44
-	OO+YesalKorCPL0dlNisQTayB/2WKvKldrnPaS65yqsRBQY5JvMfmtMeKe0GPwkL
-	TKhVYBLDpzeQ55z5gWkox2AQiDEloJlb7cgD1+AfcsuI1imgvgZEgdhCjbhuxoV4
-	gARcfmoHVJqw/dSU2z0sD+K+pwP57FE6ktH1g+1BJ9EHUYZy47a3+JIsXNWCPMxe
-	LeLWJy5loXiK9zs9AU2Xnc/QaUffIq11Mv8IYqcAibyDYIuSYMv1vEhv6MWqECvU
-	PWe6qtSWwdDIYTC1us53Q==
-X-ME-Sender: <xms:Ci_HaSPuAjvlA26m7gP6mSR3DvMsFCOaKXg68VFWDUG90VU1Yfh33A>
-    <xme:Ci_HabyqBYB_uDT6V27GbhMGcpbvvTcEov8e3UR1jv0OqWwbjPWAsR9x-aha0cIp7
-    mzf_glLDLt_4fzlRIyAyHOrCZU9Muxk6BhfIn09YXRab8KQeLiXifPE>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeefgedrtddtgdeffedukeegucetufdoteggodetrf
-    dotffvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdfurfetoffkrfgpnffqhgenuceu
-    rghilhhouhhtmecufedttdenucesvcftvggtihhpihgvnhhtshculddquddttddmnecujf
-    gurhepofggfffhvfevkfgjfhfutgfgsehtjeertdertddtnecuhfhrohhmpedfofgrrhhk
-    ucfrvggrrhhsohhnfdcuoehmphgvrghrshhonhdqlhgvnhhovhhosehsqhhuvggssgdrtg
-    grqeenucggtffrrghtthgvrhhnpefhuedvheetgeehtdehtdevheduvdejjefggfeijedv
-    geekhfefleehkeehvdffheenucevlhhushhtvghrufhiiigvpedtnecurfgrrhgrmhepmh
-    grihhlfhhrohhmpehmphgvrghrshhonhdqlhgvnhhovhhosehsqhhuvggssgdrtggrpdhn
-    sggprhgtphhtthhopeelpdhmohguvgepshhmthhpohhuthdprhgtphhtthhopeguvghrvg
-    hkjhhohhhnrdgtlhgrrhhksehgmhgrihhlrdgtohhmpdhrtghpthhtohephhhmhheshhhm
-    hhdrvghnghdrsghrpdhrtghpthhtohephhgrnhhsgheskhgvrhhnvghlrdhorhhgpdhrtg
-    hpthhtoheprhgrfhgrvghlsehkvghrnhgvlhdrohhrghdprhgtphhtthhopehilhhpohdr
-    jhgrrhhvihhnvghnsehlihhnuhigrdhinhhtvghlrdgtohhmpdhrtghpthhtohepihgsmh
-    dqrggtphhiqdguvghvvghlsehlihhsthhsrdhsohhurhgtvghfohhrghgvrdhnvghtpdhr
-    tghpthhtoheplhhinhhugidqrggtphhisehvghgvrhdrkhgvrhhnvghlrdhorhhgpdhrtg
-    hpthhtoheplhhinhhugidqkhgvrhhnvghlsehvghgvrhdrkhgvrhhnvghlrdhorhhgpdhr
-    tghpthhtohepphhlrghtfhhorhhmqdgurhhivhgvrhdqgiekieesvhhgvghrrdhkvghrnh
-    gvlhdrohhrgh
-X-ME-Proxy: <xmx:Ci_HaYyYCjV--6CaIml2yWD7aCBuxOyDFdMT8Xbh2jsUTxL9Gfrjeg>
-    <xmx:Ci_HaUfMEubwL6qN0sjjRvsQstjw2p5pQ5iDJggwyXqGxuhIrkjqEA>
-    <xmx:Ci_HaV6Gd0aTAdlzF_GpKhSTyO4C_hxB0X0ZtVVH8PyJNYSAEfPaEw>
-    <xmx:Ci_HaRIwvSjIiPyV935wq_CuvI7gv2HsscKJp5-VV6hp55GX3cCjMg>
-    <xmx:Cy_HabWpkk9YkuU0oQTqbDbamX26cf2h78KAzEEMEOl_lIaFs58xUuhK>
-Feedback-ID: ibe194615:Fastmail
-Received: by mailuser.phl.internal (Postfix, from userid 501)
-	id 2D2AD2CE07BC; Fri, 27 Mar 2026 21:29:46 -0400 (EDT)
-X-Mailer: MessagingEngine.com Webmail Interface
+	dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b="CJjIuppb";
+	dkim=pass (2048-bit key) header.d=oss.qualcomm.com header.i=@oss.qualcomm.com header.b="jnBZzVUY"
+Received: from pps.filterd (m0279868.ppops.net [127.0.0.1])
+	by mx0a-0031df01.pphosted.com (8.18.1.11/8.18.1.11) with ESMTP id 62S2Xba42835246
+	for <platform-driver-x86@vger.kernel.org>; Sat, 28 Mar 2026 11:50:49 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=qualcomm.com; h=
+	cc:content-transfer-encoding:content-type:date:from:in-reply-to
+	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
+	Dld5selLQ1J9MQ4u6bdHYyqpBvugOu7TPOGeAA3ulRE=; b=CJjIuppbrcqftwQU
+	Ao8XLTmwKvWGSULHW447kNmatmu4f+c1hne9c9maOa3xv8o5mo1IcBBsvrm2GV1c
+	0+9J2+E0uZgRxjBfGw1FA+KyPAINH46uk9D/7TjoP9LX30h5+EwaApha92gRinnf
+	9Sx3zaHTG+d8UziBXtCZWT0aJCOpmKCOjTTmbf4csTBzcKQQ/knLaxldSe3s13rG
+	sZES4LN3sXBc+y/pAmywE7B4ZdGCAZgMzCW0dvXoe1Nk3EeBNNeFUsDEcp8aCjz8
+	SpOsTnqiqrXOlmr5+j/MjaE63hg04LR4Ej0lwOwVE8QxEZAupOUDAAR8hj8iL5xP
+	bmQFjQ==
+Received: from mail-qt1-f199.google.com (mail-qt1-f199.google.com [209.85.160.199])
+	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 4d66afrtrh-1
+	(version=TLSv1.3 cipher=TLS_AES_128_GCM_SHA256 bits=128 verify=NOT)
+	for <platform-driver-x86@vger.kernel.org>; Sat, 28 Mar 2026 11:50:48 +0000 (GMT)
+Received: by mail-qt1-f199.google.com with SMTP id d75a77b69052e-5090e08dcfcso84708581cf.0
+        for <platform-driver-x86@vger.kernel.org>; Sat, 28 Mar 2026 04:50:48 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=oss.qualcomm.com; s=google; t=1774698648; x=1775303448; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:content-language:references
+         :cc:to:subject:from:user-agent:mime-version:date:message-id:from:to
+         :cc:subject:date:message-id:reply-to;
+        bh=Dld5selLQ1J9MQ4u6bdHYyqpBvugOu7TPOGeAA3ulRE=;
+        b=jnBZzVUYG96znZRt5i1iNXSdQbvsmi4aMbyCIfaCosEkaZRjkz2FztEEp8xMhXOmmO
+         f5OFkGvl4u7wsYDN/kD0du3DNFj2jgeChbZqjxCVjxcq2torwriFH2fL0QKJfVuSd/h6
+         XVzLz4u44kLt/o9KnGic6Xjgut+6TsYO9wKTxaGHl4MTk4H2dQxIr35YkLWH9avW02oi
+         CqwRDXbsM7/24P2mejsqxucgr0baEmdyf3ApzoBo0jytT/cUsjBgs0AkraCkN3Zz1ghc
+         ZjBVrrHhQs+u7aEY+WirqO99j8kCXijFk3s11hZjwi4BuOH7hic6UR4afHWxd+q3HGmi
+         7M/Q==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20251104; t=1774698648; x=1775303448;
+        h=content-transfer-encoding:in-reply-to:content-language:references
+         :cc:to:subject:from:user-agent:mime-version:date:message-id:x-gm-gg
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=Dld5selLQ1J9MQ4u6bdHYyqpBvugOu7TPOGeAA3ulRE=;
+        b=ovpfl3/rhLoXLkW3CEtBg4V4ydcBjLIueNDCwOce0UkmhfA300FYQ+c3ILupifEIdv
+         THsHfDELEc0F5SVjADEB/RenC7X/8+tuM5a++vgT4KstEMqHlrqh7ys6z6N35a9mjJpc
+         AQ+m5LX/Sop5MrMjJNzuJLqKKFsPzmmd3Be1RRKwMXklXzbijBhsp/6lC34wWzaA9IRD
+         N0Q6l59zm+JMuu3PZ9iNfHZOiz3+y91wE5t+KeJW9ewdOH4hkZtFRpZ6wL1pvCKt8ivv
+         KbfhPc5rBJtNuHNkBIbNPzzwgpUg+XhtxkLs/hDZfNUvLEP8OBI5VwfrSBUFDNhEoGyu
+         l42w==
+X-Forwarded-Encrypted: i=1; AJvYcCW0m7DCfw82VN9KFBHsjf13+AI5buYSufmM0oiTjZpOLgSbHC9wTddlFGIVPS9+otqpzXopkzMGgSVgvzAkOy1cnOL8@vger.kernel.org
+X-Gm-Message-State: AOJu0YwWhv2YtE+op3G4tQGv8YbqBnHOyrzAfEsP1R3yL5Ad38xtwtrY
+	rzT/Km48lBQLy51reKVnMNcl0K0i3mWmfN16xW3ZBI1NVlOFMCe7ZvMibevSi6eo2rMj4Rvs85R
+	x3Lz5niZP2yAajisq7GhL29NmCkB1egm8T3cW/xMnViBQ3WkKnw9j7ZhjSNypm1OEqFsczjDz5P
+	Es
+X-Gm-Gg: ATEYQzynMztSSuDI0GeW95RmUUBO/zbyL/iiPdw3Im+m1zmVefRYlxECnFASoFys16u
+	zcRFxjcBFBKag5oAPmcGZ9b9rLinNVQyZqFpb1Msevya/Lwiy2HYIvQg8x2tFX6P5+ap2NY4NUN
+	mPwotPHPADdzvfQgInElAFdr2eWH06MCMymV090zqKn8dczek3ZyrrrtqPJ7kfrqsAiyfvZd3Ia
+	pzUvEy+X2FBefKBDdaGYLjRTGJy93maYIDhDzy8fjWk35kw4oinxqt4bEYnKsTzq2fnHo0rbVLM
+	mFtGamDNilXZOiXUqq84QuL690CWGDRIjanExRqjfJMr8W4C7P0A6LVbPtrfjCkHwMtZPUUPY4h
+	uNvYR+Yl0jJYO/sypAmpi6xeidNtwoQXThghs9i24kDyQhIJeirKzbPaCQWhVp4NnI+INjoDp5E
+	/Y8vywKuB0gf4EdDFJVSNXMHCH40e0+gl7NSIgI77frA7C3Wh9VFZwZpSxmg0pQS0WY6G41st2c
+	05uWEjJyhX8lkjq
+X-Received: by 2002:a05:622a:548:b0:50b:34b7:fd62 with SMTP id d75a77b69052e-50ba388e98emr73972301cf.25.1774698648335;
+        Sat, 28 Mar 2026 04:50:48 -0700 (PDT)
+X-Received: by 2002:a05:622a:548:b0:50b:34b7:fd62 with SMTP id d75a77b69052e-50ba388e98emr73971941cf.25.1774698647805;
+        Sat, 28 Mar 2026 04:50:47 -0700 (PDT)
+Received: from ?IPV6:2001:1c00:c32:7800:5bfa:a036:83f0:f9ec? (2001-1c00-0c32-7800-5bfa-a036-83f0-f9ec.cable.dynamic.v6.ziggo.nl. [2001:1c00:c32:7800:5bfa:a036:83f0:f9ec])
+        by smtp.gmail.com with ESMTPSA id 2adb3069b0e04-5a2b13fd743sm412475e87.21.2026.03.28.04.50.44
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Sat, 28 Mar 2026 04:50:45 -0700 (PDT)
+Message-ID: <e0d704f8-180c-4167-90f0-a9052d8f85b3@oss.qualcomm.com>
+Date: Sat, 28 Mar 2026 12:50:43 +0100
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-ThreadId: Av_tymGQ9vDF
-Date: Fri, 27 Mar 2026 21:29:25 -0400
-From: "Mark Pearson" <mpearson-lenovo@squebb.ca>
-To: "Rafael J. Wysocki" <rafael@kernel.org>,
- =?UTF-8?Q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
-Cc: "Hans de Goede" <hansg@kernel.org>, LKML <linux-kernel@vger.kernel.org>,
- "linux-acpi@vger.kernel.org" <linux-acpi@vger.kernel.org>,
- "platform-driver-x86@vger.kernel.org" <platform-driver-x86@vger.kernel.org>,
- "Henrique de Moraes Holschuh" <hmh@hmh.eng.br>,
- "Derek J . Clark" <derekjohn.clark@gmail.com>,
- ibm-acpi-devel@lists.sourceforge.net
-Message-Id: <cd671e41-9f36-409d-97b4-f696935b1efe@app.fastmail.com>
-In-Reply-To: <3949487.kQq0lBPeGt@rafael.j.wysocki>
-References: <3949487.kQq0lBPeGt@rafael.j.wysocki>
-Subject: Re: [PATCH v1] platform/x86: thinkpad_acpi: Drop ACPI driver registration
-Content-Type: text/plain
+User-Agent: Mozilla Thunderbird
+From: johannes.goede@oss.qualcomm.com
+Subject: Re: [PATCH v6 1/2] platform/x86: int3472: Add TPS68470 board data for
+ Intel nvl
+To: Arun T <arun.t@intel.com>
+Cc: sakari.ailus@linux.intel.com, arec.kao@intel.com,
+        ilpo.jarvinen@linux.intel.com, dan.scally@ideasonboard.com,
+        platform-driver-x86@vger.kernel.org, linux-media@vger.kernel.org,
+        linux-kernel@vger.kernel.org, mehdi.djait@intel.com
+References: <20260327181959.3528753-1-arun.t@intel.com>
+ <20260327181959.3528753-2-arun.t@intel.com>
+Content-Language: en-US, nl
+In-Reply-To: <20260327181959.3528753-2-arun.t@intel.com>
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
+X-Proofpoint-ORIG-GUID: bO6f4JWz-B97ME044_lxk3y21JPnYJpO
+X-Proofpoint-Spam-Details-Enc: AW1haW4tMjYwMzI4MDA4NiBTYWx0ZWRfX8vAOu4fk9R9I
+ 3Z4Yo2jJia+uXOndJXEsj+k8OS6HSJxdffFmb+6Swl92AXV7iu7ykihlSIqcyYth8j+x3MwsA+J
+ M8EaMjU13xqynexDzCTJCh1fvdP72+C+ikGs5hCuiXuivj06iW+wbmOuxFZjE3vZjF5NycpBOSq
+ tBqS3+9ymK/dZMBP2RBm1146IZHxFvFy2P2RPSoaWeUHVUm0pUAXdZ90A9Dya9W4xRD+egt7A5a
+ N1WX+ah8Kv1KWVz9ZQn/4SuoKQvV4SytqI/La3zGy8Nwo4PaE2brlRKp4NhmLFPwK2/JFql7Pzg
+ RJaSwVGWMz5NiZ96BXlpa22RsqQdZvvwFv95VCOeoNOSoRSxPZJIvOm8lgYI3b+FgdDP7k7hCOs
+ ELilQ99bm7hYvU+bHtQpuuEHaniS3/Zdy6kRsH200vKYosHG68bqUHplBAz7AopPK/7M6CcytWf
+ vKBqPzzNeoukGicCC1g==
+X-Authority-Analysis: v=2.4 cv=KN9XzVFo c=1 sm=1 tr=0 ts=69c7c099 cx=c_pps
+ a=WeENfcodrlLV9YRTxbY/uA==:117 a=xqWC_Br6kY4A:10 a=IkcTkHD0fZMA:10
+ a=Yq5XynenixoA:10 a=s4-Qcg_JpJYA:10 a=VkNPw1HP01LnGYTKEx00:22
+ a=u7WPNUs3qKkmUXheDGA7:22 a=ZpdpYltYx_vBUK5n70dp:22 a=QyXUC8HyAAAA:8
+ a=P1BnusSwAAAA:8 a=EUspDBNiAAAA:8 a=MB0jrDmmLyahN4NmXrMA:9 a=QEXdDO2ut3YA:10
+ a=kacYvNCVWA4VmyqE58fU:22 a=D0XLA9XvdZm18NrgonBM:22
+X-Proofpoint-GUID: bO6f4JWz-B97ME044_lxk3y21JPnYJpO
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1143,Hydra:6.1.51,FMLib:17.12.100.49
+ definitions=2026-03-27_02,2026-03-26_01,2025-10-01_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
+ clxscore=1015 priorityscore=1501 lowpriorityscore=0 phishscore=0 spamscore=0
+ adultscore=0 suspectscore=0 bulkscore=0 malwarescore=0 impostorscore=0
+ classifier=typeunknown authscore=0 authtc= authcc= route=outbound adjust=0
+ reason=mlx scancount=1 engine=8.22.0-2603050001 definitions=main-2603280086
 
-Hi Rafael
+Hi,
 
-On Tue, Mar 24, 2026, at 4:08 PM, Rafael J. Wysocki wrote:
-> From: "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>
->
-> There is no point in registering an ACPI driver that only has an empty
-> .add() callback, which is done by the thinkpad_acpi driver, since
-> after binding to an ACPI device it only sits there and does nothing.
->
-> That binding only effectively causes the ACPI device's reference count
-> to increase, but that can be achieved by using acpi_get_acpi_dev()
-> instead of acpi_fetch_acpi_dev() in setup_acpi_notify(), and doing
-> the corresponding cleanup in ibm_exit().
->
-> Update the code accordingly and get rid of the non-functional ACPI
-> driver.
->
-> No intentional functional impact beyond altering sysfs content.
+On 27-Mar-26 19:19, Arun T wrote:
+> The Intel NVL platform uses IPU8 is powered by a TPS68470 PMIC,requiring board
+> data to configure the GPIOs and regulators for proper camera sensor operation.
+> 
+> Signed-off-by: Arun T <arun.t@intel.com>
+> Reviewed-by: Daniel Scally <dan.scally@ideasonboard.com>
 
-Just curious - where would I see changes?
+Thanks, patch looks good to me:
 
->
-> Signed-off-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
+Reviewed-by: Hans de Goede <johannes.goede@oss.qualcomm.com>
+
+Regards,
+
+Hans
+
+
+
 > ---
->  drivers/platform/x86/lenovo/thinkpad_acpi.c | 62 ++-------------------
->  1 file changed, 4 insertions(+), 58 deletions(-)
->
-> diff --git a/drivers/platform/x86/lenovo/thinkpad_acpi.c 
-> b/drivers/platform/x86/lenovo/thinkpad_acpi.c
-> index 8982d92dfd97..9e1614754cd7 100644
-> --- a/drivers/platform/x86/lenovo/thinkpad_acpi.c
-> +++ b/drivers/platform/x86/lenovo/thinkpad_acpi.c
-> @@ -299,7 +299,6 @@ struct ibm_struct;
+>  .../x86/intel/int3472/tps68470_board_data.c   | 121 ++++++++++++++++++
+>  1 file changed, 121 insertions(+)
 > 
->  struct tp_acpi_drv_struct {
->  	const struct acpi_device_id *hid;
-> -	struct acpi_driver *driver;
-> 
->  	void (*notify) (struct ibm_struct *, u32);
->  	acpi_handle *handle;
-> @@ -322,7 +321,6 @@ struct ibm_struct {
->  	struct tp_acpi_drv_struct *acpi;
-> 
->  	struct {
-> -		u8 acpi_driver_registered:1;
->  		u8 acpi_notify_installed:1;
->  		u8 proc_created:1;
->  		u8 init_called:1;
-> @@ -832,9 +830,9 @@ static int __init setup_acpi_notify(struct ibm_struct *ibm)
->  	vdbg_printk(TPACPI_DBG_INIT,
->  		"setting up ACPI notify for %s\n", ibm->name);
-> 
-> -	ibm->acpi->device = acpi_fetch_acpi_dev(*ibm->acpi->handle);
-> +	ibm->acpi->device = acpi_get_acpi_dev(*ibm->acpi->handle);
->  	if (!ibm->acpi->device) {
-> -		pr_err("acpi_fetch_acpi_dev(%s) failed\n", ibm->name);
-> +		pr_err("acpi_get_acpi_dev(%s) failed\n", ibm->name);
->  		return -ENODEV;
+> diff --git a/drivers/platform/x86/intel/int3472/tps68470_board_data.c b/drivers/platform/x86/intel/int3472/tps68470_board_data.c
+> index 71357a036292..f0309fd1e515 100644
+> --- a/drivers/platform/x86/intel/int3472/tps68470_board_data.c
+> +++ b/drivers/platform/x86/intel/int3472/tps68470_board_data.c
+> @@ -143,6 +143,20 @@ static struct regulator_consumer_supply int3479_aux2_consumer_supplies[] = {
+>  	REGULATOR_SUPPLY("dovdd", "i2c-INT3479:00"),
+>  };
+>  
+> +/* Settings for Intel NVL platform */
+> +
+> +static struct regulator_consumer_supply ovti13b1_core_consumer_supplies[] = {
+> +	REGULATOR_SUPPLY("dvdd", "i2c-OVTI13B1:01"),
+> +};
+> +
+> +static struct regulator_consumer_supply ovti13b1_ana_consumer_supplies[] = {
+> +	REGULATOR_SUPPLY("avdd", "i2c-OVTI13B1:01"),
+> +};
+> +
+> +static struct regulator_consumer_supply ovti13b1_vsio_consumer_supplies[] = {
+> +	REGULATOR_SUPPLY("dovdd", "i2c-OVTI13B1:01"),
+> +};
+> +
+>  static const struct regulator_init_data dell_7212_tps68470_core_reg_init_data = {
+>  	.constraints = {
+>  		.min_uV = 1200000,
+> @@ -220,6 +234,77 @@ static const struct regulator_init_data dell_7212_tps68470_aux2_reg_init_data =
+>  	.consumer_supplies = int3479_aux2_consumer_supplies,
+>  };
+>  
+> +static const struct regulator_init_data intel_nvl_tps68470_core_reg_init_data = {
+> +	.constraints = {
+> +		.min_uV = 1200000,
+> +		.max_uV = 1200000,
+> +		.apply_uV = true,
+> +		.valid_ops_mask = REGULATOR_CHANGE_STATUS,
+> +	},
+> +	.num_consumer_supplies = ARRAY_SIZE(ovti13b1_core_consumer_supplies),
+> +	.consumer_supplies = ovti13b1_core_consumer_supplies,
+> +};
+> +
+> +static const struct regulator_init_data intel_nvl_tps68470_ana_reg_init_data = {
+> +	.constraints = {
+> +		.min_uV = 2815200,
+> +		.max_uV = 2815200,
+> +		.apply_uV = true,
+> +		.valid_ops_mask = REGULATOR_CHANGE_STATUS,
+> +	},
+> +	.num_consumer_supplies = ARRAY_SIZE(ovti13b1_ana_consumer_supplies),
+> +	.consumer_supplies = ovti13b1_ana_consumer_supplies,
+> +};
+> +
+> +static const struct regulator_init_data intel_nvl_tps68470_vcm_reg_init_data = {
+> +	.constraints = {
+> +		.min_uV = 2815200,
+> +		.max_uV = 2815200,
+> +		.apply_uV = true,
+> +		.valid_ops_mask = REGULATOR_CHANGE_STATUS,
+> +	},
+> +
+> +};
+> +
+> +/* Ensure the always-on VIO regulator has the same voltage as VSIO */
+> +static const struct regulator_init_data intel_nvl_tps68470_vio_reg_init_data = {
+> +	.constraints = {
+> +		.min_uV = 1800600,
+> +		.max_uV = 1800600,
+> +		.apply_uV = true,
+> +		.always_on = true,
+> +	},
+> +};
+> +
+> +static const struct regulator_init_data intel_nvl_tps68470_vsio_reg_init_data = {
+> +	.constraints = {
+> +		.min_uV = 1800600,
+> +		.max_uV = 1800600,
+> +		.apply_uV = true,
+> +		.valid_ops_mask = REGULATOR_CHANGE_STATUS,
+> +	},
+> +	.num_consumer_supplies = ARRAY_SIZE(ovti13b1_vsio_consumer_supplies),
+> +	.consumer_supplies = ovti13b1_vsio_consumer_supplies,
+> +};
+> +
+> +static const struct regulator_init_data intel_nvl_tps68470_aux1_reg_init_data = {
+> +	.constraints = {
+> +		.min_uV = 2815200,
+> +		.max_uV = 2815200,
+> +		.apply_uV = 1,
+> +		.valid_ops_mask = REGULATOR_CHANGE_STATUS,
+> +	},
+> +};
+> +
+> +static const struct regulator_init_data intel_nvl_tps68470_aux2_reg_init_data = {
+> +	.constraints = {
+> +		.min_uV = 1800600,
+> +		.max_uV = 1800600,
+> +		.apply_uV = 1,
+> +		.valid_ops_mask = REGULATOR_CHANGE_STATUS,
+> +	},
+> +};
+> +
+>  static const struct tps68470_regulator_platform_data dell_7212_tps68470_pdata = {
+>  	.reg_init_data = {
+>  		[TPS68470_CORE] = &dell_7212_tps68470_core_reg_init_data,
+> @@ -232,6 +317,18 @@ static const struct tps68470_regulator_platform_data dell_7212_tps68470_pdata =
+>  	},
+>  };
+>  
+> +static const struct tps68470_regulator_platform_data intel_nvl_tps68470_pdata = {
+> +	.reg_init_data = {
+> +		[TPS68470_CORE] = &intel_nvl_tps68470_core_reg_init_data,
+> +		[TPS68470_ANA]  = &intel_nvl_tps68470_ana_reg_init_data,
+> +		[TPS68470_VCM]  = &intel_nvl_tps68470_vcm_reg_init_data,
+> +		[TPS68470_VIO] = &intel_nvl_tps68470_vio_reg_init_data,
+> +		[TPS68470_VSIO] = &intel_nvl_tps68470_vsio_reg_init_data,
+> +		[TPS68470_AUX1] = &intel_nvl_tps68470_aux1_reg_init_data,
+> +		[TPS68470_AUX2] = &intel_nvl_tps68470_aux2_reg_init_data,
+> +	},
+> +};
+> +
+>  static struct gpiod_lookup_table surface_go_int347a_gpios = {
+>  	.dev_id = "i2c-INT347A:00",
+>  	.table = {
+> @@ -258,6 +355,14 @@ static struct gpiod_lookup_table dell_7212_int3479_gpios = {
 >  	}
-> 
-> @@ -859,44 +857,6 @@ static int __init setup_acpi_notify(struct ibm_struct *ibm)
->  	return 0;
->  }
-> 
-> -static int __init tpacpi_device_add(struct acpi_device *device)
-> -{
-> -	return 0;
-> -}
-> -
-> -static int __init register_tpacpi_subdriver(struct ibm_struct *ibm)
-> -{
-> -	int rc;
-> -
-> -	dbg_printk(TPACPI_DBG_INIT,
-> -		"registering %s as an ACPI driver\n", ibm->name);
-> -
-> -	BUG_ON(!ibm->acpi);
-> -
-> -	ibm->acpi->driver = kzalloc_obj(struct acpi_driver);
-> -	if (!ibm->acpi->driver) {
-> -		pr_err("failed to allocate memory for ibm->acpi->driver\n");
-> -		return -ENOMEM;
-> -	}
-> -
-> -	sprintf(ibm->acpi->driver->name, "%s_%s", TPACPI_NAME, ibm->name);
-> -	ibm->acpi->driver->ids = ibm->acpi->hid;
-> -
-> -	ibm->acpi->driver->ops.add = &tpacpi_device_add;
-> -
-> -	rc = acpi_bus_register_driver(ibm->acpi->driver);
-> -	if (rc < 0) {
-> -		pr_err("acpi_bus_register_driver(%s) failed: %d\n",
-> -		       ibm->name, rc);
-> -		kfree(ibm->acpi->driver);
-> -		ibm->acpi->driver = NULL;
-> -	} else if (!rc)
-> -		ibm->flags.acpi_driver_registered = 1;
-> -
-> -	return rc;
-> -}
-> -
-> -
->  /****************************************************************************
->   ****************************************************************************
->   *
-> @@ -11532,6 +11492,8 @@ static void ibm_exit(struct ibm_struct *ibm)
->  		acpi_remove_notify_handler(*ibm->acpi->handle,
->  					   ibm->acpi->type,
->  					   dispatch_acpi_notify);
-> +		ibm->acpi->device->driver_data = NULL;
-> +		acpi_dev_put(ibm->acpi->device);
->  		ibm->flags.acpi_notify_installed = 0;
->  	}
-> 
-> @@ -11542,16 +11504,6 @@ static void ibm_exit(struct ibm_struct *ibm)
->  		ibm->flags.proc_created = 0;
->  	}
-> 
-> -	if (ibm->flags.acpi_driver_registered) {
-> -		dbg_printk(TPACPI_DBG_EXIT,
-> -			"%s: acpi_bus_unregister_driver\n", ibm->name);
-> -		BUG_ON(!ibm->acpi);
-> -		acpi_bus_unregister_driver(ibm->acpi->driver);
-> -		kfree(ibm->acpi->driver);
-> -		ibm->acpi->driver = NULL;
-> -		ibm->flags.acpi_driver_registered = 0;
-> -	}
-> -
->  	if (ibm->flags.init_called && ibm->exit) {
->  		ibm->exit();
->  		ibm->flags.init_called = 0;
-> @@ -11587,12 +11539,6 @@ static int __init ibm_init(struct 
-> ibm_init_struct *iibm)
->  	}
-> 
->  	if (ibm->acpi) {
-> -		if (ibm->acpi->hid) {
-> -			ret = register_tpacpi_subdriver(ibm);
-> -			if (ret)
-> -				goto err_out;
-> -		}
-> -
->  		if (ibm->acpi->notify) {
->  			ret = setup_acpi_notify(ibm);
->  			if (ret == -ENODEV) {
-> -- 
-> 2.51.0
+>  };
+>  
+> +static struct gpiod_lookup_table intel_nvl_ovti13b1_gpios = {
+> +	.dev_id = "i2c-OVTI13B1:01",
+> +	.table = {
+> +		GPIO_LOOKUP("tps68470-gpio", 9, "reset", GPIO_ACTIVE_LOW),
+> +		{ }
+> +	}
+> +};
+> +
+>  static const struct int3472_tps68470_board_data surface_go_tps68470_board_data = {
+>  	.dev_name = "i2c-INT3472:05",
+>  	.tps68470_regulator_pdata = &surface_go_tps68470_pdata,
+> @@ -287,6 +392,15 @@ static const struct int3472_tps68470_board_data dell_7212_tps68470_board_data =
+>  	},
+>  };
+>  
+> +static const struct int3472_tps68470_board_data intel_nvl_tps68470_board_data = {
+> +	.dev_name = "i2c-INT3472:04",
+> +	.tps68470_regulator_pdata = &intel_nvl_tps68470_pdata,
+> +	.n_gpiod_lookups = 1,
+> +	.tps68470_gpio_lookup_tables = {
+> +		&intel_nvl_ovti13b1_gpios,
+> +	},
+> +};
+> +
+>  static const struct dmi_system_id int3472_tps68470_board_data_table[] = {
+>  	{
+>  		.matches = {
+> @@ -316,6 +430,13 @@ static const struct dmi_system_id int3472_tps68470_board_data_table[] = {
+>  		},
+>  		.driver_data = (void *)&dell_7212_tps68470_board_data,
+>  	},
+> +	{
+> +		.matches = {
+> +			DMI_EXACT_MATCH(DMI_SYS_VENDOR, "Intel Corporation"),
+> +			DMI_EXACT_MATCH(DMI_PRODUCT_NAME, "Nova Lake Client Platform"),
+> +		},
+> +	       .driver_data = (void *)&intel_nvl_tps68470_board_data,
+> +	},
+>  	{ }
+>  };
+>  
 
-Changes seem good to me (but not an expert).
-I did try them out on a system (X1 Carbon 13) and didn't find any problems. Let me know if there's anything in particular I should look out for or check and happy to do that.
-
-Tested-by: Mark Pearson <mpearson-lenovo@squebb.ca>
-Reviewed-by: Mark Pearson <mpearson-lenovo@squebb.ca>
-
-Mark
