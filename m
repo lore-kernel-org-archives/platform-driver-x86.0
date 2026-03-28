@@ -1,231 +1,106 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6DE21313E36
-	for <platform-driver-x86@vger.kernel.org>; Sat, 28 Mar 2026 11:59:42 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 715A9350D4F;
+	Sat, 28 Mar 2026 12:10:39 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1774699182; cv=none; b=ZZyVqXhaHo55gIgtzaEb2ofrcBEe4MPcmo2ht2X0b52yq5ZsgnjZg7RlqmOYcL/y8iPDwv75Li+VqvWtbCH3T1UPAE2yNglNv9gOWowhwDBwRHKa06462Y4bCjhd3S+MLbttekUoDMwABjJLU+aFP3NyL50it+Dl+eONZBDkdvc=
+	t=1774699839; cv=none; b=idvw0vZasCWtKC09RJJMrl6FbB+K7+TrAITPVoyVeZFwEpzgI0Zm49hF0jUcNQvkK3108+aXI60WZLf9AWr3+VvUon75YNxv0tFwhhZtxy3FDZiRgNDElfUAx5qRGklYlJEK1hDzqrw5BlqTyCIWpTNEHW8t3EOK5D7Q42SXHcA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1774699182; c=relaxed/simple;
-	bh=PTz2rHI475IxV/7XekLz6uyjPu4o8UrPYGzuKbSBcaU=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=vFsNhZgnVzlBa8R+TwNzA4AmWAUaXV8b5ypynA0TFJgpmwF08UXUmz1j4614HWJwW4ewY9uZC4uMazTe92mXRMu7zLzI5rWQAhGNYOf/LfgbB/rLiqr5QvCMYa0Ew0XF4O2XkVcK/TaI6CK4e9aC2Qu+KTllXVmfxAKkiBrySR0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=a5uMPz4v; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1774699839; c=relaxed/simple;
+	bh=NTFcZ7aSZIsyP3qPdyEPoyvUbM7dBDc1cogifZf44fs=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=P9XCRS2qW87CLdzcr8Zki5ktXAEtAvaTVtrv6LymA3iPpHFyYZeUoy2W6aUVFGTREiJP5JtKLK9uERT4Xbd6YMWR5L2P4XAprMHCdi+v1AFI26tMhMr5rUpkzb2IzeRg0fNh1PaeJfhEP3+XI/nDw3jNksx/uWP0sUlqGnbdQew=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=LQI2u2FJ; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="a5uMPz4v"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 12BE4C4CEF7
-	for <platform-driver-x86@vger.kernel.org>; Sat, 28 Mar 2026 11:59:42 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="LQI2u2FJ"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 24AC2C4CEF7;
+	Sat, 28 Mar 2026 12:10:26 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1774699182;
-	bh=PTz2rHI475IxV/7XekLz6uyjPu4o8UrPYGzuKbSBcaU=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-	b=a5uMPz4v1SyZIsXxv2hZAIKcTrC0XpWrUq8qYLhxv97mEF1HNY6xMOWv8ZqpiMH0W
-	 T3gHZTmN8AC3lkffRuAIFMHv3qznShrriIdcUKeCPXtOY/OoJmqEzQBhhK0hSDG+Yb
-	 S9FD5lLZ9a2zddwX0pTcbLLgy/J9p5w2hTflBNVc0QceEs8heP6sCuKvQmacQxyuvv
-	 9BjohsaV5FnpQxEAOjXtoMEDWmEGkiq7QIzpQBEvioBWy6dCkWdzvVGuzjjeJg1d1V
-	 jXQXcCyhmmRxXmgvg25Em90Q9smFMr8PhbMnJL+zHTUeWNPEo7dyRLbY3sXv4wvQDv
-	 obOzyNWLCkmrQ==
-Received: by mail-oi1-f182.google.com with SMTP id 5614622812f47-464bc03efd8so1639919b6e.2
-        for <platform-driver-x86@vger.kernel.org>; Sat, 28 Mar 2026 04:59:42 -0700 (PDT)
-X-Forwarded-Encrypted: i=1; AJvYcCU2NpqM2KbJCv0fQE5mxYhH2mhcqTfoQPe4dCfCx4K+zzxCAfyHLgTgF8reJEgFOMjvsC5bqWj3ebJv1WcL2vzKXVB/@vger.kernel.org
-X-Gm-Message-State: AOJu0YwsZaMOeJxha8X+BuxL7WQ0jghMydyyrS90yIy2grYLN2k8j+Bo
-	/y0tIzIzn9S5IRl45PI1L+hMIY3FwAfe/Zhu9RkNQm/yqs8ExQ9G0yZngDrJd29zKG/QTybiH0+
-	XPiMmX/ep7rh6i6Nz8mTbAXuCF6vTj04=
-X-Received: by 2002:a05:6870:b3e4:b0:409:5560:72f8 with SMTP id
- 586e51a60fabf-41cebe755a7mr3240178fac.0.1774699181235; Sat, 28 Mar 2026
- 04:59:41 -0700 (PDT)
+	s=k20201202; t=1774699839;
+	bh=NTFcZ7aSZIsyP3qPdyEPoyvUbM7dBDc1cogifZf44fs=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=LQI2u2FJrZdfURKcCR9tStL7U7j9JDQoiHCmq72vccMs+ZUBhp+9/TKvL161WNaYt
+	 HB6Cn/KW4bpF4LE8szU/Ttp0n1iAeBjvFxI338mQ+OH5v7/aZmAQ9mRmTZhzpLHT8Q
+	 2ij/qw3sRiilAWVo3GAkTfwxr5AaAfiGpMiRoVeACXWF2FpqJdBr1mqCSFspFTpRGG
+	 IWAWGn1ScwG3hTcEoF9XWrUzsMNbRCB9m36GDK5FSVbYng9NVfLXXuJIcV7JatH039
+	 EqdHKj9j/+OVngUAIX3Bg6ahCKh6k16Ub4DhdqyNRlVlqKadrI7x9Bvws94pvNi0EJ
+	 U/HidD7p2Gw6Q==
+Message-ID: <4c5e9bad-82f0-4714-99c2-8ccd79a45043@kernel.org>
+Date: Sat, 28 Mar 2026 13:10:25 +0100
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <3949487.kQq0lBPeGt@rafael.j.wysocki> <cd671e41-9f36-409d-97b4-f696935b1efe@app.fastmail.com>
-In-Reply-To: <cd671e41-9f36-409d-97b4-f696935b1efe@app.fastmail.com>
-From: "Rafael J. Wysocki" <rafael@kernel.org>
-Date: Sat, 28 Mar 2026 12:59:29 +0100
-X-Gmail-Original-Message-ID: <CAJZ5v0gwA-dDen-GYsdtEkHqahVrg4jSc9KD6-5AHLT=RV=bWA@mail.gmail.com>
-X-Gm-Features: AQROBzA3DxvYl3RU61mvKW4Htjtda6yOaEem0JiYgDysa_YLltqwpeGV0M_fbRE
-Message-ID: <CAJZ5v0gwA-dDen-GYsdtEkHqahVrg4jSc9KD6-5AHLT=RV=bWA@mail.gmail.com>
-Subject: Re: [PATCH v1] platform/x86: thinkpad_acpi: Drop ACPI driver registration
-To: Mark Pearson <mpearson-lenovo@squebb.ca>
-Cc: "Rafael J. Wysocki" <rafael@kernel.org>, =?UTF-8?Q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>, 
-	Hans de Goede <hansg@kernel.org>, LKML <linux-kernel@vger.kernel.org>, 
-	"linux-acpi@vger.kernel.org" <linux-acpi@vger.kernel.org>, 
-	"platform-driver-x86@vger.kernel.org" <platform-driver-x86@vger.kernel.org>, 
-	Henrique de Moraes Holschuh <hmh@hmh.eng.br>, "Derek J . Clark" <derekjohn.clark@gmail.com>, 
-	ibm-acpi-devel@lists.sourceforge.net
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH 02/12] bus: fsl-mc: use generic driver_override
+ infrastructure
+To: Ioana Ciornei <ioana.ciornei@nxp.com>, Danilo Krummrich <dakr@kernel.org>
+Cc: Russell King <linux@armlinux.org.uk>,
+ Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+ "Rafael J. Wysocki" <rafael@kernel.org>, Nipun Gupta <nipun.gupta@amd.com>,
+ Nikhil Agarwal <nikhil.agarwal@amd.com>, "K. Y. Srinivasan"
+ <kys@microsoft.com>, Haiyang Zhang <haiyangz@microsoft.com>,
+ Wei Liu <wei.liu@kernel.org>, Dexuan Cui <decui@microsoft.com>,
+ Long Li <longli@microsoft.com>, Bjorn Helgaas <bhelgaas@google.com>,
+ Armin Wolf <W_Armin@gmx.de>, Bjorn Andersson <andersson@kernel.org>,
+ Mathieu Poirier <mathieu.poirier@linaro.org>,
+ Vineeth Vijayan <vneethv@linux.ibm.com>,
+ Peter Oberparleiter <oberpar@linux.ibm.com>,
+ Heiko Carstens <hca@linux.ibm.com>, Vasily Gorbik <gor@linux.ibm.com>,
+ Alexander Gordeev <agordeev@linux.ibm.com>,
+ Christian Borntraeger <borntraeger@linux.ibm.com>,
+ Sven Schnelle <svens@linux.ibm.com>,
+ Harald Freudenberger <freude@linux.ibm.com>,
+ Holger Dengler <dengler@linux.ibm.com>, Mark Brown <broonie@kernel.org>,
+ "Michael S. Tsirkin" <mst@redhat.com>, Jason Wang <jasowang@redhat.com>,
+ Xuan Zhuo <xuanzhuo@linux.alibaba.com>, =?UTF-8?Q?Eugenio_P=C4=82=C2=A9rez?=
+ <eperezma@redhat.com>, Alex Williamson <alex@shazbot.org>,
+ Juergen Gross <jgross@suse.com>, Stefano Stabellini
+ <sstabellini@kernel.org>,
+ Oleksandr Tyshchenko <oleksandr_tyshchenko@epam.com>,
+ linux-kernel@vger.kernel.org, driver-core@lists.linux.dev,
+ linuxppc-dev@lists.ozlabs.org, linux-hyperv@vger.kernel.org,
+ linux-pci@vger.kernel.org, platform-driver-x86@vger.kernel.org,
+ linux-arm-msm@vger.kernel.org, linux-remoteproc@vger.kernel.org,
+ linux-s390@vger.kernel.org, linux-spi@vger.kernel.org,
+ virtualization@lists.linux.dev, kvm@vger.kernel.org,
+ xen-devel@lists.xenproject.org, linux-arm-kernel@lists.infradead.org,
+ Gui-Dong Han <hanguidong02@gmail.com>
+References: <20260324005919.2408620-1-dakr@kernel.org>
+ <20260324005919.2408620-3-dakr@kernel.org>
+ <cvcetxkxjq2tz6n2vsofhyzove3qdi2e4r6rq6yxou3joejk2h@rmt5ygav7ssu>
+Content-Language: fr-FR
+From: "Christophe Leroy (CS GROUP)" <chleroy@kernel.org>
+In-Reply-To: <cvcetxkxjq2tz6n2vsofhyzove3qdi2e4r6rq6yxou3joejk2h@rmt5ygav7ssu>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
 
-On Sat, Mar 28, 2026 at 2:29=E2=80=AFAM Mark Pearson <mpearson-lenovo@squeb=
-b.ca> wrote:
->
-> Hi Rafael
->
-> On Tue, Mar 24, 2026, at 4:08 PM, Rafael J. Wysocki wrote:
-> > From: "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>
-> >
-> > There is no point in registering an ACPI driver that only has an empty
-> > .add() callback, which is done by the thinkpad_acpi driver, since
-> > after binding to an ACPI device it only sits there and does nothing.
-> >
-> > That binding only effectively causes the ACPI device's reference count
-> > to increase, but that can be achieved by using acpi_get_acpi_dev()
-> > instead of acpi_fetch_acpi_dev() in setup_acpi_notify(), and doing
-> > the corresponding cleanup in ibm_exit().
-> >
-> > Update the code accordingly and get rid of the non-functional ACPI
-> > driver.
-> >
-> > No intentional functional impact beyond altering sysfs content.
->
-> Just curious - where would I see changes?
 
-In /sys/bus/acpi/drivers/ - no thinkpad_* any more (quite obviously)
-and no "driver" link in the sysfs directory of the ACPI device the
-driver used to bind to.  That should be it IIRC.
 
-> >
-> > Signed-off-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
-> > ---
-> >  drivers/platform/x86/lenovo/thinkpad_acpi.c | 62 ++-------------------
-> >  1 file changed, 4 insertions(+), 58 deletions(-)
-> >
-> > diff --git a/drivers/platform/x86/lenovo/thinkpad_acpi.c
-> > b/drivers/platform/x86/lenovo/thinkpad_acpi.c
-> > index 8982d92dfd97..9e1614754cd7 100644
-> > --- a/drivers/platform/x86/lenovo/thinkpad_acpi.c
-> > +++ b/drivers/platform/x86/lenovo/thinkpad_acpi.c
-> > @@ -299,7 +299,6 @@ struct ibm_struct;
-> >
-> >  struct tp_acpi_drv_struct {
-> >       const struct acpi_device_id *hid;
-> > -     struct acpi_driver *driver;
-> >
-> >       void (*notify) (struct ibm_struct *, u32);
-> >       acpi_handle *handle;
-> > @@ -322,7 +321,6 @@ struct ibm_struct {
-> >       struct tp_acpi_drv_struct *acpi;
-> >
-> >       struct {
-> > -             u8 acpi_driver_registered:1;
-> >               u8 acpi_notify_installed:1;
-> >               u8 proc_created:1;
-> >               u8 init_called:1;
-> > @@ -832,9 +830,9 @@ static int __init setup_acpi_notify(struct ibm_stru=
-ct *ibm)
-> >       vdbg_printk(TPACPI_DBG_INIT,
-> >               "setting up ACPI notify for %s\n", ibm->name);
-> >
-> > -     ibm->acpi->device =3D acpi_fetch_acpi_dev(*ibm->acpi->handle);
-> > +     ibm->acpi->device =3D acpi_get_acpi_dev(*ibm->acpi->handle);
-> >       if (!ibm->acpi->device) {
-> > -             pr_err("acpi_fetch_acpi_dev(%s) failed\n", ibm->name);
-> > +             pr_err("acpi_get_acpi_dev(%s) failed\n", ibm->name);
-> >               return -ENODEV;
-> >       }
-> >
-> > @@ -859,44 +857,6 @@ static int __init setup_acpi_notify(struct ibm_str=
-uct *ibm)
-> >       return 0;
-> >  }
-> >
-> > -static int __init tpacpi_device_add(struct acpi_device *device)
-> > -{
-> > -     return 0;
-> > -}
-> > -
-> > -static int __init register_tpacpi_subdriver(struct ibm_struct *ibm)
-> > -{
-> > -     int rc;
-> > -
-> > -     dbg_printk(TPACPI_DBG_INIT,
-> > -             "registering %s as an ACPI driver\n", ibm->name);
-> > -
-> > -     BUG_ON(!ibm->acpi);
-> > -
-> > -     ibm->acpi->driver =3D kzalloc_obj(struct acpi_driver);
-> > -     if (!ibm->acpi->driver) {
-> > -             pr_err("failed to allocate memory for ibm->acpi->driver\n=
-");
-> > -             return -ENOMEM;
-> > -     }
-> > -
-> > -     sprintf(ibm->acpi->driver->name, "%s_%s", TPACPI_NAME, ibm->name)=
-;
-> > -     ibm->acpi->driver->ids =3D ibm->acpi->hid;
-> > -
-> > -     ibm->acpi->driver->ops.add =3D &tpacpi_device_add;
-> > -
-> > -     rc =3D acpi_bus_register_driver(ibm->acpi->driver);
-> > -     if (rc < 0) {
-> > -             pr_err("acpi_bus_register_driver(%s) failed: %d\n",
-> > -                    ibm->name, rc);
-> > -             kfree(ibm->acpi->driver);
-> > -             ibm->acpi->driver =3D NULL;
-> > -     } else if (!rc)
-> > -             ibm->flags.acpi_driver_registered =3D 1;
-> > -
-> > -     return rc;
-> > -}
-> > -
-> > -
-> >  /*********************************************************************=
-*******
-> >   *********************************************************************=
-*******
-> >   *
-> > @@ -11532,6 +11492,8 @@ static void ibm_exit(struct ibm_struct *ibm)
-> >               acpi_remove_notify_handler(*ibm->acpi->handle,
-> >                                          ibm->acpi->type,
-> >                                          dispatch_acpi_notify);
-> > +             ibm->acpi->device->driver_data =3D NULL;
-> > +             acpi_dev_put(ibm->acpi->device);
-> >               ibm->flags.acpi_notify_installed =3D 0;
-> >       }
-> >
-> > @@ -11542,16 +11504,6 @@ static void ibm_exit(struct ibm_struct *ibm)
-> >               ibm->flags.proc_created =3D 0;
-> >       }
-> >
-> > -     if (ibm->flags.acpi_driver_registered) {
-> > -             dbg_printk(TPACPI_DBG_EXIT,
-> > -                     "%s: acpi_bus_unregister_driver\n", ibm->name);
-> > -             BUG_ON(!ibm->acpi);
-> > -             acpi_bus_unregister_driver(ibm->acpi->driver);
-> > -             kfree(ibm->acpi->driver);
-> > -             ibm->acpi->driver =3D NULL;
-> > -             ibm->flags.acpi_driver_registered =3D 0;
-> > -     }
-> > -
-> >       if (ibm->flags.init_called && ibm->exit) {
-> >               ibm->exit();
-> >               ibm->flags.init_called =3D 0;
-> > @@ -11587,12 +11539,6 @@ static int __init ibm_init(struct
-> > ibm_init_struct *iibm)
-> >       }
-> >
-> >       if (ibm->acpi) {
-> > -             if (ibm->acpi->hid) {
-> > -                     ret =3D register_tpacpi_subdriver(ibm);
-> > -                     if (ret)
-> > -                             goto err_out;
-> > -             }
-> > -
-> >               if (ibm->acpi->notify) {
-> >                       ret =3D setup_acpi_notify(ibm);
-> >                       if (ret =3D=3D -ENODEV) {
-> > --
-> > 2.51.0
->
-> Changes seem good to me (but not an expert).
-> I did try them out on a system (X1 Carbon 13) and didn't find any problem=
-s. Let me know if there's anything in particular I should look out for or c=
-heck and happy to do that.
->
-> Tested-by: Mark Pearson <mpearson-lenovo@squebb.ca>
-> Reviewed-by: Mark Pearson <mpearson-lenovo@squebb.ca>
+Le 25/03/2026 à 13:01, Ioana Ciornei a écrit :
+> On Tue, Mar 24, 2026 at 01:59:06AM +0100, Danilo Krummrich wrote:
+>> When a driver is probed through __driver_attach(), the bus' match()
+>> callback is called without the device lock held, thus accessing the
+>> driver_override field without a lock, which can cause a UAF.
+>>
+>> Fix this by using the driver-core driver_override infrastructure taking
+>> care of proper locking internally.
+>>
+>> Note that calling match() from __driver_attach() without the device lock
+>> held is intentional. [1]
+>>
+>> Link: https://eur01.safelinks.protection.outlook.com/?url=https%3A%2F%2Flore.kernel.org%2Fdriver-core%2FDGRGTIRHA62X.3RY09D9SOK77P%40kernel.org%2F&data=05%7C02%7Cchristophe.leroy%40csgroup.eu%7C4b9262ddecdd4ce29f9808de8a66485e%7C8b87af7d86474dc78df45f69a2011bb5%7C0%7C0%7C639100369055903282%7CUnknown%7CTWFpbGZsb3d8eyJFbXB0eU1hcGkiOnRydWUsIlYiOiIwLjAuMDAwMCIsIlAiOiJXaW4zMiIsIkFOIjoiTWFpbCIsIldUIjoyfQ%3D%3D%7C0%7C%7C%7C&sdata=%2BRfjlUkq7oWV%2F0v2S2B%2BEuxCY%2FLRQv6qHiEWiupd6kc%3D&reserved=0 [1]
+>> Reported-by: Gui-Dong Han <hanguidong02@gmail.com>
+>> Closes: https://eur01.safelinks.protection.outlook.com/?url=https%3A%2F%2Fbugzilla.kernel.org%2Fshow_bug.cgi%3Fid%3D220789&data=05%7C02%7Cchristophe.leroy%40csgroup.eu%7C4b9262ddecdd4ce29f9808de8a66485e%7C8b87af7d86474dc78df45f69a2011bb5%7C0%7C0%7C639100369055936232%7CUnknown%7CTWFpbGZsb3d8eyJFbXB0eU1hcGkiOnRydWUsIlYiOiIwLjAuMDAwMCIsIlAiOiJXaW4zMiIsIkFOIjoiTWFpbCIsIldUIjoyfQ%3D%3D%7C0%7C%7C%7C&sdata=XL1K1ICiygOZnlvDUbQFe192KnLsBQms0HFNGCuyz%2Fw%3D&reserved=0
+>> Fixes: 1f86a00c1159 ("bus/fsl-mc: add support for 'driver_override' in the mc-bus")
+>> Signed-off-by: Danilo Krummrich <dakr@kernel.org>
+> 
+> Tested-by: Ioana Ciornei <ioana.ciornei@nxp.com>
+> Signed-off-by: Ioana Ciornei <ioana.ciornei@nxp.com>
+> 
 
-Thank you!
+
+Applied, thanks
