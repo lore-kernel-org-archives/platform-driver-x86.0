@@ -1,75 +1,42 @@
-Received: from mail-pl1-f177.google.com (mail-pl1-f177.google.com [209.85.214.177])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from out-189.mta1.migadu.com (out-189.mta1.migadu.com [95.215.58.189])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D922027A477
-	for <platform-driver-x86@vger.kernel.org>; Sun, 29 Mar 2026 05:41:14 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.177
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 262EC3C07A;
+	Sun, 29 Mar 2026 12:47:10 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=95.215.58.189
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1774762876; cv=none; b=i/6Y0bXff8Qg72ugolp9+7XuxlBPSJ/JPm/dWaJug6R5Kqs7EqUNjZdx0DiKmukm8txLiHDrLxTAY1DRIuWcSyr486FgNu0vxsyqHdoiZQ+ex9JihH5g9iQwMbOsyKtamaewCTa24Wkeo/6bUzuX3yBurPtBBAUsI6XZOV7w5xM=
+	t=1774788432; cv=none; b=L1/gW4PDXaU1DGPv8r9uOQwkLJ9HMne4daGPezrx/TBlsTuy2FTgbcLX8Jm+hqp3oj+INBE1Wcx8f+O3b3M3ULgRzc3INiORFxsQRwodptnYclS95wqNHfU/Pb7jNb9OQgGN70ToiO7bEeWk+DtZUUh+/UQfW8p2otlUJrZNxmw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1774762876; c=relaxed/simple;
-	bh=mghBULNVYcPQDCfOhOVjq2FEvuBPQ/lJcinugvcTByU=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=ViYL4xri1gdkEIdHpaJRm01ox9mAwjfdxpzf3JZ9bczpVycW1PQL6q8uaNpDg3BY1yNMPqvaTSnDHZh2bChiFTErCudcKzwFdzmoJ50WGOK9QBhX7vEWDyDZ9vKhvIQjGGpy8XnsdBDetseOWlHIRcMV6TbesyXfkCi18MD6bVs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=R6ZZRhYu; arc=none smtp.client-ip=209.85.214.177
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1774788432; c=relaxed/simple;
+	bh=OEh3u+GOIWkisB8IehkcroDyEkPV/N4twJGRPi/i+kM=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=nniNgVzpHYDTfawzdFJiq4Cqjj8s+k/TBNHLgJNnhDP2hth0ovaKji0uBUkevqHK+O2KBsbA6XIp5Xz1h3cRk5CUVKTdRISGgcAfL0u29dEVbkr8KRhciXJ+6w9hrydNee5eSoROFQVUOs/dRoGVFBmbz86i4PFedCGfmKXKFM4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=BM4FxqsL; arc=none smtp.client-ip=95.215.58.189
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="R6ZZRhYu"
-Received: by mail-pl1-f177.google.com with SMTP id d9443c01a7336-2a871daa98fso26716745ad.1
-        for <platform-driver-x86@vger.kernel.org>; Sat, 28 Mar 2026 22:41:14 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20251104; t=1774762874; x=1775367674; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=g+lckgw6UmGvJZEicF/O4AgCi9bwg1ZzjiyXQ1bC0BU=;
-        b=R6ZZRhYu6M/X4nfeJepv/kSJ6Mzs0KqxEfmlp8vKM19/1OktTiXbUQ/R8abLd5bdy5
-         v0ejq8mq+TOhrOepvbPP6oMGbpc6Yrb6FeCRKYUvNAnldOprGaA8cg142aJd4rYnIfg2
-         nxOGsyrdW9hukWXW+BuOMaObfL4vONmSelcKh7A9PPJ/lxw0/TdubMtpzAqQ+ZHLU4/F
-         hSLvzr31tNSs+y65xxIZr/ADWAFxXC5DAe+fAGuKDO6fEF9LIql5I/Z2ok+/XqhJL+zE
-         CDEpxUE5vVcpd71cexCG7j8J1BcBmwmPk9KlmywixU+W/0DIq5DNE6/aA2yoqH5wfaBV
-         S/fg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1774762874; x=1775367674;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-gg:x-gm-message-state:from
-         :to:cc:subject:date:message-id:reply-to;
-        bh=g+lckgw6UmGvJZEicF/O4AgCi9bwg1ZzjiyXQ1bC0BU=;
-        b=gQ9RcMcXyKEEJ12sGglc0+4lIImaquM0mb/KOxlm5NEkS1p/TtkgjXou96cdBUv71C
-         6AQ7dqsstCBzbLsM0jvcYnlK06FzP2zsr6Z1l+FjOeo53FkNA56/R2NEG79u09g0pVCM
-         TZsKyKi29bGwxIphyeBkSmGeyFCDPI52YURiNBQVjqiUSloFdKXrD4C/fhdNDO932oU6
-         cSOCUsgsebrD25Ynep6w2WGeAe5usrPNa+ZTNF6Nta1ZllCpfhIix3eGdlR9PBgEkHHc
-         8FqtriTTknnjWEJVb1rlaSPhbiXlrP5Z9Njx4mWB0xdF5Q3k7sXXP0w1NXBAlVqQV9yN
-         av8w==
-X-Gm-Message-State: AOJu0YzvE8XAij/SGAKFhaeNcbv34JYDJYDWubxapB3+H8KHxbLHIJuk
-	Aw+cnTXL820+xSr3WzWYtZK8mx9sFMoFIWpr+aOJE9W7TM7jMizQad4pVglrzhxdypY=
-X-Gm-Gg: ATEYQzysX4dthqlmRLCE5/cCX7SrsdE0cvL8UKrDQ4Nq+VI56lyavWl1TF4ojCxkuhy
-	h6wDgNOZ+GwWUHolN561l1TAl6TzozFW42S1olPh6ToM1avAtKX+s/Y9A1ucdbzMjfHgNA9GpMM
-	u09IpYX+LerAfQbVDF862weiRe7yZOHyI/aOCtv1oRt4s2kODW7dFFv8Hpmz9NRoBZJ00909UDz
-	ySZQS81r/OC12h4Iap0c7QflbHy6SGcKdKI2u+OCOVzviKbwOe1HVBugdaidjPxO4TG8R6Zn3Vg
-	g7Gzh/ip7cqgYbRNlN91vDhpSI9G/kQR30832JNgJrBbVCIkOXGBdsAeD0TbW0dWMCR1VdoZcUY
-	sYvPEBV0HznCLWvO28UmnWvGISADS7B/1bwpGP5A8F2afe3KBgtgugo2fsh3FKzHFlc4IOvmVd4
-	iiz1uOQZpFb9v8eeNSX38fNHOlZ+kmb9VeAavZFRE4O+4EmcocPCs3lOXUwkjDuLY5/CFL4gkyt
-	u1y/23Y
-X-Received: by 2002:a17:902:f542:b0:2b2:42da:25cd with SMTP id d9443c01a7336-2b242da32fcmr44367275ad.45.1774762873978;
-        Sat, 28 Mar 2026 22:41:13 -0700 (PDT)
-Received: from cachyos-x8664.iitd.ac.in ([2001:df4:e000:3fd2:59eb:b75c:7ede:19e7])
-        by smtp.gmail.com with ESMTPSA id d9443c01a7336-2b242670302sm39144395ad.26.2026.03.28.22.41.11
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sat, 28 Mar 2026 22:41:13 -0700 (PDT)
-From: Bani Brata <banibrata2007@gmail.com>
-To: platform-driver-x86@vger.kernel.org
-Cc: Bani Brata <banibrata2007@gmail.com>,
-	Hans de Goede <hansg@kernel.org>,
+	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="BM4FxqsL"
+X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
+	t=1774788429;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:
+	 content-transfer-encoding:content-transfer-encoding;
+	bh=G1vdvEOcH/HdN+8Kh6+38yl5XFL80UFAj3fh9ZjMopA=;
+	b=BM4FxqsLMpkBxhPf4X9ubNn156O7GC3d2gL9jm1UF6xQi3gN1eEgxNfsN+WKNKG9lji3r+
+	Rc2f+Kk4EtZKwWTQalQENtF89gw/z67yIJMRJSkk28XrO09g9eGm7sxi2/koKy6BMnh3VH
+	KZmT94J4XESLKLA53+hAaqLgCF23dS0=
+From: Denis Benato <denis.benato@linux.dev>
+To: linux-kernel@vger.kernel.org
+Cc: platform-driver-x86@vger.kernel.org,
+	"Hans de Goede" <hansg@kernel.org>,
 	=?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>,
-	linux-kernel@vger.kernel.org
-Subject: [PATCH 2/2] platform/x86: hp-wmi: Add ACPI PWM fan control for HP ENVY 13-bd0xxx
-Date: Sun, 29 Mar 2026 11:10:51 +0530
-Message-ID: <20260329054052.32023-2-banibrata2007@gmail.com>
-X-Mailer: git-send-email 2.53.0
-In-Reply-To: <20260329054052.32023-1-banibrata2007@gmail.com>
-References: <20260329054052.32023-1-banibrata2007@gmail.com>
+	"Luke D . Jones" <luke@ljones.dev>,
+	"Mateusz Schyboll" <dragonn@op.pl>,
+	"Denis Benato" <benato.denis96@gmail.com>,
+	Denis Benato <denis.benato@linux.dev>
+Subject: [PATCH 0/3] Add three more ASUS models to asus-armoury driver
+Date: Sun, 29 Mar 2026 14:46:56 +0200
+Message-ID: <20260329124659.3967495-1-denis.benato@linux.dev>
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
@@ -77,270 +44,28 @@ List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
+X-Migadu-Flow: FLOW_OUT
 
-On the HP ENVY x360 Convertible 13-bd0xxx (board 8824), standard WMI
-methods for fan speed control and RPM reporting do not function.
+Hi all,
 
-However, the DSDT exposes ACPI methods (\_SB.PC00.LPCB.EC0.FANG and FANW)
-that allow reading and writing an 8-bit PWM level (0-255) to the EC.
+This patch series adds support for three more ASUS models to the asus-armoury driver:
+the GV302XU, FA607NU, and GU605MU.
 
-This patch maps these ACPI methods to standard hwmon `pwm1` and
-`pwm1_enable` nodes, allowing userspace tools to successfully control
-the fan speed.
+I have discovered that GU605MU model has configurable TGP that was not listed
+in the GU605M model, so I have added  a specific metch for that model before
+the GU605M one, this way the for loop should attempt to match the GU605MU
+first and if it fails it will try to match the GU605M.
 
-Signed-off-by: Bani Brata <banibrata2007@gmail.com>
----
- drivers/platform/x86/hp/hp-wmi.c | 155 ++++++++++++++++++++++++++++++-
- 1 file changed, 155 insertions(+)
+Cheers!
 
-diff --git a/drivers/platform/x86/hp/hp-wmi.c b/drivers/platform/x86/hp/hp-wmi.c
-index XXXXXXX..XXXXXXX 100644
---- a/drivers/platform/x86/hp/hp-wmi.c
-+++ b/drivers/platform/x86/hp/hp-wmi.c
-@@ -48,6 +48,14 @@
- #define HP_FAN_SPEED_AUTOMATIC	 0x00
- #define HP_POWER_LIMIT_DEFAULT	 0x00
- #define HP_POWER_LIMIT_NO_CHANGE 0xFF
-+#define HP_ENVY_8824_ACPI_FANG "\\_SB.PC00.LPCB.EC0.FANG"
-+#define HP_ENVY_8824_ACPI_FANW "\\_SB.PC00.LPCB.EC0.FANW"
-+#define HP_ENVY_8824_FAN_VALUE_ARG 33026ULL
-+#define HP_ENVY_8824_FAN_PRIME_ARG 33030ULL
-+#define HP_ENVY_8824_FAN_PRIME_MANUAL 0xFFULL
-+#define HP_ENVY_8824_FAN_PRIME_AUTO 0x8ULL
-+#define HP_ENVY_8824_PWM_MODE_MANUAL 1
-+#define HP_ENVY_8824_PWM_MODE_AUTO 2
- 
- #define ACPI_AC_CLASS "ac_adapter"
- 
-@@ -193,6 +201,8 @@ static const struct dmi_system_id hp_wmi_rfkill_dmi_table[] __initconst = {
- 
- static bool is_victus_s_board;
- static bool is_envy_x360_8824_board;
-+static DEFINE_MUTEX(hp_envy_x360_8824_fan_lock);
-+static int hp_envy_x360_8824_pwm_mode = HP_ENVY_8824_PWM_MODE_AUTO;
- 
- static const struct dmi_system_id hp_envy_x360_8824_boards[] __initconst = {
- 	{
-@@ -518,6 +528,120 @@ static int hp_wmi_get_fan_speed_victus_s(int fan)
- 	return ret;
- }
- 
-+static int hp_envy_x360_8824_acpi_eval(const char *path,
-+				       const unsigned long long *args,
-+				       size_t arg_count,
-+				       unsigned long long *value)
-+{
-+	struct acpi_buffer output = { ACPI_ALLOCATE_BUFFER, NULL };
-+	union acpi_object params[2] = { };
-+	struct acpi_object_list input = { .count = arg_count, .pointer = params };
-+	union acpi_object *obj;
-+	acpi_status status;
-+	size_t i;
-+
-+	for (i = 0; i < arg_count; i++) {
-+		params[i].type = ACPI_TYPE_INTEGER;
-+		params[i].integer.value = args[i];
-+	}
-+
-+	status = acpi_evaluate_object(NULL, (acpi_string)path,
-+				      arg_count ? &input : NULL, &output);
-+	if (ACPI_FAILURE(status))
-+		return -EIO;
-+
-+	obj = output.pointer;
-+	if (!obj)
-+		return -ENODATA;
-+
-+	if (obj->type != ACPI_TYPE_INTEGER) {
-+		kfree(obj);
-+		return -EINVAL;
-+	}
-+
-+	*value = obj->integer.value;
-+	kfree(obj);
-+
-+	return 0;
-+}
-+
-+static int hp_envy_x360_8824_get_pwm_locked(void)
-+{
-+	unsigned long long args[] = { HP_ENVY_8824_FAN_VALUE_ARG };
-+	unsigned long long value;
-+	int ret;
-+
-+	ret = hp_envy_x360_8824_acpi_eval(HP_ENVY_8824_ACPI_FANG, args,
-+					 ARRAY_SIZE(args), &value);
-+	if (ret)
-+		return ret;
-+	if (value > U8_MAX)
-+		return -EINVAL;
-+
-+	return value;
-+}
-+
-+static int hp_envy_x360_8824_set_pwm_locked(u8 pwm)
-+{
-+	unsigned long long args[] = {
-+		HP_ENVY_8824_FAN_PRIME_ARG,
-+		HP_ENVY_8824_FAN_PRIME_MANUAL,
-+	};
-+	unsigned long long value;
-+	int ret;
-+
-+	ret = hp_envy_x360_8824_acpi_eval(HP_ENVY_8824_ACPI_FANW, args,
-+					 ARRAY_SIZE(args), &value);
-+	if (ret)
-+		return ret;
-+
-+	args[0] = HP_ENVY_8824_FAN_VALUE_ARG;
-+	args[1] = pwm;
-+	ret = hp_envy_x360_8824_acpi_eval(HP_ENVY_8824_ACPI_FANW, args,
-+					 ARRAY_SIZE(args), &value);
-+	if (ret)
-+		return ret;
-+
-+	hp_envy_x360_8824_pwm_mode = HP_ENVY_8824_PWM_MODE_MANUAL;
-+	return 0;
-+}
-+
-+static int hp_envy_x360_8824_set_auto_locked(void)
-+{
-+	unsigned long long args[] = {
-+		HP_ENVY_8824_FAN_PRIME_ARG,
-+		HP_ENVY_8824_FAN_PRIME_AUTO,
-+	};
-+	unsigned long long value;
-+	int ret;
-+
-+	ret = hp_envy_x360_8824_acpi_eval(HP_ENVY_8824_ACPI_FANW, args,
-+					 ARRAY_SIZE(args), &value);
-+	if (ret)
-+		return ret;
-+
-+	args[0] = HP_ENVY_8824_FAN_VALUE_ARG;
-+	args[1] = HP_ENVY_8824_FAN_PRIME_MANUAL;
-+	ret = hp_envy_x360_8824_acpi_eval(HP_ENVY_8824_ACPI_FANW, args,
-+					 ARRAY_SIZE(args), &value);
-+	if (ret)
-+		return ret;
-+
-+	hp_envy_x360_8824_pwm_mode = HP_ENVY_8824_PWM_MODE_AUTO;
-+	return 0;
-+}
-+
-+static int hp_envy_x360_8824_set_manual_locked(void)
-+{
-+	int pwm;
-+
-+	pwm = hp_envy_x360_8824_get_pwm_locked();
-+	if (pwm < 0)
-+		return pwm;
-+
-+	return hp_envy_x360_8824_set_pwm_locked(pwm);
-+}
-+
- /*
-  * Calling this hp_wmi_get_fan_count_userdefine_trigger function also enables
-  * and/or maintains the laptop in user defined thermal and fan states, instead
-@@ -2103,6 +2227,12 @@ static void hp_wmi_rfkill_setup(struct platform_device *device)
- 		rfkill_unregister(wifi_rfkill);
- 		rfkill_destroy(wifi_rfkill);
- 	}
-+
-+	if (is_envy_x360_8824_board) {
-+		mutex_lock(&hp_envy_x360_8824_fan_lock);
-+		hp_envy_x360_8824_set_auto_locked();
-+		mutex_unlock(&hp_envy_x360_8824_fan_lock);
-+	}
- 	if (bluetooth_rfkill) {
- 		rfkill_unregister(bluetooth_rfkill);
- 		rfkill_destroy(bluetooth_rfkill);
-@@ -2176,6 +2306,10 @@ static umode_t hp_wmi_hwmon_is_visible(const void *data,
- {
- 	switch (type) {
- 	case hwmon_pwm:
-+		if (attr == hwmon_pwm_input)
-+			return is_envy_x360_8824_board ? 0644 : 0;
-+		if (attr == hwmon_pwm_enable)
-+			return is_envy_x360_8824_board ? 0644 : 0;
- 		return 0644;
- 	case hwmon_fan:
- 		if (is_envy_x360_8824_board)
-@@ -2213,6 +2347,25 @@ static int hp_wmi_hwmon_read(struct device *dev, enum hwmon_sensor_types type,
- 		*val = ret;
- 		return 0;
- 	case hwmon_pwm:
-+		if (is_envy_x360_8824_board) {
-+			mutex_lock(&hp_envy_x360_8824_fan_lock);
-+			if (attr == hwmon_pwm_input) {
-+				ret = hp_envy_x360_8824_get_pwm_locked();
-+				if (!ret)
-+					*val = ret;
-+				else if (ret > 0)
-+					*val = ret;
-+				mutex_unlock(&hp_envy_x360_8824_fan_lock);
-+				return ret < 0 ? ret : 0;
-+			}
-+			if (attr == hwmon_pwm_enable) {
-+				*val = hp_envy_x360_8824_pwm_mode;
-+				mutex_unlock(&hp_envy_x360_8824_fan_lock);
-+				return 0;
-+			}
-+			mutex_unlock(&hp_envy_x360_8824_fan_lock);
-+			return -EOPNOTSUPP;
-+		}
- 		switch (hp_wmi_fan_speed_max_get()) {
- 		case 0:
- 			/* 0 is automatic fan, which is 2 for hwmon */
-@@ -2236,8 +2389,40 @@ static int hp_wmi_hwmon_read(struct device *dev, enum hwmon_sensor_types type,
- static int hp_wmi_hwmon_write(struct device *dev, enum hwmon_sensor_types type,
- 			      u32 attr, int channel, long val)
- {
-+	int ret;
-+
- 	switch (type) {
- 	case hwmon_pwm:
-+		if (is_envy_x360_8824_board) {
-+			mutex_lock(&hp_envy_x360_8824_fan_lock);
-+			switch (attr) {
-+			case hwmon_pwm_input:
-+				if (val < 0 || val > U8_MAX) {
-+					mutex_unlock(&hp_envy_x360_8824_fan_lock);
-+					return -EINVAL;
-+				}
-+				ret = hp_envy_x360_8824_set_pwm_locked(val);
-+				mutex_unlock(&hp_envy_x360_8824_fan_lock);
-+				return ret;
-+			case hwmon_pwm_enable:
-+				switch (val) {
-+				case HP_ENVY_8824_PWM_MODE_MANUAL:
-+					ret = hp_envy_x360_8824_set_manual_locked();
-+					break;
-+				case HP_ENVY_8824_PWM_MODE_AUTO:
-+					ret = hp_envy_x360_8824_set_auto_locked();
-+					break;
-+				default:
-+					ret = -EINVAL;
-+					break;
-+				}
-+				mutex_unlock(&hp_envy_x360_8824_fan_lock);
-+				return ret;
-+			default:
-+				mutex_unlock(&hp_envy_x360_8824_fan_lock);
-+				return -EOPNOTSUPP;
-+			}
-+		}
- 		switch (val) {
- 		case 0:
- 			if (is_victus_s_thermal_profile())
-@@ -2262,7 +2447,7 @@ static int hp_wmi_hwmon_write(struct device *dev, enum hwmon_sensor_types type,
- 
- static const struct hwmon_channel_info * const info[] = {
- 	HWMON_CHANNEL_INFO(fan, HWMON_F_INPUT, HWMON_F_INPUT),
--	HWMON_CHANNEL_INFO(pwm, HWMON_PWM_ENABLE),
-+	HWMON_CHANNEL_INFO(pwm, HWMON_PWM_INPUT | HWMON_PWM_ENABLE),
- 	NULL
- };
- 
+Denis Benato (3):
+  platform/x86: asus-armoury: add support for GV302XU
+  platform/x86: asus-armoury: add support for FA607NU
+  platform/x86: asus-armoury: add support for GU605MU
+
+ drivers/platform/x86/asus-armoury.h | 86 +++++++++++++++++++++++++++++
+ 1 file changed, 86 insertions(+)
+
 -- 
-2.48.1
+2.53.0
+
