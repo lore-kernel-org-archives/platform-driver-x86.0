@@ -1,108 +1,199 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 67A6A3793D0;
-	Mon, 30 Mar 2026 16:28:59 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 889AA270EC3;
+	Mon, 30 Mar 2026 16:31:58 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1774888139; cv=none; b=ad3UZ87Atc+Dl/pvWDK+z/lXRL8Ov7hrVab+QiNPu5ZlVC9MX0oCq9ri5wrtS0jczBclwSiJ+d1TNskvmxR7WXe4adgM7n72sImtpUZWe1aNyZtSKF9h93oGVwroBSalNi0LSLRCJdNeSTgEcbBbs39Tx1s6dzmR7f6ckh6qt9I=
+	t=1774888318; cv=none; b=ASH6D+cQpJ6DRqLqNFWOehKYFPD1Z1XtSjBjGSY5uSXpjGq++WcYjTrhpvEbS1wcT5V8XaSPgYvnBRm3AQQo3ExJJ9U5RdjSok0cnVQgGDKf7iMBkaLbsjv+S+xCgvv0G4NRTqYupxWqErjk72UNxtT3dvbjdcU51gnosaQyclM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1774888139; c=relaxed/simple;
-	bh=HnR3T8HyhR5zh3UidQc9tY5GP+iCNJ+9G4eesNsn66c=;
-	h=Mime-Version:Content-Type:Date:Message-Id:Subject:Cc:To:From:
-	 References:In-Reply-To; b=SUDhd07PBiVBhnoqnSir44k5vwicaFjFvBEUZlOJFdDDaR8IErB8Rf9InZ6cehUx0Jd/MF34n0qqEwAsLtPANDZ6s449VHBmdImlyZ8HxHR5H3TvmMHhGk+t90Wr+vTzN8AAnX1qU4OVjpW2aSW50YKaddGsKtKhItNVDp4X2Dc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=P/3XWocf; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1774888318; c=relaxed/simple;
+	bh=SRDf0GTu4OPnEjLFDGhjlwNkORc3ZV3jFuzbHc7pPv4=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=oCnt17bEA8LneFdwHYhhpofin35wegHT/0jUp/Yw73H1lK9H9m3oXZ0UiZrs5+0MMM4aTHIeA+tFmHyzB0GcK9QK0vTgtww4iX/jMg4mPKAPhr0j1NfREUgvegkv2tMeRhwOdfFLf8mN/GC5d8Uhh9zV9WPkg5kKFKN+8nAYclk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=a5eUi0Ii; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="P/3XWocf"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 2732FC4CEF7;
-	Mon, 30 Mar 2026 16:28:49 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="a5eUi0Ii"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 42FA5C19423;
+	Mon, 30 Mar 2026 16:31:53 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1774888138;
-	bh=HnR3T8HyhR5zh3UidQc9tY5GP+iCNJ+9G4eesNsn66c=;
-	h=Date:Subject:Cc:To:From:References:In-Reply-To:From;
-	b=P/3XWocfTvHDzL/TvgnY90VGL4nSlLd5QBe5hsYLKubBK3nWHOJaPjPq5JQAaRhM8
-	 iAGk5KjaD3ik9GNqL6YSdRdGeXxBgLs24zJtsj3e6fxOpDbi7ZZd8I/d1cyMypX8NE
-	 2XOL2YHA8im3TC/6MZc4CKSvIWYdWZeBHcvNBDXSWRJJuejsAH9jaZzQRbryV+m5kG
-	 lnPI2WxSgVXB97c4laa/t/vZgU3QAb4tmja9ypMEFSoxTNm4EFRWFco06IOLdeGzNC
-	 AdWvpkXe36xoTq6sFQYDIMUXUgS6vorYizdKVDGjM2rmv+ZiFnuwAzo46ijHVV7DUf
-	 PA+6jJae0BAbA==
+	s=k20201202; t=1774888318;
+	bh=SRDf0GTu4OPnEjLFDGhjlwNkORc3ZV3jFuzbHc7pPv4=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=a5eUi0IilhDO1qm4GDUoY0gPuWKmmVphAikH7fxldoBSW1IByxBLpihzcOBaEfvVt
+	 X6XpRx71wLZkAMwoVwf2XPPW22w9I6N0Y0QJleFueWSuWd9uCUU3M8IEHwY43pKtOv
+	 ZVwE+jnmUV7LCO6VHVLBlDOSnM52OPikwTT7f1cW0fE3eldU7S8a/+E5AB1YCzoJlM
+	 XAHdh6H8FtT3lDVJBIyJxJ+NZPiLgyI6WbRGTui89q/XG2CpLsNaFBFTT90J2YB0mZ
+	 BH3B4dMlcQLDnE89E75T7nm0fZF+QVaukNqfbTg/0K0d0EOQwvvFsxVL/YaLPGK43F
+	 w28gmeAhIUo/g==
+Date: Mon, 30 Mar 2026 17:31:51 +0100
+From: Conor Dooley <conor@kernel.org>
+To: Krzysztof Kozlowski <krzk@kernel.org>
+Cc: markus.probst@posteo.de, Hans de Goede <hansg@kernel.org>,
+	Ilpo =?iso-8859-1?Q?J=E4rvinen?= <ilpo.jarvinen@linux.intel.com>,
+	Bryan O'Donoghue <bryan.odonoghue@linaro.org>,
+	Lee Jones <lee@kernel.org>, Pavel Machek <pavel@kernel.org>,
+	Rob Herring <robh@kernel.org>,
+	Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>, Miguel Ojeda <ojeda@kernel.org>,
+	Boqun Feng <boqun@kernel.org>, Gary Guo <gary@garyguo.net>,
+	=?iso-8859-1?Q?Bj=F6rn?= Roy Baron <bjorn3_gh@protonmail.com>,
+	Benno Lossin <lossin@kernel.org>,
+	Andreas Hindborg <a.hindborg@kernel.org>,
+	Alice Ryhl <aliceryhl@google.com>, Trevor Gross <tmgross@umich.edu>,
+	Danilo Krummrich <dakr@kernel.org>,
+	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+	"Rafael J. Wysocki" <rafael@kernel.org>,
+	Len Brown <lenb@kernel.org>, Saravana Kannan <saravanak@kernel.org>,
+	platform-driver-x86@vger.kernel.org, linux-leds@vger.kernel.org,
+	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+	rust-for-linux@vger.kernel.org, linux-acpi@vger.kernel.org
+Subject: Re: [PATCH v5 4/4] platform: Add initial synology microp driver
+Message-ID: <20260330-unrefined-headache-f640bc70a46a@spud>
+References: <20260329-synology_microp_initial-v5-0-27cb80bdf591@posteo.de>
+ <20260329-synology_microp_initial-v5-4-27cb80bdf591@posteo.de>
+ <6d2fb01a-216b-4f51-8a26-527d724002d7@kernel.org>
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
-Content-Type: text/plain; charset=UTF-8
-Date: Mon, 30 Mar 2026 18:28:48 +0200
-Message-Id: <DHG9BXUEUEU4.2DTNLE8Z61DKX@kernel.org>
-Subject: Re: [PATCH 05/12] PCI: use generic driver_override infrastructure
-Cc: "Russell King" <linux@armlinux.org.uk>, "Greg Kroah-Hartman"
- <gregkh@linuxfoundation.org>, "Rafael J. Wysocki" <rafael@kernel.org>,
- "Ioana Ciornei" <ioana.ciornei@nxp.com>, "Nipun Gupta"
- <nipun.gupta@amd.com>, "Nikhil Agarwal" <nikhil.agarwal@amd.com>, "K. Y.
- Srinivasan" <kys@microsoft.com>, "Haiyang Zhang" <haiyangz@microsoft.com>,
- "Wei Liu" <wei.liu@kernel.org>, "Dexuan Cui" <decui@microsoft.com>, "Long
- Li" <longli@microsoft.com>, "Bjorn Helgaas" <bhelgaas@google.com>, "Armin
- Wolf" <W_Armin@gmx.de>, "Bjorn Andersson" <andersson@kernel.org>, "Mathieu
- Poirier" <mathieu.poirier@linaro.org>, "Vineeth Vijayan"
- <vneethv@linux.ibm.com>, "Peter Oberparleiter" <oberpar@linux.ibm.com>,
- "Heiko Carstens" <hca@linux.ibm.com>, "Vasily Gorbik" <gor@linux.ibm.com>,
- "Alexander Gordeev" <agordeev@linux.ibm.com>, "Christian Borntraeger"
- <borntraeger@linux.ibm.com>, "Sven Schnelle" <svens@linux.ibm.com>, "Harald
- Freudenberger" <freude@linux.ibm.com>, "Holger Dengler"
- <dengler@linux.ibm.com>, "Mark Brown" <broonie@kernel.org>, "Michael S.
- Tsirkin" <mst@redhat.com>, "Jason Wang" <jasowang@redhat.com>, "Xuan Zhuo"
- <xuanzhuo@linux.alibaba.com>, =?utf-8?q?Eugenio_P=C3=A9rez?=
- <eperezma@redhat.com>, "Alex Williamson" <alex@shazbot.org>, "Juergen
- Gross" <jgross@suse.com>, "Stefano Stabellini" <sstabellini@kernel.org>,
- "Oleksandr Tyshchenko" <oleksandr_tyshchenko@epam.com>, "Christophe Leroy
- (CS GROUP)" <chleroy@kernel.org>, <linux-kernel@vger.kernel.org>,
- <driver-core@lists.linux.dev>, <linuxppc-dev@lists.ozlabs.org>,
- <linux-hyperv@vger.kernel.org>, <linux-pci@vger.kernel.org>,
- <platform-driver-x86@vger.kernel.org>, <linux-arm-msm@vger.kernel.org>,
- <linux-remoteproc@vger.kernel.org>, <linux-s390@vger.kernel.org>,
- <linux-spi@vger.kernel.org>, <virtualization@lists.linux.dev>,
- <kvm@vger.kernel.org>, <xen-devel@lists.xenproject.org>,
- <linux-arm-kernel@lists.infradead.org>, "Gui-Dong Han"
- <hanguidong02@gmail.com>
-To: "Bjorn Helgaas" <helgaas@kernel.org>
-From: "Danilo Krummrich" <dakr@kernel.org>
-References: <20260324005919.2408620-6-dakr@kernel.org>
- <20260326180825.GA1330769@bhelgaas>
-In-Reply-To: <20260326180825.GA1330769@bhelgaas>
+MIME-Version: 1.0
+Content-Type: multipart/signed; micalg=pgp-sha512;
+	protocol="application/pgp-signature"; boundary="2xLiGAbObogF50Js"
+Content-Disposition: inline
+In-Reply-To: <6d2fb01a-216b-4f51-8a26-527d724002d7@kernel.org>
 
-On Thu Mar 26, 2026 at 7:08 PM CET, Bjorn Helgaas wrote:
-> On Tue, Mar 24, 2026 at 01:59:09AM +0100, Danilo Krummrich wrote:
->> When a driver is probed through __driver_attach(), the bus' match()
->> callback is called without the device lock held, thus accessing the
->> driver_override field without a lock, which can cause a UAF.
->>=20
->> Fix this by using the driver-core driver_override infrastructure taking
->> care of proper locking internally.
->>=20
->> Note that calling match() from __driver_attach() without the device lock
->> held is intentional. [1]
->>=20
->> Link: https://lore.kernel.org/driver-core/DGRGTIRHA62X.3RY09D9SOK77P@ker=
-nel.org/ [1]
->> Reported-by: Gui-Dong Han <hanguidong02@gmail.com>
->> Closes: https://bugzilla.kernel.org/show_bug.cgi?id=3D220789
->> Fixes: 782a985d7af2 ("PCI: Introduce new device binding path using pci_d=
-ev.driver_override")
->> Signed-off-by: Danilo Krummrich <dakr@kernel.org>
->> ---
->>  drivers/pci/pci-driver.c           | 11 +++++++----
->>  drivers/pci/pci-sysfs.c            | 28 ----------------------------
->>  drivers/pci/probe.c                |  1 -
->>  include/linux/pci.h                |  6 ------
->
-> For the above:
->
-> Acked-by: Bjorn Helgaas <bhelgaas@google.com>
->
-> "driver_override" is mentioned several places in
-> Documentation/ABI/testing/sysfs-bus-*.  I assume this series doesn't
-> change the behavior documented there?
 
-Correct, none of this is altered.
+--2xLiGAbObogF50Js
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+
+On Mon, Mar 30, 2026 at 08:51:14AM +0200, Krzysztof Kozlowski wrote:
+> On 29/03/2026 20:02, Markus Probst via B4 Relay wrote:
+> > +
+> > +kernel::of_device_table!(
+> > +    pub(crate) OF_TABLE,
+> > +    MODULE_OF_TABLE,
+> > +    Model,
+> > +    models![
+> > +        apollolake @ [
+> > +            ds918p,
+> > +        ],
+> > +        evansport @ [
+> > +            ds214play,
+> > +        ],
+> > +        geminilakenk @ [
+> > +            ds225p.led_usb_copy(),
+> > +            ds425p,
+> > +        ],
+> > +        pineview @ [
+> > +            ds710p.led_esata(),
+> > +            ds1010p.led_alert(Color::Orange),
+> > +        ],
+> > +        r1000 @ [
+> > +            ds923p,
+> > +            ds723p,
+> > +            ds1522p,
+> > +            rs422p.led_power(Color::Green),
+> > +        ],
+> > +        r1000nk @ [
+> > +            ds725p,
+> > +        ],
+> > +        rtd1296 @ [
+> > +            ds118,
+> > +        ],
+> > +        rtd1619b @ [
+> > +            ds124,
+> > +            ds223.led_usb_copy(),
+> > +            ds223j,
+> > +        ],
+> > +        v1000 @ [
+> > +            ds1823xsp,
+> > +            rs822p.led_power(Color::Green),
+> > +            rs1221p.led_power(Color::Green),
+> > +            rs1221rpp.led_power(Color::Green),
+> > +        ],
+> > +        v1000nk @ [
+> > +            ds925p,
+> > +            ds1525p,
+> > +            ds1825p,
+> I don't see any compatible strings here. Actually, nowhere in the
+> driver. If that's how you write Rust drivers then NAK. Compatibles must
+> be greppable. Not only for humans but also for ABI check.
+
+The code immediately prior creates a macro, which is called here to
+produce these. This macro is barely grokkable to begin with IMO, but
+you can see the DeviceID::new() call down there that creates the
+compatible using string concatenation.
+
+Definitely on the same page as you about compatibles being greppable.
+It's not as if it is difficult to create the list using vim or whatever
+code generator llm you wanna use. Probably making the macro was more
+effort than writing them out!
+
++macro_rules! models {
++    [
++        $($arch:ident $(.$arch_func:ident( $($arch_arg:tt)* ))*
++            @ [
++                $($model:ident $(.$func:ident( $($arg:tt)* ))*, )*
++            ],
++        )*
++    ] => {
++        models![
++            $(
++                {
++                    Architecture::new()
++                    $(
++                        .$arch_func($($arch_arg)*)
++                    )*
++                }
++                @
++                [
++                    $(
++                        $model $(.$func($($arg)*))*,
++                    )*
++                ],
++            )*
++        ]
++    };
++    [
++        $($arch:block
++            @ [
++                $($model:ident $(.$func:ident( $($arg:tt)* ))*, )*
++            ],
++        )*
++    ] => {
++        [
++            $(
++                $((
++                    DeviceId::new(::kernel::c_str!(
++                        ::core::concat!(
++                            "synology,",
++                            ::core::stringify!($model),
++                            "-microp",
++                        )
++                    )),
++                    Model::new($arch)
++                    $(
++                        .$func($($arg)*)
++                    )*
++                ),)*
++            )*
++        ]
++    };
++}
+
+
+--2xLiGAbObogF50Js
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iHUEABYKAB0WIQRh246EGq/8RLhDjO14tDGHoIJi0gUCacqldgAKCRB4tDGHoIJi
+0rftAP9aoaT3IpU068yzu3eGKRdRw8ri76zvcV9wis2AB+5HsgD/fSRvodu57lM/
+7LcDt4totobtLGvQqj145ej84BFtfAo=
+=KjI9
+-----END PGP SIGNATURE-----
+
+--2xLiGAbObogF50Js--
