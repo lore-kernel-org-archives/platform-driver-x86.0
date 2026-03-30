@@ -1,111 +1,190 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mail-106119.protonmail.ch (mail-106119.protonmail.ch [79.135.106.119])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AE1043DDDA3;
-	Mon, 30 Mar 2026 17:38:52 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1E2FB36A014
+	for <platform-driver-x86@vger.kernel.org>; Mon, 30 Mar 2026 17:52:43 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=79.135.106.119
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1774892332; cv=none; b=LkbEgkd3oYeTgAdP3a+TledJGBDEkkFkdCC3u0LX6FiMRENwPCI1wr/g0VlHl6HEonO7NJKpASu1Rpf0jClPjD/r8w05Ih95V9hzZ/DjI9+yxSRUgR/iTxwGNpYhAkHwySHaoJdyEiIJycbXYkB9CH0cIQZndNAhjkLypOR+RS8=
+	t=1774893165; cv=none; b=i4qHALZUbioZeOWPAy+py7mJjNdMUr8LTYI8j0lM6awNhJ/Ox/upCiTahW6H9VCMA4V7aq+vjXHTJ0cKUBCCgXwfuDUdChtcMzi4h4Dva2zPX7jbphUk/mqLNiXPcrtcA9jAZM1h8xtTgM12dB+MGyF6i/bZ4tNEyZ8ky7JVdis=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1774892332; c=relaxed/simple;
-	bh=/8RwifExta3hi9wb0UAvoCzja5DI/LlE9XUZDEKtDlU=;
-	h=Content-Type:Date:Message-Id:From:Subject:Cc:To:Mime-Version:
-	 References:In-Reply-To; b=SD8/xN6VvQvaqrPz4qfgFA7f66EYFReohMjCkweFjH6MvN3fnm090XKAjsbU3JPrdnHUPk+NJ79ISrUX+5fuZMtNyd2BaYa5JuSOgsiIL6QsTw4+A5K57JMivfJlh2eXmh1HXIEnwOKknpQKb7Gj4xj90Bg3eU+1OtFq9Vk1KiA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=S56YWHrx; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1774893165; c=relaxed/simple;
+	bh=gV2TYs4dNvW+5C93b0IouyGEpJF44kurWfId+miiA3o=;
+	h=Date:To:From:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=msmEAfgJrz6E13SIyQbmd2lh5n0ze24PgVDEnPRHhAwvQvfukRrebbruCt74rLnVeb3G20o9ZZf+Rvo36DVaPqYV4qRyRc2mJ4/I11H7e3HAu+KWDP36zzOovMscokl/jbKep2oHiaSCNvHF4oJEhnJ7qm1qcVr6L5P//KILsug=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=pm.me; spf=pass smtp.mailfrom=pm.me; dkim=pass (2048-bit key) header.d=pm.me header.i=@pm.me header.b=dJxTo4Ds; arc=none smtp.client-ip=79.135.106.119
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=pm.me
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=pm.me
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="S56YWHrx"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 39967C2BCB5;
-	Mon, 30 Mar 2026 17:38:43 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1774892332;
-	bh=/8RwifExta3hi9wb0UAvoCzja5DI/LlE9XUZDEKtDlU=;
-	h=Date:From:Subject:Cc:To:References:In-Reply-To:From;
-	b=S56YWHrxhwHLS+EfSzEoW6H9YreN8wrQZ/7HEDAWqAjDAvn6rNoi6jXsbwo3fyTXv
-	 TjHIGPt2qRPbkCCC5yCfSjAbtAw6BzXCZXCaq/yn658JrR6/xBRJ7/mYaDQNBA9Pmv
-	 wsEtOTKeR8oMh9VC6LyR87wz4W/9tT1+Zpl9oixkuOSdi9YZxoGPEs7WRJpEIUF6YP
-	 QT3eMcBSThXdTkmokN7Q16p5we5dG5K2/LjDkgP9NUYvkxjgwB7vubbfIKhxuyu2dj
-	 oq30Tych+FNSMtuze99IC0ZOa+AcROHbp3uZujJVXn+3TGN1ylZ7O8WH21Mk5oRMNX
-	 /gBaIKRkeOGJg==
-Content-Type: text/plain; charset=UTF-8
-Date: Mon, 30 Mar 2026 19:38:41 +0200
-Message-Id: <DHGATG6LJOM1.2AI7BYQ2O4DFU@kernel.org>
-From: "Danilo Krummrich" <dakr@kernel.org>
-Subject: Re: [PATCH 05/12] PCI: use generic driver_override infrastructure
-Cc: "Russell King" <linux@armlinux.org.uk>, "Greg Kroah-Hartman"
- <gregkh@linuxfoundation.org>, "Rafael J. Wysocki" <rafael@kernel.org>,
- "Ioana Ciornei" <ioana.ciornei@nxp.com>, "Nipun Gupta"
- <nipun.gupta@amd.com>, "Nikhil Agarwal" <nikhil.agarwal@amd.com>, "K. Y.
- Srinivasan" <kys@microsoft.com>, "Haiyang Zhang" <haiyangz@microsoft.com>,
- "Wei Liu" <wei.liu@kernel.org>, "Dexuan Cui" <decui@microsoft.com>, "Long
- Li" <longli@microsoft.com>, "Bjorn Helgaas" <bhelgaas@google.com>, "Armin
- Wolf" <W_Armin@gmx.de>, "Bjorn Andersson" <andersson@kernel.org>, "Mathieu
- Poirier" <mathieu.poirier@linaro.org>, "Vineeth Vijayan"
- <vneethv@linux.ibm.com>, "Peter Oberparleiter" <oberpar@linux.ibm.com>,
- "Heiko Carstens" <hca@linux.ibm.com>, "Vasily Gorbik" <gor@linux.ibm.com>,
- "Alexander Gordeev" <agordeev@linux.ibm.com>, "Christian Borntraeger"
- <borntraeger@linux.ibm.com>, "Sven Schnelle" <svens@linux.ibm.com>, "Harald
- Freudenberger" <freude@linux.ibm.com>, "Holger Dengler"
- <dengler@linux.ibm.com>, "Mark Brown" <broonie@kernel.org>, "Michael S.
- Tsirkin" <mst@redhat.com>, "Jason Wang" <jasowang@redhat.com>, "Xuan Zhuo"
- <xuanzhuo@linux.alibaba.com>, =?utf-8?q?Eugenio_P=C3=A9rez?=
- <eperezma@redhat.com>, "Juergen Gross" <jgross@suse.com>, "Stefano
- Stabellini" <sstabellini@kernel.org>, "Oleksandr Tyshchenko"
- <oleksandr_tyshchenko@epam.com>, "Christophe Leroy (CS GROUP)"
- <chleroy@kernel.org>, <linux-kernel@vger.kernel.org>,
- <driver-core@lists.linux.dev>, <linuxppc-dev@lists.ozlabs.org>,
- <linux-hyperv@vger.kernel.org>, <linux-pci@vger.kernel.org>,
- <platform-driver-x86@vger.kernel.org>, <linux-arm-msm@vger.kernel.org>,
- <linux-remoteproc@vger.kernel.org>, <linux-s390@vger.kernel.org>,
- <linux-spi@vger.kernel.org>, <virtualization@lists.linux.dev>,
- <kvm@vger.kernel.org>, <xen-devel@lists.xenproject.org>,
- <linux-arm-kernel@lists.infradead.org>, "Danilo Krummrich"
- <dakr@kernel.org>, "Gui-Dong Han" <hanguidong02@gmail.com>
-To: "Alex Williamson" <alex@shazbot.org>, "Jason Gunthorpe" <jgg@ziepe.ca>
-Content-Transfer-Encoding: quoted-printable
+	dkim=pass (2048-bit key) header.d=pm.me header.i=@pm.me header.b="dJxTo4Ds"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=pm.me;
+	s=protonmail3; t=1774893152; x=1775152352;
+	bh=gV2TYs4dNvW+5C93b0IouyGEpJF44kurWfId+miiA3o=;
+	h=Date:To:From:Cc:Subject:Message-ID:In-Reply-To:References:
+	 Feedback-ID:From:To:Cc:Date:Subject:Reply-To:Feedback-ID:
+	 Message-ID:BIMI-Selector;
+	b=dJxTo4DsZOYpfW3RUTXnQiTdWwmr0O/kAY90Uto/Oaup6Adrf4NCmQjxigNcsbP/o
+	 FnR4kOvZUjWh4JabyYOu+OH26lO5tBeDQp6Po8rUeYha752f4S8NGrA3eN6EQ+vFhK
+	 3yVS5NMRauhP5TkhBu6KLen6f0LNqTeODdme82Uoku5OBoknrT4PBg8HvRMXkLcEts
+	 vrxN1BSxgpL3Uzmc5UKSP2LC0tfU0s1LNBHqySjMFwCxmWqphlCgiCjk/JPyepu9lZ
+	 o4qfHybuCc2lSEyLP5XIwKFnR1tWPrWcUffLwh30ZLoq74d1zq9svM8ovii7X/Xder
+	 jEZzk+V5RR9/g==
+Date: Mon, 30 Mar 2026 17:52:26 +0000
+To: srinivas pandruvada <srinivas.pandruvada@linux.intel.com>
+From: Maciej Wieczor-Retman <m.wieczorretman@pm.me>
+Cc: Artem Bityutskiy <dedekind1@gmail.com>, hansg@kernel.org, ilpo.jarvinen@linux.intel.com, linux-kernel@vger.kernel.org, platform-driver-x86@vger.kernel.org
+Subject: Re: [PATCH v1 0/2] platform/x86/intel-uncore-freq: Expose instance ID in the sysfs
+Message-ID: <acq25-Y4Eh_4wZdC@wieczorr-mobl1.localdomain>
+In-Reply-To: <b81d9ed63dc435e08d496fa6f5eba8c144767d32.camel@linux.intel.com>
+References: <cover.1774625521.git.m.wieczorretman@pm.me> <4a19dd6c2ee07bf70ac136747e1ea5bfd8e41888.camel@gmail.com> <acbwMA43StTa7kCM@wieczorr-mobl1.localdomain> <edb2d0df79c1b29b83bfa0e5a36a70814ceee505.camel@linux.intel.com> <acou4kv56NmP5nXx@wieczorr-mobl1.localdomain> <b81d9ed63dc435e08d496fa6f5eba8c144767d32.camel@linux.intel.com>
+Feedback-ID: 164464600:user:proton
+X-Pm-Message-ID: 6713f4acc471a87b122d73c755420950a3ec7e4c
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-References: <20260324005919.2408620-1-dakr@kernel.org>
- <20260324005919.2408620-6-dakr@kernel.org>
-In-Reply-To: <20260324005919.2408620-6-dakr@kernel.org>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: quoted-printable
 
-(Cc: Jason)
+On 2026-03-30 at 10:10:06 -0700, srinivas pandruvada wrote:
+>On Mon, 2026-03-30 at 08:11 +0000, Maciej Wieczor-Retman wrote:
+>> On 2026-03-29 at 12:30:59 -0700, srinivas pandruvada wrote:
+>> > On Fri, 2026-03-27 at 21:03 +0000, Maciej Wieczor-Retman wrote:
+>> > > On 2026-03-27 at 19:51:54 +0200, Artem Bityutskiy wrote:
+>> > > > On Fri, 2026-03-27 at 15:36 +0000, Maciej Wieczor-Retman wrote:
+>> > > > > on newer systems that can have multiple clusters on a single
+>> > > > > die,
+>> > > > > the
+>> > > > > intel-uncore-freq driver behaves differently and the
+>> > > > > domain_id is
+>> > > > > a
+>> > > > > globally unique value - unique on all TPMI devices. Therefore
+>> > > > > it's
+>> > > > > difficult to match a specific instance to a set of UFS
+>> > > > > registers
+>> > > > > for
+>> > > > > example visible through /sys/kernel/debug/tpmi directories.
+>> > > >
+>> > > > Although, I'd say that the key point isn't that "domain_id is
+>> > > > globally
+>> > > > unique" (though this is true), but that it's a synthetic value
+>> > > > generated by the driver rather than representing an actual HW
+>> > > > instance
+>> > > > ID.
+>> > > >
+>> > > > Artem.
+>> > >
+>> > > Right, that's worth emphasizing. I'll try to rephrase it when
+>> > > updating the
+>> > > patches.
+>> >
+>> > I think the purpose is not clear. Also need to update the
+>> > documentation.
+>> > Let me write one tomorrow.
+>> >
+>> > Thanks,
+>> > Srinivas
+>>
+>> Would it help if the purpose was stated as:
+>> =09"this domain_id value is not attached to a HW instance ID
+>> anymore"
+>> and then I could show the debug tpmi device mem_dump contents and how
+>> it
+>> diverges with the domain_id - hence why the instance_id needs to be
+>> exported?
+>
+>But why you need to have such information?
+>
+>I tried to explain. We should add to uncore documentation in some form.
+>Hope this helps.
 
-On Tue Mar 24, 2026 at 1:59 AM CET, Danilo Krummrich wrote:
-> diff --git a/drivers/vfio/pci/vfio_pci_core.c b/drivers/vfio/pci/vfio_pci=
-_core.c
-> index d43745fe4c84..460852f79f29 100644
-> --- a/drivers/vfio/pci/vfio_pci_core.c
-> +++ b/drivers/vfio/pci/vfio_pci_core.c
-> @@ -1987,9 +1987,8 @@ static int vfio_pci_bus_notifier(struct notifier_bl=
-ock *nb,
->  	    pdev->is_virtfn && physfn =3D=3D vdev->pdev) {
->  		pci_info(vdev->pdev, "Captured SR-IOV VF %s driver_override\n",
->  			 pci_name(pdev));
-> -		pdev->driver_override =3D kasprintf(GFP_KERNEL, "%s",
-> -						  vdev->vdev.ops->name);
-> -		WARN_ON(!pdev->driver_override);
-> +		WARN_ON(device_set_driver_override(&pdev->dev,
-> +						   vdev->vdev.ops->name));
+Thanks for more background information! I'll redact it into cover letter/pa=
+tch
+messages and a documentation entry.
 
-Technically, this is a change in behavior. If vdev->vdev.ops->name is NULL,=
- it
-will trigger the WARN_ON(), whereas before it would have just written "(nul=
-l)"
-into driver_override.
+>
+>"
+>This change introduces unique identification for MMIO blocks in TPMI
+>devices, enabling userspace tools like "pepc"=C2=A0
+>(https://github.com/intel/pepc) to provide additional controls through
+>direct MMIO access. "pepc" directly read/write MMIO from user space
+>when possible.
+>
+>While this was straightforward for non-partitioned systems, partitioned
+>systems require additional steps to map MMIO blocks.
+>
+>Background
+>
+>TPMI MMIO Organization
+>TPMI defines MMIO maps organized into blocks for each device, where:
+>- Each block belongs to a different power domain
+>- Each power domain is exposed in sysfs via a domain_id attribute
+>- Power domain scope is per-die (either IO dies or compute dies)
+>- Compute die blocks are ordered before IO die blocks in MMIO space
+>
+>Domain ID Mapping
+>For compute dies, the mapping is architectural with CPUID leaf or via
+>MSR 0x54:
+>- Compute die IDs directly correspond to CPU die IDs
+>- CPU die ID can be obtained from MSR 0x54 or recent CPUID leaves
+>- Example: domain_id =3D 1 applies to all CPUs with die ID 1
+>
+>For IO dies, the relationship is generation/platform specific and
+>requires special user space if any control are desired. This is
+>generally not recommended to assume any specific IO organization.
+>But uncore sysfs provides attribute to know die types, if
+>required.
+>
+>Single Partition Example (Granite Rapids)
+>
+>One TPMI device per package with MMIO blocks ordered as:
+>- Compute die 0 (domain_id =3D 0)
+>- Compute die 1 (domain_id =3D 1)
+>- IO die 0 (domain_id =3D 2)
+>- IO die 1 (domain_id =3D 3)
+>
+>Userspace tools can directly index MMIO space using domain_id, and
+>tools can correlate CPU die IDs with domain_id.
+>
+>Partitioned System Layout
+>With partitioned systems, multiple TPMI devices exist per package:
+>-Partition 0:
+>=09Compute die 0
+>=09Compute die 1
+>=09IO die 0
+>=09IO die 1
+>
+>Partition 1:
+>=09Compute die 0
+>=09Compute die 1
+>=09IO die 0
+>=09IO die 1
+>
+>CPUs are still enumerated package-wide, so die IDs remain unique per
+>package.
+>So for example a CPU with die ID 3 can map to the first instance in
+>partition 1.
+>
+>The partition ID is non architectural and there is no CPUID leaf or MSR
+>to map CPU to partition number.
+>
+>To maintain a consistent interface without exposing non-architectural
+>partitioning:
+>domain_id remains logically consistent (domain_id =3D 3 controls CPU die
+>ID 3).
+>Driver internally organizes domain_id. This allows existing user space
+>to continue to use domain_id to map CPU die IDs.
+>
+>IO domains receive logical domain IDs after all compute domain IDs as
+>it has no architectural meaning.
+>But direct MMIO indexing via domain_id is no longer possible.
+>
+>This patchset introduces "instance_id" as a physical index into MMIO
+>blocks:
+>- Single partition systems: instance_id equals domain_id
+>- Partitioned systems: instance_id provides the actual MMIO block index
+>enabling tools like pepc to perform direct MMIO access once it knows
+>partition.
+>"
 
-I assume that vfio_pci_core drivers are expected to set the name in struct
-vfio_device_ops in the first place and this code (silently) relies on this
-invariant?
-
-Alex, Jason: Should we keep this hunk above as is and check for a proper na=
-me in
-struct vfio_device_ops in vfio_pci_core_register_device() with a subsequent
-patch?
-
->  	} else if (action =3D=3D BUS_NOTIFY_BOUND_DRIVER &&
->  		   pdev->is_virtfn && physfn =3D=3D vdev->pdev) {
->  		struct pci_driver *drv =3D pci_dev_driver(pdev);
