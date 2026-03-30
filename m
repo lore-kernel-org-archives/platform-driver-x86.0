@@ -1,47 +1,44 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EE0A83D16F7;
-	Mon, 30 Mar 2026 12:38:50 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8031A3D16E5;
+	Mon, 30 Mar 2026 12:38:56 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1774874331; cv=none; b=J6ZATg27b1V3Wt0n4KGgAeKzP14Q8skPKApWDZZgDWJ9O2gEEOeGFZ01qg+jR4o3wE6/NLqzohQR5APEX5YwrM4Zn06i1nFlgmEbaXVXi9C4THvEyrbxaFV35MGjK6sBbTzYXpALtb8zSRo96CEbLTW17Lrbd4uD0Q07taIzHR0=
+	t=1774874338; cv=none; b=QXArrhZWLTuxPKCIhTKKmGoTVFlVT7m1nCKzxEu/bJ+Ch1UCESW2L1NEmW7XSdV0uIde40AxT0m6Q7EjqyXtMA+gq+TWpTDMUstcl0kS5Z0e9/3kOvBbY/YpASyYJrq66t7BucFzdTixWVr+CQ4GwYGcQOUFQmSGy5i8297S13E=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1774874331; c=relaxed/simple;
-	bh=uujdV5K8kf267EBdHO8hDWeHkE+dhVf5akE4yMxwd0A=;
+	s=arc-20240116; t=1774874338; c=relaxed/simple;
+	bh=lNnTyxFDuhsw1+MjDWI7JngK4wScW9vg6MGq567ugdc=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=C9mqV46pGWSCkVuMj91V2UYJZ6Km8uPQLGIG1X4wDj0rBf55jIX7Q4kgVrnMC6/ryp+pPoUsQYw2hk/KQWNpTIn7yGd/x6naXJwkntVV17gsj+lj36SD2nhBBm0KTwlSSrySMrgbfmbUZXRL6T60PebFpZyChvogQGwKBXmVmG4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=NIv9/zBd; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version:Content-Type; b=tSM2KMmiQeUcy6vMJXdFeoQ4g+MWzSQ6Kl9Tt5VNICVt6LsersKxF9flsGI/9IOvvbTRZPJkqgK6EboJB8FsM+m6imwXiEFBr4vkfGj4Sk8HtQBAs3vf9wn+GcBrqLAxsmzkPwmhETWIudMvvkahLVDXLFlmHnC/a2Pcjn21Ucw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=RetctO0l; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="NIv9/zBd"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 8B20DC2BCB1;
-	Mon, 30 Mar 2026 12:38:49 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="RetctO0l"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 23800C4CEF7;
+	Mon, 30 Mar 2026 12:38:55 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1774874330;
-	bh=uujdV5K8kf267EBdHO8hDWeHkE+dhVf5akE4yMxwd0A=;
+	s=k20201202; t=1774874336;
+	bh=lNnTyxFDuhsw1+MjDWI7JngK4wScW9vg6MGq567ugdc=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=NIv9/zBdZ+nGcJRGs/qb6LYeMC9nA/ES+Y2iTnnjEtmrU4v9NVBtORSPr4FilE7mp
-	 SmXYJXKUY4joGj1S0NlPl6uwDyj1phYULgxXMKPOqbbbLF+VPCuScuUbDLazMOKOvF
-	 +G6fGQiV1GFxB6IfNSufqDXr0Q7mK43BrPjVFEwWEBX1ZD9TNERgp+IK6Q5LW8xCu0
-	 WboLlb5HLpYDt6tJrlSVsLfW26oMcUcr29yG9AhuxCidIsfVkUK70CFEqFFxrckXJ0
-	 ZZdjMZX10jwK8NWEgqhlGazVYgmi7k9Wb9n2W8CcV5aL5X4Tdd9fIuY/Tq4L0+DNJM
-	 ofe1aOln4QQ2g==
+	b=RetctO0lb+4wCIK/U6HgjCAFpaGaGZmFl8uCwM6mYXnrt/2oRtCE8iQBplCiOXAxn
+	 HmtbSB2uhwB+QjKVbP/100l59pe9ZC1t9KRlkwHvnrOl9w+8NQistaZwqa20V9Njs+
+	 RSyA4mm0D54a2FLB258Rf49Lm/LCLs6s//DfJ4sXMM/kVTT0418/IHB816YYS/epwb
+	 47ciGxupouslCkT+DdQo40o/avRJpMiUDr4YYqyeqJEhju2o/nhP9gJ/OWONMpocTD
+	 MwQ2QzHbF300kw5vYLwqDOEEqUQpZ3ABQHVLVDnuiNukUw0gAWayM4JMN4qg0QBOJ5
+	 FjAAX2PxWxT/g==
 From: Sasha Levin <sashal@kernel.org>
 To: patches@lists.linux.dev,
 	stable@vger.kernel.org
-Cc: Matthew Schwartz <matthew.schwartz@linux.dev>,
-	"Mario Limonciello (AMD)" <superm1@kernel.org>,
-	Denis Benato <denis.benato@linux.dev>,
+Cc: Krishna Chomal <krishna.chomal108@gmail.com>,
+	WJ Enderlava <jie7172585@gmail.com>,
 	=?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>,
 	Sasha Levin <sashal@kernel.org>,
-	corentin.chary@gmail.com,
-	luke@ljones.dev,
 	hansg@kernel.org,
 	platform-driver-x86@vger.kernel.org,
 	linux-kernel@vger.kernel.org
-Subject: [PATCH AUTOSEL 6.19-6.12] platform/x86: asus-nb-wmi: add DMI quirk for ASUS ROG Flow Z13-KJP GZ302EAC
-Date: Mon, 30 Mar 2026 08:38:18 -0400
-Message-ID: <20260330123842.756154-5-sashal@kernel.org>
+Subject: [PATCH AUTOSEL 6.19-6.18] platform/x86: hp-wmi: Add support for Omen 16-wf1xxx (8C76)
+Date: Mon, 30 Mar 2026 08:38:22 -0400
+Message-ID: <20260330123842.756154-9-sashal@kernel.org>
 X-Mailer: git-send-email 2.53.0
 In-Reply-To: <20260330123842.756154-1-sashal@kernel.org>
 References: <20260330123842.756154-1-sashal@kernel.org>
@@ -57,19 +54,25 @@ X-Patchwork-Hint: Ignore
 X-stable-base: Linux 6.19.10
 Content-Transfer-Encoding: 8bit
 
-From: Matthew Schwartz <matthew.schwartz@linux.dev>
+From: Krishna Chomal <krishna.chomal108@gmail.com>
 
-[ Upstream commit 0198d2743207d67f995cd6df89e267e1b9f5e1f1 ]
+[ Upstream commit 84d29bfd1929d08f092851162a3d055a2134d043 ]
 
-The ASUS ROG Flow Z13-KJP GZ302EAC model uses sys_vendor name ASUS
-rather than ASUSTeK COMPUTER INC., but it needs the same folio quirk as
-the other ROG Flow Z13. To keep things simple, just match on sys_vendor
-ASUS since it covers both.
+The HP Omen 16-wf1xxx (board ID: 8C76) has the same WMI interface as
+other Victus S boards, but requires quirks for correctly switching
+thermal profile (similar to board 8C78).
 
-Signed-off-by: Matthew Schwartz <matthew.schwartz@linux.dev>
-Reviewed-by: Mario Limonciello (AMD) <superm1@kernel.org>
-Reviewed-by: Denis Benato <denis.benato@linux.dev>
-Link: https://patch.msgid.link/20260312212246.1608080-1-matthew.schwartz@linux.dev
+Add the DMI board name to victus_s_thermal_profile_boards[] table and
+map it to omen_v1_thermal_params.
+
+Testing on board 8C76 confirmed that platform profile is registered
+successfully and fan RPMs are readable and controllable.
+
+Tested-by: WJ Enderlava <jie7172585@gmail.com>
+Reported-by: WJ Enderlava <jie7172585@gmail.com>
+Closes: https://bugzilla.kernel.org/show_bug.cgi?id=221149
+Signed-off-by: Krishna Chomal <krishna.chomal108@gmail.com>
+Link: https://patch.msgid.link/20260227154106.226809-1-krishna.chomal108@gmail.com
 Reviewed-by: Ilpo Järvinen <ilpo.jarvinen@linux.intel.com>
 Signed-off-by: Ilpo Järvinen <ilpo.jarvinen@linux.intel.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
@@ -77,339 +80,350 @@ Signed-off-by: Sasha Levin <sashal@kernel.org>
 
 LLM Generated explanations, may be completely bogus:
 
-Now I have all the facts verified. Here is the complete analysis:
+Now I have all the data needed for the comprehensive analysis.
 
 ---
 
 ## PHASE 1: COMMIT MESSAGE FORENSICS
 
 **Step 1.1: Subject Line**
-Record: [platform/x86: asus-nb-wmi] [add] [Broaden DMI vendor match for
-ASUS ROG Flow Z13-KJP GZ302EAC so the existing folio quirk applies]
+Record: [platform/x86: hp-wmi] [Add] [DMI board name 8C76 to Victus S
+thermal profile table, mapped to omen_v1_thermal_params]
 
 **Step 1.2: Tags**
-- Signed-off-by: Matthew Schwartz <matthew.schwartz@linux.dev> (author)
-- Reviewed-by: Mario Limonciello (AMD) <superm1@kernel.org>
-- Reviewed-by: Denis Benato <denis.benato@linux.dev>
-- Reviewed-by: Ilpo Järvinen <ilpo.jarvinen@linux.intel.com> (subsystem
-  maintainer)
-- Signed-off-by: Ilpo Järvinen <ilpo.jarvinen@linux.intel.com>
-  (maintainer sign-off)
-- Link: https://patch.msgid.link/20260312212246.1608080-1-
-  matthew.schwartz@linux.dev
-- No Fixes:, Reported-by:, Tested-by:, or Cc: stable tags (expected for
-  candidates)
-
-Record: Triple Reviewed-by including subsystem maintainer; strong
-quality signal.
+Record:
+- `Tested-by: WJ Enderlava <jie7172585@gmail.com>` — real user tested on
+  hardware
+- `Reported-by: WJ Enderlava <jie7172585@gmail.com>` — single reporter,
+  real hardware user
+- `Closes: https://bugzilla.kernel.org/show_bug.cgi?id=221149` — user-
+  filed bugzilla
+- `Signed-off-by: Krishna Chomal` — author
+- `Link: https://patch.msgid.link/20260227154106.226809-1-
+  krishna.chomal108@gmail.com`
+- `Reviewed-by: Ilpo Järvinen` — subsystem maintainer reviewed
+- `Signed-off-by: Ilpo Järvinen` — maintainer committed
+- No `Fixes:` tag (expected for manual review candidates)
+- No `Cc: stable` (expected)
+- No syzbot involvement
 
 **Step 1.3: Body Text**
-The GZ302EAC model reports `sys_vendor` as "ASUS" rather than "ASUSTeK
-COMPUTER INC." The existing Z13 DMI entry matched only the longer
-string, so the GZ302EAC variant never received `quirk_asus_z13`. The fix
-broadens the vendor match to "ASUS" to cover both strings.
-Record: [Bug] DMI vendor string mismatch prevents quirk application.
-[Symptom] Missing folio/tablet and key-remap behavior on this model.
-[Version info] None explicit. [Root cause] `sys_vendor` differs across
-Z13 variants.
+Record: Bug: Board 8C76 (HP Omen 16-wf1xxx) has the same WMI interface
+as Victus S boards but requires quirks for correct thermal profile
+switching (similar to 8C78). Symptom: without the entry, the board
+cannot register the platform profile and fan RPMs are not
+readable/controllable. Testing confirmed on real hardware that profile
+registers and fans work after the fix. Root cause: missing DMI board
+name in the quirk table.
 
 **Step 1.4: Hidden Bug Fix Detection**
-Record: This is explicitly a hardware quirk fix — the existing Z13 quirk
-fails to match a real hardware variant, causing functional regressions
-for that model's users.
+Record: Yes — phrased as "Add support" but this is a hardware-specific
+DMI quirk. Without this entry, the board does not get routed into the
+correct thermal handling path, meaning no platform profile registration
+and no fan control. This is functionally a bug fix for users of this
+specific hardware.
 
 ---
 
 ## PHASE 2: DIFF ANALYSIS
 
 **Step 2.1: Inventory**
-Record: [1 file: `drivers/platform/x86/asus-nb-wmi.c`, +1/-1]
-[asus_quirks[] data table, Z13 entry] [Single-file, single-line surgical
-fix]
+Record: 1 file changed: `drivers/platform/x86/hp/hp-wmi.c`, +4 lines, 0
+removed. Single table entry added to
+`victus_s_thermal_profile_boards[]`. Scope: single-file, surgical, data-
+only change.
 
 **Step 2.2: Code Flow Change**
-Before: The Z13 DMI entry matched `DMI_SYS_VENDOR` substring `"ASUSTeK
-COMPUTER INC."` plus `DMI_PRODUCT_NAME` substring `"ROG Flow Z13"`.
-After: Same entry matches `DMI_SYS_VENDOR` substring `"ASUS"` plus same
-product name.
-
-Verified in `drivers/firmware/dmi_scan.c` lines 864-866 that
-`DMI_MATCH()` uses `strstr()` for non-exact matches:
-
-```864:866:drivers/firmware/dmi_scan.c
-                        if (strstr(dmi_ident[s],
-                                   dmi->matches[i].substr))
-                                continue;
-```
-
-Since "ASUS" is a substring of "ASUSTeK COMPUTER INC.", all previously-
-matching devices continue to match. The broader string also covers
-models reporting just "ASUS".
-Record: [Widens vendor match safely; existing devices still match;
-GZ302EAC now also matches]
+Record: Before: board "8C76" is not in
+`victus_s_thermal_profile_boards[]`, so `dmi_first_match()` in
+`setup_active_thermal_profile_params()` does not match it;
+`is_victus_s_board` stays false; thermal profile, fan, and power-source
+handling all skip the Victus S path. After: "8C76" matches,
+`driver_data` = `&omen_v1_thermal_params` (same as "8C78"), enabling the
+full Victus S / Omen v1 code path.
 
 **Step 2.3: Bug Mechanism**
-Category: Hardware workaround / DMI quirk match fix.
-
-The `quirk_asus_z13` provides:
-
-```153:156:drivers/platform/x86/asus-nb-wmi.c
-static struct quirk_entry quirk_asus_z13 = {
-        .key_wlan_event = ASUS_WMI_KEY_ARMOURY,
-        .tablet_switch_mode = asus_wmi_kbd_dock_devid,
-};
-```
-
-Without matching, the driver falls back to `quirk_asus_unknown` (line
-561), resulting in:
-- Side button erroneously triggering WiFi rfkill toggle instead of
-  emitting KEY_PROG3
-- No tablet mode detection when the folio keyboard is detached
-
-Record: [DMI match failure prevents `quirk_asus_z13` application on
-GZ302EAC variant; fix widens vendor match safely]
+Record: Category: Hardware workaround / DMI match table entry. Specific
+mechanism: missing board name in DMI quirk table causes incorrect
+thermal profile handling for this laptop SKU.
 
 **Step 2.4: Fix Quality**
-Record: Obviously correct — single string change in a data table,
-mechanically verifiable via `strstr()` semantics. Product-name match
-(`"ROG Flow Z13"`) still constrains the match. Regression risk: very
-low.
+Record: Obviously correct — identical pattern to adjacent "8C78" entry.
+Minimal and surgical (4 lines). Zero regression risk: only activates on
+exact DMI board name "8C76". No API or ABI changes.
 
 ---
 
 ## PHASE 3: GIT HISTORY INVESTIGATION
 
 **Step 3.1: Blame**
-`git blame` shows the Z13 DMI entry was introduced by commit
-`132bfcd24925d4` (Antheas Kapenekakis, 2025-08-08): "platform/x86: asus-
-wmi: Fix ROG button mapping, tablet mode on ASUS ROG Z13".
-Record: [Buggy code introduced by `132bfcd24925d4`] [First released in
-v6.17]
+Record: `git blame -L 162,191` shows the entire
+`victus_s_thermal_profile_boards[]` table (in its `dmi_system_id` form
+with `driver_data`) was created by commit `e7cbd37292653` ("fix platform
+profile values for Omen 16-wf1xxx", Krishna Chomal, 2026-01-13). The
+table structure/`};` terminator originates from `6e4ab59b8391a` (Julien
+Robin, 2025-01-16, original Victus S support).
 
 **Step 3.2: Fixes: tag**
-Record: N/A — no Fixes: tag present (expected for candidates).
+Record: N/A — no Fixes: tag present (expected for manual review). The
+related prerequisite `e7cbd37292653` itself has `Fixes: fb146a38cb119`.
 
 **Step 3.3: File History**
-Recent history shows `132bfcd24925d4` (Z13 quirk) and `7dc6b2d3b5503`
-(Zenbook Duo UX8406CA quirk addition — same pattern). The candidate is a
-standalone follow-up. No other GZ302 or KJP commits found.
-Record: [Related: `132bfcd24925d4` prerequisite only] [Standalone fix]
+Record: Recent `hp-wmi.c` history shows: `e7cbd37292653` (per-board
+thermal params refactor), `68779adbabdbb` (DMI ordering),
+`fa0498f804753` (Omen MAX 16-ah0xx), `fb146a38cb119` (Omen 16-wf1xxx fan
+support), `54afb047cd7eb` (Victus 16-r/s). This is a standalone single-
+patch addition, not part of a numbered series.
 
 **Step 3.4: Author**
-No prior commits by Matthew Schwartz in this subsystem found in local
-history. However, three subsystem-relevant reviewers signed off,
-including the maintainer Ilpo Järvinen.
-Record: [Author is not a regular contributor] [Maintainer reviewed and
-signed off]
+Record: Krishna Chomal has 2 prior commits in
+`drivers/platform/x86/hp/`: `fb146a38cb119` (Add Omen 16-wf1xxx fan
+support) and `e7cbd37292653` (fix platform profile values for Omen
+16-wf1xxx). Author is the original contributor for this specific
+hardware support. Reviewed and committed by subsystem maintainer Ilpo
+Järvinen.
 
 **Step 3.5: Dependencies**
-`git tag --contains 132bfcd24925d4` confirms the prerequisite is in
-v6.17, v6.18, and v6.19. It is NOT in v6.12 or older LTS trees (exit
-code 1, empty output). The candidate is only meaningful for trees that
-already contain this commit.
-Record: [Depends on `132bfcd24925d4`; relevant for v6.17+; irrelevant
-for v6.12.y, v6.6.y, v6.1.y, v5.15.y]
+Record: This patch requires the `dmi_system_id` table format with
+`driver_data` pointing to `struct thermal_profile_params`, introduced by
+`e7cbd37292653`. It also requires `omen_v1_thermal_params` to be defined
+(also from `e7cbd37292653`). Verified: `e7cbd37292653` is contained in
+`v6.19.4~320`; `fb146a38cb119` is contained in `v6.18-rc7~24^2~18`.
 
 ---
 
 ## PHASE 4: MAILING LIST AND EXTERNAL RESEARCH
 
-**Step 4.1-4.4:**
-Lore.kernel.org and patch.msgid.link were inaccessible due to Anubis
-anti-bot protection. The commit message itself carries three Reviewed-by
-tags and maintainer sign-off, which are strong acceptance signals.
-Record: [Lore thread content UNVERIFIED; relying on commit tag signals]
+**Step 4.1–4.4:**
+Record: WebFetch attempts to lore.kernel.org, patch.msgid.link, and
+bugzilla.kernel.org were blocked by Anubis bot protection. Could not
+independently verify the mailing list discussion or bugzilla details.
+The commit tags (Reported-by, Tested-by, Reviewed-by, Closes:) provide
+the evidence trail. UNVERIFIED: exact bugzilla content and mailing list
+discussion.
 
 ---
 
 ## PHASE 5: CODE SEMANTIC ANALYSIS
 
-**Step 5.1: Key Functions/Data**
-Record: `asus_quirks[]` table, `asus_nb_wmi_quirks()`,
-`dmi_check_system()`, `dmi_matched()`, `quirk_asus_z13`
+**Step 5.1: Functions in Diff**
+Record: No function bodies modified. Data change only: one entry added
+to `victus_s_thermal_profile_boards[]`.
 
 **Step 5.2: Callers**
-`asus_nb_wmi_quirks()` is the `.detect_quirks` callback in
-`asus_nb_wmi_driver`, called from `asus_wmi_register_driver()` during
-`asus_nb_wmi_init()` → module initialization. Runs on every boot/module
-load for affected hardware.
-Record: [Called during normal driver initialization, not a hot path]
+Record: Verified via grep: `victus_s_thermal_profile_boards` is consumed
+by `setup_active_thermal_profile_params()` (line 2288), which calls
+`dmi_first_match()` on this table. On match, it sets `is_victus_s_board
+= true` and `active_thermal_profile_params = id->driver_data`.
 
-**Step 5.3: Callees**
-`asus_nb_wmi_quirks()` calls `dmi_check_system(asus_quirks)`. On match,
-`dmi_matched()` sets the global `quirks` pointer. This subsequently
-affects `asus_nb_wmi_key_filter()` (key remapping) and tablet-switch
-initialization in `asus-wmi.c`.
-Record: [Quirk drives key event handling and tablet mode detection]
+**Step 5.3: Callees / Impact Surface**
+Record: `is_victus_s_thermal_profile()` (line 1634) returns
+`is_victus_s_board`. This function gates behavior in:
+- `hp_wmi_platform_profile_probe()` — platform profile registration
+  (line 1809, 2009)
+- `hp_wmi_hwmon_is_visible()` — fan sysfs visibility (line 2169)
+- `hp_wmi_hwmon_read()` — fan speed reading (line 2191)
+- `hp_wmi_hwmon_write()` — fan speed control (lines 2227, 2233)
+- `hp_wmi_init()` — power source event handler registration (line 2341)
+- `hp_wmi_exit()` — cleanup (line 2364)
 
-**Step 5.4: Call Chain**
-`module_init(asus_nb_wmi_init)` → `asus_wmi_register_driver()` →
-platform probe → `wdrv->detect_quirks()` → `asus_nb_wmi_quirks()` →
-`dmi_check_system(asus_quirks)` → `dmi_matched()` sets quirks.
-Record: [Reachable on every boot on affected hardware]
+**Step 5.4: Reachability**
+Record: Init path: `hp_wmi_init()` →
+`setup_active_thermal_profile_params()` → `platform_driver_probe()` →
+`hp_wmi_bios_setup()` → `thermal_profile_setup()`. This runs on every
+boot/module load on affected hardware. Hwmon paths are userspace-
+reachable via sysfs.
 
 **Step 5.5: Similar Patterns**
-The same file has many similar `DMI_MATCH(DMI_SYS_VENDOR, "ASUSTeK
-COMPUTER INC.")` entries. The sibling commit `7dc6b2d3b5503` (Zenbook
-Duo UX8406CA) shows the same pattern of small, single-entry DMI quirk
-additions.
-Record: [Standard pattern in this file]
+Record: The table already contains identical patterns: "8C78" →
+`&omen_v1_thermal_params`, "8BCA" → `&omen_v1_thermal_params`, "8BCD" →
+`&omen_v1_thermal_params`. This is a routine board-ID addition.
 
 ---
 
 ## PHASE 6: STABLE TREE ANALYSIS
 
-**Step 6.1: Buggy Code in Stable Trees**
-Verified via `git tag --contains`: The Z13 quirk (commit
-`132bfcd24925d4`) exists in v6.17, v6.18, v6.19 and their point
-releases. It does NOT exist in v6.12 or earlier LTS trees.
-Record: [Relevant for v6.17.y, v6.18.y, v6.19.y ONLY]
+**Step 6.1: Code Existence in Stable Trees**
+Record: Verified via `git grep`:
+- **pending-6.6, pending-6.12, pending-6.14**:
+  `victus_s_thermal_profile_boards` NOT found. Not applicable.
+- **pending-6.17**: Table exists (3 references) but uses the OLD string-
+  list format. `omen_v1_thermal_params` and `struct
+  thermal_profile_params` do NOT exist. Patch cannot apply.
+- **pending-6.18**: Table exists in NEW `dmi_system_id` format.
+  `omen_v1_thermal_params` exists. "8C76" NOT yet present. Patch applies
+  cleanly.
+- **pending-6.19**: Table exists in NEW `dmi_system_id` format.
+  `omen_v1_thermal_params` exists. "8C76" NOT yet present. Patch applies
+  cleanly.
 
 **Step 6.2: Backport Complications**
-One-line string change in a static data table. The Z13 entry is
-identical across v6.17, v6.18, and v6.19.
-Record: [Clean apply expected on all relevant trees]
+Record: Clean apply for `6.18.y` and `6.19.y`. Not standalone for
+`6.17.y` (would need the full `e7cbd37292653` refactor first). Not
+applicable to `6.14.y` and older.
 
-**Step 6.3: Duplicate Fixes**
-No evidence of an equivalent fix already shipped in stable.
-Record: [No duplicates found]
+**Step 6.3: Related Fixes Already in Stable**
+Record: No alternate "8C76" fix found in any checked branch.
 
 ---
 
 ## PHASE 7: SUBSYSTEM AND MAINTAINER CONTEXT
 
-**Step 7.1:**
-Record: [platform/x86 — ASUS notebook WMI driver] [PERIPHERAL: affects
-specific ASUS laptop hardware, not universal]
+**Step 7.1: Subsystem**
+Record: `drivers/platform/x86/hp/` — HP laptop WMI driver. Criticality:
+PERIPHERAL (specific HP laptop hardware). However, HP Omen/Victus is a
+popular consumer laptop line.
 
-**Step 7.2:**
-Record: [Actively maintained; steady stream of DMI quirk and key-mapping
-updates]
+**Step 7.2: Activity**
+Record: Actively maintained — 20 recent commits show ongoing thermal/fan
+work for various HP laptop models.
 
 ---
 
 ## PHASE 8: IMPACT AND RISK ASSESSMENT
 
-**Step 8.1: Who Is Affected**
-Record: [Driver-specific / model-specific: owners of ASUS ROG Flow
-Z13-KJP GZ302EAC and any other Z13 variant reporting `sys_vendor` =
-"ASUS"]
+**Step 8.1: Affected Users**
+Record: Platform-specific: users of HP Omen 16-wf1xxx laptops with DMI
+board name "8C76".
 
 **Step 8.2: Trigger Conditions**
-Record: [Triggers on every boot/module-load on affected hardware; not
-timing-dependent, not privilege-dependent]
+Record: Triggered every boot on affected hardware. DMI matching is init-
+time, and the resulting behavior affects all platform-profile and fan-
+control operations for the life of the session.
 
 **Step 8.3: Failure Mode Severity**
-Without the quirk: the driver falls back to `quirk_asus_unknown`, so the
-side button erroneously toggles WiFi rfkill and tablet mode detection
-when the folio keyboard is detached does not work.
-Record: [Functional hardware issue; severity MEDIUM for affected users]
+Record: Without the fix: no platform profile registration, fan RPMs not
+readable/controllable via the Victus S path, and power-source event
+handling not set up for this board. Severity: MEDIUM — hardware
+functionality (thermal management, fan control) is missing but no crash,
+corruption, or security issue.
 
 **Step 8.4: Risk-Benefit Ratio**
-- BENEFIT: Correct hardware behavior for a real device variant (HIGH for
-  those users)
-- RISK: 1-line data-only change, still constrained by product-name match
-  (VERY LOW)
-Record: [Strongly favorable ratio]
+Record: Benefit: HIGH for affected users — restores correct thermal
+profile switching and fan control on their laptop. Risk: VERY LOW —
+4-line data-only change scoped to a single DMI board name match, cannot
+affect any other hardware. Ratio: strongly favorable.
 
 ---
 
 ## PHASE 9: FINAL SYNTHESIS
 
 **Step 9.1: Evidence**
-- FOR: Fixes real DMI matching bug; trivial 1-line change; hardware
-  quirk stable exception; triple Reviewed-by including maintainer;
-  prerequisite exists in v6.17+; `strstr()` semantics verified; zero
-  regression risk to existing devices
-- AGAINST: Narrow impact (single model variant); not a
-  crash/security/corruption fix
-- UNRESOLVED: Lore thread content inaccessible; exact KJP DMI strings
-  from external source unverified
+FOR backporting:
+- Classic hardware quirk / DMI board ID addition (explicit stable
+  exception category)
+- Only 4 lines, data-only change, zero regression risk
+- Reported-by and Tested-by from real user on real hardware
+- Reviewed-by subsystem maintainer (Ilpo Järvinen)
+- Bugzilla bug report (221149) filed
+- Identical pattern to existing adjacent entries (8C78, 8BCA, 8BCD)
+- Prerequisites already present in pending-6.18 and pending-6.19
+
+AGAINST backporting:
+- Not a crash/security/corruption fix — hardware enablement for missing
+  fan/thermal control
+- Narrow impact (single laptop model)
+- Only applicable to 6.18.y and 6.19.y; 6.17.y needs prerequisite
+  refactor
+
+UNRESOLVED:
+- Bugzilla 221149 content not fetchable (Anubis blocked)
+- Lore mailing list discussion not fetchable (Anubis blocked)
 
 **Step 9.2: Stable Rules Checklist**
-1. Obviously correct and tested? **YES** — trivially verifiable,
-   maintainer-reviewed
-2. Fixes a real bug? **YES** — hardware quirk not applied to real device
-3. Important issue? **YES for affected users** — functional hardware
-   regression
-4. Small and contained? **YES** — 1 line, 1 file, data-only
-5. No new features or APIs? **YES** — extends existing quirk coverage
-6. Can apply to stable? **YES** — clean apply on v6.17+ trees
+1. Obviously correct and tested? **YES** — identical pattern to existing
+   entries, Tested-by from hardware owner
+2. Fixes a real bug? **YES** — missing quirk prevents thermal/fan
+   control on real hardware
+3. Important issue? **YES** under the hardware quirk exception — enables
+   hardware functionality
+4. Small and contained? **YES** — 4 lines, single table entry, one file
+5. No new features or APIs? **YES** — extends existing quirk table with
+   a board name
+6. Can apply to stable? **YES** — cleanly on 6.18.y and 6.19.y
 
-**Step 9.3: Exception Category**
-Record: **Hardware quirk/workaround** — explicitly in the "quirks and
-workarounds" class suitable for stable.
+**Step 9.3: Exception Categories**
+Record: This falls squarely into **QUIRKS and WORKAROUNDS** — a DMI
+board name addition to an existing driver's quirk table. This is the
+same category as USB quirks, PCI quirks, and audio codec quirks that are
+explicitly allowed in stable.
 
 **Step 9.4: Decision**
-This is a textbook hardware quirk fix: a single-line broadening of a DMI
-vendor match so that an existing quirk applies to a real hardware
-variant. It falls squarely into the stable exception for hardware quirks
-and workarounds. The fix is trivially correct (verified via `strstr()`
-semantics), carries effectively zero regression risk (product-name match
-still constrains it), and has strong review signals. It should be
-backported to stable trees v6.17.y, v6.18.y, and v6.19.y (the only trees
-containing the prerequisite Z13 quirk commit `132bfcd24925d4`).
+This is a textbook hardware quirk addition: a 4-line DMI table entry
+that enables correct thermal profile switching and fan control for a
+specific HP laptop model, using existing driver infrastructure. It
+carries essentially zero regression risk and provides concrete benefit
+to real users of this hardware. It should be backported to stable
+branches that have the per-board thermal parameter infrastructure
+(6.18.y and 6.19.y).
 
 ---
 
 ## Verification
 
-- [Phase 1] Parsed subject/body/tags from commit message; found 3x
-  Reviewed-by (Mario Limonciello, Denis Benato, Ilpo Järvinen) plus
-  maintainer sign-off
-- [Phase 2] Read diff: 1 line changed in `asus_quirks[]` — vendor string
-  `"ASUSTeK COMPUTER INC."` → `"ASUS"`
-- [Phase 2] Verified `DMI_MATCH()` uses `strstr()` in
-  `drivers/firmware/dmi_scan.c` lines 865-866
-- [Phase 2] Verified `quirk_asus_z13` at lines 153-156: sets
-  `key_wlan_event = ASUS_WMI_KEY_ARMOURY` and `tablet_switch_mode =
-  asus_wmi_kbd_dock_devid`
-- [Phase 2] Verified fallback: `asus_nb_wmi_quirks()` initializes
-  `quirks = &quirk_asus_unknown` (line 561) before `dmi_check_system()`
-- [Phase 3] `git blame -L 547,555`: Z13 entry introduced by
-  `132bfcd24925d4` (Antheas Kapenekakis, 2025-08-08)
-- [Phase 3] `git show 132bfcd24925d4`: original commit is "Fix ROG
-  button mapping, tablet mode on ASUS ROG Z13"
-- [Phase 3] `git tag --contains 132bfcd24925d4`: present in v6.17,
-  v6.18, v6.19 and their point releases
-- [Phase 3] `git tag --contains 132bfcd24925d4 | grep v6.12`: empty —
-  NOT in v6.12 or older LTS trees
-- [Phase 3] `git log --oneline -20 -- drivers/platform/x86/asus-nb-
-  wmi.c`: confirmed recent history and similar pattern (`7dc6b2d3b5503`)
-- [Phase 4] WebFetch on lore.kernel.org and patch.msgid.link blocked by
-  Anubis — lore thread UNVERIFIED
-- [Phase 5] Confirmed call chain: `module_init` →
-  `asus_wmi_register_driver()` → `.detect_quirks` →
-  `asus_nb_wmi_quirks()` → `dmi_check_system()`
-- [Phase 6] Z13 quirk only exists in v6.17+; fix irrelevant for v6.12.y
-  and older
-- [Phase 6] Z13 DMI entry identical across v6.17/v6.18/v6.19; clean
-  apply expected
-- [Phase 8] Failure mode: wrong quirks on affected hardware (missing key
-  remap, missing tablet mode); severity MEDIUM
-- UNVERIFIED: Exact DMI output of GZ302EAC (claim from commit message
-  only)
-- UNVERIFIED: Lore discussion content, stable nominations by reviewers,
-  any NAKs
+- [Phase 1] Parsed all tags from commit message: Tested-by, Reported-by,
+  Closes (bugzilla 221149), Reviewed-by (Ilpo Järvinen), Link, Signed-
+  off-by x2
+- [Phase 2] Diff analysis: +4 lines adding single DMI entry `{
+  DMI_MATCH(DMI_BOARD_NAME, "8C76"), .driver_data = (void
+  *)&omen_v1_thermal_params }`
+- [Phase 3] `git blame -L 162,191`: confirmed table created by
+  `e7cbd37292653` (Krishna Chomal, 2026-01-13), structure from
+  `6e4ab59b8391a` (2025-01-16)
+- [Phase 3] `git show e7cbd37292653`: confirmed this is the prerequisite
+  commit that refactored the table to `dmi_system_id` format with per-
+  board `thermal_profile_params`
+- [Phase 3] `git describe --contains e7cbd37292653` → `v6.19.4~320`:
+  prerequisite is in v6.19.4
+- [Phase 3] `git describe --contains fb146a38cb119` →
+  `v6.18-rc7~24^2~18`: original Omen 16-wf1xxx support is in v6.18
+- [Phase 3] `git log --author="Krishna Chomal"`: confirmed 2 prior
+  commits to hp-wmi.c
+- [Phase 4] WebFetch to lore/bugzilla blocked by Anubis — UNVERIFIED:
+  exact discussion and bug details
+- [Phase 5] `grep` for `victus_s_thermal_profile_boards`: confirmed
+  consumed by `setup_active_thermal_profile_params()` at line 2288 via
+  `dmi_first_match()`
+- [Phase 5] `grep` for `is_victus_s_thermal_profile`: confirmed it gates
+  platform profile (lines 1809, 2009), hwmon visibility/read/write
+  (lines 2169, 2191, 2227, 2233), init power source handler (line 2341),
+  exit cleanup (line 2364)
+- [Phase 6] `git grep victus_s_thermal_profile_boards` on all pending
+  branches: NOT in 6.6/6.12/6.14; present in 6.17/6.18/6.19
+- [Phase 6] `git grep omen_v1_thermal_params` on pending-6.17: NOT FOUND
+  — old string-list format, patch cannot apply standalone
+- [Phase 6] `git grep omen_v1_thermal_params` on pending-6.18: FOUND
+  (lines 92-114, 159, 167, 179) — full infrastructure present
+- [Phase 6] `git grep omen_v1_thermal_params` on pending-6.19: FOUND
+  (lines 92-114, 167, 175, 187) — full infrastructure present
+- [Phase 6] `git grep '8C76'` on pending-6.18 and pending-6.19: NOT
+  FOUND — patch not yet applied to any stable branch
+- [Phase 8] Failure mode: missing thermal profile/fan control on
+  specific HP Omen laptop; severity MEDIUM (hardware functionality, not
+  crash/security)
+- UNVERIFIED: exact bugzilla 221149 content and severity rating
+- UNVERIFIED: exact mailing list reviewer comments beyond tags in commit
 
 **YES**
 
- drivers/platform/x86/asus-nb-wmi.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/platform/x86/hp/hp-wmi.c | 4 ++++
+ 1 file changed, 4 insertions(+)
 
-diff --git a/drivers/platform/x86/asus-nb-wmi.c b/drivers/platform/x86/asus-nb-wmi.c
-index a38a65f5c550d..b4677c5bba5b4 100644
---- a/drivers/platform/x86/asus-nb-wmi.c
-+++ b/drivers/platform/x86/asus-nb-wmi.c
-@@ -548,7 +548,7 @@ static const struct dmi_system_id asus_quirks[] = {
- 		.callback = dmi_matched,
- 		.ident = "ASUS ROG Z13",
- 		.matches = {
--			DMI_MATCH(DMI_SYS_VENDOR, "ASUSTeK COMPUTER INC."),
-+			DMI_MATCH(DMI_SYS_VENDOR, "ASUS"),
- 			DMI_MATCH(DMI_PRODUCT_NAME, "ROG Flow Z13"),
- 		},
- 		.driver_data = &quirk_asus_z13,
+diff --git a/drivers/platform/x86/hp/hp-wmi.c b/drivers/platform/x86/hp/hp-wmi.c
+index 24d065ddfc6ae..9c1bdf8e7b283 100644
+--- a/drivers/platform/x86/hp/hp-wmi.c
++++ b/drivers/platform/x86/hp/hp-wmi.c
+@@ -172,6 +172,10 @@ static const struct dmi_system_id victus_s_thermal_profile_boards[] __initconst
+ 		.matches = { DMI_MATCH(DMI_BOARD_NAME, "8BD5") },
+ 		.driver_data = (void *)&victus_s_thermal_params,
+ 	},
++	{
++		.matches = { DMI_MATCH(DMI_BOARD_NAME, "8C76") },
++		.driver_data = (void *)&omen_v1_thermal_params,
++	},
+ 	{
+ 		.matches = { DMI_MATCH(DMI_BOARD_NAME, "8C78") },
+ 		.driver_data = (void *)&omen_v1_thermal_params,
 -- 
 2.53.0
 
