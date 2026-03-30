@@ -1,125 +1,96 @@
-Received: from out-186.mta0.migadu.com (out-186.mta0.migadu.com [91.218.175.186])
+Received: from spark.kcore.it (spark.kcore.it [49.13.27.68])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CEE672F90E0
-	for <platform-driver-x86@vger.kernel.org>; Mon, 30 Mar 2026 14:41:14 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.218.175.186
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E514832A3FE;
+	Mon, 30 Mar 2026 14:55:53 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=49.13.27.68
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1774881676; cv=none; b=lJe4qcR6pucapwKHTaT/9M5S8g/BH/QyJoKH6s3YDhcB7pSqfDFbT3ESMs8hEfnN1rfGCLrKALAVnDoaAKhq/nX9lLHjrJwuMNYuk2lhN3mnOaeBUOL+WJv4vawx2n1C6tcUunlRbxyomQ6zu5mRxCNlSvjiBlxIK+uX4yJ9XwU=
+	t=1774882555; cv=none; b=OjMriDh9qZokyh+4yMklSV98ntFgoq0rLWvXZRuJvtmQHSb+JJFO+fxxmMNeCt8A7n4dnIj7Ekl2NfZIf62emN2bGeotsqskR+zAqcG5WiTipuJr5DAzt5zWYepvBofamfoWr3/y2MVY/ZfU4hiG0SHH+YF1pz6troEr3+8+CuA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1774881676; c=relaxed/simple;
-	bh=DmGe+WE6i417ffQf5E790g4rwEx5gkm9xAKvPM1SAPY=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=BuiuS+TOWoasmXzXRgaU19aDgLbj/CDR7SVewEV6z49ZRuvLjdsCkSpmVWSkeScaVdXnijOjRQl2MKytllgM9MtpxkQt383GT7DIazILc3NTlnhqxy577G42FJ1YJEzCzYpPGSqVZYBBRVCltY+vwgI3YLWCHjpYYcb1LKBUumw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=BqIXs3JJ; arc=none smtp.client-ip=91.218.175.186
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
+	s=arc-20240116; t=1774882555; c=relaxed/simple;
+	bh=acCJO56NFfcB/8UhixJYyn2efEGJs6jPVdNzzkppuD0=;
+	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
+	 Content-Disposition:In-Reply-To:References; b=EBR+bKJJfDnzj8b1HygwoZAyKn8d07pG54uXuVxcUwfGZpls8AM/DLxWo9L1GqWkgb51Wgr/ByGrBSgy06ZQrB0FVwouQNVaAG/u9kh8TXoEoJQYlRp9SCKF4HlqkzhL9JPD1oZ7e+NVBaNBbTRvXh95mbHf3A9k7+rHe0X0WgI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kcore.it; spf=pass smtp.mailfrom=kcore.it; dkim=pass (1024-bit key) header.d=kcore.it header.i=@kcore.it header.b=ZI0mgFFa; arc=none smtp.client-ip=49.13.27.68
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kcore.it
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=kcore.it
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="BqIXs3JJ"
-X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
-	t=1774881662;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:
-	 content-transfer-encoding:content-transfer-encoding;
-	bh=mJ77ctf4/DF4Ka3YDmnuCYQeO+UWpZxArW4MNGyzckQ=;
-	b=BqIXs3JJY4Zho39dk7BVukO7PgndDfYT9xIYR+yL5erUyQWNIl16yolGRnRGdsHls70W3J
-	IUYWZ9m/oKnw5YRHH+RPB/fTtF3WsZqVxcnMqyClHXjXMtzFtMcYb/FrivFQuzOOfmgsRI
-	J8Un2kKB/aH01JedMg/Rrkmw7Fq7upM=
-From: Thorsten Blum <thorsten.blum@linux.dev>
-To: Prasanth Ksr <prasanth.ksr@dell.com>,
-	Hans de Goede <hansg@kernel.org>,
-	=?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
-Cc: Thorsten Blum <thorsten.blum@linux.dev>,
-	Dell.Client.Kernel@dell.com,
-	platform-driver-x86@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Subject: [PATCH RESEND] platform/x86: dell-wmi-sysman: Clean up security buffer helpers
-Date: Mon, 30 Mar 2026 16:40:36 +0200
-Message-ID: <20260330144034.478801-3-thorsten.blum@linux.dev>
+	dkim=pass (1024-bit key) header.d=kcore.it header.i=@kcore.it header.b="ZI0mgFFa"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=kcore.it;
+	s=spark; h=References:In-Reply-To:Content-Type:MIME-Version:Message-ID:
+	Subject:Cc:To:From:Date:Sender:Reply-To:Content-Transfer-Encoding:Content-ID:
+	Content-Description:Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc
+	:Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:List-Subscribe:
+	List-Post:List-Owner:List-Archive;
+	bh=acCJO56NFfcB/8UhixJYyn2efEGJs6jPVdNzzkppuD0=; b=ZI0mgFFav2Dl1ujb2VyQ3dj6Gy
+	2nTiGspRQpHFyaU5GRyG/UQgXaUhKo1zVQEOsvML1fDutrj5b25qH5JwraUnKrzkGC9Gqu4pPOn8N
+	NluCqp3Uh/Vxlgmy1dcSJEoW5BhFGOSjLe/7VovgXbtVPJdERGokFa6NekVPMJXsYD4c=;
+Received: from mnencia by spark.kcore.it with local (Exim 4.96)
+	(envelope-from <mnencia@kcore.it>)
+	id 1w7E1j-006W4L-2c;
+	Mon, 30 Mar 2026 16:55:39 +0200
+Date: Mon, 30 Mar 2026 16:55:39 +0200
+From: Marco Nenciarini <mnencia@kcore.it>
+To: johannes.goede@oss.qualcomm.com
+Cc: mnencia@kcore.it, djrscally@gmail.com, sakari.ailus@linux.intel.com,
+	ilpo.jarvinen@linux.intel.com, andriy.shevchenko@linux.intel.com,
+	platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v5 0/4] platform/x86: int3472: Add support for GPIO type
+ 0x02 (strobe)
+Message-ID: <acqO62_87TM4UZMI@spark.kcore.it>
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-Developer-Signature: v=1; a=openpgp-sha256; l=3156; i=thorsten.blum@linux.dev; h=from:subject; bh=DmGe+WE6i417ffQf5E790g4rwEx5gkm9xAKvPM1SAPY=; b=owGbwMvMwCUWt7pQ4caZUj3G02pJDJmnupO4VFWPJB/x7Fyc9Vv15PPXDt/Wh/za9ndhv0SB1 lnFU8b2HaUsDGJcDLJiiiwPZv2Y4VtaU7nJJGInzBxWJpAhDFycAjCRowoM/5SDPqs4XA9ZlGTJ 6FF1Jb2zL2FTdFfip6MFJSySom1OGxkZWuceqvy10f6c5y0n1zZNJ+cfy7PtQ/a6fE0STavJPuT PAwA=
-X-Developer-Key: i=thorsten.blum@linux.dev; a=openpgp; fpr=1D60735E8AEF3BE473B69D84733678FD8DFEEAD4
-Content-Transfer-Encoding: 8bit
-X-Migadu-Flow: FLOW_OUT
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <76baf0c3-4c1f-4169-846d-5c74dab69a18@oss.qualcomm.com>
+References: <ab0URIrzZPsYjWrM@spark.kcore.it>
+ <20260327181031.1489365-1-mnencia@kcore.it>
+ <76baf0c3-4c1f-4169-846d-5c74dab69a18@oss.qualcomm.com>
 
-In calculate_security_buffer(), call strlen() once and use ALIGN() to
-round up to an even size.
+Hi Hans,
 
-In populate_security_buffer(), also avoid recomputing strlen(), rename
-the u32 pointer from 'seclen' to 'seclenp' to avoid confusion with the
-new length variable, and drop the memcpy() guard since calling it with
-size 0 is a no-op and therefore safe.
+Thank you for the detailed feedback.
 
-Use 'const char *' for the read-only source string in both helpers.
+> My main remark on the current patch set is that IMHO
+> the LED name really should be: OVTIxxxx:00::ir_flood_led
+> since that is what it actually does, strobe is typically
+> related to flash LEDs which despite the naming in Intel's
+> side this is not.
 
-Signed-off-by: Thorsten Blum <thorsten.blum@linux.dev>
----
- .../dell/dell-wmi-sysman/dell-wmi-sysman.h    |  4 ++--
- .../x86/dell/dell-wmi-sysman/sysman.c         | 20 ++++++++-----------
- 2 files changed, 10 insertions(+), 14 deletions(-)
+The series actually started with "ir_flood" in v1-v2. It was renamed to
+"strobe" in v3 to match the GPIO type name used in Intel's ACPI _DSM
+tables. But I agree with you that the userspace-visible LED name should
+describe what the hardware actually does, not mirror an internal ACPI
+label. I am happy to go back to "ir_flood" for the LED name.
 
-diff --git a/drivers/platform/x86/dell/dell-wmi-sysman/dell-wmi-sysman.h b/drivers/platform/x86/dell/dell-wmi-sysman/dell-wmi-sysman.h
-index 817ee7ba07ca..5278a93fdaf7 100644
---- a/drivers/platform/x86/dell/dell-wmi-sysman/dell-wmi-sysman.h
-+++ b/drivers/platform/x86/dell/dell-wmi-sysman/dell-wmi-sysman.h
-@@ -189,8 +189,8 @@ void exit_bios_attr_set_interface(void);
- int init_bios_attr_set_interface(void);
- int map_wmi_error(int error_code);
- size_t calculate_string_buffer(const char *str);
--size_t calculate_security_buffer(char *authentication);
--void populate_security_buffer(char *buffer, char *authentication);
-+size_t calculate_security_buffer(const char *authentication);
-+void populate_security_buffer(char *buffer, const char *authentication);
- ssize_t populate_string_buffer(char *buffer, size_t buffer_len, const char *str);
- int set_new_password(const char *password_type, const char *new);
- int init_bios_attr_pass_interface(void);
-diff --git a/drivers/platform/x86/dell/dell-wmi-sysman/sysman.c b/drivers/platform/x86/dell/dell-wmi-sysman/sysman.c
-index 9dddab6c9397..aba9ef2cfc03 100644
---- a/drivers/platform/x86/dell/dell-wmi-sysman/sysman.c
-+++ b/drivers/platform/x86/dell/dell-wmi-sysman/sysman.c
-@@ -72,13 +72,9 @@ size_t calculate_string_buffer(const char *str)
-  *
-  * Currently only supported type is Admin password
-  */
--size_t calculate_security_buffer(char *authentication)
-+size_t calculate_security_buffer(const char *authentication)
- {
--	if (strlen(authentication) > 0) {
--		return (sizeof(u32) * 2) + strlen(authentication) +
--			strlen(authentication) % 2;
--	}
--	return sizeof(u32) * 2;
-+	return sizeof(u32) * 2 + ALIGN(strlen(authentication), 2);
- }
- 
- /**
-@@ -88,18 +84,18 @@ size_t calculate_security_buffer(char *authentication)
-  *
-  * Currently only supported type is PLAIN TEXT
-  */
--void populate_security_buffer(char *buffer, char *authentication)
-+void populate_security_buffer(char *buffer, const char *authentication)
- {
-+	size_t seclen = strlen(authentication);
- 	char *auth = buffer + sizeof(u32) * 2;
- 	u32 *sectype = (u32 *) buffer;
--	u32 *seclen = sectype + 1;
-+	u32 *seclenp = sectype + 1;
- 
--	*sectype = strlen(authentication) > 0 ? 1 : 0;
--	*seclen = strlen(authentication);
-+	*sectype = !!seclen;
-+	*seclenp = seclen;
- 
- 	/* plain text */
--	if (strlen(authentication) > 0)
--		memcpy(auth, authentication, *seclen);
-+	memcpy(auth, authentication, seclen);
- }
- 
- /**
+We could keep INT3472_GPIO_TYPE_STROBE for the define (matching the ACPI
+type value) but pass "ir_flood" as the con_id to the LED registration,
+so userspace sees OVTIxxxx:00::ir_flood_led. Would that work for
+everyone?
+
+> We really need to get some input from the V4L2 maintainers
+> here on if this is a good idea, before merging this series.
+
+Agreed.
+
+> I can even imagine
+> a default simple mode where the v4l2-core just turns
+> on the LED when streaming starts and off again when
+> streaming stops (very much like the privacy LED) and
+> then in the future maybe we can extend this, e.g.
+> add a control on the sensor device to make this
+> configurable ?
+
+That makes a lot of sense. The current series intentionally keeps things
+minimal (just exposing the LED under /sys/class/leds with no V4L2
+integration), but this future direction sounds right.
+
+I will hold off on sending v6 until we have agreement on the naming and
+Sakari has had a chance to weigh in.
+
+Regards,
+Marco
