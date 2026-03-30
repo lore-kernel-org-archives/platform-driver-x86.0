@@ -1,598 +1,415 @@
-Received: from BL0PR03CU003.outbound.protection.outlook.com (mail-eastusazon11012056.outbound.protection.outlook.com [52.101.53.56])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E43B43CA491
-	for <platform-driver-x86@vger.kernel.org>; Mon, 30 Mar 2026 12:12:31 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=52.101.53.56
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1774872753; cv=fail; b=BMvnhGt/bHbWux5SZ3w2Jr62mqP9SS8l5+2UI3CvnYIPrYYp8aQy62fCHFc90UP/XY1+dNQVFhikANl9ka7fB3cXY/wbluJx5qbOCIy18CE76Zcz+IM/4QtuhMd9SwgLlZXyE3yjG05eMaMitriDdYHWJXDdlt63C8A7okLZVxo=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1774872753; c=relaxed/simple;
-	bh=b7KbXWLxzH+Q+5UN9Bj3xAI23jp0Yk9oJb3AYgDElrU=;
-	h=Message-ID:Date:Subject:To:Cc:References:From:In-Reply-To:
-	 Content-Type:MIME-Version; b=CqV0AALWLLwLYaHdKLzzhezoJSJJsHZfBYmUdGdBwNjBFFTYGM0Q0AH0J48Iav4XEjoOUGT0DnpkjThwqK23BuxEZaW+9j8TJDvXK6jpje/ROUE595lpmmvFdkvMdUaJgJIXLVxz3vHJlUKJ8ZPYT2qiIJ4XiC2WxwZwE/WaPaY=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=axxqhOKF; arc=fail smtp.client-ip=52.101.53.56
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com
-Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=amd.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EE0A83D16F7;
+	Mon, 30 Mar 2026 12:38:50 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1774874331; cv=none; b=J6ZATg27b1V3Wt0n4KGgAeKzP14Q8skPKApWDZZgDWJ9O2gEEOeGFZ01qg+jR4o3wE6/NLqzohQR5APEX5YwrM4Zn06i1nFlgmEbaXVXi9C4THvEyrbxaFV35MGjK6sBbTzYXpALtb8zSRo96CEbLTW17Lrbd4uD0Q07taIzHR0=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1774874331; c=relaxed/simple;
+	bh=uujdV5K8kf267EBdHO8hDWeHkE+dhVf5akE4yMxwd0A=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=C9mqV46pGWSCkVuMj91V2UYJZ6Km8uPQLGIG1X4wDj0rBf55jIX7Q4kgVrnMC6/ryp+pPoUsQYw2hk/KQWNpTIn7yGd/x6naXJwkntVV17gsj+lj36SD2nhBBm0KTwlSSrySMrgbfmbUZXRL6T60PebFpZyChvogQGwKBXmVmG4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=NIv9/zBd; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="axxqhOKF"
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=vgwcctHFTLnu4DPAs0qM+xipXskXtAuJOWO6O0E87EXi/o3+iNv4Q/udBEJDzVdU+HfsSA3Id0XXQzbKoSbqaq3ZlA3LTkdDK1FUCspEHCAfOnD70Fm8Cqsqaf9BZKYZR+Q9CtVPYpWivtKuIp4drog8xiL4FryTzr8O+i+DrioTigJjQmiIh2xfsDoswUIIDBgJlCc9CoOgEcb2B/0rk2SZW5ScQ8wgLbKc3uSCXZKXsEMJfNOjQBLJ5PErtC5snd7vgssD3DnCWDgQpd84pvPeKniVEa5nRCwgr++TJrbDC5clDTC3Gto1JJNLHdqVNf6NaGC3FxHblYIFhB9ivw==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=SHl2mqMLrIGqk1LD3qgdtCCf75gbgE7EBP4G6ki2qwQ=;
- b=rpQe7A29EuT+IXe4HVm0y3AZwxkRU6msUZQ/t9n73+FBISLXxwekx0ZiMtuA8hTZUTLLnY8KESqZ7QJeYtVT5w5DlxN/I1M8wj3YL4LoP8Jli4yKbi+rWRGhDMQFWF1s5dZ9a6GhR//HWTLs+V/zL65QzxYnQvyQGcH8Cn3vr4ui/bqlP44vhQowHsD2EWjpyuWhDu6SKqFi/8EK48R5zfm6a8HCkcAjdLGfSYsEpvvTVfKp2F1MvJL09HhBovoA12xQmVI4TN2fO1h6qnfZCBr7yzvQp8Nx/Fy8GbgwUwMznIE7uCWOtzDr5uyjOVkgnwI66WZPwckwyqKTRi3PvQ==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=amd.com; dmarc=pass action=none header.from=amd.com; dkim=pass
- header.d=amd.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=SHl2mqMLrIGqk1LD3qgdtCCf75gbgE7EBP4G6ki2qwQ=;
- b=axxqhOKFwEYqyhJKTt37hXQ0Dy5CAFMbjHM64aKA1HyBMZRQ2z510g3VEAeadpdWioCZ/XMJm0ybElIMj0V9iefiVzcRdYuissTw9dC2wsOZzGxtj2Y53jOi11fwKnlce5yMz1mmqYnodqE/yPWRyTXXXSISAz6wPfZKBsaxDo8=
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=amd.com;
-Received: from BL1PR12MB5176.namprd12.prod.outlook.com (2603:10b6:208:311::19)
- by PH0PR12MB8149.namprd12.prod.outlook.com (2603:10b6:510:297::7) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.9769.15; Mon, 30 Mar
- 2026 12:12:28 +0000
-Received: from BL1PR12MB5176.namprd12.prod.outlook.com
- ([fe80::91cb:8f10:c6d2:d683]) by BL1PR12MB5176.namprd12.prod.outlook.com
- ([fe80::91cb:8f10:c6d2:d683%3]) with mapi id 15.20.9769.014; Mon, 30 Mar 2026
- 12:12:28 +0000
-Message-ID: <21d9dd9b-0ab1-4c36-af3a-77f94afa02da@amd.com>
-Date: Mon, 30 Mar 2026 17:42:23 +0530
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v3 1/7] platform/x86/amd/pmf: Add util layer and userspace
- misc device interface
-To: =?UTF-8?Q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
-Cc: Hans de Goede <hansg@kernel.org>, platform-driver-x86@vger.kernel.org,
- mario.limonciello@amd.com, Yijun.Shen@Dell.com, Sanket.Goswami@amd.com
-References: <20260301131124.1370565-1-Shyam-sundar.S-k@amd.com>
- <20260301131124.1370565-2-Shyam-sundar.S-k@amd.com>
- <86b8f4be-dfe7-afeb-7390-17b75bf438e7@linux.intel.com>
-Content-Language: en-US
-From: Shyam Sundar S K <Shyam-sundar.S-k@amd.com>
-In-Reply-To: <86b8f4be-dfe7-afeb-7390-17b75bf438e7@linux.intel.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
-X-ClientProxiedBy: PN2PR01CA0219.INDPRD01.PROD.OUTLOOK.COM
- (2603:1096:c01:ea::13) To BL1PR12MB5176.namprd12.prod.outlook.com
- (2603:10b6:208:311::19)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="NIv9/zBd"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 8B20DC2BCB1;
+	Mon, 30 Mar 2026 12:38:49 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1774874330;
+	bh=uujdV5K8kf267EBdHO8hDWeHkE+dhVf5akE4yMxwd0A=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+	b=NIv9/zBdZ+nGcJRGs/qb6LYeMC9nA/ES+Y2iTnnjEtmrU4v9NVBtORSPr4FilE7mp
+	 SmXYJXKUY4joGj1S0NlPl6uwDyj1phYULgxXMKPOqbbbLF+VPCuScuUbDLazMOKOvF
+	 +G6fGQiV1GFxB6IfNSufqDXr0Q7mK43BrPjVFEwWEBX1ZD9TNERgp+IK6Q5LW8xCu0
+	 WboLlb5HLpYDt6tJrlSVsLfW26oMcUcr29yG9AhuxCidIsfVkUK70CFEqFFxrckXJ0
+	 ZZdjMZX10jwK8NWEgqhlGazVYgmi7k9Wb9n2W8CcV5aL5X4Tdd9fIuY/Tq4L0+DNJM
+	 ofe1aOln4QQ2g==
+From: Sasha Levin <sashal@kernel.org>
+To: patches@lists.linux.dev,
+	stable@vger.kernel.org
+Cc: Matthew Schwartz <matthew.schwartz@linux.dev>,
+	"Mario Limonciello (AMD)" <superm1@kernel.org>,
+	Denis Benato <denis.benato@linux.dev>,
+	=?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>,
+	Sasha Levin <sashal@kernel.org>,
+	corentin.chary@gmail.com,
+	luke@ljones.dev,
+	hansg@kernel.org,
+	platform-driver-x86@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Subject: [PATCH AUTOSEL 6.19-6.12] platform/x86: asus-nb-wmi: add DMI quirk for ASUS ROG Flow Z13-KJP GZ302EAC
+Date: Mon, 30 Mar 2026 08:38:18 -0400
+Message-ID: <20260330123842.756154-5-sashal@kernel.org>
+X-Mailer: git-send-email 2.53.0
+In-Reply-To: <20260330123842.756154-1-sashal@kernel.org>
+References: <20260330123842.756154-1-sashal@kernel.org>
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: BL1PR12MB5176:EE_|PH0PR12MB8149:EE_
-X-MS-Office365-Filtering-Correlation-Id: 6bab255b-55c6-4212-46e8-08de8e559c69
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam:
-	BCL:0;ARA:13230040|1800799024|376014|366016|22082099003|18002099003|56012099003;
-X-Microsoft-Antispam-Message-Info:
-	hJxCB8s02uQhFKIAsZ3FQY766F0uEJpaS699mkuyOzuPtZf9XVIv2Q/1dIPrH06u7XpVuGYWAYA6IPTcH8zf9sidmhH540e5f7It38VXsYRHaiEstRlteSDVGpvYqapRrPIahEfYDi2xfkXcRjIbxI6NwmSHTsuUgzggkDAlJI7tS9hqDD889TvU53AJ6r6F+e9ygDQy5vaTjLBhlzEwm1+tjAH+iY6oU51Yd7R0/O7SMuDV8cYiE1qiPHGbzI92iPrL/SdjYh+nZzDPpB0kw4ugmjnfxus38VBps3aev4+2bk1bZfs1ZckXTdwuwjDDuwVDFdSXMlinGFmC+UDbOZziUPZhS/m9zBIpl3e9k4T8vCayXHkhpObN/5vCwmM7C9weIWZmuoLAZT5SVNrtLxPjJtFbArGsS1GUPZHnZAvK/0UM2Uw4QI62skh54FM78gixcUHV89pwRhxKZgzXrzJBpDQZ11+c/g+E5Al7zfUDXoUoceSODHtHFl65jLcabHPKBZ9kbJOrfRQ3zWd5WuovOuArFcHuNe31pbYLxltKDL7pFbORvTjH6pXmFHEZuuZ03Xu7BjC/cYjmFe87KPr+gaWcj3TTd0kaCyDhsJl7PZhHZw0sNmmQl4grreNIGgRIbmKi6kZqvGlpLGuI2Za171MbEUNChZgtwNTfIbnhE5ygK993MF8bcr7sU9TjHX3KojfjIJ4B/UBbcUMLqUs7Y79B0bepdEUQxtgIgmo/DhPZCtiXe4lTvHFZ/TXO
-X-Forefront-Antispam-Report:
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:BL1PR12MB5176.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(1800799024)(376014)(366016)(22082099003)(18002099003)(56012099003);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0:
-	=?utf-8?B?TVVxd3RNdG52OEovMHRacDNOdzdLVEV0UUdXMG9kRXdSQWtRNk4yM09ZaUtv?=
- =?utf-8?B?VStuWGJBSEhFN2NxOVF5S1pXbFRMQTk1YmpoQjd0c3ZxWTVlbnV1bnB0VUFK?=
- =?utf-8?B?S0xUYjd0TFU0NUFuVEovOWJZN1NhcXl1MENTMG5GWUdEQ0tlL2FJZDNoRzVY?=
- =?utf-8?B?OURWKzhCcU5aOHN3UDAzdHhKS3Z5YWRubnJCTE44UjBXWWtqRnBVQkJNcXlo?=
- =?utf-8?B?dTl2WXhjVDlISVRZUkliZUVDTGg3aC8vbysxejd1SnUySzlSSkprdUpEVm5z?=
- =?utf-8?B?QWdZUFJ0TEtLcEljZVlDSTN2eFBHNzdRNUcvdHhTM0pOMjdaeVMxYUQ4R1FQ?=
- =?utf-8?B?TkIyOXJHWlNKc0crRUtaUjlxcFJjcjFCeHNhQmhWb1JzS21CN2Z5MFJITGx2?=
- =?utf-8?B?ZXRHem4xTjhGdmFnWUtLeUwzcCtseU5lZEU4Q2d5VkRvQmF6bEprQ2lwRUlq?=
- =?utf-8?B?aW5XZ0IwWVgxUENabnBvczNQTk1ZNGpvSlh1cVBZeS81bFVHOC9LSUFacjJJ?=
- =?utf-8?B?cmwyQWNWOTgwWGhhZXJtT1dPWUc2aHR2eWZsTDRndURrNXUvR1Y4VzRKMC9J?=
- =?utf-8?B?cG9URXpGWnZCdjRlbytyMWxIbW4xc1VuMlIyL1lUaExVTFlmWTV6bVZnZFp5?=
- =?utf-8?B?Nm5ZUVN3T2ptRG5VSUN5cXdTZVRQSmQwVk1lZWNvTEdtZHBSbGEzVU1zaXlz?=
- =?utf-8?B?WkpNd2hyUUR0bWJxVkNSU2pyZElXdWVMU1VMN09Kbm1wV3lJaHlsN1RtUEY5?=
- =?utf-8?B?amhHL0NQTFpqS293QnFEWTM0WUdyTGRsalk1MTVCK05udGFXK2xsZXVCZFBx?=
- =?utf-8?B?ZjVKKzNteTZKSXJXOHo1TjdsdHpvN1Jnb2xGSzU2VjhObHNuWHl6UFlNa1pO?=
- =?utf-8?B?MmxlVVlGVm5oTFhmQkZVeWJuQW5abGZDcGZJSW82RWp6d21MM2tZZTFHVG5t?=
- =?utf-8?B?N24yb2xDdXIyQXJaOTlKd3ZJT2kzWGNGaDAyaVJNb1NPQ3orODJ6K3cyY2ZE?=
- =?utf-8?B?U0JhSWUvTmMzZHh2dlBGMVpISU80dmE1dHJGNTVmb2lRWWZ3WFFiYWxNcnFY?=
- =?utf-8?B?bmpFS0kvUkRxZk4vS1IyWGVhaDY5MTl6WUV0ZDc5MG5tRHo2OU1GV0ZlSnZX?=
- =?utf-8?B?Wm83TnlTT2V6b1ludU13c2ZwLzl2RDBCMkJrOGw2L0xOYklSMWpEQkdMZ2s0?=
- =?utf-8?B?Ymx6NnkvaUM0Kzh5V05salRUQTNqVTA4eG5jMzF0eXY0ejlBOUZ6QXdwN1Fx?=
- =?utf-8?B?OVhXQVFqTUpnZys4ZEVSNEpSLzZZUUVLK1NVRklnbFgzaGxOaG92RmdBais5?=
- =?utf-8?B?M1pLMVBCNno4MUI3cVZvZ3dmSDJ4bndJUE9pcnFwVGI0MW50cUJoS2FSbjZB?=
- =?utf-8?B?aTdwY0FnbDdpS3lNQURzTGM1STduRzdUeEtibkJYYXdEUWFaamlENEovWkdE?=
- =?utf-8?B?TUlLZ1R5Q0hTL0pTS21QL09EaFZvNWNHc1o4N0x1WkU3RC9GcXRpZER3QkVv?=
- =?utf-8?B?cFpGOWZsQ29oRDE2NzBQOXhmMHBjWlIxdkNuWWd5aXduMHVWME1qM2ttMnJQ?=
- =?utf-8?B?Q2tuWXhWN3ZVQlkzYnBVM05KbFVMbk8xVzhSeC95eHZvMm5wTTlBRDJjS3lV?=
- =?utf-8?B?TlRabWVieXJodW9BblE4ZW4yVWhsUXJ1Si84RUxNVHRDMHlqNzNSNEFhRnpZ?=
- =?utf-8?B?emVqSFlycDRBdVZlYUFyUzdPWW9PQlI4QUFVRnhPbk01NW9qNUJxaHBjbmNV?=
- =?utf-8?B?eG9WL2QwQVl3djc5TkZJeTBYU0tzbExvVytZMWZsMUczQ21MUkdWb1E1UFJz?=
- =?utf-8?B?ekdKa0wxd2tOUlpnMWNOUVQxL2V0UUtlMHVsdVh3dVlKZjdXRkNEUUxvclhm?=
- =?utf-8?B?a1J0RzQ1K1AzWUxhYk85OHEwdHYzOUZZL20vMXlNU2FydmJib1laRzBTZWpj?=
- =?utf-8?B?ZGE3S3F5N3hxeVQ5THhUUlFjVjdxams2aXdmTXViMzBHdU5MZzVYeXh0Und6?=
- =?utf-8?B?aEFxSU9zUmI1Vk4zQllNMXRYdjlxQy9mcTBuSTZTU1YwLzArYzVRTjJKdGlj?=
- =?utf-8?B?Vm4rdTJXb0NET3puYUJucXpSOWZjeS9QNFJOQVpBd2RNMWpUanBDQlErNWZr?=
- =?utf-8?B?UW9iT2M4YXBCK3dZN25GbG9iWVJhdG5NN2drZUpRMlB2S0NCSlUrS0kvRDhI?=
- =?utf-8?B?dk1xZmVXNm4xd3IzRlQyM1RmQ3BqRVZMVnlvWUZWcmphdVY4ZXkxM2JXdkcz?=
- =?utf-8?B?NWUrZmFnRndBU0IvRU1FK2R6bkE0bjdkV0ZPS1BBMmRsTG1EcjJ0M2pVRnoz?=
- =?utf-8?B?RXBhU3NQTVgvWDBvUHhaZkY0aTVaSGRZTHNvUnVuVlFURG85cmdpZz09?=
-X-OriginatorOrg: amd.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 6bab255b-55c6-4212-46e8-08de8e559c69
-X-MS-Exchange-CrossTenant-AuthSource: BL1PR12MB5176.namprd12.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 30 Mar 2026 12:12:28.5376
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: m3DsKK4Kvful1YmFezdaOVNGc1ogcypfm2+JULEiuq+jWD/tBDRChDCZog1imnVw5g52NbRs9/fK2nCGtlA2/g==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: PH0PR12MB8149
+Content-Type: text/plain; charset=UTF-8
+X-stable: review
+X-Patchwork-Hint: Ignore
+X-stable-base: Linux 6.19.10
+Content-Transfer-Encoding: 8bit
 
-Hi Ilpo,
+From: Matthew Schwartz <matthew.schwartz@linux.dev>
 
-Ack to all the comments in the series.
+[ Upstream commit 0198d2743207d67f995cd6df89e267e1b9f5e1f1 ]
 
-On 3/25/2026 19:35, Ilpo Järvinen wrote:
-> On Sun, 1 Mar 2026, Shyam Sundar S K wrote:
-> 
->> Add a util layer to AMD PMF that exposes a minimal userspace interface
->> via a misc character device for metrics monitoring and feature discovery.
->>
->> This creates /dev/amdpmf_interface with basic ioctl support to retrieve
->> PMF metrics such as:
->> *Power source and power slider position
->> *Platform type, lid state, and user presence
->> *Skin temperature and ambient light
->> *BIOS input parameters (1-10)
->> *Graphics workload metrics
->> *CPU C-state residency (average and maximum)
->> *Socket power consumption
->>
->> The interface enables smoother integration with userspace tools such as
->> AMD SystemDeck [1], which is widely used for monitoring and controlling
->> power and thermal behavior on AMD platforms. These tools help designers
->> keep major components within thermal limits to ensure proper operation
->> and enhance overall system stability and reliability.
->>
->> The feature is gated behind the CONFIG_AMD_PMF_UTIL_SUPPORT Kconfig
->> option, allowing it to be disabled if not needed. The implementation
->> uses existing PMF infrastructure to populate data from the TA (Trusted
->> Application) shared memory buffer.
->>
->> Link: https://docs.amd.com/v/u/en-US/68773_0.50 [1]
->>
->> Co-developed-by: Sanket Goswami <Sanket.Goswami@amd.com>
->> Signed-off-by: Sanket Goswami <Sanket.Goswami@amd.com>
->> Signed-off-by: Shyam Sundar S K <Shyam-sundar.S-k@amd.com>
->> ---
->>  drivers/platform/x86/amd/pmf/Kconfig  |  10 ++
->>  drivers/platform/x86/amd/pmf/Makefile |   2 +
->>  drivers/platform/x86/amd/pmf/core.c   |   5 +
->>  drivers/platform/x86/amd/pmf/pmf.h    |   9 ++
->>  drivers/platform/x86/amd/pmf/util.c   | 174 ++++++++++++++++++++++++++
->>  include/uapi/linux/amd-pmf.h          | 115 +++++++++++++++++
->>  6 files changed, 315 insertions(+)
->>  create mode 100644 drivers/platform/x86/amd/pmf/util.c
->>  create mode 100644 include/uapi/linux/amd-pmf.h
->>
->> diff --git a/drivers/platform/x86/amd/pmf/Kconfig b/drivers/platform/x86/amd/pmf/Kconfig
->> index 25b8f7ae3abd..ad21f679b8ab 100644
->> --- a/drivers/platform/x86/amd/pmf/Kconfig
->> +++ b/drivers/platform/x86/amd/pmf/Kconfig
->> @@ -30,3 +30,13 @@ config AMD_PMF_DEBUG
->>  	 in the PMF config store.
->>  
->>  	 Say Y here to enable more debug logs and Say N here if you are not sure.
->> +
->> +config AMD_PMF_UTIL_SUPPORT
->> +	bool "AMD PMF Util layer support"
->> +	depends on AMD_PMF
->> +	help
->> +	Enabling this option provides a character device for userspace to capture
->> +	PMF features (Smart PC Builder, Auto Mode, Static Power Slider, Dynamic
->> +	Power Slider AC/DC) along with PMF metrics from the AMD PMF driver.
->> +
->> +	Say Y here to enable it and Say N here if you are not sure.
->> diff --git a/drivers/platform/x86/amd/pmf/Makefile b/drivers/platform/x86/amd/pmf/Makefile
->> index 5978464e0eb7..bf7aad80b9e9 100644
->> --- a/drivers/platform/x86/amd/pmf/Makefile
->> +++ b/drivers/platform/x86/amd/pmf/Makefile
->> @@ -8,3 +8,5 @@ obj-$(CONFIG_AMD_PMF)		+= amd-pmf.o
->>  amd-pmf-y 			:= core.o acpi.o sps.o \
->>  				   auto-mode.o cnqf.o \
->>  				   tee-if.o spc.o
->> +# Build util.c only when AMD_PMF_UTIL_SUPPORT is enabled
->> +amd-pmf-$(CONFIG_AMD_PMF_UTIL_SUPPORT) += util.o
->> diff --git a/drivers/platform/x86/amd/pmf/core.c b/drivers/platform/x86/amd/pmf/core.c
->> index b9e5a2cf3aae..919d02f30aae 100644
->> --- a/drivers/platform/x86/amd/pmf/core.c
->> +++ b/drivers/platform/x86/amd/pmf/core.c
->> @@ -634,6 +634,10 @@ static int amd_pmf_probe(struct platform_device *pdev)
->>  
->>  	pmf_device = dev->dev;
->>  
->> +	err = amd_pmf_cdev_register(dev);
->> +	if (err)
->> +		dev_warn(dev->dev, "failed to register util interface: %d\n", err);
->> +
->>  	dev_info(dev->dev, "registered PMF device successfully\n");
->>  
->>  	return 0;
->> @@ -646,6 +650,7 @@ static void amd_pmf_remove(struct platform_device *pdev)
->>  	amd_pmf_deinit_features(dev);
->>  	if (is_apmf_func_supported(dev, APMF_FUNC_SBIOS_HEARTBEAT_V2))
->>  		amd_pmf_notify_sbios_heartbeat_event_v2(dev, ON_UNLOAD);
->> +	amd_pmf_cdev_unregister();
->>  	apmf_acpi_deinit(dev);
->>  	amd_pmf_dbgfs_unregister(dev);
->>  }
->> diff --git a/drivers/platform/x86/amd/pmf/pmf.h b/drivers/platform/x86/amd/pmf/pmf.h
->> index 69fef7448744..6f61076a9386 100644
->> --- a/drivers/platform/x86/amd/pmf/pmf.h
->> +++ b/drivers/platform/x86/amd/pmf/pmf.h
->> @@ -928,4 +928,13 @@ int amd_pmf_tee_init(struct amd_pmf_dev *dev, const uuid_t *uuid);
->>  void amd_pmf_tee_deinit(struct amd_pmf_dev *dev);
->>  int amd_pmf_start_policy_engine(struct amd_pmf_dev *dev);
->>  
->> +/* Util Layer */
->> +#if IS_ENABLED(CONFIG_AMD_PMF_UTIL_SUPPORT)
->> +int amd_pmf_cdev_register(struct amd_pmf_dev *dev);
->> +void amd_pmf_cdev_unregister(void);
->> +#else
->> +static inline int amd_pmf_cdev_register(struct amd_pmf_dev *dev) { return 0; }
->> +static inline void amd_pmf_cdev_unregister(void) {}
->> +#endif
->> +
->>  #endif /* PMF_H */
->> diff --git a/drivers/platform/x86/amd/pmf/util.c b/drivers/platform/x86/amd/pmf/util.c
->> new file mode 100644
->> index 000000000000..c6837caa44e0
->> --- /dev/null
->> +++ b/drivers/platform/x86/amd/pmf/util.c
->> @@ -0,0 +1,174 @@
->> +// SPDX-License-Identifier: GPL-2.0-or-later
->> +/*
->> + * AMD Platform Management Framework Util Layer
->> + *
->> + * Copyright (c) 2026, Advanced Micro Devices, Inc.
->> + * All Rights Reserved.
->> + *
->> + * Authors: Shyam Sundar S K <Shyam-sundar.S-k@amd.com>
->> + *			 Sanket Goswami <Sanket.Goswami@amd.com>
->> + */
->> +
->> +#include <linux/amd-pmf.h>
->> +#include <linux/miscdevice.h>
->> +#include <linux/mutex.h>
->> +#include <linux/uaccess.h>
->> +
->> +#include "pmf.h"
->> +
->> +/* Convert BIOS input control code to array index (0-9) */
->> +static int amd_pmf_get_bios_idx(u32 control_code)
->> +{
->> +	if (control_code >= IOCTL_BIOS_INPUT_1 && control_code <= IOCTL_BIOS_INPUT_10)
->> +		return control_code - IOCTL_BIOS_INPUT_1;
->> +
->> +	return -EINVAL;
->> +}
->> +
->> +static long long amd_pmf_populate_bios_input(struct ta_pmf_enact_table *in, u32 control_code)
->> +{
->> +	u32 idx;
->> +
->> +	idx = amd_pmf_get_bios_idx(control_code);
->> +
->> +	return (idx < 2) ? in->ev_info.bios_input_1[idx] : in->ev_info.bios_input_2[idx - 2];
->> +}
->> +
->> +static long long amd_pmf_device_state(struct ta_pmf_enact_table *in, u32 control_code)
->> +{
->> +	switch (control_code) {
->> +	case IOCTL_PLATFORM_TYPE:
->> +		return in->ev_info.platform_type;
->> +	case IOCTL_LAPTOP_PLACEMENT:
->> +		return in->ev_info.device_state;
->> +	case IOCTL_LID_STATE:
->> +		return in->ev_info.lid_state;
->> +	case IOCTL_USER_PRESENCE:
->> +		return in->ev_info.user_present;
->> +	default:
->> +		return -EINVAL;
->> +	}
->> +}
->> +
->> +static int amd_pmf_populate_data(struct device *dev, void __user *argp)
->> +{
->> +	struct amd_pmf_ioctl_info output = {0};
->> +	struct ta_pmf_shared_memory *ta_sm = NULL;
->> +	struct ta_pmf_enact_table *in = NULL;
->> +	struct amd_pmf_dev *pdev;
->> +
->> +	pdev = dev_get_drvdata(dev);
->> +	if (!pdev)
->> +		return -EINVAL;
->> +
->> +	memset(pdev->shbuf, 0, pdev->policy_sz);
->> +	ta_sm = pdev->shbuf;
->> +	in = &ta_sm->pmf_input.enact_table;
->> +
->> +	if (copy_from_user(&output, argp, sizeof(output)))
->> +		return -EFAULT;
->> +
->> +	switch (output.control_code) {
->> +	case IOCTL_POWER_SOURCE:
->> +		output.val = in->ev_info.power_source;
->> +		break;
->> +	case IOCTL_POWER_SLIDER_POSITION:
->> +		output.val = in->ev_info.power_slider;
->> +		break;
->> +	case IOCTL_SKIN_TEMP:
->> +		/* Convert from centi-degrees to degrees Celsius */
->> +		output.val = in->ev_info.skin_temperature / 100;
->> +		break;
->> +	case IOCTL_PLATFORM_TYPE ... IOCTL_LID_STATE:
->> +	case IOCTL_USER_PRESENCE:
->> +		output.val = amd_pmf_device_state(in, output.control_code);
->> +		break;
->> +	case IOCTL_BIOS_INPUT_1 ... IOCTL_BIOS_INPUT_10:
->> +		output.val = amd_pmf_populate_bios_input(in, output.control_code);
->> +		break;
->> +	case IOCTL_GFX_WORKLOAD:
->> +		output.val = in->ev_info.gfx_busy;
->> +		break;
->> +	case IOCTL_AMBIENT_LIGHT:
->> +		output.val = in->ev_info.ambient_light;
->> +		break;
->> +	case IOCTL_AVG_C0_RES:
->> +		output.val = in->ev_info.avg_c0residency;
->> +		break;
->> +	case IOCTL_MAX_C0_RES:
->> +		output.val = in->ev_info.max_c0residency;
->> +		break;
->> +	case IOCTL_SOCKET_POWER:
->> +		output.val = in->ev_info.socket_power;
->> +		break;
->> +	default:
->> +		return -EINVAL;
->> +	}
->> +
->> +	if (copy_to_user(argp, &output, sizeof(output)))
->> +		return -EFAULT;
->> +
->> +	return 0;
->> +}
->> +
->> +#if IS_ENABLED(CONFIG_AMD_PMF_UTIL_SUPPORT)
->> +static struct amd_pmf_dev *pmf_dev_handle;
->> +static DEFINE_MUTEX(pmf_util_lock);
->> +
->> +static long amd_pmf_set_ioctl(struct file *filp, unsigned int cmd, unsigned long arg)
->> +{
->> +	struct amd_pmf_dev *pdev = filp->private_data;
->> +	void __user *argp = (void __user *)arg;
->> +
->> +	if (cmd != IOCTL_PMF_POPULATE_DATA)
->> +		return -EINVAL;
->> +
->> +	guard(mutex)(&pmf_util_lock);
->> +	return amd_pmf_populate_data(pdev->dev, argp);
->> +}
->> +
->> +static int amd_pmf_open(struct inode *inode, struct file *filp)
->> +{
->> +	guard(mutex)(&pmf_util_lock);
->> +	if (!pmf_dev_handle)
->> +		return -ENODEV;
->> +
->> +	filp->private_data = pmf_dev_handle;
->> +	return 0;
->> +}
->> +
->> +static const struct file_operations pmf_if_ops = {
->> +	.owner          = THIS_MODULE,
->> +	.open           = amd_pmf_open,
->> +	.unlocked_ioctl = amd_pmf_set_ioctl,
->> +};
->> +
->> +static struct miscdevice amd_pmf_util_if = {
->> +	.minor		= MISC_DYNAMIC_MINOR,
->> +	.name		= "amdpmf_interface",
->> +	.fops		= &pmf_if_ops,
->> +};
->> +
->> +int amd_pmf_cdev_register(struct amd_pmf_dev *dev)
->> +{
->> +	int ret;
->> +
->> +	guard(mutex)(&pmf_util_lock);
->> +	pmf_dev_handle = dev;
->> +	ret = misc_register(&amd_pmf_util_if);
->> +	if (ret)
->> +		pmf_dev_handle = NULL;
->> +
->> +	return ret;
->> +}
->> +
->> +void amd_pmf_cdev_unregister(void)
->> +{
->> +	guard(mutex)(&pmf_util_lock);
->> +	pmf_dev_handle = NULL;
->> +	misc_deregister(&amd_pmf_util_if);
->> +}
->> +#else
->> +int amd_pmf_cdev_register(struct amd_pmf_dev *dev) { return 0; }
->> +void amd_pmf_cdev_unregister(void) {}
->> +#endif
->> diff --git a/include/uapi/linux/amd-pmf.h b/include/uapi/linux/amd-pmf.h
->> new file mode 100644
->> index 000000000000..d29431c67eaa
->> --- /dev/null
->> +++ b/include/uapi/linux/amd-pmf.h
->> @@ -0,0 +1,115 @@
->> +/* SPDX-License-Identifier: GPL-2.0-or-later WITH Linux-syscall-note */
->> +/*
->> + * AMD Platform Management Framework (PMF) UAPI Header
->> + *
->> + * Copyright (c) 2026, Advanced Micro Devices, Inc.
->> + * All Rights Reserved.
->> + *
->> + * This file defines the user-space API for interacting with the AMD PMF
->> + * driver. It provides ioctl interfaces to query platform-specific metrics
->> + * such as power source, slider position, platform type, laptop placement,
->> + * and various BIOS input/output parameters.
->> + */
->> +
->> +#ifndef _UAPI_LINUX_AMD_PMF_H
->> +#define _UAPI_LINUX_AMD_PMF_H
->> +
->> +#include <linux/ioctl.h>
->> +#include <linux/types.h>
->> +
->> +/**
->> + * AMD_PMF_IOC_MAGIC - Magic number for AMD PMF ioctl commands
->> + *
->> + * This magic number uniquely identifies AMD PMF ioctl operations.
->> + */
->> +#define AMD_PMF_IOC_MAGIC	'p'
->> +
->> +/**
->> + * IOCTL_PMF_POPULATE_DATA - ioctl command to retrieve PMF metrics data
->> + *
->> + * This ioctl command is used to populate the amd_pmf_ioctl_info structure
->> + * with the requested metrics data based on the control_code provided.
->> + */
->> +#define IOCTL_PMF_POPULATE_DATA		_IOWR(AMD_PMF_IOC_MAGIC, 0x00, struct amd_pmf_ioctl_info)
->> +
->> +/**
->> + * enum pmf_ioctl_id - Control codes for PMF ioctl operations
->> + * @IOCTL_POWER_SOURCE: Query current power source (AC/DC)
->> + * @IOCTL_POWER_SLIDER_POSITION: Query current power slider position
->> + * @IOCTL_PLATFORM_TYPE: Query current platform/form factor type
->> + * @IOCTL_LAPTOP_PLACEMENT: Query laptop physical placement state
->> + * @IOCTL_LID_STATE: Query laptop lid open/close state
->> + * @IOCTL_HETERO_STATE: Query heterogeneous computing state
->> + * @IOCTL_SKIN_TEMP: Query skin temperature sensor reading
->> + * @IOCTL_USER_PRESENCE: Query user presence detection state
->> + * @IOCTL_DISPLAY_NUM: Query number of active displays
->> + * @IOCTL_USER_ENGAGED: Query user engagement state
->> + * @IOCTL_BIOS_INPUT_1: Query BIOS input parameter 1
->> + * @IOCTL_BIOS_INPUT_2: Query BIOS input parameter 2
->> + * @IOCTL_BIOS_INPUT_3: Query BIOS input parameter 3
->> + * @IOCTL_BIOS_INPUT_4: Query BIOS input parameter 4
->> + * @IOCTL_BIOS_INPUT_5: Query BIOS input parameter 5
->> + * @IOCTL_BIOS_INPUT_6: Query BIOS input parameter 6
->> + * @IOCTL_BIOS_INPUT_7: Query BIOS input parameter 7
->> + * @IOCTL_BIOS_INPUT_8: Query BIOS input parameter 8
->> + * @IOCTL_BIOS_INPUT_9: Query BIOS input parameter 9
->> + * @IOCTL_BIOS_INPUT_10: Query BIOS input parameter 10
->> + * @IOCTL_GFX_WORKLOAD: Query current graphics workload type
->> + * @IOCTL_AMBIENT_LIGHT: Query ambient light sensor reading
->> + * @IOCTL_AVG_C0_RES: Query average C0 residency
->> + * @IOCTL_MAX_C0_RES: Query maximum C0 residency
->> + * @IOCTL_SOCKET_POWER: Query current socket power consumption
->> + * @IOCTL_TA_BIN_VER: Query Trusted Application binary version
->> + *
->> + * These control codes are used with the IOCTL_PMF_POPULATE_DATA ioctl
->> + * to specify which metrics data to retrieve from the AMD PMF driver.
->> + */
->> +enum pmf_ioctl_id {
->> +	IOCTL_POWER_SOURCE,
->> +	IOCTL_POWER_SLIDER_POSITION,
->> +	IOCTL_PLATFORM_TYPE,
->> +	IOCTL_LAPTOP_PLACEMENT,
->> +	IOCTL_LID_STATE,
->> +	IOCTL_HETERO_STATE,
->> +	IOCTL_SKIN_TEMP,
->> +	IOCTL_USER_PRESENCE,
->> +	IOCTL_DISPLAY_NUM,
->> +	IOCTL_USER_ENGAGED,
->> +	IOCTL_BIOS_INPUT_1,
->> +	IOCTL_BIOS_INPUT_2,
->> +	IOCTL_BIOS_INPUT_3,
->> +	IOCTL_BIOS_INPUT_4,
->> +	IOCTL_BIOS_INPUT_5,
->> +	IOCTL_BIOS_INPUT_6,
->> +	IOCTL_BIOS_INPUT_7,
->> +	IOCTL_BIOS_INPUT_8,
->> +	IOCTL_BIOS_INPUT_9,
->> +	IOCTL_BIOS_INPUT_10,
->> +	IOCTL_GFX_WORKLOAD,
->> +	IOCTL_AMBIENT_LIGHT = 29,
->> +	IOCTL_AVG_C0_RES = 36,
->> +	IOCTL_MAX_C0_RES,
->> +	IOCTL_SOCKET_POWER = 50,
->> +	IOCTL_TA_BIN_VER
->> +};
->> +
->> +/**
->> + * struct amd_pmf_ioctl_info - Structure for PMF ioctl data exchange
->> + * @control_code: Input parameter specifying which data to query (enum pmf_ioctl_id)
->> + * @feature_supported: Output flag indicating if the queried feature is supported
->> + * @feature_version: Output field containing the feature version number
->> + * @val: Output field containing the queried value
->> + *
->> + * This structure is used with the IOCTL_PMF_POPULATE_DATA ioctl command
->> + * to exchange data between user space and the AMD PMF kernel driver.
->> + * The user provides the control_code to specify the query type, and the
->> + * driver populates the remaining fields with the response data.
->> + */
->> +struct amd_pmf_ioctl_info {
->> +	int control_code; /* In */
->> +	bool feature_supported; /* Out */
->> +	unsigned long feature_version; /* Out */
->> +	long long val; /* Out */
-> 
-> I somehow seem to now recall that Hans suggested that the interface should 
-> be a struct which encodes many/all values...
-> 
-> Yes, it seems so. This is what he said:
-> 
-> https://lore.kernel.org/all/6104959e-0214-492d-8ceb-c7376d3b1121@kernel.org/
-> 
-> 
+The ASUS ROG Flow Z13-KJP GZ302EAC model uses sys_vendor name ASUS
+rather than ASUSTeK COMPUTER INC., but it needs the same folio quirk as
+the other ROG Flow Z13. To keep things simple, just match on sys_vendor
+ASUS since it covers both.
 
-Double chekcing - You mean to say, I should move the enum members into
-the amd_pmf_ioctl_info struct? i.e.
+Signed-off-by: Matthew Schwartz <matthew.schwartz@linux.dev>
+Reviewed-by: Mario Limonciello (AMD) <superm1@kernel.org>
+Reviewed-by: Denis Benato <denis.benato@linux.dev>
+Link: https://patch.msgid.link/20260312212246.1608080-1-matthew.schwartz@linux.dev
+Reviewed-by: Ilpo Järvinen <ilpo.jarvinen@linux.intel.com>
+Signed-off-by: Ilpo Järvinen <ilpo.jarvinen@linux.intel.com>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
+---
 
-struct amd_pmf_ioctl_info {
-    /* Size field for versioning - must be first */
-    u64 size;
+LLM Generated explanations, may be completely bogus:
 
-    /* Version and feature info */
-    __u32 version;
-    __u32 features_supported;
-    __u32 features_enabled;
-    __u32 platform_type;
+Now I have all the facts verified. Here is the complete analysis:
 
-    /* Power and state info */
-    __u32 power_source;
-    __u32 laptop_placement;
-    __u32 lid_state;
-    __u32 user_presence;
-    __u32 slider_position;
+---
 
-    /* Thermal and power metrics */
-    __s32 skin_temp;
-    __u32 gfx_busy;
-    __s32 ambient_light;
-    __u32 avg_c0_residency;
-    __u32 max_c0_residency;
-    __u32 socket_power;
+## PHASE 1: COMMIT MESSAGE FORENSICS
 
-...
+**Step 1.1: Subject Line**
+Record: [platform/x86: asus-nb-wmi] [add] [Broaden DMI vendor match for
+ASUS ROG Flow Z13-KJP GZ302EAC so the existing folio quirk applies]
 
-    /* BIOS parameters */
-    __s64 bios_input[10];
-    __s64 bios_output[10];
+**Step 1.2: Tags**
+- Signed-off-by: Matthew Schwartz <matthew.schwartz@linux.dev> (author)
+- Reviewed-by: Mario Limonciello (AMD) <superm1@kernel.org>
+- Reviewed-by: Denis Benato <denis.benato@linux.dev>
+- Reviewed-by: Ilpo Järvinen <ilpo.jarvinen@linux.intel.com> (subsystem
+  maintainer)
+- Signed-off-by: Ilpo Järvinen <ilpo.jarvinen@linux.intel.com>
+  (maintainer sign-off)
+- Link: https://patch.msgid.link/20260312212246.1608080-1-
+  matthew.schwartz@linux.dev
+- No Fixes:, Reported-by:, Tested-by:, or Cc: stable tags (expected for
+  candidates)
 
-...
+Record: Triple Reviewed-by including subsystem maintainer; strong
+quality signal.
 
-    /* Reserved for future expansion */
-    __u64 reserved[8];
+**Step 1.3: Body Text**
+The GZ302EAC model reports `sys_vendor` as "ASUS" rather than "ASUSTeK
+COMPUTER INC." The existing Z13 DMI entry matched only the longer
+string, so the GZ302EAC variant never received `quirk_asus_z13`. The fix
+broadens the vendor match to "ASUS" to cover both strings.
+Record: [Bug] DMI vendor string mismatch prevents quirk application.
+[Symptom] Missing folio/tablet and key-remap behavior on this model.
+[Version info] None explicit. [Root cause] `sys_vendor` differs across
+Z13 variants.
+
+**Step 1.4: Hidden Bug Fix Detection**
+Record: This is explicitly a hardware quirk fix — the existing Z13 quirk
+fails to match a real hardware variant, causing functional regressions
+for that model's users.
+
+---
+
+## PHASE 2: DIFF ANALYSIS
+
+**Step 2.1: Inventory**
+Record: [1 file: `drivers/platform/x86/asus-nb-wmi.c`, +1/-1]
+[asus_quirks[] data table, Z13 entry] [Single-file, single-line surgical
+fix]
+
+**Step 2.2: Code Flow Change**
+Before: The Z13 DMI entry matched `DMI_SYS_VENDOR` substring `"ASUSTeK
+COMPUTER INC."` plus `DMI_PRODUCT_NAME` substring `"ROG Flow Z13"`.
+After: Same entry matches `DMI_SYS_VENDOR` substring `"ASUS"` plus same
+product name.
+
+Verified in `drivers/firmware/dmi_scan.c` lines 864-866 that
+`DMI_MATCH()` uses `strstr()` for non-exact matches:
+
+```864:866:drivers/firmware/dmi_scan.c
+                        if (strstr(dmi_ident[s],
+                                   dmi->matches[i].substr))
+                                continue;
+```
+
+Since "ASUS" is a substring of "ASUSTeK COMPUTER INC.", all previously-
+matching devices continue to match. The broader string also covers
+models reporting just "ASUS".
+Record: [Widens vendor match safely; existing devices still match;
+GZ302EAC now also matches]
+
+**Step 2.3: Bug Mechanism**
+Category: Hardware workaround / DMI quirk match fix.
+
+The `quirk_asus_z13` provides:
+
+```153:156:drivers/platform/x86/asus-nb-wmi.c
+static struct quirk_entry quirk_asus_z13 = {
+        .key_wlan_event = ASUS_WMI_KEY_ARMOURY,
+        .tablet_switch_mode = asus_wmi_kbd_dock_devid,
 };
+```
 
-Thanks,
-Shyam
+Without matching, the driver falls back to `quirk_asus_unknown` (line
+561), resulting in:
+- Side button erroneously triggering WiFi rfkill toggle instead of
+  emitting KEY_PROG3
+- No tablet mode detection when the folio keyboard is detached
+
+Record: [DMI match failure prevents `quirk_asus_z13` application on
+GZ302EAC variant; fix widens vendor match safely]
+
+**Step 2.4: Fix Quality**
+Record: Obviously correct — single string change in a data table,
+mechanically verifiable via `strstr()` semantics. Product-name match
+(`"ROG Flow Z13"`) still constrains the match. Regression risk: very
+low.
+
+---
+
+## PHASE 3: GIT HISTORY INVESTIGATION
+
+**Step 3.1: Blame**
+`git blame` shows the Z13 DMI entry was introduced by commit
+`132bfcd24925d4` (Antheas Kapenekakis, 2025-08-08): "platform/x86: asus-
+wmi: Fix ROG button mapping, tablet mode on ASUS ROG Z13".
+Record: [Buggy code introduced by `132bfcd24925d4`] [First released in
+v6.17]
+
+**Step 3.2: Fixes: tag**
+Record: N/A — no Fixes: tag present (expected for candidates).
+
+**Step 3.3: File History**
+Recent history shows `132bfcd24925d4` (Z13 quirk) and `7dc6b2d3b5503`
+(Zenbook Duo UX8406CA quirk addition — same pattern). The candidate is a
+standalone follow-up. No other GZ302 or KJP commits found.
+Record: [Related: `132bfcd24925d4` prerequisite only] [Standalone fix]
+
+**Step 3.4: Author**
+No prior commits by Matthew Schwartz in this subsystem found in local
+history. However, three subsystem-relevant reviewers signed off,
+including the maintainer Ilpo Järvinen.
+Record: [Author is not a regular contributor] [Maintainer reviewed and
+signed off]
+
+**Step 3.5: Dependencies**
+`git tag --contains 132bfcd24925d4` confirms the prerequisite is in
+v6.17, v6.18, and v6.19. It is NOT in v6.12 or older LTS trees (exit
+code 1, empty output). The candidate is only meaningful for trees that
+already contain this commit.
+Record: [Depends on `132bfcd24925d4`; relevant for v6.17+; irrelevant
+for v6.12.y, v6.6.y, v6.1.y, v5.15.y]
+
+---
+
+## PHASE 4: MAILING LIST AND EXTERNAL RESEARCH
+
+**Step 4.1-4.4:**
+Lore.kernel.org and patch.msgid.link were inaccessible due to Anubis
+anti-bot protection. The commit message itself carries three Reviewed-by
+tags and maintainer sign-off, which are strong acceptance signals.
+Record: [Lore thread content UNVERIFIED; relying on commit tag signals]
+
+---
+
+## PHASE 5: CODE SEMANTIC ANALYSIS
+
+**Step 5.1: Key Functions/Data**
+Record: `asus_quirks[]` table, `asus_nb_wmi_quirks()`,
+`dmi_check_system()`, `dmi_matched()`, `quirk_asus_z13`
+
+**Step 5.2: Callers**
+`asus_nb_wmi_quirks()` is the `.detect_quirks` callback in
+`asus_nb_wmi_driver`, called from `asus_wmi_register_driver()` during
+`asus_nb_wmi_init()` → module initialization. Runs on every boot/module
+load for affected hardware.
+Record: [Called during normal driver initialization, not a hot path]
+
+**Step 5.3: Callees**
+`asus_nb_wmi_quirks()` calls `dmi_check_system(asus_quirks)`. On match,
+`dmi_matched()` sets the global `quirks` pointer. This subsequently
+affects `asus_nb_wmi_key_filter()` (key remapping) and tablet-switch
+initialization in `asus-wmi.c`.
+Record: [Quirk drives key event handling and tablet mode detection]
+
+**Step 5.4: Call Chain**
+`module_init(asus_nb_wmi_init)` → `asus_wmi_register_driver()` →
+platform probe → `wdrv->detect_quirks()` → `asus_nb_wmi_quirks()` →
+`dmi_check_system(asus_quirks)` → `dmi_matched()` sets quirks.
+Record: [Reachable on every boot on affected hardware]
+
+**Step 5.5: Similar Patterns**
+The same file has many similar `DMI_MATCH(DMI_SYS_VENDOR, "ASUSTeK
+COMPUTER INC.")` entries. The sibling commit `7dc6b2d3b5503` (Zenbook
+Duo UX8406CA) shows the same pattern of small, single-entry DMI quirk
+additions.
+Record: [Standard pattern in this file]
+
+---
+
+## PHASE 6: STABLE TREE ANALYSIS
+
+**Step 6.1: Buggy Code in Stable Trees**
+Verified via `git tag --contains`: The Z13 quirk (commit
+`132bfcd24925d4`) exists in v6.17, v6.18, v6.19 and their point
+releases. It does NOT exist in v6.12 or earlier LTS trees.
+Record: [Relevant for v6.17.y, v6.18.y, v6.19.y ONLY]
+
+**Step 6.2: Backport Complications**
+One-line string change in a static data table. The Z13 entry is
+identical across v6.17, v6.18, and v6.19.
+Record: [Clean apply expected on all relevant trees]
+
+**Step 6.3: Duplicate Fixes**
+No evidence of an equivalent fix already shipped in stable.
+Record: [No duplicates found]
+
+---
+
+## PHASE 7: SUBSYSTEM AND MAINTAINER CONTEXT
+
+**Step 7.1:**
+Record: [platform/x86 — ASUS notebook WMI driver] [PERIPHERAL: affects
+specific ASUS laptop hardware, not universal]
+
+**Step 7.2:**
+Record: [Actively maintained; steady stream of DMI quirk and key-mapping
+updates]
+
+---
+
+## PHASE 8: IMPACT AND RISK ASSESSMENT
+
+**Step 8.1: Who Is Affected**
+Record: [Driver-specific / model-specific: owners of ASUS ROG Flow
+Z13-KJP GZ302EAC and any other Z13 variant reporting `sys_vendor` =
+"ASUS"]
+
+**Step 8.2: Trigger Conditions**
+Record: [Triggers on every boot/module-load on affected hardware; not
+timing-dependent, not privilege-dependent]
+
+**Step 8.3: Failure Mode Severity**
+Without the quirk: the driver falls back to `quirk_asus_unknown`, so the
+side button erroneously toggles WiFi rfkill and tablet mode detection
+when the folio keyboard is detached does not work.
+Record: [Functional hardware issue; severity MEDIUM for affected users]
+
+**Step 8.4: Risk-Benefit Ratio**
+- BENEFIT: Correct hardware behavior for a real device variant (HIGH for
+  those users)
+- RISK: 1-line data-only change, still constrained by product-name match
+  (VERY LOW)
+Record: [Strongly favorable ratio]
+
+---
+
+## PHASE 9: FINAL SYNTHESIS
+
+**Step 9.1: Evidence**
+- FOR: Fixes real DMI matching bug; trivial 1-line change; hardware
+  quirk stable exception; triple Reviewed-by including maintainer;
+  prerequisite exists in v6.17+; `strstr()` semantics verified; zero
+  regression risk to existing devices
+- AGAINST: Narrow impact (single model variant); not a
+  crash/security/corruption fix
+- UNRESOLVED: Lore thread content inaccessible; exact KJP DMI strings
+  from external source unverified
+
+**Step 9.2: Stable Rules Checklist**
+1. Obviously correct and tested? **YES** — trivially verifiable,
+   maintainer-reviewed
+2. Fixes a real bug? **YES** — hardware quirk not applied to real device
+3. Important issue? **YES for affected users** — functional hardware
+   regression
+4. Small and contained? **YES** — 1 line, 1 file, data-only
+5. No new features or APIs? **YES** — extends existing quirk coverage
+6. Can apply to stable? **YES** — clean apply on v6.17+ trees
+
+**Step 9.3: Exception Category**
+Record: **Hardware quirk/workaround** — explicitly in the "quirks and
+workarounds" class suitable for stable.
+
+**Step 9.4: Decision**
+This is a textbook hardware quirk fix: a single-line broadening of a DMI
+vendor match so that an existing quirk applies to a real hardware
+variant. It falls squarely into the stable exception for hardware quirks
+and workarounds. The fix is trivially correct (verified via `strstr()`
+semantics), carries effectively zero regression risk (product-name match
+still constrains it), and has strong review signals. It should be
+backported to stable trees v6.17.y, v6.18.y, and v6.19.y (the only trees
+containing the prerequisite Z13 quirk commit `132bfcd24925d4`).
+
+---
+
+## Verification
+
+- [Phase 1] Parsed subject/body/tags from commit message; found 3x
+  Reviewed-by (Mario Limonciello, Denis Benato, Ilpo Järvinen) plus
+  maintainer sign-off
+- [Phase 2] Read diff: 1 line changed in `asus_quirks[]` — vendor string
+  `"ASUSTeK COMPUTER INC."` → `"ASUS"`
+- [Phase 2] Verified `DMI_MATCH()` uses `strstr()` in
+  `drivers/firmware/dmi_scan.c` lines 865-866
+- [Phase 2] Verified `quirk_asus_z13` at lines 153-156: sets
+  `key_wlan_event = ASUS_WMI_KEY_ARMOURY` and `tablet_switch_mode =
+  asus_wmi_kbd_dock_devid`
+- [Phase 2] Verified fallback: `asus_nb_wmi_quirks()` initializes
+  `quirks = &quirk_asus_unknown` (line 561) before `dmi_check_system()`
+- [Phase 3] `git blame -L 547,555`: Z13 entry introduced by
+  `132bfcd24925d4` (Antheas Kapenekakis, 2025-08-08)
+- [Phase 3] `git show 132bfcd24925d4`: original commit is "Fix ROG
+  button mapping, tablet mode on ASUS ROG Z13"
+- [Phase 3] `git tag --contains 132bfcd24925d4`: present in v6.17,
+  v6.18, v6.19 and their point releases
+- [Phase 3] `git tag --contains 132bfcd24925d4 | grep v6.12`: empty —
+  NOT in v6.12 or older LTS trees
+- [Phase 3] `git log --oneline -20 -- drivers/platform/x86/asus-nb-
+  wmi.c`: confirmed recent history and similar pattern (`7dc6b2d3b5503`)
+- [Phase 4] WebFetch on lore.kernel.org and patch.msgid.link blocked by
+  Anubis — lore thread UNVERIFIED
+- [Phase 5] Confirmed call chain: `module_init` →
+  `asus_wmi_register_driver()` → `.detect_quirks` →
+  `asus_nb_wmi_quirks()` → `dmi_check_system()`
+- [Phase 6] Z13 quirk only exists in v6.17+; fix irrelevant for v6.12.y
+  and older
+- [Phase 6] Z13 DMI entry identical across v6.17/v6.18/v6.19; clean
+  apply expected
+- [Phase 8] Failure mode: wrong quirks on affected hardware (missing key
+  remap, missing tablet mode); severity MEDIUM
+- UNVERIFIED: Exact DMI output of GZ302EAC (claim from commit message
+  only)
+- UNVERIFIED: Lore discussion content, stable nominations by reviewers,
+  any NAKs
+
+**YES**
+
+ drivers/platform/x86/asus-nb-wmi.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/drivers/platform/x86/asus-nb-wmi.c b/drivers/platform/x86/asus-nb-wmi.c
+index a38a65f5c550d..b4677c5bba5b4 100644
+--- a/drivers/platform/x86/asus-nb-wmi.c
++++ b/drivers/platform/x86/asus-nb-wmi.c
+@@ -548,7 +548,7 @@ static const struct dmi_system_id asus_quirks[] = {
+ 		.callback = dmi_matched,
+ 		.ident = "ASUS ROG Z13",
+ 		.matches = {
+-			DMI_MATCH(DMI_SYS_VENDOR, "ASUSTeK COMPUTER INC."),
++			DMI_MATCH(DMI_SYS_VENDOR, "ASUS"),
+ 			DMI_MATCH(DMI_PRODUCT_NAME, "ROG Flow Z13"),
+ 		},
+ 		.driver_data = &quirk_asus_z13,
+-- 
+2.53.0
+
