@@ -1,143 +1,229 @@
-Received: from mail-vk1-f175.google.com (mail-vk1-f175.google.com [209.85.221.175])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mout.gmx.net (mout.gmx.net [212.227.15.19])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 215C736CDF3
-	for <platform-driver-x86@vger.kernel.org>; Mon, 30 Mar 2026 20:36:02 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=209.85.221.175
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1774902965; cv=pass; b=duuix0uzxPpTC+co6TFzwupx6JDnK84TT5OStmJTmv0BMhr6+j9+VDdLkP5jJVdILCosd/YQ8Ig6QOsloTyqfrN4ntDzj0BwO8FdCOzsm4OPH7I1SXnPWAV6YBL8gzdzK5wDmQXdJG5/bpw/eZdGH616UmGJ28pABATsXNKHH4o=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1774902965; c=relaxed/simple;
-	bh=i1ISeGcYSeJGsQxlq3CPLfSm6r/A8sqaabjLuKhnPIU=;
-	h=MIME-Version:From:Date:Message-ID:Subject:To:Cc:Content-Type; b=l8GNdOIy1exM2zWKvG/+o8P3mK9Uh7q2IqfdXJDquq7VWhzkjvVMC7lBDk3j9FcDnrsLys2eQx4hgA/cAqgUztnQzPR2iP2QVENd0N7hIgcwNJM6mSusV0F0bnUXVHkZz5ivMSTFNIULdj2P9Ckw1j+3/cbsCyxdIkBxHKnFg+M=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=sgF4XH31; arc=pass smtp.client-ip=209.85.221.175
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E86181FF5E3
+	for <platform-driver-x86@vger.kernel.org>; Mon, 30 Mar 2026 23:25:01 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=212.227.15.19
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1774913104; cv=none; b=pGGQN59MSMecf6GKLPJ1StWwV1tbezYfVDUcLWUBRsE9SUh696RVbAmfIxgxmtt0PsY5CMprUwXmrhFXSTOuHt9JJCJ9cjqTLRBcZdT2BdIGZtUFtJXbWGe+tuzCferKPOamFN2GtJVoAakF3BqiqKCYng+2kJK7Mr5R4p5Kcik=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1774913104; c=relaxed/simple;
+	bh=s82Klk1wdMd28x51ncH54tjBvNUu3F3+ldXBp+y52xU=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=hBBqView02S+np/5QaeJqVNJu64+P9pgZWmArm/EMq5C5hqZ6ivi2tYUdNYPMRVIcY3b3toMBFyVNce627oJsKLYl3soLutpbnebmghmlCD1LfgpLm6G6jh27QzJoBza7YFBe2ogNHgc53nUWR0lYR9a3Of/x50sfvAzdMuleE8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gmx.de; spf=pass smtp.mailfrom=gmx.de; dkim=pass (2048-bit key) header.d=gmx.de header.i=w_armin@gmx.de header.b=flRqC+Rl; arc=none smtp.client-ip=212.227.15.19
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gmx.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmx.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="sgF4XH31"
-Received: by mail-vk1-f175.google.com with SMTP id 71dfb90a1353d-5673804da95so1748177e0c.0
-        for <platform-driver-x86@vger.kernel.org>; Mon, 30 Mar 2026 13:36:02 -0700 (PDT)
-ARC-Seal: i=1; a=rsa-sha256; t=1774902962; cv=none;
-        d=google.com; s=arc-20240605;
-        b=FIUEsPH8AuKoNU4bSJ+klHK4WyjU7/qTDrNcYoRWzt5nU98N4UJwO22o27aaKqccQ3
-         0tnuM6nWLMFz6xJpQhfv0ldG6RVeebvKLeHe+a7//IPR9ywIPvdCnT93aVgmGYKlugoG
-         /rNweSdCXqmaooBbfGO3GOCWLGEpaHzk0KUL/BHB4f2kyUz5XWsoefYszO0szwEMs/ZQ
-         SK5Eqk5p6yJeJ8AAVy6gSdxAdkizzBxbe5Fzd8Z5toATI02ZzPU21oIbCwZykO8qViFN
-         ziDIuYkM6a2Od9Twvd07VCvawT4IB8ZPW9DYnV3949Rv0tafQTIBpiOmsrPUGAGy9B9W
-         5c8A==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20240605;
-        h=cc:to:subject:message-id:date:from:mime-version:dkim-signature;
-        bh=rDToa3OIBIO8goM+2fWqgtZfJ2cOD2nziJXxCF3UAbY=;
-        fh=Ixa8zUO5SsJTTy1hViQ7uN+pTBKVVompkznp6ugtfp4=;
-        b=HO3o8TU/WFI6R0mBXjAKxd31Mk5PCaRD1AOzWi0oButBwohqdK+Lb7Glm3IfjMDFGm
-         vC7qXXr2myfjtxkd7RysPQ9uzezI+FPpB7KT88qJKDInZypIfKb3MZf2xJZxIyZPYHm1
-         jiKoHGN7sB+oqNH6kLjHfWGJpgIAsAobj2awar434LzDsYhpGgWT64QTa84fhtajeres
-         q/a63ZZv515b1VrC0SOJp2XvLh6SIMwcpe+fK+SxycutkqAX2cZ/6TrjUQdMthA/B4+G
-         iCmIm/HCCPwknXVAooks/Q5GCBsJXS1oxiyhL5hqVuC9V6CNASBN6yIcltEAaNPTcvs2
-         FOzw==;
-        darn=vger.kernel.org
-ARC-Authentication-Results: i=1; mx.google.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20251104; t=1774902962; x=1775507762; darn=vger.kernel.org;
-        h=cc:to:subject:message-id:date:from:mime-version:from:to:cc:subject
-         :date:message-id:reply-to;
-        bh=rDToa3OIBIO8goM+2fWqgtZfJ2cOD2nziJXxCF3UAbY=;
-        b=sgF4XH315wS2eYyZo53HxMM3b99BxRKolYcdgi/Bb1/R6yn63DRZ6mRUcsegMXQUrB
-         TRs+k2C/MmB/PrMe2Kxo1uBCfXTduyL/YKyj3rm2j//OpizsmIZRmQvH2EUP6T4pjsbN
-         BXYuQWu+H/MvTmblozzJXnFGBwZIzYdhaFyfMfOOYyHDAceX3T+QPXDO7Wio3DKVEXbS
-         U/lwtZ1oawH6m4tEoNswm4KxcQ248NVTj92GW+f7DihVmYAtQnjsl3hTS9AE1tffUf/v
-         5SiIWPbOBhUN9q/QPSYSFgIeSXL9xFFAXidV8XHawp5w5W8f1hZWfhrY4AL7hUAEcvaM
-         ZBuA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1774902962; x=1775507762;
-        h=cc:to:subject:message-id:date:from:mime-version:x-gm-gg
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=rDToa3OIBIO8goM+2fWqgtZfJ2cOD2nziJXxCF3UAbY=;
-        b=MdKrsuNYZ8/XoXBv72MbX/pqq/mLakPSzToiYbsmen3ZBbh4Gd7P/7BE2VUUrgzXu8
-         VoJ1bI4kKCOwSNtGEJATTtqC7lH3aDYcbBOV+QQM6BPdmMebEv/zxp37i5fJXiGJJaUO
-         kOYJsLvscTEZOBueC6yNbf0JmAGynmcm4KI9lb2ii4WsgvYMS02Glkx8kdoOkztT6O4W
-         ooCPlR5wMfMDerUjNA/Dx8hMoyJPRQyegiWHDhwPXw9XssCri9GPBurVZN64Vvgk8Z53
-         t4YTWIpIk334l7LZjmlIfufb9mYrjQX8r1I9zZ+MI4ETaMtT4jmt4vIpb2QbhbMwSSOC
-         ii5w==
-X-Forwarded-Encrypted: i=1; AJvYcCVfT+etvInrbM0+Bbwp7vMTrlRuSmqqDPuaHijQipdo9r3zLdOTikaybqRB068gwIInHgQvp76Dbke7xVU8ERnBhZ90@vger.kernel.org
-X-Gm-Message-State: AOJu0Yxd+i/d0Trp8PRnleIwbi3fL7jTw6AR4ostDMJ15I2ixgeov9kZ
-	ipAC06O9HkqaBUAmIeiJBEhqGQgen1a3JjloKkWPFfksfN6HKaY68yNBlgtELf+9hPsHp8K3kxM
-	1ZtEVWOQTpDTR/xOi6Vf8U1Dq2X9aIbM=
-X-Gm-Gg: ATEYQzyY3WbWQMI+AkxsU+oLzTvmNuSkpS/HMvDanEk8iZXWDdwUALNdcSnB4STgQtq
-	UTT+5ntnYLhLfFzkRCGpafvnpj5zB0DbMWiB2F42MAgm6mlt1txqVAXdbMjt2XLUMlL7wHd44K4
-	YJCbb9UbYqvt5BV++bE2GQepwmi2F8+iE0lweTZK0cxFCn1DPgv8YrirkaAlwX+Iq9Xp0SnDwic
-	ZcoEjTHIHAXRmoWBk6RcK6nw8UZAFDfuSOjL0mQ995PTo96yPCo8syzZcCWcI/f8lN1tGJD0Gmr
-	OL5ppsE=
-X-Received: by 2002:a05:6102:4b89:b0:602:8ad9:1f6f with SMTP id
- ada2fe7eead31-604f904cc47mr4758708137.5.1774902961997; Mon, 30 Mar 2026
- 13:36:01 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmx.de header.i=w_armin@gmx.de header.b="flRqC+Rl"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=gmx.de;
+	s=s31663417; t=1774913100; x=1775517900; i=w_armin@gmx.de;
+	bh=AJ2wLXij8KfZ8i6ccf+mcPfWnJDIFb9Ir6fvfi+bW6k=;
+	h=X-UI-Sender-Class:Message-ID:Date:MIME-Version:Subject:To:Cc:
+	 References:From:In-Reply-To:Content-Type:
+	 Content-Transfer-Encoding:cc:content-transfer-encoding:
+	 content-type:date:from:message-id:mime-version:reply-to:subject:
+	 to;
+	b=flRqC+Rl7ygpsrSKnwea0aMEa0D1Z66Bon1Pa3D9hJfzuUdp+xrT45Xy8hHjYvcd
+	 soKMn1IVG41ggEc7QAV+w25n1sbz7uhrrSOM+a9dUQAZ6kmJdMZC5PB8u4H8fqtv0
+	 VjJRq60HFa8CDyqGl8vYwdoOtTUXg46I2NXK4oBHPy6LSMyOVcNUwRHQAzsoEl23W
+	 lCcmD9EnWRxxvFTL9F5Lj8Cz2W0yOuih/1LRrZeEKKPEMrskIrM9uIeEXFe0tkdHL
+	 OGPv82yv/w8DjG3LTo+gae3YYvGJZFOnksExkHbxsvNCcEkQ0INAc09Wir1+Y51AI
+	 WVqWl7W8x4swQ+5Tyg==
+X-UI-Sender-Class: 724b4f7f-cbec-4199-ad4e-598c01a50d3a
+Received: from client.hidden.invalid by mail.gmx.net (mrgmx005
+ [212.227.17.190]) with ESMTPSA (Nemesis) id 1MpDJd-1vjcge41r5-00jyaX; Tue, 31
+ Mar 2026 01:24:59 +0200
+Message-ID: <b773699a-ea2a-4304-90ea-851e9ee29dbc@gmx.de>
+Date: Tue, 31 Mar 2026 01:24:59 +0200
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-From: =?UTF-8?B?0JTQsNC90LjQuNC7INCR0YPQu9Cz0LDRgNGM?= <bulgardaniil18@gmail.com>
-Date: Mon, 30 Mar 2026 22:35:50 +0200
-X-Gm-Features: AQROBzCzDvSQp2IiGmthrT5mtRJoU9aa_9VX8kQN4bDyCzLZ2kyC_pMmdLR9Ab8
-Message-ID: <CAMPU55i_MPW_MHBsBfbnrO7T5Q68q1QmNgLVBPiqoh30kGw4Pw@mail.gmail.com>
-Subject: [PATCH] platform/x86/lenovo: thinkpad_acpi: add named speed presets
- to fan_write_cmd_speed
-To: hmh@hmh.eng.br, mpearson-lenovo@squebb.ca, 
-	Derek John Clark <derekjohn.clark@gmail.com>
-Cc: hansg@kernel.org, ilpo.jarvinen@linux.intel.com, 
-	ibm-acpi-devel@lists.sourceforge.net, platform-driver-x86@vger.kernel.org, 
-	linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+User-Agent: Mozilla Thunderbird
+Subject: Re: Internal keyboard non-functional on linux on Medion Laptop -
+ NTC816 (Intel IPF) has no driver, PS/2 fallback produces corrupted scancodes
+To: Ian Jensen <ianmoellerjensen@gmail.com>
+Cc: platform-driver-x86@vger.kernel.org
+References: <CAJ0oKyQTEJit294y=fs2s2nzhzUs_GQzsgMswDNs==zkdiqz0g@mail.gmail.com>
+ <05ae0012-db1b-4826-a466-f706d2a57cc7@gmx.de>
+ <CAJ0oKyRU3=qBQvxaBycQYAyxCaVogzuVNv_M=4=npTkBF=X1zg@mail.gmail.com>
+ <18a5bcab-84d2-4957-a053-dabbf900e85d@gmx.de>
+ <CAJ0oKyR0VPXz887cJsF+oUZFYVD7QY3F3FXWbjAGZGTmFFV-UA@mail.gmail.com>
+ <81b30359-7090-430d-8cb1-805cf2d6fcc9@gmx.de>
+ <CAJ0oKySi8dLwbjM5UAgtCBRFEGAMpWZfLth=eWcMrBc3=YQqfQ@mail.gmail.com>
+ <CAJ0oKySN-q4=RuFt3mTa-VESspRn+OWDSssFtGRJm82ZWGLaGg@mail.gmail.com>
+Content-Language: en-US
+From: Armin Wolf <W_Armin@gmx.de>
+In-Reply-To: <CAJ0oKySN-q4=RuFt3mTa-VESspRn+OWDSssFtGRJm82ZWGLaGg@mail.gmail.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: quoted-printable
+X-Provags-ID: V03:K1:837VNx3Jlk6igAzeUr3c0N4Kx5G0bUQYxmVdqbZPtcqiAMBeMhC
+ RDR1GLd3fxmUk1fUBbGTfMwxQzyxzHFHWdCWFLZrvpTZJz03ZiaIR+P75syPDRRGXoU6dz4
+ t1K4tKxB2UVPp1c0LWw9Gfci11tybobgyLd8NqpCQqt3NHI06lJPBURtEg7ZrndGYAPHEqb
+ 6qmQPY1VpFwJKoTMlMp/A==
+X-Spam-Flag: NO
+UI-OutboundReport: notjunk:1;M01:P0:WGLkAUw+F6c=;nehjhjVjGs6xhvEAF5ohauAkei8
+ 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
 
-platform/x86/lenovo: thinkpad_acpi: add named speed presets to
-fan_write_cmd_speed
+Am 30.03.26 um 21:51 schrieb Ian Jensen:
 
-The fan_write_cmd_speed() function had a TODO comment suggesting
-support for named speed presets (low, medium, high). Implement
-this by mapping the preset names to the existing fan_speed_presets
-enum values, following the same strstarts() pattern used in
-fan_write_cmd_level().
-Signed-off-by: Daniil Bulgar <bulgardaniil18@gmail.com>
----
- drivers/platform/x86/lenovo/thinkpad_acpi.c | 17 +++++++++++++----
- 1 file changed, 13 insertions(+), 4 deletions(-)
+> Hello, I am writing to see if my email containing the output of ls=20
+> /sys/bus/i2c/devices arrived? I apologise for the extra email, but=20
+> because communication went silent suddenly, I was wondering if I sent=20
+> it wrong.
 
-diff --git a/drivers/platform/x86/lenovo/thinkpad_acpi.c
-b/drivers/platform/x86/lenovo/thinkpad_acpi.c
-index 8982d92df..f10cebe11 100644
---- a/drivers/platform/x86/lenovo/thinkpad_acpi.c
-+++ b/drivers/platform/x86/lenovo/thinkpad_acpi.c
-@@ -7957,6 +7957,12 @@ enum fan_control_commands {
-                         * and also watchdog cmd */
- };
+Sorry, i forgot to reply :/
 
-+enum fan_speed_preset {
-+    TPACPI_FAN_SPEED_LOW    = 65535 / 4,    /* 25% speed */
-+    TPACPI_FAN_SPEED_MEDIUM    = 65535 / 2,    /* 50% speed */
-+    TPACPI_FAN_SPEED_HIGH    = 65535,    /* 100% speed */
-+};
-+
- static bool fan_control_allowed;
+It seems that your touchpad is enumerated using i2c and correctly detected=
+, but i see no i2c entry for the keyboard.
+I thus assume that the keyboard is indeed connected using the i8042 contro=
+ller, i think your device needs some
+sort of quirk. I was also unable to find any information regarding the INT=
+C816 device, so i believe that it is a
+purely virtual device not exposed by the hardware itself.
 
- static enum fan_status_access_mode fan_status_access_mode;
-@@ -9249,10 +9255,13 @@ static int fan_write_cmd_speed(const char *cmd, int *rc)
- {
-     int speed;
+I also found that the HP Spectre x360 might have a similar bug inside its =
+i8042 emulation. Lucky for us, the
+Arch wiki contains a workaround for this: https://wiki.archlinux.org/title=
+/HP_Spectre_x360_(2020)
 
--    /* TODO:
--    * Support speed <low> <medium> <high> ? */
--
--    if (sscanf(cmd, "speed %d", &speed) != 1)
-+    if (strstarts(cmd, "speed low"))
-+        speed = TPACPI_FAN_SPEED_LOW;
-+    else if (strstarts(cmd, "speed medium"))
-+        speed = TPACPI_FAN_SPEED_MEDIUM;
-+    else if (strstarts(cmd, "speed high"))
-+        speed = TPACPI_FAN_SPEED_HIGH;
-+    else if (sscanf(cmd, "speed %d", &speed) != 1)
-         return 0;
+Can you check if this helps on your model? Please also check the following=
+ boot parameter combination:
 
-     *rc = fan_set_speed(speed);
--- 
-2.53.0
+	i8042.reset i8042.nomux=3D1 i8042.nopnp=3D1 atkbd.reset pnpacpi=3Doff
+
+Thanks,
+Armin Wolf
+
+> Den tirs. 24. mar. 2026 kl. 22.27 skrev Ian Jensen=20
+> <ianmoellerjensen@gmail.com>:
+>
+>     Yes, here
+>
+>     Den tirs. 24. mar. 2026 kl. 22.08 skrev Armin Wolf <W_Armin@gmx.de>:
+>
+>         Am 24.03.26 um 21:43 schrieb Ian Jensen:
+>
+>         >
+>         > Yes certainly, my mistake
+>         > Here it is
+>         >
+>         Thank you. Can you share the output of "ls /sys/bus/i2c/devices/=
+"?
+>
+>         Thanks,
+>         Armin Wolf
+>
+>         > Den tirs. 24. mar. 2026 kl. 21.37 skrev Armin Wolf
+>         <W_Armin@gmx.de>:
+>         >
+>         >=C2=A0 =C2=A0 =C2=A0Am 24.03.26 um 21:28 schrieb Ian Jensen:
+>         >
+>         >=C2=A0 =C2=A0 =C2=A0> Yes, here it is attached (this is with no=
+ launch
+>         parameters, so
+>         >=C2=A0 =C2=A0 =C2=A0> completely dead laptop keyboard)
+>         >
+>         >=C2=A0 =C2=A0 =C2=A0Thanks you.
+>         >
+>         >=C2=A0 =C2=A0 =C2=A0Can you please also share the acpidump with=
+ the whole
+>         mailing list
+>         >=C2=A0 =C2=A0 =C2=A0(reply-all) so that everyone can access it?
+>         >=C2=A0 =C2=A0 =C2=A0Also, it seems that the acpidump you have p=
+rovided is
+>         corrupted,
+>         >=C2=A0 =C2=A0 =C2=A0likely because use copied it manually from =
+the
+>         >=C2=A0 =C2=A0 =C2=A0command line.
+>         >
+>         >=C2=A0 =C2=A0 =C2=A0Please use this command instead:
+>         >
+>         >=C2=A0 =C2=A0 =C2=A0=C2=A0 =C2=A0 =C2=A0 =C2=A0 sudo acpidump >=
+ acpidump.txt
+>         >
+>         >=C2=A0 =C2=A0 =C2=A0The acpidump.txt file should then contain t=
+he full data.
+>         >
+>         >=C2=A0 =C2=A0 =C2=A0Thanks,
+>         >=C2=A0 =C2=A0 =C2=A0Armin Wolf
+>         >
+>
