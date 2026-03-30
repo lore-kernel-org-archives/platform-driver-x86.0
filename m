@@ -1,586 +1,187 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.9])
+Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E380F229B38
-	for <platform-driver-x86@vger.kernel.org>; Mon, 30 Mar 2026 15:10:49 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.9
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 543DB3368A5
+	for <platform-driver-x86@vger.kernel.org>; Mon, 30 Mar 2026 15:12:26 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.180.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1774883452; cv=none; b=C2d+cmMRPOw3z5WeJh5xFPJfJGdWGAyx9Y7SrtXrC5pKhfZ+rEvmxjPwj8txHieHCAPHXXKwtTPpZsSAGDPlYhO588st4sHzHEM5eNnr0H9ayTtlzPI4ljclNyqu2IL3SpkWMRBlpnuwtPOD+iGBY5Zgl/+nnl4YfB1lEu1O6po=
+	t=1774883547; cv=none; b=TMK/qujn9PsCM37uETLqEYadNTojYewQHgMYDK7TiUlEMdD/FpR2rya30OwdTKy0bLmGB/FFsxBqe3iE5s5Gc595yMjBGfoMI98puugc/2sc0PF8JZgixzXEh8GS3edW8HTtztQTW+yfeZSoGcO4jk4IscBDwFyPO9+7YtOf0DI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1774883452; c=relaxed/simple;
-	bh=JdLBBUdbb1H3CDpGjW+yiWDTxapaJFPo3J3sdtjQdB8=;
-	h=From:Date:To:cc:Subject:In-Reply-To:Message-ID:References:
-	 MIME-Version:Content-Type; b=sPsyo6F4JqH6FVYMUTY1QWcK4nrRleRzWV2o6JyRNvy0SKThtdf+Sg03pVwa8kF81tM0hQRMEKbP0CcCslnan/R6snDo1cZXoqo8Y67qmkdue/H4mCAVPuuBmFTg/BjqrJTNs187zUAORDONRlbc+TVHdgEJfwEXA8PNaAZUEis=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=pass smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=Juqj4Gxp; arc=none smtp.client-ip=198.175.65.9
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.intel.com
+	s=arc-20240116; t=1774883547; c=relaxed/simple;
+	bh=qtkVpFIt17h+XtbVcQYfq5pjUgv1xnIo5T9F5keD9Eg=;
+	h=Message-ID:Date:MIME-Version:From:Subject:To:Cc:References:
+	 In-Reply-To:Content-Type; b=JerRJmvwH8/rfBqpxi6rVJFDnG2rx1I1SWHoGyK5V8E74b1/3tQXuW8ZJjOMMX4JTBYZqcT6NTPeDKw1HmOIzzQDeiPx9MXKixPr70mObfNvqAIYSKomf1YUS5SEF7cWp9SmeFpnolsckfWyX23i7APIbVN01tWlmDOHreRpGbo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com; spf=pass smtp.mailfrom=oss.qualcomm.com; dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b=pM0qsBaU; dkim=pass (2048-bit key) header.d=oss.qualcomm.com header.i=@oss.qualcomm.com header.b=TJaLst+j; arc=none smtp.client-ip=205.220.180.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oss.qualcomm.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="Juqj4Gxp"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1774883450; x=1806419450;
-  h=from:date:to:cc:subject:in-reply-to:message-id:
-   references:mime-version;
-  bh=JdLBBUdbb1H3CDpGjW+yiWDTxapaJFPo3J3sdtjQdB8=;
-  b=Juqj4GxpII/oJDMBKxnuBNZQU5SrIj1fU7Mc9VgkVdN4MeHXVajVI5Ys
-   COFQvsb5JSLLo0vP2rNisD9BEc3K8uD8QP4QVAkwoQhbHMS4Vk08KZYnT
-   Q0mKGHkJy4XyqIMJdCZP98PtmMEsCN4Pm2tVaBHl4UOMgvVZe/HdkS/zg
-   6PmGNByrWOc6FHpySI0MMOcgjqL5b73uTwG3dI/y2ep2/UbLImwCfVY3H
-   P6/BwMAOGFvwDmCNDFiy0Zu3gE53gP65Sy+76Zy2Na2yKBz7w+eaZWW2o
-   hbwrEKzyneJxh8+F7YTY/xxzWY2FYPG9PZYGEEyb65mxBKOKSH9QjdyD0
-   A==;
-X-CSE-ConnectionGUID: XDzi8yjnRD6MeI0uCCFQWw==
-X-CSE-MsgGUID: BqfBbSw4QhymvxsAuILzpA==
-X-IronPort-AV: E=McAfee;i="6800,10657,11743"; a="98489204"
-X-IronPort-AV: E=Sophos;i="6.23,150,1770624000"; 
-   d="scan'208";a="98489204"
-Received: from orviesa010.jf.intel.com ([10.64.159.150])
-  by orvoesa101.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 30 Mar 2026 08:10:45 -0700
-X-CSE-ConnectionGUID: HXtI9ON2T2eEEmMiOLbMVA==
-X-CSE-MsgGUID: ZiligN74Qu2tF5W57qZuYQ==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.23,150,1770624000"; 
-   d="scan'208";a="225254075"
-Received: from ijarvine-mobl1.ger.corp.intel.com (HELO localhost) ([10.245.245.153])
-  by orviesa010-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 30 Mar 2026 08:10:41 -0700
-From: =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
-Date: Mon, 30 Mar 2026 18:10:35 +0300 (EEST)
-To: Shyam Sundar S K <Shyam-sundar.S-k@amd.com>
-cc: Hans de Goede <hansg@kernel.org>, platform-driver-x86@vger.kernel.org, 
-    mario.limonciello@amd.com, Yijun.Shen@Dell.com, Sanket.Goswami@amd.com
-Subject: Re: [PATCH v3 1/7] platform/x86/amd/pmf: Add util layer and userspace
- misc device interface
-In-Reply-To: <21d9dd9b-0ab1-4c36-af3a-77f94afa02da@amd.com>
-Message-ID: <977410c1-452a-2bea-3ef4-fa9b2d29da48@linux.intel.com>
-References: <20260301131124.1370565-1-Shyam-sundar.S-k@amd.com> <20260301131124.1370565-2-Shyam-sundar.S-k@amd.com> <86b8f4be-dfe7-afeb-7390-17b75bf438e7@linux.intel.com> <21d9dd9b-0ab1-4c36-af3a-77f94afa02da@amd.com>
+	dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b="pM0qsBaU";
+	dkim=pass (2048-bit key) header.d=oss.qualcomm.com header.i=@oss.qualcomm.com header.b="TJaLst+j"
+Received: from pps.filterd (m0279873.ppops.net [127.0.0.1])
+	by mx0a-0031df01.pphosted.com (8.18.1.11/8.18.1.11) with ESMTP id 62UApnfQ2723211
+	for <platform-driver-x86@vger.kernel.org>; Mon, 30 Mar 2026 15:12:25 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=qualcomm.com; h=
+	cc:content-transfer-encoding:content-type:date:from:in-reply-to
+	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
+	pCq1rraO8JDl6If4lOy4XQOIMxgapQ0bokLUVWDiW68=; b=pM0qsBaUKEivyw7I
+	L0oA8Yht5rdBskd6bXlBaLcn811qig9iwJp7Vwj322xYgyzND5dv7F37+SvXTlD/
+	oW3zNRgwlTzl08e4BYJZctyPnXXs+adQJ+Ig6MbLXoqPOIS5EYff5Km0aIU/FJZE
+	nxVuPeOo3o+92ehBO+Ad5fYMJgSflspivAdJdDV9XhjEcSDKvpqdf+rqfCFWCIqH
+	S74NP3TSQ40iWkVvgSoQ33zggiTbtV4HDk6h1KRNxEbLntBGggoyhWN4g2fkNiWB
+	U+ihiOYOcPQOe8Q1FjOZ3j/QZJT+kHiJE3cIcY9Kw39jV7z8iIkh9RWrUAD2auB+
+	5YQOCQ==
+Received: from mail-ua1-f71.google.com (mail-ua1-f71.google.com [209.85.222.71])
+	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 4d7qt0h2x2-1
+	(version=TLSv1.3 cipher=TLS_AES_128_GCM_SHA256 bits=128 verify=NOT)
+	for <platform-driver-x86@vger.kernel.org>; Mon, 30 Mar 2026 15:12:25 +0000 (GMT)
+Received: by mail-ua1-f71.google.com with SMTP id a1e0cc1a2514c-951bc4921ecso7558872241.1
+        for <platform-driver-x86@vger.kernel.org>; Mon, 30 Mar 2026 08:12:25 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=oss.qualcomm.com; s=google; t=1774883544; x=1775488344; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:content-language:references
+         :cc:to:subject:from:user-agent:mime-version:date:message-id:from:to
+         :cc:subject:date:message-id:reply-to;
+        bh=pCq1rraO8JDl6If4lOy4XQOIMxgapQ0bokLUVWDiW68=;
+        b=TJaLst+jfH5/dutICSzqUDziBK48w+khkwTj2OGKlsX1HlZfpvFq4fhjBbIdYHixjV
+         A3RaT5DlCA1lqZdD0hPPsXwFKycm6He495V+qhp8QXwCupFEFTLfHJdKtbUy9GNmutBb
+         fz0QO2q3bQQdZKvx0gXefXBewvXIfPLNjnikk9YrgQrDngd/ssoFlreFm6Al2CKWlwHS
+         eZDSWyEhG1NleZ1GHAuOPiopHtJoVWI30Wl7uZ269e/ZNIXbUY145Lu2uRbBMoVZUVKK
+         CZzQvv9T33AZOeDRtb+ao/DX3GhxZHwlWSedPbro4fXx+2kgthXz5A8lkmBPJ1YrlqjC
+         zvUA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20251104; t=1774883544; x=1775488344;
+        h=content-transfer-encoding:in-reply-to:content-language:references
+         :cc:to:subject:from:user-agent:mime-version:date:message-id:x-gm-gg
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=pCq1rraO8JDl6If4lOy4XQOIMxgapQ0bokLUVWDiW68=;
+        b=b/ULmmpr5dFu9nOOcAag+KP7SZ/HT/L9a4Q/Rbm9sgLqGgN2kui/tlo/2ueg/ZpUS3
+         bpDAWBXcqAZNBFPPoRykY6QsEwfP5F8AaIUOI2v9jVsjZ++aAdSB57SmTDNS3B9bJ6gl
+         1Ex54qhRjQ1hYORYHQ+JEIh9VDbwlKTo61TLkkmfsSfpMzAROfW9BxqWQPjWztZRl1dD
+         YrIvwCFk7oPhxXIRi+MqDI8AwXdfz/Up8fNm/D76uTxeZlyW+ufztaIi6AxG5HzNaUZk
+         CRi/LwjKP4QNzij7TsQ6c7b510RNDHY7eyaUGK3V/oTFby1mxNJ7zYG58TW3ImDlaefW
+         CRxw==
+X-Forwarded-Encrypted: i=1; AJvYcCXAuK9DzY+exHt7DwMz6+8w1+gziJvaYM3HK6SmMfT1CQs12F7StBWtbB37V7ukgFvycOzdie0ksr6nN40Pqmsswg2t@vger.kernel.org
+X-Gm-Message-State: AOJu0YwKVxp+NfQDtzSiDuTV2Ag5/YTGkO7yYcwKx5E/PHvN+M5w370S
+	ZhIq2qrKPgzovPu5HWz8tVLIOxf17tp/sX4sGTluAGPHVDnKbq9pVWkG0atdkxisQ1KwqWvo4w5
+	Megla9QvNZRZ8M4ufFRcY5bQjeGAz4YSrwdTeSn1zXCwXMonqR2ZF3NFxwagGC5OeBDHtxZ+zjp
+	+NtDTIpJzf
+X-Gm-Gg: ATEYQzwQIjDCIIQfTYtRI3qJB13H/1O/2a3Jmpatd4tebBu78ihQL7+uA/2xAlx8y92
+	HSLpCRnWF2mkXqtSxaUj4MYE1DxRaBK/aPYg1wt6RmMXsPOMZrC4LGaiHoTbGY8nTU80hH2tksF
+	+c2S11QlxSSrSjxw3bcendCd2RW1xSo/az+GGYbpHoGZ3M9AOxuTRihEhogZwYZIGWDVYPL/GCw
+	CHIgQN8w0A3oLI1OOr9Mmd6h9+mrge5rU9vJ7ehhGw+eQnJXJI+27WZA6DU0FTqeT96YZmrZH4S
+	SN934Nh6imXDL3XKlG9FmdyhIhyOlzUZpaxI3EIV4ugi3yjLiBuRdCtNbnvtRupOG1Ic7+9yBdW
+	CnznOakhcVLTz1yLskMdVndy4XRoGPkHHc3Bi+we/5Z4OVP/IP2xAG1ERow9Q4/IdeG+rDDomeE
+	5efX8e82mChYelmLnpdZOsSZirSNWg6Y6k2hkdaMszgf/UfaTxGQbsFCbAab3OQV3Tpgg2Vbq3G
+	xaDnqJPSal/o57l
+X-Received: by 2002:a05:6102:800f:b0:5ff:ca6e:c897 with SMTP id ada2fe7eead31-604f92e435cmr6041246137.25.1774883543913;
+        Mon, 30 Mar 2026 08:12:23 -0700 (PDT)
+X-Received: by 2002:a05:6102:800f:b0:5ff:ca6e:c897 with SMTP id ada2fe7eead31-604f92e435cmr6041226137.25.1774883543487;
+        Mon, 30 Mar 2026 08:12:23 -0700 (PDT)
+Received: from ?IPV6:2001:1c00:c32:7800:5bfa:a036:83f0:f9ec? (2001-1c00-0c32-7800-5bfa-a036-83f0-f9ec.cable.dynamic.v6.ziggo.nl. [2001:1c00:c32:7800:5bfa:a036:83f0:f9ec])
+        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-b9b7ae52064sm294217666b.23.2026.03.30.08.12.22
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Mon, 30 Mar 2026 08:12:22 -0700 (PDT)
+Message-ID: <06317144-d652-466a-86e9-da2569a1acf6@oss.qualcomm.com>
+Date: Mon, 30 Mar 2026 17:12:21 +0200
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/mixed; boundary="8323328-1156116031-1774883435=:968"
-
-  This message is in MIME format.  The first part should be readable text,
-  while the remaining parts are likely unreadable without MIME-aware tools.
-
---8323328-1156116031-1774883435=:968
+User-Agent: Mozilla Thunderbird
+From: johannes.goede@oss.qualcomm.com
+Subject: Re: [PATCH v5 0/4] platform/x86: int3472: Add support for GPIO type
+ 0x02 (strobe)
+To: Marco Nenciarini <mnencia@kcore.it>, sakari.ailus@linux.intel.com
+Cc: djrscally@gmail.com, ilpo.jarvinen@linux.intel.com,
+        andriy.shevchenko@linux.intel.com, platform-driver-x86@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+References: <ab0URIrzZPsYjWrM@spark.kcore.it>
+ <20260327181031.1489365-1-mnencia@kcore.it>
+ <76baf0c3-4c1f-4169-846d-5c74dab69a18@oss.qualcomm.com>
+ <acqO62_87TM4UZMI@spark.kcore.it>
+Content-Language: en-US, nl
+In-Reply-To: <acqO62_87TM4UZMI@spark.kcore.it>
 Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: QUOTED-PRINTABLE
+Content-Transfer-Encoding: 7bit
+X-Authority-Analysis: v=2.4 cv=XN09iAhE c=1 sm=1 tr=0 ts=69ca92d9 cx=c_pps
+ a=KB4UBwrhAZV1kjiGHFQexw==:117 a=xqWC_Br6kY4A:10 a=IkcTkHD0fZMA:10
+ a=Yq5XynenixoA:10 a=s4-Qcg_JpJYA:10 a=VkNPw1HP01LnGYTKEx00:22
+ a=u7WPNUs3qKkmUXheDGA7:22 a=rJkE3RaqiGZ5pbrm-msn:22 a=oQ7dI5K__yXUcHZEspgA:9
+ a=QEXdDO2ut3YA:10 a=o1xkdb1NAhiiM49bd1HK:22
+X-Proofpoint-GUID: YwbppjCtqFcIgIzzT4K3ZkeY_drS8ckZ
+X-Proofpoint-ORIG-GUID: YwbppjCtqFcIgIzzT4K3ZkeY_drS8ckZ
+X-Proofpoint-Spam-Details-Enc: AW1haW4tMjYwMzMwMDEyMCBTYWx0ZWRfX0aUQILfLf5lp
+ yj2EahfLOjLiOW9gduzkvplqH5CAgKAnS94UzokuJ5FmuX3CLJrAAWlAAHeTSVP4g8PRHiyEuiS
+ fO35N9nI9m+LtjReaGmeF5CZZY4lFrN/4evnDSv+7WVOniYsnrFgmeLW5DFkEFUvZWqHW4k3lfX
+ H+TcKUkCQnuahbYsUgPGr0yigTMtTREGPMxPuZp1Mqz2hIZFoFU1TbUSrnNrcSPtM91hS+JWK2i
+ PbPnkLk8QSWY8ERbW7g9vSqF3Ou+6KJo+5Wg+Pajtnw9VHO3IPhDD3dEZW6VmZZJs1J2igbH06R
+ 9852sP6PHA995zSzvdRxhM8AgmVNvhrbulSxObkiDo1Oa3y1zO7cQfGdH8B91aLiIvD26ROK3Ft
+ pWA6WcqV/925wKoqnc5+DY89FU8V8LhHK0bcpGKZO9+YcV3js7eFIG7664ynbrGCHvCW4DIJwLp
+ 0H8YmGHVw2ZyQfwaWPg==
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1143,Hydra:6.1.51,FMLib:17.12.100.49
+ definitions=2026-03-29_05,2026-03-28_01,2025-10-01_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
+ adultscore=0 priorityscore=1501 phishscore=0 impostorscore=0
+ lowpriorityscore=0 spamscore=0 suspectscore=0 bulkscore=0 malwarescore=0
+ clxscore=1015 classifier=typeunknown authscore=0 authtc= authcc=
+ route=outbound adjust=0 reason=mlx scancount=1 engine=8.22.0-2603050001
+ definitions=main-2603300120
 
-On Mon, 30 Mar 2026, Shyam Sundar S K wrote:
+Hi,
 
-> Hi Ilpo,
->=20
-> Ack to all the comments in the series.
->=20
-> On 3/25/2026 19:35, Ilpo J=C3=A4rvinen wrote:
-> > On Sun, 1 Mar 2026, Shyam Sundar S K wrote:
-> >=20
-> >> Add a util layer to AMD PMF that exposes a minimal userspace interface
-> >> via a misc character device for metrics monitoring and feature discove=
-ry.
-> >>
-> >> This creates /dev/amdpmf_interface with basic ioctl support to retriev=
-e
-> >> PMF metrics such as:
-> >> *Power source and power slider position
-> >> *Platform type, lid state, and user presence
-> >> *Skin temperature and ambient light
-> >> *BIOS input parameters (1-10)
-> >> *Graphics workload metrics
-> >> *CPU C-state residency (average and maximum)
-> >> *Socket power consumption
-> >>
-> >> The interface enables smoother integration with userspace tools such a=
-s
-> >> AMD SystemDeck [1], which is widely used for monitoring and controllin=
-g
-> >> power and thermal behavior on AMD platforms. These tools help designer=
-s
-> >> keep major components within thermal limits to ensure proper operation
-> >> and enhance overall system stability and reliability.
-> >>
-> >> The feature is gated behind the CONFIG_AMD_PMF_UTIL_SUPPORT Kconfig
-> >> option, allowing it to be disabled if not needed. The implementation
-> >> uses existing PMF infrastructure to populate data from the TA (Trusted
-> >> Application) shared memory buffer.
-> >>
-> >> Link: https://docs.amd.com/v/u/en-US/68773_0.50 [1]
-> >>
-> >> Co-developed-by: Sanket Goswami <Sanket.Goswami@amd.com>
-> >> Signed-off-by: Sanket Goswami <Sanket.Goswami@amd.com>
-> >> Signed-off-by: Shyam Sundar S K <Shyam-sundar.S-k@amd.com>
-> >> ---
-> >>  drivers/platform/x86/amd/pmf/Kconfig  |  10 ++
-> >>  drivers/platform/x86/amd/pmf/Makefile |   2 +
-> >>  drivers/platform/x86/amd/pmf/core.c   |   5 +
-> >>  drivers/platform/x86/amd/pmf/pmf.h    |   9 ++
-> >>  drivers/platform/x86/amd/pmf/util.c   | 174 +++++++++++++++++++++++++=
-+
-> >>  include/uapi/linux/amd-pmf.h          | 115 +++++++++++++++++
-> >>  6 files changed, 315 insertions(+)
-> >>  create mode 100644 drivers/platform/x86/amd/pmf/util.c
-> >>  create mode 100644 include/uapi/linux/amd-pmf.h
-> >>
-> >> diff --git a/drivers/platform/x86/amd/pmf/Kconfig b/drivers/platform/x=
-86/amd/pmf/Kconfig
-> >> index 25b8f7ae3abd..ad21f679b8ab 100644
-> >> --- a/drivers/platform/x86/amd/pmf/Kconfig
-> >> +++ b/drivers/platform/x86/amd/pmf/Kconfig
-> >> @@ -30,3 +30,13 @@ config AMD_PMF_DEBUG
-> >>  =09 in the PMF config store.
-> >> =20
-> >>  =09 Say Y here to enable more debug logs and Say N here if you are no=
-t sure.
-> >> +
-> >> +config AMD_PMF_UTIL_SUPPORT
-> >> +=09bool "AMD PMF Util layer support"
-> >> +=09depends on AMD_PMF
-> >> +=09help
-> >> +=09Enabling this option provides a character device for userspace to =
-capture
-> >> +=09PMF features (Smart PC Builder, Auto Mode, Static Power Slider, Dy=
-namic
-> >> +=09Power Slider AC/DC) along with PMF metrics from the AMD PMF driver=
-=2E
-> >> +
-> >> +=09Say Y here to enable it and Say N here if you are not sure.
-> >> diff --git a/drivers/platform/x86/amd/pmf/Makefile b/drivers/platform/=
-x86/amd/pmf/Makefile
-> >> index 5978464e0eb7..bf7aad80b9e9 100644
-> >> --- a/drivers/platform/x86/amd/pmf/Makefile
-> >> +++ b/drivers/platform/x86/amd/pmf/Makefile
-> >> @@ -8,3 +8,5 @@ obj-$(CONFIG_AMD_PMF)=09=09+=3D amd-pmf.o
-> >>  amd-pmf-y =09=09=09:=3D core.o acpi.o sps.o \
-> >>  =09=09=09=09   auto-mode.o cnqf.o \
-> >>  =09=09=09=09   tee-if.o spc.o
-> >> +# Build util.c only when AMD_PMF_UTIL_SUPPORT is enabled
-> >> +amd-pmf-$(CONFIG_AMD_PMF_UTIL_SUPPORT) +=3D util.o
-> >> diff --git a/drivers/platform/x86/amd/pmf/core.c b/drivers/platform/x8=
-6/amd/pmf/core.c
-> >> index b9e5a2cf3aae..919d02f30aae 100644
-> >> --- a/drivers/platform/x86/amd/pmf/core.c
-> >> +++ b/drivers/platform/x86/amd/pmf/core.c
-> >> @@ -634,6 +634,10 @@ static int amd_pmf_probe(struct platform_device *=
-pdev)
-> >> =20
-> >>  =09pmf_device =3D dev->dev;
-> >> =20
-> >> +=09err =3D amd_pmf_cdev_register(dev);
-> >> +=09if (err)
-> >> +=09=09dev_warn(dev->dev, "failed to register util interface: %d\n", e=
-rr);
-> >> +
-> >>  =09dev_info(dev->dev, "registered PMF device successfully\n");
-> >> =20
-> >>  =09return 0;
-> >> @@ -646,6 +650,7 @@ static void amd_pmf_remove(struct platform_device =
-*pdev)
-> >>  =09amd_pmf_deinit_features(dev);
-> >>  =09if (is_apmf_func_supported(dev, APMF_FUNC_SBIOS_HEARTBEAT_V2))
-> >>  =09=09amd_pmf_notify_sbios_heartbeat_event_v2(dev, ON_UNLOAD);
-> >> +=09amd_pmf_cdev_unregister();
-> >>  =09apmf_acpi_deinit(dev);
-> >>  =09amd_pmf_dbgfs_unregister(dev);
-> >>  }
-> >> diff --git a/drivers/platform/x86/amd/pmf/pmf.h b/drivers/platform/x86=
-/amd/pmf/pmf.h
-> >> index 69fef7448744..6f61076a9386 100644
-> >> --- a/drivers/platform/x86/amd/pmf/pmf.h
-> >> +++ b/drivers/platform/x86/amd/pmf/pmf.h
-> >> @@ -928,4 +928,13 @@ int amd_pmf_tee_init(struct amd_pmf_dev *dev, con=
-st uuid_t *uuid);
-> >>  void amd_pmf_tee_deinit(struct amd_pmf_dev *dev);
-> >>  int amd_pmf_start_policy_engine(struct amd_pmf_dev *dev);
-> >> =20
-> >> +/* Util Layer */
-> >> +#if IS_ENABLED(CONFIG_AMD_PMF_UTIL_SUPPORT)
-> >> +int amd_pmf_cdev_register(struct amd_pmf_dev *dev);
-> >> +void amd_pmf_cdev_unregister(void);
-> >> +#else
-> >> +static inline int amd_pmf_cdev_register(struct amd_pmf_dev *dev) { re=
-turn 0; }
-> >> +static inline void amd_pmf_cdev_unregister(void) {}
-> >> +#endif
-> >> +
-> >>  #endif /* PMF_H */
-> >> diff --git a/drivers/platform/x86/amd/pmf/util.c b/drivers/platform/x8=
-6/amd/pmf/util.c
-> >> new file mode 100644
-> >> index 000000000000..c6837caa44e0
-> >> --- /dev/null
-> >> +++ b/drivers/platform/x86/amd/pmf/util.c
-> >> @@ -0,0 +1,174 @@
-> >> +// SPDX-License-Identifier: GPL-2.0-or-later
-> >> +/*
-> >> + * AMD Platform Management Framework Util Layer
-> >> + *
-> >> + * Copyright (c) 2026, Advanced Micro Devices, Inc.
-> >> + * All Rights Reserved.
-> >> + *
-> >> + * Authors: Shyam Sundar S K <Shyam-sundar.S-k@amd.com>
-> >> + *=09=09=09 Sanket Goswami <Sanket.Goswami@amd.com>
-> >> + */
-> >> +
-> >> +#include <linux/amd-pmf.h>
-> >> +#include <linux/miscdevice.h>
-> >> +#include <linux/mutex.h>
-> >> +#include <linux/uaccess.h>
-> >> +
-> >> +#include "pmf.h"
-> >> +
-> >> +/* Convert BIOS input control code to array index (0-9) */
-> >> +static int amd_pmf_get_bios_idx(u32 control_code)
-> >> +{
-> >> +=09if (control_code >=3D IOCTL_BIOS_INPUT_1 && control_code <=3D IOCT=
-L_BIOS_INPUT_10)
-> >> +=09=09return control_code - IOCTL_BIOS_INPUT_1;
-> >> +
-> >> +=09return -EINVAL;
-> >> +}
-> >> +
-> >> +static long long amd_pmf_populate_bios_input(struct ta_pmf_enact_tabl=
-e *in, u32 control_code)
-> >> +{
-> >> +=09u32 idx;
-> >> +
-> >> +=09idx =3D amd_pmf_get_bios_idx(control_code);
-> >> +
-> >> +=09return (idx < 2) ? in->ev_info.bios_input_1[idx] : in->ev_info.bio=
-s_input_2[idx - 2];
-> >> +}
-> >> +
-> >> +static long long amd_pmf_device_state(struct ta_pmf_enact_table *in, =
-u32 control_code)
-> >> +{
-> >> +=09switch (control_code) {
-> >> +=09case IOCTL_PLATFORM_TYPE:
-> >> +=09=09return in->ev_info.platform_type;
-> >> +=09case IOCTL_LAPTOP_PLACEMENT:
-> >> +=09=09return in->ev_info.device_state;
-> >> +=09case IOCTL_LID_STATE:
-> >> +=09=09return in->ev_info.lid_state;
-> >> +=09case IOCTL_USER_PRESENCE:
-> >> +=09=09return in->ev_info.user_present;
-> >> +=09default:
-> >> +=09=09return -EINVAL;
-> >> +=09}
-> >> +}
-> >> +
-> >> +static int amd_pmf_populate_data(struct device *dev, void __user *arg=
-p)
-> >> +{
-> >> +=09struct amd_pmf_ioctl_info output =3D {0};
-> >> +=09struct ta_pmf_shared_memory *ta_sm =3D NULL;
-> >> +=09struct ta_pmf_enact_table *in =3D NULL;
-> >> +=09struct amd_pmf_dev *pdev;
-> >> +
-> >> +=09pdev =3D dev_get_drvdata(dev);
-> >> +=09if (!pdev)
-> >> +=09=09return -EINVAL;
-> >> +
-> >> +=09memset(pdev->shbuf, 0, pdev->policy_sz);
-> >> +=09ta_sm =3D pdev->shbuf;
-> >> +=09in =3D &ta_sm->pmf_input.enact_table;
-> >> +
-> >> +=09if (copy_from_user(&output, argp, sizeof(output)))
-> >> +=09=09return -EFAULT;
-> >> +
-> >> +=09switch (output.control_code) {
-> >> +=09case IOCTL_POWER_SOURCE:
-> >> +=09=09output.val =3D in->ev_info.power_source;
-> >> +=09=09break;
-> >> +=09case IOCTL_POWER_SLIDER_POSITION:
-> >> +=09=09output.val =3D in->ev_info.power_slider;
-> >> +=09=09break;
-> >> +=09case IOCTL_SKIN_TEMP:
-> >> +=09=09/* Convert from centi-degrees to degrees Celsius */
-> >> +=09=09output.val =3D in->ev_info.skin_temperature / 100;
-> >> +=09=09break;
-> >> +=09case IOCTL_PLATFORM_TYPE ... IOCTL_LID_STATE:
-> >> +=09case IOCTL_USER_PRESENCE:
-> >> +=09=09output.val =3D amd_pmf_device_state(in, output.control_code);
-> >> +=09=09break;
-> >> +=09case IOCTL_BIOS_INPUT_1 ... IOCTL_BIOS_INPUT_10:
-> >> +=09=09output.val =3D amd_pmf_populate_bios_input(in, output.control_c=
-ode);
-> >> +=09=09break;
-> >> +=09case IOCTL_GFX_WORKLOAD:
-> >> +=09=09output.val =3D in->ev_info.gfx_busy;
-> >> +=09=09break;
-> >> +=09case IOCTL_AMBIENT_LIGHT:
-> >> +=09=09output.val =3D in->ev_info.ambient_light;
-> >> +=09=09break;
-> >> +=09case IOCTL_AVG_C0_RES:
-> >> +=09=09output.val =3D in->ev_info.avg_c0residency;
-> >> +=09=09break;
-> >> +=09case IOCTL_MAX_C0_RES:
-> >> +=09=09output.val =3D in->ev_info.max_c0residency;
-> >> +=09=09break;
-> >> +=09case IOCTL_SOCKET_POWER:
-> >> +=09=09output.val =3D in->ev_info.socket_power;
-> >> +=09=09break;
-> >> +=09default:
-> >> +=09=09return -EINVAL;
-> >> +=09}
-> >> +
-> >> +=09if (copy_to_user(argp, &output, sizeof(output)))
-> >> +=09=09return -EFAULT;
-> >> +
-> >> +=09return 0;
-> >> +}
-> >> +
-> >> +#if IS_ENABLED(CONFIG_AMD_PMF_UTIL_SUPPORT)
-> >> +static struct amd_pmf_dev *pmf_dev_handle;
-> >> +static DEFINE_MUTEX(pmf_util_lock);
-> >> +
-> >> +static long amd_pmf_set_ioctl(struct file *filp, unsigned int cmd, un=
-signed long arg)
-> >> +{
-> >> +=09struct amd_pmf_dev *pdev =3D filp->private_data;
-> >> +=09void __user *argp =3D (void __user *)arg;
-> >> +
-> >> +=09if (cmd !=3D IOCTL_PMF_POPULATE_DATA)
-> >> +=09=09return -EINVAL;
-> >> +
-> >> +=09guard(mutex)(&pmf_util_lock);
-> >> +=09return amd_pmf_populate_data(pdev->dev, argp);
-> >> +}
-> >> +
-> >> +static int amd_pmf_open(struct inode *inode, struct file *filp)
-> >> +{
-> >> +=09guard(mutex)(&pmf_util_lock);
-> >> +=09if (!pmf_dev_handle)
-> >> +=09=09return -ENODEV;
-> >> +
-> >> +=09filp->private_data =3D pmf_dev_handle;
-> >> +=09return 0;
-> >> +}
-> >> +
-> >> +static const struct file_operations pmf_if_ops =3D {
-> >> +=09.owner          =3D THIS_MODULE,
-> >> +=09.open           =3D amd_pmf_open,
-> >> +=09.unlocked_ioctl =3D amd_pmf_set_ioctl,
-> >> +};
-> >> +
-> >> +static struct miscdevice amd_pmf_util_if =3D {
-> >> +=09.minor=09=09=3D MISC_DYNAMIC_MINOR,
-> >> +=09.name=09=09=3D "amdpmf_interface",
-> >> +=09.fops=09=09=3D &pmf_if_ops,
-> >> +};
-> >> +
-> >> +int amd_pmf_cdev_register(struct amd_pmf_dev *dev)
-> >> +{
-> >> +=09int ret;
-> >> +
-> >> +=09guard(mutex)(&pmf_util_lock);
-> >> +=09pmf_dev_handle =3D dev;
-> >> +=09ret =3D misc_register(&amd_pmf_util_if);
-> >> +=09if (ret)
-> >> +=09=09pmf_dev_handle =3D NULL;
-> >> +
-> >> +=09return ret;
-> >> +}
-> >> +
-> >> +void amd_pmf_cdev_unregister(void)
-> >> +{
-> >> +=09guard(mutex)(&pmf_util_lock);
-> >> +=09pmf_dev_handle =3D NULL;
-> >> +=09misc_deregister(&amd_pmf_util_if);
-> >> +}
-> >> +#else
-> >> +int amd_pmf_cdev_register(struct amd_pmf_dev *dev) { return 0; }
-> >> +void amd_pmf_cdev_unregister(void) {}
-> >> +#endif
-> >> diff --git a/include/uapi/linux/amd-pmf.h b/include/uapi/linux/amd-pmf=
-=2Eh
-> >> new file mode 100644
-> >> index 000000000000..d29431c67eaa
-> >> --- /dev/null
-> >> +++ b/include/uapi/linux/amd-pmf.h
-> >> @@ -0,0 +1,115 @@
-> >> +/* SPDX-License-Identifier: GPL-2.0-or-later WITH Linux-syscall-note =
-*/
-> >> +/*
-> >> + * AMD Platform Management Framework (PMF) UAPI Header
-> >> + *
-> >> + * Copyright (c) 2026, Advanced Micro Devices, Inc.
-> >> + * All Rights Reserved.
-> >> + *
-> >> + * This file defines the user-space API for interacting with the AMD =
-PMF
-> >> + * driver. It provides ioctl interfaces to query platform-specific me=
-trics
-> >> + * such as power source, slider position, platform type, laptop place=
-ment,
-> >> + * and various BIOS input/output parameters.
-> >> + */
-> >> +
-> >> +#ifndef _UAPI_LINUX_AMD_PMF_H
-> >> +#define _UAPI_LINUX_AMD_PMF_H
-> >> +
-> >> +#include <linux/ioctl.h>
-> >> +#include <linux/types.h>
-> >> +
-> >> +/**
-> >> + * AMD_PMF_IOC_MAGIC - Magic number for AMD PMF ioctl commands
-> >> + *
-> >> + * This magic number uniquely identifies AMD PMF ioctl operations.
-> >> + */
-> >> +#define AMD_PMF_IOC_MAGIC=09'p'
-> >> +
-> >> +/**
-> >> + * IOCTL_PMF_POPULATE_DATA - ioctl command to retrieve PMF metrics da=
-ta
-> >> + *
-> >> + * This ioctl command is used to populate the amd_pmf_ioctl_info stru=
-cture
-> >> + * with the requested metrics data based on the control_code provided=
-=2E
-> >> + */
-> >> +#define IOCTL_PMF_POPULATE_DATA=09=09_IOWR(AMD_PMF_IOC_MAGIC, 0x00, s=
-truct amd_pmf_ioctl_info)
-> >> +
-> >> +/**
-> >> + * enum pmf_ioctl_id - Control codes for PMF ioctl operations
-> >> + * @IOCTL_POWER_SOURCE: Query current power source (AC/DC)
-> >> + * @IOCTL_POWER_SLIDER_POSITION: Query current power slider position
-> >> + * @IOCTL_PLATFORM_TYPE: Query current platform/form factor type
-> >> + * @IOCTL_LAPTOP_PLACEMENT: Query laptop physical placement state
-> >> + * @IOCTL_LID_STATE: Query laptop lid open/close state
-> >> + * @IOCTL_HETERO_STATE: Query heterogeneous computing state
-> >> + * @IOCTL_SKIN_TEMP: Query skin temperature sensor reading
-> >> + * @IOCTL_USER_PRESENCE: Query user presence detection state
-> >> + * @IOCTL_DISPLAY_NUM: Query number of active displays
-> >> + * @IOCTL_USER_ENGAGED: Query user engagement state
-> >> + * @IOCTL_BIOS_INPUT_1: Query BIOS input parameter 1
-> >> + * @IOCTL_BIOS_INPUT_2: Query BIOS input parameter 2
-> >> + * @IOCTL_BIOS_INPUT_3: Query BIOS input parameter 3
-> >> + * @IOCTL_BIOS_INPUT_4: Query BIOS input parameter 4
-> >> + * @IOCTL_BIOS_INPUT_5: Query BIOS input parameter 5
-> >> + * @IOCTL_BIOS_INPUT_6: Query BIOS input parameter 6
-> >> + * @IOCTL_BIOS_INPUT_7: Query BIOS input parameter 7
-> >> + * @IOCTL_BIOS_INPUT_8: Query BIOS input parameter 8
-> >> + * @IOCTL_BIOS_INPUT_9: Query BIOS input parameter 9
-> >> + * @IOCTL_BIOS_INPUT_10: Query BIOS input parameter 10
-> >> + * @IOCTL_GFX_WORKLOAD: Query current graphics workload type
-> >> + * @IOCTL_AMBIENT_LIGHT: Query ambient light sensor reading
-> >> + * @IOCTL_AVG_C0_RES: Query average C0 residency
-> >> + * @IOCTL_MAX_C0_RES: Query maximum C0 residency
-> >> + * @IOCTL_SOCKET_POWER: Query current socket power consumption
-> >> + * @IOCTL_TA_BIN_VER: Query Trusted Application binary version
-> >> + *
-> >> + * These control codes are used with the IOCTL_PMF_POPULATE_DATA ioct=
-l
-> >> + * to specify which metrics data to retrieve from the AMD PMF driver.
-> >> + */
-> >> +enum pmf_ioctl_id {
-> >> +=09IOCTL_POWER_SOURCE,
-> >> +=09IOCTL_POWER_SLIDER_POSITION,
-> >> +=09IOCTL_PLATFORM_TYPE,
-> >> +=09IOCTL_LAPTOP_PLACEMENT,
-> >> +=09IOCTL_LID_STATE,
-> >> +=09IOCTL_HETERO_STATE,
-> >> +=09IOCTL_SKIN_TEMP,
-> >> +=09IOCTL_USER_PRESENCE,
-> >> +=09IOCTL_DISPLAY_NUM,
-> >> +=09IOCTL_USER_ENGAGED,
-> >> +=09IOCTL_BIOS_INPUT_1,
-> >> +=09IOCTL_BIOS_INPUT_2,
-> >> +=09IOCTL_BIOS_INPUT_3,
-> >> +=09IOCTL_BIOS_INPUT_4,
-> >> +=09IOCTL_BIOS_INPUT_5,
-> >> +=09IOCTL_BIOS_INPUT_6,
-> >> +=09IOCTL_BIOS_INPUT_7,
-> >> +=09IOCTL_BIOS_INPUT_8,
-> >> +=09IOCTL_BIOS_INPUT_9,
-> >> +=09IOCTL_BIOS_INPUT_10,
-> >> +=09IOCTL_GFX_WORKLOAD,
-> >> +=09IOCTL_AMBIENT_LIGHT =3D 29,
-> >> +=09IOCTL_AVG_C0_RES =3D 36,
-> >> +=09IOCTL_MAX_C0_RES,
-> >> +=09IOCTL_SOCKET_POWER =3D 50,
-> >> +=09IOCTL_TA_BIN_VER
-> >> +};
-> >> +
-> >> +/**
-> >> + * struct amd_pmf_ioctl_info - Structure for PMF ioctl data exchange
-> >> + * @control_code: Input parameter specifying which data to query (enu=
-m pmf_ioctl_id)
-> >> + * @feature_supported: Output flag indicating if the queried feature =
-is supported
-> >> + * @feature_version: Output field containing the feature version numb=
-er
-> >> + * @val: Output field containing the queried value
-> >> + *
-> >> + * This structure is used with the IOCTL_PMF_POPULATE_DATA ioctl comm=
-and
-> >> + * to exchange data between user space and the AMD PMF kernel driver.
-> >> + * The user provides the control_code to specify the query type, and =
-the
-> >> + * driver populates the remaining fields with the response data.
-> >> + */
-> >> +struct amd_pmf_ioctl_info {
-> >> +=09int control_code; /* In */
-> >> +=09bool feature_supported; /* Out */
-> >> +=09unsigned long feature_version; /* Out */
-> >> +=09long long val; /* Out */
-> >=20
-> > I somehow seem to now recall that Hans suggested that the interface sho=
-uld=20
-> > be a struct which encodes many/all values...
-> >=20
-> > Yes, it seems so. This is what he said:
-> >=20
-> > https://lore.kernel.org/all/6104959e-0214-492d-8ceb-c7376d3b1121@kernel=
-=2Eorg/
-> >=20
-> >=20
->=20
-> Double chekcing - You mean to say, I should move the enum members into
-> the amd_pmf_ioctl_info struct? i.e.
->=20
-> struct amd_pmf_ioctl_info {
->     /* Size field for versioning - must be first */
->     u64 size;
->=20
->     /* Version and feature info */
->     __u32 version;
->     __u32 features_supported;
->     __u32 features_enabled;
->     __u32 platform_type;
->=20
->     /* Power and state info */
->     __u32 power_source;
->     __u32 laptop_placement;
->     __u32 lid_state;
->     __u32 user_presence;
->     __u32 slider_position;
->=20
->     /* Thermal and power metrics */
->     __s32 skin_temp;
->     __u32 gfx_busy;
->     __s32 ambient_light;
->     __u32 avg_c0_residency;
->     __u32 max_c0_residency;
->     __u32 socket_power;
->=20
-> ...
->=20
->     /* BIOS parameters */
->     __s64 bios_input[10];
->     __s64 bios_output[10];
->=20
-> ...
->=20
->     /* Reserved for future expansion */
->     __u64 reserved[8];
-> };
+On 30-Mar-26 16:55, Marco Nenciarini wrote:
+> Hi Hans,
+> 
+> Thank you for the detailed feedback.
+> 
+>> My main remark on the current patch set is that IMHO
+>> the LED name really should be: OVTIxxxx:00::ir_flood_led
+>> since that is what it actually does, strobe is typically
+>> related to flash LEDs which despite the naming in Intel's
+>> side this is not.
+> 
+> The series actually started with "ir_flood" in v1-v2. It was renamed to
+> "strobe" in v3 to match the GPIO type name used in Intel's ACPI _DSM
+> tables. But I agree with you that the userspace-visible LED name should
+> describe what the hardware actually does, not mirror an internal ACPI
+> label. I am happy to go back to "ir_flood" for the LED name.
+> 
+> We could keep INT3472_GPIO_TYPE_STROBE for the define (matching the ACPI
+> type value) but pass "ir_flood" as the con_id to the LED registration,
+> so userspace sees OVTIxxxx:00::ir_flood_led. Would that work for
+> everyone?
 
-Yes, the point was that a result of the query covers more than one=20
-value (all of them).
+That sounds good to me.
 
---=20
- i.
---8323328-1156116031-1774883435=:968--
+>> We really need to get some input from the V4L2 maintainers
+>> here on if this is a good idea, before merging this series.
+> 
+> Agreed.
+> 
+>> I can even imagine
+>> a default simple mode where the v4l2-core just turns
+>> on the LED when streaming starts and off again when
+>> streaming stops (very much like the privacy LED) and
+>> then in the future maybe we can extend this, e.g.
+>> add a control on the sensor device to make this
+>> configurable ?
+> 
+> That makes a lot of sense. The current series intentionally keeps things
+> minimal (just exposing the LED under /sys/class/leds with no V4L2
+> integration), but this future direction sounds right.
+> 
+> I will hold off on sending v6 until we have agreement on the naming and
+> Sakari has had a chance to weigh in.
+
+Ack, lets wait for input from Sakari here.
+
+Regards,
+
+Hans
+
+
+
+
