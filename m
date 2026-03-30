@@ -1,238 +1,93 @@
-Received: from relay15.grserver.gr (relay15.grserver.gr [46.62.234.254])
+Received: from mail-43100.protonmail.ch (mail-43100.protonmail.ch [185.70.43.100])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E8B2528F5
-	for <platform-driver-x86@vger.kernel.org>; Mon, 30 Mar 2026 07:15:19 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=46.62.234.254
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 701FC3ACA70
+	for <platform-driver-x86@vger.kernel.org>; Mon, 30 Mar 2026 08:11:27 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.70.43.100
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1774854923; cv=none; b=cIfj/0u9NlrOyoCG/HqMC/P/Jk0eOa4WYLIgQE+WnDLzbCGWzC0Aixk8DBa4R0CYOR0xxTXb737bxMOLHJ6s5fA3BBK+uF3P+SEwMNAxlkR5wsSRywCax61HNTg9JIYMQB8Vd8TrQslTicO2QVovSqFdq3FEoS1Vauh57l7RMPk=
+	t=1774858289; cv=none; b=u4pslmxbl0QDXsUhgdNIJmom6v0FGZ+PZThcVQJ2umNIfjZwKl1cHP8h2nY8awoqACLlq5n/JWDHjssn3kLHNU0vU2HFZducO7BHRDFpb5ZmBupoBqhEbEL9qX2tBXOE+l+7f1Zfv9fQj0PYFJpTSHO+KrMausG7bFIPYrfgRkA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1774854923; c=relaxed/simple;
-	bh=E3ubMljP6kye9OcPoa4uP87kpxK+z2QDLyEcRgG17PA=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=rMldI/AVJ0ainmyadrJ/MYUSQUQXLx3qbyKJOD8AbX6kJMylHNvBl/1Imt0CfLOorKFMcL7LYosrEwwj1Pl1hzs2x28IkCPoKFfnf65Bcfu+PV3ltuun6FnqJqpudCv5j8YvgY6fU4rerM/VO6BQDQEtFz0OOYgJGJwNetZFmxU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=antheas.dev; spf=pass smtp.mailfrom=antheas.dev; dkim=pass (2048-bit key) header.d=antheas.dev header.i=@antheas.dev header.b=WGygv6z5; arc=none smtp.client-ip=46.62.234.254
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=antheas.dev
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=antheas.dev
+	s=arc-20240116; t=1774858289; c=relaxed/simple;
+	bh=7mpiHQCflKFORsykreBWWnO5lKLi0nakkevLt/2Qwyo=;
+	h=Date:To:From:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=CKzQwd44itFu0BonGT8jKlUCJXnChVeb4GBYMDiHJmEr3DC9jJh0ZN+J3thiiylPZHPCw9mGpkfBipUTvd3LQ+IJS+PBK0t5wEDcveeJah9zPQ+ZLJHQEmfTrlXo9XRT1Zn1mrVpUPUItLnGS10uKY0WPkvrsi/66TTxye8rb70=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=pm.me; spf=pass smtp.mailfrom=pm.me; dkim=pass (2048-bit key) header.d=pm.me header.i=@pm.me header.b=q2ByfRb7; arc=none smtp.client-ip=185.70.43.100
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=pm.me
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=pm.me
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=antheas.dev header.i=@antheas.dev header.b="WGygv6z5"
-Received: from relay15 (localhost [127.0.0.1])
-	by relay15.grserver.gr (Proxmox) with ESMTP id A2F9840AA6
-	for <platform-driver-x86@vger.kernel.org>; Mon, 30 Mar 2026 07:05:20 +0000 (UTC)
-Received: from linux3247.grserver.gr (linux3247.grserver.gr [213.158.90.240])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by relay15.grserver.gr (Proxmox) with ESMTPS id 751AF41DAC
-	for <platform-driver-x86@vger.kernel.org>; Mon, 30 Mar 2026 07:04:47 +0000 (UTC)
-Received: from mail-pl1-f181.google.com (mail-pl1-f181.google.com [209.85.214.181])
-	by linux3247.grserver.gr (Postfix) with ESMTPSA id B08561FE3A3
-	for <platform-driver-x86@vger.kernel.org>; Mon, 30 Mar 2026 10:04:46 +0300 (EEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=antheas.dev;
-	s=default; t=1774854287;
-	bh=pL9OI6yHEA/Fm6m2o3GnAu6ALQI2T97QCEsy7UNOF1g=;
-	h=Received:From:Subject:To;
-	b=WGygv6z5QKyjd7gxMaH9/D4DGNJMYQXUI8zDVnRKN4eDkiow2L4OsFJC7xgAOrT9v
-	 nucIsjUbJc9C5dTsUNsTI2Shaf+J3Lgw/vhStKVJnfDC5X6LzZWUNChdNzqsipLSG4
-	 xlPNyZx+Uyx6Sa8Ppg9gq40D5Epw7AhMvE0IQFmNfxMEJUe5zvAj1k+3PZfTUIq4/L
-	 0BHO8nheNSYyO/bQWPNRrAAGE1nm29RuyAfZiBHGrb6L47T66YQlZYejiNZEQnsJeV
-	 sHWhwm4v0m6913klNkHGRCrrYUTm5tX1LhuGbKxpw+KXjnONNLnfuE1hKQShUi3nvp
-	 NYVyVJmrzfvHA==
-Authentication-Results: linux3247.grserver.gr;
-        spf=pass (sender IP is 209.85.214.181) smtp.mailfrom=lkml@antheas.dev smtp.helo=mail-pl1-f181.google.com
-Received-SPF: pass (linux3247.grserver.gr: connection is authenticated)
-Received: by mail-pl1-f181.google.com with SMTP id
- d9443c01a7336-2addb31945aso32261815ad.1
-        for <platform-driver-x86@vger.kernel.org>;
- Mon, 30 Mar 2026 00:04:46 -0700 (PDT)
-X-Forwarded-Encrypted: i=1;
- AJvYcCXtVfkPIPUZxhRi7tT2lHcptg3EQEboocYjZVx3fFWi3vDFAtm+7YffmUX+so422zf5+Ep3BRwPmx6UxAY5r2xEcKgj@vger.kernel.org
-X-Gm-Message-State: AOJu0YwJgTeP61xpPgNIPGebdAblPWvvr6OpfixD4hOI0baLAsB5BrQ2
-	aCVsc0t2MxxWKTOByfTBEKOSN5Vzoa70lREFkVPycnBJhCcPtAdaV4+YPh+O1m9GPxEjsBExKF9
-	kSoVsN4D8ANsX36F+QkxIjDvbbcDlxVU=
-X-Received: by 2002:a17:903:98d:b0:2b0:60f1:de58 with SMTP id
- d9443c01a7336-2b0cdcfae43mr122223825ad.45.1774854285155; Mon, 30 Mar 2026
- 00:04:45 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=pm.me header.i=@pm.me header.b="q2ByfRb7"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=pm.me;
+	s=protonmail3; t=1774858280; x=1775117480;
+	bh=7mpiHQCflKFORsykreBWWnO5lKLi0nakkevLt/2Qwyo=;
+	h=Date:To:From:Cc:Subject:Message-ID:In-Reply-To:References:
+	 Feedback-ID:From:To:Cc:Date:Subject:Reply-To:Feedback-ID:
+	 Message-ID:BIMI-Selector;
+	b=q2ByfRb7lBEPAxkUUZcRhnfi2orh8KiztaB8X7QsEpBHMSqLh0RTEP2CvNp9kclVF
+	 LeLA07eqa4ZuNTH9997uYIXGW6e0ckD5afO5JREbNsru9gUeoHXmG039voJYDQFDJg
+	 FX5Ajn2DtX3IGX0IAZMLTup+D27fGOnMeJX8M7sdX/woWYQAWSLBbz/vELvd3B7sf6
+	 Ia3GCsWc7WPF+cA/WEB5CdTP/1PUyn0lhd3NxId8KWpboiHPRq1OIbNuvi5SuTyScL
+	 GE/HWTJkQ3Ondntih1FhPQCZH7WBodWOUI+8TzLF2reguNUDBivSTxF4cBEg5pEqKU
+	 fnZnyZG/jiXkQ==
+Date: Mon, 30 Mar 2026 08:11:17 +0000
+To: srinivas pandruvada <srinivas.pandruvada@linux.intel.com>
+From: Maciej Wieczor-Retman <m.wieczorretman@pm.me>
+Cc: Artem Bityutskiy <dedekind1@gmail.com>, hansg@kernel.org, ilpo.jarvinen@linux.intel.com, linux-kernel@vger.kernel.org, platform-driver-x86@vger.kernel.org
+Subject: Re: [PATCH v1 0/2] platform/x86/intel-uncore-freq: Expose instance ID in the sysfs
+Message-ID: <acou4kv56NmP5nXx@wieczorr-mobl1.localdomain>
+In-Reply-To: <edb2d0df79c1b29b83bfa0e5a36a70814ceee505.camel@linux.intel.com>
+References: <cover.1774625521.git.m.wieczorretman@pm.me> <4a19dd6c2ee07bf70ac136747e1ea5bfd8e41888.camel@gmail.com> <acbwMA43StTa7kCM@wieczorr-mobl1.localdomain> <edb2d0df79c1b29b83bfa0e5a36a70814ceee505.camel@linux.intel.com>
+Feedback-ID: 164464600:user:proton
+X-Pm-Message-ID: 60446b9d2a6f5bdc3aa07582eb6886c1f76d3391
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20260329215348.56185-1-begeebe@gmail.com>
-In-Reply-To: <20260329215348.56185-1-begeebe@gmail.com>
-From: Antheas Kapenekakis <lkml@antheas.dev>
-Date: Mon, 30 Mar 2026 09:04:32 +0200
-X-Gmail-Original-Message-ID: 
- <CAGwozwFM0HQ7hXeHpG=CkUTDH1J0F-eqNwZJ4hKdUyzj-GV0OA@mail.gmail.com>
-X-Gm-Features: AQROBzDR6E7a8Xv39D_SHVXxmyBbWtk95w2WG4DjfRWb3K5lFi9jTQyjILM627o
-Message-ID: 
- <CAGwozwFM0HQ7hXeHpG=CkUTDH1J0F-eqNwZJ4hKdUyzj-GV0OA@mail.gmail.com>
-Subject: Re: [PATCH] platform/x86: oxpec: add support for OneXPlayer Super X
-To: Alexander Egorov <begeebe@gmail.com>
-Cc: Derek John Clark <derekjohn.clark@gmail.com>,
-	=?UTF-8?Q?Joaqu=C3=ADn_Ignacio_Aramend=C3=ADa?= <samsagax@gmail.com>,
-	platform-driver-x86@vger.kernel.org, ps1x <ps1x@users.noreply.github.com>
-Content-Type: text/plain; charset="UTF-8"
-X-PPP-Message-ID: 
- <177485428692.733741.3299468852806373388@linux3247.grserver.gr>
-X-PPP-Vhost: antheas.dev
-X-Virus-Scanned: clamav-milter 1.4.3 at linux3247.grserver.gr
-X-Virus-Status: Clean
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: quoted-printable
 
-On Sun, 29 Mar 2026 at 23:54, Alexander Egorov <begeebe@gmail.com> wrote:
+On 2026-03-29 at 12:30:59 -0700, srinivas pandruvada wrote:
+>On Fri, 2026-03-27 at 21:03 +0000, Maciej Wieczor-Retman wrote:
+>> On 2026-03-27 at 19:51:54 +0200, Artem Bityutskiy wrote:
+>> > On Fri, 2026-03-27 at 15:36 +0000, Maciej Wieczor-Retman wrote:
+>> > > on newer systems that can have multiple clusters on a single die,
+>> > > the
+>> > > intel-uncore-freq driver behaves differently and the domain_id is
+>> > > a
+>> > > globally unique value - unique on all TPMI devices. Therefore
+>> > > it's
+>> > > difficult to match a specific instance to a set of UFS registers
+>> > > for
+>> > > example visible through /sys/kernel/debug/tpmi directories.
+>> >
+>> > Although, I'd say that the key point isn't that "domain_id is
+>> > globally
+>> > unique" (though this is true), but that it's a synthetic value
+>> > generated by the driver rather than representing an actual HW
+>> > instance
+>> > ID.
+>> >
+>> > Artem.
+>>
+>> Right, that's worth emphasizing. I'll try to rephrase it when
+>> updating the
+>> patches.
 >
-> From: ps1x <ps1x@users.noreply.github.com>
+>I think the purpose is not clear. Also need to update the
+>documentation.
+>Let me write one tomorrow.
 >
-> OneXPlayer Super X identifies itself via DMI as:
->
->   board vendor: ONE-NETBOOK
->   board name:   ONEXPLAYER SUPER X
->   product name: ONEXPLAYER SUPER X
->
-> Current mainline oxpec does not contain a matching DMI entry for this
-> system, so the in-tree driver is not auto-loaded.
->
-> On the tested Super X device, the working EC layout matches the
-> following handling:
+>Thanks,
+>Srinivas
 
-Hi,
-thanks. Some minor issues with your patch we need to go through first
+Would it help if the purpose was stated as:=20
+=09"this domain_id value is not attached to a HW instance ID anymore"=20
+and then I could show the debug tpmi device mem_dump contents and how it
+diverges with the domain_id - hence why the instance_id needs to be exporte=
+d?
 
-> - fan RPM is read from OXP_SENSOR_FAN_REG (0x76)
-> - pwm1_enable uses OXP_SENSOR_PWM_ENABLE_REG (0x4A)
-> - pwm1 uses OXP_SENSOR_PWM_REG (0x4B) with direct 0-255 writes
-> - turbo toggle uses OXP_TURBO_SWITCH_REG (0xF1)
-> - charge-limit / charge-behaviour uses the same battery extension path
->   as the X1 family
->
-> Add a dedicated oxp_superx board id, a DMI match for OneXPlayer Super X,
-> and route the fan, PWM, turbo-toggle, and battery-extension paths
-> through the validated Super X handling.
->
-> Tested-on: OneXPlayer Super X
-
-Drop this tag
-
-> Signed-off-by: ps1x <ps1x@users.noreply.github.com>
-
-AFAIK kernel requires real names and emails although in the past there
-have been some pseudonyms.
-
-Using Alexander Egorov <begeebe@gmail.com> would be better since you
-used this for the submission anyway.
-
-> ---
->  drivers/platform/x86/oxpec.c | 17 +++++++++++++++++
->  1 file changed, 17 insertions(+)
->
-> diff --git a/drivers/platform/x86/oxpec.c b/drivers/platform/x86/oxpec.c
-> index 6d4a53a2e..d366c398d 100644
-> --- a/drivers/platform/x86/oxpec.c
-> +++ b/drivers/platform/x86/oxpec.c
-> @@ -48,6 +48,7 @@ enum oxp_board {
->         oxp_mini_amd_a07,
->         oxp_mini_amd_pro,
->         oxp_x1,
-> +       oxp_superx,
->         oxp_g1_i,
->         oxp_g1_a,
->  };
-> @@ -282,6 +283,13 @@ static const struct dmi_system_id dmi_table[] = {
->                 },
->                 .driver_data = (void *)oxp_x1,
->         },
-> +       {
-> +               .matches = {
-> +                       DMI_MATCH(DMI_BOARD_VENDOR, "ONE-NETBOOK"),
-> +                       DMI_EXACT_MATCH(DMI_BOARD_NAME, "ONEXPLAYER SUPER X"),
-> +               },
-> +               .driver_data = (void *)oxp_superx,
-> +       },
->         {},
->  };
->
-> @@ -336,6 +344,7 @@ static umode_t tt_toggle_is_visible(struct kobject *kobj,
->         case oxp_mini_amd_a07:
->         case oxp_mini_amd_pro:
->         case oxp_x1:
-> +       case oxp_superx:
->         case oxp_g1_i:
->         case oxp_g1_a:
->                 return attr->mode;
-> @@ -366,6 +375,7 @@ static ssize_t tt_toggle_store(struct device *dev,
->         case aok_zoe_a1:
->         case oxp_fly:
->         case oxp_mini_amd_pro:
-> +       case oxp_superx:
->         case oxp_g1_a:
->                 reg = OXP_TURBO_SWITCH_REG;
->                 mask = OXP_TURBO_TAKE_VAL;
-> @@ -412,6 +422,7 @@ static ssize_t tt_toggle_show(struct device *dev,
->         case aok_zoe_a1:
->         case oxp_fly:
->         case oxp_mini_amd_pro:
-> +       case oxp_superx:
->         case oxp_g1_a:
->                 reg = OXP_TURBO_SWITCH_REG;
->                 mask = OXP_TURBO_TAKE_VAL;
-> @@ -507,6 +518,7 @@ static bool oxp_psy_ext_supported(void)
->  {
->         switch (board) {
->         case oxp_x1:
-> +       case oxp_superx:
->         case oxp_g1_i:
->         case oxp_g1_a:
->         case oxp_fly:
-> @@ -640,6 +652,7 @@ static int oxp_pwm_enable(void)
->         case oxp_mini_amd_a07:
->         case oxp_mini_amd_pro:
->         case oxp_x1:
-> +       case oxp_superx:
->         case oxp_g1_i:
->         case oxp_g1_a:
->                 return write_to_ec(OXP_SENSOR_PWM_ENABLE_REG, PWM_MODE_MANUAL);
-> @@ -660,6 +673,7 @@ static int oxp_pwm_disable(void)
->         case oxp_mini_amd_a07:
->         case oxp_mini_amd_pro:
->         case oxp_x1:
-> +       case oxp_superx:
->         case oxp_g1_i:
->         case oxp_g1_a:
->                 return write_to_ec(OXP_SENSOR_PWM_ENABLE_REG, PWM_MODE_AUTO);
-> @@ -717,6 +731,7 @@ static int oxp_pwm_fan_speed(long *val)
->         case oxp_mini_amd:
->         case oxp_mini_amd_a07:
->         case oxp_mini_amd_pro:
-> +       case oxp_superx:
->         case oxp_g1_a:
->                 return read_from_ec(OXP_SENSOR_FAN_REG, 2, val);
->         default:
-> @@ -749,6 +764,7 @@ static int oxp_pwm_input_write(long val)
->         case aok_zoe_a1:
->         case oxp_fly:
->         case oxp_mini_amd_pro:
-> +       case oxp_superx:
->         case oxp_g1_a:
->                 return write_to_ec(OXP_SENSOR_PWM_REG, val);
->         default:
-> @@ -788,6 +804,7 @@ static int oxp_pwm_input_read(long *val)
->         case aok_zoe_a1:
->         case oxp_fly:
->         case oxp_mini_amd_pro:
-> +       case oxp_superx:
-
-All these matches are above g1_a, do you need to add another enum? If
-not, re-use the g1_a to compact the patch.
-
-Thanks,
-Antheas
-
->         case oxp_g1_a:
->         default:
->                 ret = read_from_ec(OXP_SENSOR_PWM_REG, 1, val);
-> --
-> 2.53.0
->
->
+--=20
+Kind regards
+Maciej Wiecz=C3=B3r-Retman
 
