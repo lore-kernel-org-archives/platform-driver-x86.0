@@ -1,219 +1,212 @@
-Received: from mout.gmx.net (mout.gmx.net [212.227.15.18])
+Received: from mout02.posteo.de (mout02.posteo.de [185.67.36.66])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1B20523958D;
-	Mon, 30 Mar 2026 23:27:02 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=212.227.15.18
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D64373B2FD8
+	for <platform-driver-x86@vger.kernel.org>; Mon, 30 Mar 2026 23:38:52 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.67.36.66
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1774913225; cv=none; b=isdo2+d3ymhKqUIP3/Yx8tRhZYtqRA6ow0oCgCtVkoGtFOKYpmvzwpHJoULjp8tfjIlqfutCf9nP+d2dA30X3Q2l2wnO+0U2zUxjbgGXr24Ckzu3yrs7TDlA2jpm82kB0DG3SuKC8DEZrFDd2oLUrRGs/aqChRqpBccidJkwFX0=
+	t=1774913934; cv=none; b=JK9FGK/6VXQtyBB116l5mHYplQq88ubhC6F2C8bns5Q7K5+CMzcav6jGUIbb/pWMDlO29TLREJECITe7s73XDh0i1S+KKAJ1pGyOkctXmmZYWVTWzatDsPvTdHGoWW0tgLzb72kjvE6Xp5Spge8TBk0EgOzcMMxtkrmNabebdeE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1774913225; c=relaxed/simple;
-	bh=Zu7Pzmo6YVlV7XvaGRt7MygYv4ASRU2QPAVJ0HtkIC4=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=V4tVkud7vaQibryDsgBSVwMYqd6YNblczpUFA1kfGZDavEv4U8jsI+SbLg8sr5XiESq7V/p7jqCTFIWwp7I8CYhNqdueDQIdvUFfY5TIMXHh7oWfwH4NzT9b9d92UV1h79b3uHKYOhRoRYrCZHPEvtSLGSKp0sXjTOYhiGBlpFU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gmx.de; spf=pass smtp.mailfrom=gmx.de; dkim=pass (2048-bit key) header.d=gmx.de header.i=w_armin@gmx.de header.b=e7y6HM5V; arc=none smtp.client-ip=212.227.15.18
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gmx.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmx.de
+	s=arc-20240116; t=1774913934; c=relaxed/simple;
+	bh=UXt0GpjVUU9iZtnxHkrvLTJCcJMggqxXAxcvcgaaOF8=;
+	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
+	 Content-Type:MIME-Version; b=II58/b/1VDwKTtreI/34Rp94lqCxWupWZmkOYShCnkgpeAdfyt3uaiaI5mnGAE+lVKsD7m9ngDWgYQbuSptfuv9TBZHDMKe7KA8QUcHbQK+Bq82Z3BFKUHOHJDOXGz4SZLon/TD4wVfOvK/7sYfW6JhVXHR4dUU/9uEGNSOZyRo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=posteo.de; spf=pass smtp.mailfrom=posteo.de; dkim=pass (2048-bit key) header.d=posteo.de header.i=@posteo.de header.b=f6VFD37N; arc=none smtp.client-ip=185.67.36.66
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=posteo.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=posteo.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmx.de header.i=w_armin@gmx.de header.b="e7y6HM5V"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=gmx.de;
-	s=s31663417; t=1774913221; x=1775518021; i=w_armin@gmx.de;
-	bh=uEvBr01Vf2AsFaCsHT+o9mxuQn0mGKs3hqAKEDlVfO8=;
-	h=X-UI-Sender-Class:Message-ID:Date:MIME-Version:Subject:To:Cc:
-	 References:From:In-Reply-To:Content-Type:
-	 Content-Transfer-Encoding:cc:content-transfer-encoding:
-	 content-type:date:from:message-id:mime-version:reply-to:subject:
-	 to;
-	b=e7y6HM5VxNkYjaGtqsj3X6ow51cq96b7d8jcWVusWUM1M+X+ha+lzIkbBbtT7GbY
-	 filhscLmBtOI0FW/BGXuC8MnvsUdCAEQvzGKbpePfTfIsrZuMPiZ4mlaNmx0b0izN
-	 2ADdYrur6uHBHO5M0HGptGUmtBAVgFKQZj1DtIZZOLgPo5ksrxbhHa/cuiiVO8blw
-	 epnmjkMTEZMhNaF7Kxio9z7ixGt/MZKV5GwQx3CpupSswMQrXowlenAzMpYHPP0VL
-	 +2vxxrs9hdBmWc6Wq6NV451L4kLXy5i3P9Z1oHSFTXjyXcWrI+Bjc9at8k8eV4SGo
-	 n9LL+mDT89hetTQI2Q==
-X-UI-Sender-Class: 724b4f7f-cbec-4199-ad4e-598c01a50d3a
-Received: from client.hidden.invalid by mail.gmx.net (mrgmx005
- [212.227.17.190]) with ESMTPSA (Nemesis) id 1Mjj8D-1ve6sJ3NQR-00nGE4; Tue, 31
- Mar 2026 01:27:00 +0200
-Message-ID: <ea8c7adc-7caf-4305-b2c7-dca38524629c@gmx.de>
-Date: Tue, 31 Mar 2026 01:26:59 +0200
+	dkim=pass (2048-bit key) header.d=posteo.de header.i=@posteo.de header.b="f6VFD37N"
+Received: from submission (posteo.de [185.67.36.169]) 
+	by mout02.posteo.de (Postfix) with ESMTPS id 4BE11240101
+	for <platform-driver-x86@vger.kernel.org>; Tue, 31 Mar 2026 01:38:46 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=posteo.de; s=2017;
+	t=1774913931; bh=KJlVFt0fFfjlXIIskbJ95F8NElAOQxivO1b71aYLZAI=;
+	h=Message-ID:Subject:From:To:Cc:Date:Autocrypt:Content-Type:
+	 MIME-Version:OpenPGP:From;
+	b=f6VFD37N5yda8i1vSjXXRYmxmrgfmGkTAISy+puwl2vWYWONKA9yzyo54FfPL7Rsy
+	 d501JPLy2fpymx9ibw+JUVzfgNyfcWboV0HhGargng5aohrxOgLs1r0mIkYdFXAQHP
+	 LE9HqWKWcbFfF6O29J3c3Aob7gOPx1HKzD33aAI5lLexpiZ/H8zhkrA32AbfvHkwTg
+	 xGANPCP6mRqJtIOoRtdoBFx7PEhlmEjWBHNHEITX2KuRbQfqMQ71rRj4UBc9fBSshS
+	 dGdgu8zMDK97IHjGV8O1z0tNCPcnbCKeB7QBn3gXvw0hPrNpgcP7SHknfUmirXiY3+
+	 0WQaLfD0ZO1GA==
+Received: from customer (localhost [127.0.0.1])
+	by submission (posteo.de) with ESMTPSA id 4fl7431RT7z9rxB;
+	Tue, 31 Mar 2026 01:38:42 +0200 (CEST)
+Message-ID: <325bf1f6a037bad714db19101421588f671e3b2d.camel@posteo.de>
+Subject: Re: [PATCH v5 1/4] dt-bindings: embedded-controller: Add synology
+ microp devices
+From: Markus Probst <markus.probst@posteo.de>
+To: Krzysztof Kozlowski <krzk@kernel.org>
+Cc: Hans de Goede <hansg@kernel.org>, Ilpo =?ISO-8859-1?Q?J=E4rvinen?=	
+ <ilpo.jarvinen@linux.intel.com>, Bryan O'Donoghue
+ <bryan.odonoghue@linaro.org>,  Lee Jones <lee@kernel.org>, Pavel Machek
+ <pavel@kernel.org>, Rob Herring <robh@kernel.org>,  Krzysztof Kozlowski	
+ <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, Miguel Ojeda	
+ <ojeda@kernel.org>, Boqun Feng <boqun@kernel.org>, Gary Guo
+ <gary@garyguo.net>,  =?ISO-8859-1?Q?Bj=F6rn?= Roy Baron	
+ <bjorn3_gh@protonmail.com>, Benno Lossin <lossin@kernel.org>, Andreas
+ Hindborg	 <a.hindborg@kernel.org>, Alice Ryhl <aliceryhl@google.com>,
+ Trevor Gross	 <tmgross@umich.edu>, Danilo Krummrich <dakr@kernel.org>, Greg
+ Kroah-Hartman	 <gregkh@linuxfoundation.org>, "Rafael J. Wysocki"
+ <rafael@kernel.org>, Len Brown <lenb@kernel.org>, Saravana Kannan
+ <saravanak@kernel.org>, 	platform-driver-x86@vger.kernel.org,
+ linux-leds@vger.kernel.org, 	devicetree@vger.kernel.org,
+ linux-kernel@vger.kernel.org, 	rust-for-linux@vger.kernel.org,
+ linux-acpi@vger.kernel.org
+Date: Mon, 30 Mar 2026 23:38:45 +0000
+In-Reply-To: <20260330-delicate-sassy-mayfly-ebcca7@quoll>
+References: <20260329-synology_microp_initial-v5-0-27cb80bdf591@posteo.de>
+	 <20260329-synology_microp_initial-v5-1-27cb80bdf591@posteo.de>
+	 <20260330-delicate-sassy-mayfly-ebcca7@quoll>
+Autocrypt: addr=markus.probst@posteo.de; prefer-encrypt=mutual;
+ keydata=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
+ jfGillcaQOqFZ3WwVqyzG1BUfTow==
+Content-Type: multipart/signed; micalg="pgp-sha256";
+	protocol="application/pgp-signature"; boundary="=-YMgqfLsG96AmlufvYGNr"
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] platform/x86: alienware-wmi-base: Transition to new WMI
- API
-To: Kurt Borja <kuurtb@gmail.com>,
- =?UTF-8?Q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>,
- Hans de Goede <hansg@kernel.org>
-Cc: platform-driver-x86@vger.kernel.org, Dell.Client.Kernel@dell.com,
- linux-kernel@vger.kernel.org
-References: <20260330-aw-new-api-v1-1-95910bfa1b38@gmail.com>
-Content-Language: en-US
-From: Armin Wolf <W_Armin@gmx.de>
-In-Reply-To: <20260330-aw-new-api-v1-1-95910bfa1b38@gmail.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
+OpenPGP: url=https://posteo.de/keys/markus.probst@posteo.de.asc; preference=encrypt
+
+
+--=-YMgqfLsG96AmlufvYGNr
+Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
-X-Provags-ID: V03:K1:6c9a1xGgW1CF7sa+BP2xYL/6V62DnP+cD47OL3AnEPal8JsCjqy
- fhNyUBB02msmAK6vyqfUn3Q93nI8DV00w4iHv9qVs3fDUWvhj1hMPb82EhcEZdcFe6hyECa
- kkBsY/Dvk5kBPp7SR1ef7nGJd+w6eU7omiAlSvwXVM1NnVNGFhLT/Os5VuVpMYyDUI5jMjL
- dTKnyNngn8YJ2DzM9L4Jw==
-X-Spam-Flag: NO
-UI-OutboundReport: notjunk:1;M01:P0:MUHFy+Z7WKg=;6qOy7Men9aSgWWhBNjPg/NcDTIB
- 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
- nEpjZcVj1F9nIKOaYqOM1NYA==
 
-Am 30.03.26 um 17:50 schrieb Kurt Borja:
+On Mon, 2026-03-30 at 08:51 +0200, Krzysztof Kozlowski wrote:
+> On Sun, Mar 29, 2026 at 08:02:15PM +0200, Markus Probst wrote:
+> > +properties:
+> > +  compatible:
+> > +    enum:
+> > +      - synology,ds923p-microp
+> > +      - synology,ds918p-microp
+> > +      - synology,ds214play-microp
+> > +      - synology,ds225p-microp
+> > +      - synology,ds425p-microp
+> > +      - synology,ds710p-microp
+> > +      - synology,ds1010p-microp
+> > +      - synology,ds723p-microp
+> > +      - synology,ds1522p-microp
+> > +      - synology,rs422p-microp
+> > +      - synology,ds725p-microp
+> > +      - synology,ds118-microp
+> > +      - synology,ds124-microp
+> > +      - synology,ds223-microp
+> > +      - synology,ds223j-microp
+> > +      - synology,ds1823xsp-microp
+> > +      - synology,rs822p-microp
+> > +      - synology,rs1221p-microp
+> > +      - synology,rs1221rpp-microp
+> > +      - synology,ds925p-microp
+> > +      - synology,ds1525p-microp
+> > +      - synology,ds1825p-microp
+>=20
+> Last time you had one compatible and implied they are all compatible.
+> Now none of them are compatible, which might be accurate,
 
-> Transition to the new wmi_buffer based WMI API.
->
-> Signed-off-by: Kurt Borja <kuurtb@gmail.com>
-> ---
->   drivers/platform/x86/dell/alienware-wmi-base.c | 29 ++++++++++++++----=
-=2D-------
->   1 file changed, 16 insertions(+), 13 deletions(-)
->
-> diff --git a/drivers/platform/x86/dell/alienware-wmi-base.c b/drivers/pl=
-atform/x86/dell/alienware-wmi-base.c
-> index 64562b92314f..ef2b4893b7b5 100644
-> --- a/drivers/platform/x86/dell/alienware-wmi-base.c
-> +++ b/drivers/platform/x86/dell/alienware-wmi-base.c
-> @@ -9,7 +9,6 @@
->   #define pr_fmt(fmt) KBUILD_MODNAME ": " fmt
->  =20
->   #include <linux/acpi.h>
-> -#include <linux/cleanup.h>
->   #include <linux/module.h>
->   #include <linux/platform_device.h>
->   #include <linux/dmi.h>
-> @@ -150,23 +149,27 @@ u8 alienware_interface;
->   int alienware_wmi_command(struct wmi_device *wdev, u32 method_id,
->   			  void *in_args, size_t in_size, u32 *out_data)
->   {
-> -	struct acpi_buffer out =3D {ACPI_ALLOCATE_BUFFER, NULL};
-> -	struct acpi_buffer in =3D {in_size, in_args};
-> -	acpi_status ret;
-> +	struct wmi_buffer out, in =3D {
-> +		.data =3D in_args,
-> +		.length =3D in_size,
-> +	};
-> +	int ret;
->  =20
-> -	ret =3D wmidev_evaluate_method(wdev, 0, method_id, &in, out_data ? &ou=
-t : NULL);
-> -	if (ACPI_FAILURE(ret))
-> -		return -EIO;
-> +	ret =3D wmidev_invoke_method(wdev, 0, method_id, &in, out_data ? &out =
-: NULL);
-> +	if (ret)
-> +		return ret;
->  =20
-> -	union acpi_object *obj __free(kfree) =3D out.pointer;
-> +	if (!out_data)
-> +		return 0;
->  =20
-> -	if (out_data) {
-> -		if (obj && obj->type =3D=3D ACPI_TYPE_INTEGER)
-> -			*out_data =3D (u32)obj->integer.value;
-> -		else
-> -			return -ENOMSG;
-> +	if (out.length < sizeof(*out_data)) {
-> +		kfree(out.data);
-> +		return -ENOMSG;
->   	}
->  =20
-> +	*out_data =3D *(u32 *)out.data;
+As you mentioned earlier:
 
-Please cast the output data to a __le32 * and use le32_to_cpu() to take th=
-e endianess into account.
-The rest looks fine to me.
+Unless exactly same board is used
+in different models (unlikely) then the compatible defines the LEDs and
+they are not needed in DT.
 
-Thanks,
-Armin Wolf
+>=20
+> but nothing
+> explains WHY they are not compatible in the commit msg.
+Shall all 22 compatible be in the commit msg?
 
-> +	kfree(out.data);
-> +
->   	return 0;
->   }
->  =20
->
-> ---
-> base-commit: fab7c51693e95aa874d6d9db22bfae7bd0b23c66
-> change-id: 20260123-aw-new-api-1c18f1011f35
->
+Also, might be worth documenting this requirement [1].
+
+>=20
+> > +
+> > +  fan-failure-gpios:
+> > +    description: GPIOs needed to determine which fans stopped working =
+on a fan failure event.
+> > +    minItems: 2
+> > +    maxItems: 3
+>=20
+> Constraints cannot be flexible. You need allOf:if:then: block to narrow
+> them per variant.
+I can disable the property or force the property based on compatible
+with it.
+But it seems it won't let me modify the minItems and maxItems
+constraint.
+
+Thanks
+- Markus Probst
+
+
+[1] https://docs.kernel.org/devicetree/bindings/submitting-patches.html
+
+
+>=20
+> Best regards,
+> Krzysztof
+
+--=-YMgqfLsG96AmlufvYGNr
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: This is a digitally signed message part
+
+-----BEGIN PGP SIGNATURE-----
+
+iQJPBAABCAA5FiEEgnQYxPSsWOdyMMRzNHYf+OetQ9IFAmnLCYAbFIAAAAAABAAO
+bWFudTIsMi41KzEuMTEsMiwyAAoJEDR2H/jnrUPS/gEQAIMb2gXuY4FHniYPy2Jp
+la8R/ykjbSW+5ISJlfj5m9XwiPLY+AcTgISu7weP2W3kfacbdkOnbx63+vyjR0DF
+6QGhEgvY9V1vgq+0An+SSmnkzjm2ffg291nxKiqIfXtFY3v9djZk5v+MQTL38uYb
+rqGGmFHU7u7Ij+1v5TLFPuZyNwdS7wh3JQ4E+II3fBcfJRKmyqaPhrbGSOiJOuUv
+WQtTJo7lT5Obr8PPGHx3Cm59ByECXf98BF9AjjpvXDPlGiEEsQS40/F5R3Fq9UNV
+EEjNKp9SXEJJXnc/Y9zrgw6h5qwVhytq6SSlk0JA3Lh2WU2ruzzDXOUxY4RV4tK7
+DkebkYKkAGaLgnf3DNYMLsUCg8FsPle6Aadd4BzzdgJnPbotvgR3CkiUWcYjI9Ml
+k04nGUtFjBC8mIVKGOhBunCvweb8ucrOTjRk6mxhBBXOED2xvtiPASozNkNpo729
+sGA08vwLJqwhRx/WlSK2qL8C94L2CaTaWxltPT73KLrdIDcy1hliIDxxOxH9XYdE
+z9g2yYMjekpjBbsS2I57Yo3h3Zler9eO6ZhbI4m7gSpixwl0t37CsJ3mO426l923
+EuFLAnw/qbx4Gst5XESfEFkubfAU/RiU6hP4yUWVaxQlPxmS3vfVthw0QJpK7rE0
+LaHObcMI5OrEmT6Vlfr5qK5v
+=+wyl
+-----END PGP SIGNATURE-----
+
+--=-YMgqfLsG96AmlufvYGNr--
