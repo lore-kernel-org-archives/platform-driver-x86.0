@@ -1,143 +1,85 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.9])
+Received: from spark.kcore.it (spark.kcore.it [49.13.27.68])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 619B33E6DC5;
-	Tue, 31 Mar 2026 13:25:29 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.9
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BFB6F30B53C;
+	Tue, 31 Mar 2026 13:44:49 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=49.13.27.68
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1774963530; cv=none; b=SlA8LuFCtnuwLbcvVg8cUWcTZ6mtfXFDNw/FanFfKF8HxiSwWR8V76DdGoW3CYk5GImhL/Edjx5IyRO4vpQNJRzLlhoEt4EYBmbHDrXWB/7lzwnz8l0ZFvYPykJJIF8ss66DfyTSe7uXp7T+A4cJctu+u3mApcjqVLvb2nqRSk4=
+	t=1774964691; cv=none; b=apvuAiHPTG2yR1moY2tygmnbyTzZruZDabEtxQFkBEcYVprs0Ketr0a9QSfgHmdIih/SCrp5mQrorhe4d8wLP/pP6MyeeclYgkDz+ksLjwpMiq+SofEA7GwMpdkgUnL/h0BP8NHJlXLU0fIkF45slvYG/NK+pP1sfIgfwGiuUvw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1774963530; c=relaxed/simple;
-	bh=8U45AQ34K6mhFVVX+6tkxH2UVS0UKtC+ziNSiqSVGF0=;
-	h=From:Date:To:cc:Subject:In-Reply-To:Message-ID:References:
-	 MIME-Version:Content-Type; b=WjEbLGnZUoFB6tYCZe1CQqAnkMi0ezY2A4ZylMC7bMK19WJm9UblA2LCHtdbi8mxi3nO1WWqdeqphfcFVTJpY6ZCLVlloHuUDL6GT9LmH9I5sTZTNObrn7Yu+zxMF8DEqM25cm+w0o5pYeR2GRSDm+22W2k6Z1BMoDFqKSnZWCI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=pass smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=eBR+mvUK; arc=none smtp.client-ip=198.175.65.9
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.intel.com
+	s=arc-20240116; t=1774964691; c=relaxed/simple;
+	bh=hO3V9dL84QquHa0H/TehoSCQXgp3Zo/rQMkLYsZi6As=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=aESMk/mQVbGiQlU68RqY4lP1PGGzrSRWjyxVrMRHtvG+JRJhj63p/Z3M8Z5O/QveRP+7uI3Go2dV5yzZztEwlq7cdteTrS9yzN6eE+NAZVanvGjcdYepuzZkdVxv4eaAdf8jzrBDuPdq/xVN0sz2KYb2zKI+2WHljGE2A3wlyb8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kcore.it; spf=pass smtp.mailfrom=kcore.it; dkim=pass (1024-bit key) header.d=kcore.it header.i=@kcore.it header.b=JnCrkRKC; arc=none smtp.client-ip=49.13.27.68
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kcore.it
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=kcore.it
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="eBR+mvUK"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1774963529; x=1806499529;
-  h=from:date:to:cc:subject:in-reply-to:message-id:
-   references:mime-version;
-  bh=8U45AQ34K6mhFVVX+6tkxH2UVS0UKtC+ziNSiqSVGF0=;
-  b=eBR+mvUKiaTiCEbC+ggVSnlL9MBcHaETY+ii16geitKubOUa27cVjuoj
-   HBU87YMmeNWdqZDQsB8xzoa7yV9RfZKJVfQKYoOW3u4gdcTmnxaBxNCWT
-   drNqUtyTNZvuiSgDIZgRtloiF5FLSeX8EXE/3+TlFY4NRvqMoAhNg4NLX
-   zw3/pQkWJNPk/q2cUbF03eiCzYH4iqjyDS9FRpxZy/Ym4JOtXa/hmsk0b
-   k/Swf1cQ+lkVtHYGFQ5dofl9IfrCOQALCG5ZRAouqg1EXhpfPusScQmVD
-   I0SSiprWI31ZBypMuDwKR4KzZ0b3jPAuP4y6DYjNfFOPqfsefZVea/jKB
-   Q==;
-X-CSE-ConnectionGUID: nhHuhcF+SmOuHQsdYNtSXQ==
-X-CSE-MsgGUID: upPMfXNkSPyH3fXISN7NqA==
-X-IronPort-AV: E=McAfee;i="6800,10657,11745"; a="98587533"
-X-IronPort-AV: E=Sophos;i="6.23,152,1770624000"; 
-   d="scan'208";a="98587533"
-Received: from orviesa007.jf.intel.com ([10.64.159.147])
-  by orvoesa101.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 31 Mar 2026 06:25:29 -0700
-X-CSE-ConnectionGUID: 4AWQFtcdRBmgO02S3Pmj0Q==
-X-CSE-MsgGUID: rhL8Km6CSq2cNxqNG2ZAgQ==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.23,152,1770624000"; 
-   d="scan'208";a="226618697"
-Received: from ijarvine-mobl1.ger.corp.intel.com (HELO localhost) ([10.245.244.6])
-  by orviesa007-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 31 Mar 2026 06:25:26 -0700
-From: =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
-Date: Tue, 31 Mar 2026 16:25:22 +0300 (EEST)
-To: Bani Brata <banibrata2007@gmail.com>, 
-    Krishna Chomal <krishna.chomal108@gmail.com>
-cc: platform-driver-x86@vger.kernel.org, Hans de Goede <hansg@kernel.org>, 
-    LKML <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH] platform/x86: hp-wmi: Hide bogus fan RPM on HP ENVY x360
- 13-bd0xxx
-In-Reply-To: <20260329054052.32023-1-banibrata2007@gmail.com>
-Message-ID: <96f1e5b3-e1f5-0fd7-7bcc-3160deb3bc7c@linux.intel.com>
-References: <20260329054052.32023-1-banibrata2007@gmail.com>
+	dkim=pass (1024-bit key) header.d=kcore.it header.i=@kcore.it header.b="JnCrkRKC"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=kcore.it;
+	s=spark; h=Content-Transfer-Encoding:MIME-Version:Message-Id:Date:Subject:Cc:
+	To:From:Sender:Reply-To:Content-Type:Content-ID:Content-Description:
+	Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:
+	In-Reply-To:References:List-Id:List-Help:List-Unsubscribe:List-Subscribe:
+	List-Post:List-Owner:List-Archive;
+	bh=j5SyKqDkDusazZv0VlV6NYcLAWKsAQjF5FtDuF8xXnU=; b=JnCrkRKCSAcgEICi7Tx6wOIaC5
+	EBFuzKrImRnHMF/VdcXulT4BSy4opzhU/eCRzcK5Lym5KKf4szMrSs+hpxpEjVztbv4V+BfE4ZYqf
+	PeyHyJIKYJOQR/vO/+w/flInb5xSwjl2lfedROU4JnPXm5GW8MSKnG/vDwmEEC0OThKQ=;
+Received: from mnencia by spark.kcore.it with local (Exim 4.96)
+	(envelope-from <mnencia@kcore.it>)
+	id 1w7ZOd-006bDv-0G;
+	Tue, 31 Mar 2026 15:44:43 +0200
+From: Marco Nenciarini <mnencia@kcore.it>
+To: Daniel Scally <djrscally@gmail.com>,
+	Sakari Ailus <sakari.ailus@linux.intel.com>,
+	=?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
+Cc: Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+	Hans de Goede <johannes.goede@oss.qualcomm.com>,
+	platform-driver-x86@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	Marco Nenciarini <mnencia@kcore.it>
+Subject: [PATCH v7 0/4] platform/x86: int3472: Add support for GPIO type 0x02 (IR flood LED)
+Date: Tue, 31 Mar 2026 15:44:39 +0200
+Message-Id: <20260331134443.1573053-1-mnencia@kcore.it>
+X-Mailer: git-send-email 2.39.5
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 8bit
 
-On Sun, 29 Mar 2026, Bani Brata wrote:
+Add support for INT3472 GPIO type 0x02 which controls an IR flood LED
+used for face authentication on some laptops (e.g. Dell Pro Max 16
+Premium). Without this, the kernel logs "GPIO type 0x02 unknown; the
+sensor may not work" and IR sensors paired with a flood LED cannot
+function.
 
-> On the HP ENVY x360 Convertible 13-bd0xxx (board 8824), the WMI
-> interfaces for reading fan speed (HPWMI_FAN_SPEED_GET_QUERY) return
-> zero-filled buffers regardless of the actual fan speed.
-> 
-> This results in the hp_wmi driver exposing `fan1_input` and `fan2_input`
-> nodes through hwmon that permanently report "0 RPM", which is misleading
-> and interferes with userspace sensor monitoring tools.
-> 
-> Add a DMI quirk to disable exposing the hwmon fan nodes on this specific
-> board.
-> 
-> Signed-off-by: Bani Brata <banibrata2007@gmail.com>
-> ---
->  drivers/platform/x86/hp/hp-wmi.c | 18 ++++++++++++++++++
->  1 file changed, 18 insertions(+)
-> 
-> diff --git a/drivers/platform/x86/hp/hp-wmi.c b/drivers/platform/x86/hp/hp-wmi.c
-> index XXXXXXX..XXXXXXX 100644
-> --- a/drivers/platform/x86/hp/hp-wmi.c
-> +++ b/drivers/platform/x86/hp/hp-wmi.c
-> @@ -192,6 +192,18 @@ static const struct dmi_system_id hp_wmi_rfkill_dmi_table[] __initconst = {
->  };
->  
->  static bool is_victus_s_board;
-> +static bool is_envy_x360_8824_board;
-> +
-> +static const struct dmi_system_id hp_envy_x360_8824_boards[] __initconst = {
-> +	{
-> +		.matches = {
-> +			DMI_MATCH(DMI_SYS_VENDOR, "HP"),
-> +			DMI_MATCH(DMI_PRODUCT_NAME, "HP ENVY x360 Convertible 13-bd0xxx"),
-> +			DMI_MATCH(DMI_BOARD_NAME, "8824"),
-> +		},
-> +	},
-> +	{},
-> +};
->  
->  enum hp_wmi_radio {
->  	HPWMI_WIFI	= 0x0,
-> @@ -2166,6 +2178,8 @@ static umode_t hp_wmi_hwmon_is_visible(const void *data,
->  	case hwmon_pwm:
->  		return 0644;
->  	case hwmon_fan:
-> +		if (is_envy_x360_8824_board)
-> +			return 0;
->  		if (is_victus_s_thermal_profile()) {
->  			if (hp_wmi_get_fan_speed_victus_s(channel) >= 0)
->  				return 0444;
-> @@ -2188,6 +2202,8 @@ static int hp_wmi_hwmon_read(struct device *dev, enum hwmon_sensor_types type,
->  
->  	switch (type) {
->  	case hwmon_fan:
-> +		if (is_envy_x360_8824_board)
-> +			return -EOPNOTSUPP;
->  		if (is_victus_s_thermal_profile())
->  			ret = hp_wmi_get_fan_speed_victus_s(channel);
->  		else
-> @@ -2281,6 +2297,8 @@ static int __init hp_wmi_bios_setup(struct platform_device *device)
->  {
->  	const struct dmi_system_id *id;
->  
-> +	is_envy_x360_8824_board = dmi_first_match(hp_envy_x360_8824_boards);
-> +
->  	/*
->  	 * Currently only victus_s devices use the
->  	 * active_thermal_profile_params
+The series first refactors the existing LED code (patches 1-3), then
+adds the new IR flood LED type with multi-LED support (patch 4).
 
-So does this mean we can't get fan speeds at all with this device?
+Changes in v7:
+- Combined function parameters onto a single line in the brightness
+  callback to avoid alignment churn across patches (patch 1)
+- Fixed indentation after pled_set to led_set rename (patch 2)
+- Renamed GPIO con_id from "privacy-led" to "privacy" and passed it
+  from the caller to reduce churn (patch 3)
+- Avoided unnecessary line wrap in function declaration (patch 3)
+- Replaced bool add_lookup parameter with u8 type and switch-case
+  for lookup logic in the callee (patch 4)
+- Simplified caller to use fallthrough for PRIVACY_LED/STROBE (patch 4)
 
-(This approach is written very specific to a model and should be 
-generalized if there really isn't any way to get the speeds.)
+Marco Nenciarini (4):
+  platform/x86: int3472: Use local variable for LED struct access
+  platform/x86: int3472: Rename pled to led in LED registration code
+  platform/x86: int3472: Parameterize LED con_id in registration
+  platform/x86: int3472: Add support for GPIO type 0x02 (IR flood LED)
 
-I've Krishna Chomal who might have better ideas than me.
+ drivers/platform/x86/intel/int3472/discrete.c | 13 +++-
+ drivers/platform/x86/intel/int3472/led.c      | 66 +++++++++++--------
+ include/linux/platform_data/x86/int3472.h     | 12 ++--
+ 3 files changed, 58 insertions(+), 33 deletions(-)
 
 -- 
- i.
+2.47.3
 
