@@ -1,175 +1,159 @@
-Received: from fout-a2-smtp.messagingengine.com (fout-a2-smtp.messagingengine.com [103.168.172.145])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-vk1-f179.google.com (mail-vk1-f179.google.com [209.85.221.179])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9B35D2233A;
-	Tue, 31 Mar 2026 01:19:53 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=103.168.172.145
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CF37636CE04
+	for <platform-driver-x86@vger.kernel.org>; Tue, 31 Mar 2026 05:11:41 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.179
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1774919995; cv=none; b=gH+60K4jB3YOcTH0D7Biy4ooOwkRE0q/CBe4Cd0PdtQp3PDjltQOGBc6D6qshkyBllnIdlsWDlH0sr5nCRhmp3AgYJC859Y/CpxqQ9XMkihffqxhJskK7faRhzg2N+RZUqcuXAVk9QWYhaezCo+0qNNbfoWcuJY0Zk60LCIgxVk=
+	t=1774933903; cv=none; b=ac7ZVvaR7puXoLSrwO3cIoLNfHW2/L0jqt3CCM0pR975XbEBFOp2vj3WU0mCKQlspnYqTzEBZLfc3CrvlIO13e3ORvwo8JW7lPqeKP/yU0GxphMqDa1kELCxhU1Dxn0jVlhGt4q4qE/b4E7YIaO0LoyItJe9f0tcKedjZlfi29U=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1774919995; c=relaxed/simple;
-	bh=w5PERjQiBJOeMzyJXIB1d34tCiszQioU3GskhCrfnFc=;
-	h=MIME-Version:Date:From:To:Cc:Message-Id:In-Reply-To:References:
-	 Subject:Content-Type; b=V8qwHiq6azKG5pvDUvmXBFEWSz1/feyEr18myRibdDGP765OAclVG/sGT4N4OWvA80TaeaewAOJjhXWZYkt3OXVtrLJYWz1TXYxPvlzrQe1KqVPgQHxttvTQGlGlSFqLxNgvZi7cTUIvQPptOrhKWsPUSpvYeaG2AxD4yyYOX/k=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=squebb.ca; spf=pass smtp.mailfrom=squebb.ca; dkim=pass (2048-bit key) header.d=squebb.ca header.i=@squebb.ca header.b=ffv/f2zw; dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b=pyOnJD0j; arc=none smtp.client-ip=103.168.172.145
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=squebb.ca
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=squebb.ca
+	s=arc-20240116; t=1774933903; c=relaxed/simple;
+	bh=HKMawJjoAKZrHLq1BQGqWJvdWHBeduO5+GZyQ7U++vc=;
+	h=Mime-Version:Content-Type:Date:Message-Id:To:Cc:Subject:From:
+	 References:In-Reply-To; b=g10F7dvpV34hwbzIHqZOhU4/4orCM2crMRcOD7wHum2pyE9Ac94p/kQ+UdCdiYBQ1bB/yjlyiiGySuTmTiXeGH90kGIwiokPvubs1DC5EjTAZtycBAc/3plSB5DfI1z/txSrETIPBl3fQlmAgtamUfo2BLemZixY96pxU/037iU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=CTCvq8iw; arc=none smtp.client-ip=209.85.221.179
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=squebb.ca header.i=@squebb.ca header.b="ffv/f2zw";
-	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="pyOnJD0j"
-Received: from phl-compute-02.internal (phl-compute-02.internal [10.202.2.42])
-	by mailfout.phl.internal (Postfix) with ESMTP id C00BBEC006A;
-	Mon, 30 Mar 2026 21:19:52 -0400 (EDT)
-Received: from phl-imap-08 ([10.202.2.84])
-  by phl-compute-02.internal (MEProxy); Mon, 30 Mar 2026 21:19:52 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=squebb.ca; h=cc
-	:cc:content-transfer-encoding:content-type:content-type:date
-	:date:from:from:in-reply-to:in-reply-to:message-id:mime-version
-	:references:reply-to:subject:subject:to:to; s=fm2; t=1774919992;
-	 x=1775006392; bh=FEv6ZYM7mIdhBLTq8ZsWJmYZz8ACZTZdIJbgPvLEZcs=; b=
-	ffv/f2zw119EKrrrBBh9BXDnh6Im6rgxJoTCqy7UYYEjyoAbAiyyD7jQPpJXIN7X
-	EvaOH0O2MEW4vPUrcj+F0XtRzAtjc3FT+474UOp4Z6Rkh8pB2YqF/EMGv8j+m3Gy
-	KLBMlWVryid4YzEsVQ/8wapKKL2SFHCmEbIvmebKE2D0/Z64L9NQFK93TKDs4aI+
-	gGlifdu2PUzhLBQaMXyO0FXnVIJeqYEyt1hneJyujQdwXcQJN7b8o5/5BlbRClXx
-	0ykDPhzwsLtNuCaMYhv5GJvzlnCujUHoFKDOJGYtw8UBpr36dhxlivakNTS1jg0Y
-	ERtBLlROwSaNimLcB+VRgQ==
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-	messagingengine.com; h=cc:cc:content-transfer-encoding
-	:content-type:content-type:date:date:feedback-id:feedback-id
-	:from:from:in-reply-to:in-reply-to:message-id:mime-version
-	:references:reply-to:subject:subject:to:to:x-me-proxy
-	:x-me-sender:x-me-sender:x-sasl-enc; s=fm1; t=1774919992; x=
-	1775006392; bh=FEv6ZYM7mIdhBLTq8ZsWJmYZz8ACZTZdIJbgPvLEZcs=; b=p
-	yOnJD0j8mJDrvk0T6f+5Ze9yDr7hl9Vu/C1DD3vfIKwefkI+asuxHzTscXPmg8p7
-	IgEgBJDrNTrsm3oac2XnRzo0P9vJGQooLI89ygsxDNbZWh1dMN0/uBNrapGT4Ezu
-	MiNmibX/houGhcMjzcHialZsmplz+D8UB9C1UXwNEvLke2WncAwt6Pu5kPZDY0GY
-	ZINlyWESThTM5x7im1Me3hYW7R62FZkCljKwrTj5dq6XvKJtaV1wGaay2USvlhG0
-	l6zyWq0XIYLSDoKzx27/MX9v28d/QmZGMaMbeMuHHnXYXatTlm3wl9KSmkuKTQ01
-	j3nm8d3LVz5t4/VC7l9MQ==
-X-ME-Sender: <xms:OCHLaU23-qkP_EFmKUMgBySVVUYLSasH8D7-OHkczbK5BCBYmSzy-A>
-    <xme:OCHLaZ4N-jwD4Rr78C4XW9ZyRTvrVOJo0zvL8_IAYyb1j25eVPKBD6nrNQ-iWeC2G
-    xitx2Mzb9opomlfhezYLQEZisV2mD46kt-XlFn0zo6cpDhFG3jBcXo>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeefgedrtddtgdefgedthedvucetufdoteggodetrf
-    dotffvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdfurfetoffkrfgpnffqhgenuceu
-    rghilhhouhhtmecufedttdenucesvcftvggtihhpihgvnhhtshculddquddttddmnecujf
-    gurhepofggfffhvfevkfgjfhfutgfgsehtqhertdertdejnecuhfhrohhmpedfofgrrhhk
-    ucfrvggrrhhsohhnfdcuoehmphgvrghrshhonhdqlhgvnhhovhhosehsqhhuvggssgdrtg
-    grqeenucggtffrrghtthgvrhhnpefhveekjeeuueekfefhleeljeehuedugfetffdvteek
-    ffejudelffdvjeekfeehvdenucevlhhushhtvghrufhiiigvpedtnecurfgrrhgrmhepmh
-    grihhlfhhrohhmpehmphgvrghrshhonhdqlhgvnhhovhhosehsqhhuvggssgdrtggrpdhn
-    sggprhgtphhtthhopeekpdhmohguvgepshhmthhpohhuthdprhgtphhtthhopegsuhhlgh
-    grrhgurghnihhilhdukeesghhmrghilhdrtghomhdprhgtphhtthhopeguvghrvghkjhho
-    hhhnrdgtlhgrrhhksehgmhgrihhlrdgtohhmpdhrtghpthhtohephhhmhheshhhmhhdrvg
-    hnghdrsghrpdhrtghpthhtohephhgrnhhsgheskhgvrhhnvghlrdhorhhgpdhrtghpthht
-    ohepihhlphhordhjrghrvhhinhgvnheslhhinhhugidrihhnthgvlhdrtghomhdprhgtph
-    htthhopehisghmqdgrtghpihdquggvvhgvlheslhhishhtshdrshhouhhrtggvfhhorhhg
-    vgdrnhgvthdprhgtphhtthhopehlihhnuhigqdhkvghrnhgvlhesvhhgvghrrdhkvghrnh
-    gvlhdrohhrghdprhgtphhtthhopehplhgrthhfohhrmhdqughrihhvvghrqdigkeeisehv
-    ghgvrhdrkhgvrhhnvghlrdhorhhg
-X-ME-Proxy: <xmx:OCHLaZE4KEB83BG0tIexz0Pq4GbDknABT0E9JhRi18rfeMojPZ-YmQ>
-    <xmx:OCHLaewRQGnxG2Ihqnk0iFsRVri93ub-zK7sB3qgzZZJf_fDRWuBvw>
-    <xmx:OCHLab2l-FasYDRQgsnQ_j5LrJB76tsl0BSY5UdUxi1slv35r5V8eA>
-    <xmx:OCHLaWpGzpSAYR4m8AmCB5-Y8DicTncIdM6bN7LluefstJ6iWHt6kA>
-    <xmx:OCHLafZVVH3h4cKHSMe8cvmgnoI1Yz7MDWcpybqtqekdgCgknlOFuNPQ>
-Feedback-ID: ibe194615:Fastmail
-Received: by mailuser.phl.internal (Postfix, from userid 501)
-	id 53D022CE35C0; Mon, 30 Mar 2026 21:19:52 -0400 (EDT)
-X-Mailer: MessagingEngine.com Webmail Interface
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="CTCvq8iw"
+Received: by mail-vk1-f179.google.com with SMTP id 71dfb90a1353d-56cc6fe8815so2131894e0c.1
+        for <platform-driver-x86@vger.kernel.org>; Mon, 30 Mar 2026 22:11:41 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20251104; t=1774933901; x=1775538701; darn=vger.kernel.org;
+        h=in-reply-to:references:from:subject:cc:to:message-id:date
+         :content-transfer-encoding:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=3k2Oe9yXROagha6yRK/lSOmu7b8fhlcHMaOLPb6IRKc=;
+        b=CTCvq8iwsxRA8G6yyzMzguwXQWDM8Zr6M0MAoSpW5OmlXxVXpXDtimRa+8cmJzI/vC
+         v9/n4SwQunuxzGgFzX9AepoDy9dChlwcpYBWnVLC6/uFy/kxyff+1zDeFHj65f7Iiyk2
+         QQ41fq9uXyjSx9iFiyot909d0V6IlG2A3m0UXogx+kwoj0psbMt2A1va5B889BwTu4/R
+         UcXw+I8S3fW8x2fUMOYIN4t/URJynbxEinErYXEKDHvwV9olUIQlZiIt0cNOArzkEP1q
+         y9tur1Vbs3J0stjJPRaQ9sQ9kmA0k9rC3ZuODWOER2NEZtdPBVAa27sgjCgT61qsqh+H
+         S+sQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20251104; t=1774933901; x=1775538701;
+        h=in-reply-to:references:from:subject:cc:to:message-id:date
+         :content-transfer-encoding:mime-version:x-gm-gg:x-gm-message-state
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=3k2Oe9yXROagha6yRK/lSOmu7b8fhlcHMaOLPb6IRKc=;
+        b=etjOfgYIsdSYxHGNuy9pO8e6xSJRySp32YWDnWCTSuBCYEoukZU52v6enDc5J3eFaf
+         HA5gdeZoZrvHZGTDqWh6YJ1pi4L6XRHKNZ5IR+FXC2RvPcq2AAEAM+EEZrXh7PwWnmLH
+         5KnPOomFs8ctD5LZfFvXEiGK/w5o5PRsKuGRE96VHOAA4w5/khBIoM6DuM4+/bUIp8/D
+         C5QKlwVovswkBP4AfiUtt3Fz0TVdOGbFik66nW6GnyPLs3YSv2VCWa8Hqcg/rlJ+9R12
+         5j7HEUm7B6/LemklaPA8pXcgDYZBXeEgAV0PSe+FbUvB381BH58InsUOQxasWX/jPHAn
+         RDKw==
+X-Gm-Message-State: AOJu0YwsRcSHSKr9gBuX/k5yRgNhV+FiRpJpFT/BlqXx1iUv+dfX1ojP
+	AUmUsqGlZha4tlse2wOtBluRBbsAAMvBncPSVgKwhsVwuAYL7Yd9DqWG
+X-Gm-Gg: ATEYQzyV6H9pqWQdxZxQjtXJKLQNZw1P7uGShnKRzb/FN5EgddtrQMcw0VXYs7X6Del
+	GwuaKM2IQAaBD9Fw2oMKGP8FCZFHhQTSbcRKOO4kuJx20PxnT61rhHCMf1WTSbr9ZvKgIhoTYFV
+	3hS1lU3x23MYTNjxb/VYdMWh6fPEAy+h5C06mVet2vRt4wY1UXNopSdNz/Ghfkcv2kqj267x/4n
+	zRaEAncD3raX2LbtAr1wb5UwmlzwxZglBzfohLq1ak7Ctag2EkeRRC7C+IuXsmo/P9AkrIk6x6+
+	FSNuO/wNie21RqKmauOV73k7LEo7wyc1p5V2UYHV45F7U7gtuej/XDR/74KLBnpcAA9rwFqD8Vs
+	Tt5xal+XsFn6K9VT4kcnU/CkRXc65cFM7vYyioBl12v7z3RAntfSJDzbpX2eRY8QczInKoe1aU6
+	ajliimTmD1P7hg6w==
+X-Received: by 2002:a05:6122:458d:b0:56d:3b69:87d2 with SMTP id 71dfb90a1353d-56d4a5f8ef4mr6396751e0c.11.1774933900756;
+        Mon, 30 Mar 2026 22:11:40 -0700 (PDT)
+Received: from localhost ([2800:bf0:82:11a2:7ac4:1f2:947b:2b6])
+        by smtp.gmail.com with ESMTPSA id 71dfb90a1353d-56d58a46f4dsm11564060e0c.15.2026.03.30.22.11.39
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Mon, 30 Mar 2026 22:11:40 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-X-ThreadId: ApC5oMBbhHqR
-Date: Mon, 30 Mar 2026 21:19:32 -0400
-From: "Mark Pearson" <mpearson-lenovo@squebb.ca>
-To: 
- =?UTF-8?Q?=D0=94=D0=B0=D0=BD=D0=B8=D0=B8=D0=BB_=D0=91=D1=83=D0=BB=D0=B3?=
- =?UTF-8?Q?=D0=B0=D1=80=D1=8C?= <bulgardaniil18@gmail.com>,
- "Henrique de Moraes Holschuh" <hmh@hmh.eng.br>,
- "Derek J . Clark" <derekjohn.clark@gmail.com>
-Cc: "Hans de Goede" <hansg@kernel.org>,
- =?UTF-8?Q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>,
- ibm-acpi-devel@lists.sourceforge.net,
- "platform-driver-x86@vger.kernel.org" <platform-driver-x86@vger.kernel.org>,
- linux-kernel@vger.kernel.org
-Message-Id: <096ee581-2c27-4746-bc7e-1d699a952764@app.fastmail.com>
-In-Reply-To: 
- <CAMPU55i_MPW_MHBsBfbnrO7T5Q68q1QmNgLVBPiqoh30kGw4Pw@mail.gmail.com>
-References: 
- <CAMPU55i_MPW_MHBsBfbnrO7T5Q68q1QmNgLVBPiqoh30kGw4Pw@mail.gmail.com>
-Subject: Re: [PATCH] platform/x86/lenovo: thinkpad_acpi: add named speed presets to
- fan_write_cmd_speed
-Content-Type: text/plain; charset=utf-8
+Mime-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=UTF-8
+Date: Tue, 31 Mar 2026 00:11:33 -0500
+Message-Id: <DHGPJY9K6HMT.14WH9C5KDC7B5@gmail.com>
+To: "Armin Wolf" <W_Armin@gmx.de>, "Kurt Borja" <kuurtb@gmail.com>,
+ =?utf-8?q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>, "Hans de
+ Goede" <hansg@kernel.org>
+Cc: <platform-driver-x86@vger.kernel.org>, <Dell.Client.Kernel@dell.com>,
+ <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH] platform/x86: alienware-wmi-base: Transition to new WMI
+ API
+From: "Kurt Borja" <kuurtb@gmail.com>
+X-Mailer: aerc 0.21.0-0-g5549850facc2
+References: <20260330-aw-new-api-v1-1-95910bfa1b38@gmail.com>
+ <ea8c7adc-7caf-4305-b2c7-dca38524629c@gmx.de>
+In-Reply-To: <ea8c7adc-7caf-4305-b2c7-dca38524629c@gmx.de>
 
-Hi Daniil
-
-On Mon, Mar 30, 2026, at 4:35 PM, =D0=94=D0=B0=D0=BD=D0=B8=D0=B8=D0=BB =D0=
-=91=D1=83=D0=BB=D0=B3=D0=B0=D1=80=D1=8C wrote:
-> platform/x86/lenovo: thinkpad_acpi: add named speed presets to
-> fan_write_cmd_speed
+On Mon Mar 30, 2026 at 6:26 PM -05, Armin Wolf wrote:
+> Am 30.03.26 um 17:50 schrieb Kurt Borja:
 >
-> The fan_write_cmd_speed() function had a TODO comment suggesting
-> support for named speed presets (low, medium, high). Implement
-> this by mapping the preset names to the existing fan_speed_presets
-> enum values, following the same strstarts() pattern used in
-> fan_write_cmd_level().
-> Signed-off-by: Daniil Bulgar <bulgardaniil18@gmail.com>
-> ---
->  drivers/platform/x86/lenovo/thinkpad_acpi.c | 17 +++++++++++++----
->  1 file changed, 13 insertions(+), 4 deletions(-)
+>> Transition to the new wmi_buffer based WMI API.
+>>
+>> Signed-off-by: Kurt Borja <kuurtb@gmail.com>
+>> ---
+>>   drivers/platform/x86/dell/alienware-wmi-base.c | 29 ++++++++++++++----=
+--------
+>>   1 file changed, 16 insertions(+), 13 deletions(-)
+>>
+>> diff --git a/drivers/platform/x86/dell/alienware-wmi-base.c b/drivers/pl=
+atform/x86/dell/alienware-wmi-base.c
+>> index 64562b92314f..ef2b4893b7b5 100644
+>> --- a/drivers/platform/x86/dell/alienware-wmi-base.c
+>> +++ b/drivers/platform/x86/dell/alienware-wmi-base.c
+>> @@ -9,7 +9,6 @@
+>>   #define pr_fmt(fmt) KBUILD_MODNAME ": " fmt
+>>  =20
+>>   #include <linux/acpi.h>
+>> -#include <linux/cleanup.h>
+>>   #include <linux/module.h>
+>>   #include <linux/platform_device.h>
+>>   #include <linux/dmi.h>
+>> @@ -150,23 +149,27 @@ u8 alienware_interface;
+>>   int alienware_wmi_command(struct wmi_device *wdev, u32 method_id,
+>>   			  void *in_args, size_t in_size, u32 *out_data)
+>>   {
+>> -	struct acpi_buffer out =3D {ACPI_ALLOCATE_BUFFER, NULL};
+>> -	struct acpi_buffer in =3D {in_size, in_args};
+>> -	acpi_status ret;
+>> +	struct wmi_buffer out, in =3D {
+>> +		.data =3D in_args,
+>> +		.length =3D in_size,
+>> +	};
+>> +	int ret;
+>>  =20
+>> -	ret =3D wmidev_evaluate_method(wdev, 0, method_id, &in, out_data ? &ou=
+t : NULL);
+>> -	if (ACPI_FAILURE(ret))
+>> -		return -EIO;
+>> +	ret =3D wmidev_invoke_method(wdev, 0, method_id, &in, out_data ? &out =
+: NULL);
+>> +	if (ret)
+>> +		return ret;
+>>  =20
+>> -	union acpi_object *obj __free(kfree) =3D out.pointer;
+>> +	if (!out_data)
+>> +		return 0;
+>>  =20
+>> -	if (out_data) {
+>> -		if (obj && obj->type =3D=3D ACPI_TYPE_INTEGER)
+>> -			*out_data =3D (u32)obj->integer.value;
+>> -		else
+>> -			return -ENOMSG;
+>> +	if (out.length < sizeof(*out_data)) {
+>> +		kfree(out.data);
+>> +		return -ENOMSG;
+>>   	}
+>>  =20
+>> +	*out_data =3D *(u32 *)out.data;
 >
-> diff --git a/drivers/platform/x86/lenovo/thinkpad_acpi.c
-> b/drivers/platform/x86/lenovo/thinkpad_acpi.c
-> index 8982d92df..f10cebe11 100644
-> --- a/drivers/platform/x86/lenovo/thinkpad_acpi.c
-> +++ b/drivers/platform/x86/lenovo/thinkpad_acpi.c
-> @@ -7957,6 +7957,12 @@ enum fan_control_commands {
->                          * and also watchdog cmd */
->  };
+> Please cast the output data to a __le32 * and use le32_to_cpu() to take t=
+he endianess into account.
+> The rest looks fine to me.
+
+Hi Armin,
+
+Will do -- Thanks!
+
 >
-> +enum fan_speed_preset {
-> +    TPACPI_FAN_SPEED_LOW    =3D 65535 / 4,    /* 25% speed */
-> +    TPACPI_FAN_SPEED_MEDIUM    =3D 65535 / 2,    /* 50% speed */
-> +    TPACPI_FAN_SPEED_HIGH    =3D 65535,    /* 100% speed */
-> +};
-> +
->  static bool fan_control_allowed;
->
->  static enum fan_status_access_mode fan_status_access_mode;
-> @@ -9249,10 +9255,13 @@ static int fan_write_cmd_speed(const char *cmd=
-, int *rc)
->  {
->      int speed;
->
-> -    /* TODO:
-> -    * Support speed <low> <medium> <high> ? */
-> -
-> -    if (sscanf(cmd, "speed %d", &speed) !=3D 1)
-> +    if (strstarts(cmd, "speed low"))
-> +        speed =3D TPACPI_FAN_SPEED_LOW;
-> +    else if (strstarts(cmd, "speed medium"))
-> +        speed =3D TPACPI_FAN_SPEED_MEDIUM;
-> +    else if (strstarts(cmd, "speed high"))
-> +        speed =3D TPACPI_FAN_SPEED_HIGH;
-> +    else if (sscanf(cmd, "speed %d", &speed) !=3D 1)
->          return 0;
->
->      *rc =3D fan_set_speed(speed);
-> --=20
-> 2.53.0
+> Thanks,
+> Armin Wolf
 
-I'd never noticed that TODO :)
-
-No issues with the code but I'd like to check with the thermal team if t=
-hose are better ways of determining the ranges. I've got a feeling that =
-they probably aren't.=20
-Fans don't go that high (or low) during operation so I wonder if there a=
-re better 'ranges' to be used (though it might be platform dependent too)
-
-I'll ask if there is any guidance on it.
-
-Mark
-
+--=20
+Thanks,
+ ~ Kurt
