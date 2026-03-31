@@ -1,33 +1,33 @@
 Received: from spark.kcore.it (spark.kcore.it [49.13.27.68])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 344ED3C6616;
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 346143CF699;
 	Tue, 31 Mar 2026 07:52:10 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=49.13.27.68
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1774943531; cv=none; b=EUoSju1uW7sx2IloIHF+g5lJX1w/rBvXhn5wnqfC7EzhMEr7YCww605RpD2Upa0mrJoR+nXEsOooLWWp6nWSEMPn4EURWpuPDsFnva2ZxQapz+tU/ovvJiQcriQWZC4P58xnqgCZxr2YbCSwnSwXxlvRBfnRDgVIw5a4HEJqx14=
+	t=1774943531; cv=none; b=I/uMm+MAczOXLTN0q08bVc2xno8snh+HkJUBZ4FnvT1aAffWu0yeVTdPVAiMgEpgGBxSeUTutZEceehDhoLlvH2d5tQquekjmqb/JE7TuaXiQX+vcvDWz4pgH/3epbuhavY+YVvD3Sz+/n/n1+V5VaYmX+9vBQqESXEbTmLixPw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1774943531; c=relaxed/simple;
-	bh=3hJdARBALGNPFH1jbJyI1zcug/jU4KlbArNoLwq3eAE=;
+	bh=URNEaxw6vAOJt8cft7knqxbMf6Mjx2CEMk0L7LtFkBM=;
 	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=IjpzVleDCzLiOG+OxrAicKlyL9MQeNrYy9eYw3j5DxHqERSzxur8AyidWRAePpkqNl+0wQD4sfCZbNaKenjmlilR3V/qnlHTjPoczKoUuniTG8t1yS46c95hq5mbRWlAcMvF08xZWx3EL3EL5UiWAWyHKQcIAW9RSgBJ9hW4Kgc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kcore.it; spf=pass smtp.mailfrom=kcore.it; dkim=pass (1024-bit key) header.d=kcore.it header.i=@kcore.it header.b=sEIsb3Pw; arc=none smtp.client-ip=49.13.27.68
+	 MIME-Version; b=HLrrjMMYJHfQunTkSgx3GYJwrkNQyG9hpD1JZkcj9ORZLbkmHOJRVLMmtYQob7sGf5aUQtTq4Qxvd7ewhczAszuC+ty8soHCh9+vQ5hpsvjWwj2RtYLzDFX5bhi0vxKdKRfH5zukUvNIfRtnQvfPqlHwrcj7Dn2/ChzNiZSD6XM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kcore.it; spf=pass smtp.mailfrom=kcore.it; dkim=pass (1024-bit key) header.d=kcore.it header.i=@kcore.it header.b=T1tQH4xE; arc=none smtp.client-ip=49.13.27.68
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kcore.it
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=kcore.it
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=kcore.it header.i=@kcore.it header.b="sEIsb3Pw"
+	dkim=pass (1024-bit key) header.d=kcore.it header.i=@kcore.it header.b="T1tQH4xE"
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=kcore.it;
 	s=spark; h=Content-Transfer-Encoding:MIME-Version:References:In-Reply-To:
 	Message-Id:Date:Subject:Cc:To:From:Sender:Reply-To:Content-Type:Content-ID:
 	Content-Description:Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc
 	:Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:List-Subscribe:
 	List-Post:List-Owner:List-Archive;
-	bh=BYHOFqHDp1APbfiaMrbjy2TqDEKZ/vCoIf6vnII6pR8=; b=sEIsb3PwISDmhJJYeWNM6kM4aZ
-	0clKp7I2jSbo0GKbqsYqhYgpkBXnMMGtbJF1Qk/PAFO8Bsa77DD7fPSIYlHbydzRjbqd6jTY92hkn
-	lVCGa/uVu1dIAit8sL7/hbkQTRWMOHeOmpwxzgVdqbXKTsvdawVMQxukWDkK5jNM7d3U=;
+	bh=TfsGma0HRCaJckPSwJSzEW3BVGLaKzUj4B4X7nOd5S0=; b=T1tQH4xEpfOqu6Q2EsXCNOsgzI
+	vBTIT/h7KHc50Veg0TB+G8jHsEEtTzUVJWhs2zN145F0YBOF0kPNc1tf2EM1EkqZ8FXWVov5QDzHJ
+	+1bQfhNeRT7zP9mgSbqMDFxeDq8IKzopTjW7++zu2CFrdSIeotIJE/cEZbVJD8xxLegQ=;
 Received: from mnencia by spark.kcore.it with local (Exim 4.96)
 	(envelope-from <mnencia@kcore.it>)
-	id 1w7TtN-006ZoM-01;
+	id 1w7TtN-006ZoS-0C;
 	Tue, 31 Mar 2026 09:52:05 +0200
 From: Marco Nenciarini <mnencia@kcore.it>
 To: Daniel Scally <djrscally@gmail.com>,
@@ -38,12 +38,13 @@ Cc: Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
 	platform-driver-x86@vger.kernel.org,
 	linux-kernel@vger.kernel.org,
 	Marco Nenciarini <mnencia@kcore.it>
-Subject: [PATCH v6 0/4] platform/x86: int3472: Add support for GPIO type 0x02 (IR flood LED)
-Date: Tue, 31 Mar 2026 09:52:00 +0200
-Message-Id: <20260331075204.1567624-1-mnencia@kcore.it>
+Subject: [PATCH v6 2/4] platform/x86: int3472: Rename pled to led in LED registration code
+Date: Tue, 31 Mar 2026 09:52:02 +0200
+Message-Id: <20260331075204.1567624-3-mnencia@kcore.it>
 X-Mailer: git-send-email 2.39.5
-In-Reply-To: <ab0URIrzZPsYjWrM@spark.kcore.it>
+In-Reply-To: <20260331075204.1567624-1-mnencia@kcore.it>
 References: <ab0URIrzZPsYjWrM@spark.kcore.it>
+ <20260331075204.1567624-1-mnencia@kcore.it>
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
@@ -52,37 +53,120 @@ List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-Add support for INT3472 GPIO type 0x02 which controls an IR flood LED
-used for face authentication on some laptops (e.g. Dell Pro Max 16
-Premium). Without this, the kernel logs "GPIO type 0x02 unknown; the
-sensor may not work" and IR sensors paired with a flood LED cannot
-function.
+Rename the privacy LED type, struct member, and functions from "pled"
+to "led" in preparation for supporting additional LED types beyond
+just the privacy LED.
 
-The series first refactors the existing LED code (patches 1-3), then
-adds the new IR flood LED type with multi-LED support (patch 4).
+No functional change.
 
-Changes in v6:
-- Renamed LED from "strobe" back to "ir_flood" to describe what the
-  hardware actually does, per Hans de Goede's review. The internal
-  define INT3472_GPIO_TYPE_STROBE is kept to match the ACPI _DSM name.
-- Used local `led` variable from patch 1 (was `pled`, now `led`
-  throughout), per Andy's suggestion to reduce churn
-- Renamed function parameter from `name` to `con_id` in patch 3
-- Replaced `has_lookup` bool with INIT_LIST_HEAD/list_empty check and
-  renamed parameter to `add_lookup` in patch 4, per Andy's review
-- Added #include <linux/list.h> in patch 4
+Signed-off-by: Marco Nenciarini <mnencia@kcore.it>
+---
 
-Marco Nenciarini (4):
-  platform/x86: int3472: Use local variable for LED struct access
-  platform/x86: int3472: Rename pled to led in LED registration code
-  platform/x86: int3472: Parameterize LED con_id in registration
-  platform/x86: int3472: Add support for GPIO type 0x02 (IR flood LED)
+Cc: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+ drivers/platform/x86/intel/int3472/discrete.c |  4 ++--
+ drivers/platform/x86/intel/int3472/led.c      | 14 +++++++-------
+ include/linux/platform_data/x86/int3472.h     |  8 ++++----
+ 3 files changed, 13 insertions(+), 13 deletions(-)
 
- drivers/platform/x86/intel/int3472/discrete.c | 16 ++++-
- drivers/platform/x86/intel/int3472/led.c      | 62 +++++++++++--------
- include/linux/platform_data/x86/int3472.h     | 13 ++--
- 3 files changed, 59 insertions(+), 32 deletions(-)
-
+diff --git a/drivers/platform/x86/intel/int3472/discrete.c b/drivers/platform/x86/intel/int3472/discrete.c
+index 1505fc3..cb24763 100644
+--- a/drivers/platform/x86/intel/int3472/discrete.c
++++ b/drivers/platform/x86/intel/int3472/discrete.c
+@@ -348,7 +348,7 @@ static int skl_int3472_handle_gpio_resources(struct acpi_resource *ares,
+ 
+ 			break;
+ 		case INT3472_GPIO_TYPE_PRIVACY_LED:
+-			ret = skl_int3472_register_pled(int3472, gpio);
++			ret = skl_int3472_register_led(int3472, gpio);
+ 			if (ret)
+ 				err_msg = "Failed to register LED\n";
+ 
+@@ -422,7 +422,7 @@ void int3472_discrete_cleanup(struct int3472_discrete_device *int3472)
+ 	gpiod_remove_lookup_table(&int3472->gpios);
+ 
+ 	skl_int3472_unregister_clock(int3472);
+-	skl_int3472_unregister_pled(int3472);
++	skl_int3472_unregister_led(int3472);
+ 	skl_int3472_unregister_regulator(int3472);
+ }
+ EXPORT_SYMBOL_NS_GPL(int3472_discrete_cleanup, "INTEL_INT3472_DISCRETE");
+diff --git a/drivers/platform/x86/intel/int3472/led.c b/drivers/platform/x86/intel/int3472/led.c
+index 86df81a..8bd4903 100644
+--- a/drivers/platform/x86/intel/int3472/led.c
++++ b/drivers/platform/x86/intel/int3472/led.c
+@@ -6,18 +6,18 @@
+ #include <linux/leds.h>
+ #include <linux/platform_data/x86/int3472.h>
+ 
+-static int int3472_pled_set(struct led_classdev *led_cdev,
++static int int3472_led_set(struct led_classdev *led_cdev,
+ 			    enum led_brightness brightness)
+ {
+-	struct int3472_pled *led = container_of(led_cdev, struct int3472_pled, classdev);
++	struct int3472_led *led = container_of(led_cdev, struct int3472_led, classdev);
+ 
+ 	gpiod_set_value_cansleep(led->gpio, brightness);
+ 	return 0;
+ }
+ 
+-int skl_int3472_register_pled(struct int3472_discrete_device *int3472, struct gpio_desc *gpio)
++int skl_int3472_register_led(struct int3472_discrete_device *int3472, struct gpio_desc *gpio)
+ {
+-	struct int3472_pled *led = &int3472->pled;
++	struct int3472_led *led = &int3472->led;
+ 	char *p;
+ 	int ret;
+ 
+@@ -35,7 +35,7 @@ int skl_int3472_register_pled(struct int3472_discrete_device *int3472, struct gp
+ 
+ 	led->classdev.name = led->name;
+ 	led->classdev.max_brightness = 1;
+-	led->classdev.brightness_set_blocking = int3472_pled_set;
++	led->classdev.brightness_set_blocking = int3472_led_set;
+ 
+ 	ret = led_classdev_register(int3472->dev, &led->classdev);
+ 	if (ret)
+@@ -49,9 +49,9 @@ int skl_int3472_register_pled(struct int3472_discrete_device *int3472, struct gp
+ 	return 0;
+ }
+ 
+-void skl_int3472_unregister_pled(struct int3472_discrete_device *int3472)
++void skl_int3472_unregister_led(struct int3472_discrete_device *int3472)
+ {
+-	struct int3472_pled *led = &int3472->pled;
++	struct int3472_led *led = &int3472->led;
+ 
+ 	if (IS_ERR_OR_NULL(led->classdev.dev))
+ 		return;
+diff --git a/include/linux/platform_data/x86/int3472.h b/include/linux/platform_data/x86/int3472.h
+index b1b8375..7af6731 100644
+--- a/include/linux/platform_data/x86/int3472.h
++++ b/include/linux/platform_data/x86/int3472.h
+@@ -121,12 +121,12 @@ struct int3472_discrete_device {
+ 		u8 imgclk_index;
+ 	} clock;
+ 
+-	struct int3472_pled {
++	struct int3472_led {
+ 		struct led_classdev classdev;
+ 		struct led_lookup_data lookup;
+ 		char name[INT3472_LED_MAX_NAME_LEN];
+ 		struct gpio_desc *gpio;
+-	} pled;
++	} led;
+ 
+ 	struct int3472_discrete_quirks quirks;
+ 
+@@ -160,7 +160,7 @@ int skl_int3472_register_regulator(struct int3472_discrete_device *int3472,
+ 				   const char *second_sensor);
+ void skl_int3472_unregister_regulator(struct int3472_discrete_device *int3472);
+ 
+-int skl_int3472_register_pled(struct int3472_discrete_device *int3472, struct gpio_desc *gpio);
+-void skl_int3472_unregister_pled(struct int3472_discrete_device *int3472);
++int skl_int3472_register_led(struct int3472_discrete_device *int3472, struct gpio_desc *gpio);
++void skl_int3472_unregister_led(struct int3472_discrete_device *int3472);
+ 
+ #endif
 -- 
 2.47.3
 
