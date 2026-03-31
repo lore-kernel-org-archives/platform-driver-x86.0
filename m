@@ -1,58 +1,60 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.10])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.11])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AFB7C3E9F69;
-	Tue, 31 Mar 2026 08:44:03 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.10
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9963B3E557F;
+	Tue, 31 Mar 2026 09:00:19 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.11
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1774946645; cv=none; b=jHX6n4qznASJz7TBKJclhTmuYO7RgqxCT1RSTPAfWMBv712QCPGAVz6SxvM+0SJyxY4UZv4HV8+zPtRYeoertBQtUCMrOTH/5bnUNF6j4Vjm8UuPWEiWB3ZH0m2UWDSXxEDVP0nv40xl7GOUUgeOc2s+GSF7LuIrRErl3XXqVHc=
+	t=1774947621; cv=none; b=s5Wq5XuIEDz1fj8PPGY4hFrIcgHsp4q3d8MuqDb0K32Kt7c6e7XKJQnAEhqnZzUtmxIhOTP8cG4fWsgSBNAsyewT0oVC3YkDASOFUyG5fCIZo/awy6lSK/ghv/HPeZ7Jl6Nfc7RQ92V3xti666j1jmrWKSnJltiKvctD7nRmI2w=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1774946645; c=relaxed/simple;
-	bh=FXS21lgugIIVrzmN/kUlh5ta4ucvLzOfXEqZSKpNB6o=;
+	s=arc-20240116; t=1774947621; c=relaxed/simple;
+	bh=bsUk8lXey/MgHEGQWHr65TC97aJRgQM4peIDf0AU2N8=;
 	h=From:Date:To:cc:Subject:In-Reply-To:Message-ID:References:
-	 MIME-Version:Content-Type; b=P+jScGKgM6q9Ky0Pj5zOL8fhNGeS0CcuDigOYFv6LoNEh4mnwgXatDQ0NBRuNzYiwzoqZbZPgoa64Z1IUQ9QYgaIo7IprpQvHnvspqc9hYegtpTP9/riZ8mGbUi3Wyd3SSk8QOqxLaMJx3micN7R/WKh6hYIA5GwuLky8sJi86c=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=pass smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=Upz0du6k; arc=none smtp.client-ip=198.175.65.10
+	 MIME-Version:Content-Type; b=MG3ELdjCVnMKUe8mdiP9wq1VMT2EtqkvWy/p6FAgBJTLQCGjXcQgoK7ozC+fsFaj39wmjPU3U3YZDb2pGuEpY85QUu/dIA4mlOfg9ExBBSiQ6lRRHH0ZwXsKcpCOijbMJHXoqHlZEZPnk+hH2DWeyJtTJTBx7JsNapiObVKbDAU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=pass smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=FZQjtz/r; arc=none smtp.client-ip=192.198.163.11
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="Upz0du6k"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="FZQjtz/r"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1774946643; x=1806482643;
+  t=1774947619; x=1806483619;
   h=from:date:to:cc:subject:in-reply-to:message-id:
    references:mime-version;
-  bh=FXS21lgugIIVrzmN/kUlh5ta4ucvLzOfXEqZSKpNB6o=;
-  b=Upz0du6kz9HPkT4ZA+9q2h5e2Gq6svMBtwj7gTMnMjUgCySqW39FmKhc
-   rVKBb6WmgDQOJHhjf4O4gGlqxMT0iGS8LNChYYcX0EHG/jscS+6+hy7nG
-   8ZT77+aRwG3oW2T70EIFi1TiHiHXUlnMmi94iI9Y5W7d4xC+fx2lCx6W0
-   dX6OHSD1fVf8lDI5gvcm9E2stcFlZ1VVucTMCVMtuN76LVxNpwkh5NOEg
-   K3D2lXaeIQg/RY3l0rd3ukrx8R+Qpm5WXK5bxnnn0+Qy//19B08YDQ3mM
-   i7JBzP6FouV0WbU5vZqwDEm32ET7pNHsdbwkb26zfWhSMbI8/aYmxIfO4
+  bh=bsUk8lXey/MgHEGQWHr65TC97aJRgQM4peIDf0AU2N8=;
+  b=FZQjtz/rji/pS0I/SQw9Dh3d1v5lcJZRIWczHARuFYYeYrF0QY8mVnQR
+   qbzI9RKEcNebCb3wP0rWHRZ8ul148F/w+eOCeQQmH8x7xiHRNF+jbYdQt
+   p9ThwrNxh822RzcaobLQBt1479UIpIA9BYkAj9TLNEgBaGkGDFb/4AQUY
+   sWMaA0oMk2KsbdYrcHdX39TWgWSamhHlPA57uP+sgH0iLj2A2kbfi6IqC
+   98UofRpGlofuJNFK/J130QaSZsd6zwJY3VWsWWUMAczPwjPQzxS2vv46p
+   J1/fJG/03gMYLJ7WXRiyCWZXege5LXkA/ZaQPkPqRR0riCL1PVsj947TA
    g==;
-X-CSE-ConnectionGUID: 2SGPs6I6ROuBvD0S3dmYEQ==
-X-CSE-MsgGUID: BGH1IfwPTyalzrOh0pGsag==
-X-IronPort-AV: E=McAfee;i="6800,10657,11744"; a="93337225"
+X-CSE-ConnectionGUID: TKu4u1PsT5avZrFsfc6tJg==
+X-CSE-MsgGUID: gj/E4tT7SHKFiNxbvWpV+g==
+X-IronPort-AV: E=McAfee;i="6800,10657,11744"; a="86570072"
 X-IronPort-AV: E=Sophos;i="6.23,151,1770624000"; 
-   d="scan'208";a="93337225"
-Received: from fmviesa002.fm.intel.com ([10.60.135.142])
-  by orvoesa102.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 31 Mar 2026 01:44:03 -0700
-X-CSE-ConnectionGUID: 9LgDBDBJSAe3rLZfB/NJQg==
-X-CSE-MsgGUID: SOQPc+pOTWeoAceW+h3dSQ==
+   d="scan'208";a="86570072"
+Received: from orviesa006.jf.intel.com ([10.64.159.146])
+  by fmvoesa105.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 31 Mar 2026 02:00:19 -0700
+X-CSE-ConnectionGUID: EPLvlXv8TOi1Io6ktCvWTQ==
+X-CSE-MsgGUID: liLe0mJdRyunrx+/YtWGwg==
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="6.23,151,1770624000"; 
-   d="scan'208";a="249347541"
+   d="scan'208";a="225301263"
 Received: from ijarvine-mobl1.ger.corp.intel.com (HELO localhost) ([10.245.244.6])
-  by fmviesa002-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 31 Mar 2026 01:43:59 -0700
+  by orviesa006-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 31 Mar 2026 02:00:15 -0700
 From: =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
-Date: Tue, 31 Mar 2026 11:43:55 +0300 (EEST)
-To: Muthusamy Ramalingam <muthusamy.ramalingam@amd.com>
-cc: Hans de Goede <hansg@kernel.org>, platform-driver-x86@vger.kernel.org, 
-    LKML <linux-kernel@vger.kernel.org>, Muralidhara M K <muralimk@amd.com>
-Subject: Re: [PATCH 2/2] platform/x86/amd/hsmp: Add support for variable-sized
- metrics tables
-In-Reply-To: <20260305105050.2940904-3-muthusamy.ramalingam@amd.com>
-Message-ID: <81915669-87e0-f06d-7a91-eaec41ecc0e1@linux.intel.com>
-References: <20260305105050.2940904-1-muthusamy.ramalingam@amd.com> <20260305105050.2940904-3-muthusamy.ramalingam@amd.com>
+Date: Tue, 31 Mar 2026 12:00:11 +0300 (EEST)
+To: Armin Wolf <W_Armin@gmx.de>
+cc: Dell.Client.Kernel@dell.com, pali@kernel.org, mjg59@srcf.ucam.org, 
+    soyer@irl.hu, Hans de Goede <hansg@kernel.org>, 
+    platform-driver-x86@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>, 
+    linux@roeck-us.net, linux-hwmon@vger.kernel.org, mario.limonciello@amd.com
+Subject: Re: [PATCH v3 1/9] platform/x86: dell-descriptor: Use new buffer-based
+ WMI API
+In-Reply-To: <20260314175249.16040-2-W_Armin@gmx.de>
+Message-ID: <0020b3ec-e095-3736-413e-84f08dbcff93@linux.intel.com>
+References: <20260314175249.16040-1-W_Armin@gmx.de> <20260314175249.16040-2-W_Armin@gmx.de>
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
@@ -61,351 +63,181 @@ List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=US-ASCII
 
-On Thu, 5 Mar 2026, Muthusamy Ramalingam wrote:
+On Sat, 14 Mar 2026, Armin Wolf wrote:
 
-> Add support for the new metrics table format introduced in AMD Family 1Ah
-> Model 50h-5Fh processors with HSMP protocol version 7.
+> Use the new buffer-based WMI API to also support ACPI firmware
+> implementations that do not use ACPI buffers for the descriptor.
 > 
-> Use CPU family/model and protocol versions to map respective variable-sized
-> metric table configurations.
-> The exported hsmp_metric_tbl_read() function provides offset support for
-> variable-sized tables.
-
-This patch should be split into multiple changes.
-
-> Co-developed-by: Muralidhara M K <muralimk@amd.com>
-> Signed-off-by: Muralidhara M K <muralimk@amd.com>
-> Signed-off-by: Muthusamy Ramalingam <muthusamy.ramalingam@amd.com>
+> Signed-off-by: Armin Wolf <W_Armin@gmx.de>
 > ---
->  arch/x86/include/uapi/asm/amd_hsmp.h | 86 ++++++++++++++++++++++++++++
->  drivers/platform/x86/amd/hsmp/acpi.c |  9 +--
->  drivers/platform/x86/amd/hsmp/hsmp.c | 83 ++++++++++++++++++++++-----
->  drivers/platform/x86/amd/hsmp/hsmp.h |  3 +-
->  drivers/platform/x86/amd/hsmp/plat.c |  3 +-
->  5 files changed, 164 insertions(+), 20 deletions(-)
+>  .../platform/x86/dell/dell-wmi-descriptor.c   | 94 +++++++++----------
+>  1 file changed, 47 insertions(+), 47 deletions(-)
 > 
-> diff --git a/arch/x86/include/uapi/asm/amd_hsmp.h b/arch/x86/include/uapi/asm/amd_hsmp.h
-> index 603d62f8d4da..1daa7c5352f3 100644
-> --- a/arch/x86/include/uapi/asm/amd_hsmp.h
-> +++ b/arch/x86/include/uapi/asm/amd_hsmp.h
-> @@ -575,6 +575,92 @@ struct hsmp_metric_table {
->  	__u32 gfxclk_frequency[8];
->  };
+> diff --git a/drivers/platform/x86/dell/dell-wmi-descriptor.c b/drivers/platform/x86/dell/dell-wmi-descriptor.c
+> index c2a180202719..fe42eb8bbd79 100644
+> --- a/drivers/platform/x86/dell/dell-wmi-descriptor.c
+> +++ b/drivers/platform/x86/dell/dell-wmi-descriptor.c
+> @@ -7,7 +7,7 @@
 >  
-> +#define F1A_M50_M5F_MAX_CORES_PER_CCD_32	32
-> +#define F1A_M50_M5F_MAX_FREQ_TABLE_SIZE		4
-> +#define F1A_M50_M5F_MAX_XGMI			8
-> +#define F1A_M50_M5F_MAX_PCIE			8
-> +#define F1A_M50_M5F_MAX_CCD			8
-> +
-> +/* Metrics table (supported only with proto version 7) */
-> +struct hsmp_metric_table_f1a_m50_5f_iod {
-> +	__u32 num_active_ccds;
-> +	__u32 accumulation_counter;
-> +
-> +	/* TEMPERATURE */
-> +	__u64 max_socket_temperature_acc;
-> +
-> +	/* POWER */
-> +	__u32 socket_power_limit;
-> +	__u32 max_socket_power_limit;
-> +	__u64 socket_power_acc;
-> +	__u64 core_power_acc;
-> +	__u64 uncore_power_acc;
-> +
-> +	/* ENERGY */
-> +	__u64 timestamp;
-> +	__u64 socket_energy_acc;
-> +	__u64 core_energy_acc;
-> +	__u64 uncore_energy_acc;
-> +
-> +	/* FREQUENCY */
-> +	__u64 fclk_frequency_acc;
-> +	__u64 uclk_frequency_acc;
-> +	__u64 ddr_rate_acc;
-> +	__u64 lclk_frequency_acc[F1A_M50_M5F_MAX_FREQ_TABLE_SIZE];
-> +
-> +	/* FREQUENCY RANGE */
-> +	__u32 fclk_frequency_table[F1A_M50_M5F_MAX_FREQ_TABLE_SIZE];
-> +	__u32 uclk_frequency_table[F1A_M50_M5F_MAX_FREQ_TABLE_SIZE];
-> +	__u32 ddr_rate_table[F1A_M50_M5F_MAX_FREQ_TABLE_SIZE];
-> +	__u32 max_df_pstate_range;
-> +	__u32 min_df_pstate_range;
-> +	__u32 lclk_frequency_table[F1A_M50_M5F_MAX_FREQ_TABLE_SIZE];
-> +	__u32 max_lclk_dpm_range;
-> +	__u32 min_lclk_dpm_range;
-> +
-> +	/* XGMI */
-> +	__u64 xgmi_bit_rate[F1A_M50_M5F_MAX_XGMI];
-> +	__u64 xgmi_read_bandwidth[F1A_M50_M5F_MAX_XGMI];
-> +	__u64 xgmi_write_bandwidth[F1A_M50_M5F_MAX_XGMI];
-> +
-> +	/* ACTIVITY */
-> +	__u64 socket_c0_residency_acc;
-> +	__u64 socket_df_cstate_residency_acc;
-> +	__u64 dram_read_bandwidth_acc;
-> +	__u64 dram_write_bandwidth_acc;
-> +	__u32 max_dram_bandwidth;
-> +	__u64 pcie_bandwidth_acc[F1A_M50_M5F_MAX_PCIE];
-> +
-> +	/* THROTTLERS */
-> +	__u32 prochot_residency_acc;
-> +	__u32 ppt_residency_acc;
-> +	__u32 thm_residency_acc;
-> +	__u32 vrhot_residency_acc;
-> +	__u32 cpu_tdc_residency_acc;
-> +	__u32 soc_tdc_residency_acc;
-> +	__u32 io_mem_tdc_residency_acc;
-> +	__u32 fit_residency_acc;
-> +};
-> +
-> +struct hsmp_metric_table_f1a_m50_5f_ccd {
-> +	__u32 core_apicid_of_thread0[F1A_M50_M5F_MAX_CORES_PER_CCD_32];
-> +	__u64 core_c0[F1A_M50_M5F_MAX_CORES_PER_CCD_32];
-> +	__u64 core_cc1[F1A_M50_M5F_MAX_CORES_PER_CCD_32];
-> +	__u64 core_cc6[F1A_M50_M5F_MAX_CORES_PER_CCD_32];
-> +	__u64 core_frequency[F1A_M50_M5F_MAX_CORES_PER_CCD_32];
-> +	__u64 core_frequency_effective[F1A_M50_M5F_MAX_CORES_PER_CCD_32];
-> +	__u64 core_power[F1A_M50_M5F_MAX_CORES_PER_CCD_32];
-> +};
-> +
+>  #define pr_fmt(fmt) KBUILD_MODNAME ": " fmt
+>  
+> -#include <linux/acpi.h>
+> +#include <linux/compiler_attributes.h>
+>  #include <linux/list.h>
+>  #include <linux/module.h>
+>  #include <linux/wmi.h>
+> @@ -15,6 +15,24 @@
+>  
+>  #define DELL_WMI_DESCRIPTOR_GUID "8D9DDCBC-A997-11DA-B012-B622A1EF5492"
+>  
 > +/*
-> + * Future processors within the same family and model may support a
-> + * variable number of CCDs and cores
-> + */
-> +struct hsmp_metric_table_f1a_m50_5f {
-> +	struct hsmp_metric_table_f1a_m50_5f_iod	iod;
-> +	struct hsmp_metric_table_f1a_m50_5f_ccd	ccd[F1A_M50_M5F_MAX_CCD];
-> +};
-> +
->  /* Reset to default packing */
->  #pragma pack()
->  
-> diff --git a/drivers/platform/x86/amd/hsmp/acpi.c b/drivers/platform/x86/amd/hsmp/acpi.c
-> index 97ed71593bdf..c91b694bd394 100644
-> --- a/drivers/platform/x86/amd/hsmp/acpi.c
-> +++ b/drivers/platform/x86/amd/hsmp/acpi.c
-> @@ -238,13 +238,14 @@ static ssize_t hsmp_metric_tbl_acpi_read(struct file *filp, struct kobject *kobj
->  	struct device *dev = container_of(kobj, struct device, kobj);
->  	struct hsmp_socket *sock = dev_get_drvdata(dev);
->  
-> -	return hsmp_metric_tbl_read(sock, buf, count);
-> +	return hsmp_metric_tbl_read(sock, buf, count, off);
->  }
->  
->  static umode_t hsmp_is_sock_attr_visible(struct kobject *kobj,
->  					 const struct bin_attribute *battr, int id)
->  {
-> -	if (hsmp_pdev->proto_ver == HSMP_PROTO_VER6)
-> +	if (hsmp_pdev->proto_ver == HSMP_PROTO_VER6 ||
-> +	    hsmp_pdev->proto_ver == HSMP_PROTO_VER7)
->  		return battr->attr.mode;
->  
->  	return 0;
-> @@ -491,7 +492,8 @@ static int init_acpi(struct device *dev)
->  		return ret;
->  	}
->  
-> -	if (hsmp_pdev->proto_ver == HSMP_PROTO_VER6) {
-> +	if (hsmp_pdev->proto_ver == HSMP_PROTO_VER6 ||
-> +	    hsmp_pdev->proto_ver == HSMP_PROTO_VER7) {
->  		ret = hsmp_get_tbl_dram_base(sock_ind);
->  		if (ret)
->  			dev_info(dev, "Failed to init metric table\n");
-> @@ -509,7 +511,6 @@ static int init_acpi(struct device *dev)
->  static const struct bin_attribute  hsmp_metric_tbl_attr = {
->  	.attr = { .name = HSMP_METRICS_TABLE_NAME, .mode = 0444},
->  	.read = hsmp_metric_tbl_acpi_read,
-> -	.size = sizeof(struct hsmp_metric_table),
->  };
->  
->  static const struct bin_attribute *hsmp_attr_list[] = {
-> diff --git a/drivers/platform/x86/amd/hsmp/hsmp.c b/drivers/platform/x86/amd/hsmp/hsmp.c
-> index 19f82c1d3090..55b941f8a819 100644
-> --- a/drivers/platform/x86/amd/hsmp/hsmp.c
-> +++ b/drivers/platform/x86/amd/hsmp/hsmp.c
-> @@ -348,9 +348,22 @@ long hsmp_ioctl(struct file *fp, unsigned int cmd, unsigned long arg)
->  	return 0;
->  }
->  
-> -ssize_t hsmp_metric_tbl_read(struct hsmp_socket *sock, char *buf, size_t size)
-> +/**
-> + * hsmp_metric_tbl_read - Read metric table
+> + * Descriptor buffer is 128 byte long and contains:
 > + *
-> + * This function maintains ABI compatibility for external consumers.
-> + * It reads from offset 0, which works for all metrics table formats.
-> + * External modules using this function will continue to work without
-> + * modification.
-
-Please don't write history descriptions like this into comments. Only 
-focus on explain what it does now. The sentences like the last one belong 
-more into changelog text.
-
-> + *
-> + * Return: number of bytes read or negative error code
+> + *       Name             Offset  Length  Value
+> + * Vendor Signature          0       4    "DELL"
+> + * Object Signature          4       4    " WMI"
+> + * WMI Interface Version     8       4    <version>
+> + * WMI buffer length        12       4    <length>
+> + * WMI hotfix number        16       4    <hotfix>
 > + */
+> +struct descriptor {
+> +	char vendor_signature[4];
+> +	char object_signature[4];
+> +	__le32 interface_version;
+> +	__le32 buffer_length;
+> +	__le32 hotfix_number;
+> +} __packed;
 > +
-> +ssize_t hsmp_metric_tbl_read(struct hsmp_socket *sock, char *buf,
-> +			     size_t size, loff_t off)
+>  struct descriptor_priv {
+>  	struct list_head list;
+>  	u32 interface_version;
+> @@ -88,76 +106,58 @@ bool dell_wmi_get_hotfix(u32 *hotfix)
+>  }
+>  EXPORT_SYMBOL_GPL(dell_wmi_get_hotfix);
+>  
+> -/*
+> - * Descriptor buffer is 128 byte long and contains:
+> - *
+> - *       Name             Offset  Length  Value
+> - * Vendor Signature          0       4    "DELL"
+> - * Object Signature          4       4    " WMI"
+> - * WMI Interface Version     8       4    <version>
+> - * WMI buffer length        12       4    <length>
+> - * WMI hotfix number        16       4    <hotfix>
+> - */
+> -static int dell_wmi_descriptor_probe(struct wmi_device *wdev,
+> -				     const void *context)
+> +static int dell_wmi_descriptor_probe(struct wmi_device *wdev, const void *context)
 >  {
->  	struct hsmp_message msg = { 0 };
-> +	size_t var_size, remaining;
+> -	union acpi_object *obj = NULL;
+>  	struct descriptor_priv *priv;
+> -	u32 *buffer;
+> +	struct wmi_buffer buffer;
+> +	struct descriptor *desc;
 >  	int ret;
 >  
->  	if (!sock || !buf)
-> @@ -361,29 +374,37 @@ ssize_t hsmp_metric_tbl_read(struct hsmp_socket *sock, char *buf, size_t size)
->  		return -ENOMEM;
->  	}
->  
-> -	/* Do not support lseek(), also don't allow more than the size of metric table */
-> -	if (size != sizeof(struct hsmp_metric_table)) {
-> -		dev_err(sock->dev, "Wrong buffer size\n");
-> +	if (off < 0 || off > hsmp_pdev.hsmp_table_size) {
-> +		dev_err(sock->dev, "Invalid offset\n");
->  		return -EINVAL;
->  	}
->  
-> -	msg.msg_id	= HSMP_GET_METRIC_TABLE;
-> -	msg.sock_ind	= sock->sock_ind;
-> +	/* Compute remaining bytes using explicit cast to avoid signed/unsigned mixing */
-> +	remaining = hsmp_pdev.hsmp_table_size - (size_t)off;
-> +	var_size = min_t(size_t, size, remaining);
-
-Both inputs are already size_t so you should use min() instead.
-
-> +	if (off == 0) {
-> +		msg.msg_id	= HSMP_GET_METRIC_TABLE;
-> +		msg.sock_ind	= sock->sock_ind;
->  
-> -	ret = hsmp_send_message(&msg);
-> -	if (ret)
-> -		return ret;
-> -	memcpy_fromio(buf, sock->metric_tbl_addr, size);
-> +		ret = hsmp_send_message(&msg);
-> +		if (ret) {
-> +			dev_err(sock->dev, "Failed to send HSMP_GET_METRIC_TABLE, ret: %d\n", ret);
-> +			return ret;
-> +		}
-> +	}
-> +	memcpy_fromio(buf, (u8 __iomem *)sock->metric_tbl_addr + off, var_size);
-
-This change which changes size/off handling should be made separately and 
-properly explain the changes in the interface in its changelog text.
-
-I started to wonder how is concurrency control supposed to work with 
-these calls, there doesn't seem to be any locks taken?
-
-> -	return size;
-> +	return var_size;
->  }
->  EXPORT_SYMBOL_NS_GPL(hsmp_metric_tbl_read, "AMD_HSMP");
->  
->  int hsmp_get_tbl_dram_base(u16 sock_ind)
->  {
->  	struct hsmp_socket *sock = &hsmp_pdev.sock[sock_ind];
-> +	struct hsmp_message msg_tbl_ver = { 0 };
->  	struct hsmp_message msg = { 0 };
->  	phys_addr_t dram_addr;
-> +	u32 table_ver;
->  	int ret;
->  
->  	msg.sock_ind	= sock_ind;
-> @@ -403,8 +424,44 @@ int hsmp_get_tbl_dram_base(u16 sock_ind)
->  		dev_err(sock->dev, "Invalid DRAM address for metric table\n");
->  		return -ENOMEM;
->  	}
-> -	sock->metric_tbl_addr = devm_ioremap(sock->dev, dram_addr,
-> -					     sizeof(struct hsmp_metric_table));
-> +
-> +	/* Get metric table version */
-> +	msg_tbl_ver.sock_ind    = sock_ind;
-> +	msg_tbl_ver.response_sz = hsmp_msg_desc_table[HSMP_GET_METRIC_TABLE_VER].response_sz;
-> +	msg_tbl_ver.msg_id      = HSMP_GET_METRIC_TABLE_VER;
-> +
-> +	ret = hsmp_send_message(&msg_tbl_ver);
-> +	if (ret)
+> -	obj = wmidev_block_query(wdev, 0);
+> -	if (!obj) {
+> -		dev_err(&wdev->dev, "failed to read Dell WMI descriptor\n");
+> -		ret = -EIO;
+> -		goto out;
+> -	}
+> +	ret = wmidev_query_block(wdev, 0, &buffer);
+> +	if (ret < 0)
 > +		return ret;
-> +
-> +	table_ver = msg_tbl_ver.args[0];
-> +
-> +	hsmp_pdev.hsmp_table_size = 0;
-
-Is this necessary?
-
-> +	/* Determine metric table size based on CPU family/model and table version */
-> +	switch (boot_cpu_data.x86) {
-> +	case 0x1A:
-> +		if (boot_cpu_data.x86_model >= 0x50 &&
-> +		    boot_cpu_data.x86_model <= 0x5F &&
-> +		    table_ver == 0x00700000) {
-> +			hsmp_pdev.hsmp_table_size = sizeof(struct hsmp_metric_table_f1a_m50_5f);
-> +		}
-> +		break;
-> +	case 0x19:
-> +		if (boot_cpu_data.x86_model >= 0x90 &&
-> +		    boot_cpu_data.x86_model <= 0x9F) {
-
-Isn't this a new check compared with the old code? It should be added in 
-own patch as well.
-
-> +			hsmp_pdev.hsmp_table_size = sizeof(struct hsmp_metric_table);
-> +		}
-> +		break;
-> +	}
-> +
-> +	if (!hsmp_pdev.hsmp_table_size) {
-> +		dev_err(sock->dev,
-> +			"Metric table not supported for F%02Xh_M%02Xh (table version: 0x%08X)\n",
-> +			boot_cpu_data.x86, boot_cpu_data.x86_model, table_ver);
-> +		return -EOPNOTSUPP;
-> +	}
-> +
-> +	sock->metric_tbl_addr = devm_ioremap(sock->dev, dram_addr, hsmp_pdev.hsmp_table_size);
->  	if (!sock->metric_tbl_addr) {
->  		dev_err(sock->dev, "Failed to ioremap metric table addr\n");
->  		return -ENOMEM;
-> diff --git a/drivers/platform/x86/amd/hsmp/hsmp.h b/drivers/platform/x86/amd/hsmp/hsmp.h
-> index b153527e0a0d..a887eaa061e4 100644
-> --- a/drivers/platform/x86/amd/hsmp/hsmp.h
-> +++ b/drivers/platform/x86/amd/hsmp/hsmp.h
-> @@ -55,6 +55,7 @@ struct hsmp_plat_device {
->  	u32 proto_ver;
->  	u16 num_sockets;
->  	bool is_probed;
-> +	size_t hsmp_table_size;
->  };
 >  
->  int hsmp_cache_proto_ver(u16 sock_ind);
-> @@ -63,7 +64,7 @@ long hsmp_ioctl(struct file *fp, unsigned int cmd, unsigned long arg);
->  void hsmp_misc_deregister(void);
->  int hsmp_misc_register(struct device *dev);
->  int hsmp_get_tbl_dram_base(u16 sock_ind);
-> -ssize_t hsmp_metric_tbl_read(struct hsmp_socket *sock, char *buf, size_t size);
-> +ssize_t hsmp_metric_tbl_read(struct hsmp_socket *sock, char *buf, size_t size, loff_t off);
->  struct hsmp_plat_device *get_hsmp_pdev(void);
->  #if IS_ENABLED(CONFIG_HWMON)
->  int hsmp_create_sensor(struct device *dev, u16 sock_ind);
-> diff --git a/drivers/platform/x86/amd/hsmp/plat.c b/drivers/platform/x86/amd/hsmp/plat.c
-> index e07f68575055..9e37502defb2 100644
-> --- a/drivers/platform/x86/amd/hsmp/plat.c
-> +++ b/drivers/platform/x86/amd/hsmp/plat.c
-> @@ -59,7 +59,7 @@ static ssize_t hsmp_metric_tbl_plat_read(struct file *filp, struct kobject *kobj
+> -	if (obj->type != ACPI_TYPE_BUFFER) {
+> -		dev_err(&wdev->dev, "Dell descriptor has wrong type\n");
+> +	if (buffer.length < sizeof(*desc)) {
+> +		dev_err(&wdev->dev,
+> +			"Dell descriptor buffer contains not enough data (%zu)\n",
+
+This word order sounds odd to me. I'd say:
+
+Dell descriptor buffer does not contain ...
+
+> +			buffer.length);
+>  		ret = -EINVAL;
+>  		descriptor_valid = ret;
+>  		goto out;
+>  	}
 >  
->  	sock = &hsmp_pdev->sock[sock_ind];
+> -	/* Although it's not technically a failure, this would lead to
+> -	 * unexpected behavior
+> -	 */
+> -	if (obj->buffer.length != 128) {
+> -		dev_err(&wdev->dev,
+> -			"Dell descriptor buffer has unexpected length (%d)\n",
+> -			obj->buffer.length);
+> -		ret = -EINVAL;
+> +	desc = buffer.data;
+
+I think these should be moving towards using __free() so we could remove 
+those gotos to kfree(). This applies to many changes in this series. Some 
+may need a local variable to be introduced (here we've 'desc' already so 
+it's very easy in this case).
+
+I'm fine if you want to do __free() changes in a patch separate from 
+this wmi conversion but we should aim to make these follow best practices 
+so that others pick the preferred patterns more easily.
+
+> +	if (strncmp(desc->vendor_signature, "DELL", sizeof(desc->vendor_signature))) {
+> +		dev_err(&wdev->dev, "Dell descriptor buffer has invalid vendor signature (%4ph)\n",
+> +			desc->vendor_signature);
+> +		ret = -ENOMSG;
+>  		descriptor_valid = ret;
+>  		goto out;
+>  	}
 >  
-> -	return hsmp_metric_tbl_read(sock, buf, count);
-> +	return hsmp_metric_tbl_read(sock, buf, count, off);
+> -	buffer = (u32 *)obj->buffer.pointer;
+> -
+> -	if (strncmp(obj->string.pointer, "DELL WMI", 8) != 0) {
+> -		dev_err(&wdev->dev, "Dell descriptor buffer has invalid signature (%8ph)\n",
+> -			buffer);
+> -		ret = -EINVAL;
+> +	if (strncmp(desc->object_signature, " WMI", sizeof(desc->vendor_signature))) {
+> +		dev_err(&wdev->dev, "Dell descriptor buffer has invalid object signature (%4ph)\n",
+> +			desc->object_signature);
+> +		ret = -ENOMSG;
+>  		descriptor_valid = ret;
+>  		goto out;
+>  	}
+>  	descriptor_valid = 0;
+>  
+> -	if (buffer[2] != 0 && buffer[2] != 1)
+> -		dev_warn(&wdev->dev, "Dell descriptor buffer has unknown version (%lu)\n",
+> -			(unsigned long) buffer[2]);
+> -
+> -	priv = devm_kzalloc(&wdev->dev, sizeof(struct descriptor_priv),
+> -	GFP_KERNEL);
+> +	if (le32_to_cpu(desc->interface_version) > 2)
+> +		dev_warn(&wdev->dev, "Dell descriptor buffer has unknown version (%u)\n",
+> +			 le32_to_cpu(desc->interface_version));
+>  
+> +	priv = devm_kzalloc(&wdev->dev, sizeof(*priv), GFP_KERNEL);
+>  	if (!priv) {
+>  		ret = -ENOMEM;
+>  		goto out;
+>  	}
+>  
+> -	priv->interface_version = buffer[2];
+> -	priv->size = buffer[3];
+> -	priv->hotfix = buffer[4];
+> +	priv->interface_version = le32_to_cpu(desc->interface_version);
+> +	priv->size = le32_to_cpu(desc->buffer_length);
+> +	priv->hotfix = le32_to_cpu(desc->hotfix_number);
+>  	ret = 0;
+>  	dev_set_drvdata(&wdev->dev, priv);
+>  	mutex_lock(&list_mutex);
+> @@ -170,7 +170,7 @@ static int dell_wmi_descriptor_probe(struct wmi_device *wdev,
+>  		(unsigned long) priv->hotfix);
+>  
+>  out:
+> -	kfree(obj);
+> +	kfree(buffer.data);
+>  	return ret;
 >  }
 >  
->  static umode_t hsmp_is_sock_attr_visible(struct kobject *kobj,
-> @@ -94,7 +94,6 @@ static const struct bin_attribute attr##index = {			\
->  	.attr = { .name = HSMP_METRICS_TABLE_NAME, .mode = 0444},	\
->  	.private = (void *)index,					\
->  	.read = hsmp_metric_tbl_plat_read,				\
-> -	.size = sizeof(struct hsmp_metric_table),			\
->  };									\
->  static const struct bin_attribute _list[] = {				\
->  	&attr##index,							\
 > 
 
 -- 
