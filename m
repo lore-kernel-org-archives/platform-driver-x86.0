@@ -1,121 +1,128 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.10])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4708C41B36E;
-	Tue, 31 Mar 2026 15:44:54 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.10
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8893C41B37D;
+	Tue, 31 Mar 2026 15:51:15 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1774971895; cv=none; b=Jqo1zIgvfsW+WMoOYrnND8BQPxDApMSwYUWHqDal2L73ccD31Zhg2eS9El3yL05wqumH6/QcvAlLv0dMDLv8kv1kEkgNi9cbbJBX5CrtN2triZQD0NzCiBO8DfdcaRPeO9TdWlU2wn9o8SaI+8rA2fk4V7cgDr22v0tpBw+hbrc=
+	t=1774972279; cv=none; b=H/a6VC2iOiVwp+1ayxSF7y5okZDBjq7aQdTLW+wdjUfYN8ebKrnAti2TwXV/Mb2wWbDV3AyPcOTxdzqQIUTGDoua7NzUgW7opUnnmLAaBWm7QXOCjx0qXp0veGAfwOy4jiiG0+2QcSl7mRZB8x1aCmW0lHGiMKAh4y/mx5M6yK8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1774971895; c=relaxed/simple;
-	bh=7OP6PZ5N/qSaa2KVWc+HzMDatsxeHVYY524qQB1CJL8=;
+	s=arc-20240116; t=1774972279; c=relaxed/simple;
+	bh=Nge5zor6zpLsko98SNlgKwkLdBZ67zYKvW4fhw7iRFI=;
 	h=From:Date:To:cc:Subject:In-Reply-To:Message-ID:References:
-	 MIME-Version:Content-Type; b=nIX8PWGG5R1jB9KjRcwsLbcMAvo6GxqsCe76oL5ZHJxEOihQDeWFQTARV4gz8lYMFH76W8y5mJadF5KXqghl88gTGi0xD0Tfs26ugLQf7wqRnAfsjOeoUUIBd/kpTk0OD9x9c/PMeKGvorVqMtjmwDUA7CgXo1A/9qMWiUn9ibE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=pass smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=NHph9Ec5; arc=none smtp.client-ip=198.175.65.10
+	 MIME-Version:Content-Type; b=iAN2zocg46mE1s9wL/DKACEashVuJr86fLSVoC9Mkmv0tWRuest4jgaFvFXL+Y7h4z9A3hfrNgldgpB8PPCVqqQr7IfFvxKvvKi2IE0aXjwWdnP+0MNLGyJLcS80GqmLzCEM0f5hOBHTlxH4z3UP0dFdeocXQdj4LX0sOYHHDMg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=pass smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=jPPVnCRl; arc=none smtp.client-ip=192.198.163.18
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="NHph9Ec5"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="jPPVnCRl"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1774971894; x=1806507894;
+  t=1774972276; x=1806508276;
   h=from:date:to:cc:subject:in-reply-to:message-id:
    references:mime-version;
-  bh=7OP6PZ5N/qSaa2KVWc+HzMDatsxeHVYY524qQB1CJL8=;
-  b=NHph9Ec5hJvJAsUAUcduVPKQ/4tAjo25mBYl2MopVYnwR9GBIpoLE2Qc
-   IGq5gFmQFxB6YuUVOFg8e4lvEWViPb/T7KXlddeqw8KShOIGjvKV+So8i
-   4ifidswD5iEJPObeD8IcNfAiPXfR2yci9vg7SojGStBuPC8dz2azE3OvL
-   ezOEc3NSmOgEh9WWeu8q/2UFrFSOjhDeHdHJ8haCYmICMJGuyceM/F7HP
-   KTejPPOzL37UL22CU5sB73vsI+1SuIaGtClBX4xdnznMrKkWYvbXyYm7M
-   cXJx5jbGL8tso9fg1RtTKt1LLvtw3LsqQg12xScWM1BNRoVV/c/lifqMJ
-   w==;
-X-CSE-ConnectionGUID: Xyw/uD+ETNyAFta7jaWXnA==
-X-CSE-MsgGUID: J+v+PtzsSrq/QeRfL1um7Q==
-X-IronPort-AV: E=McAfee;i="6800,10657,11745"; a="93377785"
+  bh=Nge5zor6zpLsko98SNlgKwkLdBZ67zYKvW4fhw7iRFI=;
+  b=jPPVnCRl3+uoiRh+4DgQvV86Ct1cBMK5Eq9riRtLf5ynwETwAs/xPLNS
+   vHUtLgsnSno/c58W4rANBoF6O+V4wT3AyTUpwRL9qBeD5ZnURhUWTWCz9
+   51IZVfzVR32MjE/vjcZRvU8kYerekzLHWZWMmTkZ0v6GUGzWU2JuTN55w
+   GJHySzkENll/g0YKzOQvaV4pHBuhjqEz1WMQVyYgFXPoRXq4QQSt/aBQy
+   y0hjhZj01hRlapoRekY6Dg2vbc473HahP8SOy9Qzp5Xk9Jwh51zWuVjB+
+   L+WmFoDez6QEQ0B5EcwwiOLpEB1fNC6ZdAuRJTm/mae43oeeSmJtzol4C
+   A==;
+X-CSE-ConnectionGUID: M9ul4KnxR3CvXu0TAzb5sQ==
+X-CSE-MsgGUID: sMz40s9cQkKy2j7ou+OgKA==
+X-IronPort-AV: E=McAfee;i="6800,10657,11745"; a="75162616"
 X-IronPort-AV: E=Sophos;i="6.23,152,1770624000"; 
-   d="scan'208";a="93377785"
-Received: from fmviesa005.fm.intel.com ([10.60.135.145])
-  by orvoesa102.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 31 Mar 2026 08:44:53 -0700
-X-CSE-ConnectionGUID: peHiC8o6SCujpcjFpQZ5lw==
-X-CSE-MsgGUID: YidqDsHoTLejldodjGoafg==
+   d="scan'208";a="75162616"
+Received: from orviesa003.jf.intel.com ([10.64.159.143])
+  by fmvoesa112.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 31 Mar 2026 08:51:14 -0700
+X-CSE-ConnectionGUID: Erx6h0j4SBaLVonmWZa8AQ==
+X-CSE-MsgGUID: i5Ax2DCyQZGon6IlICWnbQ==
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="6.23,152,1770624000"; 
-   d="scan'208";a="231220119"
+   d="scan'208";a="230465746"
 Received: from ijarvine-mobl1.ger.corp.intel.com (HELO localhost) ([10.245.244.6])
-  by fmviesa005-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 31 Mar 2026 08:44:49 -0700
+  by ORVIESA003-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 31 Mar 2026 08:50:56 -0700
 From: =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
-Date: Tue, 31 Mar 2026 18:44:44 +0300 (EEST)
-To: "Gustavo A. R. Silva" <gustavo@embeddedor.com>
-cc: platform-driver-x86@vger.kernel.org, Rosen Penev <rosenp@gmail.com>, 
-    Kenneth Chan <kenneth.t.chan@gmail.com>, Hans de Goede <hansg@kernel.org>, 
-    Kees Cook <kees@kernel.org>, "Gustavo A. R. Silva" <gustavoars@kernel.org>, 
-    LKML <linux-kernel@vger.kernel.org>, linux-hardening@vger.kernel.org
-Subject: Re: [PATCHv2] platform/x86: panasonic-laptop: simplify allocation
- of sinf
-In-Reply-To: <ee68ff4e-27b5-4373-86dc-3b7a5ad7f7b5@embeddedor.com>
-Message-ID: <0e92b09e-3fe3-16bd-d6c2-bb7e0dcf2094@linux.intel.com>
-References: <20260326024525.63258-1-rosenp@gmail.com> <177496937487.10314.4187390108669622962.b4-ty@linux.intel.com> <ee68ff4e-27b5-4373-86dc-3b7a5ad7f7b5@embeddedor.com>
+Date: Tue, 31 Mar 2026 18:50:52 +0300 (EEST)
+To: Danilo Krummrich <dakr@kernel.org>
+cc: Russell King <linux@armlinux.org.uk>, 
+    Greg Kroah-Hartman <gregkh@linuxfoundation.org>, 
+    "Rafael J. Wysocki" <rafael@kernel.org>, 
+    Ioana Ciornei <ioana.ciornei@nxp.com>, Nipun Gupta <nipun.gupta@amd.com>, 
+    Nikhil Agarwal <nikhil.agarwal@amd.com>, 
+    "K. Y. Srinivasan" <kys@microsoft.com>, 
+    Haiyang Zhang <haiyangz@microsoft.com>, Wei Liu <wei.liu@kernel.org>, 
+    Dexuan Cui <decui@microsoft.com>, Long Li <longli@microsoft.com>, 
+    Bjorn Helgaas <bhelgaas@google.com>, Armin Wolf <W_Armin@gmx.de>, 
+    Bjorn Andersson <andersson@kernel.org>, 
+    Mathieu Poirier <mathieu.poirier@linaro.org>, 
+    Vineeth Vijayan <vneethv@linux.ibm.com>, 
+    Peter Oberparleiter <oberpar@linux.ibm.com>, 
+    Heiko Carstens <hca@linux.ibm.com>, Vasily Gorbik <gor@linux.ibm.com>, 
+    Alexander Gordeev <agordeev@linux.ibm.com>, 
+    Christian Borntraeger <borntraeger@linux.ibm.com>, 
+    Sven Schnelle <svens@linux.ibm.com>, 
+    Harald Freudenberger <freude@linux.ibm.com>, 
+    Holger Dengler <dengler@linux.ibm.com>, Mark Brown <broonie@kernel.org>, 
+    "Michael S. Tsirkin" <mst@redhat.com>, Jason Wang <jasowang@redhat.com>, 
+    Xuan Zhuo <xuanzhuo@linux.alibaba.com>, 
+    =?ISO-8859-15?Q?Eugenio_P=E9rez?= <eperezma@redhat.com>, 
+    Alex Williamson <alex@shazbot.org>, Juergen Gross <jgross@suse.com>, 
+    Stefano Stabellini <sstabellini@kernel.org>, 
+    Oleksandr Tyshchenko <oleksandr_tyshchenko@epam.com>, 
+    "Christophe Leroy (CS GROUP)" <chleroy@kernel.org>, 
+    LKML <linux-kernel@vger.kernel.org>, driver-core@lists.linux.dev, 
+    linuxppc-dev@lists.ozlabs.org, linux-hyperv@vger.kernel.org, 
+    linux-pci@vger.kernel.org, platform-driver-x86@vger.kernel.org, 
+    linux-arm-msm@vger.kernel.org, linux-remoteproc@vger.kernel.org, 
+    linux-s390@vger.kernel.org, linux-spi@vger.kernel.org, 
+    virtualization@lists.linux.dev, kvm@vger.kernel.org, 
+    xen-devel@lists.xenproject.org, linux-arm-kernel@lists.infradead.org, 
+    Gui-Dong Han <hanguidong02@gmail.com>
+Subject: Re: [PATCH 06/12] platform/wmi: use generic driver_override
+ infrastructure
+In-Reply-To: <f819b7d8-5c80-4463-9afa-933a2ddc8ab3@kernel.org>
+Message-ID: <dc11f3fd-a5c7-16e9-8417-6dddb63129fa@linux.intel.com>
+References: <20260324005919.2408620-1-dakr@kernel.org> <20260324005919.2408620-7-dakr@kernel.org> <f15629e4-ef8f-b1b6-0158-064f40f111da@linux.intel.com> <f819b7d8-5c80-4463-9afa-933a2ddc8ab3@kernel.org>
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/mixed; boundary="8323328-1838150724-1774971884=:989"
+Content-Type: multipart/mixed; boundary="8323328-2141551316-1774972252=:989"
 
   This message is in MIME format.  The first part should be readable text,
   while the remaining parts are likely unreadable without MIME-aware tools.
 
---8323328-1838150724-1774971884=:989
+--8323328-2141551316-1774972252=:989
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: QUOTED-PRINTABLE
 
-On Tue, 31 Mar 2026, Gustavo A. R. Silva wrote:
+On Tue, 31 Mar 2026, Danilo Krummrich wrote:
 
+> On 3/31/26 5:02 PM, Ilpo J=C3=A4rvinen wrote:
+> > I tried applying this to platform-drivers tree but it failed to compile=
+ so=20
+> > I ended up dropping the changed.
 >=20
->=20
-> On 3/31/26 09:02, Ilpo J=C3=A4rvinen wrote:
-> > On Wed, 25 Mar 2026 19:45:25 -0700, Rosen Penev wrote:
-> >=20
-> > > Change to a flexible array member to allocate once instead of twice.
-> > >=20
-> > > Allows using __counted_by for extra runtime analysis. Move the counti=
-ng
-> > > variable assignment to right after allocation as required by
-> > > __counted_by.
->=20
-> This is misinformation and should be phrased differently[1]
+> As the cover letter mentions, it sits on top of v7.0-rc5, did you conside=
+r this?
 
-Okay. I'll drop the patch for now.
+I noticed it but I just assumed you were working on top of that, not that=
+=20
+there's something past -rc1 that is required.
 
---
+> I can also pick it up via the driver-core tree.
+
+If there's some post -rc1 material this depends, it's probably better that=
+=20
+way.
+
+Acked-by: Ilpo J=C3=A4rvinen <ilpo.jarvinen@linux.intel.com>
+
+--=20
  i.
 
->=20
-> -Gustavo
->=20
-> [1]
-> https://lore.kernel.org/linux-hardening/37378f49-437f-438b-ad6c-d60480feb=
-306@embeddedor.com/
->=20
-> > >=20
-> > > Remove + 1 to allocation. It's already done in the previous line.
-> > >=20
-> > > [...]
-> >=20
-> >=20
-> > Thank you for your contribution, it has been applied to my local
-> > review-ilpo-next branch. Note it will show up in the public
-> > platform-drivers-x86/review-ilpo-next branch only once I've pushed my
-> > local branch there, which might take a while.
-> >=20
-> > The list of commits applied:
-> > [1/1] platform/x86: panasonic-laptop: simplify allocation of sinf
-> >        commit: e75869527c720c4ed1458cfbe25e92186950e43a
-> >=20
-> > --
-> >   i.
-> >=20
-> >=20
->=20
---8323328-1838150724-1774971884=:989--
+--8323328-2141551316-1774972252=:989--
