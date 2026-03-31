@@ -1,177 +1,144 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.19])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D77AF3DBD4A;
-	Tue, 31 Mar 2026 08:22:25 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0EAB03DD52B;
+	Tue, 31 Mar 2026 08:22:39 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.19
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1774945345; cv=none; b=Rka0tOnxdn1LlC0+Ap95fSVmOXdeRQrkRaG7UtIZ+3763hPdoZn2aTHFXZi80PJY0AowjVbgpu7+kauTasWOVWAFNOO+BVtrAlx6e0W6F0gwFHpTm0OZfjqzeb4iHLfijkArcvpFJ3MsdeJvYqX/tdUIDO6X01D0JMaMRfiQg08=
+	t=1774945362; cv=none; b=R1FxxMAyj7A0CK7jtD3rdid0aVWmpf2/MhiOf0r21K1d184hgsXGtauJEVnmAPCXSvvw65trr/BmMS9u6kwRMae69kmVxAz2t/hO2F03mvKPk0R63rJkccxCcAh4qEG9BDsts9qvTPPUCLIiTw/ur0y/85M2e7ngqVFA8ArphRk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1774945345; c=relaxed/simple;
-	bh=l6+1fNT+srCycsiVVoib27WaB3v/ZfJTiLnjMUHoUKo=;
-	h=Mime-Version:Content-Type:Date:Message-Id:Subject:Cc:To:From:
-	 References:In-Reply-To; b=GAqFVgtpqfY+jTv8RYYeTEjFB1tschma4wHs9Z72Pb7XNqnDE++abFKJi7VrhPrAIRlvPJZDAfNMy2Bl6M2a4zUQgWWzEIAM6dOHhcCfgof6CjdoQnMGgmV+wW2bRv+eSUHucTOa+RpoKa4tMb1uQ9J4t5YmJynreRAOD+7OB3I=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=hSy9+x0o; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1774945362; c=relaxed/simple;
+	bh=Zd4WaMCTgyRS5Xtx4dnVef/ZdkWg0l1Xx5T22hWMW/U=;
+	h=From:Date:To:cc:Subject:In-Reply-To:Message-ID:References:
+	 MIME-Version:Content-Type; b=PVx1YXD3OyiTztsi7lLqzGFi4Y+MTItvlKzUBFqIM/pzcBvTsMk4Nu0eMoF7v5tmeprDy92Z7mV9gaauH8SCdM7HXnl33LxFzzlwHpMfd+DVQrQyIDGd+DHpqbV4ChFK7zskvie9R7XToSr+fNyGBe4YEP3GGf6oTMBEVifAl7M=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=pass smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=ISor5gNC; arc=none smtp.client-ip=192.198.163.19
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="hSy9+x0o"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 491C9C19423;
-	Tue, 31 Mar 2026 08:22:16 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1774945345;
-	bh=l6+1fNT+srCycsiVVoib27WaB3v/ZfJTiLnjMUHoUKo=;
-	h=Date:Subject:Cc:To:From:References:In-Reply-To:From;
-	b=hSy9+x0oWet2Vv+Oa/3w4GpGm2W4uKeHJBTg9yWIIsbEo6AeK4CHA2HWQrg43wVml
-	 UVDFcKRzAiCTcPrPYa8DFRgndlsXnw4fTPckVVFiVQb06rsmUThpiBFwbHCwFpNgx9
-	 aItzsCrpgMmhdBzOksIXuo4KjSj0zwKhq5Cid6OYUD9yR5jXXRbnJ0gLf3fnZTo/+d
-	 1ltaJGKRSE2hkkenVvfpB0JLleI13qUWazlmX5cCzMNZECQq3dZ5sC7thgT6+6cjC8
-	 i3Qv/NInrpLzf5qRyZ3z333YkadqamLF6R3ft0Ny0IUSwt34LY7sCNzSn76UOiN7FG
-	 7FAeA2EXbVc6w==
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="ISor5gNC"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1774945360; x=1806481360;
+  h=from:date:to:cc:subject:in-reply-to:message-id:
+   references:mime-version;
+  bh=Zd4WaMCTgyRS5Xtx4dnVef/ZdkWg0l1Xx5T22hWMW/U=;
+  b=ISor5gNC2K74fQ9B3fTByJAQmrMfxOWH/E83UMVs4kRgiQxLh68azjf5
+   +BQi8Bh7Ne4HmpD90FpVi50Pv4JOgTgEZosli4tQa0mgKH0Nh2xEIhT0w
+   Hlm3SdLDyGmx+pnb16GEBnyCJhH+kKFtQP4/IVLFhQeZ0du6PUmfDq9hO
+   JaKYgR0QLNMZ8Kb7ALC1LUmy/I9EzeTnkhxDwrUtEyviP/EiOKbl4AYjS
+   aMu4lhbOk+UsBcToFOhGoLu/QXfHGeJi5rGp4E8NvEP+KLMvhs3JK1fXK
+   io1gZfFAuio/sHSnvP2PjjLU4fXe08DVslAyVTs/HYqTtZYA1xhpVOgtg
+   w==;
+X-CSE-ConnectionGUID: eCTFahfkSYmkboQFGbsI3w==
+X-CSE-MsgGUID: VmXVdhXmSg6JISIzt168ZQ==
+X-IronPort-AV: E=McAfee;i="6800,10657,11744"; a="74982598"
+X-IronPort-AV: E=Sophos;i="6.23,151,1770624000"; 
+   d="scan'208";a="74982598"
+Received: from orviesa007.jf.intel.com ([10.64.159.147])
+  by fmvoesa113.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 31 Mar 2026 01:22:39 -0700
+X-CSE-ConnectionGUID: 91diz+HqSp61TCN5+8/9vg==
+X-CSE-MsgGUID: Cy4YF5nvSky3iL9+Kn2VCA==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.23,151,1770624000"; 
+   d="scan'208";a="226546442"
+Received: from ijarvine-mobl1.ger.corp.intel.com (HELO localhost) ([10.245.244.6])
+  by orviesa007-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 31 Mar 2026 01:22:35 -0700
+From: =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
+Date: Tue, 31 Mar 2026 11:22:32 +0300 (EEST)
+To: Kurt Borja <kuurtb@gmail.com>
+cc: Armin Wolf <W_Armin@gmx.de>, Hans de Goede <hansg@kernel.org>, 
+    platform-driver-x86@vger.kernel.org, Dell.Client.Kernel@dell.com, 
+    LKML <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH v2] platform/x86: alienware-wmi-base: Transition to new
+ WMI API
+In-Reply-To: <20260331-aw-new-api-v2-1-3b0d33bf8d22@gmail.com>
+Message-ID: <d80f8562-f05d-c22a-5d62-398bf05b7030@linux.intel.com>
+References: <20260331-aw-new-api-v2-1-3b0d33bf8d22@gmail.com>
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
-Content-Type: text/plain; charset=UTF-8
-Date: Tue, 31 Mar 2026 10:22:14 +0200
-Message-Id: <DHGTLY0FJWD2.2VLT6NQWF97YY@kernel.org>
-Subject: Re: [PATCH 05/12] PCI: use generic driver_override infrastructure
-Cc: "Jason Gunthorpe" <jgg@ziepe.ca>, "Russell King"
- <linux@armlinux.org.uk>, "Greg Kroah-Hartman" <gregkh@linuxfoundation.org>,
- "Rafael J. Wysocki" <rafael@kernel.org>, "Ioana Ciornei"
- <ioana.ciornei@nxp.com>, "Nipun Gupta" <nipun.gupta@amd.com>, "Nikhil
- Agarwal" <nikhil.agarwal@amd.com>, "K. Y. Srinivasan" <kys@microsoft.com>,
- "Haiyang Zhang" <haiyangz@microsoft.com>, "Wei Liu" <wei.liu@kernel.org>,
- "Dexuan Cui" <decui@microsoft.com>, "Long Li" <longli@microsoft.com>,
- "Bjorn Helgaas" <bhelgaas@google.com>, "Armin Wolf" <W_Armin@gmx.de>,
- "Bjorn Andersson" <andersson@kernel.org>, "Mathieu Poirier"
- <mathieu.poirier@linaro.org>, "Vineeth Vijayan" <vneethv@linux.ibm.com>,
- "Peter Oberparleiter" <oberpar@linux.ibm.com>, "Heiko Carstens"
- <hca@linux.ibm.com>, "Vasily Gorbik" <gor@linux.ibm.com>, "Alexander
- Gordeev" <agordeev@linux.ibm.com>, "Christian Borntraeger"
- <borntraeger@linux.ibm.com>, "Sven Schnelle" <svens@linux.ibm.com>, "Harald
- Freudenberger" <freude@linux.ibm.com>, "Holger Dengler"
- <dengler@linux.ibm.com>, "Mark Brown" <broonie@kernel.org>, "Michael S.
- Tsirkin" <mst@redhat.com>, "Jason Wang" <jasowang@redhat.com>, "Xuan Zhuo"
- <xuanzhuo@linux.alibaba.com>, =?utf-8?q?Eugenio_P=C3=A9rez?=
- <eperezma@redhat.com>, "Juergen Gross" <jgross@suse.com>, "Stefano
- Stabellini" <sstabellini@kernel.org>, "Oleksandr Tyshchenko"
- <oleksandr_tyshchenko@epam.com>, "Christophe Leroy (CS GROUP)"
- <chleroy@kernel.org>, <linux-kernel@vger.kernel.org>,
- <driver-core@lists.linux.dev>, <linuxppc-dev@lists.ozlabs.org>,
- <linux-hyperv@vger.kernel.org>, <linux-pci@vger.kernel.org>,
- <platform-driver-x86@vger.kernel.org>, <linux-arm-msm@vger.kernel.org>,
- <linux-remoteproc@vger.kernel.org>, <linux-s390@vger.kernel.org>,
- <linux-spi@vger.kernel.org>, <virtualization@lists.linux.dev>,
- <kvm@vger.kernel.org>, <xen-devel@lists.xenproject.org>,
- <linux-arm-kernel@lists.infradead.org>, "Gui-Dong Han"
- <hanguidong02@gmail.com>
-To: "Alex Williamson" <alex@shazbot.org>
-From: "Danilo Krummrich" <dakr@kernel.org>
-References: <20260324005919.2408620-1-dakr@kernel.org>
- <20260324005919.2408620-6-dakr@kernel.org>
- <DHGATG6LJOM1.2AI7BYQ2O4DFU@kernel.org>
- <20260330141050.2cb47bd9@shazbot.org>
- <DHGT9XCG8Y96.3IB1EI6FF1ZDZ@kernel.org>
-In-Reply-To: <DHGT9XCG8Y96.3IB1EI6FF1ZDZ@kernel.org>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=US-ASCII
 
-On Tue Mar 31, 2026 at 10:06 AM CEST, Danilo Krummrich wrote:
-> On Mon Mar 30, 2026 at 10:10 PM CEST, Alex Williamson wrote:
->> On Mon, 30 Mar 2026 19:38:41 +0200
->> "Danilo Krummrich" <dakr@kernel.org> wrote:
->>
->>> (Cc: Jason)
->>>=20
->>> On Tue Mar 24, 2026 at 1:59 AM CET, Danilo Krummrich wrote:
->>> > diff --git a/drivers/vfio/pci/vfio_pci_core.c b/drivers/vfio/pci/vfio=
-_pci_core.c
->>> > index d43745fe4c84..460852f79f29 100644
->>> > --- a/drivers/vfio/pci/vfio_pci_core.c
->>> > +++ b/drivers/vfio/pci/vfio_pci_core.c
->>> > @@ -1987,9 +1987,8 @@ static int vfio_pci_bus_notifier(struct notifie=
-r_block *nb,
->>> >  	    pdev->is_virtfn && physfn =3D=3D vdev->pdev) {
->>> >  		pci_info(vdev->pdev, "Captured SR-IOV VF %s driver_override\n",
->>> >  			 pci_name(pdev));
->>> > -		pdev->driver_override =3D kasprintf(GFP_KERNEL, "%s",
->>> > -						  vdev->vdev.ops->name);
->>> > -		WARN_ON(!pdev->driver_override);
->>> > +		WARN_ON(device_set_driver_override(&pdev->dev,
->>> > +						   vdev->vdev.ops->name)); =20
->>>=20
->>> Technically, this is a change in behavior. If vdev->vdev.ops->name is N=
-ULL, it
->>> will trigger the WARN_ON(), whereas before it would have just written "=
-(null)"
->>> into driver_override.
->>
->> It's worse than that.  Looking at the implementation in [1], we have:
->>
->> +static inline int device_set_driver_override(struct device *dev, const =
-char *s)
->> +{
->> +	return __device_set_driver_override(dev, s, strlen(s));
->> +}
->>
->> So if name is NULL, we oops in strlen() before we even hit the -EINVAL
->> and WARN_ON().
->
-> This was changed in v2 [2] and the actual code in-tree is
->
-> 	static inline int device_set_driver_override(struct device *dev, const c=
-har *s)
-> 	{
-> 		return __device_set_driver_override(dev, s, s ? strlen(s) : 0);
-> 	}
->
-> so it does indeed return -EINVAL for a NULL pointer.
->
->> I don't believe we have any vfio-pci variant drivers where the name is
->> NULL, but kasprintf() handling NULL as "(null)" was a consideration in
->> this design, that even if there is no name the device is sequestered
->> with a driver_override that won't match an actual driver.
->>
->>> I assume that vfio_pci_core drivers are expected to set the name in str=
-uct
->>> vfio_device_ops in the first place and this code (silently) relies on t=
-his
->>> invariant?
->>
->> We do expect that, but it was previously safe either way to make sure
->> VFs are only bound to the same ops driver or barring that, at least
->> don't perform a standard driver match.  The last thing we want to
->> happen automatically is for a user owned PF to create SR-IOV VFs that
->> automatically bind to native kernel drivers.
->> =20
->>> Alex, Jason: Should we keep this hunk above as is and check for a prope=
-r name in
->>> struct vfio_device_ops in vfio_pci_core_register_device() with a subseq=
-uent
->>> patch?
->>
->> Given the oops, my preference would be to roll it in here.  This change
->> is what makes it a requirement that name cannot be NULL, where this was
->> safely handled with kasprintf().
->
-> Again, no oops here. :)
->
-> I still think it makes more sense to fail early in
-> vfio_pci_core_register_device(), rather than silently accept "(null)" in
-> driver_override. It also doesn't seem unreasonable with only the WARN_ON(=
-), but
-> I can also just add vdev->vdev.ops->name ?: "(null)".
+On Tue, 31 Mar 2026, Kurt Borja wrote:
 
-(Or just skip the call if !vdev->vdev.ops->name, as a user will read "(null=
-)"
-from sysfs either way.)
+> Transition to the new wmi_buffer based WMI API.
+> 
+> Signed-off-by: Kurt Borja <kuurtb@gmail.com>
+> ---
+> v2:
+>   - Cast wmi_buffer data to __le32 and then use le32_to_cpu() before
+>     returning
+> 
+> v1: https://patch.msgid.link/20260330-aw-new-api-v1-1-95910bfa1b38@gmail.com
+> ---
+>  drivers/platform/x86/dell/alienware-wmi-base.c | 32 +++++++++++++++-----------
+>  1 file changed, 19 insertions(+), 13 deletions(-)
+> 
+> diff --git a/drivers/platform/x86/dell/alienware-wmi-base.c b/drivers/platform/x86/dell/alienware-wmi-base.c
+> index 64562b92314f..9abdc5de8e23 100644
+> --- a/drivers/platform/x86/dell/alienware-wmi-base.c
+> +++ b/drivers/platform/x86/dell/alienware-wmi-base.c
+> @@ -9,11 +9,13 @@
+>  #define pr_fmt(fmt) KBUILD_MODNAME ": " fmt
+>  
+>  #include <linux/acpi.h>
+> -#include <linux/cleanup.h>
+>  #include <linux/module.h>
+>  #include <linux/platform_device.h>
+>  #include <linux/dmi.h>
+>  #include <linux/leds.h>
+> +
+> +#include <asm/byteorder.h>
+> +
+>  #include "alienware-wmi.h"
+>  
+>  MODULE_AUTHOR("Mario Limonciello <mario.limonciello@outlook.com>");
+> @@ -150,23 +152,27 @@ u8 alienware_interface;
+>  int alienware_wmi_command(struct wmi_device *wdev, u32 method_id,
+>  			  void *in_args, size_t in_size, u32 *out_data)
+>  {
+> -	struct acpi_buffer out = {ACPI_ALLOCATE_BUFFER, NULL};
+> -	struct acpi_buffer in = {in_size, in_args};
+> -	acpi_status ret;
+> +	struct wmi_buffer out, in = {
+> +		.data = in_args,
+> +		.length = in_size,
+> +	};
+> +	int ret;
+>  
+> -	ret = wmidev_evaluate_method(wdev, 0, method_id, &in, out_data ? &out : NULL);
+> -	if (ACPI_FAILURE(ret))
+> -		return -EIO;
+> +	ret = wmidev_invoke_method(wdev, 0, method_id, &in, out_data ? &out : NULL);
+> +	if (ret)
+> +		return ret;
+>  
+> -	union acpi_object *obj __free(kfree) = out.pointer;
+> +	if (!out_data)
+> +		return 0;
+>  
+> -	if (out_data) {
+> -		if (obj && obj->type == ACPI_TYPE_INTEGER)
+> -			*out_data = (u32)obj->integer.value;
+> -		else
+> -			return -ENOMSG;
+> +	if (out.length < sizeof(*out_data)) {
+> +		kfree(out.data);
+> +		return -ENOMSG;
+>  	}
+>  
+> +	*out_data = le32_to_cpu(*(__le32 *)out.data);
+> +	kfree(out.data);
 
-> Please let me know what you prefer.
->
-> - Danilo
->
->> [1] https://lore.kernel.org/all/20260302002729.19438-2-dakr@kernel.org/
->
-> [2] https://lore.kernel.org/driver-core/20260303115720.48783-1-dakr@kerne=
-l.org/
+Hi,
+
+Please don't bring back duplicated kfree() calls. Just assign out.data 
+into a local variable so you can use __free() for it similar to what the 
+old code did.
+
+-- 
+ i.
 
