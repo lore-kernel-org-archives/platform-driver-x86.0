@@ -1,172 +1,215 @@
-Received: from mail-vs1-f46.google.com (mail-vs1-f46.google.com [209.85.217.46])
+Received: from mail-wr1-f42.google.com (mail-wr1-f42.google.com [209.85.221.42])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DCDE13D75D9
-	for <platform-driver-x86@vger.kernel.org>; Tue, 31 Mar 2026 16:20:31 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.217.46
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E5C5F425CC6
+	for <platform-driver-x86@vger.kernel.org>; Tue, 31 Mar 2026 16:30:06 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.42
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1774974033; cv=none; b=IUyazSFKvmH6vtDVXTnTNEUx697HRgMkxh/DjynEolMZyolgIzkL7830lB7pqAMrCDQzTvxNBlDVzKfVewiLgM0c19H2ufMxBv2pr4eOBrGRkaR3H431YXco0E0C7HaYtb2/mlZaJuYv0jv2P69yyyTNSTzNUE3GMcgj5Jblhmg=
+	t=1774974608; cv=none; b=i2ZijugLlaFX5CroNhyXiYTipnTs9s1oEHqj7T9h4++NZsuaWdOpjT3rS4yAqiRIhN4kigyRC2N5Ght4r+QYdm0B/L0Y/afYAROHiJhGk1AsdYOVKyQuSw6JmDkjAMyExr1okoEQoZ8PGL8RJwJClK4fJBer0viPFsGDCi4RCfw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1774974033; c=relaxed/simple;
-	bh=5jlSc4IKKGxsaiNbC5V9mWX4XNKsUtoxWuYQvacYRUA=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:To:Cc; b=QscoZGZBNZgpSf4Hjbv+lqPHX7ozKC/wBhh1KRc3odTvl/SNU0PpeGXo4HGj+W8GtkFuaTyE+BbcgVbBR8cMWwTWf5ekSt4xHHabmSdlsYIjltksqdetUqPS4yhpxfYfV1FxexQ9Ea1EBDgV3tZ8qcAIqle6/gaqoqHPwsXA18g=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=g1+iZDwQ; arc=none smtp.client-ip=209.85.217.46
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1774974608; c=relaxed/simple;
+	bh=gRS3YG1pr3ibnZKjf/71FJl6wBB9Cgbl3KE/lAnEraw=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=Ik2BErURSdl/+wZGxY7QzISFU2NJQOmuN8B0aqpz/e5zxRko7yfyrzqT2TWxSk+eNEu0+HesRotv1zZqFE/mdkkOhH5NqKVAKCucFsti4ImtPk4cL+DKzqdZCfps4gz0DYraBBeXj9VAWtZoooODU4T6G3pG2mxReVX0e4wsACw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=dTSD6t0c; arc=none smtp.client-ip=209.85.221.42
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="g1+iZDwQ"
-Received: by mail-vs1-f46.google.com with SMTP id ada2fe7eead31-604de452750so3345506137.0
-        for <platform-driver-x86@vger.kernel.org>; Tue, 31 Mar 2026 09:20:31 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="dTSD6t0c"
+Received: by mail-wr1-f42.google.com with SMTP id ffacd0b85a97d-43cf73bbfbdso1826433f8f.1
+        for <platform-driver-x86@vger.kernel.org>; Tue, 31 Mar 2026 09:30:06 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20251104; t=1774974031; x=1775578831; darn=vger.kernel.org;
-        h=cc:to:message-id:content-transfer-encoding:mime-version:subject
-         :date:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=OoXTrHNclGZow6kYThreUdfm+RwBdBk95e0klIpPJIY=;
-        b=g1+iZDwQyE4KnENtth6llc086Y2Oa+ac1YgRq/gRNEpmvuFIsU9xOsfC4aaUbCRPVW
-         JU+X7FX1/LYAifFNn6NOC7DIza/GHpE6uAUTW4N41vP4b1zgTqVaxyH2lUiPFeUCjco/
-         TpVZWQwuuEHIwFd0VXMk68iFvtuojxRgKI5cE5bOzdVMrGHIL5VwfutRwsUwzWCOm43n
-         uT7H7D/eaM3vhKdevfz/jWTutBUFfbAWbIYe2V86JLXhxdAldqLnQk9KzInEq+RH3RlK
-         xTvgnhu1I3ps+mq7FGyxwDNvc02EpjC612UsgR3nRxTokpIIZiAuhn9PnPj2J9vxDiqG
-         o4jg==
+        d=linaro.org; s=google; t=1774974605; x=1775579405; darn=vger.kernel.org;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date:from:to
+         :cc:subject:date:message-id:reply-to;
+        bh=05T17Gt7zJJTuhvPKMku3wBY947ddWSwqLLasltmOi4=;
+        b=dTSD6t0cNjOU5XQfbf0Gvdqi67J2ZS6/QRo4sGkOy57+ZGgiEuSmbS04k95w9AIL4U
+         9Ec1WbJSiYysFd7vBlIhZi+fFlm/p/kz7MThVLDSsJ9MdpSvcxlPCav9WCnrN+UVX6LX
+         gF+BysODJ7zsZ5HKLpOGEAnvPqc09UbSDvV3u/+9Bg/HBx1LKLZvoUKmADuwCSa0oydp
+         9J3BHroLTiXBm1+jV9K1opvczZjSnAfbC98+MjA3ayziorkbXV6KO/0EKWsylayrbkwE
+         VZxTW84SoVCgM/K6QZBta7bdXtm51nx/nltSglAtdqk6iwBv1YxhFris4Y8x6ohuZvcp
+         NRHw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1774974031; x=1775578831;
-        h=cc:to:message-id:content-transfer-encoding:mime-version:subject
-         :date:from:x-gm-gg:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=OoXTrHNclGZow6kYThreUdfm+RwBdBk95e0klIpPJIY=;
-        b=T84IITlI7rym2BkD+px9BeQ9ESTePcd10FnhP4IDHC13SA6cS9e5/HZ8S1hDl80b4n
-         N2uh3lzyPvnS/Q7DP+AkiehhQOV3TEnm7rj/Eir4v/R/A3lme/QjJXM6FHkd7YaQYHol
-         koDrWau1PW69iAUOo9CM52yGm/p+n4aVobpFkixHp7ZEhhEmErKPn7sYLK/catyLXwiE
-         phiOLNaLkys+Nys9iHlwHluUyazVwsVbdY2RomrpJ9Vxvx8HeKIR0pbMVtED/eDQalul
-         8KslDPjLBwOFB3aGrjN/0+BGoGynT4x9BHln/ZlKE9Klw8//Pb6oub5Z6hlGVDojgcta
-         hRrA==
-X-Gm-Message-State: AOJu0YyfunQZYXVIvN7NrXt4cOvddcN+WLI1U7/6jj/u2nXb5ORyAtmv
-	YDJWKeKJbKSDBPeUCNwYHhLbmCShsAn4LgZMW/ND/7YoRhPBtdB/0ehOGB18fg==
-X-Gm-Gg: ATEYQzyKM9Cmrl1jXR8ss1xHZqzhj6MGRHo44EdZDUSwf0anYB6TnynULR4OchJP1Sl
-	RpBdQWbWIYsxsZywmB3lYEu7B1KOiXVPofZpv71IkGlXLnHOfHFYQ3fpl0E0CVIzB4BqDbjSRGk
-	l2eqOtYrUyBxLK/ZKp7OYbsXVoOxJPKCYlt+DeJlLQVNaR1X0hREzozxIzUbq1HKPH3fOF8Gau6
-	5SzQKO63sCBucq+EEk/zrPrr+wAzkBgrNoP0O/r8c9x+/NFZu/RSxYsaXmALGy3TD7nXePFXYjk
-	fkFTFBJf41yZB54LfH0YQbWt3X+vKCmUAmqQEFaVTzR3SkFaGppntETb/o+5DrGepw7M1JIIiHs
-	gWDlv4JSNrc3eSrMI1Yx1zfXiV4Jq+6JF8N3I6+bPkVYgtjYBIrjRU5cKt8yDP/O+2QiCzx9JAE
-	fP9oFwyWKyJg80HXVxFknfZA==
-X-Received: by 2002:a05:6102:952:b0:602:a4af:5fe with SMTP id ada2fe7eead31-604f90397d7mr7117587137.9.1774974030602;
-        Tue, 31 Mar 2026 09:20:30 -0700 (PDT)
-Received: from [192.168.100.6] ([2800:bf0:82:11a2:7ac4:1f2:947b:2b6])
-        by smtp.gmail.com with ESMTPSA id a1e0cc1a2514c-9539e031a8dsm11619065241.0.2026.03.31.09.20.29
+        d=1e100.net; s=20251104; t=1774974605; x=1775579405;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date:x-gm-gg
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=05T17Gt7zJJTuhvPKMku3wBY947ddWSwqLLasltmOi4=;
+        b=jW72JXyHrxjl1XF/jptiQ9iy9byx0nvkZIxD5Qz9Vp8M8edVGZLZ0f+ubCevztZcnJ
+         tVpcrr+FjNsanEszF15Gaeq19gXL0f53j17sxPh9JnW1gyDab9vXKGMGNRg8zQt6TX82
+         OAp+NHtB2WbNqk4CYltphH9DtqmniSQ5GBDGrGq+3RcrnrkJpggZyLtVlokkrzrHkIpm
+         j+6gJgkWLha0U7FmuB5UPMrKx+Pi6VgC3+58gTQzrshSECBJ6KNPn+jZ7bcgTaHFydmr
+         rI2cBUGMwK++CntIYaaxaa3KbDQg64ML+NHEloNO16xxFOIXxxBmx10ufNBrdxzbWtd6
+         8pQg==
+X-Forwarded-Encrypted: i=1; AJvYcCUaWL8T3JXgpmFWqfnXtsHAF9dWG6ruw5LlezNKFHTfFO+bC42mMJEGYGoamQh1tf2qWxsp7Wbo2UgcJpSmyGrw8WQ/@vger.kernel.org
+X-Gm-Message-State: AOJu0YywZ/DgAGDU0/YecivLpjEaa0X61heUlvnKIDnm/GwrPvL0sOc/
+	qz+s5wdYrCeOtoB3ZjkuuyGNbGyhmiAtKeH6w4Uw2kZBlFRz3QXqw2azGLtKFCfv+8A=
+X-Gm-Gg: ATEYQzz+/bPpHt2DaP1qJOiix5bZKz1zN71TP+gH12UdkGvz25fJFrHmZI0b4SrzvLQ
+	z4jqvckek+8UDUE3GLzyf+E+dUnEW5AhhldZEBw6HbNiwdczuFCc9WfWFywKpFpHdbOhpqF++7I
+	5Uk9sBQ9ckP4mZnJtbuZRomu1ThfU6LS44HOwKrnr1TALX9D5dHXZQI7FgUE6V19T6e2pq+Z8H3
+	SQTq4H4P34px0qoLb+uLunYERcgRbGy82eb9WX8WrIP8khDngV+ahSi4sfRfWglabg+QHZ5ghdU
+	9F3uDlLTYAutcCZ9I9/P9ARFfcvcC0p424TMT0A6RbARLJnFRTl5Kz/CqZa82a1VhjWBAEuFFJa
+	AeYzLXbkFuEFAP8QUq7DnpbVjCm3L+7RFY290RnnTfTXN2iXyoPMixQsKjTms9GE/fChjPwXSOi
+	9RoGRvjvR/HXYelNHrZbOBMdwv4P6UTA==
+X-Received: by 2002:a5d:5f53:0:b0:43c:f66e:f31 with SMTP id ffacd0b85a97d-43d150ddb4bmr483415f8f.27.1774974604559;
+        Tue, 31 Mar 2026 09:30:04 -0700 (PDT)
+Received: from linaro.org ([92.206.122.171])
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-43cf21e9e24sm27279076f8f.10.2026.03.31.09.30.02
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 31 Mar 2026 09:20:30 -0700 (PDT)
-From: Kurt Borja <kuurtb@gmail.com>
-Date: Tue, 31 Mar 2026 11:20:14 -0500
-Subject: [PATCH v3] platform/x86: alienware-wmi-base: Transition to new WMI
- API
+        Tue, 31 Mar 2026 09:30:03 -0700 (PDT)
+Date: Tue, 31 Mar 2026 18:29:51 +0200
+From: Stephan Gerhold <stephan.gerhold@linaro.org>
+To: Manivannan Sadhasivam <mani@kernel.org>
+Cc: Mark Pearson <mpearson-lenovo@squebb.ca>,
+	Dmitry Baryshkov <dmitry.baryshkov@oss.qualcomm.com>,
+	Rob Herring <robh@kernel.org>,
+	Manivannan Sadhasivam <manivannan.sadhasivam@oss.qualcomm.com>,
+	Greg KH <gregkh@linuxfoundation.org>,
+	Jiri Slaby <jirislaby@kernel.org>,
+	Nathan Chancellor <nathan@kernel.org>,
+	Nicolas Schier <nicolas.schier@linux.dev>,
+	Hans de Goede <hansg@kernel.org>,
+	Ilpo =?iso-8859-1?Q?J=E4rvinen?= <ilpo.jarvinen@linux.intel.com>,
+	"Derek J . Clark" <derekjohn.clark@gmail.com>,
+	Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>,
+	Marcel Holtmann <marcel@holtmann.org>,
+	Luiz Augusto von Dentz <luiz.dentz@gmail.com>,
+	Bartosz Golaszewski <brgl@bgdev.pl>,
+	Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+	Bartosz Golaszewski <brgl@kernel.org>, linux-serial@vger.kernel.org,
+	linux-kernel@vger.kernel.org, linux-kbuild@vger.kernel.org,
+	"platform-driver-x86@vger.kernel.org" <platform-driver-x86@vger.kernel.org>,
+	linux-pci@vger.kernel.org, devicetree@vger.kernel.org,
+	linux-arm-msm@vger.kernel.org, linux-bluetooth@vger.kernel.org,
+	linux-pm@vger.kernel.org,
+	"linux-acpi@vger.kernel.org" <linux-acpi@vger.kernel.org>
+Subject: Re: [PATCH v6 6/9] dt-bindings: connector: m2: Add M.2 1620 LGA
+ soldered down connector
+Message-ID: <acv2f1qbqu4PlSL1@linaro.org>
+References: <20260322233713.GA98177-robh@kernel.org>
+ <to2mrizprc3hjufqbiplpqyek7f4uutqtn4hx4gkmdgv2rykbc@ybwwjhdec4nm>
+ <CAL_JsqJXrHCJt770bJkMmAUhirSF3kHjYwSzkG7cXp7-eys8Rg@mail.gmail.com>
+ <6aef3xxjjd4nbgrfx6jc6jt6rpqmttoui6hil5zqgdpas2j6gj@ie6j72orenou>
+ <fsvmmgoe5wslmxebhrrwmdg2ldcmhzvj53gjkdfnfg2m2rz2lw@dcfboaakz7ae>
+ <bguhzabwryayyqkv4ilzwr3ixwv6bzxncblo3ircz2wm3fs52k@66zvcrfcb4oe>
+ <blhm4csjyw6r667cleljgzd6rpwagttjo5rau7wjrlnjakq2qm@ekyhc4jvwmwf>
+ <m44mupdmg7kgco62n4evcviagqo7wwgyt3gybugbxwesd4ekjz@o24r6v4tpezc>
+ <3faffec9-dc9d-4eec-a652-a84d30d85c96@app.fastmail.com>
+ <cvqdbqnzjmzoowxkvz2lyv4avropu5jw7h2r6zng3ecf245hgg@fsysjqflqd35>
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Message-Id: <20260331-aw-new-api-v3-1-ef03b94529d8@gmail.com>
-X-B4-Tracking: v=1; b=H4sIAAAAAAAC/1XMyw6CMBCF4VchXTum0wkGXPkexkVLW5hELmlN0
- RDe3YIbXJ6T/N8iogvsorgWiwguceRxyINOhWg6PbQO2OYtlFQXiYpAzzC4GfTEgA1WHiWip1L
- kYArO83vH7o+8O46vMXx2O+H2/hgieWQSAkJd1iiN12iourW95ue5GXuxMUkdU/xLVU7JSEtkf
- GWVOqbrun4B4mEr5t8AAAA=
-X-Change-ID: 20260123-aw-new-api-1c18f1011f35
-To: =?utf-8?q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>, 
- Armin Wolf <W_Armin@gmx.de>, Hans de Goede <hansg@kernel.org>
-Cc: platform-driver-x86@vger.kernel.org, Dell.Client.Kernel@dell.com, 
- linux-kernel@vger.kernel.org, Kurt Borja <kuurtb@gmail.com>
-X-Mailer: b4 0.15.1
-X-Developer-Signature: v=1; a=openpgp-sha256; l=2339; i=kuurtb@gmail.com;
- h=from:subject:message-id; bh=5jlSc4IKKGxsaiNbC5V9mWX4XNKsUtoxWuYQvacYRUA=;
- b=owGbwMvMwCUmluBs8WX+lTTG02pJDJmnv7j+LWqaYVObse9CoajGzmsvzk4N7Ak/J71V2ahsy
- +Wk2ydCOkpZGMS4GGTFFFnaExZ9exSV99bvQOh9mDmsTCBDGLg4BWAiF+4wMlw5vl1vxYTqzv9h
- HWKOQpP9XqmWTuh60X666GLJlumGe3oYfjIqM4l4tK5375DvPvjv+K/mZWVXlF4eEuoQmP3f+rR
- pGhcA
-X-Developer-Key: i=kuurtb@gmail.com; a=openpgp;
- fpr=54D3BE170AEF777983C3C63B57E3B6585920A69A
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <cvqdbqnzjmzoowxkvz2lyv4avropu5jw7h2r6zng3ecf245hgg@fsysjqflqd35>
 
-Transition to the new wmi_buffer based WMI API.
+On Wed, Mar 25, 2026 at 05:36:08PM +0530, Manivannan Sadhasivam wrote:
+> On Mon, Mar 23, 2026 at 01:23:07PM -0400, Mark Pearson wrote:
+> > On Mon, Mar 23, 2026, at 12:52 PM, Manivannan Sadhasivam wrote:
+> > > On Mon, Mar 23, 2026 at 06:45:15PM +0200, Dmitry Baryshkov wrote:
+> > >> On Mon, Mar 23, 2026 at 09:26:04PM +0530, Manivannan Sadhasivam wrote:
+> > >> > On Mon, Mar 23, 2026 at 05:14:30PM +0200, Dmitry Baryshkov wrote:
+> > >> > > On Mon, Mar 23, 2026 at 07:14:25PM +0530, Manivannan Sadhasivam wrote:
+> > >> > > > On Mon, Mar 23, 2026 at 08:39:55AM -0500, Rob Herring wrote:
+> > >> > > > > On Mon, Mar 23, 2026 at 7:16 AM Manivannan Sadhasivam <mani@kernel.org> wrote:
+> > >> > > > > >
+> > >> > > > > > On Sun, Mar 22, 2026 at 06:37:13PM -0500, Rob Herring wrote:
+> > >> > > > > > > On Tue, Mar 17, 2026 at 09:59:56AM +0530, Manivannan Sadhasivam wrote:
+> > >> > > > > > > > Lenovo Thinkpad T14s is found to have a soldered down version of M.2 1620
+> > >> > > > > > > > LGA connector. Though, there is no 1620 LGA form factor defined in the M.2
+> > >> > > > > > > > spec, it looks very similar to the M.2 Key E connector. So add the
+> > >> > > > > > > > "pcie-m2-1620-lga-connector" compatible with "pcie-m2-e-connector" fallback
+> > >> > > > > > > > to reuse the Key E binding.
+> > >> > > > > > >
+> > >> > > > > > > What is LGA?
+> > >> > > > > > >
+> > >> > > > > >
+> > >> > > > > > Land Grid Array
+> > >> > > > > >
+> > >> > > > > > > If not in the spec, is it really something generic?
+> > >> > > > > > >
+> > >> > > > > >
+> > >> > > > > > Good question. Yes and No! LGA is not something that Lenovo only uses. Other
+> > >> > > > > > vendors may also use this form factor. PCIe connectors are full of innovation as
+> > >> > > > > > the spec gives room for hardware designers to be as innovative as possible to
+> > >> > > > > > save the BOM cost.
+> > >> > > > > 
+> > >> > > > > innovation == incompatible changes
+> > >> > > > > 
+> > >> > > > 
+> > >> > > > Yes, I was trying to sound nice :)
+> > >> > > > 
+> > >> > > > > > This is why I do not want to make it Lenovo specific. But if you prefer that, I
+> > >> > > > > > can name it as "lenovo,pcie-m2-1620-lga-connector".
+> > >> > > > > 
+> > >> > > > > Depends if you think that s/w needs to know the differences. Hard to
+> > >> > > > > say with a sample size of 1.
+> > >> > > > > 
+> > >> > > > 
+> > >> > > > Sure. Will add the 'lenovo' prefix then.
+> > >> > > 
+> > >> > > Is it really Lenovo? Or is it some other module vendor, whose LGAs are
+> > >> > > being used by Lenovo?
+> > >> > > 
+> > >> > > I remember that DB820c also used some kind of a module for the WiFi card
+> > >> > > (which might be M.2 compatible or might not, I can't find exact docs at
+> > >> > > this point).
+> > >> > > 
+> > >> > 
+> > >> > I don't know. These kind of designs might be reused by several vendors. But
+> > >> > considering that we should not make it generic, I'd go with Lenovo as that's
+> > >> > the only vendor we know as of now.
+> > >> 
+> > >> ... and later we learn that other vendors use the same idea /pinout,
+> > >> then nothing stops us from still telling that it's a
+> > >> "lenovo,pcie-m2-something-lga". 
+> > >> 
+> > >
+> > > How do you possibly know whether a single vendor has introduced this form factor
+> > > or reused by multiple ones? Atleast, I don't have access to such a source to
+> > > confirm.
+> > >
+> > I've not really been following this thread/patchset in detail; but want me to try and check with the T14s platform team if this device is specifically made for us (Lenovo) or not?
+> > I doubt it is - we just don't do that usually, but I can go and ask the question if it will help resolve this (with the caveat that it could hold up the review for a bit and I may not be able to get a straight answer)
+> > 
+> 
+> I can drop this specific patch in the meantime.
+> 
+> > My vote (for what little it's worth) would be to make it non-Lenovo specific. Then when the same part causes issues on another vendors platform I won't get asked questions about why Lenovo is breaking <other vendor> :)
+> > 
+> 
+> Even if Lenovo prefix is used, it won't break other vendors. Just that we will
+> end up adding more compatibles.
+> 
+> Anyhow, I'll wait for your reply and drop this patch for next revision.
+> 
 
-Signed-off-by: Kurt Borja <kuurtb@gmail.com>
----
-v3:
-  - Use __free() instead of manual cleanup.
-  - Include <linux/types.h>
+If you need a vendor prefix, I think "qcom," would be more appropriate
+than Lenovo. This form factor is used by most vendors for recent
+soldered Qualcomm-based wireless cards, not just Lenovo:
 
-v2: https://patch.msgid.link/20260331-aw-new-api-v2-1-3b0d33bf8d22@gmail.com
-  - Cast wmi_buffer data to __le32 and then use le32_to_cpu() before
-    returning
+ - Dell XPS 13 9345 has exactly the same soldered M.2 card, I assume
+   there are several other vendors as well.
 
-v1: https://patch.msgid.link/20260330-aw-new-api-v1-1-95910bfa1b38@gmail.com
----
- drivers/platform/x86/dell/alienware-wmi-base.c | 34 ++++++++++++++++----------
- 1 file changed, 21 insertions(+), 13 deletions(-)
+ - https://www.sparklan.com/product/wnsq-290be/ is a third-party
+   (Qualcomm-based) M.2 LGA 1620 card, in the block diagram the
+   pinout is called "QM.2 1620 LGA 168pin".
 
-diff --git a/drivers/platform/x86/dell/alienware-wmi-base.c b/drivers/platform/x86/dell/alienware-wmi-base.c
-index 64562b92314f..38a903734fa3 100644
---- a/drivers/platform/x86/dell/alienware-wmi-base.c
-+++ b/drivers/platform/x86/dell/alienware-wmi-base.c
-@@ -12,8 +12,13 @@
- #include <linux/cleanup.h>
- #include <linux/module.h>
- #include <linux/platform_device.h>
-+#include <linux/slab.h>
-+#include <linux/types.h>
- #include <linux/dmi.h>
- #include <linux/leds.h>
-+
-+#include <asm/byteorder.h>
-+
- #include "alienware-wmi.h"
- 
- MODULE_AUTHOR("Mario Limonciello <mario.limonciello@outlook.com>");
-@@ -150,22 +155,25 @@ u8 alienware_interface;
- int alienware_wmi_command(struct wmi_device *wdev, u32 method_id,
- 			  void *in_args, size_t in_size, u32 *out_data)
- {
--	struct acpi_buffer out = {ACPI_ALLOCATE_BUFFER, NULL};
--	struct acpi_buffer in = {in_size, in_args};
--	acpi_status ret;
-+	struct wmi_buffer out, in = {
-+		.data = in_args,
-+		.length = in_size,
-+	};
-+	int ret;
- 
--	ret = wmidev_evaluate_method(wdev, 0, method_id, &in, out_data ? &out : NULL);
--	if (ACPI_FAILURE(ret))
--		return -EIO;
-+	ret = wmidev_invoke_method(wdev, 0, method_id, &in, out_data ? &out : NULL);
-+	if (ret)
-+		return ret;
- 
--	union acpi_object *obj __free(kfree) = out.pointer;
-+	if (!out_data)
-+		return 0;
- 
--	if (out_data) {
--		if (obj && obj->type == ACPI_TYPE_INTEGER)
--			*out_data = (u32)obj->integer.value;
--		else
--			return -ENOMSG;
--	}
-+	__le32 *data __free(kfree) = out.data;
-+
-+	if (out.length < sizeof(*out_data))
-+		return -ENOMSG;
-+
-+	*out_data = le32_to_cpu(*data);
- 
- 	return 0;
- }
+ - If you press F9 while booting the ThinkPad T14s, you should get to a
+   screen with "Regulatory Information". For the T14s, this screen says
+   "Contains FCC ID: J9C-QCNCM825". This is the WiFi/BT module in the
+   soldered form factor. If you look that up on the FCC website, the
+   applicant for this module is "Qualcomm Technologies, Inc.". This
+   seems to be some kind of "modular certification" that vendors can
+   reuse/adapt without going through the whole process again.
 
----
-base-commit: fab7c51693e95aa874d6d9db22bfae7bd0b23c66
-change-id: 20260123-aw-new-api-1c18f1011f35
+Perhaps you should ask around inside Qualcomm? :-)
 
--- 
-Thanks, 
- ~ Kurt
-
+Thanks,
+Stephan
