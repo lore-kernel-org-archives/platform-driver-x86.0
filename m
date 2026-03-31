@@ -1,79 +1,88 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from spark.kcore.it (spark.kcore.it [49.13.27.68])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EB20A35838A
-	for <platform-driver-x86@vger.kernel.org>; Tue, 31 Mar 2026 07:31:18 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 344ED3C6616;
+	Tue, 31 Mar 2026 07:52:10 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=49.13.27.68
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1774942279; cv=none; b=Wtv4B7Ym+X4tf3BBYGaGlosB2H8hvq2qmXOLxi5W8kJw6EfON9g9rVXIIlM0/CmHxb+lsRi2pfHNXY+zlbB6i85QiNtQGKqVZWN/ftCM/0bRf9NZFItoiHZ4bKcJkAJwJ7vd5zLspoM66Ifekse9ZAtEpHB+CHJgOJDdGWtW84s=
+	t=1774943531; cv=none; b=EUoSju1uW7sx2IloIHF+g5lJX1w/rBvXhn5wnqfC7EzhMEr7YCww605RpD2Upa0mrJoR+nXEsOooLWWp6nWSEMPn4EURWpuPDsFnva2ZxQapz+tU/ovvJiQcriQWZC4P58xnqgCZxr2YbCSwnSwXxlvRBfnRDgVIw5a4HEJqx14=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1774942279; c=relaxed/simple;
-	bh=xTIyEE/gxhMO+LZ6yeYO9erj6izM5ZNIscon4e6CU4o=;
-	h=From:To:Subject:Date:Message-ID:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=HaEgFIbjkeaHNHbQnIyYXfDUOtsrkBzRJ2B0j7HuW6ieyv9G3LmAIbgeXndEj8c9o45I3n3WEnMq6TVm5PQiIC6OvTFihF8XoQmrh900r7Rc0wW6ctHqv79rFwujOIfAAFYHexheEAJ3J4hzjFFdGmkXGPh9xK3mmcFna8HbYL4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=QcPBKkoS; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1774943531; c=relaxed/simple;
+	bh=3hJdARBALGNPFH1jbJyI1zcug/jU4KlbArNoLwq3eAE=;
+	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
+	 MIME-Version; b=IjpzVleDCzLiOG+OxrAicKlyL9MQeNrYy9eYw3j5DxHqERSzxur8AyidWRAePpkqNl+0wQD4sfCZbNaKenjmlilR3V/qnlHTjPoczKoUuniTG8t1yS46c95hq5mbRWlAcMvF08xZWx3EL3EL5UiWAWyHKQcIAW9RSgBJ9hW4Kgc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kcore.it; spf=pass smtp.mailfrom=kcore.it; dkim=pass (1024-bit key) header.d=kcore.it header.i=@kcore.it header.b=sEIsb3Pw; arc=none smtp.client-ip=49.13.27.68
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kcore.it
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=kcore.it
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="QcPBKkoS"
-Received: by smtp.kernel.org (Postfix) with ESMTPS id CADE1C19423
-	for <platform-driver-x86@vger.kernel.org>; Tue, 31 Mar 2026 07:31:18 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1774942278;
-	bh=xTIyEE/gxhMO+LZ6yeYO9erj6izM5ZNIscon4e6CU4o=;
-	h=From:To:Subject:Date:In-Reply-To:References:From;
-	b=QcPBKkoS9N/xJjYr+ouZswu2O+1iASxZ/1ZCC7LUc516ejCDMYJn5TrCtjBurwqwQ
-	 Vue32GkXXczi2LuNJJbDfyGZCfyZGIaqA+4iUwyHgRaH0dLc1QUxsJW1Crt2yN9b5p
-	 V1yNAJ5R6VhpknVGomnije52rStZTI80ylkVRgIZK6ahcHGkqvarAHSPnVWHiMjf3W
-	 RQcXXOW4haexRxVxvkatO2ZS5tgLggjHdvXrxcf9bPz31/PEzOAQHs8uRz+4msQnXz
-	 bNC47UwlMwTLLNeVjo0GVoX4U0KruUsdisvDoUXcPreeht0BJUfc3OCYIZLe8JoFg6
-	 Kuh5Yn4RceGCA==
-Received: by aws-us-west-2-korg-bugzilla-1.web.codeaurora.org (Postfix, from userid 48)
-	id BA011C3279F; Tue, 31 Mar 2026 07:31:18 +0000 (UTC)
-From: bugzilla-daemon@kernel.org
-To: platform-driver-x86@vger.kernel.org
-Subject: =?UTF-8?B?W0J1ZyAyMjExNTBdIFtCVUddIGhwLXdtaTogT01FTiAxNi1rMHh4?=
- =?UTF-8?B?eCAoYm9hcmQgOEE0RCkg4oCTIHZlcmlmaWNhdGlvbiBvZiBwbGF0Zm9ybV9w?=
- =?UTF-8?B?cm9maWxlIGFuZCBFQyByZWdpc3RlciBiZWhhdmlvcg==?=
-Date: Tue, 31 Mar 2026 07:31:18 +0000
-X-Bugzilla-Reason: None
-X-Bugzilla-Type: changed
-X-Bugzilla-Watch-Reason: AssignedTo drivers_platform_x86@kernel-bugs.osdl.org
-X-Bugzilla-Product: Drivers
-X-Bugzilla-Component: Platform_x86
-X-Bugzilla-Version: 2.5
-X-Bugzilla-Keywords: 
-X-Bugzilla-Severity: low
-X-Bugzilla-Who: qwqgong@gmail.com
-X-Bugzilla-Status: RESOLVED
-X-Bugzilla-Resolution: CODE_FIX
-X-Bugzilla-Priority: P3
-X-Bugzilla-Assigned-To: drivers_platform_x86@kernel-bugs.osdl.org
-X-Bugzilla-Flags: 
-X-Bugzilla-Changed-Fields: bug_status resolution
-Message-ID: <bug-221150-215701-YzD14g0JX3@https.bugzilla.kernel.org/>
-In-Reply-To: <bug-221150-215701@https.bugzilla.kernel.org/>
-References: <bug-221150-215701@https.bugzilla.kernel.org/>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-X-Bugzilla-URL: https://bugzilla.kernel.org/
-Auto-Submitted: auto-generated
+	dkim=pass (1024-bit key) header.d=kcore.it header.i=@kcore.it header.b="sEIsb3Pw"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=kcore.it;
+	s=spark; h=Content-Transfer-Encoding:MIME-Version:References:In-Reply-To:
+	Message-Id:Date:Subject:Cc:To:From:Sender:Reply-To:Content-Type:Content-ID:
+	Content-Description:Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc
+	:Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:List-Subscribe:
+	List-Post:List-Owner:List-Archive;
+	bh=BYHOFqHDp1APbfiaMrbjy2TqDEKZ/vCoIf6vnII6pR8=; b=sEIsb3PwISDmhJJYeWNM6kM4aZ
+	0clKp7I2jSbo0GKbqsYqhYgpkBXnMMGtbJF1Qk/PAFO8Bsa77DD7fPSIYlHbydzRjbqd6jTY92hkn
+	lVCGa/uVu1dIAit8sL7/hbkQTRWMOHeOmpwxzgVdqbXKTsvdawVMQxukWDkK5jNM7d3U=;
+Received: from mnencia by spark.kcore.it with local (Exim 4.96)
+	(envelope-from <mnencia@kcore.it>)
+	id 1w7TtN-006ZoM-01;
+	Tue, 31 Mar 2026 09:52:05 +0200
+From: Marco Nenciarini <mnencia@kcore.it>
+To: Daniel Scally <djrscally@gmail.com>,
+	Sakari Ailus <sakari.ailus@linux.intel.com>,
+	=?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
+Cc: Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+	Hans de Goede <johannes.goede@oss.qualcomm.com>,
+	platform-driver-x86@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	Marco Nenciarini <mnencia@kcore.it>
+Subject: [PATCH v6 0/4] platform/x86: int3472: Add support for GPIO type 0x02 (IR flood LED)
+Date: Tue, 31 Mar 2026 09:52:00 +0200
+Message-Id: <20260331075204.1567624-1-mnencia@kcore.it>
+X-Mailer: git-send-email 2.39.5
+In-Reply-To: <ab0URIrzZPsYjWrM@spark.kcore.it>
+References: <ab0URIrzZPsYjWrM@spark.kcore.it>
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
 
-https://bugzilla.kernel.org/show_bug.cgi?id=3D221150
+Add support for INT3472 GPIO type 0x02 which controls an IR flood LED
+used for face authentication on some laptops (e.g. Dell Pro Max 16
+Premium). Without this, the kernel logs "GPIO type 0x02 unknown; the
+sensor may not work" and IR sensors paired with a flood LED cannot
+function.
 
-wudd_maya (qwqgong@gmail.com) changed:
+The series first refactors the existing LED code (patches 1-3), then
+adds the new IR flood LED type with multi-LED support (patch 4).
 
-           What    |Removed                     |Added
-----------------------------------------------------------------------------
-             Status|NEW                         |RESOLVED
-         Resolution|---                         |CODE_FIX
+Changes in v6:
+- Renamed LED from "strobe" back to "ir_flood" to describe what the
+  hardware actually does, per Hans de Goede's review. The internal
+  define INT3472_GPIO_TYPE_STROBE is kept to match the ACPI _DSM name.
+- Used local `led` variable from patch 1 (was `pled`, now `led`
+  throughout), per Andy's suggestion to reduce churn
+- Renamed function parameter from `name` to `con_id` in patch 3
+- Replaced `has_lookup` bool with INIT_LIST_HEAD/list_empty check and
+  renamed parameter to `add_lookup` in patch 4, per Andy's review
+- Added #include <linux/list.h> in patch 4
 
---=20
-You may reply to this email to add a comment.
+Marco Nenciarini (4):
+  platform/x86: int3472: Use local variable for LED struct access
+  platform/x86: int3472: Rename pled to led in LED registration code
+  platform/x86: int3472: Parameterize LED con_id in registration
+  platform/x86: int3472: Add support for GPIO type 0x02 (IR flood LED)
 
-You are receiving this mail because:
-You are watching the assignee of the bug.=
+ drivers/platform/x86/intel/int3472/discrete.c | 16 ++++-
+ drivers/platform/x86/intel/int3472/led.c      | 62 +++++++++++--------
+ include/linux/platform_data/x86/int3472.h     | 13 ++--
+ 3 files changed, 59 insertions(+), 32 deletions(-)
+
+-- 
+2.47.3
+
