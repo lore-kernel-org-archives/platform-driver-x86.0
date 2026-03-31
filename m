@@ -1,92 +1,236 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.17])
+Received: from flow-b4-smtp.messagingengine.com (flow-b4-smtp.messagingengine.com [202.12.124.139])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 98E1D2FD7D3;
-	Tue, 31 Mar 2026 18:54:20 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.17
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B02CB331209;
+	Tue, 31 Mar 2026 19:18:46 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=202.12.124.139
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1774983262; cv=none; b=ZKaYmds8f33t7IkSl1MeZcBn14OiMqhZS0o669za1OkdEwwIkS8YJgxhBCgiOnnd7dcxX8tomyVMpjGpCwRkCwM4hwAlO7j30VQLDCNKoTkwqdIYtgOoi/jnZR5vmTuLK2lomW0uvbvM9yReDSXnWEwjotd/ouJyFhWNOwF2Dk4=
+	t=1774984729; cv=none; b=fB2PHm0w/TrZqQt82UuzNECJTDId9la+fgheacyKNNzyBQ8K4jYBo5vl0S07XVOhm7WdsMGKGGcY9UGFmpdZCQigucmfa83rGjaqTvgFhDNAZeine/X4AiuN/BtyuiSlhmiDTZExFtK1Upkl2pV6PkXzPAdMe1kCCre4RSsDGO0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1774983262; c=relaxed/simple;
-	bh=PutzRDR0a/c/qDUYo4mkknZe4+j/+op8tsZhJooZVF8=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=IMWsR9oxCPNDa4qZf3xerBYpnSVftWNv0UY9M6yTroW8AJq/glJolmgP4p6AY1xjsZty5H+aZ+/PxZlkdWelCrTDK7Hq3eykICB0K2HEGl3FZA2/CatKVtU6QzsvIe2MPvuvb+TzcLLSdyrtzCGo16kityUq67ifWRFsxvcD3WY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=pass smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=cCdgJpbF; arc=none smtp.client-ip=192.198.163.17
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.intel.com
+	s=arc-20240116; t=1774984729; c=relaxed/simple;
+	bh=eJC1dGMKA7WWnvIcrQkw8YE6B7Kq4iS3s/Ohm6s3FTI=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=q7cyVZixgrTANTH2w906VJGg7cBfHcSHigcgxxc0v8SASIzl9UXZex9tliDTPYItbEkd9bDeOK/Z5jOc+Z/fuhiSLbOt8Ye5KtwcboWl4QPcRRGZ0cMe/nKISVAowILWu0udKvqwCdEQrN9TZXVdR49sMPWltSBEGVl5ATH0a20=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=shazbot.org; spf=pass smtp.mailfrom=shazbot.org; dkim=pass (2048-bit key) header.d=shazbot.org header.i=@shazbot.org header.b=Jix2YZqP; dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b=qPkl0NIe; arc=none smtp.client-ip=202.12.124.139
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=shazbot.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=shazbot.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="cCdgJpbF"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1774983261; x=1806519261;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=PutzRDR0a/c/qDUYo4mkknZe4+j/+op8tsZhJooZVF8=;
-  b=cCdgJpbFBCOH3a2O1Dq2R61XLUbv/14ZC2S/43Z5Kd5UafkgOiqvk7gt
-   CABV94B7uhF34nfc1Tv5HoNNrMzQsz1YWK9pVSIX/dtewPUp4XKZuD3+Y
-   KnQ66zxmh45r96KoFmVexKhr147AuDSwKzCjJh2TkQrOX0oou3zrfd4zq
-   EP74HEnJVVuySpnAwWjN8E35hDGJ4TCJxClCd1NVbvSSNwe4MDdPqRAL9
-   31/OCeSrvVHp1MIlG/jLl+WZCU41kv6Y+KqYbDmG8KHnSgV+aqLUnv3Y1
-   U9K/i0tuZZinUYYfloweObYzLGXbIjf8lV78CU+rtiweHenyHT632u/eq
-   w==;
-X-CSE-ConnectionGUID: zhyARu0wTwK+V7h1aIKqng==
-X-CSE-MsgGUID: RsuTnELNRbybwXntNLVQsA==
-X-IronPort-AV: E=McAfee;i="6800,10657,11745"; a="75901746"
-X-IronPort-AV: E=Sophos;i="6.23,152,1770624000"; 
-   d="scan'208";a="75901746"
-Received: from fmviesa001.fm.intel.com ([10.60.135.141])
-  by fmvoesa111.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 31 Mar 2026 11:54:20 -0700
-X-CSE-ConnectionGUID: 7S8Ue4bySDuQcRyoxveNTw==
-X-CSE-MsgGUID: yPPmcnvKTOOQoPhCZ1Tyzg==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.23,152,1770624000"; 
-   d="scan'208";a="249661949"
-Received: from rvuia-mobl.ger.corp.intel.com (HELO localhost) ([10.245.245.209])
-  by smtpauth.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 31 Mar 2026 11:54:18 -0700
-Date: Tue, 31 Mar 2026 21:54:16 +0300
-From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-To: Marco Nenciarini <mnencia@kcore.it>
-Cc: Daniel Scally <djrscally@gmail.com>,
-	Sakari Ailus <sakari.ailus@linux.intel.com>,
-	Ilpo =?iso-8859-1?Q?J=E4rvinen?= <ilpo.jarvinen@linux.intel.com>,
-	Hans de Goede <johannes.goede@oss.qualcomm.com>,
-	platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v7 4/4] platform/x86: int3472: Add support for GPIO type
- 0x02 (IR flood LED)
-Message-ID: <acwYWAEdD4lDqaOZ@ashevche-desk.local>
-References: <20260331134443.1573053-1-mnencia@kcore.it>
- <20260331134443.1573053-5-mnencia@kcore.it>
+	dkim=pass (2048-bit key) header.d=shazbot.org header.i=@shazbot.org header.b="Jix2YZqP";
+	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="qPkl0NIe"
+Received: from phl-compute-05.internal (phl-compute-05.internal [10.202.2.45])
+	by mailflow.stl.internal (Postfix) with ESMTP id D592A130008E;
+	Tue, 31 Mar 2026 15:18:43 -0400 (EDT)
+Received: from phl-frontend-03 ([10.202.2.162])
+  by phl-compute-05.internal (MEProxy); Tue, 31 Mar 2026 15:18:45 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=shazbot.org; h=
+	cc:cc:content-transfer-encoding:content-type:content-type:date
+	:date:from:from:in-reply-to:in-reply-to:message-id:mime-version
+	:references:reply-to:subject:subject:to:to; s=fm1; t=1774984723;
+	 x=1774991923; bh=e2GLgeMPntSzKQd7unYxJVNrGT++Ey/+j0e558YaVKo=; b=
+	Jix2YZqPgfjz22R+GBZTSkmM/A+yTGqbP2D7RrPJTBlHCtwUy2TreQYJzy0FYt4E
+	mn6iGMSZZUAvgOUzmgtxkvDhEQqNq9so/LsT2uXs0WUjbk/iVyGgezKLdcntmYCJ
+	j1mTHgBbF1XmhYE9OLcmwaqRwm079G64C6NXLlTJGqXGDGeTuyvQuKL+LrxHsVyt
+	h07JL26/s5vAaqvA+uFn5EtvqWaXeuVPLWaay4hdvRDT/GeDy5zchULu+Xf5bCKw
+	aMCGUFvWJ4r5sa9ylZo53CH1LtcUihVM+4twawyn4uPT0avFIdaMYMGGz87cRj5W
+	75pcl2tsTe5q72qXomhEng==
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
+	messagingengine.com; h=cc:cc:content-transfer-encoding
+	:content-type:content-type:date:date:feedback-id:feedback-id
+	:from:from:in-reply-to:in-reply-to:message-id:mime-version
+	:references:reply-to:subject:subject:to:to:x-me-proxy
+	:x-me-sender:x-me-sender:x-sasl-enc; s=fm2; t=1774984723; x=
+	1774991923; bh=e2GLgeMPntSzKQd7unYxJVNrGT++Ey/+j0e558YaVKo=; b=q
+	Pkl0NIe505sDev2vE+9dEjJ2QQvY24shKDHRjyi5iJrJ3lhJmCH83R7Ej6uIsdKx
+	Ah2qPK0lawqj3n8MX9UbaZlR8zOv0eboHPEu2zTV9Ar46wm3SvS5yBG219IjmBDw
+	/8aE106Yb9iAY8X18cayks75OdeneZOPyq2pnCyvpFrGdunxzgrlbZPAQhHCnM3H
+	MhJM8//IeSYiIyV967PwBaCx9UybPaAajGdNOPqf34786RvJS1R2NeBhzECYdV9r
+	Hhp4kbOPpgzUg+fw9gf2jEWED5P2y3OiIotVEJPhPvUaSmHyFEthzrD5syHkfCDz
+	oj1hrBx1gCRLurULKhEqQ==
+X-ME-Sender: <xms:Eh7MaYVXhSLS49doWxNbldxcSkPJQ2lBgD6S-cXj9ML6P8DuIhi54A>
+    <xme:Eh7MaY3CTvPt8pC-6__rnVlJHk3AMpws04d9x1eLmygsx9xxcOKA3tvfX2RGrzeid
+    3eITD6bgIngUTpBItaVYS7mKstrqZdkyduHlmJydVKX9r92pk1CAA>
+X-ME-Received: <xmr:Eh7MaWAMOBeQDrW_EEEiAtExZoJg9HXrtPbMbrU13INIpg2pRTwgJd0Tapg>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeefhedrtddtgddutddvucetufdoteggodetrfdotf
+    fvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdfurfetoffkrfgpnffqhgenuceurghi
+    lhhouhhtmecufedttdenucesvcftvggtihhpihgvnhhtshculddquddttddmnecujfgurh
+    epfffhvfevuffkjghfofggtgfgsehtjeertdertddvnecuhfhrohhmpeetlhgvgicuhghi
+    lhhlihgrmhhsohhnuceorghlvgigsehshhgriigsohhtrdhorhhgqeenucggtffrrghtth
+    gvrhhnpedvkeefjeekvdduhfduhfetkedugfduieettedvueekvdehtedvkefgudegveeu
+    ueenucevlhhushhtvghrufhiiigvpedtnecurfgrrhgrmhepmhgrihhlfhhrohhmpegrlh
+    gvgiesshhhrgiisghothdrohhrghdpnhgspghrtghpthhtohephedupdhmohguvgepshhm
+    thhpohhuthdprhgtphhtthhopegurghkrheskhgvrhhnvghlrdhorhhgpdhrtghpthhtoh
+    epjhhgghesiihivghpvgdrtggrpdhrtghpthhtoheplhhinhhugiesrghrmhhlihhnuhig
+    rdhorhhgrdhukhdprhgtphhtthhopehgrhgvghhkhheslhhinhhugihfohhunhgurghtih
+    honhdrohhrghdprhgtphhtthhopehrrghfrggvlheskhgvrhhnvghlrdhorhhgpdhrtghp
+    thhtohepihhorghnrgdrtghiohhrnhgvihesnhigphdrtghomhdprhgtphhtthhopehnih
+    hpuhhnrdhguhhpthgrsegrmhgurdgtohhmpdhrtghpthhtohepnhhikhhhihhlrdgrghgr
+    rhifrghlsegrmhgurdgtohhmpdhrtghpthhtohepkhihshesmhhitghrohhsohhfthdrtg
+    homh
+X-ME-Proxy: <xmx:Eh7MaXq2mlnlOelEQan96Ie-hgy-LAK8CHBHQdkG7r27nkHcaWiIbg>
+    <xmx:Eh7Mab_KIxvqr4OxQc5evz-T_S8zOMbzrx08jzw5C5b7mvco3Iesuw>
+    <xmx:Eh7MaefX2P0crsZiJ44xT0eYo0t5zG2qKmdKMy8HHuopFTELtHeNKg>
+    <xmx:Eh7MaRJs8ye8aup8P2JAiOncajQ7Ro6xy3heBDnJcGy9BvoI7oIX_g>
+    <xmx:Ex7MaSUwhQGLpsFOIWtvVzTCvrLLbvifdUNGQI9PxQ_RqFwZ-CC-1T0v>
+Feedback-ID: i03f14258:Fastmail
+Received: by mail.messagingengine.com (Postfix) with ESMTPA; Tue,
+ 31 Mar 2026 15:18:38 -0400 (EDT)
+Date: Tue, 31 Mar 2026 13:18:37 -0600
+From: Alex Williamson <alex@shazbot.org>
+To: "Danilo Krummrich" <dakr@kernel.org>, "Jason Gunthorpe" <jgg@ziepe.ca>
+Cc: "Russell King" <linux@armlinux.org.uk>,
+ "Greg Kroah-Hartman" <gregkh@linuxfoundation.org>,
+ "Rafael J. Wysocki" <rafael@kernel.org>,
+ "Ioana Ciornei" <ioana.ciornei@nxp.com>,
+ "Nipun Gupta" <nipun.gupta@amd.com>,
+ "Nikhil Agarwal" <nikhil.agarwal@amd.com>,
+ "K. Y. Srinivasan" <kys@microsoft.com>,
+ "Haiyang Zhang" <haiyangz@microsoft.com>, "Wei Liu" <wei.liu@kernel.org>,
+ "Dexuan Cui" <decui@microsoft.com>, "Long Li" <longli@microsoft.com>,
+ "Bjorn Helgaas" <bhelgaas@google.com>, "Armin Wolf" <W_Armin@gmx.de>,
+ "Bjorn Andersson" <andersson@kernel.org>,
+ "Mathieu Poirier" <mathieu.poirier@linaro.org>,
+ "Vineeth Vijayan" <vneethv@linux.ibm.com>,
+ "Peter Oberparleiter" <oberpar@linux.ibm.com>,
+ "Heiko Carstens" <hca@linux.ibm.com>,
+ "Vasily Gorbik" <gor@linux.ibm.com>,
+ "Alexander Gordeev" <agordeev@linux.ibm.com>,
+ "Christian Borntraeger" <borntraeger@linux.ibm.com>,
+ "Sven Schnelle" <svens@linux.ibm.com>,
+ "Harald Freudenberger" <freude@linux.ibm.com>,
+ "Holger Dengler" <dengler@linux.ibm.com>,
+ "Mark Brown" <broonie@kernel.org>, "Michael S. Tsirkin" <mst@redhat.com>,
+ "Jason Wang" <jasowang@redhat.com>,
+ "Xuan Zhuo" <xuanzhuo@linux.alibaba.com>,
+ Eugenio =?UTF-8?B?UMOpcmV6?= <eperezma@redhat.com>,
+ "Juergen Gross" <jgross@suse.com>,
+ "Stefano Stabellini" <sstabellini@kernel.org>,
+ "Oleksandr Tyshchenko" <oleksandr_tyshchenko@epam.com>,
+ "Christophe Leroy (CS GROUP)" <chleroy@kernel.org>,
+ <linux-kernel@vger.kernel.org>, <driver-core@lists.linux.dev>,
+ <linuxppc-dev@lists.ozlabs.org>, <linux-hyperv@vger.kernel.org>,
+ <linux-pci@vger.kernel.org>, <platform-driver-x86@vger.kernel.org>,
+ <linux-arm-msm@vger.kernel.org>, <linux-remoteproc@vger.kernel.org>,
+ <linux-s390@vger.kernel.org>, <linux-spi@vger.kernel.org>,
+ <virtualization@lists.linux.dev>, <kvm@vger.kernel.org>,
+ <xen-devel@lists.xenproject.org>, <linux-arm-kernel@lists.infradead.org>,
+ "Gui-Dong Han" <hanguidong02@gmail.com>, alex@shazbot.org
+Subject: Re: [PATCH 05/12] PCI: use generic driver_override infrastructure
+Message-ID: <20260331131837.6a9fe9ec@shazbot.org>
+In-Reply-To: <DHGTLY0FJWD2.2VLT6NQWF97YY@kernel.org>
+References: <20260324005919.2408620-1-dakr@kernel.org>
+	<20260324005919.2408620-6-dakr@kernel.org>
+	<DHGATG6LJOM1.2AI7BYQ2O4DFU@kernel.org>
+	<20260330141050.2cb47bd9@shazbot.org>
+	<DHGT9XCG8Y96.3IB1EI6FF1ZDZ@kernel.org>
+	<DHGTLY0FJWD2.2VLT6NQWF97YY@kernel.org>
+X-Mailer: Claws Mail 4.3.1 (GTK 3.24.51; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20260331134443.1573053-5-mnencia@kcore.it>
-Organization: Intel Finland Oy - BIC 0357606-4 - c/o Alberga Business Park, 6
- krs, Bertel Jungin Aukio 5, 02600 Espoo
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 
-On Tue, Mar 31, 2026 at 03:44:43PM +0200, Marco Nenciarini wrote:
-> Add support for GPIO type 0x02, which controls an IR flood LED used
-> for face authentication on some laptops (e.g. Dell Pro Max 16 Premium).
+On Tue, 31 Mar 2026 10:22:14 +0200
+"Danilo Krummrich" <dakr@kernel.org> wrote:
+
+> On Tue Mar 31, 2026 at 10:06 AM CEST, Danilo Krummrich wrote:
+> > On Mon Mar 30, 2026 at 10:10 PM CEST, Alex Williamson wrote:  
+> >> On Mon, 30 Mar 2026 19:38:41 +0200
+> >> "Danilo Krummrich" <dakr@kernel.org> wrote:
+> >>  
+> >>> (Cc: Jason)
+> >>> 
+> >>> On Tue Mar 24, 2026 at 1:59 AM CET, Danilo Krummrich wrote:  
+> >>> > diff --git a/drivers/vfio/pci/vfio_pci_core.c b/drivers/vfio/pci/vfio_pci_core.c
+> >>> > index d43745fe4c84..460852f79f29 100644
+> >>> > --- a/drivers/vfio/pci/vfio_pci_core.c
+> >>> > +++ b/drivers/vfio/pci/vfio_pci_core.c
+> >>> > @@ -1987,9 +1987,8 @@ static int vfio_pci_bus_notifier(struct notifier_block *nb,
+> >>> >  	    pdev->is_virtfn && physfn == vdev->pdev) {
+> >>> >  		pci_info(vdev->pdev, "Captured SR-IOV VF %s driver_override\n",
+> >>> >  			 pci_name(pdev));
+> >>> > -		pdev->driver_override = kasprintf(GFP_KERNEL, "%s",
+> >>> > -						  vdev->vdev.ops->name);
+> >>> > -		WARN_ON(!pdev->driver_override);
+> >>> > +		WARN_ON(device_set_driver_override(&pdev->dev,
+> >>> > +						   vdev->vdev.ops->name));    
+> >>> 
+> >>> Technically, this is a change in behavior. If vdev->vdev.ops->name is NULL, it
+> >>> will trigger the WARN_ON(), whereas before it would have just written "(null)"
+> >>> into driver_override.  
+> >>
+> >> It's worse than that.  Looking at the implementation in [1], we have:
+> >>
+> >> +static inline int device_set_driver_override(struct device *dev, const char *s)
+> >> +{
+> >> +	return __device_set_driver_override(dev, s, strlen(s));
+> >> +}
+> >>
+> >> So if name is NULL, we oops in strlen() before we even hit the -EINVAL
+> >> and WARN_ON().  
+> >
+> > This was changed in v2 [2] and the actual code in-tree is
+> >
+> > 	static inline int device_set_driver_override(struct device *dev, const char *s)
+> > 	{
+> > 		return __device_set_driver_override(dev, s, s ? strlen(s) : 0);
+> > 	}
+> >
+> > so it does indeed return -EINVAL for a NULL pointer.
+
+Ok, good.
+
+> >> I don't believe we have any vfio-pci variant drivers where the name is
+> >> NULL, but kasprintf() handling NULL as "(null)" was a consideration in
+> >> this design, that even if there is no name the device is sequestered
+> >> with a driver_override that won't match an actual driver.
+> >>  
+> >>> I assume that vfio_pci_core drivers are expected to set the name in struct
+> >>> vfio_device_ops in the first place and this code (silently) relies on this
+> >>> invariant?  
+> >>
+> >> We do expect that, but it was previously safe either way to make sure
+> >> VFs are only bound to the same ops driver or barring that, at least
+> >> don't perform a standard driver match.  The last thing we want to
+> >> happen automatically is for a user owned PF to create SR-IOV VFs that
+> >> automatically bind to native kernel drivers.
+> >>    
+> >>> Alex, Jason: Should we keep this hunk above as is and check for a proper name in
+> >>> struct vfio_device_ops in vfio_pci_core_register_device() with a subsequent
+> >>> patch?  
+> >>
+> >> Given the oops, my preference would be to roll it in here.  This change
+> >> is what makes it a requirement that name cannot be NULL, where this was
+> >> safely handled with kasprintf().  
+> >
+> > Again, no oops here. :)
+> >
+> > I still think it makes more sense to fail early in
+> > vfio_pci_core_register_device(), rather than silently accept "(null)" in
+> > driver_override. It also doesn't seem unreasonable with only the WARN_ON(), but
+> > I can also just add vdev->vdev.ops->name ?: "(null)".  
 > 
-> Without this patch, the kernel logs "GPIO type 0x02 unknown; the sensor
-> may not work" and IR sensors paired with a flood LED cannot function.
-> 
-> The flood LED is registered through the LED subsystem like the existing
-> privacy LED. Unlike the privacy LED, it does not have a lookup entry
-> since there is no consumer driver expecting it via led_get().
-> 
-> To support multiple LEDs per INT3472 device, convert the single led
-> struct member to an array with a counter.
+> (Or just skip the call if !vdev->vdev.ops->name, as a user will read "(null)"
+> from sysfs either way.)
 
-I think this is what we want, thanks!
-Reviewed-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Hmm, I suppose they would, but there's a fundamental difference between
+driver_override being set to "(null)" vs being NULL and only
+interpreted as "(null)" via show.  The former would prevent ID table
+matching, the latter would not.  The former is what was intended here,
+without realizing both look the same through sysfs and present a
+difficult debugging challenge.
 
--- 
-With Best Regards,
-Andy Shevchenko
+Given no oops for strlen() now and no known in-kernel drivers with a
+NULL name, I can post a patch that rejects a NULL name in the ops
+structure in vfio_pci_core_register_device(), avoiding the entire
+situation.
 
+For this,
 
+Acked-by: Alex Williamson <alex@shazbot.org>
+
+Thanks,
+Alex
