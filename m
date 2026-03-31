@@ -1,191 +1,308 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.18])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-yw1-f178.google.com (mail-yw1-f178.google.com [209.85.128.178])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8433B3DDDD0;
-	Tue, 31 Mar 2026 21:28:23 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.18
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B4ACE38F23D
+	for <platform-driver-x86@vger.kernel.org>; Tue, 31 Mar 2026 22:28:21 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.178
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1774992505; cv=none; b=YBovLUGdy0JCMLaX5KT7Ze3pO6mBweM209COFw/IkXgUewSTtwcLTnB7hAFoQy2329eNFkWYvX0hI93AhwOYDNojkKWU+ShvpktWPKbxdtoG7Aqh2gjS+U4uNAUGawSyBcIhgclW6ba6KnfWECCknFTRa8A7OGH4HDwbpJQVsJA=
+	t=1774996103; cv=none; b=Gqav3OzfJNP5NTlO7YmIA/B7JsaGqwCZEZ/eCsGyiW+0AaGQV9xZmwAY6u99UNXJ2+qZmlIJEdnQ7uMtmt6ofhi40VpN8D3qw/dbndFj3vD2dqg7ruI5rYUFahDzhNKJmTCpqGbe+qPiB04PWaW+4WNzYe1hp8Jr9sKFV5CxdBc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1774992505; c=relaxed/simple;
-	bh=zsjE4hp5jU5bOTfiMkVhXXiqDBseYLZgA9VTss7idLM=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=dAP8tcvCFGnu5AMoEllMNyMtTbKBK4sw/fb+UKQrKbNbU1GStZkkzZUc/fJnwkXrzCouLMmrfQ8Sqk9HSoXYSysfqcg+Mm/PgdNjQfUxkgTcvOGlo9tgsEcXg32mQyx9LexEOsB6s6IcuRQySdb1XlKNUAjVl7Lf0O/k6G7LVtI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=pass smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=CY7527Xq; arc=none smtp.client-ip=192.198.163.18
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.intel.com
+	s=arc-20240116; t=1774996103; c=relaxed/simple;
+	bh=HSEI84D0yFAbIvuVxkKlS+H26voDwAZDIA9nEokKSZk=;
+	h=Mime-Version:Content-Type:Date:Message-Id:Cc:Subject:From:To:
+	 References:In-Reply-To; b=eAvV7djtYM6e5eujlQ4F/S+aJmGJkriN+PXzZ00vMjV4lIQSpF6c32QACjORQrXOBMHzj7phFfm2cmfXrVjVEgbcYOoYMNwXuR/sEHhDOvjfyv8z7JegSkw7WehNe9RvUBPuHLv2bWk2V+j96cTow+xPlpMMUUfGNK5FTlQz/y8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=fajbcC+T; arc=none smtp.client-ip=209.85.128.178
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="CY7527Xq"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1774992503; x=1806528503;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=zsjE4hp5jU5bOTfiMkVhXXiqDBseYLZgA9VTss7idLM=;
-  b=CY7527XqrUCdQ7iDakG9kR3teF0uOrVYriLAQjv5eVDgNotbw1+jO/GW
-   r/YOjU3DNT+/t188nrV8pVgpzPnn7dJ+6xcYT+YkaGjk4PhPiTc3SmmfW
-   AdDQH0vgDxU2vDv1NvlUlmSFjlrNIvNupY5QJXMcrLv9XU/ZK2Kosu7Ej
-   8rEDBbirmteWZMh1fe7cHdKLBZplRN9Eab/jySMMrzefWX4O5zUPltZOa
-   UeU4NdCpn3rtlP2S+75SotnVd96xulHf1puU13HQfI14Sby81pTuY12rZ
-   oe5mtPT/2GxaRtKqNlOPoCMLHxwDTJ7QyCePpnGRvx8GPubrDUKmF4T1N
-   A==;
-X-CSE-ConnectionGUID: A+DVVd1kRC2LpYdH0bWltw==
-X-CSE-MsgGUID: /IcIyR5FRrGfmNrsd07Umw==
-X-IronPort-AV: E=McAfee;i="6800,10657,11745"; a="75193081"
-X-IronPort-AV: E=Sophos;i="6.23,152,1770624000"; 
-   d="scan'208";a="75193081"
-Received: from fmviesa007.fm.intel.com ([10.60.135.147])
-  by fmvoesa112.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 31 Mar 2026 14:28:23 -0700
-X-CSE-ConnectionGUID: fe7GyusjRBmqxstZlp7OpA==
-X-CSE-MsgGUID: DRgoiAuyTiSXoGWFDU50jw==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.23,152,1770624000"; 
-   d="scan'208";a="223176401"
-Received: from smoticic-mobl1.ger.corp.intel.com (HELO kekkonen.fi.intel.com) ([10.245.244.81])
-  by fmviesa007-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 31 Mar 2026 14:28:21 -0700
-Received: from kekkonen.localdomain (localhost [IPv6:::1])
-	by kekkonen.fi.intel.com (Postfix) with SMTP id A203C120213;
-	Wed, 01 Apr 2026 00:28:28 +0300 (EEST)
-Date: Wed, 1 Apr 2026 00:28:28 +0300
-Organization: Intel Finland Oy - BIC 0357606-4 - c/o Alberga Business Park, 6 krs, Bertel Jungin Aukio 5, 02600 Espoo
-From: Sakari Ailus <sakari.ailus@linux.intel.com>
-To: johannes.goede@oss.qualcomm.com
-Cc: Marco Nenciarini <mnencia@kcore.it>, djrscally@gmail.com,
-	ilpo.jarvinen@linux.intel.com, andriy.shevchenko@linux.intel.com,
-	platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v5 0/4] platform/x86: int3472: Add support for GPIO type
- 0x02 (strobe)
-Message-ID: <acw8fB6-s3pDYCSH@kekkonen.localdomain>
-References: <ab0URIrzZPsYjWrM@spark.kcore.it>
- <20260327181031.1489365-1-mnencia@kcore.it>
- <76baf0c3-4c1f-4169-846d-5c74dab69a18@oss.qualcomm.com>
- <acqO62_87TM4UZMI@spark.kcore.it>
- <06317144-d652-466a-86e9-da2569a1acf6@oss.qualcomm.com>
- <acrbTBh8KsHmtJN5@kekkonen.localdomain>
- <55510bea-30ff-45f2-b4c7-4a191ff214a1@oss.qualcomm.com>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="fajbcC+T"
+Received: by mail-yw1-f178.google.com with SMTP id 00721157ae682-79853c0f5b9so31408117b3.0
+        for <platform-driver-x86@vger.kernel.org>; Tue, 31 Mar 2026 15:28:21 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20251104; t=1774996101; x=1775600901; darn=vger.kernel.org;
+        h=in-reply-to:references:to:from:subject:cc:message-id:date
+         :content-transfer-encoding:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=b7U0u6Dgpgu4PwuwOvCwHi0xs0R9Lw/whtuUHyprjiY=;
+        b=fajbcC+TPcJn5PWf62lF4JfDyHgqpzFudzmiPx44EB0pPWyA5Ov/iKh8xnXatNaV6D
+         jYBRDRaUkYNg4XGt0tvJZ06xJml4XcslFchg8JkYPiFQZ7zLt2tyAiqWvVeWPkOx8ZFY
+         889wY2mP3UqoIPZpA8zioyysxbq4mpR4srcZ5JJlsdGqVOqbVUpk3tDz7webp9zF0gzo
+         0nVPOEa8DK27QjsfRkpSQhgbohDAvfwHdRh30z2HM85hB8xkp147eMN/EbEyvaet+T2b
+         CspNlvLHqNNgbRkvk9ZVUlQxJuYd/PWcyKuKwiFDGlc4jqQyuZ2KLK2YpbKZ/OfPvmE9
+         1hkA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20251104; t=1774996101; x=1775600901;
+        h=in-reply-to:references:to:from:subject:cc:message-id:date
+         :content-transfer-encoding:mime-version:x-gm-gg:x-gm-message-state
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=b7U0u6Dgpgu4PwuwOvCwHi0xs0R9Lw/whtuUHyprjiY=;
+        b=lZR3yzDz7gHtXWjmVn+sN+OkFBk0vabnuZ0+04o5jfo59jlpWzDmSgrU/Ap7ziiyvK
+         QLYzWdLobgZBrtsIWldTch47XmaW9XRqUudB0tzfMNJkhct6F0piirkbhpYMvpwrYzPS
+         SowNw/Rvv/KDjXcQ+1haDL5e0yuEDvYQht8wyEy97gRspqm3GXH62LgOnZk7GRnAZHo2
+         7+vvp2Z9ReA7ccmbUJ5KKz1IjXIa8amR2nCOCLg6qcDVj9bDNntzRA5yPg7DmYoLbh/w
+         c86pLGmz7pWw+h8XAT6G7iHSt8RstBkDdMdVgZeGLaM1jehfuir89tTbJkRmAGXpm4P9
+         8AKw==
+X-Forwarded-Encrypted: i=1; AJvYcCXyTkSYMMHrvJcDQ6hsfo+fKCXmG0xI7/pXUWceYw8BS7nnbgpo9/V4QRJsZUdhoJZGCHwyvYT9F4b5DkrG6c/c61no@vger.kernel.org
+X-Gm-Message-State: AOJu0YwxLJDu1+4jCHZYzBH3RUsqa87WDEVOylzjbCKExg/0KruJvPmZ
+	NEGRGWM7szkC8Cms9ao0T53GCSNzKOIjAzVRybMhQhwayoKZW5vA48hn
+X-Gm-Gg: ATEYQzwYCUnPb2RZrnouNvbYlysdgNaKhpZ01VyQfhCockkpoh+iYI4cGQq6ZBYdgvC
+	ebe31dUPlYTOHCL7KIm5d7ntgAgpPqamFzI4KtmmTtTKUtUKGKDqwZcONUdHAZ2FMNQrtvfiEOR
+	MzC5Vtyfy2tJ38z7uPTewZYcnpjC42v0VPYlGlSam+Eha0OTMCFpe31L/3wbSYmGt/BSzQNdPNT
+	G8S0ZrhEcK/xLJA2tRDm9BTtiZ22afpmghcSLKG9TYs03ju7NqKxjMNmw58dSoo/zqwTX+/VK5b
+	GiFGUSai7a+3n7nR1JRUO6doE/H2YYWrA4JrkBUFIfD+hmvK17AozfQYjC/W+vfTs6BDnXWgYiK
+	+BcpjSUrW2dB4DpXvCifA+60TAOmC+cRUJ3Qk4Ts5C8OTLM/vHf3Q1/43MHKOKep1wc7Nnt4Fl6
+	nASRBuwpkz9DaR3iqAOms=
+X-Received: by 2002:a05:690c:1e:b0:79a:c630:c404 with SMTP id 00721157ae682-7a21214cb59mr14618097b3.41.1774996100519;
+        Tue, 31 Mar 2026 15:28:20 -0700 (PDT)
+Received: from localhost ([2800:bf0:4580:3149:c903:2904:3cc3:8b4c])
+        by smtp.gmail.com with ESMTPSA id 00721157ae682-79cba46f3ccsm54660587b3.40.2026.03.31.15.28.18
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 31 Mar 2026 15:28:20 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <55510bea-30ff-45f2-b4c7-4a191ff214a1@oss.qualcomm.com>
+Mime-Version: 1.0
+Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=UTF-8
+Date: Tue, 31 Mar 2026 17:28:18 -0500
+Message-Id: <DHHBLQISNSV5.2Y9KW7XURNH5H@gmail.com>
+Cc: "Mark Pearson" <mpearson-lenovo@squebb.ca>, "Armin Wolf"
+ <W_Armin@gmx.de>, "Jonathan Corbet" <corbet@lwn.net>, "Rong Zhang"
+ <i@rong.moe>, "Kurt Borja" <kuurtb@gmail.com>,
+ <platform-driver-x86@vger.kernel.org>, <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH v6 06/13] platform/x86: lenovo-wmi-other: Limit adding
+ attributes to supported devices
+From: "Kurt Borja" <kuurtb@gmail.com>
+To: "Derek J. Clark" <derekjohn.clark@gmail.com>,
+ =?utf-8?q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>, "Hans de
+ Goede" <hansg@kernel.org>
+X-Mailer: aerc 0.21.0-0-g5549850facc2
+References: <20260331181208.421552-1-derekjohn.clark@gmail.com>
+ <20260331181208.421552-7-derekjohn.clark@gmail.com>
+In-Reply-To: <20260331181208.421552-7-derekjohn.clark@gmail.com>
 
-Hi Hans,
+On Tue Mar 31, 2026 at 1:12 PM -05, Derek J. Clark wrote:
+> Adds lwmi_is_attr_01_supported, and only creates the attribute subfolder
+> if the attribute is supported by the hardware. Due to some poorly
+> implemented BIOS this is a multi-step sequence of events. This is
+> because:
+> - Some BIOS support getting the capability data from custom mode (0xff),
+>   while others only support it in no-mode (0x00).
+> - Some BIOS support get/set for the current value from custom mode (0xff)=
+,
+>   while others only support it in no-mode (0x00).
+> - Some BIOS report capability data for a method that is not fully
+>   implemented.
+> - Some BIOS have methods fully implemented, but no complimentary
+>   capability data.
+>
+> To ensure we only expose fully implemented methods with corresponding
+> capability data, we check each outcome before reporting that an
+> attribute can be supported.
+>
+> Checking for lwmi_is_attr_01_supported during remove is not done to
+> ensure that we don't attempt to call cd01 or send WMI events if one of
+> the interfaces being removed was the cause of the driver unloading.
+>
+> Reviewed-by: Rong Zhang <i@rong.moe>
+> Tested-by: Rong Zhang <i@rong.moe>
+> Reviewed-by: Mark Pearson <mpearson-lenovo@squebb.ca>
+> Reported-by: Kurt Borja <kuurtb@gmail.com>
+> Closes: https://lore.kernel.org/platform-driver-x86/DG60P3SHXR8H.3NSEHMZ6=
+J7XRC@gmail.com/
+> Signed-off-by: Derek J. Clark <derekjohn.clark@gmail.com>
 
-On Tue, Mar 31, 2026 at 12:15:55PM +0200, johannes.goede@oss.qualcomm.com wrote:
-> Hi Sakari,
-> 
-> On 30-Mar-26 22:21, Sakari Ailus wrote:
-> > Hi Hans, Marco,
-> > 
-> > On Mon, Mar 30, 2026 at 05:12:21PM +0200, johannes.goede@oss.qualcomm.com wrote:
-> >> Hi,
-> >>
-> >> On 30-Mar-26 16:55, Marco Nenciarini wrote:
-> >>> Hi Hans,
-> >>>
-> >>> Thank you for the detailed feedback.
-> >>>
-> >>>> My main remark on the current patch set is that IMHO
-> >>>> the LED name really should be: OVTIxxxx:00::ir_flood_led
-> >>>> since that is what it actually does, strobe is typically
-> >>>> related to flash LEDs which despite the naming in Intel's
-> >>>> side this is not.
-> >>>
-> >>> The series actually started with "ir_flood" in v1-v2. It was renamed to
-> >>> "strobe" in v3 to match the GPIO type name used in Intel's ACPI _DSM
-> >>> tables. But I agree with you that the userspace-visible LED name should
-> >>> describe what the hardware actually does, not mirror an internal ACPI
-> >>> label. I am happy to go back to "ir_flood" for the LED name.
-> >>>
-> >>> We could keep INT3472_GPIO_TYPE_STROBE for the define (matching the ACPI
-> >>> type value) but pass "ir_flood" as the con_id to the LED registration,
-> >>> so userspace sees OVTIxxxx:00::ir_flood_led. Would that work for
-> >>> everyone?
-> >>
-> >> That sounds good to me.
-> > 
-> > Seems reasonable.
-> > 
-> >>
-> >>>> We really need to get some input from the V4L2 maintainers
-> >>>> here on if this is a good idea, before merging this series.
-> >>>
-> >>> Agreed.
-> >>>
-> >>>> I can even imagine
-> >>>> a default simple mode where the v4l2-core just turns
-> >>>> on the LED when streaming starts and off again when
-> >>>> streaming stops (very much like the privacy LED) and
-> >>>> then in the future maybe we can extend this, e.g.
-> >>>> add a control on the sensor device to make this
-> >>>> configurable ?
-> >>>
-> >>> That makes a lot of sense. The current series intentionally keeps things
-> >>> minimal (just exposing the LED under /sys/class/leds with no V4L2
-> >>> integration), but this future direction sounds right.
-> >>>
-> >>> I will hold off on sending v6 until we have agreement on the naming and
-> >>> Sakari has had a chance to weigh in.
-> >>
-> >> Ack, lets wait for input from Sakari here.
-> > 
-> > I wonder if there would be any deterministic ways to find the LED device
-> > based on the sensor. It'd probably require more information via MC / V4L2
-> > controls to allow that.
-> 
-> Yes, the int3472 code adds a LED lookup table entry with the consumer-
-> device being the sensor.
-> 
-> So just like v4l2-subdev.c currently does:
-> 
-> 	sd->privacy_led = led_get(sd->dev, "privacy");
-> 
-> it will also be able to do:
-> 
-> 	sd->privacy_led = led_get(sd->dev, "ir_flood");
-> 
-> > Alternatively we could use a boolean control for this, but I think I'd
-> > avoid adding that now and rely on LED API instead.
-> > 
-> > Are there use cases for this LED, apart from Windows Hello? :-)
-> 
-> As mentioned for now we could just treat it exactly the same
-> as the privacy LED and simply turn it on while streaming
-> inside the v4l2-core / v4l2-subdev code.
-> 
-> This would nicely cover the face ID use-case for which
-> Linux implementations exist to.
-> 
-> And then later of some other use-case comes up we could
-> make this a menu-control with on/off/auto values, defaulting
-> to auto which would preserve the turn it on while streaming
-> behavior.
-> 
-> We do need to come up with something here, since use-cases
-> like Howdy (Linux face-id) will need it. My vote goes to
-> give it the same treatment as the privacy LED in the v4l2-core
-> for now making things "just work".
-> 
-> Alternatively we could document that userspace needs to
-> find the LED and turn it on itself through the LED classdev
-> but that will be painful for userspace to do for various
-> reasons including classdev access requiring root rights.
+Thanks for this!
 
-That was actually my concern as well.
+Tested-by: Kurt Borja <kuurtb@gmail.com>
 
-Still, if we bind this to the privacy LED now and the LED will effectively
-be powered whenever the camera is streaming, we can't drop that interaction
-in the future as doing so would break existing users. I'm not sure if there
-would ever be a need though.
+> ---
+> v6:
+>   - Zero initialize args in lwmi_is_attr_01_supported.
+>   - Fix formatting.
+> v5:
+>   - Move cv/cd_mode_id refrences from path 3/4.
+>   - Add missing import for ARRAY_SIZE.
+>   - Make lwmi_is_attr_01_supported return bool instead of u32.
+>   - Various formatting fixes.
+> v4:
+>   - Use for loop instead of backtrace gotos for checking if an attribute
+>     is supported.
+>   - Add include for dev_printk.
+>   - Wrap dev_dbg in lwmi_is_attr_01_supported earlier.
+>   - Don't use symmetric cleanup of attributes in error states.
+> ---
+>  drivers/platform/x86/lenovo/wmi-other.c | 87 ++++++++++++++++++++++++-
+>  1 file changed, 84 insertions(+), 3 deletions(-)
+>
+> diff --git a/drivers/platform/x86/lenovo/wmi-other.c b/drivers/platform/x=
+86/lenovo/wmi-other.c
+> index d2838ae5934f..f689d19d711a 100644
+> --- a/drivers/platform/x86/lenovo/wmi-other.c
+> +++ b/drivers/platform/x86/lenovo/wmi-other.c
+> @@ -27,10 +27,12 @@
+>   */
+> =20
+>  #include <linux/acpi.h>
+> +#include <linux/array_size.h>
+>  #include <linux/cleanup.h>
+>  #include <linux/component.h>
+>  #include <linux/container_of.h>
+>  #include <linux/device.h>
+> +#include <linux/dev_printk.h>
+>  #include <linux/export.h>
+>  #include <linux/gfp_types.h>
+>  #include <linux/hwmon.h>
+> @@ -545,6 +547,8 @@ struct tunable_attr_01 {
+>  	u8 feature_id;
+>  	u8 device_id;
+>  	u8 type_id;
+> +	u8 cd_mode_id; /* mode arg for searching capdata */
+> +	u8 cv_mode_id; /* mode arg for set/get current_value */
+>  };
+> =20
+>  static struct tunable_attr_01 ppt_pl1_spl =3D {
+> @@ -777,7 +781,7 @@ static ssize_t attr_current_value_store(struct kobjec=
+t *kobj,
+>  		return -EBUSY;
+> =20
+>  	args.arg0 =3D lwmi_attr_id(tunable_attr->device_id, tunable_attr->featu=
+re_id,
+> -				 mode, tunable_attr->type_id);
+> +				 tunable_attr->cd_mode_id, tunable_attr->type_id);
+> =20
+>  	ret =3D lwmi_cd01_get_data(priv->cd01_list, args.arg0, &capdata);
+>  	if (ret)
+> @@ -830,6 +834,10 @@ static ssize_t attr_current_value_show(struct kobjec=
+t *kobj,
+>  	if (ret)
+>  		return ret;
+> =20
+> +	/* If "no-mode" is the supported mode, ensure we never send current mod=
+e */
+> +	if (tunable_attr->cv_mode_id =3D=3D LWMI_GZ_THERMAL_MODE_NONE)
+> +		mode =3D tunable_attr->cv_mode_id;
+> +
+>  	args.arg0 =3D lwmi_attr_id(tunable_attr->device_id, tunable_attr->featu=
+re_id,
+>  				 mode, tunable_attr->type_id);
+> =20
+> @@ -842,6 +850,77 @@ static ssize_t attr_current_value_show(struct kobjec=
+t *kobj,
+>  	return sysfs_emit(buf, "%d\n", retval);
+>  }
+> =20
+> +/**
+> + * lwmi_attr_01_is_supported() - Determine if the given attribute is sup=
+ported.
+> + * @tunable_attr: The attribute to verify.
+> + *
+> + * First check if the attribute has a corresponding capdata01 table in t=
+he cd01
+> + * module under the "custom" mode (0xff). If that is not present then ch=
+eck if
+> + * there is a corresponding "no-mode" (0x00) entry. If either of those p=
+asses,
+> + * check capdata->supported for values > 0. If capdata is available, att=
+empt to
+> + * determine the set/get mode for the current value property using a sim=
+ilar
+> + * pattern. If the value returned by either custom or no-mode is 0, or w=
+e get
+> + * an error, we assume that mode is not supported. If any of the above c=
+hecks
+> + * fail then the attribute is not fully supported.
+> + *
+> + * The probed cd_mode_id/cv_mode_id are stored on the tunable_attr for l=
+ater
+> + * reference.
+> + *
+> + * Return: bool.
+> + */
+> +static bool lwmi_attr_01_is_supported(struct tunable_attr_01 *tunable_at=
+tr)
+> +{
+> +	u8 modes[2] =3D { LWMI_GZ_THERMAL_MODE_CUSTOM, LWMI_GZ_THERMAL_MODE_NON=
+E };
+> +	struct lwmi_om_priv *priv =3D dev_get_drvdata(tunable_attr->dev);
+> +	struct wmi_method_args_32 args =3D { 0x0, 0x0 };
+> +	bool cd_mode_found =3D false;
+> +	bool cv_mode_found =3D false;
+> +	struct capdata01 capdata;
+> +	int retval, ret, i;
+> +
+> +	/* Determine tunable_attr->cd_mode_id*/
+> +	for (i =3D 0; i < ARRAY_SIZE(modes); i++) {
+> +		args.arg0 =3D lwmi_attr_id(tunable_attr->device_id, tunable_attr->feat=
+ure_id,
+> +					 modes[i], tunable_attr->type_id);
+> +
+> +		ret =3D lwmi_cd01_get_data(priv->cd01_list, args.arg0, &capdata);
+> +		if (ret || !capdata.supported)
+> +			continue;
+> +		tunable_attr->cd_mode_id =3D modes[i];
+> +		cd_mode_found =3D true;
+> +		break;
+> +	}
+> +
+> +	if (!cd_mode_found)
+> +		return cd_mode_found;
+> +
+> +	/* Determine tunable_attr->cv_mode_id, returns 1 if supported*/
+> +	for (i =3D 0; i < ARRAY_SIZE(modes); i++) {
+> +		args.arg0 =3D lwmi_attr_id(tunable_attr->device_id, tunable_attr->feat=
+ure_id,
+> +					 modes[i], tunable_attr->type_id);
+> +
+> +		ret =3D lwmi_dev_evaluate_int(priv->wdev, 0x0, LWMI_FEATURE_VALUE_GET,
+> +					    (unsigned char *)&args, sizeof(args),
+> +					    &retval);
+> +		if (ret || !retval)
+> +			continue;
+> +		tunable_attr->cv_mode_id =3D modes[i];
+> +		cv_mode_found =3D true;
+> +		break;
+> +	}
+> +
+> +	if (!cv_mode_found)
+> +		return cv_mode_found;
+> +
+> +	dev_dbg(tunable_attr->dev,
+> +		"cd_mode_id: %#010x, cv_mode_id: %#010x, attribute support level: %#01=
+0x\n",
+> +		lwmi_attr_id(tunable_attr->device_id, tunable_attr->feature_id,
+> +			     tunable_attr->cd_mode_id, tunable_attr->type_id),
+> +		args.arg0, capdata.supported);
+> +
+> +	return capdata.supported > 0 ? true : false;
+> +}
+> +
+>  /* Lenovo WMI Other Mode Attribute macros */
+>  #define __LWMI_ATTR_RO(_func, _name)                                  \
+>  	{                                                             \
+> @@ -965,12 +1044,14 @@ static int lwmi_om_fw_attr_add(struct lwmi_om_priv=
+ *priv)
+>  	}
+> =20
+>  	for (i =3D 0; i < ARRAY_SIZE(cd01_attr_groups) - 1; i++) {
+> +		cd01_attr_groups[i].tunable_attr->dev =3D &priv->wdev->dev;
+> +		if (!lwmi_attr_01_is_supported(cd01_attr_groups[i].tunable_attr))
+> +			continue;
+> +
+>  		err =3D sysfs_create_group(&priv->fw_attr_kset->kobj,
+>  					 cd01_attr_groups[i].attr_group);
+>  		if (err)
+>  			goto err_remove_groups;
+> -
+> -		cd01_attr_groups[i].tunable_attr->dev =3D &priv->wdev->dev;
+>  	}
+>  	return 0;
+> =20
 
-Either way, I'm starting to feel the V4L2 control might actually be the
-best way to go from here.
 
--- 
-Kind regards,
+--=20
+Thanks,
+ ~ Kurt
 
-Sakari Ailus
