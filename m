@@ -1,236 +1,200 @@
-Received: from flow-b4-smtp.messagingengine.com (flow-b4-smtp.messagingengine.com [202.12.124.139])
+Received: from out-185.mta0.migadu.com (out-185.mta0.migadu.com [91.218.175.185])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B02CB331209;
-	Tue, 31 Mar 2026 19:18:46 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=202.12.124.139
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 296CD331209
+	for <platform-driver-x86@vger.kernel.org>; Tue, 31 Mar 2026 19:19:19 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.218.175.185
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1774984729; cv=none; b=fB2PHm0w/TrZqQt82UuzNECJTDId9la+fgheacyKNNzyBQ8K4jYBo5vl0S07XVOhm7WdsMGKGGcY9UGFmpdZCQigucmfa83rGjaqTvgFhDNAZeine/X4AiuN/BtyuiSlhmiDTZExFtK1Upkl2pV6PkXzPAdMe1kCCre4RSsDGO0=
+	t=1774984762; cv=none; b=Xu1yRquVqlCdEBSi3tttjNQH9KdM9h9PLF7BfFrb6EddM+Of5wz/1fbdhFsQFf+ck/7slRrRtJFMx+zD1g+bk/Jmlywpy1J+OPhb9++0qoNuCj9tGnkusMvo/UOrKS9GJGfBcv08F1dSZxYe8cvOo4NLyJOgSVqG0FSp3P5MfnE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1774984729; c=relaxed/simple;
-	bh=eJC1dGMKA7WWnvIcrQkw8YE6B7Kq4iS3s/Ohm6s3FTI=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=q7cyVZixgrTANTH2w906VJGg7cBfHcSHigcgxxc0v8SASIzl9UXZex9tliDTPYItbEkd9bDeOK/Z5jOc+Z/fuhiSLbOt8Ye5KtwcboWl4QPcRRGZ0cMe/nKISVAowILWu0udKvqwCdEQrN9TZXVdR49sMPWltSBEGVl5ATH0a20=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=shazbot.org; spf=pass smtp.mailfrom=shazbot.org; dkim=pass (2048-bit key) header.d=shazbot.org header.i=@shazbot.org header.b=Jix2YZqP; dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b=qPkl0NIe; arc=none smtp.client-ip=202.12.124.139
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=shazbot.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=shazbot.org
+	s=arc-20240116; t=1774984762; c=relaxed/simple;
+	bh=kJ4XfBu+/Sx5IUFJaLKcBQVJryP5ZhZBKJqRtr60k/w=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=T1VXIAPt2M4MbASeKo6TYLzMG6lYwBV6qmMwpXIYRYOERHh7o3zVmNCnpSlx5PHF2bpr4I2KQh+ilS/GMVqaWP0A6Hg6Y0x5M1uhJH6xYj3vuLqj4hyxQp6e1kgqc8IOUisJb4Y55OEhTGo939UCfDWzWDUkcwU1LJAuB9oBo/E=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=oLhLuPNz; arc=none smtp.client-ip=91.218.175.185
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=shazbot.org header.i=@shazbot.org header.b="Jix2YZqP";
-	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="qPkl0NIe"
-Received: from phl-compute-05.internal (phl-compute-05.internal [10.202.2.45])
-	by mailflow.stl.internal (Postfix) with ESMTP id D592A130008E;
-	Tue, 31 Mar 2026 15:18:43 -0400 (EDT)
-Received: from phl-frontend-03 ([10.202.2.162])
-  by phl-compute-05.internal (MEProxy); Tue, 31 Mar 2026 15:18:45 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=shazbot.org; h=
-	cc:cc:content-transfer-encoding:content-type:content-type:date
-	:date:from:from:in-reply-to:in-reply-to:message-id:mime-version
-	:references:reply-to:subject:subject:to:to; s=fm1; t=1774984723;
-	 x=1774991923; bh=e2GLgeMPntSzKQd7unYxJVNrGT++Ey/+j0e558YaVKo=; b=
-	Jix2YZqPgfjz22R+GBZTSkmM/A+yTGqbP2D7RrPJTBlHCtwUy2TreQYJzy0FYt4E
-	mn6iGMSZZUAvgOUzmgtxkvDhEQqNq9so/LsT2uXs0WUjbk/iVyGgezKLdcntmYCJ
-	j1mTHgBbF1XmhYE9OLcmwaqRwm079G64C6NXLlTJGqXGDGeTuyvQuKL+LrxHsVyt
-	h07JL26/s5vAaqvA+uFn5EtvqWaXeuVPLWaay4hdvRDT/GeDy5zchULu+Xf5bCKw
-	aMCGUFvWJ4r5sa9ylZo53CH1LtcUihVM+4twawyn4uPT0avFIdaMYMGGz87cRj5W
-	75pcl2tsTe5q72qXomhEng==
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-	messagingengine.com; h=cc:cc:content-transfer-encoding
-	:content-type:content-type:date:date:feedback-id:feedback-id
-	:from:from:in-reply-to:in-reply-to:message-id:mime-version
-	:references:reply-to:subject:subject:to:to:x-me-proxy
-	:x-me-sender:x-me-sender:x-sasl-enc; s=fm2; t=1774984723; x=
-	1774991923; bh=e2GLgeMPntSzKQd7unYxJVNrGT++Ey/+j0e558YaVKo=; b=q
-	Pkl0NIe505sDev2vE+9dEjJ2QQvY24shKDHRjyi5iJrJ3lhJmCH83R7Ej6uIsdKx
-	Ah2qPK0lawqj3n8MX9UbaZlR8zOv0eboHPEu2zTV9Ar46wm3SvS5yBG219IjmBDw
-	/8aE106Yb9iAY8X18cayks75OdeneZOPyq2pnCyvpFrGdunxzgrlbZPAQhHCnM3H
-	MhJM8//IeSYiIyV967PwBaCx9UybPaAajGdNOPqf34786RvJS1R2NeBhzECYdV9r
-	Hhp4kbOPpgzUg+fw9gf2jEWED5P2y3OiIotVEJPhPvUaSmHyFEthzrD5syHkfCDz
-	oj1hrBx1gCRLurULKhEqQ==
-X-ME-Sender: <xms:Eh7MaYVXhSLS49doWxNbldxcSkPJQ2lBgD6S-cXj9ML6P8DuIhi54A>
-    <xme:Eh7MaY3CTvPt8pC-6__rnVlJHk3AMpws04d9x1eLmygsx9xxcOKA3tvfX2RGrzeid
-    3eITD6bgIngUTpBItaVYS7mKstrqZdkyduHlmJydVKX9r92pk1CAA>
-X-ME-Received: <xmr:Eh7MaWAMOBeQDrW_EEEiAtExZoJg9HXrtPbMbrU13INIpg2pRTwgJd0Tapg>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeefhedrtddtgddutddvucetufdoteggodetrfdotf
-    fvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdfurfetoffkrfgpnffqhgenuceurghi
-    lhhouhhtmecufedttdenucesvcftvggtihhpihgvnhhtshculddquddttddmnecujfgurh
-    epfffhvfevuffkjghfofggtgfgsehtjeertdertddvnecuhfhrohhmpeetlhgvgicuhghi
-    lhhlihgrmhhsohhnuceorghlvgigsehshhgriigsohhtrdhorhhgqeenucggtffrrghtth
-    gvrhhnpedvkeefjeekvdduhfduhfetkedugfduieettedvueekvdehtedvkefgudegveeu
-    ueenucevlhhushhtvghrufhiiigvpedtnecurfgrrhgrmhepmhgrihhlfhhrohhmpegrlh
-    gvgiesshhhrgiisghothdrohhrghdpnhgspghrtghpthhtohephedupdhmohguvgepshhm
-    thhpohhuthdprhgtphhtthhopegurghkrheskhgvrhhnvghlrdhorhhgpdhrtghpthhtoh
-    epjhhgghesiihivghpvgdrtggrpdhrtghpthhtoheplhhinhhugiesrghrmhhlihhnuhig
-    rdhorhhgrdhukhdprhgtphhtthhopehgrhgvghhkhheslhhinhhugihfohhunhgurghtih
-    honhdrohhrghdprhgtphhtthhopehrrghfrggvlheskhgvrhhnvghlrdhorhhgpdhrtghp
-    thhtohepihhorghnrgdrtghiohhrnhgvihesnhigphdrtghomhdprhgtphhtthhopehnih
-    hpuhhnrdhguhhpthgrsegrmhgurdgtohhmpdhrtghpthhtohepnhhikhhhihhlrdgrghgr
-    rhifrghlsegrmhgurdgtohhmpdhrtghpthhtohepkhihshesmhhitghrohhsohhfthdrtg
-    homh
-X-ME-Proxy: <xmx:Eh7MaXq2mlnlOelEQan96Ie-hgy-LAK8CHBHQdkG7r27nkHcaWiIbg>
-    <xmx:Eh7Mab_KIxvqr4OxQc5evz-T_S8zOMbzrx08jzw5C5b7mvco3Iesuw>
-    <xmx:Eh7MaefX2P0crsZiJ44xT0eYo0t5zG2qKmdKMy8HHuopFTELtHeNKg>
-    <xmx:Eh7MaRJs8ye8aup8P2JAiOncajQ7Ro6xy3heBDnJcGy9BvoI7oIX_g>
-    <xmx:Ex7MaSUwhQGLpsFOIWtvVzTCvrLLbvifdUNGQI9PxQ_RqFwZ-CC-1T0v>
-Feedback-ID: i03f14258:Fastmail
-Received: by mail.messagingengine.com (Postfix) with ESMTPA; Tue,
- 31 Mar 2026 15:18:38 -0400 (EDT)
-Date: Tue, 31 Mar 2026 13:18:37 -0600
-From: Alex Williamson <alex@shazbot.org>
-To: "Danilo Krummrich" <dakr@kernel.org>, "Jason Gunthorpe" <jgg@ziepe.ca>
-Cc: "Russell King" <linux@armlinux.org.uk>,
- "Greg Kroah-Hartman" <gregkh@linuxfoundation.org>,
- "Rafael J. Wysocki" <rafael@kernel.org>,
- "Ioana Ciornei" <ioana.ciornei@nxp.com>,
- "Nipun Gupta" <nipun.gupta@amd.com>,
- "Nikhil Agarwal" <nikhil.agarwal@amd.com>,
- "K. Y. Srinivasan" <kys@microsoft.com>,
- "Haiyang Zhang" <haiyangz@microsoft.com>, "Wei Liu" <wei.liu@kernel.org>,
- "Dexuan Cui" <decui@microsoft.com>, "Long Li" <longli@microsoft.com>,
- "Bjorn Helgaas" <bhelgaas@google.com>, "Armin Wolf" <W_Armin@gmx.de>,
- "Bjorn Andersson" <andersson@kernel.org>,
- "Mathieu Poirier" <mathieu.poirier@linaro.org>,
- "Vineeth Vijayan" <vneethv@linux.ibm.com>,
- "Peter Oberparleiter" <oberpar@linux.ibm.com>,
- "Heiko Carstens" <hca@linux.ibm.com>,
- "Vasily Gorbik" <gor@linux.ibm.com>,
- "Alexander Gordeev" <agordeev@linux.ibm.com>,
- "Christian Borntraeger" <borntraeger@linux.ibm.com>,
- "Sven Schnelle" <svens@linux.ibm.com>,
- "Harald Freudenberger" <freude@linux.ibm.com>,
- "Holger Dengler" <dengler@linux.ibm.com>,
- "Mark Brown" <broonie@kernel.org>, "Michael S. Tsirkin" <mst@redhat.com>,
- "Jason Wang" <jasowang@redhat.com>,
- "Xuan Zhuo" <xuanzhuo@linux.alibaba.com>,
- Eugenio =?UTF-8?B?UMOpcmV6?= <eperezma@redhat.com>,
- "Juergen Gross" <jgross@suse.com>,
- "Stefano Stabellini" <sstabellini@kernel.org>,
- "Oleksandr Tyshchenko" <oleksandr_tyshchenko@epam.com>,
- "Christophe Leroy (CS GROUP)" <chleroy@kernel.org>,
- <linux-kernel@vger.kernel.org>, <driver-core@lists.linux.dev>,
- <linuxppc-dev@lists.ozlabs.org>, <linux-hyperv@vger.kernel.org>,
- <linux-pci@vger.kernel.org>, <platform-driver-x86@vger.kernel.org>,
- <linux-arm-msm@vger.kernel.org>, <linux-remoteproc@vger.kernel.org>,
- <linux-s390@vger.kernel.org>, <linux-spi@vger.kernel.org>,
- <virtualization@lists.linux.dev>, <kvm@vger.kernel.org>,
- <xen-devel@lists.xenproject.org>, <linux-arm-kernel@lists.infradead.org>,
- "Gui-Dong Han" <hanguidong02@gmail.com>, alex@shazbot.org
-Subject: Re: [PATCH 05/12] PCI: use generic driver_override infrastructure
-Message-ID: <20260331131837.6a9fe9ec@shazbot.org>
-In-Reply-To: <DHGTLY0FJWD2.2VLT6NQWF97YY@kernel.org>
-References: <20260324005919.2408620-1-dakr@kernel.org>
-	<20260324005919.2408620-6-dakr@kernel.org>
-	<DHGATG6LJOM1.2AI7BYQ2O4DFU@kernel.org>
-	<20260330141050.2cb47bd9@shazbot.org>
-	<DHGT9XCG8Y96.3IB1EI6FF1ZDZ@kernel.org>
-	<DHGTLY0FJWD2.2VLT6NQWF97YY@kernel.org>
-X-Mailer: Claws Mail 4.3.1 (GTK 3.24.51; x86_64-pc-linux-gnu)
+	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="oLhLuPNz"
+Message-ID: <7dcebac5-ef4a-4ddb-a276-82ffdb4796c4@linux.dev>
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
+	t=1774984758;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=1thraRRZOZ7peTSH3ZYe6lSStUD7WuMb66T+Rkw4Ebg=;
+	b=oLhLuPNzG+BICY/jCqlOoxsvgZqduERWGiDJbvSa/9iDC7zskTB6n042mSUJPRqpTBg8IO
+	MGfrNjc3iVeMYIJ5MTlMncYTOV3bELwpC1nn/sz93wCLUOzWfGU9e1tW4EVCYibX+LRZFh
+	YxFfQWZuSjcNtlsGs4pTRRtJ/UAFBKM=
+Date: Tue, 31 Mar 2026 21:19:14 +0200
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+Subject: Re: [PATCH v1 2/4] platform/x86: asus-laptop: Convert ACPI driver to
+ a platform one
+To: =?UTF-8?Q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
+Cc: "Rafael J. Wysocki" <rafael@kernel.org>, Hans de Goede
+ <hansg@kernel.org>, LKML <linux-kernel@vger.kernel.org>,
+ Linux ACPI <linux-acpi@vger.kernel.org>,
+ platform-driver-x86@vger.kernel.org,
+ Corentin Chary <corentin.chary@gmail.com>, "Luke D. Jones"
+ <luke@ljones.dev>, =?UTF-8?Q?Jo=C3=A3o_Paulo_Rechi_Vita?= <jprvita@gmail.com>
+References: <5971620.DvuYhMxLoT@rafael.j.wysocki>
+ <2402539.ElGaqSPkdT@rafael.j.wysocki>
+ <c9697592-c70b-4ef8-864f-213b5ea4782d@linux.dev>
+ <d42eed14-b6b1-b8f4-b73a-6033162e79e7@linux.intel.com>
+Content-Language: en-US, it-IT, en-US-large
+X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
+From: Denis Benato <denis.benato@linux.dev>
+In-Reply-To: <d42eed14-b6b1-b8f4-b73a-6033162e79e7@linux.intel.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+X-Migadu-Flow: FLOW_OUT
 
-On Tue, 31 Mar 2026 10:22:14 +0200
-"Danilo Krummrich" <dakr@kernel.org> wrote:
 
-> On Tue Mar 31, 2026 at 10:06 AM CEST, Danilo Krummrich wrote:
-> > On Mon Mar 30, 2026 at 10:10 PM CEST, Alex Williamson wrote:  
-> >> On Mon, 30 Mar 2026 19:38:41 +0200
-> >> "Danilo Krummrich" <dakr@kernel.org> wrote:
-> >>  
-> >>> (Cc: Jason)
-> >>> 
-> >>> On Tue Mar 24, 2026 at 1:59 AM CET, Danilo Krummrich wrote:  
-> >>> > diff --git a/drivers/vfio/pci/vfio_pci_core.c b/drivers/vfio/pci/vfio_pci_core.c
-> >>> > index d43745fe4c84..460852f79f29 100644
-> >>> > --- a/drivers/vfio/pci/vfio_pci_core.c
-> >>> > +++ b/drivers/vfio/pci/vfio_pci_core.c
-> >>> > @@ -1987,9 +1987,8 @@ static int vfio_pci_bus_notifier(struct notifier_block *nb,
-> >>> >  	    pdev->is_virtfn && physfn == vdev->pdev) {
-> >>> >  		pci_info(vdev->pdev, "Captured SR-IOV VF %s driver_override\n",
-> >>> >  			 pci_name(pdev));
-> >>> > -		pdev->driver_override = kasprintf(GFP_KERNEL, "%s",
-> >>> > -						  vdev->vdev.ops->name);
-> >>> > -		WARN_ON(!pdev->driver_override);
-> >>> > +		WARN_ON(device_set_driver_override(&pdev->dev,
-> >>> > +						   vdev->vdev.ops->name));    
-> >>> 
-> >>> Technically, this is a change in behavior. If vdev->vdev.ops->name is NULL, it
-> >>> will trigger the WARN_ON(), whereas before it would have just written "(null)"
-> >>> into driver_override.  
-> >>
-> >> It's worse than that.  Looking at the implementation in [1], we have:
-> >>
-> >> +static inline int device_set_driver_override(struct device *dev, const char *s)
-> >> +{
-> >> +	return __device_set_driver_override(dev, s, strlen(s));
-> >> +}
-> >>
-> >> So if name is NULL, we oops in strlen() before we even hit the -EINVAL
-> >> and WARN_ON().  
-> >
-> > This was changed in v2 [2] and the actual code in-tree is
-> >
-> > 	static inline int device_set_driver_override(struct device *dev, const char *s)
-> > 	{
-> > 		return __device_set_driver_override(dev, s, s ? strlen(s) : 0);
-> > 	}
-> >
-> > so it does indeed return -EINVAL for a NULL pointer.
+On 3/31/26 10:14, Ilpo Järvinen wrote:
+> On Sat, 28 Feb 2026, Denis Benato wrote:
+>> On 2/28/26 16:11, Rafael J. Wysocki wrote:
+>>> From: "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>
+>>>
+>>> In all cases in which a struct acpi_driver is used for binding a driver
+>>> to an ACPI device object, a corresponding platform device is created by
+>>> the ACPI core and that device is regarded as a proper representation of
+>>> underlying hardware.  Accordingly, a struct platform_driver should be
+>>> used by driver code to bind to that device.  There are multiple reasons
+>>> why drivers should not bind directly to ACPI device objects [1].
+>>>
+>>> Overall, it is better to bind drivers to platform devices than to their
+>>> ACPI companions, so convert the Asus laptop ACPI driver to a platform
+>>> one.
+>>>
+>>> While this is not expected to alter functionality, it changes sysfs
+>>> layout and so it will be visible to user space.
+>> Alright I will take a look if asus-linux software is affected and act accordingly.
+>> How much time do I have?
+>>
+>> Thanks. 
+> Hi Denis,
+>
+> Has there been some progress with this check?
+Hi!
 
-Ok, good.
+I quickly looked at it and I think there shouldn't be any problem.
 
-> >> I don't believe we have any vfio-pci variant drivers where the name is
-> >> NULL, but kasprintf() handling NULL as "(null)" was a consideration in
-> >> this design, that even if there is no name the device is sequestered
-> >> with a driver_override that won't match an actual driver.
-> >>  
-> >>> I assume that vfio_pci_core drivers are expected to set the name in struct
-> >>> vfio_device_ops in the first place and this code (silently) relies on this
-> >>> invariant?  
-> >>
-> >> We do expect that, but it was previously safe either way to make sure
-> >> VFs are only bound to the same ops driver or barring that, at least
-> >> don't perform a standard driver match.  The last thing we want to
-> >> happen automatically is for a user owned PF to create SR-IOV VFs that
-> >> automatically bind to native kernel drivers.
-> >>    
-> >>> Alex, Jason: Should we keep this hunk above as is and check for a proper name in
-> >>> struct vfio_device_ops in vfio_pci_core_register_device() with a subsequent
-> >>> patch?  
-> >>
-> >> Given the oops, my preference would be to roll it in here.  This change
-> >> is what makes it a requirement that name cannot be NULL, where this was
-> >> safely handled with kasprintf().  
-> >
-> > Again, no oops here. :)
-> >
-> > I still think it makes more sense to fail early in
-> > vfio_pci_core_register_device(), rather than silently accept "(null)" in
-> > driver_override. It also doesn't seem unreasonable with only the WARN_ON(), but
-> > I can also just add vdev->vdev.ops->name ?: "(null)".  
-> 
-> (Or just skip the call if !vdev->vdev.ops->name, as a user will read "(null)"
-> from sysfs either way.)
-
-Hmm, I suppose they would, but there's a fundamental difference between
-driver_override being set to "(null)" vs being NULL and only
-interpreted as "(null)" via show.  The former would prevent ID table
-matching, the latter would not.  The former is what was intended here,
-without realizing both look the same through sysfs and present a
-difficult debugging challenge.
-
-Given no oops for strlen() now and no known in-kernel drivers with a
-NULL name, I can post a patch that rejects a NULL name in the ops
-structure in vfio_pci_core_register_device(), avoiding the entire
-situation.
-
-For this,
-
-Acked-by: Alex Williamson <alex@shazbot.org>
+Worst case scenario I update the criteria udev uses to find certain
+things but it shouldn't be necessary (or at least I can't find a problematic spot).
 
 Thanks,
-Alex
+Denis
+> --
+>  i.
+>
+>>> Link: https://lore.kernel.org/all/2396510.ElGaqSPkdT@rafael.j.wysocki/ [1]
+>>> Signed-off-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
+>> Reviewed-by: Denis Benato <denis.benato@linux.dev>
+>>> ---
+>>>  drivers/platform/x86/asus-laptop.c | 35 +++++++++++++++---------------
+>>>  1 file changed, 18 insertions(+), 17 deletions(-)
+>>>
+>>> diff --git a/drivers/platform/x86/asus-laptop.c b/drivers/platform/x86/asus-laptop.c
+>>> index c927665dfa96..dbbb6292cd11 100644
+>>> --- a/drivers/platform/x86/asus-laptop.c
+>>> +++ b/drivers/platform/x86/asus-laptop.c
+>>> @@ -1824,8 +1824,9 @@ static void asus_dmi_check(void)
+>>>  
+>>>  static bool asus_device_present;
+>>>  
+>>> -static int asus_acpi_add(struct acpi_device *device)
+>>> +static int asus_acpi_probe(struct platform_device *pdev)
+>>>  {
+>>> +	struct acpi_device *device = ACPI_COMPANION(&pdev->dev);
+>>>  	struct asus_laptop *asus;
+>>>  	int result;
+>>>  
+>>> @@ -1837,7 +1838,6 @@ static int asus_acpi_add(struct acpi_device *device)
+>>>  	asus->handle = device->handle;
+>>>  	strscpy(acpi_device_name(device), ASUS_LAPTOP_DEVICE_NAME);
+>>>  	strscpy(acpi_device_class(device), ASUS_LAPTOP_CLASS);
+>>> -	device->driver_data = asus;
+>>>  	asus->device = device;
+>>>  
+>>>  	asus_dmi_check();
+>>> @@ -1846,6 +1846,8 @@ static int asus_acpi_add(struct acpi_device *device)
+>>>  	if (result)
+>>>  		goto fail_platform;
+>>>  
+>>> +	platform_set_drvdata(pdev, asus);
+>>> +
+>>>  	/*
+>>>  	 * Need platform type detection first, then the platform
+>>>  	 * device.  It is used as a parent for the sub-devices below.
+>>> @@ -1907,11 +1909,12 @@ static int asus_acpi_add(struct acpi_device *device)
+>>>  	return result;
+>>>  }
+>>>  
+>>> -static void asus_acpi_remove(struct acpi_device *device)
+>>> +static void asus_acpi_remove(struct platform_device *pdev)
+>>>  {
+>>> -	struct asus_laptop *asus = acpi_driver_data(device);
+>>> +	struct asus_laptop *asus = platform_get_drvdata(pdev);
+>>>  
+>>> -	acpi_dev_remove_notify_handler(device, ACPI_DEVICE_NOTIFY, asus_acpi_notify);
+>>> +	acpi_dev_remove_notify_handler(asus->device, ACPI_DEVICE_NOTIFY,
+>>> +				       asus_acpi_notify);
+>>>  	asus_backlight_exit(asus);
+>>>  	asus_rfkill_exit(asus);
+>>>  	asus_led_exit(asus);
+>>> @@ -1930,15 +1933,13 @@ static const struct acpi_device_id asus_device_ids[] = {
+>>>  };
+>>>  MODULE_DEVICE_TABLE(acpi, asus_device_ids);
+>>>  
+>>> -static struct acpi_driver asus_acpi_driver = {
+>>> -	.name = ASUS_LAPTOP_NAME,
+>>> -	.class = ASUS_LAPTOP_CLASS,
+>>> -	.ids = asus_device_ids,
+>>> -	.flags = ACPI_DRIVER_ALL_NOTIFY_EVENTS,
+>>> -	.ops = {
+>>> -		.add = asus_acpi_add,
+>>> -		.remove = asus_acpi_remove,
+>>> -		},
+>>> +static struct platform_driver asus_acpi_driver = {
+>>> +	.probe = asus_acpi_probe,
+>>> +	.remove = asus_acpi_remove,
+>>> +	.driver = {
+>>> +		.name = ASUS_LAPTOP_NAME,
+>>> +		.acpi_match_table = asus_device_ids,
+>>> +	},
+>>>  };
+>>>  
+>>>  static int __init asus_laptop_init(void)
+>>> @@ -1949,7 +1950,7 @@ static int __init asus_laptop_init(void)
+>>>  	if (result < 0)
+>>>  		return result;
+>>>  
+>>> -	result = acpi_bus_register_driver(&asus_acpi_driver);
+>>> +	result = platform_driver_register(&asus_acpi_driver);
+>>>  	if (result < 0)
+>>>  		goto fail_acpi_driver;
+>>>  	if (!asus_device_present) {
+>>> @@ -1959,7 +1960,7 @@ static int __init asus_laptop_init(void)
+>>>  	return 0;
+>>>  
+>>>  fail_no_device:
+>>> -	acpi_bus_unregister_driver(&asus_acpi_driver);
+>>> +	platform_driver_unregister(&asus_acpi_driver);
+>>>  fail_acpi_driver:
+>>>  	platform_driver_unregister(&platform_driver);
+>>>  	return result;
+>>> @@ -1967,7 +1968,7 @@ static int __init asus_laptop_init(void)
+>>>  
+>>>  static void __exit asus_laptop_exit(void)
+>>>  {
+>>> -	acpi_bus_unregister_driver(&asus_acpi_driver);
+>>> +	platform_driver_unregister(&asus_acpi_driver);
+>>>  	platform_driver_unregister(&platform_driver);
+>>>  }
+>>>  
