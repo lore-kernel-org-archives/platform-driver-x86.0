@@ -1,94 +1,92 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.15])
+Received: from out-189.mta1.migadu.com (out-189.mta1.migadu.com [95.215.58.189])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A604E336EC5;
-	Tue, 31 Mar 2026 14:23:12 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.15
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1D12933263A
+	for <platform-driver-x86@vger.kernel.org>; Tue, 31 Mar 2026 14:49:37 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=95.215.58.189
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1774966993; cv=none; b=o2LoxWFCv8baAGZjf7QDvQUcaMVxAYJq7yLxItoCr7LjVqz62T8xAaDuXcFXX6ObsXr4JUkiCuRwSDKnV2KlEuiNOsPDTsY9fJ27ToQzSMW2kdJdQRb463fp+NK5hjh7GS9vAHsYhmW4tCqn5RLxkYJE8BvknHX0cTI8DesuA1Q=
+	t=1774968580; cv=none; b=m+vLtEG3SFYGHAqeSm7BHYiQspOQrGnnxT1Qx2GY7s25BKhHtSRadYLq1K43a3S+XBS9qNYtVJ6yqtDp92Ee/fn5jfIFW9FKgZqQug2vcZjEZh83Imr5EdN6homQsLVzZ8eneBNQoSYiooQBoLhF95MxJlWyOQM4wz1EryHVLDE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1774966993; c=relaxed/simple;
-	bh=DwXjTIHBaRqm6sbZHP67D7612YEQdOOS7TCMeWWjdos=;
-	h=From:To:Cc:In-Reply-To:References:Subject:Message-Id:Date:
-	 MIME-Version:Content-Type; b=jIdSADckq9hO+jKy1oh3BI/YZPIexC6s4LAFkFSN6zmWlIimJY7HsqIxXDT7to5kzSIe06tfreR/xmFHvL6xSUZp744gO/d4gA66GCwKpvchFYWNMOdCO1jRUp8pn0lFogsx8n9Wr2clMF0sAQhtXeJqW1TpAA8NZVOzu1zu5I8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=pass smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=LM/qFmAs; arc=none smtp.client-ip=198.175.65.15
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.intel.com
+	s=arc-20240116; t=1774968580; c=relaxed/simple;
+	bh=xAB0iAIBSih7aLQsWH2HK/w1MYOJAWQFp+gHbnFkBXA=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=SAAuO0Bj1/fcmUkgAP74Jb1HW/pCYguyP1tKKiUrHjd/TXU7lOqzo9v2HB5YWPItFrsFRObuY+BQJf+rCwr7fh5zowOP9ZMmnxHMOUx2hdh3J56k+Xo46TlummwbN9pg2Grs3HG2gJXAIfZ8/PukCPFes+r3lMz6XHSmCpYaV5M=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=Awe1Pm8E; arc=none smtp.client-ip=95.215.58.189
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="LM/qFmAs"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1774966992; x=1806502992;
-  h=from:to:cc:in-reply-to:references:subject:message-id:
-   date:mime-version:content-transfer-encoding;
-  bh=DwXjTIHBaRqm6sbZHP67D7612YEQdOOS7TCMeWWjdos=;
-  b=LM/qFmAszTXdI/bVvpuvvVgQiUuMZqkAHiPVQ3A/11zbROWoiw/1/6y9
-   skQLpQ8YsRWDSky1tEX8IPSWoOEYjgAbLsnN2b1Y5RgAOQxFsuNL0fX/q
-   PtjqohTYn9g2uPZNn5p9mYR+WD0XPNat1wZvvFlZDWBXt8C2PUFIe3qD+
-   c5GJw9RvQ23BKXC2T0Kp9oFmp3Xo8xkV6uzW9Gl6inSobf2ykMrv3JC4d
-   HUo2W7B5qfWiEh3P130nk2yhRmxNP/ZGq3rhXwN+YEjpj7XWu7g2GKe3t
-   CvzlGyVax3YuxPeSUk6DgBR8cfZjsC6dlStC7rCjEOcDKzc/hCLK747hf
-   w==;
-X-CSE-ConnectionGUID: TjxOO6yhQTCNkOTS7QAGuw==
-X-CSE-MsgGUID: x3/LFjyVRyC6gobsUmkGXw==
-X-IronPort-AV: E=McAfee;i="6800,10657,11745"; a="79582033"
-X-IronPort-AV: E=Sophos;i="6.23,152,1770624000"; 
-   d="scan'208";a="79582033"
-Received: from fmviesa002.fm.intel.com ([10.60.135.142])
-  by orvoesa107.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 31 Mar 2026 07:23:12 -0700
-X-CSE-ConnectionGUID: GWZJRlSSSQOljyqFYRfhPA==
-X-CSE-MsgGUID: bCaEYo4YQ9yMhSpF8VjOqQ==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.23,152,1770624000"; 
-   d="scan'208";a="249432259"
-Received: from ijarvine-mobl1.ger.corp.intel.com (HELO localhost) ([10.245.244.6])
-  by fmviesa002-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 31 Mar 2026 07:23:09 -0700
-From: =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
-To: linux-kernel@vger.kernel.org, Denis Benato <denis.benato@linux.dev>
-Cc: platform-driver-x86@vger.kernel.org, Hans de Goede <hansg@kernel.org>, 
- "Luke D . Jones" <luke@ljones.dev>, Mateusz Schyboll <dragonn@op.pl>, 
- Denis Benato <benato.denis96@gmail.com>
-In-Reply-To: <20260329124659.3967495-1-denis.benato@linux.dev>
-References: <20260329124659.3967495-1-denis.benato@linux.dev>
-Subject: Re: [PATCH 0/3] Add three more ASUS models to asus-armoury driver
-Message-Id: <177496698462.3056.7565220602090190959.b4-ty@linux.intel.com>
-Date: Tue, 31 Mar 2026 17:23:04 +0300
+	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="Awe1Pm8E"
+Date: Tue, 31 Mar 2026 16:49:22 +0200
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
+	t=1774968576;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=wBqIbnoqh4kpCd4oLDfpFXKK+0lEBn+acfxoBptm8yA=;
+	b=Awe1Pm8EwHIhRXW3xTxf7MI0rQ+bbHm+jimBp2DHk+QH+ytjsuoa/mRjVoOoP2IdWflJFt
+	pP5csjRB0tpB5wwl3rqEfcKV/2CmP3VtbfExgFiAVnVTgx/8Av2aA4abrPzcK0mZEjFXOj
+	IZ1hauPgCVdBQdMpzy0fiBHWuvVF0oQ=
+X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
+From: Thorsten Blum <thorsten.blum@linux.dev>
+To: Ilpo =?iso-8859-1?Q?J=E4rvinen?= <ilpo.jarvinen@linux.intel.com>
+Cc: Prasanth Ksr <prasanth.ksr@dell.com>, Hans de Goede <hansg@kernel.org>,
+	Dell.Client.Kernel@dell.com, platform-driver-x86@vger.kernel.org,
+	LKML <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH] platform/x86: dell-wmi-sysman: Clean up security buffer
+ helpers
+Message-ID: <acve8iuIuycAtHyS@linux.dev>
+References: <20260309211811.82403-3-thorsten.blum@linux.dev>
+ <ec9be8c3-6946-5edb-0879-53b150c95ddb@linux.intel.com>
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-X-Mailer: b4 0.13.0
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <ec9be8c3-6946-5edb-0879-53b150c95ddb@linux.intel.com>
+X-Migadu-Flow: FLOW_OUT
 
-On Sun, 29 Mar 2026 14:46:56 +0200, Denis Benato wrote:
-
-> This patch series adds support for three more ASUS models to the asus-armoury driver:
-> the GV302XU, FA607NU, and GU605MU.
+On Tue, Mar 31, 2026 at 03:46:11PM +0300, Ilpo Järvinen wrote:
+> On Mon, 9 Mar 2026, Thorsten Blum wrote:
+> > In calculate_security_buffer(), call strlen() once and use ALIGN() to
+> > round up to an even size.
+> > 
+> > In populate_security_buffer(), also avoid recomputing strlen(), rename
+> > the u32 pointer from 'seclen' to 'seclenp' to avoid confusion with the
+> > new length variable, and drop the memcpy() guard since calling it with
+> > size 0 is a no-op and therefore safe.
+> > 
+> > Use 'const char *' for the read-only source string in both helpers.
+> > 
+> > Signed-off-by: Thorsten Blum <thorsten.blum@linux.dev>
+> > ---
+> >  .../dell/dell-wmi-sysman/dell-wmi-sysman.h    |  4 ++--
+> >  .../x86/dell/dell-wmi-sysman/sysman.c         | 20 ++++++++-----------
+> >  2 files changed, 10 insertions(+), 14 deletions(-)
+> > 
+> > [...]
 > 
-> I have discovered that GU605MU model has configurable TGP that was not listed
-> in the GU605M model, so I have added  a specific metch for that model before
-> the GU605M one, this way the for loop should attempt to match the GU605MU
-> first and if it fails it will try to match the GU605M.
-> 
-> [...]
+> Logicwise this change seem fine to me but I wonder why is buffer char *
+> (again, this is a pre-existing problem). It seems u8 * would be more 
+> appropriate given how it's handled here as something else than characters.
 
+Yes, I agree. However, using u8 * would also require changing the call
+sites in biosattr-interface.c and passwordattr-interface.c. Happy to
+change it, but it would probably be better as a follow-up patch.
 
-Thank you for your contribution, it has been applied to my local
-review-ilpo-fixes branch. Note it will show up in the public
-platform-drivers-x86/review-ilpo-fixes branch only once I've pushed my
-local branch there, which might take a while.
+> Also, you don't need resend if your patch is still listed in the 
+> patchwork, it's not lost as long as it remains in patchwork and I'll 
+> eventually get to it.
 
-The list of commits applied:
-[1/3] platform/x86: asus-armoury: add support for GV302XU
-      commit: 82cbae59263e3941a8bb79f0b25e0b0f085132d4
-[2/3] platform/x86: asus-armoury: add support for FA607NU
-      commit: b4f04a6038fa97f7ceea33e99456b9838c79dde7
-[3/3] platform/x86: asus-armoury: add support for GU605MU
-      commit: 5d486669b3db11ccc2d1b9f4e42c11c2766f35ba
+I wasn't aware of the patchwork instance - is it this one?
 
---
- i.
+https://patchwork.kernel.org/project/platform-driver-x86/list/
 
+I see 67 patches in total, but this one is not part of the list, afaict.
+
+Thanks,
+Thorsten
