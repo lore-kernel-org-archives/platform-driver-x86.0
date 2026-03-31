@@ -1,292 +1,177 @@
-Received: from mail-yw1-f178.google.com (mail-yw1-f178.google.com [209.85.128.178])
+Received: from mail-vk1-f175.google.com (mail-vk1-f175.google.com [209.85.221.175])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5CFA03EF0CD
-	for <platform-driver-x86@vger.kernel.org>; Tue, 31 Mar 2026 22:29:33 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.178
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 20DB93E959A
+	for <platform-driver-x86@vger.kernel.org>; Tue, 31 Mar 2026 23:01:51 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.175
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1774996174; cv=none; b=sdcuEPWf6PCS2kMRwETGIZAo52bZQcgpjb3mLPVdtgjZ8VRMU20kM67DUfyz+HbD2o22jbYTDyoMeb0iVpVvcuUCD82/PRHVBwz0iLm73EyOpUgy7qRRD80yqh2AaXyyUOAEdBn6NcLb0iFxnWGbPnoO0Q6eMjKUPyKJf9eMTHI=
+	t=1774998113; cv=none; b=munkL15LA+vdMvXcY/qMdAhnhUo8GlmJfEUpaHi0TGHnzY4IrmqJDblLrpqbD82hoDFue7SJmHfRKaZ9dRzpdg2fhOZ0EqpExBYPT5ZS0JR4AE98x0g6OIJmrGXqHA95rmJFYLGI+uuqgXArMVfO7pe/Vxb9gAp99a+QQeyXng0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1774996174; c=relaxed/simple;
-	bh=dR8RPVvSb/kuKrCCFijtNoAmvrCpVSpYr5Td5BP1e24=;
-	h=Mime-Version:Content-Type:Date:Message-Id:Cc:Subject:From:To:
-	 References:In-Reply-To; b=iBYudLSYN9QzA5Ix9vXURs0UTH9dHm1C505sf49ZVZyh8Y8Kw68PMFbc1M4uksjV4aTi8vtqobmeCVLzZye+llbhpdiI8UhFHOb3X3tNwwSNaBKqoVq0DbledOAkFQdeh7kNZaKdeWd30Wq1CR1sQzr5n2FqcMtKpx7w5TrIz8Y=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=JRzZBBHK; arc=none smtp.client-ip=209.85.128.178
+	s=arc-20240116; t=1774998113; c=relaxed/simple;
+	bh=CJ6+HJlQYyDECpRgJL4CbD+sc7eZDsyDCg50t18Y1zo=;
+	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
+	 Content-Disposition; b=jNm0KEW1VP+SYodd2YXEnMe4KD78N/OoR4B8qhps+0Uo7/BWdb2brscGnyqdlzj3RQaMYkoUyZtP7+bjygtKUIVni5W/6fpr92udmjdvqPZmuUKVI+yaboKdi2/ArIS60xWGEDpkZ3lc8uV77j681O8KfauhItWky7eBrX2t2zQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=K8HD1jrq; arc=none smtp.client-ip=209.85.221.175
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="JRzZBBHK"
-Received: by mail-yw1-f178.google.com with SMTP id 00721157ae682-79ea87af213so3430987b3.0
-        for <platform-driver-x86@vger.kernel.org>; Tue, 31 Mar 2026 15:29:33 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="K8HD1jrq"
+Received: by mail-vk1-f175.google.com with SMTP id 71dfb90a1353d-56a9c5cb48bso2471750e0c.0
+        for <platform-driver-x86@vger.kernel.org>; Tue, 31 Mar 2026 16:01:51 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20251104; t=1774996172; x=1775600972; darn=vger.kernel.org;
-        h=in-reply-to:references:to:from:subject:cc:message-id:date
-         :content-transfer-encoding:mime-version:from:to:cc:subject:date
+        d=gmail.com; s=20251104; t=1774998111; x=1775602911; darn=vger.kernel.org;
+        h=content-transfer-encoding:content-disposition:mime-version
+         :message-id:subject:cc:to:from:date:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=bXdLjh9f9uZdLu5sPpA2B9RziaLkCIrwTWltVeyUsrc=;
-        b=JRzZBBHKyS/hqTq+Dxg3z/YrpnQlJvCuhwvX5t6kDQRdk22MTo+lliQAqyQvQnBFw8
-         uUR5pmbLscu8AkWfMl+zXdWUS5bezjRLrQvEbk1lB1KdxwRPlu17UtxEc+QB74NOblKm
-         tWE4+SmA3GOvhMcxn0CjFBSm55RbDfSWIPb7v17wfdESlIXx0klO2A3piAVg6Xx4astP
-         uXPXJRUSY07WqcPfsohA+1b9bZJKeD2WXWIGuyjfP4psN9uDpILUhGMemhuIYQ5dFQXy
-         s0lRZ4TRK9ZU4as9xzKp3VuHJSYyul/hjp93i2IDlluVj0lESnOes1ZJtf1L/3k7gggZ
-         zyCw==
+        bh=XXj6psxl9yBoqC84nEYP2bvo2CztyINw8eq6uGB/RQc=;
+        b=K8HD1jrqOb/OKTBgutuNvaAjSl0IeYPGRC2nJTlVB7oSomwBAOFOGrUWJpb2kBiXHX
+         XaSlLPE/L4mYsM+6KMd5gxX2n84aXm10MiM6LqD6e/WtsEgqP6otZP8OLbopB6MZ7V4Z
+         NRm7knGhSRMLFMzQhCcDBn1dQh1RcjQeeNhLF1mNAQ50UZmyVlZL6gkM9dQSjgLeh1Ua
+         8Wf6EqC5RUswBuZQHvWCDHykb4gvT5AfG4pjS+0egpvWoVgM/9SQ60HJmwmfdOh+guoF
+         NoRadf0Z0IHrxkfsy5SyuXsad+B8g1mhpI/J67KQmIUJLqVPd6yURjNirSy0j8cUZHsV
+         7RqA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1774996172; x=1775600972;
-        h=in-reply-to:references:to:from:subject:cc:message-id:date
-         :content-transfer-encoding:mime-version:x-gm-gg:x-gm-message-state
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=bXdLjh9f9uZdLu5sPpA2B9RziaLkCIrwTWltVeyUsrc=;
-        b=JoCjZI3hALhrVbe0yChfX8LDtHGWJ+8LdPDrir5P+fNU6CTyyCNul0xmob8djncRsP
-         XLWAm3mS456h0pR4WMzUL0wJpwDaRSMUYHdhs2ksbD1nrka89wY5QPUs514JeefskIOc
-         tu+pDoGhLlFv9VknZ50uR9M+cPV8yRoHXimXxPLetBfyxTtlpuNcmJv9XZPNBvbGlAEN
-         TSJZi1WeaYYFOVL1IOGocHG7W5jdNEYKV6u7X79swP339pQovCy65aW9msltIyK/dWZN
-         jGM/8C0W4Xh48pKLCnqIOWseQD0q42cWdqKuUJIiGq870Ko5DdCuN54cs9IIutXDqsq+
-         380A==
-X-Forwarded-Encrypted: i=1; AJvYcCXx+yrFjmNZFZjBGwi6F+k+nyl8BYJS3Tt7+WIm6Bqliqt0Ncy9ybWa+FDY81+Oz9Vu50XVT9VF5XFsoXnCAv279CEX@vger.kernel.org
-X-Gm-Message-State: AOJu0Yz1l5gICrlYrslyZkfE8G2UYxJPnY6k288Cj15K6kEu+6DSpKtZ
-	OVYWTed6SzQCnbxxzKwu/Hn4MKjb6q8d4V0qbTSPunhRIACnrCTCmO0G
-X-Gm-Gg: ATEYQzzrBxo0ayoMMHW/c3NrHugwLFMywnUFYMvqaeppPCWmhAkVvw4PuhRPOkinNjT
-	f3+ikIcrKktNpq2ynKZUJSBK2TkojxzvN910whAoL/wvtGGHFIEyEmFVQ1Hkjz9rXBfv5yVGvh0
-	KbeMUFR2nA8tt/yqy3u0r7xaWbnEaC4BeiBpy2MwGHqHr7XK9Hjeboyb8b/8ITLRpBYyODKphPe
-	TE9dsjVptV24tPnApvBuEe7MKsAH8kqxaQ5wLkg/Ou0IbGtkPnL+wMalN7TySsZJtZkbBitB8Zg
-	L0yjouIng5kndUs7SzsdXUGRPOyq3xzPBEGkBM6TsM8ihNYmMLCx/DNiIl21wUThtUpOHVaHkwa
-	XlAk3rR7rhhqgy7ZJgv8GhuTBW0VlrXiMIqSucxhr3HkvXExthtnPsapTqUwuTFhPyYUSj2yki5
-	R7msw0s7kAiLCJ2//JUq4=
-X-Received: by 2002:a05:690c:c4e9:b0:79a:7e0a:57ea with SMTP id 00721157ae682-7a20c5b0375mr13337697b3.0.1774996172544;
-        Tue, 31 Mar 2026 15:29:32 -0700 (PDT)
-Received: from localhost ([2800:bf0:4580:3149:c903:2904:3cc3:8b4c])
-        by smtp.gmail.com with ESMTPSA id 00721157ae682-79cb4521761sm56018537b3.0.2026.03.31.15.29.31
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 31 Mar 2026 15:29:32 -0700 (PDT)
+        d=1e100.net; s=20251104; t=1774998111; x=1775602911;
+        h=content-transfer-encoding:content-disposition:mime-version
+         :message-id:subject:cc:to:from:date:x-gm-gg:x-gm-message-state:from
+         :to:cc:subject:date:message-id:reply-to;
+        bh=XXj6psxl9yBoqC84nEYP2bvo2CztyINw8eq6uGB/RQc=;
+        b=oc/oaQ0KOOHHCBW5v7x2HrBrIrMiLh2AW42lH6w4saRE5wZ3CqpM1t5aMfTmk0lMI8
+         eLDzGZtDQFsCGIEyZfcBUHzGXG2v3j7LxJ5E1++g804U3YAAG2gLmVOt3VhkcLkyvn4q
+         bzZSW8KUtFW10FSFtN7FMTgzWyPNcYy5c7wNtsxZnTP2vMwy0pxo6SmsBDwLVcCuiHem
+         Xsv3J50sqJ3qXbDbKt1GUQmBIdrm7aAhRPbbKZdeN4s4ZIAGldbu5v4L1J0234wraDoo
+         +tLaGu/Cw3wW0KcXa3f4lnkE0Bo8rVkFC0t70BBpLr+pLHNNdMcmZTiagOCDSH3AIFPc
+         4n5w==
+X-Gm-Message-State: AOJu0YyxyUHcVXuF1lF5bvKcga4xCI/v8Gj5mJeQfR2QW0S2oV9ghBZA
+	aJsMvCI861wYSguTqZfElPcilFuqvlroQawmEuxdOWFi3zC2Ai6vWcMt
+X-Gm-Gg: ATEYQzxFtaVBhvK52aiIreBlYWH1TEtQrEyi7i1bZNMVxBbP/1q/3whLXNMM1rQa950
+	YR92bGNIEJ996+C612NJMNY499eiVMXpLXkoRJEc4kYXGkTq+CIuFW6eEOmRkYPj3stFtLUiKhp
+	F+pESeByhlHphzNUdtiTNx+VATV24hPMZuHa3MwNajjjdGz0O0PvAcLQ289SJwkkEqy5hbIgFC6
+	MrXQq9kBemmscctpfLlmpFvlvSmcS4xYn+nknGIL18E8rt5fRNVRYZ1JbUkpgHiJ1oceVDwu/fF
+	wwkpkb5FPUi+1J5XOnYvtDnes7k15hI08eCrob/I9C1LbqPPBINIwg9I0CoYGT1lgCO//p4oxj+
+	FiZakmP7aaGlqFW1T7r3h1T7sA7L2yNX+sI45WqMiQP9Mm00TDRvyLbEl/70kaq/94cERUYzf1A
+	w5AtXb/8Ntq7kH5qEF8hw4n7n/OrrUBO/C4Cz4
+X-Received: by 2002:a05:6122:2a04:b0:56c:ca50:e963 with SMTP id 71dfb90a1353d-56d8a948263mr742917e0c.14.1774998110891;
+        Tue, 31 Mar 2026 16:01:50 -0700 (PDT)
+Received: from localhost ([2804:14c:5bc6:8c1b:8512:ab64:bee:7831])
+        by smtp.gmail.com with ESMTPSA id 71dfb90a1353d-56d58893cf2sm13960947e0c.4.2026.03.31.16.01.50
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 31 Mar 2026 16:01:50 -0700 (PDT)
+Date: Tue, 31 Mar 2026 20:01:47 -0300
+From: =?iso-8859-1?Q?Jos=E9?= Guilherme de Castro Rodrigues <jose.guilherme.cr.bh@gmail.com>
+To: Corentin Chary <corentin.chary@gmail.com>,
+	"Luke D. Jones" <luke@ljones.dev>,
+	Denis Benato <benato.denis96@gmail.com>,
+	Hans de Goede <hansg@kernel.org>,
+	Ilpo =?iso-8859-1?Q?J=E4rvinen?= <ilpo.jarvinen@linux.intel.com>
+Cc: platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org,
+	=?iso-8859-1?Q?Jos=E9?= Guilherme de Castro Rodrigues <jose.guilherme.cr.bh@gmail.com>
+Subject: [PATCH] platform/x86: asus-wmi: fix camera key led on Zenbook S14
+Message-ID: <acxSW8FgXbnFiqIL@djouze-zen>
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
-Content-Type: text/plain; charset=UTF-8
-Date: Tue, 31 Mar 2026 17:29:30 -0500
-Message-Id: <DHHBMNO17UAL.OUT3KDXVYRJ4@gmail.com>
-Cc: "Mark Pearson" <mpearson-lenovo@squebb.ca>, "Armin Wolf"
- <W_Armin@gmx.de>, "Jonathan Corbet" <corbet@lwn.net>, "Rong Zhang"
- <i@rong.moe>, "Kurt Borja" <kuurtb@gmail.com>,
- <platform-driver-x86@vger.kernel.org>, <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH v6 08/13] platform/x86: lenovo-wmi-other: Add GPU
- tunable attributes
-From: "Kurt Borja" <kuurtb@gmail.com>
-To: "Derek J. Clark" <derekjohn.clark@gmail.com>,
- =?utf-8?q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>, "Hans de
- Goede" <hansg@kernel.org>
-X-Mailer: aerc 0.21.0-0-g5549850facc2
-References: <20260331181208.421552-1-derekjohn.clark@gmail.com>
- <20260331181208.421552-9-derekjohn.clark@gmail.com>
-In-Reply-To: <20260331181208.421552-9-derekjohn.clark@gmail.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
 
-On Tue Mar 31, 2026 at 1:12 PM -05, Derek J. Clark wrote:
-> Use an enum for all GPU attribute feature ID's and add GPU attributes.
->
-> Reviewed-by: Rong Zhang <i@rong.moe>
-> Reviewed-by: Mark Pearson <mpearson-lenovo@squebb.ca>
-> Signed-off-by: Derek J. Clark <derekjohn.clark@gmail.com>
+Fix key led not turning on/off when the camera key is pressed. The
+asus_wmi_dev_is_present(ASUS_WMI_DEVID_CAMERA_LED) check fails on
+Zenbook S14, and no sysfs attribute for the camera key led is
+created.
 
-Tested-by: Kurt Borja <kuurtb@gmail.com>
+The check succeeds for ASUS_WMI_DEVID_CAMERA_LED_NEG, though,
+and when it is read, the led state is synchronized. By doing a read after
+every key press, the led is guaranteed to stay in sync with the actual
+camera state.
 
-> ---
-> v4:
->   - Align CPU feature enum values.
->   - Remove gpu_oc_stat from Documentation.
-> v3:
->   - Remove gpu_oc_stat.
-> ---
->  .../wmi/devices/lenovo-wmi-other.rst          |  10 ++
->  drivers/platform/x86/lenovo/wmi-capdata.h     |   1 +
->  drivers/platform/x86/lenovo/wmi-other.c       | 105 ++++++++++++++++++
->  3 files changed, 116 insertions(+)
->
-> diff --git a/Documentation/wmi/devices/lenovo-wmi-other.rst b/Documentati=
-on/wmi/devices/lenovo-wmi-other.rst
-> index 82c17361e749..bfbea59637bd 100644
-> --- a/Documentation/wmi/devices/lenovo-wmi-other.rst
-> +++ b/Documentation/wmi/devices/lenovo-wmi-other.rst
-> @@ -69,6 +69,16 @@ Each attribute has the following properties:
-> =20
->  The following firmware-attributes are implemented:
->   - cpu_temp: CPU Thermal Load Limit
-> + - dgpu_boost_clk: Dedicated GPU Boost Clock
-> + - dgpu_enable: Dedicated GPU Enabled Status
-> + - gpu_didvid: GPU Device Identifier and Vendor Identifier
-> + - gpu_mode: GPU Mode by Power Limit
-> + - gpu_nv_ac_offset: Nvidia GPU AC Total Processing Power Baseline Offse=
-t
-> + - gpu_nv_bpl: Nvidia GPU Base Power Limit
-> + - gpu_nv_cpu_boost: Nvidia GPU to CPU Dynamic Boost Limit
-> + - gpu_nv_ctgp: Nvidia GPU Configurable Total Graphics Power
-> + - gpu_nv_ppab: Nvidia GPU Power Performance Aware Boost Limit
-> + - gpu_temp: GPU Thermal Load Limit
->   - ppt_cpu_cl: CPU Cross Loading Power Limit
->   - ppt_pl1_apu_spl: Platform Profile Tracking APU Sustained Power Limit
->   - ppt_pl1_spl: Platform Profile Tracking Sustained Power Limit
-> diff --git a/drivers/platform/x86/lenovo/wmi-capdata.h b/drivers/platform=
-/x86/lenovo/wmi-capdata.h
-> index f2d45cd7a188..891b12ca1db6 100644
-> --- a/drivers/platform/x86/lenovo/wmi-capdata.h
-> +++ b/drivers/platform/x86/lenovo/wmi-capdata.h
-> @@ -20,6 +20,7 @@
-> =20
->  enum lwmi_device_id {
->  	LWMI_DEVICE_ID_CPU =3D 0x01,
-> +	LWMI_DEVICE_ID_GPU =3D 0x02,
->  	LWMI_DEVICE_ID_FAN =3D 0x04,
->  };
-> =20
-> diff --git a/drivers/platform/x86/lenovo/wmi-other.c b/drivers/platform/x=
-86/lenovo/wmi-other.c
-> index 508186c7410d..2792671ac1de 100644
-> --- a/drivers/platform/x86/lenovo/wmi-other.c
-> +++ b/drivers/platform/x86/lenovo/wmi-other.c
-> @@ -65,6 +65,19 @@ enum lwmi_feature_id_cpu {
->  	LWMI_FEATURE_ID_CPU_IPL =3D	0x09,
->  };
-> =20
-> +enum lwmi_feature_id_gpu {
-> +	LWMI_FEATURE_ID_GPU_NV_PPAB =3D		0x01,
-> +	LWMI_FEATURE_ID_GPU_NV_CTGP =3D		0x02,
-> +	LWMI_FEATURE_ID_GPU_TEMP =3D		0x03,
-> +	LWMI_FEATURE_ID_GPU_AC_OFFSET =3D		0x04,
-> +	LWMI_FEATURE_ID_DGPU_BOOST_CLK =3D	0x06,
-> +	LWMI_FEATURE_ID_DGPU_EN =3D		0x07,
-> +	LWMI_FEATURE_ID_GPU_MODE =3D		0x08,
-> +	LWMI_FEATURE_ID_DGPU_DIDVID =3D		0x09,
-> +	LWMI_FEATURE_ID_GPU_NV_BPL =3D		0x0a,
-> +	LWMI_FEATURE_ID_GPU_NV_CPU_BOOST =3D	0x0b,
-> +};
-> +
->  #define LWMI_FEATURE_ID_FAN_RPM 0x03
-> =20
->  #define LWMI_TYPE_ID_CROSSLOAD	0x01
-> @@ -630,6 +643,66 @@ static struct tunable_attr_01 ppt_pl4_ipl_cl =3D {
->  	.type_id =3D LWMI_TYPE_ID_CROSSLOAD,
->  };
-> =20
-> +static struct tunable_attr_01 gpu_nv_ppab =3D {
-> +	.device_id =3D LWMI_DEVICE_ID_GPU,
-> +	.feature_id =3D LWMI_FEATURE_ID_GPU_NV_PPAB,
-> +	.type_id =3D LWMI_TYPE_ID_NONE,
-> +};
-> +
-> +static struct tunable_attr_01 gpu_nv_ctgp =3D {
-> +	.device_id =3D LWMI_DEVICE_ID_GPU,
-> +	.feature_id =3D LWMI_FEATURE_ID_GPU_NV_CTGP,
-> +	.type_id =3D LWMI_TYPE_ID_NONE,
-> +};
-> +
-> +static struct tunable_attr_01 gpu_temp =3D {
-> +	.device_id =3D LWMI_DEVICE_ID_GPU,
-> +	.feature_id =3D LWMI_FEATURE_ID_GPU_TEMP,
-> +	.type_id =3D LWMI_TYPE_ID_NONE,
-> +};
-> +
-> +static struct tunable_attr_01 gpu_nv_ac_offset =3D {
-> +	.device_id =3D LWMI_DEVICE_ID_GPU,
-> +	.feature_id =3D LWMI_FEATURE_ID_GPU_AC_OFFSET,
-> +	.type_id =3D LWMI_TYPE_ID_NONE,
-> +};
-> +
-> +static struct tunable_attr_01 dgpu_boost_clk =3D {
-> +	.device_id =3D LWMI_DEVICE_ID_GPU,
-> +	.feature_id =3D LWMI_FEATURE_ID_DGPU_BOOST_CLK,
-> +	.type_id =3D LWMI_TYPE_ID_NONE,
-> +};
-> +
-> +static struct tunable_attr_01 dgpu_enable =3D {
-> +	.device_id =3D LWMI_DEVICE_ID_GPU,
-> +	.feature_id =3D LWMI_FEATURE_ID_DGPU_EN,
-> +	.type_id =3D LWMI_TYPE_ID_NONE,
-> +};
-> +
-> +static struct tunable_attr_01 gpu_mode =3D {
-> +	.device_id =3D LWMI_DEVICE_ID_GPU,
-> +	.feature_id =3D LWMI_FEATURE_ID_GPU_MODE,
-> +	.type_id =3D LWMI_TYPE_ID_NONE,
-> +};
-> +
-> +static struct tunable_attr_01 dgpu_didvid =3D {
-> +	.device_id =3D LWMI_DEVICE_ID_GPU,
-> +	.feature_id =3D LWMI_FEATURE_ID_DGPU_DIDVID,
-> +	.type_id =3D LWMI_TYPE_ID_NONE,
-> +};
-> +
-> +static struct tunable_attr_01 gpu_nv_bpl =3D {
-> +	.device_id =3D LWMI_DEVICE_ID_GPU,
-> +	.feature_id =3D LWMI_FEATURE_ID_GPU_NV_BPL,
-> +	.type_id =3D LWMI_TYPE_ID_NONE,
-> +};
-> +
-> +static struct tunable_attr_01 gpu_nv_cpu_boost =3D {
-> +	.device_id =3D LWMI_DEVICE_ID_GPU,
-> +	.feature_id =3D LWMI_FEATURE_ID_GPU_NV_CPU_BOOST,
-> +	.type_id =3D LWMI_TYPE_ID_NONE,
-> +};
-> +
->  struct capdata01_attr_group {
->  	const struct attribute_group *attr_group;
->  	struct tunable_attr_01 *tunable_attr;
-> @@ -1061,6 +1134,7 @@ static bool lwmi_attr_01_is_supported(struct tunabl=
-e_attr_01 *tunable_attr)
->  		.name =3D _fsname, .attrs =3D _attrname##_attrs               \
->  	}
-> =20
-> +/* CPU tunable attributes */
->  LWMI_ATTR_GROUP_TUNABLE_CAP01(cpu_temp, "cpu_temp",
->  			      "Set the CPU thermal load limit");
->  LWMI_ATTR_GROUP_TUNABLE_CAP01(ppt_cpu_cl, "ppt_cpu_cl",
-> @@ -1086,9 +1160,40 @@ LWMI_ATTR_GROUP_TUNABLE_CAP01(ppt_pl4_ipl, "ppt_pl=
-4_ipl",
->  LWMI_ATTR_GROUP_TUNABLE_CAP01(ppt_pl4_ipl_cl, "ppt_pl4_ipl_cl",
->  			      "Set the CPU cross loading instantaneous power limit");
-> =20
-> +/* GPU tunable attributes */
-> +LWMI_ATTR_GROUP_TUNABLE_CAP01(dgpu_boost_clk, "gpu_boost_clk",
-> +			      "Set the dedicated GPU boost clock");
-> +LWMI_ATTR_GROUP_TUNABLE_CAP01(dgpu_didvid, "gpu_didvid",
-> +			      "Get the GPU device identifier and vendor identifier");
-> +LWMI_ATTR_GROUP_TUNABLE_CAP01(dgpu_enable, "dgpu_enable",
-> +			      "Set the dedicated Nvidia GPU enabled status");
-> +LWMI_ATTR_GROUP_TUNABLE_CAP01(gpu_mode, "gpu_mode",
-> +			      "Set the GPU mode by power limit");
-> +LWMI_ATTR_GROUP_TUNABLE_CAP01(gpu_nv_ac_offset, "gpu_nv_ac_offset",
-> +			      "Set the Nvidia GPU AC total processing power baseline offset")=
-;
-> +LWMI_ATTR_GROUP_TUNABLE_CAP01(gpu_nv_bpl, "gpu_nv_bpl",
-> +			      "Set the Nvidia GPU base power limit");
-> +LWMI_ATTR_GROUP_TUNABLE_CAP01(gpu_nv_cpu_boost, "gpu_nv_cpu_boost",
-> +			      "Set the Nvidia GPU to CPU dynamic boost limit");
-> +LWMI_ATTR_GROUP_TUNABLE_CAP01(gpu_nv_ctgp, "gpu_nv_ctgp",
-> +			      "Set the GPU configurable total graphics power");
-> +LWMI_ATTR_GROUP_TUNABLE_CAP01(gpu_nv_ppab, "gpu_nv_ppab",
-> +			      "Set the Nvidia GPU power performance aware boost limit");
-> +LWMI_ATTR_GROUP_TUNABLE_CAP01(gpu_temp, "gpu_temp",
-> +			      "Set the GPU thermal load limit");
-> =20
->  static struct capdata01_attr_group cd01_attr_groups[] =3D {
->  	{ &cpu_temp_attr_group, &cpu_temp },
-> +	{ &dgpu_boost_clk_attr_group, &dgpu_boost_clk },
-> +	{ &dgpu_didvid_attr_group, &dgpu_didvid },
-> +	{ &dgpu_enable_attr_group, &dgpu_enable },
-> +	{ &gpu_mode_attr_group, &gpu_mode },
-> +	{ &gpu_nv_ac_offset_attr_group, &gpu_nv_ac_offset },
-> +	{ &gpu_nv_bpl_attr_group, &gpu_nv_bpl },
-> +	{ &gpu_nv_cpu_boost_attr_group, &gpu_nv_cpu_boost },
-> +	{ &gpu_nv_ctgp_attr_group, &gpu_nv_ctgp },
-> +	{ &gpu_nv_ppab_attr_group, &gpu_nv_ppab },
-> +	{ &gpu_temp_attr_group, &gpu_temp },
->  	{ &ppt_cpu_cl_attr_group, &ppt_cpu_cl },
->  	{ &ppt_pl1_apu_spl_attr_group, &ppt_pl1_apu_spl },
->  	{ &ppt_pl1_spl_attr_group, &ppt_pl1_spl },
+This change is not visible to userspace, as no sysfs attribute for
+ASUS_WMI_DEVID_CAMERA_LED_NEG exists.
 
+Tested on an ASUS Zenbook S14 with BIOS version UX5406SA.309.
 
---=20
-Thanks,
- ~ Kurt
+Signed-off-by: José Guilherme de Castro Rodrigues <jose.guilherme.cr.bh@gmail.com>
+---
+ drivers/platform/x86/asus-wmi.c            | 21 +++++++++++++++++++++
+ include/linux/platform_data/x86/asus-wmi.h |  2 +-
+ 2 files changed, 22 insertions(+), 1 deletion(-)
+
+diff --git a/drivers/platform/x86/asus-wmi.c b/drivers/platform/x86/asus-wmi.c
+index 0b87214ddd1b..a50a2a6cee98 100644
+--- a/drivers/platform/x86/asus-wmi.c
++++ b/drivers/platform/x86/asus-wmi.c
+@@ -70,6 +70,8 @@ module_param(fnlock_default, bool, 0444);
+ #define NOTIFY_KBD_TTP			0xae
+ #define NOTIFY_LID_FLIP			0xfa
+ #define NOTIFY_LID_FLIP_ROG		0xbd
++#define NOTIFY_CAMERA_TOGGLE_1          0x82
++#define NOTIFY_CAMERA_TOGGLE_2          0x85
+ 
+ #define ASUS_WMI_FNLOCK_BIOS_DISABLED	BIT(0)
+ 
+@@ -307,6 +309,7 @@ struct asus_wmi {
+ 	u32 kbd_rgb_dev;
+ 	bool kbd_rgb_state_available;
+ 	bool oobe_state_available;
++	bool camera_neg_led_available;
+ 
+ 	u8 throttle_thermal_policy_mode;
+ 	u32 throttle_thermal_policy_dev;
+@@ -1982,6 +1985,18 @@ static int micmute_led_set(struct led_classdev *led_cdev,
+ 	return err < 0 ? err : 0;
+ }
+ 
++static bool is_camera_toggle(int code)
++{
++	return code == NOTIFY_CAMERA_TOGGLE_1 || code == NOTIFY_CAMERA_TOGGLE_2;
++}
++
++static void camera_neg_led_trigger_update(struct asus_wmi *asus)
++{
++	u32 result;
++
++	asus_wmi_get_devstate(asus, ASUS_WMI_DEVID_CAMERA_LED_NEG, &result);
++}
++
+ static enum led_brightness camera_led_get(struct led_classdev *led_cdev)
+ {
+ 	struct asus_wmi *asus;
+@@ -4587,6 +4602,11 @@ static void asus_wmi_handle_event_code(int code, struct asus_wmi *asus)
+ 	if (is_display_toggle(code) && asus->driver->quirks->no_display_toggle)
+ 		return;
+ 
++	if (is_camera_toggle(code) && asus->camera_neg_led_available) {
++		camera_neg_led_trigger_update(asus);
++		return;
++	}
++
+ 	if (!sparse_keymap_report_event(asus->inputdev, code,
+ 					key_value, autorelease))
+ 		pr_info("Unknown key code 0x%x\n", code);
+@@ -5062,6 +5082,7 @@ static int asus_wmi_add(struct platform_device *pdev)
+ #endif /* IS_ENABLED(CONFIG_ASUS_WMI_DEPRECATED_ATTRS) */
+ 
+ 	asus->oobe_state_available = asus_wmi_dev_is_present(asus, ASUS_WMI_DEVID_OOBE);
++	asus->camera_neg_led_available = asus_wmi_dev_is_present(asus, ASUS_WMI_DEVID_CAMERA_LED_NEG);
+ 
+ 	if (asus_wmi_dev_is_present(asus, ASUS_WMI_DEVID_THROTTLE_THERMAL_POLICY))
+ 		asus->throttle_thermal_policy_dev = ASUS_WMI_DEVID_THROTTLE_THERMAL_POLICY;
+diff --git a/include/linux/platform_data/x86/asus-wmi.h b/include/linux/platform_data/x86/asus-wmi.h
+index 554f41b827e1..1a9349da6069 100644
+--- a/include/linux/platform_data/x86/asus-wmi.h
++++ b/include/linux/platform_data/x86/asus-wmi.h
+@@ -56,7 +56,7 @@
+ #define ASUS_WMI_DEVID_MICMUTE_LED		0x00040017
+ 
+ /* Disable Camera LED */
+-#define ASUS_WMI_DEVID_CAMERA_LED_NEG	0x00060078 /* 0 = on (unused) */
++#define ASUS_WMI_DEVID_CAMERA_LED_NEG	0x00060078 /* 0 = on */
+ #define ASUS_WMI_DEVID_CAMERA_LED	0x00060079 /* 1 = on */
+ 
+ /* Backlight and Brightness */
+-- 
+2.53.0
 
