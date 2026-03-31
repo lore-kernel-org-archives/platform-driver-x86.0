@@ -1,142 +1,175 @@
-Received: from out-184.mta0.migadu.com (out-184.mta0.migadu.com [91.218.175.184])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-vk1-f178.google.com (mail-vk1-f178.google.com [209.85.221.178])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5297E421F1C
-	for <platform-driver-x86@vger.kernel.org>; Tue, 31 Mar 2026 16:03:58 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.218.175.184
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B8D443E1CFA
+	for <platform-driver-x86@vger.kernel.org>; Tue, 31 Mar 2026 16:08:24 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.178
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1774973040; cv=none; b=l6RoChWJHcLfAblS0qF6asBNY57B9tCaTZT9/NXH1PcjYTnNm+kA7fkwSa+AeThCXb9l9rVjYxMRDmWrjyTPegzSCd1X2IUXLfEZJmQ4eM2ddpJpGd4KcRcrYty2kNwRGs01EpMnIW5fKdEAlViAoSU5+w5IPz9HR6asmqNcH1U=
+	t=1774973306; cv=none; b=AWJJMy/K1Q0b+a6RqvmsupwMKYXZPPnTFyruKPvkyMj06Lv+XD1+lq25pWpJnMdVgywCVBpKWrFZ6OUKPFZQqlU9ZfbYyxS47omIZIkAXVmDi4NCendIf266c6eAfNtAzhghxc/qjFhD4+gn71VxSnn+zungzaCcBMY17Ygq/MQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1774973040; c=relaxed/simple;
-	bh=ZCrkXDETCpA21aqg5PlKDJZWG3TJkyEp4AYs5BsgfVM=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=E+waUXjCxg7wgTeNNMrvjY5inbS0tofX/0DN+h8AbfpX20BfaTCtJO7KMQBzxM4hU0msw7mmmW+mTe4S+FGj9RY/EjkM+n/TTRqkdHF/jiWnU/Ir2HV5Yxr9lwXaZLqZYpOlhWIJNj/WRfC0NxIVkLMwxOZMgXRGAyZ9zbtzxwU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=O50KzSuB; arc=none smtp.client-ip=91.218.175.184
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
+	s=arc-20240116; t=1774973306; c=relaxed/simple;
+	bh=MOYP2bXaIIXpqOGjHPCTKk+sNTIxFv7wLOzqfU/4tpA=;
+	h=Mime-Version:Content-Type:Date:Message-Id:Cc:Subject:From:To:
+	 References:In-Reply-To; b=c/38sBe0GxIS9ZShyc1n7C9YGNw5Uzor31qA10YTaSB8aq8kZaoSdSAB1fNZ6mVC6P21WQLkvmsnp4vFNRywMjpTWko1bhlVwRwLgA/TsfRQbeepP9IpUBJXNLihi+2MukhpXfnyspkPTtU//hJQPgzjnrKncssetqr6xWJiZ7M=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=flntqM3B; arc=none smtp.client-ip=209.85.221.178
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="O50KzSuB"
-X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
-	t=1774973026;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:
-	 content-transfer-encoding:content-transfer-encoding;
-	bh=jn8MCJuE3cN7fDwMvTSZWk5jSOj+iSNPS3Lh5oSkVzY=;
-	b=O50KzSuB7dt4Hd4+kX1HTUM6lB0zFoSEpbnO0hEF9PU6s5S4hQBvKhKhQeURKvYA/O8JD9
-	odaVC4u+MnoiMEz+JoQ7jHhg/LjTEj6MqwOz26dKdpm0B6avQXuEmYByOAdBkcKRBKCv1Z
-	bqYApmmBIvun+tQnGvt3OGlKnPJgHqE=
-From: Thorsten Blum <thorsten.blum@linux.dev>
-To: Prasanth Ksr <prasanth.ksr@dell.com>,
-	Hans de Goede <hansg@kernel.org>,
-	=?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
-Cc: Thorsten Blum <thorsten.blum@linux.dev>,
-	Dell.Client.Kernel@dell.com,
-	platform-driver-x86@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Subject: [PATCH v2] platform/x86: dell-wmi-sysman: Clean up security buffer helpers
-Date: Tue, 31 Mar 2026 18:03:11 +0200
-Message-ID: <20260331160310.608857-3-thorsten.blum@linux.dev>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="flntqM3B"
+Received: by mail-vk1-f178.google.com with SMTP id 71dfb90a1353d-56cd842b60bso4161656e0c.0
+        for <platform-driver-x86@vger.kernel.org>; Tue, 31 Mar 2026 09:08:24 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20251104; t=1774973304; x=1775578104; darn=vger.kernel.org;
+        h=in-reply-to:references:to:from:subject:cc:message-id:date
+         :content-transfer-encoding:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=rs3Rb0+X++5tzUqyDuK2u5gBjFoIBlgxbqyGufCexW4=;
+        b=flntqM3BHeBEx4Z8j49cFB5cV1FmABuTjL0P0RojJsw57BtD3q2fWAu8+wmgXIENmK
+         HKDlWv08s3ID4ZWy73L+Sx9emI8KpXCTNk8Hrjf1RzmaT06tUUesNq0lZZGBd/4HaSk8
+         Ib4uBgWHHFBQxaACLSSgbHAMEG4qgjyh1vqheorOI9JcREqOgXiE/jW09yW8Ag3PSXDB
+         gZvIc5WDx+3ZiGuHq8pssRJM/yBgkPsWvzuc0cIGMn67ViiWhjVtx9E/4yPwCIG0gjRn
+         Mhkah4isxw4js2vYwIB6paSKGclY57n/8Fbkmgu9GBAsHj7d61NaTtFlh1IbLAvm0WIy
+         tQaQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20251104; t=1774973304; x=1775578104;
+        h=in-reply-to:references:to:from:subject:cc:message-id:date
+         :content-transfer-encoding:mime-version:x-gm-gg:x-gm-message-state
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=rs3Rb0+X++5tzUqyDuK2u5gBjFoIBlgxbqyGufCexW4=;
+        b=BNWyW4f9KztgfW8ogsDqClxYhLcETMUDDuXlrzy85HqVKalaErWbveFdCXDLjaPJQu
+         +qIY/7M6F0AU3t9bmiaaEaWc9NLDRgJ6Dk1K0O7D2dcwg8c/C3hqwMaxZFck/O6G5vmB
+         v2YjD82h8/kE+eJynj3KGjrB88UQgYcPhbQ2G/SxF0YU7zDXbqF+uTGJX8P6fTqLdrzO
+         kSRG2DWiHYqSvqR36UNXAL0TNrJJfBYqfGeXRVqpAKJxbGDoE3+zM6edClp0x6F9AMV9
+         0wEgWuoEscInG3UsmfukW9LeXyGg5uGyHpX2Yg1oy3MtOG4j5vQX0MNdgsdBfl6WDk6Q
+         QUzw==
+X-Forwarded-Encrypted: i=1; AJvYcCUm0wXt2ck+zrw6L8rBbK+O8b2FdWOtwJGZ8Cwy3CWJ+Ly4SEFNSHDMqwgZlpzHvxkQbEw41oalrxpclBCU2P4vK1T5@vger.kernel.org
+X-Gm-Message-State: AOJu0YyiwE9moizoUoNCLiySE0OnB3X6FQffIB4AqYeAHmnjCbaxE5lc
+	uFWCIstFH2HVLWGLAbIlV28kem6MMzcimkNdbTyzmH5VoBbZsLe+hQY3
+X-Gm-Gg: ATEYQzxlA+6BL4TWgC16DqSavH9sx38Fgqp219XLycKNUwL107saO7ikwDrH+dgISPa
+	f+etRS9dIlmHDVFOWvKosTmiY8FMBUEpCsHsZ9QkjXUTun8Z1NTGKwnWDodiwg7Ekn8EcuCPU+D
+	tDiqIHlMCZ4MI1NQBIE4U0RQt03x/lBK6osJjHQ8udtffUiePn7vfeDDTr13jvLADRzzd6RICqJ
+	1ygms/4o6FtrKlCWI5I9Was554XNMeamrmSGoAnqQ9Ns8w50z3ykk97XO0fmQPB/BP6BkDkeMIh
+	EB76bKav427bAoXp2Tc9lfEIT6GTrq0/iTZjAuexjTbdkkP1pArN0O6i8PUhSBsWyl9TliRJ1Dc
+	EF8FkgMUh25opZMUM6jQs7HAl917QwWJXshNRbkKlG+wHz6MAaM39fISB0PBHeGfuTcuMeS6OIe
+	ZPFPWGnn0okCxulA==
+X-Received: by 2002:a05:6122:698c:b0:55b:d85:5073 with SMTP id 71dfb90a1353d-56d8a834f8emr100328e0c.4.1774973303639;
+        Tue, 31 Mar 2026 09:08:23 -0700 (PDT)
+Received: from localhost ([2800:bf0:82:11a2:7ac4:1f2:947b:2b6])
+        by smtp.gmail.com with ESMTPSA id 71dfb90a1353d-56d58a333c9sm12756843e0c.13.2026.03.31.09.08.22
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 31 Mar 2026 09:08:23 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-X-Developer-Signature: v=1; a=openpgp-sha256; l=3629; i=thorsten.blum@linux.dev; h=from:subject; bh=ZCrkXDETCpA21aqg5PlKDJZWG3TJkyEp4AYs5BsgfVM=; b=owGbwMvMwCUWt7pQ4caZUj3G02pJDJmnP9h1Luu/37Zym5JTqYRE5ds6/wuR/v8323Eu/HT0u +qsOU3TO0pZGMS4GGTFFFkezPoxw7e0pnKTScROmDmsTCBDGLg4BWAiz3MZGU70Gkbuq09w56lr NtY6dqpmC6t6XEHuEweJ9NQAw4mXfzAynNl908S6LtqQu2QTU7lVm/VJZ86Q3zerljsY+1xPUGr lBgA=
-X-Developer-Key: i=thorsten.blum@linux.dev; a=openpgp; fpr=1D60735E8AEF3BE473B69D84733678FD8DFEEAD4
-Content-Transfer-Encoding: 8bit
-X-Migadu-Flow: FLOW_OUT
+Mime-Version: 1.0
+Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=UTF-8
+Date: Tue, 31 Mar 2026 11:08:16 -0500
+Message-Id: <DHH3IRMAMTCB.5BLMYBIU6RMR@gmail.com>
+Cc: "Armin Wolf" <W_Armin@gmx.de>, "Hans de Goede" <hansg@kernel.org>,
+ <platform-driver-x86@vger.kernel.org>, <Dell.Client.Kernel@dell.com>,
+ "LKML" <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH v2] platform/x86: alienware-wmi-base: Transition to new
+ WMI API
+From: "Kurt Borja" <kuurtb@gmail.com>
+To: =?utf-8?q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>, "Kurt
+ Borja" <kuurtb@gmail.com>
+X-Mailer: aerc 0.21.0-0-g5549850facc2
+References: <20260331-aw-new-api-v2-1-3b0d33bf8d22@gmail.com>
+ <d80f8562-f05d-c22a-5d62-398bf05b7030@linux.intel.com>
+In-Reply-To: <d80f8562-f05d-c22a-5d62-398bf05b7030@linux.intel.com>
 
-In calculate_security_buffer(), call strlen() once and use ALIGN() to
-round up to an even size.
+On Tue Mar 31, 2026 at 3:22 AM -05, Ilpo J=C3=A4rvinen wrote:
+> On Tue, 31 Mar 2026, Kurt Borja wrote:
+>
+>> Transition to the new wmi_buffer based WMI API.
+>>=20
+>> Signed-off-by: Kurt Borja <kuurtb@gmail.com>
+>> ---
+>> v2:
+>>   - Cast wmi_buffer data to __le32 and then use le32_to_cpu() before
+>>     returning
+>>=20
+>> v1: https://patch.msgid.link/20260330-aw-new-api-v1-1-95910bfa1b38@gmail=
+.com
+>> ---
+>>  drivers/platform/x86/dell/alienware-wmi-base.c | 32 +++++++++++++++----=
+-------
+>>  1 file changed, 19 insertions(+), 13 deletions(-)
+>>=20
+>> diff --git a/drivers/platform/x86/dell/alienware-wmi-base.c b/drivers/pl=
+atform/x86/dell/alienware-wmi-base.c
+>> index 64562b92314f..9abdc5de8e23 100644
+>> --- a/drivers/platform/x86/dell/alienware-wmi-base.c
+>> +++ b/drivers/platform/x86/dell/alienware-wmi-base.c
+>> @@ -9,11 +9,13 @@
+>>  #define pr_fmt(fmt) KBUILD_MODNAME ": " fmt
+>> =20
+>>  #include <linux/acpi.h>
+>> -#include <linux/cleanup.h>
+>>  #include <linux/module.h>
+>>  #include <linux/platform_device.h>
+>>  #include <linux/dmi.h>
+>>  #include <linux/leds.h>
+>> +
+>> +#include <asm/byteorder.h>
+>> +
+>>  #include "alienware-wmi.h"
+>> =20
+>>  MODULE_AUTHOR("Mario Limonciello <mario.limonciello@outlook.com>");
+>> @@ -150,23 +152,27 @@ u8 alienware_interface;
+>>  int alienware_wmi_command(struct wmi_device *wdev, u32 method_id,
+>>  			  void *in_args, size_t in_size, u32 *out_data)
+>>  {
+>> -	struct acpi_buffer out =3D {ACPI_ALLOCATE_BUFFER, NULL};
+>> -	struct acpi_buffer in =3D {in_size, in_args};
+>> -	acpi_status ret;
+>> +	struct wmi_buffer out, in =3D {
+>> +		.data =3D in_args,
+>> +		.length =3D in_size,
+>> +	};
+>> +	int ret;
+>> =20
+>> -	ret =3D wmidev_evaluate_method(wdev, 0, method_id, &in, out_data ? &ou=
+t : NULL);
+>> -	if (ACPI_FAILURE(ret))
+>> -		return -EIO;
+>> +	ret =3D wmidev_invoke_method(wdev, 0, method_id, &in, out_data ? &out =
+: NULL);
+>> +	if (ret)
+>> +		return ret;
+>> =20
+>> -	union acpi_object *obj __free(kfree) =3D out.pointer;
+>> +	if (!out_data)
+>> +		return 0;
+>> =20
+>> -	if (out_data) {
+>> -		if (obj && obj->type =3D=3D ACPI_TYPE_INTEGER)
+>> -			*out_data =3D (u32)obj->integer.value;
+>> -		else
+>> -			return -ENOMSG;
+>> +	if (out.length < sizeof(*out_data)) {
+>> +		kfree(out.data);
+>> +		return -ENOMSG;
+>>  	}
+>> =20
+>> +	*out_data =3D le32_to_cpu(*(__le32 *)out.data);
+>> +	kfree(out.data);
+>
+> Hi,
+>
+> Please don't bring back duplicated kfree() calls. Just assign out.data=20
+> into a local variable so you can use __free() for it similar to what the=
+=20
+> old code did.
 
-In populate_security_buffer(), also avoid recomputing strlen(), rename
-the u32 pointer from 'seclen' to 'seclenp' to avoid confusion with the
-new length variable, and drop the memcpy() guard since calling it with
-size 0 is a no-op and therefore safe.
 
-Use 'const char *' for the read-only source string in both helpers.
+Hi Ilpo,
 
-Signed-off-by: Thorsten Blum <thorsten.blum@linux.dev>
----
-Changes in v2:
-- Include headers (Ilpo)
-- Link to v1: https://lore.kernel.org/lkml/20260309211811.82403-3-thorsten.blum@linux.dev/
----
- .../dell/dell-wmi-sysman/dell-wmi-sysman.h    |  4 ++--
- .../x86/dell/dell-wmi-sysman/sysman.c         | 22 +++++++++----------
- 2 files changed, 12 insertions(+), 14 deletions(-)
+Sure! I'll use __free() again.
 
-diff --git a/drivers/platform/x86/dell/dell-wmi-sysman/dell-wmi-sysman.h b/drivers/platform/x86/dell/dell-wmi-sysman/dell-wmi-sysman.h
-index 817ee7ba07ca..5278a93fdaf7 100644
---- a/drivers/platform/x86/dell/dell-wmi-sysman/dell-wmi-sysman.h
-+++ b/drivers/platform/x86/dell/dell-wmi-sysman/dell-wmi-sysman.h
-@@ -189,8 +189,8 @@ void exit_bios_attr_set_interface(void);
- int init_bios_attr_set_interface(void);
- int map_wmi_error(int error_code);
- size_t calculate_string_buffer(const char *str);
--size_t calculate_security_buffer(char *authentication);
--void populate_security_buffer(char *buffer, char *authentication);
-+size_t calculate_security_buffer(const char *authentication);
-+void populate_security_buffer(char *buffer, const char *authentication);
- ssize_t populate_string_buffer(char *buffer, size_t buffer_len, const char *str);
- int set_new_password(const char *password_type, const char *new);
- int init_bios_attr_pass_interface(void);
-diff --git a/drivers/platform/x86/dell/dell-wmi-sysman/sysman.c b/drivers/platform/x86/dell/dell-wmi-sysman/sysman.c
-index 9dddab6c9397..4ae37a1c77f4 100644
---- a/drivers/platform/x86/dell/dell-wmi-sysman/sysman.c
-+++ b/drivers/platform/x86/dell/dell-wmi-sysman/sysman.c
-@@ -7,10 +7,12 @@
- 
- #define pr_fmt(fmt) KBUILD_MODNAME ": " fmt
- 
-+#include <linux/align.h>
- #include <linux/fs.h>
- #include <linux/dmi.h>
- #include <linux/module.h>
- #include <linux/kernel.h>
-+#include <linux/string.h>
- #include <linux/wmi.h>
- #include "dell-wmi-sysman.h"
- #include "../../firmware_attributes_class.h"
-@@ -72,13 +74,9 @@ size_t calculate_string_buffer(const char *str)
-  *
-  * Currently only supported type is Admin password
-  */
--size_t calculate_security_buffer(char *authentication)
-+size_t calculate_security_buffer(const char *authentication)
- {
--	if (strlen(authentication) > 0) {
--		return (sizeof(u32) * 2) + strlen(authentication) +
--			strlen(authentication) % 2;
--	}
--	return sizeof(u32) * 2;
-+	return sizeof(u32) * 2 + ALIGN(strlen(authentication), 2);
- }
- 
- /**
-@@ -88,18 +86,18 @@ size_t calculate_security_buffer(char *authentication)
-  *
-  * Currently only supported type is PLAIN TEXT
-  */
--void populate_security_buffer(char *buffer, char *authentication)
-+void populate_security_buffer(char *buffer, const char *authentication)
- {
-+	size_t seclen = strlen(authentication);
- 	char *auth = buffer + sizeof(u32) * 2;
- 	u32 *sectype = (u32 *) buffer;
--	u32 *seclen = sectype + 1;
-+	u32 *seclenp = sectype + 1;
- 
--	*sectype = strlen(authentication) > 0 ? 1 : 0;
--	*seclen = strlen(authentication);
-+	*sectype = !!seclen;
-+	*seclenp = seclen;
- 
- 	/* plain text */
--	if (strlen(authentication) > 0)
--		memcpy(auth, authentication, *seclen);
-+	memcpy(auth, authentication, seclen);
- }
- 
- /**
+--=20
+Thanks,
+ ~ Kurt
