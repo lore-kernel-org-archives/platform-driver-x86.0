@@ -1,65 +1,43 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.12])
+Received: from spark.kcore.it (spark.kcore.it [49.13.27.68])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7BD572C15BE;
-	Wed,  1 Apr 2026 13:56:41 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.12
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AF7443806DB;
+	Wed,  1 Apr 2026 17:13:48 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=49.13.27.68
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1775051803; cv=none; b=kCPnuoUq4lr82s8zJ1zBIi3c+uapR+bGOAnMwfo6aWVrcFOGw0tNEAhV5FAlW7fkgqMRY0o52Z/6zHMascT9s+LjZFXLS0hJ2FKI/WjX/QH1xy7KuzFl5k+lAwuXSOM4FTugeQGiWVJ+Hji12H3axp10Rvq705ng7mnpLC2QNyg=
+	t=1775063629; cv=none; b=ZGpPrmkiyUyTPiuMC8BzIz3aAJ61Ib8fixGln/p0GHx2rhM899JmSslb9dixmVO7f6O1ti1uVKZ2CbP4mKGLGOBNbBaIMU8zLqgrUewEyXPkMRf05U200Agr7ahDNE43O8N28ppc1sdlNmCgfoomEvEGKNasz+zdIJZ5Lsj6IGs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1775051803; c=relaxed/simple;
-	bh=tPHNGMHeTO/NPenrj5u9CdxjiacL02OT2nI1+jdD3mA=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=tBcrNmM9f4eiBnMfXiRfy1wzp/9CcDLhZRUoz63CeOgcnRxThgy7plp/cPmUQOfCv5Cz9Ute8nZsZUjgDKX27xvtUDzBkJyEvio1pW3UoLkIvNILtkfuXUhvq/8ximdpON8NC1fYW96HXK3ueLhwQZ7+AJ0lfmrmppfblKmwdug=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=pass smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=ix6b5Fq6; arc=none smtp.client-ip=198.175.65.12
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.intel.com
+	s=arc-20240116; t=1775063629; c=relaxed/simple;
+	bh=e44ROtbMvSPwMo+F59QlBgSXg2Srjt1Zn89COTzgQW0=;
+	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
+	 Content-Disposition:In-Reply-To:References; b=mNZGWjtfZ43cpR2TbJ8AvSZsen6YMH8b92lhBo3F85XkspjTYMxuCtj5IyoV7uPv9odULo0fKvn8eVn0Cl7rtOd54woHxBSG/w+Au+LFnO5p1tpjnb9kIdhBt3SHmFpHfCJ/+y496hE3UGEwJsDQ7PkrJlzPM3nTsxGluUbJJIY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kcore.it; spf=pass smtp.mailfrom=kcore.it; dkim=pass (1024-bit key) header.d=kcore.it header.i=@kcore.it header.b=dlmhlApC; arc=none smtp.client-ip=49.13.27.68
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kcore.it
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=kcore.it
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="ix6b5Fq6"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1775051801; x=1806587801;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=tPHNGMHeTO/NPenrj5u9CdxjiacL02OT2nI1+jdD3mA=;
-  b=ix6b5Fq6UxURJmbCt+ep+xol+2PJs4a0bhQXQ58EB3XjAx3+Mzvzk/k7
-   EQdc72Qvnhss1lnr7m36YI9B5NZqF6BPCRlbkApnYAOep36ZQsNlneoJQ
-   y0fsZy3PMALj+XfcdkQfatsaeuINFz8MGii7PloP8GQtSUms6x9L7sPBu
-   b0vQF/Z61Z91rl2MEDwEO7J4Y4lcVqXF9Ix2VZyoKQQKtARgvlJCqJxRj
-   lLG6LlFczXO8JwwnvAzu3XmYoMH2Y1+AMdnX1ltS/JL6c9L4idYdW+OlB
-   RpNxXYHdExWXl+voUu0mrgXL6T1csGwdg1nEc8x6KET1ZEyX7ZvvQhbFU
-   A==;
-X-CSE-ConnectionGUID: LuQxdQs5SiWXdrCJEl9KeQ==
-X-CSE-MsgGUID: JMGhepKnRWu2VrunT/XK6g==
-X-IronPort-AV: E=McAfee;i="6800,10657,11745"; a="87548304"
-X-IronPort-AV: E=Sophos;i="6.23,153,1770624000"; 
-   d="scan'208";a="87548304"
-Received: from orviesa001.jf.intel.com ([10.64.159.141])
-  by orvoesa104.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 01 Apr 2026 06:56:41 -0700
-X-CSE-ConnectionGUID: zSGpAO/kSxG6bGyN06oYxw==
-X-CSE-MsgGUID: Qb3NsJMLSEOAjxa4u+n3vw==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.23,153,1770624000"; 
-   d="scan'208";a="264610500"
-Received: from abityuts-desk.ger.corp.intel.com (HELO localhost) ([10.245.244.215])
-  by smtpauth.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 01 Apr 2026 06:56:39 -0700
-Date: Wed, 1 Apr 2026 16:56:36 +0300
-From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-To: Hans de Goede <johannes.goede@oss.qualcomm.com>
-Cc: Marco Nenciarini <mnencia@kcore.it>,
-	Daniel Scally <djrscally@gmail.com>,
-	Sakari Ailus <sakari.ailus@linux.intel.com>,
-	Ilpo =?iso-8859-1?Q?J=E4rvinen?= <ilpo.jarvinen@linux.intel.com>,
-	platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v6 4/4] platform/x86: int3472: Add support for GPIO type
- 0x02 (IR flood LED)
-Message-ID: <ac0kFP54V8S-nEX9@ashevche-desk.local>
-References: <ab0URIrzZPsYjWrM@spark.kcore.it>
- <20260331075204.1567624-1-mnencia@kcore.it>
- <20260331075204.1567624-5-mnencia@kcore.it>
- <bc5c4cd6-e026-41d6-ad49-aeffb949f7fb@oss.qualcomm.com>
- <acuoEp_aH_su0q2H@ashevche-desk.local>
- <7dbd37c3-4a5e-4577-bff6-ed0826b489ac@oss.qualcomm.com>
+	dkim=pass (1024-bit key) header.d=kcore.it header.i=@kcore.it header.b="dlmhlApC"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=kcore.it;
+	s=spark; h=References:In-Reply-To:Content-Type:MIME-Version:Message-ID:
+	Subject:Cc:To:From:Date:Sender:Reply-To:Content-Transfer-Encoding:Content-ID:
+	Content-Description:Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc
+	:Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:List-Subscribe:
+	List-Post:List-Owner:List-Archive;
+	bh=aBL2yUylUVSDm169RhdSLKoFhacBOWvVYMwnVM1p2u8=; b=dlmhlApCKRHzfcPYdENI4aeBjJ
+	NPHgbcjsuI7kqvWNFOpeRm+TGRWr7RTKYKd7NlzHpvi+h1NF1+M8/Xwg4AVbjLIeuIb5Jze7pYN0Z
+	YFc/vQBZ7rj5x9Qgsvz1rrrNTsZROQuHCbngmmquq/Q87CCOA5sjMWy47+4vf3FlS8WE=;
+Received: from mnencia by spark.kcore.it with local (Exim 4.96)
+	(envelope-from <mnencia@kcore.it>)
+	id 1w7z8O-006hvF-1P;
+	Wed, 01 Apr 2026 19:13:40 +0200
+Date: Wed, 1 Apr 2026 19:13:40 +0200
+From: Marco Nenciarini <mnencia@kcore.it>
+To: johannes.goede@oss.qualcomm.com, sakari.ailus@linux.intel.com
+Cc: andriy.shevchenko@linux.intel.com, djrscally@gmail.com,
+	ilpo.jarvinen@linux.intel.com, platform-driver-x86@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v5 0/4] platform/x86: int3472: Add support for GPIO type
+ 0x02 (strobe)
+Message-ID: <ac1SRO2nEt99IgBk@spark.kcore.it>
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
@@ -68,30 +46,29 @@ List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <7dbd37c3-4a5e-4577-bff6-ed0826b489ac@oss.qualcomm.com>
-Organization: Intel Finland Oy - BIC 0357606-4 - c/o Alberga Business Park, 6
- krs, Bertel Jungin Aukio 5, 02600 Espoo
+In-Reply-To: <b9b66e79-751b-476e-90e9-670ef44f131e@oss.qualcomm.com>
+References: <b9b66e79-751b-476e-90e9-670ef44f131e@oss.qualcomm.com>
 
-On Wed, Apr 01, 2026 at 03:36:01PM +0200, Hans de Goede wrote:
-> On 31-Mar-26 12:55, Andy Shevchenko wrote:
-> > On Tue, Mar 31, 2026 at 12:36:28PM +0200, Hans de Goede wrote:
-> >> On 31-Mar-26 09:52, Marco Nenciarini wrote:
-
-...
-
-> Why would we want to not register the lookup for the ir_flood
-> case too ?
+On 01-Apr-26 15:38, johannes.goede@oss.qualcomm.com wrote:
+> TL;DR: my proposal is:
 > 
-> Elsewhere in the thread we're discussing actually controlling
-> this LED from the v4l2-core which will require the lookup.
+> 1. Name the new LED classdev ir_flood[_led] including
+>    adding an "ir_flood" LED lookup with the sensor as
+>    consuming device of the LED.
 > 
-> And if that does not materialize the lookup still does no harm.
+> 2. Make v4l2-core turn the ir_flood on automatically while
+>    streaming, just like it does for a "privacy" LED currently
+>    (mostly re-using the existing privacy LED code).
+> 
+> 3. If in the future userspace needs more fine-grained control
+>    at a ir_flood V4L2 menu control on the sensor with
+>    auto/on/off values, defaulting to auto which preserves
+>    the behavior from 2.
 
-TBH, I'm fine with either case. If you think it's better, than it will
-even be simpler in the code!
+This plan sounds good to me.
 
--- 
-With Best Regards,
-Andy Shevchenko
+I have a v8 ready that addresses your feedback on patch 4/4: the LED
+lookup is now always registered (for ir_flood too), removing the type
+parameter and the conditional switch-case. Shall I go ahead and send it?
 
-
+Marco
