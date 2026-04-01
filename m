@@ -1,177 +1,141 @@
-Received: from mail-vk1-f175.google.com (mail-vk1-f175.google.com [209.85.221.175])
+Received: from mail-dl1-f52.google.com (mail-dl1-f52.google.com [74.125.82.52])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 20DB93E959A
-	for <platform-driver-x86@vger.kernel.org>; Tue, 31 Mar 2026 23:01:51 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.175
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 51B093033C6
+	for <platform-driver-x86@vger.kernel.org>; Wed,  1 Apr 2026 02:09:26 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=74.125.82.52
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1774998113; cv=none; b=munkL15LA+vdMvXcY/qMdAhnhUo8GlmJfEUpaHi0TGHnzY4IrmqJDblLrpqbD82hoDFue7SJmHfRKaZ9dRzpdg2fhOZ0EqpExBYPT5ZS0JR4AE98x0g6OIJmrGXqHA95rmJFYLGI+uuqgXArMVfO7pe/Vxb9gAp99a+QQeyXng0=
+	t=1775009369; cv=none; b=hZJGCdQsRECiCQFuJxV5CAmqPOve53VZBJOWGN8xxdUkywSENf4KQAYX1jjy7BCA/GSK42s1zrlNsHDGfb4KZq3S6ocjXmjY1GD2dXWaZxJth0KCLxYO0pmWQsPQt3sOPhbYCwzkQ383CpmQvsvGyKeNSMfSWMPWtEprBBWdmXg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1774998113; c=relaxed/simple;
-	bh=CJ6+HJlQYyDECpRgJL4CbD+sc7eZDsyDCg50t18Y1zo=;
-	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
-	 Content-Disposition; b=jNm0KEW1VP+SYodd2YXEnMe4KD78N/OoR4B8qhps+0Uo7/BWdb2brscGnyqdlzj3RQaMYkoUyZtP7+bjygtKUIVni5W/6fpr92udmjdvqPZmuUKVI+yaboKdi2/ArIS60xWGEDpkZ3lc8uV77j681O8KfauhItWky7eBrX2t2zQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=K8HD1jrq; arc=none smtp.client-ip=209.85.221.175
+	s=arc-20240116; t=1775009369; c=relaxed/simple;
+	bh=2R6lpriRiJyGfdxQxsSHGdyW9OvyN2xr4NV/z7YXTK0=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=tSUX42NtZ7U+02aUDlnaFTqxAH3ficiTXqOfuXOJ6WDOQCPslaWukecXG/ukPXDmqaTm950pWUG1Zknfke12WirqUPKDZ5gxhi9MPhvRJPJpC/QK6uVdsv/LQfxXMSe0lJ2MF4dwvMAt6umLkasdhnzwnozOQqXRhR/6WidV1yo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=KB64mDUt; arc=none smtp.client-ip=74.125.82.52
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="K8HD1jrq"
-Received: by mail-vk1-f175.google.com with SMTP id 71dfb90a1353d-56a9c5cb48bso2471750e0c.0
-        for <platform-driver-x86@vger.kernel.org>; Tue, 31 Mar 2026 16:01:51 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="KB64mDUt"
+Received: by mail-dl1-f52.google.com with SMTP id a92af1059eb24-12a747e7b2fso3177916c88.0
+        for <platform-driver-x86@vger.kernel.org>; Tue, 31 Mar 2026 19:09:26 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20251104; t=1774998111; x=1775602911; darn=vger.kernel.org;
-        h=content-transfer-encoding:content-disposition:mime-version
-         :message-id:subject:cc:to:from:date:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=XXj6psxl9yBoqC84nEYP2bvo2CztyINw8eq6uGB/RQc=;
-        b=K8HD1jrqOb/OKTBgutuNvaAjSl0IeYPGRC2nJTlVB7oSomwBAOFOGrUWJpb2kBiXHX
-         XaSlLPE/L4mYsM+6KMd5gxX2n84aXm10MiM6LqD6e/WtsEgqP6otZP8OLbopB6MZ7V4Z
-         NRm7knGhSRMLFMzQhCcDBn1dQh1RcjQeeNhLF1mNAQ50UZmyVlZL6gkM9dQSjgLeh1Ua
-         8Wf6EqC5RUswBuZQHvWCDHykb4gvT5AfG4pjS+0egpvWoVgM/9SQ60HJmwmfdOh+guoF
-         NoRadf0Z0IHrxkfsy5SyuXsad+B8g1mhpI/J67KQmIUJLqVPd6yURjNirSy0j8cUZHsV
-         7RqA==
+        d=gmail.com; s=20251104; t=1775009365; x=1775614165; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=rsoAviV2wZmke+4BsttL3YCzfWLi9sYU1xca+C62Oc0=;
+        b=KB64mDUt/6LvxBBo7pky2a4+83zjiHQl09bIvdr6xOm/D5tWedOFTuMbH5Cn2RH6ty
+         0nunWApA/l+UMNjcYARLfIaog14IG+oGQlGwhe3uXc7KlWAnWiwkfedhKV/my/Iw+mg5
+         ZxFCqzG2TkXtf3XJDiWEMLjGd5HURepY3sElQxuwPFhskJlBFE2lcH0up2pMuVuc7AXd
+         3gi+0QMQK50lS68YRdp+0RcnybIvCjzJsvS8DwWcFcv5RP0RtqJxtSxLstE5k53Qcqxo
+         M6+34vPUFbOU4TnX2HvM5R4vKNuRx+HaajBfP6+SIR7pk+Mc90/uS45RKqaXmfajHVT1
+         Niug==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1774998111; x=1775602911;
-        h=content-transfer-encoding:content-disposition:mime-version
-         :message-id:subject:cc:to:from:date:x-gm-gg:x-gm-message-state:from
-         :to:cc:subject:date:message-id:reply-to;
-        bh=XXj6psxl9yBoqC84nEYP2bvo2CztyINw8eq6uGB/RQc=;
-        b=oc/oaQ0KOOHHCBW5v7x2HrBrIrMiLh2AW42lH6w4saRE5wZ3CqpM1t5aMfTmk0lMI8
-         eLDzGZtDQFsCGIEyZfcBUHzGXG2v3j7LxJ5E1++g804U3YAAG2gLmVOt3VhkcLkyvn4q
-         bzZSW8KUtFW10FSFtN7FMTgzWyPNcYy5c7wNtsxZnTP2vMwy0pxo6SmsBDwLVcCuiHem
-         Xsv3J50sqJ3qXbDbKt1GUQmBIdrm7aAhRPbbKZdeN4s4ZIAGldbu5v4L1J0234wraDoo
-         +tLaGu/Cw3wW0KcXa3f4lnkE0Bo8rVkFC0t70BBpLr+pLHNNdMcmZTiagOCDSH3AIFPc
-         4n5w==
-X-Gm-Message-State: AOJu0YyxyUHcVXuF1lF5bvKcga4xCI/v8Gj5mJeQfR2QW0S2oV9ghBZA
-	aJsMvCI861wYSguTqZfElPcilFuqvlroQawmEuxdOWFi3zC2Ai6vWcMt
-X-Gm-Gg: ATEYQzxFtaVBhvK52aiIreBlYWH1TEtQrEyi7i1bZNMVxBbP/1q/3whLXNMM1rQa950
-	YR92bGNIEJ996+C612NJMNY499eiVMXpLXkoRJEc4kYXGkTq+CIuFW6eEOmRkYPj3stFtLUiKhp
-	F+pESeByhlHphzNUdtiTNx+VATV24hPMZuHa3MwNajjjdGz0O0PvAcLQ289SJwkkEqy5hbIgFC6
-	MrXQq9kBemmscctpfLlmpFvlvSmcS4xYn+nknGIL18E8rt5fRNVRYZ1JbUkpgHiJ1oceVDwu/fF
-	wwkpkb5FPUi+1J5XOnYvtDnes7k15hI08eCrob/I9C1LbqPPBINIwg9I0CoYGT1lgCO//p4oxj+
-	FiZakmP7aaGlqFW1T7r3h1T7sA7L2yNX+sI45WqMiQP9Mm00TDRvyLbEl/70kaq/94cERUYzf1A
-	w5AtXb/8Ntq7kH5qEF8hw4n7n/OrrUBO/C4Cz4
-X-Received: by 2002:a05:6122:2a04:b0:56c:ca50:e963 with SMTP id 71dfb90a1353d-56d8a948263mr742917e0c.14.1774998110891;
-        Tue, 31 Mar 2026 16:01:50 -0700 (PDT)
-Received: from localhost ([2804:14c:5bc6:8c1b:8512:ab64:bee:7831])
-        by smtp.gmail.com with ESMTPSA id 71dfb90a1353d-56d58893cf2sm13960947e0c.4.2026.03.31.16.01.50
+        d=1e100.net; s=20251104; t=1775009365; x=1775614165;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-gg:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=rsoAviV2wZmke+4BsttL3YCzfWLi9sYU1xca+C62Oc0=;
+        b=lXDzMmbHj43P1dB3l5RlXQSJmjOA9Ihyn1gcmUoslvZUoiIDkotMB+kySOg/82ysM0
+         f/vWVLl1IaDPUYDuRrJsDY837QyRuT+1H2iW9HDqYZP38v+rX/sZdEfNkN69dW7v53Pj
+         9BaRArEfuI+L9OcimyeHMyiTfA6LwzUV3qTb/k4tQz4VujptwXa5+2zgZ2MY1U5hS0mu
+         DON3BXmerqLRy2CtE7USplQFuCTuXzgTziyndhUw72uHXaaEcAkesYtSsPBeUkPBbW18
+         T9/1B5qxqcjghrNlcFMwNm2Hi+1P5evwsa3cex165c+C+ru8igGklrvZIwTampTADnmO
+         XN3g==
+X-Forwarded-Encrypted: i=1; AJvYcCVUVrKhcIgfoOKbzEZQM1CGnp91X2o//vKqabNjPQqdlJ/eS9VI76EFZ5FhSAz/ygahNlzjP3RvCl1He+PEVfMymPbO@vger.kernel.org
+X-Gm-Message-State: AOJu0Yy3i5/wJqkwaBYhG9XNpeQfo5y27IVEwVYBgSt8l3WiKK5RuppH
+	yDyc00C5DjsONGx5RXlkmHF03h7AGCbbLeq/Tg74zO6gABlWORqf3NWA
+X-Gm-Gg: ATEYQzyLpbF/Otq5QH/x/QEYIxyoBBpHPVAlR0hWaj89HZ3aOP8eHvtVMsTr+WZfZdw
+	+zrCSddUPrU2QY9w3DVNU8Yz3mGFPxrYeZk5zDhChgEBrBvmEO4xFYlEJ+IqJQIq8X9IBD9Jmgy
+	Z5CU0/qWc4btm7yuD9fSm+3ie/41mxbqVKPS3NLvP0DHHF7In0J/SDneVBO2UrcyB4dnsmq3Qia
+	ekVIxGOxKM6MNlMRRpwAl1DUwWf8Wp4kAQEb6b9iVSDQ+x1U7j/SilycmzYXPcxSDJbRASPvHAC
+	gOC5GlCFglQOkz9uf+iLbuKixT4rY37DN1+2+J1QbPtpfS3fhuDoAvXdk2/uPrTE1kROGmW1WBM
+	wkBUQVmZXu4B/kHygbjgdpn2UVhLWA6i3X8UwLaLx6Tyl2iilNm8Cn3Fb/zE9CiS2A/A242F63R
+	oS7shqPy5w6KoyaXwKT0Gsod242lsauxkVfTOXiaVfQyYrHKZU60qD0kM7daSWr2eF
+X-Received: by 2002:a05:7022:602:b0:128:d2f2:5cf8 with SMTP id a92af1059eb24-12be6575e03mr1074170c88.34.1775009365163;
+        Tue, 31 Mar 2026 19:09:25 -0700 (PDT)
+Received: from google.com ([2a00:79e0:2ebe:8:1dbf:b0e0:8ad0:5a2e])
+        by smtp.gmail.com with ESMTPSA id a92af1059eb24-12abde65313sm11136129c88.14.2026.03.31.19.09.23
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 31 Mar 2026 16:01:50 -0700 (PDT)
-Date: Tue, 31 Mar 2026 20:01:47 -0300
-From: =?iso-8859-1?Q?Jos=E9?= Guilherme de Castro Rodrigues <jose.guilherme.cr.bh@gmail.com>
-To: Corentin Chary <corentin.chary@gmail.com>,
-	"Luke D. Jones" <luke@ljones.dev>,
-	Denis Benato <benato.denis96@gmail.com>,
-	Hans de Goede <hansg@kernel.org>,
-	Ilpo =?iso-8859-1?Q?J=E4rvinen?= <ilpo.jarvinen@linux.intel.com>
-Cc: platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org,
-	=?iso-8859-1?Q?Jos=E9?= Guilherme de Castro Rodrigues <jose.guilherme.cr.bh@gmail.com>
-Subject: [PATCH] platform/x86: asus-wmi: fix camera key led on Zenbook S14
-Message-ID: <acxSW8FgXbnFiqIL@djouze-zen>
+        Tue, 31 Mar 2026 19:09:24 -0700 (PDT)
+Date: Tue, 31 Mar 2026 19:09:21 -0700
+From: Dmitry Torokhov <dmitry.torokhov@gmail.com>
+To: Bartosz Golaszewski <bartosz.golaszewski@oss.qualcomm.com>
+Cc: Santosh Kumar Yadav <santoshkumar.yadav@barco.com>, 
+	Peter Korsgaard <peter.korsgaard@barco.com>, Hans de Goede <hansg@kernel.org>, 
+	Ilpo =?utf-8?B?SsOkcnZpbmVu?= <ilpo.jarvinen@linux.intel.com>, platform-driver-x86@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, brgl@kernel.org
+Subject: Re: [PATCH] platform/x86: barco-p50-gpio: attach software node to
+ its target GPIO device
+Message-ID: <acx9veIH-t5cCVc_@google.com>
+References: <20260331112819.103298-1-bartosz.golaszewski@oss.qualcomm.com>
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
+In-Reply-To: <20260331112819.103298-1-bartosz.golaszewski@oss.qualcomm.com>
 
-Fix key led not turning on/off when the camera key is pressed. The
-asus_wmi_dev_is_present(ASUS_WMI_DEVID_CAMERA_LED) check fails on
-Zenbook S14, and no sysfs attribute for the camera key led is
-created.
+On Tue, Mar 31, 2026 at 01:28:19PM +0200, Bartosz Golaszewski wrote:
+> The software node representing the GPIO controller to consumers is
+> "dangling": it's not really attached to the device. The GPIO lookup
+> relies on matching the name of the node to the chip's label. Set it as
+> the secondary firmware node of the platform device to enable proper
+> fwnode-based GPIO lookup.
+> 
+> Signed-off-by: Bartosz Golaszewski <bartosz.golaszewski@oss.qualcomm.com>
+> ---
+>  drivers/platform/x86/barco-p50-gpio.c | 2 ++
+>  1 file changed, 2 insertions(+)
+> 
+> diff --git a/drivers/platform/x86/barco-p50-gpio.c b/drivers/platform/x86/barco-p50-gpio.c
+> index 2a6d8607c402..5f4ffa584295 100644
+> --- a/drivers/platform/x86/barco-p50-gpio.c
+> +++ b/drivers/platform/x86/barco-p50-gpio.c
+> @@ -365,6 +365,8 @@ static int p50_gpio_probe(struct platform_device *pdev)
+>  	if (ret)
+>  		return dev_err_probe(&pdev->dev, ret, "failed to register software nodes");
+>  
+> +	set_secondary_fwnode(&pdev->dev, software_node_fwnode(&gpiochip_node));
+> +
+>  	led_info.fwnode = software_node_fwnode(&gpio_leds_node);
+>  	p50->leds_pdev = platform_device_register_full(&led_info);
+>  	if (IS_ERR(p50->leds_pdev)) {
 
-The check succeeds for ASUS_WMI_DEVID_CAMERA_LED_NEG, though,
-and when it is read, the led state is synchronized. By doing a read after
-every key press, the led is guaranteed to stay in sync with the actual
-camera state.
+I looks like http://sashiko.dev patch critique is on point:
 
-This change is not visible to userspace, as no sysfs attribute for
-ASUS_WMI_DEVID_CAMERA_LED_NEG exists.
+"
+Is the software node attached too late to take effect?
 
-Tested on an ASUS Zenbook S14 with BIOS version UX5406SA.309.
+In the probe function, devm_gpiochip_add_data() is called before this
+set_secondary_fwnode() call. During GPIO chip registration, the gpiolib
+core snapshots the parent device's fwnode.
 
-Signed-off-by: José Guilherme de Castro Rodrigues <jose.guilherme.cr.bh@gmail.com>
----
- drivers/platform/x86/asus-wmi.c            | 21 +++++++++++++++++++++
- include/linux/platform_data/x86/asus-wmi.h |  2 +-
- 2 files changed, 22 insertions(+), 1 deletion(-)
+Because the secondary fwnode is not yet set on pdev->dev when this snapshot
+happens, the GPIO device is registered with a NULL fwnode, which seems to
+defeat the purpose of enabling fwnode-based lookups.
 
-diff --git a/drivers/platform/x86/asus-wmi.c b/drivers/platform/x86/asus-wmi.c
-index 0b87214ddd1b..a50a2a6cee98 100644
---- a/drivers/platform/x86/asus-wmi.c
-+++ b/drivers/platform/x86/asus-wmi.c
-@@ -70,6 +70,8 @@ module_param(fnlock_default, bool, 0444);
- #define NOTIFY_KBD_TTP			0xae
- #define NOTIFY_LID_FLIP			0xfa
- #define NOTIFY_LID_FLIP_ROG		0xbd
-+#define NOTIFY_CAMERA_TOGGLE_1          0x82
-+#define NOTIFY_CAMERA_TOGGLE_2          0x85
- 
- #define ASUS_WMI_FNLOCK_BIOS_DISABLED	BIT(0)
- 
-@@ -307,6 +309,7 @@ struct asus_wmi {
- 	u32 kbd_rgb_dev;
- 	bool kbd_rgb_state_available;
- 	bool oobe_state_available;
-+	bool camera_neg_led_available;
- 
- 	u8 throttle_thermal_policy_mode;
- 	u32 throttle_thermal_policy_dev;
-@@ -1982,6 +1985,18 @@ static int micmute_led_set(struct led_classdev *led_cdev,
- 	return err < 0 ? err : 0;
- }
- 
-+static bool is_camera_toggle(int code)
-+{
-+	return code == NOTIFY_CAMERA_TOGGLE_1 || code == NOTIFY_CAMERA_TOGGLE_2;
-+}
-+
-+static void camera_neg_led_trigger_update(struct asus_wmi *asus)
-+{
-+	u32 result;
-+
-+	asus_wmi_get_devstate(asus, ASUS_WMI_DEVID_CAMERA_LED_NEG, &result);
-+}
-+
- static enum led_brightness camera_led_get(struct led_classdev *led_cdev)
- {
- 	struct asus_wmi *asus;
-@@ -4587,6 +4602,11 @@ static void asus_wmi_handle_event_code(int code, struct asus_wmi *asus)
- 	if (is_display_toggle(code) && asus->driver->quirks->no_display_toggle)
- 		return;
- 
-+	if (is_camera_toggle(code) && asus->camera_neg_led_available) {
-+		camera_neg_led_trigger_update(asus);
-+		return;
-+	}
-+
- 	if (!sparse_keymap_report_event(asus->inputdev, code,
- 					key_value, autorelease))
- 		pr_info("Unknown key code 0x%x\n", code);
-@@ -5062,6 +5082,7 @@ static int asus_wmi_add(struct platform_device *pdev)
- #endif /* IS_ENABLED(CONFIG_ASUS_WMI_DEPRECATED_ATTRS) */
- 
- 	asus->oobe_state_available = asus_wmi_dev_is_present(asus, ASUS_WMI_DEVID_OOBE);
-+	asus->camera_neg_led_available = asus_wmi_dev_is_present(asus, ASUS_WMI_DEVID_CAMERA_LED_NEG);
- 
- 	if (asus_wmi_dev_is_present(asus, ASUS_WMI_DEVID_THROTTLE_THERMAL_POLICY))
- 		asus->throttle_thermal_policy_dev = ASUS_WMI_DEVID_THROTTLE_THERMAL_POLICY;
-diff --git a/include/linux/platform_data/x86/asus-wmi.h b/include/linux/platform_data/x86/asus-wmi.h
-index 554f41b827e1..1a9349da6069 100644
---- a/include/linux/platform_data/x86/asus-wmi.h
-+++ b/include/linux/platform_data/x86/asus-wmi.h
-@@ -56,7 +56,7 @@
- #define ASUS_WMI_DEVID_MICMUTE_LED		0x00040017
- 
- /* Disable Camera LED */
--#define ASUS_WMI_DEVID_CAMERA_LED_NEG	0x00060078 /* 0 = on (unused) */
-+#define ASUS_WMI_DEVID_CAMERA_LED_NEG	0x00060078 /* 0 = on */
- #define ASUS_WMI_DEVID_CAMERA_LED	0x00060079 /* 1 = on */
- 
- /* Backlight and Brightness */
+If the order is reversed, would we need to tie the software node
+registration to devres (e.g., via devm_add_action_or_reset)? Otherwise, a
+manual software_node_unregister_node_group() in the probe error path might
+free the software node while the devm-managed gpiochip still holds a pointer
+to it.
+
+Additionally, could this leave a dangling pointer on probe failure or driver
+unbind?
+
+If a subsequent step fails (like registering keys_pdev), the probe error
+path calls software_node_unregister_node_group(p50_swnodes), which frees
+the underlying memory.
+
+Because set_secondary_fwnode(&pdev->dev, NULL) is never called to clear it,
+pdev->dev.fwnode would point to freed memory. Any subsequent access to the
+device's firmware node could trigger a use-after-free.
+"
+
+Thanks.
+
 -- 
-2.53.0
-
+Dmitry
