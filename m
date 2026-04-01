@@ -1,88 +1,88 @@
-Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
+Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2A0BA4035AA
-	for <platform-driver-x86@vger.kernel.org>; Wed,  1 Apr 2026 13:36:06 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.168.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 01E3243D4F5
+	for <platform-driver-x86@vger.kernel.org>; Wed,  1 Apr 2026 13:38:38 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.180.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1775050567; cv=none; b=sx/u3Rzd5K7we7umCABJXszI306LNOqLi8TYzVcxiOKbdmwVSQJUm+WWlC5LTtpTVJhcfvcJub9LMagK0Iacn+cSaUm2psiLmN0n16JQe3dqcCE1CrFvJ/jrq4ok+qY833CSdWat2KTc2G5/EOSIEN33WmRE/iBb9N9gnDJu+7U=
+	t=1775050720; cv=none; b=WfQ4BqvrvR5TMex1O7EPSII74qp3Mn6JM4jm9cEx1TEFL/7tlTeGKcK/9cyEjgrgcofiuPmysukeWhonJhEuPEnWViXNw8KCdnv0gSVtUMLAieSgf/ZhhdiR8Uysc+v+xDGhUUMV/keBWsBIjCI9zlAXzu/QiQA15ij1cvd0oRk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1775050567; c=relaxed/simple;
-	bh=ti4R8oexXn+OJA745yjlFiW13FWx9mVLKg0pKebToC0=;
+	s=arc-20240116; t=1775050720; c=relaxed/simple;
+	bh=mC4PPi+3kQqx7iVw1yWx+0dxaAz3a6p5xq0I6EDPDrw=;
 	h=Message-ID:Date:MIME-Version:From:Subject:To:Cc:References:
-	 In-Reply-To:Content-Type; b=SMG2bFVT/3hm4qK6hNFfQ/ZTtuqctT9+OUaK/QS28cJzGHtsrXqmmH+74brGDKUyP8zBTn/92ZMQ2+iUA+lQ8l3vCC0dyYQBrNvqYRSMZSyjlXh29w0l8BqcJU6s49GMzzdRfntdpDi83xVhO8ZZ2iFHGiJ1WKonQF9KjIRUFS0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com; spf=pass smtp.mailfrom=oss.qualcomm.com; dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b=OKdevTQy; dkim=pass (2048-bit key) header.d=oss.qualcomm.com header.i=@oss.qualcomm.com header.b=BjrsA7ac; arc=none smtp.client-ip=205.220.168.131
+	 In-Reply-To:Content-Type; b=FSDqvkgVyrRr7OQEdMKQeH5O/XNOVBzQcwaqL77w8+6qB8PS1R2JZyBMeAmOAqR5SmIf/8X8ycDq1HWrJ7cGD2IqyhBRtaIeTtNCvyq6XNzIGveICL1In1AKqyU8hJndCI/v6FjkQPFN9OEuH3VK+wZo0gRyIIJTb3lTyZDNOAY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com; spf=pass smtp.mailfrom=oss.qualcomm.com; dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b=H0asddTX; dkim=pass (2048-bit key) header.d=oss.qualcomm.com header.i=@oss.qualcomm.com header.b=VibouA4g; arc=none smtp.client-ip=205.220.180.131
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oss.qualcomm.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b="OKdevTQy";
-	dkim=pass (2048-bit key) header.d=oss.qualcomm.com header.i=@oss.qualcomm.com header.b="BjrsA7ac"
-Received: from pps.filterd (m0279864.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.18.1.11/8.18.1.11) with ESMTP id 6318o68X1459470
-	for <platform-driver-x86@vger.kernel.org>; Wed, 1 Apr 2026 13:36:05 GMT
+	dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b="H0asddTX";
+	dkim=pass (2048-bit key) header.d=oss.qualcomm.com header.i=@oss.qualcomm.com header.b="VibouA4g"
+Received: from pps.filterd (m0279873.ppops.net [127.0.0.1])
+	by mx0a-0031df01.pphosted.com (8.18.1.11/8.18.1.11) with ESMTP id 6319nxdw3364339
+	for <platform-driver-x86@vger.kernel.org>; Wed, 1 Apr 2026 13:38:38 GMT
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=qualcomm.com; h=
 	cc:content-transfer-encoding:content-type:date:from:in-reply-to
 	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
-	65IFvKQl1RiHWZxxj4dKFyqz3g4kOpQxBtNIz2Ud1s0=; b=OKdevTQyxjHUoLSz
-	rE/9RuX/Cv0NcBt3sXkwE7nXLFmo3HmG9RvoMVAQq4A+fRaMXHtNBp7oEqf1Gja3
-	DKTzwypJipNZrjNY1lS+SbDPZ5cGcJUWPn0SWpLzVgVY5WKc215U92XmFAbYj4UZ
-	KjMh1szzdFCsUz8CMLSDptruI61wD1LknkAgluoPhJXCiygYIDYuxooJJvQ5xmmx
-	zOYr4z4/LjKmDwF6fjSKe9ED+DqoKhbsaH3q250MyeDHfMBpqG4ni1gApmr76fbq
-	IvelJ4Q8RPZg0FKjD3w3aSauS1pUdUoVAj4C1OxD5S3cJI/O89x0sT6Oc4UnKmT2
-	E9dmZQ==
-Received: from mail-vs1-f71.google.com (mail-vs1-f71.google.com [209.85.217.71])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 4d8uhg2fe6-1
+	dCV+ULd+ytCZYkOrcVruW64KxOJ7cl2GO/EvJ1gyoVk=; b=H0asddTXPQHBTG32
+	neSDS733k/2kp1lVXrh2HGsfX1iygLae7uQ53tZPlXg0YCdrXxOPq9oyivc0iJl/
+	MFz3EEHoLw0aEy/RkcvlK1PzPs7iqxBZU1HGSqruNSIJJXE2sW7J6KieRYOeOpQu
+	6Wiyzw5r/TS1NmAS7FWqKEcz5spxJ8WTH2ekQTAAc8lZW+nIZEWMLfKsxeQ2fllJ
+	nfsFqriW1BHoEiHhBYLDrcd6tKmJL7MTd62nvoUoetOKwnqSIclyo9nXjDT4F6cH
+	DUeVCTLSp53O7zsGaHOMoA4xFfo4A2u6rCM7kUhmdsTVfUT9lPnyMAj1KCTB1Dea
+	P5KXkA==
+Received: from mail-vs1-f70.google.com (mail-vs1-f70.google.com [209.85.217.70])
+	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 4d8nddkq90-1
 	(version=TLSv1.3 cipher=TLS_AES_128_GCM_SHA256 bits=128 verify=NOT)
-	for <platform-driver-x86@vger.kernel.org>; Wed, 01 Apr 2026 13:36:05 +0000 (GMT)
-Received: by mail-vs1-f71.google.com with SMTP id ada2fe7eead31-6054a2563adso3263979137.1
-        for <platform-driver-x86@vger.kernel.org>; Wed, 01 Apr 2026 06:36:04 -0700 (PDT)
+	for <platform-driver-x86@vger.kernel.org>; Wed, 01 Apr 2026 13:38:37 +0000 (GMT)
+Received: by mail-vs1-f70.google.com with SMTP id ada2fe7eead31-6054becb991so826229137.2
+        for <platform-driver-x86@vger.kernel.org>; Wed, 01 Apr 2026 06:38:37 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=oss.qualcomm.com; s=google; t=1775050564; x=1775655364; darn=vger.kernel.org;
+        d=oss.qualcomm.com; s=google; t=1775050717; x=1775655517; darn=vger.kernel.org;
         h=content-transfer-encoding:in-reply-to:content-language:references
          :cc:to:subject:from:user-agent:mime-version:date:message-id:from:to
          :cc:subject:date:message-id:reply-to;
-        bh=65IFvKQl1RiHWZxxj4dKFyqz3g4kOpQxBtNIz2Ud1s0=;
-        b=BjrsA7acXpNWtbnp8t4Q9tDBvSvnG1j4B+tXANm1BKtsbyRbRHga3UubHaFwCwQzcw
-         RsL1xESRa+xEcJEJ2FC5CovfD0/0bE5d22/l2FyRE7uW47LQfiJ4CU3BJ72f0yKWQjR6
-         VyLhAOPUsTaMzKx8BgFwQG4tfsgsj5ZXddJFXSFg5mGrdOdRqj01kYWrkvKwj2MxspCA
-         N1jcfP5/xNRn2aX3vzlwi24S/D3hej2aRKtbOReXscx3gim2v50KqKRST+3p7xMuDwo5
-         n07UgDVdj3zLcXhL4BZve75ZpyHC4nH/cyhG5wgBkHFp0FEzSW1CsUSbwKa2s2y73+wz
-         tF1A==
+        bh=dCV+ULd+ytCZYkOrcVruW64KxOJ7cl2GO/EvJ1gyoVk=;
+        b=VibouA4gKMyxWTfPXr7SO2gYde3POyMNpV8iVsIk3qEqeoG30cdv6x/3fgyuAhVUF9
+         3u0IJoTOjsD5wEHNNl46f6wg3kyd1wjva00jjY5BHIBsBBzuNQ7ftfg06Tkq1bKXjRg5
+         HrAcn+DCA0tM1zYc0dSExwDBJif9EvzDgz1DM3LWpEk8wFQAmFkgzMwB67BMCRQEDAMc
+         5NmfujgDs5nwlTEVIjx+6azlZAWwL+4V4xZzf07Amg+Krs/efMGyORCa+Vg9luD9gtCR
+         RSwnEAI6JV0jCOdvHV9Y6fd4Qr5ColasvRrFIpHZ7qRveByLz3DUVUs8lDu3aEbmMMbi
+         dKAw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1775050564; x=1775655364;
+        d=1e100.net; s=20251104; t=1775050717; x=1775655517;
         h=content-transfer-encoding:in-reply-to:content-language:references
          :cc:to:subject:from:user-agent:mime-version:date:message-id:x-gm-gg
          :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=65IFvKQl1RiHWZxxj4dKFyqz3g4kOpQxBtNIz2Ud1s0=;
-        b=F0ubvs2H7hWSp68ZvL9ttIl5DQr0votTZESC2udyoLvpvLAOgjlxq2uShJrA8FWklo
-         ykHgZL/XYNfVTOXZdoSw5mM3AHlhHtFanoYfaQDJ6zzrCuk7lp+Lsj47RExfBr4rdmqv
-         QlWnPejMhTiyUAJ3S2Y3k3pWwsvel9lbCK6cyA/30P6rcLYkAxmnoRWHPIUJ6lmG3CuR
-         ksjno2EaOd0sR35vL3asJO3bWPGslDWvR9TjGuLAfb/R/l3/HftM4fAZP1b8Clvyrijt
-         8LM9xVjhnpwnKSLz3ZwAyC9hrREfyv3LhB19eAh9boGv4IyWdAB2Lcqa0wTVvsyoxYNw
-         Aq2Q==
-X-Forwarded-Encrypted: i=1; AJvYcCWYRZygR/sG+eNiFOBW18wlnH0DhPIuABT7KucbTV+xZDiBAUrSf9+w+v8tq4GMY0pXIoV4fjKQFc1QLP1L5HP4vlRw@vger.kernel.org
-X-Gm-Message-State: AOJu0Yw25Az/p36PmStgpO6GNjBfU0qJQ6mjghIb7qqUrznjuNkwqpjv
-	tqv1IU24TqZHzlMKnT7bMDGRgSi4typMZ7Rg6gQj0xloDJPwboU0iSZlAbXudE+3PcvlArk5ADv
-	YCmYnV3hhOfeiB7FZW8lzvlJ6Ay2okI17iApROLH8pi6Slsby7B+7uuMbZCVeVHZRRpNHkyNBwt
-	o+efbH/IpL
-X-Gm-Gg: ATEYQzzI/piJ1qk91fzVKgynJXrbpm2OAII0XEqK0iBJi60pzTd9VLNzDotUD2ijt13
-	zG/PzHcsil5KgH6aqycM8ScYY71O/AU2aLJshE7vhwN2VLM72OlxijQhUtMY23EJZWsvPDpyNrq
-	oACvZeUd5w9TdPYDEFzrxT66IaIPB9Xqs398fF38JFW63sKCjHUJM1eMsbIaysspx2pRbRCr8Gp
-	H4e9uFjb2sN7Vb6u4zSZbUCuM51Xl92cOQCNyiv2eiQ471R4dqpRnA8Ujky2Wm2OyzA4eBy+wQL
-	YvoETgBfE0oVbyUGc+MqnNptiCTJQ/6edjW16LnTZfHL/iumjkXHwYkhHuwelhl3EVwYIgeMnVe
-	3J0g2AIINmntS8id15VwRarKMpPVKF3ELHW7V+vZ4xy4QJ1/qM81RgfxaQr2Et5Ay8+CDZyzOED
-	rSlFL4c+n8BN8GvrWAccF2nGKyQiBg6V6PUbHPvFhOgq+FVJsVmMJytY+dOZiGnK+86Pnftrm72
-	e6eOY27dcnwZeYH
-X-Received: by 2002:a05:6102:5494:b0:605:6615:d9dd with SMTP id ada2fe7eead31-60567d42645mr1456978137.3.1775050563920;
-        Wed, 01 Apr 2026 06:36:03 -0700 (PDT)
-X-Received: by 2002:a05:6102:5494:b0:605:6615:d9dd with SMTP id ada2fe7eead31-60567d42645mr1456958137.3.1775050563411;
-        Wed, 01 Apr 2026 06:36:03 -0700 (PDT)
+        bh=dCV+ULd+ytCZYkOrcVruW64KxOJ7cl2GO/EvJ1gyoVk=;
+        b=azz8EFX/GiFjkuvbQCCOIs7GEBXZQ9cI2SaLVD8kqWH0bHEJD+ATmzQmQ4VcIQQQPk
+         rltI30OD5PP81dzpMy5QeZXfSZXlP3WpIx7Mn+dPkK5FF3OxZznpuarAvrvWnx4zrx6J
+         lhx9Eca194OWwNXYid+9dIk2plEvmF8owmGnfIwX695x9wz0+2ut2fpCXhnHosxG230N
+         PC+WtrvcRwpLR43E2VoSpmjOn3ueFEixh5Jo75L2BWvPgij8RuNBmEwODQEcGaDM2xuj
+         icf2tF5eGVwXtE6E9fOC+NEKG0eKdHAcZqoToeTE2BeNXdZHQiVUtdiy4j1wMj8S3C8H
+         WNmA==
+X-Forwarded-Encrypted: i=1; AJvYcCW1YK3+bKrC3LbE74PFAaKvZLBEguuOMWkDa/e5y9bYKMp83KCqKiL4hh0uSVFIRgS2li2mjeWSDg52tgeilO/0x7Cl@vger.kernel.org
+X-Gm-Message-State: AOJu0Yxs2Q1cL+Eyly1YPcymsAnw0LWQW1kn+eMDjd5TDGfDO6AvokJx
+	6/4sfU+YJdbJQPqm5Tv3mqvAlQpBa3URhOeJJyKtKbzyxsJfVtFvjlSbpvj9ZfPGI2+iCM0q3hc
+	LJskOVd+puuXzambnCIRk0LRWiArdGPOIHTuCPPqI0f8kblQY1xPi84tGRwEHuX644Pr4QhT8Y+
+	PV8BoFkFh2
+X-Gm-Gg: ATEYQzyIhTZ0krbAXqP6gOi+QeMTMSny6qOjBEKyAdMHsiI7IIshyWg6az8rw2dQRr5
+	AargEjk5Yx18v6qAQ4QDLZbFuIhWdOJYnq55Q1ZokqQt2RsdaZVgaEO4dOgDYWC642urwkju0xH
+	26gJvdf4DjlhEveRajClHYiEj3tA5MDhhuNKB5XvLIH+K66qcKdFdnvM6Ty1bW34gZUKExA+4Wz
+	LYm4ufBC8YIk8QeuJuiih2IcprmgyxOiQhuzk1vlKExTZvMwHjHhvIITGED0PGkq+vA+b74nRte
+	LZjAbm50No2xx/kiAjTdf+eCpy9adlxve/ok39bCqkDeabD1l5fyfrHH0NOKgUS6Lm2Sls9DEXZ
+	HWpIJhiNrfcD5yIvSUdeF5hwb6xHtZFjSyhXLoNdJJK0rtjit8CjTlnpQfKVgZ4qyUXb3SXpbfL
+	/PgMV5q/M7JagzOKR/U4NOcYBHhwR0LF58wF2hzwW/QeInsW0vL3yZ5EurHrh0s7n65o/LtCK6K
+	bFOewbDP1sGXOoX
+X-Received: by 2002:a05:6102:5114:b0:605:558d:c7c2 with SMTP id ada2fe7eead31-60567dfaab0mr1252118137.12.1775050716911;
+        Wed, 01 Apr 2026 06:38:36 -0700 (PDT)
+X-Received: by 2002:a05:6102:5114:b0:605:558d:c7c2 with SMTP id ada2fe7eead31-60567dfaab0mr1252107137.12.1775050716371;
+        Wed, 01 Apr 2026 06:38:36 -0700 (PDT)
 Received: from ?IPV6:2001:1c00:c32:7800:5bfa:a036:83f0:f9ec? (2001-1c00-0c32-7800-5bfa-a036-83f0-f9ec.cable.dynamic.v6.ziggo.nl. [2001:1c00:c32:7800:5bfa:a036:83f0:f9ec])
-        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-b9b7ae24d6bsm510260966b.6.2026.04.01.06.36.02
+        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-b9b7b1e4395sm493829366b.44.2026.04.01.06.38.35
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 01 Apr 2026 06:36:02 -0700 (PDT)
-Message-ID: <7dbd37c3-4a5e-4577-bff6-ed0826b489ac@oss.qualcomm.com>
-Date: Wed, 1 Apr 2026 15:36:01 +0200
+        Wed, 01 Apr 2026 06:38:35 -0700 (PDT)
+Message-ID: <b9b66e79-751b-476e-90e9-670ef44f131e@oss.qualcomm.com>
+Date: Wed, 1 Apr 2026 15:38:34 +0200
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
@@ -90,111 +90,205 @@ List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-From: Hans de Goede <johannes.goede@oss.qualcomm.com>
-Subject: Re: [PATCH v6 4/4] platform/x86: int3472: Add support for GPIO type
- 0x02 (IR flood LED)
-To: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Cc: Marco Nenciarini <mnencia@kcore.it>, Daniel Scally <djrscally@gmail.com>,
-        Sakari Ailus <sakari.ailus@linux.intel.com>,
-        =?UTF-8?Q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>,
+From: johannes.goede@oss.qualcomm.com
+Subject: Re: [PATCH v5 0/4] platform/x86: int3472: Add support for GPIO type
+ 0x02 (strobe)
+To: Sakari Ailus <sakari.ailus@linux.intel.com>
+Cc: Marco Nenciarini <mnencia@kcore.it>, djrscally@gmail.com,
+        ilpo.jarvinen@linux.intel.com, andriy.shevchenko@linux.intel.com,
         platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
 References: <ab0URIrzZPsYjWrM@spark.kcore.it>
- <20260331075204.1567624-1-mnencia@kcore.it>
- <20260331075204.1567624-5-mnencia@kcore.it>
- <bc5c4cd6-e026-41d6-ad49-aeffb949f7fb@oss.qualcomm.com>
- <acuoEp_aH_su0q2H@ashevche-desk.local>
+ <20260327181031.1489365-1-mnencia@kcore.it>
+ <76baf0c3-4c1f-4169-846d-5c74dab69a18@oss.qualcomm.com>
+ <acqO62_87TM4UZMI@spark.kcore.it>
+ <06317144-d652-466a-86e9-da2569a1acf6@oss.qualcomm.com>
+ <acrbTBh8KsHmtJN5@kekkonen.localdomain>
+ <55510bea-30ff-45f2-b4c7-4a191ff214a1@oss.qualcomm.com>
+ <acw8fB6-s3pDYCSH@kekkonen.localdomain>
 Content-Language: en-US, nl
-In-Reply-To: <acuoEp_aH_su0q2H@ashevche-desk.local>
+In-Reply-To: <acw8fB6-s3pDYCSH@kekkonen.localdomain>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
-X-Proofpoint-Spam-Details-Enc: AW1haW4tMjYwNDAxMDEyNiBTYWx0ZWRfXwYSyhBEIOedy
- 8ra5ZA/sgPfpbR3l5zaTKcDtUrHFcMaO7qyCaHhYzO0uM8vAkEG2rakJ5ZYj5H4xEVJNkVm7uw5
- PVuAEQYOw0nMAAq0RgKd1v+9ZXGEmKVnwrn7PBYgrGvr5QaRTd2WI0Qagw459TDKeJ3kn5BOz14
- emBvo3AwhdcTN3scuF85P+k6APpxMF5dhl9HuWD8kRJLLuCF6MWOMrEILNBnGJ5Ys9oANF2vQ2H
- Cj6ZOrAt4SgOmtCeLF+jzjtepm/D/SMxybvWnCt3icsXCurlmylMQ8F1O7yVDjt+Nokmk8NP11m
- oRfKFN1IN7p7bWMJcQX9bAHAW5Vsk69ZBmT22iGdjbuXuWHEUnNreLbmmnIPfJCTya06XFWKeOL
- zig7UcfHueKyK0RhZ0D9QU1VYZgT2r0GCpET0f0MBzw3ePOYWb/QZ2+yZWjILQMtLmgdmH1FKgr
- btGhkTzNT/4cSSvmjpw==
-X-Authority-Analysis: v=2.4 cv=YcawJgRf c=1 sm=1 tr=0 ts=69cd1f45 cx=c_pps
- a=P2rfLEam3zuxRRdjJWA2cw==:117 a=xqWC_Br6kY4A:10 a=IkcTkHD0fZMA:10
+X-Authority-Analysis: v=2.4 cv=ZfUQ98VA c=1 sm=1 tr=0 ts=69cd1fdd cx=c_pps
+ a=N1BjEkVkxJi3uNfLdpvX3g==:117 a=xqWC_Br6kY4A:10 a=IkcTkHD0fZMA:10
  a=A5OVakUREuEA:10 a=s4-Qcg_JpJYA:10 a=VkNPw1HP01LnGYTKEx00:22
- a=u7WPNUs3qKkmUXheDGA7:22 a=DJpcGTmdVt4CTyJn9g5Z:22 a=PhDHjK9OYLvGxpwDl6MA:9
- a=QEXdDO2ut3YA:10 a=ODZdjJIeia2B_SHc_B0f:22
-X-Proofpoint-GUID: Jyi5WytwIK4nYPsTV8mUM_Ms53VO4Gd8
-X-Proofpoint-ORIG-GUID: Jyi5WytwIK4nYPsTV8mUM_Ms53VO4Gd8
+ a=u7WPNUs3qKkmUXheDGA7:22 a=rJkE3RaqiGZ5pbrm-msn:22 a=EUspDBNiAAAA:8
+ a=al-jjG9jT3OnI149PLAA:9 a=QEXdDO2ut3YA:10 a=crWF4MFLhNY0qMRaF8an:22
+X-Proofpoint-GUID: yUtXvAcmaPgk0Zzfj2c4rXZPFP0sy3dl
+X-Proofpoint-ORIG-GUID: yUtXvAcmaPgk0Zzfj2c4rXZPFP0sy3dl
+X-Proofpoint-Spam-Details-Enc: AW1haW4tMjYwNDAxMDEyNiBTYWx0ZWRfX7XuwVRzMj6gn
+ NuvuJHn861aEXXP86LzfaJFaOfmt9CWm6KyBVYpUoORonASiQsMEY69bjqPByl/IHVjZjXCXaSQ
+ kjjvhq4aEkH35YEvU3hN5Yt8zLYUZi+3CqTNwhK8h+gcXoqSJmw9TOnx3TBzFd/KY7gVdzvpaVT
+ afNVL/POJX0q1i8oIr2bzkpYF5rSA0dKM+RYaUHbqCuRp7aXh23CQUhT8sukawxIeZvilaNDxYO
+ ZiP9089m3xkTfUDQ7zHpNuaBVllAzmJm+/fDozFE9x13fruStufERF0FJl17weL48kFWWKBRgD1
+ qlI/dsuhZGNPtwVwgN6h89m+yD+ACFGis2Ey/rLkyZeF+zSmUedqPrasxSXopUFKBq7P6UDO20k
+ KY3CYGGZhLKFaQw8H2G8cDHp24nwgJ6niYR3M73n5DsM9xS8Wjx35zPR705fHpB/OEgkaoibPBy
+ AxbP1Cxe69v0ey+e2Tw==
 X-Proofpoint-Virus-Version: vendor=baseguard
  engine=ICAP:2.0.293,Aquarius:18.0.1143,Hydra:6.1.51,FMLib:17.12.100.49
  definitions=2026-04-01_04,2026-04-01_02,2025-10-01_01
 X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
- phishscore=0 priorityscore=1501 adultscore=0 clxscore=1015 suspectscore=0
- malwarescore=0 impostorscore=0 spamscore=0 lowpriorityscore=0 bulkscore=0
+ malwarescore=0 lowpriorityscore=0 priorityscore=1501 phishscore=0 spamscore=0
+ clxscore=1015 bulkscore=0 suspectscore=0 impostorscore=0 adultscore=0
  classifier=typeunknown authscore=0 authtc= authcc= route=outbound adjust=0
  reason=mlx scancount=1 engine=8.22.0-2603050001 definitions=main-2604010126
 
 Hi,
 
-On 31-Mar-26 12:55, Andy Shevchenko wrote:
-> On Tue, Mar 31, 2026 at 12:36:28PM +0200, Hans de Goede wrote:
->> On 31-Mar-26 09:52, Marco Nenciarini wrote:
->>> Add support for GPIO type 0x02, which controls an IR flood LED used
->>> for face authentication on some laptops (e.g. Dell Pro Max 16 Premium).
+On 31-Mar-26 23:28, Sakari Ailus wrote:
+> Hi Hans,
+> 
+> On Tue, Mar 31, 2026 at 12:15:55PM +0200, johannes.goede@oss.qualcomm.com wrote:
+>> Hi Sakari,
+>>
+>> On 30-Mar-26 22:21, Sakari Ailus wrote:
+>>> Hi Hans, Marco,
 >>>
->>> Without this patch, the kernel logs "GPIO type 0x02 unknown; the sensor
->>> may not work" and IR sensors paired with a flood LED cannot function.
+>>> On Mon, Mar 30, 2026 at 05:12:21PM +0200, johannes.goede@oss.qualcomm.com wrote:
+>>>> Hi,
+>>>>
+>>>> On 30-Mar-26 16:55, Marco Nenciarini wrote:
+>>>>> Hi Hans,
+>>>>>
+>>>>> Thank you for the detailed feedback.
+>>>>>
+>>>>>> My main remark on the current patch set is that IMHO
+>>>>>> the LED name really should be: OVTIxxxx:00::ir_flood_led
+>>>>>> since that is what it actually does, strobe is typically
+>>>>>> related to flash LEDs which despite the naming in Intel's
+>>>>>> side this is not.
+>>>>>
+>>>>> The series actually started with "ir_flood" in v1-v2. It was renamed to
+>>>>> "strobe" in v3 to match the GPIO type name used in Intel's ACPI _DSM
+>>>>> tables. But I agree with you that the userspace-visible LED name should
+>>>>> describe what the hardware actually does, not mirror an internal ACPI
+>>>>> label. I am happy to go back to "ir_flood" for the LED name.
+>>>>>
+>>>>> We could keep INT3472_GPIO_TYPE_STROBE for the define (matching the ACPI
+>>>>> type value) but pass "ir_flood" as the con_id to the LED registration,
+>>>>> so userspace sees OVTIxxxx:00::ir_flood_led. Would that work for
+>>>>> everyone?
+>>>>
+>>>> That sounds good to me.
 >>>
->>> The flood LED is registered through the LED subsystem like the existing
->>> privacy LED. Unlike the privacy LED, it does not have a lookup entry
->>> since there is no consumer driver expecting it via led_get().
+>>> Seems reasonable.
 >>>
->>> To support multiple LEDs per INT3472 device, convert the single led
->>> struct member to an array with a counter.
-> 
-> ...
-> 
->>> +			ret = skl_int3472_register_led(int3472, gpio, "privacy", true);
->>> +			if (ret)
->>> +				err_msg = "Failed to register LED\n";
->>> +
-> 
->>> +			ret = skl_int3472_register_led(int3472, gpio, "ir_flood", false);
+>>>>
+>>>>>> We really need to get some input from the V4L2 maintainers
+>>>>>> here on if this is a good idea, before merging this series.
+>>>>>
+>>>>> Agreed.
+>>>>>
+>>>>>> I can even imagine
+>>>>>> a default simple mode where the v4l2-core just turns
+>>>>>> on the LED when streaming starts and off again when
+>>>>>> streaming stops (very much like the privacy LED) and
+>>>>>> then in the future maybe we can extend this, e.g.
+>>>>>> add a control on the sensor device to make this
+>>>>>> configurable ?
+>>>>>
+>>>>> That makes a lot of sense. The current series intentionally keeps things
+>>>>> minimal (just exposing the LED under /sys/class/leds with no V4L2
+>>>>> integration), but this future direction sounds right.
+>>>>>
+>>>>> I will hold off on sending v6 until we have agreement on the naming and
+>>>>> Sakari has had a chance to weigh in.
+>>>>
+>>>> Ack, lets wait for input from Sakari here.
+>>>
+>>> I wonder if there would be any deterministic ways to find the LED device
+>>> based on the sensor. It'd probably require more information via MC / V4L2
+>>> controls to allow that.
 >>
->> and then here instead of having 2 almost identical cases just pass con_id
->> note please already use con_id here in patch 3/4 to avoid churn.
+>> Yes, the int3472 code adds a LED lookup table entry with the consumer-
+>> device being the sensor.
 >>
->> After changing that in 3/4 you only need to add a single:
+>> So just like v4l2-subdev.c currently does:
 >>
->> +		case INT3472_GPIO_TYPE_STROBE:
+>> 	sd->privacy_led = led_get(sd->dev, "privacy");
 >>
->> here to make it also handle the strobe/ir_flood case.
+>> it will also be able to do:
+>>
+>> 	sd->privacy_led = led_get(sd->dev, "ir_flood");
+>>
+>>> Alternatively we could use a boolean control for this, but I think I'd
+>>> avoid adding that now and rely on LED API instead.
+>>>
+>>> Are there use cases for this LED, apart from Windows Hello? :-)
+>>
+>> As mentioned for now we could just treat it exactly the same
+>> as the privacy LED and simply turn it on while streaming
+>> inside the v4l2-core / v4l2-subdev code.
+>>
+>> This would nicely cover the face ID use-case for which
+>> Linux implementations exist to.
+>>
+>> And then later of some other use-case comes up we could
+>> make this a menu-control with on/off/auto values, defaulting
+>> to auto which would preserve the turn it on while streaming
+>> behavior.
+>>
+>> We do need to come up with something here, since use-cases
+>> like Howdy (Linux face-id) will need it. My vote goes to
+>> give it the same treatment as the privacy LED in the v4l2-core
+>> for now making things "just work".
+>>
+>> Alternatively we could document that userspace needs to
+>> find the LED and turn it on itself through the LED classdev
+>> but that will be painful for userspace to do for various
+>> reasons including classdev access requiring root rights.
 > 
-> We would also need to recognize need for a lookup. Either keeping
-> a boolean that needs to be initialised into something like
-> `type != INT3472_GPIO_TYPE_STROBE` or turning back to switch-case
-> for that in the callee:
+> That was actually my concern as well.
 > 
-> 	switch (type) {
-> 	case _PRIVACY:
-> 		lookup = ...
-> 		led_add_lookup(...);
-> 		break;
-> 	case _STROBE: // no lookup for now
-> 	default:
-> 		break;
-> 	}
-> 
-> given the nice and neat caller side I would move to switch-case.
+> Still, if we bind this to the privacy LED now
 
-Why would we want to not register the lookup for the ir_flood
-case too ?
+To be clear my suggestion is to treat it the same as we
+currently treat privacy-LEDs (auto-on while streaming) but
+have a separate code-path, or at least a separate LED name
+("ir_flood" vs "privacy") to allow different behavior in
+the future.
 
-Elsewhere in the thread we're discussing actually controlling
-this LED from the v4l2-core which will require the lookup.
+> and the LED will effectively
+> be powered whenever the camera is streaming,
 
-And if that does not materialize the lookup still does no harm.
+Ack.
+
+> we can't drop that interaction
+> in the future as doing so would break existing users.
+
+Ack.
+
+> I'm not sure if there would ever be a need though.
+
+Ack.
+
+> Either way, I'm starting to feel the V4L2 control might actually be the
+> best way to go from here.
+
+I think we can postpone adding a ctrl to if a use-case needing
+different behavior ever shows up (which is unlikely?) .
+
+This ctrl can then be a menu ctrl with auto/on/off values
+defaulting to auto and auto preserving the on-while-streaking
+behavior, so not breaking existing users.
+
+TL;DR: my proposal is:
+
+1. Name the new LED classdev ir_flood[_led] including
+   adding an "ir_flood" LED lookup with the sensor as
+   consuming device of the LED.
+
+2. Make v4l2-core turn the ir_flood on automatically while
+   streaming, just like it does for a "privacy" LED currently
+   (mostly re-using the existing privacy LED code).
+
+3. If in the future userspace needs more fine-grained control
+   at a ir_flood V4L2 menu control on the sensor with
+   auto/on/off values, defaulting to auto which preserves
+   the behavior from 2.
 
 Regards,
 
 Hans
-
 
 
