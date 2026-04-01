@@ -1,163 +1,265 @@
-Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
+Received: from sender4-op-o15.zoho.com (sender4-op-o15.zoho.com [136.143.188.15])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5EE74211A28
-	for <platform-driver-x86@vger.kernel.org>; Wed,  1 Apr 2026 18:47:33 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.180.131
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1775069254; cv=none; b=GdN+jRn7vh1VJCYcrgsxqWiR0iGJeEuVccmYrywkGtSA/ndLf7d+fxDpff35RjQZtq5ou8yhmSIRXPCO1UutdzPB6F21tStGRdBN3ydOALE8lrX5xN97yzKjT2d/6xZfZzTVSqWdZb/EykIUsTnMRq3jXx9NQaQLZW9VquPoVLA=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1775069254; c=relaxed/simple;
-	bh=gS4Ibfh5IJpdKEth4ktrvf0S0llBqiTPM5efYyqen/0=;
-	h=Message-ID:Date:MIME-Version:From:Subject:To:Cc:References:
-	 In-Reply-To:Content-Type; b=X6TbWcAV2nYO68XslLmiM1PFqjhqLy/tebwIoklNqE9UBozdNzI6XUi2jvIf0I8/y0fss/PpzsQWzx6ML3rAskbKb6p4jjmjEEd73pDZLKYGFaaOaIOBKmchqN+VpiDYpd4KQmpZTzi9sX7oYoQTHy78Etq1Aa7/cmj9rfH9Dew=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com; spf=pass smtp.mailfrom=oss.qualcomm.com; dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b=pIW7B0RF; dkim=pass (2048-bit key) header.d=oss.qualcomm.com header.i=@oss.qualcomm.com header.b=RENmrzWp; arc=none smtp.client-ip=205.220.180.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oss.qualcomm.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 97F56217F33;
+	Wed,  1 Apr 2026 18:50:08 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=136.143.188.15
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1775069410; cv=pass; b=Ny8GjUhyAzUzmo/+AYP48ItQUatlWcQYPklR8azQPZQQY3QS+glv3haZMz019VELI+CJgckPxkFMCCVq/0tA6zgowfaxrVc/RQn9wlQq7Z3y/74HzZsEiKXE4HhKwVUbL8zlohibkFjrQcTxQaqjAgFxSVms3DifJe4FX8iCYWg=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1775069410; c=relaxed/simple;
+	bh=gI00VDT03+gr7+cypKh8q4oCczbplh8sBxPcdtTYK5k=;
+	h=Message-ID:Subject:From:To:Cc:In-Reply-To:References:Content-Type:
+	 Date:MIME-Version; b=BO/HWfq7awlbTpDfc0IEuBGIgUF03Y7vaO/lE4p+o714SXKEFiToJ39LkR5etdvgDnK9Q7OMnRcP5rupgIv7ygkGaatqzIfXv8+zFt2PAGaQlM4tWlU9q99u3aYPb14dOMttFg/LtNBP3naQGkcxL7j54Sx6C1oR/bjsnhFYcYU=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=rong.moe; spf=pass smtp.mailfrom=rong.moe; dkim=pass (2048-bit key) header.d=rong.moe header.i=i@rong.moe header.b=nl9OP9bU; arc=pass smtp.client-ip=136.143.188.15
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=rong.moe
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=rong.moe
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b="pIW7B0RF";
-	dkim=pass (2048-bit key) header.d=oss.qualcomm.com header.i=@oss.qualcomm.com header.b="RENmrzWp"
-Received: from pps.filterd (m0279869.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.18.1.11/8.18.1.11) with ESMTP id 631G6LOH361872
-	for <platform-driver-x86@vger.kernel.org>; Wed, 1 Apr 2026 18:47:32 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=qualcomm.com; h=
-	cc:content-transfer-encoding:content-type:date:from:in-reply-to
-	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
-	07bb0ELt+Dd0bv11fWezHEt7Xo1l1ORJ2ooxTs7cpp8=; b=pIW7B0RFrBpksz5A
-	6HCXytsEoGce7IBWrkVhtD2cPqGD+q074/j527Q4yRneTqwVs8DfrvsWVn6bOkKv
-	LwnPM1hR+0NBDLoDypDHik6Nu2pduCq3f6OTi9VFcZKlGLPNXXsvQ/Ashy4ay9H4
-	xiFAZVkMM4u0+x4nuGVahVJDOiZQIRlTQBLQn0acbgf2tV9gYp3iAK1fI1e6K3Oj
-	DxIVJ8yZuEIoMId7SUhtl1R8UT7hvRIhZ/mgViKEf26UVmXPm2Dd7wtdmfCCYv5b
-	tvcc2odgQ5DM0YjEplkYWNfzcALu82hB/7a8I6WLimi5H4bDXdGbptykkWNUNt1x
-	q59wCw==
-Received: from mail-qt1-f198.google.com (mail-qt1-f198.google.com [209.85.160.198])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 4d96k98h38-1
-	(version=TLSv1.3 cipher=TLS_AES_128_GCM_SHA256 bits=128 verify=NOT)
-	for <platform-driver-x86@vger.kernel.org>; Wed, 01 Apr 2026 18:47:32 +0000 (GMT)
-Received: by mail-qt1-f198.google.com with SMTP id d75a77b69052e-50911c94db1so1109261cf.0
-        for <platform-driver-x86@vger.kernel.org>; Wed, 01 Apr 2026 11:47:32 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=oss.qualcomm.com; s=google; t=1775069252; x=1775674052; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:content-language:references
-         :cc:to:subject:from:user-agent:mime-version:date:message-id:from:to
-         :cc:subject:date:message-id:reply-to;
-        bh=07bb0ELt+Dd0bv11fWezHEt7Xo1l1ORJ2ooxTs7cpp8=;
-        b=RENmrzWpQujYVgz8kDkiCkKZM7yeOU/uNc/TkOln9ZMYShir9Bc7nChOEsQ8N1uflS
-         HnxUcKJjdbGY/KVzUhP8qFEtQvZbt/jkIs1HVpt/ZmZZkq2M6ecJum96bMhcM88YhjAZ
-         r69bJZDLtz7Y15VItQgZGDgLJLZzKIFj1RpJOEk7jQk1GoyhGAs8w+UvHuPzKD+ymd+U
-         UN9ZSQlXZAwpraQS/uRtlczlV7UAhwZ8uUBXLXa2FLUSvP/0QrkU2CWtfAA9k/MxGAeh
-         j1h8Y21CH0oYc6FwhgL9MuMeaB/DVKO23OP5rT4eTCC/7x+DowO2Ng9+D7wXcEWbA4r7
-         e6hw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1775069252; x=1775674052;
-        h=content-transfer-encoding:in-reply-to:content-language:references
-         :cc:to:subject:from:user-agent:mime-version:date:message-id:x-gm-gg
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=07bb0ELt+Dd0bv11fWezHEt7Xo1l1ORJ2ooxTs7cpp8=;
-        b=EKGR3q//KZcfb1nOtqRxDAhZUeh6p6q3KBQNI9oOLH3diIgF7sWVIJ7LypvjWuLREg
-         7Hnqxz+GaZtjwiM97Ndy3jhBXD8GxeGfdtqgAe1Bijw5jf+FZjuwUefm5po0HHK6Pl0E
-         TKtuv5sEFeBbJM3tuxPzs0Ns+6gIWBwkZasF8YiyXNl6fvsq2VFElBYeSj9D0bNPC07I
-         yArG3QgWdmJMvgETsW9FKR712+R/gl0LV48nUEbrlgnKn7QgIMWRN5OdWGDZmDGdtKgU
-         EO4eOl8KgB0ioQvOv5J7bDbs8Uc9o9AYhZOrrNr12W2Wlza/Od1ux32SCgs/O1an8tUL
-         2xHQ==
-X-Forwarded-Encrypted: i=1; AJvYcCUC07TsapA6HlyOqa50Ccr0PJrUCKiHSr7C1fvjcNmcvyxbUpq5GtE9rqWmCa6ykctdKIFnDbXFc+459gCBqpTgn+45@vger.kernel.org
-X-Gm-Message-State: AOJu0YygmMgBDYu77Upf5OAxQ9jEx++hW2I5a8DYONjbpj53Jr5F+jWo
-	cViOsoT93iWyRp4NewSLYGNgNYJlVP4Ndwk1GrqzRtl2VvJhRSCw1k6cNhZefLYdiSesYeteuVM
-	G3sQm4pfp1S+ezhYXw6k543Wb/gEmn3b8kMDN+Fn3KoF51bUr50257OqZ+m/pO+jzjPwkbQnenH
-	cB
-X-Gm-Gg: ATEYQzzwBxcj89iuqSjeurmp0eTI1gMqejOl6q83tdDJtrWQU2gLFPLjWStElASQg2j
-	iBw5qF701eTCZ5P7ke0HlUFyslSlpSvZLxtWqkAD2xXmYTSOCHHOROhiJoNIEGoisnTqyZWfTh1
-	Be0BhhLVMaOEaCgqxXWFk3t+ekWqZx7RLI71Zg6jbD4dSkBNFY8vOkF3ZtP3MeCvtWaES7B9rKX
-	AJYD8NJRvStQ69ncoS3hqS9bmHdhnm2hfdpMnXX4zmJTfvTPGS+zgxepeXwRVcZWVmf943HXa36
-	REVkWh63TTrNVHDW/LDj5fHoSfVh6cuf7ViVSv/VWyKukUD9ElShN3EOYSobFHOdC4lKN0DLTq1
-	zc9wkTRbAiyaRdRMKUTCufzUwOgbTO29OwhmN8yjLi7yJng39C6mr/JoPZceh4yXNUmovwRa/OF
-	8U+xVvG07Bmupf8dq5h3tKhhFvOHhjfKBnM/JE52zlqVIrSnYttxs5Ldjug3xmOv3cnjpr4v8xw
-	aQMfJWBrJJbtCVc
-X-Received: by 2002:a05:622a:19a0:b0:509:11c6:d689 with SMTP id d75a77b69052e-50d3bc21ef9mr66832841cf.25.1775069251669;
-        Wed, 01 Apr 2026 11:47:31 -0700 (PDT)
-X-Received: by 2002:a05:622a:19a0:b0:509:11c6:d689 with SMTP id d75a77b69052e-50d3bc21ef9mr66832381cf.25.1775069251226;
-        Wed, 01 Apr 2026 11:47:31 -0700 (PDT)
-Received: from ?IPV6:2001:1c00:c32:7800:5bfa:a036:83f0:f9ec? (2001-1c00-0c32-7800-5bfa-a036-83f0-f9ec.cable.dynamic.v6.ziggo.nl. [2001:1c00:c32:7800:5bfa:a036:83f0:f9ec])
-        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-b9c3cad1350sm15268966b.28.2026.04.01.11.47.30
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 01 Apr 2026 11:47:30 -0700 (PDT)
-Message-ID: <d792efaf-590a-430c-8fba-2998360e54da@oss.qualcomm.com>
-Date: Wed, 1 Apr 2026 20:47:29 +0200
+	dkim=pass (2048-bit key) header.d=rong.moe header.i=i@rong.moe header.b="nl9OP9bU"
+ARC-Seal: i=1; a=rsa-sha256; t=1775069399; cv=none; 
+	d=zohomail.com; s=zohoarc; 
+	b=TdAp2zF36doTH9oPMBTb9PN8vGZDlavbQyyPvkX/k/xrIK5t7QbqHq+2a9In6r8MLcvsmA+F07jy4/uNzePnCVWRR5LeKCqVsY2QGN6Pxanw75sPP/NQrpwOorpQmil7fW1gW0kHk3vU9oZ1W/gQiWtypuejpF/uVEJNyoiDjpc=
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=zohomail.com; s=zohoarc; 
+	t=1775069399; h=Content-Type:Content-Transfer-Encoding:Cc:Cc:Date:Date:From:From:In-Reply-To:MIME-Version:Message-ID:References:Subject:Subject:To:To:Message-Id:Reply-To; 
+	bh=MmzjWJY1tABtNap3KyBMmkl2MXQC1Ua6O2PErvY0+xY=; 
+	b=bfRDdpxhw0OPx6iRnvvLO7DwJRVRPXzRhoteSJYFlSuCF1+DwgmMKoEBibc8ZU3hZKiDW8O+qXlzLqC0v4RqsFa/GqzB2CDqriwtyneQdqM+9wX+Egvv3EcUbMuxsbH1yohX2NiWGMbnk6GJevwkVRBKK45mElVXJYkakGKHaEg=
+ARC-Authentication-Results: i=1; mx.zohomail.com;
+	dkim=pass  header.i=rong.moe;
+	spf=pass  smtp.mailfrom=i@rong.moe;
+	dmarc=pass header.from=<i@rong.moe>
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; t=1775069399;
+	s=zmail2048; d=rong.moe; i=i@rong.moe;
+	h=Message-ID:Subject:Subject:From:From:To:To:Cc:Cc:In-Reply-To:References:Content-Type:Content-Transfer-Encoding:Date:Date:MIME-Version:Message-Id:Reply-To;
+	bh=MmzjWJY1tABtNap3KyBMmkl2MXQC1Ua6O2PErvY0+xY=;
+	b=nl9OP9bU2AW931VcgRmOZdEAzFHpAi3gyj13KcWBWgWuWHS78YRduLRnXf6ULMjb
+	GWyuwhxriRUPGa9+TBeIp05CORAY664xnfxFFsU6J1g1JRs3YVUhFnun2ObPU/bBbce
+	HwojYcOQbYsjiUBG5aui8if4NnKLXaX272gjgM1E5ALHnE1RMqlc4zRmhv8eaVvvYbw
+	cMzr+NSnIBSBclEJg2WIJcU2NNA486WlVVF0UYsx0W+3/o5sK8SrS+fB/oGr9pa5Xyn
+	iAv2UgTncltrKpMFOZUlY+ORJnOYblUBWyHGiZFX+ZNtJLf4gDYX7YyuKg1WgeCwBPF
+	89xwNhCO2g==
+Received: by mx.zohomail.com with SMTPS id 1775069396818679.7944510002686;
+	Wed, 1 Apr 2026 11:49:56 -0700 (PDT)
+Message-ID: <499fa3efd5be054ffdda77dd00ad4d8d3391e073.camel@rong.moe>
+Subject: Re: [PATCH v6 00/13] platform-x86: lenovo-wmi: Add fixes and
+ enhancement
+From: Rong Zhang <i@rong.moe>
+To: "Derek J. Clark" <derekjohn.clark@gmail.com>, Ilpo
+ =?ISO-8859-1?Q?J=E4rvinen?= <ilpo.jarvinen@linux.intel.com>, Hans de Goede
+ <hansg@kernel.org>
+Cc: Mark Pearson <mpearson-lenovo@squebb.ca>, Armin Wolf <W_Armin@gmx.de>, 
+ Jonathan Corbet
+	 <corbet@lwn.net>, Kurt Borja <kuurtb@gmail.com>, 
+	platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
+In-Reply-To: <20260331181208.421552-1-derekjohn.clark@gmail.com>
+References: <20260331181208.421552-1-derekjohn.clark@gmail.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+Date: Thu, 02 Apr 2026 02:44:51 +0800
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-From: johannes.goede@oss.qualcomm.com
-Subject: Re: [PATCH v5 0/4] platform/x86: int3472: Add support for GPIO type
- 0x02 (strobe)
-To: Marco Nenciarini <mnencia@kcore.it>, sakari.ailus@linux.intel.com
-Cc: andriy.shevchenko@linux.intel.com, djrscally@gmail.com,
-        ilpo.jarvinen@linux.intel.com, platform-driver-x86@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-References: <b9b66e79-751b-476e-90e9-670ef44f131e@oss.qualcomm.com>
- <ac1SRO2nEt99IgBk@spark.kcore.it>
-Content-Language: en-US, nl
-In-Reply-To: <ac1SRO2nEt99IgBk@spark.kcore.it>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-X-Authority-Analysis: v=2.4 cv=doLWylg4 c=1 sm=1 tr=0 ts=69cd6844 cx=c_pps
- a=mPf7EqFMSY9/WdsSgAYMbA==:117 a=xqWC_Br6kY4A:10 a=IkcTkHD0fZMA:10
- a=A5OVakUREuEA:10 a=s4-Qcg_JpJYA:10 a=VkNPw1HP01LnGYTKEx00:22
- a=u7WPNUs3qKkmUXheDGA7:22 a=_glEPmIy2e8OvE2BGh3C:22 a=EUspDBNiAAAA:8
- a=uiP3ok2nFBVsqEKrwggA:9 a=QEXdDO2ut3YA:10 a=dawVfQjAaf238kedN5IG:22
-X-Proofpoint-ORIG-GUID: vWuieNgz5Et09QS0jWrIp8sU8K10KAkT
-X-Proofpoint-GUID: vWuieNgz5Et09QS0jWrIp8sU8K10KAkT
-X-Proofpoint-Spam-Details-Enc: AW1haW4tMjYwNDAxMDE3NiBTYWx0ZWRfXyAFxmT2xTGbx
- 3Y2Lsv0ZIkPnF+DYQbs7Pio8xHozC+MoK9sQgG5MPhohw+0Ne8PN5Z6Ch78kFpc0Tyw1+CT8u5v
- bWvYMLiJ7MJJ2766BHqmoHagQgRV15/hAA5Ut4NpznVZ1Y/1rOUFGPVmM4CYINOgvk7QolXEf69
- zCRcAxACin7Wdq5KHnN+ySsHdJHIZ1kVR6LwT4iWUJFISgkKOExiMcVzGHMhY6OHPoN9bQpyO3y
- 9JvuL8bUTQHQSWu6UDSPg582QxXlYV5zAt2+U2FBu56TTvGmFQhaq4vdfAySCh4Vw/eL1XvNWje
- RfXqA56f+QNxAUutDettV85vQ4Pti4d9ezQIMwNtSMwfhOSZB+jkkAGBNYsYVA1V46hpAA4YhMX
- 60OaZaXvJWgrHlpcZG3y9G7lonRCEUc72VfFOkeSrrrkT5JbFBXqp/5yWbtHfSp0SRMYxyBZsWv
- UMiRwwzKpzo5onj+bVQ==
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1143,Hydra:6.1.51,FMLib:17.12.100.49
- definitions=2026-04-01_04,2026-04-01_02,2025-10-01_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
- phishscore=0 bulkscore=0 impostorscore=0 spamscore=0 suspectscore=0
- clxscore=1015 lowpriorityscore=0 malwarescore=0 priorityscore=1501
- adultscore=0 classifier=typeunknown authscore=0 authtc= authcc=
- route=outbound adjust=0 reason=mlx scancount=1 engine=8.22.0-2603050001
- definitions=main-2604010176
+User-Agent: Evolution 3.56.2-9 
+X-ZohoMailClient: External
 
-Hi,
+Hi Derek,
 
-On 1-Apr-26 19:13, Marco Nenciarini wrote:
-> On 01-Apr-26 15:38, johannes.goede@oss.qualcomm.com wrote:
->> TL;DR: my proposal is:
->>
->> 1. Name the new LED classdev ir_flood[_led] including
->>    adding an "ir_flood" LED lookup with the sensor as
->>    consuming device of the LED.
->>
->> 2. Make v4l2-core turn the ir_flood on automatically while
->>    streaming, just like it does for a "privacy" LED currently
->>    (mostly re-using the existing privacy LED code).
->>
->> 3. If in the future userspace needs more fine-grained control
->>    at a ir_flood V4L2 menu control on the sensor with
->>    auto/on/off values, defaulting to auto which preserves
->>    the behavior from 2.
-> 
-> This plan sounds good to me.
-> 
-> I have a v8 ready that addresses your feedback on patch 4/4: the LED
-> lookup is now always registered (for ir_flood too), removing the type
-> parameter and the conditional switch-case. Shall I go ahead and send it?
+On Tue, 2026-03-31 at 18:11 +0000, Derek J. Clark wrote:
+> This series adds many much needed features and fixes to the lenovo-wmi
+> drivers.
+>=20
+> Patch 1 moves LWMI_FAN_DIV to be next to the rest of the fan attribute
+> defines in preparation for adding additional attrbiute macros. This is
+> so the attribute macros can all be in the same place in the file.
+>=20
+> Patch 2 cleans up tunable_attr_01 by removing an unused pointer and
+> correctly assigning the members as u8 isntead of u32.
+>=20
+> Patch 3 fixes a bug when sending 32 bit arguments via WMI where the
+> second value in the args struct was uninitialized.
+>=20
+> Patch 4 moves all gamezone enums from the gamezone header into the
+> helpers header in preparation for the rest of the series.
+>=20
+> Patch 5 adds a function to make assigning attribute ID's for capdata
+> cleaner and easier.
+>=20
+> Patch 6 addresses bugs where devices that don't support exposed
+> attributes would still create the attribute, and also attempts to
+> identify the correct capdata and set/get methods since some legacy
+> interfaces don't use the custom mode in the method or capdata ID.
+>=20
+> Patch 7 adds the remaining CPU attributes that weren't previously
+> exposed.
+>=20
+> Patch 8 adds GPU attributes.
+>=20
+> Patch 9 renames a name constant in preparation for patch 6.
+>=20
+> Patch 10 adds battery charge-type limiting when supported only by WMI, or
+> when a module parameter to skip compatibility checks is set. The
+> MODULE_PARM_DESC macro creates one check and two warnings in checkpatch.
+> I reviewed other examples from the kernel and I am following the same
+> convention, so I left it as is.
+>=20
+> Patch 11 fixes a bug where the 'gamezone' and the 'other' drivers were
+> incorrectly coupled in the Kconfig, leading to side effects under
+> certain kernel configurations.
+>=20
+> Patch 12 adds a debugfs directory.
+>=20
+> Patch 13 adds a debugfs file for dumping capdata.
+>=20
+> Signed-off-by: Derek J. Clark <derekjohn.clark@gmail.com>
 
-Since Andy indicated he is ok with that approach, yes please
-submit v8 and then this should be ready for merging.
+The series LGTM except for some tiny issues. See my replies to the
+corresponding patches.
 
-Regards,
+Sashiko.dev reports some potential issues in the series as well as some
+existing bugs.
 
-Hans
+https://sashiko.dev/#/patchset/20260331181208.421552-1-derekjohn.clark%40gm=
+ail.com
+
+I've mentioned some in my reply to the corresponding patches. Besides, I
+am going to talk about existing bugs here:
 
 
+- tunable_attr_01 is a statically shared structure, but .dev is
+overwritten each time when the master is bound, which violates
+`.no_singleton =3D true'
+
+AFAIK no device in wild has multiple wmi-other instances so it should be
+safe for the time being.
+
+Fixing it will need numerous fundamental refactorings to the attributes
+and conflict with patch 6 where .cd_mode_id and .cv_mode_id is added to
+tunable_attr_01.
+
+I don't really want to make this series too large and miss this cycle.
+Hence, I am going to fix it in the next cycle with some extra
+refactorings to get rid of attribute-specific show/store callbacks.
+
+For this series, I'd consider violating `.no_singleton =3D true' a very
+minor concern. It should be fine to keep it as is. If we really care
+about it, we could set it to false temporarily.
+
+
+- Rebinding wmi-other leaks IDA
+
+- Failure in lwmi_om_fw_attr_add() followed by lwmi_other_remove()
+double frees the same IDA
+
+- Calling lwmi_dev_evaluate_int() with `retval =3D=3D NULL' leaks memory
+
+- Unbalanced component bind and unbind in the error path of
+lwmi_om_master_bind()
+
+Legit concerns. I will reply with a series fixing them. Could you
+incorporate it into your series?
+
+Fix patches should be the very first patches in the series so that
+backporting is less painful. I'd suggest rearranging the series like:
+
+patches in my fix series
+patch 3
+patch 4
+patch 11
+the rest patches
+
+Thanks,
+Rong
+
+> ---
+> v6:
+>   - Incorporate Rong Zhang's debugfs and decoupling patches into the
+>     series.
+>   - Add a patch to clean up too many cross-references to wmi-gamezone.h
+>   - Make lwmi_attr_id a static inline in wmi-capdata.h
+>   - Added a patch  to fix a bug where ares.arg1 is uninitialized when it
+>     is sent to the firmware.
+>   - Add supported checks before adding battery extenstion, and ensure
+>     both the new checks and the is_writable checks are not casting u32
+>     to i32.
+>   - Misc formating changes.
+> v5: https://lore.kernel.org/platform-driver-x86/20260324221032.1333636-1-=
+derekjohn.clark@gmail.com/
+>   - Remove cv/cd_mode_id references that occured before patch 4.
+>   - Move lwmi_attr_id to capdata.c with a namespace export.
+>   - Fix mixing include.
+>   - Make lwmi_attr_is_supported return bool.
+>   - Use switch instead of if for setting/getting charge type state.
+>   - Various formatting fixes.
+> v4: https://lore.kernel.org/platform-driver-x86/20260312031032.3467565-1-=
+derekjohn.clark@gmail.com/
+>   - Use loop instead of back gotos for identifying the working attribute
+>     ID.
+>   - Use function instead of macro to assign attribute_id, preserving
+>     types.
+>   - Removed unused defines and enum values.
+>   - Rename charging defines to clarify thier purpose.
+>   - Fixed various formatting issues from v3.
+>   - Added module param to skip ACPI check when loading the driver for
+>     the power supply extension.
+>   - Don't abort adding power supply extension if the ACPI handle from
+>     ideapad is not present.
+>   - Don't worry about symmetric cleanup when cleaning up attributes in
+>     an error state.
+>   - Reword Patch 8 commit message to be more concise.
+>   - Fix wording in Patch 7 to match the changes.
+> v3: https://lore.kernel.org/platform-driver-x86/20260224043200.2680384-1-=
+derekjohn.clark@gmail.com/
+>   - Re-add HWMON name const and just rename LWMI_OM_FW_ATTR_BASE_PATH
+>   - Fix linker warnings by moving acpi/battery include to the end of the
+>     list.
+>   - Remove CPU/GPU OC features. These attributes are BOOL type and will
+>     need a new constructor that I'll add later.
+> v2: https://lore.kernel.org/platform-driver-x86/20260215061339.2842486-1-=
+derekjohn.clark@gmail.com/
+>   - Fix gpu_mode misisng from attributes list.
+>   - Fix prototypes for power suppy patch.
+>   - Reorganize CPU and GPU attributes alphabetically.
+>   - Break out the patch consolidating the driver name cost.
+>   - Move some of the refactoring of attribute_id back to into patch 1
+>     where it belongs.
+>   - Fix some additional typos in function prototypes.
+> v1: https://lore.kernel.org/platform-driver-x86/20260213081243.794288-1-d=
+erekjohn.clark@gmail.com/
+>=20
+>=20
+> Derek J. Clark (10):
+>   platform/x86: lenovo-wmi-other: Move LWMI_FAN_DIV
+>   platform/x86: lenovo-wmi-other: Fix tunable_attr_01 struct members
+>   platform/x86: lenovo-wmi-other: Zero initialize WMI arguments
+>   platform/x86: lenovo-wmi-helpers: Move gamezone enums to wmi-helpers
+>   platform/x86: lenovo-wmi-other: Add lwmi_attr_id() function
+>   platform/x86: lenovo-wmi-other: Limit adding attributes to supported
+>     devices
+>   platform/x86: lenovo-wmi-other: Add missing CPU tunable attributes
+>   platform/x86: lenovo-wmi-other: Add GPU tunable attributes
+>   platform/x86: lenovo-wmi-other: Rename LWMI_OM_FW_ATTR_BASE_PATH
+>   platform/x86: lenovo-wmi-other: Add WMI battery charge limiting
+>=20
+> Rong Zhang (3):
+>   platform/x86: lenovo: Decouple lenovo-wmi-gamezone and
+>     lenovo-wmi-other
+>   platform/x86: lenovo-wmi-helpers: Add helper for creating per-device
+>     debugfs dir
+>   platform/x86: lenovo-wmi-capdata: Add debugfs file for dumping capdata
+>=20
+>  .../wmi/devices/lenovo-wmi-other.rst          |  19 +
+>  drivers/platform/x86/lenovo/Kconfig           |   3 +-
+>  drivers/platform/x86/lenovo/wmi-capdata.c     | 128 +++-
+>  drivers/platform/x86/lenovo/wmi-capdata.h     |  31 +-
+>  drivers/platform/x86/lenovo/wmi-events.c      |   2 +-
+>  drivers/platform/x86/lenovo/wmi-gamezone.c    |   5 +-
+>  drivers/platform/x86/lenovo/wmi-gamezone.h    |  20 -
+>  drivers/platform/x86/lenovo/wmi-helpers.c     | 136 ++++
+>  drivers/platform/x86/lenovo/wmi-helpers.h     |  23 +
+>  drivers/platform/x86/lenovo/wmi-other.c       | 689 ++++++++++++++----
+>  drivers/platform/x86/lenovo/wmi-other.h       |  16 -
+>  11 files changed, 891 insertions(+), 181 deletions(-)
+>  delete mode 100644 drivers/platform/x86/lenovo/wmi-gamezone.h
+>  delete mode 100644 drivers/platform/x86/lenovo/wmi-other.h
