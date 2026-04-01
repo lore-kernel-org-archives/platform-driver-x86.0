@@ -1,103 +1,233 @@
-Received: from mail-06.mail-europe.com (mail-06.mail-europe.com [85.9.210.45])
+Received: from relay12.grserver.gr (relay12.grserver.gr [88.99.38.195])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 091F238E12B
-	for <platform-driver-x86@vger.kernel.org>; Wed,  1 Apr 2026 07:34:08 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=85.9.210.45
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E512F37DE8A
+	for <platform-driver-x86@vger.kernel.org>; Wed,  1 Apr 2026 08:20:21 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=88.99.38.195
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1775028851; cv=none; b=FEOvZIUsmBW5eUDsKrO33D5Pa2EHCQ4lCVISXecWvtDKEBWz7D+QpJbJ+g1lEYXDGb7HZcPJq1W0td1XWtn0txF9fyOoCSuYeBFJmmccVkmGT4qqzxPbKLrdkfmEaMYqFqJnUH8jCLbaEziB9eKRNmX/qidPV9yC/ojiFQqybus=
+	t=1775031624; cv=none; b=JzSNVrZ9B7+YYlPJ5rbS7/rkOFhatpwZLjUt4uvePbpH5yesFb3kF2EuXIflfXqXZnABwHB554VvgH2I5cq3Ss0XVJm4Z9kxUBVyK0NPR+8M6SEiVN9b9IU14qsRrBA1F2UEiP59/Ta0cJQv6VtjRNitiBFFm+rdbEZWdPhbhsE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1775028851; c=relaxed/simple;
-	bh=9sjSmF37Jj1/yKIEQuiZkUqQJHlqS7e8NQWGB6S5478=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=Kqs3UU/igNAOVZ8isc7O07ADFdOBWvMQqo8OyWNUJRCrUvlV0ByXnwCfQMhdyAm4Nbaes2F+g+c6ZOgQx5up2oHjgjfe+u8AwTC6HN5Dr1ZpMfluuBVnJWljw09pihwsJtwemIbGGkfVMEQ85GCtwSWVGW2u0LlGvlNkCroyYGo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=vinarskis.com; spf=pass smtp.mailfrom=vinarskis.com; dkim=pass (2048-bit key) header.d=vinarskis.com header.i=@vinarskis.com header.b=LN5Eyjhv; arc=none smtp.client-ip=85.9.210.45
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=vinarskis.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=vinarskis.com
+	s=arc-20240116; t=1775031624; c=relaxed/simple;
+	bh=q2RWRVLQpudqmq/pOfIN1+QRGoxJlhzYXE+M8o7jPRI=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=bAfwwdwQcnrIon1crkT5rqZAsBxFSYUflnNnmBoQzE74v9jZ8XJr8gYOQTP1QZwno1oMybc/U2blWylfHbkEX76eE32CzeRGBxuNO28xRrqClc5Ks4s+gkIhpDCiP1Dh+1SMjuPstNq9bdLM4B0nWCKnzIKnPZvZcloWrqXyc8g=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=antheas.dev; spf=pass smtp.mailfrom=antheas.dev; dkim=pass (2048-bit key) header.d=antheas.dev header.i=@antheas.dev header.b=k8vuK+w8; arc=none smtp.client-ip=88.99.38.195
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=antheas.dev
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=antheas.dev
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=vinarskis.com header.i=@vinarskis.com header.b="LN5Eyjhv"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=vinarskis.com;
-	s=protonmail2; t=1775028834; x=1775288034;
-	bh=TcQPmkPisSS3l4yiWGk1b3+vCnrbkgc767xf1rlFq9c=;
-	h=From:Date:Subject:Message-Id:References:In-Reply-To:To:Cc:From:To:
-	 Cc:Date:Subject:Reply-To:Feedback-ID:Message-ID:BIMI-Selector;
-	b=LN5EyjhvQKDoij7n+z5A8aQ9nRLdv92fnyCKc5RUTwGl67iTfBnRUb+e+QzTZmHO6
-	 t9aAQ2zT5EoYKr/iscBwxUUa1mTxxQ/P92nRgxDFZQZSrjPJNmdm8k6lrlDHDXVqy1
-	 jXu7p4TfkVIoiFKEuzDq2xQKEVcPt5/6WiUp8i78D/fcn/Bxr14CEwQKrtAYHNi/P5
-	 n4lD9AtR3sE65yHoU10qXrnbsWs2m1I7f9IzDd6yhpC1E+IGi4HGfzyZDg+BsRxvUr
-	 R/v31VCG8EaYxQ5hQzB6MUbXk0L3aypWClPwrZuQpoAICCXwuKTKIUYoE8qOH7HSFl
-	 1QvILCzD0EqOA==
-X-Pm-Submission-Id: 4flxYs3pRQz1DDLK
-gpg: Signature made Wed 01 Apr 2026 09:30:46 AM CEST
-gpg: using EDDSA key 8BFCF5668AA29DAD00D728F6EDAE71A20F500310
-gpg: Good signature from "Aleksandrs Vinarskis <alex@vinarskis.com>"
- [ultimate]
-gpg: aka "Aleksandrs Vinarskis <alex.vinarskis@gmail.com>" [ultimate]
-From: Aleksandrs Vinarskis <alex@vinarskis.com>
-Date: Wed, 01 Apr 2026 09:33:12 +0200
-Subject: [PATCH 3/4] arm64: dts: qcom: hamoa-pmics: define VADC for pmk8550
+	dkim=pass (2048-bit key) header.d=antheas.dev header.i=@antheas.dev header.b="k8vuK+w8"
+Received: from relay12 (localhost [127.0.0.1])
+	by relay12.grserver.gr (Proxmox) with ESMTP id 0C464BBFD9
+	for <platform-driver-x86@vger.kernel.org>; Wed,  1 Apr 2026 11:13:35 +0300 (EEST)
+Received: from linux3247.grserver.gr (linux3247.grserver.gr [213.158.90.240])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by relay12.grserver.gr (Proxmox) with ESMTPS id 46E1EBBF63
+	for <platform-driver-x86@vger.kernel.org>; Wed,  1 Apr 2026 11:13:34 +0300 (EEST)
+Received: from mail-pg1-f181.google.com (mail-pg1-f181.google.com [209.85.215.181])
+	by linux3247.grserver.gr (Postfix) with ESMTPSA id BBA61202517
+	for <platform-driver-x86@vger.kernel.org>; Wed,  1 Apr 2026 11:13:33 +0300 (EEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=antheas.dev;
+	s=default; t=1775031214;
+	bh=ipKGBxYWE+LzxroPElf867PRuXVp1hMr42p7MosVa70=;
+	h=Received:From:Subject:To;
+	b=k8vuK+w8IJ1wq2En1lf3vrq6QmJjj3veVU7amEuaiDG1y7RqiOVmuJ5Cf+L8G7eZL
+	 otFklxgLiRGjXkmS2tXIp0KbCpiGbyC4cWPulhQbZFhIL8h7fXWP1Z7Wde9kv6b52P
+	 6AlAzFxiRIJG66BpRb+PS59ARhGAf5I1USr/EGHSY5nRYqx8dPHD+xJu9VQRPby2BF
+	 BfD0DcSp0w2xPksYaFAX2NIh17qbloQk7HCvIRGqrZShkYlD+3hCcmVToM3H1fNFDv
+	 osgOrtPuHCowpXSjV2v3sE0ae7R0MY5Lmg+G5yHKrv1Tfgo2i4I9steDYG7noI+wPN
+	 IVsQ+qdLuzzsw==
+Authentication-Results: linux3247.grserver.gr;
+        spf=pass (sender IP is 209.85.215.181) smtp.mailfrom=lkml@antheas.dev smtp.helo=mail-pg1-f181.google.com
+Received-SPF: pass (linux3247.grserver.gr: connection is authenticated)
+Received: by mail-pg1-f181.google.com with SMTP id
+ 41be03b00d2f7-c70fb6aa323so2454011a12.3
+        for <platform-driver-x86@vger.kernel.org>;
+ Wed, 01 Apr 2026 01:13:33 -0700 (PDT)
+X-Forwarded-Encrypted: i=1;
+ AJvYcCXU3cLOZb7dZbyt36xXPeZ0iokk2V2RJGRmoCp/btNyxRDlB+/GPZ3vFM/Q1rPmTYoWNGGXdY0iRlz0T4jN56CvcZEx@vger.kernel.org
+X-Gm-Message-State: AOJu0YwMtvOPKCzrZl+viZBSV8ZAThJKHFKY5C7n0eFm/Qhg7avGuS4t
+	GrlR4FEfd0smWL5q9upGQb/yqV2dHqg/DDB2zBkyI8kn5GEQ7yUutrRiqfJGIBnswY7cFMnBpHx
+	E6VL8ruOIoP9LlUABwPoe2HQkpQpT4js=
+X-Received: by 2002:a17:903:6ce:b0:2b2:4e70:631c with SMTP id
+ d9443c01a7336-2b269c7a136mr17439295ad.28.1775031212346; Wed, 01 Apr 2026
+ 01:13:32 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Message-Id: <20260401-dell-xps-9345-ec-v1-3-afa5cacd49be@vinarskis.com>
-References: <20260401-dell-xps-9345-ec-v1-0-afa5cacd49be@vinarskis.com>
-In-Reply-To: <20260401-dell-xps-9345-ec-v1-0-afa5cacd49be@vinarskis.com>
-To: Bjorn Andersson <andersson@kernel.org>, 
- Konrad Dybcio <konradybcio@kernel.org>, Rob Herring <robh@kernel.org>, 
- Krzysztof Kozlowski <krzk+dt@kernel.org>, 
- Conor Dooley <conor+dt@kernel.org>, Hans de Goede <hansg@kernel.org>, 
- =?utf-8?q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>, 
- Bryan O'Donoghue <bryan.odonoghue@linaro.org>
-Cc: linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org, 
- linux-kernel@vger.kernel.org, platform-driver-x86@vger.kernel.org, 
- laurentiu.tudor1@dell.com, Abel Vesa <abel.vesa@oss.qualcomm.com>, 
- Tobias Heider <tobias.heider@canonical.com>, Val Packett <val@packett.cool>
-X-Mailer: b4 0.14.2
-X-Developer-Signature: v=1; a=openpgp-sha256; l=1094; i=alex@vinarskis.com;
- h=from:subject:message-id; bh=9sjSmF37Jj1/yKIEQuiZkUqQJHlqS7e8NQWGB6S5478=;
- b=owGbwMvMwCX2dl3hIv4AZgHG02pJDJlnTkW/DT72l8v3+Pl8N4VtmaUubBvM5bv3e6Se8tjLq
- +CYH8PSUcrCIMbFICumyNL952ta16K5axmua3yDmcPKBDKEgYtTACaSKczIMEP0YWbAncM9PR0J
- 3zKOX1Rx4tNT3SkyVY+9THhSn4XGD4b/ATmC0mZhe+3/JK8992Hat4yESPWkT2dOJeqfdtqX+8y
- CCQA=
-X-Developer-Key: i=alex@vinarskis.com; a=openpgp;
- fpr=8E21FAE2D2967BB123303E8C684FD4BA28133815
+References: <20260329215348.56185-1-begeebe@gmail.com>
+ <20260330101028.876277-1-begeebe@gmail.com>
+In-Reply-To: <20260330101028.876277-1-begeebe@gmail.com>
+From: Antheas Kapenekakis <lkml@antheas.dev>
+Date: Wed, 1 Apr 2026 10:13:20 +0200
+X-Gmail-Original-Message-ID: 
+ <CAGwozwEttELNe1wXXugZiSOPxV2W16rneHfTRMvzU+HdUyddfQ@mail.gmail.com>
+X-Gm-Features: AQROBzDl5fI03rRBldCeXUAaBndzDdYAe1tWOvkdiMI5HiO9HiX7qLzTG-QQzWQ
+Message-ID: 
+ <CAGwozwEttELNe1wXXugZiSOPxV2W16rneHfTRMvzU+HdUyddfQ@mail.gmail.com>
+Subject: Re: [PATCH v2] platform/x86: oxpec: add support for OneXPlayer Super
+ X
+To: Alexander Egorov <begeebe@gmail.com>
+Cc: Derek John Clark <derekjohn.clark@gmail.com>,
+	=?UTF-8?Q?Joaqu=C3=ADn_Ignacio_Aramend=C3=ADa?= <samsagax@gmail.com>,
+	platform-driver-x86@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+X-PPP-Message-ID: 
+ <177503121395.753206.12929257701151756740@linux3247.grserver.gr>
+X-PPP-Vhost: antheas.dev
+X-Virus-Scanned: clamav-milter 1.4.3 at linux3247.grserver.gr
+X-Virus-Status: Clean
 
-Follow pattern of pmk8350 to add missing pmk8550 VADC to hamoa.
-Register address of 0x9000 matches example schema for spmi-adc5-gen3.
+On Mon, 30 Mar 2026 at 12:11, Alexander Egorov <begeebe@gmail.com> wrote:
+>
+> OneXPlayer Super X identifies itself via DMI as:
+>
+>   board vendor: ONE-NETBOOK
+>   board name:   ONEXPLAYER SUPER X
+>   product name: ONEXPLAYER SUPER X
+>
+> Current mainline oxpec does not contain a matching DMI entry for this
+> system, so the in-tree driver is not auto-loaded.
+>
+> On the tested Super X device, the working EC layout matches the
+> following handling:
+>
+> - fan RPM is read from OXP_SENSOR_FAN_REG (0x76)
+> - pwm1_enable uses OXP_SENSOR_PWM_ENABLE_REG (0x4A)
+> - pwm1 uses OXP_SENSOR_PWM_REG (0x4B) with direct 0-255 writes
+> - turbo toggle uses OXP_TURBO_SWITCH_REG (0xF1)
+> - charge-limit / charge-behaviour uses the same battery extension path
+>   as the X1 family
+>
+> Add a dedicated oxp_superx board id, a DMI match for OneXPlayer Super X,
+> and route the fan, PWM, turbo-toggle, and battery-extension paths
+> through the validated Super X handling.
 
-Signed-off-by: Aleksandrs Vinarskis <alex@vinarskis.com>
----
- arch/arm64/boot/dts/qcom/hamoa-pmics.dtsi | 11 +++++++++++
- 1 file changed, 11 insertions(+)
+Hi,
+did you check if the superx board id is needed or if you can piggyback on g1_a?
 
-diff --git a/arch/arm64/boot/dts/qcom/hamoa-pmics.dtsi b/arch/arm64/boot/dts/qcom/hamoa-pmics.dtsi
-index 6a31a0adf8be472badea502a916cdbc9477e9f2b..58c0dd3ccca70bce3424f83bfd5a52b1fef35c2e 100644
---- a/arch/arm64/boot/dts/qcom/hamoa-pmics.dtsi
-+++ b/arch/arm64/boot/dts/qcom/hamoa-pmics.dtsi
-@@ -218,6 +218,17 @@ pon_resin: resin {
- 			};
- 		};
- 
-+		pmk8550_vadc: adc@9000 {
-+			compatible = "qcom,spmi-adc5-gen3";
-+			reg = <0x9000>, <0x9100>;
-+			#address-cells = <1>;
-+			#size-cells = <0>;
-+			interrupts = <0x0 0x90 0x1 IRQ_TYPE_EDGE_RISING>,
-+				     <0x0 0x91 0x1 IRQ_TYPE_EDGE_RISING>;
-+			#io-channel-cells = <1>;
-+			#thermal-sensor-cells = <1>;
-+		};
-+
- 		pmk8550_rtc: rtc@6100 {
- 			compatible = "qcom,pmk8350-rtc";
- 			reg = <0x6100>, <0x6200>;
+If you can, I'd rather you do that. In either case:
 
--- 
-2.53.0
+Reviewed-by: Antheas Kapenekakis <lkml@antheas.dev>
+
+Also, for this V2, you missed Derek's Reviewed-by. Resend the patch
+with both my and Derek's reviewed tags, use -v3 in the makepatch
+generation to include V3 in the header, and cc Ilpo who is the x86
+subsystem maintainer so they can merge this patch. Before you do that,
+check if you can use g1_a though.
+
+Best,
+Antheas
+
+> Signed-off-by: Alexander Egorov <begeebe@gmail.com>
+> ---
+>  drivers/platform/x86/oxpec.c | 17 +++++++++++++++++
+>  1 file changed, 17 insertions(+)
+>
+> diff --git a/drivers/platform/x86/oxpec.c b/drivers/platform/x86/oxpec.c
+> index 6d4a53a2e..d366c398d 100644
+> --- a/drivers/platform/x86/oxpec.c
+> +++ b/drivers/platform/x86/oxpec.c
+> @@ -48,6 +48,7 @@ enum oxp_board {
+>         oxp_mini_amd_a07,
+>         oxp_mini_amd_pro,
+>         oxp_x1,
+> +       oxp_superx,
+>         oxp_g1_i,
+>         oxp_g1_a,
+>  };
+> @@ -282,6 +283,13 @@ static const struct dmi_system_id dmi_table[] = {
+>                 },
+>                 .driver_data = (void *)oxp_x1,
+>         },
+> +       {
+> +               .matches = {
+> +                       DMI_MATCH(DMI_BOARD_VENDOR, "ONE-NETBOOK"),
+> +                       DMI_EXACT_MATCH(DMI_BOARD_NAME, "ONEXPLAYER SUPER X"),
+> +               },
+> +               .driver_data = (void *)oxp_superx,
+> +       },
+>         {},
+>  };
+>
+> @@ -336,6 +344,7 @@ static umode_t tt_toggle_is_visible(struct kobject *kobj,
+>         case oxp_mini_amd_a07:
+>         case oxp_mini_amd_pro:
+>         case oxp_x1:
+> +       case oxp_superx:
+>         case oxp_g1_i:
+>         case oxp_g1_a:
+>                 return attr->mode;
+> @@ -366,6 +375,7 @@ static ssize_t tt_toggle_store(struct device *dev,
+>         case aok_zoe_a1:
+>         case oxp_fly:
+>         case oxp_mini_amd_pro:
+> +       case oxp_superx:
+>         case oxp_g1_a:
+>                 reg = OXP_TURBO_SWITCH_REG;
+>                 mask = OXP_TURBO_TAKE_VAL;
+> @@ -412,6 +422,7 @@ static ssize_t tt_toggle_show(struct device *dev,
+>         case aok_zoe_a1:
+>         case oxp_fly:
+>         case oxp_mini_amd_pro:
+> +       case oxp_superx:
+>         case oxp_g1_a:
+>                 reg = OXP_TURBO_SWITCH_REG;
+>                 mask = OXP_TURBO_TAKE_VAL;
+> @@ -507,6 +518,7 @@ static bool oxp_psy_ext_supported(void)
+>  {
+>         switch (board) {
+>         case oxp_x1:
+> +       case oxp_superx:
+>         case oxp_g1_i:
+>         case oxp_g1_a:
+>         case oxp_fly:
+> @@ -640,6 +652,7 @@ static int oxp_pwm_enable(void)
+>         case oxp_mini_amd_a07:
+>         case oxp_mini_amd_pro:
+>         case oxp_x1:
+> +       case oxp_superx:
+>         case oxp_g1_i:
+>         case oxp_g1_a:
+>                 return write_to_ec(OXP_SENSOR_PWM_ENABLE_REG, PWM_MODE_MANUAL);
+> @@ -660,6 +673,7 @@ static int oxp_pwm_disable(void)
+>         case oxp_mini_amd_a07:
+>         case oxp_mini_amd_pro:
+>         case oxp_x1:
+> +       case oxp_superx:
+>         case oxp_g1_i:
+>         case oxp_g1_a:
+>                 return write_to_ec(OXP_SENSOR_PWM_ENABLE_REG, PWM_MODE_AUTO);
+> @@ -717,6 +731,7 @@ static int oxp_pwm_fan_speed(long *val)
+>         case oxp_mini_amd:
+>         case oxp_mini_amd_a07:
+>         case oxp_mini_amd_pro:
+> +       case oxp_superx:
+>         case oxp_g1_a:
+>                 return read_from_ec(OXP_SENSOR_FAN_REG, 2, val);
+>         default:
+> @@ -749,6 +764,7 @@ static int oxp_pwm_input_write(long val)
+>         case aok_zoe_a1:
+>         case oxp_fly:
+>         case oxp_mini_amd_pro:
+> +       case oxp_superx:
+>         case oxp_g1_a:
+>                 return write_to_ec(OXP_SENSOR_PWM_REG, val);
+>         default:
+> @@ -788,6 +804,7 @@ static int oxp_pwm_input_read(long *val)
+>         case aok_zoe_a1:
+>         case oxp_fly:
+>         case oxp_mini_amd_pro:
+> +       case oxp_superx:
+>         case oxp_g1_a:
+>         default:
+>                 ret = read_from_ec(OXP_SENSOR_PWM_REG, 1, val);
+> --
+> 2.53.0
+>
+>
 
