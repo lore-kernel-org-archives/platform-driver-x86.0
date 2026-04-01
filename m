@@ -1,79 +1,93 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.17])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 91CBB239567
-	for <platform-driver-x86@vger.kernel.org>; Thu,  2 Apr 2026 04:59:20 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5E7F4238C1B;
+	Thu,  2 Apr 2026 06:28:14 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.17
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1775105960; cv=none; b=R3fLkmqGVHrRkZ5abjQ4IvERMsQ6wVwK2qVb3RKnJlsU52tH06WSrfFXztqcF1QKc7EI5ifxGsShszEUTqqsvmmqeQdgCimp2b7AQQykE9Vjh9uPfX7fCBImnZ7rHTQGjRlfCG85Tu5rK+VkL8lCJ0+UDZjsNhOTuRnJ29EuMTg=
+	t=1775111296; cv=none; b=bldy/POVKIWhaq8wRA74uBINzjZCZZH0mQm4DaKwLAN9V+VQgcMpQ4gmLehz/qEkUHnm7PLokPERTZM3+aYV0478CLgCWbgH0pCJtrOcuQ10kcB6p+UY0Hx/h9XD9g7534zhfzGlKX/0ErULUY3w3DYQoAfnycfv9ZL4zkBIGMQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1775105960; c=relaxed/simple;
-	bh=2J2tIgW4bGjg8ntwdigbV4zPfrt82rLlGa2XFZkqv0g=;
-	h=From:To:Subject:Date:Message-ID:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=asYrGex3efUS4GOjR3Lr1WtAvFc5SLNIkzO13fGOq/PTj13fPGdYqZJ0Yo+nFz2T+d5N7MX/6wSFPykP3wyzVvs+6fq9ELEDZVl/3JgcpsRP8/sS+mBKRvy6T8CFY8LijXqNmqUrE9FLMLnpNv/F3KWQC7SZP0XgRP1Md7ixaGE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=cjUOUurX; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1775111296; c=relaxed/simple;
+	bh=5HWRW44poUgaYpA/k1WBH9lfhf3JcC/BB6wQWjT4xmE=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=hvC0+qZjEaWayE7e/nHd0dvVG1qoi7JYx0Nd4PrxNNOgm1Nutvv+lfcpc0S3HDfzcGcZ36mlV7+yF8x/tEAUYYsMidcp8f9rrYHvy1LpHk7Ez0NrkF81xh29PUf8Iridnefm6qqdqjsZwBQsNYyOAYmRst2x8dRHY6J4QTzz81A=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=pass smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=Yq5sfNTB; arc=none smtp.client-ip=198.175.65.17
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="cjUOUurX"
-Received: by smtp.kernel.org (Postfix) with ESMTPS id 4C628C19423
-	for <platform-driver-x86@vger.kernel.org>; Thu,  2 Apr 2026 04:59:20 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1775105960;
-	bh=2J2tIgW4bGjg8ntwdigbV4zPfrt82rLlGa2XFZkqv0g=;
-	h=From:To:Subject:Date:In-Reply-To:References:From;
-	b=cjUOUurXlpAOXD6IsYrebuxJjJ6wxVooi/HCt7MxBUeWPysFE5QypcJxCCh/RM9jk
-	 z4xOpxvwO3TiyQoEfjMa60j3PfO6RS0qaxQR8wgccqWnL6evxTp8LNlIA0IxSZRVk+
-	 B3xKYQAxQFOn7s15HbxgDakFyy6kSuf2OGuSpD4E0QnnD7Ro6ZId/9Xv+n2IF2hX9q
-	 dmdE8VYm705m9yECNv2wjEj+T1aK97w02thKAc2c+Pn3yBVYC45gAm3zQKnXaYa6zW
-	 K3qr/liFhV4fZl+sW28HrzswsdCkbXTeRQrC1Q4dyR6bq61IFVmheu50z6/nBmCaw4
-	 1Mh8h3yevykvw==
-Received: by aws-us-west-2-korg-bugzilla-1.web.codeaurora.org (Postfix, from userid 48)
-	id 4246EC41614; Thu,  2 Apr 2026 04:59:20 +0000 (UTC)
-From: bugzilla-daemon@kernel.org
-To: platform-driver-x86@vger.kernel.org
-Subject: [Bug 221149] hp-wmi: Fan control fails and RPM always reads as zero
- on HP OMEN 16-wf1xxx (Board 8C76)
-Date: Thu, 02 Apr 2026 04:59:20 +0000
-X-Bugzilla-Reason: None
-X-Bugzilla-Type: changed
-X-Bugzilla-Watch-Reason: AssignedTo drivers_platform_x86@kernel-bugs.osdl.org
-X-Bugzilla-Product: Drivers
-X-Bugzilla-Component: Platform_x86
-X-Bugzilla-Version: 2.5
-X-Bugzilla-Keywords: 
-X-Bugzilla-Severity: normal
-X-Bugzilla-Who: rdunlap@infradead.org
-X-Bugzilla-Status: RESOLVED
-X-Bugzilla-Resolution: CODE_FIX
-X-Bugzilla-Priority: P3
-X-Bugzilla-Assigned-To: drivers_platform_x86@kernel-bugs.osdl.org
-X-Bugzilla-Flags: 
-X-Bugzilla-Changed-Fields: bug_status cc resolution
-Message-ID: <bug-221149-215701-FnZ1Rf53tS@https.bugzilla.kernel.org/>
-In-Reply-To: <bug-221149-215701@https.bugzilla.kernel.org/>
-References: <bug-221149-215701@https.bugzilla.kernel.org/>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-X-Bugzilla-URL: https://bugzilla.kernel.org/
-Auto-Submitted: auto-generated
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="Yq5sfNTB"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1775111294; x=1806647294;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=5HWRW44poUgaYpA/k1WBH9lfhf3JcC/BB6wQWjT4xmE=;
+  b=Yq5sfNTBBPmXAoCBLeKkOc1B45ikCM4nKk4I3mvuOfIvJnRug3/stG6g
+   Hd4QVCmt4hhqWMuIX69Z7tTa14hDL6LTJFa/8q9zKdQ/direOHI6vjjt7
+   09dAcvOQ6ywctC9teDx3BmbNwATiS74/CFmy7gEKMhNMvQtrLVsGupeVX
+   j+2YlVLkDDC452j8AHvSgfJf4/zZ+sZFn7Wj1saaF/nmz8xfybikPfLuc
+   mLcN+YlqOD7R6mtYvR0bcdgztAi2HZKoMcvyr3xXpVhDot2+mhE/sSdef
+   rgS9C+gZ7Uw1FL5FrZTPKKD/2TWIGpn8eM7oZJ6xhnbtYP32ywmC5MTPn
+   Q==;
+X-CSE-ConnectionGUID: 9N3R0N0+RWOEVPn8zqadGg==
+X-CSE-MsgGUID: YWLLWCWdQraDXjXzkrodBw==
+X-IronPort-AV: E=McAfee;i="6800,10657,11746"; a="76129072"
+X-IronPort-AV: E=Sophos;i="6.23,155,1770624000"; 
+   d="scan'208";a="76129072"
+Received: from orviesa004.jf.intel.com ([10.64.159.144])
+  by orvoesa109.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 01 Apr 2026 23:28:13 -0700
+X-CSE-ConnectionGUID: qV4tp17kR+afR8O3n/GYIQ==
+X-CSE-MsgGUID: ljqQzKkvS5SQBH7E8YqEFA==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.23,155,1770624000"; 
+   d="scan'208";a="231294690"
+Received: from amilburn-desk.amilburn-desk (HELO kekkonen.fi.intel.com) ([10.245.245.21])
+  by orviesa004-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 01 Apr 2026 23:28:12 -0700
+Received: from kekkonen.localdomain (localhost [IPv6:::1])
+	by kekkonen.fi.intel.com (Postfix) with SMTP id A145712080D;
+	Wed, 01 Apr 2026 15:40:56 +0300 (EEST)
+Date: Wed, 1 Apr 2026 15:40:56 +0300
+Organization: Intel Finland Oy - BIC 0357606-4 - c/o Alberga Business Park, 6 krs, Bertel Jungin Aukio 5, 02600 Espoo
+From: Sakari Ailus <sakari.ailus@linux.intel.com>
+To: Arun T <arun.t@intel.com>
+Cc: johannes.goede@oss.qualcomm.com, arec.kao@intel.com,
+	ilpo.jarvinen@linux.intel.com, dan.scally@ideasonboard.com,
+	platform-driver-x86@vger.kernel.org, linux-media@vger.kernel.org,
+	linux-kernel@vger.kernel.org, mehdi.djait@intel.com
+Subject: Re: [PATCH v7 2/2] media: ov13b10: Support multiple regulators
+Message-ID: <ac0SWIPXv6SQo2zy@kekkonen.localdomain>
+References: <20260401122030.3955499-1-arun.t@intel.com>
+ <20260401122030.3955499-3-arun.t@intel.com>
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20260401122030.3955499-3-arun.t@intel.com>
 
-https://bugzilla.kernel.org/show_bug.cgi?id=3D221149
+Hi Arun,
 
-Randy Dunlap (rdunlap@infradead.org) changed:
+On Wed, Apr 01, 2026 at 05:50:30PM +0530, Arun T wrote:
+> The OV13B10 sensor driver currently handles a single regulator called
+> avdd, however the sensor can be supplied by up to three regulators.
+> Update the driver to handle all of them together using the regulator
+> bulk API.
+> 
+> Signed-off-by: Arun T <arun.t@intel.com>
+> Reviewed-by: Daniel Scally <dan.scally@ideasonboard.com>
+> Reviewed-by: Sakari Ailus <sakari.ailus@linux.intel.com>
 
-           What    |Removed                     |Added
-----------------------------------------------------------------------------
-             Status|NEW                         |RESOLVED
-                 CC|                            |rdunlap@infradead.org
-         Resolution|---                         |CODE_FIX
+You can't add Reviewed-by: tags that haven't been explicitly (or otherwise)
+given. I haven't given mine on either of the two patches, for instance.
 
---=20
-You may reply to this email to add a comment.
+What about the other two?
 
-You are receiving this mail because:
-You are watching the assignee of the bug.=
+> Reviewed-by: Hans de Goede <johannes.goede@oss.qualcomm.com
+
+-- 
+Regards,
+
+Sakari Ailus
