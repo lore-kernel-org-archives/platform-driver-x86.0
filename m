@@ -1,64 +1,64 @@
-Received: from mail-dy1-f176.google.com (mail-dy1-f176.google.com [74.125.82.176])
+Received: from mail-dy1-f175.google.com (mail-dy1-f175.google.com [74.125.82.175])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 73BA3365A1B
-	for <platform-driver-x86@vger.kernel.org>; Thu,  2 Apr 2026 03:24:39 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=74.125.82.176
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E84183537FB
+	for <platform-driver-x86@vger.kernel.org>; Thu,  2 Apr 2026 03:24:40 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=74.125.82.175
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1775100282; cv=none; b=jbhCRfYzt6F5HYLU7PHIcl0pC0macSpkp6rDYuJQhU8+UJbzzRvD9uukGLij7ChLXjxyLG2t/GFxpfAXBMjGJnRjUOdZXmnCciw+FWajO6s2OCRD3cR5MI0m4oE6zfSb7eJbq11B9n36QyB9RS0GeCluA274hqer8m+CbJ7Qi5k=
+	t=1775100284; cv=none; b=XXVgTOiMy+n2Lc+osr85F/bfTpX7JaCpuD8YLUjMbCLpQOJYSPAxyY3/fMPXFH9e3THlEYn3NY4tAlWLjy+WAYv6JmCldh+2XoWFJCRQgLsFev3ZpDTxbZFpzHGAFc7h7L8mIWKuu3vcglZJIOyhaK+4yt9w9v8RcvyZkLyOAmU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1775100282; c=relaxed/simple;
-	bh=WMysZ52oSNBakQksYCHeaVkUqkeNNcoimYTv8lkjwoU=;
+	s=arc-20240116; t=1775100284; c=relaxed/simple;
+	bh=cvE6jnfJKB7PyqI9IxmPPiPq9P+SLWPdZ3/G/ov1JPg=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=DbnqWWljbVt0StxJ9pnTVQnAQl3ZeNfl3n/xDJ1jK4n5hSn3nHH9/n205RZE6aOY2ppLaN1Ilhn3aO2N1u78ottFWPp0URbpqKv0eYeNg3/TPDdqhgEMlcWcA4wM3otqzB4pR2vzW/GtmL+IK0VhFQOaHAK/dXeG8jFiAJ3kiZk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=j9Y35ngJ; arc=none smtp.client-ip=74.125.82.176
+	 MIME-Version; b=Awo6+OkSCsAD82DwOM3gKmThhvz5uH4WBh/SXpvN3FOB2gRdzpZ7cfi5bRjZ4Zohi5rO6ecneJyO6VMKirrHfq44ectgppF26XyUlfSLK30KMkX2WJ95EJ1GKSb0edw/wQPuf/3RRzafRi3jzJYH5ObBncnHHbDUQkPepdyuFk0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=Cg/lEqy9; arc=none smtp.client-ip=74.125.82.175
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="j9Y35ngJ"
-Received: by mail-dy1-f176.google.com with SMTP id 5a478bee46e88-2bd9a485bd6so1038979eec.1
-        for <platform-driver-x86@vger.kernel.org>; Wed, 01 Apr 2026 20:24:39 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Cg/lEqy9"
+Received: by mail-dy1-f175.google.com with SMTP id 5a478bee46e88-2c87871133dso611408eec.0
+        for <platform-driver-x86@vger.kernel.org>; Wed, 01 Apr 2026 20:24:40 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20251104; t=1775100278; x=1775705078; darn=vger.kernel.org;
+        d=gmail.com; s=20251104; t=1775100279; x=1775705079; darn=vger.kernel.org;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=EO0kfkAc/BO0FF9zBAWzVI8l6UMi0BZlbrLXFCaNrd0=;
-        b=j9Y35ngJ16n/xf/PjCz61hNfp4ymVoTr4pAREDEsKXd7lRRKgAKFRHu7fDPWpT9bqL
-         7filhOtKRkdVmZNItGOQXTn780eVA+xiNOJQr/KAgGzltbMt3RECuuhsd4PpuCJFK5Ks
-         7FuthAxxwLJIm7eJ/Ays4lXXT0Zq2rdaF04XTpF1hx6iTPRsyPOHtYEaMzh3C8vWLmkV
-         EwQgy3MOdSdLBe9Wup6goYgwDES6e+JKE2TK1CtWUKKjo3UMsVwImPvGUFnXnsSrLe7a
-         4I7AACxzo1szyjCA0Uo4XGNEzB9YHYIsfnYeNYbL37g4VxnUXvxu26S4S/mlMTsrN1xS
-         pENA==
+        bh=dYDxYM+Wzx9ftLc+PRy/V3d4RDtxf8o4zddjc5rqdI0=;
+        b=Cg/lEqy9iXwB6xezflBT/C3cRzQvBmm6/1h8axG5hdDzPB+nmsMuyJPNXCPyNcRZ5v
+         2vsSamZcO2YEHxym0mDL3j2AEFJQEkATgCXArpfruVf5AQIGCjvzQ0U9/ggvpgRUS/TL
+         NMao/1EBq5sRQjRCqOqJ1ZKrHsuEHRltRWhOTKfAatTO86glwpLRcrf1pH+X/x/YFnP3
+         Un9Cng4Ad9FgDpODb/sp5NVighOmyNV4LTXOdjFer1xTznkn7Z/wO+0pUYK8184JRyZK
+         ncJJGdhFfrbc9cyHEAMPOLpEhl0CUBOG8ivD743V25qCwtNrW+q7G5B9H4nE54M8ylqs
+         V0sg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1775100278; x=1775705078;
+        d=1e100.net; s=20251104; t=1775100279; x=1775705079;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:x-gm-gg:x-gm-message-state:from
          :to:cc:subject:date:message-id:reply-to;
-        bh=EO0kfkAc/BO0FF9zBAWzVI8l6UMi0BZlbrLXFCaNrd0=;
-        b=RApHhKo3WwK53ywwvc4J/iSd/gTGedrHkp6irYl77iFJaJ8Zx3FRko5ibwgEg1U1oR
-         0vCt/0Y2ZtqcCzFa2XK+efW4Je7XBz8vaaVoL4YtQtouKBtSloEEE8d06CEDfob3YEYz
-         3xT1w44RxE0rxgWineo9A5zG/Q/E3F6D8SNy/wEDsabzvpQAmiAcskA7Acft8n2b6aRH
-         N/+9ceI/TC8m54YfA0YJ/kF828b1KvEB+tsrboM1L2uO99jbOCXKeXpdL1wnftNWvvfF
-         KqesRSGANugC8YN9imUoqocfw2+Ku2umvdgwOm5u+zrCZsosuSH0tfjwr8DpQcO6G0KI
-         u4zQ==
-X-Forwarded-Encrypted: i=1; AJvYcCVe9Io0BN+wZLDF3+xl+g1oGdZBA0Iw4RNOCHmUYil932EbB8RrkoHifz6p24A9XYK0UGhBiSEPuvDEsW6mb+jUriyB@vger.kernel.org
-X-Gm-Message-State: AOJu0Ywv1vH8T6VKh5TsTlDPG1pOnZrNlahT2WlSrNjV4a+YxYSOYk9Q
-	9Oub4RrgVzP3H99gBph4JkLt0XLZCIyYrI3PuF6gGgAjZSSYCOq5zKX9
-X-Gm-Gg: ATEYQzzAAr772T81aAsIJln6oZ+PNOoULJz4tVSNlozLiKAW3QpsLia7lDjn8G5ZPxh
-	t8WF4WPhIeG5scvxa1Lcjp9/ZBBCFc9xDQ/9zMLXv/2Bi1r08xj6L5IPAN/nTBhWFwXhAi6eMr7
-	XKQyiColdzbP1okCFFp+14YdtKi33W1RnN8gdik1F33nlhCpnUixFeMWOTOdzE00NnPj79Zcm1Q
-	hrS5CjYWNW9Kxayz9vEfYzoXbqKtobG7F11IrqU6RucGQOiBzwLI5uGIikKuP1iybceZSVhz+oX
-	tlnBKKxw7/47AkNfo7RiQWnbmYVmAG1a7/8r9pJ9Q/8RE8CrSooT2gOqIKadVu6h/aNv0UntTVT
-	I9h+qwubjavGdrl/06BDGgj7E4oLFr/xCCX5y3ibol5kMRhfatqXH6j4Bbd/rTAhFBXhLA4fg/z
-	UEg/AONPJZa90iSKYTGqLKKeDAQdpm+ma9UXeqXiOid+ddN67956jZIApzxyxGY7qRzXJTkrBX9
-	kPM
-X-Received: by 2002:a05:7300:6d1f:b0:2c8:6361:ab58 with SMTP id 5a478bee46e88-2c931276e6amr3837194eec.13.1775100278227;
+        bh=dYDxYM+Wzx9ftLc+PRy/V3d4RDtxf8o4zddjc5rqdI0=;
+        b=YEBQgMTUaKOd9OIUzLU4WOqx3YwKyMhU3RI3HkQcypVdBXRIy3yhsvFq4ifT1JM1At
+         7+pJ5+fhAt0rsXBLQ8BJeKct3/B4dU9qsm7KKNu/5BVJnjN5sImzsxxXWvsiiYHWgoer
+         klI0plbAZY/1KgLyortyKRugxiDsj1+yFlhplJXDsww/zxNjiRVW1YCAw3oNB524+LOG
+         hFZho2VGeP4boGszl8ykbSxFdzwYdr0pi9ONxVjRO6YZUbEVLNv4jDd9j+6W99pxrA3Y
+         Czd/T2RYYmS5WjLfWsAcoCIQ2WqB6Xw1YozopS8yVNZK97MbvLnnQdrvg4UYQItP1L+3
+         5tXA==
+X-Forwarded-Encrypted: i=1; AJvYcCWvHxbbSYagR6zdZ3ihtG+sJzr1ZtaR/j4dqpSyXCbSxCc1YyVxQQUwhL4Sui//515Uqo4Bhr6k2nJIjn148xwh3Oqf@vger.kernel.org
+X-Gm-Message-State: AOJu0YxoL/xCiOCCeJMIIoVswRYl8hI2hjZCcVTjvfix2dhyo3MenoYk
+	vfQVKlLwtW4NtXM+ldCfIaIhOtLkURX+6nMfSz0vDOztkjoW7uC2Clsd
+X-Gm-Gg: ATEYQzw4Hnku9Zr/VhBZ0SAb24/aSfbitstakR3jxkG/kYAR9KDlnAqZo+CAZSTLYtJ
+	xe0A0NNkqdw030WL7N3h8BJbghfpiZhrQ7krH7gTqa/5PH+/v9g0Tm8pgBqP5A6XlCBFCEtsCQd
+	6MF0yD0fmwA5YwZCXVFQX+V4P5fE3UFxysFx0HzifuPj4fsRmjuEBzsh9tI6zrT7EAtgI+eivkO
+	qsJMhuscwjOwrkXqiiSsRZEc/UgFQyiDS0xEG6cMqIuZ25rdquuTN65H19UL6/XSrRZbaM2Pigx
+	x1uYgap71tjNo49Fkvya9n12Z1JtRyYCnq8F910cv2x5ozhnK967m/Fy+yey2HOMaUgVjMQiGHX
+	FOKiarkAXoXeAbQVEKw9vL0SoD3yfDIv9DqzE7UVD9g3Sx7WFx4HAOYXJd7niefr2tWGc2LhwG1
+	ktQsXsihGrBS2bJq4jthSbIBoNVuIOULkzbM+01t//v4kIzvdoj4jofAk+cdfRZwKKbuneG3SCg
+	hIR
+X-Received: by 2002:a05:7300:72cc:b0:2be:833c:149d with SMTP id 5a478bee46e88-2ca8fa567eemr1121701eec.28.1775100278859;
         Wed, 01 Apr 2026 20:24:38 -0700 (PDT)
 Received: from lappy (108-228-232-20.lightspeed.sndgca.sbcglobal.net. [108.228.232.20])
-        by smtp.gmail.com with ESMTPSA id 5a478bee46e88-2ca7cae9e9esm1265981eec.23.2026.04.01.20.24.37
+        by smtp.gmail.com with ESMTPSA id 5a478bee46e88-2ca7cae9e9esm1265981eec.23.2026.04.01.20.24.38
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 01 Apr 2026 20:24:37 -0700 (PDT)
+        Wed, 01 Apr 2026 20:24:38 -0700 (PDT)
 From: "Derek J. Clark" <derekjohn.clark@gmail.com>
 To: =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>,
 	Hans de Goede <hansg@kernel.org>
@@ -70,9 +70,9 @@ Cc: Mark Pearson <mpearson-lenovo@squebb.ca>,
 	"Derek J . Clark" <derekjohn.clark@gmail.com>,
 	platform-driver-x86@vger.kernel.org,
 	linux-kernel@vger.kernel.org
-Subject: [PATCH v7 15/16] platform/x86: lenovo-wmi-helpers: Add helper for creating per-device debugfs dir
-Date: Thu,  2 Apr 2026 03:24:23 +0000
-Message-ID: <20260402032424.678528-16-derekjohn.clark@gmail.com>
+Subject: [PATCH v7 16/16] platform/x86: lenovo-wmi-capdata: Add debugfs file for dumping capdata
+Date: Thu,  2 Apr 2026 03:24:24 +0000
+Message-ID: <20260402032424.678528-17-derekjohn.clark@gmail.com>
 X-Mailer: git-send-email 2.53.0
 In-Reply-To: <20260402032424.678528-1-derekjohn.clark@gmail.com>
 References: <20260402032424.678528-1-derekjohn.clark@gmail.com>
@@ -86,86 +86,235 @@ Content-Transfer-Encoding: 8bit
 
 From: Rong Zhang <i@rong.moe>
 
-We are about to add debugfs support for lenovo-wmi-capdata. Let's setup
-a debugfs directory called "lenovo_wmi" for tidiness, so that any
-lenovo-wmi-* device can put its subdirectory under the directory.
-Subdirectories will be named after the corresponding WMI devices.
+The Lenovo GameZone/Other interfaces have some delicate divergences
+among different devices. When making a bug report or adding support for
+new devices/interfaces, capdata is the most important information to
+cross-check with.
+
+Add a debugfs file (lenovo_wmi/<device_name>/capdata), so that users can
+dump capdata and include it in their reports.
+
+Since `struct capdata01' is just an extension to `struct capdata00',
+also converts the former to include the latter anonymously
+(-fms-extensions, since v6.19). In this manner type casting won't be
+confusing.
 
 Signed-off-by: Rong Zhang <i@rong.moe>
+Tested-by: Kurt Borja <kuurtb@gmail.com>
 Signed-off-by: Derek J. Clark <derekjohn.clark@gmail.com>
 ---
-v7:
-  - Use subsys_initcall() instead of module_init().
----
- drivers/platform/x86/lenovo/wmi-helpers.c | 34 +++++++++++++++++++++++
- drivers/platform/x86/lenovo/wmi-helpers.h |  2 ++
- 2 files changed, 36 insertions(+)
+ drivers/platform/x86/lenovo/Kconfig       |   1 +
+ drivers/platform/x86/lenovo/wmi-capdata.c | 120 ++++++++++++++++++++++
+ drivers/platform/x86/lenovo/wmi-capdata.h |   4 +-
+ 3 files changed, 122 insertions(+), 3 deletions(-)
 
-diff --git a/drivers/platform/x86/lenovo/wmi-helpers.c b/drivers/platform/x86/lenovo/wmi-helpers.c
-index 5fa7a92c145e..0446d25adf6e 100644
---- a/drivers/platform/x86/lenovo/wmi-helpers.c
-+++ b/drivers/platform/x86/lenovo/wmi-helpers.c
-@@ -17,6 +17,8 @@
-  */
+diff --git a/drivers/platform/x86/lenovo/Kconfig b/drivers/platform/x86/lenovo/Kconfig
+index b9a5d18caa1e..4443f40ef8aa 100644
+--- a/drivers/platform/x86/lenovo/Kconfig
++++ b/drivers/platform/x86/lenovo/Kconfig
+@@ -236,6 +236,7 @@ config YT2_1380
+ config LENOVO_WMI_CAPDATA
+ 	tristate
+ 	depends on ACPI_WMI
++	depends on LENOVO_WMI_HELPERS
  
- #include <linux/acpi.h>
-+#include <linux/debugfs.h>
-+#include <linux/device.h>
+ config LENOVO_WMI_EVENTS
+ 	tristate
+diff --git a/drivers/platform/x86/lenovo/wmi-capdata.c b/drivers/platform/x86/lenovo/wmi-capdata.c
+index 169665be4dcf..b5e2c16d638f 100644
+--- a/drivers/platform/x86/lenovo/wmi-capdata.c
++++ b/drivers/platform/x86/lenovo/wmi-capdata.c
+@@ -31,6 +31,7 @@
  #include <linux/cleanup.h>
- #include <linux/errno.h>
- #include <linux/export.h>
-@@ -186,6 +188,38 @@ int lwmi_tm_notifier_call(enum thermal_mode *mode)
- }
- EXPORT_SYMBOL_NS_GPL(lwmi_tm_notifier_call, "LENOVO_WMI_HELPERS");
+ #include <linux/component.h>
+ #include <linux/container_of.h>
++#include <linux/debugfs.h>
+ #include <linux/device.h>
+ #include <linux/dev_printk.h>
+ #include <linux/err.h>
+@@ -42,6 +43,7 @@
+ #include <linux/mutex_types.h>
+ #include <linux/notifier.h>
+ #include <linux/overflow.h>
++#include <linux/seq_file.h>
+ #include <linux/stddef.h>
+ #include <linux/types.h>
+ #include <linux/wmi.h>
+@@ -88,6 +90,7 @@ struct lwmi_cd_priv {
+ 	struct notifier_block acpi_nb; /* ACPI events */
+ 	struct wmi_device *wdev;
+ 	struct cd_list *list;
++	struct dentry *debugfs_dir;
  
-+static struct dentry *lwmi_debugfs_dir;
+ 	/*
+ 	 * A capdata device may be a component master of another capdata device.
+@@ -118,6 +121,8 @@ struct cd_list {
+ 
+ static struct wmi_driver lwmi_cd_driver;
+ 
++/* ======== Device components ======== */
++
+ /**
+  * lwmi_cd_match() - Match rule for the master driver.
+  * @dev: Pointer to the capability data parent device.
+@@ -471,6 +476,116 @@ EXPORT_SYMBOL_NS_GPL(lwmi_cd01_get_data, "LENOVO_WMI_CAPDATA");
+ DEF_LWMI_CDXX_GET_DATA(cd_fan, LENOVO_FAN_TEST_DATA, struct capdata_fan);
+ EXPORT_SYMBOL_NS_GPL(lwmi_cd_fan_get_data, "LENOVO_WMI_CAPDATA");
+ 
++/* ======== debugfs ======== */
 +
 +/**
-+ * lwmi_debugfs_create_dir() - Helper function for creating a debugfs directory
-+ * for a device.
-+ * @wdev: Pointer to the WMI device to be called.
-+ *
-+ * Caller must remove the directory with debugfs_remove_recursive() on device
-+ * removal.
-+ *
-+ * Return: Pointer to the created directory.
++ * lwmi_cd00_show() - Dump capdata00
++ * @s: Pointer to seq_file where the capdata00 is dumped.
++ * @cd00: Pointer to a capdata00 struct to be dumped.
 + */
-+struct dentry *lwmi_debugfs_create_dir(struct wmi_device *wdev)
++static void lwmi_cd00_show(struct seq_file *s, struct capdata00 *cd00)
 +{
-+	return debugfs_create_dir(dev_name(&wdev->dev), lwmi_debugfs_dir);
-+}
-+EXPORT_SYMBOL_NS_GPL(lwmi_debugfs_create_dir, "LENOVO_WMI_HELPERS");
++	u8 dev = FIELD_GET(LWMI_ATTR_DEV_ID_MASK, cd00->id);
++	u8 feat = FIELD_GET(LWMI_ATTR_FEAT_ID_MASK, cd00->id);
++	u8 mode = FIELD_GET(LWMI_ATTR_MODE_ID_MASK, cd00->id);
++	u8 type = FIELD_GET(LWMI_ATTR_TYPE_ID_MASK, cd00->id);
++	bool extra = cd00->supported & ~(LWMI_SUPP_GET | LWMI_SUPP_SET | LWMI_SUPP_VALID);
++	bool get = cd00->supported & LWMI_SUPP_GET;
++	bool set = cd00->supported & LWMI_SUPP_SET;
++	bool valid = cd00->supported & LWMI_SUPP_VALID;
 +
-+static int __init lwmi_helpers_init(void)
++	seq_printf(s, "  id:             0x%08x [dev: %2u, feat: %2u, mode: %2u, type: %2u]\n",
++		   cd00->id, dev, feat, mode, type);
++
++	seq_printf(s, "  supported:      0x%08x [%c%c%c%c]\n", cd00->supported,
++		   extra ? '+' : ' ',
++		   get   ? 'R' : ' ',
++		   set   ? 'W' : ' ',
++		   valid ? 'V' : ' ');
++
++	seq_printf(s, "  default_value:  %u\n", cd00->default_value);
++}
++
++/**
++ * lwmi_cd01_show() - Dump capdata01
++ * @s: Pointer to seq_file where the capdata01 is dumped.
++ * @cd01: Pointer to a capdata01 struct to be dumped.
++ */
++static void lwmi_cd01_show(struct seq_file *s, struct capdata01 *cd01)
 +{
-+	lwmi_debugfs_dir = debugfs_create_dir("lenovo_wmi", NULL);
++	/* capdata01 is an extension to capdata00. */
++	lwmi_cd00_show(s, (struct capdata00 *)cd01);
++
++	seq_printf(s, "  step:           %u\n", cd01->step);
++	seq_printf(s, "  min_value:      %u\n", cd01->min_value);
++	seq_printf(s, "  max_value:      %u\n", cd01->max_value);
++}
++
++/**
++ * lwmi_cd_fan_show() - Dump capdata_fan
++ * @s: Pointer to seq_file where the capdata_fan is dumped.
++ * @cd_fan: Pointer to a capdata_fan struct to be dumped.
++ */
++static void lwmi_cd_fan_show(struct seq_file *s, struct capdata_fan *cd_fan)
++{
++	seq_printf(s, "  id:             %u\n", cd_fan->id);
++	seq_printf(s, "  min_rpm:        %u\n", cd_fan->min_rpm);
++	seq_printf(s, "  max_rpm:        %u\n", cd_fan->max_rpm);
++}
++
++/**
++ * lwmi_cd_debugfs_show() - Dump capability data to debugfs
++ * @s: Pointer to seq_file where the capability data is dumped.
++ * @data: unused.
++ *
++ * Return: 0
++ */
++static int lwmi_cd_debugfs_show(struct seq_file *s, void *data)
++{
++	struct lwmi_cd_priv *priv = s->private;
++	u8 idx;
++
++	guard(mutex)(&priv->list->list_mutex);
++
++	/* lwmi_cd_alloc() ensured priv->list->type must be a valid type. */
++	for (idx = 0; idx < priv->list->count; idx++) {
++		seq_printf(s, "%s[%u]:\n", lwmi_cd_table[priv->list->type].name, idx);
++
++		if (priv->list->type == LENOVO_CAPABILITY_DATA_00)
++			lwmi_cd00_show(s, &priv->list->cd00[idx]);
++		else if (priv->list->type == LENOVO_CAPABILITY_DATA_01)
++			lwmi_cd01_show(s, &priv->list->cd01[idx]);
++		else if (priv->list->type == LENOVO_FAN_TEST_DATA)
++			lwmi_cd_fan_show(s, &priv->list->cd_fan[idx]);
++	}
 +
 +	return 0;
 +}
-+subsys_initcall(lwmi_helpers_init)
++DEFINE_SHOW_ATTRIBUTE(lwmi_cd_debugfs);
 +
-+static void __exit lwmi_helpers_exit(void)
++/**
++ * lwmi_cd_debugfs_add() - Create debugfs directory and files for a device
++ * @priv: lenovo-wmi-capdata driver data.
++ */
++static void lwmi_cd_debugfs_add(struct lwmi_cd_priv *priv)
 +{
-+	debugfs_remove_recursive(lwmi_debugfs_dir);
-+}
-+module_exit(lwmi_helpers_exit)
++	priv->debugfs_dir = lwmi_debugfs_create_dir(priv->wdev);
 +
++	debugfs_create_file("capdata", 0444, priv->debugfs_dir, priv, &lwmi_cd_debugfs_fops);
++}
++
++/**
++ * lwmi_cd_debugfs_remove() - Remove debugfs directory for a device
++ * @priv: lenovo-wmi-capdata driver data.
++ */
++static void lwmi_cd_debugfs_remove(struct lwmi_cd_priv *priv)
++{
++	debugfs_remove_recursive(priv->debugfs_dir);
++	priv->debugfs_dir = NULL;
++}
++
++/* ======== WMI interface ======== */
++
+ /**
+  * lwmi_cd_cache() - Cache all WMI data block information
+  * @priv: lenovo-wmi-capdata driver data.
+@@ -773,6 +888,8 @@ static int lwmi_cd_probe(struct wmi_device *wdev, const void *context)
+ 		dev_err(&wdev->dev, "failed to register %s: %d\n",
+ 			info->name, ret);
+ 	} else {
++		lwmi_cd_debugfs_add(priv);
++
+ 		dev_dbg(&wdev->dev, "registered %s with %u items\n",
+ 			info->name, priv->list->count);
+ 	}
+@@ -783,6 +900,8 @@ static void lwmi_cd_remove(struct wmi_device *wdev)
+ {
+ 	struct lwmi_cd_priv *priv = dev_get_drvdata(&wdev->dev);
+ 
++	lwmi_cd_debugfs_remove(priv);
++
+ 	switch (priv->list->type) {
+ 	case LENOVO_CAPABILITY_DATA_00:
+ 		lwmi_cd_sub_master_del(priv);
+@@ -822,6 +941,7 @@ static struct wmi_driver lwmi_cd_driver = {
+ 
+ module_wmi_driver(lwmi_cd_driver);
+ 
++MODULE_IMPORT_NS("LENOVO_WMI_HELPERS");
+ MODULE_DEVICE_TABLE(wmi, lwmi_cd_id_table);
  MODULE_AUTHOR("Derek J. Clark <derekjohn.clark@gmail.com>");
- MODULE_DESCRIPTION("Lenovo WMI Helpers Driver");
- MODULE_LICENSE("GPL");
-diff --git a/drivers/platform/x86/lenovo/wmi-helpers.h b/drivers/platform/x86/lenovo/wmi-helpers.h
-index ed7db3ebba6c..039fe61003ce 100644
---- a/drivers/platform/x86/lenovo/wmi-helpers.h
-+++ b/drivers/platform/x86/lenovo/wmi-helpers.h
-@@ -16,6 +16,8 @@ struct wmi_method_args_32 {
- 	u32 arg1;
+ MODULE_AUTHOR("Rong Zhang <i@rong.moe>");
+diff --git a/drivers/platform/x86/lenovo/wmi-capdata.h b/drivers/platform/x86/lenovo/wmi-capdata.h
+index e0a30f2c0c87..0df3ae534ed5 100644
+--- a/drivers/platform/x86/lenovo/wmi-capdata.h
++++ b/drivers/platform/x86/lenovo/wmi-capdata.h
+@@ -38,9 +38,7 @@ struct capdata00 {
  };
  
-+struct dentry *lwmi_debugfs_create_dir(struct wmi_device *wdev);
-+
- enum lwmi_event_type {
- 	LWMI_GZ_GET_THERMAL_MODE = 0x01,
- };
+ struct capdata01 {
+-	u32 id;
+-	u32 supported;
+-	u32 default_value;
++	struct capdata00;
+ 	u32 step;
+ 	u32 min_value;
+ 	u32 max_value;
 -- 
 2.53.0
 
