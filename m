@@ -1,108 +1,105 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.8])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7ECD33CBE7D;
-	Thu,  2 Apr 2026 13:47:56 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.8
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 949103EFD24
+	for <platform-driver-x86@vger.kernel.org>; Thu,  2 Apr 2026 15:03:24 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1775137679; cv=none; b=nXkeHx49rJFmdYSJRKkn9G903p+SOVDxZfJgp00os3zWh88AEudJHVk9+VJjRfsdsFLDq/g41Hs8KIOlm7wSxUvWc24FwjBKcWg2OFHBiTDoCkd3P31zYj6a/BogTkCAAkSKy10oXoAd9Hq2NdWQPyYKgBbO6dJ1gCsJ8yL+24E=
+	t=1775142204; cv=none; b=mU4RDtXjHjGe83QZ5np9RvG1zxnoEGwPRlwOVY1Rpsdf1XIJpcPZbqwvq8KZ8/KNJwhLhYX42DhPc80U88kHepVTHG4A/sCwjhz/6K+Os6V68Xa0I9sSB1aogoS6TsNuUxroo+XJ63Y4yVJDf9JqTNQwPGUY/IoMoOAMg6X25N8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1775137679; c=relaxed/simple;
-	bh=GRKjzT+ZDuM23HB0D2ydJq5Mdn2LGg+Wk5/aTsc+gcM=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=oPVcOxLjK6+HFNw7p4XqAGPpaoUbkwTZ78V2Vw8w3cI0WCHiJCFo7td/Ra4Q6UHJxyE8FJfxdsN4q6R72BYij3PVTNPfsgPj+vqT02ikgv7ZdBDivENa6sYZjEWIdHb42KLZVOpnrbZoiXgoqB69F0d7OR7RK9EDWDEe8/A5gkQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=pass smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=ZKglh+tN; arc=none smtp.client-ip=192.198.163.8
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.intel.com
+	s=arc-20240116; t=1775142204; c=relaxed/simple;
+	bh=F4zhH6M3sP6/pIp7gAJGXFdabfzYRh9hex7KTF1/hgk=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=PKrsnmWRdOv+S+0QHDLK2Ef0+sb6P67ejxAntRPckekceFC3T/pzJAu+dEa53FOc0Q87IrW67rJkCMv+26ulTo8wIP0tkypjznWnmgO5c/A0ojXDvvaG6q60i7XDPwH0cXpGl9U7te2+cs23RLososIBjZSSLyyoDtDNSbQyTvM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=TAzaKBk5; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="ZKglh+tN"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1775137677; x=1806673677;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:content-transfer-encoding:in-reply-to;
-  bh=GRKjzT+ZDuM23HB0D2ydJq5Mdn2LGg+Wk5/aTsc+gcM=;
-  b=ZKglh+tNafyoIRQxRwA8h7Rg113DcpNcQTCLAR3rMlM/IcpuYNWtk8+v
-   CzZtGl1ErTdoOa4hE1JPO83cWHVQ7szBOO0TBK59fRiicxti9J8o7QD3x
-   JeBJKkQsHDI74FQaEY6jrlrZpxDvEkOvkOg4LUwbtvpIYogDQRlH0EQlP
-   Ri69wyEQP8gjr0r6A2upug5nGr76vPxzJTcGlSAbfL5r9NFO68boFRcDk
-   44oKiJQPnsDyC9iaOnp4CAIKN4e4Zj7Mjqijw1893r863mpd7QqBxaOVP
-   TQ+OEqJlGqk46fCVeK6K6RZ0XPI1w3eihubazgf9Ii0os/GgCnf8pZrRl
-   A==;
-X-CSE-ConnectionGUID: 1spP+flwQ3mJz3Y0RZZgaw==
-X-CSE-MsgGUID: Egh7DFLERNWNBaXfT2S9kA==
-X-IronPort-AV: E=McAfee;i="6800,10657,11746"; a="93779317"
-X-IronPort-AV: E=Sophos;i="6.23,155,1770624000"; 
-   d="scan'208";a="93779317"
-Received: from fmviesa007.fm.intel.com ([10.60.135.147])
-  by fmvoesa102.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 02 Apr 2026 06:47:55 -0700
-X-CSE-ConnectionGUID: bkj4Upz4QEyqCYqU7DL7Og==
-X-CSE-MsgGUID: kBEvkSL+TgmqbbxElzaL1g==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.23,155,1770624000"; 
-   d="scan'208";a="223707397"
-Received: from amilburn-desk.amilburn-desk (HELO localhost) ([10.245.245.31])
-  by fmviesa007-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 02 Apr 2026 06:47:51 -0700
-Date: Thu, 2 Apr 2026 16:47:49 +0300
-From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-To: Bartosz Golaszewski <brgl@kernel.org>
-Cc: Bartosz Golaszewski <bartosz.golaszewski@oss.qualcomm.com>,
-	Daniel Scally <djrscally@gmail.com>,
-	Heikki Krogerus <heikki.krogerus@linux.intel.com>,
-	Sakari Ailus <sakari.ailus@linux.intel.com>,
-	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-	"Rafael J. Wysocki" <rafael@kernel.org>,
-	Danilo Krummrich <dakr@kernel.org>,
-	Mika Westerberg <mika.westerberg@linux.intel.com>,
-	Andy Shevchenko <andy@kernel.org>,
-	Linus Walleij <linusw@kernel.org>, Hans de Goede <hansg@kernel.org>,
-	Ilpo =?iso-8859-1?Q?J=E4rvinen?= <ilpo.jarvinen@linux.intel.com>,
-	Dmitry Torokhov <dmitry.torokhov@gmail.com>,
-	Len Brown <lenb@kernel.org>, linux-acpi@vger.kernel.org,
-	driver-core@lists.linux.dev, linux-kernel@vger.kernel.org,
-	linux-gpio@vger.kernel.org, platform-driver-x86@vger.kernel.org
-Subject: Re: [PATCH v2 0/4] platform/x86: x86-android-tablets: use real
- firmware node references with intel drivers
-Message-ID: <ac5zhZAyiwbUwzWo@ashevche-desk.local>
-References: <20260402-baytrail-real-swnode-v2-0-6f5054a4cc07@oss.qualcomm.com>
- <ac5t5XozmzN9oq96@ashevche-desk.local>
- <CAMRc=McR+S9LCHmDjAS6Wn=SrNvq5Ojr-w1qeLsGNJ+L39pbrw@mail.gmail.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="TAzaKBk5"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 5425DC2BCB7
+	for <platform-driver-x86@vger.kernel.org>; Thu,  2 Apr 2026 15:03:24 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1775142204;
+	bh=F4zhH6M3sP6/pIp7gAJGXFdabfzYRh9hex7KTF1/hgk=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+	b=TAzaKBk5bQHEBAnoDbUHErPGXZrqeqWseRisq+qBPxAXpmtjCa/Es6/BTjCHNfocR
+	 XE0tH+MhdOYS5aqtuArK6aR4Ho7A/XpMrvpI8i0bz7uUIn6PbsJ3DAigAc1iMCTu0k
+	 v0M3NLt3KBRYEgupn6ici5UJ18Zqf9r3QCP5lR9vOUGq1MBGyC3hMf+o/beD+76xKa
+	 yFZDW5tbw4inyMJwlcwAYvzaO2RxtTIXXUBWsPVQEyVOlp2Kg5g0yDdemO7O00G5oJ
+	 /Xeg6GQoCrTPJvnqZ8dqelftFEBREBcy5ftGuZrnev05C+vlBNcXUMWyM+d4EmmSqE
+	 lEy6KOHRLFiWw==
+Received: by mail-lf1-f44.google.com with SMTP id 2adb3069b0e04-5a2c9932781so764007e87.1
+        for <platform-driver-x86@vger.kernel.org>; Thu, 02 Apr 2026 08:03:24 -0700 (PDT)
+X-Forwarded-Encrypted: i=1; AJvYcCVzSX8Cu8iZU/ddAQpzuN2ysSvXdCoO4sMYAR1r7j/5BobyrBmFY+n1m43e9DWPICVStyqvVVNYHBEi3CSHLEgYkBEM@vger.kernel.org
+X-Gm-Message-State: AOJu0Yz5Mnjr9Qz5jQVUEyNrYwKQAOAEiDpnGQV08ZiFH7YdPvOxtWWW
+	Q9svJedMJ4jgyiZdHpKu2LzYAiREzAlgd7ojora0GWr6ONd+QmUEBNyTyewNRarcNw3EieG2kyR
+	gCjjv84nfNMoZrUxpphwu7et0MVhAyfLVKeCxfBPFMg==
+X-Received: by 2002:a05:6512:3d9e:b0:5a2:c66a:d6d1 with SMTP id
+ 2adb3069b0e04-5a2c8d78c78mr1121944e87.6.1775142202973; Thu, 02 Apr 2026
+ 08:03:22 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <CAMRc=McR+S9LCHmDjAS6Wn=SrNvq5Ojr-w1qeLsGNJ+L39pbrw@mail.gmail.com>
-Organization: Intel Finland Oy - BIC 0357606-4 - c/o Alberga Business Park, 6
- krs, Bertel Jungin Aukio 5, 02600 Espoo
+References: <20260402-baytrail-real-swnode-v2-0-6f5054a4cc07@oss.qualcomm.com>
+ <ac5t5XozmzN9oq96@ashevche-desk.local> <CAMRc=McR+S9LCHmDjAS6Wn=SrNvq5Ojr-w1qeLsGNJ+L39pbrw@mail.gmail.com>
+ <ac5zhZAyiwbUwzWo@ashevche-desk.local>
+In-Reply-To: <ac5zhZAyiwbUwzWo@ashevche-desk.local>
+From: Bartosz Golaszewski <brgl@kernel.org>
+Date: Thu, 2 Apr 2026 17:03:10 +0200
+X-Gmail-Original-Message-ID: <CAMRc=McJFNp15jnrehGLHsmFRfBpRQoppmdB_51whzJUQ-5ZLw@mail.gmail.com>
+X-Gm-Features: AQROBzC8kXfF8m1woyIDTDDAIkrV3H5UZACDhpRJ_7Yt9ZM71rXQFfvjqh5OmSk
+Message-ID: <CAMRc=McJFNp15jnrehGLHsmFRfBpRQoppmdB_51whzJUQ-5ZLw@mail.gmail.com>
+Subject: Re: [PATCH v2 0/4] platform/x86: x86-android-tablets: use real
+ firmware node references with intel drivers
+To: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Cc: Bartosz Golaszewski <bartosz.golaszewski@oss.qualcomm.com>, 
+	Daniel Scally <djrscally@gmail.com>, Heikki Krogerus <heikki.krogerus@linux.intel.com>, 
+	Sakari Ailus <sakari.ailus@linux.intel.com>, 
+	Greg Kroah-Hartman <gregkh@linuxfoundation.org>, "Rafael J. Wysocki" <rafael@kernel.org>, 
+	Danilo Krummrich <dakr@kernel.org>, Mika Westerberg <mika.westerberg@linux.intel.com>, 
+	Andy Shevchenko <andy@kernel.org>, Linus Walleij <linusw@kernel.org>, Hans de Goede <hansg@kernel.org>, 
+	=?UTF-8?Q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>, 
+	Dmitry Torokhov <dmitry.torokhov@gmail.com>, Len Brown <lenb@kernel.org>, linux-acpi@vger.kernel.org, 
+	driver-core@lists.linux.dev, linux-kernel@vger.kernel.org, 
+	linux-gpio@vger.kernel.org, platform-driver-x86@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Thu, Apr 02, 2026 at 03:35:24PM +0200, Bartosz Golaszewski wrote:
-> On Thu, Apr 2, 2026 at 3:23 PM Andy Shevchenko
-> <andriy.shevchenko@linux.intel.com> wrote:
+On Thu, Apr 2, 2026 at 3:47=E2=80=AFPM Andy Shevchenko
+<andriy.shevchenko@linux.intel.com> wrote:
+>
+> On Thu, Apr 02, 2026 at 03:35:24PM +0200, Bartosz Golaszewski wrote:
+> > On Thu, Apr 2, 2026 at 3:23=E2=80=AFPM Andy Shevchenko
+> > <andriy.shevchenko@linux.intel.com> wrote:
+> > >
+> > > > 3. Export the acpi_bus_type symbol. It's already available in the
+> > > > acpi_bus.h header but it's not available to loadable modules.
+> > >
+> > > Nowadays we don't do that but export the dev_is_acpi() or something s=
+imilar if
+> > > it's not yet available and to_acpi_dev(). (Names are derived from the=
+ existing
+> > > pattern, they might be need to be adjusted, dunno.) See how PNP does =
+that.
+> > > Note, I haven't read the patches yet, just a quick comment.
 > >
-> > > 3. Export the acpi_bus_type symbol. It's already available in the
-> > > acpi_bus.h header but it's not available to loadable modules.
-> >
-> > Nowadays we don't do that but export the dev_is_acpi() or something similar if
-> > it's not yet available and to_acpi_dev(). (Names are derived from the existing
-> > pattern, they might be need to be adjusted, dunno.) See how PNP does that.
-> > Note, I haven't read the patches yet, just a quick comment.
-> 
-> Maybe I should have said why I do it. It's to register a notifier call
-> on ACPI bus events. Is there a better way to do this?
+> > Maybe I should have said why I do it. It's to register a notifier call
+> > on ACPI bus events. Is there a better way to do this?
+>
+> AFAIU there shouldn't be pure ACPI devices, they are companions to the re=
+al
+> ones. Can we simply attach to the normal device notifier and check if the
+> companion is what we are looking for? Also since it's specific to that dr=
+iver
+> and you know what the platforms you are looking for, why can't we hook
+> something into drivers/acpi/x86/lpss.c?
+>
 
-AFAIU there shouldn't be pure ACPI devices, they are companions to the real
-ones. Can we simply attach to the normal device notifier and check if the
-companion is what we are looking for? Also since it's specific to that driver
-and you know what the platforms you are looking for, why can't we hook
-something into drivers/acpi/x86/lpss.c?
+The ACPI companions seem to only ever be added once and never removed
+- unlike platform devices. This is why I prefer to check the ACPI bus.
 
--- 
-With Best Regards,
-Andy Shevchenko
+As for lpss.c - what do you sugest exactly because at first glance I'm
+not quite sure what's there to hook up?
 
-
+Bart
