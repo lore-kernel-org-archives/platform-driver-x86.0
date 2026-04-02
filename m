@@ -1,433 +1,218 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-dy1-f171.google.com (mail-dy1-f171.google.com [74.125.82.171])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EDC1B3D090B;
-	Wed,  1 Apr 2026 22:57:18 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 412913328FA
+	for <platform-driver-x86@vger.kernel.org>; Thu,  2 Apr 2026 03:24:28 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=74.125.82.171
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1775084239; cv=none; b=EOKhPS9lE7yk+GHYu6YRhByQEFOLgAmFN6gBv8G7caQHXZzPzUXhvuYPheT3IYglZqyBtuN4KPRwQaA/rQgPTEQGgdpa2yW29q7XwoKxCscYlTdIk+tQKaDR9I5rcsEGVFSh/a+ESJni2QgDZzVFpkFLYrfsqz0OABuoyYp1GK4=
+	t=1775100269; cv=none; b=mXZRSuHdDohmLyRT0Os41oWVBcvQ7GMj+r40SH3U//66BAq8YkUs7uTVOvwCBdzAHNTRyNtViP3PYZzasDFb2a4gmZVJVBCFzlvOOreLIrGc3E7R9AUYTZYxMBbNOKL4FDujz50wjvnJB9krwp901QMGWbOAX9PGzHWmgGwZZtg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1775084239; c=relaxed/simple;
-	bh=EGYUhYq5pHTHrBcGAtpwYx7nH7AnwSY3CeN47psJq4o=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=mBzb2YXiJ0YmhWjPl+XNuIvdDRzMB12E1ZdP6ESIkpCqfidlgEAh1Za3ST2aCAtYCXTCTDQiDKSdrx+D48PEYdGJDP/BiEWXqScu/n0k4ngAO7Nz5994GXvyaYfk+2n9UpiFxIrcT63Caim131tEmKrh+WTFYVXCG4Me0WI3fE8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=mQQi/Rii; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1775100269; c=relaxed/simple;
+	bh=jUBx9WFH4l/1KsFlcIOApjFOkW7qDFsMYBbk/P8Ss0s=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=Y0dvBa5LJknULxi/md0aly2DebqrdG801LQYRlPfYFzisMrm3Rm68Opfo703fvr97SuLCDZpG7bqHS4E452xTMFF86ZRr8mnVzV24y/l1Ny8YutIx5ZCp7/in0KPmlB3XDi1aor7NpfEU/OuscvCJl9mo4IqkT6nkyP+4r5OZRA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=LlCQpofN; arc=none smtp.client-ip=74.125.82.171
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="mQQi/Rii"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 127D6C4CEF7;
-	Wed,  1 Apr 2026 22:57:17 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1775084238;
-	bh=EGYUhYq5pHTHrBcGAtpwYx7nH7AnwSY3CeN47psJq4o=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=mQQi/RiiGtLKwJIhpco5kMPG0l4LrtpmnW8FabxiSykgP3MKt3tuwpXPs5gGJ2yce
-	 BWrpa5JS3ntaxWv/TelXqMh4MhrX79kwCfRyfExCDyk65d+nimeS32VaHk+ZSiuK7T
-	 exsR+NQ+fxRWBVEZp3WRYJvyDjflaJSehOHmGhHXhNPW8eF8SPrq+vZc0NZ76tFMmn
-	 1rxDqV+KO9g7z4RjIdtfgnBz8J95pbXcsXQaNvF+wTuF18G0z+wgldWKrb6CEHWteK
-	 faeRW4zzZhahFn6E4et9F8Ct+7BKGGmB+pK2xT/CoumLMXBVlVLC7Bm8ttEA20laRm
-	 Uyqi0Tbdn3GKg==
-Date: Wed, 1 Apr 2026 17:57:14 -0500
-From: Bjorn Andersson <andersson@kernel.org>
-To: Aleksandrs Vinarskis <alex@vinarskis.com>
-Cc: Konrad Dybcio <konradybcio@kernel.org>, Rob Herring <robh@kernel.org>, 
-	Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, 
-	Hans de Goede <hansg@kernel.org>, Ilpo =?utf-8?B?SsOkcnZpbmVu?= <ilpo.jarvinen@linux.intel.com>, 
-	Bryan O'Donoghue <bryan.odonoghue@linaro.org>, linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, platform-driver-x86@vger.kernel.org, laurentiu.tudor1@dell.com, 
-	Abel Vesa <abel.vesa@oss.qualcomm.com>, Tobias Heider <tobias.heider@canonical.com>, 
-	Val Packett <val@packett.cool>
-Subject: Re: [PATCH 2/4] platform: arm64: dell-xps-ec: new driver
-Message-ID: <ac2g3vz8OuFYj7Pm@baldur>
-References: <20260401-dell-xps-9345-ec-v1-0-afa5cacd49be@vinarskis.com>
- <20260401-dell-xps-9345-ec-v1-2-afa5cacd49be@vinarskis.com>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="LlCQpofN"
+Received: by mail-dy1-f171.google.com with SMTP id 5a478bee46e88-2c7e5f38b37so675347eec.0
+        for <platform-driver-x86@vger.kernel.org>; Wed, 01 Apr 2026 20:24:28 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20251104; t=1775100267; x=1775705067; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=xtAOSGFFTi/RXzeRnn9TydvvZ+hDH7aqaUUU7ONJ7eg=;
+        b=LlCQpofNulIQewBiDhs3+OYgetk07N9Py0D3ejUZleZooGNK5jSvuo0hgeMACg36bn
+         ugyRYYw02/P0KEFdghhcH9B2BmnM4Xzo/5nhvKrZz415Z3y7ziA9nmC7vwDehyokidLX
+         3WUoo/okMRu6Bw0FYy3hDiINAtPhn2sB++Qvf3lDlRMY5UN8votcDT+M+SC30TaSPJim
+         IbLoDCWTLlxOvuVNXaWbE0LFznZ6l7OxuSrCVP0DNEkZ9ODUfuUmZZQhp7UEwHFKJ/Ov
+         hplwyfnUMeY6eXZKJJlyTmvlC6mol2H01P/TZ1gy9hu4he2Y3wggqjKTfgxHNBwBbu8Y
+         yaVg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20251104; t=1775100267; x=1775705067;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-gg:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=xtAOSGFFTi/RXzeRnn9TydvvZ+hDH7aqaUUU7ONJ7eg=;
+        b=c6XJxMOcehnDwu6DPpyBr9K91CvN/bTgnD2ceQKQ9wNkW8Ybwxbq4xrqR7v34HbPjL
+         ohgygzKcWqpeVdUhZYx+Wzq4vPrtkGk4CIkzj/bdFaUiPhdYKsDCgWMh4FwQocpdQ+av
+         hjDTGXB/Dq9cn26NtOB3hR6Fa/YVB+/GYaWbbfPLPOkDd4/1zQ+fmrPVVWvoVDx4mg6V
+         pImwdgMEf3KD5EmbYxv3ECRJGEEX3NsmkoNIsa/kRAa0cHSd2akBwsK8Q/nea5mbY6ZM
+         OVegSFCZ4o6jMKMnowHsyQb/fFf8Fjj4BqBawmfSSGiAtDiZ7xuzeri6UkJXsoYHEboN
+         AMag==
+X-Forwarded-Encrypted: i=1; AJvYcCVtWvKAI81J9UdNeGsWmNlvI0VHmNiagynduMe3+++6YjW7khJ7QL0x9wuU8hxn5OwK/aUiA0OXwkPwuxfFYpHQiBnZ@vger.kernel.org
+X-Gm-Message-State: AOJu0YyT5dLWCi55S4YL/69ZKqiJxzHM75qPRt8nJ0ahzezmGiNANQ+/
+	FrfvcVhX58fYH0v6oRmqvHWY+7QM142gRPR4kkpyA9Oi3Fgvt1KNnKjj
+X-Gm-Gg: ATEYQzw4/1Quq0lZg4vAgtaRoIvClscryLcKD1cNdCYy+Id8Qy7hcXvUMiyXNaHfanj
+	4TKx9L3UcEgsRw/69EZQS+UaHBwilY/oxDrUon9QlK5BZMUGP4wmXS6HdMwHwSONTGRuqZfcRF8
+	nq0gruxvTylL4vTLQG7EKZhEkmuE4ydjY/rKbe/r/g47C8qUATDMuxsCry4V1mVZhybB7fyPghf
+	hiEY6K6Mp1oQYmPcwzHRW/LxRYUgr1OO714TYazqqbIWBnSJSUJMXgI78mLVE8r5DH1XnuncdOo
+	TAfaSdo7YTDqhhpUkBfE2M183QtnzHb3FHPK6rvjh8ZLRQfveqWwS1ELFAVTC+inS590Cpxb/wK
+	GcIU78N5+x16ZRgsmdTVomqvA3Pj8Gyj+c2DiLxW19AC5KoJ1ZMUrV2V5JJtkBsOBRg6VvXJDBA
+	FLDvi93xwcOVgq10HVGbBEQ0+nYVj2ex7WqobFMhDVEFA0ynItaZjQcX9ktCzZWxi/8A3xi1lhf
+	DPz
+X-Received: by 2002:a05:7300:4309:b0:2c5:d833:a4fe with SMTP id 5a478bee46e88-2c931164080mr2835205eec.10.1775100267220;
+        Wed, 01 Apr 2026 20:24:27 -0700 (PDT)
+Received: from lappy (108-228-232-20.lightspeed.sndgca.sbcglobal.net. [108.228.232.20])
+        by smtp.gmail.com with ESMTPSA id 5a478bee46e88-2ca7cae9e9esm1265981eec.23.2026.04.01.20.24.26
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 01 Apr 2026 20:24:26 -0700 (PDT)
+From: "Derek J. Clark" <derekjohn.clark@gmail.com>
+To: =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>,
+	Hans de Goede <hansg@kernel.org>
+Cc: Mark Pearson <mpearson-lenovo@squebb.ca>,
+	Armin Wolf <W_Armin@gmx.de>,
+	Jonathan Corbet <corbet@lwn.net>,
+	Rong Zhang <i@rong.moe>,
+	Kurt Borja <kuurtb@gmail.com>,
+	"Derek J . Clark" <derekjohn.clark@gmail.com>,
+	platform-driver-x86@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Subject: [PATCH v7 00/16] platform-x86: lenovo-wmi: Add fixes and enhancement
+Date: Thu,  2 Apr 2026 03:24:08 +0000
+Message-ID: <20260402032424.678528-1-derekjohn.clark@gmail.com>
+X-Mailer: git-send-email 2.53.0
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20260401-dell-xps-9345-ec-v1-2-afa5cacd49be@vinarskis.com>
+Content-Transfer-Encoding: 8bit
 
-On Wed, Apr 01, 2026 at 09:33:11AM +0200, Aleksandrs Vinarskis wrote:
-> Introduce EC driver for Dell XPS 13 9345 (codename 'tributo') which may
-> partially of fully compatible with Snapdragon-based Dell Latitude,
-> Inspiron ('thena'). Primary function of this driver is unblock EC's
-> thermal management, specifically to provide it with necessary
-> information to control device fans, peripherals power.
-> 
-> The driver was developed primarily by analyzing ACPI DSDT's _DSM and
-> i2c dumps of communication between SoC and EC. Changes to Windows
-> driver's behavior include increasing temperature feed loop from ~50ms
-> to 100ms here.
-> 
-> While Xps's EC is rather complex and controls practically all device
-> peripherals including touch row's brightness and special keys such as
-> mic mute, these do not go over this particular i2c interface.
-> 
-> Not yet implemented features:
-> - On lid-close IRQ event is registered. Windows performs what to
->   appears to be thermistor constants readout, though its not obvious
->   what it used for.
-> - According to ACPI's _DSM there is a method to readout fans' RPM.
-> - Initial thermistor constants were sniffed from Windows, these can be
->   likely fine tuned for better cooling performance.
-> - There is additional temperature reading that Windows sents to EC but
->   more rare than others, likely SoC T_j / TZ98 or TZ4. This is the only
->   thermal zone who's reading can exceed 115C without triggering thermal
->   shutdown.
-> - Given similarities between 'tributo' and 'thena' platforms, including
->   EC i2c address, driver can be potentially extended to support both.
-> 
-> Signed-off-by: Aleksandrs Vinarskis <alex@vinarskis.com>
+This series adds many much needed fixes and features to the lenovo-wmi
+drivers. This version has been re-ordered to ensure the simplest
+application to the stable tree, with all fixes being pushed up front.
+This has caused some churn in the latter half of the series where I'm
+immediately changing things that were just added, but this should ensure
+a better result for all kernel versions so I'm happy with it.
 
-Looks good, just some minor things below.
+Patches 1-7 fix various bugs in the existing drivers and are Cc'd to
+stable.
 
-> ---
->  MAINTAINERS                          |   1 +
->  drivers/platform/arm64/Kconfig       |  12 ++
->  drivers/platform/arm64/Makefile      |   1 +
->  drivers/platform/arm64/dell-xps-ec.c | 269 +++++++++++++++++++++++++++++++++++
->  4 files changed, 283 insertions(+)
-> 
-> diff --git a/MAINTAINERS b/MAINTAINERS
-> index fe3f2fc4fbc087d8041f97708fbb93722f7d1882..f82c7f6c7377d3f2ff0ae1be263d854749541f03 100644
-> --- a/MAINTAINERS
-> +++ b/MAINTAINERS
-> @@ -7240,6 +7240,7 @@ DELL XPS EMBEDDED CONTROLLER DRIVER
->  M:	Aleksandrs Vinarskis <alex@vinarskis.com>
->  S:	Maintained
->  F:	Documentation/devicetree/bindings/embedded-controller/dell,xps13-9345-ec.yaml
-> +F:	drivers/platform/arm64/dell-xps-ec.c
->  
->  DELTA AHE-50DC FAN CONTROL MODULE DRIVER
->  M:	Zev Weiss <zev@bewilderbeest.net>
-> diff --git a/drivers/platform/arm64/Kconfig b/drivers/platform/arm64/Kconfig
-> index 10f905d7d6bfa5fad30a0689d3a20481268c781e..0bc8f016032bb05cb3a7cc50bdf1092da04153bc 100644
-> --- a/drivers/platform/arm64/Kconfig
-> +++ b/drivers/platform/arm64/Kconfig
-> @@ -33,6 +33,18 @@ config EC_ACER_ASPIRE1
->  	  laptop where this information is not properly exposed via the
->  	  standard ACPI devices.
->  
-> +config EC_DELL_XPS
-> +	tristate "Dell XPS 9345 Embedded Controller driver"
-> +	depends on ARCH_QCOM || COMPILE_TEST
-> +	depends on I2C
-> +	depends on IIO
-> +	help
-> +	  Driver for the Embedded Controller in the Qualcomm Snapdragon-based
-> +	  Dell XPS 13 9345, which handles thermal management and fan speed
-> +	  control.
-> +
-> +	  Say M or Y here to include this support.
-> +
->  config EC_HUAWEI_GAOKUN
->  	tristate "Huawei Matebook E Go Embedded Controller driver"
->  	depends on ARCH_QCOM || COMPILE_TEST
-> diff --git a/drivers/platform/arm64/Makefile b/drivers/platform/arm64/Makefile
-> index 60c131cff6a15bb51a49c9edab95badf513ee0f6..6768dc6c2310837374e67381cfc729bed1fdaaef 100644
-> --- a/drivers/platform/arm64/Makefile
-> +++ b/drivers/platform/arm64/Makefile
-> @@ -6,6 +6,7 @@
->  #
->  
->  obj-$(CONFIG_EC_ACER_ASPIRE1)	+= acer-aspire1-ec.o
-> +obj-$(CONFIG_EC_DELL_XPS)	+= dell-xps-ec.o
->  obj-$(CONFIG_EC_HUAWEI_GAOKUN)	+= huawei-gaokun-ec.o
->  obj-$(CONFIG_EC_LENOVO_YOGA_C630) += lenovo-yoga-c630.o
->  obj-$(CONFIG_EC_LENOVO_THINKPAD_T14S) += lenovo-thinkpad-t14s.o
-> diff --git a/drivers/platform/arm64/dell-xps-ec.c b/drivers/platform/arm64/dell-xps-ec.c
-> new file mode 100644
-> index 0000000000000000000000000000000000000000..5ea8f30931d8b61acbb948d8617dde3681fb8de3
-> --- /dev/null
-> +++ b/drivers/platform/arm64/dell-xps-ec.c
-> @@ -0,0 +1,269 @@
-> +// SPDX-License-Identifier: GPL-2.0-only
-> +/*
-> + * Copyright (c) 2026, Aleksandrs Vinarskis <alex@vinarskis.com>
-> + */
-> +
-> +#include <linux/array_size.h>
-> +#include <linux/devm-helpers.h>
-> +#include <linux/device.h>
-> +#include <linux/i2c.h>
-> +#include <linux/iio/consumer.h>
-> +#include <linux/interrupt.h>
-> +#include <linux/module.h>
-> +#include <linux/pm.h>
-> +#include <linux/workqueue.h>
-> +
-> +#define DELL_XPS_EC_SUSPEND_CMD		0xb9
-> +#define DELL_XPS_EC_SUSPEND_MSG_LEN	64
-> +
-> +#define DELL_XPS_EC_TEMP_CMD0		0xfb
-> +#define DELL_XPS_EC_TEMP_CMD1		0x20
-> +#define DELL_XPS_EC_TEMP_CMD3		0x02
-> +#define DELL_XPS_EC_TEMP_MSG_LEN	6
-> +#define DELL_XPS_EC_TEMP_INTERVAL_MS	100
+Patch 8 moves all gamezone enums from the gamezone header into the
+helpers header in preparation for the rest of the series.
 
-If you express this in jiffies directly, you could avoid line breaking
-three of the lines referring to it below.
+Patch 9 moves LWMI_FAN_DIV to be next to the rest of the fan attribute
+defines in preparation for adding additional attrbiute macros. This is
+so the attribute macros can all be in the same place in the file.
 
-> +
-> +/*
-> + * Format:
-> + * - header/unknown (2 bytes)
-> + * - per-thermistor entries (3 bytes): thermistor_id, param1, param2
-> + */
-> +static const u8 dell_xps_ec_thermistor_profile[] = {
-> +	0xff, 0x54,
-> +	0x01, 0x00, 0x2b,	/* sys_therm0 */
-> +	0x02, 0x44, 0x2a,	/* sys_therm1 */
-> +	0x03, 0x44, 0x2b,	/* sys_therm2 */
-> +	0x04, 0x44, 0x28,	/* sys_therm3 */
-> +	0x05, 0x55, 0x2a,	/* sys_therm4 */
-> +	0x06, 0x44, 0x26,	/* sys_therm5 */
-> +	0x07, 0x44, 0x2b,	/* sys_therm6 */
-> +};
-> +
-> +/*
-> + * Mapping from IIO channel name to EC command byte
-> + */
-> +static const struct {
-> +	const char *name;
-> +	u8 cmd;
-> +} dell_xps_ec_therms[] = {
-> +	/* TODO: 0x01 is sent only occasionally, likely TZ98 or TZ4 */
-> +	{ "sys_therm0", 0x02 },
-> +	{ "sys_therm1", 0x03 },
-> +	{ "sys_therm2", 0x04 },
-> +	{ "sys_therm3", 0x05 },
-> +	{ "sys_therm4", 0x06 },
-> +	{ "sys_therm5", 0x07 },
-> +	{ "sys_therm6", 0x08 },
-> +};
-> +
-> +struct dell_xps_ec {
-> +	struct device *dev;
-> +	struct i2c_client *client;
-> +	struct iio_channel *therm_channels[ARRAY_SIZE(dell_xps_ec_therms)];
-> +	struct delayed_work temp_work;
-> +};
-> +
-> +static int dell_xps_ec_suspend_cmd(struct dell_xps_ec *ec, bool suspend)
-> +{
-> +	u8 buf[DELL_XPS_EC_SUSPEND_MSG_LEN] = {};
-> +	int ret;
-> +
-> +	buf[0] = DELL_XPS_EC_SUSPEND_CMD;
-> +	buf[1] = suspend ? 0x01 : 0x00;
-> +	/* bytes 2..63 remain zero */
-> +
-> +	ret = i2c_master_send(ec->client, buf, sizeof(buf));
-> +	if (ret < 0)
-> +		return ret;
-> +
-> +	return 0;
-> +}
-> +
-> +static int dell_xps_ec_send_temp(struct dell_xps_ec *ec, u8 cmd_byte,
-> +				 int milli_celsius)
-> +{
-> +	u8 buf[DELL_XPS_EC_TEMP_MSG_LEN];
-> +	u16 deci_celsius;
-> +	int ret;
-> +
-> +	/* Convert milli-Celsius to deci-Celsius (Celsius * 10) */
-> +	deci_celsius = milli_celsius / 100;
-> +
-> +	buf[0] = DELL_XPS_EC_TEMP_CMD0;
-> +	buf[1] = DELL_XPS_EC_TEMP_CMD1;
-> +	buf[2] = cmd_byte;
-> +	buf[3] = DELL_XPS_EC_TEMP_CMD3;
-> +	buf[4] = deci_celsius & 0xff;		/* LSB */
-> +	buf[5] = (deci_celsius >> 8) & 0xff;	/* MSB */
-> +
-> +	ret = i2c_master_send(ec->client, buf, sizeof(buf));
-> +	if (ret < 0)
-> +		return ret;
-> +
-> +	return 0;
-> +}
-> +
-> +static void dell_xps_ec_temp_work_fn(struct work_struct *work)
-> +{
-> +	struct dell_xps_ec *ec = container_of(work, struct dell_xps_ec,
-> +					      temp_work.work);
-> +	int val, ret, i;
-> +
-> +	for (i = 0; i < ARRAY_SIZE(dell_xps_ec_therms); i++) {
-> +		if (!ec->therm_channels[i])
-> +			continue;
-> +
-> +		ret = iio_read_channel_processed(ec->therm_channels[i], &val);
-> +		if (ret < 0) {
-> +			dev_err_ratelimited(ec->dev,
-> +					    "Failed to read thermistor %s: %d\n",
-> +					    dell_xps_ec_therms[i].name, ret);
-> +			continue;
-> +		}
-> +
-> +		ret = dell_xps_ec_send_temp(ec, dell_xps_ec_therms[i].cmd, val);
-> +		if (ret < 0) {
-> +			dev_err_ratelimited(ec->dev,
-> +					    "Failed to send temp for %s: %d\n",
-> +					    dell_xps_ec_therms[i].name, ret);
-> +		}
-> +	}
-> +
-> +	schedule_delayed_work(&ec->temp_work,
-> +			      msecs_to_jiffies(DELL_XPS_EC_TEMP_INTERVAL_MS));
-> +}
-> +
-> +static irqreturn_t dell_xps_ec_irq_handler(int irq, void *data)
-> +{
-> +	struct dell_xps_ec *ec = data;
-> +
-> +	/*
-> +	 * TODO: IRQ is fired on lid-close. Follow Windows example to read out
-> +	 *       the thermistor thresholds and potentially fan speeds.
-> +	 */
-> +	dev_info_ratelimited(ec->dev, "IRQ triggered! (irq=%d)\n", irq);
-> +
-> +	return IRQ_HANDLED;
-> +}
-> +
-> +static int dell_xps_ec_probe(struct i2c_client *client)
-> +{
-> +	struct device *dev = &client->dev;
-> +	struct dell_xps_ec *ec;
-> +	int ret, i;
-> +
-> +	ec = devm_kzalloc(dev, sizeof(*ec), GFP_KERNEL);
-> +	if (!ec)
-> +		return -ENOMEM;
-> +
-> +	ec->dev = dev;
-> +	ec->client = client;
-> +	i2c_set_clientdata(client, ec);
-> +
-> +	/* Set default thermistor profile */
-> +	ret = i2c_master_send(client, dell_xps_ec_thermistor_profile,
-> +			      sizeof(dell_xps_ec_thermistor_profile));
-> +	if (ret < 0)
-> +		return dev_err_probe(dev, ret, "Failed to set thermistor profile\n");
-> +
-> +	/* Get IIO channels for thermistors */
-> +	for (i = 0; i < ARRAY_SIZE(dell_xps_ec_therms); i++) {
-> +		ec->therm_channels[i] = devm_iio_channel_get(dev,
-> +					dell_xps_ec_therms[i].name);
+Patch 10 adds a function to make assigning attribute ID's for capdata
+cleaner and easier.
 
-What does checkpatch --strict think about this line wrap?
+Patch 11 adds the remaining CPU attributes that weren't previously
+exposed.
 
-> +		if (IS_ERR(ec->therm_channels[i])) {
-> +			ret = PTR_ERR(ec->therm_channels[i]);
-> +			ec->therm_channels[i] = NULL;
-> +			if (ret == -EPROBE_DEFER)
-> +				return ret;
-> +			dev_warn(dev, "Thermistor %s not available: %d\n",
-> +				 dell_xps_ec_therms[i].name, ret);
-> +		}
-> +	}
-> +
-> +	/* Start periodic temperature reporting */
-> +	ret = devm_delayed_work_autocancel(dev, &ec->temp_work,
-> +					   dell_xps_ec_temp_work_fn);
-> +	if (ret)
-> +		return ret;
-> +	schedule_delayed_work(&ec->temp_work,
-> +			      msecs_to_jiffies(DELL_XPS_EC_TEMP_INTERVAL_MS));
-> +	dev_info(dev, "Started periodic temperature reporting to EC every %d ms\n",
-> +		 DELL_XPS_EC_TEMP_INTERVAL_MS);
+Patch 12 adds GPU attributes.
 
-I think dev_dbg() is sufficient here. This isn't something the user
-should care about during normal operation/bootup.
+Patch 13 renames a name constant in preparation for patch 6.
 
-Regards,
-Bjorn
+Patch 14 adds battery charge-type limiting when supported only by WMI, or
+when a module parameter to skip compatibility checks is set. The
+MODULE_PARM_DESC macro creates one check and two warnings in checkpatch.
+I reviewed other examples from the kernel and I am following the same
+convention, so I left it as is.
 
-> +
-> +	/* Request IRQ for EC events */
-> +	ret = devm_request_threaded_irq(dev, client->irq, NULL,
-> +					dell_xps_ec_irq_handler,
-> +					IRQF_ONESHOT, dev_name(dev), ec);
-> +	if (ret < 0)
-> +		return dev_err_probe(dev, ret, "Failed to request IRQ\n");
-> +
-> +	return 0;
-> +}
-> +
-> +/*
-> + * Notify EC of suspend
-> + *
-> + * This will:
-> + * - Ramp down the fans
-> + * - Cut power to display/trackpad/keyboard/touch row
-> + * - Periodically (?) power them back, such that wake-up source still works
-> + */
-> +static int dell_xps_ec_suspend(struct device *dev)
-> +{
-> +	struct dell_xps_ec *ec = dev_get_drvdata(dev);
-> +
-> +	cancel_delayed_work_sync(&ec->temp_work);
-> +
-> +	return dell_xps_ec_suspend_cmd(ec, true);
-> +}
-> +
-> +/*
-> + * Notify EC of resume
-> + *
-> + * This will undo the suspend actions
-> + * Without the resume signal, device would wake up but be forced back into
-> + * suspend by EC within seconds
-> + */
-> +static int dell_xps_ec_resume(struct device *dev)
-> +{
-> +	struct dell_xps_ec *ec = dev_get_drvdata(dev);
-> +	int ret;
-> +
-> +	ret = dell_xps_ec_suspend_cmd(ec, false);
-> +	if (ret)
-> +		return ret;
-> +
-> +	schedule_delayed_work(&ec->temp_work,
-> +			      msecs_to_jiffies(DELL_XPS_EC_TEMP_INTERVAL_MS));
-> +	return 0;
-> +}
-> +
-> +static const struct of_device_id dell_xps_ec_of_match[] = {
-> +	{ .compatible = "dell,xps13-9345-ec" },
-> +	{}
-> +};
-> +MODULE_DEVICE_TABLE(of, dell_xps_ec_of_match);
-> +
-> +static const struct i2c_device_id dell_xps_ec_i2c_id[] = {
-> +	{ "dell-xps-ec" },
-> +	{}
-> +};
-> +MODULE_DEVICE_TABLE(i2c, dell_xps_ec_i2c_id);
-> +
-> +static const struct dev_pm_ops dell_xps_ec_pm_ops = {
-> +	SYSTEM_SLEEP_PM_OPS(dell_xps_ec_suspend, dell_xps_ec_resume)
-> +};
-> +
-> +static struct i2c_driver dell_xps_ec_driver = {
-> +	.driver = {
-> +		.name = "dell-xps-ec",
-> +		.of_match_table = dell_xps_ec_of_match,
-> +		.pm = &dell_xps_ec_pm_ops,
-> +	},
-> +	.probe = dell_xps_ec_probe,
-> +	.id_table = dell_xps_ec_i2c_id,
-> +};
-> +module_i2c_driver(dell_xps_ec_driver);
-> +
-> +MODULE_AUTHOR("Aleksandrs Vinarskis <alex@vinarskis.com>");
-> +MODULE_DESCRIPTION("Dell XPS 13 9345 Embedded Controller");
-> +MODULE_LICENSE("GPL");
-> 
-> -- 
-> 2.53.0
-> 
+Patch 15 adds a debugfs directory.
+
+Patch 16 adds a debugfs file for dumping capdata.
+
+Signed-off-by: Derek J. Clark <derekjohn.clark@gmail.com>
+---
+v7:
+  - Add 3 additional bug fix patches from Rong Zhang reported by
+    shashiko.dev
+  - Reorder patches so the fixes are upfront in patches 1-7.
+  - Fix various typos and rebase mixups from v6.
+v6: https://lore.kernel.org/platform-driver-x86/20260331181208.421552-1-derekjohn.clark@gmail.com/
+  - Incorporate Rong Zhang's debugfs and decoupling patches into the
+    series.
+  - Add a patch to clean up too many cross-references to wmi-gamezone.h
+  - Make lwmi_attr_id a static inline in wmi-capdata.h
+  - Added a patch  to fix a bug where ares.arg1 is uninitialized when it
+    is sent to the firmware.
+  - Add supported checks before adding battery extenstion, and ensure
+    both the new checks and the is_writable checks are not casting u32
+    to i32.
+  - Misc formating changes.
+v5: https://lore.kernel.org/platform-driver-x86/20260324221032.1333636-1-derekjohn.clark@gmail.com/
+  - Remove cv/cd_mode_id references that occured before patch 4.
+  - Move lwmi_attr_id to capdata.c with a namespace export.
+  - Fix mixing include.
+  - Make lwmi_attr_is_supported return bool.
+  - Use switch instead of if for setting/getting charge type state.
+  - Various formatting fixes.
+v4: https://lore.kernel.org/platform-driver-x86/20260312031032.3467565-1-derekjohn.clark@gmail.com/
+  - Use loop instead of back gotos for identifying the working attribute
+    ID.
+  - Use function instead of macro to assign attribute_id, preserving
+    types.
+  - Removed unused defines and enum values.
+  - Rename charging defines to clarify thier purpose.
+  - Fixed various formatting issues from v3.
+  - Added module param to skip ACPI check when loading the driver for
+    the power supply extension.
+  - Don't abort adding power supply extension if the ACPI handle from
+    ideapad is not present.
+  - Don't worry about symmetric cleanup when cleaning up attributes in
+    an error state.
+  - Reword Patch 8 commit message to be more concise.
+  - Fix wording in Patch 7 to match the changes.
+v3: https://lore.kernel.org/platform-driver-x86/20260224043200.2680384-1-derekjohn.clark@gmail.com/
+  - Re-add HWMON name const and just rename LWMI_OM_FW_ATTR_BASE_PATH
+  - Fix linker warnings by moving acpi/battery include to the end of the
+    list.
+  - Remove CPU/GPU OC features. These attributes are BOOL type and will
+    need a new constructor that I'll add later.
+v2: https://lore.kernel.org/platform-driver-x86/20260215061339.2842486-1-derekjohn.clark@gmail.com/
+  - Fix gpu_mode misisng from attributes list.
+  - Fix prototypes for power suppy patch.
+  - Reorganize CPU and GPU attributes alphabetically.
+  - Break out the patch consolidating the driver name cost.
+  - Move some of the refactoring of attribute_id back to into patch 1
+    where it belongs.
+  - Fix some additional typos in function prototypes.
+v1: https://lore.kernel.org/platform-driver-x86/20260213081243.794288-1-derekjohn.clark@gmail.com/
+
+Derek J. Clark (10):
+  platform/x86: lenovo-wmi-other: Zero initialize WMI arguments
+  platform/x86: lenovo-wmi-other: Fix tunable_attr_01 struct members
+  platform/x86: lenovo-wmi-other: Limit adding attributes to supported
+    devices
+  platform/x86: lenovo-wmi-helpers: Move gamezone enums to wmi-helpers
+  platform/x86: lenovo-wmi-other: Move LWMI_FAN_DIV
+  platform/x86: lenovo-wmi-other: Add lwmi_attr_id() function
+  platform/x86: lenovo-wmi-other: Add missing CPU tunable attributes
+  platform/x86: lenovo-wmi-other: Add GPU tunable attributes
+  platform/x86: lenovo-wmi-other: Rename LWMI_OM_FW_ATTR_BASE_PATH
+  platform/x86: lenovo-wmi-other: Add WMI battery charge limiting
+
+Rong Zhang (6):
+  platform/x86: lenovo-wmi-helpers: Fix memory leak in
+    lwmi_dev_evaluate_int()
+  platform/x86: lenovo-wmi-other: Balance IDA id allocation and free
+  platform/x86: lenovo-wmi-other: Balance component bind and unbind
+  platform/x86: lenovo: Decouple lenovo-wmi-gamezone and
+    lenovo-wmi-other
+  platform/x86: lenovo-wmi-helpers: Add helper for creating per-device
+    debugfs dir
+  platform/x86: lenovo-wmi-capdata: Add debugfs file for dumping capdata
+
+ .../wmi/devices/lenovo-wmi-other.rst          |  19 +
+ drivers/platform/x86/lenovo/Kconfig           |   3 +-
+ drivers/platform/x86/lenovo/wmi-capdata.c     | 128 ++-
+ drivers/platform/x86/lenovo/wmi-capdata.h     |  31 +-
+ drivers/platform/x86/lenovo/wmi-events.c      |   2 +-
+ drivers/platform/x86/lenovo/wmi-gamezone.c    |   7 +-
+ drivers/platform/x86/lenovo/wmi-gamezone.h    |  20 -
+ drivers/platform/x86/lenovo/wmi-helpers.c     | 138 +++-
+ drivers/platform/x86/lenovo/wmi-helpers.h     |  23 +
+ drivers/platform/x86/lenovo/wmi-other.c       | 746 ++++++++++++++----
+ drivers/platform/x86/lenovo/wmi-other.h       |  16 -
+ 11 files changed, 935 insertions(+), 198 deletions(-)
+ delete mode 100644 drivers/platform/x86/lenovo/wmi-gamezone.h
+ delete mode 100644 drivers/platform/x86/lenovo/wmi-other.h
+
+-- 
+2.53.0
+
