@@ -1,78 +1,106 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.12])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 79B013A3E74
-	for <platform-driver-x86@vger.kernel.org>; Thu,  2 Apr 2026 09:59:08 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D43833A544D;
+	Thu,  2 Apr 2026 10:06:37 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.12
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1775123948; cv=none; b=rdaPCct3dH6633GEbflLCkOh+g6cIKnNhoL0Qk31gjt/04KFDD9k4WDVtGuJS7siLdSMEQnvH8IveY7yL6+kgFwaNyh3fqro76hvKyEAf9zpcyjOqu2TFOp0R4PhGz1u0MPNbSNW/Nx7vsLPSQT5uYWLpSGphQPcCrkp+v/6G20=
+	t=1775124400; cv=none; b=VMgCoXfsT+96X2WhQh5bcVjsLgB8qhUQTIGdGROM5HbhUhQYEuiK5pW98Nzv0WH3PY3tjFmMwReE0Gx26Wuwin9SrRp6HahgfpEvo6YIhM+Mb5E87/EA+PAxZqs2tfzqtVGpL4NWCDGcCn/5CGD42GzoDs7JuF4RBvfSztqN+DE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1775123948; c=relaxed/simple;
-	bh=pTPYvpMDauejvyjKNPR1ptgoZO8sri1WJIXPtMOvY1Q=;
-	h=From:To:Subject:Date:Message-ID:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=HOtXiWegkuJ02+M9/4JZD/tB1y1GnBtypWr03rtsim09WV9I/AQ6PoJ4LIuIf8C2a2dXXRP1vzJRqRglEAdA5tdvHHiwjptcSWVg0qOuEZEKE20XiczoRqjcIBjrqbw+y8JUmEDHHzeu5cvVBhYWMivzUExtm0gNWlaW9fMphf0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=JDKPYvLp; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1775124400; c=relaxed/simple;
+	bh=SiMI7LRImQA5vrlzkfg8JrjdbDvFzFk+MVw41oq4XJM=;
+	h=From:Date:To:cc:Subject:In-Reply-To:Message-ID:References:
+	 MIME-Version:Content-Type; b=d0Z0fUfz9vstn0lEX3cmKfa4BISLOZNkzmSvEWHaszBXoaJJEYlQwOz4L2OUBcSe3uxEmtu5PQMdu28fVcgal8OZ6f0WqeKd43P1XgM9EzuasPd03U9Y0uVUCZJ0PlUWZoxveRpyoulj44nu9BHhSrXJVUhwo0sQ+DpenXxwmHw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=pass smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=fa+JH8A7; arc=none smtp.client-ip=198.175.65.12
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="JDKPYvLp"
-Received: by smtp.kernel.org (Postfix) with ESMTPS id E9796C116C6
-	for <platform-driver-x86@vger.kernel.org>; Thu,  2 Apr 2026 09:59:07 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1775123947;
-	bh=pTPYvpMDauejvyjKNPR1ptgoZO8sri1WJIXPtMOvY1Q=;
-	h=From:To:Subject:Date:In-Reply-To:References:From;
-	b=JDKPYvLpuQ37/gZrllqPdrb0KVS0LbAwKKk14rTOCdkWMQfpB5RskLknIo0BRaXFG
-	 FqIBHiB9SwMKMiif1RdoQeiQ+Yaco61dyud43aB6o1eLv2ZQ/A6vhMCzpHenqyYub6
-	 S3871rPDwxB+TpTLjqM6WPwt/j1Vq38Badpn/Kz/uxm0IcRAFVjcvOQi8SGZ5ndKL5
-	 KhZzD/wKRIrVHsLfYV454edwVVmb8qGNjQilKh6xjxalyDI3UPV/f3zVQ/jMDG+scS
-	 Hn5/3DDxkplskWgHbSkIERa5Gb8fBmx9ccnjoKhYchPkImJCsZn2KYD9ZvfdAqDLMn
-	 RCJ7Gw1Xf8Kbw==
-Received: by aws-us-west-2-korg-bugzilla-1.web.codeaurora.org (Postfix, from userid 48)
-	id E0A9DC433E1; Thu,  2 Apr 2026 09:59:07 +0000 (UTC)
-From: bugzilla-daemon@kernel.org
-To: platform-driver-x86@vger.kernel.org
-Subject: =?UTF-8?B?W0J1ZyAyMjEzMTFdIEFTVVMgWmVuYm9vayBTIDE2IFVNNTYwNldB?=
- =?UTF-8?B?IOKAlCBUb3VjaHBhZCAoRUxBTjEwMTApIGJlY29tZXMgdW5yZXNwb25zaXZl?=
- =?UTF-8?B?IGR1ZSB0byBFQyBzdGF0ZSBjb3JydXB0aW9u?=
-Date: Thu, 02 Apr 2026 09:59:07 +0000
-X-Bugzilla-Reason: None
-X-Bugzilla-Type: changed
-X-Bugzilla-Watch-Reason: AssignedTo drivers_platform_x86@kernel-bugs.osdl.org
-X-Bugzilla-Product: Drivers
-X-Bugzilla-Component: Platform_x86
-X-Bugzilla-Version: 2.5
-X-Bugzilla-Keywords: 
-X-Bugzilla-Severity: normal
-X-Bugzilla-Who: david@flyboard.ai
-X-Bugzilla-Status: NEW
-X-Bugzilla-Resolution: 
-X-Bugzilla-Priority: P3
-X-Bugzilla-Assigned-To: drivers_platform_x86@kernel-bugs.osdl.org
-X-Bugzilla-Flags: 
-X-Bugzilla-Changed-Fields: cf_kernel_version
-Message-ID: <bug-221311-215701-yJpMaWsxi0@https.bugzilla.kernel.org/>
-In-Reply-To: <bug-221311-215701@https.bugzilla.kernel.org/>
-References: <bug-221311-215701@https.bugzilla.kernel.org/>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-X-Bugzilla-URL: https://bugzilla.kernel.org/
-Auto-Submitted: auto-generated
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="fa+JH8A7"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1775124398; x=1806660398;
+  h=from:date:to:cc:subject:in-reply-to:message-id:
+   references:mime-version;
+  bh=SiMI7LRImQA5vrlzkfg8JrjdbDvFzFk+MVw41oq4XJM=;
+  b=fa+JH8A7YJ4P5wPTy/SwSYArEOjn0VCs/CHl+ZoquZNPu1aYQIBdEKpx
+   Vc3MKTyyE2hBDdzF6kLg9li0kdD8gMZ+17WezCFKANdlXp7B0CacgwEIn
+   g+rdrCJDkc4LIeAynxpoWcXvenhwSMhYvoR45pvvkRE/jfB4YtOsa3b+C
+   h1mPl9DtnAx3QeLD0drGucHi/cdUiH1rzfxIulxW5FJRgOIS+6NURq48n
+   HoxF2I7kM6PTeHJcPMIwdXsk5RxtyvbjUjq91v1hTAuusUVzGlb1rIf8T
+   IgiZemiSX1Fq5+VT0H63wc0Ok8SzyaW/Q4fmUSbUr2kpXinkQsfRyz4Vl
+   w==;
+X-CSE-ConnectionGUID: qiOA99Q+QKKQJwATNGI5Lw==
+X-CSE-MsgGUID: ODQ8NWNHS/aIQ8u/KFNwJw==
+X-IronPort-AV: E=McAfee;i="6800,10657,11746"; a="87639010"
+X-IronPort-AV: E=Sophos;i="6.23,155,1770624000"; 
+   d="scan'208";a="87639010"
+Received: from orviesa004.jf.intel.com ([10.64.159.144])
+  by orvoesa104.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 02 Apr 2026 03:06:37 -0700
+X-CSE-ConnectionGUID: wOd5QWhmQMqS11WcYxyvGg==
+X-CSE-MsgGUID: Dc23DyLRRgyt9SwoEeWHvg==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.23,155,1770624000"; 
+   d="scan'208";a="231344094"
+Received: from dhhellew-desk2.ger.corp.intel.com (HELO localhost) ([10.245.245.76])
+  by orviesa004-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 02 Apr 2026 03:06:34 -0700
+From: =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
+Date: Thu, 2 Apr 2026 13:06:30 +0300 (EEST)
+To: Rong Zhang <i@rong.moe>
+cc: "Derek J . Clark" <derekjohn.clark@gmail.com>, 
+    Hans de Goede <hansg@kernel.org>, Mark Pearson <mpearson-lenovo@squebb.ca>, 
+    Armin Wolf <W_Armin@gmx.de>, Jonathan Corbet <corbet@lwn.net>, 
+    Kurt Borja <kuurtb@gmail.com>, platform-driver-x86@vger.kernel.org, 
+    LKML <linux-kernel@vger.kernel.org>, stable@vger.kernel.org
+Subject: Re: [PATCH 1/3] platform/x86: lenovo-wmi-helpers: Fix memory leak
+ in lwmi_dev_evaluate_int()
+In-Reply-To: <20260401190221.1595264-1-i@rong.moe>
+Message-ID: <d1fe81a6-9814-d070-fbdf-66bd5e647a80@linux.intel.com>
+References: <499fa3efd5be054ffdda77dd00ad4d8d3391e073.camel@rong.moe> <20260401190221.1595264-1-i@rong.moe>
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=US-ASCII
 
-https://bugzilla.kernel.org/show_bug.cgi?id=3D221311
+On Thu, 2 Apr 2026, Rong Zhang wrote:
 
-david@flyboard.ai changed:
+> lwmi_dev_evaluate_int() leaks output.pointer when retval == NULL (found
+> by sashiko.dev [1]).
+> 
+> Fix it by moving `ret_obj = output.pointer' outside of the `if (retval)'
+> block so that it is always freed by the __free cleanup callback.
+> 
+> No functional change intended.
+> 
+> Fixes: e521d16e76cd ("platform/x86: Add lenovo-wmi-helpers")
+> Cc: stable@vger.kernel.org
+> Link: https://sashiko.dev/#/patchset/20260331181208.421552-1-derekjohn.clark%40gmail.com [1]
+> Signed-off-by: Rong Zhang <i@rong.moe>
+> ---
+>  drivers/platform/x86/lenovo/wmi-helpers.c | 3 ++-
+>  1 file changed, 2 insertions(+), 1 deletion(-)
+> 
+> diff --git a/drivers/platform/x86/lenovo/wmi-helpers.c b/drivers/platform/x86/lenovo/wmi-helpers.c
+> index 7379defac500..80021f59d1ef 100644
+> --- a/drivers/platform/x86/lenovo/wmi-helpers.c
+> +++ b/drivers/platform/x86/lenovo/wmi-helpers.c
+> @@ -55,8 +55,9 @@ int lwmi_dev_evaluate_int(struct wmi_device *wdev, u8 instance, u32 method_id,
+>  	if (ACPI_FAILURE(status))
+>  		return -EIO;
+>  
+> +	ret_obj = output.pointer;
 
-           What    |Removed                     |Added
-----------------------------------------------------------------------------
-     Kernel Version|                            |6.19.8-200.fc43.x86_64
+To follow the best practice, could you please also place the variable 
+declaration here as well so there's no separate ret_obj = NULL line.
 
---=20
-You may reply to this email to add a comment.
+> +
+>  	if (retval) {
+> -		ret_obj = output.pointer;
+>  		if (!ret_obj)
+>  			return -ENODATA;
 
-You are receiving this mail because:
-You are watching the assignee of the bug.=
+-- 
+ i.
+
