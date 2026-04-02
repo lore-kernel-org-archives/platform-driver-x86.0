@@ -1,210 +1,247 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.12])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C13993F164A
-	for <platform-driver-x86@vger.kernel.org>; Thu,  2 Apr 2026 16:39:34 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4245C36403A;
+	Thu,  2 Apr 2026 16:44:40 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.12
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1775147974; cv=none; b=GvJglO+2rlUa54STpmOT2d4Bc+TXafAyJUkAmkHmpnln7AL6drH5Tp7weTp+NF31wqOFTr/9a8OC0o4blbABlylLLOJIi/Ne2zleoq9vlbT2f1AEqCqZRqB9GDtVnNEf2addlX98fP1pR8KoM/qbm3S194WJl1LTIEZd4CQr+kc=
+	t=1775148289; cv=none; b=hTaqbIS8J2eIx70hnA3aqtOTfmLUNt52QfEyn7MMcDKaE9KV7t7/j/1Crjm/lFV6xd+rTfKJB5EPZxLI5NVNbtNFhXarqrJOWtZtLHQQzNquIWOBQW1txZlcXPGkFLz29l88yHhcA3mGMIOJR69YjqRBOkSEeYdjIg77qyoZfx0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1775147974; c=relaxed/simple;
-	bh=+POvXfTOUMtNiB+FhzwUh3PO82On4Bq0tlYheDATb80=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=YG8lKIgTOQAJ+jjAu3LhXAm6P3VgfP4dz6czw8F5L20IslZ8SX5D200BA4QILLXl0WvEQLQ978w2f3ouQvqxc+/TbihCA5bZbgIy/NH9MUwk0pBOi5M2yMEeRPuL3R7+IoIZEHXZVMJ9QG/gQDCPop5EvGX7SjWvjjuQ5AdnuH4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=tMOcxxBB; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1775148289; c=relaxed/simple;
+	bh=qCo+/6apm7GWgITOzfOIQfT7lZ2u3h3yYvC5VnAGOIs=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=krWgW0BLRVG0MWRnk9Ufv7K6geQmnZDm7Bb6i0vFePCDZUCXhxqzIAQ7axG+DG9bNe50E5anHolH6joIkB4AsV9GAqDuf4TbognpqNhXNgDt46f7KjZKOkJkxcd4I3Kp8xir0dCcCZjf8bBDQMF8JkQdhxVwSq+Whx3uOLBCaEw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=pass smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=idhSXM26; arc=none smtp.client-ip=198.175.65.12
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="tMOcxxBB"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 4337AC2BCAF
-	for <platform-driver-x86@vger.kernel.org>; Thu,  2 Apr 2026 16:39:34 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1775147974;
-	bh=+POvXfTOUMtNiB+FhzwUh3PO82On4Bq0tlYheDATb80=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-	b=tMOcxxBBBAPtG6dO1Qmnfy5eDNIJzGp45IrnhGlDd7hgpYPFxUHg4FkBVeGnyEpjp
-	 acwSR7QkgICNEwUG0EjPwn00JQLruFmljM3vhCpZH2ODR0yyFKe7AxnEcPEjYA0EYl
-	 twvCP5dqeEUdFc8HLmH5tKlrCJYC/GfKuDdf+kDeK9+LB8r6mrRlqR0cp/4YNxed3n
-	 XTnZLTL6hOctLrHAffYTU1C04a3FWoyRPnpLaIhrOqQYgf+qIk09wF4pe2iKlt2Csd
-	 aFkDGPj1xwoeIDpsrRVQjL4h+6QOsLoMSiTjEvhR0qPVxE2MRB5D2q+IrdIebbg3EG
-	 O3zOBKDtUWWBA==
-Received: by mail-lf1-f47.google.com with SMTP id 2adb3069b0e04-5a2c9932781so888459e87.1
-        for <platform-driver-x86@vger.kernel.org>; Thu, 02 Apr 2026 09:39:34 -0700 (PDT)
-X-Forwarded-Encrypted: i=1; AJvYcCWf4B5InMaT4Z3Jvco7JqMXIHH7nAeQDgN88xpfIDTiqYlbNxLhoynn7zOE8wI3EtZfAGK4FLZbmDO/dOu2BBx3yA+U@vger.kernel.org
-X-Gm-Message-State: AOJu0Yz1mMJluec3gnX0DlUKwiVThSQVPxl4kctCfH3KFEghyAYy0Zai
-	dgjMgVnoo82RWaKhjeisTnbrb7FDy9ojcSntmNrL8i92APKv7qsS/2uVKW/oWhidddy4N/WWUBq
-	9E+n/OGmyxaOi/rPjlqIu6MU4rneEIIRHFnHXwp46dA==
-X-Received: by 2002:a05:6512:31c2:b0:5a1:357d:8d5c with SMTP id
- 2adb3069b0e04-5a2c8d8f9aamr1311614e87.16.1775147972949; Thu, 02 Apr 2026
- 09:39:32 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="idhSXM26"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1775148281; x=1806684281;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=qCo+/6apm7GWgITOzfOIQfT7lZ2u3h3yYvC5VnAGOIs=;
+  b=idhSXM26Dyp0H9BQ96SWHkZSgZHrLOLdiYiUszpoq7FffYByEju2md9O
+   Hhaah8FDOqnR0Sj4LByHQQhHanpSK6fHR0V2AMFgc8E8HZfzfkPItdHsm
+   cgy1UAgBPX5ScMyU+HkmRZ1Y4VoYDrnMrftAjEz9J6pCrOiq89kHAYe1p
+   17KBv2h6TQgUgpu47oV8MGN1cE1mm7syvXJFNdKu3782XR63sZYPzR6Rd
+   feIaPq5GGBHw39roYTLoB5HyPKDyMBC6xjkqOIDwAak3oVb6xBSgkKwpI
+   ++XPCvPC+0R4AVy28izhsxgnsfkVu6le6H5D0H54OWeGjPk3j1YgYdpoo
+   A==;
+X-CSE-ConnectionGUID: hiXoej01SPq9e3dCtLEZWQ==
+X-CSE-MsgGUID: oP0BJwTCRkedcnNJlz55lw==
+X-IronPort-AV: E=McAfee;i="6800,10657,11747"; a="87667656"
+X-IronPort-AV: E=Sophos;i="6.23,156,1770624000"; 
+   d="scan'208";a="87667656"
+Received: from fmviesa009.fm.intel.com ([10.60.135.149])
+  by orvoesa104.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 02 Apr 2026 09:44:39 -0700
+X-CSE-ConnectionGUID: GCQbV5aeRn64ftRHMTt9uA==
+X-CSE-MsgGUID: dz1P2E9bSne5Qvm4SG1fQw==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.23,156,1770624000"; 
+   d="scan'208";a="220375303"
+Received: from rvuia-mobl.ger.corp.intel.com (HELO kekkonen.fi.intel.com) ([10.245.245.118])
+  by fmviesa009-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 02 Apr 2026 09:44:36 -0700
+Received: from kekkonen.localdomain (localhost [IPv6:::1])
+	by kekkonen.fi.intel.com (Postfix) with SMTP id 1990411FBE3;
+	Thu, 02 Apr 2026 19:44:46 +0300 (EEST)
+Date: Thu, 2 Apr 2026 19:44:46 +0300
+Organization: Intel Finland Oy - BIC 0357606-4 - c/o Alberga Business Park, 6 krs, Bertel Jungin Aukio 5, 02600 Espoo
+From: Sakari Ailus <sakari.ailus@linux.intel.com>
+To: Arun T <arun.t@intel.com>
+Cc: johannes.goede@oss.qualcomm.com, arec.kao@intel.com,
+	ilpo.jarvinen@linux.intel.com, dan.scally@ideasonboard.com,
+	platform-driver-x86@vger.kernel.org, linux-media@vger.kernel.org,
+	linux-kernel@vger.kernel.org, mehdi.djait@intel.com
+Subject: Re: [PATCH v8 1/2] platform/x86: int3472: Add TPS68470 board data
+ for Intel nvl
+Message-ID: <ac6c_mGE368bCHVg@kekkonen.localdomain>
+References: <20260402104045.4040328-1-arun.t@intel.com>
+ <20260402104045.4040328-2-arun.t@intel.com>
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20260331112819.103298-1-bartosz.golaszewski@oss.qualcomm.com>
- <acx9veIH-t5cCVc_@google.com> <CAMRc=MfCbKa2YZYPckV7bj-+kcOx1g+v9BjYL0v+SFxTVJTTLA@mail.gmail.com>
- <ac6OpN-pfcdAhdEj@google.com>
-In-Reply-To: <ac6OpN-pfcdAhdEj@google.com>
-From: Bartosz Golaszewski <brgl@kernel.org>
-Date: Thu, 2 Apr 2026 18:39:16 +0200
-X-Gmail-Original-Message-ID: <CAMRc=McbuVrw5eNp6vhF1DJP=5YM8BA4yTM6wf_1Dcg_T2gBhQ@mail.gmail.com>
-X-Gm-Features: AQROBzAuf3_51afMzuyEgiNhaJW2sVszFdH7rZi4YRleZQkF5XsJ7Y4IY0Khwro
-Message-ID: <CAMRc=McbuVrw5eNp6vhF1DJP=5YM8BA4yTM6wf_1Dcg_T2gBhQ@mail.gmail.com>
-Subject: Re: [PATCH] platform/x86: barco-p50-gpio: attach software node to its
- target GPIO device
-To: Dmitry Torokhov <dmitry.torokhov@gmail.com>
-Cc: Santosh Kumar Yadav <santoshkumar.yadav@barco.com>, 
-	Peter Korsgaard <peter.korsgaard@barco.com>, Hans de Goede <hansg@kernel.org>, 
-	=?UTF-8?Q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>, 
-	platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	Bartosz Golaszewski <bartosz.golaszewski@oss.qualcomm.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20260402104045.4040328-2-arun.t@intel.com>
 
-On Thu, Apr 2, 2026 at 5:53=E2=80=AFPM Dmitry Torokhov
-<dmitry.torokhov@gmail.com> wrote:
->
-> On Thu, Apr 02, 2026 at 01:29:35AM -0700, Bartosz Golaszewski wrote:
-> > On Wed, 1 Apr 2026 04:09:21 +0200, Dmitry Torokhov
-> > <dmitry.torokhov@gmail.com> said:
-> > > On Tue, Mar 31, 2026 at 01:28:19PM +0200, Bartosz Golaszewski wrote:
-> > >> The software node representing the GPIO controller to consumers is
-> > >> "dangling": it's not really attached to the device. The GPIO lookup
-> > >> relies on matching the name of the node to the chip's label. Set it =
-as
-> > >> the secondary firmware node of the platform device to enable proper
-> > >> fwnode-based GPIO lookup.
-> > >>
-> > >> Signed-off-by: Bartosz Golaszewski <bartosz.golaszewski@oss.qualcomm=
-.com>
-> > >> ---
-> > >>  drivers/platform/x86/barco-p50-gpio.c | 2 ++
-> > >>  1 file changed, 2 insertions(+)
-> > >>
-> > >> diff --git a/drivers/platform/x86/barco-p50-gpio.c b/drivers/platfor=
-m/x86/barco-p50-gpio.c
-> > >> index 2a6d8607c402..5f4ffa584295 100644
-> > >> --- a/drivers/platform/x86/barco-p50-gpio.c
-> > >> +++ b/drivers/platform/x86/barco-p50-gpio.c
-> > >> @@ -365,6 +365,8 @@ static int p50_gpio_probe(struct platform_device=
- *pdev)
-> > >>    if (ret)
-> > >>            return dev_err_probe(&pdev->dev, ret, "failed to register=
- software nodes");
-> > >>
-> > >> +  set_secondary_fwnode(&pdev->dev, software_node_fwnode(&gpiochip_n=
-ode));
-> > >> +
-> > >>    led_info.fwnode =3D software_node_fwnode(&gpio_leds_node);
-> > >>    p50->leds_pdev =3D platform_device_register_full(&led_info);
-> > >>    if (IS_ERR(p50->leds_pdev)) {
-> > >
-> > > I looks like http://sashiko.dev patch critique is on point:
-> > >
-> >
-> > Ok, let's unpack it.
-> >
-> > > "
-> > > Is the software node attached too late to take effect?
-> > >
-> > > In the probe function, devm_gpiochip_add_data() is called before this
-> > > set_secondary_fwnode() call. During GPIO chip registration, the gpiol=
-ib
-> > > core snapshots the parent device's fwnode.
-> > >
-> >
-> > What does it mean "to snapshot" the parent's fwnode?
-> >
-> > What happens is this:
-> >
-> > static struct fwnode_handle *gpiochip_choose_fwnode(struct gpio_chip *g=
-c)
-> > {
-> >       if (gc->fwnode)
-> >               return gc->fwnode;
-> >
-> >       if (gc->parent)
-> >               return dev_fwnode(gc->parent);
-> >
-> >       return NULL;
-> > }
-> >
-> > gc->fwnode is NULL so we set gc->parent as the GPIO controller's fwnode=
-.
->
-> However if parent does not have fwnode assigned (dev->fwnode is NULL)
-> this will return NULL as well. This effectively severs the link between
-> the gpiochip and the parent device.
->
-> >
-> > > Because the secondary fwnode is not yet set on pdev->dev when this sn=
-apshot
-> > > happens, the GPIO device is registered with a NULL fwnode, which seem=
-s to
-> > > defeat the purpose of enabling fwnode-based lookups.
-> > >
-> >
-> > Sashiko is completely wrong here: not only is the device registered wit=
-h the
-> > parent's fwnode assigned, the secondary fwnode is a property of the *fw=
-node*,
-> > not of the device. We set the secondary fwnode of the parent's real fwn=
-ode.
-> > This is carried over to the GPIO controller's device properties even af=
-ter
-> > it's been created.
->
-> I do not think it is wrong. If the parent does not have fwnode assigned
-> (and it does not) then you do not have a fwnode object to attach a
-> secondary node to. The node you are attaching as a secondary becomes
-> primary, but it is *too late*. The link has been severed, gpiochip's
-> fwnode is a NULL pointer and has no idea that the parent now has a valid
-> fwnode.
->
-> I think this woudl be a better approach:
->
-> @@ -426,7 +419,6 @@ MODULE_DEVICE_TABLE(dmi, dmi_ids);
->
->  static int __init p50_module_init(void)
->  {
-> -       struct resource res =3D DEFINE_RES_IO(P50_GPIO_IO_PORT_BASE, P50_=
-PORT_CMD + 1);
->         int ret;
->
->         if (!dmi_first_match(dmi_ids))
-> @@ -436,7 +428,15 @@ static int __init p50_module_init(void)
->         if (ret)
->                 return ret;
->
-> -       gpio_pdev =3D platform_device_register_simple(DRIVER_NAME, PLATFO=
-RM_DEVID_NONE, &res, 1);
-> +       gpio_pdev =3D platform_device_register_full(&(struct platform_dev=
-ice_info){
-> +               .name =3D DRIVER_NAME,
-> +               .id =3D PLATFORM_DEVID_NONE,
-> +               .res =3D (const struct resource[]){
-> +                       DEFINE_RES_IO(P50_GPIO_IO_PORT_BASE, P50_PORT_CMD=
- + 1),
-> +               },
-> +               .num_res =3D 1,
-> +               .swnode =3D &gpiochip_node,
-> +       });
->         if (IS_ERR(gpio_pdev)) {
->                 pr_err("failed registering %s: %ld\n", DRIVER_NAME, PTR_E=
-RR(gpio_pdev));
->                 platform_driver_unregister(&p50_gpio_driver);
->
-> This way you start with the right node right away.
->
-> Thanks.
->
-> --
-> Dmitry
+Hi Arun,
 
-Ah, maybe sashiko wasn't wrong after all but it definitely could do a
-better job explaining the actual issue. I missed the fact that this is
-not a device described in firmware and as such doesn't have a firmware
-node. I see it now. Ok, I'll fix it in v2. In fact, I'll probably wait
-until v7.1-rc1 and use the new .swnode field.
+On Thu, Apr 02, 2026 at 04:10:37PM +0530, Arun T wrote:
+> The Intel NVL platform uses IPU8 is powered by a TPS68470 PMIC,requiring board
+> data to configure the GPIOs and regulators for proper camera sensor operation.
+> 
+> Signed-off-by: Arun T <arun.t@intel.com>
+> Reviewed-by: Daniel Scally <dan.scally@ideasonboard.com>
+> Reviewed-by: Hans de Goede <johannes.goede@oss.qualcomm.com>
+> ---
+>  .../x86/intel/int3472/tps68470_board_data.c   | 108 ++++++++++++++++++
+>  1 file changed, 108 insertions(+)
+> 
+> diff --git a/drivers/platform/x86/intel/int3472/tps68470_board_data.c b/drivers/platform/x86/intel/int3472/tps68470_board_data.c
+> index 6bec5a910396..bfec0f1af065 100644
+> --- a/drivers/platform/x86/intel/int3472/tps68470_board_data.c
+> +++ b/drivers/platform/x86/intel/int3472/tps68470_board_data.c
+> @@ -144,6 +144,24 @@ static struct regulator_consumer_supply int3479_aux2_consumer_supplies[] = {
+>  	REGULATOR_SUPPLY("dovdd", "i2c-INT3479:00"),
+>  };
+>  
+> +/* Settings for Intel NVL platform */
+> +
+> +static struct regulator_consumer_supply ovti13b1_core_consumer_supplies[] = {
+> +	REGULATOR_SUPPLY("dvdd", "i2c-OVTI13B1:01"),
+> +};
+> +
+> +static struct regulator_consumer_supply ovti13b1_ana_consumer_supplies[] = {
+> +	REGULATOR_SUPPLY("avdd", "i2c-OVTI13B1:01"),
+> +};
+> +
+> +static struct regulator_consumer_supply ovti13b1_vcm_consumer_supplies[] = {
+> +	REGULATOR_SUPPLY("vcc", "i2c-OVTI13B1:01-VCM"),
+> +};
+> +
+> +static struct regulator_consumer_supply ovti13b1_vsio_consumer_supplies[] = {
+> +	REGULATOR_SUPPLY("dovdd", "i2c-OVTI13B1:01"),
+> +};
+> +
+>  static const struct regulator_init_data dell_7212_tps68470_core_reg_init_data = {
+>  	.constraints = {
+>  		.min_uV = 1200000,
+> @@ -221,6 +239,61 @@ static const struct regulator_init_data dell_7212_tps68470_aux2_reg_init_data =
+>  	.consumer_supplies = int3479_aux2_consumer_supplies,
+>  };
+>  
+> +static const struct regulator_init_data intel_nvl_tps68470_core_reg_init_data = {
+> +	.constraints = {
+> +		.min_uV = 1200000,
+> +		.max_uV = 1200000,
+> +		.apply_uV = true,
+> +		.valid_ops_mask = REGULATOR_CHANGE_STATUS,
+> +	},
+> +	.num_consumer_supplies = ARRAY_SIZE(ovti13b1_core_consumer_supplies),
+> +	.consumer_supplies = ovti13b1_core_consumer_supplies,
+> +};
+> +
+> +static const struct regulator_init_data intel_nvl_tps68470_ana_reg_init_data = {
+> +	.constraints = {
+> +		.min_uV = 2815200,
+> +		.max_uV = 2815200,
+> +		.apply_uV = true,
+> +		.valid_ops_mask = REGULATOR_CHANGE_STATUS,
+> +	},
+> +	.num_consumer_supplies = ARRAY_SIZE(ovti13b1_ana_consumer_supplies),
+> +	.consumer_supplies = ovti13b1_ana_consumer_supplies,
+> +};
+> +
+> +static const struct regulator_init_data intel_nvl_tps68470_vcm_reg_init_data = {
+> +	.constraints = {
+> +		.min_uV = 2815200,
+> +		.max_uV = 2815200,
+> +		.apply_uV = true,
+> +		.valid_ops_mask = REGULATOR_CHANGE_STATUS,
+> +	},
+> +	.num_consumer_supplies = ARRAY_SIZE(ovti13b1_vcm_consumer_supplies),
+> +	.consumer_supplies = ovti13b1_vcm_consumer_supplies,
+> +};
+> +
+> +/* Ensure the always-on VIO regulator has the same voltage as VSIO */
+> +static const struct regulator_init_data intel_nvl_tps68470_vio_reg_init_data = {
+> +	.constraints = {
+> +		.min_uV = 1800600,
+> +		.max_uV = 1800600,
+> +		.apply_uV = true,
+> +		.always_on = true,
+> +	},
+> +};
+> +
+> +static const struct regulator_init_data intel_nvl_tps68470_vsio_reg_init_data = {
+> +	.constraints = {
+> +		.min_uV = 1800600,
+> +		.max_uV = 1800600,
+> +		.apply_uV = true,
+> +		.valid_ops_mask = REGULATOR_CHANGE_STATUS,
+> +	},
+> +	.num_consumer_supplies = ARRAY_SIZE(ovti13b1_vsio_consumer_supplies),
+> +	.consumer_supplies = ovti13b1_vsio_consumer_supplies,
+> +};
+> +
 
-Bart
+Extra newline.
+
+> +
+>  static const struct tps68470_regulator_platform_data dell_7212_tps68470_pdata = {
+>  	.reg_init_data = {
+>  		[TPS68470_CORE] = &dell_7212_tps68470_core_reg_init_data,
+> @@ -297,6 +370,16 @@ static const struct tps68470_regulator_platform_data msi_p14_ai_evo_tps68470_pda
+>  	},
+>  };
+>  
+> +static const struct tps68470_regulator_platform_data intel_nvl_tps68470_pdata = {
+> +	.reg_init_data = {
+> +		[TPS68470_CORE] = &intel_nvl_tps68470_core_reg_init_data,
+> +		[TPS68470_ANA]  = &intel_nvl_tps68470_ana_reg_init_data,
+> +		[TPS68470_VCM]  = &intel_nvl_tps68470_vcm_reg_init_data,
+> +		[TPS68470_VIO] = &intel_nvl_tps68470_vio_reg_init_data,
+> +		[TPS68470_VSIO] = &intel_nvl_tps68470_vsio_reg_init_data,
+> +	},
+> +};
+> +
+>  static struct gpiod_lookup_table surface_go_int347a_gpios = {
+>  	.dev_id = "i2c-INT347A:00",
+>  	.table = {
+> @@ -340,6 +423,14 @@ static const struct software_node msi_p14_ai_evo_tps68470_gpio_swnode = {
+>  	.properties = msi_p14_ai_evo_gpio_props,
+>  };
+>  
+> +static struct gpiod_lookup_table intel_nvl_tps68470_gpios = {
+> +	.dev_id = "i2c-OVTI13B1:01",
+> +	.table = {
+> +		GPIO_LOOKUP("tps68470-gpio", 9, "reset", GPIO_ACTIVE_LOW),
+> +		{ }
+> +	}
+> +};
+> +
+>  static const struct int3472_tps68470_board_data surface_go_tps68470_board_data = {
+>  	.dev_name = "i2c-INT3472:05",
+>  	.tps68470_regulator_pdata = &surface_go_tps68470_pdata,
+> @@ -379,6 +470,15 @@ static const struct int3472_tps68470_board_data msi_p14_ai_evo_tps68470_board_da
+>  	},
+>  };
+>  
+> +static const struct int3472_tps68470_board_data intel_nvl_tps68470_board_data = {
+> +	.dev_name = "i2c-INT3472:04",
+> +	.tps68470_regulator_pdata = &intel_nvl_tps68470_pdata,
+> +	.n_gpiod_lookups = 1,
+> +	.tps68470_gpio_lookup_tables = {
+> +		&intel_nvl_tps68470_gpios,
+> +	},
+> +};
+> +
+>  static const struct dmi_system_id int3472_tps68470_board_data_table[] = {
+>  	{
+>  		.matches = {
+> @@ -415,6 +515,14 @@ static const struct dmi_system_id int3472_tps68470_board_data_table[] = {
+>  		},
+>  		.driver_data = (void *)&msi_p14_ai_evo_tps68470_board_data,
+>  	},
+> +	{
+> +		.matches = {
+> +			DMI_EXACT_MATCH(DMI_SYS_VENDOR, "Intel Corporation"),
+> +			DMI_EXACT_MATCH(DMI_PRODUCT_NAME, "Nova Lake Client Platform"),
+> +		},
+> +		.driver_data = (void *)&intel_nvl_tps68470_board_data,
+> +	},
+> +
+
+Ditto.
+
+>  	{ }
+>  };
+>  
+
+-- 
+Sakari Ailus
