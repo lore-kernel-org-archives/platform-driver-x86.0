@@ -1,110 +1,113 @@
-Received: from mail-pf1-f173.google.com (mail-pf1-f173.google.com [209.85.210.173])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 929B03D75A8
-	for <platform-driver-x86@vger.kernel.org>; Thu,  2 Apr 2026 09:57:15 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.173
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2D06E3AD51E
+	for <platform-driver-x86@vger.kernel.org>; Thu,  2 Apr 2026 09:58:17 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1775123837; cv=none; b=MzOTVLCxFfFvVOiSm4ZRVqOJnhYZIdKger+6UsVQVQktLDQ3m0vrqVxeR0IkV1TIJZUK2B0CD3y6ELBEt0lq6HoS8ba2ASwHB7IBWSxq9Zz4n3Yr3R8W2gVTHOua9iTbp9ARtDZHhEqqKGP058ZaFwGS+UAavsqpe0GXJR1V1H0=
+	t=1775123898; cv=none; b=ZbLtIWF5hk7MqM5K7ibEnOlA9dEzH8iKUjD7ZieLa617fcU+orkVmtb9nu5jMzbES6LingtydrmDi/3HcZgX9MCryybxxBuSGgJYlqaf+YLESoaY1HCVVHt3fKitaF0v0U+bq69BvPplnYyggy52L5oKt8zEOcaA97S3qDDfnwc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1775123837; c=relaxed/simple;
-	bh=cKjEaisXXsBBcOELewZnMZ+lJI6LWxXMnwYSOMwCs4w=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=HS9YKuv3T8zakBK8gHb2Ks8w3gdQNmzn1YWqpNUM3v9t++5jSXlCxIqbQaQlEZVSLQmD5rl6SXuErjJTQKgsWcryua/H3H0YnCRzFdn4Qr80RXgDobwWMjeIEv4B26P3Gm8AeZvQGJxVyV85/j7A+9AyCZoXHcu/3hBW58c/+gY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=iNgN445k; arc=none smtp.client-ip=209.85.210.173
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1775123898; c=relaxed/simple;
+	bh=IjJnEtS6gEElL4gii+prlk8umylodXJIj5sicABRdtE=;
+	h=From:To:Subject:Date:Message-ID:Content-Type:MIME-Version; b=c7RjV5rAlQ1u2bppHpFztpbZhTOa1p9kAEAoGjrpXpFaIGpFwpGgUTWcoPIkLji7ALi6ltCekTvqo6xkkyzC4eq3g9aTWw5Q8pUJTZBNI/tY90Zi5zE/L/DPfVzGplAfY4nysvB+WnjRnGWCZfuLg5SoSpF/wEJP6x/Zi+fDc04=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=HEOUe+rR; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="iNgN445k"
-Received: by mail-pf1-f173.google.com with SMTP id d2e1a72fcca58-82c28f0a4ecso513638b3a.3
-        for <platform-driver-x86@vger.kernel.org>; Thu, 02 Apr 2026 02:57:15 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20251104; t=1775123835; x=1775728635; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=35+ULPCAUQvYRpW1wrUKbHOsJuShNhGddzdfuyZZEog=;
-        b=iNgN445kt+t2N3SpzLjrbgIOkGjG2Fkz+S2gI4ZKKRVt9fUcb5l68HrdQOKT/KqN78
-         iHpPKoCXt9WDR0jOvdA60EkCeCXDbVaO3/1A6Dw49HT6lSTBoP6lw6hpddvmlSssP9qd
-         qqxn4LxxHM4Py72/RIQZ0rZhlNau8c8VBOZ3Nbx7oq1l2HZI3we4iXnxbYKeyYY3AYDQ
-         Eh6uo5Dpv87XCY/pqmQxYGOThDvfhDf6MXgBftoXGUh1V6v118FoKnnqRQD00vsmUwvD
-         j9dZHzE8VY3n8oOUFhOOEiwOMz2ftKNZBP9N4wXy93cLkuUudXtE5PtGxAbFlYe0ehHJ
-         OZkg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1775123835; x=1775728635;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-gg:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=35+ULPCAUQvYRpW1wrUKbHOsJuShNhGddzdfuyZZEog=;
-        b=kFSW04OI/ZeC0x+hfKA7MdHdPYDbOzfSAjcYLTKkSJLrPPPDFEYumMRSDsgVkWiluj
-         /qoz9RPBrlM/IdGlZoMgnHGUfaL18lSnNRLnG3EtmuY4qxr+Wmd20h4pMSnzqfor7XSm
-         MQrXscop1L5BPpHy8vpbnjaOpPU3vlC6sw9a6m8bhdvpCFKcZWLkeliYFg7hfzGQa/Oy
-         IczrYLjGPZ1PBywzmeMimucH+R/83V5m4lvutgfyAUKebeRth+LhokIc5fCeMMi1Z/uy
-         B99vGLrIMe0PJAp2f+6fHPXpgD7Buouxfky1+GBAuTXiMQOQDcXGBPCGWptmvy/5JvHz
-         RVDQ==
-X-Forwarded-Encrypted: i=1; AJvYcCUvvAZjrQfD4WtjMwunOO/s2fK1+g18ouDt12UZJZ77KXy9vgAfYlrWgS854YPcKiQ9OyRYKDP3om58NyX1b7EE/LDj@vger.kernel.org
-X-Gm-Message-State: AOJu0Ywb2eyimw7recUYOUg6UQl2UJm+SBGqMDmRgeLJJGHWRNOrkpk7
-	DOV5nsqPQTLtfosAFkGX6GCi16EUTO9b4ckKkezfnXdX6wDrOdkGsZ1k
-X-Gm-Gg: ATEYQzzplQ702EWimurxNC/50RAUpDM0Js/hi49umTcV5IUBpdjoZRE6Ou584mMZoCC
-	oHNYBzyNp34MZrE/pWZMraGsxVABKtRAJAyjGhBrhmXBvXqK8CV0vbefZYIl8zLMs5TLhvr0qek
-	ZIyrOz6aDe3rO1su/25jlhzR7+CYfCIdS9qIIgdHnn+xl/U8scer1utPUq/DQcLhhyEVHjSFf+N
-	dWy0IZfe/XkVoXzyDaCRuwZDmM7ZgnlcDs09xkvv5jZFWo6etGZdpEM7feqwfIeUGbyMLMHojE1
-	TM3YmVoppWMKH2mptlnNjSa/3tkgn0VKF9hHEjpEKIgqiF1svdcoz55CXjs3eB+lGCp+TUk/ms6
-	c6NpBz3dxkRLlOIWb1Oeez932+U/atW4/tTDBTiBMx2hCUm5ifcjVczXRrN6OQ6KPp5IYqvfUtB
-	gEsiEBb8mSKiqAkCqBiYPkEdIL1la99k2V
-X-Received: by 2002:a05:6a00:f87:b0:827:447f:7dbd with SMTP id d2e1a72fcca58-82cfb95141bmr3017018b3a.46.1775123834585;
-        Thu, 02 Apr 2026 02:57:14 -0700 (PDT)
-Received: from Omen-14.Dlink ([43.229.89.168])
-        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-82cf9b589b8sm2531813b3a.24.2026.04.02.02.57.11
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 02 Apr 2026 02:57:14 -0700 (PDT)
-From: ShaunV334 <shaunvarghese43@gmail.com>
-To: hansg@kernel.org,
-	platform-driver-x86@vger.kernel.org
-Cc: ilpo.jarvinen@linux.intel.com,
-	linux-kernel@vger.kernel.org,
-	plotnikovanton@gmail.com,
-	ShaunV334 <shaunvarghese43@gmail.com>
-Subject: [PATCH] platform/x86: hp-wmi: add Omen 14-fb0xxx (board 8C58) support
-Date: Thu,  2 Apr 2026 15:27:07 +0530
-Message-ID: <20260402095707.64881-1-shaunvarghese43@gmail.com>
-X-Mailer: git-send-email 2.53.0
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="HEOUe+rR"
+Received: by smtp.kernel.org (Postfix) with ESMTPS id 88468C116C6
+	for <platform-driver-x86@vger.kernel.org>; Thu,  2 Apr 2026 09:58:17 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1775123897;
+	bh=IjJnEtS6gEElL4gii+prlk8umylodXJIj5sicABRdtE=;
+	h=From:To:Subject:Date:From;
+	b=HEOUe+rRfGVqVW++XeZILVJqBmdJFYYondWQ79D/KK/treamjjewm+udNKahnZ+fE
+	 aoiaAGzfo5GFPpSivH55+iz1jl/KRxTaijIuAAeU3XdErrOox/KUypBcFE3loKMGLT
+	 PcQXcxDzZHR7v8qneD2vDb/I41UlfuV50m8x8jg55BP1kNBtxfJ+HnLCKnohLZr75e
+	 cnm+eTqKNZcGDs7pPhIy/jZnySDjA5s/PuXlQnzUMiB2qfiR0wrYuaZjls8vR2HM2j
+	 AMheybUYHplssOw1lzRb/4beTLD9l6qpdsLE1fwwGlJ+IJyLuz+3/uf1yWuf82KI8n
+	 baQlVdBI3urqA==
+Received: by aws-us-west-2-korg-bugzilla-1.web.codeaurora.org (Postfix, from userid 48)
+	id 7BEF8C3279F; Thu,  2 Apr 2026 09:58:17 +0000 (UTC)
+From: bugzilla-daemon@kernel.org
+To: platform-driver-x86@vger.kernel.org
+Subject: =?UTF-8?B?W0J1ZyAyMjEzMTFdIE5ldzogQVNVUyBaZW5ib29rIFMgMTYgVU01?=
+ =?UTF-8?B?NjA2V0Eg4oCUIFRvdWNocGFkIChFTEFOMTAxMCkgYmVjb21lcyB1bnJlc3Bv?=
+ =?UTF-8?B?bnNpdmUgZHVlIHRvIEVDIHN0YXRlIGNvcnJ1cHRpb24=?=
+Date: Thu, 02 Apr 2026 09:58:17 +0000
+X-Bugzilla-Reason: None
+X-Bugzilla-Type: new
+X-Bugzilla-Watch-Reason: AssignedTo drivers_platform_x86@kernel-bugs.osdl.org
+X-Bugzilla-Product: Drivers
+X-Bugzilla-Component: Platform_x86
+X-Bugzilla-Version: 2.5
+X-Bugzilla-Keywords: 
+X-Bugzilla-Severity: normal
+X-Bugzilla-Who: david@flyboard.ai
+X-Bugzilla-Status: NEW
+X-Bugzilla-Resolution: 
+X-Bugzilla-Priority: P3
+X-Bugzilla-Assigned-To: drivers_platform_x86@kernel-bugs.osdl.org
+X-Bugzilla-Flags: 
+X-Bugzilla-Changed-Fields: bug_id short_desc product version rep_platform
+ op_sys bug_status bug_severity priority component assigned_to reporter
+ cf_regression attachments.created
+Message-ID: <bug-221311-215701@https.bugzilla.kernel.org/>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+X-Bugzilla-URL: https://bugzilla.kernel.org/
+Auto-Submitted: auto-generated
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
 
-Board 8C58 (HP Omen Transcend Gaming Laptop 14-fb0xxx) appears to use
-the same thermal profile handling as other supported Omen systems,
-including board 8E41.
+https://bugzilla.kernel.org/show_bug.cgi?id=3D221311
 
-Add it to omen_thermal_profile_boards so hp-wmi can expose the firmware
-thermal profiles through the platform_profile interface.
+            Bug ID: 221311
+           Summary: ASUS Zenbook S 16 UM5606WA =E2=80=94 Touchpad (ELAN1010)
+                    becomes unresponsive due to EC state corruption
+           Product: Drivers
+           Version: 2.5
+          Hardware: AMD
+                OS: Linux
+            Status: NEW
+          Severity: normal
+          Priority: P3
+         Component: Platform_x86
+          Assignee: drivers_platform_x86@kernel-bugs.osdl.org
+          Reporter: david@flyboard.ai
+        Regression: No
 
-Tested on Omen 14-fb0xxx: the profile handler exposes cool, balanced,
-and performance modes, and selecting performance increases sustained CPU
-package power under load.
+Created attachment 309800
+  --> https://bugzilla.kernel.org/attachment.cgi?id=3D309800&action=3Dedit
+dmesg, acpidump, DSDT disassembly, and full ACPI analysis for ELAN1010 touc=
+hpad
+failure on UM5606WA
 
-Link: https://lore.kernel.org/platform-driver-x86/20260203164832.40514-1-plotnikovanton@gmail.com/
+On the ASUS Zenbook S 16 UM5606WA (BIOS 318, kernel 6.19.8-200.fc43.x86_64,=
+ AMD
+Ryzen AI 9 HX 370), the ELAN1010 I2C touchpad intermittently becomes
+unresponsive.
 
-Signed-off-by: ShaunV334 <shaunvarghese43@gmail.com>
----
- drivers/platform/x86/hp/hp-wmi.c | 1 +
- 1 file changed, 1 insertion(+)
+The ACPI _STA method for \_SB.I2CC.ETPD returns 0, so i2c-hid-acpi never bi=
+nds.
+The Fn+F7 touchpad toggle hotkey has no effect (no OSD, no EC event). A warm
+reboot does not fix it =E2=80=94 only a full shutdown (power-off) restores =
+the touchpad
+by resetting the EC.
 
-diff --git a/drivers/platform/x86/hp/hp-wmi.c b/drivers/platform/x86/hp/hp-wmi.c
-index 988a0acc9622..3cd5679828d6 100644
---- a/drivers/platform/x86/hp/hp-wmi.c
-+++ b/drivers/platform/x86/hp/hp-wmi.c
-@@ -153,6 +153,7 @@ static const char * const omen_thermal_profile_boards[] = {
- 	"8900", "8901", "8902", "8912", "8917", "8918", "8949", "894A", "89EB",
- 	"8A15", "8A42",
- 	"8BAD",
-+	"8C58",
- 	"8E41",
- };
- 
--- 
-2.53.0
+The _STA logic gates on two EC/firmware variables (TPIF and DSYN) that appe=
+ar
+to get corrupted during normal use. No user action triggered the failure.
 
+The DSDT also has pre-existing errors: duplicate named objects on
+\_SB.PCI0.GPP4 (_S0W, _PR0, _PR3).
+
+Full ACPI analysis, dmesg, DSDT disassembly, and acpidump attached.
+
+--=20
+You may reply to this email to add a comment.
+
+You are receiving this mail because:
+You are watching the assignee of the bug.=
