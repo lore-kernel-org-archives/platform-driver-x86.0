@@ -1,40 +1,41 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2D06E3AD51E
-	for <platform-driver-x86@vger.kernel.org>; Thu,  2 Apr 2026 09:58:17 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 79B013A3E74
+	for <platform-driver-x86@vger.kernel.org>; Thu,  2 Apr 2026 09:59:08 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1775123898; cv=none; b=ZbLtIWF5hk7MqM5K7ibEnOlA9dEzH8iKUjD7ZieLa617fcU+orkVmtb9nu5jMzbES6LingtydrmDi/3HcZgX9MCryybxxBuSGgJYlqaf+YLESoaY1HCVVHt3fKitaF0v0U+bq69BvPplnYyggy52L5oKt8zEOcaA97S3qDDfnwc=
+	t=1775123948; cv=none; b=rdaPCct3dH6633GEbflLCkOh+g6cIKnNhoL0Qk31gjt/04KFDD9k4WDVtGuJS7siLdSMEQnvH8IveY7yL6+kgFwaNyh3fqro76hvKyEAf9zpcyjOqu2TFOp0R4PhGz1u0MPNbSNW/Nx7vsLPSQT5uYWLpSGphQPcCrkp+v/6G20=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1775123898; c=relaxed/simple;
-	bh=IjJnEtS6gEElL4gii+prlk8umylodXJIj5sicABRdtE=;
-	h=From:To:Subject:Date:Message-ID:Content-Type:MIME-Version; b=c7RjV5rAlQ1u2bppHpFztpbZhTOa1p9kAEAoGjrpXpFaIGpFwpGgUTWcoPIkLji7ALi6ltCekTvqo6xkkyzC4eq3g9aTWw5Q8pUJTZBNI/tY90Zi5zE/L/DPfVzGplAfY4nysvB+WnjRnGWCZfuLg5SoSpF/wEJP6x/Zi+fDc04=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=HEOUe+rR; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1775123948; c=relaxed/simple;
+	bh=pTPYvpMDauejvyjKNPR1ptgoZO8sri1WJIXPtMOvY1Q=;
+	h=From:To:Subject:Date:Message-ID:In-Reply-To:References:
+	 Content-Type:MIME-Version; b=HOtXiWegkuJ02+M9/4JZD/tB1y1GnBtypWr03rtsim09WV9I/AQ6PoJ4LIuIf8C2a2dXXRP1vzJRqRglEAdA5tdvHHiwjptcSWVg0qOuEZEKE20XiczoRqjcIBjrqbw+y8JUmEDHHzeu5cvVBhYWMivzUExtm0gNWlaW9fMphf0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=JDKPYvLp; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="HEOUe+rR"
-Received: by smtp.kernel.org (Postfix) with ESMTPS id 88468C116C6
-	for <platform-driver-x86@vger.kernel.org>; Thu,  2 Apr 2026 09:58:17 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="JDKPYvLp"
+Received: by smtp.kernel.org (Postfix) with ESMTPS id E9796C116C6
+	for <platform-driver-x86@vger.kernel.org>; Thu,  2 Apr 2026 09:59:07 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1775123897;
-	bh=IjJnEtS6gEElL4gii+prlk8umylodXJIj5sicABRdtE=;
-	h=From:To:Subject:Date:From;
-	b=HEOUe+rRfGVqVW++XeZILVJqBmdJFYYondWQ79D/KK/treamjjewm+udNKahnZ+fE
-	 aoiaAGzfo5GFPpSivH55+iz1jl/KRxTaijIuAAeU3XdErrOox/KUypBcFE3loKMGLT
-	 PcQXcxDzZHR7v8qneD2vDb/I41UlfuV50m8x8jg55BP1kNBtxfJ+HnLCKnohLZr75e
-	 cnm+eTqKNZcGDs7pPhIy/jZnySDjA5s/PuXlQnzUMiB2qfiR0wrYuaZjls8vR2HM2j
-	 AMheybUYHplssOw1lzRb/4beTLD9l6qpdsLE1fwwGlJ+IJyLuz+3/uf1yWuf82KI8n
-	 baQlVdBI3urqA==
+	s=k20201202; t=1775123947;
+	bh=pTPYvpMDauejvyjKNPR1ptgoZO8sri1WJIXPtMOvY1Q=;
+	h=From:To:Subject:Date:In-Reply-To:References:From;
+	b=JDKPYvLpuQ37/gZrllqPdrb0KVS0LbAwKKk14rTOCdkWMQfpB5RskLknIo0BRaXFG
+	 FqIBHiB9SwMKMiif1RdoQeiQ+Yaco61dyud43aB6o1eLv2ZQ/A6vhMCzpHenqyYub6
+	 S3871rPDwxB+TpTLjqM6WPwt/j1Vq38Badpn/Kz/uxm0IcRAFVjcvOQi8SGZ5ndKL5
+	 KhZzD/wKRIrVHsLfYV454edwVVmb8qGNjQilKh6xjxalyDI3UPV/f3zVQ/jMDG+scS
+	 Hn5/3DDxkplskWgHbSkIERa5Gb8fBmx9ccnjoKhYchPkImJCsZn2KYD9ZvfdAqDLMn
+	 RCJ7Gw1Xf8Kbw==
 Received: by aws-us-west-2-korg-bugzilla-1.web.codeaurora.org (Postfix, from userid 48)
-	id 7BEF8C3279F; Thu,  2 Apr 2026 09:58:17 +0000 (UTC)
+	id E0A9DC433E1; Thu,  2 Apr 2026 09:59:07 +0000 (UTC)
 From: bugzilla-daemon@kernel.org
 To: platform-driver-x86@vger.kernel.org
-Subject: =?UTF-8?B?W0J1ZyAyMjEzMTFdIE5ldzogQVNVUyBaZW5ib29rIFMgMTYgVU01?=
- =?UTF-8?B?NjA2V0Eg4oCUIFRvdWNocGFkIChFTEFOMTAxMCkgYmVjb21lcyB1bnJlc3Bv?=
- =?UTF-8?B?bnNpdmUgZHVlIHRvIEVDIHN0YXRlIGNvcnJ1cHRpb24=?=
-Date: Thu, 02 Apr 2026 09:58:17 +0000
+Subject: =?UTF-8?B?W0J1ZyAyMjEzMTFdIEFTVVMgWmVuYm9vayBTIDE2IFVNNTYwNldB?=
+ =?UTF-8?B?IOKAlCBUb3VjaHBhZCAoRUxBTjEwMTApIGJlY29tZXMgdW5yZXNwb25zaXZl?=
+ =?UTF-8?B?IGR1ZSB0byBFQyBzdGF0ZSBjb3JydXB0aW9u?=
+Date: Thu, 02 Apr 2026 09:59:07 +0000
 X-Bugzilla-Reason: None
-X-Bugzilla-Type: new
+X-Bugzilla-Type: changed
 X-Bugzilla-Watch-Reason: AssignedTo drivers_platform_x86@kernel-bugs.osdl.org
 X-Bugzilla-Product: Drivers
 X-Bugzilla-Component: Platform_x86
@@ -47,10 +48,10 @@ X-Bugzilla-Resolution:
 X-Bugzilla-Priority: P3
 X-Bugzilla-Assigned-To: drivers_platform_x86@kernel-bugs.osdl.org
 X-Bugzilla-Flags: 
-X-Bugzilla-Changed-Fields: bug_id short_desc product version rep_platform
- op_sys bug_status bug_severity priority component assigned_to reporter
- cf_regression attachments.created
-Message-ID: <bug-221311-215701@https.bugzilla.kernel.org/>
+X-Bugzilla-Changed-Fields: cf_kernel_version
+Message-ID: <bug-221311-215701-yJpMaWsxi0@https.bugzilla.kernel.org/>
+In-Reply-To: <bug-221311-215701@https.bugzilla.kernel.org/>
+References: <bug-221311-215701@https.bugzilla.kernel.org/>
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 X-Bugzilla-URL: https://bugzilla.kernel.org/
@@ -64,47 +65,11 @@ MIME-Version: 1.0
 
 https://bugzilla.kernel.org/show_bug.cgi?id=3D221311
 
-            Bug ID: 221311
-           Summary: ASUS Zenbook S 16 UM5606WA =E2=80=94 Touchpad (ELAN1010)
-                    becomes unresponsive due to EC state corruption
-           Product: Drivers
-           Version: 2.5
-          Hardware: AMD
-                OS: Linux
-            Status: NEW
-          Severity: normal
-          Priority: P3
-         Component: Platform_x86
-          Assignee: drivers_platform_x86@kernel-bugs.osdl.org
-          Reporter: david@flyboard.ai
-        Regression: No
+david@flyboard.ai changed:
 
-Created attachment 309800
-  --> https://bugzilla.kernel.org/attachment.cgi?id=3D309800&action=3Dedit
-dmesg, acpidump, DSDT disassembly, and full ACPI analysis for ELAN1010 touc=
-hpad
-failure on UM5606WA
-
-On the ASUS Zenbook S 16 UM5606WA (BIOS 318, kernel 6.19.8-200.fc43.x86_64,=
- AMD
-Ryzen AI 9 HX 370), the ELAN1010 I2C touchpad intermittently becomes
-unresponsive.
-
-The ACPI _STA method for \_SB.I2CC.ETPD returns 0, so i2c-hid-acpi never bi=
-nds.
-The Fn+F7 touchpad toggle hotkey has no effect (no OSD, no EC event). A warm
-reboot does not fix it =E2=80=94 only a full shutdown (power-off) restores =
-the touchpad
-by resetting the EC.
-
-The _STA logic gates on two EC/firmware variables (TPIF and DSYN) that appe=
-ar
-to get corrupted during normal use. No user action triggered the failure.
-
-The DSDT also has pre-existing errors: duplicate named objects on
-\_SB.PCI0.GPP4 (_S0W, _PR0, _PR3).
-
-Full ACPI analysis, dmesg, DSDT disassembly, and acpidump attached.
+           What    |Removed                     |Added
+----------------------------------------------------------------------------
+     Kernel Version|                            |6.19.8-200.fc43.x86_64
 
 --=20
 You may reply to this email to add a comment.
