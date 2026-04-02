@@ -1,61 +1,70 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.16])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.8])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 23E3C3E7172;
-	Thu,  2 Apr 2026 12:59:54 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.16
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 72D872ED17B;
+	Thu,  2 Apr 2026 13:23:56 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.8
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1775134805; cv=none; b=ujVRwAhUKjzrgGWe46IkXtDrg6C3s1dHzHf9Bgg979PWeUcrq0mg9vNbVM0qMhKSRNPt5ioSp8alj1B5Vp+Nwpf2ikEBu4eB0+tEv80Lp4OOpiUdNC4wsUGLhwnO+8Txc9sOHSexw0Y4V5SOpPgu5hAICvLQacjHNmjq0bBTjAA=
+	t=1775136238; cv=none; b=Uuky24kqxDJUEK45xaPCQGerzovVuGxDSK5Vrcx7obNdMHFso9gzildUIjkaA22MKTIZVQFc1IMykoNm2NM/8UyD/xbpYYehMf67nT6CLY9GGLyB9srLrxAkIKYLu9C9LRojyA2dDfTLShJgmwLl4/Q5UncCfSa0R8/VqxN7n3w=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1775134805; c=relaxed/simple;
-	bh=KU6sRPEnkM8KgXOsYjyG6cOuZppp4Z3MQtu/wXnLv/U=;
+	s=arc-20240116; t=1775136238; c=relaxed/simple;
+	bh=edjl+8j9o62SXBHpmkircuLpVvzEO7MK2bsQthUrnIA=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=rIxIaTaGrDYCOtqbfiFkTMhoD/TJR/mP3CP28bZz7ORJVvWDiqdd/XCJ6fNoro0a3x18HWlVvB+1ksd1rkaF6an65htAy/m44PDKJQfqs1FQXchbHLuK1UgvICBZhX3ych8IXllavb8lWLVnxzfNZhnWgF4i77JHaBX7guDJJxI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=pass smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=TK7UTu2K; arc=none smtp.client-ip=198.175.65.16
+	 Content-Type:Content-Disposition:In-Reply-To; b=rcbAT3pZp1RqP++VZu0/Saye4JtzRIK2rLg0iw7Vy90y7tAiBg/rWTABAlVtt+CV6txfpcb7C0RBdc0sk/2j4oOBy76qCkOsSQTML7H/BhOCk2HJlBnW037BhUTRgy+iwAh9g6ZPFE0qbdeic70GQKwGcAL6HB3cvM71fDAWo3I=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=pass smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=TEJx1aux; arc=none smtp.client-ip=192.198.163.8
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="TK7UTu2K"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="TEJx1aux"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1775134795; x=1806670795;
+  t=1775136237; x=1806672237;
   h=date:from:to:cc:subject:message-id:references:
    mime-version:in-reply-to;
-  bh=KU6sRPEnkM8KgXOsYjyG6cOuZppp4Z3MQtu/wXnLv/U=;
-  b=TK7UTu2KaV0mgvGDDeCRGvJrD5EJREW27REFEbckuBFfmAm1g3d+xDpx
-   F2NltYtNYt8GhpH29ZeqhHFgvRQnjtKJrN44uEEilqQgrsclGWXepfe6i
-   4XrDFJrRUQvdOkLBvJQz38yF1J6RZD4jAR8FpMRx4SCDA+Io3KHAafEVG
-   SrX345c0uYocq4r1f6zRxHizxxasPczapohzC0DrSkqPOn6QkkZIb5gY9
-   v+2A2y4qRbNEHoiRcxdUA4aQj8JMMuibbCOrF603dYiXoLpMQwNgDVLqO
-   LGgugPEoooghnxgzOimVKsKDA+CfJFpHGtqJMNC/mc1JYkKVwU4L20c+V
+  bh=edjl+8j9o62SXBHpmkircuLpVvzEO7MK2bsQthUrnIA=;
+  b=TEJx1aux2F5U9IYPitrApdhwM59WNC5AEV/9Ex3V0HgAS4K2462+gz1O
+   8wPlULW2flPNEjNzJNDqAB+PXp/louT06QmhIGv2sbaYeoMuN4FBH2rIt
+   SJMc4JMFo3JOygfoHNn/f1qAlbcxCtWSy1NbpNRDrUtSOx/SJ3dZHXsCN
+   Zbm42q3uaZVT3lC0cxxQbpKOHq1+7GciRj5/DqOsrJX0r9EA2XdCcYj3a
+   Lrbzfm1qar/4ItbCnvkUufCLl+2qfc/LqOQmhdaeTvNJX16nH8+RWNcND
+   opCW8QuM2UdxDeQL6Zz8SZA5WB9RslI3Zm+joAv03epseNLkGootergnZ
    g==;
-X-CSE-ConnectionGUID: BeMiL1oxQhalQtxPV4teJg==
-X-CSE-MsgGUID: uT21nPiVT7CdKHyj/Od/Iw==
-X-IronPort-AV: E=McAfee;i="6800,10657,11746"; a="76378497"
+X-CSE-ConnectionGUID: ptbgPT/WQCmGbpW8yM3SpQ==
+X-CSE-MsgGUID: vP292jZNR4iBmv4jnemyVg==
+X-IronPort-AV: E=McAfee;i="6800,10657,11746"; a="93776951"
 X-IronPort-AV: E=Sophos;i="6.23,155,1770624000"; 
-   d="scan'208";a="76378497"
-Received: from orviesa006.jf.intel.com ([10.64.159.146])
-  by orvoesa108.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 02 Apr 2026 05:59:55 -0700
-X-CSE-ConnectionGUID: 8/cHqTRMQ6ukR0Xt+EIaLw==
-X-CSE-MsgGUID: DGRLBst+QD+2OwNDg/mJBw==
+   d="scan'208";a="93776951"
+Received: from fmviesa010.fm.intel.com ([10.60.135.150])
+  by fmvoesa102.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 02 Apr 2026 06:23:56 -0700
+X-CSE-ConnectionGUID: 8wTr4JB5QyarixZf+Zqgtw==
+X-CSE-MsgGUID: Q9CfvC6/S/av/mHQCN7Qvg==
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="6.23,155,1770624000"; 
-   d="scan'208";a="225966530"
+   d="scan'208";a="222616208"
 Received: from amilburn-desk.amilburn-desk (HELO localhost) ([10.245.245.31])
-  by orviesa006-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 02 Apr 2026 05:59:53 -0700
-Date: Thu, 2 Apr 2026 15:59:50 +0300
+  by fmviesa010-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 02 Apr 2026 06:23:51 -0700
+Date: Thu, 2 Apr 2026 16:23:49 +0300
 From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-To: Marco Nenciarini <mnencia@kcore.it>
+To: Bartosz Golaszewski <bartosz.golaszewski@oss.qualcomm.com>
 Cc: Daniel Scally <djrscally@gmail.com>,
+	Heikki Krogerus <heikki.krogerus@linux.intel.com>,
 	Sakari Ailus <sakari.ailus@linux.intel.com>,
+	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+	"Rafael J. Wysocki" <rafael@kernel.org>,
+	Danilo Krummrich <dakr@kernel.org>,
+	Mika Westerberg <mika.westerberg@linux.intel.com>,
+	Andy Shevchenko <andy@kernel.org>,
+	Linus Walleij <linusw@kernel.org>, Hans de Goede <hansg@kernel.org>,
 	Ilpo =?iso-8859-1?Q?J=E4rvinen?= <ilpo.jarvinen@linux.intel.com>,
-	Hans de Goede <johannes.goede@oss.qualcomm.com>,
-	platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v8 4/4] platform/x86: int3472: Add support for GPIO type
- 0x02 (IR flood LED)
-Message-ID: <ac5oRqLY1pNtIbLu@ashevche-desk.local>
-References: <20260401203638.1601661-1-mnencia@kcore.it>
- <20260401203638.1601661-5-mnencia@kcore.it>
+	Dmitry Torokhov <dmitry.torokhov@gmail.com>,
+	Len Brown <lenb@kernel.org>, linux-acpi@vger.kernel.org,
+	driver-core@lists.linux.dev, linux-kernel@vger.kernel.org,
+	linux-gpio@vger.kernel.org, platform-driver-x86@vger.kernel.org,
+	brgl@kernel.org
+Subject: Re: [PATCH v2 0/4] platform/x86: x86-android-tablets: use real
+ firmware node references with intel drivers
+Message-ID: <ac5t5XozmzN9oq96@ashevche-desk.local>
+References: <20260402-baytrail-real-swnode-v2-0-6f5054a4cc07@oss.qualcomm.com>
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
@@ -64,26 +73,75 @@ List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20260401203638.1601661-5-mnencia@kcore.it>
+In-Reply-To: <20260402-baytrail-real-swnode-v2-0-6f5054a4cc07@oss.qualcomm.com>
 Organization: Intel Finland Oy - BIC 0357606-4 - c/o Alberga Business Park, 6
  krs, Bertel Jungin Aukio 5, 02600 Espoo
 
-On Wed, Apr 01, 2026 at 10:36:38PM +0200, Marco Nenciarini wrote:
-> Add support for GPIO type 0x02, which controls an IR flood LED used
-> for face authentication on some laptops (e.g. Dell Pro Max 16 Premium).
+On Thu, Apr 02, 2026 at 02:54:25PM +0200, Bartosz Golaszewski wrote:
+> First let me repeat the problem statement:
 > 
-> Without this patch, the kernel logs "GPIO type 0x02 unknown; the sensor
-> may not work" and IR sensors paired with a flood LED cannot function.
+> ==
 > 
-> The flood LED is registered through the LED subsystem like the existing
-> privacy LED, including a lookup entry to allow future consumer drivers
-> to find and control it via led_get().
+> GPIO software node lookup should rely exclusively on matching the
+> addresses of the referenced firmware nodes. I tried to enforce it with
+> commit e5d527be7e69 ("gpio: swnode: don't use the swnode's name as the
+> key for GPIO lookup") but it broke existing users who abuse the software
+> node mechanism by creating "dummy" software nodes named after the device
+> they want to get GPIOs from but never attaching them to the actual GPIO
+> devices. They rely on the current behavior of GPIOLIB where it will match
+> the label of the GPIO controller against the name of the software node
+> and does not require a true link.
 > 
-> To support multiple LEDs per INT3472 device, convert the single led
-> struct member to an array with a counter.
+> x86-android-tablets driver is one of the abusers in that it creates
+> dummy software nodes for baytrail and cherryview GPIO controllers but
+> they don't really reference these devices. Before we can reapply
+> e5d527be7e69 and support matching by fwnode address exclusively, we need
+> to convert all the users to using actual fwnode references.
+> 
+> ==
+> 
+> Now for the new approach:
+> 
+> Now with the recent patches I sent or plan to send out, it turns out
+> that almost all existing users of software node lookup can easily have
+> the software node's representing the GPIO controllers attached to their
+> target devices as their primary firmware node. The remaining complex
+> cases are: pcengines-apuv2 and geode-common but in the first case we
+> have control over the creation of the GPIO device - we can assign it a
+> firmware node - and in the second case, we deal with an MFD driver so
+> can export the cell's software node in a header.
+> 
+> The only remaining use-case where we need to reference a GPIO controller
+> described in ACPI from a software node is the x86-android-tablets
+> driver. In this case, I think it no longer makes sense to propose a new
+> generic interface. Instead, I'd like to propose to keep it as a
+> driver-specific quirk.
+> 
+> This series proposes the following changes:
+> 1. Switch to returning -ENXIO if we try to resolve a reference to
+> a software node that's not registered as a firmware node yet to
+> differentiate it from other situations in which we return -ENOENT.
+> 2. In GPIO core: return -EPROBE_DEFER from swnode lookup if
+> fwnode_get_reference_args() returns -ENXIO as an unregistered software
+> node is not much different from the situation where there's a firmware
+> node not backed by a device yet.
+> 3. Export the acpi_bus_type symbol. It's already available in the
+> acpi_bus.h header but it's not available to loadable modules.
 
-Started looking really nice, thanks for the work done!
-Reviewed-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Nowadays we don't do that but export the dev_is_acpi() or something similar if
+it's not yet available and to_acpi_dev(). (Names are derived from the existing
+pattern, they might be need to be adjusted, dunno.) See how PNP does that.
+Note, I haven't read the patches yet, just a quick comment.
+
+> 4. Finally: implement support for dynamic assignment of secondary
+> firmware nodes in the x86-android-tablets driver. More details on how
+> it's approached are in the relevant commit message.
+> 
+> Merging strategy: I'd like to propose queing patches 1-3 independently
+> through their respective trees: driver core, GPIO and ACPI. The final
+> patch would make its way upstream after v7.1-rc1. I would probably
+> extend it to convert the driver to using more devres interfaces too at
+> this point.
 
 -- 
 With Best Regards,
