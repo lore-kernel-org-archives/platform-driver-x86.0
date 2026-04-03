@@ -1,314 +1,251 @@
-Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ot1-f41.google.com (mail-ot1-f41.google.com [209.85.210.41])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EE08237F720
-	for <platform-driver-x86@vger.kernel.org>; Fri,  3 Apr 2026 10:27:28 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.168.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2EC403845B5
+	for <platform-driver-x86@vger.kernel.org>; Fri,  3 Apr 2026 13:05:10 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.41
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1775212050; cv=none; b=ICwzpHrpd4i9Z9rL99A6LxqGL+j1BmXMtvFaMilh/St9IdeW8Y2vqqMKL0jiNx6g1BMNSBL44S9KMxyws1QECo9rYbiycgD+S40HB/nThUKiYayZE4HHwFvEoM6JU9QN3TeLwmQL3wUEFb9WO0RRIrLFckcgEaORhofgRwVJDsc=
+	t=1775221514; cv=none; b=dHcjJaROJ8A2ySajP6oQYaiI+icwp/wnq/RhnMu7zvI+L9QOyH9nXVswLFHiSSsr62SiCg/ir7KXhgYJhWURac2RGpziIX1dWlMl1ywA0Wk9saIDkM19OvdWJnjbZBaxbFr6ujwgWfWoPb3fhgY1bMpvJpnba+ACpj4TsQzbRIc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1775212050; c=relaxed/simple;
-	bh=NuE6ubC5OBpBpgi4ZRheJFgyhAoO0uBmhiE5w1qglSs=;
-	h=Message-ID:Date:MIME-Version:From:Subject:To:Cc:References:
-	 In-Reply-To:Content-Type; b=XwM4xB2pHS55NJ6/Bx4x7tRo2Wp9J6tEo9L4rhU+fCX8K1Ixoreln3N25k2iMheZ58eo4XLgAJ31n38J0Gp3p8mC1mgbcNKqUXtacZq8SlpVrJFe1IcuWTxgG7qSjMDOm0aDAwmStmUng8YAFe1kTtJLKr4+FYXJypziw9dyrCA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com; spf=pass smtp.mailfrom=oss.qualcomm.com; dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b=Ctz8kXrA; dkim=pass (2048-bit key) header.d=oss.qualcomm.com header.i=@oss.qualcomm.com header.b=WSNDCKkM; arc=none smtp.client-ip=205.220.168.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oss.qualcomm.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b="Ctz8kXrA";
-	dkim=pass (2048-bit key) header.d=oss.qualcomm.com header.i=@oss.qualcomm.com header.b="WSNDCKkM"
-Received: from pps.filterd (m0279866.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.18.1.11/8.18.1.11) with ESMTP id 6336ujaY947644
-	for <platform-driver-x86@vger.kernel.org>; Fri, 3 Apr 2026 10:27:28 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=qualcomm.com; h=
-	cc:content-transfer-encoding:content-type:date:from:in-reply-to
-	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
-	67Cbv6bBozzrjmoDqWSMuoSXU7QRAu5a2NdofA5VJM8=; b=Ctz8kXrAet9Y+wXm
-	XURCQIs/hhXHVZwMmSLjPJQ7shSs7P+1jMSYOa+ol+l2c/YAJdw+MPYXOg58I/bJ
-	3E2YJKF7o7ZuLseGfoHZ4JUY4xSISvRC1HdjH7trclQ/yT53hKb9ZRJO2VaV9/W7
-	ubtueUGlflg44YDiioJjzrqSyJev1I3kOhTowX7SyqsUHCS7jDIiaXJ7YbELW6np
-	OEZnQip+QIIFjHhKWe0IeumvwoG5+IDA7MF+YJ4L70JjsyYMHclzzngfGuHZtgtq
-	43SL+IMoqjkM3HDCY3TsBuNq/rxgf4t5B0HZ2coRQjUpXgwMkk0Ln4H96K6qfylk
-	nNu6EA==
-Received: from mail-qt1-f197.google.com (mail-qt1-f197.google.com [209.85.160.197])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 4d9xwfj81b-1
-	(version=TLSv1.3 cipher=TLS_AES_128_GCM_SHA256 bits=128 verify=NOT)
-	for <platform-driver-x86@vger.kernel.org>; Fri, 03 Apr 2026 10:27:28 +0000 (GMT)
-Received: by mail-qt1-f197.google.com with SMTP id d75a77b69052e-5093a985e21so47055781cf.3
-        for <platform-driver-x86@vger.kernel.org>; Fri, 03 Apr 2026 03:27:27 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=oss.qualcomm.com; s=google; t=1775212047; x=1775816847; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:content-language:references
-         :cc:to:subject:from:user-agent:mime-version:date:message-id:from:to
-         :cc:subject:date:message-id:reply-to;
-        bh=67Cbv6bBozzrjmoDqWSMuoSXU7QRAu5a2NdofA5VJM8=;
-        b=WSNDCKkMXesw4ZA3VftVu0Mmdh90ahzsEnm8Wjtk8sIZprPnV80Hh2B7zoKwgxHfDb
-         cuR6WGsn7Ab8iuVzW+h6Q0Rr1IkJGtpPfoUzfKhLrbPWWvvcHHVHUA0FF9L1QErcdYmC
-         gK9+v2cUDp0S+Kb5kepYMrjjTfmdIQ/g08PhEnn9/fOcmzNgyYPs3X3QY1SFKcZTgZkT
-         6tjsriyv32NbPeC9XWk1FvbeiouX3kEOcV3QKrJJCpbpaddji97qmyV54dHXYpatl8Ce
-         SDfPaGpKgMOaN04dDXx0GTAPqG5ALlI+WLiglHx2ijrgko8FFByngegSZlO8c3ZA0Djx
-         yuPQ==
+	s=arc-20240116; t=1775221514; c=relaxed/simple;
+	bh=cU4zrVihhAyukwAPUendYFq1CBw7lqCe9U7oQrapWrg=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=VK/RJBKFeV1+zbw2j8oXuwcsDaQ1r7fdSJAIacL6uksyM79Pg+rHkNZDH7JiFCkB5MpkScovIaiVNSlqF/M7/Lm7gxAdYaU32biBnMg+kb+mzfxlg7mkKgtXPFKE9EySX704XDgYaN9tmUgn/NpMCW+r4oNLGrxeYhTxJplLBzU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=joshuagrisham.com; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.210.41
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=joshuagrisham.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Received: by mail-ot1-f41.google.com with SMTP id 46e09a7af769-7d556c1a79eso2221688a34.3
+        for <platform-driver-x86@vger.kernel.org>; Fri, 03 Apr 2026 06:05:10 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1775212047; x=1775816847;
-        h=content-transfer-encoding:in-reply-to:content-language:references
-         :cc:to:subject:from:user-agent:mime-version:date:message-id:x-gm-gg
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=67Cbv6bBozzrjmoDqWSMuoSXU7QRAu5a2NdofA5VJM8=;
-        b=B1D0oZ/99cQ07mJng1f/k3ADVYGiKNClVa59ymQVU4i/Q24RmOvTEQtUN9M3gXYrHa
-         GaPVkpu7+q7m8CrnM8QIgT73jzE0Zdrzqd8RZBg8KmoD8HI14CH6yc3ZQhH3IUPX3hib
-         7RJrCUzDwFMfsLologFUh+EmSzH0uIX1khS3diGTNwKZi3yf+lgm6CstHOOn8wOQ0aG1
-         A5KMlv4oipu+HjFAB+UxosND1WfNU/eSwzFBUTDYAODm2v1WIqGjbeyBDjoP8p8Hjco0
-         Q/yHz9itXvaLZ8yL1KbZ5K1msP7R3X1/QQvYO2s8RYa+oci1TFFykYTNOT1obms7aXQ/
-         M1ZA==
-X-Forwarded-Encrypted: i=1; AJvYcCW8Ok3Ecs5OelPKWtAtSWOnrm0l+iVYXe7vk+W6oVG26BfzLm49gD2UruiOdxzk9y1UY1MZT3KDwVWl04tA8N7zzLpS@vger.kernel.org
-X-Gm-Message-State: AOJu0YwOwbVy7MzKs4sNoZEp1AkuR4OFcWt+Ug7FE0m5su6ThP+a8kNt
-	nk4A6G0x0ADmW6se3Pm1ReKLo1s5HncVmDlb6tlpt0WG+onsd/l+ayqNUndWKCKLxECbn9BCFL/
-	vvibhQ3vEQXBVqPBuaj0ZfF4xjGC7taQWJPkXJ26mkzE5HsSkqN1mWhyuLK4yDaBuwaaVcRNbJH
-	2G
-X-Gm-Gg: ATEYQzy+i3ZJZQs7HI008W67qaT8ocMmLHqQhONf3zQ6xSIUUfNdGiE6I68gbTzvePk
-	S3taAYPMJqc6zwdXW6i/VYQE76qCHZxwfXRC7SV0mryo5yX+AMyRMUcTO9fgpVxXQrw6Al5BwSc
-	a2Hk/whilFFTyD+JbNwtdyoyIBLrtTLiaJx8NLRQkF7wCz1hNlNhfBrPlJbB21yDNmHukZT9MdH
-	bknsDKqqju6Ocr+6jOKFnNQF6J1gy9tJQP41uxbC50xMXGi5TlgzFAVcHNEZNhdiz6tD3q7DmYu
-	GVyZdLRiT8EsQt+hJIoHJctSrz1jG2P+LsmIzUt4W0dp7zsHSF0/YHEtt7FG4tqK2xEo0IhtI0O
-	LONbSoSIT3SltpUsXeiHoCQ09fqELm+B1jbNbRjXSGygpYtdK/SZy7JShxhj1yISjgirf0Ur8s1
-	BYnDiwy9ELdjAVfsUv0NAWUMjdQrnZXecJeGUJuWBdpI5Wa4aQUyrV3+VcDSjcpIt2QESAPugoq
-	fA1fb7x3shWM8Xw
-X-Received: by 2002:a05:622a:60c:b0:50b:829e:44fe with SMTP id d75a77b69052e-50d62a95f68mr36996611cf.37.1775212047093;
-        Fri, 03 Apr 2026 03:27:27 -0700 (PDT)
-X-Received: by 2002:a05:622a:60c:b0:50b:829e:44fe with SMTP id d75a77b69052e-50d62a95f68mr36996271cf.37.1775212046636;
-        Fri, 03 Apr 2026 03:27:26 -0700 (PDT)
-Received: from ?IPV6:2001:1c00:c32:7800:5bfa:a036:83f0:f9ec? (2001-1c00-0c32-7800-5bfa-a036-83f0-f9ec.cable.dynamic.v6.ziggo.nl. [2001:1c00:c32:7800:5bfa:a036:83f0:f9ec])
-        by smtp.gmail.com with ESMTPSA id 4fb4d7f45d1cf-66e02d37620sm1490528a12.2.2026.04.03.03.27.23
+        d=1e100.net; s=20251104; t=1775221510; x=1775826310;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:x-gm-gg:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=oSJuyXivPnv8jUYTe5aVcM1VjUEpcQKUQGG47CduFdU=;
+        b=sVXsFf3MOH5iiJWccVzDMZMFem+jFPvZBglmdxcxTChvc5eI2V5ElueuUHG9x7xVGd
+         pxsiNuwGyrCjvLTdwBsk3bVlBm/rbeLrEhcminqjFQsJvELwehry2zuZuL3Vpr3/70bb
+         7bZ+Me1f3un567Kg8aSSp+JHYAjEtUhpbVUQ+G4KK8hmHH+PHu/LMOzLo7YOw6FzWfEV
+         0a0e0PUDDc6xEJIOm2vF/30vbiiyfKNJ3QETm9qc1NkR+oRNHiSF5uI4uQBZLLqUrao5
+         dIGqGN6gdze5R7tyPivYsbHDhePUWnvegVvkcD60PRRrJcabgJuohTDjle9MetjTt+yG
+         W1fQ==
+X-Forwarded-Encrypted: i=1; AJvYcCWWoVYfSkckPWx74DoVPfGcXdbXnXBJ4ETkeMXp8M9r5Sn0u2Sc+qcf2neoO5Je4Zq/0G5GHwdyAipNbNhT7ei2ycjQ@vger.kernel.org
+X-Gm-Message-State: AOJu0YwBRWez8tu0EkteDd3xk4RYusJ8fiA1AD1lQGZtaXx9OLWfzerg
+	vG2WZ+xm/mA+GymnQjth1IbPsUYZN/K5eCKwISloqThWeMBpScARZoDrYCgKq8p3
+X-Gm-Gg: ATEYQzw8uiB8MBJWCRaKWYNpcVZTeWw6iYH3qMzoQsfu8Ni6CZc5bsfuDx0RfC4BgqR
+	3KPaoaC0MjkmCisodwXU0LXGQxnsUzJ2ZNozQnuULOeZbAEVDoB5znJidHb8BmbLf2DtWsXm03P
+	BNYOowmvlaYnZLZmBVEbsIUXcUbLmvUMLSa6fixhuCDR3K9SkIwB0EsoqtS8K+2chzAXiGEHIv+
+	sL7PgLuF38lxgVi6OYWkbsijz3WEgGk5cZgk9HQmULG5XsZzRaUHxrjus6FJ+7Ddtlpnx7d5Ip+
+	25uQAUz2e5NBC+c+HGwRwqzhs8SdPh22OT82OxvYx8zyGhpJuJwWoN5F18MSqA+lWhxjfC179EO
+	yaX4d+cZqqd00dCa3aRpt/IyDI/TmM4brS2NxFboQgoXoBscQnqvD6q5it7S2EQmIh5dhnSG03/
+	pXG7zuIbxvhkxqaLzr8KXglRq8PPIlfxNYigNmSVz/VN3HDv1NkiYFXXAQUyk7kB0li74=
+X-Received: by 2002:a05:6830:2e14:b0:7db:b7ae:ef05 with SMTP id 46e09a7af769-7dbb7aef5cdmr1026239a34.4.1775221509564;
+        Fri, 03 Apr 2026 06:05:09 -0700 (PDT)
+Received: from mail-oi1-f181.google.com (mail-oi1-f181.google.com. [209.85.167.181])
+        by smtp.gmail.com with ESMTPSA id 46e09a7af769-7dbb40b1507sm2331488a34.21.2026.04.03.06.05.09
+        for <platform-driver-x86@vger.kernel.org>
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Fri, 03 Apr 2026 03:27:24 -0700 (PDT)
-Message-ID: <f5d79610-892b-439a-8f79-9b8e18007183@oss.qualcomm.com>
-Date: Fri, 3 Apr 2026 12:27:22 +0200
+        Fri, 03 Apr 2026 06:05:09 -0700 (PDT)
+Received: by mail-oi1-f181.google.com with SMTP id 5614622812f47-45f053b7b90so1062983b6e.0
+        for <platform-driver-x86@vger.kernel.org>; Fri, 03 Apr 2026 06:05:09 -0700 (PDT)
+X-Forwarded-Encrypted: i=1; AJvYcCU4HK9zPS1mMzDjJZOjV5BmC2R6gz3YBKsCXq02PJwsabBVwfPNgzCoStDVLJXikbsTpm01FGJ5cYnkYLoTDhhjDTYp@vger.kernel.org
+X-Received: by 2002:a05:6808:302a:b0:467:1c9e:213d with SMTP id
+ 5614622812f47-46ef54f5656mr1439389b6e.10.1775221509038; Fri, 03 Apr 2026
+ 06:05:09 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-From: Hans de Goede <johannes.goede@oss.qualcomm.com>
-Subject: Re: [PATCH v8 4/4] platform/x86: int3472: Add support for GPIO type
- 0x02 (IR flood LED)
-To: Marco Nenciarini <mnencia@kcore.it>, Daniel Scally <djrscally@gmail.com>,
-        Sakari Ailus <sakari.ailus@linux.intel.com>,
-        =?UTF-8?Q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
-Cc: Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
-References: <20260401203638.1601661-1-mnencia@kcore.it>
- <20260401203638.1601661-5-mnencia@kcore.it>
-Content-Language: en-US, nl
-In-Reply-To: <20260401203638.1601661-5-mnencia@kcore.it>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-X-Proofpoint-GUID: oKyArU-KMgeJnMC2nISL9zuiIaJrhy1B
-X-Proofpoint-Spam-Details-Enc: AW1haW4tMjYwNDAzMDA5MiBTYWx0ZWRfX8npBwcTyNruk
- sDc4dE0ax6OrlaxFW1lr58LUDE2h9Ekog07QENTO6eoD49TOtmSuQiiL6Y5X6m5aBggJhPWOzNd
- yTnqe9fCHtqR9fKvlmA8bB6FElhbAw9KOOpqZpF/VqH9hQdee6PGp8CAgjldp9iMq7T3y+mcjsz
- aXxITNjgjDG0zRX8EV7B1inPYoP1h0SXgjZP6lHgpLV2K4NoEnrSqnEEoTHWia7jGdcXfgV+pQv
- XScvQVm4oEjs717C9o5oyiy1Si4F0avNHNTLLkcZzWf9pWs3/omUcwJiZdv4vAlC8LBAzDnCDX6
- 0QGMip4bfU17EghgeuyVWxCULYiQuBBT5scVgs1udIvXasx4t3Imhx9FaEf4pbuVPiBJRgoQhqb
- X8d+d5PccaoTuHW8JJMdk0vlxKE9ngKU+00nfUGb8aytrUrXj2cMw44tGFjT9VZe/fcBiPo7pH1
- TdHMFcuW31sZigBYOQw==
-X-Proofpoint-ORIG-GUID: oKyArU-KMgeJnMC2nISL9zuiIaJrhy1B
-X-Authority-Analysis: v=2.4 cv=fOo0HJae c=1 sm=1 tr=0 ts=69cf9610 cx=c_pps
- a=EVbN6Ke/fEF3bsl7X48z0g==:117 a=xqWC_Br6kY4A:10 a=IkcTkHD0fZMA:10
- a=A5OVakUREuEA:10 a=s4-Qcg_JpJYA:10 a=VkNPw1HP01LnGYTKEx00:22
- a=u7WPNUs3qKkmUXheDGA7:22 a=YMgV9FUhrdKAYTUUvYB2:22 a=EUspDBNiAAAA:8
- a=QyXUC8HyAAAA:8 a=u9bSReISK_ZUcUW8qfUA:9 a=QEXdDO2ut3YA:10
- a=a_PwQJl-kcHnX1M80qC6:22
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1143,Hydra:6.1.51,FMLib:17.12.100.49
- definitions=2026-04-03_03,2026-04-03_01,2025-10-01_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
- spamscore=0 lowpriorityscore=0 impostorscore=0 clxscore=1015 malwarescore=0
- suspectscore=0 priorityscore=1501 phishscore=0 adultscore=0 bulkscore=0
- classifier=typeunknown authscore=0 authtc= authcc= route=outbound adjust=0
- reason=mlx scancount=1 engine=8.22.0-2603050001 definitions=main-2604030092
+References: <8e55cf70-5147-849a-ad5c-24a32727e620@linux.intel.com> <20260326031506.35280-1-ayaanmirzabaig85@gmail.com>
+In-Reply-To: <20260326031506.35280-1-ayaanmirzabaig85@gmail.com>
+From: Joshua Grisham <josh@joshuagrisham.com>
+Date: Fri, 3 Apr 2026 15:04:57 +0200
+X-Gmail-Original-Message-ID: <CAMF+KeaTRH2JGs53VSJ_WMFJQMBW4wDbCkW6u3=ySxkPknDvpQ@mail.gmail.com>
+X-Gm-Features: AQROBzCD1liV_n1jedVrHBXlSk37KHjXExt4M2fNrcwTnleC6OIJIUYYhMKFPTA
+Message-ID: <CAMF+KeaTRH2JGs53VSJ_WMFJQMBW4wDbCkW6u3=ySxkPknDvpQ@mail.gmail.com>
+Subject: Re: [PATCH v3] platform/x86: samsung-galaxybook: Handle ACPI hotkey notifications
+To: Ayaan Mirza Baig <ayaanmirzabaig85@gmail.com>
+Cc: ilpo.jarvinen@linux.intel.com, ayaanmirza788@gmail.com, 
+	josh@joshuagrisham.com, platform-driver-x86@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 
-Hi,
+Hi Ayaan, first of all thank you for taking the time to figure this
+out and send in the patch!! Few notes from my side inline below :)
 
-On 1-Apr-26 22:36, Marco Nenciarini wrote:
-> Add support for GPIO type 0x02, which controls an IR flood LED used
-> for face authentication on some laptops (e.g. Dell Pro Max 16 Premium).
-> 
-> Without this patch, the kernel logs "GPIO type 0x02 unknown; the sensor
-> may not work" and IR sensors paired with a flood LED cannot function.
-> 
-> The flood LED is registered through the LED subsystem like the existing
-> privacy LED, including a lookup entry to allow future consumer drivers
-> to find and control it via led_get().
-> 
-> To support multiple LEDs per INT3472 device, convert the single led
-> struct member to an array with a counter.
-> 
-> Signed-off-by: Marco Nenciarini <mnencia@kcore.it>
+Den ons 25 mars 2026 kl 22:45 skrev Ayaan Mirza Baig
+<ayaanmirzabaig85@gmail.com>:
+>
+> On Samsung Galaxy Book 5 (SAM0430), the keyboard backlight, microphone
+> mute, and camera block hotkeys do not generate i8042 scancodes.
+> Instead they arrive as ACPI notifications 0x7d, 0x63, and 0x6f
+> respectively, all of which previously fell through to the default
+> "unknown" warning in galaxybook_acpi_notify().
+>
+> Add handling for these three events:
+>
+> - 0x7d (Fn+F9, keyboard backlight): schedule the existing
+>   kbd_backlight_hotkey_work which cycles brightness.
+>
+> - 0x6e (Fn+F10, microphone mute): register a new hotkey input device
+>   and emit KEY_MICMUTE.
+>
+> - 0x6f (Fn+F11, camera block): if block_recording is active use the
+>   existing block_recording_hotkey_work; otherwise emit KEY_CAMERA via the
+>   hotkey input device on models where the block_recording ACPI feature is
+>   not supported
 
-Thanks, patch looks good to me:
+Just out of curiosity, are you sure KEY_CAMERA is the right key that
+should be sent here? I think this is typically interpreted as a
+"camera shutter" kind of event, and in some desktop environments or
+apps it will actually cause a picture to be captured from the webcam.
+I think better would be to toggle the camera shutter switch
+(camera_lens_cover_switch) I already created in this driver
+specifically to indicate this? You can see how this works in
+block_recording_acpi_set() -- basically there it is both sending the
+ACPI command (for models that support this) to actually disable the
+camera, but also setting the value of the switch input
+(input_report_switch + input_sync), so I guess you could always just
+update the switch value without sending the ACPI command?
 
-Reviewed-by: Hans de Goede <johannes.goede@oss.qualcomm.com>
+But, alas, just setting the status of a switch does not actually "do"
+anything, but instead more correctly tries to report the status to the
+right interface. Out of curiosity, do you know if there are any of the
+Galaxy Book devices which report this camera switch hotkey over ACPI
+and do not also support the Samsung ACPI sub function (sasb) to
+enable/disable the camera (GB_SASB_BLOCK_RECORDING) ? It would be
+interesting to see how they behaved and if it were possible to cover
+that case in a clear way so that everything works right for them.
 
-Regards,
+>
+> Tested on Samsung Galaxy Book 5 (SAM0430).
+>
 
-Hans
+I will try to build and load this on my Galaxy Book2 Pro and 3 Pro as
+well just to rule out any potential regressions but from a quick
+glance it looks like it should be fine :)
 
-
+> Signed-off-by: Ayaan Mirza Baig <ayaanmirzabaig85@gmail.com>
 > ---
-> Changes in v8:
-> - Always register the LED lookup for ir_flood too, removing the type
->   parameter and conditional switch-case (Hans de Goede, Andy Shevchenko).
-> 
-> The ACPI _DSM tables refer to this GPIO type as "strobe", hence the
-> INT3472_GPIO_TYPE_STROBE define. The userspace-visible LED name uses
-> "ir_flood" instead, as the hardware is an IR flood illuminator, not a
-> flash strobe.
-> 
-> Cc: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-> Cc: Hans de Goede <johannes.goede@oss.qualcomm.com>
->  drivers/platform/x86/intel/int3472/discrete.c |  9 +++++++-
->  drivers/platform/x86/intel/int3472/led.c      | 23 ++++++++++---------
->  include/linux/platform_data/x86/int3472.h     |  7 ++++--
->  3 files changed, 25 insertions(+), 14 deletions(-)
-> 
-> diff --git a/drivers/platform/x86/intel/int3472/discrete.c b/drivers/platform/x86/intel/int3472/discrete.c
-> index a45a93093..a675e8f4c 100644
-> --- a/drivers/platform/x86/intel/int3472/discrete.c
-> +++ b/drivers/platform/x86/intel/int3472/discrete.c
-> @@ -215,6 +215,10 @@ static void int3472_get_con_id_and_polarity(struct int3472_discrete_device *int3
->  		*con_id = "privacy";
->  		*gpio_flags = GPIO_ACTIVE_HIGH;
->  		break;
-> +	case INT3472_GPIO_TYPE_STROBE:
-> +		*con_id = "ir_flood";
-> +		*gpio_flags = GPIO_ACTIVE_HIGH;
-> +		break;
->  	case INT3472_GPIO_TYPE_HOTPLUG_DETECT:
->  		*con_id = "hpd";
->  		*gpio_flags = GPIO_ACTIVE_HIGH;
-> @@ -248,6 +252,7 @@ static void int3472_get_con_id_and_polarity(struct int3472_discrete_device *int3
->   *
->   * 0x00 Reset
->   * 0x01 Power down
-> + * 0x02 Strobe
->   * 0x0b Power enable
->   * 0x0c Clock enable
->   * 0x0d Privacy LED
-> @@ -331,6 +336,7 @@ static int skl_int3472_handle_gpio_resources(struct acpi_resource *ares,
->  		break;
->  	case INT3472_GPIO_TYPE_CLK_ENABLE:
->  	case INT3472_GPIO_TYPE_PRIVACY_LED:
-> +	case INT3472_GPIO_TYPE_STROBE:
->  	case INT3472_GPIO_TYPE_POWER_ENABLE:
->  	case INT3472_GPIO_TYPE_HANDSHAKE:
->  		gpio = skl_int3472_gpiod_get_from_temp_lookup(int3472, agpio, con_id, gpio_flags);
-> @@ -348,6 +354,7 @@ static int skl_int3472_handle_gpio_resources(struct acpi_resource *ares,
->  
->  			break;
->  		case INT3472_GPIO_TYPE_PRIVACY_LED:
-> +		case INT3472_GPIO_TYPE_STROBE:
->  			ret = skl_int3472_register_led(int3472, gpio, con_id);
->  			if (ret)
->  				err_msg = "Failed to register LED\n";
-> @@ -422,7 +429,7 @@ void int3472_discrete_cleanup(struct int3472_discrete_device *int3472)
->  	gpiod_remove_lookup_table(&int3472->gpios);
->  
->  	skl_int3472_unregister_clock(int3472);
-> -	skl_int3472_unregister_led(int3472);
-> +	skl_int3472_unregister_leds(int3472);
->  	skl_int3472_unregister_regulator(int3472);
->  }
->  EXPORT_SYMBOL_NS_GPL(int3472_discrete_cleanup, "INTEL_INT3472_DISCRETE");
-> diff --git a/drivers/platform/x86/intel/int3472/led.c b/drivers/platform/x86/intel/int3472/led.c
-> index 22d0d6c5e..9b2573cc3 100644
-> --- a/drivers/platform/x86/intel/int3472/led.c
-> +++ b/drivers/platform/x86/intel/int3472/led.c
-> @@ -17,13 +17,14 @@ static int int3472_led_set(struct led_classdev *led_cdev, enum led_brightness br
->  int skl_int3472_register_led(struct int3472_discrete_device *int3472, struct gpio_desc *gpio,
->  			     const char *con_id)
->  {
-> -	struct int3472_led *led = &int3472->led;
-> +	struct int3472_led *led;
->  	char *p;
->  	int ret;
->  
-> -	if (led->classdev.dev)
-> -		return -EBUSY;
-> +	if (int3472->n_leds >= INT3472_MAX_LEDS)
-> +		return -ENOSPC;
->  
-> +	led = &int3472->leds[int3472->n_leds];
->  	led->gpio = gpio;
->  
->  	/* Generate the name, replacing the ':' in the ACPI devname with '_' */
-> @@ -46,17 +47,17 @@ int skl_int3472_register_led(struct int3472_discrete_device *int3472, struct gpi
->  	led->lookup.con_id = con_id;
->  	led_add_lookup(&led->lookup);
->  
-> +	int3472->n_leds++;
->  	return 0;
->  }
->  
-> -void skl_int3472_unregister_led(struct int3472_discrete_device *int3472)
-> +void skl_int3472_unregister_leds(struct int3472_discrete_device *int3472)
->  {
-> -	struct int3472_led *led = &int3472->led;
-> +	for (unsigned int i = 0; i < int3472->n_leds; i++) {
-> +		struct int3472_led *led = &int3472->leds[i];
->  
-> -	if (IS_ERR_OR_NULL(led->classdev.dev))
-> -		return;
-> -
-> -	led_remove_lookup(&led->lookup);
-> -	led_classdev_unregister(&led->classdev);
-> -	gpiod_put(led->gpio);
-> +		led_remove_lookup(&led->lookup);
-> +		led_classdev_unregister(&led->classdev);
-> +		gpiod_put(led->gpio);
-> +	}
->  }
-> diff --git a/include/linux/platform_data/x86/int3472.h b/include/linux/platform_data/x86/int3472.h
-> index 3ba0d5646..c597f37e9 100644
-> --- a/include/linux/platform_data/x86/int3472.h
-> +++ b/include/linux/platform_data/x86/int3472.h
-> @@ -23,6 +23,7 @@
->  /* PMIC GPIO Types */
->  #define INT3472_GPIO_TYPE_RESET					0x00
->  #define INT3472_GPIO_TYPE_POWERDOWN				0x01
-> +#define INT3472_GPIO_TYPE_STROBE				0x02
->  #define INT3472_GPIO_TYPE_POWER_ENABLE				0x0b
->  #define INT3472_GPIO_TYPE_CLK_ENABLE				0x0c
->  #define INT3472_GPIO_TYPE_PRIVACY_LED				0x0d
-> @@ -31,6 +32,7 @@
->  
->  #define INT3472_PDEV_MAX_NAME_LEN				23
->  #define INT3472_MAX_SENSOR_GPIOS				3
-> +#define INT3472_MAX_LEDS					2
->  #define INT3472_MAX_REGULATORS					3
->  
->  /* E.g. "avdd\0" */
-> @@ -126,11 +128,12 @@ struct int3472_discrete_device {
->  		struct led_lookup_data lookup;
->  		char name[INT3472_LED_MAX_NAME_LEN];
->  		struct gpio_desc *gpio;
-> -	} led;
-> +	} leds[INT3472_MAX_LEDS];
->  
->  	struct int3472_discrete_quirks quirks;
->  
->  	unsigned int ngpios; /* how many GPIOs have we seen */
-> +	unsigned int n_leds; /* how many LEDs have we registered */
->  	unsigned int n_sensor_gpios; /* how many have we mapped to sensor */
->  	unsigned int n_regulator_gpios; /* how many have we mapped to a regulator */
->  	struct gpiod_lookup_table gpios;
-> @@ -162,6 +165,6 @@ void skl_int3472_unregister_regulator(struct int3472_discrete_device *int3472);
->  
->  int skl_int3472_register_led(struct int3472_discrete_device *int3472, struct gpio_desc *gpio,
->  			     const char *con_id);
-> -void skl_int3472_unregister_led(struct int3472_discrete_device *int3472);
-> +void skl_int3472_unregister_leds(struct int3472_discrete_device *int3472);
->  
->  #endif
+>  drivers/platform/x86/samsung-galaxybook.c | 47 +++++++++++++++++++++++
+>  1 file changed, 47 insertions(+)
+>
+> diff --git a/drivers/platform/x86/samsung-galaxybook.c b/drivers/platform/x86/samsung-galaxybook.c
+> index 755cb82bdb60..fe549e224c17 100644
+> --- a/drivers/platform/x86/samsung-galaxybook.c
+> +++ b/drivers/platform/x86/samsung-galaxybook.c
+> @@ -54,6 +54,7 @@ struct samsung_galaxybook {
+>
+>         struct work_struct block_recording_hotkey_work;
+>         struct input_dev *camera_lens_cover_switch;
+> +       struct input_dev *hotkey_dev;
+>
+>         struct acpi_battery_hook battery_hook;
+>
+> @@ -197,6 +198,9 @@ static const guid_t performance_mode_guid =
+>  #define GB_ACPI_NOTIFY_DEVICE_ON_TABLE          0x6c
+>  #define GB_ACPI_NOTIFY_DEVICE_OFF_TABLE         0x6d
+>  #define GB_ACPI_NOTIFY_HOTKEY_PERFORMANCE_MODE  0x70
+> +#define GB_ACPI_NOTIFY_HOTKEY_KBD_BACKLIGHT  0x7d
+> +#define GB_ACPI_NOTIFY_HOTKEY_CAMERA         0x6f
+> +#define GB_ACPI_NOTIFY_HOTKEY_MICMUTE        0x6e
+>
 
+Just a minor nit but the spacing for the values on these last 3 new
+lines is not aligned with the existing lines above it (it might fail
+checkpatch? have not tried myself...).
+
+>  #define GB_KEY_KBD_BACKLIGHT_KEYDOWN    0x2c
+>  #define GB_KEY_KBD_BACKLIGHT_KEYUP      0xac
+> @@ -1223,6 +1227,22 @@ static void galaxybook_i8042_filter_remove(void *data)
+>         cancel_work_sync(&galaxybook->block_recording_hotkey_work);
+>  }
+>
+> +static int galaxybook_hotkey_init(struct samsung_galaxybook *galaxybook)
+> +{
+> +       galaxybook->hotkey_dev = devm_input_allocate_device(&galaxybook->platform->dev);
+> +       if (!galaxybook->hotkey_dev)
+> +               return -ENOMEM;
+> +
+> +       galaxybook->hotkey_dev->name = "Samsung Galaxy Book hotkeys";
+> +       galaxybook->hotkey_dev->phys = DRIVER_NAME "/input1";
+> +       galaxybook->hotkey_dev->id.bustype = BUS_HOST;
+> +
+> +       input_set_capability(galaxybook->hotkey_dev, EV_KEY, KEY_MICMUTE);
+> +       input_set_capability(galaxybook->hotkey_dev, EV_KEY, KEY_CAMERA);
+> +
+> +       return input_register_device(galaxybook->hotkey_dev);
+> +}
+> +
+>  static int galaxybook_i8042_filter_install(struct samsung_galaxybook *galaxybook)
+>  {
+>         int err;
+> @@ -1260,6 +1280,28 @@ static void galaxybook_acpi_notify(acpi_handle handle, u32 event, void *data)
+>                 if (galaxybook->has_performance_mode)
+>                         platform_profile_cycle();
+>                 break;
+> +       case GB_ACPI_NOTIFY_HOTKEY_KBD_BACKLIGHT:
+> +               if (galaxybook->has_kbd_backlight)
+> +                       schedule_work(&galaxybook->kbd_backlight_hotkey_work);
+> +               break;
+> +       case GB_ACPI_NOTIFY_HOTKEY_MICMUTE:
+> +               if (galaxybook->hotkey_dev) {
+> +                       input_report_key(galaxybook->hotkey_dev, KEY_MICMUTE, 1);
+> +                       input_sync(galaxybook->hotkey_dev);
+> +                       input_report_key(galaxybook->hotkey_dev, KEY_MICMUTE, 0);
+> +                       input_sync(galaxybook->hotkey_dev);
+> +               }
+> +               break;
+> +       case GB_ACPI_NOTIFY_HOTKEY_CAMERA:
+> +               if (galaxybook->has_block_recording) {
+> +                       schedule_work(&galaxybook->block_recording_hotkey_work);
+> +               } else if (galaxybook->hotkey_dev) {
+> +                       input_report_key(galaxybook->hotkey_dev, KEY_CAMERA, 1);
+> +                       input_sync(galaxybook->hotkey_dev);
+> +                       input_report_key(galaxybook->hotkey_dev, KEY_CAMERA, 0);
+> +                       input_sync(galaxybook->hotkey_dev);
+
+Here is where I was talking about from above. Maybe this should
+instead be something more like (with correct spacing etc):
+
+input_report_switch(galaxybook->camera_lens_cover_switch, 1);
+input_sync(galaxybook->camera_lens_cover_switch);
+
+Also I guess it would need to keep track somehow if the lens is
+"covered" / blocked (value = 1) vs not (value = 0) and toggle between
+those values each time the key is pressed?
+
+> +               }
+> +               break;
+>         default:
+>                 dev_warn(&galaxybook->platform->dev,
+>                          "unknown ACPI notification event: 0x%x\n", event);
+> @@ -1397,6 +1439,11 @@ static int galaxybook_probe(struct platform_device *pdev)
+>                 return dev_err_probe(&galaxybook->platform->dev, err,
+>                                      "failed to initialize firmware-attributes\n");
+>
+> +       err = galaxybook_hotkey_init(galaxybook);
+> +       if (err)
+> +               return dev_err_probe(&galaxybook->platform->dev, err,
+> +                                        "failed to initialize hotkey input device\n");
+> +
+>         err = galaxybook_i8042_filter_install(galaxybook);
+>         if (err)
+>                 return dev_err_probe(&galaxybook->platform->dev, err,
+> --
+> 2.53.0
+>
+
+Otherwise for me everything else seems pretty reasonable. Nice finds!
+The only other thing I am thinking about is if someone comes and looks
+at this with fresh eyes, it might be confusing why there are multiple
+different hotkeys that seem to do the same thing (why they are there
+and what is the difference between them). My gut reaction is this
+should be written down somewhere, but I'm not sure if the preference
+would be to update the docs vs some comments in the code -- any
+feedback from maintainers on preference for that? :)
+
+And of course any other input from maintainers is also welcome!
+
+Thanks again and best regards,
+Joshua
