@@ -1,65 +1,74 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.18])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-yx1-f48.google.com (mail-yx1-f48.google.com [74.125.224.48])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6402D2475F7;
-	Fri,  3 Apr 2026 00:47:15 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.18
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9AE6532E6BD
+	for <platform-driver-x86@vger.kernel.org>; Fri,  3 Apr 2026 07:09:34 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=74.125.224.48
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1775177239; cv=none; b=diLdf/VFQtn8Px3lOu4ObnWHAVdbka3tMEcUiFHpUb7vvKoLitXui+Ex2UZBO5ps+8aknLGS2E4UQPXGJaQFi9q8zLXfH9B5CPsQs9CZ01eJRHf7k0xhm+sutT7859ZE/DTwXV2b9YZbo48m7+KprsrWshf7K5XLMRtyfROoeYw=
+	t=1775200175; cv=none; b=YHKkHQjoIeu94rskORrfIPDfkJMIb8SymZu5bEV8HabKtBsao4itTaIB0Cv9cR67y/OYGTCmSrPS9Lxpx4+GV+Pq4ofaEpKjGkVzy7qh4QKDE9tjhJ/q/Oq8bMw1OsKeRPnsRVA+t4O4Jl4yTHx8h4sp9fBUeetTIwhyNoyPDBE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1775177239; c=relaxed/simple;
-	bh=LTeQaUWHvsph4joDVjSb9M34kexlgvWpIEuOIo8m45k=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=pjECrcifRhmu9KtylB/sNh+JELasjPMiGj3s/B+8dgTfH5qKt+zjTFa+q2H6XXfUJHm+E9RgpsDTI2tSCtGwx+d7CS3rneGXn6yIqGZFhdcC34d0mlFI2qnXtKCnyLrkxv+zsroIo35HmQOqE8yBlMeHHqmN/Ecopf6ESWT8yVU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=U48ykSlU; arc=none smtp.client-ip=192.198.163.18
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	s=arc-20240116; t=1775200175; c=relaxed/simple;
+	bh=Morcopt2lGB0ZpVtL8FAdELel3jz9tKgQ0+/EqZDV64=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=pZpZ/8yMskPayafIV8TSIXKO6mF4lV6aX+Ic27Uw/HKC0HtncN4JC8gi+ZIOgNFEsZ9/tXUZSNG3/5HBgcV0mJcDUXE7YHG3RS6wYw4JFJ2dJm21CrWUFZ6sRV3ORPCVF9J9ePOEjredMzgLpShy0ojSRMzLUZBpPdfuX+Ix7R4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=Mvt6Sv0g; arc=none smtp.client-ip=74.125.224.48
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="U48ykSlU"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1775177235; x=1806713235;
-  h=from:to:cc:subject:date:message-id:in-reply-to:
-   references:mime-version:content-transfer-encoding;
-  bh=LTeQaUWHvsph4joDVjSb9M34kexlgvWpIEuOIo8m45k=;
-  b=U48ykSlUY9aTzo8vPT01Rs/ha45rlTkJmjY9jtbp96OIBckaoAE/LGAx
-   OGMUdL9b+OhBH96C0/R4TGVd0wGMSDo72oB4ZAfrvvGaI8wU23P3PGG3d
-   QygQT+h5VYF47+qbZhssFBm644AY3ZGLiQoKh0SHZrSPneGiNpKlYu6aq
-   fJOXK8rQ/v5g3t9dy7DgxVCFdRHAmSmvuHpkpqHeXCRvArF/Yeiz7WT44
-   Pkj9vfayXgyROl6BWDqqg1vxeU5W1OfyJZFy9TIw0l0meCG7u9PF7abXz
-   MntkYCAQv2uD2Qwp33ak3/d3TZK+UsttBl0BeyMm2G8vdTC45tyapzaOb
-   g==;
-X-CSE-ConnectionGUID: 8SCQOLHOR6ezwF061YDvEQ==
-X-CSE-MsgGUID: cJaAnKP8Sc+VkyXG42WqLw==
-X-IronPort-AV: E=McAfee;i="6800,10657,11747"; a="75417225"
-X-IronPort-AV: E=Sophos;i="6.23,156,1770624000"; 
-   d="scan'208";a="75417225"
-Received: from orviesa007.jf.intel.com ([10.64.159.147])
-  by fmvoesa112.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 02 Apr 2026 17:47:15 -0700
-X-CSE-ConnectionGUID: cwzy6uNBRs6F9CIbi7vQLw==
-X-CSE-MsgGUID: 8WIzhzOsTSegU3kRNW153g==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.23,156,1770624000"; 
-   d="scan'208";a="227371056"
-Received: from intel-nuc8i7beh.iind.intel.com ([10.223.163.35])
-  by orviesa007.jf.intel.com with ESMTP; 02 Apr 2026 17:47:12 -0700
-From: Arun T <arun.t@intel.com>
-To: arun.t@intel.com,
-	johannes.goede@oss.qualcomm.com
-Cc: sakari.ailus@linux.intel.com,
-	arec.kao@intel.com,
-	ilpo.jarvinen@linux.intel.com,
-	dan.scally@ideasonboard.com,
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Mvt6Sv0g"
+Received: by mail-yx1-f48.google.com with SMTP id 956f58d0204a3-6501547d7edso1714942d50.0
+        for <platform-driver-x86@vger.kernel.org>; Fri, 03 Apr 2026 00:09:34 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20251104; t=1775200174; x=1775804974; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=czTHxpPx48e5trNDy9Haci3gHx5owBw1LqTAi7hI1ps=;
+        b=Mvt6Sv0gW7pfWm3Lka5QwSTN1cs24Iax6va6WIT6Bs9hA3rKnM2GUVbHMil3/rKWBd
+         9Hg1Y2IejeVJZee9dbWKeiZp/fqxl3RM9rSFZdr0C1iG6DhATMGBtO/SCcdDYLQfbej/
+         1aiAF27WmvelqYIRIie1//vxXQqwAPkCHyW6XHI4cg76JupVU3RHHO+0yZxWzNZMXAZu
+         CbHRMx87xdyQqa81KiP0Q7qF0uAgAJOZc9sk6LsWlzn3m39wikhVPYgyUnRnfwFLzkBh
+         s5vswF3+4dYVV5fUYa4hAFopF62PAt69urxH2XC0pipzZ5/qeDELRMs2wZzGEXIxIGho
+         CevA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20251104; t=1775200174; x=1775804974;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-gg:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=czTHxpPx48e5trNDy9Haci3gHx5owBw1LqTAi7hI1ps=;
+        b=AZ76pfd2XPO5fMBh+RUs/OExCo9dMIjJDzXRrWqEd6pa8GPkv6D8gOA9rvZA+0pVYG
+         5g6vk503cbhja2xeUyhb5f1EfZepCQUtJlBv+/7+xfJn0F+6rHAF9kEi/kd8do+DZpvW
+         32+f6/mfIN93d5IsDzrO0EnfVI7+fCdspdDyfk9v4d/mrpuyfzDNi6+xAcvaKqhDQ5g2
+         wgu6bYip8t4yaai5JrHDld4qWKQ126sDT7zC/O8rHS/5Q+wXJcF5e/5mVLaaPKnFobqY
+         oYFinPgW9L3JO53CK1Y4ywTpSa3/F9KDN/EWqTv24DU/YHBn2yyT4/6NwhCouNtk5crF
+         RQCQ==
+X-Forwarded-Encrypted: i=1; AJvYcCVgHZpCBUTfQPGaSH/lvUfL6axTAYJspkPBWhaPXqhUDVL4WlIfwULxPC8PFB/Kpq7QdlUWEdZWP4HK8B+qipNxOUwD@vger.kernel.org
+X-Gm-Message-State: AOJu0Yy4mliyJsCqaOqeXqRAT4iXo0NWIHGEp5GzELZow7VT5pulkHkW
+	Cw+vriIv3NtYuVuAzMfJgtfvQhV3Epk3GjIgHwYwwHmm6+Ek6fMPn7VY
+X-Gm-Gg: AeBDievsrDkxPoygKBMOrjFP0Eo9JUN5mXpMnJusfAd3ALw0IQspQN3KOCo/Yd7eqEc
+	x0MvbOlQm2IJ2t7D+qMis0wmtB35UE832WcL/5s7Lr/CnkbNkA8p9K0K0A0RRZIgthTQRiaElFg
+	dL0/h3uT2KiuTlRmG2tniMrleY4oaWhEAlKO5SYdPZO95Jw5vJRh1RvrdhzLyz0hUJ4Yb/9ukBS
+	nFjWm1p3Nd14tQy2icZh4hyM/RvgDJl7cBohR0JbKN8Ha3r2/a0vhBvb3+mo0MgzTBEdgDdUNKC
+	rp+dfoNx1h88KzJo9GprNkNN0r5JioA4st93bYIkzponcvCC2AF9Uh/zWdMWdRKjUjlbkgX+HnQ
+	ouNavzXTVnNwwgOs6yJ7CqLl3pG437X77ZZRc5xzGYr4OyufNaiSEjs3jerCegWHna3Xej376Zr
+	oLILY0RBSV38mqmX7/ywyYT62hybBj9CuMoClHbydT0UsGEOqqlHGSnhdR2I4fl8+PP53Zr1RsR
+	l8iuOIoKOfqpkDtd3UJZXNd
+X-Received: by 2002:a05:690c:a052:b0:79b:f866:e208 with SMTP id 00721157ae682-7a4d90a2e29mr18612167b3.43.1775200173567;
+        Fri, 03 Apr 2026 00:09:33 -0700 (PDT)
+Received: from tux ([2601:7c0:c37e:2360::17e2])
+        by smtp.gmail.com with ESMTPSA id 00721157ae682-7a3712ecc31sm19049057b3.45.2026.04.03.00.09.32
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 03 Apr 2026 00:09:33 -0700 (PDT)
+From: Ethan Tidmore <ethantidmore06@gmail.com>
+To: W_Armin@gmx.de,
+	hansg@kernel.org,
+	ilpo.jarvinen@linux.intel.com
+Cc: wse@tuxedocomputers.com,
 	platform-driver-x86@vger.kernel.org,
-	linux-media@vger.kernel.org,
 	linux-kernel@vger.kernel.org,
-	mehdi.djait@intel.com
-Subject: [PATCH v9 2/2] media: ov13b10: Support multiple regulators
-Date: Fri,  3 Apr 2026 06:10:43 +0530
-Message-ID: <20260403004044.4093501-3-arun.t@intel.com>
-X-Mailer: git-send-email 2.43.0
-In-Reply-To: <20260403004044.4093501-1-arun.t@intel.com>
-References: <20260403004044.4093501-1-arun.t@intel.com>
+	Ethan Tidmore <ethantidmore06@gmail.com>
+Subject: [PATCH] platform/x86: uniwill-laptop: Fix signedness bug
+Date: Fri,  3 Apr 2026 02:09:28 -0500
+Message-ID: <20260403070928.802196-1-ethantidmore06@gmail.com>
+X-Mailer: git-send-email 2.53.0
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
@@ -68,118 +77,42 @@ List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-The OV13B10 sensor driver currently handles a single regulator called
-avdd, however the sensor can be supplied by up to three regulators.
-Update the driver to handle all of them together using the regulator
-bulk API.
+The function sysfs_match_string() can return negative error codes and
+the variable assigned to it is the enum 'option'. Which could be an
+unsigned int due to different compiler implementations.
 
-Signed-off-by: Arun T <arun.t@intel.com>
-Reviewed-by: Hans de Goede <johannes.goede@oss.qualcomm.com>
+Assign signed variable 'ret' to sysfs_match_string(), check for error,
+then assign ret to option.
+
+Detected by Smatch:
+drivers/platform/x86/uniwill/uniwill-acpi.c:919 usb_c_power_priority_store()
+warn: unsigned 'option' is never less than zero.
+
+Fixes: 03ae0a0d0973b ("platform/x86: uniwill-laptop: Implement USB-C power priority setting")
+Signed-off-by: Ethan Tidmore <ethantidmore06@gmail.com>
 ---
- drivers/media/i2c/ov13b10.c | 47 ++++++++++++++++++++-----------------
- 1 file changed, 26 insertions(+), 21 deletions(-)
+ drivers/platform/x86/uniwill/uniwill-acpi.c | 7 ++++---
+ 1 file changed, 4 insertions(+), 3 deletions(-)
 
-diff --git a/drivers/media/i2c/ov13b10.c b/drivers/media/i2c/ov13b10.c
-index 5421874732bc..b0d34141a13a 100644
---- a/drivers/media/i2c/ov13b10.c
-+++ b/drivers/media/i2c/ov13b10.c
-@@ -8,6 +8,7 @@
- #include <linux/i2c.h>
- #include <linux/module.h>
- #include <linux/pm_runtime.h>
-+#include <linux/regulator/consumer.h>
- #include <media/v4l2-ctrls.h>
- #include <media/v4l2-device.h>
- #include <media/v4l2-fwnode.h>
-@@ -699,6 +700,12 @@ static const struct ov13b10_mode supported_2_lanes_modes[] = {
- 	},
- };
- 
-+static const char * const ov13b10_supply_names[] = {
-+	"dovdd",        /* Digital I/O power */
-+	"avdd",         /* Analog power */
-+	"dvdd",         /* Digital core power */
-+};
-+
- struct ov13b10 {
- 	struct device *dev;
- 
-@@ -708,7 +715,7 @@ struct ov13b10 {
- 	struct v4l2_ctrl_handler ctrl_handler;
- 
- 	struct clk *img_clk;
--	struct regulator *avdd;
-+	struct regulator_bulk_data supplies[ARRAY_SIZE(ov13b10_supply_names)];
- 	struct gpio_desc *reset;
- 
- 	/* V4L2 Controls */
-@@ -1194,9 +1201,8 @@ static int ov13b10_power_off(struct device *dev)
- 	struct ov13b10 *ov13b10 = to_ov13b10(sd);
- 
- 	gpiod_set_value_cansleep(ov13b10->reset, 1);
--
--	if (ov13b10->avdd)
--		regulator_disable(ov13b10->avdd);
-+	regulator_bulk_disable(ARRAY_SIZE(ov13b10_supply_names),
-+			       ov13b10->supplies);
- 
- 	clk_disable_unprepare(ov13b10->img_clk);
- 
-@@ -1214,14 +1220,12 @@ static int ov13b10_power_on(struct device *dev)
- 		dev_err(dev, "failed to enable imaging clock: %d", ret);
- 		return ret;
- 	}
--
--	if (ov13b10->avdd) {
--		ret = regulator_enable(ov13b10->avdd);
--		if (ret < 0) {
--			dev_err(dev, "failed to enable avdd: %d", ret);
--			clk_disable_unprepare(ov13b10->img_clk);
--			return ret;
--		}
-+	ret = regulator_bulk_enable(ARRAY_SIZE(ov13b10_supply_names),
-+				    ov13b10->supplies);
-+	if (ret < 0) {
-+		dev_err(dev, "failed to enable regulators\n");
-+		clk_disable_unprepare(ov13b10->img_clk);
-+		return ret;
- 	}
- 
- 	gpiod_set_value_cansleep(ov13b10->reset, 0);
-@@ -1475,7 +1479,8 @@ static int ov13b10_get_pm_resources(struct ov13b10 *ov13b)
- 	unsigned long freq;
+diff --git a/drivers/platform/x86/uniwill/uniwill-acpi.c b/drivers/platform/x86/uniwill/uniwill-acpi.c
+index faade4cf08be..945df5092637 100644
+--- a/drivers/platform/x86/uniwill/uniwill-acpi.c
++++ b/drivers/platform/x86/uniwill/uniwill-acpi.c
+@@ -915,10 +915,11 @@ static ssize_t usb_c_power_priority_store(struct device *dev,
+ 	unsigned int value;
  	int ret;
  
--	ov13b->reset = devm_gpiod_get_optional(ov13b->dev, "reset", GPIOD_OUT_LOW);
-+	ov13b->reset = devm_gpiod_get_optional(ov13b->dev, "reset",
-+					       GPIOD_OUT_LOW);
- 	if (IS_ERR(ov13b->reset))
- 		return dev_err_probe(ov13b->dev, PTR_ERR(ov13b->reset),
- 				     "failed to get reset gpio\n");
-@@ -1491,15 +1496,15 @@ static int ov13b10_get_pm_resources(struct ov13b10 *ov13b)
- 				     "external clock %lu is not supported\n",
- 				     freq);
+-	option = sysfs_match_string(usb_c_power_priority_text, buf);
+-	if (option < 0)
+-		return option;
++	ret = sysfs_match_string(usb_c_power_priority_text, buf);
++	if (ret < 0)
++		return ret;
  
--	ov13b->avdd = devm_regulator_get_optional(ov13b->dev, "avdd");
--	if (IS_ERR(ov13b->avdd)) {
--		ret = PTR_ERR(ov13b->avdd);
--		ov13b->avdd = NULL;
--		if (ret != -ENODEV)
--			return dev_err_probe(ov13b->dev, ret,
--					     "failed to get avdd regulator\n");
--	}
-+	for (unsigned int i = 0; i < ARRAY_SIZE(ov13b10_supply_names); i++)
-+		ov13b->supplies[i].supply = ov13b10_supply_names[i];
++	option = ret;
+ 	value = usb_c_power_priority_value[option];
  
-+	ret = devm_regulator_bulk_get(ov13b->dev,
-+				      ARRAY_SIZE(ov13b10_supply_names),
-+				      ov13b->supplies);
-+	if (ret)
-+		return dev_err_probe(ov13b->dev, ret,
-+				     "failed to get regulators\n");
- 	return 0;
- }
- 
+ 	guard(mutex)(&data->usb_c_power_priority_lock);
 -- 
-2.43.0
+2.53.0
 
