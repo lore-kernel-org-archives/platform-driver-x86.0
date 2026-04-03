@@ -1,251 +1,210 @@
-Received: from mail-ot1-f41.google.com (mail-ot1-f41.google.com [209.85.210.41])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from SA9PR02CU001.outbound.protection.outlook.com (mail-southcentralusazon11013059.outbound.protection.outlook.com [40.93.196.59])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2EC403845B5
-	for <platform-driver-x86@vger.kernel.org>; Fri,  3 Apr 2026 13:05:10 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.41
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1775221514; cv=none; b=dHcjJaROJ8A2ySajP6oQYaiI+icwp/wnq/RhnMu7zvI+L9QOyH9nXVswLFHiSSsr62SiCg/ir7KXhgYJhWURac2RGpziIX1dWlMl1ywA0Wk9saIDkM19OvdWJnjbZBaxbFr6ujwgWfWoPb3fhgY1bMpvJpnba+ACpj4TsQzbRIc=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1775221514; c=relaxed/simple;
-	bh=cU4zrVihhAyukwAPUendYFq1CBw7lqCe9U7oQrapWrg=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=VK/RJBKFeV1+zbw2j8oXuwcsDaQ1r7fdSJAIacL6uksyM79Pg+rHkNZDH7JiFCkB5MpkScovIaiVNSlqF/M7/Lm7gxAdYaU32biBnMg+kb+mzfxlg7mkKgtXPFKE9EySX704XDgYaN9tmUgn/NpMCW+r4oNLGrxeYhTxJplLBzU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=joshuagrisham.com; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.210.41
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=joshuagrisham.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-ot1-f41.google.com with SMTP id 46e09a7af769-7d556c1a79eso2221688a34.3
-        for <platform-driver-x86@vger.kernel.org>; Fri, 03 Apr 2026 06:05:10 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1775221510; x=1775826310;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-gg:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=oSJuyXivPnv8jUYTe5aVcM1VjUEpcQKUQGG47CduFdU=;
-        b=sVXsFf3MOH5iiJWccVzDMZMFem+jFPvZBglmdxcxTChvc5eI2V5ElueuUHG9x7xVGd
-         pxsiNuwGyrCjvLTdwBsk3bVlBm/rbeLrEhcminqjFQsJvELwehry2zuZuL3Vpr3/70bb
-         7bZ+Me1f3un567Kg8aSSp+JHYAjEtUhpbVUQ+G4KK8hmHH+PHu/LMOzLo7YOw6FzWfEV
-         0a0e0PUDDc6xEJIOm2vF/30vbiiyfKNJ3QETm9qc1NkR+oRNHiSF5uI4uQBZLLqUrao5
-         dIGqGN6gdze5R7tyPivYsbHDhePUWnvegVvkcD60PRRrJcabgJuohTDjle9MetjTt+yG
-         W1fQ==
-X-Forwarded-Encrypted: i=1; AJvYcCWWoVYfSkckPWx74DoVPfGcXdbXnXBJ4ETkeMXp8M9r5Sn0u2Sc+qcf2neoO5Je4Zq/0G5GHwdyAipNbNhT7ei2ycjQ@vger.kernel.org
-X-Gm-Message-State: AOJu0YwBRWez8tu0EkteDd3xk4RYusJ8fiA1AD1lQGZtaXx9OLWfzerg
-	vG2WZ+xm/mA+GymnQjth1IbPsUYZN/K5eCKwISloqThWeMBpScARZoDrYCgKq8p3
-X-Gm-Gg: ATEYQzw8uiB8MBJWCRaKWYNpcVZTeWw6iYH3qMzoQsfu8Ni6CZc5bsfuDx0RfC4BgqR
-	3KPaoaC0MjkmCisodwXU0LXGQxnsUzJ2ZNozQnuULOeZbAEVDoB5znJidHb8BmbLf2DtWsXm03P
-	BNYOowmvlaYnZLZmBVEbsIUXcUbLmvUMLSa6fixhuCDR3K9SkIwB0EsoqtS8K+2chzAXiGEHIv+
-	sL7PgLuF38lxgVi6OYWkbsijz3WEgGk5cZgk9HQmULG5XsZzRaUHxrjus6FJ+7Ddtlpnx7d5Ip+
-	25uQAUz2e5NBC+c+HGwRwqzhs8SdPh22OT82OxvYx8zyGhpJuJwWoN5F18MSqA+lWhxjfC179EO
-	yaX4d+cZqqd00dCa3aRpt/IyDI/TmM4brS2NxFboQgoXoBscQnqvD6q5it7S2EQmIh5dhnSG03/
-	pXG7zuIbxvhkxqaLzr8KXglRq8PPIlfxNYigNmSVz/VN3HDv1NkiYFXXAQUyk7kB0li74=
-X-Received: by 2002:a05:6830:2e14:b0:7db:b7ae:ef05 with SMTP id 46e09a7af769-7dbb7aef5cdmr1026239a34.4.1775221509564;
-        Fri, 03 Apr 2026 06:05:09 -0700 (PDT)
-Received: from mail-oi1-f181.google.com (mail-oi1-f181.google.com. [209.85.167.181])
-        by smtp.gmail.com with ESMTPSA id 46e09a7af769-7dbb40b1507sm2331488a34.21.2026.04.03.06.05.09
-        for <platform-driver-x86@vger.kernel.org>
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Fri, 03 Apr 2026 06:05:09 -0700 (PDT)
-Received: by mail-oi1-f181.google.com with SMTP id 5614622812f47-45f053b7b90so1062983b6e.0
-        for <platform-driver-x86@vger.kernel.org>; Fri, 03 Apr 2026 06:05:09 -0700 (PDT)
-X-Forwarded-Encrypted: i=1; AJvYcCU4HK9zPS1mMzDjJZOjV5BmC2R6gz3YBKsCXq02PJwsabBVwfPNgzCoStDVLJXikbsTpm01FGJ5cYnkYLoTDhhjDTYp@vger.kernel.org
-X-Received: by 2002:a05:6808:302a:b0:467:1c9e:213d with SMTP id
- 5614622812f47-46ef54f5656mr1439389b6e.10.1775221509038; Fri, 03 Apr 2026
- 06:05:09 -0700 (PDT)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6CF4A3AB26C;
+	Fri,  3 Apr 2026 13:23:46 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.93.196.59
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1775222627; cv=fail; b=Uxto+joQxiprxRcFCnoWpi1DFNWKAPs1nSwD2q+vNaldSv43/YNrb/I6CGFrPIMwo2PyL7Qxlufm8Gs+l039r2RflSDxrUpZiYjHehQAcAB6F7a+AzQMLqDEh3OLgaz8JUpOz7jWYLwhMgLHNUmbz7w7smbYIQZFlIZ27GIYQWg=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1775222627; c=relaxed/simple;
+	bh=bpECJ2n4t7SoM4N4woTzlRUUfPSyABFOM7MFnBg+s6M=;
+	h=Message-ID:Date:Subject:To:Cc:References:From:In-Reply-To:
+	 Content-Type:MIME-Version; b=Fxan/3VY1JVhMNyFlmPGeqV74Y1ZbzY+R76BhviWYMhHnqcQD3/S1HZBiD8tz4GB7/vzFY52gZxxv+UtviXqbhjOjEskDXB/vAxutMpOPihe8bmASSlfAEZ7lxvfvRmUqszZskfaODU5MimT1Ddcuw+lGWZA/3hTXOK9wxDIzPY=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=IEPw6v8Q; arc=fail smtp.client-ip=40.93.196.59
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=amd.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="IEPw6v8Q"
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=uoZ14pLlZICmdzWKH9dNxkrep9EkAggCyjAHHtbW9VihZW7GTyc9OJ2nPPIlatzkKlml/oHA2/ef0x9kPtz7gcN3PG4yx29SbGnhnhyP48Z5Gz8+Hitk2njqbg6+42FTEGR+SDK5Tu973kJtFvE+owVoDGd3ITuVFnHNVdU1BsLOLQ1JJtA6lthJFJOKgfvh0jeRpBiOjaHSr3RbdkPbF2WrNsHg+x2Cv3NCbUkORZBnu+M2q2y62S1mj+eI6QcX8stH9iULnY7SFOUIYiZ9aBksIu33rMSKXFf4RnIEcGXClIRfApnVe7J+Eygp1kOEZarpO0f+ZfG0yiA5GSbbxg==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=z+RPGj5zuAJgN5ZHITsaQeOEYhN/vSYfCLbgow2M3SQ=;
+ b=lKgCfRKWG+wzU4kde4Mo4UutKWVmxwDV6uLwRfC0FV+NjpW5zc2MVeS3A+8EPYiI2rdrkPiUj2pZY5++25cMwguZCEKpLJubmwKdjFvNJQOB7nLGbsvzW4UOCXG/4JrcEvrDuqm7/apknFi6koahK2cd7IiYYBh3B5pyUBElF7lmiFqxw9mWS3RBO3sQNi+Ehrf7RCvp+wTDL7J1TUZFv/J6JR8AE+nCJ67T8TDhpXYHwQ2sBJ8fcQgzhHNVHI6yHgz2qUGGsN+m4FoGaV/jRF3nOygMuU2VMEAhsjT8liBwzwgVZCjOyNZvLtCTCC69ykBxt1p8xrizjrZuoTc0NA==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=amd.com; dmarc=pass action=none header.from=amd.com; dkim=pass
+ header.d=amd.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=z+RPGj5zuAJgN5ZHITsaQeOEYhN/vSYfCLbgow2M3SQ=;
+ b=IEPw6v8Q0bqRfa2mQwyF53KzzTU51qhNYSsLMCYQBF8/IHTCl24VIOObvsvp8IVPeoTjSkOt2MzQznNH3oFkv5oR0gJZgrV91e2kMImoRj++GEfjsRurVoI2CajMUsmeR7NpVpT1sobkIcL/1Ph3zbSQOZKUbc1lfDcH9sXseEs=
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=amd.com;
+Received: from SA0PR12MB4557.namprd12.prod.outlook.com (2603:10b6:806:9d::10)
+ by PH7PR12MB9222.namprd12.prod.outlook.com (2603:10b6:510:2ef::8) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.9769.17; Fri, 3 Apr
+ 2026 13:23:42 +0000
+Received: from SA0PR12MB4557.namprd12.prod.outlook.com
+ ([fe80::885a:79b3:8288:287]) by SA0PR12MB4557.namprd12.prod.outlook.com
+ ([fe80::885a:79b3:8288:287%5]) with mapi id 15.20.9769.018; Fri, 3 Apr 2026
+ 13:23:42 +0000
+Message-ID: <4978c9b7-00bf-4562-baae-098bd0d09ba4@amd.com>
+Date: Fri, 3 Apr 2026 08:23:40 -0500
+User-Agent: Mozilla Thunderbird
+Subject: Re: [BUG] ASUS ProArt PX13 HN7306WU: amd_pmc s2idle S0ix corrupts AMD
+ 1022:150b root port, NVIDIA dGPU returns header type 7f
+To: Joyful Lee <joy@joyfullee.me>
+Cc: platform-driver-x86@vger.kernel.org,
+ Shyam Sundar S K <Shyam-sundar.S-k@amd.com>, Hans de Goede
+ <hansg@kernel.org>, =?UTF-8?Q?Ilpo_J=C3=A4rvinen?=
+ <ilpo.jarvinen@linux.intel.com>, linux-pci@vger.kernel.org,
+ Bjorn Helgaas <bhelgaas@google.com>, linux-acpi@vger.kernel.org,
+ "Rafael J. Wysocki" <rafael@kernel.org>, linux-kernel@vger.kernel.org
+References: <CADj6jrgK+sRXoNaYH90Rdc8DYEFK2iSF4vkJC=KE4UaZ73y67A@mail.gmail.com>
+ <a935b2e3-e11d-47ec-af47-7eb7e86a9dd0@amd.com>
+ <CADj6jrgcuz=Bcp0q7BHVizVeF=C2r_8qXw7r0Mc5X9Vd8uWK-w@mail.gmail.com>
+ <4192851c-20d1-4185-9f63-32c66ed2a664@amd.com>
+ <CADj6jrgse2NksUgkHUzTm0332ba4qnV=0QOJAnupS=Lr=5hh4A@mail.gmail.com>
+Content-Language: en-US
+From: Mario Limonciello <mario.limonciello@amd.com>
+In-Reply-To: <CADj6jrgse2NksUgkHUzTm0332ba4qnV=0QOJAnupS=Lr=5hh4A@mail.gmail.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
+X-ClientProxiedBy: DS7P222CA0016.NAMP222.PROD.OUTLOOK.COM (2603:10b6:8:2e::8)
+ To SA0PR12MB4557.namprd12.prod.outlook.com (2603:10b6:806:9d::10)
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <8e55cf70-5147-849a-ad5c-24a32727e620@linux.intel.com> <20260326031506.35280-1-ayaanmirzabaig85@gmail.com>
-In-Reply-To: <20260326031506.35280-1-ayaanmirzabaig85@gmail.com>
-From: Joshua Grisham <josh@joshuagrisham.com>
-Date: Fri, 3 Apr 2026 15:04:57 +0200
-X-Gmail-Original-Message-ID: <CAMF+KeaTRH2JGs53VSJ_WMFJQMBW4wDbCkW6u3=ySxkPknDvpQ@mail.gmail.com>
-X-Gm-Features: AQROBzCD1liV_n1jedVrHBXlSk37KHjXExt4M2fNrcwTnleC6OIJIUYYhMKFPTA
-Message-ID: <CAMF+KeaTRH2JGs53VSJ_WMFJQMBW4wDbCkW6u3=ySxkPknDvpQ@mail.gmail.com>
-Subject: Re: [PATCH v3] platform/x86: samsung-galaxybook: Handle ACPI hotkey notifications
-To: Ayaan Mirza Baig <ayaanmirzabaig85@gmail.com>
-Cc: ilpo.jarvinen@linux.intel.com, ayaanmirza788@gmail.com, 
-	josh@joshuagrisham.com, platform-driver-x86@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: SA0PR12MB4557:EE_|PH7PR12MB9222:EE_
+X-MS-Office365-Filtering-Correlation-Id: c7073c3f-95d0-4a12-6c79-08de918439ba
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam:
+	BCL:0;ARA:13230040|366016|1800799024|376014|56012099003|18002099003|22082099003;
+X-Microsoft-Antispam-Message-Info:
+	6kqPsO/NC0vsXvwIcJJiHDivirQoysp9nbewvfDNm/smcC449Jo0ibV5JpNi3M0dnxhBw1CpUzUu8pvL98OzK47z7qC30XAe50jeuU13eufBGaMWG0e9xmP44IWsAf8NEtRUTuwErXSb5FMuyNRxzN6giMcCUNc53CUDY3QIy/ddDi7xVtl5N+NT9bO9S6gUpF+cAuz89A9OcfX3girCyH6jI3s04c5UANdT+4fPQ5qbFAv16aRVZ/t9VaGKRDLoOXkfslXT8cKEiOGCNcrIKZfPBzpjz2MbycUHR9WtinTRC57X2TMpGv2U+1YtM+g1px66v5PNlz1ACdXcjRFX9jbPT+SHy1ZIZjbBk+U8wx+qIkRyzEsujJFK5BFG2ijUuzINt/lvU4wIWoXdlo5k1KTmO8NvKS8+MT0Wfkl6QQppJcWxFsF0FOYX86OaTaFy9CmQYD446J0sKlkex9bUXGLVWVFKi6O4J9GLijLuLr1fFRZJ0gEiOHUG0+v8HensNsh8rgHuGOpsFHBWNHJDbK7U+CIGjkOX+vs0Bb962zM+n1ulZrYExHZR7cqBBbSBxt4xF9UAClnHc1Ux5VN8UwYWOipqYzevBbpnSX/cXAPCd47BwyTHV1D1kWAET4N1RCSseewPtdmHDsN4NdxlV7dZjCPz9GKg6UZmSSlgtXxkAyXMKqZZvs0+IfrP6K1EjYZKLk/D6MfDmiiCT+iBtgzdWv+pfOQPLdvpV8DvM3c=
+X-Forefront-Antispam-Report:
+	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:SA0PR12MB4557.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(366016)(1800799024)(376014)(56012099003)(18002099003)(22082099003);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0:
+	=?utf-8?B?R0wwTU9QS2NQVlhxNWE4clNoc2FoUXdxZVFZTlJYckJIeTA3MUxrUzBWRTFy?=
+ =?utf-8?B?Wm92dGlOSWpZS1g1VUhNRVFNT3d6TlVmUzdzeTlsYmNkSEF2b0EwZ2ZhUUpu?=
+ =?utf-8?B?NHFteHAveHZIYnJVTHNPYzdhQlpidFlvbldUMHlDVmhsSnhraXF4UzN1K0l4?=
+ =?utf-8?B?TCtaOFBNTUFjU2JlZlhiaUtWR0p2WC9Mb2w2cTB3ZDkzbDR6aVoxYnJ0T01G?=
+ =?utf-8?B?MlBmdHIxaEdqZXVLN3BGYWJQcWx2UkFROXlxZHV2Z3BPM3Mrb2Yvbmw5WEFH?=
+ =?utf-8?B?aXIzeHc0T0VEcTFYeGJRb0hHSjYrTC9PSU80NW9zY3VBdEZ3V29uZlE5d1ho?=
+ =?utf-8?B?MTQraGc2M3V2dW9uQjFNYkcveU8xSllNVmtBQWNCbjl1V0tDRVhhcmh3Tmsx?=
+ =?utf-8?B?T2l1Ulpva0xrZXg3VUdDVldZTUthdk9DZGxjc1M4cjBoUWljQ1Fja3JwYTVn?=
+ =?utf-8?B?NmM5enBLZ0EvQUNXdVB2cDFMc01vajZvbDFaZ0QxVjIyb2JOR2xLUXFuTUFu?=
+ =?utf-8?B?dlY3SC9XaHlZZCticDFGVE9YVWZKNEwvK3FvUHo4b1ZNUHRkbmZlamtDVk9E?=
+ =?utf-8?B?V2hzN3BoSG8rWHJKSnF0RnFhdEhTUUhNSElRU0ErQy91ZGtHQWhvRnFieHcx?=
+ =?utf-8?B?cUllc0xZanp1RUNNeWRIejJ0MW1lbjRtZUc3UTBJUUJmZ24rTGdxcXB0VE9Q?=
+ =?utf-8?B?ajJaVkZDRXE3N2hEb2orQUpndlVEQmJnSWpMUmNtZXprZUI4eFR6VitYUmJJ?=
+ =?utf-8?B?eFQ1Q3Y5d2hYM2VUZlIzV212ZjVhaEFMKzJBS291dkd5MUw2VWlUb2Jza0ln?=
+ =?utf-8?B?ay9qZVFqN1JRTXg0WFhqY1ZZNzhyYkZxK1Qyd2FOcVJlN2RPS3V4TVc5ZTNH?=
+ =?utf-8?B?bU4rNzZvaFhLRVZEUUlTZXg5MzVOeWptSm1od3dSOHJCcW5qZkxFbVdkbEpK?=
+ =?utf-8?B?eU1ZWXphVlFqYldsZjFOdkxzYnlXZzkxTnRRNkFpcDRYdDU2MldIZnZ3SWpr?=
+ =?utf-8?B?UFVkRXhLSk1mZGg5aXM3VDJRSGRWNDRKaVN2eXV5bytnY2UzdmNTa1IwMjVu?=
+ =?utf-8?B?K2I1ZUZqTjJ3cjdWbndBclZqVFg1TkRPcXBvUlJGVU5Na2xKTHBCUndkZ01w?=
+ =?utf-8?B?aERVRUdIRkdHQ3Iwc3lFRDlETTIwSUFVMCtHcUtqcjI4emNwWUd5VkJGNEhQ?=
+ =?utf-8?B?Ty90V2svMzd6SHBXcTZIbW15STFHNU9RWDlSbmZWTzc0c1R3QjVGYVo5MFoz?=
+ =?utf-8?B?enNYbExET3loY1p5akU5SWRKUTBYN2JlYzFEeFBNejdONXJLcWZDSFFEVWc2?=
+ =?utf-8?B?OERjTGhvVVkwaElkMGdDeG9HM2NYc2dzV3RzU1k2VlNIQ2pqcGsvZFAvRkZi?=
+ =?utf-8?B?c0tyT1JMUUF3Q0RreXlZZ2VrYk5jMDFHODQ4NkJmNmRLOHlFclZEYU9jRmhO?=
+ =?utf-8?B?dkNReFFQUlRIUUhVZk1RS28rOUJ2V21kL0tCRjFqWHRjb1V6RlpGaFpkWVAx?=
+ =?utf-8?B?blhEcjRvaVFhVGVxZUxVczIvRVB2eHlITjJpSjRNeFViQUhRa3VnMGlXZmI1?=
+ =?utf-8?B?VGhCWHF6cVovSGNsei9xbG14eTQ0OVZ0b2NSQml6MkZlWDdUSytMRnh6c3lP?=
+ =?utf-8?B?RGhIUGg3aVcrUW5pa2ZhZzEyWk9HeDMvZlNsY3hNMnEwa2k2dmZLTENScUtu?=
+ =?utf-8?B?RnU2OHk0TXZ0RHZnTmVuSmhMZkdQV2FkWTJJZU9vb0pEVDZQa00zY3dFWSti?=
+ =?utf-8?B?V0g3and2SlZUMHpCNnJnV0VTamoxR1NobzBtMVVRdzN4NEtWdU1lNGVMUVhY?=
+ =?utf-8?B?Q2tQU2FnVVcwRzk0SC9FejZ1azdQL3VFWi9ZWldOREVVQXpPRGtoMWFBTElV?=
+ =?utf-8?B?QlJwUk56K1l1Tlo1aXZybzRyVnQzSk5LS2VUYU9tNmpEM2ZtRXdHdWducU9Q?=
+ =?utf-8?B?TVBzNU9NQXRYQWJoQkZkL1dlZ3pYblN0MUVHL0dSc3JZWmNiVnVNTXJ5TSsz?=
+ =?utf-8?B?SlUvQlhKcWUwNEkveU5samVNVnNaQWM4UjdpSUVTMWJoZy8xcVg4WGwvKzBX?=
+ =?utf-8?B?NVVzMUR1Rmt0K0lRanRQQmxtVUI1WWs1ejRRdm00MUloUUdzM0h2alJUSFVD?=
+ =?utf-8?B?MUVCQVZESVJBVzhHbEtYVkU4V0NkQ2JKREpUdGNiT2Jxdzk3eDV6VVNlbTVM?=
+ =?utf-8?B?UGRWc0VzVkVBVktmZUdLQnJDSDNpTjJsTlZGOHJHZ2JDbkxmM3YvZmU1QkM3?=
+ =?utf-8?B?QzR5YW9LTmhZVER3Z2hVbERDdWJraThlcUY4TVF2YjlNQU1lYkJ0MCs3VkFQ?=
+ =?utf-8?B?OTUxc28vb0lRNFMvR3JBOGdoTmQxVlpnK3BWZHNCQnNoTXJ3WmNOQT09?=
+X-OriginatorOrg: amd.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: c7073c3f-95d0-4a12-6c79-08de918439ba
+X-MS-Exchange-CrossTenant-AuthSource: SA0PR12MB4557.namprd12.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 03 Apr 2026 13:23:42.5195
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: jSGA+pB77ZB5/4stJLwZFC/aWA67feq8u0S5zWyEUPk2P7PEB0KCgx6nLV0tQcEzETnBooBpwIhz+lx5dAakwg==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: PH7PR12MB9222
 
-Hi Ayaan, first of all thank you for taking the time to figure this
-out and send in the patch!! Few notes from my side inline below :)
+On 4/2/26 4:32 PM, Joyful Lee wrote:
+> On Thu, Apr 2, 2026 at 5:14 PM Mario Limonciello
+> <mario.limonciello@amd.com> wrote:
+>> Can you please explain what root port corruption means?  Are you
+>> actually meaning graphical corruption?
+>>
+>> A few things I want to point out after resume that might be relevant.
+>>
+>>   > pci 0000:c4:00.0: Unable to change power state from D0 to D0, device
+>> inaccessible
+>>   > snd_hda_intel 0000:c4:00.1: Unable to change power state from D3hot
+>> to D0, device inaccessible
+>>
+>> Both of these devices are part of the discrete GPU (VGA and Audio class
+>> endpoints).  So neither came back to the right state, which to me has me
+>> wondering if the EC is cutting a power rail used for the discrete GPU
+>> and it's coming back at the wrong time.
+>>
+>> It wouldn't be the first time that the kernel raced with firmware and lost.
+>>
+>> What happens if you pass a PCIe reset to the root port above them after
+>> resume?  Does it recover?
+> 
+> Corruption is just the best word I have to describe the way the dGPU
+> bridge (00:03.1) comes back in an unexpected state after resume and the
+> two devices under it (the NVIDIA GPU c4:00.0 and its audio device
+> c4:00.1) become unresponsive. The two lspci attachments on my original
+> post really demonstrate that weird state.
 
-Den ons 25 mars 2026 kl 22:45 skrev Ayaan Mirza Baig
-<ayaanmirzabaig85@gmail.com>:
->
-> On Samsung Galaxy Book 5 (SAM0430), the keyboard backlight, microphone
-> mute, and camera block hotkeys do not generate i8042 scancodes.
-> Instead they arrive as ACPI notifications 0x7d, 0x63, and 0x6f
-> respectively, all of which previously fell through to the default
-> "unknown" warning in galaxybook_acpi_notify().
->
-> Add handling for these three events:
->
-> - 0x7d (Fn+F9, keyboard backlight): schedule the existing
->   kbd_backlight_hotkey_work which cycles brightness.
->
-> - 0x6e (Fn+F10, microphone mute): register a new hotkey input device
->   and emit KEY_MICMUTE.
->
-> - 0x6f (Fn+F11, camera block): if block_recording is active use the
->   existing block_recording_hotkey_work; otherwise emit KEY_CAMERA via the
->   hotkey input device on models where the block_recording ACPI feature is
->   not supported
+Got it.
 
-Just out of curiosity, are you sure KEY_CAMERA is the right key that
-should be sent here? I think this is typically interpreted as a
-"camera shutter" kind of event, and in some desktop environments or
-apps it will actually cause a picture to be captured from the webcam.
-I think better would be to toggle the camera shutter switch
-(camera_lens_cover_switch) I already created in this driver
-specifically to indicate this? You can see how this works in
-block_recording_acpi_set() -- basically there it is both sending the
-ACPI command (for models that support this) to actually disable the
-camera, but also setting the value of the switch input
-(input_report_switch + input_sync), so I guess you could always just
-update the switch value without sending the ACPI command?
+> 
+> Indeed, the "Unable to change power state from D0/D3hot/D3cold to D0,
+> device inaccessible" messages are the main symptom of the problem. I'm
+> purposefully avoiding the nouveau and nvidia drivers at this point to
+> reduce confusion, but the problem happens even when they are loaded, and
+> both of them crash upon resume.
 
-But, alas, just setting the status of a switch does not actually "do"
-anything, but instead more correctly tries to report the status to the
-right interface. Out of curiosity, do you know if there are any of the
-Galaxy Book devices which report this camera switch hotkey over ACPI
-and do not also support the Samsung ACPI sub function (sasb) to
-enable/disable the camera (GB_SASB_BLOCK_RECORDING) ? It would be
-interesting to see how they behaved and if it were possible to cover
-that case in a clear way so that everything works right for them.
+Thanks - I agree with removing drivers from the equation to look at the 
+behavior of bridges and root ports.
 
->
-> Tested on Samsung Galaxy Book 5 (SAM0430).
->
+It's unfortunate that turning off pcie_port_pm didn't help either.
 
-I will try to build and load this on my Galaxy Book2 Pro and 3 Pro as
-well just to rule out any potential regressions but from a quick
-glance it looks like it should be fine :)
+> 
+> When I issue a reset to the root port after resume, it does not recover.
+> The kernel prints the "unable to change power state" messages again and
+> the devices remain unresponsive.
+> 
+> Joy
 
-> Signed-off-by: Ayaan Mirza Baig <ayaanmirzabaig85@gmail.com>
-> ---
->  drivers/platform/x86/samsung-galaxybook.c | 47 +++++++++++++++++++++++
->  1 file changed, 47 insertions(+)
->
-> diff --git a/drivers/platform/x86/samsung-galaxybook.c b/drivers/platform/x86/samsung-galaxybook.c
-> index 755cb82bdb60..fe549e224c17 100644
-> --- a/drivers/platform/x86/samsung-galaxybook.c
-> +++ b/drivers/platform/x86/samsung-galaxybook.c
-> @@ -54,6 +54,7 @@ struct samsung_galaxybook {
->
->         struct work_struct block_recording_hotkey_work;
->         struct input_dev *camera_lens_cover_switch;
-> +       struct input_dev *hotkey_dev;
->
->         struct acpi_battery_hook battery_hook;
->
-> @@ -197,6 +198,9 @@ static const guid_t performance_mode_guid =
->  #define GB_ACPI_NOTIFY_DEVICE_ON_TABLE          0x6c
->  #define GB_ACPI_NOTIFY_DEVICE_OFF_TABLE         0x6d
->  #define GB_ACPI_NOTIFY_HOTKEY_PERFORMANCE_MODE  0x70
-> +#define GB_ACPI_NOTIFY_HOTKEY_KBD_BACKLIGHT  0x7d
-> +#define GB_ACPI_NOTIFY_HOTKEY_CAMERA         0x6f
-> +#define GB_ACPI_NOTIFY_HOTKEY_MICMUTE        0x6e
->
+To your questions in the original post (again sorry for the original 
+knee jerk reaction):
 
-Just a minor nit but the spacing for the values on these last 3 new
-lines is not aligned with the existing lines above it (it might fail
-checkpatch? have not tried myself...).
+1) Yes semantics of how AMD-PMC works are correct for this platform. 
+There are lots of other Strix designs that do everything correctly.
+2) Yes; there are FW dependencies that are design specific.
+3) There are no quirks for working around this bug you've found right now.
 
->  #define GB_KEY_KBD_BACKLIGHT_KEYDOWN    0x2c
->  #define GB_KEY_KBD_BACKLIGHT_KEYUP      0xac
-> @@ -1223,6 +1227,22 @@ static void galaxybook_i8042_filter_remove(void *data)
->         cancel_work_sync(&galaxybook->block_recording_hotkey_work);
->  }
->
-> +static int galaxybook_hotkey_init(struct samsung_galaxybook *galaxybook)
-> +{
-> +       galaxybook->hotkey_dev = devm_input_allocate_device(&galaxybook->platform->dev);
-> +       if (!galaxybook->hotkey_dev)
-> +               return -ENOMEM;
-> +
-> +       galaxybook->hotkey_dev->name = "Samsung Galaxy Book hotkeys";
-> +       galaxybook->hotkey_dev->phys = DRIVER_NAME "/input1";
-> +       galaxybook->hotkey_dev->id.bustype = BUS_HOST;
-> +
-> +       input_set_capability(galaxybook->hotkey_dev, EV_KEY, KEY_MICMUTE);
-> +       input_set_capability(galaxybook->hotkey_dev, EV_KEY, KEY_CAMERA);
-> +
-> +       return input_register_device(galaxybook->hotkey_dev);
-> +}
-> +
->  static int galaxybook_i8042_filter_install(struct samsung_galaxybook *galaxybook)
->  {
->         int err;
-> @@ -1260,6 +1280,28 @@ static void galaxybook_acpi_notify(acpi_handle handle, u32 event, void *data)
->                 if (galaxybook->has_performance_mode)
->                         platform_profile_cycle();
->                 break;
-> +       case GB_ACPI_NOTIFY_HOTKEY_KBD_BACKLIGHT:
-> +               if (galaxybook->has_kbd_backlight)
-> +                       schedule_work(&galaxybook->kbd_backlight_hotkey_work);
-> +               break;
-> +       case GB_ACPI_NOTIFY_HOTKEY_MICMUTE:
-> +               if (galaxybook->hotkey_dev) {
-> +                       input_report_key(galaxybook->hotkey_dev, KEY_MICMUTE, 1);
-> +                       input_sync(galaxybook->hotkey_dev);
-> +                       input_report_key(galaxybook->hotkey_dev, KEY_MICMUTE, 0);
-> +                       input_sync(galaxybook->hotkey_dev);
-> +               }
-> +               break;
-> +       case GB_ACPI_NOTIFY_HOTKEY_CAMERA:
-> +               if (galaxybook->has_block_recording) {
-> +                       schedule_work(&galaxybook->block_recording_hotkey_work);
-> +               } else if (galaxybook->hotkey_dev) {
-> +                       input_report_key(galaxybook->hotkey_dev, KEY_CAMERA, 1);
-> +                       input_sync(galaxybook->hotkey_dev);
-> +                       input_report_key(galaxybook->hotkey_dev, KEY_CAMERA, 0);
-> +                       input_sync(galaxybook->hotkey_dev);
+I believe this issue you're seeing is likely a platform firmware bug. 
+Whether it's AGESA or it's ASUS firmware is unclear right now.
 
-Here is where I was talking about from above. Maybe this should
-instead be something more like (with correct spacing etc):
+I have not seen this specific symptom you mention on other systems 
+(including AMD reference systems) so I am /leaning/ more on ASUS firmware.
 
-input_report_switch(galaxybook->camera_lens_cover_switch, 1);
-input_sync(galaxybook->camera_lens_cover_switch);
+I notice that the BIOS you have from ASUS is quite old:
 
-Also I guess it would need to keep track somehow if the lens is
-"covered" / blocked (value = 1) vs not (value = 0) and toggle between
-those values each time the key is pressed?
+ > bios_date| 03/18/2025
 
-> +               }
-> +               break;
->         default:
->                 dev_warn(&galaxybook->platform->dev,
->                          "unknown ACPI notification event: 0x%x\n", event);
-> @@ -1397,6 +1439,11 @@ static int galaxybook_probe(struct platform_device *pdev)
->                 return dev_err_probe(&galaxybook->platform->dev, err,
->                                      "failed to initialize firmware-attributes\n");
->
-> +       err = galaxybook_hotkey_init(galaxybook);
-> +       if (err)
-> +               return dev_err_probe(&galaxybook->platform->dev, err,
-> +                                        "failed to initialize hotkey input device\n");
-> +
->         err = galaxybook_i8042_filter_install(galaxybook);
->         if (err)
->                 return dev_err_probe(&galaxybook->platform->dev, err,
-> --
-> 2.53.0
->
+Any chance there is a BIOS update available?
+Unfortunately ASUS doesn't always make flashing in Linux easy, but 
+hopefully you can find a way to flash the update if one is available.
 
-Otherwise for me everything else seems pretty reasonable. Nice finds!
-The only other thing I am thinking about is if someone comes and looks
-at this with fresh eyes, it might be confusing why there are multiple
-different hotkeys that seem to do the same thing (why they are there
-and what is the difference between them). My gut reaction is this
-should be written down somewhere, but I'm not sure if the preference
-would be to update the docs vs some comments in the code -- any
-feedback from maintainers on preference for that? :)
 
-And of course any other input from maintainers is also welcome!
-
-Thanks again and best regards,
-Joshua
