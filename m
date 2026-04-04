@@ -1,129 +1,289 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BED5386341;
-	Sat,  4 Apr 2026 17:09:27 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AE5E6336EE1
+	for <platform-driver-x86@vger.kernel.org>; Sat,  4 Apr 2026 18:25:56 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1775322567; cv=none; b=c+DIP8f7lo4+dScQuqsDF7tEURBMHZTMVfjJWXQZar5TvrJhh9a4I2hmd4mQe8Ng7UtJ/XJrIGuFdLdOBkTH1yoGNzS25wWy5pgHqgvXtenfVMCgHmynejYatZg/nybHmmYycHsLBUVjfKLKDqKkGU5g0lz+a0VzeC6r56PFe5U=
+	t=1775327156; cv=none; b=rlglZrtsmQJFy8k1R9NAe/iaSvNKsRdLA+YgmeBH7Dgw2Yy7/yNpdJkrELTlAwbsfRbQI/eN/biRiOPZ0mfwnO0Q2OE7WGu2ksPX7VrlrRz9sG/fCUio1RKjRZzMR0auicizaC9n3oK4eJDygkc5m3SbJlmDX2hLK/sIjtQdLb8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1775322567; c=relaxed/simple;
-	bh=u8kt7OrQ/vRwebR8QID4XnX8+JNDMp1i5iK/K6bdNDA=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=V5yVs8D+L635rIKbwam5DXkkF8SPfX2JABaAxaWPcmjeh4WVHD+IgKz/suHPRLNSAccd8uYsIINDe33xZ9l4vFYM8zbhGkwzGGMeBp38KUWe4G/HBhQxqet0piKNqoXmgJDSTPbYgTIajp4fLWE4rG6a32BbR8fPcIQjWRllPYk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Mur2l9g+; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1775327156; c=relaxed/simple;
+	bh=HmVC8HG22vzlAHr9b9ZKLVJ7JJhmrXnAN67usYKy5N8=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=TMbX78TLoczr1nH8VC8fcor99Hc23FO9tUqD4s3RddRMT2lPL4rSi7+zrdbtIQgc5a/GeidLBLL0S4rXILwijH8N7+SUe5e6H39Kp1W6BMh4UM8HfAHBO44xrDhOaLThbnftitfZDDb+Ak8EXyyncljJMWPrWRny+FPVfib2jjw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=dasMaZUC; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Mur2l9g+"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 6956BC19421;
-	Sat,  4 Apr 2026 17:09:12 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="dasMaZUC"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 7548AC2BCB1
+	for <platform-driver-x86@vger.kernel.org>; Sat,  4 Apr 2026 18:25:56 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1775322567;
-	bh=u8kt7OrQ/vRwebR8QID4XnX8+JNDMp1i5iK/K6bdNDA=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=Mur2l9g+deVKWOVOfXlkgvgdKFA4eMN3VFsDjrp+nvoKeM3X3pstiyexcKEvOeD0a
-	 RbWpztozc0h4lQoSWYVOnXtkhFF+JRtMTTya2FNPQi3D7loBz93/IYN7Ge2fCwnYY6
-	 Re4J05NhHq8kCVMn7SJKTXcUdNw54AUQcOdwffM3zMjz7evbLjl/s54+7J+0y2RhZM
-	 +Mi+DO81POzfix85rvYo25MmliRWwTmiQ4w8GEjh3lU6Bg01dUBrobNBgfy2tPEGch
-	 AFl8Q1R0jHMSDedYpY3Yug+qqjGh5y0LuX4UV4lD2NPGO2GuUGdy7lPrJwFQklpETH
-	 wOUF3U6ODslbQ==
-Message-ID: <a8c85884-e2ba-4a3a-a660-9715f0de2704@kernel.org>
-Date: Sat, 4 Apr 2026 19:09:11 +0200
+	s=k20201202; t=1775327156;
+	bh=HmVC8HG22vzlAHr9b9ZKLVJ7JJhmrXnAN67usYKy5N8=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+	b=dasMaZUC5EkFDx2TKERqqeWNVyhb4oojm4rJGiJ9uG9TX2ZtFQD2I1hVwM+pTTTrd
+	 9tPcYq+2jwV0Qivdi9fSOJW6BeFkNIwz+X1QGStle9Jw6Zevcu64IRjVvjOAPHPivn
+	 JRjZdFuXb/Ihk1ZohNIu78gmuMMCX517ZR6hfp2EDq1NqgdHS0tGD3fwuQ774gCwjq
+	 rlIUxqgfdfTT/Wrs3C5Dja7FvXcNICUQ0YDPqsLK/ZdVwZtVbciurRWtyLwaOllJkt
+	 Q06x1xz4ukp6eVZWok518Fas4+/dsxqW8QOr+84yLM3ODguMdz/+qWwXjfrl8VuMsJ
+	 +GC4opymnJkPA==
+Received: by mail-oi1-f181.google.com with SMTP id 5614622812f47-4670464029eso1619515b6e.2
+        for <platform-driver-x86@vger.kernel.org>; Sat, 04 Apr 2026 11:25:56 -0700 (PDT)
+X-Forwarded-Encrypted: i=1; AJvYcCV4IwP98RV2/cSMx7otnrjNjJB6zUMz1tsdVUqRedvzgCvTdSCJA0B2tM+y4m/QoU2nJfQzjkFdOF5hiBUlufiz8jH0@vger.kernel.org
+X-Gm-Message-State: AOJu0Yy4oODToBdjhpT8Il0tVxn20U+DovrPM6fqLUVeP1aBF/21vBCV
+	BYf3Kk1pL31THgZiQ0Y9qmPknMimCS1yC6ca1VyiFD1vBTGwaHxLbAnh9DoFvyazNl5+aNPFHZm
+	wLqIfHyO7hoL7WY34pzJ5cKDO3xSjXvs=
+X-Received: by 2002:a05:6870:21d3:b0:417:3421:13ff with SMTP id
+ 586e51a60fabf-4230ff4f728mr3820411fac.29.1775327155442; Sat, 04 Apr 2026
+ 11:25:55 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: (subset) [PATCH 00/12] treewide: Convert buses to use generic
- driver_override
-To: Danilo Krummrich <dakr@kernel.org>
-Cc: Russell King <linux@armlinux.org.uk>,
- Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
- "Rafael J. Wysocki" <rafael@kernel.org>,
- Ioana Ciornei <ioana.ciornei@nxp.com>, Nipun Gupta <nipun.gupta@amd.com>,
- Nikhil Agarwal <nikhil.agarwal@amd.com>, "K. Y. Srinivasan"
- <kys@microsoft.com>, Haiyang Zhang <haiyangz@microsoft.com>,
- Wei Liu <wei.liu@kernel.org>, Dexuan Cui <decui@microsoft.com>,
- Long Li <longli@microsoft.com>, Bjorn Helgaas <bhelgaas@google.com>,
- Armin Wolf <W_Armin@gmx.de>, Bjorn Andersson <andersson@kernel.org>,
- Mathieu Poirier <mathieu.poirier@linaro.org>,
- Vineeth Vijayan <vneethv@linux.ibm.com>,
- Peter Oberparleiter <oberpar@linux.ibm.com>,
- Heiko Carstens <hca@linux.ibm.com>, Vasily Gorbik <gor@linux.ibm.com>,
- Alexander Gordeev <agordeev@linux.ibm.com>,
- Christian Borntraeger <borntraeger@linux.ibm.com>,
- Sven Schnelle <svens@linux.ibm.com>,
- Harald Freudenberger <freude@linux.ibm.com>,
- Holger Dengler <dengler@linux.ibm.com>, Mark Brown <broonie@kernel.org>,
- "Michael S. Tsirkin" <mst@redhat.com>, Jason Wang <jasowang@redhat.com>,
- Xuan Zhuo <xuanzhuo@linux.alibaba.com>, =?UTF-8?Q?Eugenio_P=C3=A9rez?=
- <eperezma@redhat.com>, Alex Williamson <alex@shazbot.org>,
- Juergen Gross <jgross@suse.com>, Stefano Stabellini
- <sstabellini@kernel.org>,
- Oleksandr Tyshchenko <oleksandr_tyshchenko@epam.com>,
- linux-kernel@vger.kernel.org, driver-core@lists.linux.dev,
- linuxppc-dev@lists.ozlabs.org, linux-hyperv@vger.kernel.org,
- linux-pci@vger.kernel.org, platform-driver-x86@vger.kernel.org,
- linux-arm-msm@vger.kernel.org, linux-remoteproc@vger.kernel.org,
- linux-s390@vger.kernel.org, linux-spi@vger.kernel.org,
- virtualization@lists.linux.dev, kvm@vger.kernel.org,
- xen-devel@lists.xenproject.org, linux-arm-kernel@lists.infradead.org
-References: <20260324005919.2408620-1-dakr@kernel.org>
- <DHKGQN6D0ANO.2QYY3JTM5435O@kernel.org>
- <76355cb5-0b5d-4a29-9702-8d020a79f4c0@kernel.org>
- <DHKJ7VWI1CHO.3ETHUGQVPFFDE@kernel.org>
-Content-Language: fr-FR
-From: "Christophe Leroy (CS GROUP)" <chleroy@kernel.org>
-In-Reply-To: <DHKJ7VWI1CHO.3ETHUGQVPFFDE@kernel.org>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
+References: <20260402-baytrail-real-swnode-v2-0-6f5054a4cc07@oss.qualcomm.com> <20260402-baytrail-real-swnode-v2-4-6f5054a4cc07@oss.qualcomm.com>
+In-Reply-To: <20260402-baytrail-real-swnode-v2-4-6f5054a4cc07@oss.qualcomm.com>
+From: "Rafael J. Wysocki" <rafael@kernel.org>
+Date: Sat, 4 Apr 2026 20:25:43 +0200
+X-Gmail-Original-Message-ID: <CAJZ5v0iwfZPcFtM7Jv29bXFmh3zN0OaG9UfNY5iC5RpzRzp07w@mail.gmail.com>
+X-Gm-Features: AQROBzD6YmXrnAzgz9aL6fqWq1iOyolotQRnTtrF6brMuNKBBNGJLMNRaP4UCiA
+Message-ID: <CAJZ5v0iwfZPcFtM7Jv29bXFmh3zN0OaG9UfNY5iC5RpzRzp07w@mail.gmail.com>
+Subject: Re: [PATCH v2 4/4] platform/x86: x86-android-tablets: enable fwnode
+ matching of GPIO chips
+To: Bartosz Golaszewski <bartosz.golaszewski@oss.qualcomm.com>
+Cc: Andy Shevchenko <andriy.shevchenko@linux.intel.com>, Daniel Scally <djrscally@gmail.com>, 
+	Heikki Krogerus <heikki.krogerus@linux.intel.com>, 
+	Sakari Ailus <sakari.ailus@linux.intel.com>, 
+	Greg Kroah-Hartman <gregkh@linuxfoundation.org>, "Rafael J. Wysocki" <rafael@kernel.org>, 
+	Danilo Krummrich <dakr@kernel.org>, Mika Westerberg <mika.westerberg@linux.intel.com>, 
+	Andy Shevchenko <andy@kernel.org>, Linus Walleij <linusw@kernel.org>, Hans de Goede <hansg@kernel.org>, 
+	=?UTF-8?Q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>, 
+	Dmitry Torokhov <dmitry.torokhov@gmail.com>, Len Brown <lenb@kernel.org>, linux-acpi@vger.kernel.org, 
+	driver-core@lists.linux.dev, linux-kernel@vger.kernel.org, 
+	linux-gpio@vger.kernel.org, platform-driver-x86@vger.kernel.org, 
+	brgl@kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
+On Thu, Apr 2, 2026 at 2:54=E2=80=AFPM Bartosz Golaszewski
+<bartosz.golaszewski@oss.qualcomm.com> wrote:
+>
+> In order to allow GPIOLIB to match cherryview and baytrail GPIO
+> controllers by their firmware nodes instead of their names, we need to
+> attach the - currently "dangling" - existing software nodes to their
+> target devices dynamically.
+>
+> We deal with devices described in ACPI so set up a bus notifier waiting
+> for the ADD events. We know the name of the device we're waiting for so
+> match against it and - on match - assign the appropriate software node
+> as the secondary firmware node of the underlying ACPI node. In case the
+> event was emitted earlier than this driver's probe: also make sure the
+> device was not added before.
+>
+> Scheduling fine-grained devres actions allows for proper teardown and
+> unsetting of the secondary firmware nodes.
+>
+> Signed-off-by: Bartosz Golaszewski <bartosz.golaszewski@oss.qualcomm.com>
+> ---
+>  drivers/platform/x86/x86-android-tablets/core.c | 127 ++++++++++++++++++=
++++++-
+>  1 file changed, 124 insertions(+), 3 deletions(-)
+>
+> diff --git a/drivers/platform/x86/x86-android-tablets/core.c b/drivers/pl=
+atform/x86/x86-android-tablets/core.c
+> index 021009e9085bec3db9c4daa1f6235600210a6099..9e6e8f272dfe16cda421b5698=
+02045c3d94fc0ab 100644
+> --- a/drivers/platform/x86/x86-android-tablets/core.c
+> +++ b/drivers/platform/x86/x86-android-tablets/core.c
+> @@ -13,10 +13,12 @@
+>  #include <linux/acpi.h>
+>  #include <linux/device.h>
+>  #include <linux/dmi.h>
+> +#include <linux/fwnode.h>
+>  #include <linux/gpio/consumer.h>
+>  #include <linux/gpio/machine.h>
+>  #include <linux/irq.h>
+>  #include <linux/module.h>
+> +#include <linux/notifier.h>
+>  #include <linux/pci.h>
+>  #include <linux/platform_device.h>
+>  #include <linux/serdev.h>
+> @@ -360,6 +362,124 @@ static const struct software_node *cherryview_gpioc=
+hip_node_group[] =3D {
+>         NULL
+>  };
+>
+> +struct auto_secondary_data {
+> +       struct notifier_block nb;
+> +       struct device *parent;
+> +};
+> +
+> +static void auto_secondary_unset(void *data)
+> +{
+> +       struct fwnode_handle *fwnode =3D data;
+> +
+> +       fwnode->secondary =3D NULL;
+> +}
+> +
+> +static int acpi_set_secondary_fwnode(struct device *parent, struct devic=
+e *dev,
+> +                                    const struct software_node *const sw=
+node)
+> +{
+> +       struct acpi_device *device =3D to_acpi_device(dev);
+> +       struct fwnode_handle *fwnode;
+> +       int ret;
+> +
+> +       fwnode =3D software_node_fwnode(swnode);
+> +       if (WARN_ON(!fwnode))
+> +               return -ENOENT;
+> +
+> +       fwnode->secondary =3D ERR_PTR(-ENODEV);
+> +       device->fwnode.secondary =3D fwnode;
+> +
+> +       ret =3D devm_add_action_or_reset(parent, auto_secondary_unset, &d=
+evice->fwnode);
+> +       if (ret)
+> +               dev_err(parent, "Failed to schedule the unset action for =
+secondary fwnode\n");
+> +
+> +       return ret;
+> +}
+> +
+> +static int acpi_auto_secondary_notifier(struct notifier_block *nb,
+> +                                       unsigned long action, void *data)
+> +{
+> +       struct auto_secondary_data *auto_sec =3D container_of(nb, struct =
+auto_secondary_data, nb);
+> +       const struct software_node *const *swnode;
+> +       struct device *dev =3D data;
+> +       int ret;
+> +
+> +       switch (action) {
+> +       case BUS_NOTIFY_ADD_DEVICE:
+> +               for (swnode =3D gpiochip_node_group; *swnode; swnode++) {
+> +                       if (strcmp((*swnode)->name, dev_name(dev)) =3D=3D=
+ 0) {
+> +                               ret =3D acpi_set_secondary_fwnode(auto_se=
+c->parent, dev, *swnode);
+> +                               return ret ? NOTIFY_BAD : NOTIFY_OK;
+> +                       }
+> +               }
+> +               break;
+> +       default:
+> +               break;
+> +       }
+> +
+> +       return NOTIFY_DONE;
+> +}
+> +
+> +static void auto_secondary_unregister_node_group(void *data)
+> +{
+> +       const struct software_node **nodes =3D data;
+> +
+> +       software_node_unregister_node_group(nodes);
+> +}
+> +
+> +static void auto_secondary_unregister_notifier(void *data)
+> +{
+> +       struct notifier_block *nb =3D data;
+> +
+> +       bus_unregister_notifier(&acpi_bus_type, nb);
+> +}
 
+Instead of exporting acpi_bus_type in the previous patch and defining
+this function here, can you define
 
-Le 04/04/2026 à 19:04, Danilo Krummrich a écrit :
-> On Sat Apr 4, 2026 at 6:58 PM CEST, Christophe Leroy (CS GROUP) wrote:
->>
->>
->> Le 04/04/2026 à 17:07, Danilo Krummrich a écrit :
->>> On Tue Mar 24, 2026 at 1:59 AM CET, Danilo Krummrich wrote:
->>>> Danilo Krummrich (12):
->>>>     PCI: use generic driver_override infrastructure
->>>>     platform/wmi: use generic driver_override infrastructure
->>>>     vdpa: use generic driver_override infrastructure
->>>>     s390/cio: use generic driver_override infrastructure
->>>>     s390/ap: use generic driver_override infrastructure
->>>
->>> Applied to driver-core-testing, thanks!
->>>
->>>>     amba: use generic driver_override infrastructure
->>>>     cdx: use generic driver_override infrastructure
->>>>     hv: vmbus: use generic driver_override infrastructure
->>>>     rpmsg: use generic driver_override infrastructure
->>>
->>> I have not picked these up, as they have not received ACKs from the
->>> corresponding subsystem maintainers so far.
->>>
->>>>     bus: fsl-mc: use generic driver_override infrastructure
->>
->> I droped it from soc_fsl tree, some dependency must be missing.
->>
->> Feal free to take it if you can, it is acked-by Ioana.
-> 
-> It is based on v7.0-rc5; if you want I can pick it up.
+void acpi_bus_unregister_notifier(void *data)
+{
+       struct notifier_block *nb =3D data;
 
-Yes please pick it up as my tree is based on rc1.
+       bus_unregister_notifier(&acpi_bus_type, nb);
+}
 
-Thanks
-Christophe
+in the previous patch and use it here?
 
-
-> 
->>>>     spi: use generic driver_override infrastructure
->>>
->>> These have already been picked up via the respective subsystem trees -- thanks!
->>>
->>> Thanks,
->>> Danilo
-> 
-
+> +
+> +static int auto_secondary_fwnode_init(struct device *parent)
+> +{
+> +       const struct software_node *const *swnode;
+> +       struct auto_secondary_data *data;
+> +       int ret;
+> +
+> +       ret =3D software_node_register_node_group(gpiochip_node_group);
+> +       if (ret)
+> +               return ret;
+> +
+> +       ret =3D devm_add_action_or_reset(parent,
+> +                                      auto_secondary_unregister_node_gro=
+up,
+> +                                      gpiochip_node_group);
+> +       if (ret)
+> +               return ret;
+> +
+> +       data =3D devm_kzalloc(parent, sizeof(*data), GFP_KERNEL);
+> +       if (!data)
+> +               return -ENOMEM;
+> +
+> +       data->nb.notifier_call =3D acpi_auto_secondary_notifier;
+> +       data->parent =3D parent;
+> +
+> +       ret =3D bus_register_notifier(&acpi_bus_type, &data->nb);
+> +       if (ret)
+> +               return ret;
+> +
+> +       ret =3D devm_add_action_or_reset(parent,
+> +                                      auto_secondary_unregister_notifier=
+,
+> +                                      &data->nb);
+> +       if (ret)
+> +               return ret;
+> +
+> +       /* Device may have been already added. */
+> +       for (swnode =3D gpiochip_node_group; *swnode; swnode++) {
+> +               struct device *dev __free(put_device) =3D
+> +                       bus_find_device_by_name(&acpi_bus_type, NULL, (*s=
+wnode)->name);
+> +               if (dev) {
+> +                       ret =3D acpi_set_secondary_fwnode(parent, dev, *s=
+wnode);
+> +                       if (ret)
+> +                               return ret;
+> +               }
+> +       }
+> +
+> +       return 0;
+> +}
+> +
+>  static void x86_android_tablet_remove(struct platform_device *pdev)
+>  {
+>         int i;
+> @@ -391,7 +511,6 @@ static void x86_android_tablet_remove(struct platform=
+_device *pdev)
+>
+>         software_node_unregister_node_group(gpio_button_swnodes);
+>         software_node_unregister_node_group(swnode_group);
+> -       software_node_unregister_node_group(gpiochip_node_group);
+>  }
+>
+>  static __init int x86_android_tablet_probe(struct platform_device *pdev)
+> @@ -427,9 +546,11 @@ static __init int x86_android_tablet_probe(struct pl=
+atform_device *pdev)
+>                 break;
+>         }
+>
+> -       ret =3D software_node_register_node_group(gpiochip_node_group);
+> -       if (ret)
+> +       ret =3D auto_secondary_fwnode_init(&pdev->dev);
+> +       if (ret) {
+> +               x86_android_tablet_remove(pdev);
+>                 return ret;
+> +       }
+>
+>         ret =3D software_node_register_node_group(dev_info->swnode_group)=
+;
+>         if (ret) {
+>
+> --
+> 2.47.3
+>
