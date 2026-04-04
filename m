@@ -1,114 +1,221 @@
-Received: from mail-43172.protonmail.ch (mail-43172.protonmail.ch [185.70.43.172])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1944526A1CF;
-	Sat,  4 Apr 2026 12:55:35 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.70.43.172
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 238BA3B7A8;
+	Sat,  4 Apr 2026 15:02:15 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1775307340; cv=none; b=UnKEpo3e1ZQkAoiGTWpoDB7Lady7TuBYhb5DOl2EId6ul9MKETR+O/dhhQ2z7MAIsz7wFTMQfzDtuCTHz57PdhVUJM+gB3Q4cy1H/WNv9/NUNDIWsUyC1wseqtRVc8u7ivujRu+Sapxw8VBARdGeMnVxVUOyY5Es2ZNNiaoxySQ=
+	t=1775314936; cv=none; b=hXy9wh6iRLHCgPLpwTcrMVazPACLWQ7Nh9iBsM8SymD9oawhjS87W3ieISdwGRqkxuPaO3agP6XPnj0eW8+V/n0gD+GqZAYcfzwKcbbTlbBR2BmRauKV9eOfq3mOPwl+K2JzC3zN0KUzvHiElzZrf0ypqZEr9Pfxj98ZpcnmBqk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1775307340; c=relaxed/simple;
-	bh=6lCzzmT04bUXxFeCDCTdNr4L1nRMzf4mXgZ5vVaXvm4=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=tfuUlQPrFZO0fO1V9CLQc9JQWDoOtvilxSTvSOizOZ1fCmTZg7HhMNob8becU5gTWXd5GiJ7hdX4NBIiwLBGlRodjSMwxmFr6sZepns6YnWha0x5TPgar1KoKsk37ASs/wg/j77M/RGxLt65uD65LkkEpBaMh1KEbj9XqklwFxc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=vinarskis.com; spf=pass smtp.mailfrom=vinarskis.com; dkim=pass (2048-bit key) header.d=vinarskis.com header.i=@vinarskis.com header.b=Pe7GKaDb; arc=none smtp.client-ip=185.70.43.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=vinarskis.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=vinarskis.com
+	s=arc-20240116; t=1775314936; c=relaxed/simple;
+	bh=yS1a8GmMxhd+gaXjsrUMOyEcZUcN2vLf71oRyrhAVkk=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=U7whb4p0v2gfusZtNmzpc2g52jEEGYJwWhUfkdYnueaq0aVlNCTCg7MAvWKVqc6K91kFLa9il1ZJMXRQaqmhCo8VXCUU2Zh9MSNm5PXOjGXQ57XJ+RRvOcZVNMk8DUx3DQ7OfD6Ei/IAH07RXc/ud58vcvc9rrLW1G5sjTxG6o0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=fcd1WH1u; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=vinarskis.com header.i=@vinarskis.com header.b="Pe7GKaDb"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=vinarskis.com;
-	s=protonmail2; t=1775307328; x=1775566528;
-	bh=yN+ZowQkunJWeqIT+q24edOeFG11gt12c7AirgxSOfM=;
-	h=From:Date:Subject:Message-Id:References:In-Reply-To:To:Cc:From:To:
-	 Cc:Date:Subject:Reply-To:Feedback-ID:Message-ID:BIMI-Selector;
-	b=Pe7GKaDbfMZ/MH+QlPfSY7gsUGjAkyBJc0ox2Q3jzaVp62iRVqAGd0M1Jt+IGIZam
-	 ePjhr6wQznMab2s70embFmnrYi/PsE5uZ1I9P6LeViuWISR/lJca547flpmtSLpFY4
-	 JRVH8JCR6X36qDy430jC+mAKqGAKcN1U8W21cUQIbsLTNAHds8Ly0b06BW24IYTZBs
-	 teEC65ii5GxHXAfpdLJCFhOM+lAkUX0yt2E8PMnMwxQWQUExM+L4n8ncuBSguRY6vL
-	 sduCJ6TDidplxkbXK7vlBjn1vHjnC6loajGiQSi+rptN0m/aUQ2f9ifY/0Ro877UYC
-	 iC+KlH7QBkKTg==
-X-Pm-Submission-Id: 4fnwYW0f3Cz1DDWf
-From: Aleksandrs Vinarskis <alex@vinarskis.com>
-Date: Sat, 04 Apr 2026 14:55:16 +0200
-Subject: [PATCH v2 3/4] arm64: dts: qcom: hamoa-pmics: define VADC for
- pmk8550
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="fcd1WH1u"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id B9BB2C19421;
+	Sat,  4 Apr 2026 15:02:06 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1775314935;
+	bh=yS1a8GmMxhd+gaXjsrUMOyEcZUcN2vLf71oRyrhAVkk=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+	b=fcd1WH1uMPDFcW95A5bP6twrmSlGywxDbhV9K4GUdxmnw9OhLho72J9OlIZREDDfv
+	 Evf5eg+FhGKnEBZMEi0xrGzL0W0wBBPFC5ZbOalQpNWyhGwDm3HuLGvy/jgjYAq60X
+	 Jsa257f9xIzRC/LnmHpxdh9mv/JRHNm7utYMn96WoZP6ZRATrlwe1+3BmjlR9bxRPR
+	 tiA87cPHB5ojtZQJ2zSKPbtecnXGON24oyWbrZcP9XuN+XivvmLrVCQGu5orrMZe/a
+	 +xDtWMIwREbTcGNYdTKbgyxE7aDCuXqmHaashK055GEOETa+XQlaspyrGVn7GrwOhI
+	 UHZOaAkc+kiUA==
+From: Danilo Krummrich <dakr@kernel.org>
+To: Russell King <linux@armlinux.org.uk>,
+	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+	"Rafael J. Wysocki" <rafael@kernel.org>,
+	Ioana Ciornei <ioana.ciornei@nxp.com>,
+	Nipun Gupta <nipun.gupta@amd.com>,
+	Nikhil Agarwal <nikhil.agarwal@amd.com>,
+	"K. Y. Srinivasan" <kys@microsoft.com>,
+	Haiyang Zhang <haiyangz@microsoft.com>,
+	Wei Liu <wei.liu@kernel.org>,
+	Dexuan Cui <decui@microsoft.com>,
+	Long Li <longli@microsoft.com>,
+	Bjorn Helgaas <bhelgaas@google.com>,
+	Armin Wolf <W_Armin@gmx.de>,
+	Bjorn Andersson <andersson@kernel.org>,
+	Mathieu Poirier <mathieu.poirier@linaro.org>,
+	Vineeth Vijayan <vneethv@linux.ibm.com>,
+	Peter Oberparleiter <oberpar@linux.ibm.com>,
+	Heiko Carstens <hca@linux.ibm.com>,
+	Vasily Gorbik <gor@linux.ibm.com>,
+	Alexander Gordeev <agordeev@linux.ibm.com>,
+	Christian Borntraeger <borntraeger@linux.ibm.com>,
+	Sven Schnelle <svens@linux.ibm.com>,
+	Harald Freudenberger <freude@linux.ibm.com>,
+	Holger Dengler <dengler@linux.ibm.com>,
+	Mark Brown <broonie@kernel.org>,
+	"Michael S. Tsirkin" <mst@redhat.com>,
+	Jason Wang <jasowang@redhat.com>,
+	Xuan Zhuo <xuanzhuo@linux.alibaba.com>,
+	=?UTF-8?q?Eugenio=20P=C3=A9rez?= <eperezma@redhat.com>,
+	Alex Williamson <alex@shazbot.org>,
+	Juergen Gross <jgross@suse.com>,
+	Stefano Stabellini <sstabellini@kernel.org>,
+	Oleksandr Tyshchenko <oleksandr_tyshchenko@epam.com>,
+	"Christophe Leroy (CS GROUP)" <chleroy@kernel.org>
+Cc: linux-kernel@vger.kernel.org,
+	driver-core@lists.linux.dev,
+	linuxppc-dev@lists.ozlabs.org,
+	linux-hyperv@vger.kernel.org,
+	linux-pci@vger.kernel.org,
+	platform-driver-x86@vger.kernel.org,
+	linux-arm-msm@vger.kernel.org,
+	linux-remoteproc@vger.kernel.org,
+	linux-s390@vger.kernel.org,
+	linux-spi@vger.kernel.org,
+	virtualization@lists.linux.dev,
+	kvm@vger.kernel.org,
+	xen-devel@lists.xenproject.org,
+	linux-arm-kernel@lists.infradead.org,
+	Danilo Krummrich <dakr@kernel.org>,
+	Michael Kelley <mhklinux@outlook.com>,
+	Gui-Dong Han <hanguidong02@gmail.com>
+Subject: [PATCH v2] Drivers: hv: vmbus: use generic driver_override infrastructure
+Date: Sat,  4 Apr 2026 17:01:49 +0200
+Message-ID: <20260404150155.3473682-1-dakr@kernel.org>
+X-Mailer: git-send-email 2.53.0
+In-Reply-To: <BN7PR02MB414825D0532A1DFE16F3B671D449A@BN7PR02MB4148.namprd02.prod.outlook.com>
+References: <BN7PR02MB414825D0532A1DFE16F3B671D449A@BN7PR02MB4148.namprd02.prod.outlook.com>
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Message-Id: <20260404-dell-xps-9345-ec-v2-3-c977c3caa81f@vinarskis.com>
-References: <20260404-dell-xps-9345-ec-v2-0-c977c3caa81f@vinarskis.com>
-In-Reply-To: <20260404-dell-xps-9345-ec-v2-0-c977c3caa81f@vinarskis.com>
-To: Bjorn Andersson <andersson@kernel.org>, 
- Konrad Dybcio <konradybcio@kernel.org>, Rob Herring <robh@kernel.org>, 
- Krzysztof Kozlowski <krzk+dt@kernel.org>, 
- Conor Dooley <conor+dt@kernel.org>, Hans de Goede <hansg@kernel.org>, 
- =?utf-8?q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>, 
- Bryan O'Donoghue <bryan.odonoghue@linaro.org>
-Cc: linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org, 
- linux-kernel@vger.kernel.org, platform-driver-x86@vger.kernel.org, 
- laurentiu.tudor1@dell.com, Abel Vesa <abel.vesa@oss.qualcomm.com>, 
- Tobias Heider <tobias.heider@canonical.com>, Val Packett <val@packett.cool>
-X-Mailer: b4 0.14.2
-X-Developer-Signature: v=1; a=openpgp-sha256; l=1415; i=alex@vinarskis.com;
- h=from:subject:message-id; bh=6lCzzmT04bUXxFeCDCTdNr4L1nRMzf4mXgZ5vVaXvm4=;
- b=owGbwMvMwCX2dl3hIv4AZgHG02pJDJkXucw1CxalZp77dFKnRn3J5ZeTAk89Cp/entv5quyT6
- gerfqOzHaUsDGJcDLJiiizdf76mdS2au5bhusY3mDmsTCBDGLg4BWAiUgEM/+z8306Oz0lkeCB5
- uC4rZNH/nviWed8b53r7Ok/1Z7vmpsnI0Dh/p/iPKQkb2cXv3r8jGH34vurHF+94/+WIsb9jfnH
- vMB8A
-X-Developer-Key: i=alex@vinarskis.com; a=openpgp;
- fpr=8E21FAE2D2967BB123303E8C684FD4BA28133815
+Content-Transfer-Encoding: 8bit
 
-Follow pattern of pmk8350 to add missing pmk8550 VADC to hamoa.
-Register address of 0x9000 matches example schema for spmi-adc5-gen3.
+When a driver is probed through __driver_attach(), the bus' match()
+callback is called without the device lock held, thus accessing the
+driver_override field without a lock, which can cause a UAF.
 
-Signed-off-by: Aleksandrs Vinarskis <alex@vinarskis.com>
+Fix this by using the driver-core driver_override infrastructure taking
+care of proper locking internally.
+
+Note that calling match() from __driver_attach() without the device lock
+held is intentional. [1]
+
+Tested-by: Michael Kelley <mhklinux@outlook.com>
+Reviewed-by: Michael Kelley <mhklinux@outlook.com>
+Link: https://lore.kernel.org/driver-core/DGRGTIRHA62X.3RY09D9SOK77P@kernel.org/ [1]
+Reported-by: Gui-Dong Han <hanguidong02@gmail.com>
+Closes: https://bugzilla.kernel.org/show_bug.cgi?id=220789
+Fixes: d765edbb301c ("vmbus: add driver_override support")
+Signed-off-by: Danilo Krummrich <dakr@kernel.org>
 ---
- arch/arm64/boot/dts/qcom/hamoa-pmics.dtsi | 26 ++++++++++++++++++++++++++
- 1 file changed, 26 insertions(+)
+Changes in v2:
+  - Change patch subject and comments according to Michael's suggestion.
+---
+ drivers/hv/vmbus_drv.c | 43 ++++++++++--------------------------------
+ include/linux/hyperv.h |  5 -----
+ 2 files changed, 10 insertions(+), 38 deletions(-)
 
-diff --git a/arch/arm64/boot/dts/qcom/hamoa-pmics.dtsi b/arch/arm64/boot/dts/qcom/hamoa-pmics.dtsi
-index 6a31a0adf8be472badea502a916cdbc9477e9f2b..cc69d299bc356d90aa1483f347f5eee43b853e45 100644
---- a/arch/arm64/boot/dts/qcom/hamoa-pmics.dtsi
-+++ b/arch/arm64/boot/dts/qcom/hamoa-pmics.dtsi
-@@ -218,6 +218,32 @@ pon_resin: resin {
- 			};
- 		};
+diff --git a/drivers/hv/vmbus_drv.c b/drivers/hv/vmbus_drv.c
+index bc4fc1951ae1..ba7326ec6add 100644
+--- a/drivers/hv/vmbus_drv.c
++++ b/drivers/hv/vmbus_drv.c
+@@ -541,34 +541,6 @@ static ssize_t device_show(struct device *dev,
+ }
+ static DEVICE_ATTR_RO(device);
  
-+		pmk8550_vadc: adc@9000 {
-+			compatible = "qcom,spmi-adc5-gen3";
-+			reg = <0x9000>, <0x9100>;
-+			#address-cells = <1>;
-+			#size-cells = <0>;
-+			interrupts = <0x0 0x90 0x1 IRQ_TYPE_EDGE_RISING>,
-+				     <0x0 0x91 0x1 IRQ_TYPE_EDGE_RISING>;
-+			#io-channel-cells = <1>;
-+			#thermal-sensor-cells = <1>;
-+
-+			channel@3 {
-+				reg = <0x3>;
-+				label = "pmk8550_die_temp";
-+				qcom,pre-scaling = <1 1>;
-+			};
-+
-+			channel@44 {
-+				reg = <0x44>;
-+				label = "pmk8550_xo_therm";
-+				qcom,pre-scaling = <1 1>;
-+				qcom,ratiometric;
-+				qcom,hw-settle-time = <200>;
-+				qcom,adc-tm;
-+			};
-+		};
-+
- 		pmk8550_rtc: rtc@6100 {
- 			compatible = "qcom,pmk8350-rtc";
- 			reg = <0x6100>, <0x6200>;
-
+-static ssize_t driver_override_store(struct device *dev,
+-				     struct device_attribute *attr,
+-				     const char *buf, size_t count)
+-{
+-	struct hv_device *hv_dev = device_to_hv_device(dev);
+-	int ret;
+-
+-	ret = driver_set_override(dev, &hv_dev->driver_override, buf, count);
+-	if (ret)
+-		return ret;
+-
+-	return count;
+-}
+-
+-static ssize_t driver_override_show(struct device *dev,
+-				    struct device_attribute *attr, char *buf)
+-{
+-	struct hv_device *hv_dev = device_to_hv_device(dev);
+-	ssize_t len;
+-
+-	device_lock(dev);
+-	len = sysfs_emit(buf, "%s\n", hv_dev->driver_override);
+-	device_unlock(dev);
+-
+-	return len;
+-}
+-static DEVICE_ATTR_RW(driver_override);
+-
+ /* Set up per device attributes in /sys/bus/vmbus/devices/<bus device> */
+ static struct attribute *vmbus_dev_attrs[] = {
+ 	&dev_attr_id.attr,
+@@ -599,7 +571,6 @@ static struct attribute *vmbus_dev_attrs[] = {
+ 	&dev_attr_channel_vp_mapping.attr,
+ 	&dev_attr_vendor.attr,
+ 	&dev_attr_device.attr,
+-	&dev_attr_driver_override.attr,
+ 	NULL,
+ };
+ 
+@@ -711,9 +682,11 @@ static const struct hv_vmbus_device_id *hv_vmbus_get_id(const struct hv_driver *
+ {
+ 	const guid_t *guid = &dev->dev_type;
+ 	const struct hv_vmbus_device_id *id;
++	int ret;
+ 
+-	/* When driver_override is set, only bind to the matching driver */
+-	if (dev->driver_override && strcmp(dev->driver_override, drv->name))
++	/* If a driver override is set, only bind to the matching driver */
++	ret = device_match_driver_override(&dev->device, &drv->driver);
++	if (ret == 0)
+ 		return NULL;
+ 
+ 	/* Look at the dynamic ids first, before the static ones */
+@@ -721,8 +694,11 @@ static const struct hv_vmbus_device_id *hv_vmbus_get_id(const struct hv_driver *
+ 	if (!id)
+ 		id = hv_vmbus_dev_match(drv->id_table, guid);
+ 
+-	/* driver_override will always match, send a dummy id */
+-	if (!id && dev->driver_override)
++	/*
++	 * If there's a matching driver override, this function should succeed,
++	 * thus return a dummy device ID if no matching ID is found.
++	 */
++	if (!id && ret > 0)
+ 		id = &vmbus_device_null;
+ 
+ 	return id;
+@@ -1024,6 +1000,7 @@ static const struct dev_pm_ops vmbus_pm = {
+ /* The one and only one */
+ static const struct bus_type  hv_bus = {
+ 	.name =		"vmbus",
++	.driver_override =	true,
+ 	.match =		vmbus_match,
+ 	.shutdown =		vmbus_shutdown,
+ 	.remove =		vmbus_remove,
+diff --git a/include/linux/hyperv.h b/include/linux/hyperv.h
+index dfc516c1c719..bf689d07d750 100644
+--- a/include/linux/hyperv.h
++++ b/include/linux/hyperv.h
+@@ -1272,11 +1272,6 @@ struct hv_device {
+ 	u16 device_id;
+ 
+ 	struct device device;
+-	/*
+-	 * Driver name to force a match.  Do not set directly, because core
+-	 * frees it.  Use driver_set_override() to set or clear it.
+-	 */
+-	const char *driver_override;
+ 
+ 	struct vmbus_channel *channel;
+ 	struct kset	     *channels_kset;
 -- 
 2.53.0
 
