@@ -1,60 +1,62 @@
-Received: from mail-wr1-f46.google.com (mail-wr1-f46.google.com [209.85.221.46])
+Received: from mail-wm1-f45.google.com (mail-wm1-f45.google.com [209.85.128.45])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4B8F5257851
-	for <platform-driver-x86@vger.kernel.org>; Sun,  5 Apr 2026 14:45:14 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.46
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F3BC6257851
+	for <platform-driver-x86@vger.kernel.org>; Sun,  5 Apr 2026 14:45:15 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.45
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1775400315; cv=none; b=fynT5OyWowZ0KUVKJ6P/3aO5Hw0l6OKEClvk/0jWurShir37fzp6RG2tBgxkzMuKEYL4DrleGzU2rO3ul1b7Rv5u2xuUR4yFk5GmE/Lv5j/FYT+qGs6me//MNE5/F29vqjP1E6YVyU7qoohHLD+rmvaNbyWiokPgcwcZQ0BA9nY=
+	t=1775400317; cv=none; b=dyqIooySS3jugLj7ghY/qJjRgPCZo9nHZbQ8+KIyEOBvGoIXeiFNEp034mgwqlya1Xj97QemikxTDiwuEmDSGi5JM7FF+EfChluhrBB80pKh86fkcQdbsen32YWzABp0CW//HNxhSPBAG8swH9wEMA0gv5Wtr8Yi6cYRYDlHVeo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1775400315; c=relaxed/simple;
-	bh=tkrvEtZ4WQSCiFhqWBbNgBH8eVKjWLUk1kGkERCJHwI=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=WYrnB+Vj49UeoinuRU4+hTEq0zfhq8pK/rgx8u9Ovc7Im25/iDkBQD9OqgJgL3t5w+PY1jO/QGXv7bZiAzA+e+3nbKnf7j5Apvo8dTQxphTaTfC0zLF1FCOlFZcdz5TZPydtFrytczyq1hTMwmwuczgqwhwoegLUT/7NAZXz0j8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=smsNkoB7; arc=none smtp.client-ip=209.85.221.46
+	s=arc-20240116; t=1775400317; c=relaxed/simple;
+	bh=44Okvn52N6xqTGEytJH/Z5j9cTiQ194ocVa3p4+mz6A=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=PbdnnBo4T86/JQFr/zjbFmXe+SJEIwVDR02cf1SP95Ngmubw5IkDg2gUuqZ8NyotxF2icmckpLnGnzUNUGFs/5Hz/GV5VSBWlL+AoFyKQzRUdyMHw0RDgQR7s8kLXqLX5lS9D4T6pxDpGYjMxr/j/2mr8A7evM1JMyk8vIT6asA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=LJH55jzW; arc=none smtp.client-ip=209.85.128.45
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="smsNkoB7"
-Received: by mail-wr1-f46.google.com with SMTP id ffacd0b85a97d-43d0292ae5aso173806f8f.0
-        for <platform-driver-x86@vger.kernel.org>; Sun, 05 Apr 2026 07:45:14 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="LJH55jzW"
+Received: by mail-wm1-f45.google.com with SMTP id 5b1f17b1804b1-488b2260ff0so41365e9.0
+        for <platform-driver-x86@vger.kernel.org>; Sun, 05 Apr 2026 07:45:15 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20251104; t=1775400312; x=1776005112; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=kTRvg62YHKKbl2RSllukQcxTo3F/ts65IHiRDno4Nls=;
-        b=smsNkoB76KMX/iPa+KWzVzD34wtDQNKok137vR8rZkpv1Q3RnSld2tQwtxjTZ51KZO
-         Rml6lNTY1M7B6Q+ZuJFEWNWrZWegCQkmgprE/P6gEhg88iDOR5wbORT+xD6+wRRVYOn+
-         hR5I86lE99sOI9hUVHVaDlr7yCMx5suxqTibRo6u6EJfeBKbw+1k56P4JVKSQINitAP1
-         qwe7cazUYM5Brm76rK+3sty4UZbyzKWaijlQoKyWA0VLJCgXK8cXWpg3EA5fmMnWML5Z
-         TKT5lMj+4rEb9Oup7ed7qP3f4RBmkkSrkpHCQmMlEHY+f7eexMis3OlNnRlboaoYKmJR
-         XO+A==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1775400312; x=1776005112;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-gg:x-gm-message-state:from:to:cc:subject:date
+        d=gmail.com; s=20251104; t=1775400314; x=1776005114; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=kTRvg62YHKKbl2RSllukQcxTo3F/ts65IHiRDno4Nls=;
-        b=aOXZzCQt0jQeKq2xUUGnf+PLw3t+MIS3gd/gzZvodyl5yRZ/W0PA98vBPRnRosksqs
-         9UL1pA7rHcNS/TEOXVgnYD/pRdrJjGN7wStzQ59MmEAdEnthS42hsS+B5nIxblWMaPed
-         RofY9/41Aaa+oFCyv0D/SmL9tNjjbfxPCzoxFIPKz6m8LKKUAQ9cQE4PnCHTqXoQH/Fs
-         s/t1T9TG3twNJYrYWoJ4V3PQaY8ovprBOAz7XGpSMfXiikQT5G02/ZFm2atB4gYNirlK
-         zEZoYZmkC4ocf2q2GvU/df6f2Z4lzV93VaxrJo3gQ3QNzYTlghGfaP/lxFHW3OUqmW1W
-         6Jcg==
-X-Gm-Message-State: AOJu0YwWNBxaULvAsmVO5vjb27sXS09yIAZyO1Dkb3BXLBmr7Qnywcw5
-	eUv0GWwp0EQf6ax3XzlyGU49DR3FT/uNrlk7lfII5mQ6KqGh9dzAkA1kddA5RjevVbJPCg==
-X-Gm-Gg: AeBDietnRMwIsmBjVzWRbV0G1DX5hpO5QIaWtV8tCYezReU+YWcgf6B8AaxnIl+505g
-	7Xo+IQyLYMkUfUgWpuUPiI3fjEr2jZlb+i5uUphhPqAsYiDyNIax6LrMrODJTQdfO3SNGq1XlxY
-	uX/eLs3Ohw16fZoDdys1nLMvdyOJLCFHLoEW9V2q4NYi3poXhrOs+JH8dNi8f7Hf8MCva7lCrck
-	wz50q9CG8IMt7kGTE94xi7mrxYO1ZrV9kBWWlu2d+u8pst+eQzDxQLvXud+G2KU0C+JopnmnkJu
-	zxRTe9C/x+gaPmprCtbVCd373j78sr08W1QUmMER/pnTM+X5JMzgu15YQE01kMB4KaG1ScuaB2Q
-	BjHASs1zlwbKWkLfGw4QdZlz6SBJGuZk5EfZOx3RyA9HWA3SDul36QOOCdJ8Mfxa3kjPrml0qeT
-	zA9EGtXfxbDQoCV06r4t0yFyccIOIfXRbYk4b2zqZLRLBweL73gqWIJtihtho=
-X-Received: by 2002:a05:600c:354d:b0:487:575:5e3 with SMTP id 5b1f17b1804b1-488997a5edamr70650735e9.5.1775400312355;
-        Sun, 05 Apr 2026 07:45:12 -0700 (PDT)
+        bh=stAMSWyB4mZAS8H9YKj1ITgLlFTm/EJVMUZqWjHkvfo=;
+        b=LJH55jzWfzBvquZInislSJH0UIqq++kNB9MUbdytZy0BladaiuoM0N0T1Oo9T51Aeb
+         EX3328wO0sNdtoEnOx+ejM5tAB3HZI3ZRXxgMTyXJtI0JZlVO574WC4tZOfgNgMacqeh
+         PgDZ2qipo1BW1tXu4ywUA1Za7JrZY8Bt7n6liKvE+BCUN6/irCZKDPmQwjg7jJvnhP21
+         WbTYIyPRA3BjhmFi0U9vXhopAdHjgzoVm5BSRMLkdLLey72IqALx37Lhe4jBqoVktrdR
+         mzZlMXTFm9p4nQWElSxk1xfZ2uNgwC4RZynx/LDEfRLTG5JmdmBnhEAPw8A9kcp4g02v
+         Z58Q==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20251104; t=1775400314; x=1776005114;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:x-gm-gg:x-gm-message-state:from
+         :to:cc:subject:date:message-id:reply-to;
+        bh=stAMSWyB4mZAS8H9YKj1ITgLlFTm/EJVMUZqWjHkvfo=;
+        b=gsIAYIn1RT5G9jG2s+3LtFosdQiBDUT66j8mBgXA9xoZbJhJF0SaTvu3x250x/IOm6
+         gcudVQrxKegdc+aRgQRR2Pb1ew+Y4cb/1nB/yhe+kmDfNN1fjZF67oFjPVExGRKULFwH
+         4hA68RlCJogrTdcovN+tQaxTLd4vdWW5GoygL5cTTn7L1UjdIZRzgEBi99pHBF1tA2Sl
+         ULxFaCKejjTMl73XVnz3p59OcJwN6uOSBP9fjBwlCdSbaVMF6Bpu2SQnHUSnFw0TQ8Eg
+         gBnyOwjhVO+katwcQr1nhNrVGXZ+8Hnf0BkKDVpO+07pLhhBgyi1dZx4r6aSVsV3D5KD
+         2drA==
+X-Gm-Message-State: AOJu0Yysc39AY2sil7A4TEgEjIYQojjJXWvHSE9KIrLlciG8E6dSZvX4
+	z0Sd8lG1ZD1NZtGRBgtHcQccn6a9pcz6IxdK6tggWIDFHkUMCwH1jHUBu8j+DyX06p0CUw==
+X-Gm-Gg: AeBDieuQZDywNeiKoDs3EOAv+8GQ69BH0HcWY18wQO/PDShpfRQJn29W53Tvium9gJQ
+	qhkeAxNi4y7rf5Neb77yAk2fcMpkNNyzeZvozHwVJ+viyWerTbp+i8CPzetNaNKl9XNe7wqzOBm
+	/x0mzYu1VZNB9DpnuPBY+45jF+w3tYtIV7tivG8u0rhnul22In1IGZ4RxhBFT1YBkTfSeNaWj5F
+	jdW4cDXUCymBHwhKZnlIqUTAq+zEDbFUgDF93GnUYmPz7rAZHJov6OorvytQKE7EcWLYxGPBg7A
+	L1XAx1FSzjWPOc8CpyOjqC1swEB/ZVY5iJTf824rEUaStQEqnqYxKhFSr8CEDvfTmtJsiXW2qRq
+	yDpMWAU34VkMB9pIZpPc/p+YH/cSkeI4JOx5uOcX89aUznhYsL5NK7tLHJey7jVQetBuutOhEpE
+	g4IktjRD7Q0zSKd7OgZKPVR3L7l7xJcq5m3pgMP4dMk97RjEX9rXULZ0wYOTI=
+X-Received: by 2002:a05:600c:1f8f:b0:485:f1d6:2b1d with SMTP id 5b1f17b1804b1-488995d1535mr75603005e9.0.1775400313974;
+        Sun, 05 Apr 2026 07:45:13 -0700 (PDT)
 Received: from fridge.local ([2a00:1d35:c836:5700:77d9:f36f:3748:d642])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-43d1e4f1a99sm35698799f8f.32.2026.04.05.07.45.10
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-43d1e4f1a99sm35698799f8f.32.2026.04.05.07.45.12
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 05 Apr 2026 07:45:12 -0700 (PDT)
+        Sun, 05 Apr 2026 07:45:13 -0700 (PDT)
 From: Emre Cecanpunar <emreleno@gmail.com>
 To: platform-driver-x86@vger.kernel.org
 Cc: hansg@kernel.org,
@@ -63,10 +65,12 @@ Cc: hansg@kernel.org,
 	krishna.chomal108@gmail.com,
 	edip@medip.dev,
 	emreleno@gmail.com
-Subject: [PATCH v3 0/5] platform/x86: hp-wmi: Victus S fan control fixes
-Date: Sun,  5 Apr 2026 17:44:55 +0300
-Message-ID: <20260405144502.24944-1-emreleno@gmail.com>
+Subject: [PATCH v3 1/5] platform/x86: hp-wmi: fix ignored return values in fan settings
+Date: Sun,  5 Apr 2026 17:44:56 +0300
+Message-ID: <20260405144502.24944-2-emreleno@gmail.com>
 X-Mailer: git-send-email 2.53.0
+In-Reply-To: <20260405144502.24944-1-emreleno@gmail.com>
+References: <20260405144502.24944-1-emreleno@gmail.com>
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
@@ -75,29 +79,89 @@ List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-Bug fixes for the Victus S manual fan control:
-- Propagate fan_count_userdefine_trigger() errors
-- Fix cancel_delayed_work_sync() deadlock from work handler
-- Use mod_delayed_work() for efficient keep-alive timer resets
-- Fix u8 underflow in gpu_delta calculation
-- Add mutex for concurrent hwmon state access
+hp_wmi_get_fan_count_userdefine_trigger() can fail, but its return
+value was silently ignored in hp_wmi_apply_fan_settings() for
+PWM_MODE_MAX/AUTO. Propagate these errors consistently.
 
-Changes in v2:
-- Patch 4: Store gpu_delta as 'int' to handle negative deltas correctly.
+Additionally, handle the return value of hp_wmi_apply_fan_settings()
+in its callers by adding appropriate warnings on failure, and remove an
+unreachable "return 0" at the end of the function.
 
-Changes in v3:
-- Add Fixes: tags to all patches.
-- Patch 4: Remove unnecessary casting.
+Fixes: 46be1453e6e6 ("platform/x86: hp-wmi: add manual fan control for Victus S models")
+Signed-off-by: Emre Cecanpunar <emreleno@gmail.com>
+---
+ drivers/platform/x86/hp/hp-wmi.c | 23 ++++++++++++++++-------
+ 1 file changed, 16 insertions(+), 7 deletions(-)
 
-Emre Cecanpunar (5):
-  platform/x86: hp-wmi: fix ignored return values in fan settings
-  platform/x86: hp-wmi: avoid cancel_delayed_work_sync from work handler
-  platform/x86: hp-wmi: use mod_delayed_work to reset keep-alive timer
-  platform/x86: hp-wmi: fix u8 underflow in gpu_delta calculation
-  platform/x86: hp-wmi: add locking for concurrent hwmon access
-
- drivers/platform/x86/hp/hp-wmi.c | 55 +++++++++++++++++++++-----------
- 1 file changed, 37 insertions(+), 18 deletions(-)
-
---
+diff --git a/drivers/platform/x86/hp/hp-wmi.c b/drivers/platform/x86/hp/hp-wmi.c
+index 988a0acc9622..eac39f68d762 100644
+--- a/drivers/platform/x86/hp/hp-wmi.c
++++ b/drivers/platform/x86/hp/hp-wmi.c
+@@ -2353,8 +2353,11 @@ static int hp_wmi_apply_fan_settings(struct hp_wmi_hwmon_priv *priv)
+ 
+ 	switch (priv->mode) {
+ 	case PWM_MODE_MAX:
+-		if (is_victus_s_thermal_profile())
+-			hp_wmi_get_fan_count_userdefine_trigger();
++		if (is_victus_s_thermal_profile()) {
++			ret = hp_wmi_get_fan_count_userdefine_trigger();
++			if (ret < 0)
++				return ret;
++		}
+ 		ret = hp_wmi_fan_speed_max_set(1);
+ 		if (ret < 0)
+ 			return ret;
+@@ -2372,7 +2375,9 @@ static int hp_wmi_apply_fan_settings(struct hp_wmi_hwmon_priv *priv)
+ 		return 0;
+ 	case PWM_MODE_AUTO:
+ 		if (is_victus_s_thermal_profile()) {
+-			hp_wmi_get_fan_count_userdefine_trigger();
++			ret = hp_wmi_get_fan_count_userdefine_trigger();
++			if (ret < 0)
++				return ret;
+ 			ret = hp_wmi_fan_speed_max_reset(priv);
+ 		} else {
+ 			ret = hp_wmi_fan_speed_max_set(0);
+@@ -2385,8 +2390,6 @@ static int hp_wmi_apply_fan_settings(struct hp_wmi_hwmon_priv *priv)
+ 		/* shouldn't happen */
+ 		return -EINVAL;
+ 	}
+-
+-	return 0;
+ }
+ 
+ static umode_t hp_wmi_hwmon_is_visible(const void *data,
+@@ -2528,6 +2531,7 @@ static void hp_wmi_hwmon_keep_alive_handler(struct work_struct *work)
+ {
+ 	struct delayed_work *dwork;
+ 	struct hp_wmi_hwmon_priv *priv;
++	int ret;
+ 
+ 	dwork = to_delayed_work(work);
+ 	priv = container_of(dwork, struct hp_wmi_hwmon_priv, keep_alive_dwork);
+@@ -2535,7 +2539,10 @@ static void hp_wmi_hwmon_keep_alive_handler(struct work_struct *work)
+ 	 * Re-apply the current hwmon context settings.
+ 	 * NOTE: hp_wmi_apply_fan_settings will handle the re-scheduling.
+ 	 */
+-	hp_wmi_apply_fan_settings(priv);
++	ret = hp_wmi_apply_fan_settings(priv);
++	if (ret)
++		pr_warn_ratelimited("keep-alive failed to refresh fan settings: %d\n",
++				    ret);
+ }
+ 
+ static int hp_wmi_setup_fan_settings(struct hp_wmi_hwmon_priv *priv)
+@@ -2597,7 +2604,9 @@ static int hp_wmi_hwmon_init(void)
+ 
+ 	INIT_DELAYED_WORK(&priv->keep_alive_dwork, hp_wmi_hwmon_keep_alive_handler);
+ 	platform_set_drvdata(hp_wmi_platform_dev, priv);
+-	hp_wmi_apply_fan_settings(priv);
++	ret = hp_wmi_apply_fan_settings(priv);
++	if (ret)
++		dev_warn(dev, "Failed to apply initial fan settings: %d\n", ret);
+ 
+ 	return 0;
+ }
+-- 
 2.53.0
+
