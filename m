@@ -1,90 +1,94 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.7])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pj1-f43.google.com (mail-pj1-f43.google.com [209.85.216.43])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 742DD24E4C3;
-	Sun,  5 Apr 2026 09:01:29 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.7
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 259BC3FFD
+	for <platform-driver-x86@vger.kernel.org>; Sun,  5 Apr 2026 09:15:41 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.43
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1775379690; cv=none; b=ZMEjEloQ2xQFDlaLHPvEMgZs35XydNf/JiYXuTdpOhOZCjyo8hd/aGxe7QlsWJuOzuIBhpjWmVIkphoMr89vnwbd4DLRbQ+8CZPEhOgKyt7KviPCfOyrNZ6ZMDJovM9wsvGLvnkza07HIaapQ2P+rAT0HKB8NYvgdevrtmhDjlo=
+	t=1775380542; cv=none; b=pZfXVJQb2xCX3qPqKpEFZ0g5qg8Zuq6l42ZosxB+a7ECYKMC+4h5jlgERKxUQ42mTKSQ1xAkuOE1zghGjX51ZcdhZl+Sn8vdmZhLvP/f8gll9dbxF1qI8/e5PTZ7R9WEfrlECy3XWPD4wx79aHdIkLs6nXiwnrxORNbpNFGjPRk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1775379690; c=relaxed/simple;
-	bh=3vliQ17qwShGDX6gdqEdG1kTB8ZKtibwy9Eu/jiyVng=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=iN+mHwx0WPeNCbnkPJSwGu28OK9twJqeVovmRU0v1MLVBrlOpXF4n2who1feJ5FCkynCFdj3ZOokfxaOnzzQbODvzEFF4xdv9dA3d3JfLWeZjj356+u8Q6RMh3KPRpqLrbeIP1djXr8xXpvuL7Je/HmUbeR9oVLp2Mqq6VnHJGo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=pass smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=f3YoSkqy; arc=none smtp.client-ip=192.198.163.7
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.intel.com
+	s=arc-20240116; t=1775380542; c=relaxed/simple;
+	bh=QsgUECxygV8T/LN69w1baPyglSdRdFa9YjKb3vC8QAo=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=RX1uB+cjIPhMVEz/xz39oc2MMoeFIU5HeIe9RDNhyLxPEL7atDk5VZTY/HTerpB5TxWNdZMW9akE0JaZP4Gl1AmFoEJpW8nFV4IF/28QRTM++UaEaYyGRnTENqXVwOAswzjathStIi/DJiA5vdMkaaONycxrsEyUl+ouQIfneCs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=UtzZkoEm; arc=none smtp.client-ip=209.85.216.43
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="f3YoSkqy"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1775379689; x=1806915689;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=3vliQ17qwShGDX6gdqEdG1kTB8ZKtibwy9Eu/jiyVng=;
-  b=f3YoSkqyO/bNtgBOdMJcj0xBBvXazjBxoHPs7ndcPpK4zivuB+PH/cSz
-   zI8r7hRRblU3VYN2/tsqEFCE8oVWQ6TiykaCmly6ywvMa4wFop6AJnQXL
-   vGzRJML0SUD9UNVQSEJzVzLJTa+qARTBJmsqXGo1C7Nugd1b389y+oA6K
-   kASOCHbAdapits+o89VNYtPq9mxJghVV+spZzoeELcre2B1DLIGZOu7QC
-   FMyK6fdvRXfT62JxyoqBs8DOhJkJePOy3E/ldHjIVRlQuTz+ksRR/g7lx
-   MvMN6fvmqTpE0PEJfzPLxpnW3D15ut6Ozut+rMjdGzGnB3LtpsHvDz1cN
-   Q==;
-X-CSE-ConnectionGUID: GrHcENiXSFSuGnltFGDU2g==
-X-CSE-MsgGUID: +ehIC8PxSBqJ8Q1n0RBq4g==
-X-IronPort-AV: E=McAfee;i="6800,10657,11749"; a="101828790"
-X-IronPort-AV: E=Sophos;i="6.23,161,1770624000"; 
-   d="scan'208";a="101828790"
-Received: from orviesa008.jf.intel.com ([10.64.159.148])
-  by fmvoesa101.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 05 Apr 2026 02:01:29 -0700
-X-CSE-ConnectionGUID: cM7AsFSHRY2sILQpelW3xw==
-X-CSE-MsgGUID: nW44ssMMSESwvf2a8hlEZQ==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.23,161,1770624000"; 
-   d="scan'208";a="227580546"
-Received: from abityuts-desk.ger.corp.intel.com (HELO localhost) ([10.245.245.247])
-  by orviesa008-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 05 Apr 2026 02:01:27 -0700
-Date: Sun, 5 Apr 2026 12:01:24 +0300
-From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-To: Vasu <vasuhansalia05@gmail.com>
-Cc: platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org,
-	linux-gpio@vger.kernel.org, djrscally@gmail.com,
-	mika.westerberg@linux.intel.com
-Subject: Re: [PATCH 2/2] platform/x86: int3472: Handle GPIO types 0x02 and
- 0x12 for Lunar Lake
-Message-ID: <adIk5GhZ9ZXj1kt9@ashevche-desk.local>
-References: <20260405013413.31970-1-vasuhansalia05@gmail.com>
- <20260405013413.31970-2-vasuhansalia05@gmail.com>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="UtzZkoEm"
+Received: by mail-pj1-f43.google.com with SMTP id 98e67ed59e1d1-35da2d35eccso1955352a91.0
+        for <platform-driver-x86@vger.kernel.org>; Sun, 05 Apr 2026 02:15:40 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20251104; t=1775380540; x=1775985340; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=QsgUECxygV8T/LN69w1baPyglSdRdFa9YjKb3vC8QAo=;
+        b=UtzZkoEmYnLOep6m+Z7hgR0dNwzBhIEFfIieZedYhqaHcDkLb7/Q/UzdcnYewjU6CE
+         wbT6jAm06d9quupXWZ3H+QaTlewJpO08MpsD1RHWuB9PZG63IB0ktHjj44HzuSY3Kv9y
+         Sptbsau+M/0FqVVE6kxG2ltBcRQ3s1WkjXb9REUuFj80mSaIr4qzqzacY2VLpJgIb+A2
+         3CRzKlJKM+8hPEmaVft+jvBLjKX9pq/ETNxEWTG137+8kk8JtQyGhT0kl98G4PhfbA54
+         bOStoEb5oBoa6E++b+Tci5+xx3oUkmJRBirzebELJwcYP4Ims4BGAre2aD28D4FsOudR
+         DiNA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20251104; t=1775380540; x=1775985340;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:x-gm-gg:x-gm-message-state:from
+         :to:cc:subject:date:message-id:reply-to;
+        bh=QsgUECxygV8T/LN69w1baPyglSdRdFa9YjKb3vC8QAo=;
+        b=Cl3RGKC7ZbfIXhm64mR7hmEZMybt8AYV/ALjWzof/c3Y27JCjDaR9FI1KCCm+2hLyd
+         BKrycOzx6boZD2aUIPR+UVQj+26AzN/HDl+VeOKW/VEkiQKK5kRRFbUQ0i4seLzMUqzX
+         0t0qu+647FrwLR4z0ISy9kX3kcP/zf6MI5b24s7dCJ3XtdEzFJadUD9YtBPwbLHwo8P/
+         YiWXuhvTwtjos76prLDvREKWffOA5gc0SVdH4Xp49smoWxdOlHHiqCSLrTgaqTlLeh28
+         2QDZkWyrxPSCnt1CBG7F32eNDxi1o+5Ojr8Yt4dyXtaK8+jJeHdaVpRv5tfVxTkpKb2s
+         Bl8g==
+X-Gm-Message-State: AOJu0YzCHglb6hF2RLr8gr846XSNZfKTBrBhgZ+Vm8yx3wnmGWgSw+B8
+	ND4uoCspzuqILaYzKw+WzXbDn3+jzPpnMpdam1fpCcfJmBm6CIKCU4yo
+X-Gm-Gg: AeBDiesHpHy5Locy4Mw/2uf/uSHokwwyBWeMCYMFf2g2NZfrXAhhfZyqmAkn/jBTVyO
+	Z0UCm1CacI/+keD/jL/G7XfBAJKNUDFZ2hHcUZjX579zWLV7qC1o8wIOMZAhYOVS7i8dIebP6/4
+	p0s+zqLGL/tUJlspxppjHqOCdTAJ9GZPqutnHzQGDUM9QGHhpEGrJE4umobYqM95z8TkXUhFrgY
+	DZL8pugBrmUTFYShboSxAzLxMcA7TxHVdXxnNK7Jirw3MS4Q3wpoe6o+kWzJq/ENUT+g52oYxZ/
+	a3oXQ+dPm3DCMLKLycc1pprgTXtU6GmSQMuGQW6rr6yGrUvH9cr7uX26LuY+fVLxd7kp1geCjtg
+	AgN910mMZCNWssSQhilk6+aG+apXOMUZa0uoM4PikMus7F8IvLMmzbm4XqGlhrmwoGIUrQYsF0r
+	0f3Qwg7TBPlsRgA7d2w0moqDg=
+X-Received: by 2002:a17:90b:4c8b:b0:35d:a2d3:5c44 with SMTP id 98e67ed59e1d1-35de69d5567mr8170403a91.28.1775380540368;
+        Sun, 05 Apr 2026 02:15:40 -0700 (PDT)
+Received: from dell.. ([2406:7400:98:ade4:d639:9368:51aa:bf9c])
+        by smtp.gmail.com with ESMTPSA id 98e67ed59e1d1-35de674a87dsm3208105a91.3.2026.04.05.02.15.37
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sun, 05 Apr 2026 02:15:39 -0700 (PDT)
+From: Vasu <vasuhansalia05@gmail.com>
+To: andriy.shevchenko@linux.intel.com
+Cc: platform-driver-x86@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	linux-gpio@vger.kernel.org,
+	djrscally@gmail.com,
+	mika.westerberg@linux.intel.com,
+	Vasu Hansalia <vasuhansalia05@gmail.com>
+Subject: Re: [PATCH 1/2] pinctrl: intel: platform: Add INTC10B5 ACPI ID for Lunar Lake
+Date: Sun,  5 Apr 2026 14:45:17 +0530
+Message-ID: <20260405091518.5322-1-vasuhansalia05@gmail.com>
+X-Mailer: git-send-email 2.43.0
+In-Reply-To: <adIkXdCXr2x2zTrE@ashevche-desk.local>
+References: 
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20260405013413.31970-2-vasuhansalia05@gmail.com>
-Organization: Intel Finland Oy - BIC 0357606-4 - c/o Alberga Business Park, 6
- krs, Bertel Jungin Aukio 5, 02600 Espoo
+Content-Transfer-Encoding: 8bit
 
-On Sun, Apr 05, 2026 at 07:04:13AM +0530, Vasu wrote:
+From: Vasu Hansalia <vasuhansalia05@gmail.com>
 
-> Thank you for the feedback Andy.
-> 
-> Could you point me to the series that is adding STROBE support so I
-> can avoid duplicating that work?
+Yes, multiple PA14250 variants are already on the market and shipping.
+The Core Ultra 5 variants ship with Ubuntu 24.04 and are Ubuntu-certified.
+The Dell Pro 13 Plus (PB13250) with Core Ultra 7 266V is also
+Ubuntu-certified. My device, the PA14250 with Core Ultra 7 266V, ships
+with Windows 11.
 
-Sure, you can find it on lore archive:
-https://lore.kernel.org/platform-driver-x86/20260401203638.1601661-1-mnencia@kcore.it/
-(It took less than a minute to find :-)
+All of these Lunar Lake Dell laptops share the same ACPI BIOS issue with
+INTC10B5 not having _CID set properly.
 
-> For 0x12, I will add a proper define. Based on the OEM kernel module
-> behaviour, would INT3472_GPIO_TYPE_AVDD be an appropriate name, or do
-> you have a preferred name for this type?
-
-Better to follow the name in accordance with the specification(s).
-
--- 
-With Best Regards,
-Andy Shevchenko
-
-
+Regards,
+Vasu Hansalia
