@@ -1,259 +1,190 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.17])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A7DC32D77F7;
-	Sun,  5 Apr 2026 17:36:38 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1775410598; cv=none; b=oyzcCAUcTVGD4ISlsAEjjQ8tviC1jPhyQyiHw8ziiSE5n0VD/QxsnCGmTkoSAPEDDaxx//U/1OfEmy142OskDp/ovtDxk/t7lauc+3Rc51CLGhU5Ai0iDwoKWOwsybVKiF2CH5B2Kw8LbsQpdjs4remuN3cxUd5HiXgXk4SJzYU=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1775410598; c=relaxed/simple;
-	bh=C6bIGNqSPLUuNJnBYEa3V+Uvm9RizUc5DJtv6szIM44=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=jpkwBH+hrqo99e2wnrTlS0tDtYjsc0H83ULRAWBrmhhK1YGiqHy4eUFcS91XQ1cpYXsoAjHPzJGy5Q3yPR/AvtF0tcJOhWgGN+1N07EoaPdrEFMGCpPNlqt6ohFDb6D042fvvmdcSKK0DkChjJVeKi8GrWBZQioOdCp0BWw/5Mg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=qOqa1H61; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6B3332F5328
+	for <platform-driver-x86@vger.kernel.org>; Sun,  5 Apr 2026 19:24:18 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=198.175.65.17
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1775417060; cv=fail; b=haKtD3WqLFZ6VkyUqbsRciJEDtkhAc5mZnKnPCCB8RAEl5fgdtVP1qLKLKmUoOT9KTlm0mjJmE8+hskaBCDKOEey2+FxTNhc4UEdXgZ0jGtrezUo1mjPoidBXASkAbgxwDN8zLC25XfBZFlHQ4snCAbd8Ufo3fLoNumxKeshpTI=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1775417060; c=relaxed/simple;
+	bh=yrXW7Ta22zVEANzmRVKYdfkmWvIRvytrV8wtUTu0liU=;
+	h=From:To:CC:Subject:Date:Message-ID:Content-Type:MIME-Version; b=sD+Zuve1uCRj46j8F7e+R/azn69qiaktUhuAr/dBS0ISoc4Zn/rpdzod3L18pBsEkJdAXlHjL0eJU57O6TUapghp3QBmSrJMEyqNlSYz6AG40DRlUrGmJgznf5po3ZzDXkH08C8JfcGNmbC7Q0H9lbX0gry0D8CrNvkm//rmmOs=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=SH5BffMv; arc=fail smtp.client-ip=198.175.65.17
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="qOqa1H61"
-Received: by smtp.kernel.org (Postfix) with ESMTPS id 57CE8C2BCC9;
-	Sun,  5 Apr 2026 17:36:38 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1775410598;
-	bh=C6bIGNqSPLUuNJnBYEa3V+Uvm9RizUc5DJtv6szIM44=;
-	h=From:Date:Subject:References:In-Reply-To:To:Cc:Reply-To:From;
-	b=qOqa1H611pGbCVP4dtHC25DocqUniF0HRG4wcRbEZFX0jR7aJcTtB/73/GWLxCiR8
-	 BP6CDTM4dvss9MZe2ylWdLGyLKEYo68SCudUzftJTQC58wHdBrGdjDk7Rm6VEBMN12
-	 JToR3rWpbh3qyb4hfYGcDTq6AYSzTwiMbaoBRLhOQH/wPIbijm0h3RH2UJWlUmJnin
-	 XszwpvGHnpnT1oi0Ie7XoLQRGYwmcU0taxS7i7t3ydtukNkwwJ9cCTO0/uiTRDB+Xy
-	 BxU/M2TiMdZQVSCwz1dV2QvU8PErmLTHOWbKrYQOr3EjLCVn0tFdQcVTUe8aJxtwAl
-	 hLN8ef+cr7njg==
-Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4EB60E9D812;
-	Sun,  5 Apr 2026 17:36:38 +0000 (UTC)
-From: Markus Probst via B4 Relay <devnull+markus.probst.posteo.de@kernel.org>
-Date: Sun, 05 Apr 2026 19:36:29 +0200
-Subject: [PATCH v6 2/2] dt-bindings: embedded-controller: Add synology
- microp devices
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="SH5BffMv"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1775417058; x=1806953058;
+  h=from:to:cc:subject:date:message-id:content-id:
+   content-transfer-encoding:mime-version;
+  bh=yrXW7Ta22zVEANzmRVKYdfkmWvIRvytrV8wtUTu0liU=;
+  b=SH5BffMvbfeF5iWQ8cJrSo2+BLGcnBSqC1l2s2aR7e3p7SkA0WWfNkq/
+   JsFndKyroDBjbPrpFzHro2mgCI5f7UvEKB2rWRjM7KhoNKfFTQAp/EIme
+   PbTU+3Jc39EtxprByfcYtFz9dqGXa29ZYfa6Jgx/kwzVqG2M+Yw43Kkx1
+   ZyTXlmkf2G7T7TXEvnqWv3dCTNV62/HFxcWufP9+J7zxedg9FwGpe37zi
+   crteCR5mT3XTGPkyKnwGYNI56kxgYJ2GSZJatxSqfMf+ROm61ac+M43Wd
+   L0oYGMWG5Gsbk9NlzowveDyvxeMbgrDnAXJ9RqThqkL2LUlZjBn2/9mWH
+   g==;
+X-CSE-ConnectionGUID: icEy5T8QR1m+KIuE9rn2qQ==
+X-CSE-MsgGUID: 8vRmw9IHSpCkR4QkZga42w==
+X-IronPort-AV: E=McAfee;i="6800,10657,11750"; a="76352039"
+X-IronPort-AV: E=Sophos;i="6.23,162,1770624000"; 
+   d="scan'208";a="76352039"
+Received: from orviesa001.jf.intel.com ([10.64.159.141])
+  by orvoesa109.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 05 Apr 2026 12:24:18 -0700
+X-CSE-ConnectionGUID: IQ7zb02dStaZ4X6B/6SBrQ==
+X-CSE-MsgGUID: U4SFktOaSZ63aBeA6+hrHg==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.23,162,1770624000"; 
+   d="scan'208";a="265682971"
+Received: from orsmsx903.amr.corp.intel.com ([10.22.229.25])
+  by orviesa001.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 05 Apr 2026 12:24:18 -0700
+Received: from ORSMSX903.amr.corp.intel.com (10.22.229.25) by
+ ORSMSX903.amr.corp.intel.com (10.22.229.25) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.2562.37; Sun, 5 Apr 2026 12:24:17 -0700
+Received: from ORSEDG902.ED.cps.intel.com (10.7.248.12) by
+ ORSMSX903.amr.corp.intel.com (10.22.229.25) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.2562.37 via Frontend Transport; Sun, 5 Apr 2026 12:24:17 -0700
+Received: from CY3PR05CU001.outbound.protection.outlook.com (40.93.201.15) by
+ edgegateway.intel.com (134.134.137.112) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.2562.37; Sun, 5 Apr 2026 12:24:17 -0700
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=RDCaSnBlSsaOsz6Qepy74X06URzwPAMNqXIFKT1zMSTT/vDwzyKvHp2rcKECBUVaxSC3V074YRqdxHQCPo+CMDBGZrQZXe0bLR5L671lygB0qdAqkuAHkdjqgXI6fj/U3+cM2ZLlZUoMgjHcTOBAOCR8pZFw5XpbsHKgrBgQWMqhufawlrIbHao57c3aCuEgJZZT1n2eG/gwgjVF1vNlz1F/P67QeHiQWf4N0JHQwfcJQ7bbiozatIDcdIC5vrrHN+nHNwHty4XqqLvtvC5c62vr5Y9/JK1B5J7ch++eqn1PYWcct3joJ7h/bW64HyBz93DU1cdvidyZGoZuTfpI7g==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=yrXW7Ta22zVEANzmRVKYdfkmWvIRvytrV8wtUTu0liU=;
+ b=Htxf1yPbiC53PzIcZF3bTl5J4cVOrznftdGfHj1MwLT/EjM+N4oYB7Mb2iXknaVSgYu4To4Tv1ESRMFMG5jzP/gwiJ44CxR7k7RNZ06ckSz2Dv25ANvHCwkrm5HBdozOhGp3YiPhopuC/nnciehsw1pVXulWplZEEG2SPIU6COuyjfJkKCXU59cievFAB1073lOoNdP7ADxeA2/klyWHJ4KSHhl4xdunDsBUI4RQKdMlLOqBlZirc+B/1Ch0vjhzMjLRuZnoHfQXbByGCyG6ekBKFkKeTeumlXSexQUEqZw9sw4Kkv9QPsb2RAlnI6BW6pVEkEG3zx3BYPKH+pv/eQ==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=intel.com; dmarc=pass action=none header.from=intel.com;
+ dkim=pass header.d=intel.com; arc=none
+Received: from DM8PR11MB5592.namprd11.prod.outlook.com (2603:10b6:8:35::6) by
+ SA1PR11MB6847.namprd11.prod.outlook.com (2603:10b6:806:29e::9) with Microsoft
+ SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.9769.18; Sun, 5 Apr 2026 19:24:10 +0000
+Received: from DM8PR11MB5592.namprd11.prod.outlook.com
+ ([fe80::4fe4:767e:7ec8:6fd9]) by DM8PR11MB5592.namprd11.prod.outlook.com
+ ([fe80::4fe4:767e:7ec8:6fd9%4]) with mapi id 15.20.9769.018; Sun, 5 Apr 2026
+ 19:24:10 +0000
+From: "Pandruvada, Srinivas" <srinivas.pandruvada@intel.com>
+To: "hansg@kernel.org" <hansg@kernel.org>, "ilpo.jarvinen@linux.intel.com"
+	<ilpo.jarvinen@linux.intel.com>
+CC: "srinivas.pandruvada@linux.intel.com"
+	<srinivas.pandruvada@linux.intel.com>, "platform-driver-x86@vger.kernel.org"
+	<platform-driver-x86@vger.kernel.org>
+Subject: [GIT PULL]: tools/power/x86/intel-speed-select pull request for
+ 7.1-rc1
+Thread-Topic: [GIT PULL]: tools/power/x86/intel-speed-select pull request for
+ 7.1-rc1
+Thread-Index: AQHcxTHHVNhlSilEYkCy61pzdUAuaQ==
+Date: Sun, 5 Apr 2026 19:24:09 +0000
+Message-ID: <0b288f7a7024f896a1699ac3609c7da39c588d03.camel@intel.com>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach:
+X-MS-TNEF-Correlator:
+user-agent: Evolution 3.58.3 (3.58.3-1.fc43) 
+authentication-results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=intel.com;
+x-ms-publictraffictype: Email
+x-ms-traffictypediagnostic: DM8PR11MB5592:EE_|SA1PR11MB6847:EE_
+x-ms-office365-filtering-correlation-id: 79eae14a-7183-44a2-9fc5-08de9348e9a1
+x-ms-exchange-senderadcheck: 1
+x-ms-exchange-antispam-relay: 0
+x-microsoft-antispam: BCL:0;ARA:13230040|366016|1800799024|376014|18002099003|56012099003|38070700021;
+x-microsoft-antispam-message-info: ttFordlPI9qNuE/OCzf9a4umgE8XPIfnzndajARkbfwa7msCBclpNegPoGiVxmybxzBjiBii6O8DbJ/WY7V8LJlZ7v0+nN9fEhI5iib5YNVddB49Bay07vr2ml51JQeUxf6YMW6mq2Y32jByBmx8DciIlfvGgydusbQ5JwAEXD2ePrX8Unte+qufTvrE4c2d+3nCroeO8a4Fz8WlqN6uUuba2OFUEeu4q5/eIxdnwmfazAspx61QtfDA2L183eJUQA8V1HAR59/TLefJLz65OfI1dhTyZJcdBPsb2bLkkCqUqQhJO67zpGiXH6VvzWygGBbIfYabtQ2VGo7toRl97ha/g4TkEUkp/UUfti+TjaBu2S28B3d7sOiS6VYZcxz32P8gzvITZmwucMYp8cSkhml0M+vnAOH8uHajRdYZHW1yXIxbNlV278OHgZOYQmvOCuEofklA/QqOjnn6et6yLQvdw97TgV2e/Rdi3rUJk4FhtAhyvhzEY4quvRhcv+TGUVnvCPfae3H1xg5c4Wf5WVhGMfBToTPPsYstIu2UIu89q5RU8OSgvB/yGSsngtMkjlBGqItp21Ceebhb7oEC5pXICj5hiLKxwbGdJI20TC85g7E1Zxk55s5LlqmVM8iTAkRl+gCF1xVtgnYL+p1eeVXN8OiGdoGfEQLFwn7M6dFXIed5HxZKl45TsT3uIYBQivMSgJoXfL2iZMyKF0Tgh2i3gnNGBC9j0PJzVcrZI6QXaw8GSkI4BQo4pYzCtipeuLA/KCiLE/pOgkgKKzdkQwje2iRREKI6zZZdVkJtScI=
+x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DM8PR11MB5592.namprd11.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(366016)(1800799024)(376014)(18002099003)(56012099003)(38070700021);DIR:OUT;SFP:1101;
+x-ms-exchange-antispam-messagedata-chunkcount: 1
+x-ms-exchange-antispam-messagedata-0: =?utf-8?B?ZjNwb1kwRjRBSmhYUWozc0ovMmZJV3c4WW1rRTBGNU5FeVVISjA5ZkFWNFFt?=
+ =?utf-8?B?TURNSjJmRUtIVHVQdlpXOHpLU0t1SzFUTTlLdkVaU3VEb1JMM00wNTJ0WFln?=
+ =?utf-8?B?MFpVRmxSNGgvTEkwc2VSZnRSNUw3QzR5N3NTZXRGN0M3eGZtczRnNldpTU5Y?=
+ =?utf-8?B?bzBGcVBOYkVPZUZjQktmR0wyaGxxY3BlR3RmOVNMTElUa1JkdFk5NG9MUHpn?=
+ =?utf-8?B?VEU2R25rUDhsZ3lMN1QrSmZHUTd1Zy93ajFZdm4wc2VsU0wvNVhKOEh0OTFy?=
+ =?utf-8?B?UndnaHNMRHZzempxd0hmU3hSQUNMZmZqSVFSb1J3d2ZtZDBCeUIyV0Mxbi9Y?=
+ =?utf-8?B?M2d6blJBZ2R3eWI0bmFFNWw1SGtWQXJOdDFpWGJFQUxaV0ZGU20wRHptOEhU?=
+ =?utf-8?B?eUViKzlJYzJrOGtIdllqYXEvUXNDZWFMWUVya0hZSmF5ZWQ1bGpGUG1PaDZJ?=
+ =?utf-8?B?T3JmR2xDWnVKdUk1ZCtYbFFvc283a3Fjc1lvaEJHY2ZjMkZSMnphTGxIQXhI?=
+ =?utf-8?B?NkxrQmlLUmJ6SGkwMzZMV2pGQXVXSnc4TmowZVNvaU81L1EycDI0WlJHVVZ1?=
+ =?utf-8?B?V2hpRW0zd1pDNWQvMlFWVUhodDI5allWeVdMWkkwUVFGVXJHK1h6Q2ZiMXJD?=
+ =?utf-8?B?RjhadzNEYzZVbUp2ODRlT0xTMkFoOTRTNVpocWNxckkwa0RZTFE2akFZOUdQ?=
+ =?utf-8?B?ZTRBdEE2ZUI2OTlMVWpQUWtKYU9NM1ZjaFJMU08ybmJJZlBmQ1VmSXNQVmV4?=
+ =?utf-8?B?NWpZcU5UaERlVUdOZitpMVJCbkxacUFSam13U0xHTzMvNWp1RDFmWit2NXdx?=
+ =?utf-8?B?RkdyQnJwbk5aa2RDM1lwVDZLTW1JM2lkZ0ZmY1g0Wkw4TzhRYm1xRjdnTEZn?=
+ =?utf-8?B?c2x5NGFiNG0vSWtFODRsaG1heFB5R1ZneGhsVmFiSWhhQkE5S25WQi9OeVlI?=
+ =?utf-8?B?ekRJQ1piRml1R3kycjVFdXhtU0pLcVFsVG1RY0VLQXpZcnZaUzlmbHNNbEhO?=
+ =?utf-8?B?Q0pzckJjV2hYdUxlR3VEd2NyNmpwT3R1UEQrUWdYSkdvN21veVNzeFh4S1BN?=
+ =?utf-8?B?QnVJSTRoMzBXbjlkNkdMcGVYTmhEL3M3V2p6U2NUdnNCWEdDQW4wcmU0L0c0?=
+ =?utf-8?B?WEp5SHlsMkZuYUVaZWpPV0lDZ2JWSWt1K0FUbldycjd0aS9kYWhpd2pOaThV?=
+ =?utf-8?B?L3BxZHladUd4ZHkxM0Q4MkdGWFBHWmRZc3NRcDFDd0pacWNiVG5td0NCNnVD?=
+ =?utf-8?B?TW51a3B2Z25iNDFic2E4OXNWVDIvUWFSdThyV1VlVlFBaGc2MzZzV3hTNFdJ?=
+ =?utf-8?B?QkRyc1R4RnIvZC9LcCtFbVJoSjUyVHBaVFVUK1hqQ2plVEliWHgwQS9hMDEx?=
+ =?utf-8?B?K2VPdHFSdVhDbUpEQ0tyTHB2K1ByK3pCZHB4c0N2cHpjaldLcitKZWRFZmRU?=
+ =?utf-8?B?TmFudjlldHplbTY1dk8zRmJMMzBlQm5aclNOS0Y4S0VpdThzV0FVTFZQOW84?=
+ =?utf-8?B?NGRERTVCWDZLblQyeE1ZcWxVR3ROOVJKZkZFcUhhNGROVENSWEEvQlJ0TEZZ?=
+ =?utf-8?B?MUw1dlJXVWoxaW1WVmhOS1NSVmpxQWNQejcweXU1bmpQbFhkY0xUN09lWTdp?=
+ =?utf-8?B?Mmx5MWV1Zi9nSkhHYVBGYVZuVXhLZTFxT3B3NUVzdk02dE5DaTNmeVlMdUZL?=
+ =?utf-8?B?QjZlc25kS0s1T3IwaDdtNXNreUszNUxGZklRbnBXTE5JaDg2N0VBZ1RadlpP?=
+ =?utf-8?B?dHZ0dDhCdW12UnppWERvWWpDQlYwdngxRldKUVRIZnorYUIrQkEzdE9aYXhZ?=
+ =?utf-8?B?Tm9QYjZtKzVxQmR5ZHA2WWZHSDRMUzZMd1JGN0cyMENEUXV4NllyVDdERC9q?=
+ =?utf-8?B?MXdqOVZmaHJxNzg5L3NaWEg2V1AxZjBjUFNNSi9GbFBBcjdHd2xvT0dvUmZk?=
+ =?utf-8?B?QlhwYWppUGNyNWt2ejFaLzU5bERGUDByL0JCdzFTa3dHSHNhcStNOWZQb3pE?=
+ =?utf-8?B?RllWenREM1hLN1Y1R1RSMVIrZWJyOU03by9EZ0hzeWoyM0hXTE1FM0RXZjdo?=
+ =?utf-8?B?VkZubWRQaFlNQ1lGbEZsT29PU0pSY1FjLzA5UHRNRDhXVUNrclNjNDdmU1dq?=
+ =?utf-8?B?MG9GdzJOSm1Nb21oclpFRWhXNGxtbld2OWdZdVhGTTcveUYwUW1IajNqbCs2?=
+ =?utf-8?B?UnVhT21CQ1dEaUlDb2w3QXBBRTRLVWhaa25yOUVUVXpGdlU4cm0xa3dpT0NV?=
+ =?utf-8?B?UWNMRzJXQ1RtLzE1TnhrZnRvNFNYNkpDNTI4dllHMno5ZXZ1YnBzSmFDcGlH?=
+ =?utf-8?B?RkFLNjFYSnJQQVU4S2ZrY3hEWUxFMlFMei9IUFcwRzhFRGZSalhtMG02alY2?=
+ =?utf-8?Q?w1ZNqZiUrQoyRafDK3BFh7o1zKfPjWHuXnPzC?=
+Content-Type: text/plain; charset="utf-8"
+Content-ID: <6E276970808EAB4E9853B5BFA6A384D7@namprd11.prod.outlook.com>
+Content-Transfer-Encoding: base64
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Message-Id: <20260405-synology_microp_initial-v6-2-08fde474b6c9@posteo.de>
-References: <20260405-synology_microp_initial-v6-0-08fde474b6c9@posteo.de>
-In-Reply-To: <20260405-synology_microp_initial-v6-0-08fde474b6c9@posteo.de>
-To: Hans de Goede <hansg@kernel.org>, 
- =?utf-8?q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>, 
- Bryan O'Donoghue <bryan.odonoghue@linaro.org>, Lee Jones <lee@kernel.org>, 
- Pavel Machek <pavel@kernel.org>, Miguel Ojeda <ojeda@kernel.org>, 
- Boqun Feng <boqun@kernel.org>, Gary Guo <gary@garyguo.net>, 
- =?utf-8?q?Bj=C3=B6rn_Roy_Baron?= <bjorn3_gh@protonmail.com>, 
- Benno Lossin <lossin@kernel.org>, Andreas Hindborg <a.hindborg@kernel.org>, 
- Alice Ryhl <aliceryhl@google.com>, Trevor Gross <tmgross@umich.edu>, 
- Danilo Krummrich <dakr@kernel.org>, Rob Herring <robh@kernel.org>, 
- Krzysztof Kozlowski <krzk+dt@kernel.org>, 
- Conor Dooley <conor+dt@kernel.org>, 
- Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc: platform-driver-x86@vger.kernel.org, linux-leds@vger.kernel.org, 
- devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, 
- rust-for-linux@vger.kernel.org, Markus Probst <markus.probst@posteo.de>
-X-Mailer: b4 0.14.3
-X-Developer-Signature: v=1; a=openpgp-sha256; l=5337;
- i=markus.probst@posteo.de; h=from:subject:message-id;
- bh=fHl3WzBXTZoWL7NeZc8DC8ZKuATEEU9zJoDi3XrrDYY=;
- b=owEBiQJ2/ZANAwAIATR2H/jnrUPSAcsmYgBp0p2i0v1m+Z5fO9TcT7v5suSdzKGVcrxAnP6Km
- 0uUGYbEEYKJAk8EAAEIADkWIQSCdBjE9KxY53IwxHM0dh/4561D0gUCadKdohsUgAAAAAAEAA5t
- YW51MiwyLjUrMS4xMiwyLDIACgkQNHYf+OetQ9IACA//dZsOw8pTiglnPnPxOIG5fYzp5D0O9qM
- APG7JPRR4ylyYCv2N25NEXiC6GFCxD8JviRCjSAj3lpsgMZNjTlo0w59bpKv/K9za8no9g7YN8X
- p646e0Bi+OkaVsuutNt8/jryqAnNemFppLKnpjTbxrMHHZuUn1vP3SFYdfuDzfUXJPtYI4avPZH
- rciF1W0TqO7NiYQzsDsqLu++OsbnBTS10q9eAvg0kQTozJFjVzfqxWg8KXIC9FvwQTIb5WomA/S
- bcvCBjYhXnayr79mkOTAL1y9uOFiPc/K+zXeWSu7TfFVbk6FZGJ/r7SKFDvLFanzh9xFrBvNKy6
- tpaCpVRvcR99lztK8+xVBDUa+wWXD1tIABwZpuBiwI9ZxPpG5WaCHXsNBfNf90eA5V6F13vb+Rl
- yrCz7ivo6NCJp9VYhUTxXfn7ujCTI0JnprUadhyTq4MHPldq3dIKfbTLMmJ8ytKR2Y2oQvkGACx
- PaH36/9BpNHtrMCMXGuhdoYubcy+EnE31Y+EnAlGb3dfY1/R7xY4x1xllrywfUfIDe5T7fmhNwB
- mc1nAnk008akv4nCWVlJoDebso0+fxhKc1bVRbrB30hkoyGuKg9rddhFeTw82sedz9CNh4rT5Jn
- 71QMaWAIZS7cUyWvMpLwGr0bYp46Q2kctvMYRpmPVedSgQz2P9Lc=
-X-Developer-Key: i=markus.probst@posteo.de; a=openpgp;
- fpr=827418C4F4AC58E77230C47334761FF8E7AD43D2
-X-Endpoint-Received: by B4 Relay for markus.probst@posteo.de/default with
- auth_id=680
-X-Original-From: Markus Probst <markus.probst@posteo.de>
-Reply-To: markus.probst@posteo.de
+X-Exchange-RoutingPolicyChecked: wS/6PgmU4m5DgfPvu539Xnyxb0gKzIcpTtwNl1o09jQ0vpuzPtYtlpQahTZhpiZtsdNlQ+qI+q63YcFFI9SPkOZTP+yRwtBC45BciKZJhvr0JWbLF8L/btE8re3xR5vrL1bYVWMXpbsebLEHNN+jJRiLW589Wo3bWi+Q84lZw6Ka3NKBp0lBECYRVEBulvAtHhJboBu58vV55Hsvd9tsUBvINRBtxb009lIm0XKidnvULSCDcHLGibYkMmRYqLs6ubIt36aNIbsYa8qUdAXklZM8zHi7COfxA0i67DkWLPXiFAJn9J7gkrwoD8pBWHk+qvFiy+fKgZyHbdtI/RqR5w==
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-AuthSource: DM8PR11MB5592.namprd11.prod.outlook.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 79eae14a-7183-44a2-9fc5-08de9348e9a1
+X-MS-Exchange-CrossTenant-originalarrivaltime: 05 Apr 2026 19:24:09.9256
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 46c98d88-e344-4ed4-8496-4ed7712e255d
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: pDVVwJyTAOQSWpihH0m4ltTD9LrL6UTmpWusDHUgJj6zQQHHnVF0EqjGlUBcbFHqFoIsVHi+MQppS7SxYLBCCH7T853ff33vuTANlckV3jw=
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: SA1PR11MB6847
+X-OriginatorOrg: intel.com
 
-From: Markus Probst <markus.probst@posteo.de>
-
-Add the Synology Microp devicetree bindings. Those devices are
-microcontrollers found on Synology NAS devices. They are connected to a
-serial port on the host device.
-
-Those devices are used to control certain LEDs, fan speeds, a beeper, to
-handle buttons, fan failures and to properly shutdown and reboot the
-device.
-
-This includes the following compatible ids:
- - synology,ds923p-microp
- - synology,ds918p-microp
- - synology,ds214play-microp
- - synology,ds225p-microp
- - synology,ds425p-microp
- - synology,ds710p-microp
- - synology,ds1010p-microp
- - synology,ds723p-microp
- - synology,ds1522p-microp
- - synology,rs422p-microp
- - synology,ds725p-microp
- - synology,ds118-microp
- - synology,ds124-microp
- - synology,ds223-microp
- - synology,ds223j-microp
- - synology,ds1823xsp-microp
- - synology,rs822p-microp
- - synology,rs1221p-microp
- - synology,rs1221rpp-microp
- - synology,ds925p-microp
- - synology,ds1525p-microp
- - synology,ds1825p-microp
-
-Signed-off-by: Markus Probst <markus.probst@posteo.de>
----
- .../synology,ds923p-microp.yaml                    | 112 +++++++++++++++++++++
- MAINTAINERS                                        |   1 +
- 2 files changed, 113 insertions(+)
-
-diff --git a/Documentation/devicetree/bindings/embedded-controller/synology,ds923p-microp.yaml b/Documentation/devicetree/bindings/embedded-controller/synology,ds923p-microp.yaml
-new file mode 100644
-index 000000000000..4518e9b74be1
---- /dev/null
-+++ b/Documentation/devicetree/bindings/embedded-controller/synology,ds923p-microp.yaml
-@@ -0,0 +1,112 @@
-+# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
-+%YAML 1.2
-+---
-+$id: http://devicetree.org/schemas/embedded-controller/synology,ds923p-microp.yaml#
-+$schema: http://devicetree.org/meta-schemas/core.yaml#
-+
-+title: Synology NAS on-board Microcontroller
-+
-+maintainers:
-+  - Markus Probst <markus.probst@posteo.de>
-+
-+description: |
-+  Synology Microp is a microcontroller found in Synology NAS devices.
-+  It is connected to a serial port on the host device.
-+
-+  It is necessary to properly shutdown and reboot the NAS device and
-+  provides additional functionality such as led control, fan speed control,
-+  a beeper and buttons on the NAS device.
-+
-+properties:
-+  compatible:
-+    enum:
-+      - synology,ds923p-microp
-+      - synology,ds918p-microp
-+      - synology,ds214play-microp
-+      - synology,ds225p-microp
-+      - synology,ds425p-microp
-+      - synology,ds710p-microp
-+      - synology,ds1010p-microp
-+      - synology,ds723p-microp
-+      - synology,ds1522p-microp
-+      - synology,rs422p-microp
-+      - synology,ds725p-microp
-+      - synology,ds118-microp
-+      - synology,ds124-microp
-+      - synology,ds223-microp
-+      - synology,ds223j-microp
-+      - synology,ds1823xsp-microp
-+      - synology,rs822p-microp
-+      - synology,rs1221p-microp
-+      - synology,rs1221rpp-microp
-+      - synology,ds925p-microp
-+      - synology,ds1525p-microp
-+      - synology,ds1825p-microp
-+
-+  fan-failure-gpios:
-+    description: GPIOs needed to determine which fans stopped working on a fan failure event.
-+    minItems: 2
-+    maxItems: 3
-+
-+required:
-+  - compatible
-+
-+allOf:
-+  - if:
-+      properties:
-+        compatible:
-+          contains:
-+            enum:
-+              - synology,ds214play-microp
-+              - synology,ds225p-microp
-+              - synology,ds710p-microp
-+              - synology,ds723p-microp
-+              - synology,ds725p-microp
-+              - synology,ds118-microp
-+              - synology,ds124-microp
-+              - synology,ds223-microp
-+              - synology,ds223j-microp
-+              - synology,ds1823xsp-microp
-+              - synology,rs822p-microp
-+              - synology,rs1221p-microp
-+              - synology,rs1221rpp-microp
-+              - synology,ds1825p-microp
-+    then:
-+      properties:
-+        fan-failure-gpios: false
-+    else:
-+      required:
-+        - fan-failure-gpios
-+
-+additionalProperties: false
-+
-+examples:
-+  - |
-+    #include <dt-bindings/leds/common.h>
-+    #include <dt-bindings/gpio/gpio.h>
-+
-+    embedded-controller {
-+      compatible = "synology,ds923p-microp";
-+
-+      fan-failure-gpios = <&gpio 68 GPIO_ACTIVE_HIGH>, <&gpio 69 GPIO_ACTIVE_HIGH>;
-+    };
-+
-+  - |
-+    #include <dt-bindings/leds/common.h>
-+    #include <dt-bindings/gpio/gpio.h>
-+
-+    embedded-controller {
-+      compatible = "synology,ds723p-microp";
-+    };
-+
-+  - |
-+    #include <dt-bindings/leds/common.h>
-+    #include <dt-bindings/gpio/gpio.h>
-+
-+    embedded-controller {
-+      compatible = "synology,rs422p-microp";
-+
-+      fan-failure-gpios = <&gpio 68 GPIO_ACTIVE_HIGH>,
-+                          <&gpio 69 GPIO_ACTIVE_HIGH>,
-+                          <&gpio 40 GPIO_ACTIVE_HIGH>;
-+    };
-diff --git a/MAINTAINERS b/MAINTAINERS
-index 78c99d831431..72075c9a2016 100644
---- a/MAINTAINERS
-+++ b/MAINTAINERS
-@@ -25557,6 +25557,7 @@ F:	include/uapi/linux/sync_file.h
- SYNOLOGY MICROP DRIVER
- M:	Markus Probst <markus.probst@posteo.de>
- S:	Maintained
-+F:	Documentation/devicetree/bindings/embedded-controller/synology,ds923p-microp.yaml
- F:	drivers/platform/synology_microp/
- 
- SYNOPSYS ARC ARCHITECTURE
-
--- 
-2.52.0
-
-
+SGkgSWxwbywNCg0KVGhpcyBwdWxsIHJlcXVlc3QgaXMgYmFzZWQgb24NCmh0dHBzOi8va2VybmVs
+Lmdvb2dsZXNvdXJjZS5jb20vcHViL3NjbS9saW51eC9rZXJuZWwvZ2l0L3BkeDg2L3BsYXRmb3Jt
+LWRyaXZlcnMteDg2DQpmb3ItbmV4dA0KYXMgb2YgdG9kYXkNCg0KDQpUaGUgZm9sbG93aW5nIGNo
+YW5nZXMgc2luY2UgY29tbWl0DQo4ZTBhMmZjNjhlYzM2OWYyYjY3NTU5OTRkYTFkMzE4ZDA4OThh
+OWQ5Og0KDQogIHBsYXRmb3JtL3g4Ni9pbnRlbC90cG1pOiBVc2UgMzIgYml0IGFsaWduZWQgYWRk
+cmVzcyBmb3IgZGVidWdmcyBtZW0NCndyaXRlICgyMDI2LTAzLTMxIDE4OjQ1OjExICswMzAwKQ0K
+DQphcmUgYXZhaWxhYmxlIGluIHRoZSBHaXQgcmVwb3NpdG9yeSBhdDoNCg0KICBodHRwczovL2dp
+dGh1Yi5jb20vc3BhbmRydXZhZGEvbGludXgta2VybmVsLmdpdCBpbnRlbC1zc3QNCg0KZm9yIHlv
+dSB0byBmZXRjaCBjaGFuZ2VzIHVwIHRvDQplZTY5ZDllMzJiZGIwMDQ0Yjk0NDRmMWFlMTIxMDdm
+ZjhiNWZmOTVmOg0KDQogIHRvb2xzL3Bvd2VyL3g4Ni9pbnRlbC1zcGVlZC1zZWxlY3Q6IHYxLjI2
+IHJlbGVhc2UgKDIwMjYtMDQtMDUNCjExOjU0OjI1IC0wNzAwKQ0KDQotLS0tLS0tLS0tLS0tLS0t
+LS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tDQpTcmluaXZh
+cyBQYW5kcnV2YWRhICgyKToNCiAgICAgIHRvb2xzL3Bvd2VyL3g4Ni9pbnRlbC1zcGVlZC1zZWxl
+Y3Q6IEF2b2lkIGN1cnJlbnQgYmFzZSBmcmVxIGFzDQptYXhpbXVtDQogICAgICB0b29scy9wb3dl
+ci94ODYvaW50ZWwtc3BlZWQtc2VsZWN0OiB2MS4yNiByZWxlYXNlDQoNClpoYW5nIFJ1aSAoNCk6
+DQogICAgICB0b29scy9wb3dlci94ODYvaW50ZWwtc3BlZWQtc2VsZWN0OiBGaXggY3B1IGV4dGVu
+ZGVkIGZhbWlseSBJRA0KZGVjb2RpbmcNCiAgICAgIHRvb2xzL3Bvd2VyL3g4Ni9pbnRlbC1zcGVl
+ZC1zZWxlY3Q6IEZpeCBzb21lIHByb2dyYW0gcmV0dXJuIHZhbHVlDQogICAgICB0b29scy9wb3dl
+ci94ODYvaW50ZWwtc3BlZWQtc2VsZWN0OiBQcmludCBWZXJzaW9uIGluZm8gd2hlbg0KSW5jb21w
+YXRpYmxlIEFQSSB2ZXJzaW9uIGlzIGRldGVjdGVkDQogICAgICB0b29scy9wb3dlci94ODYvaW50
+ZWwtc3BlZWQtc2VsZWN0OiBGaXggb3V0cHV0IHdoZW4gcnVubmluZyBvbg0KdW5zdXBwb3J0ZWQg
+Q0xYIHBsYXRmb3Jtcw0KDQogdG9vbHMvcG93ZXIveDg2L2ludGVsLXNwZWVkLXNlbGVjdC9pc3N0
+LWNvbmZpZy5jIHwgNDENCisrKysrKysrKysrKysrKysrKysrKysrKy0tLS0tLS0tLS0tLS0tLS0t
+DQogMSBmaWxlIGNoYW5nZWQsIDI0IGluc2VydGlvbnMoKyksIDE3IGRlbGV0aW9ucygtKQ0KDQpU
+aGFua3MsDQpTcmluaXZhcw0K
