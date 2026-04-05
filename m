@@ -1,109 +1,83 @@
-Received: from mail-pl1-f181.google.com (mail-pl1-f181.google.com [209.85.214.181])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mailout3.hostsharing.net (mailout3.hostsharing.net [144.76.133.104])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 960B91A3029
-	for <platform-driver-x86@vger.kernel.org>; Sun,  5 Apr 2026 02:08:01 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.181
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6A5C170818;
+	Sun,  5 Apr 2026 07:05:21 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=144.76.133.104
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1775354882; cv=none; b=Y9l7Dugy6LnpxR79BkQhFUdFoDYo/+3I41PvKcBDGA72kupNrgX7xFgDaJtbYqnseKrd0GmYKTTdCejLA/WAede0M9qxXdKXYy65A0Xe8reFVV/NRYII8NR+cBwLAN57rICYSx78PCSqXJ7rYxhYOpAcYIwXzqizWybJZ8JtFnY=
+	t=1775372725; cv=none; b=tgwCO1DvdbuO+vj2uclb99heK053I1VSlU8e8V3eSrmADAVFP/wE5I7IDNMMGVogcJT2pabKoQSCZ4jI57lGdTXhciCoJk0gBzyve1cikMvkFXi2Vw7s0BLHAHWtn+jVjdTsYSgJHA8s/UNhp/UTppIlb349REsHUtZmsbk25iI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1775354882; c=relaxed/simple;
-	bh=E4g65yvLu0fcn1IkVOLQj7pPV2zJHOkBVhdsZHOQbmg=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=HjQG1K6y34RRxrR4kRJNX68iPJUybAvFGYBgq5WiJL9hdkkSsEkuv/+aslWmJGS2lQ85f+K1iAVgsU+eTxDs6QuVUqTnT+F1IHKJL8HXu7URzFMLwqdAmvgOc5XDuJxjdzyalztTOG/EnlH9Lsakqu+ID/++lfxr5kSR+oJ4hWs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=AXlcsLet; arc=none smtp.client-ip=209.85.214.181
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="AXlcsLet"
-Received: by mail-pl1-f181.google.com with SMTP id d9443c01a7336-2b2429f98d0so18822545ad.2
-        for <platform-driver-x86@vger.kernel.org>; Sat, 04 Apr 2026 19:08:01 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20251104; t=1775354881; x=1775959681; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=5unS9RT/mwVK9Q3rFwUfXupKzLnXXtbKuHJYYbkhV+o=;
-        b=AXlcsLetl9t0J9OM7DFUVuLMN9WWvzdoTYHB7lcUNmIAmE5Jgb2vNFNHsquFIUCLUy
-         0cRFmqXvrxrC95a/k/fDZUCbc5xrawLYg1BCi9kCxzwtYsKzyZc5M6LlAxOkOOsBjyHz
-         QZ2Yk1akKLTwIRc56hqw21awBt30jlCzIWReuUm579T3J1gimfoX2E+/4lEpsw5KQItO
-         AIigeJIc/2hXMGT5uhEpRe+b9UerrO3bNa7oUAKSABro+S61nc0t7i9Rdm+O46CYrTUt
-         GZ24SnZIG+jizjTwGQJG3Qs2eZPS7a7GAiQBYm6PzCOxVBqjokYpLFSI5AlZ2sjmDCMr
-         uRNQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1775354881; x=1775959681;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-gg:x-gm-message-state:from
-         :to:cc:subject:date:message-id:reply-to;
-        bh=5unS9RT/mwVK9Q3rFwUfXupKzLnXXtbKuHJYYbkhV+o=;
-        b=HsBitkG8B8XlfQ4druxeE4Zts8R5MueLuLwo6KK9zKKoipaB9D0E3hao38NUHW8FVT
-         Uafa6ZqDRmnnQcOD+hks4IWYRrpS9mzis/E5iWGeNjKhJv8tenfoxfrtZ6DPZivOmEaZ
-         AIez5lfQT0Zz1U+A1NaPotaCL9tuZ+zZPtxmzX6JP8ihTbyDIcVZvsLmb820FKZdPBMY
-         RzYlSkKOUdH3/hI7GdakVWMnjNgFb3AhjjqOt7n0jwb2hUQ8bK2K1StYcy24W4WpwbSj
-         39josERW6eMCEYusi30SV1V1yFp/SAFbR5oHWYYLRqwOY59c7l/x7A/nHmqaUVeLDsET
-         HOMg==
-X-Gm-Message-State: AOJu0YxrMSURT0DFxl5SHys8l8CpXE5GDAa2O54EHwz3V1M45ldvrcWr
-	d0Mq26DhRXrPdpQucqAhTDXqmldRMhF7sHNUNIR4FzwSGVhvgG9Urfwp
-X-Gm-Gg: AeBDies6EifU3e8bF5TtWlK+VJTEHFQuVWy1kFD64maUHwyV3m9AAl4ycpN5yxPYUds
-	3Ud0AiQOQuMwjaYNJH0waqWVk0avz5FSLh9V/9+Zuk2V9iQ87cawo8/i5p+/izsWnWvFxIchd4R
-	FfJj4FiSRt2dNHeLiGhRYilkuCgeDMCmmypHugs0qw2jECecfNBEGG7VV9Ius3jY58spPkNi6KN
-	hsRvLnSXkrexUTZR4H0Amg1bz/9RoYQ/v6nQ+5s3/d6Fl23Snkc9gjGqPoZjZZi/Qg64M/7HmVH
-	R/13axAZwDlHsR+kC5igacLsy5NxvQ6mxhyKvrEfWOilQ0o2wt7kFGyocl1wgfPxOgzI675MpR2
-	t1j3ody+EEFd6axNEYhzNljILYg1r+6aSn/m06anYYQVOcBgQoTUmxW1L1CihyIKJTV1q6b1J/H
-	Yn+Q9EKi8dNYF2U6z1By8=
-X-Received: by 2002:a17:902:e78b:b0:2b2:57df:264d with SMTP id d9443c01a7336-2b28178c3b7mr82639705ad.33.1775354880854;
-        Sat, 04 Apr 2026 19:08:00 -0700 (PDT)
-Received: from dell.. ([2406:7400:98:ade4:7ae6:3380:c4:fb8c])
-        by smtp.gmail.com with ESMTPSA id d9443c01a7336-2b2749b2423sm127556535ad.67.2026.04.04.19.07.58
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sat, 04 Apr 2026 19:08:00 -0700 (PDT)
-From: Vasu <vasuhansalia05@gmail.com>
-To: andriy.shevchenko@linux.intel.com
-Cc: platform-driver-x86@vger.kernel.org,
-	mika.westerberg@linux.intel.com,
-	Vasu Hansalia <vasuhansalia05@gmail.com>
-Subject: Re: [PATCH 1/2] pinctrl: intel: platform: Add INTC10B5 ACPI ID for Lunar Lake
-Date: Sun,  5 Apr 2026 07:37:42 +0530
-Message-ID: <20260405020742.34869-1-vasuhansalia05@gmail.com>
-X-Mailer: git-send-email 2.43.0
-In-Reply-To: <adFsG9mTkoE3kIF4@ashevche-desk.local>
-References: <adFsG9mTkoE3kIF4@ashevche-desk.local>
+	s=arc-20240116; t=1775372725; c=relaxed/simple;
+	bh=kfa4tEekvQKAv2+kDvqO33po8NedO0Q9IC4uwPSe8ro=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=VU5rqbSx4Cya/dnPGGWuHpWmyKFIzis9GyFiLXIVbMnYE0+44+zcyW3YhJUkdANfvP2lcRquI8xdF+UbVOR9ti0ZYGsJKg31BzYB3To/zpu+8OFToCUcfkJljRKdz9h+8v1P/hf7Vm6x4bAZU6+wdVJDFhrXJp+18N7Aw7wEY+4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=wunner.de; spf=pass smtp.mailfrom=wunner.de; arc=none smtp.client-ip=144.76.133.104
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=wunner.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=wunner.de
+Received: from h08.hostsharing.net (h08.hostsharing.net [83.223.95.28])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange x25519 server-signature ECDSA (secp384r1) server-digest SHA384
+	 client-signature ECDSA (secp384r1) client-digest SHA384)
+	(Client CN "*.hostsharing.net", Issuer "GlobalSign GCC R6 AlphaSSL CA 2025" (verified OK))
+	by mailout3.hostsharing.net (Postfix) with ESMTPS id ED0ABCBE;
+	Sun, 05 Apr 2026 09:05:12 +0200 (CEST)
+Received: by h08.hostsharing.net (Postfix, from userid 100393)
+	id B46546029C49; Sun,  5 Apr 2026 09:05:12 +0200 (CEST)
+Date: Sun, 5 Apr 2026 09:05:12 +0200
+From: Lukas Wunner <lukas@wunner.de>
+To: Bjorn Helgaas <helgaas@kernel.org>
+Cc: Mario Limonciello <mario.limonciello@amd.com>,
+	Joyful Lee <joy@joyfullee.me>, platform-driver-x86@vger.kernel.org,
+	Shyam Sundar S K <Shyam-sundar.S-k@amd.com>,
+	Hans de Goede <hansg@kernel.org>,
+	Ilpo =?iso-8859-1?Q?J=E4rvinen?= <ilpo.jarvinen@linux.intel.com>,
+	linux-pci@vger.kernel.org, Bjorn Helgaas <bhelgaas@google.com>,
+	linux-acpi@vger.kernel.org, "Rafael J. Wysocki" <rafael@kernel.org>,
+	linux-kernel@vger.kernel.org
+Subject: Re: [BUG] ASUS ProArt PX13 HN7306WU: amd_pmc s2idle S0ix corrupts
+ AMD 1022:150b root port, NVIDIA dGPU returns header type 7f
+Message-ID: <adIJqIn76ApoSdMg@wunner.de>
+References: <84268751-a128-4cfc-94ae-588de5d98ec8@amd.com>
+ <20260403180422.GA341023@bhelgaas>
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20260403180422.GA341023@bhelgaas>
 
-From: Vasu Hansalia <vasuhansalia05@gmail.com>
+On Fri, Apr 03, 2026 at 01:04:22PM -0500, Bjorn Helgaas wrote:
+> It looks like something is wrong with the 00:03.1 Root Port config
+> space after S0ix, e.g., the HwInit Port Number is non-sensical:
+> 
+>   00:03.1 PCI bridge [0604]: Advanced Micro Devices, Inc. [AMD] Strix/Strix Halo GPP Bridge
+>   -               LnkCap: Port #0, Speed 16GT/s, Width x8, ASPM not supported
+>   +               LnkCap: Port #247, Speed 16GT/s, Width x8, ASPM not supported
+> 
+> but the c4:00 device below it seems completely inaccessible; maybe the
+> link is down or the endpoint is in D3cold so config reads return ~0:
+> 
+>   c4:00.0 VGA compatible controller [0300]: NVIDIA Corporation AD107M
+>   +       !!! Unknown header type 7f
+>   +       Interrupt: pin ? routed to IRQ 255
 
-Hi Andy,
+The link is indeed down at the Root Port:
 
-Thank you for confirming this is a BIOS bug.
+		LnkSta:	Speed 2.5GT/s, Width x16 (overdriven)
+			TrErr- Train- SlotClk+ DLActive- BWMgmt- ABWMgmt-
+                                               ^^^^^^^^^
 
-I have filed the issue in the following places:
+But perhaps that's expected when a port capable of x8 is configured
+to x16?  I don't think system software can even influence the width,
+I'd expect platform firmware to have set that incorrectly.
 
-1. Ubuntu Launchpad bug tracker:
-   https://bugs.launchpad.net/ubuntu/+source/linux-firmware/+bug/2131016
+Elsewhere in this thread, Mario hypothesized that platform firmware
+may behave incorrectly unless the OS requests control of PCIe hotplug.
+Perhaps Joyful could provide an acpidump that may help confirm this.
 
-2. Intel ipu7-drivers issue tracker:
-   https://github.com/intel/ipu7-drivers/issues/26
+Thanks,
 
-Unfortunately I could not find an official Dell bug tracker or public
-repository where BIOS/firmware bugs can be reported. Dell does not appear
-to have a public GitHub repository for BIOS bugs unlike other vendors.
-
-Since Intel has a direct relationship with Dell OEM, would it be possible
-for you or someone at Intel to escalate this BIOS _CID issue to Dell's
-firmware team? This affects all Lunar Lake Dell laptops (PA14250, XPS 13
-9350) running Linux.
-
-The affected users are currently unable to use the camera in any native
-Linux application. A BIOS fix from Dell would resolve this permanently
-without requiring a kernel workaround.
-
-Thank you for your help.
-
-Regards,
-Vasu Hansalia
+Lukas
