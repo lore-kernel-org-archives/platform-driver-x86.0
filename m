@@ -1,49 +1,59 @@
-Received: from mailout1.hostsharing.net (mailout1.hostsharing.net [83.223.95.204])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 609661E5B68;
-	Sun,  5 Apr 2026 07:17:08 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=83.223.95.204
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EEC471552FD;
+	Sun,  5 Apr 2026 08:59:13 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1775373430; cv=none; b=rMyUaHPbIUlFXOGQlZA1B408GSDdNBAz803a1XFwsdNfTgtGhP5hleTRFM7g67gy3t+0wp/pP/BbxbwpLxkAX34VEJnQmM1MyN0j8TqJi6guERLdNQ36aZinI8uNByRA5oBs3TudFqNoH4L9mIDGecUnixhvUapHwwIfPTbMpSE=
+	t=1775379555; cv=none; b=ant5Z0RGyIcJchQKc3iejf1krWv/MDa5eqF6G/F4XC2E+A7npcxqdlYsq2EAbCTJ2IXMV5dAkY209d1tUVM2TlKZXnfC8ACi9cAFzenOiPqV2NWZIcJZOXiv8Zppe1NR6V96MY3KdovtsgvxjSU+C+RYD2XfGXDbxX5PP9xVPpU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1775373430; c=relaxed/simple;
-	bh=GN6VFv/oxQu1oTePkEXrJqHA531yO+kKNFT27nH+PXQ=;
+	s=arc-20240116; t=1775379555; c=relaxed/simple;
+	bh=jKF2ApH7+J7jaZcNZYj4K4ZUHGb5ofLTt8r+CPuEVFY=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=iwYWg8x+ylekVm26fr1+qh9NgDn0aPZaPDuV9GTuvnB5qiCUBbTSc71Mv/pwFys5nLBrhRyyugNzcFgfxWI7wQ2j5swWRTuJjXOqjMAWJftG+vxOz1PwuLtks6Osk5bvOEYc0W2A/86DmZJ4WWVvYWXERhFKy6hj8FCMYSmyIuA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=wunner.de; spf=pass smtp.mailfrom=wunner.de; arc=none smtp.client-ip=83.223.95.204
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=wunner.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=wunner.de
-Received: from h08.hostsharing.net (h08.hostsharing.net [83.223.95.28])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange x25519 server-signature ECDSA (secp384r1) server-digest SHA384
-	 client-signature ECDSA (secp384r1) client-digest SHA384)
-	(Client CN "*.hostsharing.net", Issuer "GlobalSign GCC R6 AlphaSSL CA 2025" (verified OK))
-	by mailout1.hostsharing.net (Postfix) with ESMTPS id 4E22736D;
-	Sun, 05 Apr 2026 09:16:59 +0200 (CEST)
-Received: by h08.hostsharing.net (Postfix, from userid 100393)
-	id 3B2706029C49; Sun,  5 Apr 2026 09:16:59 +0200 (CEST)
-Date: Sun, 5 Apr 2026 09:16:59 +0200
-From: Lukas Wunner <lukas@wunner.de>
-To: Mario Limonciello <mario.limonciello@amd.com>
-Cc: Joyful Lee <joy@joyfullee.me>, Bjorn Helgaas <helgaas@kernel.org>,
-	platform-driver-x86@vger.kernel.org,
-	Shyam Sundar S K <Shyam-sundar.S-k@amd.com>,
-	Hans de Goede <hansg@kernel.org>,
-	Ilpo =?iso-8859-1?Q?J=E4rvinen?= <ilpo.jarvinen@linux.intel.com>,
-	linux-pci@vger.kernel.org, Bjorn Helgaas <bhelgaas@google.com>,
-	linux-acpi@vger.kernel.org, "Rafael J. Wysocki" <rafael@kernel.org>,
-	linux-kernel@vger.kernel.org
-Subject: Re: [BUG] ASUS ProArt PX13 HN7306WU: amd_pmc s2idle S0ix corrupts
- AMD 1022:150b root port, NVIDIA dGPU returns header type 7f
-Message-ID: <adIMa_yVLMJZvdLq@wunner.de>
-References: <84268751-a128-4cfc-94ae-588de5d98ec8@amd.com>
- <20260403180422.GA341023@bhelgaas>
- <CADj6jrg4YWx+iR0o=JSh23uP0Mb2Mvs-ngCJXGUAwCCUQGHM4A@mail.gmail.com>
- <d0994dad-4506-4b5a-b44d-3bb68aae4517@amd.com>
- <CADj6jrgEwySW_A=-0o947aGg+CmaZD+qR4NnopVFoQptdHz=bQ@mail.gmail.com>
- <024bce0e-5bc7-40ca-be01-278ef9935531@amd.com>
- <adc13acd-4a2b-4b64-9dcc-c622d8b9f3cf@amd.com>
+	 Content-Type:Content-Disposition:In-Reply-To; b=pb4BKcfadUVaeHCXEOT0o+WznVrXXv73fjOXl2z0ZpAvARtB1JpGGHY2L9kDMn88Psrc09altEf97apEXnDn9/WuYFWFTXh5EBKEG7iynVoey49ZiYaOXxiA6BzRZfBMeGRX3Yd2VA2hg2NuFINhZFM7ZuZqiZRQQBijmCRQHG0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=pass smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=npt9HnNj; arc=none smtp.client-ip=198.175.65.18
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="npt9HnNj"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1775379554; x=1806915554;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=jKF2ApH7+J7jaZcNZYj4K4ZUHGb5ofLTt8r+CPuEVFY=;
+  b=npt9HnNjU6WnZn+0VpzMVqcRmhgZFH9vEk/pojpQ0T5QxtzUVMGKAV0t
+   Ab/3uGwt68knptGHS/VsiBvKEGyNBd0mTHy2qtlAn9PfeMG2HJOeO7AGH
+   1QvoZ8vBzX/IxKcHSRNTWGp56eHP+KqF7bCQBlKn6ZEuCPt6s+dIlPdeh
+   erxTMzR52akGSTzUMjUQJtU8Pwn2LO4rFqVOj+YXzhpjus4Y2yhS2wLI7
+   GhZ2DRih3ILYT5HAPqwxJZHPATPvHmrcPj/1D2rRbIlo5nhHGz7hMf9/d
+   Czw+/ipRAc80/zeL09syJ5SwA/AgfyvsfKkvitANGRFIXxV+E4BkyzuQ4
+   g==;
+X-CSE-ConnectionGUID: ON9K+CrlRLKlW/0A4kWySw==
+X-CSE-MsgGUID: qdtlyit7TzeVVToje+i7gQ==
+X-IronPort-AV: E=McAfee;i="6800,10657,11749"; a="76388310"
+X-IronPort-AV: E=Sophos;i="6.23,161,1770624000"; 
+   d="scan'208";a="76388310"
+Received: from orviesa005.jf.intel.com ([10.64.159.145])
+  by orvoesa110.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 05 Apr 2026 01:59:14 -0700
+X-CSE-ConnectionGUID: mTyubixVREKDJIwU+G3xrg==
+X-CSE-MsgGUID: LrlP7G7nQz2yxzR4YzO9RA==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.23,161,1770624000"; 
+   d="scan'208";a="232561846"
+Received: from abityuts-desk.ger.corp.intel.com (HELO localhost) ([10.245.245.247])
+  by orviesa005-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 05 Apr 2026 01:59:12 -0700
+Date: Sun, 5 Apr 2026 11:59:09 +0300
+From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+To: Vasu <vasuhansalia05@gmail.com>
+Cc: platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org,
+	linux-gpio@vger.kernel.org, djrscally@gmail.com,
+	mika.westerberg@linux.intel.com
+Subject: Re: [PATCH 1/2] pinctrl: intel: platform: Add INTC10B5 ACPI ID for
+ Lunar Lake
+Message-ID: <adIkXdCXr2x2zTrE@ashevche-desk.local>
+References: <adFsG9mTkoE3kIF4@ashevche-desk.local>
+ <20260405013413.31970-1-vasuhansalia05@gmail.com>
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
@@ -52,43 +62,25 @@ List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <adc13acd-4a2b-4b64-9dcc-c622d8b9f3cf@amd.com>
+In-Reply-To: <20260405013413.31970-1-vasuhansalia05@gmail.com>
+Organization: Intel Finland Oy - BIC 0357606-4 - c/o Alberga Business Park, 6
+ krs, Bertel Jungin Aukio 5, 02600 Espoo
 
-On Fri, Apr 03, 2026 at 04:28:23PM -0500, Mario Limonciello wrote:
-> On 4/3/26 4:05 PM, Mario Limonciello wrote:
-> > Thanks - the most obvious observation is what you already noted -
-> > without hotplug support the root port skips PM all together.
-> > 
-> > [24.575705] pcieport 0000:00:01.2: PCI PM: Suspend power state: D0
-> > [24.575707] pcieport 0000:00:01.2: PCI PM: Skipped
-> > [24.575709] pcieport 0000:00:01.1: PCI PM: Suspend power state: D0
-> > [24.575709] pcieport 0000:00:01.1: PCI PM: Skipped
-> > 
-> > vs
-> > 
-> > [29.279987] pcieport 0000:00:01.1: power state changed by ACPI to D3cold
-> > [29.279991] pcieport 0000:00:01.1: PCI PM: Suspend power state: D3cold
-> > [29.280214] pcieport 0000:00:01.2: power state changed by ACPI to D3cold
-> > [29.280219] pcieport 0000:00:01.2: PCI PM: Suspend power state: D3cold
+On Sun, Apr 05, 2026 at 07:04:12AM +0530, Vasu wrote:
 
-Those are different Root Ports than 0000:00:03.1.
-
-> > The hotplug support seems to apply to 3 ports.
-[...]
-> >    0000:00:03.1 (Bus c4):
-> >    - Slot Capabilities: 0x000425e0
-> >    - Flags: HotPlug+ Surprise+ LLActRep+
-[...]
-> OK - so the issue comes from acpi_pci_bridge_d3() which is called from
-> platform_pci_bridge_d3():
+> Thank you for the feedback Andy.
 > 
-> 	if (acpi_pci_disabled || !dev->is_pciehp)
-> 		return false;
+> Understood - this is a BIOS bug where the firmware is not setting _CID
+> properly for INTC10B5. I will file a bug with Dell to get their BIOS
+> fixed.
+> 
+> Should I drop this patch entirely, or would a kernel workaround still
+> be acceptable with a comment noting the BIOS bug?
 
-Also not relevant, the is_pciehp flag is true because of the
-set HotPlug+ bit in the Slot Capabilities Register, so the check
-doesn't evaluate to true and the function doesn't return here.
+Is this machine already on the market?
 
-Thanks,
+-- 
+With Best Regards,
+Andy Shevchenko
 
-Lukas
+
