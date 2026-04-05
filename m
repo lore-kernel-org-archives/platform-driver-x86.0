@@ -1,62 +1,62 @@
-Received: from mail-pj1-f52.google.com (mail-pj1-f52.google.com [209.85.216.52])
+Received: from mail-pf1-f171.google.com (mail-pf1-f171.google.com [209.85.210.171])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 106EF371046
-	for <platform-driver-x86@vger.kernel.org>; Sun,  5 Apr 2026 09:15:43 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.52
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A54ED33AD8A
+	for <platform-driver-x86@vger.kernel.org>; Sun,  5 Apr 2026 09:27:32 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.171
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1775380545; cv=none; b=gmaSbxNY1YzeLQhTjPupKxVw1weamO5NfpMy+au70prtJBm+Z4LRhRyXQHbNI1A1B/fpRXggJisn2Oz/fJ7FWHEFhB2xC9kHbps5wC+YXoksVNsFicrpZXuj0EzILfrHQzunOzofcdezqNkhZbZ+RxixqEbovdUsPFDm0V0ciHY=
+	t=1775381253; cv=none; b=JZT5VIxXfAl1Wik1LcGNJpk/3sIOGvMfH1pLuJHP6ixah3cu7zugsGcHEl+pKwjAvEi+OAYlipEaCk4aC0Qerb2y515Wupnet3pOsqa4/XJws6SNIJI3PhyZYRV7v4wJxF2VZhepy1QsZCPwv9B5yoe42Kxr1t2o9p1SeBI64tU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1775380545; c=relaxed/simple;
-	bh=14QcobTYAs6tmK4DZbG1d7Ts8aPo1wgkXwEuKU5/0gk=;
+	s=arc-20240116; t=1775381253; c=relaxed/simple;
+	bh=R4JHJOpcZ3k5Uofec7kARlSA2Tji4pJsIxwT1H/DBII=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=q866x1leD6ze9K5CG8EfQxTQsMp/IB9n5upkcfF6U9Ky/yBfbwoaa45mFxPbF393I3pw1Jsihu2fQV8YVLehYpaqh51kDVBDc0PtQs+vZaG7JO1FC62z4rmk5fBIwaIQlL8LdjgnD6kYdR5poXNBjqv9x6EuKXHG0P7mLphj0dU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=cUDDcNGO; arc=none smtp.client-ip=209.85.216.52
+	 MIME-Version; b=hxFH6rW5syxW/YPfHMDjoJbYK8eKbhjflqhObjgOUsUdhX/xiNgQ3jby7O8+UPQQ1R48tpPQdF2rCBSY4aH2qIKI4oX9Ur5lyTbfzXZiAHlAn2PHJOLC7zEjccw6IFZUbNx3V18ZNzCe+I9IVmRJbLPJTf41U1z1Hj3SwCKRkKA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=cJmb2weU; arc=none smtp.client-ip=209.85.210.171
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="cUDDcNGO"
-Received: by mail-pj1-f52.google.com with SMTP id 98e67ed59e1d1-35d9827661bso1504503a91.3
-        for <platform-driver-x86@vger.kernel.org>; Sun, 05 Apr 2026 02:15:43 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="cJmb2weU"
+Received: by mail-pf1-f171.google.com with SMTP id d2e1a72fcca58-82cebbdbdccso1530787b3a.1
+        for <platform-driver-x86@vger.kernel.org>; Sun, 05 Apr 2026 02:27:32 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20251104; t=1775380543; x=1775985343; darn=vger.kernel.org;
+        d=gmail.com; s=20251104; t=1775381252; x=1775986052; darn=vger.kernel.org;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=14QcobTYAs6tmK4DZbG1d7Ts8aPo1wgkXwEuKU5/0gk=;
-        b=cUDDcNGOqWi3JwQgfqiTCe2F87PesAKpVw89ITgY6H3z9VXmdPQVAlYmJ2vjXWRe30
-         8lz+4ew22wiI8ZF5doRVFaeh8YBdqvNnNszHpYmIBUsPzWQdoOOBSZHvak1EUmwx5Vj5
-         XV9ieO7MJhvpudAXYiVrqEKZOfczapPZ9o/DYlXFMv3sBxICWCrVmx3UL9gGb77C8O+P
-         HG81YLIf+Z7lUu2FgyT8vPDTdDvAr4wUS38xJZiDfsjtGjsHWXs3IIyMsfiCVkbpaODH
-         +o8En9n8pzWDEMgcNSR802b+mxIpV0pa5c2yOL6J4qtdPE2FHaQXiT2nrImRn1nSuW0P
-         Y6Dw==
+        bh=R4JHJOpcZ3k5Uofec7kARlSA2Tji4pJsIxwT1H/DBII=;
+        b=cJmb2weUoFWB/fI+GRJd1GzXTCaJ+9wjbvTr5TULpNt55Zssd3mWQ+0gk52IqVHmlj
+         2EMnl3JHvePTnLV+h7V3Ez8XYdvMgqTmMQ1vkWs1/fdJfXLsKOzaCUphidaIgeyrqXTw
+         PiHMaSAazJg6yDbi+NF6XdMwdRcLYGILKLPyESpKYlGePkrVaOAzDcuHZgb6cqQY8eOx
+         PNYx4Z6HijLpXQ9nFQo1ocykVOhaJPk2xo8dsUHnhSTN0m4m0OZY7EH3ZN8LM8XecNCy
+         JypsMt2n4PEev69oM2g9QeUCthL3ckzn97G0hKcmtvILoO3yMCdoIInzi3mRdrnwN7pw
+         0xpw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1775380543; x=1775985343;
+        d=1e100.net; s=20251104; t=1775381252; x=1775986052;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:x-gm-gg:x-gm-message-state:from
          :to:cc:subject:date:message-id:reply-to;
-        bh=14QcobTYAs6tmK4DZbG1d7Ts8aPo1wgkXwEuKU5/0gk=;
-        b=M1OK4z7mJKfAVLRC/H7EsWA2it/7VR9Hp7HlymmCCLXi9y7YtX2Dg8m+ECENtMx9s7
-         idlfSDLw7Q7JELb8bocBkW4X7uUJJJ2R/QkreC6Liq3V5CQaqPItXsSP8+dWYh+mvvfa
-         0qLL8v4DfbfDYdpHfrFkvGykLg/G8dMcYtYjl9BcUwEHNpHt80vNmBi4zN/LxMem45PC
-         O/MTNtG46gy/XyUSJy2wUUBC6+mEiEnkQU4LT2mkR36RK/d8MAc/oxW8a35w741Db95b
-         l8v16MN+UkztAXejQpnOJEq6QxpzHVeOBXYnkOSXte0dSNc3O2XKSN4mb6VsctFlcjEU
-         sAhw==
-X-Gm-Message-State: AOJu0YzB7gCsBpVLYV+TPVyxQnZK/jm8PEHLX/tWSdlw+lmMtLUNcyLr
-	CpUQSADIJ8phtKUjoRtjLizgJDma+auqoWb/VTO+u/HEcrNpNSeC3mOu
-X-Gm-Gg: AeBDievCTzn6Iygn1uaFUKzsD0tyyCJx/0jf3to6PfcGJhqVmevPdfVPAuOIjS8JtnU
-	XeNPqriV/RuMc5ZyrJ74FgvkLpIJALz6+BKYOB6+yPWt5w0U5kHBSAz/qR7Wb3B4VlzF3i721q4
-	ebhsKDZCPnINKDWS3Yl1G9NBjv0PJ54k5ajFTRIV1P57thaIP+1fQ5JUYJvafwzfXUQlQ9qsw8I
-	MEoGFBx3TNd5lWmVX2TwN+DyYgZE3D5nMgffCnx6NMIUYvIhGSx8TtGyw1By6nbCZuINUAWnSOk
-	kSVC1X2mLwhRP+XtVTdNcRq2r+22UNoF2xKkfF8VaSawQFYwxDLv3BCweHbR8PphlpdmqSJrOMZ
-	bRACn8i86m9GhZiflTEvABlBNGQ293K4yPy7EAlCZK3TdJb6TaeI+hdehzL+xbUR7QgITlrU4S5
-	2V+gbxJrVPFWtpK0qflG3h+M0=
-X-Received: by 2002:a17:90b:3fcf:b0:35d:997c:8ebc with SMTP id 98e67ed59e1d1-35de69448e5mr8236060a91.19.1775380543369;
-        Sun, 05 Apr 2026 02:15:43 -0700 (PDT)
+        bh=R4JHJOpcZ3k5Uofec7kARlSA2Tji4pJsIxwT1H/DBII=;
+        b=PfKBi9DVABeOoDH/hB+VZLeuBgYArDVO6M+nf1UGZGZewtd5EZjfzDzUBw0qRtvzwt
+         xYLKZSVpRsBu6VG6c4RdOtWCvkIetgUmXHkOFrAWfpLCzVJieAPYywGzT1V5WuHNAMxa
+         LfOxx6w8i8GaZLqka96X/HXx2GZakCNarf+foaMAZhyJZCqtHhdyuThNe887EP4jOVYe
+         mcrhH3pEgjoJLeRvjhltmaOFuvRZnx+Xkp9TaICZLtutVw9q5DLJbGFyeuJ9ktiJftB6
+         vM/0cPWjm8NXLibNyA9I9UAJasA3+iWTb4F44J7Fg7J3e791M2PlW5p054I6Gk2Lszh1
+         OEHA==
+X-Gm-Message-State: AOJu0YyKMhQd8jA1dajj/3BjpEtsqad/929uGjev3ivh+StT6FY+I6pE
+	I795c2KKljP0z3jjyH/rpF1jOKgc42JxdBFpixh5xUqANcVmXZoDq8Yl
+X-Gm-Gg: AeBDieuq3nhkBjv5XmdA3dlCLkNCViQFixQzcFKlJoN9t5cSymXCXW/1mOfs6zm1wQk
+	5hwvGZ7Go3/Hi9BlPmNY49WWHM8RicHcMuQQOcQTmVSLqD+q0ncNpfyq2nKiK1SsV4HAR2c2nBw
+	sZPU8zW32f8ctlPhlDHfvpOm+jLBDV7ooO/H8WTNp3TN0b6iGlGuUA9lRS4N236HayoQQ2jNgEx
+	9GuRfGcFUwBtUz7RCfuKqZKEQwERDey4WtiHEFQYi3QZD+64xAOAfObjWHwanfXwHWQcdfkIyzd
+	CCuMZ0yagv/eAdB+eFuhwM56kNHU38jhZ4sG3MSaElxmwt01vcVJcUvOx2WDZ1QWCogxYuZdodj
+	Fvop9/femx7VcTbfzP2NnoKB9XkBBtX7YErFwZVe7mnYJN4aw17B6sVMfoChNQgg8Cpd6dOQO3B
+	txMuwK7LQbXb0qSuUuhgKm+KI=
+X-Received: by 2002:a05:6a00:4005:b0:827:2c6b:897f with SMTP id d2e1a72fcca58-82d00235695mr10083046b3a.9.1775381252045;
+        Sun, 05 Apr 2026 02:27:32 -0700 (PDT)
 Received: from dell.. ([2406:7400:98:ade4:d639:9368:51aa:bf9c])
-        by smtp.gmail.com with ESMTPSA id 98e67ed59e1d1-35de674a87dsm3208105a91.3.2026.04.05.02.15.40
+        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-82cf9ca14b3sm12324396b3a.54.2026.04.05.02.27.29
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 05 Apr 2026 02:15:43 -0700 (PDT)
+        Sun, 05 Apr 2026 02:27:31 -0700 (PDT)
 From: Vasu <vasuhansalia05@gmail.com>
 To: andriy.shevchenko@linux.intel.com
 Cc: platform-driver-x86@vger.kernel.org,
@@ -66,11 +66,11 @@ Cc: platform-driver-x86@vger.kernel.org,
 	mika.westerberg@linux.intel.com,
 	Vasu Hansalia <vasuhansalia05@gmail.com>
 Subject: Re: [PATCH 2/2] platform/x86: int3472: Handle GPIO types 0x02 and 0x12 for Lunar Lake
-Date: Sun,  5 Apr 2026 14:45:18 +0530
-Message-ID: <20260405091518.5322-2-vasuhansalia05@gmail.com>
+Date: Sun,  5 Apr 2026 14:57:14 +0530
+Message-ID: <20260405092714.6203-1-vasuhansalia05@gmail.com>
 X-Mailer: git-send-email 2.43.0
 In-Reply-To: <adIk5GhZ9ZXj1kt9@ashevche-desk.local>
-References: <20260405091518.5322-1-vasuhansalia05@gmail.com>
+References: <adIk5GhZ9ZXj1kt9@ashevche-desk.local>
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
@@ -81,13 +81,15 @@ Content-Transfer-Encoding: 8bit
 
 From: Vasu Hansalia <vasuhansalia05@gmail.com>
 
-Thank you for the pointer to the STROBE series.
+After checking the mainline kernel source, I found that
+INT3472_GPIO_TYPE_HANDSHAKE (0x12) is already defined and fully
+handled in mainline. So no v2 patch is needed for mainline.
 
-Based on the specification, the correct name for type 0x12 appears to
-be "handshake". I will use INT3472_GPIO_TYPE_HANDSHAKE in v2.
+The fix just needs to be backported to the Ubuntu OEM kernels
+(6.11-oem, 6.17-oem) where affected users are running Ubuntu 24.04.
 
-I will prepare v2 dropping type 0x02 (handled by the STROBE series)
-and adding the proper #define for type 0x12.
+Should I send a backport request to the Ubuntu kernel team, or is
+there another process you would recommend?
 
 Regards,
 Vasu Hansalia
