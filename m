@@ -1,66 +1,66 @@
-Received: from mail-wr1-f48.google.com (mail-wr1-f48.google.com [209.85.221.48])
+Received: from mail-wr1-f47.google.com (mail-wr1-f47.google.com [209.85.221.47])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E6EA51CAB3
-	for <platform-driver-x86@vger.kernel.org>; Sun,  5 Apr 2026 00:05:36 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.48
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 18D9F6A001
+	for <platform-driver-x86@vger.kernel.org>; Sun,  5 Apr 2026 00:15:17 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.47
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1775347538; cv=none; b=WH1AlxZ6VOs7/KHMRdsTq+5v2G4Kt1KU6cGBNVUMyr96PVR0io+riFJWjiv3yC8ggGt45GlmeytiZABhDD1HqTIQhApXuKk2TGxH25oM7Zk9Ph0HyLCYoeKqp8AbAkgrhOUCu0xEQj/EueXJW0PEu2sRa/ZEV1GdVPUkC+qFyFc=
+	t=1775348118; cv=none; b=s4t80sUpJQE0aJ1w7MDbApXmn/L9ta8tOxtmi8Vs9oqUQBP1HW3SeeA2kxW07tQPbm8YB8QOKvd+gCor3SrqnX89EkhLYU5zfhWWPxLroVaZBeYtSi1FlXMd1K8wUEGRlT/UYWKPnQ2VEhTsmYuqcCw4n18OWQr8NlVu1Vh3ywo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1775347538; c=relaxed/simple;
-	bh=eD839NDE5H9CmiRueWDchOB7qjzUfCxB7uRTtrbIfqM=;
+	s=arc-20240116; t=1775348118; c=relaxed/simple;
+	bh=BqF5Ej2M5OJWzngrc4HxVEbLJx8wJq7qVUOlYU9Jnj4=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=AenuDmSguVzoM10xF6/GeWg1QSkD/DLYoVwclVUrtxIoJJTQ202MunkLFzWMQp5pJczY56oSzw/PkgeLltK12w4DEb/SlfOoEY6f+5QqRTgbyNaBvP+qh5fUFwiWNCXOVlCi4admls+o+p62BZZbVuif1EKCs19nDkvlXVg42Ps=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=KSc9op4s; arc=none smtp.client-ip=209.85.221.48
+	 In-Reply-To:Content-Type; b=OuIsTn0WCvtTLFgONrOQl8rQuYxSQtALSvi1gvsPgXhh+s43R7Z8o/VJd70EqcKIMfJvBnd2GvJmjNPZ4CJ134WtBCLpHTdaH/m6safS34F5qLE92I78voFWFcQIkMrBfQy7TjLPsAlgIbZ1bs9WRRYKF2eCcknU0PPY9PSR+Yc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=Y3nQGDc5; arc=none smtp.client-ip=209.85.221.47
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="KSc9op4s"
-Received: by mail-wr1-f48.google.com with SMTP id ffacd0b85a97d-43d029f346eso2617142f8f.3
-        for <platform-driver-x86@vger.kernel.org>; Sat, 04 Apr 2026 17:05:36 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="Y3nQGDc5"
+Received: by mail-wr1-f47.google.com with SMTP id ffacd0b85a97d-43d03db7f87so1573328f8f.3
+        for <platform-driver-x86@vger.kernel.org>; Sat, 04 Apr 2026 17:15:16 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1775347535; x=1775952335; darn=vger.kernel.org;
+        d=linaro.org; s=google; t=1775348115; x=1775952915; darn=vger.kernel.org;
         h=content-transfer-encoding:in-reply-to:from:content-language
          :references:cc:to:subject:user-agent:mime-version:date:message-id
          :from:to:cc:subject:date:message-id:reply-to;
-        bh=F6niN5rHkfj9+STb1B7vVxgC82p/xl+UfQX44Fsubjc=;
-        b=KSc9op4syQgcWg5K/WIYliDjKhLBUE1VZfpebjg67BwohCmo8TlFKJ5/o5lnfRg/+9
-         MPSfKq707P4/9mVGWAclfd8T523hI9L/E1TzdSFo8ECHak34kXwylZr0kArCWKwoP4Gi
-         DDtzXja/n9GRKjg80QGf2G9pZi1BzYzqg0FTUTsMvwBoJWWGFqgvsIK6wB1TfvXWSQAn
-         zFRw8XUoDR1zjZATC+piFhooZ+jdCg72Hi1Fn/F1KSaF1MyXT/Dh/o8fPs1bN3Fze9IB
-         10DO5cXzBPnLEI9bOFJ6WS0B+KNwUSGKlfXLD3G9D7OgXYm4cf9TDR9C0TfUdzllJz8M
-         p5Eg==
+        bh=tyH1td2yG3Lr3A+EaOSUNG+8Njer1sxg1R+RRdpnOs0=;
+        b=Y3nQGDc57odxB0UXDTnPxuBw5c65qOfFZHmsm2o3VInrSZxPoBpyKo85iReSCEoioW
+         UgyNG0N6ua4jEvRytolbhK70uoiX3L9qk6Tcf2kVAW7+CUsNIlK+mGRD61QkJv1BnUH3
+         Ufdmt9u3Bal2/q4UhDKFOUct9+DZr3HlCbwEkMU5C3502b5mAerMwMTbvEZVHn1IRwRU
+         wfYBP2akHJ5SzrES8DfkOd8lhOyDyIkGcJjAZJq3Rpnt6umAqJ0dyyIcynJGPHfurhOs
+         MlXJAEzea9g7FfENWLb3wkFaOpcITT/ayKo7Jwh9TCVf6CWlLSIrXgyx8VzN391oWT+W
+         evmw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1775347535; x=1775952335;
+        d=1e100.net; s=20251104; t=1775348115; x=1775952915;
         h=content-transfer-encoding:in-reply-to:from:content-language
          :references:cc:to:subject:user-agent:mime-version:date:message-id
          :x-gm-gg:x-gm-message-state:from:to:cc:subject:date:message-id
          :reply-to;
-        bh=F6niN5rHkfj9+STb1B7vVxgC82p/xl+UfQX44Fsubjc=;
-        b=lQFZVxl1mfkMAUgnzod6vbQ71UWRrj7wqAfIQ6B7kgNiH8XearkO8ksEqXbm1McGyQ
-         ZPcH3v6ceb9EhiuqQ6ZgazaF5ibPT5ZiOyyWKMA3YJymI9cwZXvCZNvXWUKbe6HXtACt
-         BCIJhRBkkNemXUsrLhdZza6MqDXEEOdO5I12YZg3YDDjdFO0kJOJsmY1ukANtg/C10Pr
-         IKbNMURscewoUbWJzDeoLeV/s894DV/q/TFyZKpg5P9wqka8iEQfyLxPxYs1DtNtL2GX
-         SmRq+6H4yFt+Ui2oZpuhFQ/A6ZFt67OcnS5Xu4JZudsUnEMfAJ+d2m5xoncP8S4rHPZP
-         oyWQ==
-X-Forwarded-Encrypted: i=1; AJvYcCU3rhR3dGLoK/RrDU/DOH7zvuCMnex0fTUvU2MQd7VDGdpowod1317hgOtDDQKF/g1fbN0GUjo/3C4NHLdJ/MuAn2Jd@vger.kernel.org
-X-Gm-Message-State: AOJu0Yw+Ddy4i6X4jKP4sMLM/6dj0ZciyIpy13K0RAZbbKWhf3zf0cDm
-	12+2a8Zg/u6NQsprDfziYsZM0hM1e8xr7h48dfgGqL+QE87gLhzZ78h87pLuJtHyTFw=
-X-Gm-Gg: AeBDievSBS5jZfn643aSRrMB8PDX7tU52SR3EzqxOkR3X6LST3TrDEX1x2WpJPfu1Wh
-	+xovhZQWDNZPMPVOvX+GoACuUs6E5iaTuyFVycc2QHgoexpDZKfZzbaTGwWxE0wL7E7NK6ZfEls
-	YBdCwOclCv+Hs6P4PmT0nSERmaAsYnr2CnpUYL9av8tzefWJtipI6CQJBReUcMHidk+K+jxANOm
-	JHyy9Y/SnGIVjTeg3AxfVklW0eJOE+/PP9hudpRjLbtmGCv213SVnUxZGMBS+E0NTCdIzjYh88s
-	gwf9IA6kZ3T+cUrc4AeoCG0RIqbAuEfe5UhScWh6crM9Xnvfn8ZzTc8sHK5Qsxy5PtRNaS4R9+O
-	8afAslKBotptQLaUWBVR8CS1Zn1a8Z3+Vbo51+tuu8dwclsAgrcVbFocdABB1vbFutc5i5716Wn
-	d4oGSVQIfmKKCwz4eSJGxFJOpQTmbGGJtiT8Y=
-X-Received: by 2002:a05:6000:2c0c:b0:439:b59e:5e65 with SMTP id ffacd0b85a97d-43d2927ffe4mr11556544f8f.6.1775347535109;
-        Sat, 04 Apr 2026 17:05:35 -0700 (PDT)
+        bh=tyH1td2yG3Lr3A+EaOSUNG+8Njer1sxg1R+RRdpnOs0=;
+        b=LHQc+vsq0sxWLT2MTze01YdIQOoCx0DdCt5OLVo/uI7x/ogeIiodfp9fLVDWvQKHrI
+         NpdmyDiSBLRa9z8dPDKwLIe2V+Nt2VLsHi40ncKhTzEBZi4mqzLQN+TVatcAPB8rLiuE
+         1R5QiwocEb2xvf+ybWBCB0oszj4N9pqqAdP1sxVhhjIiQBEUHulPsevFvTKm623wyWSF
+         7I1wEooKUhNz9t1eTVHjHs2erCFSk9yh8Pue3RESe6kE0qgjjJUAp9dug1LbgMIUXOXU
+         HIFmaNPERaTEef20rVcdabJM/PupOFbNgu0hzYdyKoEXpL1Dm9ahiIvkMFuihzK/i+ma
+         xvfQ==
+X-Forwarded-Encrypted: i=1; AJvYcCW6HHICQuE3lWX+dNzElz8OV2t7L8Al33Gty5TCveZIBY4X3ts4ZNwQCgXdkDXYXv41vhK140TP33JA65kQT27ef935@vger.kernel.org
+X-Gm-Message-State: AOJu0YzYmbkUMEYKUB4Vcy4sGuVVI3PmPL/0K8tXtPajDGG786/EO/5B
+	Uf6YUGOYSOHSH8+eOYLIyRZfOSZTmP7FJjqKSc26db68Pj2x4/VwIlNwHMFmGEFxMTM=
+X-Gm-Gg: AeBDiev4NF5XXogtcLDpCjYRi2aHVDuGkBEMZkSBq8Quor1jVds/x+NWIc31hC1O+lx
+	kYibwBNDmppe/1d0LM00jjH/tBgvFk+GqgdPKklBM+a58TTLo2sV/LhShDzXvVubG81FOLXYJuU
+	7uIXLDYCwSacwZiRqysTccwfr9+1j+mgmPKSUs0fqf3n+zP6mkvNEk2wiDHUKQ2AX1e/vyKgSUT
+	TMyB7t2+3cwWN+iq9qgGtwIx7jHholfrwPOtOiiBhPfQZuBecLSAL1J1MFHuebhmFby8ZKmCxaO
+	pd6aeamOnMzA9P/d8ki7VviYWo+0B1Sr7ddz5VkD4X/3B3At4BD15tJZZT50xWhSXif2iJs37jp
+	k7FsZQJ868Zv9QrCiGRFvT3ERt3LPBOTf4kXiMh3ApJWqEDQpXAjuIc1A8z2gH3CEUg+Mc8Mt2w
+	0zJDJUnnJFjEabTZYWkQnyr0lW85HefFsCQp0=
+X-Received: by 2002:a5d:5d0f:0:b0:43b:3d54:3154 with SMTP id ffacd0b85a97d-43d29277113mr11674528f8f.7.1775348114416;
+        Sat, 04 Apr 2026 17:15:14 -0700 (PDT)
 Received: from [192.168.0.35] ([109.77.125.194])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-43d1e4d27a8sm28693271f8f.17.2026.04.04.17.05.33
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-43d1e2a720dsm28453399f8f.4.2026.04.04.17.15.12
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Sat, 04 Apr 2026 17:05:34 -0700 (PDT)
-Message-ID: <e69ebf4a-126e-48c7-970b-1ba2a40a4492@linaro.org>
-Date: Sun, 5 Apr 2026 01:05:33 +0100
+        Sat, 04 Apr 2026 17:15:13 -0700 (PDT)
+Message-ID: <c0cb35d7-3fcf-477a-9268-70f379a76637@linaro.org>
+Date: Sun, 5 Apr 2026 01:15:12 +0100
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
@@ -90,65 +90,6 @@ Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 7bit
 
 On 04/04/2026 13:55, Aleksandrs Vinarskis wrote:
-> Add bindings for Embedded Controller (EC) in Dell XPS 13 9345 (platform
-> codename 'tributo'). It may be partially or fully compatible with EC
-> found in Snapdragon-based Dell Latitude, Inspiron ('thena').
-> 
-> Reviewed-by: Krzysztof Kozlowski <krzysztof.kozlowski@oss.qualcomm.com>
-> Signed-off-by: Aleksandrs Vinarskis <alex@vinarskis.com>
-> ---
->   .../embedded-controller/dell,xps13-9345-ec.yaml    | 91 ++++++++++++++++++++++
->   MAINTAINERS                                        |  5 ++
->   2 files changed, 96 insertions(+)
-> 
-> diff --git a/Documentation/devicetree/bindings/embedded-controller/dell,xps13-9345-ec.yaml b/Documentation/devicetree/bindings/embedded-controller/dell,xps13-9345-ec.yaml
-> new file mode 100644
-> index 0000000000000000000000000000000000000000..e14dbf2f1a6af8cc7511890fbef08c6c717c0aa6
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/embedded-controller/dell,xps13-9345-ec.yaml
-
-I believe the part name of this embedded controller is the "mec5200" so 
-instead of calling it dell,xps13-9345-ec suggest "dell,mec5200"
-
-> @@ -0,0 +1,91 @@
-> +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
-> +%YAML 1.2
-> +---
-> +$id: http://devicetree.org/schemas/embedded-controller/dell,xps13-9345-ec.yaml#
-> +$schema: http://devicetree.org/meta-schemas/core.yaml#
-> +
-> +title: Dell XPS 13 9345 Embedded Controller
-> +
-> +maintainers:
-> +  - Aleksandrs Vinarskis <alex@vinarskis.com>
-> +
-> +description:
-> +  The Dell XPS 13 9345 has an Embedded Controller (EC) which handles thermal
-> +  and power management. It is communicating with SoC over multiple i2c busses.
-> +  Among other things, it handles fan speed control, thermal shutdown, peripheral
-> +  power supply including trackpad, touch-row, display. For these functions, it
-> +  requires frequently updated thermal readings from onboard thermistors.
-> +
-> +properties:
-> +  compatible:
-> +    const: dell,xps13-9345-ec
-
-Ditto the compat - name it after the IC not the laptop its a "mec5200" 
-or "mec5200-ec" - I suspect the -ec postfix is a tautology the ec bit in 
-"mec" probably captures.
-
-> +
-> +  reg:
-> +    const: 0x3b
-> +
-> +  interrupts:
-> +    maxItems: 1
-> +
-> +  io-channels:
-> +    description:
-> +      ADC channels connected to the 7 onboard thermistors on PMK8550.
-> +      EC requires frequent thermal readings of these channels to perform
-> +      automated fan speed control.
 > +    items:
 > +      - description: ADC channel for sys_therm0
 > +      - description: ADC channel for sys_therm1
@@ -168,62 +109,12 @@ or "mec5200-ec" - I suspect the -ec postfix is a tautology the ec bit in
 > +      - const: sys_therm5
 > +      - const: sys_therm6
 
+I agree with the number of io-channels but, having fixed names is I feel 
+not correct.
 
-> +
-> +required:
-> +  - compatible
-> +  - reg
-> +  - interrupts
-> +  - io-channels
-> +  - io-channel-names
-> +
-> +additionalProperties: false
-> +
-> +examples:
-> +  - |
-> +    #include <dt-bindings/interrupt-controller/irq.h>
-> +    #include <dt-bindings/iio/qcom,spmi-adc7-pm8350.h>
-> +    i2c {
-> +        #address-cells = <1>;
-> +        #size-cells = <0>;
-> +
-> +        embedded-controller@3b {
-> +            compatible = "dell,xps13-9345-ec";
-> +            reg = <0x3b>;
-> +            interrupts-extended = <&tlmm 66 IRQ_TYPE_LEVEL_LOW>;
-> +
-> +            io-channels = <&pmk8550_vadc PM8350_ADC7_GPIO3_100K_PU(1)>,
-> +                          <&pmk8550_vadc PM8350_ADC7_GPIO4_100K_PU(1)>,
-> +                          <&pmk8550_vadc PM8350_ADC7_AMUX_THM1_100K_PU(1)>,
-> +                          <&pmk8550_vadc PM8350_ADC7_AMUX_THM2_100K_PU(1)>,
-> +                          <&pmk8550_vadc PM8350_ADC7_AMUX_THM3_100K_PU(1)>,
-> +                          <&pmk8550_vadc PM8350_ADC7_AMUX_THM4_100K_PU(1)>,
-> +                          <&pmk8550_vadc PM8350_ADC7_AMUX_THM5_100K_PU(1)>;
-> +            io-channel-names = "sys_therm0",
-> +                               "sys_therm1",
-> +                               "sys_therm2",
-> +                               "sys_therm3",
-> +                               "sys_therm4",
-> +                               "sys_therm5",
-> +                               "sys_therm6";
-> +        };
-> +    };
-> +...
-> diff --git a/MAINTAINERS b/MAINTAINERS
-> index 96e0781f2201b41b976dfa69efd44d62c4ff0058..a5d175559f4468dfe363b319a1b08d3425f4d712 100644
-> --- a/MAINTAINERS
-> +++ b/MAINTAINERS
-> @@ -7236,6 +7236,11 @@ S:	Maintained
->   F:	Documentation/ABI/testing/sysfs-class-firmware-attributes
->   F:	drivers/platform/x86/dell/dell-wmi-sysman/
->   
-> +DELL XPS EMBEDDED CONTROLLER DRIVER
-> +M:	Aleksandrs Vinarskis <alex@vinarskis.com>
-> +S:	Maintained
-> +F:	Documentation/devicetree/bindings/embedded-controller/dell,xps13-9345-ec.yaml
-> +
->   DELTA AHE-50DC FAN CONTROL MODULE DRIVER
->   M:	Zev Weiss <zev@bewilderbeest.net>
->   L:	linux-hwmon@vger.kernel.org
-> 
+io-channel-names:
+   minItems: 7
+   maxItems: 7
 
+Does the same thing but lets you name the channels at the source and the 
+sync wrt what they do.
