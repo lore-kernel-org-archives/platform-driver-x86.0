@@ -1,239 +1,229 @@
-Received: from fout-b4-smtp.messagingengine.com (fout-b4-smtp.messagingengine.com [202.12.124.147])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wr1-f48.google.com (mail-wr1-f48.google.com [209.85.221.48])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 456E140DFB7;
-	Sun,  5 Apr 2026 00:04:14 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=202.12.124.147
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E6EA51CAB3
+	for <platform-driver-x86@vger.kernel.org>; Sun,  5 Apr 2026 00:05:36 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.48
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1775347456; cv=none; b=mDWHtJ6rgPbzliCkI56gWO4nhZNsx6xafYbKbyzQ1wmfpuSLo3O1cHobMzzgppji6Z36h3P+OHq2T+F/fpdf0aOFNicTpvHejf27qDnL3hsZcBjWmzn7qG6dvlkjL5p5fIxSfJtfKqoY+T0kFMrWb47OS/HBd6+1PbO9vBHATPg=
+	t=1775347538; cv=none; b=WH1AlxZ6VOs7/KHMRdsTq+5v2G4Kt1KU6cGBNVUMyr96PVR0io+riFJWjiv3yC8ggGt45GlmeytiZABhDD1HqTIQhApXuKk2TGxH25oM7Zk9Ph0HyLCYoeKqp8AbAkgrhOUCu0xEQj/EueXJW0PEu2sRa/ZEV1GdVPUkC+qFyFc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1775347456; c=relaxed/simple;
-	bh=05qBqUi1wgYMkikwds/rpw/nu7uGQJsPLYxdqFZ8NwQ=;
-	h=MIME-Version:Date:From:To:Cc:Message-Id:In-Reply-To:References:
-	 Subject:Content-Type; b=QRh6Mu8NCBqcUBw57s0FHO5cXpIAICnzHUF8I+a8WZL3V9RnZRYsmBhKxSwRbb8GOYfIUHyY3UyN4PZDxv9/RnVFvxUBQwpQgJoV/yiP8S1ByGmY7oeuUG7M0iMeHJ1ow3CJ1x6CbsEqlh/PXL3Vs+3EZ27Y9q8xmB0E3dTtCRQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=squebb.ca; spf=pass smtp.mailfrom=squebb.ca; dkim=pass (2048-bit key) header.d=squebb.ca header.i=@squebb.ca header.b=DBkBz7pJ; dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b=C2AoK14l; arc=none smtp.client-ip=202.12.124.147
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=squebb.ca
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=squebb.ca
+	s=arc-20240116; t=1775347538; c=relaxed/simple;
+	bh=eD839NDE5H9CmiRueWDchOB7qjzUfCxB7uRTtrbIfqM=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=AenuDmSguVzoM10xF6/GeWg1QSkD/DLYoVwclVUrtxIoJJTQ202MunkLFzWMQp5pJczY56oSzw/PkgeLltK12w4DEb/SlfOoEY6f+5QqRTgbyNaBvP+qh5fUFwiWNCXOVlCi4admls+o+p62BZZbVuif1EKCs19nDkvlXVg42Ps=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=KSc9op4s; arc=none smtp.client-ip=209.85.221.48
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=squebb.ca header.i=@squebb.ca header.b="DBkBz7pJ";
-	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="C2AoK14l"
-Received: from phl-compute-02.internal (phl-compute-02.internal [10.202.2.42])
-	by mailfout.stl.internal (Postfix) with ESMTP id E374F1D000CB;
-	Sat,  4 Apr 2026 20:04:12 -0400 (EDT)
-Received: from phl-imap-08 ([10.202.2.84])
-  by phl-compute-02.internal (MEProxy); Sat, 04 Apr 2026 20:04:13 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=squebb.ca; h=cc
-	:cc:content-transfer-encoding:content-type:content-type:date
-	:date:from:from:in-reply-to:in-reply-to:message-id:mime-version
-	:references:reply-to:subject:subject:to:to; s=fm3; t=1775347452;
-	 x=1775433852; bh=XagppRzShUGHdhY0WZiBJkN4RXxOAphDSrg3oTlGsBM=; b=
-	DBkBz7pJTOaPG0x0SsC16nAOH8plhoPPY4+VqLuE4KBn9CYgllHIGGLDVxLKwNrf
-	UI9InYwpDi34s0wMKuIkcYFF9qxKCn7kmI/OIMC/rmx9TLW88i5wcENQRktZ0o7w
-	I8/fFeZ/t3r3uIEK79BsZLA6lTDMwJ6DxD5z7offxT/pucT9kshNJ91TQBqyHUVI
-	aM7011sLdnFmbOQiDBju53jjRolqAmqHjwiJ0l978H24En8zn+xiOlT5cLrJQX4m
-	g1l5Db9pewtUVA8NkjkorOc0uNqWRJmicnDqUJu1UllbjkJIpPkKf2af9LAa7nfJ
-	4vYaz0A2Sqqc/xEh4y2VEA==
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-	messagingengine.com; h=cc:cc:content-transfer-encoding
-	:content-type:content-type:date:date:feedback-id:feedback-id
-	:from:from:in-reply-to:in-reply-to:message-id:mime-version
-	:references:reply-to:subject:subject:to:to:x-me-proxy
-	:x-me-sender:x-me-sender:x-sasl-enc; s=fm2; t=1775347452; x=
-	1775433852; bh=XagppRzShUGHdhY0WZiBJkN4RXxOAphDSrg3oTlGsBM=; b=C
-	2AoK14lmZUsY6TL8Tylz8yQaWvmY48PrAFQtGDv23v3NZBeUL08erOSmL9AVqcbp
-	o76kLv+ZXMgNQnO4Qs5jgAmnfRH1zVN7ahwY0B1T5omN2TtIbz2q9pnDMSr70yqp
-	xy2Pi69/OM+Y7gUdGeij3cnZp99Wj8yUtfKmZsIrE/ZHWQvQb7/tgDlGvjSF+JlY
-	YjTOYYI9O/y/AJJVQBDefmFBh2rXFoEfHWNn7N64qLTHw3lJHc/GE3a6ThDsWzAq
-	nw3iwCljL87AOYvzr9hz56SxfpVhBZyWqTcyNNhAZyHEaTvIgjzmfXdmBV8J/nh/
-	kRVhbI80aEVoxiDyFbHVw==
-X-ME-Sender: <xms:_KbRaU3MQccNFf6ldKsgps9iNuISaR0KTeafA-P95wj-fyqU7fmbNw>
-    <xme:_KbRaZ7-G-0DOT83NmCM9pTtin7i9LJEzPuLmkfuDBOmtI8I67wOYS1YsXVyYuBB6
-    g-VzFVesC5Ht_1qow7tphYZ244rBWkok_oITVtfwO4vvMzdiGwkesA>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeefhedrtddtgddufedvgecutefuodetggdotefrod
-    ftvfcurfhrohhfihhlvgemucfhrghsthforghilhdpuffrtefokffrpgfnqfghnecuuegr
-    ihhlohhuthemuceftddtnecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenucfjug
-    hrpefoggffhffvvefkjghfufgtgfesthejredtredttdenucfhrhhomhepfdforghrkhcu
-    rfgvrghrshhonhdfuceomhhpvggrrhhsohhnqdhlvghnohhvohesshhquhgvsggsrdgtrg
-    eqnecuggftrfgrthhtvghrnhephfeuvdehteeghedthedtveehuddvjeejgffgieejvdeg
-    kefhfeelheekhedvffehnecuvehluhhsthgvrhfuihiivgeptdenucfrrghrrghmpehmrg
-    hilhhfrhhomhepmhhpvggrrhhsohhnqdhlvghnohhvohesshhquhgvsggsrdgtrgdpnhgs
-    pghrtghpthhtohepledpmhhouggvpehsmhhtphhouhhtpdhrtghpthhtohepuggvrhgvkh
-    hjohhhnhdrtghlrghrkhesghhmrghilhdrtghomhdprhgtphhtthhopehkuhhurhhtsges
-    ghhmrghilhdrtghomhdprhgtphhtthhopeifpggrrhhmihhnsehgmhigrdguvgdprhgtph
-    htthhopehhrghnshhgsehkvghrnhgvlhdrohhrghdprhgtphhtthhopehilhhpohdrjhgr
-    rhhvihhnvghnsehlihhnuhigrdhinhhtvghlrdgtohhmpdhrtghpthhtoheptghorhgsvg
-    htsehlfihnrdhnvghtpdhrtghpthhtohepihesrhhonhhgrdhmohgvpdhrtghpthhtohep
-    lhhinhhugidqkhgvrhhnvghlsehvghgvrhdrkhgvrhhnvghlrdhorhhgpdhrtghpthhtoh
-    epphhlrghtfhhorhhmqdgurhhivhgvrhdqgiekieesvhhgvghrrdhkvghrnhgvlhdrohhr
-    gh
-X-ME-Proxy: <xmx:_KbRab1yVzcLrhWU5lRTAbp9l4zvh1xVQqLZWgQwBPYFd-NJvnbrbw>
-    <xmx:_KbRaWqPWUWUipEbMMDG2OTq64AE9W7tvOwpDQFnYEwzXhFvBDpxZw>
-    <xmx:_KbRaQWFWZMjtZHJU7xZwovKhAqD-4Bp3A5IRaLKgcpLDvfZ226yQA>
-    <xmx:_KbRaXoisVGU0oaTOcTSJ95PgUeWDhCN-PDmLrUdG5bUx84gbJY2lg>
-    <xmx:_KbRaY6IzUj5RDYD-iQIA6kpwAIoIbo1HcAyWwHTTBQaByDQAWv3Yh9l>
-Feedback-ID: ibe194615:Fastmail
-Received: by mailuser.phl.internal (Postfix, from userid 501)
-	id 0E7502CE3F96; Sat,  4 Apr 2026 20:04:12 -0400 (EDT)
-X-Mailer: MessagingEngine.com Webmail Interface
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="KSc9op4s"
+Received: by mail-wr1-f48.google.com with SMTP id ffacd0b85a97d-43d029f346eso2617142f8f.3
+        for <platform-driver-x86@vger.kernel.org>; Sat, 04 Apr 2026 17:05:36 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1775347535; x=1775952335; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=F6niN5rHkfj9+STb1B7vVxgC82p/xl+UfQX44Fsubjc=;
+        b=KSc9op4syQgcWg5K/WIYliDjKhLBUE1VZfpebjg67BwohCmo8TlFKJ5/o5lnfRg/+9
+         MPSfKq707P4/9mVGWAclfd8T523hI9L/E1TzdSFo8ECHak34kXwylZr0kArCWKwoP4Gi
+         DDtzXja/n9GRKjg80QGf2G9pZi1BzYzqg0FTUTsMvwBoJWWGFqgvsIK6wB1TfvXWSQAn
+         zFRw8XUoDR1zjZATC+piFhooZ+jdCg72Hi1Fn/F1KSaF1MyXT/Dh/o8fPs1bN3Fze9IB
+         10DO5cXzBPnLEI9bOFJ6WS0B+KNwUSGKlfXLD3G9D7OgXYm4cf9TDR9C0TfUdzllJz8M
+         p5Eg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20251104; t=1775347535; x=1775952335;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-gg:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=F6niN5rHkfj9+STb1B7vVxgC82p/xl+UfQX44Fsubjc=;
+        b=lQFZVxl1mfkMAUgnzod6vbQ71UWRrj7wqAfIQ6B7kgNiH8XearkO8ksEqXbm1McGyQ
+         ZPcH3v6ceb9EhiuqQ6ZgazaF5ibPT5ZiOyyWKMA3YJymI9cwZXvCZNvXWUKbe6HXtACt
+         BCIJhRBkkNemXUsrLhdZza6MqDXEEOdO5I12YZg3YDDjdFO0kJOJsmY1ukANtg/C10Pr
+         IKbNMURscewoUbWJzDeoLeV/s894DV/q/TFyZKpg5P9wqka8iEQfyLxPxYs1DtNtL2GX
+         SmRq+6H4yFt+Ui2oZpuhFQ/A6ZFt67OcnS5Xu4JZudsUnEMfAJ+d2m5xoncP8S4rHPZP
+         oyWQ==
+X-Forwarded-Encrypted: i=1; AJvYcCU3rhR3dGLoK/RrDU/DOH7zvuCMnex0fTUvU2MQd7VDGdpowod1317hgOtDDQKF/g1fbN0GUjo/3C4NHLdJ/MuAn2Jd@vger.kernel.org
+X-Gm-Message-State: AOJu0Yw+Ddy4i6X4jKP4sMLM/6dj0ZciyIpy13K0RAZbbKWhf3zf0cDm
+	12+2a8Zg/u6NQsprDfziYsZM0hM1e8xr7h48dfgGqL+QE87gLhzZ78h87pLuJtHyTFw=
+X-Gm-Gg: AeBDievSBS5jZfn643aSRrMB8PDX7tU52SR3EzqxOkR3X6LST3TrDEX1x2WpJPfu1Wh
+	+xovhZQWDNZPMPVOvX+GoACuUs6E5iaTuyFVycc2QHgoexpDZKfZzbaTGwWxE0wL7E7NK6ZfEls
+	YBdCwOclCv+Hs6P4PmT0nSERmaAsYnr2CnpUYL9av8tzefWJtipI6CQJBReUcMHidk+K+jxANOm
+	JHyy9Y/SnGIVjTeg3AxfVklW0eJOE+/PP9hudpRjLbtmGCv213SVnUxZGMBS+E0NTCdIzjYh88s
+	gwf9IA6kZ3T+cUrc4AeoCG0RIqbAuEfe5UhScWh6crM9Xnvfn8ZzTc8sHK5Qsxy5PtRNaS4R9+O
+	8afAslKBotptQLaUWBVR8CS1Zn1a8Z3+Vbo51+tuu8dwclsAgrcVbFocdABB1vbFutc5i5716Wn
+	d4oGSVQIfmKKCwz4eSJGxFJOpQTmbGGJtiT8Y=
+X-Received: by 2002:a05:6000:2c0c:b0:439:b59e:5e65 with SMTP id ffacd0b85a97d-43d2927ffe4mr11556544f8f.6.1775347535109;
+        Sat, 04 Apr 2026 17:05:35 -0700 (PDT)
+Received: from [192.168.0.35] ([109.77.125.194])
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-43d1e4d27a8sm28693271f8f.17.2026.04.04.17.05.33
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Sat, 04 Apr 2026 17:05:34 -0700 (PDT)
+Message-ID: <e69ebf4a-126e-48c7-970b-1ba2a40a4492@linaro.org>
+Date: Sun, 5 Apr 2026 01:05:33 +0100
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-ThreadId: AMBM-yAyqqRN
-Date: Sat, 04 Apr 2026 20:03:50 -0400
-From: "Mark Pearson" <mpearson-lenovo@squebb.ca>
-To: "Derek J . Clark" <derekjohn.clark@gmail.com>,
- =?UTF-8?Q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>,
- "Hans de Goede" <hansg@kernel.org>
-Cc: "Armin Wolf" <W_Armin@gmx.de>, "Jonathan Corbet" <corbet@lwn.net>,
- "Rong Zhang" <i@rong.moe>, "Kurt Borja" <kuurtb@gmail.com>,
- "platform-driver-x86@vger.kernel.org" <platform-driver-x86@vger.kernel.org>,
- linux-kernel@vger.kernel.org
-Message-Id: <ac5a412f-9fb5-4f1a-99ca-127e1564d327@app.fastmail.com>
-In-Reply-To: <20260402032424.678528-9-derekjohn.clark@gmail.com>
-References: <20260402032424.678528-1-derekjohn.clark@gmail.com>
- <20260402032424.678528-9-derekjohn.clark@gmail.com>
-Subject: Re: [PATCH v7 08/16] platform/x86: lenovo-wmi-helpers: Move gamezone enums to
- wmi-helpers
-Content-Type: text/plain
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v2 1/4] dt-bindings: platform: introduce EC for Dell XPS
+ 13 9345
+To: Aleksandrs Vinarskis <alex@vinarskis.com>,
+ Bjorn Andersson <andersson@kernel.org>,
+ Konrad Dybcio <konradybcio@kernel.org>, Rob Herring <robh@kernel.org>,
+ Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley
+ <conor+dt@kernel.org>, Hans de Goede <hansg@kernel.org>,
+ =?UTF-8?Q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
+Cc: linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org,
+ linux-kernel@vger.kernel.org, platform-driver-x86@vger.kernel.org,
+ laurentiu.tudor1@dell.com, Abel Vesa <abel.vesa@oss.qualcomm.com>,
+ Tobias Heider <tobias.heider@canonical.com>, Val Packett <val@packett.cool>,
+ Krzysztof Kozlowski <krzysztof.kozlowski@oss.qualcomm.com>
+References: <20260404-dell-xps-9345-ec-v2-0-c977c3caa81f@vinarskis.com>
+ <20260404-dell-xps-9345-ec-v2-1-c977c3caa81f@vinarskis.com>
+Content-Language: en-US
+From: Bryan O'Donoghue <bryan.odonoghue@linaro.org>
+In-Reply-To: <20260404-dell-xps-9345-ec-v2-1-c977c3caa81f@vinarskis.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 7bit
 
-Hi Derek,
-
-On Wed, Apr 1, 2026, at 11:24 PM, Derek J. Clark wrote:
-> In a later patch in the series the thermal mode enum will be accessed
-> across three separate drivers (wmi-capdata, wmi-gamezonem and wmi-other).
-> An additional patch in the series will also add a function protoype that
-> needs to reference this enum in wmi-helpers.h To avoid having all these
-> drivers begin to import each others headers, and to avoid declaring an
-> opaque enum to hande the second case, move the thermal mode enum to
-> helpers where it can be safely accessed by everything that needs it from
-> a single import.
->
-> While at it, since the gamezone_events_type enum is the only remaining
-> item in the header, move that as well and remove the gamezone header
-> entirely.
->
-> Reviewed-by: Rong Zhang <i@rong.moe>
-> Tested-by: Rong Zhang <i@rong.moe>
-> Signed-off-by: Derek J. Clark <derekjohn.clark@gmail.com>
+On 04/04/2026 13:55, Aleksandrs Vinarskis wrote:
+> Add bindings for Embedded Controller (EC) in Dell XPS 13 9345 (platform
+> codename 'tributo'). It may be partially or fully compatible with EC
+> found in Snapdragon-based Dell Latitude, Inspiron ('thena').
+> 
+> Reviewed-by: Krzysztof Kozlowski <krzysztof.kozlowski@oss.qualcomm.com>
+> Signed-off-by: Aleksandrs Vinarskis <alex@vinarskis.com>
 > ---
->  drivers/platform/x86/lenovo/wmi-events.c   |  2 +-
->  drivers/platform/x86/lenovo/wmi-gamezone.c |  1 -
->  drivers/platform/x86/lenovo/wmi-gamezone.h | 21 ---------------------
->  drivers/platform/x86/lenovo/wmi-helpers.h  | 13 +++++++++++++
->  drivers/platform/x86/lenovo/wmi-other.c    |  3 +--
->  5 files changed, 15 insertions(+), 25 deletions(-)
->  delete mode 100644 drivers/platform/x86/lenovo/wmi-gamezone.h
->
-> diff --git a/drivers/platform/x86/lenovo/wmi-events.c 
-> b/drivers/platform/x86/lenovo/wmi-events.c
-> index 0994cd7dd504..9e9f2e82e04d 100644
-> --- a/drivers/platform/x86/lenovo/wmi-events.c
-> +++ b/drivers/platform/x86/lenovo/wmi-events.c
-> @@ -17,7 +17,7 @@
->  #include <linux/wmi.h>
+>   .../embedded-controller/dell,xps13-9345-ec.yaml    | 91 ++++++++++++++++++++++
+>   MAINTAINERS                                        |  5 ++
+>   2 files changed, 96 insertions(+)
 > 
->  #include "wmi-events.h"
-> -#include "wmi-gamezone.h"
-> +#include "wmi-helpers.h"
-> 
->  #define THERMAL_MODE_EVENT_GUID "D320289E-8FEA-41E0-86F9-911D83151B5F"
-> 
-> diff --git a/drivers/platform/x86/lenovo/wmi-gamezone.c 
-> b/drivers/platform/x86/lenovo/wmi-gamezone.c
-> index a91089694727..5a8f4aee02cf 100644
-> --- a/drivers/platform/x86/lenovo/wmi-gamezone.c
-> +++ b/drivers/platform/x86/lenovo/wmi-gamezone.c
-> @@ -21,7 +21,6 @@
->  #include <linux/wmi.h>
-> 
->  #include "wmi-events.h"
-> -#include "wmi-gamezone.h"
->  #include "wmi-helpers.h"
-> 
->  #define LENOVO_GAMEZONE_GUID "887B54E3-DDDC-4B2C-8B88-68A26A8835D0"
-> diff --git a/drivers/platform/x86/lenovo/wmi-gamezone.h 
-> b/drivers/platform/x86/lenovo/wmi-gamezone.h
-> deleted file mode 100644
-> index ddb919cf6c36..000000000000
-> --- a/drivers/platform/x86/lenovo/wmi-gamezone.h
-> +++ /dev/null
-> @@ -1,21 +0,0 @@
-> -/* SPDX-License-Identifier: GPL-2.0-or-later */
-> -
-> -/* Copyright (C) 2025 Derek J. Clark <derekjohn.clark@gmail.com> */
-> -
-> -#ifndef _LENOVO_WMI_GAMEZONE_H_
-> -#define _LENOVO_WMI_GAMEZONE_H_
-> -
-> -enum gamezone_events_type {
-> -	LWMI_GZ_GET_THERMAL_MODE = 1,
-> -};
-> -
-> -enum thermal_mode {
-> -	LWMI_GZ_THERMAL_MODE_NONE =	   0x00,
-> -	LWMI_GZ_THERMAL_MODE_QUIET =	   0x01,
-> -	LWMI_GZ_THERMAL_MODE_BALANCED =	   0x02,
-> -	LWMI_GZ_THERMAL_MODE_PERFORMANCE = 0x03,
-> -	LWMI_GZ_THERMAL_MODE_EXTREME =	   0xE0, /* Ver 6+ */
-> -	LWMI_GZ_THERMAL_MODE_CUSTOM =	   0xFF,
-> -};
-> -
-> -#endif /* !_LENOVO_WMI_GAMEZONE_H_ */
-> diff --git a/drivers/platform/x86/lenovo/wmi-helpers.h 
-> b/drivers/platform/x86/lenovo/wmi-helpers.h
-> index 651a039228ed..ed7db3ebba6c 100644
-> --- a/drivers/platform/x86/lenovo/wmi-helpers.h
-> +++ b/drivers/platform/x86/lenovo/wmi-helpers.h
-> @@ -16,6 +16,19 @@ struct wmi_method_args_32 {
->  	u32 arg1;
->  };
-> 
-> +enum lwmi_event_type {
-> +	LWMI_GZ_GET_THERMAL_MODE = 0x01,
-> +};
-> +
-> +enum thermal_mode {
-> +	LWMI_GZ_THERMAL_MODE_NONE =	   0x00,
-> +	LWMI_GZ_THERMAL_MODE_QUIET =	   0x01,
-> +	LWMI_GZ_THERMAL_MODE_BALANCED =	   0x02,
-> +	LWMI_GZ_THERMAL_MODE_PERFORMANCE = 0x03,
-> +	LWMI_GZ_THERMAL_MODE_EXTREME =	   0xE0, /* Ver 6+ */
-> +	LWMI_GZ_THERMAL_MODE_CUSTOM =	   0xFF,
-> +};
-> +
->  int lwmi_dev_evaluate_int(struct wmi_device *wdev, u8 instance, u32 method_id,
->  			  unsigned char *buf, size_t size, u32 *retval);
-> 
-> diff --git a/drivers/platform/x86/lenovo/wmi-other.c 
-> b/drivers/platform/x86/lenovo/wmi-other.c
-> index 1d1bab98298b..e475d1d8a5a7 100644
-> --- a/drivers/platform/x86/lenovo/wmi-other.c
-> +++ b/drivers/platform/x86/lenovo/wmi-other.c
-> @@ -46,7 +46,6 @@
-> 
->  #include "wmi-capdata.h"
->  #include "wmi-events.h"
-> -#include "wmi-gamezone.h"
->  #include "wmi-helpers.h"
->  #include "../firmware_attributes_class.h"
-> 
-> @@ -787,7 +786,7 @@ static bool lwmi_attr_01_is_supported(struct 
-> tunable_attr_01 *tunable_attr)
->  {
->  	u8 modes[2] = { LWMI_GZ_THERMAL_MODE_CUSTOM, 
-> LWMI_GZ_THERMAL_MODE_NONE };
->  	struct lwmi_om_priv *priv = dev_get_drvdata(tunable_attr->dev);
-> -	struct wmi_method_args_32 args = { 0x0, 0x0 };
-> +	struct wmi_method_args_32 args = {};
+> diff --git a/Documentation/devicetree/bindings/embedded-controller/dell,xps13-9345-ec.yaml b/Documentation/devicetree/bindings/embedded-controller/dell,xps13-9345-ec.yaml
+> new file mode 100644
+> index 0000000000000000000000000000000000000000..e14dbf2f1a6af8cc7511890fbef08c6c717c0aa6
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/embedded-controller/dell,xps13-9345-ec.yaml
 
-Was this change intentional? It's seems unrelated to the commit description.
+I believe the part name of this embedded controller is the "mec5200" so 
+instead of calling it dell,xps13-9345-ec suggest "dell,mec5200"
 
->  	bool cd_mode_found = false;
->  	bool cv_mode_found = false;
->  	struct capdata01 capdata;
-> -- 
-> 2.53.0
+> @@ -0,0 +1,91 @@
+> +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
+> +%YAML 1.2
+> +---
+> +$id: http://devicetree.org/schemas/embedded-controller/dell,xps13-9345-ec.yaml#
+> +$schema: http://devicetree.org/meta-schemas/core.yaml#
+> +
+> +title: Dell XPS 13 9345 Embedded Controller
+> +
+> +maintainers:
+> +  - Aleksandrs Vinarskis <alex@vinarskis.com>
+> +
+> +description:
+> +  The Dell XPS 13 9345 has an Embedded Controller (EC) which handles thermal
+> +  and power management. It is communicating with SoC over multiple i2c busses.
+> +  Among other things, it handles fan speed control, thermal shutdown, peripheral
+> +  power supply including trackpad, touch-row, display. For these functions, it
+> +  requires frequently updated thermal readings from onboard thermistors.
+> +
+> +properties:
+> +  compatible:
+> +    const: dell,xps13-9345-ec
+
+Ditto the compat - name it after the IC not the laptop its a "mec5200" 
+or "mec5200-ec" - I suspect the -ec postfix is a tautology the ec bit in 
+"mec" probably captures.
+
+> +
+> +  reg:
+> +    const: 0x3b
+> +
+> +  interrupts:
+> +    maxItems: 1
+> +
+> +  io-channels:
+> +    description:
+> +      ADC channels connected to the 7 onboard thermistors on PMK8550.
+> +      EC requires frequent thermal readings of these channels to perform
+> +      automated fan speed control.
+> +    items:
+> +      - description: ADC channel for sys_therm0
+> +      - description: ADC channel for sys_therm1
+> +      - description: ADC channel for sys_therm2
+> +      - description: ADC channel for sys_therm3
+> +      - description: ADC channel for sys_therm4
+> +      - description: ADC channel for sys_therm5
+> +      - description: ADC channel for sys_therm6
+> +
+> +  io-channel-names:
+> +    items:
+> +      - const: sys_therm0
+> +      - const: sys_therm1
+> +      - const: sys_therm2
+> +      - const: sys_therm3
+> +      - const: sys_therm4
+> +      - const: sys_therm5
+> +      - const: sys_therm6
+
+
+> +
+> +required:
+> +  - compatible
+> +  - reg
+> +  - interrupts
+> +  - io-channels
+> +  - io-channel-names
+> +
+> +additionalProperties: false
+> +
+> +examples:
+> +  - |
+> +    #include <dt-bindings/interrupt-controller/irq.h>
+> +    #include <dt-bindings/iio/qcom,spmi-adc7-pm8350.h>
+> +    i2c {
+> +        #address-cells = <1>;
+> +        #size-cells = <0>;
+> +
+> +        embedded-controller@3b {
+> +            compatible = "dell,xps13-9345-ec";
+> +            reg = <0x3b>;
+> +            interrupts-extended = <&tlmm 66 IRQ_TYPE_LEVEL_LOW>;
+> +
+> +            io-channels = <&pmk8550_vadc PM8350_ADC7_GPIO3_100K_PU(1)>,
+> +                          <&pmk8550_vadc PM8350_ADC7_GPIO4_100K_PU(1)>,
+> +                          <&pmk8550_vadc PM8350_ADC7_AMUX_THM1_100K_PU(1)>,
+> +                          <&pmk8550_vadc PM8350_ADC7_AMUX_THM2_100K_PU(1)>,
+> +                          <&pmk8550_vadc PM8350_ADC7_AMUX_THM3_100K_PU(1)>,
+> +                          <&pmk8550_vadc PM8350_ADC7_AMUX_THM4_100K_PU(1)>,
+> +                          <&pmk8550_vadc PM8350_ADC7_AMUX_THM5_100K_PU(1)>;
+> +            io-channel-names = "sys_therm0",
+> +                               "sys_therm1",
+> +                               "sys_therm2",
+> +                               "sys_therm3",
+> +                               "sys_therm4",
+> +                               "sys_therm5",
+> +                               "sys_therm6";
+> +        };
+> +    };
+> +...
+> diff --git a/MAINTAINERS b/MAINTAINERS
+> index 96e0781f2201b41b976dfa69efd44d62c4ff0058..a5d175559f4468dfe363b319a1b08d3425f4d712 100644
+> --- a/MAINTAINERS
+> +++ b/MAINTAINERS
+> @@ -7236,6 +7236,11 @@ S:	Maintained
+>   F:	Documentation/ABI/testing/sysfs-class-firmware-attributes
+>   F:	drivers/platform/x86/dell/dell-wmi-sysman/
+>   
+> +DELL XPS EMBEDDED CONTROLLER DRIVER
+> +M:	Aleksandrs Vinarskis <alex@vinarskis.com>
+> +S:	Maintained
+> +F:	Documentation/devicetree/bindings/embedded-controller/dell,xps13-9345-ec.yaml
+> +
+>   DELTA AHE-50DC FAN CONTROL MODULE DRIVER
+>   M:	Zev Weiss <zev@bewilderbeest.net>
+>   L:	linux-hwmon@vger.kernel.org
+> 
+
