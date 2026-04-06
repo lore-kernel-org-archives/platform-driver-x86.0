@@ -1,43 +1,50 @@
-Received: from mail-4318.protonmail.ch (mail-4318.protonmail.ch [185.70.43.18])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B1680381B17;
-	Sun,  5 Apr 2026 20:50:39 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.70.43.18
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BD0C230B502;
+	Mon,  6 Apr 2026 07:59:29 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1775422241; cv=none; b=q7qx5j3snvQEBfNIZvWL1RXJ0Bgf8k2pCJpx9uNz4i03lMWR9U9FSN73Wxh1mNIHT5r4sihvAP1TnUmCGRy2SzGwO6R+Ip8yTJiv6us4c+rfklTUSNI78NnBOOygMP+Mf2zjtbt67o7pBlbk+tGbFI/a2fFxfqep0uTU01fm3g0=
+	t=1775462369; cv=none; b=hjDkwQLWXiRaK6M0ooRrfB1UbQ0mWiCt3zlh9E6SM+CV97E0dXieq6cnoDW6II/8d3ravC6/Z4l43q6FURieToBXPrVDMGnanPReZLkXap7Nnz46ksbNziv/GSVQDD6+1c5Y4iyjkTv9lPqYQtBBk+VH85H+kzSLnsfl4FNnRLs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1775422241; c=relaxed/simple;
-	bh=yWW1KiahdiwLNaDRgC2JDM+HB1aVzqYnA5lTecRFm24=;
-	h=Date:To:From:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=E1NdgZ8bgGRFxgZvUgJ2j84nTFp8MwHxon1dTS2oVvycZnkWo0dT4AIJe0TLqFAU4rnoaF/Cu1KA4B0U8EELeNvt8RXBsfz2ABSx9xtFHl364oyUH9T9gR5OQxXTBzTYdcrOaeGHnz6DISi1EIolagYcApvDKswpUyX8zT3dwVw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=vinarskis.com; spf=pass smtp.mailfrom=vinarskis.com; dkim=pass (2048-bit key) header.d=vinarskis.com header.i=@vinarskis.com header.b=GJQeghOB; arc=none smtp.client-ip=185.70.43.18
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=vinarskis.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=vinarskis.com
+	s=arc-20240116; t=1775462369; c=relaxed/simple;
+	bh=H3kuvxg8ZHne3PX9xJGEzutPg/Mzcmu/UywTM0mbcz0=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=rXZrT9uNCwYSIDAT2Ot+n0OLWzL2KZUP3Hm82ZAA2VkwIz1qYsfqXYPXcaIoFjguuCvSva3kYJHw5iEHTwQoauWwmZqP8fLKDxmgnj7w2XZwGYmPhClbG7IXUrUq91A8eu1MupiPkyLckQrPmY7Xy7mqIlcdzoJk5v/BRD64ALY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=MLPvHqtN; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=vinarskis.com header.i=@vinarskis.com header.b="GJQeghOB"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=vinarskis.com;
-	s=protonmail2; t=1775422236; x=1775681436;
-	bh=4Ek/EPssZe3unSnM8iR+18ST+mZuimkNI21OwBSt0qo=;
-	h=Date:To:From:Cc:Subject:Message-ID:In-Reply-To:References:
-	 Feedback-ID:From:To:Cc:Date:Subject:Reply-To:Feedback-ID:
-	 Message-ID:BIMI-Selector;
-	b=GJQeghOBtMLcFdZAVe5O+nhiZ+kf8Lh6X6133z1OJPd5OT1s6THvv5JZ6+pvBggzA
-	 Fk1XoQ+NXQJJUvEwhbqAwWTONpOEmVMIfUqcZoYmHG8veaG5usOCzZtzG/MEk+Q6aQ
-	 dQDDxwLJcyI67yMaewuW0XsbsCDk2cYAcG18Jx7sUpwIaoXed6CgINBIeang5tBAx8
-	 7EgCHX0EfnJkBve+2T+zGyOudJMTjjvs7YRLnD+B9ZYBcDjU45CVpT0lEQNTVLCB6a
-	 tr4JF2DtW+6CLM8fYDSG1PWRj0xiioqobK2Ip4FFXYhSlTXJZG82RnyUyhNKQnuQta
-	 xdwW4HnrkehMA==
-Date: Sun, 05 Apr 2026 20:50:33 +0000
-To: Bryan O'Donoghue <bryan.odonoghue@linaro.org>
-From: Aleksandrs Vinarskis <alex@vinarskis.com>
-Cc: Bjorn Andersson <andersson@kernel.org>, Konrad Dybcio <konradybcio@kernel.org>, Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, Hans de Goede <hansg@kernel.org>, =?utf-8?Q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>, linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, platform-driver-x86@vger.kernel.org, laurentiu.tudor1@dell.com, Abel Vesa <abel.vesa@oss.qualcomm.com>, Tobias Heider <tobias.heider@canonical.com>, Val Packett <val@packett.cool>, Krzysztof Kozlowski <krzysztof.kozlowski@oss.qualcomm.com>
-Subject: Re: [PATCH v2 1/4] dt-bindings: platform: introduce EC for Dell XPS 13 9345
-Message-ID: <21_zFoUYN_HKM8GMSFC7b0uIgOQevyqpWbjtIX1vVP7YtK9tlMgqC3XRgwo35ANlvZ1veGNShZuQFHkKWcf3B_qhjhD90FS7kvR3qCpKzIY=@vinarskis.com>
-In-Reply-To: <e69ebf4a-126e-48c7-970b-1ba2a40a4492@linaro.org>
-References: <20260404-dell-xps-9345-ec-v2-0-c977c3caa81f@vinarskis.com> <20260404-dell-xps-9345-ec-v2-1-c977c3caa81f@vinarskis.com> <e69ebf4a-126e-48c7-970b-1ba2a40a4492@linaro.org>
-Feedback-ID: 158356072:user:proton
-X-Pm-Message-ID: f9ffe8d03f539179f5c2003a662c36b0d58c4c3a
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="MLPvHqtN"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id DB334C4CEF7;
+	Mon,  6 Apr 2026 07:59:28 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1775462369;
+	bh=H3kuvxg8ZHne3PX9xJGEzutPg/Mzcmu/UywTM0mbcz0=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=MLPvHqtNDibelkhWsspKp8g1g5/z5kCt8APbvI2N0179QAEqc3UXpesAV6GxuYDAN
+	 oPwEnq/Hn4h6hld/zWITBqffmIOokZnxQ8nqJpcjLs0pI6+SYUcHlDzW/kOf+4IlPm
+	 h0CMHBTtH2shIFAa55wF7m4b2uFuKTN1LgziNs9PNbDmohAdBvxoWP7HOwciDECfWn
+	 lFlNqqswHLPtImYRbnSSnfXoo1GrKfsjndSNyUjcldh3MXn8+yBWB1AuEiGZUmfl9M
+	 DTyLRjKNi5HS6K8g5CI/FcjaHoFEIoqlCV/7GuiEAMiT+L6tlbGfUj8tPWbS7h7WCg
+	 W0kVWNUdJMfkg==
+Date: Mon, 6 Apr 2026 09:59:26 +0200
+From: Krzysztof Kozlowski <krzk@kernel.org>
+To: Markus Probst <markus.probst@posteo.de>
+Cc: Hans de Goede <hansg@kernel.org>, 
+	Ilpo =?utf-8?B?SsOkcnZpbmVu?= <ilpo.jarvinen@linux.intel.com>, Bryan O'Donoghue <bryan.odonoghue@linaro.org>, 
+	Lee Jones <lee@kernel.org>, Pavel Machek <pavel@kernel.org>, Miguel Ojeda <ojeda@kernel.org>, 
+	Boqun Feng <boqun@kernel.org>, Gary Guo <gary@garyguo.net>, 
+	=?utf-8?B?QmrDtnJu?= Roy Baron <bjorn3_gh@protonmail.com>, Benno Lossin <lossin@kernel.org>, 
+	Andreas Hindborg <a.hindborg@kernel.org>, Alice Ryhl <aliceryhl@google.com>, 
+	Trevor Gross <tmgross@umich.edu>, Danilo Krummrich <dakr@kernel.org>, 
+	Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>, 
+	Conor Dooley <conor+dt@kernel.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, 
+	platform-driver-x86@vger.kernel.org, linux-leds@vger.kernel.org, devicetree@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, rust-for-linux@vger.kernel.org
+Subject: Re: [PATCH v6 2/2] dt-bindings: embedded-controller: Add synology
+ microp devices
+Message-ID: <20260406-ancient-amethyst-poodle-1ba0b2@quoll>
+References: <20260405-synology_microp_initial-v6-0-08fde474b6c9@posteo.de>
+ <20260405-synology_microp_initial-v6-2-08fde474b6c9@posteo.de>
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
@@ -45,195 +52,157 @@ List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: quoted-printable
+Content-Disposition: inline
+In-Reply-To: <20260405-synology_microp_initial-v6-2-08fde474b6c9@posteo.de>
 
-On Sunday, April 5th, 2026 at 02:05, Bryan O'Donoghue <bryan.odonoghue@lina=
-ro.org> wrote:
+On Sun, Apr 05, 2026 at 07:36:29PM +0200, Markus Probst wrote:
+> Add the Synology Microp devicetree bindings. Those devices are
+> microcontrollers found on Synology NAS devices. They are connected to a
+> serial port on the host device.
+> 
+> Those devices are used to control certain LEDs, fan speeds, a beeper, to
+> handle buttons, fan failures and to properly shutdown and reboot the
+> device.
+> 
+> This includes the following compatible ids:
+>  - synology,ds923p-microp
+>  - synology,ds918p-microp
+>  - synology,ds214play-microp
+>  - synology,ds225p-microp
+>  - synology,ds425p-microp
+>  - synology,ds710p-microp
+>  - synology,ds1010p-microp
+>  - synology,ds723p-microp
+>  - synology,ds1522p-microp
+>  - synology,rs422p-microp
+>  - synology,ds725p-microp
+>  - synology,ds118-microp
+>  - synology,ds124-microp
+>  - synology,ds223-microp
+>  - synology,ds223j-microp
+>  - synology,ds1823xsp-microp
+>  - synology,rs822p-microp
+>  - synology,rs1221p-microp
+>  - synology,rs1221rpp-microp
+>  - synology,ds925p-microp
+>  - synology,ds1525p-microp
+>  - synology,ds1825p-microp
 
-> On 04/04/2026 13:55, Aleksandrs Vinarskis wrote:
-> > Add bindings for Embedded Controller (EC) in Dell XPS 13 9345 (platform
-> > codename 'tributo'). It may be partially or fully compatible with EC
-> > found in Snapdragon-based Dell Latitude, Inspiron ('thena').
-> >
-> > Reviewed-by: Krzysztof Kozlowski <krzysztof.kozlowski@oss.qualcomm.com>
-> > Signed-off-by: Aleksandrs Vinarskis <alex@vinarskis.com>
-> > ---
-> >   .../embedded-controller/dell,xps13-9345-ec.yaml    | 91 +++++++++++++=
-+++++++++
-> >   MAINTAINERS                                        |  5 ++
-> >   2 files changed, 96 insertions(+)
-> >
-> > diff --git a/Documentation/devicetree/bindings/embedded-controller/dell=
-,xps13-9345-ec.yaml b/Documentation/devicetree/bindings/embedded-controller=
-/dell,xps13-9345-ec.yaml
-> > new file mode 100644
-> > index 0000000000000000000000000000000000000000..e14dbf2f1a6af8cc7511890=
-fbef08c6c717c0aa6
-> > --- /dev/null
-> > +++ b/Documentation/devicetree/bindings/embedded-controller/dell,xps13-=
-9345-ec.yaml
->
-> I believe the part name of this embedded controller is the "mec5200" so
-> instead of calling it dell,xps13-9345-ec suggest "dell,mec5200"
+Drop, we see this in the diff.
 
-Correct, its Microchip MEC5200. I remember reading some series discussion
-about not naming driver after IC its based on, but rather platform its
-used for since driver depends on firmware which is platform specific...
-cannot find that discussion now.
+> 
+> Signed-off-by: Markus Probst <markus.probst@posteo.de>
+> ---
+>  .../synology,ds923p-microp.yaml                    | 112 +++++++++++++++++++++
+>  MAINTAINERS                                        |   1 +
+>  2 files changed, 113 insertions(+)
+> 
+> diff --git a/Documentation/devicetree/bindings/embedded-controller/synology,ds923p-microp.yaml b/Documentation/devicetree/bindings/embedded-controller/synology,ds923p-microp.yaml
+> new file mode 100644
+> index 000000000000..4518e9b74be1
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/embedded-controller/synology,ds923p-microp.yaml
+> @@ -0,0 +1,112 @@
+> +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
+> +%YAML 1.2
+> +---
+> +$id: http://devicetree.org/schemas/embedded-controller/synology,ds923p-microp.yaml#
+> +$schema: http://devicetree.org/meta-schemas/core.yaml#
+> +
+> +title: Synology NAS on-board Microcontroller
+> +
+> +maintainers:
+> +  - Markus Probst <markus.probst@posteo.de>
+> +
+> +description: |
+> +  Synology Microp is a microcontroller found in Synology NAS devices.
+> +  It is connected to a serial port on the host device.
+> +
+> +  It is necessary to properly shutdown and reboot the NAS device and
+> +  provides additional functionality such as led control, fan speed control,
+> +  a beeper and buttons on the NAS device.
+> +
+> +properties:
+> +  compatible:
+> +    enum:
+> +      - synology,ds923p-microp
+> +      - synology,ds918p-microp
+> +      - synology,ds214play-microp
+> +      - synology,ds225p-microp
+> +      - synology,ds425p-microp
+> +      - synology,ds710p-microp
+> +      - synology,ds1010p-microp
+> +      - synology,ds723p-microp
+> +      - synology,ds1522p-microp
+> +      - synology,rs422p-microp
+> +      - synology,ds725p-microp
+> +      - synology,ds118-microp
+> +      - synology,ds124-microp
+> +      - synology,ds223-microp
+> +      - synology,ds223j-microp
+> +      - synology,ds1823xsp-microp
+> +      - synology,rs822p-microp
+> +      - synology,rs1221p-microp
+> +      - synology,rs1221rpp-microp
+> +      - synology,ds925p-microp
+> +      - synology,ds1525p-microp
+> +      - synology,ds1825p-microp
 
->
-> > @@ -0,0 +1,91 @@
-> > +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
-> > +%YAML 1.2
-> > +---
-> > +$id: http://devicetree.org/schemas/embedded-controller/dell,xps13-9345=
--ec.yaml#
-> > +$schema: http://devicetree.org/meta-schemas/core.yaml#
-> > +
-> > +title: Dell XPS 13 9345 Embedded Controller
-> > +
-> > +maintainers:
-> > +  - Aleksandrs Vinarskis <alex@vinarskis.com>
-> > +
-> > +description:
-> > +  The Dell XPS 13 9345 has an Embedded Controller (EC) which handles t=
-hermal
-> > +  and power management. It is communicating with SoC over multiple i2c=
- busses.
-> > +  Among other things, it handles fan speed control, thermal shutdown, =
-peripheral
-> > +  power supply including trackpad, touch-row, display. For these funct=
-ions, it
-> > +  requires frequently updated thermal readings from onboard thermistor=
-s.
-> > +
-> > +properties:
-> > +  compatible:
-> > +    const: dell,xps13-9345-ec
->
-> Ditto the compat - name it after the IC not the laptop its a "mec5200"
-> or "mec5200-ec" - I suspect the -ec postfix is a tautology the ec bit in
-> "mec" probably captures.
+So we already talked about this and you were told to use compatibility.
+Your driver clearly states several of these are compatible, so I am
+confused that I do not see it expressed here.
 
-I'm not sure I agree regarding the compatible, its supposed to be as exact =
-as
-possible. "dell,mec5200" will not allow us to differentiate between EC driv=
-ers
-of "tributo" and "thena" for example.
+> +
+> +  fan-failure-gpios:
+> +    description: GPIOs needed to determine which fans stopped working on a fan failure event.
+> +    minItems: 2
+> +    maxItems: 3
+> +
+> +required:
+> +  - compatible
+> +
+> +allOf:
+> +  - if:
+> +      properties:
+> +        compatible:
+> +          contains:
+> +            enum:
+> +              - synology,ds214play-microp
+> +              - synology,ds225p-microp
+> +              - synology,ds710p-microp
+> +              - synology,ds723p-microp
+> +              - synology,ds725p-microp
+> +              - synology,ds118-microp
+> +              - synology,ds124-microp
+> +              - synology,ds223-microp
+> +              - synology,ds223j-microp
+> +              - synology,ds1823xsp-microp
+> +              - synology,rs822p-microp
+> +              - synology,rs1221p-microp
+> +              - synology,rs1221rpp-microp
+> +              - synology,ds1825p-microp
+> +    then:
+> +      properties:
+> +        fan-failure-gpios: false
+> +    else:
+> +      required:
+> +        - fan-failure-gpios
+> +
+> +additionalProperties: false
+> +
+> +examples:
+> +  - |
+> +    #include <dt-bindings/leds/common.h>
+> +    #include <dt-bindings/gpio/gpio.h>
+> +
+> +    embedded-controller {
+> +      compatible = "synology,ds923p-microp";
+> +
+> +      fan-failure-gpios = <&gpio 68 GPIO_ACTIVE_HIGH>, <&gpio 69 GPIO_ACTIVE_HIGH>;
 
-Suggestion:
-- Schema filename to be generalized "dell,mec5200-ec.yaml"
-- Driver filename to be generalized "dell-mec5200-ec.c"
-- Config to be generalized "EC_DELL_MEC5200"
-- Compatible to stay specific "dell,xps13-9345-ec", with fallback to
-  "dell,mec5200-ec".
+Keep only one example, they are basically the same. Difference in one
+property does not need a new example.
 
-I would also keep "-ec" to stay consistent with naming convention of
-existing drivers and bindings.
+Best regards,
+Krzysztof
 
-Let me know if this would work for you.
-
-Alex
-
->
-> > +
-> > +  reg:
-> > +    const: 0x3b
-> > +
-> > +  interrupts:
-> > +    maxItems: 1
-> > +
-> > +  io-channels:
-> > +    description:
-> > +      ADC channels connected to the 7 onboard thermistors on PMK8550.
-> > +      EC requires frequent thermal readings of these channels to perfo=
-rm
-> > +      automated fan speed control.
-> > +    items:
-> > +      - description: ADC channel for sys_therm0
-> > +      - description: ADC channel for sys_therm1
-> > +      - description: ADC channel for sys_therm2
-> > +      - description: ADC channel for sys_therm3
-> > +      - description: ADC channel for sys_therm4
-> > +      - description: ADC channel for sys_therm5
-> > +      - description: ADC channel for sys_therm6
-> > +
-> > +  io-channel-names:
-> > +    items:
-> > +      - const: sys_therm0
-> > +      - const: sys_therm1
-> > +      - const: sys_therm2
-> > +      - const: sys_therm3
-> > +      - const: sys_therm4
-> > +      - const: sys_therm5
-> > +      - const: sys_therm6
->
->
-> > +
-> > +required:
-> > +  - compatible
-> > +  - reg
-> > +  - interrupts
-> > +  - io-channels
-> > +  - io-channel-names
-> > +
-> > +additionalProperties: false
-> > +
-> > +examples:
-> > +  - |
-> > +    #include <dt-bindings/interrupt-controller/irq.h>
-> > +    #include <dt-bindings/iio/qcom,spmi-adc7-pm8350.h>
-> > +    i2c {
-> > +        #address-cells =3D <1>;
-> > +        #size-cells =3D <0>;
-> > +
-> > +        embedded-controller@3b {
-> > +            compatible =3D "dell,xps13-9345-ec";
-> > +            reg =3D <0x3b>;
-> > +            interrupts-extended =3D <&tlmm 66 IRQ_TYPE_LEVEL_LOW>;
-> > +
-> > +            io-channels =3D <&pmk8550_vadc PM8350_ADC7_GPIO3_100K_PU(1=
-)>,
-> > +                          <&pmk8550_vadc PM8350_ADC7_GPIO4_100K_PU(1)>=
-,
-> > +                          <&pmk8550_vadc PM8350_ADC7_AMUX_THM1_100K_PU=
-(1)>,
-> > +                          <&pmk8550_vadc PM8350_ADC7_AMUX_THM2_100K_PU=
-(1)>,
-> > +                          <&pmk8550_vadc PM8350_ADC7_AMUX_THM3_100K_PU=
-(1)>,
-> > +                          <&pmk8550_vadc PM8350_ADC7_AMUX_THM4_100K_PU=
-(1)>,
-> > +                          <&pmk8550_vadc PM8350_ADC7_AMUX_THM5_100K_PU=
-(1)>;
-> > +            io-channel-names =3D "sys_therm0",
-> > +                               "sys_therm1",
-> > +                               "sys_therm2",
-> > +                               "sys_therm3",
-> > +                               "sys_therm4",
-> > +                               "sys_therm5",
-> > +                               "sys_therm6";
-> > +        };
-> > +    };
-> > +...
-> > diff --git a/MAINTAINERS b/MAINTAINERS
-> > index 96e0781f2201b41b976dfa69efd44d62c4ff0058..a5d175559f4468dfe363b31=
-9a1b08d3425f4d712 100644
-> > --- a/MAINTAINERS
-> > +++ b/MAINTAINERS
-> > @@ -7236,6 +7236,11 @@ S:=09Maintained
-> >   F:=09Documentation/ABI/testing/sysfs-class-firmware-attributes
-> >   F:=09drivers/platform/x86/dell/dell-wmi-sysman/
-> >
-> > +DELL XPS EMBEDDED CONTROLLER DRIVER
-> > +M:=09Aleksandrs Vinarskis <alex@vinarskis.com>
-> > +S:=09Maintained
-> > +F:=09Documentation/devicetree/bindings/embedded-controller/dell,xps13-=
-9345-ec.yaml
-> > +
-> >   DELTA AHE-50DC FAN CONTROL MODULE DRIVER
-> >   M:=09Zev Weiss <zev@bewilderbeest.net>
-> >   L:=09linux-hwmon@vger.kernel.org
-> >
->
->
