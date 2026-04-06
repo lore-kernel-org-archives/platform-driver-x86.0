@@ -1,80 +1,80 @@
-Received: from mail-qt1-f178.google.com (mail-qt1-f178.google.com [209.85.160.178])
+Received: from mail-qv1-f53.google.com (mail-qv1-f53.google.com [209.85.219.53])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8EAC138F233
-	for <platform-driver-x86@vger.kernel.org>; Mon,  6 Apr 2026 18:41:01 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=209.85.160.178
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E1A092F290A
+	for <platform-driver-x86@vger.kernel.org>; Mon,  6 Apr 2026 18:42:48 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=209.85.219.53
 ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1775500863; cv=pass; b=LjR2m+cWuuWKt1a386LULmPTcQl0KQ55Q8d7jEj7YroX9iQqfzGqsbcUTyWBpOarGeDxbMqA07hLlrh83Wzt89Zw8J9fCoG7qdYJ023Yxukp4z2J3ASEHf+QQxcFHObFewhzTFXEahLIlf0Na4ebbtwRkfFaHfwxEaKquD/FlKk=
+	t=1775500970; cv=pass; b=E6ILQ1UlCOXxg+UYdt71OKYr5jPr5YwbDrSlsTPwmLVid2pY7LbG0elKVNYMWABr5DLsaxt14usW9Mjyj3A/a9M+26fcHm3lJ6OmzMg9MSelsZKkmkCyfTgSCE9DAGs5cJMHFOFw4/35D6EM8zc1vBledHw6eronfSihbo8frqw=
 ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1775500863; c=relaxed/simple;
-	bh=itbSgjuM/hijuv8ozRCl7pcwf83pOf92MbcIFgmT+Wg=;
+	s=arc-20240116; t=1775500970; c=relaxed/simple;
+	bh=2t/dqWikcuVoZCGkAQ9ON3eKcJP2RLNeubP1KG6L0P4=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=OytJwyD6uA8btPd9mZtZ6Y1f5mK+nLfjEVlMH2X25Ks9EmhK37ghehK+w/oOI8mEIEnm276vAdRwzQ+tguTZLM4jcYJRirUD9DzNQ5oRsAmTv4lCVIDFmc+suAPz4jfUqbBfCrgdSxFezID0vXCbmE5+GGlVNKMr+oNlgwqgWOA=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=AydQfnlb; arc=pass smtp.client-ip=209.85.160.178
+	 To:Cc:Content-Type; b=YcUEYvDQ3mFJEbKEbNijkszZ9HwqkPOWT0OhJ6UF2dOUPpryorwpRlnB3Pp21doGUrXmlKgHk3+DhhmPEbd+IXO+tKZuXB6VTOg5lzTr6WEkRDrpn3W3vgOQ1BqOhfkFwHVPdpe3TfcVJMvAcUjGjoC0HAQLtrAJgDyeMNYbQBM=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=EqXxZq/K; arc=pass smtp.client-ip=209.85.219.53
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="AydQfnlb"
-Received: by mail-qt1-f178.google.com with SMTP id d75a77b69052e-50d7c12e48eso22703671cf.1
-        for <platform-driver-x86@vger.kernel.org>; Mon, 06 Apr 2026 11:41:01 -0700 (PDT)
-ARC-Seal: i=1; a=rsa-sha256; t=1775500860; cv=none;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="EqXxZq/K"
+Received: by mail-qv1-f53.google.com with SMTP id 6a1803df08f44-8a05c388b27so84982346d6.3
+        for <platform-driver-x86@vger.kernel.org>; Mon, 06 Apr 2026 11:42:48 -0700 (PDT)
+ARC-Seal: i=1; a=rsa-sha256; t=1775500968; cv=none;
         d=google.com; s=arc-20240605;
-        b=LvZ7tkAXKGl/YsE+1gwSi4FGQwuIxUHIbkiPNwAbJZdRdAT87JGleaOG6ymSFQNZ5J
-         VatzUSb+6vy2aRL/m+SNxnK6+aiVErhU2WcQtL+x7cHPJKYq+dz2zrupCV4pixyvag/y
-         Si1zvlR1P+Tn2TO3zPIov09oeVUotB78lf7RnGzS+HCAfND9PfwykouNgOy5ktBZqxZN
-         nbdinl1Dd2mqaDiEbEwH8BgEeqOWh7KNgUe/0kazbaTq7NzJRtmez72tqOk5KaoUu37j
-         ebbAqUMDscLn2cauqzaaGX9LFnmqEZi+noXVZbCT3d/nqkB6MwNWiLoNjj3pGNAIGUkg
-         okUg==
+        b=Wlna+nubdxmFY60kHQi5YjwgFzJR0GhA255CCEA3h+2v/L6FvQRewuOocW2Bm7/vJk
+         OTYSUfT08fvfy8ll9OeSlrQRN40f2qpZatjtXqOcAn41TpKCDDz6ZeX8NIOreSwIjwBo
+         YjqJZ2RvRyA3PnzIzehiquqiZ7yn7fY+Q+Dicih/DG7w6SBFMq3keNDe3MDj1WPOHCTy
+         G3W2vtXaPV1NO0fLUnm6Fld8dCC8WKHdsCOjIr3vqUmscw2yZ/2+O3eMDrokAP73cgbt
+         U6xhDtmrB8xT4cVpZuuaTDfq+CyRfuRy/GnF3SHXp61m1zV4VmELFAA9EXiwryhdrX/A
+         PMxA==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20240605;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:dkim-signature;
-        bh=12qt9cAgRuNIzAl41U0jlXVpP16G7YKp6dn4gm822lw=;
-        fh=D0NeIRY8uwOAYrO/iRVnSLUWJU/OOFn1URFknTO9d3M=;
-        b=GDsvde21kKERsP2OND1O9W8KeQ9eKjMUEheMskHIuSxN2ndp5+UTGkbZKvHiKAiyw8
-         attb7+E27gMR4xnatxsPiGvyYeLsvKPJ7tvzoh3HHlBtQrK1BF3TG+p8MA2J9kzQjasP
-         rRYI1K1p+k4zWwG98G6vuqldzGxmHzlMQmrHW2qiMPh6r3nDfN+rtbuz8J7CsFDd5gc5
-         oRRdq53ujIbUG73KrVjvAgYtu+MBytE1vrbfC0EXW+Uk+TpUJLb1nq/2nEf1EFQd8EUN
-         PM16mvwML/pZ8bWKU8vmcpCm/+R8uyOEJFw6jAT+ZGl094GgW+qq0jfxDLFoojGg7F8F
-         MaQw==;
+        bh=2dD2eVO9YOEvgq4N0uzPsgMJoIErz8h33H4BqncBVvI=;
+        fh=3xg73sFtJ/dEVUZm2zJOQO/1FePc3B48lu1zgf2ktjQ=;
+        b=PbuVeWk/yrmi7iqS83w4R4y4HnCLFnnhc0j1lEbgqY8anLtC1uNJkfVSp52jA7qfsT
+         V304XiQBr9VAs9stTMDwfITE1Tq2CqO5rI5aV78+zP0qUee5RzcA6gVkjp4u0F/uATx0
+         s889Oz4Ha1OoBWPuoQ3ocWxSN8Az31JUZD95AqlUHULU1wU/tyrUkTOUGmjinYlbWGrY
+         x07zT9dVexei+zYI+XAkkhfiTFXmbZBV3ljE2KbsIM21KGPH0W7xovJcUoxGpK9ISLTD
+         qQLVa/Iw0lvWDb9hRggLmoQ/MLED01pBxo2hfDklRKb+UIL27TU13diZY/bLisEZLyh5
+         aqqA==;
         darn=vger.kernel.org
 ARC-Authentication-Results: i=1; mx.google.com; arc=none
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20251104; t=1775500860; x=1776105660; darn=vger.kernel.org;
+        d=gmail.com; s=20251104; t=1775500968; x=1776105768; darn=vger.kernel.org;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=12qt9cAgRuNIzAl41U0jlXVpP16G7YKp6dn4gm822lw=;
-        b=AydQfnlbzeKN5eS9onfJifq4EXmJBjI0HdaW5lyskiwmuoPTZFr9GMr3Z/m+rBcnxH
-         efMcS1csErlE7h6aecMEMxgFbpGxRCK4u1KtWeZKazdQxLxWcnx1p7pfsallVXvy8sf+
-         /qV8zvH6qF9f8Z4fPQP5Sw1Dgnxg54ZE5CYglvjbn5lBBcJjA15arGSP44L0Qq+2giNC
-         9+tJdrFFs161TJlAdzDxp+9+AP66wHBjwQml+MWfEughQRt/z299ghJm/Fwe9yQIGUWA
-         klvE8J2TwjOxT9RfCZo25iFYnfyHsjTsHPTcURvJ7EpCsQPovF3nY7o0eRaZTFRrvhf2
-         8PMw==
+        bh=2dD2eVO9YOEvgq4N0uzPsgMJoIErz8h33H4BqncBVvI=;
+        b=EqXxZq/K2MhC7uKCEYNmzunhohiaErVLRZd1WXQ/KXP1UFlvr7JlAJhi0XlHAEJQKn
+         RcOcpcLCE7CrqT4N9CU00rzeWl8Dc1gJQyKucCaXEQDG6JHrI5uZ0JqZlQ1EXl1189bF
+         xYTOtLjcqcXXUnCfesLGGt1X3UQmY4zfUsvj8nmHTs4tRh3XnYllyq/mN48/qAQFhDr1
+         XWItjFUN46VtYTocktwtCjbfHi+UKvHTF7oBuxiWUCSY7mUOUKfcjm12PPxKhx9v5rTx
+         xLoCgz5ptWioJWaDFRkTTjLmU76LYw06lKjdygwTNan8fsoS9kuk2vg6iVcTyOgH77Oo
+         IHUg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1775500860; x=1776105660;
+        d=1e100.net; s=20251104; t=1775500968; x=1776105768;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:x-gm-gg:x-gm-message-state:from
          :to:cc:subject:date:message-id:reply-to;
-        bh=12qt9cAgRuNIzAl41U0jlXVpP16G7YKp6dn4gm822lw=;
-        b=JTiUF5GuWye1+jm3KeCPM79EmBkU+JO8gri4/NDbSoefo5oogfEfJIqu3TdJYihD8+
-         F0I0PTrtIB2Yilg5Lnc2FPU2tQGW85mp2bQc7cbDq4si6avWqCOm5N/GNxia5A6sCABr
-         QwivhwfR6eRS9tazwd7WOoc4TU43q+gW/OPPPkKDEwjpf1ONzeLSQg8iIBa3f03yNjQA
-         NnaKmjlv3IpbrICMHtnyajuSOqVShC0eFi1dtImIslEvCJk0i1MpNCa+6Nbd1Fxo5D5y
-         XNsbV9cf7kk9Mim7fHvm83JcdgyJzwR0T1bw2Ua+gbF0TfmtNzCp3+n7DIOyb4t/UNaX
-         XXSA==
-X-Forwarded-Encrypted: i=1; AJvYcCW+pQraH4fDF5BG4zlNftNdoAwjeKeys/eCe9m2NpzQCBi6a42Du8psGMfKYx9M3FSydWaHy3RBTN3iIt1wr40aKWd7@vger.kernel.org
-X-Gm-Message-State: AOJu0Yx4ZDufqOHy4CsmrjYJb7Sg7PiIY8Zpm8E1581mgon74cvGE0y1
-	uf4S/y2mjhb5HsDBcQ1YcTLfexaldZPPRnGY2WcQgwmZhnRyFkctHOxHiVhdxLHLdKuENgSQrKO
-	Tn809UmdObRa/pdve4z3vupFPgSXwUs4=
-X-Gm-Gg: AeBDievOpy4xIbG+d1PgKRCpdGlRc2QHms5Ugv9li4yoxkLRF5JZ6dw6DYZ61/uJyL7
-	unqskUM6aJXxRowb5Ens1E1UuUJS+jS+khWQZW/+xkNo28K/lnx48L70axyBCDvMvSkwBz0KDXH
-	CtcCbpM0+HtTlW0EeqwgtPWpUf/lBgSkbRTNx1n8m0wxOv0dloL/NOiie07AESuXE6XzESnqzGp
-	HmIPmbTDwX8jOuFftLSkJF7UrYLldMGp5XaVyf92iVmaBdP0xjynBxoumBF7cea63D5Qv7Bjar3
-	KinuTojU
-X-Received: by 2002:a05:622a:148e:b0:50d:3efd:bd93 with SMTP id
- d75a77b69052e-50d4fa6ef2cmr215903271cf.11.1775500860318; Mon, 06 Apr 2026
- 11:41:00 -0700 (PDT)
+        bh=2dD2eVO9YOEvgq4N0uzPsgMJoIErz8h33H4BqncBVvI=;
+        b=Yfl+YdbSJHH+Eqcd8zAx2VeRA5jnKbBUTXZBcEl6KQb9WRONiAwNC7xBwqqtXeVhry
+         4/iJKuTmtNNSDITGvfpz+1Xwb2i/ziF7Dubr+RyISxm5N6XnVErUaWBVoEy5gXfDU1G5
+         yZ1cOuFNmk1LlUmQm+Yd7i3v+v8Qo9LG7YVpbvf7FcTTS81nJFCmyNQZccWAvVlQFazv
+         blZbuDiG0ASu4mljN0COmWJ8spJFXr4Z+OjHDMYhuhp9QQVTglXcySx2oiFL6cciLQej
+         VO+UGqyUpOzzQdOAF5k+SBb3hMcmo8tbqGZJ5AcJIRG2vG1DGQwJ6jX62FjxmvnpYAOl
+         7BRA==
+X-Forwarded-Encrypted: i=1; AJvYcCUQS1J84Bbe6j9iqDEQ9Rcz6IWst9/uroGtdMF5iNjLZDCUOgTLhjSiZVFOk5SMNDR4iOU0uGKJRFhQZ364RqB+22V0@vger.kernel.org
+X-Gm-Message-State: AOJu0Yyoe6XejjcZ7dm88fCFq3q3Y/OK+hfty9AsjG2n2A6JrGZjgjlO
+	sx6UXpNS6ULpaGj0zlnTYRDY5MTElEFrSTgV4mEd3zoG6boW8qSvvKTRZNGGau1e+iXfyX5grZE
+	WrXs+0HttnrmbbRFbljTfmJ5KimipBso=
+X-Gm-Gg: AeBDiesiHuT+Zfx8kplqpx/MhwI5Y9uPwZ2KAeb5OEwzc9l6lbOPoSxFykYDANwkAal
+	ufqqD7Bw6emnOqK7ZVKtY2nM+Ux9SelP1iFn86iVPfqbKOMkMdx37fIj6Q5Tj0YbwVbnOeB/QBZ
+	knwR4+UpnOL5WrZxTxp0vJuLNngid3BGqsl0Zu3NPYdB7VGpdSxxhlNaZ5bnl39g7+GYQ2Z/Lwi
+	AqY7kqHVjw+5GxeOYpqN8lRYbM/BsurPAR5i7zSRAbdiddhg3di5dqi/E0OHdFBnzcxGbiWyXKg
+	zllHbrKIqqWjcZwdJ9c=
+X-Received: by 2002:a05:6214:21a2:b0:89c:4ea7:a714 with SMTP id
+ 6a1803df08f44-8a7027a3647mr221372076d6.22.1775500967714; Mon, 06 Apr 2026
+ 11:42:47 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
@@ -82,373 +82,171 @@ List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 References: <20260402032424.678528-1-derekjohn.clark@gmail.com>
- <20260402032424.678528-7-derekjohn.clark@gmail.com> <b1877396-593b-47a0-b84c-30e6f000d759@app.fastmail.com>
-In-Reply-To: <b1877396-593b-47a0-b84c-30e6f000d759@app.fastmail.com>
+ <20260402032424.678528-9-derekjohn.clark@gmail.com> <ac5a412f-9fb5-4f1a-99ca-127e1564d327@app.fastmail.com>
+In-Reply-To: <ac5a412f-9fb5-4f1a-99ca-127e1564d327@app.fastmail.com>
 From: Derek John Clark <derekjohn.clark@gmail.com>
-Date: Mon, 6 Apr 2026 11:40:46 -0700
-X-Gm-Features: AQROBzC_8Ralz_vdmumdz6JCRxuHNf5_HKKuypC9_JGBNsDD0aAR7Qq-54o2llE
-Message-ID: <CAFqHKTmKpk8+rxhxCyie4G7NC4Bz31Z=iTi8aTR6Sey5So5t1A@mail.gmail.com>
-Subject: Re: [PATCH v7 06/16] platform/x86: lenovo-wmi-other: Limit adding
- attributes to supported devices
+Date: Mon, 6 Apr 2026 11:42:36 -0700
+X-Gm-Features: AQROBzAOSr1d7CIkvo1HORURLutWf5XH9XzqqMvCcf6Hnx76tk5mBWwOXV6R0jI
+Message-ID: <CAFqHKTn+1wbZdpi_yKpaqHmeLnb5PKbWXpj8Pc=547GVYBhX=Q@mail.gmail.com>
+Subject: Re: [PATCH v7 08/16] platform/x86: lenovo-wmi-helpers: Move gamezone
+ enums to wmi-helpers
 To: Mark Pearson <mpearson-lenovo@squebb.ca>
 Cc: =?UTF-8?Q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>, 
 	Hans de Goede <hansg@kernel.org>, Armin Wolf <W_Armin@gmx.de>, Jonathan Corbet <corbet@lwn.net>, 
 	Rong Zhang <i@rong.moe>, Kurt Borja <kuurtb@gmail.com>, 
-	"platform-driver-x86@vger.kernel.org" <platform-driver-x86@vger.kernel.org>, linux-kernel@vger.kernel.org, 
-	stable@vger.kernel.org
+	"platform-driver-x86@vger.kernel.org" <platform-driver-x86@vger.kernel.org>, linux-kernel@vger.kernel.org
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-On Sat, Apr 4, 2026 at 2:51=E2=80=AFPM Mark Pearson <mpearson-lenovo@squebb=
+On Sat, Apr 4, 2026 at 5:04=E2=80=AFPM Mark Pearson <mpearson-lenovo@squebb=
 .ca> wrote:
 >
 > Hi Derek,
 >
 > On Wed, Apr 1, 2026, at 11:24 PM, Derek J. Clark wrote:
-> > Adds lwmi_is_attr_01_supported, and only creates the attribute subfolde=
-r
-> > if the attribute is supported by the hardware. Due to some poorly
-> > implemented BIOS this is a multi-step sequence of events. This is
-> > because:
-> > - Some BIOS support getting the capability data from custom mode (0xff)=
-,
-> >   while others only support it in no-mode (0x00).
-> > - Some BIOS support get/set for the current value from custom mode (0xf=
-f),
-> >   while others only support it in no-mode (0x00).
-> > - Some BIOS report capability data for a method that is not fully
-> >   implemented.
-> > - Some BIOS have methods fully implemented, but no complimentary
-> >   capability data.
+> > In a later patch in the series the thermal mode enum will be accessed
+> > across three separate drivers (wmi-capdata, wmi-gamezonem and wmi-other=
+).
+> > An additional patch in the series will also add a function protoype tha=
+t
+> > needs to reference this enum in wmi-helpers.h To avoid having all these
+> > drivers begin to import each others headers, and to avoid declaring an
+> > opaque enum to hande the second case, move the thermal mode enum to
+> > helpers where it can be safely accessed by everything that needs it fro=
+m
+> > a single import.
 > >
-> > To ensure we only expose fully implemented methods with corresponding
-> > capability data, we check each outcome before reporting that an
-> > attribute can be supported.
+> > While at it, since the gamezone_events_type enum is the only remaining
+> > item in the header, move that as well and remove the gamezone header
+> > entirely.
 > >
+> > Reviewed-by: Rong Zhang <i@rong.moe>
+> > Tested-by: Rong Zhang <i@rong.moe>
+> > Signed-off-by: Derek J. Clark <derekjohn.clark@gmail.com>
+> > ---
+> >  drivers/platform/x86/lenovo/wmi-events.c   |  2 +-
+> >  drivers/platform/x86/lenovo/wmi-gamezone.c |  1 -
+> >  drivers/platform/x86/lenovo/wmi-gamezone.h | 21 ---------------------
+> >  drivers/platform/x86/lenovo/wmi-helpers.h  | 13 +++++++++++++
+> >  drivers/platform/x86/lenovo/wmi-other.c    |  3 +--
+> >  5 files changed, 15 insertions(+), 25 deletions(-)
+> >  delete mode 100644 drivers/platform/x86/lenovo/wmi-gamezone.h
+> >
+> > diff --git a/drivers/platform/x86/lenovo/wmi-events.c
+> > b/drivers/platform/x86/lenovo/wmi-events.c
+> > index 0994cd7dd504..9e9f2e82e04d 100644
+> > --- a/drivers/platform/x86/lenovo/wmi-events.c
+> > +++ b/drivers/platform/x86/lenovo/wmi-events.c
+> > @@ -17,7 +17,7 @@
+> >  #include <linux/wmi.h>
+> >
+> >  #include "wmi-events.h"
+> > -#include "wmi-gamezone.h"
+> > +#include "wmi-helpers.h"
+> >
+> >  #define THERMAL_MODE_EVENT_GUID "D320289E-8FEA-41E0-86F9-911D83151B5F"
+> >
+> > diff --git a/drivers/platform/x86/lenovo/wmi-gamezone.c
+> > b/drivers/platform/x86/lenovo/wmi-gamezone.c
+> > index a91089694727..5a8f4aee02cf 100644
+> > --- a/drivers/platform/x86/lenovo/wmi-gamezone.c
+> > +++ b/drivers/platform/x86/lenovo/wmi-gamezone.c
+> > @@ -21,7 +21,6 @@
+> >  #include <linux/wmi.h>
+> >
+> >  #include "wmi-events.h"
+> > -#include "wmi-gamezone.h"
+> >  #include "wmi-helpers.h"
+> >
+> >  #define LENOVO_GAMEZONE_GUID "887B54E3-DDDC-4B2C-8B88-68A26A8835D0"
+> > diff --git a/drivers/platform/x86/lenovo/wmi-gamezone.h
+> > b/drivers/platform/x86/lenovo/wmi-gamezone.h
+> > deleted file mode 100644
+> > index ddb919cf6c36..000000000000
+> > --- a/drivers/platform/x86/lenovo/wmi-gamezone.h
+> > +++ /dev/null
+> > @@ -1,21 +0,0 @@
+> > -/* SPDX-License-Identifier: GPL-2.0-or-later */
+> > -
+> > -/* Copyright (C) 2025 Derek J. Clark <derekjohn.clark@gmail.com> */
+> > -
+> > -#ifndef _LENOVO_WMI_GAMEZONE_H_
+> > -#define _LENOVO_WMI_GAMEZONE_H_
+> > -
+> > -enum gamezone_events_type {
+> > -     LWMI_GZ_GET_THERMAL_MODE =3D 1,
+> > -};
+> > -
+> > -enum thermal_mode {
+> > -     LWMI_GZ_THERMAL_MODE_NONE =3D        0x00,
+> > -     LWMI_GZ_THERMAL_MODE_QUIET =3D       0x01,
+> > -     LWMI_GZ_THERMAL_MODE_BALANCED =3D    0x02,
+> > -     LWMI_GZ_THERMAL_MODE_PERFORMANCE =3D 0x03,
+> > -     LWMI_GZ_THERMAL_MODE_EXTREME =3D     0xE0, /* Ver 6+ */
+> > -     LWMI_GZ_THERMAL_MODE_CUSTOM =3D      0xFF,
+> > -};
+> > -
+> > -#endif /* !_LENOVO_WMI_GAMEZONE_H_ */
+> > diff --git a/drivers/platform/x86/lenovo/wmi-helpers.h
+> > b/drivers/platform/x86/lenovo/wmi-helpers.h
+> > index 651a039228ed..ed7db3ebba6c 100644
+> > --- a/drivers/platform/x86/lenovo/wmi-helpers.h
+> > +++ b/drivers/platform/x86/lenovo/wmi-helpers.h
+> > @@ -16,6 +16,19 @@ struct wmi_method_args_32 {
+> >       u32 arg1;
+> >  };
+> >
+> > +enum lwmi_event_type {
+> > +     LWMI_GZ_GET_THERMAL_MODE =3D 0x01,
+> > +};
+> > +
+> > +enum thermal_mode {
+> > +     LWMI_GZ_THERMAL_MODE_NONE =3D        0x00,
+> > +     LWMI_GZ_THERMAL_MODE_QUIET =3D       0x01,
+> > +     LWMI_GZ_THERMAL_MODE_BALANCED =3D    0x02,
+> > +     LWMI_GZ_THERMAL_MODE_PERFORMANCE =3D 0x03,
+> > +     LWMI_GZ_THERMAL_MODE_EXTREME =3D     0xE0, /* Ver 6+ */
+> > +     LWMI_GZ_THERMAL_MODE_CUSTOM =3D      0xFF,
+> > +};
+> > +
+> >  int lwmi_dev_evaluate_int(struct wmi_device *wdev, u8 instance, u32 me=
+thod_id,
+> >                         unsigned char *buf, size_t size, u32 *retval);
+> >
+> > diff --git a/drivers/platform/x86/lenovo/wmi-other.c
+> > b/drivers/platform/x86/lenovo/wmi-other.c
+> > index 1d1bab98298b..e475d1d8a5a7 100644
+> > --- a/drivers/platform/x86/lenovo/wmi-other.c
+> > +++ b/drivers/platform/x86/lenovo/wmi-other.c
+> > @@ -46,7 +46,6 @@
+> >
+> >  #include "wmi-capdata.h"
+> >  #include "wmi-events.h"
+> > -#include "wmi-gamezone.h"
+> >  #include "wmi-helpers.h"
+> >  #include "../firmware_attributes_class.h"
+> >
+> > @@ -787,7 +786,7 @@ static bool lwmi_attr_01_is_supported(struct
+> > tunable_attr_01 *tunable_attr)
+> >  {
+> >       u8 modes[2] =3D { LWMI_GZ_THERMAL_MODE_CUSTOM,
+> > LWMI_GZ_THERMAL_MODE_NONE };
+> >       struct lwmi_om_priv *priv =3D dev_get_drvdata(tunable_attr->dev);
+> > -     struct wmi_method_args_32 args =3D { 0x0, 0x0 };
+> > +     struct wmi_method_args_32 args =3D {};
 >
-> I've been trying to go through this series a bit more carefully, while re=
-ading the (not exactly clear) Lenovo internal spec.
-> I was curious if the cap00, ID 290000, method would work here? ("Thermal =
-Mode Capability")
+> Was this change intentional? It's seems unrelated to the commit descripti=
+on.
 >
-> I don't have systems to try it out on, but it looked like it might give y=
-ou which modes are supported (or not). Not sure if it would be more reliabl=
-e than the cap01 methods?
->
-> Apologies if you've tried this before and it doesn't work - just wanted t=
-o check. Nothing wrong (that I can see) with your method below if that's sa=
-fer :)
 
-Hi Mark,
-
-That wasn't added until v3.8 of the spec, so most devices won't have
-that until gen 11, and it only reports the thermal modes supported. It
-doesn't really provide the information we're gathering here, which is
-whether or not the given attribute's get/set methods and the
-capability data structure include the thermal mode as part of the
-command or not. We need to this because some older hardware only
-reports any of that information with 0x00 as the thermal mode, some
-hardware reports get/set is supported but has no capability data, and
-some hardware has capability data but the get/set methods are stubbed
-and have no effect.
-
-Perhaps in a later series I can add FID 0x00290000 as a "Step 1" for
-the extreme supported function, but I have no hardware to test it with
-and I'd rather not delay this series any further for it.
+It should have been declared as =3D {}; from the initial patch. Seems I
+missed one in the rebase and it got added later.
 
 Thanks,
 Derek
 
-> Mark
->
-> > Checking for lwmi_is_attr_01_supported during remove is not done to
-> > ensure that we don't attempt to call cd01 or send WMI events if one of
-> > the interfaces being removed was the cause of the driver unloading.
-> >
-> > Fixes: edc4b183b794 ("platform/x86: Add Lenovo Other Mode WMI Driver")
-> > Reported-by: Kurt Borja <kuurtb@gmail.com>
-> > Closes:
-> > https://lore.kernel.org/platform-driver-x86/DG60P3SHXR8H.3NSEHMZ6J7XRC@=
-gmail.com/
-> > Cc: stable@vger.kernel.org
-> > Reviewed-by: Rong Zhang <i@rong.moe>
-> > Tested-by: Rong Zhang <i@rong.moe>
-> > Reviewed-by: Mark Pearson <mpearson-lenovo@squebb.ca>
-> > Signed-off-by: Derek J. Clark <derekjohn.clark@gmail.com>
-> > ---
-> > v7:
-> >   - Move earlier in the series. This required dropping the use of
-> >     lwmi_attr_id as it will be added later.
-> >   - Add missing switch between cd_mode_id and cv_mode_id in
-> >     current_value_store.
-> > v6:
-> >   - Zero initialize args in lwmi_is_attr_01_supported.
-> >   - Fix formatting.
-> > v5:
-> >   - Move cv/cd_mode_id refrences from path 3/4.
-> >   - Add missing import for ARRAY_SIZE.
-> >   - Make lwmi_is_attr_01_supported return bool instead of u32.
-> >   - Various formatting fixes.
-> > v4:
-> >   - Use for loop instead of backtrace gotos for checking if an attribut=
-e
-> >     is supported.
-> >   - Add include for dev_printk.
-> >   - Wrap dev_dbg in lwmi_is_attr_01_supported earlier.
-> >   - Don't use symmetric cleanup of attributes in error states.
-> > ---
-> >  drivers/platform/x86/lenovo/wmi-gamezone.h |   1 +
-> >  drivers/platform/x86/lenovo/wmi-other.c    | 114 ++++++++++++++++++---
-> >  2 files changed, 98 insertions(+), 17 deletions(-)
-> >
-> > diff --git a/drivers/platform/x86/lenovo/wmi-gamezone.h
-> > b/drivers/platform/x86/lenovo/wmi-gamezone.h
-> > index 6b163a5eeb95..ddb919cf6c36 100644
-> > --- a/drivers/platform/x86/lenovo/wmi-gamezone.h
-> > +++ b/drivers/platform/x86/lenovo/wmi-gamezone.h
-> > @@ -10,6 +10,7 @@ enum gamezone_events_type {
-> >  };
-> >
-> >  enum thermal_mode {
-> > +     LWMI_GZ_THERMAL_MODE_NONE =3D        0x00,
-> >       LWMI_GZ_THERMAL_MODE_QUIET =3D       0x01,
-> >       LWMI_GZ_THERMAL_MODE_BALANCED =3D    0x02,
-> >       LWMI_GZ_THERMAL_MODE_PERFORMANCE =3D 0x03,
-> > diff --git a/drivers/platform/x86/lenovo/wmi-other.c
-> > b/drivers/platform/x86/lenovo/wmi-other.c
-> > index 0e8a69309ec4..3e7dfe94499b 100644
-> > --- a/drivers/platform/x86/lenovo/wmi-other.c
-> > +++ b/drivers/platform/x86/lenovo/wmi-other.c
-> > @@ -550,6 +550,8 @@ struct tunable_attr_01 {
-> >       u8 feature_id;
-> >       u8 device_id;
-> >       u8 type_id;
-> > +     u8 cd_mode_id; /* mode arg for searching capdata */
-> > +     u8 cv_mode_id; /* mode arg for set/get current_value */
-> >  };
-> >
-> >  static struct tunable_attr_01 ppt_pl1_spl =3D {
-> > @@ -775,7 +777,6 @@ static ssize_t attr_current_value_store(struct
-> > kobject *kobj,
-> >       struct wmi_method_args_32 args =3D {};
+> >       bool cd_mode_found =3D false;
+> >       bool cv_mode_found =3D false;
 > >       struct capdata01 capdata;
-> >       enum thermal_mode mode;
-> > -     u32 attribute_id;
-> >       u32 value;
-> >       int ret;
-> >
-> > @@ -786,13 +787,12 @@ static ssize_t attr_current_value_store(struct
-> > kobject *kobj,
-> >       if (mode !=3D LWMI_GZ_THERMAL_MODE_CUSTOM)
-> >               return -EBUSY;
-> >
-> > -     attribute_id =3D
-> > -             FIELD_PREP(LWMI_ATTR_DEV_ID_MASK, tunable_attr->device_id=
-) |
-> > -             FIELD_PREP(LWMI_ATTR_FEAT_ID_MASK, tunable_attr->feature_=
-id) |
-> > -             FIELD_PREP(LWMI_ATTR_MODE_ID_MASK, mode) |
-> > -             FIELD_PREP(LWMI_ATTR_TYPE_ID_MASK, tunable_attr->type_id)=
-;
-> > +     args.arg0 =3D FIELD_PREP(LWMI_ATTR_DEV_ID_MASK, tunable_attr->dev=
-ice_id) |
-> > +                 FIELD_PREP(LWMI_ATTR_FEAT_ID_MASK, tunable_attr->feat=
-ure_id) |
-> > +                 FIELD_PREP(LWMI_ATTR_MODE_ID_MASK, tunable_attr->cd_m=
-ode_id) |
-> > +                 FIELD_PREP(LWMI_ATTR_TYPE_ID_MASK, tunable_attr->type=
-_id);
-> >
-> > -     ret =3D lwmi_cd01_get_data(priv->cd01_list, attribute_id, &capdat=
-a);
-> > +     ret =3D lwmi_cd01_get_data(priv->cd01_list, args.arg0, &capdata);
-> >       if (ret)
-> >               return ret;
-> >
-> > @@ -803,7 +803,10 @@ static ssize_t attr_current_value_store(struct
-> > kobject *kobj,
-> >       if (value < capdata.min_value || value > capdata.max_value)
-> >               return -EINVAL;
-> >
-> > -     args.arg0 =3D attribute_id;
-> > +     args.arg0 =3D FIELD_PREP(LWMI_ATTR_DEV_ID_MASK, tunable_attr->dev=
-ice_id) |
-> > +                 FIELD_PREP(LWMI_ATTR_FEAT_ID_MASK, tunable_attr->feat=
-ure_id) |
-> > +                 FIELD_PREP(LWMI_ATTR_MODE_ID_MASK, tunable_attr->cv_m=
-ode_id) |
-> > +                 FIELD_PREP(LWMI_ATTR_TYPE_ID_MASK, tunable_attr->type=
-_id);
-> >       args.arg1 =3D value;
-> >
-> >       ret =3D lwmi_dev_evaluate_int(priv->wdev, 0x0, LWMI_FEATURE_VALUE=
-_SET,
-> > @@ -837,7 +840,6 @@ static ssize_t attr_current_value_show(struct kobje=
-ct *kobj,
-> >       struct lwmi_om_priv *priv =3D dev_get_drvdata(tunable_attr->dev);
-> >       struct wmi_method_args_32 args =3D {};
-> >       enum thermal_mode mode;
-> > -     u32 attribute_id;
-> >       int retval;
-> >       int ret;
-> >
-> > @@ -845,13 +847,14 @@ static ssize_t attr_current_value_show(struct
-> > kobject *kobj,
-> >       if (ret)
-> >               return ret;
-> >
-> > -     attribute_id =3D
-> > -             FIELD_PREP(LWMI_ATTR_DEV_ID_MASK, tunable_attr->device_id=
-) |
-> > -             FIELD_PREP(LWMI_ATTR_FEAT_ID_MASK, tunable_attr->feature_=
-id) |
-> > -             FIELD_PREP(LWMI_ATTR_MODE_ID_MASK, mode) |
-> > -             FIELD_PREP(LWMI_ATTR_TYPE_ID_MASK, tunable_attr->type_id)=
-;
-> > +     /* If "no-mode" is the supported mode, ensure we never send curre=
-nt mode */
-> > +     if (tunable_attr->cv_mode_id =3D=3D LWMI_GZ_THERMAL_MODE_NONE)
-> > +             mode =3D tunable_attr->cv_mode_id;
-> >
-> > -     args.arg0 =3D attribute_id;
-> > +     args.arg0 =3D FIELD_PREP(LWMI_ATTR_DEV_ID_MASK, tunable_attr->dev=
-ice_id) |
-> > +                 FIELD_PREP(LWMI_ATTR_FEAT_ID_MASK, tunable_attr->feat=
-ure_id) |
-> > +                 FIELD_PREP(LWMI_ATTR_MODE_ID_MASK, mode) |
-> > +                 FIELD_PREP(LWMI_ATTR_TYPE_ID_MASK, tunable_attr->type=
-_id);
-> >
-> >       ret =3D lwmi_dev_evaluate_int(priv->wdev, 0x0, LWMI_FEATURE_VALUE=
-_GET,
-> >                                   (unsigned char *)&args, sizeof(args),
-> > @@ -862,6 +865,81 @@ static ssize_t attr_current_value_show(struct
-> > kobject *kobj,
-> >       return sysfs_emit(buf, "%d\n", retval);
-> >  }
-> >
-> > +/**
-> > + * lwmi_attr_01_is_supported() - Determine if the given attribute is
-> > supported.
-> > + * @tunable_attr: The attribute to verify.
-> > + *
-> > + * First check if the attribute has a corresponding capdata01 table in
-> > the cd01
-> > + * module under the "custom" mode (0xff). If that is not present then
-> > check if
-> > + * there is a corresponding "no-mode" (0x00) entry. If either of those
-> > passes,
-> > + * check capdata->supported for values > 0. If capdata is available,
-> > attempt to
-> > + * determine the set/get mode for the current value property using a
-> > similar
-> > + * pattern. If the value returned by either custom or no-mode is 0, or
-> > we get
-> > + * an error, we assume that mode is not supported. If any of the above
-> > checks
-> > + * fail then the attribute is not fully supported.
-> > + *
-> > + * The probed cd_mode_id/cv_mode_id are stored on the tunable_attr for
-> > later
-> > + * reference.
-> > + *
-> > + * Return: bool.
-> > + */
-> > +static bool lwmi_attr_01_is_supported(struct tunable_attr_01
-> > *tunable_attr)
-> > +{
-> > +     u8 modes[2] =3D { LWMI_GZ_THERMAL_MODE_CUSTOM,
-> > LWMI_GZ_THERMAL_MODE_NONE };
-> > +     struct lwmi_om_priv *priv =3D dev_get_drvdata(tunable_attr->dev);
-> > +     struct wmi_method_args_32 args =3D { 0x0, 0x0 };
-> > +     bool cd_mode_found =3D false;
-> > +     bool cv_mode_found =3D false;
-> > +     struct capdata01 capdata;
-> > +     int retval, ret, i;
-> > +
-> > +     /* Determine tunable_attr->cd_mode_id*/
-> > +     for (i =3D 0; i < ARRAY_SIZE(modes); i++) {
-> > +             args.arg0 =3D FIELD_PREP(LWMI_ATTR_DEV_ID_MASK,
-> > tunable_attr->device_id) |
-> > +                         FIELD_PREP(LWMI_ATTR_FEAT_ID_MASK, tunable_at=
-tr->feature_id) |
-> > +                         FIELD_PREP(LWMI_ATTR_MODE_ID_MASK, modes[i]) =
-|
-> > +                         FIELD_PREP(LWMI_ATTR_TYPE_ID_MASK, tunable_at=
-tr->type_id);
-> > +
-> > +             ret =3D lwmi_cd01_get_data(priv->cd01_list, args.arg0, &c=
-apdata);
-> > +             if (ret || !capdata.supported)
-> > +                     continue;
-> > +             tunable_attr->cd_mode_id =3D modes[i];
-> > +             cd_mode_found =3D true;
-> > +             break;
-> > +     }
-> > +
-> > +     if (!cd_mode_found)
-> > +             return cd_mode_found;
-> > +
-> > +     dev_dbg(tunable_attr->dev,
-> > +             "cd_mode_id: %#010x\n", args.arg0);
-> > +
-> > +     /* Determine tunable_attr->cv_mode_id, returns 1 if supported*/
-> > +     for (i =3D 0; i < ARRAY_SIZE(modes); i++) {
-> > +             args.arg0 =3D FIELD_PREP(LWMI_ATTR_DEV_ID_MASK,
-> > tunable_attr->device_id) |
-> > +                         FIELD_PREP(LWMI_ATTR_FEAT_ID_MASK, tunable_at=
-tr->feature_id) |
-> > +                         FIELD_PREP(LWMI_ATTR_MODE_ID_MASK, modes[i]) =
-|
-> > +                         FIELD_PREP(LWMI_ATTR_TYPE_ID_MASK, tunable_at=
-tr->type_id);
-> > +
-> > +             ret =3D lwmi_dev_evaluate_int(priv->wdev, 0x0, LWMI_FEATU=
-RE_VALUE_GET,
-> > +                                         (unsigned char *)&args, sizeo=
-f(args),
-> > +                                         &retval);
-> > +             if (ret || !retval)
-> > +                     continue;
-> > +             tunable_attr->cv_mode_id =3D modes[i];
-> > +             cv_mode_found =3D true;
-> > +             break;
-> > +     }
-> > +
-> > +     if (!cv_mode_found)
-> > +             return cv_mode_found;
-> > +
-> > +     dev_dbg(tunable_attr->dev, "cv_mode_id: %#010x, attribute support
-> > level: %#010x\n",
-> > +             args.arg0, capdata.supported);
-> > +
-> > +     return capdata.supported > 0 ? true : false;
-> > +}
-> > +
-> >  /* Lenovo WMI Other Mode Attribute macros */
-> >  #define __LWMI_ATTR_RO(_func, _name)                                  =
-\
-> >       {                                                             \
-> > @@ -985,12 +1063,14 @@ static void lwmi_om_fw_attr_add(struct
-> > lwmi_om_priv *priv)
-> >       }
-> >
-> >       for (i =3D 0; i < ARRAY_SIZE(cd01_attr_groups) - 1; i++) {
-> > +             cd01_attr_groups[i].tunable_attr->dev =3D &priv->wdev->de=
-v;
-> > +             if (!lwmi_attr_01_is_supported(cd01_attr_groups[i].tunabl=
-e_attr))
-> > +                     continue;
-> > +
-> >               err =3D sysfs_create_group(&priv->fw_attr_kset->kobj,
-> >                                        cd01_attr_groups[i].attr_group);
-> >               if (err)
-> >                       goto err_remove_groups;
-> > -
-> > -             cd01_attr_groups[i].tunable_attr->dev =3D &priv->wdev->de=
-v;
-> >       }
-> >       return;
-> >
 > > --
 > > 2.53.0
