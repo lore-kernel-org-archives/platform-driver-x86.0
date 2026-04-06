@@ -1,514 +1,174 @@
-Received: from mail-dl1-f51.google.com (mail-dl1-f51.google.com [74.125.82.51])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mout.gmx.net (mout.gmx.net [212.227.17.21])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2DD1A39C63C
-	for <platform-driver-x86@vger.kernel.org>; Mon,  6 Apr 2026 20:14:13 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=74.125.82.51
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D8DB12F690F;
+	Mon,  6 Apr 2026 21:17:14 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=212.227.17.21
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1775506458; cv=none; b=P3MmaNyYCvfQjme0Crp+1qhtKAjEIC94vBGRjvTVAMOs4chJ3dv3fE8CC3/+AdRTuYGk+h8Fn2+F7amPKeopysxJshztus7uHGAXx4gFkB8+2FRiFhQREn0UvUNWdz1JDeMSlpanQxEaor7j0OJzKywi++obmx3JB0HOIDVnm3c=
+	t=1775510236; cv=none; b=jH1VPEufk/Sc8yRRDnEMT80t4vWGp+BXFnl4GnpXvDwLgvVER045V9Hni0cZ6XXVxhfUhwOspN+eyIbAvG8AhFTZ2EcXnGmQiXpvzO8maOQcIVf/i8oE0Bl3IsrYcZYETCRH/9lc2M7MPZjaeFH34HjxqZA6hIPCouWU8Om2wMo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1775506458; c=relaxed/simple;
-	bh=2LSdcxqJsCWQ1AwIqijG7hIMgUiL2V2fl9wnLV6umgE=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=j4zP0rqIIqxzTQaEmBPPl1TSvYRtsZB3WEp6ggUD87lORGCn9GjwX/OOBcYMsFwNzzVYB+SP9GwdCl9cXy5tgCpEs4lOiZh+df0i73fMtT+Rj9IAEYliHbc8TxEQ8CsuB9JZHCFXkjhMIDFdZ5EUF79UBSg1TMPi4o6MVsBmN/M=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=Xc9WvZoE; arc=none smtp.client-ip=74.125.82.51
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1775510236; c=relaxed/simple;
+	bh=DCelb6pFj96iGlgWxkwkpw2vaelmkz7WAbO1EK8hPP4=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=buThaoCpEHESlbT0uGwOaFClQc8RS/pJ3xLTrO0XHihvUH41nGjvMjp/yGHN1hFsluVTCzcShCDKIrj3FcoF8lNLdLyutrUkR0ApuDxXFT742znUCoWAT7YaVOeVHOwIcjdohYnrjlv2zO3/z+gXe1c8y1vfqTBZrzYscCsafu8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gmx.de; spf=pass smtp.mailfrom=gmx.de; dkim=pass (2048-bit key) header.d=gmx.de header.i=w_armin@gmx.de header.b=HTXjBdbI; arc=none smtp.client-ip=212.227.17.21
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gmx.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmx.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Xc9WvZoE"
-Received: by mail-dl1-f51.google.com with SMTP id a92af1059eb24-1271195d2a7so9286478c88.0
-        for <platform-driver-x86@vger.kernel.org>; Mon, 06 Apr 2026 13:14:13 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20251104; t=1775506453; x=1776111253; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=zbl1hjC6LDFHtdiwozGoivNuyQK+LiMguIHToBzSjiI=;
-        b=Xc9WvZoEqtXTMiYbX5F8qcGLvKgdvQgyAn7Xg4+dJS17bdP2Js9F5gcFdhKEqqoOsg
-         ZM7fMcXGyCzZMz9pp6iXEC+pQksvmEHW0/OtgxldeXDOVeBpJQOGErc3uiZbpuan2YhO
-         JZJPMt3ViWltkwOgpaf+NwtOawoWQrFQLI8ym6aPDdETlJFvnQOe4/POcV+c0DzV1wgs
-         1Av777rGuiw+opQVKm//CKtx+vaAOEaztYs3pyG+PtBHUFQy+ExIssF9Zo8qDJlu+VDS
-         GJ7KWyK6eZ0s22DFo2HlttdvyvtAnXpoUiHJM+Y7TULkcVmb/j7AtahU/CEji69nJdRv
-         AJyg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1775506453; x=1776111253;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-gg:x-gm-message-state:from
-         :to:cc:subject:date:message-id:reply-to;
-        bh=zbl1hjC6LDFHtdiwozGoivNuyQK+LiMguIHToBzSjiI=;
-        b=PKY8/x0rcy8pHk02LB2s7F3fd5vNF1wfA30HbaGFQkZLuzA/FzlXZqBIImO/6YqUab
-         2MhRxpYd6FKivJHZy6LTR9Jl67VxSQ1auGBauuoUhQb0hQWbQoCsjXIKVl5rLZSBk7pF
-         Fr3DuTTHccByM3+Upq7YQBDfyPzEyFxN9mP/+b8ORqSpK0gwiCu3yF3evoYF0LCR/LTO
-         PyRZT8FMFygi8P6BgJ0veESBVZwpiyhGBlZiJHI1GmvzZKQ/TTbh6Kx15ZY1kRz50j6s
-         PGd4+Kfx2srTWhklTcAtEGg2ELWUSns+PVmyfz+EDxjZbquz5AnXWrxjrihX96ahzNn1
-         mPwQ==
-X-Forwarded-Encrypted: i=1; AJvYcCWMqxzPUtSGDhGj8TVLNrup5IUAcKGsbbw0ec3XZhLhxocLM0yeQWRdTJ8c62zTxOy6HzSOdn4bU6EC1DWUC1U1tRXC@vger.kernel.org
-X-Gm-Message-State: AOJu0Yz3Mz/pEdcf/UvQ21Nb0GYAf8onKqACBBxXm5k4vRYCqtPSTgs4
-	rjp8i5liY9LvQ4LpGJ7IuV6XMWGjQRFE99ClhUw+60EdSisLs3ubL31M
-X-Gm-Gg: AeBDieskx2nD6vhzVSfnpAehQr48iJmhVSR+qdBecGbj+vCbAhceztXoBisiiheIR0x
-	LEX5w2SFy1wNFvK9cix3CQH5RZacdGBHIAwnzU03+oU6E4MDvzJbUex1dWS6kCNHP5TanClrhnE
-	rCweZ141K5pD7oqVjdyWe61XmV5dCfBmAlG6mFe7vnoGBYPahhcPlVKHSSTd/tKY3vyRsiUo8XS
-	anR0b9MjDT0NXcuhILOBeHlsXXids+Sfzs0LLXFjyUf7wJjHXQWsmjyF0DHz0oRKFS+jbRPCXX4
-	wfhPJEDbS4JQEMkb28E4UHDT08Wc5XhsTUPHk0VwAKRGtVovisDSDIOvJ0bnlRD3jeftoby3eHg
-	kWOcgouzPqHs+rsN6tiolA9Hgc417nSp+mOowSZ3bkYvJpurw8/ZR9+4xkoEk/h7eZ40hdEVFQB
-	L/bOB2ttf2xrswKMh65OudXpyWVAcUXs6N/8qCi0rNTRZR1k49/RlsvIaQV9K82BvHgZH/XHKlS
-	LZM
-X-Received: by 2002:a05:7022:e09:b0:12a:6902:ddc6 with SMTP id a92af1059eb24-12bfb63ac8cmr6364925c88.0.1775506452846;
-        Mon, 06 Apr 2026 13:14:12 -0700 (PDT)
-Received: from lappy (108-228-232-20.lightspeed.sndgca.sbcglobal.net. [108.228.232.20])
-        by smtp.gmail.com with ESMTPSA id a92af1059eb24-12bed93f861sm17022333c88.0.2026.04.06.13.14.12
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 06 Apr 2026 13:14:12 -0700 (PDT)
-From: "Derek J. Clark" <derekjohn.clark@gmail.com>
-To: =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>,
-	Hans de Goede <hansg@kernel.org>
-Cc: Mark Pearson <mpearson-lenovo@squebb.ca>,
-	Armin Wolf <W_Armin@gmx.de>,
-	Jonathan Corbet <corbet@lwn.net>,
-	Rong Zhang <i@rong.moe>,
-	Kurt Borja <kuurtb@gmail.com>,
-	"Derek J . Clark" <derekjohn.clark@gmail.com>,
+	dkim=pass (2048-bit key) header.d=gmx.de header.i=w_armin@gmx.de header.b="HTXjBdbI"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=gmx.de;
+	s=s31663417; t=1775510233; x=1776115033; i=w_armin@gmx.de;
+	bh=cxZEGNJwwugOLpZmKlabSC+kUiI4KaxNXX3qroW4Bj8=;
+	h=X-UI-Sender-Class:From:To:Cc:Subject:Date:Message-Id:
+	 MIME-Version:Content-Transfer-Encoding:cc:
+	 content-transfer-encoding:content-type:date:from:message-id:
+	 mime-version:reply-to:subject:to;
+	b=HTXjBdbICdSHJy9tzJGkTglrPVdfGy5arh+x/hTWxqx7DXAYxQ/Eh3PY4L4EAx97
+	 VhXtcofmg3hA3suiu6/lFGKCjfUHUW6KSWqFtRFa0ILRQH83dxQSkpl7IRcQZXSeb
+	 Ai3dLtVaGtRjJSCNtKHn36an48Mvz24jQ7NUxxt1+HpAsmNJRmw5YOiYAU+hrBDCL
+	 tM3n12COAvxBP2bE5R+WHaq3rKO/beHMz2r/u2uIE6EhCA//28PYaRGXvuObigzIW
+	 INKLVf5AKvKmeUcnuwbadkyFKPPG/uDT2ADpwCsU+dzWMt6v9wP1ZTHb67xnY5JMP
+	 vdogtwD4mYZJffTflQ==
+X-UI-Sender-Class: 724b4f7f-cbec-4199-ad4e-598c01a50d3a
+Received: from client.hidden.invalid by mail.gmx.net (mrgmx104
+ [212.227.17.168]) with ESMTPSA (Nemesis) id 1N2Dx8-1vTh4A3V2E-016esy; Mon, 06
+ Apr 2026 23:17:12 +0200
+From: Armin Wolf <W_Armin@gmx.de>
+To: hansg@kernel.org
+Cc: ilpo.jarvinen@linux.intel.com,
 	platform-driver-x86@vger.kernel.org,
 	linux-kernel@vger.kernel.org
-Subject: [PATCH v8 14/16] platform/x86: lenovo-wmi-other: Add WMI battery charge limiting
-Date: Mon,  6 Apr 2026 20:13:58 +0000
-Message-ID: <20260406201400.438221-15-derekjohn.clark@gmail.com>
-X-Mailer: git-send-email 2.53.0
-In-Reply-To: <20260406201400.438221-1-derekjohn.clark@gmail.com>
-References: <20260406201400.438221-1-derekjohn.clark@gmail.com>
+Subject: [PATCH 0/6] platform/wmi: Use WMI driver core for size checks
+Date: Mon,  6 Apr 2026 22:32:31 +0200
+Message-Id: <20260406203237.2970-1-W_Armin@gmx.de>
+X-Mailer: git-send-email 2.39.5
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Transfer-Encoding: quoted-printable
+X-Provags-ID: V03:K1:cdZCJlMRCSDawVIAPlrajOb60EmQCf7Y2QSs3aCXDTRdv7Mo+7/
+ 8aYeRUKxzmKY1YgSRfAGH8ilt/8sxAAYrItMWTCE0pFcNEaBefB8zZwcxQhYkqyydlB24Gz
+ uX8viLjRg0Uq8OpUsYIJsx+7XJee+woPs25BQ91xogLC9FHWcdAgzekLe4p7fJLoBbiCNCW
+ bGX1meSf7Ntajdd+WjjrQ==
+X-Spam-Flag: NO
+UI-OutboundReport: notjunk:1;M01:P0:ylgaNKfiYZc=;UvrEfCdgfaa5/w98vkSwiSBvDBR
+ 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
+ 66nEZY6bkme
 
-Add charge-type power supply extension for devices that support WMI based
-charge enable/disable.
+As suggested by Ilpo, the buffer-based WMI API should assist drivers
+in verifying the size of buffers received from WMI methods or blocks.
+This patch series implements this suggestion by allowing drivers to
+use the WMI driver core to automatically reject undersized buffers.
 
-Lenovo Legion devices that implement WMI function and capdata ID
-0x03010001 in their BIOS are able to enable or disable charging at 80%
-through the lenovo-wmi-other interface. Add a charge_type power supply
-extension to expose this capability to the sysfs.
+This avoids a memory allocation for undersized data and simplifies
+the size checking code in most WMI drivers. All patches except the
+last one have been tested using synthetic ACPI tables and appear to
+work just fine.
 
-The ideapad_laptop driver can also provide the charge_type attribute. To
-avoid conflicts between the drivers, get the acpi_handle and do the same
-check that ideapad_laptop does when it enables the feature. If the
-feature is supported in ideapad_laptop, abort adding the extension from
-lenovo-wmi-other. The ACPI method is more reliable when both are
-present, from my testing, so we can prefer that implementation and do
-not need to worry about de-conflicting from inside that driver. A new
-module parameter, force_load_psy_ext, is provided to bypass this ACPI
-check, if desired.
+Armin Wolf (6):
+  platform/wmi: Add wmidev_invoke_procedure()
+  platform/wmi: Convert drivers to use wmidev_invoke_procedure()
+  platform/wmi: Prepare to reject undersized unmarshalling results
+  platform/wmi: Extend wmidev_invoke_method() to reject undersized data
+  platform/wmi: Extend wmidev_query_block() to reject undersized data
+  platform/wmi: Replace .no_notify_data with .min_event_size
 
-Reviewed-by: Rong Zhang <i@rong.moe>
-Reviewed-by: Mark Pearson <mpearson-lenovo@squebb.ca>
-Signed-off-by: Derek J. Clark <derekjohn.clark@gmail.com>
----
-v7:
-  - Use devm_battery_hook_register, manually unregister during unbind.
-v6:
-  - Check feature flags to determine if the extension should be loaded
-    and if it is writable.
-  - Zero initialize wmi_method_args_32.
-  - Fix formatting.
-v5:
-  - Use switch statement instead of if for battery charge state set/get.
-  - use force_load_psy_ext to skip all ACPI interactions.
-  - Various formatting fixes.
-v4:
-  - Remove unused defines.
-  - Disambiguate charging defines by renaming them to be more consistent
-    with the kernel modes they represent.
-  - Add module parameter to ignore ACPI checks.
-  - Don't fail if the ACPI handle isn't found, skip the ACPI check
-    instead.
----
- drivers/platform/x86/lenovo/Kconfig       |   1 +
- drivers/platform/x86/lenovo/wmi-capdata.h |   1 +
- drivers/platform/x86/lenovo/wmi-other.c   | 293 +++++++++++++++++++++-
- 3 files changed, 294 insertions(+), 1 deletion(-)
+ .../wmi/driver-development-guide.rst          | 11 ++-
+ drivers/platform/wmi/core.c                   | 89 ++++++++++++++-----
+ drivers/platform/wmi/internal.h               |  3 +-
+ drivers/platform/wmi/marshalling.c            |  6 +-
+ .../platform/wmi/tests/marshalling_kunit.c    | 24 ++++-
+ drivers/platform/x86/bitland-mifs-wmi.c       | 24 ++---
+ drivers/platform/x86/dell/dell-wmi-base.c     |  1 +
+ .../platform/x86/intel/wmi/sbl-fw-update.c    |  7 +-
+ drivers/platform/x86/intel/wmi/thunderbolt.c  |  2 +-
+ drivers/platform/x86/lenovo/ideapad-laptop.c  |  1 +
+ drivers/platform/x86/lenovo/wmi-camera.c      |  1 +
+ drivers/platform/x86/lenovo/wmi-events.c      |  1 +
+ drivers/platform/x86/lenovo/ymc.c             |  1 +
+ drivers/platform/x86/lenovo/yogabook.c        |  2 +-
+ drivers/platform/x86/redmi-wmi.c              |  1 +
+ drivers/platform/x86/uniwill/uniwill-wmi.c    |  1 +
+ drivers/platform/x86/wmi-bmof.c               |  2 +-
+ drivers/platform/x86/xiaomi-wmi.c             |  1 +
+ include/linux/wmi.h                           | 15 +++-
+ 19 files changed, 135 insertions(+), 58 deletions(-)
 
-diff --git a/drivers/platform/x86/lenovo/Kconfig b/drivers/platform/x86/lenovo/Kconfig
-index 09b1b055d2e0..b9a5d18caa1e 100644
---- a/drivers/platform/x86/lenovo/Kconfig
-+++ b/drivers/platform/x86/lenovo/Kconfig
-@@ -262,6 +262,7 @@ config LENOVO_WMI_GAMEZONE
- config LENOVO_WMI_TUNING
- 	tristate "Lenovo Other Mode WMI Driver"
- 	depends on ACPI_WMI
-+	depends on ACPI_BATTERY
- 	select HWMON
- 	select FW_ATTR_CLASS
- 	select LENOVO_WMI_CAPDATA
-diff --git a/drivers/platform/x86/lenovo/wmi-capdata.h b/drivers/platform/x86/lenovo/wmi-capdata.h
-index 891b12ca1db6..e0a30f2c0c87 100644
---- a/drivers/platform/x86/lenovo/wmi-capdata.h
-+++ b/drivers/platform/x86/lenovo/wmi-capdata.h
-@@ -21,6 +21,7 @@
- enum lwmi_device_id {
- 	LWMI_DEVICE_ID_CPU = 0x01,
- 	LWMI_DEVICE_ID_GPU = 0x02,
-+	LWMI_DEVICE_ID_PSU = 0x03,
- 	LWMI_DEVICE_ID_FAN = 0x04,
- };
- 
-diff --git a/drivers/platform/x86/lenovo/wmi-other.c b/drivers/platform/x86/lenovo/wmi-other.c
-index 3ff7b9680f3a..975f0e5269fb 100644
---- a/drivers/platform/x86/lenovo/wmi-other.c
-+++ b/drivers/platform/x86/lenovo/wmi-other.c
-@@ -40,9 +40,12 @@
- #include <linux/limits.h>
- #include <linux/module.h>
- #include <linux/platform_profile.h>
-+#include <linux/power_supply.h>
- #include <linux/types.h>
- #include <linux/wmi.h>
- 
-+#include <acpi/battery.h>
-+
- #include "wmi-capdata.h"
- #include "wmi-events.h"
- #include "wmi-helpers.h"
-@@ -74,9 +77,11 @@ enum lwmi_feature_id_gpu {
- 	LWMI_FEATURE_ID_GPU_NV_CPU_BOOST =	0x0b,
- };
- 
--#define LWMI_FEATURE_ID_FAN_RPM 0x03
-+#define LWMI_FEATURE_ID_FAN_RPM		0x03
-+#define LWMI_FEATURE_ID_PSU_CHARGE_TYPE	0x01
- 
- #define LWMI_TYPE_ID_CROSSLOAD	0x01
-+#define LWMI_TYPE_ID_PSU_AC	0x01
- 
- #define LWMI_FEATURE_VALUE_GET 17
- #define LWMI_FEATURE_VALUE_SET 18
-@@ -87,10 +92,17 @@ enum lwmi_feature_id_gpu {
- 
- #define LWMI_FAN_DIV 100
- 
-+#define LWMI_CHARGE_TYPE_STANDARD	0x00
-+#define LWMI_CHARGE_TYPE_LONGLIFE	0x01
-+
- #define LWMI_ATTR_ID_FAN_RPM(x)                                   \
- 	lwmi_attr_id(LWMI_DEVICE_ID_FAN, LWMI_FEATURE_ID_FAN_RPM, \
- 		     LWMI_GZ_THERMAL_MODE_NONE, LWMI_FAN_ID(x))
- 
-+#define LWMI_ATTR_ID_PSU(feat, type)			\
-+	lwmi_attr_id(LWMI_DEVICE_ID_PSU, feat,		\
-+		     LWMI_GZ_THERMAL_MODE_NONE, type)
-+
- #define LWMI_OM_SYSFS_NAME "lenovo-wmi-other"
- #define LWMI_OM_HWMON_NAME "lenovo_wmi_other"
- 
-@@ -130,6 +142,9 @@ struct lwmi_om_priv {
- 		bool capdata00_collected : 1;
- 		bool capdata_fan_collected : 1;
- 	} fan_flags;
-+
-+	struct acpi_battery_hook battery_hook;
-+	bool bh_registered;
- };
- 
- /*
-@@ -554,6 +569,279 @@ static void lwmi_om_fan_info_collect_cd_fan(struct device *dev, struct cd_list *
- 	lwmi_om_hwmon_add(priv);
- }
- 
-+/* ======== Power Supply Extension (component: lenovo-wmi-capdata 00) ======== */
-+
-+/**
-+ * lwmi_psy_ext_get_prop() - Get a power_supply_ext property
-+ * @ps: The battery that was extended
-+ * @ext: The extension
-+ * @ext_data: Pointer the lwmi_om_priv drvdata
-+ * @prop: The property to read
-+ * @val: The value to return
-+ *
-+ * Writes the given value to the power_supply_ext property
-+ *
-+ * Return: 0 on success, or an error
-+ */
-+static int lwmi_psy_ext_get_prop(struct power_supply *ps,
-+				 const struct power_supply_ext *ext,
-+				 void *ext_data,
-+				 enum power_supply_property prop,
-+				 union power_supply_propval *val)
-+{
-+	struct wmi_method_args_32 args = {};
-+	struct lwmi_om_priv *priv = ext_data;
-+	u32 retval;
-+	int ret;
-+
-+	args.arg0 = LWMI_ATTR_ID_PSU(LWMI_FEATURE_ID_PSU_CHARGE_TYPE, LWMI_TYPE_ID_PSU_AC);
-+
-+	ret = lwmi_dev_evaluate_int(priv->wdev, 0x0, LWMI_FEATURE_VALUE_GET,
-+				    (unsigned char *)&args, sizeof(args),
-+				    &retval);
-+	if (ret)
-+		return ret;
-+
-+	dev_dbg(&priv->wdev->dev, "Got return value %#x for property %#x\n", retval, prop);
-+
-+	switch (retval) {
-+	case LWMI_CHARGE_TYPE_LONGLIFE:
-+		val->intval = POWER_SUPPLY_CHARGE_TYPE_LONGLIFE;
-+		break;
-+	case LWMI_CHARGE_TYPE_STANDARD:
-+		val->intval = POWER_SUPPLY_CHARGE_TYPE_STANDARD;
-+		break;
-+	default:
-+		dev_err(&priv->wdev->dev, "Got invalid charge value: %#x\n", retval);
-+		return -EINVAL;
-+	}
-+
-+	return 0;
-+}
-+
-+/**
-+ * lwmi_psy_ext_set_prop() - Set a power_supply_ext property
-+ * @ps: The battery that was extended
-+ * @ext: The extension
-+ * @ext_data: Pointer the lwmi_om_priv drvdata
-+ * @prop: The property to write
-+ * @val: The value to write
-+ *
-+ * Writes the given value to the power_supply_ext property
-+ *
-+ * Return: 0 on success, or an error
-+ */
-+static int lwmi_psy_ext_set_prop(struct power_supply *ps,
-+				 const struct power_supply_ext *ext,
-+				 void *ext_data,
-+				 enum power_supply_property prop,
-+				 const union power_supply_propval *val)
-+{
-+	struct wmi_method_args_32 args = {};
-+	struct lwmi_om_priv *priv = ext_data;
-+
-+	args.arg0 = LWMI_ATTR_ID_PSU(LWMI_FEATURE_ID_PSU_CHARGE_TYPE, LWMI_TYPE_ID_PSU_AC);
-+	switch (val->intval) {
-+	case POWER_SUPPLY_CHARGE_TYPE_LONGLIFE:
-+		args.arg1 = LWMI_CHARGE_TYPE_LONGLIFE;
-+		break;
-+	case POWER_SUPPLY_CHARGE_TYPE_STANDARD:
-+		args.arg1 = LWMI_CHARGE_TYPE_STANDARD;
-+		break;
-+	default:
-+		dev_err(&priv->wdev->dev, "Got invalid charge value: %#x\n", val->intval);
-+		return -EINVAL;
-+	}
-+
-+	dev_dbg(&priv->wdev->dev, "Attempting to set %#010x for property %#x to %#x\n",
-+		args.arg0, prop, args.arg1);
-+
-+	return lwmi_dev_evaluate_int(priv->wdev, 0x0, LWMI_FEATURE_VALUE_SET,
-+				     (unsigned char *)&args, sizeof(args), NULL);
-+}
-+
-+/**
-+ * lwmi_psy_prop_is_supported() - Determine if the property is supported
-+ * @priv: Pointer the lwmi_om_priv drvdata
-+ *
-+ * Checks capdata 00 to determine if the property is supported.
-+ *
-+ * Return: true if readable, or false
-+ */
-+static bool lwmi_psy_prop_is_supported(struct lwmi_om_priv *priv)
-+{
-+	u32 attribute_id = LWMI_ATTR_ID_PSU(LWMI_FEATURE_ID_PSU_CHARGE_TYPE, LWMI_TYPE_ID_PSU_AC);
-+	struct capdata00 capdata;
-+	int ret;
-+
-+	ret = lwmi_cd00_get_data(priv->cd00_list, attribute_id, &capdata);
-+	if (ret)
-+		return false;
-+
-+	dev_dbg(&priv->wdev->dev, "Battery charge mode (%#010x) support level: %#x\n",
-+		attribute_id, capdata.supported);
-+
-+	return ((capdata.supported & LWMI_SUPP_VALID) && (capdata.supported & LWMI_SUPP_GET));
-+}
-+
-+/**
-+ * lwmi_psy_prop_is_writeable() - Determine if the property is writeable
-+ * @ps: The battery that was extended
-+ * @ext: The extension
-+ * @ext_data: Pointer the lwmi_om_priv drvdata
-+ * @prop: The property to check
-+ *
-+ * Checks capdata 00 to determine if the property is writable.
-+ *
-+ * Return: true if writable, or false
-+ */
-+static int lwmi_psy_prop_is_writeable(struct power_supply *ps,
-+				      const struct power_supply_ext *ext,
-+				      void *ext_data,
-+				      enum power_supply_property prop)
-+{
-+	u32 attribute_id = LWMI_ATTR_ID_PSU(LWMI_FEATURE_ID_PSU_CHARGE_TYPE, LWMI_TYPE_ID_PSU_AC);
-+	struct lwmi_om_priv *priv = ext_data;
-+	struct capdata00 capdata;
-+	int ret;
-+
-+	ret = lwmi_cd00_get_data(priv->cd00_list, attribute_id, &capdata);
-+	if (ret)
-+		return false;
-+
-+	return !!(capdata.supported & LWMI_SUPP_SET);
-+}
-+
-+static const enum power_supply_property lwmi_psy_ext_props[] = {
-+	POWER_SUPPLY_PROP_CHARGE_TYPES,
-+};
-+
-+static const struct power_supply_ext lwmi_psy_ext = {
-+	.name			= LWMI_OM_SYSFS_NAME,
-+	.properties		= lwmi_psy_ext_props,
-+	.num_properties		= ARRAY_SIZE(lwmi_psy_ext_props),
-+	.charge_types		= (BIT(POWER_SUPPLY_CHARGE_TYPE_STANDARD) |
-+				   BIT(POWER_SUPPLY_CHARGE_TYPE_LONGLIFE)),
-+	.get_property		= lwmi_psy_ext_get_prop,
-+	.set_property		= lwmi_psy_ext_set_prop,
-+	.property_is_writeable	= lwmi_psy_prop_is_writeable,
-+};
-+
-+/**
-+ * lwmi_add_battery() - Connect the power_supply_ext
-+ * @battery: The battery to extend
-+ * @hook: The driver hook used to extend the battery
-+ *
-+ * Return: 0 on success, or an error.
-+ */
-+static int lwmi_add_battery(struct power_supply *battery, struct acpi_battery_hook *hook)
-+{
-+	struct lwmi_om_priv *priv = container_of(hook, struct lwmi_om_priv, battery_hook);
-+
-+	return power_supply_register_extension(battery, &lwmi_psy_ext, &priv->wdev->dev, priv);
-+}
-+
-+/**
-+ * lwmi_remove_battery() - Disconnect the power_supply_ext
-+ * @battery: The battery that was extended
-+ * @hook: The driver hook used to extend the battery
-+ *
-+ * Return: 0 on success, or an error.
-+ */
-+static int lwmi_remove_battery(struct power_supply *battery, struct acpi_battery_hook *hook)
-+{
-+	power_supply_unregister_extension(battery, &lwmi_psy_ext);
-+	return 0;
-+}
-+
-+/**
-+ * lwmi_acpi_match() - Attempts to return the ideapad acpi handle
-+ * @handle: The ACPI handle that manages battery charging
-+ * @lvl: Unused
-+ * @context: Void pointer to the acpi_handle object to return
-+ * @retval: Unused
-+ *
-+ * Checks if the ideapad_laptop driver is going to manage charge_type first,
-+ * then if not, hooks the battery to our WMI methods.
-+ *
-+ * Return: AE_CTRL_TERMINATE if found, AE_OK if not found.
-+ */
-+static acpi_status lwmi_acpi_match(acpi_handle handle, u32 lvl,
-+				   void *context, void **retval)
-+{
-+	acpi_handle *ahand = context;
-+
-+	if (!handle)
-+		return AE_OK;
-+
-+	*ahand = handle;
-+
-+	return AE_CTRL_TERMINATE;
-+}
-+
-+static bool force_load_psy_ext;
-+module_param(force_load_psy_ext, bool, 0444);
-+MODULE_PARM_DESC(force_load_psy_ext,
-+	"This option will skip checking if the ideapad_laptop driver will conflict "
-+	"with adding an extension to set the battery charge type. It is recommended "
-+	"to blacklist the ideapad driver before using this option.");
-+
-+/**
-+ * lwmi_om_psy_ext_init() - Hooks power supply extension to device battery
-+ * @priv: Driver private data
-+ *
-+ * Checks if the ideapad_laptop driver is going to manage charge_type first,
-+ * then if not, hooks the battery to our WMI methods.
-+ */
-+static void lwmi_om_psy_ext_init(struct lwmi_om_priv *priv)
-+{
-+	static const char * const ideapad_hid = "VPC2004";
-+	acpi_handle handle = NULL;
-+	int ret;
-+
-+	priv->bh_registered = false;
-+
-+	/* Deconflict ideapad_laptop driver */
-+	if (force_load_psy_ext)
-+		goto load_psy_ext;
-+
-+	if (!lwmi_psy_prop_is_supported(priv))
-+		return;
-+
-+	ret = acpi_get_devices(ideapad_hid, lwmi_acpi_match, &handle, NULL);
-+	if (ret)
-+		return;
-+
-+	if (handle && acpi_has_method(handle, "GBMD") && acpi_has_method(handle, "SBMC")) {
-+		dev_dbg(&priv->wdev->dev, "ideapad_laptop driver manages battery for device\n");
-+		return;
-+	}
-+
-+load_psy_ext:
-+	/* Add battery hooks */
-+	priv->battery_hook.add_battery = lwmi_add_battery;
-+	priv->battery_hook.remove_battery = lwmi_remove_battery;
-+	priv->battery_hook.name = "Lenovo WMI Other Battery Extension";
-+	priv->bh_registered = true;
-+
-+	battery_hook_register(&priv->battery_hook);
-+}
-+
-+/**
-+ * lwmi_om_psy_remove() - Unregister battery hook
-+ * @priv: Driver private data
-+ *
-+ * Unregisters the battery hook if applicable.
-+ */
-+static void lwmi_om_psy_remove(struct lwmi_om_priv *priv)
-+{
-+	if (!priv->bh_registered)
-+		return;
-+
-+	battery_hook_unregister(&priv->battery_hook);
-+	priv->bh_registered = false;
-+}
-+
- /* ======== fw_attributes (component: lenovo-wmi-capdata 01) ======== */
- 
- struct tunable_attr_01 {
-@@ -1228,6 +1516,7 @@ static int lwmi_om_master_bind(struct device *dev)
- 	}
- 
- 	lwmi_om_fan_info_collect_cd00(priv);
-+	lwmi_om_psy_ext_init(priv);
- 
- 	lwmi_om_fw_attr_add(priv);
- 
-@@ -1250,6 +1539,8 @@ static void lwmi_om_master_unbind(struct device *dev)
- 
- 	lwmi_om_hwmon_remove(priv);
- 
-+	lwmi_om_psy_remove(priv);
-+
- 	component_unbind_all(dev, NULL);
- }
- 
--- 
-2.53.0
+=2D-=20
+2.39.5
 
