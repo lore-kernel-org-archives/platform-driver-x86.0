@@ -1,208 +1,200 @@
-Received: from mail-qt1-f169.google.com (mail-qt1-f169.google.com [209.85.160.169])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from fout-b6-smtp.messagingengine.com (fout-b6-smtp.messagingengine.com [202.12.124.149])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CDE19316199
-	for <platform-driver-x86@vger.kernel.org>; Mon,  6 Apr 2026 19:22:38 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=209.85.160.169
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1775503360; cv=pass; b=J+wMF3stL++3mJGtBWtUew2ACyckKiNj9th4NwW0PkYOBRqnFdM5BQEuCvDD6or/QKbMdNu5DLSz2R54bs2IL6tSEqW8JzakkW8WN4o+QUNyS5eBQSCT2lu6/EXwDN+KgQTNHMy3hIQZls6DVkYUJwcWCgQr1scGYft1bi80oDY=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1775503360; c=relaxed/simple;
-	bh=+b0WeJDS90s2CbTjJRcCNd1vwwUf0mDjzEDa95vhxEw=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=XIpuI4vNB5jrm3Y5evYcAqkinaIfBBWxBITQ072zcG/Hf0+dAujzBEW1nzA7ed9dYag1duEDv/lQoeAXQKe3fhcIhJ0UNkh8qjj3f1GP8AJkxjHF4N6sT2KJEVt5pcSy/Sngyuz0K0WLTInJFj9asReu7hgnL+vOXPoEI+BUi9s=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=oBjrIbQh; arc=pass smtp.client-ip=209.85.160.169
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0256D2D7BF;
+	Mon,  6 Apr 2026 19:23:44 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=202.12.124.149
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1775503426; cv=none; b=TPExCIyUyGRE+VYnU78Dj4lmudX+GCuSDWLst0wowN6nVmbjbbYTt+R//WiUZemBOp4Y1PKMRqiYALuiiZkK2obYd2rRekz3ahilOqxBKqfzKuy4ifS+4U2/1fVuAevPBmT3t9N+NdVECDzjh/grNRRfkFFFuGZbe95Vme3hThI=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1775503426; c=relaxed/simple;
+	bh=5RxONuvzJvKwfB0a6qFhQg4E/OqQExrHn7hBsc1r0W8=;
+	h=MIME-Version:Date:From:To:Cc:Message-Id:In-Reply-To:References:
+	 Subject:Content-Type; b=N6BhFI18NTiWlEA5ThjBBqV/VWYKEaxUQ5vX3o2VMfSTi+jnEkW1uNqNBTS9oVXPBtPMDZDjisnjNenxvs0iwe1T3/5T9UCn38w1P4UtTMSbFceDjRR22BwkIQkfwC8tLZyYxXF7vh3CpBiaciGcVK1DZHAtOL/VU+5p3BpY4JU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=squebb.ca; spf=pass smtp.mailfrom=squebb.ca; dkim=pass (2048-bit key) header.d=squebb.ca header.i=@squebb.ca header.b=SW3EITjM; dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b=CWX2xgTb; arc=none smtp.client-ip=202.12.124.149
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=squebb.ca
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=squebb.ca
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="oBjrIbQh"
-Received: by mail-qt1-f169.google.com with SMTP id d75a77b69052e-50b29c4e554so53839511cf.0
-        for <platform-driver-x86@vger.kernel.org>; Mon, 06 Apr 2026 12:22:38 -0700 (PDT)
-ARC-Seal: i=1; a=rsa-sha256; t=1775503358; cv=none;
-        d=google.com; s=arc-20240605;
-        b=W+rDeXYksNC/6mGe6FG9yC6AsuOq25dWhcFq18ecCA0XCg9lSxmvWAfBtDYBK8fkSX
-         M10uNwl6NjYNqPfToOcWMsChSaELZSzlfwp0HjCe5wzdY1/NcTqZjsqYKX1ZUprYyiX5
-         Iakm+QeFqLdOkDbJzJLqgxdU3vHwsReiA7zQNXiLW51lUFC3JyRZXBpu1+pksrbftInW
-         PNm0n5RMM3gqr1NNhVyooogOG0R0stS5liH/RaKzwKxCPORo3AeUqU2YE15auIgtq+wB
-         75VXXo7NQW7M3LaiS6rBNCrzrVIDIjEXILwRsykrDLyTxOv79FVZV+CedbzrrqK1ieCV
-         myvg==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20240605;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:dkim-signature;
-        bh=WU05QSfHdMtbStdAODAlR0dDFiyTP/nFgodTOTpjsrw=;
-        fh=mG+5qnQuOTRNMOekmA4UWWoC5WNPJseN5uNH2zX/O3U=;
-        b=QflOljJCa4YNkS9M5VqnCNtzZeD7RswYi33pc4GUQ1j+s1Vk8Rd+SMUuoN3qug1NO8
-         fO2/S+wstCioxM6axMwfC7j3y6/j0BYf/3ZXQqxL8kI/rNWU0Z6iTzNps1J43z32m3dF
-         xWhEZ6txPbVOP1qmDCwtc+YnDuoFHc1EpOQQk5WxKCNzLFuH8ycuQRBOaCYyRW02TWkk
-         xbdURxssgs71tvSBQOhrNlBF9nw5DJskGWntIJ4TKsPFYxg9Jzeh3bcBZmJvTA9V7RsU
-         f9onxkM0PgB3aVVsfLWKqojA5ZftMxwoxJ37tDiclBZsFbrPElAMR5MUBZcwr5bkjUw9
-         M0Ww==;
-        darn=vger.kernel.org
-ARC-Authentication-Results: i=1; mx.google.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20251104; t=1775503358; x=1776108158; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=WU05QSfHdMtbStdAODAlR0dDFiyTP/nFgodTOTpjsrw=;
-        b=oBjrIbQhSGq+JDEFWT+8g5SwMDcQB7E+3atnbN/s+3Us0btE5u/g7y5LSWRYrY0Zhj
-         +DMULsSHgdTT7+FVV9FzC0Ix0wXGvh1gcdb5Bqp3mqrK9uFaojwOtGQlIUiJSUKQmkef
-         rWjWlRUXgl3oV0N4WiiQcBtnwqLqWt4sMJaW2DUkY+guJM7Dwh5TnP+kjA8hWIagfVf7
-         ER+awJ3KdO1Xw6erEzr/LJx6GmOEY3O9YctZDx6MjD6KabP44LForNF3zApexYNjksh5
-         IpCWa59hIt4Q3+BiIPx+h7T/kuxEk3S6ltXbUYbJt7hhrE6hxnXulGi3k1042ZeI4sFY
-         fV6A==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1775503358; x=1776108158;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-gg:x-gm-message-state:from
-         :to:cc:subject:date:message-id:reply-to;
-        bh=WU05QSfHdMtbStdAODAlR0dDFiyTP/nFgodTOTpjsrw=;
-        b=mJuajUdpbgOdtb/xn7caltzY0zdccsLHtyy0D/5zbd6whtQ0TTT76AKHBntscwLcLJ
-         fRfG9U082wFj8VKK8rAMGoSz2GVu5sVLXsvLObFr/EYD17CWH0jCIfCAvbn+um9Yeb6S
-         ct2VwvKBKZuJvLt8jRQwlr5yHceXW28O2J2/FRunotl4napeeSHDcY+JRToiK6WTRGHO
-         zPNK77g34HaFNPGxCvbphbqnYjuKM60gWBpoocC69VdMYcXEj2o8x+O+wppq0tdr8smv
-         G794QlOuP9e7p726mHsbD8fwOSF/4l4u/xxxGtCQvFJnp/l+tkp3zsdxHdB+fzXRpOPq
-         dhVQ==
-X-Forwarded-Encrypted: i=1; AJvYcCUtv3Ap4+mVidWiMMAU2dwxh4edauJsdHD1MGPqY1nsp0KCk1ohqJc/nSLw8/RiE0abmgAkZxWRMWW9zWVCSsEwpaFQ@vger.kernel.org
-X-Gm-Message-State: AOJu0YxQRpFVaYJfpE30l8CmndI3D/OexLfsQFdEFN/UDLNusN0fT3nW
-	583bjFetX9yD/NoIfC9EXcHC2a+a0WBpm0sZQ9e6Q2sk581cQty4KaGetWvKhgHuROpfNKJ5WQt
-	iS6xz6PFcbFJzoXdfxokP9+i/oZGGnBs=
-X-Gm-Gg: AeBDiesJzcrLVs+t9jBvLXubDdCuJKM4DHaagFYyc15eWpoiERAruxTUC99RpCaXp4D
-	nhPnvMDZ6ID9B5zcKutmn89xrqzepXlax9i6ulKiCS1ynwBmKjd4rMd9rP3IIzMU0736JAyso3j
-	2r9acabX0mcCCI8CFS8Ih2L0haDYfgEdxqK6G3jgiEbhjcHp33wrVjCXp+7UuuEfqDgZAY0sNKh
-	nDW7Fk2ER0MDUS8prr0ra2B9v21yKjbQdcw2H4C4YuLwbH5Ga6cIk/ess6P2fvoti9KD4uQSxgF
-	WzaXqxBS
-X-Received: by 2002:a05:622a:4106:b0:50d:7a6c:7d4a with SMTP id
- d75a77b69052e-50d7a6c8951mr152287031cf.31.1775503357576; Mon, 06 Apr 2026
- 12:22:37 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=squebb.ca header.i=@squebb.ca header.b="SW3EITjM";
+	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="CWX2xgTb"
+Received: from phl-compute-02.internal (phl-compute-02.internal [10.202.2.42])
+	by mailfout.stl.internal (Postfix) with ESMTP id 9705E1D001F1;
+	Mon,  6 Apr 2026 15:23:43 -0400 (EDT)
+Received: from phl-imap-08 ([10.202.2.84])
+  by phl-compute-02.internal (MEProxy); Mon, 06 Apr 2026 15:23:44 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=squebb.ca; h=cc
+	:cc:content-transfer-encoding:content-type:content-type:date
+	:date:from:from:in-reply-to:in-reply-to:message-id:mime-version
+	:references:reply-to:subject:subject:to:to; s=fm3; t=1775503423;
+	 x=1775589823; bh=ON3Kiz7lXcZ9y081vA8sj3D0u6J739Kxs7fJGIzL6H0=; b=
+	SW3EITjMPRd4nBW8SCGEgxOiNt2epsH3q/xgxIDPJWKt9dQgW/MbObZYdauQzACa
+	+AsATEFvDjiSFimE/M+iUM9lxHgJjWCTdHIPcsSE4Z2tzA27VGrQe8rYgXul3ixk
+	LiH7IgnrVKv0vrDumqcNunisJ89msmCZ6N6S+dVs0Hubws3MCl/JFkaj2lmO0dD5
+	xLV5nslmVsj+ATdsWpVnXoAdgmTs8vrNyJFuZnF8yPeH1aPenxLU896LJmlaN6u5
+	ihsxKDerf749DUJBR65PY9vP8eBbzoM8QJhLVrD14AeDCgMEy6RpR5sXnvACJSF1
+	h8kxP4h/N0KGnZyGUhdxnw==
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
+	messagingengine.com; h=cc:cc:content-transfer-encoding
+	:content-type:content-type:date:date:feedback-id:feedback-id
+	:from:from:in-reply-to:in-reply-to:message-id:mime-version
+	:references:reply-to:subject:subject:to:to:x-me-proxy
+	:x-me-sender:x-me-sender:x-sasl-enc; s=fm2; t=1775503423; x=
+	1775589823; bh=ON3Kiz7lXcZ9y081vA8sj3D0u6J739Kxs7fJGIzL6H0=; b=C
+	WX2xgTbBajAmAT4NZHjzvrkUrcM7lZKnhy6J4Q7EbsrVLLRyHwxxwRPba8ZMwFFd
+	YFjdURXxzPX1V0W2/fa/mlxZElrn2uaLZ0GkLLxYuNp8Fh/bFIt4zAMBO0zohbr6
+	gJEjHp0EhyQknrVwUNs0Psg/9o3FUjoh7Rgnk0IGaJ2CpaAPho3pa6uT79D6T1Mo
+	+tlNmfy4I/4EiXEhtlLRsQm4I7rqVt0VTz6KYRxurS6PFf7zeU9ZgecDA7QFOySs
+	MtWyxliGigqyRydDFQBIlD8JF/NMwYMI269bmGksoW4DWwxRAvfCCL/oghRtKD3r
+	+3vCukf6LKariHkzxPWqQ==
+X-ME-Sender: <xms:PgjUaT6fbAQOixciLrls1wnxXAD18uKzDXWC0kMRIz69lVHjcOzF8Q>
+    <xme:PgjUaTtVCOYYNtPYw1GuqRXXwd38XgX-Ja7mhmplt42SjsWLtDeIyFeqLV6K1vYGB
+    XGgjFJjfMVTpUQMjIOc-OXYd_a0fAhZr2fFVxF-1rXRE5jJr8hILSNg>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeefhedrtddtgddukeehjecutefuodetggdotefrod
+    ftvfcurfhrohhfihhlvgemucfhrghsthforghilhdpuffrtefokffrpgfnqfghnecuuegr
+    ihhlohhuthemuceftddtnecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenucfjug
+    hrpefoggffhffvvefkjghfufgtgfesthhqredtredtjeenucfhrhhomhepfdforghrkhcu
+    rfgvrghrshhonhdfuceomhhpvggrrhhsohhnqdhlvghnohhvohesshhquhgvsggsrdgtrg
+    eqnecuggftrfgrthhtvghrnhephfevkeejueeukeefhfelleejheeuudfgteffvdetkeff
+    jeduleffvdejkeefhedvnecuvehluhhsthgvrhfuihiivgeptdenucfrrghrrghmpehmrg
+    hilhhfrhhomhepmhhpvggrrhhsohhnqdhlvghnohhvohesshhquhgvsggsrdgtrgdpnhgs
+    pghrtghpthhtohepledpmhhouggvpehsmhhtphhouhhtpdhrtghpthhtohepuggvrhgvkh
+    hjohhhnhdrtghlrghrkhesghhmrghilhdrtghomhdprhgtphhtthhopehkuhhurhhtsges
+    ghhmrghilhdrtghomhdprhgtphhtthhopeifpggrrhhmihhnsehgmhigrdguvgdprhgtph
+    htthhopehhrghnshhgsehkvghrnhgvlhdrohhrghdprhgtphhtthhopehilhhpohdrjhgr
+    rhhvihhnvghnsehlihhnuhigrdhinhhtvghlrdgtohhmpdhrtghpthhtoheptghorhgsvg
+    htsehlfihnrdhnvghtpdhrtghpthhtohepihesrhhonhhgrdhmohgvpdhrtghpthhtohep
+    lhhinhhugidqkhgvrhhnvghlsehvghgvrhdrkhgvrhhnvghlrdhorhhgpdhrtghpthhtoh
+    epphhlrghtfhhorhhmqdgurhhivhgvrhdqgiekieesvhhgvghrrdhkvghrnhgvlhdrohhr
+    gh
+X-ME-Proxy: <xmx:PgjUaQYHTj51TzVv5c8mIF4Z4mLGCpBQbfDEWOJnCpgvh13_k686Lw>
+    <xmx:PgjUaX9I3MYNh48RWs2vALwvAXUHrCB5kYFDGRHPFrOT9WXjJ3ztSQ>
+    <xmx:PgjUafYwp_-5_J6XijbU2QwZ7gAsyNhZ2t886AKIPXSWj07dioDxcA>
+    <xmx:PgjUaRfeabc8KhN_9Xu9xKVgFQzMp_nAZMRzCh4L4WmjpWdhCAOM1A>
+    <xmx:PwjUafceEBEzJpC3Wofq6c8VGcFblBaRHbpYl_Wenvm41EQdOOe1Hq4p>
+Feedback-ID: ibe194615:Fastmail
+Received: by mailuser.phl.internal (Postfix, from userid 501)
+	id A8A4C2CE3F93; Mon,  6 Apr 2026 15:23:42 -0400 (EDT)
+X-Mailer: MessagingEngine.com Webmail Interface
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+X-ThreadId: A78gagOl5mRc
+Date: Mon, 06 Apr 2026 15:23:22 -0400
+From: "Mark Pearson" <mpearson-lenovo@squebb.ca>
+To: "Derek J . Clark" <derekjohn.clark@gmail.com>
+Cc: =?UTF-8?Q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>,
+ "Hans de Goede" <hansg@kernel.org>, "Armin Wolf" <W_Armin@gmx.de>,
+ "Jonathan Corbet" <corbet@lwn.net>, "Rong Zhang" <i@rong.moe>,
+ "Kurt Borja" <kuurtb@gmail.com>,
+ "platform-driver-x86@vger.kernel.org" <platform-driver-x86@vger.kernel.org>,
+ linux-kernel@vger.kernel.org
+Message-Id: <f61511f9-b4fa-42df-84a4-097536ebb012@app.fastmail.com>
+In-Reply-To: 
+ <CAFqHKTkQdm3Fq_XAbPZ3uk+8NE2Q90sq6SaVJ7xbCBNVvbdc=g@mail.gmail.com>
 References: <20260402032424.678528-1-derekjohn.clark@gmail.com>
- <20260402032424.678528-13-derekjohn.clark@gmail.com> <dbfb6211-179b-4d92-aa62-374df2d39490@app.fastmail.com>
-In-Reply-To: <dbfb6211-179b-4d92-aa62-374df2d39490@app.fastmail.com>
-From: Derek John Clark <derekjohn.clark@gmail.com>
-Date: Mon, 6 Apr 2026 12:22:25 -0700
-X-Gm-Features: AQROBzAG2sZut7ICt5tuKN-pyret-JIcoevfsAyheA3O-xXWPcYLmR-_qx3HtT8
-Message-ID: <CAFqHKTkA9Vrau6EeAK8mTvpxBZO2zoVtAZjOLTwrw2bYoEjKdw@mail.gmail.com>
-Subject: Re: [PATCH v7 12/16] platform/x86: lenovo-wmi-other: Add GPU tunable attributes
-To: Mark Pearson <mpearson-lenovo@squebb.ca>
-Cc: =?UTF-8?Q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>, 
-	Hans de Goede <hansg@kernel.org>, Armin Wolf <W_Armin@gmx.de>, Jonathan Corbet <corbet@lwn.net>, 
-	Rong Zhang <i@rong.moe>, Kurt Borja <kuurtb@gmail.com>, 
-	"platform-driver-x86@vger.kernel.org" <platform-driver-x86@vger.kernel.org>, linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+ <20260402032424.678528-12-derekjohn.clark@gmail.com>
+ <22b180a6-c6ee-4785-9cee-577b9f55d48b@app.fastmail.com>
+ <CAFqHKTkQdm3Fq_XAbPZ3uk+8NE2Q90sq6SaVJ7xbCBNVvbdc=g@mail.gmail.com>
+Subject: Re: [PATCH v7 11/16] platform/x86: lenovo-wmi-other: Add missing CPU tunable
+ attributes
+Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: quoted-printable
 
-On Sat, Apr 4, 2026 at 5:54=E2=80=AFPM Mark Pearson <mpearson-lenovo@squebb=
-.ca> wrote:
->
-> Hi Derek,
->
-> On Wed, Apr 1, 2026, at 11:24 PM, Derek J. Clark wrote:
-> > Use an enum for all GPU attribute feature ID's and add GPU attributes.
-> >
-> > Reviewed-by: Rong Zhang <i@rong.moe>
-> > Reviewed-by: Mark Pearson <mpearson-lenovo@squebb.ca>
-> > Signed-off-by: Derek J. Clark <derekjohn.clark@gmail.com>
-> > ---
-> > v7:
-> >   - Fix typo in dgpu_boost_clk attribute string.
-> > v4:
-> >   - Align CPU feature enum values.
-> >   - Remove gpu_oc_stat from Documentation.
-> > v3:
-> >   - Remove gpu_oc_stat.
-> > ---
-> >  .../wmi/devices/lenovo-wmi-other.rst          |  10 ++
-> >  drivers/platform/x86/lenovo/wmi-capdata.h     |   1 +
-> >  drivers/platform/x86/lenovo/wmi-other.c       | 105 ++++++++++++++++++
-> >  3 files changed, 116 insertions(+)
-> >
-> > diff --git a/Documentation/wmi/devices/lenovo-wmi-other.rst
-> > b/Documentation/wmi/devices/lenovo-wmi-other.rst
-> > index 189dd4d31926..988ae04ff724 100644
-> > --- a/Documentation/wmi/devices/lenovo-wmi-other.rst
-> > +++ b/Documentation/wmi/devices/lenovo-wmi-other.rst
-> > @@ -69,6 +69,16 @@ Each attribute has the following properties:
-> >
-> >  The following firmware-attributes are implemented:
-> >   - cpu_temp: CPU Thermal Load Limit
-> > + - dgpu_boost_clk: Dedicated GPU Boost Clock
-> > + - dgpu_enable: Dedicated GPU Enabled Status
-> > + - gpu_didvid: GPU Device Identifier and Vendor Identifier
-> > + - gpu_mode: GPU Mode by Power Limit
-> > + - gpu_nv_ac_offset: Nvidia GPU AC Total Processing Power Baseline
-> > Offset
-> > + - gpu_nv_bpl: Nvidia GPU Base Power Limit
-> > + - gpu_nv_cpu_boost: Nvidia GPU to CPU Dynamic Boost Limit
-> > + - gpu_nv_ctgp: Nvidia GPU Configurable Total Graphics Power
-> > + - gpu_nv_ppab: Nvidia GPU Power Performance Aware Boost Limit
-> > + - gpu_temp: GPU Thermal Load Limit
-> >   - ppt_cpu_cl: CPU Cross Loading Power Limit
-> >   - ppt_pl1_apu_spl: Platform Profile Tracking APU Sustained Power Limi=
-t
-> >   - ppt_pl1_spl: Platform Profile Tracking Sustained Power Limit
-> > diff --git a/drivers/platform/x86/lenovo/wmi-capdata.h
-> > b/drivers/platform/x86/lenovo/wmi-capdata.h
-> > index f2d45cd7a188..891b12ca1db6 100644
-> > --- a/drivers/platform/x86/lenovo/wmi-capdata.h
-> > +++ b/drivers/platform/x86/lenovo/wmi-capdata.h
-> > @@ -20,6 +20,7 @@
-> >
-> >  enum lwmi_device_id {
-> >       LWMI_DEVICE_ID_CPU =3D 0x01,
-> > +     LWMI_DEVICE_ID_GPU =3D 0x02,
-> >       LWMI_DEVICE_ID_FAN =3D 0x04,
-> >  };
-> >
-> > diff --git a/drivers/platform/x86/lenovo/wmi-other.c
-> > b/drivers/platform/x86/lenovo/wmi-other.c
-> > index 56c8b84f306d..57b6b6f17f33 100644
-> > --- a/drivers/platform/x86/lenovo/wmi-other.c
-> > +++ b/drivers/platform/x86/lenovo/wmi-other.c
-> > @@ -61,6 +61,19 @@ enum lwmi_feature_id_cpu {
-> >       LWMI_FEATURE_ID_CPU_IPL =3D       0x09,
-> >  };
-> >
-> > +enum lwmi_feature_id_gpu {
-> > +     LWMI_FEATURE_ID_GPU_NV_PPAB =3D           0x01,
-> > +     LWMI_FEATURE_ID_GPU_NV_CTGP =3D           0x02,
-> > +     LWMI_FEATURE_ID_GPU_TEMP =3D              0x03,
-> > +     LWMI_FEATURE_ID_GPU_AC_OFFSET =3D         0x04,
-> > +     LWMI_FEATURE_ID_DGPU_BOOST_CLK =3D        0x06,
-> > +     LWMI_FEATURE_ID_DGPU_EN =3D               0x07,
-> > +     LWMI_FEATURE_ID_GPU_MODE =3D              0x08,
-> > +     LWMI_FEATURE_ID_DGPU_DIDVID =3D           0x09,
-> > +     LWMI_FEATURE_ID_GPU_NV_BPL =3D            0x0a,
-> > +     LWMI_FEATURE_ID_GPU_NV_CPU_BOOST =3D      0x0b,
-> > +};
-> > +
->
-> I don't have feature ID's 0x6 to 0xa defined in the spec that I have (whi=
-ch I got off the Yoga team last week).
-> We should sync up offline and compare notes.
->
 
-Odd, I have it all clearly shown in the documentation I have...
-Feature ID (DeviceID =3D 2)
-Feature | FeatureID | TypeID
-Nvidia GPU PPAB | 0x01 |
-Nvidia GPU cTGP | 0x02 |
-GPU Thermal Limit | 0x03 |
-Nvidia GPU Total Processing Power Target on AC offset from baseline | 0x04 =
-|
-GPU Overclocking Stauts | 0x05 |
-Get GPU  boost clock | 0x06 |
-Set whether the dgpu exists in the device manager | 0x07 |
-Get_Mode_By_Power_Limit | 0x08 |
-Get_GPU DIDVID | 0x09 |
-Get_GPU Base Power Limit | 0x0A |
-Nvidia GPU To CPU Boost | 0x0B |
-Nvidia GPU DBDC Data | 0x0C |
 
-Derek
-> Mark
+On Mon, Apr 6, 2026, at 3:14 PM, Derek John Clark wrote:
+> On Sat, Apr 4, 2026 at 5:48=E2=80=AFPM Mark Pearson <mpearson-lenovo@s=
+quebb.ca> wrote:
+>>
+>> Hi Derek
+>>
+>> On Wed, Apr 1, 2026, at 11:24 PM, Derek J. Clark wrote:
+>> > Use an enum for all device ID's and CPU attribute feature ID's,
+>> > add missing CPU attributes.
+>> >
+>> > Reviewed-by: Rong Zhang <i@rong.moe>
+>> > Reviewed-by: Mark Pearson <mpearson-lenovo@squebb.ca>
+>> > Signed-off-by: Derek J. Clark <derekjohn.clark@gmail.com>
+>> > ---
+>> > v7:
+>> >   - Fix typo in documentation.
+>> > v4:
+>> >   - Align type ID defines.
+>> >   - Align CPU feature enum values.
+>> >   - remove cpu_oc_stat from Documentation.
+>> > v3:
+>> >   - Remove cpu_oc_stat.
+>> > ---
+>> >  .../wmi/devices/lenovo-wmi-other.rst          |  9 ++
+>> >  drivers/platform/x86/lenovo/wmi-capdata.h     |  5 +-
+>> >  drivers/platform/x86/lenovo/wmi-other.c       | 99 +++++++++++++++=
++++-
+>> >  3 files changed, 107 insertions(+), 6 deletions(-)
+>> >
+>> > diff --git a/Documentation/wmi/devices/lenovo-wmi-other.rst
+>> > b/Documentation/wmi/devices/lenovo-wmi-other.rst
+>> > index 01d471156738..189dd4d31926 100644
+>> > --- a/Documentation/wmi/devices/lenovo-wmi-other.rst
+>> > +++ b/Documentation/wmi/devices/lenovo-wmi-other.rst
+>> > @@ -68,9 +68,18 @@ Each attribute has the following properties:
+>> >   - type
+>> >
+>> >  The following firmware-attributes are implemented:
+>> > + - cpu_temp: CPU Thermal Load Limit
+>> > + - ppt_cpu_cl: CPU Cross Loading Power Limit
+>> > + - ppt_pl1_apu_spl: Platform Profile Tracking APU Sustained Power =
+Limit
+>> >   - ppt_pl1_spl: Platform Profile Tracking Sustained Power Limit
+>> > + - ppt_pl1_spl_cl: Platform Profile Tracking Cross Loading Sustain=
+ed
+>> > Power Limit
+>> > + - ppt_pl1_tau: Exceed Duration for Platform Profile Tracking
+>> > Sustained Power Limit
+>> >   - ppt_pl2_sppt: Platform Profile Tracking Slow Package Power Trac=
+king
+>> > + - ppt_pl2_sppt_cl: Platform Profile Tracking Cross Loading Slow
+>> > Package Tracking
+>> >   - ppt_pl3_fppt: Platform Profile Tracking Fast Package Power Trac=
+king
+>> > + - ppt_pl3_fppt_cl: Platform Profile Tracking Cross Loading Fast
+>> > Package Power Tracking
+>> > + - ppt_pl4_ipl: Platform Profile Tracking Instantaneous Power Limit
+>> > + - ppt_pl4_ipl_cl: Platform Profile Tracking Cross Loading
+>> > Instantaneous Power Limit
+>> >
+>>
+>> Just wanted to flag that the naming for sppt and fppt seems wrong to =
+me. Wanted to make sure it was deliberate.
+>>
+>> I have, for Feature ID's:
+>> 1 =3D CPU Short Term Power Limit (you have Slow package Power Trackin=
+g)
+>> 3 =3D CPU Peak Power Limit (you have as Fast Package Power Tracking)
+>>
+>
+> Hmm, that does seem to be what the documentation shows. However, from
+> what my devices report this appears to be correct in practice. From my
+> Lenovo Legion Go:
+>
+>     ATTR{attributes/ppt_pl1_spl/current_value}=3D=3D"20"
+>     ATTR{attributes/ppt_pl1_spl/max_value}=3D=3D"30"
+>     ATTR{attributes/ppt_pl2_sppt/current_value}=3D=3D"22"
+>     ATTR{attributes/ppt_pl2_sppt/max_value}=3D=3D"35"
+>     ATTR{attributes/ppt_pl3_fppt/current_value}=3D=3D"24"
+>     ATTR{attributes/ppt_pl3_fppt/max_value}=3D=3D"41"
+>
+> It seems the max values line up with the intended use cases for each
+> attribute, and ryzenadj reports the same current values here when
+> probed. I would personally chock this up to Lenovo documentation being
+> wrong, but perhaps the situation is different with an Intel device? I
+> don't have one on hand to verify with.
+>
+Ah - good point. I don't have an Intel one either :)
+
+I think you're probably right about Lenovo documentation so unless I fin=
+d out otherwise let's leave it as it is.
+
+Mark
