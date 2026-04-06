@@ -1,200 +1,158 @@
-Received: from fout-b6-smtp.messagingengine.com (fout-b6-smtp.messagingengine.com [202.12.124.149])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ed1-f52.google.com (mail-ed1-f52.google.com [209.85.208.52])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0256D2D7BF;
-	Mon,  6 Apr 2026 19:23:44 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=202.12.124.149
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1775503426; cv=none; b=TPExCIyUyGRE+VYnU78Dj4lmudX+GCuSDWLst0wowN6nVmbjbbYTt+R//WiUZemBOp4Y1PKMRqiYALuiiZkK2obYd2rRekz3ahilOqxBKqfzKuy4ifS+4U2/1fVuAevPBmT3t9N+NdVECDzjh/grNRRfkFFFuGZbe95Vme3hThI=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1775503426; c=relaxed/simple;
-	bh=5RxONuvzJvKwfB0a6qFhQg4E/OqQExrHn7hBsc1r0W8=;
-	h=MIME-Version:Date:From:To:Cc:Message-Id:In-Reply-To:References:
-	 Subject:Content-Type; b=N6BhFI18NTiWlEA5ThjBBqV/VWYKEaxUQ5vX3o2VMfSTi+jnEkW1uNqNBTS9oVXPBtPMDZDjisnjNenxvs0iwe1T3/5T9UCn38w1P4UtTMSbFceDjRR22BwkIQkfwC8tLZyYxXF7vh3CpBiaciGcVK1DZHAtOL/VU+5p3BpY4JU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=squebb.ca; spf=pass smtp.mailfrom=squebb.ca; dkim=pass (2048-bit key) header.d=squebb.ca header.i=@squebb.ca header.b=SW3EITjM; dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b=CWX2xgTb; arc=none smtp.client-ip=202.12.124.149
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=squebb.ca
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=squebb.ca
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 374FF396D0A
+	for <platform-driver-x86@vger.kernel.org>; Mon,  6 Apr 2026 19:30:03 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=209.85.208.52
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1775503804; cv=pass; b=Li2MFylq8zv20zTdSvxYeDXe5P+lk74Xtc4aVWXSJmKQruruPaoYABI2z0vs+Nc//rMrhXwtfxx1HpPUBTWjRs5HLpbmyUdZNCCEmIu7XNyU3z4ziEk02SaU5yFmQsCd78baOszyjsjSNtdmgaWRJnjc74g5VTZAhOYLo/TzbJk=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1775503804; c=relaxed/simple;
+	bh=E91vaeMNwDF/pEjv7G2aprNsjDohPpm/gfEXupHR2kM=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=obOxRoLgo/7J++g/nIgMu1UPAoAVSe6aMyNKWM4rKGwm/9f/e7YzCJSXQFYh6tFcs8+W7V+TViSHY8EkAJq0QPr8o+Yg8tTeghVzS++5ROe3mJNXCxYibKrNt6za4PxsGjtUOLjSppHNy43NCh248tMJRj6yVpxw8YR/KZ5umXY=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=fpYt8ULx; arc=pass smtp.client-ip=209.85.208.52
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=squebb.ca header.i=@squebb.ca header.b="SW3EITjM";
-	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="CWX2xgTb"
-Received: from phl-compute-02.internal (phl-compute-02.internal [10.202.2.42])
-	by mailfout.stl.internal (Postfix) with ESMTP id 9705E1D001F1;
-	Mon,  6 Apr 2026 15:23:43 -0400 (EDT)
-Received: from phl-imap-08 ([10.202.2.84])
-  by phl-compute-02.internal (MEProxy); Mon, 06 Apr 2026 15:23:44 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=squebb.ca; h=cc
-	:cc:content-transfer-encoding:content-type:content-type:date
-	:date:from:from:in-reply-to:in-reply-to:message-id:mime-version
-	:references:reply-to:subject:subject:to:to; s=fm3; t=1775503423;
-	 x=1775589823; bh=ON3Kiz7lXcZ9y081vA8sj3D0u6J739Kxs7fJGIzL6H0=; b=
-	SW3EITjMPRd4nBW8SCGEgxOiNt2epsH3q/xgxIDPJWKt9dQgW/MbObZYdauQzACa
-	+AsATEFvDjiSFimE/M+iUM9lxHgJjWCTdHIPcsSE4Z2tzA27VGrQe8rYgXul3ixk
-	LiH7IgnrVKv0vrDumqcNunisJ89msmCZ6N6S+dVs0Hubws3MCl/JFkaj2lmO0dD5
-	xLV5nslmVsj+ATdsWpVnXoAdgmTs8vrNyJFuZnF8yPeH1aPenxLU896LJmlaN6u5
-	ihsxKDerf749DUJBR65PY9vP8eBbzoM8QJhLVrD14AeDCgMEy6RpR5sXnvACJSF1
-	h8kxP4h/N0KGnZyGUhdxnw==
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-	messagingengine.com; h=cc:cc:content-transfer-encoding
-	:content-type:content-type:date:date:feedback-id:feedback-id
-	:from:from:in-reply-to:in-reply-to:message-id:mime-version
-	:references:reply-to:subject:subject:to:to:x-me-proxy
-	:x-me-sender:x-me-sender:x-sasl-enc; s=fm2; t=1775503423; x=
-	1775589823; bh=ON3Kiz7lXcZ9y081vA8sj3D0u6J739Kxs7fJGIzL6H0=; b=C
-	WX2xgTbBajAmAT4NZHjzvrkUrcM7lZKnhy6J4Q7EbsrVLLRyHwxxwRPba8ZMwFFd
-	YFjdURXxzPX1V0W2/fa/mlxZElrn2uaLZ0GkLLxYuNp8Fh/bFIt4zAMBO0zohbr6
-	gJEjHp0EhyQknrVwUNs0Psg/9o3FUjoh7Rgnk0IGaJ2CpaAPho3pa6uT79D6T1Mo
-	+tlNmfy4I/4EiXEhtlLRsQm4I7rqVt0VTz6KYRxurS6PFf7zeU9ZgecDA7QFOySs
-	MtWyxliGigqyRydDFQBIlD8JF/NMwYMI269bmGksoW4DWwxRAvfCCL/oghRtKD3r
-	+3vCukf6LKariHkzxPWqQ==
-X-ME-Sender: <xms:PgjUaT6fbAQOixciLrls1wnxXAD18uKzDXWC0kMRIz69lVHjcOzF8Q>
-    <xme:PgjUaTtVCOYYNtPYw1GuqRXXwd38XgX-Ja7mhmplt42SjsWLtDeIyFeqLV6K1vYGB
-    XGgjFJjfMVTpUQMjIOc-OXYd_a0fAhZr2fFVxF-1rXRE5jJr8hILSNg>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeefhedrtddtgddukeehjecutefuodetggdotefrod
-    ftvfcurfhrohhfihhlvgemucfhrghsthforghilhdpuffrtefokffrpgfnqfghnecuuegr
-    ihhlohhuthemuceftddtnecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenucfjug
-    hrpefoggffhffvvefkjghfufgtgfesthhqredtredtjeenucfhrhhomhepfdforghrkhcu
-    rfgvrghrshhonhdfuceomhhpvggrrhhsohhnqdhlvghnohhvohesshhquhgvsggsrdgtrg
-    eqnecuggftrfgrthhtvghrnhephfevkeejueeukeefhfelleejheeuudfgteffvdetkeff
-    jeduleffvdejkeefhedvnecuvehluhhsthgvrhfuihiivgeptdenucfrrghrrghmpehmrg
-    hilhhfrhhomhepmhhpvggrrhhsohhnqdhlvghnohhvohesshhquhgvsggsrdgtrgdpnhgs
-    pghrtghpthhtohepledpmhhouggvpehsmhhtphhouhhtpdhrtghpthhtohepuggvrhgvkh
-    hjohhhnhdrtghlrghrkhesghhmrghilhdrtghomhdprhgtphhtthhopehkuhhurhhtsges
-    ghhmrghilhdrtghomhdprhgtphhtthhopeifpggrrhhmihhnsehgmhigrdguvgdprhgtph
-    htthhopehhrghnshhgsehkvghrnhgvlhdrohhrghdprhgtphhtthhopehilhhpohdrjhgr
-    rhhvihhnvghnsehlihhnuhigrdhinhhtvghlrdgtohhmpdhrtghpthhtoheptghorhgsvg
-    htsehlfihnrdhnvghtpdhrtghpthhtohepihesrhhonhhgrdhmohgvpdhrtghpthhtohep
-    lhhinhhugidqkhgvrhhnvghlsehvghgvrhdrkhgvrhhnvghlrdhorhhgpdhrtghpthhtoh
-    epphhlrghtfhhorhhmqdgurhhivhgvrhdqgiekieesvhhgvghrrdhkvghrnhgvlhdrohhr
-    gh
-X-ME-Proxy: <xmx:PgjUaQYHTj51TzVv5c8mIF4Z4mLGCpBQbfDEWOJnCpgvh13_k686Lw>
-    <xmx:PgjUaX9I3MYNh48RWs2vALwvAXUHrCB5kYFDGRHPFrOT9WXjJ3ztSQ>
-    <xmx:PgjUafYwp_-5_J6XijbU2QwZ7gAsyNhZ2t886AKIPXSWj07dioDxcA>
-    <xmx:PgjUaRfeabc8KhN_9Xu9xKVgFQzMp_nAZMRzCh4L4WmjpWdhCAOM1A>
-    <xmx:PwjUafceEBEzJpC3Wofq6c8VGcFblBaRHbpYl_Wenvm41EQdOOe1Hq4p>
-Feedback-ID: ibe194615:Fastmail
-Received: by mailuser.phl.internal (Postfix, from userid 501)
-	id A8A4C2CE3F93; Mon,  6 Apr 2026 15:23:42 -0400 (EDT)
-X-Mailer: MessagingEngine.com Webmail Interface
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="fpYt8ULx"
+Received: by mail-ed1-f52.google.com with SMTP id 4fb4d7f45d1cf-66d24c6963bso7594308a12.1
+        for <platform-driver-x86@vger.kernel.org>; Mon, 06 Apr 2026 12:30:03 -0700 (PDT)
+ARC-Seal: i=1; a=rsa-sha256; t=1775503801; cv=none;
+        d=google.com; s=arc-20240605;
+        b=EGPOgrFvLfVqsAphsU88oJUbFPuHNX5j3/iFtQXmstmeVUUrVLNmFLXjZGU+jSBbyl
+         tMbprSz4J/rbuPheTajduQ+5j1gtuBvdJDet+I5J1sQ8n/9p5YOwRBxVqZpbw30iTdGl
+         TaEacXiJLJTMACAMafXELrArHie17aGGeLqBKbLxNPExThnNvU26m1hu6DVXPPjUDlp3
+         g7pJZwLoZoqW1kiuK/2G4pK/9qT7zwOvAaQDHpr8HA/zDW5Aduvme9NFYwDu/HpvGjAB
+         ctfk4nT6WSJKQ2947TiEMdVpC7rvvNFmG0glzEHI7mJX+otpWQVtUDwxlCpeOFhLhUMv
+         /o/w==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20240605;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:dkim-signature;
+        bh=6oqpjiW2BP+Tsq4RmXpwQJ34Z4G51X+Eu8RZMOYwNBA=;
+        fh=RP6K4vFT4EVGjwOFn2Op6Ijd3Fq8yJZCGrpODIf5M60=;
+        b=Ia+4xzmn54MoPI13zmuzg8xzJnrXCF976Zf6GWIa6uMtatTLeYmuOi1moWa5Sd+hwg
+         JnRb/FrRUoSy1xwzR+mruH5fk/u6WMHi4IRBvdcbslIHdkgY79z4CwydjolzaEM03E6e
+         7FkcnQveTZDNlAoex1i9BusneRKEJNmrsnCZIHRFjp7cmWU+YddF6FlIkuYkYUDdhU+x
+         Uof3fFpXJ5ay7HgBmZWoJYhLiyUWz/ZDVpyrXLB1MjFho/4W3kFze2dsfimkxRBqfirk
+         oEa+75PbccXoma1lmXIvUB6MpqZqIwXYr3Zjqck99U/jFFS5qnep1/Ch2FufN+rNn7Ir
+         l1Qg==;
+        darn=vger.kernel.org
+ARC-Authentication-Results: i=1; mx.google.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20251104; t=1775503801; x=1776108601; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=6oqpjiW2BP+Tsq4RmXpwQJ34Z4G51X+Eu8RZMOYwNBA=;
+        b=fpYt8ULxqnw2GUbo8PxtOmsJkkZtVysEaDZlyc4h2P68GO+cYulde84SIJ0uydhpZx
+         jXNxQ9O2Gp2cuhIi61UgF3kYmIp0wsH6hphdOhhfWsv/rcIlbgPOzmweaqa3IgtwuzP9
+         PGx5z6ohMvudLwSjIw93Q7vdhkwWj/QFO55A7+teVpb6rtuH474NgoX05nB2PuJumkIA
+         SbfOZSaseyOcdue3nC51ekx29sYKiCI528A3gJM6P3mDHj/Bib7xmsx64QruetIGRfSe
+         g7O7sqUO8j7eozf+iBdwIQCQgVMAopcZ4hX5BfHAeP7lWhUUHW9DOwoC0Z0o7v18+9wK
+         9bBg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20251104; t=1775503801; x=1776108601;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-gg:x-gm-message-state:from
+         :to:cc:subject:date:message-id:reply-to;
+        bh=6oqpjiW2BP+Tsq4RmXpwQJ34Z4G51X+Eu8RZMOYwNBA=;
+        b=hS/bVLBqih1TnLt9/xukBkeqveOIWPb6NKDcHBmGi0KEDY979gci1VEJYqNB3zMz8p
+         XUtHfmeOowhDTOykCiwff9XL72ZDa3UDrYNiiVEspe7IjDJA0/QVGTef7U0tntAGenSX
+         tQZ373D9R1JA5yZknTFtmx44xleolto7+IfraLamIaq7/gf1Uxhm8x41p8hPQ7sdqKD+
+         gYp5Y58hTDciph2Te2StpxFUzLzeCFUqN3OelgktIJdG9uPhfsGT+QEJovRwXEC1y66m
+         UZPv4NbmhL4W+HoJGHM80FXHJh3Sm3ahqWXJMWy8vJoQBIwr9uyaNYGGSZ5w9S7Wbci2
+         sgxg==
+X-Forwarded-Encrypted: i=1; AJvYcCWeJRbTUBsmapVCFup6D195Zw/NTk7rwWfD8+7ZxcCLZCGOz54DUqd1UQOz8L0YkK1mEPIa0wAzmIJ2oXkzJsEssiGt@vger.kernel.org
+X-Gm-Message-State: AOJu0YzZZHtwy3czKVCRvjmmIXeZUgAL7Lc0y1sKbAgPTeQmQwYVlliT
+	d6KrbQMXVPTI7d2VCyHnJe0fcW31dcVB2bunPaGLQiSb08O9jetyFbxWWkuAkjIedI9IcySOW7Q
+	F7OC/iZ+GAgHgVf63gYWXxEM5MgI0lD8=
+X-Gm-Gg: AeBDiev0SB7f2aN0o1cQAEcUicM+W00w7cZQqdg0mnyEeZveBkDNIup3tn/Zz3OfDxf
+	zlcVfEoZY2bMhJMGk3pIvF8AU52otwojIf1KbhNVbL2hZAw8pyONONIppR881r+w7MCUDEZzFrF
+	fm1m46xOLf0iAtQRZCYas8whknqKHOD3szpKisFHu2bdNVXHk4xiCnWAmBlOmAWwYWEzjgnCNH1
+	MSwecgeJnD9F42U5nckXPDnRPG9ML07iDq818zolOzOi5+q34tydi2V9qBlGVWH7xVCTAeOdd2E
+	k3Oe5zdrRXG7DaStEwP0QgMvaQAkUSqG5bb07aBvdLJyyHHHHxwoA1yn8duZAdMOnwyJslmjSo/
+	8BgwgphDHPZUVMvKFIA==
+X-Received: by 2002:a17:907:d87:b0:b9c:b069:8ac3 with SMTP id
+ a640c23a62f3a-b9cb069bac2mr337550766b.3.1775503801341; Mon, 06 Apr 2026
+ 12:30:01 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-ThreadId: A78gagOl5mRc
-Date: Mon, 06 Apr 2026 15:23:22 -0400
-From: "Mark Pearson" <mpearson-lenovo@squebb.ca>
-To: "Derek J . Clark" <derekjohn.clark@gmail.com>
-Cc: =?UTF-8?Q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>,
- "Hans de Goede" <hansg@kernel.org>, "Armin Wolf" <W_Armin@gmx.de>,
- "Jonathan Corbet" <corbet@lwn.net>, "Rong Zhang" <i@rong.moe>,
- "Kurt Borja" <kuurtb@gmail.com>,
- "platform-driver-x86@vger.kernel.org" <platform-driver-x86@vger.kernel.org>,
- linux-kernel@vger.kernel.org
-Message-Id: <f61511f9-b4fa-42df-84a4-097536ebb012@app.fastmail.com>
-In-Reply-To: 
- <CAFqHKTkQdm3Fq_XAbPZ3uk+8NE2Q90sq6SaVJ7xbCBNVvbdc=g@mail.gmail.com>
-References: <20260402032424.678528-1-derekjohn.clark@gmail.com>
- <20260402032424.678528-12-derekjohn.clark@gmail.com>
- <22b180a6-c6ee-4785-9cee-577b9f55d48b@app.fastmail.com>
- <CAFqHKTkQdm3Fq_XAbPZ3uk+8NE2Q90sq6SaVJ7xbCBNVvbdc=g@mail.gmail.com>
-Subject: Re: [PATCH v7 11/16] platform/x86: lenovo-wmi-other: Add missing CPU tunable
- attributes
-Content-Type: text/plain; charset=utf-8
+References: <20260403-swnode-unreg-retcode-v3-0-7886092b28b4@oss.qualcomm.com> <20260403-swnode-unreg-retcode-v3-2-7886092b28b4@oss.qualcomm.com>
+In-Reply-To: <20260403-swnode-unreg-retcode-v3-2-7886092b28b4@oss.qualcomm.com>
+From: Andy Shevchenko <andy.shevchenko@gmail.com>
+Date: Mon, 6 Apr 2026 22:29:24 +0300
+X-Gm-Features: AQROBzA8JV6OQ6clUVeDdQ8y2N7R8Nc6EH_ZR0i5RXUt9ZfYunTBiDn_zltZ3Uw
+Message-ID: <CAHp75Vca5R82wEV1hAyu1=zkuQOw3htXT787XhGH+LVN+EHQHg@mail.gmail.com>
+Subject: Re: [PATCH v3 2/2] gpio: swnode: defer probe on references to
+ unregistered software nodes
+To: Bartosz Golaszewski <bartosz.golaszewski@oss.qualcomm.com>
+Cc: Andy Shevchenko <andriy.shevchenko@linux.intel.com>, Daniel Scally <djrscally@gmail.com>, 
+	Heikki Krogerus <heikki.krogerus@linux.intel.com>, 
+	Sakari Ailus <sakari.ailus@linux.intel.com>, 
+	Greg Kroah-Hartman <gregkh@linuxfoundation.org>, "Rafael J. Wysocki" <rafael@kernel.org>, 
+	Danilo Krummrich <dakr@kernel.org>, Mika Westerberg <mika.westerberg@linux.intel.com>, 
+	Andy Shevchenko <andy@kernel.org>, Linus Walleij <linusw@kernel.org>, Hans de Goede <hansg@kernel.org>, 
+	=?UTF-8?Q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>, 
+	Dmitry Torokhov <dmitry.torokhov@gmail.com>, Len Brown <lenb@kernel.org>, linux-acpi@vger.kernel.org, 
+	driver-core@lists.linux.dev, linux-kernel@vger.kernel.org, 
+	linux-gpio@vger.kernel.org, platform-driver-x86@vger.kernel.org, 
+	brgl@kernel.org
+Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-
-
-On Mon, Apr 6, 2026, at 3:14 PM, Derek John Clark wrote:
-> On Sat, Apr 4, 2026 at 5:48=E2=80=AFPM Mark Pearson <mpearson-lenovo@s=
-quebb.ca> wrote:
->>
->> Hi Derek
->>
->> On Wed, Apr 1, 2026, at 11:24 PM, Derek J. Clark wrote:
->> > Use an enum for all device ID's and CPU attribute feature ID's,
->> > add missing CPU attributes.
->> >
->> > Reviewed-by: Rong Zhang <i@rong.moe>
->> > Reviewed-by: Mark Pearson <mpearson-lenovo@squebb.ca>
->> > Signed-off-by: Derek J. Clark <derekjohn.clark@gmail.com>
->> > ---
->> > v7:
->> >   - Fix typo in documentation.
->> > v4:
->> >   - Align type ID defines.
->> >   - Align CPU feature enum values.
->> >   - remove cpu_oc_stat from Documentation.
->> > v3:
->> >   - Remove cpu_oc_stat.
->> > ---
->> >  .../wmi/devices/lenovo-wmi-other.rst          |  9 ++
->> >  drivers/platform/x86/lenovo/wmi-capdata.h     |  5 +-
->> >  drivers/platform/x86/lenovo/wmi-other.c       | 99 +++++++++++++++=
-+++-
->> >  3 files changed, 107 insertions(+), 6 deletions(-)
->> >
->> > diff --git a/Documentation/wmi/devices/lenovo-wmi-other.rst
->> > b/Documentation/wmi/devices/lenovo-wmi-other.rst
->> > index 01d471156738..189dd4d31926 100644
->> > --- a/Documentation/wmi/devices/lenovo-wmi-other.rst
->> > +++ b/Documentation/wmi/devices/lenovo-wmi-other.rst
->> > @@ -68,9 +68,18 @@ Each attribute has the following properties:
->> >   - type
->> >
->> >  The following firmware-attributes are implemented:
->> > + - cpu_temp: CPU Thermal Load Limit
->> > + - ppt_cpu_cl: CPU Cross Loading Power Limit
->> > + - ppt_pl1_apu_spl: Platform Profile Tracking APU Sustained Power =
-Limit
->> >   - ppt_pl1_spl: Platform Profile Tracking Sustained Power Limit
->> > + - ppt_pl1_spl_cl: Platform Profile Tracking Cross Loading Sustain=
-ed
->> > Power Limit
->> > + - ppt_pl1_tau: Exceed Duration for Platform Profile Tracking
->> > Sustained Power Limit
->> >   - ppt_pl2_sppt: Platform Profile Tracking Slow Package Power Trac=
-king
->> > + - ppt_pl2_sppt_cl: Platform Profile Tracking Cross Loading Slow
->> > Package Tracking
->> >   - ppt_pl3_fppt: Platform Profile Tracking Fast Package Power Trac=
-king
->> > + - ppt_pl3_fppt_cl: Platform Profile Tracking Cross Loading Fast
->> > Package Power Tracking
->> > + - ppt_pl4_ipl: Platform Profile Tracking Instantaneous Power Limit
->> > + - ppt_pl4_ipl_cl: Platform Profile Tracking Cross Loading
->> > Instantaneous Power Limit
->> >
->>
->> Just wanted to flag that the naming for sppt and fppt seems wrong to =
-me. Wanted to make sure it was deliberate.
->>
->> I have, for Feature ID's:
->> 1 =3D CPU Short Term Power Limit (you have Slow package Power Trackin=
-g)
->> 3 =3D CPU Peak Power Limit (you have as Fast Package Power Tracking)
->>
+On Fri, Apr 3, 2026 at 4:52=E2=80=AFPM Bartosz Golaszewski
+<bartosz.golaszewski@oss.qualcomm.com> wrote:
 >
-> Hmm, that does seem to be what the documentation shows. However, from
-> what my devices report this appears to be correct in practice. From my
-> Lenovo Legion Go:
->
->     ATTR{attributes/ppt_pl1_spl/current_value}=3D=3D"20"
->     ATTR{attributes/ppt_pl1_spl/max_value}=3D=3D"30"
->     ATTR{attributes/ppt_pl2_sppt/current_value}=3D=3D"22"
->     ATTR{attributes/ppt_pl2_sppt/max_value}=3D=3D"35"
->     ATTR{attributes/ppt_pl3_fppt/current_value}=3D=3D"24"
->     ATTR{attributes/ppt_pl3_fppt/max_value}=3D=3D"41"
->
-> It seems the max values line up with the intended use cases for each
-> attribute, and ryzenadj reports the same current values here when
-> probed. I would personally chock this up to Lenovo documentation being
-> wrong, but perhaps the situation is different with an Intel device? I
-> don't have one on hand to verify with.
->
-Ah - good point. I don't have an Intel one either :)
+> fwnode_property_get_reference_args() now returns -ENOTCONN when called
+> on a software node referencing another software node which has not yet
+> been registered as a firmware node. It makes sense to defer probe in this
+> situation as the node will most likely be registered later on and we'll
+> be able to resolve the reference eventually. Change the behavior of
+> swnode_find_gpio() to return -EPROBE_DEFER if the software node reference
+> resolution returns -ENOTCONN.
 
-I think you're probably right about Lenovo documentation so unless I fin=
-d out otherwise let's leave it as it is.
+...
 
-Mark
+>         for_each_gpio_property_name(propname, con_id) {
+>                 ret =3D swnode_gpio_get_reference(fwnode, propname, idx, =
+&args);
+> -               if (ret =3D=3D 0)
+> +               if (ret =3D=3D 0 || ret =3D=3D -ENOTCONN)
+>                         break;
+
+If I understood the logic correctly this may be just extended as
+
+  if (ret =3D=3D 0)
+    break;
+
+  if (ret =3D=3D -ENOTCONN)
+    /* ... */
+    return -EPROBE_DEFER;
+
+>         }
+>         if (ret) {
+> +               if (ret =3D=3D -ENOTCONN)
+> +                       /*
+> +                        * -ENOTCONN for a software node reference lookup=
+ means
+> +                        *  that a remote struct software_node exists but=
+ has
+> +                        *  not yet been registered as a firmware node. D=
+efer
+> +                        *  until this happens.
+> +                        */
+> +                       return ERR_PTR(-EPROBE_DEFER);
+> +
+>                 pr_debug("%s: can't parse '%s' property of node '%pfwP[%d=
+]'\n",
+>                         __func__, propname, fwnode, idx);
+>                 return ERR_PTR(ret);
+
+--=20
+With Best Regards,
+Andy Shevchenko
