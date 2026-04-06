@@ -1,534 +1,454 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-qt1-f178.google.com (mail-qt1-f178.google.com [209.85.160.178])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DEFF4393DD4;
-	Mon,  6 Apr 2026 17:56:51 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1775498212; cv=none; b=eg6rxcKYdC101o8lCyzoCuF7aAmo6/Gh8mjwxFxPrPGhBHRxvhuG39EKiuanxdyOjeY09eyj1yZqi3Z/EdAi3S5yK5lvPdeCT5zAvZg901dKDKJ9tlB13Vl7RU7hWVoCJ6XtwFbxW2MqMs1lEJh5N1dOihoCr+wVB3DUgOi8Aqw=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1775498212; c=relaxed/simple;
-	bh=e9198/IHkHkBuy/FQwEbhly2T4hTaKTfdmdZn/5x6SM=;
-	h=Message-ID:Date:MIME-Version:Subject:From:To:Cc:References:
-	 In-Reply-To:Content-Type; b=P286RYS5PX6XAYyyn0IddA65FiVGWYsrkXlUyNaFyEX1Mb5Ec7IryZi6WdUKdKB03lFVLmtVYLNbHBeYqyxJJREbkma3/9MNSvz5/DIIaT/lAM/dCQIaJs+Er5MZeSVBr21yxFSx/N6lkR+XssInqbs4ftVZ/7eFg5KAzO8hwDo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=NogbV3fN; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8EAC138F233
+	for <platform-driver-x86@vger.kernel.org>; Mon,  6 Apr 2026 18:41:01 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=209.85.160.178
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1775500863; cv=pass; b=LjR2m+cWuuWKt1a386LULmPTcQl0KQ55Q8d7jEj7YroX9iQqfzGqsbcUTyWBpOarGeDxbMqA07hLlrh83Wzt89Zw8J9fCoG7qdYJ023Yxukp4z2J3ASEHf+QQxcFHObFewhzTFXEahLIlf0Na4ebbtwRkfFaHfwxEaKquD/FlKk=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1775500863; c=relaxed/simple;
+	bh=itbSgjuM/hijuv8ozRCl7pcwf83pOf92MbcIFgmT+Wg=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=OytJwyD6uA8btPd9mZtZ6Y1f5mK+nLfjEVlMH2X25Ks9EmhK37ghehK+w/oOI8mEIEnm276vAdRwzQ+tguTZLM4jcYJRirUD9DzNQ5oRsAmTv4lCVIDFmc+suAPz4jfUqbBfCrgdSxFezID0vXCbmE5+GGlVNKMr+oNlgwqgWOA=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=AydQfnlb; arc=pass smtp.client-ip=209.85.160.178
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="NogbV3fN"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id C1E25C4CEF7;
-	Mon,  6 Apr 2026 17:56:49 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1775498211;
-	bh=e9198/IHkHkBuy/FQwEbhly2T4hTaKTfdmdZn/5x6SM=;
-	h=Date:Subject:From:To:Cc:References:In-Reply-To:From;
-	b=NogbV3fNbZ4nP1awnBbKUVrnzKIjnzgZjNGldHBg2Ce+TX8CHBQoXMnsiGJHMS7ev
-	 SLdU4fVDvn0dMWHtZVH1Dqd5DTD9AmK/sfWzcQR1RO9usLZFSCoEHcRktoW86ifZkG
-	 pU2kZa+ekwFcj4yh4qW2MPetwfZh54sxKzRo5ei2s50afi7KyPiZqR3h3LiZVJzV1b
-	 PXB1rsFdijY30zKp0iIy54b0IpVOQPZE1XXQJnevf0EfCDxlD9lNKEK4ts7uS33l7K
-	 u/Gy7JJDWvhb/zH3if/pFb7xJOvug64ZwAFl4MIfBp8Pq0HhLUeiTV0Lbek5srqv4s
-	 iMVYG4k31dVdw==
-Message-ID: <5c0e9a01-4ea1-4e50-8199-a16365ec8eba@kernel.org>
-Date: Mon, 6 Apr 2026 19:56:47 +0200
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="AydQfnlb"
+Received: by mail-qt1-f178.google.com with SMTP id d75a77b69052e-50d7c12e48eso22703671cf.1
+        for <platform-driver-x86@vger.kernel.org>; Mon, 06 Apr 2026 11:41:01 -0700 (PDT)
+ARC-Seal: i=1; a=rsa-sha256; t=1775500860; cv=none;
+        d=google.com; s=arc-20240605;
+        b=LvZ7tkAXKGl/YsE+1gwSi4FGQwuIxUHIbkiPNwAbJZdRdAT87JGleaOG6ymSFQNZ5J
+         VatzUSb+6vy2aRL/m+SNxnK6+aiVErhU2WcQtL+x7cHPJKYq+dz2zrupCV4pixyvag/y
+         Si1zvlR1P+Tn2TO3zPIov09oeVUotB78lf7RnGzS+HCAfND9PfwykouNgOy5ktBZqxZN
+         nbdinl1Dd2mqaDiEbEwH8BgEeqOWh7KNgUe/0kazbaTq7NzJRtmez72tqOk5KaoUu37j
+         ebbAqUMDscLn2cauqzaaGX9LFnmqEZi+noXVZbCT3d/nqkB6MwNWiLoNjj3pGNAIGUkg
+         okUg==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20240605;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:dkim-signature;
+        bh=12qt9cAgRuNIzAl41U0jlXVpP16G7YKp6dn4gm822lw=;
+        fh=D0NeIRY8uwOAYrO/iRVnSLUWJU/OOFn1URFknTO9d3M=;
+        b=GDsvde21kKERsP2OND1O9W8KeQ9eKjMUEheMskHIuSxN2ndp5+UTGkbZKvHiKAiyw8
+         attb7+E27gMR4xnatxsPiGvyYeLsvKPJ7tvzoh3HHlBtQrK1BF3TG+p8MA2J9kzQjasP
+         rRYI1K1p+k4zWwG98G6vuqldzGxmHzlMQmrHW2qiMPh6r3nDfN+rtbuz8J7CsFDd5gc5
+         oRRdq53ujIbUG73KrVjvAgYtu+MBytE1vrbfC0EXW+Uk+TpUJLb1nq/2nEf1EFQd8EUN
+         PM16mvwML/pZ8bWKU8vmcpCm/+R8uyOEJFw6jAT+ZGl094GgW+qq0jfxDLFoojGg7F8F
+         MaQw==;
+        darn=vger.kernel.org
+ARC-Authentication-Results: i=1; mx.google.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20251104; t=1775500860; x=1776105660; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=12qt9cAgRuNIzAl41U0jlXVpP16G7YKp6dn4gm822lw=;
+        b=AydQfnlbzeKN5eS9onfJifq4EXmJBjI0HdaW5lyskiwmuoPTZFr9GMr3Z/m+rBcnxH
+         efMcS1csErlE7h6aecMEMxgFbpGxRCK4u1KtWeZKazdQxLxWcnx1p7pfsallVXvy8sf+
+         /qV8zvH6qF9f8Z4fPQP5Sw1Dgnxg54ZE5CYglvjbn5lBBcJjA15arGSP44L0Qq+2giNC
+         9+tJdrFFs161TJlAdzDxp+9+AP66wHBjwQml+MWfEughQRt/z299ghJm/Fwe9yQIGUWA
+         klvE8J2TwjOxT9RfCZo25iFYnfyHsjTsHPTcURvJ7EpCsQPovF3nY7o0eRaZTFRrvhf2
+         8PMw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20251104; t=1775500860; x=1776105660;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-gg:x-gm-message-state:from
+         :to:cc:subject:date:message-id:reply-to;
+        bh=12qt9cAgRuNIzAl41U0jlXVpP16G7YKp6dn4gm822lw=;
+        b=JTiUF5GuWye1+jm3KeCPM79EmBkU+JO8gri4/NDbSoefo5oogfEfJIqu3TdJYihD8+
+         F0I0PTrtIB2Yilg5Lnc2FPU2tQGW85mp2bQc7cbDq4si6avWqCOm5N/GNxia5A6sCABr
+         QwivhwfR6eRS9tazwd7WOoc4TU43q+gW/OPPPkKDEwjpf1ONzeLSQg8iIBa3f03yNjQA
+         NnaKmjlv3IpbrICMHtnyajuSOqVShC0eFi1dtImIslEvCJk0i1MpNCa+6Nbd1Fxo5D5y
+         XNsbV9cf7kk9Mim7fHvm83JcdgyJzwR0T1bw2Ua+gbF0TfmtNzCp3+n7DIOyb4t/UNaX
+         XXSA==
+X-Forwarded-Encrypted: i=1; AJvYcCW+pQraH4fDF5BG4zlNftNdoAwjeKeys/eCe9m2NpzQCBi6a42Du8psGMfKYx9M3FSydWaHy3RBTN3iIt1wr40aKWd7@vger.kernel.org
+X-Gm-Message-State: AOJu0Yx4ZDufqOHy4CsmrjYJb7Sg7PiIY8Zpm8E1581mgon74cvGE0y1
+	uf4S/y2mjhb5HsDBcQ1YcTLfexaldZPPRnGY2WcQgwmZhnRyFkctHOxHiVhdxLHLdKuENgSQrKO
+	Tn809UmdObRa/pdve4z3vupFPgSXwUs4=
+X-Gm-Gg: AeBDievOpy4xIbG+d1PgKRCpdGlRc2QHms5Ugv9li4yoxkLRF5JZ6dw6DYZ61/uJyL7
+	unqskUM6aJXxRowb5Ens1E1UuUJS+jS+khWQZW/+xkNo28K/lnx48L70axyBCDvMvSkwBz0KDXH
+	CtcCbpM0+HtTlW0EeqwgtPWpUf/lBgSkbRTNx1n8m0wxOv0dloL/NOiie07AESuXE6XzESnqzGp
+	HmIPmbTDwX8jOuFftLSkJF7UrYLldMGp5XaVyf92iVmaBdP0xjynBxoumBF7cea63D5Qv7Bjar3
+	KinuTojU
+X-Received: by 2002:a05:622a:148e:b0:50d:3efd:bd93 with SMTP id
+ d75a77b69052e-50d4fa6ef2cmr215903271cf.11.1775500860318; Mon, 06 Apr 2026
+ 11:41:00 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v5] platform/x86: hp-wmi: Add multicolor LED support for
- HP keyboard backlight
-From: Hans de Goede <hansg@kernel.org>
-To: edip@medip.dev, ilpo.jarvinen@linux.intel.com, kuba@kernel.org
-Cc: platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
-References: <20260304105831.119349-3-edip@medip.dev>
- <9d7fcfa2-6bd7-4a78-8a64-411a25e87155@kernel.org>
-Content-Language: en-US, nl
-In-Reply-To: <9d7fcfa2-6bd7-4a78-8a64-411a25e87155@kernel.org>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+References: <20260402032424.678528-1-derekjohn.clark@gmail.com>
+ <20260402032424.678528-7-derekjohn.clark@gmail.com> <b1877396-593b-47a0-b84c-30e6f000d759@app.fastmail.com>
+In-Reply-To: <b1877396-593b-47a0-b84c-30e6f000d759@app.fastmail.com>
+From: Derek John Clark <derekjohn.clark@gmail.com>
+Date: Mon, 6 Apr 2026 11:40:46 -0700
+X-Gm-Features: AQROBzC_8Ralz_vdmumdz6JCRxuHNf5_HKKuypC9_JGBNsDD0aAR7Qq-54o2llE
+Message-ID: <CAFqHKTmKpk8+rxhxCyie4G7NC4Bz31Z=iTi8aTR6Sey5So5t1A@mail.gmail.com>
+Subject: Re: [PATCH v7 06/16] platform/x86: lenovo-wmi-other: Limit adding
+ attributes to supported devices
+To: Mark Pearson <mpearson-lenovo@squebb.ca>
+Cc: =?UTF-8?Q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>, 
+	Hans de Goede <hansg@kernel.org>, Armin Wolf <W_Armin@gmx.de>, Jonathan Corbet <corbet@lwn.net>, 
+	Rong Zhang <i@rong.moe>, Kurt Borja <kuurtb@gmail.com>, 
+	"platform-driver-x86@vger.kernel.org" <platform-driver-x86@vger.kernel.org>, linux-kernel@vger.kernel.org, 
+	stable@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-Hi,
+On Sat, Apr 4, 2026 at 2:51=E2=80=AFPM Mark Pearson <mpearson-lenovo@squebb=
+.ca> wrote:
+>
+> Hi Derek,
+>
+> On Wed, Apr 1, 2026, at 11:24 PM, Derek J. Clark wrote:
+> > Adds lwmi_is_attr_01_supported, and only creates the attribute subfolde=
+r
+> > if the attribute is supported by the hardware. Due to some poorly
+> > implemented BIOS this is a multi-step sequence of events. This is
+> > because:
+> > - Some BIOS support getting the capability data from custom mode (0xff)=
+,
+> >   while others only support it in no-mode (0x00).
+> > - Some BIOS support get/set for the current value from custom mode (0xf=
+f),
+> >   while others only support it in no-mode (0x00).
+> > - Some BIOS report capability data for a method that is not fully
+> >   implemented.
+> > - Some BIOS have methods fully implemented, but no complimentary
+> >   capability data.
+> >
+> > To ensure we only expose fully implemented methods with corresponding
+> > capability data, we check each outcome before reporting that an
+> > attribute can be supported.
+> >
+>
+> I've been trying to go through this series a bit more carefully, while re=
+ading the (not exactly clear) Lenovo internal spec.
+> I was curious if the cap00, ID 290000, method would work here? ("Thermal =
+Mode Capability")
+>
+> I don't have systems to try it out on, but it looked like it might give y=
+ou which modes are supported (or not). Not sure if it would be more reliabl=
+e than the cap01 methods?
+>
+> Apologies if you've tried this before and it doesn't work - just wanted t=
+o check. Nothing wrong (that I can see) with your method below if that's sa=
+fer :)
 
-On 4-Mar-26 13:10, Hans de Goede wrote:
-> Hi Edip,
-> 
-> On 4-Mar-26 11:58 AM, edip@medip.dev wrote:
->> From: Edip Hazuri <edip@medip.dev>
->>
->> Add support for the HP keyboard RGB backlight found on HP OMEN and
->> HP Victus laptops. These keyboards expose per-zone RGB control through
->> WMI commands.
->>
->> Register multicolor LED class devices for each keyboard zone (up to 4
->> zones, depending on the keyboard type). Each zone exposes individual
->> red, green, and blue channels via the multicolor LED subsystem.
->>
->> Also hardware-initiated brightness changes (e.g. via the keyboard
->> backlight hotkey, mostly fn+f4) are reported.
->>
->> The color data is stored in a 128-byte color table managed by the
->> firmware, with RGB values starting at offset 25, packed sequentially
->> per zone.
->>
->> Signed-off-by: Edip Hazuri <edip@medip.dev>
-> 
-> Thank you for your patch and sorry for not looking at this earlier.
-> 
-> The new "hp::kbd_backlight_zone%d" LED class devices you are adding
-> are a new userspace API. At least the name of the LED class devices is.
-> 
-> There was a previous attempt to add support for the 4 zone HP omen
-> kbd backlight to the driver, which unfortunaly in the end did not make it
-> upstream (I don't remember why).
-> 
-> The last version of the previous attempt can be found here:
-> 
-> https://lore.kernel.org/platform-driver-x86/20240719100011.16656-1-carlosmiguelferreira.2003@gmail.com/
-> 
-> My main reason for linking to this is patch 2/2 of this series:
-> 
-> https://lore.kernel.org/platform-driver-x86/20240719100011.16656-3-carlosmiguelferreira.2003@gmail.com/
-> 
-> which documents the naming of LED class devices for kbd-backlight use.
-> 
-> Documenting both the existing ':kbd_backlight' postfix for single zone
-> kbd-backlighting as new postfix-es for zoned keyboards.
-> 
-> IMHO this patchset should also document the new names it introduces, with
-> from my pov a preference for the names from the exisiting doc patch rather
-> then just using numbers. So that userspace can show the zone-name part
-> of the LED class device name to the user to make it clear which zone is
-> which.
-> 
-> I think everyone agrees we want to do the single MC LED class device per
-> zone thing, so this is just about documenting the zone naming and you
-> can probably just pick up the existing doc-patch as is as patch 2/2
-> in your patch-set and adding your own Signed-off-by.
-> 
-> Note you may also want to look a the original patch adding support
-> for these kbd backlight zones to see if there is anything there you can
-> learn about how the WMI API works; or other good ideas you can borrow :)
-> 
-> https://lore.kernel.org/platform-driver-x86/20240719100011.16656-2-carlosmiguelferreira.2003@gmail.com/
+Hi Mark,
 
-Since the LED class device names for multi-zone keyboard backlight
-issue came up again here:
+That wasn't added until v3.8 of the spec, so most devices won't have
+that until gen 11, and it only reports the thermal modes supported. It
+doesn't really provide the information we're gathering here, which is
+whether or not the given attribute's get/set methods and the
+capability data structure include the thermal mode as part of the
+command or not. We need to this because some older hardware only
+reports any of that information with 0x00 as the thermal mode, some
+hardware reports get/set is supported but has no capability data, and
+some hardware has capability data but the get/set methods are stubbed
+and have no effect.
 
-https://lore.kernel.org/linux-input/20260402075239.3829699-1-xav@bes.tel/
+Perhaps in a later series I can add FID 0x00290000 as a "Step 1" for
+the extreme supported function, but I have no hardware to test it with
+and I'd rather not delay this series any further for it.
 
-I've submitted a new version of the documentation patch to establish
-an agreed upon naming scheme for these myself:
+Thanks,
+Derek
 
-https://lore.kernel.org/linux-leds/20260406174638.320135-1-johannes.goede@oss.qualcomm.com/
-
-please give this a read. As mentioned there zones should have
-descriptive names not numbers.
-
-Once the new doc patch gets merged this patch should be good to go
-wrt the LED class device names once you've changed them from
-a number to using a descriptive name for each zone.
-
-Regards,
- 
-Hans
-
-
-
-
->> ---
->> v4: https://lore.kernel.org/all/20260303084022.7223-3-edip@medip.dev/
->>
->> Changes since v4:
->>  - Fix circular dependencies
->>
->> Changes since v3:
->>  - Merge the changes into a single commit
->>
->> Changes since v1:
->>  - Fix mentioned style errors
->>  - Add Kconfig dependencies
->>
->>  drivers/platform/x86/hp/Kconfig  |   2 +
->>  drivers/platform/x86/hp/hp-wmi.c | 274 +++++++++++++++++++++++++++++++
->>  2 files changed, 276 insertions(+)
->>
->> diff --git a/drivers/platform/x86/hp/Kconfig b/drivers/platform/x86/hp/Kconfig
->> index dd51491b9bcd..2a1841cbec76 100644
->> --- a/drivers/platform/x86/hp/Kconfig
->> +++ b/drivers/platform/x86/hp/Kconfig
->> @@ -45,6 +45,8 @@ config HP_WMI
->>  	select INPUT_SPARSEKMAP
->>  	select ACPI_PLATFORM_PROFILE
->>  	select HWMON
->> +	select LEDS_CLASS
->> +	select LEDS_CLASS_MULTICOLOR
->>  	help
->>  	  Say Y here if you want to support WMI-based hotkeys on HP laptops and
->>  	  to read data from WMI such as docking or ambient light sensor state.
->> diff --git a/drivers/platform/x86/hp/hp-wmi.c b/drivers/platform/x86/hp/hp-wmi.c
->> index 304d9ac63c8a..4a378ebe9be4 100644
->> --- a/drivers/platform/x86/hp/hp-wmi.c
->> +++ b/drivers/platform/x86/hp/hp-wmi.c
->> @@ -14,6 +14,7 @@
->>  #define pr_fmt(fmt) KBUILD_MODNAME ": " fmt
->>  
->>  #include <linux/acpi.h>
->> +#include <linux/array_size.h>
->>  #include <linux/cleanup.h>
->>  #include <linux/compiler_attributes.h>
->>  #include <linux/dmi.h>
->> @@ -23,6 +24,8 @@
->>  #include <linux/input.h>
->>  #include <linux/input/sparse-keymap.h>
->>  #include <linux/kernel.h>
->> +#include <linux/led-class-multicolor.h>
->> +#include <linux/leds.h>
->>  #include <linux/limits.h>
->>  #include <linux/minmax.h>
->>  #include <linux/module.h>
->> @@ -58,6 +61,8 @@ enum hp_ec_offsets {
->>  #define HP_POWER_LIMIT_DEFAULT	 0x00
->>  #define HP_POWER_LIMIT_NO_CHANGE 0xFF
->>  
->> +#define HP_COLOR_TABLE_PADDING 25
->> +
->>  #define ACPI_AC_CLASS "ac_adapter"
->>  
->>  #define zero_if_sup(tmp) (zero_insize_support?0:sizeof(tmp)) // use when zero insize is required
->> @@ -98,6 +103,15 @@ enum hp_thermal_profile {
->>  	HP_THERMAL_PROFILE_QUIET			= 0x03,
->>  };
->>  
->> +enum hp_keyboard_type {
->> +	HP_KEYBOARD_TYPE_NOBACKLIGHT                = 0x0,
->> +	HP_KEYBOARD_TYPE_FOURZONE_WITH_NUMPAD       = 0x1,
->> +	HP_KEYBOARD_TYPE_FOURZONE_WITHOUT_NUMPAD    = 0x2,
->> +	HP_KEYBOARD_TYPE_RGB_PER_KEY                = 0x3,
->> +	HP_KEYBOARD_TYPE_SINGLEZONE_WITH_NUMPAD     = 0x4,
->> +	HP_KEYBOARD_TYPE_SINGLEZONE_WITHOUT_NUMPAD  = 0x5,
->> +};
->> +
->>  
->>  struct thermal_profile_params {
->>  	u8 performance;
->> @@ -290,16 +304,27 @@ enum hp_wmi_gm_commandtype {
->>  	HPWMI_GET_GPU_THERMAL_MODES_QUERY	= 0x21,
->>  	HPWMI_SET_GPU_THERMAL_MODES_QUERY	= 0x22,
->>  	HPWMI_SET_POWER_LIMITS_QUERY		= 0x29,
->> +	HPWMI_GET_KEYBOARD_TYPE_QUERY		= 0x2b,
->>  	HPWMI_VICTUS_S_FAN_SPEED_GET_QUERY	= 0x2D,
->>  	HPWMI_VICTUS_S_FAN_SPEED_SET_QUERY	= 0x2E,
->>  	HPWMI_VICTUS_S_GET_FAN_TABLE_QUERY	= 0x2F,
->>  };
->>  
->> +enum hp_wmi_backlight_commandtype {
->> +	HPWMI_BACKLIGHT_COLOR_GET_QUERY         = 0x02,
->> +	HPWMI_BACKLIGHT_COLOR_SET_QUERY         = 0x03,
->> +	HPWMI_BACKLIGHT_BRIGHTNESS_GET_QUERY    = 0x04,
->> +	HPWMI_BACKLIGHT_BRIGHTNESS_SET_QUERY    = 0x05,
->> +	HPWMI_BACKLIGHT_SET_OFF_QUERY           = 0x64,
->> +	HPWMI_BACKLIGHT_SET_ON_QUERY            = 0xE4,
->> +};
->> +
->>  enum hp_wmi_command {
->>  	HPWMI_READ	= 0x01,
->>  	HPWMI_WRITE	= 0x02,
->>  	HPWMI_ODM	= 0x03,
->>  	HPWMI_GM	= 0x20008,
->> +	HPWMI_BACKLIGHT = 0x20009,
->>  };
->>  
->>  enum hp_wmi_hardware_mask {
->> @@ -373,6 +398,16 @@ static const struct key_entry hp_wmi_keymap[] = {
->>  	{ KE_END, 0 }
->>  };
->>  
->> +struct hp_kbd_led_priv {
->> +	int zone;               /* Zone index (0-3) */
->> +	enum led_brightness last_brightness;  /* Brightness before turning off */
->> +};
->> +
->> +struct hp_mc_leds {
->> +	struct led_classdev_mc devices[4];
->> +	struct hp_kbd_led_priv priv[4];
->> +};
->> +
->>  /*
->>   * Mutex for the active_platform_profile variable,
->>   * see omen_powersource_event.
->> @@ -382,6 +417,7 @@ static DEFINE_MUTEX(active_platform_profile_lock);
->>  static struct input_dev *hp_wmi_input_dev;
->>  static struct input_dev *camera_shutter_input_dev;
->>  static struct platform_device *hp_wmi_platform_dev;
->> +static struct hp_mc_leds hp_multicolor_leds;
->>  static struct device *platform_profile_device;
->>  static struct notifier_block platform_power_source_nb;
->>  static enum platform_profile_option active_platform_profile;
->> @@ -1068,6 +1104,8 @@ static struct attribute *hp_wmi_attrs[] = {
->>  };
->>  ATTRIBUTE_GROUPS(hp_wmi);
->>  
->> +static void hp_kbd_brightness_set_by_hwd(u32 event_data);
->> +
->>  static void hp_wmi_notify(union acpi_object *obj, void *context)
->>  {
->>  	u32 event_id, event_data;
->> @@ -1168,6 +1206,7 @@ static void hp_wmi_notify(union acpi_object *obj, void *context)
->>  	case HPWMI_PROXIMITY_SENSOR:
->>  		break;
->>  	case HPWMI_BACKLIT_KB_BRIGHTNESS:
->> +		hp_kbd_brightness_set_by_hwd(event_data);
->>  		break;
->>  	case HPWMI_PEAKSHIFT_PERIOD:
->>  		break;
->> @@ -1430,6 +1469,237 @@ static int __init hp_wmi_rfkill2_setup(struct platform_device *device)
->>  	return err;
->>  }
->>  
->> +static struct hp_kbd_led_priv *hp_led_get_priv(struct led_classdev *led_cdev)
->> +{
->> +	struct led_classdev_mc *mc_cdev = lcdev_to_mccdev(led_cdev);
->> +	int zone = mc_cdev - hp_multicolor_leds.devices;
->> +
->> +	return &hp_multicolor_leds.priv[zone];
->> +}
->> +
->> +static int hp_kbd_backlight_set_rgb_color(int zone, int red, int green, int blue)
->> +{
->> +	u8 color_table[128];
->> +	int ret;
->> +
->> +	/*
->> +	 * Get the current color table and then change only the relevant parts.
->> +	 */
->> +	ret = hp_wmi_perform_query(HPWMI_BACKLIGHT_COLOR_GET_QUERY,
->> +				   HPWMI_BACKLIGHT, color_table,
->> +				   zero_if_sup(color_table),
->> +				   sizeof(color_table));
->> +	if (ret)
->> +		return ret;
->> +
->> +	/*
->> +	 * RGB color data starts at offset 25 +3 per zone (r g b)
->> +	 * e.g. if zone 1 starts in 25 zone 2 starts in 28
->> +	 */
->> +	color_table[HP_COLOR_TABLE_PADDING + zone * 3]     = red;
->> +	color_table[HP_COLOR_TABLE_PADDING + zone * 3 + 1] = green;
->> +	color_table[HP_COLOR_TABLE_PADDING + zone * 3 + 2] = blue;
->> +
->> +	ret = hp_wmi_perform_query(HPWMI_BACKLIGHT_COLOR_SET_QUERY, HPWMI_BACKLIGHT,
->> +				   color_table, sizeof(color_table), sizeof(color_table));
->> +	if (ret < 0)
->> +		return ret;
->> +	if (ret)
->> +		return -EINVAL;
->> +
->> +	return 0;
->> +}
->> +
->> +static bool hp_kbd_backlight_is_on(void)
->> +{
->> +	u8 data;
->> +	int ret;
->> +
->> +	ret = hp_wmi_perform_query(HPWMI_BACKLIGHT_BRIGHTNESS_GET_QUERY, HPWMI_BACKLIGHT, &data,
->> +				sizeof(data), sizeof(data));
->> +	if (ret)
->> +		return false;
->> +
->> +	return data == HPWMI_BACKLIGHT_SET_ON_QUERY;
->> +}
->> +
->> +static int hp_kbd_set_brightness(struct led_classdev *led_cdev,
->> +					enum led_brightness brightness)
->> +{
->> +	struct hp_kbd_led_priv *priv = hp_led_get_priv(led_cdev);
->> +	struct led_classdev_mc *mc_cdev;
->> +	struct led_classdev_mc *device;
->> +	int red, green, blue;
->> +	int ret;
->> +
->> +	if (!hp_kbd_backlight_is_on()) {
->> +		u8 data = HPWMI_BACKLIGHT_SET_ON_QUERY;
->> +
->> +		ret = hp_wmi_perform_query(HPWMI_BACKLIGHT_BRIGHTNESS_SET_QUERY,
->> +					   HPWMI_BACKLIGHT, &data,
->> +					   sizeof(data), sizeof(data));
->> +		if (ret)
->> +			return ret;
->> +
->> +		/*
->> +		 * Turning the backlight on via WMI turns all zones,
->> +		 * so we need to restore the other zones' off state.
->> +		 */
->> +		for (int i = 0; i < ARRAY_SIZE(hp_multicolor_leds.devices); i++) {
->> +			if (i == priv->zone)
->> +				continue;
->> +
->> +			device = &hp_multicolor_leds.devices[i];
->> +			if (!device->led_cdev.name)
->> +				continue;
->> +			hp_kbd_backlight_set_rgb_color(i,
->> +				device->subled_info[0].brightness,
->> +				device->subled_info[1].brightness,
->> +				device->subled_info[2].brightness);
->> +		}
->> +	}
->> +
->> +	led_cdev->brightness = brightness;
->> +
->> +	mc_cdev = lcdev_to_mccdev(led_cdev);
->> +	led_mc_calc_color_components(mc_cdev, brightness);
->> +
->> +	red = mc_cdev->subled_info[0].brightness;
->> +	green = mc_cdev->subled_info[1].brightness;
->> +	blue = mc_cdev->subled_info[2].brightness;
->> +
->> +	return hp_kbd_backlight_set_rgb_color(priv->zone, red, green, blue);
->> +}
->> +
->> +static void hp_kbd_brightness_set_by_hwd(u32 event_data)
->> +{
->> +	struct device *dev = &hp_wmi_platform_dev->dev;
->> +	struct led_classdev *led_cdev;
->> +	struct hp_kbd_led_priv *priv;
->> +	u8 brightness;
->> +
->> +	for (int zone = 0; zone < ARRAY_SIZE(hp_multicolor_leds.devices); zone++) {
->> +		if (!hp_multicolor_leds.devices[zone].led_cdev.name)
->> +			continue;
->> +
->> +		led_cdev = &hp_multicolor_leds.devices[zone].led_cdev;
->> +		if (!led_cdev->dev)
->> +			continue;
->> +
->> +		priv = hp_led_get_priv(led_cdev);
->> +
->> +		if (event_data == 0x2) {
->> +			brightness = priv->last_brightness ? : LED_FULL;
->> +		} else if (event_data == 0x0) {
->> +			priv->last_brightness = led_cdev->brightness;
->> +			brightness = LED_OFF;
->> +		} else {
->> +			dev_warn(dev, "Unknown keyboard backlight event - 0x%x\n",
->> +				 event_data);
->> +			return;
->> +		}
->> +
->> +		led_cdev->brightness = brightness;
->> +		led_classdev_notify_brightness_hw_changed(led_cdev, brightness);
->> +	}
->> +}
->> +
->> +static int __init hp_mc_leds_register(int num_zones)
->> +{
->> +	u8 color_table[128];
->> +	int ret;
->> +
->> +	ret = hp_wmi_perform_query(HPWMI_BACKLIGHT_COLOR_GET_QUERY, HPWMI_BACKLIGHT,
->> +				   color_table, zero_if_sup(color_table),
->> +				   sizeof(color_table));
->> +	if (ret)
->> +		return ret;
->> +
->> +	for (int zone = 0; zone < num_zones; zone++) {
->> +		struct led_classdev_mc *multicolor_led_dev;
->> +		struct led_classdev *led_cdev;
->> +		struct mc_subled *mc_subled_info;
->> +		struct hp_kbd_led_priv *priv;
->> +		struct device *dev;
->> +
->> +		dev = &hp_wmi_platform_dev->dev;
->> +		multicolor_led_dev = &hp_multicolor_leds.devices[zone];
->> +		led_cdev = &multicolor_led_dev->led_cdev;
->> +		priv = &hp_multicolor_leds.priv[zone];
->> +
->> +		if (num_zones == 1)
->> +			led_cdev->name = devm_kasprintf(dev, GFP_KERNEL,
->> +							"hp::kbd_backlight");
->> +		else if (num_zones > 1)
->> +			led_cdev->name = devm_kasprintf(dev, GFP_KERNEL,
->> +							"hp::kbd_backlight_zone%d",
->> +							zone);
->> +
->> +		if (!led_cdev->name)
->> +			return -ENOMEM;
->> +		led_cdev->brightness = hp_kbd_backlight_is_on() ?
->> +				       LED_FULL : LED_OFF;
->> +		led_cdev->max_brightness = LED_FULL;
->> +		led_cdev->brightness_set_blocking = hp_kbd_set_brightness;
->> +		led_cdev->flags = LED_CORE_SUSPENDRESUME |
->> +				  LED_RETAIN_AT_SHUTDOWN |
->> +				  LED_BRIGHT_HW_CHANGED;
->> +
->> +		mc_subled_info = devm_kzalloc(dev, sizeof(*mc_subled_info) * 3,
->> +					      GFP_KERNEL);
->> +		if (!mc_subled_info)
->> +			return -ENOMEM;
->> +
->> +		mc_subled_info[0].color_index = LED_COLOR_ID_RED;
->> +		mc_subled_info[1].color_index = LED_COLOR_ID_GREEN;
->> +		mc_subled_info[2].color_index = LED_COLOR_ID_BLUE;
->> +
->> +		for (int i = 0; i < 3; i++) {
->> +			int off = HP_COLOR_TABLE_PADDING + zone * 3 + i;
->> +
->> +			mc_subled_info[i].channel = zone * 3 + i;
->> +			mc_subled_info[i].intensity = color_table[off];
->> +			mc_subled_info[i].brightness = LED_FULL;
->> +		}
->> +
->> +		multicolor_led_dev->subled_info = mc_subled_info;
->> +		multicolor_led_dev->num_colors = 3;
->> +
->> +		ret = devm_led_classdev_multicolor_register(dev, multicolor_led_dev);
->> +		if (ret) {
->> +			dev_err(dev, "Failed to register multicolor RGB backlight\n");
->> +			return ret;
->> +		}
->> +
->> +		/* Initialize private data */
->> +		priv->zone = zone;
->> +		priv->last_brightness = LED_FULL;
->> +	}
->> +	return 0;
->> +}
->> +
->> +static int __init hp_kbd_rgb_setup(void)
->> +{
->> +	u8 keyboard_type;
->> +	int ret;
->> +
->> +	ret = hp_wmi_perform_query(HPWMI_GET_KEYBOARD_TYPE_QUERY, HPWMI_GM, &keyboard_type,
->> +				   sizeof(keyboard_type), sizeof(keyboard_type));
->> +	if (ret)
->> +		return ret;
->> +
->> +	switch (keyboard_type) {
->> +	case HP_KEYBOARD_TYPE_FOURZONE_WITH_NUMPAD:
->> +	case HP_KEYBOARD_TYPE_FOURZONE_WITHOUT_NUMPAD:
->> +		return hp_mc_leds_register(4);
->> +	case HP_KEYBOARD_TYPE_SINGLEZONE_WITH_NUMPAD:
->> +	case HP_KEYBOARD_TYPE_SINGLEZONE_WITHOUT_NUMPAD:
->> +		return hp_mc_leds_register(1);
->> +	default:
->> +		return 0;
->> +	}
->> +}
->> +
->>  static int platform_profile_omen_get_ec(enum platform_profile_option *profile)
->>  {
->>  	int tp;
->> @@ -2230,6 +2500,10 @@ static int __init hp_wmi_bios_setup(struct platform_device *device)
->>  
->>  	thermal_profile_setup(device);
->>  
->> +	err = hp_kbd_rgb_setup();
->> +	if (err)
->> +		dev_err(&device->dev, "Failed to initialize keyboard RGB\n");
->> +
->>  	return 0;
->>  }
->>  
-> 
-
+> Mark
+>
+> > Checking for lwmi_is_attr_01_supported during remove is not done to
+> > ensure that we don't attempt to call cd01 or send WMI events if one of
+> > the interfaces being removed was the cause of the driver unloading.
+> >
+> > Fixes: edc4b183b794 ("platform/x86: Add Lenovo Other Mode WMI Driver")
+> > Reported-by: Kurt Borja <kuurtb@gmail.com>
+> > Closes:
+> > https://lore.kernel.org/platform-driver-x86/DG60P3SHXR8H.3NSEHMZ6J7XRC@=
+gmail.com/
+> > Cc: stable@vger.kernel.org
+> > Reviewed-by: Rong Zhang <i@rong.moe>
+> > Tested-by: Rong Zhang <i@rong.moe>
+> > Reviewed-by: Mark Pearson <mpearson-lenovo@squebb.ca>
+> > Signed-off-by: Derek J. Clark <derekjohn.clark@gmail.com>
+> > ---
+> > v7:
+> >   - Move earlier in the series. This required dropping the use of
+> >     lwmi_attr_id as it will be added later.
+> >   - Add missing switch between cd_mode_id and cv_mode_id in
+> >     current_value_store.
+> > v6:
+> >   - Zero initialize args in lwmi_is_attr_01_supported.
+> >   - Fix formatting.
+> > v5:
+> >   - Move cv/cd_mode_id refrences from path 3/4.
+> >   - Add missing import for ARRAY_SIZE.
+> >   - Make lwmi_is_attr_01_supported return bool instead of u32.
+> >   - Various formatting fixes.
+> > v4:
+> >   - Use for loop instead of backtrace gotos for checking if an attribut=
+e
+> >     is supported.
+> >   - Add include for dev_printk.
+> >   - Wrap dev_dbg in lwmi_is_attr_01_supported earlier.
+> >   - Don't use symmetric cleanup of attributes in error states.
+> > ---
+> >  drivers/platform/x86/lenovo/wmi-gamezone.h |   1 +
+> >  drivers/platform/x86/lenovo/wmi-other.c    | 114 ++++++++++++++++++---
+> >  2 files changed, 98 insertions(+), 17 deletions(-)
+> >
+> > diff --git a/drivers/platform/x86/lenovo/wmi-gamezone.h
+> > b/drivers/platform/x86/lenovo/wmi-gamezone.h
+> > index 6b163a5eeb95..ddb919cf6c36 100644
+> > --- a/drivers/platform/x86/lenovo/wmi-gamezone.h
+> > +++ b/drivers/platform/x86/lenovo/wmi-gamezone.h
+> > @@ -10,6 +10,7 @@ enum gamezone_events_type {
+> >  };
+> >
+> >  enum thermal_mode {
+> > +     LWMI_GZ_THERMAL_MODE_NONE =3D        0x00,
+> >       LWMI_GZ_THERMAL_MODE_QUIET =3D       0x01,
+> >       LWMI_GZ_THERMAL_MODE_BALANCED =3D    0x02,
+> >       LWMI_GZ_THERMAL_MODE_PERFORMANCE =3D 0x03,
+> > diff --git a/drivers/platform/x86/lenovo/wmi-other.c
+> > b/drivers/platform/x86/lenovo/wmi-other.c
+> > index 0e8a69309ec4..3e7dfe94499b 100644
+> > --- a/drivers/platform/x86/lenovo/wmi-other.c
+> > +++ b/drivers/platform/x86/lenovo/wmi-other.c
+> > @@ -550,6 +550,8 @@ struct tunable_attr_01 {
+> >       u8 feature_id;
+> >       u8 device_id;
+> >       u8 type_id;
+> > +     u8 cd_mode_id; /* mode arg for searching capdata */
+> > +     u8 cv_mode_id; /* mode arg for set/get current_value */
+> >  };
+> >
+> >  static struct tunable_attr_01 ppt_pl1_spl =3D {
+> > @@ -775,7 +777,6 @@ static ssize_t attr_current_value_store(struct
+> > kobject *kobj,
+> >       struct wmi_method_args_32 args =3D {};
+> >       struct capdata01 capdata;
+> >       enum thermal_mode mode;
+> > -     u32 attribute_id;
+> >       u32 value;
+> >       int ret;
+> >
+> > @@ -786,13 +787,12 @@ static ssize_t attr_current_value_store(struct
+> > kobject *kobj,
+> >       if (mode !=3D LWMI_GZ_THERMAL_MODE_CUSTOM)
+> >               return -EBUSY;
+> >
+> > -     attribute_id =3D
+> > -             FIELD_PREP(LWMI_ATTR_DEV_ID_MASK, tunable_attr->device_id=
+) |
+> > -             FIELD_PREP(LWMI_ATTR_FEAT_ID_MASK, tunable_attr->feature_=
+id) |
+> > -             FIELD_PREP(LWMI_ATTR_MODE_ID_MASK, mode) |
+> > -             FIELD_PREP(LWMI_ATTR_TYPE_ID_MASK, tunable_attr->type_id)=
+;
+> > +     args.arg0 =3D FIELD_PREP(LWMI_ATTR_DEV_ID_MASK, tunable_attr->dev=
+ice_id) |
+> > +                 FIELD_PREP(LWMI_ATTR_FEAT_ID_MASK, tunable_attr->feat=
+ure_id) |
+> > +                 FIELD_PREP(LWMI_ATTR_MODE_ID_MASK, tunable_attr->cd_m=
+ode_id) |
+> > +                 FIELD_PREP(LWMI_ATTR_TYPE_ID_MASK, tunable_attr->type=
+_id);
+> >
+> > -     ret =3D lwmi_cd01_get_data(priv->cd01_list, attribute_id, &capdat=
+a);
+> > +     ret =3D lwmi_cd01_get_data(priv->cd01_list, args.arg0, &capdata);
+> >       if (ret)
+> >               return ret;
+> >
+> > @@ -803,7 +803,10 @@ static ssize_t attr_current_value_store(struct
+> > kobject *kobj,
+> >       if (value < capdata.min_value || value > capdata.max_value)
+> >               return -EINVAL;
+> >
+> > -     args.arg0 =3D attribute_id;
+> > +     args.arg0 =3D FIELD_PREP(LWMI_ATTR_DEV_ID_MASK, tunable_attr->dev=
+ice_id) |
+> > +                 FIELD_PREP(LWMI_ATTR_FEAT_ID_MASK, tunable_attr->feat=
+ure_id) |
+> > +                 FIELD_PREP(LWMI_ATTR_MODE_ID_MASK, tunable_attr->cv_m=
+ode_id) |
+> > +                 FIELD_PREP(LWMI_ATTR_TYPE_ID_MASK, tunable_attr->type=
+_id);
+> >       args.arg1 =3D value;
+> >
+> >       ret =3D lwmi_dev_evaluate_int(priv->wdev, 0x0, LWMI_FEATURE_VALUE=
+_SET,
+> > @@ -837,7 +840,6 @@ static ssize_t attr_current_value_show(struct kobje=
+ct *kobj,
+> >       struct lwmi_om_priv *priv =3D dev_get_drvdata(tunable_attr->dev);
+> >       struct wmi_method_args_32 args =3D {};
+> >       enum thermal_mode mode;
+> > -     u32 attribute_id;
+> >       int retval;
+> >       int ret;
+> >
+> > @@ -845,13 +847,14 @@ static ssize_t attr_current_value_show(struct
+> > kobject *kobj,
+> >       if (ret)
+> >               return ret;
+> >
+> > -     attribute_id =3D
+> > -             FIELD_PREP(LWMI_ATTR_DEV_ID_MASK, tunable_attr->device_id=
+) |
+> > -             FIELD_PREP(LWMI_ATTR_FEAT_ID_MASK, tunable_attr->feature_=
+id) |
+> > -             FIELD_PREP(LWMI_ATTR_MODE_ID_MASK, mode) |
+> > -             FIELD_PREP(LWMI_ATTR_TYPE_ID_MASK, tunable_attr->type_id)=
+;
+> > +     /* If "no-mode" is the supported mode, ensure we never send curre=
+nt mode */
+> > +     if (tunable_attr->cv_mode_id =3D=3D LWMI_GZ_THERMAL_MODE_NONE)
+> > +             mode =3D tunable_attr->cv_mode_id;
+> >
+> > -     args.arg0 =3D attribute_id;
+> > +     args.arg0 =3D FIELD_PREP(LWMI_ATTR_DEV_ID_MASK, tunable_attr->dev=
+ice_id) |
+> > +                 FIELD_PREP(LWMI_ATTR_FEAT_ID_MASK, tunable_attr->feat=
+ure_id) |
+> > +                 FIELD_PREP(LWMI_ATTR_MODE_ID_MASK, mode) |
+> > +                 FIELD_PREP(LWMI_ATTR_TYPE_ID_MASK, tunable_attr->type=
+_id);
+> >
+> >       ret =3D lwmi_dev_evaluate_int(priv->wdev, 0x0, LWMI_FEATURE_VALUE=
+_GET,
+> >                                   (unsigned char *)&args, sizeof(args),
+> > @@ -862,6 +865,81 @@ static ssize_t attr_current_value_show(struct
+> > kobject *kobj,
+> >       return sysfs_emit(buf, "%d\n", retval);
+> >  }
+> >
+> > +/**
+> > + * lwmi_attr_01_is_supported() - Determine if the given attribute is
+> > supported.
+> > + * @tunable_attr: The attribute to verify.
+> > + *
+> > + * First check if the attribute has a corresponding capdata01 table in
+> > the cd01
+> > + * module under the "custom" mode (0xff). If that is not present then
+> > check if
+> > + * there is a corresponding "no-mode" (0x00) entry. If either of those
+> > passes,
+> > + * check capdata->supported for values > 0. If capdata is available,
+> > attempt to
+> > + * determine the set/get mode for the current value property using a
+> > similar
+> > + * pattern. If the value returned by either custom or no-mode is 0, or
+> > we get
+> > + * an error, we assume that mode is not supported. If any of the above
+> > checks
+> > + * fail then the attribute is not fully supported.
+> > + *
+> > + * The probed cd_mode_id/cv_mode_id are stored on the tunable_attr for
+> > later
+> > + * reference.
+> > + *
+> > + * Return: bool.
+> > + */
+> > +static bool lwmi_attr_01_is_supported(struct tunable_attr_01
+> > *tunable_attr)
+> > +{
+> > +     u8 modes[2] =3D { LWMI_GZ_THERMAL_MODE_CUSTOM,
+> > LWMI_GZ_THERMAL_MODE_NONE };
+> > +     struct lwmi_om_priv *priv =3D dev_get_drvdata(tunable_attr->dev);
+> > +     struct wmi_method_args_32 args =3D { 0x0, 0x0 };
+> > +     bool cd_mode_found =3D false;
+> > +     bool cv_mode_found =3D false;
+> > +     struct capdata01 capdata;
+> > +     int retval, ret, i;
+> > +
+> > +     /* Determine tunable_attr->cd_mode_id*/
+> > +     for (i =3D 0; i < ARRAY_SIZE(modes); i++) {
+> > +             args.arg0 =3D FIELD_PREP(LWMI_ATTR_DEV_ID_MASK,
+> > tunable_attr->device_id) |
+> > +                         FIELD_PREP(LWMI_ATTR_FEAT_ID_MASK, tunable_at=
+tr->feature_id) |
+> > +                         FIELD_PREP(LWMI_ATTR_MODE_ID_MASK, modes[i]) =
+|
+> > +                         FIELD_PREP(LWMI_ATTR_TYPE_ID_MASK, tunable_at=
+tr->type_id);
+> > +
+> > +             ret =3D lwmi_cd01_get_data(priv->cd01_list, args.arg0, &c=
+apdata);
+> > +             if (ret || !capdata.supported)
+> > +                     continue;
+> > +             tunable_attr->cd_mode_id =3D modes[i];
+> > +             cd_mode_found =3D true;
+> > +             break;
+> > +     }
+> > +
+> > +     if (!cd_mode_found)
+> > +             return cd_mode_found;
+> > +
+> > +     dev_dbg(tunable_attr->dev,
+> > +             "cd_mode_id: %#010x\n", args.arg0);
+> > +
+> > +     /* Determine tunable_attr->cv_mode_id, returns 1 if supported*/
+> > +     for (i =3D 0; i < ARRAY_SIZE(modes); i++) {
+> > +             args.arg0 =3D FIELD_PREP(LWMI_ATTR_DEV_ID_MASK,
+> > tunable_attr->device_id) |
+> > +                         FIELD_PREP(LWMI_ATTR_FEAT_ID_MASK, tunable_at=
+tr->feature_id) |
+> > +                         FIELD_PREP(LWMI_ATTR_MODE_ID_MASK, modes[i]) =
+|
+> > +                         FIELD_PREP(LWMI_ATTR_TYPE_ID_MASK, tunable_at=
+tr->type_id);
+> > +
+> > +             ret =3D lwmi_dev_evaluate_int(priv->wdev, 0x0, LWMI_FEATU=
+RE_VALUE_GET,
+> > +                                         (unsigned char *)&args, sizeo=
+f(args),
+> > +                                         &retval);
+> > +             if (ret || !retval)
+> > +                     continue;
+> > +             tunable_attr->cv_mode_id =3D modes[i];
+> > +             cv_mode_found =3D true;
+> > +             break;
+> > +     }
+> > +
+> > +     if (!cv_mode_found)
+> > +             return cv_mode_found;
+> > +
+> > +     dev_dbg(tunable_attr->dev, "cv_mode_id: %#010x, attribute support
+> > level: %#010x\n",
+> > +             args.arg0, capdata.supported);
+> > +
+> > +     return capdata.supported > 0 ? true : false;
+> > +}
+> > +
+> >  /* Lenovo WMI Other Mode Attribute macros */
+> >  #define __LWMI_ATTR_RO(_func, _name)                                  =
+\
+> >       {                                                             \
+> > @@ -985,12 +1063,14 @@ static void lwmi_om_fw_attr_add(struct
+> > lwmi_om_priv *priv)
+> >       }
+> >
+> >       for (i =3D 0; i < ARRAY_SIZE(cd01_attr_groups) - 1; i++) {
+> > +             cd01_attr_groups[i].tunable_attr->dev =3D &priv->wdev->de=
+v;
+> > +             if (!lwmi_attr_01_is_supported(cd01_attr_groups[i].tunabl=
+e_attr))
+> > +                     continue;
+> > +
+> >               err =3D sysfs_create_group(&priv->fw_attr_kset->kobj,
+> >                                        cd01_attr_groups[i].attr_group);
+> >               if (err)
+> >                       goto err_remove_groups;
+> > -
+> > -             cd01_attr_groups[i].tunable_attr->dev =3D &priv->wdev->de=
+v;
+> >       }
+> >       return;
+> >
+> > --
+> > 2.53.0
