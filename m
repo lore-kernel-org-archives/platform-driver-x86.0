@@ -1,47 +1,47 @@
-Received: from mout.gmx.net (mout.gmx.net [212.227.17.20])
+Received: from mout.gmx.net (mout.gmx.net [212.227.17.21])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C899D38D010;
-	Mon,  6 Apr 2026 19:37:09 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=212.227.17.20
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 69E7332ED29;
+	Mon,  6 Apr 2026 19:37:11 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=212.227.17.21
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1775504231; cv=none; b=oYk+isq7ViNsmipCT7azmIDWHscnemg6s5haUrnUSo8Zs7dQ9jnkKWTv19IpaKiqfuMOKvhz/VcsPdS5DPIECJlnuCgBEArDRzcp90S9LaADVUNewRG3ijeAdIrlruKn97frGtsfki5LgcMB2o4j8xK+JpIdqraCgtcb9FONmJI=
+	t=1775504233; cv=none; b=aVWtjg1B/a97M0PlUSf60lli5j+R1rE+Vlak2hrnqTfTt2MHLLziP2Xz5kLV4j5ofR7hzfm0Y1fD6CxYflm0XUVbSpdD5sHNsPUaYT+MPaIWC/y4Z/D7kTQ7xgE0SU2Umt1woXpWfx/cXR11jTKvVZQXifEiy6UM7tAynyvJAgw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1775504231; c=relaxed/simple;
-	bh=y74qQIqEi3csafPQG6kDQYFn19R48VOTJNK1XYJr7Rs=;
+	s=arc-20240116; t=1775504233; c=relaxed/simple;
+	bh=MeNhhhpS4+DknzpsFdCdkE0SU3Krx643NQcWp3tYrAc=;
 	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=jT/BJhWCVupJJbbKBQIL1fdcwnsJQF2950RTPAzo9faOwTxmjRabT81HivdlWzFrAhiIGhBQIu5B0ah30Wifzg05nX0cRMzsooFpC4BgButZL0zBLUKwDGYwIOKAxzsTRjthQXTtY3UIs3PwxSzvLXctpg40bLmkkYu1i4pK/2k=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gmx.de; spf=pass smtp.mailfrom=gmx.de; dkim=pass (2048-bit key) header.d=gmx.de header.i=w_armin@gmx.de header.b=e2nyHo6W; arc=none smtp.client-ip=212.227.17.20
+	 MIME-Version; b=hqHd5WGwdtTXZzQTg4bnTwpjS6aUbTmSZ/BxCAsO9ylPR0mZAUg8I2fD8tQWqzwq77CPV+JSX7WoFRBIJgQ8LgiXUh/pvPIhkEbVrfn5nqJZkx2tzr9jcM6un8hMk+kmSh8Q1jaVUakAgO71As4hy47obcFgsUSHq8J1b7/aAwM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gmx.de; spf=pass smtp.mailfrom=gmx.de; dkim=pass (2048-bit key) header.d=gmx.de header.i=w_armin@gmx.de header.b=H3fF0+fH; arc=none smtp.client-ip=212.227.17.21
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gmx.de
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmx.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmx.de header.i=w_armin@gmx.de header.b="e2nyHo6W"
+	dkim=pass (2048-bit key) header.d=gmx.de header.i=w_armin@gmx.de header.b="H3fF0+fH"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=gmx.de;
-	s=s31663417; t=1775504228; x=1776109028; i=w_armin@gmx.de;
-	bh=+x3igDWEYVt+m3KEbk8uExBVUBQUDknkEFl0ZM2/lyQ=;
+	s=s31663417; t=1775504229; x=1776109029; i=w_armin@gmx.de;
+	bh=xVuqGfJ0cGF24Izj0Ye+GFBoBKemKHuXB+COrZ4xdbM=;
 	h=X-UI-Sender-Class:From:To:Cc:Subject:Date:Message-Id:In-Reply-To:
 	 References:MIME-Version:Content-Transfer-Encoding:cc:
 	 content-transfer-encoding:content-type:date:from:message-id:
 	 mime-version:reply-to:subject:to;
-	b=e2nyHo6Wkid9lLRIyNAWYV+Jib3vg+wgX3SE493UST3nWWEF6rRv2/rw4YiahjKx
-	 1GzrYVQNHNVfkbHKJUotm7ZmR/EUewsl1KMGKo4zka6sIrDyKUnhSuj6pyH1JIkrj
-	 sJOem2GrItNsrxy5evgAQl4QuEz6BeNMv/E2LlfQAaRAGl2JzaJPpruW9W7K1a+Hd
-	 ixJ2t/jYyrLFUhKLn9GRJWeFQaZuoN1yYdsZfYEw0euat+5NjeeH6RYkPvFr7XTxd
-	 T96H2nCnJZy8ofjDfKJqP2dJuG3Ba/ONAtAOK0ZBuMmXgBUrmg6H2uxO5ew/DUSbj
-	 oK23B3Mp0cHPU660Ww==
+	b=H3fF0+fHBVJMhG5/+1Y10w73D9BeHMugoV+88fkA1uaq52saYVD7WrIN4+2eOQ7U
+	 Z3oBj0SiEA9fz06qZEHJ1dDo0FIvOoQYHWURPBexzp0VgOKooKowkhqTp2ICIK7Fv
+	 3lsjcJK5pcif+j03WZhxtfigtQZfLr3tqoPh+gYjDltHNL4EvgBPMgY6kOkcYT/Ip
+	 +ZiP75cV3o8IpW1x3x9Md5q72fNTBYUJKpsiTvVLRFVztxDCneM4vz6vMULmQs+eI
+	 oTzsUMVB05aGZuVhGVpJrY5ISBJWRVrFwATbOFWMUAZzreVG15HWNOhP0W5VEqI1D
+	 UzMxsmPJkajfhrs00A==
 X-UI-Sender-Class: 724b4f7f-cbec-4199-ad4e-598c01a50d3a
 Received: from client.hidden.invalid by mail.gmx.net (mrgmx105
- [212.227.17.168]) with ESMTPSA (Nemesis) id 1MDhhX-1wIOSi3DT5-00GSUG; Mon, 06
- Apr 2026 21:37:07 +0200
+ [212.227.17.168]) with ESMTPSA (Nemesis) id 1Mq2nK-1vflzj1ffe-00lvKq; Mon, 06
+ Apr 2026 21:37:09 +0200
 From: Armin Wolf <W_Armin@gmx.de>
 To: hansg@kernel.org,
 	ilpo.jarvinen@linux.intel.com
 Cc: wse@tuxedocomputers.com,
 	platform-driver-x86@vger.kernel.org,
 	linux-kernel@vger.kernel.org
-Subject: [PATCH 4/6] platform/x86: uniwill-laptop: Rework FN lock/super key suspend handling
-Date: Mon,  6 Apr 2026 21:36:51 +0200
-Message-Id: <20260406193653.7799-5-W_Armin@gmx.de>
+Subject: [PATCH 5/6] platform/x86: uniwill-laptop: Mark EC_ADDR_OEM_4 as volatile
+Date: Mon,  6 Apr 2026 21:36:52 +0200
+Message-Id: <20260406193653.7799-6-W_Armin@gmx.de>
 X-Mailer: git-send-email 2.39.5
 In-Reply-To: <20260406193653.7799-1-W_Armin@gmx.de>
 References: <20260406193653.7799-1-W_Armin@gmx.de>
@@ -52,357 +52,265 @@ List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
-X-Provags-ID: V03:K1:wKPJkNAEUBfu7uDT/TVnL8EfjgifSnbO5f5qmSoYNEQ5PSEfAEP
- RCujiU/IhaArjzfRRp2VdNnwhsqag4Ldw9mwJP7S+jn8v81Sck/seMBpK+rxDEQkJ+BxCka
- ahDvBzXW3uGFv7TTjHv01AJvtar9x+zkaZafSqO/Fbue/v6yU61b6MVoLbfhM0vU+KxnG2c
- Mk9cgixNBuNc0zBFN8BIQ==
+X-Provags-ID: V03:K1:JfuX4NW3GAT5agy0sPS+RVWB08wkXGkAo2CrBPXTV11qMe0FNEX
+ dwULHzq4kjYrMNTnaJsThYkaFVPDAi7yeiES5LzvxLn/a5HFV+XlfT6P55nGkPG1XwBZ7oC
+ 4TYo1P7ZoSMa6YJrsNELDAOW5/NziqbVlqtZPw/hgWVfdUg6V+rqb6mdkBRqSjCzRwxqMz/
+ EAErcqRSXyfZ1SoLrRo6A==
 X-Spam-Flag: NO
-UI-OutboundReport: notjunk:1;M01:P0:eowKAbmH4f0=;5zCOeowoFJbWXmT6+Fg/reJlc7x
- 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
- Y3
+UI-OutboundReport: notjunk:1;M01:P0:G9gAY1Fu2QQ=;CsD1i3eKa0Am/S51gL/oaw2ruyE
+ 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
+ 8cZNBrR26HW
 
-Currently the supend handling for the FN lock and super key enable
-features saves the whole values of the affected registers instead of
-the individual feature state. This duplicates the register access
-logic from the associated sysfs attributes.
-
-Rework the suspend handling to reuse said register access logic and
-only store the individual feature state as a boolean value.
+It turned out that EC_ADDR_OEM_4 also contains bits with a volatile
+nature. Mark the whole register as volatile to prepare for the usage
+of said bits. This also means that we now have to save/restore the
+touchpad toggle state ourself.
 
 Signed-off-by: Armin Wolf <W_Armin@gmx.de>
 =2D--
- drivers/platform/x86/uniwill/uniwill-acpi.c | 117 ++++++++++++--------
- 1 file changed, 73 insertions(+), 44 deletions(-)
+ drivers/platform/x86/uniwill/uniwill-acpi.c | 70 ++++++++++++++++++---
+ 1 file changed, 60 insertions(+), 10 deletions(-)
 
 diff --git a/drivers/platform/x86/uniwill/uniwill-acpi.c b/drivers/platfor=
 m/x86/uniwill/uniwill-acpi.c
-index 7c7ea0e76966..4d149b39d94e 100644
+index 4d149b39d94e..a116e2ec6453 100644
 =2D-- a/drivers/platform/x86/uniwill/uniwill-acpi.c
 +++ b/drivers/platform/x86/uniwill/uniwill-acpi.c
-@@ -341,8 +341,8 @@ struct uniwill_data {
- 	struct acpi_battery_hook hook;
- 	unsigned int last_charge_ctrl;
+@@ -343,6 +343,7 @@ struct uniwill_data {
  	struct mutex battery_lock;	/* Protects the list of currently registered =
 batteries */
--	unsigned int last_status;
--	unsigned int last_switch_status;
-+	bool last_fn_lock_state;
-+	bool last_super_key_enable_state;
+ 	bool last_fn_lock_state;
+ 	bool last_super_key_enable_state;
++	bool last_touchpad_toggle_enable_state;
  	struct mutex super_key_lock;	/* Protects the toggling of the super key l=
 ock state */
  	struct list_head batteries;
  	struct mutex led_lock;		/* Protects writes to the lightbar registers */
-@@ -619,11 +619,22 @@ static const struct regmap_config uniwill_ec_config =
-=3D {
- 	.use_single_write =3D true,
- };
+@@ -598,6 +599,7 @@ static bool uniwill_volatile_reg(struct device *dev, u=
+nsigned int reg)
+ 	case EC_ADDR_PWM_2:
+ 	case EC_ADDR_TRIGGER:
+ 	case EC_ADDR_SWITCH_STATUS:
++	case EC_ADDR_OEM_4:
+ 	case EC_ADDR_CHARGE_CTRL:
+ 	case EC_ADDR_USB_C_POWER_PRIORITY:
+ 		return true;
+@@ -747,11 +749,22 @@ static ssize_t super_key_enable_show(struct device *=
+dev, struct device_attribute
 =20
-+static int uniwill_write_fn_lock(struct uniwill_data *data, bool status)
+ static DEVICE_ATTR_RW(super_key_enable);
+=20
++static int uniwill_write_touchpad_toggle_enable(struct uniwill_data *data=
+, bool status)
 +{
 +	unsigned int value;
 +
 +	if (status)
-+		value =3D FN_LOCK_STATUS;
-+	else
 +		value =3D 0;
++	else
++		value =3D TOUCHPAD_TOGGLE_OFF;
 +
-+	return regmap_update_bits(data->regmap, EC_ADDR_BIOS_OEM, FN_LOCK_STATUS=
-, value);
++	return regmap_update_bits(data->regmap, EC_ADDR_OEM_4, TOUCHPAD_TOGGLE_O=
+FF, value);
 +}
 +
- static ssize_t fn_lock_store(struct device *dev, struct device_attribute =
-*attr, const char *buf,
- 			     size_t count)
+ static ssize_t touchpad_toggle_enable_store(struct device *dev, struct de=
+vice_attribute *attr,
+ 					    const char *buf, size_t count)
  {
  	struct uniwill_data *data =3D dev_get_drvdata(dev);
 -	unsigned int value;
  	bool enable;
  	int ret;
 =20
-@@ -631,21 +642,15 @@ static ssize_t fn_lock_store(struct device *dev, str=
-uct device_attribute *attr,
+@@ -759,30 +772,39 @@ static ssize_t touchpad_toggle_enable_store(struct d=
+evice *dev, struct device_at
  	if (ret < 0)
  		return ret;
 =20
 -	if (enable)
--		value =3D FN_LOCK_STATUS;
--	else
 -		value =3D 0;
+-	else
+-		value =3D TOUCHPAD_TOGGLE_OFF;
 -
--	ret =3D regmap_update_bits(data->regmap, EC_ADDR_BIOS_OEM, FN_LOCK_STATU=
-S, value);
-+	ret =3D uniwill_write_fn_lock(data, enable);
+-	ret =3D regmap_update_bits(data->regmap, EC_ADDR_OEM_4, TOUCHPAD_TOGGLE_=
+OFF, value);
++	ret =3D uniwill_write_touchpad_toggle_enable(data, enable);
  	if (ret < 0)
  		return ret;
 =20
  	return count;
  }
 =20
--static ssize_t fn_lock_show(struct device *dev, struct device_attribute *=
-attr, char *buf)
-+static int uniwill_read_fn_lock(struct uniwill_data *data, bool *status)
- {
--	struct uniwill_data *data =3D dev_get_drvdata(dev);
- 	unsigned int value;
- 	int ret;
-=20
-@@ -653,23 +658,31 @@ static ssize_t fn_lock_show(struct device *dev, stru=
-ct device_attribute *attr, c
- 	if (ret < 0)
- 		return ret;
-=20
--	return sysfs_emit(buf, "%d\n", !!(value & FN_LOCK_STATUS));
--}
-+	*status =3D !!(value & FN_LOCK_STATUS);
-=20
--static DEVICE_ATTR_RW(fn_lock);
-+	return 0;
-+}
-=20
--static ssize_t super_key_enable_store(struct device *dev, struct device_a=
-ttribute *attr,
--				      const char *buf, size_t count)
-+static ssize_t fn_lock_show(struct device *dev, struct device_attribute *=
-attr, char *buf)
- {
- 	struct uniwill_data *data =3D dev_get_drvdata(dev);
--	unsigned int value;
--	bool enable;
-+	bool status;
- 	int ret;
-=20
--	ret =3D kstrtobool(buf, &enable);
-+	ret =3D uniwill_read_fn_lock(data, &status);
- 	if (ret < 0)
- 		return ret;
-=20
-+	return sysfs_emit(buf, "%d\n", status);
-+}
-+
-+static DEVICE_ATTR_RW(fn_lock);
-+
-+static int uniwill_write_super_key_enable(struct uniwill_data *data, bool=
- status)
++static int uniwill_read_touchpad_toggle_enable(struct uniwill_data *data,=
+ bool *status)
 +{
 +	unsigned int value;
 +	int ret;
 +
- 	guard(mutex)(&data->super_key_lock);
-=20
- 	ret =3D regmap_read(data->regmap, EC_ADDR_SWITCH_STATUS, &value);
-@@ -680,20 +693,33 @@ static ssize_t super_key_enable_store(struct device =
-*dev, struct device_attribut
- 	 * We can only toggle the super key lock, so we return early if the sett=
-ing
- 	 * is already in the correct state.
- 	 */
--	if (enable =3D=3D !(value & SUPER_KEY_LOCK_STATUS))
--		return count;
-+	if (status =3D=3D !(value & SUPER_KEY_LOCK_STATUS))
-+		return 0;
-+
-+	return regmap_write_bits(data->regmap, EC_ADDR_TRIGGER, TRIGGER_SUPER_KE=
-Y_LOCK,
-+				 TRIGGER_SUPER_KEY_LOCK);
-+}
-+
-+static ssize_t super_key_enable_store(struct device *dev, struct device_a=
-ttribute *attr,
-+				      const char *buf, size_t count)
-+{
-+	struct uniwill_data *data =3D dev_get_drvdata(dev);
-+	bool enable;
-+	int ret;
-=20
--	ret =3D regmap_write_bits(data->regmap, EC_ADDR_TRIGGER, TRIGGER_SUPER_K=
-EY_LOCK,
--				TRIGGER_SUPER_KEY_LOCK);
-+	ret =3D kstrtobool(buf, &enable);
++	ret =3D regmap_read(data->regmap, EC_ADDR_OEM_4, &value);
 +	if (ret < 0)
 +		return ret;
 +
-+	ret =3D uniwill_write_super_key_enable(data, enable);
- 	if (ret < 0)
- 		return ret;
-=20
- 	return count;
- }
-=20
--static ssize_t super_key_enable_show(struct device *dev, struct device_at=
-tribute *attr, char *buf)
-+static int uniwill_read_super_key_enable(struct uniwill_data *data, bool =
-*status)
- {
--	struct uniwill_data *data =3D dev_get_drvdata(dev);
- 	unsigned int value;
- 	int ret;
-=20
-@@ -701,7 +727,22 @@ static ssize_t super_key_enable_show(struct device *d=
-ev, struct device_attribute
- 	if (ret < 0)
- 		return ret;
-=20
--	return sysfs_emit(buf, "%d\n", !(value & SUPER_KEY_LOCK_STATUS));
-+	*status =3D !(value & SUPER_KEY_LOCK_STATUS);
++	*status =3D !(value & TOUCHPAD_TOGGLE_OFF);
 +
 +	return 0;
 +}
 +
-+static ssize_t super_key_enable_show(struct device *dev, struct device_at=
-tribute *attr, char *buf)
-+{
-+	struct uniwill_data *data =3D dev_get_drvdata(dev);
+ static ssize_t touchpad_toggle_enable_show(struct device *dev, struct dev=
+ice_attribute *attr,
+ 					   char *buf)
+ {
+ 	struct uniwill_data *data =3D dev_get_drvdata(dev);
+-	unsigned int value;
 +	bool status;
-+	int ret;
-+
-+	ret =3D uniwill_read_super_key_enable(data, &status);
-+	if (ret < 0)
-+		return ret;
-+
+ 	int ret;
+=20
+-	ret =3D regmap_read(data->regmap, EC_ADDR_OEM_4, &value);
++	ret =3D uniwill_read_touchpad_toggle_enable(data, &status);
+ 	if (ret < 0)
+ 		return ret;
+=20
+-	return sysfs_emit(buf, "%d\n", !(value & TOUCHPAD_TOGGLE_OFF));
 +	return sysfs_emit(buf, "%d\n", status);
  }
 =20
- static DEVICE_ATTR_RW(super_key_enable);
-@@ -1715,10 +1756,10 @@ static int uniwill_suspend_fn_lock(struct uniwill_=
-data *data)
- 		return 0;
-=20
- 	/*
--	 * The EC_ADDR_BIOS_OEM is marked as volatile, so we have to restore it
-+	 * EC_ADDR_BIOS_OEM is marked as volatile, so we have to restore it
- 	 * ourselves.
- 	 */
--	return regmap_read(data->regmap, EC_ADDR_BIOS_OEM, &data->last_status);
-+	return uniwill_read_fn_lock(data, &data->last_fn_lock_state);
- }
-=20
- static int uniwill_suspend_super_key(struct uniwill_data *data)
-@@ -1727,10 +1768,10 @@ static int uniwill_suspend_super_key(struct uniwil=
-l_data *data)
- 		return 0;
-=20
- 	/*
--	 * The EC_ADDR_SWITCH_STATUS is marked as volatile, so we have to restor=
-e it
-+	 * EC_ADDR_SWITCH_STATUS is marked as volatile, so we have to restore it
- 	 * ourselves.
- 	 */
--	return regmap_read(data->regmap, EC_ADDR_SWITCH_STATUS, &data->last_swit=
-ch_status);
-+	return uniwill_read_super_key_enable(data, &data->last_super_key_enable_=
+ static DEVICE_ATTR_RW(touchpad_toggle_enable);
+@@ -1774,6 +1796,18 @@ static int uniwill_suspend_super_key(struct uniwill=
+_data *data)
+ 	return uniwill_read_super_key_enable(data, &data->last_super_key_enable_=
 state);
  }
 =20
++static int uniwill_suspend_touchpad_toggle(struct uniwill_data *data)
++{
++	if (!uniwill_device_supports(data, UNIWILL_FEATURE_TOUCHPAD_TOGGLE))
++		return 0;
++
++	/*
++	 * EC_ADDR_OEM_4 is marked as volatile, so we have to restore it
++	 * ourselves.
++	 */
++	return uniwill_read_touchpad_toggle_enable(data, &data->last_touchpad_to=
+ggle_enable_state);
++}
++
  static int uniwill_suspend_battery(struct uniwill_data *data)
-@@ -1787,27 +1828,15 @@ static int uniwill_resume_fn_lock(struct uniwill_d=
-ata *data)
- 	if (!uniwill_device_supports(data, UNIWILL_FEATURE_FN_LOCK))
- 		return 0;
-=20
--	return regmap_update_bits(data->regmap, EC_ADDR_BIOS_OEM, FN_LOCK_STATUS=
-,
--				  data->last_status);
-+	return uniwill_write_fn_lock(data, data->last_fn_lock_state);
- }
-=20
- static int uniwill_resume_super_key(struct uniwill_data *data)
  {
--	unsigned int value;
--	int ret;
--
- 	if (!uniwill_device_supports(data, UNIWILL_FEATURE_SUPER_KEY))
- 		return 0;
+ 	if (!uniwill_device_supports(data, UNIWILL_FEATURE_BATTERY))
+@@ -1809,6 +1843,10 @@ static int uniwill_suspend(struct device *dev)
+ 	if (ret < 0)
+ 		return ret;
 =20
--	ret =3D regmap_read(data->regmap, EC_ADDR_SWITCH_STATUS, &value);
--	if (ret < 0)
--		return ret;
--
--	if ((data->last_switch_status & SUPER_KEY_LOCK_STATUS) =3D=3D (value & S=
-UPER_KEY_LOCK_STATUS))
--		return 0;
--
--	return regmap_write_bits(data->regmap, EC_ADDR_TRIGGER, TRIGGER_SUPER_KE=
-Y_LOCK,
--				 TRIGGER_SUPER_KEY_LOCK);
-+	return uniwill_write_super_key_enable(data, data->last_super_key_enable_=
++	ret =3D uniwill_suspend_touchpad_toggle(data);
++	if (ret < 0)
++		return ret;
++
+ 	ret =3D uniwill_suspend_battery(data);
+ 	if (ret < 0)
+ 		return ret;
+@@ -1839,6 +1877,14 @@ static int uniwill_resume_super_key(struct uniwill_=
+data *data)
+ 	return uniwill_write_super_key_enable(data, data->last_super_key_enable_=
 state);
  }
 =20
++static int uniwill_resume_touchpad_toggle(struct uniwill_data *data)
++{
++	if (!uniwill_device_supports(data, UNIWILL_FEATURE_TOUCHPAD_TOGGLE))
++		return 0;
++
++	return uniwill_write_touchpad_toggle_enable(data, data->last_touchpad_to=
+ggle_enable_state);
++}
++
  static int uniwill_resume_battery(struct uniwill_data *data)
+ {
+ 	if (!uniwill_device_supports(data, UNIWILL_FEATURE_BATTERY))
+@@ -1884,6 +1930,10 @@ static int uniwill_resume(struct device *dev)
+ 	if (ret < 0)
+ 		return ret;
+=20
++	ret =3D uniwill_resume_touchpad_toggle(data);
++	if (ret < 0)
++		return ret;
++
+ 	ret =3D uniwill_resume_battery(data);
+ 	if (ret < 0)
+ 		return ret;
 =2D-=20
 2.39.5
 
