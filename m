@@ -1,107 +1,284 @@
-Received: from mail-lf1-f43.google.com (mail-lf1-f43.google.com [209.85.167.43])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0864631B83B
-	for <platform-driver-x86@vger.kernel.org>; Mon,  6 Apr 2026 10:26:24 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.43
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AA48023183C;
+	Mon,  6 Apr 2026 12:32:32 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1775471186; cv=none; b=YpUhIxl/OEwIdcvgdMfZoNeKE3NZLylAdp2BqF0B41YCSo8JdiT/hwwk1iFWMH8QI+acrcfnEN0sUg18tUX/ocZXQcH807lsL1clKpufwjnFkwBIEzelNPZtFxsuFUrr2oJ8oYYzEyyzr1Xm/YlVydcdGHjkzXrGdKGEy8Epzsk=
+	t=1775478752; cv=none; b=TzontE2fjJfdHhHRtPpTdMXNF1jv0h8JKYJwxqBBli3JsG54bM8T8iuSWgqa4slSQ0yE6p33mbZASSnx75Uh31H4JXipU+73MtTcWHYZNLlHr0ei449TOEM8PCkXczD8Q8scjpC0YrfbT2RO7OqRHfvelFNeOyJyzw6b9qm2yEs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1775471186; c=relaxed/simple;
-	bh=pkKh0bscQakv2Ey9UpOYuHJ95C/vu5bablwlg+7c2PQ=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=gPFK8FZm55RPFYF1Fmi/TpY1sgYUmtkeCFkgOrZXAC80/ZL7rLphky2+lmecwAvOyRkUGI7DCVadTQCQ8vRL1vTRwMYzAcuSYMlxxbF83lKSHbT83prMpGJ01ZGTuJpnfZSy78zJv+MUF44bySNLUMzaY1Bx6wnijZKvRaL/zJ4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=qVobY1yh; arc=none smtp.client-ip=209.85.167.43
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1775478752; c=relaxed/simple;
+	bh=93nmLJJXcQ6fbQNQAA8dv7doCKMICW/nB+1lRWqwYHo=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=g8T7fU5mjT1cqVIvVNCldAvkW4ui+CVxZuk4uHyfUdOxko0GuAeB8w6jkSkwepLcU2rLtOgngA2va5STbhvzsklK+v4KqZ5WUX11K/MfUH/eO+IRvMzKhzB3VMUjhSM8wQIikNtWzX+0oTOxLkWkVArkWJfq4F60v3GqyLnvkuk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=lhA2M99E; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="qVobY1yh"
-Received: by mail-lf1-f43.google.com with SMTP id 2adb3069b0e04-5a2c7427ad9so3630128e87.1
-        for <platform-driver-x86@vger.kernel.org>; Mon, 06 Apr 2026 03:26:24 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20251104; t=1775471183; x=1776075983; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=+DpOHfZPSKid5DwyyV58HBLJITsfUDBSjGV4lT8xuUc=;
-        b=qVobY1yhuPfriJRV5L9MwUupHBTeDeAGC/+hQCXysjecc6cmws4mxR/aoxfAqzxw9K
-         TfhpQNsMfXMJq5EKxXwXSAnO09UpqkLk08urnAROQO3ADrvdWlksKUyZ9Cp/+/0Op49N
-         0e1N6fgE2uYSLpRVVVhyY9qoeeiBIefZJWT9/M7m00U/uK8zrnjVEbv/eUqQcKWGNhlW
-         fWc9339cW9O8wlDEr/eECGtjyP+rNABNBRJHRlmcaXtucLrzzZRyigvKZgk+5a0+hDzR
-         KpF5Iva+mREfeYPleuxT4kVuE7Duv/8EmF2WJuCBtr9nQV6nc+iK4RnOdx5GLMMtCcHJ
-         Vw4w==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1775471183; x=1776075983;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-gg:x-gm-message-state:from
-         :to:cc:subject:date:message-id:reply-to;
-        bh=+DpOHfZPSKid5DwyyV58HBLJITsfUDBSjGV4lT8xuUc=;
-        b=SFZGMKJaXEZK44fdTa5jRYl0WPwpNo4da3hokottyUcm2WnwyzkH+6ERRQhl+AfBZA
-         PbAMfAvMLAoCPVu6aqhoCE4/KGWSxFfFwzvv/pXEvzmFsgi0A6Ufh8z5imI6dkGNdTcq
-         XaL0//Cy7a+HMHEeQT8B80lQ9ddmJYrAinYp6oImNxO4V/URcTVhnh/OP+LKFT7P+QbI
-         3IP23oMQdrSIskwqb5en3vaiyuxyVD3eoqtEAXPlR1fw9QVYRn0HG94BchqKYsVlOvcY
-         ky/IHJNHyFLBL9oAWuOz2ldBQ6JNTQek5fwpDF6JoE7kEeF5n64Fv0jYUP44CmeR0w8+
-         m1tQ==
-X-Forwarded-Encrypted: i=1; AJvYcCXQOw1nMdNYMa7ADEdFSQVfCjlxypgArz1ViCst9SekCO6M5WUgzQb1FTD89wtt39ZT7kALbroAP4EicUOZWpKUyteI@vger.kernel.org
-X-Gm-Message-State: AOJu0YzYEbMXGRL8ISU9y4Icq/eRon5UBZkN5xH99Ms+6ZBJanp6MktH
-	RRHeL418iaa2GxMqeRk3bXZ6a/zrmjYfccSZ2I3KwQfreYhF/NewndxksT0d6OkS0DSqhQ==
-X-Gm-Gg: AeBDietXq0ETD+lMNeiM1ISzVDMXv/b+dHH323syRZRhDKjBshb4NUaZEOxCI+BZb5N
-	GXfr/VsR4JSYNs3NEjCGEbev9Qqu7ZhCOSylBF/nj2tQ6M1NQN6jiAvatWNehRtd/jFK5kpsmZV
-	haY54O245tJQeHrOOFHP27bHTxMFiAskkXEkh/gEt11J3jNNcoU7K/aiKVdE3r2aNEP+NjhNVm1
-	edR8p9JSs415KjPe9RBDAXkU8kNWY/n1XGcjzru9feIXfSgGSLeRMoGExdTbgu5utlBDhPdSqnB
-	PIoAblfxJMWYJC5RpSvL1R1V4IOTclN8Mcj1HHUacQg2VkhcCc+JZGvYL3WaQ+F06kY5OPPv4rA
-	/zZr9VJS1AHXjZqris6pJbuKduOJjwI9KKGJ6319YBlpM5N3ot+N9p1KeAkydTam+DHCDDOurXE
-	B37rP0V4S5i2ZY/mqzZECjHwxtWwdJqQVNKs1ZybY=
-X-Received: by 2002:a05:6512:6d6:b0:5a2:a8ab:ab4d with SMTP id 2adb3069b0e04-5a33758079bmr3893269e87.22.1775471182813;
-        Mon, 06 Apr 2026 03:26:22 -0700 (PDT)
-Received: from fedora.dev.gazprombank.ru (yeal.ru. [94.103.95.240])
-        by smtp.gmail.com with ESMTPSA id 2adb3069b0e04-5a2c6c9c3b6sm3221443e87.19.2026.04.06.03.26.21
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 06 Apr 2026 03:26:22 -0700 (PDT)
-From: Alexander Egorov <begeebe@gmail.com>
-To: Antheas Kapenekakis <lkml@antheas.dev>,
-	Derek John Clark <derekjohn.clark@gmail.com>,
-	=?UTF-8?q?Joaqu=C3=ADn=20Ignacio=20Aramend=C3=ADa?= <samsagax@gmail.com>
-Cc: =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>,
-	platform-driver-x86@vger.kernel.org,
-	ps1x <ps1x@users.noreply.github.com>
-Subject: [PATCH v3] Remove outdated upstream contact note
-Date: Mon,  6 Apr 2026 13:25:21 +0300
-Message-ID: <20260406102531.896524-1-begeebe@gmail.com>
-X-Mailer: git-send-email 2.53.0
-In-Reply-To: <20260329215348.56185-1-begeebe@gmail.com>
-References: <20260329215348.56185-1-begeebe@gmail.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="lhA2M99E"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 04476C4CEF7;
+	Mon,  6 Apr 2026 12:32:30 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1775478752;
+	bh=93nmLJJXcQ6fbQNQAA8dv7doCKMICW/nB+1lRWqwYHo=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=lhA2M99EkjAwe+FN/1VCsNK9m24alwkE/NK/wPHgYL6t+G0DaaJXpKwu40r/r/soj
+	 5HQ7O1JXwC0jsj3nd3QsIe+b4ST0d3mbwoe2EWvqyHiTFFVID1eIw1a8VXY3c5R+RQ
+	 Wxgb+F2IcMCgNb84sx/QI5X+XnVGFBPc6eCUZa2NJE9P6MolHOW7rbgtaL9UFXAqYX
+	 DQpnIYJfSc0wtVOSnoI5Yf+puNm79LwU/XRHJcF5S0u/R53+ZUtpAL2O3cMQl0M1OM
+	 NSU3hKVKZI8/EJPCRUHc354L4tXGQUb4nDVzRFy7PRGYpj6MqmYBgXqUJJsLYQxITY
+	 XAwKLeZtWs3Yw==
+Date: Mon, 6 Apr 2026 07:32:27 -0500
+From: Bjorn Andersson <andersson@kernel.org>
+To: Aleksandrs Vinarskis <alex@vinarskis.com>
+Cc: Bryan O'Donoghue <bryan.odonoghue@linaro.org>, 
+	Konrad Dybcio <konradybcio@kernel.org>, Rob Herring <robh@kernel.org>, 
+	Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, 
+	Hans de Goede <hansg@kernel.org>, Ilpo =?utf-8?B?SsOkcnZpbmVu?= <ilpo.jarvinen@linux.intel.com>, 
+	linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	platform-driver-x86@vger.kernel.org, laurentiu.tudor1@dell.com, 
+	Abel Vesa <abel.vesa@oss.qualcomm.com>, Tobias Heider <tobias.heider@canonical.com>, 
+	Val Packett <val@packett.cool>
+Subject: Re: [PATCH v2 2/4] platform: arm64: dell-xps-ec: new driver
+Message-ID: <adOl-iVGAyiA-QSx@baldur>
+References: <20260404-dell-xps-9345-ec-v2-0-c977c3caa81f@vinarskis.com>
+ <20260404-dell-xps-9345-ec-v2-2-c977c3caa81f@vinarskis.com>
+ <6be0cefb-72e4-4a8a-8668-45994db6c5d8@linaro.org>
+ <P9IQ5Penud7CH3Yfn0bw0RXJfIhFhFGksRjP-aZwLoAxmajMfeOtLEItrcWOXwVjHE_zObIA8SYjcPVR9dkAk9KgDYLun0DJJ6dBIU-IRDI=@vinarskis.com>
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <P9IQ5Penud7CH3Yfn0bw0RXJfIhFhFGksRjP-aZwLoAxmajMfeOtLEItrcWOXwVjHE_zObIA8SYjcPVR9dkAk9KgDYLun0DJJ6dBIU-IRDI=@vinarskis.com>
 
-From: ps1x <ps1x@users.noreply.github.com>
+On Sun, Apr 05, 2026 at 08:48:25PM +0000, Aleksandrs Vinarskis wrote:
+> On Sunday, April 5th, 2026 at 02:29, Bryan O'Donoghue <bryan.odonoghue@linaro.org> wrote:
+> 
+> > On 04/04/2026 13:55, Aleksandrs Vinarskis wrote:
+> > > Introduce EC driver for Dell XPS 13 9345 (codename 'tributo') which may
+> > > partially of fully compatible with Snapdragon-based Dell Latitude,
+> > > Inspiron ('thena'). Primary function of this driver is unblock EC's
+> > > thermal management, specifically to provide it with necessary
+> > > information to control device fans, peripherals power.
+> > >
+> > > The driver was developed primarily by analyzing ACPI DSDT's _DSM and
+> > > i2c dumps of communication between SoC and EC. Changes to Windows
+> > > driver's behavior include increasing temperature feed loop from ~50ms
+> > > to 100ms here.
+> > >
+> > > While Xps's EC is rather complex and controls practically all device
+> > > peripherals including touch row's brightness and special keys such as
+> > > mic mute, these do not go over this particular i2c interface.
+> > >
+> > > Not yet implemented features:
+> > > - On lid-close IRQ event is registered. Windows performs what to
+> > >    appears to be thermistor constants readout, though its not obvious
+> > >    what it used for.
+> > > - According to ACPI's _DSM there is a method to readout fans' RPM.
+> > > - Initial thermistor constants were sniffed from Windows, these can be
+> > >    likely fine tuned for better cooling performance.
+> > > - There is additional temperature reading that Windows sents to EC but
+> > >    more rare than others, likely SoC T_j / TZ98 or TZ4. This is the only
+> > >    thermal zone who's reading can exceed 115C without triggering thermal
+> > >    shutdown.
+> > > - Given similarities between 'tributo' and 'thena' platforms, including
+> > >    EC i2c address, driver can be potentially extended to support both.
+> > >
+> > > Signed-off-by: Aleksandrs Vinarskis <alex@vinarskis.com>
+> > > ---
+> > >   MAINTAINERS                          |   1 +
+> > >   drivers/platform/arm64/Kconfig       |  12 ++
+> > >   drivers/platform/arm64/Makefile      |   1 +
+> > >   drivers/platform/arm64/dell-xps-ec.c | 267 +++++++++++++++++++++++++++++++++++
+> > >   4 files changed, 281 insertions(+)
+> > >
+> > > diff --git a/MAINTAINERS b/MAINTAINERS
+> > > index a5d175559f4468dfe363b319a1b08d3425f4d712..c150f57b60706224e5b24b0dfb3d8a9b81f36398 100644
+> > > --- a/MAINTAINERS
+> > > +++ b/MAINTAINERS
+> > > @@ -7240,6 +7240,7 @@ DELL XPS EMBEDDED CONTROLLER DRIVER
+> > >   M:	Aleksandrs Vinarskis <alex@vinarskis.com>
+> > >   S:	Maintained
+> > >   F:	Documentation/devicetree/bindings/embedded-controller/dell,xps13-9345-ec.yaml
+> > > +F:	drivers/platform/arm64/dell-xps-ec.c
+> > >
+> > >   DELTA AHE-50DC FAN CONTROL MODULE DRIVER
+> > >   M:	Zev Weiss <zev@bewilderbeest.net>
+> > > diff --git a/drivers/platform/arm64/Kconfig b/drivers/platform/arm64/Kconfig
+> > > index 10f905d7d6bfa5fad30a0689d3a20481268c781e..0bc8f016032bb05cb3a7cc50bdf1092da04153bc 100644
+> > > --- a/drivers/platform/arm64/Kconfig
+> > > +++ b/drivers/platform/arm64/Kconfig
+> > > @@ -33,6 +33,18 @@ config EC_ACER_ASPIRE1
+> > >   	  laptop where this information is not properly exposed via the
+> > >   	  standard ACPI devices.
+> > >
+> > > +config EC_DELL_XPS
+> > > +	tristate "Dell XPS 9345 Embedded Controller driver"
+> > > +	depends on ARCH_QCOM || COMPILE_TEST
+> > > +	depends on I2C
+> > > +	depends on IIO
+> > > +	help
+> > > +	  Driver for the Embedded Controller in the Qualcomm Snapdragon-based
+> > > +	  Dell XPS 13 9345, which handles thermal management and fan speed
+> > > +	  control.
+> > > +
+> > > +	  Say M or Y here to include this support.
+> > > +
+> > >   config EC_HUAWEI_GAOKUN
+> > >   	tristate "Huawei Matebook E Go Embedded Controller driver"
+> > >   	depends on ARCH_QCOM || COMPILE_TEST
+> > > diff --git a/drivers/platform/arm64/Makefile b/drivers/platform/arm64/Makefile
+> > > index 60c131cff6a15bb51a49c9edab95badf513ee0f6..6768dc6c2310837374e67381cfc729bed1fdaaef 100644
+> > > --- a/drivers/platform/arm64/Makefile
+> > > +++ b/drivers/platform/arm64/Makefile
+> > > @@ -6,6 +6,7 @@
+> > >   #
+> > >
+> > >   obj-$(CONFIG_EC_ACER_ASPIRE1)	+= acer-aspire1-ec.o
+> > > +obj-$(CONFIG_EC_DELL_XPS)	+= dell-xps-ec.o
+> > >   obj-$(CONFIG_EC_HUAWEI_GAOKUN)	+= huawei-gaokun-ec.o
+> > >   obj-$(CONFIG_EC_LENOVO_YOGA_C630) += lenovo-yoga-c630.o
+> > >   obj-$(CONFIG_EC_LENOVO_THINKPAD_T14S) += lenovo-thinkpad-t14s.o
+> > > diff --git a/drivers/platform/arm64/dell-xps-ec.c b/drivers/platform/arm64/dell-xps-ec.c
+> > > new file mode 100644
+> > > index 0000000000000000000000000000000000000000..bf1495fbe473ccdb82b95a66b56e8525f782cc8e
+> > > --- /dev/null
+> > > +++ b/drivers/platform/arm64/dell-xps-ec.c
+> > > @@ -0,0 +1,267 @@
+> > > +// SPDX-License-Identifier: GPL-2.0-only
+> > > +/*
+> > > + * Copyright (c) 2026, Aleksandrs Vinarskis <alex@vinarskis.com>
+> > > + */
+> > > +
+> > > +#include <linux/array_size.h>
+> > > +#include <linux/dev_printk.h>
+> > > +#include <linux/device.h>
+> > > +#include <linux/devm-helpers.h>
+> > > +#include <linux/err.h>
+> > > +#include <linux/i2c.h>
+> > > +#include <linux/iio/consumer.h>
+> > > +#include <linux/interrupt.h>
+> > > +#include <linux/jiffies.h>
+> > > +#include <linux/module.h>
+> > > +#include <linux/pm.h>
+> > > +#include <linux/unaligned.h>
+> > > +#include <linux/workqueue.h>
+> > > +
+> > > +#define DELL_XPS_EC_SUSPEND_CMD		0xb9
+> > > +#define DELL_XPS_EC_SUSPEND_MSG_LEN	64
+> > > +
+> > > +#define DELL_XPS_EC_TEMP_CMD0		0xfb
+> > > +#define DELL_XPS_EC_TEMP_CMD1		0x20
+> > > +#define DELL_XPS_EC_TEMP_CMD3		0x02
+> > > +#define DELL_XPS_EC_TEMP_MSG_LEN	6
+> > > +#define DELL_XPS_EC_TEMP_POLL_JIFFIES	msecs_to_jiffies(100)
+> > > +
+> > > +/*
+> > > + * Format:
+> > > + * - header/unknown (2 bytes)
+> > > + * - per-thermistor entries (3 bytes): thermistor_id, param1, param2
+> > > + */
+> > > +static const u8 dell_xps_ec_thermistor_profile[] = {
+> > > +	0xff, 0x54,
+> > > +	0x01, 0x00, 0x2b,	/* sys_therm0 */
+> > > +	0x02, 0x44, 0x2a,	/* sys_therm1 */
+> > > +	0x03, 0x44, 0x2b,	/* sys_therm2 */
+> > > +	0x04, 0x44, 0x28,	/* sys_therm3 */
+> > > +	0x05, 0x55, 0x2a,	/* sys_therm4 */
+> > > +	0x06, 0x44, 0x26,	/* sys_therm5 */
+> > > +	0x07, 0x44, 0x2b,	/* sys_therm6 */
+> > > +};
+> > > +
+> > > +/*
+> > > + * Mapping from IIO channel name to EC command byte
+> > > + */
+> > > +static const struct {
+> > > +	const char *name;
+> > > +	u8 cmd;
+> > > +} dell_xps_ec_therms[] = {
+> > > +	/* TODO: 0x01 is sent only occasionally, likely TZ98 or TZ4 */
+> > > +	{ "sys_therm0", 0x02 },
+> > > +	{ "sys_therm1", 0x03 },
+> > > +	{ "sys_therm2", 0x04 },
+> > > +	{ "sys_therm3", 0x05 },
+> > > +	{ "sys_therm4", 0x06 },
+> > > +	{ "sys_therm5", 0x07 },
+> > > +	{ "sys_therm6", 0x08 },
+> > > +};
+> >
+> > You could probably retrieve these strings from the dt if you really need
+> > them.
+> >
+> > I don't think you need static consts in your driver though you could
+> > just as easily do `sprintf("sys_therm%d\n", i) where you use
+> > ec_therms[i].name - the name is only used to print errors and you have
+> > the index of the channel when you do.
+> >
+> > It would be nicer to get the strings from DT - certainly make the string
+> > names mandatory but, then let the DT specify those names.
+> >
+> > Either that or just do the sprintf("sys_therm%d\n", i); for the index,
+> > whichever you wish yourself.
+> 
+> Hi Bryan,
+> 
+> Will answer here to all three comments about `sys_thermX`.
+> 
+> The reason I have added them as static consts here, and defined them in
+> the schema is because the order of the channels matters:
+> 1. On my XPS (UEFI v2.11.0) changes in sys_therm2 immediately result in
+>    changes in fan speeds. Other channels seemingly have no affect, at
+>    least when spoofed one by one, implying that EC cares which value
+>    is which.
+> 2. As I do not know internals of the EC firmware, even if today the other
+>    thermistor channels ordering is seemingly not relevant, we cannot be
+>    sure it will not change with EC firmware upgrade.
+> 
+> I have reconstructed the order of channels by comparing i2c data dumps
+> and real-time temps on Windows, eg. sys_therm0 is sent to EC under id 0x02
+> and represents the TZ71 (around dram on XPS). There is no other reason to
+> have the names of the channels in this driver except for enforcing the
+> channel mapping, so `sprintf("sys_therm%d\n", i)` wouldn't be useful.
+> 
+> By allowing source and sink to define the names and not enforcing it in
+> schema we lose ability to force the correct order, there is no way of
+> knowing whether "lpddr5-therm" or "ssd-therm" goes first. By forcing
+> "sys_thermX" convention, one would need to figure which one is which,
+> for example by referring to laptop schematics. I assume, "thena"'s
+> schematics has thermistors labeled as "sys_thermX"?
+> 
+> I do agree that labels of the ADC nodes could be more useful for the
+> user. So far I followed the example of sc8280xp platforms that define
+> ADC channels with "sys_thermX". Perhaps, we could separate the
+> io-channel-names and ADC node labels then? eg:
+> 
 
----
- README.md | 5 -----
- 1 file changed, 5 deletions(-)
+The general guidance for such naming questions is to follow naming from
+the schematics, whenever available.
 
-diff --git a/README.md b/README.md
-index acc4503..67c2915 100644
---- a/README.md
-+++ b/README.md
-@@ -58,11 +58,6 @@ This project is based on the original `oxp-sensors` work:
- 
- - <https://gitlab.com/Samsagax/oxp-sensors>
- 
--I could not find a working way to contact Joaquín Ignacio Aramendía
--(`@Samsagax`) directly. If the upstream author wants this repository or any
--part of it to be removed from public distribution, they are welcome to open an
--issue in this repository.
--
- ## Included Components
- 
- - `oxp-sensors.c`: kernel driver
--- 
-2.53.0
+> + io-channel-names = "sys_therm0",
+> + 		     "sys_therm1",
+> ...
+> 
+> + &pmk8550_vadc {
+> +	sys_therm0: channel@14c {
+> + 		reg = <PM8350_ADC7_GPIO3_100K_PU(1)>;
+> + 		qcom,hw-settle-time = <200>;
+> + 		qcom,ratiometric;
+> + 		label = "lpddr5x-therm";
+> 
+> Though not sure if such approach is 'legal'?
 
+I might be missing something, but that does look legal. Your node's
+label follows (what I assume to be) the naming in the schematics and you
+provide a human-friendly label.
+
+
+PS. Once we have these adc channels in place, I presume there's also a
+TM that would allow us to wire them up as cooling-maps, to throttle the
+CPUs? Similar to "skin-temp-thermal" in x13s.
+
+Regards,
+Bjorn
