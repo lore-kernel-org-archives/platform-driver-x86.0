@@ -1,171 +1,125 @@
-Received: from mail-wr1-f43.google.com (mail-wr1-f43.google.com [209.85.221.43])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.11])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 895A43BED01
-	for <platform-driver-x86@vger.kernel.org>; Tue,  7 Apr 2026 14:25:46 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.43
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A151928C037;
+	Tue,  7 Apr 2026 14:33:13 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.11
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1775571948; cv=none; b=fw4+4QFNtZvdUvgAGuV94XYGdKoZXqIRyKxLXjP+fx+D0I+LOBOvKy+WmEYldoRuWyGuaQ6AF6xX3cnXlt90jrsUFmhBo2ZiEfBnZIrHGhbR+TIhCixl9DUiJLQp2h9xwrRPjmpTxH+mVHcdu6DR23hOcNs3JUqO1FvH0j1b+co=
+	t=1775572395; cv=none; b=ZhVjyct5cQjhf2aXvoy5BBoqcO7MJyeaEY4yVHfhkfFt+nDYnov51hPL181QEjjsVpznx9qDmhlmzVW/DWNzKl9Fr+EQ4JAr97/JvfyCPiE/tTbqPWYYhBlUnSDqVO4jcAAxNMhyz8hBWtwDpJFyqxQu8VF8ssjw9r/S4HPjiTk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1775571948; c=relaxed/simple;
-	bh=oagBiGn9yap490aPu+qNXgOoV9AQzMDW831Ks4zUb1I=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=j/zEQRi81jK9/S9J3XmVGuLOskh/d4nkNWF9hGxHQkKpA9EhkvoGhpU/k6N9wTv/qxT4Mizxntbpt9pZ9Yb6cnSNSd6PNuUxLAEvtssvK+54BB6hEWv/NySt0kVqZapg9W517IWKwmxDIhq0y22tstu2bcaiWJEQXaMUvd7r+4s=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=lC7BsgYN; arc=none smtp.client-ip=209.85.221.43
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1775572395; c=relaxed/simple;
+	bh=RTf7fSdKbOlG+Uqgt+xipV/ZZjbunaObxcyZXfjW2Kg=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=fnAi40wbm29ugX7rGjpEVjoL+S4Cn+vF8T84RNWGoLAh4/PeHunEKPqeE7YTk/uRqW/mfhkeLsPqEUD6DnhfLLDV+mUWyzYOUGL7Z8m3aeVxsJ0n0zqlvdw7/Hr+rNdyhCJ90tvX/edxDNHd4mF3KUQy1+Y50B5zatiDkfbCv6A=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=pass smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=aUR/aohk; arc=none smtp.client-ip=192.198.163.11
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="lC7BsgYN"
-Received: by mail-wr1-f43.google.com with SMTP id ffacd0b85a97d-43cf7c58bb3so178457f8f.3
-        for <platform-driver-x86@vger.kernel.org>; Tue, 07 Apr 2026 07:25:46 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20251104; t=1775571945; x=1776176745; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=XuC322jDmAgsELlQ3uSNloCGDfnK1HdiuXq+p7r0feg=;
-        b=lC7BsgYNcy4+JBJWiS0eBoyzoUctNxNl2xV+NfJdYwnbbsossStaA4yBr64c767fEO
-         3AJeaHx61dZGAbmmab3gub+7PEiXpWDC5Ae53cBMK/60Ahq4WSi0Qz7Lx5/Kbp2iX2IX
-         Z1idOF31vHYbkKwSVMDlg3/vB4DTQmP7e5V8n7sQi2Rz6ZLRz/5cbbdVcHAS5A8Ldu18
-         ArHR7bw7ZPegsv6SGB2PiJxgsgvztq0+X1x0v9HjUwRJI1Gad8t1B/PNYYuJqO+emPZh
-         YjwX+jHQ31VII6HgW5T06MFMZ5wPM2NORAIsS2PustKfEt0iSM+Y44O5I9Rwv89IFcOI
-         ibKQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1775571945; x=1776176745;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-gg:x-gm-message-state:from
-         :to:cc:subject:date:message-id:reply-to;
-        bh=XuC322jDmAgsELlQ3uSNloCGDfnK1HdiuXq+p7r0feg=;
-        b=P6K/tDnY9lHJas4OXHHKVrMwWjn3lYRTCvo7LdzKXPgzm51L+F6gqxPuC7UTTxRDXU
-         k9QrexL5ec1inGDGPOARg+dj5vNzwQJBQORI/cR+hLLibn1cqZH+5lemWzxF8pRU1Fd5
-         6dOM4h4131KfV5ldncqf9LfryIqxdXTXysYIIvsZ9WfG+v7zTq2jjq3EnNNyk+QDGTsz
-         5oMiMau4e9m6Vr+LVTEKCgcTpzgBIwaZebCdml0Vu5ERAc7b9lNoLYKcW7ji1tD4E0Fz
-         T1A0SW19KgboUJfPyuozN3kEd3Lf5kHgqD3JB2cNOJWv8eXNWkL9KFUBmVE+eygSsaBx
-         N0Qw==
-X-Gm-Message-State: AOJu0YwG81ljIBP4G9JRz6kP6jZzRGHrzg1T+obul1imgGD61CYpHZVA
-	PbqgDtYHHFMj1Jjz6dez7drFrI/CYvmcrLx4tyC1AB4tng/YnQ23joPpIqBTymlPe/c=
-X-Gm-Gg: AeBDietyvDEb2oiTmfbVTV7h0dusk5NXmovplHlBEa4JmL+mWfmmtbYtNwQli7JXP1n
-	7tlr/So0FRPcwIwCcJMm4UfC61yNahX1z1tv3cbipYWWko34wT+MQakzNHXvHR6MXGlJrZyktv7
-	TcubedHmFGCH0BqiQD18K8uoaQegQJlEssEsv3VOV0iJKvrwiKJyUihrcdEUyE++c2kJBEDlmHf
-	jyYLJIZmga3bi2krDtDByjZk3ZfXLKeU8bGxoFQr+oamn2x4Iog/Gm6YHrTnWgnxdNIQxHltY2+
-	wyyz+dj8dxpTiJ3FtpFOiK6GSsbWx8GACScolDd3gRLVcKJXOyRhobtNVKZXP8Cb5/n9ftdxanT
-	YKYVUDwO7bV3wEfNeo1NAxMqIEE9dwsmow6YGJld4CD+iad5GylfvazXHVgitxQ7YTkN0nK+cnV
-	rQf/1Lou72HI2DVk4yQuo6Qi154KqVyL8xNEIC3p2D1tS4TwxOWe1Y25IXJ384kA==
-X-Received: by 2002:a05:6000:645:b0:43d:284d:28c with SMTP id ffacd0b85a97d-43d292f53a6mr8996744f8f.7.1775571944791;
-        Tue, 07 Apr 2026 07:25:44 -0700 (PDT)
-Received: from localhost.localdomain ([31.7.38.28])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-43d1e4f1a99sm53489990f8f.32.2026.04.07.07.25.43
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 07 Apr 2026 07:25:44 -0700 (PDT)
-From: Emre Cecanpunar <emreleno@gmail.com>
-To: platform-driver-x86@vger.kernel.org
-Cc: hansg@kernel.org,
-	ilpo.jarvinen@linux.intel.com,
-	linux-kernel@vger.kernel.org,
-	krishna.chomal108@gmail.com,
-	edip@medip.dev,
-	emreleno@gmail.com
-Subject: [PATCH v4 5/5] platform/x86: hp-wmi: add locking for concurrent hwmon access
-Date: Tue,  7 Apr 2026 17:25:14 +0300
-Message-ID: <20260407142515.20683-6-emreleno@gmail.com>
-X-Mailer: git-send-email 2.53.0
-In-Reply-To: <20260407142515.20683-1-emreleno@gmail.com>
-References: <20260407142515.20683-1-emreleno@gmail.com>
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="aUR/aohk"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1775572394; x=1807108394;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=RTf7fSdKbOlG+Uqgt+xipV/ZZjbunaObxcyZXfjW2Kg=;
+  b=aUR/aohk6NZQcF7bZ0/6pFRIPm7vo2whlftkFLVybwznj3bQqUMB0LJr
+   hyt8beAtEZYRhHSamubLM6tcJoneepfLHxVl6N09aR7HhzlVLn6D9hsfV
+   xalaQQwwxjhV5YfNG9yliyVryObOtJCpz6/h7Z7rCjgyY2nzlPOogw5Kf
+   QvzpVB6pgvvsXoxJ2n53CCcpqfWl68IgHYrjCTSYkma0Dws8nsAneDGFd
+   Og4LChrIrE093L2mZu/nksx4zo03cyW1+xy34njkNf0iRbiDBv2c25v8b
+   jImzWR5qV9ADuYLUdSzONDJHjTo4uns77YdlCVwzQP9UTT8fko5f45Cid
+   A==;
+X-CSE-ConnectionGUID: amwbAnGVTNKwrTADkn2X9g==
+X-CSE-MsgGUID: movWTWikTWyxTslMtU5CqQ==
+X-IronPort-AV: E=McAfee;i="6800,10657,11752"; a="87163644"
+X-IronPort-AV: E=Sophos;i="6.23,165,1770624000"; 
+   d="scan'208";a="87163644"
+Received: from fmviesa009.fm.intel.com ([10.60.135.149])
+  by fmvoesa105.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 07 Apr 2026 07:33:13 -0700
+X-CSE-ConnectionGUID: zqijq4DTTA64NzhYME3UXQ==
+X-CSE-MsgGUID: 3r0YnN6ORSObwk2CRP3d5w==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.23,165,1770624000"; 
+   d="scan'208";a="221609845"
+Received: from pgcooper-mobl3.ger.corp.intel.com (HELO localhost) ([10.245.244.182])
+  by fmviesa009-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 07 Apr 2026 07:33:08 -0700
+Date: Tue, 7 Apr 2026 17:33:06 +0300
+From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+To: Bartosz Golaszewski <bartosz.golaszewski@oss.qualcomm.com>
+Cc: Daniel Scally <djrscally@gmail.com>,
+	Heikki Krogerus <heikki.krogerus@linux.intel.com>,
+	Sakari Ailus <sakari.ailus@linux.intel.com>,
+	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+	"Rafael J. Wysocki" <rafael@kernel.org>,
+	Danilo Krummrich <dakr@kernel.org>,
+	Mika Westerberg <mika.westerberg@linux.intel.com>,
+	Andy Shevchenko <andy@kernel.org>,
+	Linus Walleij <linusw@kernel.org>, Hans de Goede <hansg@kernel.org>,
+	Ilpo =?iso-8859-1?Q?J=E4rvinen?= <ilpo.jarvinen@linux.intel.com>,
+	Dmitry Torokhov <dmitry.torokhov@gmail.com>,
+	Len Brown <lenb@kernel.org>, linux-acpi@vger.kernel.org,
+	driver-core@lists.linux.dev, linux-kernel@vger.kernel.org,
+	linux-gpio@vger.kernel.org, platform-driver-x86@vger.kernel.org,
+	brgl@kernel.org
+Subject: Re: [PATCH v4 2/2] gpio: swnode: defer probe on references to
+ unregistered software nodes
+Message-ID: <adUVoiVaOkVq1C4w@ashevche-desk.local>
+References: <20260407-swnode-unreg-retcode-v4-0-1b2f0725eb9c@oss.qualcomm.com>
+ <20260407-swnode-unreg-retcode-v4-2-1b2f0725eb9c@oss.qualcomm.com>
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20260407-swnode-unreg-retcode-v4-2-1b2f0725eb9c@oss.qualcomm.com>
+Organization: Intel Finland Oy - BIC 0357606-4 - c/o Alberga Business Park, 6
+ krs, Bertel Jungin Aukio 5, 02600 Espoo
 
-hp_wmi_hwmon_priv.mode and .pwm are written by hp_wmi_hwmon_write() in
-sysfs context and read by hp_wmi_hwmon_keep_alive_handler() in a
-workqueue. A concurrent write and keep-alive expiry can observe an
-inconsistent mode/pwm pair (e.g. mode=MANUAL with a stale pwm).
+On Tue, Apr 07, 2026 at 03:27:58PM +0200, Bartosz Golaszewski wrote:
+> fwnode_property_get_reference_args() now returns -ENOTCONN when called
+> on a software node referencing another software node which has not yet
+> been registered as a firmware node. It makes sense to defer probe in this
+> situation as the node will most likely be registered later on and we'll
+> be able to resolve the reference eventually. Change the behavior of
+> swnode_find_gpio() to return -EPROBE_DEFER if the software node reference
+> resolution returns -ENOTCONN.
 
-Add a mutex to hp_wmi_hwmon_priv protecting mode and pwm. Hold it in
-hp_wmi_hwmon_write() across the field update and apply call, and in
-hp_wmi_hwmon_keep_alive_handler() before calling apply.
+Reviewed-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
 
-In hp_wmi_hwmon_read(), only the pwm_enable path reads priv->mode; use
-scoped_guard() there to avoid holding the lock across unrelated WMI
-calls.
+...
 
-Fixes: c203c59fb5de ("platform/x86: hp-wmi: implement fan keep-alive")
-Suggested-by: Ilpo Järvinen <ilpo.jarvinen@linux.intel.com>
-Signed-off-by: Emre Cecanpunar <emreleno@gmail.com>
----
-Changes in v4:
-- Use devm_mutex_init() and handle init errors.
+>  		ret = swnode_gpio_get_reference(fwnode, propname, idx, &args);
 
- drivers/platform/x86/hp/hp-wmi.c | 15 +++++++++++++--
- 1 file changed, 13 insertions(+), 2 deletions(-)
+>  		if (ret == 0)
+>  			break;
 
-diff --git a/drivers/platform/x86/hp/hp-wmi.c b/drivers/platform/x86/hp/hp-wmi.c
-index 4f49861d3fbe..470c6e48f8e9 100644
---- a/drivers/platform/x86/hp/hp-wmi.c
-+++ b/drivers/platform/x86/hp/hp-wmi.c
-@@ -453,6 +453,7 @@ enum pwm_modes {
- };
+Maybe check for an error first? Dunno. Up to you.
 
- struct hp_wmi_hwmon_priv {
-+	struct mutex lock;	/* protects mode, pwm */
- 	u8 min_rpm;
- 	u8 max_rpm;
- 	int gpu_delta;
-@@ -2422,6 +2423,7 @@ static int hp_wmi_hwmon_read(struct device *dev, enum hwmon_sensor_types type,
- {
- 	struct hp_wmi_hwmon_priv *priv;
- 	int rpm, ret;
-+	u8 mode;
+		if (ret == -ENOTCONN)
+			...
+		if (ret)
+			continue;
 
- 	priv = dev_get_drvdata(dev);
- 	switch (type) {
-@@ -2445,11 +2447,13 @@ static int hp_wmi_hwmon_read(struct device *dev, enum hwmon_sensor_types type,
- 			*val = rpm_to_pwm(rpm / 100, priv);
- 			return 0;
- 		}
--		switch (priv->mode) {
-+		scoped_guard(mutex, &priv->lock)
-+			mode = priv->mode;
-+		switch (mode) {
- 		case PWM_MODE_MAX:
- 		case PWM_MODE_MANUAL:
- 		case PWM_MODE_AUTO:
--			*val = priv->mode;
-+			*val = mode;
- 			return 0;
- 		default:
- 			/* shouldn't happen */
-@@ -2467,6 +2471,7 @@ static int hp_wmi_hwmon_write(struct device *dev, enum hwmon_sensor_types type,
- 	int rpm;
+		/* The reference is found, bail out */
+		break;
 
- 	priv = dev_get_drvdata(dev);
-+	guard(mutex)(&priv->lock);
- 	switch (type) {
- 	case hwmon_pwm:
- 		if (attr == hwmon_pwm_input) {
-@@ -2535,6 +2540,8 @@ static void hp_wmi_hwmon_keep_alive_handler(struct work_struct *work)
+(Also may be done in a separate change no need to mix these things
+ in the proposed change.)
 
- 	dwork = to_delayed_work(work);
- 	priv = container_of(dwork, struct hp_wmi_hwmon_priv, keep_alive_dwork);
-+
-+	guard(mutex)(&priv->lock);
- 	/*
- 	 * Re-apply the current hwmon context settings.
- 	 * NOTE: hp_wmi_apply_fan_settings will handle the re-scheduling.
-@@ -2591,6 +2598,10 @@ static int hp_wmi_hwmon_init(void)
- 	if (!priv)
- 		return -ENOMEM;
+> +		if (ret == -ENOTCONN)
+> +			/*
+> +			 * -ENOTCONN for a software node reference lookup means
+> +			 *  that a remote struct software_node exists but has
+> +			 *  not yet been registered as a firmware node. Defer
+> +			 *  until this happens.
+> +			 */
+> +			return ERR_PTR(-EPROBE_DEFER);
 
-+	ret = devm_mutex_init(dev, &priv->lock);
-+	if (ret)
-+		return ret;
-+
- 	ret = hp_wmi_setup_fan_settings(priv);
- 	if (ret)
- 		return ret;
---
-2.53.0
+-- 
+With Best Regards,
+Andy Shevchenko
+
+
