@@ -1,62 +1,62 @@
-Received: from mail-wr1-f44.google.com (mail-wr1-f44.google.com [209.85.221.44])
+Received: from mail-wm1-f49.google.com (mail-wm1-f49.google.com [209.85.128.49])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F141B3BD246
-	for <platform-driver-x86@vger.kernel.org>; Tue,  7 Apr 2026 14:25:40 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.44
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4E5E53ACA49
+	for <platform-driver-x86@vger.kernel.org>; Tue,  7 Apr 2026 14:25:43 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.49
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1775571942; cv=none; b=tZNURajnmqvi2lmStbKQaHUSpm6p6kxod77PaLvnWGsAXBTCxLNZM0jp+L7dF+MFlPpnFgha2e69Omk8kc9WCw7nDyOwGdX25fCLDPAWvcLDmIbFN2WLRSSl2GD5fvfhqTsMDzqq8WwkOAstfJhRn1VQslpxrh0+tAXgLYmF1Mw=
+	t=1775571944; cv=none; b=Ex/XRudRjZtGjPrqNy0co00XtJ1W4pa1lRE0x2RGcpgEfr9mmVlCYqSgaGzxeeyA2DMQMRzqqnvB58KrpvsVwC85ikiGtCWMItMZ0H5IVXwjC/Z8ucbKQnvI4R/lc7BGJ+uhIDM2w7vExl2xpwnURMDAoffc/jtRGl6Ej8ipjtE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1775571942; c=relaxed/simple;
-	bh=TfNxeGb9nt4qVFEDy3vSP2vU6t/UvG2YByCxEcAn8sI=;
+	s=arc-20240116; t=1775571944; c=relaxed/simple;
+	bh=YxZ/d8hWc5Dojxq2+WQ8y//zQ0MV75jV5AaZq1iu/u8=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=SCi72PuE/e6vOHeSZalj27ZcZK0MoSpu+w6I25NSWW0Qtlx/yk+sOQop4m34RHCgQvP9qCJwS6Hwkdh9UZ+ScNiEsoOzOKKeVFBexwMVbH/+tVX/5thJoZrxAdLA7e47TVx5q8gqsAEZD7B7avYltNhJtbZ20sRsJtyR/Yx971M=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=QjAWmBzV; arc=none smtp.client-ip=209.85.221.44
+	 MIME-Version; b=RIVnmDzQ7wpmXzPxKT2s0b3tHkFgD8vLN07tDYvscGnMdA0Fn27O69fsC84jpmLHksY7No7fJPdud94mqr477ClVd4AmKqXAgoySlY9AKlZCZSXvj0oJvisubODWr9IukzaBgU06cwF5RqQbZuf8aPPGcJB12WDNeZPNYP0zVAs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=jIbURaW+; arc=none smtp.client-ip=209.85.128.49
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="QjAWmBzV"
-Received: by mail-wr1-f44.google.com with SMTP id ffacd0b85a97d-43b8822fc05so290149f8f.1
-        for <platform-driver-x86@vger.kernel.org>; Tue, 07 Apr 2026 07:25:40 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="jIbURaW+"
+Received: by mail-wm1-f49.google.com with SMTP id 5b1f17b1804b1-483708b697cso7713335e9.3
+        for <platform-driver-x86@vger.kernel.org>; Tue, 07 Apr 2026 07:25:43 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20251104; t=1775571939; x=1776176739; darn=vger.kernel.org;
+        d=gmail.com; s=20251104; t=1775571941; x=1776176741; darn=vger.kernel.org;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=8kTb1nxrmvzDufvOzlr6MJ8Yqsu0pkzDYB5uLfxFM34=;
-        b=QjAWmBzVzs2ez7jWQUrLqzEWHpl8yx5qG8Sq0j05/QWL9X6gMr/GCHeVHeGRY8JsFl
-         FAtJnsMZOFaO7CqgU2b/8qNerctEgOZzyECGHyR52AQiDGnLyDDsI9laokvGYxabRDvf
-         OVvU8Vj8jxJzB6ObNYf+9lWE8gdnS3cP9jEeQkhnB9GIlXn1GLb2PPfel7Fu4cku6pwn
-         nu1x2Kma/8h5iiICWYcsiAQEpbpeU0NiMKTU4/Ke8MH9pnXytHwZ7/bVSBmrejiZ+bLa
-         NJX5q+PpzGK3wLVRErXGvU410tH5IPgOAdnB1XDbKnKcYwce8evyQmQeruPAC0zSDezm
-         wBZQ==
+        bh=dxSRimATBcfYurd5oZ/SGQyL2ML4iFG/Nsr5i0TaWFg=;
+        b=jIbURaW+ukOGuQQctJEoairvOPQeByCUvvxUD+PGkWm6bdyaiWI0ltQPinY65dB0QY
+         ua5efzQYPoCVt3wl1z9nD7vLnIC3gtnCxv+9QQguRXpkAI8wx/qvDbEn4HDBYJ2y8vNj
+         SW/DBlfFCR0Sr2SdbmGq/N+TlKgS3+J3daqp+zDDwXfwiHW6uXnFDx7ENxrEQ4oNueqc
+         /8JozC6SehqasCorKIalQkCfSha4F2jFxa+ScdFfj+XRwQEikNce2d5zA+BvL93yBKUZ
+         HJ4zTMAja1OOuwcJSkVFCQKTNRtHb0QIudmcR3S6bTdkKkniRYehBdOpX2IxP1zjVosz
+         9r1A==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1775571939; x=1776176739;
+        d=1e100.net; s=20251104; t=1775571941; x=1776176741;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:x-gm-gg:x-gm-message-state:from
          :to:cc:subject:date:message-id:reply-to;
-        bh=8kTb1nxrmvzDufvOzlr6MJ8Yqsu0pkzDYB5uLfxFM34=;
-        b=PKFj2ju7eX1iLnD3TM9cBhIgo4gHrsBKaUPPrjGNA9VVMy0kUR0vErkBVpMQLzQ01x
-         NrkKpOSP94kOOfTPcUJWComPeIMPlomIXXYNYvE6CX6ZHGBbUbFNgWvZVlXbfnELJvYz
-         EaMTATEc50UMcPtqcHbIMmlekx+l6L53ZroyZkCUc7+9JNaeoKPkqVJlfYEp9Tae0mLS
-         vmiIFxW/p1xOErdDHCtnxxxlHhnrR4R8s7cro614gFih/F3JiMeJy3LZgeMcE9Bbwpjz
-         kyQYlbP87rZSPqiUib/4oz+t0tZz6W36l7IgZgAuCW18AHu04RfQWZ4iumCibTJfyoyH
-         RmHg==
-X-Gm-Message-State: AOJu0YzO2cRaRb+57KBMwIcza2gQ05wz9RzlcLOxrwy/nWs0nyHd4I0H
-	kjFnU4sUHrwGnpoimyempJ5kdMOJwRbQD0P/qIQwLZzr/6QPjDjIDtaGTdc/mBHP09waCA==
-X-Gm-Gg: AeBDietBBvl4U8oJHWiH+h74Sa3faEp4+pi+eCOd3BW6ahlB4Se5hT+DQvXRoW2wh7R
-	BTQ3fa8tUjVSU87yMnTcQAqYMJr7+IUA5AhH7zwtBa2t/Ys6UQn8LwNV+aRh62bJWqXaJrEK+Ep
-	KGBg9I3u96F/BnBomHeBS7oO2/Bb6Rt4HXPRcEuF+cAUzZw8esRvaCVa9QbYqJGoWxU+OidTTnY
-	7Ae7nIvx7HgjZfIwHCUBZ9o4qXKEICfzHPZe9pTmuladzoeJM63mFfhF+nlAfcNMxMO68U2JFIh
-	o9DEJ0LItKiBaY5/eECw7Q6CnV9JfR1EEJZCjERSH9FP8vNNgwOWMRrCbKFj4jcYUmSxUxI/9Uk
-	dQu7RAmueBUM6ymztKxXwM+FYeSngVmJueCb8GI0xRRCaAyhd+DybujpMdnJ8BCCbLI65GZ6xmh
-	cWiU2L2HvuKm3QYpabqa9nROqTvvsWcgiJVSpCd6OsvwMEZUQbg12JT4WhJJf/6A==
-X-Received: by 2002:a05:6000:186f:b0:43d:4c34:6668 with SMTP id ffacd0b85a97d-43d4c346772mr1883002f8f.0.1775571939138;
-        Tue, 07 Apr 2026 07:25:39 -0700 (PDT)
+        bh=dxSRimATBcfYurd5oZ/SGQyL2ML4iFG/Nsr5i0TaWFg=;
+        b=DtQKN6I6OneSQ96KnEgYvhBQdxtV+kVH8lmxA/V24/vGSeQ5Xyc4DnQqDioaFm8pxb
+         x/A3anB2Xn7rcx3LLKeaSeZSMGiOPkLjyEjkQetK/5341QOceMm8jmv1WrkFIgMvyt/M
+         cvlUeOiaMmgU42+r8fkTGHx2b0SN/BToqqV1NXMcemUfG+X2EIg2ALxOs3FwN0TJgmbt
+         6jE5/I1bYuG2KAhXQUhZ4H7AuZ/X5se0ehLPapPY93JjoPtWtAvo6PR+1u6mZpUe/46G
+         RmId+6WBlxdz6lq2kjqn28ZxJI+LcjF5tqxHD5skp6SVo3UlhUdB2rIrgwQSdMwGK3K9
+         OKBw==
+X-Gm-Message-State: AOJu0YzOjWCRZ+DdOni8w2GHUjoHoqq8wE84XWeBdrjgdgu0rusdmoKb
+	okYx9pa0+B/rlO9BJ5v6kp3pXHCDyiL0d0Er3kKCHtjVlZkQdCYCsT6DA3ZRg8sE6B8+Gw==
+X-Gm-Gg: AeBDieuZUrm8KKPqTtpGwTubrUNvqdKsjMxvRvty2jivvxY6nwyHJsH1HXF90AQfoHv
+	T9+l6X7ZwLrRhynAicl/PJmxG4uNYa9ymd/bCwoSK/wadWEAl7SQcC9Yzm5msKYECMVvRhyvgIJ
+	kR6C6RMHQv+t8QSBc3+vaGTPOe9zaYGtpswoO4QJxI/MeIf6d/NtpZpeDHflwvsB5EC1nrAsF52
+	RIry91CFXSc1QpThHa9D3mwBqfzEBj0RMeb+mKcB7VDZRA0Z4Ep9njeiZfMv6v0zAhwig7MzGUZ
+	YZBnTxn+rzt8a3Zexh3+iIEOC64k7T4no+RfUaGJvTfnU+xbq7YsozzsrpY5B0WNvvAOo4aLpuw
+	QpuNRNwvMjdIryydGx33o06kUiw5U9jMWZjvVPWUAUrMJT+KqC0OYNDU8hIqGRnOmNxa1NcYB3k
+	B8ecBwIzUhFh/nMCvL44uNcn0CzKtYmULHp3rntJMcvoZ84iA3GRHoKXPf2+5Jbg==
+X-Received: by 2002:a05:600c:3152:b0:486:b967:5c9b with SMTP id 5b1f17b1804b1-48899e90690mr135036095e9.3.1775571941416;
+        Tue, 07 Apr 2026 07:25:41 -0700 (PDT)
 Received: from localhost.localdomain ([31.7.38.28])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-43d1e4f1a99sm53489990f8f.32.2026.04.07.07.25.37
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-43d1e4f1a99sm53489990f8f.32.2026.04.07.07.25.39
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 07 Apr 2026 07:25:38 -0700 (PDT)
+        Tue, 07 Apr 2026 07:25:40 -0700 (PDT)
 From: Emre Cecanpunar <emreleno@gmail.com>
 To: platform-driver-x86@vger.kernel.org
 Cc: hansg@kernel.org,
@@ -65,9 +65,9 @@ Cc: hansg@kernel.org,
 	krishna.chomal108@gmail.com,
 	edip@medip.dev,
 	emreleno@gmail.com
-Subject: [PATCH v4 2/5] platform/x86: hp-wmi: avoid cancel_delayed_work_sync from work handler
-Date: Tue,  7 Apr 2026 17:25:11 +0300
-Message-ID: <20260407142515.20683-3-emreleno@gmail.com>
+Subject: [PATCH v4 3/5] platform/x86: hp-wmi: use mod_delayed_work to reset keep-alive timer
+Date: Tue,  7 Apr 2026 17:25:12 +0300
+Message-ID: <20260407142515.20683-4-emreleno@gmail.com>
 X-Mailer: git-send-email 2.53.0
 In-Reply-To: <20260407142515.20683-1-emreleno@gmail.com>
 References: <20260407142515.20683-1-emreleno@gmail.com>
@@ -79,34 +79,54 @@ List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-hp_wmi_apply_fan_settings() uses cancel_delayed_work_sync() to stop
-the keep-alive timer in AUTO mode. However, since
-hp_wmi_apply_fan_settings() is also called from the keep-alive
-handler, a race condition with a sysfs write can cause the handler to
-wait on itself, leading to a deadlock.
+Currently, schedule_delayed_work() is used to queue the 90s keep-alive
+timer. If a user manually changes the fan speed at T=85s,
+schedule_delayed_work() leaves the existing timer in place as it is a
+no-op if the work is already pending. This results in the keep-alive
+timer firing unnecessarily at T=90s, just 5 seconds after the user
+action.
 
-Replace cancel_delayed_work_sync() with cancel_delayed_work() in
-hp_wmi_apply_fan_settings() to avoid the self-flush deadlock.
+Replace schedule_delayed_work() with mod_delayed_work() to reset the
+90s timer whenever fan settings are applied. This guarantees a full 90s
+delay after every user interaction, preventing redundant keep-alive
+executions and improving efficiency.
 
 Fixes: c203c59fb5de ("platform/x86: hp-wmi: implement fan keep-alive")
 Signed-off-by: Emre Cecanpunar <emreleno@gmail.com>
 ---
- drivers/platform/x86/hp/hp-wmi.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+Changes in v3:
+- Reworded commit message to clarify this is an inefficiency fix, not
+  a functional bug.
+
+ drivers/platform/x86/hp/hp-wmi.c | 8 ++++----
+ 1 file changed, 4 insertions(+), 4 deletions(-)
 
 diff --git a/drivers/platform/x86/hp/hp-wmi.c b/drivers/platform/x86/hp/hp-wmi.c
-index eac39f68d762..79d6bc3cd223 100644
+index 79d6bc3cd223..2932cab9aa78 100644
 --- a/drivers/platform/x86/hp/hp-wmi.c
 +++ b/drivers/platform/x86/hp/hp-wmi.c
-@@ -2384,7 +2384,7 @@ static int hp_wmi_apply_fan_settings(struct hp_wmi_hwmon_priv *priv)
- 		}
+@@ -2361,8 +2361,8 @@ static int hp_wmi_apply_fan_settings(struct hp_wmi_hwmon_priv *priv)
+ 		ret = hp_wmi_fan_speed_max_set(1);
  		if (ret < 0)
  			return ret;
--		cancel_delayed_work_sync(&priv->keep_alive_dwork);
-+		cancel_delayed_work(&priv->keep_alive_dwork);
+-		schedule_delayed_work(&priv->keep_alive_dwork,
+-				      secs_to_jiffies(KEEP_ALIVE_DELAY_SECS));
++		mod_delayed_work(system_wq, &priv->keep_alive_dwork,
++				 secs_to_jiffies(KEEP_ALIVE_DELAY_SECS));
  		return 0;
- 	default:
- 		/* shouldn't happen */
+ 	case PWM_MODE_MANUAL:
+ 		if (!is_victus_s_thermal_profile())
+@@ -2370,8 +2370,8 @@ static int hp_wmi_apply_fan_settings(struct hp_wmi_hwmon_priv *priv)
+ 		ret = hp_wmi_fan_speed_set(priv, pwm_to_rpm(priv->pwm, priv));
+ 		if (ret < 0)
+ 			return ret;
+-		schedule_delayed_work(&priv->keep_alive_dwork,
+-				      secs_to_jiffies(KEEP_ALIVE_DELAY_SECS));
++		mod_delayed_work(system_wq, &priv->keep_alive_dwork,
++				 secs_to_jiffies(KEEP_ALIVE_DELAY_SECS));
+ 		return 0;
+ 	case PWM_MODE_AUTO:
+ 		if (is_victus_s_thermal_profile()) {
 -- 
 2.53.0
 
