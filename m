@@ -1,190 +1,238 @@
-Received: from fout-a8-smtp.messagingengine.com (fout-a8-smtp.messagingengine.com [103.168.172.151])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.10])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3F6E53469FC;
-	Tue,  7 Apr 2026 17:39:51 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=103.168.172.151
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 47EE73D5666;
+	Tue,  7 Apr 2026 17:46:01 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.10
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1775583595; cv=none; b=FdrC+MNeLn/6mFyyCojxBrd5oZn3Pn2RH8zKkuXFx4O4S8hzZYjodMNovKvGs+M7PBN5CvRumGQuP/l13G7M0VLL4vtmc78zWDtVCLa+Mf2mpfLb7gNV3mfCjVeXxBUj/0vIv+6kFDh7rboyvAvX1H6n6AySq5jd8wUdhN9WO74=
+	t=1775583969; cv=none; b=tmDLr1bJtp8wUFAmxz4t+iAraB0OPq3IRbHGakCTm2hEtav7bwIUpCrw8W9kgD2HAlgbvSIuN0GZ/HjXZ0+nFOIxjotnUqFJqrJwDtDqzZ/Rs4V7viRH1peWAZcHFJ9XfVZW4wkxDqdH1PJx226MSy6bIZgBlhEQ4qyei9h39Ww=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1775583595; c=relaxed/simple;
-	bh=Q/1BRvkcCzm61Op33ghmmbAOx4r6KGe8hekNSrURQDc=;
-	h=MIME-Version:Date:From:To:Cc:Message-Id:In-Reply-To:References:
-	 Subject:Content-Type; b=hQjWrsqTZM8pJ03u46QnfUTLcTWalyFbmAKKyvICX57koNfvKQ45AbNGzw33mKjfVhZjU0P8l7VeR63HV25LtgnBma/BSDrWJbx/3I4hTGZwHZyvr3RKGkSexsyJuf9p2BiwXVhJPPKav1OItm/iojn1SCxEusSaWiE+I3zgpfE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=squebb.ca; spf=pass smtp.mailfrom=squebb.ca; dkim=pass (2048-bit key) header.d=squebb.ca header.i=@squebb.ca header.b=aMRNImzj; dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b=A9hd9AYZ; arc=none smtp.client-ip=103.168.172.151
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=squebb.ca
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=squebb.ca
+	s=arc-20240116; t=1775583969; c=relaxed/simple;
+	bh=CKhq3jVtAhnbnvQNJe3hVbTEtge0L/VqPRJKVHAmgZI=;
+	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
+	 Content-Type:MIME-Version; b=MMMwlKWC5uNvZrW2nWB2iDIg22mA5DS5RJyvQal3IpLc4HM2bzRHUBCMidSssgShbQBhw8zmQ47X5pFNK4DRzQSOBRrn5fwQ6o9EHvW2oVtjkiv1m6lOi/mH5n0qctnsI4JqqURk5dV6APvgzEqmo8Y1LbGReOfdJRK6hizZGeM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=pass smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=P6m8Uwef; arc=none smtp.client-ip=198.175.65.10
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=squebb.ca header.i=@squebb.ca header.b="aMRNImzj";
-	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="A9hd9AYZ"
-Received: from phl-compute-02.internal (phl-compute-02.internal [10.202.2.42])
-	by mailfout.phl.internal (Postfix) with ESMTP id D9D6AEC04A4;
-	Tue,  7 Apr 2026 13:39:50 -0400 (EDT)
-Received: from phl-imap-08 ([10.202.2.84])
-  by phl-compute-02.internal (MEProxy); Tue, 07 Apr 2026 13:39:50 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=squebb.ca; h=cc
-	:cc:content-transfer-encoding:content-type:content-type:date
-	:date:from:from:in-reply-to:in-reply-to:message-id:mime-version
-	:references:reply-to:subject:subject:to:to; s=fm3; t=1775583590;
-	 x=1775669990; bh=vyW4A3TVWiIRNcwE+FUGUf28XAk9UHsbgPFkDwrI1wI=; b=
-	aMRNImzjNYm07+y2QrR4k1CpfAvu/9Igs7q9c1TsH4ujx4m0QifEzX6AV/ctZJe1
-	aLrc06NwsH4KDbGfkVg1vOVV64GIkRRPwPjpF0MX0L/RuN18GH8K9kKsx2OibQSj
-	ZLTcfsRt11u1R6I6wzDEjQLbwyyV7jJN+xHWRarp30D8/hy/KKm0TNjk9MzZG4ce
-	Hwf6S3A+gqDbOUVRkWf7wFR+wabag2NJZFvTVXfj99pWrw2hbq4XwPbFbtbrn1bh
-	LUW/0BpQNetd8Ccqo6wUC12Vyb7n3j0uLFYD3Dt/jx9ioyik1WC98nUDDJCZgWFm
-	ZQeLykXsAcuBgxa4LC5mjQ==
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-	messagingengine.com; h=cc:cc:content-transfer-encoding
-	:content-type:content-type:date:date:feedback-id:feedback-id
-	:from:from:in-reply-to:in-reply-to:message-id:mime-version
-	:references:reply-to:subject:subject:to:to:x-me-proxy
-	:x-me-sender:x-me-sender:x-sasl-enc; s=fm2; t=1775583590; x=
-	1775669990; bh=vyW4A3TVWiIRNcwE+FUGUf28XAk9UHsbgPFkDwrI1wI=; b=A
-	9hd9AYZdV/sqxtUXQNVend3n8QllOXHcsFgJKdNwjK4WAyRJxfgREQ2LmwGK6w3S
-	F3IMg74HMUjjKl//FBpoDvrmv4x+bSxUrRYmcX8wkLWtqDWt3b3c7dGZSEhUOTVi
-	iN7Ax3vrIAM/gOrau9MOWIdBXsKhKA9huyCzC2xuGIR/Q1PtR8BPgRcGyOMt0JG6
-	ZjLi+nXEyHMmtrC3/SJQWBhJ8Nm2BgL8hM5dgXN8FQ4uIpCTZgDZBMkuF7IVTpaW
-	YpxhhEpF2ArPcSGW3hIoZy/xrSttyKtvFuAIhQwQuBxtOlp7TyJDEi456Zj73fdv
-	8tEi8uGwE3bittohGmjTw==
-X-ME-Sender: <xms:ZkHVab5KGfTVptSrLYYGmWa-Pbw1A9KQ1Uxg4WMw_kQFZ0za5p9gtw>
-    <xme:ZkHVabtaoi4hemqVmS0meOuIoodq6yHweD0LD6GZ2Jd5r4YitRiZxloy1o8iMXQdq
-    UUPNB4QFUE2gGi5plLU_CgH5_0i_OiO9NFFIuNaR-RrnmVyuzcTBFs>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeefhedrtddtgddvuddvjecutefuodetggdotefrod
-    ftvfcurfhrohhfihhlvgemucfhrghsthforghilhdpuffrtefokffrpgfnqfghnecuuegr
-    ihhlohhuthemuceftddtnecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenucfjug
-    hrpefoggffhffvvefkjghfufgtgfesthhqredtredtjeenucfhrhhomhepfdforghrkhcu
-    rfgvrghrshhonhdfuceomhhpvggrrhhsohhnqdhlvghnohhvohesshhquhgvsggsrdgtrg
-    eqnecuggftrfgrthhtvghrnhephfevkeejueeukeefhfelleejheeuudfgteffvdetkeff
-    jeduleffvdejkeefhedvnecuvehluhhsthgvrhfuihiivgeptdenucfrrghrrghmpehmrg
-    hilhhfrhhomhepmhhpvggrrhhsohhnqdhlvghnohhvohesshhquhgvsggsrdgtrgdpnhgs
-    pghrtghpthhtohepkedpmhhouggvpehsmhhtphhouhhtpdhrtghpthhtohepsghulhhgrg
-    hruggrnhhiihhludeksehgmhgrihhlrdgtohhmpdhrtghpthhtohepuggvrhgvkhhjohhh
-    nhdrtghlrghrkhesghhmrghilhdrtghomhdprhgtphhtthhopehhmhhhsehhmhhhrdgvnh
-    hgrdgsrhdprhgtphhtthhopehhrghnshhgsehkvghrnhgvlhdrohhrghdprhgtphhtthho
-    pehilhhpohdrjhgrrhhvihhnvghnsehlihhnuhigrdhinhhtvghlrdgtohhmpdhrtghpth
-    htohepihgsmhdqrggtphhiqdguvghvvghlsehlihhsthhsrdhsohhurhgtvghfohhrghgv
-    rdhnvghtpdhrtghpthhtoheplhhinhhugidqkhgvrhhnvghlsehvghgvrhdrkhgvrhhnvg
-    hlrdhorhhgpdhrtghpthhtohepphhlrghtfhhorhhmqdgurhhivhgvrhdqgiekieesvhhg
-    vghrrdhkvghrnhgvlhdrohhrgh
-X-ME-Proxy: <xmx:ZkHVafKvDaFzuJDzHMujQc3OR2CCV1lko0da3YK131z0HZiKuG3fwg>
-    <xmx:ZkHVaTkMof_fBgHS1fTyGbBO5kTL7MUUPyhbXx9t9S7XcFxPqChLGQ>
-    <xmx:ZkHVaYZmIATahUrvC0zhOY9KG_6_7qVCFrS7ygmnzOuaW_1Md08QSQ>
-    <xmx:ZkHVaf_xOw0A4wZyvGFylQ0Sxh5fF6xHBDcbCgOYT_hfPdU3boTZ9g>
-    <xmx:ZkHVaQOdLfwyqo_C6BB7J2XQCxdmfmcyiI4cESdJ723doqYw83f-dgPe>
-Feedback-ID: ibe194615:Fastmail
-Received: by mailuser.phl.internal (Postfix, from userid 501)
-	id 3E3672CE3F93; Tue,  7 Apr 2026 13:39:50 -0400 (EDT)
-X-Mailer: MessagingEngine.com Webmail Interface
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="P6m8Uwef"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1775583962; x=1807119962;
+  h=message-id:subject:from:to:cc:date:in-reply-to:
+   references:content-transfer-encoding:mime-version;
+  bh=CKhq3jVtAhnbnvQNJe3hVbTEtge0L/VqPRJKVHAmgZI=;
+  b=P6m8UwefRnDS2a0oPPydSgdsMWh7Nuz5cKCtA4j7N+sspJ5ihZbn6zP9
+   HV6iCavTgfSr+FKOkS0CROgXVj4xfyNQbvJHhkKeVANWhFic+7LC4gw6+
+   Zq/btQl7ATnHmOk1LVuDoe3/LKOVoNMms0f9dMpCtoZ8JHDWa44zvm1xC
+   rn2K5R6UaKUqb0IVYMqYb4RcbEjHAYSw2VnTJtKzuL6K4EUH9U8i3Wkyn
+   16tZtvH78JYWD8ATxN6amMUDu5q99wGzX1++Im/OwaraOnfB7ivo8alQl
+   T0mp+peGSoVIQDmJLDaReOMD1/wcq8VysSJiBQWGHJZoR06VGkL/R355f
+   Q==;
+X-CSE-ConnectionGUID: 6RhzYfPVT02FqWtoiTJhEQ==
+X-CSE-MsgGUID: Y4mp5HBdSKOA4eW96JP7LA==
+X-IronPort-AV: E=McAfee;i="6800,10657,11752"; a="93944078"
+X-IronPort-AV: E=Sophos;i="6.23,166,1770624000"; 
+   d="scan'208";a="93944078"
+Received: from fmviesa008.fm.intel.com ([10.60.135.148])
+  by orvoesa102.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 07 Apr 2026 10:45:59 -0700
+X-CSE-ConnectionGUID: ReQMdKzZT16vLthth0lhcA==
+X-CSE-MsgGUID: f7EyRpIOQ9Ckqr5Oup2TXg==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.23,166,1770624000"; 
+   d="scan'208";a="225478520"
+Received: from spandruv-desk2.jf.intel.com ([10.88.27.176])
+  by fmviesa008-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 07 Apr 2026 10:45:59 -0700
+Message-ID: <e96c61877730f624e8ab9793c17f485538dde545.camel@linux.intel.com>
+Subject: Re: [PATCH v2 0/2] platform/x86/intel-uncore-freq: Expose instance
+ ID in the sysfs
+From: srinivas pandruvada <srinivas.pandruvada@linux.intel.com>
+To: Maciej Wieczor-Retman <m.wieczorretman@pm.me>, hansg@kernel.org, 
+	ilpo.jarvinen@linux.intel.com
+Cc: linux-kernel@vger.kernel.org, platform-driver-x86@vger.kernel.org, 
+	dedekind1@gmail.com, artem.bityutskiy@linux.intel.com
+Date: Tue, 07 Apr 2026 10:45:58 -0700
+In-Reply-To: <cover.1775159775.git.m.wieczorretman@pm.me>
+References: <cover.1775159775.git.m.wieczorretman@pm.me>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+User-Agent: Evolution 3.56.2 (3.56.2-2.fc42) 
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-ThreadId: ApC5oMBbhHqR
-Date: Tue, 07 Apr 2026 13:39:29 -0400
-From: "Mark Pearson" <mpearson-lenovo@squebb.ca>
-To: 
- =?UTF-8?Q?=D0=94=D0=B0=D0=BD=D0=B8=D0=B8=D0=BB_=D0=91=D1=83=D0=BB=D0=B3?=
- =?UTF-8?Q?=D0=B0=D1=80=D1=8C?= <bulgardaniil18@gmail.com>,
- "Henrique de Moraes Holschuh" <hmh@hmh.eng.br>,
- "Derek J . Clark" <derekjohn.clark@gmail.com>
-Cc: "Hans de Goede" <hansg@kernel.org>,
- =?UTF-8?Q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>,
- ibm-acpi-devel@lists.sourceforge.net,
- "platform-driver-x86@vger.kernel.org" <platform-driver-x86@vger.kernel.org>,
- linux-kernel@vger.kernel.org
-Message-Id: <e4723a5a-0bdd-4062-af38-ca5f4a4f6d1d@app.fastmail.com>
-In-Reply-To: <096ee581-2c27-4746-bc7e-1d699a952764@app.fastmail.com>
-References: 
- <CAMPU55i_MPW_MHBsBfbnrO7T5Q68q1QmNgLVBPiqoh30kGw4Pw@mail.gmail.com>
- <096ee581-2c27-4746-bc7e-1d699a952764@app.fastmail.com>
-Subject: Re: [PATCH] platform/x86/lenovo: thinkpad_acpi: add named speed presets to
- fan_write_cmd_speed
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: quoted-printable
 
-Hi Daniil
+On Thu, 2026-04-02 at 19:59 +0000, Maciej Wieczor-Retman wrote:
+> --- Motivation
+>=20
+> This patchset is about exporting instance ID, a value used to
+> uniquely
+> identify MMIO blocks in TPMI devices. Userspace tools like "pepc" [1]
+> can use it for direct MMIO reads or writes. It's faster than the
+> alternative legacy approach which is interacting with MSRs.
+This statement is not required. MSR is not an option. This allows PEPC
+like tools to do some platform specific turning which is not supported
+via uncore sysfs.
 
-On Mon, Mar 30, 2026, at 9:19 PM, Mark Pearson wrote:
-> Hi Daniil
->
-> On Mon, Mar 30, 2026, at 4:35 PM, =D0=94=D0=B0=D0=BD=D0=B8=D0=B8=D0=BB=
- =D0=91=D1=83=D0=BB=D0=B3=D0=B0=D1=80=D1=8C wrote:
->> platform/x86/lenovo: thinkpad_acpi: add named speed presets to
->> fan_write_cmd_speed
->>
->> The fan_write_cmd_speed() function had a TODO comment suggesting
->> support for named speed presets (low, medium, high). Implement
->> this by mapping the preset names to the existing fan_speed_presets
->> enum values, following the same strstarts() pattern used in
->> fan_write_cmd_level().
->> Signed-off-by: Daniil Bulgar <bulgardaniil18@gmail.com>
->> ---
->>  drivers/platform/x86/lenovo/thinkpad_acpi.c | 17 +++++++++++++----
->>  1 file changed, 13 insertions(+), 4 deletions(-)
->>
->> diff --git a/drivers/platform/x86/lenovo/thinkpad_acpi.c
->> b/drivers/platform/x86/lenovo/thinkpad_acpi.c
->> index 8982d92df..f10cebe11 100644
->> --- a/drivers/platform/x86/lenovo/thinkpad_acpi.c
->> +++ b/drivers/platform/x86/lenovo/thinkpad_acpi.c
->> @@ -7957,6 +7957,12 @@ enum fan_control_commands {
->>                          * and also watchdog cmd */
->>  };
->>
->> +enum fan_speed_preset {
->> +    TPACPI_FAN_SPEED_LOW    =3D 65535 / 4,    /* 25% speed */
->> +    TPACPI_FAN_SPEED_MEDIUM    =3D 65535 / 2,    /* 50% speed */
->> +    TPACPI_FAN_SPEED_HIGH    =3D 65535,    /* 100% speed */
->> +};
->> +
->>  static bool fan_control_allowed;
->>
->>  static enum fan_status_access_mode fan_status_access_mode;
->> @@ -9249,10 +9255,13 @@ static int fan_write_cmd_speed(const char *cm=
-d, int *rc)
->>  {
->>      int speed;
->>
->> -    /* TODO:
->> -    * Support speed <low> <medium> <high> ? */
->> -
->> -    if (sscanf(cmd, "speed %d", &speed) !=3D 1)
->> +    if (strstarts(cmd, "speed low"))
->> +        speed =3D TPACPI_FAN_SPEED_LOW;
->> +    else if (strstarts(cmd, "speed medium"))
->> +        speed =3D TPACPI_FAN_SPEED_MEDIUM;
->> +    else if (strstarts(cmd, "speed high"))
->> +        speed =3D TPACPI_FAN_SPEED_HIGH;
->> +    else if (sscanf(cmd, "speed %d", &speed) !=3D 1)
->>          return 0;
->>
->>      *rc =3D fan_set_speed(speed);
->> --=20
->> 2.53.0
->
-> I'd never noticed that TODO :)
->
-> No issues with the code but I'd like to check with the thermal team if=20
-> those are better ways of determining the ranges. I've got a feeling=20
-> that they probably aren't.=20
-> Fans don't go that high (or low) during operation so I wonder if there=20
-> are better 'ranges' to be used (though it might be platform dependent=20
-> too)
->
-> I'll ask if there is any guidance on it.
->
+Thanks,
+Srinivas
 
-Afraid I'm going to nack this patch.
-
-I reviewed with the thermal team and there are 7 or more different level=
-s and the speeds and steps between speeds can vary between platforms qui=
-te significantly.
-Trying to fit them into a low/medium/high framework just doesn't seem a =
-good idea I'm afraid.
-
-I'd be good with a patch removing the TODO comment :)
-
-Mark
-
+>=20
+> Currently exported information allows doing this on non-partitioned
+> systems, but partitioned systems require additional steps to map MMIO
+> blocks.
+>=20
+> [1] https://github.com/intel/pepc
+>=20
+> --- Background
+>=20
+> * TPMI MMIO organization
+> For each TPMI device a direct register access is possible through
+> MMIO
+> mapped blocks, where:
+> - Each block belongs to a different power domain.
+> - Each power domain is exposed in sysfs via a domain_id attribute.
+> - Power domain scope is per-die (either IO dies or compute dies).
+> - Compute die blocks are ordered first, before IO die blocks in
+> =C2=A0 MMIO space.
+>=20
+> * Domain ID mapping
+> For compute dies, the mapping is architectural through a CPUID leaf
+> or
+> via MSR 0x54:
+> - Compute die IDs directly correspond to CPU die IDs
+> - CPU die ID can be obtained from MSR 0x54 or recent CPUID leaves
+> - Example: domain_id equal to 1 applies to all CPUs with die ID 1
+>=20
+> * IO die mapping
+> For IO dies, the relationship is generation/platform specific. It's
+> generally not recommended to assume any specific IO organization but
+> uncore sysfs provides an attribute to differentiate die types.
+>=20
+> * Partitioning
+> In partitioned systems multiple TPMI devices exist per package.
+> However
+> CPUs are still enumerated package-wide and so die IDs (domain_id) are
+> unique per-package. For example a single partition (single TPMI
+> device)
+> Granite Rapids might order its dies in the following way:
+>=20
+> +---------------------+-----------+
+> > Die type and number | Domain ID |
+> +---------------------+-----------+
+> > Compute die 0	=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 |=C2=A0=C2=A0=C2=A0=C2=A0=
+=C2=A0=C2=A0=C2=A0=C2=A0 0 |
+> > Compute die 1=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 |=C2=A0=C2=A0=C2=A0=
+=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 1 |
+> > IO die 0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
+=A0 |=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 2 |
+> > IO die 1=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
+=A0 |=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 3 |
+> +---------------------+-----------+
+>=20
+> While a two partition system may be numbered in this way:
+>=20
+> +---------------------+-------------+-------------+
+> > Die type and number |=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 D=
+omain ID=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 |
+> > local in single=C2=A0=C2=A0=C2=A0=C2=A0 +-------------+-------------+
+> > partition scope=C2=A0=C2=A0=C2=A0=C2=A0 | Partition 0 | Partition 1 |
+> +---------------------+-------------+-------------+
+> > Compute die 0	=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 |=C2=A0=C2=A0=C2=A0=C2=A0=
+=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 0 |=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
+=A0=C2=A0=C2=A0=C2=A0=C2=A0 2 |
+> > Compute die 1=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 |=C2=A0=C2=A0=C2=A0=
+=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 1 |=C2=A0=C2=A0=C2=A0=C2=A0=C2=
+=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 3 |
+> > IO die 0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
+=A0 |=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 4 |=C2=A0=
+=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 6 |
+> > IO die 1=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
+=A0 |=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 5 |=C2=A0=
+=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 7 |
+> +---------------------+-------------+-------------+
+>=20
+> The cd_mask value from the TPMI bus info register can show using a
+> bitmap which compute dies belong to which partition.
+>=20
+> * Instance ID
+> Partition ID is not an architectural value, meaning there is no CPUID
+> or
+> MSR to map a CPU to a partition number. Therefore to allow mapping
+> CPUs
+> to compute dies as well as mapping TPMI registers in MMIO mapped
+> space
+> two numbers need to be exported:
+> - domain_id
+> 	- Whether the system is partitioned or not it still allows
+> 	=C2=A0 mapping CPUs to compute die IDs.
+> - instance_id
+> 	- A per-partition (and hence per-device) physical index to
+> still
+> 	=C2=A0 allow mapping MMIO blocks to both compute and IO dies. On
+> 	=C2=A0 partitioned systems mapping IO dies would be very
+> difficult
+> 	=C2=A0 since they are only indexed after all the compute dies are
+> 	=C2=A0 numbered.
+>=20
+> As one can see, on non-partitioned systems the instance ID and domain
+> ID
+> have the same value. It's only on partitioned systems that both
+> values
+> are needed to keep all mapping functionality. To better show the
+> relationship this is how values on a partitioned system can look:
+>=20
+> +---------------------+-------------+-------------+-------------+----
+> ---------+
+> > Die type and number |=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 D=
+omain ID=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 |=C2=A0=C2=A0=C2=
+=A0=C2=A0=C2=A0=C2=A0=C2=A0 Instance
+> > ID=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 |
+> > local in single=C2=A0=C2=A0=C2=A0=C2=A0 +-------------+-------------+--=
+-----------+----
+> > ---------+
+> > partition scope=C2=A0=C2=A0=C2=A0=C2=A0 | Partition 0 | Partition 1 | P=
+artition 0 |
+> > Partition 1 |
+> +---------------------+-------------+-------------+-------------+----
+> ---------+
+> > Compute die 0	=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 |=C2=A0=C2=A0=C2=A0=C2=A0=
+=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 0 |=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
+=A0=C2=A0=C2=A0=C2=A0=C2=A0 2 |=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
+=C2=A0=C2=A0=C2=A0 0
+> > |=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 0 |
+> > Compute die 1=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 |=C2=A0=C2=A0=C2=A0=
+=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 1 |=C2=A0=C2=A0=C2=A0=C2=A0=C2=
+=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 3 |=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
+=C2=A0=C2=A0=C2=A0=C2=A0 1
+> > |=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 1 |
+> > IO die 0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
+=A0 |=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 4 |=C2=A0=
+=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 6 |=C2=A0=C2=A0=C2=
+=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 2
+> > |=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 2 |
+> > IO die 1=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
+=A0 |=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 5 |=C2=A0=
+=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 7 |=C2=A0=C2=A0=C2=
+=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 3
+> > |=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 3 |
+> +---------------------+-------------+-------------+-------------+----
+> ---------+
+>=20
+> Maciej Wieczor-Retman (2):
+> =C2=A0 platform/x86/intel-uncore-freq: Rename instance_id
+> =C2=A0 platform/x86/intel-uncore-freq: Expose instance ID in the sysfs
+>=20
+> =C2=A0.../pm/intel_uncore_frequency_scaling.rst=C2=A0=C2=A0=C2=A0=C2=A0=
+=C2=A0=C2=A0=C2=A0 |=C2=A0 7 +++++++
+> =C2=A0.../uncore-frequency/uncore-frequency-common.c=C2=A0=C2=A0 | 16 +++=
+++++++++++-
+> --
+> =C2=A0.../uncore-frequency/uncore-frequency-common.h=C2=A0=C2=A0 |=C2=A0 =
+8 ++++++--
+> =C2=A0.../uncore-frequency/uncore-frequency-tpmi.c=C2=A0=C2=A0=C2=A0=C2=
+=A0 | 15
+> ++++++++++++++-
+> =C2=A04 files changed, 40 insertions(+), 6 deletions(-)
