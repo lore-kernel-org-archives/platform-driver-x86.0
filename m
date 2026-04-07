@@ -1,143 +1,147 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.17])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.21])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A85223859EC;
-	Tue,  7 Apr 2026 13:33:31 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.17
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1985A3B636E;
+	Tue,  7 Apr 2026 13:59:58 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.21
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1775568813; cv=none; b=WDNK2eD8+yLqyID1FBy+PDxmn+oo7CSMk8j4ifCxj93scGCIXekRJJkQfAIi+gh0AtgR60Jk6+LVQ2SCFV3AT00A+QNXzJ0A8C0WhDIUZw3k2GMf7ImbHXYkixBAMYO/ifmQJ6ZbJd1tQwx8Cu376oLJ17AJUMHhcvQ/3vBJxuQ=
+	t=1775570400; cv=none; b=ooty5LvFLa9SUkOmsZX1+/yvlhIZZQjTAOtWsZ3UADMALcB8hYqhEHlT8KEZZ49aHq2WrMKMK8F/QkGa0MJF5rAYMOZ2LOm+B8rZj2LBSVZqpZcEWGJ280p/Uh9GIKG1hPP1MKvytYTlB/z5+azO85y6CpQlE70wpAnsNUkCXTY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1775568813; c=relaxed/simple;
-	bh=o5weGs+fvxwUJXqhhhAGaa2cpAqk/dlykKj8ROgw8Dw=;
-	h=From:Date:To:cc:Subject:In-Reply-To:Message-ID:References:
-	 MIME-Version:Content-Type; b=iQCM0GUVIVhsUCC5hKT8H5H8j0/GjQxKgK1ThsvGpYSAEZqC/5gRbdJ52pu7khvVqggNPtRVjW5jUJwsEg9wSvaJ4ozRk9Ax7MFKCCbrSNL2mYCAqWiIiI4PmCZWvX97RkXHDWXqdz5WwHtCuaxNDgMsCi1NMDAvF+gmRs9NkjA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=pass smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=Ircx8SmR; arc=none smtp.client-ip=192.198.163.17
+	s=arc-20240116; t=1775570400; c=relaxed/simple;
+	bh=H3Fo4J2NVU0PFRfCQAwlJEgYC6mqn4kJRkIsmg1rNmQ=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=PK9GZqk2X+OEoNWMjSf4y3pi0zwpaJExTQLQdJUAWJhrPee8AT/7S5hwXzGAP6codUQ47mL3htxRUs0pQD5GKWTDCuy9CB72wbTjI0TG0SPXkxS6HN3pzubBmBJgtWIdfICUDrrtCHwy9iwvWgHDf+eAQkPYJn3Ae7bLAibX7Ks=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=pass smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=KFjXiaUj; arc=none smtp.client-ip=198.175.65.21
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="Ircx8SmR"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="KFjXiaUj"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1775568811; x=1807104811;
-  h=from:date:to:cc:subject:in-reply-to:message-id:
-   references:mime-version;
-  bh=o5weGs+fvxwUJXqhhhAGaa2cpAqk/dlykKj8ROgw8Dw=;
-  b=Ircx8SmRyqXGDHsm0CbVnGh+tWluOkRjC4Ft+HLcvjLfPYGKQtwE0Hrm
-   s29kdiV3TpKNrjg4HnwKB6/r4J6lDRM3lbNhmxe7hs593+vj7XzN0iFBx
-   HnpY4v1fJxlAX5m4ougwiHc1j4uLBHq639Kp2ghWL1BCQd/vsYq4EU0uv
-   F0Lemn2y1t5Xx/NU1K0izxLuEjljRdSsrdAxYiZCg84gBXdRM1fLMEKgh
-   caRoxTbxLrcmfCCJV9ME0Aq7RgSmMB/7E/KaIxKnxoGMUIRI2c46i0dXs
-   vSH+puyCdLvI0/52GQfdFc+/xislhYz9k7x4jUmtMi9cc+WCftxXaKF/l
-   Q==;
-X-CSE-ConnectionGUID: U6R7cMpmQ1eSh9nNB5lazQ==
-X-CSE-MsgGUID: +LOifNbISUuFXQG3BKBVvg==
-X-IronPort-AV: E=McAfee;i="6800,10657,11752"; a="76426276"
+  t=1775570399; x=1807106399;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:content-transfer-encoding:in-reply-to;
+  bh=H3Fo4J2NVU0PFRfCQAwlJEgYC6mqn4kJRkIsmg1rNmQ=;
+  b=KFjXiaUjrQBaUb7SBE2M+hlt2hCUGWcOpEkNOq7zK/MO970unci8Waty
+   vUFnE5XiA0uf09PTop5vKWr377HfdfJnnyVMdqrG6/q9wU8bzUaim33j7
+   Pg0AUyjXr9C5JnF2DSuRtXnUb7SR1ORYKCAnVJfDs1vhRB/zdaUV7X9UA
+   3DY2aT0c/5rSJcXGlabM1o4udVDRPOUdollXX2qHpGBEg7+ij6DnmlQwM
+   fV6Uo6PvuzrA5NzbvhWcg53PvRYx0SwTv55PdNtKVsHGx8u/W5yhWQPJa
+   E2MhGkQJm/hV46OczP85cIj8qgXWtr//R3VtGR4/5pH88h6aPYv8Vtsrj
+   g==;
+X-CSE-ConnectionGUID: wozY9WhbSWaxH2KWOTaGUQ==
+X-CSE-MsgGUID: n967fMBuTAeldXDhtCfT+Q==
+X-IronPort-AV: E=McAfee;i="6800,10657,11752"; a="76416502"
 X-IronPort-AV: E=Sophos;i="6.23,165,1770624000"; 
-   d="scan'208";a="76426276"
-Received: from fmviesa007.fm.intel.com ([10.60.135.147])
-  by fmvoesa111.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 07 Apr 2026 06:33:31 -0700
-X-CSE-ConnectionGUID: oIYJA6DPSUK+6tsAlUnJYg==
-X-CSE-MsgGUID: BvosUNORSpOmXe4v4jqg2g==
+   d="scan'208";a="76416502"
+Received: from fmviesa002.fm.intel.com ([10.60.135.142])
+  by orvoesa113.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 07 Apr 2026 06:59:59 -0700
+X-CSE-ConnectionGUID: IGZNhBObRoOtINcVfkMZIw==
+X-CSE-MsgGUID: EdV9wd8jR22m7NUwFtblFA==
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="6.23,165,1770624000"; 
-   d="scan'208";a="224986734"
-Received: from ijarvine-mobl1.ger.corp.intel.com (HELO localhost) ([10.245.244.110])
-  by fmviesa007-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 07 Apr 2026 06:33:09 -0700
-From: =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
-Date: Tue, 7 Apr 2026 16:33:06 +0300 (EEST)
-To: "David E. Box" <david.e.box@linux.intel.com>
-cc: irenic.rajneesh@gmail.com, srinivas.pandruvada@linux.intel.com, 
-    xi.pardee@linux.intel.com, Hans de Goede <hansg@kernel.org>, 
-    LKML <linux-kernel@vger.kernel.org>, platform-driver-x86@vger.kernel.org
-Subject: Re: [PATCH V2 14/17] platform/x86/intel/pmc/ssram_telemetry: Fix
- cleanup pattern for __free() variables
-In-Reply-To: <20260325014819.1283566-15-david.e.box@linux.intel.com>
-Message-ID: <4e5324cb-a60d-c292-8945-583723f18571@linux.intel.com>
-References: <20260325014819.1283566-1-david.e.box@linux.intel.com> <20260325014819.1283566-15-david.e.box@linux.intel.com>
+   d="scan'208";a="251309532"
+Received: from pgcooper-mobl3.ger.corp.intel.com (HELO localhost) ([10.245.244.182])
+  by fmviesa002-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 07 Apr 2026 06:59:54 -0700
+Date: Tue, 7 Apr 2026 16:59:52 +0300
+From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+To: Bartosz Golaszewski <brgl@kernel.org>
+Cc: Dmitry Torokhov <dmitry.torokhov@gmail.com>,
+	Bartosz Golaszewski <bartosz.golaszewski@oss.qualcomm.com>,
+	Daniel Scally <djrscally@gmail.com>,
+	Heikki Krogerus <heikki.krogerus@linux.intel.com>,
+	Sakari Ailus <sakari.ailus@linux.intel.com>,
+	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+	"Rafael J. Wysocki" <rafael@kernel.org>,
+	Danilo Krummrich <dakr@kernel.org>,
+	Mika Westerberg <mika.westerberg@linux.intel.com>,
+	Andy Shevchenko <andy@kernel.org>,
+	Linus Walleij <linusw@kernel.org>, Hans de Goede <hansg@kernel.org>,
+	Ilpo =?iso-8859-1?Q?J=E4rvinen?= <ilpo.jarvinen@linux.intel.com>,
+	Len Brown <lenb@kernel.org>, linux-acpi@vger.kernel.org,
+	driver-core@lists.linux.dev, linux-kernel@vger.kernel.org,
+	linux-gpio@vger.kernel.org, platform-driver-x86@vger.kernel.org
+Subject: Re: [PATCH v2 1/4] software node: return -ENXIO when referenced
+ swnode is not registered yet
+Message-ID: <adUN2LIjNn9Y_xeT@ashevche-desk.local>
+References: <20260402-baytrail-real-swnode-v2-0-6f5054a4cc07@oss.qualcomm.com>
+ <20260402-baytrail-real-swnode-v2-1-6f5054a4cc07@oss.qualcomm.com>
+ <ac5wprh9vfTU5pGa@ashevche-desk.local>
+ <ac7UqTsPC8yUooAR@google.com>
+ <CAMRc=Mcq-T=4fnGTWXzEBjfiPaZLGw4HVAuOm48v-5Uf++K5xg@mail.gmail.com>
+ <ac_9EV3C0I1WXQz2@google.com>
+ <CAMRc=MeRSKWoEn36hht4JuwrwOMpoA5g_Xju2XT9Urq3mQS2wg@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <CAMRc=MeRSKWoEn36hht4JuwrwOMpoA5g_Xju2XT9Urq3mQS2wg@mail.gmail.com>
+Organization: Intel Finland Oy - BIC 0357606-4 - c/o Alberga Business Park, 6
+ krs, Bertel Jungin Aukio 5, 02600 Espoo
 
-On Tue, 24 Mar 2026, David E. Box wrote:
+On Tue, Apr 07, 2026 at 12:57:29PM +0200, Bartosz Golaszewski wrote:
+> On Fri, Apr 3, 2026 at 8:07 PM Dmitry Torokhov
+> <dmitry.torokhov@gmail.com> wrote:
+> > On Fri, Apr 03, 2026 at 09:29:38AM +0200, Bartosz Golaszewski wrote:
+> > > On Thu, Apr 2, 2026 at 10:43 PM Dmitry Torokhov
+> > > <dmitry.torokhov@gmail.com> wrote:
+> > > > On Thu, Apr 02, 2026 at 04:35:34PM +0300, Andy Shevchenko wrote:
+> > > > > On Thu, Apr 02, 2026 at 02:54:26PM +0200, Bartosz Golaszewski wrote:
 
-> Fix improper cleanup.h usage where __free() variables were initialized to
-> NULL and then assigned later. Move ssram variable declarations into the
-> if/else branches where they're actually assigned to follow the safer
-> pattern recommended in cleanup.h.  This change requires also moving the
-> pmc_ssram_get_devid_pwrmbase() and add_pmt calls into both if/else branches
-> to keep operations within the scope of the local ssram variables.
+...
+
+> > > Because -EPROBE_DEFER only makes sense in probe() context, while
+> > > fwnode_get_reference_args() may be called in many other situations.
+> >
+> > Exactly same argument applies to your follow-up change: gpiod_get()
+> > returning -EPROBE_DEFER only makes sense in probe context but it may be
+> > called in many other situations. Are you planning to change all places
+> > where gpiolib returns -EPROBE_DEFER to something else just in case it
+> > might be called outside of probe context?
 > 
-> Signed-off-by: David E. Box <david.e.box@linux.intel.com>
-> ---
-> 
-> V2 changes:
-> - New patch addressing Ilpo's review of cleanup.h patterns
-> 
->  .../platform/x86/intel/pmc/ssram_telemetry.c  | 25 +++++++++++--------
->  1 file changed, 15 insertions(+), 10 deletions(-)
-> 
-> diff --git a/drivers/platform/x86/intel/pmc/ssram_telemetry.c b/drivers/platform/x86/intel/pmc/ssram_telemetry.c
-> index b329e0c0080b..b1ba17f18ea5 100644
-> --- a/drivers/platform/x86/intel/pmc/ssram_telemetry.c
-> +++ b/drivers/platform/x86/intel/pmc/ssram_telemetry.c
-> @@ -102,12 +102,11 @@ pmc_ssram_telemetry_add_pmt(struct pci_dev *pcidev, u64 ssram_base, void __iomem
->  static int
->  pmc_ssram_telemetry_get_pmc_pci(struct pci_dev *pcidev, unsigned int pmc_idx, u32 offset)
->  {
-> -	void __iomem __free(pmc_ssram_telemetry_iounmap) *tmp_ssram = NULL;
-> -	void __iomem __free(pmc_ssram_telemetry_iounmap) *ssram = NULL;
->  	u64 ssram_base;
->  
->  	ssram_base = pci_resource_start(pcidev, 0);
-> -	tmp_ssram = ioremap(ssram_base, SSRAM_HDR_SIZE);
-> +	void __iomem __free(pmc_ssram_telemetry_iounmap) *tmp_ssram =
-> +		ioremap(ssram_base, SSRAM_HDR_SIZE);
->  	if (!tmp_ssram)
->  		return -ENOMEM;
->  
-> @@ -121,18 +120,24 @@ pmc_ssram_telemetry_get_pmc_pci(struct pci_dev *pcidev, unsigned int pmc_idx, u3
->  		if (!ssram_base)
->  			return 0;
->  
-> -		ssram = ioremap(ssram_base, SSRAM_HDR_SIZE);
-> +		void __iomem __free(pmc_ssram_telemetry_iounmap) *ssram =
-> +			ioremap(ssram_base, SSRAM_HDR_SIZE);
->  		if (!ssram)
->  			return -ENOMEM;
->  
-> +		pmc_ssram_get_devid_pwrmbase(ssram, pmc_idx);
-> +
-> +		/* Find and register and PMC telemetry entries */
-> +		return pmc_ssram_telemetry_add_pmt(pcidev, ssram_base, ssram);
->  	} else {
-> -		ssram = no_free_ptr(tmp_ssram);
-> +		void __iomem __free(pmc_ssram_telemetry_iounmap) *ssram =
-> +			no_free_ptr(tmp_ssram);
-> +
-> +		pmc_ssram_get_devid_pwrmbase(ssram, pmc_idx);
-> +
-> +		/* Find and register and PMC telemetry entries */
-> +		return pmc_ssram_telemetry_add_pmt(pcidev, ssram_base, ssram);
->  	}
-> -
-> -	pmc_ssram_get_devid_pwrmbase(ssram, pmc_idx);
-> -
-> -	/* Find and register and PMC telemetry entries */
-> -	return pmc_ssram_telemetry_add_pmt(pcidev, ssram_base, ssram);
+> I'd argue that gpiod_get() should really be limited to being called at
+> probe() time but I see your point.
 
-Hi,
+There is weird hardware that might need to switch GPIO from IRQ (input) to
+output at runtime (at least some touchscreens functioning like that IIRC).
+But I dunno if it requires gpiod_put()/gpiod_get() dances.
 
-I'm sorry you probably made this because of my request, but this doesn't 
-make things simpler so lets stick with having that = NULL outside of the 
-inner blocks.
+> > -EPROBE_DEFER should have been called -ENOTREADY from the beginning and
+> > then we would not have this argument. Or, even better, we should have
+> > used -EAGAIN. But it is just a name, semantics does not really change.
+> > We want to signal that something is not ready and the operation needs be
+> > repeated. Currently we contorting ourselves by using yet another error
+> > code that everyone will either convert to -EPORBE_DEFER or will handle
+> > like -EAGAIN.
+> >
+> > > I think ENOTCONN as "not connected" makes sense, though the string
+> >
+> > Why is it better? Most of users of -ENOTCONN are in networking code so
+> > it is somewhat unexpected to have other APIs return it.
+> >
+> > > representation says: "Transport endpoint is not connected" which
+> > > doesn't spell out quite the same thing.
+> >
+> > Yes, because it is really for networking/sockets handling.
 
-You could have overruled me at your own discretion when you realized you 
-have to start duplicating code (and just mention that in the coverletter).
+> Andy et al: what is your take on this?
+
+I already commented on this while ago, and I think EPROBE_DEFER should be
+limited as much as possible (and eventually killed for good). This is known
+hack to the Linux device model instead of doing it via some graphs that are
+constructed during initialisation. There were talks and approaches how to
+solve this using graph theory IIRC (i.o.w. mathematically proven).
+
+To the current case, I think the fwnode/swnode APIs should be clean of
+deferred probe hack, so I like Bart's patch.
 
 -- 
- i.
+With Best Regards,
+Andy Shevchenko
+
 
