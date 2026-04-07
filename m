@@ -1,148 +1,109 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.21])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wm1-f48.google.com (mail-wm1-f48.google.com [209.85.128.48])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 45AAE175A63;
-	Tue,  7 Apr 2026 14:19:55 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.21
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 553FC3A5450
+	for <platform-driver-x86@vger.kernel.org>; Tue,  7 Apr 2026 14:25:37 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.48
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1775571596; cv=none; b=jAqqiuVTHjvcg4bcyQH1eA+GO5b5XunJAqEylt5yjR5e2YbKYSel6NdmWbCrOmWw7pNgPEeDLYl8THnRFGin6tJJabSoALWrCmpyLA4/J29pasQ8P2zbZth754e74DKSVz0YPBhPxTTKzOxl+m6SjVBrZtkacqdoOYZvn62qOUw=
+	t=1775571938; cv=none; b=tPoQhPf5cGvBmlAplyyMpVXD9HVdcnEALidNLzdrnqKWDJDP0/j65P4hA0TCOZmm4MgpkiK1MvBhtHUsyxIL6n1SbDk9oHXQi65d5I2uxiwLiEXyqzDYXXzrncJSR4GF4bS7901E3D18CajRqIn5h43yJilrrr17Vm2ifDXQUuM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1775571596; c=relaxed/simple;
-	bh=nqI5YMH/6ik1AFcBX93m4HF1/Pphpm5Mg0S3oIhJ6ps=;
-	h=From:Date:To:cc:Subject:In-Reply-To:Message-ID:References:
-	 MIME-Version:Content-Type; b=DCPqMTogdgB8chBOaG22wFPBNL1ApXaiewxrlTFe/p3XTfWK/S1fNIJH7dnNUbuBdqy8mRjqo2AwaLYe+/0P3E5yMxwv23YUjUtt/rzyl9lIdn+iWqixADNN7mMWPbJGmRx5qSl3yt6JxPfTZ4EDbEtACeFwhckDOg4phTkkmOw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=pass smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=T4/Nm28J; arc=none smtp.client-ip=198.175.65.21
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.intel.com
+	s=arc-20240116; t=1775571938; c=relaxed/simple;
+	bh=C1b8DhnjoTPYFNF8FR44nLSeIWMA8FOIiyAWwWCQPM0=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version:Content-Type; b=Nb918wQUbsqxeK4CzBeA4MvJQR6zOE1Jqi3UK9shoZR3AMDpQf5WP9SUKeCX2Si96H9u61o+CtPZu+Z1WxOUKjzhlhrO+6n+E13iPG1LGjbxIH9BhZAYJDBj1fqLZoPxSUbOq47nKRgIIkLp+lIRGcN+y/LOV49BjpPZEsJpYs8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=nYRBNGLE; arc=none smtp.client-ip=209.85.128.48
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="T4/Nm28J"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1775571596; x=1807107596;
-  h=from:date:to:cc:subject:in-reply-to:message-id:
-   references:mime-version;
-  bh=nqI5YMH/6ik1AFcBX93m4HF1/Pphpm5Mg0S3oIhJ6ps=;
-  b=T4/Nm28JcHQrVxiSMsAR0zwb+inaYvLtG7wGEXII8e1j6TtkC+o9VCa4
-   7GMNwcPKkKB7yuBdYp4g9NywuZYT8zDBxSc7eilY95dHE78Hj8QKBtD6o
-   Pu6BbrDXdSTr8ROnF814RCL9tt7r8ZlOm6uP/RCZLTc4FNDr71mdcoTvX
-   Uf7os8hjOsWqS+eNKXb4k2QNFKPvnX1jNjbBVmHoAGxoa9zfY76rdw8XN
-   7SEdgDIP3idb5Bt3YVS0JRlT8zJr0MHKoCryWiP4FnVtld8LnoExzbOzm
-   kQjMwKRpGX4qvn6aT3vxjhnH1JfWykdHOE3ayoPIehJVuCAN3UE37FHmh
-   Q==;
-X-CSE-ConnectionGUID: siStw81XRleW+mM2l2jZww==
-X-CSE-MsgGUID: zOuwjwYoTH6mmrM8F2WrVw==
-X-IronPort-AV: E=McAfee;i="6800,10657,11752"; a="76420260"
-X-IronPort-AV: E=Sophos;i="6.23,165,1770624000"; 
-   d="scan'208";a="76420260"
-Received: from fmviesa010.fm.intel.com ([10.60.135.150])
-  by orvoesa113.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 07 Apr 2026 07:19:55 -0700
-X-CSE-ConnectionGUID: lEhjo7tZQQCmPDSWRhKn4g==
-X-CSE-MsgGUID: Onizkyb/Royh5chCQwexmw==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.23,165,1770624000"; 
-   d="scan'208";a="223883165"
-Received: from ijarvine-mobl1.ger.corp.intel.com (HELO localhost) ([10.245.244.110])
-  by fmviesa010-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 07 Apr 2026 07:19:52 -0700
-From: =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
-Date: Tue, 7 Apr 2026 17:19:49 +0300 (EEST)
-To: Pengpeng Hou <pengpeng@iscas.ac.cn>
-cc: prasanth.ksr@dell.com, Hans de Goede <hansg@kernel.org>, 
-    divya.bharathi@dell.com, mario.limonciello@dell.com, 
-    Dell.Client.Kernel@dell.com, platform-driver-x86@vger.kernel.org, 
-    LKML <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH] platform/x86: dell-wmi-sysman: bound enumeration string
- aggregation
-In-Reply-To: <20260329030948.32467-1-pengpeng@iscas.ac.cn>
-Message-ID: <7a55f2f6-38dd-298a-d036-3e528f542c52@linux.intel.com>
-References: <20260329030948.32467-1-pengpeng@iscas.ac.cn>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="nYRBNGLE"
+Received: by mail-wm1-f48.google.com with SMTP id 5b1f17b1804b1-488965a9ca1so2652615e9.2
+        for <platform-driver-x86@vger.kernel.org>; Tue, 07 Apr 2026 07:25:37 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20251104; t=1775571935; x=1776176735; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=ovmrV+8r3ndatY7ScOMAKozR76LjhLaaFKO4szSCWIA=;
+        b=nYRBNGLEglBY0lxIakARtadIJUQMycb42lARkY09o3xrifkS2ixEo6KTzAISq2nfu/
+         Ms58PaXcGEido0yromR/fz8ZMJq6LPh6CCWB4ksqhr/Pii5Yx8b9rwRiMDxMxBZaZh5j
+         Sagg44QzB/nJlVQGTFaZLBQLzmto9J00ag1p7Axsy5OdHvzU6wy4sisse05xs2jn/Chx
+         l6cxHKewidNFgFj4LoGpsEzn3O3vPzRF2VVbycYdlfo4xfcP9CUz8MFa5dJO9/m2H0Ux
+         Y2kzT+FJBzZZPCApZrP1prPzIe0VzRzL4TmUx+Yc0GpWtgNMNwVJh8AZj+yYiHAu9PWP
+         jprQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20251104; t=1775571935; x=1776176735;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-gg:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=ovmrV+8r3ndatY7ScOMAKozR76LjhLaaFKO4szSCWIA=;
+        b=XRgUFWAed7eKMdv5VAsc7Uj2TPHE+vmHzHO671T2hXpc6S76t5CAfyRAq7TmPIL+ua
+         AeD+vTUEj4pcXLwsXG9D8siAz1/tJXxIX/1UvJLCoE5O9/GrK+BcSiBW5XflfURoROXH
+         4xPEi9sC9nhzsEtJgGw+oVM19ses+JH7H0u+R+zk4hHy54F/vGeh8LMCC3JkuSuEvX5R
+         gQ46jc1/XcVplftr425rTl5fdgewubkjss7krAb8vvFnNqWdUDxbycMbhxiiypIHa9xK
+         pHjEPxnpjwqA+uXApgt70JVOFm3yo+3/97uL0JsIV0gY7VfxFzHqQ+tGvQtkZHkNYQZm
+         m6vA==
+X-Gm-Message-State: AOJu0YzQKXhMhbs0vY92vQX8uyZhSymU0aiYBMt3uOOOl6dWV+ZkEwYL
+	RE3QDnvDlxfbZuW18aq2ejyXV5kKxgjW+sAGlbozHvMScncfgbZTGdTXKGpfLwJ4+DRzbw==
+X-Gm-Gg: AeBDieveCqJ2crHOCqI55xGRTyPtARHed6JjN72flDxhHGDF9osmcnx/wlkKyJGgUGz
+	vleHXK6CaMLbXuR+s0VREe3ityCTR+dEB8fRZqYzwDXqWlN3ya1w6zR7XHL1Tpgegiz+mL8Q5n+
+	wIBol6p1zQhBYg++GL6iZxRQDjHl3glEJkqa7JJaEnqCF4bbM0OnkHPW4BZasOsVG0WgnGItwVk
+	tCqxbaoCqa45W2egRqH4dy9gwyaB82xERECDq7F34NHmfNMhmjImZorPMS8DOnYCCBYPdoRtJ/g
+	+BCccH1nNylNZdH/iG3QBugPbkmuQDLXxgZLiLkwONYDBXpz5pVvVS1vkilRxLL+cjlHpxz3rVJ
+	hNRgUIe/neXhhHLBsI+PWPxL91kw3JsPG2tvIAKoQEiEm+Ei+IsUD2neeg0hE0l7IOgpqbL/CQv
+	oBleacgiOvlPvNjENk/jdVWdZulY+twobTQR84kPrykgtxHgEiqScP8dBh/RsZjw==
+X-Received: by 2002:a05:600c:354d:b0:487:17d:d0bf with SMTP id 5b1f17b1804b1-488997a00a2mr123016845e9.6.1775571935438;
+        Tue, 07 Apr 2026 07:25:35 -0700 (PDT)
+Received: from localhost.localdomain ([31.7.38.28])
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-43d1e4f1a99sm53489990f8f.32.2026.04.07.07.25.33
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 07 Apr 2026 07:25:35 -0700 (PDT)
+From: Emre Cecanpunar <emreleno@gmail.com>
+To: platform-driver-x86@vger.kernel.org
+Cc: hansg@kernel.org,
+	ilpo.jarvinen@linux.intel.com,
+	linux-kernel@vger.kernel.org,
+	krishna.chomal108@gmail.com,
+	edip@medip.dev,
+	emreleno@gmail.com
+Subject: [PATCH v4 0/5] platform/x86: hp-wmi: Victus S fan control fixes
+Date: Tue,  7 Apr 2026 17:25:09 +0300
+Message-ID: <20260407142515.20683-1-emreleno@gmail.com>
+X-Mailer: git-send-email 2.53.0
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 
-On Sun, 29 Mar 2026, Pengpeng Hou wrote:
+Bug fixes for the Victus S manual fan control:
+- Propagate fan_count_userdefine_trigger() errors
+- Fix cancel_delayed_work_sync() deadlock from work handler
+- Use mod_delayed_work() for efficient keep-alive timer resets
+- Fix u8 underflow in gpu_delta calculation
+- Add mutex for concurrent hwmon state access
 
-> populate_enum_data() aggregates firmware-provided value-modifier and possible-value strings into fixed 512-byte struct members. The current code bounds each individual source string but then appends every string and separator with raw strcat() and no remaining-space check.
-> 
-> Switch the aggregation loops to a bounded append helper and reject enumeration packages whose combined strings do not fit in the destination buffers.
+Changes in v4:
+- Patch 4: Prevent line wrap in gpu_delta assignment.
+- Patch 5: Use devm_mutex_init() and handle init errors.
 
-Please fold changelog paragraphs to 72 chars.
- 
-> Fixes: e8a60aa7404b ("platform/x86: Introduce support for Systems Management Driver over WMI for Dell Systems")
-> Signed-off-by: Pengpeng Hou <pengpeng@iscas.ac.cn>
-> ---
->  .../dell/dell-wmi-sysman/enum-attributes.c    | 34 +++++++++++++++----
->  1 file changed, 28 insertions(+), 6 deletions(-)
-> 
-> diff --git a/drivers/platform/x86/dell/dell-wmi-sysman/enum-attributes.c b/drivers/platform/x86/dell/dell-wmi-sysman/enum-attributes.c
-> index 09996fbdc707..14decb219128 100644
-> --- a/drivers/platform/x86/dell/dell-wmi-sysman/enum-attributes.c
-> +++ b/drivers/platform/x86/dell/dell-wmi-sysman/enum-attributes.c
-> @@ -10,6 +10,26 @@
->  
->  get_instance_id(enumeration);
->  
-> +static int append_enum_string(char *dest, const char *src)
-> +{
-> +	size_t dest_len = strlen(dest);
-> +	ssize_t copied;
-> +
-> +	if (dest_len >= MAX_BUFF)
+Changes in v3:
+- Add Fixes: tags to all patches.
+- Patch 4: Remove unnecessary casting.
 
-Doesn't this imply that something is already broken (buggy) if we blew 
-past the allocated buffer? If so, I suppose it would warrant 
-WARN_ON_ONCE() if something caused such invalid string in dest.
+Changes in v2:
+- Patch 4: Store gpu_delta as 'int' to handle negative deltas correctly.
 
-> +		return -EINVAL;
-> +
-> +	copied = strscpy(dest + dest_len, src, MAX_BUFF - dest_len);
-> +	if (copied < 0)
-> +		return -EINVAL;
-> +
-> +	dest_len += copied;
-> +	copied = strscpy(dest + dest_len, ";", MAX_BUFF - dest_len);
-> +	if (copied < 0)
-> +		return -EINVAL;
-> +
-> +	return 0;
-> +}
-> +
->  static ssize_t current_value_show(struct kobject *kobj, struct kobj_attribute *attr, char *buf)
->  {
->  	int instance_id = get_enumeration_instance_id(kobj);
-> @@ -176,9 +196,10 @@ int populate_enum_data(union acpi_object *enumeration_obj, int instance_id,
->  			return -EINVAL;
->  		if (check_property_type(enumeration, next_obj, ACPI_TYPE_STRING))
->  			return -EINVAL;
-> -		strcat(wmi_priv.enumeration_data[instance_id].dell_value_modifier,
-> -			enumeration_obj[next_obj++].string.pointer);
-> -		strcat(wmi_priv.enumeration_data[instance_id].dell_value_modifier, ";");
-> +		if (append_enum_string(
-> +			    wmi_priv.enumeration_data[instance_id].dell_value_modifier,
-> +			    enumeration_obj[next_obj++].string.pointer))
-> +			return -EINVAL;
->  	}
->  
->  	if (next_obj >= enum_property_count)
-> @@ -193,9 +214,10 @@ int populate_enum_data(union acpi_object *enumeration_obj, int instance_id,
->  			return -EINVAL;
->  		if (check_property_type(enumeration, next_obj, ACPI_TYPE_STRING))
->  			return -EINVAL;
-> -		strcat(wmi_priv.enumeration_data[instance_id].possible_values,
-> -			enumeration_obj[next_obj++].string.pointer);
-> -		strcat(wmi_priv.enumeration_data[instance_id].possible_values, ";");
-> +		if (append_enum_string(
-> +			    wmi_priv.enumeration_data[instance_id].possible_values,
-> +			    enumeration_obj[next_obj++].string.pointer))
-> +			return -EINVAL;
->  	}
->  
->  	return sysfs_create_group(attr_name_kobj, &enumeration_attr_group);
-> 
+Emre Cecanpunar (5):
+  platform/x86: hp-wmi: fix ignored return values in fan settings
+  platform/x86: hp-wmi: avoid cancel_delayed_work_sync from work handler
+  platform/x86: hp-wmi: use mod_delayed_work to reset keep-alive timer
+  platform/x86: hp-wmi: fix u8 underflow in gpu_delta calculation
+  platform/x86: hp-wmi: add locking for concurrent hwmon access
+
+ drivers/platform/x86/hp/hp-wmi.c | 54 ++++++++++++++++++++++----------
+ 1 file changed, 37 insertions(+), 17 deletions(-)
 
 -- 
- i.
+2.53.0
 
