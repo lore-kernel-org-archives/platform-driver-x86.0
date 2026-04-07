@@ -1,84 +1,190 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.11])
+Received: from fout-a8-smtp.messagingengine.com (fout-a8-smtp.messagingengine.com [103.168.172.151])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EB949282F23;
-	Tue,  7 Apr 2026 14:39:31 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.11
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3F6E53469FC;
+	Tue,  7 Apr 2026 17:39:51 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=103.168.172.151
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1775572773; cv=none; b=q81b7SiQ2L5/y52JPpcVd5htELYKRLJDOEh55SaLzh2tEBerOO0qcG/86i9O85MvraE7tLemxLHCdGZ6Du0mltcn1yR+/PpBYKSYU041jBLDYpFgJtMPNxqD5Z7Uo6RMghtJ/ITuJ8n9QIAlBiZ2SMafplT7Kmi/INCNTYkcMHY=
+	t=1775583595; cv=none; b=FdrC+MNeLn/6mFyyCojxBrd5oZn3Pn2RH8zKkuXFx4O4S8hzZYjodMNovKvGs+M7PBN5CvRumGQuP/l13G7M0VLL4vtmc78zWDtVCLa+Mf2mpfLb7gNV3mfCjVeXxBUj/0vIv+6kFDh7rboyvAvX1H6n6AySq5jd8wUdhN9WO74=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1775572773; c=relaxed/simple;
-	bh=HBt5U4lT0rwnfX+k21fFlo3Vy3lQPBMi0aL1lP+L47E=;
-	h=From:To:Cc:In-Reply-To:References:Subject:Message-Id:Date:
-	 MIME-Version:Content-Type; b=JuWfwqS6NwL/iqR6OPDeIvLUnFlmU9dK9JzBpG52qm6zlbwG2LOe5Fhw0qDqCNQkiU4T++s3+qeCNGSJxuUVcyJUXOQe/xpg0ZRw0H7KhU10EJo21XwtdfP1dRiG3gsZIidlwRTXXUrpSRCuT18x2w53/Z1R954sr7BfLYcs4M8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=pass smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=JJbh5w83; arc=none smtp.client-ip=198.175.65.11
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.intel.com
+	s=arc-20240116; t=1775583595; c=relaxed/simple;
+	bh=Q/1BRvkcCzm61Op33ghmmbAOx4r6KGe8hekNSrURQDc=;
+	h=MIME-Version:Date:From:To:Cc:Message-Id:In-Reply-To:References:
+	 Subject:Content-Type; b=hQjWrsqTZM8pJ03u46QnfUTLcTWalyFbmAKKyvICX57koNfvKQ45AbNGzw33mKjfVhZjU0P8l7VeR63HV25LtgnBma/BSDrWJbx/3I4hTGZwHZyvr3RKGkSexsyJuf9p2BiwXVhJPPKav1OItm/iojn1SCxEusSaWiE+I3zgpfE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=squebb.ca; spf=pass smtp.mailfrom=squebb.ca; dkim=pass (2048-bit key) header.d=squebb.ca header.i=@squebb.ca header.b=aMRNImzj; dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b=A9hd9AYZ; arc=none smtp.client-ip=103.168.172.151
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=squebb.ca
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=squebb.ca
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="JJbh5w83"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1775572773; x=1807108773;
-  h=from:to:cc:in-reply-to:references:subject:message-id:
-   date:mime-version:content-transfer-encoding;
-  bh=HBt5U4lT0rwnfX+k21fFlo3Vy3lQPBMi0aL1lP+L47E=;
-  b=JJbh5w83Lg1vuYvKTHEfA0j4iST0BeNUSi6Mh31mPaBNt2q/+jK7P8Te
-   zzhwYHcdPF4Pe+XDOTExvkblrd0bkEzpCKm3fSW6k77A9lmR1BQPZ7p5h
-   M22znTvVR/xBWYjfy3u/UgBsFIa66/533GqaPevcoc2MJEfDN1XW4m3OJ
-   Mj8KDtsWL6ZsfFFdl6CRIaFWQFcmFEmMcUSFslESTwiZnmPsDYzTXzefq
-   IqLCXBSfkRumMJtafWannlM5rLQ4/j6StofOJLzhPTARpGYdTGKPdTx3x
-   HEzTL3PyQLHByw7prixqTinNfGiR7DMqQPIzanZM3N7FTqanepOas04xl
-   Q==;
-X-CSE-ConnectionGUID: gPQo/LGsRgWroAqR73TVuA==
-X-CSE-MsgGUID: ZfpPcM13SpCZmfdIh5Y4Fw==
-X-IronPort-AV: E=McAfee;i="6800,10657,11752"; a="86828996"
-X-IronPort-AV: E=Sophos;i="6.23,165,1770624000"; 
-   d="scan'208";a="86828996"
-Received: from fmviesa001.fm.intel.com ([10.60.135.141])
-  by orvoesa103.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 07 Apr 2026 07:39:27 -0700
-X-CSE-ConnectionGUID: DiUElBJZRoWf23aFjuu6ug==
-X-CSE-MsgGUID: ucJzOK8aQVuk64QGfj/R3w==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.23,165,1770624000"; 
-   d="scan'208";a="251478320"
-Received: from ijarvine-mobl1.ger.corp.intel.com (HELO localhost) ([10.245.244.110])
-  by smtpauth.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 07 Apr 2026 07:39:23 -0700
-From: =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
-To: Prasanth Ksr <prasanth.ksr@dell.com>, Hans de Goede <hansg@kernel.org>, 
- Thorsten Blum <thorsten.blum@linux.dev>
-Cc: Dell.Client.Kernel@dell.com, platform-driver-x86@vger.kernel.org, 
- linux-kernel@vger.kernel.org
-In-Reply-To: <20260401094318.658932-2-thorsten.blum@linux.dev>
-References: <20260401094318.658932-2-thorsten.blum@linux.dev>
-Subject: Re: [PATCH] platform/x86: Fix typo in function comment
-Message-Id: <177557275885.18830.4715237725941075216.b4-ty@linux.intel.com>
-Date: Tue, 07 Apr 2026 17:39:18 +0300
+	dkim=pass (2048-bit key) header.d=squebb.ca header.i=@squebb.ca header.b="aMRNImzj";
+	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="A9hd9AYZ"
+Received: from phl-compute-02.internal (phl-compute-02.internal [10.202.2.42])
+	by mailfout.phl.internal (Postfix) with ESMTP id D9D6AEC04A4;
+	Tue,  7 Apr 2026 13:39:50 -0400 (EDT)
+Received: from phl-imap-08 ([10.202.2.84])
+  by phl-compute-02.internal (MEProxy); Tue, 07 Apr 2026 13:39:50 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=squebb.ca; h=cc
+	:cc:content-transfer-encoding:content-type:content-type:date
+	:date:from:from:in-reply-to:in-reply-to:message-id:mime-version
+	:references:reply-to:subject:subject:to:to; s=fm3; t=1775583590;
+	 x=1775669990; bh=vyW4A3TVWiIRNcwE+FUGUf28XAk9UHsbgPFkDwrI1wI=; b=
+	aMRNImzjNYm07+y2QrR4k1CpfAvu/9Igs7q9c1TsH4ujx4m0QifEzX6AV/ctZJe1
+	aLrc06NwsH4KDbGfkVg1vOVV64GIkRRPwPjpF0MX0L/RuN18GH8K9kKsx2OibQSj
+	ZLTcfsRt11u1R6I6wzDEjQLbwyyV7jJN+xHWRarp30D8/hy/KKm0TNjk9MzZG4ce
+	Hwf6S3A+gqDbOUVRkWf7wFR+wabag2NJZFvTVXfj99pWrw2hbq4XwPbFbtbrn1bh
+	LUW/0BpQNetd8Ccqo6wUC12Vyb7n3j0uLFYD3Dt/jx9ioyik1WC98nUDDJCZgWFm
+	ZQeLykXsAcuBgxa4LC5mjQ==
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
+	messagingengine.com; h=cc:cc:content-transfer-encoding
+	:content-type:content-type:date:date:feedback-id:feedback-id
+	:from:from:in-reply-to:in-reply-to:message-id:mime-version
+	:references:reply-to:subject:subject:to:to:x-me-proxy
+	:x-me-sender:x-me-sender:x-sasl-enc; s=fm2; t=1775583590; x=
+	1775669990; bh=vyW4A3TVWiIRNcwE+FUGUf28XAk9UHsbgPFkDwrI1wI=; b=A
+	9hd9AYZdV/sqxtUXQNVend3n8QllOXHcsFgJKdNwjK4WAyRJxfgREQ2LmwGK6w3S
+	F3IMg74HMUjjKl//FBpoDvrmv4x+bSxUrRYmcX8wkLWtqDWt3b3c7dGZSEhUOTVi
+	iN7Ax3vrIAM/gOrau9MOWIdBXsKhKA9huyCzC2xuGIR/Q1PtR8BPgRcGyOMt0JG6
+	ZjLi+nXEyHMmtrC3/SJQWBhJ8Nm2BgL8hM5dgXN8FQ4uIpCTZgDZBMkuF7IVTpaW
+	YpxhhEpF2ArPcSGW3hIoZy/xrSttyKtvFuAIhQwQuBxtOlp7TyJDEi456Zj73fdv
+	8tEi8uGwE3bittohGmjTw==
+X-ME-Sender: <xms:ZkHVab5KGfTVptSrLYYGmWa-Pbw1A9KQ1Uxg4WMw_kQFZ0za5p9gtw>
+    <xme:ZkHVabtaoi4hemqVmS0meOuIoodq6yHweD0LD6GZ2Jd5r4YitRiZxloy1o8iMXQdq
+    UUPNB4QFUE2gGi5plLU_CgH5_0i_OiO9NFFIuNaR-RrnmVyuzcTBFs>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeefhedrtddtgddvuddvjecutefuodetggdotefrod
+    ftvfcurfhrohhfihhlvgemucfhrghsthforghilhdpuffrtefokffrpgfnqfghnecuuegr
+    ihhlohhuthemuceftddtnecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenucfjug
+    hrpefoggffhffvvefkjghfufgtgfesthhqredtredtjeenucfhrhhomhepfdforghrkhcu
+    rfgvrghrshhonhdfuceomhhpvggrrhhsohhnqdhlvghnohhvohesshhquhgvsggsrdgtrg
+    eqnecuggftrfgrthhtvghrnhephfevkeejueeukeefhfelleejheeuudfgteffvdetkeff
+    jeduleffvdejkeefhedvnecuvehluhhsthgvrhfuihiivgeptdenucfrrghrrghmpehmrg
+    hilhhfrhhomhepmhhpvggrrhhsohhnqdhlvghnohhvohesshhquhgvsggsrdgtrgdpnhgs
+    pghrtghpthhtohepkedpmhhouggvpehsmhhtphhouhhtpdhrtghpthhtohepsghulhhgrg
+    hruggrnhhiihhludeksehgmhgrihhlrdgtohhmpdhrtghpthhtohepuggvrhgvkhhjohhh
+    nhdrtghlrghrkhesghhmrghilhdrtghomhdprhgtphhtthhopehhmhhhsehhmhhhrdgvnh
+    hgrdgsrhdprhgtphhtthhopehhrghnshhgsehkvghrnhgvlhdrohhrghdprhgtphhtthho
+    pehilhhpohdrjhgrrhhvihhnvghnsehlihhnuhigrdhinhhtvghlrdgtohhmpdhrtghpth
+    htohepihgsmhdqrggtphhiqdguvghvvghlsehlihhsthhsrdhsohhurhgtvghfohhrghgv
+    rdhnvghtpdhrtghpthhtoheplhhinhhugidqkhgvrhhnvghlsehvghgvrhdrkhgvrhhnvg
+    hlrdhorhhgpdhrtghpthhtohepphhlrghtfhhorhhmqdgurhhivhgvrhdqgiekieesvhhg
+    vghrrdhkvghrnhgvlhdrohhrgh
+X-ME-Proxy: <xmx:ZkHVafKvDaFzuJDzHMujQc3OR2CCV1lko0da3YK131z0HZiKuG3fwg>
+    <xmx:ZkHVaTkMof_fBgHS1fTyGbBO5kTL7MUUPyhbXx9t9S7XcFxPqChLGQ>
+    <xmx:ZkHVaYZmIATahUrvC0zhOY9KG_6_7qVCFrS7ygmnzOuaW_1Md08QSQ>
+    <xmx:ZkHVaf_xOw0A4wZyvGFylQ0Sxh5fF6xHBDcbCgOYT_hfPdU3boTZ9g>
+    <xmx:ZkHVaQOdLfwyqo_C6BB7J2XQCxdmfmcyiI4cESdJ723doqYw83f-dgPe>
+Feedback-ID: ibe194615:Fastmail
+Received: by mailuser.phl.internal (Postfix, from userid 501)
+	id 3E3672CE3F93; Tue,  7 Apr 2026 13:39:50 -0400 (EDT)
+X-Mailer: MessagingEngine.com Webmail Interface
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-X-Mailer: b4 0.13.0
+X-ThreadId: ApC5oMBbhHqR
+Date: Tue, 07 Apr 2026 13:39:29 -0400
+From: "Mark Pearson" <mpearson-lenovo@squebb.ca>
+To: 
+ =?UTF-8?Q?=D0=94=D0=B0=D0=BD=D0=B8=D0=B8=D0=BB_=D0=91=D1=83=D0=BB=D0=B3?=
+ =?UTF-8?Q?=D0=B0=D1=80=D1=8C?= <bulgardaniil18@gmail.com>,
+ "Henrique de Moraes Holschuh" <hmh@hmh.eng.br>,
+ "Derek J . Clark" <derekjohn.clark@gmail.com>
+Cc: "Hans de Goede" <hansg@kernel.org>,
+ =?UTF-8?Q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>,
+ ibm-acpi-devel@lists.sourceforge.net,
+ "platform-driver-x86@vger.kernel.org" <platform-driver-x86@vger.kernel.org>,
+ linux-kernel@vger.kernel.org
+Message-Id: <e4723a5a-0bdd-4062-af38-ca5f4a4f6d1d@app.fastmail.com>
+In-Reply-To: <096ee581-2c27-4746-bc7e-1d699a952764@app.fastmail.com>
+References: 
+ <CAMPU55i_MPW_MHBsBfbnrO7T5Q68q1QmNgLVBPiqoh30kGw4Pw@mail.gmail.com>
+ <096ee581-2c27-4746-bc7e-1d699a952764@app.fastmail.com>
+Subject: Re: [PATCH] platform/x86/lenovo: thinkpad_acpi: add named speed presets to
+ fan_write_cmd_speed
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: quoted-printable
 
-On Wed, 01 Apr 2026 11:43:19 +0200, Thorsten Blum wrote:
+Hi Daniil
 
-> s/Fress/Frees/
-> 
-> 
+On Mon, Mar 30, 2026, at 9:19 PM, Mark Pearson wrote:
+> Hi Daniil
+>
+> On Mon, Mar 30, 2026, at 4:35 PM, =D0=94=D0=B0=D0=BD=D0=B8=D0=B8=D0=BB=
+ =D0=91=D1=83=D0=BB=D0=B3=D0=B0=D1=80=D1=8C wrote:
+>> platform/x86/lenovo: thinkpad_acpi: add named speed presets to
+>> fan_write_cmd_speed
+>>
+>> The fan_write_cmd_speed() function had a TODO comment suggesting
+>> support for named speed presets (low, medium, high). Implement
+>> this by mapping the preset names to the existing fan_speed_presets
+>> enum values, following the same strstarts() pattern used in
+>> fan_write_cmd_level().
+>> Signed-off-by: Daniil Bulgar <bulgardaniil18@gmail.com>
+>> ---
+>>  drivers/platform/x86/lenovo/thinkpad_acpi.c | 17 +++++++++++++----
+>>  1 file changed, 13 insertions(+), 4 deletions(-)
+>>
+>> diff --git a/drivers/platform/x86/lenovo/thinkpad_acpi.c
+>> b/drivers/platform/x86/lenovo/thinkpad_acpi.c
+>> index 8982d92df..f10cebe11 100644
+>> --- a/drivers/platform/x86/lenovo/thinkpad_acpi.c
+>> +++ b/drivers/platform/x86/lenovo/thinkpad_acpi.c
+>> @@ -7957,6 +7957,12 @@ enum fan_control_commands {
+>>                          * and also watchdog cmd */
+>>  };
+>>
+>> +enum fan_speed_preset {
+>> +    TPACPI_FAN_SPEED_LOW    =3D 65535 / 4,    /* 25% speed */
+>> +    TPACPI_FAN_SPEED_MEDIUM    =3D 65535 / 2,    /* 50% speed */
+>> +    TPACPI_FAN_SPEED_HIGH    =3D 65535,    /* 100% speed */
+>> +};
+>> +
+>>  static bool fan_control_allowed;
+>>
+>>  static enum fan_status_access_mode fan_status_access_mode;
+>> @@ -9249,10 +9255,13 @@ static int fan_write_cmd_speed(const char *cm=
+d, int *rc)
+>>  {
+>>      int speed;
+>>
+>> -    /* TODO:
+>> -    * Support speed <low> <medium> <high> ? */
+>> -
+>> -    if (sscanf(cmd, "speed %d", &speed) !=3D 1)
+>> +    if (strstarts(cmd, "speed low"))
+>> +        speed =3D TPACPI_FAN_SPEED_LOW;
+>> +    else if (strstarts(cmd, "speed medium"))
+>> +        speed =3D TPACPI_FAN_SPEED_MEDIUM;
+>> +    else if (strstarts(cmd, "speed high"))
+>> +        speed =3D TPACPI_FAN_SPEED_HIGH;
+>> +    else if (sscanf(cmd, "speed %d", &speed) !=3D 1)
+>>          return 0;
+>>
+>>      *rc =3D fan_set_speed(speed);
+>> --=20
+>> 2.53.0
+>
+> I'd never noticed that TODO :)
+>
+> No issues with the code but I'd like to check with the thermal team if=20
+> those are better ways of determining the ranges. I've got a feeling=20
+> that they probably aren't.=20
+> Fans don't go that high (or low) during operation so I wonder if there=20
+> are better 'ranges' to be used (though it might be platform dependent=20
+> too)
+>
+> I'll ask if there is any guidance on it.
+>
 
+Afraid I'm going to nack this patch.
 
-Thank you for your contribution, it has been applied to my local
-review-ilpo-next branch. Note it will show up in the public
-platform-drivers-x86/review-ilpo-next branch only once I've pushed my
-local branch there, which might take a while.
+I reviewed with the thermal team and there are 7 or more different level=
+s and the speeds and steps between speeds can vary between platforms qui=
+te significantly.
+Trying to fit them into a low/medium/high framework just doesn't seem a =
+good idea I'm afraid.
 
-The list of commits applied:
-[1/1] platform/x86: Fix typo in function comment
-      commit: ec427398794bbc0e294225a094a3060cc4bff19c
+I'd be good with a patch removing the TODO comment :)
 
---
- i.
+Mark
 
