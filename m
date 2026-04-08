@@ -1,65 +1,70 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.10])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pg1-f181.google.com (mail-pg1-f181.google.com [209.85.215.181])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 26A4D3BADBF;
-	Wed,  8 Apr 2026 10:51:52 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.10
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F1ABB3806DA
+	for <platform-driver-x86@vger.kernel.org>; Wed,  8 Apr 2026 11:18:11 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.181
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1775645513; cv=none; b=L/Ow0+h658Oc4cf2VDhECBtzMsC3T9vcqtP0bIn21b7mRp5GDoY/PSqWc4IF1N9XNDcaKUalCQlOtkAZhg8Mm+Yz/bmq/eUjhpZClt4gfqZDNCMKL1DFqeCBYoIhdY/ZZes9+leOpUesvoERhiyxxk8o0x58F0q0nyylFUOVaKU=
+	t=1775647093; cv=none; b=W2ghC0sQ00G+ahpggU9bZdOJJ1fWEtcxeO+0FROGFZatkv+VWMN3hjfuklSHVPZjt3MCx7UWYzLwwB7DV73PHdigova6uMKGhKdrb4F1II15WzhdxQv9Sk7d5W4AuiYuQiPLXPk5p1s59Q0aQxb7FrL5iJ65+yKHLIZIIWWbiZk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1775645513; c=relaxed/simple;
-	bh=LTeQaUWHvsph4joDVjSb9M34kexlgvWpIEuOIo8m45k=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=KZAd5kvRkCqHwHKED4pysofM+ZsminNFaKhSPgVXqwO29HTPPMrU7BusZIgNOCLBZN9KMIMHG5ZEGlZfUVpUxbjFZV1/PY0tdMf9r+S1S+kUVSk+KJabDbo01CdjFxjWDCe6RU/1lqq5hIsHGrUKDXXFZ709A1rDyQ7ntAJ5eSo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=YD9Js2FZ; arc=none smtp.client-ip=198.175.65.10
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	s=arc-20240116; t=1775647093; c=relaxed/simple;
+	bh=2JJwm+TEadk/RVJ++F3+rQ7Tk7rdiq5znuYA+7R5718=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=HTGiSFG9RdkrPeGHrkbAgyMaiBpM11jpMZQYeQ25X8eDpUypCEOyrMkWDnxTG6cHQa2egDhwFAmRQXbqohV15I6NqtuFvf5lGv1lBadqGmFBMNZRLNckbpUXLqcZVVpK66Kpd9PQlxhGRFAIjokBbULs8ZViRf2JH3k4VpV3TWQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=Dv2IbHDA; arc=none smtp.client-ip=209.85.215.181
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="YD9Js2FZ"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1775645512; x=1807181512;
-  h=from:to:cc:subject:date:message-id:in-reply-to:
-   references:mime-version:content-transfer-encoding;
-  bh=LTeQaUWHvsph4joDVjSb9M34kexlgvWpIEuOIo8m45k=;
-  b=YD9Js2FZ1UMXatjUY3r1CWT09dwD7B/X9g5tsAon0HfQyRfjKv665/Ge
-   7VyaAIdXvScm2kAARHB2P+gZHioDXjInC5NyDVsLfY6kyoHvtaBw8Ep2n
-   gvDcubwi6hW4sU3R1FQqIyZmP2j5BavpBXLK4WrYTBADYfyBPggFXWZ85
-   1YdkrOoSW3fZm5TKfHX1iaK7gC5RBHalNdQpsPkdkBdyz4wnOk1SIH/TB
-   aHjcR8gdYYdaKH8EqesQSl5NWueaQYpv1vKNQjjlE/i2qq6AUx5JZRp5c
-   AX6oNzkqYcVtxuuXNHyWPbWL4EstxJHxvVUiwRM+gunNpKZGkWAEvSSU4
-   Q==;
-X-CSE-ConnectionGUID: lCSxAnTqQjCOURcnXfPmcw==
-X-CSE-MsgGUID: wawTNbuhTua5cF0lbPcIGQ==
-X-IronPort-AV: E=McAfee;i="6800,10657,11752"; a="94013893"
-X-IronPort-AV: E=Sophos;i="6.23,167,1770624000"; 
-   d="scan'208";a="94013893"
-Received: from orviesa009.jf.intel.com ([10.64.159.149])
-  by orvoesa102.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 08 Apr 2026 03:51:52 -0700
-X-CSE-ConnectionGUID: PNSKOGPBSjaMb9fJTkrMag==
-X-CSE-MsgGUID: jh35wxJNSK67r+POof/LRg==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.23,167,1770624000"; 
-   d="scan'208";a="228340140"
-Received: from intel-nuc8i7beh.iind.intel.com ([10.223.163.35])
-  by orviesa009.jf.intel.com with ESMTP; 08 Apr 2026 03:51:49 -0700
-From: Arun T <arun.t@intel.com>
-To: arun.t@intel.com,
-	johannes.goede@oss.qualcomm.com
-Cc: sakari.ailus@linux.intel.com,
-	arec.kao@intel.com,
-	ilpo.jarvinen@linux.intel.com,
-	dan.scally@ideasonboard.com,
-	platform-driver-x86@vger.kernel.org,
-	linux-media@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	mehdi.djait@intel.com
-Subject: [PATCH v10 2/2] media: ov13b10: Support multiple regulators
-Date: Wed,  8 Apr 2026 16:15:07 +0530
-Message-ID: <20260408104510.392906-3-arun.t@intel.com>
-X-Mailer: git-send-email 2.43.0
-In-Reply-To: <20260408104510.392906-1-arun.t@intel.com>
-References: <20260408104510.392906-1-arun.t@intel.com>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Dv2IbHDA"
+Received: by mail-pg1-f181.google.com with SMTP id 41be03b00d2f7-c76b95e652bso2002718a12.3
+        for <platform-driver-x86@vger.kernel.org>; Wed, 08 Apr 2026 04:18:11 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20251104; t=1775647091; x=1776251891; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=sUEk2Ea7JLAjxXHeto1QkqPgsjFkRXcBHDbf7e+WVlw=;
+        b=Dv2IbHDAKeL1c4gWOjr7EezB7DFDmK0XwyjnwAx0Iog1idTy1TI5B2Xu5YH3Tq0Pz5
+         3YI+3V4YCrvDpY9MhPAO4omv3Ru8S9o+v3U4jPBdjYssOVwr5xQPTj9K4FVCYtAJKDEl
+         br881q1oLcG77H7rXtlPHZYma0uS5aPGb2hpHKSZO8IZWYqoi9A/gLKHkkTK3nXi95xA
+         d359XLui5+PIHU6mF3+2+/5KQmX7GmoVfvJZBplWdHRUZJLdGgXfdZ+O1OzmMlzmOQsp
+         O8oC7MwWvomiB6pM7Hbtgrg0xjPLXSdRMg9rYkiewoZZb+p1dnfQe9tOQsd5eOBXLk77
+         IQFQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20251104; t=1775647091; x=1776251891;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-gg:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=sUEk2Ea7JLAjxXHeto1QkqPgsjFkRXcBHDbf7e+WVlw=;
+        b=kaz83+xkhifS7Zk2GilDnsGoqRlfFT5d5xILslMp0NiLKSOawqGYTj7U71G74xmXyp
+         9tTNs4WnB04ov1TnRRsjOKuWNJXf0FzMXrYddMdsXLFpikiDN+Ed57E9D9cyxN3jUemL
+         hMZUSFkOwRYTQ95aq3kn3BowHsnFQhdpmU1JDghbEm8KO32aawCluylRqblv6G2XvRTO
+         ASx5jAYspn7yV4j21t1c+Lqx/pUVnddK+gguEIOXWudO+TkJ0SCLkYpjwxugDnxT7TnE
+         x0xZOn6EX5lrG3cQj5ZOWnvSO0Jv34RlkIBASe1pRHccbqrglrrlCnqeXNpzKx4Olke9
+         p5NA==
+X-Gm-Message-State: AOJu0YyQv3u2MWPZeK1JYZXxK9tRMXQ05Cg1rFpIO58vXIMiWKlFyFh9
+	XK8xr45gDRAgmM9qpyivIx2k9MEG7dUbgLCWyAbOzWo8wfEiIgOKBbjOFJRxXQ==
+X-Gm-Gg: AeBDiev7q1A2TVPlhps6LjyongQvWIQ4xsdRemQbDybP0SRfznlBa31IBJLYXvIvcWi
+	uUQCiRaQ4bP/SFTHeqQeyiPeib08Li2Pb2ufWReJYZGzYV0/MOchjclBQMSkD4Xz8nD8GCuRBIN
+	fB3WjL88ZmKIW/WCl5BvKqq45qP6GCarwy46inB3w6i2dfRDiEYooUqmEl5FFjLL459eypabOv7
+	tM/nRTayxTthlx1REwsEoO7t4eY0UDli4QLKeLF9fZz4wPHuSCplKL6y3um5lRDGiJetVoL2h56
+	lcpiZgh1MdGOu32ZfIzbf2OaTotKW+YNYJIWPUEBd5exkrj5fyIncjOBC8tZ0xI7Yg6V1PcYVV/
+	l94DRgQbDmAFwdM9zzfP0cTjqxfG3I3dJXJLnvlmTSRRLX0jjaYkcSfZy1ppPlqToIEawD6PMDF
+	vUDCi8Ef8u+9DVNt2n
+X-Received: by 2002:a17:903:b8d:b0:2ae:4800:141a with SMTP id d9443c01a7336-2b281771b1cmr211736815ad.32.1775647091192;
+        Wed, 08 Apr 2026 04:18:11 -0700 (PDT)
+Received: from localhost ([2402:7500:404:94a3:bc1:db3:c7d7:391])
+        by smtp.gmail.com with ESMTPSA id d9443c01a7336-2b274779b48sm280006375ad.25.2026.04.08.04.18.10
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 08 Apr 2026 04:18:10 -0700 (PDT)
+From: Jack Wu <wojackbb@gmail.com>
+X-Google-Original-From: Jack Wu <jackbb_wu@compal.com>
+To: Hans de Goede <hansg@kernel.org>,
+	=?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
+Cc: platform-driver-x86@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Subject: [PATCH] platform/x86: dell-dw5826e: Add reset driver for DW5826e
+Date: Wed,  8 Apr 2026 19:17:38 +0800
+Message-Id: <20260408111738.232040-1-jackbb_wu@compal.com>
+X-Mailer: git-send-email 2.34.1
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
@@ -68,118 +73,168 @@ List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-The OV13B10 sensor driver currently handles a single regulator called
-avdd, however the sensor can be supplied by up to three regulators.
-Update the driver to handle all of them together using the regulator
-bulk API.
+If the DW5826e is in a frozen state and unable to receive USB commands,
+this driver provides a method for the user to reset the DW5826e via ACPI.
 
-Signed-off-by: Arun T <arun.t@intel.com>
-Reviewed-by: Hans de Goede <johannes.goede@oss.qualcomm.com>
+Signed-off-by: Jack Wu <jackbb_wu@compal.com>
 ---
- drivers/media/i2c/ov13b10.c | 47 ++++++++++++++++++++-----------------
- 1 file changed, 26 insertions(+), 21 deletions(-)
+ drivers/platform/x86/dell/Kconfig             |   6 +
+ drivers/platform/x86/dell/Makefile            |   2 +
+ .../platform/x86/dell/dell-dw5826e-reset.c    | 120 ++++++++++++++++++
+ 3 files changed, 128 insertions(+)
+ create mode 100644 drivers/platform/x86/dell/dell-dw5826e-reset.c
 
-diff --git a/drivers/media/i2c/ov13b10.c b/drivers/media/i2c/ov13b10.c
-index 5421874732bc..b0d34141a13a 100644
---- a/drivers/media/i2c/ov13b10.c
-+++ b/drivers/media/i2c/ov13b10.c
-@@ -8,6 +8,7 @@
- #include <linux/i2c.h>
- #include <linux/module.h>
- #include <linux/pm_runtime.h>
-+#include <linux/regulator/consumer.h>
- #include <media/v4l2-ctrls.h>
- #include <media/v4l2-device.h>
- #include <media/v4l2-fwnode.h>
-@@ -699,6 +700,12 @@ static const struct ov13b10_mode supported_2_lanes_modes[] = {
- 	},
- };
+diff --git a/drivers/platform/x86/dell/Kconfig b/drivers/platform/x86/dell/Kconfig
+index 738c108c2163..c4540c837a88 100644
+--- a/drivers/platform/x86/dell/Kconfig
++++ b/drivers/platform/x86/dell/Kconfig
+@@ -276,4 +276,10 @@ config DELL_WMI_SYSMAN
+ 	  To compile this driver as a module, choose M here: the module will
+ 	  be called dell-wmi-sysman.
  
-+static const char * const ov13b10_supply_names[] = {
-+	"dovdd",        /* Digital I/O power */
-+	"avdd",         /* Analog power */
-+	"dvdd",         /* Digital core power */
++config DELL_DW5826E_RESET
++	tristate "Dell DW5826e PLDR reset support"
++	default m
++	depends on ACPI
++	help
++	  This adds support for the Dell DW5826e PLDR reset via ACPI
+ endif # X86_PLATFORM_DRIVERS_DELL
+diff --git a/drivers/platform/x86/dell/Makefile b/drivers/platform/x86/dell/Makefile
+index c7501c25e627..8150283cfd1d 100644
+--- a/drivers/platform/x86/dell/Makefile
++++ b/drivers/platform/x86/dell/Makefile
+@@ -28,3 +28,5 @@ obj-$(CONFIG_DELL_WMI_DESCRIPTOR)		+= dell-wmi-descriptor.o
+ obj-$(CONFIG_DELL_WMI_DDV)			+= dell-wmi-ddv.o
+ obj-$(CONFIG_DELL_WMI_LED)			+= dell-wmi-led.o
+ obj-$(CONFIG_DELL_WMI_SYSMAN)			+= dell-wmi-sysman/
++obj-$(CONFIG_DELL_DW5826E_RESET)		+= dell-dw5826e-reset.o
++
+diff --git a/drivers/platform/x86/dell/dell-dw5826e-reset.c b/drivers/platform/x86/dell/dell-dw5826e-reset.c
+new file mode 100644
+index 000000000000..28865a123c63
+--- /dev/null
++++ b/drivers/platform/x86/dell/dell-dw5826e-reset.c
+@@ -0,0 +1,120 @@
++// SPDX-License-Identifier: GPL-2.0-or-later
++/*
++ *  dell-dw5826e-reset.c - Dell DW5826e reset driver
++ *
++ *  Copyright (C) 2026 Jackbb Wu <jackbb.wu@compal.com>
++ *
++ */
++
++#include <linux/module.h>
++#include <linux/platform_device.h>
++#include <linux/acpi.h>
++#include <linux/miscdevice.h>
++#include <linux/fs.h>
++#include <linux/uaccess.h>
++
++static guid_t palc_dsm_guid =
++	GUID_INIT(0x5a1a4bba, 0x8006, 0x487e, 0xbe, 0x0a, 0xac, 0xf5, 0xd8, 0xfd, 0xfe, 0x59);
++
++struct palc_dev {
++	struct device *dev;
++	acpi_handle handle;
++	struct miscdevice miscdev;
 +};
 +
- struct ov13b10 {
- 	struct device *dev;
- 
-@@ -708,7 +715,7 @@ struct ov13b10 {
- 	struct v4l2_ctrl_handler ctrl_handler;
- 
- 	struct clk *img_clk;
--	struct regulator *avdd;
-+	struct regulator_bulk_data supplies[ARRAY_SIZE(ov13b10_supply_names)];
- 	struct gpio_desc *reset;
- 
- 	/* V4L2 Controls */
-@@ -1194,9 +1201,8 @@ static int ov13b10_power_off(struct device *dev)
- 	struct ov13b10 *ov13b10 = to_ov13b10(sd);
- 
- 	gpiod_set_value_cansleep(ov13b10->reset, 1);
--
--	if (ov13b10->avdd)
--		regulator_disable(ov13b10->avdd);
-+	regulator_bulk_disable(ARRAY_SIZE(ov13b10_supply_names),
-+			       ov13b10->supplies);
- 
- 	clk_disable_unprepare(ov13b10->img_clk);
- 
-@@ -1214,14 +1220,12 @@ static int ov13b10_power_on(struct device *dev)
- 		dev_err(dev, "failed to enable imaging clock: %d", ret);
- 		return ret;
- 	}
--
--	if (ov13b10->avdd) {
--		ret = regulator_enable(ov13b10->avdd);
--		if (ret < 0) {
--			dev_err(dev, "failed to enable avdd: %d", ret);
--			clk_disable_unprepare(ov13b10->img_clk);
--			return ret;
--		}
-+	ret = regulator_bulk_enable(ARRAY_SIZE(ov13b10_supply_names),
-+				    ov13b10->supplies);
-+	if (ret < 0) {
-+		dev_err(dev, "failed to enable regulators\n");
-+		clk_disable_unprepare(ov13b10->img_clk);
-+		return ret;
- 	}
- 
- 	gpiod_set_value_cansleep(ov13b10->reset, 0);
-@@ -1475,7 +1479,8 @@ static int ov13b10_get_pm_resources(struct ov13b10 *ov13b)
- 	unsigned long freq;
- 	int ret;
- 
--	ov13b->reset = devm_gpiod_get_optional(ov13b->dev, "reset", GPIOD_OUT_LOW);
-+	ov13b->reset = devm_gpiod_get_optional(ov13b->dev, "reset",
-+					       GPIOD_OUT_LOW);
- 	if (IS_ERR(ov13b->reset))
- 		return dev_err_probe(ov13b->dev, PTR_ERR(ov13b->reset),
- 				     "failed to get reset gpio\n");
-@@ -1491,15 +1496,15 @@ static int ov13b10_get_pm_resources(struct ov13b10 *ov13b)
- 				     "external clock %lu is not supported\n",
- 				     freq);
- 
--	ov13b->avdd = devm_regulator_get_optional(ov13b->dev, "avdd");
--	if (IS_ERR(ov13b->avdd)) {
--		ret = PTR_ERR(ov13b->avdd);
--		ov13b->avdd = NULL;
--		if (ret != -ENODEV)
--			return dev_err_probe(ov13b->dev, ret,
--					     "failed to get avdd regulator\n");
--	}
-+	for (unsigned int i = 0; i < ARRAY_SIZE(ov13b10_supply_names); i++)
-+		ov13b->supplies[i].supply = ov13b10_supply_names[i];
- 
-+	ret = devm_regulator_bulk_get(ov13b->dev,
-+				      ARRAY_SIZE(ov13b10_supply_names),
-+				      ov13b->supplies);
-+	if (ret)
-+		return dev_err_probe(ov13b->dev, ret,
-+				     "failed to get regulators\n");
- 	return 0;
- }
- 
++static int trigger_palc_pldr(struct palc_dev *palc)
++{
++	union acpi_object *obj;
++
++	dev_info(palc->dev, "Triggering PLDR via ACPI _DSM Function 1...\n");
++
++	obj = acpi_evaluate_dsm(palc->handle, &palc_dsm_guid, 1, 1, NULL);
++
++	if (!obj) {
++		dev_err(palc->dev, "Failed to evaluate _DSM\n");
++		return -EIO;
++	}
++
++	if (obj->type == ACPI_TYPE_BUFFER)
++		dev_info(palc->dev, "PLDR _DSM executed successfully\n");
++
++	ACPI_FREE(obj);
++	return 0;
++}
++
++static ssize_t palc_write(struct file *filp, const char __user *buf, size_t count, loff_t *ppos)
++{
++	struct palc_dev *palc = filp->private_data;
++
++	trigger_palc_pldr(palc);
++
++	return count;
++}
++
++static int palc_open(struct inode *inode, struct file *filp)
++{
++	struct palc_dev *palc = container_of(filp->private_data, struct palc_dev, miscdev);
++
++	filp->private_data = palc;
++	return 0;
++}
++
++static const struct file_operations palc_fops = {
++	.owner  = THIS_MODULE,
++	.open   = palc_open,
++	.write  = palc_write,
++};
++
++static int palc_acpi_probe(struct acpi_device *adev)
++{
++	struct palc_dev *palc;
++
++	palc = devm_kzalloc(&adev->dev, sizeof(*palc), GFP_KERNEL);
++	if (!palc)
++		return -ENOMEM;
++
++	palc->dev    = &adev->dev;
++	palc->handle = adev->handle;
++
++	palc->miscdev.minor  = MISC_DYNAMIC_MINOR;
++	palc->miscdev.name   = "reset_palc";
++	palc->miscdev.fops   = &palc_fops;
++	palc->miscdev.parent = &adev->dev;
++
++	if (misc_register(&palc->miscdev))
++		return -EINVAL;
++
++	dev_set_drvdata(&adev->dev, palc);
++
++	dev_info(&adev->dev, "DW5826e Reset Device (PALC0001) Driver Loaded\n");
++	return 0;
++}
++
++static void palc_acpi_remove(struct acpi_device *adev)
++{
++	struct palc_dev *palc = dev_get_drvdata(&adev->dev);
++
++	if (palc)
++		misc_deregister(&palc->miscdev);
++}
++
++static const struct acpi_device_id palc_acpi_ids[] = {
++	{ "PALC0001", 0 },
++	{ "", 0 }
++};
++
++static struct acpi_driver palc_acpi_driver = {
++	.name  = "palc_reset",
++	.ids   = palc_acpi_ids,
++	.ops = {
++		.add    = palc_acpi_probe,
++		.remove = palc_acpi_remove,
++	},
++};
++
++MODULE_DEVICE_TABLE(acpi, palc_acpi_ids);
++module_acpi_driver(palc_acpi_driver);
++
++MODULE_DESCRIPTION("Dell DW5826e reset driver");
++MODULE_LICENSE("GPL");
++MODULE_AUTHOR("JackBB Wu");
 -- 
-2.43.0
+2.34.1
 
