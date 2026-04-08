@@ -1,57 +1,56 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.14])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.15])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 299FE3B8D78;
-	Wed,  8 Apr 2026 13:37:09 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.14
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1F09E3CFF71;
+	Wed,  8 Apr 2026 13:46:21 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.15
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1775655432; cv=none; b=XZ1s1kxZwgJS3hIr7hCnQmvDYcYU19iTtTdwNzBO7fcNuL0lF/1ANTp33vm6/qLkzE/9HRd6n6W3Y9V4/l4N6MywBoc9ZxahDBc1OcC+JMFQkgZF29eoWjb2gHw8Kqv2A1bNBdryTjnmtat4kMV/9/yFbZ5I1CirRaKaUcbZ94A=
+	t=1775655983; cv=none; b=u/hxhzGBbXESPaZ8xnauGZCUpcVTe/sELm3la11085Don8kVMknbRVuNBz8ORO9YS+Ug3FHxEtIkkU51gFi+ez7qfw+WwmqnBTrS1rhCRd45TIxFzM/r6Ss/HMAmq9PqNAL7Z2NuC4BfoPvJAqrICKzH/tTEm5WV/PzTwt5+oUg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1775655432; c=relaxed/simple;
-	bh=8sOwfLc+s7+aior3XAimJEjHolL23aIWrgA0NSkg6RE=;
+	s=arc-20240116; t=1775655983; c=relaxed/simple;
+	bh=YmlSKCTcTsQiBllFOByTqGyAA6Pq4uYVpE1Zmvkqb+A=;
 	h=From:Date:To:cc:Subject:In-Reply-To:Message-ID:References:
-	 MIME-Version:Content-Type; b=XojC6qyiYCBaf6P4QUnQN+5sTPnJQOvsRYdWiU6kDZUid7PadJBeuKmDqG0ONU2HohbuyGPiw2Ur386jSclE6mQn7nvJULkk+Gp86hBLlgjpYjEIvbJv0/APuq6sWqAuKZcGqFhtmm2+zy0Nz//kuA0HM1uHIy9xiDY6hefrkzw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=pass smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=JU95sYcR; arc=none smtp.client-ip=192.198.163.14
+	 MIME-Version:Content-Type; b=Q95cOm5vwCqnqSJ/oRXRE812hsaff5/97mt/7anlNwbY9ng6MaLG9ru2gVAkT+Y2XwWE5jjX5VqsTX+5s2DJDrrAx62y/HKAApZsCwfBK4yW8/WDhMP+9bhwTDI3FSe29eRTCbch4EqP9W/Y4wgh2BcseC7VgQlTnTe6f26c26k=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=pass smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=oDLVJd+E; arc=none smtp.client-ip=198.175.65.15
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="JU95sYcR"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="oDLVJd+E"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1775655430; x=1807191430;
+  t=1775655982; x=1807191982;
   h=from:date:to:cc:subject:in-reply-to:message-id:
    references:mime-version;
-  bh=8sOwfLc+s7+aior3XAimJEjHolL23aIWrgA0NSkg6RE=;
-  b=JU95sYcRjH5zt21AIlrtXKFZ40fG/VYvFxr35IRZLeDwAL2jhA+8gtiF
-   mrWyA5AQsT2WHULTrD7usK/kv7fwtqrAEy6Gc0+9gINRopuTRKBATpkQF
-   nxbhfSRzn/vKTu2+qRxL2ftdJli+k4B4blwB6B7mBxzakr5Tf2o3pb6Ga
-   aNSFifHN9QBIOemHHvI79bD5oAT0yHx2GsQpH4vMDAo8pYPPea9kJBT9E
-   0iumAhdQGK/FWJW9M0gj9JKwiT9SJT7ciLxGx0RJAEPRXaLFiMUNq1w9s
-   +ohC0P6T3kp8ryuakY8nUy1fcis90RS13IPmNxTor/OyEsp5Z16e3RG9X
+  bh=YmlSKCTcTsQiBllFOByTqGyAA6Pq4uYVpE1Zmvkqb+A=;
+  b=oDLVJd+EKtdAWr6Cm7MuaIjFpdu05F0gCyfSlb4s4ZliL2CqQUUJE8ZH
+   BouFKzc5WtIhcVElF4HhiwKaQk+8noMRIKjL2iroS8hJGuF9fIQmnzZH/
+   pogwVdtne7ViUSueJ+07an8AgdNdgcO6mfsodVO13sgMCgJu1pD695YlL
+   w2Rf6OmClzSX5ngUTO/CCm+RozGSmIPG5zx+ek67zz7KDkudqQcyOv5j7
+   EYZkl844xJE77vGZux3SGBLOb9qTI2Jgk5jIsXKOJgUZnslaoq/gImu1U
+   B3EudmmQCZrPVkMPiSIo/Vt5OgUBebqrxoVbh9dO+pApe/67FeMrETz7K
    g==;
-X-CSE-ConnectionGUID: dzkW9N2OQnGW4S7F7ZUh7Q==
-X-CSE-MsgGUID: eHnnTxAYTpuBIVGpFqA4xw==
-X-IronPort-AV: E=McAfee;i="6800,10657,11753"; a="76709785"
+X-CSE-ConnectionGUID: q2QjgUJFSPylWeM1+1fHzg==
+X-CSE-MsgGUID: DOG5dgUQSVGfSHxY0rttPw==
+X-IronPort-AV: E=McAfee;i="6800,10657,11753"; a="80234038"
 X-IronPort-AV: E=Sophos;i="6.23,167,1770624000"; 
-   d="scan'208";a="76709785"
-Received: from orviesa003.jf.intel.com ([10.64.159.143])
-  by fmvoesa108.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 08 Apr 2026 06:37:09 -0700
-X-CSE-ConnectionGUID: ObbyhGmSSzKG6zFSvXm8sg==
-X-CSE-MsgGUID: zS1XNmqtTOeS5HCRiQPjGQ==
+   d="scan'208";a="80234038"
+Received: from fmviesa002.fm.intel.com ([10.60.135.142])
+  by orvoesa107.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 08 Apr 2026 06:46:22 -0700
+X-CSE-ConnectionGUID: ARCYSRppStqtB78RDSF0Aw==
+X-CSE-MsgGUID: jFHjXnMMQmahwhCqxXfkZA==
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="6.23,167,1770624000"; 
-   d="scan'208";a="232505673"
+   d="scan'208";a="251621082"
 Received: from ijarvine-mobl1.ger.corp.intel.com (HELO localhost) ([10.245.245.45])
-  by ORVIESA003-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 08 Apr 2026 06:37:08 -0700
+  by fmviesa002-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 08 Apr 2026 06:46:19 -0700
 From: =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
-Date: Wed, 8 Apr 2026 16:37:03 +0300 (EEST)
-To: Jack Wu <wojackbb@gmail.com>
-cc: Hans de Goede <hansg@kernel.org>, platform-driver-x86@vger.kernel.org, 
-    LKML <linux-kernel@vger.kernel.org>
+Date: Wed, 8 Apr 2026 16:46:16 +0300 (EEST)
+To: Jack Wu <wojackbb@gmail.com>, Hans de Goede <hansg@kernel.org>
+cc: platform-driver-x86@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>
 Subject: Re: [PATCH] platform/x86: dell-dw5826e: Add reset driver for
  DW5826e
 In-Reply-To: <20260408111738.232040-1-jackbb_wu@compal.com>
-Message-ID: <4c31d95e-6b38-506b-3b3d-adb1e4a96ecd@linux.intel.com>
+Message-ID: <cffd3116-fbf3-06f4-430d-7924b43b3737@linux.intel.com>
 References: <20260408111738.232040-1-jackbb_wu@compal.com>
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
@@ -98,6 +97,14 @@ On Wed, 8 Apr 2026, Jack Wu wrote:
 >  obj-$(CONFIG_DELL_WMI_LED)			+= dell-wmi-led.o
 >  obj-$(CONFIG_DELL_WMI_SYSMAN)			+= dell-wmi-sysman/
 > +obj-$(CONFIG_DELL_DW5826E_RESET)		+= dell-dw5826e-reset.o
+
+Another thing,
+
+I wonder if this is good place for this, as kernel also has drivers/reset/.
+
+-- 
+ i.
+
 > +
 > diff --git a/drivers/platform/x86/dell/dell-dw5826e-reset.c b/drivers/platform/x86/dell/dell-dw5826e-reset.c
 > new file mode 100644
@@ -111,9 +118,6 @@ On Wed, 8 Apr 2026, Jack Wu wrote:
 > + *
 > + *  Copyright (C) 2026 Jackbb Wu <jackbb.wu@compal.com>
 > + *
-
-Remove extra empty lines.
-
 > + */
 > +
 > +#include <linux/module.h>
@@ -122,15 +126,9 @@ Remove extra empty lines.
 > +#include <linux/miscdevice.h>
 > +#include <linux/fs.h>
 > +#include <linux/uaccess.h>
-
-Please order alphabetically.
-
 > +
 > +static guid_t palc_dsm_guid =
 > +	GUID_INIT(0x5a1a4bba, 0x8006, 0x487e, 0xbe, 0x0a, 0xac, 0xf5, 0xd8, 0xfd, 0xfe, 0x59);
-
-Add include.
-
 > +
 > +struct palc_dev {
 > +	struct device *dev;
@@ -143,16 +141,10 @@ Add include.
 > +	union acpi_object *obj;
 > +
 > +	dev_info(palc->dev, "Triggering PLDR via ACPI _DSM Function 1...\n");
-
-Add include.
-
 > +
 > +	obj = acpi_evaluate_dsm(palc->handle, &palc_dsm_guid, 1, 1, NULL);
 > +
 > +	if (!obj) {
-
-Don't leave empty lines in between call and it's error handling.
-
 > +		dev_err(palc->dev, "Failed to evaluate _DSM\n");
 > +		return -EIO;
 > +	}
@@ -209,9 +201,6 @@ Don't leave empty lines in between call and it's error handling.
 > +	dev_set_drvdata(&adev->dev, palc);
 > +
 > +	dev_info(&adev->dev, "DW5826e Reset Device (PALC0001) Driver Loaded\n");
-
-Don't print anything on success path please.
-
 > +	return 0;
 > +}
 > +
@@ -236,10 +225,6 @@ Don't print anything on success path please.
 > +		.remove = palc_acpi_remove,
 > +	},
 > +};
-
-Rafael has been trying to get rid of all acpi_drivers, please don't add 
-more.
-
 > +
 > +MODULE_DEVICE_TABLE(acpi, palc_acpi_ids);
 > +module_acpi_driver(palc_acpi_driver);
@@ -248,7 +233,4 @@ more.
 > +MODULE_LICENSE("GPL");
 > +MODULE_AUTHOR("JackBB Wu");
 > 
-
--- 
- i.
 
