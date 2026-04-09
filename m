@@ -1,58 +1,61 @@
 Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.17])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0FC723C7E1A;
-	Thu,  9 Apr 2026 13:41:29 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BDFB03BE163;
+	Thu,  9 Apr 2026 13:41:37 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.17
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1775742092; cv=none; b=p4a4MZ1SkSNkb8z5EaDZovwVOKgB9uHEmpdfVsQd2xXP9Fqady8eYbVzCH4FD6ZEzOi8+6/cRzis31fMduuUitT9wtSgOlg2zL0tyJYAfMpi7eQf+ohD/WwEqVDyxQP7F2wTfBOMhAVJxbqw2sTIPDASD8jlKxkqIO+OrWHzK+Q=
+	t=1775742098; cv=none; b=HNtlytSAlpbEirR86tOh6FXwMHtbEQS2bEZqUIR3kqGBUmIIIrFj3j1FezUHU/1tDrN38rXfC140UbYCtnhEEzyNtT8KsfTQfFC6/iuKiug3rJP7sfPSRoziXfepfIuVFccRs8qMI0tec0nI4I0ta4cMud5hm0F5HgEzFduO/c8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1775742092; c=relaxed/simple;
-	bh=ranInEKjaHKjh6RSOMqdy/rCN/r/tTTiUBdJJdtFYps=;
+	s=arc-20240116; t=1775742098; c=relaxed/simple;
+	bh=coLuzzU0sTEa3kepes1qHmGXcg974uivXLf/1lY8aNA=;
 	h=From:To:Cc:In-Reply-To:References:Subject:Message-Id:Date:
-	 MIME-Version:Content-Type; b=hLYmDmX0c8H6X+0ppu77nuv5HtqGlbc6LMWN2cWrBSGiQ7830d/6rR1XNtXAXiF8DSItET0Kb3RX598dx/j4BCJN4990TEwyQw/ZRLbcslsKmZcOfmcSgiuZ0hPL1UjEVG0kohwegi8VweUKUuEhAnual4VNn3ZFK97xuYb38iM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=pass smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=d0On6QB9; arc=none smtp.client-ip=198.175.65.17
+	 MIME-Version:Content-Type; b=D1dJdAy8gs5cHpAFaHj2uc3ZjsdS2VZFFW8THMyOtkq8yk4X7tc5UcTe7p5GCyHfKFqqeIGJoi/Q2MpjPg+nzomQZVoalDBIgNSPb8dJRmmaug9K/W6qtRolh+MUzrlHXz41kj1bIszQJhExS3/PR2EcvFl6Tl/YPhy3CXylipg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=pass smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=aoXnCDIK; arc=none smtp.client-ip=198.175.65.17
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="d0On6QB9"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="aoXnCDIK"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1775742090; x=1807278090;
+  t=1775742097; x=1807278097;
   h=from:to:cc:in-reply-to:references:subject:message-id:
    date:mime-version:content-transfer-encoding;
-  bh=ranInEKjaHKjh6RSOMqdy/rCN/r/tTTiUBdJJdtFYps=;
-  b=d0On6QB95teZdSCUuMTz7jSouKO2kvITYfWVi8XbX3fsoxc9VkM0WZZI
-   kgQ1Uwf7C+0VZsBNiYihV3B4koF2+R2iB+8kob2Go1YD6DZ+l7i7TRU1W
-   4hnT/ITYzcqLnyp40duw5t1mIL6skBjPTjoScgPOVwCNTBb/pglIgzSPz
-   sK8kjMfqf9Csupk88kVknA1QVrI+Nu4eWUOwrpCDLA5O0sBU9aK9LaMPL
-   5dowKgnrCZ3BmXY8UauBUeH8dKITxEKV3oUMWwYrNlHLD4Y0FXQyJU0N1
-   VJ5sJbJQyDwnSQqIVfPu+zONJK4C8Wy8yrvnwHHRmgAvkMwDzB0vxR/a8
-   g==;
-X-CSE-ConnectionGUID: hCHUe/tUTKOszXvDgn7Stw==
-X-CSE-MsgGUID: NoSfS+mqTJqau1ovxPdOjQ==
-X-IronPort-AV: E=McAfee;i="6800,10657,11754"; a="76708224"
+  bh=coLuzzU0sTEa3kepes1qHmGXcg974uivXLf/1lY8aNA=;
+  b=aoXnCDIKy+qoqdi8HINkMlLp1XQ2VimqkC/qkS5hKfrVAQCXl+cS4oL7
+   ar/LX2O0PozByULMFEcI0lQdP3FomFBMeEVIOi9V+LtbuvqtPm3ZjjwPr
+   QNuEF+slDDoaM3lr0/7l3Sf6EqHmWqyYvsTnTzqyLBFcc7pV2/2yyx+Hh
+   8wbQETx2cyUeIwO21KuQmOr2ucg46gNq7KaIM00vN3j3ob+7+50Jq7+4D
+   d1I7e1iR+yG8y/OF8r69AzD0ac6Xw1YtklxNxA9kKSoJT8ss71d1pn4az
+   0HSF8eN6NQTbPltvNmjwi0sX4KFPWtqs3YuQU3XtvndhHGvRNR1jfUqTN
+   A==;
+X-CSE-ConnectionGUID: nnJD4eFESKqENtpPdOL/OQ==
+X-CSE-MsgGUID: ohVvicUPTXGwgxBvHPJWzw==
+X-IronPort-AV: E=McAfee;i="6800,10657,11754"; a="76708236"
 X-IronPort-AV: E=Sophos;i="6.23,169,1770624000"; 
-   d="scan'208";a="76708224"
+   d="scan'208";a="76708236"
 Received: from orviesa005.jf.intel.com ([10.64.159.145])
-  by orvoesa109.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 09 Apr 2026 06:41:29 -0700
-X-CSE-ConnectionGUID: k/551sLNRTKsJvaZvLVWsA==
-X-CSE-MsgGUID: VeoTpCDsQPaRBA0tOL55oA==
+  by orvoesa109.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 09 Apr 2026 06:41:37 -0700
+X-CSE-ConnectionGUID: apZPwugyRh+bmoVFlox7IA==
+X-CSE-MsgGUID: FrzIqDHiSU2C6eQW8rhuRA==
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="6.23,169,1770624000"; 
-   d="scan'208";a="233756833"
+   d="scan'208";a="233756920"
 Received: from ijarvine-mobl1.ger.corp.intel.com (HELO localhost) ([10.245.245.197])
-  by orviesa005-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 09 Apr 2026 06:41:27 -0700
+  by orviesa005-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 09 Apr 2026 06:41:34 -0700
 From: =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
-To: hansg@kernel.org, Krishna Chomal <krishna.chomal108@gmail.com>
-Cc: platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org, 
- "Artem S. Tashkinov" <aros@gmx.com>
-In-Reply-To: <20260403080155.169653-1-krishna.chomal108@gmail.com>
-References: <20260403080155.169653-1-krishna.chomal108@gmail.com>
-Subject: Re: [PATCH] platform/x86: hp-wmi: Ignore backlight and FnLock
- events
-Message-Id: <177574208280.8529.8908382951281952205.b4-ty@linux.intel.com>
-Date: Thu, 09 Apr 2026 16:41:22 +0300
+To: Prasanth Ksr <prasanth.ksr@dell.com>, Hans de Goede <hansg@kernel.org>, 
+ Pengpeng Hou <pengpeng@iscas.ac.cn>
+Cc: "Divya.Bharathi" <divya.bharathi@dell.com>, 
+ Mario Limonciello <mario.limonciello@dell.com>, Dell.Client.Kernel@dell.com, 
+ platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
+In-Reply-To: <20260408084501.1-dell-wmi-sysman-v2-pengpeng@iscas.ac.cn>
+References: <20260329030948.32467-1-pengpeng@iscas.ac.cn>
+ <20260408084501.1-dell-wmi-sysman-v2-pengpeng@iscas.ac.cn>
+Subject: Re: [PATCH v2] platform/x86: dell-wmi-sysman: bound enumeration
+ string aggregation
+Message-Id: <177574208989.8529.6766457149139541924.b4-ty@linux.intel.com>
+Date: Thu, 09 Apr 2026 16:41:29 +0300
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
@@ -63,14 +66,17 @@ Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
 X-Mailer: b4 0.13.0
 
-On Fri, 03 Apr 2026 13:31:55 +0530, Krishna Chomal wrote:
+On Wed, 08 Apr 2026 08:38:21 +0800, Pengpeng Hou wrote:
 
-> On HP OmniBook 7 the keyboard backlight and FnLock keys are handled
-> directly by the firmware. However, they still trigger WMI events which
-> results in "Unknown key code" warnings in dmesg.
+> populate_enum_data() aggregates firmware-provided value-modifier
+> and possible-value strings into fixed 512-byte struct members.
+> The current code bounds each individual source string but then
+> appends every string and separator with raw strcat() and no
+> remaining-space check.
 > 
-> Add these key codes to the keymap with KE_IGNORE to silence the warnings
-> since no software action is needed.
+> Switch the aggregation loops to a bounded append helper and
+> reject enumeration packages whose combined strings do not fit
+> in the destination buffers.
 > 
 > [...]
 
@@ -81,8 +87,8 @@ platform-drivers-x86/review-ilpo-next branch only once I've pushed my
 local branch there, which might take a while.
 
 The list of commits applied:
-[1/1] platform/x86: hp-wmi: Ignore backlight and FnLock events
-      commit: e8c597368b8500a824c639bfb5ed0044068c6870
+[1/1] platform/x86: dell-wmi-sysman: bound enumeration string aggregation
+      commit: 3c34471c26abc52a37f5ad90949e2e4b8027eb14
 
 --
  i.
