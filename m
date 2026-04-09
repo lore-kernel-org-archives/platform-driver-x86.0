@@ -1,114 +1,98 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.14])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7DBB339023C
-	for <platform-driver-x86@vger.kernel.org>; Thu,  9 Apr 2026 13:40:54 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CEAAC3BE62F;
+	Thu,  9 Apr 2026 13:41:04 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.14
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1775742054; cv=none; b=b8Zc8faNGpKTYwPwk2mPZW/Nz3euY31F5sU3VAipmZyWrxuQcAfwYyAhDpSCvxtVBRZiBBA70VtzMVX52kWMEqqc/UC1+JEWnjuVqEnIc+cie65bedSXt2YMtpJwRRlGsPmIy8BnD5yLKjpDj5rW5yRPjZpnxjyhtH0ouGPAkQw=
+	t=1775742067; cv=none; b=a0FyaYBqS/GPTsNwgjwiLhGMgKIzuQl9X9GBWI3j/+Il7CC0xS2bOavJL6lVbnhPwKTvA07Cg3nHhozwI6EWa1vHMVEjzWb8wUstkU0tN3z0SnGLrJMGqBtSFEdtW5b/ukbSdvdJSzlGzBtH979tcTMEJKD9xxcIomzDR3ejMA8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1775742054; c=relaxed/simple;
-	bh=iFrvQX8HGgaiNoFcPWFQYQcUFgEcwZBHlJGXFnzqfkQ=;
-	h=From:To:Subject:Date:Message-ID:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=CGgHgPzKOOncsGxypdrsUowTI0pvheTDDnjbvRCW3AmeUUpDT1fj31peOktFxBAb2XoSPRuDK4/IA4Zrl6Y75BOgpdchPP5/toAMiqJPDBT7vzCrOCp9m/GcIfMQTsdaxQW2YRb40QwdzQBRNYMmzmgr9/Qw4yogi7UaQPOvOjw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=LvtiIzxa; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1775742067; c=relaxed/simple;
+	bh=dtAoRY71Dd7S0XaVBfTVRxacwv+Mj7+j40E6X6JtTL4=;
+	h=From:To:Cc:In-Reply-To:References:Subject:Message-Id:Date:
+	 MIME-Version:Content-Type; b=DuNqLLcVu2/Eo+Dz/ztXI5i6X52DUfTs3qaaUYvfwvm2zpjQjg4gYhMugUDJZy3RivW5Y0o9Y2fKLbasFb+vSULESWYoYVTnMxTlA9eFVK1NqDjQ0EYW+8bWXLtI4raODBtrJcApvxxOPlfEMf3LP7n+pzvckH8Spb4hcE2C8s4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=pass smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=LsNLZIWx; arc=none smtp.client-ip=192.198.163.14
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="LvtiIzxa"
-Received: by smtp.kernel.org (Postfix) with ESMTPS id 3EA17C19424
-	for <platform-driver-x86@vger.kernel.org>; Thu,  9 Apr 2026 13:40:54 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1775742054;
-	bh=iFrvQX8HGgaiNoFcPWFQYQcUFgEcwZBHlJGXFnzqfkQ=;
-	h=From:To:Subject:Date:In-Reply-To:References:From;
-	b=LvtiIzxaN+yyuGPLgm/YkvWaLoE2TMm2FQsqCMdoh6j8CkwZZwfTd6BNoxqXzATGC
-	 baLYxtGCui/wg5r1zHogp29p8GiRDbjIizowEAKOIKwYTFpqoVz8SlIwYV8kyRPE8t
-	 IWwqTjPHonqa0/J0ouUoVoBqLVONzwXKcAFihPHE1vblDu1Hd38AVq6RcwiFcQ+wc6
-	 kkJVKGmEgqKgelpL71Tr++XpJwRcw7832THmrvRQaw9gwtgWdjDSGPhg+3TSS5j4Jq
-	 SH192fCPvf/Xn3LjBWFJdW2fUvTNhK0WAQPvj/dXLOmgFyc8cO2qclg1X32eNjEbj7
-	 JWiY0iCO5bl1A==
-Received: by aws-us-west-2-korg-bugzilla-1.web.codeaurora.org (Postfix, from userid 48)
-	id 3080DC433E1; Thu,  9 Apr 2026 13:40:54 +0000 (UTC)
-From: bugzilla-daemon@kernel.org
-To: platform-driver-x86@vger.kernel.org
-Subject: [Bug 219904] pc speaker not working (just pop's/click's) on intel
- chipsets gen 6, 7 and probably more
-Date: Thu, 09 Apr 2026 13:40:54 +0000
-X-Bugzilla-Reason: None
-X-Bugzilla-Type: changed
-X-Bugzilla-Watch-Reason: AssignedTo drivers_platform_x86@kernel-bugs.osdl.org
-X-Bugzilla-Product: Drivers
-X-Bugzilla-Component: Platform_x86
-X-Bugzilla-Version: 2.5
-X-Bugzilla-Keywords: 
-X-Bugzilla-Severity: normal
-X-Bugzilla-Who: keyofblues@gmail.com
-X-Bugzilla-Status: RESOLVED
-X-Bugzilla-Resolution: INVALID
-X-Bugzilla-Priority: P3
-X-Bugzilla-Assigned-To: drivers_platform_x86@kernel-bugs.osdl.org
-X-Bugzilla-Flags: 
-X-Bugzilla-Changed-Fields: 
-Message-ID: <bug-219904-215701-2gfDpQXLLk@https.bugzilla.kernel.org/>
-In-Reply-To: <bug-219904-215701@https.bugzilla.kernel.org/>
-References: <bug-219904-215701@https.bugzilla.kernel.org/>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-X-Bugzilla-URL: https://bugzilla.kernel.org/
-Auto-Submitted: auto-generated
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="LsNLZIWx"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1775742065; x=1807278065;
+  h=from:to:cc:in-reply-to:references:subject:message-id:
+   date:mime-version:content-transfer-encoding;
+  bh=dtAoRY71Dd7S0XaVBfTVRxacwv+Mj7+j40E6X6JtTL4=;
+  b=LsNLZIWxSrp4dS4C6jx3E/Fy2VvwwgWkPxAAevPfKGJfKFHj/kZvVl7Q
+   9a4kQSnrxE+kRTLIYglGMxlT6txQ3aZM0p7TfawisbE9SXJ2CZzxRTHY+
+   CLpeEVAxE3I0uTyN5PoTQghnmmIyNNrD5Lyb1Sjgvzm2xwuLTqYJu5oWu
+   IgnOvfbL0T2Ncf2cvUG/OAlog5GlyDWMQG4HDbT1OyR1g8St6V5+ZtvrR
+   wwy0OaAmsKV6tyDWNROK9315rifHH1bM15Hu86Tt6dQboWgzR2GVfIxwG
+   wS5qzBtGQ69dESdE+w8+M6ChqZOnij+kTMlN2pyzSJKK8uTizNQL1JVhn
+   g==;
+X-CSE-ConnectionGUID: Ke+4racNTKqRu5cd3F6gbQ==
+X-CSE-MsgGUID: KqYVrkK7SuGli3IBp6ciQw==
+X-IronPort-AV: E=McAfee;i="6800,10657,11754"; a="76818830"
+X-IronPort-AV: E=Sophos;i="6.23,169,1770624000"; 
+   d="scan'208";a="76818830"
+Received: from fmviesa008.fm.intel.com ([10.60.135.148])
+  by fmvoesa108.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 09 Apr 2026 06:41:04 -0700
+X-CSE-ConnectionGUID: 07v4W3h8TRik1XLuG8S3vg==
+X-CSE-MsgGUID: 1eMj04EOQY+OAVmXzqGwcw==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.23,169,1770624000"; 
+   d="scan'208";a="226022412"
+Received: from ijarvine-mobl1.ger.corp.intel.com (HELO localhost) ([10.245.245.197])
+  by fmviesa008-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 09 Apr 2026 06:40:59 -0700
+From: =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
+To: platform-driver-x86@vger.kernel.org, 
+ Emre Cecanpunar <emreleno@gmail.com>
+Cc: hansg@kernel.org, linux-kernel@vger.kernel.org, 
+ krishna.chomal108@gmail.com, edip@medip.dev
+In-Reply-To: <20260407142515.20683-1-emreleno@gmail.com>
+References: <20260407142515.20683-1-emreleno@gmail.com>
+Subject: Re: [PATCH v4 0/5] platform/x86: hp-wmi: Victus S fan control
+ fixes
+Message-Id: <177574205493.8529.4447378805508346661.b4-ty@linux.intel.com>
+Date: Thu, 09 Apr 2026 16:40:54 +0300
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+X-Mailer: b4 0.13.0
 
-https://bugzilla.kernel.org/show_bug.cgi?id=3D219904
+On Tue, 07 Apr 2026 17:25:09 +0300, Emre Cecanpunar wrote:
 
---- Comment #20 from KeyofBlueS (keyofblues@gmail.com) ---
-Good news, the issue is now officially resolved by ASUS.
+> Bug fixes for the Victus S manual fan control:
+> - Propagate fan_count_userdefine_trigger() errors
+> - Fix cancel_delayed_work_sync() deadlock from work handler
+> - Use mod_delayed_work() for efficient keep-alive timer resets
+> - Fix u8 underflow in gpu_delta calculation
+> - Add mutex for concurrent hwmon state access
+> 
+> [...]
 
-ASUS released new BIOS versions for the motherboards I had reported to them:
 
-- ROG STRIX Z790-F GAMING WIFI: BIOS 3201
-- ROG STRIX B660-F GAMING WIFI: BIOS 4001
+Thank you for your contribution, it has been applied to my local
+review-ilpo-next branch. Note it will show up in the public
+platform-drivers-x86/review-ilpo-next branch only once I've pushed my
+local branch there, which might take a while.
 
-ASUS support clarified that the feature is present but not enabled by defau=
-lt.
+The list of commits applied:
+[1/5] platform/x86: hp-wmi: fix ignored return values in fan settings
+      commit: 7265b57fbc32782d02bdb8d865ba0d8efa209c8c
+[2/5] platform/x86: hp-wmi: avoid cancel_delayed_work_sync from work handler
+      commit: 249ddba9c0ba4453c0a6bc0e3626e7864751d940
+[3/5] platform/x86: hp-wmi: use mod_delayed_work to reset keep-alive timer
+      commit: 6297443beb0c5606399ec7d4f4b335e2e7379147
+[4/5] platform/x86: hp-wmi: fix u8 underflow in gpu_delta calculation
+      commit: cb4daa450f05447c1f914eaef75b2577c25a0fcd
+[5/5] platform/x86: hp-wmi: add locking for concurrent hwmon access
+      commit: 5969c55e2145368254194edbe0e64880314be69f
 
-To make the PC Speaker work correctly, you need to enable the following opt=
-ion
-in the BIOS:
+--
+ i.
 
-"BIOS" > "Advanced Mode" > "Advanced" > "Onboard Devices Configuration" > "=
-8254
-timer clock in OS"
-
-After enabling this option on the Z790-F with BIOS 3201, I can confirm that=
- the
-PC Speaker works correctly again.
-
-Unfortunately, I cannot test the B660-F at the moment, but since the same
-change was reported for its BIOS as well, it should behave the same.
-
-It's currently not clear whether this fix will be released for other
-motherboards too. If you are affected, it's worth checking whether a BIOS
-update is available for your motherboard and then looking in the BIOS for t=
-he
-option "8254 timer clock in OS" (or something similar).
-
-If you can't find it, I recommend contacting your motherboard vendor's supp=
-ort
-and mentioning the issue, as well as the fact that ASUS solved it by
-introducing this BIOS option. That may help them reproduce the fix on their
-side.
-
-Huge thanks to ASUS support and their technical team for actually investiga=
-ting
-the issue and implementing a fix. The support experience was genuinely
-impressive.
-
---=20
-You may reply to this email to add a comment.
-
-You are receiving this mail because:
-You are watching the assignee of the bug.=
