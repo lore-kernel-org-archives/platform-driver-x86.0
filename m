@@ -1,107 +1,114 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.11])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 352A9378817;
-	Thu,  9 Apr 2026 12:45:42 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.11
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7DBB339023C
+	for <platform-driver-x86@vger.kernel.org>; Thu,  9 Apr 2026 13:40:54 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1775738743; cv=none; b=NmkQSITdAwRJ5f0vpxAc4xbj0ZZ/lrPqnIhrG5WT6icxdaby7GGIhZSWCQcQNQ4CQCMeadrXUY8xWKLmkDrjcxS7TUORtHl7cK0iBx17tf+PaItQLtcYJY8lHjHyO3qvQIOAOp3iRwku4BHzz39bpzTuQ23akQ/19jT8eUCnkXE=
+	t=1775742054; cv=none; b=b8Zc8faNGpKTYwPwk2mPZW/Nz3euY31F5sU3VAipmZyWrxuQcAfwYyAhDpSCvxtVBRZiBBA70VtzMVX52kWMEqqc/UC1+JEWnjuVqEnIc+cie65bedSXt2YMtpJwRRlGsPmIy8BnD5yLKjpDj5rW5yRPjZpnxjyhtH0ouGPAkQw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1775738743; c=relaxed/simple;
-	bh=uDYeBqG1pZWecDWl2DJkWpYEoVM2UWgZGXsu2/NoVT8=;
-	h=From:Date:To:cc:Subject:In-Reply-To:Message-ID:References:
-	 MIME-Version:Content-Type; b=XlvOi0pFQQZsnvTuPrD5UNUx5ZEJR/3ZiN/AgLhie3RqnqNTonM8M9OVAVDOS49HC0hRRnhXkKmComxqzx2bFMCCQ0/U1lzI1OgeCuJypUNxuJEIjpEv2c0tDzI7R/7gvI/xzB1pmr25PwZNhRH1fChmr6zOGC2jyOklGmnyI4I=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=pass smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=j3yVDDgu; arc=none smtp.client-ip=198.175.65.11
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.intel.com
+	s=arc-20240116; t=1775742054; c=relaxed/simple;
+	bh=iFrvQX8HGgaiNoFcPWFQYQcUFgEcwZBHlJGXFnzqfkQ=;
+	h=From:To:Subject:Date:Message-ID:In-Reply-To:References:
+	 Content-Type:MIME-Version; b=CGgHgPzKOOncsGxypdrsUowTI0pvheTDDnjbvRCW3AmeUUpDT1fj31peOktFxBAb2XoSPRuDK4/IA4Zrl6Y75BOgpdchPP5/toAMiqJPDBT7vzCrOCp9m/GcIfMQTsdaxQW2YRb40QwdzQBRNYMmzmgr9/Qw4yogi7UaQPOvOjw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=LvtiIzxa; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="j3yVDDgu"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1775738742; x=1807274742;
-  h=from:date:to:cc:subject:in-reply-to:message-id:
-   references:mime-version;
-  bh=uDYeBqG1pZWecDWl2DJkWpYEoVM2UWgZGXsu2/NoVT8=;
-  b=j3yVDDguxniQnG++drdD9rM8oiuf5iI/1iLEwyL6zE33fwMFWsV0eTp5
-   zmAuqmzUEfpEFvJF+37X7nGzZ8lmLuxPQ9tV1xeX0GgPyCDRBeYsC7mFT
-   BY6H0E+A7/gxqHNQfjmIYXiU66oC7HnIvYIIDHF15kZFOYmyl7Iz2OOAe
-   YvdlOWFBlTn4wfaKSFqbScBrgbUusp94oyi86zCBz6CsfTKYzqRCeAmO1
-   cr1jb7BtTz+P+a6bX2F9ih0CCuoZzVPeQxJoPHZdm4+v71P3p9qZJsHM5
-   GYNGLkRUDgCs/HviQZV59DSRazpWqnie85qgJJlucKFcvO/8Q0iTMYXpt
-   Q==;
-X-CSE-ConnectionGUID: 8lo+mgQVR5KJu65fHpMX8Q==
-X-CSE-MsgGUID: o0zuu7BaQgOQKnjsIoOFlg==
-X-IronPort-AV: E=McAfee;i="6800,10657,11753"; a="87030626"
-X-IronPort-AV: E=Sophos;i="6.23,169,1770624000"; 
-   d="scan'208";a="87030626"
-Received: from orviesa010.jf.intel.com ([10.64.159.150])
-  by orvoesa103.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 09 Apr 2026 05:45:41 -0700
-X-CSE-ConnectionGUID: fDn2yc36RNevGzWeJJLp+g==
-X-CSE-MsgGUID: 7pDIgRmnSe+G221rZSVghA==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.23,169,1770624000"; 
-   d="scan'208";a="227915974"
-Received: from ijarvine-mobl1.ger.corp.intel.com (HELO localhost) ([10.245.245.197])
-  by orviesa010-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 09 Apr 2026 05:45:37 -0700
-From: =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
-Date: Thu, 9 Apr 2026 15:45:29 +0300 (EEST)
-To: =?ISO-8859-15?Q?Jos=E9_Guilherme_de_Castro_Rodrigues?= <jose.guilherme.cr.bh@gmail.com>
-cc: Corentin Chary <corentin.chary@gmail.com>, 
-    "Luke D. Jones" <luke@ljones.dev>, Denis Benato <benato.denis96@gmail.com>, 
-    Hans de Goede <hansg@kernel.org>, platform-driver-x86@vger.kernel.org, 
-    LKML <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH] platform/x86: asus-wmi: fix camera key led on Zenbook
- S14
-In-Reply-To: <ac6xgsMxzpnU_8FA@djouze-zen>
-Message-ID: <7db8d74a-e250-d790-aaca-d02a08a7c091@linux.intel.com>
-References: <acxSW8FgXbnFiqIL@djouze-zen> <ac6xgsMxzpnU_8FA@djouze-zen>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="LvtiIzxa"
+Received: by smtp.kernel.org (Postfix) with ESMTPS id 3EA17C19424
+	for <platform-driver-x86@vger.kernel.org>; Thu,  9 Apr 2026 13:40:54 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1775742054;
+	bh=iFrvQX8HGgaiNoFcPWFQYQcUFgEcwZBHlJGXFnzqfkQ=;
+	h=From:To:Subject:Date:In-Reply-To:References:From;
+	b=LvtiIzxaN+yyuGPLgm/YkvWaLoE2TMm2FQsqCMdoh6j8CkwZZwfTd6BNoxqXzATGC
+	 baLYxtGCui/wg5r1zHogp29p8GiRDbjIizowEAKOIKwYTFpqoVz8SlIwYV8kyRPE8t
+	 IWwqTjPHonqa0/J0ouUoVoBqLVONzwXKcAFihPHE1vblDu1Hd38AVq6RcwiFcQ+wc6
+	 kkJVKGmEgqKgelpL71Tr++XpJwRcw7832THmrvRQaw9gwtgWdjDSGPhg+3TSS5j4Jq
+	 SH192fCPvf/Xn3LjBWFJdW2fUvTNhK0WAQPvj/dXLOmgFyc8cO2qclg1X32eNjEbj7
+	 JWiY0iCO5bl1A==
+Received: by aws-us-west-2-korg-bugzilla-1.web.codeaurora.org (Postfix, from userid 48)
+	id 3080DC433E1; Thu,  9 Apr 2026 13:40:54 +0000 (UTC)
+From: bugzilla-daemon@kernel.org
+To: platform-driver-x86@vger.kernel.org
+Subject: [Bug 219904] pc speaker not working (just pop's/click's) on intel
+ chipsets gen 6, 7 and probably more
+Date: Thu, 09 Apr 2026 13:40:54 +0000
+X-Bugzilla-Reason: None
+X-Bugzilla-Type: changed
+X-Bugzilla-Watch-Reason: AssignedTo drivers_platform_x86@kernel-bugs.osdl.org
+X-Bugzilla-Product: Drivers
+X-Bugzilla-Component: Platform_x86
+X-Bugzilla-Version: 2.5
+X-Bugzilla-Keywords: 
+X-Bugzilla-Severity: normal
+X-Bugzilla-Who: keyofblues@gmail.com
+X-Bugzilla-Status: RESOLVED
+X-Bugzilla-Resolution: INVALID
+X-Bugzilla-Priority: P3
+X-Bugzilla-Assigned-To: drivers_platform_x86@kernel-bugs.osdl.org
+X-Bugzilla-Flags: 
+X-Bugzilla-Changed-Fields: 
+Message-ID: <bug-219904-215701-2gfDpQXLLk@https.bugzilla.kernel.org/>
+In-Reply-To: <bug-219904-215701@https.bugzilla.kernel.org/>
+References: <bug-219904-215701@https.bugzilla.kernel.org/>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+X-Bugzilla-URL: https://bugzilla.kernel.org/
+Auto-Submitted: auto-generated
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/mixed; boundary="8323328-1068670578-1775738729=:968"
 
-  This message is in MIME format.  The first part should be readable text,
-  while the remaining parts are likely unreadable without MIME-aware tools.
+https://bugzilla.kernel.org/show_bug.cgi?id=3D219904
 
---8323328-1068670578-1775738729=:968
-Content-Type: text/plain; charset=iso-8859-1
-Content-Transfer-Encoding: QUOTED-PRINTABLE
+--- Comment #20 from KeyofBlueS (keyofblues@gmail.com) ---
+Good news, the issue is now officially resolved by ASUS.
 
-On Thu, 2 Apr 2026, Jos=E9 Guilherme de Castro Rodrigues wrote:
+ASUS released new BIOS versions for the motherboards I had reported to them:
 
-> On Tue, Mar 31, 2026 at 08:01:47PM -0300, Jos=E9 Guilherme de Castro Rodr=
-igues wrote:
-> >=20
-> > This change is not visible to userspace, as no sysfs attribute for
-> > ASUS_WMI_DEVID_CAMERA_LED_NEG exists.
-> > =20
-> > +=09if (is_camera_toggle(code) && asus->camera_neg_led_available) {
-> > +=09=09camera_neg_led_trigger_update(asus);
-> > +=09=09return;
-> > +=09}
-> > +
-> >  =09if (!sparse_keymap_report_event(asus->inputdev, code,
-> >  =09=09=09=09=09key_value, autorelease))
-> >  =09=09pr_info("Unknown key code 0x%x\n", code);
->=20
-> This change is actually visible to userspace because I'm early returning
-> and that means the event for the camera key is not propagated to
-> userspace. Sashiko correctly identified that, as well as another detail
-> in formatting (using space instead of tab for indentation on the newly
-> added macros). The event is currently not used on my system, so I didn't
-> notice it before.
->=20
-> Removing the return fixes this. I can send a new version of the patch if
-> necessary.
+- ROG STRIX Z790-F GAMING WIFI: BIOS 3201
+- ROG STRIX B660-F GAMING WIFI: BIOS 4001
 
-Please just send a new version. It will be much easier for me when I don't=
-=20
-need to hunt down odd spaces or do multi-line code edits.
+ASUS support clarified that the feature is present but not enabled by defau=
+lt.
+
+To make the PC Speaker work correctly, you need to enable the following opt=
+ion
+in the BIOS:
+
+"BIOS" > "Advanced Mode" > "Advanced" > "Onboard Devices Configuration" > "=
+8254
+timer clock in OS"
+
+After enabling this option on the Z790-F with BIOS 3201, I can confirm that=
+ the
+PC Speaker works correctly again.
+
+Unfortunately, I cannot test the B660-F at the moment, but since the same
+change was reported for its BIOS as well, it should behave the same.
+
+It's currently not clear whether this fix will be released for other
+motherboards too. If you are affected, it's worth checking whether a BIOS
+update is available for your motherboard and then looking in the BIOS for t=
+he
+option "8254 timer clock in OS" (or something similar).
+
+If you can't find it, I recommend contacting your motherboard vendor's supp=
+ort
+and mentioning the issue, as well as the fact that ASUS solved it by
+introducing this BIOS option. That may help them reproduce the fix on their
+side.
+
+Huge thanks to ASUS support and their technical team for actually investiga=
+ting
+the issue and implementing a fix. The support experience was genuinely
+impressive.
 
 --=20
- i.
+You may reply to this email to add a comment.
 
---8323328-1068670578-1775738729=:968--
+You are receiving this mail because:
+You are watching the assignee of the bug.=
