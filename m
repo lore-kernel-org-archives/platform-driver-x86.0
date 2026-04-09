@@ -1,85 +1,145 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.19])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B608A3815FA
-	for <platform-driver-x86@vger.kernel.org>; Thu,  9 Apr 2026 08:53:58 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0458A27BF7C;
+	Thu,  9 Apr 2026 11:45:59 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.19
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1775724838; cv=none; b=ZJkHZQNJl2DoyTl69n7sZz/aDYeKc2NTOD8smQ8iixXyy+We6MOEnINSZ/wkWHsTqoTP+IJUIEnbMok6LzrJmnfOjWffi4pr1JFJJsXmSoCQSz3XSV69bPiUhV+rN/PbkGyhsFOg3oGvkv9eoMdA4fRFgZqhYlm5FKpOLZXONxM=
+	t=1775735161; cv=none; b=fVf7tOBxzhZbdeOBYjwlLarS8wl5cMa/At3xFT6cruSR0lH+hNGYTrcgZIaWXsASGjHfe4oxf7sDnediXFa2t5YyqKwX4Gv/zCi4Ca7BN446c3Ap6hgMcSJ6oYmDfY+tbaWJ7ySlme/dr3XwaBTzgqV8nAnoUZGlQB+ylhhtNGw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1775724838; c=relaxed/simple;
-	bh=VPUYR4LP+0KATdMvEmZX4SL61Dntc2f7Qo3SSh171vM=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=DqF/k4KFHOhOl0mLjctivENaOYwBT4WuYtmm2VnVTTdN/DQyQro8bH9IkBfjXQE62tgxDh0jvXmuQ/tUs74+81OH9XILknHAsQzX2QFgGGqE1S8mGq+U1G+aezNeA2FoysAt6bLvYPM4wC4oMyNXyc9NWwPFY8VvFE3bi33ffM4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=EtH5qKdL; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1775735161; c=relaxed/simple;
+	bh=h8++f52J1ZVf53xsU99RDIqW0KXJi+c06Hsl572nDBs=;
+	h=From:To:Cc:Date:Subject:Message-ID:MIME-Version:Content-Type; b=iiOrQfuTgiy1nRYVr8efOeaBZgMK2JtzikleL42lbVdF0Z9PcuvgXFvB4q4OPqNiaJzm5n/b2WBD6+BhMe+iYC4phvhltZhqFdAnwQGB05fKkPNOK6BWy+aZyIiu7K3JdxVNEgdTWKO6vE5quW7DMj3sfSucgp1JeUuHF6ISS24=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=pass smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=RHf50SyD; arc=none smtp.client-ip=198.175.65.19
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="EtH5qKdL"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 660DAC2BCB0
-	for <platform-driver-x86@vger.kernel.org>; Thu,  9 Apr 2026 08:53:58 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1775724838;
-	bh=VPUYR4LP+0KATdMvEmZX4SL61Dntc2f7Qo3SSh171vM=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-	b=EtH5qKdLmmztI9hjq53SGVlqeGinGzRUR7gz/+Zrn5X4w9z9cuN9ruUVrtFkMPp7a
-	 h0NHqvMCjxxO/T8/hByT23Aio/UQsc1M3CtfAxfCpkQ4Gjdlxi0F2mWz86AfUVzca0
-	 Cw2A9hM5pWyYXzq+NMXxgLO+iK+LYowV3zmv7eO+MYufuyAqUcazrElKZIF40+8xEK
-	 0EeoRkjOxicLaeaKrKnZbyG8Wv5uMq7NwV3TsLQmCDeWFKF6K3t2KIHRG72fIdZS6+
-	 rOpv7K8FeR7scDrduKrrVxK0gIYhwhnHXDc8tuJhqwdNuqT0a5unE9vUqbs4NZcANy
-	 wZdKmfmpKak3w==
-Received: by mail-lf1-f43.google.com with SMTP id 2adb3069b0e04-59e4a04f059so549240e87.2
-        for <platform-driver-x86@vger.kernel.org>; Thu, 09 Apr 2026 01:53:58 -0700 (PDT)
-X-Forwarded-Encrypted: i=1; AJvYcCVixdjrIteYjkQIISBSvTBMp3DV207ouKTh9QJY06zYXWwYot/AcDSstithVVN3mLhL4ynX6cHFrdeUxq6JYikHOwUC@vger.kernel.org
-X-Gm-Message-State: AOJu0Yz7fa9uWDJhUx+MWVWSKXqT7vT+Ij6aG9gCnNuqvzuamvMKFPeW
-	RuTEum/EOUx9B+fhtXb/EzP+huVn76nVl/WUHHyZr9Fnj7N0HRHnPJDuElP3BK/3uTimgy62oDs
-	l3P2WV6zof+Vbc3cJpHZpj/irTNTi9N/U+9/JrVW1xg==
-X-Received: by 2002:a05:6512:a93:b0:5a2:ae27:c879 with SMTP id
- 2adb3069b0e04-5a3e7b4b5cdmr993856e87.29.1775724837082; Thu, 09 Apr 2026
- 01:53:57 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="RHf50SyD"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1775735160; x=1807271160;
+  h=from:to:cc:date:subject:message-id:mime-version:
+   content-transfer-encoding;
+  bh=h8++f52J1ZVf53xsU99RDIqW0KXJi+c06Hsl572nDBs=;
+  b=RHf50SyDaaR8NdjZGgq5bbi/N8WxRLVlaDDti43TiKKzX0wjV7REt94B
+   7ninkphyBGausZGZW3JNwdgplu0gVk1oLh3doOXe+14n/Wi7J/jdcT0lU
+   uvzkcxM4jOI4cQ0Kn5Gdcgf93Tf7KJMXHYuzK6VaBNo0aj6hg0bU2skw0
+   bxvQ3/KfHTfEPDFDxu5WvxCi6A/XbtSs51QIzHVadpTRJltNM5yduHp2b
+   YdETO0nhc4mBxvSziUYXTOyqLO+q7HCJUM5mzbEcvhIpmwHxQsTy5QoZO
+   e8lLSycNQMjzKdBcSjlg6iJ3F4n8ePDoC/NrpujiG8CLATtctw/W1rAEd
+   w==;
+X-CSE-ConnectionGUID: emVEubjNQhu0078Fw4Ef9g==
+X-CSE-MsgGUID: MmyLKnyQRRu8TJzNjuaL5A==
+X-IronPort-AV: E=McAfee;i="6800,10657,11753"; a="76640774"
+X-IronPort-AV: E=Sophos;i="6.23,169,1770624000"; 
+   d="scan'208";a="76640774"
+Received: from orviesa009.jf.intel.com ([10.64.159.149])
+  by orvoesa111.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 09 Apr 2026 04:45:59 -0700
+X-CSE-ConnectionGUID: ZP9AloRuRO2BvfWc7SDIaA==
+X-CSE-MsgGUID: +7jj62jwSq6t/E4YZoaZeA==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.23,169,1770624000"; 
+   d="scan'208";a="228642214"
+Received: from ijarvine-mobl1.ger.corp.intel.com (HELO localhost) ([10.245.245.197])
+  by orviesa009-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 09 Apr 2026 04:45:56 -0700
+From: =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
+To: Linus Torvalds <torvalds@linux-foundation.org>
+Cc: LKML <linux-kernel@vger.kernel.org>, PDx86 <platform-driver-x86@vger.kernel.org>, Hans de Goede <hansg@kernel.org>, Andy Shevchenko <andy@kernel.org>
+Date: Thu, 09 Apr 2026 14:44:17 +0300
+Subject: [GIT PULL] platform-drivers-x86 for v7.0-4
+Message-ID: <pdx86-pr-20260409144417-2403128410@linux.intel.com>
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20260407-swnode-unreg-retcode-v4-0-1b2f0725eb9c@oss.qualcomm.com>
- <20260407-swnode-unreg-retcode-v4-1-1b2f0725eb9c@oss.qualcomm.com>
- <CAMRc=MdWSigDmTGSCe-ggAC+rKcCLimKgKU_kAGh5N66jyXGtg@mail.gmail.com>
- <DHNVOVO67YMW.1Q763BB153CGF@kernel.org> <CAMRc=MchUSdWo=BXrYN-qS3YFer2R3J02HyJxKJje-a1QvWdfg@mail.gmail.com>
- <DHO01A7B9M0Y.1QVVS8600WRJ5@kernel.org>
-In-Reply-To: <DHO01A7B9M0Y.1QVVS8600WRJ5@kernel.org>
-From: Bartosz Golaszewski <brgl@kernel.org>
-Date: Thu, 9 Apr 2026 10:53:43 +0200
-X-Gmail-Original-Message-ID: <CAMRc=MfX8D1xM+BLCMO75zxQ9NTKtYBLoMPiXtbqUmOn+o9K_w@mail.gmail.com>
-X-Gm-Features: AQROBzDr4oZI_GfUCnBWYgDbtcc6blX4QnOeCr1x6uj9MPbAiBva7WK__bUOmQw
-Message-ID: <CAMRc=MfX8D1xM+BLCMO75zxQ9NTKtYBLoMPiXtbqUmOn+o9K_w@mail.gmail.com>
-Subject: Re: [PATCH v4 1/2] software node: return -ENOTCONN when referenced
- swnode is not registered yet
-To: Danilo Krummrich <dakr@kernel.org>
-Cc: Andy Shevchenko <andriy.shevchenko@linux.intel.com>, Daniel Scally <djrscally@gmail.com>, 
-	Heikki Krogerus <heikki.krogerus@linux.intel.com>, 
-	Sakari Ailus <sakari.ailus@linux.intel.com>, 
-	Greg Kroah-Hartman <gregkh@linuxfoundation.org>, "Rafael J. Wysocki" <rafael@kernel.org>, 
-	Mika Westerberg <mika.westerberg@linux.intel.com>, Andy Shevchenko <andy@kernel.org>, 
-	Linus Walleij <linusw@kernel.org>, Hans de Goede <hansg@kernel.org>, 
-	=?UTF-8?Q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>, 
-	Dmitry Torokhov <dmitry.torokhov@gmail.com>, Len Brown <lenb@kernel.org>, linux-acpi@vger.kernel.org, 
-	driver-core@lists.linux.dev, linux-kernel@vger.kernel.org, 
-	linux-gpio@vger.kernel.org, platform-driver-x86@vger.kernel.org, 
-	Bartosz Golaszewski <bartosz.golaszewski@oss.qualcomm.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 
-On Wed, Apr 8, 2026 at 8:53=E2=80=AFPM Danilo Krummrich <dakr@kernel.org> w=
-rote:
->
-> One additional question though. I think it should be fine, but are we sur=
-e the
-> change can't regress other subsystems? It seems some of them (e.g. sfp-bu=
-s,
-> v4l2, iio) special case -ENOENT.
+Hi Linus,
 
-It seems all users check for -ENOENT for when there *is no such*
-property. If this does break anyone in next cycle's RCs, I'm here to
-fix it.
+Here is a platform-drivers-x86 fixes PR for v7.0.
 
-Bart
+New HW Support and Fixes:
+
+- amd/pmc: Add Thinkpad L14 Gen3 to quirk_s2idle_bug
+
+- asus-armoury: Add support for FA607NU, GU605MU, and GV302XU.
+
+- intel-uncore-freq: Handle autonomous UFS status bit
+
+- ISST: Handle cases with less than max buckets correctly
+
+- intel-uncore-freq & ISST: Mark minor version 3 supported (no additional
+			    driver changes required)
+
+Regards, i.
+
+
+The following changes since commit fbddf68d7b4e1e6da7a78dd7fbd8ec376536584a:
+
+  platform/x86: ISST: Correct locked bit width (2026-03-24 12:31:10 +0200)
+
+are available in the Git repository at:
+
+  https://git.kernel.org/pub/scm/linux/kernel/git/pdx86/platform-drivers-x86.git tags/platform-drivers-x86-v7.0-4
+
+for you to fetch changes up to 5d486669b3db11ccc2d1b9f4e42c11c2766f35ba:
+
+  platform/x86: asus-armoury: add support for GU605MU (2026-03-31 17:22:28 +0300)
+
+----------------------------------------------------------------
+platform-drivers-x86 for v7.0-4
+
+New HW Support and Fixes:
+
+- amd/pmc: Add Thinkpad L14 Gen3 to quirk_s2idle_bug
+
+- asus-armoury: Add support for FA607NU, GU605MU, and GV302XU.
+
+- intel-uncore-freq: Handle autonomous UFS status bit
+
+- ISST: Handle cases with less than max buckets correctly
+
+- intel-uncore-freq & ISST: Mark minor version 3 supported (no additional
+			    driver changes required)
+
+The following is an automated shortlog grouped by driver:
+
+amd: pmc:
+ -  Add Thinkpad L14 Gen3 to quirk_s2idle_bug
+
+asus-armoury:
+ -  add support for FA607NU
+ -  add support for GU605MU
+ -  add support for GV302XU
+
+intel-uncore-freq:
+ -  Handle autonomous UFS status bit
+ -  Increase minor version
+
+ISST:
+ -  Increase minor version
+ -  Reset core count to 0
+
+----------------------------------------------------------------
+Denis Benato (3):
+      platform/x86: asus-armoury: add support for GV302XU
+      platform/x86: asus-armoury: add support for FA607NU
+      platform/x86: asus-armoury: add support for GU605MU
+
+Mario Limonciello (1):
+      platform/x86/amd: pmc: Add Thinkpad L14 Gen3 to quirk_s2idle_bug
+
+Srinivas Pandruvada (4):
+      platform/x86: ISST: Reset core count to 0
+      platform/x86/intel-uncore-freq: Handle autonomous UFS status bit
+      platform/x86: ISST: Increase minor version
+      platform/x86/intel-uncore-freq: Increase minor version
+
+ drivers/platform/x86/amd/pmc/pmc-quirks.c          |  9 +++
+ drivers/platform/x86/asus-armoury.h                | 86 ++++++++++++++++++++++
+ .../x86/intel/speed_select_if/isst_tpmi_core.c     |  4 +-
+ .../intel/uncore-frequency/uncore-frequency-tpmi.c | 10 ++-
+ 4 files changed, 106 insertions(+), 3 deletions(-)
