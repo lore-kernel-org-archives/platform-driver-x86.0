@@ -1,145 +1,205 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.19])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.17])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0458A27BF7C;
-	Thu,  9 Apr 2026 11:45:59 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.19
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4BBC03C1403;
+	Thu,  9 Apr 2026 12:30:00 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.17
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1775735161; cv=none; b=fVf7tOBxzhZbdeOBYjwlLarS8wl5cMa/At3xFT6cruSR0lH+hNGYTrcgZIaWXsASGjHfe4oxf7sDnediXFa2t5YyqKwX4Gv/zCi4Ca7BN446c3Ap6hgMcSJ6oYmDfY+tbaWJ7ySlme/dr3XwaBTzgqV8nAnoUZGlQB+ylhhtNGw=
+	t=1775737806; cv=none; b=IiO81qsYWIcLsoVo9lkeu2sErR9foyfCNEGysotmu45uIjfFo+Xb83C48HzLNrlabhS1hYk6KqeskVuEr6aeapiRIDyP5eUKleFDD4gsEN5WP5+KKMTfz40kwEXvplcGlZQIs6FOJoCX1PjQRRD/Ll+FwyKarhqIrNM+Rc4wFYk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1775735161; c=relaxed/simple;
-	bh=h8++f52J1ZVf53xsU99RDIqW0KXJi+c06Hsl572nDBs=;
-	h=From:To:Cc:Date:Subject:Message-ID:MIME-Version:Content-Type; b=iiOrQfuTgiy1nRYVr8efOeaBZgMK2JtzikleL42lbVdF0Z9PcuvgXFvB4q4OPqNiaJzm5n/b2WBD6+BhMe+iYC4phvhltZhqFdAnwQGB05fKkPNOK6BWy+aZyIiu7K3JdxVNEgdTWKO6vE5quW7DMj3sfSucgp1JeUuHF6ISS24=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=pass smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=RHf50SyD; arc=none smtp.client-ip=198.175.65.19
+	s=arc-20240116; t=1775737806; c=relaxed/simple;
+	bh=xJ3M4J7KKxJBDJmre4wB1TgDOXwOzJsC22Iv2wzUkEk=;
+	h=From:Date:To:cc:Subject:In-Reply-To:Message-ID:References:
+	 MIME-Version:Content-Type; b=V0BQMqXn8rL2yDXpG9KwHq1kP/W0PeY+MDqrxfzxqGdwycValQpcLXFchhavTODo8skG8LExzPohqy+HNvaPrWaxOHB5lEpNxyPnRZgIbdH7UyM5ufZp8ueevJvQhlr7GvVhJTX6VD2ppjzk1tzJOftFVVzNrmFm5aOjiY8WNM8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=pass smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=RKoVWLUv; arc=none smtp.client-ip=198.175.65.17
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="RHf50SyD"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="RKoVWLUv"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1775735160; x=1807271160;
-  h=from:to:cc:date:subject:message-id:mime-version:
-   content-transfer-encoding;
-  bh=h8++f52J1ZVf53xsU99RDIqW0KXJi+c06Hsl572nDBs=;
-  b=RHf50SyDaaR8NdjZGgq5bbi/N8WxRLVlaDDti43TiKKzX0wjV7REt94B
-   7ninkphyBGausZGZW3JNwdgplu0gVk1oLh3doOXe+14n/Wi7J/jdcT0lU
-   uvzkcxM4jOI4cQ0Kn5Gdcgf93Tf7KJMXHYuzK6VaBNo0aj6hg0bU2skw0
-   bxvQ3/KfHTfEPDFDxu5WvxCi6A/XbtSs51QIzHVadpTRJltNM5yduHp2b
-   YdETO0nhc4mBxvSziUYXTOyqLO+q7HCJUM5mzbEcvhIpmwHxQsTy5QoZO
-   e8lLSycNQMjzKdBcSjlg6iJ3F4n8ePDoC/NrpujiG8CLATtctw/W1rAEd
-   w==;
-X-CSE-ConnectionGUID: emVEubjNQhu0078Fw4Ef9g==
-X-CSE-MsgGUID: MmyLKnyQRRu8TJzNjuaL5A==
-X-IronPort-AV: E=McAfee;i="6800,10657,11753"; a="76640774"
+  t=1775737800; x=1807273800;
+  h=from:date:to:cc:subject:in-reply-to:message-id:
+   references:mime-version;
+  bh=xJ3M4J7KKxJBDJmre4wB1TgDOXwOzJsC22Iv2wzUkEk=;
+  b=RKoVWLUvB5T9V2en+uNkrMXMKuRMWqGYOyRH9SidNpRBAtfY5LNQ0lp3
+   ZGwEW+bh+eeKXVCePNXcqbH43gDd/PsvUYcO7mTYx0Eo58mJpt7bNRCOn
+   xgHrIKRPHoAFK0786wgsVkXStW45MDaMn3r017LlB2OR9lss2KJhWyMF2
+   NBAEaevu6nvg5sc+1BqidOgei+hS7/JQrISNUxHvOxNMxIVF2Bl4gJHsw
+   xeLKOjePJLgKlirF9wfo1Ps+HCoALUS3ehQr+SyaeOMicOGDPSdN8Gg2u
+   JV9+dQSH8L472Ofyb5lMttbzFrWYOyXh/xtlwQwOa55mavyxC9sSIjy20
+   Q==;
+X-CSE-ConnectionGUID: 8PhuGm4rSw+IAxIfIdY81A==
+X-CSE-MsgGUID: IuYuNCM0Q8OY/jjefWDAxg==
+X-IronPort-AV: E=McAfee;i="6800,10657,11753"; a="76702225"
 X-IronPort-AV: E=Sophos;i="6.23,169,1770624000"; 
-   d="scan'208";a="76640774"
-Received: from orviesa009.jf.intel.com ([10.64.159.149])
-  by orvoesa111.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 09 Apr 2026 04:45:59 -0700
-X-CSE-ConnectionGUID: ZP9AloRuRO2BvfWc7SDIaA==
-X-CSE-MsgGUID: +7jj62jwSq6t/E4YZoaZeA==
+   d="scan'208";a="76702225"
+Received: from orviesa003.jf.intel.com ([10.64.159.143])
+  by orvoesa109.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 09 Apr 2026 05:29:58 -0700
+X-CSE-ConnectionGUID: AxAQxsF/QhKtVHK5JzIn6g==
+X-CSE-MsgGUID: iz9TStlaQ3GrFTzh0raR1g==
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="6.23,169,1770624000"; 
-   d="scan'208";a="228642214"
+   d="scan'208";a="232791765"
 Received: from ijarvine-mobl1.ger.corp.intel.com (HELO localhost) ([10.245.245.197])
-  by orviesa009-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 09 Apr 2026 04:45:56 -0700
+  by ORVIESA003-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 09 Apr 2026 05:29:56 -0700
 From: =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
-To: Linus Torvalds <torvalds@linux-foundation.org>
-Cc: LKML <linux-kernel@vger.kernel.org>, PDx86 <platform-driver-x86@vger.kernel.org>, Hans de Goede <hansg@kernel.org>, Andy Shevchenko <andy@kernel.org>
-Date: Thu, 09 Apr 2026 14:44:17 +0300
-Subject: [GIT PULL] platform-drivers-x86 for v7.0-4
-Message-ID: <pdx86-pr-20260409144417-2403128410@linux.intel.com>
+Date: Thu, 9 Apr 2026 15:29:36 +0300 (EEST)
+To: Rong Zhang <i@rong.moe>
+cc: "Derek J . Clark" <derekjohn.clark@gmail.com>, 
+    Hans de Goede <hansg@kernel.org>, Mark Pearson <mpearson-lenovo@squebb.ca>, 
+    Armin Wolf <W_Armin@gmx.de>, Jonathan Corbet <corbet@lwn.net>, 
+    Kurt Borja <kuurtb@gmail.com>, platform-driver-x86@vger.kernel.org, 
+    LKML <linux-kernel@vger.kernel.org>, stable@vger.kernel.org
+Subject: Re: [PATCH 2/3] platform/x86: lenovo-wmi-other: Balance IDA id
+ allocation and free
+In-Reply-To: <20260401190221.1595264-2-i@rong.moe>
+Message-ID: <6a796411-67b4-943b-f8aa-1e5f6b0b2c97@linux.intel.com>
+References: <499fa3efd5be054ffdda77dd00ad4d8d3391e073.camel@rong.moe> <20260401190221.1595264-2-i@rong.moe>
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=US-ASCII
 
-Hi Linus,
+On Thu, 2 Apr 2026, Rong Zhang wrote:
 
-Here is a platform-drivers-x86 fixes PR for v7.0.
+> Currently, the IDA id is only freed on wmi-other device removal or
+> failure to create firmware-attributes device, kset, or attributes. It
+> leaks IDA ids if the wmi-other device is bound multiple times, as the
+> unbind callback never frees the previously allocated IDA id.
+> Additionally, if the wmi-other device has failed to create a
+> firmware-attributes device before it gets removed, the wmi-device
+> removal callback double frees the same IDA id.
+> 
+> These bugs were found by sashiko.dev [1].
+> 
+> Fix them by moving ida_free() into lwmi_om_fw_attr_remove() so it is
+> balanced with ida_alloc() in lwmi_om_fw_attr_add(). With them fixed,
+> properly set and utilize the validity of priv->ida_id to balance
+> firmware-attributes registration and removal, without relying on
+> propagating the registration error to the component framework, which is
+> more reliable and aligns with the hwmon device registration and removal
+> sequences.
+> 
+> No functional change intended.
+> 
+> Fixes: edc4b183b794 ("platform/x86: Add Lenovo Other Mode WMI Driver")
+> Cc: stable@vger.kernel.org
+> Link: https://sashiko.dev/#/patchset/20260331181208.421552-1-derekjohn.clark%40gmail.com [1]
+> Signed-off-by: Rong Zhang <i@rong.moe>
+> ---
+>  drivers/platform/x86/lenovo/wmi-other.c | 34 +++++++++++++++----------
+>  1 file changed, 20 insertions(+), 14 deletions(-)
+> 
+> diff --git a/drivers/platform/x86/lenovo/wmi-other.c b/drivers/platform/x86/lenovo/wmi-other.c
+> index 6040f45aa2b0..b47418df099f 100644
+> --- a/drivers/platform/x86/lenovo/wmi-other.c
+> +++ b/drivers/platform/x86/lenovo/wmi-other.c
+> @@ -957,17 +957,17 @@ static struct capdata01_attr_group cd01_attr_groups[] = {
+>  /**
+>   * lwmi_om_fw_attr_add() - Register all firmware_attributes_class members
+>   * @priv: The Other Mode driver data.
+> - *
+> - * Return: Either 0, or an error code.
+>   */
+> -static int lwmi_om_fw_attr_add(struct lwmi_om_priv *priv)
+> +static void lwmi_om_fw_attr_add(struct lwmi_om_priv *priv)
+>  {
+>  	unsigned int i;
+>  	int err;
+>  
+>  	priv->ida_id = ida_alloc(&lwmi_om_ida, GFP_KERNEL);
+> -	if (priv->ida_id < 0)
+> -		return priv->ida_id;
+> +	if (priv->ida_id < 0) {
+> +		err = priv->ida_id;
 
-New HW Support and Fixes:
+This looks a bit backwards. It would be better to do:
 
-- amd/pmc: Add Thinkpad L14 Gen3 to quirk_s2idle_bug
+	err = ida_alloc(&lwmi_om_ida, GFP_KERNEL);
+	if (err < 0)
+> +		goto err;
 
-- asus-armoury: Add support for FA607NU, GU605MU, and GV302XU.
+	priv->ida_id = err;
 
-- intel-uncore-freq: Handle autonomous UFS status bit
+...This, btw, tells us why "ret" would have been superior name for the 
+generic return variable as it does not carry "error" connotation.
 
-- ISST: Handle cases with less than max buckets correctly
+> +	}
+>  
+>  	priv->fw_attr_dev = device_create(&firmware_attributes_class, NULL,
+>  					  MKDEV(0, 0), NULL, "%s-%u",
+> @@ -993,7 +993,7 @@ static int lwmi_om_fw_attr_add(struct lwmi_om_priv *priv)
+>  
+>  		cd01_attr_groups[i].tunable_attr->dev = &priv->wdev->dev;
+>  	}
+> -	return 0;
+> +	return;
+>  
+>  err_remove_groups:
+>  	while (i--)
+> @@ -1007,7 +1007,12 @@ static int lwmi_om_fw_attr_add(struct lwmi_om_priv *priv)
+>  
+>  err_free_ida:
+>  	ida_free(&lwmi_om_ida, priv->ida_id);
+> -	return err;
+> +
+> +err:
+> +	priv->ida_id = -EIDRM;
+> +
+> +	dev_warn(&priv->wdev->dev,
+> +		 "failed to register firmware-attributes device: %d\n", err);
+>  }
+>  
+>  /**
+> @@ -1016,12 +1021,17 @@ static int lwmi_om_fw_attr_add(struct lwmi_om_priv *priv)
+>   */
+>  static void lwmi_om_fw_attr_remove(struct lwmi_om_priv *priv)
+>  {
+> +	if (priv->ida_id < 0)
+> +		return;
+> +
+>  	for (unsigned int i = 0; i < ARRAY_SIZE(cd01_attr_groups) - 1; i++)
+>  		sysfs_remove_group(&priv->fw_attr_kset->kobj,
+>  				   cd01_attr_groups[i].attr_group);
+>  
+>  	kset_unregister(priv->fw_attr_kset);
+>  	device_unregister(priv->fw_attr_dev);
+> +	ida_free(&lwmi_om_ida, priv->ida_id);
+> +	priv->ida_id = -EIDRM;
+>  }
+>  
+>  /* ======== Self (master: lenovo-wmi-other) ======== */
+> @@ -1063,7 +1073,9 @@ static int lwmi_om_master_bind(struct device *dev)
+>  
+>  	lwmi_om_fan_info_collect_cd00(priv);
+>  
+> -	return lwmi_om_fw_attr_add(priv);
+> +	lwmi_om_fw_attr_add(priv);
+> +
+> +	return 0;
+>  }
+>  
+>  /**
+> @@ -1115,13 +1127,7 @@ static int lwmi_other_probe(struct wmi_device *wdev, const void *context)
+>  
+>  static void lwmi_other_remove(struct wmi_device *wdev)
+>  {
+> -	struct lwmi_om_priv *priv = dev_get_drvdata(&wdev->dev);
+> -
+>  	component_master_del(&wdev->dev, &lwmi_om_master_ops);
+> -
+> -	/* No IDA to free if the driver is never bound to its components. */
+> -	if (priv->ida_id >= 0)
+> -		ida_free(&lwmi_om_ida, priv->ida_id);
+>  }
+>  
+>  static const struct wmi_device_id lwmi_other_id_table[] = {
+> 
 
-- intel-uncore-freq & ISST: Mark minor version 3 supported (no additional
-			    driver changes required)
+-- 
+ i.
 
-Regards, i.
-
-
-The following changes since commit fbddf68d7b4e1e6da7a78dd7fbd8ec376536584a:
-
-  platform/x86: ISST: Correct locked bit width (2026-03-24 12:31:10 +0200)
-
-are available in the Git repository at:
-
-  https://git.kernel.org/pub/scm/linux/kernel/git/pdx86/platform-drivers-x86.git tags/platform-drivers-x86-v7.0-4
-
-for you to fetch changes up to 5d486669b3db11ccc2d1b9f4e42c11c2766f35ba:
-
-  platform/x86: asus-armoury: add support for GU605MU (2026-03-31 17:22:28 +0300)
-
-----------------------------------------------------------------
-platform-drivers-x86 for v7.0-4
-
-New HW Support and Fixes:
-
-- amd/pmc: Add Thinkpad L14 Gen3 to quirk_s2idle_bug
-
-- asus-armoury: Add support for FA607NU, GU605MU, and GV302XU.
-
-- intel-uncore-freq: Handle autonomous UFS status bit
-
-- ISST: Handle cases with less than max buckets correctly
-
-- intel-uncore-freq & ISST: Mark minor version 3 supported (no additional
-			    driver changes required)
-
-The following is an automated shortlog grouped by driver:
-
-amd: pmc:
- -  Add Thinkpad L14 Gen3 to quirk_s2idle_bug
-
-asus-armoury:
- -  add support for FA607NU
- -  add support for GU605MU
- -  add support for GV302XU
-
-intel-uncore-freq:
- -  Handle autonomous UFS status bit
- -  Increase minor version
-
-ISST:
- -  Increase minor version
- -  Reset core count to 0
-
-----------------------------------------------------------------
-Denis Benato (3):
-      platform/x86: asus-armoury: add support for GV302XU
-      platform/x86: asus-armoury: add support for FA607NU
-      platform/x86: asus-armoury: add support for GU605MU
-
-Mario Limonciello (1):
-      platform/x86/amd: pmc: Add Thinkpad L14 Gen3 to quirk_s2idle_bug
-
-Srinivas Pandruvada (4):
-      platform/x86: ISST: Reset core count to 0
-      platform/x86/intel-uncore-freq: Handle autonomous UFS status bit
-      platform/x86: ISST: Increase minor version
-      platform/x86/intel-uncore-freq: Increase minor version
-
- drivers/platform/x86/amd/pmc/pmc-quirks.c          |  9 +++
- drivers/platform/x86/asus-armoury.h                | 86 ++++++++++++++++++++++
- .../x86/intel/speed_select_if/isst_tpmi_core.c     |  4 +-
- .../intel/uncore-frequency/uncore-frequency-tpmi.c | 10 ++-
- 4 files changed, 106 insertions(+), 3 deletions(-)
