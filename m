@@ -1,106 +1,85 @@
-Received: from mail-pl1-f176.google.com (mail-pl1-f176.google.com [209.85.214.176])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 47069258EE1
-	for <platform-driver-x86@vger.kernel.org>; Thu,  9 Apr 2026 03:44:01 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.176
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B608A3815FA
+	for <platform-driver-x86@vger.kernel.org>; Thu,  9 Apr 2026 08:53:58 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1775706242; cv=none; b=W+EMYE/iuVdmHqy71wJBZ5SgWp8tfdTZPCK3iK9KkZBp2u3/rmpe7fU9gShITHO3mNBymY31l6Kfr5eDx275fUmIvED8Ca8Jy3rqMFtXbiUd3tQ8MgdlqrK1lY93e1PWDbW5RPkPqMgxB2ZRCFPoioFEUmwWUWgg5v3rsTFobvg=
+	t=1775724838; cv=none; b=ZJkHZQNJl2DoyTl69n7sZz/aDYeKc2NTOD8smQ8iixXyy+We6MOEnINSZ/wkWHsTqoTP+IJUIEnbMok6LzrJmnfOjWffi4pr1JFJJsXmSoCQSz3XSV69bPiUhV+rN/PbkGyhsFOg3oGvkv9eoMdA4fRFgZqhYlm5FKpOLZXONxM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1775706242; c=relaxed/simple;
-	bh=SP0OnbNRHhyJrckrvomuAzJzB+x6l7giCTW2+w8sSyA=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=HOLE3dFyEEl5LPeDKYstgVco/fyoZqrvbQVY2wj4wxFzC6bBPgD2gQDuKzPgAn7WyBJOuzQH6+GgdZyGlniuEaUx8qpOK+f9IGVgDKDyNYTtIIXVqZq0bDUbtYy5xEIZX2aNQR6/BXY8+A7oNi0NmjkV8BhkA7RY1ZJBlawbMV8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=mAi2ZEse; arc=none smtp.client-ip=209.85.214.176
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1775724838; c=relaxed/simple;
+	bh=VPUYR4LP+0KATdMvEmZX4SL61Dntc2f7Qo3SSh171vM=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=DqF/k4KFHOhOl0mLjctivENaOYwBT4WuYtmm2VnVTTdN/DQyQro8bH9IkBfjXQE62tgxDh0jvXmuQ/tUs74+81OH9XILknHAsQzX2QFgGGqE1S8mGq+U1G+aezNeA2FoysAt6bLvYPM4wC4oMyNXyc9NWwPFY8VvFE3bi33ffM4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=EtH5qKdL; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="mAi2ZEse"
-Received: by mail-pl1-f176.google.com with SMTP id d9443c01a7336-2b2429f98d0so2992615ad.2
-        for <platform-driver-x86@vger.kernel.org>; Wed, 08 Apr 2026 20:44:01 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20251104; t=1775706240; x=1776311040; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=PgMt0qw0VR15K82Eu6IygRQmCQK8o8ppv3m5J4WJD8M=;
-        b=mAi2ZEseNEg9WoWQYzLYAPcTZlovLSfToGXpGfS1w6QcdlJ/WU0bnL7TIXoHkc9Mzo
-         8NmSHd0SEfv8EP4X9jCcAYV99obZphV1a5DRDDkQNptRdCsEC0NkQQtpQM8aZ/Ym/AKL
-         NBvBY/y1AxbQFHki7LP/BxEL2FW7CYM+cqbjwb3l6wSEqeR5Gm0HO6144Vo9gA9Xu2te
-         wqNqAMdUWdciH0KRLkcS+Pqi17ar5vTY1JFZlr2ZkUkS4UWPhpUVIyXeMsx78LO7SEBU
-         mG4RtifKaxt/5H1xV9nss1pulUoGBw6oNkl0WNgtvsddfvGEWkkitjKjPR+YvaeCo2ru
-         k8hw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1775706240; x=1776311040;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-gg:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=PgMt0qw0VR15K82Eu6IygRQmCQK8o8ppv3m5J4WJD8M=;
-        b=Es0vRCh1xIQiTBtDfXXYeegIHfSbz8Pa/b2U65baDpuFV45y1lpi61S+Bjcedmgkji
-         oN2Z9wQeSlDVZTXWlrCqYUN6v4ACAiOo04W08KSQs4/2BkoSF76Vqar+E43XzpJXTmwT
-         X6j/ttxxiMqEN7n9U8UQzVUwxh3I2zw49c1SOLvuxlj1pNprwsTNdTw4OFrTlaWex3Jz
-         ccWbQ4dVWbbwSrT3nD9txrVun+CywKszdNxtW4MEJ1i/6kxfmJnpnQW4AgNK36ei4Q9w
-         VLCxauRKJmBzISp9WqLPITLlFMYFMgM4HMHwX/MbDFr76eCjIfdpsU4GcqNQf0S2BLHD
-         J2XQ==
-X-Gm-Message-State: AOJu0YzRO2KfbysgrYr3Adn+/oniYFefmursFM8lwQFdn6dCrogC4hEC
-	qgCEgNuCBN+NdvRph1GBU6SVy5enbN/aTl8dDBksHMZhpBAoc15uVatK
-X-Gm-Gg: AeBDietahzb8CYSpQuq4yKjNjskxoS1wYL5S5M5yCougImgx+8L59/Q3LsOMAZu6VU2
-	q5XGjNJLASZ1mrbEIVJWvZp0lCwdraK+ICsOhUZMraUbkXJe12+rhEwzfHsKG5dp1u6m852Xpgt
-	Aqb6aifnUvQkYZw0ERf8BXsqgMHJWRgxHMcRy3kZzt8h3+1sArJ9ZPQmdgU9P/tHMYOIB1Z4gIY
-	tANHMhwHcmAIoA3B2GyqzJ6ZvL4uyp/F2YJISkg+Hz8g2u7Q+x2Fo43kdIzK5R/nAb98dYziWxy
-	EHVr8bwGyPyFDM7RHxSLBUpJu0+JYMWotE/FbPpyJP26VV7xuxOo+sfWv8HM2Tf5u8RwznKdTmq
-	qobuRNJ2zQLTaxCv1PZKLka3gsXBkpiKi+p+KeEhmVk0T55xdsYSJSsLyq0nMgVVHZAnYPV5Ieu
-	HKaH/2gO8cBnlK/UF8mAKW67IOxeXs6kQHHIEseVgoOvpM0BxdEfbDS3EhDekc3wkGhBlD
-X-Received: by 2002:a17:903:1aa3:b0:2b2:4e5a:9473 with SMTP id d9443c01a7336-2b2c73abb8fmr19443015ad.21.1775706240566;
-        Wed, 08 Apr 2026 20:44:00 -0700 (PDT)
-Received: from tomriddle.lan ([2406:2d40:64ea:4810:e3d7:bcdc:3449:4b6f])
-        by smtp.gmail.com with ESMTPSA id d9443c01a7336-2b274979525sm266420275ad.45.2026.04.08.20.43.57
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 08 Apr 2026 20:44:00 -0700 (PDT)
-From: Oliver White <oliverjwhite07@gmail.com>
-To: luzmaximilian@gmail.com,
-	hansg@kernel.org,
-	ilpo.jarvinen@linux.intel.com
-Cc: platform-driver-x86@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	Oliver White <oliverjwhite07@gmail.com>
-Subject: [PATCH] platform/surface: aggregator_registry: omit battery & AC nodes on Surface Laptop 7
-Date: Thu,  9 Apr 2026 15:43:47 +1200
-Message-ID: <20260409034347.17381-1-oliverjwhite07@gmail.com>
-X-Mailer: git-send-email 2.51.0
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="EtH5qKdL"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 660DAC2BCB0
+	for <platform-driver-x86@vger.kernel.org>; Thu,  9 Apr 2026 08:53:58 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1775724838;
+	bh=VPUYR4LP+0KATdMvEmZX4SL61Dntc2f7Qo3SSh171vM=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+	b=EtH5qKdLmmztI9hjq53SGVlqeGinGzRUR7gz/+Zrn5X4w9z9cuN9ruUVrtFkMPp7a
+	 h0NHqvMCjxxO/T8/hByT23Aio/UQsc1M3CtfAxfCpkQ4Gjdlxi0F2mWz86AfUVzca0
+	 Cw2A9hM5pWyYXzq+NMXxgLO+iK+LYowV3zmv7eO+MYufuyAqUcazrElKZIF40+8xEK
+	 0EeoRkjOxicLaeaKrKnZbyG8Wv5uMq7NwV3TsLQmCDeWFKF6K3t2KIHRG72fIdZS6+
+	 rOpv7K8FeR7scDrduKrrVxK0gIYhwhnHXDc8tuJhqwdNuqT0a5unE9vUqbs4NZcANy
+	 wZdKmfmpKak3w==
+Received: by mail-lf1-f43.google.com with SMTP id 2adb3069b0e04-59e4a04f059so549240e87.2
+        for <platform-driver-x86@vger.kernel.org>; Thu, 09 Apr 2026 01:53:58 -0700 (PDT)
+X-Forwarded-Encrypted: i=1; AJvYcCVixdjrIteYjkQIISBSvTBMp3DV207ouKTh9QJY06zYXWwYot/AcDSstithVVN3mLhL4ynX6cHFrdeUxq6JYikHOwUC@vger.kernel.org
+X-Gm-Message-State: AOJu0Yz7fa9uWDJhUx+MWVWSKXqT7vT+Ij6aG9gCnNuqvzuamvMKFPeW
+	RuTEum/EOUx9B+fhtXb/EzP+huVn76nVl/WUHHyZr9Fnj7N0HRHnPJDuElP3BK/3uTimgy62oDs
+	l3P2WV6zof+Vbc3cJpHZpj/irTNTi9N/U+9/JrVW1xg==
+X-Received: by 2002:a05:6512:a93:b0:5a2:ae27:c879 with SMTP id
+ 2adb3069b0e04-5a3e7b4b5cdmr993856e87.29.1775724837082; Thu, 09 Apr 2026
+ 01:53:57 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+References: <20260407-swnode-unreg-retcode-v4-0-1b2f0725eb9c@oss.qualcomm.com>
+ <20260407-swnode-unreg-retcode-v4-1-1b2f0725eb9c@oss.qualcomm.com>
+ <CAMRc=MdWSigDmTGSCe-ggAC+rKcCLimKgKU_kAGh5N66jyXGtg@mail.gmail.com>
+ <DHNVOVO67YMW.1Q763BB153CGF@kernel.org> <CAMRc=MchUSdWo=BXrYN-qS3YFer2R3J02HyJxKJje-a1QvWdfg@mail.gmail.com>
+ <DHO01A7B9M0Y.1QVVS8600WRJ5@kernel.org>
+In-Reply-To: <DHO01A7B9M0Y.1QVVS8600WRJ5@kernel.org>
+From: Bartosz Golaszewski <brgl@kernel.org>
+Date: Thu, 9 Apr 2026 10:53:43 +0200
+X-Gmail-Original-Message-ID: <CAMRc=MfX8D1xM+BLCMO75zxQ9NTKtYBLoMPiXtbqUmOn+o9K_w@mail.gmail.com>
+X-Gm-Features: AQROBzDr4oZI_GfUCnBWYgDbtcc6blX4QnOeCr1x6uj9MPbAiBva7WK__bUOmQw
+Message-ID: <CAMRc=MfX8D1xM+BLCMO75zxQ9NTKtYBLoMPiXtbqUmOn+o9K_w@mail.gmail.com>
+Subject: Re: [PATCH v4 1/2] software node: return -ENOTCONN when referenced
+ swnode is not registered yet
+To: Danilo Krummrich <dakr@kernel.org>
+Cc: Andy Shevchenko <andriy.shevchenko@linux.intel.com>, Daniel Scally <djrscally@gmail.com>, 
+	Heikki Krogerus <heikki.krogerus@linux.intel.com>, 
+	Sakari Ailus <sakari.ailus@linux.intel.com>, 
+	Greg Kroah-Hartman <gregkh@linuxfoundation.org>, "Rafael J. Wysocki" <rafael@kernel.org>, 
+	Mika Westerberg <mika.westerberg@linux.intel.com>, Andy Shevchenko <andy@kernel.org>, 
+	Linus Walleij <linusw@kernel.org>, Hans de Goede <hansg@kernel.org>, 
+	=?UTF-8?Q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>, 
+	Dmitry Torokhov <dmitry.torokhov@gmail.com>, Len Brown <lenb@kernel.org>, linux-acpi@vger.kernel.org, 
+	driver-core@lists.linux.dev, linux-kernel@vger.kernel.org, 
+	linux-gpio@vger.kernel.org, platform-driver-x86@vger.kernel.org, 
+	Bartosz Golaszewski <bartosz.golaszewski@oss.qualcomm.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-Surface Laptop 7 exposes battery and AC status via Qualcomm PMIC GLINK
-qcom_battmgr. Registering the standard SSAM battery and AC client
-devices on this platform causes duplicate power-supply devices to
-appear.
+On Wed, Apr 8, 2026 at 8:53=E2=80=AFPM Danilo Krummrich <dakr@kernel.org> w=
+rote:
+>
+> One additional question though. I think it should be fine, but are we sur=
+e the
+> change can't regress other subsystems? It seems some of them (e.g. sfp-bu=
+s,
+> v4l2, iio) special case -ENOENT.
 
-Drop the SSAM battery and AC nodes from the Surface Laptop 7 registry
-group so that only the qcom_battmgr power supplies are instantiated.
+It seems all users check for -ENOENT for when there *is no such*
+property. If this does break anyone in next cycle's RCs, I'm here to
+fix it.
 
-Fixes: b27622f13172 ("platform/surface: Add OF support")
-Signed-off-by: Oliver White <oliverjwhite07@gmail.com>
----
- drivers/platform/surface/surface_aggregator_registry.c | 2 --
- 1 file changed, 2 deletions(-)
-
-diff --git a/drivers/platform/surface/surface_aggregator_registry.c b/drivers/platform/surface/surface_aggregator_registry.c
-index 0599d5adf02e..f0881edfb616 100644
---- a/drivers/platform/surface/surface_aggregator_registry.c
-+++ b/drivers/platform/surface/surface_aggregator_registry.c
-@@ -295,8 +295,6 @@ static const struct software_node *ssam_node_group_sl6[] = {
- /* Devices for Surface Laptop 7. */
- static const struct software_node *ssam_node_group_sl7[] = {
- 	&ssam_node_root,
--	&ssam_node_bat_ac,
--	&ssam_node_bat_main,
- 	&ssam_node_tmp_perf_profile_with_fan,
- 	&ssam_node_fan_speed,
- 	&ssam_node_hid_sam_keyboard,
--- 
-2.51.0
-
+Bart
