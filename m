@@ -1,75 +1,63 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AE40F30594F
-	for <platform-driver-x86@vger.kernel.org>; Thu,  9 Apr 2026 15:16:39 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 74CDF3C73F6;
+	Thu,  9 Apr 2026 15:39:39 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1775747799; cv=none; b=ciUwvLgDtPtpjAtB+EGaocoUoC0EmDaweCjmNClmTl5xIIZUn14quEFSfixPsR8hSelAX3UsbYOlbrDvrobMy4SnbNXX5RTeeDI1heP0TBNYyXtzE6KUBEpqQhn+BBBTcQU0BkqMC5R1jx2hQnADIBxpL5GqhvJaWCoISvjW7WI=
+	t=1775749179; cv=none; b=ibdhKi7hh+XmcYM5+BYDEGS6hO4eMTDqcmDaH+gk1hKOO18AcBSoUCvDqSJzW1G2Tpkz77ZpVgdoSh1ff6ap88b8OdwRXWkxpoKfKFnxYZAhiBae++i6RCRdZ45CIgdXpI8aoKuleihyD8SK7q/Mq3uWqnjJPrdQVh5PXT45rmM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1775747799; c=relaxed/simple;
-	bh=iSdGwR69Vh3csFtrX2kbCJUCfKGWfOQHrhDroMSrVKA=;
-	h=From:To:Subject:Date:Message-ID:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=Ar6trN1wjFeZOjcQuSHAxmKCWdsLnVXtAl1dV6yQfnBDYUzjC+RAReMaQFvnKU74ZedNQPBq5p8+WjFLcGFfX1BkpZwpSswJ+GKGrtbJp3lFNP89DJSZuRWB0PvcviSA0dTbEXP6y8zoj/qK1C5j2IOf60S30dvuF11Bzap3AZY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=bFUNhqrZ; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1775749179; c=relaxed/simple;
+	bh=ocOiepQM0ru3PXWetk622DbEv5dQZXUA/GhjA4WQoIc=;
+	h=Subject:From:In-Reply-To:References:Message-Id:Date:To:Cc; b=maAIxydMO5uZNhStyTjjypQE5rg4GiZC0o930BdPIXR5D8PtJg8F3ToBScALyXYIErlXfkzrzsjQUSXDn4ADyDtFCdGodnzmImnGQ2tVOwRe9NalNe+By3yw/VOP7rK4KTxaCdmjGaj9kZXZYIsMlR56BNcwfoFDxS4BxEEd9SM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=EWTRN5v1; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="bFUNhqrZ"
-Received: by smtp.kernel.org (Postfix) with ESMTPS id 61932C116C6
-	for <platform-driver-x86@vger.kernel.org>; Thu,  9 Apr 2026 15:16:39 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="EWTRN5v1"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 582F4C4CEF7;
+	Thu,  9 Apr 2026 15:39:39 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1775747799;
-	bh=iSdGwR69Vh3csFtrX2kbCJUCfKGWfOQHrhDroMSrVKA=;
-	h=From:To:Subject:Date:In-Reply-To:References:From;
-	b=bFUNhqrZCfO2aBy2NRoDBMMDVpxwPnZfMzIXF4Flg1mxP62Sey9BDvt4zUTCB/boN
-	 NBW0TDDUyuq9g41UMdlclIUk3AwElgJ60MvbgVFhQ2/EAA7p0Z9VfRTaRzIhm5Jyl6
-	 pn7BgfKEFftI5ItefM43carvk2YlJCd2nhuh5NQ17m8767Gcd9ViaQ4dDF72pieRbr
-	 IqfkLSBjUSM969YouE5BkJwto+TaBRPYlGWZcMmcFNchwMq1VlPWLWSp55XYG7xeo3
-	 N+YL5MTFEDciGIU5plbQYGJGWdXmwCWSqdfuwIy7EKF2l9mCsu35821mLbOAV5CHjr
-	 aLnqXgAHloCcg==
-Received: by aws-us-west-2-korg-bugzilla-1.web.codeaurora.org (Postfix, from userid 48)
-	id 512D5C4160E; Thu,  9 Apr 2026 15:16:39 +0000 (UTC)
-From: bugzilla-daemon@kernel.org
-To: platform-driver-x86@vger.kernel.org
-Subject: [Bug 219904] pc speaker not working (just pop's/click's) on intel
- chipsets gen 6, 7 and probably more
-Date: Thu, 09 Apr 2026 15:16:39 +0000
-X-Bugzilla-Reason: None
-X-Bugzilla-Type: changed
-X-Bugzilla-Watch-Reason: AssignedTo drivers_platform_x86@kernel-bugs.osdl.org
-X-Bugzilla-Product: Drivers
-X-Bugzilla-Component: Platform_x86
-X-Bugzilla-Version: 2.5
-X-Bugzilla-Keywords: 
-X-Bugzilla-Severity: normal
-X-Bugzilla-Who: masterwishx@gmail.com
-X-Bugzilla-Status: RESOLVED
-X-Bugzilla-Resolution: INVALID
-X-Bugzilla-Priority: P3
-X-Bugzilla-Assigned-To: drivers_platform_x86@kernel-bugs.osdl.org
-X-Bugzilla-Flags: 
-X-Bugzilla-Changed-Fields: 
-Message-ID: <bug-219904-215701-6CbWIuH773@https.bugzilla.kernel.org/>
-In-Reply-To: <bug-219904-215701@https.bugzilla.kernel.org/>
-References: <bug-219904-215701@https.bugzilla.kernel.org/>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-X-Bugzilla-URL: https://bugzilla.kernel.org/
-Auto-Submitted: auto-generated
+	s=k20201202; t=1775749179;
+	bh=ocOiepQM0ru3PXWetk622DbEv5dQZXUA/GhjA4WQoIc=;
+	h=Subject:From:In-Reply-To:References:Date:To:Cc:From;
+	b=EWTRN5v1f6iEF5VBVWFkEM96+ZThVkyjJ0kwcHc5b0SAt/JmgD1IC0YDk/+bwBvIp
+	 a+NSbFh7NOep3PgIz8LG2BXvlcw2BKmjk3jPiSn5WjAAY2mopSasf/eUzObaVqkUhw
+	 kOxGPZ5YOR6PHuWCzlQicNJMV5bjvEZG2LX9H6Oe+4fMZAG6dqljhtLgqPhNDH9WW6
+	 3dswpB3RRzo5QjNLDPi+FK+nA8ar197Q0jqjoBYXezouoK3j4I//F7cqAvaAeo4UF/
+	 8WYFr3CumQrrE67q7ZsUr/XamAT1hemTYiqD4d/Zs2+kMfmyvsTlmofujUL55bD21B
+	 /OHMcCfqt3FFg==
+Received: from [10.30.226.235] (localhost [IPv6:::1])
+	by aws-us-west-2-korg-oddjob-rhel9-1.codeaurora.org (Postfix) with ESMTP id 3FF223930899;
+	Thu,  9 Apr 2026 15:39:16 +0000 (UTC)
+Subject: Re: [GIT PULL] platform-drivers-x86 for v7.0-4
+From: pr-tracker-bot@kernel.org
+In-Reply-To: <pdx86-pr-20260409144417-2403128410@linux.intel.com>
+References: <pdx86-pr-20260409144417-2403128410@linux.intel.com>
+X-PR-Tracked-List-Id: <platform-driver-x86.vger.kernel.org>
+X-PR-Tracked-Message-Id: <pdx86-pr-20260409144417-2403128410@linux.intel.com>
+X-PR-Tracked-Remote: https://git.kernel.org/pub/scm/linux/kernel/git/pdx86/platform-drivers-x86.git tags/platform-drivers-x86-v7.0-4
+X-PR-Tracked-Commit-Id: 5d486669b3db11ccc2d1b9f4e42c11c2766f35ba
+X-PR-Merge-Tree: torvalds/linux.git
+X-PR-Merge-Refname: refs/heads/master
+X-PR-Merge-Commit-Id: acfa7a35442571e316e1b3f391f481e2f92ac076
+Message-Id: <177574915483.1617900.11257871979364338057.pr-tracker-bot@kernel.org>
+Date: Thu, 09 Apr 2026 15:39:14 +0000
+To: =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
+Cc: Linus Torvalds <torvalds@linux-foundation.org>, LKML <linux-kernel@vger.kernel.org>, PDx86 <platform-driver-x86@vger.kernel.org>, Hans de Goede <hansg@kernel.org>, Andy Shevchenko <andy@kernel.org>
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
 
-https://bugzilla.kernel.org/show_bug.cgi?id=3D219904
+The pull request you sent on Thu, 09 Apr 2026 14:44:17 +0300:
 
---- Comment #21 from masterwishx@gmail.com ---
-Good new, but Still have no update for my Asus PRIME B760M-A D4-CSM.
-Seems need to contact support again... :(
+> https://git.kernel.org/pub/scm/linux/kernel/git/pdx86/platform-drivers-x86.git tags/platform-drivers-x86-v7.0-4
 
---=20
-You may reply to this email to add a comment.
+has been merged into torvalds/linux.git:
+https://git.kernel.org/torvalds/c/acfa7a35442571e316e1b3f391f481e2f92ac076
 
-You are receiving this mail because:
-You are watching the assignee of the bug.=
+Thank you!
+
+-- 
+Deet-doot-dot, I am a bot.
+https://korg.docs.kernel.org/prtracker.html
