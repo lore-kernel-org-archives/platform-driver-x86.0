@@ -1,61 +1,54 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.13])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.20])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E90853DB65D;
-	Fri, 10 Apr 2026 16:28:54 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.13
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 465C53DA5D1;
+	Fri, 10 Apr 2026 16:29:02 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.20
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1775838536; cv=none; b=DqWXI3J7O77dwgzZncRMWCCgmYH+4t3Vj/pRdonds7FsqspdhMQ/aQbWSllCWZgMiHXr8REGM2ay5ZsaeWXruEKHSjD/XHnXcr7rHLh1cM0O0jKaUN253OXR0e6/5urfhXYyLgHiAdp/2/deoJ/ADi6QP7oWfQaO3UU4kd8DO1Q=
+	t=1775838543; cv=none; b=srJhAg3OKG2JecKrzMDFzx+bJn+spisxMhlWx7tZDLk1rOYlxL/8epR4ZTtiAkkKGvNr5vhZHrY489x5nqDnIN3IpCDXffQ/vkW5+mN3fdaDXDDs4l1uWGWb9TGzWU6qVCUHA0dycV9W/EYEEowE0BjUPe0fTbSltFRbALUfcyQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1775838536; c=relaxed/simple;
-	bh=mnYs2blxwPt3sWL5U867E87eMqf3O7gW9mUTYa9+FIM=;
+	s=arc-20240116; t=1775838543; c=relaxed/simple;
+	bh=HxlnTzmQEwEzy+olWItFMsc0s9YH082H7+y2XP6NFE4=;
 	h=From:To:Cc:In-Reply-To:References:Subject:Message-Id:Date:
-	 MIME-Version:Content-Type; b=M7rZK6ck8CgHDB/XjG055LPJ3iO3ewhz2TR7gRCIsKz9TdZ3rAlnL660pier855c5qURixC9pQf5o0JYjduKaouFwuPAHP2zuyonLrERrHvXuu4cK/MX0dbPiwKGnF00V8207YZMUcAMmJOsHkQQjeW3n3f8X8dbuOw+0muiMpc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=pass smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=A/VBrph2; arc=none smtp.client-ip=192.198.163.13
+	 MIME-Version:Content-Type; b=awy/ozF2soqMPElFk1GRN2Vnm3pO01kwvdcF2wJOdL1rxuTPdMqmYiZVJEIaMkzShYbbD+THiXKxgoFlaeMtUbCRkRtLOAbyGNbQnFkl4zP3vlxtBt6o5Hvg/fRFG+0+5Y0rYZJgYBDfGEbuHAxga38jXs8jrYx/T6i9xsbPRII=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=pass smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=DYpAU64u; arc=none smtp.client-ip=198.175.65.20
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="A/VBrph2"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="DYpAU64u"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1775838535; x=1807374535;
+  t=1775838542; x=1807374542;
   h=from:to:cc:in-reply-to:references:subject:message-id:
    date:mime-version:content-transfer-encoding;
-  bh=mnYs2blxwPt3sWL5U867E87eMqf3O7gW9mUTYa9+FIM=;
-  b=A/VBrph2zL0qkkZvCJLVMB186Ajx7mSutiOGLnjc3CLt6d985pGZSQpT
-   wyi3Z0P7pbtkK2MLygg++AUEKOcY2b6eeGL+sYLpz/Qv/frKj1z6S8lrQ
-   pfdfms0eojrgvMUdzJbyzMKjRDzhze+sCfTsZ1ft5rvKecnlZzMuE6fcu
-   fQfb5JKC9iv1mIhevdShLzdD1s6bovdpNZKymJNh+FrzM2goy7YhvlgpE
-   +Ljwzh8wGVpl+x8mSq9IPWbAt4fZ9o08ZBoKg3ABcW9Fylf1RZg/FlcAK
-   w2GFbKUDHOvPbEui/mJiB80PUqfPKtCsCbXiDq1HIiQ2ci6f8W89kgQus
+  bh=HxlnTzmQEwEzy+olWItFMsc0s9YH082H7+y2XP6NFE4=;
+  b=DYpAU64uvUZlECIlGYYhH3/OWJ+wA0q1/ti1NFJOSlRDfZD5MC3DEzqw
+   /EyQPaR1/JwjdEUhkk8Ht7JnKjueFYs6cGp+NOhamtC4zOfuY/Qzmo/Cs
+   qQVmQxQ9TSOnx9da7HiYNNNBDkoseeeLnzXKY45N5moi9HFpCW9OmBjG5
+   hj1bAYFlmA/jDmx4+DHljf+cB9EabOKZ7/Uq7cqCKlOx3HraqlP1dlnCc
+   ZR6MPS1wz0vxZ57P1jkO0y5ICzDmAbTlraEEUl3NiTNGK9D4r6b/fWLqa
+   uf50N5GjLJxpFnVvN3x2B4wBMkD5CNh3oVBDtKSp95860yfRUpmAe6D19
    A==;
-X-CSE-ConnectionGUID: HlVjTPopTNaMOTwrr5G/hg==
-X-CSE-MsgGUID: vwvg635GQfmyl6oIrIzcIg==
-X-IronPort-AV: E=McAfee;i="6800,10657,11755"; a="79447091"
+X-CSE-ConnectionGUID: 4wMnYLQcRfOQWSjInFgpUQ==
+X-CSE-MsgGUID: bTz5hNnTSKSOWkaa+7Meag==
+X-IronPort-AV: E=McAfee;i="6800,10657,11755"; a="76575852"
 X-IronPort-AV: E=Sophos;i="6.23,171,1770624000"; 
-   d="scan'208";a="79447091"
-Received: from orviesa006.jf.intel.com ([10.64.159.146])
-  by fmvoesa107.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 10 Apr 2026 09:28:54 -0700
-X-CSE-ConnectionGUID: Lo0qQ+aNRwmWPVICbICyuA==
-X-CSE-MsgGUID: ZkzlDP77R7e3fzJr3Kjlmg==
+   d="scan'208";a="76575852"
+Received: from fmviesa003.fm.intel.com ([10.60.135.143])
+  by orvoesa112.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 10 Apr 2026 09:29:02 -0700
+X-CSE-ConnectionGUID: BZ8R5toDSKqdou/haiOdew==
+X-CSE-MsgGUID: rvv4zb8kQsmirx2XLooySQ==
 X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.23,171,1770624000"; 
-   d="scan'208";a="228112673"
 Received: from ijarvine-mobl1.ger.corp.intel.com (HELO localhost) ([10.245.244.118])
-  by orviesa006-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 10 Apr 2026 09:28:51 -0700
+  by fmviesa003-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 10 Apr 2026 09:29:00 -0700
 From: =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
-To: Daniel Scally <djrscally@gmail.com>, 
- Sakari Ailus <sakari.ailus@linux.intel.com>, 
- Marco Nenciarini <mnencia@kcore.it>
-Cc: Andy Shevchenko <andriy.shevchenko@linux.intel.com>, 
- Hans de Goede <johannes.goede@oss.qualcomm.com>, 
- platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
-In-Reply-To: <20260401203638.1601661-1-mnencia@kcore.it>
-References: <20260401203638.1601661-1-mnencia@kcore.it>
-Subject: Re: [PATCH v8 0/4] platform/x86: int3472: Add support for GPIO
- type 0x02 (IR flood LED)
-Message-Id: <177583852538.14800.10803596666009986811.b4-ty@linux.intel.com>
-Date: Fri, 10 Apr 2026 19:28:45 +0300
+To: hansg@kernel.org, Armin Wolf <W_Armin@gmx.de>
+Cc: platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
+In-Reply-To: <20260406203237.2970-1-W_Armin@gmx.de>
+References: <20260406203237.2970-1-W_Armin@gmx.de>
+Subject: Re: [PATCH 0/6] platform/wmi: Use WMI driver core for size checks
+Message-Id: <177583853473.14800.16471793286589917557.b4-ty@linux.intel.com>
+Date: Fri, 10 Apr 2026 19:28:54 +0300
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
@@ -66,16 +59,17 @@ Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
 X-Mailer: b4 0.13.0
 
-On Wed, 01 Apr 2026 22:36:34 +0200, Marco Nenciarini wrote:
+On Mon, 06 Apr 2026 22:32:31 +0200, Armin Wolf wrote:
 
-> Add support for INT3472 GPIO type 0x02 which controls an IR flood LED
-> used for face authentication on some laptops (e.g. Dell Pro Max 16
-> Premium). Without this, the kernel logs "GPIO type 0x02 unknown; the
-> sensor may not work" and IR sensors paired with a flood LED cannot
-> function.
+> As suggested by Ilpo, the buffer-based WMI API should assist drivers
+> in verifying the size of buffers received from WMI methods or blocks.
+> This patch series implements this suggestion by allowing drivers to
+> use the WMI driver core to automatically reject undersized buffers.
 > 
-> The series first refactors the existing LED code (patches 1-3), then
-> adds the new IR flood LED type with multi-LED support (patch 4).
+> This avoids a memory allocation for undersized data and simplifies
+> the size checking code in most WMI drivers. All patches except the
+> last one have been tested using synthetic ACPI tables and appear to
+> work just fine.
 > 
 > [...]
 
@@ -86,14 +80,18 @@ platform-drivers-x86/review-ilpo-next branch only once I've pushed my
 local branch there, which might take a while.
 
 The list of commits applied:
-[1/4] platform/x86: int3472: Use local variable for LED struct access
-      commit: d6116d86e58a04a9522e349c4a27145521c01ad7
-[2/4] platform/x86: int3472: Rename pled to led in LED registration code
-      commit: 39237e3208209d1bb35d939d6fee1f36b642f562
-[3/4] platform/x86: int3472: Parameterize LED con_id in registration
-      commit: 218d3c44f5f0a3cc1647bc61a4e4eac663b37aa5
-[4/4] platform/x86: int3472: Add support for GPIO type 0x02 (IR flood LED)
-      commit: bbd917d96aa152a5c4701964db5b28db666f7491
+[1/6] platform/wmi: Add wmidev_invoke_procedure()
+      commit: a6354b385fd18fcd7414052f8f6d13fd27521720
+[2/6] platform/wmi: Convert drivers to use wmidev_invoke_procedure()
+      commit: dd2dd86f44800911e71127d3f418ee3685197c41
+[3/6] platform/wmi: Prepare to reject undersized unmarshalling results
+      commit: 668aa6086f04d1bd63f27753d6c2d318c44ae306
+[4/6] platform/wmi: Extend wmidev_invoke_method() to reject undersized data
+      commit: c6f69ffec0aec2ac783f900b5c17ebff13c58f82
+[5/6] platform/wmi: Extend wmidev_query_block() to reject undersized data
+      commit: ceed8c1bcffab475facb6d4ee071464d01dd1865
+[6/6] platform/wmi: Replace .no_notify_data with .min_event_size
+      commit: a99543f1d8f92e11ff3cb2760964490b04864e33
 
 --
  i.
