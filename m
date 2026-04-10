@@ -1,220 +1,100 @@
-Received: from mail.tuxedocomputers.com (mail.tuxedocomputers.com [157.90.84.7])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.13])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EA4BF35DD1C;
-	Fri, 10 Apr 2026 15:36:00 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=157.90.84.7
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E90853DB65D;
+	Fri, 10 Apr 2026 16:28:54 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.13
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1775835363; cv=none; b=iQRNea3Z2vemqW+Rpr+QfM30VovPEuVbtgT4LaABbpjK++2orkOUfLGTPLxswg1+vI46tG0dDmr+SU7ne04oA97p2gsG3i4kkCoTgINUfbh7wXzg8NR4VQnwwdp2o5zV2Qxm5yU/j72FP2kYWbZfbN7MO6PbSrpdh9H3PC9xvkg=
+	t=1775838536; cv=none; b=DqWXI3J7O77dwgzZncRMWCCgmYH+4t3Vj/pRdonds7FsqspdhMQ/aQbWSllCWZgMiHXr8REGM2ay5ZsaeWXruEKHSjD/XHnXcr7rHLh1cM0O0jKaUN253OXR0e6/5urfhXYyLgHiAdp/2/deoJ/ADi6QP7oWfQaO3UU4kd8DO1Q=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1775835363; c=relaxed/simple;
-	bh=V5Jy7YKNhJm71xg6qITjfLDgukAwWZgCIpu/9YPGdC0=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=uitgENhl9g3a7GL3DpWM2VX/yYJuCfLtlBiAIanUcAIcgCHtwcR0tEa6jGeu9A17Ei8ipSn43k6n/+QuJLrG8XsSll86mlFZV3gWzShR2nPclTdEqPS5Z3RMnJHDOzfxsY5ED9JLYb2ETpNrzdGsnp1dan5lJjW8w2x5uEYcYf0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=tuxedocomputers.com; spf=pass smtp.mailfrom=tuxedocomputers.com; dkim=pass (1024-bit key) header.d=tuxedocomputers.com header.i=@tuxedocomputers.com header.b=DvKvWnUf; arc=none smtp.client-ip=157.90.84.7
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=tuxedocomputers.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=tuxedocomputers.com
+	s=arc-20240116; t=1775838536; c=relaxed/simple;
+	bh=mnYs2blxwPt3sWL5U867E87eMqf3O7gW9mUTYa9+FIM=;
+	h=From:To:Cc:In-Reply-To:References:Subject:Message-Id:Date:
+	 MIME-Version:Content-Type; b=M7rZK6ck8CgHDB/XjG055LPJ3iO3ewhz2TR7gRCIsKz9TdZ3rAlnL660pier855c5qURixC9pQf5o0JYjduKaouFwuPAHP2zuyonLrERrHvXuu4cK/MX0dbPiwKGnF00V8207YZMUcAMmJOsHkQQjeW3n3f8X8dbuOw+0muiMpc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=pass smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=A/VBrph2; arc=none smtp.client-ip=192.198.163.13
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=tuxedocomputers.com header.i=@tuxedocomputers.com header.b="DvKvWnUf"
-Received: from [192.168.178.25] (i5C75F434.versanet.de [92.117.244.52])
-	(Authenticated sender: wse@tuxedocomputers.com)
-	by mail.tuxedocomputers.com (Postfix) with ESMTPSA id 61A5A2FC021B;
-	Fri, 10 Apr 2026 17:35:58 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=tuxedocomputers.com;
-	s=default; t=1775835358;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=D3uvLO29UL8ug1eh3hngElP+woMJ4E5Wegk+jt8GtVs=;
-	b=DvKvWnUf91mIKqM1Oqim/C2mO/teM5LaEha2dfKxaZgunU3NT5OUGto3eGpmyr40G1sjiS
-	m1W3MTYdqxI2oJzq/DqKCGqPzyogFpNHAEJDwApE/KBmjrtkwRo02fm0C0Xa2v98z2wZ8w
-	6zdjkq1yTf32/RcXjAEj4omIp6VlQ70=
-Authentication-Results: mail.tuxedocomputers.com;
-	auth=pass smtp.auth=wse@tuxedocomputers.com smtp.mailfrom=wse@tuxedocomputers.com
-Message-ID: <373b5b5f-f0ce-48b5-9d01-24f00a50bf77@tuxedocomputers.com>
-Date: Fri, 10 Apr 2026 17:35:58 +0200
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="A/VBrph2"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1775838535; x=1807374535;
+  h=from:to:cc:in-reply-to:references:subject:message-id:
+   date:mime-version:content-transfer-encoding;
+  bh=mnYs2blxwPt3sWL5U867E87eMqf3O7gW9mUTYa9+FIM=;
+  b=A/VBrph2zL0qkkZvCJLVMB186Ajx7mSutiOGLnjc3CLt6d985pGZSQpT
+   wyi3Z0P7pbtkK2MLygg++AUEKOcY2b6eeGL+sYLpz/Qv/frKj1z6S8lrQ
+   pfdfms0eojrgvMUdzJbyzMKjRDzhze+sCfTsZ1ft5rvKecnlZzMuE6fcu
+   fQfb5JKC9iv1mIhevdShLzdD1s6bovdpNZKymJNh+FrzM2goy7YhvlgpE
+   +Ljwzh8wGVpl+x8mSq9IPWbAt4fZ9o08ZBoKg3ABcW9Fylf1RZg/FlcAK
+   w2GFbKUDHOvPbEui/mJiB80PUqfPKtCsCbXiDq1HIiQ2ci6f8W89kgQus
+   A==;
+X-CSE-ConnectionGUID: HlVjTPopTNaMOTwrr5G/hg==
+X-CSE-MsgGUID: vwvg635GQfmyl6oIrIzcIg==
+X-IronPort-AV: E=McAfee;i="6800,10657,11755"; a="79447091"
+X-IronPort-AV: E=Sophos;i="6.23,171,1770624000"; 
+   d="scan'208";a="79447091"
+Received: from orviesa006.jf.intel.com ([10.64.159.146])
+  by fmvoesa107.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 10 Apr 2026 09:28:54 -0700
+X-CSE-ConnectionGUID: Lo0qQ+aNRwmWPVICbICyuA==
+X-CSE-MsgGUID: ZkzlDP77R7e3fzJr3Kjlmg==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.23,171,1770624000"; 
+   d="scan'208";a="228112673"
+Received: from ijarvine-mobl1.ger.corp.intel.com (HELO localhost) ([10.245.244.118])
+  by orviesa006-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 10 Apr 2026 09:28:51 -0700
+From: =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
+To: Daniel Scally <djrscally@gmail.com>, 
+ Sakari Ailus <sakari.ailus@linux.intel.com>, 
+ Marco Nenciarini <mnencia@kcore.it>
+Cc: Andy Shevchenko <andriy.shevchenko@linux.intel.com>, 
+ Hans de Goede <johannes.goede@oss.qualcomm.com>, 
+ platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
+In-Reply-To: <20260401203638.1601661-1-mnencia@kcore.it>
+References: <20260401203638.1601661-1-mnencia@kcore.it>
+Subject: Re: [PATCH v8 0/4] platform/x86: int3472: Add support for GPIO
+ type 0x02 (IR flood LED)
+Message-Id: <177583852538.14800.10803596666009986811.b4-ty@linux.intel.com>
+Date: Fri, 10 Apr 2026 19:28:45 +0300
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 5/6] platform/x86: uniwill-laptop: Mark EC_ADDR_OEM_4 as
- volatile
-To: Armin Wolf <W_Armin@gmx.de>, hansg@kernel.org,
- ilpo.jarvinen@linux.intel.com
-Cc: platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
-References: <20260406193653.7799-1-W_Armin@gmx.de>
- <20260406193653.7799-6-W_Armin@gmx.de>
-Content-Language: en-US
-From: Werner Sembach <wse@tuxedocomputers.com>
-In-Reply-To: <20260406193653.7799-6-W_Armin@gmx.de>
-Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
+X-Mailer: b4 0.13.0
+
+On Wed, 01 Apr 2026 22:36:34 +0200, Marco Nenciarini wrote:
+
+> Add support for INT3472 GPIO type 0x02 which controls an IR flood LED
+> used for face authentication on some laptops (e.g. Dell Pro Max 16
+> Premium). Without this, the kernel logs "GPIO type 0x02 unknown; the
+> sensor may not work" and IR sensors paired with a flood LED cannot
+> function.
+> 
+> The series first refactors the existing LED code (patches 1-3), then
+> adds the new IR flood LED type with multi-LED support (patch 4).
+> 
+> [...]
 
 
-Am 06.04.26 um 21:36 schrieb Armin Wolf:
-> It turned out that EC_ADDR_OEM_4 also contains bits with a volatile
-> nature. Mark the whole register as volatile to prepare for the usage
-> of said bits. This also means that we now have to save/restore the
-> touchpad toggle state ourself.
->
-> Signed-off-by: Armin Wolf <W_Armin@gmx.de>
-looks good
+Thank you for your contribution, it has been applied to my local
+review-ilpo-next branch. Note it will show up in the public
+platform-drivers-x86/review-ilpo-next branch only once I've pushed my
+local branch there, which might take a while.
 
-Reviewed-by: Werner Sembach <wse@tuxedocomputers.com>
-> ---
->   drivers/platform/x86/uniwill/uniwill-acpi.c | 70 ++++++++++++++++++---
->   1 file changed, 60 insertions(+), 10 deletions(-)
->
-> diff --git a/drivers/platform/x86/uniwill/uniwill-acpi.c b/drivers/platform/x86/uniwill/uniwill-acpi.c
-> index 4d149b39d94e..a116e2ec6453 100644
-> --- a/drivers/platform/x86/uniwill/uniwill-acpi.c
-> +++ b/drivers/platform/x86/uniwill/uniwill-acpi.c
-> @@ -343,6 +343,7 @@ struct uniwill_data {
->   	struct mutex battery_lock;	/* Protects the list of currently registered batteries */
->   	bool last_fn_lock_state;
->   	bool last_super_key_enable_state;
-> +	bool last_touchpad_toggle_enable_state;
->   	struct mutex super_key_lock;	/* Protects the toggling of the super key lock state */
->   	struct list_head batteries;
->   	struct mutex led_lock;		/* Protects writes to the lightbar registers */
-> @@ -598,6 +599,7 @@ static bool uniwill_volatile_reg(struct device *dev, unsigned int reg)
->   	case EC_ADDR_PWM_2:
->   	case EC_ADDR_TRIGGER:
->   	case EC_ADDR_SWITCH_STATUS:
-> +	case EC_ADDR_OEM_4:
->   	case EC_ADDR_CHARGE_CTRL:
->   	case EC_ADDR_USB_C_POWER_PRIORITY:
->   		return true;
-> @@ -747,11 +749,22 @@ static ssize_t super_key_enable_show(struct device *dev, struct device_attribute
->   
->   static DEVICE_ATTR_RW(super_key_enable);
->   
-> +static int uniwill_write_touchpad_toggle_enable(struct uniwill_data *data, bool status)
-> +{
-> +	unsigned int value;
-> +
-> +	if (status)
-> +		value = 0;
-> +	else
-> +		value = TOUCHPAD_TOGGLE_OFF;
-> +
-> +	return regmap_update_bits(data->regmap, EC_ADDR_OEM_4, TOUCHPAD_TOGGLE_OFF, value);
-> +}
-> +
->   static ssize_t touchpad_toggle_enable_store(struct device *dev, struct device_attribute *attr,
->   					    const char *buf, size_t count)
->   {
->   	struct uniwill_data *data = dev_get_drvdata(dev);
-> -	unsigned int value;
->   	bool enable;
->   	int ret;
->   
-> @@ -759,30 +772,39 @@ static ssize_t touchpad_toggle_enable_store(struct device *dev, struct device_at
->   	if (ret < 0)
->   		return ret;
->   
-> -	if (enable)
-> -		value = 0;
-> -	else
-> -		value = TOUCHPAD_TOGGLE_OFF;
-> -
-> -	ret = regmap_update_bits(data->regmap, EC_ADDR_OEM_4, TOUCHPAD_TOGGLE_OFF, value);
-> +	ret = uniwill_write_touchpad_toggle_enable(data, enable);
->   	if (ret < 0)
->   		return ret;
->   
->   	return count;
->   }
->   
-> +static int uniwill_read_touchpad_toggle_enable(struct uniwill_data *data, bool *status)
-> +{
-> +	unsigned int value;
-> +	int ret;
-> +
-> +	ret = regmap_read(data->regmap, EC_ADDR_OEM_4, &value);
-> +	if (ret < 0)
-> +		return ret;
-> +
-> +	*status = !(value & TOUCHPAD_TOGGLE_OFF);
-> +
-> +	return 0;
-> +}
-> +
->   static ssize_t touchpad_toggle_enable_show(struct device *dev, struct device_attribute *attr,
->   					   char *buf)
->   {
->   	struct uniwill_data *data = dev_get_drvdata(dev);
-> -	unsigned int value;
-> +	bool status;
->   	int ret;
->   
-> -	ret = regmap_read(data->regmap, EC_ADDR_OEM_4, &value);
-> +	ret = uniwill_read_touchpad_toggle_enable(data, &status);
->   	if (ret < 0)
->   		return ret;
->   
-> -	return sysfs_emit(buf, "%d\n", !(value & TOUCHPAD_TOGGLE_OFF));
-> +	return sysfs_emit(buf, "%d\n", status);
->   }
->   
->   static DEVICE_ATTR_RW(touchpad_toggle_enable);
-> @@ -1774,6 +1796,18 @@ static int uniwill_suspend_super_key(struct uniwill_data *data)
->   	return uniwill_read_super_key_enable(data, &data->last_super_key_enable_state);
->   }
->   
-> +static int uniwill_suspend_touchpad_toggle(struct uniwill_data *data)
-> +{
-> +	if (!uniwill_device_supports(data, UNIWILL_FEATURE_TOUCHPAD_TOGGLE))
-> +		return 0;
-> +
-> +	/*
-> +	 * EC_ADDR_OEM_4 is marked as volatile, so we have to restore it
-> +	 * ourselves.
-> +	 */
-> +	return uniwill_read_touchpad_toggle_enable(data, &data->last_touchpad_toggle_enable_state);
-> +}
-> +
->   static int uniwill_suspend_battery(struct uniwill_data *data)
->   {
->   	if (!uniwill_device_supports(data, UNIWILL_FEATURE_BATTERY))
-> @@ -1809,6 +1843,10 @@ static int uniwill_suspend(struct device *dev)
->   	if (ret < 0)
->   		return ret;
->   
-> +	ret = uniwill_suspend_touchpad_toggle(data);
-> +	if (ret < 0)
-> +		return ret;
-> +
->   	ret = uniwill_suspend_battery(data);
->   	if (ret < 0)
->   		return ret;
-> @@ -1839,6 +1877,14 @@ static int uniwill_resume_super_key(struct uniwill_data *data)
->   	return uniwill_write_super_key_enable(data, data->last_super_key_enable_state);
->   }
->   
-> +static int uniwill_resume_touchpad_toggle(struct uniwill_data *data)
-> +{
-> +	if (!uniwill_device_supports(data, UNIWILL_FEATURE_TOUCHPAD_TOGGLE))
-> +		return 0;
-> +
-> +	return uniwill_write_touchpad_toggle_enable(data, data->last_touchpad_toggle_enable_state);
-> +}
-> +
->   static int uniwill_resume_battery(struct uniwill_data *data)
->   {
->   	if (!uniwill_device_supports(data, UNIWILL_FEATURE_BATTERY))
-> @@ -1884,6 +1930,10 @@ static int uniwill_resume(struct device *dev)
->   	if (ret < 0)
->   		return ret;
->   
-> +	ret = uniwill_resume_touchpad_toggle(data);
-> +	if (ret < 0)
-> +		return ret;
-> +
->   	ret = uniwill_resume_battery(data);
->   	if (ret < 0)
->   		return ret;
+The list of commits applied:
+[1/4] platform/x86: int3472: Use local variable for LED struct access
+      commit: d6116d86e58a04a9522e349c4a27145521c01ad7
+[2/4] platform/x86: int3472: Rename pled to led in LED registration code
+      commit: 39237e3208209d1bb35d939d6fee1f36b642f562
+[3/4] platform/x86: int3472: Parameterize LED con_id in registration
+      commit: 218d3c44f5f0a3cc1647bc61a4e4eac663b37aa5
+[4/4] platform/x86: int3472: Add support for GPIO type 0x02 (IR flood LED)
+      commit: bbd917d96aa152a5c4701964db5b28db666f7491
+
+--
+ i.
+
