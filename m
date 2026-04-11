@@ -1,63 +1,63 @@
-Received: from mail-ej1-f46.google.com (mail-ej1-f46.google.com [209.85.218.46])
+Received: from mail-ed1-f41.google.com (mail-ed1-f41.google.com [209.85.208.41])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0826D29ACF7
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 33E7D1862
 	for <platform-driver-x86@vger.kernel.org>; Sat, 11 Apr 2026 18:04:21 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.46
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.41
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1775930663; cv=none; b=RtTKVG2zfADi/cW+4n0qLF24KMVCKz77Jw9u+w5/I+yv45Up9DCwDeL0veFULu9A+pepErlklUBk9JAO25pADHej38UNGn9MSjOT1rGPqZ/f7vwx9gRQMlsQCNqOMOw6XU68PdlvR97aQclCHWHGv/+QivjoI3UaCiB11SMkaEc=
+	t=1775930663; cv=none; b=HjYcJi2sL01WAZ20X3LxhXY6cbfv1R77FWtANUxFG3aUKzcKAj4YKT7W21fxuZe+DVxz2mYjNdrmM5jAwjN8Xz5Rx81F3iOJqRt8qy4wNoPBxB+/pCcOCD6LUZORqVOtiCvXCxdvMg3Qp71mQ7yv/PcHz3W8lGoJXUCYqyKOH1w=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1775930663; c=relaxed/simple;
-	bh=9aKPv9W66PoQjS1drLRMSLNL5N+3u0CUbWozsmMaGuY=;
+	bh=hw+SP67MUczjNWm2PgIVoT1LydkC/JLPEi4afGQ7WQQ=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=qIVw606t2Z+4cSwNO+vQUTfusH+lD/4VsYE3BUn7W4Ikn9dJLOn9zmph0DEowsL82umJ3veVA8QoOXqE039F/tIFM2wbBe+KtYvjZGpKVuDHFN0Wu2kjiIlPGU8Eto0W1M3He+pTP+M8TCp+bq5zTCGIpqtp+Nq1o9hQ4+KxENY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=qwa3jElP; arc=none smtp.client-ip=209.85.218.46
+	 MIME-Version; b=DqieBuxm6+4ibxoT22S9Jasassv+LNnA7dS2yV37xjSg4/dQQlFivw0XTGtvSTKsy+Qif8cNvv1SSOGd1oxkjKVu5Vh2phcojxM5VWKcjPevtZyT9tLIsl084IOhVljTCyVh4LmoDHdlaC7+xWokiIfR2KUbQqcTSKl9Ao9wUGU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=UhcyoCpy; arc=none smtp.client-ip=209.85.208.41
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="qwa3jElP"
-Received: by mail-ej1-f46.google.com with SMTP id a640c23a62f3a-b9d9971d059so159365366b.2
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="UhcyoCpy"
+Received: by mail-ed1-f41.google.com with SMTP id 4fb4d7f45d1cf-670c6c6e64dso1684790a12.2
         for <platform-driver-x86@vger.kernel.org>; Sat, 11 Apr 2026 11:04:21 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20251104; t=1775930660; x=1776535460; darn=vger.kernel.org;
+        d=gmail.com; s=20251104; t=1775930659; x=1776535459; darn=vger.kernel.org;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=tUEOsnfxXuZLqwLt1IFYC5XjnP8ak+RNfelGDS4bV6g=;
-        b=qwa3jElP+iCMlndVflfYj152Tniir5hai7buLbBMRxoXa+Qn0CAbxYbkDwRQtthxOa
-         07CsFti7gkzWoIGciMIAdUQRH8l4CMuvb8Zpc+DON5jTCQnlHS4X69ez4h39FD5g6yd/
-         hsvPV/CjwSb4SfwX8yeUqjWQYK/G3OjPfngzBy0NVpyw+JrJ4PIiIvUDeulcLDbVQRVE
-         KWmagHOxKfddfm/KpoxhKztksiiJfuJyKctEANyK7O69JrAUIO922iYDqwWMo2Te2Z0K
-         UFItX8O4qAYmIQBKDoMF9dso+amNGQgFHYlqNXrCojUfnyhe2Ay+TildKEkli47rBmAl
-         Yhow==
+        bh=Y7P0p0kVaJzs6hmjX5/J5a5R/qOsuqr4kJlAR2Hczlg=;
+        b=UhcyoCpyDv7AXpL2oISMk/4+SsHXEnbWxR/XRkJmdF43pW0S7wRA3C/0DP3P4SSAgZ
+         +TK6VcF0ZH37/g2ynHnTLi2WXukayb0Xu9xxkFHBC4gOapoeo0cya/bfRbDWFHeHNH+t
+         Z2x3CghgS77oDVFoAxBPJrjYvjX6rYmyCstSrenWdrwbJvHmTT0cZfErFsMjVo62qZ0B
+         zqcbck59UuNXRpSdy+3xMKGBNBe7TbrpgLXJs3l/+hoFZfLJJsFetMzTcuk+7AY1xUnm
+         RL1LgK1f44ea+UcPNw4ZWqG9IyShldCv8DXoUdG5VYeiSjmLTgjvOR4fRpuEfOW/nHo9
+         QpCA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1775930660; x=1776535460;
+        d=1e100.net; s=20251104; t=1775930659; x=1776535459;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:x-gm-gg:x-gm-message-state:from
          :to:cc:subject:date:message-id:reply-to;
-        bh=tUEOsnfxXuZLqwLt1IFYC5XjnP8ak+RNfelGDS4bV6g=;
-        b=CP8kETfA2SBpYbhqdNlMS/jn8flREJDcjifc4Kd5yeD31AJtM7BUSXkYsTUXJ9gSA5
-         nF0oXmV0S+7hCFkaYxX5D+hEdTtCe7XEdWIL63DrM8bV22EnZrJiSGxWP8Fa/n6C+auY
-         iK1HL6gDhGvY5Pl1wquX+VOWjL1TfMCAGajolLNJcj9JZko1rkWHhYpZ6ZPPckFW1cxH
-         5MOF6N0aj3zNLeJrefBiwiWy98PENs2cnLXDkzl4U98EthtAAXyjSFDUN3k5nbGNdZED
-         MiHRotAoSK4mcZtf+mYORCZERQqC2DxQmV3jMrhg3E3aoPS2GfwGCVNsFxQ8lEWhQSv6
-         GTkw==
-X-Forwarded-Encrypted: i=1; AJvYcCX0DaIIUHSopPmrrJvQqtKCbsCDVvRfeNM6c1h7yKJijDvqDvvjqiH9rX649jzN5DB5tDYW9CONuBpN8ee0PBjDyN6p@vger.kernel.org
-X-Gm-Message-State: AOJu0Ywnbz0PKplUTr6fPSm0/pfDm8SUW8ZKZfCH6zcIwg8KBgzoZCGH
-	2c5i7ikwD6ibt26+Qzwi6VvdT/13mQdAjmKUxcldDjEduObGZXXUlB1Q
-X-Gm-Gg: AeBDiet7J6aKZFGHCX5n6lbKbzo3OQlKRIP6z28BKXgLIrzoFSM6ZTw43xqSdQ2zJLh
-	xmZat4Y1vPBZrqF/xrRVgqVeiw9nkucE234cm/qpoMBhbtd9ecnVb/fiDAdOwonfnT+9ueWhN3L
-	NCm8ciAzzzkmNFNXiDskjR0DceSGCQCKrGi4PBol0M76RNq9aLrUTp6OTHhFkC8A++UPYDVxYzb
-	g3NDOw2nOUatGjPchn/LZdLQnxMtJqVWCyhJ2GCJItmn/zNLoBTswwipUCE9WUgbG+ECgmq8l33
-	LiRKS8Iikyz+r0vO+y0ERfeSCSbhV7YhBvJSy6ZK2IRS8VWof4UUkJI0HikaQHDtiM4WsPxaCSG
-	VoBuMbL9Y1+4Zs77nP55nJBZhN0+3WxKVkdxOQ5yHjQo0QhJ1DZtESiSl6lduleFj9lbpNDXvCV
-	MYkbGK//G1d9jSJLFoTYTJTayh/4FK4Jd/
-X-Received: by 2002:a17:906:4790:b0:b98:7e30:8129 with SMTP id a640c23a62f3a-b9d7296657fmr412690366b.32.1775930659993;
+        bh=Y7P0p0kVaJzs6hmjX5/J5a5R/qOsuqr4kJlAR2Hczlg=;
+        b=At5G6CzFtTHXm2XAQ5FmWudt9sv+uMc190/FM8kXc/efuaqcQml6x5zu1nMYRsFF0C
+         xfnKe0N/rEYL9Llx3ZkhpLR+aFjxW0492BmfqktBVNoJeOjZvodpUwdzHEBlT1l5WLOJ
+         uddVV9GMoVIf5vWe+YyeFK876+udX57/wMMAmgdMpN8phJC6KLT0ZSfWG4TX0Yw7nQFP
+         2SVJRM7wD7OvzpuZpraRXQU/LOgY8yjg5GyR3ykPt6X9aoCRqLl4Y0y+CndLi2Os0h9C
+         s/fq9w27Er6RESmV1Wy41lqJP/aZsDHHOr3+VptvMLP3cRVuD4Q/WiXIb/ZknjkTO+81
+         1CTA==
+X-Forwarded-Encrypted: i=1; AJvYcCVmdy+5xqAsbqYUXqDPIp8KgxkMSenHCD0gOZEWYmI8LewZRAZwOJLCRI+tLx0CAk6+6SpaRJIPdT600bDK1+X/Yx7f@vger.kernel.org
+X-Gm-Message-State: AOJu0YynStDNUgtAdlf37RzQpLWe4asOBopDlh5Qv+qPQE4PMS78ClCY
+	Q86mhVayZmVkfwJAP62WH7kbhNOavMz+u79IkQ6tvVa/0sHSJXTV8SE+RryO5+yR
+X-Gm-Gg: AeBDiesIlx7JnBswxW5Kk/UKHOI0PW92ikXaKeOnXCC1ix5dHEQMnGfU9YRHqBJWvjk
+	2R+jMvlNHtslq6z4gmnum8s5Yg60qSU4pzJ2aZC+y2WJ0ePmFxmAPjxoWohCP/3yJRm+YV6ppCT
+	8YH1brwgaa3aaiUCLL+DrmWAqtqiDsEmG2eavNakfhPGryFaUvQ3b8+LUAA10WaqR4U8prkAdDp
+	S+28QACs6NTsuJoEbquzy4R0eKw6emKUTSUmHmzlbF7IFMhc9FFvUDO2Dis6L8hV4/ZTie9MZwf
+	BmBIxIH0lqGvQEpyR4eikUcvTLCojwmXJUU6UTnjvPi1G2QKLWNo2A8xERryWMuBCgR2kL2Tb43
+	AC2sEbfh9smUDF2Qg9gto+hRswoo8wqhrAmiXDo0CHjp3c+Pqa7MCfphybTt/s+hpfLQ+GTnif+
+	58fOX81Ysjvs+So8Odk3XCMg==
+X-Received: by 2002:a17:906:7943:b0:b9d:6e82:10f7 with SMTP id a640c23a62f3a-b9d72483ff2mr445226566b.13.1775930659367;
         Sat, 11 Apr 2026 11:04:19 -0700 (PDT)
 Received: from khalil-hp.home ([62.250.67.33])
-        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-b9d6e5c56d3sm186160666b.32.2026.04.11.11.04.19
+        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-b9d6e5c56d3sm186160666b.32.2026.04.11.11.04.18
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sat, 11 Apr 2026 11:04:19 -0700 (PDT)
+        Sat, 11 Apr 2026 11:04:18 -0700 (PDT)
 From: Khalil <khalilst@gmail.com>
 X-Google-Original-From: Khalil <khalil@rentman.nl>
 To: broonie@kernel.org,
@@ -66,15 +66,13 @@ To: broonie@kernel.org,
 Cc: rf@opensource.cirrus.com,
 	linux-spi@vger.kernel.org,
 	platform-driver-x86@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	Khalil <khalilst@gmail.com>
-Subject: [PATCH 1/3] spi: Preserve preset cs_gpiod in __spi_add_device()
-Date: Sat, 11 Apr 2026 20:04:12 +0200
-Message-ID: <20260411180414.481427-2-khalil@rentman.nl>
+	linux-kernel@vger.kernel.org
+Subject: [PATCH v2 0/3] Fix CS35L56 amplifier on Intel LPSS SPI with broken ACPI cs-gpios
+Date: Sat, 11 Apr 2026 20:04:11 +0200
+Message-ID: <20260411180414.481427-1-khalil@rentman.nl>
 X-Mailer: git-send-email 2.43.0
-In-Reply-To: <20260411180414.481427-1-khalil@rentman.nl>
+In-Reply-To: <20260215135524.1171065-2-khalil@rentman.nl>
 References: <20260215135524.1171065-2-khalil@rentman.nl>
- <20260411180414.481427-1-khalil@rentman.nl>
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
@@ -83,41 +81,74 @@ List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-From: Khalil <khalilst@gmail.com>
+To: broonie@kernel.org, hdegoede@kernel.org, ilpo.jarvinen@linux.intel.com
+Cc: rf@opensource.cirrus.com, linux-spi@vger.kernel.org,
+    platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
+In-Reply-To: <20260215135524.1171065-2-khalil@rentman.nl>
 
-__spi_add_device() unconditionally overwrites spi->cs_gpiod[] from
-ctlr->cs_gpiods[cs], even if the caller has already set a GPIO
-descriptor on the device. This prevents drivers like
-serial-multi-instantiate from pre-configuring a GPIO chip select
-acquired from ACPI before adding the device.
+Hi,
 
-Skip the overwrite when the device already has a cs_gpiod set for
-the given index, allowing callers to preset GPIO chip selects that
-aren't described in the controller's cs-gpios property.
+This is v2 of the patch series fixing dual CS35L56 amplifiers on HP
+laptops with Intel Lunar Lake and broken ACPI cs-gpios.
 
-This is useful on platforms where the ACPI _DSD cs-gpios property
-on the SPI controller is incomplete, but the peripheral's ACPI node
-does contain the correct GpioIo resource for its chip select.
+Changes since RFC v1 (addressing feedback from Richard Fitzgerald):
 
-Suggested-by: Richard Fitzgerald <rf@opensource.cirrus.com>
-Signed-off-by: Khalil <khalilst@gmail.com>
----
- drivers/spi/spi.c | 3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
+- Added DMI quirk table: GPIO CS fixup is now only applied on known
+  affected platforms (HP EliteBook 8 G1i, board 8D8A), not generically
+  for all devices with CS > 0.
 
-diff --git a/drivers/spi/spi.c b/drivers/spi/spi.c
-index XXXXXXX..XXXXXXX 100644
---- a/drivers/spi/spi.c
-+++ b/drivers/spi/spi.c
-@@ -1148,7 +1148,8 @@ static int __spi_add_device(struct spi_device *spi)
+- Fixed chip select range check: only chip selects outside the
+  controller's num_chipselect range are fixed up. A NULL cs_gpiods[cs]
+  within range means "native chip select", not broken. This avoids
+  incorrectly replacing native CS0 with the GPIO descriptor.
 
- 	if (ctlr->cs_gpiods) {
- 		for (idx = 0; idx < SPI_CS_CNT_MAX; idx++) {
--			if (is_valid_cs(cs))
-+			cs = spi_get_chipselect(spi, idx);
-+			if (is_valid_cs(cs) && !spi_get_csgpiod(spi, idx))
- 				spi_set_csgpiod(spi, idx, ctlr->cs_gpiods[cs]);
- 		}
- 	}
+- Removed ASUS reference (GU605C was fixed by BIOS update).
+
+- Added Patch 1/3 (spi core): __spi_add_device() now preserves preset
+  cs_gpiod on the device instead of unconditionally overwriting from
+  ctlr->cs_gpiods. This was suggested by Richard as the preferred
+  approach to avoid modifying controller state post-probe.
+
+- Patch 2/3 (serial-multi-instantiate): Extracted GPIO fixup into a
+  dedicated helper function. Currently still installs the GPIO on the
+  controller's cs_gpiods array because __spi_add_device() overwrites
+  device-level cs_gpiod. With Patch 1/3 applied, a future cleanup
+  could set the GPIO directly on the device instead.
+
+- Patch 3/3 (spi-pxa2xx): Unchanged from v1. Handles clock gating
+  on Intel LPSS controllers when GPIO chip select is active.
+
+Note: While Richard also suggested the cs35l41_hda self-fixup approach
+(setting cs_gpiod on the device post-probe via spi_setup), this doesn't
+work here because the device can't even be added to the bus - SPI core
+rejects it with -EINVAL when cs >= num_chipselect. The serial-multi-
+instantiate approach is necessary to extend num_chipselect first.
+
+Regarding modifying the probed controller: I acknowledge this is not
+ideal. Patch 1/3 is a step toward the cleaner approach (preset on
+device). However, num_chipselect still needs to be extended, and
+cs_gpiods needs to be expanded to prevent out-of-bounds access in
+__spi_add_device(). I'm open to suggestions for a cleaner way to
+handle this.
+
+Tested on HP EliteBook 8 G1i 16 inch (Intel Core Ultra 7 258V,
+Lunar Lake-M) with 2x CS35L56 Rev B0. Both amplifiers probe
+successfully, load calibration and tuning, and produce audio.
+
+Related bug reports:
+- https://bugs.launchpad.net/ubuntu/+source/alsa-driver/+bug/2131138
+- https://bugzilla.kernel.org/show_bug.cgi?id=221064
+- https://github.com/thesofproject/linux/issues/5621
+
+Khalil (3):
+  spi: Preserve preset cs_gpiod in __spi_add_device()
+  platform/x86: serial-multi-instantiate: Fix SPI chip select on
+    platforms with incomplete ACPI cs-gpios
+  spi: pxa2xx: Handle clock gating for GPIO chip select devices
+
+ drivers/spi/spi.c                                |   3 +-
+ drivers/platform/x86/serial-multi-instantiate.c  | 156 +++++++++++++++-
+ drivers/spi/spi-pxa2xx.c                         |  78 ++++-----
+ 3 files changed, 196 insertions(+), 41 deletions(-)
+
 --
-2.43.0
