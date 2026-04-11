@@ -1,122 +1,82 @@
-Received: from vps0.lunn.ch (vps0.lunn.ch [156.67.10.101])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EA9A53328FD;
-	Sat, 11 Apr 2026 20:43:21 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=156.67.10.101
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6C11F1F936;
+	Sat, 11 Apr 2026 21:57:47 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1775940203; cv=none; b=CHas72xBwsiRn9PmSLzqL0lE4xkCsPh+4Vz62AWyXvZF55DACXid0Z6PpQOBW7EgpnwTJ//J83hJAd1Qdwx+p6b6uTk9S3eok9p9sfa5Q3FlkPep8EjtRZUV+W45VPib2wUiAlOCm0rMEdNCrxucIJ500LGFjMT0CHyhyIi5qU0=
+	t=1775944668; cv=none; b=jGBcXoHVcAUxUhDJt/QG2aj5dj7ZRsLd8oLcLX8FIabWhMsmSRz++7GQ+eexHXyb6tEsl4QmaXef1xp6VCMbWkwks2++ug+RpgZdNpU0t38DW9G1pX8zC/2iWf65ka0s3t+ELE4kb9hNQxwLcl+tL09CrOic9faoYcXrL7o2Q60=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1775940203; c=relaxed/simple;
-	bh=QdB9j3ELGjAHtqktWrtZmDL+Cg+ygpB+8+l6RDPkrqM=;
+	s=arc-20240116; t=1775944668; c=relaxed/simple;
+	bh=5TkzBwy6tsw51wDeX5pNXpNxr8hIlKnh3x3I4Y0n1q4=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=uDEADf1UqOJYmNxMqbmEYMX5gc3oJju26AB2IiOiYt+7/CFtQroKG0inRk8eOP1OKv59RGFPE092lRRIMCRXxSbptEyIn63CEwIObJt9Ch3ndhHcjb93ZgYDaFVKIfuhsUzW+iEf7MwXYGX6aY+s4D3ZnyA3B5IXpE+OPhUZD0s=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lunn.ch; spf=pass smtp.mailfrom=lunn.ch; dkim=pass (1024-bit key) header.d=lunn.ch header.i=@lunn.ch header.b=3oyX/rog; arc=none smtp.client-ip=156.67.10.101
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lunn.ch
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=lunn.ch
+	 Content-Type:Content-Disposition:In-Reply-To; b=mu8kpYG16SIWhggo5V5EhUrN4h2MW68bL3LWhdRdwwtB0FTlC3IWrvL7Slh72r0GlJG9+Jv91crtspKOMedDf4iarmwL0pFwY67NHlMSHreppLf052Mzah4rB2U2Z9vwVdRd651n937oOnPxeboO6EbywcSbxvTbDAI6jP7t/+0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=C5rQOqXj; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=lunn.ch header.i=@lunn.ch header.b="3oyX/rog"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=lunn.ch;
-	s=20171124; h=In-Reply-To:Content-Disposition:Content-Type:MIME-Version:
-	References:Message-ID:Subject:Cc:To:From:Date:From:Sender:Reply-To:Subject:
-	Date:Message-ID:To:Cc:MIME-Version:Content-Type:Content-Transfer-Encoding:
-	Content-ID:Content-Description:Content-Disposition:In-Reply-To:References;
-	bh=AuSUZosFHaDPhEj6fvCYhJbYcRov3la6wHZJFcHDGTg=; b=3oyX/rogn9xlw9jGx90ymEm0nS
-	mtV7x5WDxC0tbvWd7QLog8BI9LjkKJtT4+nWr304NyUaAmepTfw1ptaMj6pYL9u1TU/lEkeTlACMz
-	6VYnNVGtzX/+VU296XBtTCgT7+Rfi3SKg3+ESLA6HQDq5fZKti+gqQcWEab+DghJ6+tM=;
-Received: from andrew by vps0.lunn.ch with local (Exim 4.94.2)
-	(envelope-from <andrew@lunn.ch>)
-	id 1wBfAP-00FkMY-Aw; Sat, 11 Apr 2026 22:42:57 +0200
-Date: Sat, 11 Apr 2026 22:42:57 +0200
-From: Andrew Lunn <andrew@lunn.ch>
-To: Mark Pearson <mpearson-lenovo@squebb.ca>
-Cc: Rong Zhang <i@rong.moe>, Lee Jones <lee@kernel.org>,
-	Pavel Machek <pavel@kernel.org>,
-	Thomas =?iso-8859-1?Q?Wei=DFschuh?= <linux@weissschuh.net>,
-	Benson Leung <bleung@chromium.org>,
-	Guenter Roeck <groeck@chromium.org>,
-	Marek =?iso-8859-1?Q?Beh=FAn?= <kabel@kernel.org>,
-	"Derek J . Clark" <derekjohn.clark@gmail.com>,
-	Hans de Goede <hansg@kernel.org>,
-	Ilpo =?iso-8859-1?Q?J=E4rvinen?= <ilpo.jarvinen@linux.intel.com>,
-	Ike Panhc <ikepanhc@gmail.com>, Vishnu Sankar <vishnuocv@gmail.com>,
-	Vishnu Sankar <vsankar@lenovo.com>, linux-kernel@vger.kernel.org,
-	linux-leds@vger.kernel.org, chrome-platform@lists.linux.dev,
-	"platform-driver-x86@vger.kernel.org" <platform-driver-x86@vger.kernel.org>
-Subject: Re: [RFC PATCH 1/9] leds: Load trigger modules on-demand if used as
- hw control trigger
-Message-ID: <6697bb96-6ae7-4cff-b218-2aa099977dc9@lunn.ch>
-References: <500dfc4b-ebd7-4637-bed0-130fc571923c@lunn.ch>
- <b48993998e6e48d4448f8c6dc758f4e260d0f857.camel@rong.moe>
- <353713de-b121-4e27-a46f-6ca1941888a6@lunn.ch>
- <8b25e1ea9bff414442fa47475b9c9ac5b29049d7.camel@rong.moe>
- <60e60c42-f776-424a-a5b4-7286d33175d1@lunn.ch>
- <d2d321fe39c41ebd896eef63f3909df29f5a1622.camel@rong.moe>
- <4e839e55-4daa-45cd-b403-d1d6eae63d8d@app.fastmail.com>
- <cc4398e1512dceb531ba3bd5dd0d20cf2042bb84.camel@rong.moe>
- <2ac0c46c-805d-4749-a6e0-94b16b104a72@app.fastmail.com>
- <7437cc09-7958-4172-aec2-4429cfa98141@app.fastmail.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="C5rQOqXj"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 3EA3BC116C6;
+	Sat, 11 Apr 2026 21:57:47 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1775944667;
+	bh=5TkzBwy6tsw51wDeX5pNXpNxr8hIlKnh3x3I4Y0n1q4=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=C5rQOqXjHaq5C2/Cz5WjDhxKGc5LY52d6og89TdZeOJbGTifzWRztNsi1nK1bcRHo
+	 +nAotZEx9EUrbLJRZx2sBtV7TAbSknMxahhhnCAGhqC4FJFmhjYYVM4pE8vdHA+tv+
+	 jjKYbhS6Bzn0f4z+t7uxiwL9TPWSH5vDxF96LKE5EMQ0xAALc0pIfo8ARnDH8zwnXr
+	 tuVwo+RquePc5kx385mrUiayXM2kvyvBoGWQhFRswJcksNIdQNAi8AtFtC590wjVN1
+	 TZs43ZP5257E5uF2igvphukrJB+68eMUYex+/wod2X6cmYv/X2SdqpJOgxujsLZ662
+	 v3cVTEST2YH/Q==
+Received: by finisterre.sirena.org.uk (Postfix, from userid 1000)
+	id BB4CA1AC58C1; Sat, 11 Apr 2026 22:57:44 +0100 (BST)
+Date: Sat, 11 Apr 2026 22:57:44 +0100
+From: Mark Brown <broonie@kernel.org>
+To: Khalil <khalilst@gmail.com>
+Cc: hdegoede@kernel.org, ilpo.jarvinen@linux.intel.com,
+	rf@opensource.cirrus.com, linux-spi@vger.kernel.org,
+	platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v2 0/3] Fix CS35L56 amplifier on Intel LPSS SPI with
+ broken ACPI cs-gpios
+Message-ID: <adrD2BrO11tQq49R@sirena.co.uk>
+References: <20260215135524.1171065-2-khalil@rentman.nl>
+ <20260411180414.481427-1-khalil@rentman.nl>
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Content-Type: multipart/signed; micalg=pgp-sha512;
+	protocol="application/pgp-signature"; boundary="YvlfXJkyw/fm60h0"
+Content-Disposition: inline
+In-Reply-To: <20260411180414.481427-1-khalil@rentman.nl>
+X-Cookie: You will be divorced within a year.
+
+
+--YvlfXJkyw/fm60h0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <7437cc09-7958-4172-aec2-4429cfa98141@app.fastmail.com>
 
-> Hi maintainers - a gentle nudge on this one. Would like some
-> direction if we can move ahead with the series. If not, what is
-> required?
- 
-> On our side I know Vishnu has implemented the thinkpad driver using
-> this and confirmed the design works there too.
- 
-> Would like to get this upstream so we can start working with the
-> user-space folk on updating their pieces.
+On Sat, Apr 11, 2026 at 08:04:11PM +0200, Khalil wrote:
 
-I'm not the Maintainer here, so i would not be too unhappy if i was
-ignored.
+> This is v2 of the patch series fixing dual CS35L56 amplifiers on HP
+> laptops with Intel Lunar Lake and broken ACPI cs-gpios.
 
-I've had some time to think about this. I guess you are going to go
-with a Linux LED, whatever. With that assumption in place, a trigger
-makes sense. But i think it needs to be a special sort of trigger, and
-a special sort of LED.
+I can't work out what these apply against, please submit against my
+current tree.
 
-This is not a general purpose LED, which is a basic assumption for
-Linux LEDs. You cannot make it blink for netdev packets, shift lock,
-heartbeat, etc, because Linux does not control it, the EC does. Linux
-can ask the EC to set it to some state, but the EC might change it,
-and notify Linux afterwards. That is not the normal behaviour of a
-Linux LED.
+--YvlfXJkyw/fm60h0
+Content-Type: application/pgp-signature; name="signature.asc"
 
-Also, it does not make sense to allow the trigger to be bound to any
-other LED.
+-----BEGIN PGP SIGNATURE-----
 
-The trigger and the LED are tightly bound together. So i would put
-them in the same driver. There are triggers which live outside of
-drivers/leds/trigger/. So it is not a problem it lives somewhere
-else. It also solves the ordering problem you had, getting the trigger
-registered. Since it lives in the same driver as the LED, you know it
-is registered, you do it before registering the LED.
+iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAmnaw9cACgkQJNaLcl1U
+h9DqSgf/c46kiKmYcNbzMk6RDUssL5ZaB4McUIOQLOyk4/GmbE1E8RfjMBnOJNP/
+nT1CGYDdLBoOEGuxj1A2O688P6W/uZIxEJMnd0uZD7+qQ9x3Fs2nmsNA4PTY5L0e
+TkiO2u+CBqXal4+hyhrE5tNo+/kWSNk/5RzuSOh550YPWlDVlrnuk9WqVMcsQYtN
+lc/yjQMsoLUwOShI3bfw0mSM/o+c0+gYEvd1r7n9RxcsRP+39TiOGUX5/ynxNZPB
+NALEXzQXBhMLUe9Brbg0R1pN8h8cObg0hB0UB2K4lQttKiL5U+MZ4WgBWcj9nhmA
+pxJoAXyz4ksOjkInap0YgObPSoDS5Q==
+=+Lcw
+-----END PGP SIGNATURE-----
 
-I think you need some additional logic in the core. This LED must have
-this trigger. I would look at using the is_visible() attribute
-callback to make the trigger file in sysfs invisible for this LED, so
-it cannot be changed. I would somehow get this trigger attached to the
-LED when it is created. The trigger_relevant() call needs to be
-extended so that you cannot attach this trigger to any other LED.
-
-I would also think about naming. The behaviour is i guess specific to
-X86 laptops? Do Apple laptops have the same behaviour? What about
-Snapdragon X Series laptops? Chromebooks? USB keyboards? What about
-things like the Unihertz Titan 2?
-
-Somebody in the future might produce a generic solution. Linux
-controls the LED. The Linux input system gets the key presses and
-sends them to the trigger. You can bind an iio ambient sensor to the
-trigger, etc. So you should leave the name space open for other
-implementations.
-
-	 Andrew
+--YvlfXJkyw/fm60h0--
