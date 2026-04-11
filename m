@@ -1,159 +1,226 @@
-Received: from mail-pg1-f171.google.com (mail-pg1-f171.google.com [209.85.215.171])
+Received: from mail-dl1-f50.google.com (mail-dl1-f50.google.com [74.125.82.50])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E29743A1E9F
-	for <platform-driver-x86@vger.kernel.org>; Sat, 11 Apr 2026 15:56:30 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.171
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3DBE233B6F8
+	for <platform-driver-x86@vger.kernel.org>; Sat, 11 Apr 2026 16:23:39 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=74.125.82.50
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1775922992; cv=none; b=RbPu7sqCp+XRxMzH/Pb9j3YOIXyLQBHI4gZjA9kTFOYymtKuZp/Tc3xJKQGiFVEVqM1dspWjhEvnLErclK/dYss0Af3pmWZtJ0mA6vgiT7Oeh1hinclKnGzfCougHVHKJ20EIx72bT46w0BOcE7fQO3uOiHnFKYKyB64/k4A1IE=
+	t=1775924620; cv=none; b=SELaZ6CbSkDerrcu+5zVSZkb03hnYqgqP4FqruVkGnfIjvGbWxP6QWAlMI5nu640oDYxNPzQohPwkJu/oIPu2oR5qx+W/Dhf23rFo//5ZyKUnlUe6S+Gevsd9pISHeLVmu0iCEgGPFkI0MlWxfSHFHlLmrMc0s8DzFoBob3W0X4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1775922992; c=relaxed/simple;
-	bh=zmm20FAEZWTHtPUEhdkWyeNT7WutfYAtNm9+L21TLBE=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=VOrM6FCq4l3Omf2wWOPg2IL6CbdyKAtgaLzBZ90wZZ5hJagsyz5QAHlnFVSawAEhnwdQzPnq4HLuV18NtJRo7AVBP3DxWpjJngfYIjZkN9LodeZWXx4xGFSVfd3moHCm2wOmnwQo0Yg65bn4ES4kAjHDT4BJoTeVOjt3UolNrKY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=roeck-us.net; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=brkUMsz6; arc=none smtp.client-ip=209.85.215.171
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=roeck-us.net
+	s=arc-20240116; t=1775924620; c=relaxed/simple;
+	bh=VoJf0Ow/ZO1SpLbRLCmkOYyokf4NswZmhDv8CzmIAnY=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version:Content-Type; b=n2oWREhH1D9+JfiCh1DJFtM/pW4GQqXxfJr4HNIFTasDGKQfp5zzoJoCUDtq/WBIfPLcsq8WaEolDizIsW0YUOx/I0Cgsb+wKY+nEK8zDxNfLUZQ2C0fHQzSz3q9pB+0N4UbLQkmPklxP9wxSAJc+fOaTeR5BSM9MxbQUi0y4YI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=kc2EeOFS; arc=none smtp.client-ip=74.125.82.50
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="brkUMsz6"
-Received: by mail-pg1-f171.google.com with SMTP id 41be03b00d2f7-c70fb6aa323so1178195a12.3
-        for <platform-driver-x86@vger.kernel.org>; Sat, 11 Apr 2026 08:56:30 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="kc2EeOFS"
+Received: by mail-dl1-f50.google.com with SMTP id a92af1059eb24-12c1fcce8f8so3989454c88.1
+        for <platform-driver-x86@vger.kernel.org>; Sat, 11 Apr 2026 09:23:39 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20251104; t=1775922990; x=1776527790; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:autocrypt:from
-         :content-language:references:cc:to:subject:user-agent:mime-version
-         :date:message-id:sender:from:to:cc:subject:date:message-id:reply-to;
-        bh=DVrkaIEUqPuIb+vzkFm+RwXcE+fiPv+6EDt7LTGcx90=;
-        b=brkUMsz6qtfjABioTbiLmUL9oXf14AjU1NqvZMK4d1tMghVPImjXRTLFae12m7s4Dp
-         gFQ1cnaYrAEcWMnOhjulT+1k8BcUPhJNHRZYPIdJzNBHp+8etD706U3tvWDi+vbnmAyM
-         rVVRslnzH8S1nzD7b0xnPf0dvVrAKZ1Pv4KrF0MIb0EC6VXfOc6r5zzICBXBNrjilATq
-         dhSc1VF6+b1G7gX1Ap8ArQiZ8iVSvS3de2OpHSQi1NT6uWTTWXxO2YaImnO+ghnC7Wj0
-         CFr2SE3KeGfybPVnUwIRRZiuU0EbnALOHW1mYEabWO3PMCVNw8/y6wUvoIkjkIwV7eFc
-         EtjA==
+        d=gmail.com; s=20251104; t=1775924618; x=1776529418; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=ErbI6s80ggnwe90FQyxoll7CZ+dFQeGjE3pVrT6j40E=;
+        b=kc2EeOFSKySOcQ7n8zOR63hLVQXGflzvuGjZ7rt9Kg3kg3YiXwZDhGMHIhfrLPdg6O
+         CTkY5A9eRpD4agDLUe70HiB8GdOOyycKvjPMsCmyYcIeJ8dNcALgQAnZP0umSO7zbOkN
+         AVFLX2RWco7ouv1RyyztdmkijSM+s+kdQRyQnelBSDQBZGWBWDGGNc8s4E893isDlBK6
+         qZ6z3q+ls9rSvmZbdnw/nG78VC9XNFOHA6kT55sV2wLO9M57d3pnInHFsqTJ5ec8kEXB
+         vAz66hZgsotkbdLMIwYmB8sMjMwnuvyOy19+VIR24KhHeU1Y3lATq97ttRBLK98ArhMx
+         0ihw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1775922990; x=1776527790;
-        h=content-transfer-encoding:in-reply-to:autocrypt:from
-         :content-language:references:cc:to:subject:user-agent:mime-version
-         :date:message-id:sender:x-gm-gg:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=DVrkaIEUqPuIb+vzkFm+RwXcE+fiPv+6EDt7LTGcx90=;
-        b=p446Sfv0NkhdDqnYQoYb9QQBcSd3rDOiTjX4LkNAP9dNstY627tEqW9mG6dfwdacRo
-         fvgYMHbFGxw1fF5xM+JOLuRgFYg9ZWkp5t3nIJ1eG4iMCqz9s9M+SUUu0/OXde03xXJK
-         1FvHrfEJAi4AVwOYTR76mKjWarQelugWO2gFOmg+eNHhBkEoSYdwJpzuKG5j8qoUjQgS
-         EPZM9zi9Zf/sOSAzKJrsDqhR0OVc/4yP06P5kHVmGP5mXryIuFF/YAdZwtLSzvu7pMOP
-         PtIgNDaQhDI9X9gEfBuDT0CyqDjIieENvam2VPDbXNSV7yodqDGq/NA0zOcOB82NbOA4
-         7jFg==
-X-Forwarded-Encrypted: i=1; AFNElJ8VOxV2TEdQvggnXpSUKtAU5cn4orshMxQJRY/d0BEfPsoqetNmQDi/jfC4ssJ35cLrQ7ZAvQbxZhGhcUmHQoLbSCqI@vger.kernel.org
-X-Gm-Message-State: AOJu0YyB660VCq7TzaU5dI+iN+GY+WoYyEaEfsGqOtWP8NnZh0nZNuza
-	QKTWIIL3JVoOCp1EakUIqR/u7felBBJDM2dcEuwEvzCyCij4Jqi2r+jD
-X-Gm-Gg: AeBDiev/p5tmpHASJmoJ5XOTkoraGso17FMBHA8DsFEUs2t+luYSo1AaMPG9dee3fTa
-	ivusiTd5moqzvi72Yxzr32MBogN4jpDnGOg3W1eGKnif7xeH0CVd9MvIsRgeDIVAhzCvmqs5J4s
-	RglKE8FvXX8m9mfgw67xZ4EOi2HuZjVEwteyc1UlEY9ScVqcz94hjU7HKH8GADZSn01wUUHFCsG
-	SPAqAtEFmCrDuKxedRW1s0w5Bpvb4Cda4x4WZ4lTNjyiTPc8oDAxkmlgt9cIUX8ItPxM0XQB7U0
-	qA00DEAx0t2EqGp4uyGHWH7zwhajGfmDwzhVWtPhjantl9roHKrkQdzygUfhPEdO0P0WGwReLJp
-	YWSq44NqVRn7+DDgCY/U6X8lLzP1EtngUUGRIRlcozy6520gdMPCNV0gzhKdDNAIsgCnXWQ5zMC
-	qWvkj2JId9HDo+qPG8JQzcROr913pi51S+4jnma0rAPAej5phKcsjClniTlpv1dJunoRi2TRRX
-X-Received: by 2002:a17:902:a982:b0:2b0:445a:8c7b with SMTP id d9443c01a7336-2b2d59a0c3cmr57057695ad.15.1775922990251;
-        Sat, 11 Apr 2026 08:56:30 -0700 (PDT)
-Received: from ?IPV6:2600:1700:e321:62f0:da43:aeff:fecc:bfd5? ([2600:1700:e321:62f0:da43:aeff:fecc:bfd5])
-        by smtp.gmail.com with ESMTPSA id d9443c01a7336-2b2d4f48cfdsm65623585ad.82.2026.04.11.08.56.29
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Sat, 11 Apr 2026 08:56:29 -0700 (PDT)
-Sender: Guenter Roeck <groeck7@gmail.com>
-Message-ID: <8f7812ec-3c8a-4673-8222-28ba22796e22@roeck-us.net>
-Date: Sat, 11 Apr 2026 08:56:28 -0700
+        d=1e100.net; s=20251104; t=1775924618; x=1776529418;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-gg:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=ErbI6s80ggnwe90FQyxoll7CZ+dFQeGjE3pVrT6j40E=;
+        b=fvTg+1zgFCFFQm/l5Ek46HOFS+ZRC7KH4d8u/hq7WsoKUvlwEqIrtZoGJIl0F3ghE7
+         DTB2feOs4zwE6FBDxomhEZHVprx5yQCaJ+5swyuXQLciKNa/Oj5N1lfa5B+WZGPr2NFa
+         feWB7/xvxZU1PgcWB4HiR3nZbYh3QqCtEQ4UZ0izAuoWY/Wz6BmtWEM6K7MoppHR1m5D
+         Z1chkm/AmN2aRRgpahXmyu/sbRigkSWf4J+AOJ131jefKa5p4dWhTfWF/36J0gt2GUqN
+         1dLcqjFvE4qdSE+L4LIrSKekqEYYWL70rTXisjgTflsFz7AcCQcENNhmnhoxBU7PAWar
+         ZB9g==
+X-Forwarded-Encrypted: i=1; AJvYcCVJHVc6IH54Gdbyv5RsuhwW29LArHJgsWqE05lWT6eJIz2q+dwn767SHf+97VLQPQvE+CVRVmFPa3SHg9PFT4fBxPNw@vger.kernel.org
+X-Gm-Message-State: AOJu0Yzrezo5HsLjf0YalONX1qCapvGKg06ejhbkRRL05rARHvd0TaxZ
+	+EE6l4W1Qa9pbKe7qRSp4xh8POmGeAZ9f0IW0dn9qdYUEVAydLIINDBG
+X-Gm-Gg: AeBDievoDKQy8n5iwJ8hjcHBLWIGwwizLhi1Ye4GgEYUeN++OFfY2ZPcdB1uYQemPK9
+	Sd8Eh8T7ijPwRxPK6t/bNB0791Qsu6cXuJEvUrGf8r3jdCFGSE4Fwz2B27Elkm3zNYvNUEvEy5c
+	qeEO6i87ei0l8lw1VbskAS7kL9yaB4c5cixgNrC3yNblXJhZmwajsJkXpeNuibYS/GpA5HHnnlt
+	Dfg7GX1lvH2ZS1qdW9EJirmeVbqId3OsbwDaoCXjenbfBu1JGoYRa26HM7PIlQ0k1WnG1NVm316
+	M790DL1vxjoxLjlQ180llLk7Cd0GXLQokHxQfH6ejs95YghwDZqp5wPhnZGeyrxyZziYgMGiibV
+	JchD5n7UmZGBi+vvVgPmLtddpRu/Vlo6yMMIV9XpEHirh/CGwuCmODafg/Tvx9NoHQGaDmJjVYH
+	XZoEO6dUpO4I4AsBnEkQuWgqFW/yrKsCH29MFYLO95Ym+KH5w8cqnRfQfbC4eCVbKaSUa49GHUW
+	LEb
+X-Received: by 2002:a05:7300:7495:b0:2ca:e4f2:31ff with SMTP id 5a478bee46e88-2d5873adf3emr5060656eec.6.1775924618216;
+        Sat, 11 Apr 2026 09:23:38 -0700 (PDT)
+Received: from lappy (108-228-232-20.lightspeed.sndgca.sbcglobal.net. [108.228.232.20])
+        by smtp.gmail.com with ESMTPSA id 5a478bee46e88-2d55ce46a65sm9358907eec.0.2026.04.11.09.23.37
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sat, 11 Apr 2026 09:23:37 -0700 (PDT)
+From: "Derek J. Clark" <derekjohn.clark@gmail.com>
+To: =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>,
+	Hans de Goede <hansg@kernel.org>
+Cc: Mark Pearson <mpearson-lenovo@squebb.ca>,
+	Armin Wolf <W_Armin@gmx.de>,
+	Jonathan Corbet <corbet@lwn.net>,
+	Rong Zhang <i@rong.moe>,
+	Kurt Borja <kuurtb@gmail.com>,
+	"Derek J . Clark" <derekjohn.clark@gmail.com>,
+	platform-driver-x86@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Subject: [PATCH v9 00/16] platform-x86: lenovo-wmi: Add fixes and enhancement
+Date: Sat, 11 Apr 2026 16:23:18 +0000
+Message-ID: <20260411162334.25682-1-derekjohn.clark@gmail.com>
+X-Mailer: git-send-email 2.53.0
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v14] Subject: [PATCH v14] hwmon: (yogafan) Extend support
- to more Lenovo consumer models
-To: Rong Zhang <i@rong.moe>, Sergio Melas <sergiomelas@gmail.com>
-Cc: "Derek J. Clark" <derekjohn.clark@gmail.com>, Armin Wolf
- <W_Armin@gmx.de>, Jean Delvare <jdelvare@suse.com>,
- linux-hwmon@vger.kernel.org, linux-kernel@vger.kernel.org,
- platform-driver-x86 <platform-driver-x86@vger.kernel.org>
-References: <20260404164339.119023-1-sergiomelas@gmail.com>
- <ae53b7783787975caa973dcde337f20aee9b0b40.camel@rong.moe>
- <CAP8e=s+TcnikqHtTaXdsDUmOreLP5MYNQN1gDWvrQa-smbh_9w@mail.gmail.com>
- <4c627b63e40d1a3b2923ebe8b42fedde176f35cd.camel@rong.moe>
-Content-Language: en-US
-From: Guenter Roeck <linux@roeck-us.net>
-Autocrypt: addr=linux@roeck-us.net; keydata=
- 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
- np3900V20aS7eD9K8GTU0TGC1pyz6IVJwIE=
-In-Reply-To: <4c627b63e40d1a3b2923ebe8b42fedde176f35cd.camel@rong.moe>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 
-On 4/11/26 07:31, Rong Zhang wrote:
-> Hi Sergio,
-> 
-> On Fri, 2026-04-10 at 22:14 +0200, Sergio Melas wrote:
->> Hi Rong, Hi Guenter,
->>
->> Thank you for the review and for pointing out the overlap with lenovo-wmi-other.
->>
->> 1. WMI Coexistence and Bogus Fans
->> I completely agree that double-reporting is suboptimal. I will
->> implement a check in the probe function using
->> wmi_has_guid(LENOVO_WMI_FAN_GUID). If the WMI interface is present,
->> yogafan will return -ENODEV and yield to your driver. This ensures my
->> driver only covers models where WMI reporting is unavailable.
->>
-> 
-> You may also want to add a module parameter to override the WMI GUID
-> check as some devices do not support the fan reporting/tuning interface
-> despite having the WMI GUIDs.
-> 
+This series adds many much needed fixes and features to the lenovo-wmi
+drivers. This version has been re-ordered to ensure the simplest
+application to the stable tree, with all fixes being pushed up front.
+This has caused some churn in the latter half of the series where I'm
+immediately changing things that were just added, but this should ensure
+a better result for all kernel versions so I'm happy with it.
 
-Please, no new module parameters. If there are devices not supporting this,
-add them to an exclude list. Or make sure that only devices supporting
-the functionality are instantiated in the first place.
+Patches 1-7 fix various bugs in the existing drivers and are Cc'd to
+stable.
 
-Thanks,
-Guenter
+Patch 8 moves all gamezone enums from the gamezone header into the
+helpers header in preparation for the rest of the series.
+
+Patch 9 moves LWMI_FAN_DIV to be next to the rest of the fan attribute
+defines in preparation for adding additional attrbiute macros. This is
+so the attribute macros can all be in the same place in the file.
+
+Patch 10 adds a function to make assigning attribute ID's for capdata
+cleaner and easier.
+
+Patch 11 adds the remaining CPU attributes that weren't previously
+exposed.
+
+Patch 12 adds GPU attributes.
+
+Patch 13 renames a name constant in preparation for patch 6.
+
+Patch 14 adds battery charge-type limiting when supported only by WMI, or
+when a module parameter to skip compatibility checks is set. The
+MODULE_PARM_DESC macro creates one check and two warnings in checkpatch.
+I reviewed other examples from the kernel and I am following the same
+convention, so I left it as is.
+
+Patch 15 adds a debugfs directory.
+
+Patch 16 adds a debugfs file for dumping capdata.
+
+Signed-off-by: Derek J. Clark <derekjohn.clark@gmail.com>
+---
+v9:
+  - Invert ida_alloc fail logic.
+  - Fix dropped mode arg in current_value_show.
+  - Fix misnamed attribute in documentation.
+v8: https://lore.kernel.org/platform-driver-x86/20260406201400.438221-1-derekjohn.clark@gmail.com/
+  - Clean up rebase mixup with re-assinment of wmi_method_args_32 in
+    patches 6 and 14 from {} to { 0x00, 0x00 } and back.
+  - Combine ret_obj declaration and assignment in patch 1.
+v7: https://lore.kernel.org/platform-driver-x86/20260402032424.678528-1-derekjohn.clark@gmail.com/
+  - Add 3 additional bug fix patches from Rong Zhang reported by
+    shashiko.dev
+  - Reorder patches so the fixes are upfront in patches 1-7.
+  - Fix various typos and rebase mixups from v6.
+v6: https://lore.kernel.org/platform-driver-x86/20260331181208.421552-1-derekjohn.clark@gmail.com/
+  - Incorporate Rong Zhang's debugfs and decoupling patches into the
+    series.
+  - Add a patch to clean up too many cross-references to wmi-gamezone.h
+  - Make lwmi_attr_id a static inline in wmi-capdata.h
+  - Added a patch  to fix a bug where ares.arg1 is uninitialized when it
+    is sent to the firmware.
+  - Add supported checks before adding battery extenstion, and ensure
+    both the new checks and the is_writable checks are not casting u32
+    to i32.
+  - Misc formating changes.
+v5: https://lore.kernel.org/platform-driver-x86/20260324221032.1333636-1-derekjohn.clark@gmail.com/
+  - Remove cv/cd_mode_id references that occured before patch 4.
+  - Move lwmi_attr_id to capdata.c with a namespace export.
+  - Fix mixing include.
+  - Make lwmi_attr_is_supported return bool.
+  - Use switch instead of if for setting/getting charge type state.
+  - Various formatting fixes.
+v4: https://lore.kernel.org/platform-driver-x86/20260312031032.3467565-1-derekjohn.clark@gmail.com/
+  - Use loop instead of back gotos for identifying the working attribute
+    ID.
+  - Use function instead of macro to assign attribute_id, preserving
+    types.
+  - Removed unused defines and enum values.
+  - Rename charging defines to clarify thier purpose.
+  - Fixed various formatting issues from v3.
+  - Added module param to skip ACPI check when loading the driver for
+    the power supply extension.
+  - Don't abort adding power supply extension if the ACPI handle from
+    ideapad is not present.
+  - Don't worry about symmetric cleanup when cleaning up attributes in
+    an error state.
+  - Reword Patch 8 commit message to be more concise.
+  - Fix wording in Patch 7 to match the changes.
+v3: https://lore.kernel.org/platform-driver-x86/20260224043200.2680384-1-derekjohn.clark@gmail.com/
+  - Re-add HWMON name const and just rename LWMI_OM_FW_ATTR_BASE_PATH
+  - Fix linker warnings by moving acpi/battery include to the end of the
+    list.
+  - Remove CPU/GPU OC features. These attributes are BOOL type and will
+    need a new constructor that I'll add later.
+v2: https://lore.kernel.org/platform-driver-x86/20260215061339.2842486-1-derekjohn.clark@gmail.com/
+  - Fix gpu_mode misisng from attributes list.
+  - Fix prototypes for power suppy patch.
+  - Reorganize CPU and GPU attributes alphabetically.
+  - Break out the patch consolidating the driver name cost.
+  - Move some of the refactoring of attribute_id back to into patch 1
+    where it belongs.
+  - Fix some additional typos in function prototypes.
+v1: https://lore.kernel.org/platform-driver-x86/20260213081243.794288-1-derekjohn.clark@gmail.com/
+Derek J. Clark (10):
+  platform/x86: lenovo-wmi-other: Zero initialize WMI arguments
+  platform/x86: lenovo-wmi-other: Fix tunable_attr_01 struct members
+  platform/x86: lenovo-wmi-other: Limit adding attributes to supported
+    devices
+  platform/x86: lenovo-wmi-helpers: Move gamezone enums to wmi-helpers
+  platform/x86: lenovo-wmi-other: Move LWMI_FAN_DIV
+  platform/x86: lenovo-wmi-other: Add lwmi_attr_id() function
+  platform/x86: lenovo-wmi-other: Add missing CPU tunable attributes
+  platform/x86: lenovo-wmi-other: Add GPU tunable attributes
+  platform/x86: lenovo-wmi-other: Rename LWMI_OM_FW_ATTR_BASE_PATH
+  platform/x86: lenovo-wmi-other: Add WMI battery charge limiting
+
+Rong Zhang (6):
+  platform/x86: lenovo-wmi-helpers: Fix memory leak in
+    lwmi_dev_evaluate_int()
+  platform/x86: lenovo-wmi-other: Balance IDA id allocation and free
+  platform/x86: lenovo-wmi-other: Balance component bind and unbind
+  platform/x86: lenovo: Decouple lenovo-wmi-gamezone and
+    lenovo-wmi-other
+  platform/x86: lenovo-wmi-helpers: Add helper for creating per-device
+    debugfs dir
+  platform/x86: lenovo-wmi-capdata: Add debugfs file for dumping capdata
+
+ .../wmi/devices/lenovo-wmi-other.rst          |  19 +
+ drivers/platform/x86/lenovo/Kconfig           |   3 +-
+ drivers/platform/x86/lenovo/wmi-capdata.c     | 128 ++-
+ drivers/platform/x86/lenovo/wmi-capdata.h     |  31 +-
+ drivers/platform/x86/lenovo/wmi-events.c      |   2 +-
+ drivers/platform/x86/lenovo/wmi-gamezone.c    |   7 +-
+ drivers/platform/x86/lenovo/wmi-gamezone.h    |  20 -
+ drivers/platform/x86/lenovo/wmi-helpers.c     | 139 +++-
+ drivers/platform/x86/lenovo/wmi-helpers.h     |  23 +
+ drivers/platform/x86/lenovo/wmi-other.c       | 747 ++++++++++++++----
+ drivers/platform/x86/lenovo/wmi-other.h       |  16 -
+ 11 files changed, 935 insertions(+), 200 deletions(-)
+ delete mode 100644 drivers/platform/x86/lenovo/wmi-gamezone.h
+ delete mode 100644 drivers/platform/x86/lenovo/wmi-other.h
+
+-- 
+2.53.0
 
