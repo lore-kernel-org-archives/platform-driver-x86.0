@@ -1,1014 +1,1487 @@
-Received: from mout.gmx.net (mout.gmx.net [212.227.15.19])
+Received: from sender4-op-o15.zoho.com (sender4-op-o15.zoho.com [136.143.188.15])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 36E9121ADB7;
-	Fri, 10 Apr 2026 21:47:14 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=212.227.15.19
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1775857640; cv=none; b=IzcEATsyWkZ5SPvrW1kp7ECdx0j86Coy48NO64JxPsewAXYrYxb036r3nnx8FjUgHywtQvrhaHVOe5lGELcEZb/O/e8u06xGLvn4IaWPamRT64LWii1CHAIyZPph/HSQodIsm+ybQVNZHsaro3XPNIfCKsntDSvHlAzXabdnHHQ=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1775857640; c=relaxed/simple;
-	bh=sZHRoUEGrSnuQpMo3KzOQVXx8a4BE/CH/3u8zu8O75A=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=FTUBQi20IErevUFsXLeIy8biN7+2t2PFRi8HhA1ij8SVvMPA+ab2Sb2cEvkmRAkZrx57eUjaR8E1zEBwE/dvOzzEyJ9KNApPpzUTyHLVAiFK42LKgjsWRLQJZ2P+tkx+AYQJENE03Mcx4Hbnymxojv6mP4UTrHgWbPEw9OazE2o=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gmx.de; spf=pass smtp.mailfrom=gmx.de; dkim=pass (2048-bit key) header.d=gmx.de header.i=w_armin@gmx.de header.b=ufFiTgL/; arc=none smtp.client-ip=212.227.15.19
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gmx.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmx.de
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C6E88370D52;
+	Sat, 11 Apr 2026 14:36:54 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=136.143.188.15
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1775918218; cv=pass; b=JJ4bxFuIZjeyj2iAW5dJKIE3momo7piMAsPsgM+Cc8o7rknJkwesMk2eZT9J27iljop7JbU3k9dCO+vcTbNGCo8vxOTI9WKnD0bEZ/KMTeF/SBKIdKKOJdwG3GVmf25H6sSpNKyeiUVsI9kwy0WsHCwZKWUjoDaxz4VbP+gIQEE=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1775918218; c=relaxed/simple;
+	bh=vlV+RbXrNNU59DJ2+4i6hSGP56fMQg62de4I8bGjB5Y=;
+	h=Message-ID:Subject:From:To:Cc:In-Reply-To:References:Content-Type:
+	 Date:MIME-Version; b=cf4myE9/xVVkGhlsj+R2upWMQkaOyvrDuUJWdb7PlM+JTKHW1RDlhJ6oyZ0BdyW8b19cOLexj+WGjeb2ybaElBj5YBG26t62ZJJMg1xImRuIobImtGAiHjQ9TEyHmf70LOaP0oavfmYGdmid9MK9G+anoZpvCXG1W4o2I7qGuNI=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=rong.moe; spf=pass smtp.mailfrom=rong.moe; dkim=pass (2048-bit key) header.d=rong.moe header.i=i@rong.moe header.b=fCoN8tHF; arc=pass smtp.client-ip=136.143.188.15
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=rong.moe
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=rong.moe
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmx.de header.i=w_armin@gmx.de header.b="ufFiTgL/"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=gmx.de;
-	s=s31663417; t=1775857629; x=1776462429; i=w_armin@gmx.de;
-	bh=sZHRoUEGrSnuQpMo3KzOQVXx8a4BE/CH/3u8zu8O75A=;
-	h=X-UI-Sender-Class:Message-ID:Date:MIME-Version:Subject:To:Cc:
-	 References:From:In-Reply-To:Content-Type:
-	 Content-Transfer-Encoding:cc:content-transfer-encoding:
-	 content-type:date:from:message-id:mime-version:reply-to:subject:
-	 to;
-	b=ufFiTgL/UubmeHfNDISmOOo7ms8FhiBkRsUeB9weiSPhu/S3SDas233hIu4Ovv2V
-	 a+N4grpE3b6/OKHTZtbqcx633CTxXCUNhU+SLj819HrKHlr+nTPLeDiP1kxJL5ig9
-	 Wko1ouin2K46fbATCccqdSUNQUDvutXzf15Pm1AO1BQMcmclER0LBMfJ9UaoCsRlg
-	 ve/Pq+YjlcjYJM4Y6ujYd3gkqqWAugUZ8bYWXxMTARTm6CHUe2ucGz5H8Ww3GpBBn
-	 +GaIAbiC4LONSDjpjLxLZkjT9LcUjcvyyvtL2WOvHOxcqZhpaX08cUn6NfOce2dRK
-	 8NglTEU1uwTayFH6oA==
-X-UI-Sender-Class: 724b4f7f-cbec-4199-ad4e-598c01a50d3a
-Received: from client.hidden.invalid by mail.gmx.net (mrgmx004
- [212.227.17.190]) with ESMTPSA (Nemesis) id 1MTAFh-1w1ZZr3izH-00RkCW; Fri, 10
- Apr 2026 23:47:08 +0200
-Message-ID: <6247044d-f6e0-4173-b69b-82bd6abfafd9@gmx.de>
-Date: Fri, 10 Apr 2026 23:47:08 +0200
+	dkim=pass (2048-bit key) header.d=rong.moe header.i=i@rong.moe header.b="fCoN8tHF"
+ARC-Seal: i=1; a=rsa-sha256; t=1775918193; cv=none; 
+	d=zohomail.com; s=zohoarc; 
+	b=TYxPUO8v1F7bwDeOnEjDHdYBKrFxiZkdBC8RyUeTu70HWXxBWXgnI22F2lBtdGDGEB8zoO0Di+ELnZ3/7fnmJThOtjg9KzQQJ0DSHVHOe4c2SGaghVJWt6H+21YYNKf3mDLIKLi1kZFLJGnUgZDICZp9eiU522Jp+//4u9oqrck=
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=zohomail.com; s=zohoarc; 
+	t=1775918193; h=Content-Type:Content-Transfer-Encoding:Cc:Cc:Date:Date:From:From:In-Reply-To:MIME-Version:Message-ID:References:Subject:Subject:To:To:Message-Id:Reply-To; 
+	bh=CBJu+PWrTpqXWJCLNcBLOIuapE7A5yiSa0WPdbVWUNo=; 
+	b=WxZUD/J1IQBX/tqTagy6JsuHUzBmkkDsDtOaghPWmbZuYDJgqzrl77NCoX32sIzr24pEtEIYtkW5lHATe2x67Ecu6JFor0vTjBzlRCIme6NUEe2lSOBJz3DKKzADzRDWPqns7enhKM51D+XFrtPj6QHtVV7ifflE29l5lbe5jB0=
+ARC-Authentication-Results: i=1; mx.zohomail.com;
+	dkim=pass  header.i=rong.moe;
+	spf=pass  smtp.mailfrom=i@rong.moe;
+	dmarc=pass header.from=<i@rong.moe>
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; t=1775918192;
+	s=zmail2048; d=rong.moe; i=i@rong.moe;
+	h=Message-ID:Subject:Subject:From:From:To:To:Cc:Cc:In-Reply-To:References:Content-Type:Content-Transfer-Encoding:Date:Date:MIME-Version:Message-Id:Reply-To;
+	bh=CBJu+PWrTpqXWJCLNcBLOIuapE7A5yiSa0WPdbVWUNo=;
+	b=fCoN8tHFujhewc71zZ8J3kdfpr6Tlo6YPNy+CYMved2l05T3sp5g0G26f7yDMU0d
+	/cvHTm440D/F1B7DnKctr6i6eqH1El6PCsm1+kBhH6+EG9F+miyuAgnCq6BcBhnvjfa
+	68UELYt0lUtY2NxiL2a2BHkit266Zjw16+eIs4FxO3t2ZiBbxOvNGpe5VRKejVBsrGe
+	JyOFxGfhJAiGsN8sDpsNk0sKp3/V08dSv9tjlM3tU0W0SNgpG5Pl/vx1xqN1GeRDQP8
+	ychKUNtqqmZyvLtxvHFnk/cEH+ch0bDm2Ud3JNsHIEvDQaMGKWdSdEP/PqdN16HtEYI
+	rcKe3MSLnA==
+Received: by mx.zohomail.com with SMTPS id 1775918188909961.7234914497765;
+	Sat, 11 Apr 2026 07:36:28 -0700 (PDT)
+Message-ID: <4c627b63e40d1a3b2923ebe8b42fedde176f35cd.camel@rong.moe>
+Subject: Re: [PATCH v14] Subject: [PATCH v14] hwmon: (yogafan) Extend
+ support to more Lenovo consumer models
+From: Rong Zhang <i@rong.moe>
+To: Sergio Melas <sergiomelas@gmail.com>
+Cc: Guenter Roeck <linux@roeck-us.net>, "Derek J. Clark"	
+ <derekjohn.clark@gmail.com>, Armin Wolf <W_Armin@gmx.de>, Jean Delvare	
+ <jdelvare@suse.com>, linux-hwmon@vger.kernel.org,
+ linux-kernel@vger.kernel.org,  platform-driver-x86
+ <platform-driver-x86@vger.kernel.org>
+In-Reply-To: <CAP8e=s+TcnikqHtTaXdsDUmOreLP5MYNQN1gDWvrQa-smbh_9w@mail.gmail.com>
+References: <20260404164339.119023-1-sergiomelas@gmail.com>
+	 <ae53b7783787975caa973dcde337f20aee9b0b40.camel@rong.moe>
+	 <CAP8e=s+TcnikqHtTaXdsDUmOreLP5MYNQN1gDWvrQa-smbh_9w@mail.gmail.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+Date: Sat, 11 Apr 2026 22:31:21 +0800
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 6/6] platform/x86: uniwill-laptop: Add support for battery
- charge modes
-To: Werner Sembach <wse@tuxedocomputers.com>, hansg@kernel.org,
- ilpo.jarvinen@linux.intel.com
-Cc: platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
-References: <20260406193653.7799-1-W_Armin@gmx.de>
- <20260406193653.7799-7-W_Armin@gmx.de>
- <520b2905-1120-4375-9333-05f0eb82fe19@tuxedocomputers.com>
- <96d39ecd-5204-4b5a-96d6-0160f1910d71@gmx.de>
- <a097f57a-e412-4a00-8095-c2feeb096173@tuxedocomputers.com>
-Content-Language: en-US
-From: Armin Wolf <W_Armin@gmx.de>
-In-Reply-To: <a097f57a-e412-4a00-8095-c2feeb096173@tuxedocomputers.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: quoted-printable
-X-Provags-ID: V03:K1:XL49ayJcYWmXVZUKf+z/y9pKZiDUTxyk7ixEPW/KxrFU1EvKh/c
- v0NWTgSZf2tAQ6mxoNKwgTqyDLqLTiWR6MshXKIZyIHNkdF+sL3fJ3gJ/EFt0liclZv5pDJ
- 4g5wUO0HH2y9FGG9wFMxtfaVkHGB768gKlq5DnSMsg7FWYMptxJS6ixKuejXHSK0SoaG88T
- 7jwNlEPtk0vGF35O76paQ==
-X-Spam-Flag: NO
-UI-OutboundReport: notjunk:1;M01:P0:qi5AL0okbXY=;PmKdauBvOg5+3G3aVGX72HGY6rM
- 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
- qxWq6laqKGYclNxvm3doA66+sOVhGNie4AHc=
+User-Agent: Evolution 3.56.2-9 
+X-ZohoMailClient: External
 
-Am 10.04.26 um 22:24 schrieb Werner Sembach:
+Hi Sergio,
 
->
-> Am 10.04.26 um 19:53 schrieb Armin Wolf:
->> Am 10.04.26 um 18:53 schrieb Werner Sembach:
->>
->>> Hi Armin,
->>>
->>> Am 06.04.26 um 21:36 schrieb Armin Wolf:
->>>> Many Uniwill-based devices do not supports the already existing
->>>> charge limit functionality, but instead support an alternative
->>>> interface for controlling the battery charge algorithm.
->>>>
->>>> Add support for this interface and update the documentation.
->>>>
->>>> Signed-off-by: Armin Wolf <W_Armin@gmx.de>
->>>> ---
->>>> =C2=A0 .../admin-guide/laptops/uniwill-laptop.rst=C2=A0=C2=A0=C2=A0 |=
-=C2=A0 25 +-
->>>> =C2=A0 drivers/platform/x86/uniwill/uniwill-acpi.c=C2=A0=C2=A0 | 244=
-=20
->>>> ++++++++++++++----
->>>> =C2=A0 drivers/platform/x86/uniwill/uniwill-wmi.c=C2=A0=C2=A0=C2=A0 |=
-=C2=A0=C2=A0 5 +-
->>>> =C2=A0 3 files changed, 226 insertions(+), 48 deletions(-)
->>>>
->>>> diff --git a/Documentation/admin-guide/laptops/uniwill-laptop.rst=20
->>>> b/Documentation/admin-guide/laptops/uniwill-laptop.rst
->>>> index 561334865feb..24b41dbab886 100644
->>>> --- a/Documentation/admin-guide/laptops/uniwill-laptop.rst
->>>> +++ b/Documentation/admin-guide/laptops/uniwill-laptop.rst
->>>> @@ -43,9 +43,23 @@ Support for changing the platform performance=20
->>>> mode is currently not implemented.
->>>> =C2=A0 Battery Charging Control
->>>> =C2=A0 ------------------------
->>>> =C2=A0 -The ``uniwill-laptop`` driver supports controlling the batter=
-y=20
->>>> charge limit. This happens over
->>>> -the standard ``charge_control_end_threshold`` power supply sysfs=20
->>>> attribute. All values
->>>> -between 1 and 100 percent are supported.
->>>> +.. warning:: Some devices do not properly implement the charging=20
->>>> threshold interface. Forcing
->>>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
-=C2=A0 the driver to enable access to said interface on such=20
->>>> devices might damage the
->>>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
-=C2=A0 battery [1]_. Because of this the driver will not=20
->>>> enable said feature even when
->>>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
-=C2=A0 using the ``force`` module parameter. The charging=20
->>>> profile interface will be
->>>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
-=C2=A0 available instead.
->>>> +
->>>> +The ``uniwill-laptop`` driver supports controlling the battery=20
->>>> charge limit. This either happens
->>>> +over the standard ``charge_control_end_threshold`` or=20
->>>> ``charge_types`` power supply sysfs attribute,
->>>> +depending on the device. When using the=20
->>>> ``charge_control_end_threshold`` sysfs attribute, all values
->>>> +between 1 and 100 percent are supported. When using the=20
->>>> ``charge_types`` sysfs attribute, the driver
->>>> +supports switching between the ``Standard``, ``Trickle`` and=20
->>>> ``Long Life`` profiles.
->>>> +
->>>> +Keep in mind that when using the ``charge_types`` sysfs attribute,=
-=20
->>>> the EC firmware will hide the
->>>> +true charging status of the battery from the operating system,=20
->>>> potentially misleading users into
->>>> +thinking that the charging profile does not work. Checking the=20
->>>> ``current_now`` sysfs attribute
->>>> +tells you the true charging status of the battery even when using=20
->>>> the ``charge_types`` sysfs
->>>> +attribute (0 means that the battery is currently not charging).
->>>> =C2=A0 =C2=A0 Additionally the driver signals the presence of battery=
-=20
->>>> charging issues through the standard
->>>> =C2=A0 ``health`` power supply sysfs attribute.
->>>> @@ -70,3 +84,8 @@ The ``uniwill-laptop`` driver allows to set the=20
->>>> configurable TGP for devices wit
->>>> =C2=A0 allow it.
->>>> =C2=A0 =C2=A0 See Documentation/ABI/testing/sysfs-driver-uniwill-lapt=
-op for=20
->>>> details.
->>>> +
->>>> +References
->>>> +=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
->>>> +
->>>> +.. [1]=20
->>>> https://www.reddit.com/r/XMG_gg/comments/ld9yyf/battery_limit_hidden_=
-function_discovered_on/
->>>> diff --git a/drivers/platform/x86/uniwill/uniwill-acpi.c=20
->>>> b/drivers/platform/x86/uniwill/uniwill-acpi.c
->>>> index a116e2ec6453..fbf2e101a074 100644
->>>> --- a/drivers/platform/x86/uniwill/uniwill-acpi.c
->>>> +++ b/drivers/platform/x86/uniwill/uniwill-acpi.c
->>>> @@ -254,6 +254,10 @@
->>>> =C2=A0 =C2=A0 #define EC_ADDR_OEM_4=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
-=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 0x07A6
->>>> =C2=A0 #define OVERBOOST_DYN_TEMP_OFF=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
-=C2=A0=C2=A0 BIT(1)
->>>> +#define CHARGING_PROFILE_MASK=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
-=A0 GENMASK(5, 4)
->>>> +#define CHARGING_PROFILE_HIGH_CAPACITY=C2=A0=C2=A0=C2=A0 0x00
->>>> +#define CHARGING_PROFILE_BALANCED=C2=A0=C2=A0=C2=A0 0x01
->>>> +#define CHARGING_PROFILE_STATIONARY=C2=A0=C2=A0=C2=A0 0x02
->>>> =C2=A0 #define TOUCHPAD_TOGGLE_OFF=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
-=A0=C2=A0 BIT(6)
->>>> =C2=A0 =C2=A0 #define EC_ADDR_CHARGE_CTRL=C2=A0=C2=A0=C2=A0=C2=A0=C2=
-=A0=C2=A0=C2=A0 0x07B9
->>>> @@ -320,13 +324,15 @@
->>>> =C2=A0 #define UNIWILL_FEATURE_SUPER_KEY=C2=A0=C2=A0=C2=A0=C2=A0=C2=
-=A0=C2=A0=C2=A0 BIT(1)
->>>> =C2=A0 #define UNIWILL_FEATURE_TOUCHPAD_TOGGLE=C2=A0=C2=A0=C2=A0=C2=
-=A0=C2=A0=C2=A0=C2=A0 BIT(2)
->>>> =C2=A0 #define UNIWILL_FEATURE_LIGHTBAR=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
-=C2=A0=C2=A0 BIT(3)
->>>> -#define UNIWILL_FEATURE_BATTERY=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
-=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 BIT(4)
->>>> -#define UNIWILL_FEATURE_CPU_TEMP=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
-=C2=A0 BIT(5)
->>>> -#define UNIWILL_FEATURE_GPU_TEMP=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
-=C2=A0 BIT(6)
->>>> -#define UNIWILL_FEATURE_PRIMARY_FAN=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
-=A0=C2=A0 BIT(7)
->>>> -#define UNIWILL_FEATURE_SECONDARY_FAN=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
-=C2=A0=C2=A0 BIT(8)
->>>> -#define UNIWILL_FEATURE_NVIDIA_CTGP_CONTROL=C2=A0=C2=A0=C2=A0 BIT(9)
->>>> -#define UNIWILL_FEATURE_USB_C_POWER_PRIORITY=C2=A0=C2=A0=C2=A0 BIT(1=
-0)
->>>> +#define UNIWILL_FEATURE_BATTERY_CHARGE_LIMIT=C2=A0=C2=A0=C2=A0 BIT(4=
-)
->>>> +/* Mutually exclusive with the charge limit feature */
->>>> +#define UNIWILL_FEATURE_BATTERY_CHARGE_MODES=C2=A0=C2=A0=C2=A0 BIT(5=
-)
->>>> +#define UNIWILL_FEATURE_CPU_TEMP=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
-=C2=A0 BIT(6)
->>>> +#define UNIWILL_FEATURE_GPU_TEMP=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
-=C2=A0 BIT(7)
->>>> +#define UNIWILL_FEATURE_PRIMARY_FAN=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
-=A0=C2=A0 BIT(8)
->>>> +#define UNIWILL_FEATURE_SECONDARY_FAN=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
-=C2=A0=C2=A0 BIT(9)
->>>> +#define UNIWILL_FEATURE_NVIDIA_CTGP_CONTROL=C2=A0=C2=A0=C2=A0 BIT(10=
-)
->>>> +#define UNIWILL_FEATURE_USB_C_POWER_PRIORITY=C2=A0=C2=A0=C2=A0 BIT(1=
-1)
->>>> =C2=A0 =C2=A0 enum usb_c_power_priority_options {
->>>> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 USB_C_POWER_PRIORITY_CHARGING =3D 0,
->>>> @@ -339,8 +345,15 @@ struct uniwill_data {
->>>> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 struct regmap *regmap;
->>>> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 unsigned int features;
->>>> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 struct acpi_battery_hook hook;
->>>> -=C2=A0=C2=A0=C2=A0 unsigned int last_charge_ctrl;
->>>> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 struct mutex battery_lock;=C2=A0=C2=A0=
-=C2=A0 /* Protects the list of=20
->>>> currently registered batteries */
->>>> +=C2=A0=C2=A0=C2=A0 union {
->>>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 struct {
->>>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 /=
-* Protects writes to last_charge_type */
->>>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 s=
-truct mutex charge_type_lock;
->>>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 e=
-num power_supply_charge_type last_charge_type;
->>>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 };
->>>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 unsigned int last_charge_=
-ctrl;
->>>> +=C2=A0=C2=A0=C2=A0 };
->>>> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 bool last_fn_lock_state;
->>>> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 bool last_super_key_enable_state;
->>>> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 bool last_touchpad_toggle_enable_state=
-;
->>>> @@ -447,6 +460,12 @@ static inline bool=20
->>>> uniwill_device_supports(const struct uniwill_data *data,
->>>> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 return (data->features & features) =3D=
-=3D features;
->>>> =C2=A0 }
->>>> =C2=A0 +static inline bool uniwill_device_supports_any(const struct=
-=20
->>>> uniwill_data *data,
->>>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
-=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
-=C2=A0=C2=A0=C2=A0 unsigned int features)
->>>> +{
->>>> +=C2=A0=C2=A0=C2=A0 return data->features & features;
->>>> +}
->>>> +
->>> Maybe add a "!=3D 0" to make the return a clear 1 or 0
->>
->> This function already returns a boolean, so the compiler will already=
-=20
->> do this for us.
-> ack
->>
->>>> =C2=A0 static int uniwill_ec_reg_write(void *context, unsigned int re=
-g,=20
->>>> unsigned int val)
->>>> =C2=A0 {
->>>> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 union acpi_object params[2] =3D {
->>>> @@ -1421,6 +1440,30 @@ static int uniwill_led_init(struct=20
->>>> uniwill_data *data)
->>>> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
-=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
-=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 &init_data);
->>>> =C2=A0 }
->>>> =C2=A0 +static int uniwill_read_charge_type(struct uniwill_data *data=
-,=20
->>>> enum power_supply_charge_type *type)
->>>> +{
->>>> +=C2=A0=C2=A0=C2=A0 unsigned int value;
->>>> +=C2=A0=C2=A0=C2=A0 int ret;
->>>> +
->>>> +=C2=A0=C2=A0=C2=A0 ret =3D regmap_read(data->regmap, EC_ADDR_OEM_4, =
-&value);
->>>> +=C2=A0=C2=A0=C2=A0 if (ret < 0)
->>>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 return ret;
->>>> +
->>>> +=C2=A0=C2=A0=C2=A0 switch (FIELD_GET(CHARGING_PROFILE_MASK, value)) =
-{
->>>> +=C2=A0=C2=A0=C2=A0 case CHARGING_PROFILE_HIGH_CAPACITY:
->>>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 *type =3D POWER_SUPPLY_CH=
-ARGE_TYPE_STANDARD;
->>>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 return 0;
->>>> +=C2=A0=C2=A0=C2=A0 case CHARGING_PROFILE_BALANCED:
->>>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 *type =3D POWER_SUPPLY_CH=
-ARGE_TYPE_LONGLIFE;
->>>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 return 0;
->>>> +=C2=A0=C2=A0=C2=A0 case CHARGING_PROFILE_STATIONARY:
->>>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 *type =3D POWER_SUPPLY_CH=
-ARGE_TYPE_TRICKLE;
->>>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 return 0;
->>>> +=C2=A0=C2=A0=C2=A0 default:
->>>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 return -EPROTO;
->>>> +=C2=A0=C2=A0=C2=A0 }
->>>> +}
->>> Like I wrote here:=20
->>> https://github.com/Wer-Wolf/uniwill-laptop/issues/6#issuecomment-39871=
-00594=20
->>> I think it would be less confusing to use
->>>
->>> POWER_SUPPLY_CHARGE_TYPE_TRICKLE -> CHARGING_PROFILE_STATIONARY
->>>
->>> POWER_SUPPLY_CHARGE_TYPE_STANDARD -> CHARGING_PROFILE_BALANCED
->>>
->>> POWER_SUPPLY_CHARGE_TYPE_FAST -> CHARGING_PROFILE_HIGH_CAPACITY
->>>
->>> because then the charge speed is at least clearly communicated
->>>
->>> POWER_SUPPLY_CHARGE_TYPE_FAST would then be the default
->>>
->> I think that this will confuse userspace applications.=20
->> POWER_SUPPLY_CHARGE_TYPE_FAST is meant to stand for
->> above-average/non-default charging speed, while=20
->> POWER_SUPPLY_CHARGE_TYPE_STANDARD is meant to stand for
->> the default/recommended setting.
->>
->> In this case CHARGING_PROFILE_HIGH_CAPACITY is the default charging=20
->> setting with the default charging speed,
->> and CHARGING_PROFILE_BALANCED is the "Long Life" option with reduced=20
->> charging speed. CHARGING_PROFILE_STATIONARY
->> on the other hand could as well be called "Primary AC", so=20
->> POWER_SUPPLY_CHARGE_TYPE_TRICKLE fits best for it.
->>
->> On a separate note, UPower prefers to select "Standard" over "Fast"=20
->> when disabling the charging threshold.
->> Mapping CHARGING_PROFILE_HIGH_CAPACITY to=20
->> POWER_SUPPLY_CHARGE_TYPE_FAST would thus confuse users, because
->> disabling the battery charging threshold thru upower will limit them=20
->> CHARGING_PROFILE_BALANCED. Basically
->> they cannot reach CHARGING_PROFILE_HIGH_CAPACITY again thru UPower=20
->> when the charging threshold has been
->> enabled.
-> ok didn't know about the upower behaviour
->>
->>>> +
->>>> =C2=A0 static int uniwill_get_property(struct power_supply *psy, cons=
-t=20
->>>> struct power_supply_ext *ext,
->>>> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
-=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 void *drvdata, enum power_supply_propert=
-y psp,
->>>> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
-=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 union power_supply_propval *val)
->>>> @@ -1431,6 +1474,16 @@ static int uniwill_get_property(struct=20
->>>> power_supply *psy, const struct power_sup
->>>> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 int ret;
->>>> =C2=A0 =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 switch (psp) {
->>>> +=C2=A0=C2=A0=C2=A0 case POWER_SUPPLY_PROP_CHARGE_TYPES:
->>>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 /*
->>>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 * We need to use th=
-e cached value here because the=20
->>>> charging mode
->>>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 * reported by the E=
-C might temporarily change when a=20
->>>> external power
->>>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 * source has been c=
-onnected.
->>>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 */
->>>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 mutex_lock(&data->charge_=
-type_lock);
->>>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 val->intval =3D data->las=
-t_charge_type;
->>>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 mutex_unlock(&data->charg=
-e_type_lock);
->>>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 return 0;
->>>> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 case POWER_SUPPLY_PROP_HEALTH:
->>>> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 ret =3D power_=
-supply_get_property_direct(psy,=20
->>>> POWER_SUPPLY_PROP_PRESENT, &prop);
->>>> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 if (ret < 0)
->>>> @@ -1479,13 +1532,52 @@ static int uniwill_get_property(struct=20
->>>> power_supply *psy, const struct power_sup
->>>> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 }
->>>> =C2=A0 }
->>>> =C2=A0 +static int uniwill_write_charge_type(struct uniwill_data *dat=
-a,=20
->>>> enum power_supply_charge_type type)
->>>> +{
->>>> +=C2=A0=C2=A0=C2=A0 unsigned int value;
->>>> +
->>>> +=C2=A0=C2=A0=C2=A0 switch (type) {
->>>> +=C2=A0=C2=A0=C2=A0 case POWER_SUPPLY_CHARGE_TYPE_TRICKLE:
->>>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 value =3D FIELD_PREP(CHAR=
-GING_PROFILE_MASK,=20
->>>> CHARGING_PROFILE_STATIONARY);
->>>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 break;
->>>> +=C2=A0=C2=A0=C2=A0 case POWER_SUPPLY_CHARGE_TYPE_STANDARD:
->>>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 value =3D FIELD_PREP(CHAR=
-GING_PROFILE_MASK,=20
->>>> CHARGING_PROFILE_HIGH_CAPACITY);
->>>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 break;
->>>> +=C2=A0=C2=A0=C2=A0 case POWER_SUPPLY_CHARGE_TYPE_LONGLIFE:
->>>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 value =3D FIELD_PREP(CHAR=
-GING_PROFILE_MASK,=20
->>>> CHARGING_PROFILE_BALANCED);
->>>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 break;
->>>> +=C2=A0=C2=A0=C2=A0 default:
->>>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 return -EINVAL;
->>>> +=C2=A0=C2=A0=C2=A0 }
->>>> +
->>>> +=C2=A0=C2=A0=C2=A0 return regmap_update_bits(data->regmap, EC_ADDR_O=
-EM_4,=20
->>>> CHARGING_PROFILE_MASK, value);
->>>> +}
->>>> +
->>>> +static int uniwill_restore_charge_type(struct uniwill_data *data)
->>>> +{
->>>> +=C2=A0=C2=A0=C2=A0 guard(mutex)(&data->charge_type_lock);
->>>> +
->>>> +=C2=A0=C2=A0=C2=A0 return uniwill_write_charge_type(data, data->last=
-_charge_type);
->>>> +}
->>>> +
->>>> =C2=A0 static int uniwill_set_property(struct power_supply *psy, cons=
-t=20
->>>> struct power_supply_ext *ext,
->>>> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
-=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 void *drvdata, enum power_supply_propert=
-y psp,
->>>> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
-=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 const union power_supply_propval *val)
->>>> =C2=A0 {
->>>> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 struct uniwill_data *data =3D drvdata;
->>>> +=C2=A0=C2=A0=C2=A0 int ret;
->>>> =C2=A0 =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 switch (psp) {
->>>> +=C2=A0=C2=A0=C2=A0 case POWER_SUPPLY_PROP_CHARGE_TYPES:
->>>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 mutex_lock(&data->charge_=
-type_lock);
->>>> +
->>>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 ret =3D uniwill_write_cha=
-rge_type(data, val->intval);
->>>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 if (ret >=3D 0)
->>>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 d=
-ata->last_charge_type =3D val->intval;
->>>> +
->>>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 mutex_unlock(&data->charg=
-e_type_lock);
->>>> +
->>>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 return ret;
->>>> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 case POWER_SUPPLY_PROP_CHARGE_CONTROL_=
-END_THRESHOLD:
->>>> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 if (val->intva=
-l < 0 || val->intval > 100)
->>>> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
-=A0=C2=A0 return -EINVAL;
->>>> @@ -1501,21 +1593,41 @@ static int=20
->>>> uniwill_property_is_writeable(struct power_supply *psy,
->>>> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
-=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 const stru=
-ct power_supply_ext *ext, void=20
->>>> *drvdata,
->>>> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
-=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 enum power=
-_supply_property psp)
->>>> =C2=A0 {
->>>> -=C2=A0=C2=A0=C2=A0 if (psp =3D=3D POWER_SUPPLY_PROP_CHARGE_CONTROL_E=
-ND_THRESHOLD)
->>>> +=C2=A0=C2=A0=C2=A0 switch (psp) {
->>>> +=C2=A0=C2=A0=C2=A0 case POWER_SUPPLY_PROP_CHARGE_TYPES:
->>>> +=C2=A0=C2=A0=C2=A0 case POWER_SUPPLY_PROP_CHARGE_CONTROL_END_THRESHO=
-LD:
->>>> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 return true;
->>>> -
->>>> -=C2=A0=C2=A0=C2=A0 return false;
->>>> +=C2=A0=C2=A0=C2=A0 default:
->>>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 return false;
->>>> +=C2=A0=C2=A0=C2=A0 }
->>>> =C2=A0 }
->>> Could be mistaken, but does this work without producing a compiler=20
->>> warning or error not having a return on the top level?
->>
->> All exits from the switch statement end with a return statement, so=20
->> we will always leave this function once we
->> enter the switch statement.
-> ack
->>
->>>> =C2=A0 -static const enum power_supply_property uniwill_properties[] =
-=3D {
->>>> +static const enum power_supply_property=20
->>>> uniwill_charge_limit_properties[] =3D {
->>>> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 POWER_SUPPLY_PROP_HEALTH,
->>>> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 POWER_SUPPLY_PROP_CHARGE_CONTROL_END_T=
-HRESHOLD,
->>>> =C2=A0 };
->>>> =C2=A0 -static const struct power_supply_ext uniwill_extension =3D {
->>>> +static const struct power_supply_ext=20
->>>> uniwill_charge_limit_extension =3D {
->>>> +=C2=A0=C2=A0=C2=A0 .name =3D DRIVER_NAME,
->>>> +=C2=A0=C2=A0=C2=A0 .properties =3D uniwill_charge_limit_properties,
->>>> +=C2=A0=C2=A0=C2=A0 .num_properties =3D ARRAY_SIZE(uniwill_charge_lim=
-it_properties),
->>>> +=C2=A0=C2=A0=C2=A0 .get_property =3D uniwill_get_property,
->>>> +=C2=A0=C2=A0=C2=A0 .set_property =3D uniwill_set_property,
->>>> +=C2=A0=C2=A0=C2=A0 .property_is_writeable =3D uniwill_property_is_wr=
-iteable,
->>>> +};
->>>> +
->>>> +static const enum power_supply_property=20
->>>> uniwill_charge_modes_properties[] =3D {
->>>> +=C2=A0=C2=A0=C2=A0 POWER_SUPPLY_PROP_CHARGE_TYPES,
->>>> +=C2=A0=C2=A0=C2=A0 POWER_SUPPLY_PROP_HEALTH,
->>>> +};
->>>> +
->>>> +static const struct power_supply_ext=20
->>>> uniwill_charge_modes_extension =3D {
->>>> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 .name =3D DRIVER_NAME,
->>>> -=C2=A0=C2=A0=C2=A0 .properties =3D uniwill_properties,
->>>> -=C2=A0=C2=A0=C2=A0 .num_properties =3D ARRAY_SIZE(uniwill_properties=
-),
->>>> +=C2=A0=C2=A0=C2=A0 .charge_types =3D BIT(POWER_SUPPLY_CHARGE_TYPE_TR=
-ICKLE) |
->>>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 B=
-IT(POWER_SUPPLY_CHARGE_TYPE_STANDARD) |
->>>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 B=
-IT(POWER_SUPPLY_CHARGE_TYPE_LONGLIFE),
->>>> +=C2=A0=C2=A0=C2=A0 .properties =3D uniwill_charge_modes_properties,
->>>> +=C2=A0=C2=A0=C2=A0 .num_properties =3D ARRAY_SIZE(uniwill_charge_mod=
-es_properties),
->>>> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 .get_property =3D uniwill_get_property=
-,
->>>> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 .set_property =3D uniwill_set_property=
-,
->>>> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 .property_is_writeable =3D uniwill_pro=
-perty_is_writeable,
->>>> @@ -1531,7 +1643,13 @@ static int uniwill_add_battery(struct=20
->>>> power_supply *battery, struct acpi_battery
->>>> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 if (!entry)
->>>> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 return -ENOMEM=
-;
->>>> =C2=A0 -=C2=A0=C2=A0=C2=A0 ret =3D power_supply_register_extension(ba=
-ttery,=20
->>>> &uniwill_extension, data->dev, data);
->>>> +=C2=A0=C2=A0=C2=A0 if (uniwill_device_supports(data,=20
->>>> UNIWILL_FEATURE_BATTERY_CHARGE_LIMIT))
->>>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 ret =3D power_supply_regi=
-ster_extension(battery,=20
->>>> &uniwill_charge_limit_extension,
->>>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
-=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
-=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 data->dev, data);
->>>> +=C2=A0=C2=A0=C2=A0 else
->>>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 ret =3D power_supply_regi=
-ster_extension(battery,=20
->>>> &uniwill_charge_modes_extension,
->>>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
-=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
-=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 data->dev, data);
->>>> +
->>> Currently there is now way to specify just the health parameter, but=
-=20
->>> i have to check if that is even required
->>
->> AFAIK the OEM software always bundles this feature with the charging=20
->> limit or the charging modes.
->> We can separate this in the future should the need arise.
-> ack
->>
->>>> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 if (ret < 0) {
->>>> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 kfree(entry);
->>>> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 return ret;
->>>> @@ -1560,7 +1678,10 @@ static int uniwill_remove_battery(struct=20
->>>> power_supply *battery, struct acpi_batt
->>>> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 }
->>>> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 }
->>>> =C2=A0 -=C2=A0=C2=A0=C2=A0 power_supply_unregister_extension(battery,=
- &uniwill_extension);
->>>> +=C2=A0=C2=A0=C2=A0 if (uniwill_device_supports(data,=20
->>>> UNIWILL_FEATURE_BATTERY_CHARGE_LIMIT))
->>>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 power_supply_unregister_e=
-xtension(battery,=20
->>>> &uniwill_charge_limit_extension);
->>>> +=C2=A0=C2=A0=C2=A0 else
->>>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 power_supply_unregister_e=
-xtension(battery,=20
->>>> &uniwill_charge_modes_extension);
->>>> =C2=A0 =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 return 0;
->>>> =C2=A0 }
->>>> @@ -1570,25 +1691,35 @@ static int uniwill_battery_init(struct=20
->>>> uniwill_data *data)
->>>> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 unsigned int value, threshold;
->>>> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 int ret;
->>>> =C2=A0 -=C2=A0=C2=A0=C2=A0 if (!uniwill_device_supports(data, UNIWILL=
-_FEATURE_BATTERY))
->>>> -=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 return 0;
->>>> +=C2=A0=C2=A0=C2=A0 if (uniwill_device_supports(data,=20
->>>> UNIWILL_FEATURE_BATTERY_CHARGE_LIMIT)) {
->>>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 ret =3D regmap_read(data-=
->regmap, EC_ADDR_CHARGE_CTRL, &value);
->>>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 if (ret < 0)
->>>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 r=
-eturn ret;
->>>> =C2=A0 -=C2=A0=C2=A0=C2=A0 ret =3D regmap_read(data->regmap, EC_ADDR_=
-CHARGE_CTRL, &value);
->>>> -=C2=A0=C2=A0=C2=A0 if (ret < 0)
->>>> -=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 return ret;
->>>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 /*
->>>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 * The charge contro=
-l threshold might be initialized with=20
->>>> 0 by
->>>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 * the EC to signal =
-that said threshold is uninitialized.=20
->>>> We thus
->>>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 * need to replace t=
-his value with 100 to signal that we=20
->>>> want to
->>>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 * take control of b=
-attery charging. For the sake of=20
->>>> completeness
->>>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 * we also set the c=
-harging threshold to 100 if the=20
->>>> EC-provided
->>>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 * value is invalid.
->>>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 */
->>>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 threshold =3D FIELD_GET(C=
-HARGE_CTRL_MASK, value);
->>>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 if (threshold =3D=3D 0 ||=
- threshold > 100) {
->>>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 F=
-IELD_MODIFY(CHARGE_CTRL_MASK, &value, 100);
->>>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 r=
-et =3D regmap_write(data->regmap, EC_ADDR_CHARGE_CTRL,=20
->>>> value);
->>>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 i=
-f (ret < 0)
->>>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
-=C2=A0=C2=A0=C2=A0=C2=A0 return ret;
->>>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 }
->>>> +=C2=A0=C2=A0=C2=A0 } else {
->>>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 if (!uniwill_device_suppo=
-rts(data,=20
->>>> UNIWILL_FEATURE_BATTERY_CHARGE_MODES))
->>>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 r=
-eturn 0;
->>> Would use an "else if (uniwill_device_supports(data,=20
->>> UNIWILL_FEATURE_BATTERY_CHARGE_MODES))" and put the return 0 at the=20
->>> end of the function.
->>
->> This would not work, because we must not register the battery=20
->> extension when both features are not supported.
->
-> ah sorry overlooked that, but what about:
->
-> =C2=A0 =C2=A0 } else if (uniwill_device_supports(data,=20
-> UNIWILL_FEATURE_BATTERY_CHARGE_MODES)) {
-> =C2=A0 =C2=A0 =C2=A0 =C2=A0 ret =3D devm_mutex_init(data->dev, &data->ch=
-arge_type_lock);
-> =C2=A0 =C2=A0 =C2=A0 =C2=A0 if (ret < 0)
-> =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 return ret;
->
-> =C2=A0 =C2=A0 =C2=A0 =C2=A0 ret =3D uniwill_read_charge_type(data, &data=
-->last_charge_type);
-> =C2=A0 =C2=A0 =C2=A0 =C2=A0 if (ret < 0)
-> =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 return ret;
-> =C2=A0 =C2=A0 } else {
-> =C2=A0 =C2=A0 =C2=A0 =C2=A0 return 0;
-> =C2=A0 =C2=A0 }
->
-> It's the same number of lines and same indentation level but more=20
-> readable imho
->
-Alright, i will check if checkpatch agrees with using "else if". If that i=
-s fine then
-i will restructure the code.
+On Fri, 2026-04-10 at 22:14 +0200, Sergio Melas wrote:
+> Hi Rong, Hi Guenter,
+>=20
+> Thank you for the review and for pointing out the overlap with lenovo-wmi=
+-other.
+>=20
+> 1. WMI Coexistence and Bogus Fans
+> I completely agree that double-reporting is suboptimal. I will
+> implement a check in the probe function using
+> wmi_has_guid(LENOVO_WMI_FAN_GUID). If the WMI interface is present,
+> yogafan will return -ENODEV and yield to your driver. This ensures my
+> driver only covers models where WMI reporting is unavailable.=C2=A0
+>=20
+
+You may also want to add a module parameter to override the WMI GUID
+check as some devices do not support the fan reporting/tuning interface
+despite having the WMI GUIDs.
+
+> I will
+> also adjust the quirks for the ThinkBook 14 G7+ to avoid registering
+> bogus fan handles.
+>=20
+> 2. New Submission Plan and Community Testing
+> As requested by Guenter, I am preparing a fresh series starting from
+> [PATCH v1] to provide a clean baseline. This will include the WMI
+> back-off logic and the Aura Edition (83KF) support.
+> However, I must be clear: I do not have physical access to the latest
+> WMI-enabled hardware (like the ThinkBook G7+) to locally verify the
+> back-off logic. I will provide the V1 with the implemented check, but
+> I will have to rely on the community=E2=80=94and specifically Rong=E2=80=
+=94to test and
+> verify the behavior on affected models.
+
+Thanks, I will test it and add a Tested-by: tag then.
+
+>=20
+> 3. Authorship and AI Assistance
+> Regarding the Assisted-by: tag, I want to clarify that the driver
+> architecture, the design of the RLLag filter, derived from my PhD
+> research at: https://theses.fr/1998INPG0114, and the overall physical
+> modeling logic are entirely my original work.
+> Drawing on my automation background, I validated functional safety and
+> cybersecurity integrity using a full Bow-Tie Risk Analysis and
+> Traceability report (following IEC 61508, IEC 61511, and IEC 62443
+> standards).
+
+Awesome!
+
+>  I utilized Gemini as a productivity tool for non-creative, repetitive
+> tasks: specifically for generating the extensive DMI/ACPI mapping
+> tables from DSDT data=C2=A0
+>=20
+
+I am a little curious about where you got so many DSDTs. I sometimes
+need DSDTs from other devices for cross-reference. I didn't see a
+reference in the documentation. Am I missing something?
+
+> and community-driven reverse engineering of
+> Lenovo Legion/LOQ EC memory maps at:
+> https://github.com/hirschmann/nbfc/tree/master/Configs. The full
+> development history, DSDT research, and hardware analysis are
+> documented in my repository at:
+> https://github.com/sergiomelas/lenovo-linux-drivers. I will include
+> the tag in the next submission to be transparent about the tools used.
+>=20
+> Note: I will be traveling to China from April 15th to May 10th. My
+> connectivity will be limited. I will monitor the mailing list via
+> mobile roaming to address feedback,  but I will submit the new V1
+> series early next week, prior to my departure.
+
+Have a nice trip in China :-)
 
 Thanks,
-Armin Wolf
+Rong
 
->>
->>>> =C2=A0 -=C2=A0=C2=A0=C2=A0 /*
->>>> -=C2=A0=C2=A0=C2=A0=C2=A0 * The charge control threshold might be ini=
-tialized with 0 by
->>>> -=C2=A0=C2=A0=C2=A0=C2=A0 * the EC to signal that said threshold is u=
-ninitialized. We thus
->>>> -=C2=A0=C2=A0=C2=A0=C2=A0 * need to replace this value with 100 to si=
-gnal that we want to
->>>> -=C2=A0=C2=A0=C2=A0=C2=A0 * take control of battery charging. For the=
- sake of completeness
->>>> -=C2=A0=C2=A0=C2=A0=C2=A0 * we also set the charging threshold to 100=
- if the EC-provided
->>>> -=C2=A0=C2=A0=C2=A0=C2=A0 * value is invalid.
->>>> -=C2=A0=C2=A0=C2=A0=C2=A0 */
->>>> -=C2=A0=C2=A0=C2=A0 threshold =3D FIELD_GET(CHARGE_CTRL_MASK, value);
->>>> -=C2=A0=C2=A0=C2=A0 if (threshold =3D=3D 0 || threshold > 100) {
->>>> -=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 FIELD_MODIFY(CHARGE_CTRL_=
-MASK, &value, 100);
->>>> -=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 ret =3D regmap_write(data=
-->regmap, EC_ADDR_CHARGE_CTRL, value);
->>>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 ret =3D devm_mutex_init(d=
-ata->dev, &data->charge_type_lock);
->>>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 if (ret < 0)
->>>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 r=
-eturn ret;
->>>> +
->>>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 ret =3D uniwill_read_char=
-ge_type(data,=20
->>>> &data->last_charge_type);
->>>> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 if (ret < 0)
->>>> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
-=A0=C2=A0 return ret;
->>>> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 }
->>>> @@ -1609,10 +1740,13 @@ static int uniwill_notifier_call(struct=20
->>>> notifier_block *nb, unsigned long action
->>>> =C2=A0 {
->>>> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 struct uniwill_data *data =3D containe=
-r_of(nb, struct=20
->>>> uniwill_data, nb);
->>>> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 struct uniwill_battery_entry *entry;
->>>> +=C2=A0=C2=A0=C2=A0 int ret;
->>>> =C2=A0 =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 switch (action) {
->>>> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 case UNIWILL_OSD_BATTERY_ALERT:
->>>> -=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 if (!uniwill_device_suppo=
-rts(data, UNIWILL_FEATURE_BATTERY))
->>>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 if (!uniwill_device_suppo=
-rts_any(data,
->>>> + UNIWILL_FEATURE_BATTERY_CHARGE_LIMIT |
->>>> + UNIWILL_FEATURE_BATTERY_CHARGE_MODES))
->>>> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
-=A0=C2=A0 return NOTIFY_DONE;
->>>> =C2=A0 =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 mutex_l=
-ock(&data->battery_lock);
->>>> @@ -1623,10 +1757,24 @@ static int uniwill_notifier_call(struct=20
->>>> notifier_block *nb, unsigned long action
->>>> =C2=A0 =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 return =
-NOTIFY_OK;
->>>> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 case UNIWILL_OSD_DC_ADAPTER_CHANGED:
->>>> -=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 if (!uniwill_device_suppo=
-rts(data,=20
->>>> UNIWILL_FEATURE_USB_C_POWER_PRIORITY))
->>>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 if (!uniwill_device_suppo=
-rts_any(data,
->>>> + UNIWILL_FEATURE_BATTERY_CHARGE_MODES |
->>>> + UNIWILL_FEATURE_USB_C_POWER_PRIORITY))
->>>> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
-=A0=C2=A0 return NOTIFY_DONE;
->>>> =C2=A0 -=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 return=20
->>>> notifier_from_errno(usb_c_power_priority_restore(data));
->>>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 if (uniwill_device_suppor=
-ts(data,=20
->>>> UNIWILL_FEATURE_BATTERY_CHARGE_MODES)) {
->>>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 r=
-et =3D uniwill_restore_charge_type(data);
->>>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 i=
-f (ret < 0)
->>>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
-=C2=A0=C2=A0=C2=A0=C2=A0 return notifier_from_errno(ret);
->>>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 }
->>>> +
->>>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 if (uniwill_device_suppor=
-ts(data,=20
->>>> UNIWILL_FEATURE_USB_C_POWER_PRIORITY)) {
->>>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 r=
-et =3D usb_c_power_priority_restore(data);
->>>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 i=
-f (ret < 0)
->>>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
-=C2=A0=C2=A0=C2=A0=C2=A0 return notifier_from_errno(ret);
->>>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 }
->>>> +
->>>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 return NOTIFY_OK;
->>>> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 case UNIWILL_OSD_FN_LOCK:
->>>> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 if (!uniwill_d=
-evice_supports(data, UNIWILL_FEATURE_FN_LOCK))
->>>> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
-=A0=C2=A0 return NOTIFY_DONE;
->>>> @@ -1810,7 +1958,7 @@ static int=20
->>>> uniwill_suspend_touchpad_toggle(struct uniwill_data *data)
->>>> =C2=A0 =C2=A0 static int uniwill_suspend_battery(struct uniwill_data =
-*data)
->>>> =C2=A0 {
->>>> -=C2=A0=C2=A0=C2=A0 if (!uniwill_device_supports(data, UNIWILL_FEATUR=
-E_BATTERY))
->>>> +=C2=A0=C2=A0=C2=A0 if (!uniwill_device_supports(data,=20
->>>> UNIWILL_FEATURE_BATTERY_CHARGE_LIMIT))
->>>> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 return 0;
->>>> =C2=A0 =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 /*
->>>> @@ -1887,7 +2035,15 @@ static int=20
->>>> uniwill_resume_touchpad_toggle(struct uniwill_data *data)
->>>> =C2=A0 =C2=A0 static int uniwill_resume_battery(struct uniwill_data *=
-data)
->>>> =C2=A0 {
->>>> -=C2=A0=C2=A0=C2=A0 if (!uniwill_device_supports(data, UNIWILL_FEATUR=
-E_BATTERY))
->>>> +=C2=A0=C2=A0=C2=A0 int ret;
->>>> +
->>>> +=C2=A0=C2=A0=C2=A0 if (uniwill_device_supports(data,=20
->>>> UNIWILL_FEATURE_BATTERY_CHARGE_MODES)) {
->>>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 ret =3D uniwill_restore_c=
-harge_type(data);
->>>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 if (ret < 0)
->>>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 r=
-eturn ret;
->>>> +=C2=A0=C2=A0=C2=A0 }
->>>> +
->>>> +=C2=A0=C2=A0=C2=A0 if (!uniwill_device_supports(data,=20
->>>> UNIWILL_FEATURE_BATTERY_CHARGE_LIMIT))
->>>> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 return 0;
->>>> =C2=A0 =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 return regmap_update_bits(data-=
->regmap,=20
->>>> EC_ADDR_CHARGE_CTRL, CHARGE_CTRL_MASK,
->>>> @@ -1970,7 +2126,7 @@ static struct platform_driver uniwill_driver =
-=3D {
->>>> =C2=A0 =C2=A0 static struct uniwill_device_descriptor=20
->>>> lapqc71a_lapqc71b_descriptor __initdata =3D {
->>>> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 .features =3D UNIWILL_FEATURE_SUPER_KE=
-Y |
->>>> -=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 U=
-NIWILL_FEATURE_BATTERY |
->>>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 U=
-NIWILL_FEATURE_BATTERY_CHARGE_LIMIT |
->>>> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
-=A0=C2=A0 UNIWILL_FEATURE_CPU_TEMP |
->>>> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
-=A0=C2=A0 UNIWILL_FEATURE_GPU_TEMP |
->>>> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
-=A0=C2=A0 UNIWILL_FEATURE_PRIMARY_FAN |
->>>> @@ -1981,7 +2137,7 @@ static struct uniwill_device_descriptor=20
->>>> lapac71h_descriptor __initdata =3D {
->>>> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 .features =3D UNIWILL_FEATURE_FN_LOCK =
-|
->>>> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
-=A0=C2=A0 UNIWILL_FEATURE_SUPER_KEY |
->>>> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
-=A0=C2=A0 UNIWILL_FEATURE_TOUCHPAD_TOGGLE |
->>>> -=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 U=
-NIWILL_FEATURE_BATTERY |
->>>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 U=
-NIWILL_FEATURE_BATTERY_CHARGE_LIMIT |
->>>> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
-=A0=C2=A0 UNIWILL_FEATURE_CPU_TEMP |
->>>> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
-=A0=C2=A0 UNIWILL_FEATURE_GPU_TEMP |
->>>> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
-=A0=C2=A0 UNIWILL_FEATURE_PRIMARY_FAN |
->>>> @@ -1993,7 +2149,7 @@ static struct uniwill_device_descriptor=20
->>>> lapkc71f_descriptor __initdata =3D {
->>>> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
-=A0=C2=A0 UNIWILL_FEATURE_SUPER_KEY |
->>>> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
-=A0=C2=A0 UNIWILL_FEATURE_TOUCHPAD_TOGGLE |
->>>> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
-=A0=C2=A0 UNIWILL_FEATURE_LIGHTBAR |
->>>> -=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 U=
-NIWILL_FEATURE_BATTERY |
->>>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 U=
-NIWILL_FEATURE_BATTERY_CHARGE_LIMIT |
->>>> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
-=A0=C2=A0 UNIWILL_FEATURE_CPU_TEMP |
->>>> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
-=A0=C2=A0 UNIWILL_FEATURE_GPU_TEMP |
->>>> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
-=A0=C2=A0 UNIWILL_FEATURE_PRIMARY_FAN |
->>> Maybe we should put in some assertion to ensure that=20
->>> UNIWILL_FEATURE_BATTERY_CHARGE_LIMIT and=20
->>> UNIWILL_FEATURE_BATTERY_CHARGE_MODES are not set at the same time,=20
->>> or it that being to wary?
->>
->> I do not think that we really need that. Those device descriptors are=
-=20
->> mostly static and have a fairly trivial structure,
->> so we should easily spot such a mistake.
-> ok
->>
->>>> @@ -2578,8 +2734,8 @@ static int __init uniwill_init(void)
->>>> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 }
->>>> =C2=A0 =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 if (force) {
->>>> -=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 /* Assume that the device=
- supports all features */
->>>> -=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 device_descriptor.feature=
-s =3D UINT_MAX;
->>>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 /* Assume that the device=
- supports all features except the=20
->>>> charge limit */
->>>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 device_descriptor.feature=
-s =3D UINT_MAX &=20
->>>> ~UNIWILL_FEATURE_BATTERY_CHARGE_LIMIT;
->>>> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 pr_warn("Enabl=
-ing potentially unsupported features\n");
->>>> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 }
->>>> =C2=A0 diff --git a/drivers/platform/x86/uniwill/uniwill-wmi.c=20
->>>> b/drivers/platform/x86/uniwill/uniwill-wmi.c
->>>> index 31d9c39f14ab..f1b89bc63df6 100644
->>>> --- a/drivers/platform/x86/uniwill/uniwill-wmi.c
->>>> +++ b/drivers/platform/x86/uniwill/uniwill-wmi.c
->>>> @@ -48,6 +48,7 @@ int devm_uniwill_wmi_register_notifier(struct=20
->>>> device *dev, struct notifier_block
->>>> =C2=A0 static void uniwill_wmi_notify(struct wmi_device *wdev, union=
-=20
->>>> acpi_object *obj)
->>>> =C2=A0 {
->>>> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 u32 value;
->>>> +=C2=A0=C2=A0=C2=A0 int ret;
->>>> =C2=A0 =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 if (obj->type !=3D ACPI_TYPE_IN=
-TEGER)
->>>> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 return;
->>>> @@ -56,7 +57,9 @@ static void uniwill_wmi_notify(struct wmi_device=20
->>>> *wdev, union acpi_object *obj)
->>>> =C2=A0 =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 dev_dbg(&wdev->dev, "Received W=
-MI event %u\n", value);
->>>> =C2=A0 - blocking_notifier_call_chain(&uniwill_wmi_chain_head, value,=
-=20
->>>> NULL);
->>>> +=C2=A0=C2=A0=C2=A0 ret =3D blocking_notifier_call_chain(&uniwill_wmi=
-_chain_head,=20
->>>> value, NULL);
->>>> +=C2=A0=C2=A0=C2=A0 if (notifier_to_errno(ret) < 0)
->>>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 dev_err(&wdev->dev, "Fail=
-ed to handle event %u\n", value);
->>>> =C2=A0 }
->>>> =C2=A0 =C2=A0 /*
->>> Is this something specific for this patch or just general cleanup=20
->>> that sneaked into here?
->>>
->>> Best regards,
->>>
->>> Werner
->>
->> It is necessary because handling of UNIWILL_OSD_DC_ADAPTER_CHANGED=20
->> can now fail with an error code.
->> I decided to place the "error handling" code inside=20
->> uniwill_wmi_notify() so that the resulting error
->> codes are not silently swallowed.
-> ok
->>
->> Thanks,
->> Armin Wolf
->>
->
+>=20
+> Best regards,
+>=20
+> Sergio Melas
+>=20
+>=20
+> On Fri, Apr 10, 2026 at 7:20=E2=80=AFPM Rong Zhang <i@rong.moe> wrote:
+> >=20
+> > (+CC pdx86 list, Armin, Derek)
+> >=20
+> > Hi Sergio,
+> >=20
+> > Thanks for developing this driver.
+> >=20
+> > On Sat, 2026-04-04 at 18:43 +0200, Sergio Melas wrote:
+> > > Please disregard the previous V13 submission; the patch was malformed
+> > > due to a header corruption issue during generation.
+> > >=20
+> > > This patch expands hardware compatibility for the yogafan driver from
+> > > 3 families to 12, covering approximately 95% of the Lenovo consumer
+> > > portfolio released between 2011 and 2026.
+> > >=20
+> > > Key improvements include:
+> > > - Implementation of linear estimation for discrete Embedded Controlle=
+rs.
+> > > - A major architectural refactor to move physics constants into hardw=
+are
+> > >   profiles.
+> > > - Safety fixes for divide-by-zero risks and filter state corruption.
+> >=20
+> > Derek and I recently noticed that the driver (more specifically, v11)
+> > has appeared in hwmon-next. We haven't carefully reviewed the code, but
+> > we have a minor concern.
+> >=20
+> > Some Legion/ThinkBook devices support reporting or tuning fan RPM via
+> > the LENOVO_OTHER_MODE WMI interface. I've added hwmon support to the
+> > lenovo-wmi-other driver to expose this capability:
+> >=20
+> > https://web.git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/=
+tree/drivers/platform/x86/lenovo/wmi-other.c?h=3Dv7.0-rc7#n153
+> > https://lore.kernel.org/all/20260120182104.163424-1-i@rong.moe/
+> >=20
+> > With yogafan and lenovo-wmi-other both enabled, there will be two hwmon
+> > devices reporting the same metric (except for some temporary hysteresis
+> > introduced by yogafan's RLLag filter).
+> >=20
+> > Ideally, it'd better not registering the same metric more than once.
+> > From our perspective, lenovo-wmi-other should be preferred as it
+> > provides tuning support, as well as min/max values directly from the
+> > LENOVO_FAN_TEST_DATA interface.
+> >=20
+> > To address the issue, it should be enough to return -ENODEV on probe
+> > when the WMI GUIDs of the LENOVO_OTHER_MODE and
+> > LENOVO_CAPABILITY_DATA_00 interfaces are present. Alternatively, we may
+> > introduce a coordinator driver to arbitrate between both drivers.
+> >=20
+> > That being said, I found no interference between the two driver during
+> > my test [1], so double reporting is not a major blocker of yogafan from
+> > my perspective.
+> >=20
+> > >=20
+> > > Signed-off-by: Sergio Melas <sergiomelas@gmail.com>
+> >=20
+> > I have a faint intuition that the patch might be AI assisted. If that's
+> > the case, please add an `Assisted-by:' tag accordingly. See also
+> > https://docs.kernel.org/process/coding-assistants.html
+> >=20
+> > I also noticed that you mentioned ideapad-laptop in the documentation.
+> > Since lenovo-wmi-other can provide the same metric on some devices, it
+> > may deserve a mention too. For the same reason, could you kindly CC the
+> > pdx86 list when you resubmit this?
+> >=20
+> > [1]: the test was against this patch (v14). I had to manually add a
+> > device table entry for my device (ThinkBook 14 G7+ ASP) as the ACPI pat=
+h
+> > of its fan is \_SB.PCI0.LPC0.EC0.FA1S. \_SB.PCI0.LPC0.EC0.FA2S also
+> > exists, but it's bogus -- that's why lenovo-wmi-other needs
+> > LENOVO_FAN_TEST_DATA to hide bogus fans.
+> >=20
+> > Thanks,
+> > Rong
+> >=20
+> > > ---
+> > > I realize we are late in the current cycle and this expansion will ha=
+ve to
+> > > wait for the next merge window. I am submitting V13 now to address th=
+e
+> > > technical and safety concerns raised in the V12 review so the code is=
+ ready
+> > > when the next window opens.
+> > >=20
+> > > V14:
+> > >   - Technical content identical to v13.
+> > >   - Fixed malformed email headers and MIME/Subject corruption that pr=
+evented patch application.
+> > >=20
+> > > v13: Complete Architectural Refactor & Safety Fixes
+> > >   - Hardcoded Physics: Moved filter constants (Tau, Slew, Threshold) =
+from
+> > >     global defines into static hardware profiles within 'yogafan_conf=
+ig'
+> > >     to provide model-specific tuning and clear technical rationale.
+> > >   - Eliminated Module Parameters: Removed all module_param inputs to =
+comply
+> > >     with subsystem guidelines and prevent runtime instability.
+> > >   - Divide-by-Zero Protection: Implemented safety clamps (?: 1) in th=
+e probe
+> > >     calculation to ensure the denominator is never zero during initia=
+lization.
+> > >   - State Corruption Fix: Modified yoga_fan_read() to handle static _=
+max
+> > >     attribute requests at the entry point. This prevents userspace po=
+lling
+> > >     (e.g., KDE/Dashboards) from inadvertently triggering the RLLag fi=
+lter
+> > >     and corrupting the last_sample timestamp.
+> > >   - Sysfs Sanitation: Deleted custom attribute groups and non-standar=
+d _raw
+> > >     files; switched to standard HWMON core registration.
+> > >   - Clean Probing: Refactored the ACPI path discovery loop to a simpl=
+ified
+> > >     conditional for loop and removed unnecessary (void *) type casts.
+> > >   - Documentation Sync: Updated yogafan.rst to include secondary ACPI=
+ paths
+> > >     (.FANS) for Yoga 3/11s models to match the driver's probing logic=
+.
+> > >=20
+> > > v12: Expanded Architecture & Universal Coverage (Rejected)
+> > >   - Implemented Discrete Level Architecture (Linear Estimation) using=
+ the formula
+> > >     raw_RPM =3D (Rmax * IN) / Nmax to support legacy and ultra-portab=
+le models
+> > >     reporting fixed PWM steps.
+> > >   - Added specific DMI-based quirks for Yoga 710, 720, 510, IdeaPad 5=
+00S, U31-70,
+> > >     and Yoga 2/3 series to utilize the new estimation logic.
+> > >   - Expanded ACPI path probing to include "FAN0", "FA2S", and "FANS" =
+handles,
+> > >     ensuring out-of-the-box compatibility for ThinkBook G6 and LOQ se=
+ries.
+> > >   - Integrated the RLLag filter with discrete steps, mathematically s=
+moothing
+> > >     abrupt level jumps into a continuous physical RPM curve.
+> > >   - Refactored driver to store filter constants (Tau, Slew) per-devic=
+e,
+> > >     enabling dynamic synchronization with model-specific maximum RPMs=
+.
+> > >   - Updated Documentation/hwmon/yogafan.rst with the validated Master
+> > >     HAL Reference Database (2026).
+> > >   - Expanded support from 3 to 12 distinct hardware families, coverin=
+g over
+> > >     450 unique models and 95% of Lenovo's consumer portfolio (2011=E2=
+=80=932026).
+> > >   - Fixed Documentation formatting, now table appear correctly.
+> > >=20
+> > > V11: Multirate Filter & Autoreset Logic
+> > >   - Mapped ACPI paths directly via DMI quirks.
+> > >   - Fixed Documentation formatting (0-day robot warnings).
+> > >   - Implemented 100ms MIN_SAMPLING to address rapid polling concerns.
+> > >   - Removed redundant platform_set_drvdata() in probe.
+> > >   - Already Supported Models: Yoga 14c, Slim 7, Pro 7, Pro 9, Legion =
+5, Legion 7i, LOQ.
+> > >=20
+> > > v9/10:RLLag V1 Physics & Multiplier Fix
+> > >   - Implement ACPI handle resolution during probe for better performa=
+nce (O(1) read).
+> > >   - Add MODULE_DEVICE_TABLE(dmi, ...) to enable module autoloading.
+> > >   - Refine RLLag filter documentation and suspend/resume logic.
+> > >   - Include comprehensive EC architecture research database (8-bit vs=
+ 16-bit).
+> > >   - Validated efficiency on kernels 6.18, 6.19, and 7.0-rc5: 'perf to=
+p'
+> > >     confirms negligible CPU overhead (<0.01%) during active polling.
+> > > V08: ACPI Handle Discovery & Initial Probe
+> > >   - Replaced heuristic multiplier with deterministic DMI Quirk Table.
+> > >   - Added 'depends on DMI' to Kconfig.
+> > >   - Verified FOPTD model (1000ms TAU / 1500 RPM/s slew) against hardw=
+are traces.
+> > >   - Increased filter precision to 12-bit fixed-point.
+> > > V07: DMI Quirk Table & Device Identification
+> > >   - Fixed Kconfig: Removed non-existent 'select MATH64'.
+> > >   - Fixed unused macro: Utilized RPM_FLOOR_LIMIT to implement an
+> > >     immediate 0-RPM bypass in the filter.
+> > >   - Clarification: Previous "unified structure" comment meant that al=
+l
+> > >     6 files (driver, docs, metadata) are now in this single atomic pa=
+tch.
+> > > V06: Dual-Fan Support & ACPI Handle Eval
+> > >   - Unified patch structure (6 files changed).
+> > >   - Verified FOPTD (First-Order Plus Time Delay) model against hardwa=
+re
+> > >       traces (Yoga 14c) to ensure physical accuracy of the 1000ms tim=
+e constant.
+> > >   - Fixed a rounding stall: added a +/- 1 RPM floor to the step calcu=
+lation
+> > >     to ensure convergence even at high polling frequencies.
+> > >   - Set MAX_SLEW_RPM_S to 1500 to match physical motor inertia.
+> > >   - Documentation: Updated to clarify 100-RPM hardware step resolutio=
+n.
+> > >   - 32-bit safety: Implemented div64_s64 for coefficient precision.
+> > > V05: Raw EC Register Offset Validation
+> > >   - Fixed 32-bit build failures by using div64_s64 for 64-bit divisio=
+n.
+> > >   - Extracted magic numbers into constants (RPM_UNIT_THRESHOLD, etc.)=
+.
+> > >   - Fixed filter stall by ensuring a minimum slew limit (limit =3D 1)=
+.
+> > >   - Refined RPM floor logic to trigger only when hardware reports 0 R=
+PM.
+> > >   - Resolved 255/256 unit-jump bug by adjusting heuristic thresholds.
+> > > v04: Initial HWMON Sysfs Implementation
+> > >   - Rebased on groeck/hwmon-next branch for clean application.
+> > >   - Corrected alphabetical sorting in Kconfig and Makefile.
+> > >   - Technical Validation & FOPTD Verification:
+> > >     - Implemented RLLag (Rate-Limited Lag) first-order modeling.
+> > >     - Used 10-bit fixed-point math for alpha calculation to avoid
+> > >       floating point overhead in the kernel.
+> > >     - Added 5000ms filter reset for resume/long-polling sanitation.
+> > > V03: DSDT Analysis & ACPI Path Mapping
+> > >   - Added MAINTAINERS entry and full Documentation/hwmon/yogafan.rst.
+> > >   - Fixed integer overflow in filter math.
+> > >   - Added support for secondary fan paths (FA2S) for Legion laptops.
+> > > V02: Proof-of-Concept Embedded Controller Reads
+> > >   - Migrated from background worker to passive multirate filtering.
+> > >   - Implemented dt-based scaling to maximize CPU sleep states.
+> > >   - Restricted driver to Lenovo hardware via DMI matching.
+> > > V01: Initial Module Skeleton & Kbuild Setup
+> > >   - Initial submission with basic ACPI fan path support.
+> > > ---
+> > > ---
+> > >  Documentation/hwmon/yogafan.rst | 293 ++++++++++++++++++++----
+> > >  drivers/hwmon/Kconfig           |   1 -
+> > >  drivers/hwmon/yogafan.c         | 381 +++++++++++++++++++++++++++---=
+--
+> > >  3 files changed, 571 insertions(+), 104 deletions(-)
+> > >=20
+> > > diff --git a/Documentation/hwmon/yogafan.rst b/Documentation/hwmon/yo=
+gafan.rst
+> > > index c0a449aa8..eb5534fb8 100644
+> > > --- a/Documentation/hwmon/yogafan.rst
+> > > +++ b/Documentation/hwmon/yogafan.rst
+> > > @@ -1,56 +1,186 @@
+> > >  .. SPDX-License-Identifier: GPL-2.0-only
+> > > -=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
+=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
+=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
+=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
+> > > +
+> > > +=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
+> > >  Kernel driver yogafan
+> > > -=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
+=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
+=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
+=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
+> > > +=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
+> > > +
+> > > +The yogafan driver provides fan speed monitoring for Lenovo consumer=
+ laptops (Yoga, Legion, IdeaPad)
+> > > +by interfacing with the Embedded Controller (EC) via ACPI, implement=
+ing a Rate-Limited Lag (RLLag)
+> > > +filter to ensure smooth and physically accurate RPM telemetry.
+> > >=20
+> > >  Supported chips:
+> > > +----------------
+> > > +
+> > > +  * YOGA & SLIM SERIES (8-bit / Discrete Logic)
+> > > +    - Yoga 14cACN, 14s, 13 (including Aura Edition)
+> > > +    - Yoga Slim 7, 7i, 7 Pro, 7 Carbon
+> > > +    - Yoga Pro 7, 9 (83E2, 83DN)
+> > > +    - Yoga 710, 720, 510 (Discrete Step Logic)
+> > > +    - Yoga 3 14, 11s, Yoga 2 13 (Discrete Step Logic)
+> > > +    - Xiaoxin Pro, Air, 14, 16 (All PRC/Chinese Variants)
+> > > +
+> > > +  * LEGION, LOQ & G-SERIES (16-bit High-Precision Raw)
+> > > +    - Legion 5, 5i, 5 Pro (AMD & Intel 82JW/82JU)
+> > > +    - Legion 7, 7i, 7 Slim (82WQ)
+> > > +    - LOQ 15, 16 (82XV, 83DV)
+> > > +    - GeekPro G5000, G6000 (PRC Gaming Series)
+> > > +
+> > > +  * IDEAPAD & FLEX SERIES (8-bit / Discrete Logic)
+> > > +    - IdeaPad 5, 5i, 5 Pro (81YM, 82FG)
+> > > +    - IdeaPad 3, 3i (Modern 8-bit variants)
+> > > +    - IdeaPad 500S, U31-70 (Discrete Step Logic)
+> > > +    - Flex 5, 5i (81X1)
+> > > +
+> > > +  * THINKBOOK, V-SERIES & LEGACY (Discrete Logic)
+> > > +    - ThinkBook G6, G7 (83AK)
+> > > +    - V330-15IKB, V580
+> > > +    - Legacy U-Series (U330p, U430p)
+> > >=20
+> > > -  * Lenovo Yoga, Legion, IdeaPad, Slim, Flex, and LOQ Embedded Contr=
+ollers
+> > >      Prefix: 'yogafan'
+> > > -    Addresses: ACPI handle (See Database Below)
+> > > +
+> > > +    Addresses: ACPI handle (DMI Quirk Table Fallback)
+> > > +
+> > > +    Datasheet: Not available; based on ACPI DSDT and EC reverse engi=
+neering.
+> > >=20
+> > >  Author: Sergio Melas <sergiomelas@gmail.com>
+> > >=20
+> > >  Description
+> > >  -----------
+> > >=20
+> > > -This driver provides fan speed monitoring for modern Lenovo consumer=
+ laptops.
+> > > -Most Lenovo laptops do not provide fan tachometer data through stand=
+ard
+> > > -ISA/LPC hardware monitoring chips. Instead, the data is stored in th=
+e
+> > > -Embedded Controller (EC) and exposed via ACPI.
+> > > +This driver provides fan speed monitoring for a wide range of Lenovo=
+ consumer
+> > > +laptops. Unlike standard ThinkPads, these models do not use the 'thi=
+nkpad_acpi'
+> > > +interface for fan speed but instead store fan telemetry in the Embed=
+ded
+> > > +Controller (EC).
+> > > +
+> > > +The driver interfaces with the ACPI namespace to locate the fan tach=
+ometer
+> > > +objects. If the ACPI path is not standard, it falls back to a machin=
+e-specific
+> > > +quirk table based on DMI information.
+> > > +
+> > > +This driver covers over 95% of Lenovo's consumer and ultra-portable =
+laptop portfolio
+> > > +released between 2011 and 2026, providing a unified hardware abstrac=
+tion layer for diverse
+> > > +Embedded Controller (EC) architectures.
+> > > +
+> > > +The driver exposes the RLLag  physical filter parameters (time const=
+ant and slew-rate limit) in SI units (seconds),
+> > > +dynamically synchronizing them with the specific model's maximum RPM=
+ to ensure a consistent physical response
+> > > +across the entire Lenovo product stack.
+> > > +
+> > > +Filter Physics (RLLag )
+> > > +--------------------------
+> > > +
+> > > +To address low-resolution tachometer sampling in the Embedded Contro=
+ller,
+> > > +the driver implements a passive discrete-time first-order lag filter
+> > > +with slew-rate limiting.
+> > > +
+> > > +* Multirate Filtering: The filter adapts to the sampling time (dt) o=
+f the
+> > > +  userspace request.
+> > > +* Discrete Logic: For older models (e.g., Yoga 710), it estimates RP=
+M based
+> > > +  on discrete duty-cycle steps.
+> > > +* Continuous Logic: For modern models (e.g., Legion), it maps raw hi=
+gh-precision
+> > > +  units to RPM.
+> > >=20
+> > >  The driver implements a **Rate-Limited Lag (RLLag)** filter to handl=
+e
+> > > -the low-resolution and jittery sampling found in Lenovo EC firmware.
+> > > +low-resolution sampling in Lenovo EC firmware. The update equation i=
+s:
+> > > +
+> > > +    **RPM_state[t+1] =3D RPM_state[t] + Clamp(Alpha * (raw_RPM[t] - =
+RPM_state[t]), -limit[t], limit[t])**
+> > > +
+> > > +    Where:
+> > > +
+> > > +*   Time delta between reads:
+> > > +
+> > > +       **Ts[t]    =3D Sys_time[t+1] - Sys_time[t]**
+> > > +
+> > > +*   Low-pass smoothing factor
+> > > +
+> > > +       **Alpha    =3D 1 - exp(-Ts[t] / Tau)**
+> > > +
+> > > +*   Time-normalized slew limit
+> > > +
+> > > +       **limit[t] =3D MAX_SLEW_RPM_S * Ts[t]**
+> > > +
+> > > +To avoid expensive floating-point exponential calculations in the ke=
+rnel,
+> > > +we use a first-order Taylor/Bilinear approximation:
+> > > +
+> > > +       **Alpha =3D Ts / (Tau + Ts)**
+> > > +
+> > > +Implementing this in the driver state machine:
+> > > +
+> > > +*   Next step filtered RPM:
+> > > +       **RPM_state[t+1] =3D RPM_new**
+> > > +*   Current step filtered RPM:
+> > > +       **RPM_state[t]   =3D RPM_old**
+> > > +*   Time step Calculation:
+> > > +       **Ts             =3D current_time - last_sample_time**
+> > > +*   Alpha Calculation:
+> > > +       **Alpha           =3D Ts / (Tau + Ts)**
+> > > +*   RPM  step Calculation:
+> > > +       **step           =3D Alpha * (raw_RPM -  RPM_old)**
+> > > +*   Limit  step Calculation:
+> > > +       **limit           =3D MAX_SLEW_RPM_S * Ts**
+> > > +*   RPM physical step Calculation:
+> > > +       **step_clamped   =3D clamp(step, -limit, limit)**
+> > > +*   Update of RPM
+> > > +       **RPM_new        =3D RPM_old + step_clamped**
+> > > +*   Update internal state
+> > > +       **RPM_old        =3D RPM_new**
+> > > +
+> > > +The input of the filter (raw_RPM) is derived from the EC using the l=
+ogic defined in the
+> > > +HAL section below.
+> > > +
+> > > +The driver exposes the RLLag  physical filter parameters (time const=
+ant and slew-rate limit)
+> > > +in SI units (seconds), dynamically synchronizing them with the speci=
+fic model's maximum RPM
+> > > +to ensure a consistent physical response across the entire Lenovo pr=
+oduct stack.
+> > > +
+> > > +This approach inshures that the RLLag filter is a passive discrete-t=
+ime first-order lag model:
+> > > +  - **Smoothing:** Low-resolution step increments are smoothed into =
+1-RPM increments.
+> > > +  - **Slew-Rate Limiting:** Prevents unrealistic readings by capping=
+ the change
+> > > +    to 1500 RPM/s, matching physical fan inertia.
+> > > +  - **Polling Independence:** The filter math scales based on the ti=
+me delta
+> > > +    between userspace reads, ensuring a consistent physical curve re=
+gardless
+> > > +    of polling frequency.
+> > >=20
+> > >  Hardware Identification and Multiplier Logic
+> > >  --------------------------------------------
+> > >=20
+> > > -The driver supports two distinct EC architectures. Differentiation i=
+s handled
+> > > +The driver supports three distinct EC architectures. Differentiation=
+ is handled
+> > >  deterministically via a DMI Product Family quirk table during the pr=
+obe phase,
+> > >  eliminating the need for runtime heuristics.
+> > >=20
+> > > +Continuous RPM Reads
+> > > +~~~~~~~~~~~~~~~~~~~~
+> > > +
+> > >  1. 8-bit EC Architecture (Multiplier: 100)
+> > > -   - **Families:** Yoga, IdeaPad, Slim, Flex.
+> > > +   - **Families:** Yoga, IdeaPad, Slim, Flex, Xiaoxin.
+> > >     - **Technical Detail:** These models allocate a single 8-bit regi=
+ster for
+> > >     tachometer data. Since 8-bit fields are limited to a value of 255=
+, the
+> > >     BIOS stores fan speed in units of 100 RPM (e.g., 42 =3D 4200 RPM)=
+.
+> > >=20
+> > >  2. 16-bit EC Architecture (Multiplier: 1)
+> > > -   - **Families:** Legion, LOQ.
+> > > +   - **Families:** Legion, LOQ, GeekPro.
+> > >     - **Technical Detail:** High-performance gaming models require gr=
+eater
+> > >     precision for fans exceeding 6000 RPM. These use a 16-bit word (2=
+ bytes)
+> > >     storing the raw RPM value directly.
+> > >=20
+> > > -Filter Details:
+> > > ----------------
+> > > +Discrete RPM Reads
+> > > +~~~~~~~~~~~~~~~~~~
+> > >=20
+> > > -The RLLag filter is a passive discrete-time first-order lag model th=
+at ensures:
+> > > -  - **Smoothing:** Low-resolution step increments are smoothed into =
+1-RPM increments.
+> > > -  - **Slew-Rate Limiting:** Prevents unrealistic readings by capping=
+ the change
+> > > -    to 1500 RPM/s, matching physical fan inertia.
+> > > -  - **Polling Independence:** The filter math scales based on the ti=
+me delta
+> > > -    between userspace reads, ensuring a consistent physical curve re=
+gardless
+> > > -    of polling frequency.
+> > > +3. Discrete Level Architecture (Linear Estimation)
+> > > +   - **Families:** Yoga 710/510/13, IdeaPad 500S, Legacy U-Series.
+> > > +   - **Technical Detail:** Older or ultra-portable EC firmware does =
+not store
+> > > +   a real-time tachometer value. Instead, it operates on a fixed num=
+ber of
+> > > +   discrete PWM states (Nmax). The driver translates these levels in=
+to an
+> > > +   estimated physical RPM using the following linear mapping:
+> > > +
+> > > +     raw_RPM =3D (Rmax * IN) / Nmax
+> > > +
+> > > +     Where:
+> > > +     - IN:   Current discrete level read from the EC.
+> > > +     - Nmax: Maximum number of steps defined in the BIOS (e.g., 59, =
+255).
+> > > +     - Rmax: Maximum physical RPM of the fan motor at full duty cycl=
+e.
+> > > +
+> > > +   - **Filter Interaction:** Because these hardware reads jump abrup=
+tly
+> > > +     between levels (e.g., from level 4 to 5), the RLLag filter is e=
+ssential
+> > > +     here to simulate mechanical acceleration, smoothing the transit=
+ion
+> > > +     for the final fanX_input attribute.
+> > >=20
+> > >  Suspend and Resume
+> > >  ------------------
+> > > @@ -68,31 +198,11 @@ The driver exposes standard hwmon sysfs attribut=
+es:
+> > >  Attribute         Description
+> > >  fanX_input        Filtered fan speed in RPM.
+> > >=20
+> > > -
+> > >  Note: If the hardware reports 0 RPM, the filter is bypassed and 0 is=
+ reported
+> > >  immediately to ensure the user knows the fan has stopped.
+> > >=20
+> > > -
+> > > -=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
+=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
+=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
+=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
+=3D=3D=3D
+> > > -                 LENOVO FAN CONTROLLER: MASTER REFERENCE DATABASE (2=
+026)
+> > > -=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
+=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
+=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
+=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
+=3D=3D=3D
+> > > -
+> > > -MODEL (DMI PN) | FAMILY / SERIES  | EC OFFSET | FULL ACPI OBJECT PAT=
+H          | WIDTH  | MULTiplier
+> > > ---------------------------------------------------------------------=
+--------------------------------
+> > > -82N7           | Yoga 14cACN      | 0x06      | \_SB.PCI0.LPC0.EC0.F=
+ANS        |  8-bit | 100
+> > > -80V2 / 81C3    | Yoga 710/720     | 0x06      | \_SB.PCI0.LPC0.EC0.F=
+AN0        |  8-bit | 100
+> > > -83E2 / 83DN    | Yoga Pro 7/9     | 0xFE      | \_SB.PCI0.LPC0.EC0.F=
+ANS        |  8-bit | 100
+> > > -82A2 / 82A3    | Yoga Slim 7      | 0x06      | \_SB.PCI0.LPC0.EC0.F=
+ANS        |  8-bit | 100
+> > > -81YM / 82FG    | IdeaPad 5        | 0x06      | \_SB.PCI0.LPC0.EC0.F=
+AN0        |  8-bit | 100
+> > > -82JW / 82JU    | Legion 5 (AMD)   | 0xFE/0xFF | \_SB.PCI0.LPC0.EC0.F=
+ANS (Fan1) | 16-bit | 1
+> > > -82JW / 82JU    | Legion 5 (AMD)   | 0xFE/0xFF | \_SB.PCI0.LPC0.EC0.F=
+A2S (Fan2) | 16-bit | 1
+> > > -82WQ           | Legion 7i (Int)  | 0xFE/0xFF | \_SB.PCI0.LPC0.EC0.F=
+ANS (Fan1) | 16-bit | 1
+> > > -82WQ           | Legion 7i (Int)  | 0xFE/0xFF | \_SB.PCI0.LPC0.EC0.F=
+A2S (Fan2) | 16-bit | 1
+> > > -82XV / 83DV    | LOQ 15/16        | 0xFE/0xFF | \_SB.PCI0.LPC0.EC0.F=
+ANS /FA2S  | 16-bit | 1
+> > > -83AK           | ThinkBook G6     | 0x06      | \_SB.PCI0.LPC0.EC0.F=
+AN0        |  8-bit | 100
+> > > -81X1           | Flex 5           | 0x06      | \_SB.PCI0.LPC0.EC0.F=
+AN0        |  8-bit | 100
+> > > -*Legacy*       | Pre-2020 Models  | 0x06      | \_SB.PCI0.LPC.EC.FAN=
+0          |  8-bit | 100
+> > > ---------------------------------------------------------------------=
+--------------------------------
+> > > +Lenovo Fan HAL
+> > > +--------------
+> > >=20
+> > >  METHODOLOGY & IDENTIFICATION:
+> > >=20
+> > > @@ -109,6 +219,103 @@ METHODOLOGY & IDENTIFICATION:
+> > >     - 8-bit (Multiplier 100): Standard for Yoga/IdeaPad. Raw values (=
+0-255).
+> > >     - 16-bit (Multiplier 1): Standard for Legion/LOQ. Two registers (=
+0xFE/0xFF).
+> > >=20
+> > > +=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
+=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
+=3D
+> > > +LENOVO FAN CONTROLLER Hardware Abstraction Layer
+> > > +=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
+=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
+=3D
+> > > +
+> > > ++-------------+-------------------+---------+-----------------------=
+---------+--------+-------+-------+------+
+> > > +| MODEL       | FAMILY / SERIES   |  OFFSET | FULL ACPI OBJECT PATH =
+         | WIDTH  | NMAX  | RMAX  | MULT |
+> > > ++=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D+=3D=3D=3D=3D=3D=3D=3D=3D=3D=
+=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D+=3D=3D=3D=3D=3D=3D=3D=3D=3D+=3D=3D=3D=3D=3D=
+=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
+=3D=3D+=3D=3D=3D=3D=3D=3D=3D=3D+=3D=3D=3D=3D=3D=3D=3D+=3D=3D=3D=3D=3D=3D=3D=
++=3D=3D=3D=3D=3D=3D+
+> > > +| 82N7        | Yoga 14cACN       | 0x06    | \_SB.PCI0.LPC0.EC0.FAN=
+S        | 8-bit  | 0     | 5500  | 100  |
+> > > ++-------------+-------------------+---------+-----------------------=
+---------+--------+-------+-------+------+
+> > > +| 80V2 / 81C3 | Yoga 710/720      | 0x06    | \_SB.PCI0.LPC0.EC0.FAN=
+0        | 8-bit  | 59    | 4500  | 0    |
+> > > ++-------------+-------------------+---------+-----------------------=
+---------+--------+-------+-------+------+
+> > > +| 83E2 / 83DN | Yoga Pro 7/9      | 0xFE    | \_SB.PCI0.LPC0.EC0.FAN=
+S        | 8-bit  | 0     | 6000  | 100  |
+> > > ++-------------+-------------------+---------+-----------------------=
+---------+--------+-------+-------+------+
+> > > +| 82A2 / 82A3 | Yoga Slim 7       | 0x06    | \_SB.PCI0.LPC0.EC0.FAN=
+S        | 8-bit  | 0     | 5500  | 100  |
+> > > ++-------------+-------------------+---------+-----------------------=
+---------+--------+-------+-------+------+
+> > > +| 81YM / 82FG | IdeaPad 5         | 0x06    | \_SB.PCI0.LPC0.EC0.FAN=
+0        | 8-bit  | 0     | 4500  | 100  |
+> > > ++-------------+-------------------+---------+-----------------------=
+---------+--------+-------+-------+------+
+> > > +| 80S7        | Yoga 510          | 0x06    | \_SB.PCI0.LPC0.EC0.FAN=
+0        | 8-bit  | 41    | 4500  | 0    |
+> > > ++-------------+-------------------+---------+-----------------------=
+---------+--------+-------+-------+------+
+> > > +| 81AX        | V330-15IKB        | 0x95    | \_SB.PCI0.LPC0.EC0.FAN=
+0        | 8-bit  | 116   | 4200  | 100  |
+> > > ++-------------+-------------------+---------+-----------------------=
+---------+--------+-------+-------+------+
+> > > +| 82JW / 82JU | Legion 5 (AMD)    | 0xFE/FF | \_SB.PCI0.LPC0.EC0.FAN=
+S (Fan1) | 16-bit | 0     | 6500  | 1    |
+> > > ++-------------+-------------------+---------+-----------------------=
+---------+--------+-------+-------+------+
+> > > +| 82JW / 82JU | Legion 5 (AMD)    | 0xFE/FF | \_SB.PCI0.LPC0.EC0.FA2=
+S (Fan2) | 16-bit | 0     | 6500  | 1    |
+> > > ++-------------+-------------------+---------+-----------------------=
+---------+--------+-------+-------+------+
+> > > +| 82WQ        | Legion 7i (Int)   | 0xFE/FF | \_SB.PCI0.LPC0.EC0.FAN=
+S (Fan1) | 16-bit | 0     | 8000  | 1    |
+> > > ++-------------+-------------------+---------+-----------------------=
+---------+--------+-------+-------+------+
+> > > +| 82WQ        | Legion 7i (Int)   | 0xFE/FF | \_SB.PCI0.LPC0.EC0.FA2=
+S (Fan2) | 16-bit | 0     | 8000  | 1    |
+> > > ++-------------+-------------------+---------+-----------------------=
+---------+--------+-------+-------+------+
+> > > +| 82XV / 83DV | LOQ 15/16         | 0xFE/FF | \_SB.PCI0.LPC0.EC0.FAN=
+S (Fan1) | 16-bit | 0     | 6500  | 1    |
+> > > ++-------------+-------------------+---------+-----------------------=
+---------+--------+-------+-------+------+
+> > > +| 82XV / 83DV | LOQ 15/16         | 0xFE/FF | \_SB.PCI0.LPC0.EC0.FA2=
+S (Fan2) | 16-bit | 0     | 6500  | 1    |
+> > > ++-------------+-------------------+---------+-----------------------=
+---------+--------+-------+-------+------+
+> > > +| 83AK        | ThinkBook G6      | 0x06    | \_SB.PCI0.LPC0.EC0.FAN=
+0        | 8-bit  | 0     | 5400  | 100  |
+> > > ++-------------+-------------------+---------+-----------------------=
+---------+--------+-------+-------+------+
+> > > +| 81X1        | Flex 5            | 0x06    | \_SB.PCI0.LPC0.EC0.FAN=
+0        | 8-bit  | 0     | 4500  | 100  |
+> > > ++-------------+-------------------+---------+-----------------------=
+---------+--------+-------+-------+------+
+> > > +| 80SR / 80SX | IdeaPad 500S-13   | 0x06    | \_SB.PCI0.LPC0.EC0.FAN=
+0        | 8-bit  | 44    | 5500  | 100  |
+> > > ++-------------+-------------------+---------+-----------------------=
+---------+--------+-------+-------+------+
+> > > +| 80S1        | IdeaPad 500S-14   | 0x95    | \_SB.PCI0.LPC0.EC0.FAN=
+0        | 8-bit  | 116   | 5000  | 100  |
+> > > ++-------------+-------------------+---------+-----------------------=
+---------+--------+-------+-------+------+
+> > > +| 80TK        | IdeaPad 510S      | 0x06    | \_SB.PCI0.LPC0.EC0.FAN=
+0        | 8-bit  | 41    | 5100  | 100  |
+> > > ++-------------+-------------------+---------+-----------------------=
+---------+--------+-------+-------+------+
+> > > +| 80S9        | IdeaPad 710S      | 0x95/98 | \_SB.PCI0.LPC0.EC0.FAN=
+1/2      | 8-bit  | 72    | 5200  | 100  |
+> > > ++-------------+-------------------+---------+-----------------------=
+---------+--------+-------+-------+------+
+> > > +| 80KU        | U31-70            | 0x06    | \_SB.PCI0.LPC0.EC0.FAN=
+0        | 8-bit  | 44    | 5500  | 100  |
+> > > ++-------------+-------------------+---------+-----------------------=
+---------+--------+-------+-------+------+
+> > > +| 80S1        | U41-70            | 0x95    | \_SB.PCI0.LPC0.EC0.FAN=
+0        | 8-bit  | 116   | 5000  | 100  |
+> > > ++-------------+-------------------+---------+-----------------------=
+---------+--------+-------+-------+------+
+> > > +| 80JH        | Yoga 3 14         | 0x06    | \_SB.PCI0.LPC0.EC0.FAN=
+0/.FANS  | 8-bit  | 80    | 5000  | 0    |
+> > > ++-------------+-------------------+---------+-----------------------=
+---------+--------+-------+-------+------+
+> > > +| 20344       | Yoga 2 13         | 0xAB    | \_SB.PCI0.LPC0.EC0.FAN=
+0        | 8-bit  | 8     | 4200  | 0    |
+> > > ++-------------+-------------------+---------+-----------------------=
+---------+--------+-------+-------+------+
+> > > +| 2191 / 20191| Yoga 13           | 0xF2/F3 | \_SB.PCI0.LPC0.EC0.FAN=
+1/2      | 8-bit  | 255   | 5000  | 0    |
+> > > ++-------------+-------------------+---------+-----------------------=
+---------+--------+-------+-------+------+
+> > > +| Legacy      | Yoga 11s          | 0x56    | \_SB.PCI0.LPC0.EC0.FAN=
+0/.FANS  | 8-bit  | 80    | 4500  | 100  |
+> > > ++-------------+-------------------+---------+-----------------------=
+---------+--------+-------+-------+------+
+> > > +| 20GJ / 20GK | ThinkPad 13       | 0x85    | \_SB.PCI0.LPC0.EC0.FAN=
+0        | 8-bit  | 7     | 5500  | 100  |
+> > > ++-------------+-------------------+---------+-----------------------=
+---------+--------+-------+-------+------+
+> > > +| 1143        | ThinkPad E520     | 0x95    | \_SB.PCI0.LPC0.EC0.FAN=
+0        | 8-bit  | 100   | 4200  | 100  |
+> > > ++-------------+-------------------+---------+-----------------------=
+---------+--------+-------+-------+------+
+> > > +| 3698        | ThinkPad Helix    | 0x2F    | \_SB.PCI0.LPC0.EC0.FAN=
+S        | 8-bit  | 7     | 4500  | 100  |
+> > > ++-------------+-------------------+---------+-----------------------=
+---------+--------+-------+-------+------+
+> > > +| 20M7 / 20M8 | ThinkPad L380     | 0x95    | \_SB.PCI0.LPC0.EC0.FAN=
+1        | 8-bit  | 52    | 4600  | 100  |
+> > > ++-------------+-------------------+---------+-----------------------=
+---------+--------+-------+-------+------+
+> > > +| 20NR / 20NS | ThinkPad L390     | 0x95    | \_SB.PCI0.LPC0.EC0.FAN=
+0        | 8-bit  | 64    | 5500  | 100  |
+> > > ++-------------+-------------------+---------+-----------------------=
+---------+--------+-------+-------+------+
+> > > +| 2464 / 2468 | ThinkPad L530     | 0x95    | \_SB.PCI0.LPC0.EC0.FAN=
+0        | 8-bit  | 75    | 4400  | 100  |
+> > > ++-------------+-------------------+---------+-----------------------=
+---------+--------+-------+-------+------+
+> > > +| 2356        | ThinkPad T430s    | 0x2F    | \_SB.PCI0.LPC0.EC0.FAN=
+S        | 8-bit  | 7     | 5000  | 100  |
+> > > ++-------------+-------------------+---------+-----------------------=
+---------+--------+-------+-------+------+
+> > > +| 20AQ / 20AR | ThinkPad T440s    | 0x4E    | \_SB.PCI0.LPC0.EC0.FAN=
+S        | 8-bit  | 7     | 5200  | 100  |
+> > > ++-------------+-------------------+---------+-----------------------=
+---------+--------+-------+-------+------+
+> > > +| 20BE / 20BF | ThinkPad T540p    | 0x2F    | \_SB.PCI0.LPC0.EC0.FAN=
+S        | 8-bit  | 7     | 5500  | 100  |
+> > > ++-------------+-------------------+---------+-----------------------=
+---------+--------+-------+-------+------+
+> > > +| 3051        | ThinkPad x121e    | 0x2F    | \_SB.PCI0.LPC0.EC0.FAN=
+S        | 8-bit  | 7     | 4500  | 100  |
+> > > ++-------------+-------------------+---------+-----------------------=
+---------+--------+-------+-------+------+
+> > > +| 4290        | ThinkPad x220i    | 0x2F    | \_SB.PCI0.LPC0.EC0.FAN=
+S        | 8-bit  | 7     | 5000  | 100  |
+> > > ++-------------+-------------------+---------+-----------------------=
+---------+--------+-------+-------+------+
+> > > +| 2324 / 2325 | ThinkPad x230     | 0x2F    | \_SB.PCI0.LPC0.EC0.FAN=
+S        | 8-bit  | 7     | 5000  | 100  |
+> > > ++-------------+-------------------+---------+-----------------------=
+---------+--------+-------+-------+------+
+> > > +| Legacy      | IdeaPad Y580      | 0x06    | \_SB.PCI0.LPC0.EC0.FAN=
+0        | 8-bit  | 95    | 5200  | 100  |
+> > > ++-------------+-------------------+---------+-----------------------=
+---------+--------+-------+-------+------+
+> > > +| Legacy      | IdeaPad V580      | 0x95    | \_SB.PCI0.LPC0.EC0.FAN=
+0        | 8-bit  | 100   | 5000  | 100  |
+> > > ++-------------+-------------------+---------+-----------------------=
+---------+--------+-------+-------+------+
+> > > +| Legacy      | U160              | 0x95    | \_SB.PCI0.LPC0.EC0.FAN=
+0        | 8-bit  | 64    | 4500  | 100  |
+> > > ++-------------+-------------------+---------+-----------------------=
+---------+--------+-------+-------+------+
+> > > +| Legacy      | U330p/U430p       | 0x92    | \_SB.PCI0.LPC0.EC0.FAN=
+0        | 16-bit | 768   | 5000  | 0    |
+> > > ++-------------+-------------------+---------+-----------------------=
+---------+--------+-------+-------+------+
+> > > +
+> > > +Note for the  raw_RPM we have 2 cases:
+> > > +
+> > > +* Discrete Level Estimation
+> > > +    **Nmax > 0 then raw_RPM =3D (Rmax * IN) / Nmax**
+> > > +
+> > > +* Continuous Unit Mapping
+> > > +    **Nmax =3D 0 then raw_RPM =3D IN * Multiplier**
+> > >=20
+> > >  References
+> > >  ----------
+> > > diff --git a/drivers/hwmon/Kconfig b/drivers/hwmon/Kconfig
+> > > index 0081dd097..f1b89bf45 100644
+> > > --- a/drivers/hwmon/Kconfig
+> > > +++ b/drivers/hwmon/Kconfig
+> > > @@ -2673,7 +2673,6 @@ config SENSORS_YOGAFAN
+> > >         This driver can also be built as a module. If so, the module
+> > >         will be called yogafan.
+> > >=20
+> > > -
+> > >  config SENSORS_INTEL_M10_BMC_HWMON
+> > >       tristate "Intel MAX10 BMC Hardware Monitoring"
+> > >       depends on MFD_INTEL_M10_BMC_CORE
+> > > diff --git a/drivers/hwmon/yogafan.c b/drivers/hwmon/yogafan.c
+> > > index 605cc928f..ee6ba5812 100644
+> > > --- a/drivers/hwmon/yogafan.c
+> > > +++ b/drivers/hwmon/yogafan.c
+> > > @@ -24,6 +24,7 @@
+> > >  #include <linux/platform_device.h>
+> > >  #include <linux/slab.h>
+> > >  #include <linux/math64.h>
+> > > +#include <linux/hwmon-sysfs.h>
+> > >=20
+> > >  /* Driver Configuration Constants */
+> > >  #define DRVNAME                      "yogafan"
+> > > @@ -37,37 +38,123 @@
+> > >=20
+> > >  /* RPM Sanitation Constants */
+> > >  #define RPM_FLOOR_LIMIT              50      /* Snap filtered value =
+to 0 if raw is 0 */
+> > > +#define MIN_THRESHOLD_RPM    10      /* Minimum safety floor for per=
+-model stop thresholds */
+> > >=20
+> > >  struct yogafan_config {
+> > > -     int multiplier;
+> > > -     int fan_count;
+> > > -     const char *paths[2];
+> > > +     int multiplier;                 /* Used if n_max =3D=3D 0 */
+> > > +     int fan_count;                  /* 1 or 2 */
+> > > +     int n_max;                      /* Discrete steps (0 =3D Contin=
+uous) */
+> > > +     int r_max;                      /* Max physical RPM for estimat=
+ion */
+> > > +     unsigned int tau_ms;            /* To store the smoothing speed=
+    */
+> > > +     unsigned int slew_time_s;       /* To store the acceleration li=
+mit */
+> > > +     unsigned int stop_threshold;    /* To store the RPM floor */
+> > > +     const char *paths[2];           /* Paths */
+> > >  };
+> > >=20
+> > >  struct yoga_fan_data {
+> > >       acpi_handle active_handles[MAX_FANS];
+> > >       long filtered_val[MAX_FANS];
+> > > +     long raw_val[MAX_FANS];
+> > >       ktime_t last_sample[MAX_FANS];
+> > > -     int multiplier;
+> > > +     const struct yogafan_config *config;
+> > >       int fan_count;
+> > > +     /* Per-device physics constants */
+> > > +     unsigned int internal_tau_ms;
+> > > +     unsigned int internal_max_slew_rpm_s;
+> > > +     unsigned int device_max_rpm;
+> > >  };
+> > >=20
+> > >  /* Specific configurations mapped via DMI */
+> > > -static const struct yogafan_config yoga_8bit_fans_cfg =3D {
+> > > -     .multiplier =3D 100,
+> > > -     .fan_count =3D 1,
+> > > -     .paths =3D { "\\_SB.PCI0.LPC0.EC0.FANS", NULL }
+> > > +//* --- CONTINUOUS PROFILES (Nmax =3D 0) --- */
+> > > +
+> > > +/* Standard 8-bit Yoga/IdeaPad (Covers 82N7, Slim 7, etc.) */
+> > > +static struct yogafan_config yoga_continuous_8bit_cfg =3D {
+> > > +     .multiplier =3D 100, .fan_count =3D 1, .n_max =3D 0,
+> > > +     .r_max =3D 5500,  /* Verified 14cACN peak */
+> > > +     .tau_ms =3D 1000, .slew_time_s =3D 4, .stop_threshold =3D 50,
+> > > +     .paths =3D { "\\_SB.PCI0.LPC0.EC0.FANS", "\\_SB.PCI0.LPC0.EC0.F=
+AN0" }
+> > > +};
+> > > +
+> > > +/* Legion / LOQ Gaming (2 Fans, Raw RPM 16-bit) */
+> > > +static struct yogafan_config legion_continuous_16bit_cfg =3D {
+> > > +     .multiplier =3D 1, .fan_count =3D 2, .n_max =3D 0,
+> > > +     .r_max =3D 6500,  /* Standard Legion/LOQ peak */
+> > > +     .tau_ms =3D 1000, .slew_time_s =3D 4, .stop_threshold =3D 50,
+> > > +     .paths =3D { "\\_SB.PCI0.LPC0.EC0.FANS", "\\_SB.PCI0.LPC0.EC0.F=
+A2S" }
+> > > +};
+> > > +
+> > > +/* --- DISCRETE ESTIMATION PROFILES (NMAX > 0) --- */
+> > > +
+> > > +/* Yoga 710/720 (N=3D59) */
+> > > +static struct yogafan_config yoga_710_discrete_cfg =3D {
+> > > +     .multiplier =3D 0, .fan_count =3D 1, .n_max =3D 59, .r_max =3D =
+4500,
+> > > +     .tau_ms =3D 1000, .slew_time_s =3D 4, .stop_threshold =3D 50,
+> > > +     .paths =3D { "\\_SB.PCI0.LPC0.EC0.FAN0", NULL }
+> > > +};
+> > > +
+> > > +/* Yoga 510 / Ideapad 510s (N=3D41) */
+> > > +static struct yogafan_config yoga_510_discrete_cfg =3D {
+> > > +     .multiplier =3D 0, .fan_count =3D 1, .n_max =3D 41, .r_max =3D =
+4500,
+> > > +     .tau_ms =3D 1000, .slew_time_s =3D 4, .stop_threshold =3D 50,
+> > > +     .paths =3D { "\\_SB.PCI0.LPC0.EC0.FAN0", NULL }
+> > >  };
+> > >=20
+> > > -static const struct yogafan_config ideapad_8bit_fan0_cfg =3D {
+> > > -     .multiplier =3D 100,
+> > > -     .fan_count =3D 1,
+> > > +/* Ideapad 500S / U31-70 (N=3D44) */
+> > > +static struct yogafan_config ideapad_500s_discrete_cfg =3D {
+> > > +     .multiplier =3D 0, .fan_count =3D 1, .n_max =3D 44, .r_max =3D =
+5500,
+> > > +     .tau_ms =3D 1000, .slew_time_s =3D 4, .stop_threshold =3D 50,
+> > >       .paths =3D { "\\_SB.PCI0.LPC0.EC0.FAN0", NULL }
+> > >  };
+> > >=20
+> > > -static const struct yogafan_config legion_16bit_dual_cfg =3D {
+> > > -     .multiplier =3D 1,
+> > > -     .fan_count =3D 2,
+> > > +/* Yoga 3 14 / Yoga 11s (N=3D80) */
+> > > +static struct yogafan_config yoga3_14_discrete_cfg =3D {
+> > > +     .multiplier =3D 0, .fan_count =3D 1, .n_max =3D 80, .r_max =3D =
+5000,
+> > > +     .tau_ms =3D 1000, .slew_time_s =3D 4, .stop_threshold =3D 50,
+> > > +     .paths =3D { "\\_SB.PCI0.LPC0.EC0.FAN0", "\\_SB.PCI0.LPC0.EC0.F=
+ANS" }
+> > > +};
+> > > +
+> > > +/* Yoga 2 13 (N=3D8) */
+> > > +static struct yogafan_config yoga2_13_discrete_cfg =3D {
+> > > +     .multiplier =3D 0, .fan_count =3D 1, .n_max =3D 8, .r_max =3D 4=
+200,
+> > > +     .tau_ms =3D 1000, .slew_time_s =3D 4, .stop_threshold =3D 50,
+> > > +     .paths =3D { "\\_SB.PCI0.LPC0.EC0.FAN0", NULL }
+> > > +};
+> > > +
+> > > +/* Yoga 13 (N=3D255) - Dual Fan */
+> > > +static struct yogafan_config yoga13_discrete_cfg =3D {
+> > > +     .multiplier =3D 0, .fan_count =3D 2, .n_max =3D 255, .r_max =3D=
+ 5000,
+> > > +     .tau_ms =3D 1000, .slew_time_s =3D 4, .stop_threshold =3D 50,
+> > > +     .paths =3D { "\\_SB.PCI0.LPC0.EC0.FAN1", "\\_SB.PCI0.LPC0.EC0.F=
+AN2" }
+> > > +};
+> > > +
+> > > +/* Legacy U330p/U430p (N=3D768) */
+> > > +static struct yogafan_config legacy_u_discrete_cfg =3D {
+> > > +     .multiplier =3D 0, .fan_count =3D 1, .n_max =3D 768, .r_max =3D=
+ 5000,
+> > > +     .tau_ms =3D 1000, .slew_time_s =3D 4, .stop_threshold =3D 50,
+> > > +     .paths =3D { "\\_SB.PCI0.LPC0.EC0.FAN0", NULL }
+> > > +};
+> > > +
+> > > +/* ThinkPad 13 / Helix / T-Series (Strict Discrete) */
+> > > +static struct yogafan_config thinkpad_discrete_cfg =3D {
+> > > +     .multiplier =3D 0, .fan_count =3D 1, .n_max =3D 7,
+> > > +     .r_max =3D 5500, /* Matching table peak for T540p/TP13 */
+> > > +     .tau_ms =3D 1000, .slew_time_s =3D 4, .stop_threshold =3D 50,
+> > > +     .paths =3D { "\\_SB.PCI0.LPC0.EC0.FAN0", "\\_SB.PCI0.LPC0.EC0.F=
+ANS" }
+> > > +};
+> > > +
+> > > +/* ThinkPad L-Series / V580 (Continuous 8-bit) */
+> > > +static struct yogafan_config thinkpad_l_cfg =3D {
+> > > +     .multiplier =3D 100, .fan_count =3D 1, .n_max =3D 100,
+> > > +     .r_max =3D 5500, /* Matching table peak for L390 */
+> > > +     .tau_ms =3D 1000, .slew_time_s =3D 4, .stop_threshold =3D 50,
+> > > +     .paths =3D { "\\_SB.PCI0.LPC0.EC0.FAN0", "\\_SB.PCI0.LPC0.EC0.F=
+AN1" }
+> > > +};
+> > > +
+> > > +/* High Performance (Strict Continuous) */
+> > > +static struct yogafan_config legion_high_perf_cfg =3D {
+> > > +     .multiplier =3D 1, .fan_count =3D 2, .n_max =3D 0,
+> > > +     .r_max =3D 8000, /* Peak for Legion 7i / Yoga Pro 9 */
+> > > +     .tau_ms =3D 1000, .slew_time_s =3D 4, .stop_threshold =3D 50,
+> > >       .paths =3D { "\\_SB.PCI0.LPC0.EC0.FANS", "\\_SB.PCI0.LPC0.EC0.F=
+A2S" }
+> > >  };
+> > >=20
+> > > @@ -78,12 +165,21 @@ static void apply_rllag_filter(struct yoga_fan_d=
+ata *data, int idx, long raw_rpm
+> > >       long delta, step, limit, alpha;
+> > >       s64 temp_num;
+> > >=20
+> > > -     if (raw_rpm < RPM_FLOOR_LIMIT) {
+> > > +     /* 1. PHYSICAL CLAMP & TELEMETRY: Use per-device device_max_rpm=
+ */
+> > > +     if (raw_rpm > (long)data->device_max_rpm)
+> > > +             raw_rpm =3D (long)data->device_max_rpm;
+> > > +
+> > > +     data->raw_val[idx] =3D raw_rpm;
+> > > +
+> > > +     /* 2. Threshold logic */
+> > > +     if (raw_rpm < (long)(data->config->stop_threshold < MIN_THRESHO=
+LD_RPM
+> > > +             ? MIN_THRESHOLD_RPM : data->config->stop_threshold)) {
+> > >               data->filtered_val[idx] =3D 0;
+> > >               data->last_sample[idx] =3D now;
+> > >               return;
+> > >       }
+> > >=20
+> > > +     /* 3. Auto-reset logic */
+> > >       if (data->last_sample[idx] =3D=3D 0 || dt_ms > MAX_SAMPLING) {
+> > >               data->filtered_val[idx] =3D raw_rpm;
+> > >               data->last_sample[idx] =3D now;
+> > > @@ -99,14 +195,16 @@ static void apply_rllag_filter(struct yoga_fan_d=
+ata *data, int idx, long raw_rpm
+> > >               return;
+> > >       }
+> > >=20
+> > > +     /* 4.  PHYSICS: Use per-device internal_tau_ms */
+> > >       temp_num =3D dt_ms << 12;
+> > > -     alpha =3D (long)div64_s64(temp_num, (s64)(TAU_MS + dt_ms));
+> > > +     alpha =3D (long)div64_s64(temp_num, (s64)(data->config->tau_ms =
++ dt_ms));
+> > >       step =3D (delta * alpha) >> 12;
+> > >=20
+> > >       if (step =3D=3D 0 && delta !=3D 0)
+> > >               step =3D (delta > 0) ? 1 : -1;
+> > >=20
+> > > -     limit =3D (MAX_SLEW_RPM_S * (long)dt_ms) / 1000;
+> > > +     /* 5.  SLEW: Use per-device internal_max_slew_rpm_s */
+> > > +     limit =3D ((long)data->internal_max_slew_rpm_s * (long)dt_ms) /=
+ 1000;
+> > >       if (limit < 1)
+> > >               limit =3D 1;
+> > >=20
+> > > @@ -123,19 +221,38 @@ static int yoga_fan_read(struct device *dev, en=
+um hwmon_sensor_types type,
+> > >                        u32 attr, int channel, long *val)
+> > >  {
+> > >       struct yoga_fan_data *data =3D dev_get_drvdata(dev);
+> > > +     const struct yogafan_config *cfg =3D data->config;
+> > >       unsigned long long raw_acpi;
+> > > +     long rpm_raw;
+> > >       acpi_status status;
+> > >=20
+> > > -     if (type !=3D hwmon_fan || attr !=3D hwmon_fan_input)
+> > > +     if (type !=3D hwmon_fan)
+> > >               return -EOPNOTSUPP;
+> > >=20
+> > > +     /* 1. Handle static MAX attribute immediately without filtering=
+ */
+> > > +     if (attr =3D=3D hwmon_fan_max) {
+> > > +             *val =3D (long)data->device_max_rpm;
+> > > +             return 0;
+> > > +     }
+> > > +
+> > > +     if (attr !=3D hwmon_fan_input)
+> > > +             return -EOPNOTSUPP;
+> > > +
+> > > +     /* 2. Get hardware data only for INPUT requests */
+> > >       status =3D acpi_evaluate_integer(data->active_handles[channel],=
+ NULL, NULL, &raw_acpi);
+> > >       if (ACPI_FAILURE(status))
+> > >               return -EIO;
+> > >=20
+> > > -     apply_rllag_filter(data, channel, (long)raw_acpi * data->multip=
+lier);
+> > > -     *val =3D data->filtered_val[channel];
+> > > +     /* 3. Calculate raw RPM based on architecture */
+> > > +     if (cfg->n_max > 0)
+> > > +             rpm_raw =3D (long)div64_s64((s64)cfg->r_max * raw_acpi,=
+ cfg->n_max);
+> > > +     else
+> > > +             rpm_raw =3D (long)raw_acpi * cfg->multiplier;
+> > > +
+> > > +     /* 4. Apply filter only for real speed readings */
+> > > +     apply_rllag_filter(data, channel, rpm_raw);
+> > >=20
+> > > +     *val =3D data->filtered_val[channel];
+> > >       return 0;
+> > >  }
+> > >=20
+> > > @@ -155,47 +272,150 @@ static const struct hwmon_ops yoga_fan_hwmon_o=
+ps =3D {
+> > >       .read =3D yoga_fan_read,
+> > >  };
+> > >=20
+> > > -static const struct hwmon_channel_info *yoga_fan_info[] =3D {
+> > > -     HWMON_CHANNEL_INFO(fan,
+> > > -                        HWMON_F_INPUT, HWMON_F_INPUT,
+> > > -                        HWMON_F_INPUT, HWMON_F_INPUT,
+> > > -                        HWMON_F_INPUT, HWMON_F_INPUT,
+> > > -                        HWMON_F_INPUT, HWMON_F_INPUT),
+> > > -     NULL
+> > > -};
+> > > -
+> > > -static const struct hwmon_chip_info yoga_fan_chip_info =3D {
+> > > -     .ops =3D &yoga_fan_hwmon_ops,
+> > > -     .info =3D yoga_fan_info,
+> > > -};
+> > > -
+> > >  static const struct dmi_system_id yogafan_quirks[] =3D {
+> > > +     /* --- DISCRETE OVERRIDES (Specific matches MUST come first) --=
+- */
+> > >       {
+> > > -             .ident =3D "Lenovo Yoga",
+> > > -             .matches =3D {
+> > > -                     DMI_MATCH(DMI_SYS_VENDOR, "LENOVO"),
+> > > -                     DMI_MATCH(DMI_PRODUCT_FAMILY, "Yoga"),
+> > > -             },
+> > > -             .driver_data =3D (void *)&yoga_8bit_fans_cfg,
+> > > +             .ident =3D "Lenovo Yoga 710",
+> > > +             .matches =3D { DMI_MATCH(DMI_PRODUCT_NAME, "Yoga 710") =
+},
+> > > +             .driver_data =3D &yoga_710_discrete_cfg,
+> > > +     },
+> > > +     {
+> > > +             .ident =3D "Lenovo Yoga 510",
+> > > +             .matches =3D { DMI_MATCH(DMI_PRODUCT_NAME, "Yoga 510") =
+},
+> > > +             .driver_data =3D &yoga_510_discrete_cfg,
+> > > +     },
+> > > +     {
+> > > +             .ident =3D "Lenovo Ideapad 510s",
+> > > +             .matches =3D { DMI_MATCH(DMI_PRODUCT_NAME, "Ideapad 510=
+s") },
+> > > +             .driver_data =3D &yoga_510_discrete_cfg,
+> > > +     },
+> > > +     {
+> > > +             .ident =3D "Lenovo Ideapad 500S",
+> > > +             .matches =3D { DMI_MATCH(DMI_PRODUCT_NAME, "Ideapad 500=
+S") },
+> > > +             .driver_data =3D &ideapad_500s_discrete_cfg,
+> > > +     },
+> > > +     {
+> > > +             .ident =3D "Lenovo U31-70",
+> > > +             .matches =3D { DMI_MATCH(DMI_PRODUCT_NAME, "U31-70") },
+> > > +             .driver_data =3D &ideapad_500s_discrete_cfg,
+> > > +     },
+> > > +     {
+> > > +             .ident =3D "Lenovo Yoga 3 14",
+> > > +             .matches =3D { DMI_MATCH(DMI_PRODUCT_NAME, "80JH") },
+> > > +             .driver_data =3D &yoga3_14_discrete_cfg,
+> > > +     },
+> > > +     {
+> > > +             .ident =3D "Lenovo Yoga 2 13",
+> > > +             .matches =3D { DMI_MATCH(DMI_PRODUCT_NAME, "20344") },
+> > > +             .driver_data =3D &yoga2_13_discrete_cfg,
+> > > +     },
+> > > +     {
+> > > +             .ident =3D "Lenovo Yoga 13",
+> > > +             .matches =3D { DMI_MATCH(DMI_PRODUCT_NAME, "20191") },
+> > > +             .driver_data =3D &yoga13_discrete_cfg,
+> > >       },
+> > > +     {
+> > > +             .ident =3D "Lenovo U330p/U430p",
+> > > +             .matches =3D { DMI_MATCH(DMI_PRODUCT_NAME, "Lenovo u330=
+p") },
+> > > +             .driver_data =3D &legacy_u_discrete_cfg,
+> > > +     },
+> > > +     {
+> > > +             .ident =3D "ThinkPad 13",
+> > > +             .matches =3D { DMI_MATCH(DMI_PRODUCT_NAME, "ThinkPad 13=
+") },
+> > > +             .driver_data =3D &thinkpad_discrete_cfg,
+> > > +     },
+> > > +     {
+> > > +             .ident =3D "ThinkPad Helix",
+> > > +             .matches =3D { DMI_MATCH(DMI_PRODUCT_NAME, "3698") },
+> > > +             .driver_data =3D &thinkpad_discrete_cfg,
+> > > +     },
+> > > +     {
+> > > +             .ident =3D "ThinkPad X-Series",
+> > > +             .matches =3D { DMI_MATCH(DMI_PRODUCT_NAME, "ThinkPad X"=
+) },
+> > > +             .driver_data =3D &thinkpad_discrete_cfg,
+> > > +     },
+> > > +     {
+> > > +             .ident =3D "ThinkPad T-Series",
+> > > +             .matches =3D { DMI_MATCH(DMI_PRODUCT_NAME, "ThinkPad T"=
+) },
+> > > +             .driver_data =3D &thinkpad_discrete_cfg,
+> > > +     },
+> > > +     {
+> > > +             .ident =3D "Lenovo V330",
+> > > +             .matches =3D { DMI_MATCH(DMI_PRODUCT_NAME, "81AX") },
+> > > +             .driver_data =3D &thinkpad_l_cfg,
+> > > +     },
+> > > +
+> > > +     /* --- SPECIAL PROFILES (Must precede general fallbacks) --- */
+> > > +     {
+> > > +             .ident =3D "Lenovo Yoga Pro",
+> > > +             .matches =3D { DMI_MATCH(DMI_PRODUCT_NAME, "Yoga Pro") =
+},
+> > > +             .driver_data =3D &legion_high_perf_cfg,
+> > > +     },
+> > > +     {
+> > > +             .ident =3D "Lenovo Legion Pro",
+> > > +             .matches =3D { DMI_MATCH(DMI_PRODUCT_NAME, "Legion P") =
+},
+> > > +             .driver_data =3D &legion_high_perf_cfg,
+> > > +     },
+> > > +     {
+> > > +             .ident =3D "Lenovo ThinkPad L",
+> > > +             .matches =3D { DMI_MATCH(DMI_PRODUCT_NAME, "ThinkPad L"=
+) },
+> > > +             .driver_data =3D &thinkpad_l_cfg,
+> > > +     },
+> > > +
+> > > +     /* --- CONTINUOUS FALLBACKS (Family matches last) --- */
+> > >       {
+> > >               .ident =3D "Lenovo Legion",
+> > > -             .matches =3D {
+> > > -                     DMI_MATCH(DMI_SYS_VENDOR, "LENOVO"),
+> > > -                     DMI_MATCH(DMI_PRODUCT_FAMILY, "Legion"),
+> > > -             },
+> > > -             .driver_data =3D (void *)&legion_16bit_dual_cfg,
+> > > +             .matches =3D { DMI_MATCH(DMI_PRODUCT_FAMILY, "Legion") =
+},
+> > > +             .driver_data =3D &legion_continuous_16bit_cfg,
+> > > +     },
+> > > +     {
+> > > +             .ident =3D "Lenovo LOQ",
+> > > +             .matches =3D { DMI_MATCH(DMI_PRODUCT_FAMILY, "LOQ") },
+> > > +             .driver_data =3D &legion_continuous_16bit_cfg,
+> > > +     },
+> > > +     {
+> > > +             .ident =3D "Lenovo Yoga",
+> > > +             .matches =3D { DMI_MATCH(DMI_PRODUCT_FAMILY, "Yoga") },
+> > > +             .driver_data =3D &yoga_continuous_8bit_cfg,
+> > >       },
+> > >       {
+> > >               .ident =3D "Lenovo IdeaPad",
+> > > -             .matches =3D {
+> > > -                     DMI_MATCH(DMI_SYS_VENDOR, "LENOVO"),
+> > > -                     DMI_MATCH(DMI_PRODUCT_FAMILY, "IdeaPad"),
+> > > -             },
+> > > -             .driver_data =3D (void *)&ideapad_8bit_fan0_cfg,
+> > > +             .matches =3D { DMI_MATCH(DMI_PRODUCT_FAMILY, "IdeaPad")=
+ },
+> > > +             .driver_data =3D &yoga_continuous_8bit_cfg,
+> > > +     },
+> > > +     {
+> > > +             .ident =3D "Lenovo Xiaoxin",
+> > > +             .matches =3D { DMI_MATCH(DMI_PRODUCT_FAMILY, "Xiaoxin")=
+ },
+> > > +             .driver_data =3D &yoga_continuous_8bit_cfg,
+> > > +     },
+> > > +     {
+> > > +             .ident =3D "Lenovo GeekPro",
+> > > +             .matches =3D { DMI_MATCH(DMI_PRODUCT_FAMILY, "GeekPro")=
+ },
+> > > +             .driver_data =3D &legion_continuous_16bit_cfg,
+> > > +     },
+> > > +     {
+> > > +             .ident =3D "Lenovo ThinkBook",
+> > > +             .matches =3D { DMI_MATCH(DMI_PRODUCT_FAMILY, "ThinkBook=
+") },
+> > > +             .driver_data =3D &yoga_continuous_8bit_cfg,
+> > > +     },
+> > > +     {
+> > > +             .ident =3D "Lenovo Slim",
+> > > +             .matches =3D { DMI_MATCH(DMI_PRODUCT_FAMILY, "Slim") },
+> > > +             .driver_data =3D &yoga_continuous_8bit_cfg,
+> > > +     },
+> > > +     {
+> > > +             .ident =3D "Lenovo V-Series",
+> > > +             .matches =3D { DMI_MATCH(DMI_PRODUCT_NAME, "Lenovo V") =
+},
+> > > +             .driver_data =3D &yoga_continuous_8bit_cfg,
+> > > +     },
+> > > +     {
+> > > +             .ident =3D "Lenovo Aura Edition",
+> > > +             .matches =3D { DMI_MATCH(DMI_PRODUCT_NAME, "Aura") },
+> > > +             .driver_data =3D &yoga_continuous_8bit_cfg,
+> > >       },
+> > >       { }
+> > >  };
+> > > +
+> > >  MODULE_DEVICE_TABLE(dmi, yogafan_quirks);
+> > >=20
+> > >  static int yoga_fan_probe(struct platform_device *pdev)
+> > > @@ -203,7 +423,10 @@ static int yoga_fan_probe(struct platform_device=
+ *pdev)
+> > >       const struct dmi_system_id *dmi_id;
+> > >       const struct yogafan_config *cfg;
+> > >       struct yoga_fan_data *data;
+> > > -     struct device *hwmon_dev;
+> > > +     struct hwmon_chip_info *chip_info;
+> > > +     struct hwmon_channel_info *info;
+> > > +     u32 *fan_config;
+> > > +     acpi_status status;
+> > >       int i;
+> > >=20
+> > >       dmi_id =3D dmi_first_match(yogafan_quirks);
+> > > @@ -215,24 +438,62 @@ static int yoga_fan_probe(struct platform_devic=
+e *pdev)
+> > >       if (!data)
+> > >               return -ENOMEM;
+> > >=20
+> > > -     data->multiplier =3D cfg->multiplier;
+> > > +     data->config =3D cfg;
+> > > +     data->device_max_rpm =3D cfg->r_max ?: 5000;
+> > > +     data->internal_tau_ms =3D cfg->tau_ms;
+> > > +     data->internal_max_slew_rpm_s =3D data->device_max_rpm / (cfg->=
+slew_time_s ?: 1);
+> > >=20
+> > > -     for (i =3D 0; i < cfg->fan_count; i++) {
+> > > -             acpi_status status;
+> > > +     /* 1. Discover handles and set the REAL fan_count */
+> > > +     for (i =3D 0; i < 2 && cfg->paths[i]; i++) {
+> > > +             acpi_handle handle;
+> > >=20
+> > > -             status =3D acpi_get_handle(NULL, (char *)cfg->paths[i],
+> > > -                                      &data->active_handles[data->fa=
+n_count]);
+> > > -             if (ACPI_SUCCESS(status))
+> > > +             status =3D acpi_get_handle(NULL, cfg->paths[i], &handle=
+);
+> > > +             if (ACPI_SUCCESS(status)) {
+> > > +                     data->active_handles[data->fan_count] =3D handl=
+e;
+> > >                       data->fan_count++;
+> > > +             }
+> > >       }
+> > >=20
+> > >       if (data->fan_count =3D=3D 0)
+> > >               return -ENODEV;
+> > >=20
+> > > -     hwmon_dev =3D devm_hwmon_device_register_with_info(&pdev->dev, =
+DRVNAME,
+> > > -                                                      data, &yoga_fa=
+n_chip_info, NULL);
+> > > +     /* 2. Dynamically build the HWMON channel info (Fixes Guenter's=
+ complaint) */
+> > > +     fan_config =3D devm_kcalloc(&pdev->dev, data->fan_count + 1, si=
+zeof(u32), GFP_KERNEL);
+> > > +     if (!fan_config)
+> > > +             return -ENOMEM;
+> > > +
+> > > +     for (i =3D 0; i < data->fan_count; i++)
+> > > +             fan_config[i] =3D HWMON_F_INPUT | HWMON_F_MAX;
+> > > +
+> > > +     info =3D devm_kzalloc(&pdev->dev, sizeof(*info), GFP_KERNEL);
+> > > +     if (!info)
+> > > +             return -ENOMEM;
+> > > +
+> > > +     info->type =3D hwmon_fan;
+> > > +     info->config =3D fan_config;
+> > > +
+> > > +/* 3. Wrap it in chip_info */
+> > > +     chip_info =3D devm_kzalloc(&pdev->dev, sizeof(*chip_info), GFP_=
+KERNEL);
+> > > +     if (!chip_info)
+> > > +             return -ENOMEM;
+> > > +
+> > > +     chip_info->ops =3D &yoga_fan_hwmon_ops;
+> > > +
+> > > +     /* Create AND ALLOCATE the temporary pointer array */
+> > > +     const struct hwmon_channel_info **chip_info_array;
+> > > +
+> > > +     chip_info_array =3D devm_kcalloc(&pdev->dev, 2, sizeof(*chip_in=
+fo_array), GFP_KERNEL);
+> > > +     if (!chip_info_array)
+> > > +             return -ENOMEM;
+> > > +
+> > > +     chip_info_array[0] =3D info;
+> > > +     chip_info_array[1] =3D NULL; /* Null terminated */
+> > > +
+> > > +     chip_info->info =3D chip_info_array;
+> > >=20
+> > > -     return PTR_ERR_OR_ZERO(hwmon_dev);
+> > > +     /* 4. Register with the accurate hardware description and retur=
+n the result */
+> > > +     return PTR_ERR_OR_ZERO(devm_hwmon_device_register_with_info(&pd=
+ev->dev,
+> > > +                             DRVNAME, data, chip_info, NULL));
+> > >  }
+> > >=20
+> > >  static struct platform_driver yoga_fan_driver =3D {
