@@ -1,82 +1,235 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from sender4-op-o15.zoho.com (sender4-op-o15.zoho.com [136.143.188.15])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6C11F1F936;
-	Sat, 11 Apr 2026 21:57:47 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1775944668; cv=none; b=jGBcXoHVcAUxUhDJt/QG2aj5dj7ZRsLd8oLcLX8FIabWhMsmSRz++7GQ+eexHXyb6tEsl4QmaXef1xp6VCMbWkwks2++ug+RpgZdNpU0t38DW9G1pX8zC/2iWf65ka0s3t+ELE4kb9hNQxwLcl+tL09CrOic9faoYcXrL7o2Q60=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1775944668; c=relaxed/simple;
-	bh=5TkzBwy6tsw51wDeX5pNXpNxr8hIlKnh3x3I4Y0n1q4=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=mu8kpYG16SIWhggo5V5EhUrN4h2MW68bL3LWhdRdwwtB0FTlC3IWrvL7Slh72r0GlJG9+Jv91crtspKOMedDf4iarmwL0pFwY67NHlMSHreppLf052Mzah4rB2U2Z9vwVdRd651n937oOnPxeboO6EbywcSbxvTbDAI6jP7t/+0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=C5rQOqXj; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 648DC1862;
+	Sat, 11 Apr 2026 22:37:43 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=136.143.188.15
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1775947064; cv=pass; b=UiwsgJjUZvwAau6VJ+A3UmfRBMIuUOgafcGJYXuCWP0XJ6I5rljSC1RIH1FbntQ2MFxWeOg2SSB7880UoRa/ukn6rvdGrP+dS/PVfXBlRuQ7SuLP0d8IpxXVg2HUu+Qu6i9tOCJyN1a7mc8qXIWcypb2LV7KKuOJd5TK5/864qI=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1775947064; c=relaxed/simple;
+	bh=YFzDcMGTo503e8HjbuFdNKlbfcCU4S4C5DjI2dWNWCg=;
+	h=Message-ID:Subject:From:To:Cc:In-Reply-To:References:Content-Type:
+	 Date:MIME-Version; b=qxgUDRDGrzckaxh7CMf5uo3aHJ8dKtFr1X3FROdSV4kwOH5rTEsGkokY+mSpgJ5NTUKDj3HapPLDKZ60R6UPMMJhUKnIEU0U3OfABlXmet3Pihc0f4dFBLWdCiGMk2gMHMbGsUfuSpochuNZ0OaEpLq57qGW5EVppuCPBjBSaJM=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=rong.moe; spf=pass smtp.mailfrom=rong.moe; dkim=pass (2048-bit key) header.d=rong.moe header.i=i@rong.moe header.b=UsfULlIa; arc=pass smtp.client-ip=136.143.188.15
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=rong.moe
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=rong.moe
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="C5rQOqXj"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 3EA3BC116C6;
-	Sat, 11 Apr 2026 21:57:47 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1775944667;
-	bh=5TkzBwy6tsw51wDeX5pNXpNxr8hIlKnh3x3I4Y0n1q4=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=C5rQOqXjHaq5C2/Cz5WjDhxKGc5LY52d6og89TdZeOJbGTifzWRztNsi1nK1bcRHo
-	 +nAotZEx9EUrbLJRZx2sBtV7TAbSknMxahhhnCAGhqC4FJFmhjYYVM4pE8vdHA+tv+
-	 jjKYbhS6Bzn0f4z+t7uxiwL9TPWSH5vDxF96LKE5EMQ0xAALc0pIfo8ARnDH8zwnXr
-	 tuVwo+RquePc5kx385mrUiayXM2kvyvBoGWQhFRswJcksNIdQNAi8AtFtC590wjVN1
-	 TZs43ZP5257E5uF2igvphukrJB+68eMUYex+/wod2X6cmYv/X2SdqpJOgxujsLZ662
-	 v3cVTEST2YH/Q==
-Received: by finisterre.sirena.org.uk (Postfix, from userid 1000)
-	id BB4CA1AC58C1; Sat, 11 Apr 2026 22:57:44 +0100 (BST)
-Date: Sat, 11 Apr 2026 22:57:44 +0100
-From: Mark Brown <broonie@kernel.org>
-To: Khalil <khalilst@gmail.com>
-Cc: hdegoede@kernel.org, ilpo.jarvinen@linux.intel.com,
-	rf@opensource.cirrus.com, linux-spi@vger.kernel.org,
-	platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v2 0/3] Fix CS35L56 amplifier on Intel LPSS SPI with
- broken ACPI cs-gpios
-Message-ID: <adrD2BrO11tQq49R@sirena.co.uk>
-References: <20260215135524.1171065-2-khalil@rentman.nl>
- <20260411180414.481427-1-khalil@rentman.nl>
+	dkim=pass (2048-bit key) header.d=rong.moe header.i=i@rong.moe header.b="UsfULlIa"
+ARC-Seal: i=1; a=rsa-sha256; t=1775947040; cv=none; 
+	d=zohomail.com; s=zohoarc; 
+	b=RXV69iCB66igDd9h3bw9ByP/uU/uG7SEwfCV/lpOBHdiRRCTzpigPtezZruec4QF9G/odbfxb9S6w/JNUuxAKtx8wXLPi622W0fiMFM4DV0H6dvpFoTEKyAjji4eYSmDtGymNSmawhUBsOCmpWdDiNuzn7O9fid8C+iCMv5gL3k=
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=zohomail.com; s=zohoarc; 
+	t=1775947040; h=Content-Type:Content-Transfer-Encoding:Cc:Cc:Date:Date:From:From:In-Reply-To:MIME-Version:Message-ID:References:Subject:Subject:To:To:Message-Id:Reply-To; 
+	bh=flwqPFmVI+dvB8OaxOpBOZENS6A39u5Hf5gToiKRdbE=; 
+	b=llh7YFytT05lWxOgBnhJxFO+g9N/82is0nwyhjnRz6p1ZbJEiWm4l36TUbUKF7Lt0sps3nptvIS8c78UHw+y13fWzYoA2nRWmuDXDectHJ6mQNElmGCW6xGq+AxeWjli9z6rXsBskxgYiyxk75lKtbcNHa1Ul8wngDXOUSS55uU=
+ARC-Authentication-Results: i=1; mx.zohomail.com;
+	dkim=pass  header.i=rong.moe;
+	spf=pass  smtp.mailfrom=i@rong.moe;
+	dmarc=pass header.from=<i@rong.moe>
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; t=1775947040;
+	s=zmail2048; d=rong.moe; i=i@rong.moe;
+	h=Message-ID:Subject:Subject:From:From:To:To:Cc:Cc:In-Reply-To:References:Content-Type:Content-Transfer-Encoding:Date:Date:MIME-Version:Message-Id:Reply-To;
+	bh=flwqPFmVI+dvB8OaxOpBOZENS6A39u5Hf5gToiKRdbE=;
+	b=UsfULlIaB317uABg3yREb/dOgAB0EszRi8lv+9LHPkAYOGq+vNlSg5t7ySLizaUN
+	Eo+QIJlSrUDJKRa6vcX4TNgfQ72tLYCxFN4rRclHF2lNY1IEkCMyKYfIWMBnw5qmtX5
+	uCT0S9KYWSkIU2KSj3dQ1AXXdJnivfQx8gss+13y1juepRabPW7h1ve60NyR/E/Wv8G
+	Xs9UU3Ujb8oATu7YAMq2/OyEayJapISkusoqAIyrhpeo/xrwbP8Lzr/ISRAR6Cn4fiJ
+	nqvPwzPEnidOb5sZaSZBkC+WSiSjjuTXjmFmJfOrkvNWJunEhrGRKa7wqsrqaf1Zota
+	RJ5Z2P4QbA==
+Received: by mx.zohomail.com with SMTPS id 1775947037522108.32564365614166;
+	Sat, 11 Apr 2026 15:37:17 -0700 (PDT)
+Message-ID: <9c17a159b81db81e83a9e5553a5b4105624ecc81.camel@rong.moe>
+Subject: Re: [RFC PATCH 1/9] leds: Load trigger modules on-demand if used
+ as hw control trigger
+From: Rong Zhang <i@rong.moe>
+To: Andrew Lunn <andrew@lunn.ch>, Mark Pearson <mpearson-lenovo@squebb.ca>
+Cc: Lee Jones <lee@kernel.org>, Pavel Machek <pavel@kernel.org>, Thomas
+ =?ISO-8859-1?Q?Wei=DFschuh?=	 <linux@weissschuh.net>, Benson Leung
+ <bleung@chromium.org>, Guenter Roeck	 <groeck@chromium.org>, Marek
+ =?ISO-8859-1?Q?Beh=FAn?= <kabel@kernel.org>,  "Derek J . Clark"
+ <derekjohn.clark@gmail.com>, Hans de Goede <hansg@kernel.org>, Ilpo
+ =?ISO-8859-1?Q?J=E4rvinen?=	 <ilpo.jarvinen@linux.intel.com>, Ike Panhc
+ <ikepanhc@gmail.com>, Vishnu Sankar	 <vishnuocv@gmail.com>, Vishnu Sankar
+ <vsankar@lenovo.com>, 	linux-kernel@vger.kernel.org,
+ linux-leds@vger.kernel.org, 	chrome-platform@lists.linux.dev,
+ "platform-driver-x86@vger.kernel.org"	 <platform-driver-x86@vger.kernel.org>
+In-Reply-To: <6697bb96-6ae7-4cff-b218-2aa099977dc9@lunn.ch>
+References: <500dfc4b-ebd7-4637-bed0-130fc571923c@lunn.ch>
+	 <b48993998e6e48d4448f8c6dc758f4e260d0f857.camel@rong.moe>
+	 <353713de-b121-4e27-a46f-6ca1941888a6@lunn.ch>
+	 <8b25e1ea9bff414442fa47475b9c9ac5b29049d7.camel@rong.moe>
+	 <60e60c42-f776-424a-a5b4-7286d33175d1@lunn.ch>
+	 <d2d321fe39c41ebd896eef63f3909df29f5a1622.camel@rong.moe>
+	 <4e839e55-4daa-45cd-b403-d1d6eae63d8d@app.fastmail.com>
+	 <cc4398e1512dceb531ba3bd5dd0d20cf2042bb84.camel@rong.moe>
+	 <2ac0c46c-805d-4749-a6e0-94b16b104a72@app.fastmail.com>
+	 <7437cc09-7958-4172-aec2-4429cfa98141@app.fastmail.com>
+	 <6697bb96-6ae7-4cff-b218-2aa099977dc9@lunn.ch>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+Date: Sun, 12 Apr 2026 06:32:10 +0800
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-	protocol="application/pgp-signature"; boundary="YvlfXJkyw/fm60h0"
-Content-Disposition: inline
-In-Reply-To: <20260411180414.481427-1-khalil@rentman.nl>
-X-Cookie: You will be divorced within a year.
+User-Agent: Evolution 3.56.2-9 
+X-ZohoMailClient: External
 
+Hi Andrew,
 
---YvlfXJkyw/fm60h0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+On Sat, 2026-04-11 at 22:42 +0200, Andrew Lunn wrote:
+> > Hi maintainers - a gentle nudge on this one. Would like some
+> > direction if we can move ahead with the series. If not, what is
+> > required?
+> =C2=A0
+>=20
+>=20
+>=20
+> > On our side I know Vishnu has implemented the thinkpad driver using
+> > this and confirmed the design works there too.
+> =C2=A0
+>=20
+>=20
+>=20
+> > Would like to get this upstream so we can start working with the
+> > user-space folk on updating their pieces.
+>=20
+> I'm not the Maintainer here, so i would not be too unhappy if i was
+> ignored.
 
-On Sat, Apr 11, 2026 at 08:04:11PM +0200, Khalil wrote:
+Thanks for sharing your thoughts.
 
-> This is v2 of the patch series fixing dual CS35L56 amplifiers on HP
-> laptops with Intel Lunar Lake and broken ACPI cs-gpios.
+>=20
+> I've had some time to think about this. I guess you are going to go
+> with a Linux LED, whatever. With that assumption in place, a trigger
+> makes sense. But i think it needs to be a special sort of trigger, and
+> a special sort of LED.
+>=20
+> This is not a general purpose LED, which is a basic assumption for
+> Linux LEDs. You cannot make it blink for netdev packets, shift lock,
+> heartbeat, etc, because Linux does not control it, the EC does. Linux
+> can ask the EC to set it to some state, but the EC might change it,
+> and notify Linux afterwards. That is not the normal behaviour of a
+> Linux LED.
 
-I can't work out what these apply against, please submit against my
-current tree.
+Such a behavior is mostly handled by brightness_hw_changed (with
+CONFIG_LEDS_BRIGHTNESS_HW_CHANGED=3Dy). It's already there for 9 years.
+More details below.
 
---YvlfXJkyw/fm60h0
-Content-Type: application/pgp-signature; name="signature.asc"
+The problem here is more about how to represent the ALS-based auto
+brightness mode and how to notify userspace of its (de)activation. The
+series demonstrates an approach to achieve both goals.
 
------BEGIN PGP SIGNATURE-----
+>=20
+> Also, it does not make sense to allow the trigger to be bound to any
+> other LED.
 
-iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAmnaw9cACgkQJNaLcl1U
-h9DqSgf/c46kiKmYcNbzMk6RDUssL5ZaB4McUIOQLOyk4/GmbE1E8RfjMBnOJNP/
-nT1CGYDdLBoOEGuxj1A2O688P6W/uZIxEJMnd0uZD7+qQ9x3Fs2nmsNA4PTY5L0e
-TkiO2u+CBqXal4+hyhrE5tNo+/kWSNk/5RzuSOh550YPWlDVlrnuk9WqVMcsQYtN
-lc/yjQMsoLUwOShI3bfw0mSM/o+c0+gYEvd1r7n9RxcsRP+39TiOGUX5/ynxNZPB
-NALEXzQXBhMLUe9Brbg0R1pN8h8cObg0hB0UB2K4lQttKiL5U+MZ4WgBWcj9nhmA
-pxJoAXyz4ksOjkInap0YgObPSoDS5Q==
-=+Lcw
------END PGP SIGNATURE-----
+I used a private trigger in PATCH 9/9. It can never be bound to any
+other LEDs.
 
---YvlfXJkyw/fm60h0--
+>=20
+> The trigger and the LED are tightly bound together. So i would put
+> them in the same driver. There are triggers which live outside of
+> drivers/leds/trigger/. So it is not a problem it lives somewhere
+> else. It also solves the ordering problem you had, getting the trigger
+> registered. Since it lives in the same driver as the LED, you know it
+> is registered, you do it before registering the LED.
+
+I intentionally included PATCH 9/9 in the series to demonstrate how to
+use the new interface. It registers a private trigger before registering
+the LED, so there is no ordering problem.
+
+>=20
+> I think you need some additional logic in the core. This LED must have
+> this trigger.=C2=A0I would look at using the is_visible() attribute
+> callback to make the trigger file in sysfs invisible for this LED, so
+> it cannot be changed.=C2=A0
+>=20
+
+Doing so breaks userspace. The LED device has been already there and
+worked with LED triggers for so many years. Not having 100% pure
+software control is not a convictive reason to break userspace from my
+perspective. Of course I am not a maintainer too so that's just my
+personal thoughts.
+
+Moreover, LEDs without 100% pure software control are already there for
+at least 9 years. All LEDs with the LED_BRIGHT_HW_CHANGED flag set fall
+into this category. They've worked with LED triggers for 9 years. See
+also commit 0cb8eb30d425 ("leds: class: Add new optional
+brightness_hw_changed attribute")
+
+All these LEDs are keyboard backlight. As long as the user doesn't press
+the shortcut (e.g., Fn+Space), all these LEDs works with any LED
+triggers perfectly. If an user presses the shortcut, they know what they
+are doing. If an user enables a trigger by writing to the trigger file,
+they know they shouldn't press the shortcut afterward.
+
+> I would somehow get this trigger attached to the
+> LED when it is created.=C2=A0
+>=20
+
+I've done this in PATCH 9/9.
+
+> The trigger_relevant() call needs to be
+> extended so that you cannot attach this trigger to any other LED.
+
+trigger_relevant() already supports this.
+
+I set .trigger_type to the same value on both the private trigger and
+the LED device in PATCH 9/9. Doing so is enough to prevent the trigger
+from being attached to any other LED. See also commit 93690cdf3060
+("leds: trigger: add support for LED-private device triggers").
+
+>=20
+> I would also think about naming. The behaviour is i guess specific to
+> X86 laptops? Do Apple laptops have the same behaviour? What about
+> Snapdragon X Series laptops? Chromebooks? USB keyboards? What about
+> things like the Unihertz Titan 2?
+
+   $ grep -rl LED_BRIGHT_HW_CHANGED
+   Documentation/leds/leds-class.rst
+   drivers/hid/hid-lg-g15.c
+   drivers/leds/led-class.c
+   drivers/platform/x86/dell/dell-laptop.c
+   drivers/platform/x86/system76_acpi.c
+   drivers/platform/x86/lenovo/ideapad-laptop.c
+   drivers/platform/x86/lenovo/thinkpad_acpi.c
+   drivers/platform/x86/samsung-galaxybook.c
+   drivers/platform/x86/asus-wmi.c
+   drivers/platform/x86/lg-laptop.c
+   drivers/platform/x86/toshiba_acpi.c
+   drivers/platform/arm64/lenovo-thinkpad-t14s.c
+   include/linux/leds.h
+
+There are arm64 laptops and Logitech's USB keyboards that change their
+backlight brightness without consulting with the OS. If these devices
+support auto brightness, they will benefit from this series too.
+
+Also, the series aims to eliminate problems on naming. Userspace doesn't
+need to know the trigger's name beforehand. Instead, the new interface
+provides the name to userspace, see PATCH 6/9.
+
+>=20
+> Somebody in the future might produce a generic solution. Linux
+> controls the LED. The Linux input system gets the key presses and
+> sends them to the trigger. You can bind an iio ambient sensor to the
+> trigger, etc. So you should leave the name space open for other
+> implementations.
+
+I agree with that, but we are already living in a world that most Fn
+keys on keyboards are always translated before reaching the OS. I don't
+think we will have a keyboard that behave like the ideal way any soon,
+especially considering that nowadays some compact keyboards even send
+Meta+Shift+S instead of SysRq when the Fn key combination for screenshot
+is pressed -- they can't even work with magic SysRq. And in an ideal
+world the Copilot key (sends RCtrl+RShift+F23) shouldn't appear at
+all...
+
+Thanks,
+Rong
+
+>=20
+> 	 Andrew
