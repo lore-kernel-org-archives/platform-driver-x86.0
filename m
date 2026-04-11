@@ -1,114 +1,123 @@
-Received: from sender4-op-o15.zoho.com (sender4-op-o15.zoho.com [136.143.188.15])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ej1-f46.google.com (mail-ej1-f46.google.com [209.85.218.46])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 95C5F3B6348;
-	Sat, 11 Apr 2026 17:12:24 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=136.143.188.15
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1775927545; cv=pass; b=RRw5q9NvgR7D+AsNsru4ZCpKboKGD/cs30Yog8/b1DZp2pI0wz0JUQISpqv506CWEEOqI7wnX7a+0iE+HhqPK2fCnCMf0OZBzT6MMLZNpzcbjQb6wjwPZLCNZIgpxnpNqd6tQQMRo0R2aso3C4dwyqvCf4haT8j4abCxcATNdIU=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1775927545; c=relaxed/simple;
-	bh=QzTyzfgwJmX5l6gOtBshZqepdzh53YMTwugDRTceRFg=;
-	h=Message-ID:Subject:From:To:Cc:In-Reply-To:References:Content-Type:
-	 Date:MIME-Version; b=t7wmUdXlCLqH1dT+KWiyOGWV8E2beP/rb0DlQzhcMuX2uVS7JYLWoVSZYoRK0q63m3oj4DWd93CSlH6n8h7r5Sh8REJGI1hF1RfSyqqgCIVzxVMrnOzYSfSiGF5g++Xt/GQthaGiD8fSSyfpPD9rWLA2gf0jvbkFP+gjjdCjy/0=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=rong.moe; spf=pass smtp.mailfrom=rong.moe; dkim=pass (2048-bit key) header.d=rong.moe header.i=i@rong.moe header.b=FNjSH2Mz; arc=pass smtp.client-ip=136.143.188.15
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=rong.moe
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=rong.moe
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0826D29ACF7
+	for <platform-driver-x86@vger.kernel.org>; Sat, 11 Apr 2026 18:04:21 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.46
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1775930663; cv=none; b=RtTKVG2zfADi/cW+4n0qLF24KMVCKz77Jw9u+w5/I+yv45Up9DCwDeL0veFULu9A+pepErlklUBk9JAO25pADHej38UNGn9MSjOT1rGPqZ/f7vwx9gRQMlsQCNqOMOw6XU68PdlvR97aQclCHWHGv/+QivjoI3UaCiB11SMkaEc=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1775930663; c=relaxed/simple;
+	bh=9aKPv9W66PoQjS1drLRMSLNL5N+3u0CUbWozsmMaGuY=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=qIVw606t2Z+4cSwNO+vQUTfusH+lD/4VsYE3BUn7W4Ikn9dJLOn9zmph0DEowsL82umJ3veVA8QoOXqE039F/tIFM2wbBe+KtYvjZGpKVuDHFN0Wu2kjiIlPGU8Eto0W1M3He+pTP+M8TCp+bq5zTCGIpqtp+Nq1o9hQ4+KxENY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=qwa3jElP; arc=none smtp.client-ip=209.85.218.46
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=rong.moe header.i=i@rong.moe header.b="FNjSH2Mz"
-ARC-Seal: i=1; a=rsa-sha256; t=1775927513; cv=none; 
-	d=zohomail.com; s=zohoarc; 
-	b=GBNN3vih+kevB5woGNSFLOURU1fiJRof/a0dGcioKGBfwrOrNViZW4IsW4r4Wct/y79s5GH6XvBp7GwWli3lKTyXM+HdayUEQBhUcSImPjX4Trg+6R30YtMXxc4Om5ciTsaUvt05PNBz0Je8korcxak6+J2V8baJMxkaqCqk14I=
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=zohomail.com; s=zohoarc; 
-	t=1775927513; h=Content-Type:Content-Transfer-Encoding:Cc:Cc:Date:Date:From:From:In-Reply-To:MIME-Version:Message-ID:References:Subject:Subject:To:To:Message-Id:Reply-To; 
-	bh=QzTyzfgwJmX5l6gOtBshZqepdzh53YMTwugDRTceRFg=; 
-	b=PFNVTY/v15wvjPCwcgnZ9Svs2BFSfFiATY6oAGyUzzsXktQMJPj7A9JgPG/hoRUaAzLCXl9/r2NwZfBOaLTp//NoccLRjbjBRj/PLQtX2tA3kVRLcF4bmw5LZSnajoEvo4/axCk/JWCKXsKsyCfbFjIIngafMVENRrHH/ifvA5k=
-ARC-Authentication-Results: i=1; mx.zohomail.com;
-	dkim=pass  header.i=rong.moe;
-	spf=pass  smtp.mailfrom=i@rong.moe;
-	dmarc=pass header.from=<i@rong.moe>
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; t=1775927513;
-	s=zmail2048; d=rong.moe; i=i@rong.moe;
-	h=Message-ID:Subject:Subject:From:From:To:To:Cc:Cc:In-Reply-To:References:Content-Type:Content-Transfer-Encoding:Date:Date:MIME-Version:Message-Id:Reply-To;
-	bh=QzTyzfgwJmX5l6gOtBshZqepdzh53YMTwugDRTceRFg=;
-	b=FNjSH2Mz7Y6LMgfgLqUrJwHgSNAkog6YZ19G2uxTx+h0bLPDXVpY+kR4WEjTHybT
-	Fl6TTLKWD1Yjx93Qciz/+RoNoO1LbCxd2NE9H/pewyRh1WcuK6tiM1V/kbTn8LLBony
-	t18PbDLlqyhYG1sj48X0tp87GFFYkwPnKt4UT9qU4Qrg+uKodkOXojRnDQOe1cCuh1C
-	V4ZD0IKCL2dX0CPwBYONwpUKdr0ao0bzv1I3zRpgAkhoL8A1GTsAN69qV9VtgOw+1dT
-	cAxonDgboM9MkW/qiHTENilx2asmrQDOyBJjuwrhqz4/Z7e1BUlZOaP2cweh+B/YSSU
-	rpNhz8SeGA==
-Received: by mx.zohomail.com with SMTPS id 1775927512784127.39999269271095;
-	Sat, 11 Apr 2026 10:11:52 -0700 (PDT)
-Message-ID: <39680cd5d1211cd0f0e944ebc7c831f5607ee9c7.camel@rong.moe>
-Subject: Re: [PATCH v14] Subject: [PATCH v14] hwmon: (yogafan) Extend
- support to more Lenovo consumer models
-From: Rong Zhang <i@rong.moe>
-To: Guenter Roeck <linux@roeck-us.net>, Sergio Melas <sergiomelas@gmail.com>
-Cc: Henrique de Moraes Holschuh <hmh@hmh.eng.br>, 
-	ibm-acpi-devel@lists.sourceforge.net, "Derek J. Clark"	
- <derekjohn.clark@gmail.com>, Armin Wolf <W_Armin@gmx.de>, Jean Delvare	
- <jdelvare@suse.com>, linux-hwmon@vger.kernel.org,
- linux-kernel@vger.kernel.org, 	platform-driver-x86@vger.kernel.org
-In-Reply-To: <8f7812ec-3c8a-4673-8222-28ba22796e22@roeck-us.net>
-References: <20260404164339.119023-1-sergiomelas@gmail.com>
-	 <ae53b7783787975caa973dcde337f20aee9b0b40.camel@rong.moe>
-	 <CAP8e=s+TcnikqHtTaXdsDUmOreLP5MYNQN1gDWvrQa-smbh_9w@mail.gmail.com>
-	 <4c627b63e40d1a3b2923ebe8b42fedde176f35cd.camel@rong.moe>
-	 <8f7812ec-3c8a-4673-8222-28ba22796e22@roeck-us.net>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-Date: Sun, 12 Apr 2026 01:06:47 +0800
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="qwa3jElP"
+Received: by mail-ej1-f46.google.com with SMTP id a640c23a62f3a-b9d9971d059so159365366b.2
+        for <platform-driver-x86@vger.kernel.org>; Sat, 11 Apr 2026 11:04:21 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20251104; t=1775930660; x=1776535460; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=tUEOsnfxXuZLqwLt1IFYC5XjnP8ak+RNfelGDS4bV6g=;
+        b=qwa3jElP+iCMlndVflfYj152Tniir5hai7buLbBMRxoXa+Qn0CAbxYbkDwRQtthxOa
+         07CsFti7gkzWoIGciMIAdUQRH8l4CMuvb8Zpc+DON5jTCQnlHS4X69ez4h39FD5g6yd/
+         hsvPV/CjwSb4SfwX8yeUqjWQYK/G3OjPfngzBy0NVpyw+JrJ4PIiIvUDeulcLDbVQRVE
+         KWmagHOxKfddfm/KpoxhKztksiiJfuJyKctEANyK7O69JrAUIO922iYDqwWMo2Te2Z0K
+         UFItX8O4qAYmIQBKDoMF9dso+amNGQgFHYlqNXrCojUfnyhe2Ay+TildKEkli47rBmAl
+         Yhow==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20251104; t=1775930660; x=1776535460;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:x-gm-gg:x-gm-message-state:from
+         :to:cc:subject:date:message-id:reply-to;
+        bh=tUEOsnfxXuZLqwLt1IFYC5XjnP8ak+RNfelGDS4bV6g=;
+        b=CP8kETfA2SBpYbhqdNlMS/jn8flREJDcjifc4Kd5yeD31AJtM7BUSXkYsTUXJ9gSA5
+         nF0oXmV0S+7hCFkaYxX5D+hEdTtCe7XEdWIL63DrM8bV22EnZrJiSGxWP8Fa/n6C+auY
+         iK1HL6gDhGvY5Pl1wquX+VOWjL1TfMCAGajolLNJcj9JZko1rkWHhYpZ6ZPPckFW1cxH
+         5MOF6N0aj3zNLeJrefBiwiWy98PENs2cnLXDkzl4U98EthtAAXyjSFDUN3k5nbGNdZED
+         MiHRotAoSK4mcZtf+mYORCZERQqC2DxQmV3jMrhg3E3aoPS2GfwGCVNsFxQ8lEWhQSv6
+         GTkw==
+X-Forwarded-Encrypted: i=1; AJvYcCX0DaIIUHSopPmrrJvQqtKCbsCDVvRfeNM6c1h7yKJijDvqDvvjqiH9rX649jzN5DB5tDYW9CONuBpN8ee0PBjDyN6p@vger.kernel.org
+X-Gm-Message-State: AOJu0Ywnbz0PKplUTr6fPSm0/pfDm8SUW8ZKZfCH6zcIwg8KBgzoZCGH
+	2c5i7ikwD6ibt26+Qzwi6VvdT/13mQdAjmKUxcldDjEduObGZXXUlB1Q
+X-Gm-Gg: AeBDiet7J6aKZFGHCX5n6lbKbzo3OQlKRIP6z28BKXgLIrzoFSM6ZTw43xqSdQ2zJLh
+	xmZat4Y1vPBZrqF/xrRVgqVeiw9nkucE234cm/qpoMBhbtd9ecnVb/fiDAdOwonfnT+9ueWhN3L
+	NCm8ciAzzzkmNFNXiDskjR0DceSGCQCKrGi4PBol0M76RNq9aLrUTp6OTHhFkC8A++UPYDVxYzb
+	g3NDOw2nOUatGjPchn/LZdLQnxMtJqVWCyhJ2GCJItmn/zNLoBTswwipUCE9WUgbG+ECgmq8l33
+	LiRKS8Iikyz+r0vO+y0ERfeSCSbhV7YhBvJSy6ZK2IRS8VWof4UUkJI0HikaQHDtiM4WsPxaCSG
+	VoBuMbL9Y1+4Zs77nP55nJBZhN0+3WxKVkdxOQ5yHjQo0QhJ1DZtESiSl6lduleFj9lbpNDXvCV
+	MYkbGK//G1d9jSJLFoTYTJTayh/4FK4Jd/
+X-Received: by 2002:a17:906:4790:b0:b98:7e30:8129 with SMTP id a640c23a62f3a-b9d7296657fmr412690366b.32.1775930659993;
+        Sat, 11 Apr 2026 11:04:19 -0700 (PDT)
+Received: from khalil-hp.home ([62.250.67.33])
+        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-b9d6e5c56d3sm186160666b.32.2026.04.11.11.04.19
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sat, 11 Apr 2026 11:04:19 -0700 (PDT)
+From: Khalil <khalilst@gmail.com>
+X-Google-Original-From: Khalil <khalil@rentman.nl>
+To: broonie@kernel.org,
+	hdegoede@kernel.org,
+	ilpo.jarvinen@linux.intel.com
+Cc: rf@opensource.cirrus.com,
+	linux-spi@vger.kernel.org,
+	platform-driver-x86@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	Khalil <khalilst@gmail.com>
+Subject: [PATCH 1/3] spi: Preserve preset cs_gpiod in __spi_add_device()
+Date: Sat, 11 Apr 2026 20:04:12 +0200
+Message-ID: <20260411180414.481427-2-khalil@rentman.nl>
+X-Mailer: git-send-email 2.43.0
+In-Reply-To: <20260411180414.481427-1-khalil@rentman.nl>
+References: <20260215135524.1171065-2-khalil@rentman.nl>
+ <20260411180414.481427-1-khalil@rentman.nl>
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Evolution 3.56.2-9 
-X-ZohoMailClient: External
+Content-Transfer-Encoding: 8bit
 
-Hi Guenter,
+From: Khalil <khalilst@gmail.com>
 
-On Sat, 2026-04-11 at 08:56 -0700, Guenter Roeck wrote:
-> On 4/11/26 07:31, Rong Zhang wrote:
-> > Hi Sergio,
-> >=20
-> > On Fri, 2026-04-10 at 22:14 +0200, Sergio Melas wrote:
-> > > Hi Rong, Hi Guenter,
-> > >=20
-> > > Thank you for the review and for pointing out the overlap with lenovo=
--wmi-other.
-> > >=20
-> > > 1. WMI Coexistence and Bogus Fans
-> > > I completely agree that double-reporting is suboptimal. I will
-> > > implement a check in the probe function using
-> > > wmi_has_guid(LENOVO_WMI_FAN_GUID). If the WMI interface is present,
-> > > yogafan will return -ENODEV and yield to your driver. This ensures my
-> > > driver only covers models where WMI reporting is unavailable.
-> > >=20
-> >=20
-> > You may also want to add a module parameter to override the WMI GUID
-> > check as some devices do not support the fan reporting/tuning interface
-> > despite having the WMI GUIDs.
-> >=20
->=20
-> Please, no new module parameters. If there are devices not supporting thi=
-s,
-> add them to an exclude list.=C2=A0Or make sure that only devices supporti=
-ng
-> the functionality are instantiated in the first place.
+__spi_add_device() unconditionally overwrites spi->cs_gpiod[] from
+ctlr->cs_gpiods[cs], even if the caller has already set a GPIO
+descriptor on the device. This prevents drivers like
+serial-multi-instantiate from pre-configuring a GPIO chip select
+acquired from ACPI before adding the device.
 
-Fine. I will no longer request for a module parameter then. Relying on
-WMI GUID checks with an exclude list to determine if lenovo-wmi-other is
-preferred over yogafan is OK for us.
+Skip the overwrite when the device already has a cs_gpiod set for
+the given index, allowing callers to preset GPIO chip selects that
+aren't described in the controller's cs-gpios property.
 
-BTW,=C2=A0I just noticed that thinkpad_acpi also provides fan reporting and
-tuning support for some ThinkPad devices when I saw a patch on the pdx86
-list. So, +CC ibm-acpi-devel, Henrique.
+This is useful on platforms where the ACPI _DSD cs-gpios property
+on the SPI controller is incomplete, but the peripheral's ACPI node
+does contain the correct GpioIo resource for its chip select.
 
-Thanks,
-Rong
+Suggested-by: Richard Fitzgerald <rf@opensource.cirrus.com>
+Signed-off-by: Khalil <khalilst@gmail.com>
+---
+ drivers/spi/spi.c | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
 
->=20
-> Thanks,
-> Guenter
+diff --git a/drivers/spi/spi.c b/drivers/spi/spi.c
+index XXXXXXX..XXXXXXX 100644
+--- a/drivers/spi/spi.c
++++ b/drivers/spi/spi.c
+@@ -1148,7 +1148,8 @@ static int __spi_add_device(struct spi_device *spi)
+
+ 	if (ctlr->cs_gpiods) {
+ 		for (idx = 0; idx < SPI_CS_CNT_MAX; idx++) {
+-			if (is_valid_cs(cs))
++			cs = spi_get_chipselect(spi, idx);
++			if (is_valid_cs(cs) && !spi_get_csgpiod(spi, idx))
+ 				spi_set_csgpiod(spi, idx, ctlr->cs_gpiods[cs]);
+ 		}
+ 	}
+--
+2.43.0
