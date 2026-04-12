@@ -1,235 +1,179 @@
-Received: from sender4-op-o15.zoho.com (sender4-op-o15.zoho.com [136.143.188.15])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-dl1-f49.google.com (mail-dl1-f49.google.com [74.125.82.49])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 648DC1862;
-	Sat, 11 Apr 2026 22:37:43 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=136.143.188.15
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1775947064; cv=pass; b=UiwsgJjUZvwAau6VJ+A3UmfRBMIuUOgafcGJYXuCWP0XJ6I5rljSC1RIH1FbntQ2MFxWeOg2SSB7880UoRa/ukn6rvdGrP+dS/PVfXBlRuQ7SuLP0d8IpxXVg2HUu+Qu6i9tOCJyN1a7mc8qXIWcypb2LV7KKuOJd5TK5/864qI=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1775947064; c=relaxed/simple;
-	bh=YFzDcMGTo503e8HjbuFdNKlbfcCU4S4C5DjI2dWNWCg=;
-	h=Message-ID:Subject:From:To:Cc:In-Reply-To:References:Content-Type:
-	 Date:MIME-Version; b=qxgUDRDGrzckaxh7CMf5uo3aHJ8dKtFr1X3FROdSV4kwOH5rTEsGkokY+mSpgJ5NTUKDj3HapPLDKZ60R6UPMMJhUKnIEU0U3OfABlXmet3Pihc0f4dFBLWdCiGMk2gMHMbGsUfuSpochuNZ0OaEpLq57qGW5EVppuCPBjBSaJM=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=rong.moe; spf=pass smtp.mailfrom=rong.moe; dkim=pass (2048-bit key) header.d=rong.moe header.i=i@rong.moe header.b=UsfULlIa; arc=pass smtp.client-ip=136.143.188.15
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=rong.moe
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=rong.moe
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CF961212FAD
+	for <platform-driver-x86@vger.kernel.org>; Sun, 12 Apr 2026 06:11:25 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=74.125.82.49
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1775974287; cv=none; b=MBpjI65IU4wcUL7fAtlEsZ1QFODiTv9DY0m59nTXh01w78lo9R/mJ1xhkigKIgBB16x45GqitDolTW2E61pBXkZHkZwpWg5hWYqf5nLQmhOKVaMnFx7pPe82+sgX8UmRWJHNpn8xeZeBWshBH7YQzgBDG39+uNAbWqd2ggcyLXs=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1775974287; c=relaxed/simple;
+	bh=WFSGwgH02YFku0hSVSXCqcW1ONjlSGICutXtlrLEs3I=;
+	h=From:Date:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=XjIuMyFKCQlCNVhkOQCCZ8qcJ1EZimRaxRGAYg3MgodxXExTe9x2w4SroeoEsGerxhHjnCBHtv2Vu6mFIcqrxi0G6nOUuQqKkSCiBWCuALkgwSuA0U4DLsQIWd6gVIQn6WZ3g4gdXZXCG10ph3sFQlWeTyIl+8NcY3zpz4VE5MQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=code406.com; spf=pass smtp.mailfrom=code406.com; dkim=pass (1024-bit key) header.d=code406.com header.i=@code406.com header.b=XkDh6ita; arc=none smtp.client-ip=74.125.82.49
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=code406.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=code406.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=rong.moe header.i=i@rong.moe header.b="UsfULlIa"
-ARC-Seal: i=1; a=rsa-sha256; t=1775947040; cv=none; 
-	d=zohomail.com; s=zohoarc; 
-	b=RXV69iCB66igDd9h3bw9ByP/uU/uG7SEwfCV/lpOBHdiRRCTzpigPtezZruec4QF9G/odbfxb9S6w/JNUuxAKtx8wXLPi622W0fiMFM4DV0H6dvpFoTEKyAjji4eYSmDtGymNSmawhUBsOCmpWdDiNuzn7O9fid8C+iCMv5gL3k=
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=zohomail.com; s=zohoarc; 
-	t=1775947040; h=Content-Type:Content-Transfer-Encoding:Cc:Cc:Date:Date:From:From:In-Reply-To:MIME-Version:Message-ID:References:Subject:Subject:To:To:Message-Id:Reply-To; 
-	bh=flwqPFmVI+dvB8OaxOpBOZENS6A39u5Hf5gToiKRdbE=; 
-	b=llh7YFytT05lWxOgBnhJxFO+g9N/82is0nwyhjnRz6p1ZbJEiWm4l36TUbUKF7Lt0sps3nptvIS8c78UHw+y13fWzYoA2nRWmuDXDectHJ6mQNElmGCW6xGq+AxeWjli9z6rXsBskxgYiyxk75lKtbcNHa1Ul8wngDXOUSS55uU=
-ARC-Authentication-Results: i=1; mx.zohomail.com;
-	dkim=pass  header.i=rong.moe;
-	spf=pass  smtp.mailfrom=i@rong.moe;
-	dmarc=pass header.from=<i@rong.moe>
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; t=1775947040;
-	s=zmail2048; d=rong.moe; i=i@rong.moe;
-	h=Message-ID:Subject:Subject:From:From:To:To:Cc:Cc:In-Reply-To:References:Content-Type:Content-Transfer-Encoding:Date:Date:MIME-Version:Message-Id:Reply-To;
-	bh=flwqPFmVI+dvB8OaxOpBOZENS6A39u5Hf5gToiKRdbE=;
-	b=UsfULlIaB317uABg3yREb/dOgAB0EszRi8lv+9LHPkAYOGq+vNlSg5t7ySLizaUN
-	Eo+QIJlSrUDJKRa6vcX4TNgfQ72tLYCxFN4rRclHF2lNY1IEkCMyKYfIWMBnw5qmtX5
-	uCT0S9KYWSkIU2KSj3dQ1AXXdJnivfQx8gss+13y1juepRabPW7h1ve60NyR/E/Wv8G
-	Xs9UU3Ujb8oATu7YAMq2/OyEayJapISkusoqAIyrhpeo/xrwbP8Lzr/ISRAR6Cn4fiJ
-	nqvPwzPEnidOb5sZaSZBkC+WSiSjjuTXjmFmJfOrkvNWJunEhrGRKa7wqsrqaf1Zota
-	RJ5Z2P4QbA==
-Received: by mx.zohomail.com with SMTPS id 1775947037522108.32564365614166;
-	Sat, 11 Apr 2026 15:37:17 -0700 (PDT)
-Message-ID: <9c17a159b81db81e83a9e5553a5b4105624ecc81.camel@rong.moe>
-Subject: Re: [RFC PATCH 1/9] leds: Load trigger modules on-demand if used
- as hw control trigger
-From: Rong Zhang <i@rong.moe>
-To: Andrew Lunn <andrew@lunn.ch>, Mark Pearson <mpearson-lenovo@squebb.ca>
-Cc: Lee Jones <lee@kernel.org>, Pavel Machek <pavel@kernel.org>, Thomas
- =?ISO-8859-1?Q?Wei=DFschuh?=	 <linux@weissschuh.net>, Benson Leung
- <bleung@chromium.org>, Guenter Roeck	 <groeck@chromium.org>, Marek
- =?ISO-8859-1?Q?Beh=FAn?= <kabel@kernel.org>,  "Derek J . Clark"
- <derekjohn.clark@gmail.com>, Hans de Goede <hansg@kernel.org>, Ilpo
- =?ISO-8859-1?Q?J=E4rvinen?=	 <ilpo.jarvinen@linux.intel.com>, Ike Panhc
- <ikepanhc@gmail.com>, Vishnu Sankar	 <vishnuocv@gmail.com>, Vishnu Sankar
- <vsankar@lenovo.com>, 	linux-kernel@vger.kernel.org,
- linux-leds@vger.kernel.org, 	chrome-platform@lists.linux.dev,
- "platform-driver-x86@vger.kernel.org"	 <platform-driver-x86@vger.kernel.org>
-In-Reply-To: <6697bb96-6ae7-4cff-b218-2aa099977dc9@lunn.ch>
-References: <500dfc4b-ebd7-4637-bed0-130fc571923c@lunn.ch>
-	 <b48993998e6e48d4448f8c6dc758f4e260d0f857.camel@rong.moe>
-	 <353713de-b121-4e27-a46f-6ca1941888a6@lunn.ch>
-	 <8b25e1ea9bff414442fa47475b9c9ac5b29049d7.camel@rong.moe>
-	 <60e60c42-f776-424a-a5b4-7286d33175d1@lunn.ch>
-	 <d2d321fe39c41ebd896eef63f3909df29f5a1622.camel@rong.moe>
-	 <4e839e55-4daa-45cd-b403-d1d6eae63d8d@app.fastmail.com>
-	 <cc4398e1512dceb531ba3bd5dd0d20cf2042bb84.camel@rong.moe>
-	 <2ac0c46c-805d-4749-a6e0-94b16b104a72@app.fastmail.com>
-	 <7437cc09-7958-4172-aec2-4429cfa98141@app.fastmail.com>
-	 <6697bb96-6ae7-4cff-b218-2aa099977dc9@lunn.ch>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-Date: Sun, 12 Apr 2026 06:32:10 +0800
+	dkim=pass (1024-bit key) header.d=code406.com header.i=@code406.com header.b="XkDh6ita"
+Received: by mail-dl1-f49.google.com with SMTP id a92af1059eb24-12c444dbe8eso1466409c88.0
+        for <platform-driver-x86@vger.kernel.org>; Sat, 11 Apr 2026 23:11:25 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=code406.com; s=google; t=1775974285; x=1776579085; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:date:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=LJnDCUlTGFnlijTfwOhFOapbEBc2V50kQ2M+TmS9vCc=;
+        b=XkDh6itaJo2r151q0MDeBfD6S4JNq1nUzJ2wAk0jg1J+/rdnXgYgZcjTzmPkS01s31
+         leETrmGRsvCjtdbLKVegibUSrpGn/qoPBRPCMm4Tbte2AlTZgEPKnx36JhrgYv2Go3oe
+         B6BOeUgYcV7ssMRN7r3fAF8dgtwTEgujUK7RA=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20251104; t=1775974285; x=1776579085;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:date:from:x-gm-gg:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=LJnDCUlTGFnlijTfwOhFOapbEBc2V50kQ2M+TmS9vCc=;
+        b=jGdDHwwuk0PDfTI02Y3u7hS+k5UPnuu9UqB6e+f4YBWfkX7+xszdD0sB/Rr3+e5c+/
+         xdb4pxBHM8UxTdWRCZX5Nd+A8kvkYO5L14akuXFDooa2Cr8jfp1JaJB47zANFHv0fo9U
+         ukrOoPDLgUBm+egjbNN17MbuDzifoVvI6tT/+Pudt82O+fj0HSYCJywIt25KmkdU1UQm
+         jmV2BICZ/2t0gzQcMqw0kGB/smdxuVmzQ36FDPXm2tNnEXsHgInXiYU8xGfXhytgPJ7m
+         xnmcyTsdgIpIcAmscnzRTemOwSZTIFQa1CSVosTziXRNUsruM2xl0y4u8T7aOKiJsklZ
+         rmbA==
+X-Forwarded-Encrypted: i=1; AJvYcCXTlXC+AOrF6MdS0KGwzwUGExOi9s3Sx8hMZ3tbZMNY2X4W5/ME/e5f/SKeoM2InL1GHOPwXKDNotq0svwvgptg9G/R@vger.kernel.org
+X-Gm-Message-State: AOJu0YyANYsijVoQsUkzj4WIS5ysl+rZtitN3LP80tobdB/8H0uVk1C+
+	N/ZVExwbBYdxyUwdd+Ld5u2Vx134x2ahfJD+WOjyMmIiqx9gOdNR+eH17IZjL9hbRlptLs1JRJ7
+	Vyi1Dbw==
+X-Gm-Gg: AeBDies8xToSuYcbUA7fHXBixqWggPdLA0rfC/zH+PU6jnjR9feSo9JdPxDSHu5uKZH
+	JMzf6IU+MPvO+maKnKeGSOOKa4I8VWRXM83hxymKzVHRY1h/Qk4W7PfvMbEoiHWtZqXIUFjK0dS
+	xE1PauU827F6QK7xpPv/hxwNuBWvyoEuuwbxIiyUy0da2lu0gRvy1oxT4n4EHK3DHaVWRSULozX
+	IanBUL6NLNcwKGFVR0vAzaHUQdclyhJNoZ1PTh6djgSvb6SUUSeBryyo3S1acLALLUdOUsI450v
+	rezAPlPWdrnUtDHGSIULhuinrzMi8AFD5Z99xV7TfYixbQYo26/mCbGjfJJvAHbAyYreNdlIN6l
+	P00dljttvsA5Wx9X6nbm9Y35U558Gdy7ub9vFis3ITprGd5iqSLloMGyLJRkFaSdoO+5BvTbyou
+	u2VUZ6zOKoStJb7L1QJ2nXT34Iykevg/ORAWvFfnhGOm4XFrAmxxgtNd5iAs0gEqufMKOrqX+Dj
+	RAHXYWqJV6FoZdhUVa1UlMNVyLkl64=
+X-Received: by 2002:a05:7022:20c:b0:128:bc19:813d with SMTP id a92af1059eb24-12c34eefa5bmr4678519c88.27.1775974284847;
+        Sat, 11 Apr 2026 23:11:24 -0700 (PDT)
+Received: from rasputin ([2601:645:8a00:6e44:21b5:a2d0:e6aa:2a9a])
+        by smtp.gmail.com with ESMTPSA id 5a478bee46e88-2d561cd3138sm11472896eec.14.2026.04.11.23.11.23
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sat, 11 Apr 2026 23:11:24 -0700 (PDT)
+From: Josh Snyder <josh@code406.com>
+X-Google-Original-From: Josh Snyder <josh@cod406.com>
+Date: Sat, 11 Apr 2026 23:11:22 -0700
+To: Ilpo =?utf-8?B?SsOkcnZpbmVu?= <ilpo.jarvinen@linux.intel.com>
+Cc: Josh Snyder <josh@code406.com>, Jorge Lopez <jorge.lopez2@hp.com>, 
+	Hans de Goede <hansg@kernel.org>, platform-driver-x86@vger.kernel.org, 
+	LKML <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH] platform/x86: hp-bioscfg: fix heap buffer overflow in
+ security buffer
+Message-ID: <dtfokh4rcywrav7eqddh5ruij2uyqxcw2raxhx6iu6cxjult55@2j6dqjzjvxfr>
+References: <20260402-hp-bioscfg-overflow-v1-1-6985f8c9e67c@code406.com>
+ <928a6f5c-6f94-5661-d95c-03e310abf7bb@linux.intel.com>
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Evolution 3.56.2-9 
-X-ZohoMailClient: External
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <928a6f5c-6f94-5661-d95c-03e310abf7bb@linux.intel.com>
 
-Hi Andrew,
+My apologies! It's been a while since my last kernel contribution, and I'm quite
+unfamiliar with this driver. All I can say for certain is that this patch fixed
+the error I was getting when writing to my homelab PC's BIOS variables, and the
+bug looks like a heap overrun to my untrained eyes.
 
-On Sat, 2026-04-11 at 22:42 +0200, Andrew Lunn wrote:
-> > Hi maintainers - a gentle nudge on this one. Would like some
-> > direction if we can move ahead with the series. If not, what is
-> > required?
-> =C2=A0
->=20
->=20
->=20
-> > On our side I know Vishnu has implemented the thinkpad driver using
-> > this and confirmed the design works there too.
-> =C2=A0
->=20
->=20
->=20
-> > Would like to get this upstream so we can start working with the
-> > user-space folk on updating their pieces.
->=20
-> I'm not the Maintainer here, so i would not be too unhappy if i was
-> ignored.
+I'll walk through the code as I understand it. The relevant code in
+hp-bioscfg/biosattr-interface.c looks like:
 
-Thanks for sharing your thoughts.
+int hp_set_attribute(const char *a_name, const char *a_value)
+{
+...
+        a_name_size = hp_calculate_string_buffer(a_name);
+        a_value_size = hp_calculate_string_buffer(a_value);
+        security_area_size = hp_calculate_security_buffer(auth_token_choice);
+        buffer_size = a_name_size + a_value_size + security_area_size;
 
->=20
-> I've had some time to think about this. I guess you are going to go
-> with a Linux LED, whatever. With that assumption in place, a trigger
-> makes sense. But i think it needs to be a special sort of trigger, and
-> a special sort of LED.
->=20
-> This is not a general purpose LED, which is a basic assumption for
-> Linux LEDs. You cannot make it blink for netdev packets, shift lock,
-> heartbeat, etc, because Linux does not control it, the EC does. Linux
-> can ask the EC to set it to some state, but the EC might change it,
-> and notify Linux afterwards. That is not the normal behaviour of a
-> Linux LED.
+        buffer = kmalloc(buffer_size + 1, GFP_KERNEL);
+        ...
+        ret = hp_populate_security_buffer(start, auth_token_choice);
+        if (ret < 0)
+                goto out_set_attribute;
 
-Such a behavior is mostly handled by brightness_hw_changed (with
-CONFIG_LEDS_BRIGHTNESS_HW_CHANGED=3Dy). It's already there for 9 years.
-More details below.
+        ret = hp_wmi_set_bios_setting(buffer, buffer_size);
 
-The problem here is more about how to represent the ALS-based auto
-brightness mode and how to notify userspace of its (de)activation. The
-series demonstrates an approach to achieve both goals.
+As you can see, it calls hp_calculate_security_buffer() and then uses the result
+to decide how large `buffer` should be. hp_calculate_security_buffer() serves to
+predict how many bytes hp_populate_security_buffer() will later write. If
+hp_calculate_security_buffer() under-estimates, then
+hp_populate_security_buffer() will over-run the kmalloc'd buffer.
+hp_populate_security_buffer() has this logic:
 
->=20
-> Also, it does not make sense to allow the trigger to be bound to any
-> other LED.
+        if (strstarts(authentication, BEAM_PREFIX)) {
+               ...
+        } else {
+                /*
+                 * UTF-16 prefix is append to the * authbuf when a BIOS
+                 * admin password is configured in BIOS
+                 */
 
-I used a private trigger in PATCH 9/9. It can never be bound to any
-other LEDs.
+                /* append UTF_PREFIX to part and then convert it to unicode */
+                strprefix = kasprintf(GFP_KERNEL, "%s%s", UTF_PREFIX,
+                                      authentication);
+                if (!strprefix)
+                        return -ENOMEM;
 
->=20
-> The trigger and the LED are tightly bound together. So i would put
-> them in the same driver. There are triggers which live outside of
-> drivers/leds/trigger/. So it is not a problem it lives somewhere
-> else. It also solves the ordering problem you had, getting the trigger
-> registered. Since it lives in the same driver as the LED, you know it
-> is registered, you do it before registering the LED.
+                auth = hp_ascii_to_utf16_unicode(auth, strprefix);
+                kfree(strprefix);
 
-I intentionally included PATCH 9/9 in the series to demonstrate how to
-use the new interface. It registers a private trigger before registering
-the LED, so there is no ordering problem.
+                if (!auth) {
+                        ret = -EINVAL;
+                        goto out_buffer;
+                }
+        }
 
->=20
-> I think you need some additional logic in the core. This LED must have
-> this trigger.=C2=A0I would look at using the is_visible() attribute
-> callback to make the trigger file in sysfs invisible for this LED, so
-> it cannot be changed.=C2=A0
->=20
+The existing logic in hp_calculate_security_buffer() doesn't match: it has these
+two early-return guards:
 
-Doing so breaks userspace. The LED device has been already there and
-worked with LED triggers for so many years. Not having 100% pure
-software control is not a convictive reason to break userspace from my
-perspective. Of course I am not a maintainer too so that's just my
-personal thoughts.
+        if (!authentication)
+                return sizeof(u16) * 2; 
 
-Moreover, LEDs without 100% pure software control are already there for
-at least 9 years. All LEDs with the LED_BRIGHT_HW_CHANGED flag set fall
-into this category. They've worked with LED triggers for 9 years. See
-also commit 0cb8eb30d425 ("leds: class: Add new optional
-brightness_hw_changed attribute")
+        authlen = strlen(authentication);
+        if (!authlen)
+                return sizeof(u16) * 2;
 
-All these LEDs are keyboard backlight. As long as the user doesn't press
-the shortcut (e.g., Fn+Space), all these LEDs works with any LED
-triggers perfectly. If an user presses the shortcut, they know what they
-are doing. If an user enables a trigger by writing to the trigger file,
-they know they shouldn't press the shortcut afterward.
+The second early-return, in particular, means that an empty `authentication`
+string will produce a buffer that is 16 bytes too small for the payload that is
+ultimately written by hp_populate_security_buffer() and sent to the firmware by
+hp_wmi_set_bios_setting().
 
-> I would somehow get this trigger attached to the
-> LED when it is created.=C2=A0
->=20
+The net effect is that my homelab's firmware saw an invalid payload and refused
+the write with error 0x04. My guess is that this bug will hit anyone who doesn't
+have a BIOS admin password set, and the logic had only been tested with HP
+BIOSes where the admin password is set.
 
-I've done this in PATCH 9/9.
+> >  The NULL check is preserved since hp_populate_security_buffer() would
+> >  dereference NULL via strstarts().
 
-> The trigger_relevant() call needs to be
-> extended so that you cannot attach this trigger to any other LED.
+> What NULL check this refers to??? For which of the inputs?
 
-trigger_relevant() already supports this.
+Yeah, that sentence could have been worded better, I admit. The existing code in
+hp_calculate_security_buffer() has two early-return guards, and that sentence is
+attempting to answer the question: "why not remove both of them?". The answer is
+"because we don't want to pass a null pointer to strstarts()" immediately
+beneath:
 
-I set .trigger_type to the same value on both the private trigger and
-the LED device in PATCH 9/9. Doing so is enough to prevent the trigger
-from being attached to any other LED. See also commit 93690cdf3060
-("leds: trigger: add support for LED-private device triggers").
+        if (!strstarts(authentication, BEAM_PREFIX))
+                size += strlen(UTF_PREFIX) * sizeof(u16);
 
->=20
-> I would also think about naming. The behaviour is i guess specific to
-> X86 laptops? Do Apple laptops have the same behaviour? What about
-> Snapdragon X Series laptops? Chromebooks? USB keyboards? What about
-> things like the Unihertz Titan 2?
+But now that I give the code another look, my mildly-informed opinion is that it
+should be hp_set_attribute()'s job to ensure a non-NULL `authentication` value as
+a precondition of calling hp_calculate_security_buffer().
 
-   $ grep -rl LED_BRIGHT_HW_CHANGED
-   Documentation/leds/leds-class.rst
-   drivers/hid/hid-lg-g15.c
-   drivers/leds/led-class.c
-   drivers/platform/x86/dell/dell-laptop.c
-   drivers/platform/x86/system76_acpi.c
-   drivers/platform/x86/lenovo/ideapad-laptop.c
-   drivers/platform/x86/lenovo/thinkpad_acpi.c
-   drivers/platform/x86/samsung-galaxybook.c
-   drivers/platform/x86/asus-wmi.c
-   drivers/platform/x86/lg-laptop.c
-   drivers/platform/x86/toshiba_acpi.c
-   drivers/platform/arm64/lenovo-thinkpad-t14s.c
-   include/linux/leds.h
+If any of this "clicks" for you, I'd be happy to reword the commit message to
+incorporate whatever portion makes makes the most sense. I'd also be happy to
+just contribute a bug report, and have someone with real understanding of this
+driver do the actual patching.
 
-There are arm64 laptops and Logitech's USB keyboards that change their
-backlight brightness without consulting with the OS. If these devices
-support auto brightness, they will benefit from this series too.
-
-Also, the series aims to eliminate problems on naming. Userspace doesn't
-need to know the trigger's name beforehand. Instead, the new interface
-provides the name to userspace, see PATCH 6/9.
-
->=20
-> Somebody in the future might produce a generic solution. Linux
-> controls the LED. The Linux input system gets the key presses and
-> sends them to the trigger. You can bind an iio ambient sensor to the
-> trigger, etc. So you should leave the name space open for other
-> implementations.
-
-I agree with that, but we are already living in a world that most Fn
-keys on keyboards are always translated before reaching the OS. I don't
-think we will have a keyboard that behave like the ideal way any soon,
-especially considering that nowadays some compact keyboards even send
-Meta+Shift+S instead of SysRq when the Fn key combination for screenshot
-is pressed -- they can't even work with magic SysRq. And in an ideal
-world the Copilot key (sends RCtrl+RShift+F23) shouldn't appear at
-all...
-
-Thanks,
-Rong
-
->=20
-> 	 Andrew
+Thanks!
+Josh
