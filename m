@@ -1,159 +1,152 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ej1-f46.google.com (mail-ej1-f46.google.com [209.85.218.46])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8971533D6CA;
-	Sun, 12 Apr 2026 13:23:03 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CF9D019D8AC
+	for <platform-driver-x86@vger.kernel.org>; Sun, 12 Apr 2026 16:32:17 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.46
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1776000183; cv=none; b=EDx0giIr4664KP6FEHgfZyzmignbbsiMA5TWsxfxcyYnxUBOTvCNz4qgeUVH7Wsu9Si6IWk8uKUB6/K2OhGxUX6iNUpcizIAaHj+wKIe2af7tmTJXTxo2roZt1aQEOIEvega6f8VXfiUgqpE0MQ+dJ46WgXGAsPTIgL8pMFEfEU=
+	t=1776011539; cv=none; b=gJ8v5uhmnGPG3POSDCXU2wkTumB7NJFewJ8/uiJM58fkiDiFwABgpTicbLsGUNKJ3mmc95osHVTwvHf1vRVrmyWIdctKgf4iextDCgMMCt7yant31k2uwQQYBzvO99Hp9KXaOggVj6JRq2gg5xccLRnSBL3Fu4509a3dM0u+oZs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1776000183; c=relaxed/simple;
-	bh=aYHqWJYLBiMXrDvtCOwuoP3WgzDcSKZ3t2fT5JRVxmI=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=SzZNfXH+0SjaAgZ0OHHtxZavuwpOB+AxXwNTNeirT/6LBi47yfFf/BqqiQlrKLjVuem1zkTocTXQtphdQsVB1ZW9tFRHykWpbNjkjSUxsRyC4Sxgs66X5b7DByO/zyMa+Sv7GBdyEW2EmtgshHI9Z9O6nX0hyCJxGLlDHOvBSH0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=BhRJKm7J; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1776011539; c=relaxed/simple;
+	bh=fGMrJdVHO3BNg782zgRhFj4456fWdretKPYfi/QjIgY=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=GvgKxkO3aJRY+yCMK1102HLYv0OY0xwmJwo8Y0vk+N8e6iB/I7InhVWR8razXV6vhJYhgltEo9tz+vaeVBuOgA9+niV+31KRUH5OSKvHVNWOSmMInxy0+fhbxNTPw40ygFORgiceENtLe4kUPEKXDtqmvzd8mPv+K37lohNpXas=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=eknjw8Ht; arc=none smtp.client-ip=209.85.218.46
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="BhRJKm7J"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id C653AC19424;
-	Sun, 12 Apr 2026 13:22:53 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1776000183;
-	bh=aYHqWJYLBiMXrDvtCOwuoP3WgzDcSKZ3t2fT5JRVxmI=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=BhRJKm7JyCu2kDZeR6utCxxXiTnkqzdEdkbNPdbrvkqhiFIgT3EzWOFQS6J9lpLIk
-	 Nw1i78o3a6XFllRd5th6ZEaUe0lynNoN1diC1iU0SqyjyF9bi71K7aeESBtQ4uS0ae
-	 r2sy8fTq47NsPGOJ1t+kKqY0afvNsMBlFim8QrmRgUsQf42yJAT640gHC30OzBP6Ra
-	 HTITde693ewpS6iypVIQGASZA6NoyRiSSokXdV1atxlZ717S6TOk3hCgPLbsyZM2hm
-	 L8OLt4STnZ9Cp/QNR3m+qQ4AsbUjS/MDnoywgIrYvLFIIoeyxRy2wfLQYuckjO6bRA
-	 lNy2bIh1QqZpw==
-Message-ID: <125cad6c-fb58-4498-a967-41778f6f91f6@kernel.org>
-Date: Sun, 12 Apr 2026 15:22:51 +0200
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="eknjw8Ht"
+Received: by mail-ej1-f46.google.com with SMTP id a640c23a62f3a-b9910707d82so438540966b.1
+        for <platform-driver-x86@vger.kernel.org>; Sun, 12 Apr 2026 09:32:17 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20251104; t=1776011536; x=1776616336; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=HugtwxIexB7rRcOd2FqtNpLxabVB7H+4U5esmVbZeJ4=;
+        b=eknjw8HtInTbRpuiEvy4pVfvXNJw4KnC+Dl4HPHMHBtQQBdeIMPiBmb/D477xI6n12
+         hUXCNVNSKz+R28UpI3LynqsEinVBvLvJEqSKcvwcsKOxqPqmS0YTS1rq5UPLhTvt42fu
+         qcTc7MDL+fpbLXovymshFad/5eQvcdzY3WnwlEjlnlxJOAxDhA+mQOOaGh9vgQlRixXO
+         3q8frR2BC9ShLBQ0OKtXGP1vAhvBjM1Fir/iJwqInWK5JNVWd8KOWRITnHCHcPCrmsHF
+         mTixKNF7ukiLe35/nnxH6Qu1Gengjnc+XbipfxG/pjHoT+1rbJB4qXqo/sDkHfwzKtwJ
+         eKwQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20251104; t=1776011536; x=1776616336;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:x-gm-gg:x-gm-message-state:from
+         :to:cc:subject:date:message-id:reply-to;
+        bh=HugtwxIexB7rRcOd2FqtNpLxabVB7H+4U5esmVbZeJ4=;
+        b=K2jKER18srBy470Tb9AvNpXZ94i2pa1IcX7QjtERbLegWJXc/C248UdWs3+PbrVjmn
+         axUtTTRVSTDySdsF5dtHv/tzk9vw0yy884SiIsaOt3oYOfP/l+LsZmaW6Q2TleVMVSJk
+         cOF4kZQ/uil5t9qcONOlFCjyDkjvLqakYnnPZQquz6tO7gNvFzDta0Fw8IKUHWsVRXp8
+         c5CqwPpNCpRRSFHWOLLi/Agswc4vaOwcXcnbdlWTcDx/Yz5r31rQqTClQhSIvSiivWyI
+         3gRjpkLYHzJw6o6DotmeKyNDMERCBdKyEHMUfSlGthj5cE95zoU49QrOOKI9v7JfiVf0
+         g+2w==
+X-Forwarded-Encrypted: i=1; AJvYcCUjfPZEhaJBMydKAte+X1svvsBb3Qz6/4m/6j5oTT0F7MLTqwDGZDS67t0Y6yX6zjdmtpoQ667AGZ0gG179REFmka4Y@vger.kernel.org
+X-Gm-Message-State: AOJu0Yy/lRacSoDDlaatis60Mj+ZbFtIab3v+JwGzANwe2S4p/fxEMnD
+	Ny3+jmD+kNK799kZBR8B3XGUGMpTnSOg30vr1elyGMy+hxZARE0KWWm3
+X-Gm-Gg: AeBDieswINzCYXnpWWoE+o/VI+yatiKqe2rPkEDW0AxF3lyIeYtf4THWjPdxAzTAZF/
+	U4VvUexlCOVXZV/tDKIqp+Q4B5VpgFai+OK6OBd1bYR5aer8U/kLffHyinCdXkzGHgc/1iNTHEd
+	8jJNunv4Lonsnkhr2E/VhlbAllivbWaLpFmpA4SMEc8hU9jCLNpHTiwAqSISHYX/6Q2SgTfdPVs
+	AS+PRtr0xiku7J+/ZKfjf9Lz7N4XKtJpew6ui7IuHIFxRcemqDSBknOCptgo9E4L+Fa5x/p9gaA
+	ccK/bMAopPlw1BUjxo8mUFaCnEqhONYUH3/TxpvRcWq/vNIhJzZTp8aPIf2bDE92H88QMS2RIUu
+	0SmK5/AMHDBbSDmgyEf7ZqtfwFlAkG9tTTX/qXedIlWgK6gPvN38Td7oARIKxcc0pIyUjjaPExn
+	ghHugs72NXho96I9cu1IhjUA==
+X-Received: by 2002:a17:906:bf45:b0:b98:36cd:7e0e with SMTP id a640c23a62f3a-b9d729bfe44mr587550466b.45.1776011535850;
+        Sun, 12 Apr 2026 09:32:15 -0700 (PDT)
+Received: from khalil-hp.home ([62.250.67.33])
+        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-b9d6e7f1a3bsm236468666b.62.2026.04.12.09.32.14
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sun, 12 Apr 2026 09:32:15 -0700 (PDT)
+From: Khalil <khalilst@gmail.com>
+X-Google-Original-From: Khalil <khalil@rentman.nl>
+To: broonie@kernel.org,
+	hdegoede@redhat.com,
+	ilpo.jarvinen@linux.intel.com
+Cc: rf@opensource.cirrus.com,
+	linux-spi@vger.kernel.org,
+	platform-driver-x86@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	Khalil <khalil@rentman.nl>
+Subject: [PATCH v2 0/3] Fix CS35L56 amplifier on Intel LPSS SPI with broken ACPI cs-gpios
+Date: Sun, 12 Apr 2026 18:31:48 +0200
+Message-ID: <20260412163151.506282-1-khalil@rentman.nl>
+X-Mailer: git-send-email 2.43.0
+In-Reply-To: <20260215135524.1171065-2-khalil@rentman.nl>
+References: <20260215135524.1171065-2-khalil@rentman.nl>
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v7 2/2] dt-bindings: embedded-controller: Add synology
- microp devices
-To: Markus Probst <markus.probst@posteo.de>
-Cc: Hans de Goede <hansg@kernel.org>,
- =?UTF-8?Q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>,
- Bryan O'Donoghue <bryan.odonoghue@linaro.org>, Lee Jones <lee@kernel.org>,
- Pavel Machek <pavel@kernel.org>, Miguel Ojeda <ojeda@kernel.org>,
- Boqun Feng <boqun@kernel.org>, Gary Guo <gary@garyguo.net>,
- =?UTF-8?Q?Bj=C3=B6rn_Roy_Baron?= <bjorn3_gh@protonmail.com>,
- Benno Lossin <lossin@kernel.org>, Andreas Hindborg <a.hindborg@kernel.org>,
- Alice Ryhl <aliceryhl@google.com>, Trevor Gross <tmgross@umich.edu>,
- Danilo Krummrich <dakr@kernel.org>, Rob Herring <robh@kernel.org>,
- Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley
- <conor+dt@kernel.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
- platform-driver-x86@vger.kernel.org, linux-leds@vger.kernel.org,
- devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
- rust-for-linux@vger.kernel.org
-References: <20260411-synology_microp_initial-v7-0-9a3a094e763a@posteo.de>
- <20260411-synology_microp_initial-v7-2-9a3a094e763a@posteo.de>
- <20260412-cuddly-taipan-of-reputation-1cafe0@quoll>
- <485ab9e829e902e3f29172059be8c3203062d06b.camel@posteo.de>
-From: Krzysztof Kozlowski <krzk@kernel.org>
-Content-Language: en-US
-Autocrypt: addr=krzk@kernel.org; keydata=
- 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 a/A=
-In-Reply-To: <485ab9e829e902e3f29172059be8c3203062d06b.camel@posteo.de>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 
-On 12/04/2026 15:21, Markus Probst wrote:
-> On Sun, 2026-04-12 at 10:26 +0200, Krzysztof Kozlowski wrote:
->> On Sat, Apr 11, 2026 at 05:27:35PM +0200, Markus Probst wrote:
->>> +properties:
->>> +  compatible:
->>> +    enum:
->>> +      - synology,ds923p-microp
->>> +      - synology,ds918p-microp
->>> +      - synology,ds214play-microp
->>> +      - synology,ds225p-microp
->>> +      - synology,ds425p-microp
->>> +      - synology,ds710p-microp
->>> +      - synology,ds1010p-microp
->>> +      - synology,ds723p-microp
->>> +      - synology,ds1522p-microp
->>> +      - synology,rs422p-microp
->>> +      - synology,ds725p-microp
->>> +      - synology,ds118-microp
->>> +      - synology,ds124-microp
->>> +      - synology,ds223-microp
->>> +      - synology,ds223j-microp
->>> +      - synology,ds1823xsp-microp
->>> +      - synology,rs822p-microp
->>> +      - synology,rs1221p-microp
->>> +      - synology,rs1221rpp-microp
->>> +      - synology,ds925p-microp
->>> +      - synology,ds1525p-microp
->>> +      - synology,ds1825p-microp
->>
->> Previous comment is not resolved. For example you stated that ds723p is
->> compatible with ds725p, so this should be expressed.
-> Using this expression?
-> 
-> properties:
->   compatible:
->     oneOf:
->       - enum:
->           - synology,ds923p-microp
->           - synology,ds1522p-microp
->       - enum:
->           - synology,ds918p-microp
->           - synology,ds415p-microp
->       - const: synology,ds214play-microp
-> ...
-> ?
-> If so shall there each be a description?
+Hi,
 
-No, you changed nothing. You need fallbacks, please read example-schema
-or DTS101 slides.
+This is v2 of the patch series fixing dual CS35L56 amplifiers on HP
+laptops with Intel Lunar Lake and broken ACPI cs-gpios.
 
-Best regards,
-Krzysztof
+Changes since RFC v1 (addressing feedback from Richard Fitzgerald):
+
+- Added DMI quirk table: GPIO CS fixup is now only applied on known
+  affected platforms (HP EliteBook 8 G1i, board 8D8A), not generically
+  for all devices with CS > 0.
+
+- Fixed chip select range check: only chip selects outside the
+  controller's num_chipselect range are fixed up. A NULL cs_gpiods[cs]
+  within range means "native chip select", not broken. This avoids
+  incorrectly replacing native CS0 with the GPIO descriptor.
+
+- Removed ASUS reference (GU605C was fixed by BIOS update).
+
+- Added Patch 1/3 (spi core): __spi_add_device() now preserves preset
+  cs_gpiod on the device instead of unconditionally overwriting from
+  ctlr->cs_gpiods. This was suggested by Richard as the preferred
+  approach to avoid modifying controller state post-probe.
+
+- Patch 2/3 (serial-multi-instantiate): Extracted GPIO fixup into a
+  dedicated helper function. Currently still installs the GPIO on the
+  controller's cs_gpiods array because __spi_add_device() overwrites
+  device-level cs_gpiod. With Patch 1/3 applied, a future cleanup
+  could set the GPIO directly on the device instead.
+
+- Patch 3/3 (spi-pxa2xx): Unchanged from v1. Handles clock gating
+  on Intel LPSS controllers when GPIO chip select is active.
+
+Note: While Richard also suggested the cs35l41_hda self-fixup approach
+(setting cs_gpiod on the device post-probe via spi_setup), this doesn't
+work here because the device can't even be added to the bus - SPI core
+rejects it with -EINVAL when cs >= num_chipselect. The serial-multi-
+instantiate approach is necessary to extend num_chipselect first.
+
+Regarding modifying the probed controller: I acknowledge this is not
+ideal. Patch 1/3 is a step toward the cleaner approach (preset on
+device). However, num_chipselect still needs to be extended, and
+cs_gpiods needs to be expanded to prevent out-of-bounds access in
+__spi_add_device(). I'm open to suggestions for a cleaner way to
+handle this.
+
+Tested on HP EliteBook 8 G1i 16 inch (Intel Core Ultra 7 258V,
+Lunar Lake-M) with 2x CS35L56 Rev B0. Both amplifiers probe
+successfully, load calibration and tuning, and produce audio.
+
+Related bug reports:
+- https://bugs.launchpad.net/ubuntu/+source/alsa-driver/+bug/2131138
+- https://bugzilla.kernel.org/show_bug.cgi?id=221064
+- https://github.com/thesofproject/linux/issues/5621
+
+Khalil (3):
+  spi: Preserve preset cs_gpiod in __spi_add_device()
+  platform/x86: serial-multi-instantiate: Fix SPI chip select on
+    platforms with incomplete ACPI cs-gpios
+  spi: pxa2xx: Handle clock gating for GPIO chip select devices
+
+ .../platform/x86/serial-multi-instantiate.c   | 168 ++++++++++++++++++
+ drivers/spi/spi-pxa2xx.c                      |  45 ++++-
+ drivers/spi/spi.c                             |   3 +-
+ 3 files changed, 211 insertions(+), 5 deletions(-)
+
+-- 
+2.43.0
+
