@@ -1,114 +1,173 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 354A57262F;
-	Sun, 12 Apr 2026 08:26:22 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D3111257844
+	for <platform-driver-x86@vger.kernel.org>; Sun, 12 Apr 2026 09:05:32 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1775982382; cv=none; b=dyczIZZvEPJNMqiCX8AJBNL3RAi+lxd0+Tux0DWhjx7/Jd8K89yUsW33lrPl0Jk3X729f1R3BLqYMvYlx15VUGjasQ1JVHt52eCF1/sHLoO4THuRAFNRczq2Te/cX2ZgkrC9sm1GnwfHCOhybO3EbQAvTAC+QWPnnNT8NC7OG6s=
+	t=1775984732; cv=none; b=dunk2LWZkdsi/9HQVuZe4hIzjDxD7KIdGqrCf+SrIuthuyWqeRyube3KtfWea47nGqsDLPwqOHsCmelG5NPZiKUm5cv2PW6MYMQUZQxW7ELQSkHyALd1F7y4Vl8DKc16iZMnnhVU0EkHDYqAUOA+IHW30XdcLfLisDQAj1gzsec=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1775982382; c=relaxed/simple;
-	bh=cfBrcSWwcevFwkdPbQiXo3iCG6nOcw8bkeirs2KTYn8=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=OJJxbeGz/I6/Qj2VDnhhlmOtOGjydVbctb3gqAikPAFpy3u5PkTI2XjONHYNikNT6uNc+hu0SfvY35vv9Caf7159Bv9hAR5A3ezTl7O4TQCUPjleEjHzkdv3aohZs5Wd6ik592phLHcgQzqcnRgdA8DycGUxc8fHHnlC+iG3Gfs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=XQsDp/Ia; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1775984732; c=relaxed/simple;
+	bh=M5AFdESz+ehu46jlR0u44s+7eqynE4DDNCg4s7mfw+g=;
+	h=From:To:Subject:Date:Message-ID:Content-Type:MIME-Version; b=FebAM+hbNY1REIsBLeoAsNk5McY66xosS1nnyF3+uo+S4k2abgwb0fFHAKVWMcLCZEz1/pgf+WVzmoQITqAqFgVfSxrFrKHHP97g8TKW8qlhwCFJhgg7MEjluf1FeFdzUmJ0SqWj8GPAgrXuFPmK3cXxpY238C2XhjUMoDSSkDE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=YTmPkRmb; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="XQsDp/Ia"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 3EDF3C19424;
-	Sun, 12 Apr 2026 08:26:21 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="YTmPkRmb"
+Received: by smtp.kernel.org (Postfix) with ESMTPS id 6F3D7C19424
+	for <platform-driver-x86@vger.kernel.org>; Sun, 12 Apr 2026 09:05:32 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1775982381;
-	bh=cfBrcSWwcevFwkdPbQiXo3iCG6nOcw8bkeirs2KTYn8=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=XQsDp/IaWMHWUf30T4GKek1gvjdHCa9bT2UIDJKu0xbNQvJ0PQcxgMuqBnnASDG4E
-	 cTtdak+V0tWt4ZXnGmqAkfkTnZe5b9atnOo3XV7GWo5RFvPaNsF0yAUG8CftYROeK5
-	 Iv2BH2CFCV1Q5wkMvw8nb88HwvUmdPigFfUS2g8TN5Pvox9r7KbEJSkDjFNzPrRDG+
-	 yesG0vpTv/SZfWXf4XPS7L0EJGfpO2C533XWwugqJ2g7C48fo3LmVYEXJHJc94Yrlb
-	 wQDbYPmOT3MbgErAenRIYiEvm0bgiydm51SVwzmc0+RE+hUuuoaxEYI5mABNYgJanF
-	 ewmxyk8anQpZg==
-Date: Sun, 12 Apr 2026 10:26:19 +0200
-From: Krzysztof Kozlowski <krzk@kernel.org>
-To: Markus Probst <markus.probst@posteo.de>
-Cc: Hans de Goede <hansg@kernel.org>, 
-	Ilpo =?utf-8?B?SsOkcnZpbmVu?= <ilpo.jarvinen@linux.intel.com>, Bryan O'Donoghue <bryan.odonoghue@linaro.org>, 
-	Lee Jones <lee@kernel.org>, Pavel Machek <pavel@kernel.org>, Miguel Ojeda <ojeda@kernel.org>, 
-	Boqun Feng <boqun@kernel.org>, Gary Guo <gary@garyguo.net>, 
-	=?utf-8?B?QmrDtnJu?= Roy Baron <bjorn3_gh@protonmail.com>, Benno Lossin <lossin@kernel.org>, 
-	Andreas Hindborg <a.hindborg@kernel.org>, Alice Ryhl <aliceryhl@google.com>, 
-	Trevor Gross <tmgross@umich.edu>, Danilo Krummrich <dakr@kernel.org>, 
-	Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>, 
-	Conor Dooley <conor+dt@kernel.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, 
-	platform-driver-x86@vger.kernel.org, linux-leds@vger.kernel.org, devicetree@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, rust-for-linux@vger.kernel.org
-Subject: Re: [PATCH v7 2/2] dt-bindings: embedded-controller: Add synology
- microp devices
-Message-ID: <20260412-cuddly-taipan-of-reputation-1cafe0@quoll>
-References: <20260411-synology_microp_initial-v7-0-9a3a094e763a@posteo.de>
- <20260411-synology_microp_initial-v7-2-9a3a094e763a@posteo.de>
+	s=k20201202; t=1775984732;
+	bh=M5AFdESz+ehu46jlR0u44s+7eqynE4DDNCg4s7mfw+g=;
+	h=From:To:Subject:Date:From;
+	b=YTmPkRmbcTzhDdh0lnVCB2t4JPJZk5S+h0ZomoLPZhDcGAgaoaUJL95P4oidyuWSb
+	 xNQTark2GqC4mZ73DWLfoKYEOqglEfoMfrUnN6bgmCbGeGXD626xC9NjJ9yASFdbmk
+	 A6zlX7kEeD093xQFaV2nYW9BH7Jk176GzOSh5JK527WJ3mi3bq96E6wspWQ5ZHm1+A
+	 aBJJisXFCmyTA1e6o7+gRTvwBJfuJFcFpB0rscI2rjA8mOcmzL6Zh5aexhd/chys+y
+	 Odp0xzJ3a3aJOj+1IF/XduM9BPjjOWKY2+7WElfSuZdh9E6LRHXPVqUq3IoTib0jRx
+	 2qEWPW+NoZUTA==
+Received: by aws-us-west-2-korg-bugzilla-1.web.codeaurora.org (Postfix, from userid 48)
+	id 674DDC433E1; Sun, 12 Apr 2026 09:05:32 +0000 (UTC)
+From: bugzilla-daemon@kernel.org
+To: platform-driver-x86@vger.kernel.org
+Subject: [Bug 221353] New: ideapad_acpi: fan_mode values 1/2/4 all trigger
+ dust cleaning mode
+Date: Sun, 12 Apr 2026 09:05:32 +0000
+X-Bugzilla-Reason: None
+X-Bugzilla-Type: new
+X-Bugzilla-Watch-Reason: AssignedTo drivers_platform_x86@kernel-bugs.osdl.org
+X-Bugzilla-Product: Drivers
+X-Bugzilla-Component: Platform_x86
+X-Bugzilla-Version: 2.5
+X-Bugzilla-Keywords: 
+X-Bugzilla-Severity: normal
+X-Bugzilla-Who: basak.sb2006@gmail.com
+X-Bugzilla-Status: NEW
+X-Bugzilla-Resolution: 
+X-Bugzilla-Priority: P3
+X-Bugzilla-Assigned-To: drivers_platform_x86@kernel-bugs.osdl.org
+X-Bugzilla-Flags: 
+X-Bugzilla-Changed-Fields: bug_id short_desc product version rep_platform
+ op_sys bug_status bug_severity priority component assigned_to reporter
+ cf_regression
+Message-ID: <bug-221353-215701@https.bugzilla.kernel.org/>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+X-Bugzilla-URL: https://bugzilla.kernel.org/
+Auto-Submitted: auto-generated
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <20260411-synology_microp_initial-v7-2-9a3a094e763a@posteo.de>
 
-On Sat, Apr 11, 2026 at 05:27:35PM +0200, Markus Probst wrote:
-> +properties:
-> +  compatible:
-> +    enum:
-> +      - synology,ds923p-microp
-> +      - synology,ds918p-microp
-> +      - synology,ds214play-microp
-> +      - synology,ds225p-microp
-> +      - synology,ds425p-microp
-> +      - synology,ds710p-microp
-> +      - synology,ds1010p-microp
-> +      - synology,ds723p-microp
-> +      - synology,ds1522p-microp
-> +      - synology,rs422p-microp
-> +      - synology,ds725p-microp
-> +      - synology,ds118-microp
-> +      - synology,ds124-microp
-> +      - synology,ds223-microp
-> +      - synology,ds223j-microp
-> +      - synology,ds1823xsp-microp
-> +      - synology,rs822p-microp
-> +      - synology,rs1221p-microp
-> +      - synology,rs1221rpp-microp
-> +      - synology,ds925p-microp
-> +      - synology,ds1525p-microp
-> +      - synology,ds1825p-microp
+https://bugzilla.kernel.org/show_bug.cgi?id=3D221353
 
-Previous comment is not resolved. For example you stated that ds723p is
-compatible with ds725p, so this should be expressed.
+            Bug ID: 221353
+           Summary: ideapad_acpi: fan_mode values 1/2/4 all trigger dust
+                    cleaning mode
+           Product: Drivers
+           Version: 2.5
+          Hardware: Intel
+                OS: Linux
+            Status: NEW
+          Severity: normal
+          Priority: P3
+         Component: Platform_x86
+          Assignee: drivers_platform_x86@kernel-bugs.osdl.org
+          Reporter: basak.sb2006@gmail.com
+        Regression: No
 
-ds918p and ds415p as well. ds925p and several others you EXPLICITLY
-wrote they are compatible:
+# Hardware
 
-"ds925p, ds1525p, ds1825p, ds1823xsp:
-- supports fan rpm report via an adt7475 chip and therefore does not
-have gpios for fan failure
-- no system current sensor"
+## DMI
 
-Probably many more cases, I did not verify all of them.
+- system-manufacturer: `LENOVO`
+- system-version: `IdeaPad 3 15ALC6 Ub`
+- system-product-name: `82KU`
+- bios-version: `GLCN46WW`
 
-If there is going to be new version, please organize the patch
-documenting the compatible (DT bindings) before the patch using that
-compatible.
-See also: https://elixir.bootlin.com/linux/v6.14-rc6/source/Documentation/devicetree/bindings/submitting-patches.rst#L46
+## Kernel
 
-> +
-> +  fan-failure-gpios:
-> +    description: GPIOs needed to determine which fans stopped working on a fan failure event.
-> +    minItems: 2
-> +    maxItems: 3
-> +
-> +required:
-> +  - compatible
+- `uname -a`: `Linux ideapad 6.19.11-arch1-1 #1 SMP PREEMPT_DYNAMIC Thu, 02=
+ Apr
+2026 23:33:01 +0000 x86_64 GNU/Linux`
 
-Best regards,
-Krzysztof
 
+# Description
+
+According to
+[Documentation/ABI/testing/sysfs-platform-ideapad-laptop](https://github.co=
+m/torvalds/linux/blob/f5459048c38a00fc583658d6dcd0f894aff6df8f/Documentatio=
+n/ABI/testing/sysfs-platform-ideapad-laptop),
+
+fan_mode supports:
+0 =3D Super Silent
+1 =3D Standard
+2 =3D Dust Cleaning
+4 =3D Efficient Thermal Dissipation
+
+However, on this device:
+- Writing 1, 2, or 4 all produce identical behavior.
+- Fan enters a pulsing high-speed mode where it ramps up to max speed and t=
+hen
+ramps down to 0 RPM about 10 times. Consistent with "dust cleaning" mode.
+- Only value 0 behaves differently. It changes it to the default/"Super Sil=
+ent"
+mode.
+
+Here is the observation table:
+| Input | Transition (read immediately afterwards)              | Finish (r=
+ead
+after 1 min or so)|
+|-------|-------------------------------------------------------|----------=
+----------------------|
+| 0     | immediately 133, minimal fan activity                 | 133=20=20=
+=20=20=20=20=20=20=20=20
+                 |
+| 1     | 3, enters "dust cleaning" mode                        | 5=20=20=
+=20=20=20=20=20=20=20=20=20=20
+                 |
+| 2     | 3                                                     | 5=20=20=
+=20=20=20=20=20=20=20=20=20=20
+                 |
+| 4     | 3                                                     | 5=20=20=
+=20=20=20=20=20=20=20=20=20=20
+                 |
+
+
+# Steps to Reproduce
+
+1. Switch to a fan mode.
+- echo 0 | sudo tee  /sys/bus/platform/drivers/ideapad_acpi/VPC2004:00/fan_=
+mode
+- echo 1 | sudo tee  /sys/bus/platform/drivers/ideapad_acpi/VPC2004:00/fan_=
+mode
+- echo 2 | sudo tee  /sys/bus/platform/drivers/ideapad_acpi/VPC2004:00/fan_=
+mode
+- echo 4 | sudo tee  /sys/bus/platform/drivers/ideapad_acpi/VPC2004:00/fan_=
+mode
+
+2. Observe that all of them except mode "0" (a.k.a. "Super Silent" mode) ma=
+ke
+the fan enter the "dust cleaning" mode.
+
+
+# Expected
+
+Different fan behaviors per documented modes.
+
+
+# Actual
+
+All non-zero modes behave like dust cleaning.
+
+
+Best Regards,
+Sourajyoti Basak
+
+--=20
+You may reply to this email to add a comment.
+
+You are receiving this mail because:
+You are watching the assignee of the bug.=
