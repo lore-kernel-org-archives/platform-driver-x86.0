@@ -1,64 +1,64 @@
-Received: from mail-dl1-f49.google.com (mail-dl1-f49.google.com [74.125.82.49])
+Received: from mail-dl1-f54.google.com (mail-dl1-f54.google.com [74.125.82.54])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7272737F8D9
-	for <platform-driver-x86@vger.kernel.org>; Sun, 12 Apr 2026 21:11:25 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=74.125.82.49
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 34D68381B0B
+	for <platform-driver-x86@vger.kernel.org>; Sun, 12 Apr 2026 21:11:26 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=74.125.82.54
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1776028286; cv=none; b=GIcrPsM6Ydu1RqNFEKowXzDtMv18tfnCctl0meeuUJrmL3vhs2Gt9oD1MaT7UxPhf9XUY3F4H/++WNijbPkJKepjiColHWE1gQxGBDg8sWbcD9LcRc/bQzI/ThXj7obDQcwagsF3LhCM+CvZa3JKuKQvLkUVkkyhS09Y7uOIjT0=
+	t=1776028287; cv=none; b=mI3mJZ+as6wjnYDSbg9uT3SR73RzvxfeqDYC1wSGOCctB6bESXgOwn59p3IlYqmjUIgTs6lu5BkP5hOqlFkc5zL/Xc4B5dy3p0SSGAuUB9jtQ83j1Ja9cC7p1AHLPB1GweHuv4TdjprB4DO0cZIblZGIqQuFUiW9TvSQvEunvdE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1776028286; c=relaxed/simple;
-	bh=as/Y6rgrCLbxvFJK4woRt4WCiXpZGU5Bmcl75dpz1Ic=;
+	s=arc-20240116; t=1776028287; c=relaxed/simple;
+	bh=8LUDQtMderd6djIBXviEFlt08t4GGAhmClar2YVACLg=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=BW+WL9rMF5AgRwFWje2nBJ990HC1hZVRqGW3npGwJhVisQcYhdgIdvEkmLcNvTcPkT65BW/8kqzs1m9CIsYhOr7RTVyH5p5WNZBY9PXznsoAnIXVfbvUTNS+d9RiXSF02RGD5o21g5rqCLzpo8CH6ab978wbjAp7HyJd8OhbtwE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=UZhMmfqY; arc=none smtp.client-ip=74.125.82.49
+	 MIME-Version; b=e1hmh2Iv+13g3sfz+2oZ77RImC4XmQ3Ojd6TPqnXHXmsAM6tqoeI4MWqDzkBtLcRij0DwofAZp7WatzPYv18fG4NxAEH7fRhVS9BIEUo90yEICuyETJ11whhMSOGiBF/fg5gqaGZ+KoXuIX1oT5Bb3E1oPRYbYGkPh6dFWVHP64=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=Cek/NTrw; arc=none smtp.client-ip=74.125.82.54
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="UZhMmfqY"
-Received: by mail-dl1-f49.google.com with SMTP id a92af1059eb24-1271257ae53so11097340c88.1
-        for <platform-driver-x86@vger.kernel.org>; Sun, 12 Apr 2026 14:11:25 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Cek/NTrw"
+Received: by mail-dl1-f54.google.com with SMTP id a92af1059eb24-12732165d1eso13329243c88.1
+        for <platform-driver-x86@vger.kernel.org>; Sun, 12 Apr 2026 14:11:26 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20251104; t=1776028285; x=1776633085; darn=vger.kernel.org;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=6Epvlpqxnk7CA+C9ymJCfGqy8SHrtqDJZ4fsM6TY9RM=;
-        b=UZhMmfqY8i6TiedDCEqOwCLh2DM0mNU9tH/OS4oxpi25wxqkZZOQO8OmOsw841YD7/
-         N6eQOJIabg8o3PiEQGiUyQaokyoPWZLJ6GYBjDI9XcmUMNgJIK/e35RibHnjpqkbFTUm
-         lqxQTLBIcJrhvdAv78FQfewRZ7kMtUs43jh2tnoG948HtEM7T7RCFNUlc1/oU0lm2vgo
-         TKCVM5P0owwxe9XpUR1pw81veIZk6I2IwUqY0LGR/c845Mrh3YDQjTAiXU4MUruIjBQ5
-         UBVRu8yIEq17KjsFreW9KFpyVwStkudfzUK6+Plz5jzGaPfxOTEEmM1opmjmdJa3bsp5
-         dKYw==
+        bh=JnJVHMF3J4KnB49uOjeY/NdO1ByBdmanEQTbiS1LzsE=;
+        b=Cek/NTrwj0gnqNy56kJ0w7TIKVANFl6GBb1SjPx5H2SsR4UPpIriCh0LjkVCsAELZn
+         7fYKBWxAVn3Oos9qvdrebals4LjHCxDgPLe43Ck8uPUPCGWeQE7d/vFZActRdtTHeopO
+         ksdQSepVZuQKKIYIeMXgqdhBifnN0KyXf3QzyvAM7cjKR7q3bRb8iCYcKvvV7TS8Ro3d
+         icEY9DBSoLFalAtVdfdLd6N/8bM49M6h79qiocUUvB1z7c8yGuK6aezUfY1uqSLu03RR
+         MhytgPpNCWDczuv7skkRE8pMr127CfkZK7zEgP3NLDkF5y+WZ5MWf3RBu/bUUaUh/nKT
+         LuXQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20251104; t=1776028285; x=1776633085;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:x-gm-gg:x-gm-message-state:from
          :to:cc:subject:date:message-id:reply-to;
-        bh=6Epvlpqxnk7CA+C9ymJCfGqy8SHrtqDJZ4fsM6TY9RM=;
-        b=FGy2PoDkcWo5wQFOylXsYVYPQ43S7XmppJsb0zfiXU6Dy8AGCzcKV6sQPGah4mdaiH
-         EiPH1ECAGxHiVUE5cVDc0FOIasuIQ00CrG37XqEs9A8QYLpbZ16t7luc7wzZhu2AKvdQ
-         3Yjb0NdzdCy2AOH6qx7hGxnoM8sMc1704vwFwRxayD1qIkuU8C4j4IRQ+I4GIe/MTE+J
-         c0Si5EOi2Un0TMTTicVY7KASAWYiGYnlFwCISZBJlD63JBb9gsOuA3tYuWU/w6DIg59E
-         9j5oN+v9d+wHDlI/sQ4ZXwYbhVxy1m3rMFHEMFSOnkgFkF7Q7dAfJnCkknH73Zq1HEg9
-         LzAg==
-X-Forwarded-Encrypted: i=1; AJvYcCXnAZeKTMcp+t9EcgHQzq72iASuAxweQ8G2agDsPjCNf93viMWo0ca/wV0Nm8z8Fojks6rQD67atAhsBr+QHuJxOZ5/@vger.kernel.org
-X-Gm-Message-State: AOJu0YyblVoGiQpgoxuUA46mViTju1hNGGifNtvh4OZaGtEwkBCQ5jSO
-	QOC/tvO9dOmqPyMSastbCYf4qbrL02JkDqyefyR9qAVnoI3ayQ2JydY1e0JueA==
-X-Gm-Gg: AeBDieuSE0gjbiVuSFQrSEMsFva5yuv2PpZ81wdweTN3RPMfYfHs9iaUTYdeROeBr3n
-	n6y21YQzM0GITsPTQru+QHZSfs0XQD2tvcAGNENGm2uW0/u7/FRiV4qYHtFW0hwX+3VGTo0UU6A
-	ISwmqhYhSzFUoTMWi4zSFBlGnKv6jZGDUL7DWxEtpQl04bBPeadhQS4bwbgEe0sePHavbztM9yt
-	uKHg9YiAjehO0poazRtXfL1+5b8eap7aUOsovPeBRRSTcRDIVjo8YCRuN0R/PeBv5ruOfKvGiSV
-	oRLcstMur2plFBoODMeXN2Ne6wK7QtH3YJEh0zjE3AyVzccR6KFKf/l4zom49gxIMvNfVGx0irL
-	btRtP/iHZZtPgNWB38ToBQaklbUa2dwOOKRxgOES7KiWQQeA/zLlX1rV0ETsNZX0XwOHbrR0EHK
-	Xiun+XUMnbw6F1O1f6jjxs6vy7TGF07T+tFJK/feO/v5Wd6PzB3WiDLyIWTCTMX06G2rn/CUZWq
-	FIy
-X-Received: by 2002:a05:7022:ec07:b0:119:e55a:9c04 with SMTP id a92af1059eb24-12c34ef9715mr6188284c88.32.1776028284605;
-        Sun, 12 Apr 2026 14:11:24 -0700 (PDT)
+        bh=JnJVHMF3J4KnB49uOjeY/NdO1ByBdmanEQTbiS1LzsE=;
+        b=Z2Cxo725gGwLFYSN4Ckvy26QUSul644p+D3vJzjYhMyK+WN1v6X+0U6zdntF0MlMlo
+         WyA7ffmU3EyuBETxdFNjrmCH9sla1Qpnx3j2Ph06drTDhMukaoH/TqDfOw2EA9iploql
+         RN7XwtMsqT//YOLKYc7Ksga37Q3nDxOU//+kuXOlm7/GPjtA0Lb57U5klZ3R3goe/J8O
+         NPavPDgg80nhF94AoxAszesFxpdmYaRZGRqP9V/fSTBzugjZpafe/6nd/Qk7KBljxpp2
+         4wU8NPzwyY38A3zQjEZuNUc0A5vGAOdx7sW2JjFVK1nBGDOn5729Lu022DjmixQMX3Pe
+         oJQQ==
+X-Forwarded-Encrypted: i=1; AJvYcCX2RJdmYuP39TaNCQKJSYzkWzP9H1UhVfBcEtKHwFdky6mCD7Q3pK3LEVimNuOxvytBFN4D84Dj5AxiSGFIa3BXPBOi@vger.kernel.org
+X-Gm-Message-State: AOJu0Yw8bLWKMg+bv0CzunSiw6rVeSVJXcdLkxiPz2F7sXdtHnasqmiM
+	gVkQdXWFoKDBkzAMLS1m6kPfopr3Z0XH1Qh3pDqDH7SIObyDHTNoCFblkZUzig==
+X-Gm-Gg: AeBDievvb//dy044AmbRovmu5N/USMB9DafTfO54aiht6kbZh+wa7IYzM6hS3fcs/ag
+	+NeXlg11+9BNuFFvxk/OLypLICZilxJX4scC4Fa27AHTd8rnWp8yyFsOsAAYWC5jK57VeLOG//z
+	z+/7Io4VTsbzwusxGxvgAXnaiCGT6RZqsg4X5JJb8Xd9BB/nMCIx3UkZeMVrGEIsyJHcCLmjcS+
+	EwDPEtzlkA0N3FtUPHlZIrtIuembNnzBWynzNMtXMyZLeeuSklTagwr6op3UTj5LTfRlHdiR9xM
+	9jsY8SIKBZtVceg/81ucfGIpaQyU61CIMoRmDmC2UEI89xj2vSf0ptNWFCZ8jKz0f70Gd/qXvqH
+	FrPOFwXlFdzL/kxa/MPVAJjpJY4WINjKRnH2gZSZNn9jiEtZoZCGUr72z1+SlZy7l913WCw+9eK
+	tE/lEdETnK6e5WL0t7HLsI8YWuG81LtwK0yfCdMV8aEY1XVrykxZG2s7rgDjYTOxCORE9jRzcNS
+	F2oYqEFP5TwR6Q=
+X-Received: by 2002:a05:7022:622:b0:128:df80:1852 with SMTP id a92af1059eb24-12c34e55bc9mr5865117c88.9.1776028285266;
+        Sun, 12 Apr 2026 14:11:25 -0700 (PDT)
 Received: from lappy (108-228-232-20.lightspeed.sndgca.sbcglobal.net. [108.228.232.20])
         by smtp.gmail.com with ESMTPSA id a92af1059eb24-12c346fb141sm11520856c88.12.2026.04.12.14.11.24
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 12 Apr 2026 14:11:24 -0700 (PDT)
+        Sun, 12 Apr 2026 14:11:25 -0700 (PDT)
 From: "Derek J. Clark" <derekjohn.clark@gmail.com>
 To: =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>,
 	Hans de Goede <hansg@kernel.org>
@@ -71,9 +71,9 @@ Cc: Mark Pearson <mpearson-lenovo@squebb.ca>,
 	platform-driver-x86@vger.kernel.org,
 	linux-kernel@vger.kernel.org,
 	stable@vger.kernel.org
-Subject: [PATCH v10 01/16] platform/x86: lenovo-wmi-helpers: Fix memory leak in lwmi_dev_evaluate_int()
-Date: Sun, 12 Apr 2026 14:11:06 -0700
-Message-ID: <20260412211121.2220556-2-derekjohn.clark@gmail.com>
+Subject: [PATCH v10 02/16] platform/x86: lenovo-wmi-other: Balance IDA id allocation and free
+Date: Sun, 12 Apr 2026 14:11:07 -0700
+Message-ID: <20260412211121.2220556-3-derekjohn.clark@gmail.com>
 X-Mailer: git-send-email 2.53.0
 In-Reply-To: <20260412211121.2220556-1-derekjohn.clark@gmail.com>
 References: <20260412211121.2220556-1-derekjohn.clark@gmail.com>
@@ -87,47 +87,135 @@ Content-Transfer-Encoding: 8bit
 
 From: Rong Zhang <i@rong.moe>
 
-lwmi_dev_evaluate_int() leaks output.pointer when retval == NULL (found
-by sashiko.dev [1]).
+Currently, the IDA id is only freed on wmi-other device removal or
+failure to create firmware-attributes device, kset, or attributes. It
+leaks IDA ids if the wmi-other device is bound multiple times, as the
+unbind callback never frees the previously allocated IDA id.
+Additionally, if the wmi-other device has failed to create a
+firmware-attributes device before it gets removed, the wmi-device
+removal callback double frees the same IDA id.
 
-Fix it by moving `ret_obj = output.pointer' outside of the `if (retval)'
-block so that it is always freed by the __free cleanup callback.
+These bugs were found by sashiko.dev [1].
+
+Fix them by moving ida_free() into lwmi_om_fw_attr_remove() so it is
+balanced with ida_alloc() in lwmi_om_fw_attr_add(). With them fixed,
+properly set and utilize the validity of priv->ida_id to balance
+firmware-attributes registration and removal, without relying on
+propagating the registration error to the component framework, which is
+more reliable and aligns with the hwmon device registration and removal
+sequences.
 
 No functional change intended.
 
 Reviewed-by: Mark Pearson <mpearson-lenovo@squebb.ca>
-Fixes: e521d16e76cd ("platform/x86: Add lenovo-wmi-helpers")
+Fixes: edc4b183b794 ("platform/x86: Add Lenovo Other Mode WMI Driver")
 Cc: stable@vger.kernel.org
 Link: https://sashiko.dev/#/patchset/20260331181208.421552-1-derekjohn.clark%40gmail.com [1]
 Signed-off-by: Rong Zhang <i@rong.moe>
 Signed-off-by: Derek J. Clark <derekjohn.clark@gmail.com>
 ---
- drivers/platform/x86/lenovo/wmi-helpers.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+v9:
+  - Invert err logic for when allocating IDA fails.
+  - Rename ida_alloc err goto from 'err' to 'err_no_ida' to disambiguate
+    from 'int err'.
+---
+ drivers/platform/x86/lenovo/wmi-other.c | 36 ++++++++++++++-----------
+ 1 file changed, 21 insertions(+), 15 deletions(-)
 
-diff --git a/drivers/platform/x86/lenovo/wmi-helpers.c b/drivers/platform/x86/lenovo/wmi-helpers.c
-index 7379defac500..018d7642e2bd 100644
---- a/drivers/platform/x86/lenovo/wmi-helpers.c
-+++ b/drivers/platform/x86/lenovo/wmi-helpers.c
-@@ -46,7 +46,6 @@ int lwmi_dev_evaluate_int(struct wmi_device *wdev, u8 instance, u32 method_id,
- 			  unsigned char *buf, size_t size, u32 *retval)
+diff --git a/drivers/platform/x86/lenovo/wmi-other.c b/drivers/platform/x86/lenovo/wmi-other.c
+index 6040f45aa2b0..be3309d74e03 100644
+--- a/drivers/platform/x86/lenovo/wmi-other.c
++++ b/drivers/platform/x86/lenovo/wmi-other.c
+@@ -957,17 +957,17 @@ static struct capdata01_attr_group cd01_attr_groups[] = {
+ /**
+  * lwmi_om_fw_attr_add() - Register all firmware_attributes_class members
+  * @priv: The Other Mode driver data.
+- *
+- * Return: Either 0, or an error code.
+  */
+-static int lwmi_om_fw_attr_add(struct lwmi_om_priv *priv)
++static void lwmi_om_fw_attr_add(struct lwmi_om_priv *priv)
  {
- 	struct acpi_buffer output = { ACPI_ALLOCATE_BUFFER, NULL };
--	union acpi_object *ret_obj __free(kfree) = NULL;
- 	struct acpi_buffer input = { size, buf };
- 	acpi_status status;
+ 	unsigned int i;
+ 	int err;
  
-@@ -55,8 +54,9 @@ int lwmi_dev_evaluate_int(struct wmi_device *wdev, u8 instance, u32 method_id,
- 	if (ACPI_FAILURE(status))
- 		return -EIO;
- 
-+	union acpi_object *ret_obj __free(kfree) = output.pointer;
+-	priv->ida_id = ida_alloc(&lwmi_om_ida, GFP_KERNEL);
+-	if (priv->ida_id < 0)
+-		return priv->ida_id;
++	err = ida_alloc(&lwmi_om_ida, GFP_KERNEL);
++	if (err < 0)
++		goto err_no_ida;
 +
- 	if (retval) {
--		ret_obj = output.pointer;
- 		if (!ret_obj)
- 			return -ENODATA;
++	priv->ida_id = err;
  
+ 	priv->fw_attr_dev = device_create(&firmware_attributes_class, NULL,
+ 					  MKDEV(0, 0), NULL, "%s-%u",
+@@ -993,7 +993,7 @@ static int lwmi_om_fw_attr_add(struct lwmi_om_priv *priv)
+ 
+ 		cd01_attr_groups[i].tunable_attr->dev = &priv->wdev->dev;
+ 	}
+-	return 0;
++	return;
+ 
+ err_remove_groups:
+ 	while (i--)
+@@ -1007,7 +1007,12 @@ static int lwmi_om_fw_attr_add(struct lwmi_om_priv *priv)
+ 
+ err_free_ida:
+ 	ida_free(&lwmi_om_ida, priv->ida_id);
+-	return err;
++
++err_no_ida:
++	priv->ida_id = -EIDRM;
++
++	dev_warn(&priv->wdev->dev,
++		 "failed to register firmware-attributes device: %d\n", err);
+ }
+ 
+ /**
+@@ -1016,12 +1021,17 @@ static int lwmi_om_fw_attr_add(struct lwmi_om_priv *priv)
+  */
+ static void lwmi_om_fw_attr_remove(struct lwmi_om_priv *priv)
+ {
++	if (priv->ida_id < 0)
++		return;
++
+ 	for (unsigned int i = 0; i < ARRAY_SIZE(cd01_attr_groups) - 1; i++)
+ 		sysfs_remove_group(&priv->fw_attr_kset->kobj,
+ 				   cd01_attr_groups[i].attr_group);
+ 
+ 	kset_unregister(priv->fw_attr_kset);
+ 	device_unregister(priv->fw_attr_dev);
++	ida_free(&lwmi_om_ida, priv->ida_id);
++	priv->ida_id = -EIDRM;
+ }
+ 
+ /* ======== Self (master: lenovo-wmi-other) ======== */
+@@ -1063,7 +1073,9 @@ static int lwmi_om_master_bind(struct device *dev)
+ 
+ 	lwmi_om_fan_info_collect_cd00(priv);
+ 
+-	return lwmi_om_fw_attr_add(priv);
++	lwmi_om_fw_attr_add(priv);
++
++	return 0;
+ }
+ 
+ /**
+@@ -1115,13 +1127,7 @@ static int lwmi_other_probe(struct wmi_device *wdev, const void *context)
+ 
+ static void lwmi_other_remove(struct wmi_device *wdev)
+ {
+-	struct lwmi_om_priv *priv = dev_get_drvdata(&wdev->dev);
+-
+ 	component_master_del(&wdev->dev, &lwmi_om_master_ops);
+-
+-	/* No IDA to free if the driver is never bound to its components. */
+-	if (priv->ida_id >= 0)
+-		ida_free(&lwmi_om_ida, priv->ida_id);
+ }
+ 
+ static const struct wmi_device_id lwmi_other_id_table[] = {
 -- 
 2.53.0
 
