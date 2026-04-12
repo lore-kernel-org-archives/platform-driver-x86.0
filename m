@@ -1,173 +1,227 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mout01.posteo.de (mout01.posteo.de [185.67.36.65])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D3111257844
-	for <platform-driver-x86@vger.kernel.org>; Sun, 12 Apr 2026 09:05:32 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BAAFD1684BE
+	for <platform-driver-x86@vger.kernel.org>; Sun, 12 Apr 2026 13:21:31 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.67.36.65
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1775984732; cv=none; b=dunk2LWZkdsi/9HQVuZe4hIzjDxD7KIdGqrCf+SrIuthuyWqeRyube3KtfWea47nGqsDLPwqOHsCmelG5NPZiKUm5cv2PW6MYMQUZQxW7ELQSkHyALd1F7y4Vl8DKc16iZMnnhVU0EkHDYqAUOA+IHW30XdcLfLisDQAj1gzsec=
+	t=1776000093; cv=none; b=KrGQgE8b4ct3la1loFelLyxhr4DNxevBBnoghWef9tf09tarUDZrqRjeNc8gAHZMwxlPZErP+YfW8WkwnZjDhh9bJ/JmYATjD7H+r4a8hgiaaRfQZ94YogAs+0fA9kW7TYnpb6dDWV94EcuP/XZIZGVstOTw8UBtavAutzUtbHY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1775984732; c=relaxed/simple;
-	bh=M5AFdESz+ehu46jlR0u44s+7eqynE4DDNCg4s7mfw+g=;
-	h=From:To:Subject:Date:Message-ID:Content-Type:MIME-Version; b=FebAM+hbNY1REIsBLeoAsNk5McY66xosS1nnyF3+uo+S4k2abgwb0fFHAKVWMcLCZEz1/pgf+WVzmoQITqAqFgVfSxrFrKHHP97g8TKW8qlhwCFJhgg7MEjluf1FeFdzUmJ0SqWj8GPAgrXuFPmK3cXxpY238C2XhjUMoDSSkDE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=YTmPkRmb; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1776000093; c=relaxed/simple;
+	bh=TJ8wVwTaPPX8IA9fBCpnZgN0uKm56+4zTNIE8Ys86RI=;
+	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
+	 Content-Type:MIME-Version; b=GUsW9pP159wJ0tfIGEXdoDOnUpJHUyinV+kTahBVJd7Ng1w43wHUpkhQLBhiZN6DuiIx5aKSB06nHMOe6y7kj8ZOAKiWPdkmUnTCYxoNuycSJgNZPNGtZQ1D4S1/v1njsiBSwPfRe0jpCVIC/fUzRVFzP3O5djwt3lpcYSIqOLc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=posteo.de; spf=pass smtp.mailfrom=posteo.de; dkim=pass (2048-bit key) header.d=posteo.de header.i=@posteo.de header.b=Nj5RYxZM; arc=none smtp.client-ip=185.67.36.65
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=posteo.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=posteo.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="YTmPkRmb"
-Received: by smtp.kernel.org (Postfix) with ESMTPS id 6F3D7C19424
-	for <platform-driver-x86@vger.kernel.org>; Sun, 12 Apr 2026 09:05:32 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1775984732;
-	bh=M5AFdESz+ehu46jlR0u44s+7eqynE4DDNCg4s7mfw+g=;
-	h=From:To:Subject:Date:From;
-	b=YTmPkRmbcTzhDdh0lnVCB2t4JPJZk5S+h0ZomoLPZhDcGAgaoaUJL95P4oidyuWSb
-	 xNQTark2GqC4mZ73DWLfoKYEOqglEfoMfrUnN6bgmCbGeGXD626xC9NjJ9yASFdbmk
-	 A6zlX7kEeD093xQFaV2nYW9BH7Jk176GzOSh5JK527WJ3mi3bq96E6wspWQ5ZHm1+A
-	 aBJJisXFCmyTA1e6o7+gRTvwBJfuJFcFpB0rscI2rjA8mOcmzL6Zh5aexhd/chys+y
-	 Odp0xzJ3a3aJOj+1IF/XduM9BPjjOWKY2+7WElfSuZdh9E6LRHXPVqUq3IoTib0jRx
-	 2qEWPW+NoZUTA==
-Received: by aws-us-west-2-korg-bugzilla-1.web.codeaurora.org (Postfix, from userid 48)
-	id 674DDC433E1; Sun, 12 Apr 2026 09:05:32 +0000 (UTC)
-From: bugzilla-daemon@kernel.org
-To: platform-driver-x86@vger.kernel.org
-Subject: [Bug 221353] New: ideapad_acpi: fan_mode values 1/2/4 all trigger
- dust cleaning mode
-Date: Sun, 12 Apr 2026 09:05:32 +0000
-X-Bugzilla-Reason: None
-X-Bugzilla-Type: new
-X-Bugzilla-Watch-Reason: AssignedTo drivers_platform_x86@kernel-bugs.osdl.org
-X-Bugzilla-Product: Drivers
-X-Bugzilla-Component: Platform_x86
-X-Bugzilla-Version: 2.5
-X-Bugzilla-Keywords: 
-X-Bugzilla-Severity: normal
-X-Bugzilla-Who: basak.sb2006@gmail.com
-X-Bugzilla-Status: NEW
-X-Bugzilla-Resolution: 
-X-Bugzilla-Priority: P3
-X-Bugzilla-Assigned-To: drivers_platform_x86@kernel-bugs.osdl.org
-X-Bugzilla-Flags: 
-X-Bugzilla-Changed-Fields: bug_id short_desc product version rep_platform
- op_sys bug_status bug_severity priority component assigned_to reporter
- cf_regression
-Message-ID: <bug-221353-215701@https.bugzilla.kernel.org/>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-X-Bugzilla-URL: https://bugzilla.kernel.org/
-Auto-Submitted: auto-generated
+	dkim=pass (2048-bit key) header.d=posteo.de header.i=@posteo.de header.b="Nj5RYxZM"
+Received: from submission (posteo.de [185.67.36.169]) 
+	by mout01.posteo.de (Postfix) with ESMTPS id F07B2240028
+	for <platform-driver-x86@vger.kernel.org>; Sun, 12 Apr 2026 15:21:29 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=posteo.de; s=2017;
+	t=1776000089; bh=Jb7EIbixOeoV5E5XbGXz4LVjV4oNjHY8UojULhpOhrE=;
+	h=Message-ID:Subject:From:To:Cc:Date:Autocrypt:Content-Type:
+	 MIME-Version:OpenPGP:From;
+	b=Nj5RYxZMAO4NhPZsLojI0EIQgJN0wjFGB+xLZUxybn/1NJaH3OXaXO/eETtABLBoR
+	 PdFyrebIZX6eIkdVrEpn9WpNyRCgqEhZi8OruJ+HDYRF+OhZ5yOvC0yZufU9TWF8pp
+	 VO0h4ZC+dJaUT97Bsq2/xBFpEfD5CbMPlhOmxi1XI45Ku84aQoynvGtttb0aG6d34U
+	 J0muUKtpAPaylhUk0SAjD51zimgj43xjRVhTF+aoRDG7AQMSsaPAQ/f8irOtj7GSVv
+	 2vTDJRTkWto8L2IQ6ihPcmCA/B0OwmKqvgfgrENlDXPyB9zn5G1sU9vs/ZXzNyfkNZ
+	 qZGxBTh0sPFQg==
+Received: from customer (localhost [127.0.0.1])
+	by submission (posteo.de) with ESMTPSA id 4ftrlp6Bdjz9rxD;
+	Sun, 12 Apr 2026 15:21:26 +0200 (CEST)
+Message-ID: <485ab9e829e902e3f29172059be8c3203062d06b.camel@posteo.de>
+Subject: Re: [PATCH v7 2/2] dt-bindings: embedded-controller: Add synology
+ microp devices
+From: Markus Probst <markus.probst@posteo.de>
+To: Krzysztof Kozlowski <krzk@kernel.org>
+Cc: Hans de Goede <hansg@kernel.org>, Ilpo =?ISO-8859-1?Q?J=E4rvinen?=	
+ <ilpo.jarvinen@linux.intel.com>, Bryan O'Donoghue
+ <bryan.odonoghue@linaro.org>,  Lee Jones <lee@kernel.org>, Pavel Machek
+ <pavel@kernel.org>, Miguel Ojeda <ojeda@kernel.org>, Boqun Feng
+ <boqun@kernel.org>, Gary Guo <gary@garyguo.net>, =?ISO-8859-1?Q?Bj=F6rn?=
+ Roy Baron	 <bjorn3_gh@protonmail.com>, Benno Lossin <lossin@kernel.org>,
+ Andreas Hindborg	 <a.hindborg@kernel.org>, Alice Ryhl
+ <aliceryhl@google.com>, Trevor Gross	 <tmgross@umich.edu>, Danilo Krummrich
+ <dakr@kernel.org>, Rob Herring	 <robh@kernel.org>, Krzysztof Kozlowski
+ <krzk+dt@kernel.org>, Conor Dooley	 <conor+dt@kernel.org>, Greg
+ Kroah-Hartman <gregkh@linuxfoundation.org>, 
+	platform-driver-x86@vger.kernel.org, linux-leds@vger.kernel.org, 
+	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	rust-for-linux@vger.kernel.org
+Date: Sun, 12 Apr 2026 13:21:28 +0000
+In-Reply-To: <20260412-cuddly-taipan-of-reputation-1cafe0@quoll>
+References: <20260411-synology_microp_initial-v7-0-9a3a094e763a@posteo.de>
+	 <20260411-synology_microp_initial-v7-2-9a3a094e763a@posteo.de>
+	 <20260412-cuddly-taipan-of-reputation-1cafe0@quoll>
+Autocrypt: addr=markus.probst@posteo.de; prefer-encrypt=mutual;
+ keydata=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
+ jfGillcaQOqFZ3WwVqyzG1BUfTow==
+Content-Type: multipart/signed; micalg="pgp-sha256";
+	protocol="application/pgp-signature"; boundary="=-xhQZRujpQLSdSyyM6rXY"
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-
-https://bugzilla.kernel.org/show_bug.cgi?id=3D221353
-
-            Bug ID: 221353
-           Summary: ideapad_acpi: fan_mode values 1/2/4 all trigger dust
-                    cleaning mode
-           Product: Drivers
-           Version: 2.5
-          Hardware: Intel
-                OS: Linux
-            Status: NEW
-          Severity: normal
-          Priority: P3
-         Component: Platform_x86
-          Assignee: drivers_platform_x86@kernel-bugs.osdl.org
-          Reporter: basak.sb2006@gmail.com
-        Regression: No
-
-# Hardware
-
-## DMI
-
-- system-manufacturer: `LENOVO`
-- system-version: `IdeaPad 3 15ALC6 Ub`
-- system-product-name: `82KU`
-- bios-version: `GLCN46WW`
-
-## Kernel
-
-- `uname -a`: `Linux ideapad 6.19.11-arch1-1 #1 SMP PREEMPT_DYNAMIC Thu, 02=
- Apr
-2026 23:33:01 +0000 x86_64 GNU/Linux`
+OpenPGP: url=https://posteo.de/keys/markus.probst@posteo.de.asc; preference=encrypt
 
 
-# Description
+--=-xhQZRujpQLSdSyyM6rXY
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-According to
-[Documentation/ABI/testing/sysfs-platform-ideapad-laptop](https://github.co=
-m/torvalds/linux/blob/f5459048c38a00fc583658d6dcd0f894aff6df8f/Documentatio=
-n/ABI/testing/sysfs-platform-ideapad-laptop),
+On Sun, 2026-04-12 at 10:26 +0200, Krzysztof Kozlowski wrote:
+> On Sat, Apr 11, 2026 at 05:27:35PM +0200, Markus Probst wrote:
+> > +properties:
+> > +  compatible:
+> > +    enum:
+> > +      - synology,ds923p-microp
+> > +      - synology,ds918p-microp
+> > +      - synology,ds214play-microp
+> > +      - synology,ds225p-microp
+> > +      - synology,ds425p-microp
+> > +      - synology,ds710p-microp
+> > +      - synology,ds1010p-microp
+> > +      - synology,ds723p-microp
+> > +      - synology,ds1522p-microp
+> > +      - synology,rs422p-microp
+> > +      - synology,ds725p-microp
+> > +      - synology,ds118-microp
+> > +      - synology,ds124-microp
+> > +      - synology,ds223-microp
+> > +      - synology,ds223j-microp
+> > +      - synology,ds1823xsp-microp
+> > +      - synology,rs822p-microp
+> > +      - synology,rs1221p-microp
+> > +      - synology,rs1221rpp-microp
+> > +      - synology,ds925p-microp
+> > +      - synology,ds1525p-microp
+> > +      - synology,ds1825p-microp
+>=20
+> Previous comment is not resolved. For example you stated that ds723p is
+> compatible with ds725p, so this should be expressed.
+Using this expression?
 
-fan_mode supports:
-0 =3D Super Silent
-1 =3D Standard
-2 =3D Dust Cleaning
-4 =3D Efficient Thermal Dissipation
+properties:
+  compatible:
+    oneOf:
+      - enum:
+          - synology,ds923p-microp
+          - synology,ds1522p-microp
+      - enum:
+          - synology,ds918p-microp
+          - synology,ds415p-microp
+      - const: synology,ds214play-microp
+...
+?
+If so shall there each be a description?
 
-However, on this device:
-- Writing 1, 2, or 4 all produce identical behavior.
-- Fan enters a pulsing high-speed mode where it ramps up to max speed and t=
-hen
-ramps down to 0 RPM about 10 times. Consistent with "dust cleaning" mode.
-- Only value 0 behaves differently. It changes it to the default/"Super Sil=
-ent"
-mode.
+Also ds723p and ds725p are not compatible. ds723p has a system current
+sensor, ds725p does not. This will be relevant when implementing the
+hwmon part of the driver.
 
-Here is the observation table:
-| Input | Transition (read immediately afterwards)              | Finish (r=
-ead
-after 1 min or so)|
-|-------|-------------------------------------------------------|----------=
-----------------------|
-| 0     | immediately 133, minimal fan activity                 | 133=20=20=
-=20=20=20=20=20=20=20=20
-                 |
-| 1     | 3, enters "dust cleaning" mode                        | 5=20=20=
-=20=20=20=20=20=20=20=20=20=20
-                 |
-| 2     | 3                                                     | 5=20=20=
-=20=20=20=20=20=20=20=20=20=20
-                 |
-| 4     | 3                                                     | 5=20=20=
-=20=20=20=20=20=20=20=20=20=20
-                 |
+>=20
+> ds918p and ds415p as well. ds925p and several others you EXPLICITLY
+> wrote they are compatible:
+>=20
+> "ds925p, ds1525p, ds1825p, ds1823xsp:
+> - supports fan rpm report via an adt7475 chip and therefore does not
+> have gpios for fan failure
+> - no system current sensor"
+Yes.
 
+>=20
+> Probably many more cases, I did not verify all of them.
+>=20
+> If there is going to be new version, please organize the patch
+> documenting the compatible (DT bindings) before the patch using that
+> compatible.
+> See also: https://elixir.bootlin.com/linux/v6.14-rc6/source/Documentation=
+/devicetree/bindings/submitting-patches.rst#L46
+Ok.
 
-# Steps to Reproduce
+Thanks
+- Markus Probst
 
-1. Switch to a fan mode.
-- echo 0 | sudo tee  /sys/bus/platform/drivers/ideapad_acpi/VPC2004:00/fan_=
-mode
-- echo 1 | sudo tee  /sys/bus/platform/drivers/ideapad_acpi/VPC2004:00/fan_=
-mode
-- echo 2 | sudo tee  /sys/bus/platform/drivers/ideapad_acpi/VPC2004:00/fan_=
-mode
-- echo 4 | sudo tee  /sys/bus/platform/drivers/ideapad_acpi/VPC2004:00/fan_=
-mode
+>=20
+> > +
+> > +  fan-failure-gpios:
+> > +    description: GPIOs needed to determine which fans stopped working =
+on a fan failure event.
+> > +    minItems: 2
+> > +    maxItems: 3
+> > +
+> > +required:
+> > +  - compatible
+>=20
+> Best regards,
+> Krzysztof
 
-2. Observe that all of them except mode "0" (a.k.a. "Super Silent" mode) ma=
-ke
-the fan enter the "dust cleaning" mode.
+--=-xhQZRujpQLSdSyyM6rXY
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: This is a digitally signed message part
 
+-----BEGIN PGP SIGNATURE-----
 
-# Expected
+iQJPBAABCAA5FiEEgnQYxPSsWOdyMMRzNHYf+OetQ9IFAmnbnEobFIAAAAAABAAO
+bWFudTIsMi41KzEuMTIsMiwyAAoJEDR2H/jnrUPSrtMQAJ9Qq+Qbobe0voqfOqqV
+FKXcfR/Kl1yi90yrS65R6WQxmG2xphTJ7XXkLPGYXmscivM05vDVEQL6iPTZKV5a
+d7Ok7wZhoLj5q+2uFFztPuqOXUzuZJfjBUKaSw3Lg8wI89HxYKfATESrwUhUw3rI
+A6pqD1GA5Pnb1AgWuQwq31JftQ/rzCMCAdQdTwRHIZB0ARxtxHssmbmsmnX2N4/n
+4K52sq8B72OQM/ImWst5Gym3uCOlnniuoTJH2+EFl2v9RRj045mn8UWnit1szWP9
+Uc6DMON3BIr0tdQWs1jj31HMZXzwj7AJW3DKuCcgzbn0XB5Ok4kmNZxaPZINBx+s
+JsLZANQi6rsmkxRyz58Nu+Qy6Ydc91ZIZ3UO561F1/vZ17OeLSTgUBIAuq6xGRUW
+SEUSQIN0JUPvbKMBnx0i69bAz7rPQnJgpsB+kJ8/b9p/W80yEThHsAau0V4aCJgD
+RlSE1Fw4tVr+GBNXNZXZ8oj2zOALVGV4f19Roxl2aPP/P76LtxwK/hcKqfZQZjme
+6xckx/MDDv3D24V0ND64uT10FGpK9n+5NPlwoUKlaybkfruSeqXyFpUvfLtopHbM
+VGMWdxrTjlPNG3ucrtFFeGGnW/AXfFrcjMJR3Ld3KYsmgZxCf//Z84aBlzp860ig
+L6Y2NPqJfh6pDmknIbFBU3TB
+=CXK6
+-----END PGP SIGNATURE-----
 
-Different fan behaviors per documented modes.
-
-
-# Actual
-
-All non-zero modes behave like dust cleaning.
-
-
-Best Regards,
-Sourajyoti Basak
-
---=20
-You may reply to this email to add a comment.
-
-You are receiving this mail because:
-You are watching the assignee of the bug.=
+--=-xhQZRujpQLSdSyyM6rXY--
