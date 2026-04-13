@@ -1,33 +1,33 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B895A1DF75A;
-	Mon, 13 Apr 2026 09:45:59 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5857037C10D;
+	Mon, 13 Apr 2026 09:48:41 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1776073559; cv=none; b=hKDakPsK1+8thDfsobEprLEDchq7imnm4jQw6r5nhxqDzk7Q1vzn1Gu3B/SRk7PLU0FZGYQtptom2hXNGR23thgVHWehb70x/UVf01PcEMChjUq7QLgxBx7NuSNgJA/s/Y2KqSXWRX+Xpe40Y0BJ4h8+rcPUiOPOFtbiU5ZbyUE=
+	t=1776073721; cv=none; b=gryhKKyxelU6y78O7Z+PIPaoLe7VbLuweE8J2ui46PJ63Vqh7qfwQaeg1M/u1yMtfoFvGlH66qa9JTH0rgJPnPyyJldzmmCxgptua61yGWv6ErulIbPILZaHAYKJ8Uo0xdJF6Ra/rRr887fA8Aa/T6nydNmlg7hIH8UFFIsGtq0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1776073559; c=relaxed/simple;
-	bh=5veiHHgWaMzRiwn6PqcbksFhy1YN7r23zzqcwCRI7c8=;
+	s=arc-20240116; t=1776073721; c=relaxed/simple;
+	bh=ei62gy1NTjROvmCzpJDNwUoL/wL4EpzF/cw5QAv3oJU=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=FW9OLBgCEmZH6//OMewb9B/HD46vtn9EPRk0IGRZVFzerE9QB0h1P7H0wyWi48lrJhGmnWGfi9Va6aMQHamOlhMluYxXEYQy8twSUblU+OrMsP/EA7SW7A2caatrIa96NYc2PGcwJt4ZEug5l9Nr6nMu9XxyNxG3RLnf7k/ihus=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=WeamRhP9; arc=none smtp.client-ip=10.30.226.201
+	 In-Reply-To:Content-Type; b=j0YjNZ+UwOGU82wPVpwGK8Gzt6f7m+ZXXmBcOW1uYQKB0rinHr2SELGKIE7u9qIgcaPBazyXes3YQFCsSp54pbWhfd2kncER1fAY9qfsM5tAAryF4iNmXLNluuQfUVfFp/fGfc566SCKvzKPQolbtbZVUbMSh7niz6xAr/iuhwk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Qex+PchW; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="WeamRhP9"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 6AEE0C116C6;
-	Mon, 13 Apr 2026 09:45:57 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Qex+PchW"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 29F72C116C6;
+	Mon, 13 Apr 2026 09:48:39 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1776073559;
-	bh=5veiHHgWaMzRiwn6PqcbksFhy1YN7r23zzqcwCRI7c8=;
+	s=k20201202; t=1776073721;
+	bh=ei62gy1NTjROvmCzpJDNwUoL/wL4EpzF/cw5QAv3oJU=;
 	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=WeamRhP9646SVf2IFUQlX/iyvdRV9gNeT1Y4g6PqjcuNsbxuW2ImPnKKa0twJSjM7
-	 PRte7P4h4faYwmIo9b4vz9A5SH1kCiOOy9mJkRnm7YnRAyDqtKw5Utpi+zlZ1kdprh
-	 XtIZIFDdGzOnTw3Z5MHhDVfSkj4XSdJvmOlUXrborJSCtE1liDgsTE2sa5EwF4kP48
-	 bQNLou6OdlecerlUCvHBKSP7pITaGxko6rjS0lUqgOHzz0MIB7+cpLlO0wd8Hkz+i7
-	 n1lIvzxZbR45DvfY+cyHuU5dTcmPLTbsE90vFD/82+1uagC9HQpCJ9pty01QvgZ9Kq
-	 E//v0B2L59V0g==
-Message-ID: <25fd6ad5-0da9-485b-b507-9d1dc080cc86@kernel.org>
-Date: Mon, 13 Apr 2026 11:45:54 +0200
+	b=Qex+PchWpAPgmOQM8WlERs/crhywWswafr8Wr0wMzHZrdulOUHfDw7uqv1zNHExCm
+	 ytWk9KLPw/FutUb8/1zeM50fS1HjoGL9oxMehV9+oGuxnA4c8+XR/k2iMblt/2mpPQ
+	 GzdTYz5hwTKzPpwRsquD0d+TRVNeg6IOlRJvo3SOsYyLISZ5QmHWl2S9MaeoY2wEaX
+	 QXUaCxQ+P1meEc/oWigZjnGLBp8pk29Jds4QqKYkXJXnZlZwYDlfHPGdkGHmB2FDzj
+	 rmqsGln1GY5tYt9uQRnGBuXL+qHagQEfKNv9uvu2BfdMYFtcXlwPGfEOAOfN16ZKan
+	 Sxw70DbzbVgQw==
+Message-ID: <5120a664-9fb5-41f7-b9d4-16e4369430d7@kernel.org>
+Date: Mon, 13 Apr 2026 11:48:37 +0200
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
@@ -35,7 +35,8 @@ List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v2 0/5] Enable dual cameras on Dell Latitude 5285 2-in-1
+Subject: Re: [PATCH v2 1/3] platform/x86: intel_lpss: add resource conflict
+ quirk for Dell Latitude 5285
 To: Thierry Chatard <tchatard@gmail.com>, linux-kernel@vger.kernel.org
 Cc: linux-media@vger.kernel.org, platform-driver-x86@vger.kernel.org,
  lee@kernel.org, djrscally@gmail.com, ilpo.jarvinen@linux.intel.com,
@@ -43,64 +44,30 @@ Cc: linux-media@vger.kernel.org, platform-driver-x86@vger.kernel.org,
  jacopo.mondi@ideasonboard.com, nicholas@rothemail.net
 References: <20260320000937.9177-1-tchatard@gmail.com>
  <20260324214129.17300-1-tchatard@gmail.com>
+ <20260324214129.17300-2-tchatard@gmail.com>
 From: Hans de Goede <hansg@kernel.org>
 Content-Language: en-US, nl
-In-Reply-To: <20260324214129.17300-1-tchatard@gmail.com>
+In-Reply-To: <20260324214129.17300-2-tchatard@gmail.com>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 
-Hi Thierry,
-
-Thank you for your work on this.
+Hi,
 
 On 24-Mar-26 10:41 PM, Thierry Chatard wrote:
-> Changes in v2:
-> - patch 2: split trailing statements in aml_parse_int() onto separate
->   lines (checkpatch); add kernel-doc @param descriptions to
->   aml_parse_int(), dell5285_gnvs_from_table(), and dell5285_gnvs_find()
->   (kernel test robot); add Reported-by/Closes tags
-> - patch 3: wrap long lines in commit message (checkpatch)
+> The Dell Latitude 5285 2-in-1 has a BIOS bug where the ACPI GEXP device
+> and the I2C4 controller (INT3446) both claim the same MMIO region via the
+> shared SB04 variable. This causes intel_lpss_acpi to fail binding to I2C4
+> with -EBUSY, preventing the front camera (OV5670) sensor from being
+> registered.
 > 
-> The Dell Latitude 5285 2-in-1 has two cameras (OV5670 front, OV8858
-> rear) connected through a TPS68470 PMIC/clock/GPIO hub. All five patches
-> are required for a working system; each is self-contained and
-> bisect-safe.
+> Add a DMI quirk that selects IGNORE_RESOURCE_CONFLICTS for INT3446 on this
+> machine, matching the existing pattern used by other LPSS quirks.
 > 
-> Hardware topology
-> -----------------
->   Front camera:  OV5670 (ACPI INT3479), I2C4 / INT3446
->   Rear camera:   OV8858 (ACPI INT3477), I2C2 / i2c_designware.3
->   PMIC:          TPS68470 (ACPI INT3472:05), addr 0x4D, on I2C2
->   ISP:           Intel IPU3 (ipu3_cio2 + ipu3-imgu)
-> 
-> The OV8858 is daisy-chained behind the TPS68470 S_I2C passthrough port.
-> The TPS68470 VSIO regulator controls S_I2C_CTL (reg 0x43); marking it
-> always_on keeps the passthrough active from boot so OV8858 is reachable
-> on I2C2 at probe time.
-> > Four problems must be fixed in combination:
+> Signed-off-by: Thierry Chatard <tchatard@gmail.com>
 
-Hmm, it is unfortunate that this 2-in-1 requires the first 2 workarounds,
-especially the second workaround.
+Thanks, patch looks good to me:
 
-Patches 3-5 look fine at a quick glance.
-
-> patch 1/5 - intel_lpss: The BIOS claims the same MMIO region for both
->   GEXP and INT3446 (I2C4). Without this quirk the kernel rejects INT3446
->   as a resource conflict and the front camera's I2C bus never comes up.
-
-This one is a bit unfortunate but this is a known issue on similar
-(Microsoft Surface Go series) devices with an IPU3 camera like here,
-with a pre-existing quirk mechanism to deal with this, so I guess this is
-acceptable.
-
-> patch 2/5 - GNVS fixup: With I2C4 available, ipu_bridge still does not
->   create the front camera client because _DEP on INT3479 returns the
->   root PCI bus instead of the INT3472 handle. Root cause: BIOS leaves
->   GNVS fields C0TP, L0CL, L1CL at zero. Fix: scan DSDT/SSDTs for the
->   GNVS OperationRegion at TPS68470 probe time and write 0x02 (19.2 MHz)
->   into all three fields before ipu_bridge evaluates _DEP.
-
-This one really is nasty. I'll reply in detail to the patch itself.
+Reviewed-by: Hans de Goede <johannes.goede@oss.qualcomm.com>
 
 Regards,
 
@@ -108,38 +75,73 @@ Hans
 
 
 
-> patch 3/5 - TPS68470 board data: No board data existed for this machine,
->   so no PMIC regulators or GPIOs were configured for either sensor.
+
+> ---
+>  drivers/mfd/intel-lpss-acpi.c | 32 ++++++++++++++++++++++++++++++++
+>  1 file changed, 32 insertions(+)
 > 
-> patch 4/5 - ipu-bridge: INT3477 (OV8858) was unknown to ipu_bridge, so
->   it was skipped at CSI-2 enumeration.
-> 
-> patch 5/5 - ov8858 driver: No ACPI match for INT3477, and the driver did
->   not request the vsio supply needed by the S_I2C passthrough.
-> 
-> Tested on Dell Latitude 5285 2-in-1, Ubuntu 25.10, kernel 6.17.0-19.
-> Both cameras appear in libcamera and are usable in applications.
-> Note: the IPU3 IMGU can only run one pipeline at a time, so front and
-> rear camera use is mutually exclusive.
-> 
-> Thierry Chatard (5):
->   platform/x86: intel_lpss: add resource conflict quirk for Dell
->     Latitude 5285
->   platform/x86: int3472: tps68470: fix GNVS clock fields for Dell
->     Latitude 5285
->   platform/x86: int3472: tps68470: add board data for Dell Latitude 5285
->   media: ipu-bridge: add sensor configuration for OV8858 (INT3477)
->   media: ov8858: add ACPI device ID INT3477 and vsio power supply
-> 
->  drivers/mfd/intel-lpss-acpi.c                 |  32 +++
->  drivers/media/i2c/ov8858.c                    |  10 +-
->  drivers/media/pci/intel/ipu-bridge.c          |   2 ++
->  drivers/platform/x86/intel/int3472/tps68470.c | 201 ++++++++++++++++++
->  .../x86/intel/int3472/tps68470_board_data.c   | 163 ++++++++++++++
->  5 files changed, 407 insertions(+), 1 deletion(-)
-> 
-> base-commit: 6de23f81a4be5ee86a4df4fde0ca0c7bf67aecd1
-> --
-> 2.51.0
-> 
+> diff --git a/drivers/mfd/intel-lpss-acpi.c b/drivers/mfd/intel-lpss-acpi.c
+> index 63406026d..7d0964848 100644
+> --- a/drivers/mfd/intel-lpss-acpi.c
+> +++ b/drivers/mfd/intel-lpss-acpi.c
+> @@ -13,6 +13,8 @@
+>  #include <linux/ioport.h>
+>  #include <linux/mod_devicetable.h>
+>  #include <linux/module.h>
+> +#include <linux/acpi.h>
+> +#include <linux/dmi.h>
+>  #include <linux/pm.h>
+>  #include <linux/pm_runtime.h>
+>  #include <linux/platform_device.h>
+> @@ -52,6 +54,15 @@ static const struct intel_lpss_platform_info spt_i2c_info = {
+>  	.swnode = &spt_i2c_node,
+>  };
+>  
+> +/* Same as spt_i2c_info but with QUIRK_IGNORE_RESOURCE_CONFLICTS for Dell 5285
+> + * where ACPI GEXP device conflicts with I2C4 (INT3446) MMIO resources.
+> + */
+> +static const struct intel_lpss_platform_info spt_i2c_info_ignore_conflicts = {
+> +	.clk_rate = 120000000,
+> +	.swnode = &spt_i2c_node,
+> +	.quirks = QUIRK_IGNORE_RESOURCE_CONFLICTS,
+> +};
+> +
+>  static const struct property_entry uart_properties[] = {
+>  	PROPERTY_ENTRY_U32("reg-io-width", 4),
+>  	PROPERTY_ENTRY_U32("reg-shift", 2),
+> @@ -172,6 +183,16 @@ static const struct acpi_device_id intel_lpss_acpi_ids[] = {
+>  };
+>  MODULE_DEVICE_TABLE(acpi, intel_lpss_acpi_ids);
+>  
+> +static const struct dmi_system_id dell5285_lpss_dmi[] = {
+> +	{
+> +		.matches = {
+> +			DMI_EXACT_MATCH(DMI_SYS_VENDOR, "Dell Inc."),
+> +			DMI_EXACT_MATCH(DMI_PRODUCT_NAME, "Latitude 5285"),
+> +		},
+> +	},
+> +	{ }
+> +};
+> +
+>  static int intel_lpss_acpi_probe(struct platform_device *pdev)
+>  {
+>  	const struct intel_lpss_platform_info *data;
+> @@ -182,6 +203,17 @@ static int intel_lpss_acpi_probe(struct platform_device *pdev)
+>  	if (!data)
+>  		return -ENODEV;
+>  
+> +	/* Apply IGNORE_RESOURCE_CONFLICTS for I2C4 on Dell Latitude 5285.
+> +	 * The ACPI GEXP device conflicts with I2C4 (INT3446) MMIO resources
+> +	 * due to a BIOS bug where both use the same SB04 variable.
+> +	 */
+> +	if (data == &spt_i2c_info &&
+> +	    acpi_dev_hid_uid_match(ACPI_COMPANION(&pdev->dev), "INT3446", NULL) &&
+> +	    dmi_check_system(dell5285_lpss_dmi)) {
+> +		dev_info(&pdev->dev, "Dell 5285: applying IGNORE_RESOURCE_CONFLICTS for I2C4\n");
+> +		data = &spt_i2c_info_ignore_conflicts;
+> +	}
+> +
+>  	info = devm_kmemdup(&pdev->dev, data, sizeof(*info), GFP_KERNEL);
+>  	if (!info)
+>  		return -ENOMEM;
 
