@@ -1,338 +1,361 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.16])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 071433B0AFD;
-	Mon, 13 Apr 2026 10:45:01 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.16
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2E7B322156C;
+	Mon, 13 Apr 2026 11:02:23 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1776077103; cv=none; b=efAC1l2DK8PZARTG4TnmqfvmexJ70qQNAsIkG6Vm+AKYVxeug3I/Ili+QS7tKGA1U1YqFTJ/Z9GYnC8OWy/QyPq4XHiBHHsUvLM6tJFRk/zhPs9UXE1OIUrj9/RPW2bOTQdx5LjsnmhlSgWlOe176MCz135aBHjvsPFj8pa9ZGE=
+	t=1776078144; cv=none; b=VWsb7XlwXNp427HU+EoQzY3n8bOn/4mxx7QzYvJr5Jg2ZqAlLI1C0F65jbtKErh/DHnaIEzuS0gi4J1bB3FIoihrZy2JBWrPxw5p+mw/KD99SdCFpFRPr164bIWvjd0f88TyuC2dTqBJyRKtXcon2qNOb2v+wJAJohOv++Gd63s=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1776077103; c=relaxed/simple;
-	bh=QnB20GMBsTAE5vdQlnDv33Uqy9ISYS0NazsTV1hGnFw=;
-	h=From:Date:To:cc:Subject:In-Reply-To:Message-ID:References:
-	 MIME-Version:Content-Type; b=WKhY/pdkkXg5qeO/mEBNLFdYeT89uciu27OnuDBYKKB0S1cZ+XqlHVG62IZIBP57+KJX9T914VLuvQ4gZlEIUuyAXrijmKIy/D9BfzpWW+Q48wwi8IxQxAGPEc0BCQWDM6+9T6FBwzxi5y2RAkuEicQ9tae23cVVEmrZeaF4VPI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=pass smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=mF81/xMQ; arc=none smtp.client-ip=192.198.163.16
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.intel.com
+	s=arc-20240116; t=1776078144; c=relaxed/simple;
+	bh=WqZvPApVXMwS7BXxXyyxchsM+pO3uNmhKBM1ivYferU=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=bgHylYdMIOCsAB5seIvmtf8ZVmkATs/jHFP0raDtkJ3CQyBOpbmuLUoigDhTvpLyT4xnLysk69D7aKOj1/HlXaZPoCRKwm/gKbSf16tjE9YTI9XJolYNu4+oq3OKz2VXWeKfxDBGuuw6oQElgRoXEG3TTQ3EEgJYOgJiaE3m9R8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=jiAlKdaZ; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="mF81/xMQ"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1776077102; x=1807613102;
-  h=from:date:to:cc:subject:in-reply-to:message-id:
-   references:mime-version;
-  bh=QnB20GMBsTAE5vdQlnDv33Uqy9ISYS0NazsTV1hGnFw=;
-  b=mF81/xMQ2ojkePgVsLzqz4QNuA7yyYr44zU8j9ucuF6LBNtyrEkRwYHe
-   yY63qipOcoc4kkPDjCsUJMSyeOssm9oo9etcLPHIP5ihbCLR19Geqe2mm
-   Sn9icMbyTK3cRWvUPQ2XXd9UbtS1u6gAsemJYG5dIwG6fWS+xZ3mT383q
-   Y7NpJDHOS40ify6gqCUrPypWGBJmyKX5jZ/2uwu4BEYNnuVF8ABLkJfRb
-   u5yBX7j2f5443vWfz5UsmGoLIU7OBQ5oWgPKkIP9BxROR/GrD4B3vGqzl
-   T75/PQh6G3IvjCQic2r84GR5nfWdNFRP70FqwPz2Ih3fikyDVzdru0waJ
-   g==;
-X-CSE-ConnectionGUID: uelK3hUjS/6k5BuhAJ+myQ==
-X-CSE-MsgGUID: jlxpuNG/QjaC0a9YJUDrIQ==
-X-IronPort-AV: E=McAfee;i="6800,10657,11757"; a="64538457"
-X-IronPort-AV: E=Sophos;i="6.23,177,1770624000"; 
-   d="scan'208";a="64538457"
-Received: from fmviesa004.fm.intel.com ([10.60.135.144])
-  by fmvoesa110.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 13 Apr 2026 03:45:01 -0700
-X-CSE-ConnectionGUID: yUzdwGT0S9OVU2YHeBD46Q==
-X-CSE-MsgGUID: IuEAirhCTVeBttD0NrF0cQ==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.23,177,1770624000"; 
-   d="scan'208";a="231480885"
-Received: from ijarvine-mobl1.ger.corp.intel.com (HELO localhost) ([10.245.245.63])
-  by fmviesa004-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 13 Apr 2026 03:44:57 -0700
-From: =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
-Date: Mon, 13 Apr 2026 13:44:52 +0300 (EEST)
-To: Khalil <khalilst@gmail.com>
-cc: broonie@kernel.org, Hans de Goede <hansg@kernel.org>, 
-    rf@opensource.cirrus.com, linux-spi@vger.kernel.org, 
-    platform-driver-x86@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>, 
-    Khalil <khalil@rentman.nl>
-Subject: Re: [PATCH v2 2/3] platform/x86: serial-multi-instantiate: Fix SPI
- chip select on platforms with incomplete ACPI cs-gpios
-In-Reply-To: <20260413100530.580649-3-khalil@rentman.nl>
-Message-ID: <a46ead79-5951-1dfc-4a7f-833a29819228@linux.intel.com>
-References: <20260413100530.580649-1-khalil@rentman.nl> <20260413100530.580649-3-khalil@rentman.nl>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="jiAlKdaZ"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id B9009C116C6;
+	Mon, 13 Apr 2026 11:02:21 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1776078143;
+	bh=WqZvPApVXMwS7BXxXyyxchsM+pO3uNmhKBM1ivYferU=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=jiAlKdaZDJ6CswQxMwsXxXd1MF7Z1TzTax6/zpxIp32UA9vZdRZHBzLi9AixRaKjQ
+	 HQLCSF3YE5dq1MsIyLp1KMLoSQhbFue2Dnl8fbrnkFjOeZN3Pqx64TmZ5VgS+a7W56
+	 nbMAf6toskK30vi+7AvNCZBWunmM0sSjUjeZW52ElPo5el3ZHtHZs7vU+wfx0CxWmG
+	 0sJiMA77sdD3fR0ZJhyQvmCDhXamkmNfRWpuNMaTDH3k1JO/KZt2HL89jdBl2o/euU
+	 R1UmEZuaB+g/Sx6iVoCAyloyFsNP/CtPmyV09p/3IJUe7dfXiN5i4fv5HfGnoo+3ai
+	 3TcDohiBYoGEw==
+Message-ID: <4ef5f305-0234-4193-a190-edbfe770ea04@kernel.org>
+Date: Mon, 13 Apr 2026 13:02:20 +0200
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v2 2/3] platform/x86: int3472: tps68470: fix GNVS clock
+ fields for Dell Latitude 5285
+To: Thierry Chatard <tchatard@gmail.com>, linux-kernel@vger.kernel.org
+Cc: linux-media@vger.kernel.org, platform-driver-x86@vger.kernel.org,
+ lee@kernel.org, djrscally@gmail.com, ilpo.jarvinen@linux.intel.com,
+ mchehab@kernel.org, sakari.ailus@linux.intel.com,
+ jacopo.mondi@ideasonboard.com, nicholas@rothemail.net,
+ kernel test robot <lkp@intel.com>
+References: <20260320000937.9177-1-tchatard@gmail.com>
+ <20260324214129.17300-1-tchatard@gmail.com>
+ <20260324214129.17300-3-tchatard@gmail.com>
+From: Hans de Goede <hansg@kernel.org>
+Content-Language: en-US, nl
+In-Reply-To: <20260324214129.17300-3-tchatard@gmail.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-On Mon, 13 Apr 2026, Khalil wrote:
+Hi,
 
-> Some HP laptops with Intel Lunar Lake and dual Cirrus Logic CS35L56
-> amplifiers over SPI have an incomplete cs-gpios property in the SPI
-> controller's _DSD - it only declares the first chip select. The
-> remaining chip select GPIOs are defined as GpioIo resources in the
-> peripheral's ACPI node but are not referenced by the controller.
+On 24-Mar-26 10:41 PM, Thierry Chatard wrote:
+> The Dell Latitude 5285 BIOS leaves the GNVS fields C0TP, L0CL, and L1CL
+> at zero at boot. The TPS68470 clock driver reads L0CL and L1CL to select
+> the output frequency; with both fields zero the clock outputs are disabled,
+> and neither camera sensor can communicate over I2C.
 > 
-> This causes the SPI framework to reject devices whose chip select
-> exceeds num_chipselect with -EINVAL, preventing the second amplifier
-> from probing.
+> Additionally, when C0TP=0 the ACPI _DEP method on INT3479 returns PCI0 as
+> its dependency instead of CLP0 (the INT3472 device), causing ipu_bridge to
+> never create the i2c-INT3479:00 client for the front camera.
 > 
-> Fix this on known affected platforms by:
+> Add a DMI-gated fixup that runs at TPS68470 probe time and writes 0x02
+> (19.2 MHz) into C0TP, L0CL, and L1CL.
 > 
-> 1. Adding a DMI quirk table to identify affected systems
-> 2. For devices with chip selects outside the controller's range,
->    acquiring the GPIO from the peripheral's ACPI GpioIo resource
-> 3. Extending num_chipselect and reallocating the controller's
->    cs_gpiods array to install the GPIO descriptor
-> 4. Setting SPI_CONTROLLER_GPIO_SS so the framework calls both
->    the GPIO toggle and controller->set_cs (needed for clock
->    gating on Intel LPSS controllers)
+> The GNVS physical address is discovered at run time by scanning the raw
+> AML of the DSDT (and any SSDTs) for the GNVS SystemMemory OperationRegion
+> definition (opcode sequence 0x5B 0x80 "GNVS" 0x00). The parsed address is
+> then mapped with acpi_os_map_memory(), which is safe because ACPI NVS
+> memory is reserved by the firmware and already mapped by the OS. No
+> hard-coded physical addresses are used.
 > 
-> Only chip selects beyond the controller's num_chipselect are fixed up.
-> Chip selects within range with a NULL cs_gpiods entry are left alone,
-> as NULL means "native chip select" which is intentional.
+> Field byte offsets within the GNVS region (verified against DSDT
+> disassembly on this platform, region size 0x0725 bytes):
+>   C0TP: 0x43A   L0CL: 0x4F7   L1CL: 0x549
 > 
-> Tested on HP EliteBook 8 G1i 16 inch (board 8D8A) with 2x CS35L56
-> Rev B0 amplifiers. Both amplifiers probe and produce audio.
-> 
-> Signed-off-by: Khalil <khalilst@gmail.com>
+> Signed-off-by: Thierry Chatard <tchatard@gmail.com>
+> Reported-by: kernel test robot <lkp@intel.com>
+> Closes: https://lore.kernel.org/oe-kbuild-all/202603211747.Z6xudmNd-lkp@intel.com/
+
+I'm sorry but the ACPI table / GNVS poking going on here really is not
+acceptable. I can see you've done your best to make this safe, but this is
+still something which I think we should not do. Writing to GNVS is troublesome
+because the old values there might have already been used for 
+
+The first thing to try here is make sure you have the latest BIOS and then select
+"load setup defaults" or something similar and then "save settings". These sort
+of GVNS problems often come from the layout of GVNS having changed with a BIOS
+update, but the BIOS not automatically re-applying the new default settings
+(which include many hidden settings) to its saved settings.
+
+This may also change the I2C4 controller from being in ACPI enumeration mode
+to being in PCI enumeration mode as one would expect of this generation of
+"laptop".
+
+If loading + saving the BIOS default settings does not help then for the
+tps68470 clk problem I would suggest to just add clk data to struct
+int3472_tps68470_board_data and if the clk data is set use that instead of
+the values from ACPI.
+
+Which would leave the when C0TP=0 the ACPI _DEP method on INT3479 returns PCI0
+problem. Can you describe that in a bit more detail? You write:
+
+> returns PCI0 as
+> its dependency instead of CLP0 (the INT3472 device), causing ipu_bridge to
+> never create the i2c-INT3479:00 client for the front camera.
+
+but it is not ipu-bridge which is creating the i2c-INT3479:00 client, that
+is done by the APCI + I2C core code, when all _DEP dependencies are marked
+as available.
+
+I guess a problem with the wrong _DEP being returned is mostly a problem
+for the int3472 code which uses the _DEP relation to find out which sensor
+to add regulator lookups, etc. to. But we could do a DMI quirk to simply
+lookup the sensor firmware-node by its ACPI path on this 2-in-1 model ?
+
+Also can you share an acpidump of the tables for this device please ?
+
+Regards,
+
+Hans
+
+
+
 > ---
->  .../platform/x86/serial-multi-instantiate.c   | 168 ++++++++++++++++++
->  1 file changed, 168 insertions(+)
+>  drivers/platform/x86/intel/int3472/tps68470.c | 201 ++++++++++++++++++
+>  1 file changed, 201 insertions(+)
 > 
-> diff --git a/drivers/platform/x86/serial-multi-instantiate.c b/drivers/platform/x86/serial-multi-instantiate.c
-> index 1a369334f..0d30bd0a7 100644
-> --- a/drivers/platform/x86/serial-multi-instantiate.c
-> +++ b/drivers/platform/x86/serial-multi-instantiate.c
-> @@ -8,6 +8,10 @@
+> diff --git a/drivers/platform/x86/intel/int3472/tps68470.c b/drivers/platform/x86/intel/int3472/tps68470.c
+> index a496075c0..c9686426f 100644
+> --- a/drivers/platform/x86/intel/int3472/tps68470.c
+> +++ b/drivers/platform/x86/intel/int3472/tps68470.c
+> @@ -2,8 +2,10 @@
+>  /* Author: Dan Scally <djrscally@gmail.com> */
 >  
 >  #include <linux/acpi.h>
->  #include <linux/bits.h>
-> +#include <linux/delay.h>
 > +#include <linux/dmi.h>
-
-Will this build with all configs since you didn't add any depends on?
-
-> +#include <linux/gpio/consumer.h>
-> +#include <linux/gpio/machine.h>
 >  #include <linux/i2c.h>
->  #include <linux/interrupt.h>
 >  #include <linux/kernel.h>
-> @@ -46,6 +50,53 @@ struct smi {
->  	int spi_num;
->  	struct i2c_client **i2c_devs;
->  	struct spi_device **spi_devs;
-> +	struct gpio_desc *cs_gpio;
-> +};
-> +
-> +/*
-> + * Quirk data for platforms with broken ACPI SPI chip select descriptions.
-> + * cs_gpio_idx: index of the GpioIo resource in the ACPI _CRS that provides
-> + *              the chip select GPIO for devices missing a proper cs-gpios
-> + *              entry on the SPI controller.
-> + */
-> +struct smi_cs_gpio_quirk {
-> +	int cs_gpio_idx;
-> +};
-> +
-> +static const struct smi_cs_gpio_quirk hp_elitebook_8g1i_quirk = {
-> +	.cs_gpio_idx = 0,
-> +};
-> +
-> +/*
-> + * DMI table of platforms with broken SPI chip select ACPI descriptions.
+> +#include <linux/unaligned.h>
+>  #include <linux/mfd/core.h>
+>  #include <linux/mfd/tps68470.h>
+>  #include <linux/platform_device.h>
+> @@ -140,6 +142,203 @@ skl_int3472_fill_clk_pdata(struct device *dev, struct tps68470_clk_platform_data
+>  	return n_consumers;
+>  }
+>  
+> +/* Dell Latitude 5285 GNVS fix
 > + *
-> + * These systems have multiple SPI peripherals (e.g., dual CS35L56
-> + * amplifiers) but the SPI controller's _DSD cs-gpios property is
-> + * incomplete - it only declares the first chip select. The remaining
-> + * chip select GPIOs are defined as GpioIo resources in the peripheral's
-> + * ACPI node but are not referenced by the controller.
+> + * The BIOS leaves GNVS fields C0TP, L0CL and L1CL at zero after POST.
+> + * With C0TP=0 the ACPI _DEP on INT3479 resolves to PCI0 instead of CLP0
+> + * (INT3472), so ipu_bridge never creates i2c-INT3479:00 (OV5670 front cam).
+> + * With L0CL=L1CL=0 the TPS68470 clock driver disables all clock outputs,
+> + * making both sensors unreachable over I2C.
+> + *
+> + * Fix: at TPS68470 probe time, locate the GNVS SystemMemory OperationRegion
+> + * by scanning the DSDT/SSDTs for its AML definition, map the region, and
+> + * write 0x02 (19.2 MHz) into C0TP, L0CL and L1CL.
+> + *
+> + * Field byte offsets (verified from DSDT disassembly, GNVS size 0x0725):
+> + *   C0TP: 0x43A   L0CL: 0x4F7   L1CL: 0x549
 > + */
-> +static const struct dmi_system_id smi_cs_gpio_dmi_table[] = {
+> +#define DELL5285_C0TP_OFF	0x43A
+> +#define DELL5285_L0CL_OFF	0x4F7
+> +#define DELL5285_L1CL_OFF	0x549
+> +/* Minimum GNVS region size: last field (L1CL) is 1 byte at 0x549 */
+> +#define DELL5285_GNVS_MIN_SIZE	(DELL5285_L1CL_OFF + 1)
+> +
+> +/* AML integer opcodes (ACPI 6.4, section 20.2.3) */
+> +#define AML_ZERO_OP		0x00
+> +#define AML_ONE_OP		0x01
+> +#define AML_BYTE_PREFIX		0x0A
+> +#define AML_WORD_PREFIX		0x0B
+> +#define AML_DWORD_PREFIX	0x0C
+> +#define AML_QWORD_PREFIX	0x0E
+> +
+> +/**
+> + * aml_parse_int - Parse one AML integer opcode at @p.
+> + * @p:   Pointer to the current position in the AML byte stream.
+> + * @end: One past the last valid byte of the AML buffer.
+> + * @val: Output: the parsed integer value.
+> + *
+> + * Returns the number of bytes consumed, or 0 on failure.
+> + */
+> +static int aml_parse_int(const u8 *p, const u8 *end, u64 *val)
+> +{
+> +	if (p >= end)
+> +		return 0;
+> +	switch (*p) {
+> +	case AML_ZERO_OP:
+> +		*val = 0;
+> +		return 1;
+> +	case AML_ONE_OP:
+> +		*val = 1;
+> +		return 1;
+> +	case AML_BYTE_PREFIX:
+> +		if (p + 2 > end)
+> +			return 0;
+> +		*val = p[1];
+> +		return 2;
+> +	case AML_WORD_PREFIX:
+> +		if (p + 3 > end)
+> +			return 0;
+> +		*val = get_unaligned_le16(p + 1);
+> +		return 3;
+> +	case AML_DWORD_PREFIX:
+> +		if (p + 5 > end)
+> +			return 0;
+> +		*val = get_unaligned_le32(p + 1);
+> +		return 5;
+> +	case AML_QWORD_PREFIX:
+> +		if (p + 9 > end)
+> +			return 0;
+> +		*val = get_unaligned_le64(p + 1);
+> +		return 9;
+> +	}
+> +	return 0;
+> +}
+> +
+> +/**
+> + * dell5285_gnvs_from_table - Scan one ACPI table for the GNVS OperationRegion.
+> + * @tbl:  ACPI table header; the AML body is scanned for the GNVS signature.
+> + * @addr: Output: physical base address of the GNVS region.
+> + * @size: Output: byte length of the GNVS region.
+> + *
+> + * Searches the AML body of @tbl for the byte sequence:
+> + *   ExtOp(0x5B) OpRegionOp(0x80) NameSeg("GNVS") RegionSpace(SystemMemory=0x00)
+> + * followed by two AML integers (region address and length).
+> + *
+> + * Returns true and fills @addr / @size if found and plausible.
+> + */
+> +static bool dell5285_gnvs_from_table(const struct acpi_table_header *tbl,
+> +				     phys_addr_t *addr, u32 *size)
+> +{
+> +	/* AML: ExtOp OpRegionOp NameSeg("GNVS") SystemMemory */
+> +	static const u8 sig[] = { 0x5B, 0x80, 'G', 'N', 'V', 'S', 0x00 };
+> +	const u8 *aml = (const u8 *)tbl + sizeof(*tbl);
+> +	const u8 *end = (const u8 *)tbl + tbl->length;
+> +	const u8 *p;
+> +
+> +	for (p = aml; p + sizeof(sig) < end; p++) {
+> +		u64 region_addr, region_size;
+> +		int consumed;
+> +
+> +		if (memcmp(p, sig, sizeof(sig)) != 0)
+> +			continue;
+> +
+> +		p += sizeof(sig);
+> +		consumed = aml_parse_int(p, end, &region_addr);
+> +		if (!consumed || !region_addr)
+> +			continue;
+> +
+> +		p += consumed;
+> +		consumed = aml_parse_int(p, end, &region_size);
+> +		if (!consumed || region_size < DELL5285_GNVS_MIN_SIZE)
+> +			continue;
+> +
+> +		*addr = (phys_addr_t)region_addr;
+> +		*size = (u32)region_size;
+> +		return true;
+> +	}
+> +	return false;
+> +}
+> +
+> +/**
+> + * dell5285_gnvs_find - Locate the GNVS OperationRegion by scanning DSDT and SSDTs.
+> + * @addr: Output: physical base address of the GNVS region.
+> + * @size: Output: byte length of the GNVS region.
+> + *
+> + * Returns true if the GNVS region was found in any ACPI table.
+> + */
+> +static bool dell5285_gnvs_find(phys_addr_t *addr, u32 *size)
+> +{
+> +	struct acpi_table_header *tbl;
+> +	u32 i;
+> +
+> +	/* DSDT */
+> +	if (ACPI_SUCCESS(acpi_get_table(ACPI_SIG_DSDT, 1, &tbl))) {
+> +		bool found = dell5285_gnvs_from_table(tbl, addr, size);
+> +
+> +		acpi_put_table(tbl);
+> +		if (found)
+> +			return true;
+> +	}
+> +
+> +	/* SSDTs (instance numbers start at 1, stop at first failure) */
+> +	for (i = 1; i <= 32; i++) {
+> +		bool found;
+> +
+> +		if (ACPI_FAILURE(acpi_get_table(ACPI_SIG_SSDT, i, &tbl)))
+> +			break;
+> +		found = dell5285_gnvs_from_table(tbl, addr, size);
+> +		acpi_put_table(tbl);
+> +		if (found)
+> +			return true;
+> +	}
+> +
+> +	return false;
+> +}
+> +
+> +static const struct dmi_system_id dell5285_gnvs_dmi[] = {
 > +	{
-> +		.ident = "HP EliteBook 8 G1i 16 inch",
 > +		.matches = {
-> +			DMI_MATCH(DMI_SYS_VENDOR, "HP"),
-> +			DMI_MATCH(DMI_BOARD_NAME, "8D8A"),
+> +			DMI_EXACT_MATCH(DMI_SYS_VENDOR, "Dell Inc."),
+> +			DMI_EXACT_MATCH(DMI_PRODUCT_NAME, "Latitude 5285"),
 > +		},
-> +		.driver_data = (void *)&hp_elitebook_8g1i_quirk,
-
-Cast looks unnecessary.
-
 > +	},
 > +	{ }
 > +};
 > +
-> +/*
-> + * ACPI GPIO mapping for the chip select GpioIo resource.
-> + * Maps "cs-gpios" to the GpioIo resource at index 0 of the ACPI _CRS.
-> + */
-> +static const struct acpi_gpio_params smi_cs_gpio_params = { 0, 0, false };
-> +
-> +static const struct acpi_gpio_mapping smi_cs_gpio_mapping[] = {
-> +	{ "cs-gpios", &smi_cs_gpio_params, 1 },
-> +	{ }
->  };
->  
->  static int smi_get_irq(struct platform_device *pdev, struct acpi_device *adev,
-> @@ -99,6 +150,101 @@ static void smi_devs_unregister(struct smi *smi)
->  	}
->  }
->  
-> +/*
-> + * smi_spi_setup_cs_gpio - Fix up chip select for a device on a platform
-> + * with broken ACPI cs-gpios description.
-> + *
-> + * On affected platforms, the SPI controller's cs-gpios property is incomplete,
-> + * so the framework has no GPIO descriptor for some chip selects. This causes
-> + * __spi_add_device() to reject the device with -EINVAL (cs >= num_chipselect).
-> + *
-> + * This function:
-> + * 1. Extends num_chipselect if the device's CS is out of range
-> + * 2. Reallocates cs_gpiods to match, preventing out-of-bounds access
-> + *    in __spi_add_device()
-> + * 3. Installs the GPIO from the peripheral's ACPI node into the
-> + *    controller's cs_gpiods array so __spi_add_device() propagates
-> + *    it to the device
-> + * 4. Sets SPI_CONTROLLER_GPIO_SS so the framework calls both the GPIO
-> + *    toggle and controller->set_cs (needed for clock gating on Intel
-> + *    LPSS controllers)
-> + */
-> +static int smi_spi_setup_cs_gpio(struct device *dev,
-> +				 struct spi_device *spi_dev,
-> +				 struct smi *smi,
-> +				 const struct smi_cs_gpio_quirk *quirk)
+> +static void dell5285_gnvs_fix(void)
 > +{
-> +	struct spi_controller *ctlr = spi_dev->controller;
-> +	struct gpio_desc **new_gpiods;
-> +	u16 cs = spi_get_chipselect(spi_dev, 0);
-
-Could you place this assignment right before the if () below.
-
+> +	phys_addr_t gnvs_addr;
+> +	u32 gnvs_size;
+> +	void *gnvs;
 > +
-> +	/*
-> +	 * Only fix up chip selects that the controller doesn't know about.
-> +	 * A NULL cs_gpiods[cs] within the controller's num_chipselect range
-> +	 * means "native chip select" - that's intentional, not broken.
-> +	 * The broken case is when cs >= num_chipselect, meaning the ACPI
-> +	 * cs-gpios property on the controller was incomplete.
-> +	 */
-> +	if (cs < ctlr->num_chipselect)
-> +		return 0;
+> +	if (!dmi_check_system(dell5285_gnvs_dmi))
+> +		return;
 > +
-> +	/* Extend num_chipselect to cover this device */
-> +	dev_info(dev, "Extending num_chipselect from %u to %u for CS%u\n",
-
-Add include for dev_*() printing (I know it's also a pre-existing problem 
-but lets add it finally here).
-
-> +		 ctlr->num_chipselect, cs + 1, cs);
-> +	ctlr->num_chipselect = cs + 1;
-> +
-> +	/* Acquire the CS GPIO from the ACPI GpioIo resource if not yet done */
-> +	if (!smi->cs_gpio) {
-> +		int ret;
-> +
-> +		ret = devm_acpi_dev_add_driver_gpios(dev, smi_cs_gpio_mapping);
-> +		if (ret) {
-> +			dev_warn(dev, "Failed to add CS GPIO mapping: %d\n", ret);
-> +			return ret;
-> +		}
-> +
-> +		smi->cs_gpio = devm_gpiod_get(dev, "cs", GPIOD_OUT_HIGH);
-> +		if (IS_ERR(smi->cs_gpio)) {
-
-Add include.
-
-> +			dev_warn(dev, "Failed to get CS GPIO: %ld\n",
-> +				 PTR_ERR(smi->cs_gpio));
-> +			smi->cs_gpio = NULL;
-> +			return -ENOENT;
-
-Should this pass the error code instead?
-
-> +		}
-> +		dev_info(dev, "Acquired CS GPIO for CS%u from ACPI GpioIo[%d]\n",
-> +			 cs, quirk->cs_gpio_idx);
+> +	if (!dell5285_gnvs_find(&gnvs_addr, &gnvs_size)) {
+> +		pr_err("int3472-tps68470: Dell 5285: GNVS OperationRegion not found in DSDT/SSDTs\n");
+> +		return;
 > +	}
 > +
-> +	/*
-> +	 * Reallocate the controller's cs_gpiods array to accommodate the
-> +	 * new num_chipselect, and install the GPIO descriptor. This is
-> +	 * necessary because __spi_add_device() unconditionally reads
-> +	 * ctlr->cs_gpiods[cs] to set the device's cs_gpiod.
-> +	 */
-> +	new_gpiods = devm_kcalloc(&ctlr->dev, ctlr->num_chipselect,
-> +				  sizeof(*new_gpiods), GFP_KERNEL);
-> +	if (!new_gpiods)
-> +		return -ENOMEM;
-> +
-> +	if (ctlr->cs_gpiods) {
-> +		unsigned int i;
-> +
-> +		for (i = 0; i < cs; i++)
-> +			new_gpiods[i] = ctlr->cs_gpiods[i];
+> +	gnvs = acpi_os_map_memory(gnvs_addr, gnvs_size);
+> +	if (!gnvs) {
+> +		pr_err("int3472-tps68470: Dell 5285: failed to map GNVS at %pa\n",
+> +		       &gnvs_addr);
+> +		return;
 > +	}
-> +	new_gpiods[cs] = smi->cs_gpio;
-> +	ctlr->cs_gpiods = new_gpiods;
 > +
-> +	/*
-> +	 * SPI_CONTROLLER_GPIO_SS ensures the framework calls both the
-> +	 * GPIO CS toggle and controller->set_cs(). This is required on
-> +	 * Intel LPSS controllers where set_cs handles clock gating.
-> +	 */
-> +	ctlr->flags |= SPI_CONTROLLER_GPIO_SS;
+> +	pr_info("int3472-tps68470: Dell 5285 GNVS fix at %pa: C0TP=0x%02x L0CL=0x%02x L1CL=0x%02x -> 0x02\n",
+> +		&gnvs_addr,
+> +		*(u8 *)(gnvs + DELL5285_C0TP_OFF),
+> +		*(u8 *)(gnvs + DELL5285_L0CL_OFF),
+> +		*(u8 *)(gnvs + DELL5285_L1CL_OFF));
 > +
-> +	dev_info(dev, "Installed GPIO CS on controller for CS%u\n", cs);
-
-Normally, the expectation is that success remains silent.
-
-> +	return 0;
+> +	*(u8 *)(gnvs + DELL5285_C0TP_OFF) = 0x02;
+> +	*(u8 *)(gnvs + DELL5285_L0CL_OFF) = 0x02;
+> +	*(u8 *)(gnvs + DELL5285_L1CL_OFF) = 0x02;
+> +
+> +	acpi_os_unmap_memory(gnvs, gnvs_size);
 > +}
 > +
->  /**
->   * smi_spi_probe - Instantiate multiple SPI devices from inst array
->   * @pdev:	Platform device
-> @@ -112,10 +258,19 @@ static int smi_spi_probe(struct platform_device *pdev, struct smi *smi,
+>  static int skl_int3472_tps68470_probe(struct i2c_client *client)
 >  {
->  	struct device *dev = &pdev->dev;
->  	struct acpi_device *adev = ACPI_COMPANION(dev);
-> +	const struct dmi_system_id *dmi_id;
-> +	const struct smi_cs_gpio_quirk *quirk = NULL;
->  	struct spi_controller *ctlr;
->  	struct spi_device *spi_dev;
->  	char name[50];
->  	int i, ret, count;
-> +	u16 cs;
+>  	struct acpi_device *adev = ACPI_COMPANION(&client->dev);
+> @@ -155,6 +354,8 @@ static int skl_int3472_tps68470_probe(struct i2c_client *client)
+>  	if (!adev)
+>  		return -ENODEV;
+>  
+> +	dell5285_gnvs_fix();
 > +
-> +	dmi_id = dmi_first_match(smi_cs_gpio_dmi_table);
-> +	if (dmi_id) {
-> +		quirk = dmi_id->driver_data;
-> +		dev_info(dev, "Applying CS GPIO quirk for %s\n", dmi_id->ident);
-> +	}
->  
->  	ret = acpi_spi_count_resources(adev);
->  	if (ret < 0)
-> @@ -139,6 +294,19 @@ static int smi_spi_probe(struct platform_device *pdev, struct smi *smi,
->  		}
->  
->  		ctlr = spi_dev->controller;
-> +		cs = spi_get_chipselect(spi_dev, 0);
-> +
-> +		/*
-> +		 * On quirked platforms, fix up the chip select GPIO for
-> +		 * devices that would otherwise fail due to incomplete
-> +		 * ACPI cs-gpios on the SPI controller.
-> +		 */
-> +		if (quirk) {
-> +			ret = smi_spi_setup_cs_gpio(dev, spi_dev, smi, quirk);
-> +			if (ret)
-> +				dev_dbg(dev, "CS GPIO setup returned %d for CS%u\n",
-> +					ret, cs);
-> +		}
->  
->  		strscpy(spi_dev->modalias, inst_array[i].type);
->  
-> 
-
--- 
- i.
+>  	n_consumers = skl_int3472_fill_clk_pdata(&client->dev, &clk_pdata);
+>  	if (n_consumers < 0)
+>  		return n_consumers;
 
