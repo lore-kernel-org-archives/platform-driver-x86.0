@@ -1,41 +1,41 @@
-Received: from mout.gmx.net (mout.gmx.net [212.227.15.18])
+Received: from mout.gmx.net (mout.gmx.net [212.227.17.20])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4FCFE40DFD5;
-	Mon, 13 Apr 2026 06:21:53 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=212.227.15.18
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D1FCE241690;
+	Mon, 13 Apr 2026 06:26:03 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=212.227.17.20
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1776061316; cv=none; b=oxg8Iy4vLwQDgXliR/yM9orsctTrfYzzglrsX/mnhkr001+SGUMAw4VUpj0759rvxOOAVdBGjauN6qswS9Nj+BrgYU8JbcxbRGIpmyREmcynOAtggF3T9W2tgMSN7ua+CO0nouf35xN/Ckf5Zs1w69R5hDxclWe6u4YZOqIgzOk=
+	t=1776061565; cv=none; b=M7IRZ2mbbhYIzCVkChL7qzbGMPaTxjtd9bB8VRut0iODHv0WlBr0AfhMc4tbm1m+MVK2Oleh7UfF+ajGH9lBfaZB6gKMQLMzytK4RZVJJgwTvWA4eqwX0eUbODtDUcbmXDhthqjE+f2xHnl8DureJVrOsVx8GVLoHnJlum56Z+Q=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1776061316; c=relaxed/simple;
-	bh=TsXnY8FaxDv/8tK9XjJXiSK8z147G6X0whCAoHAz2RU=;
+	s=arc-20240116; t=1776061565; c=relaxed/simple;
+	bh=yHXV5OyqD5vGowCNNypKAYy2WbcME28B0ThRhJQ2xXY=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=j1dpU+HR/45ynoe41JyOIxHSq7CU3mIeCXjFd3HNt/BqnrpbJZTrmcYW7qhG5gBLP1cfQZrFrG1/EEEBDYajFBl9bO8siTn9wkzHBYqvzIlKV7oMV3/iYZ3NSqx4jxy4eaxh960gvaKBcQCnZHVzWDATpOqVZg2EqCkUo7V6HwQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gmx.de; spf=pass smtp.mailfrom=gmx.de; dkim=pass (2048-bit key) header.d=gmx.de header.i=w_armin@gmx.de header.b=MMCHR7MB; arc=none smtp.client-ip=212.227.15.18
+	 In-Reply-To:Content-Type; b=HikxZxyZjJlWObFbmX8+t425yACuhoTTyWklH2aJ4xEk+ufMzBh/KC4apo0sXvn4lj9c7s+P2VeEzTVSrChJOEXmehwHlcCr1yD//BDjoVi/c6LWI4hS2Jm+C/BLDyAgYp1OYdlmcd4zJ2W7svmf6Ihgylgrkl5FyOAiiGNBU7E=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gmx.de; spf=pass smtp.mailfrom=gmx.de; dkim=pass (2048-bit key) header.d=gmx.de header.i=w_armin@gmx.de header.b=pQUxZRlg; arc=none smtp.client-ip=212.227.17.20
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gmx.de
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmx.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmx.de header.i=w_armin@gmx.de header.b="MMCHR7MB"
+	dkim=pass (2048-bit key) header.d=gmx.de header.i=w_armin@gmx.de header.b="pQUxZRlg"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=gmx.de;
-	s=s31663417; t=1776061312; x=1776666112; i=w_armin@gmx.de;
-	bh=+eQFQt0Pi0KzeFqYz/XOcAzx4GL+74551ShC213zUKs=;
+	s=s31663417; t=1776061562; x=1776666362; i=w_armin@gmx.de;
+	bh=ljBr8UiqvWQRuIyZQ3tO0AjBZJRCimGPoMBaSr8KFrk=;
 	h=X-UI-Sender-Class:Message-ID:Date:MIME-Version:Subject:To:Cc:
 	 References:From:In-Reply-To:Content-Type:
 	 Content-Transfer-Encoding:cc:content-transfer-encoding:
 	 content-type:date:from:message-id:mime-version:reply-to:subject:
 	 to;
-	b=MMCHR7MBUpOCkoTwCEwNFJgIdEr5LhvijvmBDvSz9EA07cnLH+9+/8QqRAizkj+w
-	 gDdEqq5upfkfBXyvj/0fr6zqBtn5C8tfbqlt75sY5Ob9N4z63oTrFL4M0Ti2TQXJG
-	 dJByorNOSMpYQK1GuMoUpsAP+eJbGybFeTcnpV8mVm0XJbgIn/TfxROT3SVxou4ZC
-	 cGBc+xoua5sVKjb7v9nLgEbo2Sj2163Q+kZXNanqjFRKJMm+4t4PfgAUuP2TDCdyq
-	 92zOQz7B/JwearGJmLu6lnhm896nDj2fHZIJzS0oa+Ditil0vDrovztugUOQj6E0K
-	 uL+LUnMix2dkxIxQiQ==
+	b=pQUxZRlgfhuLM0C0zyFeoCE65Uc2k5Pgh65zEeJecT89i/HSPj9Jqd8Cdo1eMZ4O
+	 eawN4gHmuA+JD0CS+g0gnwQnrJG8YBlMztHYjaONWA40xL8DX0EBcbQanjcexAsYu
+	 e+ft9kRFsZb8TS2+omS8zgQRULnV66CCG71wkVm5kQxa+NXk9OlGL3v17rzRJtyb2
+	 piAG1kYqwqBAY7Beh0iYzPTBGOZvEUAh+QAmRoiRWsj3urCciAGnCP47WyQV51T9O
+	 tTH8RY1I9fypeWo0vZH1c9NWTK/HRd3p7t4vXrK0p5+H8ECERBbmIsEQSj3C1coIV
+	 fACumAoAA4L124Jb6Q==
 X-UI-Sender-Class: 724b4f7f-cbec-4199-ad4e-598c01a50d3a
-Received: from client.hidden.invalid by mail.gmx.net (mrgmx004
- [212.227.17.190]) with ESMTPSA (Nemesis) id 1M4axg-1wBciU2Vde-003j4s; Mon, 13
- Apr 2026 08:21:52 +0200
-Message-ID: <fd2d0fd7-b6ca-42e9-81cd-eb41b6b857ce@gmx.de>
-Date: Mon, 13 Apr 2026 08:21:51 +0200
+Received: from client.hidden.invalid by mail.gmx.net (mrgmx104
+ [212.227.17.168]) with ESMTPSA (Nemesis) id 1MJE6F-1vtGHS3QOh-00PJ4p; Mon, 13
+ Apr 2026 08:26:01 +0200
+Message-ID: <eb4b7361-128e-4e1d-853b-667deb52603a@gmx.de>
+Date: Mon, 13 Apr 2026 08:25:59 +0200
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
@@ -43,253 +43,200 @@ List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v2] platform/x86: dell-dw5826e: Add reset driver for
- DW5826e
-To: Jack Wu <wojackbb@gmail.com>, Hans de Goede <hansg@kernel.org>,
- =?UTF-8?Q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
-Cc: platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
-References: <20260410093752.298067-1-jackbb_wu@compal.com>
+Subject: Re: [PATCH v3] platform/x86: alienware-wmi-base: Transition to new
+ WMI API
+To: Kurt Borja <kuurtb@gmail.com>,
+ =?UTF-8?Q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>,
+ Hans de Goede <hansg@kernel.org>
+Cc: platform-driver-x86@vger.kernel.org, Dell.Client.Kernel@dell.com,
+ linux-kernel@vger.kernel.org
+References: <20260331-aw-new-api-v3-1-ef03b94529d8@gmail.com>
 Content-Language: en-US
 From: Armin Wolf <W_Armin@gmx.de>
-In-Reply-To: <20260410093752.298067-1-jackbb_wu@compal.com>
+In-Reply-To: <20260331-aw-new-api-v3-1-ef03b94529d8@gmail.com>
 Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: quoted-printable
-X-Provags-ID: V03:K1:ww4OkxyhQ8RHCtFHdXdAr7YMyVdcjXrtienkACgdCyp08/wrMzT
- zQ9e8dSEpb90gsToKJemZqufk7roRxlvYwRhve1riN3/o+r+R/qXcRWaymne/qww2a9SGj2
- MXwDOggaVzWgATgRN5t44DNv9IjtEWJANvMO9QIZ/VPdL6cViRKveDzQGl0sP5Tly9hEyi/
- 5/x0bNd6KtyU50/8HBDUg==
+X-Provags-ID: V03:K1:GHsZYHGibwIuoiDWd+ZTzCX9e5HDaXyHaUnQomGBPlKRQozxfyH
+ 8Nz0UKa2SR0e+WdMb4bj8jgCjGLQwQrdfxTlpUIJTEUtzblhUTs+COdtYtjoh712bbqhC5I
+ LRHf850ZMVYdTgJNWdWNsYzRDGBWqp7NaY+f/8uxjAVERv9NH06TNtrdz3spHul9L1y+obn
+ b1RuR5iia0m6P5bZO8iPw==
 X-Spam-Flag: NO
-UI-OutboundReport: notjunk:1;M01:P0:g8gNBfTWrLw=;QYXlpRpwQIAiy8VfBODjPdj4Ryx
- 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
- obh7Ffu2RW98rtr9Frnj/4QC3wYZc2PzniYA=
+UI-OutboundReport: notjunk:1;M01:P0:oJyvETL3Dzo=;4DZwf6uIL/JGqHiHM5M/pDcujLB
+ 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
 
-Am 10.04.26 um 11:37 schrieb Jack Wu:
-> If the DW5826e is in a frozen state and unable to receive USB commands,
-> this driver provides a method for the user to reset the DW5826e via ACPI=
-.
->=20
-> E.g: echo 1 > /sys/bus/platform/devices/PALC0001\:00/pldr
->=20
-> Signed-off-by: Jack Wu <jackbb_wu@compal.com>
-> ---
-> v2:
->    - Remove extra empty line
->    - Add missing includes and Remove unnecessary includes, sort includes=
- alphabetically
->    - Remove noisy dev_info()
->    - Handle obj->type !=3D ACPI_TYPE_BUFFER as error with proper return =
-code
->    - Replace miscdevice/file_operations with sysfs attribute (DEVICE_ATT=
-R_WO) to reduce boilerplate
->    - Propagate trigger_palc_pldr() return code to userspace
->    - Convert from acpi_driver to platform_driver
-> ---
-> ---
->   drivers/platform/x86/dell/Kconfig             |  6 ++
->   drivers/platform/x86/dell/Makefile            |  2 +
->   .../platform/x86/dell/dell-dw5826e-reset.c    | 83 +++++++++++++++++++
->   3 files changed, 91 insertions(+)
->   create mode 100644 drivers/platform/x86/dell/dell-dw5826e-reset.c
->=20
-> diff --git a/drivers/platform/x86/dell/Kconfig b/drivers/platform/x86/de=
-ll/Kconfig
-> index 738c108c2163..c4540c837a88 100644
-> --- a/drivers/platform/x86/dell/Kconfig
-> +++ b/drivers/platform/x86/dell/Kconfig
-> @@ -276,4 +276,10 @@ config DELL_WMI_SYSMAN
->   	  To compile this driver as a module, choose M here: the module will
->   	  be called dell-wmi-sysman.
->  =20
-> +config DELL_DW5826E_RESET
-> +	tristate "Dell DW5826e PLDR reset support"
-> +	default m
-> +	depends on ACPI
-> +	help
-> +	  This adds support for the Dell DW5826e PLDR reset via ACPI
->   endif # X86_PLATFORM_DRIVERS_DELL
-> diff --git a/drivers/platform/x86/dell/Makefile b/drivers/platform/x86/d=
-ell/Makefile
-> index c7501c25e627..8150283cfd1d 100644
-> --- a/drivers/platform/x86/dell/Makefile
-> +++ b/drivers/platform/x86/dell/Makefile
-> @@ -28,3 +28,5 @@ obj-$(CONFIG_DELL_WMI_DESCRIPTOR)		+=3D dell-wmi-descr=
-iptor.o
->   obj-$(CONFIG_DELL_WMI_DDV)			+=3D dell-wmi-ddv.o
->   obj-$(CONFIG_DELL_WMI_LED)			+=3D dell-wmi-led.o
->   obj-$(CONFIG_DELL_WMI_SYSMAN)			+=3D dell-wmi-sysman/
-> +obj-$(CONFIG_DELL_DW5826E_RESET)		+=3D dell-dw5826e-reset.o
-> +
-> diff --git a/drivers/platform/x86/dell/dell-dw5826e-reset.c b/drivers/pl=
-atform/x86/dell/dell-dw5826e-reset.c
-> new file mode 100644
-> index 000000000000..52002578ed68
-> --- /dev/null
-> +++ b/drivers/platform/x86/dell/dell-dw5826e-reset.c
-> @@ -0,0 +1,83 @@
-> +// SPDX-License-Identifier: GPL-2.0-or-later
-> +/*
-> + *  dell-dw5826e-reset.c - Dell DW5826e reset driver
-> + *
-> + *  Copyright (C) 2026 Jackbb Wu <jackbb.wu@compal.com>
-> + */
-> +
-> +#include <linux/acpi.h>
-> +#include <linux/device.h>
-> +#include <linux/uuid.h>
-> +#include <linux/module.h>
-> +#include <linux/platform_device.h>
-> +
-> +static guid_t palc_dsm_guid =3D
-> +	GUID_INIT(0x5a1a4bba, 0x8006, 0x487e, 0xbe, 0x0a, 0xac, 0xf5, 0xd8, 0x=
-fd, 0xfe, 0x59);
-> +
-> +static int trigger_palc_pldr(struct device *dev, acpi_handle handle)
-> +{
-> +	union acpi_object *obj;
-> +	int ret =3D 0;
-> +
-> +	obj =3D acpi_evaluate_dsm(handle, &palc_dsm_guid, 1, 1, NULL);
-> +	if (!obj) {
-> +		dev_err(dev, "Failed to evaluate _DSM\n");
-> +		return -EIO;
-> +	}
-> +
-> +	if (obj->type !=3D ACPI_TYPE_BUFFER) {
-> +		dev_err(dev, "Unexpected _DSM return type: %d\n", obj->type);
-> +		ret =3D -EINVAL;
-> +	}
-> +
-> +	ACPI_FREE(obj);
-> +	return ret;
-> +}
-> +
-> +static ssize_t pldr_store(struct device *dev, struct device_attribute *=
-attr,
-> +			  const char *buf, size_t count)
-> +{
-> +	acpi_handle handle =3D ACPI_HANDLE(dev);
-> +	int ret;
-> +
-> +	ret =3D trigger_palc_pldr(dev, handle);
-> +	if (ret)
-> +		return ret;
-> +
-> +	return count;
-> +}
-> +static DEVICE_ATTR_WO(pldr);
-> +
-> +static struct attribute *palc_attrs[] =3D {
-> +	&dev_attr_pldr.attr,
-> +	NULL
-> +};
-> +ATTRIBUTE_GROUPS(palc);
-> +
-> +static int palc_probe(struct platform_device *pdev)
-> +{
-> +	if (!ACPI_HANDLE(&pdev->dev))
-> +		return -ENODEV;
-> +
+Am 31.03.26 um 18:20 schrieb Kurt Borja:
+> Transition to the new wmi_buffer based WMI API.
 
-Hi, please check here if the _DSM method exists using acpi_check_dsm().
+Hi,
+
+i think you will have to adapt this patch to the changes i made to
+wmidev_invoke_method(). Said function now takes an additional parameter
+specifying the minimum size of the output data.
+
+In your case this would replace the size check when output data is=20
+expected, otherwise you should call wmidev_invoke_procedure.
 
 Thanks,
 Armin Wolf
 
-> +	return 0;
-> +}
+
+>=20
+> Signed-off-by: Kurt Borja <kuurtb@gmail.com>
+> ---
+> v3:
+>    - Use __free() instead of manual cleanup.
+>    - Include <linux/types.h>
+>=20
+> v2: https://patch.msgid.link/20260331-aw-new-api-v2-1-3b0d33bf8d22@gmail=
+.com
+>    - Cast wmi_buffer data to __le32 and then use le32_to_cpu() before
+>      returning
+>=20
+> v1: https://patch.msgid.link/20260330-aw-new-api-v1-1-95910bfa1b38@gmail=
+.com
+> ---
+>   drivers/platform/x86/dell/alienware-wmi-base.c | 34 ++++++++++++++++--=
+=2D-------
+>   1 file changed, 21 insertions(+), 13 deletions(-)
+>=20
+> diff --git a/drivers/platform/x86/dell/alienware-wmi-base.c b/drivers/pl=
+atform/x86/dell/alienware-wmi-base.c
+> index 64562b92314f..38a903734fa3 100644
+> --- a/drivers/platform/x86/dell/alienware-wmi-base.c
+> +++ b/drivers/platform/x86/dell/alienware-wmi-base.c
+> @@ -12,8 +12,13 @@
+>   #include <linux/cleanup.h>
+>   #include <linux/module.h>
+>   #include <linux/platform_device.h>
+> +#include <linux/slab.h>
+> +#include <linux/types.h>
+>   #include <linux/dmi.h>
+>   #include <linux/leds.h>
 > +
-> +static const struct acpi_device_id palc_acpi_ids[] =3D {
-> +	{ "PALC0001", 0 },
-> +	{ }
-> +};
-> +MODULE_DEVICE_TABLE(acpi, palc_acpi_ids);
+> +#include <asm/byteorder.h>
 > +
-> +static struct platform_driver palc_driver =3D {
-> +	.driver =3D {
-> +		.name =3D "dell-dw5826e-reset",
-> +		.acpi_match_table =3D palc_acpi_ids,
-> +		.dev_groups =3D palc_groups,
-> +	},
-> +	.probe  =3D palc_probe,
-> +};
-> +module_platform_driver(palc_driver);
+>   #include "alienware-wmi.h"
+>  =20
+>   MODULE_AUTHOR("Mario Limonciello <mario.limonciello@outlook.com>");
+> @@ -150,22 +155,25 @@ u8 alienware_interface;
+>   int alienware_wmi_command(struct wmi_device *wdev, u32 method_id,
+>   			  void *in_args, size_t in_size, u32 *out_data)
+>   {
+> -	struct acpi_buffer out =3D {ACPI_ALLOCATE_BUFFER, NULL};
+> -	struct acpi_buffer in =3D {in_size, in_args};
+> -	acpi_status ret;
+> +	struct wmi_buffer out, in =3D {
+> +		.data =3D in_args,
+> +		.length =3D in_size,
+> +	};
+> +	int ret;
+>  =20
+> -	ret =3D wmidev_evaluate_method(wdev, 0, method_id, &in, out_data ? &ou=
+t : NULL);
+> -	if (ACPI_FAILURE(ret))
+> -		return -EIO;
+> +	ret =3D wmidev_invoke_method(wdev, 0, method_id, &in, out_data ? &out =
+: NULL);
+> +	if (ret)
+> +		return ret;
+>  =20
+> -	union acpi_object *obj __free(kfree) =3D out.pointer;
+> +	if (!out_data)
+> +		return 0;
+>  =20
+> -	if (out_data) {
+> -		if (obj && obj->type =3D=3D ACPI_TYPE_INTEGER)
+> -			*out_data =3D (u32)obj->integer.value;
+> -		else
+> -			return -ENOMSG;
+> -	}
+> +	__le32 *data __free(kfree) =3D out.data;
 > +
-> +MODULE_DESCRIPTION("Dell DW5826e reset driver");
-> +MODULE_LICENSE("GPL");
-> +MODULE_AUTHOR("JackBB Wu");
+> +	if (out.length < sizeof(*out_data))
+> +		return -ENOMSG;
+> +
+> +	*out_data =3D le32_to_cpu(*data);
+>  =20
+>   	return 0;
+>   }
+>=20
+> ---
+> base-commit: fab7c51693e95aa874d6d9db22bfae7bd0b23c66
+> change-id: 20260123-aw-new-api-1c18f1011f35
+>=20
 
