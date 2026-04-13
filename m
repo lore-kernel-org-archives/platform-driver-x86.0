@@ -1,147 +1,122 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ej1-f50.google.com (mail-ej1-f50.google.com [209.85.218.50])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5857037C10D;
-	Mon, 13 Apr 2026 09:48:41 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 256D037F8D3
+	for <platform-driver-x86@vger.kernel.org>; Mon, 13 Apr 2026 10:02:07 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.50
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1776073721; cv=none; b=gryhKKyxelU6y78O7Z+PIPaoLe7VbLuweE8J2ui46PJ63Vqh7qfwQaeg1M/u1yMtfoFvGlH66qa9JTH0rgJPnPyyJldzmmCxgptua61yGWv6ErulIbPILZaHAYKJ8Uo0xdJF6Ra/rRr887fA8Aa/T6nydNmlg7hIH8UFFIsGtq0=
+	t=1776074528; cv=none; b=j2k1hd8hKfPvOymzrcpVvg8hn3qgSSNjmfQSQmtxGNgvzv1rxdKP4DDB0cFudjej/JNUs5xsk1aVMQ3AUpOHy+aKjjRsnL6BThx106Ox97EFemxtu08/r1qEDYgCj7QMVuf2u5LLugnucUredrbz/IvHwczlg+WDk3/wv48barQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1776073721; c=relaxed/simple;
-	bh=ei62gy1NTjROvmCzpJDNwUoL/wL4EpzF/cw5QAv3oJU=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=j0YjNZ+UwOGU82wPVpwGK8Gzt6f7m+ZXXmBcOW1uYQKB0rinHr2SELGKIE7u9qIgcaPBazyXes3YQFCsSp54pbWhfd2kncER1fAY9qfsM5tAAryF4iNmXLNluuQfUVfFp/fGfc566SCKvzKPQolbtbZVUbMSh7niz6xAr/iuhwk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Qex+PchW; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1776074528; c=relaxed/simple;
+	bh=qC/bld90r+ThMcnTaEI8CINzwhOGNircQN5AmvhHCP0=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=KCIiWGvyFTGfHOXUnAtJ8NqSAFKLpYWf1VkONcWmVH9Opb11sR0tp0w1vkLFsGfTynEvKPqs9uBwkha3x2HZoPGsoHkoqAGq6Q1GpsLoeqmmy+9aExPY0aDDDyymhzHgi8cVLegdB5qufaJnPLHpEwIDJhzAS3YpSjSLNnMvERw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=qoUccUgv; arc=none smtp.client-ip=209.85.218.50
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Qex+PchW"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 29F72C116C6;
-	Mon, 13 Apr 2026 09:48:39 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1776073721;
-	bh=ei62gy1NTjROvmCzpJDNwUoL/wL4EpzF/cw5QAv3oJU=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=Qex+PchWpAPgmOQM8WlERs/crhywWswafr8Wr0wMzHZrdulOUHfDw7uqv1zNHExCm
-	 ytWk9KLPw/FutUb8/1zeM50fS1HjoGL9oxMehV9+oGuxnA4c8+XR/k2iMblt/2mpPQ
-	 GzdTYz5hwTKzPpwRsquD0d+TRVNeg6IOlRJvo3SOsYyLISZ5QmHWl2S9MaeoY2wEaX
-	 QXUaCxQ+P1meEc/oWigZjnGLBp8pk29Jds4QqKYkXJXnZlZwYDlfHPGdkGHmB2FDzj
-	 rmqsGln1GY5tYt9uQRnGBuXL+qHagQEfKNv9uvu2BfdMYFtcXlwPGfEOAOfN16ZKan
-	 Sxw70DbzbVgQw==
-Message-ID: <5120a664-9fb5-41f7-b9d4-16e4369430d7@kernel.org>
-Date: Mon, 13 Apr 2026 11:48:37 +0200
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="qoUccUgv"
+Received: by mail-ej1-f50.google.com with SMTP id a640c23a62f3a-b9bff57cb62so682494866b.2
+        for <platform-driver-x86@vger.kernel.org>; Mon, 13 Apr 2026 03:02:06 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20251104; t=1776074525; x=1776679325; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=QkilzuMUQETyKz1FjFPqWn2VyiH1H/H3jmR+rqzk7H0=;
+        b=qoUccUgvKtNQgbQfRJhbpWS660seLNbDFcSWxSKZ3sV5qXXch5gT+YTlPSZGmk8l21
+         pE/wT69ivm/oTcAv3+B1G3KMNrCucRDLemO6q34KuEwOlxPm6+FUGXD2K+yMWEak8I+O
+         prM0zPPOIlPB3l8Mc4rdm/T1blKKvUucgJroH7t/U5atUaO7m4L5ZzRyPSJNbUtbwk0u
+         bCb8Za8jq260aU887lrCp92atTyPUYXCsbGW3rIgl46OGEGdCZtKwJJ5LRg8tcqrZpaE
+         xPqFFpuAtICkfnNUFCUgB0xxvZg/VKm1XKdbArNTZKVF/s5KFOkBnVCd84XM+ldztMR0
+         bFxA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20251104; t=1776074525; x=1776679325;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:x-gm-gg:x-gm-message-state:from
+         :to:cc:subject:date:message-id:reply-to;
+        bh=QkilzuMUQETyKz1FjFPqWn2VyiH1H/H3jmR+rqzk7H0=;
+        b=X7etQJQC7AIiqK2XFmUVvxRG1PkyKgwSqyiMumnV/BWIB5xpEVHsVMJgOYs5E86E+M
+         DNpIucJ4VqutDy1Spdghvde0zVFcefpWcKPVkOvtmy2zQtUJzdoexaqQUBadxQ8noBl2
+         16X8p2CNCtO9YgkGqX1Ng9WCCQyXwLPdvowM13R+WkJaQfsO9l1RW1R0kWjkva5wUbKF
+         XPSMO5gHJ60fu2l5VQs+5yG5cgcCrHho5gnVROkRuHAdyTRiL4hxsfVn9BXwEIrVwDX6
+         tEsHdsKFl4djnS6jfeZHkL7FKc9dMpwYW7tpEiBDyiuLq1f1a1prcVoG6VlQaXR36kmu
+         xEPA==
+X-Forwarded-Encrypted: i=1; AFNElJ8Tn7tl5v9fY/GtkVNy0tJH8PG1FkhmdRGFfYhZ5Nyn3RrGsWcfiwNYa6uumJA/ldL0n82t6AuWnTcb9+Udyfgoz9fB@vger.kernel.org
+X-Gm-Message-State: AOJu0Yy9NeYSjtWc1XQr2+fSZaeJBJWzONtJp7/EYRIGjWgXUcMFn176
+	b9DXb+LFmggwA1niziWNXkXObmtl4cK8a69Cyhd0Eq6RsbdGuQ86twYo
+X-Gm-Gg: AeBDies1jHGrsdPCFD/jAx4qz0IkvvIQBIfUMrWcTR3kF7YVxtxrQDZvoQi1Hwcik7d
+	oy8tLoJAN0XHlhnVpMXTH3h3tdTZHArNrjXaYiyJW26KaM6Qhw2Zub1d10DT17j6nn6PGwYmuTL
+	D07wFm8BBO+x5cJp0y9+BqFXmIeXfyeKVcqpjts2Uo0Z4HioyAgpyX9OUisO/txmgcabaV4rKax
+	yhrE6TdaX9mkREEPZlyWX0i+m/NWDfLxB/U9LVZ2lgT/BLApw5MaTlR6+88qreyExlkkf2rMz23
+	8/gzhMOTz5l3bdHloEO4C/umaJxaEXan2qHEGYVKt/y5e/o8mpbvu7I5AWW+c3tl3dc2G3t9ia1
+	IxEjS20epitjgXTpR2i1iGOqnjsejXBli5F4y05ye5Oz+xmAWIWv0fgp4OKvcCSAGfoS9iX4gD9
+	GGGUzbpgUANsK8Dfs1u4DjjA==
+X-Received: by 2002:a17:906:518c:20b0:b9c:7748:a26f with SMTP id a640c23a62f3a-b9d7260e086mr530307666b.17.1776074525085;
+        Mon, 13 Apr 2026 03:02:05 -0700 (PDT)
+Received: from khalil-hp.home ([62.250.67.33])
+        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-b9d6e7f189esm291993566b.58.2026.04.13.03.02.04
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 13 Apr 2026 03:02:04 -0700 (PDT)
+From: Khalil <khalilst@gmail.com>
+X-Google-Original-From: Khalil <khalil@rentman.nl>
+To: broonie@kernel.org,
+	hdegoede@kernel.org,
+	ilpo.jarvinen@linux.intel.com
+Cc: rf@opensource.cirrus.com,
+	linux-spi@vger.kernel.org,
+	platform-driver-x86@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	Khalil <khalil@rentman.nl>,
+	Khalil <khalilst@gmail.com>
+Subject: [PATCH v2 1/3] spi: Preserve preset cs_gpiod in __spi_add_device()
+Date: Mon, 13 Apr 2026 12:01:38 +0200
+Message-ID: <20260413100140.579845-2-khalil@rentman.nl>
+X-Mailer: git-send-email 2.43.0
+In-Reply-To: <20260413100140.579845-1-khalil@rentman.nl>
+References: <20260413100140.579845-1-khalil@rentman.nl>
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v2 1/3] platform/x86: intel_lpss: add resource conflict
- quirk for Dell Latitude 5285
-To: Thierry Chatard <tchatard@gmail.com>, linux-kernel@vger.kernel.org
-Cc: linux-media@vger.kernel.org, platform-driver-x86@vger.kernel.org,
- lee@kernel.org, djrscally@gmail.com, ilpo.jarvinen@linux.intel.com,
- mchehab@kernel.org, sakari.ailus@linux.intel.com,
- jacopo.mondi@ideasonboard.com, nicholas@rothemail.net
-References: <20260320000937.9177-1-tchatard@gmail.com>
- <20260324214129.17300-1-tchatard@gmail.com>
- <20260324214129.17300-2-tchatard@gmail.com>
-From: Hans de Goede <hansg@kernel.org>
-Content-Language: en-US, nl
-In-Reply-To: <20260324214129.17300-2-tchatard@gmail.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 
-Hi,
+__spi_add_device() unconditionally overwrites spi->cs_gpiod[] from
+ctlr->cs_gpiods[cs], even if the caller has already set a GPIO
+descriptor on the device. This prevents drivers like
+serial-multi-instantiate from pre-configuring a GPIO chip select
+acquired from ACPI before adding the device.
 
-On 24-Mar-26 10:41 PM, Thierry Chatard wrote:
-> The Dell Latitude 5285 2-in-1 has a BIOS bug where the ACPI GEXP device
-> and the I2C4 controller (INT3446) both claim the same MMIO region via the
-> shared SB04 variable. This causes intel_lpss_acpi to fail binding to I2C4
-> with -EBUSY, preventing the front camera (OV5670) sensor from being
-> registered.
-> 
-> Add a DMI quirk that selects IGNORE_RESOURCE_CONFLICTS for INT3446 on this
-> machine, matching the existing pattern used by other LPSS quirks.
-> 
-> Signed-off-by: Thierry Chatard <tchatard@gmail.com>
+Skip the overwrite when the device already has a cs_gpiod set for
+the given index, allowing callers to preset GPIO chip selects that
+aren't described in the controller's cs-gpios property.
 
-Thanks, patch looks good to me:
+This is useful on platforms where the ACPI _DSD cs-gpios property
+on the SPI controller is incomplete, but the peripheral's ACPI node
+does contain the correct GpioIo resource for its chip select.
 
-Reviewed-by: Hans de Goede <johannes.goede@oss.qualcomm.com>
+Suggested-by: Richard Fitzgerald <rf@opensource.cirrus.com>
+Signed-off-by: Khalil <khalilst@gmail.com>
+---
+ drivers/spi/spi.c | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
 
-Regards,
-
-Hans
-
-
-
-
-> ---
->  drivers/mfd/intel-lpss-acpi.c | 32 ++++++++++++++++++++++++++++++++
->  1 file changed, 32 insertions(+)
-> 
-> diff --git a/drivers/mfd/intel-lpss-acpi.c b/drivers/mfd/intel-lpss-acpi.c
-> index 63406026d..7d0964848 100644
-> --- a/drivers/mfd/intel-lpss-acpi.c
-> +++ b/drivers/mfd/intel-lpss-acpi.c
-> @@ -13,6 +13,8 @@
->  #include <linux/ioport.h>
->  #include <linux/mod_devicetable.h>
->  #include <linux/module.h>
-> +#include <linux/acpi.h>
-> +#include <linux/dmi.h>
->  #include <linux/pm.h>
->  #include <linux/pm_runtime.h>
->  #include <linux/platform_device.h>
-> @@ -52,6 +54,15 @@ static const struct intel_lpss_platform_info spt_i2c_info = {
->  	.swnode = &spt_i2c_node,
->  };
->  
-> +/* Same as spt_i2c_info but with QUIRK_IGNORE_RESOURCE_CONFLICTS for Dell 5285
-> + * where ACPI GEXP device conflicts with I2C4 (INT3446) MMIO resources.
-> + */
-> +static const struct intel_lpss_platform_info spt_i2c_info_ignore_conflicts = {
-> +	.clk_rate = 120000000,
-> +	.swnode = &spt_i2c_node,
-> +	.quirks = QUIRK_IGNORE_RESOURCE_CONFLICTS,
-> +};
-> +
->  static const struct property_entry uart_properties[] = {
->  	PROPERTY_ENTRY_U32("reg-io-width", 4),
->  	PROPERTY_ENTRY_U32("reg-shift", 2),
-> @@ -172,6 +183,16 @@ static const struct acpi_device_id intel_lpss_acpi_ids[] = {
->  };
->  MODULE_DEVICE_TABLE(acpi, intel_lpss_acpi_ids);
->  
-> +static const struct dmi_system_id dell5285_lpss_dmi[] = {
-> +	{
-> +		.matches = {
-> +			DMI_EXACT_MATCH(DMI_SYS_VENDOR, "Dell Inc."),
-> +			DMI_EXACT_MATCH(DMI_PRODUCT_NAME, "Latitude 5285"),
-> +		},
-> +	},
-> +	{ }
-> +};
-> +
->  static int intel_lpss_acpi_probe(struct platform_device *pdev)
->  {
->  	const struct intel_lpss_platform_info *data;
-> @@ -182,6 +203,17 @@ static int intel_lpss_acpi_probe(struct platform_device *pdev)
->  	if (!data)
->  		return -ENODEV;
->  
-> +	/* Apply IGNORE_RESOURCE_CONFLICTS for I2C4 on Dell Latitude 5285.
-> +	 * The ACPI GEXP device conflicts with I2C4 (INT3446) MMIO resources
-> +	 * due to a BIOS bug where both use the same SB04 variable.
-> +	 */
-> +	if (data == &spt_i2c_info &&
-> +	    acpi_dev_hid_uid_match(ACPI_COMPANION(&pdev->dev), "INT3446", NULL) &&
-> +	    dmi_check_system(dell5285_lpss_dmi)) {
-> +		dev_info(&pdev->dev, "Dell 5285: applying IGNORE_RESOURCE_CONFLICTS for I2C4\n");
-> +		data = &spt_i2c_info_ignore_conflicts;
-> +	}
-> +
->  	info = devm_kmemdup(&pdev->dev, data, sizeof(*info), GFP_KERNEL);
->  	if (!info)
->  		return -ENOMEM;
+diff --git a/drivers/spi/spi.c b/drivers/spi/spi.c
+index a0b2bd3b8..64be99d13 100644
+--- a/drivers/spi/spi.c
++++ b/drivers/spi/spi.c
+@@ -734,7 +734,8 @@ static int __spi_add_device(struct spi_device *spi, struct spi_device *parent)
+ 
+ 		for (idx = 0; idx < spi->num_chipselect; idx++) {
+ 			cs = spi_get_chipselect(spi, idx);
+-			spi_set_csgpiod(spi, idx, ctlr->cs_gpiods[cs]);
++			if (!spi_get_csgpiod(spi, idx))
++				spi_set_csgpiod(spi, idx, ctlr->cs_gpiods[cs]);
+ 		}
+ 	}
+ 
+-- 
+2.43.0
 
