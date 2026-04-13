@@ -1,104 +1,162 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D51F43CB2C1;
-	Mon, 13 Apr 2026 14:03:12 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 179CC303CAB;
+	Mon, 13 Apr 2026 15:05:54 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1776088992; cv=none; b=YZceBHgH4bUMaps8QTPAPDTRV0J6kkPj+/M5WeNmMP2isXzJV/9Em9nF9+Tmu06pC+YLxm6kOBmo6Qqm9Mj+OpDgGvwcouJ58/8/1dp6wxJmwukDSDaZjRuE3+GQmf/IBqYyAd+pAwwqLgC5ixMzVK6anX8QrEqIslYIgsbvVRM=
+	t=1776092755; cv=none; b=n//g0W/zhHZUTBZx/pFucUhvoA8/fiGCGEhoVmoTJn53HLueL+zwqCZt1B+iWvFK6xwriu0tgkomsO+OHqRmpf1NzPbsktPzNz3VGBwKnyJ5HQ/uURRJMOw/QZD8nSqHdhRdUIIlA901nqJQ1sSULL7qOc94Yp5IlQBdfCHKFzI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1776088992; c=relaxed/simple;
-	bh=ZujmsWUiIlgFWuYStOUbuRgZOWkohs/X7TyfIkjFDX0=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=efDZ2JdPE90FGg9ogvnnpHIbKTrfSznnGKNM10b1x33TwmWyA9///HlchC6Nc/o7urdMZKzL/xfm1NKAPB6iCc5nJK4qZEtxelDFnoqRYnk+nzbJEamrUn+Dpl6LI/EMRClzTd9AX5FXHtJhCGRfGMV6l8v8mXU8L87XeXa7bBI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 5DE95C2BCAF;
-	Mon, 13 Apr 2026 14:03:03 +0000 (UTC)
-Date: Mon, 13 Apr 2026 19:32:53 +0530
-From: Manivannan Sadhasivam <manivannan.sadhasivam@oss.qualcomm.com>
-To: Chen-Yu Tsai <wenst@chromium.org>
-Cc: Rob Herring <robh@kernel.org>, 
-	Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Jiri Slaby <jirislaby@kernel.org>, 
-	Nathan Chancellor <nathan@kernel.org>, Nicolas Schier <nicolas.schier@linux.dev>, 
-	Hans de Goede <hansg@kernel.org>, Ilpo =?utf-8?B?SsOkcnZpbmVu?= <ilpo.jarvinen@linux.intel.com>, 
-	Mark Pearson <mpearson-lenovo@squebb.ca>, "Derek J. Clark" <derekjohn.clark@gmail.com>, 
-	Manivannan Sadhasivam <mani@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>, 
-	Conor Dooley <conor+dt@kernel.org>, Marcel Holtmann <marcel@holtmann.org>, 
-	Luiz Augusto von Dentz <luiz.dentz@gmail.com>, Bartosz Golaszewski <brgl@bgdev.pl>, 
-	Andy Shevchenko <andriy.shevchenko@linux.intel.com>, Bartosz Golaszewski <brgl@kernel.org>, 
-	linux-serial@vger.kernel.org, linux-kernel@vger.kernel.org, linux-kbuild@vger.kernel.org, 
-	platform-driver-x86@vger.kernel.org, linux-pci@vger.kernel.org, devicetree@vger.kernel.org, 
-	linux-arm-msm@vger.kernel.org, linux-bluetooth@vger.kernel.org, linux-pm@vger.kernel.org, 
-	Stephan Gerhold <stephan.gerhold@linaro.org>, Dmitry Baryshkov <dmitry.baryshkov@oss.qualcomm.com>, 
-	linux-acpi@vger.kernel.org, Hans de Goede <johannes.goede@oss.qualcomm.com>, 
-	Bartosz Golaszewski <bartosz.golaszewski@oss.qualcomm.com>
-Subject: Re: [PATCH v7 0/8] Add support for handling PCIe M.2 Key E
- connectors in devicetree
-Message-ID: <fpcs4p62f35a5qyqwgm5ysa73stbysxcr62tkmmkrrcvsuf4t4@4ivukyqjey57>
-References: <20260326-pci-m2-e-v7-0-43324a7866e6@oss.qualcomm.com>
- <20260413075459.GA2626902@google.com>
+	s=arc-20240116; t=1776092755; c=relaxed/simple;
+	bh=Iu8U2UKqNM3IkKuWyjXe/EMJbbHXer9r5OHhYIDndqc=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=Y0QvJ4Y54/yqv37kw2sraOj5JB4JbV3tv/3Nbewufe4HZdyoEXaCyIQPGaeoB88+gpqal80dZYI86gzePHxhrBZzt/iZeI1Dd5rvhjD1qrw+HFxjoEIv4p/opbKE3vmbOf+oDF+IPM5LoTHf/LAPpmjYZ+7M1aVgUZU/RoyO7K8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=tVgRikja; arc=none smtp.client-ip=10.30.226.201
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="tVgRikja"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 0F4D6C2BCB0;
+	Mon, 13 Apr 2026 15:05:52 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1776092754;
+	bh=Iu8U2UKqNM3IkKuWyjXe/EMJbbHXer9r5OHhYIDndqc=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=tVgRikjae0C071EgJUFCE9RQSB1F3Hc/8RPCFBt4If6ZQn3kPrzGSBA5LuC/6JTUj
+	 yAcWO79tFg390aaUfj8hv2LZAttf/U8OOeXBs9LqajenJPcm6eLqEFXxWWaUqUYc3V
+	 OZNxVbWESWYwRx54WYXWsB1MxB+NObt/h1u5yEZogFpIQo354ka84jaZtrNC2xQjIh
+	 j1grB/2R+/hs+/ERT6X5uP+Bjm32MaN32MTgnepJjpvWz/SCB2/FfQcim99Zq6tU13
+	 3VU95pgYpn7iK9U9i2d5b6lH8yxND/3SkQ+CsLMR+ltczRHiZ4F9ecPPNuCZlLRFQN
+	 ItoUGs2cg8yXA==
+Message-ID: <6dea7a2f-5730-4fa4-a093-53f663c6a8eb@kernel.org>
+Date: Mon, 13 Apr 2026 17:05:50 +0200
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v2 2/3] platform/x86: serial-multi-instantiate: Fix SPI
+ chip select on platforms with incomplete ACPI cs-gpios
+To: Richard Fitzgerald <rf@opensource.cirrus.com>, Khalil
+ <khalilst@gmail.com>, broonie@kernel.org, ilpo.jarvinen@linux.intel.com,
+ Andy Shevchenko <andy@kernel.org>
+Cc: linux-spi@vger.kernel.org, platform-driver-x86@vger.kernel.org,
+ linux-kernel@vger.kernel.org, Khalil <khalil@rentman.nl>
+References: <20260413100530.580649-1-khalil@rentman.nl>
+ <20260413100530.580649-3-khalil@rentman.nl>
+ <6af0a67a-c028-45c5-b514-52570ecfcc68@kernel.org>
+ <a451416b-80a6-439f-8340-e53e4b30d87a@opensource.cirrus.com>
+From: Hans de Goede <hansg@kernel.org>
+Content-Language: en-US, nl
+In-Reply-To: <a451416b-80a6-439f-8340-e53e4b30d87a@opensource.cirrus.com>
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <20260413075459.GA2626902@google.com>
 
-On Mon, Apr 13, 2026 at 03:54:59PM +0800, Chen-Yu Tsai wrote:
-> Hi,
+Hi,
+
+On 13-Apr-26 2:51 PM, Richard Fitzgerald wrote:
+> On 13/04/2026 12:43 pm, Hans de Goede wrote:
+>> Hi,
+>>
+>> On 13-Apr-26 12:05 PM, Khalil wrote:
+>>> Some HP laptops with Intel Lunar Lake and dual Cirrus Logic CS35L56
+>>> amplifiers over SPI have an incomplete cs-gpios property in the SPI
+>>> controller's _DSD - it only declares the first chip select. The
+>>> remaining chip select GPIOs are defined as GpioIo resources in the
+>>> peripheral's ACPI node but are not referenced by the controller.
+>>>
+>>> This causes the SPI framework to reject devices whose chip select
+>>> exceeds num_chipselect with -EINVAL, preventing the second amplifier
+>>> from probing.
+>>>
+>>> Fix this on known affected platforms by:
+>>>
 > 
-> On Thu, Mar 26, 2026 at 01:36:28PM +0530, Manivannan Sadhasivam wrote:
-> > Hi,
-> > 
-> > This series is the continuation of the series [1] that added the initial support
-> > for the PCIe M.2 connectors. This series extends it by adding support for Key E
-> > connectors. These connectors are used to connect the Wireless Connectivity
-> > devices such as WiFi, BT, NFC and GNSS devices to the host machine over
-> > interfaces such as PCIe/SDIO, USB/UART and NFC. This series adds support for
-> > connectors that expose PCIe interface for WiFi and UART interface for BT. Other
-> > interfaces are left for future improvements.
+> <SNIP>
 > 
-> Thanks for working on this. I started playing with it now that it is in
-> -next. The PCIe part works fine. I'm looking into how to fit the pwrseq
+>>> +
+>>> +/*
+>>> + * ACPI GPIO mapping for the chip select GpioIo resource.
+>>> + * Maps "cs-gpios" to the GpioIo resource at index 0 of the ACPI _CRS.
+>>> + */
+>>> +static const struct acpi_gpio_params smi_cs_gpio_params = { 0, 0, false };
+>>> +
+>>> +static const struct acpi_gpio_mapping smi_cs_gpio_mapping[] = {
+>>> +    { "cs-gpios", &smi_cs_gpio_params, 1 },
+>>> +    { }
+>>>   };
+>>
+>> I'm confused here you say that the chip-select for the second amplifier
+>> is missing, but I would expect that to be the GpioIo resource at index 1
+>> not 0?
+>>
+>> I would expect the GpioIo resource at index 0 to be for the first
+>> amplifier which does have a GPIO already in the _DSD cs-gpios property ?
+>>
+>> Since this is a multi-serial device ACPI node, there is only one
+>> set of resources for both amplifiers (with their also being 2 SPI
+>> resources in the _CRS list).
+>>
+>> So I would expect there to also be multiple GPIO entries in the
+>> _CRS list, with the order of the chip-selects GPIOs resources matching
+>> the order of the SPI resources.
 > 
-> A couple questions:
-> 
-> - Given that this connector actually represents two devices, how do I
->   say I want the BT part to be a wakeup source, but not the WiFi part?
->   Does wakeup-source even work at this point?
-> 
+> You can't assume that. There is no ACPI reason why the GpioIo should be
+> in order of chip selects. In fact, some manufacturers scramble them
+> (e.g. CS2, CS1, CS3). You have to remember that the ACPI is written so
+> that it works with Windows (which is the reason we need this serial
+> multi-instantiate driver.) so it may contain Windowsisms.
 
-You can't use the DT property since the devices are not described in DT
-statically. But you can still use the per-device 'wakeup' sysfs knob to enable
-wakeup.
+Right, in that case maybe we do need the DMI quirk and the DMI quirk
+needs to point to a specific struct acpi_gpio_mapping for that model
+laptop ?
 
-> - Are there plans to do the SDIO part?
-> 
+Either there is some logic and the code can be generic, or there
+is no logic and then we need to not pretend that the code is generic.
 
-No, not at the moment. Feel free to take it up if you have the hardware and
-motivation :)
+And in my mind the current code at least pretends to be somewhat
+generic.
 
-> - The matching done in the M.2 connector driver for pwrseq_get() seems a
->   bit naive. It simply checks if the remote device in the OF graph is
->   the same as the requesting device.
-> 
->   I think this would run into issues with USB hubs. If I have a USB hub
->   and two M.2 connectors, with both connectors connected to the same
->   hub, pwrseq_get() is going to always return only one of the instances.
->   This is because the USB hub has one device node with multiple OF graph
->   ports.
-> 
+Thinking more about this, I do not think that the current patch does
+what it is supposed to do at all.
 
-Yeah, this is a known limitation. I'm trying to improve this part now and have
-the WIP commits here: https://github.com/Mani-Sadhasivam/linux/tree/pwrseq-bt-en-fixes
+According to the commit msg there is 1 GPIO listed in the _DSD
+props and the ACPI lookup added is using the same "cs-gpios" conid
+as the _DSD dependent code in drivers/spi/spi.c and it is getting
+the gpio with:
 
-Once the merge window closes, I'll submit these.
+smi->cs_gpio = devm_gpiod_get(dev, "cs", GPIOD_OUT_HIGH);
 
-- Mani
+which is equivalent to:
 
--- 
-மணிவண்ணன் சதாசிவம்
+smi->cs_gpio = devm_gpiod_get_index(dev, "cs", 0, GPIOD_OUT_HIGH);
+
+which is the same lookup as the already succeeded lookup of CS0
+in drivers/spi/spi.c .
+
+for CS1 the lookup should be:
+
+smi->cs_gpio = devm_gpiod_get_index(dev, "cs", 1, GPIOD_OUT_HIGH);
+
+and the struct acpi_gpio_mapping should point to an array of
+acpi_gpio_params[[] with 2 entries, with the first entry
+duplicating the GPIO from the _DSD info and the second entry
+pointing to the actual CS1 chip-select.
+
+
+Andy, you know the ACPI gpio-lookup code better then me, can
+you confirm that since the con_id between _DSD props and
+the added acpi_gpio_mapping is the same that calling:
+
+smi->cs_gpio = devm_gpiod_get(dev, "cs", GPIOD_OUT_HIGH);
+
+aka:
+
+smi->cs_gpio = devm_gpiod_get_index(dev, "cs", 0, GPIOD_OUT_HIGH);
+
+will just return the GPIO from the _DSD again ?
+
+Regards,
+
+Hans
+
