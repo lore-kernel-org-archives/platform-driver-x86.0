@@ -1,226 +1,174 @@
-Received: from mail-ej1-f54.google.com (mail-ej1-f54.google.com [209.85.218.54])
+Received: from mail-lf1-f52.google.com (mail-lf1-f52.google.com [209.85.167.52])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 128F23BE64C
-	for <platform-driver-x86@vger.kernel.org>; Tue, 14 Apr 2026 09:16:44 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=209.85.218.54
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 075E339768C
+	for <platform-driver-x86@vger.kernel.org>; Tue, 14 Apr 2026 10:29:16 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=209.85.167.52
 ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1776158206; cv=pass; b=kRePwIxtpt5zrRiHSa4gjTwp3Vc8EMhLnNktVx+wqFtF5kgm/NA9XIbDbGgB012N7KylM+fzM3lMvEFYB921NUcw9TfuxyXEcbwXwZQbwsDhruENNa6hw2qbqTgtOsIDhwJ9CekszBs50sFBcvrGjjRiXyHsvis6i4CQlTDo4lY=
+	t=1776162563; cv=pass; b=G+Ctq386EaKtklE31fVyeRzt8MMNh2ohn4DGo90kG+DgQ2Nllk8uf0P0ObVNqYO/PuFeWz38oyyToEUfGEZVZvO5vGZYtTUDWjsPAffjN+LTSKC4YtTw9wVS6mFi8XUWv6L16zJC/6qi+hav5xSQAlnbrqYrf697rttmlqg9SEI=
 ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1776158206; c=relaxed/simple;
-	bh=FY4GbFRdIg81eSH0lJ0AJPUloL7hXTDQSrueGrrhMVI=;
+	s=arc-20240116; t=1776162563; c=relaxed/simple;
+	bh=Ido82lTsBObPiLyE+cnbnYTa5RnXovthshiMl4cqqxw=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=U4VScP00HXM5T4SFxnhnrHZBPmuYchaSuvVDECrkFTsa3jTL12fT866tPV5lOjHeufVoGSYTL2Dr7K65WhzlStDVoIBHh26kDicCjz0j/uoee2vRauMidNMExMPGPsmAc8JSgsHJXOi2HOjunzNbtQ55HXCmcxXSTGlfx2v5ziM=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=eK7DNFBp; arc=pass smtp.client-ip=209.85.218.54
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	 To:Cc:Content-Type; b=LfvLuXxA6dKwlJomwLcA2lCp7QAPxfTTXqh+SfnS633hD/eXqu0UgDrGh8dUNypmTn3Q6asDGg4YUMQU6HSEkoHol8hNhs5PwrFCEcBTlUgxEwP2JgLZQcX3RKS02Ib3max6THdPVf0mCblo/fRYq7Oms9LspO2XfD7gsSKACv4=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org; spf=pass smtp.mailfrom=chromium.org; dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b=CAg1W+YC; arc=pass smtp.client-ip=209.85.167.52
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=chromium.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="eK7DNFBp"
-Received: by mail-ej1-f54.google.com with SMTP id a640c23a62f3a-b932fe2e1a7so740361766b.1
-        for <platform-driver-x86@vger.kernel.org>; Tue, 14 Apr 2026 02:16:44 -0700 (PDT)
-ARC-Seal: i=1; a=rsa-sha256; t=1776158203; cv=none;
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="CAg1W+YC"
+Received: by mail-lf1-f52.google.com with SMTP id 2adb3069b0e04-59e4a04f059so5019101e87.2
+        for <platform-driver-x86@vger.kernel.org>; Tue, 14 Apr 2026 03:29:16 -0700 (PDT)
+ARC-Seal: i=1; a=rsa-sha256; t=1776162554; cv=none;
         d=google.com; s=arc-20240605;
-        b=PLItbm5D8GihFT4+RpEL0hegDLkuFRw9jm1YOI029C3k0ztIRlUzxZlS6hCE4sgIjf
-         80pAGgRHsQi23eziA5i1WNGtvdGnxgyixxAGylnwW21oRCQiw6eDUDCr4GMi0JlDgJJ7
-         /zxKT72lGdsxX5FktlEqCgkKBGjYwkFfBHtPcOa6Mq6P2tfKEZ5nxKFo8ThpS1Q+qdx4
-         Fvc8VvRqd33IBKxf/1aShXaRFckXWnbCh5ErnsRyS2QsLsKks1rnl11cNHt6y3VlauSv
-         iM+RyrB/SPTGeuo0s2GLLE9dSoji3ZqrlDmZtWmKp+WHFeKSwYd/dZk8BxXzpN7JpP3g
-         l/FQ==
+        b=L0v/yDxaX0dJjHPGl02qjKOt1w1GO82RLE0hi8wHM764fzHTZDXqZvAydPeGXP7tuf
+         u1amMb8qVzJAj0xeZSmanxBdH/qSmvPMao5WX6dr5AkKMxZSs5Sqhnyo6OIjSkFbTQ72
+         I0dUoje+XXQZ2IUgY/EP/udzkZoVcC2lqJIbOLBGoQT4cG+hw3Cb1cK8i/9W9Ly1mkpx
+         5KMPTaC+NDgfnVs1V2Kdh6PNE24z1PDHW9JA201wh5PYI+xFDst6TlQxO5TY+5+IEj+A
+         XBrDtTZ11qqjFUB9X3pru4+CS1m0SgOem33HbgvIymfZ+doC2algOYeU6WHMZw/WD9dG
+         Adpg==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20240605;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:dkim-signature;
-        bh=0SIly2zfbq/eYwM2WkiEicqWCe6uu1Y74Q3yJMzCBG8=;
-        fh=plg5xdap+2zC/f8mw46zSJk2CaZpJzR57hHpDCyGk98=;
-        b=Un0bxwxGPi5nxZqPopmlpGNC6yOFAqqn7+aWFOuJ2qvbQXkQA+AsGKrVZojcdVBVNj
-         O3gS8eQ8v2LFfCbHyJxi5g09vRDuH/ufXwkmqRg8YKU3wSG2DHgxeZ9r7gwKkxWTEcTy
-         WMNrC6V1A5na6k+vwiwQi7kd4vZQnpqcXurFerbSwqFL8FQCzItN0zzzyPT4fSl3qjGl
-         Mwi90Ker6ZlBrwUhJN/02wUOstvVkCC1RhA0oqtE2rPjXPsD54p50spLTXsPxDHWWgtD
-         XpKoLjQmrlleBMwpimujxJ+2RnaQLSqHDiVsJ5CXXmMZVq0eRWUB6wNi91AUv+yD5Jp7
-         CsJw==;
+        bh=obCwu9OJRNTUN7BsZbzZ8PH73jQ+TTI+BXXfuHZowXE=;
+        fh=3E10NQruygRJEm73kdh4AbuFBe5RQlc5Lzl7MNtq5Ic=;
+        b=SVyqSYX7hcKiKzo5+12e92XavGe4WMPDll/gfeISGzt9hFWuKJ3wrPizft8wgIgRvp
+         Hb9qnp7YaxlDmeNxg8HzNBSS1BHNJMF2vYeutYVdxDtYZS3b4d3oluWN2VGu/RLGUYPO
+         ZwbnzJGRRQzm2/UpYpWApDqT80w0jbSCueM0cfqoyzZktv9iYFJ0tvwaQsnJ0mYH+fM3
+         wjTdw0wDpq9XSdqSAjRsxakqkw4MtMpvXHKHAkQi/P95bHYyGkmC4l3RS3IvpiKp0ZjD
+         sninHEFi3Ozb5Bod9DrvaROrjIWNWdfoKGUIkiHqkixMvV8ruP0bGesBVkEdF96ziioN
+         FA6w==;
         darn=vger.kernel.org
 ARC-Authentication-Results: i=1; mx.google.com; arc=none
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20251104; t=1776158203; x=1776763003; darn=vger.kernel.org;
+        d=chromium.org; s=google; t=1776162554; x=1776767354; darn=vger.kernel.org;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=0SIly2zfbq/eYwM2WkiEicqWCe6uu1Y74Q3yJMzCBG8=;
-        b=eK7DNFBp9fhHeAQt5Nyd6jWNhuvi146eokB7Bx/gJttXH/71bxpCZbFk+d/ZB2jMCR
-         ewhcQSunBgdIf0I05oD6Wme89w16hdw0g1BlsWuEmm1HwBYa9lUVe4fYeSwYe/WRGWu3
-         fGXPha07rjNVA0/scPB9xJG4Nla5gT5WT99VmS8QGSAob0D4EsE7iNj5dLFGipqN08hn
-         X7RfwUzvp79SDKbHewNtBkEoQQjepV+AfFz9z+uyCJvWNkAOSJ7YNq9GXtrdTwOPSVlT
-         F6R1/3JEwI1aH2YGP6QZc2SO3qhcQco2tr7MyZdOkehqf8fmp0PAXrCNL39x1Cnum9at
-         4KDg==
+        bh=obCwu9OJRNTUN7BsZbzZ8PH73jQ+TTI+BXXfuHZowXE=;
+        b=CAg1W+YCDWa+7hMyoFTX9wrJnea3anbAiHdxWmpDFPNhe7kCyRPxDRCs4+n9KcUSjl
+         w6nzvTJigwS7oM6UFv5A3HKxmii0VyJz1d3VSyhkRHh9KbLCHy+zvkfyRpySbb5xZhZu
+         JuL3QYV3wyDOI2wfxl8ehTcAnuZZDMlWKsh4c=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1776158203; x=1776763003;
+        d=1e100.net; s=20251104; t=1776162554; x=1776767354;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:x-gm-gg:x-gm-message-state:from
          :to:cc:subject:date:message-id:reply-to;
-        bh=0SIly2zfbq/eYwM2WkiEicqWCe6uu1Y74Q3yJMzCBG8=;
-        b=ibWnImHSwnVing8GnqxG9NNRGmp3e2HPOo1yUZU4uNIdoid02BMBJffue0b8yxsqz/
-         7M//bMz4V+JHZvL7trCAHV06JBlEIbuKB3kzSiDcb1MkKFf2Rm+hxuxvfpPa0HIFBCCl
-         D1GAfNz+6KlH8NOnNqgHg3tx/WVnb0G00nYpW9DodyPGC+0nXfGV6mVyJTSOuO6ay/lg
-         cfoeTUy81yKrhkmBHN6k8mpH8OtZbtwNzoWy91ur/7Iz45m0F/jN3N3h9wLJlSE5y3zP
-         q5L7ZAYWFHMoGn+Vv94TficiUOfjfYsX2CB+fU0ACG5/tTOb/hnKDz7/IV7qtLmQx2UB
-         Hk6w==
-X-Forwarded-Encrypted: i=1; AFNElJ/gC9QWUBf9wL+EJp85Z2JGZcQwi+e/rES68szeGNKUZCFXZ9zkRgxKHAm/EUxOBySHKZN+IOnJvMXmURGPiIM+je/b@vger.kernel.org
-X-Gm-Message-State: AOJu0YyfE5hOMJ9ycNahu+NqyjZOsvvDj3TfNBZnIouUKbp2ewuRJH1K
-	S+RHYDIqeJAC4N3Djic0QEKPP3GpvsEZgVQ+3zE30ut2DcomMIJ6VmbLVnhIpZINkrkmJrO5+bc
-	J6r8aiepkWMZswqM0gO5jPc66PhYobtU=
-X-Gm-Gg: AeBDieu3aDx9NWWDWSeRa8gcZAdC7+DcdGKJwEryhzJhJhsPVOTW3tpchc+7RMR8rhv
-	JMZR8UTvNMndRij0meRPHtBk9sx7p5O3fE/Z5/RHG/J6WJG1LFw4UFxNZVVvg/a1dQ65YjGxoZE
-	IGyWubOqiALISDrsdVeODv93C9vo19tSkRHDMoYgcMd2IqYJwLN75f+CKfH6hwM9gMysxEmL0MI
-	6qeEokyho+RFDdowBNOGJHmkFNfKC7vere5USK7FxPQDNRkteZOLji+W9vMvja2dFpElZa1qrhF
-	0L/sqXuoOMphunIPhCWPkblVqhPMi+2axBcFUeKD7zaoa3kQYrz1gMPOw+icTgFFh9L2DGchCHg
-	eF3TYLMo=
-X-Received: by 2002:a17:907:1c9c:b0:b97:cbb9:2290 with SMTP id
- a640c23a62f3a-b9d7243e6eamr915863666b.11.1776158202848; Tue, 14 Apr 2026
- 02:16:42 -0700 (PDT)
+        bh=obCwu9OJRNTUN7BsZbzZ8PH73jQ+TTI+BXXfuHZowXE=;
+        b=XOhCNdWuQ8/ln45Oy8YjcAGIQeb0PYIsrWG0LhjO5p2FueahOBl5SeQ7/abkyYrVLK
+         HaUTc+1szJiXNXIbrWPI6U+f38Jzy5YVQmT3R9sarRALG2So+xlRz37FrdBUugpmBXiU
+         D5zPWpwht0RuC2WNcB6Qlw1y3H9p9O6UWmmKaDRx4gT9vydA1wtea5XesDUFSW+AV0Wq
+         SqtKhM85U/jat3oyn0UOg4abvosIdOqKfluvTL7JWbXOTFqov1ufVB+ztYFDgUWc2hzF
+         1B7FuiI4oWVYgwc9DdbrMHXhZtHOnzzEgZmNy+G5OSsE43rwaalZBlBgYgdpIYtO7MWL
+         Az6w==
+X-Forwarded-Encrypted: i=1; AFNElJ+A5RElXSYMf2ThQAh15tq7tNm2j/EGVRHsY3TO965qaxAduucTCwO0MqPtub5+21PGPtRdaRrhrQlOalS1fUHfF78I@vger.kernel.org
+X-Gm-Message-State: AOJu0Yxq2Zd+14mPmroXvUwqC6w1IpWdul+xeTaX32XBD57ISkcXWiY8
+	l0F45UHH6mKUNLWeDV8q3KcqQlBPiZx0d+MmHNYS0UvYdyh7jk3BfzFS42VILhZjfKNmLsCD4ft
+	iITuEOJOav6S1ILjBvUMLINwN+0u0RmBOmVzsImIi
+X-Gm-Gg: AeBDiesLceatbEVh31454Z8iVJ7ITn1JHbl0eD6rVmk/wEToa4r/VExWiOM5o5nxpH2
+	urQ4gCMXzMcAEzfTNENCAyddOWA0d9fnHEpCdR1zL/p/wxeEZ8dujNuUYvgQIQn683AnzOSyCQh
+	O16v3Znkj2SWKJwAnaMqFIvx/F4vIAyTxcDGl2HfS++wTMX1Op5vW2i+qZAFFaHRdiXRHijhDkJ
+	688XHR54zNGtWbq7R/2Z4XNhnpj3iZDHOoi4Uwp7mQbtpsEOxxIOn2NdSLwESogXbrp6NqBPShE
+	K2SC2JOgqOaIsLJf7A8BlExXkIy7Jp/e67Ut9KwvQMqNzWUd
+X-Received: by 2002:a05:6512:68e:b0:5a2:ae27:c879 with SMTP id
+ 2adb3069b0e04-5a3efd7f0d8mr4850095e87.29.1776162554447; Tue, 14 Apr 2026
+ 03:29:14 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20260413100530.580649-1-khalil@rentman.nl> <20260413100530.580649-3-khalil@rentman.nl>
- <6af0a67a-c028-45c5-b514-52570ecfcc68@kernel.org> <a451416b-80a6-439f-8340-e53e4b30d87a@opensource.cirrus.com>
- <6dea7a2f-5730-4fa4-a093-53f663c6a8eb@kernel.org>
-In-Reply-To: <6dea7a2f-5730-4fa4-a093-53f663c6a8eb@kernel.org>
-From: Andy Shevchenko <andy.shevchenko@gmail.com>
-Date: Tue, 14 Apr 2026 12:16:05 +0300
-X-Gm-Features: AQROBzAYnOKPp6E9PRGHWIow9snUafoTvUXTrEoWd3EQel_RnOCNS48xiS6c_L8
-Message-ID: <CAHp75Vcs68e_GtFmLyYxJXi5PFo-0LqWi-7j1ZSARxDQ6UkDWg@mail.gmail.com>
-Subject: Re: [PATCH v2 2/3] platform/x86: serial-multi-instantiate: Fix SPI
- chip select on platforms with incomplete ACPI cs-gpios
-To: Hans de Goede <hansg@kernel.org>
-Cc: Richard Fitzgerald <rf@opensource.cirrus.com>, Khalil <khalilst@gmail.com>, broonie@kernel.org, 
-	ilpo.jarvinen@linux.intel.com, Andy Shevchenko <andy@kernel.org>, linux-spi@vger.kernel.org, 
-	platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	Khalil <khalil@rentman.nl>
+References: <20260326-pci-m2-e-v7-0-43324a7866e6@oss.qualcomm.com>
+ <20260413075459.GA2626902@google.com> <fpcs4p62f35a5qyqwgm5ysa73stbysxcr62tkmmkrrcvsuf4t4@4ivukyqjey57>
+ <eeytuhqpgdz4do4tgtbmfntub2femtyq7bij7svhodpyjwaylx@j3gmvq2a2zqc>
+ <CAGXv+5E=tujhtZjwi6Qm7hk3Ks74UzTQHWq82NiTEw1+vYod5g@mail.gmail.com> <ad36pIu-0dutL7Nk@ashevche-desk.local>
+In-Reply-To: <ad36pIu-0dutL7Nk@ashevche-desk.local>
+From: Chen-Yu Tsai <wenst@chromium.org>
+Date: Tue, 14 Apr 2026 18:29:02 +0800
+X-Gm-Features: AQROBzDHB_HCwto4iaprIWgL7mrQWt62yIrtGAtxckKlX4EUkJwTT3ZqPu-YslU
+Message-ID: <CAGXv+5EGe59nJctLweEdZjb3MNmMvjuCHngGSfptzN985OiLdg@mail.gmail.com>
+Subject: Re: [PATCH v7 0/8] Add support for handling PCIe M.2 Key E connectors
+ in devicetree
+To: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Cc: Manivannan Sadhasivam <mani@kernel.org>, 
+	Manivannan Sadhasivam <manivannan.sadhasivam@oss.qualcomm.com>, Rob Herring <robh@kernel.org>, 
+	Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Jiri Slaby <jirislaby@kernel.org>, 
+	Nathan Chancellor <nathan@kernel.org>, Nicolas Schier <nicolas.schier@linux.dev>, 
+	Hans de Goede <hansg@kernel.org>, =?UTF-8?Q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>, 
+	Mark Pearson <mpearson-lenovo@squebb.ca>, "Derek J. Clark" <derekjohn.clark@gmail.com>, 
+	Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, 
+	Marcel Holtmann <marcel@holtmann.org>, Luiz Augusto von Dentz <luiz.dentz@gmail.com>, 
+	Bartosz Golaszewski <brgl@bgdev.pl>, Bartosz Golaszewski <brgl@kernel.org>, linux-serial@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, linux-kbuild@vger.kernel.org, 
+	platform-driver-x86@vger.kernel.org, linux-pci@vger.kernel.org, 
+	devicetree@vger.kernel.org, linux-arm-msm@vger.kernel.org, 
+	linux-bluetooth@vger.kernel.org, linux-pm@vger.kernel.org, 
+	Stephan Gerhold <stephan.gerhold@linaro.org>, 
+	Dmitry Baryshkov <dmitry.baryshkov@oss.qualcomm.com>, linux-acpi@vger.kernel.org, 
+	Hans de Goede <johannes.goede@oss.qualcomm.com>, 
+	Bartosz Golaszewski <bartosz.golaszewski@oss.qualcomm.com>
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-On Mon, Apr 13, 2026 at 6:05=E2=80=AFPM Hans de Goede <hansg@kernel.org> wr=
-ote:
-> On 13-Apr-26 2:51 PM, Richard Fitzgerald wrote:
-> > On 13/04/2026 12:43 pm, Hans de Goede wrote:
-> >> On 13-Apr-26 12:05 PM, Khalil wrote:
-> >>> Some HP laptops with Intel Lunar Lake and dual Cirrus Logic CS35L56
-> >>> amplifiers over SPI have an incomplete cs-gpios property in the SPI
-> >>> controller's _DSD - it only declares the first chip select. The
-> >>> remaining chip select GPIOs are defined as GpioIo resources in the
-> >>> peripheral's ACPI node but are not referenced by the controller.
-> >>>
-> >>> This causes the SPI framework to reject devices whose chip select
-> >>> exceeds num_chipselect with -EINVAL, preventing the second amplifier
-> >>> from probing.
-> >>>
-> >>> Fix this on known affected platforms by:
-
-If I understood the problem correctly, this should be fixed in SPI
-core. And I tried already a few years ago to push the patch for that
-[1]. I have locally an updated version which I need to revisit again
-and probably submit.
-
-<SNIP>
-
-> >>> +/*
-> >>> + * ACPI GPIO mapping for the chip select GpioIo resource.
-> >>> + * Maps "cs-gpios" to the GpioIo resource at index 0 of the ACPI _CR=
-S.
-> >>> + */
-> >>> +static const struct acpi_gpio_params smi_cs_gpio_params =3D { 0, 0, =
-false };
-> >>> +
-> >>> +static const struct acpi_gpio_mapping smi_cs_gpio_mapping[] =3D {
-> >>> +    { "cs-gpios", &smi_cs_gpio_params, 1 },
-> >>> +    { }
-> >>>   };
-> >>
-> >> I'm confused here you say that the chip-select for the second amplifie=
-r
-> >> is missing, but I would expect that to be the GpioIo resource at index=
- 1
-> >> not 0?
-> >>
-> >> I would expect the GpioIo resource at index 0 to be for the first
-> >> amplifier which does have a GPIO already in the _DSD cs-gpios property=
- ?
-> >>
-> >> Since this is a multi-serial device ACPI node, there is only one
-> >> set of resources for both amplifiers (with their also being 2 SPI
-> >> resources in the _CRS list).
-> >>
-> >> So I would expect there to also be multiple GPIO entries in the
-> >> _CRS list, with the order of the chip-selects GPIOs resources matching
-> >> the order of the SPI resources.
+On Tue, Apr 14, 2026 at 4:28=E2=80=AFPM Andy Shevchenko
+<andriy.shevchenko@linux.intel.com> wrote:
+>
+> On Tue, Apr 14, 2026 at 01:03:19PM +0800, Chen-Yu Tsai wrote:
+> > On Tue, Apr 14, 2026 at 12:08=E2=80=AFAM Manivannan Sadhasivam <mani@ke=
+rnel.org> wrote:
+> > > On Mon, Apr 13, 2026 at 07:33:12PM +0530, Manivannan Sadhasivam wrote=
+:
+> > > > On Mon, Apr 13, 2026 at 03:54:59PM +0800, Chen-Yu Tsai wrote:
+> > > > > On Thu, Mar 26, 2026 at 01:36:28PM +0530, Manivannan Sadhasivam w=
+rote:
+>
+> ...
+>
+> > > > > - Given that this connector actually represents two devices, how =
+do I
+> > > > >   say I want the BT part to be a wakeup source, but not the WiFi =
+part?
+> > > > >   Does wakeup-source even work at this point?
+> > > >
+> > > > You can't use the DT property since the devices are not described i=
+n DT
+> > > > statically. But you can still use the per-device 'wakeup' sysfs kno=
+b to enable
+> > > > wakeup.
 > >
-> > You can't assume that. There is no ACPI reason why the GpioIo should be
-> > in order of chip selects. In fact, some manufacturers scramble them
-> > (e.g. CS2, CS1, CS3). You have to remember that the ACPI is written so
-> > that it works with Windows (which is the reason we need this serial
-> > multi-instantiate driver.) so it may contain Windowsisms.
+> > I see. I think not being able to specify generic properties for the dev=
+ices
+> > on the connector is going to be a bit problematic.
 >
-> Right, in that case maybe we do need the DMI quirk and the DMI quirk
-> needs to point to a specific struct acpi_gpio_mapping for that model
-> laptop ?
->
-> Either there is some logic and the code can be generic, or there
-> is no logic and then we need to not pretend that the code is generic.
->
-> And in my mind the current code at least pretends to be somewhat
-> generic.
->
-> Thinking more about this, I do not think that the current patch does
-> what it is supposed to do at all.
->
-> According to the commit msg there is 1 GPIO listed in the _DSD
-> props and the ACPI lookup added is using the same "cs-gpios" conid
-> as the _DSD dependent code in drivers/spi/spi.c and it is getting
-> the gpio with:
->
-> smi->cs_gpio =3D devm_gpiod_get(dev, "cs", GPIOD_OUT_HIGH);
->
-> which is equivalent to:
->
-> smi->cs_gpio =3D devm_gpiod_get_index(dev, "cs", 0, GPIOD_OUT_HIGH);
->
-> which is the same lookup as the already succeeded lookup of CS0
-> in drivers/spi/spi.c .
->
-> for CS1 the lookup should be:
->
-> smi->cs_gpio =3D devm_gpiod_get_index(dev, "cs", 1, GPIOD_OUT_HIGH);
->
-> and the struct acpi_gpio_mapping should point to an array of
-> acpi_gpio_params[[] with 2 entries, with the first entry
-> duplicating the GPIO from the _DSD info and the second entry
-> pointing to the actual CS1 chip-select.
+> This is nature of the open-connectors, especially on the busses that are
+> hotpluggable, like PCIe. We never know what is connected there _ahead_.
 
-In general duplicate is not needed, the priority is FW, so the dup
-entry won't be used, but since it's an array that leads us to the
-necessity of having all elements being included. So, yes, in this case
-we have to duplicate.
+I believe what you mean by "hotpluggable" is "user replaceable".
 
-> Andy, you know the ACPI gpio-lookup code better then me, can
-> you confirm that since the con_id between _DSD props and
-> the added acpi_gpio_mapping is the same that calling:
->
-> smi->cs_gpio =3D devm_gpiod_get(dev, "cs", GPIOD_OUT_HIGH);
->
-> aka:
->
-> smi->cs_gpio =3D devm_gpiod_get_index(dev, "cs", 0, GPIOD_OUT_HIGH);
->
-> will just return the GPIO from the _DSD again ?
+> In other words you can't describe in DT something that may not exist.
 
-I haven't refreshed my memories, but that's exactly my understanding
-of how it works. I can check it for sure if it doesn't work in
-practice. But see also the link I shared.
+But this is actually doable with the PCIe slot representation. The
+properties are put in the device node for the slot. If no card is
+actually inserted in the slot, then no device is created, and the
+device node is left as not associated with anything.
 
-[1]: https://lore.kernel.org/all/20190326212918.18541-1-andriy.shevchenko@l=
-inux.intel.com/
+It's just that for this new M.2 E-key connector, there aren't separate
+nodes for each interface. And the system doesn't associate the device
+node with the device, because it's no longer a child node of the
+controller or hierarchy, but connected over the OF graph.
 
---=20
-With Best Regards,
-Andy Shevchenko
+Moving over to the E-key connector representation seems like one step
+forward and one step backward in descriptive ability. We gain proper
+power sequencing, but lose generic properties.
+
+The latter part is solvable, but we likely need child nodes under the
+connector for the different interfaces. Properties that make sense for
+one type might not make sense for another.
+
+
+Thanks
+ChenYu
+
+P.S. We could also just add child device nodes under the controller to
+put the generic properties, but that's splitting the description into
+multiple parts. Let's not go there if at all possible.
