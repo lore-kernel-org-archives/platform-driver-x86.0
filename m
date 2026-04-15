@@ -1,245 +1,216 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.7])
+Received: from smtpout-03.galae.net (smtpout-03.galae.net [185.246.85.4])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B94541EB5E3;
-	Wed, 15 Apr 2026 09:43:20 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.7
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 63B4D3290A6;
+	Wed, 15 Apr 2026 14:57:07 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.246.85.4
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1776246202; cv=none; b=IO+iu2pRTtxKokH1DKEz3NAEzF07/ZSfHGj3pRNYNrIPGKrKQ7BHZGVjKKLY2TrBijIoRkklzChtRsrVJJVyeYRkh2uJ9JKZp8q//MWBq/8tmT2Zalbaaei1Y79S1VaAFdWqjuUpsLVG+Y649xlv2v9ra4g05EOmteDwh7YT5eA=
+	t=1776265029; cv=none; b=tLmfw3JttcZZhZCaLR1HdCO55o0j86nf0HIQZJOOMZn1EDdM8cLSoTafa2AcXp2JdlctyTNEJrBeRTmB03NCKk5eXb27recVWOCSJDJDgDipJ87v7OxfTA1UvxsVte5xxM/W+spkx2jZ7qMImYSUJ/iRKohzjyrClHR52S+HxvA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1776246202; c=relaxed/simple;
-	bh=0Ri4gHPbploaCPW16c6LkAdMWUb8oknafbLd+SmeCBQ=;
-	h=From:Date:To:cc:Subject:In-Reply-To:Message-ID:References:
-	 MIME-Version:Content-Type; b=Jh+lWTVY40cOERfdt9kRM1Rs8Mgt+OMFTgdfQ2q9eJzfegyS+TqhukPKQJ+iAtJjrMe12nTL5ShAHsvhKfjLjqcprnBhl48q+CQsTA21JYM2tp9muxkw5RGVi05BzvaDZte1uFnqUcnj1iCX5AbjCwGsiC4I7VgYl2jQXJRT+1k=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=pass smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=ickmJFvU; arc=none smtp.client-ip=192.198.163.7
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.intel.com
+	s=arc-20240116; t=1776265029; c=relaxed/simple;
+	bh=1S2kdSoru/ifNvwgwwUu/EShTTtvBQkznTzuC20u86I=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=dKd6O9rUDcbdDc4wOwby9ZSxZ/4rBKBKFVqVwXF7FQ49NrLQK0wCZpn7Eeiqom/LVRJlYC5wuPfS4hAxA4VjfWHCh74fPnqB6k7OvoAarGOu4K0NlaE/j805XEbBzKQP+8U6LIeePkEDNjVjxZ6f2kzodDyZNh7lK/jO6Oo36W8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com; spf=pass smtp.mailfrom=bootlin.com; dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b=odMVGQ2n; arc=none smtp.client-ip=185.246.85.4
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bootlin.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="ickmJFvU"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1776246200; x=1807782200;
-  h=from:date:to:cc:subject:in-reply-to:message-id:
-   references:mime-version;
-  bh=0Ri4gHPbploaCPW16c6LkAdMWUb8oknafbLd+SmeCBQ=;
-  b=ickmJFvUf/O1gxSKqadYfVA0HhJW77D1mVHXKYc/DolSUQgwjkYua/f2
-   DANY7N5WDV0agiXHR0vtgze3gz9rJkl9sdnfFQgH7kEcJ9QdVSRdPI11c
-   UUAXBG0ZJwCqqv5qS3KnSHb6pmo1MczC5knYPm4ku2JCCq/4ZyJJeFoIJ
-   OR901X/tYWowSyvgNB6IqbrK5bNq5jq6eLe4MkzTFldcaq/1xQaamxao6
-   rqnO8IAkHv6wmeUMTOtKpiYHIMpbyZf3ZkvnFEupvSc3p0i82p8EhD1Iz
-   bI6dz5N/0kQAbktjhUBAl8l+jsXrvw8kas0mQMJLhdxrRqBGl9RG7Zyv5
-   g==;
-X-CSE-ConnectionGUID: 6ynH0sWGTu+kBeC3WIUfhA==
-X-CSE-MsgGUID: ULwBZPlbRoSJvlieeYgXrw==
-X-IronPort-AV: E=McAfee;i="6800,10657,11759"; a="102676538"
-X-IronPort-AV: E=Sophos;i="6.23,179,1770624000"; 
-   d="scan'208";a="102676538"
-Received: from fmviesa008.fm.intel.com ([10.60.135.148])
-  by fmvoesa101.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 15 Apr 2026 02:43:15 -0700
-X-CSE-ConnectionGUID: 0C6YxCvxTA2e3bDwR/6Plw==
-X-CSE-MsgGUID: 38d/xnFiQhiKEKlI5oPHRg==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.23,179,1770624000"; 
-   d="scan'208";a="227727718"
-Received: from ijarvine-mobl1.ger.corp.intel.com (HELO localhost) ([10.245.244.114])
-  by fmviesa008-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 15 Apr 2026 02:43:13 -0700
-From: =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
-Date: Wed, 15 Apr 2026 12:43:10 +0300 (EEST)
-To: Jack Wu <wojackbb@gmail.com>
-cc: Hans de Goede <hansg@kernel.org>, platform-driver-x86@vger.kernel.org, 
-    LKML <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH v3] platform/x86: dell-dw5826e: Add reset driver for
- DW5826e
-In-Reply-To: <20260415062255.1615337-1-jackbb_wu@compal.com>
-Message-ID: <1b234e48-b41f-9c81-ce25-a0fe00f654d3@linux.intel.com>
-References: <20260415062255.1615337-1-jackbb_wu@compal.com>
+	dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b="odMVGQ2n"
+Received: from smtpout-01.galae.net (smtpout-01.galae.net [212.83.139.233])
+	by smtpout-03.galae.net (Postfix) with ESMTPS id B7C594E429FE;
+	Wed, 15 Apr 2026 14:57:05 +0000 (UTC)
+Received: from mail.galae.net (mail.galae.net [212.83.136.155])
+	by smtpout-01.galae.net (Postfix) with ESMTPS id 7D7B360420;
+	Wed, 15 Apr 2026 14:57:05 +0000 (UTC)
+Received: from [127.0.0.1] (localhost [127.0.0.1]) by localhost (Mailerdaemon) with ESMTPSA id A90DA10459FC4;
+	Wed, 15 Apr 2026 16:56:53 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bootlin.com; s=dkim;
+	t=1776265023; h=from:subject:date:message-id:to:cc:mime-version:content-type:
+	 content-transfer-encoding:in-reply-to:references;
+	bh=wNrWnquhsR0dlE0WJjRS5Whb5Pw+B2YUuFT6hABZVPw=;
+	b=odMVGQ2nxDTLW1G3zgpTCupAd+WE2qFmsXEHoMqdccBJm6+seTVkYni4wkvFut2s/DTE9G
+	rQgJl0iu49WoTtlt1D/ZKPek9XtvZcEmNB9JnLU3j86MKSmxk0y1H4eOFoLP4pJQsWK0+w
+	LDUa2pRoeccJ5yO0iFUiIEbEnbUiIajUOclrFN+JeJ62x/Xy4nqUEFN9xkXGH+zLdqVXtx
+	kehs4bdgRvsag91OXjg4XIBY8DTEtrZvQr4puEi8w9yA6S832dhmPp7KfxTskDf4t6OHwQ
+	pnPSy6MjhtDRs2iRsgVjZI0ToOQtgYM1i8qxDLRKg3x0iefOJqJW241JPYnlmg==
+Date: Wed, 15 Apr 2026 16:56:51 +0200
+From: Herve Codina <herve.codina@bootlin.com>
+To: Chen-Yu Tsai <wenst@chromium.org>
+Cc: Andy Shevchenko <andriy.shevchenko@linux.intel.com>, Manivannan
+ Sadhasivam <mani@kernel.org>, Manivannan Sadhasivam
+ <manivannan.sadhasivam@oss.qualcomm.com>, Rob Herring <robh@kernel.org>,
+ Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Jiri Slaby
+ <jirislaby@kernel.org>, Nathan Chancellor <nathan@kernel.org>, Nicolas
+ Schier <nicolas.schier@linux.dev>, Hans de Goede <hansg@kernel.org>, Ilpo
+ =?UTF-8?B?SsOkcnZpbmVu?= <ilpo.jarvinen@linux.intel.com>, Mark Pearson
+ <mpearson-lenovo@squebb.ca>, "Derek J. Clark" <derekjohn.clark@gmail.com>,
+ Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley
+ <conor+dt@kernel.org>, Marcel Holtmann <marcel@holtmann.org>, Luiz Augusto
+ von Dentz <luiz.dentz@gmail.com>, Bartosz Golaszewski <brgl@bgdev.pl>,
+ Bartosz Golaszewski <brgl@kernel.org>, linux-serial@vger.kernel.org,
+ linux-kernel@vger.kernel.org, linux-kbuild@vger.kernel.org,
+ platform-driver-x86@vger.kernel.org, linux-pci@vger.kernel.org,
+ devicetree@vger.kernel.org, linux-arm-msm@vger.kernel.org,
+ linux-bluetooth@vger.kernel.org, linux-pm@vger.kernel.org, Stephan Gerhold
+ <stephan.gerhold@linaro.org>, Dmitry Baryshkov
+ <dmitry.baryshkov@oss.qualcomm.com>, linux-acpi@vger.kernel.org, Hans de
+ Goede <johannes.goede@oss.qualcomm.com>, Bartosz Golaszewski
+ <bartosz.golaszewski@oss.qualcomm.com>, Luca Ceresoli
+ <luca.ceresoli@bootlin.com>
+Subject: Re: [PATCH v7 0/8] Add support for handling PCIe M.2 Key E
+ connectors in devicetree
+Message-ID: <20260415165651.153b573d@bootlin.com>
+In-Reply-To: <CAGXv+5EPA29G-fsH=wWOD8AK6TZFezFhsE0NHPYj_Pt3nT+d_w@mail.gmail.com>
+References: <20260326-pci-m2-e-v7-0-43324a7866e6@oss.qualcomm.com>
+	<20260413075459.GA2626902@google.com>
+	<fpcs4p62f35a5qyqwgm5ysa73stbysxcr62tkmmkrrcvsuf4t4@4ivukyqjey57>
+	<eeytuhqpgdz4do4tgtbmfntub2femtyq7bij7svhodpyjwaylx@j3gmvq2a2zqc>
+	<CAGXv+5E=tujhtZjwi6Qm7hk3Ks74UzTQHWq82NiTEw1+vYod5g@mail.gmail.com>
+	<ad36pIu-0dutL7Nk@ashevche-desk.local>
+	<CAGXv+5EGe59nJctLweEdZjb3MNmMvjuCHngGSfptzN985OiLdg@mail.gmail.com>
+	<ad4tJN27opdEooA7@ashevche-desk.local>
+	<CAGXv+5EPA29G-fsH=wWOD8AK6TZFezFhsE0NHPYj_Pt3nT+d_w@mail.gmail.com>
+Organization: Bootlin
+X-Mailer: Claws Mail 4.3.1 (GTK 3.24.52; x86_64-redhat-linux-gnu)
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+X-Last-TLS-Session-Version: TLSv1.3
 
-On Wed, 15 Apr 2026, Jack Wu wrote:
+Hi Chen, all,
 
-
-
-> If the DW5826e is in a frozen state and unable to receive USB commands,
-> this driver provides a method for the user to reset the DW5826e via ACPI.
+...
+ 
 > 
-> E.g: echo 1 > /sys/bus/platform/devices/PALC0001\:00/wwan_reset
+> I'm not arguing for a even more generic "M.2" connector. The "key" is
+> already described in the compatible. I'm saying we should have some way
+> of describing the individual interfaces (PCIe, SDIO, USB, UART, I2S, I2C)
+> on the connector so further nodes or properties can be attached to them,
+> either with overlays or dynamically within the kernel. Right now the
+> are only described as individual ports, but we can't actually tie a
+> device to a OF graph port.
 > 
-> Signed-off-by: Jack Wu <jackbb_wu@compal.com>
-> ---
-> v3:
->   - Rename sysfs attribute from "pldr" to "wwan_reset" for clarity
->   - Add ABI documentation for the wwan_reset sysfs interface
->   - Validate _DSM method availability in probe using acpi_check_dsm()
-> v2:
->   - Remove extra empty line
->   - Add missing includes and Remove unnecessary includes, sort includes alphabetically
->   - Remove noisy dev_info()
->   - Handle obj->type != ACPI_TYPE_BUFFER as error with proper return code
->   - Replace miscdevice/file_operations with sysfs attribute (DEVICE_ATTR_WO) to reduce boilerplate
->   - Propagate trigger_palc_pldr() return code to userspace
->   - Convert from acpi_driver to platform_driver
-> ---
-> ---
->  .../testing/sysfs-driver-dell-dw5826e-reset   |  9 ++
->  drivers/platform/x86/dell/Kconfig             |  6 ++
->  drivers/platform/x86/dell/Makefile            |  2 +
->  .../platform/x86/dell/dell-dw5826e-reset.c    | 89 +++++++++++++++++++
->  4 files changed, 106 insertions(+)
->  create mode 100644 Documentation/ABI/testing/sysfs-driver-dell-dw5826e-reset
->  create mode 100644 drivers/platform/x86/dell/dell-dw5826e-reset.c
+> But maybe I'm overthinking the representation part. AFAICT for Qualcomm's
+> UART-based BT bit part, Mani just had the driver create a device node
+> under the UART (by traversing the OF graph to find the UART). If that's
+> the desired way then the connector binding should mention it. And that
+> works for me. But I think it's messier and also we're missing an
+> opportunity to make the M.2 connector a standardized attachment point
+> for overlays.
 > 
-> diff --git a/Documentation/ABI/testing/sysfs-driver-dell-dw5826e-reset b/Documentation/ABI/testing/sysfs-driver-dell-dw5826e-reset
-> new file mode 100644
-> index 000000000000..88286191caa6
-> --- /dev/null
-> +++ b/Documentation/ABI/testing/sysfs-driver-dell-dw5826e-reset
-> @@ -0,0 +1,9 @@
-> +What:		/sys/bus/platform/devices/<PALC0001 device>/wwan_reset
-> +Date:		April 2026
-> +KernelVersion:	7.0
-
-This ship has sailed long ago. ATM, you're targetting 7.2.
-
-> +Contact:	Jackbb Wu <jackbb.wu@compal.com>
-> +Description:
-> +		Writing to this file triggers a Platform Level Device Reset
-> +		(PLDR) of the Dell DW5826e WWAN module via an ACPI _DSM
-> +		method. This can be used to recover the modem when it is in
-> +		a frozen state and unable to respond to USB commands.
-> diff --git a/drivers/platform/x86/dell/Kconfig b/drivers/platform/x86/dell/Kconfig
-> index 738c108c2163..c4540c837a88 100644
-> --- a/drivers/platform/x86/dell/Kconfig
-> +++ b/drivers/platform/x86/dell/Kconfig
-> @@ -276,4 +276,10 @@ config DELL_WMI_SYSMAN
->  	  To compile this driver as a module, choose M here: the module will
->  	  be called dell-wmi-sysman.
->  
-> +config DELL_DW5826E_RESET
-> +	tristate "Dell DW5826e PLDR reset support"
-> +	default m
-> +	depends on ACPI
-> +	help
-> +	  This adds support for the Dell DW5826e PLDR reset via ACPI
->  endif # X86_PLATFORM_DRIVERS_DELL
-> diff --git a/drivers/platform/x86/dell/Makefile b/drivers/platform/x86/dell/Makefile
-> index c7501c25e627..8150283cfd1d 100644
-> --- a/drivers/platform/x86/dell/Makefile
-> +++ b/drivers/platform/x86/dell/Makefile
-> @@ -28,3 +28,5 @@ obj-$(CONFIG_DELL_WMI_DESCRIPTOR)		+= dell-wmi-descriptor.o
->  obj-$(CONFIG_DELL_WMI_DDV)			+= dell-wmi-ddv.o
->  obj-$(CONFIG_DELL_WMI_LED)			+= dell-wmi-led.o
->  obj-$(CONFIG_DELL_WMI_SYSMAN)			+= dell-wmi-sysman/
-> +obj-$(CONFIG_DELL_DW5826E_RESET)		+= dell-dw5826e-reset.o
-> +
-> diff --git a/drivers/platform/x86/dell/dell-dw5826e-reset.c b/drivers/platform/x86/dell/dell-dw5826e-reset.c
-> new file mode 100644
-> index 000000000000..98c5b68c8746
-> --- /dev/null
-> +++ b/drivers/platform/x86/dell/dell-dw5826e-reset.c
-> @@ -0,0 +1,89 @@
-> +// SPDX-License-Identifier: GPL-2.0-or-later
-> +/*
-> + *  dell-dw5826e-reset.c - Dell DW5826e reset driver
-> + *
-> + *  Copyright (C) 2026 Jackbb Wu <jackbb.wu@compal.com>
-> + */
-> +
-> +#include <linux/acpi.h>
-> +#include <linux/device.h>
-> +#include <linux/module.h>
-> +#include <linux/platform_device.h>
-> +#include <linux/uuid.h>
-> +
-> +static guid_t palc_dsm_guid =
-> +	GUID_INIT(0x5a1a4bba, 0x8006, 0x487e, 0xbe, 0x0a, 0xac, 0xf5, 0xd8, 0xfd, 0xfe, 0x59);
-> +
-> +static int trigger_palc_pldr(struct device *dev, acpi_handle handle)
-> +{
-> +	union acpi_object *obj;
-> +	int ret = 0;
-> +
-> +	obj = acpi_evaluate_dsm(handle, &palc_dsm_guid, 1, 1, NULL);
-> +	if (!obj) {
-> +		dev_err(dev, "Failed to evaluate _DSM\n");
-
-Missing include.
-
-> +		return -EIO;
-> +	}
-> +
-> +	if (obj->type != ACPI_TYPE_BUFFER) {
-> +		dev_err(dev, "Unexpected _DSM return type: %d\n", obj->type);
-> +		ret = -EINVAL;
-> +	}
-> +
-> +	ACPI_FREE(obj);
-> +	return ret;
-> +}
-> +
-> +static ssize_t wwan_reset_store(struct device *dev, struct device_attribute *attr,
-
-Please also add linux/types.h for ssize_t.
-
-> +				const char *buf, size_t count)
-> +{
-> +	acpi_handle handle = ACPI_HANDLE(dev);
-> +	int ret;
-> +
-> +	ret = trigger_palc_pldr(dev, handle);
-> +	if (ret)
-> +		return ret;
-> +
-> +	return count;
-> +}
-> +static DEVICE_ATTR_WO(wwan_reset);
-> +
-> +static struct attribute *palc_attrs[] = {
-> +	&dev_attr_wwan_reset.attr,
-> +	NULL
-> +};
-> +ATTRIBUTE_GROUPS(palc);
-> +
-> +static int palc_probe(struct platform_device *pdev)
-> +{
-> +	acpi_handle handle;
-> +
-> +	handle = ACPI_HANDLE(&pdev->dev);
-> +	if (!handle)
-> +		return -ENODEV;
-> +
-> +	if (!acpi_check_dsm(handle, &palc_dsm_guid, 1, BIT(1)))
-> +		return -ENODEV;
-> +
-> +	return 0;
-> +}
-> +
-> +static const struct acpi_device_id palc_acpi_ids[] = {
-> +	{ "PALC0001", 0 },
-> +	{ }
-> +};
-> +MODULE_DEVICE_TABLE(acpi, palc_acpi_ids);
-> +
-> +static struct platform_driver palc_driver = {
-> +	.driver = {
-> +		.name = "dell-dw5826e-reset",
-> +		.acpi_match_table = palc_acpi_ids,
-> +		.dev_groups = palc_groups,
-> +	},
-> +	.probe  = palc_probe,
-> +};
-> +module_platform_driver(palc_driver);
-> +
-> +MODULE_DESCRIPTION("Dell DW5826e reset driver");
-> +MODULE_LICENSE("GPL");
-> +MODULE_AUTHOR("JackBB Wu");
+> Mani, could you also chime in a bit on what you envisioned?
 > 
+> (Added Luca from Bootlin to CC, as I think there are parallels to the
+>  "Hotplug of Non-discoverable Hardware" work)
+>
+
+Related to "Hotplug of Non-discoverable Hardware",
+
+I would add entries for busses in the connector without using an OF graph.
+
+For I2C and later SPI, this was is done.
+
+You already have an i2c-parent property but no node where an i2c device
+can be added.
+
+The last discussion related to hotplug, connectors and DT led to the RFC
+series [1].
+
+It is a huge series. The last patch give a real example of representation:
+  https://lore.kernel.org/all/20260112142009.1006236-78-herve.codina@bootlin.com/
+
+In your case I would see some thing like:
+
+    connector {
+        compatible = "pcie-m2-e-connector";
+        vpcie3v3-supply = <&vreg_wcn_3p3>;
+        vpcie1v8-supply = <&vreg_l15b_1p8>;
+
+	/*
+	 * If those GPIOs have to be used by components available in
+	 * the connected board, a Nexus node should be used.
+         */
+        w-disable1-gpios = <&tlmm 115 GPIO_ACTIVE_LOW>;
+        w-disable2-gpios = <&tlmm 116 GPIO_ACTIVE_LOW>;
+        viocfg-gpios = <&tlmm 117 GPIO_ACTIVE_HIGH>;
+        uart-wake-gpios = <&tlmm 118 GPIO_ACTIVE_LOW>;
+        sdio-wake-gpios = <&tlmm 119 GPIO_ACTIVE_LOW>;
+        sdio-reset-gpios = <&tlmm 120 GPIO_ACTIVE_LOW>;
+
+	conn-i2c {
+		i2c-parent = <&i2c0>;
+
+		/*
+ 		 * Here i2c devices available on the board
+		 * connected to the connector can be described.
+		 */
+	};
+
+	/* Same kind to description for other busses */
+	conn-pcie {
+		pci-parent = <&xxxxx>;
+
+		/*
+		 * The PCIe bus has abilities to discover devices.
+		 * Not sure this node is needed.
+		 *
+		 * If a PCI device need a DT description to describe
+		 * stuffs behind the device, what has been done for LAN966x
+		 * could be re-used [2] and [3]
+		 */
+	};
+
+	conn_uart {
+		uart-parent = <&uart-ctrl>;
+
+		/* uart child (maybe a serdes) should be describe here
+	};
+
+	...
+    };
+
+Of course, some DT symbols need to be exported in order to have them usable from
+the DT describing the connected board.
+
+This notion of exported symbol is not yet available upstream and is the purpose of
+the RFC series [1].
+
+[1] https://lore.kernel.org/all/20260112142009.1006236-1-herve.codina@bootlin.com/
+[2] https://elixir.bootlin.com/linux/v7.0/source/drivers/misc/lan966x_pci.c
+[3] https://elixir.bootlin.com/linux/v7.0/source/drivers/misc/lan966x_pci.dtso
+
+Feel free to ask for more specific question if needed.
+
+Best regards,
+Hervé
+
+> 
+> Thanks
+> ChenYu
+> 
+> 
+> > > The latter part is solvable, but we likely need child nodes under the
+> > > connector for the different interfaces. Properties that make sense for
+> > > one type might not make sense for another.
+> > >
+> > > P.S. We could also just add child device nodes under the controller to
+> > > put the generic properties, but that's splitting the description into
+> > > multiple parts. Let's not go there if at all possible.  
+> >
+> > --
+> > With Best Regards,
+> > Andy Shevchenko
+> >
+> >  
+
+
 
 -- 
- i.
-
+Hervé Codina, Bootlin
+Embedded Linux and Kernel engineering
+https://bootlin.com
