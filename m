@@ -1,216 +1,132 @@
-Received: from smtpout-03.galae.net (smtpout-03.galae.net [185.246.85.4])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pg1-f173.google.com (mail-pg1-f173.google.com [209.85.215.173])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 63B4D3290A6;
-	Wed, 15 Apr 2026 14:57:07 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.246.85.4
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0CBFF31AF31
+	for <platform-driver-x86@vger.kernel.org>; Wed, 15 Apr 2026 18:00:57 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.173
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1776265029; cv=none; b=tLmfw3JttcZZhZCaLR1HdCO55o0j86nf0HIQZJOOMZn1EDdM8cLSoTafa2AcXp2JdlctyTNEJrBeRTmB03NCKk5eXb27recVWOCSJDJDgDipJ87v7OxfTA1UvxsVte5xxM/W+spkx2jZ7qMImYSUJ/iRKohzjyrClHR52S+HxvA=
+	t=1776276059; cv=none; b=OhDAUJdFKBSzH2TAdR72713qm58dw3Iv2v25FEDyuLC9ezS5YBJfM/9BgPMyTeGFamOFs4SFo2iC0IlsptrpgToLlcZv3KZCT7B/Qg3UXYZZqWnI+6sMsQWXagihO+7IOWsRXDmgF4BisIxDU28JaFYUqyAH3mrNTJpT4W9rclo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1776265029; c=relaxed/simple;
-	bh=1S2kdSoru/ifNvwgwwUu/EShTTtvBQkznTzuC20u86I=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=dKd6O9rUDcbdDc4wOwby9ZSxZ/4rBKBKFVqVwXF7FQ49NrLQK0wCZpn7Eeiqom/LVRJlYC5wuPfS4hAxA4VjfWHCh74fPnqB6k7OvoAarGOu4K0NlaE/j805XEbBzKQP+8U6LIeePkEDNjVjxZ6f2kzodDyZNh7lK/jO6Oo36W8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com; spf=pass smtp.mailfrom=bootlin.com; dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b=odMVGQ2n; arc=none smtp.client-ip=185.246.85.4
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bootlin.com
+	s=arc-20240116; t=1776276059; c=relaxed/simple;
+	bh=qO55L3YjS8zCKFEzzaa6hbU1AVUHdvMDaL6ZPKdxjCc=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=GTglDG+vVPNOAyK/qtyX0tiQB9WMpsW1gYuDXyL4JYUVjEaKZtRGmuuNPRb8sAF0R/LALKh2qkXOChAVP7dk+2zCqj1KpixD1oA5YPZTaTj9F4TTpjqd4JpZ1LcYhIaCntnaM9OA5VwiajnmpInP/QCiynEN2osQzfARL2z7mHc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=VO0yCdmb; arc=none smtp.client-ip=209.85.215.173
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b="odMVGQ2n"
-Received: from smtpout-01.galae.net (smtpout-01.galae.net [212.83.139.233])
-	by smtpout-03.galae.net (Postfix) with ESMTPS id B7C594E429FE;
-	Wed, 15 Apr 2026 14:57:05 +0000 (UTC)
-Received: from mail.galae.net (mail.galae.net [212.83.136.155])
-	by smtpout-01.galae.net (Postfix) with ESMTPS id 7D7B360420;
-	Wed, 15 Apr 2026 14:57:05 +0000 (UTC)
-Received: from [127.0.0.1] (localhost [127.0.0.1]) by localhost (Mailerdaemon) with ESMTPSA id A90DA10459FC4;
-	Wed, 15 Apr 2026 16:56:53 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bootlin.com; s=dkim;
-	t=1776265023; h=from:subject:date:message-id:to:cc:mime-version:content-type:
-	 content-transfer-encoding:in-reply-to:references;
-	bh=wNrWnquhsR0dlE0WJjRS5Whb5Pw+B2YUuFT6hABZVPw=;
-	b=odMVGQ2nxDTLW1G3zgpTCupAd+WE2qFmsXEHoMqdccBJm6+seTVkYni4wkvFut2s/DTE9G
-	rQgJl0iu49WoTtlt1D/ZKPek9XtvZcEmNB9JnLU3j86MKSmxk0y1H4eOFoLP4pJQsWK0+w
-	LDUa2pRoeccJ5yO0iFUiIEbEnbUiIajUOclrFN+JeJ62x/Xy4nqUEFN9xkXGH+zLdqVXtx
-	kehs4bdgRvsag91OXjg4XIBY8DTEtrZvQr4puEi8w9yA6S832dhmPp7KfxTskDf4t6OHwQ
-	pnPSy6MjhtDRs2iRsgVjZI0ToOQtgYM1i8qxDLRKg3x0iefOJqJW241JPYnlmg==
-Date: Wed, 15 Apr 2026 16:56:51 +0200
-From: Herve Codina <herve.codina@bootlin.com>
-To: Chen-Yu Tsai <wenst@chromium.org>
-Cc: Andy Shevchenko <andriy.shevchenko@linux.intel.com>, Manivannan
- Sadhasivam <mani@kernel.org>, Manivannan Sadhasivam
- <manivannan.sadhasivam@oss.qualcomm.com>, Rob Herring <robh@kernel.org>,
- Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Jiri Slaby
- <jirislaby@kernel.org>, Nathan Chancellor <nathan@kernel.org>, Nicolas
- Schier <nicolas.schier@linux.dev>, Hans de Goede <hansg@kernel.org>, Ilpo
- =?UTF-8?B?SsOkcnZpbmVu?= <ilpo.jarvinen@linux.intel.com>, Mark Pearson
- <mpearson-lenovo@squebb.ca>, "Derek J. Clark" <derekjohn.clark@gmail.com>,
- Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley
- <conor+dt@kernel.org>, Marcel Holtmann <marcel@holtmann.org>, Luiz Augusto
- von Dentz <luiz.dentz@gmail.com>, Bartosz Golaszewski <brgl@bgdev.pl>,
- Bartosz Golaszewski <brgl@kernel.org>, linux-serial@vger.kernel.org,
- linux-kernel@vger.kernel.org, linux-kbuild@vger.kernel.org,
- platform-driver-x86@vger.kernel.org, linux-pci@vger.kernel.org,
- devicetree@vger.kernel.org, linux-arm-msm@vger.kernel.org,
- linux-bluetooth@vger.kernel.org, linux-pm@vger.kernel.org, Stephan Gerhold
- <stephan.gerhold@linaro.org>, Dmitry Baryshkov
- <dmitry.baryshkov@oss.qualcomm.com>, linux-acpi@vger.kernel.org, Hans de
- Goede <johannes.goede@oss.qualcomm.com>, Bartosz Golaszewski
- <bartosz.golaszewski@oss.qualcomm.com>, Luca Ceresoli
- <luca.ceresoli@bootlin.com>
-Subject: Re: [PATCH v7 0/8] Add support for handling PCIe M.2 Key E
- connectors in devicetree
-Message-ID: <20260415165651.153b573d@bootlin.com>
-In-Reply-To: <CAGXv+5EPA29G-fsH=wWOD8AK6TZFezFhsE0NHPYj_Pt3nT+d_w@mail.gmail.com>
-References: <20260326-pci-m2-e-v7-0-43324a7866e6@oss.qualcomm.com>
-	<20260413075459.GA2626902@google.com>
-	<fpcs4p62f35a5qyqwgm5ysa73stbysxcr62tkmmkrrcvsuf4t4@4ivukyqjey57>
-	<eeytuhqpgdz4do4tgtbmfntub2femtyq7bij7svhodpyjwaylx@j3gmvq2a2zqc>
-	<CAGXv+5E=tujhtZjwi6Qm7hk3Ks74UzTQHWq82NiTEw1+vYod5g@mail.gmail.com>
-	<ad36pIu-0dutL7Nk@ashevche-desk.local>
-	<CAGXv+5EGe59nJctLweEdZjb3MNmMvjuCHngGSfptzN985OiLdg@mail.gmail.com>
-	<ad4tJN27opdEooA7@ashevche-desk.local>
-	<CAGXv+5EPA29G-fsH=wWOD8AK6TZFezFhsE0NHPYj_Pt3nT+d_w@mail.gmail.com>
-Organization: Bootlin
-X-Mailer: Claws Mail 4.3.1 (GTK 3.24.52; x86_64-redhat-linux-gnu)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="VO0yCdmb"
+Received: by mail-pg1-f173.google.com with SMTP id 41be03b00d2f7-c7961d7bc09so213601a12.1
+        for <platform-driver-x86@vger.kernel.org>; Wed, 15 Apr 2026 11:00:57 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20251104; t=1776276057; x=1776880857; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=BkycsCrJmhofL1VSAGHsLVaCLza7QJmmTEvp4Vq/cIY=;
+        b=VO0yCdmbqr7hLOzBkxBHTIDKpESCCKjJIJNkmPcOLT0X4rU/0fHG3T+M556dUw7Hzu
+         2XeRZyA9UMa6+7m9QX7vKm1H6jDu0M9vitA4C/FXU3Gt7jPuTLgqeISw72lGhhG9ikBp
+         /lxYtssOHoBXTDyNOwT8/qROr1K7YN1rZQNAViim5hgP/bUQ8VEU+CgMM/OGOZdDFgc0
+         6Renzo5HbFFPnAtwHylexHva1Fmm4OTGm6peTg6MjgrgzRUjrWzATeKi2PGWPt5B64PX
+         wHYEbX6PdJ7y5h5Y0o8Bkn5UFxYDi1T1OS/xzdEPgJ8slZp++Frk1DLR3zjdr4QnVpm1
+         4Qqw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20251104; t=1776276057; x=1776880857;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-gg:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=BkycsCrJmhofL1VSAGHsLVaCLza7QJmmTEvp4Vq/cIY=;
+        b=ZQyuxEiHadjO5p8n8+O8ThBQW/+6olk1HccSjy5KmoG/O1QQYvZcveKhlNOsFINYpw
+         KGhl5IaWMIBi5RIVVWJr0IGTQz4DrUhXo0J3o2VetanNcMK7+Xrkz+BTEnPihlc5mUwB
+         jP2b0otw6lTXPHaLCLI2DuUiF0Yx0jrEvcIrcPacwnqNazl12AItLY2QnQ4DGiugkW9O
+         R97ZXGXoY3Jb3R3efQnyuoQgqZwHHM8Uf6nvW2xVsz/vdoQ4+xVekMkuJphhGw8RQ3Fx
+         e8AWflf0vxsdbnqbsli+I7pzw6aenyQ5CWDtmxwocsb4AFw24hCmr2yY6SyAqL6kSyTy
+         xPhw==
+X-Forwarded-Encrypted: i=1; AFNElJ+SJ3vv5mF71wmMbji6FnCLqe4vx80q7sCyxONf6bmBxbVF95nHvk258tln+VjYPrbskUK+RrwWVNvVUiUXYoqt/aHZ@vger.kernel.org
+X-Gm-Message-State: AOJu0YxVVQcfn3tu0smUdIYupjmkvmXPWxiryOc3t/9kHJj1wTle20iX
+	8WEUsZ/Lmrepcm6d0VVaBU6wvqVYumKLAcTZBhz5YPjxAPHgZ6FY1pFZ
+X-Gm-Gg: AeBDieu2woIUVYQIzJb2IuKAbbzFalltwS6sod3qP7DPOzPJy02wqq9MiZP702fTLPz
+	+abq26AfOD2/LnfJv/jedKE6nIWMLpa/qLhuE/Oww5f4jNFGHyJScNyIfkb0gdcXTWMLeuhrTBJ
+	9RXw9iHOYqsCD8LBTION7hNf6VHE06WfeR5/RYUokKqGrkh3ywOmANryyt7/VDYCD8mRv6en8sH
+	YdCVO9w7gkZdj442DCT4+yrZOlcDGzMK5imeu+m/7pHT/cfOVlLAcrZpVyCazDHJaebVYr4h8EZ
+	DZxWBGU7Sx0BsouSvO9oGryt/dRrf1+/al91P41Mdm2NaQACSrALq3Jnr92KeTC2S/O0qWrjM3L
+	OMBvaCFByfSockReuqOoDe2oySoPf1jAH/Y0aI9lIRMeauGD3NAybahsoYzcqDWCqDQLxXfWPFu
+	xLNSE5YOV3hI2AX0aSDSQloeehNuMlp4+gVOBJuCTmw4qjOAA=
+X-Received: by 2002:a05:6a20:4312:b0:39b:c9ff:e3eb with SMTP id adf61e73a8af0-39fe3c64cb1mr23482146637.4.1776276057180;
+        Wed, 15 Apr 2026 11:00:57 -0700 (PDT)
+Received: from lgs.. ([2409:893d:1171:10e2:48dd:8f21:beaa:cec8])
+        by smtp.gmail.com with ESMTPSA id 41be03b00d2f7-c79581bad89sm2057644a12.25.2026.04.15.11.00.53
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 15 Apr 2026 11:00:56 -0700 (PDT)
+From: Guangshuo Li <lgs201920130244@gmail.com>
+To: Andy Shevchenko <andy@kernel.org>,
+	Mika Westerberg <mika.westerberg@linux.intel.com>,
+	Hans de Goede <hansg@kernel.org>,
+	=?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>,
+	Linus Walleij <linusw@kernel.org>,
+	Guenter Roeck <linux@roeck-us.net>,
+	linux-kernel@vger.kernel.org,
+	platform-driver-x86@vger.kernel.org
+Cc: Guangshuo Li <lgs201920130244@gmail.com>,
+	stable@vger.kernel.org
+Subject: [PATCH] platform/x86: intel_scu_wdt: fix reference leak on failed device registration
+Date: Thu, 16 Apr 2026 02:00:42 +0800
+Message-ID: <20260415180042.3648360-1-lgs201920130244@gmail.com>
+X-Mailer: git-send-email 2.43.0
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
-X-Last-TLS-Session-Version: TLSv1.3
 
-Hi Chen, all,
+When platform_device_register() fails in register_mid_wdt(), the
+embedded struct device in wdt_dev has already been initialized by
+device_initialize(), but the failure path returns the error without
+dropping the device reference for the current platform device:
 
-...
+  register_mid_wdt()
+    -> platform_device_register(&wdt_dev)
+       -> device_initialize(&wdt_dev.dev)
+       -> setup_pdev_dma_masks(&wdt_dev)
+       -> platform_device_add(&wdt_dev)
+
+This leads to a reference leak when platform_device_register() fails.
+Fix this by calling platform_device_put() before returning the error.
+
+The issue was identified by a static analysis tool I developed and
+confirmed by manual review.
+
+Fixes: 55627c70db6ad ("platform/x86: intel_scu_wdt: Drop SCU notification")
+Cc: stable@vger.kernel.org
+Signed-off-by: Guangshuo Li <lgs201920130244@gmail.com>
+---
+ drivers/platform/x86/intel_scu_wdt.c | 7 ++++++-
+ 1 file changed, 6 insertions(+), 1 deletion(-)
+
+diff --git a/drivers/platform/x86/intel_scu_wdt.c b/drivers/platform/x86/intel_scu_wdt.c
+index 746d47d33406..bc120d57cadd 100644
+--- a/drivers/platform/x86/intel_scu_wdt.c
++++ b/drivers/platform/x86/intel_scu_wdt.c
+@@ -58,13 +58,18 @@ static const struct x86_cpu_id intel_mid_cpu_ids[] = {
+ static int __init register_mid_wdt(void)
+ {
+ 	const struct x86_cpu_id *id;
++	int ret;
  
-> 
-> I'm not arguing for a even more generic "M.2" connector. The "key" is
-> already described in the compatible. I'm saying we should have some way
-> of describing the individual interfaces (PCIe, SDIO, USB, UART, I2S, I2C)
-> on the connector so further nodes or properties can be attached to them,
-> either with overlays or dynamically within the kernel. Right now the
-> are only described as individual ports, but we can't actually tie a
-> device to a OF graph port.
-> 
-> But maybe I'm overthinking the representation part. AFAICT for Qualcomm's
-> UART-based BT bit part, Mani just had the driver create a device node
-> under the UART (by traversing the OF graph to find the UART). If that's
-> the desired way then the connector binding should mention it. And that
-> works for me. But I think it's messier and also we're missing an
-> opportunity to make the M.2 connector a standardized attachment point
-> for overlays.
-> 
-> Mani, could you also chime in a bit on what you envisioned?
-> 
-> (Added Luca from Bootlin to CC, as I think there are parallels to the
->  "Hotplug of Non-discoverable Hardware" work)
->
-
-Related to "Hotplug of Non-discoverable Hardware",
-
-I would add entries for busses in the connector without using an OF graph.
-
-For I2C and later SPI, this was is done.
-
-You already have an i2c-parent property but no node where an i2c device
-can be added.
-
-The last discussion related to hotplug, connectors and DT led to the RFC
-series [1].
-
-It is a huge series. The last patch give a real example of representation:
-  https://lore.kernel.org/all/20260112142009.1006236-78-herve.codina@bootlin.com/
-
-In your case I would see some thing like:
-
-    connector {
-        compatible = "pcie-m2-e-connector";
-        vpcie3v3-supply = <&vreg_wcn_3p3>;
-        vpcie1v8-supply = <&vreg_l15b_1p8>;
-
-	/*
-	 * If those GPIOs have to be used by components available in
-	 * the connected board, a Nexus node should be used.
-         */
-        w-disable1-gpios = <&tlmm 115 GPIO_ACTIVE_LOW>;
-        w-disable2-gpios = <&tlmm 116 GPIO_ACTIVE_LOW>;
-        viocfg-gpios = <&tlmm 117 GPIO_ACTIVE_HIGH>;
-        uart-wake-gpios = <&tlmm 118 GPIO_ACTIVE_LOW>;
-        sdio-wake-gpios = <&tlmm 119 GPIO_ACTIVE_LOW>;
-        sdio-reset-gpios = <&tlmm 120 GPIO_ACTIVE_LOW>;
-
-	conn-i2c {
-		i2c-parent = <&i2c0>;
-
-		/*
- 		 * Here i2c devices available on the board
-		 * connected to the connector can be described.
-		 */
-	};
-
-	/* Same kind to description for other busses */
-	conn-pcie {
-		pci-parent = <&xxxxx>;
-
-		/*
-		 * The PCIe bus has abilities to discover devices.
-		 * Not sure this node is needed.
-		 *
-		 * If a PCI device need a DT description to describe
-		 * stuffs behind the device, what has been done for LAN966x
-		 * could be re-used [2] and [3]
-		 */
-	};
-
-	conn_uart {
-		uart-parent = <&uart-ctrl>;
-
-		/* uart child (maybe a serdes) should be describe here
-	};
-
-	...
-    };
-
-Of course, some DT symbols need to be exported in order to have them usable from
-the DT describing the connected board.
-
-This notion of exported symbol is not yet available upstream and is the purpose of
-the RFC series [1].
-
-[1] https://lore.kernel.org/all/20260112142009.1006236-1-herve.codina@bootlin.com/
-[2] https://elixir.bootlin.com/linux/v7.0/source/drivers/misc/lan966x_pci.c
-[3] https://elixir.bootlin.com/linux/v7.0/source/drivers/misc/lan966x_pci.dtso
-
-Feel free to ask for more specific question if needed.
-
-Best regards,
-Hervé
-
-> 
-> Thanks
-> ChenYu
-> 
-> 
-> > > The latter part is solvable, but we likely need child nodes under the
-> > > connector for the different interfaces. Properties that make sense for
-> > > one type might not make sense for another.
-> > >
-> > > P.S. We could also just add child device nodes under the controller to
-> > > put the generic properties, but that's splitting the description into
-> > > multiple parts. Let's not go there if at all possible.  
-> >
-> > --
-> > With Best Regards,
-> > Andy Shevchenko
-> >
-> >  
-
-
-
+ 	id = x86_match_cpu(intel_mid_cpu_ids);
+ 	if (!id)
+ 		return -ENODEV;
+ 
+ 	wdt_dev.dev.platform_data = (struct intel_mid_wdt_pdata *)id->driver_data;
+-	return platform_device_register(&wdt_dev);
++	ret = platform_device_register(&wdt_dev);
++	if (ret)
++		platform_device_put(&wdt_dev);
++
++	return ret;
+ }
+ arch_initcall(register_mid_wdt);
+ 
 -- 
-Hervé Codina, Bootlin
-Embedded Linux and Kernel engineering
-https://bootlin.com
+2.43.0
+
