@@ -1,262 +1,239 @@
-Received: from mail-yx1-f54.google.com (mail-yx1-f54.google.com [74.125.224.54])
+Received: from mail-lf1-f42.google.com (mail-lf1-f42.google.com [209.85.167.42])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D015D38AC61
-	for <platform-driver-x86@vger.kernel.org>; Wed, 15 Apr 2026 06:25:09 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=74.125.224.54
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D17EC393DCD
+	for <platform-driver-x86@vger.kernel.org>; Wed, 15 Apr 2026 08:31:37 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=209.85.167.42
 ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1776234311; cv=pass; b=CJ2rF7b3CdXiG1ZMKtZRIjZE684SsVDKbap14LRH8eV7ILHf93kzeiRAZe7dBpirTjmukwwuspLCAK+1cZN0xHgM2kUC6Vl2Wd9IWdtErVEaDUZjDtYUsfhNphO249xMx1JRslPHJCjmqrS5hjF/sy2Y+k4hqn2AB8BMW604vVE=
+	t=1776241900; cv=pass; b=aCf92OQ9eFJAWLees1IviJVbzbiR7jPTC5TyKzUJtjckdmVWFtRZ0PxK4G368Jw+1JPox2zbslpDxNu6iptRaQmBauoxOLh+yEll0NZKWgkaINR7nR9ZRYkFC5gjMi7rxaHPAYgmnwDPGOMe225Sb+rtePLHRuYzn/lLjgYvpAQ=
 ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1776234311; c=relaxed/simple;
-	bh=E+Se1x3KPy4aRVceEvRMs4nij076oklWmGwd5viTUCQ=;
+	s=arc-20240116; t=1776241900; c=relaxed/simple;
+	bh=2vto3FW353Zu82QYk26GNUwn95iDmVTER564VnZJYjA=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=BSfW+nmAzYUBSVLl50irpx5wPp8UmpN/fhvnYDTIjtPR1BM9pRQjBwrMJyQpHWMhVD08gc0yEFVb87KyXHRnTlRs2Pg033vvg0d9VKWe9bt0SU/I/J3OIjVQ/3RchV2aokNXLg9ktC4N+GHPbu3wYQ+MLcmrvVqr3Gxk5EMgM9A=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=cAOztM9l; arc=pass smtp.client-ip=74.125.224.54
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	 To:Cc:Content-Type; b=WBU2NZti30hUj/mPwcV/6lYMzzZ7zHqI4Gf8Acebs7n/2EihGbjX6y8g8X+x7OdW+rgxhN5bwVhHrnoyvZOEyWG9TqkUlmNKU4ux4SRv/zSi7BOtRrkggZJ+QAZdZhehBiHGP7lyMDEtHx408wOTI7U5TKSWu3XfBlyvhzxs/cE=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org; spf=pass smtp.mailfrom=chromium.org; dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b=K5UGAvvF; arc=pass smtp.client-ip=209.85.167.42
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=chromium.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="cAOztM9l"
-Received: by mail-yx1-f54.google.com with SMTP id 956f58d0204a3-64eb84d1e37so4937983d50.2
-        for <platform-driver-x86@vger.kernel.org>; Tue, 14 Apr 2026 23:25:09 -0700 (PDT)
-ARC-Seal: i=1; a=rsa-sha256; t=1776234309; cv=none;
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="K5UGAvvF"
+Received: by mail-lf1-f42.google.com with SMTP id 2adb3069b0e04-5a3cc771c26so5188034e87.3
+        for <platform-driver-x86@vger.kernel.org>; Wed, 15 Apr 2026 01:31:37 -0700 (PDT)
+ARC-Seal: i=1; a=rsa-sha256; t=1776241896; cv=none;
         d=google.com; s=arc-20240605;
-        b=XRsFXqqA0nKU1VeDOx2X/eeMD1Jz/vxYJ/D8Nz9hPn8LapGuHTw3215S0l4il/9k90
-         APQh2+u84ueZmpLODVBec8xYkCtf68QuROxnpTqDPK0M70itoQ91D6eYNrMjJTtTES9+
-         04fiWhEKVMQ7URI9nWWBSBj1iQnp9hdbDigGDC4RBaFwZnSYe597SZVABbUlVy/gKYB6
-         IR2QWPWrB2n/vxxmynOM0WcQVmZH0kK8codDOEKm3S7cU/ZD8+Z+u4+ivE7j3DtkmU4t
-         bi4rg/ml473KtjAYbfRzTKKOVvQhHhWL7RjY79fsENkSLk/eWJDi/YDjpsvBltDmEG5v
-         fqoQ==
+        b=Hq1IT95xN2DbOpGU/0/gpSoJJAyn+eNu31ba+YdmfnBOSB5n1zTAhp1YEgq30qysrk
+         i6dsTA8rChR0XMubSVRtuGk2eHN09stS6f1k1lZW3+YU0NdsCbQwNk5XE98zzEgrNwAO
+         8bzy7VPEOWjaqOLHzH4Ii9Aptg6r6OYWRVKmU5K6VmYBPrG8uwYWHhmv0GSzL9u1qCv2
+         8jtrgcAUUsVaz84NH+hyJ/StpnEWuzUOG2WRsVdUp4ApCwz0dH2SapmNsajDdRYz29c9
+         1Al+tnrDaSUtB/I9vreicd5PzrTnGQ8Ez7tkqHkJYW9qwTGTYvQV6a7nBfXnVwD94voT
+         F8IA==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20240605;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:dkim-signature;
-        bh=jt5grHWKGUvf2j6gaAbli3eUo6Qz3g2Sjs1DrXNwxy8=;
-        fh=UIMaPH3u/Vgu0mHmt17Wt5/XJlGWZPhw2RXJKw1GpXs=;
-        b=a65Sm4lY66vlZdAWTx43N4dhNAglm/kkJcsJc9qeJurHbZVttwLT+lCFzNFlic7m/F
-         oE2NCGFQMi7eIQu23sU3Zi6kVONsAGIqvlDwVfI/pD7C9mfE1c7PxN+wbw6JN/b1b9B8
-         p7hIsx6yuHwzYHdQwnIUDvyXGljbF97kl4fXyDmnVKtbpL4tEJdeG1AceJl0+5SCvjCY
-         CV26JfvxChZ0CQ3Oek7Ba65YEOXviWCQ2W09mrf9w+IWExaT+88jxZsQPFQS2mVpcwfv
-         JrXFyuu/6PD7y07SrLB4Jx4tApXm7Okcyl6jyogjaj3/KRcP/y3me+GSxoAvzXTHE4QV
-         O4YQ==;
+        bh=75qqfi9qSpcNd5UITToYiihcYMMpTHFOID21ZWu5+AE=;
+        fh=Ud5kb4Nqow2r0CtaJofxTb7zL0f7naLCZ+2NNb/2OwU=;
+        b=Bw5lmsdyQK79OnmR31abyR5ydMLJSp3I94f61QQ3dt/fUoZ9WJe/m9wtXytMNgVt9A
+         xBVDUrfgcy34h1fEMGRpzw9O+SUIE5f3bW+HuCujy2lscDscygzlj7u74unUDAZp7TWf
+         fTiokpWn9AKNMiUxBN7y5yPVvAtyA4eBgC4i+ha/IKWv6pTYvNcCxTvQnngUO49OqduH
+         QoNs4KaNlij2t6nVzxW7LTuNNnW9Q/STSURgOJF21kHrwOXB/gYaCggZV4TN4LNfTxhv
+         bothJvku3xzLPJdQ68kr76NjmoxppTSd+0jjfKfgY5/6fUneN0JDjnhFBre4aDYykAT4
+         fiMw==;
         darn=vger.kernel.org
 ARC-Authentication-Results: i=1; mx.google.com; arc=none
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20251104; t=1776234309; x=1776839109; darn=vger.kernel.org;
+        d=chromium.org; s=google; t=1776241896; x=1776846696; darn=vger.kernel.org;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=jt5grHWKGUvf2j6gaAbli3eUo6Qz3g2Sjs1DrXNwxy8=;
-        b=cAOztM9lrZXCqjIUVL4gi0A9zmR8hQ+5H6pG1MhODMv6fFw/v2R3AZoIdAdAelGE3w
-         puPmR+WRlRZDfISxH5Vdht05xYDPsfiJ7wVQM8KCD10oEVgBUOFNerL7vreimKVqY4X3
-         gjfSTYt3LK+hCN5iy0Ck6x/NkuzdPsARG5pH1PDUOX/Bi3JQ7SvW6D9dUNLKoQol4n32
-         KtBDv0i0wi3yhadVxotgqQ3mmNnH9RTF544Z3v4A13zV+7azOVGPytkdnJxgLRhVv76c
-         LmoHlkplhNVjfIleCQPKi/cOELlKb+A8rrueO0qORAJs2pZ2v7FvVGdSOG/PIziK4/5/
-         GexA==
+        bh=75qqfi9qSpcNd5UITToYiihcYMMpTHFOID21ZWu5+AE=;
+        b=K5UGAvvFYCw1lKIySpdxs+2VhQlu1DNfkQnTJo6uJshdmSwQBoqYPkYm885x67rk5A
+         Sj0gGABTH/LttyV0M6yVENkD0MxhWEPS0tm4ubGvXt0SFTGMEnMnxewpxBPr/X9Kr5Cd
+         qAZ5aXEbrM+4DvQYOBBKj/rlzLSiDmcR7mKsY=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1776234309; x=1776839109;
+        d=1e100.net; s=20251104; t=1776241896; x=1776846696;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:x-gm-gg:x-gm-message-state:from
          :to:cc:subject:date:message-id:reply-to;
-        bh=jt5grHWKGUvf2j6gaAbli3eUo6Qz3g2Sjs1DrXNwxy8=;
-        b=L1clslusT+6yrEStInkky39Let3BGGsLv23HuOnlyyDgoVymZ6pNNJ8tyoOWWNl1X2
-         imgfDmU8Bxio89bMuI6K0SVC6DT22wMecD3lSUjo6Q6N//OhgJCBNvYSTklggKbQNuAw
-         kq7GoasBPbyzm/azG2tNt6qLnAPK4uxO3V9e/0YaGnoVpXEb4FY8anDpF5atjMNwgVg1
-         /iat6+Qtdgz6SQ0e3LWk3gqY59uK598q7bk38W7mhiKvmBWVphUhaZ51TNSgm11ZNb39
-         Y74t2oiuDyAf20WApVcwluD699SyYcLJvHA8uUJ+PlAPq+P+tsX777UkaeU4L0T4D1Ko
-         vvEg==
-X-Forwarded-Encrypted: i=1; AFNElJ9j7aTKbJLkuhQAshFym1K7/mzNn9ZgSbt4wEZNt8MdiW+cY2TLKIlFvU+4UrIch/9PFoC5iywQqICtTtRz86zKVfe/@vger.kernel.org
-X-Gm-Message-State: AOJu0YxQYTJEoFMEUSn6dHbxcDmGdU8uceqZORRsEixNFIQ8x97mnLUy
-	NC2fFBhAKI/OlD/eYVDJ27DAYhZwJ+/dWA+5PP3rD3c+jK1JwLu9Cy/Wm+WSUmgLvSz8X4nPvQU
-	5dWlTufZK+hT6eUJoCBMDidDpH1z7Hos=
-X-Gm-Gg: AeBDiespypHfYfCGla4+ZyY30tyj6hipYOLNbHk2h8V28JkF4vQ6N29h1hNPGodPfhJ
-	zsUXENFLEYyXSj7McCNCFPNCqlbitxNor5j+1Zt9dEaDefQUAeBqaEqifMS98zHvwSSYFWiRh1D
-	GltmmWg+1rhuueLty3XnZmUauOJ+CSxr4DLqbWiMvWDvPTSg1B7hPOR5copVjih3OzSrY1hh61M
-	HOilL3GY4QVctcFnbAKCE2h0D2gvP2vD0XqRVOH+lDfL+74+MmqYYKVhIldGPBpwMLOwMDVLXsP
-	nPrypQEDcXYLRb/QCMCzgHeyuQ5GVNuPWXmKauQ=
-X-Received: by 2002:a05:690e:150c:b0:651:d2e3:394 with SMTP id
- 956f58d0204a3-651d9b53e9cmr6612187d50.34.1776234308876; Tue, 14 Apr 2026
- 23:25:08 -0700 (PDT)
+        bh=75qqfi9qSpcNd5UITToYiihcYMMpTHFOID21ZWu5+AE=;
+        b=eaSjEn0cJbTrbjqVRM8GR/EtJQtJ8G0AnvZ9VlTLU0ZzZ8afCoOPihDK7xA5/B1SgI
+         0gl1mQ8iKU3wj49JId3j+gQ0NW8iYz6P85YBYP6bNZ9XW5fMlzcHbI4uFH70lW3zLyr+
+         iYqIVytzo2TXfYJAEnLIMkqtZ1G6lJjGv3B1T8mPo4Gj5YZjFc87fqEUXekc2T19gZH9
+         CwGwriUlDyuQpayC0oH8p6+rxLw43W5uhG4hcI8QSak3N/xyQfL/NvkCWDS58rkYjoIO
+         mYqgMgdUByxMWfFPA236XovICjdWXvGvUrpzON2MhONiCV4B0dycslfXvL9XBfIjdSDk
+         5ylQ==
+X-Forwarded-Encrypted: i=1; AFNElJ8K8V68iricFZc+OT+tsjG7u0XCS1FJ0DJw2TLa71wt4jhYSN5l+37ueupF88wWm5dngBsw9iuHqMZij9CKmtmbuha/@vger.kernel.org
+X-Gm-Message-State: AOJu0Yw+GqQHXs0VlWkx2D/p8PSTC4qzf/RtkdDslyO5UXvp0cgHjugX
+	2loTK+IO9rWMXy65QYqItjLCIlopKRG/0NH7BvOrr+B82VIVadeJGsMxI4k235FMLAmMYK+wMND
+	VONuvbKIMRjcRNIiONlnIbSlx44FeONd2Tigh4CCW
+X-Gm-Gg: AeBDieue+ESaNQ7yd0Wdi8r8xVHxVLr2MXqgglTEVeCUrdvkPIEnYOA1dA+O4ZfGiKk
+	0xZEKurO04eT6JTWJCZkrx5DtuA061BZzaOtsPiieOMs6ewathvyDmx7gfQlE9M4eW/X6bF0H0D
+	uQvGcz/MbNaoLoL5OVYx4RM2JzcwXGGpZ3rSV2TBVqsagjEgrZ4v8vJdlwdZ7Lb+bJJLpfs9d0V
+	6jyhGVbwLHimzLFkcuhhU/DdeBjUCa11hku13faktOwfNcUcs4bAiJ/3csH7MNNZ8loy66y1OWQ
+	BrE9hO1rreb3JjdyXmCoxCPBQeNLGjQn61YhlHUH7OYGtedZ
+X-Received: by 2002:a05:6512:3e26:b0:5a2:a174:8958 with SMTP id
+ 2adb3069b0e04-5a3efb4968emr7410769e87.35.1776241895968; Wed, 15 Apr 2026
+ 01:31:35 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20260410093752.298067-1-jackbb_wu@compal.com> <fd2d0fd7-b6ca-42e9-81cd-eb41b6b857ce@gmx.de>
-In-Reply-To: <fd2d0fd7-b6ca-42e9-81cd-eb41b6b857ce@gmx.de>
-From: =?UTF-8?B?5ZCz6YC86YC8?= <wojackbb@gmail.com>
-Date: Wed, 15 Apr 2026 14:24:54 +0800
-X-Gm-Features: AQROBzB_8j2l0egujvmI-rdPkM5TNavMyP73oCCgsy5HYAMxHzGBFtULASnfS6E
-Message-ID: <CAAQ7Y6ZvDyeJjUYbd+UasUhPcGK=pVHTNszRBwtZgKw2NaUFNA@mail.gmail.com>
-Subject: Re: [PATCH v2] platform/x86: dell-dw5826e: Add reset driver for DW5826e
-To: Armin Wolf <W_Armin@gmx.de>
-Cc: Hans de Goede <hansg@kernel.org>, =?UTF-8?Q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>, 
-	platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <20260326-pci-m2-e-v7-0-43324a7866e6@oss.qualcomm.com>
+ <20260413075459.GA2626902@google.com> <fpcs4p62f35a5qyqwgm5ysa73stbysxcr62tkmmkrrcvsuf4t4@4ivukyqjey57>
+ <eeytuhqpgdz4do4tgtbmfntub2femtyq7bij7svhodpyjwaylx@j3gmvq2a2zqc>
+ <CAGXv+5E=tujhtZjwi6Qm7hk3Ks74UzTQHWq82NiTEw1+vYod5g@mail.gmail.com>
+ <ad36pIu-0dutL7Nk@ashevche-desk.local> <CAGXv+5EGe59nJctLweEdZjb3MNmMvjuCHngGSfptzN985OiLdg@mail.gmail.com>
+ <ad4tJN27opdEooA7@ashevche-desk.local>
+In-Reply-To: <ad4tJN27opdEooA7@ashevche-desk.local>
+From: Chen-Yu Tsai <wenst@chromium.org>
+Date: Wed, 15 Apr 2026 16:31:24 +0800
+X-Gm-Features: AQROBzDzEraU5iaeBZSJUdxidhUdHObcnpB5nGLDAzHMGlTf0-gnuExg99lbWBI
+Message-ID: <CAGXv+5EPA29G-fsH=wWOD8AK6TZFezFhsE0NHPYj_Pt3nT+d_w@mail.gmail.com>
+Subject: Re: [PATCH v7 0/8] Add support for handling PCIe M.2 Key E connectors
+ in devicetree
+To: Andy Shevchenko <andriy.shevchenko@linux.intel.com>, 
+	Manivannan Sadhasivam <mani@kernel.org>
+Cc: Manivannan Sadhasivam <manivannan.sadhasivam@oss.qualcomm.com>, Rob Herring <robh@kernel.org>, 
+	Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Jiri Slaby <jirislaby@kernel.org>, 
+	Nathan Chancellor <nathan@kernel.org>, Nicolas Schier <nicolas.schier@linux.dev>, 
+	Hans de Goede <hansg@kernel.org>, =?UTF-8?Q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>, 
+	Mark Pearson <mpearson-lenovo@squebb.ca>, "Derek J. Clark" <derekjohn.clark@gmail.com>, 
+	Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, 
+	Marcel Holtmann <marcel@holtmann.org>, Luiz Augusto von Dentz <luiz.dentz@gmail.com>, 
+	Bartosz Golaszewski <brgl@bgdev.pl>, Bartosz Golaszewski <brgl@kernel.org>, linux-serial@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, linux-kbuild@vger.kernel.org, 
+	platform-driver-x86@vger.kernel.org, linux-pci@vger.kernel.org, 
+	devicetree@vger.kernel.org, linux-arm-msm@vger.kernel.org, 
+	linux-bluetooth@vger.kernel.org, linux-pm@vger.kernel.org, 
+	Stephan Gerhold <stephan.gerhold@linaro.org>, 
+	Dmitry Baryshkov <dmitry.baryshkov@oss.qualcomm.com>, linux-acpi@vger.kernel.org, 
+	Hans de Goede <johannes.goede@oss.qualcomm.com>, 
+	Bartosz Golaszewski <bartosz.golaszewski@oss.qualcomm.com>, 
+	Luca Ceresoli <luca.ceresoli@bootlin.com>
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-Thanks for the feedback. I add the sysfs ABI documentation in
-Documentation/ABI/testing/ and fix other issue. they include it in the
-v3 version of the patch.
+On Tue, Apr 14, 2026 at 8:03=E2=80=AFPM Andy Shevchenko
+<andriy.shevchenko@linux.intel.com> wrote:
+>
+> On Tue, Apr 14, 2026 at 06:29:02PM +0800, Chen-Yu Tsai wrote:
+> > On Tue, Apr 14, 2026 at 4:28=E2=80=AFPM Andy Shevchenko
+> > <andriy.shevchenko@linux.intel.com> wrote:
+> > > On Tue, Apr 14, 2026 at 01:03:19PM +0800, Chen-Yu Tsai wrote:
+> > > > On Tue, Apr 14, 2026 at 12:08=E2=80=AFAM Manivannan Sadhasivam <man=
+i@kernel.org> wrote:
+> > > > > On Mon, Apr 13, 2026 at 07:33:12PM +0530, Manivannan Sadhasivam w=
+rote:
+> > > > > > On Mon, Apr 13, 2026 at 03:54:59PM +0800, Chen-Yu Tsai wrote:
+> > > > > > > On Thu, Mar 26, 2026 at 01:36:28PM +0530, Manivannan Sadhasiv=
+am wrote:
+>
+> ...
+>
+> > > > > > > - Given that this connector actually represents two devices, =
+how do I
+> > > > > > >   say I want the BT part to be a wakeup source, but not the W=
+iFi part?
+> > > > > > >   Does wakeup-source even work at this point?
+> > > > > >
+> > > > > > You can't use the DT property since the devices are not describ=
+ed in DT
+> > > > > > statically. But you can still use the per-device 'wakeup' sysfs=
+ knob to enable
+> > > > > > wakeup.
+> > > >
+> > > > I see. I think not being able to specify generic properties for the=
+ devices
+> > > > on the connector is going to be a bit problematic.
+> > >
+> > > This is nature of the open-connectors, especially on the busses that =
+are
+> > > hotpluggable, like PCIe. We never know what is connected there _ahead=
+_.
+> >
+> > I believe what you mean by "hotpluggable" is "user replaceable".
+>
+> From the OS perspective it's the same. From platform perspective
+> there is a difference, granted.
 
-Armin Wolf <W_Armin@gmx.de> =E6=96=BC 2026=E5=B9=B44=E6=9C=8813=E6=97=A5=E9=
-=80=B1=E4=B8=80 =E4=B8=8B=E5=8D=882:21=E5=AF=AB=E9=81=93=EF=BC=9A
->
-> Am 10.04.26 um 11:37 schrieb Jack Wu:
-> > If the DW5826e is in a frozen state and unable to receive USB commands,
-> > this driver provides a method for the user to reset the DW5826e via ACP=
-I.
+Yes. I just wanted to clarify.
+
+> > > In other words you can't describe in DT something that may not exist.
 > >
-> > E.g: echo 1 > /sys/bus/platform/devices/PALC0001\:00/pldr
-> >
-> > Signed-off-by: Jack Wu <jackbb_wu@compal.com>
-> > ---
-> > v2:
-> >    - Remove extra empty line
-> >    - Add missing includes and Remove unnecessary includes, sort include=
-s alphabetically
-> >    - Remove noisy dev_info()
-> >    - Handle obj->type !=3D ACPI_TYPE_BUFFER as error with proper return=
- code
-> >    - Replace miscdevice/file_operations with sysfs attribute (DEVICE_AT=
-TR_WO) to reduce boilerplate
-> >    - Propagate trigger_palc_pldr() return code to userspace
-> >    - Convert from acpi_driver to platform_driver
-> > ---
-> > ---
-> >   drivers/platform/x86/dell/Kconfig             |  6 ++
-> >   drivers/platform/x86/dell/Makefile            |  2 +
-> >   .../platform/x86/dell/dell-dw5826e-reset.c    | 83 ++++++++++++++++++=
-+
-> >   3 files changed, 91 insertions(+)
-> >   create mode 100644 drivers/platform/x86/dell/dell-dw5826e-reset.c
-> >
-> > diff --git a/drivers/platform/x86/dell/Kconfig b/drivers/platform/x86/d=
-ell/Kconfig
-> > index 738c108c2163..c4540c837a88 100644
-> > --- a/drivers/platform/x86/dell/Kconfig
-> > +++ b/drivers/platform/x86/dell/Kconfig
-> > @@ -276,4 +276,10 @@ config DELL_WMI_SYSMAN
-> >         To compile this driver as a module, choose M here: the module w=
-ill
-> >         be called dell-wmi-sysman.
-> >
-> > +config DELL_DW5826E_RESET
-> > +     tristate "Dell DW5826e PLDR reset support"
-> > +     default m
-> > +     depends on ACPI
-> > +     help
-> > +       This adds support for the Dell DW5826e PLDR reset via ACPI
-> >   endif # X86_PLATFORM_DRIVERS_DELL
-> > diff --git a/drivers/platform/x86/dell/Makefile b/drivers/platform/x86/=
-dell/Makefile
-> > index c7501c25e627..8150283cfd1d 100644
-> > --- a/drivers/platform/x86/dell/Makefile
-> > +++ b/drivers/platform/x86/dell/Makefile
-> > @@ -28,3 +28,5 @@ obj-$(CONFIG_DELL_WMI_DESCRIPTOR)           +=3D dell=
--wmi-descriptor.o
-> >   obj-$(CONFIG_DELL_WMI_DDV)                  +=3D dell-wmi-ddv.o
-> >   obj-$(CONFIG_DELL_WMI_LED)                  +=3D dell-wmi-led.o
-> >   obj-$(CONFIG_DELL_WMI_SYSMAN)                       +=3D dell-wmi-sys=
-man/
-> > +obj-$(CONFIG_DELL_DW5826E_RESET)             +=3D dell-dw5826e-reset.o
-> > +
-> > diff --git a/drivers/platform/x86/dell/dell-dw5826e-reset.c b/drivers/p=
-latform/x86/dell/dell-dw5826e-reset.c
-> > new file mode 100644
-> > index 000000000000..52002578ed68
-> > --- /dev/null
-> > +++ b/drivers/platform/x86/dell/dell-dw5826e-reset.c
-> > @@ -0,0 +1,83 @@
-> > +// SPDX-License-Identifier: GPL-2.0-or-later
-> > +/*
-> > + *  dell-dw5826e-reset.c - Dell DW5826e reset driver
-> > + *
-> > + *  Copyright (C) 2026 Jackbb Wu <jackbb.wu@compal.com>
-> > + */
-> > +
-> > +#include <linux/acpi.h>
-> > +#include <linux/device.h>
-> > +#include <linux/uuid.h>
-> > +#include <linux/module.h>
-> > +#include <linux/platform_device.h>
-> > +
-> > +static guid_t palc_dsm_guid =3D
-> > +     GUID_INIT(0x5a1a4bba, 0x8006, 0x487e, 0xbe, 0x0a, 0xac, 0xf5, 0xd=
-8, 0xfd, 0xfe, 0x59);
-> > +
-> > +static int trigger_palc_pldr(struct device *dev, acpi_handle handle)
-> > +{
-> > +     union acpi_object *obj;
-> > +     int ret =3D 0;
-> > +
-> > +     obj =3D acpi_evaluate_dsm(handle, &palc_dsm_guid, 1, 1, NULL);
-> > +     if (!obj) {
-> > +             dev_err(dev, "Failed to evaluate _DSM\n");
-> > +             return -EIO;
-> > +     }
-> > +
-> > +     if (obj->type !=3D ACPI_TYPE_BUFFER) {
-> > +             dev_err(dev, "Unexpected _DSM return type: %d\n", obj->ty=
-pe);
-> > +             ret =3D -EINVAL;
-> > +     }
-> > +
-> > +     ACPI_FREE(obj);
-> > +     return ret;
-> > +}
-> > +
-> > +static ssize_t pldr_store(struct device *dev, struct device_attribute =
-*attr,
-> > +                       const char *buf, size_t count)
-> > +{
-> > +     acpi_handle handle =3D ACPI_HANDLE(dev);
-> > +     int ret;
-> > +
-> > +     ret =3D trigger_palc_pldr(dev, handle);
-> > +     if (ret)
-> > +             return ret;
-> > +
-> > +     return count;
-> > +}
-> > +static DEVICE_ATTR_WO(pldr);
-> > +
-> > +static struct attribute *palc_attrs[] =3D {
-> > +     &dev_attr_pldr.attr,
-> > +     NULL
-> > +};
-> > +ATTRIBUTE_GROUPS(palc);
-> > +
-> > +static int palc_probe(struct platform_device *pdev)
-> > +{
-> > +     if (!ACPI_HANDLE(&pdev->dev))
-> > +             return -ENODEV;
-> > +
+> > But this is actually doable with the PCIe slot representation. The
+> > properties are put in the device node for the slot. If no card is
+> > actually inserted in the slot, then no device is created, and the
+> > device node is left as not associated with anything.
 >
-> Hi, please check here if the _DSM method exists using acpi_check_dsm().
+> But you need to list all devices in the world if you want to support this
+
+Why would I need to? The PCIe slot representation just describes a
+PCIe bridge. Granted this might not be entirely correct, but it's
+what we currently have.
+
+And even then, there are properties like memory-region or wakeup-source
+that are generic and aren't tied to specific devices.
+
+> somehow. Yes, probably many of them (or majority) will be enumerated as i=
+s,
+> but some may need an assistance via (dynamic) properties or similar mecha=
+nisms.
+
+Even if we wanted to add dynamic properties, there is currently no proper
+device node to attach them to.
+
+> > It's just that for this new M.2 E-key connector, there aren't separate
+> > nodes for each interface. And the system doesn't associate the device
+> > node with the device, because it's no longer a child node of the
+> > controller or hierarchy, but connected over the OF graph.
+> >
+> > Moving over to the E-key connector representation seems like one step
+> > forward and one step backward in descriptive ability. We gain proper
+> > power sequencing, but lose generic properties.
 >
-> Thanks,
-> Armin Wolf
+> The "key" is property of the connector. Hence if you have an idea what ca=
+n be
+> common for ALL "key":s, that's probably can be abstracted. Note, I'm not
+> familiar with the connector framework in the Linux kernel, perhaps it's a=
+lready
+> that kind of abstraction.
+
+I'm not arguing for a even more generic "M.2" connector. The "key" is
+already described in the compatible. I'm saying we should have some way
+of describing the individual interfaces (PCIe, SDIO, USB, UART, I2S, I2C)
+on the connector so further nodes or properties can be attached to them,
+either with overlays or dynamically within the kernel. Right now the
+are only described as individual ports, but we can't actually tie a
+device to a OF graph port.
+
+But maybe I'm overthinking the representation part. AFAICT for Qualcomm's
+UART-based BT bit part, Mani just had the driver create a device node
+under the UART (by traversing the OF graph to find the UART). If that's
+the desired way then the connector binding should mention it. And that
+works for me. But I think it's messier and also we're missing an
+opportunity to make the M.2 connector a standardized attachment point
+for overlays.
+
+Mani, could you also chime in a bit on what you envisioned?
+
+(Added Luca from Bootlin to CC, as I think there are parallels to the
+ "Hotplug of Non-discoverable Hardware" work)
+
+
+Thanks
+ChenYu
+
+
+> > The latter part is solvable, but we likely need child nodes under the
+> > connector for the different interfaces. Properties that make sense for
+> > one type might not make sense for another.
+> >
+> > P.S. We could also just add child device nodes under the controller to
+> > put the generic properties, but that's splitting the description into
+> > multiple parts. Let's not go there if at all possible.
 >
-> > +     return 0;
-> > +}
-> > +
-> > +static const struct acpi_device_id palc_acpi_ids[] =3D {
-> > +     { "PALC0001", 0 },
-> > +     { }
-> > +};
-> > +MODULE_DEVICE_TABLE(acpi, palc_acpi_ids);
-> > +
-> > +static struct platform_driver palc_driver =3D {
-> > +     .driver =3D {
-> > +             .name =3D "dell-dw5826e-reset",
-> > +             .acpi_match_table =3D palc_acpi_ids,
-> > +             .dev_groups =3D palc_groups,
-> > +     },
-> > +     .probe  =3D palc_probe,
-> > +};
-> > +module_platform_driver(palc_driver);
-> > +
-> > +MODULE_DESCRIPTION("Dell DW5826e reset driver");
-> > +MODULE_LICENSE("GPL");
-> > +MODULE_AUTHOR("JackBB Wu");
+> --
+> With Best Regards,
+> Andy Shevchenko
+>
 >
