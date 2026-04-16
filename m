@@ -1,96 +1,200 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.13])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1043A2701BB;
-	Thu, 16 Apr 2026 08:03:39 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.13
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 81E95391E75;
+	Thu, 16 Apr 2026 08:34:56 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1776326621; cv=none; b=TAArxAJKK5is1ORaVs17k1zW8czO8NFioIdfsM4Va/1mKMtBnfN+CMoK/q/yjJ0MPY1TcZCUoTWxyE2Dh+dce9PHK6dLCmWzeeRPE18/+i9yk/lCyxE2GyYmRgMOkABBj+7dOIbU+Pk5sV6tY8D8G8TbxB6pJLVLksPCMoLlp7E=
+	t=1776328496; cv=none; b=dxYCSUZe+DZDDHhv4D5rZD7BjBUCrBGYmmC4wlD0MdsOruK/yMkqGlbfvDXvteC7AlOvDhQnp6pCvbOBNRRPNrapoQRKokp1GrywJtWiyWT8/IDI+UY9nEXqeXvXapCnNW7kQIR5iDcAzgWD3Tk3pPL9aUp3hWflQIQ4Jj2v/c0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1776326621; c=relaxed/simple;
-	bh=yZw9iQqdQFGLs9E14Uhc+ABsrVj6P6Qwp6mM8nQTYzc=;
+	s=arc-20240116; t=1776328496; c=relaxed/simple;
+	bh=aM4+d7l5SobaIHWwosmsIax5/zWaIyefWpD4h8VccEg=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=dX3yBJS9bZ+YKTZN8HNwNjQZ/Tvk2767GqJhXEH+pFoinZLB21HbXn0zgyutP0ATRr1Kvka0C5D3ct9h+TISNnLQqYYIi2ZCDF/fS8VIXKltT2aftaVlLFrjN7TOfUjBL/Y9aXLGcplrI0PY0OPvjAkBswT1sIqAXhddq1AXdOM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=I5nTPOgV; arc=none smtp.client-ip=192.198.163.13
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	 Content-Type:Content-Disposition:In-Reply-To; b=RfCi2DKV9pLA0D8ukdn0RngqAcPLWDRB/J1HPrAmJ9Y7TxpfHCbzgg5828TUv1KvGuwCBCaQs1F0MerKUvFHYtOjuZvhNlcjwY7iRhszjx61WB8CBK7IoUI0p/YqMGRsxM37jKFi1lzPODYGMsj9tAtOqiVUM+XHIsPwvgCryIM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=EI2+kHOe; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="I5nTPOgV"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1776326620; x=1807862620;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=yZw9iQqdQFGLs9E14Uhc+ABsrVj6P6Qwp6mM8nQTYzc=;
-  b=I5nTPOgVINQuTFuZe5g7Uy/96DnofRDSpLfwQNGfg2d7sQpf5EIp4b1l
-   F+1MVQCcI1uQUlwNDPaY6Wzx1RMEH7Jhe8JIjSeqGYS7BXdc9pQjLvfDd
-   iVGtBn+49NPpcXEGJf4d6bzLqSXVjVfrIsCa1ViHaL1eSo7lbGUrOP2ss
-   Vg5R1rvLCLLliWqq7ot4gXEQCEfYLLmVZ+TNQ5DWZwPmePy0Yf15gXi8u
-   /m3TiN6TvgZxO0MOHiJfY7BewQABJANK0kZF9YrVIbC4/PwbsOGpPtL+E
-   SxnEpY6pcz9ikUQ6J0Qq9/JnBaik/05pu3ZaGjKijS9ZMCqNCbPetlfR1
-   g==;
-X-CSE-ConnectionGUID: WN5oI05DR2KMUlnRhxj/vw==
-X-CSE-MsgGUID: WWgA5xdPSLGGeTiy/PkCwA==
-X-IronPort-AV: E=McAfee;i="6800,10657,11760"; a="79903295"
-X-IronPort-AV: E=Sophos;i="6.23,181,1770624000"; 
-   d="scan'208";a="79903295"
-Received: from orviesa007.jf.intel.com ([10.64.159.147])
-  by fmvoesa107.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 16 Apr 2026 01:03:39 -0700
-X-CSE-ConnectionGUID: yFugkF4jRKK0TpZ+8grNJA==
-X-CSE-MsgGUID: BbU0WXX2RhuLaX+E9VqbCg==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.23,181,1770624000"; 
-   d="scan'208";a="230912743"
-Received: from abityuts-desk.ger.corp.intel.com (HELO localhost) ([10.245.244.173])
-  by orviesa007-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 16 Apr 2026 01:03:37 -0700
-Date: Thu, 16 Apr 2026 11:03:34 +0300
-From: Andy Shevchenko <andriy.shevchenko@intel.com>
-To: Guangshuo Li <lgs201920130244@gmail.com>
-Cc: Andy Shevchenko <andy@kernel.org>,
-	Mika Westerberg <mika.westerberg@linux.intel.com>,
-	Hans de Goede <hansg@kernel.org>,
-	Ilpo =?iso-8859-1?Q?J=E4rvinen?= <ilpo.jarvinen@linux.intel.com>,
-	Linus Walleij <linusw@kernel.org>,
-	Guenter Roeck <linux@roeck-us.net>, linux-kernel@vger.kernel.org,
-	platform-driver-x86@vger.kernel.org, stable@vger.kernel.org
-Subject: Re: [PATCH] platform/x86: intel_scu_wdt: fix reference leak on
- failed device registration
-Message-ID: <aeCX1m_RMbSYXG8R@ashevche-desk.local>
-References: <20260415180042.3648360-1-lgs201920130244@gmail.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="EI2+kHOe"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id A59AEC2BCB3;
+	Thu, 16 Apr 2026 08:34:46 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1776328496;
+	bh=aM4+d7l5SobaIHWwosmsIax5/zWaIyefWpD4h8VccEg=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=EI2+kHOe/DSVW7CnFneR5MVopc93u+GXckFYs8+VSkPIcMFQWRZgP5q80n6iB1eiX
+	 aoNUEwlqhXD+o+H9Eh11VuiH+quE4tAbQTtlE80W7c2LYprKl/R7Qjni/yScZ14lDN
+	 Wvc1heA3ps2ph6X5y2R8R9fPI0wghozxYGHyPeDwvjLCQp0CS+CXJU7Cnh67pjqPQm
+	 xG53TF8arOZmLIP9mOWvsmIDxybYzZ+Lbj0Ug/slhEhOriwaIrC2pN0DQqauKZ7hdx
+	 MeMVb/IVzD9Jq2gRYN0O0zx/vHqqSqA30ro36X42rb6yE9cdu+ySyEC0vvg2SKuHBU
+	 FwYQLiWDwwJ8w==
+Date: Thu, 16 Apr 2026 14:04:38 +0530
+From: Manivannan Sadhasivam <mani@kernel.org>
+To: Chen-Yu Tsai <wenst@chromium.org>
+Cc: Andy Shevchenko <andriy.shevchenko@linux.intel.com>, 
+	Manivannan Sadhasivam <manivannan.sadhasivam@oss.qualcomm.com>, Rob Herring <robh@kernel.org>, 
+	Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Jiri Slaby <jirislaby@kernel.org>, 
+	Nathan Chancellor <nathan@kernel.org>, Nicolas Schier <nicolas.schier@linux.dev>, 
+	Hans de Goede <hansg@kernel.org>, Ilpo =?utf-8?B?SsOkcnZpbmVu?= <ilpo.jarvinen@linux.intel.com>, 
+	Mark Pearson <mpearson-lenovo@squebb.ca>, "Derek J. Clark" <derekjohn.clark@gmail.com>, 
+	Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, 
+	Marcel Holtmann <marcel@holtmann.org>, Luiz Augusto von Dentz <luiz.dentz@gmail.com>, 
+	Bartosz Golaszewski <brgl@bgdev.pl>, Bartosz Golaszewski <brgl@kernel.org>, 
+	linux-serial@vger.kernel.org, linux-kernel@vger.kernel.org, linux-kbuild@vger.kernel.org, 
+	platform-driver-x86@vger.kernel.org, linux-pci@vger.kernel.org, devicetree@vger.kernel.org, 
+	linux-arm-msm@vger.kernel.org, linux-bluetooth@vger.kernel.org, linux-pm@vger.kernel.org, 
+	Stephan Gerhold <stephan.gerhold@linaro.org>, Dmitry Baryshkov <dmitry.baryshkov@oss.qualcomm.com>, 
+	linux-acpi@vger.kernel.org, Hans de Goede <johannes.goede@oss.qualcomm.com>, 
+	Bartosz Golaszewski <bartosz.golaszewski@oss.qualcomm.com>, Luca Ceresoli <luca.ceresoli@bootlin.com>
+Subject: Re: [PATCH v7 0/8] Add support for handling PCIe M.2 Key E
+ connectors in devicetree
+Message-ID: <7kpwgrxgtrpavmm2aezv66csuumma6wzsqtwvmojwgrtiqasjf@gczv34l6pnma>
+References: <20260326-pci-m2-e-v7-0-43324a7866e6@oss.qualcomm.com>
+ <20260413075459.GA2626902@google.com>
+ <fpcs4p62f35a5qyqwgm5ysa73stbysxcr62tkmmkrrcvsuf4t4@4ivukyqjey57>
+ <eeytuhqpgdz4do4tgtbmfntub2femtyq7bij7svhodpyjwaylx@j3gmvq2a2zqc>
+ <CAGXv+5E=tujhtZjwi6Qm7hk3Ks74UzTQHWq82NiTEw1+vYod5g@mail.gmail.com>
+ <ad36pIu-0dutL7Nk@ashevche-desk.local>
+ <CAGXv+5EGe59nJctLweEdZjb3MNmMvjuCHngGSfptzN985OiLdg@mail.gmail.com>
+ <ad4tJN27opdEooA7@ashevche-desk.local>
+ <CAGXv+5EPA29G-fsH=wWOD8AK6TZFezFhsE0NHPYj_Pt3nT+d_w@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <20260415180042.3648360-1-lgs201920130244@gmail.com>
-Organization: Intel Finland Oy - BIC 0357606-4 - c/o Alberga Business Park, 6
- krs, Bertel Jungin Aukio 5, 02600 Espoo
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <CAGXv+5EPA29G-fsH=wWOD8AK6TZFezFhsE0NHPYj_Pt3nT+d_w@mail.gmail.com>
 
-On Thu, Apr 16, 2026 at 02:00:42AM +0800, Guangshuo Li wrote:
-> When platform_device_register() fails in register_mid_wdt(), the
-> embedded struct device in wdt_dev has already been initialized by
-> device_initialize(), but the failure path returns the error without
-> dropping the device reference for the current platform device:
+On Wed, Apr 15, 2026 at 04:31:24PM +0800, Chen-Yu Tsai wrote:
+> On Tue, Apr 14, 2026 at 8:03 PM Andy Shevchenko
+> <andriy.shevchenko@linux.intel.com> wrote:
+> >
+> > On Tue, Apr 14, 2026 at 06:29:02PM +0800, Chen-Yu Tsai wrote:
+> > > On Tue, Apr 14, 2026 at 4:28 PM Andy Shevchenko
+> > > <andriy.shevchenko@linux.intel.com> wrote:
+> > > > On Tue, Apr 14, 2026 at 01:03:19PM +0800, Chen-Yu Tsai wrote:
+> > > > > On Tue, Apr 14, 2026 at 12:08 AM Manivannan Sadhasivam <mani@kernel.org> wrote:
+> > > > > > On Mon, Apr 13, 2026 at 07:33:12PM +0530, Manivannan Sadhasivam wrote:
+> > > > > > > On Mon, Apr 13, 2026 at 03:54:59PM +0800, Chen-Yu Tsai wrote:
+> > > > > > > > On Thu, Mar 26, 2026 at 01:36:28PM +0530, Manivannan Sadhasivam wrote:
+> >
+> > ...
+> >
+> > > > > > > > - Given that this connector actually represents two devices, how do I
+> > > > > > > >   say I want the BT part to be a wakeup source, but not the WiFi part?
+> > > > > > > >   Does wakeup-source even work at this point?
+> > > > > > >
+> > > > > > > You can't use the DT property since the devices are not described in DT
+> > > > > > > statically. But you can still use the per-device 'wakeup' sysfs knob to enable
+> > > > > > > wakeup.
+> > > > >
+> > > > > I see. I think not being able to specify generic properties for the devices
+> > > > > on the connector is going to be a bit problematic.
+> > > >
+> > > > This is nature of the open-connectors, especially on the busses that are
+> > > > hotpluggable, like PCIe. We never know what is connected there _ahead_.
+> > >
+> > > I believe what you mean by "hotpluggable" is "user replaceable".
+> >
+> > From the OS perspective it's the same. From platform perspective
+> > there is a difference, granted.
 > 
->   register_mid_wdt()
->     -> platform_device_register(&wdt_dev)
->        -> device_initialize(&wdt_dev.dev)
->        -> setup_pdev_dma_masks(&wdt_dev)
->        -> platform_device_add(&wdt_dev)
+> Yes. I just wanted to clarify.
 > 
-> This leads to a reference leak when platform_device_register() fails.
-> Fix this by calling platform_device_put() before returning the error.
+> > > > In other words you can't describe in DT something that may not exist.
+> > >
+> > > But this is actually doable with the PCIe slot representation. The
+> > > properties are put in the device node for the slot. If no card is
+> > > actually inserted in the slot, then no device is created, and the
+> > > device node is left as not associated with anything.
+> >
+> > But you need to list all devices in the world if you want to support this
 > 
-> The issue was identified by a static analysis tool I developed and
-> confirmed by manual review.
+> Why would I need to? The PCIe slot representation just describes a
+> PCIe bridge. Granted this might not be entirely correct, but it's
+> what we currently have.
+> 
+> And even then, there are properties like memory-region or wakeup-source
+> that are generic and aren't tied to specific devices.
+> 
+> > somehow. Yes, probably many of them (or majority) will be enumerated as is,
+> > but some may need an assistance via (dynamic) properties or similar mechanisms.
+> 
+> Even if we wanted to add dynamic properties, there is currently no proper
+> device node to attach them to.
+> 
 
-Reviewed-by: Andy Shevchenko <andriy.shevchenko@intel.com>
+There are dynamic device nodes that we need to create for hotpluggable devices,
+if we need to pass the DT properties to the driver. Like how we do it for PCIe,
+serdev. You cannot describe static device nodes in DT for devices attached to
+swappable cards like M.2.
+
+> > > It's just that for this new M.2 E-key connector, there aren't separate
+> > > nodes for each interface. And the system doesn't associate the device
+> > > node with the device, because it's no longer a child node of the
+> > > controller or hierarchy, but connected over the OF graph.
+> > >
+> > > Moving over to the E-key connector representation seems like one step
+> > > forward and one step backward in descriptive ability. We gain proper
+> > > power sequencing, but lose generic properties.
+> >
+> > The "key" is property of the connector. Hence if you have an idea what can be
+> > common for ALL "key":s, that's probably can be abstracted. Note, I'm not
+> > familiar with the connector framework in the Linux kernel, perhaps it's already
+> > that kind of abstraction.
+> 
+> I'm not arguing for a even more generic "M.2" connector. The "key" is
+> already described in the compatible. I'm saying we should have some way
+> of describing the individual interfaces (PCIe, SDIO, USB, UART, I2S, I2C)
+> on the connector so further nodes or properties can be attached to them,
+> either with overlays or dynamically within the kernel. Right now the
+> are only described as individual ports, but we can't actually tie a
+> device to a OF graph port.
+> 
+
+If there are properties that apply to the interfaces, *not devices*, then you
+can add them to the relevant endpoint node:
+https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree/Documentation/devicetree/bindings/connector/pcie-m2-e-connector.yaml#n167
+
+> But maybe I'm overthinking the representation part. AFAICT for Qualcomm's
+> UART-based BT bit part, Mani just had the driver create a device node
+> under the UART (by traversing the OF graph to find the UART). If that's
+> the desired way then the connector binding should mention it.
+
+What do you mean by 'connector binding should mention it'? You cannot hardcode
+the device node in the connector binding, because it is not part of the
+connector binding itself. For example, the UART device node that is created for
+the WCN7850, already has a binding:
+https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree/Documentation/devicetree/bindings/net/bluetooth/qcom,wcn7850-bt.yaml
+
+What the driver does is, just creating that node under the serdev controller as
+if the device was described statically in the DT.
+
+For the wakeup property you asked earlier, it depends on the interface. If the
+interface supports "in-band" wakeup like USB/SDIO, you can add the property in
+the relevant controller node statically itself. For example, with USB XHCI
+controller, you would know that the controller will support wakeup or not
+statically. So you will add that property to the controller node. Then, if the
+user has enabled the wakeup for a specific USB device like keyboard/mouse
+through sysfs, then wakeup will just work. Here, we don't need to create the
+USB device node at all.
+
+But if the interface supports physical wakeup, like UART_WAKE# in M.2 SDIO Key
+E, then based on the presence of that property, you would configure wakeup in
+the connector driver itself. But this is not present as of now.
+
+> And that
+> works for me. But I think it's messier and also we're missing an
+> opportunity to make the M.2 connector a standardized attachment point
+> for overlays.
+> 
+
+I don't envision using overlays for the M.2 connectors. It is not strictly
+needed, unless the connector is non-standard.
+
+- Mani
 
 -- 
-With Best Regards,
-Andy Shevchenko
-
-
+மணிவண்ணன் சதாசிவம்
