@@ -1,63 +1,63 @@
-Received: from mail-dl1-f50.google.com (mail-dl1-f50.google.com [74.125.82.50])
+Received: from mail-dl1-f44.google.com (mail-dl1-f44.google.com [74.125.82.44])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 25A13356A12
-	for <platform-driver-x86@vger.kernel.org>; Fri, 17 Apr 2026 16:33:02 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=74.125.82.50
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 953DF356A24
+	for <platform-driver-x86@vger.kernel.org>; Fri, 17 Apr 2026 16:33:05 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=74.125.82.44
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1776443585; cv=none; b=EBfTISeh75vgCM8X8ey+ubHe2XKgi6sKNOZ11dGaaUM5peSw0mLxf3A9f3G5+oRJuLaFnfvTYXGLLbFIj7ifiLqZEFRpPRifdIqvoJl1MUHTdwAFZjW8FzSmW7zIymP5La8PausKmA7OG2ms2APwdMQ8f5y1+7HD4t103NyjVz8=
+	t=1776443587; cv=none; b=g1t+jLgUvj2yiyoTN38dKiHhs4yi5AjaYVqQUALjh8P+hBu3Se2newosrEjVu4YBGFnCvWv7MrhAEcCjMDpWKPLKlU1gqWqIRFu2ti/CRE7+YBoERYi6v8z91nOFNe2U1QBYgXD/t1MRVbS+t3+JiKZLKaED5BDDY8muUZmfPys=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1776443585; c=relaxed/simple;
-	bh=+075GOoyLbd5S34H1HUCr/nG7KpOcOATM4+CPgFOnJs=;
+	s=arc-20240116; t=1776443587; c=relaxed/simple;
+	bh=Cu1Qzmws012BXnI1eTEAw1sw3l4dPj+7XQhUK50WAm0=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=MkEYpUsdjM98GvTeUu5L7j3HqWhABojbREb3/8CaC6KpOpMaLgEOtzoyrrEQ/cm20xTEWTgIZCOII+hzzhUgYhPfhgXvuckVR+lQYEZcsEr4FUHDAR+z0dbwjenV9Uf8qx14nQ7snMK2/9APHF8+CJ9AaD1IzfoS/cEE7PlyL+E=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=ClKPsrUS; arc=none smtp.client-ip=74.125.82.50
+	 MIME-Version; b=hs9V8RpUHMMYV38aPrFt2C1vVPJxz5qrgQCBf93qvB63SUXSCys5sm/j8pWiQ++zNQZ57FHQo/ZYR8xuwcnl7rjPdP77rJjD38mDyTR47x6/Cd1UyQaUyf91T5etJeanvB6m+13l0qhtDD+7o5uI62pVaPqRGS8tVQoolKv+U8M=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=VXBeNk5i; arc=none smtp.client-ip=74.125.82.44
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ClKPsrUS"
-Received: by mail-dl1-f50.google.com with SMTP id a92af1059eb24-12c1a170a50so1186034c88.0
-        for <platform-driver-x86@vger.kernel.org>; Fri, 17 Apr 2026 09:33:02 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="VXBeNk5i"
+Received: by mail-dl1-f44.google.com with SMTP id a92af1059eb24-12c565dd3a7so1314952c88.1
+        for <platform-driver-x86@vger.kernel.org>; Fri, 17 Apr 2026 09:33:05 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20251104; t=1776443582; x=1777048382; darn=vger.kernel.org;
+        d=gmail.com; s=20251104; t=1776443584; x=1777048384; darn=vger.kernel.org;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=yX+MCrL59z+GAPTCkuU/G/y2YHYVEKPhhbS8nU432oc=;
-        b=ClKPsrUSsq+hitrgPAFzWIzs1HBzbZe8jyNtnZ6Sl2sbKeni2jWVys08nOfi+zw3AK
-         iS2reSjObf6d8V8R5Hdq06k1lMvwG+F3GzJGnLIOeT95+ye/vSwmNjynZ3pqddp0g8Y9
-         faiK7zlG+7WU9ovWzb+FclAkGMUswMEZwpAH1ROZq1QjGaL5nbCkfbl9rwlr5WqOe7Ir
-         n753fcdjMsIvye7avBN28Uzw1EKckLXCgNkWfmAzBjAvD21vRY+gyVVXsaZVztlgLrvA
-         ljqk18uxcb2BVF+U5+Mztr8wvxSaJ7X3MuNahjHAYQcVzaYZkG26IrMQzE2ybv5QrfTL
-         pvqg==
+        bh=+lDBm8n8fJvrsOswm79MFjtCZT25fXo9SM2Tx+0mY14=;
+        b=VXBeNk5ik3eQP1muaXlgiq/5III6uvCaZTOm0JPvIowMBGdSw6xpNxb1zymgVWPhc/
+         ooVy9tFpjVkOCwh6qYz3FzLxmeu67GCfYPoW5ym2MdseeBk1808IizuMd45ug0zFnvVm
+         eGxEsaTmLrZaZGX2GGpZkKtemNRCeT4c+fJOqyWydSevvareH4Ufiei/JDJccknt6UmU
+         NX/VQpNUtoTdtZ9E3b+5l4EKf56lBC5RFVEXO2+WewMdj7eNsRnvN7QsOtQdXb2/uxOy
+         J/W69Nlg8bpoQ/vc1DKz2Bv30ZWBpXhDssDP+NoIjd32ayVA/QE3zCkc3G9u/BsCL6iH
+         ptnA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1776443582; x=1777048382;
+        d=1e100.net; s=20251104; t=1776443584; x=1777048384;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:x-gm-gg:x-gm-message-state:from
          :to:cc:subject:date:message-id:reply-to;
-        bh=yX+MCrL59z+GAPTCkuU/G/y2YHYVEKPhhbS8nU432oc=;
-        b=m0a3sY+sifJPvi0O+iXONRZrqzEU1GlOlQgwgEHW8VlwPsOceXDSBqTr0D3lURGYRD
-         +rUFAMHoImYgjLhtZsU5Yvi2tdO6P0qdRI0UGvv+hRsGJrAkn+dSPaoiW69OAaHmVT+l
-         bx8fnntk7zK4cymh+UC1j9NkJarRt8EhEbKUvmqJMOtymQlg7H/gbf+JvFwh1DGwfU7t
-         uoxLsg0DT1ezLM7oT4vierveH/sWBNR1jfOg0D5IJg7DS+P8m8WNiqmDwMbDdxGav96s
-         NLfMaKyCuf3RJkwiJw4LVO+78oO08S7+434pLcP5H0mxzyJ8a4seOuNIEwa6tazZ8Dxa
-         OF9Q==
-X-Forwarded-Encrypted: i=1; AFNElJ+Y226tyGJGA8Grrj5W7JfLPbNsKoUWFXzAHD5GYxO+UfusiiEXNad3oBrzoY+w8Ky9e8yOWUp4a4kco/AYH8ylX7rM@vger.kernel.org
-X-Gm-Message-State: AOJu0YyysB1Lf+bACF9JDkDo9vFKWEbbXFUeMzBWGVkpEqq3351Q1VGE
-	h1JPzdHRo2SeCz39wYqAIJjHnqro5bd2C9e2LrDyYi0guTQmMP4VvUZC
-X-Gm-Gg: AeBDieskiSn4uzt2u+fQFnXQBLPyRdBiXsi1lxUzh99j2SoecC3EzFoq+SrrxUoN9Eb
-	jLdiNFvk/RNq89wgE4GkKC6NZy0ZI6Tu23YFYjzJ4QZOXikS2By7KvQBGwh8Y6ntnaJbKi8jUon
-	QF3m9MIBxDTNrC3uOrbsbtWgkAwxyMsob4uG1T49RARxFyK5g8RyrfkcQk3CbUB2U2nJuga/0Kg
-	KxKa+0PLssT300u7ANfOh3nFr0OWHWQwKGpoIz8yf4NvirJv3WB79yKLkxgjMuetLUpZNwOLJ4Z
-	Ogsp04MOc8Sc2M2+8RYorBGogOyrRWb8TYooQ09rv708N7gmqcv3boLU2ZvM2gcj6+vvuD9dVlc
-	LYG/hjZwBqRA4anFGY9djuJCQm97aJCX53Ffb4IFvQp1N9MYjfshTnogFFEQgB6a3DU0D3vbaMN
-	9xN8UkPGA6M46ugVPtYmZUYGcthw+UxthTRNnEeJRMt/VLySHxylNY/RSa00q598n4v7Q5yQ==
-X-Received: by 2002:a05:7022:1282:b0:122:33e:6d41 with SMTP id a92af1059eb24-12c73f975e0mr1490067c88.23.1776443582098;
-        Fri, 17 Apr 2026 09:33:02 -0700 (PDT)
+        bh=+lDBm8n8fJvrsOswm79MFjtCZT25fXo9SM2Tx+0mY14=;
+        b=D7iuzWnGQoYJxuzvfSzS0MJCC/n8hEGmKkxiEpFeqzso/ATorI8R+XuOmJT7gHhYT+
+         ugWWnIMsu5bO3tGXg8aA/an8/9ptb6tk9u+AKjx1XV1eotsH3XFqY5A4TZnF9d+mAtwg
+         gJ29jE8W5K14i+duywlMjpmIKoT+U/wNsZuEErtQI7tmTsjCpSTK1a5BGGLywOEpd/lc
+         gGxrw5+6YfQboaOmgW9oMdM6VbadujHOPv/TOQpnDm96crb6ecq/7J1luXaosqWiE2HF
+         +Pbi+5cpz8PRICz6b2wdCV9XtRGl0Ib4lJrtYNyDY/Ppj5FHlG1WQdGG6qYenUbJhJ6H
+         np/w==
+X-Forwarded-Encrypted: i=1; AFNElJ/WUisXuGcb+njGqWkkgxKmR760tZUT+CFK+vIufbjGUI3jvkIfKc0R8SQOhZj3FZUR7HTUGn+sh3z5wURVltKWaMGb@vger.kernel.org
+X-Gm-Message-State: AOJu0YyUwSd7PKes4oO+sl5JJ1tTt2zl7aQGFBCeVAhkagoHSh9jWHXT
+	AX67JIDa75qafy88c0JvG4ecnmPkfsOdxMqrWCivoxtIpDqvQy0xOdRc
+X-Gm-Gg: AeBDieuRsG5mVPDvBrgsVjhgWbSmpCtic1FnJMEm5FybOI0SGC0nP9End01y9R0/x+b
+	rB/1Grzcc9QOLqusPjHUMTz6ayTjhxtNCW54sgFXex0EBUVYW1kB/S+fWml16eZWcbOubgyb3HH
+	TFXeIFenCn13aEvDTcHQsbZq7h4yc2t41AEv/cyEnufL2on3l7o2R3HFGLAvk+dX9wBBoZzi9fm
+	y2mBcBqq8HKEin1u4cjDXdzZjc7YR4dgzr/lgqpY45Y8i/WNZo8wScavB0odxBl9iGTFOwWVXI0
+	1A5H7w/vILuS3Y3uKrOuUJwP9WDaI9rrwKcqj84Df85HccdnmYS68vENIa+N0WDnYIU4HpjRKH8
+	UKVrTzKG162zv0SMiO1KjQj1JvFuOFrFMZNWqR23Zax59xhP5SJqN+DA3sQSWqWT214OebMrBmw
+	j479wOv0pG2tQyT9HvhvFFgxIXJw7Mwcw9k41VrTQOwJZXkc8doJ9aMiDKBZXBcyDWx3RXiQ==
+X-Received: by 2002:a05:7022:383:b0:12b:ebb9:1c18 with SMTP id a92af1059eb24-12c73fa739fmr2082866c88.31.1776443584133;
+        Fri, 17 Apr 2026 09:33:04 -0700 (PDT)
 Received: from TC-LAPTOP (23-93-157-142.fiber.dynamic.sonic.net. [23.93.157.142])
-        by smtp.gmail.com with ESMTPSA id a92af1059eb24-12c749dc86bsm3603777c88.8.2026.04.17.09.33.01
+        by smtp.gmail.com with ESMTPSA id a92af1059eb24-12c749dc86bsm3603777c88.8.2026.04.17.09.33.03
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 17 Apr 2026 09:33:01 -0700 (PDT)
+        Fri, 17 Apr 2026 09:33:03 -0700 (PDT)
 From: Thierry Chatard <tchatard@gmail.com>
 To: linux-kernel@vger.kernel.org
 Cc: hansg@kernel.org,
@@ -71,9 +71,9 @@ Cc: hansg@kernel.org,
 	jacopo.mondi@ideasonboard.com,
 	nicholas@rothemail.net,
 	Thierry Chatard <tchatard@gmail.com>
-Subject: [PATCH v3 1/5] platform/x86: intel_lpss: add resource conflict quirk for Dell Latitude 5285
-Date: Fri, 17 Apr 2026 09:32:48 -0700
-Message-ID: <20260417163252.15603-2-tchatard@gmail.com>
+Subject: [PATCH v3 2/5] platform/x86: int3472: tps68470: fix clock consumer registration for Dell Latitude 5285
+Date: Fri, 17 Apr 2026 09:32:49 -0700
+Message-ID: <20260417163252.15603-3-tchatard@gmail.com>
 X-Mailer: git-send-email 2.51.0
 In-Reply-To: <20260417163252.15603-1-tchatard@gmail.com>
 References: <4ef5f305-0234-4193-a190-edbfe770ea04@kernel.org>
@@ -86,84 +86,108 @@ List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-The Dell Latitude 5285 2-in-1 has a BIOS bug where the ACPI GEXP device
-and the I2C4 controller (INT3446) both claim the same MMIO region via the
-shared SB04 variable. This causes intel_lpss_acpi to fail binding to I2C4
-with -EBUSY, preventing the front camera (OV5670) sensor from being
-registered.
+The BIOS on the Dell Latitude 5285 leaves GNVS field C0TP at zero.
+With C0TP=0 the ACPI _DEP method on INT3479 (OV5670, front camera)
+resolves to PCI0 instead of the INT3472 (TPS68470 PMIC) device.
 
-Add a DMI quirk that selects IGNORE_RESOURCE_CONFLICTS for INT3446 on this
-machine, matching the existing pattern used by other LPSS quirks.
+Because for_each_acpi_consumer_dev() walks the _DEP reverse-mapping,
+INT3479 is invisible to it: the clock consumer lookup entry for the
+front camera is never registered with the tps68470-clk driver, and
+the OV5670 sensor driver cannot acquire its MCLK.
+
+Fix this without touching ACPI tables by adding optional static clock
+consumer fields to struct int3472_tps68470_board_data:
+
+  unsigned int n_clk_consumers;
+  const struct tps68470_clk_consumer *clk_consumers;
+
+When board data is present and n_clk_consumers is non-zero, probe uses
+the static list instead of for_each_acpi_consumer_dev() to populate
+tps68470-clk platform data.  Platforms that do not set these fields
+continue to use the existing ACPI traversal path unchanged.
+
+The board_data lookup is moved before the clock-pdata allocation so
+that it is available for both the static and dynamic paths.
 
 Signed-off-by: Thierry Chatard <tchatard@gmail.com>
 ---
- drivers/mfd/intel-lpss-acpi.c | 32 ++++++++++++++++++++++++++++++++
- 1 file changed, 32 insertions(+)
+ drivers/platform/x86/intel/int3472/tps68470.c | 29 ++++++++++++++++---
+ drivers/platform/x86/intel/int3472/tps68470.h | 10 +++++++
+ 2 files changed, 35 insertions(+), 4 deletions(-)
 
-diff --git a/drivers/mfd/intel-lpss-acpi.c b/drivers/mfd/intel-lpss-acpi.c
-index 63406026d..7d0964848 100644
---- a/drivers/mfd/intel-lpss-acpi.c
-+++ b/drivers/mfd/intel-lpss-acpi.c
-@@ -13,6 +13,8 @@
- #include <linux/ioport.h>
- #include <linux/mod_devicetable.h>
- #include <linux/module.h>
-+#include <linux/acpi.h>
-+#include <linux/dmi.h>
- #include <linux/pm.h>
- #include <linux/pm_runtime.h>
- #include <linux/platform_device.h>
-@@ -52,6 +54,15 @@ static const struct intel_lpss_platform_info spt_i2c_info = {
- 	.swnode = &spt_i2c_node,
- };
- 
-+/* Same as spt_i2c_info but with QUIRK_IGNORE_RESOURCE_CONFLICTS for Dell 5285
-+ * where ACPI GEXP device conflicts with I2C4 (INT3446) MMIO resources.
-+ */
-+static const struct intel_lpss_platform_info spt_i2c_info_ignore_conflicts = {
-+	.clk_rate = 120000000,
-+	.swnode = &spt_i2c_node,
-+	.quirks = QUIRK_IGNORE_RESOURCE_CONFLICTS,
-+};
-+
- static const struct property_entry uart_properties[] = {
- 	PROPERTY_ENTRY_U32("reg-io-width", 4),
- 	PROPERTY_ENTRY_U32("reg-shift", 2),
-@@ -172,6 +183,16 @@ static const struct acpi_device_id intel_lpss_acpi_ids[] = {
- };
- MODULE_DEVICE_TABLE(acpi, intel_lpss_acpi_ids);
- 
-+static const struct dmi_system_id dell5285_lpss_dmi[] = {
-+	{
-+		.matches = {
-+			DMI_EXACT_MATCH(DMI_SYS_VENDOR, "Dell Inc."),
-+			DMI_EXACT_MATCH(DMI_PRODUCT_NAME, "Latitude 5285"),
-+		},
-+	},
-+	{ }
-+};
-+
- static int intel_lpss_acpi_probe(struct platform_device *pdev)
- {
- 	const struct intel_lpss_platform_info *data;
-@@ -182,6 +203,17 @@ static int intel_lpss_acpi_probe(struct platform_device *pdev)
- 	if (!data)
+diff --git a/drivers/platform/x86/intel/int3472/tps68470.c b/drivers/platform/x86/intel/int3472/tps68470.c
+index a496075c0..3364ef428 100644
+--- a/drivers/platform/x86/intel/int3472/tps68470.c
++++ b/drivers/platform/x86/intel/int3472/tps68470.c
+@@ -155,9 +155,31 @@ static int skl_int3472_tps68470_probe(struct i2c_client *client)
+ 	if (!adev)
  		return -ENODEV;
  
-+	/* Apply IGNORE_RESOURCE_CONFLICTS for I2C4 on Dell Latitude 5285.
-+	 * The ACPI GEXP device conflicts with I2C4 (INT3446) MMIO resources
-+	 * due to a BIOS bug where both use the same SB04 variable.
+-	n_consumers = skl_int3472_fill_clk_pdata(&client->dev, &clk_pdata);
+-	if (n_consumers < 0)
+-		return n_consumers;
++	/*
++	 * Look up board data before building clock platform data.  On platforms
++	 * where a sensor's ACPI _DEP does not list the INT3472 device,
++	 * for_each_acpi_consumer_dev() misses that sensor and its clock consumer
++	 * entry is never registered.  Board data can supply a static consumer
++	 * list to use instead, bypassing the broken _DEP traversal.
 +	 */
-+	if (data == &spt_i2c_info &&
-+	    acpi_dev_hid_uid_match(ACPI_COMPANION(&pdev->dev), "INT3446", NULL) &&
-+	    dmi_check_system(dell5285_lpss_dmi)) {
-+		dev_info(&pdev->dev, "Dell 5285: applying IGNORE_RESOURCE_CONFLICTS for I2C4\n");
-+		data = &spt_i2c_info_ignore_conflicts;
-+	}
++	board_data = int3472_tps68470_get_board_data(dev_name(&client->dev));
 +
- 	info = devm_kmemdup(&pdev->dev, data, sizeof(*info), GFP_KERNEL);
- 	if (!info)
- 		return -ENOMEM;
++	if (board_data && board_data->n_clk_consumers) {
++		clk_pdata = devm_kzalloc(&client->dev,
++					 struct_size(clk_pdata, consumers,
++						     board_data->n_clk_consumers),
++					 GFP_KERNEL);
++		if (!clk_pdata)
++			return -ENOMEM;
++		clk_pdata->n_consumers = board_data->n_clk_consumers;
++		for (i = 0; i < (int)board_data->n_clk_consumers; i++)
++			clk_pdata->consumers[i] = board_data->clk_consumers[i];
++		n_consumers = board_data->n_clk_consumers;
++	} else {
++		n_consumers = skl_int3472_fill_clk_pdata(&client->dev, &clk_pdata);
++		if (n_consumers < 0)
++			return n_consumers;
++	}
+ 
+ 	regmap = devm_regmap_init_i2c(client, &tps68470_regmap_config);
+ 	if (IS_ERR(regmap)) {
+@@ -176,7 +198,6 @@ static int skl_int3472_tps68470_probe(struct i2c_client *client)
+ 	device_type = skl_int3472_tps68470_calc_type(adev);
+ 	switch (device_type) {
+ 	case DESIGNED_FOR_WINDOWS:
+-		board_data = int3472_tps68470_get_board_data(dev_name(&client->dev));
+ 		if (!board_data)
+ 			return dev_err_probe(&client->dev, -ENODEV, "No board-data found for this model\n");
+ 
+diff --git a/drivers/platform/x86/intel/int3472/tps68470.h b/drivers/platform/x86/intel/int3472/tps68470.h
+index 35915e701..4aefb728e 100644
+--- a/drivers/platform/x86/intel/int3472/tps68470.h
++++ b/drivers/platform/x86/intel/int3472/tps68470.h
+@@ -12,11 +12,21 @@
+ #define _INTEL_SKL_INT3472_TPS68470_H
+ 
+ struct gpiod_lookup_table;
++struct tps68470_clk_consumer;
+ struct tps68470_regulator_platform_data;
+ 
+ struct int3472_tps68470_board_data {
+ 	const char *dev_name;
+ 	const struct tps68470_regulator_platform_data *tps68470_regulator_pdata;
++	/*
++	 * Static clock consumers.  When n_clk_consumers is non-zero these are
++	 * used in place of for_each_acpi_consumer_dev() to build the tps68470-clk
++	 * platform data.  Needed on platforms where a sensor's ACPI _DEP does not
++	 * list the INT3472 device, causing that sensor to be missed by the ACPI
++	 * dependency traversal.
++	 */
++	unsigned int n_clk_consumers;
++	const struct tps68470_clk_consumer *clk_consumers;
+ 	unsigned int n_gpiod_lookups;
+ 	struct gpiod_lookup_table *tps68470_gpio_lookup_tables[];
+ };
 -- 
 2.51.0
 
