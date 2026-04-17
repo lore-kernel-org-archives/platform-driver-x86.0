@@ -1,162 +1,229 @@
-Received: from mail-pj1-f49.google.com (mail-pj1-f49.google.com [209.85.216.49])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.13])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 347FE36492A
-	for <platform-driver-x86@vger.kernel.org>; Fri, 17 Apr 2026 19:16:52 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.49
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D430830EF64;
+	Fri, 17 Apr 2026 21:37:17 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.13
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1776453413; cv=none; b=M7DI27+fmLJ5qAnHk8wuTSwMBxy3Tx3HELqfL/6S05rUKSrKOzrNshfj/UjRDI8Tqiy5O6IEpwtw1Cs6qvCf9APhg2u4//cKKe85f12m0ubG9ZHWJMOmlnqVUBRytfb3J083G/IsXop43358VfyQU59s7nR+4BieSYjrOfrba+U=
+	t=1776461840; cv=none; b=KVnKRd4eJyXSQEzwN7pBUxnT/rjxh42tIOfrVRkmg/qZd0HoHSEk3tCUYJvm2P0t2VaaBl8lM3I0RlqHLgGOYOMkBQZjjd6kG6DB2r3KTaGfOeAjI9qEENolJT/0NtqWfxMISr6WQHBPTiMsJKB+nNL51eqbWbVvn1IWWNPj3CM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1776453413; c=relaxed/simple;
-	bh=ujuYV0pSwCtZOJwyM0F/+J7velSQIeFiLkVjt+sG9TQ=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=RfR9UpMILo9K9ixnvcbo9/Kjx3pyHHEbZ0YwXDPHOE7EocW2Hkf6qIelqpHgs4HwGHVyVtb4W+dq0G4zwdmF2y8YQAOMdF49aCAyvmg8Pe5e5axnEBD8+6AATWHOmv7PT7YOCu6VDoFZnzN+oQXFNK4gzZ4JRZ7uWUEyPKN/YU0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=oll95xjg; arc=none smtp.client-ip=209.85.216.49
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1776461840; c=relaxed/simple;
+	bh=5gozF/YVoH2brUhxMlKBeS4XSk3dhGat1AgsWEJQbMY=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=q7JiKs839gZDdQgLzrXLf1AYuE1MsNHpzWt9rpLN6bM4lAwezp3vYSZ0mmK6M/l1zsGFenH2rasG88qdtKRdIE/2ogVohYLnU+0AxJPvshbmvddvTHIk2hYfe1EAawyMoULocQO29igjBb82dei9bE22dSQxb68XnWQpMCgoajg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=MtF+tXpe; arc=none smtp.client-ip=198.175.65.13
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="oll95xjg"
-Received: by mail-pj1-f49.google.com with SMTP id 98e67ed59e1d1-35e563b0ee7so527998a91.1
-        for <platform-driver-x86@vger.kernel.org>; Fri, 17 Apr 2026 12:16:52 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20251104; t=1776453412; x=1777058212; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=OekRKekk3j1AeClebcRERfCyBBA7D7adqLjQiMd5w7Y=;
-        b=oll95xjgfZHQo50hAJZPLIVnXdHT1iFP+M6V40eAjX8LN0Uf4mPmeE9RZrxjvC6qvg
-         4pfrESXzp2lkw8LxkBOdAhcCIFLmcQdK4180IVa3PsFf27DH5eZnDXkH5TXU9/4AHfMW
-         JuxNMWpbmxK05tvMk9JALehvVhTGGLPsJSDuZNNYYXlTlARrAjBUSsexTRvuNH8z+5cX
-         8kiRRY+EQpwpkhhibMccAy0q22alPFhANFri4tdT6RUiYs3aZ99yMlwlULNLJpaiNtWF
-         FcpdyOYm6D0KR0jJnveuUHAONgOMtISrFWp29QZHJrBNt/bmzCAN+I1YkLjdbGlkJznk
-         +xfQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1776453412; x=1777058212;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-gg:x-gm-message-state:from
-         :to:cc:subject:date:message-id:reply-to;
-        bh=OekRKekk3j1AeClebcRERfCyBBA7D7adqLjQiMd5w7Y=;
-        b=QVWad6/MEwdVxm3aBSdZj7/4f+wXUsHvecc9qILDmTou0PxGhIICPSKMVxxY69FPZK
-         l5MS8w1GmqE3iW5CXIssyNdukqMxDVxCXfRYO7idkAW3i4WvkJatPDUFbU5INwmvqK9L
-         GplsKA0+RyvNTkTraxZ4K/Xtem+XyO55QsSNMPP1USfOZXTJ1fBPIAb9jY1j4KN1QwBf
-         cu+TGljhhXvCr8ALrUHK1FCzktX2lWhiwAuYcub0fFsFWtECkMFdGpivYP5VmOfMOelH
-         5M86A9YI7QZSlfLWCTcSGd9hkueUxbo3mEdpPJqIoUrXcVA0ytG8eUopvNWkdX5GWjKM
-         jigw==
-X-Forwarded-Encrypted: i=1; AFNElJ/pjkPAyFgL28b/WbeSwqIpxxHbIjuM3bdOzCZrUHuT0hkSXQbMkLU4UFmmNH8q5/IUiUkMQlaqolO+GKYmHw9jy8Q+@vger.kernel.org
-X-Gm-Message-State: AOJu0YzE17NQW9wxjwX7bkuCRP1kPFKWaf7pM9P9PMgyWkjKAMHpn5mm
-	6Q938rvizxbcphQAYpadwhhpRJ/1UB1oekTjS+E2b8yhkXpiIKnA4hr+MdWvBQ==
-X-Gm-Gg: AeBDievj/FwL2IdlgUSNhPprvT7/QkVhMLz/9s0BJDevQmdwsTYHjkpig1BLZNODkH0
-	7uzgPbAo7bs3SHQKMcQv7x5r2RsU43rMvJz3vIhr6xjpQz/Tn/5oXbxTVyrxgDamksvs4pe7LhI
-	dVIiZy2fUTv06X9T/HDvAmMc3nTKN9TnU/erewnflstzPUznr96B6o8B/lfvC3bZdQCHg5J0En/
-	TM0MZ76iwdxL/brFrTzERKAPVSJjKQgOpB6FrJXg0ur+N37t7OUKc17Csjhq7qUit+mcJP3VqdC
-	bEBRkFqORrigZhP71jBt3pFMh9/PKYmpA1BRg1nCkQ8Uow73DErt19oYiqm9ryRCKCAcKMBlvK/
-	dbtQgAI57S78Fm81pvvyirX8s+tnpA11VoY9gjWJ6jM9YiJud2Ei/uLgMNoXIci+T99LYid+N8f
-	tCvXlQK7npCxxUvWw9/Oj/fsyYGuY87GkvBzI01oPrnLdgeu8wuHoJn1467IJRK6iX
-X-Received: by 2002:a17:90b:55cb:b0:35c:10e8:1a72 with SMTP id 98e67ed59e1d1-361401f50d9mr3769729a91.7.1776453411388;
-        Fri, 17 Apr 2026 12:16:51 -0700 (PDT)
-Received: from gb5.tail50fddd.ts.net ([139.5.199.80])
-        by smtp.gmail.com with ESMTPSA id 98e67ed59e1d1-36140feea38sm2913310a91.6.2026.04.17.12.16.48
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 17 Apr 2026 12:16:50 -0700 (PDT)
-From: Ayaan Mirza Baig <ayaanmirzabaig85@gmail.com>
-To: ilpo.jarvinen@linux.intel.com
-Cc: ayaanmirza788@gmail.com,
-	ayaanmirzabaig85@gmail.com,
-	josh@joshuagrisham.com,
-	linux-kernel@vger.kernel.org,
-	platform-driver-x86@vger.kernel.org
-Subject: [PATCH v5 2/2] platform/x86: samsung-galaxybook: Handle ACPI hotkey notifications
-Date: Sat, 18 Apr 2026 00:46:14 +0000
-Message-ID: <20260418004613.93981-3-ayaanmirzabaig85@gmail.com>
-X-Mailer: git-send-email 2.53.0
-In-Reply-To: <20260418004613.93981-2-ayaanmirzabaig85@gmail.com>
-References: <c46938e0-02f0-22b1-1730-4ce87603667c@linux.intel.com>
- <20260418004613.93981-2-ayaanmirzabaig85@gmail.com>
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="MtF+tXpe"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1776461838; x=1807997838;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:content-transfer-encoding:in-reply-to;
+  bh=5gozF/YVoH2brUhxMlKBeS4XSk3dhGat1AgsWEJQbMY=;
+  b=MtF+tXpe7zUhFTk0+ltNnx3qGbJgsFzNLp0nPeEEB0GSgNFOArII1D1V
+   Uq//werjDh98SFU4HuLUKl3ifYwEkAf3B1joUXzaEyhzAqUp6NOMGD1YZ
+   /kJF1NUlAt1wNUI7j4YKoWbdIlHhtUPxJZgMaynQtsXcabai9bM79DL1L
+   p48za4FY6GajGfllyKuKpyvgmFmeP75ehIGb1Tcql1eh3JL3CC6AnCn6n
+   tknwT6MIpuEqdcVQLrGIX/Ztp6aAlZ+D93HDOdp7Q5MphZNZeDlGvy//G
+   W6RQL7rujLQxuZJl1yM+727V5jzkWgYCBSFRbRijsBGvXCM00TtCqu/ec
+   A==;
+X-CSE-ConnectionGUID: GEj7wFQ+T0KWQ9x6kjnI/g==
+X-CSE-MsgGUID: c/Z69Od4T9Gq2vS6klhTZQ==
+X-IronPort-AV: E=McAfee;i="6800,10657,11762"; a="88550793"
+X-IronPort-AV: E=Sophos;i="6.23,185,1770624000"; 
+   d="scan'208";a="88550793"
+Received: from fmviesa004.fm.intel.com ([10.60.135.144])
+  by orvoesa105.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 17 Apr 2026 14:37:17 -0700
+X-CSE-ConnectionGUID: LGL6QYaeSY+q1BqyDDc4pw==
+X-CSE-MsgGUID: jCTR/ib3Twmdj0VE4rvLKg==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.23,185,1770624000"; 
+   d="scan'208";a="232889944"
+Received: from lkp-server01.sh.intel.com (HELO 7e48d0ff8e22) ([10.239.97.150])
+  by fmviesa004.fm.intel.com with ESMTP; 17 Apr 2026 14:37:14 -0700
+Received: from kbuild by 7e48d0ff8e22 with local (Exim 4.98.2)
+	(envelope-from <lkp@intel.com>)
+	id 1wDqsB-000000000jM-36n5;
+	Fri, 17 Apr 2026 21:37:11 +0000
+Date: Sat, 18 Apr 2026 05:37:05 +0800
+From: kernel test robot <lkp@intel.com>
+To: Sergio Melas <sergiomelas@gmail.com>,
+	Guenter Roeck <linux@roeck-us.net>,
+	Jean Delvare <jdelvare@suse.com>, Rong Zhang <i@rong.moe>
+Cc: llvm@lists.linux.dev, oe-kbuild-all@lists.linux.dev,
+	linux-hwmon@vger.kernel.org, platform-driver-x86@vger.kernel.org,
+	linux-kernel@vger.kernel.org, Armin Wolf <W_Armin@gmx.de>,
+	"Derek J . Clark" <derekjohn.clark@gmail.com>,
+	Sergio Melas <sergiomelas@gmail.com>
+Subject: Re: [PATCH v1] hwmon: (yogafan) Massive hardware expansion and
+ structural refactoring
+Message-ID: <202604180539.EuswNnjG-lkp@intel.com>
+References: <20260413060931.31091-2-sergiomelas@gmail.com>
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
+In-Reply-To: <20260413060931.31091-2-sergiomelas@gmail.com>
 
-On Samsung Galaxy Book 5 (SAM0430), the keyboard backlight, microphone
-mute, and camera block hotkeys do not generate i8042 scancodes.
-Instead they arrive as ACPI notifications 0x7d, 0x6e, and 0x6f
-respectively, all of which previously fell through to the default
-"unknown" warning in galaxybook_acpi_notify().
+Hi Sergio,
 
-Add handling for these three events:
+kernel test robot noticed the following build errors:
 
- - 0x7d (Fn+F9, keyboard backlight): schedule the existing
-   kbd_backlight_hotkey_work which cycles brightness.
+[auto build test ERROR on groeck-staging/hwmon-next]
+[also build test ERROR on linus/master next-20260416]
+[cannot apply to v7.0]
+[If your patch is applied to the wrong git tree, kindly drop us a note.
+And when submitting patch, we suggest to use '--base' as documented in
+https://git-scm.com/docs/git-format-patch#_base_tree_information]
 
- - 0x6e (Fn+F10, microphone mute): emit KEY_MICMUTE via the driver's
-   input device.
+url:    https://github.com/intel-lab-lkp/linux/commits/Sergio-Melas/hwmon-yogafan-Massive-hardware-expansion-and-structural-refactoring/20260417-063319
+base:   https://git.kernel.org/pub/scm/linux/kernel/git/groeck/linux-staging.git hwmon-next
+patch link:    https://lore.kernel.org/r/20260413060931.31091-2-sergiomelas%40gmail.com
+patch subject: [PATCH v1] hwmon: (yogafan) Massive hardware expansion and structural refactoring
+config: loongarch-allmodconfig (https://download.01.org/0day-ci/archive/20260418/202604180539.EuswNnjG-lkp@intel.com/config)
+compiler: clang version 19.1.7 (https://github.com/llvm/llvm-project cd708029e0b2869e80abe31ddb175f7c35361f90)
+reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20260418/202604180539.EuswNnjG-lkp@intel.com/reproduce)
 
- - 0x6f (Fn+F11, camera block): if block_recording is active use the
-   existing block_recording_hotkey_work; otherwise emit a toggle of
-   SW_CAMERA_LENS_COVER via the driver's input device on models where
-   the block_recording ACPI feature is not supported.
+If you fix the issue in a separate patch/commit (i.e. not just a new version of
+the same patch/commit), kindly add following tags
+| Reported-by: kernel test robot <lkp@intel.com>
+| Closes: https://lore.kernel.org/oe-kbuild-all/202604180539.EuswNnjG-lkp@intel.com/
 
-Tested on Samsung Galaxy Book 5 (SAM0430) and Samsung Galaxy Book2 Pro
-(SAM0429).
+All errors (new ones prefixed by >>):
 
-Signed-off-by: Ayaan Mirza Baig <ayaanmirzabaig85@gmail.com>
-Co-developed-by: Joshua Grisham <josh@joshuagrisham.com>
-Signed-off-by: Joshua Grisham <josh@joshuagrisham.com>
----
- drivers/platform/x86/samsung-galaxybook.c | 23 +++++++++++++++++++++++
- 1 file changed, 23 insertions(+)
+>> drivers/hwmon/yogafan.c:712:6: error: call to undeclared function 'wmi_has_guid'; ISO C99 and later do not support implicit function declarations [-Wimplicit-function-declaration]
+     712 |         if (wmi_has_guid(LENOVO_WMI_OTHER_MODE_GUID) ||
+         |             ^
+   1 error generated.
 
-diff --git a/drivers/platform/x86/samsung-galaxybook.c b/drivers/platform/x86/samsung-galaxybook.c
-index a51ad6b03164..6382af0b106c 100644
---- a/drivers/platform/x86/samsung-galaxybook.c
-+++ b/drivers/platform/x86/samsung-galaxybook.c
-@@ -197,6 +197,9 @@ static const guid_t performance_mode_guid =
- #define GB_ACPI_NOTIFY_DEVICE_ON_TABLE          0x6c
- #define GB_ACPI_NOTIFY_DEVICE_OFF_TABLE         0x6d
- #define GB_ACPI_NOTIFY_HOTKEY_PERFORMANCE_MODE  0x70
-+#define GB_ACPI_NOTIFY_HOTKEY_KBD_BACKLIGHT     0x7d
-+#define GB_ACPI_NOTIFY_HOTKEY_MICMUTE           0x6e
-+#define GB_ACPI_NOTIFY_HOTKEY_CAMERA            0x6f
- 
- #define GB_KEY_KBD_BACKLIGHT_KEYDOWN    0x2c
- #define GB_KEY_KBD_BACKLIGHT_KEYUP      0xac
-@@ -876,6 +879,7 @@ static int galaxybook_input_init(struct samsung_galaxybook *galaxybook)
- 	galaxybook->input->phys = DRIVER_NAME "/input0";
- 	galaxybook->input->id.bustype = BUS_HOST;
- 
-+	input_set_capability(galaxybook->input, EV_KEY, KEY_MICMUTE);
- 	input_set_capability(galaxybook->input, EV_SW, SW_CAMERA_LENS_COVER);
- 
- 	return input_register_device(galaxybook->input);
-@@ -1259,6 +1263,25 @@ static void galaxybook_acpi_notify(acpi_handle handle, u32 event, void *data)
- 		if (galaxybook->has_performance_mode)
- 			platform_profile_cycle();
- 		break;
-+	case GB_ACPI_NOTIFY_HOTKEY_KBD_BACKLIGHT:
-+		if (galaxybook->has_kbd_backlight)
-+			schedule_work(&galaxybook->kbd_backlight_hotkey_work);
-+		break;
-+	case GB_ACPI_NOTIFY_HOTKEY_MICMUTE:
-+		input_report_key(galaxybook->input, KEY_MICMUTE, 1);
-+		input_sync(galaxybook->input);
-+		input_report_key(galaxybook->input, KEY_MICMUTE, 0);
-+		input_sync(galaxybook->input);
-+		break;
-+	case GB_ACPI_NOTIFY_HOTKEY_CAMERA:
-+		if (galaxybook->has_block_recording) {
-+			schedule_work(&galaxybook->block_recording_hotkey_work);
-+		} else {
-+			input_report_switch(galaxybook->input, SW_CAMERA_LENS_COVER,
-+					    !test_bit(SW_CAMERA_LENS_COVER, galaxybook->input->sw));
-+			input_sync(galaxybook->input);
-+		}
-+		break;
- 	default:
- 		dev_warn(&galaxybook->platform->dev,
- 			 "unknown ACPI notification event: 0x%x\n", event);
+
+vim +/wmi_has_guid +712 drivers/hwmon/yogafan.c
+
+   697	
+   698	static int yoga_fan_probe(struct platform_device *pdev)
+   699	{
+   700		const struct dmi_system_id *dmi_id;
+   701		const struct yogafan_config *cfg;
+   702		struct yoga_fan_data *data;
+   703		struct hwmon_chip_info *chip_info;
+   704		struct hwmon_channel_info *info;
+   705		u32 *fan_config;
+   706		acpi_status status;
+   707		int i;
+   708		const struct hwmon_channel_info **chip_info_array;
+   709	
+   710		/* Check for WMI interfaces that handle fan/thermal management. */
+   711		/*  If present, we yield to the WMI driver to prevent double-reporting. */
+ > 712		if (wmi_has_guid(LENOVO_WMI_OTHER_MODE_GUID) ||
+   713		    wmi_has_guid(LENOVO_CAPABILITY_DATA_00_GUID) ||
+   714		    wmi_has_guid(LENOVO_WMI_FAN_GUID)) {
+   715			dev_info(&pdev->dev, "Lenovo WMI management interface detected; yielding to WMI driver\n");
+   716			return -ENODEV;
+   717		}
+   718	
+   719		dmi_id = dmi_first_match(yogafan_quirks);
+   720		if (!dmi_id)
+   721			return -ENODEV;
+   722	
+   723		cfg = dmi_id->driver_data;
+   724		data = devm_kzalloc(&pdev->dev, sizeof(*data), GFP_KERNEL);
+   725		if (!data)
+   726			return -ENOMEM;
+   727	
+   728		/* * 1. Hardware Calibration & Inertia Scaling (Note 3):
+   729		 * Dynamic parameters (TAU and SLEW) are calibrated relative to fan diameter
+   730		 * based on the moment of inertia relationship (J ∝ d²).
+   731		 */
+   732		data->config = cfg;
+   733		data->device_max_rpm = cfg->r_max ?: 5000;
+   734		data->internal_tau_ms = cfg->tau_ms ?: 1000; /* Robustness: Prevent zero-division */
+   735	
+   736		/* Calculate Slew Rate based on time-to-max-RPM physics */
+   737		data->internal_max_slew_rpm_s = data->device_max_rpm / (cfg->slew_time_s ?: 1);
+   738	
+   739		/* * Log physical parameters for safety traceability (IEC 61508):
+   740		 * Provides a deterministic baseline for the RLLag filter verification.
+   741		 */
+   742		dev_info(&pdev->dev, "Identified hardware: %s\n", dmi_id->ident);
+   743		dev_info(&pdev->dev, "HAL Profile: [Tau: %ums, Slew: %u RPM/s, Max: %u RPM]\n",
+   744			 data->internal_tau_ms, data->internal_max_slew_rpm_s, data->device_max_rpm);
+   745	
+   746		/* * 2. Deterministic Multi-Path Discovery:
+   747		 * We iterate through the available paths to find physical handles.
+   748		 * This loop tests variations until data->fan_count matches the
+   749		 * cfg->fan_count expected for this model profile.
+   750		 */
+   751		for (i = 0; i < MAX_FANS && data->fan_count < cfg->fan_count; i++) {
+   752			acpi_handle handle;
+   753	
+   754			/* Integrity check: End of defined paths in the quirk table */
+   755			if (!cfg->paths[i])
+   756				break;
+   757	
+   758			status = acpi_get_handle(NULL, cfg->paths[i], &handle);
+   759			if (ACPI_SUCCESS(status)) {
+   760				data->active_handles[data->fan_count] = handle;
+   761				data->fan_count++;
+   762			} else {
+   763				/* Log variation failure for troubleshooting */
+   764				dev_dbg(&pdev->dev, "Fan path variation %s not found\n", cfg->paths[i]);
+   765			}
+   766		}
+   767	
+   768		/* Integrity Check: Fail probe if no fans were successfully registered */
+   769		if (data->fan_count == 0) {
+   770			dev_err(&pdev->dev, "Hardware identification failed: No fans found\n");
+   771			return -ENODEV;
+   772		}
+   773	
+   774		/* * 3. HWMON Configuration:
+   775		 * Dynamically build the HWMON channel configuration based on the
+   776		 * number of fans actually discovered. We allocate one extra slot
+   777		 * to serve as a null terminator for the HWMON core.
+   778		 */
+   779		fan_config = devm_kcalloc(&pdev->dev, data->fan_count + 1, sizeof(u32), GFP_KERNEL);
+   780		if (!fan_config)
+   781			return -ENOMEM;
+   782	
+   783		for (i = 0; i < data->fan_count; i++)
+   784			fan_config[i] = HWMON_F_INPUT | HWMON_F_MAX;
+   785	
+   786		info = devm_kzalloc(&pdev->dev, sizeof(*info), GFP_KERNEL);
+   787		if (!info)
+   788			return -ENOMEM;
+   789	
+   790		info->type = hwmon_fan;
+   791		info->config = fan_config;
+   792	
+   793		/* 4. Wrap it in chip_info for registration */
+   794		chip_info = devm_kzalloc(&pdev->dev, sizeof(*chip_info), GFP_KERNEL);
+   795		if (!chip_info)
+   796			return -ENOMEM;
+   797	
+   798		chip_info->ops = &yoga_fan_hwmon_ops;
+   799	
+   800		chip_info_array = devm_kcalloc(&pdev->dev, 2, sizeof(*chip_info_array), GFP_KERNEL);
+   801		if (!chip_info_array)
+   802			return -ENOMEM;
+   803	
+   804		chip_info_array[0] = info;
+   805		chip_info_array[1] = NULL; /* Null terminated */
+   806	
+   807		chip_info->info = chip_info_array;
+   808	
+   809		/* 5. Finalize registration with the accurate hardware description */
+   810		return PTR_ERR_OR_ZERO(devm_hwmon_device_register_with_info(&pdev->dev,
+   811					DRVNAME, data, chip_info, NULL));
+   812	}
+   813	
+
 -- 
-2.53.0
-
+0-DAY CI Kernel Test Service
+https://github.com/intel/lkp-tests/wiki
