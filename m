@@ -1,63 +1,63 @@
-Received: from mail-dl1-f42.google.com (mail-dl1-f42.google.com [74.125.82.42])
+Received: from mail-dl1-f54.google.com (mail-dl1-f54.google.com [74.125.82.54])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4DC5C35E95E
-	for <platform-driver-x86@vger.kernel.org>; Fri, 17 Apr 2026 16:33:07 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=74.125.82.42
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7BD1835AC1C
+	for <platform-driver-x86@vger.kernel.org>; Fri, 17 Apr 2026 16:33:09 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=74.125.82.54
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1776443590; cv=none; b=k2ydG/GyWX7T/8AyWdnsfvar6RdSG3d67MnHKcsKOIwCdIQE88oWOuq+06UCrANNk3O66LuZjEctEo/qHrAW4aodZFkpXC7iXrOgMIQDcIWAP2Es4D952FuPnLACcKd9vgyFefs27xnfedId6Er6MWXfsR+EFNEPzUY7TykiTCI=
+	t=1776443591; cv=none; b=qH8541daMswQzIBc8R4SdAfY8cO20CFe3qDnqAdsw9UqhY8hlRSF8fgd5Gz6dcR5d5uG6YdtEcdcCzn878VXHUeae/bwVb9YQefZh6g6TxoVbhf0tqPaK/UsD6nPawi44okTSpJgxcA58oafTpC9lum6p6kXKEKhiJdlM8CTExA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1776443590; c=relaxed/simple;
-	bh=LRi+8j1uv4IQyt+SAcNH9ZeGWEkOX3C75mNUd0mLMwo=;
+	s=arc-20240116; t=1776443591; c=relaxed/simple;
+	bh=wde4TF8CgNzn8si/JL9P12OCZloroRuFEPIxq/TcvgI=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=K9aTRKagzEOPaUIe0oD9BxEOZpGo2XER4sIXEi65jLpROMlfRljKfdnKLuB3BwA+bH6kifZo/tbysBQzzFmGdiaZaAqUaly6gwEttFIGiWzq0vvDk1FDWfS/0Mo7dcnRvOvCOJs78zMy/Tst11XBXowwq4ixHoQgmFIGWE+voeA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=YZBhD0wj; arc=none smtp.client-ip=74.125.82.42
+	 MIME-Version; b=UE43K6z9ChnM26Q9MlizhzgbdRt+wmb2FYzw3JTsrlz7N+mH/hUGTcMJF/6jzr3IASTiVM5bn3BSpOl0r2Gb+s4C3hf8MqJTPItB2EM7saEkzCaCLQA9/cGROfw5BpfHBEk3q+NkXwfq67dsk402mTsN3KWbXOYrAENxKk3MdL8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=mDh9BjCn; arc=none smtp.client-ip=74.125.82.54
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="YZBhD0wj"
-Received: by mail-dl1-f42.google.com with SMTP id a92af1059eb24-12c33bad4bbso299064c88.0
-        for <platform-driver-x86@vger.kernel.org>; Fri, 17 Apr 2026 09:33:07 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="mDh9BjCn"
+Received: by mail-dl1-f54.google.com with SMTP id a92af1059eb24-12c565dd3a7so1315270c88.1
+        for <platform-driver-x86@vger.kernel.org>; Fri, 17 Apr 2026 09:33:09 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20251104; t=1776443586; x=1777048386; darn=vger.kernel.org;
+        d=gmail.com; s=20251104; t=1776443588; x=1777048388; darn=vger.kernel.org;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=OZYzSmgJreVWUypCLvWA6sUD7qzkFl9KFowiKMZhy/4=;
-        b=YZBhD0wjLsPA1xLU3hD877iYG9/rqT7vfEZcg02XQIDvmoyHBpbECILodegmD/hEH5
-         ooROrabaIMU+VZAZP6O9VwN2+u1DMxPFYkjefM8P4J/ZdwlDU1qRcdJ0WghDPfUe4SoA
-         8AIyyReXOpN+HUGXD1Qk6KkrTcc51xyzZvhwKQL6Aai5Yg+ahv1IwB/0AzxsI9La1Vjt
-         NA2zDj3vb0kop/TlINgfBDfVZw7fvH+R8VFk4lHl2PM174vLWelWaCEf52Us4yNhKVse
-         X/L3JpjfGARLxige6it5ykXuLaHSGjj4nKSgWywzwK9fw/0WcjXUdma9JO/foQPC2IX7
-         HfJg==
+        bh=TVHeDChmbK7H9JMCFb+9pqFytvxF0fdzrozCeGR4L7s=;
+        b=mDh9BjCnf/w8BO1+JMrGkCDkZ783BuUbJzd8HDRs/jzlYQUsJZyesnoVJBgXU1hp+O
+         j+LFV9+ajZspvucMIXFpz171eqU1Ugn1kDTE+7JyPceUttSAvwa3vh59eq5y54Vjx/2C
+         6O+bL1vPGg4bBWNK8Bwtmpzsi1EssJJMadn9O58UNuIegM3m7mJrf3qOR0vgMM7nI6Uy
+         7vxOjrYOMO+dOPyJv11FFdcmldNvIjEMoGlbrNgeVTX+vW3V552nLOyRddlLYmYKnjHo
+         mzPYUu5LV4l8JAdLVgqvlQ6Wocc0uRyovHPo5VwcUGghBuvlF+QUeg3Ky8vkRka5oOlx
+         CODg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1776443586; x=1777048386;
+        d=1e100.net; s=20251104; t=1776443588; x=1777048388;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:x-gm-gg:x-gm-message-state:from
          :to:cc:subject:date:message-id:reply-to;
-        bh=OZYzSmgJreVWUypCLvWA6sUD7qzkFl9KFowiKMZhy/4=;
-        b=GQOWVj1ApXfEJgceP752QsXpu3UEx9Ii4pXM46R8AF4Qv7C6L3FEikBU767v0FlJJH
-         GmImC6s5T/Hgf6jirdjPVEbBlGxi49nHKy7KAFeDvR7DJ5ixWbDULtnadQDVvFSl6DeK
-         ZKOlejZG2lt/IuhYuNNV6sAWgSx3H55P85rIgXQaLEhlJzB1gAHM1VgZ0epT/C8HAkpO
-         J1BoBPW9Xi9/EaRkLXeKYtBUPxNLuYPEry/YkAjH2ucAI41X5+WcXjdcBlnBWkYUdaOa
-         T1M4gbxr6Edpb8xgcc2sQUO2YOSQDqEfiF7HDM47nA800wC49IFR1kG+DOWSsAPUmN6o
-         1z+Q==
-X-Forwarded-Encrypted: i=1; AFNElJ92zGTLmvZ7hBR9cEUyq/xdlHfqu0wHuINX/7M7ZE0TUc4vtRYccZU1199YQht3ku94Ac/et+mZ0HSbWLPoIaacrMri@vger.kernel.org
-X-Gm-Message-State: AOJu0YxIGVvksOvr4rkgk7j1y50JVZ3+Tuwl9MvlLhh8dxzaf/KoaDaH
-	awyxiGqNeVG1y1wwpg03IfX3Gqhel1I4G/dmNcQh2VMiZzE/zpNjOw+Q
-X-Gm-Gg: AeBDieuzQ36bcpuQO5E1ej6lc94lKWaciGk2RycykxotSwX7CENAEQ2XW6B2MPWhKdB
-	BC+3Is2P7u8v/RYI1bC5ztYY4cPoD5vOfgJX9rLJHtg+bLDb8sX8/Ew30acsnty0JGV/fK4/+xw
-	iVb/xVeNBrv36dQ8UlA4MKq+wmSm3llvqceoPWF/7tfO/Z5Whv6qoLh+IRam7MyZrrFWWXx2slY
-	2XT6R2ZVxh/HCPDt3y96p56D/u3b2lzKH6Lmt6mwl8+Bkl5wXgP5YEH+3L3BN1XxTnIt4ODRnF3
-	u2G5PeTqsqVcCYKlbn2vsFxmvvJLHMDsVBTRNpOvBE4WOdtBNGVRb0wC1X4dSjv3cS+KqOdxir7
-	E7ffmYzrIc+I+rF0B5WypD3piVxZLMXS5hdDdxftTGBBaj7Wd6KBwD1XAqXeoNGZtpt9bgFnMhR
-	xL8lBGnDkt3xKMjwBNl27IaRv/kS+SBlgEyCXpGFwC113mBWIrhl8VvpZ6t/uoM5svxjSTZw==
-X-Received: by 2002:a05:7022:11c:b0:128:d3de:c9e4 with SMTP id a92af1059eb24-12c73f9da5amr1468930c88.30.1776443586139;
-        Fri, 17 Apr 2026 09:33:06 -0700 (PDT)
+        bh=TVHeDChmbK7H9JMCFb+9pqFytvxF0fdzrozCeGR4L7s=;
+        b=MbWBGHSq9EJxXj3YhJy6aUKZkp3QK5DW47zdypmzYIAbItEAxy3ePha+PZfYOMw0/j
+         NuUBvZfOXEKc89msp3DS5NA+V1KGfyOGcV2kuKTJp85F1at+DOgMZH1o8F5MeB/LAzAm
+         DQc2kAr33w+EznbyY5Z0d2sd4aVGz2jTdRnoTv4wRc3mE+7yU5JE/CMRrHBtJ/apMhTv
+         G696Sxeqh2q5CRnBqEtCzQ12/Svif5DQBrAQ9kSQ2Ou83dx93+0MxnuNb4GQwCPsLgBA
+         BhJvre6mIiTTO7UA20tsg5oJqPLqMGNvEobZeBSK2O2saWcV+B9Y7e8D3PoEKd96LEUF
+         NMpQ==
+X-Forwarded-Encrypted: i=1; AFNElJ8dsD7eif1K33wMLdqOTJueh75A5fVCKfL269N4iV1SmsJ4VDOhS8jh2/Jrtx+rLwltewplk0dGZgGDW0CQ7BWrbTTg@vger.kernel.org
+X-Gm-Message-State: AOJu0YxYn/KiTUg66gSwHcseYSZ31bHjj8dozcFXMZY/EPZpSe+fyUYE
+	7J02NmLoHI36shqYlJe12YyDdY4ITyPPoTiAI97yix2T9CCTI8ATNzbM
+X-Gm-Gg: AeBDietEbU+RyGan1xJf+AuUFe0fqnXqjnAabyFX9zof3SSRBiVt5nPaaWxOsYP15A/
+	sBFXTqf3bHbKDEc/PkEvwzhTQxvNpEcQVuK4+b3Yu4BXhzv6q8sVbzt20uVpZG1yVyItUP5TVu9
+	sKRd4W/FZiYdVwE3LE4EtVn4Xpaw7lBhOfzIkDhOhebepPL7/baeHDDJfN+TLvWxPXYrYTuZEl+
+	njtXGZV/AvLSdovKU0Upnd0g+Gch7faFhzPQHxiuO0Gedo/OLGjnloessacMnUyFBI9caW+UEqS
+	shwgJ3B9Yd1x5aoYVjQRWtm2muKFTXSLjT8y3zridfK4i8svAt/hP6Am9g/ZOTws04UN5pAkTCz
+	eIb2FO9lgud/NudSgVFMZpu7E1Xipy424fYv3lu6pfQ8XWf57wtZVTq5UpzBpvZ1EbvIVUuOMLi
+	TcZyrJo4qTjJZr2kTwCnSffrPydhFS8S9MM1DI4Rgn2RrEwaBxb1kj+Md6L58AlZ+GccZJZQ==
+X-Received: by 2002:a05:7022:eac8:b0:12c:2f8b:4c4d with SMTP id a92af1059eb24-12c73f7cbabmr2017351c88.15.1776443588111;
+        Fri, 17 Apr 2026 09:33:08 -0700 (PDT)
 Received: from TC-LAPTOP (23-93-157-142.fiber.dynamic.sonic.net. [23.93.157.142])
-        by smtp.gmail.com with ESMTPSA id a92af1059eb24-12c749dc86bsm3603777c88.8.2026.04.17.09.33.05
+        by smtp.gmail.com with ESMTPSA id a92af1059eb24-12c749dc86bsm3603777c88.8.2026.04.17.09.33.07
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 17 Apr 2026 09:33:05 -0700 (PDT)
+        Fri, 17 Apr 2026 09:33:07 -0700 (PDT)
 From: Thierry Chatard <tchatard@gmail.com>
 To: linux-kernel@vger.kernel.org
 Cc: hansg@kernel.org,
@@ -71,9 +71,9 @@ Cc: hansg@kernel.org,
 	jacopo.mondi@ideasonboard.com,
 	nicholas@rothemail.net,
 	Thierry Chatard <tchatard@gmail.com>
-Subject: [PATCH v3 3/5] platform/x86: int3472: tps68470: add board data for Dell Latitude 5285
-Date: Fri, 17 Apr 2026 09:32:50 -0700
-Message-ID: <20260417163252.15603-4-tchatard@gmail.com>
+Subject: [PATCH v3 4/5] media: ipu-bridge: add sensor configuration for OV8858 (INT3477)
+Date: Fri, 17 Apr 2026 09:32:51 -0700
+Message-ID: <20260417163252.15603-5-tchatard@gmail.com>
 X-Mailer: git-send-email 2.51.0
 In-Reply-To: <20260417163252.15603-1-tchatard@gmail.com>
 References: <4ef5f305-0234-4193-a190-edbfe770ea04@kernel.org>
@@ -86,235 +86,29 @@ List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-The Dell Latitude 5285 2-in-1 has two cameras connected through a TPS68470
-PMIC/clock/GPIO hub:
-
-  Front: OV5670 (ACPI INT3479) on I2C4
-  Back:  OV8858 (ACPI INT3477) on I2C2, daisy-chained behind TPS68470
-         S_I2C port (controlled by reg 0x43 S_I2C_CTL)
-
-GPIO mapping (TPS68470):
-  INT3479 (OV5670): GPIO3 = reset, GPIO4 = powerdown (both active-low)
-  INT3477 (OV8858): GPIO9 = s_resetn, GPIO7 = s_enable (both active-low)
-    GPIO9 and GPIO7 are the TPS68470 secondary-port GPIOs (SGPO reg 0x22
-    bits 2 and 0), not regular GPDO outputs.
-
-Regulator mapping:
-  CORE  -> dvdd  / INT3477
-  ANA   -> avdd  / INT3477
-  VIO   -> dovdd / INT3477
-  VSIO  -> avdd  / INT3479 and vsio / INT3477 (always_on: keeps S_I2C_CTL
-           non-zero from boot so OV8858 is reachable on I2C2 at any time)
-  AUX1  -> dvdd  / INT3479
-  AUX2  -> dovdd / INT3479
-
-Marking VSIO always_on ensures the TPS68470 S_I2C passthrough is active
-from the moment the PMIC driver probes, eliminating a timing dependency
-between TPS68470 and ov8858 probe ordering.
-
-A static clock consumer list is provided for both sensors (INT3477 and
-INT3479) to work around the broken ACPI _DEP on INT3479 described in the
-previous patch.
+The Omnivision OV8858 is used as the rear camera in several Intel
+IPU3-based devices (e.g. Dell Latitude 5285 2-in-1). Its ACPI HID is
+INT3477. Add a sensor configuration entry with a link frequency of
+360 MHz to allow ipu_bridge to create the firmware node for this sensor.
 
 Signed-off-by: Thierry Chatard <tchatard@gmail.com>
 ---
- .../x86/intel/int3472/tps68470_board_data.c   | 176 ++++++++++++++++++
- 1 file changed, 176 insertions(+)
+ drivers/media/pci/intel/ipu-bridge.c | 2 ++
+ 1 file changed, 2 insertions(+)
 
-diff --git a/drivers/platform/x86/intel/int3472/tps68470_board_data.c b/drivers/platform/x86/intel/int3472/tps68470_board_data.c
-index 71357a036..c1bf13faf 100644
---- a/drivers/platform/x86/intel/int3472/tps68470_board_data.c
-+++ b/drivers/platform/x86/intel/int3472/tps68470_board_data.c
-@@ -287,6 +287,175 @@ static const struct int3472_tps68470_board_data dell_7212_tps68470_board_data =
- 	},
- };
- 
-+/* Settings for Dell Latitude 5285 2-in-1 */
-+
-+/*
-+ * The BIOS leaves GNVS field C0TP at zero, which causes INT3479's _DEP to
-+ * resolve to PCI0 instead of the INT3472 device.  Provide a static clock
-+ * consumer list so probe registers MCLK lookups for both sensors regardless
-+ * of the broken _DEP traversal.
-+ */
-+static const struct tps68470_clk_consumer dell_5285_clk_consumers[] = {
-+	{ .consumer_dev_name = "i2c-INT3477:00" },	/* OV8858 rear camera  */
-+	{ .consumer_dev_name = "i2c-INT3479:00" },	/* OV5670 front camera */
-+};
-+
-+static struct regulator_consumer_supply dell_5285_int3477_ana_consumer_supplies[] = {
-+	REGULATOR_SUPPLY("avdd", "i2c-INT3477:00"),
-+};
-+
-+static struct regulator_consumer_supply dell_5285_int3477_core_consumer_supplies[] = {
-+	REGULATOR_SUPPLY("dvdd", "i2c-INT3477:00"),
-+};
-+
-+static struct regulator_consumer_supply dell_5285_int3477_vio_consumer_supplies[] = {
-+	REGULATOR_SUPPLY("dovdd", "i2c-INT3477:00"),
-+};
-+
-+static struct regulator_consumer_supply dell_5285_int3479_vsio_consumer_supplies[] = {
-+	REGULATOR_SUPPLY("avdd", "i2c-INT3479:00"),
-+	/* S_I2C_CTL: must be enabled for OV8858 I2C daisy-chain access */
-+	REGULATOR_SUPPLY("vsio", "i2c-INT3477:00"),
-+};
-+
-+static struct regulator_consumer_supply dell_5285_int3479_aux1_consumer_supplies[] = {
-+	REGULATOR_SUPPLY("dvdd", "i2c-INT3479:00"),
-+};
-+
-+static struct regulator_consumer_supply dell_5285_int3479_aux2_consumer_supplies[] = {
-+	REGULATOR_SUPPLY("dovdd", "i2c-INT3479:00"),
-+};
-+
-+static const struct regulator_init_data dell_5285_tps68470_core_reg_init_data = {
-+	.constraints = {
-+		.min_uV = 1200000,
-+		.max_uV = 1200000,
-+		.apply_uV = 1,
-+		.valid_ops_mask = REGULATOR_CHANGE_STATUS,
-+	},
-+	.num_consumer_supplies = ARRAY_SIZE(dell_5285_int3477_core_consumer_supplies),
-+	.consumer_supplies = dell_5285_int3477_core_consumer_supplies,
-+};
-+
-+static const struct regulator_init_data dell_5285_tps68470_ana_reg_init_data = {
-+	.constraints = {
-+		.min_uV = 2815200,
-+		.max_uV = 2815200,
-+		.apply_uV = 1,
-+		.valid_ops_mask = REGULATOR_CHANGE_STATUS,
-+	},
-+	.num_consumer_supplies = ARRAY_SIZE(dell_5285_int3477_ana_consumer_supplies),
-+	.consumer_supplies = dell_5285_int3477_ana_consumer_supplies,
-+};
-+
-+static const struct regulator_init_data dell_5285_tps68470_vcm_reg_init_data = {
-+	.constraints = {
-+		.min_uV = 2815200,
-+		.max_uV = 2815200,
-+		.apply_uV = 1,
-+		.valid_ops_mask = REGULATOR_CHANGE_STATUS,
-+	},
-+	.num_consumer_supplies = 0,
-+	.consumer_supplies = NULL,
-+};
-+
-+static const struct regulator_init_data dell_5285_tps68470_vio_reg_init_data = {
-+	.constraints = {
-+		.min_uV = 1800600,
-+		.max_uV = 1800600,
-+		.apply_uV = 1,
-+		.valid_ops_mask = REGULATOR_CHANGE_STATUS,
-+	},
-+	.num_consumer_supplies = ARRAY_SIZE(dell_5285_int3477_vio_consumer_supplies),
-+	.consumer_supplies = dell_5285_int3477_vio_consumer_supplies,
-+};
-+
-+static const struct regulator_init_data dell_5285_tps68470_vsio_reg_init_data = {
-+	.constraints = {
-+		.min_uV = 1800600,
-+		.max_uV = 1800600,
-+		.apply_uV = 1,
-+		.valid_ops_mask = REGULATOR_CHANGE_STATUS,
-+		/*
-+		 * Keep S_I2C_CTL enabled from boot so OV8858 I2C daisy-chain
-+		 * is accessible before ov8858 driver probes.
-+		 */
-+		.always_on = 1,
-+	},
-+	.num_consumer_supplies = ARRAY_SIZE(dell_5285_int3479_vsio_consumer_supplies),
-+	.consumer_supplies = dell_5285_int3479_vsio_consumer_supplies,
-+};
-+
-+static const struct regulator_init_data dell_5285_tps68470_aux1_reg_init_data = {
-+	.constraints = {
-+		.min_uV = 1213200,
-+		.max_uV = 1213200,
-+		.apply_uV = 1,
-+		.valid_ops_mask = REGULATOR_CHANGE_STATUS,
-+	},
-+	.num_consumer_supplies = ARRAY_SIZE(dell_5285_int3479_aux1_consumer_supplies),
-+	.consumer_supplies = dell_5285_int3479_aux1_consumer_supplies,
-+};
-+
-+static const struct regulator_init_data dell_5285_tps68470_aux2_reg_init_data = {
-+	.constraints = {
-+		.min_uV = 1800600,
-+		.max_uV = 1800600,
-+		.apply_uV = 1,
-+		.valid_ops_mask = REGULATOR_CHANGE_STATUS,
-+	},
-+	.num_consumer_supplies = ARRAY_SIZE(dell_5285_int3479_aux2_consumer_supplies),
-+	.consumer_supplies = dell_5285_int3479_aux2_consumer_supplies,
-+};
-+
-+static const struct tps68470_regulator_platform_data dell_5285_tps68470_pdata = {
-+	.reg_init_data = {
-+		[TPS68470_CORE] = &dell_5285_tps68470_core_reg_init_data,
-+		[TPS68470_ANA]  = &dell_5285_tps68470_ana_reg_init_data,
-+		[TPS68470_VCM]  = &dell_5285_tps68470_vcm_reg_init_data,
-+		[TPS68470_VIO]  = &dell_5285_tps68470_vio_reg_init_data,
-+		[TPS68470_VSIO] = &dell_5285_tps68470_vsio_reg_init_data,
-+		[TPS68470_AUX1] = &dell_5285_tps68470_aux1_reg_init_data,
-+		[TPS68470_AUX2] = &dell_5285_tps68470_aux2_reg_init_data,
-+	},
-+};
-+
-+static struct gpiod_lookup_table dell_5285_int3477_gpios = {
-+	.dev_id = "i2c-INT3477:00",
-+	.table = {
-+		/*
-+		 * TPS68470 GPIO9 = s_resetn (secondary camera reset, active-low)
-+		 * TPS68470 GPIO7 = s_enable (secondary camera enable/powerdown)
-+		 * These logic outputs are specifically designed for secondary
-+		 * camera control on the TPS68470. Matches Surface Go pattern.
-+		 */
-+		GPIO_LOOKUP("tps68470-gpio", 9, "reset", GPIO_ACTIVE_LOW),
-+		GPIO_LOOKUP("tps68470-gpio", 7, "powerdown", GPIO_ACTIVE_LOW),
-+		{ }
-+	}
-+};
-+
-+static struct gpiod_lookup_table dell_5285_int3479_gpios = {
-+	.dev_id = "i2c-INT3479:00",
-+	.table = {
-+		GPIO_LOOKUP("tps68470-gpio", 3, "reset", GPIO_ACTIVE_LOW),
-+		GPIO_LOOKUP("tps68470-gpio", 4, "powerdown", GPIO_ACTIVE_LOW),
-+		{ }
-+	}
-+};
-+
-+static const struct int3472_tps68470_board_data dell_5285_tps68470_board_data = {
-+	.dev_name = "i2c-INT3472:05",
-+	.tps68470_regulator_pdata = &dell_5285_tps68470_pdata,
-+	.n_clk_consumers = ARRAY_SIZE(dell_5285_clk_consumers),
-+	.clk_consumers = dell_5285_clk_consumers,
-+	.n_gpiod_lookups = 2,
-+	.tps68470_gpio_lookup_tables = {
-+		&dell_5285_int3477_gpios,
-+		&dell_5285_int3479_gpios,
-+	},
-+};
-+
- static const struct dmi_system_id int3472_tps68470_board_data_table[] = {
- 	{
- 		.matches = {
-@@ -316,6 +485,13 @@ static const struct dmi_system_id int3472_tps68470_board_data_table[] = {
- 		},
- 		.driver_data = (void *)&dell_7212_tps68470_board_data,
- 	},
-+	{
-+		.matches = {
-+			DMI_EXACT_MATCH(DMI_SYS_VENDOR,   "Dell Inc."),
-+			DMI_EXACT_MATCH(DMI_PRODUCT_NAME, "Latitude 5285"),
-+		},
-+		.driver_data = (void *)&dell_5285_tps68470_board_data,
-+	},
- 	{ }
- };
- 
+diff --git a/drivers/media/pci/intel/ipu-bridge.c b/drivers/media/pci/intel/ipu-bridge.c
+index fc6608e33..f51749d0f 100644
+--- a/drivers/media/pci/intel/ipu-bridge.c
++++ b/drivers/media/pci/intel/ipu-bridge.c
+@@ -63,6 +63,8 @@ static const struct ipu_sensor_config ipu_supported_sensors[] = {
+ 	IPU_SENSOR_CONFIG("INT33F0", 1, 384000000),
+ 	/* Omnivision OV2740 */
+ 	IPU_SENSOR_CONFIG("INT3474", 1, 180000000),
++	/* Omnivision OV8858 */
++	IPU_SENSOR_CONFIG("INT3477", 1, 360000000),
+ 	/* Omnivision OV5670 */
+ 	IPU_SENSOR_CONFIG("INT3479", 1, 422400000),
+ 	/* Omnivision OV8865 */
 -- 
 2.51.0
 
