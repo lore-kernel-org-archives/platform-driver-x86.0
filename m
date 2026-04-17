@@ -1,63 +1,63 @@
-Received: from mail-dl1-f44.google.com (mail-dl1-f44.google.com [74.125.82.44])
+Received: from mail-dl1-f42.google.com (mail-dl1-f42.google.com [74.125.82.42])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 953DF356A24
-	for <platform-driver-x86@vger.kernel.org>; Fri, 17 Apr 2026 16:33:05 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=74.125.82.44
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4DC5C35E95E
+	for <platform-driver-x86@vger.kernel.org>; Fri, 17 Apr 2026 16:33:07 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=74.125.82.42
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1776443587; cv=none; b=g1t+jLgUvj2yiyoTN38dKiHhs4yi5AjaYVqQUALjh8P+hBu3Se2newosrEjVu4YBGFnCvWv7MrhAEcCjMDpWKPLKlU1gqWqIRFu2ti/CRE7+YBoERYi6v8z91nOFNe2U1QBYgXD/t1MRVbS+t3+JiKZLKaED5BDDY8muUZmfPys=
+	t=1776443590; cv=none; b=k2ydG/GyWX7T/8AyWdnsfvar6RdSG3d67MnHKcsKOIwCdIQE88oWOuq+06UCrANNk3O66LuZjEctEo/qHrAW4aodZFkpXC7iXrOgMIQDcIWAP2Es4D952FuPnLACcKd9vgyFefs27xnfedId6Er6MWXfsR+EFNEPzUY7TykiTCI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1776443587; c=relaxed/simple;
-	bh=Cu1Qzmws012BXnI1eTEAw1sw3l4dPj+7XQhUK50WAm0=;
+	s=arc-20240116; t=1776443590; c=relaxed/simple;
+	bh=LRi+8j1uv4IQyt+SAcNH9ZeGWEkOX3C75mNUd0mLMwo=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=hs9V8RpUHMMYV38aPrFt2C1vVPJxz5qrgQCBf93qvB63SUXSCys5sm/j8pWiQ++zNQZ57FHQo/ZYR8xuwcnl7rjPdP77rJjD38mDyTR47x6/Cd1UyQaUyf91T5etJeanvB6m+13l0qhtDD+7o5uI62pVaPqRGS8tVQoolKv+U8M=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=VXBeNk5i; arc=none smtp.client-ip=74.125.82.44
+	 MIME-Version; b=K9aTRKagzEOPaUIe0oD9BxEOZpGo2XER4sIXEi65jLpROMlfRljKfdnKLuB3BwA+bH6kifZo/tbysBQzzFmGdiaZaAqUaly6gwEttFIGiWzq0vvDk1FDWfS/0Mo7dcnRvOvCOJs78zMy/Tst11XBXowwq4ixHoQgmFIGWE+voeA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=YZBhD0wj; arc=none smtp.client-ip=74.125.82.42
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="VXBeNk5i"
-Received: by mail-dl1-f44.google.com with SMTP id a92af1059eb24-12c565dd3a7so1314952c88.1
-        for <platform-driver-x86@vger.kernel.org>; Fri, 17 Apr 2026 09:33:05 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="YZBhD0wj"
+Received: by mail-dl1-f42.google.com with SMTP id a92af1059eb24-12c33bad4bbso299064c88.0
+        for <platform-driver-x86@vger.kernel.org>; Fri, 17 Apr 2026 09:33:07 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20251104; t=1776443584; x=1777048384; darn=vger.kernel.org;
+        d=gmail.com; s=20251104; t=1776443586; x=1777048386; darn=vger.kernel.org;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=+lDBm8n8fJvrsOswm79MFjtCZT25fXo9SM2Tx+0mY14=;
-        b=VXBeNk5ik3eQP1muaXlgiq/5III6uvCaZTOm0JPvIowMBGdSw6xpNxb1zymgVWPhc/
-         ooVy9tFpjVkOCwh6qYz3FzLxmeu67GCfYPoW5ym2MdseeBk1808IizuMd45ug0zFnvVm
-         eGxEsaTmLrZaZGX2GGpZkKtemNRCeT4c+fJOqyWydSevvareH4Ufiei/JDJccknt6UmU
-         NX/VQpNUtoTdtZ9E3b+5l4EKf56lBC5RFVEXO2+WewMdj7eNsRnvN7QsOtQdXb2/uxOy
-         J/W69Nlg8bpoQ/vc1DKz2Bv30ZWBpXhDssDP+NoIjd32ayVA/QE3zCkc3G9u/BsCL6iH
-         ptnA==
+        bh=OZYzSmgJreVWUypCLvWA6sUD7qzkFl9KFowiKMZhy/4=;
+        b=YZBhD0wjLsPA1xLU3hD877iYG9/rqT7vfEZcg02XQIDvmoyHBpbECILodegmD/hEH5
+         ooROrabaIMU+VZAZP6O9VwN2+u1DMxPFYkjefM8P4J/ZdwlDU1qRcdJ0WghDPfUe4SoA
+         8AIyyReXOpN+HUGXD1Qk6KkrTcc51xyzZvhwKQL6Aai5Yg+ahv1IwB/0AzxsI9La1Vjt
+         NA2zDj3vb0kop/TlINgfBDfVZw7fvH+R8VFk4lHl2PM174vLWelWaCEf52Us4yNhKVse
+         X/L3JpjfGARLxige6it5ykXuLaHSGjj4nKSgWywzwK9fw/0WcjXUdma9JO/foQPC2IX7
+         HfJg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1776443584; x=1777048384;
+        d=1e100.net; s=20251104; t=1776443586; x=1777048386;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:x-gm-gg:x-gm-message-state:from
          :to:cc:subject:date:message-id:reply-to;
-        bh=+lDBm8n8fJvrsOswm79MFjtCZT25fXo9SM2Tx+0mY14=;
-        b=D7iuzWnGQoYJxuzvfSzS0MJCC/n8hEGmKkxiEpFeqzso/ATorI8R+XuOmJT7gHhYT+
-         ugWWnIMsu5bO3tGXg8aA/an8/9ptb6tk9u+AKjx1XV1eotsH3XFqY5A4TZnF9d+mAtwg
-         gJ29jE8W5K14i+duywlMjpmIKoT+U/wNsZuEErtQI7tmTsjCpSTK1a5BGGLywOEpd/lc
-         gGxrw5+6YfQboaOmgW9oMdM6VbadujHOPv/TOQpnDm96crb6ecq/7J1luXaosqWiE2HF
-         +Pbi+5cpz8PRICz6b2wdCV9XtRGl0Ib4lJrtYNyDY/Ppj5FHlG1WQdGG6qYenUbJhJ6H
-         np/w==
-X-Forwarded-Encrypted: i=1; AFNElJ/WUisXuGcb+njGqWkkgxKmR760tZUT+CFK+vIufbjGUI3jvkIfKc0R8SQOhZj3FZUR7HTUGn+sh3z5wURVltKWaMGb@vger.kernel.org
-X-Gm-Message-State: AOJu0YyUwSd7PKes4oO+sl5JJ1tTt2zl7aQGFBCeVAhkagoHSh9jWHXT
-	AX67JIDa75qafy88c0JvG4ecnmPkfsOdxMqrWCivoxtIpDqvQy0xOdRc
-X-Gm-Gg: AeBDieuRsG5mVPDvBrgsVjhgWbSmpCtic1FnJMEm5FybOI0SGC0nP9End01y9R0/x+b
-	rB/1Grzcc9QOLqusPjHUMTz6ayTjhxtNCW54sgFXex0EBUVYW1kB/S+fWml16eZWcbOubgyb3HH
-	TFXeIFenCn13aEvDTcHQsbZq7h4yc2t41AEv/cyEnufL2on3l7o2R3HFGLAvk+dX9wBBoZzi9fm
-	y2mBcBqq8HKEin1u4cjDXdzZjc7YR4dgzr/lgqpY45Y8i/WNZo8wScavB0odxBl9iGTFOwWVXI0
-	1A5H7w/vILuS3Y3uKrOuUJwP9WDaI9rrwKcqj84Df85HccdnmYS68vENIa+N0WDnYIU4HpjRKH8
-	UKVrTzKG162zv0SMiO1KjQj1JvFuOFrFMZNWqR23Zax59xhP5SJqN+DA3sQSWqWT214OebMrBmw
-	j479wOv0pG2tQyT9HvhvFFgxIXJw7Mwcw9k41VrTQOwJZXkc8doJ9aMiDKBZXBcyDWx3RXiQ==
-X-Received: by 2002:a05:7022:383:b0:12b:ebb9:1c18 with SMTP id a92af1059eb24-12c73fa739fmr2082866c88.31.1776443584133;
-        Fri, 17 Apr 2026 09:33:04 -0700 (PDT)
+        bh=OZYzSmgJreVWUypCLvWA6sUD7qzkFl9KFowiKMZhy/4=;
+        b=GQOWVj1ApXfEJgceP752QsXpu3UEx9Ii4pXM46R8AF4Qv7C6L3FEikBU767v0FlJJH
+         GmImC6s5T/Hgf6jirdjPVEbBlGxi49nHKy7KAFeDvR7DJ5ixWbDULtnadQDVvFSl6DeK
+         ZKOlejZG2lt/IuhYuNNV6sAWgSx3H55P85rIgXQaLEhlJzB1gAHM1VgZ0epT/C8HAkpO
+         J1BoBPW9Xi9/EaRkLXeKYtBUPxNLuYPEry/YkAjH2ucAI41X5+WcXjdcBlnBWkYUdaOa
+         T1M4gbxr6Edpb8xgcc2sQUO2YOSQDqEfiF7HDM47nA800wC49IFR1kG+DOWSsAPUmN6o
+         1z+Q==
+X-Forwarded-Encrypted: i=1; AFNElJ92zGTLmvZ7hBR9cEUyq/xdlHfqu0wHuINX/7M7ZE0TUc4vtRYccZU1199YQht3ku94Ac/et+mZ0HSbWLPoIaacrMri@vger.kernel.org
+X-Gm-Message-State: AOJu0YxIGVvksOvr4rkgk7j1y50JVZ3+Tuwl9MvlLhh8dxzaf/KoaDaH
+	awyxiGqNeVG1y1wwpg03IfX3Gqhel1I4G/dmNcQh2VMiZzE/zpNjOw+Q
+X-Gm-Gg: AeBDieuzQ36bcpuQO5E1ej6lc94lKWaciGk2RycykxotSwX7CENAEQ2XW6B2MPWhKdB
+	BC+3Is2P7u8v/RYI1bC5ztYY4cPoD5vOfgJX9rLJHtg+bLDb8sX8/Ew30acsnty0JGV/fK4/+xw
+	iVb/xVeNBrv36dQ8UlA4MKq+wmSm3llvqceoPWF/7tfO/Z5Whv6qoLh+IRam7MyZrrFWWXx2slY
+	2XT6R2ZVxh/HCPDt3y96p56D/u3b2lzKH6Lmt6mwl8+Bkl5wXgP5YEH+3L3BN1XxTnIt4ODRnF3
+	u2G5PeTqsqVcCYKlbn2vsFxmvvJLHMDsVBTRNpOvBE4WOdtBNGVRb0wC1X4dSjv3cS+KqOdxir7
+	E7ffmYzrIc+I+rF0B5WypD3piVxZLMXS5hdDdxftTGBBaj7Wd6KBwD1XAqXeoNGZtpt9bgFnMhR
+	xL8lBGnDkt3xKMjwBNl27IaRv/kS+SBlgEyCXpGFwC113mBWIrhl8VvpZ6t/uoM5svxjSTZw==
+X-Received: by 2002:a05:7022:11c:b0:128:d3de:c9e4 with SMTP id a92af1059eb24-12c73f9da5amr1468930c88.30.1776443586139;
+        Fri, 17 Apr 2026 09:33:06 -0700 (PDT)
 Received: from TC-LAPTOP (23-93-157-142.fiber.dynamic.sonic.net. [23.93.157.142])
-        by smtp.gmail.com with ESMTPSA id a92af1059eb24-12c749dc86bsm3603777c88.8.2026.04.17.09.33.03
+        by smtp.gmail.com with ESMTPSA id a92af1059eb24-12c749dc86bsm3603777c88.8.2026.04.17.09.33.05
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 17 Apr 2026 09:33:03 -0700 (PDT)
+        Fri, 17 Apr 2026 09:33:05 -0700 (PDT)
 From: Thierry Chatard <tchatard@gmail.com>
 To: linux-kernel@vger.kernel.org
 Cc: hansg@kernel.org,
@@ -71,9 +71,9 @@ Cc: hansg@kernel.org,
 	jacopo.mondi@ideasonboard.com,
 	nicholas@rothemail.net,
 	Thierry Chatard <tchatard@gmail.com>
-Subject: [PATCH v3 2/5] platform/x86: int3472: tps68470: fix clock consumer registration for Dell Latitude 5285
-Date: Fri, 17 Apr 2026 09:32:49 -0700
-Message-ID: <20260417163252.15603-3-tchatard@gmail.com>
+Subject: [PATCH v3 3/5] platform/x86: int3472: tps68470: add board data for Dell Latitude 5285
+Date: Fri, 17 Apr 2026 09:32:50 -0700
+Message-ID: <20260417163252.15603-4-tchatard@gmail.com>
 X-Mailer: git-send-email 2.51.0
 In-Reply-To: <20260417163252.15603-1-tchatard@gmail.com>
 References: <4ef5f305-0234-4193-a190-edbfe770ea04@kernel.org>
@@ -86,108 +86,235 @@ List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-The BIOS on the Dell Latitude 5285 leaves GNVS field C0TP at zero.
-With C0TP=0 the ACPI _DEP method on INT3479 (OV5670, front camera)
-resolves to PCI0 instead of the INT3472 (TPS68470 PMIC) device.
+The Dell Latitude 5285 2-in-1 has two cameras connected through a TPS68470
+PMIC/clock/GPIO hub:
 
-Because for_each_acpi_consumer_dev() walks the _DEP reverse-mapping,
-INT3479 is invisible to it: the clock consumer lookup entry for the
-front camera is never registered with the tps68470-clk driver, and
-the OV5670 sensor driver cannot acquire its MCLK.
+  Front: OV5670 (ACPI INT3479) on I2C4
+  Back:  OV8858 (ACPI INT3477) on I2C2, daisy-chained behind TPS68470
+         S_I2C port (controlled by reg 0x43 S_I2C_CTL)
 
-Fix this without touching ACPI tables by adding optional static clock
-consumer fields to struct int3472_tps68470_board_data:
+GPIO mapping (TPS68470):
+  INT3479 (OV5670): GPIO3 = reset, GPIO4 = powerdown (both active-low)
+  INT3477 (OV8858): GPIO9 = s_resetn, GPIO7 = s_enable (both active-low)
+    GPIO9 and GPIO7 are the TPS68470 secondary-port GPIOs (SGPO reg 0x22
+    bits 2 and 0), not regular GPDO outputs.
 
-  unsigned int n_clk_consumers;
-  const struct tps68470_clk_consumer *clk_consumers;
+Regulator mapping:
+  CORE  -> dvdd  / INT3477
+  ANA   -> avdd  / INT3477
+  VIO   -> dovdd / INT3477
+  VSIO  -> avdd  / INT3479 and vsio / INT3477 (always_on: keeps S_I2C_CTL
+           non-zero from boot so OV8858 is reachable on I2C2 at any time)
+  AUX1  -> dvdd  / INT3479
+  AUX2  -> dovdd / INT3479
 
-When board data is present and n_clk_consumers is non-zero, probe uses
-the static list instead of for_each_acpi_consumer_dev() to populate
-tps68470-clk platform data.  Platforms that do not set these fields
-continue to use the existing ACPI traversal path unchanged.
+Marking VSIO always_on ensures the TPS68470 S_I2C passthrough is active
+from the moment the PMIC driver probes, eliminating a timing dependency
+between TPS68470 and ov8858 probe ordering.
 
-The board_data lookup is moved before the clock-pdata allocation so
-that it is available for both the static and dynamic paths.
+A static clock consumer list is provided for both sensors (INT3477 and
+INT3479) to work around the broken ACPI _DEP on INT3479 described in the
+previous patch.
 
 Signed-off-by: Thierry Chatard <tchatard@gmail.com>
 ---
- drivers/platform/x86/intel/int3472/tps68470.c | 29 ++++++++++++++++---
- drivers/platform/x86/intel/int3472/tps68470.h | 10 +++++++
- 2 files changed, 35 insertions(+), 4 deletions(-)
+ .../x86/intel/int3472/tps68470_board_data.c   | 176 ++++++++++++++++++
+ 1 file changed, 176 insertions(+)
 
-diff --git a/drivers/platform/x86/intel/int3472/tps68470.c b/drivers/platform/x86/intel/int3472/tps68470.c
-index a496075c0..3364ef428 100644
---- a/drivers/platform/x86/intel/int3472/tps68470.c
-+++ b/drivers/platform/x86/intel/int3472/tps68470.c
-@@ -155,9 +155,31 @@ static int skl_int3472_tps68470_probe(struct i2c_client *client)
- 	if (!adev)
- 		return -ENODEV;
- 
--	n_consumers = skl_int3472_fill_clk_pdata(&client->dev, &clk_pdata);
--	if (n_consumers < 0)
--		return n_consumers;
-+	/*
-+	 * Look up board data before building clock platform data.  On platforms
-+	 * where a sensor's ACPI _DEP does not list the INT3472 device,
-+	 * for_each_acpi_consumer_dev() misses that sensor and its clock consumer
-+	 * entry is never registered.  Board data can supply a static consumer
-+	 * list to use instead, bypassing the broken _DEP traversal.
-+	 */
-+	board_data = int3472_tps68470_get_board_data(dev_name(&client->dev));
-+
-+	if (board_data && board_data->n_clk_consumers) {
-+		clk_pdata = devm_kzalloc(&client->dev,
-+					 struct_size(clk_pdata, consumers,
-+						     board_data->n_clk_consumers),
-+					 GFP_KERNEL);
-+		if (!clk_pdata)
-+			return -ENOMEM;
-+		clk_pdata->n_consumers = board_data->n_clk_consumers;
-+		for (i = 0; i < (int)board_data->n_clk_consumers; i++)
-+			clk_pdata->consumers[i] = board_data->clk_consumers[i];
-+		n_consumers = board_data->n_clk_consumers;
-+	} else {
-+		n_consumers = skl_int3472_fill_clk_pdata(&client->dev, &clk_pdata);
-+		if (n_consumers < 0)
-+			return n_consumers;
-+	}
- 
- 	regmap = devm_regmap_init_i2c(client, &tps68470_regmap_config);
- 	if (IS_ERR(regmap)) {
-@@ -176,7 +198,6 @@ static int skl_int3472_tps68470_probe(struct i2c_client *client)
- 	device_type = skl_int3472_tps68470_calc_type(adev);
- 	switch (device_type) {
- 	case DESIGNED_FOR_WINDOWS:
--		board_data = int3472_tps68470_get_board_data(dev_name(&client->dev));
- 		if (!board_data)
- 			return dev_err_probe(&client->dev, -ENODEV, "No board-data found for this model\n");
- 
-diff --git a/drivers/platform/x86/intel/int3472/tps68470.h b/drivers/platform/x86/intel/int3472/tps68470.h
-index 35915e701..4aefb728e 100644
---- a/drivers/platform/x86/intel/int3472/tps68470.h
-+++ b/drivers/platform/x86/intel/int3472/tps68470.h
-@@ -12,11 +12,21 @@
- #define _INTEL_SKL_INT3472_TPS68470_H
- 
- struct gpiod_lookup_table;
-+struct tps68470_clk_consumer;
- struct tps68470_regulator_platform_data;
- 
- struct int3472_tps68470_board_data {
- 	const char *dev_name;
- 	const struct tps68470_regulator_platform_data *tps68470_regulator_pdata;
-+	/*
-+	 * Static clock consumers.  When n_clk_consumers is non-zero these are
-+	 * used in place of for_each_acpi_consumer_dev() to build the tps68470-clk
-+	 * platform data.  Needed on platforms where a sensor's ACPI _DEP does not
-+	 * list the INT3472 device, causing that sensor to be missed by the ACPI
-+	 * dependency traversal.
-+	 */
-+	unsigned int n_clk_consumers;
-+	const struct tps68470_clk_consumer *clk_consumers;
- 	unsigned int n_gpiod_lookups;
- 	struct gpiod_lookup_table *tps68470_gpio_lookup_tables[];
+diff --git a/drivers/platform/x86/intel/int3472/tps68470_board_data.c b/drivers/platform/x86/intel/int3472/tps68470_board_data.c
+index 71357a036..c1bf13faf 100644
+--- a/drivers/platform/x86/intel/int3472/tps68470_board_data.c
++++ b/drivers/platform/x86/intel/int3472/tps68470_board_data.c
+@@ -287,6 +287,175 @@ static const struct int3472_tps68470_board_data dell_7212_tps68470_board_data =
+ 	},
  };
+ 
++/* Settings for Dell Latitude 5285 2-in-1 */
++
++/*
++ * The BIOS leaves GNVS field C0TP at zero, which causes INT3479's _DEP to
++ * resolve to PCI0 instead of the INT3472 device.  Provide a static clock
++ * consumer list so probe registers MCLK lookups for both sensors regardless
++ * of the broken _DEP traversal.
++ */
++static const struct tps68470_clk_consumer dell_5285_clk_consumers[] = {
++	{ .consumer_dev_name = "i2c-INT3477:00" },	/* OV8858 rear camera  */
++	{ .consumer_dev_name = "i2c-INT3479:00" },	/* OV5670 front camera */
++};
++
++static struct regulator_consumer_supply dell_5285_int3477_ana_consumer_supplies[] = {
++	REGULATOR_SUPPLY("avdd", "i2c-INT3477:00"),
++};
++
++static struct regulator_consumer_supply dell_5285_int3477_core_consumer_supplies[] = {
++	REGULATOR_SUPPLY("dvdd", "i2c-INT3477:00"),
++};
++
++static struct regulator_consumer_supply dell_5285_int3477_vio_consumer_supplies[] = {
++	REGULATOR_SUPPLY("dovdd", "i2c-INT3477:00"),
++};
++
++static struct regulator_consumer_supply dell_5285_int3479_vsio_consumer_supplies[] = {
++	REGULATOR_SUPPLY("avdd", "i2c-INT3479:00"),
++	/* S_I2C_CTL: must be enabled for OV8858 I2C daisy-chain access */
++	REGULATOR_SUPPLY("vsio", "i2c-INT3477:00"),
++};
++
++static struct regulator_consumer_supply dell_5285_int3479_aux1_consumer_supplies[] = {
++	REGULATOR_SUPPLY("dvdd", "i2c-INT3479:00"),
++};
++
++static struct regulator_consumer_supply dell_5285_int3479_aux2_consumer_supplies[] = {
++	REGULATOR_SUPPLY("dovdd", "i2c-INT3479:00"),
++};
++
++static const struct regulator_init_data dell_5285_tps68470_core_reg_init_data = {
++	.constraints = {
++		.min_uV = 1200000,
++		.max_uV = 1200000,
++		.apply_uV = 1,
++		.valid_ops_mask = REGULATOR_CHANGE_STATUS,
++	},
++	.num_consumer_supplies = ARRAY_SIZE(dell_5285_int3477_core_consumer_supplies),
++	.consumer_supplies = dell_5285_int3477_core_consumer_supplies,
++};
++
++static const struct regulator_init_data dell_5285_tps68470_ana_reg_init_data = {
++	.constraints = {
++		.min_uV = 2815200,
++		.max_uV = 2815200,
++		.apply_uV = 1,
++		.valid_ops_mask = REGULATOR_CHANGE_STATUS,
++	},
++	.num_consumer_supplies = ARRAY_SIZE(dell_5285_int3477_ana_consumer_supplies),
++	.consumer_supplies = dell_5285_int3477_ana_consumer_supplies,
++};
++
++static const struct regulator_init_data dell_5285_tps68470_vcm_reg_init_data = {
++	.constraints = {
++		.min_uV = 2815200,
++		.max_uV = 2815200,
++		.apply_uV = 1,
++		.valid_ops_mask = REGULATOR_CHANGE_STATUS,
++	},
++	.num_consumer_supplies = 0,
++	.consumer_supplies = NULL,
++};
++
++static const struct regulator_init_data dell_5285_tps68470_vio_reg_init_data = {
++	.constraints = {
++		.min_uV = 1800600,
++		.max_uV = 1800600,
++		.apply_uV = 1,
++		.valid_ops_mask = REGULATOR_CHANGE_STATUS,
++	},
++	.num_consumer_supplies = ARRAY_SIZE(dell_5285_int3477_vio_consumer_supplies),
++	.consumer_supplies = dell_5285_int3477_vio_consumer_supplies,
++};
++
++static const struct regulator_init_data dell_5285_tps68470_vsio_reg_init_data = {
++	.constraints = {
++		.min_uV = 1800600,
++		.max_uV = 1800600,
++		.apply_uV = 1,
++		.valid_ops_mask = REGULATOR_CHANGE_STATUS,
++		/*
++		 * Keep S_I2C_CTL enabled from boot so OV8858 I2C daisy-chain
++		 * is accessible before ov8858 driver probes.
++		 */
++		.always_on = 1,
++	},
++	.num_consumer_supplies = ARRAY_SIZE(dell_5285_int3479_vsio_consumer_supplies),
++	.consumer_supplies = dell_5285_int3479_vsio_consumer_supplies,
++};
++
++static const struct regulator_init_data dell_5285_tps68470_aux1_reg_init_data = {
++	.constraints = {
++		.min_uV = 1213200,
++		.max_uV = 1213200,
++		.apply_uV = 1,
++		.valid_ops_mask = REGULATOR_CHANGE_STATUS,
++	},
++	.num_consumer_supplies = ARRAY_SIZE(dell_5285_int3479_aux1_consumer_supplies),
++	.consumer_supplies = dell_5285_int3479_aux1_consumer_supplies,
++};
++
++static const struct regulator_init_data dell_5285_tps68470_aux2_reg_init_data = {
++	.constraints = {
++		.min_uV = 1800600,
++		.max_uV = 1800600,
++		.apply_uV = 1,
++		.valid_ops_mask = REGULATOR_CHANGE_STATUS,
++	},
++	.num_consumer_supplies = ARRAY_SIZE(dell_5285_int3479_aux2_consumer_supplies),
++	.consumer_supplies = dell_5285_int3479_aux2_consumer_supplies,
++};
++
++static const struct tps68470_regulator_platform_data dell_5285_tps68470_pdata = {
++	.reg_init_data = {
++		[TPS68470_CORE] = &dell_5285_tps68470_core_reg_init_data,
++		[TPS68470_ANA]  = &dell_5285_tps68470_ana_reg_init_data,
++		[TPS68470_VCM]  = &dell_5285_tps68470_vcm_reg_init_data,
++		[TPS68470_VIO]  = &dell_5285_tps68470_vio_reg_init_data,
++		[TPS68470_VSIO] = &dell_5285_tps68470_vsio_reg_init_data,
++		[TPS68470_AUX1] = &dell_5285_tps68470_aux1_reg_init_data,
++		[TPS68470_AUX2] = &dell_5285_tps68470_aux2_reg_init_data,
++	},
++};
++
++static struct gpiod_lookup_table dell_5285_int3477_gpios = {
++	.dev_id = "i2c-INT3477:00",
++	.table = {
++		/*
++		 * TPS68470 GPIO9 = s_resetn (secondary camera reset, active-low)
++		 * TPS68470 GPIO7 = s_enable (secondary camera enable/powerdown)
++		 * These logic outputs are specifically designed for secondary
++		 * camera control on the TPS68470. Matches Surface Go pattern.
++		 */
++		GPIO_LOOKUP("tps68470-gpio", 9, "reset", GPIO_ACTIVE_LOW),
++		GPIO_LOOKUP("tps68470-gpio", 7, "powerdown", GPIO_ACTIVE_LOW),
++		{ }
++	}
++};
++
++static struct gpiod_lookup_table dell_5285_int3479_gpios = {
++	.dev_id = "i2c-INT3479:00",
++	.table = {
++		GPIO_LOOKUP("tps68470-gpio", 3, "reset", GPIO_ACTIVE_LOW),
++		GPIO_LOOKUP("tps68470-gpio", 4, "powerdown", GPIO_ACTIVE_LOW),
++		{ }
++	}
++};
++
++static const struct int3472_tps68470_board_data dell_5285_tps68470_board_data = {
++	.dev_name = "i2c-INT3472:05",
++	.tps68470_regulator_pdata = &dell_5285_tps68470_pdata,
++	.n_clk_consumers = ARRAY_SIZE(dell_5285_clk_consumers),
++	.clk_consumers = dell_5285_clk_consumers,
++	.n_gpiod_lookups = 2,
++	.tps68470_gpio_lookup_tables = {
++		&dell_5285_int3477_gpios,
++		&dell_5285_int3479_gpios,
++	},
++};
++
+ static const struct dmi_system_id int3472_tps68470_board_data_table[] = {
+ 	{
+ 		.matches = {
+@@ -316,6 +485,13 @@ static const struct dmi_system_id int3472_tps68470_board_data_table[] = {
+ 		},
+ 		.driver_data = (void *)&dell_7212_tps68470_board_data,
+ 	},
++	{
++		.matches = {
++			DMI_EXACT_MATCH(DMI_SYS_VENDOR,   "Dell Inc."),
++			DMI_EXACT_MATCH(DMI_PRODUCT_NAME, "Latitude 5285"),
++		},
++		.driver_data = (void *)&dell_5285_tps68470_board_data,
++	},
+ 	{ }
+ };
+ 
 -- 
 2.51.0
 
