@@ -1,155 +1,186 @@
-Received: from sender4-op-o15.zoho.com (sender4-op-o15.zoho.com [136.143.188.15])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 76B75327C09;
-	Sat, 18 Apr 2026 11:57:54 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=136.143.188.15
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1776513475; cv=pass; b=EDXJQwTt+LzeZNDrpGBOwqExZwpDdSnb7VCrqlyeBVZEx3NRgslMUNXtr1H6rbZcntTBeluxkkOqmgr1w2lE2HCBdka+2bJmUus9KMvQDfiQvMmK2KDpwWXI0m+1vmyDAsH2O8Y0nzm6gzDY/wF7zIqs7n8Xk4ZusHxSIMAE64E=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1776513475; c=relaxed/simple;
-	bh=lVPZ60Nd9rJQ4/Fh1p4eBhqxLKAV1diK5qfNYRes+E0=;
-	h=Message-ID:Subject:From:To:Cc:In-Reply-To:References:Content-Type:
-	 Date:MIME-Version; b=J1pV/KL8cEpXUgdbvS7bOzy0Ip1bEsq7C4Vn+vzGTdMwM+M6kmOUDPfO5GwAoisgk5GkG6XFB8GHerncbI4GKaQbuNqvoacOE0YLjUgqLu8/zY2dgeeTxxGnP7fcWJh1lNTCN/LQZ9tVd+76xKnh++HJzGM4/Hnf+pIDgsUxPV0=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=rong.moe; spf=pass smtp.mailfrom=rong.moe; dkim=pass (2048-bit key) header.d=rong.moe header.i=i@rong.moe header.b=aHiOYQ+W; arc=pass smtp.client-ip=136.143.188.15
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=rong.moe
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=rong.moe
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D0A9E26056C
+	for <platform-driver-x86@vger.kernel.org>; Sat, 18 Apr 2026 13:38:37 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1776519517; cv=none; b=sYPrHU+26/OB2TxTw3S+CZPcZWi99Zdd2RNFSUe+pHuQG9pAX+ddqfZgT1/wjLQrqiC82w8FgwDBp5d/8tHhJm+9aeNJSf2XeF0494fDeX1x99cvaQuauqLM4OXhMzqgL88F8uTNkY/H7OvkTa8JEo8NMp3HAcGpPXcD2OON6RM=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1776519517; c=relaxed/simple;
+	bh=g4EWhkoV3W6Rnmy7B5NtgcRtpuFDsGR3hCMzbTmC2iw=;
+	h=From:To:Subject:Date:Message-ID:Content-Type:MIME-Version; b=nVZyqoQKtWU28XALmtuGILMEO3RZmX3R5l2c6gy6kHPn+uCNEqSJN8oRY580T7zkUKUQjYNtVqsa36Dzh3Q7uIqBfcJdnjSKMjtd08HYN/rfUKi/APSp41t2Z6/kdhy73fkD8wUpBlDbJPAG1G6yzsDt7nbTZHYYNH+0NeOJrsg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=sJ2JGuB1; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=rong.moe header.i=i@rong.moe header.b="aHiOYQ+W"
-ARC-Seal: i=1; a=rsa-sha256; t=1776513450; cv=none; 
-	d=zohomail.com; s=zohoarc; 
-	b=NSQZ7GrcOYFZe3tsk4y1CrVIDXHGchBSH9tvghd3+8Y4GZvJooZX/OfJz6B0uY1k5qET0PEFpYAG8RuwQ17fLy+H3ZEtNviJa6dWyCdiOaAiXduJLbISJ4W9V90MKD56xZ/rm6GLIt4+jR35F5YCPEkoCZ2hPKm0TZFfmv0JMcw=
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=zohomail.com; s=zohoarc; 
-	t=1776513450; h=Content-Type:Content-Transfer-Encoding:Cc:Cc:Date:Date:From:From:In-Reply-To:MIME-Version:Message-ID:References:Subject:Subject:To:To:Message-Id:Reply-To; 
-	bh=8Y/pfwtq8kovQtFX6BwkjS9tBEsvrSMPwA7x8TdE3eQ=; 
-	b=c48I/PbpeQNPtQOlIqkrkfskZOk3EA1wt2wtRpNoFWbe9QevIAAPp/TqNuzEgsO4KJyF8+9hvMVADU0XmjXUG1JaNVMA5pzQk7qdtAWkP1D/dkOZfRV+oADM2SMuiBpBq6Qr9vjAkNfjEmheO70+t7Gsh0VmdCo5RRdbOpAPy8E=
-ARC-Authentication-Results: i=1; mx.zohomail.com;
-	dkim=pass  header.i=rong.moe;
-	spf=pass  smtp.mailfrom=i@rong.moe;
-	dmarc=pass header.from=<i@rong.moe>
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; t=1776513450;
-	s=zmail2048; d=rong.moe; i=i@rong.moe;
-	h=Message-ID:Subject:Subject:From:From:To:To:Cc:Cc:In-Reply-To:References:Content-Type:Content-Transfer-Encoding:Date:Date:MIME-Version:Message-Id:Reply-To;
-	bh=8Y/pfwtq8kovQtFX6BwkjS9tBEsvrSMPwA7x8TdE3eQ=;
-	b=aHiOYQ+WHRpsS11OFjmk8P4ikKCegpppjfccI3DqWB4xP7RSTgdiF+Zaoe++Nx9S
-	9X0QJK83ZhYMmqfHrMcBB1sou7SKOqk2DMtzUgZifS3j192BX0qlg3iAuSc4Lc1wK85
-	nAzCjFrTYk3i3EK3gs6NpRRTvgklnSkK0NmJaoeUQdyg0IBrpIfEfc8f5Xfph4RmpAt
-	YNtSQO/YQqrFYvcoxBAVo0FwQR3ZSFUX1XeTvNmC1HeNOgmfo9Wdj2TonB/Wyc1SbNh
-	StxQFD/5Os1IX8LDc0bX+L35xl6b64pCjcBQSVXuWjIwqOgDgXgfzMBXDXLGlpVg3Ck
-	BeWaKbO3Hw==
-Received: by mx.zohomail.com with SMTPS id 1776513447676502.2420835260647;
-	Sat, 18 Apr 2026 04:57:27 -0700 (PDT)
-Message-ID: <0b3afed83b586334d97251c3238d146169907cd9.camel@rong.moe>
-Subject: Re: [RFC PATCH 1/9] leds: Load trigger modules on-demand if used
- as hw control trigger
-From: Rong Zhang <i@rong.moe>
-To: Andrew Lunn <andrew@lunn.ch>, Mark Pearson <mpearson-lenovo@squebb.ca>
-Cc: Lee Jones <lee@kernel.org>, Pavel Machek <pavel@kernel.org>, Thomas
- =?ISO-8859-1?Q?Wei=DFschuh?=	 <linux@weissschuh.net>, Benson Leung
- <bleung@chromium.org>, Guenter Roeck	 <groeck@chromium.org>, Marek
- =?ISO-8859-1?Q?Beh=FAn?= <kabel@kernel.org>,  "Derek J . Clark"
- <derekjohn.clark@gmail.com>, Hans de Goede <hansg@kernel.org>, Ilpo
- =?ISO-8859-1?Q?J=E4rvinen?=	 <ilpo.jarvinen@linux.intel.com>, Ike Panhc
- <ikepanhc@gmail.com>, Vishnu Sankar	 <vishnuocv@gmail.com>, Vishnu Sankar
- <vsankar@lenovo.com>, 	linux-kernel@vger.kernel.org,
- linux-leds@vger.kernel.org, 	chrome-platform@lists.linux.dev,
- "platform-driver-x86@vger.kernel.org"	 <platform-driver-x86@vger.kernel.org>
-In-Reply-To: <6697bb96-6ae7-4cff-b218-2aa099977dc9@lunn.ch>
-References: <500dfc4b-ebd7-4637-bed0-130fc571923c@lunn.ch>
-	 <b48993998e6e48d4448f8c6dc758f4e260d0f857.camel@rong.moe>
-	 <353713de-b121-4e27-a46f-6ca1941888a6@lunn.ch>
-	 <8b25e1ea9bff414442fa47475b9c9ac5b29049d7.camel@rong.moe>
-	 <60e60c42-f776-424a-a5b4-7286d33175d1@lunn.ch>
-	 <d2d321fe39c41ebd896eef63f3909df29f5a1622.camel@rong.moe>
-	 <4e839e55-4daa-45cd-b403-d1d6eae63d8d@app.fastmail.com>
-	 <cc4398e1512dceb531ba3bd5dd0d20cf2042bb84.camel@rong.moe>
-	 <2ac0c46c-805d-4749-a6e0-94b16b104a72@app.fastmail.com>
-	 <7437cc09-7958-4172-aec2-4429cfa98141@app.fastmail.com>
-	 <6697bb96-6ae7-4cff-b218-2aa099977dc9@lunn.ch>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="sJ2JGuB1"
+Received: by smtp.kernel.org (Postfix) with ESMTPS id 8B51DC19424
+	for <platform-driver-x86@vger.kernel.org>; Sat, 18 Apr 2026 13:38:37 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1776519517;
+	bh=g4EWhkoV3W6Rnmy7B5NtgcRtpuFDsGR3hCMzbTmC2iw=;
+	h=From:To:Subject:Date:From;
+	b=sJ2JGuB1kFnsnDvxi3xMN9pRiiVnsCfKZbPXbdOj47hVEqaUO8YwMLQOfTdXuylYx
+	 kQ+tkwZFFB5N6teZontcpQPEDZ9rLzHaWP9Vz6UPEyG6kqsuvzhvjP9u07Khu1YqL2
+	 nenzipznLf9VKgNp+PWq8RazNi8ue+amMfOMHJRl/Lru1d5LMoQnjVxotDZwO+nzF+
+	 sMR3w1ms96Q4yQl6lUbxEm+uhv7+NFZxQ6vbcA5bKYjLUSBTfDdI68qfNrRIsvTj5v
+	 sRxgJCROmMgDnb0z5VYQHD4ar0E1zr2X9eJkUdlPFHKSDBaysVRcuCJuqGilaY5o9N
+	 PmddLYZcAjFHA==
+Received: by aws-us-west-2-korg-bugzilla-1.web.codeaurora.org (Postfix, from userid 48)
+	id 7EA43C3279F; Sat, 18 Apr 2026 13:38:37 +0000 (UTC)
+From: bugzilla-daemon@kernel.org
+To: platform-driver-x86@vger.kernel.org
+Subject: [Bug 221383] New: ideapad_laptop: Fn hotkeys stop emitting after
+ s2idle resume on IdeaPad Slim 3   14ARP10 (Ryzen 7735HS)
+Date: Sat, 18 Apr 2026 13:38:37 +0000
+X-Bugzilla-Reason: None
+X-Bugzilla-Type: new
+X-Bugzilla-Watch-Reason: AssignedTo drivers_platform_x86@kernel-bugs.osdl.org
+X-Bugzilla-Product: Drivers
+X-Bugzilla-Component: Platform_x86
+X-Bugzilla-Version: 2.5
+X-Bugzilla-Keywords: 
+X-Bugzilla-Severity: normal
+X-Bugzilla-Who: sindrehenriksen93@gmail.com
+X-Bugzilla-Status: NEW
+X-Bugzilla-Resolution: 
+X-Bugzilla-Priority: P3
+X-Bugzilla-Assigned-To: drivers_platform_x86@kernel-bugs.osdl.org
+X-Bugzilla-Flags: 
+X-Bugzilla-Changed-Fields: bug_id short_desc product version rep_platform
+ op_sys bug_status bug_severity priority component assigned_to reporter
+ cf_regression attachments.created
+Message-ID: <bug-221383-215701@https.bugzilla.kernel.org/>
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
-Date: Sat, 18 Apr 2026 19:52:19 +0800
+X-Bugzilla-URL: https://bugzilla.kernel.org/
+Auto-Submitted: auto-generated
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Evolution 3.56.2-9 
-X-ZohoMailClient: External
 
-Hi Andrew,
+https://bugzilla.kernel.org/show_bug.cgi?id=3D221383
 
-On Sat, 2026-04-11 at 22:42 +0200, Andrew Lunn wrote:
-> > Hi maintainers - a gentle nudge on this one. Would like some
-> > direction if we can move ahead with the series. If not, what is
-> > required?
-> =C2=A0
->=20
->=20
->=20
-> > On our side I know Vishnu has implemented the thinkpad driver using
-> > this and confirmed the design works there too.
-> =C2=A0
->=20
->=20
->=20
-> > Would like to get this upstream so we can start working with the
-> > user-space folk on updating their pieces.
->=20
-> I'm not the Maintainer here, so i would not be too unhappy if i was
-> ignored.
->=20
-> I've had some time to think about this. I guess you are going to go
-> with a Linux LED, whatever. With that assumption in place, a trigger
-> makes sense. But i think it needs to be a special sort of trigger, and
-> a special sort of LED.
->=20
-> This is not a general purpose LED, which is a basic assumption for
-> Linux LEDs. You cannot make it blink for netdev packets, shift lock,
-> heartbeat, etc, because Linux does not control it, the EC does. Linux
-> can ask the EC to set it to some state, but the EC might change it,
-> and notify Linux afterwards. That is not the normal behaviour of a
-> Linux LED.
->=20
-> Also, it does not make sense to allow the trigger to be bound to any
-> other LED.
->=20
-> The trigger and the LED are tightly bound together. So i would put
-> them in the same driver. There are triggers which live outside of
-> drivers/leds/trigger/. So it is not a problem it lives somewhere
-> else. It also solves the ordering problem you had, getting the trigger
-> registered. Since it lives in the same driver as the LED, you know it
-> is registered, you do it before registering the LED.
->=20
-> I think you need some additional logic in the core. This LED must have
-> this trigger. I would look at using the is_visible() attribute
-> callback to make the trigger file in sysfs invisible for this LED, so
-> it cannot be changed. I would somehow get this trigger attached to the
-> LED when it is created. The trigger_relevant() call needs to be
-> extended so that you cannot attach this trigger to any other LED.
+            Bug ID: 221383
+           Summary: ideapad_laptop: Fn hotkeys stop emitting after s2idle
+                    resume on IdeaPad Slim 3   14ARP10 (Ryzen 7735HS)
+           Product: Drivers
+           Version: 2.5
+          Hardware: All
+                OS: Linux
+            Status: NEW
+          Severity: normal
+          Priority: P3
+         Component: Platform_x86
+          Assignee: drivers_platform_x86@kernel-bugs.osdl.org
+          Reporter: sindrehenriksen93@gmail.com
+        Regression: No
 
-I think I understand your points better now.
+Created attachment 309895
+  --> https://bugzilla.kernel.org/attachment.cgi?id=3D309895&action=3Dedit
+dmesg after cold boot (working state)
 
-Though my PATCH 9/9 already used a private trigger for ideapad-laptop, I
-will further restrict the led_trigger_notify_hw_control_changed()
-interface (PATCH 7/9) to private triggers only when I resubmit this.
+Kernel version: 6.17.0-19-generic (Ubuntu 24.04.4 LTS HWE; upstream 6.17.13)
 
-Does it make sense to you?
+Hardware:
+  Vendor:  LENOVO
+  Product: IdeaPad Slim 3 14ARP10 (MTM 83K6 / board LNVNB161216)
+  CPU:     AMD Ryzen 7 7735HS (Rembrandt)
+  BIOS:    QBCN29WW (2026-01-15, latest available from Lenovo)
 
-Thanks,
-Rong
+Distribution: Ubuntu 24.04.4 LTS
 
->=20
-> I would also think about naming. The behaviour is i guess specific to
-> X86 laptops? Do Apple laptops have the same behaviour? What about
-> Snapdragon X Series laptops? Chromebooks? USB keyboards? What about
-> things like the Unihertz Titan 2?
->=20
-> Somebody in the future might produce a generic solution. Linux
-> controls the LED. The Linux input system gets the key presses and
-> sends them to the trigger. You can bind an iio ambient sensor to the
-> trigger, etc. So you should leave the name space open for other
-> implementations.
->=20
-> 	 Andrew
+Loaded drivers: ideapad_laptop, lenovo_wmi_other, lenovo_wmi_helpers,
+                lenovo_wmi_capdata01, lenovo_wmi_hotkey_utilities,
+                sparse_keymap, platform_profile
+
+Background:
+  BIOS HotKey Mode is ON =E2=80=94 pressing an Fx key produces the media ac=
+tion
+  by default; Fn+Fx gives the raw function key. In normal operation,
+  the media keys are emitted on multiple input devices depending on the
+  function:
+    * /dev/input/event2 ("AT Translated Set 2 keyboard"):
+        KEY_VOLUMEUP / KEY_VOLUMEDOWN / KEY_MUTE
+    * /dev/input/event5 ("Video Bus"):
+        KEY_BRIGHTNESSUP / KEY_BRIGHTNESSDOWN
+    * /dev/input/event6 ("Ideapad extra buttons"):
+        KEY_F20 (mic mute, scancode 0x08), KEY_RFKILL (airplane, 0x0d),
+        touchpad toggle, etc.
+
+Steps to reproduce:
+  1. Boot. Verify media keys work =E2=80=94 all of brightness, volume, mic-=
+mute,
+     airplane-mode change system state when their Fx key is pressed.
+  2. Suspend (s2idle). Resume after a longer idle period (short
+     suspend/resume cycles do not reliably trigger the bug; in my
+     experience ~15 min or more does).
+  3. Press any media key.
+
+Expected:
+  System reacts as before suspend. KEY_* events are emitted on their
+  respective input devices.
+
+Actual:
+  No media key does anything. Diagnostics:
+    * evtest --grab /dev/input/event6: zero KEY events for any Fx press
+      (confirmed via exclusive grab).
+    * evtest /dev/input/event2: pressing what should be the volume-up
+      key (Fx with the volume-up label) emits plain KEY_F3 (scancode
+      0x3f). KEY_F1..KEY_F12 emit for the corresponding Fx positions.
+      The EC is no longer translating Fx to media keycodes; it is
+      forwarding raw scancodes to i8042.
+  The Fn modifier is effectively a dead key =E2=80=94 Fn+Fx and Fx produce =
+the
+  same output.
+
+dmesg observations in broken state (attached):
+  * "atkbd serio0: Failed to deactivate keyboard on isa0060/serio0"
+    appears on each suspend.
+  * ACPI BIOS errors at boot: AE_NOT_FOUND [\_SB.PCI0.GPP7.DEV0],
+    AE_ALREADY_EXISTS [\_TZ.TZ01] (possibly unrelated, included for
+    completeness).
+
+Does not resolve the issue (all tested on this machine):
+  - Writing 0 or 1 to
+    /sys/bus/platform/drivers/ideapad_acpi/VPC2004:00/fn_lock
+    (the fn-lock LED toggles, but event emission is unchanged).
+  - rmmod/modprobe of ideapad_laptop and lenovo_wmi_hotkey_utilities.
+  - Kernel parameters reported as failing by other affected users on
+    the same hardware family: i8042.reset=3D1, i8042.nopnp,
+    acpi.prefer_microsoft_guid=3D1.
+  - Latest available BIOS (QBCN29WW, 2026-01-15).
+
+Resolves: reboot. EC state re-syncs on cold start and media keys work
+again until the next s2idle resume past the threshold.
+
+Related user reports on the IdeaPad Slim 3 Ryzen family with the same
+symptom:
+  https://bbs.archlinux.org/viewtopic.php?id=3D310124
+=20
+https://discussion.fedoraproject.org/t/fn-keys-stop-working-after-sleep-on-=
+lenovo-ideapad-slim-3/95528
+  https://bugs.launchpad.net/ubuntu/+bug/2114256
+
+Attached:
+  - fn-broken-dmesg.txt  =E2=80=94 dmesg spanning broken (post-resume) state
+  - fn-working-dmesg.txt =E2=80=94 dmesg after cold boot (working state)
+  - fn_lock-working.txt  =E2=80=94 fn_lock value in working state
+  - evtest-working.txt   =E2=80=94 evtest on /dev/input/event6 showing mic-=
+mute
+                           (KEY_F20) and airplane (KEY_RFKILL) emitting
+                           correctly
+  - acpidump.bin         =E2=80=94 ACPI tables (acpica-tools acpidump)
+
+Happy to test patches, bisect, or provide additional logs (e.g.
+working-state captures on event2/event5, dynamic_debug traces of
+ideapad_laptop suspend/resume paths, dmesg with `no_console_suspend`).
+Let me know what's most useful.
+
+--=20
+You may reply to this email to add a comment.
+
+You are receiving this mail because:
+You are watching the assignee of the bug.=
