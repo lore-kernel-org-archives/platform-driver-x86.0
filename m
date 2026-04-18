@@ -1,167 +1,194 @@
-Received: from SN4PR0501CU005.outbound.protection.outlook.com (mail-southcentralusazon11011008.outbound.protection.outlook.com [40.93.194.8])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.16])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C70CB23183B;
-	Sat, 18 Apr 2026 05:51:03 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.93.194.8
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1776491465; cv=fail; b=j++Gg67ObCBq9eCG6AiTeRaC4nRe7C/AQ4Yix7XOeYCxtwexKTZ5n4DAjuhMUxR9v0zy87Qmh4OsAtpZtUhSxDedyOKSjlpatohehsph5vT67+A1P7sjOOKS/dl3CVU3vJrP49oifuFE0M9VqfwGex5a8DB3njDMri9M0eWgmAk=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1776491465; c=relaxed/simple;
-	bh=ONO3kHytT4urPFptqYQUOHr49DV7CxMb/bXIBh1+QI0=;
-	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=lQDec/xPXdLx6GWP0wnsQU/Xh8VsNbTN638eBnhvF1jRvL5EbF1RgL3sDm3wkLcmH+Ep0FseCXFSnyY2Glt/uUDcq48F8XEdPP3jXq8ZSxQJQneQ0129Hu9/J84maY7uICiNMFtlZvWH+/qDzW0KLoKngvWKiVjAvytfDj5ptok=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com; spf=pass smtp.mailfrom=ti.com; dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b=cQ2bx3Iy; arc=fail smtp.client-ip=40.93.194.8
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ti.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4B4973491C4;
+	Sat, 18 Apr 2026 06:30:04 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.16
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1776493806; cv=none; b=MHnvUMAw15OY/Y+1P7L1dhxIRMVoaIc6jnunvTE5C1EmfS8MoKEYVRapakxLia7jeOvg9qnt0/Zj0eMJHbWIc7zFZMyLlQ+biLWo1wBCXX995hG+VRq+Rt6kYzfFabeot7mcy6KBWluSXqsSSXWEWvlnepgWnTsV9gWE5muBX/s=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1776493806; c=relaxed/simple;
+	bh=HeAK1DpVxrbx8UpYi479tPTCELd8qJjKCkMljrNX8dM=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=mDMV8OcVPT6dTNT9lu3Q22nyf4710S0ZPlzYnl8w4+xqQtKFZqd3GgRXomjcjo5+GL1wqTz1ftTnhJGLAFRvStfvd0r9PnW0ipngWAdZikOA1ouXT+vDJMTeT+Xp/XRATgBzKXYnDt3JFe3DEKhf/Ir3PFIkC1bfIbO+cVQpVtQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=pass smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=NKOarh+x; arc=none smtp.client-ip=192.198.163.16
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="cQ2bx3Iy"
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=nMc9sFHSsVsKnd/X6S1JnmFZgJYJ3HKBTRsR5NWrDQ7V6HDPSBVfQJE/WlAopx2OhInO3YTtKX423/d1O5+rQDTuyAZikoOXlLhGEiMJKwgyOGduFcWBkWrSwR6v3Dv/mzMIgxI1foF0Ob+iBBPJrNbQZdUBgPH6MzaaY9tguZETApOSf2KaafxlFAfDlbxXVuXs+BFZ+2X3D+2AOiKiIDpr5XlvBlOtyze0ATFOWnRCXC2+t621PInC+z3aEJugw5iyEurm1+8jQZuJvjSFzu9gnR3vq0OAeEohIbnrBO8bOd7y4DaTDtWGli2KLJ1BjrhH4T0dH2RI1DFHCbpydQ==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=8ConWqiU7INilTtVKBq+6UvsE8KX4dwccFZ/3xGJ59w=;
- b=yptGIHr/GtAlTN4Ug86Pqot96YXlJWg4V5jgknrXlBzftSGpnuHbzgHZGpSqpDOfw58xrSv/iM6pTkIs7L087GjRhJRJApgvqahvOaSaUUnByluPNJ/M4dLTE9Lo4y8EqY44Dmk0vn0cqGWGpnKFXYlPkpQOcp1S0T1tz9rmhU3xrofMHAbZ3CCiBoA0f5k1QmnMNiTIkyu8VPVdsvIu2xrX8ZLvz38HGPC1dnPK/cXGLY7F2LEdSuj/fERJ8QEuckkYZsOMeTJ06E7n4nOvGqCUq80ODusdkh6PsrzwE2v/WoFIBwY5pjLXVlzVV3iFFvX7yFASm+TrMA1+Xjvjgg==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
- 198.47.23.195) smtp.rcpttodomain=canonical.com smtp.mailfrom=ti.com;
- dmarc=pass (p=quarantine sp=none pct=100) action=none header.from=ti.com;
- dkim=none (message not signed); arc=none (0)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com; s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=8ConWqiU7INilTtVKBq+6UvsE8KX4dwccFZ/3xGJ59w=;
- b=cQ2bx3Iy9jwRZPeZJ+1+Zrmhd8WFKAhUDFQGhNyu7Ge55Xt9UPXlEJEJSdXhCHM5On+uuH2Pw+5kvt8VMdJWmUo+3HKv561WiRnNPh415IJ1Kq+53NdLlFakDT8g2e5wvn6Q2K92zDFHUEqEfRbqDSTymlLGd6/Nt4pluLA341Y=
-Received: from SN7PR04CA0166.namprd04.prod.outlook.com (2603:10b6:806:125::21)
- by CH2PR10MB4263.namprd10.prod.outlook.com (2603:10b6:610:a6::23) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.9818.25; Sat, 18 Apr
- 2026 05:51:01 +0000
-Received: from SA2PEPF00001507.namprd04.prod.outlook.com
- (2603:10b6:806:125:cafe::3c) by SN7PR04CA0166.outlook.office365.com
- (2603:10b6:806:125::21) with Microsoft SMTP Server (version=TLS1_3,
- cipher=TLS_AES_256_GCM_SHA384) id 15.20.9769.55 via Frontend Transport; Sat,
- 18 Apr 2026 05:51:01 +0000
-X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 198.47.23.195)
- smtp.mailfrom=ti.com; dkim=none (message not signed) header.d=none;dmarc=pass
- action=none header.from=ti.com;
-Received-SPF: Pass (protection.outlook.com: domain of ti.com designates
- 198.47.23.195 as permitted sender) receiver=protection.outlook.com;
- client-ip=198.47.23.195; helo=lewvzet201.ext.ti.com; pr=C
-Received: from lewvzet201.ext.ti.com (198.47.23.195) by
- SA2PEPF00001507.mail.protection.outlook.com (10.167.242.39) with Microsoft
- SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.9791.48 via Frontend Transport; Sat, 18 Apr 2026 05:51:01 +0000
-Received: from DLEE211.ent.ti.com (157.170.170.113) by lewvzet201.ext.ti.com
- (10.4.14.104) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.2562.20; Sat, 18 Apr
- 2026 00:51:00 -0500
-Received: from DLEE208.ent.ti.com (157.170.170.97) by DLEE211.ent.ti.com
- (157.170.170.113) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.2562.20; Sat, 18 Apr
- 2026 00:51:00 -0500
-Received: from lelvem-mr06.itg.ti.com (10.180.75.8) by DLEE208.ent.ti.com
- (157.170.170.97) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.2562.20 via Frontend
- Transport; Sat, 18 Apr 2026 00:51:00 -0500
-Received: from lelvem-mr05.itg.ti.com ([10.250.165.138])
-	by lelvem-mr06.itg.ti.com (8.18.1/8.18.1) with ESMTP id 63I5otm32986092;
-	Sat, 18 Apr 2026 00:50:56 -0500
-From: Baojun Xu <baojun.xu@ti.com>
-To: <tiwai@suse.de>, <hansg@kernel.org>
-CC: <ilpo.jarvinen@linux.intel.com>, <broonie@kernel.org>,
-	<andriy.shevchenko@linux.intel.com>, <shenghao-ding@ti.com>,
-	<13916275206@139.com>, <platform-driver-x86@vger.kernel.org>,
-	<linux-sound@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-	<baojun.xu@ti.com>, <letitia.tsai@hp.com>, <bill.yu@canonical.com>
-Subject: [PATCH v1] ALSA: hda/tas2781: Fix sound abnormal issue on some SPI device
-Date: Sat, 18 Apr 2026 13:50:30 +0800
-Message-ID: <20260418055030.765-1-baojun.xu@ti.com>
-X-Mailer: git-send-email 2.43.0.windows.1
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="NKOarh+x"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1776493804; x=1808029804;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=HeAK1DpVxrbx8UpYi479tPTCELd8qJjKCkMljrNX8dM=;
+  b=NKOarh+xIKvX4bbCvS6mcPWrSvVpVK6Gd/BpalZNivKnvDDP22ukp1w9
+   A6u8LKagC0fzJn7al7kI3I8vpaWvmOkbsDDMPcOXscGCCVfwudH5Z+EWz
+   2dizvuFxlxwT4ULO0Fz0T+zxZ3qBVzR8jGu8bdSMDV5gtNCFqQugk8O/r
+   LwpfAnzkks3nAp92+8yZ/Tn8p1/6T0S7+aqQ1D8gF2Eb1qnd+d73MIqbq
+   ib85mWWLDETbv82xKdtpWFHX4zILNaSsgd/47VLm/KQcbWYosfpeZa1fk
+   DMwG4Z/plwFY5iU5/K/dkOFlzCzx68v0g1qOBKPFhKBL9nIMc+sfORUt2
+   g==;
+X-CSE-ConnectionGUID: +I77wMLiQsiRhjskT4zbBg==
+X-CSE-MsgGUID: fQTs1kE3Q/CPmNpLnz+c8w==
+X-IronPort-AV: E=McAfee;i="6800,10657,11762"; a="65035195"
+X-IronPort-AV: E=Sophos;i="6.23,185,1770624000"; 
+   d="scan'208";a="65035195"
+Received: from fmviesa006.fm.intel.com ([10.60.135.146])
+  by fmvoesa110.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 17 Apr 2026 23:30:03 -0700
+X-CSE-ConnectionGUID: 6KsNLANmTUyeNxay6xlfCQ==
+X-CSE-MsgGUID: 4SvRY4QNQ8KAoRC7PUvfjw==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.23,185,1770624000"; 
+   d="scan'208";a="226548966"
+Received: from amilburn-desk.amilburn-desk (HELO kekkonen.fi.intel.com) ([10.245.245.232])
+  by fmviesa006-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 17 Apr 2026 23:30:01 -0700
+Received: from kekkonen.localdomain (localhost [IPv6:::1])
+	by kekkonen.fi.intel.com (Postfix) with SMTP id 80DCC121CD9;
+	Sat, 18 Apr 2026 09:29:58 +0300 (EEST)
+Date: Sat, 18 Apr 2026 09:29:58 +0300
+Organization: Intel Finland Oy - BIC 0357606-4 - c/o Alberga Business Park, 6 krs, Bertel Jungin Aukio 5, 02600 Espoo
+From: Sakari Ailus <sakari.ailus@linux.intel.com>
+To: Thierry Chatard <tchatard@gmail.com>
+Cc: linux-kernel@vger.kernel.org, hansg@kernel.org, lee@kernel.org,
+	platform-driver-x86@vger.kernel.org, ilpo.jarvinen@linux.intel.com,
+	djrscally@gmail.com, linux-media@vger.kernel.org,
+	mchehab@kernel.org, jacopo.mondi@ideasonboard.com,
+	nicholas@rothemail.net
+Subject: Re: [PATCH v3 2/5] platform/x86: int3472: tps68470: fix clock
+ consumer registration for Dell Latitude 5285
+Message-ID: <aeMk5s8u9DFJtqac@kekkonen.localdomain>
+References: <4ef5f305-0234-4193-a190-edbfe770ea04@kernel.org>
+ <20260417163252.15603-1-tchatard@gmail.com>
+ <20260417163252.15603-3-tchatard@gmail.com>
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-C2ProcessedOrg: 333ef613-75bf-4e12-a4b1-8e3623f5dcea
-X-EOPAttributedMessage: 0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: SA2PEPF00001507:EE_|CH2PR10MB4263:EE_
-X-MS-Office365-Filtering-Correlation-Id: ec9ec664-8080-4164-5599-08de9d0e78a1
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam:
-	BCL:0;ARA:13230040|82310400026|7416014|1800799024|36860700016|376014|56012099003|18002099003;
-X-Microsoft-Antispam-Message-Info:
-	mXp86ftejhAmnfmcL9IW+bw9nvWbMDQ2kdzBWo3C6E5qR1UtCvkwKyjMruKoqMNKGhVTrCY4N1SSZkC+H8wm2BFcRaGpryuBzowghRSsUiYEVC89webr+FUxlBStHFJfGG1D2yXTOuzy1yGbI9bLQIx0W7M0MFvnETyJqXJrUv2TqX/aewStmQ3nFFTIZsknyMLhwIFOARGbb1Q1FldfeemfjPOkmBJoFcyXjwTOsExPK9PWAdHsAckwE1DizAySrDzwjADgNJFNS36z+gs3o7NG9m8dLwL48xI/aOGUZbA0YonrHWgWuMm0Yi0CSet2cXKkCiFnELNNVF0q0if0v+aBH8exVURK6MQ2jbV86bX8T04iMP9J+89ijxf+T2ti+e7aDur90zIuKCqtNgPIGOCqenphWcXdEOTwmpDpaorm17qGjupS7g0Ydm5nRdFoaMvU6qNuUy2mvvh2cKHnhVO5YlwF7PHO5aKc/EblLT/vNOt4BhujMrAqT5r/i7jK6mOaXueA+wfFggbwQkR5aj9yTF9H2DtNxHEUYqhmW3erqG4RLBQDpyZlg4c6dkSO8VEGiEQK8owjWaqAkyGJDiIgdvsB0WkknNJZRBk1VlZg0HUJEBAqEG6zaAEZCtzdfpgFVwWBH6iF8guhkobf8x/CmLs7EptO3/xZzFxbGVzmPa6kPnT7+rxaDy7MrTxyALvlTau+D9KP3U+5uyTmdmDQfiXVT/4KeZqL3EahiXnoQBUVwUGJETztEBYXbkmj2Fs2fDIVD5AKyY+S/yu6JQ==
-X-Forefront-Antispam-Report:
-	CIP:198.47.23.195;CTRY:US;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:lewvzet201.ext.ti.com;PTR:InfoDomainNonexistent;CAT:NONE;SFS:(13230040)(82310400026)(7416014)(1800799024)(36860700016)(376014)(56012099003)(18002099003);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0:
-	QPJjWGWJuv2ClTX6pTk4+esBFKvvKQPWX+zhscbs4yWDfLSlk9pSe2byt4hNNHF992cnGb89Nk0k8fIKv6T1lizsBNSdxFSaKebv17idNDQxJRgB/8L8/0tBRjjQlp4uRfd+8rwh4HaQZYznza2q1dwjAo8IkJsVU3qGo1F0Yuj16VR4SkC4LLvWTkwCMi1VlxJKNNHr5eakkgLICabcnkIjkE0p3FV5r/wzERE9YV0GECgCx9DCTnCva6uTr3gspazm25V5cJdsv4q7BgUbE2vRDVjeCsKkhwmGAs2NBy779T+QNOKkAWKXzmLpAAqUS6aI76mEeDZVYgBXCXDBD8UvZzTbT7TJL/UlWomgrF73hAhUo4NUO4nqkVdMKyvbeckymqmMGUTPZVTOHZ53CJdxj0TX2j+oM2hIJxgnFFXk4bk4kd+P8rB1mTvImb2k
-X-OriginatorOrg: ti.com
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 18 Apr 2026 05:51:01.1356
- (UTC)
-X-MS-Exchange-CrossTenant-Network-Message-Id: ec9ec664-8080-4164-5599-08de9d0e78a1
-X-MS-Exchange-CrossTenant-Id: e5b49634-450b-4709-8abb-1e2b19b982b7
-X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=e5b49634-450b-4709-8abb-1e2b19b982b7;Ip=[198.47.23.195];Helo=[lewvzet201.ext.ti.com]
-X-MS-Exchange-CrossTenant-AuthSource:
-	SA2PEPF00001507.namprd04.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Anonymous
-X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: CH2PR10MB4263
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20260417163252.15603-3-tchatard@gmail.com>
 
-In the SPI driver probe, the chip ID must be set to TAS2781. Without this
-initialization, calibration data fails to load correctly, causing audio
-abnormalities on some devices.
-And update the register bulk read API to handle the distinct requirements
-of SPI and I2C devices.
+Hi Thierry,
 
-Fixes: 05ac3846ffe5 ("ALSA: hda/tas2781: A workaround solution to lower-vol issue among lower calibrated-impedance micro-speaker on TAS2781")
-Signed-off-by: Baojun Xu <baojun.xu@ti.com>
----
- sound/hda/codecs/side-codecs/tas2781_hda_spi.c | 1 +
- sound/soc/codecs/tas2781-fmwlib.c              | 7 +++----
- 2 files changed, 4 insertions(+), 4 deletions(-)
+Thanks for the set.
 
-diff --git a/sound/hda/codecs/side-codecs/tas2781_hda_spi.c b/sound/hda/codecs/side-codecs/tas2781_hda_spi.c
-index f860e0eb7602..560f2385212d 100644
---- a/sound/hda/codecs/side-codecs/tas2781_hda_spi.c
-+++ b/sound/hda/codecs/side-codecs/tas2781_hda_spi.c
-@@ -788,6 +788,7 @@ static int tas2781_hda_spi_probe(struct spi_device *spi)
- 	}
- 	if (strstr(dev_name(&spi->dev), "TXNW2781")) {
- 		device_name = "TXNW2781";
-+		tas_hda->priv->chip_id = TAS2781;
- 	} else {
- 		dev_err(tas_priv->dev, "Unmatched spi dev %s\n",
- 			dev_name(&spi->dev));
-diff --git a/sound/soc/codecs/tas2781-fmwlib.c b/sound/soc/codecs/tas2781-fmwlib.c
-index a1d86bd309f4..885e0b6fed00 100644
---- a/sound/soc/codecs/tas2781-fmwlib.c
-+++ b/sound/soc/codecs/tas2781-fmwlib.c
-@@ -2487,7 +2487,7 @@ static int tas2781_cali_preproc(struct tasdevice_priv *priv, int i)
- 		if (spec == NULL)
- 			return -ENOMEM;
- 		priv->tasdevice[i].cali_specific = spec;
--		rc = tasdevice_dev_bulk_read(priv, i, p->r0_reg, r0_deflt, 4);
-+		rc = priv->dev_bulk_read(priv, i, p->r0_reg, r0_deflt, 4);
- 		if (rc < 0) {
- 			dev_err(priv->dev, "invalid RE from %d = %d\n", i, rc);
- 			return rc;
-@@ -2511,9 +2511,8 @@ static int tas2781_cali_preproc(struct tasdevice_priv *priv, int i)
- 				TASDEVICE_REG(0, 0x1b, 0x34) :
- 				TASDEVICE_REG(0, 0x18, 0x1c);
- 
--			rc = tasdevice_dev_bulk_read(priv, i,
--						      spec->sin_gni_reg,
--						      spec->sin_gni, 4);
-+			rc = priv->dev_bulk_read(priv, i, spec->sin_gni_reg,
-+						 spec->sin_gni, 4);
- 			if (rc < 0) {
- 				dev_err(priv->dev, "wrong sinegaini %d = %d\n",
- 					i, rc);
+On Fri, Apr 17, 2026 at 09:32:49AM -0700, Thierry Chatard wrote:
+> The BIOS on the Dell Latitude 5285 leaves GNVS field C0TP at zero.
+> With C0TP=0 the ACPI _DEP method on INT3479 (OV5670, front camera)
+> resolves to PCI0 instead of the INT3472 (TPS68470 PMIC) device.
+> 
+> Because for_each_acpi_consumer_dev() walks the _DEP reverse-mapping,
+> INT3479 is invisible to it: the clock consumer lookup entry for the
+> front camera is never registered with the tps68470-clk driver, and
+> the OV5670 sensor driver cannot acquire its MCLK.
+> 
+> Fix this without touching ACPI tables by adding optional static clock
+> consumer fields to struct int3472_tps68470_board_data:
+> 
+>   unsigned int n_clk_consumers;
+>   const struct tps68470_clk_consumer *clk_consumers;
+> 
+> When board data is present and n_clk_consumers is non-zero, probe uses
+> the static list instead of for_each_acpi_consumer_dev() to populate
+> tps68470-clk platform data.  Platforms that do not set these fields
+> continue to use the existing ACPI traversal path unchanged.
+> 
+> The board_data lookup is moved before the clock-pdata allocation so
+> that it is available for both the static and dynamic paths.
+> 
+> Signed-off-by: Thierry Chatard <tchatard@gmail.com>
+> ---
+>  drivers/platform/x86/intel/int3472/tps68470.c | 29 ++++++++++++++++---
+>  drivers/platform/x86/intel/int3472/tps68470.h | 10 +++++++
+>  2 files changed, 35 insertions(+), 4 deletions(-)
+> 
+> diff --git a/drivers/platform/x86/intel/int3472/tps68470.c b/drivers/platform/x86/intel/int3472/tps68470.c
+> index a496075c0..3364ef428 100644
+> --- a/drivers/platform/x86/intel/int3472/tps68470.c
+> +++ b/drivers/platform/x86/intel/int3472/tps68470.c
+> @@ -155,9 +155,31 @@ static int skl_int3472_tps68470_probe(struct i2c_client *client)
+>  	if (!adev)
+>  		return -ENODEV;
+>  
+> -	n_consumers = skl_int3472_fill_clk_pdata(&client->dev, &clk_pdata);
+> -	if (n_consumers < 0)
+> -		return n_consumers;
+> +	/*
+> +	 * Look up board data before building clock platform data.  On platforms
+> +	 * where a sensor's ACPI _DEP does not list the INT3472 device,
+> +	 * for_each_acpi_consumer_dev() misses that sensor and its clock consumer
+> +	 * entry is never registered.  Board data can supply a static consumer
+> +	 * list to use instead, bypassing the broken _DEP traversal.
+
+Please wrap to 80 characters.
+
+> +	 */
+> +	board_data = int3472_tps68470_get_board_data(dev_name(&client->dev));
+> +
+> +	if (board_data && board_data->n_clk_consumers) {
+> +		clk_pdata = devm_kzalloc(&client->dev,
+> +					 struct_size(clk_pdata, consumers,
+> +						     board_data->n_clk_consumers),
+> +					 GFP_KERNEL);
+> +		if (!clk_pdata)
+> +			return -ENOMEM;
+> +		clk_pdata->n_consumers = board_data->n_clk_consumers;
+> +		for (i = 0; i < (int)board_data->n_clk_consumers; i++)
+
+No need to cast -- instead declare i as unsigned int.
+
+> +			clk_pdata->consumers[i] = board_data->clk_consumers[i];
+> +		n_consumers = board_data->n_clk_consumers;
+> +	} else {
+> +		n_consumers = skl_int3472_fill_clk_pdata(&client->dev, &clk_pdata);
+> +		if (n_consumers < 0)
+> +			return n_consumers;
+> +	}
+>  
+>  	regmap = devm_regmap_init_i2c(client, &tps68470_regmap_config);
+>  	if (IS_ERR(regmap)) {
+> @@ -176,7 +198,6 @@ static int skl_int3472_tps68470_probe(struct i2c_client *client)
+>  	device_type = skl_int3472_tps68470_calc_type(adev);
+>  	switch (device_type) {
+>  	case DESIGNED_FOR_WINDOWS:
+> -		board_data = int3472_tps68470_get_board_data(dev_name(&client->dev));
+>  		if (!board_data)
+>  			return dev_err_probe(&client->dev, -ENODEV, "No board-data found for this model\n");
+>  
+> diff --git a/drivers/platform/x86/intel/int3472/tps68470.h b/drivers/platform/x86/intel/int3472/tps68470.h
+> index 35915e701..4aefb728e 100644
+> --- a/drivers/platform/x86/intel/int3472/tps68470.h
+> +++ b/drivers/platform/x86/intel/int3472/tps68470.h
+> @@ -12,11 +12,21 @@
+>  #define _INTEL_SKL_INT3472_TPS68470_H
+>  
+>  struct gpiod_lookup_table;
+> +struct tps68470_clk_consumer;
+>  struct tps68470_regulator_platform_data;
+>  
+>  struct int3472_tps68470_board_data {
+>  	const char *dev_name;
+>  	const struct tps68470_regulator_platform_data *tps68470_regulator_pdata;
+> +	/*
+> +	 * Static clock consumers.  When n_clk_consumers is non-zero these are
+> +	 * used in place of for_each_acpi_consumer_dev() to build the tps68470-clk
+> +	 * platform data.  Needed on platforms where a sensor's ACPI _DEP does not
+> +	 * list the INT3472 device, causing that sensor to be missed by the ACPI
+> +	 * dependency traversal.
+
+Please wrap this, too, to 80 characters.
+
+> +	 */
+> +	unsigned int n_clk_consumers;
+> +	const struct tps68470_clk_consumer *clk_consumers;
+>  	unsigned int n_gpiod_lookups;
+>  	struct gpiod_lookup_table *tps68470_gpio_lookup_tables[];
+>  };
+
 -- 
-2.25.1
+Regards,
 
+Sakari Ailus
