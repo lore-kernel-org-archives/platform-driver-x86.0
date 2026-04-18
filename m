@@ -1,63 +1,63 @@
-Received: from mail-pj1-f48.google.com (mail-pj1-f48.google.com [209.85.216.48])
+Received: from mail-pj1-f49.google.com (mail-pj1-f49.google.com [209.85.216.49])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1F5813B19C6
-	for <platform-driver-x86@vger.kernel.org>; Fri, 17 Apr 2026 19:16:43 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.48
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 347FE36492A
+	for <platform-driver-x86@vger.kernel.org>; Fri, 17 Apr 2026 19:16:52 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.49
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1776453404; cv=none; b=XGj0bpaVocH1hnGE4GoH9xYMGNdBe7SHUox0nc3VKn2E+F/xVbqz06K7F5z8IHWDdUf7S15LTsSz5jS14FH95eB0vP8kOlBa48tVrfotuVEroU/eoK+JdcFTvN53FLLiXFRdYTZXZjcmIaCD5uikgeozfy0yjsDJV5BNUvia5F0=
+	t=1776453413; cv=none; b=M7DI27+fmLJ5qAnHk8wuTSwMBxy3Tx3HELqfL/6S05rUKSrKOzrNshfj/UjRDI8Tqiy5O6IEpwtw1Cs6qvCf9APhg2u4//cKKe85f12m0ubG9ZHWJMOmlnqVUBRytfb3J083G/IsXop43358VfyQU59s7nR+4BieSYjrOfrba+U=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1776453404; c=relaxed/simple;
-	bh=fCA9d0oH7tGsciyCMRPrbRJOQUijmuhnOXNzwydbxb8=;
+	s=arc-20240116; t=1776453413; c=relaxed/simple;
+	bh=ujuYV0pSwCtZOJwyM0F/+J7velSQIeFiLkVjt+sG9TQ=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=pzj/z3GWSmjK/h4KTRDvmlB9Kfw43VAEYuQH009OdAffSzWwQGWOkFzmamv/S69EwV95nwplhwMRqC0X0nejkPh1IQjG4B1gbM8UPxUldloYlboUiCsy2FvXLAN3jsIGgP3iAcn47j285mWw+kVgqSl4f7VpfTIWtD6L99SDiKw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=khSpVdX5; arc=none smtp.client-ip=209.85.216.48
+	 MIME-Version; b=RfR9UpMILo9K9ixnvcbo9/Kjx3pyHHEbZ0YwXDPHOE7EocW2Hkf6qIelqpHgs4HwGHVyVtb4W+dq0G4zwdmF2y8YQAOMdF49aCAyvmg8Pe5e5axnEBD8+6AATWHOmv7PT7YOCu6VDoFZnzN+oQXFNK4gzZ4JRZ7uWUEyPKN/YU0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=oll95xjg; arc=none smtp.client-ip=209.85.216.49
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="khSpVdX5"
-Received: by mail-pj1-f48.google.com with SMTP id 98e67ed59e1d1-35fc258aaa4so686297a91.2
-        for <platform-driver-x86@vger.kernel.org>; Fri, 17 Apr 2026 12:16:43 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="oll95xjg"
+Received: by mail-pj1-f49.google.com with SMTP id 98e67ed59e1d1-35e563b0ee7so527998a91.1
+        for <platform-driver-x86@vger.kernel.org>; Fri, 17 Apr 2026 12:16:52 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20251104; t=1776453402; x=1777058202; darn=vger.kernel.org;
+        d=gmail.com; s=20251104; t=1776453412; x=1777058212; darn=vger.kernel.org;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=B1G6x1YyXw8l45WTHbqcq5pSU5LcJaf1UYS+jkiOeaQ=;
-        b=khSpVdX5zoLafeUI7dnt6GL2Ls4O/GNVXHazD5zTRRtaC9yGh7lgBg1O35Yi27aYth
-         xQi4dwJavsASsDsgcaZSYVTd80McTzgZJY0YZHly4PykPVDGAKHcq/TTf8F6FLtwZsKe
-         8NZ2GbNrVTl4NBARrOBGA4JQNmfbz3ZNqCDJnJvzIwwiYMRawsPer54NszVTkALFdMWV
-         Zrfye3uFGJEC2t0CF05o2Np9VTxXH2/pB7qqVRAAYodjuCINWJuEBBvNUmCwBcpfcHUG
-         yQHZ+uFVz1RxjGlyLkH2+a7VPbdvwZqhY+gfJtw9OZ9JODUqfeNzf+S2yvCG5cCrK9Bz
-         rgOA==
+        bh=OekRKekk3j1AeClebcRERfCyBBA7D7adqLjQiMd5w7Y=;
+        b=oll95xjgfZHQo50hAJZPLIVnXdHT1iFP+M6V40eAjX8LN0Uf4mPmeE9RZrxjvC6qvg
+         4pfrESXzp2lkw8LxkBOdAhcCIFLmcQdK4180IVa3PsFf27DH5eZnDXkH5TXU9/4AHfMW
+         JuxNMWpbmxK05tvMk9JALehvVhTGGLPsJSDuZNNYYXlTlARrAjBUSsexTRvuNH8z+5cX
+         8kiRRY+EQpwpkhhibMccAy0q22alPFhANFri4tdT6RUiYs3aZ99yMlwlULNLJpaiNtWF
+         FcpdyOYm6D0KR0jJnveuUHAONgOMtISrFWp29QZHJrBNt/bmzCAN+I1YkLjdbGlkJznk
+         +xfQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1776453402; x=1777058202;
+        d=1e100.net; s=20251104; t=1776453412; x=1777058212;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:x-gm-gg:x-gm-message-state:from
          :to:cc:subject:date:message-id:reply-to;
-        bh=B1G6x1YyXw8l45WTHbqcq5pSU5LcJaf1UYS+jkiOeaQ=;
-        b=iNvnzZHBIE0CytsmD55y779L3IvWF6l7cm8Gr/d7hQegmbuylopDQsSbUk0ypi47+X
-         iGC44957lWaru105KFwcJgWHHjepedmlvllBEbQQzHqiZp4Cg657U72xiv5fV9IRum3C
-         1w+6d7YYMGFRKi8gF2E0fiWDphqxEzrK71TfZkUfOFzK3JKh8kdjqv5xVh0RBu+zI37X
-         P/anDhHHIQaHLVP1QRZvl7uVETP8v4WV7VaVbDhKuDpah/c895m68sDFS3XrFN5V62Nh
-         pDU5UU3XOcDdfhjAs06oy/8WqGkM+RQ72MwFHkKuuywtNuGdWc6Q6Lzn1i7kkTjFF6TG
-         vIaQ==
-X-Forwarded-Encrypted: i=1; AFNElJ8SsUSnZD0mhyGGSBjXqmCKCd16jzzL9nyv8XDFCF03iKZJpOWYls5GBE8dfE0K5WCSKn11Pa9kRDNhZOD1reccPsDx@vger.kernel.org
-X-Gm-Message-State: AOJu0Yw6xWs+XNqyktfoPdyzDFCtnl0p8nwVqoxuDZx56DDJsVbd5p/p
-	9ZWS7IMmyuHUOk+ricOTZewE1FqYqiYZ7vHDPCC01O9Zjx2isp3ewtyOBH7BYw==
-X-Gm-Gg: AeBDievnjgUd9QEAdLwC/IbPae7aG0UUpw6AnCIML7HPjw4tpSjR9hWn7f2svSh103O
-	XoRmxOcU6rJFW2okCyrDYFjtD9bNf1hrzwEqrj7CUbMrgNO5JA8YvkEuDrRJ9qOBtKVaPBJqJbT
-	EbMTcvL/cIRKG2GyARlp34yVmAOWNe1XE2chmFEQR7d6J0gw70OD25hIHBraWxGjGYLdur5h0b8
-	3I81wLfZb5VQzElRwfYbLv0m5QTOTsJRQvTiqnTUF41G2ICNhT7LujKsUudR9AEbWZcCpDkizlk
-	JQYHdC79mCH2EOb8n0SV14wTMUZSbSPGxusUx+8ZJNKiK/99v6LLNUxlGJlorYWZoHIMiLVDgjh
-	q61+oBXK4DNUNEqiN5nJdpuqovVyqQHeLWug9eYtADYlkzrh65Z+W4e3r3iTb9ZfEyFeIJGfxL3
-	TOwTbGo4ceEm5rFM5CwbcomAv26/VnVXL/8x9QVp7Rh3ele+aAuYXq6Xk7PHLbNz9G
-X-Received: by 2002:a17:90b:5544:b0:35e:3103:d4d8 with SMTP id 98e67ed59e1d1-361403d5b48mr4098807a91.6.1776453402326;
-        Fri, 17 Apr 2026 12:16:42 -0700 (PDT)
+        bh=OekRKekk3j1AeClebcRERfCyBBA7D7adqLjQiMd5w7Y=;
+        b=QVWad6/MEwdVxm3aBSdZj7/4f+wXUsHvecc9qILDmTou0PxGhIICPSKMVxxY69FPZK
+         l5MS8w1GmqE3iW5CXIssyNdukqMxDVxCXfRYO7idkAW3i4WvkJatPDUFbU5INwmvqK9L
+         GplsKA0+RyvNTkTraxZ4K/Xtem+XyO55QsSNMPP1USfOZXTJ1fBPIAb9jY1j4KN1QwBf
+         cu+TGljhhXvCr8ALrUHK1FCzktX2lWhiwAuYcub0fFsFWtECkMFdGpivYP5VmOfMOelH
+         5M86A9YI7QZSlfLWCTcSGd9hkueUxbo3mEdpPJqIoUrXcVA0ytG8eUopvNWkdX5GWjKM
+         jigw==
+X-Forwarded-Encrypted: i=1; AFNElJ/pjkPAyFgL28b/WbeSwqIpxxHbIjuM3bdOzCZrUHuT0hkSXQbMkLU4UFmmNH8q5/IUiUkMQlaqolO+GKYmHw9jy8Q+@vger.kernel.org
+X-Gm-Message-State: AOJu0YzE17NQW9wxjwX7bkuCRP1kPFKWaf7pM9P9PMgyWkjKAMHpn5mm
+	6Q938rvizxbcphQAYpadwhhpRJ/1UB1oekTjS+E2b8yhkXpiIKnA4hr+MdWvBQ==
+X-Gm-Gg: AeBDievj/FwL2IdlgUSNhPprvT7/QkVhMLz/9s0BJDevQmdwsTYHjkpig1BLZNODkH0
+	7uzgPbAo7bs3SHQKMcQv7x5r2RsU43rMvJz3vIhr6xjpQz/Tn/5oXbxTVyrxgDamksvs4pe7LhI
+	dVIiZy2fUTv06X9T/HDvAmMc3nTKN9TnU/erewnflstzPUznr96B6o8B/lfvC3bZdQCHg5J0En/
+	TM0MZ76iwdxL/brFrTzERKAPVSJjKQgOpB6FrJXg0ur+N37t7OUKc17Csjhq7qUit+mcJP3VqdC
+	bEBRkFqORrigZhP71jBt3pFMh9/PKYmpA1BRg1nCkQ8Uow73DErt19oYiqm9ryRCKCAcKMBlvK/
+	dbtQgAI57S78Fm81pvvyirX8s+tnpA11VoY9gjWJ6jM9YiJud2Ei/uLgMNoXIci+T99LYid+N8f
+	tCvXlQK7npCxxUvWw9/Oj/fsyYGuY87GkvBzI01oPrnLdgeu8wuHoJn1467IJRK6iX
+X-Received: by 2002:a17:90b:55cb:b0:35c:10e8:1a72 with SMTP id 98e67ed59e1d1-361401f50d9mr3769729a91.7.1776453411388;
+        Fri, 17 Apr 2026 12:16:51 -0700 (PDT)
 Received: from gb5.tail50fddd.ts.net ([139.5.199.80])
-        by smtp.gmail.com with ESMTPSA id 98e67ed59e1d1-36140feea38sm2913310a91.6.2026.04.17.12.16.39
+        by smtp.gmail.com with ESMTPSA id 98e67ed59e1d1-36140feea38sm2913310a91.6.2026.04.17.12.16.48
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 17 Apr 2026 12:16:41 -0700 (PDT)
+        Fri, 17 Apr 2026 12:16:50 -0700 (PDT)
 From: Ayaan Mirza Baig <ayaanmirzabaig85@gmail.com>
 To: ilpo.jarvinen@linux.intel.com
 Cc: ayaanmirza788@gmail.com,
@@ -65,12 +65,13 @@ Cc: ayaanmirza788@gmail.com,
 	josh@joshuagrisham.com,
 	linux-kernel@vger.kernel.org,
 	platform-driver-x86@vger.kernel.org
-Subject: [PATCH v5 1/2] platform/x86: samsung-galaxybook: Refactor camera lens cover input device
-Date: Sat, 18 Apr 2026 00:46:13 +0000
-Message-ID: <20260418004613.93981-2-ayaanmirzabaig85@gmail.com>
+Subject: [PATCH v5 2/2] platform/x86: samsung-galaxybook: Handle ACPI hotkey notifications
+Date: Sat, 18 Apr 2026 00:46:14 +0000
+Message-ID: <20260418004613.93981-3-ayaanmirzabaig85@gmail.com>
 X-Mailer: git-send-email 2.53.0
-In-Reply-To: <c46938e0-02f0-22b1-1730-4ce87603667c@linux.intel.com>
+In-Reply-To: <20260418004613.93981-2-ayaanmirzabaig85@gmail.com>
 References: <c46938e0-02f0-22b1-1730-4ce87603667c@linux.intel.com>
+ <20260418004613.93981-2-ayaanmirzabaig85@gmail.com>
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
@@ -79,102 +80,83 @@ List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-Rename the camera_lens_cover_switch input device to a generic input
-device which can be used for multiple input events. Move input device
-allocation and registration into a dedicated galaxybook_input_init()
-helper which is called early in probe so that the device is available
-to all features.
+On Samsung Galaxy Book 5 (SAM0430), the keyboard backlight, microphone
+mute, and camera block hotkeys do not generate i8042 scancodes.
+Instead they arrive as ACPI notifications 0x7d, 0x6e, and 0x6f
+respectively, all of which previously fell through to the default
+"unknown" warning in galaxybook_acpi_notify().
 
-No functional change.
+Add handling for these three events:
+
+ - 0x7d (Fn+F9, keyboard backlight): schedule the existing
+   kbd_backlight_hotkey_work which cycles brightness.
+
+ - 0x6e (Fn+F10, microphone mute): emit KEY_MICMUTE via the driver's
+   input device.
+
+ - 0x6f (Fn+F11, camera block): if block_recording is active use the
+   existing block_recording_hotkey_work; otherwise emit a toggle of
+   SW_CAMERA_LENS_COVER via the driver's input device on models where
+   the block_recording ACPI feature is not supported.
+
+Tested on Samsung Galaxy Book 5 (SAM0430) and Samsung Galaxy Book2 Pro
+(SAM0429).
 
 Signed-off-by: Ayaan Mirza Baig <ayaanmirzabaig85@gmail.com>
+Co-developed-by: Joshua Grisham <josh@joshuagrisham.com>
+Signed-off-by: Joshua Grisham <josh@joshuagrisham.com>
 ---
- drivers/platform/x86/samsung-galaxybook.c | 46 ++++++++++++-----------
- 1 file changed, 25 insertions(+), 21 deletions(-)
+ drivers/platform/x86/samsung-galaxybook.c | 23 +++++++++++++++++++++++
+ 1 file changed, 23 insertions(+)
 
 diff --git a/drivers/platform/x86/samsung-galaxybook.c b/drivers/platform/x86/samsung-galaxybook.c
-index 755cb82bdb60..a51ad6b03164 100644
+index a51ad6b03164..6382af0b106c 100644
 --- a/drivers/platform/x86/samsung-galaxybook.c
 +++ b/drivers/platform/x86/samsung-galaxybook.c
-@@ -53,7 +53,7 @@ struct samsung_galaxybook {
- 	void *i8042_filter_ptr;
+@@ -197,6 +197,9 @@ static const guid_t performance_mode_guid =
+ #define GB_ACPI_NOTIFY_DEVICE_ON_TABLE          0x6c
+ #define GB_ACPI_NOTIFY_DEVICE_OFF_TABLE         0x6d
+ #define GB_ACPI_NOTIFY_HOTKEY_PERFORMANCE_MODE  0x70
++#define GB_ACPI_NOTIFY_HOTKEY_KBD_BACKLIGHT     0x7d
++#define GB_ACPI_NOTIFY_HOTKEY_MICMUTE           0x6e
++#define GB_ACPI_NOTIFY_HOTKEY_CAMERA            0x6f
  
- 	struct work_struct block_recording_hotkey_work;
--	struct input_dev *camera_lens_cover_switch;
-+	struct input_dev *input;
+ #define GB_KEY_KBD_BACKLIGHT_KEYDOWN    0x2c
+ #define GB_KEY_KBD_BACKLIGHT_KEYUP      0xac
+@@ -876,6 +879,7 @@ static int galaxybook_input_init(struct samsung_galaxybook *galaxybook)
+ 	galaxybook->input->phys = DRIVER_NAME "/input0";
+ 	galaxybook->input->id.bustype = BUS_HOST;
  
- 	struct acpi_battery_hook battery_hook;
++	input_set_capability(galaxybook->input, EV_KEY, KEY_MICMUTE);
+ 	input_set_capability(galaxybook->input, EV_SW, SW_CAMERA_LENS_COVER);
  
-@@ -859,13 +859,28 @@ static int block_recording_acpi_set(struct samsung_galaxybook *galaxybook, const
- 	if (err)
- 		return err;
- 
--	input_report_switch(galaxybook->camera_lens_cover_switch,
-+	input_report_switch(galaxybook->input,
- 			    SW_CAMERA_LENS_COVER, value ? 1 : 0);
--	input_sync(galaxybook->camera_lens_cover_switch);
-+	input_sync(galaxybook->input);
- 
- 	return 0;
- }
- 
-+static int galaxybook_input_init(struct samsung_galaxybook *galaxybook)
-+{
-+	galaxybook->input = devm_input_allocate_device(&galaxybook->platform->dev);
-+	if (!galaxybook->input)
-+		return -ENOMEM;
-+
-+	galaxybook->input->name = "Samsung Galaxy Book Camera Lens Cover";
-+	galaxybook->input->phys = DRIVER_NAME "/input0";
-+	galaxybook->input->id.bustype = BUS_HOST;
-+
-+	input_set_capability(galaxybook->input, EV_SW, SW_CAMERA_LENS_COVER);
-+
-+	return input_register_device(galaxybook->input);
-+}
-+
- static int galaxybook_block_recording_init(struct samsung_galaxybook *galaxybook)
- {
- 	bool value;
-@@ -887,24 +902,8 @@ static int galaxybook_block_recording_init(struct samsung_galaxybook *galaxybook
- 		return GB_NOT_SUPPORTED;
- 	}
- 
--	galaxybook->camera_lens_cover_switch =
--		devm_input_allocate_device(&galaxybook->platform->dev);
--	if (!galaxybook->camera_lens_cover_switch)
--		return -ENOMEM;
--
--	galaxybook->camera_lens_cover_switch->name = "Samsung Galaxy Book Camera Lens Cover";
--	galaxybook->camera_lens_cover_switch->phys = DRIVER_NAME "/input0";
--	galaxybook->camera_lens_cover_switch->id.bustype = BUS_HOST;
--
--	input_set_capability(galaxybook->camera_lens_cover_switch, EV_SW, SW_CAMERA_LENS_COVER);
--
--	err = input_register_device(galaxybook->camera_lens_cover_switch);
--	if (err)
--		return err;
--
--	input_report_switch(galaxybook->camera_lens_cover_switch,
--			    SW_CAMERA_LENS_COVER, value ? 1 : 0);
--	input_sync(galaxybook->camera_lens_cover_switch);
-+	input_report_switch(galaxybook->input, SW_CAMERA_LENS_COVER, value ? 1 : 0);
-+	input_sync(galaxybook->input);
- 
- 	return 0;
- }
-@@ -1392,6 +1391,11 @@ static int galaxybook_probe(struct platform_device *pdev)
- 		return dev_err_probe(&galaxybook->platform->dev, err,
- 				     "failed to initialize kbd_backlight\n");
- 
-+	err = galaxybook_input_init(galaxybook);
-+	if (err)
-+		return dev_err_probe(&galaxybook->platform->dev, err,
-+				     "failed to initialize input device\n");
-+
- 	err = galaxybook_fw_attrs_init(galaxybook);
- 	if (err)
- 		return dev_err_probe(&galaxybook->platform->dev, err,
+ 	return input_register_device(galaxybook->input);
+@@ -1259,6 +1263,25 @@ static void galaxybook_acpi_notify(acpi_handle handle, u32 event, void *data)
+ 		if (galaxybook->has_performance_mode)
+ 			platform_profile_cycle();
+ 		break;
++	case GB_ACPI_NOTIFY_HOTKEY_KBD_BACKLIGHT:
++		if (galaxybook->has_kbd_backlight)
++			schedule_work(&galaxybook->kbd_backlight_hotkey_work);
++		break;
++	case GB_ACPI_NOTIFY_HOTKEY_MICMUTE:
++		input_report_key(galaxybook->input, KEY_MICMUTE, 1);
++		input_sync(galaxybook->input);
++		input_report_key(galaxybook->input, KEY_MICMUTE, 0);
++		input_sync(galaxybook->input);
++		break;
++	case GB_ACPI_NOTIFY_HOTKEY_CAMERA:
++		if (galaxybook->has_block_recording) {
++			schedule_work(&galaxybook->block_recording_hotkey_work);
++		} else {
++			input_report_switch(galaxybook->input, SW_CAMERA_LENS_COVER,
++					    !test_bit(SW_CAMERA_LENS_COVER, galaxybook->input->sw));
++			input_sync(galaxybook->input);
++		}
++		break;
+ 	default:
+ 		dev_warn(&galaxybook->platform->dev,
+ 			 "unknown ACPI notification event: 0x%x\n", event);
 -- 
 2.53.0
 
