@@ -1,124 +1,104 @@
-Received: from mail-yx1-f52.google.com (mail-yx1-f52.google.com [74.125.224.52])
+Received: from mail-pj1-f41.google.com (mail-pj1-f41.google.com [209.85.216.41])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B3BE5175A6D
-	for <platform-driver-x86@vger.kernel.org>; Sun, 19 Apr 2026 10:36:09 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=74.125.224.52
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1776594970; cv=pass; b=nlJhnWnZgT2USVWePWFrhIEJxcLCcKXLwDP3iRWabk3b+ddMXaSRSNTqRjW9vRjb/uf+V5HnCWGgLGs1PbTyZ8Hj74mHnpeAPyVi8iE7Xzp/gs2kG0A1GggyYSi1nvVbm2KvNzC9UVckR8rRsldHLryciVSb+g8aw+IJQbUqzVo=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1776594970; c=relaxed/simple;
-	bh=XdE6Eq/koFKWakMrfTypz95nQBfaZLy3vdLDUwdtL9k=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=CupS5nRF8xwhuJnJV0MOX178pUjE5fRByru9K5UaLJGfZxopwAfZxx+mMihmtJms43e0i3bavQ9gPQugZYQPDK7yqZqZ4lavDta77lCBSgUSQPglUZnsYzZ6Sd1Mvq+7ILiKqq1g8TjKUwW3SM7YNRKV+6EmcpVhEuDg5QRFhQ8=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=googlemail.com; spf=pass smtp.mailfrom=googlemail.com; dkim=pass (2048-bit key) header.d=googlemail.com header.i=@googlemail.com header.b=fgIS4mZt; arc=pass smtp.client-ip=74.125.224.52
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=googlemail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=googlemail.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 014E1238150
+	for <platform-driver-x86@vger.kernel.org>; Sun, 19 Apr 2026 17:10:31 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.41
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1776618633; cv=none; b=MihnrkK+Z52hEMkaz4merZ+14c9/GPODTafXTKXl25yex56YUysHjZbubdOer2grgUxAHGUBIjo1O5zdaoSN6ORx7pKZKfb+u2a3j7bqkEj1NNCrWNhZT/g81siqt4qt79iKc+KfvFvZO9MKkOhiS7QCcPfC5HqK083WxXO380c=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1776618633; c=relaxed/simple;
+	bh=g048MkCvqSOBynlchfJh57UY0Z1vzIEQS6EpQbM4rkc=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=gZXNq8yfyMNvE4blsyuIDQYZhFZHL0G/odAn6GLwyLVdYW8PJ3okyFlgeTp5Rofcxxv3V2c5+Cihlg6yerAuy4kPtq0q5c46aNhnvYJ0Km3FOdODYnA5x3x9OV2Ew6Rro3NVEc+QHNnkA+OAiE1efhmsSKAWnf4ILyxa7uUR76o=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=JvnHDdfA; arc=none smtp.client-ip=209.85.216.41
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=googlemail.com header.i=@googlemail.com header.b="fgIS4mZt"
-Received: by mail-yx1-f52.google.com with SMTP id 956f58d0204a3-64d5a7926cfso2024698d50.2
-        for <platform-driver-x86@vger.kernel.org>; Sun, 19 Apr 2026 03:36:09 -0700 (PDT)
-ARC-Seal: i=1; a=rsa-sha256; t=1776594969; cv=none;
-        d=google.com; s=arc-20240605;
-        b=GJJShIehbbmjZ1wcMqCOYCcirLYtI2wpoiNAV9qmZE6FhIYRAo4pZP16XGn+p8U3NA
-         E1KIKm9jQmgyumUUxFUvMR3QQOzozidEKc50hx2AqLgxr3oWOXRpdcslI7tfuci4ckfR
-         n5HVEH07UxceYHeq7PHRsiJCG44B/KBWU88A2ULlH8v7W5aObKTnv5PYNdk+1BrkLbQI
-         VLRRMe/JFczGMNmj+lDn9zfQEGQc5Z3hc4mQqYx4wiI39gR9yVtgJmbe9M+BcjSlK5kj
-         fNipSysBb7G5Imeq+wC4r4DSY0fSkWhrtqS9Fh+h0cPYADPN7aBVvL1gm8gLM+cXjgO4
-         z07A==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20240605;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:dkim-signature;
-        bh=uDecoIfKTbR+dHQNvuYjtHUUP8GokjVSx8iDKeD0F9s=;
-        fh=YmD6mQu7bqY1UxmZ2xWsAe5xcatXOr1sjYfsVPyuswk=;
-        b=SzJ8V6VLPH2mTFiiBghtZSzFAXuhbsR2RqDSIsLdhstamMIJlSsUTYizXqYNTWffri
-         c9RzJ5y/tf6XCFinjVNsJS37p82UvsbgJ55sEMPBD9hu3iUjAVknE8SqR/XH9PO+DtZH
-         7vefIXf5C0cOWsmY8ASZ7xfoM0BRkEJiGRXBIqGmajGLNQDU+MFU6NS891Hh5X+5oT3L
-         YjJdXIFm6tb/ofA2OZCilf21ZkZQqIx6g3yn1oPDlGslwr3K4BH+3LkeBVJOVQhjYto+
-         jwttd9/lj6fx2QT9h47NXA2qD+RJHIwNlMFV+QB+FBg6vM353wdxsqglx3lrsvicMAXS
-         lT8w==;
-        darn=vger.kernel.org
-ARC-Authentication-Results: i=1; mx.google.com; arc=none
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="JvnHDdfA"
+Received: by mail-pj1-f41.google.com with SMTP id 98e67ed59e1d1-3614826eca4so1632954a91.1
+        for <platform-driver-x86@vger.kernel.org>; Sun, 19 Apr 2026 10:10:31 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=googlemail.com; s=20251104; t=1776594969; x=1777199769; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=uDecoIfKTbR+dHQNvuYjtHUUP8GokjVSx8iDKeD0F9s=;
-        b=fgIS4mZtdoRCfw50pYpRqOzuyfLau2HijKLZuwGTXUmdE+uA+Zwsh+hgdLxLJn8Mqa
-         KkGi/VgurhIQmz+KsLryr/kxvvKU1WLR53cD3//Hp/sEAYEDE5CzgO0yl7TtQWCGKLre
-         HdXWzrI4HnCYdgVovgr3rq2BvsI5HsS26sqHymMZUYHepCqmUw6w3aZ5wg7hFOMpQ8dm
-         RcTkFxeOYgKa3ECH//+ivgcppAyv/ps08uHrFKfnxmCcDn4k/XTj1UhmO7mIjULNL/YI
-         +1K7Meb0SmMvCrHFxen5Wf2Rno0iQmCeaL/rasw8whQQAJP1KEcqVCrr3TPJSGHifcAR
-         09CQ==
+        d=gmail.com; s=20251104; t=1776618631; x=1777223431; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=uOL+TTkZLOen7KX0j3LR+g56bpC3CZN3+QqLNYREIS8=;
+        b=JvnHDdfAwvt/p9TyZSefPy6/l/JzAoDj1+mwjgfHyeTGj9KzvkNJCHF9198zT2jPlY
+         GIyHlXUK7WYSB7zT7OBurzRO1/JhF5IoiMEQRwJ4hQG3k9tK4/4igwg0Jah6Vd3ocMaq
+         9rWcUrhwt0VXz76wqm/kKcNOVrmxoU7h3T1RuwxyJiwXnkrQA9AKQHRJuLPP9ODfs2db
+         FaYTymonVMgfZkjq8pPwrb2TIzPYI0q45ewfNOFpT0dGw3BLJN87vesbNN6VE+iJh3X7
+         cA8rfT2UFiMEVJ5DPtoqYA+RnZ8zDLPmwmYoCjYsY1mTC2fGpPrpDs0aiZHDIVR0Mt1x
+         Jy/g==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1776594969; x=1777199769;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-gg:x-gm-message-state:from
-         :to:cc:subject:date:message-id:reply-to;
-        bh=uDecoIfKTbR+dHQNvuYjtHUUP8GokjVSx8iDKeD0F9s=;
-        b=EEZJki0l1zCVBZNM5eylPuENEi4GdguIVfpQmgJZk0bzYHxd85503M4TbwBk7798XN
-         G+45F+U6VYX5B0uMN5J6Tq+5HVBJ6Jg0uBjFnHPi4Ou/Lq4tPqr2Rf25Lbe421zfk94l
-         Cb4hApMOMG0Hd7T5WrWIxirqg47YwZiyeccWdqB+5Vz7uE34PfhD04nX/t90zY80oYN2
-         G36lzIic/PF7DuFleInXTHqYoV/Ae6rAg02ZUZzkzrshTwHfugObgtnN1rY/U3RnkkEF
-         Lo+M8Xaf9Cnb6ML+nnEkA2Z8yEp1nteDA0w20fWDCDsOtgJ8KFYsP7wZmimRQmpAcMqN
-         Lw5g==
-X-Forwarded-Encrypted: i=1; AFNElJ+QrqkHGUiRGnqsGYMDqTMVMRvN/84z82usJYlaT0FWoMQsOnRnrL2o0mh9/5xxgYyKaB4DkAZcgU2obNAD+m85dYRy@vger.kernel.org
-X-Gm-Message-State: AOJu0Yyvl+Y7ud4J55kcYpsSJUk4JS2sNllSeS46k1wPiiSPzShC7eue
-	HKFV5pDVecA7hyyJ2THreVEtcveMxt8Y+KKFfc+Jfl6nSjbcLnkVbJXBMU0gOAaEj70Nz6dwRQM
-	ifykcOMH3o52VfAko8VF6gRnHFGO1uL1RXBCDKwVQ
-X-Gm-Gg: AeBDietlruadR6UB0FBXbBAdRWPnTt0l2wTfC9K6OtcZXAucFxCWHTfqqQZ3wjsUfka
-	W69VdkK8IYXo3krYpIVIxdvrBdJBwSaW3/tjDPojf3lE1nwAwblzmW05Pc1BGE150tN4nigD9zp
-	P6ktTyEfm9ZzlEuJv8/ANb+niirACZlchP6xqXhjj2/Fdai61HcgiG4Pecvo3OZv4YvGec+V3Ut
-	JsoABSjm7bemortTIedRAGWM1yehRS2Te5PrIFwJFOJJq2CSB5iLGGRgAzlced/wpxZu0oKhUwL
-	L1++1mBFLT44WnhPlTduTxPXHFrbmiMlpS/AVwNZHGrRCO/y+Q==
-X-Received: by 2002:a05:690e:43d0:b0:64a:d04e:a340 with SMTP id
- 956f58d0204a3-653107be0d5mr6721585d50.11.1776594968771; Sun, 19 Apr 2026
- 03:36:08 -0700 (PDT)
+        d=1e100.net; s=20251104; t=1776618631; x=1777223431;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-gg:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=uOL+TTkZLOen7KX0j3LR+g56bpC3CZN3+QqLNYREIS8=;
+        b=DTVMvXpfO5zAS6Dvvig+DFQZ80DFH6c7PqRncPqLL4O4+EpR8sSm8G3x8GfOqB4Qf5
+         aeCpQxN8XOoRTJLQDbLHbC13wKqUGJpTbYJJXdaQW/EgHHk93nW0uFJY/VSYeRJVahdC
+         jOpCHSoJ33z5C0tmeiJG7ie+oDmeCSylH54mRjixcSVTCf1N61HcaK+U9tx1bhKpDSVs
+         NOlOqEeJXbLp6oLdLhmQqhXW7ngvTpBU+/4nMpzND13XKL7kyv4pBAgVlVjkKdPnHwB6
+         +/J6GvNiCgSOs3dihUfApr0QuVAKCFyA39i3Oq9HGeNUlFuI0EvqxlXE7ImI40SPOsXa
+         2vAQ==
+X-Gm-Message-State: AOJu0YxGouq9EnCK7bncDUdsEdOm9CWM1jNZH7AkACZ1EQ2UXstvATfD
+	m0/+Eyktz9QO1yVbR/P8/TaswOnzSEYJ7D4xZdlb1tilFeJos4B2tSia
+X-Gm-Gg: AeBDieue2A+2R+R2Cstpj/YoPPGzQYXIE8MVx56MqPBhXV+Jp/Q2Ybfv+xjaB/NrdSq
+	iJOCLSvvzCY6Q83xpgMQf7DVXC8GEJIVZ2puq7OFMrJ3B0BhdX57jR38o9F7/5NvgP6tXAgS+uD
+	3dcnsFKUqoBg4z3JX1CN5C4/bWjJoYO7/R0pW4O6dDumVfYW0hdZ9D15P7cwtKIWVF75Gq4IUaj
+	Y+zZRci15iq0w5lDp7TL6snk9Ik2+MTKKnoMJOdWPxdb2FKv0sBGCytASO+RSYZFwVsJvbSyXhQ
+	CngkNAlnTOFU8OiUSrkgoz3NOq7I99qblta9a5dqGhpcKbNfpi9kRfDXKwU7LX+FJy+8vknKTeF
+	xcb7pbtvoL+IFwRypSqR88P3mvC6LXRnskN+59DSzeMcz4axzl6oJfW1xSeeumwv4a9b1Um1n0B
+	tmshQR7Oz5ecrpfRycsh/qt6O+wNszDSEow+yu592/ho21sTe926nR+SvJgKMGCUcQSJ6SvlkJ0
+	3GmbsVdCEr4b6GNjg==
+X-Received: by 2002:a17:90b:4c52:b0:35c:30a8:31f with SMTP id 98e67ed59e1d1-361403bdd28mr11782171a91.2.1776618631255;
+        Sun, 19 Apr 2026 10:10:31 -0700 (PDT)
+Received: from fedora ([103.181.54.97])
+        by smtp.gmail.com with ESMTPSA id d9443c01a7336-2b5fa9ff3casm98158695ad.17.2026.04.19.10.10.27
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sun, 19 Apr 2026 10:10:30 -0700 (PDT)
+From: Ninad Naik <ninadnaik07@gmail.com>
+To: mpearson-lenovo@squebb.ca,
+	derekjohn.clark@gmail.com,
+	W_Armin@gmx.de,
+	corbet@lwn.net,
+	skhan@linuxfoundation.org
+Cc: platform-driver-x86@vger.kernel.org,
+	linux-doc@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	me@brighamcampbell.com,
+	linux-kernel-mentees@lists.linux.dev,
+	Ninad Naik <ninadnaik07@gmail.com>
+Subject: [PATCH] Documentation: fix spelling mistake "Minumum" -> "Minimum"
+Date: Sun, 19 Apr 2026 22:38:35 +0530
+Message-ID: <20260419170835.347910-1-ninadnaik07@gmail.com>
+X-Mailer: git-send-email 2.53.0
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20260314142236.74514-1-pithenrich2d@gmail.com>
- <0b0f6ef9-ae3a-4642-85af-fbdf7ebafd1e@app.fastmail.com> <CAMBPg2fCtHoA6cX3kCGN7BUARsC5UrB1he6+eC06vfrLXTtktw@mail.gmail.com>
- <6922cac9-de03-4aad-a710-473cb314077a@app.fastmail.com>
-In-Reply-To: <6922cac9-de03-4aad-a710-473cb314077a@app.fastmail.com>
-From: Pit Henrich <pithenrich2d@googlemail.com>
-Date: Sun, 19 Apr 2026 12:35:57 +0200
-X-Gm-Features: AQROBzDXFau3D2e3T0O018Y860D_gFXPSSEXTh0MFbqEHG4VwNq75a7DtsFpw_I
-Message-ID: <CAMBPg2e_7KpzDFWEnX=tRAO-qDAPo6X3ec+B_hkJP5GssKsKJg@mail.gmail.com>
-Subject: Re: [PATCH] platform/x86: thinkpad-acpi: Add X1 Fold keyboard
- attachment detection
-To: Mark Pearson <mpearson-lenovo@squebb.ca>
-Cc: Henrique de Moraes Holschuh <hmh@hmh.eng.br>, "Derek J . Clark" <derekjohn.clark@gmail.com>, 
-	Hans de Goede <hansg@kernel.org>, =?UTF-8?Q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>, 
-	ibm-acpi-devel@lists.sourceforge.net, 
-	"platform-driver-x86@vger.kernel.org" <platform-driver-x86@vger.kernel.org>, linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 8bit
 
-Hi Mark,
+There is a spelling mistake in Documentation/wmi/devices/lenovo-wmi-other.rst.
+Fixing it.
 
-On Fri, 27 Mar 2026 at 18:32, Mark Pearson <mpearson-lenovo@squebb.ca> wrot=
-e:
-> I got some internal details on the implementation and whilst there isn't =
-a spec I can share, we did determine that Windows driver is using some ACPI=
- methods instead: GDST (get device state), GDSZ (get device display occlusi=
-on) and NSMC (Notify BIOS of screen mode change).
->
-> I don't have any details on how those ACPI methods break down I'm afraid =
-- but just wanted you to be aware that  Windows is doing things differently=
-.
+Signed-off-by: Ninad Naik <ninadnaik07@gmail.com>
+---
+ Documentation/wmi/devices/lenovo-wmi-other.rst | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-Sorry for the late reply, I have been busy.
-Thanks for this information! I managed to get things working using the
-ACPI methods and I have submitted a v2 patch.
-I found GDST to provide the keyboard state, but I am somewhat confused
-what the other ACPI methods are for.
-I didn't find that setting NSMC does anything obvious? Or I am using
-it wrongly.. and GDSZ feels a bit redundant?
+diff --git a/Documentation/wmi/devices/lenovo-wmi-other.rst b/Documentation/wmi/devices/lenovo-wmi-other.rst
+index 01d471156738..1d0410500d3f 100644
+--- a/Documentation/wmi/devices/lenovo-wmi-other.rst
++++ b/Documentation/wmi/devices/lenovo-wmi-other.rst
+@@ -144,5 +144,5 @@ data using the `bmfdec <https://github.com/pali/bmfdec>`_ utility:
+     [WmiDataId(1), read, Description("Mode.")] uint32 NumOfFans;
+     [WmiDataId(2), read, Description("Fan ID."), WmiSizeIs("NumOfFans")] uint32 FanId[];
+     [WmiDataId(3), read, Description("Maximum Fan Speed."), WmiSizeIs("NumOfFans")] uint32 FanMaxSpeed[];
+-    [WmiDataId(4), read, Description("Minumum Fan Speed."), WmiSizeIs("NumOfFans")] uint32 FanMinSpeed[];
++    [WmiDataId(4), read, Description("Minimum Fan Speed."), WmiSizeIs("NumOfFans")] uint32 FanMinSpeed[];
+   };
+-- 
+2.53.0
 
-Greetings
-Pit
