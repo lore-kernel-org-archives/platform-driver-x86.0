@@ -1,268 +1,124 @@
-Received: from mail-wr1-f42.google.com (mail-wr1-f42.google.com [209.85.221.42])
+Received: from mail-yx1-f52.google.com (mail-yx1-f52.google.com [74.125.224.52])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EF08632939C
-	for <platform-driver-x86@vger.kernel.org>; Sun, 19 Apr 2026 10:28:29 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.42
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1776594512; cv=none; b=pvrtDe9gXjevmHK8+kLCRTlMFqqvHGU5hANt9ZfYkDdZMppMYqOjNhAYoULEnlS0m8+1f3odgdz+fSQgu6s1tUBB41ol2N3ncbgVRfHF6oQdKcDjG8buucK9p58iHmObo6E6xoKLYqEW/w3AwoEXvSkMO8wsouXN5LKVbwR32pM=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1776594512; c=relaxed/simple;
-	bh=4iJ1gv72UrEH9ch7bOz66/scCDLY1/qX+e5zfeb5yWA=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=Z4eP1Im7F2dI9N0k1nKVW9EIhSTTLzfGxIgVp0aFz08wyMlzsv8/pBU3aWk0TrMd9NGqh+t9vicS+DTojOWo/KfWe32KzcxtKqWLKBVDEDCEkZlzDrw3tt6fbw7aWwxnXLhnHtPWiSyu9lsevnb1oT8Pw7vIM5U0BOsruX0JFZM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=googlemail.com; spf=pass smtp.mailfrom=googlemail.com; dkim=pass (2048-bit key) header.d=googlemail.com header.i=@googlemail.com header.b=peQcvska; arc=none smtp.client-ip=209.85.221.42
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B3BE5175A6D
+	for <platform-driver-x86@vger.kernel.org>; Sun, 19 Apr 2026 10:36:09 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=74.125.224.52
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1776594970; cv=pass; b=nlJhnWnZgT2USVWePWFrhIEJxcLCcKXLwDP3iRWabk3b+ddMXaSRSNTqRjW9vRjb/uf+V5HnCWGgLGs1PbTyZ8Hj74mHnpeAPyVi8iE7Xzp/gs2kG0A1GggyYSi1nvVbm2KvNzC9UVckR8rRsldHLryciVSb+g8aw+IJQbUqzVo=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1776594970; c=relaxed/simple;
+	bh=XdE6Eq/koFKWakMrfTypz95nQBfaZLy3vdLDUwdtL9k=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=CupS5nRF8xwhuJnJV0MOX178pUjE5fRByru9K5UaLJGfZxopwAfZxx+mMihmtJms43e0i3bavQ9gPQugZYQPDK7yqZqZ4lavDta77lCBSgUSQPglUZnsYzZ6Sd1Mvq+7ILiKqq1g8TjKUwW3SM7YNRKV+6EmcpVhEuDg5QRFhQ8=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=googlemail.com; spf=pass smtp.mailfrom=googlemail.com; dkim=pass (2048-bit key) header.d=googlemail.com header.i=@googlemail.com header.b=fgIS4mZt; arc=pass smtp.client-ip=74.125.224.52
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=googlemail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=googlemail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=googlemail.com header.i=@googlemail.com header.b="peQcvska"
-Received: by mail-wr1-f42.google.com with SMTP id ffacd0b85a97d-43fea39e066so1157406f8f.1
-        for <platform-driver-x86@vger.kernel.org>; Sun, 19 Apr 2026 03:28:29 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=googlemail.com header.i=@googlemail.com header.b="fgIS4mZt"
+Received: by mail-yx1-f52.google.com with SMTP id 956f58d0204a3-64d5a7926cfso2024698d50.2
+        for <platform-driver-x86@vger.kernel.org>; Sun, 19 Apr 2026 03:36:09 -0700 (PDT)
+ARC-Seal: i=1; a=rsa-sha256; t=1776594969; cv=none;
+        d=google.com; s=arc-20240605;
+        b=GJJShIehbbmjZ1wcMqCOYCcirLYtI2wpoiNAV9qmZE6FhIYRAo4pZP16XGn+p8U3NA
+         E1KIKm9jQmgyumUUxFUvMR3QQOzozidEKc50hx2AqLgxr3oWOXRpdcslI7tfuci4ckfR
+         n5HVEH07UxceYHeq7PHRsiJCG44B/KBWU88A2ULlH8v7W5aObKTnv5PYNdk+1BrkLbQI
+         VLRRMe/JFczGMNmj+lDn9zfQEGQc5Z3hc4mQqYx4wiI39gR9yVtgJmbe9M+BcjSlK5kj
+         fNipSysBb7G5Imeq+wC4r4DSY0fSkWhrtqS9Fh+h0cPYADPN7aBVvL1gm8gLM+cXjgO4
+         z07A==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20240605;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:dkim-signature;
+        bh=uDecoIfKTbR+dHQNvuYjtHUUP8GokjVSx8iDKeD0F9s=;
+        fh=YmD6mQu7bqY1UxmZ2xWsAe5xcatXOr1sjYfsVPyuswk=;
+        b=SzJ8V6VLPH2mTFiiBghtZSzFAXuhbsR2RqDSIsLdhstamMIJlSsUTYizXqYNTWffri
+         c9RzJ5y/tf6XCFinjVNsJS37p82UvsbgJ55sEMPBD9hu3iUjAVknE8SqR/XH9PO+DtZH
+         7vefIXf5C0cOWsmY8ASZ7xfoM0BRkEJiGRXBIqGmajGLNQDU+MFU6NS891Hh5X+5oT3L
+         YjJdXIFm6tb/ofA2OZCilf21ZkZQqIx6g3yn1oPDlGslwr3K4BH+3LkeBVJOVQhjYto+
+         jwttd9/lj6fx2QT9h47NXA2qD+RJHIwNlMFV+QB+FBg6vM353wdxsqglx3lrsvicMAXS
+         lT8w==;
+        darn=vger.kernel.org
+ARC-Authentication-Results: i=1; mx.google.com; arc=none
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=googlemail.com; s=20251104; t=1776594508; x=1777199308; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=NrNKL6waj+m8gxH0wqqXUCobj5ffrCP96TQS8MeVnFg=;
-        b=peQcvskawP9lJEKvRWu7DTFYR5trvUfA4Db4BONZDtLXPKphbC7CokgNHVS3ahBP4c
-         KbsG+1BiEFDUDW8Fr32NV3iKwyyBSMr9tsOg91oSWyuArE1PuiWJFiHsflKExPPSvyiT
-         fWyOW64PrvUJoKq+wYDT4XYjX864vjKw4zj1iHnzZCrrRAedqYq9y9nAUsj7z9qea0F0
-         HSgatF7k68Dp4PQSqgkrzSrajZxn9ozzgEpCUEdieI+c5uHA804kwW2eib8bS6xphXP4
-         RmAdZCnoVLiahjM3Ov6UpmLyhoPku9rEEGckLhBUXY8b5Qo5Yw88oDW153YJ1JjtzqNm
-         MJ+Q==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1776594508; x=1777199308;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-gg:x-gm-message-state:from:to:cc:subject:date
+        d=googlemail.com; s=20251104; t=1776594969; x=1777199769; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=NrNKL6waj+m8gxH0wqqXUCobj5ffrCP96TQS8MeVnFg=;
-        b=hLCU4g+4zmeocwO8gRnCBLUD2mBIDThncV1X9hGFV3Xjr/jii0dGXotb+aoxykXGY+
-         jJz1OBnwp0Sb6y+2tTHi0fhNmUTCq37732qd+VeiOwkWvDeJrmvC5Ldu3qliQkM+vvD8
-         FUvEbFVgs3XfY2mTj2rC2hyrCO20P04vmMyN7wdgGCiKslDuupQWPodoWz2ol+cX8ISg
-         C1JRNbo7UPNCebWRg3pycMqa/FfPGUjTZ/1nDZHrS2XMpH+UkcUo0vzxAPN89gI9PxBh
-         eIVZMi+RiI/i6l9C1PltgqQxFi2SxBKoj05fwTQdzvTa2yoto6S9FqpMSqBpZMeuVTzx
-         LBIg==
-X-Forwarded-Encrypted: i=1; AFNElJ/pK09W8oEVFmBcnKHhmv7lnhsPGR9h2mID5g1aLL2jLUocwZSHZMmcjGZc3iLL5pyeH7cZ4zndDt91f2qcaXkh+JUS@vger.kernel.org
-X-Gm-Message-State: AOJu0YzEc49GVu1Yfl4t5cmM1dI1Rv8YH94K1ozvj8Q6pg/SWvip2n/m
-	hH52tE79XJbxLOhDuZ0oIsnAncCY+u5fbmTA1IgJx8zWRGItC8d9m3TxZIrV/pnAaQ==
-X-Gm-Gg: AeBDiet/v5XC3Vw7ZRwyu0w4xSdaS2dnLqHzBrBBy4Pe4bXPLOiNOqg+reBAKWOWVYO
-	gqw9UrHrs6cXBlMcIdP7NQfoQjtibLP70DvOenMXYwNYBgksqyn8ddynGi7nXIFxC6OC1iHFrHs
-	aBWlc54PV+J60X32NZ0Uh6xMVbO998hPBdynbrLpYllRzlkbjj83i4zLUt6cflk49OpI8VrtuAw
-	h6YJiHHr46aM/kSKmA0Nz1gvBAhZoXRSjQVmnxVQes9Gb2sLX08hdd/7mkib7yX4f15c5oyCtMl
-	6rnq4uRo/43JI8Sd+aqvgA0J/OOQy9VEzD5BzhlUxbL62cDG7UfpcWnatvbifPiJxNHFZWpbL1u
-	CnDEzLnC0OoK5FGsixKb1td94o8Kq2BCYlePdW/0+VZ2jybnumXvyr8hdZv7JclNQA5QFRPvt5Z
-	RRkWVo18Bpzwv35JctJaF5UIkLNFgXLjvk/EdAvCzRzmORdVsGsXB5lKQpYbxVXtrMk5G6L4yJX
-	saSBV2w/9q+k7Q6gpmfYLE8oWFXGvyjgP8BvCkP
-X-Received: by 2002:a5d:5889:0:b0:439:b60a:b400 with SMTP id ffacd0b85a97d-43fe3e0be70mr13215631f8f.31.1776594507770;
-        Sun, 19 Apr 2026 03:28:27 -0700 (PDT)
-Received: from pit-c621e.speedport.ip (p4ffa8da1.dip0.t-ipconnect.de. [79.250.141.161])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-43fe4cb1176sm20604438f8f.3.2026.04.19.03.28.26
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 19 Apr 2026 03:28:27 -0700 (PDT)
-From: Pit Henrich <pithenrich2d@googlemail.com>
-X-Google-Original-From: Pit Henrich <pithenrich2d@gmail.com>
-To: hmh@hmh.eng.br
-Cc: mpearson-lenovo@squebb.ca,
-	derekjohn.clark@gmail.com,
-	hansg@kernel.org,
-	ilpo.jarvinen@linux.intel.com,
-	ibm-acpi-devel@lists.sourceforge.net,
-	platform-driver-x86@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	pithenrich2d@gmail.com
-Subject: [PATCH v2] platform/x86: thinkpad-acpi: Add X1 Fold keyboard attachment detection
-Date: Sun, 19 Apr 2026 12:27:24 +0200
-Message-ID: <20260419102724.91451-1-pithenrich2d@gmail.com>
-X-Mailer: git-send-email 2.43.0
+        bh=uDecoIfKTbR+dHQNvuYjtHUUP8GokjVSx8iDKeD0F9s=;
+        b=fgIS4mZtdoRCfw50pYpRqOzuyfLau2HijKLZuwGTXUmdE+uA+Zwsh+hgdLxLJn8Mqa
+         KkGi/VgurhIQmz+KsLryr/kxvvKU1WLR53cD3//Hp/sEAYEDE5CzgO0yl7TtQWCGKLre
+         HdXWzrI4HnCYdgVovgr3rq2BvsI5HsS26sqHymMZUYHepCqmUw6w3aZ5wg7hFOMpQ8dm
+         RcTkFxeOYgKa3ECH//+ivgcppAyv/ps08uHrFKfnxmCcDn4k/XTj1UhmO7mIjULNL/YI
+         +1K7Meb0SmMvCrHFxen5Wf2Rno0iQmCeaL/rasw8whQQAJP1KEcqVCrr3TPJSGHifcAR
+         09CQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20251104; t=1776594969; x=1777199769;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-gg:x-gm-message-state:from
+         :to:cc:subject:date:message-id:reply-to;
+        bh=uDecoIfKTbR+dHQNvuYjtHUUP8GokjVSx8iDKeD0F9s=;
+        b=EEZJki0l1zCVBZNM5eylPuENEi4GdguIVfpQmgJZk0bzYHxd85503M4TbwBk7798XN
+         G+45F+U6VYX5B0uMN5J6Tq+5HVBJ6Jg0uBjFnHPi4Ou/Lq4tPqr2Rf25Lbe421zfk94l
+         Cb4hApMOMG0Hd7T5WrWIxirqg47YwZiyeccWdqB+5Vz7uE34PfhD04nX/t90zY80oYN2
+         G36lzIic/PF7DuFleInXTHqYoV/Ae6rAg02ZUZzkzrshTwHfugObgtnN1rY/U3RnkkEF
+         Lo+M8Xaf9Cnb6ML+nnEkA2Z8yEp1nteDA0w20fWDCDsOtgJ8KFYsP7wZmimRQmpAcMqN
+         Lw5g==
+X-Forwarded-Encrypted: i=1; AFNElJ+QrqkHGUiRGnqsGYMDqTMVMRvN/84z82usJYlaT0FWoMQsOnRnrL2o0mh9/5xxgYyKaB4DkAZcgU2obNAD+m85dYRy@vger.kernel.org
+X-Gm-Message-State: AOJu0Yyvl+Y7ud4J55kcYpsSJUk4JS2sNllSeS46k1wPiiSPzShC7eue
+	HKFV5pDVecA7hyyJ2THreVEtcveMxt8Y+KKFfc+Jfl6nSjbcLnkVbJXBMU0gOAaEj70Nz6dwRQM
+	ifykcOMH3o52VfAko8VF6gRnHFGO1uL1RXBCDKwVQ
+X-Gm-Gg: AeBDietlruadR6UB0FBXbBAdRWPnTt0l2wTfC9K6OtcZXAucFxCWHTfqqQZ3wjsUfka
+	W69VdkK8IYXo3krYpIVIxdvrBdJBwSaW3/tjDPojf3lE1nwAwblzmW05Pc1BGE150tN4nigD9zp
+	P6ktTyEfm9ZzlEuJv8/ANb+niirACZlchP6xqXhjj2/Fdai61HcgiG4Pecvo3OZv4YvGec+V3Ut
+	JsoABSjm7bemortTIedRAGWM1yehRS2Te5PrIFwJFOJJq2CSB5iLGGRgAzlced/wpxZu0oKhUwL
+	L1++1mBFLT44WnhPlTduTxPXHFrbmiMlpS/AVwNZHGrRCO/y+Q==
+X-Received: by 2002:a05:690e:43d0:b0:64a:d04e:a340 with SMTP id
+ 956f58d0204a3-653107be0d5mr6721585d50.11.1776594968771; Sun, 19 Apr 2026
+ 03:36:08 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+References: <20260314142236.74514-1-pithenrich2d@gmail.com>
+ <0b0f6ef9-ae3a-4642-85af-fbdf7ebafd1e@app.fastmail.com> <CAMBPg2fCtHoA6cX3kCGN7BUARsC5UrB1he6+eC06vfrLXTtktw@mail.gmail.com>
+ <6922cac9-de03-4aad-a710-473cb314077a@app.fastmail.com>
+In-Reply-To: <6922cac9-de03-4aad-a710-473cb314077a@app.fastmail.com>
+From: Pit Henrich <pithenrich2d@googlemail.com>
+Date: Sun, 19 Apr 2026 12:35:57 +0200
+X-Gm-Features: AQROBzDXFau3D2e3T0O018Y860D_gFXPSSEXTh0MFbqEHG4VwNq75a7DtsFpw_I
+Message-ID: <CAMBPg2e_7KpzDFWEnX=tRAO-qDAPo6X3ec+B_hkJP5GssKsKJg@mail.gmail.com>
+Subject: Re: [PATCH] platform/x86: thinkpad-acpi: Add X1 Fold keyboard
+ attachment detection
+To: Mark Pearson <mpearson-lenovo@squebb.ca>
+Cc: Henrique de Moraes Holschuh <hmh@hmh.eng.br>, "Derek J . Clark" <derekjohn.clark@gmail.com>, 
+	Hans de Goede <hansg@kernel.org>, =?UTF-8?Q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>, 
+	ibm-acpi-devel@lists.sourceforge.net, 
+	"platform-driver-x86@vger.kernel.org" <platform-driver-x86@vger.kernel.org>, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-ThinkPad X1 Fold 16 Gen 1 firmware reports whether the keyboard is magnetically
-attached (on the screen), but thinkpad-acpi does not expose this to userspace.
-The state can be obtained via ACPI methods: GDST (get device state).
+Hi Mark,
 
-Add a read-only keyboard_attached_on_screen sysfs attribute, gated by
-a DMI match. The state is read directly from the EC.
+On Fri, 27 Mar 2026 at 18:32, Mark Pearson <mpearson-lenovo@squebb.ca> wrot=
+e:
+> I got some internal details on the implementation and whilst there isn't =
+a spec I can share, we did determine that Windows driver is using some ACPI=
+ methods instead: GDST (get device state), GDSZ (get device display occlusi=
+on) and NSMC (Notify BIOS of screen mode change).
+>
+> I don't have any details on how those ACPI methods break down I'm afraid =
+- but just wanted you to be aware that  Windows is doing things differently=
+.
 
-Cache the state and emit a sysfs notification on
-TP_HKEY_EV_TABLET_CHANGED (0x60c0) when it changes. Initialize the cache during
-hotkey setup and refresh it before the resume notification to keep the state
-consistent across suspend and resume.
+Sorry for the late reply, I have been busy.
+Thanks for this information! I managed to get things working using the
+ACPI methods and I have submitted a v2 patch.
+I found GDST to provide the keyboard state, but I am somewhat confused
+what the other ACPI methods are for.
+I didn't find that setting NSMC does anything obvious? Or I am using
+it wrongly.. and GDSZ feels a bit redundant?
 
-Signed-off-by: Pit Henrich <pithenrich2d@gmail.com>
----
-This replaced the v1 patch in:
-https://lore.kernel.org/all/20260314142236.74514-1-pithenrich2d@gmail.com/
-
-Changes v1 -> v2:
- * Use ACPI method instead of using the EC directly (thanks Mark).
-
----
- drivers/platform/x86/lenovo/thinkpad_acpi.c | 85 ++++++++++++++++++++-
- 1 file changed, 83 insertions(+), 2 deletions(-)
-
-diff --git a/drivers/platform/x86/lenovo/thinkpad_acpi.c b/drivers/platform/x86/lenovo/thinkpad_acpi.c
-index 8982d92dfd97..b57ae7eb5548 100644
---- a/drivers/platform/x86/lenovo/thinkpad_acpi.c
-+++ b/drivers/platform/x86/lenovo/thinkpad_acpi.c
-@@ -218,8 +218,9 @@ enum tpacpi_hkey_event_t {
- 	TP_HKEY_EV_LID_OPEN		= 0x5002, /* laptop lid opened */
- 	TP_HKEY_EV_TABLET_TABLET	= 0x5009, /* tablet swivel up */
- 	TP_HKEY_EV_TABLET_NOTEBOOK	= 0x500a, /* tablet swivel down */
--	TP_HKEY_EV_TABLET_CHANGED	= 0x60c0, /* X1 Yoga (2016):
--						   * enter/leave tablet mode
-+	TP_HKEY_EV_TABLET_CHANGED	= 0x60c0, /* posture change event:
-+						   * X1 Yoga (2016): enter/leave tablet mode
-+						   * X1 Fold 16 Gen 1: keyboard attachment state changed
- 						   */
- 	TP_HKEY_EV_PEN_INSERTED		= 0x500b, /* tablet pen inserted */
- 	TP_HKEY_EV_PEN_REMOVED		= 0x500c, /* tablet pen removed */
-@@ -375,6 +376,7 @@ static struct {
- 	u32 has_adaptive_kbd:1;
- 	u32 kbd_lang:1;
- 	u32 trackpoint_doubletap:1;
-+	u32 has_keyboard_attached_on_screen:1;
- 	struct quirk_entry *quirks;
- } tp_features;
- 
-@@ -2928,6 +2930,63 @@ static void hotkey_tablet_mode_notify_change(void)
- 			     "hotkey_tablet_mode");
- }
- 
-+static bool keyboard_attached_on_screen;
-+static bool keyboard_attached_on_screen_initialized;
-+
-+static int x1_fold_keyboard_attached_on_screen_get(bool *attached)
-+{
-+	int state;
-+
-+	if (!tp_features.has_keyboard_attached_on_screen)
-+		return -ENODEV;
-+
-+	if (!acpi_evalf(NULL, &state, "\\_SB.DEVD.GDST", "d"))
-+		return -EIO;
-+
-+	*attached = state != 0;
-+	return 0;
-+}
-+
-+static ssize_t keyboard_attached_on_screen_show(struct device *dev,
-+						struct device_attribute *attr,
-+						char *buf)
-+{
-+	bool attached;
-+	int res;
-+
-+	res = x1_fold_keyboard_attached_on_screen_get(&attached);
-+	if (res)
-+		return res;
-+
-+	return sysfs_emit(buf, "%d\n", attached);
-+}
-+
-+static DEVICE_ATTR_RO(keyboard_attached_on_screen);
-+
-+static void keyboard_attached_on_screen_notify_change(void)
-+{
-+	if (tp_features.has_keyboard_attached_on_screen)
-+		sysfs_notify(&tpacpi_pdev->dev.kobj, NULL,
-+			     "keyboard_attached_on_screen");
-+}
-+
-+static bool keyboard_attached_on_screen_update(void)
-+{
-+	bool attached;
-+
-+	if (x1_fold_keyboard_attached_on_screen_get(&attached))
-+		return false;
-+
-+	if (keyboard_attached_on_screen_initialized &&
-+	    keyboard_attached_on_screen == attached)
-+		return false;
-+
-+	keyboard_attached_on_screen = attached;
-+	keyboard_attached_on_screen_initialized = true;
-+
-+	return true;
-+}
-+
- /* sysfs wakeup reason (pollable) -------------------------------------- */
- static ssize_t hotkey_wakeup_reason_show(struct device *dev,
- 			   struct device_attribute *attr,
-@@ -3032,6 +3091,7 @@ static struct attribute *hotkey_attributes[] = {
- 	&dev_attr_hotkey_adaptive_all_mask.attr,
- 	&dev_attr_hotkey_recommended_mask.attr,
- 	&dev_attr_hotkey_tablet_mode.attr,
-+	&dev_attr_keyboard_attached_on_screen.attr,
- 	&dev_attr_hotkey_radio_sw.attr,
- #ifdef CONFIG_THINKPAD_ACPI_HOTKEY_POLL
- 	&dev_attr_hotkey_source_mask.attr,
-@@ -3046,6 +3106,9 @@ static umode_t hotkey_attr_is_visible(struct kobject *kobj,
- 	if (attr == &dev_attr_hotkey_tablet_mode.attr) {
- 		if (!tp_features.hotkey_tablet)
- 			return 0;
-+	} else if (attr == &dev_attr_keyboard_attached_on_screen.attr) {
-+		if (!tp_features.has_keyboard_attached_on_screen)
-+			return 0;
- 	} else if (attr == &dev_attr_hotkey_radio_sw.attr) {
- 		if (!tp_features.hotkey_wlsw)
- 			return 0;
-@@ -3462,6 +3525,7 @@ static int __init hotkey_init(struct ibm_init_struct *iibm)
- 	}
- 
- 	tabletsw_state = hotkey_init_tablet_mode();
-+	keyboard_attached_on_screen_update();
- 
- 	/* Set up key map */
- 	keymap_id = tpacpi_check_quirks(tpacpi_keymap_qtable,
-@@ -3842,6 +3906,8 @@ static bool hotkey_notify_6xxx(const u32 hkey, bool *send_acpi_ev)
- 	case TP_HKEY_EV_TABLET_CHANGED:
- 		tpacpi_input_send_tabletsw();
- 		hotkey_tablet_mode_notify_change();
-+		if (keyboard_attached_on_screen_update())
-+			keyboard_attached_on_screen_notify_change();
- 		*send_acpi_ev = false;
- 		return true;
- 
-@@ -3998,6 +4064,8 @@ static void hotkey_resume(void)
- 	tpacpi_send_radiosw_update();
- 	tpacpi_input_send_tabletsw();
- 	hotkey_tablet_mode_notify_change();
-+	keyboard_attached_on_screen_update();
-+	keyboard_attached_on_screen_notify_change();
- 	hotkey_wakeup_reason_notify_change();
- 	hotkey_wakeup_hotunplug_complete_notify_change();
- 	hotkey_poll_setup_safe(false);
-@@ -4296,6 +4364,17 @@ static const struct dmi_system_id fwbug_list[] __initconst = {
- 	{}
- };
- 
-+static const struct dmi_system_id keyboard_attached_on_screen_list[] __initconst = {
-+	{
-+		.ident = "ThinkPad X1 Fold 16 Gen 1",
-+		.matches = {
-+			DMI_MATCH(DMI_SYS_VENDOR, "LENOVO"),
-+			DMI_MATCH(DMI_PRODUCT_FAMILY, "ThinkPad X1 Fold 16 Gen 1"),
-+		},
-+	},
-+	{}
-+};
-+
- static const struct pci_device_id fwbug_cards_ids[] __initconst = {
- 	{ PCI_DEVICE(PCI_VENDOR_ID_INTEL, 0x24F3) },
- 	{ PCI_DEVICE(PCI_VENDOR_ID_INTEL, 0x24FD) },
-@@ -12230,6 +12309,8 @@ static int __init thinkpad_acpi_module_init(void)
- 	dmi_id = dmi_first_match(fwbug_list);
- 	if (dmi_id)
- 		tp_features.quirks = dmi_id->driver_data;
-+	tp_features.has_keyboard_attached_on_screen =
-+		dmi_check_system(keyboard_attached_on_screen_list);
- 
- 	/* Device initialization */
- 	tpacpi_pdev = platform_device_register_simple(TPACPI_DRVR_NAME, PLATFORM_DEVID_NONE,
--- 
-2.43.0
-
+Greetings
+Pit
