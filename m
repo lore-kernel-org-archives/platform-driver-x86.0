@@ -1,104 +1,133 @@
-Received: from mail-pj1-f41.google.com (mail-pj1-f41.google.com [209.85.216.41])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from fhigh-a1-smtp.messagingengine.com (fhigh-a1-smtp.messagingengine.com [103.168.172.152])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 014E1238150
-	for <platform-driver-x86@vger.kernel.org>; Sun, 19 Apr 2026 17:10:31 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.41
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8042E218ADD;
+	Sun, 19 Apr 2026 22:10:30 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=103.168.172.152
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1776618633; cv=none; b=MihnrkK+Z52hEMkaz4merZ+14c9/GPODTafXTKXl25yex56YUysHjZbubdOer2grgUxAHGUBIjo1O5zdaoSN6ORx7pKZKfb+u2a3j7bqkEj1NNCrWNhZT/g81siqt4qt79iKc+KfvFvZO9MKkOhiS7QCcPfC5HqK083WxXO380c=
+	t=1776636633; cv=none; b=gGy/G+ol929JYlG3uOavm3YIf0Bil49YMv5D+P7nmTQDnvrgAHvPusDPqyxebTdGMxHIph3ZbhV73OyYykQUhkl2F/5GFgrdCBw1meQU8cfhZw0ltrjlpZ9edNGMLETHaKW9bUo0qCwqMwR5M3WV0+bdRmx1iHTXAJkQMAlMcMg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1776618633; c=relaxed/simple;
-	bh=g048MkCvqSOBynlchfJh57UY0Z1vzIEQS6EpQbM4rkc=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=gZXNq8yfyMNvE4blsyuIDQYZhFZHL0G/odAn6GLwyLVdYW8PJ3okyFlgeTp5Rofcxxv3V2c5+Cihlg6yerAuy4kPtq0q5c46aNhnvYJ0Km3FOdODYnA5x3x9OV2Ew6Rro3NVEc+QHNnkA+OAiE1efhmsSKAWnf4ILyxa7uUR76o=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=JvnHDdfA; arc=none smtp.client-ip=209.85.216.41
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1776636633; c=relaxed/simple;
+	bh=hCBtdPf9RjQ3ObbW9oa4vAuiyqv3ryG2GcwBmj+BBdE=;
+	h=MIME-Version:Date:From:To:Cc:Message-Id:In-Reply-To:References:
+	 Subject:Content-Type; b=l18s8P/f17U442M0vRfiA5B8XpIt51T3wFTLUSIjLfvNqOoZxSkxmnTqD0TZKqIq7cr+qeSbUt0iE2KvNT3hCrTutDHDMj6bMkABdTR8Izee+Orb4v+aurBkr0PV/YmrU0oHCVZITmXkMTERvw31UVm4PxB90jbT9OqIbrNYzvQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=squebb.ca; spf=pass smtp.mailfrom=squebb.ca; dkim=pass (2048-bit key) header.d=squebb.ca header.i=@squebb.ca header.b=FutQJw28; dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b=vd/XTF3T; arc=none smtp.client-ip=103.168.172.152
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=squebb.ca
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=squebb.ca
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="JvnHDdfA"
-Received: by mail-pj1-f41.google.com with SMTP id 98e67ed59e1d1-3614826eca4so1632954a91.1
-        for <platform-driver-x86@vger.kernel.org>; Sun, 19 Apr 2026 10:10:31 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20251104; t=1776618631; x=1777223431; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=uOL+TTkZLOen7KX0j3LR+g56bpC3CZN3+QqLNYREIS8=;
-        b=JvnHDdfAwvt/p9TyZSefPy6/l/JzAoDj1+mwjgfHyeTGj9KzvkNJCHF9198zT2jPlY
-         GIyHlXUK7WYSB7zT7OBurzRO1/JhF5IoiMEQRwJ4hQG3k9tK4/4igwg0Jah6Vd3ocMaq
-         9rWcUrhwt0VXz76wqm/kKcNOVrmxoU7h3T1RuwxyJiwXnkrQA9AKQHRJuLPP9ODfs2db
-         FaYTymonVMgfZkjq8pPwrb2TIzPYI0q45ewfNOFpT0dGw3BLJN87vesbNN6VE+iJh3X7
-         cA8rfT2UFiMEVJ5DPtoqYA+RnZ8zDLPmwmYoCjYsY1mTC2fGpPrpDs0aiZHDIVR0Mt1x
-         Jy/g==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1776618631; x=1777223431;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-gg:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=uOL+TTkZLOen7KX0j3LR+g56bpC3CZN3+QqLNYREIS8=;
-        b=DTVMvXpfO5zAS6Dvvig+DFQZ80DFH6c7PqRncPqLL4O4+EpR8sSm8G3x8GfOqB4Qf5
-         aeCpQxN8XOoRTJLQDbLHbC13wKqUGJpTbYJJXdaQW/EgHHk93nW0uFJY/VSYeRJVahdC
-         jOpCHSoJ33z5C0tmeiJG7ie+oDmeCSylH54mRjixcSVTCf1N61HcaK+U9tx1bhKpDSVs
-         NOlOqEeJXbLp6oLdLhmQqhXW7ngvTpBU+/4nMpzND13XKL7kyv4pBAgVlVjkKdPnHwB6
-         +/J6GvNiCgSOs3dihUfApr0QuVAKCFyA39i3Oq9HGeNUlFuI0EvqxlXE7ImI40SPOsXa
-         2vAQ==
-X-Gm-Message-State: AOJu0YxGouq9EnCK7bncDUdsEdOm9CWM1jNZH7AkACZ1EQ2UXstvATfD
-	m0/+Eyktz9QO1yVbR/P8/TaswOnzSEYJ7D4xZdlb1tilFeJos4B2tSia
-X-Gm-Gg: AeBDieue2A+2R+R2Cstpj/YoPPGzQYXIE8MVx56MqPBhXV+Jp/Q2Ybfv+xjaB/NrdSq
-	iJOCLSvvzCY6Q83xpgMQf7DVXC8GEJIVZ2puq7OFMrJ3B0BhdX57jR38o9F7/5NvgP6tXAgS+uD
-	3dcnsFKUqoBg4z3JX1CN5C4/bWjJoYO7/R0pW4O6dDumVfYW0hdZ9D15P7cwtKIWVF75Gq4IUaj
-	Y+zZRci15iq0w5lDp7TL6snk9Ik2+MTKKnoMJOdWPxdb2FKv0sBGCytASO+RSYZFwVsJvbSyXhQ
-	CngkNAlnTOFU8OiUSrkgoz3NOq7I99qblta9a5dqGhpcKbNfpi9kRfDXKwU7LX+FJy+8vknKTeF
-	xcb7pbtvoL+IFwRypSqR88P3mvC6LXRnskN+59DSzeMcz4axzl6oJfW1xSeeumwv4a9b1Um1n0B
-	tmshQR7Oz5ecrpfRycsh/qt6O+wNszDSEow+yu592/ho21sTe926nR+SvJgKMGCUcQSJ6SvlkJ0
-	3GmbsVdCEr4b6GNjg==
-X-Received: by 2002:a17:90b:4c52:b0:35c:30a8:31f with SMTP id 98e67ed59e1d1-361403bdd28mr11782171a91.2.1776618631255;
-        Sun, 19 Apr 2026 10:10:31 -0700 (PDT)
-Received: from fedora ([103.181.54.97])
-        by smtp.gmail.com with ESMTPSA id d9443c01a7336-2b5fa9ff3casm98158695ad.17.2026.04.19.10.10.27
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 19 Apr 2026 10:10:30 -0700 (PDT)
-From: Ninad Naik <ninadnaik07@gmail.com>
-To: mpearson-lenovo@squebb.ca,
-	derekjohn.clark@gmail.com,
-	W_Armin@gmx.de,
-	corbet@lwn.net,
-	skhan@linuxfoundation.org
-Cc: platform-driver-x86@vger.kernel.org,
-	linux-doc@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	me@brighamcampbell.com,
-	linux-kernel-mentees@lists.linux.dev,
-	Ninad Naik <ninadnaik07@gmail.com>
-Subject: [PATCH] Documentation: fix spelling mistake "Minumum" -> "Minimum"
-Date: Sun, 19 Apr 2026 22:38:35 +0530
-Message-ID: <20260419170835.347910-1-ninadnaik07@gmail.com>
-X-Mailer: git-send-email 2.53.0
+	dkim=pass (2048-bit key) header.d=squebb.ca header.i=@squebb.ca header.b="FutQJw28";
+	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="vd/XTF3T"
+Received: from phl-compute-02.internal (phl-compute-02.internal [10.202.2.42])
+	by mailfhigh.phl.internal (Postfix) with ESMTP id C58AA14000A7;
+	Sun, 19 Apr 2026 18:10:29 -0400 (EDT)
+Received: from phl-imap-08 ([10.202.2.84])
+  by phl-compute-02.internal (MEProxy); Sun, 19 Apr 2026 18:10:29 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=squebb.ca; h=cc
+	:cc:content-transfer-encoding:content-type:content-type:date
+	:date:from:from:in-reply-to:in-reply-to:message-id:mime-version
+	:references:reply-to:subject:subject:to:to; s=fm3; t=1776636629;
+	 x=1776723029; bh=rFkd2WdJ+FVyOXY1EUv5Gki37/4tABHQ3mRheY4SK+k=; b=
+	FutQJw28V49F4uN8E8Fu3uRRyxijO73RzZ0QMAsYF+bu0HXNfIIoPfdPN43XtPBi
+	CuKlmyyL9EW9AXh4Vj0/xuRrsun2ind2mYjNmkFYDHGrfiEOOLK+iIVuBugQ4jXp
+	uYMhVAFu19QhW46UHP0rLGWUZb+b53KtdNS/7E4iLm0fDxZeLI7hZWwTziFiep2K
+	XBh2nl6WlRKDqZ9Wf/U413EP3xpclQTdkISQCs/rPnxWnibGvqc/wgl69qJR2MyX
+	HMl3ufUUvdrN7sB2P9QmBxJPvGxdexjQAsE1SbMWwOpUwAEsWn+zzGNB8/zwY2r7
+	GxP/PtUmMd9QMXEZLVQufw==
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
+	messagingengine.com; h=cc:cc:content-transfer-encoding
+	:content-type:content-type:date:date:feedback-id:feedback-id
+	:from:from:in-reply-to:in-reply-to:message-id:mime-version
+	:references:reply-to:subject:subject:to:to:x-me-proxy
+	:x-me-sender:x-me-sender:x-sasl-enc; s=fm2; t=1776636629; x=
+	1776723029; bh=rFkd2WdJ+FVyOXY1EUv5Gki37/4tABHQ3mRheY4SK+k=; b=v
+	d/XTF3Tk0YcKGtYv+U29sAwOccoPDRqS9vcqGDs9SMriBSVimn0ALHPm7qMdjj7I
+	bYWZz+EhUQT28huTjAxvey1W2H8UX8F7yXepI6TZZZaFPFJWeLAwftRyrLxqUs86
+	ubvGucWpCTUcBwg2FBuCa2R6m6Qr/h0vmP+/JZf0vHC1qXQzS8Pfeo4npflEL9lN
+	bgvI3vm8/Yb15HsugExAC/ZIzb9SUKa47KGnyZwZvJfqEQbKbG8ycrXSrL2Vu/xt
+	PA5Ok3VCI6yWoVy5AzJFj1tF0DmSb91GnWYYZ7qAPasooUDNWRQg8Ewr03GDyCJ7
+	WXr1P4iezg7+5ANlOCsHQ==
+X-ME-Sender: <xms:1FLlae3XKB7bA0o48JuhLHTCk7ztVdb26i5f4H482Wbb0IhadXO-MA>
+    <xme:1FLlab6xbfndxW3bdqRJ5j3r0IJg5Re3w_pxipul-Wdxy3q46SAycW8W5iv3vXkUq
+    BAKlj18sL03VlfACswSVgBDYknRPjAeND0Y6d29OQN0m8a9A7Tcd7o>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeefhedrtddtgdehieektdcutefuodetggdotefrod
+    ftvfcurfhrohhfihhlvgemucfhrghsthforghilhdpuffrtefokffrpgfnqfghnecuuegr
+    ihhlohhuthemuceftddtnecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenucfjug
+    hrpefoggffhffvvefkjghfufgtgfesthejredtredttdenucfhrhhomhepfdforghrkhcu
+    rfgvrghrshhonhdfuceomhhpvggrrhhsohhnqdhlvghnohhvohesshhquhgvsggsrdgtrg
+    eqnecuggftrfgrthhtvghrnhepudefgfelhefgveffheehuedtudefffetiedtvedthefg
+    vdeuvdefgeeiiefhieegnecuffhomhgrihhnpehgihhthhhusgdrtghomhenucevlhhush
+    htvghrufhiiigvpedtnecurfgrrhgrmhepmhgrihhlfhhrohhmpehmphgvrghrshhonhdq
+    lhgvnhhovhhosehsqhhuvggssgdrtggrpdhnsggprhgtphhtthhopedutddpmhhouggvpe
+    hsmhhtphhouhhtpdhrtghpthhtohepmhgvsegsrhhighhhrghmtggrmhhpsggvlhhlrdgt
+    ohhmpdhrtghpthhtohepuggvrhgvkhhjohhhnhdrtghlrghrkhesghhmrghilhdrtghomh
+    dprhgtphhtthhopehnihhnrggunhgrihhktdejsehgmhgrihhlrdgtohhmpdhrtghpthht
+    ohepfigprghrmhhinhesghhmgidruggvpdhrtghpthhtohepshhkhhgrnheslhhinhhugi
+    hfohhunhgurghtihhonhdrohhrghdprhgtphhtthhopehlihhnuhigqdhkvghrnhgvlhdq
+    mhgvnhhtvggvsheslhhishhtshdrlhhinhhugidruggvvhdprhgtphhtthhopegtohhrsg
+    gvtheslhifnhdrnhgvthdprhgtphhtthhopehlihhnuhigqdguohgtsehvghgvrhdrkhgv
+    rhhnvghlrdhorhhgpdhrtghpthhtoheplhhinhhugidqkhgvrhhnvghlsehvghgvrhdrkh
+    gvrhhnvghlrdhorhhg
+X-ME-Proxy: <xmx:1FLladi7VfckJsrL2W5xtwuFLLQgZGVvjsUOM0KjcXPFmdUjv3Cqnw>
+    <xmx:1FLlaQSR3TPFWu2ZsFqD5WzrkKNdGTz6Wo2MnSa_L4ekG5KyDAORRw>
+    <xmx:1FLlaWaankT6ErbNm0640f-NllGvYvw6FzFI7cpsSX_vfYlfVIdx1A>
+    <xmx:1FLlaVQ0LHe-h9mXK_J-Sx08E8316e9g4d9tK12dxtkfz0-zu22qVg>
+    <xmx:1VLlaSAIHvscsbrn_yNZA4zSi8bFg2y8U0_NvUfLj-5_VV_JxuTKB7tc>
+Feedback-ID: ibe194615:Fastmail
+Received: by mailuser.phl.internal (Postfix, from userid 501)
+	id 77DC52CE3F94; Sun, 19 Apr 2026 18:10:28 -0400 (EDT)
+X-Mailer: MessagingEngine.com Webmail Interface
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+X-ThreadId: Ab0JQVG51Pnw
+Date: Sun, 19 Apr 2026 18:10:08 -0400
+From: "Mark Pearson" <mpearson-lenovo@squebb.ca>
+To: "Ninad Naik" <ninadnaik07@gmail.com>,
+ "Derek J . Clark" <derekjohn.clark@gmail.com>, "Armin Wolf" <W_Armin@gmx.de>,
+ "Jonathan Corbet" <corbet@lwn.net>, skhan@linuxfoundation.org
+Cc: 
+ "platform-driver-x86@vger.kernel.org" <platform-driver-x86@vger.kernel.org>,
+ linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org,
+ me@brighamcampbell.com, linux-kernel-mentees@lists.linux.dev
+Message-Id: <b94cef14-d02d-4544-abb5-ead7db6eaa72@app.fastmail.com>
+In-Reply-To: <20260419170835.347910-1-ninadnaik07@gmail.com>
+References: <20260419170835.347910-1-ninadnaik07@gmail.com>
+Subject: Re: [PATCH] Documentation: fix spelling mistake "Minumum" -> "Minimum"
+Content-Type: text/plain
+Content-Transfer-Encoding: 7bit
 
-There is a spelling mistake in Documentation/wmi/devices/lenovo-wmi-other.rst.
-Fixing it.
 
-Signed-off-by: Ninad Naik <ninadnaik07@gmail.com>
----
- Documentation/wmi/devices/lenovo-wmi-other.rst | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/Documentation/wmi/devices/lenovo-wmi-other.rst b/Documentation/wmi/devices/lenovo-wmi-other.rst
-index 01d471156738..1d0410500d3f 100644
---- a/Documentation/wmi/devices/lenovo-wmi-other.rst
-+++ b/Documentation/wmi/devices/lenovo-wmi-other.rst
-@@ -144,5 +144,5 @@ data using the `bmfdec <https://github.com/pali/bmfdec>`_ utility:
-     [WmiDataId(1), read, Description("Mode.")] uint32 NumOfFans;
-     [WmiDataId(2), read, Description("Fan ID."), WmiSizeIs("NumOfFans")] uint32 FanId[];
-     [WmiDataId(3), read, Description("Maximum Fan Speed."), WmiSizeIs("NumOfFans")] uint32 FanMaxSpeed[];
--    [WmiDataId(4), read, Description("Minumum Fan Speed."), WmiSizeIs("NumOfFans")] uint32 FanMinSpeed[];
-+    [WmiDataId(4), read, Description("Minimum Fan Speed."), WmiSizeIs("NumOfFans")] uint32 FanMinSpeed[];
-   };
--- 
-2.53.0
-
+On Sun, Apr 19, 2026, at 1:08 PM, Ninad Naik wrote:
+> There is a spelling mistake in Documentation/wmi/devices/lenovo-wmi-other.rst.
+> Fixing it.
+>
+> Signed-off-by: Ninad Naik <ninadnaik07@gmail.com>
+> ---
+>  Documentation/wmi/devices/lenovo-wmi-other.rst | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+>
+> diff --git a/Documentation/wmi/devices/lenovo-wmi-other.rst 
+> b/Documentation/wmi/devices/lenovo-wmi-other.rst
+> index 01d471156738..1d0410500d3f 100644
+> --- a/Documentation/wmi/devices/lenovo-wmi-other.rst
+> +++ b/Documentation/wmi/devices/lenovo-wmi-other.rst
+> @@ -144,5 +144,5 @@ data using the `bmfdec 
+> <https://github.com/pali/bmfdec>`_ utility:
+>      [WmiDataId(1), read, Description("Mode.")] uint32 NumOfFans;
+>      [WmiDataId(2), read, Description("Fan ID."), 
+> WmiSizeIs("NumOfFans")] uint32 FanId[];
+>      [WmiDataId(3), read, Description("Maximum Fan Speed."), 
+> WmiSizeIs("NumOfFans")] uint32 FanMaxSpeed[];
+> -    [WmiDataId(4), read, Description("Minumum Fan Speed."), 
+> WmiSizeIs("NumOfFans")] uint32 FanMinSpeed[];
+> +    [WmiDataId(4), read, Description("Minimum Fan Speed."), 
+> WmiSizeIs("NumOfFans")] uint32 FanMinSpeed[];
+>    };
+> -- 
+> 2.53.0
+Looks good.
+Reviewed-by: Mark Pearson <mpearson-lenovo@squebb.ca>
