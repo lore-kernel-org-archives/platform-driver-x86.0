@@ -1,627 +1,255 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.13])
+Received: from mout01.posteo.de (mout01.posteo.de [185.67.36.65])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 84F55363C7F;
-	Mon, 20 Apr 2026 14:05:15 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.13
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 30DA93A7825
+	for <platform-driver-x86@vger.kernel.org>; Mon, 20 Apr 2026 14:24:28 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.67.36.65
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1776693918; cv=none; b=HjU2FFJ4YsBDWs8CQ+T2n0l4U03kP9cIGPzNA8SmaT21qRx0l+oXg+5VqkFu3DkNWPFJD8ZlRUQKztF0EY/GxHRVt8M/pkgjWTZOPrw3ozLbLvM3Upb1lPSCPNdUnsPsiNKAVltaqwbmO6e+jE3T3REtlBf5GsCQPmZbcDhMvEs=
+	t=1776695070; cv=none; b=YA+c8Kqe28nhnwqhm1nUUJPYp6/sHWDt8CxQIvYx/gv77/oI69IfzPWj9C6Z7uSkLHMzcFfcdW3eTPBYQmBEVXL0WLuqQjEG8Xk9oFSnK1stTJyFi2RHzky6zX6R8bZ5PnNlj+P783r6u73hqy0gNKkNFGOlQqddcwotd9VbKaw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1776693918; c=relaxed/simple;
-	bh=ogVDysJcGyORCp9suwoAKZ58MhM1F57CDAmR4aLPhrI=;
-	h=From:To:Cc:Date:Subject:Message-ID:MIME-Version:Content-Type; b=KQyj9Cm7pvV+wrIDT8bCF8gm5zcEir0zHjeWKxht4K4haEQFWDFici4LMPGnSH05+e7N/NUw9U85eGNVrGiLhkj4uESXuNFILlwIXFyXIRU0f8qwNb6mLiET6B7PdvsKXEqGD0RJDAbzO/C01uN85YAAVfBY2daq90jThYNpMx4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=pass smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=BiR/7K4b; arc=none smtp.client-ip=192.198.163.13
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.intel.com
+	s=arc-20240116; t=1776695070; c=relaxed/simple;
+	bh=vw2hTZymCfMrYoEv0cRDWDcybr2OjGRIyiI8Bg1iJ7s=;
+	h=From:Subject:Date:Message-Id:MIME-Version:Content-Type:To:Cc; b=N1vK/oBvdklT0f00TQ5IdxCOrFhT8z/v3978gRj0bR6+MO40NRS4ji+Q2CWPFVVGGRwgWvxsloCzYIofq/6f+tVJDYBIZYBqUX+4cPhk4EAeQ+NTWMzGdXOEHkqUSbkuTg+lWtaNEzmhYJTVyhll/XZxZAw6SSgPiW0uqF6mJQc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=posteo.de; spf=pass smtp.mailfrom=posteo.de; dkim=pass (2048-bit key) header.d=posteo.de header.i=@posteo.de header.b=SwZEOYAM; arc=none smtp.client-ip=185.67.36.65
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=posteo.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=posteo.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="BiR/7K4b"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1776693915; x=1808229915;
-  h=from:to:cc:date:subject:message-id:mime-version:
-   content-transfer-encoding;
-  bh=ogVDysJcGyORCp9suwoAKZ58MhM1F57CDAmR4aLPhrI=;
-  b=BiR/7K4bWi1rN+FM1OXKAKG2/jkUhhXHNX326MpSwnwE1SDGNPGEGM1p
-   Pai+Ht5UYsyKHSN21omlYsLB6Pv2kLV+Gkf+KPsM4QrNaDp6YMoJuyWmM
-   lnc4pXbu5NrxA/4f9Wej4lr13CwTANkS/GCPXKGOAaJ0zgM25IXO6cipZ
-   /hscmP/3p0/TSbhkPRqjQS7HJIMa0WDGlqv+uhctVADeVAGvzm3XWb5Nq
-   OsLCl4kJKC4lVTwlzm+goXi6dZakeo0ZMQWyoiNloxbCJjSs7Qbg4OGOP
-   br1RmhQZwTEfWr3qWgFdhA6czsocn6+jzc4Fmd13FQmZI12DwbVVvSO18
-   Q==;
-X-CSE-ConnectionGUID: cV9pQy7JSB+slHnFw5SGXQ==
-X-CSE-MsgGUID: 88VKgJ56RlWmLtOqwHjkAA==
-X-IronPort-AV: E=McAfee;i="6800,10657,11762"; a="80196642"
-X-IronPort-AV: E=Sophos;i="6.23,189,1770624000"; 
-   d="scan'208";a="80196642"
-Received: from orviesa004.jf.intel.com ([10.64.159.144])
-  by fmvoesa107.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 20 Apr 2026 07:05:14 -0700
-X-CSE-ConnectionGUID: 0E2lOTrgRmSwQaVXGliKnA==
-X-CSE-MsgGUID: GhWl4mNDSp+AwP9dTbt4tA==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.23,189,1770624000"; 
-   d="scan'208";a="236104195"
-Received: from ijarvine-mobl1.ger.corp.intel.com (HELO localhost) ([10.245.244.150])
-  by orviesa004-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 20 Apr 2026 07:05:09 -0700
-From: =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
-To: Linus Torvalds <torvalds@linux-foundation.org>
-Cc: LKML <linux-kernel@vger.kernel.org>, PDx86 <platform-driver-x86@vger.kernel.org>, Hans de Goede <hansg@kernel.org>, Andy Shevchenko <andy@kernel.org>
-Date: Mon, 20 Apr 2026 16:58:56 +0300
-Subject: [GIT PULL] platform-drivers-x86 for v7.1-1
-Message-ID: <pdx86-pr-20260420165856-1561211278@linux.intel.com>
+	dkim=pass (2048-bit key) header.d=posteo.de header.i=@posteo.de header.b="SwZEOYAM"
+Received: from submission (posteo.de [185.67.36.169]) 
+	by mout01.posteo.de (Postfix) with ESMTPS id D3555240027
+	for <platform-driver-x86@vger.kernel.org>; Mon, 20 Apr 2026 16:24:20 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=posteo.de; s=2017;
+	t=1776695060; bh=NNJwZUk6tsMRPb4N4FcplYBtJxe4IgYVfKHoe/pSc5I=;
+	h=From:Subject:Date:Message-Id:MIME-Version:Content-Type:
+	 Content-Transfer-Encoding:To:Cc:Autocrypt:OpenPGP:From;
+	b=SwZEOYAMMEfJk7WeLTh148tvlBcNuQmbBx38grooXP3W29wtPcbJH/EbprYP6U2c2
+	 XrBasGwY916/Ire/B3l87BfRwoT91j4vTAZxtdqbSTavDVFu2wjEpIXWtVfv9w1jMQ
+	 UjtXo8dXAzTYrfB6mV1k9zuNDA2+GVznLGxZww8RbYznwjhzuPv/Emacmaxt12A9LM
+	 Bnqn45/7+LrFASeXC+AaxT4NE4ijaoKxikyHZSZ9O07aqlSJgFA/9oyhspzn/GSPfP
+	 k2k05iXGR2cBTpeHs+hfNEIeXl5yDo8bNnexVwD3rdmhNQCf9mr8ocBBP53T2KDGWO
+	 lHk5331Mb/lBw==
+Received: from customer (localhost [127.0.0.1])
+	by submission (posteo.de) with ESMTPSA id 4fznmd2yyyz9rxS;
+	Mon, 20 Apr 2026 16:24:17 +0200 (CEST)
+From: Markus Probst <markus.probst@posteo.de>
+Subject: [PATCH v8 0/2] Introduce Synology Microp driver
+Date: Mon, 20 Apr 2026 14:24:19 +0000
+Message-Id: <20260420-synology_microp_initial-v8-0-7946a9124491@posteo.de>
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
+Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 8bit
+X-B4-Tracking: v=1; b=H4sIAAQ35mkC/4XQy2rDMBAF0F8xXldB74dX/Y9SgiyNEkFipZZjG
+ kL+vbJTiHExXY7gHt2Ze52hj5DrprrXPYwxx9SVQb9VtTva7gAo+jLXFFOJGZYo37p0Sofb/hx
+ dny772MUh2hPCQXnrVKu4kXVJX3oI8XuWPz6fcw9f1/LB8Hx8+U1VdEEoUai/5mFfKnkYEYDgm
+ oDBWrhm5PWy0m+EEP6MnMBnZI0wQTkaVDDNSNiUaG0G5NL5HIemGtUO11OZY8xD6m/z1iOZ2/y
+ 74EgQRsGFAB4k59q9X1IeIO08zOZIl47edmhxDNPGSBYYcWLtsIVD2LbDimO9tI5LZikma4cvH
+ Iq3HV4czCnzvtXMWb52xNIx244oDlWu1bj1QZg/feTL4VhsO3Lqo4MHrngrnVk7auEQsu2o6c6
+ WWWw4qHKipfN4PH4AXufH0/sCAAA=
+X-Change-ID: 20260306-synology_microp_initial-0f7dac7b7496
+To: Hans de Goede <hansg@kernel.org>, 
+ =?utf-8?q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>, 
+ Bryan O'Donoghue <bryan.odonoghue@linaro.org>, Lee Jones <lee@kernel.org>, 
+ Pavel Machek <pavel@kernel.org>, Miguel Ojeda <ojeda@kernel.org>, 
+ Boqun Feng <boqun@kernel.org>, Gary Guo <gary@garyguo.net>, 
+ =?utf-8?q?Bj=C3=B6rn_Roy_Baron?= <bjorn3_gh@protonmail.com>, 
+ Benno Lossin <lossin@kernel.org>, Andreas Hindborg <a.hindborg@kernel.org>, 
+ Alice Ryhl <aliceryhl@google.com>, Trevor Gross <tmgross@umich.edu>, 
+ Danilo Krummrich <dakr@kernel.org>, Rob Herring <robh@kernel.org>, 
+ Krzysztof Kozlowski <krzk+dt@kernel.org>, 
+ Conor Dooley <conor+dt@kernel.org>, 
+ Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc: platform-driver-x86@vger.kernel.org, linux-leds@vger.kernel.org, 
+ devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, 
+ rust-for-linux@vger.kernel.org, Markus Probst <markus.probst@posteo.de>
+X-Developer-Signature: v=1; a=openpgp-sha256; l=5701;
+ i=markus.probst@posteo.de; h=from:subject:message-id;
+ bh=vw2hTZymCfMrYoEv0cRDWDcybr2OjGRIyiI8Bg1iJ7s=;
+ b=owEBiQJ2/ZANAwAIATR2H/jnrUPSAcsmYgBp5jcQun/ZnkrM2aj2TP8BqNrbmH0fN2g4IfWJw
+ fFPgxL6WeaJAk8EAAEIADkWIQSCdBjE9KxY53IwxHM0dh/4561D0gUCaeY3EBsUgAAAAAAEAA5t
+ YW51MiwyLjUrMS4xMiwyLDIACgkQNHYf+OetQ9L7Rw//als8/YMt+K9OLrXDvcnEnxNKIyozGYM
+ X8LOmsPLtM6EIVtT2Kq9p3QfD9zxdw+vwLgO/f2Kb0Ioa87Zs90T0jroPhITWOp0kcyxM66fKqN
+ zvfWB4ex9sIe1ixSTY0qFXeOxa4O2uPq7+ND99zSfzKuP0wBVJ0xEDYFyRS/3FzJabOsg3NmrI+
+ S1w9S/bYXdQuApDt6aKK/UKhuDYi3QOoxzeyHlTGJvw+IzTzQtqdHnrd7yvBZ5XHQduSGz5rg9y
+ MpGGp/UBDnfeDHW8PnBwGiQOqPokdYd8rSeSuJhGe6fYQ+vMx6mKvIl6kkLHw7BYk38D5/TVekQ
+ NvYCPT+heLcLa/nPrbZh4nSXURM+xo2hCGKVYoEJdMMGo07ux4BMxhGMDT/i4ULbv/wYNNdhLbq
+ WN9oSoIhYo3iQQcQ90h+v2OF4SbZwauvcsaJG0s2f1RZd7suOso1FVQwuKy0uOFn7vn9SnIzkLo
+ l9HKT5AgKRx/WecQtCtlNlsLu9h32bxVThlODT8uHx4JHuTqoHA1Q62m27lxpzk5jI9hhPPKd8U
+ Msp/Psn4eVlGKZeN/7S5mUalIs5vXLW52lZAhMoUVcy5Hm1ZeXJNYHcQUA7JjBS+i8Wkf5u/CZM
+ IRtkMP6x/kcCu8qoVTcZCfjjCFSBf+6EKuDHhmE/JTqvqXjuQ1gM=
+X-Developer-Key: i=markus.probst@posteo.de; a=openpgp;
+ fpr=827418C4F4AC58E77230C47334761FF8E7AD43D2
+Autocrypt: addr=markus.probst@posteo.de; prefer-encrypt=mutual;
+  keydata=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
+  aBeNN4ijKZchBXHPgVx+YtWRHfcm4l8=
+OpenPGP: url=https://posteo.de/keys/markus.probst@posteo.de.asc; preference=encrypt
+
+Synology uses a microcontroller in their NAS devices connected to a
+serial port to control certain LEDs, fan speeds, a beeper, to handle
+proper shutdown and restart, buttons and fan failures.
+
+This patch series depends on the rust led abstraction [1] and the rust
+serdev abstraction [2].
+
+This is only a initial version of the driver able to control LEDs.
+The following rust abstractions would be required, to implement the
+remaining features:
+- hwmon (include/linux/hwmon.h)
+- input (include/linux/input.h)
+- sysoff handler + hardware protection shutdown (include/linux/reboot.h)
+
+[1] https://lore.kernel.org/rust-for-linux/20260329-rust_leds-v13-0-21a599c5b2d1@posteo.de/
+[2] https://lore.kernel.org/rust-for-linux/20260411-rust_serdev-v4-0-845e960c6627@posteo.de/
+
+Signed-off-by: Markus Probst <markus.probst@posteo.de>
+---
+Changes in v8:
+- removed unnecessary Copy and Clone derive
+- added `BLINK_DELAY` constant
+- added compatible id fallbacks
+- moved dt schema patch before the driver
+- added ds411p
+- Link to v7: https://lore.kernel.org/r/20260411-synology_microp_initial-v7-0-9a3a094e763a@posteo.de
+
+Changes in v7:
+- remove list of compatible ids from commit msg
+- explain what makes the different models not compatible in the commit msg
+- remove unnecessary examples
+- Link to v6: https://lore.kernel.org/r/20260405-synology_microp_initial-v6-0-08fde474b6c9@posteo.de
+
+Changes in v6:
+- moved devicetree bindings patch at the end of the set
+- remove several patches
+- move of id table from model.rs to synology_microp.rs
+- remove the model! macro
+- use if blocks in devicetree schema to narrow down the
+  fan-failure-gpios property
+- add multiple devicetree examples to test if blocks
+- Link to v5: https://lore.kernel.org/r/20260329-synology_microp_initial-v5-0-27cb80bdf591@posteo.de
+
+Changes in v5:
+- add esata led support
+- use different compatible for each model
+- add visibility modifier to of_device_table macro
+- fix match data missing when using PRP0001
+- Link to v4: https://lore.kernel.org/r/20260320-synology_microp_initial-v4-0-0423ddb83ca4@posteo.de
+
+Changes in v4:
+- convert to monolithic driver and moved it into drivers/platform
+- removed mfd rust abstraction
+- moved dt-bindings to embedded-controller
+- Link to v3: https://lore.kernel.org/r/20260313-synology_microp_initial-v3-0-ad6ac463a201@posteo.de
+
+Changes in v3:
+- remove `default n` from Kconfig entry, as n is the default already.
+- select RUST_SERIAL_DEV_BUS_ABSTRACTIONS in Kconfig
+- add mfd rust abstraction
+- split core and led parts into their own driver. It should now be considered a
+  MFD device.
+- split led part of dt binding into its own file
+- Link to v2: https://lore.kernel.org/r/20260308-synology_microp_initial-v2-0-9389963f31c5@posteo.de
+
+Changes in v2:
+- fix missing tabs in MAINTAINERS file
+- remove word binding from patch subject
+- add missing signed-off-by
+- add missing help entry in Kconfig
+- add missing spdx license headers
+- remove no-check{,-cpu}-fan properties from the dt-bindings and replace
+  them with the check_fan module parameter
+- use patternProperties for leds in dt-bindings
+- license dt-binding as GPL-2.0-only OR BSD-2-Clause
+- move driver from staging tree into mfd tree and mark it as work in
+  progress inside Kconfig
+- only register alert and usb led if fwnode is present
+- Link to v1: https://lore.kernel.org/r/20260306-synology_microp_initial-v1-0-fcffede6448c@posteo.de
+
+To: Markus Probst <markus.probst@posteo.de>
+To: Rob Herring <robh@kernel.org>
+To: Krzysztof Kozlowski <krzk+dt@kernel.org>
+To: Conor Dooley <conor+dt@kernel.org>
+To: Miguel Ojeda <ojeda@kernel.org>
+To: Boqun Feng <boqun@kernel.org>
+To: Gary Guo <gary@garyguo.net>
+To: Björn Roy Baron <bjorn3_gh@protonmail.com>
+To: Benno Lossin <lossin@kernel.org>
+To: Andreas Hindborg <a.hindborg@kernel.org>
+To: Alice Ryhl <aliceryhl@google.com>
+To: Trevor Gross <tmgross@umich.edu>
+To: Danilo Krummrich <dakr@kernel.org>
+Cc: devicetree@vger.kernel.org
+Cc: linux-kernel@vger.kernel.org
+Cc: rust-for-linux@vger.kernel.org
+
+---
+Markus Probst (2):
+      dt-bindings: embedded-controller: Add synology microp devices
+      platform: Add initial synology microp driver
+
+ .../synology,ds1825p-microp.yaml                   | 108 ++++++++
+ MAINTAINERS                                        |   6 +
+ drivers/platform/Kconfig                           |   2 +
+ drivers/platform/Makefile                          |   1 +
+ drivers/platform/synology_microp/Kconfig           |  13 +
+ drivers/platform/synology_microp/Makefile          |   3 +
+ drivers/platform/synology_microp/TODO              |   7 +
+ drivers/platform/synology_microp/command.rs        |  54 ++++
+ drivers/platform/synology_microp/led.rs            | 281 +++++++++++++++++++++
+ drivers/platform/synology_microp/model.rs          |  49 ++++
+ .../platform/synology_microp/synology_microp.rs    | 110 ++++++++
+ 11 files changed, 634 insertions(+)
+---
+base-commit: 3131ff5a117498bb4b9db3a238bb311cbf8383ce
+change-id: 20260306-synology_microp_initial-0f7dac7b7496
+prerequisite-change-id: 20251217-rust_serdev-ee5481e9085c:v4
+prerequisite-patch-id: 52b17274481cc770c257d8f95335293eca32a2c5
+prerequisite-patch-id: eec47e5051640d08bcd34a9670b98804449cad52
+prerequisite-patch-id: f24b68c71c3f69371e8ac0251efca0a023b31cc4
+prerequisite-patch-id: d0686cf451ef899a06d468adfba51ccd84e6ff98
+prerequisite-change-id: 20251114-rust_leds-a959f7c2f7f9:v13
+prerequisite-patch-id: 818700f22dcb9676157c985f82762d7c607b861e
+prerequisite-patch-id: b15ffa7d95d9260151bfb116b259c4473f721c82
+prerequisite-patch-id: 8c47e0d107530f577a1be0b79f8ee791f95d3cbe
 
-Hi Linus,
-
-Here is the main PDx86 PR for v7.1.
-
-Highlights:
-
-- asus-wmi:
-  - Retain battery charge threshold during boot which avoids unsolicited
-    change to 100%. Return -ENODATA when the limit is not yet known
-  - Improve screenpad power/brightness handling consistency
-  - Fix screenpad brightness range
-
-- barco-p50-gpio: Normalize gpio_get return values
-
-- bitland-mifs-wmi: Add driver for Bitland laptops (supports platform
-                    profile,hwmon, kbd backlight, gpu mode, hotkeys, and
-                    fan boost)
-
-- dell_rbu: Fix using uninitialized value in sysfs write function
-
-- dell-wmi-sysman: Respect destination length when constructing enum
-                   strings
-
-- hp-wmi:
-  - Propagate fan setting apply failures and log an error
-  - Fix sysfs write vs work handler cancel_delayed_work_sync() deadlock
-  - Correct keepalive schedule_delayed_work() to mod_delayed_work()
-  - Fix u8 underflows in GPU delta calculation
-  - Use mutex to protect fan pwm/mode
-  - Ignore kbd backlight and FnLock key events that are handled by FW
-  - Fix fan table parsing (use correct field)
-  - Add support for Omen 14-fb0xxx, 16-n0xxx, 16-wf1xxx, and Omen MAX
-    16-ak0xxxx
-
-- input: trackpoint & thinkpad_acpi: Enable doubletap by default and
-                                     add sysfs enable/disable
-
-- int3472: Add support for GPIO type 0x02 (IR flood LED)
-
-- intel-speed-select: (updated to v1.26)
-  - Avoid using current base frequency as maximum
-  - Fix CPU extended family ID decoding
-  - Fix exit code
-  - Improve error reporting
-
-- intel/vsec: Refactor to support ACPI-enumerated PMT endpoints.
-
-- pcengines-apuv2: Attach software node to the gpiochip
-
-- uniwill:
-  - Refactor hwmon to smaller parts to accomodate HW diversity
-  - Support USB-C power/performance priority switch through sysfs
-  - Add another XMG Fusion 15 (L19) DMI vendor
-  - Enable fine-grained features to device lineup mapping
-
-- wmi: Perform output size check within WMI core to allow simpler WMI
-       drivers
-
-- acpi_driver -> platform driver conversions (a large number of changes
-  from Rafael J. Wysocki)
-
-- Miscellaneous cleanups / refactoring / improvements
-
-Regards, i.
-
-
-The following changes since commit fbddf68d7b4e1e6da7a78dd7fbd8ec376536584a:
-
-  platform/x86: ISST: Correct locked bit width (2026-03-24 12:31:10 +0200)
-
-are available in the Git repository at:
-
-  https://git.kernel.org/pub/scm/linux/kernel/git/pdx86/platform-drivers-x86.git tags/platform-drivers-x86-v7.1-1
-
-for you to fetch changes up to 344bf523d441d44c75c429ea6cdcfa8f12efde4d:
-
-  platform/x86: hp-wmi: Add support for Omen 16-wf1xxx (8C77) (2026-04-14 19:00:18 +0300)
-
-----------------------------------------------------------------
-platform-drivers-x86 for v7.1-1
-
-Highlights:
-
-- asus-wmi:
-  - Retain battery charge threshold during boot which avoids unsolicited
-    change to 100%. Return -ENODATA when the limit is not yet known
-  - Improve screenpad power/brightness handling consistency
-  - Fix screenpad brightness range
-
-- barco-p50-gpio: Normalize gpio_get return values
-
-- bitland-mifs-wmi: Add driver for Bitland laptops (supports platform
-                    profile,hwmon, kbd backlight, gpu mode, hotkeys, and
-                    fan boost)
-
-- dell_rbu: Fix using uninitialized value in sysfs write function
-
-- dell-wmi-sysman: Respect destination length when constructing enum
-                   strings
-
-- hp-wmi:
-  - Propagate fan setting apply failures and log an error
-  - Fix sysfs write vs work handler cancel_delayed_work_sync() deadlock
-  - Correct keepalive schedule_delayed_work() to mod_delayed_work()
-  - Fix u8 underflows in GPU delta calculation
-  - Use mutex to protect fan pwm/mode
-  - Ignore kbd backlight and FnLock key events that are handled by FW
-  - Fix fan table parsing (use correct field)
-  - Add support for Omen 14-fb0xxx, 16-n0xxx, 16-wf1xxx, and Omen MAX
-    16-ak0xxxx
-
-- input: trackpoint & thinkpad_acpi: Enable doubletap by default and
-                                     add sysfs enable/disable
-
-- int3472: Add support for GPIO type 0x02 (IR flood LED)
-
-- intel-speed-select: (updated to v1.26)
-  - Avoid using current base frequency as maximum
-  - Fix CPU extended family ID decoding
-  - Fix exit code
-  - Improve error reporting
-
-- intel/vsec: Refactor to support ACPI-enumerated PMT endpoints.
-
-- pcengines-apuv2: Attach software node to the gpiochip
-
-- uniwill:
-  - Refactor hwmon to smaller parts to accomodate HW diversity
-  - Support USB-C power/performance priority switch through sysfs
-  - Add another XMG Fusion 15 (L19) DMI vendor
-  - Enable fine-grained features to device lineup mapping
-
-- wmi: Perform output size check within WMI core to allow simpler WMI
-       drivers
-
-- acpi_driver -> platform driver conversions (a large number of changes
-  from Rafael J. Wysocki)
-
-- Miscellaneous cleanups / refactoring / improvements
-
-The following is an automated shortlog grouped by driver:
-
-acer-wireless:
- -  Convert ACPI driver to a platform one
- -  Register ACPI notify handler directly
-
-asus-laptop:
- -  Convert ACPI driver to a platform one
- -  Register ACPI notify handler directly
-
-asus-wireless:
- -  Convert ACPI driver to a platform one
- -  Register ACPI notify handler directly
-
-asus-wmi:
- -  adjust screenpad power/brightness handling
- -  do not enforce a battery charge threshold
- -  fix screenpad brightness range
-
-barco-p50-gpio:
- -  convert to guard() notation
- -  normalize return value of gpio_get
-
-bitland-mifs-wmi:
- -  Add new Bitland MIFS WMI driver
-
-dell/dell-rbtn:
- -  Convert ACPI driver to a platform one
- -  Register ACPI notify handler directly
-
-dell_rbu:
- -  avoid uninit value usage in packet_size_write()
-
-dell-wmi-sysman:
- -  bound enumeration string aggregation
- -  Clean up security buffer helpers
- -  Fix typo in function comment
- -  Use standard kobj_sysfs_ops
- -  Use sysfs_emit{_at} in show functions
-
-Documentation: laptops:
- -  Update documentation for uniwill laptops
-
-Documentation:
- -  thinkpad-acpi - Document doubletap_enable attribute
-
-eeepc-laptop:
- -  Convert ACPI driver to a platform one
- -  Register ACPI notify handler directly
-
-fujitsu:
- -  Convert backlight driver to a platform one
- -  Convert laptop driver to a platform one
- -  Register ACPI notify handlers directly
- -  Reorder code to avoid forward declarations
-
-fujitsu-tablet:
- -  Convert ACPI driver to a platform one
-
-hp-wmi:
- -  add locking for concurrent hwmon access
- -  add Omen 14-fb0xxx (board 8C58) support
- -  Add support for Omen 16-n0xxx (8A44)
- -  Add support for Omen 16-wf1xxx (8C77)
- -  Add support for OMEN MAX 16-ak0xxx (8D87)
- -  avoid cancel_delayed_work_sync from work handler
- -  fix fan table parsing
- -  fix ignored return values in fan settings
- -  fix u8 underflow in gpu_delta calculation
- -  Ignore backlight and FnLock events
- -  use mod_delayed_work to reset keep-alive timer
-
-input:
- -  trackpoint - Enable doubletap by default on capable devices
-
-int3472:
- -  Add support for GPIO type 0x02 (IR flood LED)
- -  Parameterize LED con_id in registration
- -  Rename pled to led in LED registration code
- -  Use local variable for LED struct access
-
-intel/rst:
- -  Convert ACPI driver to a platform one
-
-intel/smartconnect:
- -  Convert ACPI driver to a platform one
-
-intel/tpmi:
- -  Use 32 bit aligned address for debugfs mem write
-
-intel/vsec:
- -  Decouple add/link helpers from PCI
- -  Make driver_data info const
- -  Plumb ACPI PMT discovery tables through vsec
- -  Refactor base_addr handling
- -  Return real error codes from registration path
- -  Switch exported helpers from pci_dev to device
-
-lg-laptop:
- -  Convert ACPI driver to a platform one
- -  Drop debug-only ACPI notify handler
-
-nvsw-sn2201:
- -  Drop unused include
-
-panasonic-laptop:
- -  Convert ACPI driver to a platform one
- -  Fix OPTD notifier registration and cleanup
- -  Make pcc_register_optd_notifier() void
- -  Register ACPI notify handler directly
- -  Remove redundant checks from 3 functions
-
-pcengines-apuv2:
- -  attach software node to the gpiochip
-
-sony-laptop:
- -  Convert NC driver to a platform one
- -  Convert PIC driver to a platform one
- -  Register ACPI notify handler directly
-
-surface: hotplug:
- -  Correct inclusion for GPIO APIs
-
-surface: surfacepro3_button:
- -  Convert to a platform driver
- -  Drop wakeup source on remove
- -  Register ACPI notify handler
-
-system76:
- -  Convert ACPI driver to a platform one
- -  Drop redundant devm_led_classdev_unregister()
- -  Register ACPI notify handler directly
-
-thinkpad_acpi:
- -  Add sysfs control for TrackPoint double-tap
- -  Drop ACPI driver registration
- -  remove obsolete TODO comment
- -  use seq_puts() instead of seq_printf()
-
-tools/power/x86/intel-speed-select:
- -  Avoid current base freq as maximum
- -  Fix cpu extended family ID decoding
- -  Fix output when running on unsupported CLX platforms
- -  Fix some program return value
- -  Print Version info when Incompatible API version is detected
- -  v1.26 release
-
-topstar-laptop:
- -  Convert ACPI driver to a platform one
- -  Register ACPI notify handler directly
-
-toshiba_acpi:
- -  Convert ACPI driver to a platform one
- -  Register ACPI notify handler directly
- -  Reorder code to avoid forward declaration
-
-toshiba_bluetooth:
- -  Convert ACPI driver to a platform one
- -  Register ACPI notify handler directly
-
-toshiba_haps:
- -  Convert ACPI driver to a platform one
- -  Register ACPI notify handler directly
-
-uniwill-laptop:
- -  Apply features across all TUXEDO devices
- -  Fix signedness bug
- -  Fix XMG Fusion 15 (L19) entries
- -  Implement USB-C power priority setting
- -  Rework hwmon feature defines
-
-wireless-hotkey:
- -  Convert ACPI driver to a platform one
- -  Register ACPI notify handler directly
-
-wmi:
- -  Add wmidev_invoke_procedure()
- -  Convert drivers to use wmidev_invoke_procedure()
- -  Extend wmidev_invoke_method() to reject undersized data
- -  Extend wmidev_query_block() to reject undersized data
- -  Prepare to reject undersized unmarshalling results
- -  Replace .no_notify_data with .min_event_size
-
-x86:
- -  remove unnecessary module_init/exit() functions
-
-Merges:
- -  Merge branch 'intel-sst' of https://github.com/spandruvada/linux-kernel into review-ilpo-next
- -  Merge tag 'fixes' into 'for-next'
-
-----------------------------------------------------------------
-Andy Shevchenko (2):
-      platform/surface: hotplug: Correct inclusion for GPIO APIs
-      platform/mellanox: nvsw-sn2201: Drop unused include
-
-Armin Wolf (7):
-      platform/x86: uniwill-laptop: Rework hwmon feature defines
-      platform/wmi: Add wmidev_invoke_procedure()
-      platform/wmi: Convert drivers to use wmidev_invoke_procedure()
-      platform/wmi: Prepare to reject undersized unmarshalling results
-      platform/wmi: Extend wmidev_invoke_method() to reject undersized data
-      platform/wmi: Extend wmidev_query_block() to reject undersized data
-      platform/wmi: Replace .no_notify_data with .min_event_size
-
-Coby McKinney (1):
-      platform/x86: thinkpad_acpi: use seq_puts() instead of seq_printf()
-
-Daniil Bulgar (1):
-      platform/x86: thinkpad_acpi: remove obsolete TODO comment
-
-David E. Box (6):
-      platform/x86/intel/vsec: Refactor base_addr handling
-      platform/x86/intel/vsec: Make driver_data info const
-      platform/x86/intel/vsec: Decouple add/link helpers from PCI
-      platform/x86/intel/vsec: Switch exported helpers from pci_dev to device
-      platform/x86/intel/vsec: Return real error codes from registration path
-      platform/x86/intel/vsec: Plumb ACPI PMT discovery tables through vsec
-
-Denis Benato (3):
-      platform/x86: asus-wmi: do not enforce a battery charge threshold
-      platform/x86: asus-wmi: adjust screenpad power/brightness handling
-      platform/x86: asus-wmi: fix screenpad brightness range
-
-Dmitry Torokhov (3):
-      platform/x86: pcengines-apuv2: attach software node to the gpiochip
-      platform/x86: barco-p50-gpio: normalize return value of gpio_get
-      platform/x86: barco-p50-gpio: convert to guard() notation
-
-Emre Cecanpunar (5):
-      platform/x86: hp-wmi: fix ignored return values in fan settings
-      platform/x86: hp-wmi: avoid cancel_delayed_work_sync from work handler
-      platform/x86: hp-wmi: use mod_delayed_work to reset keep-alive timer
-      platform/x86: hp-wmi: fix u8 underflow in gpu_delta calculation
-      platform/x86: hp-wmi: add locking for concurrent hwmon access
-
-Ethan Nelson-Moore (1):
-      platform: x86: remove unnecessary module_init/exit() functions
-
-Ethan Tidmore (1):
-      platform/x86: uniwill-laptop: Fix signedness bug
-
-Fedor Pchelkin (1):
-      platform/x86: dell_rbu: avoid uninit value usage in packet_size_write()
-
-Ilpo Järvinen (2):
-      Merge tag 'fixes' into 'for-next'
-      Merge branch 'intel-sst' of https://github.com/spandruvada/linux-kernel into review-ilpo-next
-
-Krishna Chomal (5):
-      platform/x86: hp-wmi: Ignore backlight and FnLock events
-      platform/x86: hp-wmi: fix fan table parsing
-      platform/x86: hp-wmi: Add support for OMEN MAX 16-ak0xxx (8D87)
-      platform/x86: hp-wmi: Add support for Omen 16-n0xxx (8A44)
-      platform/x86: hp-wmi: Add support for Omen 16-wf1xxx (8C77)
-
-Marco Nenciarini (4):
-      platform/x86: int3472: Use local variable for LED struct access
-      platform/x86: int3472: Rename pled to led in LED registration code
-      platform/x86: int3472: Parameterize LED con_id in registration
-      platform/x86: int3472: Add support for GPIO type 0x02 (IR flood LED)
-
-Mingyou Chen (1):
-      platform/x86: bitland-mifs-wmi: Add new Bitland MIFS WMI driver
-
-Pengpeng Hou (1):
-      platform/x86: dell-wmi-sysman: bound enumeration string aggregation
-
-Rafael J. Wysocki (45):
-      platform/x86: acer-wireless: Register ACPI notify handler directly
-      platform/x86: acer-wireless: Convert ACPI driver to a platform one
-      platform/x86: eeepc-laptop: Register ACPI notify handler directly
-      platform/x86: eeepc-laptop: Convert ACPI driver to a platform one
-      platform/x86: intel/rst: Convert ACPI driver to a platform one
-      platform/x86: intel/smartconnect: Convert ACPI driver to a platform one
-      platform/surface: surfacepro3_button: Drop wakeup source on remove
-      platform/surface: surfacepro3_button: Register ACPI notify handler
-      platform/surface: surfacepro3_button: Convert to a platform driver
-      platform/x86: lg-laptop: Drop debug-only ACPI notify handler
-      platform/x86: lg-laptop: Convert ACPI driver to a platform one
-      platform/x86: sony-laptop: Register ACPI notify handler directly
-      platform/x86: sony-laptop: Convert NC driver to a platform one
-      platform/x86: sony-laptop: Convert PIC driver to a platform one
-      platform/x86: topstar-laptop: Register ACPI notify handler directly
-      platform/x86: topstar-laptop: Convert ACPI driver to a platform one
-      platform/x86: wireless-hotkey: Register ACPI notify handler directly
-      platform/x86: wireless-hotkey: Convert ACPI driver to a platform one
-      platform/x86: fujitsu-tablet: Convert ACPI driver to a platform one
-      platform/x86: fujitsu: Reorder code to avoid forward declarations
-      platform/x86: fujitsu: Register ACPI notify handlers directly
-      platform/x86: fujitsu: Convert backlight driver to a platform one
-      platform/x86: fujitsu: Convert laptop driver to a platform one
-      platform/x86: panasonic-laptop: Make pcc_register_optd_notifier() void
-      platform/x86: panasonic-laptop: Fix OPTD notifier registration and cleanup
-      platform/x86: panasonic-laptop: Remove redundant checks from 3 functions
-      platform/x86: panasonic-laptop: Register ACPI notify handler directly
-      platform/x86: panasonic-laptop: Convert ACPI driver to a platform one
-      platform/x86: system76: Drop redundant devm_led_classdev_unregister()
-      platform/x86: system76: Register ACPI notify handler directly
-      platform/x86: system76: Convert ACPI driver to a platform one
-      platform/x86: dell/dell-rbtn: Register ACPI notify handler directly
-      platform/x86: dell/dell-rbtn: Convert ACPI driver to a platform one
-      platform/x86: toshiba_acpi: Reorder code to avoid forward declaration
-      platform/x86: toshiba_acpi: Register ACPI notify handler directly
-      platform/x86: toshiba_acpi: Convert ACPI driver to a platform one
-      platform/x86: toshiba_bluetooth: Register ACPI notify handler directly
-      platform/x86: toshiba_bluetooth: Convert ACPI driver to a platform one
-      platform/x86: toshiba_haps: Register ACPI notify handler directly
-      platform/x86: toshiba_haps: Convert ACPI driver to a platform one
-      platform/x86: asus-laptop: Register ACPI notify handler directly
-      platform/x86: asus-laptop: Convert ACPI driver to a platform one
-      platform/x86: asus-wireless: Register ACPI notify handler directly
-      platform/x86: asus-wireless: Convert ACPI driver to a platform one
-      platform/x86: thinkpad_acpi: Drop ACPI driver registration
-
-Shaun Varghese (1):
-      platform/x86: hp-wmi: add Omen 14-fb0xxx (board 8C58) support
-
-Srinivas Pandruvada (3):
-      platform/x86/intel/tpmi: Use 32 bit aligned address for debugfs mem write
-      tools/power/x86/intel-speed-select: Avoid current base freq as maximum
-      tools/power/x86/intel-speed-select: v1.26 release
-
-Thomas Weißschuh (1):
-      platform/x86: dell-wmi-sysman: Use standard kobj_sysfs_ops
-
-Thorsten Blum (3):
-      platform/x86: dell-wmi-sysman: Use sysfs_emit{_at} in show functions
-      platform/x86: dell-wmi-sysman: Clean up security buffer helpers
-      platform/x86: dell-wmi-sysman: Fix typo in function comment
-
-Vishnu Sankar (3):
-      input: trackpoint - Enable doubletap by default on capable devices
-      platform/x86: thinkpad_acpi: Add sysfs control for TrackPoint double-tap
-      Documentation: thinkpad-acpi - Document doubletap_enable attribute
-
-Werner Sembach (4):
-      platform/x86: uniwill-laptop: Implement USB-C power priority setting
-      platform/x86: uniwill-laptop: Fix XMG Fusion 15 (L19) entries
-      platform/x86: uniwill-laptop: Apply features across all TUXEDO devices
-      Documentation: laptops: Update documentation for uniwill laptops
-
-Zhang Rui (4):
-      tools/power/x86/intel-speed-select: Fix cpu extended family ID decoding
-      tools/power/x86/intel-speed-select: Fix some program return value
-      tools/power/x86/intel-speed-select: Print Version info when Incompatible API version is detected
-      tools/power/x86/intel-speed-select: Fix output when running on unsupported CLX platforms
-
- .../ABI/testing/sysfs-driver-uniwill-laptop        |  27 +
- .../admin-guide/laptops/thinkpad-acpi.rst          |  21 +
- .../admin-guide/laptops/uniwill-laptop.rst         |  12 +
- Documentation/wmi/devices/bitland-mifs-wmi.rst     | 207 +++++
- Documentation/wmi/driver-development-guide.rst     |  11 +-
- drivers/gpu/drm/xe/xe_debugfs.c                    |   2 +-
- drivers/gpu/drm/xe/xe_hwmon.c                      |   2 +-
- drivers/gpu/drm/xe/xe_vsec.c                       |   7 +-
- drivers/gpu/drm/xe/xe_vsec.h                       |   4 +-
- drivers/input/mouse/trackpoint.c                   |  46 ++
- drivers/input/mouse/trackpoint.h                   |   5 +
- drivers/platform/mellanox/nvsw-sn2201.c            |   1 -
- drivers/platform/surface/surface_hotplug.c         |   2 +-
- drivers/platform/surface/surfacepro3_button.c      |  71 +-
- drivers/platform/wmi/core.c                        |  89 ++-
- drivers/platform/wmi/internal.h                    |   3 +-
- drivers/platform/wmi/marshalling.c                 |   6 +-
- drivers/platform/wmi/tests/marshalling_kunit.c     |  24 +-
- drivers/platform/x86/Kconfig                       |  18 +
- drivers/platform/x86/Makefile                      |   1 +
- drivers/platform/x86/acer-wireless.c               |  48 +-
- drivers/platform/x86/asus-laptop.c                 |  44 +-
- drivers/platform/x86/asus-wireless.c               |  55 +-
- drivers/platform/x86/asus-wmi.c                    |  77 +-
- drivers/platform/x86/barco-p50-gpio.c              |  23 +-
- drivers/platform/x86/bitland-mifs-wmi.c            | 837 +++++++++++++++++++++
- drivers/platform/x86/dell/dell-rbtn.c              | 142 ++--
- drivers/platform/x86/dell/dell-wmi-base.c          |   1 +
- .../x86/dell/dell-wmi-sysman/dell-wmi-sysman.h     |   4 +-
- .../x86/dell/dell-wmi-sysman/enum-attributes.c     |  34 +-
- drivers/platform/x86/dell/dell-wmi-sysman/sysman.c |  68 +-
- drivers/platform/x86/dell/dell_rbu.c               |   6 +-
- drivers/platform/x86/eeepc-laptop.c                |  45 +-
- drivers/platform/x86/fujitsu-laptop.c              | 489 ++++++------
- drivers/platform/x86/fujitsu-tablet.c              |  30 +-
- drivers/platform/x86/hp/hp-wmi.c                   | 125 ++-
- drivers/platform/x86/intel/int3472/discrete.c      |  13 +-
- drivers/platform/x86/intel/int3472/led.c           |  55 +-
- drivers/platform/x86/intel/pmc/core.c              |   4 +-
- drivers/platform/x86/intel/pmc/ssram_telemetry.c   |   2 +-
- drivers/platform/x86/intel/pmt/class.c             |   8 +-
- drivers/platform/x86/intel/pmt/class.h             |   5 +-
- drivers/platform/x86/intel/pmt/discovery.c         |   4 +-
- drivers/platform/x86/intel/pmt/telemetry.c         |  13 +-
- drivers/platform/x86/intel/pmt/telemetry.h         |  12 +-
- drivers/platform/x86/intel/rst.c                   |  23 +-
- drivers/platform/x86/intel/sdsi.c                  |   5 +-
- drivers/platform/x86/intel/smartconnect.c          |  23 +-
- drivers/platform/x86/intel/vsec.c                  | 121 +--
- drivers/platform/x86/intel/vsec_tpmi.c             |  12 +-
- drivers/platform/x86/intel/wmi/sbl-fw-update.c     |   7 +-
- drivers/platform/x86/intel/wmi/thunderbolt.c       |   2 +-
- drivers/platform/x86/lenovo/ideapad-laptop.c       |   1 +
- drivers/platform/x86/lenovo/thinkpad_acpi.c        | 193 ++---
- drivers/platform/x86/lenovo/wmi-camera.c           |   1 +
- drivers/platform/x86/lenovo/wmi-events.c           |   1 +
- drivers/platform/x86/lenovo/ymc.c                  |   1 +
- drivers/platform/x86/lenovo/yogabook.c             |   2 +-
- drivers/platform/x86/lg-laptop.c                   |  51 +-
- drivers/platform/x86/mxm-wmi.c                     |  12 -
- drivers/platform/x86/panasonic-laptop.c            |  79 +-
- drivers/platform/x86/pcengines-apuv2.c             |   3 +-
- drivers/platform/x86/redmi-wmi.c                   |   1 +
- drivers/platform/x86/sony-laptop.c                 | 122 +--
- drivers/platform/x86/system76_acpi.c               |  63 +-
- drivers/platform/x86/topstar-laptop.c              |  43 +-
- drivers/platform/x86/toshiba_acpi.c                | 182 +++--
- drivers/platform/x86/toshiba_bluetooth.c           |  74 +-
- drivers/platform/x86/toshiba_haps.c                |  57 +-
- drivers/platform/x86/uniwill/uniwill-acpi.c        | 440 +++++++++--
- drivers/platform/x86/uniwill/uniwill-wmi.c         |   1 +
- drivers/platform/x86/wireless-hotkey.c             |  49 +-
- drivers/platform/x86/wmi-bmof.c                    |   2 +-
- drivers/platform/x86/xiaomi-wmi.c                  |   1 +
- include/linux/intel_vsec.h                         |  39 +-
- include/linux/platform_data/x86/int3472.h          |  12 +-
- include/linux/wmi.h                                |  15 +-
- tools/power/x86/intel-speed-select/isst-config.c   |  41 +-
- 78 files changed, 3073 insertions(+), 1309 deletions(-)
- create mode 100644 Documentation/wmi/devices/bitland-mifs-wmi.rst
- create mode 100644 drivers/platform/x86/bitland-mifs-wmi.c
