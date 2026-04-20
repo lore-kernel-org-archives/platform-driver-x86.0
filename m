@@ -1,102 +1,128 @@
-Received: from mail-vk1-f174.google.com (mail-vk1-f174.google.com [209.85.221.174])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from fhigh-b8-smtp.messagingengine.com (fhigh-b8-smtp.messagingengine.com [202.12.124.159])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D3F99351C2B
-	for <platform-driver-x86@vger.kernel.org>; Mon, 20 Apr 2026 16:30:03 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.174
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 82AF834EF00;
+	Mon, 20 Apr 2026 18:08:16 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=202.12.124.159
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1776702605; cv=none; b=tqG4QmHsXYIhQdlQMr/1Ld3WefNMAsRJBNpk1mLDqrEUDUFXJmpFA79YP6gQP/7D3L3QjFgqeDhpnGYFez2PI8Migv01LeJLXSyJ5T1FVfQYL0Iy8BQLOG6vRvYa48gFmamOpcKbA24dB2Kdfr/HYQ8zuuPpzwkLIFI/DVcYKrM=
+	t=1776708498; cv=none; b=CXmntu47OJEebHfkCgqxQq0MlagTgnpHdr3KmtumFOyUQt5/rkFtT0LTe/hSLGybv0WTZnULg9DiaEaR9VdZSPMktF7uotJFN0hzQte9K7yfDTj3dr0U2uUVV9Tb6IVRxYXbhdG/7Wwgyb9VUTwYfkrFo4vysN38HDKUpf+prO4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1776702605; c=relaxed/simple;
-	bh=1FZNMMWn2mfuFQRKV39o9u06Bb7L6kVeqBozxU34kcU=;
-	h=Mime-Version:Content-Type:Date:Message-Id:Cc:Subject:From:To:
-	 References:In-Reply-To; b=a1zGVwBku+4geQ9+HcOuQB0/lTxHZ26gPFUqc5MWnI189W9KFHtcGvDtSo59M/bvCagLckEAEybJrEM4ori1C8DNFgRNd/H13Bmrn1Xz6WltONmhJfSBRjCAjoOTvYnNKFiErANDfxkAoUytdBBQNHlZ/zNaVscaL2waG598E3g=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=OTLkmtMG; arc=none smtp.client-ip=209.85.221.174
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1776708498; c=relaxed/simple;
+	bh=jiKs6ZJoVpcVKKjIgsqvSL9z9lkxeqRL5Yg3zihEUog=;
+	h=MIME-Version:Date:From:To:Cc:Message-Id:In-Reply-To:References:
+	 Subject:Content-Type; b=pqv7I5c1KK5jWy8OL3QhYHoavt4ePy3wzknNfBHsMA3x4KTYy29yRocTwNuoYzcrp6lCcdg8622/K8ysmWavJLU1d2OcEVpUhwrdrIIi5mNMfx6oNjW97jlJemnO7b4W8K0SfekUf96zSim6fJOMrlw1qEOxsns9fk4jSGEizFg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=squebb.ca; spf=pass smtp.mailfrom=squebb.ca; dkim=pass (2048-bit key) header.d=squebb.ca header.i=@squebb.ca header.b=csONNvIS; dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b=Gaf1DxYI; arc=none smtp.client-ip=202.12.124.159
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=squebb.ca
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=squebb.ca
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="OTLkmtMG"
-Received: by mail-vk1-f174.google.com with SMTP id 71dfb90a1353d-56739adfa1aso2439617e0c.0
-        for <platform-driver-x86@vger.kernel.org>; Mon, 20 Apr 2026 09:30:03 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20251104; t=1776702603; x=1777307403; darn=vger.kernel.org;
-        h=in-reply-to:references:to:from:subject:cc:message-id:date
-         :content-transfer-encoding:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=1FZNMMWn2mfuFQRKV39o9u06Bb7L6kVeqBozxU34kcU=;
-        b=OTLkmtMGPTXtIeeHOWfMaquur9Zvl1viX0mWNnQzlH0O3K/bHhY0I5LVeTUPx1qrms
-         wOpXekG2pnzftNtJOMRHD5lr9GG1vQDqI6RCv/5BWC+LyTIkkyu+EM8Rzu7BAalOjigI
-         JJExa0+0mXdiq/Bm1RdVr72bmBbeaIXkKgVnbKXYJTU1+5G8KSWITV7kZoBdarpkOLnd
-         8VE/aHEGpbsZw7cUb1WV29Q49hBaM/KMXR7ECOUyhkU/j3K+pR/19KYfhc1juJ7398k4
-         pbIWwKMQZ4jiZrMiFXS0tEzDROXT9Fg3tY7A7sZ9WuFeGvGn48EEYcg4NpVuJqDAy2BY
-         7n4Q==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1776702603; x=1777307403;
-        h=in-reply-to:references:to:from:subject:cc:message-id:date
-         :content-transfer-encoding:mime-version:x-gm-gg:x-gm-message-state
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=1FZNMMWn2mfuFQRKV39o9u06Bb7L6kVeqBozxU34kcU=;
-        b=KS2jYFh0BQCXHbpfL9Dslngd/BNfldW5V4UE8bpfWOiiNIrFOMHGt4gDBSH87U9UWB
-         +heRQZpK5beUjsc94K9wndwpgH0Ks8C39pNycQ7kEwf01kEReQ+OuxwTHBhxCjqfJgd9
-         SR9wl5fgoTTb5RpfxikngDE030WGxSZRV9kNBtr3dUNh63iuVHPBOFysO5owyRRQum2R
-         qMGEGoZb4JxQ0zttZPBg0d3hIPaS3gMBcyWLJEAG2JLyFdX6d1TMK6KxowZHLrlNNzv3
-         aIwTnTon/ALAbPVHyH9oK3+l4vj5KKKjzzwhigAVi0HHv2PZxj/u6skPpz6v1ImPS5Zq
-         mtog==
-X-Gm-Message-State: AOJu0YxzSLnAUqjBc7jGaHG6yVH/Vzz8BT4ceyhlDRHQ2pjqPEvHvp7N
-	pLySo52USP4rMamIFhD1jrkv3JfWnDyBMfi2/rBjeiaufMr3jov2d4Pu
-X-Gm-Gg: AeBDiesnsEhHzHK1jPrD5vy/Luj6hRhReQdpKT8GVM1mOGlpSZDw3HyulwVW37g1Oh+
-	YgUcUmaA4TmDkryNz3L/xa7ReWixMmEulT5miB8fRwEEnhasvRiFurejEk04bA+4WrXHXRCRyTN
-	OcaYPCygus5kaBZmXqAi5QE7/AKUxIV4m2omNROODDMwVo1mpwL/gxlWxzIvsLOYqa6j7ioWVy+
-	Y5upPDqryUkKNKHkbpFifKzJUY/nqVlhoX1Iy5kh29kLqO7SKxF7x2KV512Rlr/WbXcje8clzZn
-	hyR639xrGTmwY+uOwLvsJEuS2NicxHDFAYnbcCFJXzU+QzIEimcNJufJQl7D5j2Z1Heyb9rL3me
-	ATvXW+N4E6vWRhPj8Vs+tPdGQzRmTYs0j7ymnYBZyo42WmlDAi0+IyMwwlPC0a+IjsfOqwmo3No
-	Mi0g1mU3OlQsRQ1qVcIFsQq9pt
-X-Received: by 2002:a05:6122:4b82:b0:56d:451b:e4dd with SMTP id 71dfb90a1353d-56fa5a232c6mr6634105e0c.12.1776702602684;
-        Mon, 20 Apr 2026 09:30:02 -0700 (PDT)
-Received: from localhost ([2800:bf0:82:11a2:7ac4:1f2:947b:2b6])
-        by smtp.gmail.com with ESMTPSA id 71dfb90a1353d-56fa93253aesm6156415e0c.14.2026.04.20.09.30.01
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 20 Apr 2026 09:30:02 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=squebb.ca header.i=@squebb.ca header.b="csONNvIS";
+	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="Gaf1DxYI"
+Received: from phl-compute-02.internal (phl-compute-02.internal [10.202.2.42])
+	by mailfhigh.stl.internal (Postfix) with ESMTP id 519587A01E8;
+	Mon, 20 Apr 2026 14:08:15 -0400 (EDT)
+Received: from phl-imap-08 ([10.202.2.84])
+  by phl-compute-02.internal (MEProxy); Mon, 20 Apr 2026 14:08:15 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=squebb.ca; h=cc
+	:cc:content-transfer-encoding:content-type:content-type:date
+	:date:from:from:in-reply-to:in-reply-to:message-id:mime-version
+	:references:reply-to:subject:subject:to:to; s=fm3; t=1776708495;
+	 x=1776794895; bh=daniOWyt82clBCpPF91tefseu6u3nUNzlAoqxcM2Kak=; b=
+	csONNvISozAsFO+FTVUIS0cx83a77Qh3l5FhbNrriGo+FRsjHlON0DRaq51y1iFw
+	3POgYBALXs9TFxfcQ8FvtsHOXkHp5/4BAZ7WtVT+tDukmjzcHrXyGXz5v/C3/Bgn
+	/zIgy1UMASCdINe2lQNdEB3XgY0B8WSz/p7GS22wzR2tRmuwvdK77xGCad7874Uw
+	CySacyGOZOsHvq/URaBXSqZjGlDid7dF1YVq6o4UUp4Ovia7zj36t7z/CVpGsS9Z
+	nB+yvNOrHw0LKidPHfR+n1nQ0VHBeM6XMiEde7OHTxU8AMhDVb+b6stNMkx2sncs
+	KmbcgbNVLHRNR0uJxK/2kg==
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
+	messagingengine.com; h=cc:cc:content-transfer-encoding
+	:content-type:content-type:date:date:feedback-id:feedback-id
+	:from:from:in-reply-to:in-reply-to:message-id:mime-version
+	:references:reply-to:subject:subject:to:to:x-me-proxy
+	:x-me-sender:x-me-sender:x-sasl-enc; s=fm2; t=1776708495; x=
+	1776794895; bh=daniOWyt82clBCpPF91tefseu6u3nUNzlAoqxcM2Kak=; b=G
+	af1DxYIYouBEZJttUvxWxR2BKcaq/w+qkBnBJE5zdAnb0KPcjrTSqenSh/U3RR9p
+	PFy/EmJpqQdOWd2vv/YnI/6IQm1MhTkg7kCny2Ko0BWPOMAS+pYRHi8ljtRyLTMk
+	qQOL5OMfgowqxuhDwhbEnJJFF8awT1nlV226MoD7q9HDhJndtqDsmmif+PMen9So
+	R7dnRk2gPkgSmUM9aWy8m9/gx3MSrbrGVjbjtV0EzY70fQspPfUCXDmeSCmF4zXt
+	O8KREBjQJXSUyBmNaRetcRgnhJ2HzSndp6or37Zlthj4Bx0XjVUbFJj11Vc7xFmH
+	w7OKvchKiDtBLEudfr75w==
+X-ME-Sender: <xms:jmvmaTivBH--eDyI2tN77VWx266gpKVhiUSQu5EzrkpsNp2IktTtPg>
+    <xme:jmvmaa2-mT12HbbWpShiupUZsXYTZtBcEr5rUz84HKdkjZyIYCdkTSMwM7Z9VdLp9
+    7ORAKr-lMA6opOoX-82yZlN6brBqNdOYqjpY3mc4ije9yOxt-9At6Fo>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeefhedrtddtgdehledvtdcutefuodetggdotefrod
+    ftvfcurfhrohhfihhlvgemucfhrghsthforghilhdpuffrtefokffrpgfnqfghnecuuegr
+    ihhlohhuthemuceftddtnecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenucfjug
+    hrpefoggffhffvvefkjghfufgtgfesthejredtredttdenucfhrhhomhepfdforghrkhcu
+    rfgvrghrshhonhdfuceomhhpvggrrhhsohhnqdhlvghnohhvohesshhquhgvsggsrdgtrg
+    eqnecuggftrfgrthhtvghrnheptdffvefgtefhveetuddvfeelveektdduvdelgfehgfei
+    keffjeetjeevffektdfhnecuffhomhgrihhnpehkvghrnhgvlhdrohhrghenucevlhhush
+    htvghrufhiiigvpedtnecurfgrrhgrmhepmhgrihhlfhhrohhmpehmphgvrghrshhonhdq
+    lhgvnhhovhhosehsqhhuvggssgdrtggrpdhnsggprhgtphhtthhopedutddpmhhouggvpe
+    hsmhhtphhouhhtpdhrtghpthhtohepmhgvsegsrhhighhhrghmtggrmhhpsggvlhhlrdgt
+    ohhmpdhrtghpthhtohepuggvrhgvkhhjohhhnhdrtghlrghrkhesghhmrghilhdrtghomh
+    dprhgtphhtthhopehnihhnrggunhgrihhktdejsehgmhgrihhlrdgtohhmpdhrtghpthht
+    ohepfigprghrmhhinhesghhmgidruggvpdhrtghpthhtohepshhkhhgrnheslhhinhhugi
+    hfohhunhgurghtihhonhdrohhrghdprhgtphhtthhopehlihhnuhigqdhkvghrnhgvlhdq
+    mhgvnhhtvggvsheslhhishhtshdrlhhinhhugidruggvvhdprhgtphhtthhopegtohhrsg
+    gvtheslhifnhdrnhgvthdprhgtphhtthhopehlihhnuhigqdguohgtsehvghgvrhdrkhgv
+    rhhnvghlrdhorhhgpdhrtghpthhtoheplhhinhhugidqkhgvrhhnvghlsehvghgvrhdrkh
+    gvrhhnvghlrdhorhhg
+X-ME-Proxy: <xmx:jmvmacu7cD8DG0ozzuz2V1gX9Nkqrut9mAZYstwndyU90bYv2IQp7g>
+    <xmx:jmvmaXvdVNcR6upF1gSq5vUdZx1GzUG_irMCfPOOUnVU2xhmYwa7Uw>
+    <xmx:jmvmaRET0bweJMopTau_gVSb0du6Hnhc9Vimfngd9ZKpUfSQ2mBHTA>
+    <xmx:jmvmaSM3t4TB2-NkEsvBE37ZcQYTzetm0jPV06yhPLGTcTY0sc7t-g>
+    <xmx:j2vmaTrM9nIutg3DwEMtLE8pXO8PeqKdepl5fN43fV7XOApRRNAWdUci>
+Feedback-ID: ibe194615:Fastmail
+Received: by mailuser.phl.internal (Postfix, from userid 501)
+	id C5A022CE3F95; Mon, 20 Apr 2026 14:08:14 -0400 (EDT)
+X-Mailer: MessagingEngine.com Webmail Interface
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
-Content-Type: text/plain; charset=UTF-8
-Date: Mon, 20 Apr 2026 11:29:55 -0500
-Message-Id: <DHY4I8I2KLOU.1F5GQO5EMRL4H@gmail.com>
-Cc: <platform-driver-x86@vger.kernel.org>, <Dell.Client.Kernel@dell.com>,
- <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH v3] platform/x86: alienware-wmi-base: Transition to new
- WMI API
-From: "Kurt Borja" <kuurtb@gmail.com>
-To: "Armin Wolf" <W_Armin@gmx.de>, "Kurt Borja" <kuurtb@gmail.com>,
- =?utf-8?q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>, "Hans de
- Goede" <hansg@kernel.org>
-X-Mailer: aerc 0.21.0-0-g5549850facc2
-References: <20260331-aw-new-api-v3-1-ef03b94529d8@gmail.com>
- <eb4b7361-128e-4e1d-853b-667deb52603a@gmx.de>
-In-Reply-To: <eb4b7361-128e-4e1d-853b-667deb52603a@gmx.de>
+MIME-Version: 1.0
+X-ThreadId: Ab0JQVG51Pnw
+Date: Mon, 20 Apr 2026 14:07:53 -0400
+From: "Mark Pearson" <mpearson-lenovo@squebb.ca>
+To: "Jonathan Corbet" <corbet@lwn.net>,
+ "Derek J . Clark" <derekjohn.clark@gmail.com>,
+ "Ninad Naik" <ninadnaik07@gmail.com>, "Armin Wolf" <W_Armin@gmx.de>,
+ skhan@linuxfoundation.org
+Cc: 
+ "platform-driver-x86@vger.kernel.org" <platform-driver-x86@vger.kernel.org>,
+ linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org,
+ me@brighamcampbell.com, linux-kernel-mentees@lists.linux.dev
+Message-Id: <caeb609a-499f-4eab-91a2-2d85665631ea@app.fastmail.com>
+In-Reply-To: <87fr4qw2jy.fsf@trenco.lwn.net>
+References: <20260419170835.347910-1-ninadnaik07@gmail.com>
+ <b94cef14-d02d-4544-abb5-ead7db6eaa72@app.fastmail.com>
+ <BAA4F3A7-E892-4904-95A6-64B177CDA7AD@gmail.com>
+ <87fr4qw2jy.fsf@trenco.lwn.net>
+Subject: Re: [PATCH] Documentation: fix spelling mistake "Minumum" -> "Minimum"
+Content-Type: text/plain
+Content-Transfer-Encoding: 7bit
 
-On Mon Apr 13, 2026 at 1:25 AM -05, Armin Wolf wrote:
-> Am 31.03.26 um 18:20 schrieb Kurt Borja:
->> Transition to the new wmi_buffer based WMI API.
->
-> Hi,
->
-> i think you will have to adapt this patch to the changes i made to
-> wmidev_invoke_method(). Said function now takes an additional parameter
-> specifying the minimum size of the output data.
 
-Hi Armin,
-
-I'll go for this!
-
+On Mon, Apr 20, 2026, at 2:47 AM, Jonathan Corbet wrote:
+> "Derek J. Clark" <derekjohn.clark@gmail.com> writes:
 >
-> In your case this would replace the size check when output data is=20
-> expected, otherwise you should call wmidev_invoke_procedure.
+>> The MOF spelling mistakes are well known. We've left them is as to
+>> ensure match with what the hardware actually reports.
+>>
+>> See: https://lore.kernel.org/platform-driver-x86/cfd7977e-d612-4e08-a68a-65fed8e164b6@gmx.de
+>>
+>> I suppose if we're going to continue getting these types or PR I
+>> should add a note to the documentation. I'll add that soon.
 >
-> Thanks,
-> Armin Wolf
+> Perhaps worth adding, but I'm not sure I would expect it to help.  The
+> people generating these patches aren't putting much attention into the
+> context surrounding them.
+>
+I'd forgotten that previous discussion - sorry.
+
+Part of the problem (I know I had this many years ago when I got started) is being told the best way to get involved in kernel development and learn the process is to find small things to fix (spelling mistakes, documentation, comments etc). I suspect that's accelerated with AI identifying them too :)
+
+What if we fix the typo, and add a comment highlighting that the vendor documentation/MOF/whatever is wrong? Then everybody is 'happy'? (or at least we'll get less emails about it)
+
+Mark
