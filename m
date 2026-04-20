@@ -1,38 +1,38 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 25E82150997
-	for <platform-driver-x86@vger.kernel.org>; Mon, 20 Apr 2026 20:02:11 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8E189150997
+	for <platform-driver-x86@vger.kernel.org>; Mon, 20 Apr 2026 20:02:40 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1776715332; cv=none; b=jNyle8w8wvD04p6AaVBw5iB6+xCvP0QfzJtuQ/cr2zJhdcXgNXmYjkuyMmkcKEcJBa1urChIx9CzSxZ7NYYYMvLzhf/iBGGWNUGofUP9HsqSFL7ym/EU7y9z5osxblZz+T2OcWXDAbZW7saulBicbWheBTuu04ee6zup9rJrTvA=
+	t=1776715360; cv=none; b=UEy9ZnskIb9+09+/W1DKNAHrF5QHsPZ3C98BZE5ARbJ54u7bD2WZ3WLKVgexppOR0xgYd7LyFcRByv1MUfxZxG7BvaUy+8Czcnh+Wg4Ho9LWs6FqEkz6YdEI1D+8brzSRs/I+Ggj+ebdTsL+hbCiP8HkDrE2uRDJgs+nCV91ff8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1776715332; c=relaxed/simple;
-	bh=BgrJC+wve0KluIaYEUmwKoxlij7b6+rXurVFEbZPCu4=;
+	s=arc-20240116; t=1776715360; c=relaxed/simple;
+	bh=f+5fQMr7lv2HwJBmWGWyh6uOdUiVr16AdA9UDWdJyDk=;
 	h=From:To:Subject:Date:Message-ID:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=bL5Dv3bM9QdqJvzmylMN0ROFLx78jRCyxWYc2Dn5qlc4nNDrwGjRfLy4scaWZAq4HF/R7mwdXGEu0BN/nqbpxtjVeEWl2PjeIM+dhBirXJy9Craml7sFZ4xm4LmrZtq+MwRyqio5B9TB2VmNrsMgn6NN4ZdSMBGdF/zOAMzBgAA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=MlSVk4dk; arc=none smtp.client-ip=10.30.226.201
+	 Content-Type:MIME-Version; b=VfEwxopRrA78QqotWARuG8f9g7Ew29LH48JlR079IBtrl5FaUfAfQKhER9Vrj+wW6UHpd34lSzbvsMThi14/BxDnHjwFaBYS3jSN/7DDdon0uuWfwQQclqh2Adn6WPz4mg7yOpdv9OcgPutIQj5F2izK8Arim9Clb7HwJzajwpM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ZUBJKgG/; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="MlSVk4dk"
-Received: by smtp.kernel.org (Postfix) with ESMTPS id C1A3AC19425
-	for <platform-driver-x86@vger.kernel.org>; Mon, 20 Apr 2026 20:02:11 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ZUBJKgG/"
+Received: by smtp.kernel.org (Postfix) with ESMTPS id 2B1E3C19425
+	for <platform-driver-x86@vger.kernel.org>; Mon, 20 Apr 2026 20:02:40 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1776715331;
-	bh=BgrJC+wve0KluIaYEUmwKoxlij7b6+rXurVFEbZPCu4=;
+	s=k20201202; t=1776715360;
+	bh=f+5fQMr7lv2HwJBmWGWyh6uOdUiVr16AdA9UDWdJyDk=;
 	h=From:To:Subject:Date:In-Reply-To:References:From;
-	b=MlSVk4dkMSW9OuHlxia59v/K4snyDm9+wQF7UAXX7ONk9aIVE4/lKFrV3dSwJv7TP
-	 F1NERJeVes1SYnQmOMb4JzDQoQQh9yzNEVkPhhhEHjDumNE1WOXSCmjsVnCDrY/g2W
-	 dqMsuAcpDMnJpHmkt2fehvf/A033csi2Hbjp+LS6dm4ijqacwF7KvxredNRiljeCdh
-	 /4WQ4gxbR+EfrFcAx4It+UkeBleRm57+UZLxl32H+aEn9oyt/Mcn3Rrp7WRiUGjxhi
-	 zZloZOCiku4im0y1zyaa6eOs7cbMahlXzDiFEEga64E9COZUdbArKS/Mh6aL94oRnE
-	 S9dZRZmzDt9+Q==
+	b=ZUBJKgG/0I8ICz7uO1YW8TdlI2EWnWbaBXUCLyeBVcQM90G9vvhgABorhJhoSrJU/
+	 /nR7DN4roiADTcWLzVNpn6v7CROOv5qsHj4EdZxVYGCERxTgWTajQWWYIKzPxn5WQi
+	 1448tJPQYlsSnzx9xvDSzyHV0kW8nEHpzCCFLWKik5wMR5pkUhwzfyZ9joWp6XOw57
+	 Ben7suEXLoPxlDEn5rovt5EKw5cpRaHvLggB5JB62q1Es+z9IZliAzgfiZ22bF8i8V
+	 UybkDHqHA2wCB6j8uz1uJS10qkcZhdwFxCPZnqcgRjt1kSr7sRMseDTdRRTMQXMQiZ
+	 puvObxrH8hCrQ==
 Received: by aws-us-west-2-korg-bugzilla-1.web.codeaurora.org (Postfix, from userid 48)
-	id B9E3AC3279F; Mon, 20 Apr 2026 20:02:11 +0000 (UTC)
+	id 23508C433E1; Mon, 20 Apr 2026 20:02:40 +0000 (UTC)
 From: bugzilla-daemon@kernel.org
 To: platform-driver-x86@vger.kernel.org
 Subject: [Bug 221383] ideapad_laptop: Fn hotkeys stop emitting after s2idle
  resume on IdeaPad Slim 3   14ARP10 (Ryzen 7735HS)
-Date: Mon, 20 Apr 2026 20:02:11 +0000
+Date: Mon, 20 Apr 2026 20:02:39 +0000
 X-Bugzilla-Reason: None
 X-Bugzilla-Type: changed
 X-Bugzilla-Watch-Reason: AssignedTo drivers_platform_x86@kernel-bugs.osdl.org
@@ -48,7 +48,7 @@ X-Bugzilla-Priority: P3
 X-Bugzilla-Assigned-To: drivers_platform_x86@kernel-bugs.osdl.org
 X-Bugzilla-Flags: 
 X-Bugzilla-Changed-Fields: attachments.created
-Message-ID: <bug-221383-215701-UYmA7SZYBR@https.bugzilla.kernel.org/>
+Message-ID: <bug-221383-215701-YdkTcoi9cC@https.bugzilla.kernel.org/>
 In-Reply-To: <bug-221383-215701@https.bugzilla.kernel.org/>
 References: <bug-221383-215701@https.bugzilla.kernel.org/>
 Content-Type: text/plain; charset="UTF-8"
@@ -64,10 +64,10 @@ MIME-Version: 1.0
 
 https://bugzilla.kernel.org/show_bug.cgi?id=3D221383
 
---- Comment #7 from sindrehenriksen93@gmail.com ---
-Created attachment 309919
-  --> https://bugzilla.kernel.org/attachment.cgi?id=3D309919&action=3Dedit
-evtest on event2, all 7 modules blacklisted, pre-suspend (working)
+--- Comment #8 from sindrehenriksen93@gmail.com ---
+Created attachment 309920
+  --> https://bugzilla.kernel.org/attachment.cgi?id=3D309920&action=3Dedit
+evtest on event2, all 7 modules blacklisted, post-s2idle resume (broken)
 
 --=20
 You may reply to this email to add a comment.
