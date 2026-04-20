@@ -1,222 +1,627 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.13])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3902235B138;
-	Mon, 20 Apr 2026 14:03:15 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 84F55363C7F;
+	Mon, 20 Apr 2026 14:05:15 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.13
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1776693795; cv=none; b=V2LspLRA7dEzGn7s8USLyIsujF7hp+xj5+fs/Pt3VSXfomO/0W3ePckXEWHG0Np9GvWAyXUrTcDISy/Bedk25QQQnJPusqj4UY/cixIigg40R6k/mHIj4n4sVamam1BD3wfyS3XfTbITyKYTiVp6eHcV0CFDENOf3hmXW4OXuf8=
+	t=1776693918; cv=none; b=HjU2FFJ4YsBDWs8CQ+T2n0l4U03kP9cIGPzNA8SmaT21qRx0l+oXg+5VqkFu3DkNWPFJD8ZlRUQKztF0EY/GxHRVt8M/pkgjWTZOPrw3ozLbLvM3Upb1lPSCPNdUnsPsiNKAVltaqwbmO6e+jE3T3REtlBf5GsCQPmZbcDhMvEs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1776693795; c=relaxed/simple;
-	bh=iLU6N2l2jgd4++DK662JYK8rj+h/DJ1uPLEdbKxpw5k=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=Xs7CczbiHNSLapRyUoYDqCG9xoWmlio+6/1VFVh8MzawMQv+kOlFXw3gquc2jLGKMkgLtGmluA3eTCBdmRERCeOixcQCKJHtS6/Bi98mgiowkLXy+3MR+Sfl761ECHTMh2FB14g4XrTrLjxMDHdxwYi1GUHonh2S1Q0QgOSqxe4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=oy/DQR2e; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1776693918; c=relaxed/simple;
+	bh=ogVDysJcGyORCp9suwoAKZ58MhM1F57CDAmR4aLPhrI=;
+	h=From:To:Cc:Date:Subject:Message-ID:MIME-Version:Content-Type; b=KQyj9Cm7pvV+wrIDT8bCF8gm5zcEir0zHjeWKxht4K4haEQFWDFici4LMPGnSH05+e7N/NUw9U85eGNVrGiLhkj4uESXuNFILlwIXFyXIRU0f8qwNb6mLiET6B7PdvsKXEqGD0RJDAbzO/C01uN85YAAVfBY2daq90jThYNpMx4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=pass smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=BiR/7K4b; arc=none smtp.client-ip=192.198.163.13
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="oy/DQR2e"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 4744EC2BCB4;
-	Mon, 20 Apr 2026 14:03:14 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1776693794;
-	bh=iLU6N2l2jgd4++DK662JYK8rj+h/DJ1uPLEdbKxpw5k=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=oy/DQR2eGcF1Xm7ivYNsn6Afig/B1HtEoJRgttnjk5E09vB+/EONN1LyO3PEbehdc
-	 x0+rYINU2rBuPzw9ufo4O7NEw2erIsvBgv/zLHacLFXbqOl/97KJn5zu0NM0v+D8uq
-	 08tA46P4EiGTNyZb3FaPCohqjO0vHcNZYtoi4Pw21QWMbvZIvNVZMzhlFFiaIUnPxW
-	 sllzf9cyybeTLl03q+Y2vLlHi9wSeNIT9U37KHgEyYz8QDhhAzi6Cqlff4sbugDPbZ
-	 p96FSJA+58xNwb0kN/0UkyIpl+AbHQWjQRxy8CrP1wE4u7zN7/DLFUemuKKnVPdDy5
-	 di75GLz1biRww==
-Message-ID: <a2828a8c-bf46-4018-a8e2-ef9b7808ba90@kernel.org>
-Date: Mon, 20 Apr 2026 09:03:12 -0500
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="BiR/7K4b"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1776693915; x=1808229915;
+  h=from:to:cc:date:subject:message-id:mime-version:
+   content-transfer-encoding;
+  bh=ogVDysJcGyORCp9suwoAKZ58MhM1F57CDAmR4aLPhrI=;
+  b=BiR/7K4bWi1rN+FM1OXKAKG2/jkUhhXHNX326MpSwnwE1SDGNPGEGM1p
+   Pai+Ht5UYsyKHSN21omlYsLB6Pv2kLV+Gkf+KPsM4QrNaDp6YMoJuyWmM
+   lnc4pXbu5NrxA/4f9Wej4lr13CwTANkS/GCPXKGOAaJ0zgM25IXO6cipZ
+   /hscmP/3p0/TSbhkPRqjQS7HJIMa0WDGlqv+uhctVADeVAGvzm3XWb5Nq
+   OsLCl4kJKC4lVTwlzm+goXi6dZakeo0ZMQWyoiNloxbCJjSs7Qbg4OGOP
+   br1RmhQZwTEfWr3qWgFdhA6czsocn6+jzc4Fmd13FQmZI12DwbVVvSO18
+   Q==;
+X-CSE-ConnectionGUID: cV9pQy7JSB+slHnFw5SGXQ==
+X-CSE-MsgGUID: 88VKgJ56RlWmLtOqwHjkAA==
+X-IronPort-AV: E=McAfee;i="6800,10657,11762"; a="80196642"
+X-IronPort-AV: E=Sophos;i="6.23,189,1770624000"; 
+   d="scan'208";a="80196642"
+Received: from orviesa004.jf.intel.com ([10.64.159.144])
+  by fmvoesa107.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 20 Apr 2026 07:05:14 -0700
+X-CSE-ConnectionGUID: 0E2lOTrgRmSwQaVXGliKnA==
+X-CSE-MsgGUID: GhWl4mNDSp+AwP9dTbt4tA==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.23,189,1770624000"; 
+   d="scan'208";a="236104195"
+Received: from ijarvine-mobl1.ger.corp.intel.com (HELO localhost) ([10.245.244.150])
+  by orviesa004-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 20 Apr 2026 07:05:09 -0700
+From: =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
+To: Linus Torvalds <torvalds@linux-foundation.org>
+Cc: LKML <linux-kernel@vger.kernel.org>, PDx86 <platform-driver-x86@vger.kernel.org>, Hans de Goede <hansg@kernel.org>, Andy Shevchenko <andy@kernel.org>
+Date: Mon, 20 Apr 2026 16:58:56 +0300
+Subject: [GIT PULL] platform-drivers-x86 for v7.1-1
+Message-ID: <pdx86-pr-20260420165856-1561211278@linux.intel.com>
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v4] platform/x86: dell-dw5826e: Add reset driver for
- DW5826e
-Content-Language: en-US
-To: Jack Wu <wojackbb@gmail.com>, Hans de Goede <hansg@kernel.org>,
- =?UTF-8?Q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
-Cc: platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
-References: <20260420060029.1754854-1-jackbb_wu@compal.com>
-From: Mario Limonciello <superm1@kernel.org>
-In-Reply-To: <20260420060029.1754854-1-jackbb_wu@compal.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+
+Hi Linus,
+
+Here is the main PDx86 PR for v7.1.
+
+Highlights:
+
+- asus-wmi:
+  - Retain battery charge threshold during boot which avoids unsolicited
+    change to 100%. Return -ENODATA when the limit is not yet known
+  - Improve screenpad power/brightness handling consistency
+  - Fix screenpad brightness range
+
+- barco-p50-gpio: Normalize gpio_get return values
+
+- bitland-mifs-wmi: Add driver for Bitland laptops (supports platform
+                    profile,hwmon, kbd backlight, gpu mode, hotkeys, and
+                    fan boost)
+
+- dell_rbu: Fix using uninitialized value in sysfs write function
+
+- dell-wmi-sysman: Respect destination length when constructing enum
+                   strings
+
+- hp-wmi:
+  - Propagate fan setting apply failures and log an error
+  - Fix sysfs write vs work handler cancel_delayed_work_sync() deadlock
+  - Correct keepalive schedule_delayed_work() to mod_delayed_work()
+  - Fix u8 underflows in GPU delta calculation
+  - Use mutex to protect fan pwm/mode
+  - Ignore kbd backlight and FnLock key events that are handled by FW
+  - Fix fan table parsing (use correct field)
+  - Add support for Omen 14-fb0xxx, 16-n0xxx, 16-wf1xxx, and Omen MAX
+    16-ak0xxxx
+
+- input: trackpoint & thinkpad_acpi: Enable doubletap by default and
+                                     add sysfs enable/disable
+
+- int3472: Add support for GPIO type 0x02 (IR flood LED)
+
+- intel-speed-select: (updated to v1.26)
+  - Avoid using current base frequency as maximum
+  - Fix CPU extended family ID decoding
+  - Fix exit code
+  - Improve error reporting
+
+- intel/vsec: Refactor to support ACPI-enumerated PMT endpoints.
+
+- pcengines-apuv2: Attach software node to the gpiochip
+
+- uniwill:
+  - Refactor hwmon to smaller parts to accomodate HW diversity
+  - Support USB-C power/performance priority switch through sysfs
+  - Add another XMG Fusion 15 (L19) DMI vendor
+  - Enable fine-grained features to device lineup mapping
+
+- wmi: Perform output size check within WMI core to allow simpler WMI
+       drivers
+
+- acpi_driver -> platform driver conversions (a large number of changes
+  from Rafael J. Wysocki)
+
+- Miscellaneous cleanups / refactoring / improvements
+
+Regards, i.
 
 
+The following changes since commit fbddf68d7b4e1e6da7a78dd7fbd8ec376536584a:
 
-On 4/20/26 01:00, Jack Wu wrote:
-> If the DW5826e is in a frozen state and unable to receive USB commands,
-> this driver provides a method for the user to reset the DW5826e via ACPI.
-> 
-> E.g: echo 1 > /sys/bus/platform/devices/PALC0001\:00/wwan_reset
-> 
-> Signed-off-by: Jack Wu <jackbb_wu@compal.com>
-Reviewed-by: Mario Limonciello (AMD) <superm1@kernel.org>
-> ---
-> v4:
->    - Fix version of the ABI documentation to 7.2
->    - Add include linux/types.h
-> v3:
->    - Rename sysfs attribute from "pldr" to "wwan_reset" for clarity
->    - Add ABI documentation for the wwan_reset sysfs interface
->    - Validate _DSM method availability in probe using acpi_check_dsm()
-> v2:
->    - Remove extra empty line
->    - Add missing includes and Remove unnecessary includes, sort includes alphabetically
->    - Remove noisy dev_info()
->    - Handle obj->type != ACPI_TYPE_BUFFER as error with proper return code
->    - Replace miscdevice/file_operations with sysfs attribute (DEVICE_ATTR_WO) to reduce boilerplate
->    - Propagate trigger_palc_pldr() return code to userspace
->    - Convert from acpi_driver to platform_driver
-> ---
-> ---
->   .../testing/sysfs-driver-dell-dw5826e-reset   |  9 ++
->   drivers/platform/x86/dell/Kconfig             |  6 ++
->   drivers/platform/x86/dell/Makefile            |  2 +
->   .../platform/x86/dell/dell-dw5826e-reset.c    | 90 +++++++++++++++++++
->   4 files changed, 107 insertions(+)
->   create mode 100644 Documentation/ABI/testing/sysfs-driver-dell-dw5826e-reset
->   create mode 100644 drivers/platform/x86/dell/dell-dw5826e-reset.c
-> 
-> diff --git a/Documentation/ABI/testing/sysfs-driver-dell-dw5826e-reset b/Documentation/ABI/testing/sysfs-driver-dell-dw5826e-reset
-> new file mode 100644
-> index 000000000000..a665e265633f
-> --- /dev/null
-> +++ b/Documentation/ABI/testing/sysfs-driver-dell-dw5826e-reset
-> @@ -0,0 +1,9 @@
-> +What:		/sys/bus/platform/devices/<PALC0001 device>/wwan_reset
-> +Date:		April 2026
-> +KernelVersion:	7.2
-> +Contact:	Jackbb Wu <jackbb.wu@compal.com>
-> +Description:
-> +		Writing to this file triggers a Platform Level Device Reset
-> +		(PLDR) of the Dell DW5826e WWAN module via an ACPI _DSM
-> +		method. This can be used to recover the modem when it is in
-> +		a frozen state and unable to respond to USB commands.
-> diff --git a/drivers/platform/x86/dell/Kconfig b/drivers/platform/x86/dell/Kconfig
-> index 738c108c2163..c4540c837a88 100644
-> --- a/drivers/platform/x86/dell/Kconfig
-> +++ b/drivers/platform/x86/dell/Kconfig
-> @@ -276,4 +276,10 @@ config DELL_WMI_SYSMAN
->   	  To compile this driver as a module, choose M here: the module will
->   	  be called dell-wmi-sysman.
->   
-> +config DELL_DW5826E_RESET
-> +	tristate "Dell DW5826e PLDR reset support"
-> +	default m
-> +	depends on ACPI
-> +	help
-> +	  This adds support for the Dell DW5826e PLDR reset via ACPI
->   endif # X86_PLATFORM_DRIVERS_DELL
-> diff --git a/drivers/platform/x86/dell/Makefile b/drivers/platform/x86/dell/Makefile
-> index c7501c25e627..8150283cfd1d 100644
-> --- a/drivers/platform/x86/dell/Makefile
-> +++ b/drivers/platform/x86/dell/Makefile
-> @@ -28,3 +28,5 @@ obj-$(CONFIG_DELL_WMI_DESCRIPTOR)		+= dell-wmi-descriptor.o
->   obj-$(CONFIG_DELL_WMI_DDV)			+= dell-wmi-ddv.o
->   obj-$(CONFIG_DELL_WMI_LED)			+= dell-wmi-led.o
->   obj-$(CONFIG_DELL_WMI_SYSMAN)			+= dell-wmi-sysman/
-> +obj-$(CONFIG_DELL_DW5826E_RESET)		+= dell-dw5826e-reset.o
-> +
-> diff --git a/drivers/platform/x86/dell/dell-dw5826e-reset.c b/drivers/platform/x86/dell/dell-dw5826e-reset.c
-> new file mode 100644
-> index 000000000000..4e0d64535abb
-> --- /dev/null
-> +++ b/drivers/platform/x86/dell/dell-dw5826e-reset.c
-> @@ -0,0 +1,90 @@
-> +// SPDX-License-Identifier: GPL-2.0-or-later
-> +/*
-> + *  dell-dw5826e-reset.c - Dell DW5826e reset driver
-> + *
-> + *  Copyright (C) 2026 Jackbb Wu <jackbb.wu@compal.com>
-> + */
-> +
-> +#include <linux/acpi.h>
-> +#include <linux/device.h>
-> +#include <linux/module.h>
-> +#include <linux/platform_device.h>
-> +#include <linux/types.h>
-> +#include <linux/uuid.h>
-> +
-> +static guid_t palc_dsm_guid =
-> +	GUID_INIT(0x5a1a4bba, 0x8006, 0x487e, 0xbe, 0x0a, 0xac, 0xf5, 0xd8, 0xfd, 0xfe, 0x59);
-> +
-> +static int trigger_palc_pldr(struct device *dev, acpi_handle handle)
-> +{
-> +	union acpi_object *obj;
-> +	int ret = 0;
-> +
-> +	obj = acpi_evaluate_dsm(handle, &palc_dsm_guid, 1, 1, NULL);
-> +	if (!obj) {
-> +		dev_err(dev, "Failed to evaluate _DSM\n");
-> +		return -EIO;
-> +	}
-> +
-> +	if (obj->type != ACPI_TYPE_BUFFER) {
-> +		dev_err(dev, "Unexpected _DSM return type: %d\n", obj->type);
-> +		ret = -EINVAL;
-> +	}
-> +
-> +	ACPI_FREE(obj);
-> +	return ret;
-> +}
-> +
-> +static ssize_t wwan_reset_store(struct device *dev, struct device_attribute *attr,
-> +				const char *buf, size_t count)
-> +{
-> +	acpi_handle handle = ACPI_HANDLE(dev);
-> +	int ret;
-> +
-> +	ret = trigger_palc_pldr(dev, handle);
-> +	if (ret)
-> +		return ret;
-> +
-> +	return count;
-> +}
-> +static DEVICE_ATTR_WO(wwan_reset);
-> +
-> +static struct attribute *palc_attrs[] = {
-> +	&dev_attr_wwan_reset.attr,
-> +	NULL
-> +};
-> +ATTRIBUTE_GROUPS(palc);
-> +
-> +static int palc_probe(struct platform_device *pdev)
-> +{
-> +	acpi_handle handle;
-> +
-> +	handle = ACPI_HANDLE(&pdev->dev);
-> +	if (!handle)
-> +		return -ENODEV;
-> +
-> +	if (!acpi_check_dsm(handle, &palc_dsm_guid, 1, BIT(1)))
-> +		return -ENODEV;
-> +
-> +	return 0;
-> +}
-> +
-> +static const struct acpi_device_id palc_acpi_ids[] = {
-> +	{ "PALC0001", 0 },
-> +	{ }
-> +};
-> +MODULE_DEVICE_TABLE(acpi, palc_acpi_ids);
-> +
-> +static struct platform_driver palc_driver = {
-> +	.driver = {
-> +		.name = "dell-dw5826e-reset",
-> +		.acpi_match_table = palc_acpi_ids,
-> +		.dev_groups = palc_groups,
-> +	},
-> +	.probe  = palc_probe,
-> +};
-> +module_platform_driver(palc_driver);
-> +
-> +MODULE_DESCRIPTION("Dell DW5826e reset driver");
-> +MODULE_LICENSE("GPL");
-> +MODULE_AUTHOR("JackBB Wu");
+  platform/x86: ISST: Correct locked bit width (2026-03-24 12:31:10 +0200)
 
+are available in the Git repository at:
+
+  https://git.kernel.org/pub/scm/linux/kernel/git/pdx86/platform-drivers-x86.git tags/platform-drivers-x86-v7.1-1
+
+for you to fetch changes up to 344bf523d441d44c75c429ea6cdcfa8f12efde4d:
+
+  platform/x86: hp-wmi: Add support for Omen 16-wf1xxx (8C77) (2026-04-14 19:00:18 +0300)
+
+----------------------------------------------------------------
+platform-drivers-x86 for v7.1-1
+
+Highlights:
+
+- asus-wmi:
+  - Retain battery charge threshold during boot which avoids unsolicited
+    change to 100%. Return -ENODATA when the limit is not yet known
+  - Improve screenpad power/brightness handling consistency
+  - Fix screenpad brightness range
+
+- barco-p50-gpio: Normalize gpio_get return values
+
+- bitland-mifs-wmi: Add driver for Bitland laptops (supports platform
+                    profile,hwmon, kbd backlight, gpu mode, hotkeys, and
+                    fan boost)
+
+- dell_rbu: Fix using uninitialized value in sysfs write function
+
+- dell-wmi-sysman: Respect destination length when constructing enum
+                   strings
+
+- hp-wmi:
+  - Propagate fan setting apply failures and log an error
+  - Fix sysfs write vs work handler cancel_delayed_work_sync() deadlock
+  - Correct keepalive schedule_delayed_work() to mod_delayed_work()
+  - Fix u8 underflows in GPU delta calculation
+  - Use mutex to protect fan pwm/mode
+  - Ignore kbd backlight and FnLock key events that are handled by FW
+  - Fix fan table parsing (use correct field)
+  - Add support for Omen 14-fb0xxx, 16-n0xxx, 16-wf1xxx, and Omen MAX
+    16-ak0xxxx
+
+- input: trackpoint & thinkpad_acpi: Enable doubletap by default and
+                                     add sysfs enable/disable
+
+- int3472: Add support for GPIO type 0x02 (IR flood LED)
+
+- intel-speed-select: (updated to v1.26)
+  - Avoid using current base frequency as maximum
+  - Fix CPU extended family ID decoding
+  - Fix exit code
+  - Improve error reporting
+
+- intel/vsec: Refactor to support ACPI-enumerated PMT endpoints.
+
+- pcengines-apuv2: Attach software node to the gpiochip
+
+- uniwill:
+  - Refactor hwmon to smaller parts to accomodate HW diversity
+  - Support USB-C power/performance priority switch through sysfs
+  - Add another XMG Fusion 15 (L19) DMI vendor
+  - Enable fine-grained features to device lineup mapping
+
+- wmi: Perform output size check within WMI core to allow simpler WMI
+       drivers
+
+- acpi_driver -> platform driver conversions (a large number of changes
+  from Rafael J. Wysocki)
+
+- Miscellaneous cleanups / refactoring / improvements
+
+The following is an automated shortlog grouped by driver:
+
+acer-wireless:
+ -  Convert ACPI driver to a platform one
+ -  Register ACPI notify handler directly
+
+asus-laptop:
+ -  Convert ACPI driver to a platform one
+ -  Register ACPI notify handler directly
+
+asus-wireless:
+ -  Convert ACPI driver to a platform one
+ -  Register ACPI notify handler directly
+
+asus-wmi:
+ -  adjust screenpad power/brightness handling
+ -  do not enforce a battery charge threshold
+ -  fix screenpad brightness range
+
+barco-p50-gpio:
+ -  convert to guard() notation
+ -  normalize return value of gpio_get
+
+bitland-mifs-wmi:
+ -  Add new Bitland MIFS WMI driver
+
+dell/dell-rbtn:
+ -  Convert ACPI driver to a platform one
+ -  Register ACPI notify handler directly
+
+dell_rbu:
+ -  avoid uninit value usage in packet_size_write()
+
+dell-wmi-sysman:
+ -  bound enumeration string aggregation
+ -  Clean up security buffer helpers
+ -  Fix typo in function comment
+ -  Use standard kobj_sysfs_ops
+ -  Use sysfs_emit{_at} in show functions
+
+Documentation: laptops:
+ -  Update documentation for uniwill laptops
+
+Documentation:
+ -  thinkpad-acpi - Document doubletap_enable attribute
+
+eeepc-laptop:
+ -  Convert ACPI driver to a platform one
+ -  Register ACPI notify handler directly
+
+fujitsu:
+ -  Convert backlight driver to a platform one
+ -  Convert laptop driver to a platform one
+ -  Register ACPI notify handlers directly
+ -  Reorder code to avoid forward declarations
+
+fujitsu-tablet:
+ -  Convert ACPI driver to a platform one
+
+hp-wmi:
+ -  add locking for concurrent hwmon access
+ -  add Omen 14-fb0xxx (board 8C58) support
+ -  Add support for Omen 16-n0xxx (8A44)
+ -  Add support for Omen 16-wf1xxx (8C77)
+ -  Add support for OMEN MAX 16-ak0xxx (8D87)
+ -  avoid cancel_delayed_work_sync from work handler
+ -  fix fan table parsing
+ -  fix ignored return values in fan settings
+ -  fix u8 underflow in gpu_delta calculation
+ -  Ignore backlight and FnLock events
+ -  use mod_delayed_work to reset keep-alive timer
+
+input:
+ -  trackpoint - Enable doubletap by default on capable devices
+
+int3472:
+ -  Add support for GPIO type 0x02 (IR flood LED)
+ -  Parameterize LED con_id in registration
+ -  Rename pled to led in LED registration code
+ -  Use local variable for LED struct access
+
+intel/rst:
+ -  Convert ACPI driver to a platform one
+
+intel/smartconnect:
+ -  Convert ACPI driver to a platform one
+
+intel/tpmi:
+ -  Use 32 bit aligned address for debugfs mem write
+
+intel/vsec:
+ -  Decouple add/link helpers from PCI
+ -  Make driver_data info const
+ -  Plumb ACPI PMT discovery tables through vsec
+ -  Refactor base_addr handling
+ -  Return real error codes from registration path
+ -  Switch exported helpers from pci_dev to device
+
+lg-laptop:
+ -  Convert ACPI driver to a platform one
+ -  Drop debug-only ACPI notify handler
+
+nvsw-sn2201:
+ -  Drop unused include
+
+panasonic-laptop:
+ -  Convert ACPI driver to a platform one
+ -  Fix OPTD notifier registration and cleanup
+ -  Make pcc_register_optd_notifier() void
+ -  Register ACPI notify handler directly
+ -  Remove redundant checks from 3 functions
+
+pcengines-apuv2:
+ -  attach software node to the gpiochip
+
+sony-laptop:
+ -  Convert NC driver to a platform one
+ -  Convert PIC driver to a platform one
+ -  Register ACPI notify handler directly
+
+surface: hotplug:
+ -  Correct inclusion for GPIO APIs
+
+surface: surfacepro3_button:
+ -  Convert to a platform driver
+ -  Drop wakeup source on remove
+ -  Register ACPI notify handler
+
+system76:
+ -  Convert ACPI driver to a platform one
+ -  Drop redundant devm_led_classdev_unregister()
+ -  Register ACPI notify handler directly
+
+thinkpad_acpi:
+ -  Add sysfs control for TrackPoint double-tap
+ -  Drop ACPI driver registration
+ -  remove obsolete TODO comment
+ -  use seq_puts() instead of seq_printf()
+
+tools/power/x86/intel-speed-select:
+ -  Avoid current base freq as maximum
+ -  Fix cpu extended family ID decoding
+ -  Fix output when running on unsupported CLX platforms
+ -  Fix some program return value
+ -  Print Version info when Incompatible API version is detected
+ -  v1.26 release
+
+topstar-laptop:
+ -  Convert ACPI driver to a platform one
+ -  Register ACPI notify handler directly
+
+toshiba_acpi:
+ -  Convert ACPI driver to a platform one
+ -  Register ACPI notify handler directly
+ -  Reorder code to avoid forward declaration
+
+toshiba_bluetooth:
+ -  Convert ACPI driver to a platform one
+ -  Register ACPI notify handler directly
+
+toshiba_haps:
+ -  Convert ACPI driver to a platform one
+ -  Register ACPI notify handler directly
+
+uniwill-laptop:
+ -  Apply features across all TUXEDO devices
+ -  Fix signedness bug
+ -  Fix XMG Fusion 15 (L19) entries
+ -  Implement USB-C power priority setting
+ -  Rework hwmon feature defines
+
+wireless-hotkey:
+ -  Convert ACPI driver to a platform one
+ -  Register ACPI notify handler directly
+
+wmi:
+ -  Add wmidev_invoke_procedure()
+ -  Convert drivers to use wmidev_invoke_procedure()
+ -  Extend wmidev_invoke_method() to reject undersized data
+ -  Extend wmidev_query_block() to reject undersized data
+ -  Prepare to reject undersized unmarshalling results
+ -  Replace .no_notify_data with .min_event_size
+
+x86:
+ -  remove unnecessary module_init/exit() functions
+
+Merges:
+ -  Merge branch 'intel-sst' of https://github.com/spandruvada/linux-kernel into review-ilpo-next
+ -  Merge tag 'fixes' into 'for-next'
+
+----------------------------------------------------------------
+Andy Shevchenko (2):
+      platform/surface: hotplug: Correct inclusion for GPIO APIs
+      platform/mellanox: nvsw-sn2201: Drop unused include
+
+Armin Wolf (7):
+      platform/x86: uniwill-laptop: Rework hwmon feature defines
+      platform/wmi: Add wmidev_invoke_procedure()
+      platform/wmi: Convert drivers to use wmidev_invoke_procedure()
+      platform/wmi: Prepare to reject undersized unmarshalling results
+      platform/wmi: Extend wmidev_invoke_method() to reject undersized data
+      platform/wmi: Extend wmidev_query_block() to reject undersized data
+      platform/wmi: Replace .no_notify_data with .min_event_size
+
+Coby McKinney (1):
+      platform/x86: thinkpad_acpi: use seq_puts() instead of seq_printf()
+
+Daniil Bulgar (1):
+      platform/x86: thinkpad_acpi: remove obsolete TODO comment
+
+David E. Box (6):
+      platform/x86/intel/vsec: Refactor base_addr handling
+      platform/x86/intel/vsec: Make driver_data info const
+      platform/x86/intel/vsec: Decouple add/link helpers from PCI
+      platform/x86/intel/vsec: Switch exported helpers from pci_dev to device
+      platform/x86/intel/vsec: Return real error codes from registration path
+      platform/x86/intel/vsec: Plumb ACPI PMT discovery tables through vsec
+
+Denis Benato (3):
+      platform/x86: asus-wmi: do not enforce a battery charge threshold
+      platform/x86: asus-wmi: adjust screenpad power/brightness handling
+      platform/x86: asus-wmi: fix screenpad brightness range
+
+Dmitry Torokhov (3):
+      platform/x86: pcengines-apuv2: attach software node to the gpiochip
+      platform/x86: barco-p50-gpio: normalize return value of gpio_get
+      platform/x86: barco-p50-gpio: convert to guard() notation
+
+Emre Cecanpunar (5):
+      platform/x86: hp-wmi: fix ignored return values in fan settings
+      platform/x86: hp-wmi: avoid cancel_delayed_work_sync from work handler
+      platform/x86: hp-wmi: use mod_delayed_work to reset keep-alive timer
+      platform/x86: hp-wmi: fix u8 underflow in gpu_delta calculation
+      platform/x86: hp-wmi: add locking for concurrent hwmon access
+
+Ethan Nelson-Moore (1):
+      platform: x86: remove unnecessary module_init/exit() functions
+
+Ethan Tidmore (1):
+      platform/x86: uniwill-laptop: Fix signedness bug
+
+Fedor Pchelkin (1):
+      platform/x86: dell_rbu: avoid uninit value usage in packet_size_write()
+
+Ilpo Järvinen (2):
+      Merge tag 'fixes' into 'for-next'
+      Merge branch 'intel-sst' of https://github.com/spandruvada/linux-kernel into review-ilpo-next
+
+Krishna Chomal (5):
+      platform/x86: hp-wmi: Ignore backlight and FnLock events
+      platform/x86: hp-wmi: fix fan table parsing
+      platform/x86: hp-wmi: Add support for OMEN MAX 16-ak0xxx (8D87)
+      platform/x86: hp-wmi: Add support for Omen 16-n0xxx (8A44)
+      platform/x86: hp-wmi: Add support for Omen 16-wf1xxx (8C77)
+
+Marco Nenciarini (4):
+      platform/x86: int3472: Use local variable for LED struct access
+      platform/x86: int3472: Rename pled to led in LED registration code
+      platform/x86: int3472: Parameterize LED con_id in registration
+      platform/x86: int3472: Add support for GPIO type 0x02 (IR flood LED)
+
+Mingyou Chen (1):
+      platform/x86: bitland-mifs-wmi: Add new Bitland MIFS WMI driver
+
+Pengpeng Hou (1):
+      platform/x86: dell-wmi-sysman: bound enumeration string aggregation
+
+Rafael J. Wysocki (45):
+      platform/x86: acer-wireless: Register ACPI notify handler directly
+      platform/x86: acer-wireless: Convert ACPI driver to a platform one
+      platform/x86: eeepc-laptop: Register ACPI notify handler directly
+      platform/x86: eeepc-laptop: Convert ACPI driver to a platform one
+      platform/x86: intel/rst: Convert ACPI driver to a platform one
+      platform/x86: intel/smartconnect: Convert ACPI driver to a platform one
+      platform/surface: surfacepro3_button: Drop wakeup source on remove
+      platform/surface: surfacepro3_button: Register ACPI notify handler
+      platform/surface: surfacepro3_button: Convert to a platform driver
+      platform/x86: lg-laptop: Drop debug-only ACPI notify handler
+      platform/x86: lg-laptop: Convert ACPI driver to a platform one
+      platform/x86: sony-laptop: Register ACPI notify handler directly
+      platform/x86: sony-laptop: Convert NC driver to a platform one
+      platform/x86: sony-laptop: Convert PIC driver to a platform one
+      platform/x86: topstar-laptop: Register ACPI notify handler directly
+      platform/x86: topstar-laptop: Convert ACPI driver to a platform one
+      platform/x86: wireless-hotkey: Register ACPI notify handler directly
+      platform/x86: wireless-hotkey: Convert ACPI driver to a platform one
+      platform/x86: fujitsu-tablet: Convert ACPI driver to a platform one
+      platform/x86: fujitsu: Reorder code to avoid forward declarations
+      platform/x86: fujitsu: Register ACPI notify handlers directly
+      platform/x86: fujitsu: Convert backlight driver to a platform one
+      platform/x86: fujitsu: Convert laptop driver to a platform one
+      platform/x86: panasonic-laptop: Make pcc_register_optd_notifier() void
+      platform/x86: panasonic-laptop: Fix OPTD notifier registration and cleanup
+      platform/x86: panasonic-laptop: Remove redundant checks from 3 functions
+      platform/x86: panasonic-laptop: Register ACPI notify handler directly
+      platform/x86: panasonic-laptop: Convert ACPI driver to a platform one
+      platform/x86: system76: Drop redundant devm_led_classdev_unregister()
+      platform/x86: system76: Register ACPI notify handler directly
+      platform/x86: system76: Convert ACPI driver to a platform one
+      platform/x86: dell/dell-rbtn: Register ACPI notify handler directly
+      platform/x86: dell/dell-rbtn: Convert ACPI driver to a platform one
+      platform/x86: toshiba_acpi: Reorder code to avoid forward declaration
+      platform/x86: toshiba_acpi: Register ACPI notify handler directly
+      platform/x86: toshiba_acpi: Convert ACPI driver to a platform one
+      platform/x86: toshiba_bluetooth: Register ACPI notify handler directly
+      platform/x86: toshiba_bluetooth: Convert ACPI driver to a platform one
+      platform/x86: toshiba_haps: Register ACPI notify handler directly
+      platform/x86: toshiba_haps: Convert ACPI driver to a platform one
+      platform/x86: asus-laptop: Register ACPI notify handler directly
+      platform/x86: asus-laptop: Convert ACPI driver to a platform one
+      platform/x86: asus-wireless: Register ACPI notify handler directly
+      platform/x86: asus-wireless: Convert ACPI driver to a platform one
+      platform/x86: thinkpad_acpi: Drop ACPI driver registration
+
+Shaun Varghese (1):
+      platform/x86: hp-wmi: add Omen 14-fb0xxx (board 8C58) support
+
+Srinivas Pandruvada (3):
+      platform/x86/intel/tpmi: Use 32 bit aligned address for debugfs mem write
+      tools/power/x86/intel-speed-select: Avoid current base freq as maximum
+      tools/power/x86/intel-speed-select: v1.26 release
+
+Thomas Weißschuh (1):
+      platform/x86: dell-wmi-sysman: Use standard kobj_sysfs_ops
+
+Thorsten Blum (3):
+      platform/x86: dell-wmi-sysman: Use sysfs_emit{_at} in show functions
+      platform/x86: dell-wmi-sysman: Clean up security buffer helpers
+      platform/x86: dell-wmi-sysman: Fix typo in function comment
+
+Vishnu Sankar (3):
+      input: trackpoint - Enable doubletap by default on capable devices
+      platform/x86: thinkpad_acpi: Add sysfs control for TrackPoint double-tap
+      Documentation: thinkpad-acpi - Document doubletap_enable attribute
+
+Werner Sembach (4):
+      platform/x86: uniwill-laptop: Implement USB-C power priority setting
+      platform/x86: uniwill-laptop: Fix XMG Fusion 15 (L19) entries
+      platform/x86: uniwill-laptop: Apply features across all TUXEDO devices
+      Documentation: laptops: Update documentation for uniwill laptops
+
+Zhang Rui (4):
+      tools/power/x86/intel-speed-select: Fix cpu extended family ID decoding
+      tools/power/x86/intel-speed-select: Fix some program return value
+      tools/power/x86/intel-speed-select: Print Version info when Incompatible API version is detected
+      tools/power/x86/intel-speed-select: Fix output when running on unsupported CLX platforms
+
+ .../ABI/testing/sysfs-driver-uniwill-laptop        |  27 +
+ .../admin-guide/laptops/thinkpad-acpi.rst          |  21 +
+ .../admin-guide/laptops/uniwill-laptop.rst         |  12 +
+ Documentation/wmi/devices/bitland-mifs-wmi.rst     | 207 +++++
+ Documentation/wmi/driver-development-guide.rst     |  11 +-
+ drivers/gpu/drm/xe/xe_debugfs.c                    |   2 +-
+ drivers/gpu/drm/xe/xe_hwmon.c                      |   2 +-
+ drivers/gpu/drm/xe/xe_vsec.c                       |   7 +-
+ drivers/gpu/drm/xe/xe_vsec.h                       |   4 +-
+ drivers/input/mouse/trackpoint.c                   |  46 ++
+ drivers/input/mouse/trackpoint.h                   |   5 +
+ drivers/platform/mellanox/nvsw-sn2201.c            |   1 -
+ drivers/platform/surface/surface_hotplug.c         |   2 +-
+ drivers/platform/surface/surfacepro3_button.c      |  71 +-
+ drivers/platform/wmi/core.c                        |  89 ++-
+ drivers/platform/wmi/internal.h                    |   3 +-
+ drivers/platform/wmi/marshalling.c                 |   6 +-
+ drivers/platform/wmi/tests/marshalling_kunit.c     |  24 +-
+ drivers/platform/x86/Kconfig                       |  18 +
+ drivers/platform/x86/Makefile                      |   1 +
+ drivers/platform/x86/acer-wireless.c               |  48 +-
+ drivers/platform/x86/asus-laptop.c                 |  44 +-
+ drivers/platform/x86/asus-wireless.c               |  55 +-
+ drivers/platform/x86/asus-wmi.c                    |  77 +-
+ drivers/platform/x86/barco-p50-gpio.c              |  23 +-
+ drivers/platform/x86/bitland-mifs-wmi.c            | 837 +++++++++++++++++++++
+ drivers/platform/x86/dell/dell-rbtn.c              | 142 ++--
+ drivers/platform/x86/dell/dell-wmi-base.c          |   1 +
+ .../x86/dell/dell-wmi-sysman/dell-wmi-sysman.h     |   4 +-
+ .../x86/dell/dell-wmi-sysman/enum-attributes.c     |  34 +-
+ drivers/platform/x86/dell/dell-wmi-sysman/sysman.c |  68 +-
+ drivers/platform/x86/dell/dell_rbu.c               |   6 +-
+ drivers/platform/x86/eeepc-laptop.c                |  45 +-
+ drivers/platform/x86/fujitsu-laptop.c              | 489 ++++++------
+ drivers/platform/x86/fujitsu-tablet.c              |  30 +-
+ drivers/platform/x86/hp/hp-wmi.c                   | 125 ++-
+ drivers/platform/x86/intel/int3472/discrete.c      |  13 +-
+ drivers/platform/x86/intel/int3472/led.c           |  55 +-
+ drivers/platform/x86/intel/pmc/core.c              |   4 +-
+ drivers/platform/x86/intel/pmc/ssram_telemetry.c   |   2 +-
+ drivers/platform/x86/intel/pmt/class.c             |   8 +-
+ drivers/platform/x86/intel/pmt/class.h             |   5 +-
+ drivers/platform/x86/intel/pmt/discovery.c         |   4 +-
+ drivers/platform/x86/intel/pmt/telemetry.c         |  13 +-
+ drivers/platform/x86/intel/pmt/telemetry.h         |  12 +-
+ drivers/platform/x86/intel/rst.c                   |  23 +-
+ drivers/platform/x86/intel/sdsi.c                  |   5 +-
+ drivers/platform/x86/intel/smartconnect.c          |  23 +-
+ drivers/platform/x86/intel/vsec.c                  | 121 +--
+ drivers/platform/x86/intel/vsec_tpmi.c             |  12 +-
+ drivers/platform/x86/intel/wmi/sbl-fw-update.c     |   7 +-
+ drivers/platform/x86/intel/wmi/thunderbolt.c       |   2 +-
+ drivers/platform/x86/lenovo/ideapad-laptop.c       |   1 +
+ drivers/platform/x86/lenovo/thinkpad_acpi.c        | 193 ++---
+ drivers/platform/x86/lenovo/wmi-camera.c           |   1 +
+ drivers/platform/x86/lenovo/wmi-events.c           |   1 +
+ drivers/platform/x86/lenovo/ymc.c                  |   1 +
+ drivers/platform/x86/lenovo/yogabook.c             |   2 +-
+ drivers/platform/x86/lg-laptop.c                   |  51 +-
+ drivers/platform/x86/mxm-wmi.c                     |  12 -
+ drivers/platform/x86/panasonic-laptop.c            |  79 +-
+ drivers/platform/x86/pcengines-apuv2.c             |   3 +-
+ drivers/platform/x86/redmi-wmi.c                   |   1 +
+ drivers/platform/x86/sony-laptop.c                 | 122 +--
+ drivers/platform/x86/system76_acpi.c               |  63 +-
+ drivers/platform/x86/topstar-laptop.c              |  43 +-
+ drivers/platform/x86/toshiba_acpi.c                | 182 +++--
+ drivers/platform/x86/toshiba_bluetooth.c           |  74 +-
+ drivers/platform/x86/toshiba_haps.c                |  57 +-
+ drivers/platform/x86/uniwill/uniwill-acpi.c        | 440 +++++++++--
+ drivers/platform/x86/uniwill/uniwill-wmi.c         |   1 +
+ drivers/platform/x86/wireless-hotkey.c             |  49 +-
+ drivers/platform/x86/wmi-bmof.c                    |   2 +-
+ drivers/platform/x86/xiaomi-wmi.c                  |   1 +
+ include/linux/intel_vsec.h                         |  39 +-
+ include/linux/platform_data/x86/int3472.h          |  12 +-
+ include/linux/wmi.h                                |  15 +-
+ tools/power/x86/intel-speed-select/isst-config.c   |  41 +-
+ 78 files changed, 3073 insertions(+), 1309 deletions(-)
+ create mode 100644 Documentation/wmi/devices/bitland-mifs-wmi.rst
+ create mode 100644 drivers/platform/x86/bitland-mifs-wmi.c
