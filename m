@@ -1,165 +1,102 @@
-Received: from mout01.posteo.de (mout01.posteo.de [185.67.36.65])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-vk1-f174.google.com (mail-vk1-f174.google.com [209.85.221.174])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B6992329C6D
-	for <platform-driver-x86@vger.kernel.org>; Mon, 20 Apr 2026 15:55:46 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.67.36.65
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D3F99351C2B
+	for <platform-driver-x86@vger.kernel.org>; Mon, 20 Apr 2026 16:30:03 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.174
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1776700548; cv=none; b=q/vkxB54IgFYX3SRyj4VazXGlWMFeAtex65rL+qmr8QtaRCILL/9YBQs0wjpLx66927bNvqE98QY5Nbiacf0QuMFP6o8/p3E4spE6mxA/67QArTMLThM1Dv4LVHLIq7ty7wKvZkmj9HUVs9PjPcfJTs8QmpzcbbEYGPNrYoh7u8=
+	t=1776702605; cv=none; b=tqG4QmHsXYIhQdlQMr/1Ld3WefNMAsRJBNpk1mLDqrEUDUFXJmpFA79YP6gQP/7D3L3QjFgqeDhpnGYFez2PI8Migv01LeJLXSyJ5T1FVfQYL0Iy8BQLOG6vRvYa48gFmamOpcKbA24dB2Kdfr/HYQ8zuuPpzwkLIFI/DVcYKrM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1776700548; c=relaxed/simple;
-	bh=WyFDoQ/U03VgXLs/qMbc1sIihqv8/JBMF0eKXw5g2zM=;
-	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=eNKzXxk3iAvvqbDPihBu9OQvVrEcEKN+4ACbHqaBx77zjzx9t+XAwH89GRcDUGOMn2btqV3183QCTzpAS/EDDbjTcjBXaJDK31WWLUqSUcLBXay1R/ZR0Im5mTV93W/MKY597uIfErH+9q/vSZ+EvafoqQtPmMspz1+QHjVShWY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=posteo.de; spf=pass smtp.mailfrom=posteo.de; dkim=pass (2048-bit key) header.d=posteo.de header.i=@posteo.de header.b=ldEWWNFX; arc=none smtp.client-ip=185.67.36.65
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=posteo.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=posteo.de
+	s=arc-20240116; t=1776702605; c=relaxed/simple;
+	bh=1FZNMMWn2mfuFQRKV39o9u06Bb7L6kVeqBozxU34kcU=;
+	h=Mime-Version:Content-Type:Date:Message-Id:Cc:Subject:From:To:
+	 References:In-Reply-To; b=a1zGVwBku+4geQ9+HcOuQB0/lTxHZ26gPFUqc5MWnI189W9KFHtcGvDtSo59M/bvCagLckEAEybJrEM4ori1C8DNFgRNd/H13Bmrn1Xz6WltONmhJfSBRjCAjoOTvYnNKFiErANDfxkAoUytdBBQNHlZ/zNaVscaL2waG598E3g=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=OTLkmtMG; arc=none smtp.client-ip=209.85.221.174
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=posteo.de header.i=@posteo.de header.b="ldEWWNFX"
-Received: from submission (posteo.de [185.67.36.169]) 
-	by mout01.posteo.de (Postfix) with ESMTPS id 91DFB240028
-	for <platform-driver-x86@vger.kernel.org>; Mon, 20 Apr 2026 17:55:44 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=posteo.de; s=2017;
-	t=1776700544; bh=WyFDoQ/U03VgXLs/qMbc1sIihqv8/JBMF0eKXw5g2zM=;
-	h=Message-ID:Subject:From:To:Cc:Date:Autocrypt:Content-Type:
-	 MIME-Version:OpenPGP:From;
-	b=ldEWWNFXybKduwRTUwVDkoi9u/uGCB039TSXlztPCltNIafOv/ntnKOph6fi5SGgI
-	 eZ+ieQGalMxpa1Qxe7euOQikixVHVqWyMSXExuYrc29xvTJBpzHPZpp1AgNMzXsUAO
-	 YihkwPfVNY5G9zXw/4k1eQxzzzplrLgPM8JrgHah/2/oL9FsSZKFwY21yTuWoE1LzZ
-	 3MKJp2U75wp9EC8HEroKhqgEf9hD0BL1DRN9a9ZIfGSgebrwbpNPNrMN1Wh+vGlyIX
-	 +z6AakB+pjf/CZYQ3Ek4yNB/ZpbPl03grhdf/1jKd6yIgDl5wep3S5a5qRzhyeP3OI
-	 shPreXDzi6eEQ==
-Received: from customer (localhost [127.0.0.1])
-	by submission (posteo.de) with ESMTPSA id 4fzqp53mdkz6trs;
-	Mon, 20 Apr 2026 17:55:41 +0200 (CEST)
-Message-ID: <7ff5410e6526cde6049140bef3d704a5bc09f26b.camel@posteo.de>
-Subject: Re: [PATCH v8 0/2] Introduce Synology Microp driver
-From: Markus Probst <markus.probst@posteo.de>
-To: Hans de Goede <hansg@kernel.org>, Ilpo =?ISO-8859-1?Q?J=E4rvinen?=	
- <ilpo.jarvinen@linux.intel.com>, Bryan O'Donoghue
- <bryan.odonoghue@linaro.org>,  Lee Jones <lee@kernel.org>, Pavel Machek
- <pavel@kernel.org>, Miguel Ojeda <ojeda@kernel.org>, Boqun Feng
- <boqun@kernel.org>, Gary Guo <gary@garyguo.net>, =?ISO-8859-1?Q?Bj=F6rn?=
- Roy Baron	 <bjorn3_gh@protonmail.com>, Benno Lossin <lossin@kernel.org>,
- Andreas Hindborg	 <a.hindborg@kernel.org>, Alice Ryhl
- <aliceryhl@google.com>, Trevor Gross	 <tmgross@umich.edu>, Danilo Krummrich
- <dakr@kernel.org>, Rob Herring	 <robh@kernel.org>, Krzysztof Kozlowski
- <krzk+dt@kernel.org>, Conor Dooley	 <conor+dt@kernel.org>, Greg
- Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc: platform-driver-x86@vger.kernel.org, linux-leds@vger.kernel.org, 
-	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	rust-for-linux@vger.kernel.org
-Date: Mon, 20 Apr 2026 15:55:43 +0000
-In-Reply-To: <20260420-synology_microp_initial-v8-0-7946a9124491@posteo.de>
-References: <20260420-synology_microp_initial-v8-0-7946a9124491@posteo.de>
-Autocrypt: addr=markus.probst@posteo.de; prefer-encrypt=mutual;
- keydata=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
- jfGillcaQOqFZ3WwVqyzG1BUfTow==
-Content-Type: multipart/signed; micalg="pgp-sha256";
-	protocol="application/pgp-signature"; boundary="=-LwMCbgppev4PlArGDnXW"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="OTLkmtMG"
+Received: by mail-vk1-f174.google.com with SMTP id 71dfb90a1353d-56739adfa1aso2439617e0c.0
+        for <platform-driver-x86@vger.kernel.org>; Mon, 20 Apr 2026 09:30:03 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20251104; t=1776702603; x=1777307403; darn=vger.kernel.org;
+        h=in-reply-to:references:to:from:subject:cc:message-id:date
+         :content-transfer-encoding:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=1FZNMMWn2mfuFQRKV39o9u06Bb7L6kVeqBozxU34kcU=;
+        b=OTLkmtMGPTXtIeeHOWfMaquur9Zvl1viX0mWNnQzlH0O3K/bHhY0I5LVeTUPx1qrms
+         wOpXekG2pnzftNtJOMRHD5lr9GG1vQDqI6RCv/5BWC+LyTIkkyu+EM8Rzu7BAalOjigI
+         JJExa0+0mXdiq/Bm1RdVr72bmBbeaIXkKgVnbKXYJTU1+5G8KSWITV7kZoBdarpkOLnd
+         8VE/aHEGpbsZw7cUb1WV29Q49hBaM/KMXR7ECOUyhkU/j3K+pR/19KYfhc1juJ7398k4
+         pbIWwKMQZ4jiZrMiFXS0tEzDROXT9Fg3tY7A7sZ9WuFeGvGn48EEYcg4NpVuJqDAy2BY
+         7n4Q==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20251104; t=1776702603; x=1777307403;
+        h=in-reply-to:references:to:from:subject:cc:message-id:date
+         :content-transfer-encoding:mime-version:x-gm-gg:x-gm-message-state
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=1FZNMMWn2mfuFQRKV39o9u06Bb7L6kVeqBozxU34kcU=;
+        b=KS2jYFh0BQCXHbpfL9Dslngd/BNfldW5V4UE8bpfWOiiNIrFOMHGt4gDBSH87U9UWB
+         +heRQZpK5beUjsc94K9wndwpgH0Ks8C39pNycQ7kEwf01kEReQ+OuxwTHBhxCjqfJgd9
+         SR9wl5fgoTTb5RpfxikngDE030WGxSZRV9kNBtr3dUNh63iuVHPBOFysO5owyRRQum2R
+         qMGEGoZb4JxQ0zttZPBg0d3hIPaS3gMBcyWLJEAG2JLyFdX6d1TMK6KxowZHLrlNNzv3
+         aIwTnTon/ALAbPVHyH9oK3+l4vj5KKKjzzwhigAVi0HHv2PZxj/u6skPpz6v1ImPS5Zq
+         mtog==
+X-Gm-Message-State: AOJu0YxzSLnAUqjBc7jGaHG6yVH/Vzz8BT4ceyhlDRHQ2pjqPEvHvp7N
+	pLySo52USP4rMamIFhD1jrkv3JfWnDyBMfi2/rBjeiaufMr3jov2d4Pu
+X-Gm-Gg: AeBDiesnsEhHzHK1jPrD5vy/Luj6hRhReQdpKT8GVM1mOGlpSZDw3HyulwVW37g1Oh+
+	YgUcUmaA4TmDkryNz3L/xa7ReWixMmEulT5miB8fRwEEnhasvRiFurejEk04bA+4WrXHXRCRyTN
+	OcaYPCygus5kaBZmXqAi5QE7/AKUxIV4m2omNROODDMwVo1mpwL/gxlWxzIvsLOYqa6j7ioWVy+
+	Y5upPDqryUkKNKHkbpFifKzJUY/nqVlhoX1Iy5kh29kLqO7SKxF7x2KV512Rlr/WbXcje8clzZn
+	hyR639xrGTmwY+uOwLvsJEuS2NicxHDFAYnbcCFJXzU+QzIEimcNJufJQl7D5j2Z1Heyb9rL3me
+	ATvXW+N4E6vWRhPj8Vs+tPdGQzRmTYs0j7ymnYBZyo42WmlDAi0+IyMwwlPC0a+IjsfOqwmo3No
+	Mi0g1mU3OlQsRQ1qVcIFsQq9pt
+X-Received: by 2002:a05:6122:4b82:b0:56d:451b:e4dd with SMTP id 71dfb90a1353d-56fa5a232c6mr6634105e0c.12.1776702602684;
+        Mon, 20 Apr 2026 09:30:02 -0700 (PDT)
+Received: from localhost ([2800:bf0:82:11a2:7ac4:1f2:947b:2b6])
+        by smtp.gmail.com with ESMTPSA id 71dfb90a1353d-56fa93253aesm6156415e0c.14.2026.04.20.09.30.01
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Mon, 20 Apr 2026 09:30:02 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-OpenPGP: url=https://posteo.de/keys/markus.probst@posteo.de.asc; preference=encrypt
-
-
---=-LwMCbgppev4PlArGDnXW
-Content-Type: text/plain; charset="UTF-8"
+Mime-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=UTF-8
+Date: Mon, 20 Apr 2026 11:29:55 -0500
+Message-Id: <DHY4I8I2KLOU.1F5GQO5EMRL4H@gmail.com>
+Cc: <platform-driver-x86@vger.kernel.org>, <Dell.Client.Kernel@dell.com>,
+ <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH v3] platform/x86: alienware-wmi-base: Transition to new
+ WMI API
+From: "Kurt Borja" <kuurtb@gmail.com>
+To: "Armin Wolf" <W_Armin@gmx.de>, "Kurt Borja" <kuurtb@gmail.com>,
+ =?utf-8?q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>, "Hans de
+ Goede" <hansg@kernel.org>
+X-Mailer: aerc 0.21.0-0-g5549850facc2
+References: <20260331-aw-new-api-v3-1-ef03b94529d8@gmail.com>
+ <eb4b7361-128e-4e1d-853b-667deb52603a@gmx.de>
+In-Reply-To: <eb4b7361-128e-4e1d-853b-667deb52603a@gmx.de>
 
-On Mon, 2026-04-20 at 14:24 +0000, Markus Probst wrote:
->=20
-> To: Markus Probst <markus.probst@posteo.de>
-> To: Rob Herring <robh@kernel.org>
-> To: Krzysztof Kozlowski <krzk+dt@kernel.org>
-> To: Conor Dooley <conor+dt@kernel.org>
-> To: Miguel Ojeda <ojeda@kernel.org>
-> To: Boqun Feng <boqun@kernel.org>
-> To: Gary Guo <gary@garyguo.net>
-> To: Bj=C3=B6rn Roy Baron <bjorn3_gh@protonmail.com>
-> To: Benno Lossin <lossin@kernel.org>
-> To: Andreas Hindborg <a.hindborg@kernel.org>
-> To: Alice Ryhl <aliceryhl@google.com>
-> To: Trevor Gross <tmgross@umich.edu>
-> To: Danilo Krummrich <dakr@kernel.org>
-> Cc: devicetree@vger.kernel.org
-> Cc: linux-kernel@vger.kernel.org
-> Cc: rust-for-linux@vger.kernel.org
-Thats unintentional. b4 seems to have messed up my cover letter.
-Caused by
-https://github.com/mricon/b4/commit/bf7beca19f723300d9a911cbf57d2f6aee3d449=
-3
-(according to my bisect).
+On Mon Apr 13, 2026 at 1:25 AM -05, Armin Wolf wrote:
+> Am 31.03.26 um 18:20 schrieb Kurt Borja:
+>> Transition to the new wmi_buffer based WMI API.
+>
+> Hi,
+>
+> i think you will have to adapt this patch to the changes i made to
+> wmidev_invoke_method(). Said function now takes an additional parameter
+> specifying the minimum size of the output data.
 
-Thanks
-- Markus Probst
+Hi Armin,
 
+I'll go for this!
 
-
---=-LwMCbgppev4PlArGDnXW
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: This is a digitally signed message part
-
------BEGIN PGP SIGNATURE-----
-
-iQJPBAABCAA5FiEEgnQYxPSsWOdyMMRzNHYf+OetQ9IFAmnmTHwbFIAAAAAABAAO
-bWFudTIsMi41KzEuMTIsMiwyAAoJEDR2H/jnrUPSEbIP/RZWXjlvmIFk3IOpbXyI
-v9/8k3NL4PiVvzRObuquUnoHCaG5ya7hpJv+s80hBXblMf56bBYx8dwO9bdfplaq
-Jm9gW/IZy/pgy4qUMwvxtyv07QpKuwqpu9Rc/V3RF7nFt15jAUm3gcc7DCbzx1zL
-1K5DubSOHo6TCMHmiqr9uen5Wr8F8SAWtQbShJpO7pt3k78PwsXweVqCic/qmcr8
-jV4K3OK5/9MbzJsFCTOe/jzFAvtcMf6nKjHkliBRupG+eL2BY1W4/B1/T2h8QSCX
-KinLsZ+QxYcVWsu5WpxQoAhi7SgSddk1gzDldzVxYQEdcVfhs3g9Y/1+kqjNMcwS
-D1Fy1QovNeXkmpq/pNPznt/fwQ2Vbz55wbvi1x8E7fCfE846V1QwQw7X7jxL5l8A
-jd6li7Y7t+5Aa4i91iqw7VbsCiL+rUJgpL5b7MweoA3D+sPlMku+Ru6Mz6Wu0QIn
-C5LWJysrGmQgCGli9tJKlvqqyw9mf3yUpVUJ8hwllkOpK2dZOnwPtuApMg3okt53
-HWWkGdrMUio9r7eGXgK6u2N7lQO+TVmOPqbBGaUdnpzu6NB7gSRaIh/CvtlhUP8x
-tW+mIh1KGhTZRC4HkDCAz+8jtyeS0R9zN+0hiE354lkWAhp16Py97IIDhFt4eckw
-BOeqf2VQAffrd1Wxxo34x1mK
-=QpWx
------END PGP SIGNATURE-----
-
---=-LwMCbgppev4PlArGDnXW--
+>
+> In your case this would replace the size check when output data is=20
+> expected, otherwise you should call wmidev_invoke_procedure.
+>
+> Thanks,
+> Armin Wolf
