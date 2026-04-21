@@ -1,540 +1,136 @@
-Received: from mail.tuxedocomputers.com (mail.tuxedocomputers.com [157.90.84.7])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 011F6150997;
-	Mon, 20 Apr 2026 20:03:08 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=157.90.84.7
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3EA1F40DFC6;
+	Tue, 21 Apr 2026 07:07:42 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1776715392; cv=none; b=McLsHY6HGQlBLzQD256BbG8rmkDpfs08cfJ/eAO5mBloHWMQIh72XM/OcQVuQgRJLaAbmL8kalfyg+c26OIgYhYcNQRERaPp60MeW61oz2xqrrf71BEtbJrSi6d/aNerqvL3lFbr1uFP1nhKSBvjqTUBC6VdanMxPHVduuaCRgs=
+	t=1776755262; cv=none; b=rNo9n6r7MTzHkYaBrOEiruZKv4Cvy+R5qoAogCZhGB8cSc7uygO6B8kO45Nypu3E5i/UIC7CA2s6mrENaiJ8izSu8xAMSrQTBTbKd4TVtpmj/XZReKi7WQm9ntckGbuuxJ1bcomtJufaNkzW39lUfOHuptZ3mmPdGacuXZSkk1E=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1776715392; c=relaxed/simple;
-	bh=ckjw7ltv4ZGOe8zT0X39uCo1cWdSwKlgfYNJO0z2qK4=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=ldH/jkYuDSbyNidz+PWsFLN4sBznTPFeS/5vbINFXGuIIwjsmAz4LXLLAlvbNIXv/c1ap46pdp6WrjA7q4g6fZQxbto32iXF/26tAF/SBOpyq05Ti5WxStGq3N5yY1oTB39uHKCPSMq1MXIZQ7L36kog8DIl3eY/7MnRjooaeeI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=tuxedocomputers.com; spf=pass smtp.mailfrom=tuxedocomputers.com; dkim=pass (1024-bit key) header.d=tuxedocomputers.com header.i=@tuxedocomputers.com header.b=tjd2azmd; arc=none smtp.client-ip=157.90.84.7
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=tuxedocomputers.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=tuxedocomputers.com
+	s=arc-20240116; t=1776755262; c=relaxed/simple;
+	bh=m1ux5+g+loLvGVcL/xT/LLI9MeFo1pJsZ88/ku9jdtA=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=bT5QsNPqcV/RA3sWDZ8+m5Cqt1mfPsp+oeCdD3eyfN1MM30FjSM66VV856SVa7ScOySH3AF/8rnlWuk8K+RNoV3EyrRPj5ajEiA5RqxvSBNWR2iiQvXdtRuqu6NipqJYhQnG9MWDhfU/J+5N1eb5op1gxJs/bdXmAxxQarZGWZw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Ll1GuxNM; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=tuxedocomputers.com header.i=@tuxedocomputers.com header.b="tjd2azmd"
-Received: from [192.168.178.44] (i5C75F4C3.versanet.de [92.117.244.195])
-	(Authenticated sender: wse@tuxedocomputers.com)
-	by mail.tuxedocomputers.com (Postfix) with ESMTPSA id 76F292FC021F;
-	Mon, 20 Apr 2026 22:03:06 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=tuxedocomputers.com;
-	s=default; t=1776715386;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=VNtn+owHAbGI9nVmaQiVHlflmLs3IibcFJt+MQY2ffI=;
-	b=tjd2azmd1F3WTzY7iN3VL3OMyIJSYdoZdguOwhsgqkF/bBMdVKQy6FSUxvBxmKY34v0lgD
-	ANxb3DhT0j2/W71fDtIZWnMpRDbUxy8tMKzKyhpjWDUSddg1cFoUlKlvvMY4AvF4ETJ2Gr
-	b1UtB+iWST8jEE6ZDbHzEgdvg4OhAgs=
-Authentication-Results: mail.tuxedocomputers.com;
-	auth=pass smtp.auth=wse@tuxedocomputers.com smtp.mailfrom=wse@tuxedocomputers.com
-Message-ID: <ed10db68-b3b7-4a05-823b-5dc0302737ee@tuxedocomputers.com>
-Date: Mon, 20 Apr 2026 22:03:06 +0200
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Ll1GuxNM"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 57088C2BCB5;
+	Tue, 21 Apr 2026 07:07:41 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1776755261;
+	bh=m1ux5+g+loLvGVcL/xT/LLI9MeFo1pJsZ88/ku9jdtA=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=Ll1GuxNMU9FnNu+sH5ZQ4RXzQKGNsSkJZz+3gScEZAFRF1xDQsLOidnCHgWs96q9x
+	 rqNRv6U8I0Fef/qyskEKNbfIUg1dG+ZveiucDR6gL69W+OF+9i9VqJJxrSyC3r5WmL
+	 uQYPv40J0wIIqejJkMv/dC9FpkZRdztfOq2kSJXPVv1bF3HsbGyG4ac+/HjbJSYz6H
+	 xbT0kqC/Du4wosOjFG6pEVYl/+H5GgYpSXpoMCI6Rr6sVHaE7AVFjZ7c19sYg8+p7Q
+	 LIP1ciP9Od7rMjFZLNQpY2jdpTEL0jEwVClF80CgaGyNedtlOomg3FyYFZgUW2wtaj
+	 ZAhvGRpNmGBkw==
+Date: Tue, 21 Apr 2026 09:07:39 +0200
+From: Krzysztof Kozlowski <krzk@kernel.org>
+To: Markus Probst <markus.probst@posteo.de>
+Cc: Hans de Goede <hansg@kernel.org>, 
+	Ilpo =?utf-8?B?SsOkcnZpbmVu?= <ilpo.jarvinen@linux.intel.com>, Bryan O'Donoghue <bryan.odonoghue@linaro.org>, 
+	Lee Jones <lee@kernel.org>, Pavel Machek <pavel@kernel.org>, Miguel Ojeda <ojeda@kernel.org>, 
+	Boqun Feng <boqun@kernel.org>, Gary Guo <gary@garyguo.net>, 
+	=?utf-8?B?QmrDtnJu?= Roy Baron <bjorn3_gh@protonmail.com>, Benno Lossin <lossin@kernel.org>, 
+	Andreas Hindborg <a.hindborg@kernel.org>, Alice Ryhl <aliceryhl@google.com>, 
+	Trevor Gross <tmgross@umich.edu>, Danilo Krummrich <dakr@kernel.org>, 
+	Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>, 
+	Conor Dooley <conor+dt@kernel.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, 
+	platform-driver-x86@vger.kernel.org, linux-leds@vger.kernel.org, devicetree@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, rust-for-linux@vger.kernel.org
+Subject: Re: [PATCH v8 1/2] dt-bindings: embedded-controller: Add synology
+ microp devices
+Message-ID: <20260421-just-benevolent-dormouse-2c35ed@quoll>
+References: <20260420-synology_microp_initial-v8-0-7946a9124491@posteo.de>
+ <20260420-synology_microp_initial-v8-1-7946a9124491@posteo.de>
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v2 7/7] platform/x86: uniwill-laptop: Add support for
- battery charge modes
-To: Armin Wolf <W_Armin@gmx.de>, hansg@kernel.org,
- ilpo.jarvinen@linux.intel.com
-Cc: platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
-References: <20260417050912.5582-1-W_Armin@gmx.de>
- <20260417050912.5582-8-W_Armin@gmx.de>
-Content-Language: en-US, de-DE
-From: Werner Sembach <wse@tuxedocomputers.com>
-In-Reply-To: <20260417050912.5582-8-W_Armin@gmx.de>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <20260420-synology_microp_initial-v8-1-7946a9124491@posteo.de>
 
-Hi Armin,
+On Mon, Apr 20, 2026 at 02:24:20PM +0000, Markus Probst wrote:
+> Add the Synology Microp devicetree bindings. Those devices are
+> microcontrollers found on Synology NAS devices. They are connected to a
+> serial port on the host device.
+> 
+> Those devices are used to control certain LEDs, fan speeds, a beeper, to
+> handle buttons, fan failures and to properly shutdown and reboot the
+> device.
+> 
+> The device has a different feature set depending on the Synology NAS
+> model, like having different number of fans, buttons and leds. Depending
+> on the architecture of the model, they also need a different system
+> shutdown behaviour.
+> 
+> Signed-off-by: Markus Probst <markus.probst@posteo.de>
+> ---
+>  .../synology,ds1825p-microp.yaml                   | 108 +++++++++++++++++++++
+>  1 file changed, 108 insertions(+)
+> 
+> diff --git a/Documentation/devicetree/bindings/embedded-controller/synology,ds1825p-microp.yaml b/Documentation/devicetree/bindings/embedded-controller/synology,ds1825p-microp.yaml
+> new file mode 100644
+> index 000000000000..76c671a42fbf
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/embedded-controller/synology,ds1825p-microp.yaml
+> @@ -0,0 +1,108 @@
+> +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
+> +%YAML 1.2
+> +---
+> +$id: http://devicetree.org/schemas/embedded-controller/synology,ds1825p-microp.yaml#
+> +$schema: http://devicetree.org/meta-schemas/core.yaml#
+> +
+> +title: Synology NAS on-board Microcontroller
+> +
+> +maintainers:
+> +  - Markus Probst <markus.probst@posteo.de>
+> +
+> +description: |
+> +  Synology Microp is a microcontroller found in Synology NAS devices.
+> +  It is connected to a serial port on the host device.
+> +
+> +  It is necessary to properly shutdown and reboot the NAS device and
+> +  provides additional functionality such as led control, fan speed control,
+> +  a beeper and buttons on the NAS device.
+> +
+> +properties:
+> +  compatible:
+> +    oneOf:
+> +      - const: synology,ds223-microp
+> +      - const: synology,ds411p-microp
+> +      - const: synology,ds1010p-microp
+> +      - const: synology,ds710p-microp
+> +      - const: synology,ds723p-microp
+> +      - const: synology,ds225p-microp
+> +      - const: synology,rs422p-microp
 
-Am 17.04.26 um 07:09 schrieb Armin Wolf:
-> Many Uniwill-based devices do not supports the already existing
-> charge limit functionality, but instead support an alternative
-> interface for controlling the battery charge algorithm.
->
-> Add support for this interface and update the documentation.
->
-> Signed-off-by: Armin Wolf <W_Armin@gmx.de>
+That's one enum.
 
-Looks good.
+> +      - maxItems: 2
+> +        minItems: 2
 
-Reviewed-by: Werner Sembach <wse@tuxedocomputers.com>
+There is no such syntax foro compatibles. Please use any existing file
+as example or look at example-schema.
+
+> +        items:
+> +          enum:
+
+No, why the list is randomly ordered.
+
+> +            - synology,ds923p-microp
+> +            - synology,ds1522p-microp
+
+And fallback, whichever is that, is not documented alone.
+
+> +      - minItems: 4
+> +        maxItems: 4
 
 Best regards,
+Krzysztof
 
-Werner
-
-> ---
->   .../admin-guide/laptops/uniwill-laptop.rst    |  19 +-
->   drivers/platform/x86/uniwill/uniwill-acpi.c   | 243 ++++++++++++++----
->   drivers/platform/x86/uniwill/uniwill-wmi.c    |   5 +-
->   3 files changed, 215 insertions(+), 52 deletions(-)
->
-> diff --git a/Documentation/admin-guide/laptops/uniwill-laptop.rst b/Documentation/admin-guide/laptops/uniwill-laptop.rst
-> index 1f3ca84c7d88..24b41dbab886 100644
-> --- a/Documentation/admin-guide/laptops/uniwill-laptop.rst
-> +++ b/Documentation/admin-guide/laptops/uniwill-laptop.rst
-> @@ -46,11 +46,20 @@ Battery Charging Control
->   .. warning:: Some devices do not properly implement the charging threshold interface. Forcing
->                the driver to enable access to said interface on such devices might damage the
->                battery [1]_. Because of this the driver will not enable said feature even when
-> -             using the ``force`` module parameter.
-> -
-> -The ``uniwill-laptop`` driver supports controlling the battery charge limit. This happens over
-> -the standard ``charge_control_end_threshold`` power supply sysfs attribute. All values
-> -between 1 and 100 percent are supported.
-> +             using the ``force`` module parameter. The charging profile interface will be
-> +             available instead.
-> +
-> +The ``uniwill-laptop`` driver supports controlling the battery charge limit. This either happens
-> +over the standard ``charge_control_end_threshold`` or ``charge_types`` power supply sysfs attribute,
-> +depending on the device. When using the ``charge_control_end_threshold`` sysfs attribute, all values
-> +between 1 and 100 percent are supported. When using the ``charge_types`` sysfs attribute, the driver
-> +supports switching between the ``Standard``, ``Trickle`` and ``Long Life`` profiles.
-> +
-> +Keep in mind that when using the ``charge_types`` sysfs attribute, the EC firmware will hide the
-> +true charging status of the battery from the operating system, potentially misleading users into
-> +thinking that the charging profile does not work. Checking the ``current_now`` sysfs attribute
-> +tells you the true charging status of the battery even when using the ``charge_types`` sysfs
-> +attribute (0 means that the battery is currently not charging).
->   
->   Additionally the driver signals the presence of battery charging issues through the standard
->   ``health`` power supply sysfs attribute.
-> diff --git a/drivers/platform/x86/uniwill/uniwill-acpi.c b/drivers/platform/x86/uniwill/uniwill-acpi.c
-> index d4abcaf87e39..e11b6c8aeb0d 100644
-> --- a/drivers/platform/x86/uniwill/uniwill-acpi.c
-> +++ b/drivers/platform/x86/uniwill/uniwill-acpi.c
-> @@ -254,6 +254,10 @@
->   
->   #define EC_ADDR_OEM_4			0x07A6
->   #define OVERBOOST_DYN_TEMP_OFF		BIT(1)
-> +#define CHARGING_PROFILE_MASK		GENMASK(5, 4)
-> +#define CHARGING_PROFILE_HIGH_CAPACITY	0x00
-> +#define CHARGING_PROFILE_BALANCED	0x01
-> +#define CHARGING_PROFILE_STATIONARY	0x02
->   #define TOUCHPAD_TOGGLE_OFF		BIT(6)
->   
->   #define EC_ADDR_CHARGE_CTRL		0x07B9
-> @@ -320,13 +324,15 @@
->   #define UNIWILL_FEATURE_SUPER_KEY		BIT(1)
->   #define UNIWILL_FEATURE_TOUCHPAD_TOGGLE		BIT(2)
->   #define UNIWILL_FEATURE_LIGHTBAR		BIT(3)
-> -#define UNIWILL_FEATURE_BATTERY			BIT(4)
-> -#define UNIWILL_FEATURE_CPU_TEMP		BIT(5)
-> -#define UNIWILL_FEATURE_GPU_TEMP		BIT(6)
-> -#define UNIWILL_FEATURE_PRIMARY_FAN		BIT(7)
-> -#define UNIWILL_FEATURE_SECONDARY_FAN		BIT(8)
-> -#define UNIWILL_FEATURE_NVIDIA_CTGP_CONTROL	BIT(9)
-> -#define UNIWILL_FEATURE_USB_C_POWER_PRIORITY	BIT(10)
-> +#define UNIWILL_FEATURE_BATTERY_CHARGE_LIMIT	BIT(4)
-> +/* Mutually exclusive with the charge limit feature */
-> +#define UNIWILL_FEATURE_BATTERY_CHARGE_MODES	BIT(5)
-> +#define UNIWILL_FEATURE_CPU_TEMP		BIT(6)
-> +#define UNIWILL_FEATURE_GPU_TEMP		BIT(7)
-> +#define UNIWILL_FEATURE_PRIMARY_FAN		BIT(8)
-> +#define UNIWILL_FEATURE_SECONDARY_FAN		BIT(9)
-> +#define UNIWILL_FEATURE_NVIDIA_CTGP_CONTROL	BIT(10)
-> +#define UNIWILL_FEATURE_USB_C_POWER_PRIORITY	BIT(11)
->   
->   enum usb_c_power_priority_options {
->   	USB_C_POWER_PRIORITY_CHARGING = 0,
-> @@ -339,8 +345,15 @@ struct uniwill_data {
->   	struct regmap *regmap;
->   	unsigned int features;
->   	struct acpi_battery_hook hook;
-> -	unsigned int last_charge_ctrl;
->   	struct mutex battery_lock;	/* Protects the list of currently registered batteries */
-> +	union {
-> +		struct {
-> +			/* Protects writes to last_charge_type */
-> +			struct mutex charge_type_lock;
-> +			enum power_supply_charge_type last_charge_type;
-> +		};
-> +		unsigned int last_charge_ctrl;
-> +	};
->   	bool last_fn_lock_state;
->   	bool last_super_key_enable_state;
->   	bool last_touchpad_toggle_enable_state;
-> @@ -447,6 +460,12 @@ static inline bool uniwill_device_supports(const struct uniwill_data *data,
->   	return (data->features & features) == features;
->   }
->   
-> +static inline bool uniwill_device_supports_any(const struct uniwill_data *data,
-> +					       unsigned int features)
-> +{
-> +	return data->features & features;
-> +}
-> +
->   static int uniwill_ec_reg_write(void *context, unsigned int reg, unsigned int val)
->   {
->   	union acpi_object params[2] = {
-> @@ -1421,6 +1440,30 @@ static int uniwill_led_init(struct uniwill_data *data)
->   							 &init_data);
->   }
->   
-> +static int uniwill_read_charge_type(struct uniwill_data *data, enum power_supply_charge_type *type)
-> +{
-> +	unsigned int value;
-> +	int ret;
-> +
-> +	ret = regmap_read(data->regmap, EC_ADDR_OEM_4, &value);
-> +	if (ret < 0)
-> +		return ret;
-> +
-> +	switch (FIELD_GET(CHARGING_PROFILE_MASK, value)) {
-> +	case CHARGING_PROFILE_HIGH_CAPACITY:
-> +		*type = POWER_SUPPLY_CHARGE_TYPE_STANDARD;
-> +		return 0;
-> +	case CHARGING_PROFILE_BALANCED:
-> +		*type = POWER_SUPPLY_CHARGE_TYPE_LONGLIFE;
-> +		return 0;
-> +	case CHARGING_PROFILE_STATIONARY:
-> +		*type = POWER_SUPPLY_CHARGE_TYPE_TRICKLE;
-> +		return 0;
-> +	default:
-> +		return -EPROTO;
-> +	}
-> +}
-> +
->   static int uniwill_get_property(struct power_supply *psy, const struct power_supply_ext *ext,
->   				void *drvdata, enum power_supply_property psp,
->   				union power_supply_propval *val)
-> @@ -1431,6 +1474,16 @@ static int uniwill_get_property(struct power_supply *psy, const struct power_sup
->   	int ret;
->   
->   	switch (psp) {
-> +	case POWER_SUPPLY_PROP_CHARGE_TYPES:
-> +		/*
-> +		 * We need to use the cached value here because the charging mode
-> +		 * reported by the EC might temporarily change when a external power
-> +		 * source has been connected.
-> +		 */
-> +		mutex_lock(&data->charge_type_lock);
-> +		val->intval = data->last_charge_type;
-> +		mutex_unlock(&data->charge_type_lock);
-> +		return 0;
->   	case POWER_SUPPLY_PROP_HEALTH:
->   		ret = power_supply_get_property_direct(psy, POWER_SUPPLY_PROP_PRESENT, &prop);
->   		if (ret < 0)
-> @@ -1479,13 +1532,52 @@ static int uniwill_get_property(struct power_supply *psy, const struct power_sup
->   	}
->   }
->   
-> +static int uniwill_write_charge_type(struct uniwill_data *data, enum power_supply_charge_type type)
-> +{
-> +	unsigned int value;
-> +
-> +	switch (type) {
-> +	case POWER_SUPPLY_CHARGE_TYPE_TRICKLE:
-> +		value = FIELD_PREP(CHARGING_PROFILE_MASK, CHARGING_PROFILE_STATIONARY);
-> +		break;
-> +	case POWER_SUPPLY_CHARGE_TYPE_STANDARD:
-> +		value = FIELD_PREP(CHARGING_PROFILE_MASK, CHARGING_PROFILE_HIGH_CAPACITY);
-> +		break;
-> +	case POWER_SUPPLY_CHARGE_TYPE_LONGLIFE:
-> +		value = FIELD_PREP(CHARGING_PROFILE_MASK, CHARGING_PROFILE_BALANCED);
-> +		break;
-> +	default:
-> +		return -EINVAL;
-> +	}
-> +
-> +	return regmap_update_bits(data->regmap, EC_ADDR_OEM_4, CHARGING_PROFILE_MASK, value);
-> +}
-> +
-> +static int uniwill_restore_charge_type(struct uniwill_data *data)
-> +{
-> +	guard(mutex)(&data->charge_type_lock);
-> +
-> +	return uniwill_write_charge_type(data, data->last_charge_type);
-> +}
-> +
->   static int uniwill_set_property(struct power_supply *psy, const struct power_supply_ext *ext,
->   				void *drvdata, enum power_supply_property psp,
->   				const union power_supply_propval *val)
->   {
->   	struct uniwill_data *data = drvdata;
-> +	int ret;
->   
->   	switch (psp) {
-> +	case POWER_SUPPLY_PROP_CHARGE_TYPES:
-> +		mutex_lock(&data->charge_type_lock);
-> +
-> +		ret = uniwill_write_charge_type(data, val->intval);
-> +		if (ret >= 0)
-> +			data->last_charge_type = val->intval;
-> +
-> +		mutex_unlock(&data->charge_type_lock);
-> +
-> +		return ret;
->   	case POWER_SUPPLY_PROP_CHARGE_CONTROL_END_THRESHOLD:
->   		if (val->intval < 0 || val->intval > 100)
->   			return -EINVAL;
-> @@ -1501,21 +1593,41 @@ static int uniwill_property_is_writeable(struct power_supply *psy,
->   					 const struct power_supply_ext *ext, void *drvdata,
->   					 enum power_supply_property psp)
->   {
-> -	if (psp == POWER_SUPPLY_PROP_CHARGE_CONTROL_END_THRESHOLD)
-> +	switch (psp) {
-> +	case POWER_SUPPLY_PROP_CHARGE_TYPES:
-> +	case POWER_SUPPLY_PROP_CHARGE_CONTROL_END_THRESHOLD:
->   		return true;
-> -
-> -	return false;
-> +	default:
-> +		return false;
-> +	}
->   }
->   
-> -static const enum power_supply_property uniwill_properties[] = {
-> +static const enum power_supply_property uniwill_charge_limit_properties[] = {
->   	POWER_SUPPLY_PROP_HEALTH,
->   	POWER_SUPPLY_PROP_CHARGE_CONTROL_END_THRESHOLD,
->   };
->   
-> -static const struct power_supply_ext uniwill_extension = {
-> +static const struct power_supply_ext uniwill_charge_limit_extension = {
->   	.name = DRIVER_NAME,
-> -	.properties = uniwill_properties,
-> -	.num_properties = ARRAY_SIZE(uniwill_properties),
-> +	.properties = uniwill_charge_limit_properties,
-> +	.num_properties = ARRAY_SIZE(uniwill_charge_limit_properties),
-> +	.get_property = uniwill_get_property,
-> +	.set_property = uniwill_set_property,
-> +	.property_is_writeable = uniwill_property_is_writeable,
-> +};
-> +
-> +static const enum power_supply_property uniwill_charge_modes_properties[] = {
-> +	POWER_SUPPLY_PROP_CHARGE_TYPES,
-> +	POWER_SUPPLY_PROP_HEALTH,
-> +};
-> +
-> +static const struct power_supply_ext uniwill_charge_modes_extension = {
-> +	.name = DRIVER_NAME,
-> +	.charge_types = BIT(POWER_SUPPLY_CHARGE_TYPE_TRICKLE) |
-> +			BIT(POWER_SUPPLY_CHARGE_TYPE_STANDARD) |
-> +			BIT(POWER_SUPPLY_CHARGE_TYPE_LONGLIFE),
-> +	.properties = uniwill_charge_modes_properties,
-> +	.num_properties = ARRAY_SIZE(uniwill_charge_modes_properties),
->   	.get_property = uniwill_get_property,
->   	.set_property = uniwill_set_property,
->   	.property_is_writeable = uniwill_property_is_writeable,
-> @@ -1531,7 +1643,13 @@ static int uniwill_add_battery(struct power_supply *battery, struct acpi_battery
->   	if (!entry)
->   		return -ENOMEM;
->   
-> -	ret = power_supply_register_extension(battery, &uniwill_extension, data->dev, data);
-> +	if (uniwill_device_supports(data, UNIWILL_FEATURE_BATTERY_CHARGE_LIMIT))
-> +		ret = power_supply_register_extension(battery, &uniwill_charge_limit_extension,
-> +						      data->dev, data);
-> +	else
-> +		ret = power_supply_register_extension(battery, &uniwill_charge_modes_extension,
-> +						      data->dev, data);
-> +
->   	if (ret < 0) {
->   		kfree(entry);
->   		return ret;
-> @@ -1560,7 +1678,10 @@ static int uniwill_remove_battery(struct power_supply *battery, struct acpi_batt
->   		}
->   	}
->   
-> -	power_supply_unregister_extension(battery, &uniwill_extension);
-> +	if (uniwill_device_supports(data, UNIWILL_FEATURE_BATTERY_CHARGE_LIMIT))
-> +		power_supply_unregister_extension(battery, &uniwill_charge_limit_extension);
-> +	else
-> +		power_supply_unregister_extension(battery, &uniwill_charge_modes_extension);
->   
->   	return 0;
->   }
-> @@ -1570,27 +1691,36 @@ static int uniwill_battery_init(struct uniwill_data *data)
->   	unsigned int value, threshold;
->   	int ret;
->   
-> -	if (!uniwill_device_supports(data, UNIWILL_FEATURE_BATTERY))
-> -		return 0;
-> +	if (uniwill_device_supports(data, UNIWILL_FEATURE_BATTERY_CHARGE_LIMIT)) {
-> +		ret = regmap_read(data->regmap, EC_ADDR_CHARGE_CTRL, &value);
-> +		if (ret < 0)
-> +			return ret;
->   
-> -	ret = regmap_read(data->regmap, EC_ADDR_CHARGE_CTRL, &value);
-> -	if (ret < 0)
-> -		return ret;
-> +		/*
-> +		 * The charge control threshold might be initialized with 0 by
-> +		 * the EC to signal that said threshold is uninitialized. We thus
-> +		 * need to replace this value with 100 to signal that we want to
-> +		 * take control of battery charging. For the sake of completeness
-> +		 * we also set the charging threshold to 100 if the EC-provided
-> +		 * value is invalid.
-> +		 */
-> +		threshold = FIELD_GET(CHARGE_CTRL_MASK, value);
-> +		if (threshold == 0 || threshold > 100) {
-> +			FIELD_MODIFY(CHARGE_CTRL_MASK, &value, 100);
-> +			ret = regmap_write(data->regmap, EC_ADDR_CHARGE_CTRL, value);
-> +			if (ret < 0)
-> +				return ret;
-> +		}
-> +	} else if (uniwill_device_supports(data, UNIWILL_FEATURE_BATTERY_CHARGE_MODES)) {
-> +		ret = devm_mutex_init(data->dev, &data->charge_type_lock);
-> +		if (ret < 0)
-> +			return ret;
->   
-> -	/*
-> -	 * The charge control threshold might be initialized with 0 by
-> -	 * the EC to signal that said threshold is uninitialized. We thus
-> -	 * need to replace this value with 100 to signal that we want to
-> -	 * take control of battery charging. For the sake of completeness
-> -	 * we also set the charging threshold to 100 if the EC-provided
-> -	 * value is invalid.
-> -	 */
-> -	threshold = FIELD_GET(CHARGE_CTRL_MASK, value);
-> -	if (threshold == 0 || threshold > 100) {
-> -		FIELD_MODIFY(CHARGE_CTRL_MASK, &value, 100);
-> -		ret = regmap_write(data->regmap, EC_ADDR_CHARGE_CTRL, value);
-> +		ret = uniwill_read_charge_type(data, &data->last_charge_type);
->   		if (ret < 0)
->   			return ret;
-> +	} else {
-> +		return 0;
->   	}
->   
->   	ret = devm_mutex_init(data->dev, &data->battery_lock);
-> @@ -1609,10 +1739,13 @@ static int uniwill_notifier_call(struct notifier_block *nb, unsigned long action
->   {
->   	struct uniwill_data *data = container_of(nb, struct uniwill_data, nb);
->   	struct uniwill_battery_entry *entry;
-> +	int ret;
->   
->   	switch (action) {
->   	case UNIWILL_OSD_BATTERY_ALERT:
-> -		if (!uniwill_device_supports(data, UNIWILL_FEATURE_BATTERY))
-> +		if (!uniwill_device_supports_any(data,
-> +						 UNIWILL_FEATURE_BATTERY_CHARGE_LIMIT |
-> +						 UNIWILL_FEATURE_BATTERY_CHARGE_MODES))
->   			return NOTIFY_DONE;
->   
->   		mutex_lock(&data->battery_lock);
-> @@ -1623,10 +1756,24 @@ static int uniwill_notifier_call(struct notifier_block *nb, unsigned long action
->   
->   		return NOTIFY_OK;
->   	case UNIWILL_OSD_DC_ADAPTER_CHANGED:
-> -		if (!uniwill_device_supports(data, UNIWILL_FEATURE_USB_C_POWER_PRIORITY))
-> +		if (!uniwill_device_supports_any(data,
-> +						 UNIWILL_FEATURE_BATTERY_CHARGE_MODES |
-> +						 UNIWILL_FEATURE_USB_C_POWER_PRIORITY))
->   			return NOTIFY_DONE;
->   
-> -		return notifier_from_errno(usb_c_power_priority_restore(data));
-> +		if (uniwill_device_supports(data, UNIWILL_FEATURE_BATTERY_CHARGE_MODES)) {
-> +			ret = uniwill_restore_charge_type(data);
-> +			if (ret < 0)
-> +				return notifier_from_errno(ret);
-> +		}
-> +
-> +		if (uniwill_device_supports(data, UNIWILL_FEATURE_USB_C_POWER_PRIORITY)) {
-> +			ret = usb_c_power_priority_restore(data);
-> +			if (ret < 0)
-> +				return notifier_from_errno(ret);
-> +		}
-> +
-> +		return NOTIFY_OK;
->   	case UNIWILL_OSD_FN_LOCK:
->   		if (!uniwill_device_supports(data, UNIWILL_FEATURE_FN_LOCK))
->   			return NOTIFY_DONE;
-> @@ -1810,7 +1957,7 @@ static int uniwill_suspend_touchpad_toggle(struct uniwill_data *data)
->   
->   static int uniwill_suspend_battery(struct uniwill_data *data)
->   {
-> -	if (!uniwill_device_supports(data, UNIWILL_FEATURE_BATTERY))
-> +	if (!uniwill_device_supports(data, UNIWILL_FEATURE_BATTERY_CHARGE_LIMIT))
->   		return 0;
->   
->   	/*
-> @@ -1887,11 +2034,15 @@ static int uniwill_resume_touchpad_toggle(struct uniwill_data *data)
->   
->   static int uniwill_resume_battery(struct uniwill_data *data)
->   {
-> -	if (!uniwill_device_supports(data, UNIWILL_FEATURE_BATTERY))
-> -		return 0;
->   
-> -	return regmap_update_bits(data->regmap, EC_ADDR_CHARGE_CTRL, CHARGE_CTRL_MASK,
-> -				  data->last_charge_ctrl);
-> +	if (uniwill_device_supports(data, UNIWILL_FEATURE_BATTERY_CHARGE_MODES))
-> +		return uniwill_restore_charge_type(data);
-> +
-> +	if (uniwill_device_supports(data, UNIWILL_FEATURE_BATTERY_CHARGE_LIMIT))
-> +		return regmap_update_bits(data->regmap, EC_ADDR_CHARGE_CTRL, CHARGE_CTRL_MASK,
-> +					  data->last_charge_ctrl);
-> +
-> +	return 0;
->   }
->   
->   static int uniwill_resume_nvidia_ctgp(struct uniwill_data *data)
-> @@ -1970,7 +2121,7 @@ static struct platform_driver uniwill_driver = {
->   
->   static struct uniwill_device_descriptor lapqc71a_lapqc71b_descriptor __initdata = {
->   	.features = UNIWILL_FEATURE_SUPER_KEY |
-> -		    UNIWILL_FEATURE_BATTERY |
-> +		    UNIWILL_FEATURE_BATTERY_CHARGE_LIMIT |
->   		    UNIWILL_FEATURE_CPU_TEMP |
->   		    UNIWILL_FEATURE_GPU_TEMP |
->   		    UNIWILL_FEATURE_PRIMARY_FAN |
-> @@ -1981,7 +2132,7 @@ static struct uniwill_device_descriptor lapac71h_descriptor __initdata = {
->   	.features = UNIWILL_FEATURE_FN_LOCK |
->   		    UNIWILL_FEATURE_SUPER_KEY |
->   		    UNIWILL_FEATURE_TOUCHPAD_TOGGLE |
-> -		    UNIWILL_FEATURE_BATTERY |
-> +		    UNIWILL_FEATURE_BATTERY_CHARGE_LIMIT |
->   		    UNIWILL_FEATURE_CPU_TEMP |
->   		    UNIWILL_FEATURE_GPU_TEMP |
->   		    UNIWILL_FEATURE_PRIMARY_FAN |
-> @@ -1993,7 +2144,7 @@ static struct uniwill_device_descriptor lapkc71f_descriptor __initdata = {
->   		    UNIWILL_FEATURE_SUPER_KEY |
->   		    UNIWILL_FEATURE_TOUCHPAD_TOGGLE |
->   		    UNIWILL_FEATURE_LIGHTBAR |
-> -		    UNIWILL_FEATURE_BATTERY |
-> +		    UNIWILL_FEATURE_BATTERY_CHARGE_LIMIT |
->   		    UNIWILL_FEATURE_CPU_TEMP |
->   		    UNIWILL_FEATURE_GPU_TEMP |
->   		    UNIWILL_FEATURE_PRIMARY_FAN |
-> @@ -2579,7 +2730,7 @@ static int __init uniwill_init(void)
->   
->   	if (force) {
->   		/* Assume that the device supports all features except the charge limit */
-> -		device_descriptor.features = UINT_MAX & ~UNIWILL_FEATURE_BATTERY;
-> +		device_descriptor.features = UINT_MAX & ~UNIWILL_FEATURE_BATTERY_CHARGE_LIMIT;
->   		pr_warn("Enabling potentially unsupported features\n");
->   	}
->   
-> diff --git a/drivers/platform/x86/uniwill/uniwill-wmi.c b/drivers/platform/x86/uniwill/uniwill-wmi.c
-> index 31d9c39f14ab..f1b89bc63df6 100644
-> --- a/drivers/platform/x86/uniwill/uniwill-wmi.c
-> +++ b/drivers/platform/x86/uniwill/uniwill-wmi.c
-> @@ -48,6 +48,7 @@ int devm_uniwill_wmi_register_notifier(struct device *dev, struct notifier_block
->   static void uniwill_wmi_notify(struct wmi_device *wdev, union acpi_object *obj)
->   {
->   	u32 value;
-> +	int ret;
->   
->   	if (obj->type != ACPI_TYPE_INTEGER)
->   		return;
-> @@ -56,7 +57,9 @@ static void uniwill_wmi_notify(struct wmi_device *wdev, union acpi_object *obj)
->   
->   	dev_dbg(&wdev->dev, "Received WMI event %u\n", value);
->   
-> -	blocking_notifier_call_chain(&uniwill_wmi_chain_head, value, NULL);
-> +	ret = blocking_notifier_call_chain(&uniwill_wmi_chain_head, value, NULL);
-> +	if (notifier_to_errno(ret) < 0)
-> +		dev_err(&wdev->dev, "Failed to handle event %u\n", value);
->   }
->   
->   /*
