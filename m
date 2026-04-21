@@ -1,35 +1,35 @@
 Received: from mail.tuxedocomputers.com (mail.tuxedocomputers.com [157.90.84.7])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EF5B2388E77;
-	Tue, 21 Apr 2026 20:11:15 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6E3063DD53A;
+	Tue, 21 Apr 2026 20:11:16 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=157.90.84.7
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1776802278; cv=none; b=BC0uGRL5HteVyigeVt/ISE52sG1GRRIOjy6dzfX1B878KE3/J+Y5G2hR/2bF8vs4FNPhKngjXeZNNhYrVyExYl7MWWaBmHfQdRukUmV6rm6mnnx8N7tuY/BX6uIEFUpEByXzZ4F3KB/zAVZoU4vjBWDRqXqtH1TrA6a8N/Oaqcs=
+	t=1776802279; cv=none; b=hXxktQUxvpsQ46C4eobOKuN/PL+50UJ1BAyd5OMgScwmANiUJByBm5i4rrycTP6K0k5nDY4V7Qmi8QWdqpb8LXCqpYVy9w/71HOMf2oGc52GaevQL5yQC55hfmW9TktQ+imllS1nJQ1NGMvFBTcE3IKRAs6yMtjkRQOiBou1W8k=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1776802278; c=relaxed/simple;
-	bh=Peoyy0GHOwICCN/tNJTu1Xh+JZnNkeAXca84kSo0X9M=;
+	s=arc-20240116; t=1776802279; c=relaxed/simple;
+	bh=qCbCb0yTbJlaKSVsdtR+FMXXyNsYZ3o4vXKnK/NHzl0=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=RP8bxbWH8fvOP+7zqESW/SNoPriU02OluC5HTcmu116i7Vyn4f308sCHvRwlTogp++G31uXtzRcKwbSsBURFHb+Ca2WCjmkZrxjukKHeAmjviwBhvt8dXeW7MWqrOVUe2tGjLtRNKI6Ba++7gXFHLiwXHppAPfA9Rg9T4m4TmN0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=tuxedocomputers.com; spf=pass smtp.mailfrom=tuxedocomputers.com; dkim=pass (1024-bit key) header.d=tuxedocomputers.com header.i=@tuxedocomputers.com header.b=hMIygCYr; arc=none smtp.client-ip=157.90.84.7
+	 MIME-Version; b=QHfCV09bgmG4SUneHDhS31JIjQNewvbZEkCQC/5vdC4nBJfpEU/S0MeVaQJVDTUJTxZ96sktMTAeCciyIdtDI2fjJImoUeDca6v2GCBn20Vh1MA8x8MUHRauDR3q+XQ6xAdaDMEVYKG2UP2j4kOO8TyF2AB74EK8ay0OAdp0fgQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=tuxedocomputers.com; spf=pass smtp.mailfrom=tuxedocomputers.com; dkim=pass (1024-bit key) header.d=tuxedocomputers.com header.i=@tuxedocomputers.com header.b=e7lE/icL; arc=none smtp.client-ip=157.90.84.7
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=tuxedocomputers.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=tuxedocomputers.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=tuxedocomputers.com header.i=@tuxedocomputers.com header.b="hMIygCYr"
+	dkim=pass (1024-bit key) header.d=tuxedocomputers.com header.i=@tuxedocomputers.com header.b="e7lE/icL"
 Received: from wse-pc.fritz.box (i5C75F683.versanet.de [92.117.246.131])
 	(Authenticated sender: wse@tuxedocomputers.com)
-	by mail.tuxedocomputers.com (Postfix) with ESMTPA id 51AA92FC0225;
-	Tue, 21 Apr 2026 22:11:08 +0200 (CEST)
+	by mail.tuxedocomputers.com (Postfix) with ESMTPA id 65DEE2FC0226;
+	Tue, 21 Apr 2026 22:11:09 +0200 (CEST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=tuxedocomputers.com;
-	s=default; t=1776802268;
+	s=default; t=1776802269;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=KYb3zC4GdkzpYcydAJaXs+9nZIdkMHPvFcSdCM4+56o=;
-	b=hMIygCYrAyKP2Jckx0XheWiquOTD/6zaYFfNRm5mbB09YX9rRHuF983ClfVMdenIX/xrv/
-	LdADw8vFHykCzMsvdAWukBkud9A2G4kaFex57cv322bLuT3u1Z3yHBsGwoGbp9xofijHHr
-	6ZPvWcEU6rs2AtODITe4jML4GPlh/VM=
+	bh=dpakQoIyJoSYNr0v6zw1c6XEmfX8aaFSo0XKYFTgz1U=;
+	b=e7lE/icLJjwZbtQkNpE9VYjYoD1uDslbpy1iUDhvFSmnhT1vFEP0fziVwgYPOchGjfkdo4
+	V1SZfGuehVLvx0vhhAV/1xkZ2e9Zo+q4fmqdQHm74sSV/2vOmTCUPjx9VTUwcjK53LqkKh
+	UrnW5+QP1w3CgBbGDiOYAUbknMAExPw=
 Authentication-Results: mail.tuxedocomputers.com;
 	auth=pass smtp.auth=wse@tuxedocomputers.com smtp.mailfrom=wse@tuxedocomputers.com
 From: Werner Sembach <wse@tuxedocomputers.com>
@@ -39,9 +39,9 @@ To: W_Armin@gmx.de,
 Cc: platform-driver-x86@vger.kernel.org,
 	linux-kernel@vger.kernel.org,
 	Werner Sembach <wse@tuxedocomputers.com>
-Subject: [RFC PATCH 2/3] platform/x86: uniwill-laptop: Implement lightbar for XMG Fusion (L19)
-Date: Tue, 21 Apr 2026 22:01:26 +0200
-Message-ID: <20260421201103.142403-3-wse@tuxedocomputers.com>
+Subject: [RFC PATCH 3/3] platform/x86: uniwill-laptop: Offer support to activate local dimming
+Date: Tue, 21 Apr 2026 22:01:27 +0200
+Message-ID: <20260421201103.142403-4-wse@tuxedocomputers.com>
 X-Mailer: git-send-email 2.43.0
 In-Reply-To: <20260421201103.142403-1-wse@tuxedocomputers.com>
 References: <20260421201103.142403-1-wse@tuxedocomputers.com>
@@ -53,126 +53,288 @@ List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-The XMG Fusion (L19) also has a lightbar but with a different max
-brightness value of 36 instead of 200.
+This patch adds a sysfs variable local_dimming to supported devices.
+Setting it to true enables local dimming for the internal notebook display.
 
-This patch adds a new feature flag for the driver to correctly handle this
-case and applies it to the mentioned device.
+Currently only TUXEDO Stellaris 16 Gen7 Intel/AMD with mLED displays are
+supported.
 
 Signed-off-by: Werner Sembach <wse@tuxedocomputers.com>
 ---
- drivers/platform/x86/uniwill/uniwill-acpi.c | 19 +++++++++++++------
- 1 file changed, 13 insertions(+), 6 deletions(-)
+ drivers/platform/x86/uniwill/uniwill-acpi.c | 162 +++++++++++++++++++-
+ 1 file changed, 158 insertions(+), 4 deletions(-)
 
 diff --git a/drivers/platform/x86/uniwill/uniwill-acpi.c b/drivers/platform/x86/uniwill/uniwill-acpi.c
-index 7d1fdbacc6871..62d56cc67e2e8 100644
+index 62d56cc67e2e8..909d8608a2f80 100644
 --- a/drivers/platform/x86/uniwill/uniwill-acpi.c
 +++ b/drivers/platform/x86/uniwill/uniwill-acpi.c
-@@ -318,7 +318,6 @@
- #define FAN_TABLE_LENGTH	16
+@@ -275,6 +275,9 @@
+ #define EC_ADDR_USB_C_POWER_PRIORITY	0x07CC
+ #define USB_C_POWER_PRIORITY		BIT(7)
  
- #define LED_CHANNELS		3
--#define LED_MAX_BRIGHTNESS	200
++#define EC_ADDR_LOCAL_DIMMING_SUPPORT	0x0D4F
++#define LOCAL_DIMMING_SUPPORT		BIT(0)
++
+ /* Same bits as EC_ADDR_LIGHTBAR_AC_CTRL except LIGHTBAR_S3_OFF */
+ #define EC_ADDR_LIGHTBAR_BAT_CTRL	0x07E2
  
- #define UNIWILL_FEATURE_FN_LOCK			BIT(0)
- #define UNIWILL_FEATURE_SUPER_KEY		BIT(1)
-@@ -344,6 +343,7 @@ struct uniwill_data {
- 	acpi_handle handle;
- 	struct regmap *regmap;
- 	unsigned int features;
-+	u8 lightbar_max_brightness;
- 	struct acpi_battery_hook hook;
- 	struct mutex battery_lock;	/* Protects the list of currently registered batteries */
- 	union {
-@@ -376,6 +376,7 @@ struct uniwill_battery_entry {
+@@ -296,6 +299,14 @@
  
- struct uniwill_device_descriptor {
- 	unsigned int features;
-+	u8 lightbar_max_brightness;
- 	/* Executed during driver probing */
- 	int (*probe)(struct uniwill_data *data);
+ #define EC_ADDR_GPU_FAN_SPEED_TABLE	0x0F50
+ 
++#define WMI_GUID_BC			"ABBC0F6F-8EA1-11D1-00A0-C90629100000"
++#define WMI_DEFAULT_INSTANCE		0x00
++#define WMI_DEFAULT_METHOD		0x04
++
++#define WMI_FUNC_SET_FEATURE		0x00000500
++#define WMI_FEATURE_LOCAL_DIMMING_OFF	0x0d
++#define WMI_FEATURE_LOCAL_DIMMING_ON	0x0e
++
+ /*
+  * Those two registers technically allow for manual fan control,
+  * but are unstable on some models and are likely not meant to
+@@ -332,6 +343,7 @@
+ #define UNIWILL_FEATURE_SECONDARY_FAN		BIT(9)
+ #define UNIWILL_FEATURE_NVIDIA_CTGP_CONTROL	BIT(10)
+ #define UNIWILL_FEATURE_USB_C_POWER_PRIORITY	BIT(11)
++#define UNIWILL_FEATURE_LOCAL_DIMMING		BIT(12)
+ 
+ enum usb_c_power_priority_options {
+ 	USB_C_POWER_PRIORITY_CHARGING = 0,
+@@ -367,6 +379,8 @@ struct uniwill_data {
+ 	struct notifier_block nb;
+ 	struct mutex usb_c_power_priority_lock; /* Protects dependent bit write and state safe */
+ 	enum usb_c_power_priority_options last_usb_c_power_priority_option;
++	struct mutex local_dimming_lock; /* Protects call to local dimming wmi method */
++	bool last_local_dimming_option;
  };
-@@ -1340,7 +1341,7 @@ static int uniwill_led_brightness_set(struct led_classdev *led_cdev, enum led_br
  
- 	for (int i = 0; i < LED_CHANNELS; i++) {
- 		/* Prevent the brightness values from overflowing */
--		value = min(LED_MAX_BRIGHTNESS, data->led_mc_subled_info[i].brightness);
-+		value = min(data->lightbar_max_brightness, data->led_mc_subled_info[i].brightness);
- 		ret = regmap_write(data->regmap, uniwill_led_channel_to_ac_reg[i], value);
- 		if (ret < 0)
- 			return ret;
-@@ -1376,12 +1377,14 @@ static int uniwill_led_init(struct uniwill_data *data)
- 		LED_COLOR_ID_GREEN,
- 		LED_COLOR_ID_BLUE,
- 	};
--	unsigned int value;
-+	unsigned int value, max_brightness;
- 	int ret;
- 
- 	if (!uniwill_device_supports(data, UNIWILL_FEATURE_LIGHTBAR))
+ struct uniwill_battery_entry {
+@@ -774,7 +788,7 @@ static int super_key_enable_init(struct uniwill_data *data)
+ 	if (!uniwill_device_supports(data, UNIWILL_FEATURE_SUPER_KEY))
  		return 0;
  
-+	max_brightness = data->lightbar_max_brightness;
+-	return devm_mutex_init(&data->dev, &data->super_key_lock);
++	return devm_mutex_init(data->dev, &data->super_key_lock);
+ }
+ 
+ static int uniwill_write_touchpad_toggle_enable(struct uniwill_data *data, bool status)
+@@ -1086,6 +1100,87 @@ static int usb_c_power_priority_init(struct uniwill_data *data)
+ 	return 0;
+ }
+ 
++struct __packed uniwill_wmi_input {
++	u8 args[4];
++	u32 function;
++	/* Prevent accidential out of bounds access by the ACPI code */
++	u32 reserved[8];
++};
 +
- 	ret = devm_mutex_init(data->dev, &data->led_lock);
++static int set_local_dimming(bool enable)
++{
++	struct __packed uniwill_wmi_input wmi_input;
++	struct acpi_buffer wmi_buf = { (acpi_size) sizeof(wmi_input), &wmi_input };
++	acpi_status status;
++
++	wmi_input.function = WMI_FUNC_SET_FEATURE;
++	wmi_input.args[0] = enable ? WMI_FEATURE_LOCAL_DIMMING_ON : WMI_FEATURE_LOCAL_DIMMING_OFF;
++
++	status = wmi_evaluate_method(WMI_GUID_BC, WMI_DEFAULT_INSTANCE, WMI_DEFAULT_METHOD,
++				     &wmi_buf, &wmi_buf);
++	if (ACPI_FAILURE(status))
++		return -EIO;
++
++	return 0;
++}
++
++static ssize_t local_dimming_store(struct device *dev,
++				   struct device_attribute *attr,
++				   const char *buf, size_t count)
++{
++	struct uniwill_data *data = dev_get_drvdata(dev);
++	bool enable;
++	int ret;
++
++	ret = kstrtobool(buf, &enable);
++	if (ret < 0)
++		return ret;
++
++	guard(mutex)(&data->local_dimming_lock);
++
++	ret = set_local_dimming(enable);
++	if (ret)
++		return ret;
++
++	data->last_local_dimming_option = enable;
++
++	return count;
++}
++
++static ssize_t local_dimming_show(struct device *dev,
++				  struct device_attribute *attr,
++				  char *buf)
++{
++	struct uniwill_data *data = dev_get_drvdata(dev);
++
++	return sysfs_emit(buf, "%d\n", data->last_local_dimming_option);
++}
++
++static DEVICE_ATTR_RW(local_dimming);
++
++static int local_dimming_restore(struct uniwill_data *data)
++{
++	guard(mutex)(&data->local_dimming_lock);
++
++	return set_local_dimming(data->last_local_dimming_option);
++}
++
++static int local_dimming_init(struct uniwill_data *data)
++{
++	int ret;
++
++	if (!uniwill_device_supports(data, UNIWILL_FEATURE_LOCAL_DIMMING))
++		return 0;
++
++	ret = devm_mutex_init(data->dev, &data->local_dimming_lock);
++	if (ret < 0)
++		return ret;
++
++	data->last_local_dimming_option = 0;
++
++	return local_dimming_restore(data);
++}
++
+ static struct attribute *uniwill_attrs[] = {
+ 	/* Keyboard-related */
+ 	&dev_attr_fn_lock.attr,
+@@ -1097,6 +1192,7 @@ static struct attribute *uniwill_attrs[] = {
+ 	/* Power-management-related */
+ 	&dev_attr_ctgp_offset.attr,
+ 	&dev_attr_usb_c_power_priority.attr,
++	&dev_attr_local_dimming.attr,
+ 	NULL
+ };
+ 
+@@ -1136,6 +1232,11 @@ static umode_t uniwill_attr_is_visible(struct kobject *kobj, struct attribute *a
+ 			return attr->mode;
+ 	}
+ 
++	if (attr == &dev_attr_local_dimming.attr) {
++		if (uniwill_device_supports(data, UNIWILL_FEATURE_LOCAL_DIMMING))
++			return attr->mode;
++	}
++
+ 	return 0;
+ }
+ 
+@@ -1922,6 +2023,10 @@ static int uniwill_probe(struct platform_device *pdev)
  	if (ret < 0)
  		return ret;
-@@ -1409,14 +1412,14 @@ static int uniwill_led_init(struct uniwill_data *data)
+ 
++	ret = local_dimming_init(data);
++	if (ret < 0)
++		return ret;
++
+ 	return uniwill_input_init(data);
+ }
+ 
+@@ -2075,6 +2180,14 @@ static int uniwill_resume_usb_c_power_priority(struct uniwill_data *data)
+ 	return usb_c_power_priority_restore(data);
+ }
+ 
++static int uniwill_resume_local_dimming(struct uniwill_data *data)
++{
++	if (!uniwill_device_supports(data, UNIWILL_FEATURE_LOCAL_DIMMING))
++		return 0;
++
++	return local_dimming_restore(data);
++}
++
+ static int uniwill_resume(struct device *dev)
+ {
+ 	struct uniwill_data *data = dev_get_drvdata(dev);
+@@ -2106,7 +2219,11 @@ static int uniwill_resume(struct device *dev)
+ 	if (ret < 0)
  		return ret;
  
- 	data->led_mc_cdev.led_cdev.color = LED_COLOR_ID_MULTI;
--	data->led_mc_cdev.led_cdev.max_brightness = LED_MAX_BRIGHTNESS;
-+	data->led_mc_cdev.led_cdev.max_brightness = max_brightness;
- 	data->led_mc_cdev.led_cdev.flags = LED_REJECT_NAME_CONFLICT;
- 	data->led_mc_cdev.led_cdev.brightness_set_blocking = uniwill_led_brightness_set;
+-	return uniwill_resume_usb_c_power_priority(data);
++	ret = uniwill_resume_usb_c_power_priority(data);
++	if (ret < 0)
++		return ret;
++
++	return uniwill_resume_local_dimming(data);
+ }
  
- 	if (value & LIGHTBAR_S0_OFF)
- 		data->led_mc_cdev.led_cdev.brightness = 0;
- 	else
--		data->led_mc_cdev.led_cdev.brightness = LED_MAX_BRIGHTNESS;
-+		data->led_mc_cdev.led_cdev.brightness = max_brightness;
- 
- 	for (int i = 0; i < LED_CHANNELS; i++) {
- 		data->led_mc_subled_info[i].color_index = color_indices[i];
-@@ -1429,7 +1432,7 @@ static int uniwill_led_init(struct uniwill_data *data)
- 		 * Make sure that the initial intensity value is not greater than
- 		 * the maximum brightness.
- 		 */
--		value = min(LED_MAX_BRIGHTNESS, value);
-+		value = min(max_brightness, value);
- 		ret = regmap_write(data->regmap, uniwill_led_channel_to_ac_reg[i], value);
- 		if (ret < 0)
- 			return ret;
-@@ -1882,6 +1885,7 @@ static int uniwill_probe(struct platform_device *pdev)
- 		return ret;
- 
- 	data->features = device_descriptor.features;
-+	data->lightbar_max_brightness = device_descriptor.lightbar_max_brightness;
- 
- 	/*
- 	 * Some devices might need to perform some device-specific initialization steps
-@@ -2130,11 +2134,13 @@ static struct platform_driver uniwill_driver = {
- 
- static struct uniwill_device_descriptor lapqc71a_lapqc71b_descriptor __initdata = {
- 	.features = UNIWILL_FEATURE_SUPER_KEY |
-+		    UNIWILL_FEATURE_LIGHTBAR |
- 		    UNIWILL_FEATURE_BATTERY_CHARGE_LIMIT |
- 		    UNIWILL_FEATURE_CPU_TEMP |
- 		    UNIWILL_FEATURE_GPU_TEMP |
- 		    UNIWILL_FEATURE_PRIMARY_FAN |
- 		    UNIWILL_FEATURE_SECONDARY_FAN,
-+	.lightbar_max_brightness = 36,
+ static DEFINE_SIMPLE_DEV_PM_OPS(uniwill_pm_ops, uniwill_suspend, uniwill_resume);
+@@ -2222,6 +2339,17 @@ static struct uniwill_device_descriptor tux_featureset_3_nvidia_descriptor __ini
+ 		    UNIWILL_FEATURE_NVIDIA_CTGP_CONTROL,
  };
  
- static struct uniwill_device_descriptor lapac71h_descriptor __initdata = {
-@@ -2158,6 +2164,7 @@ static struct uniwill_device_descriptor lapkc71f_descriptor __initdata = {
- 		    UNIWILL_FEATURE_GPU_TEMP |
- 		    UNIWILL_FEATURE_PRIMARY_FAN |
- 		    UNIWILL_FEATURE_SECONDARY_FAN,
-+	.lightbar_max_brightness = 200,
++static struct uniwill_device_descriptor tux_featureset_3_nvidia_mled_descriptor __initdata = {
++	.features = UNIWILL_FEATURE_FN_LOCK |
++		    UNIWILL_FEATURE_SUPER_KEY |
++		    UNIWILL_FEATURE_CPU_TEMP |
++		    UNIWILL_FEATURE_GPU_TEMP |
++		    UNIWILL_FEATURE_PRIMARY_FAN |
++		    UNIWILL_FEATURE_SECONDARY_FAN |
++		    UNIWILL_FEATURE_NVIDIA_CTGP_CONTROL |
++		    UNIWILL_FEATURE_LOCAL_DIMMING,
++};
++
+ static int phxtxx1_probe(struct uniwill_data *data)
+ {
+ 	unsigned int value;
+@@ -2272,6 +2400,32 @@ static struct uniwill_device_descriptor phxarx1_phxaqf1_descriptor __initdata =
+ 	.probe = phxarx1_phxaqf1_probe,
  };
  
- /*
++static int x6fr5xxy_probe(struct uniwill_data *data)
++{
++	unsigned int value;
++	int ret;
++
++	ret = regmap_read(data->regmap, EC_ADDR_LOCAL_DIMMING_SUPPORT, &value);
++	if (ret < 0)
++		return ret;
++
++	if (value != 0xff && value & LOCAL_DIMMING_SUPPORT)
++		data->features |= UNIWILL_FEATURE_LOCAL_DIMMING;
++
++	return 0;
++};
++
++static struct uniwill_device_descriptor x6fr5xxy_descriptor __initdata = {
++	.features = UNIWILL_FEATURE_FN_LOCK |
++		    UNIWILL_FEATURE_SUPER_KEY |
++		    UNIWILL_FEATURE_CPU_TEMP |
++		    UNIWILL_FEATURE_GPU_TEMP |
++		    UNIWILL_FEATURE_PRIMARY_FAN |
++		    UNIWILL_FEATURE_SECONDARY_FAN |
++		    UNIWILL_FEATURE_NVIDIA_CTGP_CONTROL,
++	.probe = x6fr5xxy_probe,
++};
++
+ static struct uniwill_device_descriptor pf5pu1g_descriptor __initdata = {
+ 	.features = UNIWILL_FEATURE_FN_LOCK |
+ 		    UNIWILL_FEATURE_SUPER_KEY |
+@@ -2662,7 +2816,7 @@ static const struct dmi_system_id uniwill_dmi_table[] __initconst = {
+ 			DMI_MATCH(DMI_SYS_VENDOR, "TUXEDO"),
+ 			DMI_EXACT_MATCH(DMI_BOARD_NAME, "X6FR5xxY"),
+ 		},
+-		.driver_data = &tux_featureset_3_nvidia_descriptor,
++		.driver_data = &x6fr5xxy_descriptor,
+ 	},
+ 	{
+ 		.ident = "TUXEDO Stellaris 16 Gen7 Intel",
+@@ -2678,7 +2832,7 @@ static const struct dmi_system_id uniwill_dmi_table[] __initconst = {
+ 			DMI_MATCH(DMI_SYS_VENDOR, "TUXEDO"),
+ 			DMI_EXACT_MATCH(DMI_BOARD_NAME, "X6AR5xxY_mLED"),
+ 		},
+-		.driver_data = &tux_featureset_3_nvidia_descriptor,
++		.driver_data = &tux_featureset_3_nvidia_mled_descriptor,
+ 	},
+ 	{
+ 		.ident = "TUXEDO Book BA15 Gen10 AMD",
 -- 
 2.43.0
 
