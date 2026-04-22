@@ -1,249 +1,118 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.12])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ej1-f52.google.com (mail-ej1-f52.google.com [209.85.218.52])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4BF762FA0DF;
-	Wed, 22 Apr 2026 09:56:02 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.12
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D952E3C0636
+	for <platform-driver-x86@vger.kernel.org>; Wed, 22 Apr 2026 10:42:45 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.52
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1776851763; cv=none; b=Lw98V3LsdH+knEtletk11W/8w7H84+gGDnq5jkS/NfeDBIqdqvkf1pEt5mhf6zb3MmVFf+S/MSDB8e2mf4Q+yjDIB96IoBvX+cWBx5zWGhAfNO2ZNRNP33XqLLZuqYxPb6YSbAQuN4qLAjHStfTB3Q8rL3627v17na9TG9qeFUk=
+	t=1776854567; cv=none; b=GMPZ01xRKLRkFRlIRrkfy/jvWGWeUMULnWWJ7m2uxTpd6dZVn86u2H/xRdOP5Fs7C1s5CKrNv7I4Enq5F66aGegom7+EBi3d2LUVlXzJ6QSJyFmErKI1HVUR/F3QBrhSgLxxej5HEwNhq6Nk+inoH1qy7IQkCaRhcXIuOhD8pzw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1776851763; c=relaxed/simple;
-	bh=WoJXtATBZcNjFPERCJ9f77CmNIQXO+YeEIF4mFvoqyU=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=rs5/KX08myTAJZVa4zFf7p7k6M0hYstFl9dDkFZiBXzYND+uPCZQ/gqM55kvVOOrGJh1Flie5bp6q0r0hWuzlx5AYxxp2iULTwiKaLR0ueI9Xmbo5tbKgrqT2Xp2DV8ot0ECEcLd4t8V5r21pBwhx0VGM4uOX5cUKcMnkEmn7Qo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=pass smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=Mz0ePwR6; arc=none smtp.client-ip=198.175.65.12
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.intel.com
+	s=arc-20240116; t=1776854567; c=relaxed/simple;
+	bh=nVoN2jvwCuM34Ln0MbOO6ruG4cmf5xyO0e0Y7H57HGM=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=t8eISpKNSJhlAjkq397askFk5z6w/14iuft4Xk+6BBwluL1YBN3RIp6tWrqm6WxraPwBCIAPZvBhnQCQBlCQwqFYICNXOuKHSIa5gnJH2vSFaNFXYYcywDbYRQ0UQL0aMC5lxDz1SWaPH6urJzAo7VFbKY90my/7Rhaa6fDUbGQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=Sx+nZUv3; arc=none smtp.client-ip=209.85.218.52
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="Mz0ePwR6"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1776851763; x=1808387763;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=WoJXtATBZcNjFPERCJ9f77CmNIQXO+YeEIF4mFvoqyU=;
-  b=Mz0ePwR6KpRg4GH+Zm50m4kwmgllov75G9BflSG+9Z8PMyPgK3zPOQh7
-   3frfhatjCv4pvm9+WKZy2mILIwMsi9Iup/Wmv7GEyK8ik9Q7AlH0db+5a
-   whUWqo07lKAw3D8fmaN5o2nS3HdycfPbwINddwQKL3igN9QNr/TIGiA0S
-   470OdWrze09fDDjuWrXc8wVzDsZBpU43Y4+uNSfMj593iLLpnRPVaaWRq
-   b0auI7mACo8ch/ftXusvB2Bc7Iw4GnvxJoY4pCY3r4jn7q26JdGo0VziF
-   FwTTvSmYSqAZFA8oMwsFC0lyndk+PHlG4JK/EvEYODAhH3rykrTSGb0do
-   A==;
-X-CSE-ConnectionGUID: mUV0iTO1QK2BulFkwUCE2A==
-X-CSE-MsgGUID: 8/5fdKS5SPGklzW7ErBolQ==
-X-IronPort-AV: E=McAfee;i="6800,10657,11763"; a="89269066"
-X-IronPort-AV: E=Sophos;i="6.23,192,1770624000"; 
-   d="scan'208";a="89269066"
-Received: from orviesa008.jf.intel.com ([10.64.159.148])
-  by orvoesa104.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 22 Apr 2026 02:56:02 -0700
-X-CSE-ConnectionGUID: lJbpWZs/SIG7JUOsa6G/jA==
-X-CSE-MsgGUID: gd2uw9eaSba+2O21dWdavg==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.23,192,1770624000"; 
-   d="scan'208";a="232219136"
-Received: from black.igk.intel.com ([10.91.253.5])
-  by orviesa008.jf.intel.com with ESMTP; 22 Apr 2026 02:56:00 -0700
-Received: by black.igk.intel.com (Postfix, from userid 1001)
-	id ABA6195; Wed, 22 Apr 2026 11:55:58 +0200 (CEST)
-Date: Wed, 22 Apr 2026 11:55:58 +0200
-From: Mika Westerberg <mika.westerberg@linux.intel.com>
-To: Marco Scardovi <mscardovi95@gmail.com>
-Cc: Hans de Goede <hansg@kernel.org>,
-	Francesco Lauritano <francesco.lauritano1@protonmail.com>,
-	Mario Limonciello <superm1@kernel.org>,
-	"linux-acpi@vger.kernel.org" <linux-acpi@vger.kernel.org>,
-	"open list:GPIO ACPI SUPPORT" <linux-gpio@vger.kernel.org>,
-	"platform-driver-x86@vger.kernel.org" <platform-driver-x86@vger.kernel.org>,
-	"westeri@kernel.org" <westeri@kernel.org>,
-	Benjamin Tissoires <bentiss@kernel.org>
-Subject: Re: [BUG] 36-second boot delay due to by
- acpi_gpio_handle_deferred_request_irqs on ASUS ROG Strix G16 (2025)
-Message-ID: <20260422095558.GC557136@black.igk.intel.com>
-References: <woxnPhTYiKi2aLzBK8GnO8DpvdgYjQc-P42uhJOzyrcYC3Gdstht27hML8yNHgOklhm2MgGA7wt9gGZ17BHoWlG0vqJuVVJDgCSev8udfds=@protonmail.com>
- <NIIS8XD_nSRvp36X39GxcDRAWsaScQIFx6o9JsFCbyBZk5PqznRdxg9EDDb_9tzWd5TcjzxrRtFx5_uLCVa5wJAYykW2k0Ue_XPMPtWCQiY=@protonmail.com>
- <e8ed4d4e-37e1-4577-bf80-62fcefbef7dc@kernel.org>
- <ReQS8sQSGy3UTuG6tyPvoOb8_037sC6A2yXsSFNuXY1PlTFtCcDHnjf8vufEsk8avBSIL46U0qE-ZjTJD1xsbVYZ6_d2-wlTOZ2NJ2coTsc=@protonmail.com>
- <20251218063954.GT2275908@black.igk.intel.com>
- <b57b44c3-ea96-4189-8b70-71bf4a80d29b@kernel.org>
- <20251218103831.GW2275908@black.igk.intel.com>
- <51f999d7-2064-47dc-8d9b-e262588bfbdb@gmail.com>
- <20260422090709.GB557136@black.igk.intel.com>
- <4e55e31e-a5e8-4098-8a7f-bb52476b882a@gmail.com>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Sx+nZUv3"
+Received: by mail-ej1-f52.google.com with SMTP id a640c23a62f3a-b941762394aso721133766b.1
+        for <platform-driver-x86@vger.kernel.org>; Wed, 22 Apr 2026 03:42:45 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20251104; t=1776854564; x=1777459364; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=VlNzo1eBMowqDfFElEr+Uc5k30IlaG2soSobSy7sGxQ=;
+        b=Sx+nZUv3AL/F1GqTQWq1cshoyCO0Ly+L3Akw0KPoVKmm+8viAeEVPTHq6gE7G45d2J
+         DhsluVdsxgzWPPMGq+ezg/76Wb+Q1Q0tbfeJ2nDYRWrSEkgme4Og/DTnu6rMwB99oa1r
+         FsUZgcEL+LkEyd7OOvmUPpO00+FzDqpewsLVkiiltMQsWcjdPGXAOYATU+ByROosvP2E
+         mT2ly4ZKOHnOBiZOic7E7MoeUgTU8pQACkEPAGKg7QxLe+e50FmevgrZMtDY5Rh+aYcw
+         6+meXRHbiXRrNNZ9WLeYvCVOknVTA7a/GVYFVu1Gi4bkuyV5bz9W/LBda+d6ZgKFZuU9
+         AIEw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20251104; t=1776854564; x=1777459364;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-gg:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=VlNzo1eBMowqDfFElEr+Uc5k30IlaG2soSobSy7sGxQ=;
+        b=ZbXO7367m4nQW+3r+bMszFFNDp2fAm3WaQ9Mb4AZRuUpMTRLxoJTXz38GDnw/LhbC+
+         zSlNfXhhykhXsSh7aizvKGM5ORcGsUDM7ZtigBIoZ9Yk+rvfTyCVewIrIzEhq7GL1suA
+         sFp/9AsAfg8uxjT82PLmjh7AKE8CBRfgTMsODY7Jl58bXOQ1FfcmjhIITLNU2qFV5s7B
+         rBwol97PA+SA5BJlu3RBYjgb81uwrp7MCYjH7uxyEREYlZ2Q8cRP9yJ5kOLVx5JJptoe
+         vg7/bKa5DQyxmapceohsbxJJtBcCbA55AZzWGQ50queYp12iiyGA0Te+PwFgh+Jz788i
+         Vk6Q==
+X-Forwarded-Encrypted: i=1; AFNElJ/NvkbPLbPLkJiADDIWlYhsroweu8ONiVrJPvxG6n7BjD7e0Ue/1mv/DGhxzeq/cCBI5kgqIYZXbsyVBfJ956sjmfqo@vger.kernel.org
+X-Gm-Message-State: AOJu0YyBMRHI8uLBkCiCBnC8bT9/VMsC9bZsjzV8ahhFrFHyT/HhUBM2
+	CQTs0cEdT556Cl6Q/6G1pL5Q6uAKZ7cM3+2qtotxe2FeIYhjnAd/Lku7+sXMAI6s
+X-Gm-Gg: AeBDieumpIEtVjQSX8j0L7VlV5eqiA/wAePGpLFJnNgsC5HxRKAD1VjG8SSWR9/BccF
+	23+mJoMiSjXV1C8zKaSrNHRhKMU8xtRcbC2J+KC53btT4ZU1uL614gg689d4BoZdjdxlMxo9HoF
+	VRvaNPV5axGgkshokrccHtEwn1WB1ZKML1QLW9cHvjBECBmJ9Y0E8ZD7REJqjDjfkyY+tg0IWBE
+	4UZgkzwkna+/exfEGU4Kj54hbCuW99B3Ueh4UYiM0tuSOGIDisPxg/pMPsOigDMZ/TzXb8OPgk8
+	Xes6tJZWx68Ir9MJvrojyPbQFECJdfcuJxSuqHhCrluBYUY0PwGDap36liPnw/winDs0BiPHMsI
+	UdUMTRCcGNcwwR1Rba6xyG4h49BxKTPhKybmHPc4V0kcJL8OxMV31gBXuRCJJTPgq9pd7e+hm1r
+	q0y0bux6XMlx4SLrEReTxU5QUNA1POSpCqKb5wagBvXewTrQpkrlgwCCjlgcDe3YsS8Bvcf9+8D
+	OmBIF0=
+X-Received: by 2002:a17:907:c1f:b0:ba5:85fb:d0de with SMTP id a640c23a62f3a-ba585fc891amr982035266b.3.1776854563788;
+        Wed, 22 Apr 2026 03:42:43 -0700 (PDT)
+Received: from Bors-School.home (154-125-146-85.ftth.glasoperator.nl. [85.146.125.154])
+        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-ba451210e1bsm530742566b.3.2026.04.22.03.42.42
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 22 Apr 2026 03:42:43 -0700 (PDT)
+From: Borys Turko <turkoborys@gmail.com>
+To: Ike Panhc <ikepanhc@gmail.com>,
+	Hans de Goede <hansg@kernel.org>
+Cc: Mark Pearson <mpearson-lenovo@squebb.ca>,
+	"Derek J . Clark" <derekjohn.clark@gmail.com>,
+	=?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>,
+	platform-driver-x86@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	Borys Turko <turkoborys@gmail.com>
+Subject: [PATCH] platform/x86: ideapad-laptop: remap "Star with S" key to KEY_DASHBOARD
+Date: Wed, 22 Apr 2026 12:42:27 +0200
+Message-ID: <20260422104227.19969-1-turkoborys@gmail.com>
+X-Mailer: git-send-email 2.54.0
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <4e55e31e-a5e8-4098-8a7f-bb52476b882a@gmail.com>
+Content-Transfer-Encoding: 8bit
 
-On Wed, Apr 22, 2026 at 11:45:33AM +0200, Marco Scardovi wrote:
-> 
-> On 4/22/26 11:07, Mika Westerberg wrote:
-> > Hi,
-> > 
-> > On Wed, Apr 22, 2026 at 09:51:01AM +0200, Marco Scardovi wrote:
-> > > On 12/18/25 11:38, Mika Westerberg wrote:
-> > > > On Thu, Dec 18, 2025 at 11:33:14AM +0100, Hans de Goede wrote:
-> > > > > Hi,
-> > > > > 
-> > > > > On 18-Dec-25 07:39, Mika Westerberg wrote:
-> > > > > > On Wed, Dec 17, 2025 at 07:19:56PM +0000, Francesco Lauritano wrote:
-> > > > > > > On Wednesday, December 17th, 2025 at 7:01 PM, Mario Limonciello <superm1@kernel.org> wrote:
-> > > > > > > 
-> > > > > > > > On 12/17/25 10:57 AM, Francesco Lauritano wrote:
-> > > > > > > > 
-> > > > > > > > > On Wednesday, December 17th, 2025 at 4:12 PM, Francesco Lauritano francesco.lauritano1@protonmail.com wrote:
-> > > > > > > > > 
-> > > > > > > > > > The _AEI defines 5 GPIO interrupts. Narrowed it down to two:
-> > > > > > > > > > 
-> > > > > > > > > > gpiolib_acpi.ignore_interrupt=AMDI0030:00@21,AMDI0030:00@24
-> > > > > > > > > > 
-> > > > > > > > > > This fixes the delay. Pins 0x15 and 0x18 both call: \_SB.PCI0.SBRG.HNC0()
-> > > > > > > > > Traced it further. HNC0(pin, 0) takes the Else branch and calls:
-> > > > > > > > > ATKM(0xC0)
-> > > > > > > > > ADTM(Zero)
-> > > > > > > > > 
-> > > > > > > > > ADTM calls NOD2(), which is the actual culprit:
-> > > > > > > > > 
-> > > > > > > > > While ((Arg0 != RDNT))
-> > > > > > > > > {
-> > > > > > > > > If ((Local0 >= 0x0F)) { Break }
-> > > > > > > > > Notify (^^GPP0.PEGP, Arg0)
-> > > > > > > > > Local0++
-> > > > > > > > > Sleep (Local0 * 0x64)
-> > > > > > > > > }
-> > > > > > > > > 
-> > > > > > > > > It notifies the dGPU and polls RDNT, sleeping 100, 200, ... 1500ms per iteration.
-> > > > > > > > > Max 15 loops = ~12s per pin. GPU doesn't respond at boot so it maxes out.
-> > > > > > > > > 
-> > > > > > > > > Two pins, ~12s each, ~24-36s total.
-> > > > > > > > > 
-> > > > > > > > > Francesco
-> > > > > > > > Any idea why isn't the dGPU responding? I would have expected
-> > > > > > > > https://git.kernel.org/torvalds/c/4d4c10f763d78 sets up policy that it's
-> > > > > > > > in D0.
-> > > > > > > > 
-> > > > > > > > Is the dGPU turned off in BIOS or through some reverse engineered
-> > > > > > > > tool/API or something?
-> > > > > > > dmesg without the workaround:
-> > > > > > > [    1.005184] pci 0000:01:00.0: PME# supported from D0 D3hot
-> > > > > > > [    1.288811] pci 0000:01:00.0: vgaarb: VGA device added
-> > > > > > > [   38.250139] nvidia: loading out-of-tree module taints kernel.
-> > > > > > > [   38.369358] nvidia 0000:01:00.0: enabling device (0000 -> 0003)
-> > > > > > > [   39.744421] NVRM: GPS ACPI DSM called before _acpiDsmSupportedFuncCacheInit
-> > > > > > > 
-> > > > > > > GPU is in D0 from 1.0s. nvidia loads at 38.2s after the GPIO hang completes.
-> > > > > > > 
-> > > > > > > No weird tools/APIs besides userspace utils (asusctl/supergfxctl).
-> > > > > > > 
-> > > > > > > No changes to BIOS factory defaults other than disabling Fast Boot.
-> > > > > > > dGPU is active, Display Mode is Dynamic (hybrid).
-> > > > > > > 
-> > > > > > > Traced RDNT - it's set by GPS function 19 in the ACPI tables:
-> > > > > > > Case (0x13)
-> > > > > > > {
-> > > > > > >       Debug = "GPS fun 19"
-> > > > > > >       \_SB.PCI0.SBRG.RDNT = (Local1 + 0xD1)
-> > > > > > > }
-> > > > > > > 
-> > > > > > > As far as I can understand GPIO initcall blocks at late_initcall_sync, preventing nvidia
-> > > > > > > from loading in time to respond. Based on the timing, GPU is awake but nothing can
-> > > > > > > register a handler while kernel is stuck at NOD2 polling loop.
-> > > > > > I wonder if you could try with the nouveau driver so that it's built-in to
-> > > > > > the kernel proper? Then it should be ready at the time these events
-> > > > > > trigger.
-> > > > > That is not really a workable solution though.
-> > > > Yeah, I did not meant it to be the "solution" rather just to check whether
-> > > > it is related if the GPU driver is there or not. You cannot build the
-> > > > proprietary driver into the kernel so that's why I suggested the
-> > > > open-source one.
-> > > Hi Everyone,
-> > > 
-> > > I would start saying sorry for the necrobump. I faced the same problem on my
-> > > G614PR and fixed the same way as Francesco.
-> > > 
-> > > Do you happen to know if there is any news about this? I'm currently on
-> > > CachyOS with kernel 7.0 and noticed it behaves the same way as 6.19.
-> > > 
-> > > I'm on to try patches or provide more infos if needed, even if I have to
-> > > admit I know Linux but not that deeply.
-> > As far as I can tell no updates unfortunately. I guess we could go with
-> > slightly updated patch from Francesco, like below that just ignores those
-> > two interrupts. Can you try if that works for you?
-> > 
-> > This list of devices that suffer from the "edge events on boot" seems to be
-> > growing so maybe we should re-think if that should be enabled for all
-> > systems or limit to the problematic ones (although that list could get big
-> > too ;-))
-> > 
-> > diff --git a/drivers/gpio/gpiolib-acpi-quirks.c b/drivers/gpio/gpiolib-acpi-quirks.c
-> > index a0116f004975..4e60a176ac93 100644
-> > --- a/drivers/gpio/gpiolib-acpi-quirks.c
-> > +++ b/drivers/gpio/gpiolib-acpi-quirks.c
-> > @@ -392,6 +392,23 @@ static const struct dmi_system_id gpiolib_acpi_quirks[] __initconst = {
-> >   			.ignore_wake = "VEN_0488:00@355",
-> >   		},
-> >   	},
-> > +	{
-> > +		/*
-> > +		 * The ASUS ROG Strix G16 (2025) ACPI GPIO configuration
-> > +		 * causes acpi_gpio_handle_deferred_request_irqs() to
-> > +		 * stall for ~36 seconds during boot so ignore the two
-> > +		 * interrupts involved.
-> > +		 *
-> > +		 * Found in BIOS G614PP.307.
-> > +		 */
-> > +		.matches = {
-> > +			DMI_MATCH(DMI_SYS_VENDOR, "ASUSTeK COMPUTER INC."),
-> > +			DMI_MATCH(DMI_PRODUCT_NAME, "ROG Strix G16 G614PP_G614PP"),
-> > +		},
-> > +		.driver_data = &(struct acpi_gpiolib_dmi_quirk) {
-> > +			.ignore_interrupt = "AMDI0030:00@21,AMDI0030:00@24",
-> > +		},
-> > +	},
-> >   	{} /* Terminating entry */
-> >   };
-> 
-> Hi Mika,
-> 
-> thank you for the quick reply. AFAICS the patch as is would only works for
-> the G614PP and not for the others (for eg I have G614PR_G614PR).
+The customizable Lenovo hotkey ("Star with S") on the Lenovo 82EY is
+currently mapped to KEY_FAVORITES. However, KEY_FAVORITES is primarily
+handled as a browser-specific action (Add to Favorites) and is not
+consistently recognized as a system-wide hotkey by modern desktop
+environments.
 
-Ah sorry missed that.
+Testing on the Cinnamon desktop environment shows that KEY_FAVORITES
+is not captured for system mapping, and it fails to trigger any action
+in modern web browsers.
 
-> Assuming all the variants suffer the same problem would it be ok to use a
-> wildcard for it?
+Remapping this key to KEY_DASHBOARD allows it to be treated as a
+system-level event. This change enables users to map the key to
+system functions (such as a dashboard or launcher) through their
+desktop environment's keyboard settings.
 
-Yeah, we could expand it to all "ROG Strix G16" I think:
+Tested on Lenovo 82EY with evtest and Cinnamon DE.
 
-diff --git a/drivers/gpio/gpiolib-acpi-quirks.c b/drivers/gpio/gpiolib-acpi-quirks.c
-index a0116f004975..e3a6111854e8 100644
---- a/drivers/gpio/gpiolib-acpi-quirks.c
-+++ b/drivers/gpio/gpiolib-acpi-quirks.c
-@@ -392,6 +392,23 @@ static const struct dmi_system_id gpiolib_acpi_quirks[] __initconst = {
- 			.ignore_wake = "VEN_0488:00@355",
- 		},
- 	},
-+	{
-+		/*
-+		 * The ASUS ROG Strix G16 (2025) ACPI GPIO configuration
-+		 * causes acpi_gpio_handle_deferred_request_irqs() to
-+		 * stall for ~36 seconds during boot so ignore the two
-+		 * interrupts involved.
-+		 *
-+		 * Found in BIOS G614PP.307.
-+		 */
-+		.matches = {
-+			DMI_MATCH(DMI_SYS_VENDOR, "ASUSTeK COMPUTER INC."),
-+			DMI_MATCH(DMI_PRODUCT_NAME, "ROG Strix G16"),
-+		},
-+		.driver_data = &(struct acpi_gpiolib_dmi_quirk) {
-+			.ignore_interrupt = "AMDI0030:00@21,AMDI0030:00@24",
-+		},
-+	},
- 	{} /* Terminating entry */
- };
- 
+Signed-off-by: Borys Turko <turkoborys@gmail.com>
+---
+ drivers/platform/x86/lenovo/ideapad-laptop.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/drivers/platform/x86/lenovo/ideapad-laptop.c b/drivers/platform/x86/lenovo/ideapad-laptop.c
+index 4fbc904f1..3a5b5a478 100644
+--- a/drivers/platform/x86/lenovo/ideapad-laptop.c
++++ b/drivers/platform/x86/lenovo/ideapad-laptop.c
+@@ -1333,7 +1333,7 @@ static const struct key_entry ideapad_keymap[] = {
+ 	/* Esc (handled by the firmware) */
+ 	{ KE_IGNORE,	0x03 | IDEAPAD_WMI_KEY },
+ 	/* Customizable Lenovo Hotkey ("star" with 'S' inside) */
+-	{ KE_KEY,	0x01 | IDEAPAD_WMI_KEY, { KEY_FAVORITES } },
++	{ KE_KEY,	0x01 | IDEAPAD_WMI_KEY, { KEY_DASHBOARD } },
+ 	{ KE_KEY,	0x04 | IDEAPAD_WMI_KEY, { KEY_SELECTIVE_SCREENSHOT } },
+ 	/* Lenovo Support */
+ 	{ KE_KEY,	0x07 | IDEAPAD_WMI_KEY, { KEY_HELP } },
+-- 
+2.54.0
+
