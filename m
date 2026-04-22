@@ -1,41 +1,40 @@
 Received: from mout.gmx.net (mout.gmx.net [212.227.17.20])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 481C63563D4;
-	Wed, 22 Apr 2026 11:28:35 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B39BD3C7E1B;
+	Wed, 22 Apr 2026 11:29:54 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=212.227.17.20
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1776857318; cv=none; b=ROw0vqNA+9BU4e3Wqvk4ywyA6rWcptGd2q85JCJj6unxEcv1LrWi+A+yADRkTMhpVBdQDuKeTiusSIdHqCZaKzlE7IcmFq4u3re/O9K2up2Mal19kmgcWTnzSAOGgF99IK8NHfIgUE/rjC/WlP0VXUfRte33TKwXD1u5RQhwqac=
+	t=1776857396; cv=none; b=lEf/XsvLhE/9kWzMUEn5VNB7Mau448X4ftQB1wkeSzAj28zEFskfv1lJcjZH34mNllBvVOE1XpIBA7AKbNISELZfKcMSbtIqRAJsepUz3OAUU+zxLwvmz6u9BvB7A3MRPZrc8HmNsz4CWdcMOsBlzTtmfIskEgISbiOIsun8TKA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1776857318; c=relaxed/simple;
-	bh=mXW+r7qwp4g/bEGZCt5S9Z0aeKkXMAo/9c+pf12Q6I8=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=SqTR8rIc/0/CC024wzEm1dmaEOt80glqf6hhmSY3d63h3XLZZe4gcQXnm/aUR15t55GyOHSkhYpSYkYZK9ivEMk7EMypRNaaf2tHniDpe1lbdfe7+LvEntY/UT2k7es0CWPTPuCHbhTauIAyy9VcVHulbXHZhhcea4yVjocFU14=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gmx.de; spf=pass smtp.mailfrom=gmx.de; dkim=pass (2048-bit key) header.d=gmx.de header.i=w_armin@gmx.de header.b=rRj637yd; arc=none smtp.client-ip=212.227.17.20
+	s=arc-20240116; t=1776857396; c=relaxed/simple;
+	bh=aa5C2HnXYVaCYsdIKcZFFflk2NTG9k/5j3sdcztlY4s=;
+	h=Message-ID:Date:MIME-Version:Subject:From:To:Cc:References:
+	 In-Reply-To:Content-Type; b=KvoBcE0kFi8hylSb3yzE/c1ZQcipsp/xjwW1XSelJoWdOCWZ0uX/oSDSuBbKaGdVNrNzA54eQXluF5Keo6Ar2JR8ZtC5g2vQfi/VpkpWPNfmfwTPjG1Vd4zmaEVeHWnrRQOeO52ZqpanxuAAPb34bg+y5KI4m8aZ6jMijBs+dMI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gmx.de; spf=pass smtp.mailfrom=gmx.de; dkim=pass (2048-bit key) header.d=gmx.de header.i=w_armin@gmx.de header.b=fT08F45T; arc=none smtp.client-ip=212.227.17.20
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gmx.de
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmx.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmx.de header.i=w_armin@gmx.de header.b="rRj637yd"
+	dkim=pass (2048-bit key) header.d=gmx.de header.i=w_armin@gmx.de header.b="fT08F45T"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=gmx.de;
-	s=s31663417; t=1776857314; x=1777462114; i=w_armin@gmx.de;
-	bh=GeHDQXJYU/B/c/59BAtFFyD0s/+zC9hOb00WeJL2Eiw=;
-	h=X-UI-Sender-Class:Message-ID:Date:MIME-Version:Subject:To:Cc:
-	 References:From:In-Reply-To:Content-Type:
-	 Content-Transfer-Encoding:cc:content-transfer-encoding:
-	 content-type:date:from:message-id:mime-version:reply-to:subject:
-	 to;
-	b=rRj637ydDBtqoqx1iE2sRLeYTSgxlCEuKrMoIfwTry4INMVMauTQ8vc3a9IYtgL/
-	 EBQo9Nzxrd1frl3bQtJD+6fhg0g4DjfniNI/YKuFviFQ3O/UQu/bnqci/RpQZ+b9m
-	 x0j1NKm6twxf/cFu9PZ8MkKtsUxahbo596uRt0S9Gcm9W6tvtxMbaKiPydakuJwTX
-	 rdtGIRAFqOqqzAD8TY0tY8d2pa6XRihSXsuPo6bD+nP70O3+j9/pUF4S6Tmnl5wyK
-	 y/sb6RsC+DyPRi/0z7VFdO2Qm6YtQIsJBYVtwX0qMf+YF/+OLxo9mCuSom7R7MQpz
-	 MbQxEc09kkIiGrkdVA==
+	s=s31663417; t=1776857385; x=1777462185; i=w_armin@gmx.de;
+	bh=aa5C2HnXYVaCYsdIKcZFFflk2NTG9k/5j3sdcztlY4s=;
+	h=X-UI-Sender-Class:Message-ID:Date:MIME-Version:Subject:From:To:
+	 Cc:References:In-Reply-To:Content-Type:Content-Transfer-Encoding:
+	 cc:content-transfer-encoding:content-type:date:from:message-id:
+	 mime-version:reply-to:subject:to;
+	b=fT08F45TbVXYetLXUX13UUlK810apKgGAdWObVOa0uw7fbMb4jyt75tvFF600cZl
+	 rt/dhCGS4v4LRNspIuf0hPuUlvpOpi0J0KRuIJibX2BYB4U0n45QEjUTmMJmV3FM0
+	 rY/HVyBEBlbvz7XG0A/i1Hc9zc9wIbyRnoH3rcDDncqupRJVwn9zucW30Zn37Jg99
+	 bP7B2YSeKdOBOctsp63EKY+M4CJGO07ylGifw2bUgaSbUOiVhUeNjHBvh+WJQZRRT
+	 W2afL4R7qUmA+QbTAW2FihfC5JsEK9OStwjn/wOyROQ05G3m+7bjpCkAZ90Ohq3b+
+	 aSjYzJ4HUwC7AyKIZQ==
 X-UI-Sender-Class: 724b4f7f-cbec-4199-ad4e-598c01a50d3a
 Received: from client.hidden.invalid by mail.gmx.net (mrgmx104
- [212.227.17.168]) with ESMTPSA (Nemesis) id 1MI5UN-1wCza91UeN-00188u; Wed, 22
- Apr 2026 13:28:34 +0200
-Message-ID: <00de99ce-cb58-491d-81fc-f8bfb8ea4a16@gmx.de>
-Date: Wed, 22 Apr 2026 13:28:33 +0200
+ [212.227.17.168]) with ESMTPSA (Nemesis) id 1MFKKX-1w98uf3qlV-002lrV; Wed, 22
+ Apr 2026 13:29:44 +0200
+Message-ID: <df847a42-bdca-4a86-a8b0-641876264bbb@gmx.de>
+Date: Wed, 22 Apr 2026 13:29:44 +0200
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
@@ -43,148 +42,300 @@ List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [RFC PATCH 0/3] platform/x86: uniwill-laptop: Another improvement
- and another feature
+Subject: Re: [RFC PATCH 2/3] platform/x86: uniwill-laptop: Implement lightbar
+ for XMG Fusion (L19)
+From: Armin Wolf <W_Armin@gmx.de>
 To: Werner Sembach <wse@tuxedocomputers.com>, hansg@kernel.org,
  ilpo.jarvinen@linux.intel.com
 Cc: platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
 References: <20260421201103.142403-1-wse@tuxedocomputers.com>
+ <20260421201103.142403-3-wse@tuxedocomputers.com>
+ <d85481fe-513c-48db-b766-8f365bcbf66b@gmx.de>
 Content-Language: en-US
-From: Armin Wolf <W_Armin@gmx.de>
-In-Reply-To: <20260421201103.142403-1-wse@tuxedocomputers.com>
+In-Reply-To: <d85481fe-513c-48db-b766-8f365bcbf66b@gmx.de>
 Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: quoted-printable
-X-Provags-ID: V03:K1:4G+L/Hq2AcYZoGSckIgO2As8oFH4wVyXlwjXe90x8ClWgA+SBKW
- 6oyWp994Hzhjfvx33j/+3ZQfu+WhccFx1i/kiYnY9qfzAXRfX4T6upbwXHPyXxJqUoAqYzy
- 2Cs0qTdh9yF4D3ssCnWq7HZo+0Bw3S5Lci1jwdMdk0Le8KURCPP0nibes2pSdaQ5En8KUjZ
- NOaa77KnAK4TKTPha1Fvg==
+X-Provags-ID: V03:K1:rmcy98ReymUS2hJXGZIlNkOeeFsMGqcGzcavtwXNjARwrk9CEnd
+ 5MO5Ef1IH+yOyQKyndeGlXWJTY77WYRinXh2cLw0X2SrdGsrrjVbw7pO2y0v4+fpFxrHq9d
+ z202w+2CvF24Kf6Fef2qytb9iMB3hfknLjkZEJ9fx61M/HDY7JtPSvlDR8BY9XrO/0HtjYv
+ 7sV7DA/W9dixJ4F4BxatA==
 X-Spam-Flag: NO
-UI-OutboundReport: notjunk:1;M01:P0:f+SjNu+LRKk=;uME4RGmVxvoGan5IMqNOFByHutG
- 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
- DSPerxNZXxzkSTUwXes3o5/vwzU0VjA6ADBk=
+UI-OutboundReport: notjunk:1;M01:P0:BGD1Az5vPqI=;s4Jn5RMAjZGUc8CD+tNW+IBIgvC
+ XGZJy9EbNil+xkO0j/ef1bn4WEFBGc80EGcjGtqdTzA7LZbols0f+SbE5bPiLzDjFQT6eHLm+
+ YD7KW9h1LmEgTtY9g3tj3MWkle1PQtwB82iV6VD37E7QAT0wLtzpnex0hsYzBV596+VLQluWV
+ lXMp3ap2E3TAlzkQxOboTEtd/gH3Sy8/OYioC37JxJt2OAOHhTEITZo9cp1oVq4kY22mjF3bO
+ CA7MLsu0PiQGuM4ZLC3DmyTmaQPevv2BQxfz7d+XqXGm7ge8KNFleDCle25TjIw3ZXQSofRHE
+ e6ZfjiKrETgaC/DvuLkuYxcgfnHJ86bYGHEHRJl9yBcjb0zzqIlrQ9Wuim/VeIJBlegCDjh4C
+ hZG9fpLWHFQGOucUwoAvEeBsB77GmIUOHcfiYXujxCvTaIObQDvHLRXvemvAmnD2YC+FCPHb0
+ zLRKZ96KYOTCL4Wfsi4fjn332SQ10lkxxD9ab6X+/g942xKJ3/KchQBR2hperWVSBcty8Wyoy
+ 0EUSgxixkXhibZy/wWCnfzquGaC+wW2Vc4F0DksJQbcndUp3HJu/aOPYL3VGWu/TZcvohcuYg
+ Xb1iGaeT6pUN2N1HMH2cGuBLZfF3NS3l/9tX/7KmkswrhhBheo8yT0uvVn8fF8eIcz8bOMXZ3
+ UJ77uy9Z2tQIz/YOmTWAQEMYOpNc4IBR4bFfkIGIZoVA9Ms+jJxP7yvFA8yUZIDQSIq6kteAz
+ jTuKvUFaBgQou9G+WIpcg49x+FZT/2sjLYCCUIMK789acNUQhSGXhU91ITwzrvh3m9HX9VMUG
+ ZxhqXFv46Op4CuIg7JjPp2I8ziA/FBVwJesvsOMZm8qyf1JDuLQkjRUWbaj85cqLJ6pzHzR/o
+ hbcWRuGxdGBM740I0/8CAU21Dlc4jCezSlAhEGVGmwUDricmy0k2R+Ski/E3+yP+xgDk0OKk2
+ eA56OJs12+7t6cvclVDuGQCwovgHJdq2AGgIekhAfSi2iyX13gxtfGYBQuWM3mEa0tfKnScoz
+ yEqezMFUpCn4PXOo8sMDJLXzOGKRLLwZ4xj7EUtv6YVmf5+OmYkcMPzQg0ZFWgnh+8pVR2qdi
+ aMhxfVuD88HSjMCNv0qgdahMUcgaw9a1pigtfqD0HZDXqfMnwn5fsXsP8EEJPtfwY4mowfmGg
+ 3y1YfboTmBZjozKxX7kw0lTitowC3ll0QtBqrY00EsxLDlVmk5G9g29azY66uMTlC4NWHb1F5
+ qaKeldAx6gToOWbxWNwwstbhhZAt/1aeBuaIjXvmnzXuG3jx4s+eFGDlibUgGY3Nx1O/1cxjV
+ 8Z7DlSaS488zb/KhPODItbntqBYf1VSJFpxnP3Vnv7P/QmlVFEYDJ/f/H4lPQxzZQ+sMbOCnH
+ gjAr/Q4aCAsWjKs+Gh+ko4KzjynDHjr4v+Kuj9DTs6NFxUYyadzO3BAfYJcKfkqFQl9CfOsvc
+ 6y8oNgIbJ+4jllANYFkEXiLYMr6ujFIutC25turgVXz2ekncEJzYisIiCkQ7T5gQgbcYOWgda
+ iG2veovHNRY/sSg7qJLFw6cDqOeq33DZLqAAwhlYNP1FbTjCDyrWsxNV8c0gXKU6/1oyTqoo8
+ 0Z5y357B3CAD9bq7B2KO0OMN/Z2CvZHA0lHdCVR2NlPTmEc1G1tskD3XpsDBO3K9UCs98hxoQ
+ ztgYDWnnDHArsMANv9VEqM3jsuX/u//5Oz5NiYPawZoUeAd8q3rfQofXvw4i0OspNUZyXGv6I
+ lbcSu0hOkFbOAurkVu+pmZb35XCpaq+yMz8vZup18dcwZbFAKUUy7NfmbNNVIuUKUAdR+wZ62
+ ClpuLzvGwp+H7+ixiddSXUBQJcapJED935OTCxOWb9mUI9NBow4oXeUEIhR0y9DEI0II81HDS
+ g+VZ1uYYw9L41TFrsszuHcPfL4zRyFZPq9AvC+vcAgUz6MhtfU3Rw5TJcGNt99c9Y/Lg49Xol
+ lWvokrNZrk8tUdfJaqTPJa/LS4J3mOZGvjhEzLfmNoqgftXAxF0KdajDct1p2zIDI6mRk5Ur5
+ Msq35330hDyODn5NxDna1zYa4tgoMjMcGRGy4799z559q8vuwpuO9qbfDZIOAx2oaz4J5o607
+ c0n+RYrl/WqC4Of/ikUzb3v0goydI5hJBPdt4Eb3c3cYBZAkflFQN74888hJTvZ7NO2oq5td2
+ 7Zqpqg0mixplWw9xLk+EaVOc9lC8eHKUb4uPgsCIXSevXXrdpAeYh7cGDaRCtjC4Xv7CsNswm
+ ss8hVC8dX7j4VuujkP2OiJ30mBSNapOoGBjPq+A514GAesOIpe6J5xyR7pIh+c//ojsZoJamM
+ svVbsZhC1MTYJamWntrUE8I4GYum8q0R/vJCj+R39ZSLx3uez8LwgPPF595BUT4d4SKJqPro7
+ 9JPEw+gEBQuG/U03EpC+bBLCkjG5PRijQUiTk+QEWwm26DLbF8XKm4RR+GH+gNtZVfBZumZFH
+ NLaZYHXPyspRwLDF9tY7Iju/swdyDxpBPa0Ip5yl7T2a3h3z0akiLd+v6rJEujuOTpOKTDiEa
+ ODq1ElG7edTOcZBXw9oLRlEegKWz/8nMrQeUAeHicXpR37adX8Ui4h+mUosMQG48Z84Nb9oYP
+ C+L4eDb9y8cuT0D12BceREC6P6/L1l4+GUS5HqJi/Lb0XCMyEY3Kh7HCaHAuC7l5kYQmsgFa1
+ +0Y+N9EMQcu+D+aMxmGNN3l7mx8XrkwGIlkpi8TITsoJjX6wGE6a0ynQ8wCz984S0sj/Opt3Z
+ 5I912w/ocSWYcIHXAqXfBv2l1M5KEaAy7A1ldKO0lf1dfADjBPLd7qwujjczdDvsaRZoJrpEA
+ E4hUDrmDI3HhwNfSQZMw3oSvfwBoUsGiwhBwBafYKxxluzk8os36SobGzLAytJX2bYOcaOj+c
+ wGCWO9IvPyyF/jPsW8tNbtGVaZfwj09eSE3Gmx4o/MyY4Yd8IcxhxRxhht2EUvdX4aIuqc5n0
+ NRg1N75AsnXgjsq2OZ9idhfhTOgBxHvzoDxUjF47PqFDEgxBOKd2DRn47HBUXTKoaKMahQq3a
+ zSAYr6re304zclurKmwA5s8Wi8MxBmYaDVcIlJqS0gp9DNES8qxWsr2xQbAleHQ3u8Xa7OWEM
+ ufByKRnkRH3LRER2z+fCbMQPg9KUiaZFjPRO0Oq6GPaWJuzEpYS/G9goSWCiJ9WTfV79iGco+
+ vYdH4tKIBJiozjA+foD4uvpIjHILKm0rKdnjwiLZDLc6GL7DU2s9UUna9d4wJpD1mmmkF14Bh
+ xRX2I9Odixp5PHt5ux3aaSnFXhkgclZJQhZ/6gQz1s6MFsir3q047mCYmii+UkP4I9wuQiJpD
+ YSjWk5DhvuxBONIi5Dq/m1ZU67d9iZrlbAC6f8NGZ5J4A2j8PK6SMzfsCtEZw00XAuoXyi98c
+ c6eVS8CPpDgXvvKcKeAc9BAaBcz+yihQ94Zb1cskgcKgSoFfVisMlKB96P5XVMbsxI8g02wSY
+ oR7KKlfY8QMNJUnmsrUOWqWhTAnqfp89C7EDx6UO1pc1KbbQ8+VyaTRuQk3Vyf2cG/oV5aGTW
+ 8JassurjRB8S+ftzFbrska39IvT5FjfGYv9W/9mnvrgsqPCJgXriXsJO+Xh07gnMBuarhLmzD
+ fJoQbPf9ptZ/PAehxJ+tREDRzBF2MnIzxoBSXmTqLjThi9X+mLzSoMUpSUtD0nPkgGZxSWU4P
+ RV7i6qUn4B9wehmrvJ1omVk+OxN65ZJk9QTS2/LwgNm7WJnfHoTCjtleHNTPYBWsc+YDo9I/y
+ 2hVyHTEDQBILTX/gm8/LRgFF7gu5UNJoiZ83GJKuzN0cBeWto7vYXmler4gkT2TrGAGE2Zmb0
+ HOOxUVRCWhFyXfYBLGRuCtMQz06Fn/lMKDHz/BWgPODsYveilrOjUVBJhhSAVuZIzei7k3/hS
+ l5MzEwJhB4eJ4Jte9fmCyVEvIAn4IDCyVyWEPzexfJLdpm6nqapCyhZCQE1lkbt7Glbw/IbYm
+ 20m1w/E/fleJNJto9ge2g9lEW78/mqRPcYHq/M75cMRU2iuDpNG1aMqdhcunxfM/0i6mhXqrb
+ IgB52LnVPio/F1BDBHEoCR+6XmhU1OfkQuQufzn9ggAXDz/pR6eWL4+Osy5pyBUIJKgNStW57
+ RPoKPI7DyHEwB/F+PZerIMu6P7k8NLBDJK/xdu9hsAR3z08xPJ+PcKhKSAd8H1QNKZKkmtZY+
+ naiQ7oRoMzjQBi0ZVu8r2aay6v0FzFQf5ZppmnW3SV0Gudj/TEGGRmQ1aYcRoHJ11Oxw6GgP7
+ AJ7G/2OlcD+3omO7C3WaN8bcvsCJ8SIKGWRFJ9VhaJfpfsPetPQTDmVxV3A7TbJgaeqQua48F
+ kLDJHU8FnCHs9xzzOwhB/G43p48qdu+/pxj2dVRWX2uMZ3XxqZbZocsZfHzh0ij7If3fhqhj/
+ sn1graWkDiXc/HyX48qWnAMHtkqfNFwIvdUeuUb5whHCylAaJXJV0+eT1U3WJIilvjFHhQ9+B
+ VaLAvqZMGBaLb/8NPO6zo6kVlPX5foOwqnga63BSCFzhQuBay6eBeCxwN4CW77+L4r0mvm50y
+ sNq8Rr6JOiltTDco6pZDzrfpeKSsIM3695lAI8C7iJaexZsk4Dmv2VdnEsArziJBpM4+xVGSk
+ Evx6EQbmZfjlfpchugtYJ0N7OQ2oVoSpxCVqn8guhCvfWtH1gkLKSEfBQeoytkOo6I4UuuphU
+ Undg22jwYjn0E8aSzgFGUYyoPH4o/uXNlU3VtT3NWO5h7tnTd8W5u2nontrEefRkXf8N81Z3J
+ WSG3BE9x0DIpWXSAQJIim7q2dBGbpe2XS0IWN4RQ3v9g3ipXIOSdBBhJTIiNtVzPulHMRUTGn
+ RoxOBzjASqV86zL3na0ScbaA5hUcF30SqixgydFKcFecglPfRd2ddQn3RH3LPCjUqPCD3Afmu
+ 8m6R8aQ30axEDLi3fCn3H2hz6PQ0Lcm902l4Rdno0gTovV41URpCPU9+mp3I/KDAK8gxHrwWp
+ YPwOqEVFIJTJ8geya+OCw7ObjyE+WLQFpbIaHLKbYFyT2+QhYzz7t1Gi6lqLBRfHdDSDsj83C
+ E5btLRURxuN0DVYc9jZFJeyeKs9PdchpUHQ3ANTXk2unCM2LCYUmdLwM6YwO1QPhnvGmqUJ+E
+ JUT0tU/vqoF5oqRi6FIvPVbodJw7qNydBCR+Ouk9wKZvdhHm1T0qm8IZ23DAtCIG0jkAunFf7
+ aiqqm5sYfloCo3jxhj2VBWlwis1ac4Qiidhq18d7bGXecqKQzrJabV0bBx58y5hWnFOJ2E/65
+ UtHLXTd/bcidONlD/Nw8KVyxMgoF1WDmb7HvqrzozPuYfMoVAPyzLWwGGxUz9JBI2dtHyClMf
+ g75LqfB5GMLZrR+/NoRCP2UgXM1QshCP7WK7NKnoFwZuPD7txK8XiEAopVvUqVys0uLReioA2
+ 7tUOYEq5CKMey4380zq6zzZq6DuDZgA9D09mBIF6w5YDfpak156276tpvq4vXKMCJzO+FeC0V
+ l3tDzt0R3P3vZmfRV1+DkVbj3PQQ8tpi5bdLVVnt9zRT7EA6Vi00f19kaYx7P+D9ecstxusdQ
+ jlaQjhqZT4BksvZE9DHwQpqDdlNnzb2JS6LNFrMxONYSSipL
 
-Am 21.04.26 um 22:01 schrieb Werner Sembach:
-> Hi,
->=20
-> This series is based on another not yet accepted series
-> https://lore.kernel.org/all/20260417050912.5582-1-W_Armin@gmx.de/
->=20
-> RFC because of that, because the third patch is not yet tested, and beca=
-use
-> I have a question regarding the 3rd patch:
->=20
-> Should I abstract the call to wmi_evaluate_method away in a wrapper
-> function in uniwill-wmi somehow, or is it ok to have it straight in the
-> uniwill-laptop code like that? It is quite self contained.
->=20
-> Best regards,
->=20
-> Werner
-
-Hi,
-
-i prefer having the code for this WMI interface inside a separate file.=20
-I think we have to first rename uniwill-wmi* to uniwill-wmi-event*, then=
+Am 22.04.26 um 13:17 schrieb Armin Wolf:
+> Am 21.04.26 um 22:01 schrieb Werner Sembach:
+>> The XMG Fusion (L19) also has a lightbar but with a different max
+>> brightness value of 36 instead of 200.
+>>
+>> This patch adds a new feature flag for the driver to correctly handle=
 =20
-the new code can live in uniwill-wmi.c
+>> this
+>> case and applies it to the mentioned device.
+>>
+>> Signed-off-by: Werner Sembach <wse@tuxedocomputers.com>
+>> ---
+>> =C2=A0 drivers/platform/x86/uniwill/uniwill-acpi.c | 19 +++++++++++++--=
+=2D---
+>> =C2=A0 1 file changed, 13 insertions(+), 6 deletions(-)
+>>
+>> diff --git a/drivers/platform/x86/uniwill/uniwill-acpi.c b/drivers/=20
+>> platform/x86/uniwill/uniwill-acpi.c
+>> index 7d1fdbacc6871..62d56cc67e2e8 100644
+>> --- a/drivers/platform/x86/uniwill/uniwill-acpi.c
+>> +++ b/drivers/platform/x86/uniwill/uniwill-acpi.c
+>> @@ -318,7 +318,6 @@
+>> =C2=A0 #define FAN_TABLE_LENGTH=C2=A0=C2=A0=C2=A0 16
+>> =C2=A0 #define LED_CHANNELS=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 3
+>> -#define LED_MAX_BRIGHTNESS=C2=A0=C2=A0=C2=A0 200
+>> =C2=A0 #define UNIWILL_FEATURE_FN_LOCK=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
+=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 BIT(0)
+>> =C2=A0 #define UNIWILL_FEATURE_SUPER_KEY=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
+=C2=A0=C2=A0 BIT(1)
+>> @@ -344,6 +343,7 @@ struct uniwill_data {
+>> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 acpi_handle handle;
+>> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 struct regmap *regmap;
+>> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 unsigned int features;
+>> +=C2=A0=C2=A0=C2=A0 u8 lightbar_max_brightness;
+>> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 struct acpi_battery_hook hook;
+>> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 struct mutex battery_lock;=C2=A0=C2=A0=
+=C2=A0 /* Protects the list of currently=20
+>> registered batteries */
+>> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 union {
+>> @@ -376,6 +376,7 @@ struct uniwill_battery_entry {
+>> =C2=A0 struct uniwill_device_descriptor {
+>> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 unsigned int features;
+>> +=C2=A0=C2=A0=C2=A0 u8 lightbar_max_brightness;
+>> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 /* Executed during driver probing */
+>> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 int (*probe)(struct uniwill_data *data);
+>> =C2=A0 };
+>> @@ -1340,7 +1341,7 @@ static int uniwill_led_brightness_set(struct=20
+>> led_classdev *led_cdev, enum led_br
+>> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 for (int i =3D 0; i < LED_CHANNELS; i++)=
+ {
+>> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 /* Prevent the b=
+rightness values from overflowing */
+>> -=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 value =3D min(LED_MAX_BRIGH=
+TNESS, data-=20
+>> >led_mc_subled_info[i].brightness);
+>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 value =3D min(data->lightba=
+r_max_brightness, data-=20
+>> >led_mc_subled_info[i].brightness);
+>> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 ret =3D regmap_w=
+rite(data->regmap,=20
+>> uniwill_led_channel_to_ac_reg[i], value);
+>> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 if (ret < 0)
+>> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
+=A0=C2=A0 return ret;
+>> @@ -1376,12 +1377,14 @@ static int uniwill_led_init(struct=20
+>> uniwill_data *data)
+>> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 LED_COLOR_ID_GRE=
+EN,
+>> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 LED_COLOR_ID_BLU=
+E,
+>> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 };
+>> -=C2=A0=C2=A0=C2=A0 unsigned int value;
+>> +=C2=A0=C2=A0=C2=A0 unsigned int value, max_brightness;
+>> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 int ret;
+>> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 if (!uniwill_device_supports(data, UNIWI=
+LL_FEATURE_LIGHTBAR))
+>> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 return 0;
+>> +=C2=A0=C2=A0=C2=A0 max_brightness =3D data->lightbar_max_brightness;
+>=20
+> Please drop the max_brightness variable and assign=20
+> led_cdev.max_brightness and led_cdev.brightness directly.
+>=20
+>> +
+>> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 ret =3D devm_mutex_init(data->dev, &data=
+->led_lock);
+>> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 if (ret < 0)
+>> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 return ret;
+>> @@ -1409,14 +1412,14 @@ static int uniwill_led_init(struct=20
+>> uniwill_data *data)
+>> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 return ret;
+>> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 data->led_mc_cdev.led_cdev.color =3D LED=
+_COLOR_ID_MULTI;
+>> -=C2=A0=C2=A0=C2=A0 data->led_mc_cdev.led_cdev.max_brightness =3D LED_M=
+AX_BRIGHTNESS;
+>> +=C2=A0=C2=A0=C2=A0 data->led_mc_cdev.led_cdev.max_brightness =3D max_b=
+rightness;
+>> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 data->led_mc_cdev.led_cdev.flags =3D LED=
+_REJECT_NAME_CONFLICT;
+>> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 data->led_mc_cdev.led_cdev.brightness_se=
+t_blocking =3D=20
+>> uniwill_led_brightness_set;
+>> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 if (value & LIGHTBAR_S0_OFF)
+>> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 data->led_mc_cde=
+v.led_cdev.brightness =3D 0;
+>> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 else
+>> -=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 data->led_mc_cdev.led_cdev.=
+brightness =3D LED_MAX_BRIGHTNESS;
+>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 data->led_mc_cdev.led_cdev.=
+brightness =3D max_brightness;
+>> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 for (int i =3D 0; i < LED_CHANNELS; i++)=
+ {
+>> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 data->led_mc_sub=
+led_info[i].color_index =3D color_indices[i];
+>> @@ -1429,7 +1432,7 @@ static int uniwill_led_init(struct uniwill_data=
+=20
+>> *data)
+>> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 * Make sur=
+e that the initial intensity value is not greater=20
+>> than
+>> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 * the maxi=
+mum brightness.
+>> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 */
+>> -=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 value =3D min(LED_MAX_BRIGH=
+TNESS, value);
+>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 value =3D min(max_brightnes=
+s, value);
+>> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 ret =3D regmap_w=
+rite(data->regmap,=20
+>> uniwill_led_channel_to_ac_reg[i], value);
+>> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 if (ret < 0)
+>> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
+=A0=C2=A0 return ret;
+>> @@ -1882,6 +1885,7 @@ static int uniwill_probe(struct platform_device=
+=20
+>> *pdev)
+>> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 return ret;
+>> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 data->features =3D device_descriptor.fea=
+tures;
+>> +=C2=A0=C2=A0=C2=A0 data->lightbar_max_brightness =3D=20
+>> device_descriptor.lightbar_max_brightness;
+>> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 /*
+>> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 * Some devices might need to perfo=
+rm some device-specific=20
+>> initialization steps
+>> @@ -2130,11 +2134,13 @@ static struct platform_driver uniwill_driver =
+=3D {
+>> =C2=A0 static struct uniwill_device_descriptor lapqc71a_lapqc71b_descri=
+ptor=20
+>> __initdata =3D {
+>> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 .features =3D UNIWILL_FEATURE_SUPER_KEY =
+|
+>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 UNI=
+WILL_FEATURE_LIGHTBAR |
+>> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
+=A0=C2=A0 UNIWILL_FEATURE_BATTERY_CHARGE_LIMIT |
+>> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
+=A0=C2=A0 UNIWILL_FEATURE_CPU_TEMP |
+>> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
+=A0=C2=A0 UNIWILL_FEATURE_GPU_TEMP |
+>> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
+=A0=C2=A0 UNIWILL_FEATURE_PRIMARY_FAN |
+>> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
+=A0=C2=A0 UNIWILL_FEATURE_SECONDARY_FAN,
+>> +=C2=A0=C2=A0=C2=A0 .lightbar_max_brightness =3D 36,
+>> =C2=A0 };
+>> =C2=A0 static struct uniwill_device_descriptor lapac71h_descriptor=20
+>> __initdata =3D {
+>> @@ -2158,6 +2164,7 @@ static struct uniwill_device_descriptor=20
+>> lapkc71f_descriptor __initdata =3D {
+>> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
+=A0=C2=A0 UNIWILL_FEATURE_GPU_TEMP |
+>> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
+=A0=C2=A0 UNIWILL_FEATURE_PRIMARY_FAN |
+>> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
+=A0=C2=A0 UNIWILL_FEATURE_SECONDARY_FAN,
+>> +=C2=A0=C2=A0=C2=A0 .lightbar_max_brightness =3D 200,
+>=20
+> Please also set lightbar_max_brightness to 200 during module=20
+> initialization when the "force" parameter is set.
+>=20
+> I suggest you rebase this series on top of the "platform/x86: uniwill-=
+=20
+> laptop: Charging-related improvements" series to avoid merge conflicts.
 
-However we also need some synchronization mechanism between uniwill-acpi=
-=20
-and the new uniwill-wmi because some code path need to check EC=20
-registers before enabling support for local dimming. I suggest that you=20
-use the component framework for that. Basically the new WMI driver=20
-registers a component during probing, while the EC acts as a component=20
-master _if_ local dimming support is present. When the component and the=
-=20
-component master match a sysfs attribute is registered to allow=20
-userspace application to control this feature.
+Forget about the rebase part, the series is already based on this series x=
+d.
 
 Thanks,
 Armin Wolf
 
 >=20
-> Werner Sembach (3):
->    platform/x86: uniwill-laptop: Make super key init lineup with other
->      inits
->    platform/x86: uniwill-laptop: Implement lightbar for XMG Fusion (L19)
->    platform/x86: uniwill-laptop: Offer support to activate local dimming
+> Thanks,
+> Armin Wolf
 >=20
->   drivers/platform/x86/uniwill/uniwill-acpi.c | 195 ++++++++++++++++++--
->   1 file changed, 182 insertions(+), 13 deletions(-)
+>> =C2=A0 };
+>> =C2=A0 /*
+>=20
 >=20
 
