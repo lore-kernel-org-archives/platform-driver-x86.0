@@ -1,93 +1,116 @@
-Received: from outbound.qs.icloud.com (qs-2005l-snip4-1.eps.apple.com [57.103.86.242])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail.tuxedocomputers.com (mail.tuxedocomputers.com [157.90.84.7])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4627234889F
-	for <platform-driver-x86@vger.kernel.org>; Wed, 22 Apr 2026 13:49:56 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=57.103.86.242
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 28F3A1A5B90;
+	Wed, 22 Apr 2026 15:30:51 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=157.90.84.7
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1776865800; cv=none; b=l0PwK9EEi5UNthF+1hEYzlQ9JHbmIXjqOGqrMivTzvZL+PL4fv2C+3KmUz+QyHxr8RtMRjgfu7hEfXuExCLzDSjg8+Nvk3ojBVI2MLz9ipJEF7nYOn94WzIgutH+IcRPod6xGsNio3udnepY3TG6UqQlxJAgJCRqUoXW7FMFPZk=
+	t=1776871855; cv=none; b=DljEl3tF1mV0GaIvPdsZr3kZNhLnqLqTbtRmJhp9Z+ltwVIOnn5hrQE9MzrCPDbyogiJ5AfMQHdOjxHj1pmbHBuHlIgjPsBafEWEoASzA0srtK65hfk9ULidzl76bJtLDHs+b2aDEESyuT7wIV3opedSr5DQ/bFqsTP88cMDx1w=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1776865800; c=relaxed/simple;
-	bh=EK6R/ppVQCbJp84Dc4nejfzdRb4ywHL1WEEgEYIH74A=;
-	h=Date:Message-Id:To:Cc:Subject:From:In-Reply-To:References:
-	 Mime-Version:Content-Type; b=aEU5l1RhObpD84WyL17yOw/E3/38sgaeTjfWDxB426o2JrOqbgx0RdH02vxvX97zriJg9ZtkwAEiZgtxavdbdymKtQ2qNre1xRufm/uEGcN0egYcDUFFrx5JlS9LLZ8bHYSIlSC5cnHCrX0cOBySCjur/RELp+F90b/gfBpswF4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=aliasing.net; spf=pass smtp.mailfrom=aliasing.net; dkim=pass (2048-bit key) header.d=aliasing.net header.i=@aliasing.net header.b=AQxeUZCg; arc=none smtp.client-ip=57.103.86.242
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=aliasing.net
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=aliasing.net
+	s=arc-20240116; t=1776871855; c=relaxed/simple;
+	bh=r+Hwy0PObFq5IoyLTEReBmWvUG8dpy/fqj/gqPJXRj0=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=PhUKyyxthAXeNRbr7r/ICNMyt89DHZWMxRqQMB8+aJuXHI2ff9AeyibvZsDb05FqPLAoqtZjo4crP8GamKYEG3ETFutGxyWCwstMx1HziXVCLBJhAHOg69opobHQQ36rlUM+X+PCOQaYnYklpsz2v9m7FGq3nsDsgEbpVJe0eD0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=tuxedocomputers.com; spf=pass smtp.mailfrom=tuxedocomputers.com; dkim=pass (1024-bit key) header.d=tuxedocomputers.com header.i=@tuxedocomputers.com header.b=pyyoovf0; arc=none smtp.client-ip=157.90.84.7
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=tuxedocomputers.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=tuxedocomputers.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=aliasing.net header.i=@aliasing.net header.b="AQxeUZCg"
-Received: from outbound.qs.icloud.com (unknown [127.0.0.2])
-	by p00-icloudmta-asmtp-us-east-2d-100-percent-3 (Postfix) with ESMTPS id AF3EF18154DF;
-	Wed, 22 Apr 2026 13:49:51 +0000 (UTC)
-X-ICL-Out-Info: HUtFAUMHWwJACUgBTUQeDx5WFlZNRAJCTQhNAEMFXwBeC0oCQwZfBlBcHA4ZWAZdMFgUWgxEAlwXFxZWGRcNVk1NF14CdwpeGVgLWgNQRVwVTVhBDgpYAFBRHV8CCgRHBFsXRgNTRUMDFxFQAVgeVl5aF15NRx9ATWJJAVoZWxxAF0puTVMPDxFVEVIeXgVVXlcdR01aAlZNBUoDXwFbBkILVgFfA1MGRxdKAl8CXANHCEkCXg5TB0kMSQtYGQ1HGlAMUi1VDldOGQxKHVJWUQVKDFwAaA9dHVgRXQ==
-Dkim-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=aliasing.net; s=sig1; t=1776865796; x=1779457796; bh=EK6R/ppVQCbJp84Dc4nejfzdRb4ywHL1WEEgEYIH74A=; h=Date:Message-Id:To:Subject:From:Mime-Version:Content-Type:x-icloud-hme; b=AQxeUZCgNP4MoxRAeFrkOHD94e8IrPEp0U2GRRLUMSgFwcoK2oUmzajYGxSlNx0zOxW+bDZYiZZbUbEIF062SExb/jS9jxmwFx6/T/IVjf/SktjHEEPyjoceizD913oticwgkO+6m9G+J63zxxHTgBIUvC58MYV4dhwKvzbgZ2bmu1FXkhFBvIM1rKjcNnFgydH5gw4D1p7/DglNncCvo2MvXYiAUCDxY2txGRcRHHHxM97lW+ZXpUbgwIvciLhoCXUrywh0zf9NicpBVXoMoiZUATcwdEI8RiDwkTr4h6aD1UmVfg6r7NPtkJxuWhXPplHWEsM5VxYUX6WeAEJ2xw==
-mail-alias-created-date: 1769500909675
-Received: from localhost (unknown [17.57.155.37])
-	by p00-icloudmta-asmtp-us-east-2d-100-percent-3 (Postfix) with ESMTPSA id CF1BB18154D9;
-	Wed, 22 Apr 2026 13:49:45 +0000 (UTC)
-Date: Wed, 22 Apr 2026 22:48:47 +0900 (JST)
-Message-Id: <20260422.224847.2125717111398595185.fujita@bee>
-To: miguel.ojeda.sandonis@gmail.com
-Cc: markus.probst@posteo.de, a.hindborg@kernel.org, boqun@kernel.org,
- fujita.tomonori@gmail.com, frederic@kernel.org, lyude@redhat.com,
- tglx@kernel.org, anna-maria@linutronix.de, jstultz@google.com,
- sboyd@kernel.org, ilpo.jarvinen@linux.intel.com, hansg@kernel.org,
- bryan.odonoghue@linaro.org, lee@kernel.org, pavel@kernel.org,
- ojeda@kernel.org, gary@garyguo.net, bjorn3_gh@protonmail.com,
- lossin@kernel.org, aliceryhl@google.com, tmgross@umich.edu,
- dakr@kernel.org, robh@kernel.org, krzk+dt@kernel.org, conor+dt@kernel.org,
- gregkh@linuxfoundation.org, platform-driver-x86@vger.kernel.org,
- linux-leds@vger.kernel.org, devicetree@vger.kernel.org,
- linux-kernel@vger.kernel.org, rust-for-linux@vger.kernel.org
-Subject: Re: [PATCH v8 2/2] platform: Add initial synology microp driver
-From: FUJITA Tomonori <tomo@aliasing.net>
-In-Reply-To: <CANiq72k=8fmi0fJnNV=GgR5_HO_COWGynKDF-xzoX1nDAdxdrw@mail.gmail.com>
-References: <e166861c-e75d-d1c2-61e8-f611e6ee1ef2@linux.intel.com>
-	<1cc39657ac50f3930dfa27de41a1b4605a7167d9.camel@posteo.de>
-	<CANiq72k=8fmi0fJnNV=GgR5_HO_COWGynKDF-xzoX1nDAdxdrw@mail.gmail.com>
+	dkim=pass (1024-bit key) header.d=tuxedocomputers.com header.i=@tuxedocomputers.com header.b="pyyoovf0"
+Received: from [192.168.178.25] (i5C75F720.versanet.de [92.117.247.32])
+	(Authenticated sender: wse@tuxedocomputers.com)
+	by mail.tuxedocomputers.com (Postfix) with ESMTPSA id 589BA2FC022B;
+	Wed, 22 Apr 2026 17:30:49 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=tuxedocomputers.com;
+	s=default; t=1776871849;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=HlSMMvjiznxtUdbAo/4K4+cB1heLVP/6ONN2Yl8L8nQ=;
+	b=pyyoovf05U9xAY+Rb8uay3LQIdMZdHS7dStC8d02igq32vDiSLIYd8u1TxDMdaT+l2eWWE
+	SghKYe0dG9p4qJVD93WMIbEwXvvobY8NyJ8MOW90ZAWdv6+jR+nXStHV7/nAnDBtM84sem
+	fazZk09Fp6E12juFi+/RZs9mclfTEh8=
+Authentication-Results: mail.tuxedocomputers.com;
+	auth=pass smtp.auth=wse@tuxedocomputers.com smtp.mailfrom=wse@tuxedocomputers.com
+Message-ID: <119c3496-9f2f-460d-9727-251731e32686@tuxedocomputers.com>
+Date: Wed, 22 Apr 2026 17:30:49 +0200
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-Content-Type: Text/Plain; charset=utf-8
-Content-Transfer-Encoding: base64
-X-Authority-Info-Out: v=2.4 cv=IqQTsb/g c=1 sm=1 tr=0 ts=69e8d202
- cx=c_apl:c_pps:t_out a=bsP7O+dXZ5uKcj+dsLqiMw==:117
- a=bsP7O+dXZ5uKcj+dsLqiMw==:17 a=IkcTkHD0fZMA:10 a=A5OVakUREuEA:10
- a=VkNPw1HP01LnGYTKEx00:22 a=pGLkceISAAAA:8 a=quj8a31CzFAiuebbDgUA:9
- a=QEXdDO2ut3YA:10
-X-Proofpoint-GUID: Qm1pbyuctvrbTi3ps4QEHVGq62ptDXKM
-X-Proofpoint-ORIG-GUID: Qm1pbyuctvrbTi3ps4QEHVGq62ptDXKM
-X-Proofpoint-Spam-Details-Enc: AW1haW4tMjYwNDIyMDEzNCBTYWx0ZWRfX/EGxVhedDk8X
- shVORPt36bM4bXQ18VZy/5kczIDlLQXZuvGmA9H1lURgkuUbc6z4EIPDNiBuF8/nAsAVdYpknti
- djBVLZGxBTPHg0dhMpyroUYMpvpHNJDen6lmX8T6NIglgUuKRhgJkcOxcBCcWbIc4gVSTeHgA8l
- WrB8L4mmhNGZc4QyxdGLQBkcDemRCsr6QaT4ajWm1OeNtmwpK0Y0Xk4x5TBsq803I837ANbDken
- zxzhmt7cQInQjrTCoIwQTjQWPmviUD3vEfuSqpQ41w9jpAd4gmLzgPNRuiGqYN2xpj7gwbgkaDe
- p4h3pjBnB8udgib+IorfJlUWwQaIcP868pN1EjqVtHUnY7GIO+RaBCbnmnjOCU=
+MIME-Version: 1.0
+User-Agent: Mozilla Thunderbird
+Subject: Re: [RFC PATCH 0/3] platform/x86: uniwill-laptop: Another improvement
+ and another feature
+To: Armin Wolf <W_Armin@gmx.de>, hansg@kernel.org,
+ ilpo.jarvinen@linux.intel.com
+Cc: platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <20260421201103.142403-1-wse@tuxedocomputers.com>
+ <00de99ce-cb58-491d-81fc-f8bfb8ea4a16@gmx.de>
+Content-Language: en-US
+From: Werner Sembach <wse@tuxedocomputers.com>
+In-Reply-To: <00de99ce-cb58-491d-81fc-f8bfb8ea4a16@gmx.de>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
 
-T24gVHVlLCAyMSBBcHIgMjAyNiAyMDo0Njo1OSArMDIwMA0KTWlndWVsIE9qZWRhIDxtaWd1ZWwu
-b2plZGEuc2FuZG9uaXNAZ21haWwuY29tPiB3cm90ZToNCg0KPiBPbiBUdWUsIEFwciAyMSwgMjAy
-NiBhdCA4OjIx4oCvUE0gTWFya3VzIFByb2JzdCA8bWFya3VzLnByb2JzdEBwb3N0ZW8uZGU+IHdy
-b3RlOg0KPj4NCj4+IERlbHRhIHN0b3JlcyBpdCBpbiBuYW5vIHNlY29uZHMsIHNvIGl0IHdpbGwg
-cmVxdWlyZSBhbiBhZGRpdGlvbmFsDQo+PiBgLmFzX21pbGxpcygpYCBjYWxsIG9uIHVzZS4gSSBh
-c3N1bWUgcnVzdCB3aWxsIG9wdGltaXplIHRoYXQgb3V0LCBzbyBpdA0KPj4gd2lsbCBiZSBmaW5l
-LiBJIHdpbGwgdXNlIHRoZSBgRGVsdGFgIHR5cGUgbGlrZSBNaWd1ZWwgc3VnZ2VzdGVkIGluIHRo
-ZQ0KPj4gbmV4dCByZXZpc2lvbi4NCj4gDQo+IEkgdGhpbmsgaXQgc2hvdWxkIChhdCBsZWFzdCBp
-biB0aGUgNjQtYml0IGNhc2UgLS0gd2UgZG8gaGF2ZSBhDQo+IGBiaW5kaW5nczo6YCBDIGNhbGwg
-aW4gdGhlIDMyLWJpdCBjYXNlLCBzbyBsaWtlbHkgbm90IGluIHRoYXQgY2FzZSksDQo+IGJ1dCBw
-bGVhc2UgZG91YmxlLWNoZWNrIHRoZSBjb2RlZ2VuLg0KPiANCj4gSW4gYW55IGNhc2UsIG15IHN1
-Z2dlc3Rpb24gd2Fzbid0IG5lY2Vzc2FyaWx5IGFib3V0IHVzaW5nIGBEZWx0YWAsDQo+IHdoaWNo
-IGlzIGRlZmluaXRlbHkgYW4gb3B0aW9uIHRvIGNvbnNpZGVyLCBidXQgcmF0aGVyIG1vcmUgZ2Vu
-ZXJhbGx5DQo+IGFib3V0IHVzaW5nIG5ld3R5cGVzLCBlLmcuIGl0IG1heSBiZSB0aGF0IHdlIHdh
-bnQgdG8gaGF2ZSBhIGZldyBzaW1wbGUNCj4gdGltZSB1bml0IHR5cGVzIChwcm9iYWJseSB3aXRo
-IHN1cHBvcnQgZm9yIGBjb25zdGApIGZvciBjYXNlcyBsaWtlDQo+IHRoZXNlIGlmIHBlb3BsZSBh
-cmUgZ29pbmcgdG8gdXNlIHByaW1pdGl2ZXMgZXZlcnl3aGVyZSB0byBkZWZpbmUgdGhlaXINCj4g
-YGNvbnN0YHMgLS0gQ2MnaW5nIHRoZSB0aW1la2VlcGluZyBSdXN0IGZvbGtzLg0KDQpDdXJyZW50
-bHksIE1zZWNzIGlzIGEgdHlwZSBhbGlhcywgc28gaXQgcHJvdmlkZXMgbm8gdHlwZSBzYWZldHks
-IGFuZA0KaXQgaGFzIG5vIHVzZXJzIGluIHRoZSBrZXJuZWwuIEkgdGhpbmsgd2Ugc2hvdWxkIHJl
-bW92ZSBpdC4NCg0KSSB0aGluayB0aGF0IERlbHRhIHdvcmtzIGZpbmUgZm9yIEJMSU5LX0RFTEFZ
-LiBPbiAzMi1iaXQgdGhlcmUgaXMgYQ0Kc21hbGwgb3ZlcmhlYWQgaW4gYXNfbWlsbGlzKCksIGJ1
-dCBJIGRvbid0IHRoaW5rIHRoYXQgd2lsbCBiZSBhDQpwcm9ibGVtIHNpZ25pZmljYW50IGVub3Vn
-aCB0byBqdXN0aWZ5IGludHJvZHVjaW5nIG5ldyB0eXBlcy4NCg0K
+
+Am 22.04.26 um 13:28 schrieb Armin Wolf:
+> Am 21.04.26 um 22:01 schrieb Werner Sembach:
+>> Hi,
+>>
+>> This series is based on another not yet accepted series
+>> https://lore.kernel.org/all/20260417050912.5582-1-W_Armin@gmx.de/
+>>
+>> RFC because of that, because the third patch is not yet tested, and because
+>> I have a question regarding the 3rd patch:
+>>
+>> Should I abstract the call to wmi_evaluate_method away in a wrapper
+>> function in uniwill-wmi somehow, or is it ok to have it straight in the
+>> uniwill-laptop code like that? It is quite self contained.
+>>
+>> Best regards,
+>>
+>> Werner
+>
+> Hi,
+>
+> i prefer having the code for this WMI interface inside a separate file. I 
+> think we have to first rename uniwill-wmi* to uniwill-wmi-event*, then the new 
+> code can live in uniwill-wmi.c
+>
+> However we also need some synchronization mechanism between uniwill-acpi and 
+> the new uniwill-wmi because some code path need to check EC registers before 
+> enabling support for local dimming. I suggest that you use the component 
+> framework for that. Basically the new WMI driver registers a component during 
+> probing, while the EC acts as a component master _if_ local dimming support is 
+> present. When the component and the component master match a sysfs attribute 
+> is registered to allow userspace application to control this feature.
+
+Calling the old uniwill-wmi uniwill-wmi-event and the new driver uniwill-wmi 
+from here on:
+
+I haven't yet worked with the component framework, but i wonder: since the same 
+manual register call structure that we already have for uniwill-wmi-event will 
+be also required for uniwill-wmi, can't this call not also be used to exchange 
+callbacks like for uniwill-wmi-event and the notifier block? just the other way 
+around with uniwill-acpi receiving a callback instead of providing one.
+
+ofc these callbacks must be guarded in some way to not accidentally call 
+uninitialized code, if uniwill-wmi fails to init or probe
+
+>
+> Thanks,
+> Armin Wolf
+>
+>>
+>> Werner Sembach (3):
+>>    platform/x86: uniwill-laptop: Make super key init lineup with other
+>>      inits
+>>    platform/x86: uniwill-laptop: Implement lightbar for XMG Fusion (L19)
+>>    platform/x86: uniwill-laptop: Offer support to activate local dimming
+>>
+>>   drivers/platform/x86/uniwill/uniwill-acpi.c | 195 ++++++++++++++++++--
+>>   1 file changed, 182 insertions(+), 13 deletions(-)
+>>
+>
