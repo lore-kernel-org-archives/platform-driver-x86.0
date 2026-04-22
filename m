@@ -1,135 +1,188 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.9])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wm1-f53.google.com (mail-wm1-f53.google.com [209.85.128.53])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5645236D9FE;
-	Wed, 22 Apr 2026 07:15:49 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.9
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B2D2725782D
+	for <platform-driver-x86@vger.kernel.org>; Wed, 22 Apr 2026 07:51:04 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.53
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1776842150; cv=none; b=JPGn56CsF60w4fLPjI/Qlq9/ptZCf8wzGMN+NueaqBUjJpYvFxKzNRkOowvFkwmLF07Tvvu/UR2vb/kETozOoVArrkqywBgTYU/uWqk9pmK6+QETQz+n7UDIKNX5R9c1wJjygP3h8xijCISnnR8ltCg+pYBPRfrGFfCNYzJYzE4=
+	t=1776844266; cv=none; b=phcpICph2M7KhVf6+Ba8XSnmVv4A5klmYXQbwr9ykDFwkoDJsqjUbeLF8uRlcMNEd8KlBams4B6B4SpGoc8b9QMEB52jO8vo+ozeQuXzKbDXYhzzfbN2o/UlU+OmkANxmE9qC5NJzs24KTEvIiZR5FUZoEEwBFC2xJfrQsQDRWk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1776842150; c=relaxed/simple;
-	bh=Gn2Jm42jqE9gFTv8djZxt7QP5Gn6bGlx1l4hDdnT+bQ=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=PLKkDXQQwAQzz2/qA0HTkz0bsrgbv0J01Tkf5f8iagkxCLotlsIU1+KWl10G+cOXQ+NO8d6tbaE33p2dR2NbdeUiyT3gtdR4BGO5Wuplx5WCgY3WRbENhHPxNhYGjTFiHVnbh/9Ev476ITdlisWXBUg5tBKkAPyF0GJUrfciZK8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=pass smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=EOdNn8O8; arc=none smtp.client-ip=198.175.65.9
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.intel.com
+	s=arc-20240116; t=1776844266; c=relaxed/simple;
+	bh=Fm+6JsKYL5p+lIphcLpRUQ//+P47s7cB1+1S8XqDqhY=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=aS91vOpD1KcZKeHnr1L6PQsXhFtNqxja+29RTl5ry9PTcYJRs61ZnsQyCsuQvjg5HoQEo3cTiiSyeb4buq4Ti3qxL9tzmXGMZ66/+jwRMtek7ahwYHQQRGjvMRiQUHuTBROTd+MUsW4SQb4vL1DbWEkw7S1tcnpOHZIwjKF1CIU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=Rv7fSa/R; arc=none smtp.client-ip=209.85.128.53
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="EOdNn8O8"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1776842149; x=1808378149;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=Gn2Jm42jqE9gFTv8djZxt7QP5Gn6bGlx1l4hDdnT+bQ=;
-  b=EOdNn8O8moqZye3GPhuNBt/QL9QEwM6kuhPGYzbW8H1zYHEPv7mXPW6N
-   ajcFZGaxZIndJ2IkRpwYZTpVLFUSljYk4XpzbOFW89P5vdiX5wcTRblOX
-   S2948oPUfJzOvzfzdDbYm20Va6vGPA7XDhgvHuxSCN16Yqh3+oLYbQIYp
-   d7jxRC+sIeoq5wmPTkIkEFeAX0EJUWj6vXX4c/dUds3KXifX7ihGEP9Y5
-   3hv1mJVEUdtyQadFT5GaKHAkSuxH2oF1TAsGz+3MtnaPv/bLIf+ym1hfQ
-   Jl6uDf4vVPBQSCRUsbAO0FP4zB1vSuvRvOfl/bnOqqDLos33fnF77kxKz
-   Q==;
-X-CSE-ConnectionGUID: SHOfjdKFSLWJ6IzGCIvejw==
-X-CSE-MsgGUID: 5xBeKcTcTgS2MnmF81QPUg==
-X-IronPort-AV: E=McAfee;i="6800,10657,11763"; a="100443695"
-X-IronPort-AV: E=Sophos;i="6.23,192,1770624000"; 
-   d="scan'208";a="100443695"
-Received: from orviesa008.jf.intel.com ([10.64.159.148])
-  by orvoesa101.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 22 Apr 2026 00:15:49 -0700
-X-CSE-ConnectionGUID: OWvqMF80S/muHJwqbrrQ2A==
-X-CSE-MsgGUID: P0ydl1sOSwyazY4mYuYC9Q==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.23,192,1770624000"; 
-   d="scan'208";a="232181867"
-Received: from dhhellew-desk2.ger.corp.intel.com (HELO kekkonen.fi.intel.com) ([10.245.245.208])
-  by orviesa008-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 22 Apr 2026 00:15:47 -0700
-Received: from kekkonen.localdomain (localhost [IPv6:::1])
-	by kekkonen.fi.intel.com (Postfix) with SMTP id 4EDFC1201FC;
-	Wed, 22 Apr 2026 10:15:45 +0300 (EEST)
-Date: Wed, 22 Apr 2026 10:15:45 +0300
-Organization: Intel Finland Oy - BIC 0357606-4 - c/o Alberga Business Park, 6 krs, Bertel Jungin Aukio 5, 02600 Espoo
-From: Sakari Ailus <sakari.ailus@linux.intel.com>
-To: Thierry Chatard <tchatard@gmail.com>
-Cc: linux-kernel@vger.kernel.org, hansg@kernel.org, lee@kernel.org,
-	platform-driver-x86@vger.kernel.org, ilpo.jarvinen@linux.intel.com,
-	djrscally@gmail.com, linux-media@vger.kernel.org,
-	mchehab@kernel.org, jacopo.mondi@ideasonboard.com,
-	nicholas@rothemail.net
-Subject: Re: [PATCH v4 5/5] media: ov8858: add ACPI device ID INT3477
-Message-ID: <aeh1obUwTJ7eIof9@kekkonen.localdomain>
-References: <aeMvy5aL0hSNNmEd@kekkonen.localdomain>
- <20260421225217.12472-1-tchatard@gmail.com>
- <20260421225217.12472-6-tchatard@gmail.com>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Rv7fSa/R"
+Received: by mail-wm1-f53.google.com with SMTP id 5b1f17b1804b1-48374014a77so66727445e9.3
+        for <platform-driver-x86@vger.kernel.org>; Wed, 22 Apr 2026 00:51:04 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20251104; t=1776844263; x=1777449063; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=OeBgF5ArqvNpLLh7sLJtZPShItT09VS9VrZ4plNfw2M=;
+        b=Rv7fSa/R489VJu0OABj246u0IlY+Hv9LASHu/qttbr4la7yqF1lmWU+8uCgmRW4Y0y
+         +YGuDkGvDhcZlGd9hqqWlaKl1WryBDGh/s/eGdQxoGt1vVLjaZqNikDQ+fwzt0LeMtTk
+         1SuOEYpfAvvXYn588BdAWrg6qtJ3KorP+1hzsjm3T5qM8zti7qhpiYlffmy3Nb0uE9O1
+         0aGCb9Q0RN6Q11fS3cvuC/wIUMHS1CG3Y03917brcSe9J9MOje16gVeS80x5H7+vKV31
+         2g4R3lp6A8Cw9Gv4XV/QohaYlxvDYfEB3bzvwaAI/FyoUB9nIAGeNRqbcCglKFGijsyt
+         iGPA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20251104; t=1776844263; x=1777449063;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-gg:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=OeBgF5ArqvNpLLh7sLJtZPShItT09VS9VrZ4plNfw2M=;
+        b=IGPfjCPduU1ouWD8kxWo3deoJpp4DYb2CiFKDmPr+se8tfkLNHPxElQA7J3tZVs+w8
+         k0FyHghS+144Qo8TkPFeXQrRV3RnYtqFjjuVMN+yHJFM37eNyK8KzZvsoHFPQACa0wau
+         OjpACUk8XB+/p47tflVrap5tiGQRA0Ea4qwpO6rbZ1jj3ApaTaDJHK6FMmErQwwtDS2b
+         vDUGwlueh8Ua5qslqe0JdN7P7c7AYCafdVggeQl4i3TQbtfU5YVsqKJtVs3j1NdfixXA
+         VuFZVdHdYYWrN/zfum2e/4BwVQczvaSaA20XSUSuWnHNOOvd76vG+b88Ic+BRRlCmnj8
+         DPWg==
+X-Forwarded-Encrypted: i=1; AFNElJ+HlTbQRPUQN7NDGCd920ff1fbGeals/kfJoeZuHxYpDQ5yn4ZLLQdeVvqfHNEnJFR8p4sWlFVh8zY4P6MFR5rmMKVR@vger.kernel.org
+X-Gm-Message-State: AOJu0YyiHb56ZqyEpeW9l+mtkwCCyCSHigO/ktAqjOg2LzV+HUfr8Ym7
+	n+VzHZZXAlZcLbl6lzTVK7Xah0JYV6CalIcET0HtoWSUhe/ZCc4GHm+x
+X-Gm-Gg: AeBDieui2Z27ZBQStv5pcHLt1wek0kmRty33IHkDegJqDbCtGzul2v+E+V1FgNZZidY
+	dD+NJj8Gb8UtTD8iMLA2RK1nVmxTdUOubdfTkWpCCho6Xb+gB3lSVpao6a9/SndajWgKiUG1yfz
+	4gdOdz0Hh0/MlHWZIzUz6UpMyGv3aZuL/B5JxbIn+A0CyUO+zd0BV1lOXlEFIQlnlBaCipDm/f+
+	+sWgCNcRtO/waRB8mBsdd/eDc07WkXZc8AVXOq2H597rCEIUR/Mn1g9HMhQUwUBTolqK8YALv2L
+	rCcMEIkwE1VZv4dqXa3WfPnvAH9T20BhnSsBjS/dS+edds5trKVZcMhAPlsDraYa3gNoJuyJwWR
+	JSLNCchXcaOYVFmrvxzS1JxDXd3qFRdcTPOYu10yPw210PB5cNpH2IWIyorYrhMtyfTxByas4PL
+	WmddoVzWEsidpuHlKRDrBFQQdIKOiYt6e0baLd74nDqAq3Xw9++6sAA9dqfg3DViV5KJ3+POnZs
+	GV+bvg=
+X-Received: by 2002:a05:600c:1da1:b0:488:bc6a:528d with SMTP id 5b1f17b1804b1-488fb785204mr347044255e9.22.1776844262834;
+        Wed, 22 Apr 2026 00:51:02 -0700 (PDT)
+Received: from ?IPV6:2a01:e11:202b:40:3c42:f121:865e:1066? ([2a01:e11:202b:40:3c42:f121:865e:1066])
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-48a575ad67asm79137295e9.2.2026.04.22.00.51.01
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Wed, 22 Apr 2026 00:51:02 -0700 (PDT)
+Message-ID: <51f999d7-2064-47dc-8d9b-e262588bfbdb@gmail.com>
+Date: Wed, 22 Apr 2026 09:51:01 +0200
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20260421225217.12472-6-tchatard@gmail.com>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [BUG] 36-second boot delay due to by
+ acpi_gpio_handle_deferred_request_irqs on ASUS ROG Strix G16 (2025)
+To: Mika Westerberg <mika.westerberg@linux.intel.com>,
+ Hans de Goede <hansg@kernel.org>
+Cc: Francesco Lauritano <francesco.lauritano1@protonmail.com>,
+ Mario Limonciello <superm1@kernel.org>,
+ "linux-acpi@vger.kernel.org" <linux-acpi@vger.kernel.org>,
+ "open list:GPIO ACPI SUPPORT" <linux-gpio@vger.kernel.org>,
+ "platform-driver-x86@vger.kernel.org" <platform-driver-x86@vger.kernel.org>,
+ "westeri@kernel.org" <westeri@kernel.org>,
+ Benjamin Tissoires <bentiss@kernel.org>
+References: <2kSCn4XaoXsXJ3EUR0syTdmip8Z1cBuUr0Br4sFVnwnsA8q4GlhiHOmsJkeBxvxYoLnetp4r44wIPXw42yTAFl-BtMROnIwR-NkckKgA5EY=@protonmail.com>
+ <6iFCwGH2vssb7NRUTWGpkubGMNbgIlBHSz40z8ZsezjxngXpoiiRiJaijviNvhiDAGIr43bfUmdxLmxYoHDjyft4DgwFc3Pnu5hzPguTa0s=@protonmail.com>
+ <4402ed86-77f5-4a47-a9e1-8d57a709bb15@kernel.org>
+ <woxnPhTYiKi2aLzBK8GnO8DpvdgYjQc-P42uhJOzyrcYC3Gdstht27hML8yNHgOklhm2MgGA7wt9gGZ17BHoWlG0vqJuVVJDgCSev8udfds=@protonmail.com>
+ <NIIS8XD_nSRvp36X39GxcDRAWsaScQIFx6o9JsFCbyBZk5PqznRdxg9EDDb_9tzWd5TcjzxrRtFx5_uLCVa5wJAYykW2k0Ue_XPMPtWCQiY=@protonmail.com>
+ <e8ed4d4e-37e1-4577-bf80-62fcefbef7dc@kernel.org>
+ <ReQS8sQSGy3UTuG6tyPvoOb8_037sC6A2yXsSFNuXY1PlTFtCcDHnjf8vufEsk8avBSIL46U0qE-ZjTJD1xsbVYZ6_d2-wlTOZ2NJ2coTsc=@protonmail.com>
+ <20251218063954.GT2275908@black.igk.intel.com>
+ <b57b44c3-ea96-4189-8b70-71bf4a80d29b@kernel.org>
+ <20251218103831.GW2275908@black.igk.intel.com>
+Content-Language: en-US
+From: Marco Scardovi <mscardovi95@gmail.com>
+In-Reply-To: <20251218103831.GW2275908@black.igk.intel.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-Hi Thierry,
 
-On Tue, Apr 21, 2026 at 03:52:17PM -0700, Thierry Chatard wrote:
-> The Omnivision OV8858 appears in ACPI firmware under the HID INT3477 on
-> Intel IPU3-based platforms such as the Dell Latitude 5285 2-in-1. Add
-> INT3477 to the ACPI match table so the driver binds when instantiated by
-> ipu_bridge.
-> 
-> The supply names array already covers the regulators needed on this
-> platform: the TPS68470 board data maps VSIO to the "dovdd" supply of
-> INT3477, so enabling dovdd via regulator_bulk_enable() also activates the
-> S_I2C_CTL passthrough (reg 0x43) that gates I2C access to the sensor.
-> No additional supply name is required in the driver.
+On 12/18/25 11:38, Mika Westerberg wrote:
+> On Thu, Dec 18, 2025 at 11:33:14AM +0100, Hans de Goede wrote:
+>> Hi,
+>>
+>> On 18-Dec-25 07:39, Mika Westerberg wrote:
+>>> On Wed, Dec 17, 2025 at 07:19:56PM +0000, Francesco Lauritano wrote:
+>>>> On Wednesday, December 17th, 2025 at 7:01 PM, Mario Limonciello <superm1@kernel.org> wrote:
+>>>>
+>>>>> On 12/17/25 10:57 AM, Francesco Lauritano wrote:
+>>>>>
+>>>>>> On Wednesday, December 17th, 2025 at 4:12 PM, Francesco Lauritano francesco.lauritano1@protonmail.com wrote:
+>>>>>>
+>>>>>>> The _AEI defines 5 GPIO interrupts. Narrowed it down to two:
+>>>>>>>
+>>>>>>> gpiolib_acpi.ignore_interrupt=AMDI0030:00@21,AMDI0030:00@24
+>>>>>>>
+>>>>>>> This fixes the delay. Pins 0x15 and 0x18 both call: \_SB.PCI0.SBRG.HNC0()
+>>>>>> Traced it further. HNC0(pin, 0) takes the Else branch and calls:
+>>>>>> ATKM(0xC0)
+>>>>>> ADTM(Zero)
+>>>>>>
+>>>>>> ADTM calls NOD2(), which is the actual culprit:
+>>>>>>
+>>>>>> While ((Arg0 != RDNT))
+>>>>>> {
+>>>>>> If ((Local0 >= 0x0F)) { Break }
+>>>>>> Notify (^^GPP0.PEGP, Arg0)
+>>>>>> Local0++
+>>>>>> Sleep (Local0 * 0x64)
+>>>>>> }
+>>>>>>
+>>>>>> It notifies the dGPU and polls RDNT, sleeping 100, 200, ... 1500ms per iteration.
+>>>>>> Max 15 loops = ~12s per pin. GPU doesn't respond at boot so it maxes out.
+>>>>>>
+>>>>>> Two pins, ~12s each, ~24-36s total.
+>>>>>>
+>>>>>> Francesco
+>>>>>
+>>>>> Any idea why isn't the dGPU responding? I would have expected
+>>>>> https://git.kernel.org/torvalds/c/4d4c10f763d78 sets up policy that it's
+>>>>> in D0.
+>>>>>
+>>>>> Is the dGPU turned off in BIOS or through some reverse engineered
+>>>>> tool/API or something?
+>>>> dmesg without the workaround:
+>>>> [    1.005184] pci 0000:01:00.0: PME# supported from D0 D3hot
+>>>> [    1.288811] pci 0000:01:00.0: vgaarb: VGA device added
+>>>> [   38.250139] nvidia: loading out-of-tree module taints kernel.
+>>>> [   38.369358] nvidia 0000:01:00.0: enabling device (0000 -> 0003)
+>>>> [   39.744421] NVRM: GPS ACPI DSM called before _acpiDsmSupportedFuncCacheInit
+>>>>
+>>>> GPU is in D0 from 1.0s. nvidia loads at 38.2s after the GPIO hang completes.
+>>>>
+>>>> No weird tools/APIs besides userspace utils (asusctl/supergfxctl).
+>>>>
+>>>> No changes to BIOS factory defaults other than disabling Fast Boot.
+>>>> dGPU is active, Display Mode is Dynamic (hybrid).
+>>>>
+>>>> Traced RDNT - it's set by GPS function 19 in the ACPI tables:
+>>>> Case (0x13)
+>>>> {
+>>>>      Debug = "GPS fun 19"
+>>>>      \_SB.PCI0.SBRG.RDNT = (Local1 + 0xD1)
+>>>> }
+>>>>
+>>>> As far as I can understand GPIO initcall blocks at late_initcall_sync, preventing nvidia
+>>>> from loading in time to respond. Based on the timing, GPU is awake but nothing can
+>>>> register a handler while kernel is stuck at NOD2 polling loop.
+>>> I wonder if you could try with the nouveau driver so that it's built-in to
+>>> the kernel proper? Then it should be ready at the time these events
+>>> trigger.
+>> That is not really a workable solution though.
+> Yeah, I did not meant it to be the "solution" rather just to check whether
+> it is related if the GPU driver is there or not. You cannot build the
+> proprietary driver into the kernel so that's why I suggested the
+> open-source one.
 
-I think you can drop this paragraph.
+Hi Everyone,
 
-> 
-> Signed-off-by: Thierry Chatard <tchatard@gmail.com>
-> ---
->  drivers/media/i2c/ov8858.c | 9 ++++++++-
->  1 file changed, 8 insertions(+), 1 deletion(-)
-> 
-> diff --git a/drivers/media/i2c/ov8858.c b/drivers/media/i2c/ov8858.c
-> index 3f45f7fab..a1fa0be52 100644
-> --- a/drivers/media/i2c/ov8858.c
-> +++ b/drivers/media/i2c/ov8858.c
-> @@ -79,8 +79,8 @@
->  
->  static const char * const ov8858_supply_names[] = {
->  	"avdd",		/* Analog power */
-> -	"dovdd",	/* Digital I/O power */
->  	"dvdd",		/* Digital core power */
-> +	"dovdd",	/* Digital I/O power */
+I would start saying sorry for the necrobump. I faced the same problem 
+on my G614PR and fixed the same way as Francesco.
 
-Why?
+Do you happen to know if there is any news about this? I'm currently on 
+CachyOS with kernel 7.0 and noticed it behaves the same way as 6.19.
 
->  };
->  
->  struct regval {
-> @@ -1981,11 +1981,18 @@ static const struct of_device_id ov8858_of_match[] = {
->  };
->  MODULE_DEVICE_TABLE(of, ov8858_of_match);
->  
-> +static const struct acpi_device_id ov8858_acpi_ids[] = {
-> +	{ "INT3477" },
-> +	{ /* sentinel */ },
-> +};
-> +MODULE_DEVICE_TABLE(acpi, ov8858_acpi_ids);
-> +
->  static struct i2c_driver ov8858_i2c_driver = {
->  	.driver = {
->  		.name = "ov8858",
->  		.pm = &ov8858_pm_ops,
->  		.of_match_table = ov8858_of_match,
-> +		.acpi_match_table = ov8858_acpi_ids,
->  	},
->  	.probe		= ov8858_probe,
->  	.remove		= ov8858_remove,
+I'm on to try patches or provide more infos if needed, even if I have to 
+admit I know Linux but not that deeply.
 
--- 
-Regards,
 
-Sakari Ailus
