@@ -1,210 +1,137 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.13])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.11])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 611BC3B27EC;
-	Wed, 22 Apr 2026 09:07:13 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.13
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E97841E86E;
+	Wed, 22 Apr 2026 09:33:48 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.11
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1776848834; cv=none; b=beolwYrESwCaU9zR75YB9tdtFCwrtHQSCboOBYBJ1kPv20f7LOZvVzwtCz6WkCtT0cxgBSle36JwM0dGSp1CB/LjZbZCqQgUmLdq3VR5ukDWHyViND5i6VR6jruEuByIAbHk3bSMnPB7TZEka23DV99pADiPwK38KX6sSZaikJA=
+	t=1776850430; cv=none; b=MFTwzQP9DZDKWbIiAb+whH6Yv0EeUtaASv7UTFinQHGeDw3sNNKvSRuAKQMuSM6LJvz9NY50XbgK5En+/suwQc58vesN9qvWNP8U0raKBunvOt3VH6QOp3X5Y2GtIkThsiglTKlNnv1Gf6O3hoOmHQ4vH8uB+6U+Z7rvkGNXYu4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1776848834; c=relaxed/simple;
-	bh=tNQoplVn3lwOKy/hV4N5PlwdB5qg3RTXGvP9n0QBC6E=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=UarUm/DGfPcgV2VwK1kwUlXKAp1svkd7ORo0mceOLlF47MOdliJEW2/TqDcp2A+zmzSQ7i2NGDmQlw7JuCeE4CM94ESompQd5OyKJo4pSajiRTNVoGX2NkOAu2zT9EzvTpDj70qkdPc6j0xhqqOPvUeS3U58rAM25WhTeCZt/X8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=pass smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=aChn/Gdq; arc=none smtp.client-ip=192.198.163.13
+	s=arc-20240116; t=1776850430; c=relaxed/simple;
+	bh=uZVPpHsznlRLwbfAKcdZTf8mugdTDrDN3yOiZRyqDik=;
+	h=From:Date:To:cc:Subject:In-Reply-To:Message-ID:References:
+	 MIME-Version:Content-Type; b=GFiCT103IXIF3QZMxwPndGRrjwjyHWEWTRcF6zNaIy+UVbVMyixBsegSsFoNxvKtL5uBXoozSQeeymu+Jb3Ho+LfC4hwRJ1ZJ/H9pB2EqpzUulQpOeXZopeDLtMoEYR2zcwWWMkkR1h9dc4BQr2/CWy9hXVGD+miOA1LPLlsscE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=pass smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=UsfweiUj; arc=none smtp.client-ip=192.198.163.11
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="aChn/Gdq"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="UsfweiUj"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1776848833; x=1808384833;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=tNQoplVn3lwOKy/hV4N5PlwdB5qg3RTXGvP9n0QBC6E=;
-  b=aChn/GdqFpy05KSnU4QT0uGopR3S/cLvWcv5r7V/JkFvyhS1pbFIWUGp
-   Ab5ySyBjL2ZyPZ1rr6ZJaDIipU7ZAIN0ccRdqrrFaDhctzazh5JTxAsWb
-   ZVtujM5mpaks+jcu4yY43g5aJzTi/azjC0S0e5QYDidIO1afXSEXJIF7b
-   haXCQEC6ICpHbokOS5HZIiwfBdLLFWKdFExr1VAT89ucsT5ttfBdzRnCR
-   Ei4qRtyC5igFm+k4/mZNWErCpTJvwxHYCaQCDpMD6rQJJw4SBfluFuCvq
-   AituSpBSWchy5XnbeIwGnSEGXEZ/7+o48l6BFk1caHi6bHiRVLv4QTaCy
-   A==;
-X-CSE-ConnectionGUID: YgjGyE7yTOCR31YXIIUcBA==
-X-CSE-MsgGUID: yKw/l7egT+SiYaLdOn4miA==
-X-IronPort-AV: E=McAfee;i="6800,10657,11763"; a="80383788"
+  t=1776850429; x=1808386429;
+  h=from:date:to:cc:subject:in-reply-to:message-id:
+   references:mime-version;
+  bh=uZVPpHsznlRLwbfAKcdZTf8mugdTDrDN3yOiZRyqDik=;
+  b=UsfweiUjLTvbR7AwXGC0OuwKz+jA54nQaVkACMZ7fhsQ2c4U+7O2OpfW
+   AS5W/OLNXw86YChvohvrT2fDpF8GDPEF4HnHuSePMzPScTZSCnZMbzzkp
+   6bhbTeIZvs62Sfb2fJJzp6D29lOdQvnOTXFJAPjef62SbJRHxmTkVHLoH
+   Lukjlg6bLEpaYLWZbHQZRma+twLP1P4HS7roL2/RYGU1S4yQ/balB5Ny7
+   PU5agMGdnq9UJmn8DRtb8gaERhCPYA/TLV7FxhUBSw3uSHBPsAC/yMnPk
+   WjbxNvxJ/5zUk+SFyUMMtfh9wzPupYBtP2MDeseqru7C5P+U19V3tE1jS
+   g==;
+X-CSE-ConnectionGUID: 2mF3yjxfRhSuSS7rMS4AfQ==
+X-CSE-MsgGUID: BTP11rqfSQmhK4c5/STOWw==
+X-IronPort-AV: E=McAfee;i="6800,10657,11763"; a="88409282"
 X-IronPort-AV: E=Sophos;i="6.23,192,1770624000"; 
-   d="scan'208";a="80383788"
-Received: from orviesa005.jf.intel.com ([10.64.159.145])
-  by fmvoesa107.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 22 Apr 2026 02:07:12 -0700
-X-CSE-ConnectionGUID: rBryd8lWSkK/5lhqi0Ihgg==
-X-CSE-MsgGUID: CRJRPTLZSIGwnGDLFtlr9A==
+   d="scan'208";a="88409282"
+Received: from orviesa007.jf.intel.com ([10.64.159.147])
+  by fmvoesa105.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 22 Apr 2026 02:33:48 -0700
+X-CSE-ConnectionGUID: iWYdSiASTu2bJ6L7BJeAiQ==
+X-CSE-MsgGUID: La8LcKZOTzG80EBvg78MDA==
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="6.23,192,1770624000"; 
-   d="scan'208";a="237342720"
-Received: from black.igk.intel.com ([10.91.253.5])
-  by orviesa005.jf.intel.com with ESMTP; 22 Apr 2026 02:07:11 -0700
-Received: by black.igk.intel.com (Postfix, from userid 1001)
-	id 6693D95; Wed, 22 Apr 2026 11:07:09 +0200 (CEST)
-Date: Wed, 22 Apr 2026 11:07:09 +0200
-From: Mika Westerberg <mika.westerberg@linux.intel.com>
-To: Marco Scardovi <mscardovi95@gmail.com>
-Cc: Hans de Goede <hansg@kernel.org>,
-	Francesco Lauritano <francesco.lauritano1@protonmail.com>,
-	Mario Limonciello <superm1@kernel.org>,
-	"linux-acpi@vger.kernel.org" <linux-acpi@vger.kernel.org>,
-	"open list:GPIO ACPI SUPPORT" <linux-gpio@vger.kernel.org>,
-	"platform-driver-x86@vger.kernel.org" <platform-driver-x86@vger.kernel.org>,
-	"westeri@kernel.org" <westeri@kernel.org>,
-	Benjamin Tissoires <bentiss@kernel.org>
-Subject: Re: [BUG] 36-second boot delay due to by
- acpi_gpio_handle_deferred_request_irqs on ASUS ROG Strix G16 (2025)
-Message-ID: <20260422090709.GB557136@black.igk.intel.com>
-References: <6iFCwGH2vssb7NRUTWGpkubGMNbgIlBHSz40z8ZsezjxngXpoiiRiJaijviNvhiDAGIr43bfUmdxLmxYoHDjyft4DgwFc3Pnu5hzPguTa0s=@protonmail.com>
- <4402ed86-77f5-4a47-a9e1-8d57a709bb15@kernel.org>
- <woxnPhTYiKi2aLzBK8GnO8DpvdgYjQc-P42uhJOzyrcYC3Gdstht27hML8yNHgOklhm2MgGA7wt9gGZ17BHoWlG0vqJuVVJDgCSev8udfds=@protonmail.com>
- <NIIS8XD_nSRvp36X39GxcDRAWsaScQIFx6o9JsFCbyBZk5PqznRdxg9EDDb_9tzWd5TcjzxrRtFx5_uLCVa5wJAYykW2k0Ue_XPMPtWCQiY=@protonmail.com>
- <e8ed4d4e-37e1-4577-bf80-62fcefbef7dc@kernel.org>
- <ReQS8sQSGy3UTuG6tyPvoOb8_037sC6A2yXsSFNuXY1PlTFtCcDHnjf8vufEsk8avBSIL46U0qE-ZjTJD1xsbVYZ6_d2-wlTOZ2NJ2coTsc=@protonmail.com>
- <20251218063954.GT2275908@black.igk.intel.com>
- <b57b44c3-ea96-4189-8b70-71bf4a80d29b@kernel.org>
- <20251218103831.GW2275908@black.igk.intel.com>
- <51f999d7-2064-47dc-8d9b-e262588bfbdb@gmail.com>
+   d="scan'208";a="232607052"
+Received: from ijarvine-mobl1.ger.corp.intel.com (HELO localhost) ([10.245.244.4])
+  by orviesa007-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 22 Apr 2026 02:33:45 -0700
+From: =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
+Date: Wed, 22 Apr 2026 12:33:41 +0300 (EEST)
+To: Werner Sembach <wse@tuxedocomputers.com>
+cc: W_Armin@gmx.de, Hans de Goede <hansg@kernel.org>, 
+    platform-driver-x86@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>
+Subject: Re: [RFC PATCH 1/3] platform/x86: uniwill-laptop: Make super key
+ init lineup with other inits
+In-Reply-To: <20260421201103.142403-2-wse@tuxedocomputers.com>
+Message-ID: <6f8f06d2-d0f4-04fd-986a-0466d987266b@linux.intel.com>
+References: <20260421201103.142403-1-wse@tuxedocomputers.com> <20260421201103.142403-2-wse@tuxedocomputers.com>
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <51f999d7-2064-47dc-8d9b-e262588bfbdb@gmail.com>
+Content-Type: multipart/mixed; boundary="8323328-2086096041-1776850421=:1863"
 
-Hi,
+  This message is in MIME format.  The first part should be readable text,
+  while the remaining parts are likely unreadable without MIME-aware tools.
 
-On Wed, Apr 22, 2026 at 09:51:01AM +0200, Marco Scardovi wrote:
-> 
-> On 12/18/25 11:38, Mika Westerberg wrote:
-> > On Thu, Dec 18, 2025 at 11:33:14AM +0100, Hans de Goede wrote:
-> > > Hi,
-> > > 
-> > > On 18-Dec-25 07:39, Mika Westerberg wrote:
-> > > > On Wed, Dec 17, 2025 at 07:19:56PM +0000, Francesco Lauritano wrote:
-> > > > > On Wednesday, December 17th, 2025 at 7:01 PM, Mario Limonciello <superm1@kernel.org> wrote:
-> > > > > 
-> > > > > > On 12/17/25 10:57 AM, Francesco Lauritano wrote:
-> > > > > > 
-> > > > > > > On Wednesday, December 17th, 2025 at 4:12 PM, Francesco Lauritano francesco.lauritano1@protonmail.com wrote:
-> > > > > > > 
-> > > > > > > > The _AEI defines 5 GPIO interrupts. Narrowed it down to two:
-> > > > > > > > 
-> > > > > > > > gpiolib_acpi.ignore_interrupt=AMDI0030:00@21,AMDI0030:00@24
-> > > > > > > > 
-> > > > > > > > This fixes the delay. Pins 0x15 and 0x18 both call: \_SB.PCI0.SBRG.HNC0()
-> > > > > > > Traced it further. HNC0(pin, 0) takes the Else branch and calls:
-> > > > > > > ATKM(0xC0)
-> > > > > > > ADTM(Zero)
-> > > > > > > 
-> > > > > > > ADTM calls NOD2(), which is the actual culprit:
-> > > > > > > 
-> > > > > > > While ((Arg0 != RDNT))
-> > > > > > > {
-> > > > > > > If ((Local0 >= 0x0F)) { Break }
-> > > > > > > Notify (^^GPP0.PEGP, Arg0)
-> > > > > > > Local0++
-> > > > > > > Sleep (Local0 * 0x64)
-> > > > > > > }
-> > > > > > > 
-> > > > > > > It notifies the dGPU and polls RDNT, sleeping 100, 200, ... 1500ms per iteration.
-> > > > > > > Max 15 loops = ~12s per pin. GPU doesn't respond at boot so it maxes out.
-> > > > > > > 
-> > > > > > > Two pins, ~12s each, ~24-36s total.
-> > > > > > > 
-> > > > > > > Francesco
-> > > > > > 
-> > > > > > Any idea why isn't the dGPU responding? I would have expected
-> > > > > > https://git.kernel.org/torvalds/c/4d4c10f763d78 sets up policy that it's
-> > > > > > in D0.
-> > > > > > 
-> > > > > > Is the dGPU turned off in BIOS or through some reverse engineered
-> > > > > > tool/API or something?
-> > > > > dmesg without the workaround:
-> > > > > [    1.005184] pci 0000:01:00.0: PME# supported from D0 D3hot
-> > > > > [    1.288811] pci 0000:01:00.0: vgaarb: VGA device added
-> > > > > [   38.250139] nvidia: loading out-of-tree module taints kernel.
-> > > > > [   38.369358] nvidia 0000:01:00.0: enabling device (0000 -> 0003)
-> > > > > [   39.744421] NVRM: GPS ACPI DSM called before _acpiDsmSupportedFuncCacheInit
-> > > > > 
-> > > > > GPU is in D0 from 1.0s. nvidia loads at 38.2s after the GPIO hang completes.
-> > > > > 
-> > > > > No weird tools/APIs besides userspace utils (asusctl/supergfxctl).
-> > > > > 
-> > > > > No changes to BIOS factory defaults other than disabling Fast Boot.
-> > > > > dGPU is active, Display Mode is Dynamic (hybrid).
-> > > > > 
-> > > > > Traced RDNT - it's set by GPS function 19 in the ACPI tables:
-> > > > > Case (0x13)
-> > > > > {
-> > > > >      Debug = "GPS fun 19"
-> > > > >      \_SB.PCI0.SBRG.RDNT = (Local1 + 0xD1)
-> > > > > }
-> > > > > 
-> > > > > As far as I can understand GPIO initcall blocks at late_initcall_sync, preventing nvidia
-> > > > > from loading in time to respond. Based on the timing, GPU is awake but nothing can
-> > > > > register a handler while kernel is stuck at NOD2 polling loop.
-> > > > I wonder if you could try with the nouveau driver so that it's built-in to
-> > > > the kernel proper? Then it should be ready at the time these events
-> > > > trigger.
-> > > That is not really a workable solution though.
-> > Yeah, I did not meant it to be the "solution" rather just to check whether
-> > it is related if the GPU driver is there or not. You cannot build the
-> > proprietary driver into the kernel so that's why I suggested the
-> > open-source one.
-> 
-> Hi Everyone,
-> 
-> I would start saying sorry for the necrobump. I faced the same problem on my
-> G614PR and fixed the same way as Francesco.
-> 
-> Do you happen to know if there is any news about this? I'm currently on
-> CachyOS with kernel 7.0 and noticed it behaves the same way as 6.19.
-> 
-> I'm on to try patches or provide more infos if needed, even if I have to
-> admit I know Linux but not that deeply.
+--8323328-2086096041-1776850421=:1863
+Content-Type: text/plain; charset=ISO-8859-15
+Content-Transfer-Encoding: QUOTED-PRINTABLE
 
-As far as I can tell no updates unfortunately. I guess we could go with
-slightly updated patch from Francesco, like below that just ignores those
-two interrupts. Can you try if that works for you?
+On Tue, 21 Apr 2026, Werner Sembach wrote:
 
-This list of devices that suffer from the "edge events on boot" seems to be
-growing so maybe we should re-think if that should be enabled for all
-systems or limit to the problematic ones (although that list could get big
-too ;-))
+> The super key init, while being trivial, was the only one not in its own
+> method and before the EC init.
+>=20
+> Make an own method and move it after EC init and probe call to make it
+> consistent with other initialization steps.
+>=20
+> Signed-off-by: Werner Sembach <wse@tuxedocomputers.com>
+> ---
+>  drivers/platform/x86/uniwill/uniwill-acpi.c | 16 ++++++++++++----
+>  1 file changed, 12 insertions(+), 4 deletions(-)
+>=20
+> diff --git a/drivers/platform/x86/uniwill/uniwill-acpi.c b/drivers/platfo=
+rm/x86/uniwill/uniwill-acpi.c
+> index 766bc1ee192d2..7d1fdbacc6871 100644
+> --- a/drivers/platform/x86/uniwill/uniwill-acpi.c
+> +++ b/drivers/platform/x86/uniwill/uniwill-acpi.c
+> @@ -768,6 +768,14 @@ static ssize_t super_key_enable_show(struct device *=
+dev, struct device_attribute
+> =20
+>  static DEVICE_ATTR_RW(super_key_enable);
+> =20
+> +static int super_key_enable_init(struct uniwill_data *data)
+> +{
+> +=09if (!uniwill_device_supports(data, UNIWILL_FEATURE_SUPER_KEY))
+> +=09=09return 0;
+> +
+> +=09return devm_mutex_init(&data->dev, &data->super_key_lock);
+> +}
+> +
+>  static int uniwill_write_touchpad_toggle_enable(struct uniwill_data *dat=
+a, bool status)
+>  {
+>  =09unsigned int value;
+> @@ -1869,10 +1877,6 @@ static int uniwill_probe(struct platform_device *p=
+dev)
+> =20
+>  =09data->regmap =3D regmap;
+> =20
+> -=09ret =3D devm_mutex_init(&pdev->dev, &data->super_key_lock);
+> -=09if (ret < 0)
+> -=09=09return ret;
+> -
+>  =09ret =3D uniwill_ec_init(data);
+>  =09if (ret < 0)
+>  =09=09return ret;
+> @@ -1890,6 +1894,10 @@ static int uniwill_probe(struct platform_device *p=
+dev)
+>  =09=09=09return ret;
+>  =09}
+> =20
+> +=09ret =3D super_key_enable_init(data);
+> +=09if (ret < 0)
+> +=09=09return ret;
+> +
+>  =09ret =3D uniwill_battery_init(data);
+>  =09if (ret < 0)
+>  =09=09return ret;
+>=20
 
-diff --git a/drivers/gpio/gpiolib-acpi-quirks.c b/drivers/gpio/gpiolib-acpi-quirks.c
-index a0116f004975..4e60a176ac93 100644
---- a/drivers/gpio/gpiolib-acpi-quirks.c
-+++ b/drivers/gpio/gpiolib-acpi-quirks.c
-@@ -392,6 +392,23 @@ static const struct dmi_system_id gpiolib_acpi_quirks[] __initconst = {
- 			.ignore_wake = "VEN_0488:00@355",
- 		},
- 	},
-+	{
-+		/*
-+		 * The ASUS ROG Strix G16 (2025) ACPI GPIO configuration
-+		 * causes acpi_gpio_handle_deferred_request_irqs() to
-+		 * stall for ~36 seconds during boot so ignore the two
-+		 * interrupts involved.
-+		 *
-+		 * Found in BIOS G614PP.307.
-+		 */
-+		.matches = {
-+			DMI_MATCH(DMI_SYS_VENDOR, "ASUSTeK COMPUTER INC."),
-+			DMI_MATCH(DMI_PRODUCT_NAME, "ROG Strix G16 G614PP_G614PP"),
-+		},
-+		.driver_data = &(struct acpi_gpiolib_dmi_quirk) {
-+			.ignore_interrupt = "AMDI0030:00@21,AMDI0030:00@24",
-+		},
-+	},
- 	{} /* Terminating entry */
- };
- 
+Reviewed-by: Ilpo J=E4rvinen <ilpo.jarvinen@linux.intel.com>
+
+--=20
+ i.
+
+--8323328-2086096041-1776850421=:1863--
