@@ -1,116 +1,177 @@
-Received: from mail.tuxedocomputers.com (mail.tuxedocomputers.com [157.90.84.7])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.9])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 28F3A1A5B90;
-	Wed, 22 Apr 2026 15:30:51 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=157.90.84.7
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D6023375F9A;
+	Wed, 22 Apr 2026 15:49:38 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.9
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1776871855; cv=none; b=DljEl3tF1mV0GaIvPdsZr3kZNhLnqLqTbtRmJhp9Z+ltwVIOnn5hrQE9MzrCPDbyogiJ5AfMQHdOjxHj1pmbHBuHlIgjPsBafEWEoASzA0srtK65hfk9ULidzl76bJtLDHs+b2aDEESyuT7wIV3opedSr5DQ/bFqsTP88cMDx1w=
+	t=1776872982; cv=none; b=l1xpfObuNwkKP4pCKwqPZvEjxpUKwnwRYG0yNB5l81pomoq66p+6F9Gy7alD/wr0fCWpq1frJb0NFNzEzOOYGJd3w+pef09LT3vecddjCcoT9kZI/gU1BRP/gVGUBQ+lC5Vt/5jHDT8iYfNeipFiGr/MoLqNy+eBYLs0QK3jnMY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1776871855; c=relaxed/simple;
-	bh=r+Hwy0PObFq5IoyLTEReBmWvUG8dpy/fqj/gqPJXRj0=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=PhUKyyxthAXeNRbr7r/ICNMyt89DHZWMxRqQMB8+aJuXHI2ff9AeyibvZsDb05FqPLAoqtZjo4crP8GamKYEG3ETFutGxyWCwstMx1HziXVCLBJhAHOg69opobHQQ36rlUM+X+PCOQaYnYklpsz2v9m7FGq3nsDsgEbpVJe0eD0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=tuxedocomputers.com; spf=pass smtp.mailfrom=tuxedocomputers.com; dkim=pass (1024-bit key) header.d=tuxedocomputers.com header.i=@tuxedocomputers.com header.b=pyyoovf0; arc=none smtp.client-ip=157.90.84.7
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=tuxedocomputers.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=tuxedocomputers.com
+	s=arc-20240116; t=1776872982; c=relaxed/simple;
+	bh=riHHVLqImjXHOko8Jk1i1dh3X2lF7U6GwHdwGvhso/g=;
+	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
+	 Content-Type:MIME-Version; b=cNYZ4ZAp15EwICqkMwQIjyl4srIbCptrJKakjOTB8jh5BaVq15JdqLQUnM2Ulm9IP+U9TZ1URx6KKgblLJ0G4MlQUlK27DPVWCvqviQ0nF9yqMOIqbAQg8edUvk/8Eqh8com8s0leCpKVIjqbHiCkE11VOSb38KzJGsq6kPOrcY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=pass smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=BmFVAS9L; arc=none smtp.client-ip=198.175.65.9
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=tuxedocomputers.com header.i=@tuxedocomputers.com header.b="pyyoovf0"
-Received: from [192.168.178.25] (i5C75F720.versanet.de [92.117.247.32])
-	(Authenticated sender: wse@tuxedocomputers.com)
-	by mail.tuxedocomputers.com (Postfix) with ESMTPSA id 589BA2FC022B;
-	Wed, 22 Apr 2026 17:30:49 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=tuxedocomputers.com;
-	s=default; t=1776871849;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=HlSMMvjiznxtUdbAo/4K4+cB1heLVP/6ONN2Yl8L8nQ=;
-	b=pyyoovf05U9xAY+Rb8uay3LQIdMZdHS7dStC8d02igq32vDiSLIYd8u1TxDMdaT+l2eWWE
-	SghKYe0dG9p4qJVD93WMIbEwXvvobY8NyJ8MOW90ZAWdv6+jR+nXStHV7/nAnDBtM84sem
-	fazZk09Fp6E12juFi+/RZs9mclfTEh8=
-Authentication-Results: mail.tuxedocomputers.com;
-	auth=pass smtp.auth=wse@tuxedocomputers.com smtp.mailfrom=wse@tuxedocomputers.com
-Message-ID: <119c3496-9f2f-460d-9727-251731e32686@tuxedocomputers.com>
-Date: Wed, 22 Apr 2026 17:30:49 +0200
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="BmFVAS9L"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1776872979; x=1808408979;
+  h=message-id:subject:from:to:cc:date:in-reply-to:
+   references:content-transfer-encoding:mime-version;
+  bh=riHHVLqImjXHOko8Jk1i1dh3X2lF7U6GwHdwGvhso/g=;
+  b=BmFVAS9LnvgFAaF47VUVzSjF1yLhenVoPvyPHKZdtRKgI4eAESYv86VF
+   t/mzHYM/+0LNZqS83iVADLH/0BF36gzYsBhLXUqcVO6ON0csMzHoWcgpn
+   hO5uEceOM9jmEaJxaXHVjqTA+JnCqGofbmHPM66YMs57uE1bY8P6dj7fS
+   e5o/PFSkSDj8sm9kZ6/ndxnbQb5lP9ITHPeNdLBwbv0sB9CYnjhqSNRSi
+   OsVTHnmsjNvALU0tVlKoZ0lpJ6GPYnaxkjfOU5pSVfdjZpbHOa1x7VG/r
+   d2+sncdC1HfwviVf5pdDO7DsjAJgwwk6VnXqBeH85EGshHJ12puRS2pc8
+   Q==;
+X-CSE-ConnectionGUID: oZ2Fol6RSVi+cFKD0a6jXw==
+X-CSE-MsgGUID: cL3jEvdfSLS7AJKLPko0zA==
+X-IronPort-AV: E=McAfee;i="6800,10657,11764"; a="100483991"
+X-IronPort-AV: E=Sophos;i="6.23,193,1770624000"; 
+   d="scan'208";a="100483991"
+Received: from fmviesa008.fm.intel.com ([10.60.135.148])
+  by orvoesa101.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 22 Apr 2026 08:49:38 -0700
+X-CSE-ConnectionGUID: C8Ee5GzYRxuGR3LEI3RlDw==
+X-CSE-MsgGUID: dtx3aqx2R9ySx3ByHGjSdw==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.23,193,1770624000"; 
+   d="scan'208";a="229720573"
+Received: from spandruv-desk2.jf.intel.com ([10.88.27.176])
+  by fmviesa008-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 22 Apr 2026 08:49:37 -0700
+Message-ID: <3f5125cd88361c88fa7604eba262c82f1cc20c2f.camel@linux.intel.com>
+Subject: Re: [PATCH v3 1/2] platform/x86/intel-uncore-freq: Rename
+ instance_id
+From: srinivas pandruvada <srinivas.pandruvada@linux.intel.com>
+To: Maciej Wieczor-Retman <m.wieczorretman@pm.me>,
+ skhan@linuxfoundation.org, 	ilpo.jarvinen@linux.intel.com,
+ hansg@kernel.org, corbet@lwn.net
+Cc: linux-kernel@vger.kernel.org, platform-driver-x86@vger.kernel.org, 
+	linux-doc@vger.kernel.org, Maciej Wieczor-Retman
+	 <maciej.wieczor-retman@intel.com>
+Date: Wed, 22 Apr 2026 08:49:37 -0700
+In-Reply-To: <4d983157199cf0e163597df254e2dc629878b818.1775665057.git.m.wieczorretman@pm.me>
+References: <cover.1775665057.git.m.wieczorretman@pm.me>
+	 <4d983157199cf0e163597df254e2dc629878b818.1775665057.git.m.wieczorretman@pm.me>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+User-Agent: Evolution 3.56.2 (3.56.2-2.fc42) 
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [RFC PATCH 0/3] platform/x86: uniwill-laptop: Another improvement
- and another feature
-To: Armin Wolf <W_Armin@gmx.de>, hansg@kernel.org,
- ilpo.jarvinen@linux.intel.com
-Cc: platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
-References: <20260421201103.142403-1-wse@tuxedocomputers.com>
- <00de99ce-cb58-491d-81fc-f8bfb8ea4a16@gmx.de>
-Content-Language: en-US
-From: Werner Sembach <wse@tuxedocomputers.com>
-In-Reply-To: <00de99ce-cb58-491d-81fc-f8bfb8ea4a16@gmx.de>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
 
+On Wed, 2026-04-08 at 16:27 +0000, Maciej Wieczor-Retman wrote:
+> From: Maciej Wieczor-Retman <maciej.wieczor-retman@intel.com>
+>=20
+> The "instance" word has a specific meaning in TPMI. It is a physical
+> index related to compute dies and IO dies present on a single TPMI
+> partition (which is also a single TPMI device). It's used for mapping
+> MMIO blocks for direct TPMI register access.
+>=20
+> The currently used "instance_id" uncore_data struct field is a
+> sequentially generated value that's used for appending to uncore
+> directories inside the /sys/devices/system/cpu/intel_uncore_frequency
+> directory. It has no relation to the physical TPMI elements.
+>=20
 
-Am 22.04.26 um 13:28 schrieb Armin Wolf:
-> Am 21.04.26 um 22:01 schrieb Werner Sembach:
->> Hi,
->>
->> This series is based on another not yet accepted series
->> https://lore.kernel.org/all/20260417050912.5582-1-W_Armin@gmx.de/
->>
->> RFC because of that, because the third patch is not yet tested, and because
->> I have a question regarding the 3rd patch:
->>
->> Should I abstract the call to wmi_evaluate_method away in a wrapper
->> function in uniwill-wmi somehow, or is it ok to have it straight in the
->> uniwill-laptop code like that? It is quite self contained.
->>
->> Best regards,
->>
->> Werner
->
-> Hi,
->
-> i prefer having the code for this WMI interface inside a separate file. I 
-> think we have to first rename uniwill-wmi* to uniwill-wmi-event*, then the new 
-> code can live in uniwill-wmi.c
->
-> However we also need some synchronization mechanism between uniwill-acpi and 
-> the new uniwill-wmi because some code path need to check EC registers before 
-> enabling support for local dimming. I suggest that you use the component 
-> framework for that. Basically the new WMI driver registers a component during 
-> probing, while the EC acts as a component master _if_ local dimming support is 
-> present. When the component and the component master match a sysfs attribute 
-> is registered to allow userspace application to control this feature.
+In future, It is always better to say no functional changes as this is
+just renaming.
 
-Calling the old uniwill-wmi uniwill-wmi-event and the new driver uniwill-wmi 
-from here on:
-
-I haven't yet worked with the component framework, but i wonder: since the same 
-manual register call structure that we already have for uniwill-wmi-event will 
-be also required for uniwill-wmi, can't this call not also be used to exchange 
-callbacks like for uniwill-wmi-event and the notifier block? just the other way 
-around with uniwill-acpi receiving a callback instead of providing one.
-
-ofc these callbacks must be guarded in some way to not accidentally call 
-uninitialized code, if uniwill-wmi fails to init or probe
-
->
-> Thanks,
-> Armin Wolf
->
->>
->> Werner Sembach (3):
->>    platform/x86: uniwill-laptop: Make super key init lineup with other
->>      inits
->>    platform/x86: uniwill-laptop: Implement lightbar for XMG Fusion (L19)
->>    platform/x86: uniwill-laptop: Offer support to activate local dimming
->>
->>   drivers/platform/x86/uniwill/uniwill-acpi.c | 195 ++++++++++++++++++--
->>   1 file changed, 182 insertions(+), 13 deletions(-)
->>
->
+> Signed-off-by: Maciej Wieczor-Retman
+> <maciej.wieczor-retman@intel.com>
+> Acked-by: Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>
+> ---
+> Changelog v3:
+> - Add Srinivas' Acked-by.
+>=20
+> Changelog v2:
+> - Redid the first paragraph to better describe what "instance" is.
+> - Rename seqname_id to seqnum_id to emphasize it's a sequential
+> number
+> =C2=A0 not sequential name.
+>=20
+> =C2=A0.../x86/intel/uncore-frequency/uncore-frequency-common.c=C2=A0=C2=
+=A0=C2=A0 | 6 +++-
+> --
+> =C2=A0.../x86/intel/uncore-frequency/uncore-frequency-common.h=C2=A0=C2=
+=A0=C2=A0 | 4 ++--
+> =C2=A02 files changed, 5 insertions(+), 5 deletions(-)
+>=20
+> diff --git a/drivers/platform/x86/intel/uncore-frequency/uncore-
+> frequency-common.c b/drivers/platform/x86/intel/uncore-
+> frequency/uncore-frequency-common.c
+> index 7070c94324e0..25ab511ed8d2 100644
+> --- a/drivers/platform/x86/intel/uncore-frequency/uncore-frequency-
+> common.c
+> +++ b/drivers/platform/x86/intel/uncore-frequency/uncore-frequency-
+> common.c
+> @@ -268,7 +268,7 @@ int uncore_freq_add_entry(struct uncore_data
+> *data, int cpu)
+> =C2=A0		if (ret < 0)
+> =C2=A0			goto uncore_unlock;
+> =C2=A0
+> -		data->instance_id =3D ret;
+> +		data->seqnum_id =3D ret;
+> =C2=A0		scnprintf(data->name, sizeof(data->name),
+> "uncore%02d", ret);
+> =C2=A0	} else {
+> =C2=A0		scnprintf(data->name, sizeof(data->name),
+> "package_%02d_die_%02d",
+> @@ -281,7 +281,7 @@ int uncore_freq_add_entry(struct uncore_data
+> *data, int cpu)
+> =C2=A0	ret =3D create_attr_group(data, data->name);
+> =C2=A0	if (ret) {
+> =C2=A0		if (data->domain_id !=3D UNCORE_DOMAIN_ID_INVALID)
+> -			ida_free(&intel_uncore_ida, data-
+> >instance_id);
+> +			ida_free(&intel_uncore_ida, data-
+> >seqnum_id);
+> =C2=A0	} else {
+> =C2=A0		data->control_cpu =3D cpu;
+> =C2=A0		data->valid =3D true;
+> @@ -301,7 +301,7 @@ void uncore_freq_remove_die_entry(struct
+> uncore_data *data)
+> =C2=A0	data->control_cpu =3D -1;
+> =C2=A0	data->valid =3D false;
+> =C2=A0	if (data->domain_id !=3D UNCORE_DOMAIN_ID_INVALID)
+> -		ida_free(&intel_uncore_ida, data->instance_id);
+> +		ida_free(&intel_uncore_ida, data->seqnum_id);
+> =C2=A0
+> =C2=A0	mutex_unlock(&uncore_lock);
+> =C2=A0}
+> diff --git a/drivers/platform/x86/intel/uncore-frequency/uncore-
+> frequency-common.h b/drivers/platform/x86/intel/uncore-
+> frequency/uncore-frequency-common.h
+> index 0abe850ef54e..0d5fd91ee0aa 100644
+> --- a/drivers/platform/x86/intel/uncore-frequency/uncore-frequency-
+> common.h
+> +++ b/drivers/platform/x86/intel/uncore-frequency/uncore-frequency-
+> common.h
+> @@ -35,7 +35,7 @@
+> =C2=A0 * @die_id:		Die id for this instance
+> =C2=A0 * @domain_id:		Power domain id for this instance
+> =C2=A0 * @cluster_id:		cluster id in a domain
+> - * @instance_id:	Unique instance id to append to directory
+> name
+> + * @seqnum_id:		Unique sequential id to append to directory
+> name
+> =C2=A0 * @name:		Sysfs entry name for this instance
+> =C2=A0 * @agent_type_mask:	Bit mask of all hardware agents for this
+> domain
+> =C2=A0 * @uncore_attr_group:	Attribute group storage
+> @@ -71,7 +71,7 @@ struct uncore_data {
+> =C2=A0	int die_id;
+> =C2=A0	int domain_id;
+> =C2=A0	int cluster_id;
+> -	int instance_id;
+> +	int seqnum_id;
+> =C2=A0	char name[32];
+> =C2=A0	u16=C2=A0 agent_type_mask;
+> =C2=A0
