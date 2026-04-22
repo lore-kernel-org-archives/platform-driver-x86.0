@@ -1,91 +1,165 @@
-Received: from mail-qv1-f46.google.com (mail-qv1-f46.google.com [209.85.219.46])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.16])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 65BBB18FC97
-	for <platform-driver-x86@vger.kernel.org>; Wed, 22 Apr 2026 00:19:00 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.46
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 80FAA2857EA;
+	Wed, 22 Apr 2026 06:54:16 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.16
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1776817141; cv=none; b=khbzZz3Axk5FUD6kvfCFIOPKN0Qk3hrYfizojzV0zefdUT0IYBOTBz/ziN7bLTx0uxUXFa+pqNB26Q7OQ8j/xjaj6uLyNxh7lRm3gc+pRp0YkBmrcYcFC0ftUldG97sApl0/jKbRUy8UC6Iw9ypoD/CelBLj4K089jK2MW04Ieo=
+	t=1776840857; cv=none; b=lv+m5Y3j2XW9RbSBSjwrguLLc+glVxmE0tDMJC/dLIU1VUXTn6pfaKnc6SX81BfDyZQxIha/gRFxKkh5bMF6LBaicqx72xHQIddzdhsc/QwwS4KlcDDnjclTeuehndSmAwQHFzz/6rurwMIreYACf1F4bN3dCjeGY4MbyJC90mI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1776817141; c=relaxed/simple;
-	bh=VM/AU8fqs/tbU/gzohS8srZPcMcGr9URI0nFagfdoeI=;
-	h=Message-ID:Date:MIME-Version:To:From:Subject:Content-Type; b=fEcYs5PnkWJscOkpnaIyefWAAvKfaTOBZMgEb4TAG5g8VS1TqYx5+xhzE7zzgFX+I72PDYwQhzOSNXYMS5/aFBCno2/lZ0UeYg4vHbCfcEeeN10rKqxBQ8KXPeqa4fnuuqeshRhyxoEzagrDkftFCjJmdPYVDFw41YI8x9JIbbo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=hViDBVyF; arc=none smtp.client-ip=209.85.219.46
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1776840857; c=relaxed/simple;
+	bh=0khrdPwN7/B/JaOiHCF0u6aBQihTb63y1pMx89Buflg=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=L8tjXZ5MUY3ZReFT0dxEkASoa2gxl4EIK1y/ZycnBIp8srCT6KLOkViQAot2TRpQ9lpZX5oSY3Q3YXlgEa9yOEyW8vZcAh1cNWV3quRWz6idYAD/zOXpqNFhQk1DOezWGXt01365l4dcgtTTGAUbybTfGp7uKTv5cmV0swWc1X8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=pass smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=S+fdS1g0; arc=none smtp.client-ip=192.198.163.16
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="hViDBVyF"
-Received: by mail-qv1-f46.google.com with SMTP id 6a1803df08f44-8a3342d301aso49403916d6.2
-        for <platform-driver-x86@vger.kernel.org>; Tue, 21 Apr 2026 17:19:00 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20251104; t=1776817139; x=1777421939; darn=vger.kernel.org;
-        h=content-transfer-encoding:subject:from:to:content-language
-         :user-agent:mime-version:date:message-id:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=91WM7bcY0FPG+GvQUi/O55GfvYUTGmEFOiTffbaQo94=;
-        b=hViDBVyFS0krDXp5cXsijMJIM9eqYQoglN3XQkOQt3uxc17kBk28M1IubJ+qQDLGTQ
-         YOyr7v3Gc2BF001SBjktbaC1QIBClTFi4X8GUSVEmG5X2qefdUNQHRxBpwKxJevFtdi9
-         YxZ3mFn9976kEBILvmm5biHTJSIqRwHMVGXchK8DpAQwp9Sdza4WUJW6IFVm8T50jw80
-         YmqIXMfB33N1jSQqvEwEdlurRqo8niRqFLxEMfBBSg/onaJ0KM4iFEbpz3YeOPq8+Hf9
-         5pLcwADNWESNkoHBs1gFBoqg+DnqKzDeRkISQmfPwFID9QJogZUG6s8Z5/YsLuuavYLk
-         o6SQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1776817139; x=1777421939;
-        h=content-transfer-encoding:subject:from:to:content-language
-         :user-agent:mime-version:date:message-id:x-gm-gg:x-gm-message-state
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=91WM7bcY0FPG+GvQUi/O55GfvYUTGmEFOiTffbaQo94=;
-        b=enaghrTDacQHMcekPviiLuNuFsUE5vfHR1hyFs2uWni68HyDJRq5aNOxY4sLud6/vE
-         2ITtezptG7E0eMMkGrw0Qzm51WAsrZYktBpPZkchowfzAAiUlVIlfk8AY+4RPTOUs+kN
-         AP4dRv1m3J4lr4gfvOwJoG21NOmFtVDwBU7ITINKAYKxyfg//ysq392ahX+DqdVKCzMc
-         c91SOyYIQJ7kmFRqdUgFc2TfmMNv11kB0q6yCe3uGOt0Tv9GitVnWsuzc8LyciIqU2aj
-         +hUlzWz1NbzZSE6uV/rzpLOn6KboFfAds+5P89kPOwN2Z2mi812/wujDpE1rdPchvblG
-         hqsQ==
-X-Gm-Message-State: AOJu0YyPn0zLkh+vwG80Dp9Rkmu9UKb2Q4WAlFzooiauMzGeGBjFGZLr
-	i0vBoOW1NQw9Rs6NjU7wctmWpYClHYYT5dn1jsKpAJD8fLeJp3q2LfLnAEIYn86lq5Q=
-X-Gm-Gg: AeBDievzA9x1nRy82ZIOs/VuZvRiwHR1fVfuLh5dizXEuRa6+BOGRfJzVDhQ2YEAB2k
-	UlL6R/zJRcFVL6yZ6x7BdfUBbTuf2rFcITzGl5OF8X20LyqvX6v/gh+OuHiFpGi+/t/JC4hbB46
-	5cerI42J7z3XAKdvkf7XTh1xbcsr4IGaWmZjiHbjaE/WXLZf4Z8Mzhwnney01Gybg3N3c/JeeDl
-	KRAAzMYc9H2BdpOORpXzYAoz3fa3mtIBqyiKIexvFxdzSTRfp5t5czoW+521fb2wI6Pna4Ad98t
-	7bY8GW0WYB2d1Oncp36RHI6QhLk1pxx1z4Buah2eeH0RNVFaN6sLRjj9sIlwuFcDByzVuYN8I15
-	c0LbQF4v3J7YR8ZOky18ojtMDnv3Le3vP3NATpYEhNQQZsInneEhsa4mFnkxeHV7iKjS23LQJJt
-	WkifvRIJizI0vY7e7MZJOBidx6S4VpZHYQZmERFlRdmKZcS8rWWIQx6BI1fIhZq+RM+T3SqR1uY
-	SaXHJhK
-X-Received: by 2002:a05:6214:5b87:b0:8ac:ab13:8f15 with SMTP id 6a1803df08f44-8b027ff994cmr357712266d6.7.1776817139095;
-        Tue, 21 Apr 2026 17:18:59 -0700 (PDT)
-Received: from ?IPV6:2601:154:8300:ee0:1853:44ea:a4d0:a8a5? ([2601:154:8300:ee0:1853:44ea:a4d0:a8a5])
-        by smtp.gmail.com with ESMTPSA id 6a1803df08f44-8b02ae7d79esm113799706d6.36.2026.04.21.17.18.58
-        for <platform-driver-x86@vger.kernel.org>
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 21 Apr 2026 17:18:58 -0700 (PDT)
-Message-ID: <4ae4d7f9-f1db-4394-b0d9-c75dc39afcf8@gmail.com>
-Date: Tue, 21 Apr 2026 20:18:58 -0400
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="S+fdS1g0"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1776840857; x=1808376857;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=0khrdPwN7/B/JaOiHCF0u6aBQihTb63y1pMx89Buflg=;
+  b=S+fdS1g02Mhi0Ezk7PcPkyQEeRlLgHQIkJK9Ma8WVScGnx6Kwl4pDHWl
+   BaAyNTVbOM5JcNKaE8xkt/94RoIG0K2yGVrGXTuOmxCpWgGZKfUHC+pIl
+   7CIqNKNmNepylc0uLWxB0XAWTi57RM3J/Xf7XaMKwm96yCmF4Nt4eq2BX
+   5BhjUETb8Kh0L5L4kfd69WZ4AHOkvaWAMRlqTolOrI+9unURPgwUQ0YJN
+   /bUTOoi/0A+pqXDOQPfCCcGfPMAwRB1hsgtPtyam4on+ju/jS4o4VKmN0
+   X2MAB8zXEmGPlKKp+MTH2I5Nvya/kp2VsAxXzBuG33nqFGm2pn3Cul6PF
+   Q==;
+X-CSE-ConnectionGUID: jpy/ITvVRpyTOqKcH0Ccnw==
+X-CSE-MsgGUID: yqnFY0iETbi+0wppYB6XlQ==
+X-IronPort-AV: E=McAfee;i="6800,10657,11763"; a="65323165"
+X-IronPort-AV: E=Sophos;i="6.23,192,1770624000"; 
+   d="scan'208";a="65323165"
+Received: from fmviesa003.fm.intel.com ([10.60.135.143])
+  by fmvoesa110.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 21 Apr 2026 23:54:16 -0700
+X-CSE-ConnectionGUID: H+P6kzcwRxa+8vwyP7qmFg==
+X-CSE-MsgGUID: h1Of9f8zRHm0NhMmTjEBWQ==
+X-ExtLoop1: 1
+Received: from dhhellew-desk2.ger.corp.intel.com (HELO kekkonen.fi.intel.com) ([10.245.245.208])
+  by fmviesa003-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 21 Apr 2026 23:54:13 -0700
+Received: from kekkonen.localdomain (localhost [IPv6:::1])
+	by kekkonen.fi.intel.com (Postfix) with SMTP id 316361201FC;
+	Wed, 22 Apr 2026 09:54:12 +0300 (EEST)
+Date: Wed, 22 Apr 2026 09:54:12 +0300
+Organization: Intel Finland Oy - BIC 0357606-4 - c/o Alberga Business Park, 6 krs, Bertel Jungin Aukio 5, 02600 Espoo
+From: Sakari Ailus <sakari.ailus@linux.intel.com>
+To: Thierry Chatard <tchatard@gmail.com>
+Cc: linux-kernel@vger.kernel.org, hansg@kernel.org, lee@kernel.org,
+	platform-driver-x86@vger.kernel.org, ilpo.jarvinen@linux.intel.com,
+	djrscally@gmail.com, linux-media@vger.kernel.org,
+	mchehab@kernel.org, jacopo.mondi@ideasonboard.com,
+	nicholas@rothemail.net
+Subject: Re: [PATCH v4 1/5] platform/x86: intel_lpss: add resource conflict
+ quirk for Dell Latitude 5285
+Message-ID: <aehwlPPQf5LzwmAM@kekkonen.localdomain>
+References: <aeMvy5aL0hSNNmEd@kekkonen.localdomain>
+ <20260421225217.12472-1-tchatard@gmail.com>
+ <20260421225217.12472-2-tchatard@gmail.com>
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Content-Language: en-US
-To: platform-driver-x86@vger.kernel.org
-From: Benjamin Young <benj.n.yng@gmail.com>
-Subject: hp-wmi: Fix thermal profile board classification for HP Omen Max 16
- (8D41)
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20260421225217.12472-2-tchatard@gmail.com>
 
-Subject: hp-wmi: Fix thermal profile board classification for HP Omen 
-Max 16 (8D41)
+Hi Thierry,
 
-Board 8D41 (HP Omen MAX Gaming Laptop 16t-ah000) was incorrectly added
-to victus_s_thermal_profile_boards in kernel 7.0, causing hp-wmi probe
-to fail with -EINVAL.
+Thanks for the update.
 
-The fix is to remove 8D41 from victus_s_thermal_profile_boards and add
-it to omen_thermal_profile_boards whitelist instead.
+On Tue, Apr 21, 2026 at 03:52:13PM -0700, Thierry Chatard wrote:
+> The Dell Latitude 5285 2-in-1 has a BIOS bug where the ACPI GEXP device
+> and the I2C4 controller (INT3446) both claim the same MMIO region via the
+> shared SB04 variable. This causes intel_lpss_acpi to fail binding to I2C4
+> with -EBUSY, preventing the front camera (OV5670) sensor from being
+> registered.
+> 
+> Add a DMI quirk that selects IGNORE_RESOURCE_CONFLICTS for INT3446 on this
+> machine, matching the existing pattern used by other LPSS quirks.
+> 
+> Signed-off-by: Thierry Chatard <tchatard@gmail.com>
+> ---
+>  drivers/mfd/intel-lpss-acpi.c | 34 ++++++++++++++++++++++++++++++++++
+>  1 file changed, 34 insertions(+)
+> 
+> diff --git a/drivers/mfd/intel-lpss-acpi.c b/drivers/mfd/intel-lpss-acpi.c
+> index 63406026d..c48eac03a 100644
+> --- a/drivers/mfd/intel-lpss-acpi.c
+> +++ b/drivers/mfd/intel-lpss-acpi.c
+> @@ -13,6 +13,8 @@
+>  #include <linux/ioport.h>
+>  #include <linux/mod_devicetable.h>
+>  #include <linux/module.h>
+> +#include <linux/acpi.h>
+> +#include <linux/dmi.h>
+>  #include <linux/pm.h>
+>  #include <linux/pm_runtime.h>
+>  #include <linux/platform_device.h>
+> @@ -52,6 +54,16 @@ static const struct intel_lpss_platform_info spt_i2c_info = {
+>  	.swnode = &spt_i2c_node,
+>  };
+>  
+> +/*
+> + * Same as spt_i2c_info but with QUIRK_IGNORE_RESOURCE_CONFLICTS for Dell 5285
+> + * where ACPI GEXP device conflicts with I2C4 (INT3446) MMIO resources.
+> + */
+> +static const struct intel_lpss_platform_info spt_i2c_info_ignore_conflicts = {
+> +	.clk_rate = 120000000,
+> +	.swnode = &spt_i2c_node,
+> +	.quirks = QUIRK_IGNORE_RESOURCE_CONFLICTS,
+> +};
+> +
+>  static const struct property_entry uart_properties[] = {
+>  	PROPERTY_ENTRY_U32("reg-io-width", 4),
+>  	PROPERTY_ENTRY_U32("reg-shift", 2),
+> @@ -172,6 +184,16 @@ static const struct acpi_device_id intel_lpss_acpi_ids[] = {
+>  };
+>  MODULE_DEVICE_TABLE(acpi, intel_lpss_acpi_ids);
+>  
+> +static const struct dmi_system_id dell5285_lpss_dmi[] = {
+> +	{
+> +		.matches = {
+> +			DMI_EXACT_MATCH(DMI_SYS_VENDOR, "Dell Inc."),
+> +			DMI_EXACT_MATCH(DMI_PRODUCT_NAME, "Latitude 5285"),
+> +		},
+> +	},
+> +	{ }
+> +};
+> +
+>  static int intel_lpss_acpi_probe(struct platform_device *pdev)
+>  {
+>  	const struct intel_lpss_platform_info *data;
+> @@ -182,6 +204,18 @@ static int intel_lpss_acpi_probe(struct platform_device *pdev)
+>  	if (!data)
+>  		return -ENODEV;
+>  
+> +	/*
+> +	 * Apply IGNORE_RESOURCE_CONFLICTS for I2C4 on Dell Latitude 5285.
+> +	 * The ACPI GEXP device conflicts with I2C4 (INT3446) MMIO resources
+> +	 * due to a BIOS bug where both use the same SB04 variable.
+> +	 */
+> +	if (data == &spt_i2c_info &&
 
-Tested on HP Omen MAX Gaming Laptop 16t-ah000, BIOS F.21, kernel
-7.0.0-1-cachyos-bore. After the fix, hp_wmi registers successfully as
-a platform profile handler.
+I believe you can drop this check: there are other devices that yield
+&spt_i2c_info, but the check below is more precise in any case.
 
+> +	    acpi_dev_hid_uid_match(ACPI_COMPANION(&pdev->dev), "INT3446", NULL) &&
+> +	    dmi_check_system(dell5285_lpss_dmi)) {
+> +		dev_info(&pdev->dev, "Dell 5285: applying IGNORE_RESOURCE_CONFLICTS for I2C4\n");
+> +		data = &spt_i2c_info_ignore_conflicts;
+> +	}
+> +
+>  	info = devm_kmemdup(&pdev->dev, data, sizeof(*info), GFP_KERNEL);
+>  	if (!info)
+>  		return -ENOMEM;
+
+-- 
+Regards,
+
+Sakari Ailus
