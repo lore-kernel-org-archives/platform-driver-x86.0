@@ -1,40 +1,67 @@
-Received: from mout.gmx.net (mout.gmx.net [212.227.17.20])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wm1-f42.google.com (mail-wm1-f42.google.com [209.85.128.42])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B39BD3C7E1B;
-	Wed, 22 Apr 2026 11:29:54 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=212.227.17.20
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id ECA202DFF04
+	for <platform-driver-x86@vger.kernel.org>; Wed, 22 Apr 2026 12:08:32 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.42
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1776857396; cv=none; b=lEf/XsvLhE/9kWzMUEn5VNB7Mau448X4ftQB1wkeSzAj28zEFskfv1lJcjZH34mNllBvVOE1XpIBA7AKbNISELZfKcMSbtIqRAJsepUz3OAUU+zxLwvmz6u9BvB7A3MRPZrc8HmNsz4CWdcMOsBlzTtmfIskEgISbiOIsun8TKA=
+	t=1776859714; cv=none; b=Uwmrlr4tZiBrMocSZSuk2gYx1Qy+MUyVkuHFuBmRmQVKWe0CGXOdhM2DtrnKLMjunfz6o/I2QTwjFOlrtnDwbD2pgx8dzIPT2sA1tKmImdU++MK6UKZ39z/cH4ZwWjMP9SsQFKo7VjcPhqFRDS4lfJEJgzv1zw/aQDqco7QqX4o=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1776857396; c=relaxed/simple;
-	bh=aa5C2HnXYVaCYsdIKcZFFflk2NTG9k/5j3sdcztlY4s=;
-	h=Message-ID:Date:MIME-Version:Subject:From:To:Cc:References:
-	 In-Reply-To:Content-Type; b=KvoBcE0kFi8hylSb3yzE/c1ZQcipsp/xjwW1XSelJoWdOCWZ0uX/oSDSuBbKaGdVNrNzA54eQXluF5Keo6Ar2JR8ZtC5g2vQfi/VpkpWPNfmfwTPjG1Vd4zmaEVeHWnrRQOeO52ZqpanxuAAPb34bg+y5KI4m8aZ6jMijBs+dMI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gmx.de; spf=pass smtp.mailfrom=gmx.de; dkim=pass (2048-bit key) header.d=gmx.de header.i=w_armin@gmx.de header.b=fT08F45T; arc=none smtp.client-ip=212.227.17.20
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gmx.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmx.de
+	s=arc-20240116; t=1776859714; c=relaxed/simple;
+	bh=YsZRZJwMyF0JmyqtIb+8z2p9fViWe6kZh3QoXuO4hHI=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=Sxe8BOmJilKFoPtiPzoUR9mj5l8T0oZQ834xnvIAdnr1X2D04dBD2E9N0CEGmhPyqlsidnyM5LetHeDm3L2e37TJHkaEoKTY+o/SrrTIM2HnCyoGHWDusecq46dmoH/l+JIdUjb+wTfKzoYc56AqK7iT8+4BAJSSJQSCPkdz+jk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=RHRqZIFs; arc=none smtp.client-ip=209.85.128.42
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmx.de header.i=w_armin@gmx.de header.b="fT08F45T"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=gmx.de;
-	s=s31663417; t=1776857385; x=1777462185; i=w_armin@gmx.de;
-	bh=aa5C2HnXYVaCYsdIKcZFFflk2NTG9k/5j3sdcztlY4s=;
-	h=X-UI-Sender-Class:Message-ID:Date:MIME-Version:Subject:From:To:
-	 Cc:References:In-Reply-To:Content-Type:Content-Transfer-Encoding:
-	 cc:content-transfer-encoding:content-type:date:from:message-id:
-	 mime-version:reply-to:subject:to;
-	b=fT08F45TbVXYetLXUX13UUlK810apKgGAdWObVOa0uw7fbMb4jyt75tvFF600cZl
-	 rt/dhCGS4v4LRNspIuf0hPuUlvpOpi0J0KRuIJibX2BYB4U0n45QEjUTmMJmV3FM0
-	 rY/HVyBEBlbvz7XG0A/i1Hc9zc9wIbyRnoH3rcDDncqupRJVwn9zucW30Zn37Jg99
-	 bP7B2YSeKdOBOctsp63EKY+M4CJGO07ylGifw2bUgaSbUOiVhUeNjHBvh+WJQZRRT
-	 W2afL4R7qUmA+QbTAW2FihfC5JsEK9OStwjn/wOyROQ05G3m+7bjpCkAZ90Ohq3b+
-	 aSjYzJ4HUwC7AyKIZQ==
-X-UI-Sender-Class: 724b4f7f-cbec-4199-ad4e-598c01a50d3a
-Received: from client.hidden.invalid by mail.gmx.net (mrgmx104
- [212.227.17.168]) with ESMTPSA (Nemesis) id 1MFKKX-1w98uf3qlV-002lrV; Wed, 22
- Apr 2026 13:29:44 +0200
-Message-ID: <df847a42-bdca-4a86-a8b0-641876264bbb@gmx.de>
-Date: Wed, 22 Apr 2026 13:29:44 +0200
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="RHRqZIFs"
+Received: by mail-wm1-f42.google.com with SMTP id 5b1f17b1804b1-4852a9c6309so49525605e9.0
+        for <platform-driver-x86@vger.kernel.org>; Wed, 22 Apr 2026 05:08:32 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20251104; t=1776859711; x=1777464511; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=OH3FKNYqov5c9Pzh8OPnLDc5XEVHpmOUMSX0nrhvEyY=;
+        b=RHRqZIFs6ENqRaRKi5y6p99EtomBsLiFadK/djnrxMblhOMSc+sf4v2t96+GyrNPBa
+         kXj1O+fvBKB+GxuNt3heDoB3S/8+NvAv3aMmUnFOVQAf/y2dznYqb4HfK4WM6HV9QzQ8
+         TyZw+hRowkTmhzmGC9HSJKm1AmVkGWnQQt29rlzFVc3KJEBIPhJWmPI/xdps8GZZs9HI
+         MDCQtlwlS65MpG9keG81KZdHcjwIG14uW0YjT0D8u7EBKzUvfUuuN1cHloL5nQ1WI3Fk
+         1sFJa/EyAyHgqrE4pAHBk6erLCyRER+phRga7ZmHSuAlehhYjfVw3Lwwm+8N5rcoe8cW
+         0E6Q==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20251104; t=1776859711; x=1777464511;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-gg:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=OH3FKNYqov5c9Pzh8OPnLDc5XEVHpmOUMSX0nrhvEyY=;
+        b=G3xM4SPRvG/aCN+iToKqjhYb4APtBlI6x2YjqddGpjXm79UPXV+dTtWZ5C2e3pIEcS
+         +5xC2Zfmx30NPh4wGOFCqN4qLB924/kNFaHpRIfaSR8LmdlkkyogptySalm7qmY1U+58
+         Y+cJs8HihQKGNGDo8HgQwJujL1oKofPcCkj1PG69XyjINVXtUnvB/5uJjKSgNNkUa2L5
+         Vl9mDSo354vdSGMrS2mmNGeNEhtT548KaDDa9pSc4l9eyYIFCE+6mOVXPfRDMfYeosm+
+         vxeDoyxwCDkHp6+woKv3OaVdfITJ6/jcvvWyqOM3VZf587+WDq4xmL03PPcLON41m8gA
+         9PCQ==
+X-Forwarded-Encrypted: i=1; AFNElJ+KcURcaYASmRxZwi0PN7g76qovV8xHhO9Nud7U+Xw24zi+5VlKDmAjC+pwILi3NcADCJPRpw6auU9rPQhdBNRvsMuM@vger.kernel.org
+X-Gm-Message-State: AOJu0YzBy76YJugUWQ/mYwntdMvtHfAa7t+x2RAYpXpzbt5gAbvx+Bja
+	tVVtkytrM9NKl73UlEc7W5aPFJsP4MbwUJ9EYyAF+2vQDQoq0f3q1SJi
+X-Gm-Gg: AeBDietT1ijPIUfkEhBphFRZtVUp6JEUaMV2UXdKPMd50ZRHmX6QDhna8C1ruYPblnm
+	3ynQZie1cD+91RAN43pdeZREKMYETjfOj8NGUxyaTpfjTAAJWoYhKwLysepuEC62KFkmFGqamLa
+	Ma+E5i/GKkGnNsJYk0/pq2KM2BwV65pkVo0WqQeVb/guMw8drhRvEcokjfP2r2GYHvaquH1R12Z
+	LHfIrzeKkQuWlO4WZqBHXSWLQZHycOfCpEPLIQ/1hfnU/Z0ojhZrsUkbXmID8XSIMleNTXTv7SI
+	wML+4SL3elWgq6Dmu/hTO4ILHu/seM3ZqJGwFyG6dD+RRknUUc4gTOIIOogCJr3zqJozGrRIkZC
+	Kwjk8BZbNCrMArKeZinKe7Q4xJNQV3PM1ts1/EIcDT5Wd/Sw0sM10ZX30j1tRGKICS0lSwDRXJC
+	cMZCq814oJw759hSVMHgO+UnrDiy3ZXa/oOWVDKva3t3GubGV+9kxdSbZx6ss9htWGRqZl1D8y/
+	NP6MDk=
+X-Received: by 2002:a05:600c:4fc6:b0:48a:53ea:1408 with SMTP id 5b1f17b1804b1-48a53ea15a4mr119784885e9.8.1776859710927;
+        Wed, 22 Apr 2026 05:08:30 -0700 (PDT)
+Received: from ?IPV6:2a01:e11:202b:40:3c42:f121:865e:1066? ([2a01:e11:202b:40:3c42:f121:865e:1066])
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-4891bb3d121sm383222985e9.14.2026.04.22.05.08.29
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Wed, 22 Apr 2026 05:08:30 -0700 (PDT)
+Message-ID: <5a36760d-5d1e-4eee-9006-3fed042aa2cd@gmail.com>
+Date: Wed, 22 Apr 2026 14:08:29 +0200
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
@@ -42,300 +69,203 @@ List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [RFC PATCH 2/3] platform/x86: uniwill-laptop: Implement lightbar
- for XMG Fusion (L19)
-From: Armin Wolf <W_Armin@gmx.de>
-To: Werner Sembach <wse@tuxedocomputers.com>, hansg@kernel.org,
- ilpo.jarvinen@linux.intel.com
-Cc: platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
-References: <20260421201103.142403-1-wse@tuxedocomputers.com>
- <20260421201103.142403-3-wse@tuxedocomputers.com>
- <d85481fe-513c-48db-b766-8f365bcbf66b@gmx.de>
+Subject: Re: [BUG] 36-second boot delay due to by
+ acpi_gpio_handle_deferred_request_irqs on ASUS ROG Strix G16 (2025)
+To: Mika Westerberg <mika.westerberg@linux.intel.com>
+Cc: Hans de Goede <hansg@kernel.org>,
+ Francesco Lauritano <francesco.lauritano1@protonmail.com>,
+ Mario Limonciello <superm1@kernel.org>,
+ "linux-acpi@vger.kernel.org" <linux-acpi@vger.kernel.org>,
+ "open list:GPIO ACPI SUPPORT" <linux-gpio@vger.kernel.org>,
+ "platform-driver-x86@vger.kernel.org" <platform-driver-x86@vger.kernel.org>,
+ "westeri@kernel.org" <westeri@kernel.org>,
+ Benjamin Tissoires <bentiss@kernel.org>
+References: <woxnPhTYiKi2aLzBK8GnO8DpvdgYjQc-P42uhJOzyrcYC3Gdstht27hML8yNHgOklhm2MgGA7wt9gGZ17BHoWlG0vqJuVVJDgCSev8udfds=@protonmail.com>
+ <NIIS8XD_nSRvp36X39GxcDRAWsaScQIFx6o9JsFCbyBZk5PqznRdxg9EDDb_9tzWd5TcjzxrRtFx5_uLCVa5wJAYykW2k0Ue_XPMPtWCQiY=@protonmail.com>
+ <e8ed4d4e-37e1-4577-bf80-62fcefbef7dc@kernel.org>
+ <ReQS8sQSGy3UTuG6tyPvoOb8_037sC6A2yXsSFNuXY1PlTFtCcDHnjf8vufEsk8avBSIL46U0qE-ZjTJD1xsbVYZ6_d2-wlTOZ2NJ2coTsc=@protonmail.com>
+ <20251218063954.GT2275908@black.igk.intel.com>
+ <b57b44c3-ea96-4189-8b70-71bf4a80d29b@kernel.org>
+ <20251218103831.GW2275908@black.igk.intel.com>
+ <51f999d7-2064-47dc-8d9b-e262588bfbdb@gmail.com>
+ <20260422090709.GB557136@black.igk.intel.com>
+ <4e55e31e-a5e8-4098-8a7f-bb52476b882a@gmail.com>
+ <20260422095558.GC557136@black.igk.intel.com>
 Content-Language: en-US
-In-Reply-To: <d85481fe-513c-48db-b766-8f365bcbf66b@gmx.de>
+From: Marco Scardovi <mscardovi95@gmail.com>
+In-Reply-To: <20260422095558.GC557136@black.igk.intel.com>
 Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: quoted-printable
-X-Provags-ID: V03:K1:rmcy98ReymUS2hJXGZIlNkOeeFsMGqcGzcavtwXNjARwrk9CEnd
- 5MO5Ef1IH+yOyQKyndeGlXWJTY77WYRinXh2cLw0X2SrdGsrrjVbw7pO2y0v4+fpFxrHq9d
- z202w+2CvF24Kf6Fef2qytb9iMB3hfknLjkZEJ9fx61M/HDY7JtPSvlDR8BY9XrO/0HtjYv
- 7sV7DA/W9dixJ4F4BxatA==
-X-Spam-Flag: NO
-UI-OutboundReport: notjunk:1;M01:P0:BGD1Az5vPqI=;s4Jn5RMAjZGUc8CD+tNW+IBIgvC
- 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
+Content-Transfer-Encoding: 7bit
 
-Am 22.04.26 um 13:17 schrieb Armin Wolf:
-> Am 21.04.26 um 22:01 schrieb Werner Sembach:
->> The XMG Fusion (L19) also has a lightbar but with a different max
->> brightness value of 36 instead of 200.
+
+On 4/22/26 11:55, Mika Westerberg wrote:
+> On Wed, Apr 22, 2026 at 11:45:33AM +0200, Marco Scardovi wrote:
+>> On 4/22/26 11:07, Mika Westerberg wrote:
+>>> Hi,
+>>>
+>>> On Wed, Apr 22, 2026 at 09:51:01AM +0200, Marco Scardovi wrote:
+>>>> On 12/18/25 11:38, Mika Westerberg wrote:
+>>>>> On Thu, Dec 18, 2025 at 11:33:14AM +0100, Hans de Goede wrote:
+>>>>>> Hi,
+>>>>>>
+>>>>>> On 18-Dec-25 07:39, Mika Westerberg wrote:
+>>>>>>> On Wed, Dec 17, 2025 at 07:19:56PM +0000, Francesco Lauritano wrote:
+>>>>>>>> On Wednesday, December 17th, 2025 at 7:01 PM, Mario Limonciello <superm1@kernel.org> wrote:
+>>>>>>>>
+>>>>>>>>> On 12/17/25 10:57 AM, Francesco Lauritano wrote:
+>>>>>>>>>
+>>>>>>>>>> On Wednesday, December 17th, 2025 at 4:12 PM, Francesco Lauritano francesco.lauritano1@protonmail.com wrote:
+>>>>>>>>>>
+>>>>>>>>>>> The _AEI defines 5 GPIO interrupts. Narrowed it down to two:
+>>>>>>>>>>>
+>>>>>>>>>>> gpiolib_acpi.ignore_interrupt=AMDI0030:00@21,AMDI0030:00@24
+>>>>>>>>>>>
+>>>>>>>>>>> This fixes the delay. Pins 0x15 and 0x18 both call: \_SB.PCI0.SBRG.HNC0()
+>>>>>>>>>> Traced it further. HNC0(pin, 0) takes the Else branch and calls:
+>>>>>>>>>> ATKM(0xC0)
+>>>>>>>>>> ADTM(Zero)
+>>>>>>>>>>
+>>>>>>>>>> ADTM calls NOD2(), which is the actual culprit:
+>>>>>>>>>>
+>>>>>>>>>> While ((Arg0 != RDNT))
+>>>>>>>>>> {
+>>>>>>>>>> If ((Local0 >= 0x0F)) { Break }
+>>>>>>>>>> Notify (^^GPP0.PEGP, Arg0)
+>>>>>>>>>> Local0++
+>>>>>>>>>> Sleep (Local0 * 0x64)
+>>>>>>>>>> }
+>>>>>>>>>>
+>>>>>>>>>> It notifies the dGPU and polls RDNT, sleeping 100, 200, ... 1500ms per iteration.
+>>>>>>>>>> Max 15 loops = ~12s per pin. GPU doesn't respond at boot so it maxes out.
+>>>>>>>>>>
+>>>>>>>>>> Two pins, ~12s each, ~24-36s total.
+>>>>>>>>>>
+>>>>>>>>>> Francesco
+>>>>>>>>> Any idea why isn't the dGPU responding? I would have expected
+>>>>>>>>> https://git.kernel.org/torvalds/c/4d4c10f763d78 sets up policy that it's
+>>>>>>>>> in D0.
+>>>>>>>>>
+>>>>>>>>> Is the dGPU turned off in BIOS or through some reverse engineered
+>>>>>>>>> tool/API or something?
+>>>>>>>> dmesg without the workaround:
+>>>>>>>> [    1.005184] pci 0000:01:00.0: PME# supported from D0 D3hot
+>>>>>>>> [    1.288811] pci 0000:01:00.0: vgaarb: VGA device added
+>>>>>>>> [   38.250139] nvidia: loading out-of-tree module taints kernel.
+>>>>>>>> [   38.369358] nvidia 0000:01:00.0: enabling device (0000 -> 0003)
+>>>>>>>> [   39.744421] NVRM: GPS ACPI DSM called before _acpiDsmSupportedFuncCacheInit
+>>>>>>>>
+>>>>>>>> GPU is in D0 from 1.0s. nvidia loads at 38.2s after the GPIO hang completes.
+>>>>>>>>
+>>>>>>>> No weird tools/APIs besides userspace utils (asusctl/supergfxctl).
+>>>>>>>>
+>>>>>>>> No changes to BIOS factory defaults other than disabling Fast Boot.
+>>>>>>>> dGPU is active, Display Mode is Dynamic (hybrid).
+>>>>>>>>
+>>>>>>>> Traced RDNT - it's set by GPS function 19 in the ACPI tables:
+>>>>>>>> Case (0x13)
+>>>>>>>> {
+>>>>>>>>        Debug = "GPS fun 19"
+>>>>>>>>        \_SB.PCI0.SBRG.RDNT = (Local1 + 0xD1)
+>>>>>>>> }
+>>>>>>>>
+>>>>>>>> As far as I can understand GPIO initcall blocks at late_initcall_sync, preventing nvidia
+>>>>>>>> from loading in time to respond. Based on the timing, GPU is awake but nothing can
+>>>>>>>> register a handler while kernel is stuck at NOD2 polling loop.
+>>>>>>> I wonder if you could try with the nouveau driver so that it's built-in to
+>>>>>>> the kernel proper? Then it should be ready at the time these events
+>>>>>>> trigger.
+>>>>>> That is not really a workable solution though.
+>>>>> Yeah, I did not meant it to be the "solution" rather just to check whether
+>>>>> it is related if the GPU driver is there or not. You cannot build the
+>>>>> proprietary driver into the kernel so that's why I suggested the
+>>>>> open-source one.
+>>>> Hi Everyone,
+>>>>
+>>>> I would start saying sorry for the necrobump. I faced the same problem on my
+>>>> G614PR and fixed the same way as Francesco.
+>>>>
+>>>> Do you happen to know if there is any news about this? I'm currently on
+>>>> CachyOS with kernel 7.0 and noticed it behaves the same way as 6.19.
+>>>>
+>>>> I'm on to try patches or provide more infos if needed, even if I have to
+>>>> admit I know Linux but not that deeply.
+>>> As far as I can tell no updates unfortunately. I guess we could go with
+>>> slightly updated patch from Francesco, like below that just ignores those
+>>> two interrupts. Can you try if that works for you?
+>>>
+>>> This list of devices that suffer from the "edge events on boot" seems to be
+>>> growing so maybe we should re-think if that should be enabled for all
+>>> systems or limit to the problematic ones (although that list could get big
+>>> too ;-))
+>>>
+>>> diff --git a/drivers/gpio/gpiolib-acpi-quirks.c b/drivers/gpio/gpiolib-acpi-quirks.c
+>>> index a0116f004975..4e60a176ac93 100644
+>>> --- a/drivers/gpio/gpiolib-acpi-quirks.c
+>>> +++ b/drivers/gpio/gpiolib-acpi-quirks.c
+>>> @@ -392,6 +392,23 @@ static const struct dmi_system_id gpiolib_acpi_quirks[] __initconst = {
+>>>    			.ignore_wake = "VEN_0488:00@355",
+>>>    		},
+>>>    	},
+>>> +	{
+>>> +		/*
+>>> +		 * The ASUS ROG Strix G16 (2025) ACPI GPIO configuration
+>>> +		 * causes acpi_gpio_handle_deferred_request_irqs() to
+>>> +		 * stall for ~36 seconds during boot so ignore the two
+>>> +		 * interrupts involved.
+>>> +		 *
+>>> +		 * Found in BIOS G614PP.307.
+>>> +		 */
+>>> +		.matches = {
+>>> +			DMI_MATCH(DMI_SYS_VENDOR, "ASUSTeK COMPUTER INC."),
+>>> +			DMI_MATCH(DMI_PRODUCT_NAME, "ROG Strix G16 G614PP_G614PP"),
+>>> +		},
+>>> +		.driver_data = &(struct acpi_gpiolib_dmi_quirk) {
+>>> +			.ignore_interrupt = "AMDI0030:00@21,AMDI0030:00@24",
+>>> +		},
+>>> +	},
+>>>    	{} /* Terminating entry */
+>>>    };
+>> Hi Mika,
 >>
->> This patch adds a new feature flag for the driver to correctly handle=
-=20
->> this
->> case and applies it to the mentioned device.
->>
->> Signed-off-by: Werner Sembach <wse@tuxedocomputers.com>
->> ---
->> =C2=A0 drivers/platform/x86/uniwill/uniwill-acpi.c | 19 +++++++++++++--=
-=2D---
->> =C2=A0 1 file changed, 13 insertions(+), 6 deletions(-)
->>
->> diff --git a/drivers/platform/x86/uniwill/uniwill-acpi.c b/drivers/=20
->> platform/x86/uniwill/uniwill-acpi.c
->> index 7d1fdbacc6871..62d56cc67e2e8 100644
->> --- a/drivers/platform/x86/uniwill/uniwill-acpi.c
->> +++ b/drivers/platform/x86/uniwill/uniwill-acpi.c
->> @@ -318,7 +318,6 @@
->> =C2=A0 #define FAN_TABLE_LENGTH=C2=A0=C2=A0=C2=A0 16
->> =C2=A0 #define LED_CHANNELS=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 3
->> -#define LED_MAX_BRIGHTNESS=C2=A0=C2=A0=C2=A0 200
->> =C2=A0 #define UNIWILL_FEATURE_FN_LOCK=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
-=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 BIT(0)
->> =C2=A0 #define UNIWILL_FEATURE_SUPER_KEY=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
-=C2=A0=C2=A0 BIT(1)
->> @@ -344,6 +343,7 @@ struct uniwill_data {
->> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 acpi_handle handle;
->> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 struct regmap *regmap;
->> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 unsigned int features;
->> +=C2=A0=C2=A0=C2=A0 u8 lightbar_max_brightness;
->> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 struct acpi_battery_hook hook;
->> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 struct mutex battery_lock;=C2=A0=C2=A0=
-=C2=A0 /* Protects the list of currently=20
->> registered batteries */
->> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 union {
->> @@ -376,6 +376,7 @@ struct uniwill_battery_entry {
->> =C2=A0 struct uniwill_device_descriptor {
->> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 unsigned int features;
->> +=C2=A0=C2=A0=C2=A0 u8 lightbar_max_brightness;
->> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 /* Executed during driver probing */
->> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 int (*probe)(struct uniwill_data *data);
->> =C2=A0 };
->> @@ -1340,7 +1341,7 @@ static int uniwill_led_brightness_set(struct=20
->> led_classdev *led_cdev, enum led_br
->> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 for (int i =3D 0; i < LED_CHANNELS; i++)=
- {
->> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 /* Prevent the b=
-rightness values from overflowing */
->> -=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 value =3D min(LED_MAX_BRIGH=
-TNESS, data-=20
->> >led_mc_subled_info[i].brightness);
->> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 value =3D min(data->lightba=
-r_max_brightness, data-=20
->> >led_mc_subled_info[i].brightness);
->> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 ret =3D regmap_w=
-rite(data->regmap,=20
->> uniwill_led_channel_to_ac_reg[i], value);
->> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 if (ret < 0)
->> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
-=A0=C2=A0 return ret;
->> @@ -1376,12 +1377,14 @@ static int uniwill_led_init(struct=20
->> uniwill_data *data)
->> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 LED_COLOR_ID_GRE=
-EN,
->> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 LED_COLOR_ID_BLU=
-E,
->> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 };
->> -=C2=A0=C2=A0=C2=A0 unsigned int value;
->> +=C2=A0=C2=A0=C2=A0 unsigned int value, max_brightness;
->> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 int ret;
->> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 if (!uniwill_device_supports(data, UNIWI=
-LL_FEATURE_LIGHTBAR))
->> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 return 0;
->> +=C2=A0=C2=A0=C2=A0 max_brightness =3D data->lightbar_max_brightness;
->=20
-> Please drop the max_brightness variable and assign=20
-> led_cdev.max_brightness and led_cdev.brightness directly.
->=20
->> +
->> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 ret =3D devm_mutex_init(data->dev, &data=
-->led_lock);
->> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 if (ret < 0)
->> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 return ret;
->> @@ -1409,14 +1412,14 @@ static int uniwill_led_init(struct=20
->> uniwill_data *data)
->> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 return ret;
->> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 data->led_mc_cdev.led_cdev.color =3D LED=
-_COLOR_ID_MULTI;
->> -=C2=A0=C2=A0=C2=A0 data->led_mc_cdev.led_cdev.max_brightness =3D LED_M=
-AX_BRIGHTNESS;
->> +=C2=A0=C2=A0=C2=A0 data->led_mc_cdev.led_cdev.max_brightness =3D max_b=
-rightness;
->> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 data->led_mc_cdev.led_cdev.flags =3D LED=
-_REJECT_NAME_CONFLICT;
->> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 data->led_mc_cdev.led_cdev.brightness_se=
-t_blocking =3D=20
->> uniwill_led_brightness_set;
->> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 if (value & LIGHTBAR_S0_OFF)
->> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 data->led_mc_cde=
-v.led_cdev.brightness =3D 0;
->> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 else
->> -=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 data->led_mc_cdev.led_cdev.=
-brightness =3D LED_MAX_BRIGHTNESS;
->> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 data->led_mc_cdev.led_cdev.=
-brightness =3D max_brightness;
->> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 for (int i =3D 0; i < LED_CHANNELS; i++)=
- {
->> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 data->led_mc_sub=
-led_info[i].color_index =3D color_indices[i];
->> @@ -1429,7 +1432,7 @@ static int uniwill_led_init(struct uniwill_data=
-=20
->> *data)
->> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 * Make sur=
-e that the initial intensity value is not greater=20
->> than
->> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 * the maxi=
-mum brightness.
->> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 */
->> -=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 value =3D min(LED_MAX_BRIGH=
-TNESS, value);
->> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 value =3D min(max_brightnes=
-s, value);
->> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 ret =3D regmap_w=
-rite(data->regmap,=20
->> uniwill_led_channel_to_ac_reg[i], value);
->> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 if (ret < 0)
->> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
-=A0=C2=A0 return ret;
->> @@ -1882,6 +1885,7 @@ static int uniwill_probe(struct platform_device=
-=20
->> *pdev)
->> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 return ret;
->> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 data->features =3D device_descriptor.fea=
-tures;
->> +=C2=A0=C2=A0=C2=A0 data->lightbar_max_brightness =3D=20
->> device_descriptor.lightbar_max_brightness;
->> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 /*
->> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 * Some devices might need to perfo=
-rm some device-specific=20
->> initialization steps
->> @@ -2130,11 +2134,13 @@ static struct platform_driver uniwill_driver =
-=3D {
->> =C2=A0 static struct uniwill_device_descriptor lapqc71a_lapqc71b_descri=
-ptor=20
->> __initdata =3D {
->> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 .features =3D UNIWILL_FEATURE_SUPER_KEY =
-|
->> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 UNI=
-WILL_FEATURE_LIGHTBAR |
->> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
-=A0=C2=A0 UNIWILL_FEATURE_BATTERY_CHARGE_LIMIT |
->> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
-=A0=C2=A0 UNIWILL_FEATURE_CPU_TEMP |
->> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
-=A0=C2=A0 UNIWILL_FEATURE_GPU_TEMP |
->> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
-=A0=C2=A0 UNIWILL_FEATURE_PRIMARY_FAN |
->> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
-=A0=C2=A0 UNIWILL_FEATURE_SECONDARY_FAN,
->> +=C2=A0=C2=A0=C2=A0 .lightbar_max_brightness =3D 36,
->> =C2=A0 };
->> =C2=A0 static struct uniwill_device_descriptor lapac71h_descriptor=20
->> __initdata =3D {
->> @@ -2158,6 +2164,7 @@ static struct uniwill_device_descriptor=20
->> lapkc71f_descriptor __initdata =3D {
->> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
-=A0=C2=A0 UNIWILL_FEATURE_GPU_TEMP |
->> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
-=A0=C2=A0 UNIWILL_FEATURE_PRIMARY_FAN |
->> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
-=A0=C2=A0 UNIWILL_FEATURE_SECONDARY_FAN,
->> +=C2=A0=C2=A0=C2=A0 .lightbar_max_brightness =3D 200,
->=20
-> Please also set lightbar_max_brightness to 200 during module=20
-> initialization when the "force" parameter is set.
->=20
-> I suggest you rebase this series on top of the "platform/x86: uniwill-=
-=20
-> laptop: Charging-related improvements" series to avoid merge conflicts.
-
-Forget about the rebase part, the series is already based on this series x=
-d.
-
-Thanks,
-Armin Wolf
-
->=20
-> Thanks,
-> Armin Wolf
->=20
->> =C2=A0 };
->> =C2=A0 /*
->=20
->=20
-
+>> thank you for the quick reply. AFAICS the patch as is would only works for
+>> the G614PP and not for the others (for eg I have G614PR_G614PR).
+> Ah sorry missed that.
+>
+>> Assuming all the variants suffer the same problem would it be ok to use a
+>> wildcard for it?
+> Yeah, we could expand it to all "ROG Strix G16" I think:
+>
+> diff --git a/drivers/gpio/gpiolib-acpi-quirks.c b/drivers/gpio/gpiolib-acpi-quirks.c
+> index a0116f004975..e3a6111854e8 100644
+> --- a/drivers/gpio/gpiolib-acpi-quirks.c
+> +++ b/drivers/gpio/gpiolib-acpi-quirks.c
+> @@ -392,6 +392,23 @@ static const struct dmi_system_id gpiolib_acpi_quirks[] __initconst = {
+>   			.ignore_wake = "VEN_0488:00@355",
+>   		},
+>   	},
+> +	{
+> +		/*
+> +		 * The ASUS ROG Strix G16 (2025) ACPI GPIO configuration
+> +		 * causes acpi_gpio_handle_deferred_request_irqs() to
+> +		 * stall for ~36 seconds during boot so ignore the two
+> +		 * interrupts involved.
+> +		 *
+> +		 * Found in BIOS G614PP.307.
+> +		 */
+> +		.matches = {
+> +			DMI_MATCH(DMI_SYS_VENDOR, "ASUSTeK COMPUTER INC."),
+> +			DMI_MATCH(DMI_PRODUCT_NAME, "ROG Strix G16"),
+> +		},
+> +		.driver_data = &(struct acpi_gpiolib_dmi_quirk) {
+> +			.ignore_interrupt = "AMDI0030:00@21,AMDI0030:00@24",
+> +		},
+> +	},
+>   	{} /* Terminating entry */
+>   };
+>   
+As for now it seems working. I've reverted it on my kernel as I prefer 
+remain as much as possible close to the CachyOS' one but hopefully it 
+will be implemented on 7.1, if someone propose the patch and it is 
+accepted. It would be amazing to see Asus more interested on Linux and 
+more strict with their BIOS but in the end I understand it's like asking 
+for the moon.
