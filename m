@@ -1,96 +1,96 @@
-Received: from gz.d.sender-sib.com (gz.d.sender-sib.com [77.32.148.26])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7C0902BE053
-	for <platform-driver-x86@vger.kernel.org>; Thu, 23 Apr 2026 19:32:48 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=77.32.148.26
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 472AF30BBBC
+	for <platform-driver-x86@vger.kernel.org>; Thu, 23 Apr 2026 19:33:17 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1776972771; cv=none; b=e2o+0HwbibHk3fiA2dl3vOwelk7W1QdrFhMEf+3hVz6fGtXPj5Svm/pj2N/6qR/WQTtnmdlRbrlpgOI9RcsfXsaPZxg+IdBl2WcapWxhGoOgRKB3iDim1VjLrRYY2KphEwjnqqCBVCPFgN9Vgv7HOjzqyOeRDHqQlV1cqnhZU/g=
+	t=1776972797; cv=none; b=Y6sQneroxp4VO87NaFERxOAex20xZ5wkFE5iV6GVEFVGHNWbkJol8q4Pn/DYeBcwLTFZe3Vy0it/bNSNkE8hx1M1aJDTtuCWGzbpOW+macscchJQqzbfTyYbrdH9VpanCm22QIve9cuZBcUHf36S3UWccelR7asA6qWUPHjT72s=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1776972771; c=relaxed/simple;
-	bh=TJyFQDkT7b3c+oKe9CG3gPgrXFOx5h7CfyFvxRoK58w=;
-	h=Date:Subject:Cc:Message-Id:From:To:Mime-Version; b=MmAtMDnxz7pDS4rKswdxQ3yggyEKyCsaUn1MlBDmAZBpLwSnrYomT/qOsQNXj8OvzRGQf9HuL+43W/voWSZLdkfWy8teIjWeD9by6cG51mRUamAKmJZOz3LBCSJcPtz7EvySkTrP8tfyXsrGpHvMpMfdAiSuXuhCWrrbZ0Gyi60=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=unknownbbqr.xyz; spf=pass smtp.mailfrom=gz.d.sender-sib.com; dkim=pass (2048-bit key) header.d=unknownbbqr.xyz header.i=@unknownbbqr.xyz header.b=h5Xak9Xe; arc=none smtp.client-ip=77.32.148.26
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=unknownbbqr.xyz
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gz.d.sender-sib.com
+	s=arc-20240116; t=1776972797; c=relaxed/simple;
+	bh=+ZfeqvpuYDcOjgfctlNS+PhzqwcHUbBMd4Jd5xkGl0s=;
+	h=From:To:Subject:Date:Message-ID:In-Reply-To:References:
+	 Content-Type:MIME-Version; b=JCVmmQt5HX5+FmDNIYT5Fi+VDLO2acA46tM7Ee3nNM5ffS2ViwLRxGoDlh91iG572b6eVWYuxr95h/4qfWt+cMgDfe9wyDIEceEFAVacWHvh84dpH+axfv9VpS+ELVG5R1aVlnXKApBysstCtCV+71N6FDm5pu9oYPHtKpYUMxM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=CtzGeKGs; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=unknownbbqr.xyz header.i=@unknownbbqr.xyz header.b="h5Xak9Xe"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=unknownbbqr.xyz;
- q=dns/txt; s=brevo1; bh=+fxAP06mWX2K+fo2gvpsSa8UERkEhD861J/6cN+s1N4=;
- h=from:subject:date:to:cc:mime-version:content-transfer-encoding:list-unsubscribe:x-csa-complaints:list-unsubscribe-post:message-id:x-sib-id:feedback-id;
-        b=h5Xak9XeitwmFpzZMeiIeM9+ZeDcCFLvkTXjl/7IXYhY8kN4D6qLFPIIbYHISTbLv62y87hSB+zb
-        vUBCWyPn5HvB3dY+7TLDOYNG2RZ/jaGIP82mVWz7yc2YAHfgHOLOkhwV/4glXXSVXkSjiTrUys8M
-        cWeESbLg+sL38pTbkKKuTDhCyCRMsabOcXPY1e68P9CMruFtUBRNtn1vewBrBb6zp/u5bmIYY/L/
-        DX87618e7hB1aq5FpLXlqkjJV8tkmg84HaSypYHkl2L5jIDwPvknKsJTshqLQZKsqEPuvZ19bKEr
-        YEDks+OG3VdMWeJLQAbT+4e1TixALYJrHRR+5Q==
-Date: Thu, 23 Apr 2026 22:32:38 +0300
-Subject: [PATCH v2] tools/power/x86/intel-speed-select: Harden daemon pidfile open
-X-sib-id: dOLLLPf5Euv7DzPe-iNNm8hpIyVdbzBNUoftB7N_s-jdaYv9_Ga_rPF6-_svcSoo9ts7u7IKQw9dJ2Hkho8jcMcsPNI42glt6pOK5nRv_uO-B73E8Y3gFW2-w9N5Uky5cMyJOL6v_AVW3MGab8PU3xb9rE6S1oUukWWkTYq3-fVCJyseV36uuBnkJxinIaBh0d8
-Cc: <platform-driver-x86@vger.kernel.org>,  <linux-kernel@vger.kernel.org>,  "ali" <dev@unknownbbqr.xyz>
-Origin-messageId: <20260423193238.364-1-dev@unknownbbqr.xyz>
-X-Mailin-EID: NDQzNzMzMzgyfnBsYXRmb3JtLWRyaXZlci14ODZAdmdlci5rZXJuZWwub3JnfjwyMDI2MDQyMzE5MzIzOC4zNjQtMS1kZXZAdW5rbm93bmJicXIueHl6Pn5nei5kLnNlbmRlci1zaWIuY29t
-Message-Id: <360cfdd8-c97c-4772-bc1e-85a6ee42a2a2@smtp-relay.sendinblue.com>
-List-Unsubscribe-Post: List-Unsubscribe=One-Click
-Feedback-ID: 77.32.148.26:10473219_-1:10473219:Sendinblue
-From: "unknownbbqrx" <dev@unknownbbqr.xyz>
-X-CSA-Complaints: csa-complaints@eco.de
-To: <srinivas.pandruvada@linux.intel.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="CtzGeKGs"
+Received: by smtp.kernel.org (Postfix) with ESMTPS id 00EA5C2BCB4
+	for <platform-driver-x86@vger.kernel.org>; Thu, 23 Apr 2026 19:33:16 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1776972797;
+	bh=+ZfeqvpuYDcOjgfctlNS+PhzqwcHUbBMd4Jd5xkGl0s=;
+	h=From:To:Subject:Date:In-Reply-To:References:From;
+	b=CtzGeKGsE2upPyDlhQ+FnuT7vwP9g+5T8uJsIlElcw+SFsD2EKXdxELZpUydZrpkh
+	 YiinWNQGPFm75a1uui9avfRGgRKGuwY14uCJCdDHC96ixBTs0Lvl+i7mW7OxbCUj6u
+	 MODAhfTw2iKMyxjJkBNmIUCg64s2owG/FUlDYW3mXI/vc6xXywh1h5LROBYERbOEzV
+	 3L8TqPdn4W3mGp02t15xsIMWiqWiPZet6/iEjFxnGajVFRt+97OddSJqe1AYBduVcX
+	 5eEszDCl54AQGShTbeCdolQuuvkkIqcIVDe0q/bl3gcP0mkAai/KAehFV7QyFVtvGH
+	 cM2La7aFPEtTQ==
+Received: by aws-us-west-2-korg-bugzilla-1.web.codeaurora.org (Postfix, from userid 48)
+	id E29EEC4160E; Thu, 23 Apr 2026 19:33:16 +0000 (UTC)
+From: bugzilla-daemon@kernel.org
+To: platform-driver-x86@vger.kernel.org
+Subject: [Bug 221383] ideapad_laptop: Fn hotkeys stop emitting after s2idle
+ resume on IdeaPad Slim 3   14ARP10 (Ryzen 7735HS)
+Date: Thu, 23 Apr 2026 19:33:16 +0000
+X-Bugzilla-Reason: None
+X-Bugzilla-Type: changed
+X-Bugzilla-Watch-Reason: AssignedTo drivers_platform_x86@kernel-bugs.osdl.org
+X-Bugzilla-Product: Drivers
+X-Bugzilla-Component: Platform_x86
+X-Bugzilla-Version: 2.5
+X-Bugzilla-Keywords: 
+X-Bugzilla-Severity: normal
+X-Bugzilla-Who: sindrehenriksen93@gmail.com
+X-Bugzilla-Status: NEW
+X-Bugzilla-Resolution: 
+X-Bugzilla-Priority: P3
+X-Bugzilla-Assigned-To: drivers_platform_x86@kernel-bugs.osdl.org
+X-Bugzilla-Flags: 
+X-Bugzilla-Changed-Fields: 
+Message-ID: <bug-221383-215701-eGebZ4Wplj@https.bugzilla.kernel.org/>
+In-Reply-To: <bug-221383-215701@https.bugzilla.kernel.org/>
+References: <bug-221383-215701@https.bugzilla.kernel.org/>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+X-Bugzilla-URL: https://bugzilla.kernel.org/
+Auto-Submitted: auto-generated
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
-X-Mailer: git-send-email 2.53.0
+MIME-Version: 1.0
 
+https://bugzilla.kernel.org/show_bug.cgi?id=3D221383
 
-From: ali <dev@unknownbbqr.xyz>
+--- Comment #24 from sindrehenriksen93@gmail.com ---
+I almost forgot =E2=80=94 reading through these comments made me realise I =
+also
+experience the complete keyboard failure, not just the Fn key issue. After
+resume the internal keyboard stops responding entirely. I've been running a
+systemd-sleep hook that rescans serio0 on resume to work around it =E2=80=
+=94 might be
+useful for you, Daniel:
 
-Avoid symlink-based pidfile clobbering by opening the pidfile with
-O_NOFOLLOW and validating it with fstat() before locking/writing.
+#!/bin/sh
+case "$1" in
+  post)
+    echo -n "rescan" > /sys/devices/platform/i8042/serio0/drvctl 2>/dev/null
+    echo -n "1" > /sys/bus/pci/rescan 2>/dev/null
+    echo -n "serio0" > /sys/bus/serio/drivers/atkbd/bind 2>/dev/null
+    ;;
+esac
 
-The daemon currently uses a fixed pidfile path under /tmp. A local
-unprivileged user can pre-create a symlink at that path and cause a
-root-run daemon instance to write into an attacker-chosen file.
+Install to /usr/lib/systemd/system-sleep/ with chmod +x. Restores basic
+keyboard function after resume, but not Fn key translation.
 
-Signed-off-by: ali <dev@unknownbbqr.xyz>
----
- tools/power/x86/intel-speed-select/isst-daemon.c | 12 +++++++++++-
- 1 file changed, 11 insertions(+), 1 deletion(-)
+On the amd_pmc angle =E2=80=94 I've seen similar "fixes" floating around, b=
+ut they're
+not really viable given the battery impact.
 
-diff --git a/tools/power/x86/intel-speed-select/isst-daemon.c b/tools/power=
-/x86/intel-speed-select/isst-daemon.c
-index 66df21b2b..4346b049d 100644
---- a/tools/power/x86/intel-speed-select/isst-daemon.c
-+++ b/tools/power/x86/intel-speed-select/isst-daemon.c
-@@ -200,11 +200,21 @@ static void daemonize(char *rundir, char *pidfile)
- 	if (ret =3D=3D -1)
- 		exit(EXIT_FAILURE);
-=20
--	pid_file_handle =3D open(pidfile, O_RDWR | O_CREAT, 0600);
-+	pid_file_handle =3D open(pidfile, O_RDWR | O_CREAT | O_NOFOLLOW, 0600);
- 	if (pid_file_handle =3D=3D -1) {
- 		/* Couldn't open lock file */
- 		exit(1);
- 	}
-+
-+	{
-+		struct stat st;
-+
-+		if (fstat(pid_file_handle, &st) =3D=3D -1)
-+			exit(1);
-+
-+		if (!S_ISREG(st.st_mode))
-+			exit(1);
-+	}
- 	/* Try to lock file */
- #ifdef LOCKF_SUPPORT
- 	if (lockf(pid_file_handle, F_TLOCK, 0) =3D=3D -1) {
-
-base-commit: 2e68039281932e6dc37718a1ea7cbb8e2cda42e6
 --=20
-2.53.0
+You may reply to this email to add a comment.
 
-
-
+You are receiving this mail because:
+You are watching the assignee of the bug.=
