@@ -1,38 +1,38 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D5FAA23BD1D
-	for <platform-driver-x86@vger.kernel.org>; Thu, 23 Apr 2026 02:26:38 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5AC9519AD5C
+	for <platform-driver-x86@vger.kernel.org>; Thu, 23 Apr 2026 02:34:36 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1776911198; cv=none; b=QLIY6QJw1utRdrGvWf9zFk2vaksOg5a1CMPOgDZgazvSu9Z3yPKbdG0b3m0dnWJs9ui3XInpg93dQVmLDCCgFgXzG4QYWQS1VDOHm8Vpl6UrH1HwhMLLj2uAq10q8hxBHrrClEiUlBRSb3FbHeCuo4+qzSIcs/AaXRDZK/Sx0AM=
+	t=1776911676; cv=none; b=E2lJl8bn1TEMyZ0uQXmbTFKWfseiSnigCJLifz2GaIzmzDYjwsZTVel1SDA6iVzg5h8arFzyv8+C4NY6t6ITChPxrpSLH2J5kPT4HBAyyxUo9pze+SqiJG/prXmX+Rn0Y+d8HQJngbCBpP49wese+lYwC7Rutmv2Ur2i4SBxRjk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1776911198; c=relaxed/simple;
-	bh=Y/ffFomzhywnOCMPPzjVFIIHi0IWINlji6GoGrMl+dk=;
+	s=arc-20240116; t=1776911676; c=relaxed/simple;
+	bh=6aZ4OP2V6vIId5iNt2l+Ej6DMuoeG9zIgig71hRiFqI=;
 	h=From:To:Subject:Date:Message-ID:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=dVF/Rmt7G8LSrY1kRN7tuWIMX2OoixvWzXpp3GhBaU+9QLtsxYIGCCzYNNt3JwQgm3SJVWYVfIxkdAr26kaT4S6f3SJZzxEIW9MRC8gK/CYSUSGwWKiEk4q/YWk1UVMoHj6HwMPxyiUmaBy2PHg6u4EedE8tNZuv5otiYyd0F5o=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=N40FNNaE; arc=none smtp.client-ip=10.30.226.201
+	 Content-Type:MIME-Version; b=IPUeWb5hDv0Y3i7padmuresMyVEPQb8eWZY7qy2IqZm3JX9Xhv4/bk7zgsRb8FT+6g0b6jx2rV3Rrk1q7pGM/yYNNg2ZUV3moXOOywwzjHl+Vfl+nxVRv7T2AA7eHMaqnbb1ultKmKgRExKOQzn3sRJRvOiHeij2qdzqvbqcdqc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=YweIrpg0; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="N40FNNaE"
-Received: by smtp.kernel.org (Postfix) with ESMTPS id 7B2B2C2BCB2
-	for <platform-driver-x86@vger.kernel.org>; Thu, 23 Apr 2026 02:26:38 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="YweIrpg0"
+Received: by smtp.kernel.org (Postfix) with ESMTPS id EEF27C19425
+	for <platform-driver-x86@vger.kernel.org>; Thu, 23 Apr 2026 02:34:35 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1776911198;
-	bh=Y/ffFomzhywnOCMPPzjVFIIHi0IWINlji6GoGrMl+dk=;
+	s=k20201202; t=1776911676;
+	bh=6aZ4OP2V6vIId5iNt2l+Ej6DMuoeG9zIgig71hRiFqI=;
 	h=From:To:Subject:Date:In-Reply-To:References:From;
-	b=N40FNNaE9XcgdAxdVVayruifLSGP+R4zhw41XIRO5s+QgE8zY84qUOTjLrzwW8y67
-	 G7HqD2Fu/wLtt3RVMw/awLXt/KkNUIOw26WBpv/y+CFmiO3zZ8kfzbeYzTSJZsR7t4
-	 zbGiIaz38fHC3MpGkFWcMfnXXs6jeAVmIsbe/+EX8W138yDUrXYC2dRiM4YmQV9cM8
-	 VFuWXHi4NVR7V3cIr8Hz2nVwTuEWfvn1C2qgAGTTzBcDoHyoa+63GP6mu5oe3FAIj7
-	 FfCJ4SEDHpEM8g6+Iv9SoT9mtPTwjzlAIY2W5y/rGnjLbFjTNLP73ggEqzH6wHV+fH
-	 OtZbX4AuwmA+Q==
+	b=YweIrpg0jawEJxekYmDTBy/Je97gj9JIis3Z4laYYW7mjoJcFuqHhAlYFSv094+V5
+	 7FRd+EIou2rM1uqRutSaApqyORj0/Xw4Rgt2BjCk+frOuBDRjCHwKN8EEoaQbSIRlq
+	 x9OO8KLo7BYZGi3HAkESdorcZ9MD3D66uyPf9f5mKgP5y9iwZdjfpJBBTbdV3f27Lt
+	 LCwEe/db+HleEkPtYTdGNjpraCBlGu/Bq5jDL0/bdTvwVd3yLPjwzEw7vkdoLmCw9F
+	 NtTmWoetKDgid7jJ9PNOk0v+4qaOGkKI4hd7icbplVZUoy11f/M8dSnEuPdrtpWuzt
+	 68KgZtERi49kQ==
 Received: by aws-us-west-2-korg-bugzilla-1.web.codeaurora.org (Postfix, from userid 48)
-	id 62DF4C433E1; Thu, 23 Apr 2026 02:26:38 +0000 (UTC)
+	id D8D86C3279F; Thu, 23 Apr 2026 02:34:35 +0000 (UTC)
 From: bugzilla-daemon@kernel.org
 To: platform-driver-x86@vger.kernel.org
 Subject: [Bug 221383] ideapad_laptop: Fn hotkeys stop emitting after s2idle
  resume on IdeaPad Slim 3   14ARP10 (Ryzen 7735HS)
-Date: Thu, 23 Apr 2026 02:26:38 +0000
+Date: Thu, 23 Apr 2026 02:34:35 +0000
 X-Bugzilla-Reason: None
 X-Bugzilla-Type: changed
 X-Bugzilla-Watch-Reason: AssignedTo drivers_platform_x86@kernel-bugs.osdl.org
@@ -41,14 +41,14 @@ X-Bugzilla-Component: Platform_x86
 X-Bugzilla-Version: 2.5
 X-Bugzilla-Keywords: 
 X-Bugzilla-Severity: normal
-X-Bugzilla-Who: metalcaedes@gmail.com
+X-Bugzilla-Who: mario.limonciello@amd.com
 X-Bugzilla-Status: NEW
 X-Bugzilla-Resolution: 
 X-Bugzilla-Priority: P3
 X-Bugzilla-Assigned-To: drivers_platform_x86@kernel-bugs.osdl.org
 X-Bugzilla-Flags: 
-X-Bugzilla-Changed-Fields: cc
-Message-ID: <bug-221383-215701-pXAInZWMqs@https.bugzilla.kernel.org/>
+X-Bugzilla-Changed-Fields: 
+Message-ID: <bug-221383-215701-v8VaUk2nP4@https.bugzilla.kernel.org/>
 In-Reply-To: <bug-221383-215701@https.bugzilla.kernel.org/>
 References: <bug-221383-215701@https.bugzilla.kernel.org/>
 Content-Type: text/plain; charset="UTF-8"
@@ -64,44 +64,12 @@ MIME-Version: 1.0
 
 https://bugzilla.kernel.org/show_bug.cgi?id=3D221383
 
-Daniel Gibson (metalcaedes@gmail.com) changed:
-
-           What    |Removed                     |Added
-----------------------------------------------------------------------------
-                 CC|                            |metalcaedes@gmail.com
-
---- Comment #11 from Daniel Gibson (metalcaedes@gmail.com) ---
-I have a similar issue on an IdeaPad Slim 3 16ABR8, using Kernel 7.0 with
-XUbuntu 26.04 (I'll hopefully post a separate bug report about that soon,
-unless I should post all my infos here)
-
-Here the keyboard doesn't work at all after suspend+resume, unbinding and
-re-binding i8042 makes it kinda work, but the Fn keys don't work then - and
-neither does the LID SWITCH.
-
-I also get the "Failed to deactivate keyboard on isa0060/serio0" error.
-
-Adding i8042.nopnp to the kernel commandline helps a little bit: Then after
-suspend+resume most of the keyboard still works, but like in the other case=
- the
-Fn keys and the lid switch don't.
-
-Anyway, one thing that makes the issue go away here (but is no acceptable
-solution) is to blacklist the amd_pmc kernel module, or unload it before
-suspend.
-Then after suspend+resume everything works as expected, but the downside is
-that the laptop draws more power while suspended (measured 1.4W on the
-wallplug, when amd_pmc is loaded it's 0.4W).
-
-Could you check if `rmmod amd_pmc` before suspend, while the keyboard still=
- is
-in working order, works around the issue for you as well?
-
-Regarding Windows, I didn't test it that much (and replaced it with Linux),=
- but
-I don't remember seeing those issues - I'm not 100% sure I actually had the
-laptop suspended there, but I think so (Win11 does that automatically when
-closing the lid, right?)
+--- Comment #12 from Mario Limonciello (AMD) (mario.limonciello@amd.com) ---
+Unloading amd pmc will prevent hardware sleep; so that's no surprise to me.=
+ It
+also would mean EC never sees the sleep signal and thus would likely never =
+go
+to a low power state either.
 
 --=20
 You may reply to this email to add a comment.
