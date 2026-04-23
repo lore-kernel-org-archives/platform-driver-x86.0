@@ -1,120 +1,131 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-yx1-f53.google.com (mail-yx1-f53.google.com [74.125.224.53])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 705D31E5724;
-	Thu, 23 Apr 2026 05:16:02 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8DF93320393
+	for <platform-driver-x86@vger.kernel.org>; Thu, 23 Apr 2026 07:09:47 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=74.125.224.53
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1776921362; cv=none; b=LWVraEeos/7zThXhp7KX2slDFilzQmNIDnx/9qisiFtbPA22LqeGtvT2XJ/9Fkif5QwwBHvxAd/OLohqquD8SKhC1QVyGPvGRPFxJ1Xjlocb/tVJqKnAzZr7EwAZ+Q0W6RHBVR481V857RjQdvVmg/rxWsLAmqtqUmgr0qKu/No=
+	t=1776928189; cv=none; b=LQiQEbCKgnP/AXO3txO3pN0PAMtD+dhw9jx4jVTGjT24iU1nI6V2pQbgs2yE8SsZ8c/rep2uZ+c18wpjlnMeATLBgwm/v+wOhoraNYhInLwO39lrU8Qcyz3T/M84wNyjk5OnJycLx6a6CeqplBOxAdWQNBbfDMCN0xiq721CApk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1776921362; c=relaxed/simple;
-	bh=WBlJC2xQ6vXNDpAD4NMjUofuCEcyUB1qLXll+KoCQ5Y=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=GIluMx0FpVrCJewxOCd7PRm9hn88D9uTNQWd/Td7tewUqH422PJsawK9zP5AygBEs9E2A44eZ8aNUz+ZQLV3jRU09aNiOcp7KnYrHpjQm/4u9iV3pMksDRp63bTcfOQzEvSrtAEIF5fHge3rkqSk/wuQicnrKSTtS6u4fbvC3HI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=IRlvFOO1; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1776928189; c=relaxed/simple;
+	bh=947w7JpVeV7EL/12bzhdsGru+tp2dTqaLdeUK2+JAPs=;
+	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
+	 Content-Disposition; b=fNAzrStjUXbQh2hwM4etOwgiAzA+Xaf2J2PqiOtL2HZMzGDur7DlWgPfrNR/0LuZMSWsWPNyY3YmbjfUrFXI8y9kCncJkLykXDZiyuDw5rgQd/7c2ue3Rk1wWRBKa58K6p5tB4GXPzQvqFxfcsvEnGeQCPFkK6nYj3W3XQn/fCY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=K50Di+bS; arc=none smtp.client-ip=74.125.224.53
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="IRlvFOO1"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 594D8C2BCB2;
-	Thu, 23 Apr 2026 05:16:01 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1776921362;
-	bh=WBlJC2xQ6vXNDpAD4NMjUofuCEcyUB1qLXll+KoCQ5Y=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=IRlvFOO1bMNHBMIGrlyAT47NE/YJHDzM+7gF8LbHOmafwOllZfQZSOqOPWnEIvTC8
-	 y1sxpApBZIGiyaOxEZiNKWRePhS1pqTTs7yTMaKa9+Jlhk3x8259gmEr1zdyiI7lQn
-	 hGggR9s+2Zwy1ie8/pUcHGiOWUa1dM8M4A2xfjsEnBhBiih6qOGApCpr3NgzVjjdnF
-	 dWtstpgK6lI/C407fyk2omqskuXMFixFr/6h/BLGVVFj2GhdGM6UHqT6AnPV3I8j2M
-	 tT+GTGMTFEZcNWJnvpXEeviTEPkpt5CxJZHHLDEzidWjFogpi1QZAWOxPreyBrsLtH
-	 Md63Dv6EbO4+g==
-Message-ID: <3d562963-9581-4e0f-b9a0-5f0fe28d2495@kernel.org>
-Date: Thu, 23 Apr 2026 00:15:59 -0500
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="K50Di+bS"
+Received: by mail-yx1-f53.google.com with SMTP id 956f58d0204a3-650775f427eso6831904d50.2
+        for <platform-driver-x86@vger.kernel.org>; Thu, 23 Apr 2026 00:09:47 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20251104; t=1776928187; x=1777532987; darn=vger.kernel.org;
+        h=content-disposition:mime-version:message-id:subject:cc:to:from:date
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=qm2NqGJEYqcC6l0qKNTOEDu5FACZAmXYCmgwUMs+6Nk=;
+        b=K50Di+bSJWJEICSIcNKUF8DyukvMyPd0hnX+v/YQtX93b16Zz6ce4hxSvrusFEtEGY
+         63b9pgWZnA+2Zr+dshscRAEfIgUsQHAwrbFXtur+PTG/2xxXXblrk/rsbkYrgBLhn63E
+         DFAp+1KGvzrhuFBDvWrlJG5ei09gu5VSFmL9ovprQMpVihSqaFd/UJw1W+lFeIOEdd7x
+         O4QWYvVGeVjWByceup8ouk/rGNYNQ1dMRdPW7D0Kbt9k7ofUk3Y5Ipfw/00EJvEfvSR4
+         4ipLdvp+rG5fbI5bJLELsFdTuh8UxMeS4fmSczZDpO2MGPp1uotjh9ljHUxN+RA0kQ3t
+         fhUA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20251104; t=1776928187; x=1777532987;
+        h=content-disposition:mime-version:message-id:subject:cc:to:from:date
+         :x-gm-gg:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=qm2NqGJEYqcC6l0qKNTOEDu5FACZAmXYCmgwUMs+6Nk=;
+        b=mNdJvLuiZCaxmj4fFjT2HksIvz0E7au/SSKP9/D6fKYllgT7mndUapfm+TN2UVf8jK
+         h6LiobpXXptHTcMj6zOyWsPWwIx0waY4Gu6HcE9VNpq0TbqQdc/hfWrM5SJEIbFtBrST
+         aafhxdN6wdu+PGnuNbhOZ1sbpXG34hA4eVj3LCAvEs3hboFTQ8xZWdOOK/r1uU11nuJq
+         Hdh+/u3sGr86iYUOD/qFFqEKXGtbFLVIa3TsFI7ZHxLAoCmHUnCx9kes70r7gfKRHYOC
+         qgalyu9TtjR7gkQ0ZMyW9ezT6E+Xe3R9gHMfAbnuNQOKoe9gJXci2TmCTomB9k3Ff80S
+         vr5A==
+X-Gm-Message-State: AOJu0YyR+7L1aGFbBnUdfv/sdcuLnsKnvKySEvv1sN9ER6QO2hQEoPLu
+	cXVw2gukEdqzwjHYJu4OZwDH596LH1LcOIVDMHCyfhzwVjhpA4XqXgyRV8r2LNrk
+X-Gm-Gg: AeBDietzKsSjv7QG6b7yZ5/PTXLMMizBCrsmGOFr+CoxcYGMumYImFBdvAltzhy1vVm
+	0TzevhoFp16jMlvSCBcEUBLjoIp7bhsylnG6o06Cxf2MagYdX+O3J61jLtZ1Cs2kklBjX0+VgoH
+	r+GbOFtOZ9MAPC9Gtz4vnuwYL0pQcCDdHINPahH9uPJAzp0wkDFb0jkPaQihgZe4ZM0z5rwzG1R
+	a/dNHOznf1/6/+dltnjQJkdFMDR5en4zDjiwXme3PIA4NREBAuZ6JlrQt6S/PKDlkH5o9eVDUpf
+	X9gl22E3ZoAftKzb9tfxcTGllxzp3gsMGmNUxBld6vG4Z4QPnp7MdzRD5PCjpm/QOtYyyXZ/zyq
+	x2SfFxaTXqCO63xwCGrHFDIr11tbAVyVMmRfILF+KKhTrltXvmquUcpppaMpxRAw8Um4AmVBVG1
+	XyPnfLNZniSXyXv0h7F73jzT7OxfPR
+X-Received: by 2002:a53:acc9:0:10b0:653:c9e:306 with SMTP id 956f58d0204a3-6531086ddd1mr19638862d50.20.1776928186673;
+        Thu, 23 Apr 2026 00:09:46 -0700 (PDT)
+Received: from localhost ([172.216.252.33])
+        by smtp.gmail.com with ESMTPSA id 956f58d0204a3-65314e328d6sm8800072d50.11.2026.04.23.00.09.44
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 23 Apr 2026 00:09:46 -0700 (PDT)
+Date: Thu, 23 Apr 2026 10:09:39 +0300
+From: Dan Carpenter <error27@gmail.com>
+To: Shyam Sundar S K <Shyam-sundar.S-k@amd.com>
+Cc: platform-driver-x86@vger.kernel.org
+Subject: [bug report] platform/x86/amd/pmf: Add support for PMF-TA interaction
+Message-ID: <aenFs-bOmM6VpO9W@stanley.mountain>
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [BUG] 36-second boot delay due to by
- acpi_gpio_handle_deferred_request_irqs on ASUS ROG Strix G16 (2025)
-Content-Language: en-US
-To: Mika Westerberg <mika.westerberg@linux.intel.com>,
- Marco Scardovi <mscardovi95@gmail.com>, Hans de Goede <hansg@kernel.org>
-Cc: Francesco Lauritano <francesco.lauritano1@protonmail.com>,
- "linux-acpi@vger.kernel.org" <linux-acpi@vger.kernel.org>,
- "open list:GPIO ACPI SUPPORT" <linux-gpio@vger.kernel.org>,
- "platform-driver-x86@vger.kernel.org" <platform-driver-x86@vger.kernel.org>,
- "westeri@kernel.org" <westeri@kernel.org>,
- Benjamin Tissoires <bentiss@kernel.org>
-References: <e8ed4d4e-37e1-4577-bf80-62fcefbef7dc@kernel.org>
- <ReQS8sQSGy3UTuG6tyPvoOb8_037sC6A2yXsSFNuXY1PlTFtCcDHnjf8vufEsk8avBSIL46U0qE-ZjTJD1xsbVYZ6_d2-wlTOZ2NJ2coTsc=@protonmail.com>
- <20251218063954.GT2275908@black.igk.intel.com>
- <b57b44c3-ea96-4189-8b70-71bf4a80d29b@kernel.org>
- <20251218103831.GW2275908@black.igk.intel.com>
- <51f999d7-2064-47dc-8d9b-e262588bfbdb@gmail.com>
- <20260422090709.GB557136@black.igk.intel.com>
- <4e55e31e-a5e8-4098-8a7f-bb52476b882a@gmail.com>
- <20260422095558.GC557136@black.igk.intel.com>
- <5a36760d-5d1e-4eee-9006-3fed042aa2cd@gmail.com>
- <20260423044211.GD557136@black.igk.intel.com>
-From: Mario Limonciello <superm1@kernel.org>
-In-Reply-To: <20260423044211.GD557136@black.igk.intel.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-On 4/22/26 23:42, Mika Westerberg wrote:
-> Hi,
-> 
-> On Wed, Apr 22, 2026 at 02:08:29PM +0200, Marco Scardovi wrote:
->>>> Assuming all the variants suffer the same problem would it be ok to use a
->>>> wildcard for it?
->>> Yeah, we could expand it to all "ROG Strix G16" I think:
->>>
->>> diff --git a/drivers/gpio/gpiolib-acpi-quirks.c b/drivers/gpio/gpiolib-acpi-quirks.c
->>> index a0116f004975..e3a6111854e8 100644
->>> --- a/drivers/gpio/gpiolib-acpi-quirks.c
->>> +++ b/drivers/gpio/gpiolib-acpi-quirks.c
->>> @@ -392,6 +392,23 @@ static const struct dmi_system_id gpiolib_acpi_quirks[] __initconst = {
->>>    			.ignore_wake = "VEN_0488:00@355",
->>>    		},
->>>    	},
->>> +	{
->>> +		/*
->>> +		 * The ASUS ROG Strix G16 (2025) ACPI GPIO configuration
->>> +		 * causes acpi_gpio_handle_deferred_request_irqs() to
->>> +		 * stall for ~36 seconds during boot so ignore the two
->>> +		 * interrupts involved.
->>> +		 *
->>> +		 * Found in BIOS G614PP.307.
->>> +		 */
->>> +		.matches = {
->>> +			DMI_MATCH(DMI_SYS_VENDOR, "ASUSTeK COMPUTER INC."),
->>> +			DMI_MATCH(DMI_PRODUCT_NAME, "ROG Strix G16"),
->>> +		},
->>> +		.driver_data = &(struct acpi_gpiolib_dmi_quirk) {
->>> +			.ignore_interrupt = "AMDI0030:00@21,AMDI0030:00@24",
->>> +		},
->>> +	},
->>>    	{} /* Terminating entry */
->>>    };
->> As for now it seems working. I've reverted it on my kernel as I prefer
->> remain as much as possible close to the CachyOS' one but hopefully it will
->> be implemented on 7.1, if someone propose the patch and it is accepted. It
->> would be amazing to see Asus more interested on Linux and more strict with
->> their BIOS but in the end I understand it's like asking for the moon.
-> 
-> Okay thanks for checking. I guess this is what we have to live with for now
-> until someone finds a better way of dealing with these.
-> 
-> @Francesco, would you like to submit a new version of the patch similar to
-> above or you want me to do that?
+Hello Shyam Sundar S K,
 
-Hans suggested that we might want to look at ripping out this edge 
-triggered events at boot earlier in the thread.
+Commit ae82cef7d9c5 ("platform/x86/amd/pmf: Add support for PMF-TA
+interaction") from Dec 12, 2023 (linux-next), leads to the following
+Smatch static checker warning:
 
-https://lore.kernel.org/platform-driver-x86/20260423044211.GD557136@black.igk.intel.com/T/#mdca882e6606d3a894ec7499d3b742d040933dbdb
+drivers/platform/x86/amd/pmf/tee-if.c:261 amd_pmf_invoke_cmd_enact() warn: set error code if 'arg.ret != 0'
+drivers/platform/x86/amd/pmf/tee-if.c:307 amd_pmf_invoke_cmd_init() warn: set error code if 'arg.ret != 0'
 
-Hans - as you pointed out that the Surface lid state is the only real 
-issue left and you happen to have one do you think you could work up 
-some patches?
+drivers/platform/x86/amd/pmf/tee-if.c
+    234 int amd_pmf_invoke_cmd_enact(struct amd_pmf_dev *dev)
+    235 {
+    236         struct ta_pmf_shared_memory *ta_sm = NULL;
+    237         struct ta_pmf_enact_result *out = NULL;
+    238         struct ta_pmf_enact_table *in = NULL;
+    239         struct tee_param param[MAX_TEE_PARAM];
+    240         struct tee_ioctl_invoke_arg arg;
+    241         int ret = 0;
+    242 
+    243         if (!dev->tee_ctx)
+    244                 return -ENODEV;
+    245 
+    246         memset(dev->shbuf, 0, dev->policy_sz);
+    247         ta_sm = dev->shbuf;
+    248         out = &ta_sm->pmf_output.policy_apply_table;
+    249         in = &ta_sm->pmf_input.enact_table;
+    250 
+    251         memset(ta_sm, 0, sizeof(*ta_sm));
+    252         ta_sm->command_id = TA_PMF_COMMAND_POLICY_BUILDER_ENACT_POLICIES;
+    253         ta_sm->if_version = PMF_TA_IF_VERSION_MAJOR;
+    254 
+    255         amd_pmf_populate_ta_inputs(dev, in);
+    256         amd_pmf_prepare_args(dev, TA_PMF_COMMAND_POLICY_BUILDER_ENACT_POLICIES, &arg, param);
+    257 
+    258         ret = tee_client_invoke_func(dev->tee_ctx, &arg, param);
+    259         if (ret < 0 || arg.ret != 0) {
+    260                 dev_err(dev->dev, "TEE enact cmd failed. err: %x, ret:%d\n", arg.ret, ret);
+--> 261                 return ret;
 
+return ret ?: -EINVAL?  (not sure what kind of error codes are stored in
+arg.ret).
+
+    262         }
+    263 
+    264         if (ta_sm->pmf_result == TA_PMF_TYPE_SUCCESS && out->actions_count) {
+    265                 amd_pmf_dump_ta_inputs(dev, in);
+    266                 dev_dbg(dev->dev, "action count:%u result:%x\n", out->actions_count,
+    267                         ta_sm->pmf_result);
+    268                 amd_pmf_apply_policies(dev, out);
+    269         }
+    270 
+    271         return 0;
+    272 }
+
+This email is a free service from the Smatch-CI project [smatch.sf.net].
+
+regards,
+dan carpenter
