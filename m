@@ -1,133 +1,271 @@
-Received: from mail-pl1-f177.google.com (mail-pl1-f177.google.com [209.85.214.177])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8188E347BC9
-	for <platform-driver-x86@vger.kernel.org>; Thu, 23 Apr 2026 08:00:01 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=209.85.214.177
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1776931202; cv=pass; b=o10w07CcsXl2h0HhTOJ+AO5vy+YSAzDy/OdFrM1N245ZHGH6FSBT1Yg2wleUq1015nvQU43H3nVH220DB0E5QcSRMVIiNBsbJ5c8++DwmbdWBG4ARu77K1TvqDwUXAh4jRBpCCI1SDip8tPYuQ69z8s1tveUnk+Q2AaUbj+f0rg=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1776931202; c=relaxed/simple;
-	bh=aYMwFjk+o0RotH3YSetD1z8LEaseMUMyIAJTQWj/GUs=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=PP5WQlD5A9fK0aoMHiasEM0GgZ2ApFOJ7QX98lPVKrgMxOBYvU9EQJyMIB6rl5TPV3Abmq2Ku9Zh4ntGTW2Yd4CbtVBVxkExPy7elCAT7wwheDLQhBxY09SAmE6ajYI9n9VViiuZxMaAV/qxoTwvscQQl7S7yfbkVi6heNY7tsI=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=o4cXL2on; arc=pass smtp.client-ip=209.85.214.177
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4FED13E51E9;
+	Thu, 23 Apr 2026 09:38:46 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1776937126; cv=none; b=hg/4URxfF/OKrPf/XTJQ8xg29UOvWi6i8wc3+irQnKiGZxwZ8m/ioYgDcDnzLehnh06PIwpYw3Y8MvNrHDBhxfpIlK3hOgRuR7RYd689t0u8yp7d31DqJ5mncVpky4rz3IAyktIf7tHqBDQKlXfIdDtEOPfyDQ4HmdEiMXF1pZM=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1776937126; c=relaxed/simple;
+	bh=pR3C1D+6wR2WoE/inF7jted1Bt91lKJKOYNIUAkUitM=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=aLW21EGmwPX/mEhFEx0/AxiqPuqrozAtofNcMdNVZJlpZDa9uPWDppM5hv1qlj/UVwFTN5Hi2NqbB2udlsk1x+uOutj+1vESYDfxL2Dp1RASv9rlKmvWO0scnhbKSjjH46phCtRs5e20rlKhnNXH8CJYP6NBQZzfXRJy8GaS1D8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=vLTxPh64; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="o4cXL2on"
-Received: by mail-pl1-f177.google.com with SMTP id d9443c01a7336-2ad4d639db3so32583575ad.0
-        for <platform-driver-x86@vger.kernel.org>; Thu, 23 Apr 2026 01:00:01 -0700 (PDT)
-ARC-Seal: i=1; a=rsa-sha256; t=1776931201; cv=none;
-        d=google.com; s=arc-20240605;
-        b=hQo9wI6OMjZLu2FrhYZImb2J5SIRhtquuEBmCz4SubTpU7rZ50xA19DFlrNDKlArM0
-         S6rvK9KwCCyxwWHpYPDg7sEZNFvsKPwwI5sT8MlEXjhOlu1xG2ei8qtQQlneX4hdl4TC
-         fWg50jkKZi01EO+teBoFjbBiBVp+f3doq4wqWcY5ZX52mXhn1Hk73Gg90RKDMwmBh8Bn
-         ly83tUF6S4z4T1/FIP98SIb0ei6W/1L+HQZJvgYs0W8J/8DQVivk0eriYq8bbHPO1n5e
-         S7yDtzWFEnYti+3nlA/hGBetqNK9f/FHGsRhmqyKxuB9SSxU1a7BWopVtV0giYYNrpbO
-         yCYw==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20240605;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:dkim-signature;
-        bh=aYMwFjk+o0RotH3YSetD1z8LEaseMUMyIAJTQWj/GUs=;
-        fh=UJqxjlrRkgDa7dqJ1cdgUP6lhHWrIZm/Eqt69kX4P8g=;
-        b=hbg/xujxGrlwTJV5++ilzpYHzwJpehtT5mgVk0QeKO/XU5K7T2/WQrRmz+MuAtUwad
-         CzixY9TffQEh1ayaBhl2zpFMGjzwXJb8KhFa5c3/eQTYkztO7wS8w/7it68zDfOzr4vx
-         WNoSJX3DkbCBXviXRnYFJxWmISkdRnuFvNAf+yCdbjm+9vWpmQcvWaWRIFi/t5wSzrvJ
-         aPkNQ3z8CD5rLb3TQE4Go14MflLhLR60J1xOezVz/OTM0P8rwvpuhxd6RQXiUoohIJ//
-         TB+OVy0czJsbHWKiYLLLLyANpnvQrDprGyUtnhOWo/u3vmkMfyEVe+y073GAN1gIR+BQ
-         jNTA==;
-        darn=vger.kernel.org
-ARC-Authentication-Results: i=1; mx.google.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20251104; t=1776931201; x=1777536001; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=aYMwFjk+o0RotH3YSetD1z8LEaseMUMyIAJTQWj/GUs=;
-        b=o4cXL2onXny/hbKgaLP/5LuHf8SMFpXkDawJbO5zot2JOqB+Orgz9TYYTLpxLteGd+
-         eft5+ag1SAzos9xsZF2tvFcYtfvPLNDuRZAT2ZndmwoLNhtIfezl8VsFWWHxpyMP/7QQ
-         n2p8Doibp2rEtDCLKiBiT9DlzYWWVGFJ0bJu0m9L0eGAiYw4+w3bF5y66n02kzoKi4iK
-         tQkYmKwkB4toCM8OQy93t0xw12ljBPeES+9hK2qcSPN8KU6gees51cx+D+nS69ctEZiW
-         GRTkIih4SvOYUlom2ZjxBqDaROgIceYfPFXAduQLBs7iSd5kxgcN1zOr1CQdeaxDKNjU
-         KHUQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1776931201; x=1777536001;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-gg:x-gm-message-state:from
-         :to:cc:subject:date:message-id:reply-to;
-        bh=aYMwFjk+o0RotH3YSetD1z8LEaseMUMyIAJTQWj/GUs=;
-        b=mFIhDhAiNglGhe1Kq31wL0Q8R0dum5OE6OtDmsvfOCGp3GTR0XlSVVHYjcKCL3vTVm
-         jVm0X58E0WdkshcmT3jeQ7QR3QkHPizoUZ+ofP5Fk7vlTI+tHgW3OUOid2F2lBG4S5Y0
-         /Y5D147MNKd8rXmyKjgH3zCbQLSIHZMvF6tmFtHQMKZQEs7iIKhgifTNB1onEZdYCB1o
-         hspnuXTboPbq9IurSjjavu2FQwCLf3Rk5Azi6hB3a3m06sW5dTYRKM9xY5dGOARBMpNp
-         IdYhjlquYyMLcPpddbfCnETwjsK6xcX57EGBVlzI3RSemIEHMMb5F4qSw3qH9H9ORfZK
-         BDug==
-X-Forwarded-Encrypted: i=1; AFNElJ9m8Wev8g5z1TuOjgxH/gPfCB6BhwuEjhPZD1vzbf6GQXOwXAN61A3r6IavwS9yRvttBi1t9bTnncBKXximsyJT874+@vger.kernel.org
-X-Gm-Message-State: AOJu0Yx4VvjdVrQ5p/qGnENDTvXT445GoKKOnJMNVOPusbZsZkN0OVjs
-	9OCalzDI/yTazLK8gzYcNgTbCnq7EyNEGDgs4JECF0cuk7lcUPcrA7W5RpqszQs+ZWLpC1Gp8fl
-	yLccb0b/0oK/rthSO61aJAiHCOMESbMA=
-X-Gm-Gg: AeBDietEwPbk/4v8ijxWgGL9arjJwV4HauxYwvxAyQMtRwN93QC7CikYly/3FwsxpL8
-	d+humUPVWZsH3bdtwtBHEVyJ7oBtyZFlGpocgPYwBry8J689h3yT/NqTLTuOzFEMvdgnR9748SW
-	4iR4gw9HP+U7Mr8F1epconE9/IDEcyVBHUnkfBRGwl2B+uarm9BIb7gHL13AyTl1Jm9gK6y/jGb
-	F0oAkTHSyEXJ/lry31Z8ejRgZ+g+nCseNgd+cloXxEitFBBCuNLZDL54BCKq1+GMSWCYx/PNeOC
-	oxLcrc2Pxlb43Wfq+LGAs0MwouBc
-X-Received: by 2002:a17:902:ce09:b0:2b4:5d87:a1fd with SMTP id
- d9443c01a7336-2b5f9fd21c5mr272633725ad.27.1776931200809; Thu, 23 Apr 2026
- 01:00:00 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="vLTxPh64"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 7F7A8C2BCAF;
+	Thu, 23 Apr 2026 09:38:39 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1776937124;
+	bh=pR3C1D+6wR2WoE/inF7jted1Bt91lKJKOYNIUAkUitM=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=vLTxPh64NrRNvXik3wdYgr+rgZYWizNAEqeZ0QJ6VGt87Dg97ioCSHdpR22y4K43J
+	 ToA7p/wDg1ER1zEaU1WNwBlx0LcMhWc2xAy2KM+AslSGhFen3M4ur8gZzKm9aMNZjF
+	 15Q+be7EUPGbdUJQbHSt6hfAOfwcPoXD6fWvl54rhXu7dLJzJTKBdmS+7f2bS5Tlp7
+	 /SHXLCbqGAxCvewtrbGyr5e2BOKTsOjmSNNASfUJrAy6gg8MEWCn8C5YERbQa9RAGd
+	 O+EoSD6g0T7GrmRZ8UmcGhvt8pPbA8aSQcly4ftnjP4IGnoJxYTFwuMNJm2/SXbsnn
+	 7LN0ke32qjXmw==
+Message-ID: <0e7020cd-361e-4f9c-a120-ee093beea10f@kernel.org>
+Date: Thu, 23 Apr 2026 11:38:37 +0200
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20260422104227.19969-1-turkoborys@gmail.com> <c0c35d9d-92cf-48e1-8e69-e737e580ab3c@app.fastmail.com>
-In-Reply-To: <c0c35d9d-92cf-48e1-8e69-e737e580ab3c@app.fastmail.com>
-From: Borys <turkoborys@gmail.com>
-Date: Thu, 23 Apr 2026 09:59:48 +0200
-X-Gm-Features: AQROBzAD-iGj1TtwldSGbdwVy9k5gJKL9dFsW_hT7J3rJtZRD4fQO36od2iGQkE
-Message-ID: <CAEAo-Lig6UGvx=uAYB2XJ4quSjxEE_QzypmsYR_ojV4OODhsng@mail.gmail.com>
-Subject: Re: [PATCH] platform/x86: ideapad-laptop: remap "Star with S" key to KEY_DASHBOARD
-To: Mark Pearson <mpearson-lenovo@squebb.ca>
-Cc: Ike Panhc <ikepanhc@gmail.com>, Hans de Goede <hansg@kernel.org>, 
-	"Derek J . Clark" <derekjohn.clark@gmail.com>, 
-	=?UTF-8?Q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>, 
-	"platform-driver-x86@vger.kernel.org" <platform-driver-x86@vger.kernel.org>, linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v8 1/2] dt-bindings: embedded-controller: Add synology
+ microp devices
+To: Markus Probst <markus.probst@posteo.de>
+Cc: Hans de Goede <hansg@kernel.org>,
+ =?UTF-8?Q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>,
+ Bryan O'Donoghue <bryan.odonoghue@linaro.org>, Lee Jones <lee@kernel.org>,
+ Pavel Machek <pavel@kernel.org>, Miguel Ojeda <ojeda@kernel.org>,
+ Boqun Feng <boqun@kernel.org>, Gary Guo <gary@garyguo.net>,
+ =?UTF-8?Q?Bj=C3=B6rn_Roy_Baron?= <bjorn3_gh@protonmail.com>,
+ Benno Lossin <lossin@kernel.org>, Andreas Hindborg <a.hindborg@kernel.org>,
+ Alice Ryhl <aliceryhl@google.com>, Trevor Gross <tmgross@umich.edu>,
+ Danilo Krummrich <dakr@kernel.org>, Rob Herring <robh@kernel.org>,
+ Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley
+ <conor+dt@kernel.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+ platform-driver-x86@vger.kernel.org, linux-leds@vger.kernel.org,
+ devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+ rust-for-linux@vger.kernel.org
+References: <20260420-synology_microp_initial-v8-0-7946a9124491@posteo.de>
+ <20260420-synology_microp_initial-v8-1-7946a9124491@posteo.de>
+ <20260421-just-benevolent-dormouse-2c35ed@quoll>
+ <26b074972581ff398b5af964ba092c8117855062.camel@posteo.de>
+ <c214f270-571c-4440-919e-99fce5ac1b08@kernel.org>
+ <33e04947d6d55035fe310935281a4f0b9e87ae08.camel@posteo.de>
+From: Krzysztof Kozlowski <krzk@kernel.org>
+Content-Language: en-US
+Autocrypt: addr=krzk@kernel.org; keydata=
+ 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 a/A=
+In-Reply-To: <33e04947d6d55035fe310935281a4f0b9e87ae08.camel@posteo.de>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-Hi Mark,
+On 21/04/2026 18:25, Markus Probst wrote:
+>>
+>> Not true. You have enum and min/maxItems. There is no such syntax for
+>> compatibles. I repeat.
+>>
+>> Instead of just blindly disagreeing and saying "I did that", point me to
+>> example-schema having compatibles with min/maxItems.
+> It is supposed to minimize the schema, otherwise
+> 
+> - minItems: 3
+>   maxItems: 3
+>   items:
+>     enum:
+>     - synology,ds223j-microp
+>     - synology,ds124-microp
+>     - synology,ds118-microp
+> 
+> would have been
+> 
+> - items:
+>     - const: synology,ds223j-microp
+>     - const: synology,ds124-microp
+>     - const: synology,ds118-microp
+> 
+> - items:
+>     - const: synology,ds124-microp
+>     - const: synology,ds223j-microp
+>     - const: synology,ds118-microp
+> 
+> - items:
+>     - const: synology,ds118-microp
+>     - const: synology,ds223j-microp
+>     - const: synology,ds124-microp
 
-Thanks for the detailed feedback and for testing this on your
-ThinkPad. I=E2=80=99ve done some further testing on the IdeaPad Gaming 3
-(Cinnamon) to address your points and cross-referenced several IdeaPad
-manuals.
+Only one device is the fallback for given groyp, not each of them.
 
-On this specific hardware, I found that KEY_FAVORITES currently
-results in no action at all. It acts as a dead key in the desktop
-environment, so the risk of a regression for existing users seems
-minimal compared to the benefit of making the key functional.
+There is no such syntax in the kernel, nowhere. Please do not invent own
+stuff.
 
-While the ThinkPad intent might be more flexible, the IdeaPad manuals
-(for the Gaming and 5 series, for example) specifically state the key
-is intended to "Open an app" or "Open Lenovo Vantage/PC Manager." I
-tested KEY_BOOKMARKS as you suggested, but found that browsers like
-Firefox "hijack" this key to open a sidebar, which prevents the user
-from mapping it to a system tool as the manual intends. Additionally,
-in my environment, the system labels this key as "Favorites," which
-might be confusing for a "PC Manager" launcher.
+> .
+> 
+> In the case of dts validation, this is the same, with the exception of
+> allowing any order. See below why the order does not matter.
+> 
+> And yes, the example schema didn't use min/maxItems.
 
-In my testing, KEY_CONFIG seems to avoid these conflicts. The system
-identifies it as "Tools," which is a perfect semantic match for the
-Vantage tools mentioned in the documentation. It isn't intercepted by
-browsers and remains fully mappable by the user. Using a neutral key
-like KEY_PROG4 would also achieve this same goal of giving the user
-full control without default interference.
+Yep. It is also explained why in writing-bindings - list is STRICTLY
+ordered. Not flexible. And example reflects that. BTW, other bindings as
+well, so recent EC patches is good way to learn:
+(although I understand that in-tree patches do not cover your case)
 
-I=E2=80=99m curious to hear your thoughts on these findings and how we can
-best align the driver with the "user-defined" intent described in the
-manuals.
+https://lore.kernel.org/all/20260327-add-driver-for-ec-v7-1-7684c915e42c@oss.qualcomm.com/
+
+from:
+https://lore.kernel.org/all/?q=dfn%3Abindings%2Fembedded-controller%2F
+
+
+>>
+>>
+>>
+>>>
+>>>
+>>> Other sources suggest, I should add fallbacks that are less specific
+>>
+>> That's not really discussed here. It all looks like some random schema
+>> and considering amount of LLM flying on the lists I have now doubts.
+> I am not using an LLM for coding. But it is the first device tree
+> schema I try to write.
+>>
+>> You need specific compatibles.
+>> ...
+>>
+>>>
+>>> If thisisn't fine either, replying to my previous message would
+>>> probably the most efficient way to move forward [1].
+>>
+>>
+>>>
+>>>>
+>>>>> +        items:
+>>>>> +          enum:
+>>>>
+>>>> No, why the list is randomly ordered.
+>>
+>> Look here
+> Was answered below. They have the exactly same known feature set, thus
+> the order does not matter. i. e. there is no known difference.
+> 
+>>
+>>>>
+>>>>> +            - synology,ds923p-microp
+>>>>> +            - synology,ds1522p-microp
+>>>>
+>>>> And fallback, whichever is that, is not documented alone.
+>>>>
+>>>>> +      - minItems: 4
+>>>>> +        maxItems: 4
+>>>
+>>> Those are devices with the exactly same known feature set.
+>>> i. e. ds1522p can act as a fallback for ds923p, and ds923p could act as
+>>> a fallback for ds1522p.
+>>
+>> You are not responding to actual comments. Lets focus ONLY on above
+>> list. ONLY. Point me, where did you document the fallback to be used
+>> alone? First of course, define what is the fallback.
+> In this schema, I defined ds923p as fallback for ds1522p, and ds1522p
+
+You did not define ds923p as fallback. It is used as front compatible as
+well. Fallback cannot be used in some contexts at front:
+
++        items:
++          enum:
++            - synology,ds923p-microp
++            - synology,ds1522p-microp
+
+> as fallback for ds923p. There was no separation of front and fallback
+> until now. See below.
+> 
+>>
+>> None of this matches example schema or any other bindings, none of this
+>> produces correct constraints for correct DTS.
+>>
+>> You need a defined enum of fallbacks and several lists for specific
+>> fallback+front, like many other bindings in kernel.
+> So now I can imagine what schema you want to see.
+> 
+> i. e.
+> - items:
+>     - enum:
+>       - front1
+>       - front2
+>       - front3
+>     - const: fallback1
+> - items:
+>     - enum:
+>       - front4
+>       - front5
+>       - front6
+>     - const: fallback2
+> - enum:
+>   - fallback1
+>   - fallback2
+
+Yes
+
+> 
+> But I am unsure how to determine which devices are the fallback and
+> which are the front devices, given some of them have the same feature
+> set. The oldest device as fallback each?
+
+You can open your v1 or other versions. They were quite clear about
+fallback: it did not matter for you which device is used as fallback at
+v1, because you treated each device as the same programming model. I
+assume you treated them the same, because you did not know the
+differences (which is fine), so it should not matter that much now.
+
+If unsure, choose oldest device, less features or eventually smallest
+number.
+
 
 Best regards,
-
-Borys
+Krzysztof
