@@ -1,164 +1,126 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.12])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DCFD0364052
-	for <platform-driver-x86@vger.kernel.org>; Thu, 23 Apr 2026 04:24:31 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 480DE375AB8;
+	Thu, 23 Apr 2026 04:42:15 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.12
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1776918271; cv=none; b=dFjJG2enLRx6wQc+0inyvGlKMjmDWAiiihKMLu5TcdCAViekHD5O6iNIwNbjQtwXuPJEg9yeuGw337nUOEKoDRSTXtbl70KWJOSTopoTBVPsA6ay5z0m75fNWWIDpB4APFVKJ9BnLgamY8/r33WXA+xyEPf8XtdaVOOdmdJbq7k=
+	t=1776919337; cv=none; b=t9HOZW673JYcm4dLodJQFS8A+VfbxHbgbxDUBc7mhAYcIBZ4m6WtM6i5AxkZ+fbb1ukN8BpOGAPQhbah2+OxD51ab4qspTWXcEdiC0hcYMVsc/iV61hBSB4pktdIB2NeK+cYCg8XBQr2h3aZfMXh5oN284hlr3XvJYzCx6nEllU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1776918271; c=relaxed/simple;
-	bh=zTe9MCxbi7LAcgwnkOCwyNhf75d8KTE9Z6gpFxkcq3w=;
-	h=From:To:Subject:Date:Message-ID:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=W/1n3BvVc4ryI91DmgF4c50Ift2t9adeQOtAxJVbzI9zuwfA2lhqZOAKuO1dvkRh/nM/vbRUav6jkQ9Ji9/748cNBKsoQ9icq3z444NQrd89d8XydqpWhe0Ama1fcWfI7DGkLcpl7b/wm7nsf1qmr6YfxZqabRpF3OGwH3iAraQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=GSOR3vV0; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1776919337; c=relaxed/simple;
+	bh=PEfoAD0MUctfQntqKzteo2bgJQOA2RN52GfMGimY6y8=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=cIXwyOwjHtzspcUhZzxN4NoAsu+BA4502ZtX8B7F2+jTXGb+OfMdBygRrMBCqSUjOVwMcHExHW9744jFe/v87HFSxXCYHAWCHGzl3avx4BG2U2mxaV7MzY8TlUWPLQK1esx6kwsTQ2p1IoaH2kzF4tuVyNv8Rk89GubeA9oMKfM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=pass smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=OnEfdhrI; arc=none smtp.client-ip=198.175.65.12
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="GSOR3vV0"
-Received: by smtp.kernel.org (Postfix) with ESMTPS id BC1E1C2BCB2
-	for <platform-driver-x86@vger.kernel.org>; Thu, 23 Apr 2026 04:24:31 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1776918271;
-	bh=zTe9MCxbi7LAcgwnkOCwyNhf75d8KTE9Z6gpFxkcq3w=;
-	h=From:To:Subject:Date:In-Reply-To:References:From;
-	b=GSOR3vV0vfCLCYL++LgNJEt7KOnEWzQQqKYA9xi/jcIwtIv9LvILkF4hjOSZGtOks
-	 +2+DfvWM28V5VWnKGl5YbxTWOrLWJD47i9ZK7zPkarGAUSR5FY967y+ND3WtdQHw5B
-	 lMMWBOYx8vsytrH57Dd2OwzpaUknCWW/FfNXjjFHuinLMg4Tc11GcmgQHgCFyVJAb6
-	 4PE+BwziQl8oSHJdoipIxy1UZohOXZU/7BWeGB6QmBrJX38siEI5GW0cixIsl4/GW6
-	 HqmDxz6yjLXKSzAwLWx9eBi7Xg3lG8k7UaslsnIgB3VU8QcEZdFzcdSzONIW5WFdbP
-	 Yea2X0bm/pyaQ==
-Received: by aws-us-west-2-korg-bugzilla-1.web.codeaurora.org (Postfix, from userid 48)
-	id B04FDC4160E; Thu, 23 Apr 2026 04:24:31 +0000 (UTC)
-From: bugzilla-daemon@kernel.org
-To: platform-driver-x86@vger.kernel.org
-Subject: [Bug 221383] ideapad_laptop: Fn hotkeys stop emitting after s2idle
- resume on IdeaPad Slim 3   14ARP10 (Ryzen 7735HS)
-Date: Thu, 23 Apr 2026 04:24:31 +0000
-X-Bugzilla-Reason: None
-X-Bugzilla-Type: changed
-X-Bugzilla-Watch-Reason: AssignedTo drivers_platform_x86@kernel-bugs.osdl.org
-X-Bugzilla-Product: Drivers
-X-Bugzilla-Component: Platform_x86
-X-Bugzilla-Version: 2.5
-X-Bugzilla-Keywords: 
-X-Bugzilla-Severity: normal
-X-Bugzilla-Who: metalcaedes@gmail.com
-X-Bugzilla-Status: NEW
-X-Bugzilla-Resolution: 
-X-Bugzilla-Priority: P3
-X-Bugzilla-Assigned-To: drivers_platform_x86@kernel-bugs.osdl.org
-X-Bugzilla-Flags: 
-X-Bugzilla-Changed-Fields: 
-Message-ID: <bug-221383-215701-biNIbolBxA@https.bugzilla.kernel.org/>
-In-Reply-To: <bug-221383-215701@https.bugzilla.kernel.org/>
-References: <bug-221383-215701@https.bugzilla.kernel.org/>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-X-Bugzilla-URL: https://bugzilla.kernel.org/
-Auto-Submitted: auto-generated
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="OnEfdhrI"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1776919335; x=1808455335;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=PEfoAD0MUctfQntqKzteo2bgJQOA2RN52GfMGimY6y8=;
+  b=OnEfdhrIfcqPNJJOV5wd8CTHRG8CbxwdAGv6FptMtSK15HVTw3lBO8Ff
+   m4ZGT1FMdlD3oDBzB6Q2jwajl4HFFuGMx8gPkx46XZ3j7xlOTqjbk+vJE
+   lpjrXHJiterfGld0+D1A5si8SucvLPRL8VFl8keALOA9ITtMmsw9/6D0A
+   CCCvmVsxM70tAydJcg3g7zYYCeH+JmXub4f/5p0p1WleHYYjVXd6KREZi
+   KbGfVK65zqkfIeyN8gr+/eG/Wfr1zDA1BYy6NGg8NXFcG6JgpJypKr3R/
+   e8HaotGT4UrTxQ+PgXPLOgSr/+UflBIQhn5qw3qekFnxOM82dBdRLXaDm
+   Q==;
+X-CSE-ConnectionGUID: qaQCKkeTTz6lbff9CG0xxQ==
+X-CSE-MsgGUID: RdZKGVmPTC+yKOojcTJmEw==
+X-IronPort-AV: E=McAfee;i="6800,10657,11764"; a="89346835"
+X-IronPort-AV: E=Sophos;i="6.23,194,1770624000"; 
+   d="scan'208";a="89346835"
+Received: from orviesa001.jf.intel.com ([10.64.159.141])
+  by orvoesa104.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 22 Apr 2026 21:42:15 -0700
+X-CSE-ConnectionGUID: BnuklEX+SzW4upnSuxbNtw==
+X-CSE-MsgGUID: DdQL4TkRQL+qP8HhGXlY7Q==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.23,194,1770624000"; 
+   d="scan'208";a="270664607"
+Received: from black.igk.intel.com ([10.91.253.5])
+  by orviesa001.jf.intel.com with ESMTP; 22 Apr 2026 21:42:12 -0700
+Received: by black.igk.intel.com (Postfix, from userid 1001)
+	id 580C895; Thu, 23 Apr 2026 06:42:11 +0200 (CEST)
+Date: Thu, 23 Apr 2026 06:42:11 +0200
+From: Mika Westerberg <mika.westerberg@linux.intel.com>
+To: Marco Scardovi <mscardovi95@gmail.com>
+Cc: Hans de Goede <hansg@kernel.org>,
+	Francesco Lauritano <francesco.lauritano1@protonmail.com>,
+	Mario Limonciello <superm1@kernel.org>,
+	"linux-acpi@vger.kernel.org" <linux-acpi@vger.kernel.org>,
+	"open list:GPIO ACPI SUPPORT" <linux-gpio@vger.kernel.org>,
+	"platform-driver-x86@vger.kernel.org" <platform-driver-x86@vger.kernel.org>,
+	"westeri@kernel.org" <westeri@kernel.org>,
+	Benjamin Tissoires <bentiss@kernel.org>
+Subject: Re: [BUG] 36-second boot delay due to by
+ acpi_gpio_handle_deferred_request_irqs on ASUS ROG Strix G16 (2025)
+Message-ID: <20260423044211.GD557136@black.igk.intel.com>
+References: <e8ed4d4e-37e1-4577-bf80-62fcefbef7dc@kernel.org>
+ <ReQS8sQSGy3UTuG6tyPvoOb8_037sC6A2yXsSFNuXY1PlTFtCcDHnjf8vufEsk8avBSIL46U0qE-ZjTJD1xsbVYZ6_d2-wlTOZ2NJ2coTsc=@protonmail.com>
+ <20251218063954.GT2275908@black.igk.intel.com>
+ <b57b44c3-ea96-4189-8b70-71bf4a80d29b@kernel.org>
+ <20251218103831.GW2275908@black.igk.intel.com>
+ <51f999d7-2064-47dc-8d9b-e262588bfbdb@gmail.com>
+ <20260422090709.GB557136@black.igk.intel.com>
+ <4e55e31e-a5e8-4098-8a7f-bb52476b882a@gmail.com>
+ <20260422095558.GC557136@black.igk.intel.com>
+ <5a36760d-5d1e-4eee-9006-3fed042aa2cd@gmail.com>
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <5a36760d-5d1e-4eee-9006-3fed042aa2cd@gmail.com>
 
-https://bugzilla.kernel.org/show_bug.cgi?id=3D221383
+Hi,
 
---- Comment #22 from Daniel Gibson (metalcaedes@gmail.com) ---
-Alright, thanks :)
+On Wed, Apr 22, 2026 at 02:08:29PM +0200, Marco Scardovi wrote:
+> > > Assuming all the variants suffer the same problem would it be ok to use a
+> > > wildcard for it?
+> > Yeah, we could expand it to all "ROG Strix G16" I think:
+> > 
+> > diff --git a/drivers/gpio/gpiolib-acpi-quirks.c b/drivers/gpio/gpiolib-acpi-quirks.c
+> > index a0116f004975..e3a6111854e8 100644
+> > --- a/drivers/gpio/gpiolib-acpi-quirks.c
+> > +++ b/drivers/gpio/gpiolib-acpi-quirks.c
+> > @@ -392,6 +392,23 @@ static const struct dmi_system_id gpiolib_acpi_quirks[] __initconst = {
+> >   			.ignore_wake = "VEN_0488:00@355",
+> >   		},
+> >   	},
+> > +	{
+> > +		/*
+> > +		 * The ASUS ROG Strix G16 (2025) ACPI GPIO configuration
+> > +		 * causes acpi_gpio_handle_deferred_request_irqs() to
+> > +		 * stall for ~36 seconds during boot so ignore the two
+> > +		 * interrupts involved.
+> > +		 *
+> > +		 * Found in BIOS G614PP.307.
+> > +		 */
+> > +		.matches = {
+> > +			DMI_MATCH(DMI_SYS_VENDOR, "ASUSTeK COMPUTER INC."),
+> > +			DMI_MATCH(DMI_PRODUCT_NAME, "ROG Strix G16"),
+> > +		},
+> > +		.driver_data = &(struct acpi_gpiolib_dmi_quirk) {
+> > +			.ignore_interrupt = "AMDI0030:00@21,AMDI0030:00@24",
+> > +		},
+> > +	},
+> >   	{} /* Terminating entry */
+> >   };
+> As for now it seems working. I've reverted it on my kernel as I prefer
+> remain as much as possible close to the CachyOS' one but hopefully it will
+> be implemented on 7.1, if someone propose the patch and it is accepted. It
+> would be amazing to see Asus more interested on Linux and more strict with
+> their BIOS but in the end I understand it's like asking for the moon.
 
-So here a longer post about what I'm seeing on my machine.
-Note that unlike Sindre I see these issues even if the laptop has only been
-suspended for a few seconds (I always wait until an indicator LED on the si=
-de
-starts flashing instead of being on constantly).
+Okay thanks for checking. I guess this is what we have to live with for now
+until someone finds a better way of dealing with these.
 
-After booting or rebooting the system, everything works as expected: The F-=
-keys
-do their thing (mute audio or whatever), when combining them with Fn they
-behave like normal F1, F2 and so on and the lid switch also works, so when
-closing the laptop it suspends (when configured that way).
-
-However after suspend+resume, the keyboard doesn't work anymore, and neither
-does the lid switch.
-Running `echo i8042 | sudo tee /sys/bus/platform/drivers/i8042/unbind`
-and then `echo i8042 | sudo tee /sys/bus/platform/drivers/i8042/bind`
-makes the keyboard mostly work again, except that the Fn keys don't work as
-intended (pressing F1 and Fn+F1 both report plain F1, not Mute) and the lid
-switch still doesn't work.
-
-Adding "i8042.nopnp" to the kernel commandline helps a bit: When it's set t=
-he
-keyboard works after suspend+resume without unbinding/rebinding it, but the
-Fn-keys and the lid switch are broken after resuming, just like before.
-
-
-In dmesg I noticed a message "ACPI BIOS Error (bug): Could not resolve symb=
-ol
-[\_SB.PC00.LPCB.EC0.SNTM], AE_NOT_FOUND (20230628/psargs-330)" during wakeu=
-p.
-After decompiling the ACPI tables the I saw that this indeed doesn't exist,=
- but
-"\_SB.PCI0.LPC0.EC0.SNTM" does, so I patched the call accordingly. Didn't s=
-eem
-to make a difference, though, apart from getting rid of that ACPI BIOS Erro=
-r.=20
-
-
-When I tried to run `amd-s2idle test`, it refused because "GPIO interrupt is
-not served" It suggests loading the i2c-hid-acpi kernel module, but it was
-already loaded.
-So I checked `/sys/kernel/debug/gpio` and it contained the line
-
-> #89   =F0=9F=94=A5 =F0=9F=98=B7|     =E2=86=93|  level|    |   |     |  |=
-    |  =E2=86=93 |input  =E2=86=93|=20=20=20=20=20=20=20=20
-> |0x10240b00
-
-Apparently that fire emoji means that this GPIO interrupt is not served (it=
-'s
-the only line with fire).
-`gpioset -c gpiochip0 -p 2m 89=3D1` makes that issue temporarily go away and
-allows running amd-s2idle.
-
-GPIO Line 89 seems to belong to the touchpad, when setting dyndbg=3D'module
-pinctrl_amd +p' I get lots of lines like
-[   25.273930] GPIO 9 is active: 0x10141b00
-[   25.273967] GPIO 89 is active: 0x10240b00
-[   25.280561] GPIO 9 is active: 0x10141b00
-[   25.280585] GPIO 89 is active: 0x10240b00
-in dmesg whenever I touch the touchpad.
-
-
-Rarely they keys and lid switch still work after resume, usually in that ca=
-se
-there's a message like
-[   54.421557] amd_pmc AMDI0005:00: Last suspend didn't reach deepest state
-in dmesg. When that happens the next suspends behave the same (and still yi=
-eld
-the message), until rebooting.
-
-Once or twice things "worked" without showing that "didn't reach deepest st=
-ate"
-message; unfortunately in those cases I didn't check power consumption on t=
-he
-wattmeter the laptop's power adapter is plugged into, so I can't say if it =
-was
-a proper suspend or not.
-
-I attached a lot of stuff, run with Kernel 7.0 from Ubuntu's mainline repo =
-(my
-own build has lots of changes for additional debugprints by now) and mostly
-with unpatched (original) ACPI tables, except for
-dg-16ABR8-dmesg_patched_acpi.txt and lshw which are with the patched ACPI t=
-able
-to get rid of the aforementioned "ACPI BIOS Error".
-dg-16ABR8-ssdt14-mod.dsl is the source of the modified ACPI table.
-
-
-Is there any more information I can provide, or things I could try?
-
---=20
-You may reply to this email to add a comment.
-
-You are receiving this mail because:
-You are watching the assignee of the bug.=
+@Francesco, would you like to submit a new version of the patch similar to
+above or you want me to do that?
