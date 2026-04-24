@@ -1,38 +1,38 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2319137CD50
-	for <platform-driver-x86@vger.kernel.org>; Fri, 24 Apr 2026 20:19:49 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 303AF347C7
+	for <platform-driver-x86@vger.kernel.org>; Fri, 24 Apr 2026 21:15:18 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1777061990; cv=none; b=dBqr2Xz/U1xmPzq4yFm7sEV3IElB7mu2QesnrpyYmfrj8iYLLQOeleFmqXSLSJ3jSFhFcNJTiqAAgb1mAKDgPrdGvX0Cz2HldQhegiwdIWqkQTw7RFYE+WTD3tTEufcyderc6TtBWuUdA78BBq6t8mnLegjYpCBBMkoVNsh91gM=
+	t=1777065319; cv=none; b=kn9knMKnvbZL9BU4306u7txcwvrE0F4ojr3wTE4LuTxVFqdwi0rt0uVmoq3N8BxGBneGahOs0NVqh7b1MKEvHJxnX/4a+5sA0CTVQwz3c88KgAaMIUDrqKR4YSEbS1JhJdqDkjXZ1MOOqiedCOTj6fLyy433qsOvRmNGAnsCv7g=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1777061990; c=relaxed/simple;
-	bh=dtbTvyE2UXMo997k22I1x5DV5l+kffYO/fVwcimSEU8=;
+	s=arc-20240116; t=1777065319; c=relaxed/simple;
+	bh=8AG+Xtv9eJB86hbd29Tr4NBtGli2f14KAgOKu6AcPB4=;
 	h=From:To:Subject:Date:Message-ID:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=qmcVoQo6my9elRcRvta+uumFSmZewuayQVPuAJe/KM7yi82RUo2DFi+giZ7rQLP6jGzEY0R4aHQRU4y0Wg0dZa1KLIHWllBBOb6a7KXu9GnMe2TBIEzJWz5EutfjNsI/2Rkkfq2LNU545GAACX5yoqyH07rbuiKA1S+pJe/+1hs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=EKchCZbs; arc=none smtp.client-ip=10.30.226.201
+	 Content-Type:MIME-Version; b=RD4rZ9cCYsjoAvYyj6VtMozh4Dm869hMnbi9mQIt0JFVa29R9zzyyzW8jLo+lH4d+mhbwnxCKENxapKj8m3Z0+TlLPehaTnCPFJ9uGWFmhSp/8PH7YMHrh/Vpyh2emDFPMaRhQXwvrH6j3er8sbDOTBDLOxPg1UWMTgptCSOKc4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ACOa+n2O; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="EKchCZbs"
-Received: by smtp.kernel.org (Postfix) with ESMTPS id 9401EC19425
-	for <platform-driver-x86@vger.kernel.org>; Fri, 24 Apr 2026 20:19:49 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ACOa+n2O"
+Received: by smtp.kernel.org (Postfix) with ESMTPS id CC707C2BCB0
+	for <platform-driver-x86@vger.kernel.org>; Fri, 24 Apr 2026 21:15:18 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1777061989;
-	bh=dtbTvyE2UXMo997k22I1x5DV5l+kffYO/fVwcimSEU8=;
+	s=k20201202; t=1777065318;
+	bh=8AG+Xtv9eJB86hbd29Tr4NBtGli2f14KAgOKu6AcPB4=;
 	h=From:To:Subject:Date:In-Reply-To:References:From;
-	b=EKchCZbsOM7wSAUCMbc/+xqv547/PWYyzxTigeHozPsY++gSFKyvLZItobjXjmOW3
-	 mE4kfTwligCnsiA2cT2eqKocYUHwt90ZyJ2RzgFRx0xeywgmuuzg3zHr3+VJivkv+k
-	 2TYkyNpnb6qZEytW2q15vvTy4BPPRaSXJKYjrXn7VVynL6vz9r6+hFKtTJi3872Lcy
-	 H8W0u+1TFXZYo530/YvUfLQd9bhcppn2gv1lEP9/rabo0RWU5+FOi3nHFrukwv6g9+
-	 7eggWu6xPs7epgBtm4vyhE8JxToXF9Qm8Hq4Fhy7MeMml2pFsGOceKARngYBS9me1Z
-	 QO1XHJR9XPcng==
+	b=ACOa+n2OPq1hGg2/CBV4nxOsBafQCd0Slb23rTRx/L8pyXK+00oTUmIXJXTqP7ouF
+	 283ICjJQS4DJUV0iuKzZb5/LiX6bPGIEDJ1J1vf4af23MctpH+/So0QrtDS+ckB+sM
+	 +gjlv5t9sRXAmphv6yeSd/hQ433yXd4tXvemaklnOCRBKzo48vgUb7Uw/z00LojrK7
+	 p0dmdu7MHgZdnc/vfOvqUSReGiD2ekHIT6AnRI06417m3BQt6dSFgXUGfXK+1x7//t
+	 VYSZrgkLy9Tx2nS8a5NDZaQnBwKxzfX3k+LtGN6PrSAUxGdtuHAyHbKLEgtgnXf5IB
+	 5x2Qjojn+B25A==
 Received: by aws-us-west-2-korg-bugzilla-1.web.codeaurora.org (Postfix, from userid 48)
-	id 84918C3279F; Fri, 24 Apr 2026 20:19:49 +0000 (UTC)
+	id B6698C3279F; Fri, 24 Apr 2026 21:15:18 +0000 (UTC)
 From: bugzilla-daemon@kernel.org
 To: platform-driver-x86@vger.kernel.org
 Subject: [Bug 221383] ideapad_laptop: Fn hotkeys stop emitting after s2idle
  resume on IdeaPad Slim 3   14ARP10 (Ryzen 7735HS)
-Date: Fri, 24 Apr 2026 20:19:49 +0000
+Date: Fri, 24 Apr 2026 21:15:18 +0000
 X-Bugzilla-Reason: None
 X-Bugzilla-Type: changed
 X-Bugzilla-Watch-Reason: AssignedTo drivers_platform_x86@kernel-bugs.osdl.org
@@ -41,14 +41,14 @@ X-Bugzilla-Component: Platform_x86
 X-Bugzilla-Version: 2.5
 X-Bugzilla-Keywords: 
 X-Bugzilla-Severity: normal
-X-Bugzilla-Who: metalcaedes@gmail.com
+X-Bugzilla-Who: mario.limonciello@amd.com
 X-Bugzilla-Status: NEW
 X-Bugzilla-Resolution: 
 X-Bugzilla-Priority: P3
 X-Bugzilla-Assigned-To: drivers_platform_x86@kernel-bugs.osdl.org
 X-Bugzilla-Flags: 
 X-Bugzilla-Changed-Fields: 
-Message-ID: <bug-221383-215701-ypD0T4qalp@https.bugzilla.kernel.org/>
+Message-ID: <bug-221383-215701-MHj92IKn5H@https.bugzilla.kernel.org/>
 In-Reply-To: <bug-221383-215701@https.bugzilla.kernel.org/>
 References: <bug-221383-215701@https.bugzilla.kernel.org/>
 Content-Type: text/plain; charset="UTF-8"
@@ -64,19 +64,9 @@ MIME-Version: 1.0
 
 https://bugzilla.kernel.org/show_bug.cgi?id=3D221383
 
---- Comment #28 from Daniel Gibson (metalcaedes@gmail.com) ---
-> If you DO want to shoot in the dark and try to change timing ...
-
-Thanks, this was a great idea!
-
-If I add msleep(1500); (1000 is not enough) to both amd_pmc_s2idle_check() =
-and
-amd_pmc_s2idle_restore(), everything works as intended \o/
-
-... at least in my patched kernel that has some other changes like longer
-waiting for ACKs in __ps2_command(), I yet have to try the vanilla 7.0 sour=
-ce
-with just these changes.
+--- Comment #29 from Mario Limonciello (AMD) (mario.limonciello@amd.com) ---
+Woah! Well play with it and compare EC and PS2 traffic in both cases. Sounds
+like we have a race condition after all.
 
 --=20
 You may reply to this email to add a comment.
