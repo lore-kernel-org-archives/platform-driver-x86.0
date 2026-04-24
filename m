@@ -1,151 +1,122 @@
-Received: from mail.tuxedocomputers.com (mail.tuxedocomputers.com [157.90.84.7])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from sender4-pp-f112.zoho.com (sender4-pp-f112.zoho.com [136.143.188.112])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6FE793CEB85;
-	Fri, 24 Apr 2026 12:35:04 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=157.90.84.7
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1777034108; cv=none; b=IE/RPxjpc0qQg2YKHfqy6pI22tzGXDipCpQNlUFc/qh/UAtEc/GYRXhRRItmDdDRg7C+8wNmN6qoojFGeeinP5AWELaxzYDM3go2LqTgZ+pPVeTDj/iYphd/BYPgm95aVdEea95WfjZRa+n/JENeDDm0a7aCa3fQmlWnQlV/Akk=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1777034108; c=relaxed/simple;
-	bh=Deyj8RSttCow8WQNgTA2LUOtKVBm9zHmExg7nq10iEc=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=oDAoN9HanJ8NmohZEKsqE5U/YcNQyIQfsTqNidYrlPYtiaKv41ojyHwo/7FFj/YrgzqmW5hUiC7H6+BelRufveFgQnF+w8D1xmzyWKxyBqWREXL8blLouiUScF4Q9qLHxBCyNjafYxXByoEcPl2mUV0uxugVe5zhmRnfPo1OykQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=tuxedocomputers.com; spf=pass smtp.mailfrom=tuxedocomputers.com; dkim=pass (1024-bit key) header.d=tuxedocomputers.com header.i=@tuxedocomputers.com header.b=CUKvKVyX; arc=none smtp.client-ip=157.90.84.7
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=tuxedocomputers.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=tuxedocomputers.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 484033CEBB8;
+	Fri, 24 Apr 2026 12:51:07 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=136.143.188.112
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1777035068; cv=pass; b=pCrvW1c0EPKjeR4WjNxdvhs+yOAD0cyupN549BI/zyvS9bGWvh78w11qSvhe9Xh/Tq4WcI71RwafXw/YoQck8JofO7trIitUfVMHCo97wcPtSF0raNymCepmfigKYb3zM6dWD/d47UjOMwJ7v2irwNfF1w13ZE1oM1qAl72osLs=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1777035068; c=relaxed/simple;
+	bh=m91rJxmU5vJkc/2ivdwWue0xovO0yfa6JOesnmfIWL4=;
+	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
+	 Content-Type:MIME-Version; b=IejX8KYCeJRgAnJvMEf39HEwuXIuAoQPtAGNUgb30sxWo0gUWKDZtq9lfQyH8Ai9Z24Jsvgo+uXMFZsiD2UAqGUQCfgJNJf9tlXUVNAS9MV4WJa2wFjD+xtfD/SmVJl89IA1FASlQ1M/J3XT/VVfCcR5Aw4nPKk2LtHOfd/ivNs=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com; spf=pass smtp.mailfrom=collabora.com; dkim=pass (1024-bit key) header.d=collabora.com header.i=nfraprado@collabora.com header.b=BZpjMzJo; arc=pass smtp.client-ip=136.143.188.112
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=collabora.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=tuxedocomputers.com header.i=@tuxedocomputers.com header.b="CUKvKVyX"
-Received: from [192.168.178.25] (i5C75F5C3.versanet.de [92.117.245.195])
-	(Authenticated sender: wse@tuxedocomputers.com)
-	by mail.tuxedocomputers.com (Postfix) with ESMTPSA id 42A5F2FC0227;
-	Fri, 24 Apr 2026 14:28:39 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=tuxedocomputers.com;
-	s=default; t=1777033719;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=HcH8sGqz1IbWz4PYmyLuFVtnK+dcfrc/c6sVTdxhkX0=;
-	b=CUKvKVyXc+cJVZKP2Z92+RFEqo44b71wmW2FKDEyM/oqU5UATSTZ7MDArNfE8uGxLYhCRX
-	CDHfaLuPZMvy8eOOCFe9q6soFAYPA6zMuSaXSuv26BBSfbLVrZI+kzWiL3FXf0lpjIEL0v
-	d/oojUORscUwonnxutO8xQf4jh4bw+0=
-Authentication-Results: mail.tuxedocomputers.com;
-	auth=pass smtp.auth=wse@tuxedocomputers.com smtp.mailfrom=wse@tuxedocomputers.com
-Message-ID: <96a7ddc3-3ac8-4e4d-8168-327abecd364f@tuxedocomputers.com>
-Date: Fri, 24 Apr 2026 14:28:38 +0200
+	dkim=pass (1024-bit key) header.d=collabora.com header.i=nfraprado@collabora.com header.b="BZpjMzJo"
+ARC-Seal: i=1; a=rsa-sha256; t=1777035056; cv=none; 
+	d=zohomail.com; s=zohoarc; 
+	b=HD6YCOe6g3lU4EmzQUdms/fnimwj4qii5hB8uzXihkz5fdz/uGLG6dNIi+NNcqMLQcubOt+ht0fV7EhqkqWMGNsWXkQf8yhS7DlGniWsIiQxLuoeZ/4TBpeKu/ppXX3tTAFcNJxga39nZ91XXI8sGW2iizalY/B4r5vJBewX/2w=
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=zohomail.com; s=zohoarc; 
+	t=1777035056; h=Content-Type:Content-Transfer-Encoding:Cc:Cc:Date:Date:From:From:In-Reply-To:MIME-Version:Message-ID:References:Subject:Subject:To:To:Message-Id:Reply-To; 
+	bh=m91rJxmU5vJkc/2ivdwWue0xovO0yfa6JOesnmfIWL4=; 
+	b=WzXsy26nNCxhcZQbX0fHtQMr3k4833BGWRwWfMyvCKWsv8KOU02+i9qcQ9UoXgd56U5Z7K7HQmxIt49JmDZkbHTXUswO5HFoeKTbO7fzAVQ6VV7HtI+BYLG+ZegiNzyjU39SwaYD9/aif3pq5shPwyRZtR89uqxqXIFgpH9HnL4=
+ARC-Authentication-Results: i=1; mx.zohomail.com;
+	dkim=pass  header.i=collabora.com;
+	spf=pass  smtp.mailfrom=nfraprado@collabora.com;
+	dmarc=pass header.from=<nfraprado@collabora.com>
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; t=1777035056;
+	s=zohomail; d=collabora.com; i=nfraprado@collabora.com;
+	h=Message-ID:Subject:Subject:From:From:To:To:Cc:Cc:Date:Date:In-Reply-To:References:Content-Type:Content-Transfer-Encoding:MIME-Version:Message-Id:Reply-To;
+	bh=m91rJxmU5vJkc/2ivdwWue0xovO0yfa6JOesnmfIWL4=;
+	b=BZpjMzJojjj+KwYBZsZ+eUdgS/aTRj7rjJsaHjOxexEJxL+wXTot30yS+/ZLgl7G
+	Oqc1nAURywK0tuuOHYASW0X5W4n48Kb9h+Dic7VIKp9qy5h82s4G5pU7mFYzvUfpzkz
+	4mBtzLe1UeoJgzC6viMAxHN182T/8V/Pxg8cvuIw=
+Received: by mx.zohomail.com with SMTPS id 1777035054608217.76181857393317;
+	Fri, 24 Apr 2026 05:50:54 -0700 (PDT)
+Message-ID: <09d21c9cee8af49fa1d5b568358db0c347668ee9.camel@collabora.com>
+Subject: Re: [PATCH v9 14/16] platform/x86: lenovo-wmi-other: Add WMI
+ battery charge limiting
+From: =?ISO-8859-1?Q?N=EDcolas?= "F. R. A. Prado" <nfraprado@collabora.com>
+To: "Derek J. Clark" <derekjohn.clark@gmail.com>, Ilpo
+ =?ISO-8859-1?Q?J=E4rvinen?= <ilpo.jarvinen@linux.intel.com>, Hans de Goede
+ <hansg@kernel.org>
+Cc: Mark Pearson <mpearson-lenovo@squebb.ca>, Armin Wolf <W_Armin@gmx.de>, 
+ Jonathan Corbet
+	 <corbet@lwn.net>, Rong Zhang <i@rong.moe>, Kurt Borja <kuurtb@gmail.com>, 
+	platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
+Date: Fri, 24 Apr 2026 08:50:53 -0400
+In-Reply-To: <20260411162334.25682-15-derekjohn.clark@gmail.com>
+References: <20260411162334.25682-1-derekjohn.clark@gmail.com>
+	 <20260411162334.25682-15-derekjohn.clark@gmail.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+User-Agent: Evolution 3.56.2-9 
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [RFC PATCH 0/3] platform/x86: uniwill-laptop: Another improvement
- and another feature
-To: Armin Wolf <W_Armin@gmx.de>, hansg@kernel.org,
- ilpo.jarvinen@linux.intel.com
-Cc: platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
-References: <20260421201103.142403-1-wse@tuxedocomputers.com>
- <00de99ce-cb58-491d-81fc-f8bfb8ea4a16@gmx.de>
- <119c3496-9f2f-460d-9727-251731e32686@tuxedocomputers.com>
- <46f7d442-04ea-4345-a540-2600a97867ab@gmx.de>
-Content-Language: en-US
-From: Werner Sembach <wse@tuxedocomputers.com>
-In-Reply-To: <46f7d442-04ea-4345-a540-2600a97867ab@gmx.de>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
+X-ZohoMailClient: External
+X-ZohoMail-Owner: <09d21c9cee8af49fa1d5b568358db0c347668ee9.camel@collabora.com>+zmo_0_
 
+On Sat, 2026-04-11 at 16:23 +0000, Derek J. Clark wrote:
+> Add charge-type power supply extension for devices that support WMI
+> based
+> charge enable/disable.
+>=20
+> Lenovo Legion devices that implement WMI function and capdata ID
+> 0x03010001 in their BIOS are able to enable or disable charging at
+> 80%
+> through the lenovo-wmi-other interface. Add a charge_type power
+> supply
+> extension to expose this capability to the sysfs.
 
-Am 22.04.26 um 18:12 schrieb Armin Wolf:
-> Am 22.04.26 um 17:30 schrieb Werner Sembach:
->>
->> Am 22.04.26 um 13:28 schrieb Armin Wolf:
->>> Am 21.04.26 um 22:01 schrieb Werner Sembach:
->>>> Hi,
->>>>
->>>> This series is based on another not yet accepted series
->>>> https://lore.kernel.org/all/20260417050912.5582-1-W_Armin@gmx.de/
->>>>
->>>> RFC because of that, because the third patch is not yet tested, and because
->>>> I have a question regarding the 3rd patch:
->>>>
->>>> Should I abstract the call to wmi_evaluate_method away in a wrapper
->>>> function in uniwill-wmi somehow, or is it ok to have it straight in the
->>>> uniwill-laptop code like that? It is quite self contained.
->>>>
->>>> Best regards,
->>>>
->>>> Werner
->>>
->>> Hi,
->>>
->>> i prefer having the code for this WMI interface inside a separate file. I 
->>> think we have to first rename uniwill-wmi* to uniwill-wmi- event*, then the 
->>> new code can live in uniwill-wmi.c
->>>
->>> However we also need some synchronization mechanism between uniwill- acpi 
->>> and the new uniwill-wmi because some code path need to check EC registers 
->>> before enabling support for local dimming. I suggest that you use the 
->>> component framework for that. Basically the new WMI driver registers a 
->>> component during probing, while the EC acts as a component master _if_ local 
->>> dimming support is present. When the component and the component master 
->>> match a sysfs attribute is registered to allow userspace application to 
->>> control this feature.
->>
->> Calling the old uniwill-wmi uniwill-wmi-event and the new driver uniwill-wmi 
->> from here on:
->>
->> I haven't yet worked with the component framework, but i wonder: since the 
->> same manual register call structure that we already have for 
->> uniwill-wmi-event will be also required for uniwill-wmi, can't this call not 
->> also be used to exchange callbacks like for uniwill-wmi-event and the 
->> notifier block? just the other way around with uniwill-acpi receiving a 
->> callback instead of providing one.
->>
->> ofc these callbacks must be guarded in some way to not accidentally call 
->> uninitialized code, if uniwill-wmi fails to init or probe
->
-> This would indeed be possible, but where would be no mechanism for detecting 
-> when the WMI driver has finished probing.
->
-> I was thinking that the WMI driver uses the component callbacks to pass a 
-> pointer to its data struct to the component master. Said data struct can then 
-> by used to change the local dimming status.
+Hi,
 
-ok i will look into this, but first a week of hollyday ^^
+this is not the right uAPI to expose this capability.
 
-best regards,
+If you check the ABI description for
+/sys/class/power_supply/<supply_name>/charge_type [1], it mentions
+"rate" and if you check the corresponding enum definition [2] it
+mentions "speed", so the charge_type uAPI is very clearly meant to
+expose the the charge rate/speed/current currently configured, with
+Long Life specifically meaning a reduced charge rate, rather than
+reduced charge capacity.
 
-Werner
+The uAPI you're looking for here is
+/sys/class/power_supply/<supply_name>/charge_control_end_threshold [3],
+which very explicitly exposes the charge threshold in percentage. You
+can then accept only 100 or 80 as valid values and configure your
+hardware accordingly. Unfortunately there's currently no way for
+userspace to know that these are the only valid values (which is
+something that I want to look into implementing soon), it can only read
+back to see if what it wrote was accepted, but it's still the best uAPI
+for this.
 
->
-> I am still not sure when the associated sysfs files should be created. We can 
-> create them during probing of the EC, but then there will be problems should 
-> the WMI device take too long/fail to probe. Alternatively we can create the 
-> sysfs file when the component master binds the WMI component, so that the 
-> sysfs file will only become visible
-> once it is operational. We can then issue a uevent towards userspace to signal 
-> userspace applications that the sysfs attributes of our device have changed.
->
-> Thanks,
-> Armin Wolf
->
->>
->>>
->>> Thanks,
->>> Armin Wolf
->>>
->>>>
->>>> Werner Sembach (3):
->>>>    platform/x86: uniwill-laptop: Make super key init lineup with other
->>>>      inits
->>>>    platform/x86: uniwill-laptop: Implement lightbar for XMG Fusion (L19)
->>>>    platform/x86: uniwill-laptop: Offer support to activate local dimming
->>>>
->>>>   drivers/platform/x86/uniwill/uniwill-acpi.c | 195 ++++++++++++++++++--
->>>>   1 file changed, 182 insertions(+), 13 deletions(-)
->>>>
->>>
->>
->
+I see that there have been 2 commits merged last year that make the
+exact same misuse of the uAPI, which probably contributed to the
+confusion here, but the ship has sailed for those.=20
+
+[1]
+https://docs.kernel.org/admin-guide/abi-testing.html#abi-sys-class-power-su=
+pply-supply-name-charge-type
+[2]
+https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree/inc=
+lude/linux/power_supply.h?h=3Dv7.0&id=3D028ef9c96e96197026887c0f09242467929=
+8aae8#n45
+[3]
+https://docs.kernel.org/admin-guide/abi-testing.html#abi-sys-class-power-su=
+pply-supply-name-charge-control-end-threshold
+[4]
+https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/commit/?=
+id=3Dde2884c6cdd3d133704ce37393590dd1c761500c
+[5]
+https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/commit/?=
+id=3Dda8f2708f9b69707f4efeb432a18395e46b4666f
+
+Thanks,
+N=C3=ADcolas
