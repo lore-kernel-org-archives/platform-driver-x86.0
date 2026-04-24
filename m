@@ -1,86 +1,109 @@
-Received: from out-180.mta0.migadu.com (out-180.mta0.migadu.com [91.218.175.180])
+Received: from fout-b8-smtp.messagingengine.com (fout-b8-smtp.messagingengine.com [202.12.124.151])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 691A536D9EA
-	for <platform-driver-x86@vger.kernel.org>; Fri, 24 Apr 2026 07:58:33 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.218.175.180
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5AF38332916;
+	Fri, 24 Apr 2026 08:34:53 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=202.12.124.151
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1777017514; cv=none; b=ByZacvZDYQEZ0SYwCL/rjXCtUYGnFbf/yFm0X1NHK0Ev91oFAgIrhIjuqJWkJHb851dimup6MOBQQDHWCQQzszBLXXyuh+grbyDTPQvd1sw/U4izC2DYFvD2CUssoibfB2KE1tocxceNGcpnM/DH12uecgYWMKKYXXY/xNTLF2w=
+	t=1777019697; cv=none; b=to8y0ZHHfzh01Xstu2my/tMrO4ovqU8K3xApeju6cz0z51O7biuAp6fRPu5l0D7+tnp69WSMd197J+FO/tfn9c6J8WWJ3Qj9IQyGVrbSw3H7tmGb3A0U2a1mIkixQ+QOxVejl8Jv613Dol4izuKywgJrR7ZGwtLMGN2wcGOVr50=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1777017514; c=relaxed/simple;
-	bh=ZWYP6mT6fA+JgNjY1AEzNNqS3PWco9MPoV33KM4nSr8=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version:Content-Type; b=JDHIYt46OPu4XQw09rNRsdzRJkl9JJVjRokT9GckKoOAHWl4MwVZjbffWYMQh2WyJ8W6xe47+WRS8PjsqaQsnqmnrSot0NOsCPnCLXZX0D8RNtFRRTIdbW9hT6ndy/+WuHb0whEe8Ju5c3Z6JTWebfXkwWeqnATG1wdskR5vNVE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=ImA6J1S7; arc=none smtp.client-ip=91.218.175.180
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
+	s=arc-20240116; t=1777019697; c=relaxed/simple;
+	bh=XhnKeeVSeym/NAMfGCWHzqkr/ICD1UZkDXN+hfUdKDA=;
+	h=MIME-Version:Date:From:To:Cc:Message-Id:In-Reply-To:References:
+	 Subject:Content-Type; b=eXjOzvltVKY7FQezPafACCRgcKZcvdSNrJ2U4DCYHK9XfeUv34rpr6xAGu5lYNquShVCfdeHOwbtJxL0AljIQtFOexiK1w2rmDkQmxDcgbXkM2f2r4d9HWNQ/d+C1lnkIL/TP4wumcH7syFQyCgjlW3KRprQbEmaKSsnJMNq+/c=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arndb.de; spf=pass smtp.mailfrom=arndb.de; dkim=pass (2048-bit key) header.d=arndb.de header.i=@arndb.de header.b=gKiHM973; dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b=snUajgrX; arc=none smtp.client-ip=202.12.124.151
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arndb.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arndb.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="ImA6J1S7"
-X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
-	t=1777017511;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding;
-	bh=bDCEtKW5Ib4ErBCREqf+dOFi6J08OrsZfJ1xvOpO73A=;
-	b=ImA6J1S7xcABIfrwkp9AAqikA6dlyOVYWp5CpmrZ+CPK3FQm3VaHON9XXIbfOz/mu8DQHJ
-	5d9sHkpjsFBYKaZCmecB1lb62A+UY3xGLlqA0fHXFUHXaA3gIV2fbQUMJ1aCpbfLW0H9cX
-	fy6rCN3QjHnjnCslinmik7U+n7yFz3U=
-From: Thorsten Blum <thorsten.blum@linux.dev>
-To: Mattia Dongili <malattia@linux.it>,
-	Arnd Bergmann <arnd@arndb.de>,
-	Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc: Thorsten Blum <thorsten.blum@linux.dev>,
-	platform-driver-x86@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Subject: [PATCH] sonypi: use strscpy() in sonypi_acpi_probe
-Date: Fri, 24 Apr 2026 09:57:57 +0200
-Message-ID: <20260424075755.305770-3-thorsten.blum@linux.dev>
+	dkim=pass (2048-bit key) header.d=arndb.de header.i=@arndb.de header.b="gKiHM973";
+	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="snUajgrX"
+Received: from phl-compute-04.internal (phl-compute-04.internal [10.202.2.44])
+	by mailfout.stl.internal (Postfix) with ESMTP id 834F31D001E2;
+	Fri, 24 Apr 2026 04:34:51 -0400 (EDT)
+Received: from phl-imap-02 ([10.202.2.81])
+  by phl-compute-04.internal (MEProxy); Fri, 24 Apr 2026 04:34:51 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=arndb.de; h=cc
+	:cc:content-transfer-encoding:content-type:content-type:date
+	:date:from:from:in-reply-to:in-reply-to:message-id:mime-version
+	:references:reply-to:subject:subject:to:to; s=fm2; t=1777019691;
+	 x=1777106091; bh=XhnKeeVSeym/NAMfGCWHzqkr/ICD1UZkDXN+hfUdKDA=; b=
+	gKiHM9733mCQsGKJMF+pX7LfuV+Sfo9aWZB+IPzZX6f6wxnBQ/C1F7b9FfSi+br4
+	vuJciPuULT3Q+XyRG+GHJfg6sMWq08whIDKfEN0bc3MgRgAn6aryY/GvJq19Qi3+
+	ipuDy6P/9GZamsrb2NU9kCX5djRcb18/ylK25MKF8X5S+Em8ZIMNMzDJxKx6ZIYX
+	ySp/fniRuBsqLdgsqZkL3cINQBQNe9v2QuqOrABE7rFYDjrhCSEiE1/BZqLZDtvx
+	+gSY6WM0Ac38iCBauEDh4m0rGQyv24LlTYnc5cmpnbnJuEY6p36DbKu7EOEQ7NZM
+	5bIpT7jh/WJ1iyyAPsVyeg==
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
+	messagingengine.com; h=cc:cc:content-transfer-encoding
+	:content-type:content-type:date:date:feedback-id:feedback-id
+	:from:from:in-reply-to:in-reply-to:message-id:mime-version
+	:references:reply-to:subject:subject:to:to:x-me-proxy
+	:x-me-sender:x-me-sender:x-sasl-enc; s=fm2; t=1777019691; x=
+	1777106091; bh=XhnKeeVSeym/NAMfGCWHzqkr/ICD1UZkDXN+hfUdKDA=; b=s
+	nUajgrXC8A+WcZGnvxeA3sXAOx8/LYilyn50n0HPKIrkeyi2qyIYP+1ADtL9KVGI
+	Oa97TW7iMdb6X/Z3Ml7lvxnixYRSa3N3YPNVnW3z+DEpcUIuqD9CRGhQ/tGxbBwA
+	W9dBYYHy1pM5YI9zgoTSjBVrTMiPCde1zFKwcKuUppJBRZ0EEQnloGi5OiufCGji
+	DsfBz8lhVWfyzPUwAKpJ32nObPalJurY+j5b2FGawXSTs1xeJd9CosGhyM8ObyB5
+	Kv95iombo4cAHuUf4wrrANnK27pEAawONFHjyF0HVqSROjlf2KFeFeXZW0cxo+3E
+	1nyC2IH7+fQ7J0iH4vxTw==
+X-ME-Sender: <xms:KyvradoNden4C-P1tcUuHZAqP2pUAp8-5RG5Cnh5UjoseGKr07WDNw>
+    <xme:KyvraaeVzz2u6vh5Tn10IKzJF8XicLyjisJ5aJfzmMW50otxNi8M_1YHi-QqtZTkt
+    SJy55EHUNQsP5uiQNK6Ooex-AWTPMHzmsifZHK9AzLVlCA9fH77FdI>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeefhedrtddtgdeileehiecutefuodetggdotefrod
+    ftvfcurfhrohhfihhlvgemucfhrghsthforghilhdpuffrtefokffrpgfnqfghnecuuegr
+    ihhlohhuthemuceftddtnecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenucfjug
+    hrpefoggffhffvvefkjghfufgtgfesthhqredtredtjeenucfhrhhomhepfdetrhhnugcu
+    uegvrhhgmhgrnhhnfdcuoegrrhhnugesrghrnhgusgdruggvqeenucggtffrrghtthgvrh
+    hnpeekvdeuhfeitdeuieejvedtieeijeefleevffefleekieetjeffvdekgfetuefhgfen
+    ucffohhmrghinhepkhgvrhhnvghlrdhorhhgnecuvehluhhsthgvrhfuihiivgeptdenuc
+    frrghrrghmpehmrghilhhfrhhomheprghrnhgusegrrhhnuggsrdguvgdpnhgspghrtghp
+    thhtohephedpmhhouggvpehsmhhtphhouhhtpdhrtghpthhtohepthhhohhrshhtvghnrd
+    gslhhumheslhhinhhugidruggvvhdprhgtphhtthhopehmrghlrghtthhirgeslhhinhhu
+    gidrihhtpdhrtghpthhtohepghhrvghgkhhhsehlihhnuhigfhhouhhnuggrthhiohhnrd
+    horhhgpdhrtghpthhtoheplhhinhhugidqkhgvrhhnvghlsehvghgvrhdrkhgvrhhnvghl
+    rdhorhhgpdhrtghpthhtohepphhlrghtfhhorhhmqdgurhhivhgvrhdqgiekieesvhhgvg
+    hrrdhkvghrnhgvlhdrohhrgh
+X-ME-Proxy: <xmx:Kyvrae13EuZUy53p9ptfOKxZwFQn3Cp9Ao0iEZ2Owu4ef8kz9LGIwQ>
+    <xmx:KyvraaBXFKb2owCl1iH0fJcND2MZbWIVDeENZeV0fvRvHj2pzsEM7A>
+    <xmx:KyvraSdXHNuy1lMDvxo1VyNL24WlPhlHhFvz2eT9D4wwB7fjADVvKA>
+    <xmx:Kyvraf5mw-LpLoLWc6ajJvVoAzZEtyNHJKHe16RjCysJZg_QMIGdlg>
+    <xmx:KyvraZkT_beCeXg2kH_GiQ7rB88W2cwNxSu3bU8UgCYowhDG7JEsS7iU>
+Feedback-ID: i56a14606:Fastmail
+Received: by mailuser.phl.internal (Postfix, from userid 501)
+	id EF357700065; Fri, 24 Apr 2026 04:34:50 -0400 (EDT)
+X-Mailer: MessagingEngine.com Webmail Interface
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-X-Developer-Signature: v=1; a=openpgp-sha256; l=1345; i=thorsten.blum@linux.dev; h=from:subject; bh=ZWYP6mT6fA+JgNjY1AEzNNqS3PWco9MPoV33KM4nSr8=; b=owGbwMvMwCUWt7pQ4caZUj3G02pJDJmvlVquzVF0MzM5GHerLrLqraHDvtUBAtHX3O7LdQu9f Rf7MOdiRykLgxgXg6yYIsuDWT9m+JbWVG4yidgJM4eVCWQIAxenAEzkWjDDP5sfM97X1aQ+ODP1 xjER57/Tn6p2VTw6tiORudhv0mqOChuG/8HX2VTjDfdLpToLqIT7H+zcaPmeUclqmWRXe+f+Yz9 M+AE=
-X-Developer-Key: i=thorsten.blum@linux.dev; a=openpgp; fpr=1D60735E8AEF3BE473B69D84733678FD8DFEEAD4
-Content-Transfer-Encoding: 8bit
-X-Migadu-Flow: FLOW_OUT
+X-ThreadId: AY2eugjpOVnk
+Date: Fri, 24 Apr 2026 10:34:20 +0200
+From: "Arnd Bergmann" <arnd@arndb.de>
+To: "Thorsten Blum" <thorsten.blum@linux.dev>,
+ "Mattia Dongili" <malattia@linux.it>,
+ "Greg Kroah-Hartman" <gregkh@linuxfoundation.org>
+Cc: platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
+Message-Id: <c81f5117-6fcb-4bcf-a929-135dac68865d@app.fastmail.com>
+In-Reply-To: <20260424075755.305770-3-thorsten.blum@linux.dev>
+References: <20260424075755.305770-3-thorsten.blum@linux.dev>
+Subject: Re: [PATCH] sonypi: use strscpy() in sonypi_acpi_probe
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: quoted-printable
 
-strcpy() has been deprecated¹ because it performs no bounds checking on
-the destination buffer, which can lead to buffer overflows. While the
-current code works correctly, replace strcpy() with the safer strscpy()
-to follow secure coding best practices.
+On Fri, Apr 24, 2026, at 09:57, Thorsten Blum wrote:
+> strcpy() has been deprecated=C2=B9 because it performs no bounds check=
+ing on
+> the destination buffer, which can lead to buffer overflows. While the
+> current code works correctly, replace strcpy() with the safer strscpy()
+> to follow secure coding best practices.
+>
+> =C2=B9 https://www.kernel.org/doc/html/latest/process/deprecated.html#=
+strcpy
+>
+> Signed-off-by: Thorsten Blum <thorsten.blum@linux.dev>
+> ---
+> Based on linux-next and the new function name sonypi_acpi_probe().
 
-¹ https://www.kernel.org/doc/html/latest/process/deprecated.html#strcpy
-
-Signed-off-by: Thorsten Blum <thorsten.blum@linux.dev>
----
-Based on linux-next and the new function name sonypi_acpi_probe().
----
- drivers/char/sonypi.c | 5 +++--
- 1 file changed, 3 insertions(+), 2 deletions(-)
-
-diff --git a/drivers/char/sonypi.c b/drivers/char/sonypi.c
-index ccda997a9098..959949f04f7d 100644
---- a/drivers/char/sonypi.c
-+++ b/drivers/char/sonypi.c
-@@ -37,6 +37,7 @@
- #include <linux/kfifo.h>
- #include <linux/platform_device.h>
- #include <linux/gfp.h>
-+#include <linux/string.h>
- #include <linux/string_choices.h>
- 
- #include <linux/uaccess.h>
-@@ -1120,8 +1121,8 @@ static int sonypi_acpi_probe(struct platform_device *pdev)
- 	struct acpi_device *device = ACPI_COMPANION(&pdev->dev);
- 
- 	sonypi_acpi_device = device;
--	strcpy(acpi_device_name(device), "Sony laptop hotkeys");
--	strcpy(acpi_device_class(device), "sony/hotkey");
-+	strscpy(acpi_device_name(device), "Sony laptop hotkeys");
-+	strscpy(acpi_device_class(device), "sony/hotkey");
- 	return 0;
- }
- 
+Acked-by: Arnd Bergmann <arnd@arndb.de>
