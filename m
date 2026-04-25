@@ -1,233 +1,136 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8B8B840DFA5;
-	Sat, 25 Apr 2026 15:15:22 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 464B1347524
+	for <platform-driver-x86@vger.kernel.org>; Sat, 25 Apr 2026 15:32:04 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1777130122; cv=none; b=JzXfoBjbjY9FMCRjKzWVzCwzrQNqaXt9ZpZuEE86VJs0zGvcS8W5KmRrFqc+y9Csv1xijMRdBaxhPHYUpImfJVSCeWWHwOCqwhOXXQrLhISSSGwvJjqHl+HCetMyjSjTyS7nyoka/ZEwT2/mxMTOpEqG/IHLsb3mETy+zUTc7RE=
+	t=1777131124; cv=none; b=n2QonmjJmiBbrxoD4Xo/obbJkPYWOXP3M3/3T3jR5IsmIamWSJVL7eP0SaaGX2UnDY2PyUU1Mzp5spZ5Hg+kFPCctHBZZn7NVpzGIjqAj1xmr8PANxii6wSGoFzPVcLX0DrFex06zWev2PD2gIb8Lq9fsSMVKpfFNx1Q58Ge6vY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1777130122; c=relaxed/simple;
-	bh=iSoI4DFNO6LwbQUPgechwxRsrKT7FQXtvei2Qm7F2CU=;
-	h=Content-Type:Message-ID:Date:MIME-Version:Subject:To:Cc:
-	 References:From:In-Reply-To; b=KvLQwrG98bdSBUNsjTVS7G8Z4KzvbVWaDAQc2bYw2fuUAwsqUVc/1KAc6KkhllXB4nBLPnof18aacCDqUjHy+9uFBE/mdhOdY1GqWcNp86STK5KxwBxDl1Rfmf6AupMaBGO/V9cFSjb7efZobDzy0qw8Kec/oX+XU8qDx+HYNXY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Ja7lG0qx; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1777131124; c=relaxed/simple;
+	bh=wS8Sufr8gc2OuWeUeZhmxGAn1A15XjCDASvn8e1/nG0=;
+	h=From:To:Subject:Date:Message-ID:In-Reply-To:References:
+	 Content-Type:MIME-Version; b=bKfQe3oqXdFA+VQfgI92FezOQOIyyJLPP4XmsGue3g8We3YIEx194gCDo5VNcSuukEHgyJ3xOa9ovxUw7Fj/C6XewdMm/cIRjuvkMMZBxqYQXuVO660l4tqjwSfmaa8GIwKHxm6f7/BZxHSQtEqs+fGRaEx8shM0xKQXMZbPDGg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=QoGAjztc; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Ja7lG0qx"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 6CF39C2BCB0;
-	Sat, 25 Apr 2026 15:15:21 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="QoGAjztc"
+Received: by smtp.kernel.org (Postfix) with ESMTPS id DDE1FC2BCB5
+	for <platform-driver-x86@vger.kernel.org>; Sat, 25 Apr 2026 15:32:03 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1777130122;
-	bh=iSoI4DFNO6LwbQUPgechwxRsrKT7FQXtvei2Qm7F2CU=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=Ja7lG0qx4W7zVcH188TZD45Gdt2FZyOIngIE/pkGvF1P/8j4rUHnDEmbj4irXPP9N
-	 eWvd9qVbO6cAh//OWOBv04SDYcLACl6NADgVLFbISwPuco7+WMF6oIoJymPy1HGXbu
-	 76VdKVd2TAnwfbrugBG2bKh2HOPze8Xwq256qyX7xUr92hFHxq71NsmcBlr/akIF2Q
-	 2CXvHKz8qUDsnKZA/854n5UBdXNqyO6AMWX8EaKofO6qmEQVWbVU+15EHv7cQRDLoA
-	 HVC76eS/SCZ+Nu4uK5HKvHLIHVTMqOFFEsCQYi93pOTVRsEOrkOrn/H7hvMfEm4UwQ
-	 5kOjs3lhLpXPw==
-Content-Type: multipart/mixed; boundary="------------YnLCLDdpuLD0GWNeh9S5lhol"
-Message-ID: <f4979d43-f61f-4387-8490-ccec7043c940@kernel.org>
-Date: Sat, 25 Apr 2026 10:15:19 -0500
+	s=k20201202; t=1777131123;
+	bh=wS8Sufr8gc2OuWeUeZhmxGAn1A15XjCDASvn8e1/nG0=;
+	h=From:To:Subject:Date:In-Reply-To:References:From;
+	b=QoGAjztcnvI4TihLE4viP8aj1hnj2jfCiYs0X8k0Qwix5/mOQ+V4zo0sF+esPjJz9
+	 uwIsRgmFihacL3R09Q/8ML0iYDVHE93xYz1SswIdEYeDlClOVOwJfdrSxw+AfqgLbR
+	 1gGjQRs0gYSxeekB2c0AwUaKhSn7czIEItegKP+dBgHEHypssRNb+71PkLAWr79q7q
+	 +pYbk6NycIai3zX9uVq3m+v2w5xUDYscR6ftYo4wMHLcwzrabUpFo4pBcDUv93vfqY
+	 8V3aRXqnMVTicSqe6ZtMEgVm0nH/436EjMHUaUeEFM7YrBOmBHYTl7GlIaKUrgPFEU
+	 yxI6z5sQOAT3Q==
+Received: by aws-us-west-2-korg-bugzilla-1.web.codeaurora.org (Postfix, from userid 48)
+	id C9F6BC433E1; Sat, 25 Apr 2026 15:32:03 +0000 (UTC)
+From: bugzilla-daemon@kernel.org
+To: platform-driver-x86@vger.kernel.org
+Subject: [Bug 221383] ideapad_laptop: Fn hotkeys stop emitting after s2idle
+ resume on IdeaPad Slim 3   14ARP10 (Ryzen 7735HS)
+Date: Sat, 25 Apr 2026 15:32:03 +0000
+X-Bugzilla-Reason: None
+X-Bugzilla-Type: changed
+X-Bugzilla-Watch-Reason: AssignedTo drivers_platform_x86@kernel-bugs.osdl.org
+X-Bugzilla-Product: Drivers
+X-Bugzilla-Component: Platform_x86
+X-Bugzilla-Version: 2.5
+X-Bugzilla-Keywords: 
+X-Bugzilla-Severity: normal
+X-Bugzilla-Who: mario.limonciello@amd.com
+X-Bugzilla-Status: NEW
+X-Bugzilla-Resolution: 
+X-Bugzilla-Priority: P3
+X-Bugzilla-Assigned-To: drivers_platform_x86@kernel-bugs.osdl.org
+X-Bugzilla-Flags: 
+X-Bugzilla-Changed-Fields: attachments.created
+Message-ID: <bug-221383-215701-rL54ooMFqG@https.bugzilla.kernel.org/>
+In-Reply-To: <bug-221383-215701@https.bugzilla.kernel.org/>
+References: <bug-221383-215701@https.bugzilla.kernel.org/>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+X-Bugzilla-URL: https://bugzilla.kernel.org/
+Auto-Submitted: auto-generated
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [BUG] 36-second boot delay due to by
- acpi_gpio_handle_deferred_request_irqs on ASUS ROG Strix G16 (2025)
-Content-Language: en-US
-To: Armin Wolf <W_Armin@gmx.de>, Marco Scardovi <mscardovi95@gmail.com>,
- Mika Westerberg <mika.westerberg@linux.intel.com>,
- Hans de Goede <hansg@kernel.org>
-Cc: Francesco Lauritano <francesco.lauritano1@protonmail.com>,
- "linux-acpi@vger.kernel.org" <linux-acpi@vger.kernel.org>,
- "open list:GPIO ACPI SUPPORT" <linux-gpio@vger.kernel.org>,
- "platform-driver-x86@vger.kernel.org" <platform-driver-x86@vger.kernel.org>,
- "westeri@kernel.org" <westeri@kernel.org>,
- Benjamin Tissoires <bentiss@kernel.org>
-References: <e8ed4d4e-37e1-4577-bf80-62fcefbef7dc@kernel.org>
- <ReQS8sQSGy3UTuG6tyPvoOb8_037sC6A2yXsSFNuXY1PlTFtCcDHnjf8vufEsk8avBSIL46U0qE-ZjTJD1xsbVYZ6_d2-wlTOZ2NJ2coTsc=@protonmail.com>
- <20251218063954.GT2275908@black.igk.intel.com>
- <b57b44c3-ea96-4189-8b70-71bf4a80d29b@kernel.org>
- <20251218103831.GW2275908@black.igk.intel.com>
- <51f999d7-2064-47dc-8d9b-e262588bfbdb@gmail.com>
- <20260422090709.GB557136@black.igk.intel.com>
- <4e55e31e-a5e8-4098-8a7f-bb52476b882a@gmail.com>
- <20260422095558.GC557136@black.igk.intel.com>
- <5a36760d-5d1e-4eee-9006-3fed042aa2cd@gmail.com>
- <20260423044211.GD557136@black.igk.intel.com>
- <3d562963-9581-4e0f-b9a0-5f0fe28d2495@kernel.org>
- <f72a1da5-2cc1-4e08-9441-ea252062b4e5@gmail.com>
- <a2a187d9-363c-48fe-8301-6a199366c478@gmx.de>
-From: Mario Limonciello <superm1@kernel.org>
-In-Reply-To: <a2a187d9-363c-48fe-8301-6a199366c478@gmx.de>
 
-This is a multi-part message in MIME format.
---------------YnLCLDdpuLD0GWNeh9S5lhol
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
+https://bugzilla.kernel.org/show_bug.cgi?id=3D221383
 
-On 4/24/26 15:02, Armin Wolf wrote:
-> Am 23.04.26 um 19:46 schrieb Marco Scardovi:
-> 
->>
->> On 4/23/26 07:15, Mario Limonciello wrote:
->>> On 4/22/26 23:42, Mika Westerberg wrote:
->>>> Hi,
->>>>
->>>> On Wed, Apr 22, 2026 at 02:08:29PM +0200, Marco Scardovi wrote:
->>>>>>> Assuming all the variants suffer the same problem would it be ok 
->>>>>>> to use a
->>>>>>> wildcard for it?
->>>>>> Yeah, we could expand it to all "ROG Strix G16" I think:
->>>>>>
->>>>>> diff --git a/drivers/gpio/gpiolib-acpi-quirks.c b/drivers/gpio/ 
->>>>>> gpiolib-acpi-quirks.c
->>>>>> index a0116f004975..e3a6111854e8 100644
->>>>>> --- a/drivers/gpio/gpiolib-acpi-quirks.c
->>>>>> +++ b/drivers/gpio/gpiolib-acpi-quirks.c
->>>>>> @@ -392,6 +392,23 @@ static const struct dmi_system_id 
->>>>>> gpiolib_acpi_quirks[] __initconst = {
->>>>>>                .ignore_wake = "VEN_0488:00@355",
->>>>>>            },
->>>>>>        },
->>>>>> +    {
->>>>>> +        /*
->>>>>> +         * The ASUS ROG Strix G16 (2025) ACPI GPIO configuration
->>>>>> +         * causes acpi_gpio_handle_deferred_request_irqs() to
->>>>>> +         * stall for ~36 seconds during boot so ignore the two
->>>>>> +         * interrupts involved.
->>>>>> +         *
->>>>>> +         * Found in BIOS G614PP.307.
->>>>>> +         */
->>>>>> +        .matches = {
->>>>>> +            DMI_MATCH(DMI_SYS_VENDOR, "ASUSTeK COMPUTER INC."),
->>>>>> +            DMI_MATCH(DMI_PRODUCT_NAME, "ROG Strix G16"),
->>>>>> +        },
->>>>>> +        .driver_data = &(struct acpi_gpiolib_dmi_quirk) {
->>>>>> +            .ignore_interrupt = "AMDI0030:00@21,AMDI0030:00@24",
->>>>>> +        },
->>>>>> +    },
->>>>>>        {} /* Terminating entry */
->>>>>>    };
->>>>> As for now it seems working. I've reverted it on my kernel as I prefer
->>>>> remain as much as possible close to the CachyOS' one but hopefully 
->>>>> it will
->>>>> be implemented on 7.1, if someone propose the patch and it is 
->>>>> accepted. It
->>>>> would be amazing to see Asus more interested on Linux and more 
->>>>> strict with
->>>>> their BIOS but in the end I understand it's like asking for the moon.
->>>>
->>>> Okay thanks for checking. I guess this is what we have to live with 
->>>> for now
->>>> until someone finds a better way of dealing with these.
->>>>
->>>> @Francesco, would you like to submit a new version of the patch 
->>>> similar to
->>>> above or you want me to do that?
->>>
->>> Hans suggested that we might want to look at ripping out this edge 
->>> triggered events at boot earlier in the thread.
->>>
->>> https://lore.kernel.org/platform-driver- 
->>> x86/20260423044211.GD557136@black.igk.intel.com/T/ 
->>> #mdca882e6606d3a894ec7499d3b742d040933dbdb
->>>
->>> Hans - as you pointed out that the Surface lid state is the only real 
->>> issue left and you happen to have one do you think you could work up 
->>> some patches?
->>>
->> I see. Well, that makes totally sense 
-> 
-> Hi,
-> 
-> according to the Microsoft documentation (https://learn.microsoft.com/ 
-> en-us/windows-hardware/drivers/bringup/general-purpose-i-o--gpio-,
-> section "GPIO controllers and ActiveBoth interrupts"), triggering GPIO 
-> interrupts marked as ActiveBoth during initialization is
-> correct as long as the associated GPIO line is already "asserted" (aka 
-> logic level low). I think the problem is that we also trigger
-> edge-based GPIO interrupts _not_ marked as ActiveBoth.
-> 
-> Based on this i agree with Hans, except that we should continue you 
-> trigger ActiveBoth GPIO interrupts as long as the above
-> condition applies.
-> 
-> Thanks,
-> Armin Wolf
-> 
+--- Comment #38 from Mario Limonciello (AMD) (mario.limonciello@amd.com) ---
+Created attachment 309954
+  --> https://bugzilla.kernel.org/attachment.cgi?id=3D309954&action=3Dedit
+patch to force clear EC events on resume
 
-So maybe something like this (attached)?
+FWIW - I passed your logs and this bug through Claude + the kernel
+review-prompts skill (https://github.com/masoncl/review-prompts) with a loc=
+al
+kernel checkout and it at least agrees that this is primarily an EC FW timi=
+ng
+bug.
 
---------------YnLCLDdpuLD0GWNeh9S5lhol
-Content-Type: text/x-patch; charset=UTF-8;
- name="0001-gpiolib-acpi-Only-trigger-ActiveBoth-interrupts-on-b.patch"
-Content-Disposition: attachment;
- filename*0="0001-gpiolib-acpi-Only-trigger-ActiveBoth-interrupts-on-b.pa";
- filename*1="tch"
-Content-Transfer-Encoding: base64
+----
+  1. EC Interrupt Blocking: When acpi_ec_enter_noirq() is called during
+suspend, the EC driver switches to busy polling mode (ec->busy_polling =3D =
+true)=20=20
+  2. Critical Window: Between EC interrupt blocking and actual suspend entr=
+y,
+the EC firmware needs time to:
+    - Complete any in-flight transactions in polling mode=20=20=20=20=20=20=
+=20=20=20=20=20=20=20=20=20=20=20=20=20=20=20=20=20
+    - Flush internal state=20=20=20=20=20=20=20=20=20=20=20=20=20=20=20=20=
+=20=20=20=20=20=20=20=20=20=20=20=20=20=20=20=20=20=20=20=20=20=20=20=20=20=
+=20=20=20=20=20=20=20=20=20=20=20=20=20
+    - Save hotkey handler state=20=20=20=20=20=20=20=20=20=20=20=20=20=20=
+=20=20=20=20=20=20=20=20=20=20=20=20=20=20=20=20=20=20=20=20=20=20=20=20=20=
+=20=20=20=20=20=20=20=20=20=20
+    - Prepare for suspend=20=20=20=20=20=20=20=20=20=20=20=20=20=20=20=20=
+=20=20=20=20=20=20=20=20=20=20=20=20=20=20=20=20=20=20=20=20=20=20=20=20=20=
+=20=20=20=20=20=20=20=20=20=20=20=20=20=20
+  3. The Race:=20=20=20=20=20=20=20=20=20=20=20=20=20=20=20=20=20=20=20=20=
+=20=20=20=20=20=20=20=20=20=20=20=20=20=20=20=20=20=20=20=20=20=20=20=20=20=
+=20=20=20=20=20=20=20=20=20=20=20=20=20=20=20=20=20=20=20=20=20
+    - Without delay: EC interrupts blocked =E2=86=92 system suspends almost=
+ immediately
+=E2=86=92 EC firmware doesn't complete state save =E2=86=92 On resume, EC l=
+oses hotkey event
+state=20=20=20=20=20=20=20=20=20=20=20=20=20=20=20=20=20=20=20=20=20=20=20=
+=20=20=20=20=20=20=20=20=20=20=20=20=20=20=20=20=20=20=20=20=20=20=20=20=20=
+=20=20=20=20=20=20=20=20=20=20=20=20=20=20=20=20=20=20=20=20=20=20=20=20=20=
+=20=20
+    - With 2.5s delay: EC interrupts blocked =E2=86=92 2.5s in polling mode=
+ =E2=86=92 EC
+firmware completes state transitions =E2=86=92 system suspends =E2=86=92 On=
+ resume, EC restores
+hotkey state correctly=20=20=20=20=20=20=20=20=20=20=20=20=20=20=20=20=20=
+=20=20=20=20=20=20=20=20=20=20=20=20=20=20=20=20=20=20=20=20=20=20=20=20=20=
+=20=20=20=20=20=20=20=20=20=20=20=20=20=20=20=20
+  4. Why SCI_EVT differs:=20=20=20=20=20=20=20=20=20=20=20=20=20=20=20=20=
+=20=20=20=20=20=20=20=20=20=20=20=20=20=20=20=20=20=20=20=20=20=20=20=20=20=
+=20=20=20=20=20=20=20=20=20=20=20=20=20=20
+    - In the broken case, the EC firmware lost track of hotkey state during
+suspend because it was rushed=20=20=20=20=20=20=20=20=20=20=20=20=20=20=20=
+=20=20=20=20=20=20=20=20=20=20=20=20=20=20=20=20=20=20=20=20=20=20=20=20=20=
+=20=20=20=20=20=20=20=20=20=20=20
+    - In the working case, the EC had time to properly save state and resto=
+re
+it, so SCI_EVT=3D1 appears naturally on resume=20=20=20=20=20=20=20=20=20=
+=20=20=20=20=20=20=20=20=20=20=20=20=20=20=20=20=20=20=20=20=20=20=20=20=20=
+=20=20
+----
 
-RnJvbSBjOTcyYThmYTU3NGQwNDlhM2Q4ZmFjYTc2MTIxZDlkM2NiNThlZjQ4IE1vbiBTZXAg
-MTcgMDA6MDA6MDAgMjAwMQpGcm9tOiBNYXJpbyBMaW1vbmNpZWxsbyA8bWFyaW8ubGltb25j
-aWVsbG9AYW1kLmNvbT4KRGF0ZTogU2F0LCAyNSBBcHIgMjAyNiAxMDoxMTozMyAtMDUwMApT
-dWJqZWN0OiBbUEFUQ0hdIGdwaW9saWI6IGFjcGk6IE9ubHkgdHJpZ2dlciBBY3RpdmVCb3Ro
-IGludGVycnVwdHMgb24gYm9vdAoKQ29tbWl0IGNhODc2Yzc0ODNiNiAoImdwaW9saWItYWNw
-aTogbWFrZSBzdXJlIHdlIHRyaWdnZXIgZWRnZSBldmVudHMgYXQKbGVhc3Qgb25jZSBvbiBi
-b290IikgaW50cm9kdWNlZCBsb2dpYyB0byB0cmlnZ2VyIGVkZ2UtYmFzZWQgR1BJTwppbnRl
-cnJ1cHRzIGR1cmluZyBpbml0aWFsaXphdGlvbiB0byBlbnN1cmUgcHJvcGVyIGluaXRpYWwg
-c3RhdGUgc2V0dXAKd2hlbiBmaXJtd2FyZSBkb2Vzbid0IGluaXRpYWxpemUgaXQuCgpIb3dl
-dmVyLCBhY2NvcmRpbmcgdG8gdGhlIE1pY3Jvc29mdCBHUElPIGRvY3VtZW50YXRpb24sIHRy
-aWdnZXJpbmcgR1BJTwppbnRlcnJ1cHRzIGR1cmluZyBpbml0aWFsaXphdGlvbiBzaG91bGQg
-b25seSBoYXBwZW4gZm9yIGludGVycnVwdHMKbWFya2VkIGFzIEFjdGl2ZUJvdGggKGJvdGgg
-SVJRRl9UUklHR0VSX1JJU0lORyBhbmQgSVJRRl9UUklHR0VSX0ZBTExJTkcpCmFuZCBvbmx5
-IHdoZW4gdGhlIGFzc29jaWF0ZWQgR1BJTyBsaW5lIGlzIGFscmVhZHkgYXNzZXJ0ZWQgKGxv
-Z2ljIGxldmVsCmxvdykuCgpUaGUgY3VycmVudCBpbXBsZW1lbnRhdGlvbiBpbmNvcnJlY3Rs
-eSB0cmlnZ2VyczoKMS4gQW55IGVkZ2UtdHJpZ2dlcmVkIGludGVycnVwdCAoUklTSU5HLW9u
-bHkgb3IgRkFMTElORy1vbmx5KQoyLiBSSVNJTkcgaW50ZXJydXB0cyB3aGVuIHZhbHVlIGlz
-IGhpZ2ggYW5kIEZBTExJTkcgd2hlbiB2YWx1ZSBpcyBsb3cKClRoaXMgY2F1c2VzIHByb2Js
-ZW1zIGF0IGJvb3R1cCBmb3Igc2luZ2xlLWVkZ2UgaW50ZXJydXB0cyB0aGF0CmRvbid0IGZv
-bGxvdyB0aGUgQWN0aXZlQm90aCBwYXR0ZXJuLgoKRml4IHRoaXMgYnk6Ci0gT25seSB0cmln
-Z2VyaW5nIHdoZW4gQk9USCByaXNpbmcgYW5kIGZhbGxpbmcgZWRnZXMgYXJlIGNvbmZpZ3Vy
-ZWQKLSBPbmx5IHRyaWdnZXJpbmcgd2hlbiB0aGUgR1BJTyBsaW5lIGlzIGFzc2VydGVkICh2
-YWx1ZSA9PSAwKQoKRml4ZXM6IGNhODc2Yzc0ODNiNjkgKCJncGlvbGliLWFjcGk6IG1ha2Ug
-c3VyZSB3ZSB0cmlnZ2VyIGVkZ2UgZXZlbnRzIGF0IGxlYXN0IG9uY2Ugb24gYm9vdCIpCkxp
-bms6IGh0dHBzOi8vbGVhcm4ubWljcm9zb2Z0LmNvbS9lbi11cy93aW5kb3dzLWhhcmR3YXJl
-L2RyaXZlcnMvYnJpbmd1cC9nZW5lcmFsLXB1cnBvc2UtaS1vLS1ncGlvLQpTdWdnZXN0ZWQt
-Ynk6IEFybWluIFdvbGYgPFdfQXJtaW5AZ214LmRlPgpTaWduZWQtb2ZmLWJ5OiBNYXJpbyBM
-aW1vbmNpZWxsbyA8bWFyaW8ubGltb25jaWVsbG9AYW1kLmNvbT4KLS0tCiBkcml2ZXJzL2dw
-aW8vZ3Bpb2xpYi1hY3BpLWNvcmUuYyB8IDE5ICsrKysrKysrKysrKysrKy0tLS0KIDEgZmls
-ZSBjaGFuZ2VkLCAxNSBpbnNlcnRpb25zKCspLCA0IGRlbGV0aW9ucygtKQoKZGlmZiAtLWdp
-dCBhL2RyaXZlcnMvZ3Bpby9ncGlvbGliLWFjcGktY29yZS5jIGIvZHJpdmVycy9ncGlvL2dw
-aW9saWItYWNwaS1jb3JlLmMKaW5kZXggMDlmODYwMjAwYTA1OS4uZWI4YTQwY2ZiN2E5OCAx
-MDA2NDQKLS0tIGEvZHJpdmVycy9ncGlvL2dwaW9saWItYWNwaS1jb3JlLmMKKysrIGIvZHJp
-dmVycy9ncGlvL2dwaW9saWItYWNwaS1jb3JlLmMKQEAgLTIzMywxMiArMjMzLDIzIEBAIHN0
-YXRpYyB2b2lkIGFjcGlfZ3Bpb2NoaXBfcmVxdWVzdF9pcnEoc3RydWN0IGFjcGlfZ3Bpb19j
-aGlwICphY3BpX2dwaW8sCiAKIAlldmVudC0+aXJxX3JlcXVlc3RlZCA9IHRydWU7CiAKLQkv
-KiBNYWtlIHN1cmUgd2UgdHJpZ2dlciB0aGUgaW5pdGlhbCBzdGF0ZSBvZiBlZGdlLXRyaWdn
-ZXJlZCBJUlFzICovCisJLyoKKwkgKiBNYWtlIHN1cmUgd2UgdHJpZ2dlciB0aGUgaW5pdGlh
-bCBzdGF0ZSBvZiBBY3RpdmVCb3RoIElSUXMuCisJICoKKwkgKiBBY2NvcmRpbmcgdG8gdGhl
-IE1pY3Jvc29mdCBHUElPIGRvY3VtZW50YXRpb24sIHRyaWdnZXJpbmcgR1BJTworCSAqIGlu
-dGVycnVwdHMgbWFya2VkIGFzIEFjdGl2ZUJvdGggZHVyaW5nIGluaXRpYWxpemF0aW9uIGlz
-IGNvcnJlY3QKKwkgKiBhcyBsb25nIGFzIHRoZSBhc3NvY2lhdGVkIEdQSU8gbGluZSBpcyBh
-bHJlYWR5ICJhc3NlcnRlZCIKKwkgKiAobG9naWMgbGV2ZWwgbG93KS4gV2Ugc2hvdWxkIG5v
-dCB0cmlnZ2VyIGVkZ2UtYmFzZWQgR1BJTworCSAqIGludGVycnVwdHMgbm90IG1hcmtlZCBh
-cyBBY3RpdmVCb3RoLgorCSAqCisJICogU2VlOiBodHRwczovL2xlYXJuLm1pY3Jvc29mdC5j
-b20vZW4tdXMvd2luZG93cy1oYXJkd2FyZS9kcml2ZXJzL2JyaW5ndXAvZ2VuZXJhbC1wdXJw
-b3NlLWktby0tZ3Bpby0KKwkgKiBTZWN0aW9uOiAiR1BJTyBjb250cm9sbGVycyBhbmQgQWN0
-aXZlQm90aCBpbnRlcnJ1cHRzIgorCSAqLwogCWlmIChhY3BpX2dwaW9fbmVlZF9ydW5fZWRn
-ZV9ldmVudHNfb25fYm9vdCgpICYmCi0JICAgIChldmVudC0+aXJxZmxhZ3MgJiAoSVJRRl9U
-UklHR0VSX1JJU0lORyB8IElSUUZfVFJJR0dFUl9GQUxMSU5HKSkpIHsKKwkgICAgKChldmVu
-dC0+aXJxZmxhZ3MgJiAoSVJRRl9UUklHR0VSX1JJU0lORyB8IElSUUZfVFJJR0dFUl9GQUxM
-SU5HKSkgPT0KKwkgICAgIChJUlFGX1RSSUdHRVJfUklTSU5HIHwgSVJRRl9UUklHR0VSX0ZB
-TExJTkcpKSkgewogCQl2YWx1ZSA9IGdwaW9kX2dldF9yYXdfdmFsdWVfY2Fuc2xlZXAoZXZl
-bnQtPmRlc2MpOwotCQlpZiAoKChldmVudC0+aXJxZmxhZ3MgJiBJUlFGX1RSSUdHRVJfUklT
-SU5HKSAmJiB2YWx1ZSA9PSAxKSB8fAotCQkgICAgKChldmVudC0+aXJxZmxhZ3MgJiBJUlFG
-X1RSSUdHRVJfRkFMTElORykgJiYgdmFsdWUgPT0gMCkpCisJCWlmICh2YWx1ZSA9PSAwKQog
-CQkJZXZlbnQtPmhhbmRsZXIoZXZlbnQtPmlycSwgZXZlbnQpOwogCX0KIH0KLS0gCjIuNTMu
-MAoK
+But - that being said I pushed the LLM a little bit more and wonder if maybe
+draining the events on resume would help.
 
---------------YnLCLDdpuLD0GWNeh9S5lhol--
+--=20
+You may reply to this email to add a comment.
+
+You are receiving this mail because:
+You are watching the assignee of the bug.=
