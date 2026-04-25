@@ -1,136 +1,125 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-dl1-f47.google.com (mail-dl1-f47.google.com [74.125.82.47])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 464B1347524
-	for <platform-driver-x86@vger.kernel.org>; Sat, 25 Apr 2026 15:32:04 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EFABA8632B
+	for <platform-driver-x86@vger.kernel.org>; Sat, 25 Apr 2026 16:31:50 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=74.125.82.47
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1777131124; cv=none; b=n2QonmjJmiBbrxoD4Xo/obbJkPYWOXP3M3/3T3jR5IsmIamWSJVL7eP0SaaGX2UnDY2PyUU1Mzp5spZ5Hg+kFPCctHBZZn7NVpzGIjqAj1xmr8PANxii6wSGoFzPVcLX0DrFex06zWev2PD2gIb8Lq9fsSMVKpfFNx1Q58Ge6vY=
+	t=1777134712; cv=none; b=ncUlPy4zgLEOK+1wM0QmGHqTk0MKNCf7Qi40q7zHwnsycEyUzvdJTl/Ya8unZ0NQWzp2ChL6ACqFNQRo1Vv21rlsTKEvfQswM7OWHxO96Zp318bR0pyDkyu91iLe4JffORnnwDuXvWV/JuIvsgHsI/rBCs3D9zplOgzzuWSmdHs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1777131124; c=relaxed/simple;
-	bh=wS8Sufr8gc2OuWeUeZhmxGAn1A15XjCDASvn8e1/nG0=;
-	h=From:To:Subject:Date:Message-ID:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=bKfQe3oqXdFA+VQfgI92FezOQOIyyJLPP4XmsGue3g8We3YIEx194gCDo5VNcSuukEHgyJ3xOa9ovxUw7Fj/C6XewdMm/cIRjuvkMMZBxqYQXuVO660l4tqjwSfmaa8GIwKHxm6f7/BZxHSQtEqs+fGRaEx8shM0xKQXMZbPDGg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=QoGAjztc; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1777134712; c=relaxed/simple;
+	bh=mv3H+AyqqYV4F8o/lHb6gla8J73a/RvMxboQCjj13C8=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=T9fJbWMgNlEduC/g7Xw+vOqOoPP2MgPGYDq8gBR0W8BOvq5jTfGeJKwukZCcMi2/Ly4f6e6adf/aKKv29psm2z10nqpLUPaKHWZR75ADB7E4IdyXqPEPOGBAlyazSM1tyfVVDihyeGOpZ2fWIAm6rxC1l3q906phtYr+6YQRbKs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=rxhRMsIl; arc=none smtp.client-ip=74.125.82.47
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="QoGAjztc"
-Received: by smtp.kernel.org (Postfix) with ESMTPS id DDE1FC2BCB5
-	for <platform-driver-x86@vger.kernel.org>; Sat, 25 Apr 2026 15:32:03 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1777131123;
-	bh=wS8Sufr8gc2OuWeUeZhmxGAn1A15XjCDASvn8e1/nG0=;
-	h=From:To:Subject:Date:In-Reply-To:References:From;
-	b=QoGAjztcnvI4TihLE4viP8aj1hnj2jfCiYs0X8k0Qwix5/mOQ+V4zo0sF+esPjJz9
-	 uwIsRgmFihacL3R09Q/8ML0iYDVHE93xYz1SswIdEYeDlClOVOwJfdrSxw+AfqgLbR
-	 1gGjQRs0gYSxeekB2c0AwUaKhSn7czIEItegKP+dBgHEHypssRNb+71PkLAWr79q7q
-	 +pYbk6NycIai3zX9uVq3m+v2w5xUDYscR6ftYo4wMHLcwzrabUpFo4pBcDUv93vfqY
-	 8V3aRXqnMVTicSqe6ZtMEgVm0nH/436EjMHUaUeEFM7YrBOmBHYTl7GlIaKUrgPFEU
-	 yxI6z5sQOAT3Q==
-Received: by aws-us-west-2-korg-bugzilla-1.web.codeaurora.org (Postfix, from userid 48)
-	id C9F6BC433E1; Sat, 25 Apr 2026 15:32:03 +0000 (UTC)
-From: bugzilla-daemon@kernel.org
-To: platform-driver-x86@vger.kernel.org
-Subject: [Bug 221383] ideapad_laptop: Fn hotkeys stop emitting after s2idle
- resume on IdeaPad Slim 3   14ARP10 (Ryzen 7735HS)
-Date: Sat, 25 Apr 2026 15:32:03 +0000
-X-Bugzilla-Reason: None
-X-Bugzilla-Type: changed
-X-Bugzilla-Watch-Reason: AssignedTo drivers_platform_x86@kernel-bugs.osdl.org
-X-Bugzilla-Product: Drivers
-X-Bugzilla-Component: Platform_x86
-X-Bugzilla-Version: 2.5
-X-Bugzilla-Keywords: 
-X-Bugzilla-Severity: normal
-X-Bugzilla-Who: mario.limonciello@amd.com
-X-Bugzilla-Status: NEW
-X-Bugzilla-Resolution: 
-X-Bugzilla-Priority: P3
-X-Bugzilla-Assigned-To: drivers_platform_x86@kernel-bugs.osdl.org
-X-Bugzilla-Flags: 
-X-Bugzilla-Changed-Fields: attachments.created
-Message-ID: <bug-221383-215701-rL54ooMFqG@https.bugzilla.kernel.org/>
-In-Reply-To: <bug-221383-215701@https.bugzilla.kernel.org/>
-References: <bug-221383-215701@https.bugzilla.kernel.org/>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-X-Bugzilla-URL: https://bugzilla.kernel.org/
-Auto-Submitted: auto-generated
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="rxhRMsIl"
+Received: by mail-dl1-f47.google.com with SMTP id a92af1059eb24-12c45281a06so11587974c88.1
+        for <platform-driver-x86@vger.kernel.org>; Sat, 25 Apr 2026 09:31:50 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20251104; t=1777134710; x=1777739510; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=2etDo6S5QLxsftodeIDSQ1hpnhwMdeQI8Kh/liV+PG4=;
+        b=rxhRMsIlGQVonxvhnptD4n7yeOh6q/xI4giDvlNWjRqtwNjoPPMxpMpXFRnPROcLcg
+         o9QRsqa2Q32ZE69Pt2W11sk6FmcDnSM0waIGv0+tOGRfu9nVCHORt9bOQ6mZniHX3HhI
+         7lwg3v/J6L75l7D5mxmnAfobWihY7LuGEkrXgMYuAphlM+q+y/p5dem+XgpXEwSWenJH
+         ccWfBZhKTEsAkCduh2LmL9h9FbnOwvVRHj2mHtD7OaCrnalbk6s8o410wYG0mgyjgs3k
+         pvoVeq0QlYwP10YAtDQy3lonbM5c20d2KbMPHGH4y6aOWSjqyiSFuX6ThpL9IdvSnLar
+         RpkQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20251104; t=1777134710; x=1777739510;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:x-gm-gg:x-gm-message-state:from
+         :to:cc:subject:date:message-id:reply-to;
+        bh=2etDo6S5QLxsftodeIDSQ1hpnhwMdeQI8Kh/liV+PG4=;
+        b=CCLBSM3FLxutSEAD8BxwYioeJ2Rq7ItfF5V1j23USt73hfmVFHm1rRQ4ms/gK7mwgP
+         BMAfYCuiIT7dCabY9OuF1XlJUShYwmUFGD62hn3UT8gP2j528WAYxQ6VStrxEAbIRR4R
+         2/qMgDXVNJup4Yvv8aSqXvtxDuD53mOop7enebl8VqHJjg37kujfwM34EG2QXMifndMj
+         SqRFLoZeYmEhwpVVnr5KstQRwLG2SFjAe8joCAXUUnmm7IuvEnfvfmchvDvQ4iL9UxBJ
+         uswcO84K2+k4U8FHOpGMh3xULQmC7kZNqqsdPoxG7lxD4JVQbG6AWMEKZm2gx6/uf2jD
+         /TkQ==
+X-Forwarded-Encrypted: i=1; AFNElJ8WEYjvvGSYJEGjZPUrue2ADaJcNl5cj6yuPWAc7vgvAZU4RRcKItGU49LiCj9Hk6+n6PL8mZ7Y8OUHgLdpEReVALtH@vger.kernel.org
+X-Gm-Message-State: AOJu0Yy9p07+cKzunWGrmsIDAyHohoHRrg5HizDEEDQrbpSS7WwTwrJX
+	TBewCB4wLgyaElasjmG+lUsxoTHDbrA45bIvbQVnhGS2p9pt2C3DyIbO
+X-Gm-Gg: AeBDievBlwvlr+2RmBry0P334MISyazugIPX6AfWcltKc1dLhFimCzQ7lEgaRBaJ2Bj
+	QBqmOnOg/InrG7vDCADjvV/iUgQmOSHN9+IWRDx8Z3U2qXy3ZNJdg05DlgEpCSYCuMno6HhpPlu
+	Ac0QYzKq4wt2iDbrq/0UWLViqHcv/haeQ3NsDZOMb95xNA8h+k6XAomuJQUguKF/syrCKirfDEJ
+	89CRl9awLnpMa5zqSqgGHjQuiRGoEqACITsoY9y8w0BUONRhtj3geDaXqnCRPdUGAVX6GuDvvP8
+	vXBLxUxVOkn8543Xg5RosVZRbgAlAVZBUQThiub8z35XrSRAWi4Xu6B9JgzuxmZwQYVCl6REyzw
+	gs4T1g6kp24cilPTkAPMUxOtoWccg7vh59dk657wMZGKH9JjHlQH/nkDxZAmmUDEICSPLYESOPh
+	nYRb3GLQGmF5VuMJ06N8DCgNEi0oKyT61W/g==
+X-Received: by 2002:a05:7300:d70e:b0:2be:1f58:32a3 with SMTP id 5a478bee46e88-2e4878d65b0mr19573764eec.29.1777134709969;
+        Sat, 25 Apr 2026 09:31:49 -0700 (PDT)
+Received: from TC-LAPTOP.lan ([66.143.226.29])
+        by smtp.gmail.com with ESMTPSA id 5a478bee46e88-2e53a4a8bd2sm35922547eec.11.2026.04.25.09.31.48
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sat, 25 Apr 2026 09:31:49 -0700 (PDT)
+From: Thierry Chatard <tchatard@gmail.com>
+To: linux-kernel@vger.kernel.org
+Cc: hansg@kernel.org,
+	lee@kernel.org,
+	platform-driver-x86@vger.kernel.org,
+	ilpo.jarvinen@linux.intel.com,
+	djrscally@gmail.com,
+	linux-media@vger.kernel.org,
+	mchehab@kernel.org,
+	sakari.ailus@linux.intel.com,
+	jacopo.mondi@ideasonboard.com,
+	nicholas@rothemail.net,
+	Thierry Chatard <tchatard@gmail.com>
+Subject: [PATCH v6 0/5] Enable cameras on Dell Latitude 5285 2-in-1
+Date: Sat, 25 Apr 2026 09:31:40 -0700
+Message-ID: <20260425163145.8474-1-tchatard@gmail.com>
+X-Mailer: git-send-email 2.51.0
+In-Reply-To: <aehzn85IsUI-bcKW@kekkonen.localdomain>
+References: <aehzn85IsUI-bcKW@kekkonen.localdomain>
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
 
-https://bugzilla.kernel.org/show_bug.cgi?id=3D221383
+This series enables the front (OV5670/INT3479) and rear (OV8858/INT3477)
+cameras on the Dell Latitude 5285 2-in-1 under Linux.
 
---- Comment #38 from Mario Limonciello (AMD) (mario.limonciello@amd.com) ---
-Created attachment 309954
-  --> https://bugzilla.kernel.org/attachment.cgi?id=3D309954&action=3Dedit
-patch to force clear EC events on resume
+Changes since v5:
+- Patch 2: Use a local 'tables' pointer before the gpiod_add/remove_
+  lookup_table() loops so that neither call ends with a bare '(' (fixes
+  checkpatch CHECK reported by the Media CI robot).
+  Also restore the missing VSIO->avdd consumer for INT3479 (OV5670):
+  the v4 refactor dropped this entry, leaving OV5670 without its analog
+  supply and causing -EIO from ov5670_identify_module().
 
-FWIW - I passed your logs and this bug through Claude + the kernel
-review-prompts skill (https://github.com/masoncl/review-prompts) with a loc=
-al
-kernel checkout and it at least agrees that this is primarily an EC FW timi=
-ng
-bug.
+Changes since v4 (addressing feedback from Sakari Ailus):
+- Patch 1: Drop the data == &spt_i2c_info guard from the probe condition;
+  the HID (INT3446) + DMI check is already precise enough.
+- Patch 2: Revert n_consumers back to int (unsigned int broke the
+  if (n_consumers < 0) error check on skl_int3472_fill_clk_pdata());
+  restructure probe so ChromeOS and error cases return early from the
+  switch and the Windows path follows as straight-line code after it.
+- Patch 3: Correct the VIO description in the commit message and code
+  comment; drop the inaccurate "no enable register" claim and instead
+  document why VIO is kept always_on (voltage must match VSIO, no direct
+  consumers).
+- Patch 5: Drop the paragraph explaining the VSIO->dovdd mapping from
+  the commit message (implementation detail belonging in patch 3);
+  add an explanation for the dvdd/dovdd reorder in supply_names (core
+  power stable before the I2C passthrough opens).
+- Patch 4: Unchanged.
 
-----
-  1. EC Interrupt Blocking: When acpi_ec_enter_noirq() is called during
-suspend, the EC driver switches to busy polling mode (ec->busy_polling =3D =
-true)=20=20
-  2. Critical Window: Between EC interrupt blocking and actual suspend entr=
-y,
-the EC firmware needs time to:
-    - Complete any in-flight transactions in polling mode=20=20=20=20=20=20=
-=20=20=20=20=20=20=20=20=20=20=20=20=20=20=20=20=20
-    - Flush internal state=20=20=20=20=20=20=20=20=20=20=20=20=20=20=20=20=
-=20=20=20=20=20=20=20=20=20=20=20=20=20=20=20=20=20=20=20=20=20=20=20=20=20=
-=20=20=20=20=20=20=20=20=20=20=20=20=20
-    - Save hotkey handler state=20=20=20=20=20=20=20=20=20=20=20=20=20=20=
-=20=20=20=20=20=20=20=20=20=20=20=20=20=20=20=20=20=20=20=20=20=20=20=20=20=
-=20=20=20=20=20=20=20=20=20=20
-    - Prepare for suspend=20=20=20=20=20=20=20=20=20=20=20=20=20=20=20=20=
-=20=20=20=20=20=20=20=20=20=20=20=20=20=20=20=20=20=20=20=20=20=20=20=20=20=
-=20=20=20=20=20=20=20=20=20=20=20=20=20=20
-  3. The Race:=20=20=20=20=20=20=20=20=20=20=20=20=20=20=20=20=20=20=20=20=
-=20=20=20=20=20=20=20=20=20=20=20=20=20=20=20=20=20=20=20=20=20=20=20=20=20=
-=20=20=20=20=20=20=20=20=20=20=20=20=20=20=20=20=20=20=20=20=20
-    - Without delay: EC interrupts blocked =E2=86=92 system suspends almost=
- immediately
-=E2=86=92 EC firmware doesn't complete state save =E2=86=92 On resume, EC l=
-oses hotkey event
-state=20=20=20=20=20=20=20=20=20=20=20=20=20=20=20=20=20=20=20=20=20=20=20=
-=20=20=20=20=20=20=20=20=20=20=20=20=20=20=20=20=20=20=20=20=20=20=20=20=20=
-=20=20=20=20=20=20=20=20=20=20=20=20=20=20=20=20=20=20=20=20=20=20=20=20=20=
-=20=20
-    - With 2.5s delay: EC interrupts blocked =E2=86=92 2.5s in polling mode=
- =E2=86=92 EC
-firmware completes state transitions =E2=86=92 system suspends =E2=86=92 On=
- resume, EC restores
-hotkey state correctly=20=20=20=20=20=20=20=20=20=20=20=20=20=20=20=20=20=
-=20=20=20=20=20=20=20=20=20=20=20=20=20=20=20=20=20=20=20=20=20=20=20=20=20=
-=20=20=20=20=20=20=20=20=20=20=20=20=20=20=20=20
-  4. Why SCI_EVT differs:=20=20=20=20=20=20=20=20=20=20=20=20=20=20=20=20=
-=20=20=20=20=20=20=20=20=20=20=20=20=20=20=20=20=20=20=20=20=20=20=20=20=20=
-=20=20=20=20=20=20=20=20=20=20=20=20=20=20
-    - In the broken case, the EC firmware lost track of hotkey state during
-suspend because it was rushed=20=20=20=20=20=20=20=20=20=20=20=20=20=20=20=
-=20=20=20=20=20=20=20=20=20=20=20=20=20=20=20=20=20=20=20=20=20=20=20=20=20=
-=20=20=20=20=20=20=20=20=20=20=20
-    - In the working case, the EC had time to properly save state and resto=
-re
-it, so SCI_EVT=3D1 appears naturally on resume=20=20=20=20=20=20=20=20=20=
-=20=20=20=20=20=20=20=20=20=20=20=20=20=20=20=20=20=20=20=20=20=20=20=20=20=
-=20=20
-----
+Tested on Ubuntu 25.10, kernel 6.17.0-22-generic.  Both cameras working
+in Zoom, Chrome, and GNOME Camera via PipeWire.
 
-But - that being said I pushed the LLM a little bit more and wonder if maybe
-draining the events on resume would help.
+Thierry Chatard (5):
+  platform/x86: intel_lpss: add resource conflict quirk for Dell Latitude 5285
+  platform/x86: int3472: tps68470: fix clock consumer registration for Dell Latitude 5285
+  platform/x86: int3472: tps68470: add board data for Dell Latitude 5285
+  media: ipu-bridge: add sensor configuration for OV8858 (INT3477)
+  media: ov8858: add ACPI device ID INT3477
 
---=20
-You may reply to this email to add a comment.
-
-You are receiving this mail because:
-You are watching the assignee of the bug.=
