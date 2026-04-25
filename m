@@ -1,100 +1,142 @@
-Received: from gz.d.sender-sib.com (gz.d.sender-sib.com [77.32.148.26])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from fout-b4-smtp.messagingengine.com (fout-b4-smtp.messagingengine.com [202.12.124.147])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 617A435D615
-	for <platform-driver-x86@vger.kernel.org>; Sat, 25 Apr 2026 11:31:09 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=77.32.148.26
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EECB031D366;
+	Sat, 25 Apr 2026 12:49:31 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=202.12.124.147
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1777116672; cv=none; b=VVZZQL0qRgvabCJMZAeu3S3phGhLlvbfn6cKqNmYZDZ6r/gpzhzH8X3BuQsa/L9QuXVJyUIQv99R0t2FrKZtcz4BvA1dCSDxKU4V5aMcpV4glQybVxlTkvsevdheRHm/IHQvO6BGT3Jx/fMsUB+67pIIRoKQ5Mepa2MUfuvjH/E=
+	t=1777121374; cv=none; b=sE7glR+P/pY4lmPcOQTGy0vNN2WLa2vOrXvtz2zAGfsRtt0nLZOfde94/4LRcM72OBkyvr3A9gDrocTzQ8+jXPth0z4wvuJyvfzNxnz5z//aVtiFLlNHUdWO6ItRcSxdVjLeP50dHThJ7D/z2IpQlN9TTXqoKn8MEb7NsftwV3Q=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1777116672; c=relaxed/simple;
-	bh=Ql2A8yFn+4ufdzeFIw64rWNupDI/jRZkOBoo19GJ4fI=;
-	h=Subject:Cc:Message-Id:From:To:Date:Mime-Version; b=S6JZzBOLgIWNvW+DbEEKWWtn2eE2OzQ1oKU9Vp9sRjSVETU+yYNyeBdiSmFUGfIoSAKYeA1MM3hl9Tby9PDTgVa2LfX5tO9TCPhGXx8/racTgL1MGvi0/dRKQ795oGfJjiJUiY69gZUuEL00W+1qF+3H01uGlJFWmHjTYONftl4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=unknownbbqr.xyz; spf=pass smtp.mailfrom=gz.d.sender-sib.com; dkim=pass (2048-bit key) header.d=unknownbbqr.xyz header.i=@unknownbbqr.xyz header.b=Gfmtkvae; arc=none smtp.client-ip=77.32.148.26
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=unknownbbqr.xyz
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gz.d.sender-sib.com
+	s=arc-20240116; t=1777121374; c=relaxed/simple;
+	bh=94HC/f6U316xi06G3glSjwpWPfz9/KWlmu7fgC+7HoQ=;
+	h=MIME-Version:Date:From:To:Cc:Message-Id:In-Reply-To:References:
+	 Subject:Content-Type; b=MhHuUDt30ye5y0WJui5OuERt+t/6GTN8ngmTflOARMCAd+ka9lLV96Ys7jZ0WrHbkV2JsiwXq2rY/CAq8iAd1DaqdQBIO7ZXFXU+W6/E5rV5SCQcCfeF8fI4/9EJaM9S6rwFg2dcDymlQscjZXN/D+XgcvymfKIcilHXGc8dymM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=squebb.ca; spf=pass smtp.mailfrom=squebb.ca; dkim=pass (2048-bit key) header.d=squebb.ca header.i=@squebb.ca header.b=DvWUeme/; dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b=mllZdHsb; arc=none smtp.client-ip=202.12.124.147
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=squebb.ca
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=squebb.ca
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=unknownbbqr.xyz header.i=@unknownbbqr.xyz header.b="Gfmtkvae"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=unknownbbqr.xyz;
- q=dns/txt; s=brevo1; bh=tjpiqEV3lHntAue4V3umDyply7Iht+6lSvFDgIM1nrA=;
- h=from:subject:date:to:cc:mime-version:content-transfer-encoding:list-unsubscribe:x-csa-complaints:list-unsubscribe-post:message-id:x-sib-id:feedback-id;
-        b=Gfmtkvae91hyvxmuqnVaS27zb/wciFxJvjOqU9yrPnqioOitluV+SajBtFaUxpS4EWx+Yy61HWeZ
-        yEolP6IWenqAVpBJoRsuwz+GKvp+9UP4SPUvaMzDMqVbyDDU3SMINbNzY2XPMR9QteXDrawUiP5s
-        GWqBtgZ2Bhzm4G8NgksiKTcUrqSLbwn7kW9nZRpqcXx5FDXPsblqUcVVlEvtV9129yiVIGBnu0eX
-        +tqMSo9nN4fbalPKpBAjC0xE8SATyFZBkDbzQO/vVXLKpPN0rKNDqw4w9I5bqMDzvNParIXvsPOh
-        07ScTdfnvja/4qrmbU594JgObcLEPVLXJoXmdQ==
-Subject: [PATCH v3] tools/power/x86/intel-speed-select: Harden daemon pidfile open
-X-sib-id: HPyif34T-q_I8gQ7xN06Cka1wozRQYOxEO9AoJKNheO_D8RBVtj4k330VrVr3P71Na5NUbdjD921VV1tcq6ALIq1xLjjEeep4H2aRdBz-GJewDk0C8GhIxcbiSxB7T6I9lDNhK2F3xvUfubR6E_3vThTebbT80PRtFPo-KT0zzKHXWh8qnmb5pSnwtoFgWwDhZk
-Cc: <platform-driver-x86@vger.kernel.org>,  <linux-kernel@vger.kernel.org>,  "Ali Ahmet MEMIS" <dev@unknownbbqr.xyz>
-Message-Id: <2e724c2a-40e9-4f09-9653-1ae28ff6877a@smtp-relay.sendinblue.com>
-List-Unsubscribe-Post: List-Unsubscribe=One-Click
-X-CSA-Complaints: csa-complaints@eco.de
-Origin-messageId: <20260425113057.178-1-dev@unknownbbqr.xyz>
-Feedback-ID: 77.32.148.26:10473219_-1:10473219:Sendinblue
-From: "unknownbbqrx" <dev@unknownbbqr.xyz>
-X-Mailin-EID: NDQzNzMzMzgyfnBsYXRmb3JtLWRyaXZlci14ODZAdmdlci5rZXJuZWwub3JnfjwyMDI2MDQyNTExMzA1Ny4xNzgtMS1kZXZAdW5rbm93bmJicXIueHl6Pn5nei5kLnNlbmRlci1zaWIuY29t
-To: <srinivas.pandruvada@linux.intel.com>
-Date: Sat, 25 Apr 2026 14:30:57 +0300
-X-Mailer: git-send-email 2.53.0
+	dkim=pass (2048-bit key) header.d=squebb.ca header.i=@squebb.ca header.b="DvWUeme/";
+	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="mllZdHsb"
+Received: from phl-compute-02.internal (phl-compute-02.internal [10.202.2.42])
+	by mailfout.stl.internal (Postfix) with ESMTP id 3850D1D00230;
+	Sat, 25 Apr 2026 08:49:30 -0400 (EDT)
+Received: from phl-imap-08 ([10.202.2.84])
+  by phl-compute-02.internal (MEProxy); Sat, 25 Apr 2026 08:49:30 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=squebb.ca; h=cc
+	:cc:content-transfer-encoding:content-type:content-type:date
+	:date:from:from:in-reply-to:in-reply-to:message-id:mime-version
+	:references:reply-to:subject:subject:to:to; s=fm3; t=1777121369;
+	 x=1777207769; bh=M4RnOaLU50xBlX6J5hw4kk3RMDaNjq/AHLUOvjplnhU=; b=
+	DvWUeme/ZkEkvxbX+ueHWZc0HMfGYZsdlNpMW4NPNSiQsW+vUKpsKolOLn7JhdKV
+	9lCOhd3w6F+4UsoYsCBju32zYTgioss/T2g9WWHmsNUkyUb/uREtnfAmt52eSTQD
+	P5cVj44LwhdCy3xmvfrlgWktXMyPxIffci7QHZaA1kXxLjpkYRms3t4afG8wdLyw
+	Wcbyq/zt0g76VNmEg8FZVwfDsFqxFhyUMcCR6A+1qoxPOtAYd2xqqcuZaGs10XC2
+	lxexG12ccjKJkDiwv6W3kM9nllBFaZOGR4jfEaWD0wsPKcc2dbhsep7srhmFZtvi
+	1k9bWblEtqwM3uEQS3Jd+g==
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
+	messagingengine.com; h=cc:cc:content-transfer-encoding
+	:content-type:content-type:date:date:feedback-id:feedback-id
+	:from:from:in-reply-to:in-reply-to:message-id:mime-version
+	:references:reply-to:subject:subject:to:to:x-me-proxy
+	:x-me-sender:x-me-sender:x-sasl-enc; s=fm2; t=1777121369; x=
+	1777207769; bh=M4RnOaLU50xBlX6J5hw4kk3RMDaNjq/AHLUOvjplnhU=; b=m
+	llZdHsbES8ql585Ya1aMIcNKiJLdgwbTjr7zNraWysIZinzx7gLYpsMnLoewThL1
+	4i0axO69FNkVtbZgqL1qziBMtAW438CtsnqnprEZXEAXUyzgtLkodAbPJUjKWVva
+	scFGsshdp8ONU8OE28lcrBUrP0TsZTfwC0dKVVEAM9+n8ZvZt6jbVSqd4I8K6pC5
+	9ylt42nFL78QOP9AiNdc75ufKaRzN/CYg1V1QIjnBjX3nabGowe5TNGE8gvG5rK1
+	QB/X5PzksAJnPlXxTF7WwlKxK749hjPokhGwbm61zXu2iuhfketT/TI1fclXn74w
+	T+qQYItKk93rXxV+ERqXA==
+X-ME-Sender: <xms:WLjsafx3c2q7yRV4OBUFq0qlnVnSaCsl1XosDy1p734CLJW7W_509A>
+    <xme:WLjsaSFS1RDLWgckGz0CC_dfj7f0nYC-BZN7QUszR1j0s2i57_Wg1yuPt09lu8kV-
+    K4Z37YbwDMXdNyC2efwq3X8kKH8GM5cfUIZQYvMwLAHz8H5piTC2A>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeefhedrtddtgdejvdelhecutefuodetggdotefrod
+    ftvfcurfhrohhfihhlvgemucfhrghsthforghilhdpuffrtefokffrpgfnqfghnecuuegr
+    ihhlohhuthemuceftddtnecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenucfjug
+    hrpefoggffhffvvefkjghfufgtgfesthejredtredttdenucfhrhhomhepfdforghrkhcu
+    rfgvrghrshhonhdfuceomhhpvggrrhhsohhnqdhlvghnohhvohesshhquhgvsggsrdgtrg
+    eqnecuggftrfgrthhtvghrnheptdffvefgtefhveetuddvfeelveektdduvdelgfehgfei
+    keffjeetjeevffektdfhnecuffhomhgrihhnpehkvghrnhgvlhdrohhrghenucevlhhush
+    htvghrufhiiigvpedtnecurfgrrhgrmhepmhgrihhlfhhrohhmpehmphgvrghrshhonhdq
+    lhgvnhhovhhosehsqhhuvggssgdrtggrpdhnsggprhgtphhtthhopeekpdhmohguvgepsh
+    hmthhpohhuthdprhgtphhtthhopegvughurghrughosegvughurghrughovhgrshgtohhn
+    tggvlhhoshdrtghomhdprhgtphhtthhopeguvghrvghkjhhohhhnrdgtlhgrrhhksehgmh
+    grihhlrdgtohhmpdhrtghpthhtohephhhmhheshhhmhhdrvghnghdrsghrpdhrtghpthht
+    ohephhgrnhhsgheskhgvrhhnvghlrdhorhhgpdhrtghpthhtohepihhlphhordhjrghrvh
+    hinhgvnheslhhinhhugidrihhnthgvlhdrtghomhdprhgtphhtthhopehisghmqdgrtghp
+    ihdquggvvhgvlheslhhishhtshdrshhouhhrtggvfhhorhhgvgdrnhgvthdprhgtphhtth
+    hopehlihhnuhigqdhkvghrnhgvlhesvhhgvghrrdhkvghrnhgvlhdrohhrghdprhgtphht
+    thhopehplhgrthhfohhrmhdqughrihhvvghrqdigkeeisehvghgvrhdrkhgvrhhnvghlrd
+    horhhg
+X-ME-Proxy: <xmx:WLjsaVAzynmz7OxwVPbDRN-wM3yW9BUikOoDRwJCtds-6ljKbu7xYQ>
+    <xmx:WLjsaT9vk0TbfV6_la2NUqDuFnHz5YKI49x9AHbAPWyUHMMm4Cu0Tw>
+    <xmx:WLjsaRT006FvJkrJbo-MLUqTCb3eHMn8rvzF_mT3p07EwAuP6K6p7g>
+    <xmx:WLjsaXXLxCbGadQRATY5mTZiOtrcJw699X2f69oi8qqRgWTqj3Mthg>
+    <xmx:WbjsaYl-NZvC3A2TuBo6OQpOdSFYKet9g_lDfVe4yF01_zW0hs1NfS8W>
+Feedback-ID: ibe194615:Fastmail
+Received: by mailuser.phl.internal (Postfix, from userid 501)
+	id D0B7A2CE3F93; Sat, 25 Apr 2026 08:49:28 -0400 (EDT)
+X-Mailer: MessagingEngine.com Webmail Interface
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
+MIME-Version: 1.0
+X-ThreadId: AVmXazV2ic5J
+Date: Sat, 25 Apr 2026 08:49:07 -0400
+From: "Mark Pearson" <mpearson-lenovo@squebb.ca>
+To: "Eduardo Vasconcelos" <eduardo@eduardovasconcelos.com>,
+ "Derek J . Clark" <derekjohn.clark@gmail.com>,
+ "Henrique de Moraes Holschuh" <hmh@hmh.eng.br>,
+ "Hans de Goede" <hansg@kernel.org>,
+ =?UTF-8?Q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
+Cc: 
+ "platform-driver-x86@vger.kernel.org" <platform-driver-x86@vger.kernel.org>,
+ ibm-acpi-devel@lists.sourceforge.net, linux-kernel@vger.kernel.org
+Message-Id: <16d45e47-8234-4983-84d4-91b66c5a67db@app.fastmail.com>
+In-Reply-To: <20260425063936.9360-1-eduardo@eduardovasconcelos.com>
+References: <20260425063936.9360-1-eduardo@eduardovasconcelos.com>
+Subject: Re: [PATCH] platform/x86: thinkpad_acpi: Remove unneeded goto
+Content-Type: text/plain
+Content-Transfer-Encoding: 7bit
 
-
-From: Ali Ahmet MEMIS <dev@unknownbbqr.xyz>
-
-Avoid symlink-based pidfile clobbering by opening the pidfile with O_NOFOLL=
-OW and validating it with fstat() before locking/writing.
-
-The daemon currently uses a fixed pidfile path under /tmp. A local unprivil=
-eged user can pre-create a symlink at that path and cause a root-run daemon=
- instance to write into an attacker-chosen file.
-
-Signed-off-by: Ali Ahmet MEMIS <dev@unknownbbqr.xyz>
----
- tools/power/x86/intel-speed-select/isst-daemon.c | 9 ++++++++-
- 1 file changed, 8 insertions(+), 1 deletion(-)
-
-diff --git a/tools/power/x86/intel-speed-select/isst-daemon.c b/tools/power=
-/x86/intel-speed-select/isst-daemon.c
-index 66df21b2b..acedb7432 100644
---- a/tools/power/x86/intel-speed-select/isst-daemon.c
-+++ b/tools/power/x86/intel-speed-select/isst-daemon.c
-@@ -148,6 +148,7 @@ static void daemonize(char *rundir, char *pidfile)
- {
- 	int pid, sid, i;
- 	char str[10];
-+	struct stat st;
- 	struct sigaction sig_actions;
- 	sigset_t sig_set;
- 	int ret;
-@@ -200,11 +201,17 @@ static void daemonize(char *rundir, char *pidfile)
- 	if (ret =3D=3D -1)
- 		exit(EXIT_FAILURE);
-=20
--	pid_file_handle =3D open(pidfile, O_RDWR | O_CREAT, 0600);
-+	pid_file_handle =3D open(pidfile, O_RDWR | O_CREAT | O_NOFOLLOW, 0600);
- 	if (pid_file_handle =3D=3D -1) {
- 		/* Couldn't open lock file */
- 		exit(1);
- 	}
-+
-+	if (fstat(pid_file_handle, &st) =3D=3D -1)
-+		exit(1);
-+
-+	if (!S_ISREG(st.st_mode))
-+		exit(1);
- 	/* Try to lock file */
- #ifdef LOCKF_SUPPORT
- 	if (lockf(pid_file_handle, F_TLOCK, 0) =3D=3D -1) {
-
-base-commit: 2e68039281932e6dc37718a1ea7cbb8e2cda42e6
---=20
-2.53.0
-
-
-
+On Sat, Apr 25, 2026, at 2:39 AM, Eduardo Vasconcelos wrote:
+> Remove an unneeded goto statement in hotkey_kthread(). Since
+> the function has a single exit location with no cleanup code,
+> the jump provides no benefit. Per the kernel coding style,
+> returning directly is preferred over goto in such case [1].
+>
+> [1] https://www.kernel.org/doc/html/latest/process/coding-style.html
+>
+> Signed-off-by: Eduardo Vasconcelos <eduardo@eduardovasconcelos.com>
+> Tested-by: Eduardo Vasconcelos <eduardo@eduardovasconcelos.com> (T420si)
+> ---
+>  drivers/platform/x86/lenovo/thinkpad_acpi.c | 3 +--
+>  1 file changed, 1 insertion(+), 2 deletions(-)
+>
+> diff --git a/drivers/platform/x86/lenovo/thinkpad_acpi.c 
+> b/drivers/platform/x86/lenovo/thinkpad_acpi.c
+> index e1cee42a1683..d4ed6f1216f2 100644
+> --- a/drivers/platform/x86/lenovo/thinkpad_acpi.c
+> +++ b/drivers/platform/x86/lenovo/thinkpad_acpi.c
+> @@ -2469,7 +2469,7 @@ static int hotkey_kthread(void *data)
+>  	bool was_frozen;
+> 
+>  	if (tpacpi_lifecycle == TPACPI_LIFE_EXITING)
+> -		goto exit;
+> +		return 0;
+> 
+>  	set_freezable();
+> 
+> @@ -2526,7 +2526,6 @@ static int hotkey_kthread(void *data)
+>  		si ^= 1;
+>  	}
+> 
+> -exit:
+>  	return 0;
+>  }
+> 
+> -- 
+> 2.54.0
+Looks good to me. Thanks!
+Reviewed-by: Mark Pearson <mpearson-lenovo@squebb.ca>
