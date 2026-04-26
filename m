@@ -1,111 +1,111 @@
-Received: from sender4-op-o15.zoho.com (sender4-op-o15.zoho.com [136.143.188.15])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pf1-f177.google.com (mail-pf1-f177.google.com [209.85.210.177])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A72952E888C;
-	Sun, 26 Apr 2026 12:51:03 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=136.143.188.15
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1777207865; cv=pass; b=GEmdwfi1+jHWc7qTDQcfMYAxVdS9VskB9/rJMDoytIj92e2CtGMOfKwbrkHrJk9KfOWi+wzKdFLGxlkLl4dTOtfa26oPfmeFfW/hpazMsLEqvYusTR7xmYmcrTkX0zcoeUAh1t21Bd3osS401/BO6tGmpA3FeH1euUbYT23XO3E=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1777207865; c=relaxed/simple;
-	bh=ch3pQIY31XUqdzQHSfAbXCrd45RugglYbBSk4bAs1JU=;
-	h=Message-ID:Subject:From:To:Cc:In-Reply-To:References:Content-Type:
-	 Date:MIME-Version; b=a6l20dToi7gI5iN22sO7h5j4Z/5nllUkdAAo0KwBR4jY+/efr/LSjD/hPHzX0lOAD6n+YSz4KBZxdbb4sCLUCPWC5Ah5BWHPxkPWyBP0hhNrkNwn1PV5Y3Tbt+rOk4u//erPhZeBNjYpQnIFDggkALSQrpJLqap6m39pUlHufcM=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=rong.moe; spf=pass smtp.mailfrom=rong.moe; dkim=pass (2048-bit key) header.d=rong.moe header.i=i@rong.moe header.b=nMYjLCWG; arc=pass smtp.client-ip=136.143.188.15
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=rong.moe
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=rong.moe
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 449CE36167F
+	for <platform-driver-x86@vger.kernel.org>; Sun, 26 Apr 2026 14:59:33 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.177
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1777215575; cv=none; b=ofpwMRObismueuGLZDd0AhGa9UTemdF7clSinWEyplb+SPkBx6zI9+9ZhWsgED4ZiuEiFmSkA/ZtYdAkDvzthQ5YIqeHSm0vO2cl+sk1Bc/Via2xlv4Vt2J/AD60wDbBy7g0ZAm6KucwyZsR49/FXLOv1IAwcanGkpx24xKP1ZI=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1777215575; c=relaxed/simple;
+	bh=8fr0qmc0yT25R2aLybbA+h+1X2keMYVAYzMmys1iFrU=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=DzS4N03RcpU/iXLnxfXpM+cDz894hu+vf0I12yhd4/UbORkSB/RYTUK4COzx8QqLlOGRM/gL4VT39WuiC6eYES+1ckM7R3ZS7dYWTiiF6BsgNmk7RJyNWYWDoRqmF/yPr+S+szmecBciCfjBCdhaOR2U4khItqV/VCR1Ovyz+jk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=qHD2YlU/; arc=none smtp.client-ip=209.85.210.177
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=rong.moe header.i=i@rong.moe header.b="nMYjLCWG"
-ARC-Seal: i=1; a=rsa-sha256; t=1777207855; cv=none; 
-	d=zohomail.com; s=zohoarc; 
-	b=S6fxFZyAbwZ1xYIT8XkWBCoYpJKDiaYIVUedY2DEYgUW3PzNm/W1dY67FRe5s4az2gIxi/AEuEbH/FgrpXmZzsaa1zroNblhxECRAkMaxDrLMdRHQxfuPWCteKkWgnt7mMqNA1lB07mQRYNooTmgQOETI4TmJc6r6Y5Uskbm5/k=
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=zohomail.com; s=zohoarc; 
-	t=1777207855; h=Content-Type:Content-Transfer-Encoding:Cc:Cc:Date:Date:From:From:In-Reply-To:MIME-Version:Message-ID:References:Subject:Subject:To:To:Message-Id:Reply-To; 
-	bh=XD4w2q4kECMDG7qxcFSeN7vp+Zq83dnYmVZF3PEB0HE=; 
-	b=l7Y7tVSNdvEccLkc6xKExcYd7WX+9Kbz6QkJucDHlG9+66MwRBkSxbCIoXx0DRim/ZoPynJcsTdvjZCQgvyw/M+vZ3zfhYPnmL6hNIg2cA845S0oQ08xLy7Q+nRKJPTUPnR0qyUvr5AqhivArlmeXL+pmP6ahQDSToUny4DGPB4=
-ARC-Authentication-Results: i=1; mx.zohomail.com;
-	dkim=pass  header.i=rong.moe;
-	spf=pass  smtp.mailfrom=i@rong.moe;
-	dmarc=pass header.from=<i@rong.moe>
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; t=1777207855;
-	s=zmail2048; d=rong.moe; i=i@rong.moe;
-	h=Message-ID:Subject:Subject:From:From:To:To:Cc:Cc:In-Reply-To:References:Content-Type:Content-Transfer-Encoding:Date:Date:MIME-Version:Message-Id:Reply-To;
-	bh=XD4w2q4kECMDG7qxcFSeN7vp+Zq83dnYmVZF3PEB0HE=;
-	b=nMYjLCWGipWpd+2NNAZP8iQn43cx+z3Y7UNIfuLKXWEN1UgWpReoiG06CgDyVNX5
-	pZ8qm68SEGwlssmcFvqpMq6/5FCIFTvSKi6MGX9dr6ktEjIbGofSfkmskrhPDKYqEwg
-	J1q4a7CjNTkE125Wr+zj6yMhibf/oHaV1uFScLRX0EY1wGD3kj14yWKyIMDIp1fIPFH
-	YnktHR5Pfg6Cex9IzM29xIPW9Ytbbfxrtqeqf4/l2Mjmab03/pXnToNp+Nl2N1Q/idb
-	4xsaf6c1ucB4fN4FAI7Hw005T7+DpIWe9vIXHcN7KgiELQyEX7HxbPrM90pLbxhz8+U
-	4AnH6ravJA==
-Received: by mx.zohomail.com with SMTPS id 1777207852804279.99062008879434;
-	Sun, 26 Apr 2026 05:50:52 -0700 (PDT)
-Message-ID: <237b00349e3c1ffce21464cdd4301a8c017a2ba6.camel@rong.moe>
-Subject: Re: [PATCH] platform/x86: lenovo-wmi-other: fix uninitialized
- variable in lenovo wmi-other driver
-From: Rong Zhang <i@rong.moe>
-To: Yufei CHENG <cd345al@gmail.com>, mpearson-lenovo@squebb.ca, 
-	derekjohn.clark@gmail.com
-Cc: hansg@kernel.org, ilpo.jarvinen@linux.intel.com, 
-	platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
-In-Reply-To: <20260426102725.3204-1-cd345al@gmail.com>
-References: <20260426102725.3204-1-cd345al@gmail.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-Date: Sun, 26 Apr 2026 20:45:47 +0800
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="qHD2YlU/"
+Received: by mail-pf1-f177.google.com with SMTP id d2e1a72fcca58-82cebbdbdccso5785495b3a.1
+        for <platform-driver-x86@vger.kernel.org>; Sun, 26 Apr 2026 07:59:33 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20251104; t=1777215573; x=1777820373; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=htUqt+6vUIWK63EUzlN/4gjYgk/elzHZ7NhwiR0tRHM=;
+        b=qHD2YlU/aTF/rL1zXg0IwbTbEooDnVo1d6X3WB4pxNyw8KOgBzDSn4eIMlSZo0Bi4+
+         5JoDQ06DObpqRXuAORt1kNBCxmgNg6b7F+1hDZgE94xjrbG/vBsYdZ3y69+iqZSmzUvd
+         DEyMgU4a1zzmqVathLeHmaK6ZBh/463TvMc7RjK0Frz+0RcfR8UoePabAkGgrQu/+tQ3
+         6D3BvhtsrXRDyooB2CHlN0AE0HwOT2Kk9/cztSUUHvsyqhEBbvDul+DhkEfrf0kFG79A
+         PCvrKiieCvycFEQoV4+D6y2y66pY+saaiUnKCHuYnB/gzfelTCwU3TqYn8yBLhignjLr
+         fmwQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20251104; t=1777215573; x=1777820373;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-gg:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=htUqt+6vUIWK63EUzlN/4gjYgk/elzHZ7NhwiR0tRHM=;
+        b=G3pX/t07NEgN/PFKhfr5ocvd/F5syVaAiOt6yGFcjdvF8nEefj+2Ycffp+NLIndUjP
+         q/qczBWVcmOPgc0qEs+vU8KmVeFs6ZJkeyXHnu2CIVnoF8CZ/GrJvp/lKeQJnt/teN6e
+         3eQ6Q5u/FCg+g9l9J1c9oOeP/CighFhx3xa56/HNXHFh9auzRd+DVf9Uulj1KWWuOV0Y
+         Ze/HONMVBE1QRAJafYGVuKZ1v+VnhFa1xVadzKRU+SgJe8ay9BMTYKGyRLGxu2z4THuy
+         hiJSy8/D/BzKZXb8kFz8jCI9ycmBd/vgVqaws8XAkpZk0vHbRJBQ+eq6SvuoaYhiosgS
+         Ha7g==
+X-Forwarded-Encrypted: i=1; AFNElJ8P9HQ3NB2uHVlgeXPtgesNMdjCWPp2UkQqM4QaMYGpMrK8PRacM/NvdPfD5rPdLNF2qljexVSoOgKbDFIHv4Ey8CeG@vger.kernel.org
+X-Gm-Message-State: AOJu0YxTRlcl8TuGR8dVv1/pnOua8BgDg3CPO00MhQ43eEp0mwGZLCMB
+	OVmPUo4AK4APWlK5z7el1KxMFYdQt9Va7GhpqFLccM8UNXMq/k2h/BeH
+X-Gm-Gg: AeBDieu4dzigSYjfDYIvmQOGHwPCjV5Thk48QhRh93XiiMlSmVf/plr4nOIPdzrbnhu
+	1L2r6/a0rtYoKIfvYMXUFt/J8H8Rg+rR88gRHCl8qxvcbddLoML0zOY85HSaa/OgFiH672LkWTS
+	p+SZPx2pAwHAZ9iUh1aVAE8uRxq4TvHpsJTq7rxfR1BQKgCK3zn/ygUdluLVBiWhV+rg/W57/ZZ
+	LzoN8YeKrCqWt+lURDAJObZOxoiYZtMDxVBkvGW4Xsw2UTOHUiPxDKAGSi4hENJY9Z97KpG/IdM
+	xEK035Jh91t9r6YrQiDTl4ULZnGGhB4LKGz1aKTrDRMQUgZyFGZagfrxFXAcV0Qq+L5UOLBZLup
+	tdms3PVbx8gMXqL2FXauSgc5BenEp5iWR8jBHqBCih4lziAIQ2hJNSjNJ9T7KrCVBEKdkhMjPks
+	S7x23Hq2GTQfzc6El0GliT6CkGm/S26782EivuyIOQSiprpe8=
+X-Received: by 2002:a05:6a00:3a20:b0:82f:50ef:3eab with SMTP id d2e1a72fcca58-82f8b54738emr33551365b3a.28.1777215572646;
+        Sun, 26 Apr 2026 07:59:32 -0700 (PDT)
+Received: from LAPTOP-DV5I1MV.localdomain ([27.19.123.93])
+        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-82f8ec06cbfsm33816987b3a.58.2026.04.26.07.59.28
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sun, 26 Apr 2026 07:59:32 -0700 (PDT)
+From: Yufei CHENG <cd345al@gmail.com>
+To: mpearson-lenovo@squebb.ca,
+	derekjohn.clark@gmail.com,
+	i@rong.moe
+Cc: hansg@kernel.org,
+	ilpo.jarvinen@linux.intel.com,
+	platform-driver-x86@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	Yufei CHENG <cd345al@gmail.com>
+Subject: [PATCH v2] platform/x86: lenovo: wmi-other: Fix uninitialized variable in lwmi_om_hwmon_write()
+Date: Sun, 26 Apr 2026 22:59:07 +0800
+Message-ID: <20260426145907.7295-1-cd345al@gmail.com>
+X-Mailer: git-send-email 2.43.0
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Evolution 3.56.2-9 
-X-ZohoMailClient: External
+Content-Transfer-Encoding: 8bit
 
-Hi Yufei,
+When the flag relax_fan_constraint is set, local variable 'raw'
+is never assigned, and lwmi_om_hwmon_write() will pass uninitialized
+value to lwmi_om_fan_get_set() resulting in undefined behavior.
 
-The title is too verbose. No need to mention the driver's name twice.
+This flag allows user to bypass minimum fan RPM divisor rounding,
+but assignment to 'raw' only happens in the non-relaxed path.
+Fix by defaulting 'raw' to user provided 'val' in the else branch.
 
-On Sun, 2026-04-26 at 18:27 +0800, Yufei CHENG wrote:
-> When the flag relax_fan_constraint is set, local variable 'raw'
-> is never assigned, and lwmi_om_hwmon_write() will pass uninitialized
-> value to lwmi_om_fan_get_set() resulting in undefined behavior.
->=20
-> This flag allows user to bypass minimum fan RPM divisor rounding,
-> but assignment to 'raw' only happens in the non-relaxed path.
-> Fix by defaulting 'raw' to user provided 'val' in the else branch.
->=20
-> Fixes: 51ed34282f63fab5b3996477cc56135eb4de5284
+Fixes: 51ed34282f63fab5b3996477cc56135eb4de5284
+Signed-off-by: Yufei CHENG <cd345al@gmail.com>
+---
+v2: rewrite the commit title to be more specific
 
-Please run scripts/checkpatch.pl before submitting patches.
+ drivers/platform/x86/lenovo/wmi-other.c | 2 ++
+ 1 file changed, 2 insertions(+)
 
-> Signed-off-by: Yufei CHENG <cd345al@gmail.com>
-> ---
->  drivers/platform/x86/lenovo/wmi-other.c | 2 ++
->  1 file changed, 2 insertions(+)
->=20
-> diff --git a/drivers/platform/x86/lenovo/wmi-other.c b/drivers/platform/x=
-86/lenovo/wmi-other.c
-> index 6040f45aa..6c2febe1a 100644
-> --- a/drivers/platform/x86/lenovo/wmi-other.c
-> +++ b/drivers/platform/x86/lenovo/wmi-other.c
-> @@ -349,6 +349,8 @@ static int lwmi_om_hwmon_write(struct device *dev, en=
-um hwmon_sensor_types type,
->  			 */
->  			if (!relax_fan_constraint)
->  				raw =3D val / LWMI_FAN_DIV * LWMI_FAN_DIV;
-> +			else
-> +				raw =3D val;
+diff --git a/drivers/platform/x86/lenovo/wmi-other.c b/drivers/platform/x86/lenovo/wmi-other.c
+index 6040f45aa..6c2febe1a 100644
+--- a/drivers/platform/x86/lenovo/wmi-other.c
++++ b/drivers/platform/x86/lenovo/wmi-other.c
+@@ -349,6 +349,8 @@ static int lwmi_om_hwmon_write(struct device *dev, enum hwmon_sensor_types type,
+ 			 */
+ 			if (!relax_fan_constraint)
+ 				raw = val / LWMI_FAN_DIV * LWMI_FAN_DIV;
++			else
++				raw = val;
+ 
+ 			err = lwmi_om_fan_get_set(priv, channel, &raw, true);
+ 			if (err)
+-- 
+2.43.0
 
-What an embarrassing mistake! I missed that when I was adding the code
-path for rounding down. Thanks for fixing it.
-
-With formatting issues fixed:
-
-Reviewed-by: Rong Zhang <i@rong.moe>
-
-Thanks,
-Rong
-
-> =20
->  			err =3D lwmi_om_fan_get_set(priv, channel, &raw, true);
->  			if (err)
