@@ -1,63 +1,63 @@
-Received: from mail-pg1-f177.google.com (mail-pg1-f177.google.com [209.85.215.177])
+Received: from mail-pg1-f172.google.com (mail-pg1-f172.google.com [209.85.215.172])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C8B8C224F3
-	for <platform-driver-x86@vger.kernel.org>; Sun, 26 Apr 2026 16:50:51 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.177
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7DCCBEEC0
+	for <platform-driver-x86@vger.kernel.org>; Sun, 26 Apr 2026 17:43:46 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1777222256; cv=none; b=bL6rPfZNfB/m2JCKOAZaU6ADfmdcZI5ZHKJxdKQpqX15+PAYiov1TiBiqJXHedQOQGn7BEQNml+2gOIDDCtu2bd8ifiMseveQ+q/YeJC7ny4ruugRkuSRWuv8M+dL6+fM1AYzhAAwLsD7dfCdkAJWBvDBW6ut9wNfhSr+7293w0=
+	t=1777225427; cv=none; b=rQ0WjIs3c2JxP2x/vSWpG5kP1OTrJgeiZtcj0j8ODI6awJc6r19ByHP662QsGHIKLc0iBp4bf7DPZawDjQdFY2cyGMVZEWkkdyek755yMtpi4A3Sblpa31cxOBtI7RpvjNqxsEm2Zi8eCctw7Jq6SHB5N2HUfGPZaz+P9MZXZ0c=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1777222256; c=relaxed/simple;
-	bh=V6Nfk52TQQCQjoetYj/INSS3ZdBJaRTflIgoGUHmLu4=;
+	s=arc-20240116; t=1777225427; c=relaxed/simple;
+	bh=o+2tQlNwafZZw54JzhYieeauP3zcVjDqxTkCRYEWQVY=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=JU0nP97/jplq+k2Eggszwqpl+Sh0v/3rwFLs10JAsc/d/pMdX4KWlhtw70LQWlcUtBJq8lwlm20Au5oBjoFzcSUMImZjljRJSoVmpfY8wu6O5FC8ozo+0qaqpgnyKtWUR2tcwXpGPH6TlRe04gBSajS1sxz3jVUMWCvIaV1IvlY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=fpCVYNC7; arc=none smtp.client-ip=209.85.215.177
+	 MIME-Version; b=BYnxMdJyNDWVGzp/p4Dg6tl/c8gTBw7Nmkk1GUiZonXMQY+ZCxeMZFKJcufLd3ebknXNeKviKd1xczAGxY4Gs2XlG7o5LE9ioaeiMAtsez2fZ3dUuoxeLLwG+5WF0NWfYCAuGaBX71biSamSxvibz2UuyTJFoPbxNJyye+i1GQg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=SsLIADjm; arc=none smtp.client-ip=209.85.215.172
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="fpCVYNC7"
-Received: by mail-pg1-f177.google.com with SMTP id 41be03b00d2f7-b6ce6d1d3dcso3419668a12.3
-        for <platform-driver-x86@vger.kernel.org>; Sun, 26 Apr 2026 09:50:51 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="SsLIADjm"
+Received: by mail-pg1-f172.google.com with SMTP id 41be03b00d2f7-c795eacbeb0so4099948a12.2
+        for <platform-driver-x86@vger.kernel.org>; Sun, 26 Apr 2026 10:43:46 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20251104; t=1777222251; x=1777827051; darn=vger.kernel.org;
+        d=gmail.com; s=20251104; t=1777225426; x=1777830226; darn=vger.kernel.org;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=lKPk8+mfHJCvfB6gJz0v484ZpE6x/XUkKSomVW1TQVg=;
-        b=fpCVYNC7It/clzcVjApDpkzL6E+TIA/4ce+WayATk/VYOJKOaGqJFfEdmmrNMynIBv
-         Ygq3Q9odXURHkPPBEr4tTT2G4fh1vIsqZOb1nqNMYY33rXWVA4sANu08BlHg2TIlzwjy
-         zg4rEifaY4kkfp18qQkF2ol3xa5amqAP/VZPjf+vgPsDdmq+1DHmaqAkHWmif1suK373
-         CZe7C8XU6nP8AOXK9ayfPmhzKTKMXhq456bh667HNs0r4lwSTWSAFGTd00Ojpac8Myjn
-         J2Wlux/q0GaDen2w/SCH4lFixc9kclXGX91vgcWA6ulTGJ/8zOLt8sJGs4lgl48Y7oN9
-         XnSA==
+        bh=o+2tQlNwafZZw54JzhYieeauP3zcVjDqxTkCRYEWQVY=;
+        b=SsLIADjmXieyi5SyeyDB8KCWysBp+uQYMF2GblSH4acnEu96ArjgXcMXX/q0DYp1lB
+         DGs0hl4ko0rS5pKmFXVMcGDJ6ghBM92mzAiGg84k7+uYLyhXckYOSaucRWAouV/WYNDr
+         rHBVP3/Ye+scKTZunetIh97+gIwpPIgX+f87L+9wRSJEaAAeN9M1KB9LWu7rhxQEEEsj
+         RFAELWumtQumuL2DW321vHMhCqj4AxWachf+oUwXPW2dZPyqs5zvoyaqOXnWl+dCccvw
+         u+OeZ2bizv80/A6L/ofDIU0R2WG9WxlajO5h2pTQKnADzgHpWYd+L0OSKQwyKIgK6yMF
+         Hnng==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1777222251; x=1777827051;
+        d=1e100.net; s=20251104; t=1777225426; x=1777830226;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:x-gm-gg:x-gm-message-state:from
          :to:cc:subject:date:message-id:reply-to;
-        bh=lKPk8+mfHJCvfB6gJz0v484ZpE6x/XUkKSomVW1TQVg=;
-        b=onfPVF7yZWo96gydtyyxD/fz03s4xYdptkPVisbV/7eR/HGig0cpzVakpwLCTt3FCk
-         hw5cxsWHWqgaragYqZIZZnFQ5JPRMOm3iXN7cpoxlQd2+59wpbN0Z+qsO8d2mvEqYalJ
-         iC5Qf+NnADOdbfVfeX4nKjExlHTTw94MWavkv0T9DUR6WdcJr8FG8eNHZ0wdmpoghpNW
-         vE0YMqG8sBxiUSfx7p4IAJLp979tgrhVf9x/olzwpJMiNp0Cq9+uYlAC+I0bp0H2+ECv
-         eENQUmyi26fXiPnUc74ghcASu6s3IBQu2EB9uP04UFIRPrjZhsNqaLzuTdGOqMFFQnmf
-         I6cA==
-X-Forwarded-Encrypted: i=1; AFNElJ99WTfmpFW0+iK5wztHg3JtT2bqkcGuHBGOhmBd0DuG/PdPXW8i4w4BblQrz2A3hjNZbpE6M+tnJ/fXN6KoKnzda6hZ@vger.kernel.org
-X-Gm-Message-State: AOJu0YzZHqF63M11OrHQEW24AoKBW8HKbxJ9EHRl7aZDrMhYCwT8/xtB
-	Tj30NDEfdlF+Glp2NlwETD/kFu5LZiijOUBAwfcbEKSV3cD3VBElKiD8
-X-Gm-Gg: AeBDietH0ypxPF9ppQYzjuqek0nI5QWfX/6zsjuyzHqXhDesbG787jHbv4fo0W7x5eH
-	Bw8afzIVF8ypaQ/eo4JFJD5W1giXD4dTbNw9d26oL6J4IFikhSy27zNI2UHxA1iWhWjcNHWNz+V
-	0W4YbQYivkWRDhpsrS9x6NyP1RN1HVkerFeH6GWdrb8pXsVdV3lH28RPpKcCJsyP8fZeWyr2c4I
-	DvyI0kajEVQfYSb2pNV0XAoffnAUAKjtE74Z38TMEVY4K3J3O73WjcsPkgDEmsF0kusZtzg5wo7
-	2ScvvIRQMlzMWvfi+0bH1/AqNunijkz5t+MfBYENbp2JwU5tUSW8Crb7Toz5BelvzeMrsHo/WqT
-	AmzwYYxcsJnGG/6ymQBZVjusxolIAv54oTnYLLmJ3G0A8SKtoz6GRd41OGKpBno9UKU5nHWh8Pv
-	bvJMimSpDRB5iKd9H1vY7px0vY+SW/Da1bmJ/cNWkPGvwAepE=
-X-Received: by 2002:a17:902:bf0b:b0:2b2:4b4e:e4d2 with SMTP id d9443c01a7336-2b5f9ede672mr282186845ad.15.1777222251037;
-        Sun, 26 Apr 2026 09:50:51 -0700 (PDT)
+        bh=o+2tQlNwafZZw54JzhYieeauP3zcVjDqxTkCRYEWQVY=;
+        b=CoIP72HzGhOFNvwCg5RrOhdBfynLh8R6CE8sjnxsVeyEhaGQLGvOrKvf8q2bKFxCvP
+         48gu2Bi8ZbnzszTZXY13WuOVlhrQE5SnpyXAUxuR5czY/BiUT6FEyLhpFI7L5kt41S8P
+         BehiRhNvxkah3ZcV46UZPziFfUBSJ4yxeH6GpUlklJJx8uO8kjFHwj54YGDy1ItDyP06
+         TqK13vdJd4DNP7sRVuIh2y0DmO1bsM8MJWRk7PYi/HoRPFbLlkXxQEJD8I2ea5zPhd2/
+         EdiEnavTC00QFt6YVJog49NVqyj+yb9SfxMlxcIK56FTaBnwiTlH69SGh4j3U7HR4yQ2
+         DrYw==
+X-Forwarded-Encrypted: i=1; AFNElJ8O2dSVUoKi/LfOL/XX7UH/q2OQV3Z061T+rl1priYuyymor6r5h8JCEsnm6zgwBD79nYNS9snlRIxoHa879o0vZ3yE@vger.kernel.org
+X-Gm-Message-State: AOJu0YwSZBMJUYynoFPOgCR4i8/05BMweGUj7VImnk7GsxFfiBBrIAYM
+	i/2tM/Pi4+Kid5Nep6WtGlASJ/qrJJXdC9a5/UkwtHyckdOKMYULg4U0
+X-Gm-Gg: AeBDieuRFrwdlWtBKv/Ctyhypf0sKHS5kWObXNs39ImScGZUwwxnD+nRwbCO2LSAGCX
+	gr0RXHqbTb8WUXCYgtVJMGs153/HhZAZfq8WhJh0jX7xTh3evc7+Ofha0OvL68wtHbT+M7I2trG
+	iZ8DQjOxEC1lUyCcNW951ivT2Xgq47/4LYdXwFtkGQNlHMP3MgQ2WpQJvJDl3IMeomEoDFGwekI
+	CvUFnOzw178UL0gUWlF/ugVe1qISLBycILK6PN/exAC7ZJ9sUwcW8rxGgkZPzm319dxpqXQLfo9
+	K2RIM6YWOYYurhWMdAU0AXz+Sn40MIBf3Sz34wOIOLJqf8H+7kDm9qbhjrDpb545hoJFJdMZT3c
+	/ZPfCanY9rWLBQzg3wrQTXpfiE9maZNkJGAIgrVCY203bk+0JC9p1D5u2le7RTWMc7FsDKMp67T
+	HAIygb2iqnHoMmUIrXcau3CupQFFbYyTzw+ZN4GsRx0WDBSvg=
+X-Received: by 2002:a17:902:7293:b0:2b2:ebed:7af5 with SMTP id d9443c01a7336-2b5f9efd501mr270575985ad.13.1777225425876;
+        Sun, 26 Apr 2026 10:43:45 -0700 (PDT)
 Received: from LAPTOP-DV5I1MV.localdomain ([27.19.123.93])
-        by smtp.gmail.com with ESMTPSA id d9443c01a7336-2b5faa30047sm289178955ad.28.2026.04.26.09.50.47
+        by smtp.gmail.com with ESMTPSA id d9443c01a7336-2b5faa30047sm289920375ad.28.2026.04.26.10.43.43
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 26 Apr 2026 09:50:50 -0700 (PDT)
+        Sun, 26 Apr 2026 10:43:45 -0700 (PDT)
 From: Yufei CHENG <cd345al@gmail.com>
 To: mpearson-lenovo@squebb.ca,
 	derekjohn.clark@gmail.com,
@@ -65,14 +65,13 @@ To: mpearson-lenovo@squebb.ca,
 Cc: hansg@kernel.org,
 	ilpo.jarvinen@linux.intel.com,
 	platform-driver-x86@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	Yufei CHENG <cd345al@gmail.com>
-Subject: [PATCH v3] platform/x86: lenovo: wmi-other: Fix uninitialized variable in lwmi_om_hwmon_write()
-Date: Mon, 27 Apr 2026 00:50:34 +0800
-Message-ID: <20260426165034.9073-1-cd345al@gmail.com>
+	linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v2] platform/x86: lenovo: wmi-other: Fix uninitialized
+Date: Mon, 27 Apr 2026 01:43:32 +0800
+Message-ID: <20260426174332.9981-1-cd345al@gmail.com>
 X-Mailer: git-send-email 2.43.0
-In-Reply-To: <20260426145907.7295-1-cd345al@gmail.com>
-References: <20260426145907.7295-1-cd345al@gmail.com>
+In-Reply-To: <673b66893c16ca31b403e7e7cba32e9b71a7515a.camel@rong.moe>
+References: <673b66893c16ca31b403e7e7cba32e9b71a7515a.camel@rong.moe>
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
@@ -81,37 +80,31 @@ List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-When the flag relax_fan_constraint is set, local variable 'raw'
-is never assigned, and lwmi_om_hwmon_write() will pass uninitialized
-value to lwmi_om_fan_get_set() resulting in undefined behavior.
+Hi Rong,
 
-This flag allows user to bypass minimum fan RPM divisor rounding,
-but assignment to 'raw' only happens in the non-relaxed path.
-Fix by defaulting 'raw' to user provided 'val' in the else branch.
+Thanks for your feedback, I've corrected the format and resend the patch.
+However I think I have to point out some other issues in this file.
 
-Fixes: 51ed34282f63 ("platform/x86: lenovo-wmi-other: Add HWMON for fan reporting/tuning")
-Reviewed-by: Rong Zhang <i@rong.moe>
-Signed-off-by: Yufei CHENG <cd345al@gmail.com>
----
-v3: fix broken format
-v2: rewrite the title to be more specific
+First, we should not complexify simple things. You use lwmi_om_fan_get_set() to
+combine get and set into a single function with a boolean flag to determine the
+action.
+This makes the control flow harder to follow and audit. Furthermore, this layer
+of abstraction is not applied constantly throughout the whole file. In some
+places, values are set through lwmi_om_fan_get_set() and in other places,
+they're called manually through lwmi_dev_evaluate_int()
+This inconsistency makes the abstraction pointless and is the direct cause of a
+second uninitialized bug
 
- drivers/platform/x86/lenovo/wmi-other.c | 2 ++
- 1 file changed, 2 insertions(+)
+In line 855, args.arg0 is set to attribute_id, but arg1 is never set. Though
+arg1 is omitted in read action, you're still passing stack garbage to the
+lwmi_dev_evaluate_int(). And I think it's better to zero it out if not used.
 
-diff --git a/drivers/platform/x86/lenovo/wmi-other.c b/drivers/platform/x86/lenovo/wmi-other.c
-index 6040f45aa2b..6c2febe1a59 100644
---- a/drivers/platform/x86/lenovo/wmi-other.c
-+++ b/drivers/platform/x86/lenovo/wmi-other.c
-@@ -349,6 +349,8 @@ static int lwmi_om_hwmon_write(struct device *dev, enum hwmon_sensor_types type,
- 			 */
- 			if (!relax_fan_constraint)
- 				raw = val / LWMI_FAN_DIV * LWMI_FAN_DIV;
-+			else
-+				raw = val;
- 
- 			err = lwmi_om_fan_get_set(priv, channel, &raw, true);
- 			if (err)
--- 
-2.43.0
+Additionally, I doubt whether bypassing the minimum RPM divisor has any
+practical use at all, not to mention it's not guranteed to work and purely
+depends on whether EC accepts that sub-division value.
+
+I may do some refactor recently, and I'm happy to hear your suggestions.
+
+Thanks,
+Yufei
 
