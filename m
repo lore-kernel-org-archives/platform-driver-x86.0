@@ -1,74 +1,59 @@
-Received: from mail-pf1-f177.google.com (mail-pf1-f177.google.com [209.85.210.177])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.10])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 449CE36167F
-	for <platform-driver-x86@vger.kernel.org>; Sun, 26 Apr 2026 14:59:33 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.177
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EBFDD126C02;
+	Sun, 26 Apr 2026 15:09:30 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.10
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1777215575; cv=none; b=ofpwMRObismueuGLZDd0AhGa9UTemdF7clSinWEyplb+SPkBx6zI9+9ZhWsgED4ZiuEiFmSkA/ZtYdAkDvzthQ5YIqeHSm0vO2cl+sk1Bc/Via2xlv4Vt2J/AD60wDbBy7g0ZAm6KucwyZsR49/FXLOv1IAwcanGkpx24xKP1ZI=
+	t=1777216173; cv=none; b=U3PYEzeySIXl17n3hi0TUzjOD0i85GmS23VS42yYogKXB6EK0rWokCGu2wMPBNT8EY1Z1+vx32QtER9X4HxD9p7nFdOz2+uS8N6xw9JvqiEAo+coZEMajOhud0+MMww9vTdosiCskU6VvG3BBlMnWPSxXRJTTP4oj30brmCaeRE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1777215575; c=relaxed/simple;
-	bh=8fr0qmc0yT25R2aLybbA+h+1X2keMYVAYzMmys1iFrU=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=DzS4N03RcpU/iXLnxfXpM+cDz894hu+vf0I12yhd4/UbORkSB/RYTUK4COzx8QqLlOGRM/gL4VT39WuiC6eYES+1ckM7R3ZS7dYWTiiF6BsgNmk7RJyNWYWDoRqmF/yPr+S+szmecBciCfjBCdhaOR2U4khItqV/VCR1Ovyz+jk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=qHD2YlU/; arc=none smtp.client-ip=209.85.210.177
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1777216173; c=relaxed/simple;
+	bh=xF8yfcHtzpv7+ttZN4fW2qfFrN7gMv/JggNIeH7LwkM=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=oFU1h8KLD9Z0fFz7fvI6tQea5y8rJBqJFqrl90s/vlSHacyvqVqud7fwJpzUtgir36sb7ynuVuaP1JVG9yA3vUS0aE/5AIEZPS//yG9IpVo6mXoCxO4ZHCM7ufIvmUaqQe5yf0d2V2ONLb8a3UGSHBDV3bSTdYp6fGqse84H8Ik=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=pass smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=aveTJhaA; arc=none smtp.client-ip=192.198.163.10
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="qHD2YlU/"
-Received: by mail-pf1-f177.google.com with SMTP id d2e1a72fcca58-82cebbdbdccso5785495b3a.1
-        for <platform-driver-x86@vger.kernel.org>; Sun, 26 Apr 2026 07:59:33 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20251104; t=1777215573; x=1777820373; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=htUqt+6vUIWK63EUzlN/4gjYgk/elzHZ7NhwiR0tRHM=;
-        b=qHD2YlU/aTF/rL1zXg0IwbTbEooDnVo1d6X3WB4pxNyw8KOgBzDSn4eIMlSZo0Bi4+
-         5JoDQ06DObpqRXuAORt1kNBCxmgNg6b7F+1hDZgE94xjrbG/vBsYdZ3y69+iqZSmzUvd
-         DEyMgU4a1zzmqVathLeHmaK6ZBh/463TvMc7RjK0Frz+0RcfR8UoePabAkGgrQu/+tQ3
-         6D3BvhtsrXRDyooB2CHlN0AE0HwOT2Kk9/cztSUUHvsyqhEBbvDul+DhkEfrf0kFG79A
-         PCvrKiieCvycFEQoV4+D6y2y66pY+saaiUnKCHuYnB/gzfelTCwU3TqYn8yBLhignjLr
-         fmwQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1777215573; x=1777820373;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-gg:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=htUqt+6vUIWK63EUzlN/4gjYgk/elzHZ7NhwiR0tRHM=;
-        b=G3pX/t07NEgN/PFKhfr5ocvd/F5syVaAiOt6yGFcjdvF8nEefj+2Ycffp+NLIndUjP
-         q/qczBWVcmOPgc0qEs+vU8KmVeFs6ZJkeyXHnu2CIVnoF8CZ/GrJvp/lKeQJnt/teN6e
-         3eQ6Q5u/FCg+g9l9J1c9oOeP/CighFhx3xa56/HNXHFh9auzRd+DVf9Uulj1KWWuOV0Y
-         Ze/HONMVBE1QRAJafYGVuKZ1v+VnhFa1xVadzKRU+SgJe8ay9BMTYKGyRLGxu2z4THuy
-         hiJSy8/D/BzKZXb8kFz8jCI9ycmBd/vgVqaws8XAkpZk0vHbRJBQ+eq6SvuoaYhiosgS
-         Ha7g==
-X-Forwarded-Encrypted: i=1; AFNElJ8P9HQ3NB2uHVlgeXPtgesNMdjCWPp2UkQqM4QaMYGpMrK8PRacM/NvdPfD5rPdLNF2qljexVSoOgKbDFIHv4Ey8CeG@vger.kernel.org
-X-Gm-Message-State: AOJu0YxTRlcl8TuGR8dVv1/pnOua8BgDg3CPO00MhQ43eEp0mwGZLCMB
-	OVmPUo4AK4APWlK5z7el1KxMFYdQt9Va7GhpqFLccM8UNXMq/k2h/BeH
-X-Gm-Gg: AeBDieu4dzigSYjfDYIvmQOGHwPCjV5Thk48QhRh93XiiMlSmVf/plr4nOIPdzrbnhu
-	1L2r6/a0rtYoKIfvYMXUFt/J8H8Rg+rR88gRHCl8qxvcbddLoML0zOY85HSaa/OgFiH672LkWTS
-	p+SZPx2pAwHAZ9iUh1aVAE8uRxq4TvHpsJTq7rxfR1BQKgCK3zn/ygUdluLVBiWhV+rg/W57/ZZ
-	LzoN8YeKrCqWt+lURDAJObZOxoiYZtMDxVBkvGW4Xsw2UTOHUiPxDKAGSi4hENJY9Z97KpG/IdM
-	xEK035Jh91t9r6YrQiDTl4ULZnGGhB4LKGz1aKTrDRMQUgZyFGZagfrxFXAcV0Qq+L5UOLBZLup
-	tdms3PVbx8gMXqL2FXauSgc5BenEp5iWR8jBHqBCih4lziAIQ2hJNSjNJ9T7KrCVBEKdkhMjPks
-	S7x23Hq2GTQfzc6El0GliT6CkGm/S26782EivuyIOQSiprpe8=
-X-Received: by 2002:a05:6a00:3a20:b0:82f:50ef:3eab with SMTP id d2e1a72fcca58-82f8b54738emr33551365b3a.28.1777215572646;
-        Sun, 26 Apr 2026 07:59:32 -0700 (PDT)
-Received: from LAPTOP-DV5I1MV.localdomain ([27.19.123.93])
-        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-82f8ec06cbfsm33816987b3a.58.2026.04.26.07.59.28
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 26 Apr 2026 07:59:32 -0700 (PDT)
-From: Yufei CHENG <cd345al@gmail.com>
-To: mpearson-lenovo@squebb.ca,
-	derekjohn.clark@gmail.com,
-	i@rong.moe
-Cc: hansg@kernel.org,
-	ilpo.jarvinen@linux.intel.com,
-	platform-driver-x86@vger.kernel.org,
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="aveTJhaA"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1777216171; x=1808752171;
+  h=from:to:cc:subject:date:message-id:mime-version:
+   content-transfer-encoding;
+  bh=xF8yfcHtzpv7+ttZN4fW2qfFrN7gMv/JggNIeH7LwkM=;
+  b=aveTJhaAZWfJyUtlrkgwIzrOxsCDyaCHzVP9GYvC+HWo0etnb8W92K41
+   23ihH+Z2o17PR3mtKKZK6FBejdN4fwPdsAvUUbt/Dkx+V08atCLRlU8+a
+   rNh3mJYNGidXTqrMrLjPrkVEwfdFsZwaXDPAVyp9b6uM5NbY8k5RrvUy+
+   aTdLXJqazSWn6NkAVoTxOGx6MsQrkrev2jBPhRPq+UQVY7WSPcX3s9gjB
+   IvZDeD6ocxPTFzg0VKe+Oht0NwuscMf4t3NEvoeesBz0k+MvzRnzfLU1H
+   wgBXpszAeE8cB8H1n9HhhjSrpGby7mt5KqYJnaQrM4Rb24k/nbUpARH/L
+   A==;
+X-CSE-ConnectionGUID: VRCEQI3QTzyUyRGoD/OfWQ==
+X-CSE-MsgGUID: dzAzZyUyQ9m9cPO791HpCA==
+X-IronPort-AV: E=McAfee;i="6800,10657,11768"; a="89501439"
+X-IronPort-AV: E=Sophos;i="6.23,200,1770624000"; 
+   d="scan'208";a="89501439"
+Received: from orviesa008.jf.intel.com ([10.64.159.148])
+  by fmvoesa104.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 26 Apr 2026 08:09:30 -0700
+X-CSE-ConnectionGUID: 4QzipPG1RNmiEY3Y9oKJjA==
+X-CSE-MsgGUID: ZAeAx6hUR22bpqBqORPBfw==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.23,200,1770624000"; 
+   d="scan'208";a="233295920"
+Received: from spandruv-desk.jf.intel.com ([10.54.55.20])
+  by orviesa008.jf.intel.com with ESMTP; 26 Apr 2026 08:09:30 -0700
+From: Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>
+To: hansg@kernel.org,
+	ilpo.jarvinen@linux.intel.com
+Cc: platform-driver-x86@vger.kernel.org,
 	linux-kernel@vger.kernel.org,
-	Yufei CHENG <cd345al@gmail.com>
-Subject: [PATCH v2] platform/x86: lenovo: wmi-other: Fix uninitialized variable in lwmi_om_hwmon_write()
-Date: Sun, 26 Apr 2026 22:59:07 +0800
-Message-ID: <20260426145907.7295-1-cd345al@gmail.com>
-X-Mailer: git-send-email 2.43.0
+	Ali Ahmet MEMIS <dev@unknownbbqr.xyz>,
+	Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>,
+	stable@kernel.org
+Subject: [PATCH v2] tools/power/x86/intel-speed-select: Harden daemon pidfile open
+Date: Sun, 26 Apr 2026 08:09:28 -0700
+Message-ID: <20260426150928.870914-1-srinivas.pandruvada@linux.intel.com>
+X-Mailer: git-send-email 2.52.0
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
@@ -77,35 +62,59 @@ List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-When the flag relax_fan_constraint is set, local variable 'raw'
-is never assigned, and lwmi_om_hwmon_write() will pass uninitialized
-value to lwmi_om_fan_get_set() resulting in undefined behavior.
+From: Ali Ahmet MEMIS <dev@unknownbbqr.xyz>
 
-This flag allows user to bypass minimum fan RPM divisor rounding,
-but assignment to 'raw' only happens in the non-relaxed path.
-Fix by defaulting 'raw' to user provided 'val' in the else branch.
+Avoid symlink-based pidfile clobbering by opening the pidfile with
+O_NOFOLLOW and validating it with fstat() before locking/writing.
 
-Fixes: 51ed34282f63fab5b3996477cc56135eb4de5284
-Signed-off-by: Yufei CHENG <cd345al@gmail.com>
+The daemon currently uses a fixed pidfile path under /tmp. A local
+unprivileged user can pre-create a symlink at that path and cause a
+root-run daemon instance to write into an attacker-chosen file.
+
+Fixes: 7fd786dfbd2c ("tools/power/x86/intel-speed-select: OOB daemon mode")
+Signed-off-by: Ali Ahmet MEMIS <dev@unknownbbqr.xyz>
+Signed-off-by: Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>
+Cc: stable@kernel.org
 ---
-v2: rewrite the commit title to be more specific
+[Fixed commit message for long lines]
 
- drivers/platform/x86/lenovo/wmi-other.c | 2 ++
- 1 file changed, 2 insertions(+)
+v2
+- Added CC to stable
 
-diff --git a/drivers/platform/x86/lenovo/wmi-other.c b/drivers/platform/x86/lenovo/wmi-other.c
-index 6040f45aa..6c2febe1a 100644
---- a/drivers/platform/x86/lenovo/wmi-other.c
-+++ b/drivers/platform/x86/lenovo/wmi-other.c
-@@ -349,6 +349,8 @@ static int lwmi_om_hwmon_write(struct device *dev, enum hwmon_sensor_types type,
- 			 */
- 			if (!relax_fan_constraint)
- 				raw = val / LWMI_FAN_DIV * LWMI_FAN_DIV;
-+			else
-+				raw = val;
+ tools/power/x86/intel-speed-select/isst-daemon.c | 9 ++++++++-
+ 1 file changed, 8 insertions(+), 1 deletion(-)
+
+diff --git a/tools/power/x86/intel-speed-select/isst-daemon.c b/tools/power/x86/intel-speed-select/isst-daemon.c
+index 66df21b2b573..acedb7432849 100644
+--- a/tools/power/x86/intel-speed-select/isst-daemon.c
++++ b/tools/power/x86/intel-speed-select/isst-daemon.c
+@@ -148,6 +148,7 @@ static void daemonize(char *rundir, char *pidfile)
+ {
+ 	int pid, sid, i;
+ 	char str[10];
++	struct stat st;
+ 	struct sigaction sig_actions;
+ 	sigset_t sig_set;
+ 	int ret;
+@@ -200,11 +201,17 @@ static void daemonize(char *rundir, char *pidfile)
+ 	if (ret == -1)
+ 		exit(EXIT_FAILURE);
  
- 			err = lwmi_om_fan_get_set(priv, channel, &raw, true);
- 			if (err)
+-	pid_file_handle = open(pidfile, O_RDWR | O_CREAT, 0600);
++	pid_file_handle = open(pidfile, O_RDWR | O_CREAT | O_NOFOLLOW, 0600);
+ 	if (pid_file_handle == -1) {
+ 		/* Couldn't open lock file */
+ 		exit(1);
+ 	}
++
++	if (fstat(pid_file_handle, &st) == -1)
++		exit(1);
++
++	if (!S_ISREG(st.st_mode))
++		exit(1);
+ 	/* Try to lock file */
+ #ifdef LOCKF_SUPPORT
+ 	if (lockf(pid_file_handle, F_TLOCK, 0) == -1) {
 -- 
-2.43.0
+2.52.0
 
