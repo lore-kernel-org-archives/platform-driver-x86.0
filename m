@@ -1,286 +1,83 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0EFCD3EB7FB
-	for <platform-driver-x86@vger.kernel.org>; Mon, 27 Apr 2026 19:32:43 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DA68434750B
+	for <platform-driver-x86@vger.kernel.org>; Mon, 27 Apr 2026 19:46:39 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1777318363; cv=none; b=IdJrvupxpL1ZyLkmr3INjIoZdYVoKghSiGvl+tRd/vMVRwZ55s565cFCb8VfonwPPL22y5PyZAVPHWz6B0l40F6bhy4EIvdiSaq/S3z+68IhyD9YiNA6Qvet4iqjWae89czs7t20WmOWvXpXKi9LsaVAnDTUUU5Yt7y4JzlaQP4=
+	t=1777319199; cv=none; b=SxTmU0/h6f87kxXFjo3wqkVdp46RfmBE57lKjuxCAez1pK+qVtrzS23D5FtJDiuTnK7uTKInXB3u59c7L8R/lO3lSb5fTmquCb8Tfh4wgjhKMBlUYgyAIKNNwMfBIj1+pWICdFdf0TrFEliPVKSVEvGZlYxGerOxmzvGnP278jc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1777318363; c=relaxed/simple;
-	bh=GcVXS9DHM5KxSH9pj/UKoe1HEQEMUMwCF6ORNHkDtWY=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=eTLQh1/qc8oG73jL77C5b2ntrMGRH7lFjFuZ+gs8rx/L+WDuwpAf+cUpCVwYXhHc+j3oVFhim+OA9DZTaULmBM2Itn50iWg2BKbMdGz3ZriguC33D3wHvPX2fCceakkm1gHj2+i1dCLhK7AEYIzo9wf7sZAvcDNyFPzXdEdKti4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=OOE7miFq; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1777319199; c=relaxed/simple;
+	bh=1NindMKrHinVTaoeeUuZicur9336OpppEMX98sxgfY8=;
+	h=From:To:Subject:Date:Message-ID:In-Reply-To:References:
+	 Content-Type:MIME-Version; b=daXsYA4S+7sLmOtVnVAMNlw95oX/nml/7kuADI+a6lam2WXJ2/icaom8+O1zuy6yQ/uVeZMQ516EQofK7b/bl3IEM81C7XnR/cuKdPrcdZyrzIYycFQ8XA6p6Iw1857RprwB2/fBUQRatllIqAPb4gjqYj+zh26QsWmoVRf+RQg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=MFc62LHr; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="OOE7miFq"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id DE78CC2BCC9
-	for <platform-driver-x86@vger.kernel.org>; Mon, 27 Apr 2026 19:32:42 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="MFc62LHr"
+Received: by smtp.kernel.org (Postfix) with ESMTPS id BE851C2BCB6
+	for <platform-driver-x86@vger.kernel.org>; Mon, 27 Apr 2026 19:46:39 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1777318362;
-	bh=GcVXS9DHM5KxSH9pj/UKoe1HEQEMUMwCF6ORNHkDtWY=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-	b=OOE7miFq3mxasU1R85/vcilbMy/53K8jtyZ7HUsOiO4Oqvsbxd8FSMidIoQm43/jn
-	 734CPhh9uggVwsTcRz9E2+HFDa8e/X3nIe3XYlthRdXp0EHuT55uIE+VaXHD4p/Nam
-	 TkRPmmp/wN42yYCIfWJVQ4PsLY0m8ZSZhW57NnlUtymqhDWTZeroAM9uM4A1pqwUaG
-	 lFIG1Jgr14IGn7lXYqjq3jsdfHzcbG5W6PBRV17v77HE/L/OCmw+kwULfGtIlSJ34b
-	 8JqYb6JfQnjY9+CM8rqysaX2lcD3j09PrM3Y6G49rCAQ/rTMcdjKDjNYgdWJw7knI9
-	 Vq2u2uIAgIPDw==
-Received: by mail-lj1-f179.google.com with SMTP id 38308e7fff4ca-38e68e4389cso111153081fa.3
-        for <platform-driver-x86@vger.kernel.org>; Mon, 27 Apr 2026 12:32:42 -0700 (PDT)
-X-Forwarded-Encrypted: i=1; AFNElJ/GcnqWWlVV3r/J0/kL3sjrlrZs5f+I8tTo1Ol4a33qAn8m+HuhPdISSsAfjwG7K8l9PKmrGMY75LWuKmD0SnHymbD6@vger.kernel.org
-X-Gm-Message-State: AOJu0Yzet6nRq+WiLftVHOn6q+kUtwrlppt79BAk8CkjFp6PpFBJRwQb
-	l+4ocQTsmgCTcKNC5CpyoWYdINaw6Pf4CNl98Qe7LHPEY0T64TBl13VMeKcQotgFmm4MRd9kr2P
-	OecmJwLhSlTXru295F8MBDtOqCJ34DV8=
-X-Received: by 2002:a05:6512:1256:b0:5a3:e7d7:c67 with SMTP id
- 2adb3069b0e04-5a7466035femr65340e87.5.1777318361178; Mon, 27 Apr 2026
- 12:32:41 -0700 (PDT)
+	s=k20201202; t=1777319199;
+	bh=1NindMKrHinVTaoeeUuZicur9336OpppEMX98sxgfY8=;
+	h=From:To:Subject:Date:In-Reply-To:References:From;
+	b=MFc62LHrfDQnpOeK86c2d4p0nSwvqaWy5DSVykKcAch+2Fm4m7HuMC5xfuaSetY+F
+	 neWvyNcxUgaofEsRg+R2FhSQtP/7YevhnkP2X3B17kChn/x8nHcCqHsqbPpoGzXbLG
+	 QTXvdFFbIJPpWiwx0fcnZmJMRjbmdh3jPwD+fuQ3gYQVO1g/2KgbExBNHnOTuibW/I
+	 zONkHT5yWjvG8yVkZWrRTkIu3shcAYL1+T9glld7hB/6yiuDRXIc5weI7dL3dfrGeQ
+	 chDVH5Snr5xh3pxG3fAHFQSRYnBixCPEKut+zp78bt8m3ETL3bN32V/QOSmxqO+epE
+	 klOBAUzsqZpkg==
+Received: by aws-us-west-2-korg-bugzilla-1.web.codeaurora.org (Postfix, from userid 48)
+	id AB74FC4160E; Mon, 27 Apr 2026 19:46:39 +0000 (UTC)
+From: bugzilla-daemon@kernel.org
+To: platform-driver-x86@vger.kernel.org
+Subject: [Bug 221383] ideapad_laptop: Fn hotkeys stop emitting after s2idle
+ resume on IdeaPad Slim 3   14ARP10 (Ryzen 7735HS)
+Date: Mon, 27 Apr 2026 19:46:39 +0000
+X-Bugzilla-Reason: None
+X-Bugzilla-Type: changed
+X-Bugzilla-Watch-Reason: AssignedTo drivers_platform_x86@kernel-bugs.osdl.org
+X-Bugzilla-Product: Drivers
+X-Bugzilla-Component: Platform_x86
+X-Bugzilla-Version: 2.5
+X-Bugzilla-Keywords: 
+X-Bugzilla-Severity: normal
+X-Bugzilla-Who: sindrehenriksen93@gmail.com
+X-Bugzilla-Status: NEW
+X-Bugzilla-Resolution: 
+X-Bugzilla-Priority: P3
+X-Bugzilla-Assigned-To: drivers_platform_x86@kernel-bugs.osdl.org
+X-Bugzilla-Flags: 
+X-Bugzilla-Changed-Fields: 
+Message-ID: <bug-221383-215701-K3lPxliO8v@https.bugzilla.kernel.org/>
+In-Reply-To: <bug-221383-215701@https.bugzilla.kernel.org/>
+References: <bug-221383-215701@https.bugzilla.kernel.org/>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+X-Bugzilla-URL: https://bugzilla.kernel.org/
+Auto-Submitted: auto-generated
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20260427-baytrail-real-swnode-v3-0-0003e4c1708c@oss.qualcomm.com> <20260427-baytrail-real-swnode-v3-2-0003e4c1708c@oss.qualcomm.com>
-In-Reply-To: <20260427-baytrail-real-swnode-v3-2-0003e4c1708c@oss.qualcomm.com>
-From: "Rafael J. Wysocki" <rafael@kernel.org>
-Date: Mon, 27 Apr 2026 21:32:28 +0200
-X-Gmail-Original-Message-ID: <CAJZ5v0gR=wvgFomQzjS6rzoJYxwT2sxB60EM52PA4j-iwcXocw@mail.gmail.com>
-X-Gm-Features: AVHnY4JhHwVpV2lDxM_tmrikNutREbg4Pf9PEzlXufNxh7vs1vpuoZx2mRT4OyE
-Message-ID: <CAJZ5v0gR=wvgFomQzjS6rzoJYxwT2sxB60EM52PA4j-iwcXocw@mail.gmail.com>
-Subject: Re: [PATCH v3 2/2] platform/x86: x86-android-tablets: enable fwnode
- matching of GPIO chips
-To: Bartosz Golaszewski <bartosz.golaszewski@oss.qualcomm.com>
-Cc: Andy Shevchenko <andriy.shevchenko@linux.intel.com>, Daniel Scally <djrscally@gmail.com>, 
-	Heikki Krogerus <heikki.krogerus@linux.intel.com>, 
-	Sakari Ailus <sakari.ailus@linux.intel.com>, 
-	Greg Kroah-Hartman <gregkh@linuxfoundation.org>, "Rafael J. Wysocki" <rafael@kernel.org>, 
-	Danilo Krummrich <dakr@kernel.org>, Mika Westerberg <mika.westerberg@linux.intel.com>, 
-	Andy Shevchenko <andy@kernel.org>, Linus Walleij <linusw@kernel.org>, Hans de Goede <hansg@kernel.org>, 
-	=?UTF-8?Q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>, 
-	Dmitry Torokhov <dmitry.torokhov@gmail.com>, Len Brown <lenb@kernel.org>, linux-acpi@vger.kernel.org, 
-	driver-core@lists.linux.dev, linux-kernel@vger.kernel.org, 
-	linux-gpio@vger.kernel.org, platform-driver-x86@vger.kernel.org, 
-	brgl@kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
 
-On Mon, Apr 27, 2026 at 2:19=E2=80=AFPM Bartosz Golaszewski
-<bartosz.golaszewski@oss.qualcomm.com> wrote:
->
-> In order to allow GPIOLIB to match cherryview and baytrail GPIO
-> controllers by their firmware nodes instead of their names, we need to
-> attach the - currently "dangling" - existing software nodes to their
-> target devices dynamically.
->
-> We deal with devices described in ACPI so set up a bus notifier waiting
-> for the ADD events. We know the name of the device we're waiting for so
-> match against it and - on match - assign the appropriate software node
-> as the secondary firmware node of the underlying ACPI node. In case the
-> event was emitted earlier than this driver's probe: also make sure the
-> device was not added before.
->
-> Scheduling fine-grained devres actions allows for proper teardown and
-> unsetting of the secondary firmware nodes.
->
-> Signed-off-by: Bartosz Golaszewski <bartosz.golaszewski@oss.qualcomm.com>
-> ---
->  drivers/platform/x86/x86-android-tablets/core.c | 127 ++++++++++++++++++=
-+++++-
->  1 file changed, 124 insertions(+), 3 deletions(-)
->
-> diff --git a/drivers/platform/x86/x86-android-tablets/core.c b/drivers/pl=
-atform/x86/x86-android-tablets/core.c
-> index 021009e9085bec3db9c4daa1f6235600210a6099..9e6e8f272dfe16cda421b5698=
-02045c3d94fc0ab 100644
-> --- a/drivers/platform/x86/x86-android-tablets/core.c
-> +++ b/drivers/platform/x86/x86-android-tablets/core.c
-> @@ -13,10 +13,12 @@
->  #include <linux/acpi.h>
->  #include <linux/device.h>
->  #include <linux/dmi.h>
-> +#include <linux/fwnode.h>
->  #include <linux/gpio/consumer.h>
->  #include <linux/gpio/machine.h>
->  #include <linux/irq.h>
->  #include <linux/module.h>
-> +#include <linux/notifier.h>
->  #include <linux/pci.h>
->  #include <linux/platform_device.h>
->  #include <linux/serdev.h>
-> @@ -360,6 +362,124 @@ static const struct software_node *cherryview_gpioc=
-hip_node_group[] =3D {
->         NULL
->  };
->
-> +struct auto_secondary_data {
-> +       struct notifier_block nb;
-> +       struct device *parent;
-> +};
-> +
-> +static void auto_secondary_unset(void *data)
-> +{
-> +       struct fwnode_handle *fwnode =3D data;
-> +
-> +       fwnode->secondary =3D NULL;
-> +}
-> +
-> +static int acpi_set_secondary_fwnode(struct device *parent, struct devic=
-e *dev,
-> +                                    const struct software_node *const sw=
-node)
-> +{
-> +       struct acpi_device *device =3D to_acpi_device(dev);
-> +       struct fwnode_handle *fwnode;
-> +       int ret;
-> +
-> +       fwnode =3D software_node_fwnode(swnode);
-> +       if (WARN_ON(!fwnode))
-> +               return -ENOENT;
-> +
-> +       fwnode->secondary =3D ERR_PTR(-ENODEV);
-> +       device->fwnode.secondary =3D fwnode;
-> +
-> +       ret =3D devm_add_action_or_reset(parent, auto_secondary_unset, &d=
-evice->fwnode);
-> +       if (ret)
-> +               dev_err(parent, "Failed to schedule the unset action for =
-secondary fwnode\n");
-> +
-> +       return ret;
-> +}
-> +
-> +static int acpi_auto_secondary_notifier(struct notifier_block *nb,
-> +                                       unsigned long action, void *data)
-> +{
-> +       struct auto_secondary_data *auto_sec =3D container_of(nb, struct =
-auto_secondary_data, nb);
-> +       const struct software_node *const *swnode;
-> +       struct device *dev =3D data;
-> +       int ret;
-> +
-> +       switch (action) {
-> +       case BUS_NOTIFY_ADD_DEVICE:
-> +               for (swnode =3D gpiochip_node_group; *swnode; swnode++) {
-> +                       if (strcmp((*swnode)->name, dev_name(dev)) =3D=3D=
- 0) {
-> +                               ret =3D acpi_set_secondary_fwnode(auto_se=
-c->parent, dev, *swnode);
-> +                               return ret ? NOTIFY_BAD : NOTIFY_OK;
-> +                       }
-> +               }
-> +               break;
-> +       default:
-> +               break;
-> +       }
-> +
-> +       return NOTIFY_DONE;
-> +}
-> +
-> +static void auto_secondary_unregister_node_group(void *data)
-> +{
-> +       const struct software_node **nodes =3D data;
-> +
-> +       software_node_unregister_node_group(nodes);
-> +}
-> +
-> +static void auto_secondary_unregister_notifier(void *data)
-> +{
-> +       struct notifier_block *nb =3D data;
-> +
-> +       bus_unregister_notifier(&acpi_bus_type, nb);
+https://bugzilla.kernel.org/show_bug.cgi?id=3D221383
 
-Please introduce acpi_bus_unregister_notifier() and use it here instead.
+--- Comment #43 from sindrehenriksen93@gmail.com ---
+Nice! Tested on my IdeaPad Slim 3 14ARP10 (Ryzen 7735H) with the keyboard-r=
+eset
+workaround disabled. DMI match fires correctly ("Delaying suspend by 2.5s to
+avoid platform firmware bug" in dmesg).
 
-> +}
-> +
-> +static int auto_secondary_fwnode_init(struct device *parent)
-> +{
-> +       const struct software_node *const *swnode;
-> +       struct auto_secondary_data *data;
-> +       int ret;
-> +
-> +       ret =3D software_node_register_node_group(gpiochip_node_group);
-> +       if (ret)
-> +               return ret;
-> +
-> +       ret =3D devm_add_action_or_reset(parent,
-> +                                      auto_secondary_unregister_node_gro=
-up,
-> +                                      gpiochip_node_group);
-> +       if (ret)
-> +               return ret;
-> +
-> +       data =3D devm_kzalloc(parent, sizeof(*data), GFP_KERNEL);
-> +       if (!data)
-> +               return -ENOMEM;
-> +
-> +       data->nb.notifier_call =3D acpi_auto_secondary_notifier;
-> +       data->parent =3D parent;
-> +
-> +       ret =3D bus_register_notifier(&acpi_bus_type, &data->nb);
+- Short suspend + resume: keyboard works (previously broke without the
+workaround)
+- 15+ min suspend + resume: Fn keys work (previously broke consistently)
 
-Please introduce acpi_bus_register_notifier() and use it here instead.
+Both issues fixed by the patch.
 
-> +       if (ret)
-> +               return ret;
-> +
-> +       ret =3D devm_add_action_or_reset(parent,
-> +                                      auto_secondary_unregister_notifier=
-,
-> +                                      &data->nb);
-> +       if (ret)
-> +               return ret;
-> +
-> +       /* Device may have been already added. */
-> +       for (swnode =3D gpiochip_node_group; *swnode; swnode++) {
-> +               struct device *dev __free(put_device) =3D
-> +                       bus_find_device_by_name(&acpi_bus_type, NULL, (*s=
-wnode)->name);
+--=20
+You may reply to this email to add a comment.
 
-Please introduce acpi_bus_find_device_by_name() and use it here instead.
-
-> +               if (dev) {
-> +                       ret =3D acpi_set_secondary_fwnode(parent, dev, *s=
-wnode);
-> +                       if (ret)
-> +                               return ret;
-> +               }
-> +       }
-> +
-> +       return 0;
-> +}
-> +
->  static void x86_android_tablet_remove(struct platform_device *pdev)
->  {
->         int i;
-> @@ -391,7 +511,6 @@ static void x86_android_tablet_remove(struct platform=
-_device *pdev)
->
->         software_node_unregister_node_group(gpio_button_swnodes);
->         software_node_unregister_node_group(swnode_group);
-> -       software_node_unregister_node_group(gpiochip_node_group);
->  }
->
->  static __init int x86_android_tablet_probe(struct platform_device *pdev)
-> @@ -427,9 +546,11 @@ static __init int x86_android_tablet_probe(struct pl=
-atform_device *pdev)
->                 break;
->         }
->
-> -       ret =3D software_node_register_node_group(gpiochip_node_group);
-> -       if (ret)
-> +       ret =3D auto_secondary_fwnode_init(&pdev->dev);
-> +       if (ret) {
-> +               x86_android_tablet_remove(pdev);
->                 return ret;
-> +       }
->
->         ret =3D software_node_register_node_group(dev_info->swnode_group)=
-;
->         if (ret) {
->
-> --
-> 2.47.3
->
->
+You are receiving this mail because:
+You are watching the assignee of the bug.=
