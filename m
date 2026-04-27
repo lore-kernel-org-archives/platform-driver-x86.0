@@ -1,147 +1,180 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wm1-f54.google.com (mail-wm1-f54.google.com [209.85.128.54])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D42AEF9C0
-	for <platform-driver-x86@vger.kernel.org>; Mon, 27 Apr 2026 12:34:32 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CF6243B961D
+	for <platform-driver-x86@vger.kernel.org>; Mon, 27 Apr 2026 12:41:39 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.54
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1777293272; cv=none; b=E6lMGp9dGMhMs62QCjZjPV7crWLjfCrQVWVoRmYQ9LKV7XX/K/LsOg2U3Tl9mlaCT73yNTcDFSTK5przP2LxcZ74LmKMshN3QSa7qj2TEo3/FTrODrZlStFqKTsRnzvwUTf9XajEFlSHC5jbUrjvwko0/A0wUw5Awn3baAomYAo=
+	t=1777293701; cv=none; b=oTYeKiva8w7YIjNb6WeUK9e463zBOYsgoiMuvk2/iwIJ8p8WUJgyXuNaF7RuJ1ungTbmhkbQtxXHxeYMlOOlvovROzwC7+bzvR8MN7FRGbvfzqkwHP9zapm8VnddLUMngjfZDu6mPcRw2KVcvds9UzmxB1coEPRT2Qx0/XAxfGI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1777293272; c=relaxed/simple;
-	bh=C9q8fBk3kOk5ggL8hVBwl/iA+2PYboh0Vgi+I9hiUnI=;
-	h=From:To:Subject:Date:Message-ID:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=c6WWt8gLhKzSJ6IIpk8um8z/+EXVTZjVCi2k9aPpZdn1Mlqjr7JrYmbXRDiwxweh2gzl6hPhuQ+OAq6eu93dQeAIALbGpOSSRoR9LS0oGQFe5xmdWefS/2Gam8sJK7PiW5VyCiTZGe8Kl7ADKUmdSJxcBSocAvGVBbBpRw9mq3g=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=YIXrIzM5; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1777293701; c=relaxed/simple;
+	bh=2vEY9g+jd2zsiuvJOyMZ3k5klcsAKucqskQWVdm7nIQ=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=axFYH9TP2YLudDJwYRR93URDxHCAWwOuv77grBC0a5QYgciid0+ESue7hQhejQJtoB6TXqXQwHrlwFpKm4SsnD/pFSTzwtNN7XjMEMwbF8RKpPWtmzQ0oS8zTJjaVKpq5K73buEtbXByQfpcNuPeVB2c4QMzd4qQZ8rrZ7unZoY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=kp5MbLO0; arc=none smtp.client-ip=209.85.128.54
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="YIXrIzM5"
-Received: by smtp.kernel.org (Postfix) with ESMTPS id 8287EC2BCB4
-	for <platform-driver-x86@vger.kernel.org>; Mon, 27 Apr 2026 12:34:32 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1777293272;
-	bh=C9q8fBk3kOk5ggL8hVBwl/iA+2PYboh0Vgi+I9hiUnI=;
-	h=From:To:Subject:Date:In-Reply-To:References:From;
-	b=YIXrIzM5M1/h0iWizjlKbYwpNfBwoCJ1KZcVLI4FNANv1WyvaOJM4rFoUTmMzpjJk
-	 OfzKyzMBBVdAobHcmKyktY9ZZsYP2l9FaSP05PFBJSXnLD5Dt1NO7S0lXP/scHZpHi
-	 lotGNvzgMwtlcpL8VhLDakihjs7voYj7r50dlEN8hGmdqJuXS7C2hb/HVC41JPZEot
-	 3xglqVlVzbfPdl782ZMQGecJgNILMP6q58sgGdxRdxGrjse/3cv3Fm7fcWhFisrLyt
-	 Ufgn8L3OZxq6AX/xTjRYoVcBDQowfbXCUN9X4yfPPel+M4kN6vrVqpHuyle+9xv+eZ
-	 i7Y1p4JeWDSgA==
-Received: by aws-us-west-2-korg-bugzilla-1.web.codeaurora.org (Postfix, from userid 48)
-	id 7D05AC4160E; Mon, 27 Apr 2026 12:34:32 +0000 (UTC)
-From: bugzilla-daemon@kernel.org
-To: platform-driver-x86@vger.kernel.org
-Subject: [Bug 221065] ideapad_acpi: unexpected charge_types spam on Yoga Pro
- 7 14ASP9
-Date: Mon, 27 Apr 2026 12:34:31 +0000
-X-Bugzilla-Reason: None
-X-Bugzilla-Type: changed
-X-Bugzilla-Watch-Reason: AssignedTo drivers_platform_x86@kernel-bugs.osdl.org
-X-Bugzilla-Product: Drivers
-X-Bugzilla-Component: Platform_x86
-X-Bugzilla-Version: 2.5
-X-Bugzilla-Keywords: 
-X-Bugzilla-Severity: low
-X-Bugzilla-Who: i@rong.moe
-X-Bugzilla-Status: NEW
-X-Bugzilla-Resolution: 
-X-Bugzilla-Priority: P3
-X-Bugzilla-Assigned-To: drivers_platform_x86@kernel-bugs.osdl.org
-X-Bugzilla-Flags: 
-X-Bugzilla-Changed-Fields: 
-Message-ID: <bug-221065-215701-iJG0CYCUdi@https.bugzilla.kernel.org/>
-In-Reply-To: <bug-221065-215701@https.bugzilla.kernel.org/>
-References: <bug-221065-215701@https.bugzilla.kernel.org/>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-X-Bugzilla-URL: https://bugzilla.kernel.org/
-Auto-Submitted: auto-generated
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="kp5MbLO0"
+Received: by mail-wm1-f54.google.com with SMTP id 5b1f17b1804b1-48334ee0aeaso106973515e9.1
+        for <platform-driver-x86@vger.kernel.org>; Mon, 27 Apr 2026 05:41:39 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20251104; t=1777293698; x=1777898498; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=Z0ouDnSC+T9ZSB+2JJ/MTzlB9sk99toFQYA8zN4EEOs=;
+        b=kp5MbLO0VCy1JbI5L+iD8oIg12pUFRmbJDNRhWo2QAQNpVOTvxC4Ot2RWO7Xlgu0xh
+         T6FDg7KEk7zelFW7VbHD14cWrPLQJD8kMQpmmuA0TgDVMLdrbzFGOkdSUur1ZkM3lUA4
+         f4i95SURw4yIS/i3kWmsqn7X5GY4yAh13k1hhaxbXMG0fn7+CN1+KV8oa8dTX9gdYrEM
+         4r2JRfn+XN45JswjwQunEPGjXpNbjOw2mRC991ARn0HR7hcxpJE51LJCXO9PMiraMo/u
+         PJdyXf0vytYPjK2T9Lnwlqh4jGL4Jh1xF42maNHIISl4KxkGg96ydhkNDAiYFZpaIW39
+         RBcw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20251104; t=1777293698; x=1777898498;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-gg:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=Z0ouDnSC+T9ZSB+2JJ/MTzlB9sk99toFQYA8zN4EEOs=;
+        b=YgIgZYA2HzpccbcGtpbTGtOUWwcoiqu//ieV8UEK+zil6CMMot7RL5ENwNMdnLK+VY
+         /Lx90DCGBuyfodgJdZM11TfX4iJ5md7BsDNUA31CASriJINiX1DhdD1zp+M/Md9BHUHk
+         eC8JuOAfK1U4vofCllSlpX7q4hamlFXGXuuDHcPJaW7YNdxoXs+d/uDuQvM2eiryJPYT
+         GMP70MdIbv7T5pptYmXBgL6L5WrZnwzreTwqPlKMBlpMNltUQ6hSANzcrErgLCA1CRkm
+         KrwNGQuC2kElU06cAsJZpjJz66JlvurKC8LT/cvSEDimMbdQma8/erKKDQHIC1rhh5r9
+         v6xQ==
+X-Forwarded-Encrypted: i=1; AFNElJ/Pcun+bnJJcYmZnAB3IgE3vkGo5VPIXm81IhfdV1WEa//Nmz+sf+RQQZ/6Fn5W3mb+yDRpFtJn7zMumgf5VYnQMjcA@vger.kernel.org
+X-Gm-Message-State: AOJu0Yy+P2hml4BZGGTSJl5S2ZCzB6f+O2G/tkXvkHJlTH93oubH4A7/
+	1ql3pyZghmCnaZnouMYyJyWTQSjSCZo3Cyv4fssgrUBgX/LV5L0MyLZP
+X-Gm-Gg: AeBDievLOyJ/7c8xf8VNK2sOo98Bav3clrrLXKjqr0ajLIDunICzQNRzjpDM/ODhkSJ
+	AiioFCN8xS0XNhPMfRnDDbX2TUo9RmRUtjWDNxkrlQiLXq+5APWdqk7YsplHKmj8ovNP6XQ6vb5
+	XUdNaH3QvXYDFR7DUN460GxHfFTLoTiR7f3juoKJbgdDA9h2868AvcmZgaHyonBnlGEc9O9HApE
+	KaWFXKJHn9hBFKPfxatVE780JwLQdcqq+tIeVZowHkKaMF9jdDtdU9bmx7WjT5WsWhaq+s97qeY
+	eYUI34x4PEF/0TsPaqEuI8EXOtffVwL4i9XCNh9JuUb/OrsoomfnidBOqD6YzbO1a/FJmX+e3mC
+	B/NUxQFGfcEjn1B/HVGL9onGz32fM6Bu6t2MysF+4tCujKyacYOL8YxA0fwOZMzPySeBeROFnQX
+	IXFAEvF/LezteAu9YnaaZ5EUOAj3uQg96saM/H57KqtGpFD1Ohyglhwe+RKPe+SWMbx1xjNeNwM
+	aGPRAQ=
+X-Received: by 2002:a05:600c:3150:b0:485:3b00:f93b with SMTP id 5b1f17b1804b1-488fb79df09mr631479005e9.31.1777293698059;
+        Mon, 27 Apr 2026 05:41:38 -0700 (PDT)
+Received: from ?IPV6:2a01:e11:202b:40:a4dd:2777:84a8:bc7b? ([2a01:e11:202b:40:a4dd:2777:84a8:bc7b])
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-48a55dc9f58sm948747075e9.6.2026.04.27.05.41.37
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Mon, 27 Apr 2026 05:41:37 -0700 (PDT)
+Message-ID: <edac84e9-93c0-4248-b28f-c121583b9f65@gmail.com>
+Date: Mon, 27 Apr 2026 14:41:36 +0200
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+User-Agent: Mozilla Thunderbird
+Subject: Re: [BUG] 36-second boot delay due to by
+ acpi_gpio_handle_deferred_request_irqs on ASUS ROG Strix G16 (2025)
+To: Mika Westerberg <mika.westerberg@linux.intel.com>,
+ Hans de Goede <hansg@kernel.org>
+Cc: Mario Limonciello <superm1@kernel.org>,
+ Francesco Lauritano <francesco.lauritano1@protonmail.com>,
+ "linux-acpi@vger.kernel.org" <linux-acpi@vger.kernel.org>,
+ "open list:GPIO ACPI SUPPORT" <linux-gpio@vger.kernel.org>,
+ "platform-driver-x86@vger.kernel.org" <platform-driver-x86@vger.kernel.org>,
+ "westeri@kernel.org" <westeri@kernel.org>,
+ Benjamin Tissoires <bentiss@kernel.org>
+References: <b57b44c3-ea96-4189-8b70-71bf4a80d29b@kernel.org>
+ <20251218103831.GW2275908@black.igk.intel.com>
+ <51f999d7-2064-47dc-8d9b-e262588bfbdb@gmail.com>
+ <20260422090709.GB557136@black.igk.intel.com>
+ <4e55e31e-a5e8-4098-8a7f-bb52476b882a@gmail.com>
+ <20260422095558.GC557136@black.igk.intel.com>
+ <5a36760d-5d1e-4eee-9006-3fed042aa2cd@gmail.com>
+ <20260423044211.GD557136@black.igk.intel.com>
+ <3d562963-9581-4e0f-b9a0-5f0fe28d2495@kernel.org>
+ <c55b55ea-a8d5-481e-916f-eb92aeb2e06d@kernel.org>
+ <20260427122806.GN557136@black.igk.intel.com>
+Content-Language: en-US
+From: Marco Scardovi <mscardovi95@gmail.com>
+In-Reply-To: <20260427122806.GN557136@black.igk.intel.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
 
-https://bugzilla.kernel.org/show_bug.cgi?id=3D221065
 
---- Comment #70 from Rong Zhang (i@rong.moe) ---
-(In reply to boite.pour.spam from comment #67)
-> I've read all the comments above and I'm trying to understand how the bro=
-ken
-> ACPI tables would work on Windows. If there's a "deadlock" in the ACPI
-> implementation,=20
+Il 27/04/26 14:28, Mika Westerberg ha scritto:
+> On Mon, Apr 27, 2026 at 01:46:03PM +0200, Hans de Goede wrote:
+>> Hi,
+>>
+>> On 23-Apr-26 07:15, Mario Limonciello wrote:
+>>> On 4/22/26 23:42, Mika Westerberg wrote:
+>>>> Hi,
+>>>>
+>>>> On Wed, Apr 22, 2026 at 02:08:29PM +0200, Marco Scardovi wrote:
+>>>>>>> Assuming all the variants suffer the same problem would it be ok to use a
+>>>>>>> wildcard for it?
+>>>>>> Yeah, we could expand it to all "ROG Strix G16" I think:
+>>>>>>
+>>>>>> diff --git a/drivers/gpio/gpiolib-acpi-quirks.c b/drivers/gpio/gpiolib-acpi-quirks.c
+>>>>>> index a0116f004975..e3a6111854e8 100644
+>>>>>> --- a/drivers/gpio/gpiolib-acpi-quirks.c
+>>>>>> +++ b/drivers/gpio/gpiolib-acpi-quirks.c
+>>>>>> @@ -392,6 +392,23 @@ static const struct dmi_system_id gpiolib_acpi_quirks[] __initconst = {
+>>>>>>                 .ignore_wake = "VEN_0488:00@355",
+>>>>>>             },
+>>>>>>         },
+>>>>>> +    {
+>>>>>> +        /*
+>>>>>> +         * The ASUS ROG Strix G16 (2025) ACPI GPIO configuration
+>>>>>> +         * causes acpi_gpio_handle_deferred_request_irqs() to
+>>>>>> +         * stall for ~36 seconds during boot so ignore the two
+>>>>>> +         * interrupts involved.
+>>>>>> +         *
+>>>>>> +         * Found in BIOS G614PP.307.
+>>>>>> +         */
+>>>>>> +        .matches = {
+>>>>>> +            DMI_MATCH(DMI_SYS_VENDOR, "ASUSTeK COMPUTER INC."),
+>>>>>> +            DMI_MATCH(DMI_PRODUCT_NAME, "ROG Strix G16"),
+>>>>>> +        },
+>>>>>> +        .driver_data = &(struct acpi_gpiolib_dmi_quirk) {
+>>>>>> +            .ignore_interrupt = "AMDI0030:00@21,AMDI0030:00@24",
+>>>>>> +        },
+>>>>>> +    },
+>>>>>>         {} /* Terminating entry */
+>>>>>>     };
+>>>>> As for now it seems working. I've reverted it on my kernel as I prefer
+>>>>> remain as much as possible close to the CachyOS' one but hopefully it will
+>>>>> be implemented on 7.1, if someone propose the patch and it is accepted. It
+>>>>> would be amazing to see Asus more interested on Linux and more strict with
+>>>>> their BIOS but in the end I understand it's like asking for the moon.
+>>>> Okay thanks for checking. I guess this is what we have to live with for now
+>>>> until someone finds a better way of dealing with these.
+>>>>
+>>>> @Francesco, would you like to submit a new version of the patch similar to
+>>>> above or you want me to do that?
+>>> Hans suggested that we might want to look at ripping out this edge triggered events at boot earlier in the thread.
+>>>
+>>> https://lore.kernel.org/platform-driver-x86/20260423044211.GD557136@black.igk.intel.com/T/#mdca882e6606d3a894ec7499d3b742d040933dbdb
+>>>
+>>> Hans - as you pointed out that the Surface lid state is the only real issue left and you happen to have one do you think you could work up some patches?
+>> Right, so I read further in the thread that Armin has a maybe better suggestion,
+>> after that has been merged I can check a bunch of the current devices with
+>> .no_edge_events_on_boot which I still have and see if those quirks can be
+>> dropped now.
+>>
+>> But the above quirk for the ASUS ROG Strix G16 (2025) does not use
+>> .no_edge_events_on_boot which just disables the initial run of
+>> the ACPI event handler at boot. Instead it uses:
+>>
+>>              .ignore_interrupt = "AMDI0030:00@21,AMDI0030:00@24",
+>>
+>> which *completely* disables the ACPI event handlers for the mentioned pins.
+> Oh, I've completely lost track of all the quirks that were added after I
+> did anything with the ACPI GPIO stuff :(. Sorry about missing this. I will
+> stay silent from now on ;-)
 
-How did you conclude that? No one had mentioned "deadlock". The issue is ab=
-out:
+Hi Everyone,
 
-#1. Errors in mutex acquisition are propagated blindly
-#2. Some ACPI methods release a mutex owned by others
+@hans, I tried it and can confirm it does the trick as well.
 
-I think my conclusion is clear enough:
-https://bugzilla.kernel.org/show_bug.cgi?id=3D221065#c33
 
-> how does Windows works around it?=20
+Best regards,
 
-Just ask Microsoft and Lenovo.
+Marco
 
-TBH, comparing Linux to Windows in that way is hardly helpful. On Windows, =
-the
-ideapad ACPI methods are used by Lenovo Vantage (or something else), which =
-is a
-userspace program. It probably doesn't query charge types after power event=
-s,
-but blindly assumes nothing has changed. It probably doesn't check ACPI ret=
-urn
-values to see if they are insane, but propagates them blindly again. I don't
-think "Windows works around it," as burying one's head in the sand works ar=
-ound
-nothing.
-
-> If I understand correctly, the solving options are:
-> 1. Have Lenovo to fix the ACPI tables (which is very unlikely)
-> 2. Implement a "live" ACPI fix with a DSDT override but it won't fix the =
-bad
-> releasing of the ACPI's mutex
-
-Again, how did you conclude that? If you used an AI to "help" you understand
-the thread, you probably chose the wrong AI.
-
-The easiest thing to fix is, however, "bad releasing" (#2). Just delete or =
-move
-several lines of ASL code, and that's it.
-
-But most of the issues here are caused by #1. It generates a lot of garbage
-return values, and there's no easy way to distinguish them afterward. Every
-method that recursively depends on ECMT must be rewritten, which means that=
- not
-only the DSDT, but also some SSDTs, need to be overridden.
-
-I've almost said the same in
-https://bugzilla.kernel.org/show_bug.cgi?id=3D221065#c41
-
-> (but we can probably live with it, since,
-> except for the dmesg noise, doesn't break anything)
-
-The error messages generated by ideapad-laptop don't break anything either.
-They're harmlessly noisy right after power events, but everything should wo=
-rk
-well once the events settle.
-
-> 3. Blacklist both usci_acpi and ideapad-laptop, so that there aren't any
-> contender on the mutex anymore, but I'm not clear about what's lost when =
-we
-> do so?
-
-It's usually OK to blacklist usci_acpi. Most Lenovo laptops have most USCI
-commands stubbed to a certain extent, so they're hardly useful. The EC will
-always handle USB-C events itself despite that.
-
-You don't need to blacklist ideapad-laptop if you can live with harmless dm=
-esg
-noise.
-
---=20
-You may reply to this email to add a comment.
-
-You are receiving this mail because:
-You are watching the assignee of the bug.=
