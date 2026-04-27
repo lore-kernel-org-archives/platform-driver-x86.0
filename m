@@ -1,155 +1,147 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.19])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5E7FB3B6343;
-	Mon, 27 Apr 2026 12:28:10 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.19
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D42AEF9C0
+	for <platform-driver-x86@vger.kernel.org>; Mon, 27 Apr 2026 12:34:32 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1777292892; cv=none; b=gkVdc9NW5S/gbE78BPHgMnVwmn4I+80KBbcevyzIWMaS4YAHBszlrTz2TSkl0e1ZmoWgXViw1SSa2KHrJ6DDL0Z93gpwOO070f8jY0A/kZ1l17ceZUtrdyiVv3mWq6cl6s6Aw3FB6tySsnkoEeWrDAyZfPojoN+1WUMB9/jrM4M=
+	t=1777293272; cv=none; b=E6lMGp9dGMhMs62QCjZjPV7crWLjfCrQVWVoRmYQ9LKV7XX/K/LsOg2U3Tl9mlaCT73yNTcDFSTK5przP2LxcZ74LmKMshN3QSa7qj2TEo3/FTrODrZlStFqKTsRnzvwUTf9XajEFlSHC5jbUrjvwko0/A0wUw5Awn3baAomYAo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1777292892; c=relaxed/simple;
-	bh=LmTSRFR3z7Z5T9lVwbK0Xia+NCM5uQm5zF+OL4a3bAw=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=hasZI0uPCV5vjbBZ1goeSa+tzn2Zy/JwiyWkCNdheG621vCz1Cb85Vmuxut+6z+QCHIZlhDWbWAM1z5MvNZoWp0dD+GtG7AX64sHIdlc42DW3DgCvBgZasZBOnG5M7tA8aL/WooxjmLu0F3ryMH9Mx4t2DEMRilGNVvl6MEWdAU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=pass smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=iPsUaoQG; arc=none smtp.client-ip=192.198.163.19
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.intel.com
+	s=arc-20240116; t=1777293272; c=relaxed/simple;
+	bh=C9q8fBk3kOk5ggL8hVBwl/iA+2PYboh0Vgi+I9hiUnI=;
+	h=From:To:Subject:Date:Message-ID:In-Reply-To:References:
+	 Content-Type:MIME-Version; b=c6WWt8gLhKzSJ6IIpk8um8z/+EXVTZjVCi2k9aPpZdn1Mlqjr7JrYmbXRDiwxweh2gzl6hPhuQ+OAq6eu93dQeAIALbGpOSSRoR9LS0oGQFe5xmdWefS/2Gam8sJK7PiW5VyCiTZGe8Kl7ADKUmdSJxcBSocAvGVBbBpRw9mq3g=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=YIXrIzM5; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="iPsUaoQG"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1777292890; x=1808828890;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:content-transfer-encoding:in-reply-to;
-  bh=LmTSRFR3z7Z5T9lVwbK0Xia+NCM5uQm5zF+OL4a3bAw=;
-  b=iPsUaoQGi6gks3yLgYW/6LTqy/F60Bw+gOezXF0I8CGVB+y8o0Y3WohT
-   fgU665RP9+TaTchDAxRDhsNXMgSO0mlT+nWww5W2K4IlkN/KdMYRcF3Oh
-   ejgxDNXNvUpjtyY/a3+K5w5AyxOOMXX8qG9tgGNen1W0EIIy/TW+6WaHs
-   D5lEnF69K+6YuLKRragLVWV1djRHMn+KOLiacs3OlB4f0PcygeybBCOhT
-   3aDLO0ExRI8YcARo+lAEOyKW0svlGqTkkNKrW4kj6hRch/Lqm7khliB6h
-   B8/+dQQ7cFPGQFjpjS9J0ajtJucXmP+WO2kbJDBUKJUdkaqz0FRIKjXH/
-   w==;
-X-CSE-ConnectionGUID: kN8fYmWYTWmQzNlLId0ZhQ==
-X-CSE-MsgGUID: eccRn1vYTKCx+AdyQodmRQ==
-X-IronPort-AV: E=McAfee;i="6800,10657,11768"; a="77203890"
-X-IronPort-AV: E=Sophos;i="6.23,202,1770624000"; 
-   d="scan'208";a="77203890"
-Received: from fmviesa009.fm.intel.com ([10.60.135.149])
-  by fmvoesa113.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 27 Apr 2026 05:28:09 -0700
-X-CSE-ConnectionGUID: DY7A+fRwQX26PTQrz1utgg==
-X-CSE-MsgGUID: cUQq0kE/Tve0cbbpqecwXg==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.23,202,1770624000"; 
-   d="scan'208";a="227097317"
-Received: from black.igk.intel.com ([10.91.253.5])
-  by fmviesa009.fm.intel.com with ESMTP; 27 Apr 2026 05:28:08 -0700
-Received: by black.igk.intel.com (Postfix, from userid 1001)
-	id A3A9795; Mon, 27 Apr 2026 14:28:06 +0200 (CEST)
-Date: Mon, 27 Apr 2026 14:28:06 +0200
-From: Mika Westerberg <mika.westerberg@linux.intel.com>
-To: Hans de Goede <hansg@kernel.org>
-Cc: Mario Limonciello <superm1@kernel.org>,
-	Marco Scardovi <mscardovi95@gmail.com>,
-	Francesco Lauritano <francesco.lauritano1@protonmail.com>,
-	"linux-acpi@vger.kernel.org" <linux-acpi@vger.kernel.org>,
-	"open list:GPIO ACPI SUPPORT" <linux-gpio@vger.kernel.org>,
-	"platform-driver-x86@vger.kernel.org" <platform-driver-x86@vger.kernel.org>,
-	"westeri@kernel.org" <westeri@kernel.org>,
-	Benjamin Tissoires <bentiss@kernel.org>
-Subject: Re: [BUG] 36-second boot delay due to by
- acpi_gpio_handle_deferred_request_irqs on ASUS ROG Strix G16 (2025)
-Message-ID: <20260427122806.GN557136@black.igk.intel.com>
-References: <b57b44c3-ea96-4189-8b70-71bf4a80d29b@kernel.org>
- <20251218103831.GW2275908@black.igk.intel.com>
- <51f999d7-2064-47dc-8d9b-e262588bfbdb@gmail.com>
- <20260422090709.GB557136@black.igk.intel.com>
- <4e55e31e-a5e8-4098-8a7f-bb52476b882a@gmail.com>
- <20260422095558.GC557136@black.igk.intel.com>
- <5a36760d-5d1e-4eee-9006-3fed042aa2cd@gmail.com>
- <20260423044211.GD557136@black.igk.intel.com>
- <3d562963-9581-4e0f-b9a0-5f0fe28d2495@kernel.org>
- <c55b55ea-a8d5-481e-916f-eb92aeb2e06d@kernel.org>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="YIXrIzM5"
+Received: by smtp.kernel.org (Postfix) with ESMTPS id 8287EC2BCB4
+	for <platform-driver-x86@vger.kernel.org>; Mon, 27 Apr 2026 12:34:32 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1777293272;
+	bh=C9q8fBk3kOk5ggL8hVBwl/iA+2PYboh0Vgi+I9hiUnI=;
+	h=From:To:Subject:Date:In-Reply-To:References:From;
+	b=YIXrIzM5M1/h0iWizjlKbYwpNfBwoCJ1KZcVLI4FNANv1WyvaOJM4rFoUTmMzpjJk
+	 OfzKyzMBBVdAobHcmKyktY9ZZsYP2l9FaSP05PFBJSXnLD5Dt1NO7S0lXP/scHZpHi
+	 lotGNvzgMwtlcpL8VhLDakihjs7voYj7r50dlEN8hGmdqJuXS7C2hb/HVC41JPZEot
+	 3xglqVlVzbfPdl782ZMQGecJgNILMP6q58sgGdxRdxGrjse/3cv3Fm7fcWhFisrLyt
+	 Ufgn8L3OZxq6AX/xTjRYoVcBDQowfbXCUN9X4yfPPel+M4kN6vrVqpHuyle+9xv+eZ
+	 i7Y1p4JeWDSgA==
+Received: by aws-us-west-2-korg-bugzilla-1.web.codeaurora.org (Postfix, from userid 48)
+	id 7D05AC4160E; Mon, 27 Apr 2026 12:34:32 +0000 (UTC)
+From: bugzilla-daemon@kernel.org
+To: platform-driver-x86@vger.kernel.org
+Subject: [Bug 221065] ideapad_acpi: unexpected charge_types spam on Yoga Pro
+ 7 14ASP9
+Date: Mon, 27 Apr 2026 12:34:31 +0000
+X-Bugzilla-Reason: None
+X-Bugzilla-Type: changed
+X-Bugzilla-Watch-Reason: AssignedTo drivers_platform_x86@kernel-bugs.osdl.org
+X-Bugzilla-Product: Drivers
+X-Bugzilla-Component: Platform_x86
+X-Bugzilla-Version: 2.5
+X-Bugzilla-Keywords: 
+X-Bugzilla-Severity: low
+X-Bugzilla-Who: i@rong.moe
+X-Bugzilla-Status: NEW
+X-Bugzilla-Resolution: 
+X-Bugzilla-Priority: P3
+X-Bugzilla-Assigned-To: drivers_platform_x86@kernel-bugs.osdl.org
+X-Bugzilla-Flags: 
+X-Bugzilla-Changed-Fields: 
+Message-ID: <bug-221065-215701-iJG0CYCUdi@https.bugzilla.kernel.org/>
+In-Reply-To: <bug-221065-215701@https.bugzilla.kernel.org/>
+References: <bug-221065-215701@https.bugzilla.kernel.org/>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+X-Bugzilla-URL: https://bugzilla.kernel.org/
+Auto-Submitted: auto-generated
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <c55b55ea-a8d5-481e-916f-eb92aeb2e06d@kernel.org>
 
-On Mon, Apr 27, 2026 at 01:46:03PM +0200, Hans de Goede wrote:
-> Hi,
-> 
-> On 23-Apr-26 07:15, Mario Limonciello wrote:
-> > On 4/22/26 23:42, Mika Westerberg wrote:
-> >> Hi,
-> >>
-> >> On Wed, Apr 22, 2026 at 02:08:29PM +0200, Marco Scardovi wrote:
-> >>>>> Assuming all the variants suffer the same problem would it be ok to use a
-> >>>>> wildcard for it?
-> >>>> Yeah, we could expand it to all "ROG Strix G16" I think:
-> >>>>
-> >>>> diff --git a/drivers/gpio/gpiolib-acpi-quirks.c b/drivers/gpio/gpiolib-acpi-quirks.c
-> >>>> index a0116f004975..e3a6111854e8 100644
-> >>>> --- a/drivers/gpio/gpiolib-acpi-quirks.c
-> >>>> +++ b/drivers/gpio/gpiolib-acpi-quirks.c
-> >>>> @@ -392,6 +392,23 @@ static const struct dmi_system_id gpiolib_acpi_quirks[] __initconst = {
-> >>>>                .ignore_wake = "VEN_0488:00@355",
-> >>>>            },
-> >>>>        },
-> >>>> +    {
-> >>>> +        /*
-> >>>> +         * The ASUS ROG Strix G16 (2025) ACPI GPIO configuration
-> >>>> +         * causes acpi_gpio_handle_deferred_request_irqs() to
-> >>>> +         * stall for ~36 seconds during boot so ignore the two
-> >>>> +         * interrupts involved.
-> >>>> +         *
-> >>>> +         * Found in BIOS G614PP.307.
-> >>>> +         */
-> >>>> +        .matches = {
-> >>>> +            DMI_MATCH(DMI_SYS_VENDOR, "ASUSTeK COMPUTER INC."),
-> >>>> +            DMI_MATCH(DMI_PRODUCT_NAME, "ROG Strix G16"),
-> >>>> +        },
-> >>>> +        .driver_data = &(struct acpi_gpiolib_dmi_quirk) {
-> >>>> +            .ignore_interrupt = "AMDI0030:00@21,AMDI0030:00@24",
-> >>>> +        },
-> >>>> +    },
-> >>>>        {} /* Terminating entry */
-> >>>>    };
-> >>> As for now it seems working. I've reverted it on my kernel as I prefer
-> >>> remain as much as possible close to the CachyOS' one but hopefully it will
-> >>> be implemented on 7.1, if someone propose the patch and it is accepted. It
-> >>> would be amazing to see Asus more interested on Linux and more strict with
-> >>> their BIOS but in the end I understand it's like asking for the moon.
-> >>
-> >> Okay thanks for checking. I guess this is what we have to live with for now
-> >> until someone finds a better way of dealing with these.
-> >>
-> >> @Francesco, would you like to submit a new version of the patch similar to
-> >> above or you want me to do that?
-> > 
-> > Hans suggested that we might want to look at ripping out this edge triggered events at boot earlier in the thread.
-> > 
-> > https://lore.kernel.org/platform-driver-x86/20260423044211.GD557136@black.igk.intel.com/T/#mdca882e6606d3a894ec7499d3b742d040933dbdb
-> > 
-> > Hans - as you pointed out that the Surface lid state is the only real issue left and you happen to have one do you think you could work up some patches?
-> 
-> Right, so I read further in the thread that Armin has a maybe better suggestion,
-> after that has been merged I can check a bunch of the current devices with
-> .no_edge_events_on_boot which I still have and see if those quirks can be
-> dropped now.
-> 
-> But the above quirk for the ASUS ROG Strix G16 (2025) does not use
-> .no_edge_events_on_boot which just disables the initial run of
-> the ACPI event handler at boot. Instead it uses:
-> 
->             .ignore_interrupt = "AMDI0030:00@21,AMDI0030:00@24",
-> 
-> which *completely* disables the ACPI event handlers for the mentioned pins.
+https://bugzilla.kernel.org/show_bug.cgi?id=3D221065
 
-Oh, I've completely lost track of all the quirks that were added after I
-did anything with the ACPI GPIO stuff :(. Sorry about missing this. I will
-stay silent from now on ;-)
+--- Comment #70 from Rong Zhang (i@rong.moe) ---
+(In reply to boite.pour.spam from comment #67)
+> I've read all the comments above and I'm trying to understand how the bro=
+ken
+> ACPI tables would work on Windows. If there's a "deadlock" in the ACPI
+> implementation,=20
+
+How did you conclude that? No one had mentioned "deadlock". The issue is ab=
+out:
+
+#1. Errors in mutex acquisition are propagated blindly
+#2. Some ACPI methods release a mutex owned by others
+
+I think my conclusion is clear enough:
+https://bugzilla.kernel.org/show_bug.cgi?id=3D221065#c33
+
+> how does Windows works around it?=20
+
+Just ask Microsoft and Lenovo.
+
+TBH, comparing Linux to Windows in that way is hardly helpful. On Windows, =
+the
+ideapad ACPI methods are used by Lenovo Vantage (or something else), which =
+is a
+userspace program. It probably doesn't query charge types after power event=
+s,
+but blindly assumes nothing has changed. It probably doesn't check ACPI ret=
+urn
+values to see if they are insane, but propagates them blindly again. I don't
+think "Windows works around it," as burying one's head in the sand works ar=
+ound
+nothing.
+
+> If I understand correctly, the solving options are:
+> 1. Have Lenovo to fix the ACPI tables (which is very unlikely)
+> 2. Implement a "live" ACPI fix with a DSDT override but it won't fix the =
+bad
+> releasing of the ACPI's mutex
+
+Again, how did you conclude that? If you used an AI to "help" you understand
+the thread, you probably chose the wrong AI.
+
+The easiest thing to fix is, however, "bad releasing" (#2). Just delete or =
+move
+several lines of ASL code, and that's it.
+
+But most of the issues here are caused by #1. It generates a lot of garbage
+return values, and there's no easy way to distinguish them afterward. Every
+method that recursively depends on ECMT must be rewritten, which means that=
+ not
+only the DSDT, but also some SSDTs, need to be overridden.
+
+I've almost said the same in
+https://bugzilla.kernel.org/show_bug.cgi?id=3D221065#c41
+
+> (but we can probably live with it, since,
+> except for the dmesg noise, doesn't break anything)
+
+The error messages generated by ideapad-laptop don't break anything either.
+They're harmlessly noisy right after power events, but everything should wo=
+rk
+well once the events settle.
+
+> 3. Blacklist both usci_acpi and ideapad-laptop, so that there aren't any
+> contender on the mutex anymore, but I'm not clear about what's lost when =
+we
+> do so?
+
+It's usually OK to blacklist usci_acpi. Most Lenovo laptops have most USCI
+commands stubbed to a certain extent, so they're hardly useful. The EC will
+always handle USB-C events itself despite that.
+
+You don't need to blacklist ideapad-laptop if you can live with harmless dm=
+esg
+noise.
+
+--=20
+You may reply to this email to add a comment.
+
+You are receiving this mail because:
+You are watching the assignee of the bug.=
