@@ -1,506 +1,111 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.21])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 40840175A9A;
-	Mon, 27 Apr 2026 02:25:53 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 326712EDD62;
+	Mon, 27 Apr 2026 04:57:35 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.21
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1777256753; cv=none; b=oaUBjOzeWFQzL38nqnqqpqGXmjXKOuoMf+RX3+n2U9Hc7Pl07fYptwDfHh+jGJ4p37yQSLVasrBrW7cFbXC5b60IN43IwQZPD1w+RfqTJ3juiixqcADU7htZ0iHYqoE/qsJZYwLyIw5ibXwJqdqTZUrDCbCbcy1XfjNecXMf9As=
+	t=1777265857; cv=none; b=pWQmm02Uo8acGAq5jL4jJXceGStDN33c8FU89agPgNG7n4+IG2KWPf4Jz7ilo1dPwNxs+kkzqpJ402zrDNLomd8PQlcGFCXhKhwZj6Ut9nLFOPOCE7HUXrrmb5NHyWiv9iiS0SNzEMNdOPuvUHzWkdQ5okgU34okrcPeRWhampo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1777256753; c=relaxed/simple;
-	bh=69wK8c4MP+TYG0GUY9wF8Ef5qSNZZJ3exJQHuDmdqUU=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=rm9PQA7AB8C+nxrIHiX9Nf8CB8JC/rxZTFGkIyAjZvKFF+noZbacntWKI9GlU/LObsSD4/ZU83g/SSJrWJaxWlSSVF+4SDquJxevYPVZhl27AJk6C3wwuWMKXbTdgLrJW6F5GTt4m1iXRAeD36jyBxjB7gyBBtCSOars+H3N38c=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=UOwD2vnS; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1777265857; c=relaxed/simple;
+	bh=jZ/gQyskDf9bpQeRgub9iz10gqKL3J/aAnToYVfGb5M=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=Nq8ogbg//JXXAlhnujGHErT2jYQ1iurCvv2vu+TH9sKTgj0JF6fDVTMTKSayvyyUNxqmuiju//YgFe93UoadU3OHBtjENk4alpOW0Dlezf+gJTP7FXi5ADgI9kyDpajlZ5MWd+AwpdlzOcxAQx/o3Yquti+av7SDXV6Ha8yPCJ0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=pass smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=Z17TkTM6; arc=none smtp.client-ip=198.175.65.21
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="UOwD2vnS"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 4979EC2BCAF;
-	Mon, 27 Apr 2026 02:25:52 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1777256753;
-	bh=69wK8c4MP+TYG0GUY9wF8Ef5qSNZZJ3exJQHuDmdqUU=;
-	h=From:To:Cc:Subject:Date:From;
-	b=UOwD2vnS3oWUavkrqjWakgbb4cz95U9VzjMOeSsx68DS/m0CUku3pl7moba5MiV7y
-	 0rLOzM41/HDgYV2k5ofFcqj7IXcOpoTtbwMX7K/KZz9Q9V55s/Nf8e+DwGN9AvOSji
-	 aayt6GhpU27nZH/ZzZcZiPPRlyA7V8WfTLEpw0N34gn7g+JNMYKny/zWnVD6hBvChJ
-	 ADvGBkwn7IqYfo8wN2bBpWtDuRhWqoYKKhO4NUPe5IWeKpmvJ3LCm3K4j+IfG9c/GR
-	 RotwLgMXANbY4H5VRpqi5UIKE3dhTrGa9JRnNYlLdXrkZO72IATmHfroSud54O0nMj
-	 FmwcE3GVttzlg==
-From: "Mario Limonciello (AMD)" <superm1@kernel.org>
-To: =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
-Cc: Hans de Goede <hansg@kernel.org>,
-	linux-kernel@vger.kernel.org (open list),
-	platform-driver-x86@vger.kernel.org (open list:X86 PLATFORM DRIVERS),
-	"Mario Limonciello (AMD)" <superm1@kernel.org>,
-	Leo.Lin@amd.com
-Subject: [PATCH] platform/x86/amd: Introduce Halo Box RGB LED driver
-Date: Sun, 26 Apr 2026 21:25:46 -0500
-Message-ID: <20260427022546.1407923-1-superm1@kernel.org>
-X-Mailer: git-send-email 2.43.0
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="Z17TkTM6"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1777265855; x=1808801855;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=jZ/gQyskDf9bpQeRgub9iz10gqKL3J/aAnToYVfGb5M=;
+  b=Z17TkTM6/hdIK583V2vp1xSdhEbTB19/5sU2BfBYX9YyjhvC9kYFNfPJ
+   4Dgz7xPcWxeeiWcurUotNBVnV5mJQkkwGeaoB0LXGDY6csAGqLSSrqykn
+   Sb+EVZs+OO3iIWNkSkC35WKEIjLrpGfSryTlbS3iIMgjunAoQFtbsH+qR
+   wXD151WleEk4wp8E7xkJaA03dImWSdhZkIT3PWCPy2q1YtdPrQkfWCtsD
+   CUw4S5Do4tfiOp1Q/zub2T52nIi2KmvjqXkIL46MghH38iGhUVScXUYw+
+   J0hQi2wy41uMCqqvl+WlFuGSn+kuGszdLnbTv0+VnOkTWkLt9b2/2y2JJ
+   A==;
+X-CSE-ConnectionGUID: Y+Ev2GXYQ8+C6YzN+3P4+A==
+X-CSE-MsgGUID: NE0c7awPSwaPqtkIK64zIA==
+X-IronPort-AV: E=McAfee;i="6800,10657,11768"; a="78034473"
+X-IronPort-AV: E=Sophos;i="6.23,201,1770624000"; 
+   d="scan'208";a="78034473"
+Received: from orviesa001.jf.intel.com ([10.64.159.141])
+  by orvoesa113.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 26 Apr 2026 21:57:35 -0700
+X-CSE-ConnectionGUID: 8rqvHTCuQ3eocDuDgTFMYw==
+X-CSE-MsgGUID: V1wDDYX7SdOeOKk1NOgFxw==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.23,201,1770624000"; 
+   d="scan'208";a="271659496"
+Received: from black.igk.intel.com ([10.91.253.5])
+  by orviesa001.jf.intel.com with ESMTP; 26 Apr 2026 21:57:32 -0700
+Received: by black.igk.intel.com (Postfix, from userid 1001)
+	id 6F1DB95; Mon, 27 Apr 2026 06:57:31 +0200 (CEST)
+Date: Mon, 27 Apr 2026 06:57:31 +0200
+From: Mika Westerberg <mika.westerberg@linux.intel.com>
+To: Armin Wolf <W_Armin@gmx.de>
+Cc: Mario Limonciello <superm1@kernel.org>,
+	Marco Scardovi <mscardovi95@gmail.com>,
+	Hans de Goede <hansg@kernel.org>,
+	Francesco Lauritano <francesco.lauritano1@protonmail.com>,
+	"linux-acpi@vger.kernel.org" <linux-acpi@vger.kernel.org>,
+	"open list:GPIO ACPI SUPPORT" <linux-gpio@vger.kernel.org>,
+	"platform-driver-x86@vger.kernel.org" <platform-driver-x86@vger.kernel.org>,
+	"westeri@kernel.org" <westeri@kernel.org>,
+	Benjamin Tissoires <bentiss@kernel.org>
+Subject: Re: [BUG] 36-second boot delay due to by
+ acpi_gpio_handle_deferred_request_irqs on ASUS ROG Strix G16 (2025)
+Message-ID: <20260427045731.GI557136@black.igk.intel.com>
+References: <20260422090709.GB557136@black.igk.intel.com>
+ <4e55e31e-a5e8-4098-8a7f-bb52476b882a@gmail.com>
+ <20260422095558.GC557136@black.igk.intel.com>
+ <5a36760d-5d1e-4eee-9006-3fed042aa2cd@gmail.com>
+ <20260423044211.GD557136@black.igk.intel.com>
+ <3d562963-9581-4e0f-b9a0-5f0fe28d2495@kernel.org>
+ <f72a1da5-2cc1-4e08-9441-ea252062b4e5@gmail.com>
+ <a2a187d9-363c-48fe-8301-6a199366c478@gmx.de>
+ <f4979d43-f61f-4387-8490-ccec7043c940@kernel.org>
+ <bcdd110b-489e-4f09-892d-b2d6ce4b0ff0@gmx.de>
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <bcdd110b-489e-4f09-892d-b2d6ce4b0ff0@gmx.de>
 
-The Halo Box features an RGB LED light bar that can be controlled
-through WMI methods to display any color combination.
+On Sat, Apr 25, 2026 at 10:41:46PM +0200, Armin Wolf wrote:
+> > > according to the Microsoft documentation
+> > > (https://learn.microsoft.com/
+> > > en-us/windows-hardware/drivers/bringup/general-purpose-i-o--gpio-,
+> > > section "GPIO controllers and ActiveBoth interrupts"), triggering
+> > > GPIO interrupts marked as ActiveBoth during initialization is
+> > > correct as long as the associated GPIO line is already "asserted"
+> > > (aka logic level low). I think the problem is that we also trigger
+> > > edge-based GPIO interrupts _not_ marked as ActiveBoth.
+> > > 
+> > > Based on this i agree with Hans, except that we should continue you
+> > > trigger ActiveBoth GPIO interrupts as long as the above
+> > > condition applies.
+> > > 
+> > > Thanks,
+> > > Armin Wolf
+> > > 
+> > 
+> > So maybe something like this (attached)?
+> 
+> Yes, exactly.
 
-The driver exposes the LED through the LED multicolor subsystem,
-allowing userspace to control RGB values via sysfs:
-  /sys/class/leds/amd_halo:rgb:light_bar/multi_intensity
-  /sys/class/leds/amd_halo:rgb:light_bar/brightness
+This is good information and definitely scales better than the quirk list.
+The linked document also mentions that there is _DSM under GPIO device that
+could be used to override the asserted state:
 
-Hardware interface:
-- Three separate RGB channels (Red, Green, Blue)
-- Each channel controlled via individual WMI method calls
-- Value range: 0-100 (matching hardware range directly)
+https://learn.microsoft.com/en-us/windows-hardware/drivers/bringup/gpio-controller-device-specific-method---dsm-
 
-Co-developed-by: Leo.Lin@amd.com
-Signed-off-by: Leo.Lin@amd.com
-Signed-off-by: Mario Limonciello (AMD) <superm1@kernel.org>
----
- MAINTAINERS                             |   7 +
- drivers/platform/x86/amd/Kconfig        |  12 +
- drivers/platform/x86/amd/Makefile       |   1 +
- drivers/platform/x86/amd/amd_halo_led.c | 375 ++++++++++++++++++++++++
- 4 files changed, 395 insertions(+)
- create mode 100644 drivers/platform/x86/amd/amd_halo_led.c
-
-diff --git a/MAINTAINERS b/MAINTAINERS
-index 2fb1c75afd163..c35b654a65041 100644
---- a/MAINTAINERS
-+++ b/MAINTAINERS
-@@ -1124,6 +1124,13 @@ F:	drivers/char/hw_random/geode-rng.c
- F:	drivers/crypto/geode*
- F:	drivers/video/fbdev/geode/
- 
-+AMD HALO BOX RGB LED DRIVER
-+M:	Mario Limonciello (AMD) <superm1@kernel.org>
-+R:	Leo Lin <Leo.Lin@amd.com>
-+L:	platform-driver-x86@vger.kernel.org
-+S:	Supported
-+F:	drivers/platform/x86/amd/amd_halo_led.c
-+
- AMD HSMP DRIVER
- M:	Naveen Krishna Chatradhi <naveenkrishna.chatradhi@amd.com>
- R:	Carlos Bilbao <carlos.bilbao@kernel.org>
-diff --git a/drivers/platform/x86/amd/Kconfig b/drivers/platform/x86/amd/Kconfig
-index b813f92653686..d642386938055 100644
---- a/drivers/platform/x86/amd/Kconfig
-+++ b/drivers/platform/x86/amd/Kconfig
-@@ -34,6 +34,18 @@ config AMD_WBRF
- 	  This mechanism will only be activated on platforms that advertise a
- 	  need for it.
- 
-+config AMD_HALO_LED
-+	tristate "AMD Halo Box RGB LED Driver"
-+	depends on ACPI_WMI
-+	select LEDS_CLASS_MULTICOLOR
-+	help
-+	  This driver provides RGB LED control for AMD Halo Box devices
-+	  through the LED multicolor subsystem. The Halo Box light bar can
-+	  be controlled via sysfs to display any RGB color combination.
-+
-+	  To compile this driver as a module, choose M here: the module
-+	  will be called amd_halo_led.
-+
- config AMD_ISP_PLATFORM
- 	tristate "AMD ISP4 platform driver"
- 	depends on I2C && X86_64 && ACPI
-diff --git a/drivers/platform/x86/amd/Makefile b/drivers/platform/x86/amd/Makefile
-index f6ff0c837f345..2f467dbbfc8a3 100644
---- a/drivers/platform/x86/amd/Makefile
-+++ b/drivers/platform/x86/amd/Makefile
-@@ -10,5 +10,6 @@ obj-$(CONFIG_AMD_PMC)		+= pmc/
- obj-$(CONFIG_AMD_HSMP)		+= hsmp/
- obj-$(CONFIG_AMD_PMF)		+= pmf/
- obj-$(CONFIG_AMD_WBRF)		+= wbrf.o
-+obj-$(CONFIG_AMD_HALO_LED)	+= amd_halo_led.o
- obj-$(CONFIG_AMD_ISP_PLATFORM)	+= amd_isp4.o
- obj-$(CONFIG_AMD_HFI)		+= hfi/
-diff --git a/drivers/platform/x86/amd/amd_halo_led.c b/drivers/platform/x86/amd/amd_halo_led.c
-new file mode 100644
-index 0000000000000..01b4583ca70f3
---- /dev/null
-+++ b/drivers/platform/x86/amd/amd_halo_led.c
-@@ -0,0 +1,375 @@
-+// SPDX-License-Identifier: GPL-2.0
-+/*
-+ * AMD Halo Box RGB LED Driver
-+ *
-+ * Copyright (C) 2026 Advanced Micro Devices, Inc.
-+ *
-+ * This driver provides RGB LED control for AMD Halo Box devices through
-+ * the LED multicolor subsystem. The Halo Box light bar can be controlled
-+ * via sysfs to display any RGB color combination.
-+ */
-+
-+#include <linux/acpi.h>
-+#include <linux/led-class-multicolor.h>
-+#include <linux/leds.h>
-+#include <linux/module.h>
-+#include <linux/mutex.h>
-+#include <linux/wmi.h>
-+
-+#define AMD_HALO_GUID "081E747B-E028-4232-AF24-EAAEAB2B1E86"
-+
-+/* WMI method IDs from MOF */
-+#define AMD_HALO_WMI_GET_LIGHTBAR	0x01
-+#define AMD_HALO_WMI_SET_LIGHTBAR	0x02
-+#define AMD_HALO_WMI_TURN_ON		0x03
-+#define AMD_HALO_WMI_TURN_OFF		0x04
-+
-+/* Channel selectors for Arg0 */
-+#define AMD_HALO_CHANNEL_RED		0x01
-+#define AMD_HALO_CHANNEL_GREEN		0x02
-+#define AMD_HALO_CHANNEL_BLUE		0x03
-+
-+/* Status codes from spec */
-+#define AMD_HALO_STATUS_SUCCESS		0x0000
-+#define AMD_HALO_STATUS_INVALID_PARAM	0xFFFD
-+
-+/* Brightness uses 0-100 range */
-+#define AMD_HALO_MAX_HW_BRIGHTNESS		100
-+
-+/**
-+ * struct amd_halo_led_data - Driver private data
-+ * @wdev: WMI device pointer
-+ * @led_mc: LED multicolor class device
-+ * @subled_info: RGB channel information
-+ * @lock: Mutex to protect WMI calls
-+ */
-+struct amd_halo_led_data {
-+	struct wmi_device *wdev;
-+	struct led_classdev_mc led_mc;
-+	struct mc_subled subled_info[3];
-+	struct mutex lock;	/* Protects WMI method calls */
-+};
-+
-+struct amd_halo_wmi_args {
-+	u32 arg0;
-+	u32 arg1;
-+};
-+
-+/**
-+ * amd_halo_wmi_set_channel - Set a single RGB channel value
-+ * @wdev: WMI device pointer
-+ * @channel: Channel selector (1=Red, 2=Green, 3=Blue)
-+ * @brightness: brightness to set (0-100)
-+ *
-+ * Return: 0 on success, negative error code on failure
-+ */
-+static int amd_halo_wmi_set_channel(struct wmi_device *wdev, u32 channel,
-+				    u32 brightness)
-+{
-+	struct amd_halo_wmi_args args = {
-+		.arg0 = channel,
-+		.arg1 = brightness,
-+	};
-+	const struct acpi_buffer input = {
-+		.length = sizeof(args),
-+		.pointer = &args,
-+	};
-+	struct acpi_buffer output = { ACPI_ALLOCATE_BUFFER, NULL };
-+	union acpi_object *obj;
-+	acpi_status status;
-+	u16 result_status;
-+	int ret = 0;
-+
-+	/* Validate input per spec */
-+	if (channel < AMD_HALO_CHANNEL_RED ||
-+	    channel > AMD_HALO_CHANNEL_BLUE ||
-+	    brightness > AMD_HALO_MAX_HW_BRIGHTNESS)
-+		return -EINVAL;
-+
-+	status = wmidev_evaluate_method(wdev, 0, AMD_HALO_WMI_SET_LIGHTBAR,
-+					&input, &output);
-+	if (ACPI_FAILURE(status)) {
-+		dev_err(&wdev->dev, "SetLightBar failed: %s\n",
-+			acpi_format_exception(status));
-+		return -EIO;
-+	}
-+
-+	/* Parse return buffer per spec: Bytes[0:1] = Status */
-+	obj = output.pointer;
-+	if (!obj || obj->type != ACPI_TYPE_BUFFER || obj->buffer.length < 2 ||
-+	    !obj->buffer.pointer) {
-+		dev_err(&wdev->dev, "Invalid return buffer\n");
-+		ret = -EIO;
-+		goto out;
-+	}
-+
-+	result_status = obj->buffer.pointer[0] |
-+			(obj->buffer.pointer[1] << 8);
-+	if (result_status != AMD_HALO_STATUS_SUCCESS) {
-+		dev_err(&wdev->dev, "WMI returned error: 0x%04x\n",
-+			result_status);
-+		ret = -EIO;
-+	}
-+
-+out:
-+	kfree(output.pointer);
-+	return ret;
-+}
-+
-+/**
-+ * amd_halo_wmi_get_channel - Get a single RGB channel value
-+ * @wdev: WMI device pointer
-+ * @channel: Channel selector (1=Red, 2=Green, 3=Blue)
-+ * @value: Pointer to store the read value
-+ *
-+ * Return: 0 on success, negative error code on failure
-+ */
-+static int amd_halo_wmi_get_channel(struct wmi_device *wdev, u32 channel,
-+				    u8 *value)
-+{
-+	struct amd_halo_wmi_args args = {
-+		.arg0 = channel,
-+		.arg1 = 0,  /* Reserved */
-+	};
-+	const struct acpi_buffer input = {
-+		.length = sizeof(args),
-+		.pointer = &args,
-+	};
-+	struct acpi_buffer output = { ACPI_ALLOCATE_BUFFER, NULL };
-+	union acpi_object *obj;
-+	acpi_status status;
-+	u16 result_status;
-+	int ret = 0;
-+
-+	if (channel < AMD_HALO_CHANNEL_RED || channel > AMD_HALO_CHANNEL_BLUE)
-+		return -EINVAL;
-+
-+	status = wmidev_evaluate_method(wdev, 0, AMD_HALO_WMI_GET_LIGHTBAR,
-+					&input, &output);
-+	if (ACPI_FAILURE(status))
-+		return -EIO;
-+
-+	obj = output.pointer;
-+	if (!obj || obj->type != ACPI_TYPE_BUFFER || obj->buffer.length < 3 ||
-+	    !obj->buffer.pointer) {
-+		ret = -EIO;
-+		goto out;
-+	}
-+
-+	result_status = obj->buffer.pointer[0] |
-+			(obj->buffer.pointer[1] << 8);
-+	if (result_status != AMD_HALO_STATUS_SUCCESS) {
-+		ret = -EIO;
-+		goto out;
-+	}
-+
-+	/* Value returned in Byte[2] per spec */
-+	*value = obj->buffer.pointer[2];
-+
-+out:
-+	kfree(output.pointer);
-+	return ret;
-+}
-+
-+/**
-+ * amd_halo_wmi_turn_off - Turn off all LED channels
-+ * @wdev: WMI device pointer
-+ *
-+ * Return: 0 on success, negative error code on failure
-+ */
-+static int amd_halo_wmi_turn_off(struct wmi_device *wdev)
-+{
-+	struct amd_halo_wmi_args args = {
-+		.arg0 = 0,
-+		.arg1 = 0,
-+	};
-+	const struct acpi_buffer input = {
-+		.length = sizeof(args),
-+		.pointer = &args,
-+	};
-+	struct acpi_buffer output = { ACPI_ALLOCATE_BUFFER, NULL };
-+	acpi_status status;
-+
-+	status = wmidev_evaluate_method(wdev, 0, AMD_HALO_WMI_TURN_OFF,
-+					&input, &output);
-+	kfree(output.pointer);
-+
-+	return ACPI_FAILURE(status) ? -EIO : 0;
-+}
-+
-+/**
-+ * amd_halo_brightness_set - Set LED brightness and color
-+ * @cdev: LED class device
-+ * @brightness: Brightness value (0 = off, >0 = on with color)
-+ *
-+ * Return: 0 on success, negative error code on failure
-+ */
-+static int amd_halo_brightness_set(struct led_classdev *cdev,
-+				   enum led_brightness brightness)
-+{
-+	struct led_classdev_mc *mc_cdev = lcdev_to_mccdev(cdev);
-+	struct amd_halo_led_data *data = container_of(mc_cdev,
-+						       struct amd_halo_led_data,
-+						       led_mc);
-+	u32 red_hw, green_hw, blue_hw;
-+	int ret;
-+
-+	guard(mutex)(&data->lock);
-+
-+	if (brightness == 0)
-+		return amd_halo_wmi_turn_off(data->wdev);
-+
-+	led_mc_calc_color_components(mc_cdev, brightness);
-+	red_hw = mc_cdev->subled_info[0].brightness;
-+	green_hw = mc_cdev->subled_info[1].brightness;
-+	blue_hw = mc_cdev->subled_info[2].brightness;
-+
-+	/* Set each channel individually - 3 WMI calls required */
-+	ret = amd_halo_wmi_set_channel(data->wdev, AMD_HALO_CHANNEL_RED,
-+				       red_hw);
-+	if (ret)
-+		return ret;
-+
-+	ret = amd_halo_wmi_set_channel(data->wdev, AMD_HALO_CHANNEL_GREEN,
-+				       green_hw);
-+	if (ret)
-+		return ret;
-+
-+	return amd_halo_wmi_set_channel(data->wdev, AMD_HALO_CHANNEL_BLUE,
-+					blue_hw);
-+}
-+
-+/**
-+ * amd_halo_brightness_get - Get current LED brightness state
-+ * @cdev: LED class device
-+ *
-+ * Return: brightness last set by the user, or AMD_HALO_MAX_HW_BRIGHTNESS if
-+ *         it was set by BIOS, or LED_OFF if all LEDs are off.
-+ */
-+static enum led_brightness amd_halo_brightness_get(struct led_classdev *cdev)
-+{
-+	struct led_classdev_mc *mc_cdev = lcdev_to_mccdev(cdev);
-+	struct amd_halo_led_data *data = container_of(mc_cdev,
-+						       struct amd_halo_led_data,
-+						       led_mc);
-+	u8 red_hw = 0, green_hw = 0, blue_hw = 0;
-+	int ret;
-+
-+	guard(mutex)(&data->lock);
-+
-+	/* Read each channel */
-+	ret = amd_halo_wmi_get_channel(data->wdev, AMD_HALO_CHANNEL_RED,
-+				       &red_hw);
-+	if (ret)
-+		return LED_OFF;
-+
-+	ret = amd_halo_wmi_get_channel(data->wdev, AMD_HALO_CHANNEL_GREEN,
-+				       &green_hw);
-+	if (ret)
-+		return LED_OFF;
-+
-+	ret = amd_halo_wmi_get_channel(data->wdev, AMD_HALO_CHANNEL_BLUE,
-+				       &blue_hw);
-+	if (ret)
-+		return LED_OFF;
-+
-+	if (mc_cdev->subled_info[0].brightness == red_hw
-+	    && mc_cdev->subled_info[1].brightness == green_hw
-+	    && mc_cdev->subled_info[2].brightness == blue_hw) {
-+		return cdev->brightness;
-+	}
-+
-+	mc_cdev->subled_info[0].intensity = red_hw;
-+	mc_cdev->subled_info[1].intensity = green_hw;
-+	mc_cdev->subled_info[2].intensity = blue_hw;
-+
-+	return AMD_HALO_MAX_HW_BRIGHTNESS;
-+}
-+
-+/**
-+ * amd_halo_color_set_default - Set LED to initial color and brightness
-+ * @cdev: LED class device
-+ *
-+ * Sets all RGB channels to 20% intensity as an initial state.
-+ *
-+ * Return: 0 on success, negative error code on failure
-+ */
-+static int amd_halo_color_set_default(struct led_classdev *cdev)
-+{
-+	struct led_classdev_mc *mc_cdev = lcdev_to_mccdev(cdev);
-+
-+	mc_cdev->subled_info[0].intensity = AMD_HALO_MAX_HW_BRIGHTNESS / 5;
-+	mc_cdev->subled_info[1].intensity = AMD_HALO_MAX_HW_BRIGHTNESS / 5;
-+	mc_cdev->subled_info[2].intensity = AMD_HALO_MAX_HW_BRIGHTNESS / 5;
-+
-+	return amd_halo_brightness_set(cdev, AMD_HALO_MAX_HW_BRIGHTNESS);
-+}
-+
-+/**
-+ * amd_halo_probe - Driver probe function
-+ * @wdev: WMI device
-+ * @context: Context data (unused)
-+ *
-+ * Return: 0 on success, negative error code on failure
-+ */
-+static int amd_halo_probe(struct wmi_device *wdev, const void *context)
-+{
-+	struct amd_halo_led_data *data;
-+	int ret;
-+
-+	data = devm_kzalloc(&wdev->dev, sizeof(*data), GFP_KERNEL);
-+	if (!data)
-+		return -ENOMEM;
-+
-+	data->wdev = wdev;
-+	mutex_init(&data->lock);
-+	dev_set_drvdata(&wdev->dev, data);
-+
-+	data->subled_info[0].color_index = LED_COLOR_ID_RED;
-+	data->subled_info[1].color_index = LED_COLOR_ID_GREEN;
-+	data->subled_info[2].color_index = LED_COLOR_ID_BLUE;
-+	data->subled_info[0].intensity = 0;
-+	data->subled_info[1].intensity = 0;
-+	data->subled_info[2].intensity = 0;
-+
-+	data->led_mc.led_cdev.name = "amd_halo:rgb:light_bar";
-+	data->led_mc.led_cdev.brightness = AMD_HALO_MAX_HW_BRIGHTNESS;
-+	data->led_mc.led_cdev.max_brightness = AMD_HALO_MAX_HW_BRIGHTNESS;
-+	data->led_mc.led_cdev.brightness_set_blocking = amd_halo_brightness_set;
-+	data->led_mc.led_cdev.brightness_get = amd_halo_brightness_get;
-+	data->led_mc.led_cdev.flags = LED_CORE_SUSPENDRESUME | LED_RETAIN_AT_SHUTDOWN;
-+	data->led_mc.num_colors = 3;
-+	data->led_mc.subled_info = data->subled_info;
-+
-+	ret = devm_led_classdev_multicolor_register(&wdev->dev, &data->led_mc);
-+	if (ret)
-+		return dev_err_probe(&wdev->dev, ret,
-+				     "Failed to register multicolor LED\n");
-+
-+	ret = amd_halo_color_set_default(&data->led_mc.led_cdev);
-+	if (ret)
-+		dev_warn(&wdev->dev, "Unable to set default LED intensity through WMI: %d\n", ret);
-+
-+	return 0;
-+}
-+
-+static const struct wmi_device_id amd_halo_id_table[] = {
-+	{ .guid_string = AMD_HALO_GUID },
-+	{ }
-+};
-+MODULE_DEVICE_TABLE(wmi, amd_halo_id_table);
-+
-+static struct wmi_driver amd_halo_driver = {
-+	.driver = {
-+		.name = "amd_halo_led",
-+	},
-+	.id_table = amd_halo_id_table,
-+	.probe = amd_halo_probe,
-+};
-+
-+module_wmi_driver(amd_halo_driver);
-+
-+MODULE_AUTHOR("Mario Limonciello (AMD) <superm1@kernel.org>");
-+MODULE_AUTHOR("Leo Lin <Leo.Lin@amd.com>");
-+MODULE_DESCRIPTION("AMD Halo Box RGB LED Control Driver");
-+MODULE_LICENSE("GPL");
--- 
-2.43.0
-
+I wonder if we should implement that as well?
