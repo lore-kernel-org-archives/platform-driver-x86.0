@@ -1,111 +1,88 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.21])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 326712EDD62;
-	Mon, 27 Apr 2026 04:57:35 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.21
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2FB03223708
+	for <platform-driver-x86@vger.kernel.org>; Mon, 27 Apr 2026 05:42:18 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1777265857; cv=none; b=pWQmm02Uo8acGAq5jL4jJXceGStDN33c8FU89agPgNG7n4+IG2KWPf4Jz7ilo1dPwNxs+kkzqpJ402zrDNLomd8PQlcGFCXhKhwZj6Ut9nLFOPOCE7HUXrrmb5NHyWiv9iiS0SNzEMNdOPuvUHzWkdQ5okgU34okrcPeRWhampo=
+	t=1777268538; cv=none; b=sUahU/CKGQqn9wEAO4v0V3LaUDjdPfCei8587zteaWmtpcx9B97V0xfeFbEzRqltelSrAG515Eg5NL8yL/vx1zn0L82nrWRy5ME+zfeteYYHKEh/Tj2YdnodTXR0jHNKMWRYF33561w1ugush1kQgjBcf0P7PYjNdh/jVXROpyA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1777265857; c=relaxed/simple;
-	bh=jZ/gQyskDf9bpQeRgub9iz10gqKL3J/aAnToYVfGb5M=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=Nq8ogbg//JXXAlhnujGHErT2jYQ1iurCvv2vu+TH9sKTgj0JF6fDVTMTKSayvyyUNxqmuiju//YgFe93UoadU3OHBtjENk4alpOW0Dlezf+gJTP7FXi5ADgI9kyDpajlZ5MWd+AwpdlzOcxAQx/o3Yquti+av7SDXV6Ha8yPCJ0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=pass smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=Z17TkTM6; arc=none smtp.client-ip=198.175.65.21
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.intel.com
+	s=arc-20240116; t=1777268538; c=relaxed/simple;
+	bh=LkfP1/v4lIMRs2lqaSHrnxz6tSy0fsICV/XxjejLOLg=;
+	h=From:To:Subject:Date:Message-ID:In-Reply-To:References:
+	 Content-Type:MIME-Version; b=k9oBXTWu4qMGYA58T8WP5jZn4YR11XUUI1JqetMFUEWPOY/jOpzW4K/CZ208B+Ddui6hWogmPhWMvEj78DZl5Z2Lmx8DPkm6nXPwCudFgIT0QZLVVIRmv3Ec1f09kC+nlCSIRkEeO0aAaMghUtfxWNOhbaySDGfcb7I3HR/hS4k=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Cbr5Ym87; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="Z17TkTM6"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1777265855; x=1808801855;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=jZ/gQyskDf9bpQeRgub9iz10gqKL3J/aAnToYVfGb5M=;
-  b=Z17TkTM6/hdIK583V2vp1xSdhEbTB19/5sU2BfBYX9YyjhvC9kYFNfPJ
-   4Dgz7xPcWxeeiWcurUotNBVnV5mJQkkwGeaoB0LXGDY6csAGqLSSrqykn
-   Sb+EVZs+OO3iIWNkSkC35WKEIjLrpGfSryTlbS3iIMgjunAoQFtbsH+qR
-   wXD151WleEk4wp8E7xkJaA03dImWSdhZkIT3PWCPy2q1YtdPrQkfWCtsD
-   CUw4S5Do4tfiOp1Q/zub2T52nIi2KmvjqXkIL46MghH38iGhUVScXUYw+
-   J0hQi2wy41uMCqqvl+WlFuGSn+kuGszdLnbTv0+VnOkTWkLt9b2/2y2JJ
-   A==;
-X-CSE-ConnectionGUID: Y+Ev2GXYQ8+C6YzN+3P4+A==
-X-CSE-MsgGUID: NE0c7awPSwaPqtkIK64zIA==
-X-IronPort-AV: E=McAfee;i="6800,10657,11768"; a="78034473"
-X-IronPort-AV: E=Sophos;i="6.23,201,1770624000"; 
-   d="scan'208";a="78034473"
-Received: from orviesa001.jf.intel.com ([10.64.159.141])
-  by orvoesa113.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 26 Apr 2026 21:57:35 -0700
-X-CSE-ConnectionGUID: 8rqvHTCuQ3eocDuDgTFMYw==
-X-CSE-MsgGUID: V1wDDYX7SdOeOKk1NOgFxw==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.23,201,1770624000"; 
-   d="scan'208";a="271659496"
-Received: from black.igk.intel.com ([10.91.253.5])
-  by orviesa001.jf.intel.com with ESMTP; 26 Apr 2026 21:57:32 -0700
-Received: by black.igk.intel.com (Postfix, from userid 1001)
-	id 6F1DB95; Mon, 27 Apr 2026 06:57:31 +0200 (CEST)
-Date: Mon, 27 Apr 2026 06:57:31 +0200
-From: Mika Westerberg <mika.westerberg@linux.intel.com>
-To: Armin Wolf <W_Armin@gmx.de>
-Cc: Mario Limonciello <superm1@kernel.org>,
-	Marco Scardovi <mscardovi95@gmail.com>,
-	Hans de Goede <hansg@kernel.org>,
-	Francesco Lauritano <francesco.lauritano1@protonmail.com>,
-	"linux-acpi@vger.kernel.org" <linux-acpi@vger.kernel.org>,
-	"open list:GPIO ACPI SUPPORT" <linux-gpio@vger.kernel.org>,
-	"platform-driver-x86@vger.kernel.org" <platform-driver-x86@vger.kernel.org>,
-	"westeri@kernel.org" <westeri@kernel.org>,
-	Benjamin Tissoires <bentiss@kernel.org>
-Subject: Re: [BUG] 36-second boot delay due to by
- acpi_gpio_handle_deferred_request_irqs on ASUS ROG Strix G16 (2025)
-Message-ID: <20260427045731.GI557136@black.igk.intel.com>
-References: <20260422090709.GB557136@black.igk.intel.com>
- <4e55e31e-a5e8-4098-8a7f-bb52476b882a@gmail.com>
- <20260422095558.GC557136@black.igk.intel.com>
- <5a36760d-5d1e-4eee-9006-3fed042aa2cd@gmail.com>
- <20260423044211.GD557136@black.igk.intel.com>
- <3d562963-9581-4e0f-b9a0-5f0fe28d2495@kernel.org>
- <f72a1da5-2cc1-4e08-9441-ea252062b4e5@gmail.com>
- <a2a187d9-363c-48fe-8301-6a199366c478@gmx.de>
- <f4979d43-f61f-4387-8490-ccec7043c940@kernel.org>
- <bcdd110b-489e-4f09-892d-b2d6ce4b0ff0@gmx.de>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Cbr5Ym87"
+Received: by smtp.kernel.org (Postfix) with ESMTPS id E1E7FC2BCC9
+	for <platform-driver-x86@vger.kernel.org>; Mon, 27 Apr 2026 05:42:17 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1777268537;
+	bh=LkfP1/v4lIMRs2lqaSHrnxz6tSy0fsICV/XxjejLOLg=;
+	h=From:To:Subject:Date:In-Reply-To:References:From;
+	b=Cbr5Ym87E7XCq5daqZU3A81gOnF/pJUkfmQdx1Vk1283nXUeCogNpaTFaexjT/0w7
+	 Z4HiBc4d+7MyLLuPhfCTz2ijgrYC8wBlF+MoOk+3CPcQAoz3RjvEy6nxcnr/Loavt/
+	 9JhztDDyNElkbSsKk6PcDMZucXGPNlnemTVClpTW5tsjXefZL147Zcv4NjQYgU27qk
+	 AuNNPsXyL1PDoIc1g67IJHmB5Nk784D00t4dsSJ1uwPbmpzeeKhOF2ACThegWCrpBM
+	 a1RElY8+gUPDR0cbPtFtpJXXdFX81xeokiDCQ0BJYNE3WrgWqxySteSo371vFv7n99
+	 K6fyHm19CjWuA==
+Received: by aws-us-west-2-korg-bugzilla-1.web.codeaurora.org (Postfix, from userid 48)
+	id DBF5AC41614; Mon, 27 Apr 2026 05:42:17 +0000 (UTC)
+From: bugzilla-daemon@kernel.org
+To: platform-driver-x86@vger.kernel.org
+Subject: [Bug 221065] ideapad_acpi: unexpected charge_types spam on Yoga Pro
+ 7 14ASP9
+Date: Mon, 27 Apr 2026 05:42:17 +0000
+X-Bugzilla-Reason: None
+X-Bugzilla-Type: changed
+X-Bugzilla-Watch-Reason: AssignedTo drivers_platform_x86@kernel-bugs.osdl.org
+X-Bugzilla-Product: Drivers
+X-Bugzilla-Component: Platform_x86
+X-Bugzilla-Version: 2.5
+X-Bugzilla-Keywords: 
+X-Bugzilla-Severity: low
+X-Bugzilla-Who: boite.pour.spam@gmail.com
+X-Bugzilla-Status: NEW
+X-Bugzilla-Resolution: 
+X-Bugzilla-Priority: P3
+X-Bugzilla-Assigned-To: drivers_platform_x86@kernel-bugs.osdl.org
+X-Bugzilla-Flags: 
+X-Bugzilla-Changed-Fields: 
+Message-ID: <bug-221065-215701-hqhG9iVc3C@https.bugzilla.kernel.org/>
+In-Reply-To: <bug-221065-215701@https.bugzilla.kernel.org/>
+References: <bug-221065-215701@https.bugzilla.kernel.org/>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+X-Bugzilla-URL: https://bugzilla.kernel.org/
+Auto-Submitted: auto-generated
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <bcdd110b-489e-4f09-892d-b2d6ce4b0ff0@gmx.de>
 
-On Sat, Apr 25, 2026 at 10:41:46PM +0200, Armin Wolf wrote:
-> > > according to the Microsoft documentation
-> > > (https://learn.microsoft.com/
-> > > en-us/windows-hardware/drivers/bringup/general-purpose-i-o--gpio-,
-> > > section "GPIO controllers and ActiveBoth interrupts"), triggering
-> > > GPIO interrupts marked as ActiveBoth during initialization is
-> > > correct as long as the associated GPIO line is already "asserted"
-> > > (aka logic level low). I think the problem is that we also trigger
-> > > edge-based GPIO interrupts _not_ marked as ActiveBoth.
-> > > 
-> > > Based on this i agree with Hans, except that we should continue you
-> > > trigger ActiveBoth GPIO interrupts as long as the above
-> > > condition applies.
-> > > 
-> > > Thanks,
-> > > Armin Wolf
-> > > 
-> > 
-> > So maybe something like this (attached)?
-> 
-> Yes, exactly.
+https://bugzilla.kernel.org/show_bug.cgi?id=3D221065
 
-This is good information and definitely scales better than the quirk list.
-The linked document also mentions that there is _DSM under GPIO device that
-could be used to override the asserted state:
+--- Comment #67 from boite.pour.spam@gmail.com ---
+I've read all the comments above and I'm trying to understand how the broken
+ACPI tables would work on Windows. If there's a "deadlock" in the ACPI
+implementation, how does Windows works around it?=20
+If I understand correctly, the solving options are:
+1. Have Lenovo to fix the ACPI tables (which is very unlikely)
+2. Implement a "live" ACPI fix with a DSDT override but it won't fix the bad
+releasing of the ACPI's mutex (but we can probably live with it, since, exc=
+ept
+for the dmesg noise, doesn't break anything)
+3. Blacklist both usci_acpi and ideapad-laptop, so that there aren't any
+contender on the mutex anymore, but I'm not clear about what's lost when we=
+ do
+so?
 
-https://learn.microsoft.com/en-us/windows-hardware/drivers/bringup/gpio-controller-device-specific-method---dsm-
+Am I right?
 
-I wonder if we should implement that as well?
+--=20
+You may reply to this email to add a comment.
+
+You are receiving this mail because:
+You are watching the assignee of the bug.=
