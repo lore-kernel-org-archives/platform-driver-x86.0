@@ -1,38 +1,38 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DA68434750B
-	for <platform-driver-x86@vger.kernel.org>; Mon, 27 Apr 2026 19:46:39 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7908537DE9C
+	for <platform-driver-x86@vger.kernel.org>; Mon, 27 Apr 2026 19:55:44 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1777319199; cv=none; b=SxTmU0/h6f87kxXFjo3wqkVdp46RfmBE57lKjuxCAez1pK+qVtrzS23D5FtJDiuTnK7uTKInXB3u59c7L8R/lO3lSb5fTmquCb8Tfh4wgjhKMBlUYgyAIKNNwMfBIj1+pWICdFdf0TrFEliPVKSVEvGZlYxGerOxmzvGnP278jc=
+	t=1777319744; cv=none; b=SiybObmVhxw04zhDWWbda6/I5lfI/rnUEmXVi7ujicCyfKNQA0wXFjREo/M6tZnqlMh/Ib/0Rv6acbm9smZjFHqQ/QL80iLxKzVubXagIxaGOos+8aAM+ZJbxIr35f7pGrSdDsSB/pscAK4J44TZAEgbidQWQAhp9WVK7s5Z8fU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1777319199; c=relaxed/simple;
-	bh=1NindMKrHinVTaoeeUuZicur9336OpppEMX98sxgfY8=;
+	s=arc-20240116; t=1777319744; c=relaxed/simple;
+	bh=dSsf4gM8tKDXJovX8EisvU5vTUjaYU02tQslzhS98Ec=;
 	h=From:To:Subject:Date:Message-ID:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=daXsYA4S+7sLmOtVnVAMNlw95oX/nml/7kuADI+a6lam2WXJ2/icaom8+O1zuy6yQ/uVeZMQ516EQofK7b/bl3IEM81C7XnR/cuKdPrcdZyrzIYycFQ8XA6p6Iw1857RprwB2/fBUQRatllIqAPb4gjqYj+zh26QsWmoVRf+RQg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=MFc62LHr; arc=none smtp.client-ip=10.30.226.201
+	 Content-Type:MIME-Version; b=ro0+l+bULIkt0MJaXV3748K9/j5RlzAI45D/wDoC2dFgoiY70Egg91hFIfZCWQ5Elh1RLyeMtmI17f8BdMDhQAVbbFqd+o1ylymbLP73hLLfApodqw69LEtaMJ6YnNe3uZ0VdHcvZTShuuxf0t50DwNn7Wxi0VYMaQxKnO30yiU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ZNYDG5Fv; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="MFc62LHr"
-Received: by smtp.kernel.org (Postfix) with ESMTPS id BE851C2BCB6
-	for <platform-driver-x86@vger.kernel.org>; Mon, 27 Apr 2026 19:46:39 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ZNYDG5Fv"
+Received: by smtp.kernel.org (Postfix) with ESMTPS id 1C3DEC19425
+	for <platform-driver-x86@vger.kernel.org>; Mon, 27 Apr 2026 19:55:44 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1777319199;
-	bh=1NindMKrHinVTaoeeUuZicur9336OpppEMX98sxgfY8=;
+	s=k20201202; t=1777319744;
+	bh=dSsf4gM8tKDXJovX8EisvU5vTUjaYU02tQslzhS98Ec=;
 	h=From:To:Subject:Date:In-Reply-To:References:From;
-	b=MFc62LHrfDQnpOeK86c2d4p0nSwvqaWy5DSVykKcAch+2Fm4m7HuMC5xfuaSetY+F
-	 neWvyNcxUgaofEsRg+R2FhSQtP/7YevhnkP2X3B17kChn/x8nHcCqHsqbPpoGzXbLG
-	 QTXvdFFbIJPpWiwx0fcnZmJMRjbmdh3jPwD+fuQ3gYQVO1g/2KgbExBNHnOTuibW/I
-	 zONkHT5yWjvG8yVkZWrRTkIu3shcAYL1+T9glld7hB/6yiuDRXIc5weI7dL3dfrGeQ
-	 chDVH5Snr5xh3pxG3fAHFQSRYnBixCPEKut+zp78bt8m3ETL3bN32V/QOSmxqO+epE
-	 klOBAUzsqZpkg==
+	b=ZNYDG5FvvzXWvvEvHgef8A8kJS1C1CsaDPVzOP8zHhtL6IxP6QsKsVrBLJ/ShzxoJ
+	 kHVexCz66pRC8eOhzhd7dEH3B//IFZmxtwcF6Q7oKWVR8GSPdA5YXn/Quln66Tsede
+	 7njOCkXRHkBKprCkiBAn4hyL9/axlDVud/ALtqtRQH/0CEmklAnj/kXCj30akAW3lc
+	 9iiwwSuWt+Ux2imcBhOzEUCMeQWX3oBqu97LvUg+uMq8a+v5h8dGrrRg2ETnt64Z2G
+	 iuESLm/x6hANQ+Cbz6l7JP3WrPIIhxIqF/c8IaXF30YJ1v3PTTJjpKskvxg9XRC+at
+	 q4/ToEHhC7UVA==
 Received: by aws-us-west-2-korg-bugzilla-1.web.codeaurora.org (Postfix, from userid 48)
-	id AB74FC4160E; Mon, 27 Apr 2026 19:46:39 +0000 (UTC)
+	id 107C8C4160E; Mon, 27 Apr 2026 19:55:44 +0000 (UTC)
 From: bugzilla-daemon@kernel.org
 To: platform-driver-x86@vger.kernel.org
 Subject: [Bug 221383] ideapad_laptop: Fn hotkeys stop emitting after s2idle
  resume on IdeaPad Slim 3   14ARP10 (Ryzen 7735HS)
-Date: Mon, 27 Apr 2026 19:46:39 +0000
+Date: Mon, 27 Apr 2026 19:55:43 +0000
 X-Bugzilla-Reason: None
 X-Bugzilla-Type: changed
 X-Bugzilla-Watch-Reason: AssignedTo drivers_platform_x86@kernel-bugs.osdl.org
@@ -41,14 +41,14 @@ X-Bugzilla-Component: Platform_x86
 X-Bugzilla-Version: 2.5
 X-Bugzilla-Keywords: 
 X-Bugzilla-Severity: normal
-X-Bugzilla-Who: sindrehenriksen93@gmail.com
+X-Bugzilla-Who: metalcaedes@gmail.com
 X-Bugzilla-Status: NEW
 X-Bugzilla-Resolution: 
 X-Bugzilla-Priority: P3
 X-Bugzilla-Assigned-To: drivers_platform_x86@kernel-bugs.osdl.org
 X-Bugzilla-Flags: 
 X-Bugzilla-Changed-Fields: 
-Message-ID: <bug-221383-215701-K3lPxliO8v@https.bugzilla.kernel.org/>
+Message-ID: <bug-221383-215701-eDjsmqtdkW@https.bugzilla.kernel.org/>
 In-Reply-To: <bug-221383-215701@https.bugzilla.kernel.org/>
 References: <bug-221383-215701@https.bugzilla.kernel.org/>
 Content-Type: text/plain; charset="UTF-8"
@@ -64,17 +64,13 @@ MIME-Version: 1.0
 
 https://bugzilla.kernel.org/show_bug.cgi?id=3D221383
 
---- Comment #43 from sindrehenriksen93@gmail.com ---
-Nice! Tested on my IdeaPad Slim 3 14ARP10 (Ryzen 7735H) with the keyboard-r=
-eset
-workaround disabled. DMI match fires correctly ("Delaying suspend by 2.5s to
-avoid platform firmware bug" in dmesg).
+--- Comment #44 from Daniel Gibson (metalcaedes@gmail.com) ---
+Great, thank you very much for the feedback!
+Good to know that despite the different platform generations the problems h=
+ave
+the same cause (or at least can be avoided with the same workaround).
 
-- Short suspend + resume: keyboard works (previously broke without the
-workaround)
-- 15+ min suspend + resume: Fn keys work (previously broke consistently)
-
-Both issues fixed by the patch.
+I guess I should try to get it into the kernel now
 
 --=20
 You may reply to this email to add a comment.
