@@ -1,86 +1,120 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 30B82270EC3
-	for <platform-driver-x86@vger.kernel.org>; Mon, 27 Apr 2026 11:50:51 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E33B93101B2;
+	Mon, 27 Apr 2026 12:06:51 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1777290651; cv=none; b=s7lQM/zBfOUFBPcjio2uqGXq7aPekSAeSK+oHVtTojCc75kgNU+e3iCJjGtg6TWF3wU8iPkQPgyOibu/3FI7JCVRcvrGuERyszvE3yYmxss35fJXLsgVGC5BxTChmuP2dt0FuHJrKGoFRi0n6ZqdONkc13U+sR9+5Kqv5mSpsfs=
+	t=1777291612; cv=none; b=bAzcYswmQ8D6SiunmVDEQrKqiHm5GHmMiWodWNrwizoGbTol8YeAuKqALTb4svEBL/O4w+aBq5EAaXr+XCDT8OrpbsWU9MnuhqZH/RF0dfJrdck2jh55xWvyy0pUF8s+U4A/W1w8f93KPMwR9BX5wte0dYDNE0WDvGnxsStRoJY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1777290651; c=relaxed/simple;
-	bh=T1Qt5nsfk62HIZhWkXe0/vQOK/gqu46COGN9l2FsWM4=;
-	h=From:To:Subject:Date:Message-ID:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=B4HeFuOIFAGLibhgrU4o+qOUEC/rLR9yu94iptKWzd8jFk/brlpgGQ5ubwpIixYRm7uXr/+CqekrrUTC2CPburVSqXJQJuTaoRkZYUGUTv2tVcr2Ws/ZrdTTWG50VZ9ai9txPOEnwgrEgSdJxmZ5+D/MYgIJdFZRMo86FQcqdV8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=FGMf3JN0; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1777291612; c=relaxed/simple;
+	bh=17eue7FzxHADuZ6rQbFkX3JTRQYgxWu8poIecN8itNg=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=N/YzVbN+xf4CpnquD8Eq/s3nH9HdbsdHl9Cy8Q/DZIoNhfvQryEkkaWq46wTW+PHYyXyU/ByIV8tp/6zI1VIuEa+p9JonaEMxFLcFUhxiIA6NzZ/8kkmhWAwZOqraka2JmadOb9P78o0drE2awKLOq8EOp5oHsK+ZpxdB1ROH44=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=UYvKczl0; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="FGMf3JN0"
-Received: by smtp.kernel.org (Postfix) with ESMTPS id 02296C2BCB6
-	for <platform-driver-x86@vger.kernel.org>; Mon, 27 Apr 2026 11:50:51 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="UYvKczl0"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id A2196C19425;
+	Mon, 27 Apr 2026 12:06:49 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1777290651;
-	bh=T1Qt5nsfk62HIZhWkXe0/vQOK/gqu46COGN9l2FsWM4=;
-	h=From:To:Subject:Date:In-Reply-To:References:From;
-	b=FGMf3JN0hOPg11LNT905V3kc1eQ28elSp8kE+XRUPoFDjkZb0a6TcACBPpTwHULqq
-	 E9kQmveDYrJLS0Jml12gh56HHOw69qT4/3KLeRmWBXbN8fRHt17oB6E9aHdBA0+fGk
-	 NHDF4UjniC4tcNsqi4OPsXYLODbS+IdGBHLhgeY0pHiHG0h1zn3OH+NpKmUuFZxhYa
-	 bxCfCDdHN+cO8pI/h+X2il4eyHLBDskWvMl9vT0qraqUkAdVACenEiuEYAKaPT5x2l
-	 T6FzwT0zhR1EJjk/020OSmwjp63DdL2F5BWrdQIr08q9MA7SeKWMB6mF1C3wqYnjqs
-	 rSnQlPSdXj6XA==
-Received: by aws-us-west-2-korg-bugzilla-1.web.codeaurora.org (Postfix, from userid 48)
-	id F08DAC41612; Mon, 27 Apr 2026 11:50:50 +0000 (UTC)
-From: bugzilla-daemon@kernel.org
-To: platform-driver-x86@vger.kernel.org
-Subject: [Bug 221065] ideapad_acpi: unexpected charge_types spam on Yoga Pro
- 7 14ASP9
-Date: Mon, 27 Apr 2026 11:50:50 +0000
-X-Bugzilla-Reason: None
-X-Bugzilla-Type: changed
-X-Bugzilla-Watch-Reason: AssignedTo drivers_platform_x86@kernel-bugs.osdl.org
-X-Bugzilla-Product: Drivers
-X-Bugzilla-Component: Platform_x86
-X-Bugzilla-Version: 2.5
-X-Bugzilla-Keywords: 
-X-Bugzilla-Severity: low
-X-Bugzilla-Who: hansg@kernel.org
-X-Bugzilla-Status: NEW
-X-Bugzilla-Resolution: 
-X-Bugzilla-Priority: P3
-X-Bugzilla-Assigned-To: drivers_platform_x86@kernel-bugs.osdl.org
-X-Bugzilla-Flags: 
-X-Bugzilla-Changed-Fields: cc
-Message-ID: <bug-221065-215701-gwKlWSFyxo@https.bugzilla.kernel.org/>
-In-Reply-To: <bug-221065-215701@https.bugzilla.kernel.org/>
-References: <bug-221065-215701@https.bugzilla.kernel.org/>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-X-Bugzilla-URL: https://bugzilla.kernel.org/
-Auto-Submitted: auto-generated
+	s=k20201202; t=1777291611;
+	bh=17eue7FzxHADuZ6rQbFkX3JTRQYgxWu8poIecN8itNg=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=UYvKczl0vANW5KOsM5tA27/xZ/f59JLN5MgIsIVjODhzIblEg9/2OJy5T819yYVif
+	 hvBvl5rr0Z+vAoqwNCuK/0iuEj4J7kM718ibpqb3kJInoODVSD5ZCwMANB7C6MNEUg
+	 0uFswaNRRZh0jpSd3DqMUmIcSh+5k2fvGwie9I0t/4FNH7e/V7NjahpUMDsbfvrvdl
+	 xS3dq+hd5IyClo+SBDX5q2eCbTsWQftZu82gZdLiyFAHQka1keSs+hMIUsG9JqB3/w
+	 ANohMWBrAJBeANBIKauskNcjmImI8mJ790lVAjqWJSZG33cGMdq8IQRpJBmyb1Ztoo
+	 iqzkdfMG+hYQQ==
+Message-ID: <10e98067-e71f-4585-a49b-8239af208ceb@kernel.org>
+Date: Mon, 27 Apr 2026 14:06:47 +0200
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v6 5/5] media: ov8858: add ACPI device ID INT3477
+To: Thierry Chatard <tchatard@gmail.com>, linux-kernel@vger.kernel.org
+Cc: lee@kernel.org, platform-driver-x86@vger.kernel.org,
+ ilpo.jarvinen@linux.intel.com, djrscally@gmail.com,
+ linux-media@vger.kernel.org, mchehab@kernel.org,
+ sakari.ailus@linux.intel.com, jacopo.mondi@ideasonboard.com,
+ nicholas@rothemail.net
+References: <aehzn85IsUI-bcKW@kekkonen.localdomain>
+ <20260425163145.8474-1-tchatard@gmail.com>
+ <20260425163145.8474-6-tchatard@gmail.com>
+From: Hans de Goede <hansg@kernel.org>
+Content-Language: en-US, nl
+In-Reply-To: <20260425163145.8474-6-tchatard@gmail.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-https://bugzilla.kernel.org/show_bug.cgi?id=3D221065
+Hi Thierry,
 
-Hans de Goede (hansg@kernel.org) changed:
+Thank you for your work on this.
 
-           What    |Removed                     |Added
-----------------------------------------------------------------------------
-                 CC|                            |hansg@kernel.org
+On 25-Apr-26 18:31, Thierry Chatard wrote:
+> The Omnivision OV8858 appears in ACPI firmware under the HID INT3477 on
+> Intel IPU3-based platforms such as the Dell Latitude 5285 2-in-1. Add
+> INT3477 to the ACPI match table so the driver binds when instantiated by
+> ipu_bridge.
+> 
+> The supply names are reordered to dvdd before dovdd so that core power is
+> stable before the I2C passthrough opens (on this platform dovdd maps to
+> the VSIO/S_I2C_CTL regulator, which gates I2C access to the sensor).
 
---- Comment #68 from Hans de Goede (hansg@kernel.org) ---
-@Rong Zhang wrote: "If you really care about that, you can simply blacklist
-usci_acpi as it also returns garbage due to the FW bug".
+Is this really necessary? Did you test without this change ?
 
-Would it be an idea to add a DMI id deny quirk-list to usci_acpi for this a=
-nd
-simply make that driver refuse to load for the known to be broken ideapad
-models from this bug ?
+Also note that this is not really how things work, the bulk
+regulator API parallelizes the enabling of all the regulators,
+so there is no guarantee the regulators will get enabled in
+a specific order.
 
---=20
-You may reply to this email to add a comment.
+Regards,
 
-You are receiving this mail because:
-You are watching the assignee of the bug.=
+Hans
+
+  
+
+> 
+> Signed-off-by: Thierry Chatard <tchatard@gmail.com>
+> ---
+>  drivers/media/i2c/ov8858.c | 9 ++++++++-
+>  1 file changed, 8 insertions(+), 1 deletion(-)
+> 
+> diff --git a/drivers/media/i2c/ov8858.c b/drivers/media/i2c/ov8858.c
+> index 3f45f7fab..a1fa0be52 100644
+> --- a/drivers/media/i2c/ov8858.c
+> +++ b/drivers/media/i2c/ov8858.c
+> @@ -79,8 +79,8 @@
+>  
+>  static const char * const ov8858_supply_names[] = {
+>  	"avdd",		/* Analog power */
+> -	"dovdd",	/* Digital I/O power */
+>  	"dvdd",		/* Digital core power */
+> +	"dovdd",	/* Digital I/O power */
+>  };
+>  
+>  struct regval {
+> @@ -1981,11 +1981,18 @@ static const struct of_device_id ov8858_of_match[] = {
+>  };
+>  MODULE_DEVICE_TABLE(of, ov8858_of_match);
+>  
+> +static const struct acpi_device_id ov8858_acpi_ids[] = {
+> +	{ "INT3477" },
+> +	{ /* sentinel */ },
+> +};
+> +MODULE_DEVICE_TABLE(acpi, ov8858_acpi_ids);
+> +
+>  static struct i2c_driver ov8858_i2c_driver = {
+>  	.driver = {
+>  		.name = "ov8858",
+>  		.pm = &ov8858_pm_ops,
+>  		.of_match_table = ov8858_of_match,
+> +		.acpi_match_table = ov8858_acpi_ids,
+>  	},
+>  	.probe		= ov8858_probe,
+>  	.remove		= ov8858_remove,
+
