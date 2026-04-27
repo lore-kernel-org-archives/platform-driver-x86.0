@@ -1,180 +1,140 @@
-Received: from mail-wm1-f54.google.com (mail-wm1-f54.google.com [209.85.128.54])
+Received: from mail-pl1-f182.google.com (mail-pl1-f182.google.com [209.85.214.182])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CF6243B961D
-	for <platform-driver-x86@vger.kernel.org>; Mon, 27 Apr 2026 12:41:39 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.54
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3649C3D170C
+	for <platform-driver-x86@vger.kernel.org>; Mon, 27 Apr 2026 14:09:04 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.182
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1777293701; cv=none; b=oTYeKiva8w7YIjNb6WeUK9e463zBOYsgoiMuvk2/iwIJ8p8WUJgyXuNaF7RuJ1ungTbmhkbQtxXHxeYMlOOlvovROzwC7+bzvR8MN7FRGbvfzqkwHP9zapm8VnddLUMngjfZDu6mPcRw2KVcvds9UzmxB1coEPRT2Qx0/XAxfGI=
+	t=1777298945; cv=none; b=EX0bi4YWss6OiLl88xssilTA0+OBKycZ60ttVXY3f0Uy7+h2EAUDKu2g6QNbSk+Ni39PEt1pf2HIM7oG61N0r61jn+KUMJmyRTczgKjExB6P8E2U43F+bzkUM/rw2rf15Vm13el4u0qnW+A1Bwu6i9zEVC90OwJMPq0+xFSjzTc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1777293701; c=relaxed/simple;
-	bh=2vEY9g+jd2zsiuvJOyMZ3k5klcsAKucqskQWVdm7nIQ=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=axFYH9TP2YLudDJwYRR93URDxHCAWwOuv77grBC0a5QYgciid0+ESue7hQhejQJtoB6TXqXQwHrlwFpKm4SsnD/pFSTzwtNN7XjMEMwbF8RKpPWtmzQ0oS8zTJjaVKpq5K73buEtbXByQfpcNuPeVB2c4QMzd4qQZ8rrZ7unZoY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=kp5MbLO0; arc=none smtp.client-ip=209.85.128.54
+	s=arc-20240116; t=1777298945; c=relaxed/simple;
+	bh=6iBp5T/boDDw3f8vu9674vxoHItIhbflv+gOtQ8i928=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=Wsp3SzbH+XDsLa1MUWnBMXXdpZHhyZVgae3yPJqVDuCmo2Kzmr5iA4fY1XA0a0oSnzCLB+GU2sEkxU4QuBBA4f51yP8itoZ9wPGukq7DRBBiIiBMGvDs8J8n8TQ/t6QBbHeLTWjz6jLDSfM5/F6ZTsRCa+Da+Twv60cdn6rtJ0w=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=ZhD6B8wF; arc=none smtp.client-ip=209.85.214.182
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="kp5MbLO0"
-Received: by mail-wm1-f54.google.com with SMTP id 5b1f17b1804b1-48334ee0aeaso106973515e9.1
-        for <platform-driver-x86@vger.kernel.org>; Mon, 27 Apr 2026 05:41:39 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ZhD6B8wF"
+Received: by mail-pl1-f182.google.com with SMTP id d9443c01a7336-2ae3a007bd1so11552915ad.2
+        for <platform-driver-x86@vger.kernel.org>; Mon, 27 Apr 2026 07:09:04 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20251104; t=1777293698; x=1777898498; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=Z0ouDnSC+T9ZSB+2JJ/MTzlB9sk99toFQYA8zN4EEOs=;
-        b=kp5MbLO0VCy1JbI5L+iD8oIg12pUFRmbJDNRhWo2QAQNpVOTvxC4Ot2RWO7Xlgu0xh
-         T6FDg7KEk7zelFW7VbHD14cWrPLQJD8kMQpmmuA0TgDVMLdrbzFGOkdSUur1ZkM3lUA4
-         f4i95SURw4yIS/i3kWmsqn7X5GY4yAh13k1hhaxbXMG0fn7+CN1+KV8oa8dTX9gdYrEM
-         4r2JRfn+XN45JswjwQunEPGjXpNbjOw2mRC991ARn0HR7hcxpJE51LJCXO9PMiraMo/u
-         PJdyXf0vytYPjK2T9Lnwlqh4jGL4Jh1xF42maNHIISl4KxkGg96ydhkNDAiYFZpaIW39
-         RBcw==
+        d=gmail.com; s=20251104; t=1777298943; x=1777903743; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=0xqpRZaDGVxEqa2CyY0E4vPQn/D7tfhzxeK6F4mGsO0=;
+        b=ZhD6B8wFNKys5HD7qL9JidzIVzeFrjpKTu/2Xpx190l37XkrceE4rxp1mXHDv9uw8K
+         30YxUnvrqCzhrNYtwb+H7D8xwkM96BbpaTMmwEYTkx0jv/7Y4Ksvq+/Bdzzr1ffZNqDE
+         jRxO5ZHP1nBA9zQWfaFljjITN4J23Pzde01yQEDfi5HFw3OOx4hP83w/OWgLryMDwFkF
+         5ut63ux3uZFgItjur0ReAKicMSpi5KHGxeUDB4hF8PWOfY4FC4C4mqlNopPHVqlD31x1
+         eXsWT0fbxIoeCTkP1uVMVDn8fbK8lvbO/Th9kn7sqppO2b7koGqQy2SH5r7/XQs7bGO6
+         FmYA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1777293698; x=1777898498;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-gg:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=Z0ouDnSC+T9ZSB+2JJ/MTzlB9sk99toFQYA8zN4EEOs=;
-        b=YgIgZYA2HzpccbcGtpbTGtOUWwcoiqu//ieV8UEK+zil6CMMot7RL5ENwNMdnLK+VY
-         /Lx90DCGBuyfodgJdZM11TfX4iJ5md7BsDNUA31CASriJINiX1DhdD1zp+M/Md9BHUHk
-         eC8JuOAfK1U4vofCllSlpX7q4hamlFXGXuuDHcPJaW7YNdxoXs+d/uDuQvM2eiryJPYT
-         GMP70MdIbv7T5pptYmXBgL6L5WrZnwzreTwqPlKMBlpMNltUQ6hSANzcrErgLCA1CRkm
-         KrwNGQuC2kElU06cAsJZpjJz66JlvurKC8LT/cvSEDimMbdQma8/erKKDQHIC1rhh5r9
-         v6xQ==
-X-Forwarded-Encrypted: i=1; AFNElJ/Pcun+bnJJcYmZnAB3IgE3vkGo5VPIXm81IhfdV1WEa//Nmz+sf+RQQZ/6Fn5W3mb+yDRpFtJn7zMumgf5VYnQMjcA@vger.kernel.org
-X-Gm-Message-State: AOJu0Yy+P2hml4BZGGTSJl5S2ZCzB6f+O2G/tkXvkHJlTH93oubH4A7/
-	1ql3pyZghmCnaZnouMYyJyWTQSjSCZo3Cyv4fssgrUBgX/LV5L0MyLZP
-X-Gm-Gg: AeBDievLOyJ/7c8xf8VNK2sOo98Bav3clrrLXKjqr0ajLIDunICzQNRzjpDM/ODhkSJ
-	AiioFCN8xS0XNhPMfRnDDbX2TUo9RmRUtjWDNxkrlQiLXq+5APWdqk7YsplHKmj8ovNP6XQ6vb5
-	XUdNaH3QvXYDFR7DUN460GxHfFTLoTiR7f3juoKJbgdDA9h2868AvcmZgaHyonBnlGEc9O9HApE
-	KaWFXKJHn9hBFKPfxatVE780JwLQdcqq+tIeVZowHkKaMF9jdDtdU9bmx7WjT5WsWhaq+s97qeY
-	eYUI34x4PEF/0TsPaqEuI8EXOtffVwL4i9XCNh9JuUb/OrsoomfnidBOqD6YzbO1a/FJmX+e3mC
-	B/NUxQFGfcEjn1B/HVGL9onGz32fM6Bu6t2MysF+4tCujKyacYOL8YxA0fwOZMzPySeBeROFnQX
-	IXFAEvF/LezteAu9YnaaZ5EUOAj3uQg96saM/H57KqtGpFD1Ohyglhwe+RKPe+SWMbx1xjNeNwM
-	aGPRAQ=
-X-Received: by 2002:a05:600c:3150:b0:485:3b00:f93b with SMTP id 5b1f17b1804b1-488fb79df09mr631479005e9.31.1777293698059;
-        Mon, 27 Apr 2026 05:41:38 -0700 (PDT)
-Received: from ?IPV6:2a01:e11:202b:40:a4dd:2777:84a8:bc7b? ([2a01:e11:202b:40:a4dd:2777:84a8:bc7b])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-48a55dc9f58sm948747075e9.6.2026.04.27.05.41.37
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 27 Apr 2026 05:41:37 -0700 (PDT)
-Message-ID: <edac84e9-93c0-4248-b28f-c121583b9f65@gmail.com>
-Date: Mon, 27 Apr 2026 14:41:36 +0200
+        d=1e100.net; s=20251104; t=1777298943; x=1777903743;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-gg:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=0xqpRZaDGVxEqa2CyY0E4vPQn/D7tfhzxeK6F4mGsO0=;
+        b=gyGWig2+nQjtWZRBtAXL1WEwjUNqZ4cWSwrqPBFHqynTsHtAYY+XfXIhG00H06vhck
+         js3MjIF3zWX/M6QQ1qudbpW0XfVVJ2qe2WOcZd8cI87fhMb1vA/7n4sSvW0JnYSab8uV
+         PDpbgwovMAeb/FzochbGDFliBBKqnxG8pWli926I0M613cjDB2KqoBWVPo80RV1UT0vf
+         JkQp6bDeq2mcxzXA2WNteHs7SIvOX+gWbutP/VQ4FvXUN3MGP5ky88Oo8X9Xy0MxX25f
+         JIA5BWf6p0WYfoKGcESKawsP4zHyMNNfYu4Guen2O2WHMU+74lguRTtUpOBYsJNfAKmr
+         NMgA==
+X-Gm-Message-State: AOJu0YwTtsAtrSOGhKAQ7nYC9vdR4+8VlA6pC8tcEQ4t8wJQGWAb9Mtd
+	0z/JMy0sz8PZQNt3m3STtwZh6ZAg9xHF1pyyGoQobf2HuKutsS+AjfEWXkG2x9IQ
+X-Gm-Gg: AeBDiesYK9quVh4WLEpIpWNdYIB5dEaTpT17+u7FJVLdGsCoXEY/eDHUfoNCqL7DNRO
+	Mt5yPrxxJBl8msZjl6AOM54uXQgHhkv8HgYg8pXihKxYSOaZvB9WqWrq3QoueVzsStuapURpzUA
+	bv/HWGpEAfthBdqkUXXUoIUejkpRBVL0WMrFIlKLyeW+dNe4HRYs9Ak9+Y6eRz6g47df2IUQJOq
+	Fbw1j6wTkZRqSh86EdA7qvp8kv9Jh7zPPaEIDYKI1qV51kICUQTF9XyNiStH/pAAII1gKl2s08M
+	CvC1aPXNjj+qNGjmE9xgiGNugnsHQU8NGL0oxCOkMr28y82vPe+7xBY0g/4DiM2pE6CNPjDsRQz
+	P2Nvf6LV4U6LYaU8XaoEUvEbtjWPxYTfUnrL3NDxVLvpphbEvtY8/rrJLzZJdA/1Lc6XHkO4U3d
+	NZHIszcTWH88m7wQjBaP4PZT8vT1tJZM3o+0sKT4/Y
+X-Received: by 2002:a17:902:8696:b0:2b2:5c84:32ba with SMTP id d9443c01a7336-2b5f9ece9f3mr169617925ad.2.1777298943363;
+        Mon, 27 Apr 2026 07:09:03 -0700 (PDT)
+Received: from magniquick ([45.112.148.110])
+        by smtp.gmail.com with ESMTPSA id d9443c01a7336-2b5fa9ff98csm307322975ad.3.2026.04.27.07.08.59
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 27 Apr 2026 07:09:02 -0700 (PDT)
+From: Navon John Lukose <navonjohnlukose@gmail.com>
+To: Hans de Goede <hansg@kernel.org>,
+	Ilpo Jarvinen <ilpo.jarvinen@linux.intel.com>,
+	Sebastian Reichel <sre@kernel.org>
+Cc: platform-driver-x86@vger.kernel.org,
+	linux-pm@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	Jorge Lopez <jorge.lopez2@hp.com>
+Subject: [RFC] HP laptop charge mode control via POWER_SUPPLY_PROP_CHARGE_BEHAVIOUR
+Date: Mon, 27 Apr 2026 19:38:57 +0530
+Message-ID: <20260427140857.397971-1-navonjohnlukose@gmail.com>
+X-Mailer: git-send-email 2.54.0
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [BUG] 36-second boot delay due to by
- acpi_gpio_handle_deferred_request_irqs on ASUS ROG Strix G16 (2025)
-To: Mika Westerberg <mika.westerberg@linux.intel.com>,
- Hans de Goede <hansg@kernel.org>
-Cc: Mario Limonciello <superm1@kernel.org>,
- Francesco Lauritano <francesco.lauritano1@protonmail.com>,
- "linux-acpi@vger.kernel.org" <linux-acpi@vger.kernel.org>,
- "open list:GPIO ACPI SUPPORT" <linux-gpio@vger.kernel.org>,
- "platform-driver-x86@vger.kernel.org" <platform-driver-x86@vger.kernel.org>,
- "westeri@kernel.org" <westeri@kernel.org>,
- Benjamin Tissoires <bentiss@kernel.org>
-References: <b57b44c3-ea96-4189-8b70-71bf4a80d29b@kernel.org>
- <20251218103831.GW2275908@black.igk.intel.com>
- <51f999d7-2064-47dc-8d9b-e262588bfbdb@gmail.com>
- <20260422090709.GB557136@black.igk.intel.com>
- <4e55e31e-a5e8-4098-8a7f-bb52476b882a@gmail.com>
- <20260422095558.GC557136@black.igk.intel.com>
- <5a36760d-5d1e-4eee-9006-3fed042aa2cd@gmail.com>
- <20260423044211.GD557136@black.igk.intel.com>
- <3d562963-9581-4e0f-b9a0-5f0fe28d2495@kernel.org>
- <c55b55ea-a8d5-481e-916f-eb92aeb2e06d@kernel.org>
- <20260427122806.GN557136@black.igk.intel.com>
-Content-Language: en-US
-From: Marco Scardovi <mscardovi95@gmail.com>
-In-Reply-To: <20260427122806.GN557136@black.igk.intel.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 8bit
 
+Hi,
 
-Il 27/04/26 14:28, Mika Westerberg ha scritto:
-> On Mon, Apr 27, 2026 at 01:46:03PM +0200, Hans de Goede wrote:
->> Hi,
->>
->> On 23-Apr-26 07:15, Mario Limonciello wrote:
->>> On 4/22/26 23:42, Mika Westerberg wrote:
->>>> Hi,
->>>>
->>>> On Wed, Apr 22, 2026 at 02:08:29PM +0200, Marco Scardovi wrote:
->>>>>>> Assuming all the variants suffer the same problem would it be ok to use a
->>>>>>> wildcard for it?
->>>>>> Yeah, we could expand it to all "ROG Strix G16" I think:
->>>>>>
->>>>>> diff --git a/drivers/gpio/gpiolib-acpi-quirks.c b/drivers/gpio/gpiolib-acpi-quirks.c
->>>>>> index a0116f004975..e3a6111854e8 100644
->>>>>> --- a/drivers/gpio/gpiolib-acpi-quirks.c
->>>>>> +++ b/drivers/gpio/gpiolib-acpi-quirks.c
->>>>>> @@ -392,6 +392,23 @@ static const struct dmi_system_id gpiolib_acpi_quirks[] __initconst = {
->>>>>>                 .ignore_wake = "VEN_0488:00@355",
->>>>>>             },
->>>>>>         },
->>>>>> +    {
->>>>>> +        /*
->>>>>> +         * The ASUS ROG Strix G16 (2025) ACPI GPIO configuration
->>>>>> +         * causes acpi_gpio_handle_deferred_request_irqs() to
->>>>>> +         * stall for ~36 seconds during boot so ignore the two
->>>>>> +         * interrupts involved.
->>>>>> +         *
->>>>>> +         * Found in BIOS G614PP.307.
->>>>>> +         */
->>>>>> +        .matches = {
->>>>>> +            DMI_MATCH(DMI_SYS_VENDOR, "ASUSTeK COMPUTER INC."),
->>>>>> +            DMI_MATCH(DMI_PRODUCT_NAME, "ROG Strix G16"),
->>>>>> +        },
->>>>>> +        .driver_data = &(struct acpi_gpiolib_dmi_quirk) {
->>>>>> +            .ignore_interrupt = "AMDI0030:00@21,AMDI0030:00@24",
->>>>>> +        },
->>>>>> +    },
->>>>>>         {} /* Terminating entry */
->>>>>>     };
->>>>> As for now it seems working. I've reverted it on my kernel as I prefer
->>>>> remain as much as possible close to the CachyOS' one but hopefully it will
->>>>> be implemented on 7.1, if someone propose the patch and it is accepted. It
->>>>> would be amazing to see Asus more interested on Linux and more strict with
->>>>> their BIOS but in the end I understand it's like asking for the moon.
->>>> Okay thanks for checking. I guess this is what we have to live with for now
->>>> until someone finds a better way of dealing with these.
->>>>
->>>> @Francesco, would you like to submit a new version of the patch similar to
->>>> above or you want me to do that?
->>> Hans suggested that we might want to look at ripping out this edge triggered events at boot earlier in the thread.
->>>
->>> https://lore.kernel.org/platform-driver-x86/20260423044211.GD557136@black.igk.intel.com/T/#mdca882e6606d3a894ec7499d3b742d040933dbdb
->>>
->>> Hans - as you pointed out that the Surface lid state is the only real issue left and you happen to have one do you think you could work up some patches?
->> Right, so I read further in the thread that Armin has a maybe better suggestion,
->> after that has been merged I can check a bunch of the current devices with
->> .no_edge_events_on_boot which I still have and see if those quirks can be
->> dropped now.
->>
->> But the above quirk for the ASUS ROG Strix G16 (2025) does not use
->> .no_edge_events_on_boot which just disables the initial run of
->> the ACPI event handler at boot. Instead it uses:
->>
->>              .ignore_interrupt = "AMDI0030:00@21,AMDI0030:00@24",
->>
->> which *completely* disables the ACPI event handlers for the mentioned pins.
-> Oh, I've completely lost track of all the quirks that were added after I
-> did anything with the ACPI GPIO stuff :(. Sorry about missing this. I will
-> stay silent from now on ;-)
+I have been looking at battery charge control on an HP laptop, and I would like
+to check the right upstream direction before preparing a patch.
 
-Hi Everyone,
+This is not a new userspace ABI. The kernel already has
+POWER_SUPPLY_PROP_CHARGE_BEHAVIOUR, and some existing drivers expose charge
+modes without exposing charge thresholds. I am trying to confirm whether that is
+the right interface for this HP firmware interface, and where the implementation
+should live.
 
-@hans, I tried it and can confirm it does the trick as well.
+On this machine, Linux currently exposes no native battery charge thresholds:
 
+  - no charge_control_start_threshold
+  - no charge_control_end_threshold
 
-Best regards,
+The existing HP kernel drivers also do not expose this feature here:
 
-Marco
+  - hp-wmi does not expose battery charge mode control
+  - hp-bioscfg is present, but does not expose Battery Health Manager or related
+    battery threshold attributes on this machine
 
+However, the firmware exposes working ACPI methods for charge mode control:
+
+  - \SBCC 0x0000 -> normal charging / auto
+  - \SBCO 0x0500 -> inhibit charge
+  - \SBCO 0x0200 -> force discharge while on AC
+
+These mappings have been tested from Linux by observing battery and adapter
+state transitions:
+
+  - auto allows normal charging
+  - inhibit-charge leaves AC online and reports Not charging / zero current
+  - force-discharge makes the battery path discharge while AC is connected
+
+My current thinking is:
+
+  - expose only POWER_SUPPLY_PROP_CHARGE_BEHAVIOUR
+  - support AUTO, INHIBIT_CHARGE, and FORCE_DISCHARGE
+  - do not synthesize charge_control_*_threshold properties in the kernel
+  - leave policies such as "resume below 75%, stop above 80%" to userspace
+
+For driver placement, this seems HP-specific rather than generic power-supply
+logic, so I think it should probably live under drivers/platform/x86/hp/ and
+register a power_supply extension on the battery, similar to other platform
+drivers that use power_supply_register_extension() from a battery hook.
+
+Does that sound like the right direction?
+
+In particular:
+
+  1. Is POWER_SUPPLY_PROP_CHARGE_BEHAVIOUR the right ABI for an HP platform that
+     appears to expose only mode-based charging control?
+
+  2. Should this be implemented as part of an existing HP driver such as hp-wmi,
+     or as a small new HP-specific driver under drivers/platform/x86/hp/?
+
+  3. What should the driver gate support on? For example, should this be gated
+     by DMI quirks, HP WMI/BIOS GUID presence, ACPI method presence, or some
+     combination of those?
+
+Thanks,
+Navon John Lukose
