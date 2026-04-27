@@ -1,145 +1,181 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from PH8PR06CU001.outbound.protection.outlook.com (mail-westus3azon11012009.outbound.protection.outlook.com [40.107.209.9])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B55063385BE;
-	Mon, 27 Apr 2026 15:45:59 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1777304759; cv=none; b=Z5OGT15qcgY8T/7O9TFdmCZuQtS8VDktR3DnEFvUYPgV7yrTGvK9p8Wr9K2rYCdinuGav0jAtLWSzu5bHwf/wPwU3xxcmdeeTLWYohAiusttG53vx9oH1l7X2+bBlhVmhzQicnujCgP7PMgdxFVRJHJLhwoz8UTze5RE1rwwMQg=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1777304759; c=relaxed/simple;
-	bh=JD/A6OYaONolnqweLO4io8yQ2GLqYURqGGUObKkTw+8=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=QpWQAiO7Kwy4PHR+pivpMCS+yr2cpSOtt+bTN0xttZgwuRqIluC97T3tK47oULuJKF0Nz5Z0N6qorsT0pkFrWhSL2RB9UogwVwgzCKDIZib0uG1eCtUmEpYVaeJQI9G9YsKfL+7b85MJffrHFWNlX5KnDlMEKFZ+msL33gjGqss=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=byea2TcV; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4B046345CCD;
+	Mon, 27 Apr 2026 15:52:00 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.209.9
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1777305121; cv=fail; b=U2o6W7k1smpiXoGERAW/rG1xS3q2cbkdaGEi/qTQhR+S7Dao1SIAzvxrYFoVyfvg3mkAWqQycChSJbQnm5pyPhFCq+F5Ak9km6cY5CY7JsXy8qXZ4DSFfedjNwYp98W4CiyvqkUcgKi2qhhP4TWIZFZyTO5ynMf4FB8ao+IRTp8=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1777305121; c=relaxed/simple;
+	bh=RZha65un4UPMK3iqSaV8ZXt66IyUmuxu1SNvHBLRSvo=;
+	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=IQd3kSeC8F63qfe+e/U7FYz2RPP8GoJu/Xv0YHMMEo5Dt/7GdwSypYfvoGZy1neLrvbZ0yrEvDVvZpcoRu9sO38fkb1gSP5n0hjhnM8IxGiM201aPYdr4oho6aFyYLbNMWKPV01NZaZtUmQEsR9ELE0+A0kb7YyeHwMsKg1G63I=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=M010bgNJ; arc=fail smtp.client-ip=40.107.209.9
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=amd.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="byea2TcV"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 17CA2C19425;
-	Mon, 27 Apr 2026 15:45:57 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1777304759;
-	bh=JD/A6OYaONolnqweLO4io8yQ2GLqYURqGGUObKkTw+8=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=byea2TcVPd4FuIMiwxfJhydHbmEeM0ALBoXWVya48501cuSo9WBXUZ6ZGmd+hxB05
-	 S6hDqZk0Tt4EYcyJAVieFcSYJXMmZDVe24gvF8bgA43mhQjCgczgHBGXkvd9aYBbGr
-	 NQeM8UD60fpOy1GNOcDznPo4opSi2rzGpq6nd4o3AfYZmYs9LRA58iXtz9QWmvFZ9W
-	 p3EsUxs1CFG0PFxUf+As6aLJyggqqVG8mgiCAVzFMDQ537xP+G2ldDG/CKijMY4FiX
-	 HgtLrgN8ec4Ia9IPN71aGZkjr7Ql2jESYS67GSRpp5b6RSB6k52bPFvaHKbqLN8Hnl
-	 N42bo9SXSG4cg==
-Message-ID: <abfc9469-5d47-4e83-8c3c-03138f1b2ade@kernel.org>
-Date: Mon, 27 Apr 2026 17:45:56 +0200
+	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="M010bgNJ"
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=FCDKn1lk08URn9vR/k10dG79tQtNsjr3T635wR53jTUJ1RzGtBWeHbe0y36beO6n4CEXy3U+xH45ppsiF8n5yYK6xs0Nwo2In3Z5JGKKGqva7lFxr+stgItpywvnjl5vleQ3A8B5ugv77+F+WstUgKw14rSfD3r4UgLVgycs0n68PXa27A71uSOX4YefiEun3Ms69zaRlwVfCsOfOwlTwo2df/Hjd9yHDskY5+8589R44on2t0+3JUV+GhMfT4QGf4HbVFneJY0K+fOw3ldMplF29HjD606AIH8oCq3Ucaa0biie+6i2Ge1JzkqCxKr3oJrIFa5C2JgI/e6B5LnYcw==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=y674wdrxwPa4iww0o65uAw5rUVc9L0hw0QCyCphhCBU=;
+ b=Yms4fv7O5+YysELWHzxQ9+IED17uoBPUIr2xo9DLDJJJoTgKCTkUBnvkQd0UiNcYmIa1VAoxm+EjFo5Y0AHjk5JlwhupJnJ+9QgUb2NRaIaLEIh6hxhgpH2p/RBLoN6J1F0AXvjWKkurxykZ37TdhycZdiM5fKD7AUbHfeXm/lGe/tmEODpnzOrlZb68ot0ztELiGtDyU9Akbtstgy6vP6uDTBInzPRB5+BsTOmM751Bi5gp8t4+7QNkQ707rP9FM9qjP3HsX9l5quWm+VAMcai6mwzXrjzHZCLiW+DYgSp5SOUgd9pXChosU1I13yWnt75i7uNDUJory5CPdgyAqg==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
+ 165.204.84.17) smtp.rcpttodomain=linux.intel.com smtp.mailfrom=amd.com;
+ dmarc=pass (p=quarantine sp=quarantine pct=100) action=none
+ header.from=amd.com; dkim=none (message not signed); arc=none (0)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=y674wdrxwPa4iww0o65uAw5rUVc9L0hw0QCyCphhCBU=;
+ b=M010bgNJzXK7k39fbbnHaS2wjrf+N5gbO6mDkB/sFVJrb4dxsvd1QjjbLk/peVV0/69s7Jrh2S8ePMQml1Hh0UpEFy8ztYv6VMJqaafOWgWv35EjvEu8YqG60SELC3Gc6ZR52E6MnqUmbjKTqMu3DgfP1WL7smtUUAAel2BXTWM=
+Received: from BN0PR03CA0049.namprd03.prod.outlook.com (2603:10b6:408:e7::24)
+ by CH3PR12MB8403.namprd12.prod.outlook.com (2603:10b6:610:133::14) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.9870.16; Mon, 27 Apr
+ 2026 15:51:54 +0000
+Received: from BL6PEPF00022572.namprd02.prod.outlook.com
+ (2603:10b6:408:e7:cafe::1f) by BN0PR03CA0049.outlook.office365.com
+ (2603:10b6:408:e7::24) with Microsoft SMTP Server (version=TLS1_3,
+ cipher=TLS_AES_256_GCM_SHA384) id 15.20.9846.26 via Frontend Transport; Mon,
+ 27 Apr 2026 15:51:54 +0000
+X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 165.204.84.17)
+ smtp.mailfrom=amd.com; dkim=none (message not signed)
+ header.d=none;dmarc=pass action=none header.from=amd.com;
+Received-SPF: Pass (protection.outlook.com: domain of amd.com designates
+ 165.204.84.17 as permitted sender) receiver=protection.outlook.com;
+ client-ip=165.204.84.17; helo=satlexmb07.amd.com; pr=C
+Received: from satlexmb07.amd.com (165.204.84.17) by
+ BL6PEPF00022572.mail.protection.outlook.com (10.167.249.40) with Microsoft
+ SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.9846.18 via Frontend Transport; Mon, 27 Apr 2026 15:51:53 +0000
+Received: from dcsm-trdripper1.amd.com (10.180.168.240) by satlexmb07.amd.com
+ (10.181.42.216) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.2562.17; Mon, 27 Apr
+ 2026 10:51:50 -0500
+From: Muralidhara M K <muralidhara.mk@amd.com>
+To: <ilpo.jarvinen@linux.intel.com>, <gregkh@linuxfoundation.org>,
+	<rafael@kernel.org>
+CC: <platform-driver-x86@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+	<driver-core@lists.linux.dev>, Muralidhara M K <muralidhara.mk@amd.com>
+Subject: [PATCH v2 0/7] AMD HSMP: metrics table improvements and Family 1Ah Model 50h-5Fh support
+Date: Mon, 27 Apr 2026 21:21:22 +0530
+Message-ID: <20260427155129.545327-1-muralidhara.mk@amd.com>
+X-Mailer: git-send-email 2.34.1
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [RFC] HP laptop charge mode control via
- POWER_SUPPLY_PROP_CHARGE_BEHAVIOUR
-To: Navon John Lukose <navonjohnlukose@gmail.com>,
- Ilpo Jarvinen <ilpo.jarvinen@linux.intel.com>,
- Sebastian Reichel <sre@kernel.org>
-Cc: platform-driver-x86@vger.kernel.org, linux-pm@vger.kernel.org,
- linux-kernel@vger.kernel.org, Jorge Lopez <jorge.lopez2@hp.com>
-References: <20260427140857.397971-1-navonjohnlukose@gmail.com>
-From: Hans de Goede <hansg@kernel.org>
-Content-Language: en-US, nl
-In-Reply-To: <20260427140857.397971-1-navonjohnlukose@gmail.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
+X-ClientProxiedBy: satlexmb08.amd.com (10.181.42.217) To satlexmb07.amd.com
+ (10.181.42.216)
+X-EOPAttributedMessage: 0
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: BL6PEPF00022572:EE_|CH3PR12MB8403:EE_
+X-MS-Office365-Filtering-Correlation-Id: 7a088432-57cc-40bd-8f57-08dea474e716
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam:
+	BCL:0;ARA:13230040|376014|1800799024|82310400026|36860700016|13003099007|56012099003|18092099006|18002099003;
+X-Microsoft-Antispam-Message-Info:
+	pOiJ29TmldXwSl02sGoKxKoAPxog/6RKD1ospUJPRvnx1ys4eCfjM+f3TKX1CKCZ7saxknILxc0XA2DBWGVskepIdiwpLRUkTFTqMlq5y0rHHY3G34FK9u1jmxh8ZoNKsgVP+MEmBbgMSm//YGUlBYv0/z5IUKEG28wlJk7xSBKcQbpWBeIq+ZTxoyJ7jEae3kamcYWzUzlCqRw8ffhoer9KKlzcnVYObod15dM7Yyq4b/L+8zhh6F7mrgdzKKiTE3JHH8f4I09FBwnlVGSUvupTHamo4ZTinGug0s0ELFfN9nBjujrJL8ErtQDHVB0olJmDdk+q3ZzmWs9/e8S88CWFr8UxbINaRMkaNg8dBm/AQ0GqfSDRJp8Pww0t1DFmG1yNqABnRPxcT99mmFaiaFoJaeVJunr1FjXuRxVXBQBUaEHwkhOaBJyR7NvGGiuIo04DkGunwP5MkNMP0D0OPy7lDHQ/N1sdgH/K1yIgKkIr24gdTRVd+plwniU8AhdOcjJWJ9E+8cpXgdme9zhX+3wy4erS43e+XwwszlyH6r/1ZyDigIcZnteb2+rxt3/TfWaAn0Jm65M32U9XcxiKxV98ynk8w+wpuVsWWgivS3lSjS+pNiNPhRrKB9mxKSPLyi94lkV7Gzza9vQLbObNlL76eeb/8FKrSDzE/Vo+tez9jXxgK76qjMEjwNVp6OEws0GQkq00NASr8DyOqHyXlxqRylnnHpq/N8CotBAHz3F+syj/yvWWxe6Srk/DTI9ZWdqpE76B8USWyqvRZX9PhSw/RiHX9c8FwvZyk/CZCHE=
+X-Forefront-Antispam-Report:
+	CIP:165.204.84.17;CTRY:US;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:satlexmb07.amd.com;PTR:InfoDomainNonexistent;CAT:NONE;SFS:(13230040)(376014)(1800799024)(82310400026)(36860700016)(13003099007)(56012099003)(18092099006)(18002099003);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0:
+	n/hG8//k6nFdxWgF9ltCFFpHzZ8ZSkAOp+NtCBvy95QTY7jr1hBvpb8jDHLmM5yRu/MB/8F9ksVyTHYjlll4e3KnOIU0B1ZrZszzETDJRdQwcjUm9iUWCLei+uDWiofHM2RyPUMGsqUIade4Y3P3M4ToRUC+tilLZ8l1gEfBCu8QoCZYkXih+Kj3KjDWiFtXfaH2oxlY1HsmXxZ0jC+5z3TQ/nLj5VszjwPNqh9NMohpucO/7r0oAuHAXATffRWAioIXroDwW8jhsl2zKaOJbxObZnX89R6fxTcIH8LYaEBqDQGvHtILyzZ8eQaGe2IQ5Rl71YGO9LDJzH74e9szcDB19KVru4ske/MbcpdqW8a9HnYYlQMwTP9fm+rAsPjrmz25EUgU1QkCfKTqSsOPuo5tEH0MIM5uShSNc+kotfTATwOIjYgWiOyYK9uBqwxV
+X-OriginatorOrg: amd.com
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 27 Apr 2026 15:51:53.2927
+ (UTC)
+X-MS-Exchange-CrossTenant-Network-Message-Id: 7a088432-57cc-40bd-8f57-08dea474e716
+X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
+X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=3dd8961f-e488-4e60-8e11-a82d994e183d;Ip=[165.204.84.17];Helo=[satlexmb07.amd.com]
+X-MS-Exchange-CrossTenant-AuthSource:
+	BL6PEPF00022572.namprd02.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Anonymous
+X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: CH3PR12MB8403
 
-Hi,
+This series adds HSMP protocol version 7 support for AMD Family 1Ah
+Model 50h-5Fh processors and replaces offset-based chunked reading
+with a single read method for variable-sized metrics data larger than
+4 KB, and addresses locking to allow concurrent reads safely.
 
-On 27-Apr-26 16:08, Navon John Lukose wrote:
-> Hi,
-> 
-> I have been looking at battery charge control on an HP laptop, and I would like
-> to check the right upstream direction before preparing a patch.
-> 
-> This is not a new userspace ABI. The kernel already has
-> POWER_SUPPLY_PROP_CHARGE_BEHAVIOUR, and some existing drivers expose charge
-> modes without exposing charge thresholds. I am trying to confirm whether that is
-> the right interface for this HP firmware interface, and where the implementation
-> should live.
-> 
-> On this machine, Linux currently exposes no native battery charge thresholds:
-> 
->   - no charge_control_start_threshold
->   - no charge_control_end_threshold
-> 
-> The existing HP kernel drivers also do not expose this feature here:
-> 
->   - hp-wmi does not expose battery charge mode control
->   - hp-bioscfg is present, but does not expose Battery Health Manager or related
->     battery threshold attributes on this machine
-> 
-> However, the firmware exposes working ACPI methods for charge mode control:
-> 
->   - \SBCC 0x0000 -> normal charging / auto
->   - \SBCO 0x0500 -> inhibit charge
->   - \SBCO 0x0200 -> force discharge while on AC
-> 
-> These mappings have been tested from Linux by observing battery and adapter
-> state transitions:
-> 
->   - auto allows normal charging
->   - inhibit-charge leaves AC online and reports Not charging / zero current
->   - force-discharge makes the battery path discharge while AC is connected
-> 
-> My current thinking is:
-> 
->   - expose only POWER_SUPPLY_PROP_CHARGE_BEHAVIOUR
->   - support AUTO, INHIBIT_CHARGE, and FORCE_DISCHARGE
->   - do not synthesize charge_control_*_threshold properties in the kernel
->   - leave policies such as "resume below 75%, stop above 80%" to userspace
-> 
-> For driver placement, this seems HP-specific rather than generic power-supply
-> logic, so I think it should probably live under drivers/platform/x86/hp/ and
-> register a power_supply extension on the battery, similar to other platform
-> drivers that use power_supply_register_extension() from a battery hook.
-> 
-> Does that sound like the right direction?
-> 
-> In particular:
-> 
->   1. Is POWER_SUPPLY_PROP_CHARGE_BEHAVIOUR the right ABI for an HP platform that
->      appears to expose only mode-based charging control?
+The zen6 metric table (~13 KB) exceeds the PAGE_SIZE (4096 bytes) read
+cap imposed by kernfs_file_read_iter().  Commit 3124eb1679b2 ("sysfs:
+remove bin_attribute.size") cleared i_size for sysfs binary files,
+which made kernfs_file_read_iter() fall back to PAGE_SIZE as the
+maximum single-read length.  This means userspace gets a silently
+truncated snapshot when reading the metric table via sysfs.
 
-Yes, POWER_SUPPLY_PROP_CHARGE_BEHAVIOUR was initially added for basically
-the same settings on Lenovo ThinkPad laptops. Note these options are typically
-used to implement battery "fuel-gauge" calibration functionality.
+To solve this, the series introduces SYSFS_HUGE_BIN_FILE, a new sysfs
+mode flag that routes binary attribute reads through the seq_file path
+(seq_read_iter) instead of kernfs_file_read_iter().  The seq_file
+buffer grows dynamically (doubling from PAGE_SIZE) and has no built-in
+size cap, so it can serve arbitrarily large binary attributes in a
+single read.
 
-I guess inhibit charge could be used together with a userspace daemon
-monitoring charge to implement a charge to 80% threshold. But that would be
-a new way to use this API. Note I'm not saying it would be a wrong use,
-just a new use.
+Additionally, the series retrieves the actual metric table size from
+the SMU at init time (via args[2] of HSMP_GET_METRIC_TABLE_DRAM_ADDR)
+rather than relying on a compiled-in sizeof(), and adds per-socket
+mutex serialization for metric table reads using the scoped guard(mutex)
+API.
 
->   2. Should this be implemented as part of an existing HP driver such as hp-wmi,
->      or as a small new HP-specific driver under drivers/platform/x86/hp/?
+Link: https://lore.kernel.org/platform-driver-x86/81915669-87e0-f06d-7a91-eaec41ecc0e1@linux.intel.com/T/#m28341c51bcf27862ef6615414b1970d3db279fd7
 
-Is there a WMI object which will call 
+Patch breakdown:
 
->   - \SBCC 0x0000 -> normal charging / auto
->   - \SBCO 0x0500 -> inhibit charge
->   - \SBCO 0x0200 -> force discharge while on AC
+  1/7  HSMP messages    - Define HSMP protocol v7 message IDs and
+                          response sizes in the UAPI header.
+  2/7  UAPI structs     - Add hsmp_metric_table_zen6 UAPI structures
+                          and widen acpi.c proto_ver checks to >= VER6.
+  3/7  response_sz      - Unify response_sz validation to an upper-bound
+                          check, allowing HSMP_GET_METRIC_TABLE_DRAM_ADDR
+                          to return 3 dwords (including table size).
+  4/7  SYSFS_HUGE_BIN_FILE - Add the sysfs infrastructure: new flag,
+                          seq_show callback, and kernfs_ops for binary
+                          files larger than PAGE_SIZE.
+  5/7  Dynamic size     - Read actual table size from SMU args[2] at
+                          init time; use bin_size callback to report it
+                          to sysfs.
+  6/7  Read locking     - Add per-socket guard(mutex) serialization for
+                          metric table reads to prevent torn snapshots.
+  7/7  Wire it up       - Set SYSFS_HUGE_BIN_FILE mode on metric table
+                          bin_attributes in both acpi.c and plat.c.
 
-when its control method is called with certain arguments ?  Typically
-the answer to this will be yes, in which case you really should go
-through that WMI object, so as to support more models where the
-method names / args may be different.
+Build-tested each patch individually with W=1, zero warnings.
+Tested on AMD Family 1Ah Model 50h platform with HSMP protocol v7.
 
->   3. What should the driver gate support on? For example, should this be gated
->      by DMI quirks, HP WMI/BIOS GUID presence, ACPI method presence, or some
->      combination of those?
+Muralidhara M K (6):
+  platform/x86/amd/hsmp: Add metrics table support for Family 1Ah Model
+    50h-5Fh
+  platform/x86/amd/hsmp: Unify response_sz validation to an upper-bound
+    check
+  sysfs: Add SYSFS_HUGE_BIN_FILE flag for binary attributes larger than
+    PAGE_SIZE
+  platform/x86/amd/hsmp: Add dynamic table size for metric table
+  platform/x86/amd/hsmp: Make metric table read locking use guard(mutex)
+  platform/x86/amd/hsmp: Support SYSFS_HUGE_BIN_FILE for metric table
+    reads
 
-That is a good question, if you can figure out how to access these methods
-through some WMI object then doing so should be safe on any model with
-that WMI object.  But firmware bugs do happen, so we may need some
-heuristics on top of relying on the WMI object GUID.
+Suma Hegde (1):
+  platform/x86/amd/hsmp: Add new HSMP messages for Family 1Ah, Model
+    50h-5Fh
 
-Regards,
+ arch/x86/include/uapi/asm/amd_hsmp.h | 235 ++++++++++++++++++++++++---
+ drivers/platform/x86/amd/hsmp/acpi.c |  14 +-
+ drivers/platform/x86/amd/hsmp/hsmp.c |  36 ++--
+ drivers/platform/x86/amd/hsmp/hsmp.h |   6 +-
+ drivers/platform/x86/amd/hsmp/plat.c |  13 +-
+ fs/sysfs/file.c                      |  45 +++++
+ fs/sysfs/group.c                     |   8 +-
+ include/linux/sysfs.h                |   1 +
+ 8 files changed, 312 insertions(+), 46 deletions(-)
 
-Hans
-
+-- 
+2.34.1
 
