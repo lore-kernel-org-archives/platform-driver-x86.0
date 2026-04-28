@@ -1,91 +1,82 @@
-Received: from hope.aquinas.su (hope.aquinas.su [82.148.24.172])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6AE3A3D47A7;
-	Tue, 28 Apr 2026 08:46:46 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=82.148.24.172
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E807C3F786C
+	for <platform-driver-x86@vger.kernel.org>; Tue, 28 Apr 2026 09:01:21 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1777366009; cv=none; b=TxIVUSe3CgOGSlx9fgCs3CTBtLZdgCGfpYvCgkpiKi1lvkhikAsukgJ0GcaqlVRaMylxwXIbsmf+jg+CUZmZ5x0JeUKS4Mb9kk949rgf4aGFBUOAH//SJGtwr66O+wA4Z+WU8P9ix/ty7FbQ7+F3K9WUls57nmpf0E5OXwwgHys=
+	t=1777366882; cv=none; b=pIGcat/a7gRqQgvDxIKvfBWekYbwWq5/TWE5IFrICvtuT2Rpp1owtgtmmPmD6tucpFIwUBYEY2/BB+myU0Svykgx0qYTQxl69bqEmUIT/3TKHMQpLR2V28E32/jxYdSWB5442SQ5xy/dP/l2t7mLUgeJVhQVMMMkE7XfXf4jdzk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1777366009; c=relaxed/simple;
-	bh=xkqsIT3puJjVXufM4Rs//DVtzl914AuKJYlwfXxWa0Q=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version:Content-Type; b=GnyOH1uKVOC1HYdX6e5jWYOo72qVF4o3RSa8ZipiO6vabWyYS24ZH+5zi9h8GNdlhrdnjZ9f69S15ZF+SxDN+coputYwKwQsP3TeBdG12igv+r6o0wCv3PxnlunRN0AjN4r4vPzhtD3Wao5Z0SyZ3xNE9FXxRu37jxTNtTyiSdM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=aquinas.su; spf=pass smtp.mailfrom=aquinas.su; dkim=pass (2048-bit key) header.d=aquinas.su header.i=@aquinas.su header.b=C9GOKohh; arc=none smtp.client-ip=82.148.24.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=aquinas.su
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=aquinas.su
+	s=arc-20240116; t=1777366882; c=relaxed/simple;
+	bh=dgUZsjBf+fgvWDzkX58wobp3RkamhMA345HKuIkcZ4M=;
+	h=From:To:Subject:Date:Message-ID:In-Reply-To:References:
+	 Content-Type:MIME-Version; b=n3yiqsNdWlS7SacJr3g6Y7MExQHMFv8UCAqvf3gWS8QAECpv1NM3lfGS7CT4RyJWeGkl+Wsikx8iVKwF02DlZbBUPQ34rnTbPDGjh7RugWWm/N7v4tOhvQcfxywHNYmGnt9rG5R2bsNTM7aJdPvnqVgtuv3Nrr+5XBl+XOfzYuA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=gjCywlBe; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=aquinas.su header.i=@aquinas.su header.b="C9GOKohh"
-Received: from woolf.localdomain (unknown [87.228.30.162])
-	(Authenticated sender: admin@aquinas.su)
-	by hope.aquinas.su (Postfix) with ESMTPSA id 9F3B470ED7;
-	Tue, 28 Apr 2026 11:38:26 +0300 (MSK)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=aquinas.su; s=default;
-	t=1777365507;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding;
-	bh=JR5D7svhufHLHr7OlrUflbzz8ZcWnKvD1eCr/jJoanM=;
-	b=C9GOKohhlbocQBpvwo8oT4GyXyniwMog5isSMowAOrdnlj87nqHHkmen5MFWRVr3hz5N+n
-	XVTtyYhdQaZ8XDWRF83wq9ehun2LrIfGZ1/KWzuVLmtBwztMwComFgxseqKoEO0OXXb+qm
-	oQtwcbWY8d2HGbwbmXmAgDjbxADxMwWdVK+CfNtFSS0Mb0RgqutAhZDhbU7v0SGuMNIM3Y
-	igTgBT+gl6e0qIQNQPZvFwfatRxf2fmEBaODtb8QtA1PGgfCR0JEslkUJKOIwVIE0kc1+c
-	SKV1Mw/QgFAWVtcJxpmr+5OST/o7XM41/y3onYNAyVchG2Y6rP5FkPCcI9bXTg==
-Authentication-Results: hope.aquinas.su;
-	auth=pass smtp.auth=admin@aquinas.su smtp.mailfrom=admin@aquinas.su
-From:
- =?UTF-8?B?0JrQvtC90LXQvdC60L4g0JDQvdC00YDQtdC5INCS0LjQutGC0L7RgNC+0LLQuNGH?=
- <admin@aquinas.su>
-To: ilpo.jarvinen@linux.intel.com
-Cc: linux-kernel@vger.kernel.org, Hans de Goede <hansg@kernel.org>,
- platform-driver-x86@vger.kernel.org, stable@vger.kernel.org
-Subject:
- [PATCH] fix support for thermal profile Omen =?UTF-8?B?MTYt0YEweHh4?=
- laptpops
-Date: Tue, 28 Apr 2026 15:38:25 +0700
-Message-ID: <T3DTKbKwQzOgk_0eUG-kMg@aquinas.su>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="gjCywlBe"
+Received: by smtp.kernel.org (Postfix) with ESMTPS id 542CBC4AF19
+	for <platform-driver-x86@vger.kernel.org>; Tue, 28 Apr 2026 09:01:21 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1777366881;
+	bh=dgUZsjBf+fgvWDzkX58wobp3RkamhMA345HKuIkcZ4M=;
+	h=From:To:Subject:Date:In-Reply-To:References:From;
+	b=gjCywlBeqsF/XthHbQniQxiRaoVEi0ZM4t81l2zwXngPRFhs7zlOxt5QmhnP+pa49
+	 uK/au6GRpfcGZoHe0S3/vySw9aDqQA0grLPGOqYtVWNqcLYuti1BJtfc5WIQ8HgFhI
+	 Ud/9fSuJhD2d0tOJIVTPo3CfuUog6MZ0F/LjXsNN5kYJ8cY7PevF0CHQL6HRNisqtX
+	 5RbgYkjU0OUuMnbPfnVguSNWXBBeXUAmyd4Dl85xJ6MojEOkAH1ExGdaRGDABfeq5P
+	 fbmh0w7erdvDrBA27BGJEFXrnKpFGf3DXPZl4UcOzRRsJpAbTJUMFCuBgnq7fDh/Xv
+	 qFk2c/TK6U2ig==
+Received: by aws-us-west-2-korg-bugzilla-1.web.codeaurora.org (Postfix, from userid 48)
+	id A72A3CAB781; Tue, 28 Apr 2026 09:01:20 +0000 (UTC)
+From: bugzilla-daemon@kernel.org
+To: platform-driver-x86@vger.kernel.org
+Subject: [Bug 221065] ideapad_acpi: unexpected charge_types spam on Yoga Pro
+ 7 14ASP9
+Date: Tue, 28 Apr 2026 09:01:20 +0000
+X-Bugzilla-Reason: None
+X-Bugzilla-Type: changed
+X-Bugzilla-Watch-Reason: AssignedTo drivers_platform_x86@kernel-bugs.osdl.org
+X-Bugzilla-Product: Drivers
+X-Bugzilla-Component: Platform_x86
+X-Bugzilla-Version: 2.5
+X-Bugzilla-Keywords: 
+X-Bugzilla-Severity: low
+X-Bugzilla-Who: hansg@kernel.org
+X-Bugzilla-Status: NEW
+X-Bugzilla-Resolution: 
+X-Bugzilla-Priority: P3
+X-Bugzilla-Assigned-To: drivers_platform_x86@kernel-bugs.osdl.org
+X-Bugzilla-Flags: 
+X-Bugzilla-Changed-Fields: 
+Message-ID: <bug-221065-215701-MXnMNH0K1c@https.bugzilla.kernel.org/>
+In-Reply-To: <bug-221065-215701@https.bugzilla.kernel.org/>
+References: <bug-221065-215701@https.bugzilla.kernel.org/>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+X-Bugzilla-URL: https://bugzilla.kernel.org/
+Auto-Submitted: auto-generated
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7Bit
-Content-Type: text/plain; charset="utf-8"
 
-The HP Omen 16-c0xxx (board ID: 8902) has the same WMI interface as
-other Victus S boards, but requires additional quirks for correctly
-switching thermal profile.
+https://bugzilla.kernel.org/show_bug.cgi?id=3D221065
 
-Add the DMI board name to victus_s_thermal_profile_boards[] table and map it 
-to the omen_v1_legacy_thermal_params quirk.
+--- Comment #72 from Hans de Goede (hansg@kernel.org) ---
+> However, with only ideapad_laptop loaded and not ucsi_acpi, I still got .=
+..
 
-Testing on board 8902 confirmed that platform profile is registered
-successfully and fan RPMs are readable and controllable.
+There is nothing we can do about those messages. The real question is if th=
+ere
+are still any messages which repeat periodically filling the disk with logs,
+like the original messages starting this bug.
 
-Signed-off-by: Konenko Andrey Viktorovich <admin@aquinas.su>
----
- drivers/platform/x86/hp/hp-wmi.c | 4 ++++
- 1 file changed, 4 insertions(+)
+Or if there are any actual problems when using the laptop?
 
-diff --git a/drivers/platform/x86/hp/hp-wmi.c b/drivers/platform/x86/hp/hp-
-wmi.c
-index d1cc6e7d176c..4ab47a43e4d4 100644
---- a/drivers/platform/x86/hp/hp-wmi.c
-+++ b/drivers/platform/x86/hp/hp-wmi.c
-@@ -197,6 +197,10 @@ static const struct dmi_system_id 
-victus_s_thermal_profile_boards[] __initconst
-                .matches = { DMI_MATCH(DMI_BOARD_NAME, "8A4D") },
-                .driver_data = (void *)&omen_v1_legacy_thermal_params,
-        },
-+       {
-+               .matches = { DMI_MATCH(DMI_BOARD_NAME, "8902") },
-+               .driver_data = (void *)&omen_v1_legacy_thermal_params,
-+       },
-        { 
-                .matches = { DMI_MATCH(DMI_BOARD_NAME, "8BAB") },
-                .driver_data = (void *)&omen_v1_thermal_params,
---
-2.54.0
+--=20
+You may reply to this email to add a comment.
 
-
-
+You are receiving this mail because:
+You are watching the assignee of the bug.=
