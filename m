@@ -1,77 +1,147 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-vs1-f53.google.com (mail-vs1-f53.google.com [209.85.217.53])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6CF5C42E01B
-	for <platform-driver-x86@vger.kernel.org>; Tue, 28 Apr 2026 14:05:20 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 874A244104F
+	for <platform-driver-x86@vger.kernel.org>; Tue, 28 Apr 2026 14:10:25 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.217.53
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1777385120; cv=none; b=FWUSnJ3+oPzNZCHoG8BnYL4EdnCQzJnZ0m10WNJAsS5CzLsADszT0nAnhvA6gJRJF0SZhLXXE9v1zR8EIHQwdmPiOAr/cwj0WbFP+yamELo0mYriXLyMcWj2PLXNpgTojEvB5cot2tx1mQUPZukG4cAn8K3rdCMdXJnZDMy4keA=
+	t=1777385426; cv=none; b=cFMnj9zzVzi7VdGy4s/R8yDpeYtwhc5huZSL0PZzzwNYEHP+ASQrwhsUMOQ8WxKIV2ElPTjXYFCoTQkcMwy/2TwT1H/VKThTqGZhpDUq3zMuQ4ftPvpOkLSrFL958fVoEyUeSvDAHBD1pehKRagGcvHj88CSlNDTi+fOPTC9Y7Y=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1777385120; c=relaxed/simple;
-	bh=dtch7dcPadcwPC7GRuh2qwVqmUcMHyE7+/VNgjOslOM=;
-	h=From:To:Subject:Date:Message-ID:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=IMhy88ltS0qpTUl0PBlvRAM2gE7UmfcTDBmw/RwEJB/+gVe+7vuy9OpIe5NLoyKNkDGhsVN2oE9DP0qeCG5iLOUnom9KThm9MSfCYscd8+rgMHQI3KUKkf5yVpjShR060BMlb+Rr6Ork+/9g+mDKrQh/cfWrZy19U75V6IkFBF4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=W21EC46d; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1777385426; c=relaxed/simple;
+	bh=VVaBU0wqcGR7DB0/rzF91LQLvMxBcV3vG/TP2ffoPuo=;
+	h=Mime-Version:Content-Type:Date:Message-Id:Subject:From:To:
+	 References:In-Reply-To; b=pVla8WHSaj9241NHXPx+pPOpIXEtUmChFLtbptCqMO/mPPCGLOJWwDX/UBm3iGXIkQ3tRavARsimQd1K8izavQ9z/cKlqtB2SSIdFSaJ6X3IV9AYciLTsFYJeJpDIufnU42BSp+GxVYucrXPnjxs4RoXGAsd7roYytzuT7j/esQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=mNam56X3; arc=none smtp.client-ip=209.85.217.53
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="W21EC46d"
-Received: by smtp.kernel.org (Postfix) with ESMTPS id 064F5C2BCB5
-	for <platform-driver-x86@vger.kernel.org>; Tue, 28 Apr 2026 14:05:20 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1777385120;
-	bh=dtch7dcPadcwPC7GRuh2qwVqmUcMHyE7+/VNgjOslOM=;
-	h=From:To:Subject:Date:In-Reply-To:References:From;
-	b=W21EC46diwlvSOmILuVPtRYFK/36UR7AZQ4YUzC2qPBmA0HP8ZbmaURvHRUdMtRqb
-	 aFsYwSq4U4WlSCScvij73CJMQreLPhuyAv1QyXg0zsdIvb215RVrgyOBRF2yW/SbO5
-	 mm8D/wCM2ePZ/SUYce9hBYc8oz0Bzbap9XDX2eTBpIKsESeJO9Jo21oLir3iECj/GY
-	 RzQqVei6pQ44VieSocyt5VR3GYSkHsqgU2DVBD3t1Q0DvIBw1gUJT0qm7d7zijyqcx
-	 AgTSX/J9F2FL9wkLIt/amsJ9Idp4JfzUaHQhKFZTo+nuJ3XZh+jL3n8nQJIkpol2Lr
-	 g0vKyJmY/MQig==
-Received: by aws-us-west-2-korg-bugzilla-1.web.codeaurora.org (Postfix, from userid 48)
-	id E89FAC3279F; Tue, 28 Apr 2026 14:05:19 +0000 (UTC)
-From: bugzilla-daemon@kernel.org
-To: platform-driver-x86@vger.kernel.org
-Subject: [Bug 221383] ideapad_laptop: Fn hotkeys stop emitting after s2idle
- resume on IdeaPad Slim 3   14ARP10 (Ryzen 7735HS)
-Date: Tue, 28 Apr 2026 14:05:19 +0000
-X-Bugzilla-Reason: None
-X-Bugzilla-Type: changed
-X-Bugzilla-Watch-Reason: AssignedTo drivers_platform_x86@kernel-bugs.osdl.org
-X-Bugzilla-Product: Drivers
-X-Bugzilla-Component: Platform_x86
-X-Bugzilla-Version: 2.5
-X-Bugzilla-Keywords: 
-X-Bugzilla-Severity: normal
-X-Bugzilla-Who: mario.limonciello@amd.com
-X-Bugzilla-Status: NEW
-X-Bugzilla-Resolution: 
-X-Bugzilla-Priority: P3
-X-Bugzilla-Assigned-To: drivers_platform_x86@kernel-bugs.osdl.org
-X-Bugzilla-Flags: 
-X-Bugzilla-Changed-Fields: 
-Message-ID: <bug-221383-215701-7s7G8lM7DX@https.bugzilla.kernel.org/>
-In-Reply-To: <bug-221383-215701@https.bugzilla.kernel.org/>
-References: <bug-221383-215701@https.bugzilla.kernel.org/>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-X-Bugzilla-URL: https://bugzilla.kernel.org/
-Auto-Submitted: auto-generated
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="mNam56X3"
+Received: by mail-vs1-f53.google.com with SMTP id ada2fe7eead31-6201fc9ac0eso2150216137.0
+        for <platform-driver-x86@vger.kernel.org>; Tue, 28 Apr 2026 07:10:25 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20251104; t=1777385424; x=1777990224; darn=vger.kernel.org;
+        h=in-reply-to:references:to:from:subject:message-id:date
+         :content-transfer-encoding:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=TZUgbXBy5wBU0wEHjVuwR+E12s+n3IKckzY0lsaTI+s=;
+        b=mNam56X3FSG++AMyjh3P9mL027rms4VH+rtKzO6o8CvbRO0y+gc44JrqUNzFezxbn1
+         VsxQHO85RqrB4lu712dI3zYydNi3gTdfdDDfvJpoQnaXc1fKGVrcro51OQhkiukz6L0P
+         J2Yv8vy4adIuwRaslwOTyZ1v5/MpLFRI3t0CmGQlsU5lfBsCk+Le5V2ThfEiGkilMa89
+         ZlzjinpKNd1sIYOQYGm9Y/xxC/rvVEup1D0jHmcowG1oI798fZj2X70ul0J8BDQBimnH
+         wgvohqTJNTMrzw7xbPTZyvy8hbTR/7KlosJ0yfKpqRLztc5lF9rqjIytmDZHnO/cwR+h
+         AzKQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20251104; t=1777385424; x=1777990224;
+        h=in-reply-to:references:to:from:subject:message-id:date
+         :content-transfer-encoding:mime-version:x-gm-gg:x-gm-message-state
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=TZUgbXBy5wBU0wEHjVuwR+E12s+n3IKckzY0lsaTI+s=;
+        b=C8jEIdirNzOOiITEom821y4Gw/o4UeKdi8yUrkNsSwRetKvmMj6+eahFkewMBzOxFl
+         X945GZUj5HHSG0T1AH98QE3Xku9uSRNk+YEa/A3KO8E5i4hBewjrxDh9SH0xhBP1LjII
+         +waRseqZIcLvYskh8tzavXHf0b/E03NE0/QjriWRSh2Kg7WjVLLmhiB6ST7W34VfNk0s
+         kMSnFckJ59O9EoLO6fA89q2aih93m2tvB3KV7pgzwFOrAE/PeNoKX6M3/RwIaEocduKo
+         Pg9RPuMRB8AcRJjdnyBfVaTPodYBD2q+w7x9BnguloIYfg8TKfIh/WG+ITVDQJ2O6Bm0
+         mMDA==
+X-Forwarded-Encrypted: i=1; AFNElJ9of880MbL4ow97UF0VULCq51W6NCwK+WQNvI+DCO1MyZTrF/n88LMgkRevrKog4sq+mIWKHjuvRqMpPgCfDYXhlYcP@vger.kernel.org
+X-Gm-Message-State: AOJu0YzedZRNGnq4IvxtJPzGLUvf9PJ9ZvXf7LH2B8MrVOM/6TR/z7GM
+	4oM4yo2rwE7TxYPVVzVULn6FWzlAq9xDRJX3TtnX8ENshhSZnpQaS5UN
+X-Gm-Gg: AeBDieu64GSnj+2b/Yi1RKJFj/+5yfuGUFRkZ2mLHlOPsgOnu4VQAGoTV20/SvMV9ax
+	j1Xo7qhWUKI6Rw6D+JF/vWugMQNtWBTfZqVxZ1f5QD+2QVJWYV1AzgTrYlTfurm9vOtjtyv/wQF
+	7PGGtZogcpZ3gFVStBWMNAbn2aLfWbRrhna4Vdza51u5Yjlt57i/qU7w5XzVXPltogcLqHDaZDE
+	A2BHEpb46dlqZKVeutzpJgT2yBAOpkIKr6mliH5Vjg7XedEIYnV+SM/nU80le0BwEPBJ64gj5Sq
+	S6oeiDesDrNCQnaannQK6Rre3Op6DOECuu78t4f8gEu32cU3aySc5eY/s/TcAQ7jFP75HutEMv0
+	XtmTuNl0jh6Kuf6rZMW2CE7QAyP4aYlsPmeD2wZNvsK5xRf0EoPJYNDDdySFqyZhuo96W504yqV
+	RGbePMdtyp9wyc8ouM1sNCXleB
+X-Received: by 2002:a05:6102:6a85:b0:61d:8fd9:fb26 with SMTP id ada2fe7eead31-62808a5f7f4mr1265865137.7.1777385424336;
+        Tue, 28 Apr 2026 07:10:24 -0700 (PDT)
+Received: from localhost ([2800:bf0:82:11a2:7ac4:1f2:947b:2b6])
+        by smtp.gmail.com with ESMTPSA id ada2fe7eead31-627f802d284sm1323462137.10.2026.04.28.07.10.23
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 28 Apr 2026 07:10:23 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
+Mime-Version: 1.0
+Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=UTF-8
+Date: Tue, 28 Apr 2026 09:10:17 -0500
+Message-Id: <DI4UJOJMXTFT.2TJBNTE9ESN7E@gmail.com>
+Subject: Re: [PATCH] platform/x86: think-lmi: fix possible memory leak in
+ tlmi_sysfs_init()
+From: "Kurt Borja" <kuurtb@gmail.com>
+To: "Guangshuo Li" <lgs201920130244@gmail.com>, "Mark Pearson"
+ <mpearson-lenovo@squebb.ca>, "Derek J. Clark" <derekjohn.clark@gmail.com>,
+ "Hans de Goede" <hansg@kernel.org>, =?utf-8?q?Ilpo_J=C3=A4rvinen?=
+ <ilpo.jarvinen@linux.intel.com>, "Kurt Borja" <kuurtb@gmail.com>,
+ <platform-driver-x86@vger.kernel.org>, <linux-kernel@vger.kernel.org>
+X-Mailer: aerc 0.21.0-0-g5549850facc2
+References: <20260428082207.357522-1-lgs201920130244@gmail.com>
+In-Reply-To: <20260428082207.357522-1-lgs201920130244@gmail.com>
 
-https://bugzilla.kernel.org/show_bug.cgi?id=3D221383
+Hi Guangshuo,
 
---- Comment #55 from Mario Limonciello (AMD) (mario.limonciello@amd.com) ---
-re comment #53:
+On Tue Apr 28, 2026 at 3:22 AM -05, Guangshuo Li wrote:
+> Once kobject_init_and_add() fails, kobject_put() should be called to
+> decrement the reference count for cleanup. Otherwise, the memory associat=
+ed
+> with the object may leak.
+>
+> tlmi_sysfs_init() jumps to fail_create_attr after kobject_init_and_add()
+> fails. The error path calls tlmi_release_attr(), which walks the kset
+> lists and puts the kobjects found there. However, when the add operation
+> fails, the kobject core removes the failed object from the kset list
+> before returning the error. Therefore tlmi_release_attr() cannot put the
+> kobject whose kobject_init_and_add() failed.
+>
+> Fix this by calling kobject_put() for the failed kobject before jumping t=
+o
+> the common error path. Since pwd_admin's saved signatures are released
+> outside of its kobject release callback, release them before putting a
+> failed pwd_admin object.
+>
+> This issue was found by a static analysis tool I am developing.
 
-Can you just use "82X" and "83K" for the product name to cover all those
-systems?  I think that should cover them all with just two quirks.
+Thanks!
+
+Just a comment bellow.
+
+>
+> Fixes: 9110056fe10b ("platform/x86: think-lmi: Fix kobject cleanup")
+> Signed-off-by: Guangshuo Li <lgs201920130244@gmail.com>
+> ---
+>  drivers/platform/x86/lenovo/think-lmi.c | 40 ++++++++++++++++++++-----
+>  1 file changed, 32 insertions(+), 8 deletions(-)
+>
+> diff --git a/drivers/platform/x86/lenovo/think-lmi.c b/drivers/platform/x=
+86/lenovo/think-lmi.c
+> index e215e86e3db7..994475eb0b9c 100644
+> --- a/drivers/platform/x86/lenovo/think-lmi.c
+> +++ b/drivers/platform/x86/lenovo/think-lmi.c
+
+...
+
+> @@ -1548,33 +1553,52 @@ static int tlmi_sysfs_init(void)
+>  	tlmi_priv.pwd_admin->kobj.kset =3D tlmi_priv.authentication_kset;
+>  	ret =3D kobject_init_and_add(&tlmi_priv.pwd_admin->kobj, &tlmi_pwd_sett=
+ing_ktype,
+>  				   NULL, "%s", "Admin");
+> -	if (ret)
+> +	if (ret) {
+> +		kfree(tlmi_priv.pwd_admin->signature);
+> +		kfree(tlmi_priv.pwd_admin->save_signature);
+> +		tlmi_priv.pwd_admin->signature =3D NULL;
+> +		tlmi_priv.pwd_admin->save_signature =3D NULL;
+
+I think, up until now (in the probe path that leads to this), we have
+not yet allocated signature and save_signature. These are allocated and
+reallocated once the sysfs files are created.
+
+Other than that, this looks good.
+
+Reviewed-by: Kurt Borja <kuurtb@gmail.com>
 
 --=20
-You may reply to this email to add a comment.
-
-You are receiving this mail because:
-You are watching the assignee of the bug.=
+Thanks,
+ ~ Kurt
