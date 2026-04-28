@@ -1,194 +1,199 @@
-Received: from mail-pf1-f172.google.com (mail-pf1-f172.google.com [209.85.210.172])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.17])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8BC57311967
-	for <platform-driver-x86@vger.kernel.org>; Tue, 28 Apr 2026 08:22:18 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.172
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E9A1B342539;
+	Tue, 28 Apr 2026 08:22:27 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.17
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1777364539; cv=none; b=I32Mm8mJ/mpr2nZ3fXj8d8lGAqo4skaEMs/N74UZsVZVSefHTBkMCmfDqqvTGgmfbY9BQlYxLtRQy+H4OVBmozsRbKAtL945Wop7yvT5Re1PVPHacWWzleOjkzqSbzFWjGjqr5vPtM6ACSKS2kHYf0cmHrEBEl61gayX5Oz2Ge0=
+	t=1777364549; cv=none; b=Y3lrbEeRoQeJgYIojLKyrusN4QXxwZhSb9NquCSflHFLbIYoFnmob09LHGEDuCprPez3aT4GlnqEnAKM7SSSs9SknZL4Q/zeNqBTKKjpcsoNWrTibtSgCsc+52Q8kGiwhMKyMjjMHfGEI7DlsODtX5Nj9giIwDojmdD3/j4lVgg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1777364539; c=relaxed/simple;
-	bh=k/xPuNkR/BIM30zNpAyI8wz6sFjBLq7tGwi2ZmqSds4=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=U83kn2wNOoXm7GUYv0hVB9uFL8h4XGo7HLs2Pi0jQ2PKf49D1cqeV/Mg90xkRQIzb9jARhGlnPP9RwDYK5Fp+DN/N9vaF8t0XTmIWNi0Qzu0GmYtCRAqsj3KIOoge65Bpo9LyPSJrD+xGIC0p2prAmLXLlymRp1nLJUhl1UIFiI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=RUO10Vj4; arc=none smtp.client-ip=209.85.210.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1777364549; c=relaxed/simple;
+	bh=9GTaruPeA32EVnCpkJpgwoDtv2OOoqn2Wn/4mnTqeKY=;
+	h=From:Date:To:cc:Subject:In-Reply-To:Message-ID:References:
+	 MIME-Version:Content-Type; b=iEGi/oZr4qnQB4dxmOAILcnJYU7TQ/2XvOeCAgrQFbFS+1EhNYUo2u8vh7b3GbLVYM92bVs9VVjxSjZIh00+u+GSyZneo6zr3fkzNQxRBdboWVl+L8Sn1pI74z5RldWYMt/KfFdH4tX1If2/oz00ChrNuJoUBL/7xkvrTFTe9Eo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=pass smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=h12Jt7k+; arc=none smtp.client-ip=192.198.163.17
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="RUO10Vj4"
-Received: by mail-pf1-f172.google.com with SMTP id d2e1a72fcca58-82f83bd32efso8246467b3a.2
-        for <platform-driver-x86@vger.kernel.org>; Tue, 28 Apr 2026 01:22:18 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20251104; t=1777364538; x=1777969338; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=VMU6unxhoyoC/YoKPR6+gEr9cN2ykfBZJQ5EWE+zSYU=;
-        b=RUO10Vj4t1iGmwVIKWM4qfhBRXSiVZcDJBXYRee1lWptk3fk1Clg47pkVA/Zc1mBc+
-         Qw9al4udFFqDKmXVGnRbYCHZYlt+W9sJlCjiyHios0g/NfPshqIM2tLhaNNA8L8vOAAt
-         ke87ubTdlNLSmae9ioPLCeFR494/lY0dgb6Q/Rl5jXOYRifs1f90dzn1mofqVTPFBAAL
-         ZXacniqYG5P6gjdfPxRqgFnyBriLtLNxYgHYpPAhi8EpF8lN1OqWmgvYXvF832V5k7mi
-         BZLKjNzSxyxPr9vAjElgHAxH7J5kodDktNM0ekbmYIxMuTh3QhB4d5U06sue74s/ChtT
-         H0Bw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1777364538; x=1777969338;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-gg:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=VMU6unxhoyoC/YoKPR6+gEr9cN2ykfBZJQ5EWE+zSYU=;
-        b=fq1nmX1/BofzcquxlTe1BbBwKqGaXpUCcWvzU5LVEANuO6BOH+6iVt26tuER751Ccz
-         QmSkhx1kdOHedzEOTx4ODETUrYNMcQarPXMFX14dB5vBOzw+bC+MG9o3YCkSI9J0n2HH
-         SqzoN8+Cl/QWoOiq+YnubqnLKPBIfDbu4+0WMnWHz5awjH1Ko+EH+Jjk6qb6qRV+ZOnN
-         tCvf+sdKW/6s+G5CW3/TsMaDNQ5bSMyD8TyrBicAlEYm+XYRvZeC7wwykYXDv6p+puGe
-         K9ACSfti3usOnAx7rucg0DuFQq3XLnUXPG4BBIMek1/jkM2fkvYoJT8tyosatSSATOqr
-         oJvg==
-X-Forwarded-Encrypted: i=1; AFNElJ/UrUBP5F1VojW7OOWvvS8o4/wwfCnAnSpWB1oLuQ+fYP+kNIxjbTG2V7TVJUdR7teSu8nvsQRG4o4Je1G8lhL71WpF@vger.kernel.org
-X-Gm-Message-State: AOJu0YxJTXLypGREXq6ipWpm8xYZLee79HRvraRlmwvw8tAsYwsZcifA
-	BkkMj3WjJ8fwbCptGrwuaAfdOlZ4q1slBo6I4qpGa+0LE/gUqS7ztGjB
-X-Gm-Gg: AeBDieujC9X/bIzLLTmz9NbAsxalX2NfcoUrfmer6aSTpZm/XfzacfAFymo7z/y+YDj
-	N9gtTHjmgfdVONOhgKReFf84inW7Oreq/Iq0Y/+mFF8ozmb2vRsva519mrEvMSEHSSNHwN3MVLR
-	VdJOcm2OhuJkCoMKXc5y8RpqwCPjIYZaBYhYZusCpqDGDgOALs9D186kPxTVIT+WtFxJCuhUCfy
-	QAjT9+8g/haS3NUstKQaQhIB6HsOdLyqb2XWF1/AEWwZ0lVDnNdt5b8FsqMNH+0g2Zc/3Alt7oi
-	APAlLQaBS+GPhmwX12Uz1Z9UVqX0L+waauwa0I702EqCUXKeb6sW8+k/0dDpxI9Hh6aG/KF/H0B
-	O8xJu5t6XU2i59w/s7hMiU6u4x7sGjUkQvTUs3RGk9Z52+rvL4v0gHZis+MKCrf7s0Igp488PlM
-	8dZf3Umw7vwIPCijsIj45qpjj4
-X-Received: by 2002:a05:6a00:929d:b0:823:d2c:b156 with SMTP id d2e1a72fcca58-834dda870b4mr2351108b3a.5.1777364537850;
-        Tue, 28 Apr 2026 01:22:17 -0700 (PDT)
-Received: from lgs.. ([152.32.133.247])
-        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-834daf624d9sm1850084b3a.43.2026.04.28.01.22.15
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 28 Apr 2026 01:22:17 -0700 (PDT)
-From: Guangshuo Li <lgs201920130244@gmail.com>
-To: Mark Pearson <mpearson-lenovo@squebb.ca>,
-	"Derek J. Clark" <derekjohn.clark@gmail.com>,
-	Hans de Goede <hansg@kernel.org>,
-	=?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>,
-	Kurt Borja <kuurtb@gmail.com>,
-	platform-driver-x86@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Cc: Guangshuo Li <lgs201920130244@gmail.com>
-Subject: [PATCH] platform/x86: think-lmi: fix possible memory leak in tlmi_sysfs_init()
-Date: Tue, 28 Apr 2026 16:22:07 +0800
-Message-ID: <20260428082207.357522-1-lgs201920130244@gmail.com>
-X-Mailer: git-send-email 2.43.0
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="h12Jt7k+"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1777364548; x=1808900548;
+  h=from:date:to:cc:subject:in-reply-to:message-id:
+   references:mime-version:content-id;
+  bh=9GTaruPeA32EVnCpkJpgwoDtv2OOoqn2Wn/4mnTqeKY=;
+  b=h12Jt7k+Dlu3qadnKigbF9k0O7CKN9bYjvl5DWSPWC7m9rgld7rx518g
+   KcvwB+Gltl056Z4McDUZe78wD17wlUmj8v8JPcu589K6cn9h/JfvoyR5I
+   x60uF1PV7bIEUVCb+oKmicep9hID+R7RvtBxTwwQAi9kqe/df7uEFlpK5
+   xXlrvFK/JH679zA/21/sTO/3pOT631AvdY+lMQMA1Qrj7CjN5RQkND2ja
+   disKUh12psTrhBXYXwk17MMPDXiuVInANr6f2lqmSYA/QFhlY214qpeqo
+   AkfKkVIW4PxdVZ5/npX5isEAwLS4CzjRzwc9qWwIZBzHCA1NRTMHbuT8Z
+   g==;
+X-CSE-ConnectionGUID: FfZ668ceQYW+2r4sk2tlSQ==
+X-CSE-MsgGUID: zJi5jGS2SVq/OWStDO6FHA==
+X-IronPort-AV: E=McAfee;i="6800,10657,11769"; a="78144805"
+X-IronPort-AV: E=Sophos;i="6.23,203,1770624000"; 
+   d="scan'208";a="78144805"
+Received: from fmviesa008.fm.intel.com ([10.60.135.148])
+  by fmvoesa111.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 28 Apr 2026 01:22:27 -0700
+X-CSE-ConnectionGUID: LzK5+LUdQyGBuonFe3B1Xw==
+X-CSE-MsgGUID: YPt4etELQjWGMLyvHWnlyQ==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.23,203,1770624000"; 
+   d="scan'208";a="231243574"
+Received: from ijarvine-mobl1.ger.corp.intel.com (HELO localhost) ([10.245.245.1])
+  by fmviesa008-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 28 Apr 2026 01:22:24 -0700
+From: =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
+Date: Tue, 28 Apr 2026 11:22:20 +0300 (EEST)
+To: =?ISO-8859-15?Q?Jos=E9_Guilherme_de_Castro_Rodrigues?= <jose.guilherme.cr.bh@gmail.com>
+cc: Corentin Chary <corentin.chary@gmail.com>, 
+    "Luke D. Jones" <luke@ljones.dev>, Denis Benato <denis.benato@linux.dev>, 
+    Hans de Goede <hansg@kernel.org>, platform-driver-x86@vger.kernel.org, 
+    LKML <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH v2] platform/x86: asus-wmi: fix camera key led on Zenbook
+ S14
+In-Reply-To: <adg6GzkykThAB_4u@djouze-zen>
+Message-ID: <ce2a2f37-ad8a-647c-0db8-83f6efd99f12@linux.intel.com>
+References: <adg6GzkykThAB_4u@djouze-zen>
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: multipart/mixed; BOUNDARY="8323328-1447735719-1777364101=:1128"
+Content-ID: <948669a1-3eed-972e-c636-40217fe781ee@linux.intel.com>
 
-Once kobject_init_and_add() fails, kobject_put() should be called to
-decrement the reference count for cleanup. Otherwise, the memory associated
-with the object may leak.
+  This message is in MIME format.  The first part should be readable text,
+  while the remaining parts are likely unreadable without MIME-aware tools.
 
-tlmi_sysfs_init() jumps to fail_create_attr after kobject_init_and_add()
-fails. The error path calls tlmi_release_attr(), which walks the kset
-lists and puts the kobjects found there. However, when the add operation
-fails, the kobject core removes the failed object from the kset list
-before returning the error. Therefore tlmi_release_attr() cannot put the
-kobject whose kobject_init_and_add() failed.
+--8323328-1447735719-1777364101=:1128
+Content-Type: text/plain; CHARSET=ISO-8859-15
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Content-ID: <1cf1f452-1d2f-4138-451c-2285264472ba@linux.intel.com>
 
-Fix this by calling kobject_put() for the failed kobject before jumping to
-the common error path. Since pwd_admin's saved signatures are released
-outside of its kobject release callback, release them before putting a
-failed pwd_admin object.
+On Thu, 9 Apr 2026, Jos=E9 Guilherme de Castro Rodrigues wrote:
 
-This issue was found by a static analysis tool I am developing.
+> Fix key led not turning on/off when the camera key is pressed. The
+> asus_wmi_dev_is_present(ASUS_WMI_DEVID_CAMERA_LED) check fails on
+> Zenbook S14, and no sysfs attribute for the camera key led is
+> created.
+>
+> The check succeeds for ASUS_WMI_DEVID_CAMERA_LED_NEG, though,
+> and when it is read, the led state is synchronized. By doing a read after
+> every key press, the led is guaranteed to stay in sync with the actual
+> camera state.
+>=20
+> This change is not visible to userspace, as no sysfs attribute for
+> ASUS_WMI_DEVID_CAMERA_LED_NEG exists.
 
-Fixes: 9110056fe10b ("platform/x86: think-lmi: Fix kobject cleanup")
-Signed-off-by: Guangshuo Li <lgs201920130244@gmail.com>
----
- drivers/platform/x86/lenovo/think-lmi.c | 40 ++++++++++++++++++++-----
- 1 file changed, 32 insertions(+), 8 deletions(-)
+While I believe you are "correct" that userspace won't see a thing, is=20
+this really correct way to implement support for this device?
 
-diff --git a/drivers/platform/x86/lenovo/think-lmi.c b/drivers/platform/x86/lenovo/think-lmi.c
-index e215e86e3db7..994475eb0b9c 100644
---- a/drivers/platform/x86/lenovo/think-lmi.c
-+++ b/drivers/platform/x86/lenovo/think-lmi.c
-@@ -1454,8 +1454,10 @@ static void tlmi_release_attr(void)
- 	kset_unregister(tlmi_priv.attribute_kset);
- 
- 	/* Free up any saved signatures */
--	kfree(tlmi_priv.pwd_admin->signature);
--	kfree(tlmi_priv.pwd_admin->save_signature);
-+	if (tlmi_priv.pwd_admin) {
-+		kfree(tlmi_priv.pwd_admin->signature);
-+		kfree(tlmi_priv.pwd_admin->save_signature);
-+	}
- 
- 	/* Authentication structures */
- 	list_for_each_entry_safe(pos, n, &tlmi_priv.authentication_kset->list, entry)
-@@ -1526,8 +1528,11 @@ static int tlmi_sysfs_init(void)
- 		tlmi_priv.setting[i]->kobj.kset = tlmi_priv.attribute_kset;
- 		ret = kobject_init_and_add(&tlmi_priv.setting[i]->kobj, &tlmi_attr_setting_ktype,
- 					   NULL, "%s", tlmi_priv.setting[i]->display_name);
--		if (ret)
-+		if (ret) {
-+			kobject_put(&tlmi_priv.setting[i]->kobj);
-+			tlmi_priv.setting[i] = NULL;
- 			goto fail_create_attr;
-+		}
- 	}
- 
- 	ret = sysfs_create_file(&tlmi_priv.attribute_kset->kobj, &pending_reboot.attr);
-@@ -1548,33 +1553,52 @@ static int tlmi_sysfs_init(void)
- 	tlmi_priv.pwd_admin->kobj.kset = tlmi_priv.authentication_kset;
- 	ret = kobject_init_and_add(&tlmi_priv.pwd_admin->kobj, &tlmi_pwd_setting_ktype,
- 				   NULL, "%s", "Admin");
--	if (ret)
-+	if (ret) {
-+		kfree(tlmi_priv.pwd_admin->signature);
-+		kfree(tlmi_priv.pwd_admin->save_signature);
-+		tlmi_priv.pwd_admin->signature = NULL;
-+		tlmi_priv.pwd_admin->save_signature = NULL;
-+		kobject_put(&tlmi_priv.pwd_admin->kobj);
-+		tlmi_priv.pwd_admin = NULL;
- 		goto fail_create_attr;
-+	}
- 
- 	tlmi_priv.pwd_power->kobj.kset = tlmi_priv.authentication_kset;
- 	ret = kobject_init_and_add(&tlmi_priv.pwd_power->kobj, &tlmi_pwd_setting_ktype,
- 				   NULL, "%s", "Power-on");
--	if (ret)
-+	if (ret) {
-+		kobject_put(&tlmi_priv.pwd_power->kobj);
-+		tlmi_priv.pwd_power = NULL;
- 		goto fail_create_attr;
-+	}
- 
- 	if (tlmi_priv.opcode_support) {
- 		tlmi_priv.pwd_system->kobj.kset = tlmi_priv.authentication_kset;
- 		ret = kobject_init_and_add(&tlmi_priv.pwd_system->kobj, &tlmi_pwd_setting_ktype,
- 					   NULL, "%s", "System");
--		if (ret)
-+		if (ret) {
-+			kobject_put(&tlmi_priv.pwd_system->kobj);
-+			tlmi_priv.pwd_system = NULL;
- 			goto fail_create_attr;
-+		}
- 
- 		tlmi_priv.pwd_hdd->kobj.kset = tlmi_priv.authentication_kset;
- 		ret = kobject_init_and_add(&tlmi_priv.pwd_hdd->kobj, &tlmi_pwd_setting_ktype,
- 					   NULL, "%s", "HDD");
--		if (ret)
-+		if (ret) {
-+			kobject_put(&tlmi_priv.pwd_hdd->kobj);
-+			tlmi_priv.pwd_hdd = NULL;
- 			goto fail_create_attr;
-+		}
- 
- 		tlmi_priv.pwd_nvme->kobj.kset = tlmi_priv.authentication_kset;
- 		ret = kobject_init_and_add(&tlmi_priv.pwd_nvme->kobj, &tlmi_pwd_setting_ktype,
- 					   NULL, "%s", "NVMe");
--		if (ret)
-+		if (ret) {
-+			kobject_put(&tlmi_priv.pwd_nvme->kobj);
-+			tlmi_priv.pwd_nvme = NULL;
- 			goto fail_create_attr;
-+		}
- 	}
- 
- 	return ret;
--- 
-2.43.0
+I mean the camera led init in asus_wmi_led_init() is gated by=20
+asus_wmi_dev_is_present(asus, ASUS_WMI_DEVID_CAMERA_LED) but should that=20
+be gated by either CAMERA_LED or CAMERA_LED_NEG and the related code in=20
+*_camera_led_*() that now only uses ASUS_WMI_DEVID_CAMERA_LED=20
+should use which ever of them is available?
 
+> Tested on an ASUS Zenbook S14 with BIOS version UX5406SA.309.
+>=20
+> Signed-off-by: Jos=E9 Guilherme de Castro Rodrigues <jose.guilherme.cr.bh=
+@gmail.com>
+> ---
+> Changes in v2:
+>  - Do not return after triggering the update.
+>  - Use tabs for indentation on new defines.
+> ---
+>  drivers/platform/x86/asus-wmi.c            | 19 +++++++++++++++++++
+>  include/linux/platform_data/x86/asus-wmi.h |  2 +-
+>  2 files changed, 20 insertions(+), 1 deletion(-)
+>=20
+> diff --git a/drivers/platform/x86/asus-wmi.c b/drivers/platform/x86/asus-=
+wmi.c
+> index 80144c412b90..32d0d4ce60ff 100644
+> --- a/drivers/platform/x86/asus-wmi.c
+> +++ b/drivers/platform/x86/asus-wmi.c
+> @@ -70,6 +70,8 @@ module_param(fnlock_default, bool, 0444);
+>  #define NOTIFY_KBD_TTP=09=09=090xae
+>  #define NOTIFY_LID_FLIP=09=09=090xfa
+>  #define NOTIFY_LID_FLIP_ROG=09=090xbd
+> +#define NOTIFY_CAMERA_TOGGLE_1=09=090x82
+> +#define NOTIFY_CAMERA_TOGGLE_2=09=090x85
+> =20
+>  #define ASUS_WMI_FNLOCK_BIOS_DISABLED=09BIT(0)
+> =20
+> @@ -307,6 +309,7 @@ struct asus_wmi {
+>  =09u32 kbd_rgb_dev;
+>  =09bool kbd_rgb_state_available;
+>  =09bool oobe_state_available;
+> +=09bool camera_neg_led_available;
+> =20
+>  =09u8 throttle_thermal_policy_mode;
+>  =09u32 throttle_thermal_policy_dev;
+> @@ -1982,6 +1985,18 @@ static int micmute_led_set(struct led_classdev *le=
+d_cdev,
+>  =09return err < 0 ? err : 0;
+>  }
+> =20
+> +static bool is_camera_toggle(int code)
+> +{
+> +=09return code =3D=3D NOTIFY_CAMERA_TOGGLE_1 || code =3D=3D NOTIFY_CAMER=
+A_TOGGLE_2;
+> +}
+> +
+> +static void camera_neg_led_trigger_update(struct asus_wmi *asus)
+> +{
+> +=09u32 result;
+> +
+> +=09asus_wmi_get_devstate(asus, ASUS_WMI_DEVID_CAMERA_LED_NEG, &result);
+> +}
+> +
+>  static enum led_brightness camera_led_get(struct led_classdev *led_cdev)
+>  {
+>  =09struct asus_wmi *asus;
+> @@ -4587,6 +4602,9 @@ static void asus_wmi_handle_event_code(int code, st=
+ruct asus_wmi *asus)
+>  =09if (is_display_toggle(code) && asus->driver->quirks->no_display_toggl=
+e)
+>  =09=09return;
+> =20
+> +=09if (is_camera_toggle(code) && asus->camera_neg_led_available)
+> +=09=09camera_neg_led_trigger_update(asus);
+> +
+>  =09if (!sparse_keymap_report_event(asus->inputdev, code,
+>  =09=09=09=09=09key_value, autorelease))
+>  =09=09pr_info("Unknown key code 0x%x\n", code);
+> @@ -5062,6 +5080,7 @@ static int asus_wmi_add(struct platform_device *pde=
+v)
+>  #endif /* IS_ENABLED(CONFIG_ASUS_WMI_DEPRECATED_ATTRS) */
+> =20
+>  =09asus->oobe_state_available =3D asus_wmi_dev_is_present(asus, ASUS_WMI=
+_DEVID_OOBE);
+> +=09asus->camera_neg_led_available =3D asus_wmi_dev_is_present(asus, ASUS=
+_WMI_DEVID_CAMERA_LED_NEG);
+> =20
+>  =09if (asus_wmi_dev_is_present(asus, ASUS_WMI_DEVID_THROTTLE_THERMAL_POL=
+ICY))
+>  =09=09asus->throttle_thermal_policy_dev =3D ASUS_WMI_DEVID_THROTTLE_THER=
+MAL_POLICY;
+> diff --git a/include/linux/platform_data/x86/asus-wmi.h b/include/linux/p=
+latform_data/x86/asus-wmi.h
+> index 554f41b827e1..1a9349da6069 100644
+> --- a/include/linux/platform_data/x86/asus-wmi.h
+> +++ b/include/linux/platform_data/x86/asus-wmi.h
+> @@ -56,7 +56,7 @@
+>  #define ASUS_WMI_DEVID_MICMUTE_LED=09=090x00040017
+> =20
+>  /* Disable Camera LED */
+> -#define ASUS_WMI_DEVID_CAMERA_LED_NEG=090x00060078 /* 0 =3D on (unused) =
+*/
+> +#define ASUS_WMI_DEVID_CAMERA_LED_NEG=090x00060078 /* 0 =3D on */
+>  #define ASUS_WMI_DEVID_CAMERA_LED=090x00060079 /* 1 =3D on */
+> =20
+>  /* Backlight and Brightness */
+>=20
+
+--=20
+ i.
+--8323328-1447735719-1777364101=:1128--
