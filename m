@@ -1,147 +1,127 @@
-Received: from mail-vs1-f53.google.com (mail-vs1-f53.google.com [209.85.217.53])
+Received: from mail-pj1-f53.google.com (mail-pj1-f53.google.com [209.85.216.53])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 874A244104F
-	for <platform-driver-x86@vger.kernel.org>; Tue, 28 Apr 2026 14:10:25 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.217.53
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5985E43E4B0
+	for <platform-driver-x86@vger.kernel.org>; Tue, 28 Apr 2026 14:19:04 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.53
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1777385426; cv=none; b=cFMnj9zzVzi7VdGy4s/R8yDpeYtwhc5huZSL0PZzzwNYEHP+ASQrwhsUMOQ8WxKIV2ElPTjXYFCoTQkcMwy/2TwT1H/VKThTqGZhpDUq3zMuQ4ftPvpOkLSrFL958fVoEyUeSvDAHBD1pehKRagGcvHj88CSlNDTi+fOPTC9Y7Y=
+	t=1777385949; cv=none; b=h6PkWP8X/sGf/SYiIGZRJmDNMTUyRe36TDglzonbGQ8mochL7SHG7pKMpZBwATb6lsiSLCZfGRZVaE2GCcXWGtu4jju+K83j26c7e23/JW90HXpl7Cuv5JyLxb8DK7bZ5J1Cou0LBgITfvXtGy74jZd4Y181K0So/96RMoqEZWU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1777385426; c=relaxed/simple;
-	bh=VVaBU0wqcGR7DB0/rzF91LQLvMxBcV3vG/TP2ffoPuo=;
-	h=Mime-Version:Content-Type:Date:Message-Id:Subject:From:To:
-	 References:In-Reply-To; b=pVla8WHSaj9241NHXPx+pPOpIXEtUmChFLtbptCqMO/mPPCGLOJWwDX/UBm3iGXIkQ3tRavARsimQd1K8izavQ9z/cKlqtB2SSIdFSaJ6X3IV9AYciLTsFYJeJpDIufnU42BSp+GxVYucrXPnjxs4RoXGAsd7roYytzuT7j/esQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=mNam56X3; arc=none smtp.client-ip=209.85.217.53
+	s=arc-20240116; t=1777385949; c=relaxed/simple;
+	bh=B1Xhw+g3PdzwhuvhrsM1a9m2CPLx9i7HUaE+i6Yty1o=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=jUYWi/W2yuQ6J11R9X8/Mn3hrFOuSkq51MpGYxaDdmAFzPkptc2mxntq5OxzXY4mAfXYeKQIHxziAIeTiUSm4ykyW6eLg6WCuM3CWeyUA6DovNVGCbyfPEfd6eSPw2B9a4JvWQ3KaoLslViRNCR1ER94p2LK5+j2HCy/OMVi9eo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=ZPVsTwJV; arc=none smtp.client-ip=209.85.216.53
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="mNam56X3"
-Received: by mail-vs1-f53.google.com with SMTP id ada2fe7eead31-6201fc9ac0eso2150216137.0
-        for <platform-driver-x86@vger.kernel.org>; Tue, 28 Apr 2026 07:10:25 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ZPVsTwJV"
+Received: by mail-pj1-f53.google.com with SMTP id 98e67ed59e1d1-358dff8447cso1737061a91.0
+        for <platform-driver-x86@vger.kernel.org>; Tue, 28 Apr 2026 07:19:02 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20251104; t=1777385424; x=1777990224; darn=vger.kernel.org;
-        h=in-reply-to:references:to:from:subject:message-id:date
-         :content-transfer-encoding:mime-version:from:to:cc:subject:date
+        d=gmail.com; s=20251104; t=1777385938; x=1777990738; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=TZUgbXBy5wBU0wEHjVuwR+E12s+n3IKckzY0lsaTI+s=;
-        b=mNam56X3FSG++AMyjh3P9mL027rms4VH+rtKzO6o8CvbRO0y+gc44JrqUNzFezxbn1
-         VsxQHO85RqrB4lu712dI3zYydNi3gTdfdDDfvJpoQnaXc1fKGVrcro51OQhkiukz6L0P
-         J2Yv8vy4adIuwRaslwOTyZ1v5/MpLFRI3t0CmGQlsU5lfBsCk+Le5V2ThfEiGkilMa89
-         ZlzjinpKNd1sIYOQYGm9Y/xxC/rvVEup1D0jHmcowG1oI798fZj2X70ul0J8BDQBimnH
-         wgvohqTJNTMrzw7xbPTZyvy8hbTR/7KlosJ0yfKpqRLztc5lF9rqjIytmDZHnO/cwR+h
-         AzKQ==
+        bh=5/l/tvbICEbtVIUOb2tF/TKbrJ4oMCuMVruWpyDt6VA=;
+        b=ZPVsTwJVs7OLtQ8CXFBjyGKN0PyiBawGjUofhCE1ZAYrPf/8Tw4LP5fbEf6GTBkgKD
+         nS9KwYcKIR+pvv18G3OHMd0kWB7fjKjVAdL2OV0GpicRTQvbOsyGymYL6AI2CoHi1pmz
+         ewnhIFcmxu1PnwRJgN4hYjQ9UA/RNm2zR8qBbQh3qGsC7A6/hU5fzfpTAGfMw0un81ue
+         I/+7gS7LMhAycKRHFRBAL9ePnDfTHsgQV+b4MFLIxrHALaAvYsGsYSv436uU7FvZpleK
+         kx2ggPhB3LUheqQIRTyRKhX/fi/vwQ6xaqoEExgXxALEHhmgwuH5DqZVaBmV0LhU1bRo
+         LN7g==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1777385424; x=1777990224;
-        h=in-reply-to:references:to:from:subject:message-id:date
-         :content-transfer-encoding:mime-version:x-gm-gg:x-gm-message-state
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=TZUgbXBy5wBU0wEHjVuwR+E12s+n3IKckzY0lsaTI+s=;
-        b=C8jEIdirNzOOiITEom821y4Gw/o4UeKdi8yUrkNsSwRetKvmMj6+eahFkewMBzOxFl
-         X945GZUj5HHSG0T1AH98QE3Xku9uSRNk+YEa/A3KO8E5i4hBewjrxDh9SH0xhBP1LjII
-         +waRseqZIcLvYskh8tzavXHf0b/E03NE0/QjriWRSh2Kg7WjVLLmhiB6ST7W34VfNk0s
-         kMSnFckJ59O9EoLO6fA89q2aih93m2tvB3KV7pgzwFOrAE/PeNoKX6M3/RwIaEocduKo
-         Pg9RPuMRB8AcRJjdnyBfVaTPodYBD2q+w7x9BnguloIYfg8TKfIh/WG+ITVDQJ2O6Bm0
-         mMDA==
-X-Forwarded-Encrypted: i=1; AFNElJ9of880MbL4ow97UF0VULCq51W6NCwK+WQNvI+DCO1MyZTrF/n88LMgkRevrKog4sq+mIWKHjuvRqMpPgCfDYXhlYcP@vger.kernel.org
-X-Gm-Message-State: AOJu0YzedZRNGnq4IvxtJPzGLUvf9PJ9ZvXf7LH2B8MrVOM/6TR/z7GM
-	4oM4yo2rwE7TxYPVVzVULn6FWzlAq9xDRJX3TtnX8ENshhSZnpQaS5UN
-X-Gm-Gg: AeBDieu64GSnj+2b/Yi1RKJFj/+5yfuGUFRkZ2mLHlOPsgOnu4VQAGoTV20/SvMV9ax
-	j1Xo7qhWUKI6Rw6D+JF/vWugMQNtWBTfZqVxZ1f5QD+2QVJWYV1AzgTrYlTfurm9vOtjtyv/wQF
-	7PGGtZogcpZ3gFVStBWMNAbn2aLfWbRrhna4Vdza51u5Yjlt57i/qU7w5XzVXPltogcLqHDaZDE
-	A2BHEpb46dlqZKVeutzpJgT2yBAOpkIKr6mliH5Vjg7XedEIYnV+SM/nU80le0BwEPBJ64gj5Sq
-	S6oeiDesDrNCQnaannQK6Rre3Op6DOECuu78t4f8gEu32cU3aySc5eY/s/TcAQ7jFP75HutEMv0
-	XtmTuNl0jh6Kuf6rZMW2CE7QAyP4aYlsPmeD2wZNvsK5xRf0EoPJYNDDdySFqyZhuo96W504yqV
-	RGbePMdtyp9wyc8ouM1sNCXleB
-X-Received: by 2002:a05:6102:6a85:b0:61d:8fd9:fb26 with SMTP id ada2fe7eead31-62808a5f7f4mr1265865137.7.1777385424336;
-        Tue, 28 Apr 2026 07:10:24 -0700 (PDT)
-Received: from localhost ([2800:bf0:82:11a2:7ac4:1f2:947b:2b6])
-        by smtp.gmail.com with ESMTPSA id ada2fe7eead31-627f802d284sm1323462137.10.2026.04.28.07.10.23
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 28 Apr 2026 07:10:23 -0700 (PDT)
+        d=1e100.net; s=20251104; t=1777385938; x=1777990738;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:x-gm-gg:x-gm-message-state:from
+         :to:cc:subject:date:message-id:reply-to;
+        bh=5/l/tvbICEbtVIUOb2tF/TKbrJ4oMCuMVruWpyDt6VA=;
+        b=IZzUcYNIy30WwQS+LrWZm5T232nmdVTDvDrVyUe/WmvhVYgv5+wrgFYc5R6IIVkheW
+         jkwT/0r0QR67QyP46pSUiSa1KUs7A3lCjQIJXr+6eWfd/FV6WNfIV+1ugnDp2SGqIuts
+         Acmy6uj4dySR1Sjmn8z98vcg4lbdwb3//sdDpodkZvQa4QYG9rfsFDi2izggX8R4Pb8J
+         8x4HHAXi/A6TGE786iaKAOvUkTMNcRaHRnfUqZ9Pict/qcAoADEUT77/vrFWqOOIyUzX
+         NkQLxaIq7MdM6KBnriTSjUu4t4Yw0+Z/vSfP5oF9WG520xYE1pt1aaeXyWGaGqgKgi6g
+         D8Sw==
+X-Forwarded-Encrypted: i=1; AFNElJ9eewqLt7UDOdI6kzfxeo3hIKPw/B6nskAeh9UvXWUfRaKM2FXknGm/rpA/KcaxGr9rkSzDfKHD30oIblE7CrlsObQg@vger.kernel.org
+X-Gm-Message-State: AOJu0Yx8Ehcm1JnAdyN/iVMhr9EIi179Ujq1lFFu/VjTbNNUzFrLf7Vp
+	nA7qMmyXe4v7Mo79jViVenvu+2DbtWJPpJrt18S1zmxSXkJRdVkk+bWH
+X-Gm-Gg: AeBDieu+63QESUozC3Z9tCL9cNRbDk36gPnW0tdGNS8/xYEt+SA//xocRMxfG9Cyzfh
+	CItHL/ATVYvzx1GDparhxqvmwaIz2UmNVqIe6/XnF77EDRnpHqGbEn4bE0SmBHAxpS7xrhj+82v
+	4SNJzgPAI3cb2CjHV2YSoFzwgLNSaAQRl9Mjdldsh+LUqfzDp+ycq0oAF8+6VdZoNjEcW+XOE+/
+	RTc2s+tuXgZqm0uszxFv//D6s+7Eh70fxBQSnkDnRnwdjpPItCc1rykIa+J10TwS+YVFUW6djPr
+	EROIfv3hwFB9e5XzKPXLXpSljRx96xN0J99yfI/iSxDUOARtgtCAzv0edjrHnPD149jYPP/pX4Z
+	QOFh+1vO6FTzIDTAo99AnnjZmV4PfwP+PWTDf/iDpXYYcLkoL6ymtAgLf6+rMhuRwB6MYmXWIJs
+	VsEaGXWbLwD6OTtYdb7JE2P7qC9uNKd1ZXaR4pY9VX
+X-Received: by 2002:a17:90b:3ecc:b0:35e:576c:7c1e with SMTP id 98e67ed59e1d1-36490ca7aa7mr2116371a91.4.1777385938195;
+        Tue, 28 Apr 2026 07:18:58 -0700 (PDT)
+Received: from magniquick ([45.112.148.109])
+        by smtp.gmail.com with ESMTPSA id 98e67ed59e1d1-36490fbfccesm3114485a91.14.2026.04.28.07.18.54
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 28 Apr 2026 07:18:57 -0700 (PDT)
+From: Navon John Lukose <navonjohnlukose@gmail.com>
+To: hansg@kernel.org
+Cc: ilpo.jarvinen@linux.intel.com,
+	jorge.lopez2@hp.com,
+	linux-kernel@vger.kernel.org,
+	linux-pm@vger.kernel.org,
+	platform-driver-x86@vger.kernel.org,
+	sre@kernel.org
+Subject: Re: [RFC] HP laptop charge mode control via POWER_SUPPLY_PROP_CHARGE_BEHAVIOUR
+Date: Tue, 28 Apr 2026 19:48:51 +0530
+Message-ID: <20260428141851.549364-1-navonjohnlukose@gmail.com>
+X-Mailer: git-send-email 2.54.0
+In-Reply-To: <abfc9469-5d47-4e83-8c3c-03138f1b2ade@kernel.org>
+References: <abfc9469-5d47-4e83-8c3c-03138f1b2ade@kernel.org>
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
-Content-Type: text/plain; charset=UTF-8
-Date: Tue, 28 Apr 2026 09:10:17 -0500
-Message-Id: <DI4UJOJMXTFT.2TJBNTE9ESN7E@gmail.com>
-Subject: Re: [PATCH] platform/x86: think-lmi: fix possible memory leak in
- tlmi_sysfs_init()
-From: "Kurt Borja" <kuurtb@gmail.com>
-To: "Guangshuo Li" <lgs201920130244@gmail.com>, "Mark Pearson"
- <mpearson-lenovo@squebb.ca>, "Derek J. Clark" <derekjohn.clark@gmail.com>,
- "Hans de Goede" <hansg@kernel.org>, =?utf-8?q?Ilpo_J=C3=A4rvinen?=
- <ilpo.jarvinen@linux.intel.com>, "Kurt Borja" <kuurtb@gmail.com>,
- <platform-driver-x86@vger.kernel.org>, <linux-kernel@vger.kernel.org>
-X-Mailer: aerc 0.21.0-0-g5549850facc2
-References: <20260428082207.357522-1-lgs201920130244@gmail.com>
-In-Reply-To: <20260428082207.357522-1-lgs201920130244@gmail.com>
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
 
-Hi Guangshuo,
+Hi Hans,
 
-On Tue Apr 28, 2026 at 3:22 AM -05, Guangshuo Li wrote:
-> Once kobject_init_and_add() fails, kobject_put() should be called to
-> decrement the reference count for cleanup. Otherwise, the memory associat=
-ed
-> with the object may leak.
->
-> tlmi_sysfs_init() jumps to fail_create_attr after kobject_init_and_add()
-> fails. The error path calls tlmi_release_attr(), which walks the kset
-> lists and puts the kobjects found there. However, when the add operation
-> fails, the kobject core removes the failed object from the kset list
-> before returning the error. Therefore tlmi_release_attr() cannot put the
-> kobject whose kobject_init_and_add() failed.
->
-> Fix this by calling kobject_put() for the failed kobject before jumping t=
-o
-> the common error path. Since pwd_admin's saved signatures are released
-> outside of its kobject release callback, release them before putting a
-> failed pwd_admin object.
->
-> This issue was found by a static analysis tool I am developing.
+Thanks, that was the right hint. The path from the EC to ACPI methods to WMI
+has been fun to trace, and I learned quite a bit.
 
-Thanks!
+I checked the WMI path, and the charge methods are reachable through the
+existing HP BIOS WMI GUID:
 
-Just a comment bellow.
+  5FB7F034-2C63-45E9-BE91-3D44E2C707E4
 
->
-> Fixes: 9110056fe10b ("platform/x86: think-lmi: Fix kobject cleanup")
-> Signed-off-by: Guangshuo Li <lgs201920130244@gmail.com>
-> ---
->  drivers/platform/x86/lenovo/think-lmi.c | 40 ++++++++++++++++++++-----
->  1 file changed, 32 insertions(+), 8 deletions(-)
->
-> diff --git a/drivers/platform/x86/lenovo/think-lmi.c b/drivers/platform/x=
-86/lenovo/think-lmi.c
-> index e215e86e3db7..994475eb0b9c 100644
-> --- a/drivers/platform/x86/lenovo/think-lmi.c
-> +++ b/drivers/platform/x86/lenovo/think-lmi.c
+The _WDG entry exposes object "AA" as a method. In this firmware that maps to:
 
-...
+  \_SB.WMID.WMAA
 
-> @@ -1548,33 +1553,52 @@ static int tlmi_sysfs_init(void)
->  	tlmi_priv.pwd_admin->kobj.kset =3D tlmi_priv.authentication_kset;
->  	ret =3D kobject_init_and_add(&tlmi_priv.pwd_admin->kobj, &tlmi_pwd_sett=
-ing_ktype,
->  				   NULL, "%s", "Admin");
-> -	if (ret)
-> +	if (ret) {
-> +		kfree(tlmi_priv.pwd_admin->signature);
-> +		kfree(tlmi_priv.pwd_admin->save_signature);
-> +		tlmi_priv.pwd_admin->signature =3D NULL;
-> +		tlmi_priv.pwd_admin->save_signature =3D NULL;
+and WMAA calls:
 
-I think, up until now (in the probe path that leads to this), we have
-not yet allocated signature and save_signature. These are allocated and
-reallocated once the sysfs files are created.
+  \_SB.WMID.WHCM(Arg1, Arg2)
 
-Other than that, this looks good.
+Inside WHCM, the command dispatch maps the charge-control methods like this:
 
-Reviewed-by: Kurt Borja <kuurtb@gmail.com>
+  read  commandtype 0x1f -> \GBCC()
+  read  commandtype 0x2b -> \GBCO()
+  write commandtype 0x1f -> \SBCC(DDWD)
+  write commandtype 0x2b -> \SBCO(DDWD)
 
---=20
+Calling the WMI wrapper for the three modes works as expected:
+
+  \SBCC 0x0000 -> normal charging / auto
+  \SBCO 0x0500 -> inhibit charge
+  \SBCO 0x0200 -> force discharge while on AC
+
+So the raw ACPI methods do not need to be called directly; the existing HP BIOS
+WMI transport reaches them.
+
+Given that, I think the implementation can use hp_wmi_perform_query() with the
+existing HPWMI_BIOS_GUID.
+
+I am still unsure about where to put it. The smallest patch would be to add the
+power_supply extension code directly to hp-wmi.c, but that file currently does
+not have any battery-specific code paths. Should I add it to hp-wmi.c, add a
+small HP-specific file under drivers/platform/x86/hp/, or is there another file
+I missed?
+
 Thanks,
- ~ Kurt
+Navon
