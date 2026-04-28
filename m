@@ -1,172 +1,160 @@
-Received: from mail-vs1-f43.google.com (mail-vs1-f43.google.com [209.85.217.43])
+Received: from mail-dl1-f43.google.com (mail-dl1-f43.google.com [74.125.82.43])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6BCED3290C4
-	for <platform-driver-x86@vger.kernel.org>; Tue, 28 Apr 2026 16:37:49 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.217.43
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D2DDB33D4EC
+	for <platform-driver-x86@vger.kernel.org>; Tue, 28 Apr 2026 17:13:43 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=74.125.82.43
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1777394271; cv=none; b=QfOF+H1ckujZOKsmgjDmsLdLl65ZyGsfxHba6amRYE/SVnVB78MTK5toaAuAzu+Flu/+nnfjuP3qrEXSGp4MVYid8J3PiEiocZweiadzD+Da0YUpgnNKD5c/6KOI4lPEg/Px+02U8rpsXLebwYd6OfyvpdIwN1mNRfjDc0u6aG4=
+	t=1777396425; cv=none; b=uPdCaOVLotPCC4xX6FGJSlGlV+/aOR7FJo8r2tutXtHgB4jh0sgCtJvRSfY1CgR5K4VUVAC+44IN5FDgSxrAVLEBX6Ad7yC8Nu5tXTWShE/5B7wuZlc93RWZrHZX3GVnIhvq1xHuh/F2B7RGUzT/q9+nR1k2/1aWzN+dX7tPXtE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1777394271; c=relaxed/simple;
-	bh=7rjJOYjWmvb2EcF6VUMA/0NaY7hKyw6Z6EWR5pCM3Ic=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:To:Cc; b=f+IizWwa5n7GkzEzLiguB70TBA/NwzhOJ2tMVn/e0wM+nq8hgn/KgfuAutDnqcka3I7fTKhVwuhrZpnLPCp59xzSVSCvv4miP8y2SlqDO5U/eOSDyOEOAk0OQVnjkEpyRngRJNoFjf3Ywjen5f7616kaJJQEL2hoeFo2dRzH6EY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=WhQmKixS; arc=none smtp.client-ip=209.85.217.43
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+	s=arc-20240116; t=1777396425; c=relaxed/simple;
+	bh=zNwt4MuWjFHi2nWiChHMSukn7s4+6k7LIxTrHSdJM0I=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=SeljTvuW4cTKD8QB0T0qQdCTfjSFSxImdtYIWJxQ8zfhcqvOSVWIVvAGYaU1dPYLAbY6hbW/psluJ9iKcHrBYgZWlprmuAbpLLbQjyP5AutbdgfyUm/pYGcqPg1V1X1Xq8mu+Kzkhj4KveCAZxQKhFcECM2W0IUnscMmdH0eYEA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=roeck-us.net; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=QDt43/Zx; arc=none smtp.client-ip=74.125.82.43
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=roeck-us.net
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="WhQmKixS"
-Received: by mail-vs1-f43.google.com with SMTP id ada2fe7eead31-60fee2fa3b8so3578693137.2
-        for <platform-driver-x86@vger.kernel.org>; Tue, 28 Apr 2026 09:37:49 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="QDt43/Zx"
+Received: by mail-dl1-f43.google.com with SMTP id a92af1059eb24-12c7212836bso2894862c88.0
+        for <platform-driver-x86@vger.kernel.org>; Tue, 28 Apr 2026 10:13:43 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20251104; t=1777394268; x=1777999068; darn=vger.kernel.org;
-        h=cc:to:message-id:content-transfer-encoding:mime-version:subject
-         :date:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=MsGpQQF7zdBC3BAV8PPfxFAulX/0eg85xZIdEP3FacY=;
-        b=WhQmKixSe1rJuHQIMdKkiOfmQZh7uSUQ8eyZDb9WQrL8jPTn1opXYO+rQmnvNbvY0b
-         C0CTl5sZWaEGzeBTe/bkN3kleMYk4E7YFwJ+mJa8bDCjo9IGXUOKG1mIzoQ1va4lQRvv
-         FNjc1DSuxKY26obODrxKpONwvts/CqoKNxqwELi7ggQ9ehhl7on0LobxF3OqVHE1JH6G
-         Myq+bURoXXMVKApc8cHx1wE3TRvmBmy/f5HWSDAx2F3pC61rcCi2Ut1pn9UX+E0hJ7t4
-         79NBERnGJ6lXjCa0uG/4envJ42lH4z8qrXGcC2nH3WZy/RU4MuHFPiOmE3sjRibr5rD3
-         vcDg==
+        d=gmail.com; s=20251104; t=1777396423; x=1778001223; darn=vger.kernel.org;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date:sender
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=m7kYEmzFH2q6R/2YwOkSe7g67dqcrJT0bRYNvxoCekk=;
+        b=QDt43/ZxUAqu/y9hK/pLoUIBmncVLO1csJJwXqSGodZFq2sFJzE2Hv0eksvX/MGgp/
+         0vgNJjXiJXQ88GBvk3GgPUbFFXs5soUN5b3t7wwPHa40FY6M3QoitjmmL9ZpsX1XxDxK
+         M6hypYRrxf8Zu3r0u1IEjXJ67F0m8dOYTzvTARAMO3A7/Grtg9IyWBszjbiEUduO3Jdk
+         dtFpUNvVyd1zRaoqYVA5mM+uxk1SJr/qlla7BbzkPdFoINRDy29n8YhDbl43yTOjeH+m
+         t7oTIxOFwxTNpcHftcESRJJ8A4P+sZA/0vYPx3XoRKwQzhj2AbjOULmj1j93YAMm5L2k
+         7/MQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1777394268; x=1777999068;
-        h=cc:to:message-id:content-transfer-encoding:mime-version:subject
-         :date:from:x-gm-gg:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=MsGpQQF7zdBC3BAV8PPfxFAulX/0eg85xZIdEP3FacY=;
-        b=eeY3ykbgzu+m1tRDGTuAUUiuLHeoliZZMD6eT6ubADCFsy2qk1CpLQr1tGTUT0gcMc
-         fa5TUNO8AjPzKgfno1TDfxnhPIkrVSQD/Q75xIBA37LD9CZBgxKYZg8LwGD8fG6XYpL3
-         436kip70Qi0XgGND28v6Ruz+SLmOEe/Xk+A8VSruQ5K96+a5FLdlwVwJoWm2TX4j13Zi
-         F9a4m3hDOp7IsIbCeaXCHkOeEvnQsv7SW4rVBMIcjFB8UAwMNKqT6OQjeD1eL9VVk+uU
-         wPbNtBrwrxSI4JiYRusm5bza6aL/d1g7lYCboOg9S/kXLFG8CM6X0a4O2MXLr7O5Exzn
-         5IjQ==
-X-Gm-Message-State: AOJu0Yz4Se2adkB0ufzdaUbiFC7PgPPlBdaYPDAK+0Igpb8S83v0polv
-	OWClaQLP1borzLOCdElkqX4EOrb5flzY8fG3BcD/8TLb3yT7Q9Xuekmn
-X-Gm-Gg: AeBDiesCn0vt+ZYqvhcz23jlA3M3im8gu+zmMiB63VGx7aG2zWGzDuKt7S4yAZjYd8P
-	iPsmbu66DRBS3iRLOGLtQGODLE6yidhmFh3lx3VPC1wR2eub04E7CHj59hz21ULQZHWHHhAqEYQ
-	zQuP4HWUXeWja7g7WB3jADyu3Q/zMd2SSoblqs5+F1AeUx0LhtmttEu05Pp4wlIH+Uw+DFpQWhr
-	SsZNjL9qSvmGLZjbLfhV6c1q0El/aRKF/cTVSRJbmzMl0L1JV3sNthHn5C5fqJ9BRqz/ZkuDm4o
-	OVrPZoHt86SEjS1YsnzGGigPUGuWjIazIpjYSrzlA0KRjmN1YlEwrdbh38z7JzUKxd4Qhd3AqZO
-	no0OrQyzB+otMLZTzMwbe7DnASU4w2eiEnaNtgWdqfMehf1z7kI0sZiC8s8FG6VnrYupChMcFjS
-	oR63hQZ3iUWQ/58fqqpdeFSGlYxpZTZXOK
-X-Received: by 2002:a05:6102:8096:b0:61c:5310:e9d5 with SMTP id ada2fe7eead31-6280a8b8244mr1876611137.20.1777394268112;
-        Tue, 28 Apr 2026 09:37:48 -0700 (PDT)
-Received: from [192.168.100.6] ([2800:bf0:82:11a2:7ac4:1f2:947b:2b6])
-        by smtp.gmail.com with ESMTPSA id ada2fe7eead31-627f7c24c7asm1488903137.7.2026.04.28.09.37.46
+        d=1e100.net; s=20251104; t=1777396423; x=1778001223;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date:sender
+         :x-gm-gg:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=m7kYEmzFH2q6R/2YwOkSe7g67dqcrJT0bRYNvxoCekk=;
+        b=BOBLnZjfYmAR6/90Qv2qfS9LrpAQbwR2hq48B7VppbItewe9OXq6VNMxb0n/H/arz2
+         HlK5sHu6SbJ8yAXKqA0hMC3aeVVEI2pkByVOd5UfTafcUrEJEvYebWOwddq0OWLJ+dPQ
+         sk49OcHhxkTcQesgYj3DtGQJ4N1fLtv4X5n/TUKHj6hNUCd96uCeO0uyHxbl+B8vA8r8
+         HJv+6XOHj7aKNPTMOWDANp3cDWVDlVhvIsviXtfWV56f/UkDaWVxs0a04uXhdnuTFoAX
+         y7sBQvLnIzGZgho+PyEcO97ZhuLHjpuCfu7A0BM9IjjTqEbwwA1O1OGXE2NHCOTR86Xa
+         AAAg==
+X-Forwarded-Encrypted: i=1; AFNElJ9x4NCtg0PqN6REaHM8fmxn+8qTyxFVSqf4KyseU3KMgaPCrKO/BdR6lTsA5sd1Q4YEh8LPylO2r3xS1UYMTohxRXoH@vger.kernel.org
+X-Gm-Message-State: AOJu0YzW7tcYGFQZOYCBrpahEky3V4OTmLhDyoHOy9wo0OPouuj5avqj
+	bl0Zyg0ISDiguu4hGcFKUbyeB1q1sVl6Y0wfMn934LJQfH6UPWeREowT
+X-Gm-Gg: AeBDieutAFG+D4vjamMyT2O4s+zUkcPZbdTJS96PKXEGhQ+98NCds3huiP0I76DarpQ
+	WryXbcDxcyQ74Udt3Y1YB61rdjJSyqYIhBhtOxWc7kEuO6w10AUkV+hI8H8JaV3chvCEIzj2bFe
+	PJJ4PW1A/AlkvZyW67tuuljQD/dJxFpksZb1pooxMIyKhqvINN7KqYLuwZwSBx4jjX7iyLczk9/
+	HcGSILJW8TAvlq5fMZw4KnVNEyqOHC+qtySXYFLNhENMLfIgJq/Kf59cloPY+dDsyurSaHJv03I
+	3n4BDUUYJfIB6UpmbKtXcH8EmIz/RJulzEHDWRTosg8/cdcP1f1p2iprPCyNg8eqO7gUJJPh8VT
+	J4JX0E41gCf0aKEF71+NJpWU2mv8hSRSzXPPhmhNcufQ+C43Y6W6zzyh4Mazsn/wuJUPluJFoIS
+	qgXouTNil63ZU+T0lAzuSveUTwswJknzn2q3lubwgMDcrNOO4=
+X-Received: by 2002:a05:7022:628e:b0:12d:b6cb:bdc9 with SMTP id a92af1059eb24-12ddd94d41dmr1845430c88.9.1777396422802;
+        Tue, 28 Apr 2026 10:13:42 -0700 (PDT)
+Received: from server.roeck-us.net ([2600:1700:e321:62f0:da43:aeff:fecc:bfd5])
+        by smtp.gmail.com with ESMTPSA id a92af1059eb24-12ddd9b1bfcsm2417790c88.12.2026.04.28.10.13.41
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 28 Apr 2026 09:37:47 -0700 (PDT)
-From: Kurt Borja <kuurtb@gmail.com>
-Date: Tue, 28 Apr 2026 11:37:29 -0500
-Subject: [PATCH v4] platform/x86: alienware-wmi-base: Transition to new WMI
- API
+        Tue, 28 Apr 2026 10:13:42 -0700 (PDT)
+Sender: Guenter Roeck <groeck7@gmail.com>
+Date: Tue, 28 Apr 2026 10:13:41 -0700
+From: Guenter Roeck <linux@roeck-us.net>
+To: Ilpo =?iso-8859-1?Q?J=E4rvinen?= <ilpo.jarvinen@linux.intel.com>
+Cc: Sergio Melas <sergiomelas@gmail.com>, Jean Delvare <jdelvare@suse.com>,
+	linux-hwmon@vger.kernel.org, platform-driver-x86@vger.kernel.org,
+	LKML <linux-kernel@vger.kernel.org>, Armin Wolf <W_Armin@gmx.de>,
+	"Derek J . Clark" <derekjohn.clark@gmail.com>,
+	Rong Zhang <i@rong.moe>
+Subject: Re: [PATCH v2 1/2] hwmon: (yogafan) Use u32 types and improve RLLag
+ filter
+Message-ID: <445bfb9b-bd80-41d2-9355-e2754dc1d6d8@roeck-us.net>
+References: <20260417142455.18806-1-sergiomelas@gmail.com>
+ <120f01a2-c77f-8be6-68a9-3abc574c0c95@linux.intel.com>
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Message-Id: <20260428-aw-new-api-v4-1-d2c06241d7ad@gmail.com>
-X-B4-Tracking: v=1; b=H4sIAAAAAAAC/3XNTQ6CMBCG4auYrq3pzIABV97DuGhpC03kJ60pG
- sLdLbgBE5ffJM87EwvGOxPY5TAxb6ILru/SyI4HVjWyqw13Om2GAs8CkLgceWdGLgfHoYLCggC
- wlLMEBm+se62x2z3txoVn799rO8Jy/WaIxDYTgQMv8xKEshIUFde6le5xqvqWLZmIWwo7iomSE
- ppI2UIj/lL6TylRYwWpMsux1Luv8zx/AD6WNHMaAQAA
-X-Change-ID: 20260123-aw-new-api-1c18f1011f35
-To: =?utf-8?q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>, 
- Armin Wolf <W_Armin@gmx.de>, Hans de Goede <hansg@kernel.org>
-Cc: platform-driver-x86@vger.kernel.org, Dell.Client.Kernel@dell.com, 
- linux-kernel@vger.kernel.org, Kurt Borja <kuurtb@gmail.com>
-X-Mailer: b4 0.15.2
-X-Developer-Signature: v=1; a=openpgp-sha256; l=2489; i=kuurtb@gmail.com;
- h=from:subject:message-id; bh=7rjJOYjWmvb2EcF6VUMA/0NaY7hKyw6Z6EWR5pCM3Ic=;
- b=owGbwMvMwCUmluBs8WX+lTTG02pJDJkfHgW+Sy9af/j6Q1sBpXqjJxtqDUv3mb00lipdl7hqm
- lxvvdaNjlIWBjEuBlkxRZb2hEXfHkXlvfU7EHofZg4rE8gQBi5OAZjIxwpGhh4p94XSr7yzPsld
- PJW6QZY7+MMabpPeOTvfZ7Zzl+Y17mL4n5G6T8XAaUmBgoen0cLrf3ovn/CYMuvr1fTupaWvNsx
- wYQIA
-X-Developer-Key: i=kuurtb@gmail.com; a=openpgp;
- fpr=54D3BE170AEF777983C3C63B57E3B6585920A69A
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <120f01a2-c77f-8be6-68a9-3abc574c0c95@linux.intel.com>
 
-Transition to the new wmi_buffer based WMI API.
+On Tue, Apr 28, 2026 at 01:44:33PM +0300, Ilpo Järvinen wrote:
+> On Fri, 17 Apr 2026, Sergio Melas wrote:
+> 
+...
+> 
+> The old way was way better. And this too looks entirely unrelated change.
+> 
+> 
+> This was extremely messy to review. Please only resubmit after splitting 
+> this into a series which does only a single logical change per patch.
+> 
+> And right before doing the next submission, my suggestion is: please try 
+> to review it yourself. If, while reviewing it yourself, you don't 
+> understand something or feel need to skip reading some lines because the 
+> change is so big or get messy, it will likely cause the same feeling for 
+> the other reviewers as well and you should rethink the approach and ensure 
+> you've really split it into manageable (reviewable) chunks.
+> 
 
-Signed-off-by: Kurt Borja <kuurtb@gmail.com>
----
-v4:
-  - Rebase to use the new wmidev_invoke_method() with size check
+The entire patch, especially and even more so the inserted cryptic
+comments, the claim that the driver would introduce a "Hardware
+Abstraction Layer", and the various enumerations, are typical of vibe
+coding with little if any human review.
 
-v3: https://patch.msgid.link/20260331-aw-new-api-v3-1-ef03b94529d8@gmail.com
-  - Use __free() instead of manual cleanup.
-  - Include <linux/types.h>
+Essentially that means that the code can not be trusted. The documentation
+claims compliance to various IEC norms, but who knows how much of that is
+AI hallucination and how much of it is real.
 
-v2: https://patch.msgid.link/20260331-aw-new-api-v2-1-3b0d33bf8d22@gmail.com
-  - Cast wmi_buffer data to __le32 and then use le32_to_cpu() before
-    returning
+On top of that, even AI (Sashiko) found problems with it. This directly
+contradicts the various "Safety and Design Integrity" claims made in the
+documentation.
 
-v1: https://patch.msgid.link/20260330-aw-new-api-v1-1-95910bfa1b38@gmail.com
----
- drivers/platform/x86/dell/alienware-wmi-base.c | 31 ++++++++++++++++----------
- 1 file changed, 19 insertions(+), 12 deletions(-)
+So, just to be sure, I asked Gemini (gemini-3-flash, coincidentally).
+See below what it had to say. Kind of fun though that it believes that
+it is late 2024. You'd think they train those models on something more
+recent.
 
-diff --git a/drivers/platform/x86/dell/alienware-wmi-base.c b/drivers/platform/x86/dell/alienware-wmi-base.c
-index 64562b92314f..21d3acfbd73d 100644
---- a/drivers/platform/x86/dell/alienware-wmi-base.c
-+++ b/drivers/platform/x86/dell/alienware-wmi-base.c
-@@ -12,8 +12,13 @@
- #include <linux/cleanup.h>
- #include <linux/module.h>
- #include <linux/platform_device.h>
-+#include <linux/slab.h>
-+#include <linux/types.h>
- #include <linux/dmi.h>
- #include <linux/leds.h>
-+
-+#include <asm/byteorder.h>
-+
- #include "alienware-wmi.h"
- 
- MODULE_AUTHOR("Mario Limonciello <mario.limonciello@outlook.com>");
-@@ -150,21 +155,23 @@ u8 alienware_interface;
- int alienware_wmi_command(struct wmi_device *wdev, u32 method_id,
- 			  void *in_args, size_t in_size, u32 *out_data)
- {
--	struct acpi_buffer out = {ACPI_ALLOCATE_BUFFER, NULL};
--	struct acpi_buffer in = {in_size, in_args};
--	acpi_status ret;
-+	struct wmi_buffer out, in = {
-+		.data = in_args,
-+		.length = in_size,
-+	};
-+	int ret;
- 
--	ret = wmidev_evaluate_method(wdev, 0, method_id, &in, out_data ? &out : NULL);
--	if (ACPI_FAILURE(ret))
--		return -EIO;
--
--	union acpi_object *obj __free(kfree) = out.pointer;
-+	if (out_data)
-+		ret = wmidev_invoke_method(wdev, 0, method_id, &in, &out,
-+					   sizeof(*out_data));
-+	else
-+		ret = wmidev_invoke_method(wdev, 0, method_id, &in, NULL, 0);
-+	if (ret)
-+		return ret;
- 
- 	if (out_data) {
--		if (obj && obj->type == ACPI_TYPE_INTEGER)
--			*out_data = (u32)obj->integer.value;
--		else
--			return -ENOMSG;
-+		__le32 *data __free(kfree) = out.data;
-+		*out_data = le32_to_cpu(*data);
- 	}
- 
- 	return 0;
+Anyway, given all that, I don't even want to look into that code myself.
+
+Guenter
 
 ---
-base-commit: 254f49634ee16a731174d2ae34bc50bd5f45e731
-change-id: 20260123-aw-new-api-1c18f1011f35
+The likelihood that the patch at index.html was AI-generated is extremely
+high (near 100%). 
 
--- 
-Thanks, 
- ~ Kurt
+  While the patch is technically sophisticated and follows many Linux kernel
+  standards, it contains several "smoking guns" and patterns characteristic
+  of advanced Large Language Models (LLMs) instructed to produce
+  high-quality, safety-critical code.
 
+  Primary Evidence: The "Smoking Gun"
+   * Explicit Attribution: The commit message contains the line:  
+      Assisted-by: Google:Gemini-3-Flash [DSDT/XML-Data-Aggregation & Formatting]  
+      This is a direct acknowledgment of AI involvement, naming a specific model (Gemini-3-Flash).
+
+  Secondary Evidence: Documentation and Tone
+   * Over-Engineering of Documentation: The patch adds a 400-line "Safety and Cybersecurity Integrity Report" to the documentation (yogafan.rst). It includes:
+       * Bow-Tie Risk Analysis: A formal risk assessment method (IEC 61508/61511) that is extremely rare in consumer hardware drivers for the Linux kernel but common in LLM outputs when
+         nudged for "industrial safety" or "expert standards."
+       * Structured "CHUNKS": The report is divided into "CHUNKS" (e.g., CHUNK 1: GLOBAL DEFINITIONS), which is a common way for AI to organize long, structured outputs.
+   * Meta-Refinement in v2 Notes: The v2 changelog explicitly states:  
+      - Dropped superlatives and simplified the commit message tone.  
+      LLMs are notorious for using "superlatives" (e.g., "This robust and efficient driver provides incredible compatibility") and often need to be told to tone down their language to
+  match the dry, professional style of the kernel community.
+
+  Technical Patterns
+   * Structured Commenting: The code uses structured tags like [TAG: INIT_STATE, STALE_DATA_THRESHOLD] and [TAG: MODEL_CONST, ALPHA_DERIVATION, ANTI_STALL_LOGIC]. These resemble
+     "traceability" markers often generated by AI when asked to link code to specific design requirements or safety standards.
+   * Physics Textbook Explanations: The detailed derivation of the RLLag filter (e.g., citing J ∝ d² and providing the discretized physics equations) reads more like an academic or
+     AI-generated explanation than typical kernel driver commentary, which usually focuses on hardware offsets and register logic.
+   * Future-Dating: The patch is dated April 17, 2026, and references Gemini-3-Flash. Given the current state of technology (as of late 2024), this indicates the file is part of a
+     simulated future scenario, further suggesting it was generated as part of a challenge or synthetic dataset.
+
+  Conclusion: The patch is a highly polished, AI-generated "expert" contribution designed to demonstrate (or test) the intersection of functional safety standards and kernel development.
