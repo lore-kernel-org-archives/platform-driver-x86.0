@@ -1,38 +1,38 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4A2BA72623
-	for <platform-driver-x86@vger.kernel.org>; Tue, 28 Apr 2026 00:28:17 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 87B2B1A9F91
+	for <platform-driver-x86@vger.kernel.org>; Tue, 28 Apr 2026 00:34:34 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1777336098; cv=none; b=aSkCjhCFyj1d2izaJhvE5gtfrh4OyCwe221fcZAe7R0eHPcdpWasl59C8jOi2lnvVi3VjSrvmBE9g6uRmYz+y/thJIwy8be3y8LfwB3aojsnMvGdYoXEzwB3VYdIoEIf4oS/PXKgqPAukPRq1D1+bH+R4QAEnV0Rk+/AD4fSHVw=
+	t=1777336474; cv=none; b=rDGiaYlpCBhWe1lcxfAfAvUJ8Q8VKWCcn/qatxHYTH5CxxAWXtYRS5qEO5SJErDAwibGEkBthZ2kBReW+NcrA8oumDDHlPzUTauZdfsL+UvJJUbgLdhdTj16E4a/qsARcfGt+Ytvv3ergNq3+ERA2zKvSjDQa43lz3IKQN1o0Xw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1777336098; c=relaxed/simple;
-	bh=DsE+5urqCgAklWs6HVOh38oR783bcjy/9sOcGmDHcHk=;
+	s=arc-20240116; t=1777336474; c=relaxed/simple;
+	bh=icL9LNSzaiZHjXGQIkV0sHU+f4u6eZNOY1Ztaf7E1qU=;
 	h=From:To:Subject:Date:Message-ID:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=mipLBt2e2MSfs+q+31xBD5qb7/fGvwu7owqyAg7f+4+tBV/Y2ifcwKhtKCIUPZqtkEyYc3Mg36lz0bVKP/Jz2tAUmOr0nV7PQm4eNq/Eb+SlRH0uOgbxdMfwz9fE6oV0LKpc13ZYEh7cv2tlQUQUlpGXisUF9AodvDywzcvAXW0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=cavfQm8j; arc=none smtp.client-ip=10.30.226.201
+	 Content-Type:MIME-Version; b=emNMyWhBIfvOFCIxs4r2ojB0K9gjhJST2wekhCr4/okSBtYXG1M4DkcNchPmnjQjuvrfyMq9/1VWPO4FvIuknptFbNnQDCmVgahmtUVJTGbCQQsReVsk+ci6xpx1fX1k5iLihE2CETKdcPFmTNfv0IH7annOfnzqZpIYH2WzVd4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=l6R1kOGd; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="cavfQm8j"
-Received: by smtp.kernel.org (Postfix) with ESMTPS id D1D12C2BCB7
-	for <platform-driver-x86@vger.kernel.org>; Tue, 28 Apr 2026 00:28:17 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="l6R1kOGd"
+Received: by smtp.kernel.org (Postfix) with ESMTPS id 38DEDC19425
+	for <platform-driver-x86@vger.kernel.org>; Tue, 28 Apr 2026 00:34:34 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1777336097;
-	bh=DsE+5urqCgAklWs6HVOh38oR783bcjy/9sOcGmDHcHk=;
+	s=k20201202; t=1777336474;
+	bh=icL9LNSzaiZHjXGQIkV0sHU+f4u6eZNOY1Ztaf7E1qU=;
 	h=From:To:Subject:Date:In-Reply-To:References:From;
-	b=cavfQm8jG0wm8aCyCtKtGCoDFEATVLezlxtLuS5oPkYZ5xtTzUvauKcQYa1iCda64
-	 n0wICscoOe8gPX3lGAohKQ3WFT1VcLROT2mbR9Jhhk4/cC54hSVX+Mtv2QpmfZ75eo
-	 L81aSKCV27m+l6KPAC06Qf+M3e2AvdDzsxw1mGK5gKybjgv5wURXD/0FrYKE5KrjBr
-	 V/33AD4Hv9jazIFT7IzsO4YXz69NkjhYle5P+f8gYxs8h19+38WniMsRqRuAwes1VA
-	 5rC4QnVKSRadWhfnX3o6XPOs+f1lSeU/2PxQLt2LGQZsB13TEg3ud9/38c3Y0jqAji
-	 vbvilcLSFmYzg==
+	b=l6R1kOGdH7NOT/DNRoP8kQYKwoTD8qeE+xvTYC9JLm0MIBvYBNMDIfvEdi2o35KJf
+	 3Qiv8ybCA5AMMhnPT0krRcpanrve9xlEGuRr+qdiMGdmPclGOf2hZ+jcZ1xljEDNPx
+	 S/cRajOENpUjMGNFEVPqDHLT0SSNEQfpbVaVkOL7reuFbF26dFOfmT2rCRLxgWfJAm
+	 eej0DofXCk1ubsw6I+GflVlGbnrf9G5vzoEm4Mcl3egc+STmPcFAnpiBMUGYhzTBkc
+	 CnGIGmtu4nr7jofBeHTHeP85ivqiLMMmsG3dkIfJdWWoftBcl2yvDXl/+A6I2Hy0v1
+	 e9CGGgJRpCeeg==
 Received: by aws-us-west-2-korg-bugzilla-1.web.codeaurora.org (Postfix, from userid 48)
-	id BFC81C4160E; Tue, 28 Apr 2026 00:28:17 +0000 (UTC)
+	id 28E36C4160E; Tue, 28 Apr 2026 00:34:34 +0000 (UTC)
 From: bugzilla-daemon@kernel.org
 To: platform-driver-x86@vger.kernel.org
 Subject: [Bug 221383] ideapad_laptop: Fn hotkeys stop emitting after s2idle
  resume on IdeaPad Slim 3   14ARP10 (Ryzen 7735HS)
-Date: Tue, 28 Apr 2026 00:28:17 +0000
+Date: Tue, 28 Apr 2026 00:34:33 +0000
 X-Bugzilla-Reason: None
 X-Bugzilla-Type: changed
 X-Bugzilla-Watch-Reason: AssignedTo drivers_platform_x86@kernel-bugs.osdl.org
@@ -48,7 +48,7 @@ X-Bugzilla-Priority: P3
 X-Bugzilla-Assigned-To: drivers_platform_x86@kernel-bugs.osdl.org
 X-Bugzilla-Flags: 
 X-Bugzilla-Changed-Fields: 
-Message-ID: <bug-221383-215701-CXsfafe1yH@https.bugzilla.kernel.org/>
+Message-ID: <bug-221383-215701-kCfmkJdF2m@https.bugzilla.kernel.org/>
 In-Reply-To: <bug-221383-215701@https.bugzilla.kernel.org/>
 References: <bug-221383-215701@https.bugzilla.kernel.org/>
 Content-Type: text/plain; charset="UTF-8"
@@ -64,25 +64,18 @@ MIME-Version: 1.0
 
 https://bugzilla.kernel.org/show_bug.cgi?id=3D221383
 
---- Comment #46 from Daniel Gibson (metalcaedes@gmail.com) ---
-Thanks for the feedback!
+--- Comment #47 from Daniel Gibson (metalcaedes@gmail.com) ---
+Oh, one thing I forgot to ask, in the ideapad_laptop kernel module's modinfo
+I've seen
+>  parm: allow_v4_dytc:Enable DYTC version 4 platform-profile support. If y=
+ou
+>  need this please report this to: platform-driver-x86@vger.kernel.org (bo=
+ol)
 
-Do you think matching the whole series (that seem to share the same BIOS, at
-least for the different screen sizes of 16ABR8) is ok, like
-
-  {
-        .ident =3D "IdeaPad Slim 3",
-        .driver_data =3D &quirk_s2idle_need_suspend_delay,
-        .matches =3D {
-                DMI_MATCH(DMI_BOARD_VENDOR, "LENOVO"),
-                /* match all IdeaPad Slim 3 models of the ABR8
-                   generation, like 16ABR8, 15ABR8, ... */
-                DMI_MATCH(DMI_PRODUCT_FAMILY, "IdeaPad Slim 3"),
-                DMI_MATCH(DMI_PRODUCT_FAMILY, "ABR8")
-        }
-  },
-
-(and the same for Sindre's "ARP10" series)?
+presumably so the users device can be added to the quirks list, do you thin=
+k I
+should do the same here?
+What would be an appropriate address to list there?
 
 --=20
 You may reply to this email to add a comment.
