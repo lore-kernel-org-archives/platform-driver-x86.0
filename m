@@ -1,38 +1,38 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 872BF43E9C5
-	for <platform-driver-x86@vger.kernel.org>; Tue, 28 Apr 2026 14:54:38 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id ECAB0272801
+	for <platform-driver-x86@vger.kernel.org>; Tue, 28 Apr 2026 15:00:57 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1777388078; cv=none; b=pY1/FKnyhYOqQQ3w2sTJsmChEy9V2oiik1vxsovK9S7E5DmTMGUo/StLxS+Oj60C8cUEORGVxdpqAwrzaZcq3vamlMWkcwtk6PPBd99nmEHDg0QmMMlToHMRIQ4C8OY6NBT1++H2xNXIkZfLl89UekShL7LnBQN5I443Tz84tqI=
+	t=1777388458; cv=none; b=LUxJnmIOU452mF3r3dTIKy5X5zJydmyL+VwRCom0Szvkser8W17zQ4yXIn/WhzBUJIlXKkve4hmlQMJNfhNcTEu7l1VbzgXVtGfXoNByx11Pu1u9QGNpVbcRTb/sOe0gLGnnNzbFHLI7L35fo+A5RV6JHUCE76Xp84dul7u4qg0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1777388078; c=relaxed/simple;
-	bh=cBwko+yQN7tB2I3Ka28F3qZju0fMRxylmkBJjVwIYT0=;
+	s=arc-20240116; t=1777388458; c=relaxed/simple;
+	bh=3vshxGpAWZeBFToG7yDkIPTcCYrUT+/Hmg22Lv+aPzo=;
 	h=From:To:Subject:Date:Message-ID:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=mqLZQyRKRbanlrqcmszvYblJmaSVBn8A8KL9L3JRr3Csg5982adgcDXUAwfk6qFPNMpeOAAxpumBu3NCRocDUKBqiwZ+smMz5Qq5oSs0LiEA4kgGa0o4dWgO2AqUf7HecEYEdktFqq1uF3ZEpVa7KZ71SHLWtkgRyFZt5GF++w8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=USsW9i+W; arc=none smtp.client-ip=10.30.226.201
+	 Content-Type:MIME-Version; b=J7QFfUUrHKOVF3MAEEcYzYePJMAAeHtyHytijC7W4PDN8CB/oLP56isxdq7roWnS2ajFnTW1Bt9ngz/UzVsOMHa3rqAQ4oYoM0Sza/gthdDVw/lud76dHde7SL6JRk1hUj2G6JJPsoBVu5lXd9shUX0w1odABwk6hP4c/Y+Lw5o=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=S27daKiX; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="USsW9i+W"
-Received: by smtp.kernel.org (Postfix) with ESMTPS id 228CEC2BCAF
-	for <platform-driver-x86@vger.kernel.org>; Tue, 28 Apr 2026 14:54:38 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="S27daKiX"
+Received: by smtp.kernel.org (Postfix) with ESMTPS id B8BEEC2BCAF
+	for <platform-driver-x86@vger.kernel.org>; Tue, 28 Apr 2026 15:00:57 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1777388078;
-	bh=cBwko+yQN7tB2I3Ka28F3qZju0fMRxylmkBJjVwIYT0=;
+	s=k20201202; t=1777388457;
+	bh=3vshxGpAWZeBFToG7yDkIPTcCYrUT+/Hmg22Lv+aPzo=;
 	h=From:To:Subject:Date:In-Reply-To:References:From;
-	b=USsW9i+W/upqBu5FyERUxT8bs6lq59LmVWw83N4i6gsJy9IMTrfr0iIGT1PxO5Psr
-	 wgXLxqXnmTw7oBwbRSdK048zbiRrC6RNqwThYW1KEnGE/k6OwyDbyE5Ad/6xTb+H9i
-	 CuRkkCneeTMnOHqldM1XBWc+phY8+ss7v/mEgeH0t8JJasvDRMqFwR59QCIxAbNdP5
-	 33IJGxO4wbxNq8Svhekb3/cz8YvZ6hp2xJ8mK7s38QGjIOS1fkOYs25jk6tjWSRx5Y
-	 CWOvDtdaRo56seTmmdLo7o1zNKIhR9fqjl4bvfOKRbpFCDvmxX+KOlvPATHC84aM96
-	 AVYO4iUMOCdHQ==
+	b=S27daKiXsSp3Vr7mM65+hee8cSZ9nJ+4q7i0/UdwWGqR6QGVz83REc7TQ+7E2AQJD
+	 0MAM1YN9/z9hk2RXJEbkgVD5+qloWzZWhba+WMrNES4ZvP8I6rX3FTJ/+GRNEoUL5p
+	 hLNlxULX8HItY/74/cBckQsNltQ4SfMXS9xJeEE89tUuYFtjGf2nRtvJni5sk+sWWs
+	 SmyWZ6nUiREHlTBws0SR3t+r3KI3WFLkEejdaWSuhn15E/dtLhr22s64HYw5tl12f1
+	 tN5z/WhnH6Ng2Pjo0gHwRirnODLNHvGCDw+fPAVukIh+ZZUublWv3WXFevlGBc2fYW
+	 jFpWZOkXkShUA==
 Received: by aws-us-west-2-korg-bugzilla-1.web.codeaurora.org (Postfix, from userid 48)
-	id 141F3C3279F; Tue, 28 Apr 2026 14:54:38 +0000 (UTC)
+	id B18D9C433E1; Tue, 28 Apr 2026 15:00:57 +0000 (UTC)
 From: bugzilla-daemon@kernel.org
 To: platform-driver-x86@vger.kernel.org
 Subject: [Bug 221383] ideapad_laptop: Fn hotkeys stop emitting after s2idle
  resume on IdeaPad Slim 3   14ARP10 (Ryzen 7735HS)
-Date: Tue, 28 Apr 2026 14:54:37 +0000
+Date: Tue, 28 Apr 2026 15:00:57 +0000
 X-Bugzilla-Reason: None
 X-Bugzilla-Type: changed
 X-Bugzilla-Watch-Reason: AssignedTo drivers_platform_x86@kernel-bugs.osdl.org
@@ -41,14 +41,14 @@ X-Bugzilla-Component: Platform_x86
 X-Bugzilla-Version: 2.5
 X-Bugzilla-Keywords: 
 X-Bugzilla-Severity: normal
-X-Bugzilla-Who: metalcaedes@gmail.com
+X-Bugzilla-Who: mario.limonciello@amd.com
 X-Bugzilla-Status: NEW
 X-Bugzilla-Resolution: 
 X-Bugzilla-Priority: P3
 X-Bugzilla-Assigned-To: drivers_platform_x86@kernel-bugs.osdl.org
 X-Bugzilla-Flags: 
 X-Bugzilla-Changed-Fields: 
-Message-ID: <bug-221383-215701-VKQPKYTKCr@https.bugzilla.kernel.org/>
+Message-ID: <bug-221383-215701-E4WfC7WiLM@https.bugzilla.kernel.org/>
 In-Reply-To: <bug-221383-215701@https.bugzilla.kernel.org/>
 References: <bug-221383-215701@https.bugzilla.kernel.org/>
 Content-Type: text/plain; charset="UTF-8"
@@ -64,28 +64,15 @@ MIME-Version: 1.0
 
 https://bugzilla.kernel.org/show_bug.cgi?id=3D221383
 
---- Comment #56 from Daniel Gibson (metalcaedes@gmail.com) ---
-There are other AMD-based Lenovo devices with those product family values, =
-like
-"IdeaPad Flex 5 14ABR8" (82XX) or "IdeaPad Slim 3 14AMN8" (82XN) or "Lenovo=
- LOQ
-16APH8" (82XU) or "Yoga Pro 7 14AKP10" (83KG) or "Ideapad 5 2-in-1 14AKP10"
-(83KT) and I don't know if they have this bug as well.
+--- Comment #57 from Mario Limonciello (AMD) (mario.limonciello@amd.com) ---
+Yeah; It's hard to know if people just haven't tested those systems with Li=
+nux
+or if they don't have the bug.
 
-Searching for those devices +linux +suspend indicates that not all of them =
-have
-this problem (or it has never been reported anywhere).
-
-For 82XU I found a similar report
-(https://bbs.archlinux.org/viewtopic.php?id=3D292867), for 83KT one that mi=
-ght be
-related but not sure
-(https://forum.manjaro.org/t/laptop-will-not-wake-from-suspend/183975)
-
-Then again, delaying suspend for 2.5s is not something that you notice unle=
-ss
-you know it - I think the power LED even starts blinking before that time is
-over.
+Good point it's only 2.5s and you won't notice unless you're looking for it=
+.  I
+can be convinced either way here, you can make the call when you submit the
+patch.
 
 --=20
 You may reply to this email to add a comment.
