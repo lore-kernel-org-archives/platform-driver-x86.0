@@ -1,200 +1,175 @@
-Received: from mail-vs1-f45.google.com (mail-vs1-f45.google.com [209.85.217.45])
+Received: from mail-vs1-f51.google.com (mail-vs1-f51.google.com [209.85.217.51])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3FF653FE64F
-	for <platform-driver-x86@vger.kernel.org>; Wed, 29 Apr 2026 13:23:19 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.217.45
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 46A413C1961
+	for <platform-driver-x86@vger.kernel.org>; Wed, 29 Apr 2026 13:27:17 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.217.51
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1777469001; cv=none; b=kRWiHsXWnL8Ez3mDkWN6bCw9yfdHpJFfEIemGo8ZTUU63rdWj2ZhlNtBkTXShzHHOOdz11sJVkF/sDri4INR0zuH6uamXPT35tdA+O6MrytxViW0dWlMXttHPJhroO9Cq+K9w/UwAV1USRsj64MtQoBDJueE8esiFL6yna6jK7M=
+	t=1777469238; cv=none; b=frF5hcechEBsp8mCFqnLg+q6aGAfzUuqMljaAisGGlIKr+yG2BaWX0i+6zouD6Wk3Jv0lFXn5GiP1aAjB80cNHBx0alPih73h9HPZcCE2diuTOaxdyNQ6+cuIOmlQiQMHBUlwpNgwuJ6FSC6htTWZFahE5jNJYE2QNWpRwk9NHY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1777469001; c=relaxed/simple;
-	bh=cSdTD4btkTq+vvdlVsv2uEtMvmS3NANRFJVZJrVV7yQ=;
-	h=Mime-Version:Content-Type:Date:Message-Id:Subject:From:To:Cc:
-	 References:In-Reply-To; b=g7LjYx2XEXPs9Acvb3U0M/7pCclpaxwVwvTNu8HVJ9xl9LUMPdtpnstJ1egvp2aWktY0HGRyHFo3T02DEzH7Bdrjy8Ka066nCNH5ZDvLbH2R80oVnvb/XqNjylLvNHUPTwm6PZFNyvZ8W8zM/Ut0pBrm4HdM09U8+vl6bgiHuLw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=FmcJrceG; arc=none smtp.client-ip=209.85.217.45
+	s=arc-20240116; t=1777469238; c=relaxed/simple;
+	bh=3rjNe5SzwzUAH8Fg/UbI3DxCjsSKhvvrLIJo3HOpTn8=;
+	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:To:Cc; b=E2fv5tuDf31Jt2K8BquuhTQrHRYSFoOOPy6j+JySuhGI8LGQM5GjOiI1EY7eiw8tIn4mDWrNNUrWvUfsKPJJrznazinSDIRRbtb9nKMgJs/jBJ9VycxbGjb9ZvoJ7SXJ6DbKnBVNt7wBlZjqebmzfM5GhwbqhdMKJlfuZ/T1c1E=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=AyJyrdvG; arc=none smtp.client-ip=209.85.217.51
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="FmcJrceG"
-Received: by mail-vs1-f45.google.com with SMTP id ada2fe7eead31-6221c72515fso3922064137.0
-        for <platform-driver-x86@vger.kernel.org>; Wed, 29 Apr 2026 06:23:19 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="AyJyrdvG"
+Received: by mail-vs1-f51.google.com with SMTP id ada2fe7eead31-61316792e42so7096532137.2
+        for <platform-driver-x86@vger.kernel.org>; Wed, 29 Apr 2026 06:27:17 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20251104; t=1777468998; x=1778073798; darn=vger.kernel.org;
-        h=in-reply-to:references:cc:to:from:subject:message-id:date
-         :content-transfer-encoding:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=8pfd+PHGHiZjMUfnOvtMwQJsaJvmmwBO+RkPzNYe4I0=;
-        b=FmcJrceG8THNuVmCJaXJtJZTBYJO/Jbo0MDl2cXEQrotR0X4aoi2wOMXL+C8cc7kdz
-         pfWLx+zG6jcjiTJbPnWsv18l75TJ7ghsXEJqU/7Uq+m44rKAdOEgvLrC22XIpWjcVyiP
-         JLse4yLsHzmU7U23oVyGAhhsMAUdKJPPKd8yNt7wGQouUZHjKjXzAVWBGHKIeNwgxthE
-         8Tcu36sXy0sEGehxx0Rsljh+bR+e/x2Uy6WuBgBWwhNxTiQIgSowavdRd0KhLCornbhB
-         ReTRrbqySgn39uTU+Pwq+blvKvnC0yn6ibEXCsSLS2U0U3worq18VoQyjIFDRLur64YP
-         CDdw==
+        d=gmail.com; s=20251104; t=1777469236; x=1778074036; darn=vger.kernel.org;
+        h=cc:to:message-id:content-transfer-encoding:mime-version:subject
+         :date:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=NWadTGnijLoIiyjf+xOJkjY7LVS3xMvY0Q85Yez1n+I=;
+        b=AyJyrdvGFhQ8AvUFEtkDVPgaefJUEuarSa3uHrQlAJY/blGbTCZWyrzEkLXZz9obD/
+         S5HsRG6zIA7LLRp/WvhUTxJUA+3jQuUfaNHt2lQ8GmbVHcCX3xDIp+lEGX3+bgj8CpaZ
+         ZfZkgu/R6RB92TDr/wktcTKqQHFOeWaW8ufnvxZMjzgL6cxz72Aj3h0Kv4QB3n5rt+jj
+         dgbyp0d3vWIVPX1g+EIgoOzgWFnPe+OYbpJY8/Uwm0U58ekVxVMrKuKIKTGOLfV0JFzS
+         R2jNUova+5q92jt5yaWZQBdZA8J5zJtSWBdW4hkvhtl6QkZNrSTudewbH6/R7c4hkpxv
+         qZjA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1777468998; x=1778073798;
-        h=in-reply-to:references:cc:to:from:subject:message-id:date
-         :content-transfer-encoding:mime-version:x-gm-gg:x-gm-message-state
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=8pfd+PHGHiZjMUfnOvtMwQJsaJvmmwBO+RkPzNYe4I0=;
-        b=L45lRb9gc0RNc2nfc0D+GSkAu7RGkRw+2PpGK1rBVQcLi8rvgW8WB0lGPa/140EE5G
-         19TcE3Pw0JaP1OBAqpQ/pwo37pkO1zObfhq9LUl48pD7uzWp5z4SPl1C6lIEXh3977oE
-         fGcXQLbfbeTmCFPOj9lyel6QDtBjbNwdcwFz5IzsUg5nzfDvDmFzAG+rpvMpdhtg1P/h
-         8TN+8p0cdpqwgoFYKq8/2LVSmlm4ITkCTihAU2xFCZoVKTdcrQDZ1XgXOsgmxAOGylxt
-         g2A8cZcmrqlLEkbUIGryvORTJZV+MZvN7/SQrzy8DI5wQP4zBdfjty9fcg47g3ZwTTEJ
-         ld4w==
-X-Gm-Message-State: AOJu0YzH4JXrlzsaLYZo1I2UJm/zVTK7+7E+rYHyaNn/60qS0SKjRi3R
-	9K2SXKna5J7kldU/4mFrrU7DFzWFm323Lc96XKRnNWB1VgwzaiKWIxf8
-X-Gm-Gg: AeBDieuBUQLqzP8XdFwBNdsXPT22oVQdZVM5RlJQClfi03R+n0+JCLzdoPmYbv3dUQ8
-	MbbSVR9CmTO6zvBf1nlgz4VjQJ7RXtd38CwJNDX4kZFW1xC846OUnB+m5zByOtEA8VTBy0EvZym
-	yzyUoKscQ31xd2iRWWXmggmTpgiwA66QJiQbAb06oLPwV0OJnsyGg6HGvNrVSt2ra9bt96YOURy
-	hLP9xzYgu3APfrSWZVLSvGPIxJpo1qA/8fFY5yyDaWR9G0T4bk90YdSU3PZwVEVZASGH8k8jrW5
-	+NzvDC0a78G4BhjGIVw8UrLG3PsO1nn4p6WozF+lUl5uOE1vTLaMehR9pw8lkF+OowofGzj6EV/
-	MnmNu4uHn7FWTnlhfrJm7qArciIxE9wQksaFYVHpielF5+PShBY50rEjC4RGzbHBKlqg4L/kA3i
-	wA6t1I4yal45YbHJ1Jyc4volJl
-X-Received: by 2002:a05:6102:504a:b0:628:6648:faa7 with SMTP id ada2fe7eead31-629271eeaa6mr2258756137.20.1777468997894;
-        Wed, 29 Apr 2026 06:23:17 -0700 (PDT)
-Received: from localhost ([2800:bf0:82:11a2:7ac4:1f2:947b:2b6])
-        by smtp.gmail.com with ESMTPSA id ada2fe7eead31-629847672cesm1021396137.11.2026.04.29.06.23.16
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 29 Apr 2026 06:23:17 -0700 (PDT)
+        d=1e100.net; s=20251104; t=1777469236; x=1778074036;
+        h=cc:to:message-id:content-transfer-encoding:mime-version:subject
+         :date:from:x-gm-gg:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=NWadTGnijLoIiyjf+xOJkjY7LVS3xMvY0Q85Yez1n+I=;
+        b=l1d58Nl+oTpjOdqqwzeCWk4ECe/YjZMxouZW1mGbnQoaPJeclpLl0CBUDFvOTGOewM
+         crY0kWSN5PeOpQbAlWQqkGVdvWfQTjLT8gc22Be9i4RdSz/bLbydfasZgLhYv3x3n2gd
+         ukcruxuljGb6rfl/pqvcNkYJj0FuK/5frOI8aTGm48aKAiOqO9VV7pvtaUey6DG94e2A
+         3LYVh0wzriTgUj+XgEvtQwZS6CpzklZGm4BxmW+mBGb7SkvPDBDh2hQTkFGz3HAHnJY+
+         DvX/f1jaash/K2jnUwoG28NVqY9N9fnQLgLCJJ5VFmJNSnB+RSXVTbPYftbYeIa/+5kU
+         bVUQ==
+X-Gm-Message-State: AOJu0YzZKoUdmlSsNRu/5y3Aa3cQolzQkHE+wxErrOg1fsn1fhd+JKOt
+	y8Z8x1DlXW19QglvlQ/kkdB2GsyLzIJZCrchJOFdz9POEr0ncFqlmPGolgd56g==
+X-Gm-Gg: AeBDievgVGApyFsIYpEcsykweqOhD3BvTxulgpvlTp5Y0aWFoLHcz0pv4rXZvZTL7xj
+	CqorVqD2GslWdVNoUswZnGCRoMu5YUQWTBzzyXLK9nSzENp9brgeK7KP+wZEo5B11BTZtd0QOmU
+	qr24OpiSFQAl78SnTwlUtfpofGWpbLx3oMJAeauXXgkQOvwMsAvpvY/Y3QQq2a6Ok6FwfNKtxdi
+	9DKb8ZUf13sWT+w8ixjUBTvUu7GR/5fDNkFvPZBqucXtFfScqa7GfwmAnAKcHxJBW3qpclmoAW3
+	AVl+hHyT+EUFDOGCcXsbo1DtN4d2ZZ0ZCN3Of2zf+cM0XiUEtkLx2f3WL/+a/xwluJJUgu3D/yb
+	N2rLVAyLa61nrasWVTqGlmEJTzTcmhp6DGsgPiqBm8ZWxVu3/4HYzinWXrnOKP18dpfHuDZOr6/
+	lsoDDd5I5FgVKxDZfKdW8v2t5mT9Yf3VVZ
+X-Received: by 2002:a05:6102:1609:b0:607:4fe2:d3e1 with SMTP id ada2fe7eead31-6280936a768mr3823164137.13.1777469236105;
+        Wed, 29 Apr 2026 06:27:16 -0700 (PDT)
+Received: from [192.168.100.6] ([2800:bf0:82:11a2:7ac4:1f2:947b:2b6])
+        by smtp.gmail.com with ESMTPSA id a1e0cc1a2514c-95cb7608f00sm898756241.6.2026.04.29.06.27.14
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 29 Apr 2026 06:27:15 -0700 (PDT)
+From: Kurt Borja <kuurtb@gmail.com>
+Date: Wed, 29 Apr 2026 08:27:02 -0500
+Subject: [PATCH v5] platform/x86: alienware-wmi-base: Transition to new WMI
+ API
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
-Content-Type: text/plain; charset=UTF-8
-Date: Wed, 29 Apr 2026 08:23:11 -0500
-Message-Id: <DI5O65UZ12EU.1IC2SMB4DGNWA@gmail.com>
-Subject: Re: [PATCH v4] platform/x86: alienware-wmi-base: Transition to new
- WMI API
-From: "Kurt Borja" <kuurtb@gmail.com>
-To: "Armin Wolf" <W_Armin@gmx.de>, "Kurt Borja" <kuurtb@gmail.com>,
- =?utf-8?q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>, "Hans de
- Goede" <hansg@kernel.org>
-Cc: <platform-driver-x86@vger.kernel.org>, <Dell.Client.Kernel@dell.com>,
- <linux-kernel@vger.kernel.org>
-X-Mailer: aerc 0.21.0-0-g5549850facc2
-References: <20260428-aw-new-api-v4-1-d2c06241d7ad@gmail.com>
- <795321b2-3655-40ec-ae10-02b0db799df6@gmx.de>
-In-Reply-To: <795321b2-3655-40ec-ae10-02b0db799df6@gmx.de>
+MIME-Version: 1.0
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+Message-Id: <20260429-aw-new-api-v5-1-7702668d04c6@gmail.com>
+X-B4-Tracking: v=1; b=H4sIAAAAAAAC/3XNTQ6CMBCG4auYrq3pzBQEV97DuGhpC03kJ2BAQ
+ 7i7BReCxuU3yfPOyDrbetux025kre195+sqjGi/Y1mhqtxyb8JmKDAWgMTVwCs7cNV4DhkkDgS
+ Ao4gF0LTW+ccSu1zDLnx3r9vn0u5hvr4zRGKd6YEDT6MUhHYKNCXnvFT+dsjqks2ZHtcUNhQDJ
+ S0MkXaJQfym9J9SoNYJ0qmMMDU/X+WHSkw2VAZqMBMxSjBHZdZ0mqYXdqyedFUBAAA=
+X-Change-ID: 20260123-aw-new-api-1c18f1011f35
+To: =?utf-8?q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>, 
+ Armin Wolf <W_Armin@gmx.de>, Hans de Goede <hansg@kernel.org>
+Cc: platform-driver-x86@vger.kernel.org, Dell.Client.Kernel@dell.com, 
+ linux-kernel@vger.kernel.org, Kurt Borja <kuurtb@gmail.com>
+X-Mailer: b4 0.15.2
+X-Developer-Signature: v=1; a=openpgp-sha256; l=2612; i=kuurtb@gmail.com;
+ h=from:subject:message-id; bh=3rjNe5SzwzUAH8Fg/UbI3DxCjsSKhvvrLIJo3HOpTn8=;
+ b=owGbwMvMwCUmluBs8WX+lTTG02pJDJmf2I0eJxtb50d9TteMDj21+Mm616YBB3cv1vXK6eu94
+ VthbzGzo5SFQYyLQVZMkaU9YdG3R1F5b/0OhN6HmcPKBDKEgYtTACZSPJ/hf/G3N/kG/aryXst1
+ prX/PcEgeu1q2tMzR/Ieie8O2jTzz1qGX0xWe/+/WV4Qktdud2l99HUpDgETzj8/qnJDu48dNjt
+ ZzA4A
+X-Developer-Key: i=kuurtb@gmail.com; a=openpgp;
+ fpr=54D3BE170AEF777983C3C63B57E3B6585920A69A
 
-On Tue Apr 28, 2026 at 2:27 PM -05, Armin Wolf wrote:
-> Am 28.04.26 um 18:37 schrieb Kurt Borja:
->
->> Transition to the new wmi_buffer based WMI API.
->>
->> Signed-off-by: Kurt Borja <kuurtb@gmail.com>
->> ---
->> v4:
->>    - Rebase to use the new wmidev_invoke_method() with size check
->>
->> v3: https://patch.msgid.link/20260331-aw-new-api-v3-1-ef03b94529d8@gmail=
-.com
->>    - Use __free() instead of manual cleanup.
->>    - Include <linux/types.h>
->>
->> v2: https://patch.msgid.link/20260331-aw-new-api-v2-1-3b0d33bf8d22@gmail=
-.com
->>    - Cast wmi_buffer data to __le32 and then use le32_to_cpu() before
->>      returning
->>
->> v1: https://patch.msgid.link/20260330-aw-new-api-v1-1-95910bfa1b38@gmail=
-.com
->> ---
->>   drivers/platform/x86/dell/alienware-wmi-base.c | 31 ++++++++++++++++--=
---------
->>   1 file changed, 19 insertions(+), 12 deletions(-)
->>
->> diff --git a/drivers/platform/x86/dell/alienware-wmi-base.c b/drivers/pl=
-atform/x86/dell/alienware-wmi-base.c
->> index 64562b92314f..21d3acfbd73d 100644
->> --- a/drivers/platform/x86/dell/alienware-wmi-base.c
->> +++ b/drivers/platform/x86/dell/alienware-wmi-base.c
->> @@ -12,8 +12,13 @@
->>   #include <linux/cleanup.h>
->>   #include <linux/module.h>
->>   #include <linux/platform_device.h>
->> +#include <linux/slab.h>
->> +#include <linux/types.h>
->>   #include <linux/dmi.h>
->>   #include <linux/leds.h>
->> +
->> +#include <asm/byteorder.h>
->> +
->>   #include "alienware-wmi.h"
->>  =20
->>   MODULE_AUTHOR("Mario Limonciello <mario.limonciello@outlook.com>");
->> @@ -150,21 +155,23 @@ u8 alienware_interface;
->>   int alienware_wmi_command(struct wmi_device *wdev, u32 method_id,
->>   			  void *in_args, size_t in_size, u32 *out_data)
->>   {
->> -	struct acpi_buffer out =3D {ACPI_ALLOCATE_BUFFER, NULL};
->> -	struct acpi_buffer in =3D {in_size, in_args};
->> -	acpi_status ret;
->> +	struct wmi_buffer out, in =3D {
->> +		.data =3D in_args,
->> +		.length =3D in_size,
->> +	};
->> +	int ret;
->>  =20
->> -	ret =3D wmidev_evaluate_method(wdev, 0, method_id, &in, out_data ? &ou=
-t : NULL);
->> -	if (ACPI_FAILURE(ret))
->> -		return -EIO;
->> -
->> -	union acpi_object *obj __free(kfree) =3D out.pointer;
->> +	if (out_data)
->> +		ret =3D wmidev_invoke_method(wdev, 0, method_id, &in, &out,
->> +					   sizeof(*out_data));
->> +	else
->> +		ret =3D wmidev_invoke_method(wdev, 0, method_id, &in, NULL, 0);
->> +	if (ret)
->> +		return ret;
->>  =20
->>   	if (out_data) {
->> -		if (obj && obj->type =3D=3D ACPI_TYPE_INTEGER)
->> -			*out_data =3D (u32)obj->integer.value;
->> -		else
->> -			return -ENOMSG;
->> +		__le32 *data __free(kfree) =3D out.data;
->> +		*out_data =3D le32_to_cpu(*data);
->>   	}
->
-> Hi,
->
-> calling wmidev_invoke_method() with a NULL output buffer will likely lead=
- to crashes. This happens
-> because wmidev_invoke_method() demands that a valid pointer to a output b=
-uffer is provided by the
-> caller. I suggest that you use wmidev_invoke_procedure() instead:
->
-> 	__le32 *data __free(kfree) =3D NULL;
->
-> 	if (!out_data)
-> 		return wmidev_invoke_procedure(wdev, 0, method_id, &in);
->
-> 	ret =3D wmidev_invoke_method(wdev, 0, method_id, &in, &out, sizeof(*data=
-));
-> 	if (ret < 0)
-> 		return ret;
->
-> 	result =3D out.data
-> 	...
+Transition to the new wmi_buffer based WMI API.
 
-Hi Armin,
+Signed-off-by: Kurt Borja <kuurtb@gmail.com>
+---
+v5:
+  - Use wmidev_invoke_procedure in the !out_data case
 
-You're right, I thought the only difference between _procedure and
-_method was the size check.
+v4: https://patch.msgid.link/20260428-aw-new-api-v4-1-d2c06241d7ad@gmail.com
+  - Rebase to use the new wmidev_invoke_method() with size check
 
-Also, Sashiko [1] reported that out.data might be ZERO_SIZE_PTR even if
-wmidev_invoke_method() succeeds. I thought it was a false positive but I
-looked further and it was actually a bug. I submitted a fix for this.
+v3: https://patch.msgid.link/20260331-aw-new-api-v3-1-ef03b94529d8@gmail.com
+  - Use __free() instead of manual cleanup.
+  - Include <linux/types.h>
 
-[1] https://sashiko.dev/#/patchset/20260428-aw-new-api-v4-1-d2c06241d7ad%40=
-gmail.com
+v2: https://patch.msgid.link/20260331-aw-new-api-v2-1-3b0d33bf8d22@gmail.com
+  - Cast wmi_buffer data to __le32 and then use le32_to_cpu() before
+    returning
 
---=20
-Thanks,
+v1: https://patch.msgid.link/20260330-aw-new-api-v1-1-95910bfa1b38@gmail.com
+---
+ drivers/platform/x86/dell/alienware-wmi-base.c | 31 +++++++++++++++-----------
+ 1 file changed, 18 insertions(+), 13 deletions(-)
+
+diff --git a/drivers/platform/x86/dell/alienware-wmi-base.c b/drivers/platform/x86/dell/alienware-wmi-base.c
+index 64562b92314f..19cadf21203a 100644
+--- a/drivers/platform/x86/dell/alienware-wmi-base.c
++++ b/drivers/platform/x86/dell/alienware-wmi-base.c
+@@ -12,8 +12,13 @@
+ #include <linux/cleanup.h>
+ #include <linux/module.h>
+ #include <linux/platform_device.h>
++#include <linux/slab.h>
++#include <linux/types.h>
+ #include <linux/dmi.h>
+ #include <linux/leds.h>
++
++#include <asm/byteorder.h>
++
+ #include "alienware-wmi.h"
+ 
+ MODULE_AUTHOR("Mario Limonciello <mario.limonciello@outlook.com>");
+@@ -150,22 +155,22 @@ u8 alienware_interface;
+ int alienware_wmi_command(struct wmi_device *wdev, u32 method_id,
+ 			  void *in_args, size_t in_size, u32 *out_data)
+ {
+-	struct acpi_buffer out = {ACPI_ALLOCATE_BUFFER, NULL};
+-	struct acpi_buffer in = {in_size, in_args};
+-	acpi_status ret;
++	struct wmi_buffer out, in = {
++		.data = in_args,
++		.length = in_size,
++	};
++	int ret;
+ 
+-	ret = wmidev_evaluate_method(wdev, 0, method_id, &in, out_data ? &out : NULL);
+-	if (ACPI_FAILURE(ret))
+-		return -EIO;
++	if (!out_data)
++		return wmidev_invoke_procedure(wdev, 0, method_id, &in);
+ 
+-	union acpi_object *obj __free(kfree) = out.pointer;
++	ret = wmidev_invoke_method(wdev, 0, method_id, &in, &out,
++				   sizeof(*out_data));
++	if (ret)
++		return ret;
+ 
+-	if (out_data) {
+-		if (obj && obj->type == ACPI_TYPE_INTEGER)
+-			*out_data = (u32)obj->integer.value;
+-		else
+-			return -ENOMSG;
+-	}
++	__le32 *data __free(kfree) = out.data;
++	*out_data = le32_to_cpu(*data);
+ 
+ 	return 0;
+ }
+
+---
+base-commit: 254f49634ee16a731174d2ae34bc50bd5f45e731
+change-id: 20260123-aw-new-api-1c18f1011f35
+
+-- 
+Thanks, 
  ~ Kurt
+
