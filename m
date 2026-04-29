@@ -1,301 +1,522 @@
-Received: from mail-yx1-f44.google.com (mail-yx1-f44.google.com [74.125.224.44])
+Received: from hope.aquinas.su (hope.aquinas.su [82.148.24.172])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CAB98328B77
-	for <platform-driver-x86@vger.kernel.org>; Wed, 29 Apr 2026 06:08:33 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=74.125.224.44
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1777442915; cv=pass; b=ZQNdyKBeUmH0tSqSthpctb4SHpSWO35HCLc+KmfPcMuWvtUH9eIcTac+sve+jumRzPeLnh6auU0CXmpZd5Gt9BgnDQ88qeu9QJoL+fNb65YREE8fiCYRQKR6lVkpqYLzU4gpWx7nXwKHPKTdQN4UEcn5td6StGw+dODf6CAhMQE=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1777442915; c=relaxed/simple;
-	bh=3QBLenzDTLtDG1rlQ6GdthWJLrsiO5cnco7lbHMFD4Y=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=KjCKnd27q16kmAmmhQ+xhSr1ur4CRDPJBs1rox+5VKaGVnyp0401IFWjEupRLV6mM+lKADbXOmkiGJ7uhDO+pzmgr8Os2S886Gwsd9zT1Li/GJSidgm9G3yMkill3HHHfKKJzSbAOexkwH8YTwF3HSjCN+ajWpBCt/Onn4psN2s=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=rYr4AXOn; arc=pass smtp.client-ip=74.125.224.44
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 45F8A2D839C;
+	Wed, 29 Apr 2026 06:56:52 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=82.148.24.172
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1777445819; cv=none; b=K6v5P2/ggCZOViDviVRbn5c719+aGavPs/1kP20FApecoCYhnXsp905CdKmNEdBmfaOd2qqR34d45ZIKsd2gXAShHWABQng4+k12KRsu+IMJDtKlKWf5NS0UgTNni7DqcyhsKuZyv6mwTdyYWKyMuqnlaM8J1clQh/qH7q8ay1c=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1777445819; c=relaxed/simple;
+	bh=FL3+tcuOgPnfFy7w2fWl9QLkgcUWon/FCZu2Y30YVkY=;
+	h=From:To:Subject:Date:Message-ID:MIME-Version:Content-Type; b=DlcAu/jTUxnbjILmwWEOBOsLFm2H3YA9e+CTb2rdYAPSEJ8vzmdadG+bdZUiuGDfvN3nMRW2KgD+8YOnBUw/JoHbNkKrP8X9rb8MPW8PHtXigjoqEk9jrJzE/wN53MZOhhUC/vS0oAR3nzrWpTNiwkwt7sHB2KZbzhg9Y2qoSPQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=aquinas.su; spf=pass smtp.mailfrom=aquinas.su; dkim=pass (2048-bit key) header.d=aquinas.su header.i=@aquinas.su header.b=lmCCNdD0; arc=none smtp.client-ip=82.148.24.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=aquinas.su
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=aquinas.su
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="rYr4AXOn"
-Received: by mail-yx1-f44.google.com with SMTP id 956f58d0204a3-65005a8840dso10546934d50.0
-        for <platform-driver-x86@vger.kernel.org>; Tue, 28 Apr 2026 23:08:33 -0700 (PDT)
-ARC-Seal: i=1; a=rsa-sha256; t=1777442913; cv=none;
-        d=google.com; s=arc-20240605;
-        b=aDZvmP2GpNm3mLdfjOALd5kkEF8Utmi03Qa8sSbup9uHDVQSeFa9pIx52C5X0tUCLx
-         2ZH4ArsY08i5XbEoMT9cx6vrQLKSw4XtOXF+jy8k8v+4fKKyOkBNxu3bZVE3iDBtq9CG
-         iK8nkD5OllNJJbpxwuig+ZDU/XNDU3CgCU282/UA/XklZMdjSyJmPmcELwOWu2Y4jSJA
-         MWw4vzRInfE2xTAPk8UljLtGtc2+jEs3XMAIZmuXZ77Vvb0RJWRRI+JXQsjYVO+cmUYg
-         nc+WlNMP88fEpAMWUSA6ut8xhry+vOShErI3sgqdEhmuh1w+bin1ZGQAY1e5McGW6mnl
-         qkbw==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20240605;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:dkim-signature;
-        bh=scdjX6a3Aoh8xVK+20Zxf4LihILvtIzU1zlLOXt9QS8=;
-        fh=/fNoPkmTr4+uNwkBp8RHrZRASiLi5ZehETsPnA8BxW8=;
-        b=Zr2G5PQfDpIWq8woPmNNdF0ltai57vZj8vYa0bIQEtftc9pbF1W/lFzUORXO/7qVly
-         zqHZbhqxSdjVAtseBygSKD3ZMHbEXe7diCnm30BVi3o1Qs+McMjey85/qlFKQilvpOOk
-         F35ViEDdWchUPSjijjpuoYjU306Br1m9m2VRT0NTW/YPNTnoKciFPqix4NaDvPB4kOhm
-         qJ9LKdbxnzdLPW2inoQxMqzO+RXPxQw+/3HURulAbcifQZeoyxSf1ZMiOQEEpuZMQCWl
-         x66yXW/lJ3ecEiq6XT2D9D1x4uin7GcmoDibDoq6X7F0gTHogTOfTfU5xqwUuqHyDbbF
-         dsWw==;
-        darn=vger.kernel.org
-ARC-Authentication-Results: i=1; mx.google.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20251104; t=1777442913; x=1778047713; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=scdjX6a3Aoh8xVK+20Zxf4LihILvtIzU1zlLOXt9QS8=;
-        b=rYr4AXOn61HbSfCFwTJSzTtLi79jFQEGnRAMvDMuBjmEpITF+am2DEhkv28cmxvoov
-         W/JtDopBHcrCPfjRcCtGaALSW1r9+57lsaFmKf7obCQiDgNSmgu8e4h9dHFYXG2KBsSr
-         tjcFJZ8zIiu+GU6svVvTNR2mYCCfteaiRgOAjsKxaqTg/q+aEtJF8phAj9TIWSa+clJL
-         plhtnummu7t8fKR2ShMjFYiKTRB/njy2BajdArk6zGJFJtVMz6NVnzrrTvt3crm9H4I/
-         SeuGbDalz7rdA0LGY7kR3aDQ1TjQKMzhmDfSUN/g5EXJlwxyT8+0C5erUujGPRdQeJqh
-         rsEA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1777442913; x=1778047713;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-gg:x-gm-message-state:from
-         :to:cc:subject:date:message-id:reply-to;
-        bh=scdjX6a3Aoh8xVK+20Zxf4LihILvtIzU1zlLOXt9QS8=;
-        b=ssfEDMZBsF3EeV1XxXRkV4HRLOlb2eiVpuzEmqA/8rSQeWuEl2/Gg7Zffl5v7IRWPx
-         WFGFQguEcxfImFFkJO2Mwhx2Y+Izn8pwdzTWwOHHzGCAxS64EA9qQshQQzRsahr05zEi
-         8U0SDYyk8xHKHHPc9gk7Mf+FLhqdVhJVtpNqB/LHJv+PRbcWpX122X1Gvnu+B7SUad2D
-         o+uT8Y9G/+a+spaERBaMOuCEETnjuHTLRbqwE+Tv1Zu91aKU/iDha7NvgRWUKlWgzObu
-         voTCDqP3JwyRvgRns96qGFrxSJTbCYE/vrjf2H0Aju24LheM7RQ+xQ9+OBK60I5J5JQL
-         svMw==
-X-Forwarded-Encrypted: i=1; AFNElJ8dapPk1bUoW4Hut/7brvmrnoVLrclANP9mw61W68suhQ45Zi3gkCXdfiTKubWH8Kzem1lOA94jpgHmJ3Tq356XkHxQ@vger.kernel.org
-X-Gm-Message-State: AOJu0Yxz314lRiMJzJ6UeJ5fOzqLjEqF13VqDNC30Is0D1DWYf/9Jmyq
-	br4RXGIsXbNE4b+S05R530p41sxhlHCQUOA8CfB8csI4WsE0ogtY+3ndhvzuHj6IZ6VBjn70O64
-	wruBDhn3Ev1jkHjNlLsyqhbZ8cvVYvzc=
-X-Gm-Gg: AeBDiesKYxg115zzrE9xDcZjK+fN5AZ0/nO6bOGn9YoQQAdnQKRjV381xZKt14JAHvZ
-	Olz6/utO17lfFF+yf03TYRv6jTi9RMoHO70oxZ/Z9J91A8tlyUegbjhX5YDMywd9HqDHv52Fdl0
-	i0wNiQ/iZEBbIqZZSZTpQOL7uqNOyoae/YUOT8eWNvje7rItHmH1uw+37gPZG7dPiQyC4eNpdAg
-	Z/gEIF5tPB2WjUBrbQv3AxAkLbSIRS3+WgfINEb7gq7T1CxBfntB415gPE798yCfcMNZc3NX11p
-	OgcuNYct12JrsVD68/i1bqcrKc7gIQ==
-X-Received: by 2002:a05:690e:4842:b0:651:cf77:f7d3 with SMTP id
- 956f58d0204a3-65beee43e5emr3964617d50.37.1777442912730; Tue, 28 Apr 2026
- 23:08:32 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=aquinas.su header.i=@aquinas.su header.b="lmCCNdD0"
+Received: from woolf.localdomain (unknown [87.228.30.162])
+	(Authenticated sender: admin@aquinas.su)
+	by hope.aquinas.su (Postfix) with ESMTPSA id C6DA274CC3;
+	Wed, 29 Apr 2026 09:56:47 +0300 (MSK)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=aquinas.su; s=default;
+	t=1777445809;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding;
+	bh=u48JPXdsLdV5yqYwlISSID+hT5Pr8McxzxGr+q0DapA=;
+	b=lmCCNdD02vXj1X6X9uP2Dg/cDUWtjzCss9/CS1KxtAg1wU2OAo61YUD8B4v6zp54+pYxmy
+	zqKI62eGQoX/OsYsERqOblCdoCOHJo74z3HkKVw8eu+0SdouoYHJ7bmoEP6iB8cPgoAR4x
+	rwQCElZwIFV4CdMlEgAAOGW0qkj7AQQQSV/NjO+5aOtqJn6D3DGvYKRsWtW1LOG1QkcaKE
+	DZ5+VyN4J7t2atG+VwTNPrr4Nk6Ck6GNQ9bu/ZRTunmgI7UAvwFRbBDwvVxexkSEO5knti
+	WvaP6tdoZqAa2ZsqUSXEc0pHESM+hbOAuzRStd/vjnGm56QmA4mIz4hhtUZDvA==
+Authentication-Results: hope.aquinas.su;
+	auth=pass smtp.auth=admin@aquinas.su smtp.mailfrom=admin@aquinas.su
+From:
+ =?UTF-8?B?0JrQvtC90LXQvdC60L4g0JDQvdC00YDQtdC5INCS0LjQutGC0L7RgNC+0LLQuNGH?=
+ <admin@aquinas.su>
+To: ilpo.jarvinen@linux.intel.com, hansg@kernel.org,
+ linux-kernel@vger.kernel.org, platform-driver-x86@vger.kernel.org
+Subject:
+ [PATCH v6] platform/x86: hp-wmi: Add multicolor LED support for HP keyboard
+ backlight
+Date: Wed, 29 Apr 2026 13:56:46 +0700
+Message-ID: <9VMMQwZjRUOGJGZr-0_YbA@aquinas.su>
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20260420060029.1754854-1-jackbb_wu@compal.com> <dd9114dc-2bf7-4167-8697-445974daee49@gmx.de>
-In-Reply-To: <dd9114dc-2bf7-4167-8697-445974daee49@gmx.de>
-From: =?UTF-8?B?5ZCz6YC86YC8?= <wojackbb@gmail.com>
-Date: Wed, 29 Apr 2026 14:08:19 +0800
-X-Gm-Features: AVHnY4L6MW9NQqjm-OhKTFwPNAK8z6FrXYJwiaakZ5trjgaJXojWRInBvFQ6BAQ
-Message-ID: <CAAQ7Y6ZM8UWEzDC+Z6A=oYH_pXjTfH8QDna06kJ_9z8k8vWa_Q@mail.gmail.com>
-Subject: Re: [PATCH v4] platform/x86: dell-dw5826e: Add reset driver for DW5826e
-To: Armin Wolf <W_Armin@gmx.de>
-Cc: Hans de Goede <hansg@kernel.org>, =?UTF-8?Q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>, 
-	platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 7Bit
+Content-Type: text/plain; charset="utf-8"
 
-I have corrected it in version 5.
+From: Edip Hazuri <edip@medip.dev>
 
-Thank you.
+Add support for the HP keyboard RGB backlight found on HP OMEN and
+HP Victus laptops. These keyboards expose per-zone RGB control through
+WMI commands.
 
-Armin Wolf <W_Armin@gmx.de> =E6=96=BC 2026=E5=B9=B44=E6=9C=8829=E6=97=A5=E9=
-=80=B1=E4=B8=89 =E4=B8=8A=E5=8D=885:16=E5=AF=AB=E9=81=93=EF=BC=9A
->
-> Am 20.04.26 um 08:00 schrieb Jack Wu:
->
-> > If the DW5826e is in a frozen state and unable to receive USB commands,
-> > this driver provides a method for the user to reset the DW5826e via ACP=
-I.
-> >
-> > E.g: echo 1 > /sys/bus/platform/devices/PALC0001\:00/wwan_reset
-> >
-> > Signed-off-by: Jack Wu <jackbb_wu@compal.com>
-> > ---
-> > v4:
-> >    - Fix version of the ABI documentation to 7.2
-> >    - Add include linux/types.h
-> > v3:
-> >    - Rename sysfs attribute from "pldr" to "wwan_reset" for clarity
-> >    - Add ABI documentation for the wwan_reset sysfs interface
-> >    - Validate _DSM method availability in probe using acpi_check_dsm()
-> > v2:
-> >    - Remove extra empty line
-> >    - Add missing includes and Remove unnecessary includes, sort include=
-s alphabetically
-> >    - Remove noisy dev_info()
-> >    - Handle obj->type !=3D ACPI_TYPE_BUFFER as error with proper return=
- code
-> >    - Replace miscdevice/file_operations with sysfs attribute (DEVICE_AT=
-TR_WO) to reduce boilerplate
-> >    - Propagate trigger_palc_pldr() return code to userspace
-> >    - Convert from acpi_driver to platform_driver
-> > ---
-> > ---
-> >   .../testing/sysfs-driver-dell-dw5826e-reset   |  9 ++
-> >   drivers/platform/x86/dell/Kconfig             |  6 ++
-> >   drivers/platform/x86/dell/Makefile            |  2 +
-> >   .../platform/x86/dell/dell-dw5826e-reset.c    | 90 ++++++++++++++++++=
+Register multicolor LED class devices for each keyboard zone (up to 4
+zones, depending on the keyboard type). Each zone exposes individual
+red, green, and blue channels via the multicolor LED subsystem.
+
+Also hardware-initiated brightness changes (e.g. via the keyboard
+backlight hotkey, mostly fn+f4) are reported.
+
+The color data is stored in a 128-byte color table managed by the
+firmware, with RGB values starting at offset 25, packed sequentially
+per zone.
+
+Signed-off-by: Konenko Andrey Viktorovich <admin@aquinas.su>
+
+---
+Changes since v5:
+ - LED class device names changed from a number to using a descriptive name 
+for each zone.
+
+v4: https://lore.kernel.org/all/20260303084022.7223-3-edip@medip.dev/
+
+Changes since v4:
+ - Fix circular dependencies
+
+Changes since v3:
+ - Merge the changes into a single commit
+
+Changes since v1:
+ - Fix mentioned style errors
+ - Add Kconfig dependencies
+
+---
+ drivers/platform/x86/hp/Kconfig  |   2 +
+ drivers/platform/x86/hp/hp-wmi.c | 284 ++++++++++++++++++++++++++++++-
+ 2 files changed, 285 insertions(+), 1 deletion(-)
+
+diff --git a/drivers/platform/x86/hp/Kconfig b/drivers/platform/x86/hp/Kconfig
+index dd51491b9bcd..2a1841cbec76 100644
+--- a/drivers/platform/x86/hp/Kconfig
++++ b/drivers/platform/x86/hp/Kconfig
+@@ -45,6 +45,8 @@ config HP_WMI
+ 	select INPUT_SPARSEKMAP
+ 	select ACPI_PLATFORM_PROFILE
+ 	select HWMON
++	select LEDS_CLASS
++	select LEDS_CLASS_MULTICOLOR
+ 	help
+ 	  Say Y here if you want to support WMI-based hotkeys on HP laptops 
+and
+ 	  to read data from WMI such as docking or ambient light sensor 
+state.
+diff --git a/drivers/platform/x86/hp/hp-wmi.c b/drivers/platform/x86/hp/hp-
+wmi.c
+index d1cc6e7d176c..19da18f68337 100644
+--- a/drivers/platform/x86/hp/hp-wmi.c
++++ b/drivers/platform/x86/hp/hp-wmi.c
+@@ -14,6 +14,7 @@
+ #define pr_fmt(fmt) KBUILD_MODNAME ": " fmt
+ 
+ #include <linux/acpi.h>
++#include <linux/array_size.h>
+ #include <linux/cleanup.h>
+ #include <linux/compiler_attributes.h>
+ #include <linux/dmi.h>
+@@ -23,6 +24,8 @@
+ #include <linux/input.h>
+ #include <linux/input/sparse-keymap.h>
+ #include <linux/kernel.h>
++#include <linux/led-class-multicolor.h>
++#include <linux/leds.h>
+ #include <linux/limits.h>
+ #include <linux/minmax.h>
+ #include <linux/module.h>
+@@ -57,6 +60,7 @@ enum hp_ec_offsets {
+ 
+ #define HP_FAN_SPEED_AUTOMATIC	 0x00
+ #define HP_POWER_LIMIT_DEFAULT	 0x00
++#define HP_COLOR_TABLE_PADDING	 25
+ #define HP_POWER_LIMIT_NO_CHANGE 0xFF
+ 
+ #define zero_if_sup(tmp) (zero_insize_support?0:sizeof(tmp)) // use when zero 
+insize is required
+@@ -97,6 +101,14 @@ enum hp_thermal_profile {
+ 	HP_THERMAL_PROFILE_QUIET			= 0x03,
+ };
+ 
++enum hp_keyboard_type {
++	HP_KEYBOARD_TYPE_NOBACKLIGHT                = 0x0,
++	HP_KEYBOARD_TYPE_FOURZONE_WITH_NUMPAD       = 0x1,
++	HP_KEYBOARD_TYPE_FOURZONE_WITHOUT_NUMPAD    = 0x2,
++	HP_KEYBOARD_TYPE_RGB_PER_KEY                = 0x3,
++	HP_KEYBOARD_TYPE_SINGLEZONE_WITH_NUMPAD     = 0x4,
++	HP_KEYBOARD_TYPE_SINGLEZONE_WITHOUT_NUMPAD  = 0x5,
++};
+ 
+ struct thermal_profile_params {
+ 	u8 performance;
+@@ -338,16 +350,27 @@ enum hp_wmi_gm_commandtype {
+ 	HPWMI_GET_GPU_THERMAL_MODES_QUERY	= 0x21,
+ 	HPWMI_SET_GPU_THERMAL_MODES_QUERY	= 0x22,
+ 	HPWMI_SET_POWER_LIMITS_QUERY		= 0x29,
++	HPWMI_GET_KEYBOARD_TYPE_QUERY		= 0x2b,
+ 	HPWMI_VICTUS_S_FAN_SPEED_GET_QUERY	= 0x2D,
+ 	HPWMI_VICTUS_S_FAN_SPEED_SET_QUERY	= 0x2E,
+ 	HPWMI_VICTUS_S_GET_FAN_TABLE_QUERY	= 0x2F,
+ };
+ 
++enum hp_wmi_backlight_commandtype {
++	HPWMI_BACKLIGHT_COLOR_GET_QUERY         = 0x02,
++	HPWMI_BACKLIGHT_COLOR_SET_QUERY         = 0x03,
++	HPWMI_BACKLIGHT_BRIGHTNESS_GET_QUERY    = 0x04,
++	HPWMI_BACKLIGHT_BRIGHTNESS_SET_QUERY    = 0x05,
++	HPWMI_BACKLIGHT_SET_OFF_QUERY           = 0x64,
++	HPWMI_BACKLIGHT_SET_ON_QUERY            = 0xE4,
++};
 +
-> >   4 files changed, 107 insertions(+)
-> >   create mode 100644 Documentation/ABI/testing/sysfs-driver-dell-dw5826=
-e-reset
-> >   create mode 100644 drivers/platform/x86/dell/dell-dw5826e-reset.c
-> >
-> > diff --git a/Documentation/ABI/testing/sysfs-driver-dell-dw5826e-reset =
-b/Documentation/ABI/testing/sysfs-driver-dell-dw5826e-reset
-> > new file mode 100644
-> > index 000000000000..a665e265633f
-> > --- /dev/null
-> > +++ b/Documentation/ABI/testing/sysfs-driver-dell-dw5826e-reset
-> > @@ -0,0 +1,9 @@
-> > +What:                /sys/bus/platform/devices/<PALC0001 device>/wwan_=
-reset
-> > +Date:                April 2026
-> > +KernelVersion:       7.2
-> > +Contact:     Jackbb Wu <jackbb.wu@compal.com>
-> > +Description:
-> > +             Writing to this file triggers a Platform Level Device Res=
-et
-> > +             (PLDR) of the Dell DW5826e WWAN module via an ACPI _DSM
-> > +             method. This can be used to recover the modem when it is =
-in
-> > +             a frozen state and unable to respond to USB commands.
-> > diff --git a/drivers/platform/x86/dell/Kconfig b/drivers/platform/x86/d=
-ell/Kconfig
-> > index 738c108c2163..c4540c837a88 100644
-> > --- a/drivers/platform/x86/dell/Kconfig
-> > +++ b/drivers/platform/x86/dell/Kconfig
-> > @@ -276,4 +276,10 @@ config DELL_WMI_SYSMAN
-> >         To compile this driver as a module, choose M here: the module w=
-ill
-> >         be called dell-wmi-sysman.
-> >
-> > +config DELL_DW5826E_RESET
-> > +     tristate "Dell DW5826e PLDR reset support"
-> > +     default m
-> > +     depends on ACPI
-> > +     help
-> > +       This adds support for the Dell DW5826e PLDR reset via ACPI
-> >   endif # X86_PLATFORM_DRIVERS_DELL
-> > diff --git a/drivers/platform/x86/dell/Makefile b/drivers/platform/x86/=
-dell/Makefile
-> > index c7501c25e627..8150283cfd1d 100644
-> > --- a/drivers/platform/x86/dell/Makefile
-> > +++ b/drivers/platform/x86/dell/Makefile
-> > @@ -28,3 +28,5 @@ obj-$(CONFIG_DELL_WMI_DESCRIPTOR)           +=3D dell=
--wmi-descriptor.o
-> >   obj-$(CONFIG_DELL_WMI_DDV)                  +=3D dell-wmi-ddv.o
-> >   obj-$(CONFIG_DELL_WMI_LED)                  +=3D dell-wmi-led.o
-> >   obj-$(CONFIG_DELL_WMI_SYSMAN)                       +=3D dell-wmi-sys=
-man/
-> > +obj-$(CONFIG_DELL_DW5826E_RESET)             +=3D dell-dw5826e-reset.o
-> > +
-> > diff --git a/drivers/platform/x86/dell/dell-dw5826e-reset.c b/drivers/p=
-latform/x86/dell/dell-dw5826e-reset.c
-> > new file mode 100644
-> > index 000000000000..4e0d64535abb
-> > --- /dev/null
-> > +++ b/drivers/platform/x86/dell/dell-dw5826e-reset.c
-> > @@ -0,0 +1,90 @@
-> > +// SPDX-License-Identifier: GPL-2.0-or-later
-> > +/*
-> > + *  dell-dw5826e-reset.c - Dell DW5826e reset driver
-> > + *
-> > + *  Copyright (C) 2026 Jackbb Wu <jackbb.wu@compal.com>
-> > + */
-> > +
-> > +#include <linux/acpi.h>
-> > +#include <linux/device.h>
-> > +#include <linux/module.h>
-> > +#include <linux/platform_device.h>
-> > +#include <linux/types.h>
-> > +#include <linux/uuid.h>
-> > +
-> > +static guid_t palc_dsm_guid =3D
-> > +     GUID_INIT(0x5a1a4bba, 0x8006, 0x487e, 0xbe, 0x0a, 0xac, 0xf5, 0xd=
-8, 0xfd, 0xfe, 0x59);
-> > +
-> > +static int trigger_palc_pldr(struct device *dev, acpi_handle handle)
-> > +{
-> > +     union acpi_object *obj;
-> > +     int ret =3D 0;
-> > +
-> > +     obj =3D acpi_evaluate_dsm(handle, &palc_dsm_guid, 1, 1, NULL);
->
-> Please use BIT() for the DSM method here. Also consider using a define fo=
-r the
-> DSM method index.
->
-> With that being fixed:
->
-> Reviewed-by: Armin Wolf <W_Armin@gmx.de>
->
-> > +     if (!obj) {
-> > +             dev_err(dev, "Failed to evaluate _DSM\n");
-> > +             return -EIO;
-> > +     }
-> > +
-> > +     if (obj->type !=3D ACPI_TYPE_BUFFER) {
-> > +             dev_err(dev, "Unexpected _DSM return type: %d\n", obj->ty=
-pe);
-> > +             ret =3D -EINVAL;
-> > +     }
-> > +
-> > +     ACPI_FREE(obj);
-> > +     return ret;
-> > +}
-> > +
-> > +static ssize_t wwan_reset_store(struct device *dev, struct device_attr=
-ibute *attr,
-> > +                             const char *buf, size_t count)
-> > +{
-> > +     acpi_handle handle =3D ACPI_HANDLE(dev);
-> > +     int ret;
-> > +
-> > +     ret =3D trigger_palc_pldr(dev, handle);
-> > +     if (ret)
-> > +             return ret;
-> > +
-> > +     return count;
-> > +}
-> > +static DEVICE_ATTR_WO(wwan_reset);
-> > +
-> > +static struct attribute *palc_attrs[] =3D {
-> > +     &dev_attr_wwan_reset.attr,
-> > +     NULL
-> > +};
-> > +ATTRIBUTE_GROUPS(palc);
-> > +
-> > +static int palc_probe(struct platform_device *pdev)
-> > +{
-> > +     acpi_handle handle;
-> > +
-> > +     handle =3D ACPI_HANDLE(&pdev->dev);
-> > +     if (!handle)
-> > +             return -ENODEV;
-> > +
-> > +     if (!acpi_check_dsm(handle, &palc_dsm_guid, 1, BIT(1)))
-> > +             return -ENODEV;
-> > +
-> > +     return 0;
-> > +}
-> > +
-> > +static const struct acpi_device_id palc_acpi_ids[] =3D {
-> > +     { "PALC0001", 0 },
-> > +     { }
-> > +};
-> > +MODULE_DEVICE_TABLE(acpi, palc_acpi_ids);
-> > +
-> > +static struct platform_driver palc_driver =3D {
-> > +     .driver =3D {
-> > +             .name =3D "dell-dw5826e-reset",
-> > +             .acpi_match_table =3D palc_acpi_ids,
-> > +             .dev_groups =3D palc_groups,
-> > +     },
-> > +     .probe  =3D palc_probe,
-> > +};
-> > +module_platform_driver(palc_driver);
-> > +
-> > +MODULE_DESCRIPTION("Dell DW5826e reset driver");
-> > +MODULE_LICENSE("GPL");
-> > +MODULE_AUTHOR("JackBB Wu");
+ enum hp_wmi_command {
+ 	HPWMI_READ	= 0x01,
+ 	HPWMI_WRITE	= 0x02,
+ 	HPWMI_ODM	= 0x03,
+ 	HPWMI_GM	= 0x20008,
++	HPWMI_BACKLIGHT = 0x20009,
+ };
+ 
+ enum hp_wmi_hardware_mask {
+@@ -355,6 +378,24 @@ enum hp_wmi_hardware_mask {
+ 	HPWMI_TABLET_MASK	= 0x04,
+ };
+ 
++struct hp_kbd_led_priv {
++	int zone;               /* Zone index (0-3) */
++	enum led_brightness last_brightness;  /* Brightness before turning 
+off */
++};
++
++struct hp_mc_leds {
++	struct led_classdev_mc devices[4];
++	struct hp_kbd_led_priv priv[4];
++};
++
++/* zone naming for 4-zone keyboards (HP Omen) */
++static const char *const hp_zone_names_4[] = {
++	[0] = "zone_right",
++	[1] = "zone_center",
++	[2] = "zone_left",
++	[3] = "zone_wasd",
++};
++
+ struct bios_return {
+ 	u32 sigpass;
+ 	u32 return_code;
+@@ -435,6 +476,7 @@ static DEFINE_MUTEX(active_platform_profile_lock);
+ static struct input_dev *hp_wmi_input_dev;
+ static struct input_dev *camera_shutter_input_dev;
+ static struct platform_device *hp_wmi_platform_dev;
++static struct hp_mc_leds hp_multicolor_leds;
+ static struct device *platform_profile_device;
+ static struct notifier_block platform_power_source_nb;
+ static enum platform_profile_option active_platform_profile;
+@@ -1122,6 +1164,8 @@ static struct attribute *hp_wmi_attrs[] = {
+ };
+ ATTRIBUTE_GROUPS(hp_wmi);
+ 
++static void hp_kbd_brightness_set_by_hwd(u32 event_data);
++
+ static void hp_wmi_notify(union acpi_object *obj, void *context)
+ {
+ 	u32 event_id, event_data;
+@@ -1222,6 +1266,7 @@ static void hp_wmi_notify(union acpi_object *obj, void 
+*context)
+ 	case HPWMI_PROXIMITY_SENSOR:
+ 		break;
+ 	case HPWMI_BACKLIT_KB_BRIGHTNESS:
++		hp_kbd_brightness_set_by_hwd(event_data);
+ 		break;
+ 	case HPWMI_PEAKSHIFT_PERIOD:
+ 		break;
+@@ -1484,6 +1529,241 @@ static int __init hp_wmi_rfkill2_setup(struct 
+platform_device *device)
+ 	return err;
+ }
+ 
++static struct hp_kbd_led_priv *hp_led_get_priv(struct led_classdev *led_cdev)
++{
++	struct led_classdev_mc *mc_cdev = lcdev_to_mccdev(led_cdev);
++	int zone = mc_cdev - hp_multicolor_leds.devices;
++
++	return &hp_multicolor_leds.priv[zone];
++}
++
++static int hp_kbd_backlight_set_rgb_color(int zone, int red, int green, int 
+blue)
++{
++	u8 color_table[128];
++	int ret;
++
++	/*
++	 * Get the current color table and then change only the relevant 
+parts.
++	 */
++	ret = hp_wmi_perform_query(HPWMI_BACKLIGHT_COLOR_GET_QUERY,
++				   HPWMI_BACKLIGHT, color_table,
++				   zero_if_sup(color_table),
++				   sizeof(color_table));
++	if (ret)
++		return ret;
++
++	/*
++	 * RGB color data starts at offset 25 +3 per zone (r g b)
++	 * e.g. if zone 1 starts in 25 zone 2 starts in 28
++	 */
++	color_table[HP_COLOR_TABLE_PADDING + zone * 3]     = red;
++	color_table[HP_COLOR_TABLE_PADDING + zone * 3 + 1] = green;
++	color_table[HP_COLOR_TABLE_PADDING + zone * 3 + 2] = blue;
++
++	ret = hp_wmi_perform_query(HPWMI_BACKLIGHT_COLOR_SET_QUERY, 
+HPWMI_BACKLIGHT,
++				   color_table, sizeof(color_table), 
+sizeof(color_table));
++	if (ret < 0)
++		return ret;
++	if (ret)
++		return -EINVAL;
++
++	return 0;
++}
++
++static bool hp_kbd_backlight_is_on(void)
++{
++	u8 data;
++	int ret;
++
++	ret = hp_wmi_perform_query(HPWMI_BACKLIGHT_BRIGHTNESS_GET_QUERY, 
+HPWMI_BACKLIGHT, &data,
++				sizeof(data), sizeof(data));
++	if (ret)
++		return false;
++
++	return data == HPWMI_BACKLIGHT_SET_ON_QUERY;
++}
++
++static int hp_kbd_set_brightness(struct led_classdev *led_cdev,
++					enum led_brightness 
+brightness)
++{
++	struct hp_kbd_led_priv *priv = hp_led_get_priv(led_cdev);
++	struct led_classdev_mc *mc_cdev;
++	struct led_classdev_mc *device;
++	int red, green, blue;
++	int ret;
++
++	if (!hp_kbd_backlight_is_on()) {
++		u8 data = HPWMI_BACKLIGHT_SET_ON_QUERY;
++
++		ret = 
+hp_wmi_perform_query(HPWMI_BACKLIGHT_BRIGHTNESS_SET_QUERY,
++					   HPWMI_BACKLIGHT, &data,
++					   sizeof(data), 
+sizeof(data));
++		if (ret)
++			return ret;
++
++		/*
++		 * Turning the backlight on via WMI turns all zones,
++		 * so we need to restore the other zones' off state.
++		 */
++		for (int i = 0; i < 
+ARRAY_SIZE(hp_multicolor_leds.devices); i++) {
++			if (i == priv->zone)
++				continue;
++
++			device = &hp_multicolor_leds.devices[i];
++			if (!device->led_cdev.name)
++				continue;
++			hp_kbd_backlight_set_rgb_color(i,
++				device->subled_info[0].brightness,
++				device->subled_info[1].brightness,
++				device->subled_info[2].brightness);
++		}
++	}
++
++	led_cdev->brightness = brightness;
++
++	mc_cdev = lcdev_to_mccdev(led_cdev);
++	led_mc_calc_color_components(mc_cdev, brightness);
++
++	red = mc_cdev->subled_info[0].brightness;
++	green = mc_cdev->subled_info[1].brightness;
++	blue = mc_cdev->subled_info[2].brightness;
++
++	return hp_kbd_backlight_set_rgb_color(priv->zone, red, green, blue);
++}
++
++static void hp_kbd_brightness_set_by_hwd(u32 event_data)
++{
++	struct device *dev = &hp_wmi_platform_dev->dev;
++	struct led_classdev *led_cdev;
++	struct hp_kbd_led_priv *priv;
++	u8 brightness;
++
++	for (int zone = 0; zone < ARRAY_SIZE(hp_multicolor_leds.devices); 
+zone++) {
++		if (!hp_multicolor_leds.devices[zone].led_cdev.name)
++			continue;
++
++		led_cdev = &hp_multicolor_leds.devices[zone].led_cdev;
++		if (!led_cdev->dev)
++			continue;
++
++		priv = hp_led_get_priv(led_cdev);
++
++		if (event_data == 0x2) {
++			brightness = priv->last_brightness ? : LED_FULL;
++		} else if (event_data == 0x0) {
++			priv->last_brightness = led_cdev->brightness;
++			brightness = LED_OFF;
++		} else {
++			dev_warn(dev, "Unknown keyboard backlight event 
+- 0x%x\n",
++				 event_data);
++			return;
++		}
++
++		led_cdev->brightness = brightness;
++		led_classdev_notify_brightness_hw_changed(led_cdev, 
+brightness);
++	}
++}
++
++static int __init hp_mc_leds_register(int num_zones)
++{
++	u8 color_table[128];
++	int ret;
++
++	ret = hp_wmi_perform_query(HPWMI_BACKLIGHT_COLOR_GET_QUERY, 
+HPWMI_BACKLIGHT,
++				   color_table, 
+zero_if_sup(color_table),
++				   sizeof(color_table));
++	if (ret)
++		return ret;
++
++	for (int zone = 0; zone < num_zones; zone++) {
++		struct led_classdev_mc *multicolor_led_dev;
++		struct led_classdev *led_cdev;
++		struct mc_subled *mc_subled_info;
++		struct hp_kbd_led_priv *priv;
++		struct device *dev;
++
++		dev = &hp_wmi_platform_dev->dev;
++		multicolor_led_dev = &hp_multicolor_leds.devices[zone];
++		led_cdev = &multicolor_led_dev->led_cdev;
++		priv = &hp_multicolor_leds.priv[zone];
++
++		if (num_zones == 1)
++			led_cdev->name = devm_kasprintf(dev, GFP_KERNEL,
++							
+"hp::kbd_backlight");
++		else if (num_zones == 4 && zone < 
+ARRAY_SIZE(hp_zone_names_4))
++			led_cdev->name = devm_kasprintf(dev, GFP_KERNEL,
++							
+"hp::kbd_backlight_%s",
++							
+hp_zone_names_4[zone]);
++		else if (num_zones > 1)
++			led_cdev->name = devm_kasprintf(dev, GFP_KERNEL,
++							
+"hp::kbd_backlight_zone%d",
++							zone);
++
++		if (!led_cdev->name)
++			return -ENOMEM;
++		led_cdev->brightness = hp_kbd_backlight_is_on() ?
++				       LED_FULL : LED_OFF;
++		led_cdev->max_brightness = LED_FULL;
++		led_cdev->brightness_set_blocking = hp_kbd_set_brightness;
++		led_cdev->flags = LED_CORE_SUSPENDRESUME |
++				  LED_RETAIN_AT_SHUTDOWN |
++				  LED_BRIGHT_HW_CHANGED;
++
++		mc_subled_info = devm_kzalloc(dev, sizeof(*mc_subled_info) 
+* 3,
++					      GFP_KERNEL);
++		if (!mc_subled_info)
++			return -ENOMEM;
++
++		mc_subled_info[0].color_index = LED_COLOR_ID_RED;
++		mc_subled_info[1].color_index = LED_COLOR_ID_GREEN;
++		mc_subled_info[2].color_index = LED_COLOR_ID_BLUE;
++
++		for (int i = 0; i < 3; i++) {
++			int off = HP_COLOR_TABLE_PADDING + zone * 3 + i;
++
++			mc_subled_info[i].channel = zone * 3 + i;
++			mc_subled_info[i].intensity = color_table[off];
++			mc_subled_info[i].brightness = LED_FULL;
++		}
++
++		multicolor_led_dev->subled_info = mc_subled_info;
++		multicolor_led_dev->num_colors = 3;
++
++		ret = devm_led_classdev_multicolor_register(dev, 
+multicolor_led_dev);
++		if (ret) {
++			dev_err(dev, "Failed to register multicolor RGB 
+backlight\n");
++			return ret;
++		}
++
++		/* Initialize private data */
++		priv->zone = zone;
++		priv->last_brightness = LED_FULL;
++	}
++	return 0;
++}
++
++static int __init hp_kbd_rgb_setup(void)
++{
++	u8 keyboard_type;
++	int ret;
++
++	ret = hp_wmi_perform_query(HPWMI_GET_KEYBOARD_TYPE_QUERY, HPWMI_GM, 
+&keyboard_type,
++				   sizeof(keyboard_type), 
+sizeof(keyboard_type));
++	if (ret)
++		return ret;
++
++	switch (keyboard_type) {
++	case HP_KEYBOARD_TYPE_FOURZONE_WITH_NUMPAD:
++	case HP_KEYBOARD_TYPE_FOURZONE_WITHOUT_NUMPAD:
++		return hp_mc_leds_register(4);
++	case HP_KEYBOARD_TYPE_SINGLEZONE_WITH_NUMPAD:
++	case HP_KEYBOARD_TYPE_SINGLEZONE_WITHOUT_NUMPAD:
++		return hp_mc_leds_register(1);
++	default:
++		return 0;
++	}
++}
++
+ static int platform_profile_omen_get_ec(enum platform_profile_option 
+*profile)
+ {
+ 	int tp;
+@@ -2285,7 +2565,9 @@ static int __init hp_wmi_bios_setup(struct 
+platform_device *device)
+ 		return err;
+ 
+ 	thermal_profile_setup(device);
+-
++	err = hp_kbd_rgb_setup();
++	if (err)
++		dev_err(&device->dev, "Failed to initialize keyboard 
+RGB\n");
+ 	return 0;
+ }
+ 
+-- 
+2.54.0
+
+
+
+
