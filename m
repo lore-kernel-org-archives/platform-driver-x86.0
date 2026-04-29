@@ -1,175 +1,112 @@
-Received: from mail-vs1-f51.google.com (mail-vs1-f51.google.com [209.85.217.51])
+Received: from mail-pj1-f42.google.com (mail-pj1-f42.google.com [209.85.216.42])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 46A413C1961
-	for <platform-driver-x86@vger.kernel.org>; Wed, 29 Apr 2026 13:27:17 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.217.51
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5D0622DC791
+	for <platform-driver-x86@vger.kernel.org>; Wed, 29 Apr 2026 18:10:01 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.42
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1777469238; cv=none; b=frF5hcechEBsp8mCFqnLg+q6aGAfzUuqMljaAisGGlIKr+yG2BaWX0i+6zouD6Wk3Jv0lFXn5GiP1aAjB80cNHBx0alPih73h9HPZcCE2diuTOaxdyNQ6+cuIOmlQiQMHBUlwpNgwuJ6FSC6htTWZFahE5jNJYE2QNWpRwk9NHY=
+	t=1777486202; cv=none; b=nf56yJj2HHAhIapdF7Eat+bnSQrpXMEXPN16tklH30HqjBvOXqj9PZtqH2eIPw7iSeUOr4UiG0XOxhi4qVBDUb4Pn/p9vX0FD8WtPSTmdyQHktTCHWdPgB5yN+FRGoSfEI6An8dc9l2iLGVnvWEaQkHGAeCDGDObjZiEGbNwVgU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1777469238; c=relaxed/simple;
-	bh=3rjNe5SzwzUAH8Fg/UbI3DxCjsSKhvvrLIJo3HOpTn8=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:To:Cc; b=E2fv5tuDf31Jt2K8BquuhTQrHRYSFoOOPy6j+JySuhGI8LGQM5GjOiI1EY7eiw8tIn4mDWrNNUrWvUfsKPJJrznazinSDIRRbtb9nKMgJs/jBJ9VycxbGjb9ZvoJ7SXJ6DbKnBVNt7wBlZjqebmzfM5GhwbqhdMKJlfuZ/T1c1E=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=AyJyrdvG; arc=none smtp.client-ip=209.85.217.51
+	s=arc-20240116; t=1777486202; c=relaxed/simple;
+	bh=zr6NPufun9/U/tOwiqE7sXIr1RfNYansOgCw+RkLZ6o=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=FoQ0JXkudBhuF2InETv47YOrI8bXkQQIp+ezt7dxEwo+kL9vziwG6f0QXqUfAxx3pF8YzPGgcKqzLuxk5GwcKbQ/+g3kpzU7XmdwVc7bLTEHr0vbyzb5DpjJeGU6HJ94Hno2CoyDXNBphcZc8ml7/eRSm11AeqAZWrRGkLJuYcc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=asNVz5UI; arc=none smtp.client-ip=209.85.216.42
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="AyJyrdvG"
-Received: by mail-vs1-f51.google.com with SMTP id ada2fe7eead31-61316792e42so7096532137.2
-        for <platform-driver-x86@vger.kernel.org>; Wed, 29 Apr 2026 06:27:17 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="asNVz5UI"
+Received: by mail-pj1-f42.google.com with SMTP id 98e67ed59e1d1-35da2d35eccso25732a91.0
+        for <platform-driver-x86@vger.kernel.org>; Wed, 29 Apr 2026 11:10:01 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20251104; t=1777469236; x=1778074036; darn=vger.kernel.org;
-        h=cc:to:message-id:content-transfer-encoding:mime-version:subject
-         :date:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=NWadTGnijLoIiyjf+xOJkjY7LVS3xMvY0Q85Yez1n+I=;
-        b=AyJyrdvGFhQ8AvUFEtkDVPgaefJUEuarSa3uHrQlAJY/blGbTCZWyrzEkLXZz9obD/
-         S5HsRG6zIA7LLRp/WvhUTxJUA+3jQuUfaNHt2lQ8GmbVHcCX3xDIp+lEGX3+bgj8CpaZ
-         ZfZkgu/R6RB92TDr/wktcTKqQHFOeWaW8ufnvxZMjzgL6cxz72Aj3h0Kv4QB3n5rt+jj
-         dgbyp0d3vWIVPX1g+EIgoOzgWFnPe+OYbpJY8/Uwm0U58ekVxVMrKuKIKTGOLfV0JFzS
-         R2jNUova+5q92jt5yaWZQBdZA8J5zJtSWBdW4hkvhtl6QkZNrSTudewbH6/R7c4hkpxv
-         qZjA==
+        d=gmail.com; s=20251104; t=1777486201; x=1778091001; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=ltliAc02c6RjPKHoWmoJGjZitZnxUTbIwIVqXdRI3Gs=;
+        b=asNVz5UIU3ENolZphRAtFJfGhqbqixWQEhOt6p/d5pWCBNOs8foEudVWxbSQu470/l
+         YuMLLbvXQUq47mrMmuwIG2LUeVxhk/6OQ5g4AuLVCtxUNOQKvHQnO4pupEu5YAJUAHRS
+         IJk/06EzeGcoH5+GKfnTEmJdYmtKOmG3rj7+xSzWqXDrt7cPyEvO99t4eWZSY0j9SmRJ
+         eQFzF6BdY/9nIZdIVS9z59LTQpYbcwh18FsRqbIIdYxvRuKC7b2spaO4iYi5U8+Za3zk
+         NcLV2qsoLhTg2aDuhIfW0pXqD410QYlfYB8ET86zq9BDOuz3kzxmgX32kbD9zv4lQ83q
+         vpaA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1777469236; x=1778074036;
-        h=cc:to:message-id:content-transfer-encoding:mime-version:subject
-         :date:from:x-gm-gg:x-gm-message-state:from:to:cc:subject:date
+        d=1e100.net; s=20251104; t=1777486201; x=1778091001;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-gg:x-gm-message-state:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=NWadTGnijLoIiyjf+xOJkjY7LVS3xMvY0Q85Yez1n+I=;
-        b=l1d58Nl+oTpjOdqqwzeCWk4ECe/YjZMxouZW1mGbnQoaPJeclpLl0CBUDFvOTGOewM
-         crY0kWSN5PeOpQbAlWQqkGVdvWfQTjLT8gc22Be9i4RdSz/bLbydfasZgLhYv3x3n2gd
-         ukcruxuljGb6rfl/pqvcNkYJj0FuK/5frOI8aTGm48aKAiOqO9VV7pvtaUey6DG94e2A
-         3LYVh0wzriTgUj+XgEvtQwZS6CpzklZGm4BxmW+mBGb7SkvPDBDh2hQTkFGz3HAHnJY+
-         DvX/f1jaash/K2jnUwoG28NVqY9N9fnQLgLCJJ5VFmJNSnB+RSXVTbPYftbYeIa/+5kU
-         bVUQ==
-X-Gm-Message-State: AOJu0YzZKoUdmlSsNRu/5y3Aa3cQolzQkHE+wxErrOg1fsn1fhd+JKOt
-	y8Z8x1DlXW19QglvlQ/kkdB2GsyLzIJZCrchJOFdz9POEr0ncFqlmPGolgd56g==
-X-Gm-Gg: AeBDievgVGApyFsIYpEcsykweqOhD3BvTxulgpvlTp5Y0aWFoLHcz0pv4rXZvZTL7xj
-	CqorVqD2GslWdVNoUswZnGCRoMu5YUQWTBzzyXLK9nSzENp9brgeK7KP+wZEo5B11BTZtd0QOmU
-	qr24OpiSFQAl78SnTwlUtfpofGWpbLx3oMJAeauXXgkQOvwMsAvpvY/Y3QQq2a6Ok6FwfNKtxdi
-	9DKb8ZUf13sWT+w8ixjUBTvUu7GR/5fDNkFvPZBqucXtFfScqa7GfwmAnAKcHxJBW3qpclmoAW3
-	AVl+hHyT+EUFDOGCcXsbo1DtN4d2ZZ0ZCN3Of2zf+cM0XiUEtkLx2f3WL/+a/xwluJJUgu3D/yb
-	N2rLVAyLa61nrasWVTqGlmEJTzTcmhp6DGsgPiqBm8ZWxVu3/4HYzinWXrnOKP18dpfHuDZOr6/
-	lsoDDd5I5FgVKxDZfKdW8v2t5mT9Yf3VVZ
-X-Received: by 2002:a05:6102:1609:b0:607:4fe2:d3e1 with SMTP id ada2fe7eead31-6280936a768mr3823164137.13.1777469236105;
-        Wed, 29 Apr 2026 06:27:16 -0700 (PDT)
-Received: from [192.168.100.6] ([2800:bf0:82:11a2:7ac4:1f2:947b:2b6])
-        by smtp.gmail.com with ESMTPSA id a1e0cc1a2514c-95cb7608f00sm898756241.6.2026.04.29.06.27.14
+        bh=ltliAc02c6RjPKHoWmoJGjZitZnxUTbIwIVqXdRI3Gs=;
+        b=bxzZ+AzH70QSyG+fVS+WxNP5Ssw3YD43EPvRFoGhhqVam59fiJ60a4hcASysbghfrM
+         0lZQPdBy4OQ6H/YtnHOirgdXt9f8kn9XPOQy85xuHIgurjWSu4iWHoV20/odUcF5wP9Q
+         yxcEeWOsm14kSkgeXs/PkAFIEhmqore7aRoNdnzVnVggsXzhmK3me6d4tbhdckca7Vh0
+         71X4M8dD9JdSVPKH/L4sH8iEmuE8x8/bvZtUUHWufF2ZWqdZDM7UPpJuZhr2iC/qwPWj
+         uCc2/O5tFbs/Un/Yy13HISK+ozV700Yl3AdNmms44zsr5ag/zHy09b55zpQRPjCKM309
+         oZqA==
+X-Gm-Message-State: AOJu0YwZEEcTq7Wwkks2bWdRJ/YOQnzNEkV9fbNcmU4xjMJmCYwhCKb3
+	KCfM/7j7YzeNBKes9gPrS1Y4nYDHsQjz7Fk+aDHEodhzAxTt2e0ic/bH
+X-Gm-Gg: AeBDievoKvZd08lKXleOC4rIjL1CNjj/FIRtagAki0gX2QvyUVSj1yY30vJQfyP+ILq
+	ovvrJ3QZwbeeaEqh0Ae6VoFy2bS9375Vsiwbt3gNwOECUrmDHnQ2+EfCNFdxa8i3ECv9xY54Umz
+	PD684jul9QJUsmXCCuwXaXU3DPnzoKQnInDSsXVtyECH6AxU+PXryaAEwlXwxwyqgYE856iXsMm
+	B1bUg7+YEGVp7x/ruc8hSsBGsL71AqKjv+VKgIsk/fCbnDuIMLvCLqRSDDPfIa5qQPvRV7X/Csb
+	KLP/XnAwSiz20YEEYlAf9lPg7jjApoW77GDvICWz6NYxY3YC8J782IKA0/zqI9WSsfisW2ANtoy
+	iMaPJugPh03GvunMo+dECYI2IubP4549+/hm6uvC3tfZG363OaWtC512ExGuC9KdHqvsZ1JJADt
+	78r95YuRMGYSWTbuuz/AhIQ//JaHH/ni9Zj06t4/PKyQarqEjslkgmbdGQQFWtuFpt/FsubTGoz
+	qtf/fXOKhHuYfKhbvvE5NmgxO249tg=
+X-Received: by 2002:a17:90b:48cd:b0:35b:952c:43b9 with SMTP id 98e67ed59e1d1-36491fba27dmr9021714a91.10.1777486200523;
+        Wed, 29 Apr 2026 11:10:00 -0700 (PDT)
+Received: from archlinux ([2405:201:1b:225f:bfac:abd3:86cf:47a3])
+        by smtp.gmail.com with ESMTPSA id 98e67ed59e1d1-364be044f23sm246373a91.17.2026.04.29.11.09.57
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 29 Apr 2026 06:27:15 -0700 (PDT)
-From: Kurt Borja <kuurtb@gmail.com>
-Date: Wed, 29 Apr 2026 08:27:02 -0500
-Subject: [PATCH v5] platform/x86: alienware-wmi-base: Transition to new WMI
- API
+        Wed, 29 Apr 2026 11:10:00 -0700 (PDT)
+From: Krishna Chomal <krishna.chomal108@gmail.com>
+To: ilpo.jarvinen@linux.intel.com,
+	hansg@kernel.org
+Cc: platform-driver-x86@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	Krishna Chomal <krishna.chomal108@gmail.com>,
+	Benjamin Y <hectare.plains1h@icloud.com>
+Subject: [PATCH] platform/x86: hp-wmi: silence unknown board warning for 8D41
+Date: Wed, 29 Apr 2026 23:39:53 +0530
+Message-ID: <20260429180953.129885-1-krishna.chomal108@gmail.com>
+X-Mailer: git-send-email 2.54.0
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Message-Id: <20260429-aw-new-api-v5-1-7702668d04c6@gmail.com>
-X-B4-Tracking: v=1; b=H4sIAAAAAAAC/3XNTQ6CMBCG4auYrq3pzBQEV97DuGhpC03kJ2BAQ
- 7i7BReCxuU3yfPOyDrbetux025kre195+sqjGi/Y1mhqtxyb8JmKDAWgMTVwCs7cNV4DhkkDgS
- Ao4gF0LTW+ccSu1zDLnx3r9vn0u5hvr4zRGKd6YEDT6MUhHYKNCXnvFT+dsjqks2ZHtcUNhQDJ
- S0MkXaJQfym9J9SoNYJ0qmMMDU/X+WHSkw2VAZqMBMxSjBHZdZ0mqYXdqyedFUBAAA=
-X-Change-ID: 20260123-aw-new-api-1c18f1011f35
-To: =?utf-8?q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>, 
- Armin Wolf <W_Armin@gmx.de>, Hans de Goede <hansg@kernel.org>
-Cc: platform-driver-x86@vger.kernel.org, Dell.Client.Kernel@dell.com, 
- linux-kernel@vger.kernel.org, Kurt Borja <kuurtb@gmail.com>
-X-Mailer: b4 0.15.2
-X-Developer-Signature: v=1; a=openpgp-sha256; l=2612; i=kuurtb@gmail.com;
- h=from:subject:message-id; bh=3rjNe5SzwzUAH8Fg/UbI3DxCjsSKhvvrLIJo3HOpTn8=;
- b=owGbwMvMwCUmluBs8WX+lTTG02pJDJmf2I0eJxtb50d9TteMDj21+Mm616YBB3cv1vXK6eu94
- VthbzGzo5SFQYyLQVZMkaU9YdG3R1F5b/0OhN6HmcPKBDKEgYtTACZSPJ/hf/G3N/kG/aryXst1
- prX/PcEgeu1q2tMzR/Ieie8O2jTzz1qGX0xWe/+/WV4Qktdud2l99HUpDgETzj8/qnJDu48dNjt
- ZzA4A
-X-Developer-Key: i=kuurtb@gmail.com; a=openpgp;
- fpr=54D3BE170AEF777983C3C63B57E3B6585920A69A
+Content-Transfer-Encoding: 8bit
 
-Transition to the new wmi_buffer based WMI API.
+The HP Omen Max 16-ah0xxx, DMI board ID 8D41 is currently marked with
+victus_s_thermal_params in the victus_s_thermal_profile_boards[] list.
+This disables thermal profile readback and adds a dmesg warning during
+driver init for "unknown board".
 
-Signed-off-by: Kurt Borja <kuurtb@gmail.com>
+After testing we know that (similar to another HP Omen Max 16 device,
+board ID 8D87), the embedded controller on this board does not expose
+thermal profile which means we have to intentionally disable EC
+readback.
+
+Changing its driver_data to omen_v1_no_ec_thermal_params is sufficient
+to silence the warning.
+
+Tested-by: Benjamin Y <hectare.plains1h@icloud.com>
+Signed-off-by: Krishna Chomal <krishna.chomal108@gmail.com>
 ---
-v5:
-  - Use wmidev_invoke_procedure in the !out_data case
+ drivers/platform/x86/hp/hp-wmi.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-v4: https://patch.msgid.link/20260428-aw-new-api-v4-1-d2c06241d7ad@gmail.com
-  - Rebase to use the new wmidev_invoke_method() with size check
-
-v3: https://patch.msgid.link/20260331-aw-new-api-v3-1-ef03b94529d8@gmail.com
-  - Use __free() instead of manual cleanup.
-  - Include <linux/types.h>
-
-v2: https://patch.msgid.link/20260331-aw-new-api-v2-1-3b0d33bf8d22@gmail.com
-  - Cast wmi_buffer data to __le32 and then use le32_to_cpu() before
-    returning
-
-v1: https://patch.msgid.link/20260330-aw-new-api-v1-1-95910bfa1b38@gmail.com
----
- drivers/platform/x86/dell/alienware-wmi-base.c | 31 +++++++++++++++-----------
- 1 file changed, 18 insertions(+), 13 deletions(-)
-
-diff --git a/drivers/platform/x86/dell/alienware-wmi-base.c b/drivers/platform/x86/dell/alienware-wmi-base.c
-index 64562b92314f..19cadf21203a 100644
---- a/drivers/platform/x86/dell/alienware-wmi-base.c
-+++ b/drivers/platform/x86/dell/alienware-wmi-base.c
-@@ -12,8 +12,13 @@
- #include <linux/cleanup.h>
- #include <linux/module.h>
- #include <linux/platform_device.h>
-+#include <linux/slab.h>
-+#include <linux/types.h>
- #include <linux/dmi.h>
- #include <linux/leds.h>
-+
-+#include <asm/byteorder.h>
-+
- #include "alienware-wmi.h"
- 
- MODULE_AUTHOR("Mario Limonciello <mario.limonciello@outlook.com>");
-@@ -150,22 +155,22 @@ u8 alienware_interface;
- int alienware_wmi_command(struct wmi_device *wdev, u32 method_id,
- 			  void *in_args, size_t in_size, u32 *out_data)
- {
--	struct acpi_buffer out = {ACPI_ALLOCATE_BUFFER, NULL};
--	struct acpi_buffer in = {in_size, in_args};
--	acpi_status ret;
-+	struct wmi_buffer out, in = {
-+		.data = in_args,
-+		.length = in_size,
-+	};
-+	int ret;
- 
--	ret = wmidev_evaluate_method(wdev, 0, method_id, &in, out_data ? &out : NULL);
--	if (ACPI_FAILURE(ret))
--		return -EIO;
-+	if (!out_data)
-+		return wmidev_invoke_procedure(wdev, 0, method_id, &in);
- 
--	union acpi_object *obj __free(kfree) = out.pointer;
-+	ret = wmidev_invoke_method(wdev, 0, method_id, &in, &out,
-+				   sizeof(*out_data));
-+	if (ret)
-+		return ret;
- 
--	if (out_data) {
--		if (obj && obj->type == ACPI_TYPE_INTEGER)
--			*out_data = (u32)obj->integer.value;
--		else
--			return -ENOMSG;
--	}
-+	__le32 *data __free(kfree) = out.data;
-+	*out_data = le32_to_cpu(*data);
- 
- 	return 0;
- }
-
----
-base-commit: 254f49634ee16a731174d2ae34bc50bd5f45e731
-change-id: 20260123-aw-new-api-1c18f1011f35
-
+diff --git a/drivers/platform/x86/hp/hp-wmi.c b/drivers/platform/x86/hp/hp-wmi.c
+index d1cc6e7d176c..24c151289dd3 100644
+--- a/drivers/platform/x86/hp/hp-wmi.c
++++ b/drivers/platform/x86/hp/hp-wmi.c
+@@ -243,7 +243,7 @@ static const struct dmi_system_id victus_s_thermal_profile_boards[] __initconst
+ 	},
+ 	{
+ 		.matches = { DMI_MATCH(DMI_BOARD_NAME, "8D41") },
+-		.driver_data = (void *)&victus_s_thermal_params,
++		.driver_data = (void *)&omen_v1_no_ec_thermal_params,
+ 	},
+ 	{
+ 		.matches = { DMI_MATCH(DMI_BOARD_NAME, "8D87") },
 -- 
-Thanks, 
- ~ Kurt
+2.54.0
 
