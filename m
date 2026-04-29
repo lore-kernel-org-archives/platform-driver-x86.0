@@ -1,48 +1,48 @@
 Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.21])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C3CDD194A6C;
-	Wed, 29 Apr 2026 19:52:20 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E172D3876C4;
+	Wed, 29 Apr 2026 19:52:22 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.21
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1777492342; cv=none; b=lSUceaTqMUm46wdoowcs2kLskFP2kN5+fjslKwGckv56G3sjyLmsjWtKmAcg8KA9UHSQ3dLONMslVH4UlxuJhf5ppOzjf8M+HliGDLTbhNYnjx5nqBB+ajmBjO7Jl8bajkHEPN6irUD2i+6iYGVtq1EclOVZrVAgHT84i7drXTk=
+	t=1777492344; cv=none; b=XTKIxBUl8PkEMq/KcB8Nd9fi3O+hHrxVxXK6Y1qIvOjoZ6/qSNrQ3xdq7LCquIWpXvs84qcbtnO3S44zOUIEzWeetUf/jj1K1OmQ+XmEBq1h5lRsdRfDRoJQXA5lSRRy58aPwm5ea5R4ltBj5Lo62efxx98a7x5iNma3jB1u/7w=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1777492342; c=relaxed/simple;
-	bh=eV+8wjJgFvWbZ6S1ykU0YqF/7yuRj+RxujDHHfqxLaE=;
+	s=arc-20240116; t=1777492344; c=relaxed/simple;
+	bh=PdUgFwDo8nPZBr4J0JoLCl5z4bpSTZfiaHAh6by9cWI=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=LebSUcOmGM+6xbvZB2B1CA54k4eb6UVfhq2GkgJFJobp1UPFCz6OsXvotdrlQjJ5m35ECj7V2Lme5Xm/LUXE7LbSaTjZty2RyEjC/zKnDE2wgI6zX/9aYmVcmRsFRmOtX+h5CrjofFDEVtSDW8rw/hcVlmRYRla+kK3IL04bY90=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=pass smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=DumGdNFP; arc=none smtp.client-ip=198.175.65.21
+	 MIME-Version; b=Kg1fVC9ShQSvWBkXZ+LQYzJtHzPgSF8PRMRzRPsF95Ul4KmSPX+knc5Fwq2w5oSxU2W/e0JYZVMqKOeaZy04kq1q5axxPlAbRVav12R1ijndijz9isGcB8ra+G7ODe61AGXLI3/llWv+pQtBLBjaDA1ewg/NbGouGEDq/ap5jCs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=pass smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=AHBVXxOK; arc=none smtp.client-ip=198.175.65.21
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="DumGdNFP"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="AHBVXxOK"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1777492341; x=1809028341;
+  t=1777492343; x=1809028343;
   h=from:to:cc:subject:date:message-id:in-reply-to:
    references:mime-version:content-transfer-encoding;
-  bh=eV+8wjJgFvWbZ6S1ykU0YqF/7yuRj+RxujDHHfqxLaE=;
-  b=DumGdNFPYkm2UohwWdgTXlbOCiAi+I3vrtjKkbI35f3ir7Bu1GisRldH
-   DSZkVZMJlwiyiDrVohVukaoRdvxWK8yC3LqeXhfj7c/2aUC1TUoSvNWvZ
-   dFLfow3PTqirJJKQXQodxQapGRiuvHcTZdhpxrYSi95D2kITXFvPfddgl
-   v4SF1wzPVSP9IoNYJQp36DEQp8+scILUe0hc3HNc+1akj7ZQ+J0S+OeDM
-   zADAb/zHKDiaGF4Cdx0S5kX+1CE5Zn6P+LqNpawQwmlZsVZnjZr/naTuh
-   2Esh0ARWSL6WSOnP1qpDqt05ExFN1dZJ6ntYBLU0GLJuXvHLdPgCPzfAb
-   g==;
-X-CSE-ConnectionGUID: RuQaPQgOQD+Fm16VUo12uA==
-X-CSE-MsgGUID: Tg0ZU0J/S5+Lx4FR1xlbTA==
-X-IronPort-AV: E=McAfee;i="6800,10657,11771"; a="78326736"
+  bh=PdUgFwDo8nPZBr4J0JoLCl5z4bpSTZfiaHAh6by9cWI=;
+  b=AHBVXxOKX4gIbvpbdts/5qRQ7rc/HX02wZF0JbAxpmzIrslpiRVbwjdV
+   jYZS6shVVU30wE3URKAI8GWCl1EMQYIk31PtieDxwNBwZT7eaePK+HlgK
+   +tiJhzEy+xtNpSYyAjkyPOdpaUsyE8JOjgyTxivo9qGkUAlddatRHRK52
+   vdyePgByUQ73e5R57RpJ8d7+owdZ3VTGTSY4R2wxw0cHVzAz2RElb6VpW
+   QWkpJJPKKoSXC4s+3bcwzkBXCOwEcD4c4VqjqvjtSthLvIZmrFEF3Unaq
+   0npVt652B9quSwqYBc45j9kxd66Pez0O7y7C5qvLHQQ2oA6HoSSIggHIZ
+   Q==;
+X-CSE-ConnectionGUID: I2KVQFtoTM+/li02mptELw==
+X-CSE-MsgGUID: vGK6BAXPQ+mZYproACHx+Q==
+X-IronPort-AV: E=McAfee;i="6800,10657,11771"; a="78326734"
 X-IronPort-AV: E=Sophos;i="6.23,206,1770624000"; 
-   d="scan'208";a="78326736"
+   d="scan'208";a="78326734"
 Received: from orviesa005.jf.intel.com ([10.64.159.145])
   by orvoesa113.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 29 Apr 2026 12:52:16 -0700
-X-CSE-ConnectionGUID: sN7IZ9dTR2Okdqwx1muxDA==
-X-CSE-MsgGUID: Ul6VFZ6kRFidScAlhtr00A==
+X-CSE-ConnectionGUID: IG0MTGW3Ri6we6i8ZCUZOQ==
+X-CSE-MsgGUID: 6LGFCtzoQPWmFwruQlMOnw==
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="6.23,206,1770624000"; 
-   d="scan'208";a="239385675"
+   d="scan'208";a="239385674"
 Received: from spandruv-desk.jf.intel.com ([10.54.55.20])
-  by orviesa005.jf.intel.com with ESMTP; 29 Apr 2026 12:52:17 -0700
+  by orviesa005.jf.intel.com with ESMTP; 29 Apr 2026 12:52:16 -0700
 From: Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>
 To: hansg@kernel.org,
 	ilpo.jarvinen@linux.intel.com
@@ -50,9 +50,9 @@ Cc: platform-driver-x86@vger.kernel.org,
 	linux-kernel@vger.kernel.org,
 	Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>,
 	Stable@vger.kernel.org
-Subject: [PATCH 2/3] platform/x86: intel: Add notifiers support
-Date: Wed, 29 Apr 2026 12:52:13 -0700
-Message-ID: <20260429195214.1532711-3-srinivas.pandruvada@linux.intel.com>
+Subject: [PATCH 1/3] platform/x86: intel: Move debugfs register before creating devices
+Date: Wed, 29 Apr 2026 12:52:12 -0700
+Message-ID: <20260429195214.1532711-2-srinivas.pandruvada@linux.intel.com>
 X-Mailer: git-send-email 2.52.0
 In-Reply-To: <20260429195214.1532711-1-srinivas.pandruvada@linux.intel.com>
 References: <20260429195214.1532711-1-srinivas.pandruvada@linux.intel.com>
@@ -64,93 +64,47 @@ List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-In some cases a driver using services of vsec_tpmi driver requires some
-processing before vsec_tpmi exits. For example a children using debugfs
-can't use debugfs as this will be deleted by the vsec_tpmi driver.
+It is possible that the driver handling device is enumerated before
+registering debugfs. If the driver wants to access debugfs by calling
+tpmi_get_debugfs_dir(), this will return error in this case.
 
-This is the case when unbind using PCI driver interface. In this case
-the remove callback of vsec_tpmi driver is called first, then remove
-callback of its children.
-
-Add support of blocking chain notifiers support. Notify on successful probe
-and before clean up in the remove callback.
+Hence register debugfs before creating devices.
 
 Fixes: 811f67c51636 ("platform/x86/intel/tpmi: Add new auxiliary driver for performance limits")
 Signed-off-by: Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>
 Cc: <Stable@vger.kernel.org>
 ---
- drivers/platform/x86/intel/vsec_tpmi.c | 19 +++++++++++++++++++
- include/linux/intel_tpmi.h             |  6 ++++++
- 2 files changed, 25 insertions(+)
+ drivers/platform/x86/intel/vsec_tpmi.c | 10 ++++++----
+ 1 file changed, 6 insertions(+), 4 deletions(-)
 
 diff --git a/drivers/platform/x86/intel/vsec_tpmi.c b/drivers/platform/x86/intel/vsec_tpmi.c
-index a38014e81e85..16fd7aa41f20 100644
+index 7fc6ff8d1040..a38014e81e85 100644
 --- a/drivers/platform/x86/intel/vsec_tpmi.c
 +++ b/drivers/platform/x86/intel/vsec_tpmi.c
-@@ -56,6 +56,7 @@
- #include <linux/io.h>
- #include <linux/iopoll.h>
- #include <linux/module.h>
-+#include <linux/notifier.h>
- #include <linux/pci.h>
- #include <linux/security.h>
- #include <linux/sizes.h>
-@@ -188,6 +189,20 @@ struct tpmi_feature_state {
- /* Used during auxbus device creation */
- static DEFINE_IDA(intel_vsec_tpmi_ida);
+@@ -817,10 +817,6 @@ static int intel_vsec_tpmi_init(struct auxiliary_device *auxdev)
  
-+static BLOCKING_NOTIFIER_HEAD(tpmi_notify_list);
-+
-+int tpmi_register_notifier(struct notifier_block *nb)
-+{
-+	return blocking_notifier_chain_register(&tpmi_notify_list, nb);
-+}
-+EXPORT_SYMBOL_NS_GPL(tpmi_register_notifier, "INTEL_TPMI");
-+
-+int tpmi_unregister_notifier(struct notifier_block *nb)
-+{
-+	return blocking_notifier_chain_unregister(&tpmi_notify_list, nb);
-+}
-+EXPORT_SYMBOL_NS_GPL(tpmi_unregister_notifier, "INTEL_TPMI");
-+
- struct oobmsm_plat_info *tpmi_get_platform_data(struct auxiliary_device *auxdev)
- {
- 	struct intel_vsec_device *vsec_dev = auxdev_to_ivdev(auxdev);
-@@ -832,6 +847,8 @@ static int intel_vsec_tpmi_init(struct auxiliary_device *auxdev)
- 		return ret;
- 	}
+ 	auxiliary_set_drvdata(auxdev, tpmi_info);
  
-+	blocking_notifier_call_chain(&tpmi_notify_list, TPMI_CORE_INIT, auxdev);
+-	ret = tpmi_create_devices(tpmi_info);
+-	if (ret)
+-		return ret;
+-
+ 	/*
+ 	 * Allow debugfs when security policy allows. Everything this debugfs
+ 	 * interface provides, can also be done via /dev/mem access. If
+@@ -830,6 +826,12 @@ static int intel_vsec_tpmi_init(struct auxiliary_device *auxdev)
+ 	if (!security_locked_down(LOCKDOWN_DEV_MEM) && capable(CAP_SYS_RAWIO))
+ 		tpmi_dbgfs_register(tpmi_info);
+ 
++	ret = tpmi_create_devices(tpmi_info);
++	if (ret) {
++		debugfs_remove_recursive(tpmi_info->dbgfs_dir);
++		return ret;
++	}
 +
  	return 0;
  }
  
-@@ -845,6 +862,8 @@ static void tpmi_remove(struct auxiliary_device *auxdev)
- {
- 	struct intel_tpmi_info *tpmi_info = auxiliary_get_drvdata(auxdev);
- 
-+	blocking_notifier_call_chain(&tpmi_notify_list, TPMI_CORE_EXIT, auxdev);
-+
- 	debugfs_remove_recursive(tpmi_info->dbgfs_dir);
- }
- 
-diff --git a/include/linux/intel_tpmi.h b/include/linux/intel_tpmi.h
-index 94c06bf214fb..15f02422e9ca 100644
---- a/include/linux/intel_tpmi.h
-+++ b/include/linux/intel_tpmi.h
-@@ -28,6 +28,12 @@ enum intel_tpmi_id {
- 	TPMI_INFO_ID = 0x81,	/* Special ID for PCI BDF and Package ID information */
- };
- 
-+#define TPMI_CORE_INIT	0
-+#define TPMI_CORE_EXIT	1
-+
-+int tpmi_register_notifier(struct notifier_block *nb);
-+int tpmi_unregister_notifier(struct notifier_block *nb);
-+
- struct oobmsm_plat_info *tpmi_get_platform_data(struct auxiliary_device *auxdev);
- struct resource *tpmi_get_resource_at_index(struct auxiliary_device *auxdev, int index);
- int tpmi_get_resource_count(struct auxiliary_device *auxdev);
 -- 
 2.52.0
 
