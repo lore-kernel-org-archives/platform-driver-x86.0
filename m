@@ -1,61 +1,57 @@
 Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.21])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 258B8388E5A;
-	Wed, 29 Apr 2026 19:52:22 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5084838E5D7;
+	Wed, 29 Apr 2026 19:52:24 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.21
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1777492344; cv=none; b=hUiij/xPA/fC7ckHRhytZ37HQwwHnJISQ6MT6D6Oj1XDgb5QBdzcxcwvSd/fg1njHeGopNE4Ts4pBUzd52pVdn7P92MHCUrTr0qp4tpZrww0Pq6jEBb+Ld+0cSdXw42J6w31g1Gp5MEyyevg9ZA7o2lfaZuGmLrNuZsO1ReIUeo=
+	t=1777492345; cv=none; b=labENo89FUr6ShlEu/EfqeQGhK0f47FpcbJ8XMfvoMUbQS7TqI05cfaTsx0VMT9jwWmfVWQIiib233njUUGUgKYJCI8+mCguI0TWyjwy05vqoLvKrafr9g38vVDqq48P/TRi92UEfnqrRhPEL2MkM90UnHWPe0tGXdktsUa3Hp4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1777492344; c=relaxed/simple;
-	bh=COwCRWMpR2QUZTYUePCcQS4dOqrwI8PSME3538UB0N4=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=M5gRVoZ/RH1I2tdUTIvNk0zjzUKj/FKI+gVmDZ7Uzx9JIrFVKY2bUVYKPpjCBhOMCojXcgD5cyyVyqefx1jmSQeohPMHmPffJyD2mrbF/vG+W+nQjHEePIvsEzQyh365LEJz5mnoyOEQAjn65fBjK9uz/eX1XVtwLggY0x1KJ3o=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=pass smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=Dk7n4FXD; arc=none smtp.client-ip=198.175.65.21
+	s=arc-20240116; t=1777492345; c=relaxed/simple;
+	bh=ok7v9q19xgzXnT7Dz8GK1RXCtFB3BNzyyAJ2gXnZPT0=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=cbLePrAusZd/kgtumZHoMja66cKXejDWKhqvDw2py7Yw7CLlP9R1m/TmlvXqemi+YLCbz2Hc5MehFbLPxPfcK+futFqWAsapr7WSoE0bB4KNSoBz3QfSsMhsBYet6zQfrBpjtxfmLrJ/mVSY+UpnRWJ0ZcuYewcRdOUzSl/dHpA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=pass smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=TzNurkNe; arc=none smtp.client-ip=198.175.65.21
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="Dk7n4FXD"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="TzNurkNe"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1777492343; x=1809028343;
-  h=from:to:cc:subject:date:message-id:in-reply-to:
-   references:mime-version:content-transfer-encoding;
-  bh=COwCRWMpR2QUZTYUePCcQS4dOqrwI8PSME3538UB0N4=;
-  b=Dk7n4FXDzzeq/Dpxiq+A623YUtx27XQnVxVaqh/5C8+wWmN6LCGi2a46
-   xaVzQtJXzpAFX6f4Kwr4i/3OW+UcGCPJxZe1GjWj7Xv1DpYFqE6WvOhd8
-   kLqWNwEvVIaGVoaBmkczjKQHHdtqvdyTrhymOkar1Nh936tUkslkb93ng
-   wky2MAai3cf8xW/2jra+XAJ9CsNiD8lc5OjQ5N2pNrlH98m9YLoExWI9u
-   AXEYJ7MwobPegnQISQ4bzrHCh4uufu3ZrRnZV/OE3nrynqXD/3j2l52eS
-   WuJz54q7SKLok7tE8rJ25RgVuSyTclq53XQByTWeZ6HwjAnrpdScIHPa3
-   g==;
-X-CSE-ConnectionGUID: qhozSwZ6T5S8sH3S9/DFtg==
-X-CSE-MsgGUID: QLDuSlhYRPe5pTrZT6awNw==
-X-IronPort-AV: E=McAfee;i="6800,10657,11771"; a="78326738"
+  t=1777492344; x=1809028344;
+  h=from:to:cc:subject:date:message-id:mime-version:
+   content-transfer-encoding;
+  bh=ok7v9q19xgzXnT7Dz8GK1RXCtFB3BNzyyAJ2gXnZPT0=;
+  b=TzNurkNesaFTKmLoPSGSDQqWpfi3mAGTmdVrVcIV402QmjAIritzS5fY
+   d06SCwjJyfl+un1lZq4Fq/IyPDKU12kiWsiZfFeqblkgYhB8ohx9OjQDm
+   WGsoQ6GgXW6MxZo57fp1qZyVY3ddYtn7XuWw1sK7BR4A1u/tO0e/YW2s8
+   wX6V3aSiDL7SmTOJWyhLLtDTWHcy4Bo++cHHMtcyNP+DESKhvmU7PBAlw
+   wTxNByb70ytu7XEYktc0HtIHfMezIcBKEpTGTQV/P6wFb4B2WuXF1+Yi0
+   3qZwuWzEFJMRJkrUqrt2/d4goPD053Zt6HWoapCPiL0ONkUpE9XqFMM4q
+   Q==;
+X-CSE-ConnectionGUID: hmJk9kyAR4WT7eR6bwONmw==
+X-CSE-MsgGUID: oXDTRQerT7W3lse4DERpmg==
+X-IronPort-AV: E=McAfee;i="6800,10657,11771"; a="78326731"
 X-IronPort-AV: E=Sophos;i="6.23,206,1770624000"; 
-   d="scan'208";a="78326738"
+   d="scan'208";a="78326731"
 Received: from orviesa005.jf.intel.com ([10.64.159.145])
   by orvoesa113.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 29 Apr 2026 12:52:16 -0700
-X-CSE-ConnectionGUID: gDRlO9WlSX2WlQNlrKdqTg==
-X-CSE-MsgGUID: Dl+1UrJnSXCRKoHcbj/7bQ==
+X-CSE-ConnectionGUID: NsARGqJfS5GMtvLhxNClWA==
+X-CSE-MsgGUID: aoqLJMuiSQy9BTM6fnmUdA==
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="6.23,206,1770624000"; 
-   d="scan'208";a="239385676"
+   d="scan'208";a="239385672"
 Received: from spandruv-desk.jf.intel.com ([10.54.55.20])
-  by orviesa005.jf.intel.com with ESMTP; 29 Apr 2026 12:52:17 -0700
+  by orviesa005.jf.intel.com with ESMTP; 29 Apr 2026 12:52:16 -0700
 From: Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>
 To: hansg@kernel.org,
 	ilpo.jarvinen@linux.intel.com
 Cc: platform-driver-x86@vger.kernel.org,
 	linux-kernel@vger.kernel.org,
-	Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>,
-	Stable@vger.kernel.org
-Subject: [PATCH 3/3] platform/x86/intel/tpmi/plr: Prevent fault during unbind
-Date: Wed, 29 Apr 2026 12:52:14 -0700
-Message-ID: <20260429195214.1532711-4-srinivas.pandruvada@linux.intel.com>
+	Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>
+Subject: [PATCH 0/3] platform/x86: intel: TPMI/PLR PCI unbind issue
+Date: Wed, 29 Apr 2026 12:52:11 -0700
+Message-ID: <20260429195214.1532711-1-srinivas.pandruvada@linux.intel.com>
 X-Mailer: git-send-email 2.52.0
-In-Reply-To: <20260429195214.1532711-1-srinivas.pandruvada@linux.intel.com>
-References: <20260429195214.1532711-1-srinivas.pandruvada@linux.intel.com>
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
@@ -64,121 +60,22 @@ List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-This driver faults when intel vsec driver unbound from PCI driver
-interface. For example:
+When VSEC PCI device is unbound from PCI driver interface, PLR driver
+causes fault. This needs notifier support for proper cleanup.
 
-echo 0000:00:03.1 > /sys/bus/pci/drivers/intel_vsec/unbind
+First two patches are required for the fix in the patch 3/3. Hence they
+also have Fixes and Cc:stable tag.
 
-This is caused by accessing plr->dbgfs_dir after vsec_tpmi driver is
-removed. Here vsec_tpmi driver is the parent. On unbind, the parent
-device remove callback is called first which here will remove debugfs
-interface. Hence plr->dbgfs_dir is no longer valid.
+Srinivas Pandruvada (3):
+  platform/x86: intel: Move debugfs register before creating devices
+  platform/x86: intel: Add notifiers support
+  platform/x86/intel/tpmi/plr: Prevent fault during unbind
 
-Register notifier for TPMI_CORE_EXIT and make this pointer to NULL,
-so that debugfs_remove_recursive() is not called with bad plr->dbgfs_dir
-pointer.
+ drivers/platform/x86/intel/plr_tpmi.c  | 43 ++++++++++++++++++++++++--
+ drivers/platform/x86/intel/vsec_tpmi.c | 29 ++++++++++++++---
+ include/linux/intel_tpmi.h             |  6 ++++
+ 3 files changed, 72 insertions(+), 6 deletions(-)
 
-After notifier is returned the vsec_tpmi driver will call remove debugfs
-by calling debugfs_remove_recursive().
-
-Fixes: 811f67c51636 ("platform/x86/intel/tpmi: Add new auxiliary driver for performance limits")
-Signed-off-by: Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>
-Cc: <Stable@vger.kernel.org>
----
- drivers/platform/x86/intel/plr_tpmi.c | 43 +++++++++++++++++++++++++--
- 1 file changed, 41 insertions(+), 2 deletions(-)
-
-diff --git a/drivers/platform/x86/intel/plr_tpmi.c b/drivers/platform/x86/intel/plr_tpmi.c
-index 05727169f49c..644df673896b 100644
---- a/drivers/platform/x86/intel/plr_tpmi.c
-+++ b/drivers/platform/x86/intel/plr_tpmi.c
-@@ -22,6 +22,7 @@
- #include <linux/module.h>
- #include <linux/mod_devicetable.h>
- #include <linux/mutex.h>
-+#include <linux/notifier.h>
- #include <linux/seq_file.h>
- #include <linux/sprintf.h>
- #include <linux/types.h>
-@@ -60,6 +61,8 @@ struct tpmi_plr {
- 	struct tpmi_plr_die *die_info;
- 	int num_dies;
- 	struct auxiliary_device *auxdev;
-+	struct notifier_block nb;
-+	struct mutex lock; /* Protect access to dbgfs_dir  */
- };
- 
- static const char * const plr_coarse_reasons[] = {
-@@ -255,6 +258,30 @@ static ssize_t plr_status_write(struct file *filp, const char __user *ubuf,
- }
- DEFINE_SHOW_STORE_ATTRIBUTE(plr_status);
- 
-+static int intel_plr_notify(struct notifier_block *self, unsigned long action, void *data)
-+{
-+	struct tpmi_plr *plr = container_of(self, struct tpmi_plr, nb);
-+
-+	if (action == TPMI_CORE_EXIT) {
-+		guard(mutex)(&plr->lock);
-+		plr->dbgfs_dir = NULL;
-+	}
-+
-+	return NOTIFY_DONE;
-+}
-+
-+static int intel_plr_register_notifier(struct notifier_block *nb)
-+{
-+	nb->notifier_call = intel_plr_notify;
-+	nb->priority = 0;
-+	return tpmi_register_notifier(nb);
-+}
-+
-+static void intel_plr_unregister_notifier(struct notifier_block *nb)
-+{
-+	tpmi_unregister_notifier(nb);
-+}
-+
- static int intel_plr_probe(struct auxiliary_device *auxdev, const struct auxiliary_device_id *id)
- {
- 	struct oobmsm_plat_info *plat_info;
-@@ -282,10 +309,16 @@ static int intel_plr_probe(struct auxiliary_device *auxdev, const struct auxilia
- 	if (!plr)
- 		return -ENOMEM;
- 
-+	mutex_init(&plr->lock);
-+
-+	intel_plr_register_notifier(&plr->nb);
-+
- 	plr->die_info = devm_kcalloc(&auxdev->dev, num_resources, sizeof(*plr->die_info),
- 				     GFP_KERNEL);
--	if (!plr->die_info)
--		return -ENOMEM;
-+	if (!plr->die_info) {
-+		err = -ENOMEM;
-+		goto err_notify;
-+	}
- 
- 	plr->num_dies = num_resources;
- 	plr->dbgfs_dir = debugfs_create_dir("plr", dentry);
-@@ -326,6 +359,9 @@ static int intel_plr_probe(struct auxiliary_device *auxdev, const struct auxilia
- 
- err:
- 	debugfs_remove_recursive(plr->dbgfs_dir);
-+err_notify:
-+	intel_plr_unregister_notifier(&plr->nb);
-+
- 	return err;
- }
- 
-@@ -333,6 +369,9 @@ static void intel_plr_remove(struct auxiliary_device *auxdev)
- {
- 	struct tpmi_plr *plr = auxiliary_get_drvdata(auxdev);
- 
-+	intel_plr_unregister_notifier(&plr->nb);
-+
-+	guard(mutex)(&plr->lock);
- 	debugfs_remove_recursive(plr->dbgfs_dir);
- }
- 
 -- 
 2.52.0
 
