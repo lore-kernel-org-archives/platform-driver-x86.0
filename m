@@ -1,112 +1,217 @@
-Received: from mail-pj1-f42.google.com (mail-pj1-f42.google.com [209.85.216.42])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5D0622DC791
-	for <platform-driver-x86@vger.kernel.org>; Wed, 29 Apr 2026 18:10:01 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.42
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7314237E2F8;
+	Wed, 29 Apr 2026 18:30:58 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1777486202; cv=none; b=nf56yJj2HHAhIapdF7Eat+bnSQrpXMEXPN16tklH30HqjBvOXqj9PZtqH2eIPw7iSeUOr4UiG0XOxhi4qVBDUb4Pn/p9vX0FD8WtPSTmdyQHktTCHWdPgB5yN+FRGoSfEI6An8dc9l2iLGVnvWEaQkHGAeCDGDObjZiEGbNwVgU=
+	t=1777487458; cv=none; b=HAyM7Ikcd8Ky5PQF1Aaz0PsUxSb0MqTsvNB1KP/7ZcKYfwGK/p+VMOFRRz4Siy0njwY2mk50bfSb022uuEi2o/nuJq3WKAzOk1X635t+EKrrjgoG63jXrhItwPdfzlgg7weomZv1QnU7qfw0nCdOcuT6yd5jVutXD6PYUliPqts=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1777486202; c=relaxed/simple;
-	bh=zr6NPufun9/U/tOwiqE7sXIr1RfNYansOgCw+RkLZ6o=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=FoQ0JXkudBhuF2InETv47YOrI8bXkQQIp+ezt7dxEwo+kL9vziwG6f0QXqUfAxx3pF8YzPGgcKqzLuxk5GwcKbQ/+g3kpzU7XmdwVc7bLTEHr0vbyzb5DpjJeGU6HJ94Hno2CoyDXNBphcZc8ml7/eRSm11AeqAZWrRGkLJuYcc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=asNVz5UI; arc=none smtp.client-ip=209.85.216.42
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1777487458; c=relaxed/simple;
+	bh=44NA6rUhVair067G7uXMUjokLii9afZLzuTWi8578y8=;
+	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
+	 In-Reply-To:To:Cc; b=rv6yiUFFZWdraMDmJPdNhBA8tvWv5iGdluK7s8V9mBOC9G4bK6XoOFHVviuSdHWf6ZPTqAvjLB5Izhsf4JwZHz0Mfm43q/a/rVFo+HZLSTIBN488NYEcA2MdAz6ZSucqELy7/at90t6rRYsZH2O5O1neZqku/wfQWwGXTJgLXCc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=MH9MDJAV; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="asNVz5UI"
-Received: by mail-pj1-f42.google.com with SMTP id 98e67ed59e1d1-35da2d35eccso25732a91.0
-        for <platform-driver-x86@vger.kernel.org>; Wed, 29 Apr 2026 11:10:01 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20251104; t=1777486201; x=1778091001; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=ltliAc02c6RjPKHoWmoJGjZitZnxUTbIwIVqXdRI3Gs=;
-        b=asNVz5UIU3ENolZphRAtFJfGhqbqixWQEhOt6p/d5pWCBNOs8foEudVWxbSQu470/l
-         YuMLLbvXQUq47mrMmuwIG2LUeVxhk/6OQ5g4AuLVCtxUNOQKvHQnO4pupEu5YAJUAHRS
-         IJk/06EzeGcoH5+GKfnTEmJdYmtKOmG3rj7+xSzWqXDrt7cPyEvO99t4eWZSY0j9SmRJ
-         eQFzF6BdY/9nIZdIVS9z59LTQpYbcwh18FsRqbIIdYxvRuKC7b2spaO4iYi5U8+Za3zk
-         NcLV2qsoLhTg2aDuhIfW0pXqD410QYlfYB8ET86zq9BDOuz3kzxmgX32kbD9zv4lQ83q
-         vpaA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1777486201; x=1778091001;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-gg:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=ltliAc02c6RjPKHoWmoJGjZitZnxUTbIwIVqXdRI3Gs=;
-        b=bxzZ+AzH70QSyG+fVS+WxNP5Ssw3YD43EPvRFoGhhqVam59fiJ60a4hcASysbghfrM
-         0lZQPdBy4OQ6H/YtnHOirgdXt9f8kn9XPOQy85xuHIgurjWSu4iWHoV20/odUcF5wP9Q
-         yxcEeWOsm14kSkgeXs/PkAFIEhmqore7aRoNdnzVnVggsXzhmK3me6d4tbhdckca7Vh0
-         71X4M8dD9JdSVPKH/L4sH8iEmuE8x8/bvZtUUHWufF2ZWqdZDM7UPpJuZhr2iC/qwPWj
-         uCc2/O5tFbs/Un/Yy13HISK+ozV700Yl3AdNmms44zsr5ag/zHy09b55zpQRPjCKM309
-         oZqA==
-X-Gm-Message-State: AOJu0YwZEEcTq7Wwkks2bWdRJ/YOQnzNEkV9fbNcmU4xjMJmCYwhCKb3
-	KCfM/7j7YzeNBKes9gPrS1Y4nYDHsQjz7Fk+aDHEodhzAxTt2e0ic/bH
-X-Gm-Gg: AeBDievoKvZd08lKXleOC4rIjL1CNjj/FIRtagAki0gX2QvyUVSj1yY30vJQfyP+ILq
-	ovvrJ3QZwbeeaEqh0Ae6VoFy2bS9375Vsiwbt3gNwOECUrmDHnQ2+EfCNFdxa8i3ECv9xY54Umz
-	PD684jul9QJUsmXCCuwXaXU3DPnzoKQnInDSsXVtyECH6AxU+PXryaAEwlXwxwyqgYE856iXsMm
-	B1bUg7+YEGVp7x/ruc8hSsBGsL71AqKjv+VKgIsk/fCbnDuIMLvCLqRSDDPfIa5qQPvRV7X/Csb
-	KLP/XnAwSiz20YEEYlAf9lPg7jjApoW77GDvICWz6NYxY3YC8J782IKA0/zqI9WSsfisW2ANtoy
-	iMaPJugPh03GvunMo+dECYI2IubP4549+/hm6uvC3tfZG363OaWtC512ExGuC9KdHqvsZ1JJADt
-	78r95YuRMGYSWTbuuz/AhIQ//JaHH/ni9Zj06t4/PKyQarqEjslkgmbdGQQFWtuFpt/FsubTGoz
-	qtf/fXOKhHuYfKhbvvE5NmgxO249tg=
-X-Received: by 2002:a17:90b:48cd:b0:35b:952c:43b9 with SMTP id 98e67ed59e1d1-36491fba27dmr9021714a91.10.1777486200523;
-        Wed, 29 Apr 2026 11:10:00 -0700 (PDT)
-Received: from archlinux ([2405:201:1b:225f:bfac:abd3:86cf:47a3])
-        by smtp.gmail.com with ESMTPSA id 98e67ed59e1d1-364be044f23sm246373a91.17.2026.04.29.11.09.57
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 29 Apr 2026 11:10:00 -0700 (PDT)
-From: Krishna Chomal <krishna.chomal108@gmail.com>
-To: ilpo.jarvinen@linux.intel.com,
-	hansg@kernel.org
-Cc: platform-driver-x86@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	Krishna Chomal <krishna.chomal108@gmail.com>,
-	Benjamin Y <hectare.plains1h@icloud.com>
-Subject: [PATCH] platform/x86: hp-wmi: silence unknown board warning for 8D41
-Date: Wed, 29 Apr 2026 23:39:53 +0530
-Message-ID: <20260429180953.129885-1-krishna.chomal108@gmail.com>
-X-Mailer: git-send-email 2.54.0
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="MH9MDJAV"
+Received: by smtp.kernel.org (Postfix) with ESMTPS id F2B7DC2BCB8;
+	Wed, 29 Apr 2026 18:30:57 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1777487458;
+	bh=44NA6rUhVair067G7uXMUjokLii9afZLzuTWi8578y8=;
+	h=From:Date:Subject:References:In-Reply-To:To:Cc:Reply-To:From;
+	b=MH9MDJAVeDwImDzASWYN8sKtPe5PjYDI0gjIPuMwInuCuw3b2DXo5pXgmtk6ia2SJ
+	 zPRz6zOrpoj5KgiGzsUabCCvyLBdF1wGUyyd2d3ixnUzJAHpOh/SxOY0IPbsszFgIq
+	 BLM5DLo5geE5O1TDA4vo+ChuONRO8qvPy1FYz9K4b5fbUNYNTkMagqPYsLU5n+ax9z
+	 uWbZl942MeXLn3FVx+kM5Oyek/WLZoceO7olT8qi8RF9xjdIyZhC/Ip9lkTRdSI3+R
+	 82bzay7KFDzaGbtgd2wa4JkgEcrv1jD8jane95Abp+3OVfEEUc4ID6tkoHnoaVBEoe
+	 ETEcFT5Y1DNDQ==
+Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E2FCBFF8875;
+	Wed, 29 Apr 2026 18:30:57 +0000 (UTC)
+From: Markus Probst via B4 Relay <devnull+markus.probst.posteo.de@kernel.org>
+Date: Wed, 29 Apr 2026 20:30:41 +0200
+Subject: [PATCH v12 1/2] dt-bindings: embedded-controller: Add synology
+ microp devices
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+Message-Id: <20260429-synology_microp_initial-v12-1-40a05033c620@posteo.de>
+References: <20260429-synology_microp_initial-v12-0-40a05033c620@posteo.de>
+In-Reply-To: <20260429-synology_microp_initial-v12-0-40a05033c620@posteo.de>
+To: Hans de Goede <hansg@kernel.org>, 
+ =?utf-8?q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>, 
+ Bryan O'Donoghue <bryan.odonoghue@linaro.org>, Lee Jones <lee@kernel.org>, 
+ Pavel Machek <pavel@kernel.org>, Miguel Ojeda <ojeda@kernel.org>, 
+ Boqun Feng <boqun@kernel.org>, Gary Guo <gary@garyguo.net>, 
+ =?utf-8?q?Bj=C3=B6rn_Roy_Baron?= <bjorn3_gh@protonmail.com>, 
+ Benno Lossin <lossin@kernel.org>, Andreas Hindborg <a.hindborg@kernel.org>, 
+ Alice Ryhl <aliceryhl@google.com>, Trevor Gross <tmgross@umich.edu>, 
+ Danilo Krummrich <dakr@kernel.org>, Rob Herring <robh@kernel.org>, 
+ Krzysztof Kozlowski <krzk+dt@kernel.org>, 
+ Conor Dooley <conor+dt@kernel.org>, 
+ Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc: platform-driver-x86@vger.kernel.org, linux-leds@vger.kernel.org, 
+ devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, 
+ rust-for-linux@vger.kernel.org, Markus Probst <markus.probst@posteo.de>, 
+ Krzysztof Kozlowski <krzysztof.kozlowski@oss.qualcomm.com>
+X-Mailer: b4 0.15.2
+X-Developer-Signature: v=1; a=openpgp-sha256; l=4079;
+ i=markus.probst@posteo.de; h=from:subject:message-id;
+ bh=alrwaULuLrijlaEQo59qC6IZr7fepf0GBhjIrFXTxGk=;
+ b=owEBiQJ2/ZANAwAIATR2H/jnrUPSAcsmYgBp8k5gON2L/rCWLtCQTIcCMcEV5bL0sSGTwMvDC
+ 7FhkRJuGsGJAk8EAAEIADkWIQSCdBjE9KxY53IwxHM0dh/4561D0gUCafJOYBsUgAAAAAAEAA5t
+ YW51MiwyLjUrMS4xMiwyLDIACgkQNHYf+OetQ9IoOxAAnJJ9dVAXt7DGKcaTSj8VpSWHgoeMz1A
+ mwhGVO5gYixEMC3k9Jb+UPHcktau2vnpF2EdIi5hvRH836DZOxoy2qJea1FnxGEUCeDGZqZ4KQo
+ W2Dk7uC6SBJYOS2zFwWZzm+TzArY094nGBTGXUIJJqY0NMWZV0W3ts2b/pTWLzjACdrGaPL80l8
+ bRn6rnI18cu/WOduSqMqTFDNcElUFPY3/UIef0pyyUvqVnzwJUB4ofc2DkN7ImjFDY6/w6mqdAm
+ B4yYmNZ01aNKvvRcJslQyT7UxWXZBgbl7Q+L/7sozBgVcZefRQc8w10UYUrRz/BlIi1XQMK+RpF
+ 5pdAmgwENn39V6j19OLJdSTeujieR5/n8vuHtcSUGt5B5StVyW7GAl3LVf97ObLEdvIdjkQpvjY
+ GAq8vTrgbLBxOEIiEaREF6SuzuESLR0cV7QjFmmRncjEjsz15VfG2JDXHugdFc/ehnFddwVBnjS
+ iRSCYsZZhE5yxEyoov3UDVeFASx+mORK+zZ2xISSFIB76G+7H120YzbGrHNKgctQUuOFg/MbSXx
+ 4PVlpZ1Eun8/JIm/7Y/qt0h3LIdU3pITIMMeKVKG0I8XiY3U2XKooyvwadzbn4bKG5bUIzujp7Y
+ K7eO2nclfipwIqI8qnWeKeGOLUrrI+Y2mIA/tOxRXC6M3N/Yb1sw=
+X-Developer-Key: i=markus.probst@posteo.de; a=openpgp;
+ fpr=827418C4F4AC58E77230C47334761FF8E7AD43D2
+X-Endpoint-Received: by B4 Relay for markus.probst@posteo.de/default with
+ auth_id=680
+X-Original-From: Markus Probst <markus.probst@posteo.de>
+Reply-To: markus.probst@posteo.de
 
-The HP Omen Max 16-ah0xxx, DMI board ID 8D41 is currently marked with
-victus_s_thermal_params in the victus_s_thermal_profile_boards[] list.
-This disables thermal profile readback and adds a dmesg warning during
-driver init for "unknown board".
+From: Markus Probst <markus.probst@posteo.de>
 
-After testing we know that (similar to another HP Omen Max 16 device,
-board ID 8D87), the embedded controller on this board does not expose
-thermal profile which means we have to intentionally disable EC
-readback.
+Add the Synology Microp devicetree bindings. Those devices are
+microcontrollers found on Synology NAS devices. They are connected to a
+serial port on the host device.
 
-Changing its driver_data to omen_v1_no_ec_thermal_params is sufficient
-to silence the warning.
+Those devices are used to control certain LEDs, fan speeds, a beeper, to
+handle buttons, fan failures and to properly shutdown and reboot the
+device.
 
-Tested-by: Benjamin Y <hectare.plains1h@icloud.com>
-Signed-off-by: Krishna Chomal <krishna.chomal108@gmail.com>
+The device has a different feature set depending on the Synology NAS
+model, like having different number of fans, buttons and leds. Depending
+on the architecture of the model, they also need a different system
+shutdown behaviour.
+
+Reviewed-by: Krzysztof Kozlowski <krzysztof.kozlowski@oss.qualcomm.com>
+Signed-off-by: Markus Probst <markus.probst@posteo.de>
 ---
- drivers/platform/x86/hp/hp-wmi.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ .../synology,ds918p-microp.yaml                    | 100 +++++++++++++++++++++
+ 1 file changed, 100 insertions(+)
 
-diff --git a/drivers/platform/x86/hp/hp-wmi.c b/drivers/platform/x86/hp/hp-wmi.c
-index d1cc6e7d176c..24c151289dd3 100644
---- a/drivers/platform/x86/hp/hp-wmi.c
-+++ b/drivers/platform/x86/hp/hp-wmi.c
-@@ -243,7 +243,7 @@ static const struct dmi_system_id victus_s_thermal_profile_boards[] __initconst
- 	},
- 	{
- 		.matches = { DMI_MATCH(DMI_BOARD_NAME, "8D41") },
--		.driver_data = (void *)&victus_s_thermal_params,
-+		.driver_data = (void *)&omen_v1_no_ec_thermal_params,
- 	},
- 	{
- 		.matches = { DMI_MATCH(DMI_BOARD_NAME, "8D87") },
+diff --git a/Documentation/devicetree/bindings/embedded-controller/synology,ds918p-microp.yaml b/Documentation/devicetree/bindings/embedded-controller/synology,ds918p-microp.yaml
+new file mode 100644
+index 000000000000..eb1c9d3fac07
+--- /dev/null
++++ b/Documentation/devicetree/bindings/embedded-controller/synology,ds918p-microp.yaml
+@@ -0,0 +1,100 @@
++# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
++%YAML 1.2
++---
++$id: http://devicetree.org/schemas/embedded-controller/synology,ds918p-microp.yaml#
++$schema: http://devicetree.org/meta-schemas/core.yaml#
++
++title: Synology NAS on-board Microcontroller
++
++maintainers:
++  - Markus Probst <markus.probst@posteo.de>
++
++description: |
++  Synology Microp is a microcontroller found in Synology NAS devices.
++  It is connected to a serial port on the host device.
++
++  It is necessary to properly shutdown and reboot the NAS device and
++  provides additional functionality such as led control, fan speed control,
++  a beeper and buttons on the NAS device.
++
++properties:
++  compatible:
++    oneOf:
++      - items:
++          - enum:
++              - synology,ds1221rpp-microp
++              - synology,rs822p-microp
++              - synology,rs422p-microp
++          - const: synology,rs1221p-microp
++
++      - items:
++          - const: synology,ds1825p-microp
++          - const: synology,ds1823xsp-microp
++
++      - items:
++          - enum:
++              - synology,ds725p-microp
++              - synology,ds225p-microp
++              - synology,ds723p-microp
++              - synology,ds710p-microp
++          - const: synology,ds214play-microp
++
++      - items:
++          - enum:
++              - synology,ds425p-microp
++              - synology,ds1525p-microp
++              - synology,ds925p-microp
++              - synology,ds923p-microp
++              - synology,ds1522p-microp
++              - synology,ds1010p-microp
++              - synology,ds411p-microp
++          - const: synology,ds918p-microp
++
++      - items:
++          - enum:
++              - synology,ds124-microp
++              - synology,ds223j-microp
++              - synology,ds223-microp
++          - const: synology,ds118-microp
++
++      - enum:
++          - synology,ds118-microp
++          - synology,ds1823xsp-microp
++          - synology,rs1221p-microp
++          - synology,ds918p-microp
++          - synology,ds214play-microp
++
++  fan-failure-gpios:
++    description: GPIOs needed to determine which fans stopped working on a fan failure event.
++    minItems: 2
++    maxItems: 3
++
++required:
++  - compatible
++
++allOf:
++  - if:
++      properties:
++        compatible:
++          contains:
++            enum:
++              - synology,ds918p-microp
++              - synology,rs422p-microp
++    then:
++      required:
++        - fan-failure-gpios
++    else:
++      properties:
++        fan-failure-gpios: false
++
++additionalProperties: false
++
++examples:
++  - |
++    #include <dt-bindings/gpio/gpio.h>
++
++    embedded-controller {
++      compatible = "synology,ds923p-microp", "synology,ds918p-microp";
++
++      fan-failure-gpios = <&gpio 68 GPIO_ACTIVE_HIGH>, <&gpio 69 GPIO_ACTIVE_HIGH>;
++    };
+
 -- 
-2.54.0
+2.53.0
+
 
