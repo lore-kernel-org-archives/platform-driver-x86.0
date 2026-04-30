@@ -1,146 +1,107 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.10])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.10])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9E923406269;
-	Thu, 30 Apr 2026 12:58:05 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.10
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3F67940B6F0;
+	Thu, 30 Apr 2026 13:01:27 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.10
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1777553886; cv=none; b=AIbcbM4jcqDYUBGl2riVB2Cy6kyd0+SiHAEnncrOjuL2OXJuDkxefWGXr5EJh0z4DD6jksUifocytinFL9GrWWjc0N9l2pSyGVzIBmP3MsNQYk8+qik5fDR5junY4h1XLyHXodxFbF4qyoiqkoe4KlMT8nhxivE0wZMmBBS4LnM=
+	t=1777554088; cv=none; b=bLe4Jl23SJT5P5FR8X8zQd5FP7HKVLjG4ZZtDd5Lxclo73Ia5tlRHrM4a9Dl6jkdr+4yudEhNyEWE5xCQjLcy0Huv++1l2yta4BzvXRGisj/MU+2PKEJLKH1UVsvHQQgjksjSoDpVkrVSNOPScqfjDbf+T0JWe7kagABJocEEMQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1777553886; c=relaxed/simple;
-	bh=ER9XG9Zw7bJwN3Dq11i1cpKEQ8SjOKhF1DHUfzvYGWM=;
-	h=From:Date:To:cc:Subject:In-Reply-To:Message-ID:References:
-	 MIME-Version:Content-Type; b=TfUFfPYsbCrSxSH+9mrl6EOdmliD8fqNSoX5rljtH78JnVLcYK1NxprrV/YY31YaKLp8JNVSIT9byMBguRwmdAxF4Bnbkm4mWNT2t1dk0bCD/PidqZ8spfUKodlcQwOh1i/Newt6E8liuRypjpZoVbYSU3a6vVgRLq2hT0pW68g=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=pass smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=Yb6Ew4Sl; arc=none smtp.client-ip=198.175.65.10
+	s=arc-20240116; t=1777554088; c=relaxed/simple;
+	bh=MZgJ0oBWrhy8i1yH1rGUVjfYjDAk40yvCjLYbXjWgTI=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=G4FCRSodAKU0SkNApfYrFoi7h0B8T1+uzv6uEGBtgn7QbJ62HX16cz08ZBx1MbAUMiwAaks0zlkppQSJdyRl9mWITME8HJAS9OeRqqWNNe0NfRFdQnPeoJqI39+NRq5dDet1Tul0gkTWM1cUo2cM+YEFEBCP2aZukkBVoWLCEpo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=pass smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=YRG20x3q; arc=none smtp.client-ip=192.198.163.10
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="Yb6Ew4Sl"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="YRG20x3q"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1777553886; x=1809089886;
-  h=from:date:to:cc:subject:in-reply-to:message-id:
-   references:mime-version;
-  bh=ER9XG9Zw7bJwN3Dq11i1cpKEQ8SjOKhF1DHUfzvYGWM=;
-  b=Yb6Ew4SlZk+695pR4AmXldduO72gCbufeP3q+Dp3HZI6jvwLgh7605FL
-   Nx/kw9OLVLfSzbFgOVOZ9byOZzUI9bFnPy+vAlVZ6549zaGKf/vkjzOeI
-   BBjxn/ZzbW9m9cF08nz5Oy7P8kJCijlyOz931ykDTL/h9KMqwzYF6iOm/
-   7FbQeUPB2pZT8Yy9bA3eQFBp2+dsEdt9gm1jEHEnoI75t8I12Ka/XRXma
-   ARDQ0HtKHe/VC3E6NVo5M+vsb0QhIVODzqRFtpxqKiVlI4h1GMHAIC6nf
-   mw/LiWRpa9EzNVLe9QRe8D3QPxSy9i1Zw+vVjUGSwZpeyonnJ4FqCfRoV
+  t=1777554087; x=1809090087;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=MZgJ0oBWrhy8i1yH1rGUVjfYjDAk40yvCjLYbXjWgTI=;
+  b=YRG20x3qMNpTzuSvCCCyzJhNZXIWttMP0hyxLEPRW5ZzRXWOBpwLRwmm
+   2ztjkfwRw3c7yhXR47VrAK6ElyLvwVZwnHMJRuCeFSQz6StNwW8bN2FwF
+   t2/oZ6JbnhcP3WXEcHQ1rax6KL3hG2uCm4rt8tu+wgj/ufKOKKRa1pAV6
+   nBi7xdXLG7ua1m2BDRNJlU5Ub1cLfah+doIqhsH5ioPUALpj6L+ma922d
+   O8flL/tVu9Ul1y94wTpgSvQ8208217Kph2ciX2wbfz13oPXc7VoeFYCs4
+   FGNtlC5W66uWRj30VNDlrTHsDx5x7suM3+cvG/6O7QeqanBiIMIYcgHU9
    g==;
-X-CSE-ConnectionGUID: kivYPTJsTQ6pX6AC6KIM+Q==
-X-CSE-MsgGUID: GWohw21JSdukuo2mdXxeRQ==
-X-IronPort-AV: E=McAfee;i="6800,10657,11771"; a="95921854"
+X-CSE-ConnectionGUID: qnxgHchOR0OlNMbnF/0bjg==
+X-CSE-MsgGUID: 2TfPKjfzQSyhX3IeVX0K9g==
+X-IronPort-AV: E=McAfee;i="6800,10657,11771"; a="89877496"
 X-IronPort-AV: E=Sophos;i="6.23,208,1770624000"; 
-   d="scan'208";a="95921854"
-Received: from fmviesa010.fm.intel.com ([10.60.135.150])
-  by orvoesa102.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 30 Apr 2026 05:58:06 -0700
-X-CSE-ConnectionGUID: aogkschfTRu2hlWgjii60A==
-X-CSE-MsgGUID: mHwuosBfSo64mK08xNLFCg==
+   d="scan'208";a="89877496"
+Received: from orviesa008.jf.intel.com ([10.64.159.148])
+  by fmvoesa104.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 30 Apr 2026 06:01:26 -0700
+X-CSE-ConnectionGUID: oq+UgGJGQSuAaaHPoJWDwA==
+X-CSE-MsgGUID: c+4LrUYMSXmrcstSM8JCag==
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="6.23,208,1770624000"; 
-   d="scan'208";a="230228105"
-Received: from ijarvine-mobl1.ger.corp.intel.com (HELO localhost) ([10.245.244.130])
-  by fmviesa010-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 30 Apr 2026 05:58:03 -0700
-From: =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
-Date: Thu, 30 Apr 2026 15:57:59 +0300 (EEST)
-To: Armin Wolf <W_Armin@gmx.de>
-cc: Hans de Goede <hansg@kernel.org>, wse@tuxedocomputers.com, 
-    platform-driver-x86@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH v2 4/7] platform/x86: uniwill-laptop: Do not enable the
- charging limit even when forced
-In-Reply-To: <20260417050912.5582-5-W_Armin@gmx.de>
-Message-ID: <189b5abd-fbc5-df01-3e93-32a5e12a9ff3@linux.intel.com>
-References: <20260417050912.5582-1-W_Armin@gmx.de> <20260417050912.5582-5-W_Armin@gmx.de>
+   d="scan'208";a="234467576"
+Received: from zzombora-mobl1 (HELO localhost) ([10.245.244.42])
+  by orviesa008-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 30 Apr 2026 06:01:22 -0700
+Date: Thu, 30 Apr 2026 16:01:19 +0300
+From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+To: Bartosz Golaszewski <bartosz.golaszewski@oss.qualcomm.com>
+Cc: Daniel Scally <djrscally@gmail.com>,
+	Heikki Krogerus <heikki.krogerus@linux.intel.com>,
+	Sakari Ailus <sakari.ailus@linux.intel.com>,
+	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+	"Rafael J. Wysocki" <rafael@kernel.org>,
+	Danilo Krummrich <dakr@kernel.org>,
+	Mika Westerberg <mika.westerberg@linux.intel.com>,
+	Andy Shevchenko <andy@kernel.org>,
+	Linus Walleij <linusw@kernel.org>, Hans de Goede <hansg@kernel.org>,
+	Ilpo =?iso-8859-1?Q?J=E4rvinen?= <ilpo.jarvinen@linux.intel.com>,
+	Dmitry Torokhov <dmitry.torokhov@gmail.com>,
+	Len Brown <lenb@kernel.org>, linux-acpi@vger.kernel.org,
+	driver-core@lists.linux.dev, linux-kernel@vger.kernel.org,
+	linux-gpio@vger.kernel.org, platform-driver-x86@vger.kernel.org,
+	brgl@kernel.org
+Subject: Re: [PATCH v4 2/2] platform/x86: x86-android-tablets: enable fwnode
+ matching of GPIO chips
+Message-ID: <afNSn42sB7sC_L9x@ashevche-desk.local>
+References: <20260430-baytrail-real-swnode-v4-0-767bcda6667f@oss.qualcomm.com>
+ <20260430-baytrail-real-swnode-v4-2-767bcda6667f@oss.qualcomm.com>
+ <afNQbtmd3j6wG0iI@ashevche-desk.local>
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/mixed; boundary="8323328-1301165838-1777553879=:971"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <afNQbtmd3j6wG0iI@ashevche-desk.local>
+Organization: Intel Finland Oy - BIC 0357606-4 - c/o Alberga Business Park, 6
+ krs, Bertel Jungin Aukio 5, 02600 Espoo
 
-  This message is in MIME format.  The first part should be readable text,
-  while the remaining parts are likely unreadable without MIME-aware tools.
+On Thu, Apr 30, 2026 at 03:51:58PM +0300, Andy Shevchenko wrote:
+> On Thu, Apr 30, 2026 at 09:34:06AM +0200, Bartosz Golaszewski wrote:
 
---8323328-1301165838-1777553879=:971
-Content-Type: text/plain; charset=ISO-8859-15
-Content-Transfer-Encoding: QUOTED-PRINTABLE
+...
 
-On Fri, 17 Apr 2026, Armin Wolf wrote:
+> > +	for (swnode = gpiochip_node_group; *swnode; swnode++) {
+> > +		struct device *dev __free(put_device) =
+> > +				acpi_bus_find_device_by_name((*swnode)->name);
+> > +		if (!dev) {
+> > +			dev_err(parent, "Failed to find the required GPIO controller: %s\n",
+> > +				(*swnode)->name);
+> 
+> swnode at this point is registered, meaning we have an associated fwnode
+> handle, hence why not use %pfwP here?
 
-> It seems that on some older models (~2020) the battery charging limit
-> can permanently damage the battery. Prevent users from enabling this
-> feature thru the "force" module parameter to avoid causing permanent
-> hardware damage on such devices.
->=20
-> Fixes: d050479693bb ("platform/x86: Add Uniwill laptop driver")
-> Link: https://www.reddit.com/r/XMG_gg/comments/ld9yyf/battery_limit_hidde=
-n_function_discovered_on/
-> Signed-off-by: Armin Wolf <W_Armin@gmx.de>
-> ---
->  Documentation/admin-guide/laptops/uniwill-laptop.rst | 10 ++++++++++
->  drivers/platform/x86/uniwill/uniwill-acpi.c          |  4 ++--
->  2 files changed, 12 insertions(+), 2 deletions(-)
->=20
-> diff --git a/Documentation/admin-guide/laptops/uniwill-laptop.rst b/Docum=
-entation/admin-guide/laptops/uniwill-laptop.rst
-> index 561334865feb..1f3ca84c7d88 100644
-> --- a/Documentation/admin-guide/laptops/uniwill-laptop.rst
-> +++ b/Documentation/admin-guide/laptops/uniwill-laptop.rst
-> @@ -43,6 +43,11 @@ Support for changing the platform performance mode is =
-currently not implemented.
->  Battery Charging Control
->  ------------------------
-> =20
-> +.. warning:: Some devices do not properly implement the charging thresho=
-ld interface. Forcing
-> +             the driver to enable access to said interface on such devic=
-es might damage the
-> +             battery [1]_. Because of this the driver will not enable sa=
-id feature even when
-> +             using the ``force`` module parameter.
-> +
->  The ``uniwill-laptop`` driver supports controlling the battery charge li=
-mit. This happens over
->  the standard ``charge_control_end_threshold`` power supply sysfs attribu=
-te. All values
->  between 1 and 100 percent are supported.
-> @@ -70,3 +75,8 @@ The ``uniwill-laptop`` driver allows to set the configu=
-rable TGP for devices wit
->  allow it.
-> =20
->  See Documentation/ABI/testing/sysfs-driver-uniwill-laptop for details.
-> +
-> +References
-> +=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
-> +
-> +.. [1] https://www.reddit.com/r/XMG_gg/comments/ld9yyf/battery_limit_hid=
-den_function_discovered_on/
-> diff --git a/drivers/platform/x86/uniwill/uniwill-acpi.c b/drivers/platfo=
-rm/x86/uniwill/uniwill-acpi.c
-> index 7c7ea0e76966..dac80c78ca0b 100644
-> --- a/drivers/platform/x86/uniwill/uniwill-acpi.c
-> +++ b/drivers/platform/x86/uniwill/uniwill-acpi.c
-> @@ -2499,8 +2499,8 @@ static int __init uniwill_init(void)
->  =09}
-> =20
->  =09if (force) {
-> -=09=09/* Assume that the device supports all features */
-> -=09=09device_descriptor.features =3D UINT_MAX;
-> +=09=09/* Assume that the device supports all features except the charge =
-limit */
-> +=09=09device_descriptor.features =3D UINT_MAX & ~UNIWILL_FEATURE_BATTERY=
-;
->  =09=09pr_warn("Enabling potentially unsupported features\n");
->  =09}
-> =20
->=20
+After reading the code again I think your version is KISS, no need for over
+engineering :-)
 
-Reviewed-by: Ilpo J=E4rvinen <ilpo.jarvinen@linux.intel.com>
+> > +			return -ENODEV;
+> > +		}
 
---=20
- i.
+-- 
+With Best Regards,
+Andy Shevchenko
 
---8323328-1301165838-1777553879=:971--
+
