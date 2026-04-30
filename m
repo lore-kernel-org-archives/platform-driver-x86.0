@@ -1,221 +1,194 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.10])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 265BD3DD507
-	for <platform-driver-x86@vger.kernel.org>; Thu, 30 Apr 2026 10:03:45 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8B2253D6CCA;
+	Thu, 30 Apr 2026 10:24:09 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.10
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1777543425; cv=none; b=I/bJa6XJ6TIXanwD6ipatXpWlRxLdHUwPtoSVg+lI5X3vbEMmWEXt3vu7nzAMH7qc+76IZHkNa0qq9dbZkkEC52d4OKJKoyMOTHfJAO0yrM6Yv5GJakvq6HmXRUH5WUO2H8pnYKlu/LkoPlW1d+/ZB/qwCUVHw5HyY1bX3jGftU=
+	t=1777544653; cv=none; b=Dyye4Dll23C96k3GNnKjMVu5TCAoh8F+gKKDMvgwHkQeJlSJKxfHBbaBLcUftB/6al+vXTTCjaIxfWQzyh5mzcx7MYB7acUmyGE8qqYSeq8W8CoMzu6SULuVflWqPXSQaTgikyWNzvZHM1V4+5RjpxbzAexvNgeZeqASdy34ui0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1777543425; c=relaxed/simple;
-	bh=24SUM8XNpgpD/jIkyrnqaESV6KB3r9PWuq9baM/oPwY=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=KC7MLsvfY5oLiDLIolinxp0CpZfNGSQ6GLoF0bOBV0lTEw288W4uyI+ya9yki7+HlGffworcbWEZNV3Hhejq6tG+x4GHlujNDzZn55iPRxlDbptJ4QT+LJl2GDqt20svZI5iIYSylfZbLnedqcoKJCin8YXpZROwIVEoVyE78+U=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Fbm7bm/t; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1777544653; c=relaxed/simple;
+	bh=qzAN5+vox86e9la/JEL32MReRe8s4fvtyoKpifqa3Uc=;
+	h=From:Date:To:cc:Subject:In-Reply-To:Message-ID:References:
+	 MIME-Version:Content-Type; b=EE7/HRrBeKANSXi9z8GDh91Zp2WlS28MmUmGLFdeOmxV0JHIWopfrp1XlBvE1sfnFfaKiMO22NlOMNzpTLZ72m046aFnK1mVcNEUqHchhzPFNrtvSbauZQ8Jll+Xgw6etJysyR9dKRZwPI0EvGY5ClpSc4Ja5PuYJSZ7sM8fnso=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=pass smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=fwKVIMlp; arc=none smtp.client-ip=192.198.163.10
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Fbm7bm/t"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id E1746C4AF09
-	for <platform-driver-x86@vger.kernel.org>; Thu, 30 Apr 2026 10:03:44 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1777543424;
-	bh=24SUM8XNpgpD/jIkyrnqaESV6KB3r9PWuq9baM/oPwY=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-	b=Fbm7bm/t+vu34+9t7voUW+wOOxbMCkLpxRdCIh99peme7yF2xulZ4cKP5EXb+2VzC
-	 Na+wpuETQ5x14dQJBJzo7rvklFJzOPeGYHO8rl0LUk8cZ3Uzib9TxhE658iCRzfM5f
-	 mq4oOK/NZeuMww+eKDCVvZz3ZbP1dEuRZ2S4kz++hJmsEb0UfGLGNdDfqGxQFRrL+t
-	 dF0jNT3lrD7+4/Zl52hk+xHKr4EFZL/wQMaoUU+LlYmZxuJ2eGnghCkj7+6XVm3R+M
-	 4EOmrnHGa6rhUqo4kt8iAEg+4pVCob+Dsyc0S5UR8W7FDyp/+q5oBig5vcpNJuc6IH
-	 M8CvFJxUuPTwg==
-Received: by mail-lf1-f51.google.com with SMTP id 2adb3069b0e04-5a40b2bc96dso726850e87.3
-        for <platform-driver-x86@vger.kernel.org>; Thu, 30 Apr 2026 03:03:44 -0700 (PDT)
-X-Forwarded-Encrypted: i=1; AFNElJ9IlX6ojO+DcJKiTdf48O3rLx+xg/2r3vSgAGBDyp94ua+pAHKytDYxPL5oS4X/fsT3LIv0mBz6sYgWUPtvC5lu+RCa@vger.kernel.org
-X-Gm-Message-State: AOJu0Yw0dEAKucXG35LeYxcQOgO/9RsmP0XOafVcYl3FtU4ry+YMzsui
-	xxuKM1YVqIo3bKP8+svhf+dSc9B61fY5xNBXS6vXo4jR1QtsdkrYxjlwbADtWjRNPwDAdSk8TdB
-	sdqZbzildgyWTO2zWSGLjOJ9KOffRu2g=
-X-Received: by 2002:a05:6512:10cb:b0:5a4:157:5354 with SMTP id
- 2adb3069b0e04-5a8522bc5ffmr780440e87.12.1777543423188; Thu, 30 Apr 2026
- 03:03:43 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="fwKVIMlp"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1777544650; x=1809080650;
+  h=from:date:to:cc:subject:in-reply-to:message-id:
+   references:mime-version;
+  bh=qzAN5+vox86e9la/JEL32MReRe8s4fvtyoKpifqa3Uc=;
+  b=fwKVIMlpqEEjOtrpat8A47Mic2w03DgDDlFXMi6MuxfH7C2qsZsRg8kn
+   5GxnaXS9I6/viF4/D6M95dLmPSBFiORJvuMGst13uUKH8TSNm8EAPw5L3
+   Hf97BtVoZauYoPEf8Y/9bJYshqcN6xeAempf63JC4eYKslv19lduPnSwg
+   uJ85O8itkSG2wKtTvowvE9SSVzS0HV5H1kwDsPKtGH0xJaEK10YEBH2a2
+   7fyVOqHGm+Hr2W5YL/njhGKc8vTxGsxXG5zLiRauIPL8GsVkKmc7BKfWk
+   F4CjkCeCRZ8kgN+2DmcfqBbLfuwTwxz+C1g061DNchNHuKQD364cu3NfN
+   g==;
+X-CSE-ConnectionGUID: bYgM6VwkQVWIbWqrF5jAvA==
+X-CSE-MsgGUID: HKpnTVYVS5qXD4ZlfIwukA==
+X-IronPort-AV: E=McAfee;i="6800,10657,11771"; a="89866972"
+X-IronPort-AV: E=Sophos;i="6.23,207,1770624000"; 
+   d="scan'208";a="89866972"
+Received: from orviesa006.jf.intel.com ([10.64.159.146])
+  by fmvoesa104.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 30 Apr 2026 03:24:08 -0700
+X-CSE-ConnectionGUID: ENu7xj8SQ+WNThZzx5dx0Q==
+X-CSE-MsgGUID: tT5/AvJCSjmQxsRXDhfc2w==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.23,207,1770624000"; 
+   d="scan'208";a="233512859"
+Received: from ijarvine-mobl1.ger.corp.intel.com (HELO localhost) ([10.245.244.130])
+  by orviesa006-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 30 Apr 2026 03:24:06 -0700
+From: =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
+Date: Thu, 30 Apr 2026 13:24:03 +0300 (EEST)
+To: Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>
+cc: Hans de Goede <hansg@kernel.org>, platform-driver-x86@vger.kernel.org, 
+    LKML <linux-kernel@vger.kernel.org>, Stable@vger.kernel.org
+Subject: Re: [PATCH 3/3] platform/x86/intel/tpmi/plr: Prevent fault during
+ unbind
+In-Reply-To: <20260429195214.1532711-4-srinivas.pandruvada@linux.intel.com>
+Message-ID: <ef77dd1d-57bf-073d-4ef6-54cf70ddd12f@linux.intel.com>
+References: <20260429195214.1532711-1-srinivas.pandruvada@linux.intel.com> <20260429195214.1532711-4-srinivas.pandruvada@linux.intel.com>
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20260430-baytrail-real-swnode-v4-0-767bcda6667f@oss.qualcomm.com> <20260430-baytrail-real-swnode-v4-2-767bcda6667f@oss.qualcomm.com>
-In-Reply-To: <20260430-baytrail-real-swnode-v4-2-767bcda6667f@oss.qualcomm.com>
-From: "Rafael J. Wysocki" <rafael@kernel.org>
-Date: Thu, 30 Apr 2026 12:03:30 +0200
-X-Gmail-Original-Message-ID: <CAJZ5v0hs98RHqZxcMjsnQDB5JJ2gKQGG6c38y3vR3WO1aLgf3w@mail.gmail.com>
-X-Gm-Features: AVHnY4LRkqUG78amCXaKPu70AEG71fakKJrwqW9j-y8MndL15_3hAR17pY87BOk
-Message-ID: <CAJZ5v0hs98RHqZxcMjsnQDB5JJ2gKQGG6c38y3vR3WO1aLgf3w@mail.gmail.com>
-Subject: Re: [PATCH v4 2/2] platform/x86: x86-android-tablets: enable fwnode
- matching of GPIO chips
-To: Bartosz Golaszewski <bartosz.golaszewski@oss.qualcomm.com>
-Cc: Andy Shevchenko <andriy.shevchenko@linux.intel.com>, Daniel Scally <djrscally@gmail.com>, 
-	Heikki Krogerus <heikki.krogerus@linux.intel.com>, 
-	Sakari Ailus <sakari.ailus@linux.intel.com>, 
-	Greg Kroah-Hartman <gregkh@linuxfoundation.org>, "Rafael J. Wysocki" <rafael@kernel.org>, 
-	Danilo Krummrich <dakr@kernel.org>, Mika Westerberg <mika.westerberg@linux.intel.com>, 
-	Andy Shevchenko <andy@kernel.org>, Linus Walleij <linusw@kernel.org>, Hans de Goede <hansg@kernel.org>, 
-	=?UTF-8?Q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>, 
-	Dmitry Torokhov <dmitry.torokhov@gmail.com>, Len Brown <lenb@kernel.org>, linux-acpi@vger.kernel.org, 
-	driver-core@lists.linux.dev, linux-kernel@vger.kernel.org, 
-	linux-gpio@vger.kernel.org, platform-driver-x86@vger.kernel.org, 
-	brgl@kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=US-ASCII
 
-On Thu, Apr 30, 2026 at 9:34=E2=80=AFAM Bartosz Golaszewski
-<bartosz.golaszewski@oss.qualcomm.com> wrote:
->
-> In order to allow GPIOLIB to match cherryview and baytrail GPIO
-> controllers by their firmware nodes instead of their names, we need to
-> attach the - currently "dangling" - existing software nodes to their
-> target devices dynamically.
->
-> The driver uses platform_create_bundle() and expects all required
-> providers to be present before it itself is probed. We know the name of
-> the device we're waiting for so look them up and assign the appropriate
-> software node as the secondary firmware node of the underlying ACPI node.
->
-> Scheduling fine-grained devres actions allows for proper teardown and
-> unsetting of the secondary firmware nodes.
->
-> Signed-off-by: Bartosz Golaszewski <bartosz.golaszewski@oss.qualcomm.com>
+On Wed, 29 Apr 2026, Srinivas Pandruvada wrote:
 
-I may have missed something subtle, but overall it looks reasonable to me, =
-so
-
-Reviewed-by: Rafael J. Wysocki (Intel) <rafael@kernel.org>
-
+> This driver faults when intel vsec driver unbound from PCI driver
+> interface. For example:
+> 
+> echo 0000:00:03.1 > /sys/bus/pci/drivers/intel_vsec/unbind
+> 
+> This is caused by accessing plr->dbgfs_dir after vsec_tpmi driver is
+> removed. Here vsec_tpmi driver is the parent. On unbind, the parent
+> device remove callback is called first which here will remove debugfs
+> interface. Hence plr->dbgfs_dir is no longer valid.
+> 
+> Register notifier for TPMI_CORE_EXIT and make this pointer to NULL,
+> so that debugfs_remove_recursive() is not called with bad plr->dbgfs_dir
+> pointer.
+> 
+> After notifier is returned the vsec_tpmi driver will call remove debugfs
+> by calling debugfs_remove_recursive().
+> 
+> Fixes: 811f67c51636 ("platform/x86/intel/tpmi: Add new auxiliary driver for performance limits")
+> Signed-off-by: Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>
+> Cc: <Stable@vger.kernel.org>
 > ---
->  drivers/platform/x86/x86-android-tablets/core.c | 78 +++++++++++++++++++=
-+++++-
->  1 file changed, 75 insertions(+), 3 deletions(-)
->
-> diff --git a/drivers/platform/x86/x86-android-tablets/core.c b/drivers/pl=
-atform/x86/x86-android-tablets/core.c
-> index 021009e9085bec3db9c4daa1f6235600210a6099..8fd0cffe351577182f31c90c1=
-04b616cec78c481 100644
-> --- a/drivers/platform/x86/x86-android-tablets/core.c
-> +++ b/drivers/platform/x86/x86-android-tablets/core.c
-> @@ -13,6 +13,7 @@
->  #include <linux/acpi.h>
->  #include <linux/device.h>
->  #include <linux/dmi.h>
-> +#include <linux/fwnode.h>
->  #include <linux/gpio/consumer.h>
->  #include <linux/gpio/machine.h>
->  #include <linux/irq.h>
-> @@ -360,6 +361,76 @@ static const struct software_node *cherryview_gpioch=
-ip_node_group[] =3D {
->         NULL
+>  drivers/platform/x86/intel/plr_tpmi.c | 43 +++++++++++++++++++++++++--
+>  1 file changed, 41 insertions(+), 2 deletions(-)
+> 
+> diff --git a/drivers/platform/x86/intel/plr_tpmi.c b/drivers/platform/x86/intel/plr_tpmi.c
+> index 05727169f49c..644df673896b 100644
+> --- a/drivers/platform/x86/intel/plr_tpmi.c
+> +++ b/drivers/platform/x86/intel/plr_tpmi.c
+> @@ -22,6 +22,7 @@
+>  #include <linux/module.h>
+>  #include <linux/mod_devicetable.h>
+>  #include <linux/mutex.h>
+> +#include <linux/notifier.h>
+>  #include <linux/seq_file.h>
+>  #include <linux/sprintf.h>
+>  #include <linux/types.h>
+> @@ -60,6 +61,8 @@ struct tpmi_plr {
+>  	struct tpmi_plr_die *die_info;
+>  	int num_dies;
+>  	struct auxiliary_device *auxdev;
+> +	struct notifier_block nb;
+> +	struct mutex lock; /* Protect access to dbgfs_dir  */
+
+Extra whitespace.
+
+Move the comment slightly more right as there's place.
+
 >  };
->
-> +static void auto_secondary_unset(void *data)
-> +{
-> +       struct fwnode_handle *fwnode =3D data;
-> +
-> +       fwnode->secondary =3D NULL;
-> +}
-> +
-> +static int acpi_set_secondary_fwnode(struct device *parent, struct devic=
-e *dev,
-> +                                    const struct software_node *const sw=
-node)
-> +{
-> +       struct acpi_device *device =3D to_acpi_device(dev);
-> +       struct fwnode_handle *fwnode;
-> +       int ret;
-> +
-> +       fwnode =3D software_node_fwnode(swnode);
-> +       if (WARN_ON(!fwnode))
-> +               return -ENOENT;
-> +
-> +       fwnode->secondary =3D ERR_PTR(-ENODEV);
-> +       device->fwnode.secondary =3D fwnode;
-> +
-> +       ret =3D devm_add_action_or_reset(parent, auto_secondary_unset, &d=
-evice->fwnode);
-> +       if (ret)
-> +               dev_err(parent, "Failed to schedule the unset action for =
-secondary fwnode\n");
-> +
-> +       return ret;
-> +}
-> +
-> +static void auto_secondary_unregister_node_group(void *data)
-> +{
-> +       const struct software_node **nodes =3D data;
-> +
-> +       software_node_unregister_node_group(nodes);
-> +}
-> +
-> +static int auto_secondary_fwnode_init(struct device *parent)
-> +{
-> +       const struct software_node *const *swnode;
-> +       int ret;
-> +
-> +       if (!gpiochip_node_group)
-> +               return 0;
-> +
-> +       ret =3D software_node_register_node_group(gpiochip_node_group);
-> +       if (ret)
-> +               return ret;
-> +
-> +       ret =3D devm_add_action_or_reset(parent,
-> +                                      auto_secondary_unregister_node_gro=
-up,
-> +                                      gpiochip_node_group);
-> +       if (ret)
-> +               return ret;
-> +
-> +       for (swnode =3D gpiochip_node_group; *swnode; swnode++) {
-> +               struct device *dev __free(put_device) =3D
-> +                               acpi_bus_find_device_by_name((*swnode)->n=
-ame);
-> +               if (!dev) {
-> +                       dev_err(parent, "Failed to find the required GPIO=
- controller: %s\n",
-> +                               (*swnode)->name);
-> +                       return -ENODEV;
-> +               }
-> +
-> +               ret =3D acpi_set_secondary_fwnode(parent, dev, *swnode);
-> +               if (ret)
-> +                       return ret;
-> +       }
-> +
-> +       return 0;
-> +}
-> +
->  static void x86_android_tablet_remove(struct platform_device *pdev)
->  {
->         int i;
-> @@ -391,7 +462,6 @@ static void x86_android_tablet_remove(struct platform=
-_device *pdev)
->
->         software_node_unregister_node_group(gpio_button_swnodes);
->         software_node_unregister_node_group(swnode_group);
-> -       software_node_unregister_node_group(gpiochip_node_group);
+>  
+>  static const char * const plr_coarse_reasons[] = {
+> @@ -255,6 +258,30 @@ static ssize_t plr_status_write(struct file *filp, const char __user *ubuf,
 >  }
->
->  static __init int x86_android_tablet_probe(struct platform_device *pdev)
-> @@ -427,9 +497,11 @@ static __init int x86_android_tablet_probe(struct pl=
-atform_device *pdev)
->                 break;
->         }
->
-> -       ret =3D software_node_register_node_group(gpiochip_node_group);
-> -       if (ret)
-> +       ret =3D auto_secondary_fwnode_init(&pdev->dev);
-> +       if (ret) {
-> +               x86_android_tablet_remove(pdev);
->                 return ret;
-> +       }
->
->         ret =3D software_node_register_node_group(dev_info->swnode_group)=
-;
->         if (ret) {
->
-> --
+>  DEFINE_SHOW_STORE_ATTRIBUTE(plr_status);
+>  
+> +static int intel_plr_notify(struct notifier_block *self, unsigned long action, void *data)
+> +{
+> +	struct tpmi_plr *plr = container_of(self, struct tpmi_plr, nb);
+> +
+> +	if (action == TPMI_CORE_EXIT) {
+> +		guard(mutex)(&plr->lock);
+> +		plr->dbgfs_dir = NULL;
+> +	}
+> +
+> +	return NOTIFY_DONE;
+> +}
+> +
+> +static int intel_plr_register_notifier(struct notifier_block *nb)
+> +{
+> +	nb->notifier_call = intel_plr_notify;
+> +	nb->priority = 0;
+> +	return tpmi_register_notifier(nb);
+> +}
+> +
+> +static void intel_plr_unregister_notifier(struct notifier_block *nb)
+> +{
+> +	tpmi_unregister_notifier(nb);
+> +}
+> +
+>  static int intel_plr_probe(struct auxiliary_device *auxdev, const struct auxiliary_device_id *id)
+>  {
+>  	struct oobmsm_plat_info *plat_info;
+> @@ -282,10 +309,16 @@ static int intel_plr_probe(struct auxiliary_device *auxdev, const struct auxilia
+>  	if (!plr)
+>  		return -ENOMEM;
+>  
+> +	mutex_init(&plr->lock);
+
+This lacks pairing destroy, but you can probably use devm_mutex_init() as 
+there's devm_*() below.
+
+> +
+> +	intel_plr_register_notifier(&plr->nb);
+> +
+>  	plr->die_info = devm_kcalloc(&auxdev->dev, num_resources, sizeof(*plr->die_info),
+>  				     GFP_KERNEL);
+> -	if (!plr->die_info)
+> -		return -ENOMEM;
+> +	if (!plr->die_info) {
+> +		err = -ENOMEM;
+> +		goto err_notify;
+> +	}
+>  
+>  	plr->num_dies = num_resources;
+>  	plr->dbgfs_dir = debugfs_create_dir("plr", dentry);
+> @@ -326,6 +359,9 @@ static int intel_plr_probe(struct auxiliary_device *auxdev, const struct auxilia
+>  
+>  err:
+>  	debugfs_remove_recursive(plr->dbgfs_dir);
+> +err_notify:
+> +	intel_plr_unregister_notifier(&plr->nb);
+> +
+>  	return err;
+>  }
+>  
+> @@ -333,6 +369,9 @@ static void intel_plr_remove(struct auxiliary_device *auxdev)
+>  {
+>  	struct tpmi_plr *plr = auxiliary_get_drvdata(auxdev);
+>  
+> +	intel_plr_unregister_notifier(&plr->nb);
+> +
+> +	guard(mutex)(&plr->lock);
+>  	debugfs_remove_recursive(plr->dbgfs_dir);
+>  }
+>  
+> 
+
+-- 
+ i.
+
