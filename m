@@ -1,86 +1,88 @@
 Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 395D23D905B
-	for <platform-driver-x86@vger.kernel.org>; Thu, 30 Apr 2026 07:34:19 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 240DA3DA5AE
+	for <platform-driver-x86@vger.kernel.org>; Thu, 30 Apr 2026 07:34:25 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.180.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1777534469; cv=none; b=Krh5icwGTchMn1Jx3H9Wtb4NK3Jnh999M0rz56uw3NOCrLdOQXXz3NaHyD++2Zy54xzM2Ghef9tJjtx3L30CSjNFtltlQSi1KulLPTkR2CCHJh00nqxAzncEf4kMXrpj2azIzvKBzYHf6yqqoIKIRe9NRKjo94eBwkgI4dH7MiU=
+	t=1777534480; cv=none; b=nXh9oXf1G0gI4G2CkRGJd1Mt7V/Zfr4HvPJxJ/OvA1cfXroA7Io8dhSltVgkaUdaJeo0JNyh64iEFziru8UoyvsTk+siB8Af4r0uWpBx1/yJlf/09ZYyVTqvQYJ7gPyEjl7dR1wjNpls7JNpRJwcvb/FIndoWq6/tEXhQ8rik0o=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1777534469; c=relaxed/simple;
-	bh=hnY9WhAyyswSQD7bqI8rIpBTtRvYyhwb49eFS9MHNTU=;
-	h=From:Subject:Date:Message-Id:MIME-Version:Content-Type:To:Cc; b=WVIiXIuasdmi+zDoyCs2xlQH11pMDXiiaVO3K00LSjlUQPWGuJuZ/Ni/dg6NOYZYBP7HwTWSz9CGF7Spu1Vf+u0BKfnRbVYAxhh8qKWpG/fasiNvR8k+G+8QYiSrgaehq3KUQS1FJa+742BSU0LaNPXHhG1VTTqJYTAvGElG0V4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com; spf=pass smtp.mailfrom=oss.qualcomm.com; dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b=YMxdWEtY; dkim=pass (2048-bit key) header.d=oss.qualcomm.com header.i=@oss.qualcomm.com header.b=UJ5SlQ6N; arc=none smtp.client-ip=205.220.180.131
+	s=arc-20240116; t=1777534480; c=relaxed/simple;
+	bh=ftejCI4cDYR15DURdSwoo+KUTTkz4glwgHDYbKITpyw=;
+	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
+	 In-Reply-To:To:Cc; b=B97JqnPVN3oFNcD20bj62F52hrG8Bd2fMpELfvwj8Zc+qQB2MN/r0TCkJVcoohoUCkZgiCEG+g3a/eqHHzWzeCC9hjWH+wUarr941818MGTBRrHD+KCPYlLNHZR7mbhKt4usmFdtid7rh5KoacDXLZ9Hhpx9fAu/7m58UQh+Zks=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com; spf=pass smtp.mailfrom=oss.qualcomm.com; dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b=YkXGUqc0; dkim=pass (2048-bit key) header.d=oss.qualcomm.com header.i=@oss.qualcomm.com header.b=AGnpajaL; arc=none smtp.client-ip=205.220.180.131
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oss.qualcomm.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b="YMxdWEtY";
-	dkim=pass (2048-bit key) header.d=oss.qualcomm.com header.i=@oss.qualcomm.com header.b="UJ5SlQ6N"
-Received: from pps.filterd (m0279870.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.18.1.11/8.18.1.11) with ESMTP id 63TNeV1l831469
-	for <platform-driver-x86@vger.kernel.org>; Thu, 30 Apr 2026 07:34:14 GMT
+	dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b="YkXGUqc0";
+	dkim=pass (2048-bit key) header.d=oss.qualcomm.com header.i=@oss.qualcomm.com header.b="AGnpajaL"
+Received: from pps.filterd (m0279871.ppops.net [127.0.0.1])
+	by mx0a-0031df01.pphosted.com (8.18.1.11/8.18.1.11) with ESMTP id 63TNvT0s3733909
+	for <platform-driver-x86@vger.kernel.org>; Thu, 30 Apr 2026 07:34:18 GMT
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=qualcomm.com; h=
-	cc:content-transfer-encoding:content-type:date:from:message-id
-	:mime-version:subject:to; s=qcppdkim1; bh=xSv3gA37ufigJREMdqvUyj
-	/7VPLNmpcCpiHXmZyc9xM=; b=YMxdWEtYEBezN5qNojXlVdTG2RjdWsC08rfClz
-	2usFSEIU/RFcr8/5AAFiRvE2fz0T6V/MiQLJUyVw3RW2Jjk7BHiE/vHnpbbaEalY
-	gxLshA4CwzxKTJHox1HvKhWcJdEm2dDnD57xpGRIQM1OSyYOhU1qLn7a/BJhNv9s
-	GSUIcZyfeGb8xnJl/XLo0qU1p72SAA90Hj34JmF7qYzl5Lg8nOlUM+unYB/FP4de
-	UIH+h+01ZUVoG82oiGwD3IVn8dyj1s1IFF4Zt6jXMveWgJzPwEV01MOW4t14iKzG
-	JweHelkr3c24m3jUT2fpNRUDCcweBI7Sb4+8zAritR40nx3Q==
-Received: from mail-qt1-f198.google.com (mail-qt1-f198.google.com [209.85.160.198])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 4duuvb1dja-1
+	cc:content-transfer-encoding:content-type:date:from:in-reply-to
+	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
+	U1lg30DyGHdc17+B9LzqWTA6Lt4/KitzUTkvawVH9l8=; b=YkXGUqc0UwwFKQda
+	PE1GWHQR2rLBvZZuCvHXOt537eZxo7bpxUkuhu/01yPufMEdgsCS46y3dh2vjshm
+	yOBLMyqduCPu+m8TK48Ct32cK7HWZLIQpgsrW8Kr/mL3VJr2dBJAYN32bWr73v9a
+	sV6yeNJB6MkMuCvDr5qzEshW9EcHuZBSM6XNx6mCL5ZOB9zodEy76yVbvSS5o7Z6
+	eTpCVHLQ/30HKkVVJ9vYAZmXpuqMLLXRsi33P0AIgfYjEVQApvfjQU13xzkm1aTE
+	KU7qJ14v3rNPnlFNoG1sXF4CE8vXEYqBVY8TZ4uxqjOr/TkOg7U7cl9289PmVSeM
+	xpbHEA==
+Received: from mail-qt1-f200.google.com (mail-qt1-f200.google.com [209.85.160.200])
+	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 4duv3x9cd9-1
 	(version=TLSv1.3 cipher=TLS_AES_128_GCM_SHA256 bits=128 verify=NOT)
-	for <platform-driver-x86@vger.kernel.org>; Thu, 30 Apr 2026 07:34:14 +0000 (GMT)
-Received: by mail-qt1-f198.google.com with SMTP id d75a77b69052e-50fae95c82cso20170651cf.2
-        for <platform-driver-x86@vger.kernel.org>; Thu, 30 Apr 2026 00:34:14 -0700 (PDT)
+	for <platform-driver-x86@vger.kernel.org>; Thu, 30 Apr 2026 07:34:18 +0000 (GMT)
+Received: by mail-qt1-f200.google.com with SMTP id d75a77b69052e-50edf0245b0so10918271cf.1
+        for <platform-driver-x86@vger.kernel.org>; Thu, 30 Apr 2026 00:34:18 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=oss.qualcomm.com; s=google; t=1777534454; x=1778139254; darn=vger.kernel.org;
-        h=cc:to:content-transfer-encoding:mime-version:message-id:date
-         :subject:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=xSv3gA37ufigJREMdqvUyj/7VPLNmpcCpiHXmZyc9xM=;
-        b=UJ5SlQ6NFEVrr4f6oplkL40y3uYXhgr8LPEHTnL6PFZQ6hqtMftcK9awUltkJ05IQm
-         1B08jpA27NkSFZB2Rdfrlzar+nZpeIvC0RQveq6IFA1N0isAI0vT+D0CwzY5GJWXOLPN
-         xw0It3DRxJIKZ0QKkOpsUlVbtvpXqerDAEFsqlCqaQBJTwHkQPSZo1lqtGJK6px6C3VF
-         PsBzHfum4HbQjQonCnYfsgFA3Zg7XnAtKEu91ofUUKD9gdH/S82kgM3nC8Ht64ePFqOT
-         H02j8JtYc9U+/evQPq1u+gt7VaNKseJvT6C7G+5HJzuJvlms9+YhvGzaKvRAgV1DJDTU
-         IUXw==
+        d=oss.qualcomm.com; s=google; t=1777534457; x=1778139257; darn=vger.kernel.org;
+        h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
+         :mime-version:subject:date:from:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=U1lg30DyGHdc17+B9LzqWTA6Lt4/KitzUTkvawVH9l8=;
+        b=AGnpajaLlAqaHH9EQX2in9CzyIyIvN2OzhTDs/pf6TRE9/HQbDz8vNsFqackNwhQ7T
+         IMloXvno0aERnnbpq/HPZEKpbgv5RBYa1AR/EbI6ZWGQZ9osiGFerSY9vdr+YLpZ8M+g
+         pHlo6XaMKFdh1n8wRCnwSTSdI+GH1yEoyXAup4WAyWNu/SLgJP7WIrYGkyuQUShQKZ0u
+         su3zkP/KTzB01ixAmJBFDME/mDwFp1Xykd/cSTwUyAC1uFWy1tUPSRZONrJpEz/9CVz5
+         iw888GMsZ1+O/9G3r1CFcAIZ/BBmdWavduf1Zpr1kpJF20besdnQdZBjhyVrnu3SueHS
+         C5BQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1777534454; x=1778139254;
-        h=cc:to:content-transfer-encoding:mime-version:message-id:date
-         :subject:from:x-gm-gg:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=xSv3gA37ufigJREMdqvUyj/7VPLNmpcCpiHXmZyc9xM=;
-        b=GAh0W6Ie7YszGZwHxhG5A7q9sBKiWLtQxN4Oy4Wl4epHruXAi8FO8cXRPndXrNjrLh
-         mCnj1vtefy++xOOKyy5Sx4vr18yaJrUwCHTdxHlbTf39ol5DI+e95++m53Z0jyPqpXxj
-         hiuyC4p5xZe8sGlX5N2WT8vHSDhNaotqJXL0nT5VIB+oqpQTj1IqPFLB6Pf6gQPL+E7o
-         axcCWJOpQKuivjKiWQG/4FIvvK5Z+1rCVYvK1/rJPCV1fDThRSt3gd3TY/XwfhNILFko
-         oiUTMfxfdVkbdTEozWqrrVSbjPpgxecd0+WvOTEX/wZtjVE0G8hhyn+JbP2WaOpDyjMS
-         h7+A==
-X-Forwarded-Encrypted: i=1; AFNElJ9ytzsgww4deN5PShx+b70tugw+L9b59+UOXjO7hcvji+tVbKw9A/ujXtztr/RyzQU5pVdqbER/4ig27x2Mt+8DUbDF@vger.kernel.org
-X-Gm-Message-State: AOJu0YwKUfSXjioRO+xxWuypsM4x42Uu2Xg1xOlE9Uc94Swrlhm8GUhG
-	5yY4FXA4IjSCmvV40dum3+41p4+3HcZ+6Y4Q6biwomQfW6pk3wC+HXMqRnua+orGa6ZkM1nptXN
-	jq3jTFKm+LHcdNsWR0txiTyHWCYngwJs66hgpDmeV81bK2V6n0J11qfDGNNkWgLS+f8B8iCal30
-	cO
-X-Gm-Gg: AeBDievByBnF+7SzuI0PD7v3zT5spXVKL6pEa7DyY9a/wGAjyURh/xZhwzaNjHupva8
-	AtEHnwqKFVW1g56bVn8EeGuGjd8cRVODbywt7sXvInwChQ2VsHj9hc7ORK8DroosyOtlr5jw86Z
-	3g+dsNAhlqENU0lc63hWYxyFqK9V4WMAi7EvAq3xJ1vtk7oSaTa0ex00AbDpQmk6fF7HXQsDvlE
-	HHqb6zOfCOmyQUsyFR3S8agJ4u6Ds8uCnamjV3Mo+yq/0cyfcIDAKbpbRG5ZMgAYmTT7/+dRSEW
-	u4in+MMuB2UYTwBXvsdwJmQhpYCz7k0oRaPhYJM+TwRJQVIthYsFK+OtF6BHgsy038EyBjaZrHT
-	pNxhjPRQKpiAr7ZnwJ25Wm2TxxaoOA9xdreaMN3qAaaDwy5xY5F1My0rx00wA
-X-Received: by 2002:a05:622a:988:b0:50e:5e8d:87d2 with SMTP id d75a77b69052e-5102aad8465mr23024681cf.1.1777534454158;
-        Thu, 30 Apr 2026 00:34:14 -0700 (PDT)
-X-Received: by 2002:a05:622a:988:b0:50e:5e8d:87d2 with SMTP id d75a77b69052e-5102aad8465mr23023991cf.1.1777534453455;
-        Thu, 30 Apr 2026 00:34:13 -0700 (PDT)
+        d=1e100.net; s=20251104; t=1777534457; x=1778139257;
+        h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
+         :mime-version:subject:date:from:x-gm-gg:x-gm-message-state:from:to
+         :cc:subject:date:message-id:reply-to;
+        bh=U1lg30DyGHdc17+B9LzqWTA6Lt4/KitzUTkvawVH9l8=;
+        b=AYFEhRlrulFXQ85DwRo8FrN7NjIyPOjOQB8MI3ltD4EvgzGjXK3kjv4MQBSo0ojozi
+         fu0qLVh3z0GrzbQ5/kS80N88bb/VMnORdA5csen1pDHYi3bmc9dN7gyCEqpgEVnUnWou
+         bShekvsZEN/SqMBdZ+1yYffUcB/ukQEK+p4y1XVAC8HwCIhPTytMrBXdRhpWRgNPQXtq
+         bTKbSw8u8D3rZSeGMhoDk5Vsq8iyMEKKOHPmesbxQPzO4EYcioEEi6DNgPp0FM2nMW1k
+         rr1OlsUs41pbqdtW2TEuf0+13HH5n6UIguCcVVzcemztOYttip8qDumYNfNHlbG73VoY
+         vvgw==
+X-Forwarded-Encrypted: i=1; AFNElJ+b7vfwGSa+WAY7p3Fpo0q1NYSHbepisyGJm/TfkbJxFS4Xzkd9HOy4OuBZwadTe1DTy2YfslhCllU7F4pkt428iUHZ@vger.kernel.org
+X-Gm-Message-State: AOJu0YyilEsVbQ2lFG1rtTzRx66QbO+xG3j7XrgmHt1xP7hrQF6/R/Jw
+	9ceD5BsX9aJpJKejoklwQsnkV61OQ7x9/P+mTNSfdbpMtIV8anKFiOiIAq2j+jlkzJiFtd+vMsY
+	9zMZN1I4oKfyHNsrZZ0RsnM2KFs6/qnqJkiwFucokKjmkpJvZQoCIsH/cs2zYsjOjotGcpP3djL
+	wU
+X-Gm-Gg: AeBDieutBXvkKgvDT2UeZ5h91HV9bik+kzOXTu7Zp3Wor6pUEmouB+m8xLBsuvb5eFl
+	LAs/L0jfgJiA0lkYAYMgyUbPRkuldfTgTEbwYkfv0HiDHDMlXZQ6y2ZPKU6xFlVOpE4iAAX93yD
+	o4JDmgj/4Rdg60bV6Mb/WGFp4iN40z6P/OGFjS6xilXeOlP0cOfWld0Zt+N269h3TpMiRo9bZDx
+	Bj5kTVMg1vguTDOXfXFClwPoJWQRajkX85ujEcRDBPUQaZayD4N8xQCj9sB8FEehuRPeC03+Ddl
+	bxYI2jRKLm5m/hHVRR4Cd5SOw97kI4fBXHnmdGz7SKA6sRRR3HMpoHTGAbJ/QEcbnWmK1Fgm6rW
+	Npv55NzAU0LqbP+HkZPd0oOLqfuKBiAtak5H2QcXsL25CzB/kUGvzJQJo+3dR
+X-Received: by 2002:a05:622a:2296:b0:50d:abc3:eed5 with SMTP id d75a77b69052e-5102ae1dd37mr24163201cf.29.1777534457247;
+        Thu, 30 Apr 2026 00:34:17 -0700 (PDT)
+X-Received: by 2002:a05:622a:2296:b0:50d:abc3:eed5 with SMTP id d75a77b69052e-5102ae1dd37mr24162871cf.29.1777534456853;
+        Thu, 30 Apr 2026 00:34:16 -0700 (PDT)
 Received: from brgl-qcom.local ([2a01:cb1d:dc:7e00:79a:f446:21cb:22e7])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-48a81ed6bafsm76132625e9.2.2026.04.30.00.34.12
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-48a81ed6bafsm76132625e9.2.2026.04.30.00.34.15
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 30 Apr 2026 00:34:12 -0700 (PDT)
+        Thu, 30 Apr 2026 00:34:16 -0700 (PDT)
 From: Bartosz Golaszewski <bartosz.golaszewski@oss.qualcomm.com>
-Subject: [PATCH v4 0/2] platform/x86: x86-android-tablets: use real
- firmware node references with intel drivers
-Date: Thu, 30 Apr 2026 09:34:04 +0200
-Message-Id: <20260430-baytrail-real-swnode-v4-0-767bcda6667f@oss.qualcomm.com>
+Date: Thu, 30 Apr 2026 09:34:06 +0200
+Subject: [PATCH v4 2/2] platform/x86: x86-android-tablets: enable fwnode
+ matching of GPIO chips
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
@@ -89,11 +91,9 @@ List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-X-B4-Tracking: v=1; b=H4sIAO0F82kC/4XNwQ6CMAyA4VchOztStsHQk+9hPMzRyRJguiFKC
- O/u4KIHiZcmf5N+nUhAbzGQQzIRj4MN1nUxxC4hulbdFamtYhMGrACe7elFjb1XtqEeVUPDs3M
- VUlmhVLyUYGRJ4unNo7GvlT2dY9c29M6P65chW7Z/wCGjQGVuGCuEQrE3RxdCen+oRru2TeMgi
- zuwjyWAbVgsWoXJIRdKaA1yw+JfFpMbFo8WAHAUOpNQ6h/WPM9v3HysSlcBAAA=
-X-Change-ID: 20260319-baytrail-real-swnode-7de7a3870f78
+Message-Id: <20260430-baytrail-real-swnode-v4-2-767bcda6667f@oss.qualcomm.com>
+References: <20260430-baytrail-real-swnode-v4-0-767bcda6667f@oss.qualcomm.com>
+In-Reply-To: <20260430-baytrail-real-swnode-v4-0-767bcda6667f@oss.qualcomm.com>
 To: Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
         Daniel Scally <djrscally@gmail.com>,
         Heikki Krogerus <heikki.krogerus@linux.intel.com>,
@@ -112,135 +112,177 @@ Cc: linux-acpi@vger.kernel.org, driver-core@lists.linux.dev,
         platform-driver-x86@vger.kernel.org, brgl@kernel.org,
         Bartosz Golaszewski <bartosz.golaszewski@oss.qualcomm.com>
 X-Mailer: b4 0.14.2
-X-Developer-Signature: v=1; a=openpgp-sha256; l=4046;
+X-Developer-Signature: v=1; a=openpgp-sha256; l=4114;
  i=bartosz.golaszewski@oss.qualcomm.com; h=from:subject:message-id;
- bh=hnY9WhAyyswSQD7bqI8rIpBTtRvYyhwb49eFS9MHNTU=;
- b=owEBbQKS/ZANAwAKAQWdLsv/NoTDAcsmYgBp8wXww0JXJj3cUPpeN7kyGC5vtRjoLvkMHCdCU
- WuBTlcVtyWJAjMEAAEKAB0WIQSR5RMt5bVGHXuiZfwFnS7L/zaEwwUCafMF8AAKCRAFnS7L/zaE
- wwVpD/99JfqwXsAJ4nP6xbzNU+tqUqCOObItl3aVI1FsBjcqzPTo1/VLEe6RUQ3IFgmezepeDeX
- XR8oTT/nb0mY+On9XTyLV/0esyKnvoz1TtLsgodHzQ1W0YgyZqRXeUa6g9lEeygSJQzELFqfjju
- PIIRSWNgIRsba9wct5mE1nizxHLBXCHUXGNDlQkdnLf8sAKZyxIs1bfWnRSaXOzG5Im4VY4+Fmw
- RQpDsBDqRnSDVfqchGIXbiSjJ67GhY4UU0kBqddKKIaYO/lGftF2JbME77k3DKAi4T7U2bj5rcd
- 2IljBtKYlru8JQtY/yWw010zR3asyeClZ2eAjzZcnLYoPC/E7fads9l6B5SJQB2umfOsWa6r32A
- LfRoj0eSlKNxBgI+CFMuA2RcnPIvC6nRZCjQpgyZYSvX2n0tf6GmVMteTXu3Rs2LsoTXQz8iFlj
- RFf9Bf9STlq4ouBMKKlIWos5jbO5vwthtzI79gWulWEiQaiz1WAQunSCysFfkkOo+C6pWAeURjG
- afv9U/vVZYJcdEXFqIbb1B9hSDH/X+QWbyvzGtlf9vs/Vhg1/vgxcOvqbMjX50910lcxuv0/VAt
- L7nCrAjjIT5K9KGk9YFtHHMI7DTCUs4Dv64SYOVXw6Pf5rBkFByQ99tc3G32UbRTrk0KFSCKNh6
- /+jbRspnZIckYCw==
+ bh=ftejCI4cDYR15DURdSwoo+KUTTkz4glwgHDYbKITpyw=;
+ b=owEBbQKS/ZANAwAKAQWdLsv/NoTDAcsmYgBp8wXyNbrBg8v29GzWwZQSXhoATQ3VfPNhBQPyX
+ CBTZhwb0VGJAjMEAAEKAB0WIQSR5RMt5bVGHXuiZfwFnS7L/zaEwwUCafMF8gAKCRAFnS7L/zaE
+ w74HD/9R4T00RQB0nP0oxJY0jbchVJlzM2HQLvTUIxu3XYf2kbK+9M5LCXFZDn6pP6shJQG8qg9
+ jvbNZ48V+8pTQiu2nRdH5ofy4TTP97Be12edItD9zYZc3BZyaIIfoREEHbyOOXcNxbijgu2ZXgK
+ aDnFxWjXdxmcJP3+44LmtBc2f66btigvbsfJ0bqpA+kXXU+pFBtW4do7ukRCaGucdQmblYoufqX
+ aFul+BFkxk6RW4b1C1jMkOnsI57vXPULWviGGg1koW2eTe/uFbexumZFhUbk3lo0nZFqVQXeKTy
+ w1QBbtvIGl07Q1FFKbkbuzNvJerte0vlk2XaTvUnOlqNViiKDhO5dJpPWYQT/Fl0lbJ07uv5yhc
+ A7HAcqvh0fSpG0of8UbqGjbqxuRiZM+E4H8S3qIZXfof/N5D0WDZmfbNSLZVfsqz9gJwSBv1uja
+ aSf/DmIUIvwc8Nq5HINCUozUGe05IUEvmVUyNfxIHkpe3JzYgUd+LNSMKGNXRx6ePOF1tSsQlOH
+ 4hzKHjmxsFkDi5IrYsP+BChzM7/DIcso0+CtHzTNy1fzq9x73NgmvHhL5plWj4KkJqSVDz9q7py
+ BAbKRhko5Ya21J6x1Tg7FjUR0qHOE6OQUOmwLRRZ99r6LSdHxzDlZDihR8wbZyeP42Kh0pJQ1qI
+ oz35jL4OLjuxAVg==
 X-Developer-Key: i=bartosz.golaszewski@oss.qualcomm.com; a=openpgp;
  fpr=169DEB6C0BC3C46013D2C79F11A72EA01471D772
-X-Proofpoint-GUID: mJY3ySGzobN7etSlcBYcOEUie0YkmQT5
-X-Proofpoint-ORIG-GUID: mJY3ySGzobN7etSlcBYcOEUie0YkmQT5
-X-Proofpoint-Spam-Details-Enc: AW1haW4tMjYwNDMwMDA3MiBTYWx0ZWRfX/7edDkVyanwu
- HV7u0Heq/NHUdxiRCi9l5iUaObYHF1a8JO9cC2yPYczhvqpHyX2bQwkFNOcMoMXWOKYhSRbb5iu
- PH9RqB3WNZbkbOqVIvrplSox0qosVm2WvX7tHVC6KIzr1eJMkuJRhTClwd6v6NTtNPkcPh21rmM
- fC4H00+YKIU2udxQXb3+IrAeatKw4NT9qdyE+5Nt2J8058MowCtIKdnLuJOPvJva+Ldtwvcy6qe
- UKn1K6L4kAdagqQOOYqMKJ+TYiX0xZL7KyTuTAerrq/mv+MCU/pQ3htsnx7q3j0W1BBcequhux/
- pd4LcPipAQaqO0V4Jt1Em537NCdLhR5QfM1k5CSteE36guYFoLIjA5ayDtEiPAShYJyq0y9LaLF
- lDVmSYk8ujdWZIWUoaJDaXsPyBSYekTKNASSmn32kRdU9v+O8lfkHzMpHrADfNyHUDNLM+lToAX
- ATdm6qH6SiN0Z5WnF3Q==
-X-Authority-Analysis: v=2.4 cv=V+JNF+ni c=1 sm=1 tr=0 ts=69f305f6 cx=c_pps
- a=mPf7EqFMSY9/WdsSgAYMbA==:117 a=xqWC_Br6kY4A:10 a=IkcTkHD0fZMA:10
+X-Proofpoint-Spam-Details-Enc: AW1haW4tMjYwNDMwMDA3MiBTYWx0ZWRfX/gE/oRVJS5PO
+ 8oG8bv3/sktWVwEkbqZb1wHYXzr5RPzceMwGK9BxzYDgLiraZ22X34ALt4Yfts+AzOIXo9MN0vi
+ meSyww7ts8rebj96lzuY9xui3nOtlvCpsKXKt5TxKqcOIM6yzTaRuzFZ1vldK00aVhruCSsMKnG
+ VG3pBCrJ9uJrjbxr184MCx3lIvwPW31vMUcehXbLlFcEK7mbP2w5K5mPNIgMBRWnjQKfCdXkf/W
+ A6axVRwQOSRKN0/MQ1qsl9EWDzW/58nJCluhJVu/NO7UK4P1KgUSi/i3rKyHHYA7JOmrqoDSH25
+ 9DATcss7tavtex835gN+JX1Edb9WzyZU3OPiO6J0jS5x0roetKk29cq3reVsXTXr57VP5FE+o2O
+ P9HuOMgHRr9W5ENgiSjmMKtX8bShBXR30GSZ+9FmVA3NsBvpPdTSkRoauXJF6yQUDKuty8ErWYP
+ zfKhVHF5n8ZVYGHpw8w==
+X-Authority-Analysis: v=2.4 cv=Oc2oyBTY c=1 sm=1 tr=0 ts=69f305fa cx=c_pps
+ a=JbAStetqSzwMeJznSMzCyw==:117 a=xqWC_Br6kY4A:10 a=IkcTkHD0fZMA:10
  a=A5OVakUREuEA:10 a=s4-Qcg_JpJYA:10 a=VkNPw1HP01LnGYTKEx00:22
- a=u7WPNUs3qKkmUXheDGA7:22 a=gowsoOTTUOVcmtlkKump:22 a=bC-a23v3AAAA:8
- a=EUspDBNiAAAA:8 a=sB14MePOP5e2yt9b4dIA:9 a=QEXdDO2ut3YA:10
- a=dawVfQjAaf238kedN5IG:22 a=FO4_E8m0qiDe52t0p3_H:22
+ a=u7WPNUs3qKkmUXheDGA7:22 a=3WHJM1ZQz_JShphwDgj5:22 a=EUspDBNiAAAA:8
+ a=k_IdGrc-7EcYSgGcGvIA:9 a=QEXdDO2ut3YA:10 a=uxP6HrT_eTzRwkO_Te1X:22
+X-Proofpoint-GUID: GuKu0lkRg0h2Av1mIx0GvbiwJfklW85B
+X-Proofpoint-ORIG-GUID: GuKu0lkRg0h2Av1mIx0GvbiwJfklW85B
 X-Proofpoint-Virus-Version: vendor=baseguard
  engine=ICAP:2.0.293,Aquarius:18.0.1143,Hydra:6.1.51,FMLib:17.12.100.49
  definitions=2026-04-30_02,2026-04-28_01,2025-10-01_01
 X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
- clxscore=1015 spamscore=0 suspectscore=0 malwarescore=0 bulkscore=0
- lowpriorityscore=0 impostorscore=0 adultscore=0 priorityscore=1501
- phishscore=0 classifier=typeunknown authscore=0 authtc= authcc=
- route=outbound adjust=0 reason=mlx scancount=1 engine=8.22.0-2604200000
- definitions=main-2604300072
+ clxscore=1015 spamscore=0 lowpriorityscore=0 phishscore=0 suspectscore=0
+ impostorscore=0 bulkscore=0 malwarescore=0 priorityscore=1501 adultscore=0
+ classifier=typeunknown authscore=0 authtc= authcc= route=outbound adjust=0
+ reason=mlx scancount=1 engine=8.22.0-2604200000 definitions=main-2604300072
 
-First let me repeat the problem statement:
+In order to allow GPIOLIB to match cherryview and baytrail GPIO
+controllers by their firmware nodes instead of their names, we need to
+attach the - currently "dangling" - existing software nodes to their
+target devices dynamically.
 
-==
+The driver uses platform_create_bundle() and expects all required
+providers to be present before it itself is probed. We know the name of
+the device we're waiting for so look them up and assign the appropriate
+software node as the secondary firmware node of the underlying ACPI node.
 
-GPIO software node lookup should rely exclusively on matching the
-addresses of the referenced firmware nodes. I tried to enforce it with
-commit e5d527be7e69 ("gpio: swnode: don't use the swnode's name as the
-key for GPIO lookup") but it broke existing users who abuse the software
-node mechanism by creating "dummy" software nodes named after the device
-they want to get GPIOs from but never attaching them to the actual GPIO
-devices. They rely on the current behavior of GPIOLIB where it will match
-the label of the GPIO controller against the name of the software node
-and does not require a true link.
-
-x86-android-tablets driver is one of the abusers in that it creates
-dummy software nodes for baytrail and cherryview GPIO controllers but
-they don't really reference these devices. Before we can reapply
-e5d527be7e69 and support matching by fwnode address exclusively, we need
-to convert all the users to using actual fwnode references.
-
-==
-
-Now for the new approach:
-
-Now with the recent patches I sent or plan to send out, it turns out
-that almost all existing users of software node lookup can easily have
-the software node's representing the GPIO controllers attached to their
-target devices as their primary firmware node. The remaining complex
-cases are: pcengines-apuv2 and geode-common but in the first case we
-have control over the creation of the GPIO device - we can assign it a
-firmware node - and in the second case, we deal with an MFD driver so
-can export the cell's software node in a header.
-
-The only remaining use-case where we need to reference a GPIO controller
-described in ACPI from a software node is the x86-android-tablets
-driver. In this case, I think it no longer makes sense to propose a new
-generic interface. Instead, I'd like to propose to keep it as a
-driver-specific quirk.
-
-This series proposes the following changes:
-1. Provide acpi_bus_find_device_by_name() for looking up ACPI devices.
-2. Implement support for dynamic assignment of secondary firmware nodes
-in the x86-android-tablets driver. More details on how it's approached
-are in the relevant commit message.
-
-The dependencies in driver core and GPIOLIB are already upstream.
-
-Merging strategy: Both patches should go through the X86 platform tree
-with an Ack from Rafael.
+Scheduling fine-grained devres actions allows for proper teardown and
+unsetting of the secondary firmware nodes.
 
 Signed-off-by: Bartosz Golaszewski <bartosz.golaszewski@oss.qualcomm.com>
 ---
-Changes in v4:
-- As pointed out by Hans: we don't need the notifier logic so replace
-  patch 1/2 with another, providing an ACPI helper for locating devices
-  by name and simplify patch 2/2
-- Link to v3: https://patch.msgid.link/20260427-baytrail-real-swnode-v3-0-0003e4c1708c@oss.qualcomm.com
-
-Changes in v3:
-- Drop dependencies that got upstream for v7.1
-- Rebase on top of v7.1-rc1
-- Link to v2: https://patch.msgid.link/20260402-baytrail-real-swnode-v2-0-6f5054a4cc07@oss.qualcomm.com
-
-Changes in v2:
-- Completely new approach
-- Keep the cherryview and baytrail secondary fwnode handling as a
-  driver-specific quirk for x86 tablets and don't introduce any new API
-- Change the return value when resolving a reference to an unregistered
-  software node and defer probe in GPIOLIB in that situation
-- Export acpi_bus_type for use in x86-android-tablets
-- Link to v1: https://patch.msgid.link/20260319-baytrail-real-swnode-v1-0-75f2264ae49f@oss.qualcomm.com
-
----
-Bartosz Golaszewski (2):
-      ACPI: provide acpi_bus_find_device_by_name()
-      platform/x86: x86-android-tablets: enable fwnode matching of GPIO chips
-
- drivers/acpi/bus.c                              | 13 +++++
  drivers/platform/x86/x86-android-tablets/core.c | 78 ++++++++++++++++++++++++-
- include/linux/acpi.h                            |  7 +++
- 3 files changed, 95 insertions(+), 3 deletions(-)
----
-base-commit: 085f14acda1c46ab815605ecf2341afe5a691eb9
-change-id: 20260319-baytrail-real-swnode-7de7a3870f78
+ 1 file changed, 75 insertions(+), 3 deletions(-)
 
-Best regards,
+diff --git a/drivers/platform/x86/x86-android-tablets/core.c b/drivers/platform/x86/x86-android-tablets/core.c
+index 021009e9085bec3db9c4daa1f6235600210a6099..8fd0cffe351577182f31c90c104b616cec78c481 100644
+--- a/drivers/platform/x86/x86-android-tablets/core.c
++++ b/drivers/platform/x86/x86-android-tablets/core.c
+@@ -13,6 +13,7 @@
+ #include <linux/acpi.h>
+ #include <linux/device.h>
+ #include <linux/dmi.h>
++#include <linux/fwnode.h>
+ #include <linux/gpio/consumer.h>
+ #include <linux/gpio/machine.h>
+ #include <linux/irq.h>
+@@ -360,6 +361,76 @@ static const struct software_node *cherryview_gpiochip_node_group[] = {
+ 	NULL
+ };
+ 
++static void auto_secondary_unset(void *data)
++{
++	struct fwnode_handle *fwnode = data;
++
++	fwnode->secondary = NULL;
++}
++
++static int acpi_set_secondary_fwnode(struct device *parent, struct device *dev,
++				     const struct software_node *const swnode)
++{
++	struct acpi_device *device = to_acpi_device(dev);
++	struct fwnode_handle *fwnode;
++	int ret;
++
++	fwnode = software_node_fwnode(swnode);
++	if (WARN_ON(!fwnode))
++		return -ENOENT;
++
++	fwnode->secondary = ERR_PTR(-ENODEV);
++	device->fwnode.secondary = fwnode;
++
++	ret = devm_add_action_or_reset(parent, auto_secondary_unset, &device->fwnode);
++	if (ret)
++		dev_err(parent, "Failed to schedule the unset action for secondary fwnode\n");
++
++	return ret;
++}
++
++static void auto_secondary_unregister_node_group(void *data)
++{
++	const struct software_node **nodes = data;
++
++	software_node_unregister_node_group(nodes);
++}
++
++static int auto_secondary_fwnode_init(struct device *parent)
++{
++	const struct software_node *const *swnode;
++	int ret;
++
++	if (!gpiochip_node_group)
++		return 0;
++
++	ret = software_node_register_node_group(gpiochip_node_group);
++	if (ret)
++		return ret;
++
++	ret = devm_add_action_or_reset(parent,
++				       auto_secondary_unregister_node_group,
++				       gpiochip_node_group);
++	if (ret)
++		return ret;
++
++	for (swnode = gpiochip_node_group; *swnode; swnode++) {
++		struct device *dev __free(put_device) =
++				acpi_bus_find_device_by_name((*swnode)->name);
++		if (!dev) {
++			dev_err(parent, "Failed to find the required GPIO controller: %s\n",
++				(*swnode)->name);
++			return -ENODEV;
++		}
++
++		ret = acpi_set_secondary_fwnode(parent, dev, *swnode);
++		if (ret)
++			return ret;
++	}
++
++	return 0;
++}
++
+ static void x86_android_tablet_remove(struct platform_device *pdev)
+ {
+ 	int i;
+@@ -391,7 +462,6 @@ static void x86_android_tablet_remove(struct platform_device *pdev)
+ 
+ 	software_node_unregister_node_group(gpio_button_swnodes);
+ 	software_node_unregister_node_group(swnode_group);
+-	software_node_unregister_node_group(gpiochip_node_group);
+ }
+ 
+ static __init int x86_android_tablet_probe(struct platform_device *pdev)
+@@ -427,9 +497,11 @@ static __init int x86_android_tablet_probe(struct platform_device *pdev)
+ 		break;
+ 	}
+ 
+-	ret = software_node_register_node_group(gpiochip_node_group);
+-	if (ret)
++	ret = auto_secondary_fwnode_init(&pdev->dev);
++	if (ret) {
++		x86_android_tablet_remove(pdev);
+ 		return ret;
++	}
+ 
+ 	ret = software_node_register_node_group(dev_info->swnode_group);
+ 	if (ret) {
+
 -- 
-Bartosz Golaszewski <bartosz.golaszewski@oss.qualcomm.com>
+2.47.3
 
