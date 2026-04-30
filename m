@@ -1,288 +1,396 @@
-Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
+Received: from smtp-out1.simply.com (smtp-out1.simply.com [94.231.106.240])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 240DA3DA5AE
-	for <platform-driver-x86@vger.kernel.org>; Thu, 30 Apr 2026 07:34:25 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.180.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 945BD2F5A06;
+	Thu, 30 Apr 2026 08:14:11 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=94.231.106.240
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1777534480; cv=none; b=nXh9oXf1G0gI4G2CkRGJd1Mt7V/Zfr4HvPJxJ/OvA1cfXroA7Io8dhSltVgkaUdaJeo0JNyh64iEFziru8UoyvsTk+siB8Af4r0uWpBx1/yJlf/09ZYyVTqvQYJ7gPyEjl7dR1wjNpls7JNpRJwcvb/FIndoWq6/tEXhQ8rik0o=
+	t=1777536857; cv=none; b=GC+6QWF1MLdUMtuY+cxGQbWbLo4hFai2cMmsLcRrakSVFn+eR5e+auVQR8+L+F5hKcQFRnLVU2MUaQQ6vJAHlcu3CU2amlEsSkSwYKBcIYgDZ+V1FlXRSXjW1IKfNcz2/3gxlzCcvmXS9KpgsGZkFP8l8ifEyJzgfd3wUXTRqmw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1777534480; c=relaxed/simple;
-	bh=ftejCI4cDYR15DURdSwoo+KUTTkz4glwgHDYbKITpyw=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=B97JqnPVN3oFNcD20bj62F52hrG8Bd2fMpELfvwj8Zc+qQB2MN/r0TCkJVcoohoUCkZgiCEG+g3a/eqHHzWzeCC9hjWH+wUarr941818MGTBRrHD+KCPYlLNHZR7mbhKt4usmFdtid7rh5KoacDXLZ9Hhpx9fAu/7m58UQh+Zks=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com; spf=pass smtp.mailfrom=oss.qualcomm.com; dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b=YkXGUqc0; dkim=pass (2048-bit key) header.d=oss.qualcomm.com header.i=@oss.qualcomm.com header.b=AGnpajaL; arc=none smtp.client-ip=205.220.180.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oss.qualcomm.com
+	s=arc-20240116; t=1777536857; c=relaxed/simple;
+	bh=tMoFJ69uaE52hLT1u3ToQcYIaqKO3QC4DBh853y5pFQ=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version:Content-Type; b=u1rWqLKsk5+p7s6q9ZGfJN/RqPZq6g9RsQ71bxaSsnFK5yRErsULEevjU6GwHWs+zv1WHpIGC0Clk84fpj1YbT9K5WpHBpDysmz1VzoZfCnLhZOZfJupTieHbOff3PjgaDJh/r0fqGAHx7RE8UY68z//LmVR2v2h7xrQtWYhI+8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=grenangen.se; spf=pass smtp.mailfrom=grenangen.se; dkim=pass (2048-bit key) header.d=grenangen.se header.i=@grenangen.se header.b=mI+gjHqH; arc=none smtp.client-ip=94.231.106.240
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=grenangen.se
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=grenangen.se
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b="YkXGUqc0";
-	dkim=pass (2048-bit key) header.d=oss.qualcomm.com header.i=@oss.qualcomm.com header.b="AGnpajaL"
-Received: from pps.filterd (m0279871.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.18.1.11/8.18.1.11) with ESMTP id 63TNvT0s3733909
-	for <platform-driver-x86@vger.kernel.org>; Thu, 30 Apr 2026 07:34:18 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=qualcomm.com; h=
-	cc:content-transfer-encoding:content-type:date:from:in-reply-to
-	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
-	U1lg30DyGHdc17+B9LzqWTA6Lt4/KitzUTkvawVH9l8=; b=YkXGUqc0UwwFKQda
-	PE1GWHQR2rLBvZZuCvHXOt537eZxo7bpxUkuhu/01yPufMEdgsCS46y3dh2vjshm
-	yOBLMyqduCPu+m8TK48Ct32cK7HWZLIQpgsrW8Kr/mL3VJr2dBJAYN32bWr73v9a
-	sV6yeNJB6MkMuCvDr5qzEshW9EcHuZBSM6XNx6mCL5ZOB9zodEy76yVbvSS5o7Z6
-	eTpCVHLQ/30HKkVVJ9vYAZmXpuqMLLXRsi33P0AIgfYjEVQApvfjQU13xzkm1aTE
-	KU7qJ14v3rNPnlFNoG1sXF4CE8vXEYqBVY8TZ4uxqjOr/TkOg7U7cl9289PmVSeM
-	xpbHEA==
-Received: from mail-qt1-f200.google.com (mail-qt1-f200.google.com [209.85.160.200])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 4duv3x9cd9-1
-	(version=TLSv1.3 cipher=TLS_AES_128_GCM_SHA256 bits=128 verify=NOT)
-	for <platform-driver-x86@vger.kernel.org>; Thu, 30 Apr 2026 07:34:18 +0000 (GMT)
-Received: by mail-qt1-f200.google.com with SMTP id d75a77b69052e-50edf0245b0so10918271cf.1
-        for <platform-driver-x86@vger.kernel.org>; Thu, 30 Apr 2026 00:34:18 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=oss.qualcomm.com; s=google; t=1777534457; x=1778139257; darn=vger.kernel.org;
-        h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
-         :mime-version:subject:date:from:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=U1lg30DyGHdc17+B9LzqWTA6Lt4/KitzUTkvawVH9l8=;
-        b=AGnpajaLlAqaHH9EQX2in9CzyIyIvN2OzhTDs/pf6TRE9/HQbDz8vNsFqackNwhQ7T
-         IMloXvno0aERnnbpq/HPZEKpbgv5RBYa1AR/EbI6ZWGQZ9osiGFerSY9vdr+YLpZ8M+g
-         pHlo6XaMKFdh1n8wRCnwSTSdI+GH1yEoyXAup4WAyWNu/SLgJP7WIrYGkyuQUShQKZ0u
-         su3zkP/KTzB01ixAmJBFDME/mDwFp1Xykd/cSTwUyAC1uFWy1tUPSRZONrJpEz/9CVz5
-         iw888GMsZ1+O/9G3r1CFcAIZ/BBmdWavduf1Zpr1kpJF20besdnQdZBjhyVrnu3SueHS
-         C5BQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1777534457; x=1778139257;
-        h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
-         :mime-version:subject:date:from:x-gm-gg:x-gm-message-state:from:to
-         :cc:subject:date:message-id:reply-to;
-        bh=U1lg30DyGHdc17+B9LzqWTA6Lt4/KitzUTkvawVH9l8=;
-        b=AYFEhRlrulFXQ85DwRo8FrN7NjIyPOjOQB8MI3ltD4EvgzGjXK3kjv4MQBSo0ojozi
-         fu0qLVh3z0GrzbQ5/kS80N88bb/VMnORdA5csen1pDHYi3bmc9dN7gyCEqpgEVnUnWou
-         bShekvsZEN/SqMBdZ+1yYffUcB/ukQEK+p4y1XVAC8HwCIhPTytMrBXdRhpWRgNPQXtq
-         bTKbSw8u8D3rZSeGMhoDk5Vsq8iyMEKKOHPmesbxQPzO4EYcioEEi6DNgPp0FM2nMW1k
-         rr1OlsUs41pbqdtW2TEuf0+13HH5n6UIguCcVVzcemztOYttip8qDumYNfNHlbG73VoY
-         vvgw==
-X-Forwarded-Encrypted: i=1; AFNElJ+b7vfwGSa+WAY7p3Fpo0q1NYSHbepisyGJm/TfkbJxFS4Xzkd9HOy4OuBZwadTe1DTy2YfslhCllU7F4pkt428iUHZ@vger.kernel.org
-X-Gm-Message-State: AOJu0YyilEsVbQ2lFG1rtTzRx66QbO+xG3j7XrgmHt1xP7hrQF6/R/Jw
-	9ceD5BsX9aJpJKejoklwQsnkV61OQ7x9/P+mTNSfdbpMtIV8anKFiOiIAq2j+jlkzJiFtd+vMsY
-	9zMZN1I4oKfyHNsrZZ0RsnM2KFs6/qnqJkiwFucokKjmkpJvZQoCIsH/cs2zYsjOjotGcpP3djL
-	wU
-X-Gm-Gg: AeBDieutBXvkKgvDT2UeZ5h91HV9bik+kzOXTu7Zp3Wor6pUEmouB+m8xLBsuvb5eFl
-	LAs/L0jfgJiA0lkYAYMgyUbPRkuldfTgTEbwYkfv0HiDHDMlXZQ6y2ZPKU6xFlVOpE4iAAX93yD
-	o4JDmgj/4Rdg60bV6Mb/WGFp4iN40z6P/OGFjS6xilXeOlP0cOfWld0Zt+N269h3TpMiRo9bZDx
-	Bj5kTVMg1vguTDOXfXFClwPoJWQRajkX85ujEcRDBPUQaZayD4N8xQCj9sB8FEehuRPeC03+Ddl
-	bxYI2jRKLm5m/hHVRR4Cd5SOw97kI4fBXHnmdGz7SKA6sRRR3HMpoHTGAbJ/QEcbnWmK1Fgm6rW
-	Npv55NzAU0LqbP+HkZPd0oOLqfuKBiAtak5H2QcXsL25CzB/kUGvzJQJo+3dR
-X-Received: by 2002:a05:622a:2296:b0:50d:abc3:eed5 with SMTP id d75a77b69052e-5102ae1dd37mr24163201cf.29.1777534457247;
-        Thu, 30 Apr 2026 00:34:17 -0700 (PDT)
-X-Received: by 2002:a05:622a:2296:b0:50d:abc3:eed5 with SMTP id d75a77b69052e-5102ae1dd37mr24162871cf.29.1777534456853;
-        Thu, 30 Apr 2026 00:34:16 -0700 (PDT)
-Received: from brgl-qcom.local ([2a01:cb1d:dc:7e00:79a:f446:21cb:22e7])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-48a81ed6bafsm76132625e9.2.2026.04.30.00.34.15
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 30 Apr 2026 00:34:16 -0700 (PDT)
-From: Bartosz Golaszewski <bartosz.golaszewski@oss.qualcomm.com>
-Date: Thu, 30 Apr 2026 09:34:06 +0200
-Subject: [PATCH v4 2/2] platform/x86: x86-android-tablets: enable fwnode
- matching of GPIO chips
+	dkim=pass (2048-bit key) header.d=grenangen.se header.i=@grenangen.se header.b="mI+gjHqH"
+Received: from localhost (localhost [127.0.0.1])
+	by smtp.simply.com (Simply.com) with ESMTP id 4g5mtx0HNDz1DDS8;
+	Thu, 30 Apr 2026 10:05:29 +0200 (CEST)
+Received: from localhost (h-217-27-171-125.A498.priv.bahnhof.se [217.27.171.125])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange ECDHE (P-256) server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(Client did not present a certificate)
+	by smtp.simply.com (Simply.com) with ESMTPSA id 4g5mtw15z1z1DDST;
+	Thu, 30 Apr 2026 10:05:28 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=grenangen.se;
+	s=simplycom2; t=1777536328;
+	bh=ALBPMtNgTnH1HXHJFPbo+yMEp737dyTrIFPJpBH/4Co=;
+	h=From:To:Cc:Subject:Date;
+	b=mI+gjHqHlVxoFSQBM/BzFKTArJ59l7Zz02bbcU/oxIl542yx7JsyHMcVizEkKn1lW
+	 ut5AWjDUKfagcEoJkUFDGS4Mwn27Nh7WfBDKenY8y4sUk9pkV5eqMO/BCdTaAJ2HuG
+	 GEF58KrrfJs4coexPSjLKSCYKk7RDnUyVKObpBwerI5UNABytNsKzNkOJHwtxOU2+i
+	 UusNK1Gq+qMIN4ItIfl2d7UrlvMcAq9QYkPBO8tS64d6BJWKCMvD/cHMgh8w35nvLc
+	 Yk3HuzQjZBmk/rEoCRQbtAAZEpk7ryG6DpQvGiAV3yV9u4NVWItaDTlax0pgd0E/GI
+	 zqfo6PW17f1Og==
+From: =?UTF-8?q?Marcus=20Gren=C3=A4ngen?= <marcus@grenangen.se>
+To: platform-driver-x86@vger.kernel.org
+Cc: linux-input@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	luke@ljones.dev,
+	denis.benato@linux.dev,
+	hansg@kernel.org,
+	ilpo.jarvinen@linux.intel.com,
+	jikos@kernel.org,
+	bentiss@kernel.org,
+	corentin.chary@gmail.com,
+	=?UTF-8?q?Marcus=20Gren=C3=A4ngen?= <marcus@grenangen.se>
+Subject: [PATCH] platform/x86: asus-wmi: fix fn-lock on platforms where WMI DEVS is a no-op
+Date: Thu, 30 Apr 2026 10:05:27 +0200
+Message-ID: <20260430080527.12754-1-marcus@grenangen.se>
+X-Mailer: git-send-email 2.54.0
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Message-Id: <20260430-baytrail-real-swnode-v4-2-767bcda6667f@oss.qualcomm.com>
-References: <20260430-baytrail-real-swnode-v4-0-767bcda6667f@oss.qualcomm.com>
-In-Reply-To: <20260430-baytrail-real-swnode-v4-0-767bcda6667f@oss.qualcomm.com>
-To: Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Daniel Scally <djrscally@gmail.com>,
-        Heikki Krogerus <heikki.krogerus@linux.intel.com>,
-        Sakari Ailus <sakari.ailus@linux.intel.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        "Rafael J. Wysocki" <rafael@kernel.org>,
-        Danilo Krummrich <dakr@kernel.org>,
-        Mika Westerberg <mika.westerberg@linux.intel.com>,
-        Andy Shevchenko <andy@kernel.org>, Linus Walleij <linusw@kernel.org>,
-        Hans de Goede <hansg@kernel.org>,
-        =?utf-8?q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>,
-        Dmitry Torokhov <dmitry.torokhov@gmail.com>,
-        Len Brown <lenb@kernel.org>
-Cc: linux-acpi@vger.kernel.org, driver-core@lists.linux.dev,
-        linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org,
-        platform-driver-x86@vger.kernel.org, brgl@kernel.org,
-        Bartosz Golaszewski <bartosz.golaszewski@oss.qualcomm.com>
-X-Mailer: b4 0.14.2
-X-Developer-Signature: v=1; a=openpgp-sha256; l=4114;
- i=bartosz.golaszewski@oss.qualcomm.com; h=from:subject:message-id;
- bh=ftejCI4cDYR15DURdSwoo+KUTTkz4glwgHDYbKITpyw=;
- b=owEBbQKS/ZANAwAKAQWdLsv/NoTDAcsmYgBp8wXyNbrBg8v29GzWwZQSXhoATQ3VfPNhBQPyX
- CBTZhwb0VGJAjMEAAEKAB0WIQSR5RMt5bVGHXuiZfwFnS7L/zaEwwUCafMF8gAKCRAFnS7L/zaE
- w74HD/9R4T00RQB0nP0oxJY0jbchVJlzM2HQLvTUIxu3XYf2kbK+9M5LCXFZDn6pP6shJQG8qg9
- jvbNZ48V+8pTQiu2nRdH5ofy4TTP97Be12edItD9zYZc3BZyaIIfoREEHbyOOXcNxbijgu2ZXgK
- aDnFxWjXdxmcJP3+44LmtBc2f66btigvbsfJ0bqpA+kXXU+pFBtW4do7ukRCaGucdQmblYoufqX
- aFul+BFkxk6RW4b1C1jMkOnsI57vXPULWviGGg1koW2eTe/uFbexumZFhUbk3lo0nZFqVQXeKTy
- w1QBbtvIGl07Q1FFKbkbuzNvJerte0vlk2XaTvUnOlqNViiKDhO5dJpPWYQT/Fl0lbJ07uv5yhc
- A7HAcqvh0fSpG0of8UbqGjbqxuRiZM+E4H8S3qIZXfof/N5D0WDZmfbNSLZVfsqz9gJwSBv1uja
- aSf/DmIUIvwc8Nq5HINCUozUGe05IUEvmVUyNfxIHkpe3JzYgUd+LNSMKGNXRx6ePOF1tSsQlOH
- 4hzKHjmxsFkDi5IrYsP+BChzM7/DIcso0+CtHzTNy1fzq9x73NgmvHhL5plWj4KkJqSVDz9q7py
- BAbKRhko5Ya21J6x1Tg7FjUR0qHOE6OQUOmwLRRZ99r6LSdHxzDlZDihR8wbZyeP42Kh0pJQ1qI
- oz35jL4OLjuxAVg==
-X-Developer-Key: i=bartosz.golaszewski@oss.qualcomm.com; a=openpgp;
- fpr=169DEB6C0BC3C46013D2C79F11A72EA01471D772
-X-Proofpoint-Spam-Details-Enc: AW1haW4tMjYwNDMwMDA3MiBTYWx0ZWRfX/gE/oRVJS5PO
- 8oG8bv3/sktWVwEkbqZb1wHYXzr5RPzceMwGK9BxzYDgLiraZ22X34ALt4Yfts+AzOIXo9MN0vi
- meSyww7ts8rebj96lzuY9xui3nOtlvCpsKXKt5TxKqcOIM6yzTaRuzFZ1vldK00aVhruCSsMKnG
- VG3pBCrJ9uJrjbxr184MCx3lIvwPW31vMUcehXbLlFcEK7mbP2w5K5mPNIgMBRWnjQKfCdXkf/W
- A6axVRwQOSRKN0/MQ1qsl9EWDzW/58nJCluhJVu/NO7UK4P1KgUSi/i3rKyHHYA7JOmrqoDSH25
- 9DATcss7tavtex835gN+JX1Edb9WzyZU3OPiO6J0jS5x0roetKk29cq3reVsXTXr57VP5FE+o2O
- P9HuOMgHRr9W5ENgiSjmMKtX8bShBXR30GSZ+9FmVA3NsBvpPdTSkRoauXJF6yQUDKuty8ErWYP
- zfKhVHF5n8ZVYGHpw8w==
-X-Authority-Analysis: v=2.4 cv=Oc2oyBTY c=1 sm=1 tr=0 ts=69f305fa cx=c_pps
- a=JbAStetqSzwMeJznSMzCyw==:117 a=xqWC_Br6kY4A:10 a=IkcTkHD0fZMA:10
- a=A5OVakUREuEA:10 a=s4-Qcg_JpJYA:10 a=VkNPw1HP01LnGYTKEx00:22
- a=u7WPNUs3qKkmUXheDGA7:22 a=3WHJM1ZQz_JShphwDgj5:22 a=EUspDBNiAAAA:8
- a=k_IdGrc-7EcYSgGcGvIA:9 a=QEXdDO2ut3YA:10 a=uxP6HrT_eTzRwkO_Te1X:22
-X-Proofpoint-GUID: GuKu0lkRg0h2Av1mIx0GvbiwJfklW85B
-X-Proofpoint-ORIG-GUID: GuKu0lkRg0h2Av1mIx0GvbiwJfklW85B
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1143,Hydra:6.1.51,FMLib:17.12.100.49
- definitions=2026-04-30_02,2026-04-28_01,2025-10-01_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
- clxscore=1015 spamscore=0 lowpriorityscore=0 phishscore=0 suspectscore=0
- impostorscore=0 bulkscore=0 malwarescore=0 priorityscore=1501 adultscore=0
- classifier=typeunknown authscore=0 authtc= authcc= route=outbound adjust=0
- reason=mlx scancount=1 engine=8.22.0-2604200000 definitions=main-2604300072
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 
-In order to allow GPIOLIB to match cherryview and baytrail GPIO
-controllers by their firmware nodes instead of their names, we need to
-attach the - currently "dangling" - existing software nodes to their
-target devices dynamically.
+Some ASUS laptops (e.g. ProArt P16, N-Key keyboard 0B05:19B6) advertise
+the WMI fn-lock DEVID (0x00100023) as present but the DEVS call has no
+effect. On these machines fn-lock must be toggled via a HID feature report
+sent directly to the N-Key keyboard, which is handled by hid-asus.
 
-The driver uses platform_create_bundle() and expects all required
-providers to be present before it itself is probed. We know the name of
-the device we're waiting for so look them up and assign the appropriate
-software node as the secondary firmware node of the underlying ACPI node.
+Add a DMI quirk flag fnlock_use_hid for such platforms. When set,
+asus_wmi_has_fnlock_key() checks for a registered hid-asus listener that
+supports fnlock instead of querying DEVS, and asus_wmi_fnlock_update()
+dispatches to asus_hid_set_fnlock().
 
-Scheduling fine-grained devres actions allows for proper teardown and
-unsetting of the secondary firmware nodes.
+Extend struct asus_hid_listener with a fnlock_set callback and wire it up
+in hid-asus for QUIRK_ROG_NKEY_KEYBOARD + QUIRK_HID_FN_LOCK devices.
+Initialize fn_lock_sync_work and register the listener in the probe path
+for these keyboards (previously the early return for ROG N-Key devices
+skipped asus_input_configured where this was done).
 
-Signed-off-by: Bartosz Golaszewski <bartosz.golaszewski@oss.qualcomm.com>
+Also add a fnlock_status sysfs attribute (RW) under the asus-wmi platform
+device so userspace (e.g. asusctl) can read and set fn-lock state without
+needing to open /dev/hidraw directly.
+
+Fix a NULL pointer dereference in do_kbd_led_set(): brightness_set was
+called unconditionally on all listeners, but listeners that only implement
+fnlock_set leave brightness_set NULL.
+
+Signed-off-by: Marcus Grenängen <marcus@grenangen.se>
 ---
- drivers/platform/x86/x86-android-tablets/core.c | 78 ++++++++++++++++++++++++-
- 1 file changed, 75 insertions(+), 3 deletions(-)
+ drivers/hid/hid-asus.c                     |  24 ++++-
+ drivers/platform/x86/asus-nb-wmi.c         |  13 +++
+ drivers/platform/x86/asus-wmi.c            | 101 ++++++++++++++++++++-
+ drivers/platform/x86/asus-wmi.h            |   5 +
+ include/linux/platform_data/x86/asus-wmi.h |   7 +-
+ 5 files changed, 143 insertions(+), 7 deletions(-)
 
-diff --git a/drivers/platform/x86/x86-android-tablets/core.c b/drivers/platform/x86/x86-android-tablets/core.c
-index 021009e9085bec3db9c4daa1f6235600210a6099..8fd0cffe351577182f31c90c104b616cec78c481 100644
---- a/drivers/platform/x86/x86-android-tablets/core.c
-+++ b/drivers/platform/x86/x86-android-tablets/core.c
-@@ -13,6 +13,7 @@
- #include <linux/acpi.h>
- #include <linux/device.h>
- #include <linux/dmi.h>
-+#include <linux/fwnode.h>
- #include <linux/gpio/consumer.h>
- #include <linux/gpio/machine.h>
- #include <linux/irq.h>
-@@ -360,6 +361,76 @@ static const struct software_node *cherryview_gpiochip_node_group[] = {
- 	NULL
+diff --git a/drivers/hid/hid-asus.c b/drivers/hid/hid-asus.c
+index d34d74df3dc0..71ced03c0f7e 100644
+--- a/drivers/hid/hid-asus.c
++++ b/drivers/hid/hid-asus.c
+@@ -143,6 +143,7 @@ struct asus_drvdata {
+ 	unsigned long battery_next_query;
+ 	struct work_struct fn_lock_sync_work;
+ 	bool fn_lock;
++	struct asus_hid_listener fn_lock_listener;
  };
  
-+static void auto_secondary_unset(void *data)
-+{
-+	struct fwnode_handle *fwnode = data;
-+
-+	fwnode->secondary = NULL;
-+}
-+
-+static int acpi_set_secondary_fwnode(struct device *parent, struct device *dev,
-+				     const struct software_node *const swnode)
-+{
-+	struct acpi_device *device = to_acpi_device(dev);
-+	struct fwnode_handle *fwnode;
-+	int ret;
-+
-+	fwnode = software_node_fwnode(swnode);
-+	if (WARN_ON(!fwnode))
-+		return -ENOENT;
-+
-+	fwnode->secondary = ERR_PTR(-ENODEV);
-+	device->fwnode.secondary = fwnode;
-+
-+	ret = devm_add_action_or_reset(parent, auto_secondary_unset, &device->fwnode);
-+	if (ret)
-+		dev_err(parent, "Failed to schedule the unset action for secondary fwnode\n");
-+
-+	return ret;
-+}
-+
-+static void auto_secondary_unregister_node_group(void *data)
-+{
-+	const struct software_node **nodes = data;
-+
-+	software_node_unregister_node_group(nodes);
-+}
-+
-+static int auto_secondary_fwnode_init(struct device *parent)
-+{
-+	const struct software_node *const *swnode;
-+	int ret;
-+
-+	if (!gpiochip_node_group)
-+		return 0;
-+
-+	ret = software_node_register_node_group(gpiochip_node_group);
-+	if (ret)
-+		return ret;
-+
-+	ret = devm_add_action_or_reset(parent,
-+				       auto_secondary_unregister_node_group,
-+				       gpiochip_node_group);
-+	if (ret)
-+		return ret;
-+
-+	for (swnode = gpiochip_node_group; *swnode; swnode++) {
-+		struct device *dev __free(put_device) =
-+				acpi_bus_find_device_by_name((*swnode)->name);
-+		if (!dev) {
-+			dev_err(parent, "Failed to find the required GPIO controller: %s\n",
-+				(*swnode)->name);
-+			return -ENODEV;
-+		}
-+
-+		ret = acpi_set_secondary_fwnode(parent, dev, *swnode);
-+		if (ret)
-+			return ret;
-+	}
-+
-+	return 0;
-+}
-+
- static void x86_android_tablet_remove(struct platform_device *pdev)
- {
- 	int i;
-@@ -391,7 +462,6 @@ static void x86_android_tablet_remove(struct platform_device *pdev)
- 
- 	software_node_unregister_node_group(gpio_button_swnodes);
- 	software_node_unregister_node_group(swnode_group);
--	software_node_unregister_node_group(gpiochip_node_group);
+ static int asus_report_battery(struct asus_drvdata *, u8 *, int);
+@@ -584,6 +585,15 @@ static void asus_sync_fn_lock(struct work_struct *work)
+ 	asus_kbd_set_fn_lock(drvdata->hdev, drvdata->fn_lock);
  }
  
- static __init int x86_android_tablet_probe(struct platform_device *pdev)
-@@ -427,9 +497,11 @@ static __init int x86_android_tablet_probe(struct platform_device *pdev)
- 		break;
- 	}
- 
--	ret = software_node_register_node_group(gpiochip_node_group);
--	if (ret)
-+	ret = auto_secondary_fwnode_init(&pdev->dev);
-+	if (ret) {
-+		x86_android_tablet_remove(pdev);
- 		return ret;
++static void asus_hid_fnlock_set(struct asus_hid_listener *listener, bool enabled)
++{
++	struct asus_drvdata *drvdata =
++		container_of(listener, struct asus_drvdata, fn_lock_listener);
++
++	drvdata->fn_lock = enabled;
++	schedule_work(&drvdata->fn_lock_sync_work);
++}
++
+ static void asus_schedule_work(struct asus_kbd_leds *led)
+ {
+ 	unsigned long flags;
+@@ -1319,8 +1329,16 @@ static int asus_probe(struct hid_device *hdev, const struct hid_device_id *id)
+ 	 * For ROG keyboards, skip rename for consistency and ->input check as
+ 	 * some devices do not have inputs.
+ 	 */
+-	if (drvdata->quirks & QUIRK_ROG_NKEY_KEYBOARD)
++	if (drvdata->quirks & QUIRK_ROG_NKEY_KEYBOARD) {
++		if (drvdata->quirks & QUIRK_HID_FN_LOCK) {
++			drvdata->fn_lock = true;
++			INIT_WORK(&drvdata->fn_lock_sync_work, asus_sync_fn_lock);
++			asus_kbd_set_fn_lock(hdev, true);
++			drvdata->fn_lock_listener.fnlock_set = asus_hid_fnlock_set;
++			asus_hid_register_listener(&drvdata->fn_lock_listener);
++		}
+ 		return 0;
 +	}
  
- 	ret = software_node_register_node_group(dev_info->swnode_group);
- 	if (ret) {
-
+ 	/*
+ 	 * Check that input registration succeeded. Checking that
+@@ -1362,8 +1380,10 @@ static void asus_remove(struct hid_device *hdev)
+ 		cancel_work_sync(&drvdata->kbd_backlight->work);
+ 	}
+ 
+-	if (drvdata->quirks & QUIRK_HID_FN_LOCK)
++	if (drvdata->quirks & QUIRK_HID_FN_LOCK) {
++		asus_hid_unregister_listener(&drvdata->fn_lock_listener);
+ 		cancel_work_sync(&drvdata->fn_lock_sync_work);
++	}
+ 
+ 	hid_hw_stop(hdev);
+ }
+diff --git a/drivers/platform/x86/asus-nb-wmi.c b/drivers/platform/x86/asus-nb-wmi.c
+index b4677c5bba5b..44e4cf68ff70 100644
+--- a/drivers/platform/x86/asus-nb-wmi.c
++++ b/drivers/platform/x86/asus-nb-wmi.c
+@@ -155,6 +155,10 @@ static struct quirk_entry quirk_asus_z13 = {
+ 	.tablet_switch_mode = asus_wmi_kbd_dock_devid,
+ };
+ 
++static struct quirk_entry quirk_asus_proart_p16 = {
++	.fnlock_use_hid = true,
++};
++
+ static int dmi_matched(const struct dmi_system_id *dmi)
+ {
+ 	pr_info("Identified laptop model '%s'\n", dmi->ident);
+@@ -553,6 +557,15 @@ static const struct dmi_system_id asus_quirks[] = {
+ 		},
+ 		.driver_data = &quirk_asus_z13,
+ 	},
++	{
++		.callback = dmi_matched,
++		.ident = "ASUS ProArt P16",
++		.matches = {
++			DMI_MATCH(DMI_SYS_VENDOR, "ASUSTeK COMPUTER INC."),
++			DMI_MATCH(DMI_PRODUCT_FAMILY, "ProArt P16"),
++		},
++		.driver_data = &quirk_asus_proart_p16,
++	},
+ 	{},
+ };
+ 
+diff --git a/drivers/platform/x86/asus-wmi.c b/drivers/platform/x86/asus-wmi.c
+index 80144c412b90..70758a20551d 100644
+--- a/drivers/platform/x86/asus-wmi.c
++++ b/drivers/platform/x86/asus-wmi.c
+@@ -1759,6 +1759,24 @@ int asus_hid_event(enum asus_hid_event event)
+ }
+ EXPORT_SYMBOL_GPL(asus_hid_event);
+ 
++/*
++ * Called by asus-wmi to propagate an fn-lock state change to all registered
++ * hid-asus listeners. Used on platforms where the WMI DEVS path for fn-lock
++ * (0x00100023) is a no-operation and the HID feature report path must be used
++ * instead (e.g. ASUS ProArt P16, USB keyboard product ID 0x19B6).
++ */
++void asus_hid_set_fnlock(bool enabled)
++{
++	struct asus_hid_listener *listener;
++
++	guard(spinlock_irqsave)(&asus_ref.lock);
++	list_for_each_entry(listener, &asus_ref.listeners, list) {
++		if (listener->fnlock_set)
++			listener->fnlock_set(listener, enabled);
++	}
++}
++EXPORT_SYMBOL_GPL(asus_hid_set_fnlock);
++
+ /*
+  * These functions actually update the LED's, and are called from a
+  * workqueue. By doing this as separate work rather than when the LED
+@@ -1852,7 +1870,8 @@ static void do_kbd_led_set(struct led_classdev *led_cdev, int value)
+ 
+ 	scoped_guard(spinlock_irqsave, &asus_ref.lock) {
+ 		list_for_each_entry(listener, &asus_ref.listeners, list)
+-			listener->brightness_set(listener, asus->kbd_led_wk);
++			if (listener->brightness_set)
++				listener->brightness_set(listener, asus->kbd_led_wk);
+ 	}
+ }
+ 
+@@ -4495,21 +4514,64 @@ static void asus_screenpad_exit(struct asus_wmi *asus)
+ 
+ /* Fn-lock ********************************************************************/
+ 
++static bool asus_hid_has_fnlock_listener(void)
++{
++	struct asus_hid_listener *listener;
++
++	guard(spinlock_irqsave)(&asus_ref.lock);
++	list_for_each_entry(listener, &asus_ref.listeners, list) {
++		if (listener->fnlock_set)
++			return true;
++	}
++	return false;
++}
++
+ static bool asus_wmi_has_fnlock_key(struct asus_wmi *asus)
+ {
+ 	u32 result;
+ 
++	/* Some platforms have a non-functional WMI path — use HID directly */
++	if (asus->driver->quirks->fnlock_use_hid)
++		return asus_hid_has_fnlock_listener();
++
+ 	asus_wmi_get_devstate(asus, ASUS_WMI_DEVID_FNLOCK, &result);
+ 
+-	return (result & ASUS_WMI_DSTS_PRESENCE_BIT) &&
+-		!(result & ASUS_WMI_FNLOCK_BIOS_DISABLED);
++	if ((result & ASUS_WMI_DSTS_PRESENCE_BIT) &&
++	    !(result & ASUS_WMI_FNLOCK_BIOS_DISABLED))
++		return true;
++
++	/*
++	 * Some platforms (e.g. ASUS ProArt P16) have a non-functional WMI
++	 * DEVS path for fn-lock (DEVS returns One unconditionally with no
++	 * side effects). On these platforms fn-lock is controlled via a HID
++	 * feature report sent directly to the N-Key keyboard. Return true if
++	 * a hid-asus listener with fnlock support has registered, so that
++	 * asus-wmi can manage the fn-lock state and expose the sysfs knob.
++	 */
++	return asus_hid_has_fnlock_listener();
+ }
+ 
+ static void asus_wmi_fnlock_update(struct asus_wmi *asus)
+ {
+ 	int mode = asus->fnlock_locked;
++	u32 result;
+ 
+-	asus_wmi_set_devstate(ASUS_WMI_DEVID_FNLOCK, mode, NULL);
++	/* Platform has non-functional WMI DEVS for fn-lock — use HID directly */
++	if (asus->driver->quirks->fnlock_use_hid) {
++		asus_hid_set_fnlock(mode);
++		return;
++	}
++
++	asus_wmi_get_devstate(asus, ASUS_WMI_DEVID_FNLOCK, &result);
++
++	if ((result & ASUS_WMI_DSTS_PRESENCE_BIT) &&
++	    !(result & ASUS_WMI_FNLOCK_BIOS_DISABLED)) {
++		asus_wmi_set_devstate(ASUS_WMI_DEVID_FNLOCK, mode, NULL);
++		return;
++	}
++
++	/* WMI path absent or non-functional — delegate to hid-asus */
++	asus_hid_set_fnlock(mode);
+ }
+ 
+ /* WMI events *****************************************************************/
+@@ -4690,6 +4752,34 @@ static ssize_t cpufv_store(struct device *dev, struct device_attribute *attr,
+ 
+ static DEVICE_ATTR_WO(cpufv);
+ 
++static ssize_t fnlock_status_show(struct device *dev,
++				  struct device_attribute *attr, char *buf)
++{
++	struct asus_wmi *asus = dev_get_drvdata(dev);
++
++	return sysfs_emit(buf, "%d\n", asus->fnlock_locked);
++}
++
++static ssize_t fnlock_status_store(struct device *dev,
++				   struct device_attribute *attr,
++				   const char *buf, size_t count)
++{
++	struct asus_wmi *asus = dev_get_drvdata(dev);
++	bool enable;
++	int err;
++
++	err = kstrtobool(buf, &enable);
++	if (err)
++		return err;
++
++	asus->fnlock_locked = enable;
++	asus_wmi_fnlock_update(asus);
++
++	return count;
++}
++
++static DEVICE_ATTR_RW(fnlock_status);
++
+ static struct attribute *platform_attributes[] = {
+ 	&dev_attr_cpufv.attr,
+ 	&dev_attr_camera.attr,
+@@ -4698,6 +4788,7 @@ static struct attribute *platform_attributes[] = {
+ 	&dev_attr_lid_resume.attr,
+ 	&dev_attr_als_enable.attr,
+ 	&dev_attr_fan_boost_mode.attr,
++	&dev_attr_fnlock_status.attr,
+ #if IS_ENABLED(CONFIG_ASUS_WMI_DEPRECATED_ATTRS)
+ 		&dev_attr_charge_mode.attr,
+ 		&dev_attr_egpu_enable.attr,
+@@ -4741,6 +4832,8 @@ static umode_t asus_sysfs_is_visible(struct kobject *kobj,
+ 		devid = ASUS_WMI_DEVID_ALS_ENABLE;
+ 	else if (attr == &dev_attr_fan_boost_mode.attr)
+ 		ok = asus->fan_boost_mode_available;
++	else if (attr == &dev_attr_fnlock_status.attr)
++		ok = asus_wmi_has_fnlock_key(asus);
+ 
+ #if IS_ENABLED(CONFIG_ASUS_WMI_DEPRECATED_ATTRS)
+ 	if (attr == &dev_attr_charge_mode.attr)
+diff --git a/drivers/platform/x86/asus-wmi.h b/drivers/platform/x86/asus-wmi.h
+index 5cd4392b964e..6c50b11860e8 100644
+--- a/drivers/platform/x86/asus-wmi.h
++++ b/drivers/platform/x86/asus-wmi.h
+@@ -52,6 +52,11 @@ struct quirk_entry {
+ 	 */
+ 	int no_display_toggle;
+ 	u32 xusb2pr;
++	/*
++	 * Some platforms report WMI DEVID_FNLOCK as present but the DEVS call
++	 * is a no-op. Force the HID feature report path via hid-asus instead.
++	 */
++	bool fnlock_use_hid;
+ };
+ 
+ struct asus_wmi_driver {
+diff --git a/include/linux/platform_data/x86/asus-wmi.h b/include/linux/platform_data/x86/asus-wmi.h
+index 554f41b827e1..569289417a51 100644
+--- a/include/linux/platform_data/x86/asus-wmi.h
++++ b/include/linux/platform_data/x86/asus-wmi.h
+@@ -173,10 +173,11 @@ enum asus_ally_mcu_hack {
+ 	ASUS_WMI_ALLY_MCU_HACK_DISABLED,
+ };
+ 
+-/* Used to notify hid-asus when asus-wmi changes keyboard backlight */
++/* Used to notify hid-asus when asus-wmi changes keyboard backlight or fn-lock */
+ struct asus_hid_listener {
+ 	struct list_head list;
+ 	void (*brightness_set)(struct asus_hid_listener *listener, int brightness);
++	void (*fnlock_set)(struct asus_hid_listener *listener, bool enabled);
+ };
+ 
+ enum asus_hid_event {
+@@ -196,6 +197,7 @@ int asus_wmi_evaluate_method(u32 method_id, u32 arg0, u32 arg1, u32 *retval);
+ int asus_hid_register_listener(struct asus_hid_listener *cdev);
+ void asus_hid_unregister_listener(struct asus_hid_listener *cdev);
+ int asus_hid_event(enum asus_hid_event event);
++void asus_hid_set_fnlock(bool enabled);
+ #else
+ static inline void set_ally_mcu_hack(enum asus_ally_mcu_hack status)
+ {
+@@ -227,6 +229,9 @@ static inline int asus_hid_event(enum asus_hid_event event)
+ {
+ 	return -ENODEV;
+ }
++static inline void asus_hid_set_fnlock(bool enabled)
++{
++}
+ #endif
+ 
+ #endif	/* __PLATFORM_DATA_X86_ASUS_WMI_H */
 -- 
-2.47.3
+2.54.0
 
