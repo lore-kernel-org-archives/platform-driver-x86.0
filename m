@@ -1,39 +1,40 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4361219E839
-	for <platform-driver-x86@vger.kernel.org>; Thu, 30 Apr 2026 11:04:55 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DE4153314BF
+	for <platform-driver-x86@vger.kernel.org>; Thu, 30 Apr 2026 11:30:10 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1777547095; cv=none; b=oGC6loDtN54ioIzU+hk7E/WwEyVzeooA0nL5tJDiiNO4yvD+OIzne4NgyMxbLzCJ3VP9nF/TulfVYOoi/UjFUTWaUyJ2XyOvgWpNg7OnJvHZWCNzYq9SeMyxg8ifRfM07RR6b4OUZKuKJwUFAg06qG9gE3a6w6BNobHFTwD38jo=
+	t=1777548610; cv=none; b=iSzh2wQTV06djI0pVO6ZyIXXSTA9DEtK+12QKRA9ryEoAqVL2C4qig2L/sGbn6cFx5LoSB3CUbxQkG4s9C+JcCnBzZCh9n36Wj2GudQZBIkfaTFL/QAsSzY8yyOuVoIUYhECOljaAIMxqMgaLmMFdVz2LQcTEPdEYM0yfqxrtGE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1777547095; c=relaxed/simple;
-	bh=ndVx3Y66sjjbcCSmeD+c/GYNLGU2kEevBiJc6xSumzY=;
-	h=From:To:Subject:Date:Message-ID:Content-Type:MIME-Version; b=KdKUFPNGKqNbvG3piiCGb1bwZJw6XQMv8b1BJEH/2qXynZVVickwUY24iP4TtM1K0WiavkvNdCtfgoI8StDL3GxBN2hxL4WRvShjZ7DC7zPqgxjg9b7Tx11rjixGbtFYXtGlAq51DDk1WqL+kBxBdxfpzRx1/jO47YQuw/7ol3A=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=j4njKW8n; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1777548610; c=relaxed/simple;
+	bh=dh/NoBRRwjnP9L1KqBbR6rs7DyVxCkp/NNbJrKEqL+c=;
+	h=From:To:Subject:Date:Message-ID:In-Reply-To:References:
+	 Content-Type:MIME-Version; b=AecOSk1AHud707mpgv+VH4qhIxQlb91htAAOAsj4B/hE0Oh+Q4xguOG8okdcYpW39LUBNoJRML5ezSr4cdtmztXUj9OL1qXMj3Q2ZfZPZ38563vtZfjer1ssv/7qPeXu+wmdJULTX6q0jRRbW3Z8dN6ICHaCyELu0c9P6XR2/9I=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=V27b6h9l; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="j4njKW8n"
-Received: by smtp.kernel.org (Postfix) with ESMTPS id E7A86C2BCB4
-	for <platform-driver-x86@vger.kernel.org>; Thu, 30 Apr 2026 11:04:54 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="V27b6h9l"
+Received: by smtp.kernel.org (Postfix) with ESMTPS id 8BCFEC2BCC4
+	for <platform-driver-x86@vger.kernel.org>; Thu, 30 Apr 2026 11:30:10 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1777547094;
-	bh=ndVx3Y66sjjbcCSmeD+c/GYNLGU2kEevBiJc6xSumzY=;
-	h=From:To:Subject:Date:From;
-	b=j4njKW8ndLdQIB/tG42umXfQTvJGKiXDxqqyGI9NMrTjxHdK/LarNvvccHs/xGJhb
-	 hpVYt+roh/PFHm6l0otU+LYrJ2xvlT3wwLoCEwfdEJ8jQouZZBd/UA7TbXyE0kGyEY
-	 ASL6WuWzKFtktJL0B6FFitAACkVv3EY3JJi5kZ/6nVaeooSg6pY1SigGfq9pT4UpB8
-	 gZW/ca9zH1Z6nS12NLchvKzRE+AxuBUKfb+44VmQyLS38Pz7a//PpOQgME4encHZnu
-	 oPSqHWOO05CQdEYCslo/b8K3/A6sfJeKCWL96NlPi68wZnXTqb31i5vpcbJwrKzUuP
-	 wxgTb25eQ5Q0A==
+	s=k20201202; t=1777548610;
+	bh=dh/NoBRRwjnP9L1KqBbR6rs7DyVxCkp/NNbJrKEqL+c=;
+	h=From:To:Subject:Date:In-Reply-To:References:From;
+	b=V27b6h9lDQuAxswKmyUTBMpuZoECEsUPvhpi5fwXN9Dp+0oiqEfyTBoVq2sByYk+Z
+	 kZ/Ho4Z6BgQuP4SvDfg/10vqFCePqsfb3SnokSTCRDxrYSqXJZzsrXLzjWYdSIAO78
+	 69TInD2SiBM1jP5v8Y+PxP0wXb22fETamWPCpHis7EgK3M9OPxmDIuYbv/fPyiTl6+
+	 5PmeWqfUqykyIjnr7JJc2n4RBJKS6wSfVx5Mpacev2J+McEQDxJ+DlL2qY42AeGgae
+	 qmDtI8OfCLQu87uK2qMuQtRqRFFpBYY+cjxKeBWuwl+AX8WjYXaXk30D/m9IkcKTJK
+	 jGyKsU0Kqdedg==
 Received: by aws-us-west-2-korg-bugzilla-1.web.codeaurora.org (Postfix, from userid 48)
-	id D0CF0C3279F; Thu, 30 Apr 2026 11:04:54 +0000 (UTC)
+	id 790B0C3279F; Thu, 30 Apr 2026 11:30:10 +0000 (UTC)
 From: bugzilla-daemon@kernel.org
 To: platform-driver-x86@vger.kernel.org
-Subject: [Bug 221441] New: asus-wmi/asus-armoury warnings on ASUS FX608LP: no
+Subject: [Bug 221441] asus-wmi/asus-armoury warnings on ASUS FX608LP: no
  matching power limits, fan_curve_get_factory_default failed
-Date: Thu, 30 Apr 2026 11:04:54 +0000
+Date: Thu, 30 Apr 2026 11:30:10 +0000
 X-Bugzilla-Reason: None
-X-Bugzilla-Type: new
+X-Bugzilla-Type: changed
 X-Bugzilla-Watch-Reason: AssignedTo drivers_platform_x86@kernel-bugs.osdl.org
 X-Bugzilla-Product: Drivers
 X-Bugzilla-Component: Platform_x86
@@ -46,10 +47,10 @@ X-Bugzilla-Resolution:
 X-Bugzilla-Priority: P3
 X-Bugzilla-Assigned-To: drivers_platform_x86@kernel-bugs.osdl.org
 X-Bugzilla-Flags: 
-X-Bugzilla-Changed-Fields: bug_id short_desc product version rep_platform
- op_sys bug_status bug_severity priority component assigned_to reporter
- cf_regression
-Message-ID: <bug-221441-215701@https.bugzilla.kernel.org/>
+X-Bugzilla-Changed-Fields: 
+Message-ID: <bug-221441-215701-ViFxfoge4U@https.bugzilla.kernel.org/>
+In-Reply-To: <bug-221441-215701@https.bugzilla.kernel.org/>
+References: <bug-221441-215701@https.bugzilla.kernel.org/>
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 X-Bugzilla-URL: https://bugzilla.kernel.org/
@@ -63,128 +64,104 @@ MIME-Version: 1.0
 
 https://bugzilla.kernel.org/show_bug.cgi?id=3D221441
 
-            Bug ID: 221441
-           Summary: asus-wmi/asus-armoury warnings on ASUS FX608LP: no
-                    matching power limits, fan_curve_get_factory_default
-                    failed
-           Product: Drivers
-           Version: 2.5
-          Hardware: All
-                OS: Linux
-            Status: NEW
-          Severity: normal
-          Priority: P3
-         Component: Platform_x86
-          Assignee: drivers_platform_x86@kernel-bugs.osdl.org
-          Reporter: fxzxaxon@outlook.com
-        Regression: No
-
-Hi,
-
-On a new ASUS TX Gaming FX608LP_FX608LP laptop, the ASUS platform drivers
-appear to load and expose several expected interfaces, but the kernel logs =
-the
-following ASUS WMI / Armoury warnings during boot:
-
-  asus_armoury: No matching power limits found for this system
-  asus_wmi: fan_curve_get_factory_default (0x00110032) failed: -19
-
-I am reporting this in case this model needs a new DMI match / model data
-entry.
-
-System information:
-
-  Kernel:
-    Linux ASUS-TX-FX608-PC 6.19.14-300.fc44.x86_64 #1 SMP PREEMPT_DYNAMIC T=
-hu
-Apr 23 15:17:50 UTC 2026 x86_64 GNU/Linux
-
-  DMI:
-    bios_vendor: American Megatrends International, LLC.
-    bios_version: FX608LP.313
-    bios_date: 11/18/2025
-    sys_vendor: ASUSTeK COMPUTER INC.
-    product_name: TX Gaming FX608LP_FX608LP
-    product_version: 1.0
-    product_family: TX Gaming
-    product_sku:
-    board_vendor: ASUSTeK COMPUTER INC.
-    board_name: FX608LP
-    board_version: 1.0
-    board_asset_tag: ATN12345678901234567
-    chassis_vendor: ASUSTeK COMPUTER INC.
-    chassis_type: 10
-    chassis_version: 1.0
-
-  DMI modalias:
-=20=20=20
-dmi:bvnAmericanMegatrendsInternational,LLC.:bvrFX608LP.313:bd11/18/2025:br5=
-.32:efr3.6:svnASUSTeKCOMPUTERINC.:pnTXGamingFX608LP_FX608LP:pvr1.0:rvnASUST=
-eKCOMPUTERINC.:rnFX608LP:rvr1.0:cvnASUSTeKCOMPUTERINC.:ct10:cvr1.0:sku:
+--- Comment #1 from fxzxaxon@outlook.com ---
+Additional information: I also noticed several firmware thermal zones faili=
+ng
+to report temperature and being disabled on the same boot.
 
 Relevant kernel log:
 
-  rcu: Adjusting geometry for rcu_fanout_leaf=3D16, nr_cpu_ids=3D24
-  acpi-fan PNP0C0B:00: Using Microsoft fan extensions
-  wmi_bus wmi_bus-PNP0C14:00: [Firmware Bug]: WQ00 data block query control
-method not found
-  asus_wmi: ASUS WMI generic driver loaded
-  asus_armoury: No matching power limits found for this system
-  asus_wmi: Initialization: 0x1
-  asus_wmi: SFUN value: 0x21
-  asus-nb-wmi asus-nb-wmi: Detected ATK, not ASUSWMI, use DSTS
+  thermal_sys: Registered thermal governor 'fair_share'
+  thermal_sys: Registered thermal governor 'bang_bang'
+  thermal_sys: Registered thermal governor 'step_wise'
+  thermal_sys: Registered thermal governor 'user_space'
+  thermal LNXTHERM:00: registered as thermal_zone0
+  ACPI: thermal: Thermal Zone [TZ00] (28 C)
+  thermal thermal_zone2: Temperature check failed (-5)
+  thermal thermal_zone4: Temperature check failed (-5)
+  thermal thermal_zone5: Temperature check failed (-5)
   asus-nb-wmi asus-nb-wmi: Using throttle_thermal_policy for platform_profi=
 le
 support
-  input: Asus WMI hotkeys as /devices/platform/asus-nb-wmi/input/input17
-  asus_wmi: fan_curve_get_factory_default (0x00110032) failed: -19
-  asus_wmi: using asus-wmi for asus::kbd_backlight
+  proc_thermal_pci 0000:00:04.0: enabling device (0000 -> 0002)
+  Consider using thermal netlink events interface
+  thermal thermal_zone5: Unable to get temperature, disabling!
+  thermal thermal_zone5: Disabled thermal zone with critical trip point
+  thermal thermal_zone4: Unable to get temperature, disabling!
+  thermal thermal_zone4: Disabled thermal zone with critical trip point
+  thermal thermal_zone2: Unable to get temperature, disabling!
+  thermal thermal_zone2: Disabled thermal zone with critical trip point
 
-Current platform_profile state:
+/sys/class/thermal summary:
 
-  platform_profile:
-    balanced
+  thermal_zone2:
+    type: SEN2
+    temp: unreadable
+    mode: disabled
+    trips:
+      passive: -274000
+      passive: -274000
+      critical: 80050
+      hot: 75050
+      passive: 65050
+      active: 60050
+      active: 50050
+      active: 40050
 
-  platform_profile_choices:
-    quiet balanced performance
+  thermal_zone3:
+    type: SEN3
+    temp: 45050
+    mode: enabled
+    trips:
+      passive: -274000
+      passive: -274000
+      critical: 80050
+      hot: 75050
+      passive: 65050
+      active: 60050
+      active: 50050
+      active: 40050
 
-The platform profile interface appears to work, and switching between
-quiet/balanced/performance succeeds.
+  thermal_zone4:
+    type: SEN4
+    temp: unreadable
+    mode: disabled
+    trips:
+      passive: -274000
+      passive: -274000
+      critical: 80050
+      hot: 75050
+      passive: 65050
+      active: 60050
+      active: 50050
+      active: 40050
 
-hwmon status:
+  thermal_zone5:
+    type: SEN5
+    temp: unreadable
+    mode: disabled
+    trips:
+      passive: -274000
+      passive: -274000
+      critical: 80050
+      hot: 75050
+      passive: 65050
+      active: 60050
+      active: 50050
+      active: 40050
 
-  The system exposes ASUS hwmon nodes under asus-nb-wmi, including:
+SEN3 appears to work and reports temperature, while SEN2/SEN4/SEN5 have the
+same trip layout but fail to report temperature and are later disabled.
 
-    /sys/class/hwmon/hwmon11/name: asus
-    fan1_input
-    fan1_label
-    fan2_input
-    fan2_label
-    pwm1_enable
-    pwm2_enable
+I am not sure whether this is related to the ASUS WMI / Armoury warnings, b=
+ut I
+am adding it here because the same boot also reports:
 
-    /sys/class/hwmon/hwmon12/name: asus_custom_fan_curve
-    pwm1_auto_point*_temp
-    pwm1_auto_point*_pwm
-    pwm2_auto_point*_temp
-    pwm2_auto_point*_pwm
-    pwm1_enable
-    pwm2_enable
+  asus-nb-wmi asus-nb-wmi: Using throttle_thermal_policy for platform_profi=
+le
+support
 
-So this does not appear to be a complete lack of ASUS WMI support. Basic
-platform profile support and ASUS hwmon interfaces are present.
-
-Additional note:
-
-  find /sys/bus/wmi/devices -name modalias
-
-returns no output on this system.
-
-I have not noticed a clear user-visible malfunction so far. This report is
-mainly to provide DMI/model information for this new ASUS model and to ask
-whether the two warnings above indicate missing model data.
-
-Thanks.
+No clear user-visible malfunction has been observed so far.
 
 --=20
 You may reply to this email to add a comment.
