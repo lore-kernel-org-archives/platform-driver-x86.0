@@ -1,127 +1,128 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.20])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ed1-f66.google.com (mail-ed1-f66.google.com [209.85.208.66])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 22C973F7A9B;
-	Wed, 29 Apr 2026 22:28:38 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.20
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1777501721; cv=none; b=Aeim2tYp7DU7M/AA8LmP8Vr7G+ALeKZamefTbYyAzN1n+ln3UtcycXWpppqE6GF8e29fmtKlkaoC8HWDPS0AfkMjZAMBN5qsyYyX+79iNqdfMhvJ1uzaS3tFmubi2Z/94/jSfk8blIXx6AEgOkbsFfXEjJrf9sDsm+kLdGKdZnY=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1777501721; c=relaxed/simple;
-	bh=A7LWwVYry1XAdvkzIRJn1skRmTZF9LeaynpHiyg53AY=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=tXsCtfXsUkkQfLIh+2uQJYI59ra0smhJNtQ8jLPTLesF/ze678ZbeTcV2l6l2MDf6L/oOwILYfPao6DWzdcjFPuenl1TqyVCz2h0/JBnmJSnRAMGbAK7Mv9/dtrDJpHUUhTilCEQP0xD2Q9FcLeOi3MTcV3LqCnNjUP3cJN9XXo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=eokGLQJc; arc=none smtp.client-ip=198.175.65.20
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0AF5A36A017
+	for <platform-driver-x86@vger.kernel.org>; Thu, 30 Apr 2026 05:00:11 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=209.85.208.66
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1777525213; cv=pass; b=YWS2GKdN24iXA1RcnSQT8rIvKVi7hmidLfh5vFIm5x4goBDjKoX0DF/7P3qedh5nYEwqyDgEIoQ0hfiu3pMkvYSqY+xe5H1Dixsg/YSV9Lc57thUEyKz61U96XHdTbc8zMHv4psPDQEVdX5t9coWHUAOSfxB+qzXpuYBEyHbRPw=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1777525213; c=relaxed/simple;
+	bh=xJkofzprckqDT9HqP2t0moTnaBc6bbI+YycLdwvEJlQ=;
+	h=MIME-Version:From:Date:Message-ID:Subject:To:Content-Type; b=WN/BbIonbW8IeLp3h5LfrcGUri1aKrEdPtD2Hl6qA/veOzKngUFN+eAgAWbsCjqxVcOKTUGQgK7nYD/PoNANf2qDHHw59VMCzVDxXKP3QnrEGI1CLjKhVOzcGCY46ZFeb1NBSzEvSnqlTmuiv9tqpKMoKrNXIuNRVi+XQzK0D2Y=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=fpL4Bwkf; arc=pass smtp.client-ip=209.85.208.66
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="eokGLQJc"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1777501719; x=1809037719;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=A7LWwVYry1XAdvkzIRJn1skRmTZF9LeaynpHiyg53AY=;
-  b=eokGLQJccjBZR0a6fZxCaC6rx6GPGfsrvq4ziGbZkyO2FVMNEiB0EL19
-   q5COojwQL5Gq2hqFqTwRL3Y2aHCS2XJJb0tuGO0hEMUFtKQlhHDG+bt9X
-   G4PrwAXvfYwqZVxMQOfUe8tgROuqyeo+RO4IRMGkMnZ1A/j7cHVgQ7CtA
-   /BxOadfR8pgQR9ZpVrUcPN+XLf2Bdo3D5iFFSRZQqwUe7pqnw7uyx5vRh
-   owf4HEvApwm1/KK5ZVtwUmSfZflDHze/bS4yM7i5taOX/6pgeHO9CBXLH
-   f9COWEqiLoZg+ZN4Vtxi4QnA/6Lj75IWAx5ZoEs7qxzDm0Wu9ZXr6EMuu
-   g==;
-X-CSE-ConnectionGUID: o/ZN267UQCOfGsXFtdemKw==
-X-CSE-MsgGUID: UlolwuIhTAmKx6zj7+lWug==
-X-IronPort-AV: E=McAfee;i="6800,10657,11771"; a="78155012"
-X-IronPort-AV: E=Sophos;i="6.23,206,1770624000"; 
-   d="scan'208";a="78155012"
-Received: from orviesa010.jf.intel.com ([10.64.159.150])
-  by orvoesa112.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 29 Apr 2026 15:27:28 -0700
-X-CSE-ConnectionGUID: QKi56/iIQUuiFzy/6I+A+A==
-X-CSE-MsgGUID: +tKxOEIQSeOYz6aqrQEi1g==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.23,206,1770624000"; 
-   d="scan'208";a="233555744"
-Received: from igk-lkp-server01.igk.intel.com (HELO bdf09bfdbd5f) ([10.211.93.152])
-  by orviesa010.jf.intel.com with ESMTP; 29 Apr 2026 15:27:26 -0700
-Received: from kbuild by bdf09bfdbd5f with local (Exim 4.98.2)
-	(envelope-from <lkp@intel.com>)
-	id 1wIDNL-000000004dF-2Rwq;
-	Wed, 29 Apr 2026 22:27:23 +0000
-Date: Thu, 30 Apr 2026 00:27:07 +0200
-From: kernel test robot <lkp@intel.com>
-To: Sergio Melas <sergiomelas@gmail.com>,
-	Guenter Roeck <linux@roeck-us.net>,
-	Jean Delvare <jdelvare@suse.com>, Rong Zhang <i@rong.moe>
-Cc: oe-kbuild-all@lists.linux.dev, linux-hwmon@vger.kernel.org,
-	platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org,
-	Armin Wolf <W_Armin@gmx.de>,
-	"Derek J . Clark" <derekjohn.clark@gmail.com>,
-	Sergio Melas <sergiomelas@gmail.com>
-Subject: Re: [PATCH v1] hwmon: (yogafan) Massive hardware expansion and
- structural refactoring
-Message-ID: <202604300021.hu1KkNxy-lkp@intel.com>
-References: <20260413060931.31091-2-sergiomelas@gmail.com>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="fpL4Bwkf"
+Received: by mail-ed1-f66.google.com with SMTP id 4fb4d7f45d1cf-67389cf78b0so969594a12.2
+        for <platform-driver-x86@vger.kernel.org>; Wed, 29 Apr 2026 22:00:11 -0700 (PDT)
+ARC-Seal: i=1; a=rsa-sha256; t=1777525210; cv=none;
+        d=google.com; s=arc-20240605;
+        b=F3b7ZNR7Toku67WOCjSXbdhM/Ety7FoF0alWkeCP9kSKRDyognmIf+NwNiEW+HlYHv
+         pFEJerKoN6268JNKMmfyKS9oocOcrF2KHqTQLm1ygLjM6ns0B4jeO20+tfQeo58435rM
+         tifrDiOdmLMmekAm6LwuhpGJFPV4YyEQMZoBWMt0FL3xENGX+ENSw8812ml8CWricYTj
+         LzWIJe2Q96T9WHdbSzDZnwdKtFcs99apai/pmMdi8OAdyIbRtYxKyYcoFlfXunXCZi4z
+         YZysWRwkc9OeIquWlnD6h/jTAVAlfVNPgC+jGQYqNs2u6eI5zIn6sgIC3nNNV77pOurw
+         iTrQ==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20240605;
+        h=to:subject:message-id:date:from:mime-version:dkim-signature;
+        bh=xJkofzprckqDT9HqP2t0moTnaBc6bbI+YycLdwvEJlQ=;
+        fh=LAtpHtVR30q6rinFeyskR7Ff9QyURHB8q3bpp5R7hcA=;
+        b=C0votFboshRD5kNqM82rA6ZfoWKwiD66CgmbSoSuOoUpaKK4rZTy0cqyt4zAL1772X
+         NrxyLy+b4DHMHoXSCMwcuMF7FV85o3M3kodb2kqkyalqtT0bqNB0GAZukWQ9xA+MtbmR
+         FJYXcq3pyjpxP232Ehe8kySXVkPV3X/2UNbUzx7JoP5PhtBvapqSFAGC+osJTO/iYgQZ
+         LFXoaE2ZRo/6y0BVgGulWc1rX3rdhX9lqTZFqCtS4apsSDM5zOzMhFQBS1/ZeMAjW3Mq
+         GP6AYzUbmTB5KRKjET4TXobSZ73nSatrTsFUYndnX8RPuA7+NmqNUEHl4pgurQP+4nny
+         PIWw==;
+        darn=vger.kernel.org
+ARC-Authentication-Results: i=1; mx.google.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20251104; t=1777525210; x=1778130010; darn=vger.kernel.org;
+        h=to:subject:message-id:date:from:mime-version:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=xJkofzprckqDT9HqP2t0moTnaBc6bbI+YycLdwvEJlQ=;
+        b=fpL4Bwkf/6rarpnG9/AynvkO1cu3TeqrlNCYIGxgCTqf/kgKhGiw84v1pVtoIjgO5F
+         QHn7m30/AJWPLDu2re5wWYYBh/PCWQ6eZI+dwhBo91c+zm6WR2o7hLVpnz894/WiM0qA
+         IontIYeyQ5hUc7tXLtba/LreD9laraWK7Tqg2Mvrkn1fHAsSgAaLR+SZD92eh/mEb1TN
+         zBwuEtwx5ufQ0wnxlPe8lgZYVuycqrprOmy26N5EGXmpeLKyCtG7E7fyuMf275SUbGWp
+         KEhpP0hwoVfRyq9pt7/308+07s8SyVexJFpaX2Cp+q1PeoGTIS1D7JEYHNyFn+5sfd8e
+         ESLA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20251104; t=1777525210; x=1778130010;
+        h=to:subject:message-id:date:from:mime-version:x-gm-gg
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=xJkofzprckqDT9HqP2t0moTnaBc6bbI+YycLdwvEJlQ=;
+        b=rCpXkrc9VrVUMe1gkymoioxQHLJ5xDBycSU9EatBCFvLDJMKbyRxQXA/o1vjl6dEjB
+         LyGmVW/TIUr7TNP4fT56mwILBh8xZl8+FaMvhD3ciwaInBl5swrqmIIvoCPpOwyRSMf3
+         IEeQQdbp8J+hN581cDnE38hbwMH5avpAPty+3AgmnjwDzN3vrnFQW413TkCXeRU5IzN0
+         j6DuKDN9UrLHZx9VRaZty2TjjzXfjbSTZvHsfyLNBFu3SLZmM79G85mDV8346/SKwStq
+         XsbYPpe1PjEZhmaqghbluKaWTERQ1l5zyJVpX8+XjM2Gs6da6pZN0uZ2HaPNK/q6YHlO
+         2TUg==
+X-Gm-Message-State: AOJu0YxaIemFSjiV6COq7IUJXzRBsp8AqqItSMSTGAl3SqXRDy8YO+x9
+	Ou/efnJleIKAMpWkQSQ3xzPmQVNFaXCS9CX71OiJ1maFSKBMthtE4kHR7Y6PhXtNaWW0hXcQL+0
+	67o9nzdX8unngRxZueOiOCH+LPSKFbpqF+OkqpZV7r6clQOM=
+X-Gm-Gg: AeBDieseyyiHt2VLWliN4gAuVQb8rdqKc+5pcW5lugQXD7tETjNrQMN97f0ltJ7eTvP
+	uqPfKnVdlYMG+8zxnG/b5N37MwzjICZ8YTs+x9jc66tT3dXbl+7wzGJwUbB/ICpzQtjMzsICOoN
+	9+Anvl9jI2BguJQZTM12fLw1rpIzb7zpBuwPNYZuB7f0/JfKslhipi8p9f41C/88WGs142YCAOp
+	g2a0xF1tKUleKVdyU3+JfFJNLmw8dtAL61JOSdcu9N30EVj/LLv5yWuucMecjk7Op0NS1qHdK0J
+	sMyyasyofW9X0xt8Fi47i9JllDtJaQw4EPS3bOGZb/7ZrrScciQ=
+X-Received: by 2002:a17:906:dc90:b0:ba9:bb46:345c with SMTP id
+ a640c23a62f3a-bbb79366094mr47305066b.45.1777525209713; Wed, 29 Apr 2026
+ 22:00:09 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20260413060931.31091-2-sergiomelas@gmail.com>
+From: yue li <mc.root.ly@gmail.com>
+Date: Thu, 30 Apr 2026 12:59:58 +0800
+X-Gm-Features: AVHnY4L-M7AAstWt4yYeC-Q3OIiKlNeu9qan-9B_yfXmA19bYUfYG7OCkWXsJFY
+Message-ID: <CABd86uaQY9-ZSU-_PHKtZZyWnDFHLEsuaM+NBV5nOLWA+YSX7A@mail.gmail.com>
+Subject: [REGRESSION] hp-wmi fails to probe on HP OMEN (board 8D41)
+To: platform-driver-x86@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 
-Hi Sergio,
+Hi,
 
-kernel test robot noticed the following build warnings:
+I am reporting a regression in the hp-wmi driver on an HP OMEN laptop.
 
-[auto build test WARNING on groeck-staging/hwmon-next]
-[also build test WARNING on linus/master v7.1-rc1 next-20260429]
-[If your patch is applied to the wrong git tree, kindly drop us a note.
-And when submitting patch, we suggest to use '--base' as documented in
-https://git-scm.com/docs/git-format-patch#_base_tree_information]
+System:
 
-url:    https://github.com/intel-lab-lkp/linux/commits/Sergio-Melas/hwmon-yogafan-Massive-hardware-expansion-and-structural-refactoring/20260417-063319
-base:   https://git.kernel.org/pub/scm/linux/kernel/git/groeck/linux-staging.git hwmon-next
-patch link:    https://lore.kernel.org/r/20260413060931.31091-2-sergiomelas%40gmail.com
-patch subject: [PATCH v1] hwmon: (yogafan) Massive hardware expansion and structural refactoring
-compiler: clang version 20.1.8 (https://github.com/llvm/llvm-project 87f0227cb60147a26a1eeb4fb06e3b505e9c7261)
-docutils: docutils (Docutils 0.21.2, Python 3.13.5, on linux)
-reproduce: (https://download.01.org/0day-ci/archive/20260430/202604300021.hu1KkNxy-lkp@intel.com/reproduce)
+Vendor: HP
+Product: OMEN MAX Gaming Laptop 16-ah0089TX
+Board: 8D41
+BIOS: F.12
+Kernel: 7.0.2-zen1-1-zen
 
-If you fix the issue in a separate patch/commit (i.e. not just a new version of
-the same patch/commit), kindly add following tags
-| Reported-by: kernel test robot <lkp@intel.com>
-| Closes: https://lore.kernel.org/oe-kbuild-all/202604300021.hu1KkNxy-lkp@intel.com/
+Regression:
+The hp-wmi driver works correctly on kernel 6.18.6-zen1-1-zen,
+but fails to probe on 7.0.2-zen1-1-zen with error -22.
 
-All warnings (new ones prefixed by >>):
+Issue:
+On the affected kernel, loading the module fails:
 
-   Runtime Survivability
-   ===================== [docutils]
-   Documentation/hwmon/yogafan.rst:165: ERROR: Unexpected indentation. [docutils]
->> Documentation/hwmon/yogafan.rst:166: WARNING: Bullet list ends without a blank line; unexpected unindent. [docutils]
-   Documentation/hwmon/yogafan.rst:169: ERROR: Unexpected indentation. [docutils]
->> Documentation/hwmon/yogafan.rst:170: WARNING: Block quote ends without a blank line; unexpected unindent. [docutils]
-   Documentation/hwmon/yogafan.rst:171: WARNING: Bullet list ends without a blank line; unexpected unindent. [docutils]
-   Documentation/hwmon/yogafan.rst:318: ERROR: Malformed table.
-   Bottom border or header rule does not match top border.
+modprobe: ERROR: could not insert 'hp_wmi': No such device
 
+dmesg output:
 
-vim +166 Documentation/hwmon/yogafan.rst
+hp_wmi: Unknown EC layout for board 8D41. Thermal profile readback
+will be disabled.
+hp-wmi hp-wmi: probe with driver hp-wmi failed with error -22
 
-   162	
-   163	This approach ensures that the RLLag filter is a passive discrete-time
-   164	first-order lag model:
-   165	  - **Smoothing:** Low-resolution step increments are smoothed into 1-RPM
- > 166	  increments.
-   167	  - **Slew-Rate Limiting:** Prevents unrealistic readings by capping the
-   168	  change
-   169	    to 1500 RPM/s, matching physical fan inertia.
- > 170	  - **Polling Independence:** The filter math scales based on the time
-   171	  delta between userspace reads, ensuring a consistent physical curve
-   172	  regardless of polling frequency.
-   173	
+The system exposes the expected WMI GUIDs:
 
--- 
-0-DAY CI Kernel Test Service
-https://github.com/intel/lkp-tests/wiki
+5FB7F034-2C63-45E9-BE91-3D44E2C707E4
+95F24279-4D7B-4334-9387-ACCDC67EF61C
+
+This suggests the driver matches the device, but fails during probe due to
+the unknown EC layout.
+
+Question:
+Is this board expected to be supported? If not, would it be acceptable to
+allow the driver to load in a degraded mode instead of failing probe?
+
+Please let me know if additional logs or testing are required.
+
+Thanks.
