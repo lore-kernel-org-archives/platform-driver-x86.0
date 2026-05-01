@@ -1,222 +1,151 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.20])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.15])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7D396359A94;
-	Fri,  1 May 2026 21:24:14 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.20
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B002326FDBF;
+	Fri,  1 May 2026 23:11:00 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.15
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1777670656; cv=none; b=rWwHeAKc4QMti/kedvnCNENOjuoUc24txl6gSsj5E+dFdvK5wOVLOPaL+xDdc1JixJDCfj+kHmmXT2n7sVqUmm3ye4Kczk7iD3S43TkGkvZUUFG4nFGVxt4XZ43HIRv8eLUs5lEDCjPIdbz507CriLLaxRDDML9m9ZlW8Hqvimo=
+	t=1777677062; cv=none; b=YO4qKHnU+VJ0lEZPWuXn/p/AQvootkxTHzO1HJ68N6JXdLXFlNrJMfwmHqobPWyKKc9F5y0FdeF1+CXxatpWqcbqbxCJ7I7r3WMQ21bjjnOovnXOPMioYTP1obD8P9pf8l3aXdRVtHjHBpIXBle4ZEbDS5uY3R5Kg+mrEZKAwcE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1777670656; c=relaxed/simple;
-	bh=SkdcsE7EjRLTtFgjUs6SYSwxlkTqmPmRyFhUGVS2CTo=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=untW+bbpafC3oUtqpxQnw1+eMYf6jYI6NoHOt+f8s5kp/a6GTlffqUXz2kZzMe8x0QkD6nlizTdHQEusTDpIJVbry+cAQt5otiABEyeC6eOVfkt30KdXuLk20ngGM3PbmEVyqCZ3mqlRWbCEFog/DUVD/jWYlbmdl04rmt1qS0U=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=pass smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=h6yXd77I; arc=none smtp.client-ip=198.175.65.20
+	s=arc-20240116; t=1777677062; c=relaxed/simple;
+	bh=px8m4H//Uvi9geAEywIz+bzxexy+o2ajZ296yDAjzUA=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version:Content-Type; b=cXDKIvYaq9ACbXfj8fCUjCvJnudg0ahKR/Jcs7xIgHgnDr11jyHlLmokEMdRTW1RqXg3O1YJOMBZ0hbAQAHRrrGByN9JoYcEe6DGmm77+Rg4SAQdLtE/YZ8rLVUs6UlQ1UT2vB9da8bPwhX6P2+AlmgnL27CXjAjTrO5BeRxTn4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=pass smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=N2+kse96; arc=none smtp.client-ip=192.198.163.15
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="h6yXd77I"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="N2+kse96"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1777670655; x=1809206655;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=SkdcsE7EjRLTtFgjUs6SYSwxlkTqmPmRyFhUGVS2CTo=;
-  b=h6yXd77IjJIGABQaNqnBmVq9lZIWY5uXgeW6r9EeSfCUNuhb8DFf5ceS
-   4WziuBl18bOofgs1CJZHiTZj0gowa+Fbew/yGfHC5SAXlMJBOiDDNUNe2
-   dFGPOxD6fHZeRpRzesa6fgrlHkzcqdRJhTgSn2NOgNgZb64xdn3wbsY9i
-   rPsX1fWE7cdk7V8TgCTPpWNrOlpSridnY47DnN/l7zCyIIjV/kac5HYHp
-   +AE3cV5R6FL5GevzUYDc6Rr2ABENv8k9nceuqy+Ne4PXEAGUg+5TJ0UYp
-   ugoA6hK3GXHlOfEvVeXb/4Da5JuAJTFQyuFzCJn71j/Id3gXE/+YzGikE
-   w==;
-X-CSE-ConnectionGUID: 2xnsrKwJSP6m6pCgE/R2Gw==
-X-CSE-MsgGUID: yIb1jZUqTkC/fXMoBgi48g==
-X-IronPort-AV: E=McAfee;i="6800,10657,11773"; a="78336659"
+  t=1777677060; x=1809213060;
+  h=from:to:cc:subject:date:message-id:mime-version:
+   content-transfer-encoding;
+  bh=px8m4H//Uvi9geAEywIz+bzxexy+o2ajZ296yDAjzUA=;
+  b=N2+kse96Yepg69a5NAWfxfIs4euseyslO5A+GLEi67MFl/BE+lAH8Wpz
+   4deWtUY2KI/VKyziQEvAZ4YHlqQEsgqz5J+5z0caoL7Cz3HIaCIIsXBHc
+   GkxpxLNbf/GKxCumthBEHTMPhgFbXHJhGLloUPzz+xof0chu188E9dGiQ
+   NObBSzako4x/CVm8jCo+MWhfSQ5cEjxAC8yvZv0RPXTdqATT5w+g/NOSl
+   8dbZpNGBhXn5y4blgnJKrpQgAw14qMkNo3qlT28WGQBpCB6/appSxiNOu
+   11wNJTgagHR31JK8zpWYnvGEQpcgaoA6F/qfsg1PujHJxAzs1hauT4Mpk
+   A==;
+X-CSE-ConnectionGUID: Zq6m3dDnRn2KRXY6lHQtTw==
+X-CSE-MsgGUID: 5RwfZrNvTgOUhyFO4a7DTA==
+X-IronPort-AV: E=McAfee;i="6800,10657,11773"; a="78740111"
 X-IronPort-AV: E=Sophos;i="6.23,210,1770624000"; 
-   d="scan'208";a="78336659"
-Received: from orviesa006.jf.intel.com ([10.64.159.146])
-  by orvoesa112.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 01 May 2026 14:24:14 -0700
-X-CSE-ConnectionGUID: cuA302NCQx6UIkdwvA9iaQ==
-X-CSE-MsgGUID: FTqA9a0NQFK949u8bG4wFA==
+   d="scan'208";a="78740111"
+Received: from orviesa003.jf.intel.com ([10.64.159.143])
+  by fmvoesa109.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 01 May 2026 16:10:59 -0700
+X-CSE-ConnectionGUID: caPfLIxZQZe0CxOExGMzYg==
+X-CSE-MsgGUID: QlGRTyNCQl+2j/cqAoFe/g==
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="6.23,210,1770624000"; 
-   d="scan'208";a="233932326"
-Received: from debox1-desk4.jf.intel.com (HELO localhost) ([10.88.27.138])
-  by orviesa006-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 01 May 2026 14:24:14 -0700
-Date: Fri, 1 May 2026 14:24:13 -0700
-From: David Box <david.e.box@linux.intel.com>
-To: Rosen Penev <rosenp@gmail.com>
-Cc: platform-driver-x86@vger.kernel.org, Hans de Goede <hansg@kernel.org>, 
-	Ilpo =?utf-8?B?SsOkcnZpbmVu?= <ilpo.jarvinen@linux.intel.com>, Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>, 
-	Kees Cook <kees@kernel.org>, "Gustavo A. R. Silva" <gustavoars@kernel.org>, 
-	open list <linux-kernel@vger.kernel.org>, 
-	"open list:KERNEL HARDENING (not covered by other areas):Keyword:b__counted_by(_le|_be)?b" <linux-hardening@vger.kernel.org>
-Subject: Re: [PATCH] platform/x86/intel/vsec: allocate res with intel_vsec_dev
-Message-ID: <fdmwbmlp44n5kspjau4w56ww3ynexep3xg47ixizmhdrdxwf7w@4pzll4a2epbl>
-References: <20260430224307.109311-1-rosenp@gmail.com>
+   d="scan'208";a="238948951"
+Received: from debox1-desk4.jf.intel.com ([10.88.27.138])
+  by ORVIESA003-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 01 May 2026 16:11:00 -0700
+From: "David E. Box" <david.e.box@linux.intel.com>
+To: irenic.rajneesh@gmail.com,
+	ilpo.jarvinen@linux.intel.com,
+	srinivas.pandruvada@linux.intel.com,
+	xi.pardee@linux.intel.com,
+	david.e.box@linux.intel.com
+Cc: hansg@kernel.org,
+	linux-kernel@vger.kernel.org,
+	platform-driver-x86@vger.kernel.org
+Subject: [PATCH V3 00/16] Add ACPI-based PMT discovery support for Intel PMC
+Date: Fri,  1 May 2026 16:10:37 -0700
+Message-ID: <20260501231054.3890305-1-david.e.box@linux.intel.com>
+X-Mailer: git-send-email 2.43.0
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <20260430224307.109311-1-rosenp@gmail.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: quoted-printable
 
-On Thu, Apr 30, 2026 at 03:43:07PM -0700, Rosen Penev wrote:
-> Use a flexible array member to combine allocations. Avoids having to
-> free separately.
-> 
-> Add __counted_by for extra runtime analysis.
-> 
-> Move counting variable assignment to after allocations as is already
-> done by kzalloc_flex for GCC 15 and above.
-> 
-> Signed-off-by: Rosen Penev <rosenp@gmail.com>
+This series adds ACPI-based PMT discovery support and wires it into the
+Intel PMC telemetry stack for Nova Lake S.
 
-Tested-by: David E. Box <david.e.box@linux.intel.com>
-Reviewed-by: David E. Box <david.e.box@linux.intel.com>
+Today, PMT discovery flow is primarily PCI-oriented. Some platforms expose
+PMT discovery via ACPI _DSD, and PMC telemetry needs to consume that path
+for both standalone and companion-device cases. This series addresses that
+in three logical steps:
 
-Thanks
+    1. Prepare intel_vsec for ACPI-backed discovery
+    2. Refactor PMT class handling so discovery source is
+       abstracted (PCI or ACPI)
+    3. Add/enable PMC consumers using ACPI discovery, including NVL
+       SSRAM support
 
-> ---
->  drivers/platform/x86/intel/vsec.c      | 14 ++++----------
->  drivers/platform/x86/intel/vsec_tpmi.c | 13 ++++---------
->  include/linux/intel_vsec.h             |  6 +++---
->  3 files changed, 11 insertions(+), 22 deletions(-)
-> 
-> diff --git a/drivers/platform/x86/intel/vsec.c b/drivers/platform/x86/intel/vsec.c
-> index 7d5dbc1c1d05..9ef0f043bbee 100644
-> --- a/drivers/platform/x86/intel/vsec.c
-> +++ b/drivers/platform/x86/intel/vsec.c
-> @@ -112,7 +112,6 @@ static void intel_vsec_dev_release(struct device *dev)
->  	ida_free(intel_vsec_dev->ida, intel_vsec_dev->auxdev.id);
->  
->  	kfree(intel_vsec_dev->acpi_disc);
-> -	kfree(intel_vsec_dev->resource);
->  	kfree(intel_vsec_dev);
->  }
->  
-> @@ -225,7 +224,6 @@ int intel_vsec_add_aux(struct device *parent,
->  	ret = xa_alloc(&auxdev_array, &intel_vsec_dev->id, intel_vsec_dev,
->  		       PMT_XA_LIMIT, GFP_KERNEL);
->  	if (ret < 0) {
-> -		kfree(intel_vsec_dev->resource);
->  		kfree(intel_vsec_dev);
->  		return ret;
->  	}
-> @@ -233,7 +231,6 @@ int intel_vsec_add_aux(struct device *parent,
->  	id = ida_alloc(intel_vsec_dev->ida, GFP_KERNEL);
->  	if (id < 0) {
->  		xa_erase(&auxdev_array, intel_vsec_dev->id);
-> -		kfree(intel_vsec_dev->resource);
->  		kfree(intel_vsec_dev);
->  		return id;
->  	}
-> @@ -282,7 +279,7 @@ static int intel_vsec_add_dev(struct device *dev, struct intel_vsec_header *head
->  			      unsigned long cap_id, u64 base_addr)
->  {
->  	struct intel_vsec_device __free(kfree) *intel_vsec_dev = NULL;
-> -	struct resource __free(kfree) *res = NULL;
-> +	struct resource *res;
->  	struct resource *tmp;
->  	struct device *parent;
->  	unsigned long quirks = info->quirks;
-> @@ -306,13 +303,12 @@ static int intel_vsec_add_dev(struct device *dev, struct intel_vsec_header *head
->  		return -EINVAL;
->  	}
->  
-> -	intel_vsec_dev = kzalloc_obj(*intel_vsec_dev);
-> +	intel_vsec_dev = kzalloc_flex(*intel_vsec_dev, resource, header->num_entries);
->  	if (!intel_vsec_dev)
->  		return -ENOMEM;
->  
-> -	res = kzalloc_objs(*res, header->num_entries);
-> -	if (!res)
-> -		return -ENOMEM;
-> +	intel_vsec_dev->num_resources = header->num_entries;
-> +	res = intel_vsec_dev->resource;
->  
->  	if (quirks & VSEC_QUIRK_TABLE_SHIFT)
->  		header->offset >>= TABLE_OFFSET_SHIFT;
-> @@ -342,8 +338,6 @@ static int intel_vsec_add_dev(struct device *dev, struct intel_vsec_header *head
->  	}
->  
->  	intel_vsec_dev->dev = dev;
-> -	intel_vsec_dev->resource = no_free_ptr(res);
-> -	intel_vsec_dev->num_resources = header->num_entries;
->  	intel_vsec_dev->quirks = info->quirks;
->  	intel_vsec_dev->base_addr = info->base_addr;
->  	intel_vsec_dev->priv_data = info->priv_data;
-> diff --git a/drivers/platform/x86/intel/vsec_tpmi.c b/drivers/platform/x86/intel/vsec_tpmi.c
-> index 79c0cbea2dee..908f3377b05a 100644
-> --- a/drivers/platform/x86/intel/vsec_tpmi.c
-> +++ b/drivers/platform/x86/intel/vsec_tpmi.c
-> @@ -626,15 +626,12 @@ static int tpmi_create_device(struct intel_tpmi_info *tpmi_info,
->  	if (!name)
->  		return -EOPNOTSUPP;
->  
-> -	res = kzalloc_objs(*res, pfs->pfs_header.num_entries);
-> -	if (!res)
-> +	feature_vsec_dev = kzalloc_flex(*feature_vsec_dev, resource, pfs->pfs_header.num_entries);
-> +	if (!feature_vsec_dev)
->  		return -ENOMEM;
->  
-> -	feature_vsec_dev = kzalloc_obj(*feature_vsec_dev);
-> -	if (!feature_vsec_dev) {
-> -		kfree(res);
-> -		return -ENOMEM;
-> -	}
-> +	feature_vsec_dev->num_resources = pfs->pfs_header.num_entries;
-> +	res = feature_vsec_dev->resource;
->  
->  	snprintf(feature_id_name, sizeof(feature_id_name), "tpmi-%s", name);
->  
-> @@ -647,8 +644,6 @@ static int tpmi_create_device(struct intel_tpmi_info *tpmi_info,
->  	}
->  
->  	feature_vsec_dev->dev = vsec_dev->dev;
-> -	feature_vsec_dev->resource = res;
-> -	feature_vsec_dev->num_resources = pfs->pfs_header.num_entries;
->  	feature_vsec_dev->priv_data = &tpmi_info->plat_info;
->  	feature_vsec_dev->priv_data_size = sizeof(tpmi_info->plat_info);
->  	feature_vsec_dev->ida = &intel_vsec_tpmi_ida;
-> diff --git a/include/linux/intel_vsec.h b/include/linux/intel_vsec.h
-> index 1fe5665a9d02..07ea563f524e 100644
-> --- a/include/linux/intel_vsec.h
-> +++ b/include/linux/intel_vsec.h
-> @@ -135,8 +135,6 @@ struct intel_vsec_platform_info {
->   * struct intel_vsec_device - Auxbus specific device information
->   * @auxdev:        auxbus device struct for auxbus access
->   * @dev:           struct device associated with the device
-> - * @resource:      PCI discovery resources (BAR windows), one per discovery
-> - *                 instance. Valid only when @src == INTEL_VSEC_DISC_PCI
->   * @acpi_disc:     ACPI discovery tables, each entry is two QWORDs
->   *                 in little-endian format as defined by the PMT ACPI spec.
->   *                 Valid only when @src == INTEL_VSEC_DISC_ACPI.
-> @@ -149,11 +147,12 @@ struct intel_vsec_platform_info {
->   * @quirks:        specified quirks
->   * @base_addr:     base address of entries (if specified)
->   * @cap_id:        the enumerated id of the vsec feature
-> + * @resource:      PCI discovery resources (BAR windows), one per discovery
-> + *                 instance. Valid only when @src == INTEL_VSEC_DISC_PCI
->   */
->  struct intel_vsec_device {
->  	struct auxiliary_device auxdev;
->  	struct device *dev;
-> -	struct resource *resource;
->  	u32 (*acpi_disc)[4];
->  	enum intel_vsec_disc_source src;
->  	struct ida *ida;
-> @@ -164,6 +163,7 @@ struct intel_vsec_device {
->  	unsigned long quirks;
->  	u64 base_addr;
->  	unsigned long cap_id;
-> +	struct resource resource[] __counted_by(num_resources);
->  };
->  
->  /**
-> -- 
-> 2.54.0
-> 
+Patches for step 1 were previously accepted. V3 includes the remaining
+integration patches.
+
+V3 changes:
+- Dropped "platform/x86/intel/pmt: Move header decode into common helper"
+- The dropped patch caused a crashlog regression because disc_res was
+  accessed before assignment
+- Updated the surrounding PMT patches to keep the needed ACPI header-fetch
+  work without the dropped helper
+- Added "platform/x86/intel/pmt: Cache the telemetry discovery header"
+  to carry the post-v3 bug fix cleanly
+- Dropped the standalone cleanup-pattern patch to keep the simpler
+  ssram pointer flow requested in review
+
+V2 changes:
+- Added the remaining integration patches
+
+Series layout
+
+    01-06: PMT class refactor and ACPI discovery-source support
+           Major patches:
+           Patch 06 - adds ACPI support in PMT driver
+
+    07-16: PMC driver integration
+           Major patches:
+           Patch 08 - adds ACPI PWRM telemetry driver for Nova Lake S
+           Patch 14 - adds ACPI discovery support in ssram driver
+           Patch 16 - adds NVL IDs for SSRAM discovery
+
+David E. Box (14):
+  platform/x86/intel/pmt: Add pre/post decode hooks around header
+    parsing
+  platform/x86/intel/pmt/crashlog: Split init into pre-decode
+  platform/x86/intel/pmt/telemetry: Move overlap check to post-decode
+    hook
+  platform/x86/intel/pmt: Pass discovery index instead of resource
+  platform/x86/intel/pmt: Cache the telemetry discovery header
+  platform/x86/intel/pmt: Unify header fetch and add ACPI source
+  platform/x86/intel/pmc: Add PMC SSRAM Kconfig description
+  platform/x86/intel/pmc: Add ACPI PWRM telemetry driver for Nova Lake S
+  platform/x86/intel/pmc/ssram: Rename probe and PCI ID table for
+    consistency
+  platform/x86/intel/pmc/ssram: Refactor DEVID/PWRMBASE extraction into
+    helper
+  platform/x86/intel/pmc/ssram: Add PCI platform data
+  platform/x86/intel/pmc/ssram: Add ACPI discovery scaffolding
+  platform/x86/intel/pmc/ssram: Make PMT registration optional
+  platform/x86/intel/pmc: Add NVL PCI IDs for SSRAM telemetry discovery
+
+Xi Pardee (2):
+  platform/x86/intel/pmc/ssram: Use fixed-size static pmc array
+  platform/x86/intel/pmc/ssram: Refactor memory barrier for reentrant
+    probe
+
+ drivers/platform/x86/intel/pmc/Kconfig        |  25 ++
+ drivers/platform/x86/intel/pmc/Makefile       |   2 +
+ drivers/platform/x86/intel/pmc/core.h         |  20 ++
+ .../platform/x86/intel/pmc/pwrm_telemetry.c   | 214 +++++++++++++++
+ .../platform/x86/intel/pmc/ssram_telemetry.c  | 251 +++++++++++++-----
+ drivers/platform/x86/intel/pmt/class.c        | 141 +++++++++-
+ drivers/platform/x86/intel/pmt/class.h        |   6 +
+ drivers/platform/x86/intel/pmt/crashlog.c     |  19 +-
+ drivers/platform/x86/intel/pmt/telemetry.c    |  34 ++-
+ 9 files changed, 621 insertions(+), 91 deletions(-)
+ create mode 100644 drivers/platform/x86/intel/pmc/pwrm_telemetry.c
+
+
+base-commit: 254f49634ee16a731174d2ae34bc50bd5f45e731
+--=20
+2.43.0
+
