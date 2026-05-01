@@ -1,184 +1,394 @@
-Received: from smtp-bc0f.mail.infomaniak.ch (smtp-bc0f.mail.infomaniak.ch [45.157.188.15])
+Received: from out-181.mta0.migadu.com (out-181.mta0.migadu.com [91.218.175.181])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 08195196C7C
-	for <platform-driver-x86@vger.kernel.org>; Fri,  1 May 2026 04:05:10 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.157.188.15
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D4ACE3B2FE1
+	for <platform-driver-x86@vger.kernel.org>; Fri,  1 May 2026 15:03:52 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.218.175.181
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1777608313; cv=none; b=HLrXg/8rNNNT1PdVhkWKvOpHv262Aalrv0O6UA5PJgSCJbxEk+Pd4dgPAxfgtHVJTHQpmHh+v2ocX2Z9imsVqWO2CCU0ItLjn5ddICi4D9MugdYakm2HSG3n0Rfysy85W+Hn7qHDP5JT51SGF8QEwmiHzey3DPxl6ciPmKVpxYM=
+	t=1777647834; cv=none; b=Aq7XbYqytASCOPNRpmBL15pIGevhSLQ0zStxohZ/jMvft8Dupvi1obyNHldPk82a9G8qNuyxJDxH4smt89ofjKD0EL7zCzuQkUnQlps+G69podMFVXko2kgRc98Bx/jNZqGHwy4/rSkBUV4ES3e19m4fOQWZyt+KViOVsJH8QVM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1777608313; c=relaxed/simple;
-	bh=n/NmCXpi4W3Gwnft4DFeECuo/XzZUMn3qdmCGP3Z+o0=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=d+jpDgpNeH3wzyvzVUW60DPe2dACgIT7IseFmSsnYKPGDhUSbGU2xeh5aY+sgNhSNSMdADplzebJN4ELGK8NFZ9o2tYS0dLjZTLL1c9RBESiwB3WHdYTzauMkgxIsTs34HHplCErKgaxaFyc05TjT5NyyZifCpluYemuH/4Kvy8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=gibson.sh; spf=pass smtp.mailfrom=gibson.sh; dkim=pass (2048-bit key) header.d=gibson.sh header.i=@gibson.sh header.b=dioFEZiR; arc=none smtp.client-ip=45.157.188.15
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=gibson.sh
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gibson.sh
+	s=arc-20240116; t=1777647834; c=relaxed/simple;
+	bh=vP1bM33vhoRcW3sAXry/KoPju2GzWZYKmqvvMGGZWiY=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=i1nnJHE4ZgB03mY2m+szPKIC4KQ/gdfWFbbXzTyFcsWBl5k8Yv2fMeRimcPrl0g6u7QiIISeyeOJykqgJHogSndkg1F4bXyRf2Rt5a0gf/bqwNPnq/0vxo0sK7cAzxLPfzIicHNUIBbyxtsh7cMPgDtI/Rty2C0ZAMKJ8fVnqGg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=V+Qh6Hnv; arc=none smtp.client-ip=91.218.175.181
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gibson.sh header.i=@gibson.sh header.b="dioFEZiR"
-Received: from smtp-4-0001.mail.infomaniak.ch (unknown [IPv6:2001:1600:7:10::a6c])
-	by smtp-4-3000.mail.infomaniak.ch (Postfix) with ESMTPS id 4g6GgY5WHPzG5W
-	for <platform-driver-x86@vger.kernel.org>; Fri,  1 May 2026 05:27:21 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=gibson.sh;
-	s=20260228; t=1777606041;
-	bh=fYRyRFkQMEkAqHabar/FCyf0QrY6d1LISKOv19r61D0=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=dioFEZiRiN0/vY4o8XIkhfkEzJpbYHZFs5tkvwoPeXaXgxBmBvdzr+SnWZM0hNT/g
-	 2qg1skBMCasSWEkRnBxZuQVKOuVz8hQgnb6kFeXZ6vHRUp/60Vsq2u9sFMT/8wQjn5
-	 g21uTFwR+oPgKI3n2b+llllvwSriY8GHF8NhaOWDRE8uRJ6ARKmHA41HrcUY5SduNU
-	 nx180fHVF22wZJszvwqSe3fk4eMOhRB/ItYaMat5uY+RTbvGOvQqxfB3Vw1kan6A3t
-	 jymrMjxaoQ/K0nb8gSzktscMvdxi3l5nwSlrjZPDLyGcplhF8JU22mTP8eyHlzDtLf
-	 rk5rEci6LnVqQ==
-Received: from unknown by smtp-4-0001.mail.infomaniak.ch (Postfix) with ESMTPA id 4g6GgY2fbKzc8d
-	for <platform-driver-x86@vger.kernel.org>; Fri,  1 May 2026 05:27:21 +0200 (CEST)
-Received: from unknown by spiderdemon.horst.lan (DragonFly Mail Agent v0.13);
-	Fri, 01 May 2026 05:27:20 +0200
-From: Daniel Gibson <daniel@gibson.sh>
-To: Shyam Sundar S K <Shyam-sundar.S-k@amd.com>,
-	Hans de Goede <hansg@kernel.org>,
-	=?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>,
-	platform-driver-x86@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Cc: Mario Limonciello <superm1@kernel.org>,
-	Daniel Gibson <daniel@gibson.sh>,
-	Sindre Henriksen <sindrehenriksen93@gmail.com>
-Subject: [PATCH 1/2] platform/x86/amd/pmc: Delay suspend for some Lenovo Laptops
-Date: Fri,  1 May 2026 05:26:54 +0200
-Message-ID: <20260501032655.283789-2-daniel@gibson.sh>
-X-Mailer: git-send-email 2.48.1
-In-Reply-To: <20260501032655.283789-1-daniel@gibson.sh>
-References: <20260501032655.283789-1-daniel@gibson.sh>
+	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="V+Qh6Hnv"
+Message-ID: <458d9e6c-8702-4cbc-9c4f-33cbd1175e67@linux.dev>
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
+	t=1777647819;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=zQHMeF7CFzMLwAGgl1ysY1Mx+gLUBweNCzENr7NU1Bk=;
+	b=V+Qh6HnvXVW45KSTg/cv6lyqatM7ZbcbSP+Kh6FwdQGCe3jQlv18aY1sRM8keIGm+9qomX
+	2ifWYZ3ACC6MY8ehzRGilv7TdgpH8C4Y9lI1Z4PjUkcXXiDSKpUjSt1leVouCowzGA/oSF
+	avsX0aYAp/PdWxmAcnTE+7gmre1ZI0g=
+Date: Fri, 1 May 2026 17:03:35 +0200
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Subject: Re: [PATCH] platform/x86: asus-wmi: fix fn-lock on platforms where
+ WMI DEVS is a no-op
+To: =?UTF-8?Q?Marcus_Gren=C3=A4ngen?= <marcus@grenangen.se>,
+ platform-driver-x86@vger.kernel.org
+Cc: linux-input@vger.kernel.org, linux-kernel@vger.kernel.org,
+ luke@ljones.dev, hansg@kernel.org, ilpo.jarvinen@linux.intel.com,
+ jikos@kernel.org, bentiss@kernel.org, corentin.chary@gmail.com
+References: <20260430080527.12754-1-marcus@grenangen.se>
+Content-Language: en-US, it-IT, en-US-large
+X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
+From: Denis Benato <denis.benato@linux.dev>
+In-Reply-To: <20260430080527.12754-1-marcus@grenangen.se>
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
-X-Infomaniak-Routing: alpha
+X-Migadu-Flow: FLOW_OUT
 
-Some IdeaPad Slim 3 devices and similar with AMD CPUs have a
-nonfunctional keyboard and lid switch after s2idle.
-It helps to delay suspend by 2.5 seconds so the EC has some time
-to do whatever it needs to get done before suspend.
 
-This issue has been reported for many different devices, this patch
-has been tested with the Zen3-based IdeaPad Slim 3 16ABR8 (82XR)
-and the Zen3+-based IdeaPad Slim 3 14ARP10 (83K6), see
-https://bugzilla.kernel.org/show_bug.cgi?id=221383
+On 4/30/26 10:05, Marcus Grenängen wrote:
+> Some ASUS laptops (e.g. ProArt P16, N-Key keyboard 0B05:19B6) advertise
+> the WMI fn-lock DEVID (0x00100023) as present but the DEVS call has no
+> effect. On these machines fn-lock must be toggled via a HID feature report
+> sent directly to the N-Key keyboard, which is handled by hid-asus.
+Hi, thanks for your work on this!
 
-Reported-by: Sindre Henriksen <sindrehenriksen93@gmail.com>
-Closes: https://bugzilla.kernel.org/show_bug.cgi?id=221383
-Tested-by: Sindre Henriksen <sindrehenriksen93@gmail.com>
-Tested-by: Daniel Gibson <daniel@gibson.sh>
-Suggested-by: Mario Limonciello (AMD) <superm1@kernel.org>
-Reviewed-by: Mario Limonciello (AMD) <superm1@kernel.org>
-Signed-off-by: Daniel Gibson <daniel@gibson.sh>
----
- drivers/platform/x86/amd/pmc/pmc-quirks.c | 36 +++++++++++++++++++++++
- drivers/platform/x86/amd/pmc/pmc.c        |  5 +++-
- drivers/platform/x86/amd/pmc/pmc.h        |  1 +
- 3 files changed, 41 insertions(+), 1 deletion(-)
+> Add a DMI quirk flag fnlock_use_hid for such platforms. When set,
+> asus_wmi_has_fnlock_key() checks for a registered hid-asus listener that
+> supports fnlock instead of querying DEVS, and asus_wmi_fnlock_update()
+> dispatches to asus_hid_set_fnlock().
+Do you think there might be something that might make this auto-detected
+instead of using a quirk?
+> Extend struct asus_hid_listener with a fnlock_set callback and wire it up
+> in hid-asus for QUIRK_ROG_NKEY_KEYBOARD + QUIRK_HID_FN_LOCK devices.
+> Initialize fn_lock_sync_work and register the listener in the probe path
+> for these keyboards (previously the early return for ROG N-Key devices
+> skipped asus_input_configured where this was done).
+>
+> Also add a fnlock_status sysfs attribute (RW) under the asus-wmi platform
+> device so userspace (e.g. asusctl) can read and set fn-lock state without
+> needing to open /dev/hidraw directly.
+I believe the place for this is asus-armoury driver not asus-wmi...
+it's easier too to do it in asus-armoury too.
+> Fix a NULL pointer dereference in do_kbd_led_set(): brightness_set was
+> called unconditionally on all listeners, but listeners that only implement
+> fnlock_set leave brightness_set NULL.
+This is spelled a bit weird since the issue does not exists until you add another
+listener type: can you split up this patch in maybe 3? One where you prepare
+asus-wmi for your additions, one where you add to asus-armoury and one where
+you actually add the functionality into asus-wmi? (also maybe is worth adding a
+4th one with modifications on asus-hid)?
 
-diff --git a/drivers/platform/x86/amd/pmc/pmc-quirks.c b/drivers/platform/x86/amd/pmc/pmc-quirks.c
-index 24506e342943..cea30f68f8dc 100644
---- a/drivers/platform/x86/amd/pmc/pmc-quirks.c
-+++ b/drivers/platform/x86/amd/pmc/pmc-quirks.c
-@@ -18,6 +18,7 @@
- struct quirk_entry {
- 	u32 s2idle_bug_mmio;
- 	bool spurious_8042;
-+	bool need_suspend_delay;
- };
- 
- static struct quirk_entry quirk_s2idle_bug = {
-@@ -33,6 +34,10 @@ static struct quirk_entry quirk_s2idle_spurious_8042 = {
- 	.spurious_8042 = true,
- };
- 
-+static struct quirk_entry quirk_s2idle_need_suspend_delay = {
-+	.need_suspend_delay = true
-+};
-+
- static const struct dmi_system_id fwbug_list[] = {
- 	{
- 		.ident = "L14 Gen2 AMD",
-@@ -203,6 +208,32 @@ static const struct dmi_system_id fwbug_list[] = {
- 			DMI_MATCH(DMI_PRODUCT_NAME, "82XQ"),
- 		}
- 	},
-+	/*
-+	 * Some Lenovo Laptops (like different IdeaPad 3 Slims) need some
-+	 * me-time before sleeping or they get uncooperative after waking
-+	 * up and don't send events for keyboard and lid switch anymore.
-+	 * See https://bugzilla.kernel.org/show_bug.cgi?id=221383
-+	 */
-+	{
-+		.ident = "Zen3-based IdeaPad Slim and similar",
-+		.driver_data = &quirk_s2idle_need_suspend_delay,
-+		.matches = {
-+			DMI_MATCH(DMI_BOARD_VENDOR, "LENOVO"),
-+			/*
-+			 * Note: there are also some Zen2-based 82X* devices that
-+			 * need different quirks, they're already handled above
-+			 */
-+			DMI_MATCH(DMI_PRODUCT_NAME, "82X")
-+		}
-+	},
-+	{
-+		.ident = "Zen3+-based IdeaPad Slim and similar",
-+		.driver_data = &quirk_s2idle_need_suspend_delay,
-+		.matches = {
-+			DMI_MATCH(DMI_BOARD_VENDOR, "LENOVO"),
-+			DMI_MATCH(DMI_PRODUCT_NAME, "83K")
-+		}
-+	},
- 	/* https://bugzilla.kernel.org/show_bug.cgi?id=221273 */
- 	{
- 		.ident = "Thinkpad L14 Gen3",
-@@ -356,6 +387,11 @@ void amd_pmc_process_restore_quirks(struct amd_pmc_dev *dev)
- 		amd_pmc_skip_nvme_smi_handler(dev->quirks->s2idle_bug_mmio);
- }
- 
-+bool amd_pmc_quirk_need_suspend_delay(struct amd_pmc_dev *dev)
-+{
-+	return dev->quirks->need_suspend_delay;
-+}
-+
- void amd_pmc_quirks_init(struct amd_pmc_dev *dev)
- {
- 	const struct dmi_system_id *dmi_id;
-diff --git a/drivers/platform/x86/amd/pmc/pmc.c b/drivers/platform/x86/amd/pmc/pmc.c
-index cae3fcafd4d7..c604dc7207ed 100644
---- a/drivers/platform/x86/amd/pmc/pmc.c
-+++ b/drivers/platform/x86/amd/pmc/pmc.c
-@@ -634,10 +634,13 @@ static void amd_pmc_s2idle_check(void)
- 	struct amd_pmc_dev *pdev = &pmc;
- 	struct smu_metrics table;
- 	int rc;
-+	bool ec_needs_sleep = !disable_workarounds && amd_pmc_quirk_need_suspend_delay(pdev);
- 
- 	/* Avoid triggering OVP */
--	if (!get_metrics_table(pdev, &table) && table.s0i3_last_entry_status)
-+	if (ec_needs_sleep || (!get_metrics_table(pdev, &table) && table.s0i3_last_entry_status)) {
-+		dev_info(pdev->dev, "Delaying suspend by 2.5s to avoid platform bug\n");
- 		msleep(2500);
-+	}
- 
- 	/* Dump the IdleMask before we add to the STB */
- 	amd_pmc_idlemask_read(pdev, pdev->dev, NULL);
-diff --git a/drivers/platform/x86/amd/pmc/pmc.h b/drivers/platform/x86/amd/pmc/pmc.h
-index fe3f53eb5955..f5257e47b8c4 100644
---- a/drivers/platform/x86/amd/pmc/pmc.h
-+++ b/drivers/platform/x86/amd/pmc/pmc.h
-@@ -147,6 +147,7 @@ enum amd_pmc_def {
- };
- 
- void amd_pmc_process_restore_quirks(struct amd_pmc_dev *dev);
-+bool amd_pmc_quirk_need_suspend_delay(struct amd_pmc_dev *dev);
- void amd_pmc_quirks_init(struct amd_pmc_dev *dev);
- void amd_mp2_stb_init(struct amd_pmc_dev *dev);
- void amd_mp2_stb_deinit(struct amd_pmc_dev *dev);
--- 
-2.48.1
-
+> Signed-off-by: Marcus Grenängen <marcus@grenangen.se>
+> ---
+>  drivers/hid/hid-asus.c                     |  24 ++++-
+>  drivers/platform/x86/asus-nb-wmi.c         |  13 +++
+>  drivers/platform/x86/asus-wmi.c            | 101 ++++++++++++++++++++-
+>  drivers/platform/x86/asus-wmi.h            |   5 +
+>  include/linux/platform_data/x86/asus-wmi.h |   7 +-
+>  5 files changed, 143 insertions(+), 7 deletions(-)
+>
+> diff --git a/drivers/hid/hid-asus.c b/drivers/hid/hid-asus.c
+> index d34d74df3dc0..71ced03c0f7e 100644
+> --- a/drivers/hid/hid-asus.c
+> +++ b/drivers/hid/hid-asus.c
+> @@ -143,6 +143,7 @@ struct asus_drvdata {
+>  	unsigned long battery_next_query;
+>  	struct work_struct fn_lock_sync_work;
+>  	bool fn_lock;
+> +	struct asus_hid_listener fn_lock_listener;
+>  };
+>  
+>  static int asus_report_battery(struct asus_drvdata *, u8 *, int);
+> @@ -584,6 +585,15 @@ static void asus_sync_fn_lock(struct work_struct *work)
+>  	asus_kbd_set_fn_lock(drvdata->hdev, drvdata->fn_lock);
+>  }
+>  
+> +static void asus_hid_fnlock_set(struct asus_hid_listener *listener, bool enabled)
+> +{
+> +	struct asus_drvdata *drvdata =
+> +		container_of(listener, struct asus_drvdata, fn_lock_listener);
+> +
+> +	drvdata->fn_lock = enabled;
+> +	schedule_work(&drvdata->fn_lock_sync_work);
+> +}
+> +
+>  static void asus_schedule_work(struct asus_kbd_leds *led)
+>  {
+>  	unsigned long flags;
+> @@ -1319,8 +1329,16 @@ static int asus_probe(struct hid_device *hdev, const struct hid_device_id *id)
+>  	 * For ROG keyboards, skip rename for consistency and ->input check as
+>  	 * some devices do not have inputs.
+>  	 */
+> -	if (drvdata->quirks & QUIRK_ROG_NKEY_KEYBOARD)
+> +	if (drvdata->quirks & QUIRK_ROG_NKEY_KEYBOARD) {
+> +		if (drvdata->quirks & QUIRK_HID_FN_LOCK) {
+> +			drvdata->fn_lock = true;
+> +			INIT_WORK(&drvdata->fn_lock_sync_work, asus_sync_fn_lock);
+> +			asus_kbd_set_fn_lock(hdev, true);
+> +			drvdata->fn_lock_listener.fnlock_set = asus_hid_fnlock_set;
+> +			asus_hid_register_listener(&drvdata->fn_lock_listener);
+> +		}
+>  		return 0;
+> +	}
+>  
+>  	/*
+>  	 * Check that input registration succeeded. Checking that
+> @@ -1362,8 +1380,10 @@ static void asus_remove(struct hid_device *hdev)
+>  		cancel_work_sync(&drvdata->kbd_backlight->work);
+>  	}
+>  
+> -	if (drvdata->quirks & QUIRK_HID_FN_LOCK)
+> +	if (drvdata->quirks & QUIRK_HID_FN_LOCK) {
+> +		asus_hid_unregister_listener(&drvdata->fn_lock_listener);
+>  		cancel_work_sync(&drvdata->fn_lock_sync_work);
+> +	}
+>  
+>  	hid_hw_stop(hdev);
+>  }
+> diff --git a/drivers/platform/x86/asus-nb-wmi.c b/drivers/platform/x86/asus-nb-wmi.c
+> index b4677c5bba5b..44e4cf68ff70 100644
+> --- a/drivers/platform/x86/asus-nb-wmi.c
+> +++ b/drivers/platform/x86/asus-nb-wmi.c
+> @@ -155,6 +155,10 @@ static struct quirk_entry quirk_asus_z13 = {
+>  	.tablet_switch_mode = asus_wmi_kbd_dock_devid,
+>  };
+>  
+> +static struct quirk_entry quirk_asus_proart_p16 = {
+> +	.fnlock_use_hid = true,
+> +};
+> +
+>  static int dmi_matched(const struct dmi_system_id *dmi)
+>  {
+>  	pr_info("Identified laptop model '%s'\n", dmi->ident);
+> @@ -553,6 +557,15 @@ static const struct dmi_system_id asus_quirks[] = {
+>  		},
+>  		.driver_data = &quirk_asus_z13,
+>  	},
+> +	{
+> +		.callback = dmi_matched,
+> +		.ident = "ASUS ProArt P16",
+> +		.matches = {
+> +			DMI_MATCH(DMI_SYS_VENDOR, "ASUSTeK COMPUTER INC."),
+> +			DMI_MATCH(DMI_PRODUCT_FAMILY, "ProArt P16"),
+> +		},
+> +		.driver_data = &quirk_asus_proart_p16,
+> +	},
+>  	{},
+>  };
+>  
+> diff --git a/drivers/platform/x86/asus-wmi.c b/drivers/platform/x86/asus-wmi.c
+> index 80144c412b90..70758a20551d 100644
+> --- a/drivers/platform/x86/asus-wmi.c
+> +++ b/drivers/platform/x86/asus-wmi.c
+> @@ -1759,6 +1759,24 @@ int asus_hid_event(enum asus_hid_event event)
+>  }
+>  EXPORT_SYMBOL_GPL(asus_hid_event);
+>  
+> +/*
+> + * Called by asus-wmi to propagate an fn-lock state change to all registered
+> + * hid-asus listeners. Used on platforms where the WMI DEVS path for fn-lock
+> + * (0x00100023) is a no-operation and the HID feature report path must be used
+> + * instead (e.g. ASUS ProArt P16, USB keyboard product ID 0x19B6).
+> + */
+> +void asus_hid_set_fnlock(bool enabled)
+> +{
+> +	struct asus_hid_listener *listener;
+> +
+> +	guard(spinlock_irqsave)(&asus_ref.lock);
+> +	list_for_each_entry(listener, &asus_ref.listeners, list) {
+> +		if (listener->fnlock_set)
+> +			listener->fnlock_set(listener, enabled);
+> +	}
+> +}
+> +EXPORT_SYMBOL_GPL(asus_hid_set_fnlock);
+> +
+>  /*
+>   * These functions actually update the LED's, and are called from a
+>   * workqueue. By doing this as separate work rather than when the LED
+> @@ -1852,7 +1870,8 @@ static void do_kbd_led_set(struct led_classdev *led_cdev, int value)
+>  
+>  	scoped_guard(spinlock_irqsave, &asus_ref.lock) {
+>  		list_for_each_entry(listener, &asus_ref.listeners, list)
+> -			listener->brightness_set(listener, asus->kbd_led_wk);
+> +			if (listener->brightness_set)
+> +				listener->brightness_set(listener, asus->kbd_led_wk);
+>  	}
+>  }
+>  
+> @@ -4495,21 +4514,64 @@ static void asus_screenpad_exit(struct asus_wmi *asus)
+>  
+>  /* Fn-lock ********************************************************************/
+>  
+> +static bool asus_hid_has_fnlock_listener(void)
+> +{
+> +	struct asus_hid_listener *listener;
+> +
+> +	guard(spinlock_irqsave)(&asus_ref.lock);
+> +	list_for_each_entry(listener, &asus_ref.listeners, list) {
+> +		if (listener->fnlock_set)
+> +			return true;
+> +	}
+> +	return false;
+> +}
+> +
+>  static bool asus_wmi_has_fnlock_key(struct asus_wmi *asus)
+>  {
+>  	u32 result;
+>  
+> +	/* Some platforms have a non-functional WMI path — use HID directly */
+> +	if (asus->driver->quirks->fnlock_use_hid)
+> +		return asus_hid_has_fnlock_listener();
+> +
+>  	asus_wmi_get_devstate(asus, ASUS_WMI_DEVID_FNLOCK, &result);
+>  
+> -	return (result & ASUS_WMI_DSTS_PRESENCE_BIT) &&
+> -		!(result & ASUS_WMI_FNLOCK_BIOS_DISABLED);
+> +	if ((result & ASUS_WMI_DSTS_PRESENCE_BIT) &&
+> +	    !(result & ASUS_WMI_FNLOCK_BIOS_DISABLED))
+> +		return true;
+> +
+> +	/*
+> +	 * Some platforms (e.g. ASUS ProArt P16) have a non-functional WMI
+> +	 * DEVS path for fn-lock (DEVS returns One unconditionally with no
+> +	 * side effects). On these platforms fn-lock is controlled via a HID
+> +	 * feature report sent directly to the N-Key keyboard. Return true if
+> +	 * a hid-asus listener with fnlock support has registered, so that
+> +	 * asus-wmi can manage the fn-lock state and expose the sysfs knob.
+> +	 */
+> +	return asus_hid_has_fnlock_listener();
+>  }
+>  
+>  static void asus_wmi_fnlock_update(struct asus_wmi *asus)
+>  {
+>  	int mode = asus->fnlock_locked;
+> +	u32 result;
+>  
+> -	asus_wmi_set_devstate(ASUS_WMI_DEVID_FNLOCK, mode, NULL);
+> +	/* Platform has non-functional WMI DEVS for fn-lock — use HID directly */
+> +	if (asus->driver->quirks->fnlock_use_hid) {
+> +		asus_hid_set_fnlock(mode);
+> +		return;
+> +	}
+> +
+> +	asus_wmi_get_devstate(asus, ASUS_WMI_DEVID_FNLOCK, &result);
+> +
+> +	if ((result & ASUS_WMI_DSTS_PRESENCE_BIT) &&
+> +	    !(result & ASUS_WMI_FNLOCK_BIOS_DISABLED)) {
+> +		asus_wmi_set_devstate(ASUS_WMI_DEVID_FNLOCK, mode, NULL);
+> +		return;
+> +	}
+> +
+> +	/* WMI path absent or non-functional — delegate to hid-asus */
+> +	asus_hid_set_fnlock(mode);
+>  }
+>  
+>  /* WMI events *****************************************************************/
+> @@ -4690,6 +4752,34 @@ static ssize_t cpufv_store(struct device *dev, struct device_attribute *attr,
+>  
+>  static DEVICE_ATTR_WO(cpufv);
+>  
+> +static ssize_t fnlock_status_show(struct device *dev,
+> +				  struct device_attribute *attr, char *buf)
+> +{
+> +	struct asus_wmi *asus = dev_get_drvdata(dev);
+> +
+> +	return sysfs_emit(buf, "%d\n", asus->fnlock_locked);
+> +}
+> +
+> +static ssize_t fnlock_status_store(struct device *dev,
+> +				   struct device_attribute *attr,
+> +				   const char *buf, size_t count)
+> +{
+> +	struct asus_wmi *asus = dev_get_drvdata(dev);
+> +	bool enable;
+> +	int err;
+> +
+> +	err = kstrtobool(buf, &enable);
+> +	if (err)
+> +		return err;
+> +
+> +	asus->fnlock_locked = enable;
+> +	asus_wmi_fnlock_update(asus);
+> +
+> +	return count;
+> +}
+> +
+> +static DEVICE_ATTR_RW(fnlock_status);
+> +
+>  static struct attribute *platform_attributes[] = {
+>  	&dev_attr_cpufv.attr,
+>  	&dev_attr_camera.attr,
+> @@ -4698,6 +4788,7 @@ static struct attribute *platform_attributes[] = {
+>  	&dev_attr_lid_resume.attr,
+>  	&dev_attr_als_enable.attr,
+>  	&dev_attr_fan_boost_mode.attr,
+> +	&dev_attr_fnlock_status.attr,
+>  #if IS_ENABLED(CONFIG_ASUS_WMI_DEPRECATED_ATTRS)
+>  		&dev_attr_charge_mode.attr,
+>  		&dev_attr_egpu_enable.attr,
+> @@ -4741,6 +4832,8 @@ static umode_t asus_sysfs_is_visible(struct kobject *kobj,
+>  		devid = ASUS_WMI_DEVID_ALS_ENABLE;
+>  	else if (attr == &dev_attr_fan_boost_mode.attr)
+>  		ok = asus->fan_boost_mode_available;
+> +	else if (attr == &dev_attr_fnlock_status.attr)
+> +		ok = asus_wmi_has_fnlock_key(asus);
+>  
+>  #if IS_ENABLED(CONFIG_ASUS_WMI_DEPRECATED_ATTRS)
+>  	if (attr == &dev_attr_charge_mode.attr)
+> diff --git a/drivers/platform/x86/asus-wmi.h b/drivers/platform/x86/asus-wmi.h
+> index 5cd4392b964e..6c50b11860e8 100644
+> --- a/drivers/platform/x86/asus-wmi.h
+> +++ b/drivers/platform/x86/asus-wmi.h
+> @@ -52,6 +52,11 @@ struct quirk_entry {
+>  	 */
+>  	int no_display_toggle;
+>  	u32 xusb2pr;
+> +	/*
+> +	 * Some platforms report WMI DEVID_FNLOCK as present but the DEVS call
+> +	 * is a no-op. Force the HID feature report path via hid-asus instead.
+> +	 */
+> +	bool fnlock_use_hid;
+>  };
+>  
+>  struct asus_wmi_driver {
+> diff --git a/include/linux/platform_data/x86/asus-wmi.h b/include/linux/platform_data/x86/asus-wmi.h
+> index 554f41b827e1..569289417a51 100644
+> --- a/include/linux/platform_data/x86/asus-wmi.h
+> +++ b/include/linux/platform_data/x86/asus-wmi.h
+> @@ -173,10 +173,11 @@ enum asus_ally_mcu_hack {
+>  	ASUS_WMI_ALLY_MCU_HACK_DISABLED,
+>  };
+>  
+> -/* Used to notify hid-asus when asus-wmi changes keyboard backlight */
+> +/* Used to notify hid-asus when asus-wmi changes keyboard backlight or fn-lock */
+>  struct asus_hid_listener {
+>  	struct list_head list;
+>  	void (*brightness_set)(struct asus_hid_listener *listener, int brightness);
+> +	void (*fnlock_set)(struct asus_hid_listener *listener, bool enabled);
+>  };
+>  
+>  enum asus_hid_event {
+> @@ -196,6 +197,7 @@ int asus_wmi_evaluate_method(u32 method_id, u32 arg0, u32 arg1, u32 *retval);
+>  int asus_hid_register_listener(struct asus_hid_listener *cdev);
+>  void asus_hid_unregister_listener(struct asus_hid_listener *cdev);
+>  int asus_hid_event(enum asus_hid_event event);
+> +void asus_hid_set_fnlock(bool enabled);
+>  #else
+>  static inline void set_ally_mcu_hack(enum asus_ally_mcu_hack status)
+>  {
+> @@ -227,6 +229,9 @@ static inline int asus_hid_event(enum asus_hid_event event)
+>  {
+>  	return -ENODEV;
+>  }
+> +static inline void asus_hid_set_fnlock(bool enabled)
+> +{
+> +}
+>  #endif
+>  
+>  #endif	/* __PLATFORM_DATA_X86_ASUS_WMI_H */
