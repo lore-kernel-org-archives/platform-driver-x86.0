@@ -1,73 +1,49 @@
-Received: from mail-pf1-f177.google.com (mail-pf1-f177.google.com [209.85.210.177])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp-8fac.mail.infomaniak.ch (smtp-8fac.mail.infomaniak.ch [83.166.143.172])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C980A244694
-	for <platform-driver-x86@vger.kernel.org>; Thu, 30 Apr 2026 22:53:28 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.177
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9DC2611CBA
+	for <platform-driver-x86@vger.kernel.org>; Fri,  1 May 2026 03:46:09 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=83.166.143.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1777589609; cv=none; b=jKRGW6p0v0rcakcvOfdxCryH/hNvHKTCQMIM0sDbnp0BPO8/Z2YSwvq8BGuhpeIBOfPwYV2imNnsBn7jEMZBmSeLieki6G3uyuRtyfAO3643hyacMuJKNIZLALsMVj2uPSyT6D5eQl/2rYl9rMPQNHiCTL+rUnTdnOJCQJrVBqA=
+	t=1777607172; cv=none; b=ZZrd6uAIpkHFEVasxRalA7mrVvFS6wtoShz2IKJmcgmvYdNLzu8fuKD+/WxSxs/WyUZZlj4MUX9qJnI8KWxx8KrNlElAZw2Hv6goslNs7S/DEUFK2kGkp6WYO4LqMGhHHsX47uJDbVwDzfRH0b1OuqpjVLUMCRgZVL/bfxSYG3s=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1777589609; c=relaxed/simple;
-	bh=skGTGrLVcifH8lHYXyJ1EySzxhgSJcO8bcxVlpJNh7g=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=cw0tzXUt6qgwm+9l/3u9R+Z50eu5jxP9O85dBX2XUyp3hTsNzMTAwgrsPWTTd/VTCyZCeHi+oTJfTvmUUKRUbvq0m8IjObfN5LQ9x/YJYGXxGAmsfHoOspqOv2/iVtjWgaj0Gk47KKgigOFR+vh9XwLSiVBIF3a6xywKoasZBUk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=NF44lAF2; arc=none smtp.client-ip=209.85.210.177
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1777607172; c=relaxed/simple;
+	bh=wGWytSVkh9qN1pTTgMGDRkwSkCIZ3zeaKgsuL4yZBuQ=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=u45YdFePtzyYSNTAU1vOnyS/U4n1hRJ0uiu3BOB232Yp6ejUwgaqB4uaLCiPgOYyGf51YHGrTD4HA6Cek/sQeRaWyyunmDuPG4InGrtb4H+iOS051oABRKrv4ZdDB9X9GfqRDHzLK5tYl7Ee+y7f87/EX04Hx62m/PIuC4xk5ew=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=gibson.sh; spf=pass smtp.mailfrom=gibson.sh; dkim=pass (2048-bit key) header.d=gibson.sh header.i=@gibson.sh header.b=PFFg8Ei2; arc=none smtp.client-ip=83.166.143.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=gibson.sh
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gibson.sh
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="NF44lAF2"
-Received: by mail-pf1-f177.google.com with SMTP id d2e1a72fcca58-82f1f6103afso661317b3a.1
-        for <platform-driver-x86@vger.kernel.org>; Thu, 30 Apr 2026 15:53:28 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20251104; t=1777589608; x=1778194408; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=3sFxgw4Clv/Aqa9OTsN2Ya0IWvB3CZpXJ32lJDy2rEw=;
-        b=NF44lAF2cAM6Tj/PSLsyHTnqn9ik/quFEGK3nLK/eRXubMHFXq1xjnG5hdDr1sLbLW
-         LUu7FltY/8mO7N/pkgrN4yKksiTYyYZwRqBb50Ch5NJePbwtwXleH8RtApw9qKlbu9Np
-         6Q5RIivI9n1vL0RYU6crLDeFkgoBv6eZzhopz3U2xA5g+fTe/XM7pvq5/RPIxukbX9cI
-         p9ykMfR3wap64xSO3gq1Tl6SMNylQKCmx8awYJB5fI+UfoVqk4+LSvGmslCGleYP4WmF
-         U/tvLuNjK+wv13vb0A+cvCoXfEKEb/bNjKagdItLHm2aMyPdlTuO0g+zu1GK3lWF/hnv
-         iOtg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1777589608; x=1778194408;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-gg:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=3sFxgw4Clv/Aqa9OTsN2Ya0IWvB3CZpXJ32lJDy2rEw=;
-        b=oH2DV8Qq3eU+so1CFBRu5GZ4KbVy7ZeSVQ5ZVpFf223ll6YOuRkLCU+VWedULYuQzV
-         BO+9cRaczvcyrNwvMy2gRiIe/+2+nCAUtqCDVf1vGAKZ+UxjGRIxm/HRJnYl9hg0HLhL
-         Pi+kRrLpvgLY2UJ0Hw6+SxUIEumMgRs+smK447kmj//KW/+wwz3xxZ3XvfE5uvgFMfl+
-         5fh6A4kjKf4IQVhvdWPYgC/YPCJhCa01kvIo1GR7xX75fIG180ZTdC8IsZEXu1fu0Tfg
-         te2CKx3WGd30HUNpI+Gr1VECNHXnnnhviUX3g74LVLQYyOyAZblauQbtGf05EwSHYV0o
-         LWmw==
-X-Gm-Message-State: AOJu0YzOYJy0WVN+WSEFhZb1P25/DSx21U4/ZesIEZwHf+BCDzvsFl70
-	DEhN08nu1G8a7dNzkwpvfwPr9TbsG8fttaKDpni4m5hUVsM7opy9n+9ile0Rc+y0
-X-Gm-Gg: AeBDievrOI/ou6JfG1F5VeIHCIQOSdHj+ss+kS65AXMtbOqqhsS6v0oKiltzpNBazsp
-	wxuGZ56Wz3fGWyzfJjD+/mhhoSQimNlxZ5UhSVSsq6OmhkVJ6cowp52taCrCZ4TD2IDfzLrvqM/
-	z0zPvT9x6QUOjN6c+2F0DzTKVCIEYNx+lI5lRns5y53GfmTNkP2XLSq1DDAIeqywou42G0ni6tb
-	Bsw6mUvZ6igyH87/72027/W969h2cocMeVN8A5TnDh65gxtgcMrcjvusaqu/dylPpWPJnfOEhhG
-	y+5R0tbqiL6Ai15MESBQrZkb1cxOzCbqu6YwkId8qJrJ0zLkgSw8eugNK8OyqxnIY6XXdUugryt
-	1SEE87JogCs6wFazZiAVX695BYa1AO1f5NGcsAxDBplCi81zi3tCizkZMNHXbRqA2KU6nFf7ey3
-	EtBSllAaGoCG+vzqVitlOircgqXNL6VTuniSVocw5f3aTop3F9AUFufSkntxXLURDFd6/Lhi+s7
-	TGN2xXrgG9SxzYNRl+gUHQ1mgDzsSyiMJvr65ohj0ISaA==
-X-Received: by 2002:a05:6a00:9a7:b0:82c:7876:a027 with SMTP id d2e1a72fcca58-834fdb4947fmr5496414b3a.18.1777589607741;
-        Thu, 30 Apr 2026 15:53:27 -0700 (PDT)
-Received: from ryzen ([2601:644:8000:5b5d:7285:c2ff:fe45:8a32])
-        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-835158322f6sm757564b3a.10.2026.04.30.15.53.26
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 30 Apr 2026 15:53:27 -0700 (PDT)
-From: Rosen Penev <rosenp@gmail.com>
-To: platform-driver-x86@vger.kernel.org
-Cc: Hans de Goede <hansg@kernel.org>,
+	dkim=pass (2048-bit key) header.d=gibson.sh header.i=@gibson.sh header.b="PFFg8Ei2"
+Received: from smtp-3-0001.mail.infomaniak.ch (unknown [IPv6:2001:1600:4:17::246c])
+	by smtp-3-3000.mail.infomaniak.ch (Postfix) with ESMTPS id 4g6GgP2wMfzHsP
+	for <platform-driver-x86@vger.kernel.org>; Fri,  1 May 2026 05:27:13 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=gibson.sh;
+	s=20260228; t=1777606033;
+	bh=9CKdKSrtjgxIbqvCl2f4pyONCbZh8XFfD7sEx1/ZNeo=;
+	h=From:To:Cc:Subject:Date:From;
+	b=PFFg8Ei2Ngzx58pdBjGkOF/JSWLHARe+2WJW5ipH6SKGB71Xi6snxIjj8m1StUiRA
+	 fUo+nBCq+K4QAzdskD4c4HrE14bzDcqAzzFRFd3HyKduKVFeoasfuF8ARHUf3sFlBh
+	 IwxoWedzFxuKBJbfOuUe68b3R1Grhvc4G3+dwje3yxh8PrM2L9EG3BSqPuBBqJ0iHD
+	 y+Eejn5NvBTJbFZoUV2/hzyO2UYjj3ij09VaXkybX+wWeT8UBGptFq6mIo0wB5PTRw
+	 jdQNoc8/eIcItvYtO6MxT0y0tYRv2bWW7TzQtIn365BlwdarR4sZDhLIskoUg484YZ
+	 5Dx5amid0RobA==
+Received: from unknown by smtp-3-0001.mail.infomaniak.ch (Postfix) with ESMTPA id 4g6GgN6fKMzdDS
+	for <platform-driver-x86@vger.kernel.org>; Fri,  1 May 2026 05:27:12 +0200 (CEST)
+Received: from unknown by spiderdemon.horst.lan (DragonFly Mail Agent v0.13);
+	Fri, 01 May 2026 05:27:12 +0200
+From: Daniel Gibson <daniel@gibson.sh>
+To: Shyam Sundar S K <Shyam-sundar.S-k@amd.com>,
+	Hans de Goede <hansg@kernel.org>,
 	=?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>,
-	Kees Cook <kees@kernel.org>,
-	"Gustavo A. R. Silva" <gustavoars@kernel.org>,
-	linux-kernel@vger.kernel.org (open list),
-	linux-hardening@vger.kernel.org (open list:KERNEL HARDENING (not covered by other areas):Keyword:\b__counted_by(_le|_be)?\b)
-Subject: [PATCH] platform/x86/intel/tpmi/plr: allocate die_info with plr
-Date: Thu, 30 Apr 2026 15:53:09 -0700
-Message-ID: <20260430225309.117557-1-rosenp@gmail.com>
-X-Mailer: git-send-email 2.54.0
+	platform-driver-x86@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Cc: Mario Limonciello <superm1@kernel.org>,
+	Daniel Gibson <daniel@gibson.sh>
+Subject: [PATCH 0/2] amd_pmc: Delay s2idle suspend for some devices
+Date: Fri,  1 May 2026 05:26:53 +0200
+Message-ID: <20260501032655.283789-1-daniel@gibson.sh>
+X-Mailer: git-send-email 2.48.1
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
@@ -75,48 +51,52 @@ List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
+X-Infomaniak-Routing: alpha
 
-Simplifies allocations slightly.
+On some AMD Zen3 and Zen3+-based Lenovo IdeaPad laptops the keyboard and
+the lid switch stop working after the first suspend, until rebooted.
 
-Add __counted_by for extra runtime analysis.
+More specifically, they stop sending events when pressing a key or
+closing the lid - it's still possible to toggle the capslock- and
+numlock-LEDs with an external keyboard or read the lid state at
+/proc/acpi/button/lid/LID/state.
 
-Signed-off-by: Rosen Penev <rosenp@gmail.com>
----
- drivers/platform/x86/intel/plr_tpmi.c | 9 ++-------
- 1 file changed, 2 insertions(+), 7 deletions(-)
+See also https://bugzilla.kernel.org/show_bug.cgi?id=221383
 
-diff --git a/drivers/platform/x86/intel/plr_tpmi.c b/drivers/platform/x86/intel/plr_tpmi.c
-index 05727169f49c..2fd27e80bc1f 100644
---- a/drivers/platform/x86/intel/plr_tpmi.c
-+++ b/drivers/platform/x86/intel/plr_tpmi.c
-@@ -57,9 +57,9 @@ struct tpmi_plr_die {
- 
- struct tpmi_plr {
- 	struct dentry *dbgfs_dir;
--	struct tpmi_plr_die *die_info;
- 	int num_dies;
- 	struct auxiliary_device *auxdev;
-+	struct tpmi_plr_die die_info[] __counted_by(num_dies);
- };
- 
- static const char * const plr_coarse_reasons[] = {
-@@ -278,15 +278,10 @@ static int intel_plr_probe(struct auxiliary_device *auxdev, const struct auxilia
- 	if (!num_resources)
- 		return -EINVAL;
- 
--	plr = devm_kzalloc(&auxdev->dev, sizeof(*plr), GFP_KERNEL);
-+	plr = devm_kzalloc(&auxdev->dev, struct_size(plr, die_info, num_resources), GFP_KERNEL);
- 	if (!plr)
- 		return -ENOMEM;
- 
--	plr->die_info = devm_kcalloc(&auxdev->dev, num_resources, sizeof(*plr->die_info),
--				     GFP_KERNEL);
--	if (!plr->die_info)
--		return -ENOMEM;
--
- 	plr->num_dies = num_resources;
- 	plr->dbgfs_dir = debugfs_create_dir("plr", dentry);
- 	plr->auxdev = auxdev;
+It appears that suspending and/or resuming gets the EC into a broken
+state. This problem doesn't happen on Windows and Mario Limonciello
+mentioned that the Windows kernel gives hardware and software some time
+before actually suspending (before activating HW DRIPS), while Linux
+(or the amd_pmc module) does that immediately, so it may be worth trying
+if calling msleep() in amd_pmc_s2idle_check() helps.
+
+It turned out that sleeping for 2.5 seconds at that point indeed makes
+the problems disappear. Sleeping for 1.5 seconds wasn't enough.
+
+Luckily there was already a quirk that does exactly that under other
+circumstances, so I could build on that:
+https://lore.kernel.org/platform-driver-x86/20250414162446.3853194-1-superm1@kernel.org/
+
+I enable this quirk for two lines of Lenovo Laptops that are known to
+have this problem and for which the patch has been successfully tested.
+
+I found several reports of these or similar issues on the web, for
+different devices, so in a second commit I added a parameter to the
+kernel module that allows enabling or disabling this, which will make
+it easy for people whose devices aren't matched yet to test this quirk.
+
+Thanks to Mario Limonciello for his support and to Sindre Henriksen
+for testing my patch!
+
+Daniel Gibson (2):
+  platform/x86/amd/pmc: Delay suspend for some Lenovo Laptops
+  platform/x86/amd/pmc: Add delay_suspend module argument
+
+ drivers/platform/x86/amd/pmc/pmc-quirks.c | 36 +++++++++++++++++++++++
+ drivers/platform/x86/amd/pmc/pmc.c        | 18 +++++++++++-
+ drivers/platform/x86/amd/pmc/pmc.h        |  1 +
+ 3 files changed, 54 insertions(+), 1 deletion(-)
+
 -- 
-2.54.0
+2.48.1
 
