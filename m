@@ -1,127 +1,82 @@
-Received: from mail-07.mail-europe.com (mail-07.mail-europe.com [188.165.51.139])
+Received: from out-173.mta0.migadu.com (out-173.mta0.migadu.com [91.218.175.173])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BA6A63A63F7;
-	Sun,  3 May 2026 21:11:24 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=188.165.51.139
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 81EF723EAB0
+	for <platform-driver-x86@vger.kernel.org>; Sun,  3 May 2026 21:23:47 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.218.175.173
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1777842686; cv=none; b=n+7D4kKRHr3EsCjxK+9M44A+JGWIjnIMgiV4UvNoFkLpxfK6m0HNsxAIdhAsX+jigb4CrpkQZ9Li40nQvtrggVYC0GNmoy8qOmq8VobTu2S+7qHMs11hd6ujv5Sk5s5zZJ1yFkJrW2gGlnbg7kO7eMofkE5FR9uyPGHujmfHDKw=
+	t=1777843428; cv=none; b=XWEdUaljWyie0iTSkxjRWcpt5BtxN12T/lWprHpucpaS0Q4r4OEAyHLZ8ckee3RE3KbNfIgvJDcESR1b+nZY6VPEXgzVxZ7w3MsWHR6AuKt4yvD0UYgiaW/I0Eff+Ck2SbKR3AX7IxIE1eaiFhrLo5Bsr357DORqiyiRlmoRUMM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1777842686; c=relaxed/simple;
-	bh=4IY6zgCE3t6xCxKy1+7cS+LAlfFK2OEbPo6snkCIKPE=;
-	h=Date:To:From:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=Qv5S4alhVmm9IWnzHLuFWDGoDaj7Zhd+62pTJS3Xo5vqku+HUnE1bv+NKGj7gSNnnQstxOFQu9u2ksbNVhQMqASZulxE9dhtv+tlASGOlT7y5amD6rV8uHEzE4MJg3HBjJ6JnX7JTZhjhghZj76cDj5MUxgdYDlSAIkOtPJF2Cc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=vinarskis.com; spf=pass smtp.mailfrom=vinarskis.com; dkim=pass (2048-bit key) header.d=vinarskis.com header.i=@vinarskis.com header.b=VC/n+2KU; arc=none smtp.client-ip=188.165.51.139
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=vinarskis.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=vinarskis.com
+	s=arc-20240116; t=1777843428; c=relaxed/simple;
+	bh=q3HnlSljT1KCV9S+3RlpFqdso8EJ3o3rx7XgscrLDp4=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=gW224fOYJS9Vjv74oN8IgSsqBNtaCKSW4Ouikf7svg82dr5oINACcag7B3Z17ZJFwdiXakHqI28LEHvdGMtgLk2HGmBDh+wqcGGXgIIl4xnrjQ4obyzjlqhArWvXZdxOcNvlyEDqxnRoysnMn0XFR5mDf7/163yN+7ESDx49V38=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=SzoVMtHl; arc=none smtp.client-ip=91.218.175.173
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=vinarskis.com header.i=@vinarskis.com header.b="VC/n+2KU"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=vinarskis.com;
-	s=protonmail2; t=1777842674; x=1778101874;
-	bh=Mze8pJ2Bv3rPQ71TmtY8/Gn2r4+/ykkYhDlYmX5zZSg=;
-	h=Date:To:From:Cc:Subject:Message-ID:In-Reply-To:References:
-	 Feedback-ID:From:To:Cc:Date:Subject:Reply-To:Feedback-ID:
-	 Message-ID:BIMI-Selector;
-	b=VC/n+2KU2ttk3svh9BYuOP1zgLWk73DcXL1aoKA5zoHj+MwFD8RluqgH4rXKgtTir
-	 KivuJLThb8r/nLxuE6IoiUhENRTmsS3WePxAbw+TShxRhr8X9zSFKMKbqEisJRI0hm
-	 kqdb68aKkSJmXcVBWVNRMvKg/JdCH3yE8/IpaKuVDsHYEMduSS09Otx9zg23J6osOl
-	 l51AqfNOYGFPy1qs82ppH39IqXpkyWmOjQlXoojevMDcKYsiVzHMxUpXKq5DVw1Usu
-	 h6PoJmn+YIi+nMgJ5SYjPfOXPq1Wmbt3HdXenPKtr0FTQYGII91xpgXSrKbbF8yiLc
-	 J5e2XGbGyVD6w==
-Date: Sun, 03 May 2026 21:11:08 +0000
-To: Jishnu Prakash <jishnu.prakash@oss.qualcomm.com>
-From: Aleksandrs Vinarskis <alex@vinarskis.com>
-Cc: Bjorn Andersson <andersson@kernel.org>, Konrad Dybcio <konradybcio@kernel.org>, Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, Hans de Goede <hansg@kernel.org>, =?utf-8?Q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>, Bryan O'Donoghue <bryan.odonoghue@linaro.org>, linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, platform-driver-x86@vger.kernel.org, laurentiu.tudor1@dell.com, Abel Vesa <abel.vesa@oss.qualcomm.com>, Tobias Heider <tobias.heider@canonical.com>, Val Packett <val@packett.cool>
-Subject: Re: [PATCH v2 3/4] arm64: dts: qcom: hamoa-pmics: define VADC for pmk8550
-Message-ID: <41zGfbkQbjrQfSqKbnaZNz8B-Vm_xJV8SsscGw_vLVygnw87MkVHK-bjR2TA1oKrLO9zk6DRTaGCrQj8duw3bCBpDK-FX6400Mhh1-sOd1o=@vinarskis.com>
-In-Reply-To: <c7cd7cf8-6f2b-4db8-a51a-04e7aad07863@oss.qualcomm.com>
-References: <20260404-dell-xps-9345-ec-v2-0-c977c3caa81f@vinarskis.com> <20260404-dell-xps-9345-ec-v2-3-c977c3caa81f@vinarskis.com> <c7cd7cf8-6f2b-4db8-a51a-04e7aad07863@oss.qualcomm.com>
-Feedback-ID: 158356072:user:proton
-X-Pm-Message-ID: 9a62b55032b81d364ff60b0d1031a224e850489f
+	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="SzoVMtHl"
+Message-ID: <93850129-bb0d-45e7-9708-2a84cd8037ea@linux.dev>
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
+	t=1777843415;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=l+1q1hA2ospgMSihd1iMQ2V58g8S4yVx3dguQcD5l0Y=;
+	b=SzoVMtHle1SBwakV84GoHIOqqP8OyyO3Ua7/6+whos6GllIw2C1r8V1ZUkzvVmSA7LfyjW
+	QlC3xxvMyiTpKVpOcVvPoY7eWO5o714g0CXRxlCAw0Ul7+DJQ/L/EXNFgQzaGjJm0C7In4
+	L0ViOPxDeAs6yxAZP0HmsosAa4krv7A=
+Date: Sun, 3 May 2026 23:23:32 +0200
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: quoted-printable
+Subject: Re: [PATCH] platform/x86: asus-armoury: downgrade missing power
+ limits warning to debug
+To: Armandas Kvietkus <armundunelis@gmail.com>, luke@ljones.dev
+Cc: hansg@kernel.org, ilpo.jarvinen@linux.intel.com,
+ platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org,
+ fxzxaxon@outlook.com
+References: <20260503175734.27795-1-armundunelis@gmail.com>
+Content-Language: en-US, it-IT, en-US-large
+X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
+From: Denis Benato <denis.benato@linux.dev>
+In-Reply-To: <20260503175734.27795-1-armundunelis@gmail.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
+X-Migadu-Flow: FLOW_OUT
 
 
-On Friday, April 17th, 2026 at 07:27, Jishnu Prakash <jishnu.prakash@oss.qu=
-alcomm.com> wrote:
-
-> On 4/4/2026 6:25 PM, Aleksandrs Vinarskis wrote:
-> > Follow pattern of pmk8350 to add missing pmk8550 VADC to hamoa.
-> > Register address of 0x9000 matches example schema for spmi-adc5-gen3.
-> >
-> > Signed-off-by: Aleksandrs Vinarskis <alex@vinarskis.com>
-> > ---
-> >  arch/arm64/boot/dts/qcom/hamoa-pmics.dtsi | 26 +++++++++++++++++++++++=
-+++
-> >  1 file changed, 26 insertions(+)
-> >
-> > diff --git a/arch/arm64/boot/dts/qcom/hamoa-pmics.dtsi b/arch/arm64/boo=
-t/dts/qcom/hamoa-pmics.dtsi
-> > index 6a31a0adf8be472badea502a916cdbc9477e9f2b..cc69d299bc356d90aa1483f=
-347f5eee43b853e45 100644
-> > --- a/arch/arm64/boot/dts/qcom/hamoa-pmics.dtsi
-> > +++ b/arch/arm64/boot/dts/qcom/hamoa-pmics.dtsi
-> > @@ -218,6 +218,32 @@ pon_resin: resin {
-> >  =09=09=09};
-> >  =09=09};
-> >
-> > +=09=09pmk8550_vadc: adc@9000 {
-> > +=09=09=09compatible =3D "qcom,spmi-adc5-gen3";
-> > +=09=09=09reg =3D <0x9000>, <0x9100>;
-> > +=09=09=09#address-cells =3D <1>;
-> > +=09=09=09#size-cells =3D <0>;
-> > +=09=09=09interrupts =3D <0x0 0x90 0x1 IRQ_TYPE_EDGE_RISING>,
-> > +=09=09=09=09     <0x0 0x91 0x1 IRQ_TYPE_EDGE_RISING>;
-> > +=09=09=09#io-channel-cells =3D <1>;
-> > +=09=09=09#thermal-sensor-cells =3D <1>;
-> > +
-> > +=09=09=09channel@3 {
-> > +=09=09=09=09reg =3D <0x3>;
-> > +=09=09=09=09label =3D "pmk8550_die_temp";
-> > +=09=09=09=09qcom,pre-scaling =3D <1 1>;
-> > +=09=09=09};
-> > +
-> > +=09=09=09channel@44 {
-> > +=09=09=09=09reg =3D <0x44>;
-> > +=09=09=09=09label =3D "pmk8550_xo_therm";
-> > +=09=09=09=09qcom,pre-scaling =3D <1 1>;
-> > +=09=09=09=09qcom,ratiometric;
-> > +=09=09=09=09qcom,hw-settle-time =3D <200>;
-> > +=09=09=09=09qcom,adc-tm;
+On 5/3/26 19:57, Armandas Kvietkus wrote:
+> When a system is not found in the power_limits DMI table,
+> init_rog_tunables() emits a pr_warn() and returns. This is
+> expected behaviour for hardware that does not support ROG
+> power limit tunables, not an error condition.
 >
-> There's a small problem here - if you add the "qcom,adc-tm" property
-> under any channels, the auxiliary TM driver will be loaded to handle
-> this functionality and it will attempt to register such channels as
-> thermal devices. Since there is no thermal-zone node added for this
-> channel, you will get an error from here.
+> Downgrade to pr_debug() to avoid spurious boot noise on
+> unsupported systems while preserving the message for debugging.
 >
-> If you intend this channel to be used for ADC_TM functionality, a
-> thermal zone node for this channel has to be added. If this functionality
-> is not needed, it's better to remove the "qcom,adc-tm" property.
-
-Thanks for catching this, I did not realize it. It would be nice to add
-thermal zone node in the future, currently I am missing required
-information to do that. For now I will drop "qcom,adc-tm" property as
-you suggested.
-
-Alex
-
+> Reported-by: fxzxaxon@outlook.com
+> Closes: https://bugzilla.kernel.org/show_bug.cgi?id=221441
+> Signed-off-by: Armandas Kvietkus <armundunelis@gmail.com>
+> ---
+>  drivers/platform/x86/asus-armoury.c | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
 >
-> Thanks,
-> Jishnu
->
-> > +=09=09=09};
-> > +=09=09};
-> > +
-> >  =09=09pmk8550_rtc: rtc@6100 {
-> >  =09=09=09compatible =3D "qcom,pmk8350-rtc";
-> >  =09=09=09reg =3D <0x6100>, <0x6200>;
-> >
->
->
+> diff --git a/drivers/platform/x86/asus-armoury.c b/drivers/platform/x86/asus-armoury.c
+> index 5b0987ccc..c8e9ff89f 100644
+> --- a/drivers/platform/x86/asus-armoury.c
+> +++ b/drivers/platform/x86/asus-armoury.c
+> @@ -991,7 +991,7 @@ static void init_rog_tunables(void)
+>  	/* Match the system against the power_limits table */
+>  	dmi_id = dmi_first_match(power_limits);
+>  	if (!dmi_id) {
+> -		pr_warn("No matching power limits found for this system\n");
+> +		pr_debug("No matching power limits found for this system\n");
+I don't agree with this: most distro suppress debug and this warning is very handy to understand what's wrong when people report "missing sliders".
+>  		return;
+>  	}
+>  
