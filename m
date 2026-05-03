@@ -1,85 +1,280 @@
-Received: from out-184.mta0.migadu.com (out-184.mta0.migadu.com [91.218.175.184])
+Received: from mail-4320.protonmail.ch (mail-4320.protonmail.ch [185.70.43.20])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1FAE1273D8D
-	for <platform-driver-x86@vger.kernel.org>; Sun,  3 May 2026 22:14:11 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.218.175.184
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1BFE478F26;
+	Sun,  3 May 2026 22:45:39 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.70.43.20
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1777846454; cv=none; b=dFcXW8foHmCNO4WSuZLLjhfZBUjFEUVmk6aR3k5U59rM3A0/2q9FBONUXmMs8Gn97kXwzU5JofcLCIQsQMYuy/g13vc22k9ZJ3go6zzBPiHwk83me06I3WT5+UX+6oeibMFwH6DiLYjyiqtHZC8XNIK/HMeO0ZrNvx8u3ZGp4xU=
+	t=1777848345; cv=none; b=qgkDfwMF+MedoAeCfbT4kDoEhPyHC/Rh7ZtZ5vpTZCANl4QFdxlXlSJR4hhnZ7Q8x0GCpZn0nM1owTwqMx+fqraYX/0Mb0fUNicNsS1v5P1PuRJ8ovc5bpzfbrejc8ro0RFHfbGhIqPi4eJz7xoiFgbDhsQx04lJgD4PvnOsVkk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1777846454; c=relaxed/simple;
-	bh=HjwHFxGcu8/7rRWiYOddktvoQEDTk+UlwUCJ/ilf8iU=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=Bd11MYOgk0m0ugV7cTRwxnZSvHGhSGLtLRnx1ph/Y6A/uW8K5ZqwhTHbG1RfFfphQWUn0AJ5BGbHrzibcr+gPG2w2DAXoExvyqhNG9bfve26V7B5xnEIYZBLn+3ygdUP6qLjqDHY9h42rwuylAz5OYlNYSATVmIW7ub+9vTae2k=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=GQbaXXLt; arc=none smtp.client-ip=91.218.175.184
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
+	s=arc-20240116; t=1777848345; c=relaxed/simple;
+	bh=IaznTKLe5dad4+R/xa0emtp+Q3PttAzGi7wiaO/eheo=;
+	h=Date:To:From:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=JlBV80yznrPYq1DfEfHpYbL2lu66iLDScnmDBT2wvjHjF18pV5k5twU/KwkD3GIFbuZBdw0DltMS+PeEbXTXcdBtEYGiDvCU25GxNge+/0DkRVyx1bN3OBgc5jZHSnT0kXPNRHRdDXtbVnuyR9QHp2G5BO+HzpLU3XErZlPnIxM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=vinarskis.com; spf=pass smtp.mailfrom=vinarskis.com; dkim=pass (2048-bit key) header.d=vinarskis.com header.i=@vinarskis.com header.b=CdR/4VHm; arc=none smtp.client-ip=185.70.43.20
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=vinarskis.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=vinarskis.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="GQbaXXLt"
-Message-ID: <6460ef7c-b4d9-4106-95cc-35710b4798bb@linux.dev>
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
-	t=1777846450;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=hdmCk1bI5zMjSNP1BA4Im5AlgYEGParDhws3/UDvYHI=;
-	b=GQbaXXLtDAuP8vu2GEurxp+O8g4RpUTyPXh5PVCyIiAPwHa2NTrUGy5dV29DgZeUHFufsx
-	vma3ADrXM6xY7YgtkGQdIs2XP10bk/1CYDL8cFVHrY1aQvtxkX7Y1n353e6J+TJx60JayN
-	JCHXbSAHaT+FyOPkefYerr5MtY7CRHw=
-Date: Mon, 4 May 2026 00:14:07 +0200
+	dkim=pass (2048-bit key) header.d=vinarskis.com header.i=@vinarskis.com header.b="CdR/4VHm"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=vinarskis.com;
+	s=protonmail2; t=1777848337; x=1778107537;
+	bh=GmRclv1lFdsQhVriTFHd1NfedZYeuyLxm4fz//FM1AY=;
+	h=Date:To:From:Cc:Subject:Message-ID:In-Reply-To:References:
+	 Feedback-ID:From:To:Cc:Date:Subject:Reply-To:Feedback-ID:
+	 Message-ID:BIMI-Selector;
+	b=CdR/4VHm7mRDYWqFZJkFRIVde4BrmSOvGTVG0lQ1x13/aza1kAttWjjk0HmQyfiDe
+	 p7n2zeXUDBjVFLJbUzgGOxVAk0osb9VBZ2to8YzJKxrf9zJkTtWR0FeI+c4Xi7cQ4D
+	 kDpWVZEMsBiWIP6eLNBK9Rkl5sJhbnop4cojvQz7S80/E4ZXHpFknZX8HPjaZT9cAV
+	 C80GgIpA+et4EoIkUWi6E8s4z/GJqyL0Jq8FolYTpolJabAsHawfOyufIBiz30/1MQ
+	 2ozloXnv1VTJrIovrQcJTJ5kx5VIvN+fBlTRko9Ue+lWuRlBXVk2r5zakDfkkWGB0U
+	 u5XAF6vTD+13w==
+Date: Sun, 03 May 2026 22:45:33 +0000
+To: Bryan O'Donoghue <bryan.odonoghue@linaro.org>
+From: Aleksandrs Vinarskis <alex@vinarskis.com>
+Cc: Bjorn Andersson <andersson@kernel.org>, Konrad Dybcio <konradybcio@kernel.org>, Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, Hans de Goede <hansg@kernel.org>, =?utf-8?Q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>, linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, platform-driver-x86@vger.kernel.org, laurentiu.tudor1@dell.com, Abel Vesa <abel.vesa@oss.qualcomm.com>, Tobias Heider <tobias.heider@canonical.com>, Val Packett <val@packett.cool>, Krzysztof Kozlowski <krzysztof.kozlowski@oss.qualcomm.com>
+Subject: Re: [PATCH v2 1/4] dt-bindings: platform: introduce EC for Dell XPS 13 9345
+Message-ID: <QaJhPBoKpGFHk8H8UHqo2y0ie-jbnPOGDWtq-b-wzoyk4lp0cPc94NsGqYb3SR0d96eCFucQzyNVfdOUBaTXN1mutr7WQ_1Xeteolba26fY=@vinarskis.com>
+In-Reply-To: <4bef096a-9f0d-4609-a74c-088caf8fba1e@linaro.org>
+References: <20260404-dell-xps-9345-ec-v2-0-c977c3caa81f@vinarskis.com> <20260404-dell-xps-9345-ec-v2-1-c977c3caa81f@vinarskis.com> <e69ebf4a-126e-48c7-970b-1ba2a40a4492@linaro.org> <21_zFoUYN_HKM8GMSFC7b0uIgOQevyqpWbjtIX1vVP7YtK9tlMgqC3XRgwo35ANlvZ1veGNShZuQFHkKWcf3B_qhjhD90FS7kvR3qCpKzIY=@vinarskis.com> <4bef096a-9f0d-4609-a74c-088caf8fba1e@linaro.org>
+Feedback-ID: 158356072:user:proton
+X-Pm-Message-ID: 5c6607cb4cd340e7d67beab4be82fdcae36914b0
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Subject: Re: [PATCH] platform/x86: asus-armoury: downgrade missing power
- limits warning to debug
-To: Armandas Kvietkus <armundunelis@gmail.com>, luke@ljones.dev
-Cc: hansg@kernel.org, ilpo.jarvinen@linux.intel.com,
- platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org,
- fxzxaxon@outlook.com
-References: <20260503175734.27795-1-armundunelis@gmail.com>
-Content-Language: en-US, it-IT, en-US-large
-X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
-From: Denis Benato <denis.benato@linux.dev>
-In-Reply-To: <20260503175734.27795-1-armundunelis@gmail.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-X-Migadu-Flow: FLOW_OUT
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: quoted-printable
 
 
-On 5/3/26 19:57, Armandas Kvietkus wrote:
-> When a system is not found in the power_limits DMI table,
-> init_rog_tunables() emits a pr_warn() and returns. This is
-> expected behaviour for hardware that does not support ROG
-> power limit tunables, not an error condition.
->
-> Downgrade to pr_debug() to avoid spurious boot noise on
-> unsupported systems while preserving the message for debugging.
->
-> Reported-by: fxzxaxon@outlook.com
-> Closes: https://bugzilla.kernel.org/show_bug.cgi?id=221441
-> Signed-off-by: Armandas Kvietkus <armundunelis@gmail.com>
-> ---
->  drivers/platform/x86/asus-armoury.c | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
->
-> diff --git a/drivers/platform/x86/asus-armoury.c b/drivers/platform/x86/asus-armoury.c
-> index 5b0987ccc..c8e9ff89f 100644
-> --- a/drivers/platform/x86/asus-armoury.c
-> +++ b/drivers/platform/x86/asus-armoury.c
-> @@ -991,7 +991,7 @@ static void init_rog_tunables(void)
->  	/* Match the system against the power_limits table */
->  	dmi_id = dmi_first_match(power_limits);
->  	if (!dmi_id) {
-> -		pr_warn("No matching power limits found for this system\n");
-> +		pr_debug("No matching power limits found for this system\n");
-Maybe this is right to get downgraded, but still no debug: I think info is better,
-but I would like to hear from Luke what this is about.
+On Monday, April 6th, 2026 at 10:15, Bryan O'Donoghue <bryan.odonoghue@lina=
+ro.org> wrote:
 
-Denis
->  		return;
->  	}
->  
+> On 05/04/2026 21:50, Aleksandrs Vinarskis wrote:
+> > On Sunday, April 5th, 2026 at 02:05, Bryan O'Donoghue <bryan.odonoghue@=
+linaro.org> wrote:
+> >
+> >> On 04/04/2026 13:55, Aleksandrs Vinarskis wrote:
+> >>> Add bindings for Embedded Controller (EC) in Dell XPS 13 9345 (platfo=
+rm
+> >>> codename 'tributo'). It may be partially or fully compatible with EC
+> >>> found in Snapdragon-based Dell Latitude, Inspiron ('thena').
+> >>>
+> >>> Reviewed-by: Krzysztof Kozlowski <krzysztof.kozlowski@oss.qualcomm.co=
+m>
+> >>> Signed-off-by: Aleksandrs Vinarskis <alex@vinarskis.com>
+> >>> ---
+> >>>    .../embedded-controller/dell,xps13-9345-ec.yaml    | 91 ++++++++++=
+++++++++++++
+> >>>    MAINTAINERS                                        |  5 ++
+> >>>    2 files changed, 96 insertions(+)
+> >>>
+> >>> diff --git a/Documentation/devicetree/bindings/embedded-controller/de=
+ll,xps13-9345-ec.yaml b/Documentation/devicetree/bindings/embedded-controll=
+er/dell,xps13-9345-ec.yaml
+> >>> new file mode 100644
+> >>> index 0000000000000000000000000000000000000000..e14dbf2f1a6af8cc75118=
+90fbef08c6c717c0aa6
+> >>> --- /dev/null
+> >>> +++ b/Documentation/devicetree/bindings/embedded-controller/dell,xps1=
+3-9345-ec.yaml
+> >>
+> >> I believe the part name of this embedded controller is the "mec5200" s=
+o
+> >> instead of calling it dell,xps13-9345-ec suggest "dell,mec5200"
+> >
+> > Correct, its Microchip MEC5200. I remember reading some series discussi=
+on
+> > about not naming driver after IC its based on, but rather platform its
+> > used for since driver depends on firmware which is platform specific...
+> > cannot find that discussion now.
+
+I managed to find the discussion from Krzysztof I was referring to [1].
+My interpretation (please correct me if its wrong):
+- Dell did not make MEC5200, so 'dell,mec5200-foo-bar' is not correct.
+- Since same IC may (and is) used on other platform, compatible and filenam=
+e
+of the driver should be specific to the platform.
+
+[1] https://lore.kernel.org/all/57515c0f-caa0-4651-96cf-dde75a13937f@kernel=
+.org/
+
+> >
+> >>
+> >>> @@ -0,0 +1,91 @@
+> >>> +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
+> >>> +%YAML 1.2
+> >>> +---
+> >>> +$id: http://devicetree.org/schemas/embedded-controller/dell,xps13-93=
+45-ec.yaml#
+> >>> +$schema: http://devicetree.org/meta-schemas/core.yaml#
+> >>> +
+> >>> +title: Dell XPS 13 9345 Embedded Controller
+> >>> +
+> >>> +maintainers:
+> >>> +  - Aleksandrs Vinarskis <alex@vinarskis.com>
+> >>> +
+> >>> +description:
+> >>> +  The Dell XPS 13 9345 has an Embedded Controller (EC) which handles=
+ thermal
+> >>> +  and power management. It is communicating with SoC over multiple i=
+2c busses.
+> >>> +  Among other things, it handles fan speed control, thermal shutdown=
+, peripheral
+> >>> +  power supply including trackpad, touch-row, display. For these fun=
+ctions, it
+> >>> +  requires frequently updated thermal readings from onboard thermist=
+ors.
+> >>> +
+> >>> +properties:
+> >>> +  compatible:
+> >>> +    const: dell,xps13-9345-ec
+> >>
+> >> Ditto the compat - name it after the IC not the laptop its a "mec5200"
+> >> or "mec5200-ec" - I suspect the -ec postfix is a tautology the ec bit =
+in
+> >> "mec" probably captures.
+> >
+> > I'm not sure I agree regarding the compatible, its supposed to be as ex=
+act as
+> > possible. "dell,mec5200" will not allow us to differentiate between EC =
+drivers
+> > of "tributo" and "thena" for example.
+> >
+> > Suggestion:
+> > - Schema filename to be generalized "dell,mec5200-ec.yaml"
+> > - Driver filename to be generalized "dell-mec5200-ec.c"
+> > - Config to be generalized "EC_DELL_MEC5200"
+> > - Compatible to stay specific "dell,xps13-9345-ec", with fallback to
+> >    "dell,mec5200-ec".
+> >
+> > I would also keep "-ec" to stay consistent with naming convention of
+> > existing drivers and bindings.
+> >
+> > Let me know if this would work for you.
+> >
+> > Alex
+>=20
+> To me including the laptop model in the IC name, when our best
+> information is that this same chip is used on both Thena variants isn't
+> very logical.
+>=20
+> The thing is the IC not the platform it resides on.
+>=20
+> But if you think the firmware is specific to each platform - something
+> like dell-mec5200-ec, dell,mec5200-xps13-9345-ec makes sense to me.
+
+Krzysztof could you please advise whats the best way to go about these
+compatibles (and driver name, if you have thoughts there)?
+
+Thanks,
+Alex
+
+>=20
+> >
+> >>
+> >>> +
+> >>> +  reg:
+> >>> +    const: 0x3b
+> >>> +
+> >>> +  interrupts:
+> >>> +    maxItems: 1
+> >>> +
+> >>> +  io-channels:
+> >>> +    description:
+> >>> +      ADC channels connected to the 7 onboard thermistors on PMK8550=
+.
+> >>> +      EC requires frequent thermal readings of these channels to per=
+form
+> >>> +      automated fan speed control.
+> >>> +    items:
+> >>> +      - description: ADC channel for sys_therm0
+> >>> +      - description: ADC channel for sys_therm1
+> >>> +      - description: ADC channel for sys_therm2
+> >>> +      - description: ADC channel for sys_therm3
+> >>> +      - description: ADC channel for sys_therm4
+> >>> +      - description: ADC channel for sys_therm5
+> >>> +      - description: ADC channel for sys_therm6
+> >>> +
+> >>> +  io-channel-names:
+> >>> +    items:
+> >>> +      - const: sys_therm0
+> >>> +      - const: sys_therm1
+> >>> +      - const: sys_therm2
+> >>> +      - const: sys_therm3
+> >>> +      - const: sys_therm4
+> >>> +      - const: sys_therm5
+> >>> +      - const: sys_therm6
+> >>
+> >>
+> >>> +
+> >>> +required:
+> >>> +  - compatible
+> >>> +  - reg
+> >>> +  - interrupts
+> >>> +  - io-channels
+> >>> +  - io-channel-names
+> >>> +
+> >>> +additionalProperties: false
+> >>> +
+> >>> +examples:
+> >>> +  - |
+> >>> +    #include <dt-bindings/interrupt-controller/irq.h>
+> >>> +    #include <dt-bindings/iio/qcom,spmi-adc7-pm8350.h>
+> >>> +    i2c {
+> >>> +        #address-cells =3D <1>;
+> >>> +        #size-cells =3D <0>;
+> >>> +
+> >>> +        embedded-controller@3b {
+> >>> +            compatible =3D "dell,xps13-9345-ec";
+> >>> +            reg =3D <0x3b>;
+> >>> +            interrupts-extended =3D <&tlmm 66 IRQ_TYPE_LEVEL_LOW>;
+> >>> +
+> >>> +            io-channels =3D <&pmk8550_vadc PM8350_ADC7_GPIO3_100K_PU=
+(1)>,
+> >>> +                          <&pmk8550_vadc PM8350_ADC7_GPIO4_100K_PU(1=
+)>,
+> >>> +                          <&pmk8550_vadc PM8350_ADC7_AMUX_THM1_100K_=
+PU(1)>,
+> >>> +                          <&pmk8550_vadc PM8350_ADC7_AMUX_THM2_100K_=
+PU(1)>,
+> >>> +                          <&pmk8550_vadc PM8350_ADC7_AMUX_THM3_100K_=
+PU(1)>,
+> >>> +                          <&pmk8550_vadc PM8350_ADC7_AMUX_THM4_100K_=
+PU(1)>,
+> >>> +                          <&pmk8550_vadc PM8350_ADC7_AMUX_THM5_100K_=
+PU(1)>;
+> >>> +            io-channel-names =3D "sys_therm0",
+> >>> +                               "sys_therm1",
+> >>> +                               "sys_therm2",
+> >>> +                               "sys_therm3",
+> >>> +                               "sys_therm4",
+> >>> +                               "sys_therm5",
+> >>> +                               "sys_therm6";
+> >>> +        };
+> >>> +    };
+> >>> +...
+> >>> diff --git a/MAINTAINERS b/MAINTAINERS
+> >>> index 96e0781f2201b41b976dfa69efd44d62c4ff0058..a5d175559f4468dfe363b=
+319a1b08d3425f4d712 100644
+> >>> --- a/MAINTAINERS
+> >>> +++ b/MAINTAINERS
+> >>> @@ -7236,6 +7236,11 @@ S:=09Maintained
+> >>>    F:=09Documentation/ABI/testing/sysfs-class-firmware-attributes
+> >>>    F:=09drivers/platform/x86/dell/dell-wmi-sysman/
+> >>>
+> >>> +DELL XPS EMBEDDED CONTROLLER DRIVER
+> >>> +M:=09Aleksandrs Vinarskis <alex@vinarskis.com>
+> >>> +S:=09Maintained
+> >>> +F:=09Documentation/devicetree/bindings/embedded-controller/dell,xps1=
+3-9345-ec.yaml
+> >>> +
+> >>>    DELTA AHE-50DC FAN CONTROL MODULE DRIVER
+> >>>    M:=09Zev Weiss <zev@bewilderbeest.net>
+> >>>    L:=09linux-hwmon@vger.kernel.org
+> >>>
+> >>
+> >>
+>=20
+> 
