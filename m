@@ -1,38 +1,38 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1CE571A2C04
-	for <platform-driver-x86@vger.kernel.org>; Sun,  3 May 2026 18:23:57 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 01FA01A2C04
+	for <platform-driver-x86@vger.kernel.org>; Sun,  3 May 2026 18:25:34 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1777832638; cv=none; b=mDb/ybJTLMVan86jqhHPHbTPifzPmrTo7w1Sv7JLhS1PalXRb0Q+7zz8+lCekYDt5d6k8TIq5StWWGO8jJae5VrleIBOvvIaaBGhMFB04CPygVfxgSMHREgoqwRolCudyv2G2ZbVIVWz1/ayiTZUoBOv7fYcImmtXydzD7Nlp+M=
+	t=1777832734; cv=none; b=lqx01QZWw3BGvCQvfXVPCnwLLIIFes2pvjt4Td5Ft654LjkfAZ5xJecWuldtVT8BPB/7Bek4gbcEN30bsc8NKM/KY57P/ZZGt6h0ROb/wRPHMCdkxeqIc5lu/rlBS5pIUBNKO5an05qp8DCiGx2EuIcU2axpglGbv7ZkgcrZmus=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1777832638; c=relaxed/simple;
-	bh=g7F6xjiBdKN9OAnOn606Nc5xOryP7KsrqaUQP8icceo=;
+	s=arc-20240116; t=1777832734; c=relaxed/simple;
+	bh=fuRnlXSo8D3QuWp0vcv89mhUcIdQ9YjnvIfg898Z1fw=;
 	h=From:To:Subject:Date:Message-ID:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=r9kahWRKE3oZolAEndDVentJO/yEzemJkZgE2b0YA+ZMicduN724cpP67wmc0Ty9rQ9fxupadOLJyzo2Znio+EvG4Ra2swBvkqXmi8oDUx7SYLRYMlByMi53JtJlCx9C8kxHyiUYVDzCJGeMGzBsVjW5ge+3OIfab2LJ4Liwk3g=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=GYvegKUX; arc=none smtp.client-ip=10.30.226.201
+	 Content-Type:MIME-Version; b=bzq3UGGcx2uMRt/Jhs/DcVAmiLubqw1b2R8/P088FKr0IFW1Ex9SnRT2BVCRpwpjySMMh2YhI9j8OIzkHChVjZRiBmekS/n/a3v0pbW3RRuhNfSF73ozqtr0HXAPle3iszWIqZ3qcCjb/0n2rpkkQtBUN2msRWLn0n5E4MvPoHQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=tuZoe7+J; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="GYvegKUX"
-Received: by smtp.kernel.org (Postfix) with ESMTPS id B6F54C2BCB4
-	for <platform-driver-x86@vger.kernel.org>; Sun,  3 May 2026 18:23:57 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="tuZoe7+J"
+Received: by smtp.kernel.org (Postfix) with ESMTPS id D74C9C2BCB4
+	for <platform-driver-x86@vger.kernel.org>; Sun,  3 May 2026 18:25:33 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1777832637;
-	bh=g7F6xjiBdKN9OAnOn606Nc5xOryP7KsrqaUQP8icceo=;
+	s=k20201202; t=1777832733;
+	bh=fuRnlXSo8D3QuWp0vcv89mhUcIdQ9YjnvIfg898Z1fw=;
 	h=From:To:Subject:Date:In-Reply-To:References:From;
-	b=GYvegKUXXSKpkCIylLHvRSEattRdH4lAFQCFPh/XPQzHMQuamcke/CevhjgFTxsD3
-	 sZMt2KnGr8P2af8pr/GrT9ffEDIZUAb/mCLg1eXQpxshXKgKg44F971XNsR0P3TsGH
-	 CgXGNQ65Pi3gpTZf/31W16iPln/rdroSaAPBu/OpjVJLPy0mvZGKjvEsPW/XiLGnXh
-	 68IRLho3Hau4jxtLByMiQIo8cHkhn8h299j0r31gAfMW4IO2zN3NaEJ8eag5CL26Yv
-	 jwv+8qkZg2WGUGnXGKcwVsDQ9RHCDIg6EKpWOg4nLLiNPdDS+YBL2GJ2wDMrPuyF96
-	 z/c6sg3oajjAQ==
+	b=tuZoe7+JMpFbXVusXTAY4BN013eBSQsxsxs8fUizah46EtTgRunhqFH3vh3DPXxBg
+	 2Zv0TfU0421rJtRvXMsUR9woKmwGtTnycHM2TwXdL9mEghTs9frJncVOkq7LfccixT
+	 44r93Lxqj0tx0szVc/emoDNeWjc2DOAD+QRkY9uCYO9xeXyKyecnsyGqxwEZt+j1qv
+	 1Km5a0wwtukOQ5TkPudYJvpdzXZ42qhxTd6WvMZwqlIyIGQC8d24XmC7uhjttDm9Xk
+	 ZBJy8j37z9NrR3RpHsnvYmpxJBxOSx9l2Ee3zZ3/Sh/q2mxOmR+sVewV42SxxKtpiq
+	 OoECQPGijd+vA==
 Received: by aws-us-west-2-korg-bugzilla-1.web.codeaurora.org (Postfix, from userid 48)
-	id A0DE9C433E1; Sun,  3 May 2026 18:23:57 +0000 (UTC)
+	id CE80AC433E1; Sun,  3 May 2026 18:25:33 +0000 (UTC)
 From: bugzilla-daemon@kernel.org
 To: platform-driver-x86@vger.kernel.org
 Subject: [Bug 221419] ideapad-laptop: brightness keys require continuous VPC
  polling to function on IdeaPad 3 15IIL05 (BIOS EMCN60WW)
-Date: Sun, 03 May 2026 18:23:57 +0000
+Date: Sun, 03 May 2026 18:25:33 +0000
 X-Bugzilla-Reason: None
 X-Bugzilla-Type: changed
 X-Bugzilla-Watch-Reason: AssignedTo drivers_platform_x86@kernel-bugs.osdl.org
@@ -48,7 +48,7 @@ X-Bugzilla-Priority: P3
 X-Bugzilla-Assigned-To: drivers_platform_x86@kernel-bugs.osdl.org
 X-Bugzilla-Flags: 
 X-Bugzilla-Changed-Fields: 
-Message-ID: <bug-221419-215701-NFBK6ztVd7@https.bugzilla.kernel.org/>
+Message-ID: <bug-221419-215701-CZnbL457U6@https.bugzilla.kernel.org/>
 In-Reply-To: <bug-221419-215701@https.bugzilla.kernel.org/>
 References: <bug-221419-215701@https.bugzilla.kernel.org/>
 Content-Type: text/plain; charset="UTF-8"
@@ -64,22 +64,13 @@ MIME-Version: 1.0
 
 https://bugzilla.kernel.org/show_bug.cgi?id=3D221419
 
---- Comment #2 from ladha979@gmail.com ---
-(In reply to ladha979 from comment #1)
-> It's suddenly working now, but this has happened previously for me on Lin=
-ux
-> Mint as well where it abruptly started working, and possibly just broke
-> again no warning.
->=20
-> So i don't know what was causing the bug or what fixed it, but currently =
-the
-> key presses are registered on evtest, and hopefully it stays that way.
-
-Admittedly I am on an updated kernel version, but I doubt there was a direc=
-tly
-implemented fix considering this problem has existed for this exact laptop
-model for a long time with no concrete fix, and this bug report saw no
-activity.
+--- Comment #3 from ladha979@gmail.com ---
+Update: Issue was present on kernel 7.0.1-1-cachyos. After updating to
+7.0.2-2-cachyos, brightness keys now generate proper
+KEY_BRIGHTNESSDOWN/KEY_BRIGHTNESSUP events on the Video Bus input device
+(confirmed via evtest). It is unclear whether this was fixed by a specific
+change in 7.0.2 or if it is intermittent as previously experienced on Linux
+Mint. Will update if it regresses.
 
 --=20
 You may reply to this email to add a comment.
