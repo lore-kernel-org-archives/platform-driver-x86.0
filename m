@@ -1,79 +1,77 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mail-07.mail-europe.com (mail-07.mail-europe.com [188.165.51.139])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 01FA01A2C04
-	for <platform-driver-x86@vger.kernel.org>; Sun,  3 May 2026 18:25:34 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AE3D53559F5;
+	Sun,  3 May 2026 20:52:28 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=188.165.51.139
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1777832734; cv=none; b=lqx01QZWw3BGvCQvfXVPCnwLLIIFes2pvjt4Td5Ft654LjkfAZ5xJecWuldtVT8BPB/7Bek4gbcEN30bsc8NKM/KY57P/ZZGt6h0ROb/wRPHMCdkxeqIc5lu/rlBS5pIUBNKO5an05qp8DCiGx2EuIcU2axpglGbv7ZkgcrZmus=
+	t=1777841552; cv=none; b=jOKxELtJvIev2xVK9db5UCExIsPRmW4+D/XnWXxJFFxyjulKtOoqzuHLNrndZfcKHiogsz8mNkYhF1IByfPCqm0nP9i4JT31UbrNO25EyvVjt/tpNI+uZdcfegucbONNpzb1U0pfRbYUCk14xzKVe8wVdQ1SE3PpPt6ZbWniUWo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1777832734; c=relaxed/simple;
-	bh=fuRnlXSo8D3QuWp0vcv89mhUcIdQ9YjnvIfg898Z1fw=;
-	h=From:To:Subject:Date:Message-ID:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=bzq3UGGcx2uMRt/Jhs/DcVAmiLubqw1b2R8/P088FKr0IFW1Ex9SnRT2BVCRpwpjySMMh2YhI9j8OIzkHChVjZRiBmekS/n/a3v0pbW3RRuhNfSF73ozqtr0HXAPle3iszWIqZ3qcCjb/0n2rpkkQtBUN2msRWLn0n5E4MvPoHQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=tuZoe7+J; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1777841552; c=relaxed/simple;
+	bh=DL6iXssMye2iStZHF5R+d5ll77LHBL24xwuWkbhRKiQ=;
+	h=Date:To:From:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=npjtQjwz/7kPfy/8aJr8q9dayi4LQeGxqDLWuRztQdpEOd98Y5DlRap36lt8xgcT7E1ASa5Kwrdfz+WTaZiR05a8j4Dm14VO7Vd0tefybyF80i6g56Y/pFOJneG2bgjrsdR+CFi0w4qnyNSMotQtBbTo4UPHpoxoQ1DUNJt0dtg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=vinarskis.com; spf=pass smtp.mailfrom=vinarskis.com; dkim=pass (2048-bit key) header.d=vinarskis.com header.i=@vinarskis.com header.b=SlN0zT8U; arc=none smtp.client-ip=188.165.51.139
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=vinarskis.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=vinarskis.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="tuZoe7+J"
-Received: by smtp.kernel.org (Postfix) with ESMTPS id D74C9C2BCB4
-	for <platform-driver-x86@vger.kernel.org>; Sun,  3 May 2026 18:25:33 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1777832733;
-	bh=fuRnlXSo8D3QuWp0vcv89mhUcIdQ9YjnvIfg898Z1fw=;
-	h=From:To:Subject:Date:In-Reply-To:References:From;
-	b=tuZoe7+JMpFbXVusXTAY4BN013eBSQsxsxs8fUizah46EtTgRunhqFH3vh3DPXxBg
-	 2Zv0TfU0421rJtRvXMsUR9woKmwGtTnycHM2TwXdL9mEghTs9frJncVOkq7LfccixT
-	 44r93Lxqj0tx0szVc/emoDNeWjc2DOAD+QRkY9uCYO9xeXyKyecnsyGqxwEZt+j1qv
-	 1Km5a0wwtukOQ5TkPudYJvpdzXZ42qhxTd6WvMZwqlIyIGQC8d24XmC7uhjttDm9Xk
-	 ZBJy8j37z9NrR3RpHsnvYmpxJBxOSx9l2Ee3zZ3/Sh/q2mxOmR+sVewV42SxxKtpiq
-	 OoECQPGijd+vA==
-Received: by aws-us-west-2-korg-bugzilla-1.web.codeaurora.org (Postfix, from userid 48)
-	id CE80AC433E1; Sun,  3 May 2026 18:25:33 +0000 (UTC)
-From: bugzilla-daemon@kernel.org
-To: platform-driver-x86@vger.kernel.org
-Subject: [Bug 221419] ideapad-laptop: brightness keys require continuous VPC
- polling to function on IdeaPad 3 15IIL05 (BIOS EMCN60WW)
-Date: Sun, 03 May 2026 18:25:33 +0000
-X-Bugzilla-Reason: None
-X-Bugzilla-Type: changed
-X-Bugzilla-Watch-Reason: AssignedTo drivers_platform_x86@kernel-bugs.osdl.org
-X-Bugzilla-Product: Drivers
-X-Bugzilla-Component: Platform_x86
-X-Bugzilla-Version: 2.5
-X-Bugzilla-Keywords: 
-X-Bugzilla-Severity: normal
-X-Bugzilla-Who: ladha979@gmail.com
-X-Bugzilla-Status: NEW
-X-Bugzilla-Resolution: 
-X-Bugzilla-Priority: P3
-X-Bugzilla-Assigned-To: drivers_platform_x86@kernel-bugs.osdl.org
-X-Bugzilla-Flags: 
-X-Bugzilla-Changed-Fields: 
-Message-ID: <bug-221419-215701-CZnbL457U6@https.bugzilla.kernel.org/>
-In-Reply-To: <bug-221419-215701@https.bugzilla.kernel.org/>
-References: <bug-221419-215701@https.bugzilla.kernel.org/>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-X-Bugzilla-URL: https://bugzilla.kernel.org/
-Auto-Submitted: auto-generated
+	dkim=pass (2048-bit key) header.d=vinarskis.com header.i=@vinarskis.com header.b="SlN0zT8U"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=vinarskis.com;
+	s=protonmail2; t=1777841532; x=1778100732;
+	bh=guOoOc13MjwplIgspUQvArsTLRGkdL6MLiDfDOg1uzE=;
+	h=Date:To:From:Cc:Subject:Message-ID:In-Reply-To:References:
+	 Feedback-ID:From:To:Cc:Date:Subject:Reply-To:Feedback-ID:
+	 Message-ID:BIMI-Selector;
+	b=SlN0zT8UPlQeuUWbPqJ+WbjmoojFB6gv7TDr+DJMA8DjgvzpBaEFr7aL6VLDDqZ7i
+	 vpd7m7ynf7gHAhE34/H1wMEd5rSHwUCk1agzu05FUOzkfHpmBRNsyFXWkJfc6Sq70O
+	 mnljgA8ZyIQBena9+jyk0Fu4MoB7FgO9K6oDB2oNV1wfjnHoiRYzDv23WVwkrXbUgJ
+	 HCWjHy5AD14oGTqX9aiCxVZ3sIbUl9PCpqjMVJpCzp7F1wWHKF9EfeBrfkGIAmkX0G
+	 26rLW7WAIse2M4xbki31I83SRiEc7HvsRfrakYTqNaWV3g4fftA5ty+hN9zbRBOXci
+	 JAj1be+aKyn/Q==
+Date: Sun, 03 May 2026 20:52:08 +0000
+To: Konrad Dybcio <konrad.dybcio@oss.qualcomm.com>
+From: Aleksandrs Vinarskis <alex@vinarskis.com>
+Cc: Bjorn Andersson <andersson@kernel.org>, Konrad Dybcio <konradybcio@kernel.org>, Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, Hans de Goede <hansg@kernel.org>, =?utf-8?Q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>, Bryan O'Donoghue <bryan.odonoghue@linaro.org>, linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, platform-driver-x86@vger.kernel.org, laurentiu.tudor1@dell.com, Abel Vesa <abel.vesa@oss.qualcomm.com>, Tobias Heider <tobias.heider@canonical.com>, Val Packett <val@packett.cool>
+Subject: Re: [PATCH v2 4/4] arm64: dts: qcom: x1e80100-dell-xps13-9345: introduce EC
+Message-ID: <XS2TSjsgj8nSwvw0hbt_xwMfuWcEyYZvBidHnSY_HeRjxejaryUEs8stsGFDkclozp8h58fyPEqe3w91rmt3h8vxAN6fTSG_-y8dgWUKeqs=@vinarskis.com>
+In-Reply-To: <38233a55-d313-4ad1-ad5b-b33011f2d345@oss.qualcomm.com>
+References: <20260404-dell-xps-9345-ec-v2-0-c977c3caa81f@vinarskis.com> <20260404-dell-xps-9345-ec-v2-4-c977c3caa81f@vinarskis.com> <38233a55-d313-4ad1-ad5b-b33011f2d345@oss.qualcomm.com>
+Feedback-ID: 158356072:user:proton
+X-Pm-Message-ID: 7755c9543d3d6321c8573abdd9bae1fe310a6bd2
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: quoted-printable
 
-https://bugzilla.kernel.org/show_bug.cgi?id=3D221419
+On Tuesday, April 14th, 2026 at 16:12, Konrad Dybcio <konrad.dybcio@oss.qua=
+lcomm.com> wrote:
 
---- Comment #3 from ladha979@gmail.com ---
-Update: Issue was present on kernel 7.0.1-1-cachyos. After updating to
-7.0.2-2-cachyos, brightness keys now generate proper
-KEY_BRIGHTNESSDOWN/KEY_BRIGHTNESSUP events on the Video Bus input device
-(confirmed via evtest). It is unclear whether this was fixed by a specific
-change in 7.0.2 or if it is intermittent as previously experienced on Linux
-Mint. Will update if it regresses.
+> On 4/4/26 2:55 PM, Aleksandrs Vinarskis wrote:
+> > Describe embedded controller, its interrupt and required thermal zones.
+> > Add EC's reset GPIO to reserved range, as triggering it during device
+> > operation leads to unrecoverable and unusable state.
+> >
+> > Signed-off-by: Aleksandrs Vinarskis <alex@vinarskis.com>
+> > ---
+>=20
+> [...]
+>=20
+> > +=09ec_int_n_default: ec-int-n-state {
+> > +=09=09pins =3D "gpio66";
+> > +=09=09function =3D "gpio";
+> > +=09=09bias-disable;
+>=20
+> Did you check what Windows configures here? bias-pull-up would be
+> customary for active-low interrupts (although there may be a
+> separate PU resistor connected too)
 
---=20
-You may reply to this email to add a comment.
+There is an external pull-up resistor on the board,
+Alex
 
-You are receiving this mail because:
-You are watching the assignee of the bug.=
+>=20
+> Konrad
+> 
