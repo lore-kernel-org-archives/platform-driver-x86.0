@@ -1,137 +1,114 @@
-Received: from mail-pf1-f172.google.com (mail-pf1-f172.google.com [209.85.210.172])
+Received: from mail-wm1-f46.google.com (mail-wm1-f46.google.com [209.85.128.46])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 60FFD299AAB
-	for <platform-driver-x86@vger.kernel.org>; Sun,  3 May 2026 07:26:27 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.172
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D2FB226F476
+	for <platform-driver-x86@vger.kernel.org>; Sun,  3 May 2026 17:47:57 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.46
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1777793188; cv=none; b=trU5NM0wmJagwoAdP6Sf9spJi3tCb/iNoEpHdfisZX3NQqyl/GE9r90QDzvp+BzeIQ+VDWc4NcCFPcL7dAwf0FMkVxNmTpE3Xxvc8nI+kdlRXD92YYm1GxhRPW8ZHULkjDlH5zUkgKSp/FgO+B8AvVKJIVb/fepX8j+XHF5qisE=
+	t=1777830480; cv=none; b=S/c+ScKwtBzcGa+G7ntPcjy1NQhezD98cHewAC3AKPGb9TmAEMNnbFFF7N2xR16x/dBVTVsSO/sSRm1wCyR5nvVuXiyRsRmd6yYsEtwKlYHdAWAj5wtf6E1qwfdoIlZbkmn5pmqb2dgsFgnrLTzgXu1noTZ5rXW8pbRdJ6tPrIU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1777793188; c=relaxed/simple;
-	bh=j2AgLSnxwlpFcwBDwvM7nDV/IQNFQY9JI+OAVicukx8=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=b4eNW+fVG1ebwabey9XkUdDZuELJSQwCBHdbmzYI19yzFx612Gn0JXI3MgIzqH5/nxrFCyXs/SWbYs1MM/lDcbGBlvYjdkc3HuTUbr1H6JjEGG9ySwyR4xH7OZZFzNXnFKgxJWqRUDnQmoFSk6RY4qrPLEyuyaLXr5+IjLDQXTU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=DzKNGd+Y; arc=none smtp.client-ip=209.85.210.172
+	s=arc-20240116; t=1777830480; c=relaxed/simple;
+	bh=5Izs4oqlAg/oLqWTsxU+lpipGMZ71nOo5k/p9Y+roEM=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=OdoXtEr0ietXWCMpWT+EBBnyjImJk2AylwYViWJ1udIK1rMcXK8g2Osnob+imjU8E35sFNqCvsU5gnx1RGR7Jgs6zZRWrF072dI4NPtZ1+Xkd6mxpqcB+vzbMRrepcq7UupCumvTVqGeACTQsEsKh58Z/DfapVqkuEI5qhktLz0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=VMGJ0o7A; arc=none smtp.client-ip=209.85.128.46
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="DzKNGd+Y"
-Received: by mail-pf1-f172.google.com with SMTP id d2e1a72fcca58-82f9fdfc965so1327605b3a.1
-        for <platform-driver-x86@vger.kernel.org>; Sun, 03 May 2026 00:26:27 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="VMGJ0o7A"
+Received: by mail-wm1-f46.google.com with SMTP id 5b1f17b1804b1-4838c15e3cbso25854795e9.3
+        for <platform-driver-x86@vger.kernel.org>; Sun, 03 May 2026 10:47:57 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20251104; t=1777793187; x=1778397987; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=1lHX1CZGJmov/5nosLd1rKvSEb6z/FL63h6r73laO64=;
-        b=DzKNGd+YYoym7kT5YKEs03KFct8Mt3sFeKfIm4sTVVz4CPfYT/Dw0Ecqx9JKOmnrNV
-         O9JoeScxDAX8r3OjFk5b7J1HfCqZUOc28OkX2Mgpb0xw9T1fYqHpq/2n/6S/mq6PHcZb
-         6I2lYw7tmHrQlIL31LQ8n3osfgnxVAmI5VD/uLsNj3lBhw2VMuHL9J+x3c0e/me33mIx
-         qCNwCMSHQDPQJiaARh0SGTqOOM6m2tYFph61I9KMgv8dXtuQgcd5YR/Q1mWULkrmS4T/
-         SvwmX2fQJP9thH3fQRVv7/TgawOy9B/2yA6dkxZoDsYPmOlTe+soLkSxj/xOrmI8f/MA
-         7vKg==
+        d=gmail.com; s=20251104; t=1777830476; x=1778435276; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=yCT3kh7x2lacjDawq7c4azvrL61Zh5Gry1KIhjeiS34=;
+        b=VMGJ0o7ATVv7Svr72aKfdytpNWdAw1K7cFP0QO0KFZgSg4J6YM52vGDkqarXyt/htC
+         Z7/hnCbOWjjgF6VKtQk/qYPHt05X8XMse4A1rLMqSwJvzxXiD67TN9a0ltj0PoJMqV5y
+         YP3nG2fmQR92i1rlQpdDMIiwsrO/FTsN1Nit9vcZUwYMclss5or2xHFGIUxM2OJ3FkMe
+         3Qgm25Tnlxg6GLJTpI5Eay2wWs0/90BCqacvemBKPai8u++/fbypmfymt/o7e56NmWSt
+         iCKzg9jzSJ/NgmY71GHf5Hc0zbBTuFF46qhXeo7Y07pEH7NeCe/xGvvyUiOnLqVcfoWJ
+         tAqQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1777793187; x=1778397987;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-gg:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=1lHX1CZGJmov/5nosLd1rKvSEb6z/FL63h6r73laO64=;
-        b=l6sdNGaG5TbWKRFzU7Bawc4Wp2pQFATi6TycS6tL0NAbJSsKpP3YPQpjTsvjMCz/pa
-         nVV943xuqtnfAHOnpHdylM2PLSgtpqViNmWRD0O5iHBt9AZ82gnsy+lPk1q2mUiYaMxU
-         IfxQfrxiFjxKhyEQs+v1FYyDtbg2QOIvVMb6TxIQULuuNUXO9TgAjDEfHtGKAVwQWna9
-         2wc47cIqhXjkKoI5ria6+S7HL5k3HXBQwfK5qDfA6yTk1A6i+UbgjUd0wICqJeKKT74N
-         efO2XnCrzR+hRPwmTBmI/+52baP8YVCd+saTwyr9Lp+PwVj+SrlSWBrFzeOmv22p3wrM
-         tKfQ==
-X-Gm-Message-State: AOJu0Ywpd0MF2ylA+Fusxpu2duE/4ubX1gNCFVbPNhgH8EKfemg/QvXb
-	FaVa1LPU108wFemddL8VSf9KXCq7olnKDMxe0wHCnbICRbzm8EigZZ6s
-X-Gm-Gg: AeBDiestRs8aWuFeUehRQ4xZOSNFrUU2VyM3G2QbAAO6FxehjD73zIUD0pC/ZyuaEm6
-	Zx87K22BBWOGrujYcXD5lEmrHMhTQ0Hmi3vIHCVqCX/9KeSOAsNtTpaGjPtamCA9+hryskQUYth
-	hNUmsHDUkI897dDryPviBgEx8oG4QhHbAs59U1yIUFChjJY95bM0uYfFbwX7aI750968ppV58yq
-	ANEmKuOpONHykYbcADVsl8dd0oww4ntwaklV0myFrZpZglIepHw8OLnSkCj/Oz2YzDS20rceMTF
-	LmqAk5R/Mith2zFL2qe7YevQ3nxBIpNLDphNoTqaftiAkgAH2zM3+4Kf7L2Ipsr+OsPaQ60+lbh
-	HNhT1NdREAu8IY9qGWyYM9nHkskRNCc58BxXMWZc+KF+PBBvqb9Zj1r+O9WIraZ1LvSyz2B1eVw
-	qvvA8WcTYKfdp9wVnU8saKHUuRpBTpMmuJdBh7OlYDP9Fxf/rX60rt6W8jsZwyc8sAU/bjuHKlC
-	sBae6UwcF/rth/w/zHGWRK7jHNUCMY=
-X-Received: by 2002:a05:6a00:800c:b0:82c:e09b:3f76 with SMTP id d2e1a72fcca58-8352d283812mr4649208b3a.41.1777793186626;
-        Sun, 03 May 2026 00:26:26 -0700 (PDT)
-Received: from archlinux ([2405:201:1b:225f:bfac:abd3:86cf:47a3])
-        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-83515b4b371sm7263017b3a.49.2026.05.03.00.26.24
+        d=1e100.net; s=20251104; t=1777830476; x=1778435276;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-gg:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=yCT3kh7x2lacjDawq7c4azvrL61Zh5Gry1KIhjeiS34=;
+        b=PpqhY4reR2VoIPGDKRAs2iXcEMCWLXGep+W63keiqJqECKDIi5b5dE8Bx5NA6hjm1e
+         rbK+R6tVqYi7yPS0BTPoiyyux/Izt7ftq8tkEuPOm/aHf9rXbui67OyAowYpxvS6XDR4
+         ZlsI+0+gkHT8/ndGxb90zSKEG2CA2dC9CxTwkrvxGYJmKguXwMBmTqqeWNuLXjGEefgc
+         SUxr7ClWrDO88bIzO48kc0MSAOND1rD1gpXnblsNqbx5XLa92aBpmVmqkm4P/iX6mN1S
+         r/o3UFUy8KOebKm3++J0HONyS2T1/0AEWJKbQMxncimAMZfwRyOrB2YgP2gTKTMxCj3z
+         EdRw==
+X-Forwarded-Encrypted: i=1; AFNElJ/rjUippIFCF7J1eu+K+S70pBcLo6RONApbk4U4UewSIYIfzNYIsD0/xQ/pwEYltaYTuqj8BscInxhV86dKuRlKLd88@vger.kernel.org
+X-Gm-Message-State: AOJu0YwxcmApGwU/Iz8eJvdHaWIlbc2WAYgnlmwWHltYR0E0/RN4SCyT
+	oFwHrH/HjscYJt6A9zX55Mu1t83DkN81Kdbbl2ObHWywND1mG8lxvOgi
+X-Gm-Gg: AeBDiesCOabQhWHJRXffdwYybDG3HHxY5o1ROJQGd5IvENcIImWDUE+v8vNZSDtq9la
+	qCmvVxWPgtrp1hpr5QFcDsRrGaF16TMwrEXuf1BrU3hcDkiqil9WOmVBq/rr2d+dwtseSKP/XPV
+	uBhrKRQWgwWSj53Dyaa4EHCf67EHkKOtj+zQxao4cEshKmZjmwk2aV2LZ2pH89ap0lr87v9XyHQ
+	aqTYren38huZRtZxZRGmHlDmkc9uFhxwysKt7j3IU1uCu7eW3ycaX1imr2I2VmpMmapOQGWpXMj
+	BaOGPefyKy0TikNNzg+QHNyeUiCbR4ZgMCCqgGW3QbICSs3/QHhlKbQojYDvuupHRZkqCtqfWWN
+	lJYIafmn6H6VwqbeM09qevIImlz/LN75HNLcbiOyf55m6/9Xd6ezCBKMbQZfGVaHwTql4cUz/S3
+	sTMKk8+crbKMiV9atu9E3HTFIbDdW4KFlL8PyQ47vMHxg=
+X-Received: by 2002:a05:600c:4ed2:b0:489:1fa5:997f with SMTP id 5b1f17b1804b1-48a98638cdcmr112152715e9.9.1777830476134;
+        Sun, 03 May 2026 10:47:56 -0700 (PDT)
+Received: from xyz-asus ([2a01:e11:29:8040:722:5fad:62cf:2b5f])
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-48a8eba865fsm190236575e9.10.2026.05.03.10.47.55
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 03 May 2026 00:26:26 -0700 (PDT)
-Date: Sun, 3 May 2026 12:56:22 +0530
-From: Krishna Chomal <krishna.chomal108@gmail.com>
-To: yue li <mc.root.ly@gmail.com>
-Cc: platform-driver-x86@vger.kernel.org
-Subject: Re: [REGRESSION] hp-wmi fails to probe on HP OMEN (board 8D41)
-Message-ID: <afb0f9gaS5z_SmRX@archlinux>
-References: <CABd86uaQY9-ZSU-_PHKtZZyWnDFHLEsuaM+NBV5nOLWA+YSX7A@mail.gmail.com>
+        Sun, 03 May 2026 10:47:55 -0700 (PDT)
+From: Armandas Kvietkus <armundunelis@gmail.com>
+To: luke@ljones.dev,
+	denis.benato@linux.dev
+Cc: hansg@kernel.org,
+	ilpo.jarvinen@linux.intel.com,
+	platform-driver-x86@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	Armandas Kvietkus <armundunelis@gmail.com>,
+	fxzxaxon@outlook.com,
+	Armandas Kvietkus <armandas.kvietkus@proton.me>
+Subject: [PATCH] platform/x86: asus-wmi: suppress -ENODEV warning in fan_curve_get_factory_default()
+Date: Sun,  3 May 2026 19:47:52 +0200
+Message-ID: <20260503174752.26288-1-armundunelis@gmail.com>
+X-Mailer: git-send-email 2.54.0
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Disposition: inline
-In-Reply-To: <CABd86uaQY9-ZSU-_PHKtZZyWnDFHLEsuaM+NBV5nOLWA+YSX7A@mail.gmail.com>
+Content-Transfer-Encoding: 8bit
 
-On Thu, Apr 30, 2026 at 12:59:58PM +0800, yue li wrote:
->Hi,
->
->I am reporting a regression in the hp-wmi driver on an HP OMEN laptop.
->
->System:
->
->Vendor: HP
->Product: OMEN MAX Gaming Laptop 16-ah0089TX
->Board: 8D41
->BIOS: F.12
->Kernel: 7.0.2-zen1-1-zen
->
->Regression:
->The hp-wmi driver works correctly on kernel 6.18.6-zen1-1-zen,
->but fails to probe on 7.0.2-zen1-1-zen with error -22.
->
->Issue:
->On the affected kernel, loading the module fails:
->
->modprobe: ERROR: could not insert 'hp_wmi': No such device
->
->dmesg output:
->
->hp_wmi: Unknown EC layout for board 8D41. Thermal profile readback
->will be disabled.
->hp-wmi hp-wmi: probe with driver hp-wmi failed with error -22
->
->The system exposes the expected WMI GUIDs:
->
->5FB7F034-2C63-45E9-BE91-3D44E2C707E4
->95F24279-4D7B-4334-9387-ACCDC67EF61C
->
->This suggests the driver matches the device, but fails during probe due to
->the unknown EC layout.
->
->Question:
->Is this board expected to be supported? If not, would it be acceptable to
->allow the driver to load in a degraded mode instead of failing probe?
->
->Please let me know if additional logs or testing are required.
->
->Thanks.
+When the firmware does not support the fan curve WMI method,
+asus_wmi_evaluate_method_buf() returns -ENODEV. The caller
+fan_curve_check_present() already handles this gracefully by
+treating it as a non-error, but fan_curve_get_factory_default()
+still emits a pr_warn() before returning, producing spurious
+boot noise on unsupported hardware.
 
-Hi Yue Li,
+Suppress the warning for -ENODEV only, consistent with how
+this error is handled elsewhere in asus-wmi.c.
 
-Thanks for reporting. This is a known issue [1]. There are 2 failures in
-your dmesg output:
-1. Unknown EC layout: The fix for this has been sent recently.
-    Currently, it is in the review-ilpo-fixes branch [2].
-2. Probe failed: This is due to a failure in parsing the fan table. The
-    fix for this has been merged into 7.1-rc1 [3].
+Reported-by: fxzxaxon@outlook.com
+Closes: https://bugzilla.kernel.org/show_bug.cgi?id=221441
+Signed-off-by: Armandas Kvietkus <armandas.kvietkus@proton.me>
+---
+ drivers/platform/x86/asus-wmi.c | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
 
-Using kernel 7.1 (or applying the above mentioned 2 patch manually to
-your current build) should restore full support for your device.
+diff --git a/drivers/platform/x86/asus-wmi.c b/drivers/platform/x86/asus-wmi.c
+index 80144c412..9b12a9e1e 100644
+--- a/drivers/platform/x86/asus-wmi.c
++++ b/drivers/platform/x86/asus-wmi.c
+@@ -3538,7 +3538,8 @@ static int fan_curve_get_factory_default(struct asus_wmi *asus, u32 fan_dev)
+ 	err = asus_wmi_evaluate_method_buf(asus->dsts_id, fan_dev, mode, buf,
+ 					   FAN_CURVE_BUF_LEN);
+ 	if (err) {
+-		pr_warn("%s (0x%08x) failed: %d\n", __func__, fan_dev, err);
++		if (err != -ENODEV)
++			pr_warn("%s (0x%08x) failed: %d\n", __func__, fan_dev, err);
+ 		return err;
+ 	}
+ 
+-- 
+2.54.0
 
-Thanks, and apologies for the inconvenience.
-
-[1] https://lore.kernel.org/platform-driver-x86/4ae4d7f9-f1db-4394-b0d9-c75dc39afcf8@gmail.com
-[2] https://git.kernel.org/pub/scm/linux/kernel/git/pdx86/platform-drivers-x86.git/commit/?h=review-ilpo-fixes&id=c2d4b76458c9ebf81eae2916970320f1f61ad002
-[3] https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/commit/drivers/platform/x86/hp/hp-wmi.c?h=v7.1-rc1&id=9d317a54e46d3b6420567dc5b63e9d7ff5c064a3
