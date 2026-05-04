@@ -1,280 +1,257 @@
-Received: from mail-4320.protonmail.ch (mail-4320.protonmail.ch [185.70.43.20])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pj1-f47.google.com (mail-pj1-f47.google.com [209.85.216.47])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1BFE478F26;
-	Sun,  3 May 2026 22:45:39 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.70.43.20
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 723C47E0E8
+	for <platform-driver-x86@vger.kernel.org>; Mon,  4 May 2026 01:33:06 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.47
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1777848345; cv=none; b=qgkDfwMF+MedoAeCfbT4kDoEhPyHC/Rh7ZtZ5vpTZCANl4QFdxlXlSJR4hhnZ7Q8x0GCpZn0nM1owTwqMx+fqraYX/0Mb0fUNicNsS1v5P1PuRJ8ovc5bpzfbrejc8ro0RFHfbGhIqPi4eJz7xoiFgbDhsQx04lJgD4PvnOsVkk=
+	t=1777858388; cv=none; b=D0F9MMr6Mv+8zOngfrGrWbCfr0j1viAjetr1EULQ8cideIF16/uHV4ZLRNAj6/zPku7FGQhVewEyn241rTluKIoFw2ePXyEdUK/RCCC/YVlahhm41XESV3u+CdXEnO5t4V5BhmlyHuJ1992dG1hjEJNQ1tKdbZoRfXVFGGign8s=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1777848345; c=relaxed/simple;
-	bh=IaznTKLe5dad4+R/xa0emtp+Q3PttAzGi7wiaO/eheo=;
-	h=Date:To:From:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=JlBV80yznrPYq1DfEfHpYbL2lu66iLDScnmDBT2wvjHjF18pV5k5twU/KwkD3GIFbuZBdw0DltMS+PeEbXTXcdBtEYGiDvCU25GxNge+/0DkRVyx1bN3OBgc5jZHSnT0kXPNRHRdDXtbVnuyR9QHp2G5BO+HzpLU3XErZlPnIxM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=vinarskis.com; spf=pass smtp.mailfrom=vinarskis.com; dkim=pass (2048-bit key) header.d=vinarskis.com header.i=@vinarskis.com header.b=CdR/4VHm; arc=none smtp.client-ip=185.70.43.20
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=vinarskis.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=vinarskis.com
+	s=arc-20240116; t=1777858388; c=relaxed/simple;
+	bh=iIZwcSJHTKXE1raLWL9tGJ3+wg5Yrl2KpUp4gDdaCwc=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=rIA6KoUZFbvl+TyLceumjsJLdB7ESxQJWL7uNGtBfp/qs15FPozF58Kcqhnm9cUO3RRqKlyXPZNDjEE/fQQ8U+SanmqRvd4Ev9FbzRW2UDcc7Io96XxVDXRk0ABkvQMmYIeS527EohFokfUfPcRNmCR6ZgKWEch0zaM9nQdPRRY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=oBTjxwS4; arc=none smtp.client-ip=209.85.216.47
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=vinarskis.com header.i=@vinarskis.com header.b="CdR/4VHm"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=vinarskis.com;
-	s=protonmail2; t=1777848337; x=1778107537;
-	bh=GmRclv1lFdsQhVriTFHd1NfedZYeuyLxm4fz//FM1AY=;
-	h=Date:To:From:Cc:Subject:Message-ID:In-Reply-To:References:
-	 Feedback-ID:From:To:Cc:Date:Subject:Reply-To:Feedback-ID:
-	 Message-ID:BIMI-Selector;
-	b=CdR/4VHm7mRDYWqFZJkFRIVde4BrmSOvGTVG0lQ1x13/aza1kAttWjjk0HmQyfiDe
-	 p7n2zeXUDBjVFLJbUzgGOxVAk0osb9VBZ2to8YzJKxrf9zJkTtWR0FeI+c4Xi7cQ4D
-	 kDpWVZEMsBiWIP6eLNBK9Rkl5sJhbnop4cojvQz7S80/E4ZXHpFknZX8HPjaZT9cAV
-	 C80GgIpA+et4EoIkUWi6E8s4z/GJqyL0Jq8FolYTpolJabAsHawfOyufIBiz30/1MQ
-	 2ozloXnv1VTJrIovrQcJTJ5kx5VIvN+fBlTRko9Ue+lWuRlBXVk2r5zakDfkkWGB0U
-	 u5XAF6vTD+13w==
-Date: Sun, 03 May 2026 22:45:33 +0000
-To: Bryan O'Donoghue <bryan.odonoghue@linaro.org>
-From: Aleksandrs Vinarskis <alex@vinarskis.com>
-Cc: Bjorn Andersson <andersson@kernel.org>, Konrad Dybcio <konradybcio@kernel.org>, Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, Hans de Goede <hansg@kernel.org>, =?utf-8?Q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>, linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, platform-driver-x86@vger.kernel.org, laurentiu.tudor1@dell.com, Abel Vesa <abel.vesa@oss.qualcomm.com>, Tobias Heider <tobias.heider@canonical.com>, Val Packett <val@packett.cool>, Krzysztof Kozlowski <krzysztof.kozlowski@oss.qualcomm.com>
-Subject: Re: [PATCH v2 1/4] dt-bindings: platform: introduce EC for Dell XPS 13 9345
-Message-ID: <QaJhPBoKpGFHk8H8UHqo2y0ie-jbnPOGDWtq-b-wzoyk4lp0cPc94NsGqYb3SR0d96eCFucQzyNVfdOUBaTXN1mutr7WQ_1Xeteolba26fY=@vinarskis.com>
-In-Reply-To: <4bef096a-9f0d-4609-a74c-088caf8fba1e@linaro.org>
-References: <20260404-dell-xps-9345-ec-v2-0-c977c3caa81f@vinarskis.com> <20260404-dell-xps-9345-ec-v2-1-c977c3caa81f@vinarskis.com> <e69ebf4a-126e-48c7-970b-1ba2a40a4492@linaro.org> <21_zFoUYN_HKM8GMSFC7b0uIgOQevyqpWbjtIX1vVP7YtK9tlMgqC3XRgwo35ANlvZ1veGNShZuQFHkKWcf3B_qhjhD90FS7kvR3qCpKzIY=@vinarskis.com> <4bef096a-9f0d-4609-a74c-088caf8fba1e@linaro.org>
-Feedback-ID: 158356072:user:proton
-X-Pm-Message-ID: 5c6607cb4cd340e7d67beab4be82fdcae36914b0
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="oBTjxwS4"
+Received: by mail-pj1-f47.google.com with SMTP id 98e67ed59e1d1-364ff382b0bso2211333a91.2
+        for <platform-driver-x86@vger.kernel.org>; Sun, 03 May 2026 18:33:06 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20251104; t=1777858386; x=1778463186; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=Vt1MXjRWO808dcrw7GdArARkDsPebzOjnTivrvOFjdE=;
+        b=oBTjxwS4+p0JZZZkqE6JL7IpjACBrlNTMmGPkjpUJeJAGbiAC/erkpxDtF+e/+pqWr
+         zyC1NrR4hX8WTiuKxt5d9qRRwRLegofMsgvR4TzbfPG8sTSVA/KQ8AByxOaNcTaNtyKI
+         7OdWczgY1DP5vT3M46oRsTeugNg6D8Iak9GMtpA+GMMoQ3TdBwEImI8qUbBYMV0g51Sq
+         hsIPIztILtYhz6mU9fnKTZKOJSt3rvYIkjPnWHlMIUwkafaezwhY5LVHZxYBIAc7slgK
+         cIjmlZOVYDOlE4p2mbihR5f1d1Woiz8IS4tVEpTEWfvSg31EK45iyUnFwfon+Wz/4z3i
+         ghCg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20251104; t=1777858386; x=1778463186;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-gg:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=Vt1MXjRWO808dcrw7GdArARkDsPebzOjnTivrvOFjdE=;
+        b=SoHHjaxmUxcZlbyouZC5A79P4x6TluMshaQ0uvr+C/Yb4LMwcNkOujE1SknmIBpxH+
+         BnjGr7kOkx1suuimQy9B/Di4/kkkfuaa4Z7nWY/47xjVS4XPXPT5GaVv2YTGYCo5fJ3j
+         ijWFSbNSpwWze/Fo5Rs8arQtxJo9ozgdX8HILPqLy/kCozReQZqmypl7dDb+VTnzVLt5
+         hRhYI7dozyAQN0xvaJ7wqxIXWA2Vv7Utj3PsFoEUz0AwfP35tiBTdfB5Rz0GP+kWndkn
+         NZyv2244L20POTKOqi8DFMbp6DIY35qDioTv54deX6HiCnc+/jgKaHlcmevRl5KrVJQV
+         DmnA==
+X-Gm-Message-State: AOJu0Yzy25Kq596NmZ4B2pp5VRWilL2zmTimJ633fGRxdGcnG4MD2XkG
+	s8BrKTOpXClqweH1VdB7dNsEzZEu+kW5g0PINenSZftVN2Dd1uCziuho
+X-Gm-Gg: AeBDiev3Eect+NJ5apgb/LdCYuX0Kb5EP2uFeYR1WABiosjN0d1qY8RWuAQRDRKc42k
+	EvVBcAnMpMTsBpd8VoqT+7WYQL3E5KEikrWn/n0H8wR4ZljXLaL/4E1wgRFczlzqBrQI4+uA3F1
+	p7HTcY4Uxna9VCBbqQf13L4ZZOUIHmNjY6t7P1uOUUJ876fz+PceFVHQvoERzi3P18rb8u2bJZh
+	AxBo3SyZfvTWteWd/4DYzk+laWvrc8ob2AAvo1TRP3qNZp8btv3iZEs11Zg1MnnmHTPksVGUeI1
+	U4kyZmFKsimSO/3cU3sRJjeyBR7gdEniqnIxqUIW79MMo8mHhuKcA12ItDOA8M7d9Y3SOsCCFrY
+	5HHDRcAwfZBFysbmQiau7U5+g11yEMCj/IAxCwlkpYqZpsN0iMGFbN96f2uSutO98/cr4vD5nWm
+	dZTIMC9CQ0ZIBcIzKHnEkx31DrDr5HDwobj7US39otGuUp8JHRvFnTya6JI/4rpIgV
+X-Received: by 2002:a17:90b:4ac2:b0:35f:b6a1:8d27 with SMTP id 98e67ed59e1d1-3650ce83a97mr8193407a91.18.1777858385651;
+        Sun, 03 May 2026 18:33:05 -0700 (PDT)
+Received: from localhost (61-219-108-167.hinet-ip.hinet.net. [61.219.108.167])
+        by smtp.gmail.com with ESMTPSA id 98e67ed59e1d1-364ec027690sm9306553a91.13.2026.05.03.18.33.04
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sun, 03 May 2026 18:33:05 -0700 (PDT)
+From: Jack Wu <wojackbb@gmail.com>
+X-Google-Original-From: Jack Wu <jackbb_wu@compal.com>
+To: Hans de Goede <hansg@kernel.org>,
+	=?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
+Cc: platform-driver-x86@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	Mario Limonciello <superm1@kernel.org>,
+	Armin Wolf <W_Armin@gmx.de>
+Subject: [PATCH v6 1/2] platform/x86: dell-dw5826e: Add reset driver for DW5826e
+Date: Mon,  4 May 2026 09:32:43 +0800
+Message-Id: <20260504013243.2445940-1-jackbb_wu@compal.com>
+X-Mailer: git-send-email 2.34.1
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 8bit
 
+If the DW5826e is in a frozen state and unable to receive USB commands,
+this driver provides a method for the user to reset the DW5826e via ACPI.
 
-On Monday, April 6th, 2026 at 10:15, Bryan O'Donoghue <bryan.odonoghue@lina=
-ro.org> wrote:
+E.g: echo 1 > /sys/bus/platform/devices/PALC0001\:00/wwan_reset
 
-> On 05/04/2026 21:50, Aleksandrs Vinarskis wrote:
-> > On Sunday, April 5th, 2026 at 02:05, Bryan O'Donoghue <bryan.odonoghue@=
-linaro.org> wrote:
-> >
-> >> On 04/04/2026 13:55, Aleksandrs Vinarskis wrote:
-> >>> Add bindings for Embedded Controller (EC) in Dell XPS 13 9345 (platfo=
-rm
-> >>> codename 'tributo'). It may be partially or fully compatible with EC
-> >>> found in Snapdragon-based Dell Latitude, Inspiron ('thena').
-> >>>
-> >>> Reviewed-by: Krzysztof Kozlowski <krzysztof.kozlowski@oss.qualcomm.co=
-m>
-> >>> Signed-off-by: Aleksandrs Vinarskis <alex@vinarskis.com>
-> >>> ---
-> >>>    .../embedded-controller/dell,xps13-9345-ec.yaml    | 91 ++++++++++=
-++++++++++++
-> >>>    MAINTAINERS                                        |  5 ++
-> >>>    2 files changed, 96 insertions(+)
-> >>>
-> >>> diff --git a/Documentation/devicetree/bindings/embedded-controller/de=
-ll,xps13-9345-ec.yaml b/Documentation/devicetree/bindings/embedded-controll=
-er/dell,xps13-9345-ec.yaml
-> >>> new file mode 100644
-> >>> index 0000000000000000000000000000000000000000..e14dbf2f1a6af8cc75118=
-90fbef08c6c717c0aa6
-> >>> --- /dev/null
-> >>> +++ b/Documentation/devicetree/bindings/embedded-controller/dell,xps1=
-3-9345-ec.yaml
-> >>
-> >> I believe the part name of this embedded controller is the "mec5200" s=
-o
-> >> instead of calling it dell,xps13-9345-ec suggest "dell,mec5200"
-> >
-> > Correct, its Microchip MEC5200. I remember reading some series discussi=
-on
-> > about not naming driver after IC its based on, but rather platform its
-> > used for since driver depends on firmware which is platform specific...
-> > cannot find that discussion now.
+Reviewed-by: Mario Limonciello (AMD) <superm1@kernel.org>
+Reviewed-by: Armin Wolf <W_Armin@gmx.de>
+Signed-off-by: Jack Wu <jackbb_wu@compal.com>
+---
+v6:
+  - Use same define for the DSM check
+v5:
+  - Use BIT() for the DSM method
+v4:
+  - Fix version of the ABI documentation to 7.2
+  - Add include linux/types.h
+v3:
+  - Rename sysfs attribute from "pldr" to "wwan_reset" for clarity
+  - Add ABI documentation for the wwan_reset sysfs interface
+  - Validate _DSM method availability in probe using acpi_check_dsm()
+v2:
+  - Remove extra empty line
+  - Add missing includes and Remove unnecessary includes, sort includes alphabetically
+  - Remove noisy dev_info()
+  - Handle obj->type != ACPI_TYPE_BUFFER as error with proper return code
+  - Replace miscdevice/file_operations with sysfs attribute (DEVICE_ATTR_WO) to reduce boilerplate
+  - Propagate trigger_palc_pldr() return code to userspace
+  - Convert from acpi_driver to platform_driver
+---
+---
+ .../testing/sysfs-driver-dell-dw5826e-reset   |  9 ++
+ drivers/platform/x86/dell/Kconfig             |  6 ++
+ drivers/platform/x86/dell/Makefile            |  2 +
+ .../platform/x86/dell/dell-dw5826e-reset.c    | 93 +++++++++++++++++++
+ 4 files changed, 110 insertions(+)
+ create mode 100644 Documentation/ABI/testing/sysfs-driver-dell-dw5826e-reset
+ create mode 100644 drivers/platform/x86/dell/dell-dw5826e-reset.c
 
-I managed to find the discussion from Krzysztof I was referring to [1].
-My interpretation (please correct me if its wrong):
-- Dell did not make MEC5200, so 'dell,mec5200-foo-bar' is not correct.
-- Since same IC may (and is) used on other platform, compatible and filenam=
-e
-of the driver should be specific to the platform.
+diff --git a/Documentation/ABI/testing/sysfs-driver-dell-dw5826e-reset b/Documentation/ABI/testing/sysfs-driver-dell-dw5826e-reset
+new file mode 100644
+index 000000000000..a665e265633f
+--- /dev/null
++++ b/Documentation/ABI/testing/sysfs-driver-dell-dw5826e-reset
+@@ -0,0 +1,9 @@
++What:		/sys/bus/platform/devices/<PALC0001 device>/wwan_reset
++Date:		April 2026
++KernelVersion:	7.2
++Contact:	Jackbb Wu <jackbb.wu@compal.com>
++Description:
++		Writing to this file triggers a Platform Level Device Reset
++		(PLDR) of the Dell DW5826e WWAN module via an ACPI _DSM
++		method. This can be used to recover the modem when it is in
++		a frozen state and unable to respond to USB commands.
+diff --git a/drivers/platform/x86/dell/Kconfig b/drivers/platform/x86/dell/Kconfig
+index 738c108c2163..c4540c837a88 100644
+--- a/drivers/platform/x86/dell/Kconfig
++++ b/drivers/platform/x86/dell/Kconfig
+@@ -276,4 +276,10 @@ config DELL_WMI_SYSMAN
+ 	  To compile this driver as a module, choose M here: the module will
+ 	  be called dell-wmi-sysman.
+ 
++config DELL_DW5826E_RESET
++	tristate "Dell DW5826e PLDR reset support"
++	default m
++	depends on ACPI
++	help
++	  This adds support for the Dell DW5826e PLDR reset via ACPI
+ endif # X86_PLATFORM_DRIVERS_DELL
+diff --git a/drivers/platform/x86/dell/Makefile b/drivers/platform/x86/dell/Makefile
+index c7501c25e627..8150283cfd1d 100644
+--- a/drivers/platform/x86/dell/Makefile
++++ b/drivers/platform/x86/dell/Makefile
+@@ -28,3 +28,5 @@ obj-$(CONFIG_DELL_WMI_DESCRIPTOR)		+= dell-wmi-descriptor.o
+ obj-$(CONFIG_DELL_WMI_DDV)			+= dell-wmi-ddv.o
+ obj-$(CONFIG_DELL_WMI_LED)			+= dell-wmi-led.o
+ obj-$(CONFIG_DELL_WMI_SYSMAN)			+= dell-wmi-sysman/
++obj-$(CONFIG_DELL_DW5826E_RESET)		+= dell-dw5826e-reset.o
++
+diff --git a/drivers/platform/x86/dell/dell-dw5826e-reset.c b/drivers/platform/x86/dell/dell-dw5826e-reset.c
+new file mode 100644
+index 000000000000..d37c6a66c4c3
+--- /dev/null
++++ b/drivers/platform/x86/dell/dell-dw5826e-reset.c
+@@ -0,0 +1,93 @@
++// SPDX-License-Identifier: GPL-2.0-or-later
++/*
++ *  dell-dw5826e-reset.c - Dell DW5826e reset driver
++ *
++ *  Copyright (C) 2026 Jackbb Wu <jackbb.wu@compal.com>
++ */
++
++#include <linux/acpi.h>
++#include <linux/bits.h>
++#include <linux/device.h>
++#include <linux/module.h>
++#include <linux/platform_device.h>
++#include <linux/types.h>
++#include <linux/uuid.h>
++
++#define PALC_DSM_FN_TRIGGER_PLDR    1
++
++static guid_t palc_dsm_guid =
++	GUID_INIT(0x5a1a4bba, 0x8006, 0x487e, 0xbe, 0x0a, 0xac, 0xf5, 0xd8, 0xfd, 0xfe, 0x59);
++
++static int trigger_palc_pldr(struct device *dev, acpi_handle handle)
++{
++	union acpi_object *obj;
++	int ret = 0;
++
++	obj = acpi_evaluate_dsm(handle, &palc_dsm_guid, 1, BIT(PALC_DSM_FN_TRIGGER_PLDR), NULL);
++	if (!obj) {
++		dev_err(dev, "Failed to evaluate _DSM\n");
++		return -EIO;
++	}
++
++	if (obj->type != ACPI_TYPE_BUFFER) {
++		dev_err(dev, "Unexpected _DSM return type: %d\n", obj->type);
++		ret = -EINVAL;
++	}
++
++	ACPI_FREE(obj);
++	return ret;
++}
++
++static ssize_t wwan_reset_store(struct device *dev, struct device_attribute *attr,
++				const char *buf, size_t count)
++{
++	acpi_handle handle = ACPI_HANDLE(dev);
++	int ret;
++
++	ret = trigger_palc_pldr(dev, handle);
++	if (ret)
++		return ret;
++
++	return count;
++}
++static DEVICE_ATTR_WO(wwan_reset);
++
++static struct attribute *palc_attrs[] = {
++	&dev_attr_wwan_reset.attr,
++	NULL
++};
++ATTRIBUTE_GROUPS(palc);
++
++static int palc_probe(struct platform_device *pdev)
++{
++	acpi_handle handle;
++
++	handle = ACPI_HANDLE(&pdev->dev);
++	if (!handle)
++		return -ENODEV;
++
++	if (!acpi_check_dsm(handle, &palc_dsm_guid, 1, BIT(PALC_DSM_FN_TRIGGER_PLDR)))
++		return -ENODEV;
++
++	return 0;
++}
++
++static const struct acpi_device_id palc_acpi_ids[] = {
++	{ "PALC0001", 0 },
++	{ }
++};
++MODULE_DEVICE_TABLE(acpi, palc_acpi_ids);
++
++static struct platform_driver palc_driver = {
++	.driver = {
++		.name = "dell-dw5826e-reset",
++		.acpi_match_table = palc_acpi_ids,
++		.dev_groups = palc_groups,
++	},
++	.probe  = palc_probe,
++};
++module_platform_driver(palc_driver);
++
++MODULE_DESCRIPTION("Dell DW5826e reset driver");
++MODULE_LICENSE("GPL");
++MODULE_AUTHOR("JackBB Wu");
+-- 
+2.34.1
 
-[1] https://lore.kernel.org/all/57515c0f-caa0-4651-96cf-dde75a13937f@kernel=
-.org/
-
-> >
-> >>
-> >>> @@ -0,0 +1,91 @@
-> >>> +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
-> >>> +%YAML 1.2
-> >>> +---
-> >>> +$id: http://devicetree.org/schemas/embedded-controller/dell,xps13-93=
-45-ec.yaml#
-> >>> +$schema: http://devicetree.org/meta-schemas/core.yaml#
-> >>> +
-> >>> +title: Dell XPS 13 9345 Embedded Controller
-> >>> +
-> >>> +maintainers:
-> >>> +  - Aleksandrs Vinarskis <alex@vinarskis.com>
-> >>> +
-> >>> +description:
-> >>> +  The Dell XPS 13 9345 has an Embedded Controller (EC) which handles=
- thermal
-> >>> +  and power management. It is communicating with SoC over multiple i=
-2c busses.
-> >>> +  Among other things, it handles fan speed control, thermal shutdown=
-, peripheral
-> >>> +  power supply including trackpad, touch-row, display. For these fun=
-ctions, it
-> >>> +  requires frequently updated thermal readings from onboard thermist=
-ors.
-> >>> +
-> >>> +properties:
-> >>> +  compatible:
-> >>> +    const: dell,xps13-9345-ec
-> >>
-> >> Ditto the compat - name it after the IC not the laptop its a "mec5200"
-> >> or "mec5200-ec" - I suspect the -ec postfix is a tautology the ec bit =
-in
-> >> "mec" probably captures.
-> >
-> > I'm not sure I agree regarding the compatible, its supposed to be as ex=
-act as
-> > possible. "dell,mec5200" will not allow us to differentiate between EC =
-drivers
-> > of "tributo" and "thena" for example.
-> >
-> > Suggestion:
-> > - Schema filename to be generalized "dell,mec5200-ec.yaml"
-> > - Driver filename to be generalized "dell-mec5200-ec.c"
-> > - Config to be generalized "EC_DELL_MEC5200"
-> > - Compatible to stay specific "dell,xps13-9345-ec", with fallback to
-> >    "dell,mec5200-ec".
-> >
-> > I would also keep "-ec" to stay consistent with naming convention of
-> > existing drivers and bindings.
-> >
-> > Let me know if this would work for you.
-> >
-> > Alex
->=20
-> To me including the laptop model in the IC name, when our best
-> information is that this same chip is used on both Thena variants isn't
-> very logical.
->=20
-> The thing is the IC not the platform it resides on.
->=20
-> But if you think the firmware is specific to each platform - something
-> like dell-mec5200-ec, dell,mec5200-xps13-9345-ec makes sense to me.
-
-Krzysztof could you please advise whats the best way to go about these
-compatibles (and driver name, if you have thoughts there)?
-
-Thanks,
-Alex
-
->=20
-> >
-> >>
-> >>> +
-> >>> +  reg:
-> >>> +    const: 0x3b
-> >>> +
-> >>> +  interrupts:
-> >>> +    maxItems: 1
-> >>> +
-> >>> +  io-channels:
-> >>> +    description:
-> >>> +      ADC channels connected to the 7 onboard thermistors on PMK8550=
-.
-> >>> +      EC requires frequent thermal readings of these channels to per=
-form
-> >>> +      automated fan speed control.
-> >>> +    items:
-> >>> +      - description: ADC channel for sys_therm0
-> >>> +      - description: ADC channel for sys_therm1
-> >>> +      - description: ADC channel for sys_therm2
-> >>> +      - description: ADC channel for sys_therm3
-> >>> +      - description: ADC channel for sys_therm4
-> >>> +      - description: ADC channel for sys_therm5
-> >>> +      - description: ADC channel for sys_therm6
-> >>> +
-> >>> +  io-channel-names:
-> >>> +    items:
-> >>> +      - const: sys_therm0
-> >>> +      - const: sys_therm1
-> >>> +      - const: sys_therm2
-> >>> +      - const: sys_therm3
-> >>> +      - const: sys_therm4
-> >>> +      - const: sys_therm5
-> >>> +      - const: sys_therm6
-> >>
-> >>
-> >>> +
-> >>> +required:
-> >>> +  - compatible
-> >>> +  - reg
-> >>> +  - interrupts
-> >>> +  - io-channels
-> >>> +  - io-channel-names
-> >>> +
-> >>> +additionalProperties: false
-> >>> +
-> >>> +examples:
-> >>> +  - |
-> >>> +    #include <dt-bindings/interrupt-controller/irq.h>
-> >>> +    #include <dt-bindings/iio/qcom,spmi-adc7-pm8350.h>
-> >>> +    i2c {
-> >>> +        #address-cells =3D <1>;
-> >>> +        #size-cells =3D <0>;
-> >>> +
-> >>> +        embedded-controller@3b {
-> >>> +            compatible =3D "dell,xps13-9345-ec";
-> >>> +            reg =3D <0x3b>;
-> >>> +            interrupts-extended =3D <&tlmm 66 IRQ_TYPE_LEVEL_LOW>;
-> >>> +
-> >>> +            io-channels =3D <&pmk8550_vadc PM8350_ADC7_GPIO3_100K_PU=
-(1)>,
-> >>> +                          <&pmk8550_vadc PM8350_ADC7_GPIO4_100K_PU(1=
-)>,
-> >>> +                          <&pmk8550_vadc PM8350_ADC7_AMUX_THM1_100K_=
-PU(1)>,
-> >>> +                          <&pmk8550_vadc PM8350_ADC7_AMUX_THM2_100K_=
-PU(1)>,
-> >>> +                          <&pmk8550_vadc PM8350_ADC7_AMUX_THM3_100K_=
-PU(1)>,
-> >>> +                          <&pmk8550_vadc PM8350_ADC7_AMUX_THM4_100K_=
-PU(1)>,
-> >>> +                          <&pmk8550_vadc PM8350_ADC7_AMUX_THM5_100K_=
-PU(1)>;
-> >>> +            io-channel-names =3D "sys_therm0",
-> >>> +                               "sys_therm1",
-> >>> +                               "sys_therm2",
-> >>> +                               "sys_therm3",
-> >>> +                               "sys_therm4",
-> >>> +                               "sys_therm5",
-> >>> +                               "sys_therm6";
-> >>> +        };
-> >>> +    };
-> >>> +...
-> >>> diff --git a/MAINTAINERS b/MAINTAINERS
-> >>> index 96e0781f2201b41b976dfa69efd44d62c4ff0058..a5d175559f4468dfe363b=
-319a1b08d3425f4d712 100644
-> >>> --- a/MAINTAINERS
-> >>> +++ b/MAINTAINERS
-> >>> @@ -7236,6 +7236,11 @@ S:=09Maintained
-> >>>    F:=09Documentation/ABI/testing/sysfs-class-firmware-attributes
-> >>>    F:=09drivers/platform/x86/dell/dell-wmi-sysman/
-> >>>
-> >>> +DELL XPS EMBEDDED CONTROLLER DRIVER
-> >>> +M:=09Aleksandrs Vinarskis <alex@vinarskis.com>
-> >>> +S:=09Maintained
-> >>> +F:=09Documentation/devicetree/bindings/embedded-controller/dell,xps1=
-3-9345-ec.yaml
-> >>> +
-> >>>    DELTA AHE-50DC FAN CONTROL MODULE DRIVER
-> >>>    M:=09Zev Weiss <zev@bewilderbeest.net>
-> >>>    L:=09linux-hwmon@vger.kernel.org
-> >>>
-> >>
-> >>
->=20
-> 
