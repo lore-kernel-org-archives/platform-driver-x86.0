@@ -1,257 +1,150 @@
-Received: from mail-pj1-f47.google.com (mail-pj1-f47.google.com [209.85.216.47])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from relay.yourmailgateway.de (relay.yourmailgateway.de [188.68.63.98])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 723C47E0E8
-	for <platform-driver-x86@vger.kernel.org>; Mon,  4 May 2026 01:33:06 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.47
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DDF902DBF76
+	for <platform-driver-x86@vger.kernel.org>; Mon,  4 May 2026 07:23:02 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=188.68.63.98
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1777858388; cv=none; b=D0F9MMr6Mv+8zOngfrGrWbCfr0j1viAjetr1EULQ8cideIF16/uHV4ZLRNAj6/zPku7FGQhVewEyn241rTluKIoFw2ePXyEdUK/RCCC/YVlahhm41XESV3u+CdXEnO5t4V5BhmlyHuJ1992dG1hjEJNQ1tKdbZoRfXVFGGign8s=
+	t=1777879386; cv=none; b=ZfVHwuZI3fTqhiUQskkXrgh6+SuZRMJPIP9sQIWp7vHaLQhdqcnRbBRPSdcEAs//dOj+wKn8jqyYQ0mUSFNKop2+VNMVh9b1fqgeTh3SfUB6pFVJmnS3wRtjT7EQ1iHpsxXHYAOO599mGnS6uSVVsR4g4X8VPVFKGT0awdKcPHU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1777858388; c=relaxed/simple;
-	bh=iIZwcSJHTKXE1raLWL9tGJ3+wg5Yrl2KpUp4gDdaCwc=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=rIA6KoUZFbvl+TyLceumjsJLdB7ESxQJWL7uNGtBfp/qs15FPozF58Kcqhnm9cUO3RRqKlyXPZNDjEE/fQQ8U+SanmqRvd4Ev9FbzRW2UDcc7Io96XxVDXRk0ABkvQMmYIeS527EohFokfUfPcRNmCR6ZgKWEch0zaM9nQdPRRY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=oBTjxwS4; arc=none smtp.client-ip=209.85.216.47
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1777879386; c=relaxed/simple;
+	bh=t6NYEMUouDBm+YDlmQnoIPvFQi4VWA5FQFO6UtsjjzA=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=Msq1c4k4Xwd8NfNtOx0IKNKM8+pWizMJ9gnpc2Or32mre7KGDT3ru0pF+tNFxtC87B/HJ0sUUS9eCTg4993UpX3C8YLn/PGpl8mJR6Rlf3bnACiYEdTIwAkRr+bXZx9wpJf5j5iFVJBLKoRBqTNPF5Rtci3rsPMLUoUy6N1N7UY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=leemhuis.info; spf=pass smtp.mailfrom=leemhuis.info; dkim=pass (2048-bit key) header.d=leemhuis.info header.i=@leemhuis.info header.b=jIGU/gPe; arc=none smtp.client-ip=188.68.63.98
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=leemhuis.info
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=leemhuis.info
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="oBTjxwS4"
-Received: by mail-pj1-f47.google.com with SMTP id 98e67ed59e1d1-364ff382b0bso2211333a91.2
-        for <platform-driver-x86@vger.kernel.org>; Sun, 03 May 2026 18:33:06 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20251104; t=1777858386; x=1778463186; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=Vt1MXjRWO808dcrw7GdArARkDsPebzOjnTivrvOFjdE=;
-        b=oBTjxwS4+p0JZZZkqE6JL7IpjACBrlNTMmGPkjpUJeJAGbiAC/erkpxDtF+e/+pqWr
-         zyC1NrR4hX8WTiuKxt5d9qRRwRLegofMsgvR4TzbfPG8sTSVA/KQ8AByxOaNcTaNtyKI
-         7OdWczgY1DP5vT3M46oRsTeugNg6D8Iak9GMtpA+GMMoQ3TdBwEImI8qUbBYMV0g51Sq
-         hsIPIztILtYhz6mU9fnKTZKOJSt3rvYIkjPnWHlMIUwkafaezwhY5LVHZxYBIAc7slgK
-         cIjmlZOVYDOlE4p2mbihR5f1d1Woiz8IS4tVEpTEWfvSg31EK45iyUnFwfon+Wz/4z3i
-         ghCg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1777858386; x=1778463186;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-gg:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=Vt1MXjRWO808dcrw7GdArARkDsPebzOjnTivrvOFjdE=;
-        b=SoHHjaxmUxcZlbyouZC5A79P4x6TluMshaQ0uvr+C/Yb4LMwcNkOujE1SknmIBpxH+
-         BnjGr7kOkx1suuimQy9B/Di4/kkkfuaa4Z7nWY/47xjVS4XPXPT5GaVv2YTGYCo5fJ3j
-         ijWFSbNSpwWze/Fo5Rs8arQtxJo9ozgdX8HILPqLy/kCozReQZqmypl7dDb+VTnzVLt5
-         hRhYI7dozyAQN0xvaJ7wqxIXWA2Vv7Utj3PsFoEUz0AwfP35tiBTdfB5Rz0GP+kWndkn
-         NZyv2244L20POTKOqi8DFMbp6DIY35qDioTv54deX6HiCnc+/jgKaHlcmevRl5KrVJQV
-         DmnA==
-X-Gm-Message-State: AOJu0Yzy25Kq596NmZ4B2pp5VRWilL2zmTimJ633fGRxdGcnG4MD2XkG
-	s8BrKTOpXClqweH1VdB7dNsEzZEu+kW5g0PINenSZftVN2Dd1uCziuho
-X-Gm-Gg: AeBDiev3Eect+NJ5apgb/LdCYuX0Kb5EP2uFeYR1WABiosjN0d1qY8RWuAQRDRKc42k
-	EvVBcAnMpMTsBpd8VoqT+7WYQL3E5KEikrWn/n0H8wR4ZljXLaL/4E1wgRFczlzqBrQI4+uA3F1
-	p7HTcY4Uxna9VCBbqQf13L4ZZOUIHmNjY6t7P1uOUUJ876fz+PceFVHQvoERzi3P18rb8u2bJZh
-	AxBo3SyZfvTWteWd/4DYzk+laWvrc8ob2AAvo1TRP3qNZp8btv3iZEs11Zg1MnnmHTPksVGUeI1
-	U4kyZmFKsimSO/3cU3sRJjeyBR7gdEniqnIxqUIW79MMo8mHhuKcA12ItDOA8M7d9Y3SOsCCFrY
-	5HHDRcAwfZBFysbmQiau7U5+g11yEMCj/IAxCwlkpYqZpsN0iMGFbN96f2uSutO98/cr4vD5nWm
-	dZTIMC9CQ0ZIBcIzKHnEkx31DrDr5HDwobj7US39otGuUp8JHRvFnTya6JI/4rpIgV
-X-Received: by 2002:a17:90b:4ac2:b0:35f:b6a1:8d27 with SMTP id 98e67ed59e1d1-3650ce83a97mr8193407a91.18.1777858385651;
-        Sun, 03 May 2026 18:33:05 -0700 (PDT)
-Received: from localhost (61-219-108-167.hinet-ip.hinet.net. [61.219.108.167])
-        by smtp.gmail.com with ESMTPSA id 98e67ed59e1d1-364ec027690sm9306553a91.13.2026.05.03.18.33.04
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 03 May 2026 18:33:05 -0700 (PDT)
-From: Jack Wu <wojackbb@gmail.com>
-X-Google-Original-From: Jack Wu <jackbb_wu@compal.com>
-To: Hans de Goede <hansg@kernel.org>,
-	=?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
-Cc: platform-driver-x86@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	Mario Limonciello <superm1@kernel.org>,
-	Armin Wolf <W_Armin@gmx.de>
-Subject: [PATCH v6 1/2] platform/x86: dell-dw5826e: Add reset driver for DW5826e
-Date: Mon,  4 May 2026 09:32:43 +0800
-Message-Id: <20260504013243.2445940-1-jackbb_wu@compal.com>
-X-Mailer: git-send-email 2.34.1
+	dkim=pass (2048-bit key) header.d=leemhuis.info header.i=@leemhuis.info header.b="jIGU/gPe"
+Received: from mors-relay-2501.netcup.net (localhost [127.0.0.1])
+	by mors-relay-2501.netcup.net (Postfix) with ESMTPS id 4g8ClM30Kfz64RN;
+	Mon,  4 May 2026 09:22:23 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=leemhuis.info;
+	s=key2; t=1777879343;
+	bh=t6NYEMUouDBm+YDlmQnoIPvFQi4VWA5FQFO6UtsjjzA=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=jIGU/gPe9csztd7cIAzL8syb3Wti5ymlzfDuuiRkGI15gDkXxwMYm9uXsDGaqjb2j
+	 +FcoSvn5h4L9zco1TPPyyI4bM5CEzey/RjTCTq5rsS1ooAusyDXGLB6NFsU8TMC5hn
+	 eQ/67whIIAwWl0SFP5OwfN0pJ2scXYolqUOjACulAvHVNruEHQxDe2iyVDxr7GfELw
+	 7Y4vOzpPQbZCsIiPmb7ZuwCg3ADAYw4tjGmOsESev5bZh7FCcXSUs4IceKvSUxayMZ
+	 EOLM1lWKDkoZmjaaKr+PbJLeQWqfK12JW4F3OebVftiBgMvumipmFqmycYTq3TXOfP
+	 NetBnNEFgF+oA==
+Received: from policy02-mors.netcup.net (unknown [46.38.225.35])
+	by mors-relay-2501.netcup.net (Postfix) with ESMTPS id 4g8ClM2HjTz50Mc;
+	Mon,  4 May 2026 09:22:23 +0200 (CEST)
+Received: from mxe9fb.netcup.net (unknown [10.243.12.53])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange ECDHE (P-256) server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by policy02-mors.netcup.net (Postfix) with ESMTPS id 4g8ClL5DGVz8sZg;
+	Mon,  4 May 2026 09:22:22 +0200 (CEST)
+Received: from [IPV6:2a02:8108:8984:1d00:a0cf:1912:4be:477f] (unknown [IPv6:2a02:8108:8984:1d00:a0cf:1912:4be:477f])
+	by mxe9fb.netcup.net (Postfix) with ESMTPSA id 457E66344D;
+	Mon,  4 May 2026 09:22:22 +0200 (CEST)
+Authentication-Results: mxe9fb;
+        spf=pass (sender IP is 2a02:8108:8984:1d00:a0cf:1912:4be:477f) smtp.mailfrom=regressions@leemhuis.info smtp.helo=[IPV6:2a02:8108:8984:1d00:a0cf:1912:4be:477f]
+Received-SPF: pass (mxe9fb: connection is authenticated)
+Message-ID: <38bef028-d574-4e7a-b857-f10ab6796833@leemhuis.info>
+Date: Mon, 4 May 2026 09:22:21 +0200
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+User-Agent: Mozilla Thunderbird
+Subject: Re: [REGRESSION] hp-wmi fails to probe on HP OMEN (board 8D41)
+To: Krishna Chomal <krishna.chomal108@gmail.com>,
+ yue li <mc.root.ly@gmail.com>
+Cc: platform-driver-x86@vger.kernel.org,
+ Linux kernel regressions list <regressions@lists.linux.dev>
+References: 
+ <CABd86uaQY9-ZSU-_PHKtZZyWnDFHLEsuaM+NBV5nOLWA+YSX7A@mail.gmail.com>
+ <afb0f9gaS5z_SmRX@archlinux>
+From: Thorsten Leemhuis <regressions@leemhuis.info>
+Content-Language: de-DE, en-US
+X-Enigmail-Draft-Status: N11222
+Autocrypt: addr=linux@leemhuis.info; keydata=
+ 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 MEK4
+In-Reply-To: <afb0f9gaS5z_SmRX@archlinux>
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
+X-PPP-Message-ID: <177787934254.492545.9723547086132448185@mxe9fb.netcup.net>
+X-NC-CID: 7Zrl8g7eefazJq4/4dMuw4z4Ax06va3kwZ2trkre2l+VYg+WhRQ=
 
-If the DW5826e is in a frozen state and unable to receive USB commands,
-this driver provides a method for the user to reset the DW5826e via ACPI.
+On 5/3/26 09:26, Krishna Chomal wrote:
+> On Thu, Apr 30, 2026 at 12:59:58PM +0800, yue li wrote:
+>> [...]
+>> Regression:
+>> The hp-wmi driver works correctly on kernel 6.18.6-zen1-1-zen,
+>> but fails to probe on 7.0.2-zen1-1-zen with error -22.
+>>
+>> Issue:
+>> On the affected kernel, loading the module fails:
+> [...]
+> Thanks for reporting. This is a known issue [1]. There are 2 failures in
+> your dmesg output:
+> 1. Unknown EC layout: The fix for this has been sent recently.
+>    Currently, it is in the review-ilpo-fixes branch [2].
+> 2. Probe failed: This is due to a failure in parsing the fan table. The
+>    fix for this has been merged into 7.1-rc1 [3].
+> 
+> Using kernel 7.1 (or applying the above mentioned 2 patch manually to
+> your current build) should restore full support for your device.
 
-E.g: echo 1 > /sys/bus/platform/devices/PALC0001\:00/wwan_reset
+You you then maybe be so kind and submit backports to the 7.0.y stable
+series to prevent more people from running into this?
 
-Reviewed-by: Mario Limonciello (AMD) <superm1@kernel.org>
-Reviewed-by: Armin Wolf <W_Armin@gmx.de>
-Signed-off-by: Jack Wu <jackbb_wu@compal.com>
----
-v6:
-  - Use same define for the DSM check
-v5:
-  - Use BIT() for the DSM method
-v4:
-  - Fix version of the ABI documentation to 7.2
-  - Add include linux/types.h
-v3:
-  - Rename sysfs attribute from "pldr" to "wwan_reset" for clarity
-  - Add ABI documentation for the wwan_reset sysfs interface
-  - Validate _DSM method availability in probe using acpi_check_dsm()
-v2:
-  - Remove extra empty line
-  - Add missing includes and Remove unnecessary includes, sort includes alphabetically
-  - Remove noisy dev_info()
-  - Handle obj->type != ACPI_TYPE_BUFFER as error with proper return code
-  - Replace miscdevice/file_operations with sysfs attribute (DEVICE_ATTR_WO) to reduce boilerplate
-  - Propagate trigger_palc_pldr() return code to userspace
-  - Convert from acpi_driver to platform_driver
----
----
- .../testing/sysfs-driver-dell-dw5826e-reset   |  9 ++
- drivers/platform/x86/dell/Kconfig             |  6 ++
- drivers/platform/x86/dell/Makefile            |  2 +
- .../platform/x86/dell/dell-dw5826e-reset.c    | 93 +++++++++++++++++++
- 4 files changed, 110 insertions(+)
- create mode 100644 Documentation/ABI/testing/sysfs-driver-dell-dw5826e-reset
- create mode 100644 drivers/platform/x86/dell/dell-dw5826e-reset.c
+Ciao, Thorsten
 
-diff --git a/Documentation/ABI/testing/sysfs-driver-dell-dw5826e-reset b/Documentation/ABI/testing/sysfs-driver-dell-dw5826e-reset
-new file mode 100644
-index 000000000000..a665e265633f
---- /dev/null
-+++ b/Documentation/ABI/testing/sysfs-driver-dell-dw5826e-reset
-@@ -0,0 +1,9 @@
-+What:		/sys/bus/platform/devices/<PALC0001 device>/wwan_reset
-+Date:		April 2026
-+KernelVersion:	7.2
-+Contact:	Jackbb Wu <jackbb.wu@compal.com>
-+Description:
-+		Writing to this file triggers a Platform Level Device Reset
-+		(PLDR) of the Dell DW5826e WWAN module via an ACPI _DSM
-+		method. This can be used to recover the modem when it is in
-+		a frozen state and unable to respond to USB commands.
-diff --git a/drivers/platform/x86/dell/Kconfig b/drivers/platform/x86/dell/Kconfig
-index 738c108c2163..c4540c837a88 100644
---- a/drivers/platform/x86/dell/Kconfig
-+++ b/drivers/platform/x86/dell/Kconfig
-@@ -276,4 +276,10 @@ config DELL_WMI_SYSMAN
- 	  To compile this driver as a module, choose M here: the module will
- 	  be called dell-wmi-sysman.
- 
-+config DELL_DW5826E_RESET
-+	tristate "Dell DW5826e PLDR reset support"
-+	default m
-+	depends on ACPI
-+	help
-+	  This adds support for the Dell DW5826e PLDR reset via ACPI
- endif # X86_PLATFORM_DRIVERS_DELL
-diff --git a/drivers/platform/x86/dell/Makefile b/drivers/platform/x86/dell/Makefile
-index c7501c25e627..8150283cfd1d 100644
---- a/drivers/platform/x86/dell/Makefile
-+++ b/drivers/platform/x86/dell/Makefile
-@@ -28,3 +28,5 @@ obj-$(CONFIG_DELL_WMI_DESCRIPTOR)		+= dell-wmi-descriptor.o
- obj-$(CONFIG_DELL_WMI_DDV)			+= dell-wmi-ddv.o
- obj-$(CONFIG_DELL_WMI_LED)			+= dell-wmi-led.o
- obj-$(CONFIG_DELL_WMI_SYSMAN)			+= dell-wmi-sysman/
-+obj-$(CONFIG_DELL_DW5826E_RESET)		+= dell-dw5826e-reset.o
-+
-diff --git a/drivers/platform/x86/dell/dell-dw5826e-reset.c b/drivers/platform/x86/dell/dell-dw5826e-reset.c
-new file mode 100644
-index 000000000000..d37c6a66c4c3
---- /dev/null
-+++ b/drivers/platform/x86/dell/dell-dw5826e-reset.c
-@@ -0,0 +1,93 @@
-+// SPDX-License-Identifier: GPL-2.0-or-later
-+/*
-+ *  dell-dw5826e-reset.c - Dell DW5826e reset driver
-+ *
-+ *  Copyright (C) 2026 Jackbb Wu <jackbb.wu@compal.com>
-+ */
-+
-+#include <linux/acpi.h>
-+#include <linux/bits.h>
-+#include <linux/device.h>
-+#include <linux/module.h>
-+#include <linux/platform_device.h>
-+#include <linux/types.h>
-+#include <linux/uuid.h>
-+
-+#define PALC_DSM_FN_TRIGGER_PLDR    1
-+
-+static guid_t palc_dsm_guid =
-+	GUID_INIT(0x5a1a4bba, 0x8006, 0x487e, 0xbe, 0x0a, 0xac, 0xf5, 0xd8, 0xfd, 0xfe, 0x59);
-+
-+static int trigger_palc_pldr(struct device *dev, acpi_handle handle)
-+{
-+	union acpi_object *obj;
-+	int ret = 0;
-+
-+	obj = acpi_evaluate_dsm(handle, &palc_dsm_guid, 1, BIT(PALC_DSM_FN_TRIGGER_PLDR), NULL);
-+	if (!obj) {
-+		dev_err(dev, "Failed to evaluate _DSM\n");
-+		return -EIO;
-+	}
-+
-+	if (obj->type != ACPI_TYPE_BUFFER) {
-+		dev_err(dev, "Unexpected _DSM return type: %d\n", obj->type);
-+		ret = -EINVAL;
-+	}
-+
-+	ACPI_FREE(obj);
-+	return ret;
-+}
-+
-+static ssize_t wwan_reset_store(struct device *dev, struct device_attribute *attr,
-+				const char *buf, size_t count)
-+{
-+	acpi_handle handle = ACPI_HANDLE(dev);
-+	int ret;
-+
-+	ret = trigger_palc_pldr(dev, handle);
-+	if (ret)
-+		return ret;
-+
-+	return count;
-+}
-+static DEVICE_ATTR_WO(wwan_reset);
-+
-+static struct attribute *palc_attrs[] = {
-+	&dev_attr_wwan_reset.attr,
-+	NULL
-+};
-+ATTRIBUTE_GROUPS(palc);
-+
-+static int palc_probe(struct platform_device *pdev)
-+{
-+	acpi_handle handle;
-+
-+	handle = ACPI_HANDLE(&pdev->dev);
-+	if (!handle)
-+		return -ENODEV;
-+
-+	if (!acpi_check_dsm(handle, &palc_dsm_guid, 1, BIT(PALC_DSM_FN_TRIGGER_PLDR)))
-+		return -ENODEV;
-+
-+	return 0;
-+}
-+
-+static const struct acpi_device_id palc_acpi_ids[] = {
-+	{ "PALC0001", 0 },
-+	{ }
-+};
-+MODULE_DEVICE_TABLE(acpi, palc_acpi_ids);
-+
-+static struct platform_driver palc_driver = {
-+	.driver = {
-+		.name = "dell-dw5826e-reset",
-+		.acpi_match_table = palc_acpi_ids,
-+		.dev_groups = palc_groups,
-+	},
-+	.probe  = palc_probe,
-+};
-+module_platform_driver(palc_driver);
-+
-+MODULE_DESCRIPTION("Dell DW5826e reset driver");
-+MODULE_LICENSE("GPL");
-+MODULE_AUTHOR("JackBB Wu");
--- 
-2.34.1
+> [1] https://lore.kernel.org/platform-driver-x86/4ae4d7f9-f1db-4394-b0d9-
+> c75dc39afcf8@gmail.com
+> [2] https://git.kernel.org/pub/scm/linux/kernel/git/pdx86/platform-
+> drivers-x86.git/commit/?h=review-ilpo-
+> fixes&id=c2d4b76458c9ebf81eae2916970320f1f61ad002
+> [3] https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/
+> commit/drivers/platform/x86/hp/hp-wmi.c?h=v7.1-
+> rc1&id=9d317a54e46d3b6420567dc5b63e9d7ff5c064a3
+
 
