@@ -1,54 +1,55 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6B9ED39B4A9
-	for <platform-driver-x86@vger.kernel.org>; Mon,  4 May 2026 11:01:05 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2686939185A
+	for <platform-driver-x86@vger.kernel.org>; Mon,  4 May 2026 11:01:27 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1777892465; cv=none; b=UW0OF8ctnNiBUPG/aERhpY/7J3O2jigwTyEj0grkuz2Uh3nFZkG38KCwSRKgZgzOvKpatYhfvYgyl2qIMRPpcZoBr5fqXvqoB7rCxLhNdG4acubrxeseMewl/KJ81iqVRXYnYDKoOr23wHmsWD0biG9D1AJR4l+th2ybGX7IKIc=
+	t=1777892487; cv=none; b=A1BYfwAFnRHCwhU9g1DVhjzXhqnmrdUnLAaXcMBvplwVDEV8gt/MY0rq+c7GX280UWDCkKnrWIrkkzUmsm4fdLbi5zmIMFeaYKgFabJH3jg/wLpTFzujgCnqQKyuOej9U1eh7Uwu7a9bhOke6WVv+RUSwRsBKOzkJkxBbKkeCNk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1777892465; c=relaxed/simple;
-	bh=ouskFgDOEFnHYqrmvdT0v5kdL0uhmxU82mtpqCG5tqg=;
+	s=arc-20240116; t=1777892487; c=relaxed/simple;
+	bh=ImXrHCwGy8/aN+MYwFMS9Bky+rG6EWRzoWw+lbmYY5s=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=kUWKV1rimNYTAxT/mp56D39mb66s/8JPj+pOmKp1dfP/N9mz0d8Co6+Tzp9YCFq9o8zMYIJ9S9hrjy65rrFk9R7tt5FnjiqCPBKCIq7VsZxF3wos782AryMSej/LNuF6lcqF4jY7yOAZTeQBaSEOu5EMyG4uuQom/XeFsstQiB4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=GHmPvoc4; arc=none smtp.client-ip=10.30.226.201
+	 To:Cc:Content-Type; b=YbB9jMqLtV8n2OYACbbLldIAPTkoCmcOp6PvRpG9sTnBd6O7NT+T6x9ky/gl5AhJB/LZIBTdbv12LFSDf0HEP7hluWEIRXudLRuWr1IoO+P7r2Qw5CA/ei5VdF/6v5LKbE+Z86DQ9E3HRMyUnMfq859fNQAWEjQJqWzQ2KGwB3U=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ovDj9JGW; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="GHmPvoc4"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 217DDC2BCFA
-	for <platform-driver-x86@vger.kernel.org>; Mon,  4 May 2026 11:01:05 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ovDj9JGW"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 07BE0C2BCF6
+	for <platform-driver-x86@vger.kernel.org>; Mon,  4 May 2026 11:01:27 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1777892465;
-	bh=ouskFgDOEFnHYqrmvdT0v5kdL0uhmxU82mtpqCG5tqg=;
+	s=k20201202; t=1777892487;
+	bh=ImXrHCwGy8/aN+MYwFMS9Bky+rG6EWRzoWw+lbmYY5s=;
 	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-	b=GHmPvoc4lc62QgQ03zIFpSWvkjWnjJGT61bQQaSHDTwvXERIPEvbrH/cwcNC2798r
-	 QSQAoR2ZNEs+sD5329CtrniL63ChDvyjWoajAQqzdTLrOoYCEKgvOB7v/GAi3/O7Ga
-	 GCLf7WKfGUw6eqlMXN6CbIj5tKojz+N/WPitZQ3irno8rLCYGmEI39410tgPd+CGCC
-	 5NOpameYINQhNc4hAeT6q28mf3WxNnSFRdax25hwOgC/NvAgbxJBVaXMPu8jK9WEWm
-	 Sbkk+ItFGGam29vU8rjhcxblc0y6QPREXeWXpB+JNtxAbKKqORlZJcKEM9qF9CyY7w
-	 DmkSOmB6+xcJw==
-Received: by mail-lf1-f54.google.com with SMTP id 2adb3069b0e04-5a4113ab355so3781738e87.1
-        for <platform-driver-x86@vger.kernel.org>; Mon, 04 May 2026 04:01:05 -0700 (PDT)
-X-Forwarded-Encrypted: i=1; AFNElJ8hAU4WE0C4jt2kKruWFKJK04peUCXmaqT2O0+ySVtGKFPpso2qAKASPbnnwRqUJKzUuNPhD2EMweZ8JFK29ECmgI3t@vger.kernel.org
-X-Gm-Message-State: AOJu0YzSZF/eHcmF0btMVXUxv9x4D90B38MBBUAATaNTogJO0X1Kxoqm
-	k3fhowJ2sND7m8lwjWmbFy5IwmTC1+8Vean8sXL0FQHv87o1eVmYwoC/DrKNWRiCPa7TabjuEFx
-	R5QgASmYGS4vMKbQhOqqtwNhylrk4DeGV+Y96xBhlaQ==
-X-Received: by 2002:a05:6512:1588:b0:5a8:763c:ab87 with SMTP id
- 2adb3069b0e04-5a8763caca9mr678854e87.24.1777892463756; Mon, 04 May 2026
- 04:01:03 -0700 (PDT)
+	b=ovDj9JGWejYHYhvl7ZaptOOmM4bW4wqKg31G0QeKeDCF6UlBLWXg+8kZr37azQVbk
+	 lHhnZkcWUkyMiwFZimWeATb0NdqdWdIBU9Xr6akMEfijCFvmX5jl8TXAT8Nh9bHukd
+	 YGJGUyRpGeuBW82+OfAsUmlJvdkVYDaJxDEoF/5DTRjlwGjfzF2117B69tfCO7hpUs
+	 uqrEKtGrLo16Qu/p9fDU9mL2vAeKjLAGN378cnef3aee0UpsGW+oAUvTJXofHcGITw
+	 reb0pmYk0+JkRhzTCUZVCAqHI7RZ5AJ/dMtVoBApDQ18JnZ7NZoNVEV4ycKw5/fT8r
+	 cX2R7G68xDDEw==
+Received: by mail-lf1-f54.google.com with SMTP id 2adb3069b0e04-5a8721851e2so689689e87.0
+        for <platform-driver-x86@vger.kernel.org>; Mon, 04 May 2026 04:01:26 -0700 (PDT)
+X-Forwarded-Encrypted: i=1; AFNElJ/Jlpptt290hmYhFvDLLcszlv4YWpgjzPgQ6we6Sq9WvaludvWsB01t5xNGiLF0vd/oPH/b/TKXtxV+yZG9MSyXYWNT@vger.kernel.org
+X-Gm-Message-State: AOJu0YyrypRCu0AC2ONC5oo2xXa9bVXNurQVYkxzGAA7yfVKsciWY/cS
+	esiOPiBabySEfmcGhRHQBzhEOU14qHEBpt57opDamqJbZwqa7VFJ324LvLh9nQHOEPgR4TsOe3J
+	c5F3RfPdyKxsg/sSnr6AxuaeClhbc3/LomrIdOYTdfw==
+X-Received: by 2002:a05:6512:696:b0:5a8:704d:c20b with SMTP id
+ 2adb3069b0e04-5a8704dc59dmr1533607e87.27.1777892485701; Mon, 04 May 2026
+ 04:01:25 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20260504-baytrail-real-swnode-v5-0-c7878b69e383@oss.qualcomm.com> <20260504-baytrail-real-swnode-v5-1-c7878b69e383@oss.qualcomm.com>
-In-Reply-To: <20260504-baytrail-real-swnode-v5-1-c7878b69e383@oss.qualcomm.com>
+References: <20260504-baytrail-real-swnode-v5-0-c7878b69e383@oss.qualcomm.com> <20260504-baytrail-real-swnode-v5-2-c7878b69e383@oss.qualcomm.com>
+In-Reply-To: <20260504-baytrail-real-swnode-v5-2-c7878b69e383@oss.qualcomm.com>
 From: Bartosz Golaszewski <brgl@kernel.org>
-Date: Mon, 4 May 2026 13:00:52 +0200
-X-Gmail-Original-Message-ID: <CAMRc=MekeGHdFNKdB9bxTOLHp+3eCH==ve9dhEwm890HzKYyfA@mail.gmail.com>
-X-Gm-Features: AVHnY4L6wTAD8jRSt-eYWSlzfZvS1La2BhlvLMYMjtNMOHeofVqZ7Hnu9KJ4HIU
-Message-ID: <CAMRc=MekeGHdFNKdB9bxTOLHp+3eCH==ve9dhEwm890HzKYyfA@mail.gmail.com>
-Subject: Re: [PATCH v5 1/2] ACPI: provide acpi_bus_find_device_by_name()
+Date: Mon, 4 May 2026 13:01:13 +0200
+X-Gmail-Original-Message-ID: <CAMRc=MdNPkVH7zmrypXcfN3rQR_nmSAFPFunZak_NjbWb4VYcA@mail.gmail.com>
+X-Gm-Features: AVHnY4IxCBxO6eTgS-AVpI_BYjwldDfRg6f2ELcYNkBfYeLOHpEzH1V0noCK12I
+Message-ID: <CAMRc=MdNPkVH7zmrypXcfN3rQR_nmSAFPFunZak_NjbWb4VYcA@mail.gmail.com>
+Subject: Re: [PATCH v5 2/2] platform/x86: x86-android-tablets: enable fwnode
+ matching of GPIO chips
 To: Bartosz Golaszewski <bartosz.golaszewski@oss.qualcomm.com>
 Cc: Andy Shevchenko <andriy.shevchenko@linux.intel.com>, Daniel Scally <djrscally@gmail.com>, 
 	Heikki Krogerus <heikki.krogerus@linux.intel.com>, 
@@ -66,9 +67,20 @@ Content-Transfer-Encoding: quoted-printable
 On Mon, May 4, 2026 at 12:59=E2=80=AFPM Bartosz Golaszewski
 <bartosz.golaszewski@oss.qualcomm.com> wrote:
 >
-> Provide a helper allowing to locate an ACPI device by its name.
+> In order to allow GPIOLIB to match cherryview and baytrail GPIO
+> controllers by their firmware nodes instead of their names, we need to
+> attach the - currently "dangling" - existing software nodes to their
+> target devices dynamically.
+>
+> The driver uses platform_create_bundle() and expects all required
+> providers to be present before it itself is probed. We know the name of
+> the device we're waiting for so look them up and assign the appropriate
+> software node as the secondary firmware node of the underlying ACPI node.
+>
+> Scheduling fine-grained devres actions allows for proper teardown and
+> unsetting of the secondary firmware nodes.
 >
 > Signed-off-by: Bartosz Golaszewski <bartosz.golaszewski@oss.qualcomm.com>
 > ---
 
-Acked-by: Rafael J. Wysocki (Intel) <rafael@kernel.org>
+Reviewed-by: Rafael J. Wysocki (Intel) <rafael@kernel.org>
