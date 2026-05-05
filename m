@@ -1,279 +1,276 @@
-Received: from SN4PR2101CU001.outbound.protection.outlook.com (mail-southcentralusazon11012019.outbound.protection.outlook.com [40.93.195.19])
+Received: from sender4-op-o15.zoho.com (sender4-op-o15.zoho.com [136.143.188.15])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1EAAF363C50;
-	Tue,  5 May 2026 15:51:12 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.93.195.19
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7F51F3E929C;
+	Tue,  5 May 2026 17:20:34 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=136.143.188.15
 ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1777996274; cv=fail; b=ZVfOJYTt35KMzmth8okrDLW+rK1p7RRnc1vGKFyTcr90ZssmRYIlMkdchjzvbGj5WCkSy3RZIJBRT/4MxNiIInjTQt45+DwT8uZhoKOi8p1WKUlKoi1JWfQ8hquHHdSPLoBul1F/blMMVJlY6XQhvzPQvVviWly/YLifjlODuXY=
+	t=1778001636; cv=pass; b=MX2TdAqtLLOzNPuHUwIgPkl85nyBP3uIv5mbsGVd2NTJpE8OLdD23B9jUAYreMw4Qka04Nx3fAztIQL1WjswjdpZqiceMIbQsF/HoAXGx/WtJ3P/lD5asyshW0VTR/d8qAuy10z6hDcpEoXRVQ2UprrBCGowOhDC+wZfb6zxoRI=
 ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1777996274; c=relaxed/simple;
-	bh=LSTjDZAEBNiVXbk3PwTcefXlz8xfMbO383zHiogTilw=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:Content-Type:
-	 Content-Disposition:In-Reply-To:MIME-Version; b=KcdPO75CimdvRWZTzBRNapUb7ofqsmDKg3M2/3fLTWqKaHZQK5pfSRPFi6brd532qyFsrXFHGyVRLfFHnOaxsOw7EZ64JTYzzW5YRgVCP8RhLlLQHgM+89JfWCTZt5aPD+1QwDgsNJCiOkZmiutCZ8myQkxcNLlLE4pYQnHrM+E=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com; spf=fail smtp.mailfrom=nvidia.com; dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b=jP5C8Cne; arc=fail smtp.client-ip=40.93.195.19
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com
-Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=nvidia.com
+	s=arc-20240116; t=1778001636; c=relaxed/simple;
+	bh=4e4lWMK8bWxQq+EMq2tVBEdPS5zH9FNybcB/TtKS1gk=;
+	h=Date:From:To:CC:Subject:In-Reply-To:References:Message-ID:
+	 MIME-Version:Content-Type; b=eebNQqwX6fEsgcDoO5fUrCZfrv6QEP7j7MjDZEu0Xbu7bnQi6AYBQByjTxrVyd4aJ/rHc8VY2uVCE5RdusEdyaExgj3wD7Gs4XJTlGYubKXFMnY8oJKCRbbk/U6I7dP2O9zmYxKILdt8tyTxcAPLLJgoz4qWlhRVbzu6u8VP0D8=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=rong.moe; spf=pass smtp.mailfrom=rong.moe; dkim=pass (2048-bit key) header.d=rong.moe header.i=i@rong.moe header.b=DxdSm7o0; arc=pass smtp.client-ip=136.143.188.15
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=rong.moe
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=rong.moe
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b="jP5C8Cne"
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=bKqL77uIMc2kyorSqdrWihamLkDW2QKSDsPKAstY0n8+DU7DkSwajQdtffcVo62iE/nI8fjhgMKN2YwRFK0bvMbupBzYwIcKexLenzCzcfdwgnSwIGcBPHdS/urOHy/9PIDdsfSjqpYlUQf2ZJR9vTJ1tEMtvXTG0cuWOZf9r6byJrWsmVhWrHV13N4Lrc9fHjhNhY6pZoiP7mfGFLFHFFKeKQ4W8qFHu5/nYxEbcpSUD/HoJugvBuM+dPQeHTbeh6psAydTh78Oioj9hp6pdM0jzwsdlwdiyHQz248lxjdf0W/X0AlmrYCofl7+SYyEXExnItIwptd08b9sunaKOQ==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=8tp1nIkSLuXxD94e4mrSbC051HzsB0ocn4gms5xgekk=;
- b=sgvzy2/ItVtmFfnMmgkrtvgCDhp2S43xLHiTFfDmcyg63l6ce3iLG7i2Qr3qVpGxKl3JIN+L0Idp5GdMCmabXREbXArFZOlJ/R0ftAn5rNB1lhvP/AzrFMOvf5JaXeKhCF5m8/wLspBCOEAo/CaiuMFl/GfTGtKQ4uOMBrn7EvHwWxvuQfvRyADASFO3kSIwoxgFzmuvS70sypfEKHQNC0yMJLtaEVh/L8ORfSh16iq09tEa92piZFzfflkMg/dNKEvVoFyOl6ihwOPT7pyG3o3fXTjKSD7Wc/fvRytAX+gHVgji3D+VgQE3nik/vgecr2CstSz9udcjg4coWLcgPQ==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=nvidia.com; dmarc=pass action=none header.from=nvidia.com;
- dkim=pass header.d=nvidia.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Nvidia.com;
- s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=8tp1nIkSLuXxD94e4mrSbC051HzsB0ocn4gms5xgekk=;
- b=jP5C8Cne4VWTvtRHsRddxQKqCfDbQuLYE4ZjApV6DZoJ/ox9vsHHZ4YJNXXRvMEuuh+JEw/eIu+TdJMZ2aZk5GAQF7voJj65scal/JILZfCxbZbyhfvyiCqbkSQLdelunXD8CbkziLqb5sif5J5roOP/ZK0WFxQbIEpSFJZRcMyivm74q+jse6ltAeCQa8hF+NltODz9L0PtBqVZmiUdxn0Z1PlXx3eudMHR0XMoT+C9C6Z6b75/zZJgAsATy1i0jpQp5mn1NMxbZo4nkF5q7xaeb0DGI3H7Jq2RnyBL7yFKHpeL9FvVQYz/sSC03vcWBYx+VL44WnW+ZCZ3HI4ZMA==
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=nvidia.com;
-Received: from IA0PR12MB8422.namprd12.prod.outlook.com (2603:10b6:208:3de::8)
- by CH3PR12MB8996.namprd12.prod.outlook.com (2603:10b6:610:170::17) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.9870.25; Tue, 5 May
- 2026 15:51:05 +0000
-Received: from IA0PR12MB8422.namprd12.prod.outlook.com
- ([fe80::b2c3:ee20:6aeb:7f6e]) by IA0PR12MB8422.namprd12.prod.outlook.com
- ([fe80::b2c3:ee20:6aeb:7f6e%4]) with mapi id 15.20.9870.023; Tue, 5 May 2026
- 15:51:05 +0000
-Date: Tue, 5 May 2026 10:51:02 -0500
-From: Daniel Dadap <ddadap@nvidia.com>
-To: Hans de Goede <johannes.goede@oss.qualcomm.com>
-Cc: Lee Jones <lee@kernel.org>, Daniel Thompson <danielt@kernel.org>,
-	Jingoo Han <jingoohan1@gmail.com>, Helge Deller <deller@gmx.de>,
-	"Rafael J. Wysocki" <rafael@kernel.org>,
-	"dri-devel@lists.freedesktop.org" <dri-devel@lists.freedesktop.org>,
-	linux-fbdev@vger.kernel.org,
-	linux-acpi <linux-acpi@vger.kernel.org>,
-	"platform-driver-x86@vger.kernel.org" <platform-driver-x86@vger.kernel.org>
-Subject: Re: Plan to fix nvidia_wmi_ec backlight issues, help wanted
-Message-ID: <afoR5jUHLPXpYJ8a@ddadap-lakeline.nvidia.com>
-References: <f10c039b-e9ef-4aae-8291-8f1e71074586@oss.qualcomm.com>
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <f10c039b-e9ef-4aae-8291-8f1e71074586@oss.qualcomm.com>
-X-ClientProxiedBy: BN0PR04CA0052.namprd04.prod.outlook.com
- (2603:10b6:408:e8::27) To IA0PR12MB8422.namprd12.prod.outlook.com
- (2603:10b6:208:3de::8)
+	dkim=pass (2048-bit key) header.d=rong.moe header.i=i@rong.moe header.b="DxdSm7o0"
+ARC-Seal: i=1; a=rsa-sha256; t=1778001624; cv=none; 
+	d=zohomail.com; s=zohoarc; 
+	b=Qlc++u5lcJuLMHKTI7rrkbMYoVwg/7mxJWkZ/yxH4ckiyb/unLAns8ydxBHuvMg4jZ1qwtakixs1UaTRiGEiPMllZa6XVF8QVVNWaVQuhaQgP13VEKZsHbYPuOT0pA4oww56QjWtmkYi7xMn6furv8k6r20CzDg3q1+tpgPLgXE=
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=zohomail.com; s=zohoarc; 
+	t=1778001624; h=Content-Type:Content-Transfer-Encoding:Cc:Cc:Date:Date:From:From:In-Reply-To:MIME-Version:Message-ID:References:Subject:Subject:To:To:Message-Id:Reply-To; 
+	bh=FmjkcII2P5r6Qmn17aMfMDneBiZpDrCCAGtIXnvqg/s=; 
+	b=fTsqzUCjtJYPAu9A6osYJCfeqOfFUGJWE8yGADxQwS9wzYNJ4ybM7hFxH0aSPyTzlsekMxb4u0jbFSw+3mW7stXDt4cAF57ecaWprAY2P3Lwu9XAzj0FhBL2NTHroH1uypVnRW/AsNe2IKgJH8Me1m+njxH4ws+1lKXgqNlqPPk=
+ARC-Authentication-Results: i=1; mx.zohomail.com;
+	dkim=pass  header.i=rong.moe;
+	spf=pass  smtp.mailfrom=i@rong.moe;
+	dmarc=pass header.from=<i@rong.moe>
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; t=1778001624;
+	s=zmail2048; d=rong.moe; i=i@rong.moe;
+	h=Date:Date:From:From:To:To:CC:Subject:Subject:In-Reply-To:References:Message-ID:MIME-Version:Content-Type:Content-Transfer-Encoding:Message-Id:Reply-To:Cc;
+	bh=FmjkcII2P5r6Qmn17aMfMDneBiZpDrCCAGtIXnvqg/s=;
+	b=DxdSm7o0eqmuWhQkMyK8Qb6YHmlKvsFnuBwExpYUW9gy5Rf5VGqEnyanv0TjG1+t
+	aO8JlLpXCcyANJLzfyRigfpO4WeepSI9PLwVEkBvxU3E5kVlCar0wIIHKKXKZaOBnwU
+	hHccZB1+ARyFpuvapIhnvkXTtu4S++HWdiOPwQqsNKRt8nHafGQI2h1lY+nAiT4EFrC
+	xuMGfK/hLoKK+9GiZ9h2rUQeFmkUSt4IrC64fsWG3y7C7SaE1k2GmYrcgd8XKnDFGLo
+	FFgClN5zTkEzGbpzEAToqRvSdPqWrNZXWW0U33+4csTvFT1UdV4F6RbSVUSeALX3AgD
+	gjt6wVPfIQ==
+Received: by mx.zohomail.com with SMTPS id 1778001622755711.0439934026193;
+	Tue, 5 May 2026 10:20:22 -0700 (PDT)
+Date: Wed, 06 May 2026 01:20:15 +0800
+From: Rong Zhang <i@rong.moe>
+To: =?ISO-8859-1?Q?Ilpo_J=E4rvinen?= <ilpo.jarvinen@linux.intel.com>
+CC: "Derek J. Clark" <derekjohn.clark@gmail.com>,
+ Hans de Goede <hansg@kernel.org>, Mark Pearson <mpearson-lenovo@squebb.ca>,
+ Armin Wolf <W_Armin@gmx.de>, Jonathan Corbet <corbet@lwn.net>,
+ Kurt Borja <kuurtb@gmail.com>, platform-driver-x86@vger.kernel.org,
+ LKML <linux-kernel@vger.kernel.org>, stable@vger.kernel.org
+Subject: =?US-ASCII?Q?Re=3A_=5BPATCH_v10_06/16=5D_platform/x86=3A_lenovo-wmi-ot?=
+ =?US-ASCII?Q?her=3A_Limit_adding_attributes_to_supported_devices?=
+User-Agent: Thunderbird for Android
+In-Reply-To: <a824cd39-8e28-96db-df59-599c283ffcdb@linux.intel.com>
+References: <20260412211121.2220556-1-derekjohn.clark@gmail.com> <20260412211121.2220556-7-derekjohn.clark@gmail.com> <1ce1d6f6-9196-c8a1-913d-4bdec2b1af80@linux.intel.com> <AA4D5F92-E158-48D1-85FC-CAA72A4EDD8A@gmail.com> <6d1aa0f0bbbd82fd0633619ec4905419db15592e.camel@rong.moe> <a824cd39-8e28-96db-df59-599c283ffcdb@linux.intel.com>
+Message-ID: <13A5927F-E79C-4F09-B7D9-92A1C777E5AC@rong.moe>
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: IA0PR12MB8422:EE_|CH3PR12MB8996:EE_
-X-MS-Office365-Filtering-Correlation-Id: 7a03ecac-e79c-4217-fc93-08deaabe1d95
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam:
-	BCL:0;ARA:13230040|7416014|366016|376014|1800799024|18002099003|22082099003|56012099003;
-X-Microsoft-Antispam-Message-Info:
-	NbX/UnMWIw7wiDP//VBgHXhTifZMX1K9/JYdQnO54ftcglr3y3hIMDmYt9Rs5XcaB/ylnYZCcfLch0yevMjuEItcyjjvF2MZDcjivOVs2mhnMsVYHS10E0JP/WZLiHTGbOYIXLFsm6KKRBT4wyskE2eUF9JkGuA4mOyTvfjlWWbgyTu279e8uxglSM/TQ4vsfWbBCVQEXQ/GTF/e8LWbgGds0Oh0Yws9zgO+iy2SiLnBItD0D2ehm3EamV13e8Iax8+svof7pc1K3hsvgLANsgt8kPw1Qxx9g2st8mPDHXlIKV9wVthjc13FMd/8HW8lvZcuCJFoQbHrWJkG1oZZZFxupuoMXO1giBtQS795YkaijWN472MIgU1/Zb4MqR36mT00mdZD0mLX4HbaqRRf6oAuPrDz5RjnLHkgEObdoZyoSvtQMawB5rE8uRBMEQA5yN5NsuKG5RxehHRj1VzopJGG97dVEpfxz0/gxXzJmztJZLffUYsUCJkhWJFClMMPNalFgmkyCj/dT4SJ46d0YzSD5uzGq/ULb8lcHl7jyZGrXcZEf2s7fXBhPXpzOhEJKzVXQT82KsLUo+kTqkGK2xpZplWvkebE1JAZRxqp3JS0ATbWU+fipRNZ7T+zL3+/2eY932ioxy0GgeaQia3HLcYlXNKLpdwXDc5reMQmkqGpiVcPrxNWXK3jg0xDC/Gu
-X-Forefront-Antispam-Report:
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:IA0PR12MB8422.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(7416014)(366016)(376014)(1800799024)(18002099003)(22082099003)(56012099003);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0:
-	=?us-ascii?Q?MAmcX3Z/PO5g6ZwQgLdIRde7vjAgM+zrjW9tjVaXay1u2s53w3YYkNgAWx9O?=
- =?us-ascii?Q?hN0O1LbwQjNILCCrQpM26s3hU/XhVJq3YJsgH40MCzZoVJ3WMqoJ32kdZ8DS?=
- =?us-ascii?Q?wvdlKTwpDhq4+/+ms72lnD4z2YXsSLgEdIs2KIYA4RVHqHfQZ87ieVWcE7ZD?=
- =?us-ascii?Q?tucL9iuMobOHXGDTaZLlE1BErAMS8zLotlUnpbX7x+wEYJ1vUJedE399hJxZ?=
- =?us-ascii?Q?TqbeWdBniWH3fHauxlNAsh3kAqwZmiOg8n+s3EdFT/LU4E6kXyxbeaQcv3P/?=
- =?us-ascii?Q?m1iLQcOpHmUq5EGqDeVgCtmJAhlBmxl2uzG4t+A4ZbbOMKz3k+HKey826RHN?=
- =?us-ascii?Q?1ktK1LrRcxj/tdOs5wijb98snJI6ThR7J+a3kr2HjequH767mtk3IxqCEx3E?=
- =?us-ascii?Q?Qm0bJdxgJnOtf/AbixAR4k9DaZYh/M8tqXlBuoMM60BO9Xiq4Fqo6kP2kPpU?=
- =?us-ascii?Q?Gt4yrx+T3Jat6XiSYpVNBombW+Q4AOBmDVe012EqscZWRYl/wVhx4cUgca+P?=
- =?us-ascii?Q?7D3jhNdgRaOtJ943KOHSarahEDYq71po9cIq5svrTGafs4Uv3QrZjIIVrjgs?=
- =?us-ascii?Q?jfXGKnEafVLhPvfhBLoexWDm3su2LQmi51g1HGruPlxI5aWbk+tMZx4lfN/w?=
- =?us-ascii?Q?5DodYvDHgXHV0JP4+rnNJirK5lxV7NPQbZfEIgu7nruzXk00Nol2yOW2L0xz?=
- =?us-ascii?Q?m9XFwwb1nJS43XlJygBhG609hEoiPwSAzjJDlwWunYepZR6dyThNphv+wuzf?=
- =?us-ascii?Q?1eyYOZWH5heUnutSEgpkIRWp5K1MPMwilArXJMktfSTblWva9E70+A3COBOj?=
- =?us-ascii?Q?bdQjiJyYhXwxb6GrJwI8qDYW46esR9G8M2aynj4ZgGwnucTxYhEgGGH8iQAm?=
- =?us-ascii?Q?eBGzZ8tpAsguY5ZMrXKega+jehnT8nI7dLFp0xbrmaQyqQq8fzZ4PA53jD2x?=
- =?us-ascii?Q?47n10xxThqap0l7kjPIxNdtzNnvcdBFMbZnslpMSdUhQCUugNBZOxmhOFgxF?=
- =?us-ascii?Q?IWFpyvDzttv1woa27Om2oN5T5EkTp7i5IiJvLcJ7q+h/i8jLR9xcYFJVmLTb?=
- =?us-ascii?Q?wBDh7O4JQ8PXT2aWPKvCVxsYic5g5ztKWkliuxWlGarnUwWfxppeAYRaesTw?=
- =?us-ascii?Q?y7zoky/hxOpgAagt+CUSDELsJr/s9McKunylM3tiT2Y29H6idjhqo8TXpiBF?=
- =?us-ascii?Q?qGtEDu6wtYWO/Ca7jBKrxvx7iT5QGiCJEcqHRdzpgEkyx75C80j3sgIu7Esh?=
- =?us-ascii?Q?FDd2Z/A6ra7+8HVQZU6UofbVke1G/Y1Tig0s/1X3m6I8SLmQylc2MfNrsZ47?=
- =?us-ascii?Q?8A9f8FAvLbefs7y8MggAzyVovMsjcZSmP7C+NdidgB7dCr+vfdMUtQCKB3Kv?=
- =?us-ascii?Q?xsdR2AhSKFJSo0WsH23/AfFy3WsOGgpdtEUG26Ak132MZ8u/m/R3MrXUqgp8?=
- =?us-ascii?Q?gvhSEt62kuNDBDyZgUdMoiz99haP+BpkqkLoePaOZ9XsXAdBMWKKpLb6xATK?=
- =?us-ascii?Q?nLnSRoP/YuJCyYlx+VbOtSUJ+siyYUU0ex8H/YDQ21wjNGq9hUDEDuM5QicX?=
- =?us-ascii?Q?g/7DWfKVOKJsbXS8aUwnN3FE4PbZk0NwihwQ0z0zAvtu9PvShV5FdHmaG7I+?=
- =?us-ascii?Q?rcNudnROC8FlwRMXtlyC8AjrwU8vLz/bQIzROiU7hGBnbNeRIMWyzHGefJmw?=
- =?us-ascii?Q?t9TLoSVIMXi63D/ep1P9ZV1oYtBVEjlrEcxYhgX4BB8WgUjU?=
-X-OriginatorOrg: Nvidia.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 7a03ecac-e79c-4217-fc93-08deaabe1d95
-X-MS-Exchange-CrossTenant-AuthSource: IA0PR12MB8422.namprd12.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 05 May 2026 15:51:05.1724
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 43083d15-7273-40c1-b7db-39efd9ccc17a
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: N71YBHM6IwmBtsVBw/Qpw/WYnpan236Q/eEAcRBrD8NzVupYISvEXSuIG0tljwBLm0oa2Hzr8U9PVlvTDDv3Xg==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: CH3PR12MB8996
+Content-Type: text/plain;
+ charset=utf-8
+Content-Transfer-Encoding: quoted-printable
+X-ZohoMailClient: External
 
-Thanks, Hans -
+Hi Ilpo,
 
-On Tue, May 05, 2026 at 11:52:55AM +0200, Hans de Goede wrote:
-> <resend adding pdx86 list, sorry>
-> 
-> Hi All,
-> 
-> A while ago Nvidia introduced a new Nvidia specific firmware method
-> for controlling the backlight on laptops with runtime switchable
-> Nvidia hybrid graphics.
-> 
-> This is supported through the nvidia-wmi-ec-backlight driver, but has
-> never worked 100%.
-> 
-> The new WMI firmware interface has a method to ask the firmware if
-> the backlight is controlled though the EC and this the new WMI interface
-> should be used; or if it is directly controlled by the GPU and the GPU
-> driver's native backlight support should be used.
-> 
-> There are several bugs in the implementation of this on various laptops:
-> 
-> 1. The method to get the backlight control source sometimes does not
-> report the correct value.
-> 
-> 2. On some laptop models which method (native-gpu vs nvidia-wmi) works
-> changes at runtime, e.g. when plugging in a charger.
-> 
-> Known affected laptop models/bug reports about this:
-> - Acer Predator PH315-55: needs acpi_backlight=native
-> - Dell G15 5515 with RTX 3050: *needs* acpi_backlight=native
-> - Dell G15 5515 with RTX 3060: *breaks* with acpi_backlight=native
-> - Lenovo Legion Slim 7 2021
-> - https://bugzilla.kernel.org/show_bug.cgi?id=217026
-> - https://gitlab.gnome.org/GNOME/gnome-settings-daemon/-/work_items/784
-> - https://gitlab.freedesktop.org/drm/amd/-/issues/4512
-> - https://bugzilla.suse.com/show_bug.cgi?id=1217750
-
-I believe there were also a couple of cases where different builds of the
-same notebook (as far as DMI quirks tables could detect) would be driven
-by different methods, exacerbating problem (1) because adding a quirtk to
-fix one notebook would break other versions of the "same" notebook. (Oh,
-maybe that's the two G15 5515 bugs linked above.)
-
-> 
-> It turns out that under Windows both a WMI backlight driver and a GPU
-> native backlight driver get installed and Windows simply always calls
-> both when the backlight changes working around these kind of firmware
-> bugs.
-> 
-
-Yes, it's frustrating that so many notebooks have implementations of this
-interface that have bugs that get masked by Windows always using both of
-the interfaces. I wonder whether Windows behaves this way because bugs of
-this type are so prevalent, or if the bugs are prevalent because Windows
-always behaved that way so nobody noticed.
-
-> When this first came up, about 2 years ago, I came up with the below
-> plan to fix this. Nvidia was supposed to work in implementing this,
-> but so far an implementation of this plan has not happened.
-> 
-> Note I do not have time to work on this myself. I'm posting this here
-> in the hope that either Nvidia will pick this up after all; or that
-> someone else can make this happen.
-> 
-> I'm more then happy to help answering any questions which may come up
-> while implementing this; and to review the resulting patches.
+=E4=BA=8E 2026=E5=B9=B45=E6=9C=885=E6=97=A5 GMT+08:00 18:25:34=EF=BC=8C"Il=
+po J=C3=A4rvinen" <ilpo=2Ejarvinen@linux=2Eintel=2Ecom> =E5=86=99=E9=81=93=
+=EF=BC=9A
+>On Fri, 1 May 2026, Rong Zhang wrote:
+>> On Thu, 2026-04-30 at 07:56 -0700, Derek J=2E Clark wrote:
+>> > On April 30, 2026 7:01:55 AM PDT, "Ilpo J=C3=A4rvinen" <ilpo=2Ejarvin=
+en@linux=2Eintel=2Ecom> wrote:
+>> > > On Sun, 12 Apr 2026, Derek J=2E Clark wrote:
+>> > >=20
+>> > > > Adds lwmi_is_attr_01_supported, and only creates the attribute su=
+bfolder
+>> > > > if the attribute is supported by the hardware=2E Due to some poor=
+ly
+>> > > > implemented BIOS this is a multi-step sequence of events=2E This =
+is
+>> > > > because:
+>> > > > - Some BIOS support getting the capability data from custom mode =
+(0xff),
+>> > > >   while others only support it in no-mode (0x00)=2E
+>> > > > - Some BIOS support get/set for the current value from custom mod=
+e (0xff),
+>> > > >   while others only support it in no-mode (0x00)=2E
+>> > > > - Some BIOS report capability data for a method that is not fully
+>> > > >   implemented=2E
+>> > > > - Some BIOS have methods fully implemented, but no complimentary
+>> > > >   capability data=2E
+>> > > >=20
+>> > > > To ensure we only expose fully implemented methods with correspon=
+ding
+>> > > > capability data, we check each outcome before reporting that an
+>> > > > attribute can be supported=2E
+>> > > >=20
+>> > > > Checking for lwmi_is_attr_01_supported during remove is not done =
+to
+>> > > > ensure that we don't attempt to call cd01 or send WMI events if o=
+ne of
+>> > > > the interfaces being removed was the cause of the driver unloadin=
+g=2E
+>> > > >=20
+>> > > > Fixes: edc4b183b794 ("platform/x86: Add Lenovo Other Mode WMI Dri=
+ver")
+>> > > > Reported-by: Kurt Borja <kuurtb@gmail=2Ecom>
+>> > > > Closes: https://lore=2Ekernel=2Eorg/platform-driver-x86/DG60P3SHX=
+R8H=2E3NSEHMZ6J7XRC@gmail=2Ecom/
+>> > > > Cc: stable@vger=2Ekernel=2Eorg
+>> > > > Reviewed-by: Rong Zhang <i@rong=2Emoe>
+>> > > > Tested-by: Rong Zhang <i@rong=2Emoe>
+>> > > > Reviewed-by: Mark Pearson <mpearson-lenovo@squebb=2Eca>
+>> > > > Signed-off-by: Derek J=2E Clark <derekjohn=2Eclark@gmail=2Ecom>
+>> > > > ---
+>> > > > v7:
+>> > > >   - Move earlier in the series=2E This required dropping the use =
+of
+>> > > >     lwmi_attr_id as it will be added later=2E
+>> > > >   - Add missing switch between cd_mode_id and cv_mode_id in
+>> > > >     current_value_store=2E
+>> > > > v6:
+>> > > >   - Zero initialize args in lwmi_is_attr_01_supported=2E
+>> > > >   - Fix formatting=2E
+>> > > > v5:
+>> > > >   - Move cv/cd_mode_id refrences from path 3/4=2E
+>> > > >   - Add missing import for ARRAY_SIZE=2E
+>> > > >   - Make lwmi_is_attr_01_supported return bool instead of u32=2E
+>> > > >   - Various formatting fixes=2E
+>> > > > v4:
+>> > > >   - Use for loop instead of backtrace gotos for checking if an at=
+tribute
+>> > > >     is supported=2E
+>> > > >   - Add include for dev_printk=2E
+>> > > >   - Wrap dev_dbg in lwmi_is_attr_01_supported earlier=2E
+>> > > >   - Don't use symmetric cleanup of attributes in error states=2E
+>> > > > ---
+>> > > >  drivers/platform/x86/lenovo/wmi-gamezone=2Eh |   1 +
+>> > > >  drivers/platform/x86/lenovo/wmi-other=2Ec    | 114 +++++++++++++=
++++++---
+>> > > >  2 files changed, 98 insertions(+), 17 deletions(-)
+>> > > >=20
+>> > > > diff --git a/drivers/platform/x86/lenovo/wmi-gamezone=2Eh b/drive=
+rs/platform/x86/lenovo/wmi-gamezone=2Eh
+>> > > > index 6b163a5eeb95=2E=2Eddb919cf6c36 100644
+>> > > > --- a/drivers/platform/x86/lenovo/wmi-gamezone=2Eh
+>> > > > +++ b/drivers/platform/x86/lenovo/wmi-gamezone=2Eh
+>> > > > @@ -10,6 +10,7 @@ enum gamezone_events_type {
+>> > > >  };
+>> > > > =20
+>> > > >  enum thermal_mode {
+>> > > > +	LWMI_GZ_THERMAL_MODE_NONE =3D	   0x00,
+>> > > >  	LWMI_GZ_THERMAL_MODE_QUIET =3D	   0x01,
+>> > > >  	LWMI_GZ_THERMAL_MODE_BALANCED =3D	   0x02,
+>> > > >  	LWMI_GZ_THERMAL_MODE_PERFORMANCE =3D 0x03,
+>> > > > diff --git a/drivers/platform/x86/lenovo/wmi-other=2Ec b/drivers/=
+platform/x86/lenovo/wmi-other=2Ec
+>> > > > index 50a03f5fd6ab=2E=2E29d062a1c6dc 100644
+>> > > > --- a/drivers/platform/x86/lenovo/wmi-other=2Ec
+>> > > > +++ b/drivers/platform/x86/lenovo/wmi-other=2Ec
+>> > > > @@ -550,6 +550,8 @@ struct tunable_attr_01 {
+>> > > >  	u8 feature_id;
+>> > > >  	u8 device_id;
+>> > > >  	u8 type_id;
+>> > > > +	u8 cd_mode_id; /* mode arg for searching capdata */
+>> > > > +	u8 cv_mode_id; /* mode arg for set/get current_value */
+>> > > >  };
+>> > > > =20
+>> > > >  static struct tunable_attr_01 ppt_pl1_spl =3D {
+>> > > > @@ -775,7 +777,6 @@ static ssize_t attr_current_value_store(struc=
+t kobject *kobj,
+>> > > >  	struct wmi_method_args_32 args =3D {};
+>> > > >  	struct capdata01 capdata;
+>> > > >  	enum thermal_mode mode;
+>> > > > -	u32 attribute_id;
+>> > > >  	u32 value;
+>> > > >  	int ret;
+>> > > > =20
+>> > > > @@ -786,13 +787,12 @@ static ssize_t attr_current_value_store(str=
+uct kobject *kobj,
+>> > > >  	if (mode !=3D LWMI_GZ_THERMAL_MODE_CUSTOM)
+>> > > >  		return -EBUSY;
+>> > > > =20
+>> > > > -	attribute_id =3D
+>> > > > -		FIELD_PREP(LWMI_ATTR_DEV_ID_MASK, tunable_attr->device_id) |
+>> > > > -		FIELD_PREP(LWMI_ATTR_FEAT_ID_MASK, tunable_attr->feature_id) |
+>> > > > -		FIELD_PREP(LWMI_ATTR_MODE_ID_MASK, mode) |
+>> > > > -		FIELD_PREP(LWMI_ATTR_TYPE_ID_MASK, tunable_attr->type_id);
+>> > > > +	args=2Earg0 =3D FIELD_PREP(LWMI_ATTR_DEV_ID_MASK, tunable_attr-=
+>device_id) |
+>> > > > +		    FIELD_PREP(LWMI_ATTR_FEAT_ID_MASK, tunable_attr->feature_i=
+d) |
+>> > > > +		    FIELD_PREP(LWMI_ATTR_MODE_ID_MASK, tunable_attr->cd_mode_i=
+d) |
+>> > > > +		    FIELD_PREP(LWMI_ATTR_TYPE_ID_MASK, tunable_attr->type_id);
+>> > > > =20
+>> > > > -	ret =3D lwmi_cd01_get_data(priv->cd01_list, attribute_id, &capd=
+ata);
+>> > > > +	ret =3D lwmi_cd01_get_data(priv->cd01_list, args=2Earg0, &capda=
+ta);
+>> > > >  	if (ret)
+>> > > >  		return ret;
+>> > > > =20
+>> > > > @@ -803,7 +803,10 @@ static ssize_t attr_current_value_store(stru=
+ct kobject *kobj,
+>> > > >  	if (value < capdata=2Emin_value || value > capdata=2Emax_value)
+>> > > >  		return -EINVAL;
+>> > > > =20
+>> > > > -	args=2Earg0 =3D attribute_id;
+>> > > > +	args=2Earg0 =3D FIELD_PREP(LWMI_ATTR_DEV_ID_MASK, tunable_attr-=
+>device_id) |
+>> > > > +		    FIELD_PREP(LWMI_ATTR_FEAT_ID_MASK, tunable_attr->feature_i=
+d) |
+>> > > > +		    FIELD_PREP(LWMI_ATTR_MODE_ID_MASK, tunable_attr->cv_mode_i=
+d) |
+>> > > > +		    FIELD_PREP(LWMI_ATTR_TYPE_ID_MASK, tunable_attr->type_id);
+>> > >=20
+>> > > It's already repeated a few times and you're adding more in this pa=
+tch=2E
+>> > >=20
+>> > > We should have a helper function for this encoding as it seems to=
+=20
+>> > > repeat=2E That is, something that takes tunable_attr and mode as in=
+put
+>> > > (the conversion of existing entries should be in own patch preceedi=
+ng=20
+>> > > this fix patch)=2E
+>> > >=20
+>> >=20
+>> > Hi Ilpo,
+>> >=20
+>> > A function for that is added in patch 10, though it is slightly modif=
+ied from that to be more flexible is tunable_attr isn't used (such as with =
+the fan test attributes)
+>> >=20
+>> > Originally I had that patch preceding any additions, but after=20
+>> > discussing with Rong we felt like it would be easier for stable=20
+>> > backports if all the fixes were upfront=2E I can certainly move it ba=
+ck=20
+>> > if  you still prefer=2E=20
+>>
+>> Moving it back is OK for me, too=2E
+>>
+>> I think exposing non-fully-functioning fw-attrs on stable/LTS kernels
+>> should be acceptable as long as reading/writing these attributes doesn'=
+t
+>> break anything, which is exactly the case now (i=2Ee=2E, without this
+>> patch)=2E
 >
+>How would refactoring the code into a helper result in changing stable=20
+>interface?
+>
+>Or did you perhaps move to talk about something entirely else (and I=20
+>ended up losing the context)?
 
-Sorry about that - I totally forgot about this proposal. I'm still happy
-to help here, although if someone else is especially eager to implement
-these changes, I'm also happy to answer questions, test, review, and help
-in other ways as bandwidth allows. I have some clarifying questions about
-the plan - it's been some time since we talked about this, so I apologize
-if I've already asked these questions and you've already answered them.
- 
-> 
-> The plan
-> ========
-> 
-> 1. Modify the core backlight code to allow registering a backlight-device
-> for in kernel use only, disabling the registering of a class device under
-> /sys/class/backlight .
-> 
-> 2. Add a new backlight-aggregate.c backlight driver, which exports a
-> devm_backlight_aggregate_register_or_add() function. Drivers can call
-> this passing in an existing backlight-device (with its sysfs interface
-> disabled). This either creates a singleton /sys/class/backlight/aggregate
-> device, or adds the passed in backlight to the existing singleton instance
-> if it already exists.
-> 
-> This new driver always exposes a range of 0-255 to userspace. This acts
-> as a proxie for any backlight-devices registered to be part of
-> the aggregate, forwarding any brightness set calls to all backlights,
-> scaled to their actual range. For reads this will report the last set
-> brightness value (starting with the value of the first registered
-> backlight-device).
-> 
-> 3. Add a new nvidia_wmi_ec_and_native type to drivers/acpi/video_detect.c
-> for both DMI quirks and commandline handling.
-> 
+I meant the *current* LTS/stable state is acceptable for me as reading/wri=
+ting these attributes doesn't break anything=2E Moving it back would be OK =
+for me even if it made this patch unable to be backported (though unlikely,=
+ since moving it back makes the patch clearer as you've said)=2E In other w=
+ords, it doesn't matter for me whether the patch is backported or not=2E
 
-So by default both the native and GPU drivers would register a "normal"
-backlight handler, and if the "both" quirk is set (or if requested via
-kernel command line) they'll register with the aggregate device?
+Some context: I didn't ask Derek to add Fixes: tag to this patch or move i=
+t=2E I asked him to rearrange other patches to make them backportable=2E
 
-Would it make sense to make this more generic, with a parameter which
-can be set via command line or quirks for which backlight devices to
-aggregate? And then maybe instead of a new "nvidia_wmi_ec_and_native"
-backlight type in video_detect.c, it could be called "aggregate" or
-something else along those lines, used in combination with the list of
-backlight types to aggregate.
+Sorry for causing misunderstandings=2E
 
-Have we seen systems where both the iGPU and dGPU register their own
-native handlers? I vaguely recall seeing such a system, but I do not
-keep careful notes about this sort of thing, so I'm not certain. If
-there are indeed such systems, then "native" might not be specific
-enough, and it may be necessary to explicitly name backlight drivers
-individually in order to aggregate them.
+Thanks,
+Rong
 
-> 
-> 4. Modify acpi_video_backlight_use_native() to also return true if
-> the __acpi_video_get_backlight_type() call there returns the new
-> acpi_backlight_nvidia_wmi_ec_and_native.
-
-> 5. Add a new devm_backlight_device_register_native() helper which
-> calls __acpi_video_get_backlight_type(true, NULL) and if that returns
-> the new nvidia_wmi_ec_and_native type then registers the passed in
-> backlight with the flag to not register a sysfs class interface and
-> then on success calls the new devm_backlight_aggregate_register_or_add()
-> with the just registered backlight device; and if the returned type
-> instead is acpi_backlight_native register the passed in backlight
-> normally through devm_backlight_device_register()
-> 
-> 5. Modify the i915 and amdgpu drivers to use the new
-> devm_backlight_device_register_native() helper. Since this new helper
-> checks the backlight-type itself, drop acpi_video_backlight_use_native()
-> checks *if* the registration is the only thing guarded by that check.
-> 
-> 6. drivers/platform/x86/nvidia-wmi-ec-backlight.c to not return
-> early from probe when acpi_video_get_backlight_type() returns
-> the new nvidia_wmi_ec_and_native type and for that type make it
-> registers its backlight with the flag to not register a sysfs class
-> interface and then on success calls the new
-> devm_backlight_aggregate_register_or_add().
-> 
-
-There still isn't anything tying a particular sysfs backlight interface
-node to a specific display panel, right? Is there a plan to eventually
-support this? How would this interact with that plan? I'm just a little
-worried about designing ourselves into a corner that makes things harder
-to untangle individual devices later if the need arises.
-
-> Regards,
-> 
-> Hans
-> 
+>
+>> Thanks a lot for your hard work in this series,
+>
+>
