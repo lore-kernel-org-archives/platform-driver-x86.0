@@ -1,94 +1,90 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 595BA38946A
-	for <platform-driver-x86@vger.kernel.org>; Tue,  5 May 2026 12:23:42 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 56CF641B36D
+	for <platform-driver-x86@vger.kernel.org>; Tue,  5 May 2026 12:38:09 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1777983822; cv=none; b=AOTz9m+m8JtBS//JknLyy0pR4FoqgNlL93SSt+87otiSEEfJ++DRcNXNY30OAho0Qw+6CXyBc73Qoac4s7dSCMRF9zXdES1j2y2xuOOJliDpxcqV/FARNs3E4uqVArm833eh/lJrWdfJsNxtJEdgSyKi4KRNOh/TG2QagCyG528=
+	t=1777984689; cv=none; b=ucENqYG5aShXIbSRsPSvk+jUcnUtFGK/L/ApIPOt8ZedRlopzH8TNmPBSExRWDbfQ69atuOw/YwSwv75RN3TvrS6i/uuh2bhIBNG08MCw2pyWwmpGxvqOmPecRLGOtdkn15bfAqKiY27Wfxz9JKAZ5Hr3JgihIqACFpbBut71dw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1777983822; c=relaxed/simple;
-	bh=c1cZQ9hyfMtG5zd+08P51YMKB6gTwCH4M/NyY4r8Zm4=;
-	h=From:To:Subject:Date:Message-ID:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=RexhJn9cyG22I0SFUmXsxbRw+AO5SNE7+RUf+AYFoj4YaWTWdeykAOkHy/wKwE+8SfgMo4mJiRbfJH1h21YheWjifeTSPX3HOjH8XrZSicWXyegBEw2QhOmBneDe6ADSrzDt4hRAS5lA5XDvWCDDoj227a6o3I87hhK6k3hTxEo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=HNR39m3U; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1777984689; c=relaxed/simple;
+	bh=fnSRU9v45eKjzKIgKd4OZcWY2fGpa+k/jKcagc5ALtg=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=c0NcAV1+mdWXvwB6E8WhSnjDsmpkk1Hc9dYC1FRImmLdA1nmi7Th1Y496c5LmEX7V/JjsxmxrjRRQszq3ZOVY0Mn9qLGWH4cWQw+ZvW53FLe9sG6i72Z7qVOW8Xk80yxrOhEEU3RZUTHQ5jZcHp1B/D0LFhb6YLuIbbpkmAp8Ug=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=coWiIcub; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="HNR39m3U"
-Received: by smtp.kernel.org (Postfix) with ESMTPS id 03A33C2BCB9
-	for <platform-driver-x86@vger.kernel.org>; Tue,  5 May 2026 12:23:42 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="coWiIcub"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 3A9E7C2BCB9
+	for <platform-driver-x86@vger.kernel.org>; Tue,  5 May 2026 12:38:09 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1777983822;
-	bh=c1cZQ9hyfMtG5zd+08P51YMKB6gTwCH4M/NyY4r8Zm4=;
-	h=From:To:Subject:Date:In-Reply-To:References:From;
-	b=HNR39m3UV/PJQb+uoBKlvEQsE0jBF+lJ1QiA0VRrNONqfG+MKuJ/KBZw9As5qxcej
-	 P2aYliGI9evY+VkAKpgEI8ZwiNQ+W4Xt0eyFSa3xc8/JExVVo+fd77V2+f4PnLGEf3
-	 kLtWMAhHgLaADTPZX0c5mmym6Q+exp5EyxyYefSKGtVjIFlaofubZuTzXWyzcdy+iH
-	 OmSNfAFd2rCJqa9xi6fHSCh1hhNrZA2JGNprQaMqpfjH8NrH0xBxemhiulVt9ZR18Y
-	 bUJq/cXV3LpPgAeffsbkGtRUtZrrdscfOykNxHxRZW6BpcbUd9ba8H/NfNkj64HVRu
-	 S2m7IMQENsTkw==
-Received: by aws-us-west-2-korg-bugzilla-1.web.codeaurora.org (Postfix, from userid 48)
-	id E51E5C4160E; Tue,  5 May 2026 12:23:41 +0000 (UTC)
-From: bugzilla-daemon@kernel.org
-To: platform-driver-x86@vger.kernel.org
-Subject: [Bug 221430] nvidia_wmi_ec_backlight: brightness writes silently
- dropped on HP OMEN 16 (2025)
-Date: Tue, 05 May 2026 12:23:41 +0000
-X-Bugzilla-Reason: None
-X-Bugzilla-Type: changed
-X-Bugzilla-Watch-Reason: AssignedTo drivers_platform_x86@kernel-bugs.osdl.org
-X-Bugzilla-Product: Drivers
-X-Bugzilla-Component: Platform_x86
-X-Bugzilla-Version: 2.5
-X-Bugzilla-Keywords: 
-X-Bugzilla-Severity: normal
-X-Bugzilla-Who: hansg@kernel.org
-X-Bugzilla-Status: NEW
-X-Bugzilla-Resolution: 
-X-Bugzilla-Priority: P3
-X-Bugzilla-Assigned-To: drivers_platform_x86@kernel-bugs.osdl.org
-X-Bugzilla-Flags: 
-X-Bugzilla-Changed-Fields: cc
-Message-ID: <bug-221430-215701-lgKHZzqwmZ@https.bugzilla.kernel.org/>
-In-Reply-To: <bug-221430-215701@https.bugzilla.kernel.org/>
-References: <bug-221430-215701@https.bugzilla.kernel.org/>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-X-Bugzilla-URL: https://bugzilla.kernel.org/
-Auto-Submitted: auto-generated
+	s=k20201202; t=1777984689;
+	bh=fnSRU9v45eKjzKIgKd4OZcWY2fGpa+k/jKcagc5ALtg=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+	b=coWiIcub1+LFjk+LL0aoMMUgTk9eQlxsfYJqww+3Hsx8vK55uV/2OU2QcEtRT214j
+	 1Ddfp7gzamX03EvB0l2GWFwpHJmvyFPut9UZ9nhvrcakSptQIxgUCtxEXdM89Ig4oq
+	 TXBLoeh3QxxGddSIvGOyxfeu4YQFtva03t3ecv49O9CVsuMRf+UmEK0uZMyJL/Phna
+	 PfYX1cjK+uId4KnT0qowIfFTY91E85O1PtUak82a5g0hf7RzMsP/3zMUV004xTimzz
+	 uzE24U7dmcn+wLdMeFKCPHf48ZZNHqCVDCzH8IWCldxxlZSWBYUaNUqf3T2PqiEUSF
+	 XUpTPX6cpDdlA==
+Received: by mail-lj1-f178.google.com with SMTP id 38308e7fff4ca-39378db197aso33632671fa.3
+        for <platform-driver-x86@vger.kernel.org>; Tue, 05 May 2026 05:38:09 -0700 (PDT)
+X-Forwarded-Encrypted: i=1; AFNElJ9yM6dlj4Iyu0X+yzwZOZCyN0Tgpeg8OzyLONHyNGGKa6NFx/BqD5PHxv7SQuVYk/skJfbBOfMJ9eOhthvBOjHndOJB@vger.kernel.org
+X-Gm-Message-State: AOJu0Yymb5RLXQigHDOaE+NsBqUlOutxpmGDEpD1sxm2+UWDDZkTKVtX
+	+4rU0tvy6Gnt7L59PX0pmbcbO2+D9vCO0YYIDoa1s4ExKAhosMsWGVP8amTYJ6bhr90Ok4hjSEu
+	63SE74zGskB/GXgVTdNpVKlLrfZs7ufw=
+X-Received: by 2002:a05:651c:e09:b0:393:a5ed:7dca with SMTP id
+ 38308e7fff4ca-393a5ed7e4emr30481781fa.10.1777984687819; Tue, 05 May 2026
+ 05:38:07 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+References: <20260504-baytrail-real-swnode-v5-0-c7878b69e383@oss.qualcomm.com> <20260504-baytrail-real-swnode-v5-2-c7878b69e383@oss.qualcomm.com>
+In-Reply-To: <20260504-baytrail-real-swnode-v5-2-c7878b69e383@oss.qualcomm.com>
+From: Linus Walleij <linusw@kernel.org>
+Date: Tue, 5 May 2026 14:37:55 +0200
+X-Gmail-Original-Message-ID: <CAD++jLmMqbxHwTYUV8oUNiAfLgzPJdRi7bTwKtyepORzUNo=YQ@mail.gmail.com>
+X-Gm-Features: AVHnY4IDQ1oB_Ou-vRaPBfPoo590aKglB83vcaM3z31gvraOfSdTNIO1HFFKK-I
+Message-ID: <CAD++jLmMqbxHwTYUV8oUNiAfLgzPJdRi7bTwKtyepORzUNo=YQ@mail.gmail.com>
+Subject: Re: [PATCH v5 2/2] platform/x86: x86-android-tablets: enable fwnode
+ matching of GPIO chips
+To: Bartosz Golaszewski <bartosz.golaszewski@oss.qualcomm.com>
+Cc: Andy Shevchenko <andriy.shevchenko@linux.intel.com>, Daniel Scally <djrscally@gmail.com>, 
+	Heikki Krogerus <heikki.krogerus@linux.intel.com>, 
+	Sakari Ailus <sakari.ailus@linux.intel.com>, 
+	Greg Kroah-Hartman <gregkh@linuxfoundation.org>, "Rafael J. Wysocki" <rafael@kernel.org>, 
+	Danilo Krummrich <dakr@kernel.org>, Mika Westerberg <mika.westerberg@linux.intel.com>, 
+	Andy Shevchenko <andy@kernel.org>, Hans de Goede <hansg@kernel.org>, 
+	=?UTF-8?Q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>, 
+	Dmitry Torokhov <dmitry.torokhov@gmail.com>, Len Brown <lenb@kernel.org>, linux-acpi@vger.kernel.org, 
+	driver-core@lists.linux.dev, linux-kernel@vger.kernel.org, 
+	linux-gpio@vger.kernel.org, platform-driver-x86@vger.kernel.org, 
+	brgl@kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-https://bugzilla.kernel.org/show_bug.cgi?id=3D221430
+On Mon, May 4, 2026 at 12:59=E2=80=AFPM Bartosz Golaszewski
+<bartosz.golaszewski@oss.qualcomm.com> wrote:
 
-Hans de Goede (hansg@kernel.org) changed:
+> In order to allow GPIOLIB to match cherryview and baytrail GPIO
+> controllers by their firmware nodes instead of their names, we need to
+> attach the - currently "dangling" - existing software nodes to their
+> target devices dynamically.
+>
+> The driver uses platform_create_bundle() and expects all required
+> providers to be present before it itself is probed. We know the name of
+> the device we're waiting for so look them up and assign the appropriate
+> software node as the secondary firmware node of the underlying ACPI node.
+>
+> Scheduling fine-grained devres actions allows for proper teardown and
+> unsetting of the secondary firmware nodes.
+>
+> Signed-off-by: Bartosz Golaszewski <bartosz.golaszewski@oss.qualcomm.com>
 
-           What    |Removed                     |Added
-----------------------------------------------------------------------------
-                 CC|                            |hansg@kernel.org
+Nice work here Bartosz!
+Reviewed-by: Linus Walleij <linusw@kernel.org>
 
---- Comment #4 from Hans de Goede (hansg@kernel.org) ---
-Hi, thank you for your bug report.
-
-Problems like this with nvidia_wmi_ec backlight control are a known issue. =
-I've
-had a plan to properly fix this for a while now, but I don't have the time =
-to
-implement this.
-
-I've taken the time to write this down, see:
-https://lore.kernel.org/dri-devel/f10c039b-e9ef-4aae-8291-8f1e71074586@oss.=
-qualcomm.com/
-
-In the mean time as a workaround can you try adding "acpi_backlight=3Dnativ=
-e" to
-your kernel commandline I suspect/hope that that will help.
-
---=20
-You may reply to this email to add a comment.
-
-You are receiving this mail because:
-You are watching the assignee of the bug.=
+Yours,
+Linus Walleij
