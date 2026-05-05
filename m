@@ -1,274 +1,354 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.17])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pj1-f41.google.com (mail-pj1-f41.google.com [209.85.216.41])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 172AD3C1994;
-	Tue,  5 May 2026 18:44:30 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.17
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 466123D332E
+	for <platform-driver-x86@vger.kernel.org>; Tue,  5 May 2026 20:02:29 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.41
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1778006672; cv=none; b=Ao4hPJ44B3kbe6V47aKf8PnZicFM7z/cOjxyq2MvzpyIiyRsKg8E61jU2WZUUm4utDfS8CHlNwi2lCj83/cEX9s/NPv1V0HAzjcJouTuUU2aCvGVNYIz05Y9qmtPnjd7HxM+WqhjpPLf5Vk+YPGNfumzWsR090mZsN2ATy12BvA=
+	t=1778011351; cv=none; b=eUApL2FW+yemcuZs+tlfOaE8bctCXi8AK9Tk5k7vSbYiIDD1u6VPLS1KelU02puvwakOXTr4pru/Gidyt4KgVzoPP4v+eKPmRpleS44bQuuDNHDtOdXCp92JD5Vdslq+2f4Duw205W40FEe5aZ0l1mBP7AlrND3ORY6cqXGzAkg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1778006672; c=relaxed/simple;
-	bh=bE8EaOPx1BslFLqjpBRG+8unZQD3NdWhANLQSxl3ulc=;
-	h=From:Date:To:cc:Subject:In-Reply-To:Message-ID:References:
-	 MIME-Version:Content-Type; b=bJX/TnCPxAtCgLOmu7d2FKr9lGLmwp2wz0MIagJb/tBjh29s15sUHKFJiHOdJdCu/Xp2CnJYflRCBPl4Ja0dONXgtUl+fyUg6kDXolwjNFwHA7sEML6icVGNmZI9tb0rNeHJ+YC3g2ZnGrbeXPxkATIzCMFi54auxZtq93Ge7VU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=pass smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=aOa2rukh; arc=none smtp.client-ip=198.175.65.17
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.intel.com
+	s=arc-20240116; t=1778011351; c=relaxed/simple;
+	bh=d6MafWgBWyl1Z4ovMrkVpWPKQeup2zhmlwELwFPn8XA=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=mV7NoBbCG7CQjd09E1PK64xxmZqwKt5IsMUN7/22vB1Kl6ChflHwu7CN4sjYlDn5zg4pA2bVdYd0CMd5H5Mdv0++mrYcJeaoFIGwJQolcylmnLJAdT5M23J/dXYFreI+dklBApcMwp6d7v73vtmg0PxEnJ0V3xyJvWb4h/hgkZw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=m6KtgFUS; arc=none smtp.client-ip=209.85.216.41
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="aOa2rukh"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1778006671; x=1809542671;
-  h=from:date:to:cc:subject:in-reply-to:message-id:
-   references:mime-version;
-  bh=bE8EaOPx1BslFLqjpBRG+8unZQD3NdWhANLQSxl3ulc=;
-  b=aOa2rukh46Ejpq4+SMeNI07DCmSJgVH/YR6/v9MkbBA8WA9QldNhkPcv
-   EHuq14uPNliVJVGxwXwK4wn9IR8/dvXjeqs0Cpz188Ny0syxvKAEF46ER
-   iF+AuezdbPowZzOUHo9HVZbi2JEFk6eyzlBtRo6vRKSQHH83BfIcur7cS
-   xBF77I07qKPsrwOqWRpSwzV5nVQP+drMDc6voRBO//HA1KeyZOIUv3nbH
-   xZmIMwVgHxi5t9DXcU0qDvcDOqZqJ0tyBMZqiq9qBsWZE3DEJW3jtPtys
-   cNCAgwI5oLRGngwLKkex277k0RYQd5B7ip1c3KW7LhFJKKL9IwMGwZnqX
-   w==;
-X-CSE-ConnectionGUID: jNnW/8jbTrWGcSZq1uzhZg==
-X-CSE-MsgGUID: EUJxaMIoSrWfs6CIJX3kMA==
-X-IronPort-AV: E=McAfee;i="6800,10657,11777"; a="78881828"
-X-IronPort-AV: E=Sophos;i="6.23,218,1770624000"; 
-   d="scan'208";a="78881828"
-Received: from orviesa001.jf.intel.com ([10.64.159.141])
-  by orvoesa109.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 05 May 2026 11:44:31 -0700
-X-CSE-ConnectionGUID: o8XEAfl2Tye0rFrN8rwDqQ==
-X-CSE-MsgGUID: kBArA1LjQhGNQD1t7Yg+oQ==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.23,218,1770624000"; 
-   d="scan'208";a="274029707"
-Received: from ijarvine-mobl1.ger.corp.intel.com (HELO localhost) ([10.245.244.85])
-  by smtpauth.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 05 May 2026 11:44:26 -0700
-From: =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
-Date: Tue, 5 May 2026 21:44:23 +0300 (EEST)
-To: "Derek J. Clark" <derekjohn.clark@gmail.com>
-cc: Hans de Goede <hansg@kernel.org>, Mark Pearson <mpearson-lenovo@squebb.ca>, 
-    Armin Wolf <W_Armin@gmx.de>, Jonathan Corbet <corbet@lwn.net>, 
-    Rong Zhang <i@rong.moe>, Kurt Borja <kuurtb@gmail.com>, 
-    platform-driver-x86@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>, 
-    stable@vger.kernel.org
-Subject: Re: [PATCH v10 06/16] platform/x86: lenovo-wmi-other: Limit adding
- attributes to supported devices
-In-Reply-To: <6ABDB1EF-324B-48EB-A5F2-18E13DD9F5B8@gmail.com>
-Message-ID: <d76ead74-30d7-650f-051e-bfec871a4d14@linux.intel.com>
-References: <20260412211121.2220556-1-derekjohn.clark@gmail.com> <20260412211121.2220556-7-derekjohn.clark@gmail.com> <1ce1d6f6-9196-c8a1-913d-4bdec2b1af80@linux.intel.com> <AA4D5F92-E158-48D1-85FC-CAA72A4EDD8A@gmail.com> <3032887f-bfa2-6968-7a8e-db141e5ef649@linux.intel.com>
- <6ABDB1EF-324B-48EB-A5F2-18E13DD9F5B8@gmail.com>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="m6KtgFUS"
+Received: by mail-pj1-f41.google.com with SMTP id 98e67ed59e1d1-364d13df3ccso830940a91.3
+        for <platform-driver-x86@vger.kernel.org>; Tue, 05 May 2026 13:02:29 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20251104; t=1778011348; x=1778616148; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=ieCKJLPjZtuIxWLquyRhV0QUhCTNdNSHFZJ3e34jy60=;
+        b=m6KtgFUS2uy+LKBtloNVR+7VF35gpVKsn/CdvoXtyXvZQCo8GqeGd+0W+I/MF0wD9K
+         CB3orYvGAGBADoKGqVQTDGFpEaYHgVoQ0QjqAFAqm+Rnr1V9Mm+YWGlfhde82rYBRKJG
+         3azaQm1zdMLuBFb8u7LspB7AGW/Gcz/3xx6VKMnhHBF2PFRpR/XnTtSQlZe/X2Kjcz3s
+         hSIMfrhYjdOml3CokXRUyWYg9FZqi8n5Izx59cJVQtvHY4OM/cvm88pro4FnbOOj5tCb
+         DRlKUUbOKiAykraRiqUQSVXpK78o+3V8k3hoFt/fsUtZ71+HnnzK/0+rRPjZDwq30xt1
+         myqQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20251104; t=1778011348; x=1778616148;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-gg:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=ieCKJLPjZtuIxWLquyRhV0QUhCTNdNSHFZJ3e34jy60=;
+        b=DN/hvpgQBb7T1cBJjIIX7/bOiiZWByHB2SyxyMlkh6ZLLNXXSh2/5OiXEWcSuGf/T0
+         w8DeGWKl+W6ILgDw0UjULvyBCBvvshgLm2Rc0lvZB0v3NZEmqTl9/6Q7GaPGQP6qtKXU
+         GsxOTEcSCtEkzwcvUMOw9Bcba2QPae1ldBEMZ9N6TjlI+O8REtF/JaZEz4TlPuI59yhY
+         Dwa21V5AGyCA45vfMPZSg01RCzMhXZxC59CciZJ4Diwd8rZbpHUbUvOjQcUXhg9Cv1Ml
+         SvINUH3QOgxpf2wj/7PvDFgt8Wvbyhxn0uAN4l/mbhE6pc2d90pAhd8HQsHEZjUpBJjM
+         D52w==
+X-Gm-Message-State: AOJu0Yzzw4eu1jqe0qTP/U08h5NNBSROHoTxGuEDvOlaYttdDPa4gQcs
+	HK/ZQU9uEMPZd7QcU96c3F5JzBz+EfxRryIo0Dv4aje7em96SAGwTXZy
+X-Gm-Gg: AeBDietMIAYt1iLnPB5C6H5jrNpLmSyUqrHSDbui3rGP8nu70liuunjHkHAm22PPWpA
+	MC7EL1og2l0bSmNvQGWdMGfD/PHd1MiFa4XuE478H7TEHkwvKiwH01rVLAU5brsGb8vZU2a/Bn7
+	/jROdy573+I6GhhTPSa4QZ5XAFa3mqNSAskntqA14g9hx+Gtee6Csq61umiJC6xPKG3tGi7qzyc
+	pcdv8qryUtx5139bjRVHaO+azmwnUrZM2WvWVSl/Xt84pUYFsem6ZaLFxInjIMTsH2+YxKRGT8n
+	UAr8rFFQI15ny9TILYmtP0JwhYEgUybJRjAO6Q+aR1NpvROPhtrN99RUaJ9oIPJ7wNc+8T/5bjy
+	SVFOJ/9IPuUCMjgBkUJnNk8vWVvKwIjQ+f8mjwVNG++VX6k8RoT59PbJiQGlW46s8ggH6ixglxL
+	SwYRwzi8+HQWxTEEWdzSPrU6L11guj/dpzCHIZaq7L
+X-Received: by 2002:a17:90b:264e:b0:35e:55fd:1bd0 with SMTP id 98e67ed59e1d1-365ad0eaae6mr128506a91.1.1778011348365;
+        Tue, 05 May 2026 13:02:28 -0700 (PDT)
+Received: from magniquick ([45.112.148.110])
+        by smtp.gmail.com with ESMTPSA id 98e67ed59e1d1-364ebec73aasm16024331a91.2.2026.05.05.13.02.25
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 05 May 2026 13:02:27 -0700 (PDT)
+From: Navon John Lukose <navonjohnlukose@gmail.com>
+To: hansg@kernel.org,
+	ilpo.jarvinen@linux.intel.com
+Cc: platform-driver-x86@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Subject: [RFC PATCH] platform/x86: hp-wmi: Add charge behaviour support
+Date: Wed,  6 May 2026 01:32:22 +0530
+Message-ID: <20260505200222.157144-1-navonjohnlukose@gmail.com>
+X-Mailer: git-send-email 2.54.0
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/mixed; boundary="8323328-1012852407-1778006663=:993"
+Content-Transfer-Encoding: 8bit
 
-  This message is in MIME format.  The first part should be readable text,
-  while the remaining parts are likely unreadable without MIME-aware tools.
+Some HP laptops expose battery charge mode control through the existing
+HP BIOS WMI GUID. On HP board 85C6, command types 0x1f and 0x2b map to
+the ACPI GBCC/GBCO and SBCC/SBCO methods through the WMI command
+dispatcher.
 
---8323328-1012852407-1778006663=:993
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: QUOTED-PRINTABLE
+Expose the mode control through the standard power_supply
+charge_behaviour property using a battery hook and power_supply
+extension. The initial quirk is limited to board 85C6 and still
+requires a successful charge mode read before registering the extension.
 
-On Tue, 5 May 2026, Derek J. Clark wrote:
+The firmware uses different commands for restoring auto mode and setting
+explicit charge modes, so report the last successfully requested policy
+after seeding it from firmware at probe time. The regular battery status
+continues to report the live charging state.
 
-> On May 5, 2026 2:48:08 AM PDT, "Ilpo J=C3=A4rvinen" <ilpo.jarvinen@linux.=
-intel.com> wrote:
-> >On Thu, 30 Apr 2026, Derek J. Clark wrote:
-> >> On April 30, 2026 7:01:55 AM PDT, "Ilpo J=C3=A4rvinen" <ilpo.jarvinen@=
-linux.intel.com> wrote:
-> >> >On Sun, 12 Apr 2026, Derek J. Clark wrote:
-> >> >
-> >> >> Adds lwmi_is_attr_01_supported, and only creates the attribute subf=
-older
-> >> >> if the attribute is supported by the hardware. Due to some poorly
-> >> >> implemented BIOS this is a multi-step sequence of events. This is
-> >> >> because:
-> >> >> - Some BIOS support getting the capability data from custom mode (0=
-xff),
-> >> >>   while others only support it in no-mode (0x00).
-> >> >> - Some BIOS support get/set for the current value from custom mode =
-(0xff),
-> >> >>   while others only support it in no-mode (0x00).
-> >> >> - Some BIOS report capability data for a method that is not fully
-> >> >>   implemented.
-> >> >> - Some BIOS have methods fully implemented, but no complimentary
-> >> >>   capability data.
-> >> >>=20
-> >> >> To ensure we only expose fully implemented methods with correspondi=
-ng
-> >> >> capability data, we check each outcome before reporting that an
-> >> >> attribute can be supported.
-> >> >>=20
-> >> >> Checking for lwmi_is_attr_01_supported during remove is not done to
-> >> >> ensure that we don't attempt to call cd01 or send WMI events if one=
- of
-> >> >> the interfaces being removed was the cause of the driver unloading.
-> >> >>=20
-> >> >> Fixes: edc4b183b794 ("platform/x86: Add Lenovo Other Mode WMI Drive=
-r")
-> >> >> Reported-by: Kurt Borja <kuurtb@gmail.com>
-> >> >> Closes: https://lore.kernel.org/platform-driver-x86/DG60P3SHXR8H.3N=
-SEHMZ6J7XRC@gmail.com/
-> >> >> Cc: stable@vger.kernel.org
-> >> >> Reviewed-by: Rong Zhang <i@rong.moe>
-> >> >> Tested-by: Rong Zhang <i@rong.moe>
-> >> >> Reviewed-by: Mark Pearson <mpearson-lenovo@squebb.ca>
-> >> >> Signed-off-by: Derek J. Clark <derekjohn.clark@gmail.com>
-> >> >> ---
-> >> >> v7:
-> >> >>   - Move earlier in the series. This required dropping the use of
-> >> >>     lwmi_attr_id as it will be added later.
-> >> >>   - Add missing switch between cd_mode_id and cv_mode_id in
-> >> >>     current_value_store.
-> >> >> v6:
-> >> >>   - Zero initialize args in lwmi_is_attr_01_supported.
-> >> >>   - Fix formatting.
-> >> >> v5:
-> >> >>   - Move cv/cd_mode_id refrences from path 3/4.
-> >> >>   - Add missing import for ARRAY_SIZE.
-> >> >>   - Make lwmi_is_attr_01_supported return bool instead of u32.
-> >> >>   - Various formatting fixes.
-> >> >> v4:
-> >> >>   - Use for loop instead of backtrace gotos for checking if an attr=
-ibute
-> >> >>     is supported.
-> >> >>   - Add include for dev_printk.
-> >> >>   - Wrap dev_dbg in lwmi_is_attr_01_supported earlier.
-> >> >>   - Don't use symmetric cleanup of attributes in error states.
-> >> >> ---
-> >> >>  drivers/platform/x86/lenovo/wmi-gamezone.h |   1 +
-> >> >>  drivers/platform/x86/lenovo/wmi-other.c    | 114 +++++++++++++++++=
-+---
-> >> >>  2 files changed, 98 insertions(+), 17 deletions(-)
-> >> >>=20
-> >> >> diff --git a/drivers/platform/x86/lenovo/wmi-gamezone.h b/drivers/p=
-latform/x86/lenovo/wmi-gamezone.h
-> >> >> index 6b163a5eeb95..ddb919cf6c36 100644
-> >> >> --- a/drivers/platform/x86/lenovo/wmi-gamezone.h
-> >> >> +++ b/drivers/platform/x86/lenovo/wmi-gamezone.h
-> >> >> @@ -10,6 +10,7 @@ enum gamezone_events_type {
-> >> >>  };
-> >> >> =20
-> >> >>  enum thermal_mode {
-> >> >> +=09LWMI_GZ_THERMAL_MODE_NONE =3D=09   0x00,
-> >> >>  =09LWMI_GZ_THERMAL_MODE_QUIET =3D=09   0x01,
-> >> >>  =09LWMI_GZ_THERMAL_MODE_BALANCED =3D=09   0x02,
-> >> >>  =09LWMI_GZ_THERMAL_MODE_PERFORMANCE =3D 0x03,
-> >> >> diff --git a/drivers/platform/x86/lenovo/wmi-other.c b/drivers/plat=
-form/x86/lenovo/wmi-other.c
-> >> >> index 50a03f5fd6ab..29d062a1c6dc 100644
-> >> >> --- a/drivers/platform/x86/lenovo/wmi-other.c
-> >> >> +++ b/drivers/platform/x86/lenovo/wmi-other.c
-> >> >> @@ -550,6 +550,8 @@ struct tunable_attr_01 {
-> >> >>  =09u8 feature_id;
-> >> >>  =09u8 device_id;
-> >> >>  =09u8 type_id;
-> >> >> +=09u8 cd_mode_id; /* mode arg for searching capdata */
-> >> >> +=09u8 cv_mode_id; /* mode arg for set/get current_value */
-> >> >>  };
-> >> >> =20
-> >> >>  static struct tunable_attr_01 ppt_pl1_spl =3D {
-> >> >> @@ -775,7 +777,6 @@ static ssize_t attr_current_value_store(struct =
-kobject *kobj,
-> >> >>  =09struct wmi_method_args_32 args =3D {};
-> >> >>  =09struct capdata01 capdata;
-> >> >>  =09enum thermal_mode mode;
-> >> >> -=09u32 attribute_id;
-> >> >>  =09u32 value;
-> >> >>  =09int ret;
-> >> >> =20
-> >> >> @@ -786,13 +787,12 @@ static ssize_t attr_current_value_store(struc=
-t kobject *kobj,
-> >> >>  =09if (mode !=3D LWMI_GZ_THERMAL_MODE_CUSTOM)
-> >> >>  =09=09return -EBUSY;
-> >> >> =20
-> >> >> -=09attribute_id =3D
-> >> >> -=09=09FIELD_PREP(LWMI_ATTR_DEV_ID_MASK, tunable_attr->device_id) |
-> >> >> -=09=09FIELD_PREP(LWMI_ATTR_FEAT_ID_MASK, tunable_attr->feature_id)=
- |
-> >> >> -=09=09FIELD_PREP(LWMI_ATTR_MODE_ID_MASK, mode) |
-> >> >> -=09=09FIELD_PREP(LWMI_ATTR_TYPE_ID_MASK, tunable_attr->type_id);
-> >> >> +=09args.arg0 =3D FIELD_PREP(LWMI_ATTR_DEV_ID_MASK, tunable_attr->d=
-evice_id) |
-> >> >> +=09=09    FIELD_PREP(LWMI_ATTR_FEAT_ID_MASK, tunable_attr->feature=
-_id) |
-> >> >> +=09=09    FIELD_PREP(LWMI_ATTR_MODE_ID_MASK, tunable_attr->cd_mode=
-_id) |
-> >> >> +=09=09    FIELD_PREP(LWMI_ATTR_TYPE_ID_MASK, tunable_attr->type_id=
-);
-> >> >> =20
-> >> >> -=09ret =3D lwmi_cd01_get_data(priv->cd01_list, attribute_id, &capd=
-ata);
-> >> >> +=09ret =3D lwmi_cd01_get_data(priv->cd01_list, args.arg0, &capdata=
-);
-> >> >>  =09if (ret)
-> >> >>  =09=09return ret;
-> >> >> =20
-> >> >> @@ -803,7 +803,10 @@ static ssize_t attr_current_value_store(struct=
- kobject *kobj,
-> >> >>  =09if (value < capdata.min_value || value > capdata.max_value)
-> >> >>  =09=09return -EINVAL;
-> >> >> =20
-> >> >> -=09args.arg0 =3D attribute_id;
-> >> >> +=09args.arg0 =3D FIELD_PREP(LWMI_ATTR_DEV_ID_MASK, tunable_attr->d=
-evice_id) |
-> >> >> +=09=09    FIELD_PREP(LWMI_ATTR_FEAT_ID_MASK, tunable_attr->feature=
-_id) |
-> >> >> +=09=09    FIELD_PREP(LWMI_ATTR_MODE_ID_MASK, tunable_attr->cv_mode=
-_id) |
-> >> >> +=09=09    FIELD_PREP(LWMI_ATTR_TYPE_ID_MASK, tunable_attr->type_id=
-);
-> >> >
-> >> >It's already repeated a few times and you're adding more in this patc=
-h.
-> >> >
-> >> >We should have a helper function for this encoding as it seems to=20
-> >> >repeat. That is, something that takes tunable_attr and mode as input
-> >> >(the conversion of existing entries should be in own patch preceeding=
-=20
-> >> >this fix patch).
-> >> >
-> >>=20
-> >> Hi Ilpo,
-> >>=20
-> >> A function for that is added in patch 10, though it is slightly modifi=
-ed=20
-> >> from that to be more flexible is tunable_attr isn't used (such as with=
-=20
-> >> the fan test attributes)
-> >
-> >It still leaves some boilerplate having to deref all those tunable_attr=
-=20
-> >fields so perhaps it would be better to do nested helpers, one taking=20
-> >tunable_attr and that calls the more flexible helper. IMO that would be=
-=20
-> >the best approach here.
-> >
->=20
-> That's simple enough. I assume that can be added to that same patch=20
-> instead of an additional one?
+Compile the battery hook support only when the ACPI battery driver is
+reachable so non-battery hp-wmi configurations keep building.
 
-Yes, adding both of them in the same patch is fine. Otherwise you'd just=20
-be changing the same spots again.
+Signed-off-by: Navon John Lukose <navonjohnlukose@gmail.com>
+---
+ drivers/platform/x86/hp/hp-wmi.c | 207 +++++++++++++++++++++++++++++++
+ 1 file changed, 207 insertions(+)
 
-> >> Originally I had that patch preceding any additions, but after=20
-> >> discussing with Rong we felt like it would be easier for stable=20
-> >> backports if all the fixes were upfront. I can certainly move it back=
-=20
-> >> if you still prefer.
-> >
-> >I see. This patch would be cleaner though if we have the helper already =
-in=20
-> >place but I'm not insisting if you two prefer the current order of the=
-=20
-> >patches.
-> >
->=20
+diff --git a/drivers/platform/x86/hp/hp-wmi.c b/drivers/platform/x86/hp/hp-wmi.c
+index d1cc6e7d176c..b3da64aee4f7 100644
+--- a/drivers/platform/x86/hp/hp-wmi.c
++++ b/drivers/platform/x86/hp/hp-wmi.c
+@@ -35,6 +35,9 @@
+ #include <linux/string.h>
+ #include <linux/types.h>
+ #include <linux/workqueue.h>
++#if IS_REACHABLE(CONFIG_ACPI_BATTERY)
++#include <acpi/battery.h>
++#endif
+ 
+ MODULE_AUTHOR("Matthew Garrett <mjg59@srcf.ucam.org>");
+ MODULE_DESCRIPTION("HP laptop WMI driver");
+@@ -309,7 +312,9 @@ enum hp_wmi_commandtype {
+ 	HPWMI_HOTKEY_QUERY		= 0x0c,
+ 	HPWMI_FEATURE2_QUERY		= 0x0d,
+ 	HPWMI_WIRELESS2_QUERY		= 0x1b,
++	HPWMI_BATTERY_CHARGE_CONTROL	= 0x1f,
+ 	HPWMI_POSTCODEERROR_QUERY	= 0x2a,
++	HPWMI_BATTERY_CHARGE_MODE	= 0x2b,
+ 	HPWMI_SYSTEM_DEVICE_MODE	= 0x40,
+ 	HPWMI_THERMAL_PROFILE_QUERY	= 0x4c,
+ };
+@@ -378,6 +383,22 @@ enum hp_wireless2_bits {
+ #define IS_HWBLOCKED(x) ((x & HPWMI_POWER_FW_OR_HW) != HPWMI_POWER_FW_OR_HW)
+ #define IS_SWBLOCKED(x) !(x & HPWMI_POWER_SOFT)
+ 
++#if IS_REACHABLE(CONFIG_ACPI_BATTERY)
++#define HPWMI_CHARGE_BEHAVIOURS \
++	(BIT(POWER_SUPPLY_CHARGE_BEHAVIOUR_AUTO) | \
++	 BIT(POWER_SUPPLY_CHARGE_BEHAVIOUR_INHIBIT_CHARGE) | \
++	 BIT(POWER_SUPPLY_CHARGE_BEHAVIOUR_FORCE_DISCHARGE))
++
++#define HPWMI_CHARGE_MODE_AUTO			0x0000
++#define HPWMI_CHARGE_MODE_FORCE_DISCHARGE	0x0200
++#define HPWMI_CHARGE_MODE_INHIBIT		0x0500
++
++#define HPWMI_CHARGE_MODE_READ_AUTO		0x00
++#define HPWMI_CHARGE_MODE_READ_FORCE_DISCHARGE	0x02
++#define HPWMI_CHARGE_MODE_READ_INHIBIT		0x04
++#define HPWMI_CHARGE_MODE_READ_INHIBIT_EXT	0x06
++#endif
++
+ struct bios_rfkill2_device_state {
+ 	u8 radio_type;
+ 	u8 bus_type;
+@@ -465,6 +486,18 @@ static const char * const tablet_chassis_types[] = {
+ 	"32"  /* Detachable */
+ };
+ 
++#if IS_REACHABLE(CONFIG_ACPI_BATTERY)
++static const struct dmi_system_id hp_wmi_charge_control_quirks[] __initconst = {
++	{
++		.matches = {
++			DMI_MATCH(DMI_BOARD_VENDOR, "HP"),
++			DMI_MATCH(DMI_BOARD_NAME, "85C6"),
++		},
++	},
++	{}
++};
++#endif
++
+ #define DEVICE_MODE_TABLET	0x06
+ 
+ #define CPU_FAN 0
+@@ -694,6 +727,176 @@ static int hp_wmi_read_int(int query)
+ 	return val;
+ }
+ 
++#if IS_REACHABLE(CONFIG_ACPI_BATTERY)
++static DEFINE_MUTEX(hp_wmi_charge_lock);
++static enum power_supply_charge_behaviour hp_wmi_charge_behaviour =
++	POWER_SUPPLY_CHARGE_BEHAVIOUR_AUTO;
++
++static enum power_supply_charge_behaviour hp_wmi_charge_mode_to_behaviour(int mode)
++{
++	switch (mode) {
++	case HPWMI_CHARGE_MODE_READ_FORCE_DISCHARGE:
++		return POWER_SUPPLY_CHARGE_BEHAVIOUR_FORCE_DISCHARGE;
++	case HPWMI_CHARGE_MODE_READ_INHIBIT:
++	case HPWMI_CHARGE_MODE_READ_INHIBIT_EXT:
++		return POWER_SUPPLY_CHARGE_BEHAVIOUR_INHIBIT_CHARGE;
++	case HPWMI_CHARGE_MODE_READ_AUTO:
++	default:
++		return POWER_SUPPLY_CHARGE_BEHAVIOUR_AUTO;
++	}
++}
++
++static int hp_wmi_charge_mode_read(void)
++{
++	int val = 0, ret;
++
++	ret = hp_wmi_perform_query(HPWMI_BATTERY_CHARGE_MODE, HPWMI_READ,
++				   &val, zero_if_sup(val), sizeof(val));
++	if (ret)
++		return ret < 0 ? ret : -EINVAL;
++
++	return val & 0xff;
++}
++
++static int hp_wmi_charge_write(enum hp_wmi_commandtype query, u32 mode)
++{
++	int ret;
++
++	ret = hp_wmi_perform_query(query, HPWMI_WRITE, &mode, sizeof(mode), 0);
++	return ret <= 0 ? ret : -EINVAL;
++}
++
++static int hp_wmi_charge_set_behaviour(enum power_supply_charge_behaviour behaviour)
++{
++	int ret;
++
++	guard(mutex)(&hp_wmi_charge_lock);
++
++	/*
++	 * HP firmware exposes normal charging through the GBCC/SBCC command
++	 * pair, while explicit charge modes use the GBCO/SBCO command pair.
++	 */
++	switch (behaviour) {
++	case POWER_SUPPLY_CHARGE_BEHAVIOUR_AUTO:
++		ret = hp_wmi_charge_write(HPWMI_BATTERY_CHARGE_CONTROL,
++					  HPWMI_CHARGE_MODE_AUTO);
++		break;
++	case POWER_SUPPLY_CHARGE_BEHAVIOUR_INHIBIT_CHARGE:
++		ret = hp_wmi_charge_write(HPWMI_BATTERY_CHARGE_MODE,
++					  HPWMI_CHARGE_MODE_INHIBIT);
++		break;
++	case POWER_SUPPLY_CHARGE_BEHAVIOUR_FORCE_DISCHARGE:
++		ret = hp_wmi_charge_write(HPWMI_BATTERY_CHARGE_MODE,
++					  HPWMI_CHARGE_MODE_FORCE_DISCHARGE);
++		break;
++	default:
++		return -EINVAL;
++	}
++
++	if (ret)
++		return ret;
++
++	/*
++	 * charge_behaviour is the requested policy. The live charging state is
++	 * still reported by the regular battery status property.
++	 */
++	hp_wmi_charge_behaviour = behaviour;
++
++	return 0;
++}
++
++static int hp_wmi_charge_get_property(struct power_supply *psy,
++				      const struct power_supply_ext *ext,
++				      void *data,
++				      enum power_supply_property psp,
++				      union power_supply_propval *val)
++{
++	if (psp != POWER_SUPPLY_PROP_CHARGE_BEHAVIOUR)
++		return -EINVAL;
++
++	guard(mutex)(&hp_wmi_charge_lock);
++	val->intval = hp_wmi_charge_behaviour;
++
++	return 0;
++}
++
++static int hp_wmi_charge_set_property(struct power_supply *psy,
++				      const struct power_supply_ext *ext,
++				      void *data,
++				      enum power_supply_property psp,
++				      const union power_supply_propval *val)
++{
++	if (psp != POWER_SUPPLY_PROP_CHARGE_BEHAVIOUR)
++		return -EINVAL;
++
++	return hp_wmi_charge_set_behaviour(val->intval);
++}
++
++static int hp_wmi_charge_property_is_writeable(struct power_supply *psy,
++					       const struct power_supply_ext *ext,
++					       void *data,
++					       enum power_supply_property psp)
++{
++	return psp == POWER_SUPPLY_PROP_CHARGE_BEHAVIOUR;
++}
++
++static const enum power_supply_property hp_wmi_charge_properties[] = {
++	POWER_SUPPLY_PROP_CHARGE_BEHAVIOUR,
++};
++
++static const struct power_supply_ext hp_wmi_charge_extension = {
++	.name			= "hp-wmi-charge-control",
++	.properties		= hp_wmi_charge_properties,
++	.num_properties		= ARRAY_SIZE(hp_wmi_charge_properties),
++	.charge_behaviours	= HPWMI_CHARGE_BEHAVIOURS,
++	.get_property		= hp_wmi_charge_get_property,
++	.set_property		= hp_wmi_charge_set_property,
++	.property_is_writeable	= hp_wmi_charge_property_is_writeable,
++};
++
++static int hp_wmi_charge_add_battery(struct power_supply *battery,
++				     struct acpi_battery_hook *hook)
++{
++	return power_supply_register_extension(battery, &hp_wmi_charge_extension,
++					       &hp_wmi_platform_dev->dev, NULL);
++}
++
++static int hp_wmi_charge_remove_battery(struct power_supply *battery,
++					struct acpi_battery_hook *hook)
++{
++	power_supply_unregister_extension(battery, &hp_wmi_charge_extension);
++	return 0;
++}
++
++static struct acpi_battery_hook hp_wmi_charge_battery_hook = {
++	.name = "HP WMI charge control",
++	.add_battery = hp_wmi_charge_add_battery,
++	.remove_battery = hp_wmi_charge_remove_battery,
++};
++
++static int __init hp_wmi_charge_control_setup(struct device *dev)
++{
++	int ret;
++
++	if (!dmi_check_system(hp_wmi_charge_control_quirks))
++		return 0;
++
++	ret = hp_wmi_charge_mode_read();
++	if (ret < 0)
++		return 0;
++
++	scoped_guard(mutex, &hp_wmi_charge_lock)
++		hp_wmi_charge_behaviour = hp_wmi_charge_mode_to_behaviour(ret);
++
++	return devm_battery_hook_register(dev, &hp_wmi_charge_battery_hook);
++}
++#else
++static int __init hp_wmi_charge_control_setup(struct device *dev)
++{
++	return 0;
++}
++#endif
++
+ static int hp_wmi_get_dock_state(void)
+ {
+ 	int state = hp_wmi_read_int(HPWMI_HARDWARE_QUERY);
+@@ -2284,6 +2487,10 @@ static int __init hp_wmi_bios_setup(struct platform_device *device)
+ 	if (err < 0)
+ 		return err;
+ 
++	err = hp_wmi_charge_control_setup(&device->dev);
++	if (err)
++		return err;
++
+ 	thermal_profile_setup(device);
+ 
+ 	return 0;
+-- 
+2.54.0
 
---=20
- i.
-
---8323328-1012852407-1778006663=:993--
