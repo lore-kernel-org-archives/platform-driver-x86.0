@@ -1,263 +1,109 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.10])
+Received: from out162-62-57-210.mail.qq.com (out162-62-57-210.mail.qq.com [162.62.57.210])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CD8023016F5;
-	Tue,  5 May 2026 10:25:40 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.10
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3231F3921E9;
+	Tue,  5 May 2026 11:45:11 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=162.62.57.210
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1777976743; cv=none; b=tuwW9uohAxha7covYe6e5rjdWVoofGcOcRTi7sjO9BalSDuEePIQj5pPBc8Di34t0EhP9S8T/+BrmJeGKjYHtiFmtFwDKUf4oDHTJxBXqnXznoJOKbZQjH5qvj+9vVbRntd6SJ6hYFH4J0VTwR7xBPRb/AbxAiZ/7YLOZOv9KqA=
+	t=1777981516; cv=none; b=RmM0o0gTvuYWdwRqaRq57qhgzaSOkkaFr9MRuj7kQF72wnxjZDcRm5La3hMfK9OTXMdDZcgz/QII2Rrkc0r12CN53XRfra7D1xrmpyaY1FErLfvtAAKtmZauFbaTepJpTlorCku4xvL36wzlKTTff8NSLl7nnTiDk1y4RlOg0/4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1777976743; c=relaxed/simple;
-	bh=Ad6ELkCuf56OvKBHSd+3doXnGWHGUi+zQs+2lrZMm5I=;
-	h=From:Date:To:cc:Subject:In-Reply-To:Message-ID:References:
-	 MIME-Version:Content-Type; b=MViuDW8tdkCpaMszz5FFNpAy1//hm7ZnBd6NlmG3iLmhJ+Qr+Dk0bZVfepzHiJdy1BsOVyMnOUqsdDPnP5G9H9HNiXVkYueWe1O8HLLKSAU1IDMHxH2hF8acm/+hEyGujpCQd7J99Q+GFgN53J2cMpOzx6M1l6OjFRiUjRDZ3d0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=pass smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=ZFTg4f1o; arc=none smtp.client-ip=192.198.163.10
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.intel.com
+	s=arc-20240116; t=1777981516; c=relaxed/simple;
+	bh=elvan3sjekKTWRYePDblXrLTHyXbkxnPYaHRwwUCXbI=;
+	h=Message-ID:From:To:Cc:Subject:Date:In-Reply-To:References:
+	 MIME-Version; b=I1kK/kE4IZ+DUt4T+7DQLRUpPu2BAKXtipk7x04660Mfvuy8YijJAPWURmQTsAzNYCHXKd5iO9OclsHApMh1xtVjzvO4P4AbKaoLMyFCJTcCFyby8o0tCI8NECV5lFXzQJ6fJKjpWSIcmv/Fbmpx+y31q4W0pvVFKD8i4cAi0Ys=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=qq.com; spf=pass smtp.mailfrom=qq.com; dkim=pass (1024-bit key) header.d=qq.com header.i=@qq.com header.b=Cqn7F3Iv; arc=none smtp.client-ip=162.62.57.210
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=qq.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=qq.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="ZFTg4f1o"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1777976741; x=1809512741;
-  h=from:date:to:cc:subject:in-reply-to:message-id:
-   references:mime-version;
-  bh=Ad6ELkCuf56OvKBHSd+3doXnGWHGUi+zQs+2lrZMm5I=;
-  b=ZFTg4f1oybL4iLddVUFf8WEzhab0P63Ay+4mzqmJFFl+AuM7N0WnTNNP
-   RTHbqJiig8HVmYL02o4ybXAxjNrosudfP6kykQ99PdGpIAc1jF3HQEORV
-   CwrSoSZtjD3emzsg0ihFN+Oz0bxQol/gkhuoNROFsXDvkgSsx46MmVc7y
-   epBPRD3W+1EzQTn2kLruNHE0u+Oidx4FripRW5lQ708bUbyf9kb5GXbLg
-   2ilUFp2ObGMS1BtvnEoFBwq2+NPgbBaQVL2ODdRBWkJM9A+zvWt44dtvh
-   0lKDS+vWs8sVBmLMZ/vG7vaS/TfrC5QxFz8DxBujuiLn35VnNj84O1GfF
-   w==;
-X-CSE-ConnectionGUID: 7sLZou2pQneF2TtQvUlKVQ==
-X-CSE-MsgGUID: UixE6R8kSMelUGIzqxzuMA==
-X-IronPort-AV: E=McAfee;i="6800,10657,11776"; a="90216477"
-X-IronPort-AV: E=Sophos;i="6.23,217,1770624000"; 
-   d="scan'208";a="90216477"
-Received: from fmviesa002.fm.intel.com ([10.60.135.142])
-  by fmvoesa104.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 05 May 2026 03:25:40 -0700
-X-CSE-ConnectionGUID: CfUOhukYSCO55MrHq5RhYw==
-X-CSE-MsgGUID: TqHIzBelTouMyP7Z9067XQ==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.23,217,1770624000"; 
-   d="scan'208";a="259128063"
-Received: from ijarvine-mobl1.ger.corp.intel.com (HELO localhost) ([10.245.244.85])
-  by fmviesa002-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 05 May 2026 03:25:37 -0700
-From: =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
-Date: Tue, 5 May 2026 13:25:34 +0300 (EEST)
-To: Rong Zhang <i@rong.moe>
-cc: "Derek J. Clark" <derekjohn.clark@gmail.com>, 
-    Hans de Goede <hansg@kernel.org>, Mark Pearson <mpearson-lenovo@squebb.ca>, 
-    Armin Wolf <W_Armin@gmx.de>, Jonathan Corbet <corbet@lwn.net>, 
-    Kurt Borja <kuurtb@gmail.com>, platform-driver-x86@vger.kernel.org, 
-    LKML <linux-kernel@vger.kernel.org>, stable@vger.kernel.org
-Subject: Re: [PATCH v10 06/16] platform/x86: lenovo-wmi-other: Limit adding
- attributes to supported devices
-In-Reply-To: <6d1aa0f0bbbd82fd0633619ec4905419db15592e.camel@rong.moe>
-Message-ID: <a824cd39-8e28-96db-df59-599c283ffcdb@linux.intel.com>
-References: <20260412211121.2220556-1-derekjohn.clark@gmail.com>  <20260412211121.2220556-7-derekjohn.clark@gmail.com>  <1ce1d6f6-9196-c8a1-913d-4bdec2b1af80@linux.intel.com>  <AA4D5F92-E158-48D1-85FC-CAA72A4EDD8A@gmail.com>
- <6d1aa0f0bbbd82fd0633619ec4905419db15592e.camel@rong.moe>
+	dkim=pass (1024-bit key) header.d=qq.com header.i=@qq.com header.b="Cqn7F3Iv"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=qq.com; s=s201512;
+	t=1777981501; bh=Qub+oP1KiTwvs67KA02nL9L7XIjze+F5ep6XPwl90O0=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References;
+	b=Cqn7F3Iv0KVr8i74KD2mhp/32RswxN7Zp1k+WGWMfEfHtNUup5ped1fWxBPXdAm2w
+	 VEM6/WKBkjJlBA2zPDYZv9Ma6r+0HcBWrDIkjdz+4B8SJo7F4YYch4KjekpP2YzFA4
+	 uJlKEwl+A+g+fsXl6Z/nlp1jcYbUQLtJubfZjgDA=
+Received: from hp-victus-16r0xxx ([42.48.237.151])
+	by newxmesmtplogicsvrszb51-1.qq.com (NewEsmtp) with SMTP
+	id B3B290D3; Tue, 05 May 2026 19:44:59 +0800
+X-QQ-mid: xmsmtpt1777981499tjg77hi8v
+Message-ID: <tencent_99A9EA72B4A101066BC4B6F391F41BB8E309@qq.com>
+X-QQ-XMAILINFO: OVFdYp27KdlJOSMQiQce72Fe52NEt4LQ2GQyESnm6bfFU0hdUgINozbP7C4R7g
+	 k6fUhiBt/oCX5qXxTAGia+nf3fV5R8PH2tGS3eYIPhAY6bDabmISKNubRx3h7Y/MRVD0X6ng44CE
+	 RtXUjesKL4K/4O6EfmqW3THvm9bLyEBZ3ov4fvBRpJSafHcK4gc+Lzwp2A4CGXQSv+p1ueHaEFa0
+	 yZw1+9H5zlL0JZzoU9Z+TFv85O+vCYlnMEm2ldwnjCa9C1mXmh4kExZB0YBz2OgHTb8yMz6BeVJz
+	 EdCawIe4PocBLUUaejXbzUr3S4DPkMCg7x80c5k5ro9v0MCWLxGfaf9hZVKZRWcQ84WjcEJrA3VJ
+	 WJgUxGXjSZa9VGzNQ9u1M3BOQiPR88gJ2TNDR8pdVnhlstDqBLZ++quV1xcQeDQUcWjbfE8A+Mdv
+	 MNvFuaKuhAJ6hkvbkORJ5Pv6QrBCkQwB84EM7UOcyOSgs4HnZZ1WQdjzEAI+3m+b4L6U11hgz5MK
+	 o6eLVYJ5FgxjKbtmMBTIGmpNliZy0WO6o80q+VGy35PZh5EHWkca9SZiR/m0JtKQHvKRYaC+PzrX
+	 xyhaMV065a1KvYZzS1EsKce76m3KvtygPXiLewNQ7jflcyJXhq9IvsSglzhqx9K16qwG5J3KHNDl
+	 Y7tjRKypEN7+bM44UJ8ISmomnud8i4A/uZeJ7hW9Uqa+eu2D3B/LJaYlOcED/7cAaBYArkVuD/s9
+	 EA5AxkKuYgY9nW4pmXjARUwD2mOi1gfUkS1Jknl+VfS7c9UbmgoY07C/7LK9eUOjwIlrRf8A5ncO
+	 jXl4EC5AW3PSm3Ai8bzuvrKEiGbKh4gR5OwgSX9E7gC/28Sw19LA3qM1Ej5HUKSDAtxEBYNvLa8w
+	 sKXPCQP/A2aKzYxkKY0pKPB8nI9X/1WDESFtRCMvAcOYnLTMv/z02/i8JUL1MoNVqVBQG/pcDt+c
+	 EraOgOm0ErUT1qtLYbtzn5evm8l2uHWJiDrSBjKPt2RVSlPMz5ZltWjFurLAQ5LL3WvPqUiaI+FY
+	 tkqYc1Qt3+8vFrt4crGdUthkNixx2D4/QEuhMqH1fqa7zx0yXCR33AgKvjPJqfv6uiHNfxJQVk2C
+	 nh0W/uPOUR5Kcr9feqbl5Dbw2iyeNxWI6N/c14FhAX1ZOrhhbne28MQcn0ATwxC2/u0jWGHWGwFR
+	 noxkF7kFhwq6p6otgWf+tyVPAZ
+X-QQ-XMRINFO: OWPUhxQsoeAVwkVaQIEGSKwwgKCxK/fD5g==
+From: Haichen Feng <2806891994@qq.com>
+To: ilpo.jarvinen@linux.intel.com
+Cc: 2806891994@qq.com,
+	hansg@kernel.org,
+	linux-kernel@vger.kernel.org,
+	platform-driver-x86@vger.kernel.org
+Subject: Re: [PATCH v4] platform/x86: hp-wmi: Add support for Victus 16-r0xxx (8BC2)
+Date: Tue,  5 May 2026 19:44:31 +0800
+X-OQ-MSGID: <20260505114430.309275-2-2806891994@qq.com>
+X-Mailer: git-send-email 2.54.0
+In-Reply-To: <f1258e15-cd9f-c215-4cc6-0b3b282994ba@linux.intel.com>
+References: <f1258e15-cd9f-c215-4cc6-0b3b282994ba@linux.intel.com>
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/mixed; boundary="8323328-1884497484-1777976734=:993"
+Content-Transfer-Encoding: 8bit
 
-  This message is in MIME format.  The first part should be readable text,
-  while the remaining parts are likely unreadable without MIME-aware tools.
+The HP Victus 16-r0xxx (board ID: 8BC2) has the same WMI as other Victus
+S boards, but requires quirks for correctly switching thermal profile.
 
---8323328-1884497484-1777976734=:993
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: QUOTED-PRINTABLE
+Add the DMI board name to victus_s_thermal_profile_boards[] table and
+map it to omen_v1_thermal_params.
 
-On Fri, 1 May 2026, Rong Zhang wrote:
-> On Thu, 2026-04-30 at 07:56 -0700, Derek J. Clark wrote:
-> > On April 30, 2026 7:01:55 AM PDT, "Ilpo J=C3=A4rvinen" <ilpo.jarvinen@l=
-inux.intel.com> wrote:
-> > > On Sun, 12 Apr 2026, Derek J. Clark wrote:
-> > >=20
-> > > > Adds lwmi_is_attr_01_supported, and only creates the attribute subf=
-older
-> > > > if the attribute is supported by the hardware. Due to some poorly
-> > > > implemented BIOS this is a multi-step sequence of events. This is
-> > > > because:
-> > > > - Some BIOS support getting the capability data from custom mode (0=
-xff),
-> > > >   while others only support it in no-mode (0x00).
-> > > > - Some BIOS support get/set for the current value from custom mode =
-(0xff),
-> > > >   while others only support it in no-mode (0x00).
-> > > > - Some BIOS report capability data for a method that is not fully
-> > > >   implemented.
-> > > > - Some BIOS have methods fully implemented, but no complimentary
-> > > >   capability data.
-> > > >=20
-> > > > To ensure we only expose fully implemented methods with correspondi=
-ng
-> > > > capability data, we check each outcome before reporting that an
-> > > > attribute can be supported.
-> > > >=20
-> > > > Checking for lwmi_is_attr_01_supported during remove is not done to
-> > > > ensure that we don't attempt to call cd01 or send WMI events if one=
- of
-> > > > the interfaces being removed was the cause of the driver unloading.
-> > > >=20
-> > > > Fixes: edc4b183b794 ("platform/x86: Add Lenovo Other Mode WMI Drive=
-r")
-> > > > Reported-by: Kurt Borja <kuurtb@gmail.com>
-> > > > Closes: https://lore.kernel.org/platform-driver-x86/DG60P3SHXR8H.3N=
-SEHMZ6J7XRC@gmail.com/
-> > > > Cc: stable@vger.kernel.org
-> > > > Reviewed-by: Rong Zhang <i@rong.moe>
-> > > > Tested-by: Rong Zhang <i@rong.moe>
-> > > > Reviewed-by: Mark Pearson <mpearson-lenovo@squebb.ca>
-> > > > Signed-off-by: Derek J. Clark <derekjohn.clark@gmail.com>
-> > > > ---
-> > > > v7:
-> > > >   - Move earlier in the series. This required dropping the use of
-> > > >     lwmi_attr_id as it will be added later.
-> > > >   - Add missing switch between cd_mode_id and cv_mode_id in
-> > > >     current_value_store.
-> > > > v6:
-> > > >   - Zero initialize args in lwmi_is_attr_01_supported.
-> > > >   - Fix formatting.
-> > > > v5:
-> > > >   - Move cv/cd_mode_id refrences from path 3/4.
-> > > >   - Add missing import for ARRAY_SIZE.
-> > > >   - Make lwmi_is_attr_01_supported return bool instead of u32.
-> > > >   - Various formatting fixes.
-> > > > v4:
-> > > >   - Use for loop instead of backtrace gotos for checking if an attr=
-ibute
-> > > >     is supported.
-> > > >   - Add include for dev_printk.
-> > > >   - Wrap dev_dbg in lwmi_is_attr_01_supported earlier.
-> > > >   - Don't use symmetric cleanup of attributes in error states.
-> > > > ---
-> > > >  drivers/platform/x86/lenovo/wmi-gamezone.h |   1 +
-> > > >  drivers/platform/x86/lenovo/wmi-other.c    | 114 +++++++++++++++++=
-+---
-> > > >  2 files changed, 98 insertions(+), 17 deletions(-)
-> > > >=20
-> > > > diff --git a/drivers/platform/x86/lenovo/wmi-gamezone.h b/drivers/p=
-latform/x86/lenovo/wmi-gamezone.h
-> > > > index 6b163a5eeb95..ddb919cf6c36 100644
-> > > > --- a/drivers/platform/x86/lenovo/wmi-gamezone.h
-> > > > +++ b/drivers/platform/x86/lenovo/wmi-gamezone.h
-> > > > @@ -10,6 +10,7 @@ enum gamezone_events_type {
-> > > >  };
-> > > > =20
-> > > >  enum thermal_mode {
-> > > > +=09LWMI_GZ_THERMAL_MODE_NONE =3D=09   0x00,
-> > > >  =09LWMI_GZ_THERMAL_MODE_QUIET =3D=09   0x01,
-> > > >  =09LWMI_GZ_THERMAL_MODE_BALANCED =3D=09   0x02,
-> > > >  =09LWMI_GZ_THERMAL_MODE_PERFORMANCE =3D 0x03,
-> > > > diff --git a/drivers/platform/x86/lenovo/wmi-other.c b/drivers/plat=
-form/x86/lenovo/wmi-other.c
-> > > > index 50a03f5fd6ab..29d062a1c6dc 100644
-> > > > --- a/drivers/platform/x86/lenovo/wmi-other.c
-> > > > +++ b/drivers/platform/x86/lenovo/wmi-other.c
-> > > > @@ -550,6 +550,8 @@ struct tunable_attr_01 {
-> > > >  =09u8 feature_id;
-> > > >  =09u8 device_id;
-> > > >  =09u8 type_id;
-> > > > +=09u8 cd_mode_id; /* mode arg for searching capdata */
-> > > > +=09u8 cv_mode_id; /* mode arg for set/get current_value */
-> > > >  };
-> > > > =20
-> > > >  static struct tunable_attr_01 ppt_pl1_spl =3D {
-> > > > @@ -775,7 +777,6 @@ static ssize_t attr_current_value_store(struct =
-kobject *kobj,
-> > > >  =09struct wmi_method_args_32 args =3D {};
-> > > >  =09struct capdata01 capdata;
-> > > >  =09enum thermal_mode mode;
-> > > > -=09u32 attribute_id;
-> > > >  =09u32 value;
-> > > >  =09int ret;
-> > > > =20
-> > > > @@ -786,13 +787,12 @@ static ssize_t attr_current_value_store(struc=
-t kobject *kobj,
-> > > >  =09if (mode !=3D LWMI_GZ_THERMAL_MODE_CUSTOM)
-> > > >  =09=09return -EBUSY;
-> > > > =20
-> > > > -=09attribute_id =3D
-> > > > -=09=09FIELD_PREP(LWMI_ATTR_DEV_ID_MASK, tunable_attr->device_id) |
-> > > > -=09=09FIELD_PREP(LWMI_ATTR_FEAT_ID_MASK, tunable_attr->feature_id)=
- |
-> > > > -=09=09FIELD_PREP(LWMI_ATTR_MODE_ID_MASK, mode) |
-> > > > -=09=09FIELD_PREP(LWMI_ATTR_TYPE_ID_MASK, tunable_attr->type_id);
-> > > > +=09args.arg0 =3D FIELD_PREP(LWMI_ATTR_DEV_ID_MASK, tunable_attr->d=
-evice_id) |
-> > > > +=09=09    FIELD_PREP(LWMI_ATTR_FEAT_ID_MASK, tunable_attr->feature=
-_id) |
-> > > > +=09=09    FIELD_PREP(LWMI_ATTR_MODE_ID_MASK, tunable_attr->cd_mode=
-_id) |
-> > > > +=09=09    FIELD_PREP(LWMI_ATTR_TYPE_ID_MASK, tunable_attr->type_id=
-);
-> > > > =20
-> > > > -=09ret =3D lwmi_cd01_get_data(priv->cd01_list, attribute_id, &capd=
-ata);
-> > > > +=09ret =3D lwmi_cd01_get_data(priv->cd01_list, args.arg0, &capdata=
-);
-> > > >  =09if (ret)
-> > > >  =09=09return ret;
-> > > > =20
-> > > > @@ -803,7 +803,10 @@ static ssize_t attr_current_value_store(struct=
- kobject *kobj,
-> > > >  =09if (value < capdata.min_value || value > capdata.max_value)
-> > > >  =09=09return -EINVAL;
-> > > > =20
-> > > > -=09args.arg0 =3D attribute_id;
-> > > > +=09args.arg0 =3D FIELD_PREP(LWMI_ATTR_DEV_ID_MASK, tunable_attr->d=
-evice_id) |
-> > > > +=09=09    FIELD_PREP(LWMI_ATTR_FEAT_ID_MASK, tunable_attr->feature=
-_id) |
-> > > > +=09=09    FIELD_PREP(LWMI_ATTR_MODE_ID_MASK, tunable_attr->cv_mode=
-_id) |
-> > > > +=09=09    FIELD_PREP(LWMI_ATTR_TYPE_ID_MASK, tunable_attr->type_id=
-);
-> > >=20
-> > > It's already repeated a few times and you're adding more in this patc=
-h.
-> > >=20
-> > > We should have a helper function for this encoding as it seems to=20
-> > > repeat. That is, something that takes tunable_attr and mode as input
-> > > (the conversion of existing entries should be in own patch preceeding=
-=20
-> > > this fix patch).
-> > >=20
-> >=20
-> > Hi Ilpo,
-> >=20
-> > A function for that is added in patch 10, though it is slightly modifie=
-d from that to be more flexible is tunable_attr isn't used (such as with th=
-e fan test attributes)
-> >=20
-> > Originally I had that patch preceding any additions, but after=20
-> > discussing with Rong we felt like it would be easier for stable=20
-> > backports if all the fixes were upfront. I can certainly move it back=
-=20
-> > if  you still prefer.=20
->
-> Moving it back is OK for me, too.
->
-> I think exposing non-fully-functioning fw-attrs on stable/LTS kernels
-> should be acceptable as long as reading/writing these attributes doesn't
-> break anything, which is exactly the case now (i.e., without this
-> patch).
+Testing on board 8BC2 confirmed that platform profile is registered
+successfully and fan RPMs are readable and controllable.
 
-How would refactoring the code into a helper result in changing stable=20
-interface?
+Signed-off-by: Haichen Feng <2806891994@qq.com>
+---
+Change in v2:
+ - Move code to correct place
+ 
+Change in v3:
+ - Move code to the front of 8BCA
+ 
+Change in v4:
+ - Add explanation about this patch
+ - Insert a space at the second parenthesis in 8BC2 line
+---
+ drivers/platform/x86/hp/hp-wmi.c | 4 ++++
+ 1 file changed, 4 insertions(+)
 
-Or did you perhaps move to talk about something entirely else (and I=20
-ended up losing the context)?
+diff --git a/drivers/platform/x86/hp/hp-wmi.c b/drivers/platform/x86/hp/hp-wmi.c
+index d1cc6e7d1..71a2093cc 100644
+--- a/drivers/platform/x86/hp/hp-wmi.c
++++ b/drivers/platform/x86/hp/hp-wmi.c
+@@ -205,6 +205,10 @@ static const struct dmi_system_id victus_s_thermal_profile_boards[] __initconst
+ 		.matches = { DMI_MATCH(DMI_BOARD_NAME, "8BBE") },
+ 		.driver_data = (void *)&victus_s_thermal_params,
+ 	},
++	{
++		.matches = { DMI_MATCH(DMI_BOARD_NAME, "8BC2") },
++		.driver_data = (void *)&omen_v1_thermal_params,
++	},
+ 	{
+ 		.matches = { DMI_MATCH(DMI_BOARD_NAME, "8BCA") },
+ 		.driver_data = (void *)&omen_v1_thermal_params,
+-- 
+2.54.0
 
-> Thanks a lot for your hard work in this series,
-
-
---=20
- i.
-
---8323328-1884497484-1777976734=:993--
