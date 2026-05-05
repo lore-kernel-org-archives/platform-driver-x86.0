@@ -1,58 +1,78 @@
-Received: from sender4-op-o15.zoho.com (sender4-op-o15.zoho.com [136.143.188.15])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-dy1-f171.google.com (mail-dy1-f171.google.com [74.125.82.171])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7F51F3E929C;
-	Tue,  5 May 2026 17:20:34 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=136.143.188.15
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1778001636; cv=pass; b=MX2TdAqtLLOzNPuHUwIgPkl85nyBP3uIv5mbsGVd2NTJpE8OLdD23B9jUAYreMw4Qka04Nx3fAztIQL1WjswjdpZqiceMIbQsF/HoAXGx/WtJ3P/lD5asyshW0VTR/d8qAuy10z6hDcpEoXRVQ2UprrBCGowOhDC+wZfb6zxoRI=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1778001636; c=relaxed/simple;
-	bh=4e4lWMK8bWxQq+EMq2tVBEdPS5zH9FNybcB/TtKS1gk=;
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A98E54A2E3E
+	for <platform-driver-x86@vger.kernel.org>; Tue,  5 May 2026 17:38:41 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=74.125.82.171
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1778002723; cv=none; b=U9yXihJAzIAGjAbB2ohV2ISNpcuN/Y5v2PdQPxx8y30tt3hnvOQnA9xAQ5sOu5taaBuiU0W9j7HZS0NrB1SbriGUqNQe6HCUvtj8aK2Os/VArGdnt0bJqwSMLDuBuFHmTyXsZmsWdLYFimwA9nv/YJjle4u7HCRNy7FTQPa5dIM=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1778002723; c=relaxed/simple;
+	bh=ONTttrMUZew0Aooh9F2p0Z1LmJuLUtxo/9VZeZR61qc=;
 	h=Date:From:To:CC:Subject:In-Reply-To:References:Message-ID:
-	 MIME-Version:Content-Type; b=eebNQqwX6fEsgcDoO5fUrCZfrv6QEP7j7MjDZEu0Xbu7bnQi6AYBQByjTxrVyd4aJ/rHc8VY2uVCE5RdusEdyaExgj3wD7Gs4XJTlGYubKXFMnY8oJKCRbbk/U6I7dP2O9zmYxKILdt8tyTxcAPLLJgoz4qWlhRVbzu6u8VP0D8=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=rong.moe; spf=pass smtp.mailfrom=rong.moe; dkim=pass (2048-bit key) header.d=rong.moe header.i=i@rong.moe header.b=DxdSm7o0; arc=pass smtp.client-ip=136.143.188.15
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=rong.moe
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=rong.moe
+	 MIME-Version:Content-Type; b=WDXIMzJoG7KhqdvfaCG4qQUtyrVXzm+J68t7KI279f0g5HmtzrWoJI9RsqG4iaWa3PxO95akPBE5G4djrSsuLSF64QrrYySazcsmShQXmcSFGY+VvRC1jKl4u9BUa7gKSwwWb67oUT5ghH7gYfZNU8k1TnePfsN56bpj+EBLudo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=UB+ynK3Z; arc=none smtp.client-ip=74.125.82.171
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=rong.moe header.i=i@rong.moe header.b="DxdSm7o0"
-ARC-Seal: i=1; a=rsa-sha256; t=1778001624; cv=none; 
-	d=zohomail.com; s=zohoarc; 
-	b=Qlc++u5lcJuLMHKTI7rrkbMYoVwg/7mxJWkZ/yxH4ckiyb/unLAns8ydxBHuvMg4jZ1qwtakixs1UaTRiGEiPMllZa6XVF8QVVNWaVQuhaQgP13VEKZsHbYPuOT0pA4oww56QjWtmkYi7xMn6furv8k6r20CzDg3q1+tpgPLgXE=
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=zohomail.com; s=zohoarc; 
-	t=1778001624; h=Content-Type:Content-Transfer-Encoding:Cc:Cc:Date:Date:From:From:In-Reply-To:MIME-Version:Message-ID:References:Subject:Subject:To:To:Message-Id:Reply-To; 
-	bh=FmjkcII2P5r6Qmn17aMfMDneBiZpDrCCAGtIXnvqg/s=; 
-	b=fTsqzUCjtJYPAu9A6osYJCfeqOfFUGJWE8yGADxQwS9wzYNJ4ybM7hFxH0aSPyTzlsekMxb4u0jbFSw+3mW7stXDt4cAF57ecaWprAY2P3Lwu9XAzj0FhBL2NTHroH1uypVnRW/AsNe2IKgJH8Me1m+njxH4ws+1lKXgqNlqPPk=
-ARC-Authentication-Results: i=1; mx.zohomail.com;
-	dkim=pass  header.i=rong.moe;
-	spf=pass  smtp.mailfrom=i@rong.moe;
-	dmarc=pass header.from=<i@rong.moe>
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; t=1778001624;
-	s=zmail2048; d=rong.moe; i=i@rong.moe;
-	h=Date:Date:From:From:To:To:CC:Subject:Subject:In-Reply-To:References:Message-ID:MIME-Version:Content-Type:Content-Transfer-Encoding:Message-Id:Reply-To:Cc;
-	bh=FmjkcII2P5r6Qmn17aMfMDneBiZpDrCCAGtIXnvqg/s=;
-	b=DxdSm7o0eqmuWhQkMyK8Qb6YHmlKvsFnuBwExpYUW9gy5Rf5VGqEnyanv0TjG1+t
-	aO8JlLpXCcyANJLzfyRigfpO4WeepSI9PLwVEkBvxU3E5kVlCar0wIIHKKXKZaOBnwU
-	hHccZB1+ARyFpuvapIhnvkXTtu4S++HWdiOPwQqsNKRt8nHafGQI2h1lY+nAiT4EFrC
-	xuMGfK/hLoKK+9GiZ9h2rUQeFmkUSt4IrC64fsWG3y7C7SaE1k2GmYrcgd8XKnDFGLo
-	FFgClN5zTkEzGbpzEAToqRvSdPqWrNZXWW0U33+4csTvFT1UdV4F6RbSVUSeALX3AgD
-	gjt6wVPfIQ==
-Received: by mx.zohomail.com with SMTPS id 1778001622755711.0439934026193;
-	Tue, 5 May 2026 10:20:22 -0700 (PDT)
-Date: Wed, 06 May 2026 01:20:15 +0800
-From: Rong Zhang <i@rong.moe>
-To: =?ISO-8859-1?Q?Ilpo_J=E4rvinen?= <ilpo.jarvinen@linux.intel.com>
-CC: "Derek J. Clark" <derekjohn.clark@gmail.com>,
- Hans de Goede <hansg@kernel.org>, Mark Pearson <mpearson-lenovo@squebb.ca>,
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="UB+ynK3Z"
+Received: by mail-dy1-f171.google.com with SMTP id 5a478bee46e88-2ef84d016d9so8479453eec.0
+        for <platform-driver-x86@vger.kernel.org>; Tue, 05 May 2026 10:38:41 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20251104; t=1778002721; x=1778607521; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:references
+         :in-reply-to:user-agent:subject:cc:to:from:date:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=MYlavuQ8ld+CKANDl2X+Fta2TfR9wiu5gpK6ggQh6gk=;
+        b=UB+ynK3ZZ863FJrwxB8WvHZ3LZNxZztPfzqbHD8pAczcwfgUaReQYkhN87dwOoDivg
+         DpP+1Jcchd4KcbbESdfqIoSm8pwce+yTZgqWIKkCKxT9rQEwRTqp/Pp9alULN2rlXhWk
+         aIQNsl9qT1u8hF1kInxbf0y3dHPvDlhc0lX4f0+BPqdBiJTIK49nv2RFB87u0PP5LRTk
+         N22wrXcuYcEuLRjJZ2Bu8r1Dun3t8pmpJZDenE15Y60gma/rGo2YrM4a+cf5y4nctynp
+         GissNS0Tbu/iEKbh462Zo4aAVsNA5Pf8aqB1p3U9T5S1DgriLwgcVH6mDRK23XqKL/OI
+         DryA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20251104; t=1778002721; x=1778607521;
+        h=content-transfer-encoding:mime-version:message-id:references
+         :in-reply-to:user-agent:subject:cc:to:from:date:x-gm-gg
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=MYlavuQ8ld+CKANDl2X+Fta2TfR9wiu5gpK6ggQh6gk=;
+        b=g4z7fT0b/UfOmzOgLt5SpFEAFuxuR/plEwa+CHKDFiDfxLdUpYOwqt1Nz50JvosD8b
+         UvOKHsY+aadFQDV2fWStKlBP/IgdHdvSKm8iGC6we24Yxe6wEPRpGaOlk8Z3B0uk9b+0
+         8wFMg+xopkGIZLFLZDrs+emNCouNFNak7L+uc5ahjI9pWlkxT6nTJYdpy8lUTqR0eyvJ
+         qMKQ2ZP/rO8zZNiceZEUCHyD0k9v5Xu2Abkh8ggdu1qinKfqeclUERSZbHJkQFeiaxZU
+         liu97OvsNodrH+ITYfV5QRit6cwDzMNlPFOjJ7PnZ5rvvpp41RWLgb5Ox9QUdTp/RjF5
+         XOWA==
+X-Forwarded-Encrypted: i=1; AFNElJ8FUaCIRoTXRmoYFbBTSejhe83oCPP8hddEmMJoP4aUMwcZzrLNibk/cXzB9UU2fccBJ89j5W6iOYYRMcd+Ojt2epsh@vger.kernel.org
+X-Gm-Message-State: AOJu0YypFQ4XD9/B9mLAZtcbB+AQ6Nm8mJWnynVywLko6J+fKzB4Cshw
+	p0xGWn3H1IpOFrGLgoGqx5+GNsO9D7Rip1pcqyhFlu59GxacnRpY47Fp
+X-Gm-Gg: AeBDiet0olJuVpKqr13xnoyHt2kEPEKZueqd/gBFr0uSyXEBz/zjV1HG7HrjAL6EmeH
+	rXaIfiT3RUmP1E5jWTLaiICSgavIm5xm3IO0AtWlNwbZXOV48EGETta9X0ph/8lR22/yQQmB/6z
+	ZWFCnWhibIHYS9lbPLamy3DNt0QYfS4wcLjYLSut6G/43NRAjEA/eKtiibnp4HFPkHF8QBogVlu
+	Iyi3h/eqrL76V3bXjaesNzwM+E5qNWYP7I3ZKmlaQUWkni3q7ixRnNn5YQbQ67YN5TVLQsGNyV2
+	65BDu7ODtvS2zEQd+O1BB/LjNQYP8GHXFAqvxqEFN4dNXFcQbIkdFQNw2KZ8BHba2VKpqfW1FY0
+	0ZMLX4r5kV3aZXMb8GDTJKDVIG44I86khwogj2B1hxpCIw7lPM5SkuCYM3m7PD8mfQ6hcW6ylZ9
+	LdmUwe+EM8MyZ/iRM9Vprx8J8cZ48xoWHpml4L2mWc2jjM6bXeCNgYGw4ELJjrFBXyirPiDUlyh
+	JNt7F6AWxZVRDtlTV30kutiDawS8l2roeOwB2BoyNc=
+X-Received: by 2002:a05:7300:6402:b0:2f2:6dde:df67 with SMTP id 5a478bee46e88-2f54ad76437mr98693eec.22.1778002720678;
+        Tue, 05 May 2026 10:38:40 -0700 (PDT)
+Received: from ehlo.thunderbird.net (108-228-232-20.lightspeed.sndgca.sbcglobal.net. [108.228.232.20])
+        by smtp.gmail.com with ESMTPSA id 5a478bee46e88-2ee38e71cedsm25566870eec.9.2026.05.05.10.38.39
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 05 May 2026 10:38:40 -0700 (PDT)
+Date: Tue, 05 May 2026 10:38:39 -0700
+From: "Derek J. Clark" <derekjohn.clark@gmail.com>
+To: Rong Zhang <i@rong.moe>,
+ =?ISO-8859-1?Q?Ilpo_J=E4rvinen?= <ilpo.jarvinen@linux.intel.com>
+CC: Hans de Goede <hansg@kernel.org>, Mark Pearson <mpearson-lenovo@squebb.ca>,
  Armin Wolf <W_Armin@gmx.de>, Jonathan Corbet <corbet@lwn.net>,
  Kurt Borja <kuurtb@gmail.com>, platform-driver-x86@vger.kernel.org,
  LKML <linux-kernel@vger.kernel.org>, stable@vger.kernel.org
 Subject: =?US-ASCII?Q?Re=3A_=5BPATCH_v10_06/16=5D_platform/x86=3A_lenovo-wmi-ot?=
  =?US-ASCII?Q?her=3A_Limit_adding_attributes_to_supported_devices?=
 User-Agent: Thunderbird for Android
-In-Reply-To: <a824cd39-8e28-96db-df59-599c283ffcdb@linux.intel.com>
-References: <20260412211121.2220556-1-derekjohn.clark@gmail.com> <20260412211121.2220556-7-derekjohn.clark@gmail.com> <1ce1d6f6-9196-c8a1-913d-4bdec2b1af80@linux.intel.com> <AA4D5F92-E158-48D1-85FC-CAA72A4EDD8A@gmail.com> <6d1aa0f0bbbd82fd0633619ec4905419db15592e.camel@rong.moe> <a824cd39-8e28-96db-df59-599c283ffcdb@linux.intel.com>
-Message-ID: <13A5927F-E79C-4F09-B7D9-92A1C777E5AC@rong.moe>
+In-Reply-To: <13A5927F-E79C-4F09-B7D9-92A1C777E5AC@rong.moe>
+References: <20260412211121.2220556-1-derekjohn.clark@gmail.com> <20260412211121.2220556-7-derekjohn.clark@gmail.com> <1ce1d6f6-9196-c8a1-913d-4bdec2b1af80@linux.intel.com> <AA4D5F92-E158-48D1-85FC-CAA72A4EDD8A@gmail.com> <6d1aa0f0bbbd82fd0633619ec4905419db15592e.camel@rong.moe> <a824cd39-8e28-96db-df59-599c283ffcdb@linux.intel.com> <13A5927F-E79C-4F09-B7D9-92A1C777E5AC@rong.moe>
+Message-ID: <8BB653FC-30AA-4BB5-9E74-AFCD507F33D2@gmail.com>
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
@@ -62,215 +82,235 @@ MIME-Version: 1.0
 Content-Type: text/plain;
  charset=utf-8
 Content-Transfer-Encoding: quoted-printable
-X-ZohoMailClient: External
 
-Hi Ilpo,
-
-=E4=BA=8E 2026=E5=B9=B45=E6=9C=885=E6=97=A5 GMT+08:00 18:25:34=EF=BC=8C"Il=
-po J=C3=A4rvinen" <ilpo=2Ejarvinen@linux=2Eintel=2Ecom> =E5=86=99=E9=81=93=
+On May 5, 2026 10:20:15 AM PDT, Rong Zhang <i@rong=2Emoe> wrote:
+>Hi Ilpo,
+>
+>=E4=BA=8E 2026=E5=B9=B45=E6=9C=885=E6=97=A5 GMT+08:00 18:25:34=EF=BC=8C"I=
+lpo J=C3=A4rvinen" <ilpo=2Ejarvinen@linux=2Eintel=2Ecom> =E5=86=99=E9=81=93=
 =EF=BC=9A
->On Fri, 1 May 2026, Rong Zhang wrote:
->> On Thu, 2026-04-30 at 07:56 -0700, Derek J=2E Clark wrote:
->> > On April 30, 2026 7:01:55 AM PDT, "Ilpo J=C3=A4rvinen" <ilpo=2Ejarvin=
-en@linux=2Eintel=2Ecom> wrote:
->> > > On Sun, 12 Apr 2026, Derek J=2E Clark wrote:
->> > >=20
->> > > > Adds lwmi_is_attr_01_supported, and only creates the attribute su=
-bfolder
->> > > > if the attribute is supported by the hardware=2E Due to some poor=
-ly
->> > > > implemented BIOS this is a multi-step sequence of events=2E This =
-is
->> > > > because:
->> > > > - Some BIOS support getting the capability data from custom mode =
-(0xff),
->> > > >   while others only support it in no-mode (0x00)=2E
->> > > > - Some BIOS support get/set for the current value from custom mod=
-e (0xff),
->> > > >   while others only support it in no-mode (0x00)=2E
->> > > > - Some BIOS report capability data for a method that is not fully
->> > > >   implemented=2E
->> > > > - Some BIOS have methods fully implemented, but no complimentary
->> > > >   capability data=2E
->> > > >=20
->> > > > To ensure we only expose fully implemented methods with correspon=
-ding
->> > > > capability data, we check each outcome before reporting that an
->> > > > attribute can be supported=2E
->> > > >=20
->> > > > Checking for lwmi_is_attr_01_supported during remove is not done =
-to
->> > > > ensure that we don't attempt to call cd01 or send WMI events if o=
-ne of
->> > > > the interfaces being removed was the cause of the driver unloadin=
-g=2E
->> > > >=20
->> > > > Fixes: edc4b183b794 ("platform/x86: Add Lenovo Other Mode WMI Dri=
-ver")
->> > > > Reported-by: Kurt Borja <kuurtb@gmail=2Ecom>
->> > > > Closes: https://lore=2Ekernel=2Eorg/platform-driver-x86/DG60P3SHX=
-R8H=2E3NSEHMZ6J7XRC@gmail=2Ecom/
->> > > > Cc: stable@vger=2Ekernel=2Eorg
->> > > > Reviewed-by: Rong Zhang <i@rong=2Emoe>
->> > > > Tested-by: Rong Zhang <i@rong=2Emoe>
->> > > > Reviewed-by: Mark Pearson <mpearson-lenovo@squebb=2Eca>
->> > > > Signed-off-by: Derek J=2E Clark <derekjohn=2Eclark@gmail=2Ecom>
->> > > > ---
->> > > > v7:
->> > > >   - Move earlier in the series=2E This required dropping the use =
-of
->> > > >     lwmi_attr_id as it will be added later=2E
->> > > >   - Add missing switch between cd_mode_id and cv_mode_id in
->> > > >     current_value_store=2E
->> > > > v6:
->> > > >   - Zero initialize args in lwmi_is_attr_01_supported=2E
->> > > >   - Fix formatting=2E
->> > > > v5:
->> > > >   - Move cv/cd_mode_id refrences from path 3/4=2E
->> > > >   - Add missing import for ARRAY_SIZE=2E
->> > > >   - Make lwmi_is_attr_01_supported return bool instead of u32=2E
->> > > >   - Various formatting fixes=2E
->> > > > v4:
->> > > >   - Use for loop instead of backtrace gotos for checking if an at=
-tribute
->> > > >     is supported=2E
->> > > >   - Add include for dev_printk=2E
->> > > >   - Wrap dev_dbg in lwmi_is_attr_01_supported earlier=2E
->> > > >   - Don't use symmetric cleanup of attributes in error states=2E
->> > > > ---
->> > > >  drivers/platform/x86/lenovo/wmi-gamezone=2Eh |   1 +
->> > > >  drivers/platform/x86/lenovo/wmi-other=2Ec    | 114 +++++++++++++=
-+++++---
->> > > >  2 files changed, 98 insertions(+), 17 deletions(-)
->> > > >=20
->> > > > diff --git a/drivers/platform/x86/lenovo/wmi-gamezone=2Eh b/drive=
-rs/platform/x86/lenovo/wmi-gamezone=2Eh
->> > > > index 6b163a5eeb95=2E=2Eddb919cf6c36 100644
->> > > > --- a/drivers/platform/x86/lenovo/wmi-gamezone=2Eh
->> > > > +++ b/drivers/platform/x86/lenovo/wmi-gamezone=2Eh
->> > > > @@ -10,6 +10,7 @@ enum gamezone_events_type {
->> > > >  };
->> > > > =20
->> > > >  enum thermal_mode {
->> > > > +	LWMI_GZ_THERMAL_MODE_NONE =3D	   0x00,
->> > > >  	LWMI_GZ_THERMAL_MODE_QUIET =3D	   0x01,
->> > > >  	LWMI_GZ_THERMAL_MODE_BALANCED =3D	   0x02,
->> > > >  	LWMI_GZ_THERMAL_MODE_PERFORMANCE =3D 0x03,
->> > > > diff --git a/drivers/platform/x86/lenovo/wmi-other=2Ec b/drivers/=
-platform/x86/lenovo/wmi-other=2Ec
->> > > > index 50a03f5fd6ab=2E=2E29d062a1c6dc 100644
->> > > > --- a/drivers/platform/x86/lenovo/wmi-other=2Ec
->> > > > +++ b/drivers/platform/x86/lenovo/wmi-other=2Ec
->> > > > @@ -550,6 +550,8 @@ struct tunable_attr_01 {
->> > > >  	u8 feature_id;
->> > > >  	u8 device_id;
->> > > >  	u8 type_id;
->> > > > +	u8 cd_mode_id; /* mode arg for searching capdata */
->> > > > +	u8 cv_mode_id; /* mode arg for set/get current_value */
->> > > >  };
->> > > > =20
->> > > >  static struct tunable_attr_01 ppt_pl1_spl =3D {
->> > > > @@ -775,7 +777,6 @@ static ssize_t attr_current_value_store(struc=
-t kobject *kobj,
->> > > >  	struct wmi_method_args_32 args =3D {};
->> > > >  	struct capdata01 capdata;
->> > > >  	enum thermal_mode mode;
->> > > > -	u32 attribute_id;
->> > > >  	u32 value;
->> > > >  	int ret;
->> > > > =20
->> > > > @@ -786,13 +787,12 @@ static ssize_t attr_current_value_store(str=
-uct kobject *kobj,
->> > > >  	if (mode !=3D LWMI_GZ_THERMAL_MODE_CUSTOM)
->> > > >  		return -EBUSY;
->> > > > =20
->> > > > -	attribute_id =3D
->> > > > -		FIELD_PREP(LWMI_ATTR_DEV_ID_MASK, tunable_attr->device_id) |
->> > > > -		FIELD_PREP(LWMI_ATTR_FEAT_ID_MASK, tunable_attr->feature_id) |
->> > > > -		FIELD_PREP(LWMI_ATTR_MODE_ID_MASK, mode) |
->> > > > -		FIELD_PREP(LWMI_ATTR_TYPE_ID_MASK, tunable_attr->type_id);
->> > > > +	args=2Earg0 =3D FIELD_PREP(LWMI_ATTR_DEV_ID_MASK, tunable_attr-=
->device_id) |
->> > > > +		    FIELD_PREP(LWMI_ATTR_FEAT_ID_MASK, tunable_attr->feature_i=
-d) |
->> > > > +		    FIELD_PREP(LWMI_ATTR_MODE_ID_MASK, tunable_attr->cd_mode_i=
-d) |
->> > > > +		    FIELD_PREP(LWMI_ATTR_TYPE_ID_MASK, tunable_attr->type_id);
->> > > > =20
->> > > > -	ret =3D lwmi_cd01_get_data(priv->cd01_list, attribute_id, &capd=
-ata);
->> > > > +	ret =3D lwmi_cd01_get_data(priv->cd01_list, args=2Earg0, &capda=
-ta);
->> > > >  	if (ret)
->> > > >  		return ret;
->> > > > =20
->> > > > @@ -803,7 +803,10 @@ static ssize_t attr_current_value_store(stru=
+>>On Fri, 1 May 2026, Rong Zhang wrote:
+>>> On Thu, 2026-04-30 at 07:56 -0700, Derek J=2E Clark wrote:
+>>> > On April 30, 2026 7:01:55 AM PDT, "Ilpo J=C3=A4rvinen" <ilpo=2Ejarvi=
+nen@linux=2Eintel=2Ecom> wrote:
+>>> > > On Sun, 12 Apr 2026, Derek J=2E Clark wrote:
+>>> > >=20
+>>> > > > Adds lwmi_is_attr_01_supported, and only creates the attribute s=
+ubfolder
+>>> > > > if the attribute is supported by the hardware=2E Due to some poo=
+rly
+>>> > > > implemented BIOS this is a multi-step sequence of events=2E This=
+ is
+>>> > > > because:
+>>> > > > - Some BIOS support getting the capability data from custom mode=
+ (0xff),
+>>> > > >   while others only support it in no-mode (0x00)=2E
+>>> > > > - Some BIOS support get/set for the current value from custom mo=
+de (0xff),
+>>> > > >   while others only support it in no-mode (0x00)=2E
+>>> > > > - Some BIOS report capability data for a method that is not full=
+y
+>>> > > >   implemented=2E
+>>> > > > - Some BIOS have methods fully implemented, but no complimentary
+>>> > > >   capability data=2E
+>>> > > >=20
+>>> > > > To ensure we only expose fully implemented methods with correspo=
+nding
+>>> > > > capability data, we check each outcome before reporting that an
+>>> > > > attribute can be supported=2E
+>>> > > >=20
+>>> > > > Checking for lwmi_is_attr_01_supported during remove is not done=
+ to
+>>> > > > ensure that we don't attempt to call cd01 or send WMI events if =
+one of
+>>> > > > the interfaces being removed was the cause of the driver unloadi=
+ng=2E
+>>> > > >=20
+>>> > > > Fixes: edc4b183b794 ("platform/x86: Add Lenovo Other Mode WMI Dr=
+iver")
+>>> > > > Reported-by: Kurt Borja <kuurtb@gmail=2Ecom>
+>>> > > > Closes: https://lore=2Ekernel=2Eorg/platform-driver-x86/DG60P3SH=
+XR8H=2E3NSEHMZ6J7XRC@gmail=2Ecom/
+>>> > > > Cc: stable@vger=2Ekernel=2Eorg
+>>> > > > Reviewed-by: Rong Zhang <i@rong=2Emoe>
+>>> > > > Tested-by: Rong Zhang <i@rong=2Emoe>
+>>> > > > Reviewed-by: Mark Pearson <mpearson-lenovo@squebb=2Eca>
+>>> > > > Signed-off-by: Derek J=2E Clark <derekjohn=2Eclark@gmail=2Ecom>
+>>> > > > ---
+>>> > > > v7:
+>>> > > >   - Move earlier in the series=2E This required dropping the use=
+ of
+>>> > > >     lwmi_attr_id as it will be added later=2E
+>>> > > >   - Add missing switch between cd_mode_id and cv_mode_id in
+>>> > > >     current_value_store=2E
+>>> > > > v6:
+>>> > > >   - Zero initialize args in lwmi_is_attr_01_supported=2E
+>>> > > >   - Fix formatting=2E
+>>> > > > v5:
+>>> > > >   - Move cv/cd_mode_id refrences from path 3/4=2E
+>>> > > >   - Add missing import for ARRAY_SIZE=2E
+>>> > > >   - Make lwmi_is_attr_01_supported return bool instead of u32=2E
+>>> > > >   - Various formatting fixes=2E
+>>> > > > v4:
+>>> > > >   - Use for loop instead of backtrace gotos for checking if an a=
+ttribute
+>>> > > >     is supported=2E
+>>> > > >   - Add include for dev_printk=2E
+>>> > > >   - Wrap dev_dbg in lwmi_is_attr_01_supported earlier=2E
+>>> > > >   - Don't use symmetric cleanup of attributes in error states=2E
+>>> > > > ---
+>>> > > >  drivers/platform/x86/lenovo/wmi-gamezone=2Eh |   1 +
+>>> > > >  drivers/platform/x86/lenovo/wmi-other=2Ec    | 114 ++++++++++++=
+++++++---
+>>> > > >  2 files changed, 98 insertions(+), 17 deletions(-)
+>>> > > >=20
+>>> > > > diff --git a/drivers/platform/x86/lenovo/wmi-gamezone=2Eh b/driv=
+ers/platform/x86/lenovo/wmi-gamezone=2Eh
+>>> > > > index 6b163a5eeb95=2E=2Eddb919cf6c36 100644
+>>> > > > --- a/drivers/platform/x86/lenovo/wmi-gamezone=2Eh
+>>> > > > +++ b/drivers/platform/x86/lenovo/wmi-gamezone=2Eh
+>>> > > > @@ -10,6 +10,7 @@ enum gamezone_events_type {
+>>> > > >  };
+>>> > > > =20
+>>> > > >  enum thermal_mode {
+>>> > > > +	LWMI_GZ_THERMAL_MODE_NONE =3D	   0x00,
+>>> > > >  	LWMI_GZ_THERMAL_MODE_QUIET =3D	   0x01,
+>>> > > >  	LWMI_GZ_THERMAL_MODE_BALANCED =3D	   0x02,
+>>> > > >  	LWMI_GZ_THERMAL_MODE_PERFORMANCE =3D 0x03,
+>>> > > > diff --git a/drivers/platform/x86/lenovo/wmi-other=2Ec b/drivers=
+/platform/x86/lenovo/wmi-other=2Ec
+>>> > > > index 50a03f5fd6ab=2E=2E29d062a1c6dc 100644
+>>> > > > --- a/drivers/platform/x86/lenovo/wmi-other=2Ec
+>>> > > > +++ b/drivers/platform/x86/lenovo/wmi-other=2Ec
+>>> > > > @@ -550,6 +550,8 @@ struct tunable_attr_01 {
+>>> > > >  	u8 feature_id;
+>>> > > >  	u8 device_id;
+>>> > > >  	u8 type_id;
+>>> > > > +	u8 cd_mode_id; /* mode arg for searching capdata */
+>>> > > > +	u8 cv_mode_id; /* mode arg for set/get current_value */
+>>> > > >  };
+>>> > > > =20
+>>> > > >  static struct tunable_attr_01 ppt_pl1_spl =3D {
+>>> > > > @@ -775,7 +777,6 @@ static ssize_t attr_current_value_store(stru=
 ct kobject *kobj,
->> > > >  	if (value < capdata=2Emin_value || value > capdata=2Emax_value)
->> > > >  		return -EINVAL;
->> > > > =20
->> > > > -	args=2Earg0 =3D attribute_id;
->> > > > +	args=2Earg0 =3D FIELD_PREP(LWMI_ATTR_DEV_ID_MASK, tunable_attr-=
->device_id) |
->> > > > +		    FIELD_PREP(LWMI_ATTR_FEAT_ID_MASK, tunable_attr->feature_i=
-d) |
->> > > > +		    FIELD_PREP(LWMI_ATTR_MODE_ID_MASK, tunable_attr->cv_mode_i=
-d) |
->> > > > +		    FIELD_PREP(LWMI_ATTR_TYPE_ID_MASK, tunable_attr->type_id);
->> > >=20
->> > > It's already repeated a few times and you're adding more in this pa=
-tch=2E
->> > >=20
->> > > We should have a helper function for this encoding as it seems to=
+>>> > > >  	struct wmi_method_args_32 args =3D {};
+>>> > > >  	struct capdata01 capdata;
+>>> > > >  	enum thermal_mode mode;
+>>> > > > -	u32 attribute_id;
+>>> > > >  	u32 value;
+>>> > > >  	int ret;
+>>> > > > =20
+>>> > > > @@ -786,13 +787,12 @@ static ssize_t attr_current_value_store(st=
+ruct kobject *kobj,
+>>> > > >  	if (mode !=3D LWMI_GZ_THERMAL_MODE_CUSTOM)
+>>> > > >  		return -EBUSY;
+>>> > > > =20
+>>> > > > -	attribute_id =3D
+>>> > > > -		FIELD_PREP(LWMI_ATTR_DEV_ID_MASK, tunable_attr->device_id) |
+>>> > > > -		FIELD_PREP(LWMI_ATTR_FEAT_ID_MASK, tunable_attr->feature_id) =
+|
+>>> > > > -		FIELD_PREP(LWMI_ATTR_MODE_ID_MASK, mode) |
+>>> > > > -		FIELD_PREP(LWMI_ATTR_TYPE_ID_MASK, tunable_attr->type_id);
+>>> > > > +	args=2Earg0 =3D FIELD_PREP(LWMI_ATTR_DEV_ID_MASK, tunable_attr=
+->device_id) |
+>>> > > > +		    FIELD_PREP(LWMI_ATTR_FEAT_ID_MASK, tunable_attr->feature_=
+id) |
+>>> > > > +		    FIELD_PREP(LWMI_ATTR_MODE_ID_MASK, tunable_attr->cd_mode_=
+id) |
+>>> > > > +		    FIELD_PREP(LWMI_ATTR_TYPE_ID_MASK, tunable_attr->type_id)=
+;
+>>> > > > =20
+>>> > > > -	ret =3D lwmi_cd01_get_data(priv->cd01_list, attribute_id, &cap=
+data);
+>>> > > > +	ret =3D lwmi_cd01_get_data(priv->cd01_list, args=2Earg0, &capd=
+ata);
+>>> > > >  	if (ret)
+>>> > > >  		return ret;
+>>> > > > =20
+>>> > > > @@ -803,7 +803,10 @@ static ssize_t attr_current_value_store(str=
+uct kobject *kobj,
+>>> > > >  	if (value < capdata=2Emin_value || value > capdata=2Emax_value=
+)
+>>> > > >  		return -EINVAL;
+>>> > > > =20
+>>> > > > -	args=2Earg0 =3D attribute_id;
+>>> > > > +	args=2Earg0 =3D FIELD_PREP(LWMI_ATTR_DEV_ID_MASK, tunable_attr=
+->device_id) |
+>>> > > > +		    FIELD_PREP(LWMI_ATTR_FEAT_ID_MASK, tunable_attr->feature_=
+id) |
+>>> > > > +		    FIELD_PREP(LWMI_ATTR_MODE_ID_MASK, tunable_attr->cv_mode_=
+id) |
+>>> > > > +		    FIELD_PREP(LWMI_ATTR_TYPE_ID_MASK, tunable_attr->type_id)=
+;
+>>> > >=20
+>>> > > It's already repeated a few times and you're adding more in this p=
+atch=2E
+>>> > >=20
+>>> > > We should have a helper function for this encoding as it seems to=
 =20
->> > > repeat=2E That is, something that takes tunable_attr and mode as in=
-put
->> > > (the conversion of existing entries should be in own patch preceedi=
-ng=20
->> > > this fix patch)=2E
->> > >=20
->> >=20
->> > Hi Ilpo,
->> >=20
->> > A function for that is added in patch 10, though it is slightly modif=
-ied from that to be more flexible is tunable_attr isn't used (such as with =
-the fan test attributes)
->> >=20
->> > Originally I had that patch preceding any additions, but after=20
->> > discussing with Rong we felt like it would be easier for stable=20
->> > backports if all the fixes were upfront=2E I can certainly move it ba=
-ck=20
->> > if  you still prefer=2E=20
+>>> > > repeat=2E That is, something that takes tunable_attr and mode as i=
+nput
+>>> > > (the conversion of existing entries should be in own patch preceed=
+ing=20
+>>> > > this fix patch)=2E
+>>> > >=20
+>>> >=20
+>>> > Hi Ilpo,
+>>> >=20
+>>> > A function for that is added in patch 10, though it is slightly modi=
+fied from that to be more flexible is tunable_attr isn't used (such as with=
+ the fan test attributes)
+>>> >=20
+>>> > Originally I had that patch preceding any additions, but after=20
+>>> > discussing with Rong we felt like it would be easier for stable=20
+>>> > backports if all the fixes were upfront=2E I can certainly move it b=
+ack=20
+>>> > if  you still prefer=2E=20
+>>>
+>>> Moving it back is OK for me, too=2E
+>>>
+>>> I think exposing non-fully-functioning fw-attrs on stable/LTS kernels
+>>> should be acceptable as long as reading/writing these attributes doesn=
+'t
+>>> break anything, which is exactly the case now (i=2Ee=2E, without this
+>>> patch)=2E
 >>
->> Moving it back is OK for me, too=2E
+>>How would refactoring the code into a helper result in changing stable=
+=20
+>>interface?
 >>
->> I think exposing non-fully-functioning fw-attrs on stable/LTS kernels
->> should be acceptable as long as reading/writing these attributes doesn'=
-t
->> break anything, which is exactly the case now (i=2Ee=2E, without this
->> patch)=2E
+>>Or did you perhaps move to talk about something entirely else (and I=20
+>>ended up losing the context)?
 >
->How would refactoring the code into a helper result in changing stable=20
->interface?
+>I meant the *current* LTS/stable state is acceptable for me as reading/wr=
+iting these attributes doesn't break anything=2E Moving it back would be OK=
+ for me even if it made this patch unable to be backported (though unlikely=
+, since moving it back makes the patch clearer as you've said)=2E In other =
+words, it doesn't matter for me whether the patch is backported or not=2E
 >
->Or did you perhaps move to talk about something entirely else (and I=20
->ended up losing the context)?
+>Some context: I didn't ask Derek to add Fixes: tag to this patch or move =
+it=2E I asked him to rearrange other patches to make them backportable=2E
+>
+>Sorry for causing misunderstandings=2E
+>
+>Thanks,
+>Rong
+>
 
-I meant the *current* LTS/stable state is acceptable for me as reading/wri=
-ting these attributes doesn't break anything=2E Moving it back would be OK =
-for me even if it made this patch unable to be backported (though unlikely,=
- since moving it back makes the patch clearer as you've said)=2E In other w=
-ords, it doesn't matter for me whether the patch is backported or not=2E
+I preferred it earlier myself since the rest of the series was cleaner tha=
+t way=2E I'll move it again as that's fairly simple=2E IMO stable should be=
+ able to take it as part of the fixes it affects since there are no functio=
+nal changes and it will be a prerequisite for some much needed fixes on sta=
+ble, but I suppose that's ultimately up to them=2E
 
-Some context: I didn't ask Derek to add Fixes: tag to this patch or move i=
-t=2E I asked him to rearrange other patches to make them backportable=2E
-
-Sorry for causing misunderstandings=2E
+I'll submit in a couple of days as I'm currently waiting on some feedback =
+from Lenovo regarding some clarification of the charge limiting features af=
+ter getting some unexpected results in a test=2E
 
 Thanks,
-Rong
+Derek
+>>
+>>> Thanks a lot for your hard work in this series,
+>>
+>>
 
->
->> Thanks a lot for your hard work in this series,
->
->
