@@ -1,186 +1,118 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CBD303E3DB5;
-	Mon,  4 May 2026 16:58:36 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BB8D619C566;
+	Tue,  5 May 2026 04:33:46 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1777913916; cv=none; b=YILif6TItlTr+zMYmZRZax1k8HCjKv88uKHePOCFgeZe300LoEgVuK1NCuCafxRw73ki7zmdDyzogHVJ6AiXTukmRRSzX9u6LZfRre/dj3HznJo53PafzQN7DhFO+SxjKFbYac/m/XK4TBfJfAC7AYBsDLLWo+Z2vCxP/O6RyRI=
+	t=1777955628; cv=none; b=NAU07PUaVXnF/1wumkaeUV0h3INxb7krCzb89hul3XM5JX8r0NcHxjeLJ7vJdaYIOibGURWSm/vD9sJYpjVxI8D1fgnHwAglVkLoLBRnuhpVdbqi82JauEcP+ewnNFiXHqdyyOIplEyDemj0/b6j6URDoBPd4DwcI/sCQce/Xp4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1777913916; c=relaxed/simple;
-	bh=kd80XGcTsGOTeH4ZW65LZWN5IuJE7lA+8m9SrHNcJEk=;
-	h=Message-ID:Date:MIME-Version:Subject:To:References:From:
-	 In-Reply-To:Content-Type; b=jfS6uKhhs1Qe6MABpuyc8PxXDc9A/4qY198CVqR/PljNEYbjJtxcOwY3h2SnZQEqtzrxRzrDUuX/ibdy63MaCXnmTMGk4HhxuAm/33Yxjwl2XE6tjsrubBEbHX7ya657EnIs3ZS69sdFaW4uI/uqLspjjzLagWHMv9r5ptOjHYs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=bCcVaw0l; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1777955628; c=relaxed/simple;
+	bh=wis0HhACv7dgYZmVfuwg47iMgk851xU2/vjJ3lil1Ms=;
+	h=From:To:Subject:Date:Message-ID:MIME-Version:Content-Type; b=sFRXDqHvtdyBUqYzwfZyhLqScIiTq0RrZkqlOvh7TGZ/L+fbZvL7v9uK6nQvTuXd5tS7B9WLwIwWEx1ycdwsd5PKX0Fm16Gtp3PqzV6k3Eak91jBQJ3+ALQzv5HQt6lnx7EZskzIroysjNAFrNlKbA19KrqicqHkF9TSDFJyItg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=pass smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=YBDlbkdQ; arc=none smtp.client-ip=198.175.65.18
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="bCcVaw0l"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id BFC6FC2BCB8;
-	Mon,  4 May 2026 16:58:35 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1777913916;
-	bh=kd80XGcTsGOTeH4ZW65LZWN5IuJE7lA+8m9SrHNcJEk=;
-	h=Date:Subject:To:References:From:In-Reply-To:From;
-	b=bCcVaw0lcloaMCl6WUURMt6ULxJYqjSXbTsHUDIMD980/kemdnInOgyfHSX8fLznA
-	 JGMmqc4pVqBwySOsGhiSUSfLvunY4lw+GMjEMc+zxoggAPOieVpuqCyX98iHAf6sqx
-	 6yKvv/aLG2suMQmsGDkbi+6jIsL+jFnrPkZwhXZ6ijAfs7b3vuRSrfLTYJ+EhAZ1v8
-	 /GjmAiGSeih10uDbkGBV+84BJkm0y2s7MyuLeLbdW0wWKkGPya7JW0gDVwoEX05v/3
-	 uzVDHIz3CW9RmFfF/NgAXxb0mFkTSBzfH0/dVik/Vpy8YCpKr34kGFkvnDCzdAbwwC
-	 Ng5hu9/Pq2ZiQ==
-Message-ID: <f86d9af4-6415-427a-9f4e-639b2ae6203e@kernel.org>
-Date: Mon, 4 May 2026 11:58:34 -0500
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="YBDlbkdQ"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1777955627; x=1809491627;
+  h=from:to:subject:date:message-id:mime-version:
+   content-transfer-encoding;
+  bh=wis0HhACv7dgYZmVfuwg47iMgk851xU2/vjJ3lil1Ms=;
+  b=YBDlbkdQ5NyhHqa7+w+yoAIUjXqeeCfG3ageK9V1YhZBZ6wXzSf3xnIH
+   8cll/mzkb4x1XH8PBBWr94LXg+yzWrsGbCEi4L8moo0cI5zHZNwFzqyeO
+   es9MidQXtF0igdKxmfXuWSt3GwHt9H3PGWvEpgSvDLp65DChzlHNqOrFa
+   JBCCN4DFySaAciYqOp/eOLgb6tJ24zSDNWTh7pRo6iMRQtVmW57E5Re6n
+   kt0718GdpeUsRAGz9uHeG1qg0GbG4XNLfs1ToBxwkdogBskqVmJFxYFqy
+   M7sV2rvy+trNAAsgx0BKB/CKxF/+hITgAKMNM9fWw9ILkE81HQ6wz8PZK
+   w==;
+X-CSE-ConnectionGUID: 9i8x4pAgSKGO3yxuf5bjfA==
+X-CSE-MsgGUID: pkowvb5rRmKT3VQfqvE6hQ==
+X-IronPort-AV: E=McAfee;i="6800,10657,11776"; a="78841279"
+X-IronPort-AV: E=Sophos;i="6.23,216,1770624000"; 
+   d="scan'208";a="78841279"
+Received: from fmviesa007.fm.intel.com ([10.60.135.147])
+  by orvoesa110.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 04 May 2026 21:33:46 -0700
+X-CSE-ConnectionGUID: HZk6lfYdQWCuS2y830xX+Q==
+X-CSE-MsgGUID: gTWUKJkIQri/J945hsqEyw==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.23,216,1770624000"; 
+   d="scan'208";a="232565201"
+Received: from aduenasd-mobl5.amr.corp.intel.com (HELO xpardee-desk.lan) ([10.125.110.35])
+  by fmviesa007-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 04 May 2026 21:33:45 -0700
+From: Xi Pardee <xi.pardee@linux.intel.com>
+To: xi.pardee@linux.intel.com,
+	irenic.rajneesh@gmail.com,
+	david.e.box@linux.intel.com,
+	ilpo.jarvinen@linux.intel.com,
+	platform-driver-x86@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	linux-pm@vger.kernel.org
+Subject: [PATCH v3 0/7] Enable NVL support in intel_pmc_core
+Date: Mon,  4 May 2026 21:33:31 -0700
+Message-ID: <20260505043342.2573556-1-xi.pardee@linux.intel.com>
+X-Mailer: git-send-email 2.43.0
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 2/2] platform/x86/amd/pmc: Add delay_suspend module
- argument
-Content-Language: en-US
-To: Daniel Gibson <daniel@gibson.sh>,
- Shyam Sundar S K <Shyam-sundar.S-k@amd.com>, Hans de Goede
- <hansg@kernel.org>, =?UTF-8?Q?Ilpo_J=C3=A4rvinen?=
- <ilpo.jarvinen@linux.intel.com>, platform-driver-x86@vger.kernel.org,
- linux-kernel@vger.kernel.org
-References: <20260501032655.283789-1-daniel@gibson.sh>
- <20260501032655.283789-3-daniel@gibson.sh>
- <47b51431-fc8d-425f-a9e0-44ed75399151@kernel.org>
- <d4f718ed-0d9e-4832-b9af-1adb539e0830@gibson.sh>
-From: Mario Limonciello <superm1@kernel.org>
-In-Reply-To: <d4f718ed-0d9e-4832-b9af-1adb539e0830@gibson.sh>
-Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 
-On 5/4/26 10:38, Daniel Gibson wrote:
-> On 04.05.26 16:37, Mario Limonciello wrote:
->> On 4/30/26 22:26, Daniel Gibson wrote:
-> (...)
->>> +static int delay_suspend = -1;
->>> +module_param(delay_suspend, int, 0644);
->>> +MODULE_PARM_DESC(delay_suspend,
->>> +                "Delays s2idle by 2.5 seconds to work around buggy
->>> ECs, often causing keyboard issues after suspend. 0: don't delay, 1:
->>> do delay, -1 (default): let amd_pmc decide. If you need this please
->>> report this to: platform-driver-x86@vger.kernel.org");
->>> +
->>>    static struct amd_pmc_dev pmc;
->>
->> Generally speaking; I don't like new module parameters.
->>
->> Since this is purely for debugging purposes and is going to hopefully
->> lead to a new patch; how about if it's done in debugfs?
->>
->> I have a couple reasons I say this.
->>
->> 1. If you make it "too easy" to make the kernel command line permanent
->> people won't report bugs and they never get fixed.
-> 
-> Sorry, I don't think this makes a difference.
+This patch series introduces two new features, enhances existing
+functionalities, and adds NVL support to the intel_pmc_core driver.
 
-OK.  I'd say up to the driver maintainers to decide which way to go.
+The first three patches add new attributes to improve Package C-state
+debugging. The fourth and fifth patches refine current functionality
+for better support. The sixth patch enables the intel_pmc_core driver
+retrieves PMC information only for available PMCs. Finally, the last
+patch adds support for Nova Lake platforms.
 
-> Even people using a bleeding-edge distro like Arch Linux will have to
-> wait at least a month or so after reporting their device until a stable
-> kernel with that quirk is released and that kernel lands in their
-> distro. Much longer for users of more traditional distros.
-> 
-> No one wants to have a broken laptop for months if it can be avoided, so
-> they'd make that workaround permanent either way, it's just more
-> annoying to do when it's in debugfs.
-> 
-> If someone reports the bug it's because they think it's the right thing
-> to do (and maybe because the module parameter or dmesg message asked
-> them to), not because the workaround requires a systemd unit instead of
-> a kernel parameter.
-> 
->>
->> 2. It needs to become ABI essentially forever, even if we found out some
->> day this was actually something we can fix with other kernel changes
->> instead.
-> 
-> Does it? prefer_microsoft_dsm_guid was removed, did that break anything?
+v3->v2:
+- Move common helper code to patch 2 to avoid switch code back and
+  forth.
+- Remove unneeded empty line.
+- Add #include for BIT() in nvl.c.
+- Change pmc_list to be const variables.
+- Change PPFEAR_MAX_NUM_ENTRIES to 13.
 
-Very good point.
+v2->v1:
+- Add a patch to use __free(pci_dev_put) in pmc_core_punit_pmt_init().
+- When using scoped base cleanup method, move variable declaration and
+  assignment in one place.
+- Simplifies logic and remove unneeded offset variables.
+- Create common helper function to used by pmc_core_pkgc_ltr_blocker_show()
+  and pmc_core_pkgc_blocker_residency_show()
+- Add num_pmcs field in pmc_dev_info struct to store the number of PMCs
+  available in the platform.
+- Use lowercase letter for variable in nvl.c().
+- Fix typo.
 
-> 
->>
->> But then the problem arguing in the direction of a module parameter is
->> discoverability of this debugging knob.  And for that; I would suggest
->> to add a bullet here: https://docs.kernel.org/arch/x86/amd-debugging.html
->>
->> Then when people report this problem we can point them to that document
->> indicating they can use it.
-> 
-> So far I've missed that document - it certainly looks like a good place
-> to document the issue and workaround.
+Xi Pardee (7):
+  platform/x86/intel/pmc: Use __free() in pmc_core_punit_pmt_init()
+  platform/x86/intel/pmc: Enable PkgC LTR blocking counter
+  platform/x86/intel/pmc: Enable Pkgc blocking residency counter
+  platform/x86/intel/pmc: Use PCI DID for PMC SSRAM device discovery
+  platform/x86/intel/pmc: Add support for variable DMU offsets
+  platform/x86/intel/pmc: Retrieve PMC info only for available PMCs
+  platform/x86/intel/pmc: Add Nova Lake support to intel_pmc_core driver
 
-Yeah; whatever direction is agreed upon (module parameter or debugfs), 
-please update the document for a section about it.
+ drivers/platform/x86/intel/pmc/Makefile |    3 +-
+ drivers/platform/x86/intel/pmc/arl.c    |   13 +-
+ drivers/platform/x86/intel/pmc/core.c   |  137 +-
+ drivers/platform/x86/intel/pmc/core.h   |   68 +-
+ drivers/platform/x86/intel/pmc/lnl.c    |    6 +-
+ drivers/platform/x86/intel/pmc/mtl.c    |    7 +-
+ drivers/platform/x86/intel/pmc/nvl.c    | 1539 +++++++++++++++++++++++
+ drivers/platform/x86/intel/pmc/ptl.c    |    8 +-
+ drivers/platform/x86/intel/pmc/wcl.c    |    6 +-
+ 9 files changed, 1748 insertions(+), 39 deletions(-)
+ create mode 100644 drivers/platform/x86/intel/pmc/nvl.c
 
-> 
-> Side-Note: "18.10. Random reboot issues" sounds interesting, I guess it
-> would be helpful to document how that value can be read or identified in
-> dmesg ;)
-
-"This information is read by the kernel at bootup and printed into the 
-syslog".
-
-Do you mean actually outputting the prefix of the message in this document?
-
-This is a sample message from my local machine.
-
-x86/amd: Previous system reset reason [0x00080800]: software wrote 0x6 
-to reset control register 0xCF9
-
-I have no qualms with this - feel free to send a patch if you're 
-touching it already anyways.
-
-> 
->>
->>>
->>>    static inline u32 amd_pmc_reg_read(struct amd_pmc_dev *dev, int
->>> reg_offset)
->>> @@ -634,11 +639,19 @@ static void amd_pmc_s2idle_check(void)
->>>           struct amd_pmc_dev *pdev = &pmc;
->>>           struct smu_metrics table;
->>>           int rc;
->>> -       bool ec_needs_sleep = !disable_workarounds &&
->>> amd_pmc_quirk_need_suspend_delay(pdev);
->>> +       bool ec_needs_sleep;
->>> +
->>> +       if (delay_suspend < 0)
->>> +               ec_needs_sleep = !disable_workarounds &&
->>> amd_pmc_quirk_need_suspend_delay(pdev);
->>> +       else
->>> +               ec_needs_sleep = delay_suspend != 0;
->>>
->>>           /* Avoid triggering OVP */
->>>           if (ec_needs_sleep || (!get_metrics_table(pdev, &table) &&
->>> table.s0i3_last_entry_status)) {
->>> -               dev_info(pdev->dev, "Delaying suspend by 2.5s to avoid
->>> platform bug\n");
->>> +               if (delay_suspend > 0)
->>> +                       dev_info(pdev->dev, "Delaying suspend by 2.5s
->>> because delay_suspend=1\n");
->>
->> Rather than telling them to report to platform-driver-x86@ in the module
->> parameter description I would suggest you should be putting it in this
->> message.  I think that's what some other drivers do when they want
->> people to report bugs.
-> 
-> Great idea!
-> 
->>
->>> +               else
->>> +                       dev_info(pdev->dev, "Delaying suspend by 2.5s
->>> to avoid platform bug\n");
->>>                   msleep(2500);
->>>           }
->>>
->>> -- 
->>> 2.48.1
->>>
->>
-> 
+-- 
+2.43.0
 
