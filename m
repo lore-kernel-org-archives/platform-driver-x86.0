@@ -1,59 +1,59 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.21])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.19])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 39BFD3DB646;
-	Wed,  6 May 2026 11:26:37 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.21
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3529536B076;
+	Wed,  6 May 2026 11:53:52 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.19
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1778066798; cv=none; b=GODKr3zdIMRyfw9IGn8QZ/6iycOk6GixaQ49bWjDnenl3dIWmDyjrv9+eNl+ftRoKzyjaMk/m9h9vDKqt5lgTa0TxN5z13IasERfyQHhqpKYF7h2kRTeZkrw3vXD39ME+W43wSOUuD5FXghfeVfhhzn21iz+yJrt/EHT4H1zEa4=
+	t=1778068435; cv=none; b=pAi0jh3vV+RcNrlkVgE+dxIdhzAcMp42Ar/+TDRg4hkFJCqrDaf9xwvwdZh8YTRXt6DCPbeqsyUeaoYL1x0BBHDv4VuD+YWreJeH0ZGh35BecNiNJ/eTmLFiB9VaCwkCENMEoL5bQiJJ6fdDwAdL/IkmUwfiPcJfbe/zTVzzK5Y=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1778066798; c=relaxed/simple;
-	bh=w/3BrIq6SLKVanB6Wv9j16dONqxr5p+5KmbAmeeaSSk=;
+	s=arc-20240116; t=1778068435; c=relaxed/simple;
+	bh=M/4A6rdGu/tfUpbXwgcMwIPK51FD0r6FLHNKZP+Tcxc=;
 	h=From:Date:To:cc:Subject:In-Reply-To:Message-ID:References:
-	 MIME-Version:Content-Type; b=ZhLv1xyZuK7oh8X3/YGNFSGApFTgOM5gdeQIV6KCg1H+YpKCqCtZQKLPYBM7PpTaroIj98t+jUhriD9aq3KOk+64DOJRmDh/KuoAOP07kWRi65lLvDuU3ztpK8a8iJaxrQJhJZE+02OHl7vt+lwYKKf2Kbj65r2mVBRIyNvK8Sg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=pass smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=RGyUlyQA; arc=none smtp.client-ip=198.175.65.21
+	 MIME-Version:Content-Type; b=gTpty5VTPlX0aftzMXrAsUFPhTz17npXqiKUlyK9nlSWBWqC81rxJhi3cjAP6oT0RfpOYWc1wWXnr99Qzrr71/q+saNr3i8gE6aVd3RpEokJBbfxdD+yd/ZAcbQZA/URvsa4OMc3yZJ0gVdoLn1qd+zTF4umT6PQL6hDDBDmkvs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=pass smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=mVqJeKXX; arc=none smtp.client-ip=192.198.163.19
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="RGyUlyQA"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="mVqJeKXX"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1778066798; x=1809602798;
+  t=1778068433; x=1809604433;
   h=from:date:to:cc:subject:in-reply-to:message-id:
    references:mime-version;
-  bh=w/3BrIq6SLKVanB6Wv9j16dONqxr5p+5KmbAmeeaSSk=;
-  b=RGyUlyQAgGv2NCTll4Wn8/i0aGVWrtfYRDuUN1xNNE9KJu6J0Ybfiyb1
-   T1V+2WI6yPxwa97tkKB4+eaUxL9bmu/2XWoaRyanyH9uKkxY21UrETL7v
-   ou5OesG4Tb2CYcZz79FilA/Tylyjus0fjI9GpxtVeG5ZLXTIA5bUlQFK2
-   xVRpX1plWAniV8WVWNawSeV96tOifUm5pIiJjzAlw6XMQ2YxgoQeITLaW
-   Oude3BuMNVJ5crazw/IDfzVzMjvGXUvxnzKpJXGWXAyycy8liWaXEGiIw
-   9qMNf/Ot5P/ZIKhWhpEseskIN4OxLUUizxyLF0zSeI8lOtfgj53/Z9R9I
-   A==;
-X-CSE-ConnectionGUID: 3hGgmpivT+m7CUJGgF+O/w==
-X-CSE-MsgGUID: Br7EreiQRCaAUYS0M+i0fg==
-X-IronPort-AV: E=McAfee;i="6800,10657,11777"; a="78885354"
+  bh=M/4A6rdGu/tfUpbXwgcMwIPK51FD0r6FLHNKZP+Tcxc=;
+  b=mVqJeKXXJO/p+idGl4LLpLR/3u9hxllWGNQoZYeU9ArOfpYqNg5MwIQr
+   YyNXAHf67g/bRV53pqRW487BCITnPSfOwlaamScoRhxezLT0gAIB7KWo2
+   UjBv+ln5eta8vSX2DfWSjzA5+EDu7zfZqlJukHgthI6O3egn72wyp7yBO
+   sBu8MSd6oyeP3mhOh/M8k0Ol9CLX7FVfC5a5aI4jzmFRH31sFe82/Qhyk
+   +oMa9ebquG3u2eyi81jp6UE9R4FopTV4Le7Qw949dRJdivZH03d0R4VMZ
+   7rsk2cL/VZ4UlGLiDpkE+tbnKLf7XAKf7QaPxVuM8aPzncpJtwzGwUO4o
+   w==;
+X-CSE-ConnectionGUID: F192n629QfyBYFC/Bp72DA==
+X-CSE-MsgGUID: GWKWWM2rQQ2j/zUBIwsD5w==
+X-IronPort-AV: E=McAfee;i="6800,10657,11777"; a="78019737"
 X-IronPort-AV: E=Sophos;i="6.23,219,1770624000"; 
-   d="scan'208";a="78885354"
-Received: from orviesa001.jf.intel.com ([10.64.159.141])
-  by orvoesa113.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 06 May 2026 04:26:37 -0700
-X-CSE-ConnectionGUID: DXph97CaQhKeWYEYNMY2XA==
-X-CSE-MsgGUID: EEMe0SJ4SA+/8j+T1tDGMw==
+   d="scan'208";a="78019737"
+Received: from orviesa007.jf.intel.com ([10.64.159.147])
+  by fmvoesa113.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 06 May 2026 04:53:53 -0700
+X-CSE-ConnectionGUID: USLnNDY/R4quphkMD/PBPw==
+X-CSE-MsgGUID: H6tVOTUYQVWfQ9Ev3prDIw==
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="6.23,219,1770624000"; 
-   d="scan'208";a="274248496"
+   d="scan'208";a="236365396"
 Received: from ijarvine-mobl1.ger.corp.intel.com (HELO localhost) ([10.245.244.231])
-  by smtpauth.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 06 May 2026 04:26:34 -0700
+  by orviesa007-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 06 May 2026 04:53:50 -0700
 From: =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
-Date: Wed, 6 May 2026 14:26:30 +0300 (EEST)
-To: Denis Benato <denis.benato@linux.dev>
-cc: Armandas Kvietkus <armundunelis@gmail.com>, luke@ljones.dev, 
-    Hans de Goede <hansg@kernel.org>, platform-driver-x86@vger.kernel.org, 
-    LKML <linux-kernel@vger.kernel.org>, fxzxaxon@outlook.com
-Subject: Re: [PATCH] platform/x86: asus-armoury: downgrade missing power
- limits warning to debug
-In-Reply-To: <6460ef7c-b4d9-4106-95cc-35710b4798bb@linux.dev>
-Message-ID: <91d3cc8d-ee5b-f204-ee42-ad8825a14a24@linux.intel.com>
-References: <20260503175734.27795-1-armundunelis@gmail.com> <6460ef7c-b4d9-4106-95cc-35710b4798bb@linux.dev>
+Date: Wed, 6 May 2026 14:53:46 +0300 (EEST)
+To: Thorsten Blum <thorsten.blum@linux.dev>
+cc: Prasanth Ksr <prasanth.ksr@dell.com>, Hans de Goede <hansg@kernel.org>, 
+    Dell.Client.Kernel@dell.com, platform-driver-x86@vger.kernel.org, 
+    LKML <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH] platform/x86: dell-wmi-sysman: use strnlen in
+ strlcpy_attr
+In-Reply-To: <20260502165707.242332-3-thorsten.blum@linux.dev>
+Message-ID: <fcff1484-24b6-ce49-bb5e-f7da3e711eea@linux.intel.com>
+References: <20260502165707.242332-3-thorsten.blum@linux.dev>
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
@@ -62,54 +62,92 @@ List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=US-ASCII
 
-On Mon, 4 May 2026, Denis Benato wrote:
-> On 5/3/26 19:57, Armandas Kvietkus wrote:
-> > When a system is not found in the power_limits DMI table,
-> > init_rog_tunables() emits a pr_warn() and returns. This is
-> > expected behaviour for hardware that does not support ROG
-> > power limit tunables, not an error condition.
-> >
-> > Downgrade to pr_debug() to avoid spurious boot noise on
-> > unsupported systems while preserving the message for debugging.
-> >
-> > Reported-by: fxzxaxon@outlook.com
-> > Closes: https://bugzilla.kernel.org/show_bug.cgi?id=221441
-> > Signed-off-by: Armandas Kvietkus <armundunelis@gmail.com>
-> > ---
-> >  drivers/platform/x86/asus-armoury.c | 2 +-
-> >  1 file changed, 1 insertion(+), 1 deletion(-)
-> >
-> > diff --git a/drivers/platform/x86/asus-armoury.c b/drivers/platform/x86/asus-armoury.c
-> > index 5b0987ccc..c8e9ff89f 100644
-> > --- a/drivers/platform/x86/asus-armoury.c
-> > +++ b/drivers/platform/x86/asus-armoury.c
-> > @@ -991,7 +991,7 @@ static void init_rog_tunables(void)
-> >  	/* Match the system against the power_limits table */
-> >  	dmi_id = dmi_first_match(power_limits);
-> >  	if (!dmi_id) {
-> > -		pr_warn("No matching power limits found for this system\n");
-> > +		pr_debug("No matching power limits found for this system\n");
->
-> Maybe this is right to get downgraded, but still no debug: I think info is better,
-> but I would like to hear from Luke what this is about.
+On Sat, 2 May 2026, Thorsten Blum wrote:
 
-Hi Denis,
+> Use strnlen() to limit source string scanning to MAX_BUFF bytes. Return
+> early on error and make the "empty string means not applicable" case
+> explicit.
+> 
+> Use 'const char *' for the read-only source string while at it.
 
-When kernel is built with CONFIG_DYNAMIC_DEBUG=y, all debug messages 
-will appear if kernel's cmdline enables it:
+Hi Thorsten,
 
-dyndbg="file drivers/platform/x86/asus-armoury.c +p"
+First of all, thanks for looking into these.
 
-(wildcards too could be used where helpful and semicolon as a separator 
-if, in rare cases, more than one filter should be necessary).
+> Signed-off-by: Thorsten Blum <thorsten.blum@linux.dev>
+> ---
+>  .../dell/dell-wmi-sysman/dell-wmi-sysman.h    |  2 +-
+>  .../x86/dell/dell-wmi-sysman/sysman.c         | 20 ++++++++++---------
+>  2 files changed, 12 insertions(+), 10 deletions(-)
+> 
+> diff --git a/drivers/platform/x86/dell/dell-wmi-sysman/dell-wmi-sysman.h b/drivers/platform/x86/dell/dell-wmi-sysman/dell-wmi-sysman.h
+> index 5278a93fdaf7..f6943301b857 100644
+> --- a/drivers/platform/x86/dell/dell-wmi-sysman/dell-wmi-sysman.h
+> +++ b/drivers/platform/x86/dell/dell-wmi-sysman/dell-wmi-sysman.h
+> @@ -162,7 +162,7 @@ static ssize_t curr_val##_store(struct kobject *kobj,				\
+>  
+>  union acpi_object *get_wmiobj_pointer(int instance_id, const char *guid_string);
+>  int get_instance_count(const char *guid_string);
+> -void strlcpy_attr(char *dest, char *src);
+> +void strlcpy_attr(char *dest, const char *src);
+>  
+>  int populate_enum_data(union acpi_object *enumeration_obj, int instance_id,
+>  			struct kobject *attr_name_kobj, u32 enum_property_count);
+> diff --git a/drivers/platform/x86/dell/dell-wmi-sysman/sysman.c b/drivers/platform/x86/dell/dell-wmi-sysman/sysman.c
+> index 51d25fdc1389..6c9911accefc 100644
+> --- a/drivers/platform/x86/dell/dell-wmi-sysman/sysman.c
+> +++ b/drivers/platform/x86/dell/dell-wmi-sysman/sysman.c
+> @@ -234,18 +234,20 @@ static const struct kobj_type attr_name_ktype = {
+>   * @dest: Where to copy the string to
+>   * @src: Where to copy the string from
+>   */
+> -void strlcpy_attr(char *dest, char *src)
+> +void strlcpy_attr(char *dest, const char *src)
+>  {
+> -	size_t len = strlen(src) + 1;
+> +	size_t len = strnlen(src, MAX_BUFF);
+>  
+> -	if (len > 1 && len <= MAX_BUFF)
+> -		strscpy(dest, src, len);
+> -
+> -	/*len can be zero because any property not-applicable to attribute can
+> -	 * be empty so check only for too long buffers and log error
+> -	 */
+> -	if (len > MAX_BUFF)
+> +	if (len == MAX_BUFF) {
+>  		pr_err("Source string returned from BIOS is out of bound!\n");
+> +		return;
+> +	}
+> +
+> +	/* Empty string means "not applicable" and is skipped intentionally. */
+> +	if (len == 0)
+> +		return;
+> +
+> +	strscpy(dest, src, len + 1);
 
-So all we need is to ask the reporter to boot with dyndbg enabled for the 
-relevant file(s), no recompiling the kernel required.
+And how exactly is this last line different from strscpy(dest, serc, 
+MAX_BUFF);
 
+?
 
-I suspect most distros do have dynamic debugging capability in their 
-kernel configs so it shouldn't be a problem when they don't by default 
-show these messages (at least the two major ones I just checked have it).
+I agree something should be done here but I don't like this approach. The 
+length passed to strscpy() should be "Size of the destination buffer" but 
+your approach calculated the length of the source string (?!):
+
+/**
+ * strscpy - Copy a C-string into a sized buffer
+ * @dst: Where to copy the string to
+ * @src: Where to copy the string from
+ * @...: Size of destination buffer (optional)
+
+So, to make it safe and sound logically, to me it looks more like the 
+_caller_ should pass the output buffer's size to this function. Or 
+alternatively, this function could be wrapped with a macro such that the 
+sizeof(*dest) can still be checked to be of correct length.
+
+Also, this function presents itself with str*() name like a generic string 
+copy function but what it really is more attr_check_and_copy(), it might 
+not copy anything if the checks fail.
 
 
 -- 
