@@ -1,205 +1,126 @@
-Received: from smtp-out1.simply.com (smtp-out1.simply.com [94.231.106.240])
+Received: from out-180.mta0.migadu.com (out-180.mta0.migadu.com [91.218.175.180])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E0F30332EC8;
-	Wed,  6 May 2026 19:33:36 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=94.231.106.240
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9130C3101C0
+	for <platform-driver-x86@vger.kernel.org>; Wed,  6 May 2026 21:45:01 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.218.175.180
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1778096024; cv=none; b=TmDADFsJNpvZIya14iMEQETx1YkncGgXVrJU1Jw3NUKes0UT/Bcs8Y0IcJuwHVBx23/KjQ4b1jhETWxGTTeMiWdHeAD3urEO/69EPplczEsvyAIPd/xiAed8JH7/w8ksJv28iATM7vns1DBNXeeHRaWTVxaW0W25kK7zrskl+3M=
+	t=1778103903; cv=none; b=SAl4pZAZexOrFjWyrflnYl6/JWngTFpQNJRIj5DJTy1xOaGRtQd6Ew8aCAGSz0nkL2P4Z/vs5DZwrEycMdMYngGeoQYPbUkObl+LTMl7GVnrwzi4LmndHrFemowxMhL5ncux0vKHiB59DgoXU/uFHBRXPbHObTf92hyBvUWdSho=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1778096024; c=relaxed/simple;
-	bh=8Hi7J7f3Jc7rM9ymARnR7xQY4X+5J79J7sltTqwI5KM=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=B5eOIi5Lds7NlhXApvYVijxymHU2j00z6gtAEZf4AMTtdeQgJ+mZBBEicyd5ManG1IX7ahPOWnkTU7omkqyfo0aWg3u6rAkuqEUUB+bkh9NwjigW8J7+K7dF/UfmZ3butaCMBWMSBkbVipitJN+zBgDUhl1m5rWcZLPkQNamDOg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=grenangen.se; spf=pass smtp.mailfrom=grenangen.se; dkim=pass (2048-bit key) header.d=grenangen.se header.i=@grenangen.se header.b=DHFLEchz; arc=none smtp.client-ip=94.231.106.240
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=grenangen.se
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=grenangen.se
+	s=arc-20240116; t=1778103903; c=relaxed/simple;
+	bh=TMnttdfByCuLSQxosH38f692SLfoPJOR1e4JetbKZxU=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=bO958r3HkSdaqzl/jt/3LK1YOzygIo8RbtOGKFpWpu5EyDFwGo+lS1Yk+56xo61d6x1IYi1D58zFIMBGXtF+ZybieNKjBVPzPfIfZjyJrWv3oCPmtrmlP1OqziKGUYiB6KPvTea/UbQClYl21mofIwlu8R/8eHFuhXCQZ0B/8Ek=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=LtchJp5h; arc=none smtp.client-ip=91.218.175.180
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=grenangen.se header.i=@grenangen.se header.b="DHFLEchz"
-Received: from localhost (localhost [127.0.0.1])
-	by smtp.simply.com (Simply.com) with ESMTP id 4g9lt06c3Cz1DHpW;
-	Wed,  6 May 2026 21:33:28 +0200 (CEST)
-Received: from localhost (h-217-27-171-125.A498.priv.bahnhof.se [217.27.171.125])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange ECDHE (P-256) server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(Client did not present a certificate)
-	by smtp.simply.com (Simply.com) with ESMTPSA id 4g9lt05F8Fz1DDSy;
-	Wed,  6 May 2026 21:33:28 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=grenangen.se;
-	s=simplycom2; t=1778096008;
-	bh=M3+Ob8zDodFfm/vUJ1ZC2GL/XQp5y9tvpEeAGHcwyvI=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References;
-	b=DHFLEchzx5/TAxiUCmE/g9p8p7syVaQrVPUeaW0Njfv26DGPcU0bBXAL29GObYvqp
-	 g1kLq8oQ4AD9ldPhGH7W4S8s4RaS4D7fgHbM6cmEt1tof2VQDuLmXF/BKFlivqzxlB
-	 UwwiBRgUw+t24Z0elUbFkmvX60uKIuzBviKNIPXYxyWvKatUGom7KTKBU2Pr4jQf6V
-	 2n2V/PiUv52ppuoXarH+FYclYB6tAzxyFEtnsi5FkFzj0p3U0+suN0kvCh3DbCK/VT
-	 MmvtvxpCwTzQHsP0iuCbmrRo5OI/8rV9U2mfvToAu7ktgEAgtkv1RtMjChQ4Jh26Dp
-	 0YKgeOgXd3RwA==
-From: =?UTF-8?q?Marcus=20Gren=C3=A4ngen?= <marcus@grenangen.se>
-To: platform-driver-x86@vger.kernel.org,
-	denis.benato@linux.dev
-Cc: linux-input@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	luke@ljones.dev,
-	hansg@kernel.org,
-	ilpo.jarvinen@linux.intel.com,
-	jikos@kernel.org,
-	bentiss@kernel.org,
-	corentin.chary@gmail.com,
-	marcus@grenangen.se
-Subject: [PATCH v2 3/3] platform/x86: asus-armoury: add fn_lock firmware attribute
-Date: Wed,  6 May 2026 21:33:26 +0200
-Message-ID: <20260506193326.5862-4-marcus@grenangen.se>
-X-Mailer: git-send-email 2.54.0
-In-Reply-To: <20260506193326.5862-1-marcus@grenangen.se>
-References: <458d9e6c-8702-4cbc-9c4f-33cbd1175e67@linux.dev>
- <20260506193326.5862-1-marcus@grenangen.se>
+	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="LtchJp5h"
+Message-ID: <dfe28a80-6ce8-4bba-b151-3c24d385782c@linux.dev>
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
+	t=1778103889;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=h9vGLRw9eB69AnuPJqu8P/DgQqRJP2/XBi617tl85lg=;
+	b=LtchJp5hwoM+OouL89mLJ0Ed+ZnE6zvF26ZXKoj1E/D+o0O8IyMo0DFtaSWQ0N0cb16dzr
+	2vpUzh3z49fli9RZ5OVUHbgjadWPWzEJ9irzyGremFzYcI9Fghjp+0hsPJ0QQ9TzLMICbi
+	Xyc4P0VnZJlBjLiN+0V4OOaWGu97fic=
+Date: Wed, 6 May 2026 23:44:46 +0200
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Subject: Re: [PATCH] platform/x86: asus-armoury: downgrade missing power
+ limits warning to debug
+To: =?UTF-8?Q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
+Cc: Armandas Kvietkus <armundunelis@gmail.com>, luke@ljones.dev,
+ Hans de Goede <hansg@kernel.org>, platform-driver-x86@vger.kernel.org,
+ LKML <linux-kernel@vger.kernel.org>, fxzxaxon@outlook.com
+References: <20260503175734.27795-1-armundunelis@gmail.com>
+ <6460ef7c-b4d9-4106-95cc-35710b4798bb@linux.dev>
+ <91d3cc8d-ee5b-f204-ee42-ad8825a14a24@linux.intel.com>
+Content-Language: en-US, it-IT, en-US-large
+X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
+From: Denis Benato <denis.benato@linux.dev>
+In-Reply-To: <91d3cc8d-ee5b-f204-ee42-ad8825a14a24@linux.intel.com>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
+X-Migadu-Flow: FLOW_OUT
 
-Add a fn_lock attribute to the asus-armoury firmware-attributes interface,
-allowing userspace to read and set the Fn-lock state (whether F1-F12 keys
-are primary or media/system keys are primary).
 
-On most ASUS laptops fn-lock is backed by WMI DEVID 0x00100023 and the
-attribute uses armoury_get/set_devstate() as normal. On platforms where
-the WMI DEVS call is a no-op (fnlock_use_hid quirk, e.g. ProArt P16), the
-store path calls asus_hid_fnlock_notify() to send the feature report
-directly to the N-Key keyboard via hid-asus. The show path returns
--EOPNOTSUPP on such platforms as the hardware provides no readback.
+On 5/6/26 13:26, Ilpo Järvinen wrote:
+> On Mon, 4 May 2026, Denis Benato wrote:
+>> On 5/3/26 19:57, Armandas Kvietkus wrote:
+>>> When a system is not found in the power_limits DMI table,
+>>> init_rog_tunables() emits a pr_warn() and returns. This is
+>>> expected behaviour for hardware that does not support ROG
+>>> power limit tunables, not an error condition.
+>>>
+>>> Downgrade to pr_debug() to avoid spurious boot noise on
+>>> unsupported systems while preserving the message for debugging.
+>>>
+>>> Reported-by: fxzxaxon@outlook.com
+>>> Closes: https://bugzilla.kernel.org/show_bug.cgi?id=221441
+>>> Signed-off-by: Armandas Kvietkus <armundunelis@gmail.com>
+>>> ---
+>>>  drivers/platform/x86/asus-armoury.c | 2 +-
+>>>  1 file changed, 1 insertion(+), 1 deletion(-)
+>>>
+>>> diff --git a/drivers/platform/x86/asus-armoury.c b/drivers/platform/x86/asus-armoury.c
+>>> index 5b0987ccc..c8e9ff89f 100644
+>>> --- a/drivers/platform/x86/asus-armoury.c
+>>> +++ b/drivers/platform/x86/asus-armoury.c
+>>> @@ -991,7 +991,7 @@ static void init_rog_tunables(void)
+>>>  	/* Match the system against the power_limits table */
+>>>  	dmi_id = dmi_first_match(power_limits);
+>>>  	if (!dmi_id) {
+>>> -		pr_warn("No matching power limits found for this system\n");
+>>> +		pr_debug("No matching power limits found for this system\n");
+>> Maybe this is right to get downgraded, but still no debug: I think info is better,
+>> but I would like to hear from Luke what this is about.
+> Hi Denis,
+>
+> When kernel is built with CONFIG_DYNAMIC_DEBUG=y, all debug messages 
+> will appear if kernel's cmdline enables it:
+>
+> dyndbg="file drivers/platform/x86/asus-armoury.c +p"
+>
+> (wildcards too could be used where helpful and semicolon as a separator 
+> if, in rare cases, more than one filter should be necessary).
+>
+> So all we need is to ask the reporter to boot with dyndbg enabled for the 
+> relevant file(s), no recompiling the kernel required.
+>
+>
+> I suspect most distros do have dynamic debugging capability in their 
+> kernel configs so it shouldn't be a problem when they don't by default 
+> show these messages (at least the two major ones I just checked have it).
+>
+Hi!
 
-The fnlock_use_hid flag is detected at init time via dmi_match() on
-DMI_PRODUCT_FAMILY. A direct DMI check is used rather than reading the
-asus-nb-wmi quirk flag because asus-armoury and asus-nb-wmi are both
-loadable modules at the same init level, so the asus_ref pointer set by
-asus-wmi may not yet be valid when asus-armoury initialises.
+My position is that the experience of most users is:
+they boot linux, install asusctl, notice that not only is less fancy than the windows counterpart,
+but it also lacks TDP sliders so they enter in discord and ask "why can't I control my TDP".
 
-Signed-off-by: Marcus Grenängen <marcus@grenangen.se>
----
- drivers/platform/x86/asus-armoury.c | 69 +++++++++++++++++++++++++++++
- 1 file changed, 69 insertions(+)
+As of now one just answers "dmesg | grep asus" and the warning appears, while if this becomes a debug
+the process becomes more involved, for both parts, as most people know dmesg, but a person randomly
+hanging in the discord doesn't usually know how to enable dynamic debugging, or how to reconfigure
+a bootloader. I surely don't know how to configure every bootloader under the sun for every major distro.
 
-diff --git a/drivers/platform/x86/asus-armoury.c b/drivers/platform/x86/asus-armoury.c
-index 5b0987ccc270..9d7646eff944 100644
---- a/drivers/platform/x86/asus-armoury.c
-+++ b/drivers/platform/x86/asus-armoury.c
-@@ -93,6 +93,7 @@ struct asus_armoury_priv {
- 
- 	u32 mini_led_dev_id;
- 	u32 gpu_mux_dev_id;
-+	bool fnlock_use_hid;
- };
- 
- static struct asus_armoury_priv asus_armoury = {
-@@ -778,6 +779,58 @@ ASUS_ATTR_GROUP_ROG_TUNABLE(nv_tgp, "nv_tgp", ASUS_WMI_DEVID_DGPU_SET_TGP,
- ASUS_ATTR_GROUP_INT_VALUE_ONLY_RO(nv_base_tgp, ATTR_NV_BASE_TGP, ASUS_WMI_DEVID_DGPU_BASE_TGP,
- 				  "Read the base TGP value");
- 
-+/*
-+ * fn_lock: toggle whether Fn key is locked (F1-F12 primary) or unlocked
-+ * (media/system keys primary).
-+ *
-+ * On most ASUS laptops this is backed by WMI DEVID 0x00100023. On some
-+ * platforms (e.g. ProArt P16) that DEVS call is a no-op and the state must
-+ * be sent as a HID feature report to the N-Key keyboard via hid-asus.
-+ */
-+static ssize_t fn_lock_current_value_show(struct kobject *kobj,
-+					  struct kobj_attribute *attr, char *buf)
-+{
-+	u32 result;
-+	int err;
-+
-+	if (asus_armoury.fnlock_use_hid)
-+		return -EOPNOTSUPP;
-+
-+	err = armoury_get_devstate(attr, &result, ASUS_WMI_DEVID_FNLOCK);
-+	if (err)
-+		return err;
-+
-+	return sysfs_emit(buf, "%u\n", result & 1);
-+}
-+
-+static ssize_t fn_lock_current_value_store(struct kobject *kobj,
-+					   struct kobj_attribute *attr,
-+					   const char *buf, size_t count)
-+{
-+	bool enable;
-+	int err;
-+
-+	err = kstrtobool(buf, &enable);
-+	if (err)
-+		return err;
-+
-+	if (asus_armoury.fnlock_use_hid) {
-+		err = asus_hid_fnlock_notify(enable);
-+		if (err)
-+			return err;
-+	} else {
-+		err = armoury_set_devstate(attr, enable ? 1 : 0, NULL,
-+					   ASUS_WMI_DEVID_FNLOCK);
-+		if (err)
-+			return err;
-+	}
-+
-+	sysfs_notify(kobj, NULL, attr->attr.name);
-+	return count;
-+}
-+
-+ASUS_ATTR_GROUP_BOOL(fn_lock, "fn_lock", "Set the Fn-lock state");
-+
- /* If an attribute does not require any special case handling add it here */
- static const struct asus_attr_group armoury_attr_groups[] = {
- 	{ &egpu_connected_attr_group, ASUS_WMI_DEVID_EGPU_CONNECTED },
-@@ -926,6 +979,16 @@ static int asus_fw_attr_add(void)
- 		}
- 	}
- 
-+	if (asus_armoury.fnlock_use_hid ||
-+	    armoury_has_devstate(ASUS_WMI_DEVID_FNLOCK)) {
-+		err = sysfs_create_group(&asus_armoury.fw_attr_kset->kobj,
-+					 &fn_lock_attr_group);
-+		if (err) {
-+			pr_err("Failed to create sysfs-group for fn_lock\n");
-+			goto err_remove_gpu_mux_group;
-+		}
-+	}
-+
- 	for (i = 0; i < ARRAY_SIZE(armoury_attr_groups); i++) {
- 		if (!armoury_has_devstate(armoury_attr_groups[i].wmi_devid))
- 			continue;
-@@ -963,6 +1026,8 @@ static int asus_fw_attr_add(void)
- 			sysfs_remove_group(&asus_armoury.fw_attr_kset->kobj,
- 					   armoury_attr_groups[i].attr_group);
- 	}
-+	sysfs_remove_group(&asus_armoury.fw_attr_kset->kobj, &fn_lock_attr_group);
-+err_remove_gpu_mux_group:
- 	if (asus_armoury.gpu_mux_dev_id)
- 		sysfs_remove_group(&asus_armoury.fw_attr_kset->kobj, &gpu_mux_mode_attr_group);
- err_remove_mini_led_group:
-@@ -1121,6 +1186,8 @@ static int __init asus_fw_init(void)
- 
- 	init_rog_tunables();
- 
-+	asus_armoury.fnlock_use_hid = dmi_match(DMI_PRODUCT_FAMILY, "ProArt P16");
-+
- 	/* Must always be last step to ensure data is available */
- 	return asus_fw_attr_add();
- }
-@@ -1138,6 +1205,8 @@ static void __exit asus_fw_exit(void)
- 	if (asus_armoury.gpu_mux_dev_id)
- 		sysfs_remove_group(&asus_armoury.fw_attr_kset->kobj, &gpu_mux_mode_attr_group);
- 
-+	sysfs_remove_group(&asus_armoury.fw_attr_kset->kobj, &fn_lock_attr_group);
-+
- 	if (asus_armoury.mini_led_dev_id)
- 		sysfs_remove_group(&asus_armoury.fw_attr_kset->kobj, &mini_led_mode_attr_group);
- 
--- 
-2.54.0
+My point of view is that said warning guided someone straight to me, so it reached its objective effectively,
+why changing something that works?
 
+The only reason I can think of is people who run with panic on warning, but since I have yet to see an asus
+laptop that doesn't make linux spam a bunch of acpi errors and warnings such a kernel (as of now) is
+unbootable on these machines.
+
+Perhaps you have a stronger motivation and can point me to it?
+
+My current opinion is that instead of demoting it from a warning I should perhaps phrase it better
+as Mario suggests.
+
+Denis
