@@ -1,155 +1,93 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.19])
+Received: from m16.mail.126.com (m16.mail.126.com [117.135.210.7])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3529536B076;
-	Wed,  6 May 2026 11:53:52 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.19
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5ABFE345CAA
+	for <platform-driver-x86@vger.kernel.org>; Wed,  6 May 2026 12:05:57 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=117.135.210.7
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1778068435; cv=none; b=pAi0jh3vV+RcNrlkVgE+dxIdhzAcMp42Ar/+TDRg4hkFJCqrDaf9xwvwdZh8YTRXt6DCPbeqsyUeaoYL1x0BBHDv4VuD+YWreJeH0ZGh35BecNiNJ/eTmLFiB9VaCwkCENMEoL5bQiJJ6fdDwAdL/IkmUwfiPcJfbe/zTVzzK5Y=
+	t=1778069161; cv=none; b=ZDDHDLgej/Tg/uZxzY9F9EgpUA8lI3gfF4CIYyJLkTvfl90wKMevIvXvg93jmvIR/5ywLkE/RoPPq+WWO2Bhx1pZwdCJ6vpnPxMiqnxs5TCMihdVe/lLateXmCYGO30xy76yhWAJSAhqpRP+A2Mm9dFdQMff97sBPaJiIBNbtC0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1778068435; c=relaxed/simple;
-	bh=M/4A6rdGu/tfUpbXwgcMwIPK51FD0r6FLHNKZP+Tcxc=;
-	h=From:Date:To:cc:Subject:In-Reply-To:Message-ID:References:
-	 MIME-Version:Content-Type; b=gTpty5VTPlX0aftzMXrAsUFPhTz17npXqiKUlyK9nlSWBWqC81rxJhi3cjAP6oT0RfpOYWc1wWXnr99Qzrr71/q+saNr3i8gE6aVd3RpEokJBbfxdD+yd/ZAcbQZA/URvsa4OMc3yZJ0gVdoLn1qd+zTF4umT6PQL6hDDBDmkvs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=pass smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=mVqJeKXX; arc=none smtp.client-ip=192.198.163.19
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.intel.com
+	s=arc-20240116; t=1778069161; c=relaxed/simple;
+	bh=cEVHgXyzWz8yuExvjK4SHL21r1UlBuz1ILbPryLJSow=;
+	h=Message-ID:Date:MIME-Version:To:Cc:From:Subject:Content-Type; b=Oz632Mc4Wzal+IQHqaH7Y926nlCxiV/m6FVWDqpJxTI0wNjFc5lTL6iiAT7YMb042ElOkXWxZfV52WXb9x+isTWGqr06dBwm2wZIvXcfCfG34xI+2TitihcHVc0XQM6hz/pQz6XPXtfBP2kno7z72Q/McmkZbsm30mqoKwqxdc0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=126.com; spf=pass smtp.mailfrom=126.com; dkim=pass (1024-bit key) header.d=126.com header.i=@126.com header.b=ZvUaC1w/; arc=none smtp.client-ip=117.135.210.7
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=126.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=126.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="mVqJeKXX"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1778068433; x=1809604433;
-  h=from:date:to:cc:subject:in-reply-to:message-id:
-   references:mime-version;
-  bh=M/4A6rdGu/tfUpbXwgcMwIPK51FD0r6FLHNKZP+Tcxc=;
-  b=mVqJeKXXJO/p+idGl4LLpLR/3u9hxllWGNQoZYeU9ArOfpYqNg5MwIQr
-   YyNXAHf67g/bRV53pqRW487BCITnPSfOwlaamScoRhxezLT0gAIB7KWo2
-   UjBv+ln5eta8vSX2DfWSjzA5+EDu7zfZqlJukHgthI6O3egn72wyp7yBO
-   sBu8MSd6oyeP3mhOh/M8k0Ol9CLX7FVfC5a5aI4jzmFRH31sFe82/Qhyk
-   +oMa9ebquG3u2eyi81jp6UE9R4FopTV4Le7Qw949dRJdivZH03d0R4VMZ
-   7rsk2cL/VZ4UlGLiDpkE+tbnKLf7XAKf7QaPxVuM8aPzncpJtwzGwUO4o
-   w==;
-X-CSE-ConnectionGUID: F192n629QfyBYFC/Bp72DA==
-X-CSE-MsgGUID: GWKWWM2rQQ2j/zUBIwsD5w==
-X-IronPort-AV: E=McAfee;i="6800,10657,11777"; a="78019737"
-X-IronPort-AV: E=Sophos;i="6.23,219,1770624000"; 
-   d="scan'208";a="78019737"
-Received: from orviesa007.jf.intel.com ([10.64.159.147])
-  by fmvoesa113.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 06 May 2026 04:53:53 -0700
-X-CSE-ConnectionGUID: USLnNDY/R4quphkMD/PBPw==
-X-CSE-MsgGUID: H6tVOTUYQVWfQ9Ev3prDIw==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.23,219,1770624000"; 
-   d="scan'208";a="236365396"
-Received: from ijarvine-mobl1.ger.corp.intel.com (HELO localhost) ([10.245.244.231])
-  by orviesa007-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 06 May 2026 04:53:50 -0700
-From: =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
-Date: Wed, 6 May 2026 14:53:46 +0300 (EEST)
-To: Thorsten Blum <thorsten.blum@linux.dev>
-cc: Prasanth Ksr <prasanth.ksr@dell.com>, Hans de Goede <hansg@kernel.org>, 
-    Dell.Client.Kernel@dell.com, platform-driver-x86@vger.kernel.org, 
-    LKML <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH] platform/x86: dell-wmi-sysman: use strnlen in
- strlcpy_attr
-In-Reply-To: <20260502165707.242332-3-thorsten.blum@linux.dev>
-Message-ID: <fcff1484-24b6-ce49-bb5e-f7da3e711eea@linux.intel.com>
-References: <20260502165707.242332-3-thorsten.blum@linux.dev>
+	dkim=pass (1024-bit key) header.d=126.com header.i=@126.com header.b="ZvUaC1w/"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=126.com;
+	s=s110527; h=Message-ID:Date:MIME-Version:To:From:Subject:
+	Content-Type; bh=EPhIhfG9E3758dze5T1cLK3D8d0bo2pE99AyWS8oLfA=;
+	b=ZvUaC1w/UI7RwBp9eB6PMShlG7RtfhtvSU20hRpIk2aYHT4BqbBeifDVA37tKN
+	D6yTpspiu2b4qzE6YFFTjndvmtTU1cxbUpjQPvUPJX/lNl4Y5aydwI+ZBEKy/tD8
+	jcZiK0XM3BbjKC0WBAhsgmuOs4yyqaOSXQj6XzALO2imU=
+Received: from [192.168.0.111] (unknown [])
+	by gzsmtp1 (Coremail) with SMTP id PCkvCgA3X__lLftpfuvPDQ--.10961S2;
+	Wed, 06 May 2026 20:02:46 +0800 (CST)
+Message-ID: <aea86975-3db1-49cd-9c17-80145a492779@126.com>
+Date: Wed, 6 May 2026 20:02:45 +0800
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+User-Agent: Mozilla Thunderbird
+Content-Language: en-US
+To: platform-driver-x86@vger.kernel.org
+Cc: luke@ljones.dev, denis.benato@linux.dev, corentin.chary@gmail.com
+From: =?UTF-8?B?5rGq5rWp54S2?= <wanghaoran505@126.com>
+Subject: asus-wmi: kbd backlight brightness keys not forwarded as input events
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
+X-CM-TRANSID:PCkvCgA3X__lLftpfuvPDQ--.10961S2
+X-Coremail-Antispam: 1Uf129KBjvJXoW7WF17Gry5uF43uw1DtrWxtFb_yoW8WF1kpF
+	WSywnYkws5AF1rJw1qqFsxXr1jvw4vyay5Awn8try5uan8X34xCr4ktw15CFsrC3y7W3W2
+	grn8Aan7WFWDA3DanT9S1TB71UUUUU7qnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
+	9KBjDUYxBIdaVFxhVjvjDU0xZFpf9x07j2ZXOUUUUU=
+X-CM-SenderInfo: pzdqwxpdrut0qvqvqiyswou0bp/xtbBngbdT2n7LeYWwQAA3E
 
-On Sat, 2 May 2026, Thorsten Blum wrote:
+There is a bug in asus-wmi's handling of keyboard backlight brightness keys.
 
-> Use strnlen() to limit source string scanning to MAX_BUFF bytes. Return
-> early on error and make the "empty string means not applicable" case
-> explicit.
-> 
-> Use 'const char *' for the read-only source string while at it.
+  == Problem: WMI key events 0xc4/0xc5/0xc7 are not forwarded as input 
+events ==
 
-Hi Thorsten,
+  In asus_wmi_notify() (asus-wmi.c, around line 4551), when the driver 
+receives
+  NOTIFY_KBD_BRTUP (0xc4), NOTIFY_KBD_BRTDWN (0xc5), or NOTIFY_KBD_BRTTOGGLE
+  (0xc7), it calls kbd_led_set_by_kbd() and immediately returns without 
+calling
+  input_report_key(). No EV_KEY event is ever delivered to /dev/input.
 
-First of all, thanks for looking into these.
+  The conventional behavior (as seen in thinkpad_acpi, dell-wmi, etc.) is to
+  emit the corresponding input event after handling the brightness change
+  internally, so that the keystroke remains visible to userspace.
 
-> Signed-off-by: Thorsten Blum <thorsten.blum@linux.dev>
-> ---
->  .../dell/dell-wmi-sysman/dell-wmi-sysman.h    |  2 +-
->  .../x86/dell/dell-wmi-sysman/sysman.c         | 20 ++++++++++---------
->  2 files changed, 12 insertions(+), 10 deletions(-)
-> 
-> diff --git a/drivers/platform/x86/dell/dell-wmi-sysman/dell-wmi-sysman.h b/drivers/platform/x86/dell/dell-wmi-sysman/dell-wmi-sysman.h
-> index 5278a93fdaf7..f6943301b857 100644
-> --- a/drivers/platform/x86/dell/dell-wmi-sysman/dell-wmi-sysman.h
-> +++ b/drivers/platform/x86/dell/dell-wmi-sysman/dell-wmi-sysman.h
-> @@ -162,7 +162,7 @@ static ssize_t curr_val##_store(struct kobject *kobj,				\
->  
->  union acpi_object *get_wmiobj_pointer(int instance_id, const char *guid_string);
->  int get_instance_count(const char *guid_string);
-> -void strlcpy_attr(char *dest, char *src);
-> +void strlcpy_attr(char *dest, const char *src);
->  
->  int populate_enum_data(union acpi_object *enumeration_obj, int instance_id,
->  			struct kobject *attr_name_kobj, u32 enum_property_count);
-> diff --git a/drivers/platform/x86/dell/dell-wmi-sysman/sysman.c b/drivers/platform/x86/dell/dell-wmi-sysman/sysman.c
-> index 51d25fdc1389..6c9911accefc 100644
-> --- a/drivers/platform/x86/dell/dell-wmi-sysman/sysman.c
-> +++ b/drivers/platform/x86/dell/dell-wmi-sysman/sysman.c
-> @@ -234,18 +234,20 @@ static const struct kobj_type attr_name_ktype = {
->   * @dest: Where to copy the string to
->   * @src: Where to copy the string from
->   */
-> -void strlcpy_attr(char *dest, char *src)
-> +void strlcpy_attr(char *dest, const char *src)
->  {
-> -	size_t len = strlen(src) + 1;
-> +	size_t len = strnlen(src, MAX_BUFF);
->  
-> -	if (len > 1 && len <= MAX_BUFF)
-> -		strscpy(dest, src, len);
-> -
-> -	/*len can be zero because any property not-applicable to attribute can
-> -	 * be empty so check only for too long buffers and log error
-> -	 */
-> -	if (len > MAX_BUFF)
-> +	if (len == MAX_BUFF) {
->  		pr_err("Source string returned from BIOS is out of bound!\n");
-> +		return;
-> +	}
-> +
-> +	/* Empty string means "not applicable" and is skipped intentionally. */
-> +	if (len == 0)
-> +		return;
-> +
-> +	strscpy(dest, src, len + 1);
+  == Impact ==
 
-And how exactly is this last line different from strscpy(dest, serc, 
-MAX_BUFF);
+  1. Wayland compositors and other userspace tools cannot bind or react to
+     these keys, since no input event is generated.
 
-?
+  2. Because the driver only updates its internal state variable 
+(kbd_led_wk)
+     without emitting input events, userspace has no way to observe 
+brightness
+     changes or persist them. As a result,
+     /sys/class/leds/asus::kbd_backlight/brightness is always 0 after boot,
+     regardless of the value set in the previous session.
 
-I agree something should be done here but I don't like this approach. The 
-length passed to strscpy() should be "Size of the destination buffer" but 
-your approach calculated the length of the source string (?!):
+  == Suggested fix ==
 
-/**
- * strscpy - Copy a C-string into a sized buffer
- * @dst: Where to copy the string to
- * @src: Where to copy the string from
- * @...: Size of destination buffer (optional)
+  After calling kbd_led_set_by_kbd(), emit the corresponding input event
+  (KEY_KBDILLUMUP / KEY_KBDILLUMDOWN) before returning, instead of returning
+  silently.
 
-So, to make it safe and sound logically, to me it looks more like the 
-_caller_ should pass the output buffer's size to this function. Or 
-alternatively, this function could be wrapped with a macro such that the 
-sizeof(*dest) can still be checked to be of correct length.
+  == Hardware ==
 
-Also, this function presents itself with str*() name like a generic string 
-copy function but what it really is more attr_check_and_copy(), it might 
-not copy anything if the checks fail.
+    Model:  ASUS ROG Strix G16 G614FR
+    Kernel: Linux 7.0.3-zen1-2-zen x86_64
+    USB ID: 0b05:19b6 ASUSTek Computer, Inc. [N-KEY Device]
 
-
--- 
- i.
+    /sys/class/leds/asus::kbd_backlight/max_brightness: 3
+    /sys/class/leds/asus::kbd_backlight/brightness: 0 (always after boot)
 
