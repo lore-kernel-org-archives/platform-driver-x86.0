@@ -1,210 +1,181 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.17])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.19])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8802A3C73E5;
-	Thu,  7 May 2026 13:44:12 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.17
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 956F53F1676;
+	Thu,  7 May 2026 13:56:07 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.19
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1778161454; cv=none; b=Gvp1ygyJ/WbdgJ3csBi4C9fUzDwTEwjvIqlim9lAaLaCWD46dCKjPNzzH5EcUaoc67dhLMFimrugQLke9Xfir9Pal5s9QsjJyuaeGCn3CDNPKTJD9y8T8szws8WqFuPU1dYXoNf3j66ymp18HH30iNK8lgPoOkzq1vgX8eMc18E=
+	t=1778162168; cv=none; b=hMcS/chYNgr22ftlaRzWJR9/eLgk7I8c2cpuOCd0yEIXY/SJWktI0xWR0waFDf08L6/iaCZdMnNZhXYUT5+U7ce6cItqye6DBbBvfqm6S+BxMpbyNO2LMsqhpBC/hWtrKA1UC/zVRx2T5Dj8lVdWNS79bW2ba8LKu6a6slnfJvs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1778161454; c=relaxed/simple;
-	bh=5bxYhbPc3/cPyNFG7Vf21TxFhTBcsQQqpmSRwRnjy3I=;
+	s=arc-20240116; t=1778162168; c=relaxed/simple;
+	bh=d2P4T+tfIjHdJIeyHllBZi89biw+X4JNaj0lL/jSYbI=;
 	h=From:Date:To:cc:Subject:In-Reply-To:Message-ID:References:
-	 MIME-Version:Content-Type; b=JSGnfcJ2A2GhCMybFFFoCd7X7NuT99CBo0OFWDh2tV8oc5V10eE1togtqVRVZavfWYDjRxtQXqP0ZNYptJW7Db7bDPdU16+3I0S0TAS2K4zAmJ2NxK2xrIlYY+zkUouBzv0aU7PleQHAV2HFQ3/nc1uLMPVLmX4gCyfhLHB5teg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=pass smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=W8yL/gfW; arc=none smtp.client-ip=198.175.65.17
+	 MIME-Version:Content-Type; b=gGr3Io6SlO0Ibhta4rUe3ocSyP9Ay8D38LeZnfvj2A4FRW5ZtD2EMTAhchbs+LBvyJp/ixm0fiRAyhmfnItpVdPkM1BeubgHD3Qk6cS0w7+c0swRc+te+2AUn59uZgpYgNG+FdYMqUF4ebVtAqgA7o7QW6z/UVBWb7wFEeaRh9s=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=pass smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=VL9bd75H; arc=none smtp.client-ip=198.175.65.19
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="W8yL/gfW"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="VL9bd75H"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1778161453; x=1809697453;
+  t=1778162167; x=1809698167;
   h=from:date:to:cc:subject:in-reply-to:message-id:
    references:mime-version;
-  bh=5bxYhbPc3/cPyNFG7Vf21TxFhTBcsQQqpmSRwRnjy3I=;
-  b=W8yL/gfWYEcAj5ohGxHHxfiCPiDy6B8FiuwxhS7HvHlR2SBeJegGH/pM
-   iZAjFhMsuwu9dBQMct7wXz1aPWHqFExoTdQgBzDm5KzJCReW9tAljIXzm
-   O06nLw1kCinrs3XcLltQx1KWezf1LZsffar4jisBXZWLP2qiKZa0jxPpd
-   dcg+qhsJ0pI3W3O0wtmPzep5MWt51WwRoICuw4kzx5nZCWLzrmZVtIZLH
-   2Jm+Lx/2VVUDupAo8LVAsEeOQcs68zB5nnrb6U6iFpL5IODphf+rb+oZm
-   LOAtUqWNQFj1bqvBHMursEQ1mtDQsnQApEQnML6Wfls1eabkIRwO6CKh0
+  bh=d2P4T+tfIjHdJIeyHllBZi89biw+X4JNaj0lL/jSYbI=;
+  b=VL9bd75H6SYN2FbpPG2igaeN43H5MrwykVgHEAPQROujKbG4gvf4WzdP
+   sFajAgdkzjDz+WfsG4pVZX+ZD3H3bs4IVSN6nNRxdVWfCQowsufcyWltH
+   xd0WxbN9lZTqRIMmKB4yFxqkeHkRPkNGZNULmCV9RZK7DmFSpy+9RUrST
+   rQX9NQob65QtvIgfkSnPqKQqRTw0B19MwBFAIg/ImoCHFoW+y0XK22Kdt
+   hZJpaJ4ecA0JR8RlXZTT/Hr3BADxgC3w8nTl7Hh1rWlpXfarKr4ujaJTY
+   V8EvQFtJnmTEWyIS9cGKyUyTFYh9UMfzGvrJCwPmf3GOvaSvQ7ARPR7QQ
    Q==;
-X-CSE-ConnectionGUID: VSnRC+KQSYemjAAQILDwlA==
-X-CSE-MsgGUID: vGlo+oCgQbePyPOOYecSKA==
-X-IronPort-AV: E=McAfee;i="6800,10657,11779"; a="79102959"
+X-CSE-ConnectionGUID: YyN2gWE0RKqmW2B354GbDg==
+X-CSE-MsgGUID: tHUvm/BORRKe8T3EJ7H3Xw==
+X-IronPort-AV: E=McAfee;i="6800,10657,11779"; a="79048793"
 X-IronPort-AV: E=Sophos;i="6.23,221,1770624000"; 
-   d="scan'208";a="79102959"
-Received: from orviesa007.jf.intel.com ([10.64.159.147])
-  by orvoesa109.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 07 May 2026 06:44:12 -0700
-X-CSE-ConnectionGUID: sdHaJEp1SsySbN1gLJIScg==
-X-CSE-MsgGUID: ArHHZWoSRgGN9GLJdr5Sxw==
+   d="scan'208";a="79048793"
+Received: from orviesa008.jf.intel.com ([10.64.159.148])
+  by orvoesa111.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 07 May 2026 06:56:07 -0700
+X-CSE-ConnectionGUID: ZK+6Z+JVSIeJIybb9ioSCg==
+X-CSE-MsgGUID: 8FD+jfROS+iMvDUhYME/bA==
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="6.23,221,1770624000"; 
-   d="scan'208";a="236726449"
+   d="scan'208";a="236386980"
 Received: from ijarvine-mobl1.ger.corp.intel.com (HELO localhost) ([10.245.245.116])
-  by orviesa007-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 07 May 2026 06:44:09 -0700
+  by orviesa008-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 07 May 2026 06:56:04 -0700
 From: =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
-Date: Thu, 7 May 2026 16:44:06 +0300 (EEST)
-To: Thorsten Blum <thorsten.blum@linux.dev>
-cc: Prasanth Ksr <prasanth.ksr@dell.com>, Hans de Goede <hansg@kernel.org>, 
-    Dell.Client.Kernel@dell.com, platform-driver-x86@vger.kernel.org, 
-    LKML <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH] platform/x86: dell-wmi-sysman: use strnlen in
- strlcpy_attr
-In-Reply-To: <afs5tVs4a59FRdzB@linux.dev>
-Message-ID: <ed074d73-7f86-a24e-1cbf-4e02b856af05@linux.intel.com>
-References: <20260502165707.242332-3-thorsten.blum@linux.dev> <fcff1484-24b6-ce49-bb5e-f7da3e711eea@linux.intel.com> <afs5tVs4a59FRdzB@linux.dev>
+Date: Thu, 7 May 2026 16:56:01 +0300 (EEST)
+To: Denis Benato <denis.benato@linux.dev>
+cc: Armandas Kvietkus <armundunelis@gmail.com>, luke@ljones.dev, 
+    Hans de Goede <hansg@kernel.org>, platform-driver-x86@vger.kernel.org, 
+    LKML <linux-kernel@vger.kernel.org>, fxzxaxon@outlook.com
+Subject: Re: [PATCH] platform/x86: asus-armoury: downgrade missing power
+ limits warning to debug
+In-Reply-To: <dfe28a80-6ce8-4bba-b151-3c24d385782c@linux.dev>
+Message-ID: <2e6d1880-fd4c-e00d-3042-0913bedb7456@linux.intel.com>
+References: <20260503175734.27795-1-armundunelis@gmail.com> <6460ef7c-b4d9-4106-95cc-35710b4798bb@linux.dev> <91d3cc8d-ee5b-f204-ee42-ad8825a14a24@linux.intel.com> <dfe28a80-6ce8-4bba-b151-3c24d385782c@linux.dev>
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/mixed; boundary="8323328-1401041204-1778161446=:983"
+Content-Type: multipart/mixed; boundary="8323328-144601563-1778162161=:983"
 
   This message is in MIME format.  The first part should be readable text,
   while the remaining parts are likely unreadable without MIME-aware tools.
 
---8323328-1401041204-1778161446=:983
-Content-Type: text/plain; charset=iso-8859-1
+--8323328-144601563-1778162161=:983
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: QUOTED-PRINTABLE
 
-On Wed, 6 May 2026, Thorsten Blum wrote:
-
-> On Wed, May 06, 2026 at 02:53:46PM +0300, Ilpo J=E4rvinen wrote:
-> > On Sat, 2 May 2026, Thorsten Blum wrote:
-> >=20
-> > > Use strnlen() to limit source string scanning to MAX_BUFF bytes. Retu=
-rn
-> > > early on error and make the "empty string means not applicable" case
-> > > explicit.
-> > >=20
-> > > Use 'const char *' for the read-only source string while at it.
-> >=20
-> > Hi Thorsten,
-> >=20
-> > First of all, thanks for looking into these.
-> >=20
-> > > Signed-off-by: Thorsten Blum <thorsten.blum@linux.dev>
-> > > ---
-> > >  .../dell/dell-wmi-sysman/dell-wmi-sysman.h    |  2 +-
-> > >  .../x86/dell/dell-wmi-sysman/sysman.c         | 20 ++++++++++-------=
---
-> > >  2 files changed, 12 insertions(+), 10 deletions(-)
-> > >=20
-> > > diff --git a/drivers/platform/x86/dell/dell-wmi-sysman/dell-wmi-sysma=
-n.h b/drivers/platform/x86/dell/dell-wmi-sysman/dell-wmi-sysman.h
-> > > index 5278a93fdaf7..f6943301b857 100644
-> > > --- a/drivers/platform/x86/dell/dell-wmi-sysman/dell-wmi-sysman.h
-> > > +++ b/drivers/platform/x86/dell/dell-wmi-sysman/dell-wmi-sysman.h
-> > > @@ -162,7 +162,7 @@ static ssize_t curr_val##_store(struct kobject *k=
-obj,=09=09=09=09\
-> > > =20
-> > >  union acpi_object *get_wmiobj_pointer(int instance_id, const char *g=
-uid_string);
-> > >  int get_instance_count(const char *guid_string);
-> > > -void strlcpy_attr(char *dest, char *src);
-> > > +void strlcpy_attr(char *dest, const char *src);
-> > > =20
-> > >  int populate_enum_data(union acpi_object *enumeration_obj, int insta=
-nce_id,
-> > >  =09=09=09struct kobject *attr_name_kobj, u32 enum_property_count);
-> > > diff --git a/drivers/platform/x86/dell/dell-wmi-sysman/sysman.c b/dri=
-vers/platform/x86/dell/dell-wmi-sysman/sysman.c
-> > > index 51d25fdc1389..6c9911accefc 100644
-> > > --- a/drivers/platform/x86/dell/dell-wmi-sysman/sysman.c
-> > > +++ b/drivers/platform/x86/dell/dell-wmi-sysman/sysman.c
-> > > @@ -234,18 +234,20 @@ static const struct kobj_type attr_name_ktype =
-=3D {
-> > >   * @dest: Where to copy the string to
-> > >   * @src: Where to copy the string from
-> > >   */
-> > > -void strlcpy_attr(char *dest, char *src)
-> > > +void strlcpy_attr(char *dest, const char *src)
-> > >  {
-> > > -=09size_t len =3D strlen(src) + 1;
-> > > +=09size_t len =3D strnlen(src, MAX_BUFF);
-> > > =20
-> > > -=09if (len > 1 && len <=3D MAX_BUFF)
-> > > -=09=09strscpy(dest, src, len);
-> > > -
-> > > -=09/*len can be zero because any property not-applicable to attribut=
-e can
-> > > -=09 * be empty so check only for too long buffers and log error
-> > > -=09 */
-> > > -=09if (len > MAX_BUFF)
-> > > +=09if (len =3D=3D MAX_BUFF) {
-> > >  =09=09pr_err("Source string returned from BIOS is out of bound!\n");
-> > > +=09=09return;
-> > > +=09}
-> > > +
-> > > +=09/* Empty string means "not applicable" and is skipped intentional=
-ly. */
-> > > +=09if (len =3D=3D 0)
-> > > +=09=09return;
-> > > +
-> > > +=09strscpy(dest, src, len + 1);
-> >=20
-> > And how exactly is this last line different from strscpy(dest, serc,=20
-> > MAX_BUFF);
-> >=20
-> > ?
->=20
-> The result is the same, but happy to use MAX_BUFF instead.
-
-The size should be related to the output buffer(!) and not come from=20
-length of the input (using input len is unsound way to engineer this). In=
+On Wed, 6 May 2026, Denis Benato wrote:
+> On 5/6/26 13:26, Ilpo J=C3=A4rvinen wrote:
+> > On Mon, 4 May 2026, Denis Benato wrote:
+> >> On 5/3/26 19:57, Armandas Kvietkus wrote:
+> >>> When a system is not found in the power_limits DMI table,
+> >>> init_rog_tunables() emits a pr_warn() and returns. This is
+> >>> expected behaviour for hardware that does not support ROG
+> >>> power limit tunables, not an error condition.
+> >>>
+> >>> Downgrade to pr_debug() to avoid spurious boot noise on
+> >>> unsupported systems while preserving the message for debugging.
+> >>>
+> >>> Reported-by: fxzxaxon@outlook.com
+> >>> Closes: https://bugzilla.kernel.org/show_bug.cgi?id=3D221441
+> >>> Signed-off-by: Armandas Kvietkus <armundunelis@gmail.com>
+> >>> ---
+> >>>  drivers/platform/x86/asus-armoury.c | 2 +-
+> >>>  1 file changed, 1 insertion(+), 1 deletion(-)
+> >>>
+> >>> diff --git a/drivers/platform/x86/asus-armoury.c b/drivers/platform/x=
+86/asus-armoury.c
+> >>> index 5b0987ccc..c8e9ff89f 100644
+> >>> --- a/drivers/platform/x86/asus-armoury.c
+> >>> +++ b/drivers/platform/x86/asus-armoury.c
+> >>> @@ -991,7 +991,7 @@ static void init_rog_tunables(void)
+> >>>  =09/* Match the system against the power_limits table */
+> >>>  =09dmi_id =3D dmi_first_match(power_limits);
+> >>>  =09if (!dmi_id) {
+> >>> -=09=09pr_warn("No matching power limits found for this system\n");
+> >>> +=09=09pr_debug("No matching power limits found for this system\n");
+> >> Maybe this is right to get downgraded, but still no debug: I think inf=
+o is better,
+> >> but I would like to hear from Luke what this is about.
+> > Hi Denis,
+> >
+> > When kernel is built with CONFIG_DYNAMIC_DEBUG=3Dy, all debug messages=
 =20
-that sense, MAX_BUFF is better than using len, but see my question about=20
-patch order below.
-
-> However,
-> since we already know the length of the source string and that it is
-> NUL-terminated within the first MAX_BUFF bytes, we could just use
-> memcpy(dest, src, len + 1) directly.
-
-Using memcpy() would be wrong direction to take. It doesn't validate the=20
-output length any better against the output buffer size than the current=20
-approach does.
-
-> > I agree something should be done here but I don't like this approach. T=
+> > will appear if kernel's cmdline enables it:
+> >
+> > dyndbg=3D"file drivers/platform/x86/asus-armoury.c +p"
+> >
+> > (wildcards too could be used where helpful and semicolon as a separator=
+=20
+> > if, in rare cases, more than one filter should be necessary).
+> >
+> > So all we need is to ask the reporter to boot with dyndbg enabled for t=
 he=20
-> > length passed to strscpy() should be "Size of the destination buffer" b=
-ut=20
-> > your approach calculated the length of the source string (?!):
-> >=20
-> > /**
-> >  * strscpy - Copy a C-string into a sized buffer
-> >  * @dst: Where to copy the string to
-> >  * @src: Where to copy the string from
-> >  * @...: Size of destination buffer (optional)
-> >=20
-> > So, to make it safe and sound logically, to me it looks more like the=
+> > relevant file(s), no recompiling the kernel required.
+> >
+> >
+> > I suspect most distros do have dynamic debugging capability in their=20
+> > kernel configs so it shouldn't be a problem when they don't by default=
 =20
-> > _caller_ should pass the output buffer's size to this function. Or=20
-> > alternatively, this function could be wrapped with a macro such that th=
-e=20
-> > sizeof(*dest) can still be checked to be of correct length.
+> > show these messages (at least the two major ones I just checked have it=
+).
+> >
+> Hi!
 >=20
-> I have some other changes queued up and would prefer to change this in a
-> follow-up patch since there are quite a few call sites that need to be
-> updated.
+> My position is that the experience of most users is:
+> they boot linux, install asusctl, notice that not only is less fancy than=
+ the windows counterpart,
+> but it also lacks TDP sliders so they enter in discord and ask "why can't=
+ I control my TDP".
+>=20
+> As of now one just answers "dmesg | grep asus" and the warning appears, w=
+hile if this becomes a debug
+> the process becomes more involved, for both parts, as most people know dm=
+esg, but a person randomly
+> hanging in the discord doesn't usually know how to enable dynamic debuggi=
+ng, or how to reconfigure
+> a bootloader. I surely don't know how to configure every bootloader under=
+ the sun for every major distro.
+>=20
+> My point of view is that said warning guided someone straight to me, so i=
+t reached its objective effectively,
+> why changing something that works?
+>=20
+> The only reason I can think of is people who run with panic on warning, b=
+ut since I have yet to see an asus
+> laptop that doesn't make linux spam a bunch of acpi errors and warnings s=
+uch a kernel (as of now) is
+> unbootable on these machines.
+>=20
+> Perhaps you have a stronger motivation and can point me to it?
 
-Why exactly you have to make this change first at all? Can't this just be=
+I don't have strong motivation here, other than shooting down the false=20
+claim that debug level messages are not available when it comes to distro=
 =20
-placed after the other changes and done properly right away. Do those=20
-other changes touch this same function so changing order is not easy?
+settings.
 
-> > Also, this function presents itself with str*() name like a generic str=
-ing=20
-> > copy function but what it really is more attr_check_and_copy(), it migh=
-t=20
-> > not copy anything if the checks fail.
->=20
-> OK, I'll take this into account when changing the function signature.
+Debug message can be enabled also through
 
+  /sys/kernel/debug/dynamic_debug/control
+
+=2E..but yes, there will be more steps in that case too as that requires=20
+mounting debugfs, and reloading the driver too to retrigger the message=20
+(and I'm not sure if the userspace program likes that, etc. :-)).
+
+So I understand if you prefer to not go there.
+
+> My current opinion is that instead of demoting it from a warning I should=
+ perhaps phrase it better
+> as Mario suggests.
+
+I don't have a problem with the message wording myself.
 
 --=20
  i.
 
---8323328-1401041204-1778161446=:983--
+--8323328-144601563-1778162161=:983--
