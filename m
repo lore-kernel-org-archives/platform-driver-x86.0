@@ -1,64 +1,64 @@
-Received: from mail-dy1-f174.google.com (mail-dy1-f174.google.com [74.125.82.174])
+Received: from mail-dy1-f175.google.com (mail-dy1-f175.google.com [74.125.82.175])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A45D9423A82
-	for <platform-driver-x86@vger.kernel.org>; Thu,  7 May 2026 18:05:24 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=74.125.82.174
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CBF92477998
+	for <platform-driver-x86@vger.kernel.org>; Thu,  7 May 2026 18:05:27 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=74.125.82.175
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1778177126; cv=none; b=OPWcKNYMZcv04GNHlTDPEjnwwzgoIwxGDZn8JNkoFB4WzKR+Ajr4YNSGk4iMSnOz7iUTtlZVw/XH3Gs6HHE3zQZJFEpvnvV8RMr7ilfLz8sUz+UpMkk1xiHtgc1YrbRbvr7XRREbJ41fRpqMouTMAq1MiDpJYInwGRjV46PabxA=
+	t=1778177129; cv=none; b=DhF9vEICgbEcmSwzfqhvruW8KF6/fysF64NJZfMZGjWNVuzN6BCuiz+QOCHdkZ6aRaZGRZlO1Gm7gXmMzQUn2GP99llfjnXcXeBxkN7i3KtjLrYJ2/J0ScTEJo5LiwHtlHUgJ9TxuzvzXrG2E2IWEL9eW9y5+naFjO4IT9t5VvE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1778177126; c=relaxed/simple;
-	bh=6uvm7kxcoZxl4SJop0VuYLP778pizJEeCY5iHUnRujE=;
+	s=arc-20240116; t=1778177129; c=relaxed/simple;
+	bh=NlwwelYA8uSHgqW88Xvl+l0Vc3NtEotDqvYvC1ZDl1E=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=oCRV4Ir0aOOYeQlZ5uvgxqPUR0VTS84+LYju5es84OwQOy+DgceIlKP3g5PapRK/RnIBT7NF7OMQNUk6LrxkaUHZI5LhMLg4XWrAc17MyWnuRbIw8LyHsxzln0qm1LFEeiVBzOpOotopScF/K4ta3hr3g11EIJPqBNJ82f3qj8I=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=ZAbJzQBV; arc=none smtp.client-ip=74.125.82.174
+	 MIME-Version; b=iczz7MYPpOiKUXKtpPEqDLWDxHjseuWWwSBwq4JGgae2aL1u5Rh7cxi7f+vayIxurLwuRt/SNb3aZYDmlgFgaTNiq+q/E9UQdwDz9jyhdOnWcDnHx8yeXLYvfzFo0KGCa5HXI2ij3v4WedGBiVSO51U8KJthfC9bVGZzm+vJuSs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=H9Aon4zs; arc=none smtp.client-ip=74.125.82.175
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ZAbJzQBV"
-Received: by mail-dy1-f174.google.com with SMTP id 5a478bee46e88-2f0d3e07e30so2975163eec.0
-        for <platform-driver-x86@vger.kernel.org>; Thu, 07 May 2026 11:05:24 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="H9Aon4zs"
+Received: by mail-dy1-f175.google.com with SMTP id 5a478bee46e88-2f3c623322bso1941671eec.0
+        for <platform-driver-x86@vger.kernel.org>; Thu, 07 May 2026 11:05:27 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20251104; t=1778177124; x=1778781924; darn=vger.kernel.org;
+        d=gmail.com; s=20251104; t=1778177127; x=1778781927; darn=vger.kernel.org;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=4ki2zpxXcCZiQ654Cm5JOUD1c7/Sq7YjZSIjBtyxJhk=;
-        b=ZAbJzQBVI0cLGmwvL10G6q18zhdo8D4tLW2JaIVPv62Q0sd3lkm5WaEGSRgCqPakDD
-         gMJ7XxQk22EExn/wquItvA7iItdR4zvtXI6R1fden0+wSKwCSsTfsvSUYCOmqHVNGE5u
-         Zqnq5r5jSol/aCE95DJsdXMsgm/FZv1VY6csxjT5ZmDKYJGYv5izFz9x+nXurrENXnXl
-         TokzK3kG0XARajmZNTxeJXtQ/6IdvXfoMPpD5rq3NKf7HFHCwSPU9R1kHW9vs+Ii5qQP
-         g7jM2irEwrB7KDPm+/yL0mNn2c14J12ssaSc5IVJptacVB+dX3VHLII7YxyVI2B8DTaz
-         V9qw==
+        bh=2LD0U2JI3+b32qBu6y4JGUu0pIw+boTDqwL9bnMsDgY=;
+        b=H9Aon4zsayzzgHkCSp+c2talcKOMl7cpNnKXFJoYoywEbMXnCTINJ7Z6EWhibseHKK
+         EC0iG24VUt6jlyDGvCWS4tdqsG/EYszn6aJj7N/KxnZOFoJZ19r072ahlc9A04kzCgvR
+         lqQW2vUfsdRhcPWW/kcqYgf7VzDwpYbzowmnmdRD6WpAI0UzJ2VQ/C975TxfR/iBSqzq
+         cKFHNxLSIkkFpLpteB/gWVauApQA3LbJv5h3huSUccdlJ4Lmbegicmj/ZpvZ97CgIt3K
+         I0rU0g+m1AZamLfAqY8hEXtKfpu+LfiYoGW8Mcnkx2EwoAH5yZk5NKrdJXqoAjnnL683
+         6EJQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1778177124; x=1778781924;
+        d=1e100.net; s=20251104; t=1778177127; x=1778781927;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:x-gm-gg:x-gm-message-state:from
          :to:cc:subject:date:message-id:reply-to;
-        bh=4ki2zpxXcCZiQ654Cm5JOUD1c7/Sq7YjZSIjBtyxJhk=;
-        b=iAdQf0n0SB8FBUF/wKxp01blmF1W19k/6ktOaFOcDQDSZSMHeYj+bLfsvgEjAnzkOg
-         W101JE5BLtRk5WAeUm/ZBD9z+tn5EaDbvwAMK7HYIkjc4cMzt0Dj5/9iRElTzCMtZzc2
-         yXPqq8GS40vOEqcavJFiYyTCDKna+pwZZF2TQk3+d3a7TzwwM0sP54UvpHR76dK6n/t0
-         N9bdio8JoqqV7QGlTOCI4fGZlcCG/AF88NOjtixCRNcWXz6GttovN6Xp1GBxMdjW/DvW
-         5vfajIMFg/u3XvabcuB4Lmlnw2IiVwSD8Hyh7xkbC2dVmXe78DAH5/X2InPwdeWcJhlb
-         pjdg==
-X-Forwarded-Encrypted: i=1; AFNElJ8SmHCTWx7/J1icJFg9wVKU8k41cekguol0W+nQLGe8kb9ZuSA16FD06Rm80p5Rl8SAKEAJuM9tilbt98m559wxPzE3@vger.kernel.org
-X-Gm-Message-State: AOJu0Yz+hi3a9FnLX180YrhycYC1zShrtClVEoikDo0Gx06SFv9ZArQx
-	NmRtxz03b9JIWJnKYxJBiDaD0HoWC3rCchPIiwFYBplQ2N8VSVN8b0EG
-X-Gm-Gg: Acq92OGS2Js8tZtpmE+WZVa4pc1hOOCe+RyPPScT+L3TWj2oX4u54eRj0G8tEX9wOMd
-	zmPjF+kVfoyNouve5DhK/odPu1vm914PlbYH40f82i+CZx+RJdmoYwTsnTcDbkVu0fXhyVhVVeV
-	v7N7JhINkW8M3gFqy3Mzqb5SfggGcDRWwg9/yokTZBpYbC9bPyAscCfmuY6OQxW0Tf5YYiHZVsl
-	ODlCZTe9ypOPcQN7WUjCFjQdl9rvPAYJbOntlg4/EtJMGAhQt6WXH3h5n+iJZzoEGGUdBUS9RVi
-	QLC8GRlQYWtssZyNXC1uUqTSHs00wHX1Rud3JxBdDV4YoIWISEabsL55iWM0vzCgzjq7bq21j3H
-	iUrDez/L6dGhXShijAluD8exUWzkjq5xfxMXVn+TFd4VlCZO/zs+rD5+sz3T6nGJGyNZw9aYyY0
-	vj54f6/MGXVvbPnmO18pUl/SPdfxia4+FRCf8L4n1BN3hCcBoSART547A5R/McohphoMTQc9tWi
-	jjDKVr/BmzcAEE=
-X-Received: by 2002:a05:7300:72d1:b0:2f1:6252:f8ef with SMTP id 5a478bee46e88-2f548a9b30cmr5316897eec.1.1778177123686;
-        Thu, 07 May 2026 11:05:23 -0700 (PDT)
+        bh=2LD0U2JI3+b32qBu6y4JGUu0pIw+boTDqwL9bnMsDgY=;
+        b=cOeC43sSNzOCQQxaNz5GgJjqfOKy+gju4zG7SHGi14fBWEZMvFeByL8hJppqnz5Zqs
+         eDMGZ77l52x8S7Gdbj0v4IAbEaxJKoBKGygrXukMnP6SqwHI05i5EBfufeuyCkkVBg3Q
+         NYXB/nl+TfmgXCDap8gxE0wvJnRs7K2NWFOQkghULTH4xdVc/Bebf/fx/1M2RrKIU6O1
+         03XtjB2YhinVZQe6pbJVPaWC1T3Zo7+/IW22V6olOB28DcO0/3gE9i8MPfeK81E+2Jjz
+         Lt9x8WKybezk6cqg/zSAFVZAj9qWmAxtcPPFs9n+eM6wzZzBweo4bx4z2td/UQhNwDxw
+         HERg==
+X-Forwarded-Encrypted: i=1; AFNElJ/rzkeMFKf6F/m862MCQjOHP6NEHlnt5S58rjM6/Qx11b69DuDfWiWKzI5yo7cZUUNcMZFfelpOIha3L255YFGMd01h@vger.kernel.org
+X-Gm-Message-State: AOJu0YwXgTH3GM5Xpuaj5booz1nmj/a8IBvQ6w1e6EjiV6WZIqagXCa/
+	HQGcMiN/s1VIKNcBBO92BMxQauS80P3gx7MBnHPLLrCAHJ/jSGZrFIIP
+X-Gm-Gg: Acq92OHMGb5NzTeSiEbxfVv3KTx7Ocwrqqmnufo5u3GI2Yoju43XQZBJHCeTJKQW62F
+	GjVbTqgDho6xfgV2A09Gtgvb/U89ly8LskMfQSdXJSO8+rad7ov9g++2jXK494x1ajjun97u2o+
+	0P5B/R9T3ECRyHmBVN19uYOkErutSVObbcIt47d8pHDFcM+OZgAr3H+gsuSQtFBb/KTE0aduJXU
+	dvXniRA6XKLfL6JSmZ4lD+FlaFzI9+9JlOYcmLBTKp/rAGM+mMIqqZoXqLtlFfTXpQ9RWAUXAI1
+	NNBcqm0aerFmJiQqHs88N7n31l6g5e+gIe8o2QQg+glbB7oFZGgHqtvUwNWsgFzukpQDueELTjh
+	LuSnzc9WPmpy2R4c7Y0FOw5pTmIA8Rf7NWDwcgQsIuCdHu1vAxI2XwNpmHtUBgnJW0qk9tBWFbA
+	TD4CDKcvvwvdv2O0ExpanS/gcMetakG3SlG1YzDXZ2m08F/7bFjw6HVX107YbDdrfUxGa2N/UMi
+	utjx1I8/zCYgrg=
+X-Received: by 2002:a05:7300:ac82:b0:2ea:5057:a31d with SMTP id 5a478bee46e88-2f54ad72b1cmr4708213eec.1.1778177125292;
+        Thu, 07 May 2026 11:05:25 -0700 (PDT)
 Received: from lappy (108-228-232-20.lightspeed.sndgca.sbcglobal.net. [108.228.232.20])
-        by smtp.gmail.com with ESMTPSA id 5a478bee46e88-2f82bd73a64sm44332eec.12.2026.05.07.11.05.23
+        by smtp.gmail.com with ESMTPSA id 5a478bee46e88-2f82bd73a64sm44332eec.12.2026.05.07.11.05.24
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 07 May 2026 11:05:23 -0700 (PDT)
+        Thu, 07 May 2026 11:05:25 -0700 (PDT)
 From: "Derek J. Clark" <derekjohn.clark@gmail.com>
 To: =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>,
 	Hans de Goede <hansg@kernel.org>
@@ -75,9 +75,9 @@ Cc: Mark Pearson <mpearson-lenovo@squebb.ca>,
 	platform-driver-x86@vger.kernel.org,
 	linux-kernel@vger.kernel.org,
 	stable@vger.kernel.org
-Subject: [PATCH v11 03/15] platform/x86: lenovo-wmi-other: Balance component bind and unbind
-Date: Thu,  7 May 2026 18:04:55 +0000
-Message-ID: <20260507180507.912966-4-derekjohn.clark@gmail.com>
+Subject: [PATCH v11 05/15] platform/x86: lenovo-wmi-other: Fix tunable_attr_01 struct members
+Date: Thu,  7 May 2026 18:04:57 +0000
+Message-ID: <20260507180507.912966-6-derekjohn.clark@gmail.com>
 X-Mailer: git-send-email 2.53.0
 In-Reply-To: <20260507180507.912966-1-derekjohn.clark@gmail.com>
 References: <20260507180507.912966-1-derekjohn.clark@gmail.com>
@@ -87,48 +87,43 @@ List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 
-From: Rong Zhang <i@rong.moe>
-
-When lwmi_om_master_bind() fails, the master device's components are
-left bound, with the aggregate device destroyed due to the failure
-(found by sashiko.dev [1]).
-
-Balance calls to component_bind_all() and component_unbind_all() when an
-error is propagated to the component framework.
+In struct tunable_attr_01 the capdata pointer is unused and the size of
+the id members is u32 when it should be u8. Fix these prior to adding
+additional members.
 
 No functional change intended.
 
 Reviewed-by: Mark Pearson <mpearson-lenovo@squebb.ca>
-Reviewed-by: Ilpo Järvinen <ilpo.jarvinen@linux.intel.com>
-Fixes: edc4b183b794 ("platform/x86: Add Lenovo Other Mode WMI Driver")
+Fixes: e1a5fe662b59 ("platform/x86: Add Lenovo Capability Data 01 WMI Driver")
 Cc: stable@vger.kernel.org
-Link: https://sashiko.dev/#/patchset/20260331181208.421552-1-derekjohn.clark%40gmail.com [1]
-Signed-off-by: Rong Zhang <i@rong.moe>
+Reviewed-by: Rong Zhang <i@rong.moe>
+Tested-by: Rong Zhang <i@rong.moe>
 Signed-off-by: Derek J. Clark <derekjohn.clark@gmail.com>
 ---
- drivers/platform/x86/lenovo/wmi-other.c | 5 ++++-
- 1 file changed, 4 insertions(+), 1 deletion(-)
+ drivers/platform/x86/lenovo/wmi-other.c | 7 +++----
+ 1 file changed, 3 insertions(+), 4 deletions(-)
 
 diff --git a/drivers/platform/x86/lenovo/wmi-other.c b/drivers/platform/x86/lenovo/wmi-other.c
-index be3309d74e03..a6be3463341c 100644
+index 1e06b894cfcc..50a03f5fd6ab 100644
 --- a/drivers/platform/x86/lenovo/wmi-other.c
 +++ b/drivers/platform/x86/lenovo/wmi-other.c
-@@ -1068,8 +1068,11 @@ static int lwmi_om_master_bind(struct device *dev)
+@@ -546,11 +546,10 @@ static void lwmi_om_fan_info_collect_cd_fan(struct device *dev, struct cd_list *
+ /* ======== fw_attributes (component: lenovo-wmi-capdata 01) ======== */
  
- 	priv->cd00_list = binder.cd00_list;
- 	priv->cd01_list = binder.cd01_list;
--	if (!priv->cd00_list || !priv->cd01_list)
-+	if (!priv->cd00_list || !priv->cd01_list) {
-+		component_unbind_all(dev, NULL);
-+
- 		return -ENODEV;
-+	}
+ struct tunable_attr_01 {
+-	struct capdata01 *capdata;
+ 	struct device *dev;
+-	u32 feature_id;
+-	u32 device_id;
+-	u32 type_id;
++	u8 feature_id;
++	u8 device_id;
++	u8 type_id;
+ };
  
- 	lwmi_om_fan_info_collect_cd00(priv);
- 
+ static struct tunable_attr_01 ppt_pl1_spl = {
 -- 
 2.53.0
 
