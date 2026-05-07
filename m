@@ -1,135 +1,247 @@
-Received: from mail-lf1-f47.google.com (mail-lf1-f47.google.com [209.85.167.47])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp-8fac.mail.infomaniak.ch (smtp-8fac.mail.infomaniak.ch [83.166.143.172])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 75CCE318EE6
-	for <platform-driver-x86@vger.kernel.org>; Thu,  7 May 2026 22:11:36 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=209.85.167.47
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1778191897; cv=pass; b=nqOEvaH0ZLwRRRe/UUkfO+tFIWZGnjD8usUxLV3z5tHcZD+njw16BdwDGjBgVdrgmjZMaFV9AfF9QtwRzgL6jNzqeUYhvyEg9SaXhiqxj5M4v+S9w4aN6Th4TzxD9yxKKhuCS3Rw8fHOCw0ztTzdqwUIUx0iHCJUcNL6C1rJY5A=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1778191897; c=relaxed/simple;
-	bh=jdUKOifzZ0/49UQNF63fX/GTOHzSFLOQBXKUlp4xA3Q=;
-	h=MIME-Version:From:Date:Message-ID:Subject:To:Cc:Content-Type; b=N093ljh8fXWPmPCx83wyYMV7Xo+r/fAmHqJnDBaFkLVHHaQAbNn7BXwvOaeQhnJqkOU5GzosU2eQDr/PvwxLENrvgAisMPrPC7Ma3TkF6uHUU24S9yrOl6aURW/xfTTdDUS1eXT7ykubQC9F4KjWiygv7zL/BDZiGrQkaXTRPdM=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=CyydptFW; arc=pass smtp.client-ip=209.85.167.47
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EAFC1372B5A
+	for <platform-driver-x86@vger.kernel.org>; Thu,  7 May 2026 22:52:32 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=83.166.143.172
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1778194356; cv=none; b=K8stFkGca/1A5gRpN2B48VW7qKCye46MnmJUBRMBnucV1SKGYGgQAKYr5kbZYm9sB/JKfUobcYcg/zE5z5IUbCRzLwCX7rtJpGo0IyzdSesHnr3zZ/57wRucKmynZbeKwljHcjxQYzafB5exguEPGRHNNovPDOG9Li5mXUDIegE=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1778194356; c=relaxed/simple;
+	bh=gwO0FwjkpISUQGWY9xYQzp+KVx8KwvXHNoLxI8Xd+Vk=;
+	h=Message-ID:Date:MIME-Version:Subject:From:To:Cc:References:
+	 In-Reply-To:Content-Type; b=FpeoP2NRN+koaHvD4u5Fj2BSofGfmcjW5UVnTOqbStnEhN79bs98qKnAESQyw0BObs14x51IHpTeBP/yTp7bSRiD9lg4iI1apmzCOdPLdVdy/E/y49WepCfsutsndw1++ohAJL4E+Ai6Ax8fbu6RriRgA0zCGhC0ZqI6SKgeBoc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=gibson.sh; spf=pass smtp.mailfrom=gibson.sh; dkim=pass (2048-bit key) header.d=gibson.sh header.i=@gibson.sh header.b=inlaL6i4; arc=none smtp.client-ip=83.166.143.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=gibson.sh
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gibson.sh
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="CyydptFW"
-Received: by mail-lf1-f47.google.com with SMTP id 2adb3069b0e04-5a86bfb6068so59741e87.2
-        for <platform-driver-x86@vger.kernel.org>; Thu, 07 May 2026 15:11:36 -0700 (PDT)
-ARC-Seal: i=1; a=rsa-sha256; t=1778191894; cv=none;
-        d=google.com; s=arc-20240605;
-        b=gb3kIKdZzcrCE4ueUoCYiWkHSYKlIdIIIAsECYHYA9BqC/aR2qaNk2yB9CzbJoN0p0
-         Tk+bia8z7WDMYpE4mE/A+y+XXfoTozRjWjgXOIIpB/Sqg24rcj+pO4vuzRcAcOsqPI+R
-         p8Dy/pZMUFWS9T+qKPUSEn9f16O9KAIRTYkVehHOS1sJXlNwlAMBBjgLrzI+8c4zodo5
-         eq9270pAUXZRS1bbaktdkLektYgphYWc2Od9XCELZHCTP50sxC7RR++rCQhK8EK9FHIw
-         olqA4057wHlUNM80gT/G7/XmB24rI4t0dDwN0XzAQ/Oi5q9y3CGma4xzEcQtlaLvcV76
-         9+hQ==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20240605;
-        h=cc:to:subject:message-id:date:from:mime-version:dkim-signature;
-        bh=egUGSfKDYB7edPjylIc29b9M+jVTc181kEJ/BwMYBDw=;
-        fh=urHKMVgT23m9wKWMoF3AgVWCXE+Q4cdsEMqS66Xx8s4=;
-        b=HpQytD4J/eaUaTp4gJhg8w14S1t6UodStSORS9K7LfccRJUCEr608Qem6w4Lk4vRyu
-         U3XqoAz8PQz383bB5KMWWVNf+weWhqYuPRMaaop8oUWpj+E9ELMO4vVm0DFCJhXt/w2L
-         pjHq3s/QAZlZkydOohbF1lLLV4ZOZyHs3zQNP8qSF7+Qfg+RiGu/H8Uu7iWwcLbIrACv
-         Zi5WaKrXsTpzKO1NpO36fYWs+Wpej0t6hBInngc+qq/h7rTH3/ege7cxkmKccuVhEsyU
-         06sHK/C+HDrJWU+YgUCFGDttrx1ElGcobz6MhetUudqqlcJ+H9xWmf783u2DUfwz6LAT
-         GB8A==;
-        darn=vger.kernel.org
-ARC-Authentication-Results: i=1; mx.google.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20251104; t=1778191894; x=1778796694; darn=vger.kernel.org;
-        h=cc:to:subject:message-id:date:from:mime-version:from:to:cc:subject
-         :date:message-id:reply-to;
-        bh=egUGSfKDYB7edPjylIc29b9M+jVTc181kEJ/BwMYBDw=;
-        b=CyydptFWq31y0hu8lz2JNzproIBIg/Vlk+CFCONe/suYcAUhC9iw0ZHQ/OvVoF4iVL
-         8U91mpOuK3Hv4DfGaL6JJWrDF65k1Kq/5h/LmYeX81/+iAq9niObJQxiSJfaMRN6u9aw
-         XexOOQ1qlRhTw9Fipl5WbBZiI7vSWjMD2n4VS0jpV8BkXfDnfVCGgL9KgLWEoHbhM8c3
-         HdT4n3c72RC+P9aZiVIXbIRMuHncpPfLOdCjq4vp88UJ7Tks3ptTaKGcEW12qLfecTvt
-         bcFlmvox26NmiN6GEiAvBvSOjVTI/cEuZo2RdbquJM5F5zc4iPeWoeTKVGQPkESSiB76
-         IrGQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1778191894; x=1778796694;
-        h=cc:to:subject:message-id:date:from:mime-version:x-gm-gg
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=egUGSfKDYB7edPjylIc29b9M+jVTc181kEJ/BwMYBDw=;
-        b=Dk/GDQARayjGw7iSzkWa2K9v6nYOeOH8EMKUqUHSPJlDd8cBvFwPdZ84tnirYIaxi1
-         TsniIaNZEEq7UiC0wRBuIrYbvvo+2hMlf6d4N8sV0rKANpAP+6pF6FFncy8/CBeC/tYT
-         diSpy7941sWSAdDSiS03MZtt0Ap/PEopql00l+7+EXy0Iat5qXTER5X6F1Fh47dZJ89u
-         oZZlI5Fu6+r660/iY4LNfLLAIKn0adbblo5Wl2lvXOqiyfnMFdmXMNXmpWj/CSEEP8HR
-         k4KRLNAfgGwyrm8HMd2UfWpVUdtGmMqcKOVTNjEiYHn+Of2Ylb4PE1Yh4Un3OCIrXFjt
-         b+PA==
-X-Gm-Message-State: AOJu0Yy12P1TcePTOnFT+rl5pomw0tpjCKFVusk0a16UQzqTRowBmOHc
-	GN/I2ifXGGnXzMm2eC0D4RUXLXUdyb3QKBTu1lMw1xGAC3d3XaFuSzFOaYunIW908hLIlOk4iEy
-	xWJeCJGerFOQuA1LUCBJZ1HAijqr17i58txkv8Nw=
-X-Gm-Gg: AeBDiet0r/2e0QR65Jy+XvCjHfOGGP5k9ieHkYnsBGzNYBlhafdDi32lsdlgfX3+bQo
-	gUKe/IF3glNw8fPH1DdsCbKS2Xy3CbEFJsxT+cfuqXWD9ElviokLq8krrvmDFvCcxHyJlaZD4im
-	W02JGHlu/hi+txcpzsJgkwLL4qsysSZ05IN6g8HHYcnBfryx/zbPmDdGIlcOnWQFbUXeqUTOFFQ
-	9sGn4Gg+n6hwrX77H0Ih/0DqkcKaUSCfhlOFtFbDkBflTlVD4hx4iHfh2TlXyfedubRt66mPLZz
-	4sRJ6qih6/RU2xpVehjUEIP2A/QW/dFjH2ivk7GWxggzDuAC1VD0ZR40AR9ZDA1V4qohCz6Q6w=
-	=
-X-Received: by 2002:a05:6512:33c5:b0:5a8:98b7:b69a with SMTP id
- 2adb3069b0e04-5a898b7ba03mr671269e87.1.1778191894025; Thu, 07 May 2026
- 15:11:34 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gibson.sh header.i=@gibson.sh header.b="inlaL6i4"
+Received: from smtp-3-0000.mail.infomaniak.ch (unknown [IPv6:2001:1600:4:17::246b])
+	by smtp-3-3000.mail.infomaniak.ch (Postfix) with ESMTPS id 4gBS2J0BSXzX9s;
+	Fri,  8 May 2026 00:43:04 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=gibson.sh;
+	s=20260228; t=1778193783;
+	bh=VJcjHqLXeiXRSxnrqAp5QY2j4wimX0CIz+H34y/neeE=;
+	h=Date:Subject:From:To:Cc:References:In-Reply-To:From;
+	b=inlaL6i4ljX/EEIKcW4rTSsqoTLPXfO3V9YI2dgY4+f4vQxCOwEbwBPgDcyQr8ygH
+	 nY+/eOoWgEGTec7av9D30Fncd96PIv3fEmYxmWwv0dFWGyc1HZCbee/Ui6sajm7E4j
+	 ub34aggOtojdPZfaTY/jn3earmimfL+iQVDZQGe7bFyUMDfRGZmLw+//6JlqeNg7Td
+	 uqMyH3ItdCgkws0zV7zqDy3pYdzDLXR6DHbqAyH/0hTPORuIi1cBT0wDFPgNqSOLoS
+	 FshnpXzE41U9BiHsS4zBDwIeVEafBscumonEIUSKNy/xfTPRE0k0qSOWkVnnn9RJh8
+	 x9JTpxQTxnFLg==
+Received: from unknown by smtp-3-0000.mail.infomaniak.ch (Postfix) with ESMTPA id 4gBS2H135XzbPh;
+	Fri,  8 May 2026 00:43:02 +0200 (CEST)
+Message-ID: <dcdd32ff-b2eb-4cd9-b1e7-0cf3fd5ba3df@gibson.sh>
+Date: Fri, 8 May 2026 00:43:02 +0200
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-From: =?UTF-8?Q?Jes=C3=BAs_Alejandro_Cort=C3=A9s_Pandele?= <jcor.alejandro@gmail.com>
-Date: Thu, 7 May 2026 23:11:21 +0100
-X-Gm-Features: AVHnY4ItfQ6xmcHUS1IJ5Dsc0Brc8ps3p2FLlcU3Bv3QT8leAMcm4FNsUIWLwqU
-Message-ID: <CAEosg6nUPu526uA1OWo8UnTAiieMpwi2gPojd-LJUJnXrArmDg@mail.gmail.com>
-Subject: [BUG] Lenovo Legion Gen 10 (83NN) - GPU power limit hard-locked at
- 35W (RTX 5070 Mobile)
-To: platform-driver-x86@vger.kernel.org
-Cc: regressions@lists.linux.dev
-Content-Type: text/plain; charset="UTF-8"
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH 1/2] platform/x86/amd/pmc: Delay suspend for some Lenovo
+ Laptops
+From: Daniel Gibson <daniel@gibson.sh>
+To: =?UTF-8?Q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
+Cc: Shyam Sundar S K <Shyam-sundar.S-k@amd.com>,
+ Hans de Goede <hansg@kernel.org>, platform-driver-x86@vger.kernel.org,
+ LKML <linux-kernel@vger.kernel.org>, Mario Limonciello <superm1@kernel.org>,
+ Sindre Henriksen <sindrehenriksen93@gmail.com>
+References: <20260501032655.283789-1-daniel@gibson.sh>
+ <20260501032655.283789-2-daniel@gibson.sh>
+ <ecd9767a-ea6d-8c1f-699e-e1ced0247f2e@linux.intel.com>
+ <13165764-9660-4887-bc13-54f2b9fee3a1@gibson.sh>
+Content-Language: de-DE, en-GB
+In-Reply-To: <13165764-9660-4887-bc13-54f2b9fee3a1@gibson.sh>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+X-Infomaniak-Routing: alpha
 
-Hello,
+On 07.05.26 22:19, Daniel Gibson wrote:
+> Thanks for the review!
+> 
+> On 07.05.26 15:22, Ilpo Järvinen wrote:
+>> On Fri, 1 May 2026, Daniel Gibson wrote:
+>>
+>>> Some IdeaPad Slim 3 devices and similar with AMD CPUs have a
+>>> nonfunctional keyboard and lid switch after s2idle.
+>>> It helps to delay suspend by 2.5 seconds so the EC has some time
+>>> to do whatever it needs to get done before suspend.
+>>>
+>>> This issue has been reported for many different devices, this patch
+>>> has been tested with the Zen3-based IdeaPad Slim 3 16ABR8 (82XR)
+>>> and the Zen3+-based IdeaPad Slim 3 14ARP10 (83K6), see
+>>> https://bugzilla.kernel.org/show_bug.cgi?id=221383
+>>>
+>>> Reported-by: Sindre Henriksen <sindrehenriksen93@gmail.com>
+>>> Closes: https://bugzilla.kernel.org/show_bug.cgi?id=221383
+>>> Tested-by: Sindre Henriksen <sindrehenriksen93@gmail.com>
+>>> Tested-by: Daniel Gibson <daniel@gibson.sh>
+>>> Suggested-by: Mario Limonciello (AMD) <superm1@kernel.org>
+>>> Reviewed-by: Mario Limonciello (AMD) <superm1@kernel.org>
+>>> Signed-off-by: Daniel Gibson <daniel@gibson.sh>
+>>> ---
+>>>  drivers/platform/x86/amd/pmc/pmc-quirks.c | 36 +++++++++++++++++++++++
+>>>  drivers/platform/x86/amd/pmc/pmc.c        |  5 +++-
+>>>  drivers/platform/x86/amd/pmc/pmc.h        |  1 +
+>>>  3 files changed, 41 insertions(+), 1 deletion(-)
+>>>
+>>> diff --git a/drivers/platform/x86/amd/pmc/pmc-quirks.c b/drivers/platform/x86/amd/pmc/pmc-quirks.c
+>>> index 24506e342943..cea30f68f8dc 100644
+>>> --- a/drivers/platform/x86/amd/pmc/pmc-quirks.c
+>>> +++ b/drivers/platform/x86/amd/pmc/pmc-quirks.c
+>>> @@ -18,6 +18,7 @@
+>>>  struct quirk_entry {
+>>>  	u32 s2idle_bug_mmio;
+>>>  	bool spurious_8042;
+>>> +	bool need_suspend_delay;
+>>>  };
+>>>  
+>>>  static struct quirk_entry quirk_s2idle_bug = {
+>>> @@ -33,6 +34,10 @@ static struct quirk_entry quirk_s2idle_spurious_8042 = {
+>>>  	.spurious_8042 = true,
+>>>  };
+>>>  
+>>> +static struct quirk_entry quirk_s2idle_need_suspend_delay = {
+>>> +	.need_suspend_delay = true
+>>
+>> Please add comma to any non-terminating entry.
+> 
+> will do
+> 
+>>
+>>> +};
+>>> +
+>>>  static const struct dmi_system_id fwbug_list[] = {
+>>>  	{
+>>>  		.ident = "L14 Gen2 AMD",
+>>> @@ -203,6 +208,32 @@ static const struct dmi_system_id fwbug_list[] = {
+>>>  			DMI_MATCH(DMI_PRODUCT_NAME, "82XQ"),
+>>>  		}
+>>>  	},
+>>> +	/*
+>>> +	 * Some Lenovo Laptops (like different IdeaPad 3 Slims) need some
+>>> +	 * me-time before sleeping or they get uncooperative after waking
+>>> +	 * up and don't send events for keyboard and lid switch anymore.
+>>> +	 * See https://bugzilla.kernel.org/show_bug.cgi?id=221383
+>>> +	 */
+>>> +	{
+>>> +		.ident = "Zen3-based IdeaPad Slim and similar",
+>>> +		.driver_data = &quirk_s2idle_need_suspend_delay,
+>>> +		.matches = {
+>>> +			DMI_MATCH(DMI_BOARD_VENDOR, "LENOVO"),
+>>> +			/*
+>>> +			 * Note: there are also some Zen2-based 82X* devices that
+>>> +			 * need different quirks, they're already handled above
+>>> +			 */
+>>> +			DMI_MATCH(DMI_PRODUCT_NAME, "82X")
+>>
+>> Ditto.
+>>
+>>> +		}
+>>> +	},
+>>> +	{
+>>> +		.ident = "Zen3+-based IdeaPad Slim and similar",
+>>> +		.driver_data = &quirk_s2idle_need_suspend_delay,
+>>> +		.matches = {
+>>> +			DMI_MATCH(DMI_BOARD_VENDOR, "LENOVO"),
+>>> +			DMI_MATCH(DMI_PRODUCT_NAME, "83K")
+>>
+>> Ditto.
+>>
+>>> +		}
+>>> +	},
+>>>  	/* https://bugzilla.kernel.org/show_bug.cgi?id=221273 */
+>>>  	{
+>>>  		.ident = "Thinkpad L14 Gen3",
+>>> @@ -356,6 +387,11 @@ void amd_pmc_process_restore_quirks(struct amd_pmc_dev *dev)
+>>>  		amd_pmc_skip_nvme_smi_handler(dev->quirks->s2idle_bug_mmio);
+>>>  }
+>>>  
+>>> +bool amd_pmc_quirk_need_suspend_delay(struct amd_pmc_dev *dev)
+>>> +{
+>>> +	return dev->quirks->need_suspend_delay;
+>>> +}
+>>> +
+>>>  void amd_pmc_quirks_init(struct amd_pmc_dev *dev)
+>>>  {
+>>>  	const struct dmi_system_id *dmi_id;
+>>> diff --git a/drivers/platform/x86/amd/pmc/pmc.c b/drivers/platform/x86/amd/pmc/pmc.c
+>>> index cae3fcafd4d7..c604dc7207ed 100644
+>>> --- a/drivers/platform/x86/amd/pmc/pmc.c
+>>> +++ b/drivers/platform/x86/amd/pmc/pmc.c
+>>> @@ -634,10 +634,13 @@ static void amd_pmc_s2idle_check(void)
+>>>  	struct amd_pmc_dev *pdev = &pmc;
+>>>  	struct smu_metrics table;
+>>>  	int rc;
+>>> +	bool ec_needs_sleep = !disable_workarounds && amd_pmc_quirk_need_suspend_delay(pdev);
+>>
+>> Why isn't disable_workarounds inside amd_pmc_quirk_need_suspend_delay() ?
+> 
+> Because disable_workarounds is a static variable in pmc.c and
+> amd_pmc_quirk_need_suspend_delay() is implemented in pmc-quirks.c
+> 
+>>
+>>>  
+>>>  	/* Avoid triggering OVP */
+>>> -	if (!get_metrics_table(pdev, &table) && table.s0i3_last_entry_status)
+>>> +	if (ec_needs_sleep || (!get_metrics_table(pdev, &table) && table.s0i3_last_entry_status)) {
+>>
+>> It would be clearer what's going on here if these two checks are clearly 
+>> separated.
+>>
+>> As is, the comment confuses if it's only meant for the 2nd check.
+>>
+>> One of the checks will be in amd_pmc_quirk_need_suspend_delay() and the 
+>> other (the existing one + the comment) should be moved in to own function 
+>> (perhaps in a patch preceeding this one) so it's clear the reasoning is 
+>> different(?). You can check the commit that introduced msleep(2500) here
+>> for details about the existing check.
+>>
+> 
+> Ok, I'll move that check for the existing workaround into its own 
+> function to make it more clear what is happening
 
-I am reporting a power-limit regression/issue on the new Lenovo Legion Pro 5
-16IRX10 (Board ID: 83NN) equipped with an RTX 5070 Mobile (Blackwell).
+While doing this and thinking learning more about this old patch I had a
+realization:
+The existing code does this 2.5s sleep before every suspend *except* for
+the very first one after a (re)boot!
 
-The Issue:
-The GPU is hard-locked to a 35W power limit and the P4 performance state under
-load. On Windows 11, the same hardware correctly hits its 115W TGP. Setting
-/sys/firmware/acpi/platform_profile to "max-power" or "performance" has no
-effect on the GPU power cap, although the choices are present.
+(Except on CPUs that don't have this metrics table (AMD_CPU_ID_PCO) or
+some edge case when pdev->smu_virt_addr is NULL and can't be set with
+amd_pmc_setup_smu_logging())
 
-Diagnostic Findings:
-- nvidia-smi reports "GPU Shutdown T.Limit Temp" as -5C, suggesting a
-  telemetry failure between the GSP firmware and the SBIOS.
-- dmesg shows repeated failures from the PlatformRequestHandler:
-  [    4.655061] NVRM: GPU0 ... failed to get target temp from SBIOS @
-platform_request_handler_ctrl.c:2171
-  [    4.655071] NVRM: GPU0 ... failed to get platform power mode from
-SBIOS @ platform_request_handler_ctrl.c:2114
+This by the way explains why in the rare cases suspend randomly worked
+as intended on my machine (even without my patch) it kept on working in
+subsequent suspends, until rebooting.
 
-Connection to other Blackwell issues:
-A similar issue was recently reported for HP Omen Blackwell laptops
-(Board 8D41).
-In that case, it was found that the WMI driver was failing to send
-HPWMI_SET_GPU_THERMAL_MODES_QUERY (command 0x22) with ctgp_enable=1 and
-ppab_enable=1, which is required to unlock the NvPCF power budget.
+Anyway, radical idea: What if we just ALWAYS SLEEP for 2.5 seconds here?
 
-I suspect the ideapad-laptop or lenovo-wmi driver is similarly missing
-the WMI "unlock" sequence for the 83NN board.
+I don't think the special case of the very first suspend after boot
+justifies all the complexity of the existing checks *and* the conditions
+I'm adding.
 
-System Environment:
-- Laptop: Lenovo Legion Pro 5 16IRX10 (Gen 10)
-- Board: 83NN
-- Kernel: 7.0.3-zen1-2-zen
-- Driver: NVIDIA 595.71.05 (Open Kernel Modules)
-- Community tools: LenovoLegionLinux (legion-laptop-dkms) does not
-  currently support this device.
+> 
+>>> +		dev_info(pdev->dev, "Delaying suspend by 2.5s to avoid platform bug\n");
+>>>  		msleep(2500);
+>>> +	}
+>>>  
+>>>  	/* Dump the IdleMask before we add to the STB */
+>>>  	amd_pmc_idlemask_read(pdev, pdev->dev, NULL);
+>>> diff --git a/drivers/platform/x86/amd/pmc/pmc.h b/drivers/platform/x86/amd/pmc/pmc.h
+>>> index fe3f53eb5955..f5257e47b8c4 100644
+>>> --- a/drivers/platform/x86/amd/pmc/pmc.h
+>>> +++ b/drivers/platform/x86/amd/pmc/pmc.h
+>>> @@ -147,6 +147,7 @@ enum amd_pmc_def {
+>>>  };
+>>>  
+>>>  void amd_pmc_process_restore_quirks(struct amd_pmc_dev *dev);
+>>> +bool amd_pmc_quirk_need_suspend_delay(struct amd_pmc_dev *dev);
+>>>  void amd_pmc_quirks_init(struct amd_pmc_dev *dev);
+>>>  void amd_mp2_stb_init(struct amd_pmc_dev *dev);
+>>>  void amd_mp2_stb_deinit(struct amd_pmc_dev *dev);
+>>>
+>>
+> 
 
-Full logs (nvidia-bug-report and acpidump):
-https://gist.github.com/kenju-u/e2fe8b86e521f4c844799518b9757f9c
-
-Please let me know if there are specific WMI queries or EC registers
-you would like me to probe to help map the unlock sequence for this board.
-
-Regards,
-Kenju
