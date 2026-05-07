@@ -1,149 +1,210 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.15])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.17])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7751A3B0AED;
-	Thu,  7 May 2026 13:33:41 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.15
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8802A3C73E5;
+	Thu,  7 May 2026 13:44:12 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.17
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1778160825; cv=none; b=JAvwWj+YaByy5mudGeXtiGk7fI0lkNTRHmYWzRlAXk7sh0rWWPVqZrdHZf/vFnyOnjKjfMdoRDzkhIrxxI4o8ThBOIwyeMWnIJI2r4w4sqnF8HbTqlPxDZAuY29dD8p3fg9Y6Syizwwn5xnpMi8CkYmt/7nBe/mzsSIM6oSM9CY=
+	t=1778161454; cv=none; b=Gvp1ygyJ/WbdgJ3csBi4C9fUzDwTEwjvIqlim9lAaLaCWD46dCKjPNzzH5EcUaoc67dhLMFimrugQLke9Xfir9Pal5s9QsjJyuaeGCn3CDNPKTJD9y8T8szws8WqFuPU1dYXoNf3j66ymp18HH30iNK8lgPoOkzq1vgX8eMc18E=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1778160825; c=relaxed/simple;
-	bh=kPQucksjzIDzkuR+FFJtR7p+zcLWtPpxXocIEbPNLAg=;
+	s=arc-20240116; t=1778161454; c=relaxed/simple;
+	bh=5bxYhbPc3/cPyNFG7Vf21TxFhTBcsQQqpmSRwRnjy3I=;
 	h=From:Date:To:cc:Subject:In-Reply-To:Message-ID:References:
-	 MIME-Version:Content-Type; b=pWDKhRjj3dw8w66iAPNc8tBJ7RVDneQ/NpFFM+eVr8oasHvRLe7JA0DLVafsi+rEqNMaGD2Rxlhrq56k4sQ8MElctMtEI5cOZIP06QNsnLPQrbE5TTg/FrhHeBFR2548ylzRULkZ8C7GLbkwPU8LTBDkQxF6FNtyQ6MUggdr9KM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=pass smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=RvUGvReV; arc=none smtp.client-ip=198.175.65.15
+	 MIME-Version:Content-Type; b=JSGnfcJ2A2GhCMybFFFoCd7X7NuT99CBo0OFWDh2tV8oc5V10eE1togtqVRVZavfWYDjRxtQXqP0ZNYptJW7Db7bDPdU16+3I0S0TAS2K4zAmJ2NxK2xrIlYY+zkUouBzv0aU7PleQHAV2HFQ3/nc1uLMPVLmX4gCyfhLHB5teg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=pass smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=W8yL/gfW; arc=none smtp.client-ip=198.175.65.17
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="RvUGvReV"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="W8yL/gfW"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1778160823; x=1809696823;
+  t=1778161453; x=1809697453;
   h=from:date:to:cc:subject:in-reply-to:message-id:
    references:mime-version;
-  bh=kPQucksjzIDzkuR+FFJtR7p+zcLWtPpxXocIEbPNLAg=;
-  b=RvUGvReVZbg9qklKDinIvVrCARMb8006Javj1DFk9NCY8wRI3c+cYwvf
-   GjL+PveuA2GPjbTK3bv82GZDP+Q41YW3eOQrSxpp+pbvBGeUT2xrfmFNT
-   +vo7f3aPkGyitMtRSluRjfQiNggoxQKLVftYu9W6N3jM5c8ywDvYjWNsw
-   g2aRP2uCtLXQqj6M5rq1a0PW/b/ZqWk0egob2WvYQG5iJNjW22FA9Q3IZ
-   B0fThP5+MCjvfLhBzUR41rAbPlquX4n+0Qc+0xvlA/w44peuww7lDpVq9
-   918v7yCAQRdoJuHFG/l0ngEVgBomBY+5oRMAaA5fRmX3qdK2b3dj7ozeJ
-   g==;
-X-CSE-ConnectionGUID: RLaYT7SwRZSxwH7sbHCfcQ==
-X-CSE-MsgGUID: WOwtGGGZQXKLAa3M2PwAVw==
-X-IronPort-AV: E=McAfee;i="6800,10657,11778"; a="82730857"
+  bh=5bxYhbPc3/cPyNFG7Vf21TxFhTBcsQQqpmSRwRnjy3I=;
+  b=W8yL/gfWYEcAj5ohGxHHxfiCPiDy6B8FiuwxhS7HvHlR2SBeJegGH/pM
+   iZAjFhMsuwu9dBQMct7wXz1aPWHqFExoTdQgBzDm5KzJCReW9tAljIXzm
+   O06nLw1kCinrs3XcLltQx1KWezf1LZsffar4jisBXZWLP2qiKZa0jxPpd
+   dcg+qhsJ0pI3W3O0wtmPzep5MWt51WwRoICuw4kzx5nZCWLzrmZVtIZLH
+   2Jm+Lx/2VVUDupAo8LVAsEeOQcs68zB5nnrb6U6iFpL5IODphf+rb+oZm
+   LOAtUqWNQFj1bqvBHMursEQ1mtDQsnQApEQnML6Wfls1eabkIRwO6CKh0
+   Q==;
+X-CSE-ConnectionGUID: VSnRC+KQSYemjAAQILDwlA==
+X-CSE-MsgGUID: vGlo+oCgQbePyPOOYecSKA==
+X-IronPort-AV: E=McAfee;i="6800,10657,11779"; a="79102959"
 X-IronPort-AV: E=Sophos;i="6.23,221,1770624000"; 
-   d="scan'208";a="82730857"
-Received: from orviesa003.jf.intel.com ([10.64.159.143])
-  by orvoesa107.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 07 May 2026 06:33:39 -0700
-X-CSE-ConnectionGUID: sYcDNPzWSVGctCKvne8lvA==
-X-CSE-MsgGUID: 8OCsBTAhTTet4VOjUxSiEw==
+   d="scan'208";a="79102959"
+Received: from orviesa007.jf.intel.com ([10.64.159.147])
+  by orvoesa109.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 07 May 2026 06:44:12 -0700
+X-CSE-ConnectionGUID: sdHaJEp1SsySbN1gLJIScg==
+X-CSE-MsgGUID: ArHHZWoSRgGN9GLJdr5Sxw==
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="6.23,221,1770624000"; 
-   d="scan'208";a="240446027"
+   d="scan'208";a="236726449"
 Received: from ijarvine-mobl1.ger.corp.intel.com (HELO localhost) ([10.245.245.116])
-  by ORVIESA003-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 07 May 2026 06:33:37 -0700
+  by orviesa007-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 07 May 2026 06:44:09 -0700
 From: =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
-Date: Thu, 7 May 2026 16:33:33 +0300 (EEST)
-To: Daniel Gibson <daniel@gibson.sh>
-cc: Shyam Sundar S K <Shyam-sundar.S-k@amd.com>, 
-    Hans de Goede <hansg@kernel.org>, platform-driver-x86@vger.kernel.org, 
-    LKML <linux-kernel@vger.kernel.org>, 
-    Mario Limonciello <superm1@kernel.org>
-Subject: Re: [PATCH 2/2] platform/x86/amd/pmc: Add delay_suspend module
- argument
-In-Reply-To: <20260501032655.283789-3-daniel@gibson.sh>
-Message-ID: <80f46c50-18eb-7f02-0bec-d124e3867839@linux.intel.com>
-References: <20260501032655.283789-1-daniel@gibson.sh> <20260501032655.283789-3-daniel@gibson.sh>
+Date: Thu, 7 May 2026 16:44:06 +0300 (EEST)
+To: Thorsten Blum <thorsten.blum@linux.dev>
+cc: Prasanth Ksr <prasanth.ksr@dell.com>, Hans de Goede <hansg@kernel.org>, 
+    Dell.Client.Kernel@dell.com, platform-driver-x86@vger.kernel.org, 
+    LKML <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH] platform/x86: dell-wmi-sysman: use strnlen in
+ strlcpy_attr
+In-Reply-To: <afs5tVs4a59FRdzB@linux.dev>
+Message-ID: <ed074d73-7f86-a24e-1cbf-4e02b856af05@linux.intel.com>
+References: <20260502165707.242332-3-thorsten.blum@linux.dev> <fcff1484-24b6-ce49-bb5e-f7da3e711eea@linux.intel.com> <afs5tVs4a59FRdzB@linux.dev>
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+Content-Type: multipart/mixed; boundary="8323328-1401041204-1778161446=:983"
 
-On Fri, 1 May 2026, Daniel Gibson wrote:
+  This message is in MIME format.  The first part should be readable text,
+  while the remaining parts are likely unreadable without MIME-aware tools.
 
-> Enabling it delays suspend for 2.5 seconds which is known to help for
+--8323328-1401041204-1778161446=:983
+Content-Type: text/plain; charset=iso-8859-1
+Content-Transfer-Encoding: QUOTED-PRINTABLE
 
-Please don't link shortlog to longer description like this. Write them 
-such that either can be read entirely on its own.
+On Wed, 6 May 2026, Thorsten Blum wrote:
 
-> some AMD-based Lenovo Laptops that otherwise failed to send/receive
-> events for key presses or the lid switch after s2idle.
-> Apparently the EC needs to do some things in the background before
-> suspend or it gets into a bad state.
-> 
-> There are many reports of AMD-based laptops (mostly but not exclusively
-> IdeaPads) about similar issues on the web; this parameter gives
-> affected users an easy way to try out if their issues have the same
-> root cause and to work around them until their specific device is added
-> to the quirks list.
-> I added a note to the parameter description encouraging users to report
-> their device so it can be added to the quirks list, inspired by a
-> similar request in parameter descriptions of the ideapad-laptop module.
-> 
-> The module parameter can be set to "1" to explicitly enable it,
-> "0" to disable it even on devices that are assumed to be affected,
-> or -1 (the default) to enable it if the device is assumed to be affected
-> (according to fwbug_list[])
-> 
-> This is related to https://bugzilla.kernel.org/show_bug.cgi?id=221383
+> On Wed, May 06, 2026 at 02:53:46PM +0300, Ilpo J=E4rvinen wrote:
+> > On Sat, 2 May 2026, Thorsten Blum wrote:
+> >=20
+> > > Use strnlen() to limit source string scanning to MAX_BUFF bytes. Retu=
+rn
+> > > early on error and make the "empty string means not applicable" case
+> > > explicit.
+> > >=20
+> > > Use 'const char *' for the read-only source string while at it.
+> >=20
+> > Hi Thorsten,
+> >=20
+> > First of all, thanks for looking into these.
+> >=20
+> > > Signed-off-by: Thorsten Blum <thorsten.blum@linux.dev>
+> > > ---
+> > >  .../dell/dell-wmi-sysman/dell-wmi-sysman.h    |  2 +-
+> > >  .../x86/dell/dell-wmi-sysman/sysman.c         | 20 ++++++++++-------=
+--
+> > >  2 files changed, 12 insertions(+), 10 deletions(-)
+> > >=20
+> > > diff --git a/drivers/platform/x86/dell/dell-wmi-sysman/dell-wmi-sysma=
+n.h b/drivers/platform/x86/dell/dell-wmi-sysman/dell-wmi-sysman.h
+> > > index 5278a93fdaf7..f6943301b857 100644
+> > > --- a/drivers/platform/x86/dell/dell-wmi-sysman/dell-wmi-sysman.h
+> > > +++ b/drivers/platform/x86/dell/dell-wmi-sysman/dell-wmi-sysman.h
+> > > @@ -162,7 +162,7 @@ static ssize_t curr_val##_store(struct kobject *k=
+obj,=09=09=09=09\
+> > > =20
+> > >  union acpi_object *get_wmiobj_pointer(int instance_id, const char *g=
+uid_string);
+> > >  int get_instance_count(const char *guid_string);
+> > > -void strlcpy_attr(char *dest, char *src);
+> > > +void strlcpy_attr(char *dest, const char *src);
+> > > =20
+> > >  int populate_enum_data(union acpi_object *enumeration_obj, int insta=
+nce_id,
+> > >  =09=09=09struct kobject *attr_name_kobj, u32 enum_property_count);
+> > > diff --git a/drivers/platform/x86/dell/dell-wmi-sysman/sysman.c b/dri=
+vers/platform/x86/dell/dell-wmi-sysman/sysman.c
+> > > index 51d25fdc1389..6c9911accefc 100644
+> > > --- a/drivers/platform/x86/dell/dell-wmi-sysman/sysman.c
+> > > +++ b/drivers/platform/x86/dell/dell-wmi-sysman/sysman.c
+> > > @@ -234,18 +234,20 @@ static const struct kobj_type attr_name_ktype =
+=3D {
+> > >   * @dest: Where to copy the string to
+> > >   * @src: Where to copy the string from
+> > >   */
+> > > -void strlcpy_attr(char *dest, char *src)
+> > > +void strlcpy_attr(char *dest, const char *src)
+> > >  {
+> > > -=09size_t len =3D strlen(src) + 1;
+> > > +=09size_t len =3D strnlen(src, MAX_BUFF);
+> > > =20
+> > > -=09if (len > 1 && len <=3D MAX_BUFF)
+> > > -=09=09strscpy(dest, src, len);
+> > > -
+> > > -=09/*len can be zero because any property not-applicable to attribut=
+e can
+> > > -=09 * be empty so check only for too long buffers and log error
+> > > -=09 */
+> > > -=09if (len > MAX_BUFF)
+> > > +=09if (len =3D=3D MAX_BUFF) {
+> > >  =09=09pr_err("Source string returned from BIOS is out of bound!\n");
+> > > +=09=09return;
+> > > +=09}
+> > > +
+> > > +=09/* Empty string means "not applicable" and is skipped intentional=
+ly. */
+> > > +=09if (len =3D=3D 0)
+> > > +=09=09return;
+> > > +
+> > > +=09strscpy(dest, src, len + 1);
+> >=20
+> > And how exactly is this last line different from strscpy(dest, serc,=20
+> > MAX_BUFF);
+> >=20
+> > ?
+>=20
+> The result is the same, but happy to use MAX_BUFF instead.
 
-Link: ...
+The size should be related to the output buffer(!) and not come from=20
+length of the input (using input len is unsound way to engineer this). In=
+=20
+that sense, MAX_BUFF is better than using len, but see my question about=20
+patch order below.
 
-> Signed-off-by: Daniel Gibson <daniel@gibson.sh>
-> Tested-by: Daniel Gibson <daniel@gibson.sh>
+> However,
+> since we already know the length of the source string and that it is
+> NUL-terminated within the first MAX_BUFF bytes, we could just use
+> memcpy(dest, src, len + 1) directly.
 
-Normally, we don't tag our own testing. :-)
+Using memcpy() would be wrong direction to take. It doesn't validate the=20
+output length any better against the output buffer size than the current=20
+approach does.
 
-> ---
->  drivers/platform/x86/amd/pmc/pmc.c | 17 +++++++++++++++--
->  1 file changed, 15 insertions(+), 2 deletions(-)
-> 
-> diff --git a/drivers/platform/x86/amd/pmc/pmc.c b/drivers/platform/x86/amd/pmc/pmc.c
-> index c604dc7207ed..f76936036d1f 100644
-> --- a/drivers/platform/x86/amd/pmc/pmc.c
-> +++ b/drivers/platform/x86/amd/pmc/pmc.c
-> @@ -89,6 +89,11 @@ static bool disable_workarounds;
->  module_param(disable_workarounds, bool, 0644);
->  MODULE_PARM_DESC(disable_workarounds, "Disable workarounds for platform bugs");
->  
-> +static int delay_suspend = -1;
-> +module_param(delay_suspend, int, 0644);
-> +MODULE_PARM_DESC(delay_suspend,
-> +		 "Delays s2idle by 2.5 seconds to work around buggy ECs, often causing keyboard issues after suspend. 0: don't delay, 1: do delay, -1 (default): let amd_pmc decide. If you need this please report this to: platform-driver-x86@vger.kernel.org");
-> +
->  static struct amd_pmc_dev pmc;
->  
->  static inline u32 amd_pmc_reg_read(struct amd_pmc_dev *dev, int reg_offset)
-> @@ -634,11 +639,19 @@ static void amd_pmc_s2idle_check(void)
->  	struct amd_pmc_dev *pdev = &pmc;
->  	struct smu_metrics table;
->  	int rc;
-> -	bool ec_needs_sleep = !disable_workarounds && amd_pmc_quirk_need_suspend_delay(pdev);
-> +	bool ec_needs_sleep;
-> +
-> +	if (delay_suspend < 0)
-> +		ec_needs_sleep = !disable_workarounds && amd_pmc_quirk_need_suspend_delay(pdev);
-> +	else
-> +		ec_needs_sleep = delay_suspend != 0;
+> > I agree something should be done here but I don't like this approach. T=
+he=20
+> > length passed to strscpy() should be "Size of the destination buffer" b=
+ut=20
+> > your approach calculated the length of the source string (?!):
+> >=20
+> > /**
+> >  * strscpy - Copy a C-string into a sized buffer
+> >  * @dst: Where to copy the string to
+> >  * @src: Where to copy the string from
+> >  * @...: Size of destination buffer (optional)
+> >=20
+> > So, to make it safe and sound logically, to me it looks more like the=
+=20
+> > _caller_ should pass the output buffer's size to this function. Or=20
+> > alternatively, this function could be wrapped with a macro such that th=
+e=20
+> > sizeof(*dest) can still be checked to be of correct length.
+>=20
+> I have some other changes queued up and would prefer to change this in a
+> follow-up patch since there are quite a few call sites that need to be
+> updated.
 
-By doing this, you added overlap between disable_workarounds and 
-delay_suspend. It gets confusing.
+Why exactly you have to make this change first at all? Can't this just be=
+=20
+placed after the other changes and done properly right away. Do those=20
+other changes touch this same function so changing order is not easy?
 
->  	/* Avoid triggering OVP */
->  	if (ec_needs_sleep || (!get_metrics_table(pdev, &table) && table.s0i3_last_entry_status)) {
-> -		dev_info(pdev->dev, "Delaying suspend by 2.5s to avoid platform bug\n");
-> +		if (delay_suspend > 0)
-> +			dev_info(pdev->dev, "Delaying suspend by 2.5s because delay_suspend=1\n");
-> +		else
-> +			dev_info(pdev->dev, "Delaying suspend by 2.5s to avoid platform bug\n");
-
-Overall, the end result looks pretty messy.
+> > Also, this function presents itself with str*() name like a generic str=
+ing=20
+> > copy function but what it really is more attr_check_and_copy(), it migh=
+t=20
+> > not copy anything if the checks fail.
+>=20
+> OK, I'll take this into account when changing the function signature.
 
 
--- 
+--=20
  i.
 
+--8323328-1401041204-1778161446=:983--
