@@ -1,193 +1,236 @@
-Received: from smtp-out1.simply.com (smtp-out1.simply.com [94.231.106.240])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pf1-f176.google.com (mail-pf1-f176.google.com [209.85.210.176])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id ECA7E3C1414;
-	Thu,  7 May 2026 09:29:14 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=94.231.106.240
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8A5013D6CB2
+	for <platform-driver-x86@vger.kernel.org>; Thu,  7 May 2026 10:14:03 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.176
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1778146159; cv=none; b=hoB5K93Xt8rstBmGuTfEe5mSaaIZz4imELQkvWEAe+frN5UvqlUb+KmTgVbiRM8lt4adJH5Ixe7seeQqkTsRuLWev43o6zrpoPleB7I7Y8j+YMoU2LH+jXcOVYJh7KCGCwyJYfT44StOzf1/Vwag4Z5AbOqGJ/sW1CrULxe1VBw=
+	t=1778148846; cv=none; b=tJlk7whjX41c0/5PVy0ZGsBE54n8DVY32YNnmhhoUMxemgXVpuf40tJNwT56OM21GnLp8rgb74HaxM5DdxPcdlfjbytuoOV9mZxn+ldWsZ0w1L0Q1dx9iHqvnoUFY1tc0qZSpy6zt10KHsK3L5tSENdsHTjUsWK+9gsoVki254Y=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1778146159; c=relaxed/simple;
-	bh=H/tScrmyvamiUhGLeRMOmsQhhFV2sCrdw6L2HUZ1k8o=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=GJrue1TuNd6hjz9wMaYPV2Q3P1vN2mOlJtl1lC/scEp3xxidby5UWmt09C/aEKvERUAsRCSKu6nZZZPrSgtPhuTMGOcyNT8fMKFRse9AFOMgkxHKA5WXURwOEOwYvqDQPBf+Xr/+dCCtlNfzl19dCUGBZohcxuVqawk9/JdAo5o=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=grenangen.se; spf=pass smtp.mailfrom=grenangen.se; dkim=pass (2048-bit key) header.d=grenangen.se header.i=@grenangen.se header.b=VksDSn6g; arc=none smtp.client-ip=94.231.106.240
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=grenangen.se
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=grenangen.se
+	s=arc-20240116; t=1778148846; c=relaxed/simple;
+	bh=uDNH5NMJmFlQ7DL5cKzf+qix4sa9vwoM1yThyGDxZug=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=HaKrV1qMGBK20Yu25qM3YixpmUX2w5+yS6VeEaTHow5QbzOIZKMIe19z1uRkg5M9O/9rwKdCX68uDkveBiAXXJsBTBJfX5wx6a8AnzptfSUz47BBfjbQ0Ti8TaBkZC8NjPfR9dO/Q2Ilsz4kz0PFeKf+DL+ugnoYAdLQvn+6bew=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=BfTo/egP; arc=none smtp.client-ip=209.85.210.176
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=grenangen.se header.i=@grenangen.se header.b="VksDSn6g"
-Received: from localhost (localhost [127.0.0.1])
-	by smtp.simply.com (Simply.com) with ESMTP id 4gB6QK1pw1z1FQVX;
-	Thu,  7 May 2026 11:29:13 +0200 (CEST)
-Received: from localhost (h-217-27-171-125.A498.priv.bahnhof.se [217.27.171.125])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange ECDHE (P-256) server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(Client did not present a certificate)
-	by smtp.simply.com (Simply.com) with ESMTPSA id 4gB6QJ5VFqz1FQVM;
-	Thu,  7 May 2026 11:29:12 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=grenangen.se;
-	s=simplycom2; t=1778146152;
-	bh=FpCphwls28tEQgBfDnPaU5ckJ/fIPJvTY6hjNF0Fqdw=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References;
-	b=VksDSn6gWODo9iEN5KQkJgMXp10iuvUe4rflAiRu5B9IvZKDs4RsSCJpwk6UPHvOH
-	 BDux5qEhhujmjyKd6FLbB9hpmS+anLiq/OvhZ6q8p+3a/J9SpmeFmE4ANIImSNBtgy
-	 zL1EzFf0TwvnOLKq/XHZa4EhLtoCKKzUh7ouHroh+Jf4iK4h7vYNPivrl3EJw+wlX+
-	 qFMDz2o+kdl1x65csoCll9HvrEl/2JUDcsrxFZfbiKZXSwVagsH5XhggwQsHQ5pbUA
-	 IEeFJwE8ADX6FdGNeEGNctbL9DftJ//5Sli2a0U/kkdm0a7Pj3dAalMzJ3/nHVszQ3
-	 vqsRrSBNjFEQw==
-From: =?UTF-8?q?Marcus=20Gren=C3=A4ngen?= <marcus@grenangen.se>
-To: platform-driver-x86@vger.kernel.org,
-	denis.benato@linux.dev
-Cc: linux-input@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	luke@ljones.dev,
-	hansg@kernel.org,
-	ilpo.jarvinen@linux.intel.com,
-	jikos@kernel.org,
-	bentiss@kernel.org,
-	corentin.chary@gmail.com,
-	marcus@grenangen.se
-Subject: [PATCH v3 2/3] platform/x86: asus-nb-wmi: add fnlock_use_hid quirk and asus_wmi_fnlock_use_hid()
-Date: Thu,  7 May 2026 11:29:10 +0200
-Message-ID: <20260507092911.8855-3-marcus@grenangen.se>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="BfTo/egP"
+Received: by mail-pf1-f176.google.com with SMTP id d2e1a72fcca58-82faf871346so380545b3a.0
+        for <platform-driver-x86@vger.kernel.org>; Thu, 07 May 2026 03:14:03 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20251104; t=1778148842; x=1778753642; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=5DBijUMyTqXBKNXh2A+r9K16+ccxw9L4uCbWgLNEwvs=;
+        b=BfTo/egPglOw52Hj9yPY1M+T0/UY94v0DKvJE1RFwI8qmU1ElLUkpWwtnaY+J7iqsL
+         4uI8H/cmZAG5bZ8aXCv8zTtDllg5ZleTqgW9ese0Qw4BxEiD9Lxq/RpJkG6/Vpr8DV3N
+         UdTXpSJBcSha1BN/NpIAelShhTAiEuGDfsXb5Lp5oMmAHM8b2HuQdv7uDSVvGbEgr1YG
+         +6cB4tXXZXrRKD8s4EpqBlnxgy+1DZZmQqnZQPFgbglbHzWYDQBPTAGSKzlJ8a8bMNnD
+         L0smyT35cJQSx727Ha+R3tOfcYB3qyAaeJhO23+nCQVrQ60xx7f66QSUqsFYxy0tBRKH
+         OgqQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20251104; t=1778148842; x=1778753642;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-gg:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=5DBijUMyTqXBKNXh2A+r9K16+ccxw9L4uCbWgLNEwvs=;
+        b=VJX2znLDTwMHZM4pXub4Ainlr1+70VU3gaWa+1oHBn9iNZ71Bt1Qj4moqK2DJIECre
+         sU3FMJp2BLjuc2SDQsG5WmHUoJyGd/Z7JNXaKMdgjQdVRotYzwg+gFDVxxsOFTKftmJV
+         9JW362TitqYC3PqIF5ugxC4KlfjiP97yMmtGNT7wgdMDxUcKPuH3wfBBG4JX88EXXtQl
+         skYBWRdZzYlKsXJbuSntRmfwMekFbrOqF/bjKBczfICOCfaXW65+zpjqGHtTN0d4rOeY
+         7KEzslLWWK+46e6NOC5mfUJV1IBQUtx1TVW3ZQjvuBwIjo3moRrjrohPvk2nx/CxluxI
+         27xg==
+X-Gm-Message-State: AOJu0Yzn/8sBCep4Rec+lxIfD7H4tBFjXGft3xb7WFrgXLQaFoeMLIYH
+	uostUakYhygaF4xjdU8CeDO5FkKY/C2+UHw0DYPN+afv88JQL6XvtCIESa7TOqA1vz4=
+X-Gm-Gg: AeBDieuj17LS9GMordW1xM1XFtRPu90NFEmbMbyMFYAA205b3VYlk7g5k2DQ4EB9gxA
+	Cwq0Eco+z0TjwP0T5I65cyLNHTZygK1fz5nN4nPJs8pMsTLaAC8I+0SXiKgqebYrRs2NS6D83lc
+	Gbnhyf2PEaS7UfmIn5fjdB2ouvSwr3CKv80HYpsY39Af5LTT5dzDaZfX/e2T7/EsTqn3cjG+u59
+	+GguxqabfDaPuFTjnF3IYK+oq8t/JWfZ07eVRxoG5yOGA+axfnROknJ8g9qeILLgYRMfAzqNAgo
+	ilk1SZrJK6hTQ1O/9N6p5/elnFRsU/V9bJywSYdEWdK9ofcNwWzdYrmHcWHtCGBSn9Y4CwOz1An
+	wTocZkYuflf1XCElnoPH+q8lR41m6IzsIkW/5S5SlaNDcld/W86jj/caVmtJJVQA1ZmBqWsNW1O
+	FDdftCgW3vZdxbZ1tqDg/rcvfxzuIz
+X-Received: by 2002:a05:6a20:2594:b0:399:b194:5d7c with SMTP id adf61e73a8af0-3aa5a947e59mr7903039637.24.1778148841675;
+        Thu, 07 May 2026 03:14:01 -0700 (PDT)
+Received: from pico-cachyos ([2a09:bac5:3e0b:1aa0::2a7:6e])
+        by smtp.gmail.com with ESMTPSA id 41be03b00d2f7-c8253b34f5esm1801829a12.21.2026.05.07.03.13.59
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 07 May 2026 03:14:01 -0700 (PDT)
+From: jR4dh3y <radheykalra901@gmail.com>
+To: platform-driver-x86@vger.kernel.org
+Cc: ilpo.jarvinen@linux.intel.com,
+	hdegoede@redhat.com,
+	jR4dh3y <radheykalra901@gmail.com>
+Subject: [PATCH] platform/x86: hp-wmi: Add Victus 15-fb0xxx fan control
+Date: Thu,  7 May 2026 15:43:44 +0530
+Message-ID: <20260507101347.27972-1-radheykalra901@gmail.com>
 X-Mailer: git-send-email 2.54.0
-In-Reply-To: <20260507092911.8855-1-marcus@grenangen.se>
-References: <9b568ce0-93f7-4a7f-98e4-625e910f8a1d@linux.dev>
- <20260507092911.8855-1-marcus@grenangen.se>
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 
-The ASUS ProArt P16 (N-Key keyboard 0B05:19B6) advertises the WMI fn-lock
-DEVID (0x00100023) as present via DSTS, but the DEVS call has no effect.
-Fn-lock must instead be toggled via a HID feature report sent to the N-Key
-keyboard (handled by hid-asus).
+HP Victus 15-fb0xxx board 8A3D supports the same WMI fan speed
+set command used by the Victus manual fan control path, but it is
+not a Victus S thermal-profile board.
 
-Add a fnlock_use_hid flag to struct quirk_entry and set it for the ProArt
-P16 via a DMI match on DMI_PRODUCT_FAMILY.
+Enable the hwmon PWM manual fan interface for this board without
+adding it to the Victus S thermal profile DMI table. This preserves
+the existing generic platform-profile choices on this machine.
 
-Export asus_wmi_fnlock_use_hid() so that asus-armoury can query whether
-the HID path is required without reading the quirk struct directly. This
-keeps the DMI and quirk knowledge inside asus-wmi.
+The board does not expose a Victus S fan table, so use the RPM limits
+validated on hardware: CPU fan 2600-5800 RPM, GPU fan about 300 RPM
+higher.
 
-Signed-off-by: Marcus Grenängen <marcus@grenangen.se>
+Compile-tested against 7.0.3-1-cachyos-bore-lto. The WMI fan-speed
+set path was validated on a Victus by HP Gaming Laptop 15-fb0xxx with
+board 8A3D and BIOS F.22.
+
+Signed-off-by: jR4dh3y <radheykalra901@gmail.com>
 ---
- drivers/platform/x86/asus-nb-wmi.c         | 13 +++++++++++++
- drivers/platform/x86/asus-wmi.c            | 22 ++++++++++++++++++++++
- drivers/platform/x86/asus-wmi.h            |  5 +++++
- include/linux/platform_data/x86/asus-wmi.h |  6 +++---
- 4 files changed, 43 insertions(+), 3 deletions(-)
+ drivers/platform/x86/hp/hp-wmi.c | 56 +++++++++++++++++++++++++-------
+ 1 file changed, 45 insertions(+), 11 deletions(-)
 
-diff --git a/drivers/platform/x86/asus-nb-wmi.c b/drivers/platform/x86/asus-nb-wmi.c
-index b4677c5bba5b..44e4cf68ff70 100644
---- a/drivers/platform/x86/asus-nb-wmi.c
-+++ b/drivers/platform/x86/asus-nb-wmi.c
-@@ -155,6 +155,10 @@ static struct quirk_entry quirk_asus_z13 = {
- 	.tablet_switch_mode = asus_wmi_kbd_dock_devid,
- };
- 
-+static struct quirk_entry quirk_asus_proart_p16 = {
-+	.fnlock_use_hid = true,
-+};
-+
- static int dmi_matched(const struct dmi_system_id *dmi)
- {
- 	pr_info("Identified laptop model '%s'\n", dmi->ident);
-@@ -553,6 +557,15 @@ static const struct dmi_system_id asus_quirks[] = {
- 		},
- 		.driver_data = &quirk_asus_z13,
- 	},
-+	{
-+		.callback = dmi_matched,
-+		.ident = "ASUS ProArt P16",
-+		.matches = {
-+			DMI_MATCH(DMI_SYS_VENDOR, "ASUSTeK COMPUTER INC."),
-+			DMI_MATCH(DMI_PRODUCT_FAMILY, "ProArt P16"),
-+		},
-+		.driver_data = &quirk_asus_proart_p16,
-+	},
+diff --git a/drivers/platform/x86/hp/hp-wmi.c b/drivers/platform/x86/hp/hp-wmi.c
+index 304d9ac..b2a6d50 100644
+--- a/drivers/platform/x86/hp/hp-wmi.c
++++ b/drivers/platform/x86/hp/hp-wmi.c
+@@ -204,6 +204,11 @@ static const struct dmi_system_id victus_s_thermal_profile_boards[] __initconst
  	{},
  };
  
-diff --git a/drivers/platform/x86/asus-wmi.c b/drivers/platform/x86/asus-wmi.c
-index 80144c412b90..d4d742b9983d 100644
---- a/drivers/platform/x86/asus-wmi.c
-+++ b/drivers/platform/x86/asus-wmi.c
-@@ -1759,6 +1759,28 @@ int asus_hid_event(enum asus_hid_event event)
- }
- EXPORT_SYMBOL_GPL(asus_hid_event);
- 
-+/**
-+ * asus_wmi_fnlock_use_hid() - Return true if fn-lock must use the HID path.
-+ *
-+ * On some platforms (e.g. ASUS ProArt P16) the WMI DEVS call for fn-lock is
-+ * silently a no-op. The fnlock_use_hid quirk flag marks these platforms so
-+ * that callers can select the HID feature-report path instead.
-+ *
-+ * Returns: true if the HID path should be used, false otherwise.
-+ */
-+bool asus_wmi_fnlock_use_hid(void)
-+{
-+	struct asus_wmi *asus;
++/* DMI Board names of Victus laptops with the Victus fan-control WMI calls. */
++static const char * const victus_fan_control_boards[] = {
++	"8A3D", /* Victus by HP Gaming Laptop 15-fb0xxx */
++};
 +
-+	guard(spinlock_irqsave)(&asus_ref.lock);
-+	asus = asus_ref.asus;
-+	if (!asus)
+ static bool is_victus_s_board;
+ 
+ enum hp_wmi_radio {
+@@ -1715,6 +1720,22 @@ static bool is_victus_s_thermal_profile(void)
+ 	return is_victus_s_board;
+ }
+ 
++static bool is_victus_fan_control(void)
++{
++	const char *board_name;
++
++	if (is_victus_s_thermal_profile())
++		return true;
++
++	board_name = dmi_get_system_info(DMI_BOARD_NAME);
++	if (!board_name)
 +		return false;
 +
-+	return asus->driver->quirks->fnlock_use_hid;
++	return match_string(victus_fan_control_boards,
++			    ARRAY_SIZE(victus_fan_control_boards),
++			    board_name) >= 0;
 +}
-+EXPORT_SYMBOL_NS_GPL(asus_wmi_fnlock_use_hid, "ASUS_WMI");
 +
- /*
-  * These functions actually update the LED's, and are called from a
-  * workqueue. By doing this as separate work rather than when the LED
-diff --git a/drivers/platform/x86/asus-wmi.h b/drivers/platform/x86/asus-wmi.h
-index 5cd4392b964e..6c50b11860e8 100644
---- a/drivers/platform/x86/asus-wmi.h
-+++ b/drivers/platform/x86/asus-wmi.h
-@@ -52,6 +52,11 @@ struct quirk_entry {
- 	 */
- 	int no_display_toggle;
- 	u32 xusb2pr;
-+	/*
-+	 * Some platforms report WMI DEVID_FNLOCK as present but the DEVS call
-+	 * is a no-op. Force the HID feature report path via hid-asus instead.
-+	 */
-+	bool fnlock_use_hid;
- };
+ static int victus_s_gpu_thermal_profile_get(bool *ctgp_enable,
+ 					    bool *ppab_enable,
+ 					    u8 *dstate,
+@@ -2324,7 +2345,7 @@ static int hp_wmi_apply_fan_settings(struct hp_wmi_hwmon_priv *priv)
  
- struct asus_wmi_driver {
-diff --git a/include/linux/platform_data/x86/asus-wmi.h b/include/linux/platform_data/x86/asus-wmi.h
-index a88bf03f9c4d..199179266363 100644
---- a/include/linux/platform_data/x86/asus-wmi.h
-+++ b/include/linux/platform_data/x86/asus-wmi.h
-@@ -205,7 +205,7 @@ int asus_wmi_evaluate_method(u32 method_id, u32 arg0, u32 arg1, u32 *retval);
- int asus_hid_register_listener(struct asus_hid_listener *cdev);
- void asus_hid_unregister_listener(struct asus_hid_listener *cdev);
- int asus_hid_event(enum asus_hid_event event);
--int asus_hid_fnlock_set(bool enabled);
-+bool asus_wmi_fnlock_use_hid(void);
- #else
- static inline void set_ally_mcu_hack(enum asus_ally_mcu_hack status)
+ 	switch (priv->mode) {
+ 	case PWM_MODE_MAX:
+-		if (is_victus_s_thermal_profile())
++		if (is_victus_fan_control())
+ 			hp_wmi_get_fan_count_userdefine_trigger();
+ 		ret = hp_wmi_fan_speed_max_set(1);
+ 		if (ret < 0)
+@@ -2333,7 +2354,7 @@ static int hp_wmi_apply_fan_settings(struct hp_wmi_hwmon_priv *priv)
+ 				      secs_to_jiffies(KEEP_ALIVE_DELAY_SECS));
+ 		return 0;
+ 	case PWM_MODE_MANUAL:
+-		if (!is_victus_s_thermal_profile())
++		if (!is_victus_fan_control())
+ 			return -EOPNOTSUPP;
+ 		ret = hp_wmi_fan_speed_set(priv, pwm_to_rpm(priv->pwm, priv));
+ 		if (ret < 0)
+@@ -2342,7 +2363,7 @@ static int hp_wmi_apply_fan_settings(struct hp_wmi_hwmon_priv *priv)
+ 				      secs_to_jiffies(KEEP_ALIVE_DELAY_SECS));
+ 		return 0;
+ 	case PWM_MODE_AUTO:
+-		if (is_victus_s_thermal_profile()) {
++		if (is_victus_fan_control()) {
+ 			hp_wmi_get_fan_count_userdefine_trigger();
+ 			ret = hp_wmi_fan_speed_max_reset(priv);
+ 		} else {
+@@ -2366,7 +2387,7 @@ static umode_t hp_wmi_hwmon_is_visible(const void *data,
  {
-@@ -238,9 +238,9 @@ static inline int asus_hid_event(enum asus_hid_event event)
- 	return -ENODEV;
- }
+ 	switch (type) {
+ 	case hwmon_pwm:
+-		if (attr == hwmon_pwm_input && !is_victus_s_thermal_profile())
++		if (attr == hwmon_pwm_input && !is_victus_fan_control())
+ 			return 0;
+ 		return 0644;
+ 	case hwmon_fan:
+@@ -2404,10 +2425,13 @@ static int hp_wmi_hwmon_read(struct device *dev, enum hwmon_sensor_types type,
+ 		return 0;
+ 	case hwmon_pwm:
+ 		if (attr == hwmon_pwm_input) {
+-			if (!is_victus_s_thermal_profile())
++			if (!is_victus_fan_control())
+ 				return -EOPNOTSUPP;
  
--static inline int asus_hid_fnlock_set(bool enabled)
-+static inline bool asus_wmi_fnlock_use_hid(void)
- {
--	return -ENODEV;
-+	return false;
- }
- #endif
+-			rpm = hp_wmi_get_fan_speed_victus_s(channel);
++			if (is_victus_s_thermal_profile())
++				rpm = hp_wmi_get_fan_speed_victus_s(channel);
++			else
++				rpm = hp_wmi_get_fan_speed(channel);
+ 			if (rpm < 0)
+ 				return rpm;
+ 			*val = rpm_to_pwm(rpm / 100, priv);
+@@ -2438,7 +2462,7 @@ static int hp_wmi_hwmon_write(struct device *dev, enum hwmon_sensor_types type,
+ 	switch (type) {
+ 	case hwmon_pwm:
+ 		if (attr == hwmon_pwm_input) {
+-			if (!is_victus_s_thermal_profile())
++			if (!is_victus_fan_control())
+ 				return -EOPNOTSUPP;
+ 			/* PWM input is invalid when not in manual mode */
+ 			if (priv->mode != PWM_MODE_MANUAL)
+@@ -2455,13 +2479,16 @@ static int hp_wmi_hwmon_write(struct device *dev, enum hwmon_sensor_types type,
+ 			priv->mode = PWM_MODE_MAX;
+ 			return hp_wmi_apply_fan_settings(priv);
+ 		case PWM_MODE_MANUAL:
+-			if (!is_victus_s_thermal_profile())
++			if (!is_victus_fan_control())
+ 				return -EOPNOTSUPP;
+ 			/*
+ 			 * When switching to manual mode, set fan speed to
+ 			 * current RPM values to ensure a smooth transition.
+ 			 */
+-			rpm = hp_wmi_get_fan_speed_victus_s(channel);
++			if (is_victus_s_thermal_profile())
++				rpm = hp_wmi_get_fan_speed_victus_s(channel);
++			else
++				rpm = hp_wmi_get_fan_speed(channel);
+ 			if (rpm < 0)
+ 				return rpm;
+ 			priv->pwm = rpm_to_pwm(rpm / 100, priv);
+@@ -2519,9 +2546,16 @@ static int hp_wmi_setup_fan_settings(struct hp_wmi_hwmon_priv *priv)
+ 	/* Default behaviour on hwmon init is automatic mode */
+ 	priv->mode = PWM_MODE_AUTO;
  
+-	/* Bypass all non-Victus S devices */
+-	if (!is_victus_s_thermal_profile())
++	/* Bypass devices without the Victus fan-control WMI calls. */
++	if (!is_victus_fan_control())
++		return 0;
++
++	if (!is_victus_s_thermal_profile()) {
++		priv->min_rpm = 26;
++		priv->max_rpm = 58;
++		priv->gpu_delta = 3;
+ 		return 0;
++	}
+ 
+ 	ret = hp_wmi_perform_query(HPWMI_VICTUS_S_GET_FAN_TABLE_QUERY,
+ 				   HPWMI_GM, &fan_data, 4, sizeof(fan_data));
 -- 
 2.54.0
 
