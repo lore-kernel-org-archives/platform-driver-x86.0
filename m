@@ -1,142 +1,261 @@
-Received: from DM5PR21CU001.outbound.protection.outlook.com (mail-centralusazon11011002.outbound.protection.outlook.com [52.101.62.2])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pl1-f172.google.com (mail-pl1-f172.google.com [209.85.214.172])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 41CD53A759E;
-	Thu,  7 May 2026 19:10:32 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=52.101.62.2
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1778181033; cv=fail; b=T/ZOvET5rbUt4ueOn//rH8jufJ+Kk+unVB1f/vcqvOfQcsn29q6NgacKsXcfQKjV5svOV5a91nXhCzX8FXoR1JV0LpMuUaVAKzdQm04H3826S+oD0dlQykgg2TsLeVSzEplDWWTisdIt7ZllrzLqT+fooRNXc1zbSFrO3QXruzw=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1778181033; c=relaxed/simple;
-	bh=0DDJXbjx3Mqh+N3GThXKjPkfsNT/B0PBYNBHoGDgve0=;
-	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=bf3VePJjjJM73q9D6oUrLGoWNfjM3fWA2j3/wD5H61g5IS5rCMRAeGEBgw0zjVvMm/UH/bKu4jHyjUpfeGTJcgJGKTkMvn44nEwIJD0gaTRPJYSEhIJowjGd+bDUNOU0zfaELeEPQ3/A3pV2jetR5CDbLw7qqIW/riXcMnwoWw0=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=rgHUWLL8; arc=fail smtp.client-ip=52.101.62.2
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com
-Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=amd.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 756D239098C
+	for <platform-driver-x86@vger.kernel.org>; Thu,  7 May 2026 19:15:10 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.172
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1778181323; cv=none; b=ruK22zGMPOiOOYi8SWDyfyF/u8EnneEDEACBOq0KouXdazi+FhrUDzTW6xnBvBKkBFWLIF//9K3MxPrI64C9r94vrnDYE6twLHVQ2d7mPj26BelbWUsgk4Cek5FgjFn6pt3wTJdQljRWAoKYnygzZEVzEtFCUoTR03+lU4Q+Ccs=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1778181323; c=relaxed/simple;
+	bh=md47/BsVI4tUEzji70Ikg6zySAx6I+JG1knRJY9b9bI=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=W6w6CWWDxHnE+XlWyP/O58oIBsjuIWDiF8+xmJyEJo5tA3eak6NCFYdM98HPV0JPDAfp0bN6g+uhUjBvl85/kPRwwpIjyMcF2iU/9QrTH3KmgDpV48c4GMAFPv+PuWY99SaulSi5ZqyAT2ju3ASzGFsDtfQIr/FNuWZoSm0YW9c=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=cn+//VMh; arc=none smtp.client-ip=209.85.214.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="rgHUWLL8"
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=K2VSfM3UlVoU9bhSnOl4gAIdkdj7bQLWzMZV7fiJ0vgRnDANiQd9lZyrd0Si76zUfPQ02c9xpMmejsOTrOSpiBXNREC0d0AVKtMvZ3Z84T05Yy4w0URNH5QgHd3raW+XU8P3oiCMMlGiROH9YbaJ12p7qBcohC0rATORj5etcHF7FIWw4XfCGQToHrFINe7z5jBLUlV6h4yzdOce8kddccy9TtfGV+jwmtLSK9NXxsXcS+1tXyVDUcfGWTgPvp0iHpRaLB07WQcF5W2SopoRWp92hFt8aidC7Vzk9tyDT6OJLNCs9cXVhyLAailu9HftYUcveF29Y9EynwboO0rSVw==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=chHzZx9jGUMT7VDMZHdTYQy8CrrO7GCnK0lZ4gRZXUs=;
- b=CvzvGovn/9OMPpaBF/oqxgtMSmqgbToXL/zpEeZolfZLkilgeo+82Fau5PDuRP/0Wj8YjYb5SeBWLXSvrLF1U8aIxK/xFWzJHTlzrEjxj+ZWI2lZ5GFkyLRmA/HsFKJjU4eWLR3uY2sLv1WmBiMuJX5kgD5av/Oc4IQnPIZRqahOVQQXHGVLpz7+Z4aDt6FvDjAGqxlmEtF6kNkRy6pSgN7uLYXgOtdRB0QQlZFjfczWi7rktORdzs9xPFaO0ch0pSeL9QK0RYveZcGUwob8IRIBN1mR9co8w0tOSVcqmr9ZPqKL7eN8ct/YiLftQDU6CEpiR+wywgVTKjN5XGTbBA==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
- 165.204.84.17) smtp.rcpttodomain=kernel.org smtp.mailfrom=amd.com; dmarc=pass
- (p=quarantine sp=quarantine pct=100) action=none header.from=amd.com;
- dkim=none (message not signed); arc=none (0)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=chHzZx9jGUMT7VDMZHdTYQy8CrrO7GCnK0lZ4gRZXUs=;
- b=rgHUWLL8rBqjGZALknhYMWbZ2lXXgmPOSGFtpD8ENdm6VUEQf+RigDWWD99CGr4XLr5xuoMFcT5kG09GXQyajvFUsYg9WUUwEyEvb/B+exk3LG4DbupXqComqT02QagH2btR4iQH8kWCi1hDz2um8e58bueDnAzf42CHEWXGoZM=
-Received: from MN2PR07CA0017.namprd07.prod.outlook.com (2603:10b6:208:1a0::27)
- by CY3PR12MB9580.namprd12.prod.outlook.com (2603:10b6:930:10a::20) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.9891.17; Thu, 7 May
- 2026 19:10:24 +0000
-Received: from BL6PEPF00020E66.namprd04.prod.outlook.com
- (2603:10b6:208:1a0:cafe::d7) by MN2PR07CA0017.outlook.office365.com
- (2603:10b6:208:1a0::27) with Microsoft SMTP Server (version=TLS1_3,
- cipher=TLS_AES_256_GCM_SHA384) id 15.20.9891.16 via Frontend Transport; Thu,
- 7 May 2026 19:10:23 +0000
-X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 165.204.84.17)
- smtp.mailfrom=amd.com; dkim=none (message not signed)
- header.d=none;dmarc=pass action=none header.from=amd.com;
-Received-SPF: Pass (protection.outlook.com: domain of amd.com designates
- 165.204.84.17 as permitted sender) receiver=protection.outlook.com;
- client-ip=165.204.84.17; helo=satlexmb07.amd.com; pr=C
-Received: from satlexmb07.amd.com (165.204.84.17) by
- BL6PEPF00020E66.mail.protection.outlook.com (10.167.249.27) with Microsoft
- SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.9891.9 via Frontend Transport; Thu, 7 May 2026 19:10:23 +0000
-Received: from airavat.amd.com (10.180.168.240) by satlexmb07.amd.com
- (10.181.42.216) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.2562.17; Thu, 7 May
- 2026 14:10:18 -0500
-From: Krishnamoorthi M <krishnamoorthi.m@amd.com>
-To: <mario.limonciello@amd.com>, <hansg@kernel.org>,
-	<ilpo.jarvinen@linux.intel.com>
-CC: <Shyam-sundar.S-k@amd.com>, <perry.yuan@amd.com>,
-	<platform-driver-x86@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-	Krishnamoorthi M <krishnamoorthi.m@amd.com>
-Subject: [PATCH] platform/x86/amd: hfi: Support for ranking table versions
-Date: Fri, 8 May 2026 00:39:26 +0530
-Message-ID: <20260507190926.1211726-1-krishnamoorthi.m@amd.com>
-X-Mailer: git-send-email 2.34.1
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="cn+//VMh"
+Received: by mail-pl1-f172.google.com with SMTP id d9443c01a7336-2b9fcf7c91bso11608365ad.0
+        for <platform-driver-x86@vger.kernel.org>; Thu, 07 May 2026 12:15:08 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20251104; t=1778181306; x=1778786106; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=IG65Dl6AcmTHEqc/ACpRmoIQxmnlVFAWTNwn+wT4SNI=;
+        b=cn+//VMhEAtsM23nK1DafLFqNu+EU3I5O6T3DI2roZgx/42PTjPuigwgPGXToxk0QL
+         M6r19JkxOAX8wQXHrG8zDJsVM9AcnqLsqZpQDHabwvyXbNWWLg+AG8zZBpsmZerhb13H
+         dAg4eJgm48z0ndnJOgpERGX9Ope5ocAN9j1nxvNEgUtdGDzUv7ZPU9xVIEO8C950f0nH
+         EKL5grx239UlA061Z0WW6Ui+0LN0bCzGaAd09N72JSNLZ9DoWuM1isi/J3olFJtb8vnB
+         wkVsuAIa5IlDEtP5lgdCnpm5K0uj3Y5Ad4u9nf0YzW1y1HSIwVtH+dVj4YJ4LUoBrcz6
+         6zWQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20251104; t=1778181306; x=1778786106;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-gg:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=IG65Dl6AcmTHEqc/ACpRmoIQxmnlVFAWTNwn+wT4SNI=;
+        b=KR+0mD5bEelDtBHQMJoE0a9gxDvCgdIoKehqVNoXpfPqeDVA8ogQok+yypQ6ClO9vw
+         nWIDP0Y0ysxd2Q7boOLDd1dRxbyALptOYLgYpXqYW1Xt38ZmuPj77kN3a245FBePDMcD
+         J1Gx7zEV+jzdMqQ9rZcUXbKvQtSaj/Ysjjj/5TAQVFi+MzTRcpEyUOS5JIbZGJYuhvZY
+         z25SaCSyRcVlIsgAEzV7RNnQxkVwW74je6h219v4E8Ujjbvc/kTmJ46FrHyMgzSY2Xyf
+         avouJVhXLS+KAr5MwXLYOg7FaHF7EjcG25yZI4tckN7Qkn9HDC3GSDtX2v01WR1LHT5s
+         1gdA==
+X-Gm-Message-State: AOJu0Yxq9n3lf43rJQKX5LEkIyRXKpviGPq0Tz9QP/NAcbcNfjw4cWyJ
+	pSUZIGYAGsWhEUQsdkTVQcQ1fPPp3BhjEXVZZ8xRJ+NZQ/SmvPf7FsFD
+X-Gm-Gg: Acq92OF8CLwftxpnNo0PZSZP56rsFNlsncvBNzUwGZ4+Ap8MEE5t1M+3h3VU8UZ3O78
+	yLCYFnOfmc/aYid9vcQClcQEAoDSK+TP0rypG9gs7WojgjVz1yzWq6u0ulzHd6unwk+nWzx86a3
+	/OJNuqOhuz0GNYYlNaLnaNnogAhZ9+ZFQEyvAiwSKfEuZaL+2IRCHcLfJFrMMEd58sHE1SxWwEV
+	L3KkofNY8fK4BOMK6Kn+WpKwu80RNU1Aj80kveGAJE3PO15rJZgcTBpLUDJsIGDcutR6Dt0ybnF
+	IUeLj1rbygCpMeFAeufBYeL9BgRqi/f4kEJxMo1MMJ9Bg1mJxmk4oBn4ti1V991nMKuyVMw3/ku
+	PG2aiXdQR+yrt2CkUrNLEyuw5IYtZr35axmX/RabNsuEXcq2byAiua/52l2PK9D2flpaVD91MlO
+	p5n5xec3MJvgfcQiKZ5AmsyDAG3w/Sv+XBYQx5uco4W8HZcHhTJDhzdHYhxCw6ru4S9p96AUT+1
+	cWWUJRKowZcwbIU9PWC
+X-Received: by 2002:a17:903:1ce:b0:2ba:6bd7:8eff with SMTP id d9443c01a7336-2ba798b64c3mr97536475ad.18.1778181306407;
+        Thu, 07 May 2026 12:15:06 -0700 (PDT)
+Received: from archlinux ([2405:201:1b:225f:36f2:f474:be1d:cad7])
+        by smtp.gmail.com with ESMTPSA id d9443c01a7336-2bae7576c53sm5104045ad.31.2026.05.07.12.15.04
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 07 May 2026 12:15:05 -0700 (PDT)
+Date: Fri, 8 May 2026 00:45:02 +0530
+From: Krishna Chomal <krishna.chomal108@gmail.com>
+To: jR4dh3y <radheykalra901@gmail.com>
+Cc: platform-driver-x86@vger.kernel.org, ilpo.jarvinen@linux.intel.com, 
+	hdegoede@redhat.com
+Subject: Re: [PATCH] platform/x86: hp-wmi: Add Victus 15-fb0xxx fan control
+Message-ID: <afzffd9SRuZQEMXe@archlinux>
+References: <20260507101347.27972-1-radheykalra901@gmail.com>
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-ClientProxiedBy: satlexmb07.amd.com (10.181.42.216) To satlexmb07.amd.com
- (10.181.42.216)
-X-EOPAttributedMessage: 0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: BL6PEPF00020E66:EE_|CY3PR12MB9580:EE_
-X-MS-Office365-Filtering-Correlation-Id: f4269ad1-a25d-497e-5921-08deac6c4a2d
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam:
-	BCL:0;ARA:13230040|1800799024|82310400026|376014|36860700016|56012099003|18002099003;
-X-Microsoft-Antispam-Message-Info:
-	MK0APezsMGiq99ubS6NxD+KwX5fsD0waii+RsldH+zJHIUZFAFtvmxwINbqaWj210pEy0EiFvxbs/AUy9Gb13wpfw1rL3WIUUCQza2/eyLqM6HjGIN9J53ovwIe8C7z7+qJ+shwxveGhzDjPbjhGFTMpC1X9WxDK/tJyvcBrXXcf1Jx4vEcV3FmPdH5Z1lSfSzUH3OF1gHjwOh2RXfqua9FPrCt3EjLUCmO9gxTjwDd37Kv0vgFQkR5vMlVctf1MkUqAeom4UWekCooSALUxgp72LOAQNIBt4be3y9iP7XvAqNSJGVFhDM92vorPWcJ3O9xu4mF0CM2lexNO02CZc7Cv1mi5scIrfkZldWoIrX+usUHDE+LoQqIda6KbQ0T4jmQmD75I7167feJI4eW1YAuUefjzLA47WBFg5Oq1StXPHFkNG1jfdTBsGm8UYZSKC8BdJRDacp6bx6tdnf+qNwo3YgrERxNryuWAriM7tM71Kg2bSo5mQVucVgpIU8u2/XMF9edyllP0kgJGorIUJUbrX09FZLX7OF4FdqKXpBHvc2301WfYYnWuQaYC+lzR2iC6qDbA3G90mbT47MCmMrrvNu+/HUA7jEPqvqLnX3IgJL7eK/+yUj0aVd8Sjuuwtt+kcwfpOBqvFB2dFzkhQHeVD4oeePcbs1cDNLc9AfRCUkfpYBjlQoqEZ5B7gcpidAZi0Hcom0GancK1qSAKLQDkzpM155bsI84uIck6TVQ=
-X-Forefront-Antispam-Report:
-	CIP:165.204.84.17;CTRY:US;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:satlexmb07.amd.com;PTR:InfoDomainNonexistent;CAT:NONE;SFS:(13230040)(1800799024)(82310400026)(376014)(36860700016)(56012099003)(18002099003);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0:
-	ew554wW2+XSYxys4XaS2F0aHRFcCTnNDPHAprIM7BcGlsMIc04rO0yq+7JiTpkSlpMPp8G7v/9NldWtd181pQppuf2FDQwR854DIKosikfE7J0JI3LY5XRKv7pUvNd+ENXzgVu+fjt29H68qEyvs/nfLs6pIMZY6r5l2xVPdLJXspt/Lv93v8Q6LNDbq2UU755xCaRnYZav32TNN8BVF/jQjs9vRXZcMnyyDJhJ+bD8Mej8KHPbsOyT8PIzG5ehve8XNKUK979lx+qwx/qPRLIg6/lJIOhyAAxlAplgi8/9V8RXlsSv4d/G8t6+6uMvoPcoKEMLKGkdTxlHFnDqrJFU19MIEQxDL277SbKHitcYgPSC1khipFzyxdG6oH4qhEpJNpr0HddxTWy4TLSXlmEFhoxK8+aw/2jRz3C6vRmjch25EdKVQcthHvQ6pRVTg
-X-OriginatorOrg: amd.com
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 07 May 2026 19:10:23.3633
- (UTC)
-X-MS-Exchange-CrossTenant-Network-Message-Id: f4269ad1-a25d-497e-5921-08deac6c4a2d
-X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
-X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=3dd8961f-e488-4e60-8e11-a82d994e183d;Ip=[165.204.84.17];Helo=[satlexmb07.amd.com]
-X-MS-Exchange-CrossTenant-AuthSource:
-	BL6PEPF00020E66.namprd04.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Anonymous
-X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: CY3PR12MB9580
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Disposition: inline
+In-Reply-To: <20260507101347.27972-1-radheykalra901@gmail.com>
 
-Add changes to support new ranking table version. Version 2 of the
-heterogeneous ranking table provides static CPU rankings. Version 3 adds
-dynamic ranking table support on newer AMD platforms. These changes ensure
-that platforms still reporting version 2 continue to function with the
-existing static ranking path, avoiding regressions on older hardware
-that does not supply a dynamic ranking table.
+Hi,
 
-Signed-off-by: Krishnamoorthi M <krishnamoorthi.m@amd.com>
----
- drivers/platform/x86/amd/hfi/hfi.c | 6 ++++--
- 1 file changed, 4 insertions(+), 2 deletions(-)
+On Thu, May 07, 2026 at 03:43:44PM +0530, jR4dh3y wrote:
+>HP Victus 15-fb0xxx board 8A3D supports the same WMI fan speed
+>set command used by the Victus manual fan control path, but it is
+>not a Victus S thermal-profile board.
+>
 
-diff --git a/drivers/platform/x86/amd/hfi/hfi.c b/drivers/platform/x86/amd/hfi/hfi.c
-index 83863a5e0fbc..e0ebcb0c4acd 100644
---- a/drivers/platform/x86/amd/hfi/hfi.c
-+++ b/drivers/platform/x86/amd/hfi/hfi.c
-@@ -33,7 +33,8 @@
- 
- #define AMD_HFI_DRIVER		"amd_hfi"
- #define AMD_HFI_MAILBOX_COUNT		1
--#define AMD_HETERO_RANKING_TABLE_VER	2
-+#define AMD_HETERO_RANKING_TABLE_MIN_VER	2
-+#define AMD_HETERO_RANKING_TABLE_MAX_VER	3
- 
- #define AMD_HETERO_CPUID_27	0x80000027
- 
-@@ -158,7 +159,8 @@ static int amd_hfi_fill_metadata(struct amd_hfi_data *amd_hfi_data)
- 		dev_err(amd_hfi_data->dev, "invalid signature in shared memory\n");
- 		return -EINVAL;
- 	}
--	if (amd_hfi_data->shmem->version_number != AMD_HETERO_RANKING_TABLE_VER) {
-+	if (amd_hfi_data->shmem->version_number < AMD_HETERO_RANKING_TABLE_MIN_VER ||
-+	    amd_hfi_data->shmem->version_number > AMD_HETERO_RANKING_TABLE_MAX_VER) {
- 		dev_err(amd_hfi_data->dev, "invalid version %d\n",
- 			amd_hfi_data->shmem->version_number);
- 		return -EINVAL;
--- 
-2.34.1
+I wanted to clarify that the names in this driver are currently a bit
+misleading since victus_s_thermal_profile_boards[] contains both Victus
+and Omen devices. The main idea is that, devices which support fan
+control should go in victus_s_thermal_profile_boards[].
 
+>Enable the hwmon PWM manual fan interface for this board without
+>adding it to the Victus S thermal profile DMI table. This preserves
+>the existing generic platform-profile choices on this machine.
+>
+>The board does not expose a Victus S fan table, so use the RPM limits
+>validated on hardware: CPU fan 2600-5800 RPM, GPU fan about 300 RPM
+>higher.
+>
+
+This is really interesting because as per my understanding the OGH
+software on Windows derives the fan curve for all fan-control supporting
+devices via WMI calls. Can you explain why it "does not expose a Victus S
+fan table"? Is it a WMI call failure or issue in parsing the table data?
+
+NOTE: There is a known regression [1] causing a failure in parsing
+the fan table so you should build against mainline 7.1-rc1 at least, or
+manually cherry-pick 9d317a54e46d ("platform/x86: hp-wmi: fix fan table
+parsing") into your tree.
+
+[1] https://lore.kernel.org/all/CABd86uaQY9-ZSU-_PHKtZZyWnDFHLEsuaM+NBV5nOLWA+YSX7A@mail.gmail.com
+
+>Compile-tested against 7.0.3-1-cachyos-bore-lto. The WMI fan-speed
+>set path was validated on a Victus by HP Gaming Laptop 15-fb0xxx with
+>board 8A3D and BIOS F.22.
+>
+>Signed-off-by: jR4dh3y <radheykalra901@gmail.com>
+>---
+> drivers/platform/x86/hp/hp-wmi.c | 56 +++++++++++++++++++++++++-------
+> 1 file changed, 45 insertions(+), 11 deletions(-)
+>
+>diff --git a/drivers/platform/x86/hp/hp-wmi.c b/drivers/platform/x86/hp/hp-wmi.c
+>index 304d9ac..b2a6d50 100644
+>--- a/drivers/platform/x86/hp/hp-wmi.c
+>+++ b/drivers/platform/x86/hp/hp-wmi.c
+>@@ -204,6 +204,11 @@ static const struct dmi_system_id victus_s_thermal_profile_boards[] __initconst
+> 	{},
+> };
+>
+>+/* DMI Board names of Victus laptops with the Victus fan-control WMI calls. */
+>+static const char * const victus_fan_control_boards[] = {
+>+	"8A3D", /* Victus by HP Gaming Laptop 15-fb0xxx */
+>+};
+>+
+> static bool is_victus_s_board;
+>
+> enum hp_wmi_radio {
+>@@ -1715,6 +1720,22 @@ static bool is_victus_s_thermal_profile(void)
+> 	return is_victus_s_board;
+> }
+>
+>+static bool is_victus_fan_control(void)
+>+{
+>+	const char *board_name;
+>+
+>+	if (is_victus_s_thermal_profile())
+>+		return true;
+>+
+>+	board_name = dmi_get_system_info(DMI_BOARD_NAME);
+>+	if (!board_name)
+>+		return false;
+>+
+>+	return match_string(victus_fan_control_boards,
+>+			    ARRAY_SIZE(victus_fan_control_boards),
+>+			    board_name) >= 0;
+>+}
+>+
+> static int victus_s_gpu_thermal_profile_get(bool *ctgp_enable,
+> 					    bool *ppab_enable,
+> 					    u8 *dstate,
+>@@ -2324,7 +2345,7 @@ static int hp_wmi_apply_fan_settings(struct hp_wmi_hwmon_priv *priv)
+>
+> 	switch (priv->mode) {
+> 	case PWM_MODE_MAX:
+>-		if (is_victus_s_thermal_profile())
+>+		if (is_victus_fan_control())
+> 			hp_wmi_get_fan_count_userdefine_trigger();
+> 		ret = hp_wmi_fan_speed_max_set(1);
+> 		if (ret < 0)
+>@@ -2333,7 +2354,7 @@ static int hp_wmi_apply_fan_settings(struct hp_wmi_hwmon_priv *priv)
+> 				      secs_to_jiffies(KEEP_ALIVE_DELAY_SECS));
+> 		return 0;
+> 	case PWM_MODE_MANUAL:
+>-		if (!is_victus_s_thermal_profile())
+>+		if (!is_victus_fan_control())
+> 			return -EOPNOTSUPP;
+> 		ret = hp_wmi_fan_speed_set(priv, pwm_to_rpm(priv->pwm, priv));
+> 		if (ret < 0)
+>@@ -2342,7 +2363,7 @@ static int hp_wmi_apply_fan_settings(struct hp_wmi_hwmon_priv *priv)
+> 				      secs_to_jiffies(KEEP_ALIVE_DELAY_SECS));
+> 		return 0;
+> 	case PWM_MODE_AUTO:
+>-		if (is_victus_s_thermal_profile()) {
+>+		if (is_victus_fan_control()) {
+> 			hp_wmi_get_fan_count_userdefine_trigger();
+> 			ret = hp_wmi_fan_speed_max_reset(priv);
+> 		} else {
+>@@ -2366,7 +2387,7 @@ static umode_t hp_wmi_hwmon_is_visible(const void *data,
+> {
+> 	switch (type) {
+> 	case hwmon_pwm:
+>-		if (attr == hwmon_pwm_input && !is_victus_s_thermal_profile())
+>+		if (attr == hwmon_pwm_input && !is_victus_fan_control())
+> 			return 0;
+> 		return 0644;
+> 	case hwmon_fan:
+>@@ -2404,10 +2425,13 @@ static int hp_wmi_hwmon_read(struct device *dev, enum hwmon_sensor_types type,
+> 		return 0;
+> 	case hwmon_pwm:
+> 		if (attr == hwmon_pwm_input) {
+>-			if (!is_victus_s_thermal_profile())
+>+			if (!is_victus_fan_control())
+> 				return -EOPNOTSUPP;
+>
+>-			rpm = hp_wmi_get_fan_speed_victus_s(channel);
+>+			if (is_victus_s_thermal_profile())
+>+				rpm = hp_wmi_get_fan_speed_victus_s(channel);
+>+			else
+>+				rpm = hp_wmi_get_fan_speed(channel);
+> 			if (rpm < 0)
+> 				return rpm;
+> 			*val = rpm_to_pwm(rpm / 100, priv);
+>@@ -2438,7 +2462,7 @@ static int hp_wmi_hwmon_write(struct device *dev, enum hwmon_sensor_types type,
+> 	switch (type) {
+> 	case hwmon_pwm:
+> 		if (attr == hwmon_pwm_input) {
+>-			if (!is_victus_s_thermal_profile())
+>+			if (!is_victus_fan_control())
+> 				return -EOPNOTSUPP;
+> 			/* PWM input is invalid when not in manual mode */
+> 			if (priv->mode != PWM_MODE_MANUAL)
+>@@ -2455,13 +2479,16 @@ static int hp_wmi_hwmon_write(struct device *dev, enum hwmon_sensor_types type,
+> 			priv->mode = PWM_MODE_MAX;
+> 			return hp_wmi_apply_fan_settings(priv);
+> 		case PWM_MODE_MANUAL:
+>-			if (!is_victus_s_thermal_profile())
+>+			if (!is_victus_fan_control())
+> 				return -EOPNOTSUPP;
+> 			/*
+> 			 * When switching to manual mode, set fan speed to
+> 			 * current RPM values to ensure a smooth transition.
+> 			 */
+>-			rpm = hp_wmi_get_fan_speed_victus_s(channel);
+>+			if (is_victus_s_thermal_profile())
+>+				rpm = hp_wmi_get_fan_speed_victus_s(channel);
+>+			else
+>+				rpm = hp_wmi_get_fan_speed(channel);
+> 			if (rpm < 0)
+> 				return rpm;
+> 			priv->pwm = rpm_to_pwm(rpm / 100, priv);
+>@@ -2519,9 +2546,16 @@ static int hp_wmi_setup_fan_settings(struct hp_wmi_hwmon_priv *priv)
+> 	/* Default behaviour on hwmon init is automatic mode */
+> 	priv->mode = PWM_MODE_AUTO;
+>
+>-	/* Bypass all non-Victus S devices */
+>-	if (!is_victus_s_thermal_profile())
+>+	/* Bypass devices without the Victus fan-control WMI calls. */
+>+	if (!is_victus_fan_control())
+>+		return 0;
+>+
+>+	if (!is_victus_s_thermal_profile()) {
+>+		priv->min_rpm = 26;
+>+		priv->max_rpm = 58;
+>+		priv->gpu_delta = 3;
+> 		return 0;
+>+	}
+>
+> 	ret = hp_wmi_perform_query(HPWMI_VICTUS_S_GET_FAN_TABLE_QUERY,
+> 				   HPWMI_GM, &fan_data, 4, sizeof(fan_data));
+>-- 
+>2.54.0
+>
