@@ -1,45 +1,46 @@
-Received: from SN4PR0501CU005.outbound.protection.outlook.com (mail-southcentralusazon11011018.outbound.protection.outlook.com [40.93.194.18])
+Received: from CO1PR03CU002.outbound.protection.outlook.com (mail-westus2azon11010011.outbound.protection.outlook.com [52.101.46.11])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 673C32BE051
-	for <platform-driver-x86@vger.kernel.org>; Thu,  7 May 2026 14:45:48 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.93.194.18
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 29354336892
+	for <platform-driver-x86@vger.kernel.org>; Thu,  7 May 2026 14:45:51 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=52.101.46.11
 ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1778165149; cv=fail; b=SwmQmrkLaW/arMXLrAFk4mTUcE7VmJRS4P4ttsynMHYUq90z4fxlQDebQwXJQ4BbMYKYjzaPfMfdaU98eXKobjFxeCzJ6kIZ/JtMG0tJ80F78H9TZhZZ0yOFasHilUSqE9ze9QGjgC4xRepjcPUsc0FS+xeRl4Gw8ORNpH/Z+ZI=
+	t=1778165153; cv=fail; b=QITbJo6IBrB07DbEgsSiDs+/N3fK9CCZ2bKo8OtwlrSVWOh1eU1K4oxU5fMX/aLehoQneNR1n+mSr7/anbt0gd+GcVTfP/57A8FjtXVbHu5WbXI9M7r6bjp0R6ymxYJ+V1cK5xVscD915I7jtWPJcsMrLO189oCdlnOqymqQyKE=
 ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1778165149; c=relaxed/simple;
-	bh=NcvzJmQBUl97WfF0EP1YofxCv0WfK6XnK9wtSbNxQIQ=;
-	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=h/Qj3/1DhvZ5ccVvTIi3FQM+ER5SeImwpgrq11IzfEhBlBYwDf9obxS6j7vOAlbgXkst/xujDa/AdtuV3PtdIl9MSb7GP3ETdLd6Dl9jBhdKOQZER0msD+28GfSdAg9SZAGa4OTUTPsOKzBOiyDLE+IPh/BwiJwXW3xrnGEq3gw=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=phulS0EK; arc=fail smtp.client-ip=40.93.194.18
+	s=arc-20240116; t=1778165153; c=relaxed/simple;
+	bh=kNpyGzeuR4haXJjUAxEPGpMf9Hi6j/leNr5By+lky4A=;
+	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=aAj+v0bqGQkZEtFhY8jYBSzGGyu7q1A0mbtFF9zQxIZZSUlFYiVpSLCuaEpfrmGJbfuzCyJRy4BkmToggkqysog8r/1FM0zSFNzLbsN+EDIFjdWv2IH/td8EeqCTNvMYbkfS91PnWwOHjHSqZHwiraCMIGlnEJAZ25suAW5tCSU=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=IHqhWJRn; arc=fail smtp.client-ip=52.101.46.11
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com
 Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=amd.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="phulS0EK"
+	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="IHqhWJRn"
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=xpNiEDXLLHc5+XLF4Qm5YspatR+uKPOXNTApRZ20o8p1QmEeTytve/Qr2HkZUSic4mBLO2s1OOyX11Zwd9au6s1He2wBBe09F+ItMQIEIW4k7DtwVVLlj9Z+AvZbyJLzn3/Fg+5EVzBCxkxthvmjUw2aKcFmLgitmC8+AiqPhG+gTP+DoKNliTUPG2Bg4dEb7cRVfke+LpJ8OcQOt49hBPFQl/+nEaNIovf1EfqHpfLeIJqYfe48mq5Y76VqJ/o2SLstjs2zHFdQ98shM6Z0kUgsUDkawdd0sFsUFxkaqlJaEy7CcI1X2omhrTHJslAFn482hBi3u0DOiyVLwSsdCQ==
+ b=lEtebjrlffEOw+VDW93AbBLRIaFmYoCH4E4+25d1AKmh8rJkYlXi3GdmMydhzFN+HDoUVsde7OXcvNMqEqreG9fUsB6/LfJzUR+xOLCEyAaa1mJ2Ij69G1lNLZoHH/CjwkDNovxPhkmw7jxjpcnDQ+0PbDjcVoFt146cpUHPFVTjHLnP68IG8CvBb0q6eHieQui53mq6JHF3jGftH/djqqVQcXr/BWkZdSkcOqQAhqw9VvzgIDK5nuZjTNhazdM+GLWsohD4T9TomVY+J1nDuAn/mDRbpcrjNbRr1KMDpJF+zoDhw75k/PzuaBrYPH9IUhpV32r3/CdHinvJ+1Kyzw==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector10001;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=e2vIv3NqRNScCncM3r7aHNaAAs3RDVm9AD9plYnfhK0=;
- b=KIjCU+6VO6N6Z3KYKPd/gjE4mRyMt9F8d9/k+9US5+NtRgU3GabkJHbIZfTOv4sBdaoXG8ELvhpNj8qMgbcze3KCrhezKmPJE2sncOTFQ8hP3zmTzfVGMuAjTtY8YUEMWedzKXPFchdtWQpq9Ok3jhZdCFUFU1hYZUmns6lg91WZqkOZgUUIcuGaMsG3KCsAp5qsFCTNC5RqSojhk0UsXHiKJq5aDTdiejxZIX4ugUyZ3pdgyNwGnpCoNjSrpEx0CbVqSptpGEraiRtoCASGAR6qSKLBzLpfERB7TtviC5dlixWhUdyQWUYHoebHo4/TS2LHn7t0v0s7hUvCAy66jg==
+ bh=ibvBlaE3SD0/fqdSf6qtc1A1/zQBfz4w2VgfwTcbHwI=;
+ b=Wjx3OR+wnvRoiUEtqTnGdLr4Gzp1iCSVh3B38p9XHjAjmi8tUeG5dV0/WT9uLpwC7j+JRfBmoTCJ7ZIGmQVCW9r5to/0VB/eYGoQNWJCO1S6dOCQwJeNHjYOk7bCv1ZwhpowCnNPbeNbP5C29rPRBsHrJMZnptB2Z9vokGuexYYF/TiAhPCrj6eTKGXekmfVuilqH41JOvO1jhWluBdA7iyaTIM+CBn5wZ8B2CwmuktrbI02pKMDHgH/tcD4jKvAn8zRVK0E4ebqnMm0yWREd3F6TL8/aL5yx0dnoCDxevrKJmWBmZZhqch5OE+3qQVBP/ofR0etuXToYbVxl+JhOQ==
 ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
  165.204.84.17) smtp.rcpttodomain=kernel.org smtp.mailfrom=amd.com; dmarc=pass
  (p=quarantine sp=quarantine pct=100) action=none header.from=amd.com;
  dkim=none (message not signed); arc=none (0)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=e2vIv3NqRNScCncM3r7aHNaAAs3RDVm9AD9plYnfhK0=;
- b=phulS0EKoyWvj/IaCyCEKAbYfpUt+2g+a3wCMENZ9GLxx8+lmrmsb5FpF/p8fLofX/wkpXuny0/oWtnhUSBRZlaAqbXjrV+LhQ0rqNWeTE7jYrBm7jrMrc1EYlHfdkCCi+qX3tyEVmrUizN2B9Y1FFMK00vcKvy95nnwOsgSPhw=
-Received: from BN9PR03CA0585.namprd03.prod.outlook.com (2603:10b6:408:10d::20)
- by DM4PR12MB6253.namprd12.prod.outlook.com (2603:10b6:8:a6::12) with
+ bh=ibvBlaE3SD0/fqdSf6qtc1A1/zQBfz4w2VgfwTcbHwI=;
+ b=IHqhWJRnGUGX566wBEsjDp5NgvmulAIKTwdDNXeTpe4+TOAeLuTTa9FW4B6VS0hmNsMu+F9LBBjY5sD44Y32/bioUw2l3CwL/941+XLkT689QQS52QcNg1024ykWcR3N8zrgPgK33Zi5+75a+S7czXtCyX3QD32qdVvvRpBPHgg=
+Received: from BN9PR03CA0582.namprd03.prod.outlook.com (2603:10b6:408:10d::17)
+ by SA5PPFF3CB57EDE.namprd12.prod.outlook.com (2603:10b6:80f:fc04::8eb) with
  Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.9891.15; Thu, 7 May
- 2026 14:45:44 +0000
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.9891.17; Thu, 7 May
+ 2026 14:45:49 +0000
 Received: from BL02EPF0002992B.namprd02.prod.outlook.com
- (2603:10b6:408:10d:cafe::58) by BN9PR03CA0585.outlook.office365.com
- (2603:10b6:408:10d::20) with Microsoft SMTP Server (version=TLS1_3,
- cipher=TLS_AES_256_GCM_SHA384) id 15.20.9891.17 via Frontend Transport; Thu,
- 7 May 2026 14:45:44 +0000
+ (2603:10b6:408:10d:cafe::40) by BN9PR03CA0582.outlook.office365.com
+ (2603:10b6:408:10d::17) with Microsoft SMTP Server (version=TLS1_3,
+ cipher=TLS_AES_256_GCM_SHA384) id 15.20.9891.18 via Frontend Transport; Thu,
+ 7 May 2026 14:45:48 +0000
 X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 165.204.84.17)
  smtp.mailfrom=amd.com; dkim=none (message not signed)
  header.d=none;dmarc=pass action=none header.from=amd.com;
@@ -49,19 +50,21 @@ Received-SPF: Pass (protection.outlook.com: domain of amd.com designates
 Received: from satlexmb07.amd.com (165.204.84.17) by
  BL02EPF0002992B.mail.protection.outlook.com (10.167.249.56) with Microsoft
  SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.9891.9 via Frontend Transport; Thu, 7 May 2026 14:45:44 +0000
+ 15.20.9891.9 via Frontend Transport; Thu, 7 May 2026 14:45:48 +0000
 Received: from airavat.amd.com (10.180.168.240) by satlexmb07.amd.com
  (10.181.42.216) with Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.2562.17; Thu, 7 May
- 2026 09:45:39 -0500
+ 2026 09:45:46 -0500
 From: Shyam Sundar S K <Shyam-sundar.S-k@amd.com>
 To: <hansg@kernel.org>, <ilpo.jarvinen@linux.intel.com>
 CC: <platform-driver-x86@vger.kernel.org>, <mario.limonciello@amd.com>,
 	<Sanket.Goswami@amd.com>, Shyam Sundar S K <Shyam-sundar.S-k@amd.com>
-Subject: [PATCH v4 0/7] platform/x86/amd/pmf: Introduce PMF util layer with userspace interface
-Date: Thu, 7 May 2026 20:15:17 +0530
-Message-ID: <20260507144524.664001-1-Shyam-sundar.S-k@amd.com>
+Subject: [PATCH v4 3/7] platform/x86/amd/pmf: Add feature discovery support to util interface
+Date: Thu, 7 May 2026 20:15:20 +0530
+Message-ID: <20260507144524.664001-4-Shyam-sundar.S-k@amd.com>
 X-Mailer: git-send-email 2.34.1
+In-Reply-To: <20260507144524.664001-1-Shyam-sundar.S-k@amd.com>
+References: <20260507144524.664001-1-Shyam-sundar.S-k@amd.com>
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
@@ -74,112 +77,102 @@ X-ClientProxiedBy: satlexmb07.amd.com (10.181.42.216) To satlexmb07.amd.com
  (10.181.42.216)
 X-EOPAttributedMessage: 0
 X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: BL02EPF0002992B:EE_|DM4PR12MB6253:EE_
-X-MS-Office365-Filtering-Correlation-Id: 00fdd87e-eb35-462c-c338-08deac475167
+X-MS-TrafficTypeDiagnostic: BL02EPF0002992B:EE_|SA5PPFF3CB57EDE:EE_
+X-MS-Office365-Filtering-Correlation-Id: 7dc72a30-20e7-4e16-9853-08deac47543d
 X-MS-Exchange-SenderADCheck: 1
 X-MS-Exchange-AntiSpam-Relay: 0
 X-Microsoft-Antispam:
-	BCL:0;ARA:13230040|1800799024|376014|36860700016|82310400026|18002099003|56012099003|3023799003;
+	BCL:0;ARA:13230040|1800799024|376014|36860700016|82310400026|56012099003|22082099003|18002099003|3023799003;
 X-Microsoft-Antispam-Message-Info:
-	lkYQoc5kalOsVxesvULPlws8Rceyr75/OkEPNtpDE7z0w3Y97XdkHZdpXGqr4pymrD0Uw4LAC6lxXV2Lf9XUPJaCJseqM5jMAtgsSW26xck72qGNJAwudS6rQGjq26Lz72Z6qv3V415wEZ2qoOSWrAasGyyycS5tjUkSuPqvfS10Bk+d/6rfYKlcfgjOUOlq3btGp+nZXkRQGzQ4oL3oe/dRN9WVV9Y14KLN2Qhf+oYnl3ZN1/2fVUjluUqMgmXEbEom+J9Jl0vQif2ya3X/kDKvwmknTePQp8Zg23d9oRZEtwN7BAkHlbzM4F+mJweuL7obvmJaoLFNFRsWvqNy5lz5khphIAYE4M4cd0WhRrbwG7dT2U2VwwInrN5h3MbMwYn+PNwpegFkMMAD3i1Fa7gIqv5ErH1Jk1QzEah7556jFkC7zEwbLYcs3EsteIfMRvzfJ60T/0kDQEvVgSs4PmVsWzwrw5leWgEvRtKW4nT3lPrbA/T4Iw8Np8RI80Tqqf4hgWN8pjobvbqTCuaMD8VDPjo2tZmOEbhJZw/UNbDsMAefWHrfSVSQP1wbzCBI8an2Xa2yjlEqmttdWlm77FFWbFS95/AvxdcNGoxnksqT4YeARfHJAZgNpvcWXRSEyLpswQgFg1eupnSf6zJxXb9/EZJ1TLxp+eu11GqtT1Apqf9rey16dE71RV5Rs6GN5m+L57mhu5u0LnZ8YiQpNzEn1dr/0GU1re8f+s0ikGk=
+	uzVHUASLiWpKqWvvqhzmGM0dvL8uKRvREAb8NBUQjNk8AKcudL1rA3olEDFR676gOmVpeagpXdJ2oXUJMRbYU1qrRo7OIdGjmJ6WoCfr4zKaGADnM5uQ44D1RRZkCsGtd/Df50BjVMGwukJOTZKeYxblGHD7umqpiDG6CXsNkv7pHY7koaTgiTlW9kCoRRPfRqYhyKrBlXEQ+20lDVjqTChosLB1I2H9XV+Sv3Vp5WTy1n3vyPvZM/k4/9TaCmCMmiHkyMf4EgXm4WAPfl4rXEaYMYO66p8c6BPwDna5pAkTghhL7CihfkV5Hs2jemElXyltgnjCReBVM+K7bDHN97OkCo69D/69P+tM23GriLs43gvCVlLAWD5v5CKADPhLeAwY9rsbfHqPdMEMC/Z7uW+ja57KYVL4iDY+tOXFFHPVdKyuCziOE56bly9Lohugb64LRFBHkZ1TjSMQsU9Lgn30s1lPDWt4EUD2r+CdBKgxwp0nW+iwDYGa/8HJVZFs8mbuxmu7SzqfJwhM532pOoQPvQ7DEfbpCZM7kQK+F9PbrR4sSEukhYghSKMyBNxtjZZorsB+8R5itjY3ew0Y/9L3ke9/VRvDK9FmbAM/G4gmMEY/7jX2pMoYZIzYKIs1AJR20Vj+IJDKfdCyqE1KAZs6X3E/mlQbHnIE0XtBosNR7CN5RY9UAeOOyBrshCi3qjB+R3b7HfF+mTYbBfN3LRiZ29hHbpVJdDPVDIxzf9o=
 X-Forefront-Antispam-Report:
-	CIP:165.204.84.17;CTRY:US;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:satlexmb07.amd.com;PTR:InfoDomainNonexistent;CAT:NONE;SFS:(13230040)(1800799024)(376014)(36860700016)(82310400026)(18002099003)(56012099003)(3023799003);DIR:OUT;SFP:1101;
+	CIP:165.204.84.17;CTRY:US;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:satlexmb07.amd.com;PTR:InfoDomainNonexistent;CAT:NONE;SFS:(13230040)(1800799024)(376014)(36860700016)(82310400026)(56012099003)(22082099003)(18002099003)(3023799003);DIR:OUT;SFP:1101;
 X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
 X-MS-Exchange-AntiSpam-MessageData-0:
-	DBNwBplZgQE70f8BIaTBcjozL5gq5tjJbCTtVWFKFnpcwdKxoEeNqGq29Zf+8gfC4xCENb8aDOwvCrMnIv/47jwb+12sSYUwWnsIgwb7iJ2/5iWCs2A1u+QSOqq3qjCA1ts/PaZNhgdqyZWGX95C/0Hnks8ELVhzQChDzKf0UhEPWLnG2bNyPENk6iUbzzhaDOTst0tdLb5V4JHECCZZ5POVpyU6F/XnkzxARfIC9C1Rz3bCb0lMXXMANuHzk8t6ZjwVjeDwMRVagmkWI0k73bfYBCi57heP5W1yIPgx5GOA61mqa+75rl1oUxIOaT/uuupFJ3JdSnh+2LbO5mrUR5sSK5dtmO+tT15KZToxaR4bpTShoEV3tTw+chuOV8bi5pWQl0pN+ZTbKMSVB11Zvi55PvguFqeHvOHO3SAnwUYm1aK3LvRPUMhDw9I31P3q
+	7BGT15AJp8l2SxAqt9UZKFul4Mn5CfP2zXRapr8roDSdFY73hKCDR1bqey674VmZQHS3aBXTkQnwYrp4dAqS+Dw265rxAIfwHoHO9wXAPlVpeUt5GQS5ktGCH8vDF2gtRdwDtTvtle0aYb+dk+dOQG8Nv54jg3x5oXrqV9iOORPA5qWVlf6+aex/Hq+3wfqBjmRMyx+tePGkwRi0qKXAoE3h4K0QOJJUdmSNbYXy2odQ6Zs5Tuebpg4CD5p/IrD4HFV4oTuqDqw/uXRuMlcU0OgmG6kVhECeHejjZ9uGBLgNbscr4UcSw3UhpVV8w65XtdeswTlzl3DO2IKm99Ly7XchfY4y13CpUmtDU7MS8/DRfErvnyYa95uoXBfrKLtAF6XuevUw9FPJJhVG1kAY5iNe/BwWGE3Tfs0Z0H8aYcLq9OxKfx8aU8gTtdJBK5sD
 X-OriginatorOrg: amd.com
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 07 May 2026 14:45:44.1234
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 07 May 2026 14:45:48.8734
  (UTC)
-X-MS-Exchange-CrossTenant-Network-Message-Id: 00fdd87e-eb35-462c-c338-08deac475167
+X-MS-Exchange-CrossTenant-Network-Message-Id: 7dc72a30-20e7-4e16-9853-08deac47543d
 X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
 X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=3dd8961f-e488-4e60-8e11-a82d994e183d;Ip=[165.204.84.17];Helo=[satlexmb07.amd.com]
 X-MS-Exchange-CrossTenant-AuthSource:
 	BL02EPF0002992B.namprd02.prod.outlook.com
 X-MS-Exchange-CrossTenant-AuthAs: Anonymous
 X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM4PR12MB6253
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: SA5PPFF3CB57EDE
 
-This patch series introduces a new util layer for the AMD Platform
-Management Framework (PMF) driver that exposes a minimal userspace
-interface for metrics monitoring and feature discovery.
+Add feature discovery capability to the util layer interface, allowing
+userspace tools to query which PMF features are supported and enabled
+on the current platform.
 
-AMD PMF currently manages power and thermal policies internally through
-Smart PC features, Auto Mode, Policy Builder, Static/Dynamic Power
-Sliders. However, system designers and OEMs need visibility into PMF
-metrics and feature status for validation, debugging, and integration
-with monitoring tools.
+The following features can now be queried through the
+/dev/amdpmf_interface ioctl:
+*  Auto Mode: Automatic power profile switching based on system activity
+*  Static Power Slider: User-selectable power profiles
+*  Policy Builder (Smart PC): Action based policy management
+*  Dynamic Power Slider AC: Adaptive power profiles when on AC power
+*  Dynamic Power Slider DC: Adaptive power profiles when on battery
 
-This series addresses that need by adding a character device interface
-that allows controlled access to PMF metrics data while maintaining
-the driver's existing automated policy management.
+Co-developed-by: Sanket Goswami <Sanket.Goswami@amd.com>
+Signed-off-by: Sanket Goswami <Sanket.Goswami@amd.com>
+Signed-off-by: Shyam Sundar S K <Shyam-sundar.S-k@amd.com>
+---
+ drivers/platform/x86/amd/pmf/util.c | 12 ++++++++++++
+ include/uapi/linux/amd-pmf.h        | 10 ++++++++++
+ 2 files changed, 22 insertions(+)
 
-The primary use case is integration with userspace tools like AMD
-SystemDeck, which are widely used by system designers to:
-- Monitor real-time power and thermal behavior
-- Validate PMF feature operation during platform bring-up
-- Debug thermal issues by tracking skin temperature, C-state residency,
-  and socket power metrics
-- Verify BIOS input/output policy values during Smart PC operation
-
-The util layer reads from the existing Trusted Application (TA) shared
-memory buffer and cached BIOS output values, adding no new communication
-overhead with the TA.
-
-v4:
- - Implement single amd_pmf_info structure which can cover all members.
- - Add amd_pmf prefix for enums/functions within the UAPI header.
- - Keep test-pmf tool outside of selftests directory.
- - Include necessary header files.
- - Address review comments received from Ilpo on v3.
-
-v3:
- - Stop exporting battery information via util layer.
- - Optimize the core logic for fetching BIOS outputs.
- - Update the documentation patch to reflect the current util layer design.
- - Consolidate amd-pmf-io.h changes into common UAPI header.
- - Define a single unified uAPI structure and IOCTL.
- - Address other v2 review remarks [1]
-
-v2:
- - address remarks from v1
- - add a new tool that exercises the IOCTLs from PMF interface
-
-[1] https://lore.kernel.org/platform-driver-x86/20251111071010.4179492-1-Shyam-sundar.S-k@amd.com/
-
-Shyam Sundar S K (7):
-  platform/x86/amd/pmf: Add util layer and userspace character device
-    interface
-  platform/x86/amd/pmf: store BIOS output values for user-space metrics
-    via util IOCTL
-  platform/x86/amd/pmf: Add feature discovery support to util interface
-  platform/x86/amd/pmf: Store commonly used enums in the header file
-  platform/x86/amd/pmf: Move debug helper functions to UAPI header
-  platform/x86/amd/pmf: Introduce AMD PMF testing tool for driver
-    metrics and features
-  Documentation/ABI: add testing entry for AMD PMF character device
-    interface
-
- Documentation/ABI/testing/amdpmf-interface    |  75 +++++++
- MAINTAINERS                                   |   1 +
- .../amd-sfh-hid/sfh1_1/amd_sfh_interface.c    |  13 +-
- drivers/platform/x86/amd/pmf/Kconfig          |  10 +
- drivers/platform/x86/amd/pmf/Makefile         |   2 +
- drivers/platform/x86/amd/pmf/core.c           |   5 +
- drivers/platform/x86/amd/pmf/pmf.h            |  33 +--
- drivers/platform/x86/amd/pmf/spc.c            |  62 +-----
- drivers/platform/x86/amd/pmf/tee-if.c         |  11 +-
- drivers/platform/x86/amd/pmf/util.c           | 155 +++++++++++++
- include/linux/amd-pmf-io.h                    |   9 -
- include/uapi/linux/amd-pmf.h                  | 205 ++++++++++++++++++
- tools/platform/x86/amd/Makefile               |  60 +++++
- tools/platform/x86/amd/test-pmf.c             | 142 ++++++++++++
- 14 files changed, 687 insertions(+), 96 deletions(-)
- create mode 100644 Documentation/ABI/testing/amdpmf-interface
- create mode 100644 drivers/platform/x86/amd/pmf/util.c
- create mode 100644 include/uapi/linux/amd-pmf.h
- create mode 100644 tools/platform/x86/amd/Makefile
- create mode 100644 tools/platform/x86/amd/test-pmf.c
-
+diff --git a/drivers/platform/x86/amd/pmf/util.c b/drivers/platform/x86/amd/pmf/util.c
+index 3a30fd4f063f..c96e6b3fef53 100644
+--- a/drivers/platform/x86/amd/pmf/util.c
++++ b/drivers/platform/x86/amd/pmf/util.c
+@@ -34,6 +34,18 @@ static int amd_pmf_populate_data(struct amd_pmf_dev *pdev, struct amd_pmf_info *
+ 	/* Set size and version */
+ 	info->size = sizeof(struct amd_pmf_info);
+ 
++	/* PMF Feature support flags */
++	if (is_apmf_func_supported(pdev, APMF_FUNC_AUTO_MODE))
++		info->features_supported |= AMD_PMF_FEAT_AUTO_MODE;
++	if (is_apmf_func_supported(pdev, APMF_FUNC_STATIC_SLIDER_GRANULAR))
++		info->features_supported |= AMD_PMF_FEAT_STATIC_POWER_SLIDER;
++	if (pdev->smart_pc_enabled)
++		info->features_supported |= AMD_PMF_FEAT_POLICY_BUILDER;
++	if (is_apmf_func_supported(pdev, APMF_FUNC_DYN_SLIDER_AC))
++		info->features_supported |= AMD_PMF_FEAT_DYNAMIC_POWER_SLIDER_AC;
++	if (is_apmf_func_supported(pdev, APMF_FUNC_DYN_SLIDER_DC))
++		info->features_supported |= AMD_PMF_FEAT_DYNAMIC_POWER_SLIDER_DC;
++
+ 	/* Device States */
+ 	info->platform_type = in->ev_info.platform_type;
+ 	info->laptop_placement = in->ev_info.device_state;
+diff --git a/include/uapi/linux/amd-pmf.h b/include/uapi/linux/amd-pmf.h
+index 54b5cf08f3fb..0fe68e21ee5b 100644
+--- a/include/uapi/linux/amd-pmf.h
++++ b/include/uapi/linux/amd-pmf.h
+@@ -34,6 +34,13 @@
+ 
+ #define AMD_PMF_BIOS_PARAMS_MAX		10
+ 
++/* AMD PMF feature flags - bitmask indicating supported features */
++#define AMD_PMF_FEAT_AUTO_MODE			BIT(0)
++#define AMD_PMF_FEAT_STATIC_POWER_SLIDER	BIT(1)
++#define AMD_PMF_FEAT_POLICY_BUILDER		BIT(2)
++#define AMD_PMF_FEAT_DYNAMIC_POWER_SLIDER_AC	BIT(3)
++#define AMD_PMF_FEAT_DYNAMIC_POWER_SLIDER_DC	BIT(4)
++
+ struct amd_pmf_info {
+ 	__u64 size;
+ 
+@@ -57,6 +64,9 @@ struct amd_pmf_info {
+ 	__u32 bios_input[AMD_PMF_BIOS_PARAMS_MAX];
+ 	__u32 bios_output[AMD_PMF_BIOS_PARAMS_MAX];
+ 
++	/* Feature info */
++	__u32 features_supported;
++
+ 	/* Reserved for future expansion */
+ 	__u32 rsvd[8];
+ };
 -- 
 2.34.1
 
