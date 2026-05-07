@@ -1,85 +1,69 @@
-Received: from mail-dy1-f181.google.com (mail-dy1-f181.google.com [74.125.82.181])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from DM5PR21CU001.outbound.protection.outlook.com (mail-centralusazon11011002.outbound.protection.outlook.com [52.101.62.2])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 84E6A466B44
-	for <platform-driver-x86@vger.kernel.org>; Thu,  7 May 2026 18:05:34 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=74.125.82.181
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1778177136; cv=none; b=t2DayGIAZoyDhDR+rCaXBFN6B4I1XkWTNbA66vTJFSU7TOhEgZ20QhLU0FuqQ2U1zkBD4rnoHPk1xIrFLprXR2woXJ0OnVwTjSskokk3Y3O46MpWFAVZa1QQs2D5mEIaSKyi71PsFO+4ilYjSPvtjK+ensZDYYJjZ0FYGHq585w=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1778177136; c=relaxed/simple;
-	bh=ZmXhWCRPkzi5nSZOzkOVzZtTzDx5rrOdANioh4FSUb8=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=RSM7wGKm9NXCluZ1ESZsYAfwfZIR67//ehGvySXIelaP9FjuT+5xsB+ZZgnqr6tr1ZS5p/Sg5zNxAG7p5VSwBN+IAkEPRDhfcwMfPr7rCm2zTSySUc1sUElhQ3s9jDIN1wn+1Y9extuQmDLCi3aAg9eng6kTQGYvZ0/thaoeidU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=AX9ujgwM; arc=none smtp.client-ip=74.125.82.181
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 41CD53A759E;
+	Thu,  7 May 2026 19:10:32 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=52.101.62.2
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1778181033; cv=fail; b=T/ZOvET5rbUt4ueOn//rH8jufJ+Kk+unVB1f/vcqvOfQcsn29q6NgacKsXcfQKjV5svOV5a91nXhCzX8FXoR1JV0LpMuUaVAKzdQm04H3826S+oD0dlQykgg2TsLeVSzEplDWWTisdIt7ZllrzLqT+fooRNXc1zbSFrO3QXruzw=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1778181033; c=relaxed/simple;
+	bh=0DDJXbjx3Mqh+N3GThXKjPkfsNT/B0PBYNBHoGDgve0=;
+	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=bf3VePJjjJM73q9D6oUrLGoWNfjM3fWA2j3/wD5H61g5IS5rCMRAeGEBgw0zjVvMm/UH/bKu4jHyjUpfeGTJcgJGKTkMvn44nEwIJD0gaTRPJYSEhIJowjGd+bDUNOU0zfaELeEPQ3/A3pV2jetR5CDbLw7qqIW/riXcMnwoWw0=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=rgHUWLL8; arc=fail smtp.client-ip=52.101.62.2
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=amd.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="AX9ujgwM"
-Received: by mail-dy1-f181.google.com with SMTP id 5a478bee46e88-2ba9c484e5eso1222805eec.1
-        for <platform-driver-x86@vger.kernel.org>; Thu, 07 May 2026 11:05:34 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20251104; t=1778177134; x=1778781934; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=myMYYqTqp1LBWmWIy6uL5gTbQy4ZdtNkIDqtI6ndFyI=;
-        b=AX9ujgwMoLvySFtxSy69DefQa9dAd+V4QkuqliNFalV5J8fXA+oxp5SCby4tMoKs5u
-         5HfME1PJEYqmdHP0oyo8AsIEr2rZrvwXKx+sQEIVhHhK4iVS8+FrKCR64j76aXL6dQuI
-         hsx/cgRHqzBVhvYNJDanYNX6ddhgZcM56w/iwRkJgAj062bgKjczvVksPz1VpgR30Lhg
-         JhsZif6YxfLqmTASHpZJy4LxcvMPHVkCLhwQUEFjUcHVxBHUoVpZQtuUi6s3IV83wFJw
-         cdcj/GQ2DIB4GUWUGhelXjroRSjIizk0MFCe+yXA74fY8djYEkEZWN30ZWcWWLW9DHC3
-         9X6g==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1778177134; x=1778781934;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-gg:x-gm-message-state:from
-         :to:cc:subject:date:message-id:reply-to;
-        bh=myMYYqTqp1LBWmWIy6uL5gTbQy4ZdtNkIDqtI6ndFyI=;
-        b=tTb4VrHPH3y7GNh8ZAaXx/HI4LLMmy/vJD3OlUoeRd5EgeXhU67TRnc1W+QbDmfaeH
-         I2agCK0uNTanuYNfG601PupFqtuwEaHq/q5Bdrmk1H9w0UTXaSgPzbwPth80WsCjgj6c
-         NZ05FcWCW1H+T5oG3+ax5Me5s5XsgoftSPdaKUpWrFmxtIZhUU6g2bmDcA8L9Ac36fvt
-         Q2qa91u61GznAyH1Aknt8UCD2xn5qFgbVwUcK+P5WLh1Ps5lHULhGi97bl0BZoGs/OlT
-         XOmzQSJavpSNyiqyXVdPNFHbyWDiJksthAgc1kdIAcgt1aLy/r6kbsiXlfkw5wbw5CAO
-         GH1g==
-X-Forwarded-Encrypted: i=1; AFNElJ+2hkfefOBhVEEsjgEAb/vAaPagTYhE1ziHibaFw9LBq5+BbYnkiBipsmFzy1wvApGZIL7RIMsvYEy/T7cELBvVCltw@vger.kernel.org
-X-Gm-Message-State: AOJu0Yzqccep7QC9pBCRqoNDd5oJI2nWGFiwKIY7pcbg0WB0elvYVUZm
-	KJgyXGFfbb5iomlk8u96NDfXE3lqJhm2Lay/MdrvCFSOEG6aKirlBF55
-X-Gm-Gg: AeBDieurqWSxr61Li2J/9UH2bf/pMdI0bcgQLuBxfiWnVOIPdeFk+cpolWqQ8cxtjIU
-	ArTaQCrqIkeqwfaOj50ZzQp///IWkcRaAjKXa/sMjldV7ELvsJykRC3oSoAyAjv/y4l9uWnLFG4
-	oU0iR1G1eg+SKKeejkxYIz9qQX0+nXoyJm+MjqpRsNi+ar8jqoo/wDaumpQB4UPYnG3A6evViz3
-	4Y09BunNIA+zH60P5V2hp4/BBkMzgMAEi7smVDoG+Mc9T1Sh+UfieUYvjBxSjyJoQwVMOwo6Swc
-	Bw3bvu7sSP9PH+UQNQhgCXd5SysImsbmgBaLwIQVDx8crYd25QSqMxUykpFBUIRZvKp3ZS2Zoa4
-	qPq//pCqmUiI5GuLKw+6gkNzME15WrCW8PQrfIC8ZfgKBNFQZW+xaHOYzS6pM6HpRDU4yKGXDZ4
-	FiBrhlOYu+h6/4el5zPqpk2sZ11RUYDMBidBpGYGmmjpHrn1bKpEz4TmgZvVNoWabJ4rQZ67wIw
-	SRK
-X-Received: by 2002:a05:7301:fa0d:b0:2d9:2b54:ea9c with SMTP id 5a478bee46e88-2f549f7c312mr4856258eec.18.1778177133651;
-        Thu, 07 May 2026 11:05:33 -0700 (PDT)
-Received: from lappy (108-228-232-20.lightspeed.sndgca.sbcglobal.net. [108.228.232.20])
-        by smtp.gmail.com with ESMTPSA id 5a478bee46e88-2f82bd73a64sm44332eec.12.2026.05.07.11.05.33
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 07 May 2026 11:05:33 -0700 (PDT)
-From: "Derek J. Clark" <derekjohn.clark@gmail.com>
-To: =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>,
-	Hans de Goede <hansg@kernel.org>
-Cc: Mark Pearson <mpearson-lenovo@squebb.ca>,
-	Armin Wolf <W_Armin@gmx.de>,
-	Jonathan Corbet <corbet@lwn.net>,
-	Rong Zhang <i@rong.moe>,
-	Kurt Borja <kuurtb@gmail.com>,
-	"Derek J . Clark" <derekjohn.clark@gmail.com>,
-	"Pierre-Loup A . Griffais" <pgriffais@valvesoftware.com>,
-	=?UTF-8?q?N=C3=ADcolas=20F=20=2E=20R=20=2E=20A=20=2E=20Prado?= <nfraprado@collabora.com>,
-	marshall@shzj.cc,
-	hyacinth@shzj.cc,
-	platform-driver-x86@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Subject: [PATCH v11 15/15] platform/x86: lenovo-wmi-capdata: Add debugfs file for dumping capdata
-Date: Thu,  7 May 2026 18:05:07 +0000
-Message-ID: <20260507180507.912966-16-derekjohn.clark@gmail.com>
-X-Mailer: git-send-email 2.53.0
-In-Reply-To: <20260507180507.912966-1-derekjohn.clark@gmail.com>
-References: <20260507180507.912966-1-derekjohn.clark@gmail.com>
+	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="rgHUWLL8"
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=K2VSfM3UlVoU9bhSnOl4gAIdkdj7bQLWzMZV7fiJ0vgRnDANiQd9lZyrd0Si76zUfPQ02c9xpMmejsOTrOSpiBXNREC0d0AVKtMvZ3Z84T05Yy4w0URNH5QgHd3raW+XU8P3oiCMMlGiROH9YbaJ12p7qBcohC0rATORj5etcHF7FIWw4XfCGQToHrFINe7z5jBLUlV6h4yzdOce8kddccy9TtfGV+jwmtLSK9NXxsXcS+1tXyVDUcfGWTgPvp0iHpRaLB07WQcF5W2SopoRWp92hFt8aidC7Vzk9tyDT6OJLNCs9cXVhyLAailu9HftYUcveF29Y9EynwboO0rSVw==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=chHzZx9jGUMT7VDMZHdTYQy8CrrO7GCnK0lZ4gRZXUs=;
+ b=CvzvGovn/9OMPpaBF/oqxgtMSmqgbToXL/zpEeZolfZLkilgeo+82Fau5PDuRP/0Wj8YjYb5SeBWLXSvrLF1U8aIxK/xFWzJHTlzrEjxj+ZWI2lZ5GFkyLRmA/HsFKJjU4eWLR3uY2sLv1WmBiMuJX5kgD5av/Oc4IQnPIZRqahOVQQXHGVLpz7+Z4aDt6FvDjAGqxlmEtF6kNkRy6pSgN7uLYXgOtdRB0QQlZFjfczWi7rktORdzs9xPFaO0ch0pSeL9QK0RYveZcGUwob8IRIBN1mR9co8w0tOSVcqmr9ZPqKL7eN8ct/YiLftQDU6CEpiR+wywgVTKjN5XGTbBA==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
+ 165.204.84.17) smtp.rcpttodomain=kernel.org smtp.mailfrom=amd.com; dmarc=pass
+ (p=quarantine sp=quarantine pct=100) action=none header.from=amd.com;
+ dkim=none (message not signed); arc=none (0)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=chHzZx9jGUMT7VDMZHdTYQy8CrrO7GCnK0lZ4gRZXUs=;
+ b=rgHUWLL8rBqjGZALknhYMWbZ2lXXgmPOSGFtpD8ENdm6VUEQf+RigDWWD99CGr4XLr5xuoMFcT5kG09GXQyajvFUsYg9WUUwEyEvb/B+exk3LG4DbupXqComqT02QagH2btR4iQH8kWCi1hDz2um8e58bueDnAzf42CHEWXGoZM=
+Received: from MN2PR07CA0017.namprd07.prod.outlook.com (2603:10b6:208:1a0::27)
+ by CY3PR12MB9580.namprd12.prod.outlook.com (2603:10b6:930:10a::20) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.9891.17; Thu, 7 May
+ 2026 19:10:24 +0000
+Received: from BL6PEPF00020E66.namprd04.prod.outlook.com
+ (2603:10b6:208:1a0:cafe::d7) by MN2PR07CA0017.outlook.office365.com
+ (2603:10b6:208:1a0::27) with Microsoft SMTP Server (version=TLS1_3,
+ cipher=TLS_AES_256_GCM_SHA384) id 15.20.9891.16 via Frontend Transport; Thu,
+ 7 May 2026 19:10:23 +0000
+X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 165.204.84.17)
+ smtp.mailfrom=amd.com; dkim=none (message not signed)
+ header.d=none;dmarc=pass action=none header.from=amd.com;
+Received-SPF: Pass (protection.outlook.com: domain of amd.com designates
+ 165.204.84.17 as permitted sender) receiver=protection.outlook.com;
+ client-ip=165.204.84.17; helo=satlexmb07.amd.com; pr=C
+Received: from satlexmb07.amd.com (165.204.84.17) by
+ BL6PEPF00020E66.mail.protection.outlook.com (10.167.249.27) with Microsoft
+ SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.9891.9 via Frontend Transport; Thu, 7 May 2026 19:10:23 +0000
+Received: from airavat.amd.com (10.180.168.240) by satlexmb07.amd.com
+ (10.181.42.216) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.2562.17; Thu, 7 May
+ 2026 14:10:18 -0500
+From: Krishnamoorthi M <krishnamoorthi.m@amd.com>
+To: <mario.limonciello@amd.com>, <hansg@kernel.org>,
+	<ilpo.jarvinen@linux.intel.com>
+CC: <Shyam-sundar.S-k@amd.com>, <perry.yuan@amd.com>,
+	<platform-driver-x86@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+	Krishnamoorthi M <krishnamoorthi.m@amd.com>
+Subject: [PATCH] platform/x86/amd: hfi: Support for ranking table versions
+Date: Fri, 8 May 2026 00:39:26 +0530
+Message-ID: <20260507190926.1211726-1-krishnamoorthi.m@amd.com>
+X-Mailer: git-send-email 2.34.1
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
@@ -87,238 +71,72 @@ List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-ClientProxiedBy: satlexmb07.amd.com (10.181.42.216) To satlexmb07.amd.com
+ (10.181.42.216)
+X-EOPAttributedMessage: 0
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: BL6PEPF00020E66:EE_|CY3PR12MB9580:EE_
+X-MS-Office365-Filtering-Correlation-Id: f4269ad1-a25d-497e-5921-08deac6c4a2d
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam:
+	BCL:0;ARA:13230040|1800799024|82310400026|376014|36860700016|56012099003|18002099003;
+X-Microsoft-Antispam-Message-Info:
+	MK0APezsMGiq99ubS6NxD+KwX5fsD0waii+RsldH+zJHIUZFAFtvmxwINbqaWj210pEy0EiFvxbs/AUy9Gb13wpfw1rL3WIUUCQza2/eyLqM6HjGIN9J53ovwIe8C7z7+qJ+shwxveGhzDjPbjhGFTMpC1X9WxDK/tJyvcBrXXcf1Jx4vEcV3FmPdH5Z1lSfSzUH3OF1gHjwOh2RXfqua9FPrCt3EjLUCmO9gxTjwDd37Kv0vgFQkR5vMlVctf1MkUqAeom4UWekCooSALUxgp72LOAQNIBt4be3y9iP7XvAqNSJGVFhDM92vorPWcJ3O9xu4mF0CM2lexNO02CZc7Cv1mi5scIrfkZldWoIrX+usUHDE+LoQqIda6KbQ0T4jmQmD75I7167feJI4eW1YAuUefjzLA47WBFg5Oq1StXPHFkNG1jfdTBsGm8UYZSKC8BdJRDacp6bx6tdnf+qNwo3YgrERxNryuWAriM7tM71Kg2bSo5mQVucVgpIU8u2/XMF9edyllP0kgJGorIUJUbrX09FZLX7OF4FdqKXpBHvc2301WfYYnWuQaYC+lzR2iC6qDbA3G90mbT47MCmMrrvNu+/HUA7jEPqvqLnX3IgJL7eK/+yUj0aVd8Sjuuwtt+kcwfpOBqvFB2dFzkhQHeVD4oeePcbs1cDNLc9AfRCUkfpYBjlQoqEZ5B7gcpidAZi0Hcom0GancK1qSAKLQDkzpM155bsI84uIck6TVQ=
+X-Forefront-Antispam-Report:
+	CIP:165.204.84.17;CTRY:US;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:satlexmb07.amd.com;PTR:InfoDomainNonexistent;CAT:NONE;SFS:(13230040)(1800799024)(82310400026)(376014)(36860700016)(56012099003)(18002099003);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0:
+	ew554wW2+XSYxys4XaS2F0aHRFcCTnNDPHAprIM7BcGlsMIc04rO0yq+7JiTpkSlpMPp8G7v/9NldWtd181pQppuf2FDQwR854DIKosikfE7J0JI3LY5XRKv7pUvNd+ENXzgVu+fjt29H68qEyvs/nfLs6pIMZY6r5l2xVPdLJXspt/Lv93v8Q6LNDbq2UU755xCaRnYZav32TNN8BVF/jQjs9vRXZcMnyyDJhJ+bD8Mej8KHPbsOyT8PIzG5ehve8XNKUK979lx+qwx/qPRLIg6/lJIOhyAAxlAplgi8/9V8RXlsSv4d/G8t6+6uMvoPcoKEMLKGkdTxlHFnDqrJFU19MIEQxDL277SbKHitcYgPSC1khipFzyxdG6oH4qhEpJNpr0HddxTWy4TLSXlmEFhoxK8+aw/2jRz3C6vRmjch25EdKVQcthHvQ6pRVTg
+X-OriginatorOrg: amd.com
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 07 May 2026 19:10:23.3633
+ (UTC)
+X-MS-Exchange-CrossTenant-Network-Message-Id: f4269ad1-a25d-497e-5921-08deac6c4a2d
+X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
+X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=3dd8961f-e488-4e60-8e11-a82d994e183d;Ip=[165.204.84.17];Helo=[satlexmb07.amd.com]
+X-MS-Exchange-CrossTenant-AuthSource:
+	BL6PEPF00020E66.namprd04.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Anonymous
+X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: CY3PR12MB9580
 
-From: Rong Zhang <i@rong.moe>
+Add changes to support new ranking table version. Version 2 of the
+heterogeneous ranking table provides static CPU rankings. Version 3 adds
+dynamic ranking table support on newer AMD platforms. These changes ensure
+that platforms still reporting version 2 continue to function with the
+existing static ranking path, avoiding regressions on older hardware
+that does not supply a dynamic ranking table.
 
-The Lenovo GameZone/Other interfaces have some delicate divergences
-among different devices. When making a bug report or adding support for
-new devices/interfaces, capdata is the most important information to
-cross-check with.
-
-Add a debugfs file (lenovo_wmi/<device_name>/capdata), so that users can
-dump capdata and include it in their reports.
-
-Since `struct capdata01' is just an extension to `struct capdata00',
-also converts the former to include the latter anonymously
-(-fms-extensions, since v6.19). In this manner type casting won't be
-confusing.
-
-Tested-by: Kurt Borja <kuurtb@gmail.com>
-Signed-off-by: Rong Zhang <i@rong.moe>
-Signed-off-by: Derek J. Clark <derekjohn.clark@gmail.com>
+Signed-off-by: Krishnamoorthi M <krishnamoorthi.m@amd.com>
 ---
- drivers/platform/x86/lenovo/Kconfig       |   1 +
- drivers/platform/x86/lenovo/wmi-capdata.c | 120 ++++++++++++++++++++++
- drivers/platform/x86/lenovo/wmi-capdata.h |   4 +-
- 3 files changed, 122 insertions(+), 3 deletions(-)
+ drivers/platform/x86/amd/hfi/hfi.c | 6 ++++--
+ 1 file changed, 4 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/platform/x86/lenovo/Kconfig b/drivers/platform/x86/lenovo/Kconfig
-index b9a5d18caa1e..4443f40ef8aa 100644
---- a/drivers/platform/x86/lenovo/Kconfig
-+++ b/drivers/platform/x86/lenovo/Kconfig
-@@ -236,6 +236,7 @@ config YT2_1380
- config LENOVO_WMI_CAPDATA
- 	tristate
- 	depends on ACPI_WMI
-+	depends on LENOVO_WMI_HELPERS
+diff --git a/drivers/platform/x86/amd/hfi/hfi.c b/drivers/platform/x86/amd/hfi/hfi.c
+index 83863a5e0fbc..e0ebcb0c4acd 100644
+--- a/drivers/platform/x86/amd/hfi/hfi.c
++++ b/drivers/platform/x86/amd/hfi/hfi.c
+@@ -33,7 +33,8 @@
  
- config LENOVO_WMI_EVENTS
- 	tristate
-diff --git a/drivers/platform/x86/lenovo/wmi-capdata.c b/drivers/platform/x86/lenovo/wmi-capdata.c
-index 169665be4dcf..b5e2c16d638f 100644
---- a/drivers/platform/x86/lenovo/wmi-capdata.c
-+++ b/drivers/platform/x86/lenovo/wmi-capdata.c
-@@ -31,6 +31,7 @@
- #include <linux/cleanup.h>
- #include <linux/component.h>
- #include <linux/container_of.h>
-+#include <linux/debugfs.h>
- #include <linux/device.h>
- #include <linux/dev_printk.h>
- #include <linux/err.h>
-@@ -42,6 +43,7 @@
- #include <linux/mutex_types.h>
- #include <linux/notifier.h>
- #include <linux/overflow.h>
-+#include <linux/seq_file.h>
- #include <linux/stddef.h>
- #include <linux/types.h>
- #include <linux/wmi.h>
-@@ -88,6 +90,7 @@ struct lwmi_cd_priv {
- 	struct notifier_block acpi_nb; /* ACPI events */
- 	struct wmi_device *wdev;
- 	struct cd_list *list;
-+	struct dentry *debugfs_dir;
+ #define AMD_HFI_DRIVER		"amd_hfi"
+ #define AMD_HFI_MAILBOX_COUNT		1
+-#define AMD_HETERO_RANKING_TABLE_VER	2
++#define AMD_HETERO_RANKING_TABLE_MIN_VER	2
++#define AMD_HETERO_RANKING_TABLE_MAX_VER	3
  
- 	/*
- 	 * A capdata device may be a component master of another capdata device.
-@@ -118,6 +121,8 @@ struct cd_list {
+ #define AMD_HETERO_CPUID_27	0x80000027
  
- static struct wmi_driver lwmi_cd_driver;
- 
-+/* ======== Device components ======== */
-+
- /**
-  * lwmi_cd_match() - Match rule for the master driver.
-  * @dev: Pointer to the capability data parent device.
-@@ -471,6 +476,116 @@ EXPORT_SYMBOL_NS_GPL(lwmi_cd01_get_data, "LENOVO_WMI_CAPDATA");
- DEF_LWMI_CDXX_GET_DATA(cd_fan, LENOVO_FAN_TEST_DATA, struct capdata_fan);
- EXPORT_SYMBOL_NS_GPL(lwmi_cd_fan_get_data, "LENOVO_WMI_CAPDATA");
- 
-+/* ======== debugfs ======== */
-+
-+/**
-+ * lwmi_cd00_show() - Dump capdata00
-+ * @s: Pointer to seq_file where the capdata00 is dumped.
-+ * @cd00: Pointer to a capdata00 struct to be dumped.
-+ */
-+static void lwmi_cd00_show(struct seq_file *s, struct capdata00 *cd00)
-+{
-+	u8 dev = FIELD_GET(LWMI_ATTR_DEV_ID_MASK, cd00->id);
-+	u8 feat = FIELD_GET(LWMI_ATTR_FEAT_ID_MASK, cd00->id);
-+	u8 mode = FIELD_GET(LWMI_ATTR_MODE_ID_MASK, cd00->id);
-+	u8 type = FIELD_GET(LWMI_ATTR_TYPE_ID_MASK, cd00->id);
-+	bool extra = cd00->supported & ~(LWMI_SUPP_GET | LWMI_SUPP_SET | LWMI_SUPP_VALID);
-+	bool get = cd00->supported & LWMI_SUPP_GET;
-+	bool set = cd00->supported & LWMI_SUPP_SET;
-+	bool valid = cd00->supported & LWMI_SUPP_VALID;
-+
-+	seq_printf(s, "  id:             0x%08x [dev: %2u, feat: %2u, mode: %2u, type: %2u]\n",
-+		   cd00->id, dev, feat, mode, type);
-+
-+	seq_printf(s, "  supported:      0x%08x [%c%c%c%c]\n", cd00->supported,
-+		   extra ? '+' : ' ',
-+		   get   ? 'R' : ' ',
-+		   set   ? 'W' : ' ',
-+		   valid ? 'V' : ' ');
-+
-+	seq_printf(s, "  default_value:  %u\n", cd00->default_value);
-+}
-+
-+/**
-+ * lwmi_cd01_show() - Dump capdata01
-+ * @s: Pointer to seq_file where the capdata01 is dumped.
-+ * @cd01: Pointer to a capdata01 struct to be dumped.
-+ */
-+static void lwmi_cd01_show(struct seq_file *s, struct capdata01 *cd01)
-+{
-+	/* capdata01 is an extension to capdata00. */
-+	lwmi_cd00_show(s, (struct capdata00 *)cd01);
-+
-+	seq_printf(s, "  step:           %u\n", cd01->step);
-+	seq_printf(s, "  min_value:      %u\n", cd01->min_value);
-+	seq_printf(s, "  max_value:      %u\n", cd01->max_value);
-+}
-+
-+/**
-+ * lwmi_cd_fan_show() - Dump capdata_fan
-+ * @s: Pointer to seq_file where the capdata_fan is dumped.
-+ * @cd_fan: Pointer to a capdata_fan struct to be dumped.
-+ */
-+static void lwmi_cd_fan_show(struct seq_file *s, struct capdata_fan *cd_fan)
-+{
-+	seq_printf(s, "  id:             %u\n", cd_fan->id);
-+	seq_printf(s, "  min_rpm:        %u\n", cd_fan->min_rpm);
-+	seq_printf(s, "  max_rpm:        %u\n", cd_fan->max_rpm);
-+}
-+
-+/**
-+ * lwmi_cd_debugfs_show() - Dump capability data to debugfs
-+ * @s: Pointer to seq_file where the capability data is dumped.
-+ * @data: unused.
-+ *
-+ * Return: 0
-+ */
-+static int lwmi_cd_debugfs_show(struct seq_file *s, void *data)
-+{
-+	struct lwmi_cd_priv *priv = s->private;
-+	u8 idx;
-+
-+	guard(mutex)(&priv->list->list_mutex);
-+
-+	/* lwmi_cd_alloc() ensured priv->list->type must be a valid type. */
-+	for (idx = 0; idx < priv->list->count; idx++) {
-+		seq_printf(s, "%s[%u]:\n", lwmi_cd_table[priv->list->type].name, idx);
-+
-+		if (priv->list->type == LENOVO_CAPABILITY_DATA_00)
-+			lwmi_cd00_show(s, &priv->list->cd00[idx]);
-+		else if (priv->list->type == LENOVO_CAPABILITY_DATA_01)
-+			lwmi_cd01_show(s, &priv->list->cd01[idx]);
-+		else if (priv->list->type == LENOVO_FAN_TEST_DATA)
-+			lwmi_cd_fan_show(s, &priv->list->cd_fan[idx]);
-+	}
-+
-+	return 0;
-+}
-+DEFINE_SHOW_ATTRIBUTE(lwmi_cd_debugfs);
-+
-+/**
-+ * lwmi_cd_debugfs_add() - Create debugfs directory and files for a device
-+ * @priv: lenovo-wmi-capdata driver data.
-+ */
-+static void lwmi_cd_debugfs_add(struct lwmi_cd_priv *priv)
-+{
-+	priv->debugfs_dir = lwmi_debugfs_create_dir(priv->wdev);
-+
-+	debugfs_create_file("capdata", 0444, priv->debugfs_dir, priv, &lwmi_cd_debugfs_fops);
-+}
-+
-+/**
-+ * lwmi_cd_debugfs_remove() - Remove debugfs directory for a device
-+ * @priv: lenovo-wmi-capdata driver data.
-+ */
-+static void lwmi_cd_debugfs_remove(struct lwmi_cd_priv *priv)
-+{
-+	debugfs_remove_recursive(priv->debugfs_dir);
-+	priv->debugfs_dir = NULL;
-+}
-+
-+/* ======== WMI interface ======== */
-+
- /**
-  * lwmi_cd_cache() - Cache all WMI data block information
-  * @priv: lenovo-wmi-capdata driver data.
-@@ -773,6 +888,8 @@ static int lwmi_cd_probe(struct wmi_device *wdev, const void *context)
- 		dev_err(&wdev->dev, "failed to register %s: %d\n",
- 			info->name, ret);
- 	} else {
-+		lwmi_cd_debugfs_add(priv);
-+
- 		dev_dbg(&wdev->dev, "registered %s with %u items\n",
- 			info->name, priv->list->count);
+@@ -158,7 +159,8 @@ static int amd_hfi_fill_metadata(struct amd_hfi_data *amd_hfi_data)
+ 		dev_err(amd_hfi_data->dev, "invalid signature in shared memory\n");
+ 		return -EINVAL;
  	}
-@@ -783,6 +900,8 @@ static void lwmi_cd_remove(struct wmi_device *wdev)
- {
- 	struct lwmi_cd_priv *priv = dev_get_drvdata(&wdev->dev);
- 
-+	lwmi_cd_debugfs_remove(priv);
-+
- 	switch (priv->list->type) {
- 	case LENOVO_CAPABILITY_DATA_00:
- 		lwmi_cd_sub_master_del(priv);
-@@ -822,6 +941,7 @@ static struct wmi_driver lwmi_cd_driver = {
- 
- module_wmi_driver(lwmi_cd_driver);
- 
-+MODULE_IMPORT_NS("LENOVO_WMI_HELPERS");
- MODULE_DEVICE_TABLE(wmi, lwmi_cd_id_table);
- MODULE_AUTHOR("Derek J. Clark <derekjohn.clark@gmail.com>");
- MODULE_AUTHOR("Rong Zhang <i@rong.moe>");
-diff --git a/drivers/platform/x86/lenovo/wmi-capdata.h b/drivers/platform/x86/lenovo/wmi-capdata.h
-index e0a30f2c0c87..0df3ae534ed5 100644
---- a/drivers/platform/x86/lenovo/wmi-capdata.h
-+++ b/drivers/platform/x86/lenovo/wmi-capdata.h
-@@ -38,9 +38,7 @@ struct capdata00 {
- };
- 
- struct capdata01 {
--	u32 id;
--	u32 supported;
--	u32 default_value;
-+	struct capdata00;
- 	u32 step;
- 	u32 min_value;
- 	u32 max_value;
+-	if (amd_hfi_data->shmem->version_number != AMD_HETERO_RANKING_TABLE_VER) {
++	if (amd_hfi_data->shmem->version_number < AMD_HETERO_RANKING_TABLE_MIN_VER ||
++	    amd_hfi_data->shmem->version_number > AMD_HETERO_RANKING_TABLE_MAX_VER) {
+ 		dev_err(amd_hfi_data->dev, "invalid version %d\n",
+ 			amd_hfi_data->shmem->version_number);
+ 		return -EINVAL;
 -- 
-2.53.0
+2.34.1
 
