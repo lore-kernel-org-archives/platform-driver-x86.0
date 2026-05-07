@@ -1,64 +1,64 @@
-Received: from mail-dy1-f176.google.com (mail-dy1-f176.google.com [74.125.82.176])
+Received: from mail-dy1-f179.google.com (mail-dy1-f179.google.com [74.125.82.179])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F2C7947B43E
-	for <platform-driver-x86@vger.kernel.org>; Thu,  7 May 2026 18:05:31 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=74.125.82.176
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B72C347DD4F
+	for <platform-driver-x86@vger.kernel.org>; Thu,  7 May 2026 18:05:33 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=74.125.82.179
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1778177133; cv=none; b=c0xibbpHa6+7y3VbL5OnF1s9NZYUgndLFJv3juTp9rWV+S6vRzzlOVk2wI/EbJaBjq2JE+Egqch2XNQMdRU5a/ftOoXLsbDzArYTIosSjLOnhXe/7A4Knr+kLx5Pak3lkguQZXWMmMcC15iFCO13A1XUwpjdmgQbTsfzHDts+oE=
+	t=1778177135; cv=none; b=jsJEWPSWaFYubVmQ2R50PEBOpPs6DxKf8i4e7MsiDi1WhfQnN3qGbSii9afi6CMx58hvsOc5yF0HMltnUCSoSP2VG2SyS217R0aIY3Iyb4GuxGjonC6d0jglT9cQL28dXYFaRIfJUjlGmxIRVriPcwH3IjFZxMJonAVaPuGhNRU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1778177133; c=relaxed/simple;
-	bh=+QPdSU+dPB1x1J3djFO1i0GpGdLxjcaXfm9GenpXhHg=;
+	s=arc-20240116; t=1778177135; c=relaxed/simple;
+	bh=nw7kdTs1biYqcCyLBgFFjUVOcmzqKE/6nPTRSBdw19M=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=V2cv5lTiAJxEi+AUsOb1TAEMQGyo7jx5p8LZ39jatZVCJmJ0yRec+v/xHmHwPCloeLcyc64PP/ENkzOjDt9Kf71RJrLNq/UsOz7jTHIEXJg6/YovAMq+gxzA3cUi68Y3EClt65iQMLXghIolJ8S4bLHtMh8ny+W04bkjjpdtmjw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=qGh3PRt7; arc=none smtp.client-ip=74.125.82.176
+	 MIME-Version; b=NVyOobXKS9piosPsbwcDCttL/AVGURm9+xF/xeQ76T126tEr/EliKsGnfgjt8bhE+omQul/gmJoUGjMyCizCELZwBHIso6YV2PapluxUS6ZtTTfzHgiKI8dSz3scIN7DKXazucRTaPK2HSwa0oRhxK5t8Hm2X1L14u5tly60Yfw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=s2Ccr8uL; arc=none smtp.client-ip=74.125.82.179
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="qGh3PRt7"
-Received: by mail-dy1-f176.google.com with SMTP id 5a478bee46e88-2f33ae12f97so2106928eec.1
-        for <platform-driver-x86@vger.kernel.org>; Thu, 07 May 2026 11:05:31 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="s2Ccr8uL"
+Received: by mail-dy1-f179.google.com with SMTP id 5a478bee46e88-2c15849aa2cso1483612eec.0
+        for <platform-driver-x86@vger.kernel.org>; Thu, 07 May 2026 11:05:33 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20251104; t=1778177131; x=1778781931; darn=vger.kernel.org;
+        d=gmail.com; s=20251104; t=1778177133; x=1778781933; darn=vger.kernel.org;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=Lo0uRteE6cnYV0vTF/SAFjT9HZ5JS4EyHjI/biZinx0=;
-        b=qGh3PRt73KGLSUjMZQJv+xxAPgtvdACQY4Y58oqG6mhfXG9OWap3M78p3rxDDv+MDg
-         GAh/HDY1rWv4gpoGpVCErU5TPzUlf0HYvoEByjhXEF0HRGwh82+Gc8S1heu3ZWu5DF8y
-         drYXV8NK/M7Xg4YFmVoDNwY2PXn68d7Li80xLaP8KCZpJc7Ud0b68EBX2yzfx06flfD8
-         IHxg5Z3d+u+MhfqxMsdd9zo3rfRC7sygrPjuiceiJEjZxTXTahFydfabU+dkiieKc4Jz
-         4T6fW7FCW0QngJfslldZkow946ruIUE6k5OXCitCl7+gpTQr8Rejf8Os6Y6Z7+QTWboV
-         UvvA==
+        bh=mZGzwivOSp3+FMEX/5WCBroL/DIUwpA8g1utSU5YDlE=;
+        b=s2Ccr8uLLWroO2D0Jtkli5piMafIJ+dGQSAMjPLg2cuE5acY6VEd7WVl9uXk15EWKZ
+         sv60UENorRlnfFRcuTZsCuyBw9D7rY6VVVcOl3V6mZnSys2vJl4VPCZRtZmYTrQJorBa
+         KH9tBFp6ki1UJ7iIl9YOG9vA8IK7sead6VOU1LajFZWZVimC5HY9fFcv1R5pUwBY5XGd
+         yqpdF/BGqv/FGX62FXXzmjGz/H20sYZDvdHMP00SZdLB4ipSpWxNLEx53me61J0M6MPO
+         R3bZ62yVkcsu4qDLZhanQ25RHG98JT8rH8dz+Ly6zPrwhuGf/62aFUiCAPH9xk8dzdd4
+         KeYg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1778177131; x=1778781931;
+        d=1e100.net; s=20251104; t=1778177133; x=1778781933;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:x-gm-gg:x-gm-message-state:from
          :to:cc:subject:date:message-id:reply-to;
-        bh=Lo0uRteE6cnYV0vTF/SAFjT9HZ5JS4EyHjI/biZinx0=;
-        b=IrMSlonFu/mJgDMaWpoaOScTLixmAqhNn4NNsdLjvLbQELfr3SSP8Okno9bbMcGsdh
-         5NGaEg1ZWCJsQP3vdYZh5LBvVLiLczfaONhWqcUBh8mY7mL5KhHv1S4aKByxZWaPEcbM
-         /dQj8cm66cDbHC3J7b/22i0+ia4hrHFi7rKEk07twnycwdbdQqEBIcbGR+E2qI2us6/W
-         jzjP2ulyVrKcmZsbj4c56mzk4u8rORLtJl2aFjtvf9ElldleZcupwk44zgo78zKNzucc
-         D8iac5mPePQarSOZIN0t19f9c8pTn1N5OmjYfOcD+DAbN8qeEe1a23quDDcMZBIGyuH0
-         5JwQ==
-X-Forwarded-Encrypted: i=1; AFNElJ95TPrbwScQB4jQ5uInFjVHXoOoOgQj6k3LoXVXuSQU6z7q31oMGwVsNjof5+Yg0VvY0CvKzGhSTvZa/MMRaFEBRiE2@vger.kernel.org
-X-Gm-Message-State: AOJu0YyJQNk6OYzFG2yAt9ThiUKmu1IguCmDbwzDvHRs2Q7VFcMke+D2
-	yHwaOxIk1JDJC4EYfBAdNbnqvVVIR3JSvXvoRhDcYnAcCZX4NM0tKrAW
-X-Gm-Gg: Acq92OEQpfJS164oM62RBsKTzztLdN39p/qt/Q4eVrbTIM8rdLWdkC6nlz1txElwjQt
-	3PL2ngfT1XCPpoUpI8zbA/v2xb1bz+XjR0ya0buhbiMWT+9T/3cjWeppjkgvLFBlNnUTWHj7KRi
-	BH9xfPfFfPARhT0YAt0BHf0C8TdsQyxtcIQDYs3bvP/4/3dzVnpVUeHE1p5lKpbqVArEUcDtr4o
-	EPh7RwYy4+xPDKwmX9ODgQBUSmbpRMjfkhU2gUJzf89lnc+5yI0gARlydDSuT4yT72I5cX0Gx/g
-	QbUP23kwSHzf6oRj1dtr2akhDAvuFW9QYRHtY6mX+0wZg23d84Ee2125ageEapVmZyMztGjQTSB
-	YcxmD9ytrpm20oDNwIWx/YgQ5pOwWJjdgXa6hp9+FeWKM7xyJq9nbHb922ZqXU5P6RNKP9PJACD
-	obMe3fEkmeXMIbzvY3feEo+qdjvuq1/9Df5Ndu6yUR+wz9slkghCFEV2vuD7dSrnfDW5FwJzZWd
-	qTO
-X-Received: by 2002:a05:7300:3245:b0:2ed:e16:6b4a with SMTP id 5a478bee46e88-2f54b98f603mr5358724eec.32.1778177131129;
-        Thu, 07 May 2026 11:05:31 -0700 (PDT)
+        bh=mZGzwivOSp3+FMEX/5WCBroL/DIUwpA8g1utSU5YDlE=;
+        b=YUHNamzkJapBUoevbvs24WyqP1pPmvqU837d3opnkUBrus/vzTc5F68YVQqXlXQCNw
+         dMVcqdI1FzDjXllly9hPKOD7/GGbZ2D/qEyB7k+6QJvX5sHowz761i0LOqxPMiA4clAn
+         RBPsNev/dj48IavFaV9dJeZvhCGkD2AigVUR0cdHJ+jCB8hDh4HJVI2WFA7jGrrNGk0A
+         t1FPB2VureXtmFg795sJHoQY9Kmv6kGepprZ259eNSOtDWGUmquHp9DPmESxjOFruzv9
+         1GNMHLdY2SMHyKePCR2ohhgDwf0KkYIxPXEID2x3i84CX5niKvtsm24I9cm5yr8XogCP
+         bl4w==
+X-Forwarded-Encrypted: i=1; AFNElJ8YNxDwLh0X9IfNs41hQ+uMZTnSAWXRjpQpt+3smgav4caA5H4y7yrG1x9JHqhlWU55vzzr37M7p3PQt41w4i354zm8@vger.kernel.org
+X-Gm-Message-State: AOJu0YzMwwRJQo2M6JKbZE5T20jqj6989zYibCEzgZ9FCdrbOUxi31h5
+	0CDrcwsEQW8L3VMNDogw8HbR13xQXRUm/p+KPANhq5MCja44/25B50Rm
+X-Gm-Gg: Acq92OEeOnfeHqTA3kW+52RJrvUsso6ewRmK21pU6a3nB1icC5ZUDSDuc7CvFMsHJ8c
+	tyiAYk6LQHSfHJeRLm3fSjJNTPN+UYRiWtnPv8OKefEJ2qbXRkIoRLJuizzvhGPrMIk0PeR0IIc
+	2pW4HhJ2ir9J05mjVKhiiDQYK158IQFrGQVakjkmlBX9YIkQFsffWJGBVHUcjuR9bFaFEMQB3WY
+	0pyQ+yVpPE8xyDOw901KXfq+rf7IULcIhm8/ZhIVTMqjzXfrhGVFRf6/xYiFYjdSTB7HX11Ksa/
+	UX0pQLMYwPUFDfNgmtGqcYwfWOFcuQerDmw2LlWUBEU1yFFjLQ6xD3KJMh4KiBCYWp63mz+fZAT
+	UYBvPeFGLJdCcqYh3HTxZvnttiUumHsKgEAKDnSaoT90m4v0sIG0xdkJ8ul/280yUbFoYJwv/Yi
+	4zKoSf3z837727ETNEfuHylu5wGoX3A8Uex6BcF3dUJRVK/6X8M+qJHYY/4fcjrCzQFf3Lz2V+U
+	RMY
+X-Received: by 2002:a05:7300:6d03:b0:2de:3022:a459 with SMTP id 5a478bee46e88-2f549f7c266mr4428613eec.21.1778177132842;
+        Thu, 07 May 2026 11:05:32 -0700 (PDT)
 Received: from lappy (108-228-232-20.lightspeed.sndgca.sbcglobal.net. [108.228.232.20])
-        by smtp.gmail.com with ESMTPSA id 5a478bee46e88-2f82bd73a64sm44332eec.12.2026.05.07.11.05.30
+        by smtp.gmail.com with ESMTPSA id 5a478bee46e88-2f82bd73a64sm44332eec.12.2026.05.07.11.05.32
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 07 May 2026 11:05:30 -0700 (PDT)
+        Thu, 07 May 2026 11:05:32 -0700 (PDT)
 From: "Derek J. Clark" <derekjohn.clark@gmail.com>
 To: =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>,
 	Hans de Goede <hansg@kernel.org>
@@ -74,9 +74,9 @@ Cc: Mark Pearson <mpearson-lenovo@squebb.ca>,
 	hyacinth@shzj.cc,
 	platform-driver-x86@vger.kernel.org,
 	linux-kernel@vger.kernel.org
-Subject: [PATCH v11 12/15] platform/x86: lenovo-wmi-other: Rename LWMI_OM_FW_ATTR_BASE_PATH
-Date: Thu,  7 May 2026 18:05:04 +0000
-Message-ID: <20260507180507.912966-13-derekjohn.clark@gmail.com>
+Subject: [PATCH v11 14/15] platform/x86: lenovo-wmi-helpers: Add helper for creating per-device debugfs dir
+Date: Thu,  7 May 2026 18:05:06 +0000
+Message-ID: <20260507180507.912966-15-derekjohn.clark@gmail.com>
 X-Mailer: git-send-email 2.53.0
 In-Reply-To: <20260507180507.912966-1-derekjohn.clark@gmail.com>
 References: <20260507180507.912966-1-derekjohn.clark@gmail.com>
@@ -88,42 +88,88 @@ List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-In the next patch a power supply extension is added which requires
-a name attribute. Instead of creating another const macro with the
-same information, rename LWMI_OM_FW_ATTR_BASE_PATH to
-LWMI_OM_SYSFS_NAME.
+From: Rong Zhang <i@rong.moe>
 
-Reviewed-by: Rong Zhang <i@rong.moe>
-Tested-by: Rong Zhang <i@rong.moe>
-Reviewed-by: Mark Pearson <mpearson-lenovo@squebb.ca>
+We are about to add debugfs support for lenovo-wmi-capdata. Let's setup
+a debugfs directory called "lenovo_wmi" for tidiness, so that any
+lenovo-wmi-* device can put its subdirectory under the directory.
+Subdirectories will be named after the corresponding WMI devices.
+
+Signed-off-by: Rong Zhang <i@rong.moe>
 Signed-off-by: Derek J. Clark <derekjohn.clark@gmail.com>
 ---
- drivers/platform/x86/lenovo/wmi-other.c | 5 ++---
- 1 file changed, 2 insertions(+), 3 deletions(-)
+v7:
+  - Use subsys_initcall() instead of module_init().
+---
+ drivers/platform/x86/lenovo/wmi-helpers.c | 34 +++++++++++++++++++++++
+ drivers/platform/x86/lenovo/wmi-helpers.h |  2 ++
+ 2 files changed, 36 insertions(+)
 
-diff --git a/drivers/platform/x86/lenovo/wmi-other.c b/drivers/platform/x86/lenovo/wmi-other.c
-index c84de0ad0cc4..fb301c54d26d 100644
---- a/drivers/platform/x86/lenovo/wmi-other.c
-+++ b/drivers/platform/x86/lenovo/wmi-other.c
-@@ -92,7 +92,7 @@ enum lwmi_feature_id_gpu {
- 	lwmi_attr_id(LWMI_DEVICE_ID_FAN, LWMI_FEATURE_ID_FAN_RPM, \
- 		     LWMI_GZ_THERMAL_MODE_NONE, LWMI_FAN_ID(x))
+diff --git a/drivers/platform/x86/lenovo/wmi-helpers.c b/drivers/platform/x86/lenovo/wmi-helpers.c
+index 7a198259e393..82dfd26c9c2b 100644
+--- a/drivers/platform/x86/lenovo/wmi-helpers.c
++++ b/drivers/platform/x86/lenovo/wmi-helpers.c
+@@ -17,6 +17,8 @@
+  */
  
--#define LWMI_OM_FW_ATTR_BASE_PATH "lenovo-wmi-other"
-+#define LWMI_OM_SYSFS_NAME "lenovo-wmi-other"
- #define LWMI_OM_HWMON_NAME "lenovo_wmi_other"
+ #include <linux/acpi.h>
++#include <linux/debugfs.h>
++#include <linux/device.h>
+ #include <linux/cleanup.h>
+ #include <linux/errno.h>
+ #include <linux/export.h>
+@@ -185,6 +187,38 @@ int lwmi_tm_notifier_call(enum thermal_mode *mode)
+ }
+ EXPORT_SYMBOL_NS_GPL(lwmi_tm_notifier_call, "LENOVO_WMI_HELPERS");
  
- static DEFINE_IDA(lwmi_om_ida);
-@@ -1130,8 +1130,7 @@ static void lwmi_om_fw_attr_add(struct lwmi_om_priv *priv)
++static struct dentry *lwmi_debugfs_dir;
++
++/**
++ * lwmi_debugfs_create_dir() - Helper function for creating a debugfs directory
++ * for a device.
++ * @wdev: Pointer to the WMI device to be called.
++ *
++ * Caller must remove the directory with debugfs_remove_recursive() on device
++ * removal.
++ *
++ * Return: Pointer to the created directory.
++ */
++struct dentry *lwmi_debugfs_create_dir(struct wmi_device *wdev)
++{
++	return debugfs_create_dir(dev_name(&wdev->dev), lwmi_debugfs_dir);
++}
++EXPORT_SYMBOL_NS_GPL(lwmi_debugfs_create_dir, "LENOVO_WMI_HELPERS");
++
++static int __init lwmi_helpers_init(void)
++{
++	lwmi_debugfs_dir = debugfs_create_dir("lenovo_wmi", NULL);
++
++	return 0;
++}
++subsys_initcall(lwmi_helpers_init)
++
++static void __exit lwmi_helpers_exit(void)
++{
++	debugfs_remove_recursive(lwmi_debugfs_dir);
++}
++module_exit(lwmi_helpers_exit)
++
+ MODULE_AUTHOR("Derek J. Clark <derekjohn.clark@gmail.com>");
+ MODULE_DESCRIPTION("Lenovo WMI Helpers Driver");
+ MODULE_LICENSE("GPL");
+diff --git a/drivers/platform/x86/lenovo/wmi-helpers.h b/drivers/platform/x86/lenovo/wmi-helpers.h
+index ed7db3ebba6c..039fe61003ce 100644
+--- a/drivers/platform/x86/lenovo/wmi-helpers.h
++++ b/drivers/platform/x86/lenovo/wmi-helpers.h
+@@ -16,6 +16,8 @@ struct wmi_method_args_32 {
+ 	u32 arg1;
+ };
  
- 	priv->fw_attr_dev = device_create(&firmware_attributes_class, NULL,
- 					  MKDEV(0, 0), NULL, "%s-%u",
--					  LWMI_OM_FW_ATTR_BASE_PATH,
--					  priv->ida_id);
-+					  LWMI_OM_SYSFS_NAME, priv->ida_id);
- 	if (IS_ERR(priv->fw_attr_dev)) {
- 		err = PTR_ERR(priv->fw_attr_dev);
- 		goto err_free_ida;
++struct dentry *lwmi_debugfs_create_dir(struct wmi_device *wdev);
++
+ enum lwmi_event_type {
+ 	LWMI_GZ_GET_THERMAL_MODE = 0x01,
+ };
 -- 
 2.53.0
 
