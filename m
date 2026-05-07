@@ -1,101 +1,189 @@
-Received: from mail-pg1-f177.google.com (mail-pg1-f177.google.com [209.85.215.177])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C06D5175A85
-	for <platform-driver-x86@vger.kernel.org>; Thu,  7 May 2026 20:13:59 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.177
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F41BF370D5F;
+	Thu,  7 May 2026 20:14:35 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1778184840; cv=none; b=E5SsDp4dF12FdtSZUZXHRiL4MufASMuFUvjKNJzDmmdEuXfyiAuzICWyRkytDwi2YNcasd01lM4S6VcFf5h8L37b9mN0LG4e48QV0f29LJqjf+RmQWoWHLDzGEXDckqEzkcMXnMSsSyY4yTlgGVYwql/YCnAYnwlMI/y1K5CSRg=
+	t=1778184876; cv=none; b=r7lAUfZswnwwPSUPjTTmSQYITIMQIPj0Ztp6CKjt12P9Z3fVrCKpwDIggJ/oPH/bvpGV7QJ7CY38a4SOcH9CcPWA+cjAzlVb/f5WNtdEKxp28k/abkvF2aMTRwDhXhNtwN4W93hVyZGsgybue8BXr16usKl1eMbKO0mJFzSJn08=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1778184840; c=relaxed/simple;
-	bh=C08sgM0wTsnmhzLRdT/bf4jtPontO9nT4sAczqh4fEY=;
+	s=arc-20240116; t=1778184876; c=relaxed/simple;
+	bh=vUFLAfmyS+0v5yg2gy/5HcsHara6X0jARKb7P5+5NEk=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=k5zlIrmCtbvTuvIpAnYUsEvFl5Bg6jxEF97Jpi6eGJQIwFc/QxvyKo+fk0lTYsSoqUQ/vCt6qTw6smwtbHvvQB5wyH9dJWXBOjd4FF0tMTm1RI4C1VP6iQ1ya7TH016x8HNCqFq88CnNlljn/U2Vc8+Y7gqy4nySLiv3In3xKZ0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=ZudsjD7j; arc=none smtp.client-ip=209.85.215.177
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	 MIME-Version:Content-Type; b=VEBukarOXCX0CR3+477774At8wtnSSwofInj5DD+yYJ8BvbfLbgQ+1sNvEHDfOPLD/9QZeSJS0/hpF0vtWCGL34xCkkCBxKBAOq2PP/ydsJoDbKicuanXLECoraU9LoXMo4AWYgdY6fhGM5yrechvqzTTuIcuD9JKEUA54luuZc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=TXZmdufj; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ZudsjD7j"
-Received: by mail-pg1-f177.google.com with SMTP id 41be03b00d2f7-c802803ac17so569310a12.1
-        for <platform-driver-x86@vger.kernel.org>; Thu, 07 May 2026 13:13:59 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20251104; t=1778184839; x=1778789639; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=C08sgM0wTsnmhzLRdT/bf4jtPontO9nT4sAczqh4fEY=;
-        b=ZudsjD7jCu9xyouPqJeAbsGIMXgWRwkF1jFaafYCd1QaoHb4Dk+G5YFzF8yA1KrjEU
-         TyQA3W6pGyDzjLhhUWwU5PlPeOF6LKT4PJs+qmtV5MncqbJGamOuApqv5yd1JFSerxEO
-         eCgrPvsLAR8owfAbjdqjsPKiSSRg+4hnL2IBccSMCOz2fDzp6XE1C40dtXnxB9xBb9vl
-         e/Y8iSdV3yb7mJELnCC9r4keQ4kLqWqZcgTl0wvreDWzGvu/pUkqsQ+kdQAQ62sML8N8
-         QtySpWe0k4fWGxzrcgsULTbh1vyvbV8WQPuevyXV+5sG3+yZMFVCHg5Ly3Rg1Nr6Q6ia
-         mi6A==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1778184839; x=1778789639;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-gg:x-gm-message-state:from
-         :to:cc:subject:date:message-id:reply-to;
-        bh=C08sgM0wTsnmhzLRdT/bf4jtPontO9nT4sAczqh4fEY=;
-        b=XKjmHZz5vke9bt/z8E2mStGhMThQDV1PeSzmKIHr1n5oTOFjlm57lLQwzFjROEguxu
-         1pJUz5+lN1au2HrW8saJCqPvrZMkca3Ujn0wOIY0/vMRSOr7ZwqTIjDDbK6vWacSu3a9
-         wo7gbJUWO85BoGQaad/ZOl98WsbxnVKRHw3ph4nN/4G4aS0Fj/sKFxaXeDXEJB7aLImx
-         hmEcyQmbaRSk+CCSD1nVjJ7846Iagh+keOMlQSvPbtGNZTVFIK9wlSHFN/e4UoOEDkIz
-         gp5FQaMDwe3iu8hIx12vZBPuoZW21PL8TV8nDg5i0WgxRY31d4SaxUDC/crw0oiG1jA2
-         HjPQ==
-X-Gm-Message-State: AOJu0YwVnPiqoBG3GYa2AtmFvHr2axeMT7PfoLy0+u12moevMGqbb4TX
-	9L896lu8BNT1AD4aoAa4HnatJFwSAnld4Ub3dvl84VUaPxM0+DIdxcxc
-X-Gm-Gg: Acq92OFm0+WzZHZeb/l+wJTfLyGbe2Txd2yOQCGbBGOQu+vnxDEDenU5hcyDtguJwzd
-	kmGd5Aja1g6F6maknAd5u/wYqzZvU10AMXZMHlmmKOkHOTd1BGfQYewp0+gBlshsZaGAEUW+Ns1
-	BH1Qp+0ck9C6XYsquALvtHF6yDAumIHH7GNtrp+kJcXQSE3ny0yFl6G1IoBA+eMVXl4/CGfi0B0
-	hAvao5iDZzrDy5MmFI0IJkk3Wy3g+sKBh0krWwGq8iC0jnXIfdL0xA3HNHA/EYRjO39QTnjTAmH
-	NmXOjzSQFS4UM+crZ1hBGZart717DIyBPRNXvrG5ehE308B1y0JAxLIKfJWa02i9u2ps5xr/+oU
-	nllzKRrME7MLGaIOc5T0A2mhfpomZgkGYRYU4YqTd0auMhu9B+j6kzdz9yMU8c1AsteD6OM8ccK
-	gO+gVbwi9okAMeK5l0Le6wvrrEaIXPas//xx8=
-X-Received: by 2002:a17:903:40c5:b0:2ae:6259:5aff with SMTP id d9443c01a7336-2ba78b30d7amr100106675ad.6.1778184839009;
-        Thu, 07 May 2026 13:13:59 -0700 (PDT)
-Received: from pico-cachyos ([2401:4900:1c39:3613:8fd9:c407:baef:f7b9])
-        by smtp.gmail.com with ESMTPSA id d9443c01a7336-2bae7558219sm7127805ad.23.2026.05.07.13.13.56
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 07 May 2026 13:13:58 -0700 (PDT)
-From: Radhey Kalra <radheykalra901@gmail.com>
-To: krishna.chomal108@gmail.com
-Cc: platform-driver-x86@vger.kernel.org,
-	ilpo.jarvinen@linux.intel.com,
-	hansg@kernel.org,
-	Radhey Kalra <radheykalra901@gmail.com>
-Subject: Re: [PATCH] platform/x86: hp-wmi: Add Victus 15-fb0xxx fan control
-Date: Fri,  8 May 2026 01:43:12 +0530
-Message-ID: <20260507201315.9868-1-radheykalra901@gmail.com>
-X-Mailer: git-send-email 2.54.0
-In-Reply-To: <afzffd9SRuZQEMXe@archlinux>
-References: <20260507101347.27972-1-radheykalra901@gmail.com> <afzffd9SRuZQEMXe@archlinux>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="TXZmdufj"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 393C8C2BCB8;
+	Thu,  7 May 2026 20:14:33 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1778184875;
+	bh=vUFLAfmyS+0v5yg2gy/5HcsHara6X0jARKb7P5+5NEk=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+	b=TXZmdufjmf/7lADwsV/sw4J3dJh08HQhxVXEReNuUJEvcqT7D+BZqCzbeU/yqzpoO
+	 6IQuI5zHFWKvf26fu+MknDHPjdQ0eZzna954TDfMH8sETDtXERmtKUCRjldkmCBJLK
+	 TUZtRBP5LaHxX3sNSB+yCzr83r6WL85fGmtD2r7i1cXu8FdIl5hXtou13eVDvYB61g
+	 LIia8cNErgnTDpZBmbLtj4QGPrn9B0WEDPR+ub/oBVFeJQV7O59qi/21PdbFLM6GCA
+	 oz76qXVeBPJxYXPpPiBayn5/SZKlWleANRr98XQt+CbcXCoOziZDFsmAifPCnHEui9
+	 3uZB/eObF2mbA==
+From: "Rafael J. Wysocki" <rafael@kernel.org>
+To: Ilpo =?ISO-8859-1?Q?J=E4rvinen?= <ilpo.jarvinen@linux.intel.com>
+Cc: LKML <linux-kernel@vger.kernel.org>,
+ Linux ACPI <linux-acpi@vger.kernel.org>, Hans de Goede <hansg@kernel.org>,
+ platform-driver-x86@vger.kernel.org,
+ Thadeu Lima de Souza Cascardo <cascardo@holoscopio.com>
+Subject:
+ [PATCH v1 10/10] platform/x86: classmate-laptop: Convert keys driver to a
+ platform one
+Date: Thu, 07 May 2026 22:14:08 +0200
+Message-ID: <3886642.MHq7AAxBmi@rafael.j.wysocki>
+Organization: Linux Kernel Development
+In-Reply-To: <1956046.tdWV9SEqCh@rafael.j.wysocki>
+References: <1956046.tdWV9SEqCh@rafael.j.wysocki>
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Transfer-Encoding: 7Bit
+Content-Type: text/plain; charset="UTF-8"
 
-Hi Ilpo, Krishna,
+From: "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>
 
-Thanks for the review.
+In all cases in which a struct acpi_driver is used for binding a driver
+to an ACPI device object, a corresponding platform device is created by
+the ACPI core and that device is regarded as a proper representation of
+underlying hardware.  Accordingly, a struct platform_driver should be
+used by driver code to bind to that device.  There are multiple reasons
+why drivers should not bind directly to ACPI device objects [1].
 
-Ilpo: understood about the Signed-off-by. I will use my real name.
+Overall, it is better to bind drivers to platform devices than to their
+ACPI companions, so convert cmpc_keys_acpi_driver in the platform
+x86 classmate-laptop driver from an ACPI driver to a platform one.
 
-I agree that v1 added an ad-hoc second DMI table and spread the model
-choice into the hwmon code. I will rework this so the DMI .driver_data
-describes the board features, including the fan-control operations and
-limits. The hwmon path will use that data instead of checking another DMI
-table, and unsupported operations will return -EOPNOTSUPP.
+After this change, the input device registered by the driver will appear
+under the platform device used for driver binding.
 
-Krishna: thanks for pointing me at 9d317a54e46d ("platform/x86: hp-wmi:
-fix fan table parsing"). My statement about the Victus S fan table came
-from testing the 7.0.3 CachyOS/DKMS tree before accounting for that fix.
-I will retest 8A3D with mainline including that commit. If the fan table
-works there, v2 will use the table-derived limits. If it still fails, I
-will include the actual WMI failure/parsing details and keep any fallback
-limits in .driver_data rather than hardcoding them in the hwmon path.
+While this is not expected to alter functionality, it changes sysfs
+layout and so it will be visible to user space.
 
-Thanks,
-Radhey Kalra
+Link: https://lore.kernel.org/all/2396510.ElGaqSPkdT@rafael.j.wysocki/ [1]
+Signed-off-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
+---
+ drivers/platform/x86/classmate-laptop.c | 44 ++++++++++++-------------
+ 1 file changed, 22 insertions(+), 22 deletions(-)
+
+diff --git a/drivers/platform/x86/classmate-laptop.c b/drivers/platform/x86/classmate-laptop.c
+index dc2b7a48435c..d69dd9c9fde1 100644
+--- a/drivers/platform/x86/classmate-laptop.c
++++ b/drivers/platform/x86/classmate-laptop.c
+@@ -1092,13 +1092,13 @@ static int cmpc_keys_codes[] = {
+ 
+ static void cmpc_keys_handler(acpi_handle handle, u32 event, void *data)
+ {
+-	struct acpi_device *dev = data;
++	struct device *dev = data;
+ 	struct input_dev *inputdev;
+ 	int code = KEY_MAX;
+ 
+ 	if ((event & 0x0F) < ARRAY_SIZE(cmpc_keys_codes))
+ 		code = cmpc_keys_codes[event & 0x0F];
+-	inputdev = dev_get_drvdata(&dev->dev);
++	inputdev = dev_get_drvdata(dev);
+ 	input_report_key(inputdev, code, !(event & 0x10));
+ 	input_sync(inputdev);
+ }
+@@ -1112,27 +1112,28 @@ static void cmpc_keys_idev_init(struct input_dev *inputdev)
+ 		set_bit(cmpc_keys_codes[i], inputdev->keybit);
+ }
+ 
+-static int cmpc_keys_add(struct acpi_device *acpi)
++static int cmpc_keys_probe(struct platform_device *pdev)
+ {
+ 	int error;
+ 
+-	error = cmpc_add_notify_device(&acpi->dev, "cmpc_keys", cmpc_keys_idev_init);
++	error = cmpc_add_notify_device(&pdev->dev, "cmpc_keys", cmpc_keys_idev_init);
+ 	if (error)
+ 		return error;
+ 
+-	error = acpi_dev_install_notify_handler(acpi, ACPI_DEVICE_NOTIFY,
+-						cmpc_keys_handler, acpi);
++	error = acpi_dev_install_notify_handler(ACPI_COMPANION(&pdev->dev),
++						ACPI_DEVICE_NOTIFY,
++						cmpc_keys_handler, &pdev->dev);
+ 	if (error)
+-		cmpc_remove_notify_device(&acpi->dev);
++		cmpc_remove_notify_device(&pdev->dev);
+ 
+ 	return error;
+ }
+ 
+-static void cmpc_keys_remove(struct acpi_device *acpi)
++static void cmpc_keys_remove(struct platform_device *pdev)
+ {
+-	acpi_dev_remove_notify_handler(acpi, ACPI_DEVICE_NOTIFY,
+-				       cmpc_keys_handler);
+-	cmpc_remove_notify_device(&acpi->dev);
++	acpi_dev_remove_notify_handler(ACPI_COMPANION(&pdev->dev),
++				       ACPI_DEVICE_NOTIFY, cmpc_keys_handler);
++	cmpc_remove_notify_device(&pdev->dev);
+ }
+ 
+ static const struct acpi_device_id cmpc_keys_device_ids[] = {
+@@ -1140,14 +1141,13 @@ static const struct acpi_device_id cmpc_keys_device_ids[] = {
+ 	{"", 0}
+ };
+ 
+-static struct acpi_driver cmpc_keys_acpi_driver = {
+-	.name = "cmpc_keys",
+-	.class = "cmpc_keys",
+-	.ids = cmpc_keys_device_ids,
+-	.ops = {
+-		.add = cmpc_keys_add,
+-		.remove = cmpc_keys_remove,
+-	}
++static struct platform_driver cmpc_keys_acpi_driver = {
++	.probe = cmpc_keys_probe,
++	.remove = cmpc_keys_remove,
++	.driver = {
++		.name = "cmpc_keys",
++		.acpi_match_table = cmpc_keys_device_ids,
++	},
+ };
+ 
+ 
+@@ -1159,7 +1159,7 @@ static int cmpc_init(void)
+ {
+ 	int r;
+ 
+-	r = acpi_bus_register_driver(&cmpc_keys_acpi_driver);
++	r = platform_driver_register(&cmpc_keys_acpi_driver);
+ 	if (r)
+ 		goto failed_keys;
+ 
+@@ -1191,7 +1191,7 @@ static int cmpc_init(void)
+ 	platform_driver_unregister(&cmpc_ipml_acpi_driver);
+ 
+ failed_bl:
+-	acpi_bus_unregister_driver(&cmpc_keys_acpi_driver);
++	platform_driver_unregister(&cmpc_keys_acpi_driver);
+ 
+ failed_keys:
+ 	return r;
+@@ -1203,7 +1203,7 @@ static void cmpc_exit(void)
+ 	platform_driver_unregister(&cmpc_accel_acpi_driver);
+ 	platform_driver_unregister(&cmpc_tablet_acpi_driver);
+ 	platform_driver_unregister(&cmpc_ipml_acpi_driver);
+-	acpi_bus_unregister_driver(&cmpc_keys_acpi_driver);
++	platform_driver_unregister(&cmpc_keys_acpi_driver);
+ }
+ 
+ module_init(cmpc_init);
+-- 
+2.51.0
+
+
+
+
