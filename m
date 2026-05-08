@@ -1,60 +1,69 @@
 Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.10])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8C85525A357;
-	Fri,  8 May 2026 18:15:26 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7612837AA7A;
+	Fri,  8 May 2026 18:15:38 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.10
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1778264128; cv=none; b=RG38ZeOyqwzrXZRFP0x7ID2MmPgsQtEYXXmIO/gVybWaLtSJ05YLy0gTPRGuXf85XNkbKnnt7e6DzyoTqrHNmx9ik+Hhc20jgpTOPkILxu0juwumr3A1tvrPbj/7l8AZ8pGupwQ0VDjRyuG71EsUpV+5dQi8J8q0JRsbsyFJY9o=
+	t=1778264139; cv=none; b=UlTtCndByExgJpesYfWAsIF3GqaS5antQK0HCk/MuZhbVDQIsO7S9X/xwINUytF8oDm92Q4WReWo7ktJjnasleawCZIh7Fd4kEsq/hxYxEDjaZ6fChiqpxOUN/b3tu2JYZIinkMsYcC8qQ4d/0frMkoXzPQf3WZFHS8alEnxivE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1778264128; c=relaxed/simple;
-	bh=G3gqAq6R7a95IU956OKhxdq4TOJe3TdTwd59qtf359o=;
+	s=arc-20240116; t=1778264139; c=relaxed/simple;
+	bh=VXdNdUVDlNnrZMEfP58I/g5Qk2zen5k91cmmz+Eb7dU=;
 	h=From:To:Cc:In-Reply-To:References:Subject:Message-Id:Date:
-	 MIME-Version:Content-Type; b=BeSGz+aNkOuKw9KG79KKhOfrQVgIDO42vCblVLWUK5mQsIn9On++S2v7Y329xmEn9vGxv+1jht/9V/C0WFnxX+xBfU9iloG6sx3FddR10s4lgfyp7koYxGRRRvhLGk9g/QjpitdV/Ar/pKoGGvH6JxHhisfSsdrmjtEWibvszC4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=pass smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=mV86MDGW; arc=none smtp.client-ip=198.175.65.10
+	 MIME-Version:Content-Type; b=oWbusas8Yvf6OFJD46ArPpF87s88vel775OnfpxQTqRcf2N5vV4hAgFrU8BrhGt5cw2lhkGYgRl1RcajvKwZL/MnXroP/cmsbmkemMBzsHPNquhJxegtyMQTI6EmzRf4FcCytSahDmvWzK53NDQZZNfxHnWCC2pfgksblxLOSxg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=pass smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=ZoVtHq3L; arc=none smtp.client-ip=198.175.65.10
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="mV86MDGW"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="ZoVtHq3L"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1778264126; x=1809800126;
+  t=1778264138; x=1809800138;
   h=from:to:cc:in-reply-to:references:subject:message-id:
    date:mime-version:content-transfer-encoding;
-  bh=G3gqAq6R7a95IU956OKhxdq4TOJe3TdTwd59qtf359o=;
-  b=mV86MDGWBVCjpCXQ1LEAe588BFisfQe0SMswC1aT+xh7x+6yM1rL4Qx/
-   AkwUE8nLcU5x9AB5+JiSI6Gr4ZIzvXYNsQebyNGvQqwR8ajYdWQ3980vF
-   hffOxnaGkr7PlrYoGnshAxlQ+fOhYoEaI7EN/fRFKJl96RLtaXHOvRw1W
-   OjelqRDqscHkOqSMjoZc/61Z2hjH94vh44c6C7mJvo8hrem18b5CEXSeQ
-   c1R4z9ac4rhxmqEUqJlZKch32mqgptBy6PH5eXq0LGrInDUevUF2DgPCg
-   oSZLdr0sHS+a4qoHK1CS+gATZFb8ikmgkKqGcUjczE30LefSU6EMK4Jvr
-   w==;
-X-CSE-ConnectionGUID: RHuGI4J5R+ydPZhXRMAARQ==
-X-CSE-MsgGUID: U7jrYhPxRCWKHdy4ml05Lw==
-X-IronPort-AV: E=McAfee;i="6800,10657,11780"; a="96665824"
+  bh=VXdNdUVDlNnrZMEfP58I/g5Qk2zen5k91cmmz+Eb7dU=;
+  b=ZoVtHq3LVX7dacbIK1MgIgBBAFv1PNlBGb3o4xsiVwCISbFTJaED6rBL
+   xnU/h5k7NJTatOF7FxrCvBGcWwviRMAIzCFvseEBKMpLjXTOGacmoNi2v
+   lpD7IBdNTWqdQV2JngB6bvogTVRe1Q2QCcz4fAaFHcyLtogeiKAN785r8
+   Z+QHVOKk4/AZr63VeBsJ9uoNakW6GCT2YYXiJsHHz3YmlTKEh9EprpRTS
+   457fshUrP6mhNzBla5lgDU4PzP8ceidpPt+v3mRYK/M8x1XDcKvEaBmdt
+   vT2REkvB9Uwr6VT0+m4/dZ/AQvgaq5BwKSlNUpKUeJPtxi748Qcx51SlQ
+   g==;
+X-CSE-ConnectionGUID: x4EsYHAxR9GQO49WBglRUA==
+X-CSE-MsgGUID: zmcNmp++QdaWfDP3wtD7+w==
+X-IronPort-AV: E=McAfee;i="6800,10657,11780"; a="96665841"
 X-IronPort-AV: E=Sophos;i="6.23,224,1770624000"; 
-   d="scan'208";a="96665824"
+   d="scan'208";a="96665841"
 Received: from fmviesa006.fm.intel.com ([10.60.135.146])
-  by orvoesa102.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 08 May 2026 11:15:26 -0700
-X-CSE-ConnectionGUID: +/InKxg2TUeD15S+4bOuTA==
-X-CSE-MsgGUID: Kkg3Z9w4SliIhcjWB6DMtg==
+  by orvoesa102.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 08 May 2026 11:15:38 -0700
+X-CSE-ConnectionGUID: vFA22ba1Qma2f4jms0kdEw==
+X-CSE-MsgGUID: gUkmPBOORTG+RDk/G1VHvg==
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="6.23,224,1770624000"; 
-   d="scan'208";a="232320447"
+   d="scan'208";a="232320521"
 Received: from ijarvine-mobl1.ger.corp.intel.com (HELO localhost) ([10.245.244.100])
-  by fmviesa006-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 08 May 2026 11:15:22 -0700
+  by fmviesa006-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 08 May 2026 11:15:31 -0700
 From: =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
-To: Hans de Goede <hansg@kernel.org>, 
- Dmitry Torokhov <dmitry.torokhov@gmail.com>, 
+To: Andy Shevchenko <andriy.shevchenko@linux.intel.com>, 
+ Daniel Scally <djrscally@gmail.com>, 
+ Heikki Krogerus <heikki.krogerus@linux.intel.com>, 
+ Sakari Ailus <sakari.ailus@linux.intel.com>, 
+ Greg Kroah-Hartman <gregkh@linuxfoundation.org>, 
+ "Rafael J. Wysocki" <rafael@kernel.org>, Danilo Krummrich <dakr@kernel.org>, 
+ Mika Westerberg <mika.westerberg@linux.intel.com>, 
+ Andy Shevchenko <andy@kernel.org>, Linus Walleij <linusw@kernel.org>, 
+ Hans de Goede <hansg@kernel.org>, 
+ Dmitry Torokhov <dmitry.torokhov@gmail.com>, Len Brown <lenb@kernel.org>, 
  Bartosz Golaszewski <bartosz.golaszewski@oss.qualcomm.com>
-Cc: Bartosz Golaszewski <brgl@kernel.org>, 
- platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
-In-Reply-To: <20260429-pcengines-apuv2-swnodes-v1-1-cd1a6fad856d@oss.qualcomm.com>
-References: <20260429-pcengines-apuv2-swnodes-v1-1-cd1a6fad856d@oss.qualcomm.com>
-Subject: Re: [PATCH] platform/x86: pcengines-apuv2: reduce indiraction in
- swnode assignment
-Message-Id: <177826411784.8043.2027766157346539886.b4-ty@linux.intel.com>
-Date: Fri, 08 May 2026 21:15:17 +0300
+Cc: linux-acpi@vger.kernel.org, driver-core@lists.linux.dev, 
+ linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org, 
+ platform-driver-x86@vger.kernel.org, brgl@kernel.org
+In-Reply-To: <20260504-baytrail-real-swnode-v5-0-c7878b69e383@oss.qualcomm.com>
+References: <20260504-baytrail-real-swnode-v5-0-c7878b69e383@oss.qualcomm.com>
+Subject: Re: [PATCH v5 0/2] platform/x86: x86-android-tablets: use real
+ firmware node references with intel drivers
+Message-Id: <177826412637.8043.3507805822778132637.b4-ty@linux.intel.com>
+Date: Fri, 08 May 2026 21:15:26 +0300
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
@@ -65,14 +74,23 @@ Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
 X-Mailer: b4 0.13.0
 
-On Wed, 29 Apr 2026 11:46:01 +0200, Bartosz Golaszewski wrote:
+On Mon, 04 May 2026 12:58:55 +0200, Bartosz Golaszewski wrote:
 
-> struct platform_device_info now has the 'swnode' field allowing passing
-> software nodes directly to platform_device_register_full() without going
-> through software_node_fwnode(). It supports both registered and
-> unregistered software nodes. Use it to drop one layer of indirection.
+> First let me repeat the problem statement:
 > 
+> ==
 > 
+> GPIO software node lookup should rely exclusively on matching the
+> addresses of the referenced firmware nodes. I tried to enforce it with
+> commit e5d527be7e69 ("gpio: swnode: don't use the swnode's name as the
+> key for GPIO lookup") but it broke existing users who abuse the software
+> node mechanism by creating "dummy" software nodes named after the device
+> they want to get GPIOs from but never attaching them to the actual GPIO
+> devices. They rely on the current behavior of GPIOLIB where it will match
+> the label of the GPIO controller against the name of the software node
+> and does not require a true link.
+> 
+> [...]
 
 
 Thank you for your contribution, it has been applied to my local
@@ -81,8 +99,10 @@ platform-drivers-x86/review-ilpo-next branch only once I've pushed my
 local branch there, which might take a while.
 
 The list of commits applied:
-[1/1] platform/x86: pcengines-apuv2: reduce indiraction in swnode assignment
-      commit: fa84425e53c43c8a17ac2af2c8f99202f4e1ee7e
+[1/2] ACPI: provide acpi_bus_find_device_by_name()
+      commit: 083a59e05db9203c346e87d822c0c12a0f7a7c85
+[2/2] platform/x86: x86-android-tablets: enable fwnode matching of GPIO chips
+      commit: 1448c2d2ca5cc7f4ea6694e6bc809946de0a751c
 
 --
  i.
