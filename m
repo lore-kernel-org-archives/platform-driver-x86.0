@@ -1,95 +1,81 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from out-170.mta0.migadu.com (out-170.mta0.migadu.com [91.218.175.170])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 816F035F161
-	for <platform-driver-x86@vger.kernel.org>; Fri,  8 May 2026 12:05:38 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C5836140E5F
+	for <platform-driver-x86@vger.kernel.org>; Fri,  8 May 2026 12:35:34 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.218.175.170
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1778241938; cv=none; b=lxsm7cE34WBf5xpyChWCoOg/sRigpvSNOuVyCLYS3dsxQ1LngERafEq0QVxluaX06y/Za8sXZLmeaDMF/NzAy6dA7SIhEoG3KkphOHvpd3zYMxSHowSS+/37hBGurmfxTl2O9nA7+coCEoyHnZE7SbLZaWBclHs/2tlzcPDBZS0=
+	t=1778243737; cv=none; b=dX/uv2clvmBgKS9AedGzKGA6hctiprt5gP/HVFTS3eiUc3JU2EoXgxzcOQKoYU1aR3JOwGRUSKWXPCsuDVf9DMgNTCb6m4Pn0zTj2LV659DAqhlR5evAWJwYxnqYlQR3rpwv/PjJQADcObNsXfBSaqgbB0IwV7b6A/SvY9RIQfM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1778241938; c=relaxed/simple;
-	bh=+xa2Izm3ndqPvIm11GqvZEPFCn0mgjZpMDDxo1ksPX0=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=WhgnwqXarTSPiQfUI08Fq4BwjIMY7IgMy6oTKV+6VH7+xepMdVN2THCm0iBz4NlcVMGqAZR9mj01zx5wilxqeS8z8ok99oX6iKYGXCxX2rK4grQS2UANixCFVGNBUeEipO0Km/wofR0jb1miHydo3dODuBivRDOVx0c1y7gD0e4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=J2nqvWuZ; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1778243737; c=relaxed/simple;
+	bh=/esmceqaAN/03p62x7JbtaUpve0W/d3reBy0lp443BY=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=cGvdCRRh9hPRX1m1ahEyFR0WI9A8AWH6XPgb/wRph3lxGFz+S+cZeBtFSZ1tlSuqs9NIgFFWxKdKO6ZXFMZbE5bR3LfJCbz06KxF9COhxYwDWhTr5Y7tLaKZvdLlPUiepO273tDMaUmSMAcFjehoNYvACAFuOmHvKFdOyjcj0QU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=ZDdBk9DE; arc=none smtp.client-ip=91.218.175.170
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="J2nqvWuZ"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 54581C2BCF6
-	for <platform-driver-x86@vger.kernel.org>; Fri,  8 May 2026 12:05:38 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1778241938;
-	bh=+xa2Izm3ndqPvIm11GqvZEPFCn0mgjZpMDDxo1ksPX0=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-	b=J2nqvWuZQxdHcFivx7gVUYA6EV/zlfprLKlKMfq97E3WQI6OulOmjZPfOPqq7SWn2
-	 moN1JEwvBNW7t0QxgCztkY0c2yQnY02xccD9zfsBa25MOfsr/Yc13cx4TOyJIaur/x
-	 3eryZitZq1W1uTXMYQ4iQPxwIYpifFWDiYorHVBbo0nPebDLIDNdle+W8Qx342/A2l
-	 cYLzj1B3XX76uVcWAwLS3meH92/5SVARxdJbPsPJ2+cqBGo0q6isg9OToXE7WBxVKI
-	 mZMxQ7rpajIIuHeCpSFnpHnUb+/k2eN9LcoUo1L6gXVe22MI1GacV9oTmkkSkhJCAw
-	 tr+gClqVsiJFw==
-Received: by mail-lf1-f51.google.com with SMTP id 2adb3069b0e04-5a525aedb24so1886166e87.2
-        for <platform-driver-x86@vger.kernel.org>; Fri, 08 May 2026 05:05:38 -0700 (PDT)
-X-Forwarded-Encrypted: i=1; AFNElJ/m/63boLZBGRK20hhjDLGs6G4qI31wLkYHtPhj9qFqDT4WqdyyaCKfv6Oga4WMpy8vlSkQQrya6JkfpF/X4DKmJfCl@vger.kernel.org
-X-Gm-Message-State: AOJu0Yw/84ojhIP/+lFpibC9ZdPJ1ZHVuqpRkVMeqhuNEoIJJ4B1hCfU
-	KDmaRekwOc33/dmk3OOjhi3dwFrlweM4X0PJ780r05Z+s7m1CUFt4kkXSzOBwSr7UwXsKFD5KWG
-	46hV1ilT9zChUDSE74YPFlqxw4luUIp0=
-X-Received: by 2002:ac2:4e0e:0:b0:5a3:ccae:c650 with SMTP id
- 2adb3069b0e04-5a887ce5215mr3806491e87.26.1778241936653; Fri, 08 May 2026
- 05:05:36 -0700 (PDT)
+	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="ZDdBk9DE"
+Message-ID: <80e67990-4e75-4901-85ee-c4faa3f2a278@linux.dev>
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
+	t=1778243732;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=7mGHaNpQNmZ8FFNheSQF4ZhSi7sRQkALPYZ4kYdULX0=;
+	b=ZDdBk9DEKUaNJd4NWmdctoPY++IB1wdVZJIe66ghiGtp3KEfg+yMEfwIwVx9Xe/RcLeOdB
+	JrGM3p+K/eHZh6TDqbKRpY0OaVO5swKHLtqexC16SaD7FrPRedxICiGEPLV5nlBJidi1N0
+	c5Z4lzxPDJYGBrQLcV6gHBm4otfr/nQ=
+Date: Fri, 8 May 2026 14:35:19 +0200
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <1956046.tdWV9SEqCh@rafael.j.wysocki>
-In-Reply-To: <1956046.tdWV9SEqCh@rafael.j.wysocki>
-From: "Rafael J. Wysocki" <rafael@kernel.org>
-Date: Fri, 8 May 2026 14:05:25 +0200
-X-Gmail-Original-Message-ID: <CAJZ5v0jZPb6GRuM+VF6F_mSAOStL82kbtm-VKn046sRtbeLUaw@mail.gmail.com>
-X-Gm-Features: AVHnY4LuxtDjtYGm-wfo6qJswHM9itJLlcsQiLfilv4j3h519Aw4KmO_NOMWfwA
-Message-ID: <CAJZ5v0jZPb6GRuM+VF6F_mSAOStL82kbtm-VKn046sRtbeLUaw@mail.gmail.com>
-Subject: Re: [PATCH v1 00/10] platform/x86: classmate-laptop: Bind to platform
- devices instead of ACPI ones
-To: =?UTF-8?Q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
-Cc: LKML <linux-kernel@vger.kernel.org>, Linux ACPI <linux-acpi@vger.kernel.org>, 
-	Hans de Goede <hansg@kernel.org>, platform-driver-x86@vger.kernel.org, 
-	Thadeu Lima de Souza Cascardo <cascardo@holoscopio.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Subject: Re: [PATCH] platform/x86: asus-nb-wmi: add DMI quirk for ASUS Zenbook
+ Duo UX8407AA
+To: Paolo Pisati <p.pisati@gmail.com>,
+ Corentin Chary <corentin.chary@gmail.com>, "Luke D . Jones"
+ <luke@ljones.dev>, Hans de Goede <hansg@kernel.org>,
+ =?UTF-8?Q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
+Cc: platform-driver-x86@vger.kernel.org
+References: <20260508070956.62201-1-p.pisati@gmail.com>
+Content-Language: en-US, it-IT, en-US-large
+X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
+From: Denis Benato <denis.benato@linux.dev>
+In-Reply-To: <20260508070956.62201-1-p.pisati@gmail.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
+X-Migadu-Flow: FLOW_OUT
 
-On Thu, May 7, 2026 at 10:15=E2=80=AFPM Rafael J. Wysocki <rafael@kernel.or=
-g> wrote:
->
-> Hi All,
->
-> This series is part of a larger effort to switch over all drivers using
-> the struct acpi_driver interface to the more common struct platform_drive=
-r
-> interface and eliminate the former.  The background is explained in
-> Documentation/driver-api/acpi/acpi-drivers.rst and in the changelog of
-> the patch that introduced the above document:
->
-> https://lore.kernel.org/all/2396510.ElGaqSPkdT@rafael.j.wysocki/
->
-> The bottom line is that the kernel would be better off without struct
-> acpi_driver and so it is better to get rid of it.
->
-> This series carries out driver conversion of 5 subdrivers in the platform=
- x86
-> classmate-laptop driver.
->
-> The first 5 patches in the series are preliminary.
->
-> Patch [01/10] updates remove callbacks of 2 subdrivers in classmate-lapto=
-p
-> to free memory allocated during initialization as appropriate.
 
-After posting this series I realized that it would be more convenient
-to switch the _add() callbacks allocating the memory over to
-devm_kzalloc() because that would lead to fewer changes overall in
-subsequent patches.
-
-So there will be a v2, but I'll first post two more driver conversion serie=
-s.
-
-Thanks!
+On 5/8/26 09:09, Paolo Pisati wrote:
+> Use the existing zenbook duo keyboard quirk for the UX8407AA model too.
+Reviewed-by: Denis Benato <denis.benato@linux.dev>
+> Signed-off-by: Paolo Pisati <p.pisati@gmail.com>
+> ---
+>  drivers/platform/x86/asus-nb-wmi.c | 9 +++++++++
+>  1 file changed, 9 insertions(+)
+>
+> diff --git a/drivers/platform/x86/asus-nb-wmi.c b/drivers/platform/x86/asus-nb-wmi.c
+> index b4677c5bba5b4..8005c088e9eee 100644
+> --- a/drivers/platform/x86/asus-nb-wmi.c
+> +++ b/drivers/platform/x86/asus-nb-wmi.c
+> @@ -544,6 +544,15 @@ static const struct dmi_system_id asus_quirks[] = {
+>  		},
+>  		.driver_data = &quirk_asus_zenbook_duo_kbd,
+>  	},
+> +	{
+> +		.callback = dmi_matched,
+> +		.ident = "ASUS Zenbook Duo UX8407AA",
+> +		.matches = {
+> +			DMI_MATCH(DMI_SYS_VENDOR, "ASUS"),
+> +			DMI_MATCH(DMI_PRODUCT_NAME, "Zenbook Duo UX8407AA"),
+> +		},
+> +		.driver_data = &quirk_asus_zenbook_duo_kbd,
+> +	},
+>  	{
+>  		.callback = dmi_matched,
+>  		.ident = "ASUS ROG Z13",
