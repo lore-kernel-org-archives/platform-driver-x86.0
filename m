@@ -1,144 +1,122 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.19])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ej1-f46.google.com (mail-ej1-f46.google.com [209.85.218.46])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DC7AA3ED5D0;
-	Fri,  8 May 2026 14:22:09 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.19
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1778250131; cv=none; b=HEtWMGf882kRI9vKVlSlbooU+gO037rN/blCDBUyo3jzpC2iJXTY5hitxUmtwW0R+T0mgypEnDQbRKvdP2y/EuSmMM/7mINoDXLtUBD5M4O83GKw8x6bjVEgAIW8q/qQpmhKzurWbb/7fkTdxUYotMBzrP+nGgD5TqXZZNPT8VQ=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1778250131; c=relaxed/simple;
-	bh=v7afZcacPM2gJOIIA91rEM2iysrWC0ISbOfxDCx9BSA=;
-	h=From:Date:To:cc:Subject:In-Reply-To:Message-ID:References:
-	 MIME-Version:Content-Type; b=Fjz3c8tQawSlsRPDs/YXoBF2OWg0sv14C487Do19ks/nlsMsLhWZpsLofZyNK1SvrC7wQTa+4HMD7bNX/MTl6cJTJ4EnnJK0sQ9geRHyzCiTL98PdaoTfUh304vea0vlIIDnWN3/AkzW4i4wrkcZx8OEhFih8pKG0GielPAshw0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=pass smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=m3hwuWfS; arc=none smtp.client-ip=198.175.65.19
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.intel.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 52E7C3DA7ED
+	for <platform-driver-x86@vger.kernel.org>; Fri,  8 May 2026 14:24:34 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=209.85.218.46
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1778250275; cv=pass; b=mKi5fWCsTkr8n//g98C2aQRw3t0szglliVsbWMkcFnLwcIlyDXT8s9/3aa99CqE/j+lJtZK6Gk1WKjY3EWfAIn04EVWiuSYNS70b+ypJcmFI0KDLDSXgemI996SzXcILLpAn0IjYczGItszFeX8Tse51c0Zn5hGXi8UwSoXBpaE=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1778250275; c=relaxed/simple;
+	bh=244f8vM4AEH12bPto+HzbTsQELxNndItQjQ3Pjf0OeU=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=HEjpRPApCuanqwWJrXQE6BQog0DbUV+YFcSAATTAopCIWpxR8rQXDSB6SjD6WA13uxY8BoKWpBofcTix2LlWpLt6w6JSw8kyC33UG5xXZLqeTLqBOl2tUjWS0GPy6anltE2pRX85UOidT/xsjSp+iOolIzGkz08zEbusw3qZotw=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com; spf=pass smtp.mailfrom=suse.com; dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b=MMtw6rrC; arc=pass smtp.client-ip=209.85.218.46
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="m3hwuWfS"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1778250130; x=1809786130;
-  h=from:date:to:cc:subject:in-reply-to:message-id:
-   references:mime-version;
-  bh=v7afZcacPM2gJOIIA91rEM2iysrWC0ISbOfxDCx9BSA=;
-  b=m3hwuWfS+kCdqeo2+Ovo/XHUghIbAIxB+jzjNt41SUfnZeO5yi56/FYn
-   Jw1CC69/SODWtN3RGAReHp6357I12siDzrnIHAp2JF8nQb5R5RdCCGQku
-   tvmJXdhuPHGs4P8oY+S/10ja90HW//Edb/IMXPctH8D+5v2SfyeV0g3Ox
-   uZsyanJm08ZM1QvnM9qFUhnjB6DCFg3WLdbZK8NNcH2vpwxPnfLwCAevj
-   q5na+I/PLYmv2JAxN69V+9STizFGGCvUM9G7MMdvUJx4JUogl9WuGRwM+
-   HILfuDaPnXjELoifmBpr+G999V/lpRC/Mnr+XNctjB5iJQiZzNKOC0ILS
-   w==;
-X-CSE-ConnectionGUID: f/ePAdlBTCi96bA7zzufiQ==
-X-CSE-MsgGUID: asSqokD8ShKbke+S83cKwg==
-X-IronPort-AV: E=McAfee;i="6800,10657,11780"; a="79157841"
-X-IronPort-AV: E=Sophos;i="6.23,223,1770624000"; 
-   d="scan'208";a="79157841"
-Received: from fmviesa002.fm.intel.com ([10.60.135.142])
-  by orvoesa111.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 08 May 2026 07:22:09 -0700
-X-CSE-ConnectionGUID: TC9zmMPXSlap/1QE5kyIhg==
-X-CSE-MsgGUID: PWVu5hs9S1iLODpo/h3rzg==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.23,223,1770624000"; 
-   d="scan'208";a="260227550"
-Received: from ijarvine-mobl1.ger.corp.intel.com (HELO localhost) ([10.245.244.100])
-  by fmviesa002-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 08 May 2026 07:22:04 -0700
-From: =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
-Date: Fri, 8 May 2026 17:22:00 +0300 (EEST)
-To: "Derek J. Clark" <derekjohn.clark@gmail.com>
-cc: Hans de Goede <hansg@kernel.org>, Mark Pearson <mpearson-lenovo@squebb.ca>, 
-    Armin Wolf <W_Armin@gmx.de>, Jonathan Corbet <corbet@lwn.net>, 
-    Rong Zhang <i@rong.moe>, Kurt Borja <kuurtb@gmail.com>, 
-    "Pierre-Loup A . Griffais" <pgriffais@valvesoftware.com>, 
-    =?ISO-8859-15?Q?N=EDcolas_F_=2E_R_=2E_A_=2E_Prado?= <nfraprado@collabora.com>, 
-    marshall@shzj.cc, hyacinth@shzj.cc, platform-driver-x86@vger.kernel.org, 
-    LKML <linux-kernel@vger.kernel.org>, stable@vger.kernel.org
-Subject: Re: [PATCH v11 04/15] platform/x86: lenovo-wmi-other: Zero initialize
- WMI arguments
-In-Reply-To: <20260507180507.912966-5-derekjohn.clark@gmail.com>
-Message-ID: <10f8f349-8777-cada-8242-250aa27dc933@linux.intel.com>
-References: <20260507180507.912966-1-derekjohn.clark@gmail.com> <20260507180507.912966-5-derekjohn.clark@gmail.com>
+	dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b="MMtw6rrC"
+Received: by mail-ej1-f46.google.com with SMTP id a640c23a62f3a-bc2a455fd55so296699166b.2
+        for <platform-driver-x86@vger.kernel.org>; Fri, 08 May 2026 07:24:34 -0700 (PDT)
+ARC-Seal: i=1; a=rsa-sha256; t=1778250273; cv=none;
+        d=google.com; s=arc-20240605;
+        b=BMlmMT9vdi37YlAuSsbABrpi+zWexO1inqWJuNq9Mx08tZM8msgUWRKUcOxl1uYhKp
+         zZwZ/hdLLu/LrUKg0vylTs3+lm16J4vocLE+/frbsYtpDbPhfHmnOOrkIjSHzjjYQASJ
+         gxZzVP5US5z6NEHW6JEPbJGApTIiCPm161Z9TNHctTReOx+pSs/ULm20tQ/z3oNKbF0w
+         FitVmwFtbJbqK8rAVkK9ToEAowONicI8AA5o9kyc+YOa/OShgJ0KPYpc8matjoCzjG0C
+         TQqtPGeS82lKbwVS87HW5rPb3mzpowIQ0EdCVmiW7jRLgO0V5JKqQ8SMNwvz3WUaeXIL
+         VH/w==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20240605;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:dkim-signature;
+        bh=244f8vM4AEH12bPto+HzbTsQELxNndItQjQ3Pjf0OeU=;
+        fh=YxGQKZ/DiCvJvIjWSaKjYqEjguimvIdpXNd84MpaDaA=;
+        b=Xfby9Myvbq5z/ZDcg9eu6/xRHoNwWK4xsECvZiXKELTi7V6us0rytDTqoQvIui4Hj6
+         IkmKJpPiKxmARlgHGQl3MRIOu7Knip4iyMYeY8dAprWid26SrIjmKoEs1rJmqpwOQqb7
+         +5+PG/y/BX7zZKyjRq4CKO5lvqrhrVnCEFIIVDYeEYHWOO+/vQ0lkcUzzvofSEJFR4wQ
+         EY2ht2Z5r3ZxXTo1XCCinwUfwxQUQY2zPmmmvWsQ8wO1BydS/nmoquAVhCx3efuDYUj8
+         V3IjmT7dCQVrzXrJCGQoxXzrGXh22nKIhFmR9V6eauxgNuTzza0P8toFDD2gsPHmM0bb
+         4R0Q==;
+        darn=vger.kernel.org
+ARC-Authentication-Results: i=1; mx.google.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=suse.com; s=google; t=1778250273; x=1778855073; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=244f8vM4AEH12bPto+HzbTsQELxNndItQjQ3Pjf0OeU=;
+        b=MMtw6rrCDzz+38iPA752cxOm2ogFqCLqpA5SL3rN/Gv3c26loTSu8kQBIFekZPlGwF
+         j7/vIl3JdE1hG47D0R7YE4inTFh4O0jCfpAMexNXXoyL9PvhKN0KfnNQBnUwPT0G06XG
+         UdSYJI29Aw28gqzdyck6VVDgj27JC8zwFnWOJ0M8MAsabk82tGvXznxyx3qixOJJrTMm
+         sRXOBuaQQcSBuZfcCL78ilVguYXQhEMv6UPBvlWlzPPsRB9YRu14dS7dNcszrIWqWHWx
+         /aBg17Z4UYojCvykTJlGsC1rnG/WUkHsrGIheI31RFXWCoySqL8tBsdZpkfdN2DjibS3
+         zHgg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20251104; t=1778250273; x=1778855073;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-gg:x-gm-message-state:from
+         :to:cc:subject:date:message-id:reply-to;
+        bh=244f8vM4AEH12bPto+HzbTsQELxNndItQjQ3Pjf0OeU=;
+        b=WVC3SCwiff1ZpqKprbOg2vaZDQZnTGS5UXhMWtRmUYw4j7yXfoIp884J/ySj90ax6S
+         6kcxP6bumf+q66HjJueSrq9hQnBX0Jb9OCLGUNWM1pSiYovfnhRHrLEADDexvHa0G1hC
+         iv5yJbWRyVJwElUj5kaQCd/UkF9kCv421saEbplITxffk5i6/JK0MGST1j3I4iVbXy2E
+         sywivhoh6bMxwAkEaJSfWF5MDUfxnaSjmZJkqZI+XqH5qwnNLLZGYvtm4ENMVyJ9PWpq
+         QP5hKwXjGs11No8Xz2zHutaWePrMRsykci2KoxspNxkLUTNtIcN840NH5gvuwDR0ooLI
+         bOpQ==
+X-Forwarded-Encrypted: i=1; AFNElJ+DPoE8yDKGkQG7ilpwiPzl2kUN/BWxQBFSChHZFwbhsMscrG5On7EBys6U/EsLThJkKMKnvX1gPIq7EwCJYWtIYi/D@vger.kernel.org
+X-Gm-Message-State: AOJu0Yy3gh/b0NCPb0fPjieYxYc5/SBkujiGLysiE0tlLqeJyuRp/Fjd
+	YSDUv1RCDVmULY/vpFaI19Lv1Nj8R4cOMUkUmA/lqjvG1ldMgokiJ+6wBG9Ix1t9a6vOwEpV3vs
+	aUrsZ1EfWoYRVZ0QpyPdDTonWzkZWgZJz5DAGvwcjCg==
+X-Gm-Gg: AeBDievb1B3+Y6lf6HLPUZ2gBFTwrnTpNOP8OEggmmY4APMdcN5cU0YV9V8tnuxR8UB
+	rzv+r1RHOOsZu+6vzQplE678w4COtmnke+lHI7THrsaHgy3Ef5w6sikuNR4XXPkB20XUehMEdgY
+	+KUU1K3XBpJ7yRrwUI5t4T6zWG0wkJqiy8Z9uavrxJRcfh7Ak3Yj3WNs7FCaGUdSyFRGdV0ABou
+	WAAV0VWfrHajkLluc0/ZAj8TzEhYJzH+5tk32db9iQRRCSBegwobjCX1JTRubqlbqB9eFRthO9S
+	EaVlsrW1r+1yYQXiYMJk4fvRGvwMxJUXo8cC+xJenXFn6Ze603o=
+X-Received: by 2002:a17:907:e106:b0:bc3:cb3c:2e2f with SMTP id
+ a640c23a62f3a-bc56cc31536mr554867666b.20.1778250272637; Fri, 08 May 2026
+ 07:24:32 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+References: <20260507143953.342654-1-marco.crivellari@suse.com>
+ <3af8e050-9934-45ca-8e5e-1e6a69909637@kernel.org> <6200c16b-74f9-9942-50f7-fc8dc04d2264@linux.intel.com>
+In-Reply-To: <6200c16b-74f9-9942-50f7-fc8dc04d2264@linux.intel.com>
+From: Marco Crivellari <marco.crivellari@suse.com>
+Date: Fri, 8 May 2026 16:24:20 +0200
+X-Gm-Features: AVHnY4LqrdkdJpqk70rVY5Qb5tHcm4-V9cPzAx9XviqUumjco_lOwl_h3XJWzrg
+Message-ID: <CAAofZF4ggLShHPZJJatM3rHMDW=VvG0tUddX8uX8-dL=Rc87hA@mail.gmail.com>
+Subject: Re: [RFC PATCH] platform/x86: asus-tf103c-dock: Move long delayed
+ work on system_dfl_long_wq
+To: =?UTF-8?Q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
+Cc: Hans de Goede <hansg@kernel.org>, LKML <linux-kernel@vger.kernel.org>, 
+	platform-driver-x86@vger.kernel.org, Tejun Heo <tj@kernel.org>, 
+	Lai Jiangshan <jiangshanlai@gmail.com>, Frederic Weisbecker <frederic@kernel.org>, 
+	Sebastian Andrzej Siewior <bigeasy@linutronix.de>, Michal Hocko <mhocko@suse.com>, 
+	Corentin Chary <corentin.chary@gmail.com>, "Luke D . Jones" <luke@ljones.dev>, 
+	Denis Benato <denis.benato@linux.dev>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Thu, 7 May 2026, Derek J. Clark wrote:
+On Fri, May 8, 2026 at 3:34=E2=80=AFPM Ilpo J=C3=A4rvinen
+<ilpo.jarvinen@linux.intel.com> wrote:
+> Hi Marco,
+>
+> Is there some particular reason why this was sent as RFC?
+>
 
-> Adds explicit initialization of wmi_method_args_32 declarations with
-> zero values to prevent uninitialized data from being sent to the device
-> BIOS when passed.
-> 
-> No functional change intended.
+Hi Ilpo,
 
-Missing empty line.
+The only reason was to ensure my check regarding per-cpu variables was
+sufficient and that there was no specific reason to keep them per-CPU,
+and to comment on it if necessary.
 
-> Reviewed-by: Mark Pearson <mpearson-lenovo@squebb.ca>
-> Fixes: 22024ac5366f ("platform/x86: Add Lenovo Gamezone WMI Driver")
-> Fixes: edc4b183b794 ("platform/x86: Add Lenovo Other Mode WMI Driver")
-> Reported-by: Rong Zhang <i@rong.moe>
-> Closes: https://lore.kernel.org/platform-driver-x86/95c7e7b539dd0af41189c754fcd35cec5b6fe182.camel@rong.moe/
-> Cc: stable@vger.kernel.org
-> Reviewed-by: Rong Zhang <i@rong.moe>
-> Tested-by: Rong Zhang <i@rong.moe>
-> Signed-off-by: Derek J. Clark <derekjohn.clark@gmail.com>
-> ---
-> v7:
->   - Include lwmi_gz_profile_set() fix as well.
-> ---
->  drivers/platform/x86/lenovo/wmi-gamezone.c | 2 +-
->  drivers/platform/x86/lenovo/wmi-other.c    | 6 +++---
->  2 files changed, 4 insertions(+), 4 deletions(-)
-> 
-> diff --git a/drivers/platform/x86/lenovo/wmi-gamezone.c b/drivers/platform/x86/lenovo/wmi-gamezone.c
-> index 381836d29a96..ca559e6c031d 100644
-> --- a/drivers/platform/x86/lenovo/wmi-gamezone.c
-> +++ b/drivers/platform/x86/lenovo/wmi-gamezone.c
-> @@ -203,7 +203,7 @@ static int lwmi_gz_profile_set(struct device *dev,
->  			       enum platform_profile_option profile)
->  {
->  	struct lwmi_gz_priv *priv = dev_get_drvdata(dev);
-> -	struct wmi_method_args_32 args;
-> +	struct wmi_method_args_32 args = {};
->  	enum thermal_mode mode;
->  	int ret;
->  
-> diff --git a/drivers/platform/x86/lenovo/wmi-other.c b/drivers/platform/x86/lenovo/wmi-other.c
-> index a6be3463341c..1e06b894cfcc 100644
-> --- a/drivers/platform/x86/lenovo/wmi-other.c
-> +++ b/drivers/platform/x86/lenovo/wmi-other.c
-> @@ -166,7 +166,7 @@ MODULE_PARM_DESC(relax_fan_constraint,
->   */
->  static int lwmi_om_fan_get_set(struct lwmi_om_priv *priv, int channel, u32 *val, bool set)
->  {
-> -	struct wmi_method_args_32 args;
-> +	struct wmi_method_args_32 args = {};
->  	u32 method_id, retval;
->  	int err;
->  
-> @@ -773,7 +773,7 @@ static ssize_t attr_current_value_store(struct kobject *kobj,
->  					struct tunable_attr_01 *tunable_attr)
->  {
->  	struct lwmi_om_priv *priv = dev_get_drvdata(tunable_attr->dev);
-> -	struct wmi_method_args_32 args;
-> +	struct wmi_method_args_32 args = {};
->  	struct capdata01 capdata;
->  	enum thermal_mode mode;
->  	u32 attribute_id;
-> @@ -836,7 +836,7 @@ static ssize_t attr_current_value_show(struct kobject *kobj,
->  				       struct tunable_attr_01 *tunable_attr)
->  {
->  	struct lwmi_om_priv *priv = dev_get_drvdata(tunable_attr->dev);
-> -	struct wmi_method_args_32 args;
-> +	struct wmi_method_args_32 args = {};
->  	enum thermal_mode mode;
->  	u32 attribute_id;
->  	int retval;
-> 
+Thanks!
 
--- 
- i.
+--=20
 
+Marco Crivellari
+
+SUSE Labs
