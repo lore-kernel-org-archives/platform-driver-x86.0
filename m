@@ -1,162 +1,209 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.11])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.15])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A38673E3D83;
-	Fri,  8 May 2026 13:34:17 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.11
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4DB0833F5A4;
+	Fri,  8 May 2026 14:21:31 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.15
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1778247260; cv=none; b=XW/wDYFkEM/3uoLkjQaaYjFwu+C1/xuqGFa2o7K2e2y1PrUTISMo2ceSzGj5RTt/6sj72h/Sc26NvYeDlXCyC5ZfVP5JNekpP1lpRmxh7glmRU8gB+8ITXK1U9KeW3Ju0qQCpAXOqDEkTdNjvVnTKdD9nWXtKa0I1jfafA/QmEg=
+	t=1778250093; cv=none; b=LJCsqkhT6CVxuVXqThWd4jbq1Qi77VbEH7tD6Vfo04l0QxYiBI9a9YoVFtqqz5bp+cxukCAO9lxii6AUiyKaCbGrDeWmd9TV/G/huTGUvsafMLeYeL2fEMaS7/vWKOfrJ8olV8pLypKrtwtKc7bSWA78ANwPeRKPZTyooZBBRl4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1778247260; c=relaxed/simple;
-	bh=RPb69BZPZuaXLBx9yCkv6HWTC762odVELtgxJ7EJYyo=;
+	s=arc-20240116; t=1778250093; c=relaxed/simple;
+	bh=3G0vq/OduJBpTa6zUlUjMSiQxCplTGVxMRTUp2VSJI8=;
 	h=From:Date:To:cc:Subject:In-Reply-To:Message-ID:References:
-	 MIME-Version:Content-Type; b=aVr24T0uXSbPCfXPG++UJMr0p26nDKesc8114X4hB9sNj9J7pIqpOkV2idaPC7gFC+pxlIX/JJxU+N/uZ0h8VDXPaKD3I3U4nNXRy8eD44X+5kNotzdaATadi54o00kKyojMSXb+GocHuyoZD3FwbVn1R08UxI8QszvbaV+9x3g=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=pass smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=n1CfC5rV; arc=none smtp.client-ip=192.198.163.11
+	 MIME-Version:Content-Type; b=p2aETfHxtdzCB5KAYRi90/9D4na4ivuV+vg3K5QmMHEE58MJ3t4yCSIgt4AS/FR4Kq2XpEoaRAsrvfsng9WrxJqvbY1qXKKkqnc/Lk03SkrQnDN0ZxIZ33souYlEw+Hv3EP9rwLpqyIIMUOt1/jO1RJcKM5yx4g5eir5+ip/bLk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=pass smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=WxtyF2cd; arc=none smtp.client-ip=198.175.65.15
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="n1CfC5rV"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="WxtyF2cd"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1778247258; x=1809783258;
+  t=1778250091; x=1809786091;
   h=from:date:to:cc:subject:in-reply-to:message-id:
-   references:mime-version:content-id;
-  bh=RPb69BZPZuaXLBx9yCkv6HWTC762odVELtgxJ7EJYyo=;
-  b=n1CfC5rVt8Jg3ubZpbUK0GRF+qEZj8M0MYYYuSYyeLSgZLRXMckXQ7Bj
-   pWFiiUfFGO50b1zwlZfHf6plYw03dzBqi2gp4mzjzZi327x30KZ/LRXNg
-   kLNk9n6UKpuEREJoYeRANzErfYspRZtuEBt6/QQxucSelnwS2NANXZJKD
-   NT0vm/cC0/U1WR/RDtdZtUXDBnirRV2cH8hlfaJFVh33qlkERDqh+QMZ3
-   H5QqE/XD//2hmsyzWN2g5fNXfEM2CSzpCX2f59pimgMIZNs2Ugga8RssV
-   C1uN3xn24d+/bzVkjOULvE188/+SDQjCXMQGwrBS5Qk/0P7NBLRsooTuz
+   references:mime-version;
+  bh=3G0vq/OduJBpTa6zUlUjMSiQxCplTGVxMRTUp2VSJI8=;
+  b=WxtyF2cdZ81qABFS4IJbH5OQCEHwn5XgKK4QWVPOsfQ5YQzM236+JIIe
+   S9PnRS2G3orCFHsSwa/8ZWMk26xq77Hqjoi4tgYmNMTF2e6oaqS4eaO9h
+   nP58O+SgfMlfRPJtQdhTv47TKjEBjpkOmh5edcN/m3vcl2p2HquMgUXrb
+   ja28I8iprymkzDPzbOyWYvIffYDKv+3Tc6Ao1jxUxFO1t9d97s3V/ch6G
+   18zLSUd/oZiOlri3qgi9RSGIdqvabuuOKgrYojEPyNCLdMgZ58llA2/BB
+   Waky1mO+zU70NZ3hh6PBsldAFpDRy2LYdZrB+dfnpL1zQ8w4S9dNLpluJ
    Q==;
-X-CSE-ConnectionGUID: smxLtWy0Qm6oHjfmYO4FLg==
-X-CSE-MsgGUID: qsFIJkZrTjuLOlJK8BIaZw==
-X-IronPort-AV: E=McAfee;i="6800,10657,11780"; a="89803154"
+X-CSE-ConnectionGUID: YMPiBfv8Tiq9Xk05Vgc56Q==
+X-CSE-MsgGUID: 7/ZprEHnRwyVrZBkEx8Grg==
+X-IronPort-AV: E=McAfee;i="6800,10657,11780"; a="82839532"
 X-IronPort-AV: E=Sophos;i="6.23,223,1770624000"; 
-   d="scan'208";a="89803154"
-Received: from orviesa003.jf.intel.com ([10.64.159.143])
-  by fmvoesa105.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 08 May 2026 06:34:16 -0700
-X-CSE-ConnectionGUID: GdN2oRC7SpqJofVdbGoMsQ==
-X-CSE-MsgGUID: dSLVcHr8SyisLiKLnqDKVQ==
+   d="scan'208";a="82839532"
+Received: from orviesa005.jf.intel.com ([10.64.159.145])
+  by orvoesa107.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 08 May 2026 07:21:30 -0700
+X-CSE-ConnectionGUID: Ww0ed/KETdurrQspcVKKhw==
+X-CSE-MsgGUID: 0YL+1c2mSSGMCbvHJr/lVg==
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="6.23,223,1770624000"; 
-   d="scan'208";a="240759456"
+   d="scan'208";a="241776245"
 Received: from ijarvine-mobl1.ger.corp.intel.com (HELO localhost) ([10.245.244.100])
-  by ORVIESA003-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 08 May 2026 06:34:12 -0700
+  by orviesa005-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 08 May 2026 07:21:26 -0700
 From: =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
-Date: Fri, 8 May 2026 16:34:08 +0300 (EEST)
-To: Hans de Goede <hansg@kernel.org>
-cc: Marco Crivellari <marco.crivellari@suse.com>, 
-    LKML <linux-kernel@vger.kernel.org>, platform-driver-x86@vger.kernel.org, 
-    Tejun Heo <tj@kernel.org>, Lai Jiangshan <jiangshanlai@gmail.com>, 
-    Frederic Weisbecker <frederic@kernel.org>, 
-    Sebastian Andrzej Siewior <bigeasy@linutronix.de>, 
-    Michal Hocko <mhocko@suse.com>, Corentin Chary <corentin.chary@gmail.com>, 
-    "Luke D . Jones" <luke@ljones.dev>, Denis Benato <denis.benato@linux.dev>
-Subject: Re: [RFC PATCH] platform/x86: asus-tf103c-dock: Move long delayed
- work on system_dfl_long_wq
-In-Reply-To: <3af8e050-9934-45ca-8e5e-1e6a69909637@kernel.org>
-Message-ID: <6200c16b-74f9-9942-50f7-fc8dc04d2264@linux.intel.com>
-References: <20260507143953.342654-1-marco.crivellari@suse.com> <3af8e050-9934-45ca-8e5e-1e6a69909637@kernel.org>
+Date: Fri, 8 May 2026 17:21:22 +0300 (EEST)
+To: "Derek J. Clark" <derekjohn.clark@gmail.com>
+cc: Hans de Goede <hansg@kernel.org>, Mark Pearson <mpearson-lenovo@squebb.ca>, 
+    Armin Wolf <W_Armin@gmx.de>, Jonathan Corbet <corbet@lwn.net>, 
+    Rong Zhang <i@rong.moe>, Kurt Borja <kuurtb@gmail.com>, 
+    "Pierre-Loup A . Griffais" <pgriffais@valvesoftware.com>, 
+    =?ISO-8859-15?Q?N=EDcolas_F_=2E_R_=2E_A_=2E_Prado?= <nfraprado@collabora.com>, 
+    marshall@shzj.cc, hyacinth@shzj.cc, platform-driver-x86@vger.kernel.org, 
+    LKML <linux-kernel@vger.kernel.org>, stable@vger.kernel.org
+Subject: Re: [PATCH v11 07/15] platform/x86: lenovo-wmi-helpers: Move gamezone
+ enums to wmi-helpers
+In-Reply-To: <20260507180507.912966-8-derekjohn.clark@gmail.com>
+Message-ID: <0d4c9865-de40-39b3-20fb-398f8480530b@linux.intel.com>
+References: <20260507180507.912966-1-derekjohn.clark@gmail.com> <20260507180507.912966-8-derekjohn.clark@gmail.com>
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/mixed; BOUNDARY="8323328-214943133-1778247172=:1002"
-Content-ID: <721c66bb-cb3c-552d-3d16-99b10f32f35f@linux.intel.com>
+Content-Type: text/plain; charset=US-ASCII
 
-  This message is in MIME format.  The first part should be readable text,
-  while the remaining parts are likely unreadable without MIME-aware tools.
+On Thu, 7 May 2026, Derek J. Clark wrote:
 
---8323328-214943133-1778247172=:1002
-Content-Type: text/plain; CHARSET=ISO-8859-15
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Content-ID: <29efece9-3c0e-4d0d-aeea-7d5ec58c8537@linux.intel.com>
+It seems there are a few nits still to address (they were too many so I'd 
+want to try to do inline editing).
 
-On Thu, 7 May 2026, Hans de Goede wrote:
+> In a later patch in the series the thermal mode enum will be accessed
+> across three separate drivers (wmi-capdata, wmi-gamezonem and wmi-other).
+> An additional patch in the series will also add a function protoype that
 
-> Hi,
->=20
-> On 7-May-26 16:39, Marco Crivellari wrote:
-> > Currently the code enqueue work items using {queue|mod}_delayed_work(),
-> > using system_long_wq. This workqueue should be used when long works are
-> > expected and it is a per-cpu workqueue.
-> >=20
-> > The function(s) end up calling __queue_delayed_work(), which set a glob=
-al
-> > timer that could fire anywhere, enqueuing the work where the timer fire=
-d.
-> >=20
-> > Unbound works could benefit from scheduler task placement, to optimize
-> > performance and power consumption. Long work shouldn't stick to a singl=
-e
-> > CPU.
-> >=20
-> > Recently, a new unbound workqueue specific for long running work has
-> > been added:
-> >=20
-> > =A0=A0=A0=A0c116737e972e ("workqueue: Add system_dfl_long_wq for long u=
-nbound works")
-> >=20
-> > Since the workqueue work doesn't rely on per-cpu variables, there is no
-> > obvious reason that justify the use of a per-cpu workqueue. So change
-> > system_long_wq with system_dfl_long_wq so that the work may benefit fro=
-m
-> > scheduler task placement.
-> >=20
-> > Signed-off-by: Marco Crivellari <marco.crivellari@suse.com>
->=20
-> Thanks, patch looks good to me:
->=20
-> Reviewed-by: Hans de Goede <johannes.goede@oss.qualcomm.com>
->=20
-> Regards,
->=20
-> Hans
->=20
->=20
->=20
-> > ---
-> >  drivers/platform/x86/asus-tf103c-dock.c | 6 ++++--
-> >  1 file changed, 4 insertions(+), 2 deletions(-)
-> >=20
-> > diff --git a/drivers/platform/x86/asus-tf103c-dock.c b/drivers/platform=
-/x86/asus-tf103c-dock.c
-> > index f09a3fc6524a..de683e17ce01 100644
-> > --- a/drivers/platform/x86/asus-tf103c-dock.c
-> > +++ b/drivers/platform/x86/asus-tf103c-dock.c
-> > @@ -669,7 +669,8 @@ static irqreturn_t tf103c_dock_hpd_irq(int irq, voi=
-d *data)
-> >  {
-> >  =09struct tf103c_dock_data *dock =3D data;
-> > =20
-> > -=09mod_delayed_work(system_long_wq, &dock->hpd_work, TF103C_DOCK_HPD_D=
-EBOUNCE);
-> > +=09mod_delayed_work(system_dfl_long_wq, &dock->hpd_work,
-> > +=09=09=09 TF103C_DOCK_HPD_DEBOUNCE);
-> >  =09return IRQ_HANDLED;
-> >  }
-> > =20
-> > @@ -677,7 +678,8 @@ static void tf103c_dock_start_hpd(struct tf103c_doc=
-k_data *dock)
-> >  {
-> >  =09enable_irq(dock->hpd_irq);
-> >  =09/* Sync current HPD status */
-> > -=09queue_delayed_work(system_long_wq, &dock->hpd_work, TF103C_DOCK_HPD=
-_DEBOUNCE);
-> > +=09queue_delayed_work(system_dfl_long_wq, &dock->hpd_work,
-> > +=09=09=09   TF103C_DOCK_HPD_DEBOUNCE);
-> >  }
-> > =20
-> >  static void tf103c_dock_stop_hpd(struct tf103c_dock_data *dock)
->=20
+prototype
 
-Hi Marco,
+> needs to reference this enum in wmi-helpers.h. To avoid having all these
+> drivers begin to import each others headers, and to avoid declaring an
+> opaque enum to hande the second case, move the thermal mode enum to
+> helpers where it can be safely accessed by everything that needs it from
+> a single import.
+> 
+> While at it, since the gamezone_events_type enum is the only remaining
+> item in the header, move that as well and remove the gamezone header
+> entirely.
+> 
+> Fixes: 22024ac5366f ("platform/x86: Add Lenovo Gamezone WMI Driver")
 
-Is there some particular reason why this was sent as RFC?
+This change doesn't seem to exactly fix anything so it shouldn't have 
+Fixes tag.
 
---=20
+We want to only have Cc: stable in the prerequisites for some other fix 
+that comes after.
+
+
+My plan is to take patches 1-9 through fixes branch and then merge fixes 
+to for-next and take the rest through for-next.
+
+-- 
  i.
---8323328-214943133-1778247172=:1002--
+
+> Cc: stable@vger.kernel.org
+> Reviewed-by: Mark Pearson <mpearson-lenovo@squebb.ca>
+> Reviewed-by: Rong Zhang <i@rong.moe>
+> Tested-by: Rong Zhang <i@rong.moe>
+> Signed-off-by: Derek J. Clark <derekjohn.clark@gmail.com>
+> ---
+> v11:
+>   - Move to earlier in the series as later patches depend on it.
+> ---
+>  drivers/platform/x86/lenovo/wmi-events.c   |  2 +-
+>  drivers/platform/x86/lenovo/wmi-gamezone.c |  1 -
+>  drivers/platform/x86/lenovo/wmi-gamezone.h | 20 --------------------
+>  drivers/platform/x86/lenovo/wmi-helpers.h  | 13 +++++++++++++
+>  drivers/platform/x86/lenovo/wmi-other.c    |  1 -
+>  5 files changed, 14 insertions(+), 23 deletions(-)
+>  delete mode 100644 drivers/platform/x86/lenovo/wmi-gamezone.h
+> 
+> diff --git a/drivers/platform/x86/lenovo/wmi-events.c b/drivers/platform/x86/lenovo/wmi-events.c
+> index 0994cd7dd504..9e9f2e82e04d 100644
+> --- a/drivers/platform/x86/lenovo/wmi-events.c
+> +++ b/drivers/platform/x86/lenovo/wmi-events.c
+> @@ -17,7 +17,7 @@
+>  #include <linux/wmi.h>
+>  
+>  #include "wmi-events.h"
+> -#include "wmi-gamezone.h"
+> +#include "wmi-helpers.h"
+>  
+>  #define THERMAL_MODE_EVENT_GUID "D320289E-8FEA-41E0-86F9-911D83151B5F"
+>  
+> diff --git a/drivers/platform/x86/lenovo/wmi-gamezone.c b/drivers/platform/x86/lenovo/wmi-gamezone.c
+> index a91089694727..5a8f4aee02cf 100644
+> --- a/drivers/platform/x86/lenovo/wmi-gamezone.c
+> +++ b/drivers/platform/x86/lenovo/wmi-gamezone.c
+> @@ -21,7 +21,6 @@
+>  #include <linux/wmi.h>
+>  
+>  #include "wmi-events.h"
+> -#include "wmi-gamezone.h"
+>  #include "wmi-helpers.h"
+>  
+>  #define LENOVO_GAMEZONE_GUID "887B54E3-DDDC-4B2C-8B88-68A26A8835D0"
+> diff --git a/drivers/platform/x86/lenovo/wmi-gamezone.h b/drivers/platform/x86/lenovo/wmi-gamezone.h
+> deleted file mode 100644
+> index 6b163a5eeb95..000000000000
+> --- a/drivers/platform/x86/lenovo/wmi-gamezone.h
+> +++ /dev/null
+> @@ -1,20 +0,0 @@
+> -/* SPDX-License-Identifier: GPL-2.0-or-later */
+> -
+> -/* Copyright (C) 2025 Derek J. Clark <derekjohn.clark@gmail.com> */
+> -
+> -#ifndef _LENOVO_WMI_GAMEZONE_H_
+> -#define _LENOVO_WMI_GAMEZONE_H_
+> -
+> -enum gamezone_events_type {
+> -	LWMI_GZ_GET_THERMAL_MODE = 1,
+> -};
+> -
+> -enum thermal_mode {
+> -	LWMI_GZ_THERMAL_MODE_QUIET =	   0x01,
+> -	LWMI_GZ_THERMAL_MODE_BALANCED =	   0x02,
+> -	LWMI_GZ_THERMAL_MODE_PERFORMANCE = 0x03,
+> -	LWMI_GZ_THERMAL_MODE_EXTREME =	   0xE0, /* Ver 6+ */
+> -	LWMI_GZ_THERMAL_MODE_CUSTOM =	   0xFF,
+> -};
+> -
+> -#endif /* !_LENOVO_WMI_GAMEZONE_H_ */
+> diff --git a/drivers/platform/x86/lenovo/wmi-helpers.h b/drivers/platform/x86/lenovo/wmi-helpers.h
+> index 651a039228ed..ed7db3ebba6c 100644
+> --- a/drivers/platform/x86/lenovo/wmi-helpers.h
+> +++ b/drivers/platform/x86/lenovo/wmi-helpers.h
+> @@ -16,6 +16,19 @@ struct wmi_method_args_32 {
+>  	u32 arg1;
+>  };
+>  
+> +enum lwmi_event_type {
+> +	LWMI_GZ_GET_THERMAL_MODE = 0x01,
+> +};
+> +
+> +enum thermal_mode {
+> +	LWMI_GZ_THERMAL_MODE_NONE =	   0x00,
+> +	LWMI_GZ_THERMAL_MODE_QUIET =	   0x01,
+> +	LWMI_GZ_THERMAL_MODE_BALANCED =	   0x02,
+> +	LWMI_GZ_THERMAL_MODE_PERFORMANCE = 0x03,
+> +	LWMI_GZ_THERMAL_MODE_EXTREME =	   0xE0, /* Ver 6+ */
+> +	LWMI_GZ_THERMAL_MODE_CUSTOM =	   0xFF,
+> +};
+> +
+>  int lwmi_dev_evaluate_int(struct wmi_device *wdev, u8 instance, u32 method_id,
+>  			  unsigned char *buf, size_t size, u32 *retval);
+>  
+> diff --git a/drivers/platform/x86/lenovo/wmi-other.c b/drivers/platform/x86/lenovo/wmi-other.c
+> index f63e568a4e12..b4ed7af50a24 100644
+> --- a/drivers/platform/x86/lenovo/wmi-other.c
+> +++ b/drivers/platform/x86/lenovo/wmi-other.c
+> @@ -46,7 +46,6 @@
+>  
+>  #include "wmi-capdata.h"
+>  #include "wmi-events.h"
+> -#include "wmi-gamezone.h"
+>  #include "wmi-helpers.h"
+>  #include "../firmware_attributes_class.h"
+>  
+> 
