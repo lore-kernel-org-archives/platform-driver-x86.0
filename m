@@ -1,35 +1,35 @@
 Received: from smtp-1909.mail.infomaniak.ch (smtp-1909.mail.infomaniak.ch [185.125.25.9])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CEB07264FBD
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CEA9364AA4
 	for <platform-driver-x86@vger.kernel.org>; Sat,  9 May 2026 01:39:06 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.125.25.9
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1778290748; cv=none; b=ojltzHgsToFMHOGNCmPSIkz2mueMcPKCdx1FV9bQrs1ehg6qO6WZubSl59/HjdVpZfXk4+QDxwv7Qabdc6eTmqI4M4P/Om1xtk50utDzzrcSUpNoRKIQ748sP2nf+CbVGVpg6tQexuZPNy5UaXUF2aa2S+T0oPNF/fYAKZgxmxE=
+	t=1778290748; cv=none; b=fVmyvP1KDIXvL/GBsYJvuTqXx6A0EtL5vNdEstuY2M2/zCbepWKb+DneU6X0PoayiWvFH1slHms9iV9SyB0Joe2rmHQ1GvDy/VQW0bqQlO9XMEAW3bb2sKr1ldSXfJVXivfhdl749B8A8FRXJmu0YBHicXyKv2FcVAYobtX6/mA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1778290748; c=relaxed/simple;
-	bh=1yu+/UM6Y0GoI7lTTWpwIsOj8noQkvZeDhVOAffQz28=;
+	bh=dZBzxIAy7lF2ul65Go/tb0xNb8XJB86LNAGd9kZFD8E=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=G36pWTiW5e9tkCIYII+huHm6Umb3D7WxCzd6F9RMIzL78c/2q34qq2Bymln+tdvLcBUNb46r2cgYbaUAFgApMlpw9e6wRd8F0UBsT6TBaOuaGUbog+pS/LJBjyJtiQkx3Cc6jgv3jGgBDtiSQOUkeYCFo9k/w969aRT2XBi5sho=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=gibson.sh; spf=pass smtp.mailfrom=gibson.sh; dkim=pass (2048-bit key) header.d=gibson.sh header.i=@gibson.sh header.b=Kum6yGWT; arc=none smtp.client-ip=185.125.25.9
+	 MIME-Version; b=W4SeG6ZDex8tQ+flMotGzmQ5zT6Zsccvc2wVPRVl4Hb68Gha9rpwDqBzToAZK6SuXs3o/uz8SRZPRpEKHV1W5YYZKEfSD0XQIKJJbpUhoKTogLisjmuVxJcoWEerrak6moNXWySGedO8VEwtZrgRrFESzoSFuHK53gDGByQ+vd8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=gibson.sh; spf=pass smtp.mailfrom=gibson.sh; dkim=pass (2048-bit key) header.d=gibson.sh header.i=@gibson.sh header.b=BVudDNo5; arc=none smtp.client-ip=185.125.25.9
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=gibson.sh
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gibson.sh
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gibson.sh header.i=@gibson.sh header.b="Kum6yGWT"
-Received: from smtp-4-0000.mail.infomaniak.ch (smtp-4-0000.mail.infomaniak.ch [10.7.10.107])
-	by smtp-4-3000.mail.infomaniak.ch (Postfix) with ESMTPS id 4gC7jn31BMzZHB
+	dkim=pass (2048-bit key) header.d=gibson.sh header.i=@gibson.sh header.b="BVudDNo5"
+Received: from smtp-4-0001.mail.infomaniak.ch (unknown [IPv6:2001:1600:7:10::a6c])
+	by smtp-4-3000.mail.infomaniak.ch (Postfix) with ESMTPS id 4gC7jn32h8zZTH
 	for <platform-driver-x86@vger.kernel.org>; Sat,  9 May 2026 03:31:09 +0200 (CEST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=gibson.sh;
 	s=20260228; t=1778290269;
-	bh=a+WRQSJV9hBwuS2Du1AmZQPBdJRpx+moR5xxxAEURRk=;
+	bh=ihbvjxvr97zedo1FQaExWZwtDYT441IOd4ui/OieJps=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=Kum6yGWTUD6izp5cmKheJ7ciQZMN75B3AA5RX751ekqep6o2b1KJcO6ZCdKdsUVv/
-	 mE9oYKF9KO6fQRONlaoNaO/a8OTjMn7TNBFXA6AaHqe9Q0kTUJAvjSpM9nufRPK5x/
-	 zp8bK6ZoXQJ7UaTNNUmXphMh9tEZ7RqoEeQUijM494X8GVzauIyKlLYwjn9p/JdXtv
-	 5Ra74mD3CCtTwEmHz/Z1V7Z86vREVV41MBDSXnOFxuCmjRn9rP6Oz9ZM1Qwoat4f+M
-	 OX5WoTcE21liUkZiEd+aALgIx/ACEzbpi4kRo5Pa8pTPQ4hFZZC7LrO3navdghR7b/
-	 GUsfQ72TRA2kg==
-Received: from unknown by smtp-4-0000.mail.infomaniak.ch (Postfix) with ESMTPA id 4gC7jn05jwz7F9
+	b=BVudDNo5AIeCeGukudy6rJqwT33l+Ql4fP6X3sY+q/3F9jL3vFNNGvU+ElrRiUplF
+	 8lWeKv11qCbzwNF2zbpfcwDNouIKS1/fa1UFry5M2nHoGO8ErKdXux7ri7y+n9LbND
+	 nqWnkz6gHJiHyfpnAHks98tECCgygsJBFhJJk2IHBNP23rrPKsa2iwzGIx9ADpyt1G
+	 J/sptzdle3YQWDj9aPZQ/eNfYmyWMjVqKqbz8jzMoEhCx+vZX10c/oMDnFzZF9aIta
+	 NBT6kpCl0pfhF3e/0baRQjbxSoTkFud+5PeHdG8mqmYUn5mp/3/mPYTDmfin+FVPk2
+	 72q4mZwged5iw==
+Received: from unknown by smtp-4-0001.mail.infomaniak.ch (Postfix) with ESMTPA id 4gC7jn0FdJzmNJ
 	for <platform-driver-x86@vger.kernel.org>; Sat,  9 May 2026 03:31:08 +0200 (CEST)
 Received: from unknown by spiderdemon.horst.lan (DragonFly Mail Agent v0.13);
 	Sat, 09 May 2026 03:31:08 +0200
@@ -40,9 +40,9 @@ To: Shyam Sundar S K <Shyam-sundar.S-k@amd.com>,
 	platform-driver-x86@vger.kernel.org,
 	linux-kernel@vger.kernel.org
 Cc: Daniel Gibson <daniel@gibson.sh>
-Subject: [PATCH v2 4/5] Documentation/arch/x86/amd-debugging: Add example for reset register
-Date: Sat,  9 May 2026 03:31:03 +0200
-Message-ID: <20260509013105.816339-5-daniel@gibson.sh>
+Subject: [PATCH v2 5/5] Documentation/arch/x86/amd-debugging: Add section about delay_suspend
+Date: Sat,  9 May 2026 03:31:04 +0200
+Message-ID: <20260509013105.816339-6-daniel@gibson.sh>
 X-Mailer: git-send-email 2.48.1
 In-Reply-To: <20260509013105.816339-1-daniel@gibson.sh>
 References: <20260509013105.816339-1-daniel@gibson.sh>
@@ -55,31 +55,49 @@ MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 X-Infomaniak-Routing: alpha
 
-To me it wasn't clear how I get the information stored in the reset
-register, or how to identify the messages in the syslog mentioned there.
-
-Mario Limonciello sent me an example line which illustrates what to
-look for and I added it to the AMD debugging documentation, with a short
-explanation.
+must be updated with the actual commit IDs when they are merged
 
 Signed-off-by: Daniel Gibson <daniel@gibson.sh>
 ---
- Documentation/arch/x86/amd-debugging.rst | 5 +++++
- 1 file changed, 5 insertions(+)
+ Documentation/arch/x86/amd-debugging.rst | 25 ++++++++++++++++++++++++
+ 1 file changed, 25 insertions(+)
 
 diff --git a/Documentation/arch/x86/amd-debugging.rst b/Documentation/arch/x86/amd-debugging.rst
-index d92bf59d62c7..3176a1240fee 100644
+index 3176a1240fee..3af7799cca1a 100644
 --- a/Documentation/arch/x86/amd-debugging.rst
 +++ b/Documentation/arch/x86/amd-debugging.rst
-@@ -366,3 +366,8 @@ There are 6 classes of reasons for the reboot:
- This information is read by the kernel at bootup and printed into
- the syslog. When a random reboot occurs this message can be helpful
- to determine the next component to debug.
+@@ -249,6 +249,31 @@ state entry.
+ 
+ `commit 40b8c14936bd2 ("drm/amd/display: Disable unneeded hpd interrupts during dm_init") <https://git.kernel.org/torvalds/c/40b8c14936bd2>`_
+ 
++Keyboard and Lid Switch stop working after resume
++-------------------------------------------------
++On various variants of the Lenovo IdeaPad Slim 3 with Barcelo and Rembrandt CPUs
++the lid switch and keyboard, or at least the Fn/Multimedia keys, stopped working
++after resume, until the next reboot.
 +
-+For example, if bit 19 was set, you will get a message like this in the log on
-+next bootup::
++This was caused by buggy firmware having timing problems, the EC needed some idle
++time right before the CPU cores are suspended, or it got into an inconsistent state.
 +
-+  x86/amd: Previous system reset reason [0x00080000]: software wrote 0x6 to reset control register 0xCF9
++For laptops that are known to be affected this workaround is enabled
++automatically, to test this workaround on other machines you can set the
++``delay_suspend`` parameter of the ``amd_pmc`` module.
++
++If you need to set the ``delay_suspend`` parameter to fix your machine, please
++report this at platform-driver-x86@vger.kernel.org for it to be added to the
++list of devices that need this workaround, so in future kernel versions it's
++enabled automatically.
++
++Note that the current workaround isn't perfect: The problems can still happen
++if resume is triggered by a timer (wakealarm).
++
++`commit TODO ("platform/x86/amd/pmc: Delay suspend for some Lenovo Laptops") <https://git.kernel.org/torvalds/c/TODO>`_
++
++`commit TODO ("platform/x86/amd/pmc: Add delay_suspend module parameter") <https://git.kernel.org/torvalds/c/TODO>`_
++
+ Runtime power consumption issues
+ ================================
+ 
 -- 
 2.48.1
 
