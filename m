@@ -1,158 +1,294 @@
-Received: from relay15.grserver.gr (relay15.grserver.gr [46.62.234.254])
+Received: from mail.barrensea.org (mail.barrensea.org [198.12.121.168])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7B554254B18
-	for <platform-driver-x86@vger.kernel.org>; Sat,  9 May 2026 17:35:46 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=46.62.234.254
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8EB2E2FD695;
+	Sat,  9 May 2026 18:25:08 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.12.121.168
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1778348147; cv=none; b=BXVikAENjtISJp7hUIIC1zkYx6WA6Zpdw+Dwvxg39xVa7CdQXL4G5Jkl8uB66aTHd6aCgXj0AumnTMo9FzjTuYBW4hRsfAzbxcJRRbJefML694D526eyncDDUis39+5Ckt7/2GyVlwR296M0dRFqIvBxrK+3tq9HAbfWfWM+xG4=
+	t=1778351110; cv=none; b=p00WZF+onka9Q7XtM5DDS8PKGscz5IYB3uHdGAjti1IZTcSwXnSXkOe9/0KXwxCsYs6nCksBlI0hLOfqlHItJRbRf4s0fO+Kf8lCqWOrpXLQPbQBswSdipek1JyuYZ4h+c+nRcYoQEbZLU6win8nwwUCwI6wxxI19JvFSCX/btk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1778348147; c=relaxed/simple;
-	bh=l462U55PT64SV7/6J/PrglUYrWnvSBMER0UTA9BRUMI=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=HRAPRxVQtIKuHUQc6Dskrm6HrxwfQSgw4luzN6xfkS+oTbsXa2jbEemVQHvlTF6UyIrmep+QgSzDwF+BtM7qm0FdjaezIfVclSi2tmAbiehGizrOGZeiDCLEPHZtE8j0GfbvVqIenYyK/ZjERE8dyPAysB0uVVh2HjpLGGtUy+8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=antheas.dev; spf=pass smtp.mailfrom=antheas.dev; dkim=pass (2048-bit key) header.d=antheas.dev header.i=@antheas.dev header.b=CWGfsEj/; arc=none smtp.client-ip=46.62.234.254
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=antheas.dev
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=antheas.dev
+	s=arc-20240116; t=1778351110; c=relaxed/simple;
+	bh=+S7HabPIX49R1UDzADLVTCzUvTPWoGiXla3+YvngtvA=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=ZX47zHMt+eq4vabiPkPVMZ98Ton1x/33j6wj6a76tTYAgfMcYlTLDLLmYFOh+MKZi7nKo1mcQdkzQRv2m2uC70Y6S17dWcJpZNz/JlxH0iGA2JDi9pCMshyKHsrpoRamScV1kAXHecYZbTZIHC7SjcqJRMBAoriKPwK5YHIKlug=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=barrensea.org; spf=pass smtp.mailfrom=barrensea.org; dkim=pass (2048-bit key) header.d=barrensea.org header.i=@barrensea.org header.b=UarXK2i/; arc=none smtp.client-ip=198.12.121.168
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=barrensea.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=barrensea.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=antheas.dev header.i=@antheas.dev header.b="CWGfsEj/"
-Received: from relay15 (localhost [127.0.0.1])
-	by relay15.grserver.gr (Proxmox) with ESMTP id A3BA3407BD
-	for <platform-driver-x86@vger.kernel.org>; Sat,  9 May 2026 17:26:10 +0000 (UTC)
-Received: from linux3247.grserver.gr (linux3247.grserver.gr [213.158.90.240])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by relay15.grserver.gr (Proxmox) with ESMTPS id EFA9D407DF
-	for <platform-driver-x86@vger.kernel.org>; Sat,  9 May 2026 17:26:09 +0000 (UTC)
-Received: from mail-pl1-f177.google.com (mail-pl1-f177.google.com [209.85.214.177])
-	by linux3247.grserver.gr (Postfix) with ESMTPSA id 3284B200788
-	for <platform-driver-x86@vger.kernel.org>; Sat,  9 May 2026 20:26:09 +0300 (EEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=antheas.dev;
-	s=default; t=1778347569;
-	bh=aaVLGWdALPBEsCmykSE9FJJUaBWJ7tM3Snl5Lo8yqac=;
-	h=Received:From:Subject:To;
-	b=CWGfsEj/D/zzuBvM5kZL+yArITWJBGNsn283ZgPsa9qWao7ohiOOFtgBCcMCuqxTc
-	 yh6EryFWzHgFo8MqPZeLdoO1CcR18mwl97uCDPp7UCkEQYB+jMHyuGqOKuwV5RRZlD
-	 c0UR4V9yIdKdxoIP/GS1hflyImWaZrOPIZir8DIYDmj9Tx8fh53gYJYMaaqHQ8JiBy
-	 wv0ZFSE2RmBRI4thmZvuz/TsTEtfAfLh9dEgcba06EswPESBn+VXC6GLzLCza6YHOg
-	 JGLvnM/hoOKTv34pG2eOspskyEaH7KU3gR0kVNTTcmj1pA4yr9x1LIS+s5iLj5mjEE
-	 pMu9cuyFWPScQ==
-Authentication-Results: linux3247.grserver.gr;
-        spf=pass (sender IP is 209.85.214.177) smtp.mailfrom=lkml@antheas.dev smtp.helo=mail-pl1-f177.google.com
-Received-SPF: pass (linux3247.grserver.gr: connection is authenticated)
-Received: by mail-pl1-f177.google.com with SMTP id
- d9443c01a7336-2bab82d75fdso16520895ad.2
-        for <platform-driver-x86@vger.kernel.org>;
- Sat, 09 May 2026 10:26:09 -0700 (PDT)
-X-Forwarded-Encrypted: i=1;
- AFNElJ/+yI9Ib7jItsHVIUJz0K6EaTjGzX+twuzCxNfJthLa4diLCKASjug6Bw6RztpCaqsnN831iWtOkzAP5dCYLnNquAIH@vger.kernel.org
-X-Gm-Message-State: AOJu0Yw0Az+XMuwLOsxjgHsYypzozkxQEvZGELS43n/4+A825YMiIROx
-	OSA/dZdgXvPYwGf2yTUVykjdMNEsSdqWlnaDqS3zXENfzmtMc9zkhG5kWzEerpmEaE/wlsNWE8s
-	K/3wWVe2BfuXExC/b7VKoghXEjHjMZuA=
-X-Received: by 2002:a17:903:1a28:b0:2b9:f8e9:70e2 with SMTP id
- d9443c01a7336-2bc7a990b6emr31487655ad.8.1778347567646; Sat, 09 May 2026
- 10:26:07 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=barrensea.org header.i=@barrensea.org header.b="UarXK2i/"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=barrensea.org;
+	s=mail; t=1778350768;
+	bh=+S7HabPIX49R1UDzADLVTCzUvTPWoGiXla3+YvngtvA=;
+	h=From:To:Cc:Subject;
+	b=UarXK2i/FSBWwthAv+Ofi9HSLDnIJWoa3+R6Y6jMST4PmYUP66yMNfT72Se2KOVXw
+	 7MhcI5tSFibnsmjylZcwgbfB5uIaoj1F7N/Fwru3sofWHamF08N0T29dKr0TOqxRGl
+	 G1YJQ5Pk9x02y/fe7cMpjUGQgk1gOb6zqhWLJLbRLfEyxFDT0uBnhhYTZ55I/Qbea5
+	 Nd77/6iX1y+Ncg4MUT1c6+Glx7rp5TyraO0EksNcxCnd3yx9sz/lsLpQg9GqaoO0r8
+	 rgrPiww+KVVw5ciCfwcTEaPwRjrzh9LbWuJPzBFoLUNe/G/VwPhGAa58G7fKsjr87+
+	 JeaZ77/CsiVfw==
+From: Donjuanplatinum <donplat@barrensea.org>
+To: W_Armin@gmx.de
+Cc: hansg@kernel.org,
+	ilpo.jarvinen@linux.intel.com,
+	platform-driver-x86@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	Donjuanplatinum <donplat@barrensea.org>
+Subject: [PATCH] platform/x86: tuxedo-laptop: Add MECHREVO WUJIE Series keyboard backlight
+Date: Sun, 10 May 2026 02:19:05 +0800
+Message-ID: <20260509181905.9060-1-donplat@barrensea.org>
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250511204427.327558-1-lkml@antheas.dev>
- <20260508184104.623016-1-derekjohn.clark@gmail.com>
-In-Reply-To: <20260508184104.623016-1-derekjohn.clark@gmail.com>
-From: Antheas Kapenekakis <lkml@antheas.dev>
-Date: Sat, 9 May 2026 19:25:54 +0200
-X-Gmail-Original-Message-ID: 
- <CAGwozwFXDP+nQO8bkW01t_iSOYQ6OUQkfv35ULfHrnLjVoFZvg@mail.gmail.com>
-X-Gm-Features: AVHnY4JBi-EFhXFTQHQXwlf5sV1Obpy2Ad4iTU3cNjmImPpDtrJiKAc9dKkWupo
-Message-ID: 
- <CAGwozwFXDP+nQO8bkW01t_iSOYQ6OUQkfv35ULfHrnLjVoFZvg@mail.gmail.com>
-Subject: Re: [PATCH v1 00/10] platform/x86: msi-wmi-platform: Add fan
- curves/platform profile/tdp/battery limiting
-To: "Derek J. Clark" <derekjohn.clark@gmail.com>
-Cc: W_Armin@gmx.de, corbet@lwn.net, hdegoede@redhat.com,
-	ilpo.jarvinen@linux.intel.com, jdelvare@suse.com, kuurtb@gmail.com,
-	linux-doc@vger.kernel.org, linux-hwmon@vger.kernel.org,
-	linux-kernel@vger.kernel.org, linux@roeck-us.net,
-	platform-driver-x86@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-X-PPP-Message-ID: 
- <177834756942.2678409.4588365212368582963@linux3247.grserver.gr>
-X-PPP-Vhost: antheas.dev
-X-Virus-Scanned: clamav-milter 1.4.3 at linux3247.grserver.gr
-X-Virus-Status: Clean
+Content-Transfer-Encoding: 8bit
 
-On Fri, 8 May 2026 at 20:41, Derek J. Clark <derekjohn.clark@gmail.com> wrote:
->
-> >This draft patch series brings into parity the msi-wmi-platform driver with
-> >the MSI Center M Windows application for the MSI Claw (all models).
-> >Unfortunately, MSI Center M and this interface do not have a discovery API,
-> >necessitating the introduction of a quirk system.
-> >
-> >While this patch series is fully functional and tested, there are still
-> >some issues that need to be addressed:
-> >  - Armin notes we need to disable fan curve support by default and quirk
-> >    it as well, as it is not supported on all models. However, the way
-> >    PWM enable ops work, this makes it a bit difficult, so I would like
-> >    some suggestions on how to rework this.
-> >  - It turns out that to fully disable the fan curve, we have to restore
-> >    the default fan values. This is also what is done on the OEM software.
-> >    For this, the last patch in the series is used, which is a bit dirty.
-> >
-> >Sleep was tested with all values being preserved during S0iX (platform
-> >profile, fan curve, PL1/PL2), so we do not need suspend/resume hooks, at
-> >least for the Claw devices.
-> >
-> >For PL1/PL2, we use firmware-attributes. So for that I +cc Kurt since if
-> >his new high level interface is merged beforehand, we can use that instead.
-> >
->
-> Hi Antheas,
->
-> It seems this series is stalled for 3 days shy of a year now. I have an
-> interest in getting this across the finish line. Will you be continuing
-> development? If not, I will take what you've started here and finish out
-> the remaining nits, keeping your original attribution of course.
+Add support for the RGB keyboard backlight found on the MECHREVO WUJIE
+Series laptop (WUJIE Series-X5SP4NAG), which uses the same
+Clevo/Tongfang EC platform as supported TUXEDO devices.
 
-Hi,
-I plan to get back to this after the standby rfc is in a good place.
-There are some issues with this series that need resolving, MSI
-firmware is a lot more varied and unstable than other OEMs which make
-it hard to pin down to a defined ABI.
+The keyboard backlight is controlled from three EC registers for the RGB
+color channels (EC_ADDR_RGB_{RED,GREEN,BLUE}) and EC_ADDR_KBD_STATUS
+for the global brightness level.  The EC firmware encodes the brightness
+in KBD_BRIGHTNESS (bits [7:5] of EC_ADDR_KBD_STATUS) as a 3-bit field,
+but only responds correctly to levels 0-4; writing values 5-7 causes the
+EC to immediately reset the backlight to level 0.  This behaviour was
+identified by observing that the Windows driver (MECHREVO Center2)
+stores only values in the range [0, 4] for both AC and DC brightness, and
+confirmed on hardware by testing that brightness recovers after the write
+sequence is corrected.  KBD_MAX_BRIGHTNESS_LEVEL enforces this limit and
+documents the reason, so future contributors do not reintroduce the bug.
 
-For V2, we'd need to look into testing into at least some laptops to
-verify shift mode behavior
+The backlight is exposed as a multicolor LED class device with the
+"kbd_backlight" function.  Feature detection is performed at probe time
+by reading the RGB_KEYBOARD capability bit from EC_ADDR_SUPPORT_2, so
+the keyboard LED is only registered when the EC reports it as present.
 
-Antheas
+Signed-off-by: Donjuanplatinum <donplat@barrensea.org>
+---
+ drivers/platform/x86/uniwill/uniwill-acpi.c | 153 ++++++++++++++++++++
+ 1 file changed, 153 insertions(+)
 
-> Cheers,
-> Derek
->
-> >Antheas Kapenekakis (8):
-> >  platform/x86: msi-wmi-platform: Add unlocked msi_wmi_platform_query
-> >  platform/x86: msi-wmi-platform: Add quirk system
-> >  platform/x86: msi-wmi-platform: Add platform profile through shift
-> >    mode
-> >  platform/x86: msi-wmi-platform: Add PL1/PL2 support via firmware
-> >    attributes
-> >  platform/x86: msi-wmi-platform: Add charge_threshold support
-> >  platform/x86: msi-wmi-platform: Drop excess fans in dual fan devices
-> >  platform/x86: msi-wmi-platform: Update header text
-> >  platform/x86: msi-wmi-platform: Restore fan curves on PWM disable and
-> >    unload
-> >
-> >Armin Wolf (2):
-> >  platform/x86: msi-wmi-platform: Use input buffer for returning result
-> >  platform/x86: msi-wmi-platform: Add support for fan control
-> >
-> > .../wmi/devices/msi-wmi-platform.rst          |   26 +
-> > drivers/platform/x86/Kconfig                  |    3 +
-> > drivers/platform/x86/msi-wmi-platform.c       | 1181 ++++++++++++++++-
-> > 3 files changed, 1156 insertions(+), 54 deletions(-)
-> >
-> >
-> >base-commit: 62b1dcf2e7af3dc2879d1a39bf6823c99486a8c2
->
+diff --git a/drivers/platform/x86/uniwill/uniwill-acpi.c b/drivers/platform/x86/uniwill/uniwill-acpi.c
+index 945df5092..e0986542a 100644
+--- a/drivers/platform/x86/uniwill/uniwill-acpi.c
++++ b/drivers/platform/x86/uniwill/uniwill-acpi.c
+@@ -230,6 +230,17 @@
+ #define KBD_TURBO_LEVEL_MASK		GENMASK(3, 2)
+ #define KBD_APPLY			BIT(4)
+ #define KBD_BRIGHTNESS			GENMASK(7, 5)
++/*
++ * The EC brightness field (KBD_BRIGHTNESS, bits [7:5] of EC_ADDR_KBD_STATUS)
++ * is a 3-bit value but the EC firmware only responds correctly to levels 0-4.
++ * Writing values 5-7 causes the EC to reset the backlight to level 0.
++ *
++ * This limit has only been verified on the MECHREVO WUJIE Series. If other
++ * devices with RGB keyboard support (UNIWILL_FEATURE_KBD_BACKLIGHT) are added
++ * in the future and have a different valid range, this constant should be moved
++ * into struct uniwill_device_descriptor as a per-device field.
++ */
++#define KBD_MAX_BRIGHTNESS_LEVEL	4
+ 
+ #define EC_ADDR_FAN_CTRL		0x078E
+ #define FAN3P5				BIT(1)
+@@ -327,6 +338,7 @@
+ #define UNIWILL_FEATURE_SECONDARY_FAN		BIT(8)
+ #define UNIWILL_FEATURE_NVIDIA_CTGP_CONTROL	BIT(9)
+ #define UNIWILL_FEATURE_USB_C_POWER_PRIORITY	BIT(10)
++#define UNIWILL_FEATURE_KBD_BACKLIGHT		BIT(11)
+ 
+ enum usb_c_power_priority_options {
+ 	USB_C_POWER_PRIORITY_CHARGING = 0,
+@@ -348,6 +360,9 @@ struct uniwill_data {
+ 	struct mutex led_lock;		/* Protects writes to the lightbar registers */
+ 	struct led_classdev_mc led_mc_cdev;
+ 	struct mc_subled led_mc_subled_info[LED_CHANNELS];
++	struct mutex kbd_led_lock;	/* Protects writes to keyboard LED registers */
++	struct led_classdev_mc kbd_led_mc_cdev;
++	struct mc_subled kbd_led_mc_subled_info[LED_CHANNELS];
+ 	struct mutex input_lock;	/* Protects input sequence during notify */
+ 	struct input_dev *input_device;
+ 	struct notifier_block nb;
+@@ -538,6 +553,10 @@ static bool uniwill_writeable_reg(struct device *dev, unsigned int reg)
+ 	case EC_ADDR_CTGP_DB_TPP_OFFSET:
+ 	case EC_ADDR_CTGP_DB_DB_OFFSET:
+ 	case EC_ADDR_USB_C_POWER_PRIORITY:
++	case EC_ADDR_RGB_RED:
++	case EC_ADDR_RGB_GREEN:
++	case EC_ADDR_RGB_BLUE:
++	case EC_ADDR_KBD_STATUS:
+ 		return true;
+ 	default:
+ 		return false;
+@@ -577,6 +596,11 @@ static bool uniwill_readable_reg(struct device *dev, unsigned int reg)
+ 	case EC_ADDR_CTGP_DB_TPP_OFFSET:
+ 	case EC_ADDR_CTGP_DB_DB_OFFSET:
+ 	case EC_ADDR_USB_C_POWER_PRIORITY:
++	case EC_ADDR_SUPPORT_2:
++	case EC_ADDR_RGB_RED:
++	case EC_ADDR_RGB_GREEN:
++	case EC_ADDR_RGB_BLUE:
++	case EC_ADDR_KBD_STATUS:
+ 		return true;
+ 	default:
+ 		return false;
+@@ -1223,6 +1247,119 @@ static int uniwill_hwmon_init(struct uniwill_data *data)
+ 	return PTR_ERR_OR_ZERO(hdev);
+ }
+ 
++static const unsigned int uniwill_kbd_led_channel_to_reg[LED_CHANNELS] = {
++	EC_ADDR_RGB_RED,
++	EC_ADDR_RGB_GREEN,
++	EC_ADDR_RGB_BLUE,
++};
++
++static int uniwill_kbd_led_brightness_set(struct led_classdev *led_cdev,
++					 enum led_brightness brightness)
++{
++	struct led_classdev_mc *led_mc_cdev = lcdev_to_mccdev(led_cdev);
++	struct uniwill_data *data = container_of(led_mc_cdev, struct uniwill_data, kbd_led_mc_cdev);
++	unsigned int value;
++	int ret;
++
++	ret = led_mc_calc_color_components(led_mc_cdev, brightness);
++	if (ret < 0)
++		return ret;
++
++	guard(mutex)(&data->kbd_led_lock);
++
++	for (int i = 0; i < LED_CHANNELS; i++) {
++		value = min(LED_MAX_BRIGHTNESS, data->kbd_led_mc_subled_info[i].brightness);
++		ret = regmap_write(data->regmap, uniwill_kbd_led_channel_to_reg[i], value);
++		if (ret < 0)
++			return ret;
++	}
++
++	value = FIELD_PREP(KBD_BRIGHTNESS,
++			   DIV_ROUND_CLOSEST(brightness * KBD_MAX_BRIGHTNESS_LEVEL,
++					     LED_MAX_BRIGHTNESS)) | KBD_APPLY;
++	ret = regmap_update_bits(data->regmap, EC_ADDR_KBD_STATUS,
++				 KBD_BRIGHTNESS | KBD_APPLY, value);
++	if (ret < 0)
++		return ret;
++
++	return regmap_write_bits(data->regmap, EC_ADDR_TRIGGER, RGB_APPLY_COLOR, RGB_APPLY_COLOR);
++}
++
++static int uniwill_kbd_led_probe(struct uniwill_data *data)
++{
++	unsigned int value;
++	int ret;
++
++	ret = regmap_read(data->regmap, EC_ADDR_SUPPORT_2, &value);
++	if (ret < 0)
++		return ret;
++
++	if (!(value & RGB_KEYBOARD))
++		return 0;
++
++	data->features |= UNIWILL_FEATURE_KBD_BACKLIGHT;
++
++	return 0;
++}
++
++static int uniwill_kbd_led_init(struct uniwill_data *data)
++{
++	struct led_init_data init_data = {
++		.devicename = DRIVER_NAME,
++		.default_label = "multicolor:" LED_FUNCTION_KBD_BACKLIGHT,
++		.devname_mandatory = true,
++	};
++	const unsigned int color_indices[3] = {
++		LED_COLOR_ID_RED,
++		LED_COLOR_ID_GREEN,
++		LED_COLOR_ID_BLUE,
++	};
++	unsigned int value;
++	int ret;
++
++	if (!uniwill_device_supports(data, UNIWILL_FEATURE_KBD_BACKLIGHT))
++		return 0;
++
++	ret = devm_mutex_init(data->dev, &data->kbd_led_lock);
++	if (ret < 0)
++		return ret;
++
++	data->kbd_led_mc_cdev.led_cdev.color = LED_COLOR_ID_MULTI;
++	data->kbd_led_mc_cdev.led_cdev.max_brightness = LED_MAX_BRIGHTNESS;
++	data->kbd_led_mc_cdev.led_cdev.flags = LED_REJECT_NAME_CONFLICT;
++	data->kbd_led_mc_cdev.led_cdev.brightness_set_blocking = uniwill_kbd_led_brightness_set;
++
++	ret = regmap_read(data->regmap, EC_ADDR_KBD_STATUS, &value);
++	if (ret < 0)
++		return ret;
++
++	data->kbd_led_mc_cdev.led_cdev.brightness =
++		DIV_ROUND_CLOSEST(FIELD_GET(KBD_BRIGHTNESS, value) * LED_MAX_BRIGHTNESS,
++				  KBD_MAX_BRIGHTNESS_LEVEL);
++
++	for (int i = 0; i < LED_CHANNELS; i++) {
++		data->kbd_led_mc_subled_info[i].color_index = color_indices[i];
++
++		ret = regmap_read(data->regmap, uniwill_kbd_led_channel_to_reg[i], &value);
++		if (ret < 0)
++			return ret;
++
++		value = min(LED_MAX_BRIGHTNESS, value);
++		ret = regmap_write(data->regmap, uniwill_kbd_led_channel_to_reg[i], value);
++		if (ret < 0)
++			return ret;
++
++		data->kbd_led_mc_subled_info[i].intensity = value;
++		data->kbd_led_mc_subled_info[i].channel = i;
++	}
++
++	data->kbd_led_mc_cdev.subled_info = data->kbd_led_mc_subled_info;
++	data->kbd_led_mc_cdev.num_colors = LED_CHANNELS;
++
++	return devm_led_classdev_multicolor_register_ext(data->dev, &data->kbd_led_mc_cdev,
++							 &init_data);
++}
++
+ static const unsigned int uniwill_led_channel_to_bat_reg[LED_CHANNELS] = {
+ 	EC_ADDR_LIGHTBAR_BAT_RED,
+ 	EC_ADDR_LIGHTBAR_BAT_GREEN,
+@@ -1654,6 +1791,10 @@ static int uniwill_probe(struct platform_device *pdev)
+ 			return ret;
+ 	}
+ 
++	ret = uniwill_kbd_led_probe(data);
++	if (ret < 0)
++		return ret;
++
+ 	ret = uniwill_battery_init(data);
+ 	if (ret < 0)
+ 		return ret;
+@@ -1662,6 +1803,10 @@ static int uniwill_probe(struct platform_device *pdev)
+ 	if (ret < 0)
+ 		return ret;
+ 
++	ret = uniwill_kbd_led_init(data);
++	if (ret < 0)
++		return ret;
++
+ 	ret = uniwill_hwmon_init(data);
+ 	if (ret < 0)
+ 		return ret;
+@@ -2193,6 +2338,14 @@ static const struct dmi_system_id uniwill_dmi_table[] __initconst = {
+ 		},
+ 		.driver_data = &tux_featureset_3_nvidia_descriptor,
+ 	},
++	{
++		.ident = "MECHREVO WUJIE Series",
++		.matches = {
++			DMI_EXACT_MATCH(DMI_SYS_VENDOR, "MECHREVO"),
++			DMI_EXACT_MATCH(DMI_BOARD_NAME, "WUJIE Series-X5SP4NAG"),
++		},
++		.driver_data = &tux_featureset_3_descriptor,
++	},
+ 	{
+ 		.ident = "TUXEDO Polaris 15 Gen1 AMD",
+ 		.matches = {
+-- 
+2.53.0
 
