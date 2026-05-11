@@ -1,216 +1,236 @@
-Received: from SA9PR02CU001.outbound.protection.outlook.com (mail-southcentralusazon11013010.outbound.protection.outlook.com [40.93.196.10])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.17])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 63D5036E494;
-	Mon, 11 May 2026 11:20:32 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.93.196.10
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1778498433; cv=fail; b=FIvC8eNBOmXasvAlWpwtklLQa3xl/enkJl5Anhrd3hZSskADMqqxHY1aUrCzikCOwOf6nT68louQsN3qEN3uztN3zhC58/8oY367223j5fdMRYj2z3vR4cmmVW3cbIFz5Ud/IWaeFhk5RByE9TX5z+W1GpdIEgxpXonbceSCVfM=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1778498433; c=relaxed/simple;
-	bh=7jGmI3Vu5Tg9+daggFnhtrnirN8bIbcKdCXGv59j8Q4=;
-	h=Message-ID:Date:Subject:To:Cc:References:From:In-Reply-To:
-	 Content-Type:MIME-Version; b=SegWC620pSZXxqBZsTBh5sRraVNx+kkgvw57wu+gmQKfIFNST8V6AcVJgap9F8iGMd8h6+puYuUcisyccHTNuXKhQ+w+l6m1eR1LAilq5vCK8uxcTjqYdqFkfAAC9dPZydZTivrqt9m9lBD4XwUrHVQgX1aevo3XXaPeBD2Zjv4=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=Qc+2qR8s; arc=fail smtp.client-ip=40.93.196.10
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com
-Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=amd.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 47E3236E493;
+	Mon, 11 May 2026 11:45:54 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.17
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1778499958; cv=none; b=DdHWzIasyBBCE4TJApqjPpdZUq8c5OyuR0sPoaRMPbcR0sdAM1nHf278eOOl2iTwpRMqcYm87qx+iUYHYaUT4whC8Kq84UcKqjCfqWUII1YrQyubn6tDDWb2nvm8SRDyrb8D+ZVcztkcneoUkMxYksnqgaPx2ShPDrirNAdCpzQ=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1778499958; c=relaxed/simple;
+	bh=//PWO9bSt6pd8D+BEVMViunOs5sYe41wKax63Q2vup4=;
+	h=From:Date:To:cc:Subject:In-Reply-To:Message-ID:References:
+	 MIME-Version:Content-Type; b=hSTQ7tz2Fv6arNZtsCpPFw64K6axYxdbOCfymkVFRPjC+k7t67o6mpN0U1RaJkVGLmNC3z2QBZsTD+tp5MInYeDLUIx8PhW7/vaxw2lallYkZpXCqRnBQJ5DS5uR9WD4HiFlvFMYhplYBlMSBqrUQldZw3ijXCrUCfpCGSQxTSc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=pass smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=mQPzkWec; arc=none smtp.client-ip=192.198.163.17
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="Qc+2qR8s"
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=qUkSSnNDSyGYYNoACiPatUKZZJuYy3tzSv38UkOapz6XX+TGtsde6dumxjHr6iz4HCjpLkPTkUYKn4xoBfm7qKxtYfRdzVjFGIX8Q/WWez4ktrVKMNWe1oZW22fDuSi4O7HfdXOerD+SZg3kOia0TDBCqJUGLNn/wVmAigkYgwlVD6anH1dObaqaM131W9O34XR4WodfaTyQX48LlRbYuLRyfuWr7XuY4wPURJIr5hAhg8B/YTCFNcZ/Y7fuL/IZmtQQeE0A0t/tPdzw7vnP+e5JHsJBk5wG1jxiyNSZezOaxNZ2uyU8MGTf663e6Bz42W45qRxjMDwtIDltinlTCg==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=5vEyQ9hqpnLXAEbizicIc/pa2uDDZUm7AjhE5IEJ0Lk=;
- b=kb6PKreLou59cP1lgsZKGN4JYOq2xvZCGZI+7qTsVyS+74vNiqrlLO1F2qioWN+DKBTxY5lTp6jUr88ewDjuJ4quNkzsfhpKAEV55PSstDvMb0SaKcYvqLaLf94N8FDhB9yK4v7gNXzhGeWpECTJ58V3fQup8JG2rv3PaUxXjVSqmps9I3tKLrEJbVaBSoEAdz/SGiEzhCz7I4LeR1IJx9DWxPnc8fDTgp1VrrcjmN2pIIeq5Kq6UrIllMUMtdP6ijT8LFRw2/YRRPiTdAga/u5XlQy87zxLOyMmAD1PjAl1YbTPeq6IXD+aqi5Bb1cw91DmKRvIhR9FijVyIkLUiA==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=amd.com; dmarc=pass action=none header.from=amd.com; dkim=pass
- header.d=amd.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=5vEyQ9hqpnLXAEbizicIc/pa2uDDZUm7AjhE5IEJ0Lk=;
- b=Qc+2qR8s+fROzhfHlFru8iLgvaogdpANLVDGyjOwqoZ7vb+ge/DcW+3fluX/UgtgZij2lm/cHKCq9aKQlS+0Yj5cm0hehYajDslx02qrHZz7ubRUcPbA1rGRIlWJFDBmiHPS/jW4bDTg2mD+4p7g+u7XW3OlTnfPppD28EHXgh0=
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=amd.com;
-Received: from PH8PR12MB7325.namprd12.prod.outlook.com (2603:10b6:510:217::19)
- by DS7PR12MB6047.namprd12.prod.outlook.com (2603:10b6:8:84::22) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.9891.23; Mon, 11 May
- 2026 11:20:29 +0000
-Received: from PH8PR12MB7325.namprd12.prod.outlook.com
- ([fe80::8024:a7ee:b29c:a4fc]) by PH8PR12MB7325.namprd12.prod.outlook.com
- ([fe80::8024:a7ee:b29c:a4fc%6]) with mapi id 15.20.9891.021; Mon, 11 May 2026
- 11:20:28 +0000
-Message-ID: <0fbf4355-4ba0-4cc9-908d-001747bcfc67@amd.com>
-Date: Mon, 11 May 2026 16:50:22 +0530
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v2 0/7] AMD HSMP: metrics table improvements and Family
- 1Ah Model 50h-5Fh support
-To: Muralidhara M K <muralidhara.mk@amd.com>, ilpo.jarvinen@linux.intel.com,
- gregkh@linuxfoundation.org, rafael@kernel.org
-Cc: platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org,
- driver-core@lists.linux.dev
-References: <20260427155129.545327-1-muralidhara.mk@amd.com>
-Content-Language: en-US
-From: "M K, Muralidhara" <muralimk@amd.com>
-In-Reply-To: <20260427155129.545327-1-muralidhara.mk@amd.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: MA5P287CA0249.INDP287.PROD.OUTLOOK.COM
- (2603:1096:a01:1ae::15) To PH8PR12MB7325.namprd12.prod.outlook.com
- (2603:10b6:510:217::19)
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="mQPzkWec"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1778499955; x=1810035955;
+  h=from:date:to:cc:subject:in-reply-to:message-id:
+   references:mime-version;
+  bh=//PWO9bSt6pd8D+BEVMViunOs5sYe41wKax63Q2vup4=;
+  b=mQPzkWecRK5rnRtAbnZYq+KC12a6grJ3SbsvWIpzfGsELQw5Vkx5W3G9
+   SFBs3z/InIxplxMxmyqyFMNWu4Mrvq5qKoj3sY1x5XIiwqbuG6dfFe16T
+   BHXH9M1z6J3a869ASg/fdJtP7X/6JsMtDoseHgAx4K0n6ULmiwdJcu0cL
+   XSv2CY/ja3b4ThiT/9kTdYznVMaXwmdEjY6xLYKMiiJ5tzJG6NV4AR47B
+   +IfewVcFpPW5zjHb2HZrrnV1/afHgUjk+0JwqWBrirDAackATdD0DQbyt
+   Fj8uNq9QvSXGtZ1OU8wbXLx8ShzZLi+cQd4xW6LBNLreJD8tcpY6KVjYW
+   w==;
+X-CSE-ConnectionGUID: CxTEHMhySSG5kNqSPcoA9Q==
+X-CSE-MsgGUID: dp08DTLNTeyprYlzXLdf6w==
+X-IronPort-AV: E=McAfee;i="6800,10657,11782"; a="79246188"
+X-IronPort-AV: E=Sophos;i="6.23,228,1770624000"; 
+   d="scan'208";a="79246188"
+Received: from fmviesa007.fm.intel.com ([10.60.135.147])
+  by fmvoesa111.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 11 May 2026 04:45:54 -0700
+X-CSE-ConnectionGUID: QgF1HBKAT4yD6CJZG60/PQ==
+X-CSE-MsgGUID: JFbduY3AQLCS2d7O+vLmrA==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.23,228,1770624000"; 
+   d="scan'208";a="234374905"
+Received: from ijarvine-mobl1.ger.corp.intel.com (HELO localhost) ([10.245.245.28])
+  by fmviesa007-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 11 May 2026 04:45:50 -0700
+From: =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
+Date: Mon, 11 May 2026 14:45:46 +0300 (EEST)
+To: "Derek J. Clark" <derekjohn.clark@gmail.com>
+cc: Hans de Goede <hansg@kernel.org>, Mark Pearson <mpearson-lenovo@squebb.ca>, 
+    Armin Wolf <W_Armin@gmx.de>, Jonathan Corbet <corbet@lwn.net>, 
+    Rong Zhang <i@rong.moe>, Kurt Borja <kuurtb@gmail.com>, 
+    "Pierre-Loup A . Griffais" <pgriffais@valvesoftware.com>, 
+    =?ISO-8859-15?Q?N=EDcolas_F_=2E_R_=2E_A_=2E_Prado?= <nfraprado@collabora.com>, 
+    marshall@shzj.cc, hyacinth@shzj.cc, platform-driver-x86@vger.kernel.org, 
+    LKML <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH v12 00/16] lenovo-wmi: Add fixes and enhancement
+In-Reply-To: <20260510042546.436874-1-derekjohn.clark@gmail.com>
+Message-ID: <ef1b3296-aec4-56ed-4f93-13ac37515c63@linux.intel.com>
+References: <20260510042546.436874-1-derekjohn.clark@gmail.com>
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: PH8PR12MB7325:EE_|DS7PR12MB6047:EE_
-X-MS-Office365-Filtering-Correlation-Id: cebcac0f-8a3c-42f7-d840-08deaf4f4e3a
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam:
-	BCL:0;ARA:13230040|1800799024|376014|366016|3023799003|11063799002|56012099003|18002099003|18092099006|22082099003;
-X-Microsoft-Antispam-Message-Info:
-	Z8JVBNJ2PoiWXQJUyiiUU8naCrMksSp0y70i+Uz2Qrnj/HOv8/UvayrdZzpd6sKOdHptuSvIil8EXeEmTBx+FrY5IO1HVv0jP/hRpCj6SP25VE0LtLeB+KCQVLcYHWzrxLSTV2nPcQxQjl2NaQPgSw5nYlRLEq0WU+DNqULHo17yYbWPZUdHppVi8lUPOicB7KfG0xzKJccqZu0WghhiWck1g2QnY8tC+Ncr6a9Rt4g4fZAO3i4BtRvg+eRUnFp2yc5nnVhxAho8Nghwm/yxeQ6uX4n5adsD7i2crugfaMwBwGksJS6KW4xc5KC0Rnu3QGHZPslMu8PqbFqBZxRfV5FFlXcKXf79EhNenCxais4AJ356qA57qpkbJKuS4XlNPtGtwldk7AErmGTuZsRtr5w8EfD6rk7ZPGqfDl4SQXUiErzzhocr+1cAodfvV0xKnTt2+35UIc9NXUL0kSXhPS1e3gVQFmbBXjsEQYZgNn7pDUpvaSHg4Am9enn+phmDTIihPr/KmkDbrRZkPdrx+IDC869u2s5KRMABRBPsBs/sTPhLj2fHX0RW9wXRN01LnO/HwTDVmYEVfKrXzUM7QVHLMnziPjRkb0XbPqhbeyh0Nihkd9EeGjqrnI82iwJqqQ9dxHLSNkKpyeYrDLUUa8AYjHAJ9e0HKB/dcmyqGPH4zeCVLMYzx7wG10OXlpeMC0GZb1uPfrq4RLFpagyvwA==
-X-Forefront-Antispam-Report:
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:PH8PR12MB7325.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(1800799024)(376014)(366016)(3023799003)(11063799002)(56012099003)(18002099003)(18092099006)(22082099003);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0:
-	=?utf-8?B?eW1idW1LLysvZHdTbkRzbmxnL0hic1RYOG1QeFQzakxGZ2tabDFiaXdFRUNa?=
- =?utf-8?B?cVFkK2s3Sk5iZ2hOc1VVMlBhQWFETlhrQnJ0eEx0U29razhQSG4yeHFldkE3?=
- =?utf-8?B?WWRzMkt0RTZpSC9TR2pRb2JLSHZGcGpZTFNPa0tuS29BenV0QlRPK21rN1dh?=
- =?utf-8?B?V0gzRExFUlc3ellxNEUxNlIxTGZVREErN001R1FZZi9FS2VJK0VVaWt5VWUv?=
- =?utf-8?B?WE9vaXFqUC9hbXYzRkhidlV2dXZ4Sm9RWUZhUERrakhWanhIZHZZVHI1UUI5?=
- =?utf-8?B?WHpCYnRLN2Y4YkVGSG9sZkdGNjZ2TFJoS0tFTzBxcFVhVFdyMjBWQWsrTWpp?=
- =?utf-8?B?NnJGdGs3U0pYa2NFNCtSK0dqTmJBbnM3NEZHZkVVS01GMitRVHhrdjhqMFdG?=
- =?utf-8?B?RzNhMzRmMWh6SjlNeS9KbTZybm9pYUQwQklWSmFIYTJHZjM1WlVBaXk4dDVk?=
- =?utf-8?B?eVlIaDhqZzVRU01JaGhRMklqZyt4bGg1V2t5QyswUmx4WW9tZ2VraHRFZEdE?=
- =?utf-8?B?T3h1czFLMmk1TnNwbzdxQzgzOHRaMldWMjNENVJic3l5YTJ6cVhPV01qV0hv?=
- =?utf-8?B?Mld2TFJSL3djdElBQ1JoTXNYbUtKV0JLNXZTU0dqVkpkVWdSaDE2TGhwU2Vv?=
- =?utf-8?B?V1hzUVI2eUVOOFZzaCsyUXlXRXowNWczdFVDT3VhRzVoUmxUeTdOZ3FwZjhS?=
- =?utf-8?B?cDhFWXNyMUxiRkdaaTRHdFppQ24yTkJoN1phcExKNnVLbVYzdUZMdFBhMk85?=
- =?utf-8?B?bU1yb0YrOUJuSW5LK0gyQU10bWNaRWVOOGVMMkdFc1lSU2FaL09OUXgyWTB3?=
- =?utf-8?B?R0ErdDRnWlBaTUpuMDBQZUVQMHltbFoxMWM4WWtmQzh3Q25Od3RrT0ZBQ3RP?=
- =?utf-8?B?MnBNUlNKdU9ZWXVISUZRdkhhdG8wMGNpSnE3UkhPb091L3I0bjlnbjlyeU8y?=
- =?utf-8?B?SVJWWERMZS9MdzVRZGFvcjI3MVlGTGUxUGlkQVlMN3RRUkxHMzJIWXFwcWRt?=
- =?utf-8?B?cFpmQzgyNnFyWTBQcDR0RWxyQzFMUmdYZ213WDRSL1llb2h6SzMwSlNxeWd2?=
- =?utf-8?B?U1NzUEEyRElKSy9yYkJrdFlRc0hXU29lSjNHeFhqRU5BWHpGSXJCQ1VXcU1Q?=
- =?utf-8?B?QWpJTFhiNHBYWCs5OXRoMUtGRktxTHdsUU01SWcxQUpWZGZpU2o2NmhteXYr?=
- =?utf-8?B?Zk5Yd1IrYTMyeW9lbDgybXo1YjNWUE0wREVZWktwNUlkNExGRTNOekl6V080?=
- =?utf-8?B?Q25LenFQVzZYdkxxamhFZ0E5ZG44bmNyY3FXWnd2NTg5bzUxTGd4MmNHMmxI?=
- =?utf-8?B?aDNjS2xQcDNHRVMyYm51Z1hqS3dweGpZcHJORGFpYzdVUDl1Mm9FRXN4VThB?=
- =?utf-8?B?bUpnTEJBb0w4bmZjcGhvcTVKNWVXTnRiYVY0NGZXZkQ4YjlMNW9FZ2dBaWEr?=
- =?utf-8?B?Ykh2L3o5QmtISUFJdmxYczR2TENvOFgycTNvOTBqYW5INlpWQjV3ampFckxX?=
- =?utf-8?B?RE1FeUtaeDI1U253dW1ZbWhTNXR0STd0TUlFUm1LbEdQZEp6bnFKV01ZbjVt?=
- =?utf-8?B?NEtnY2U5ckRWcXpmbXJQOStwWWo3SE1SR3hVUVhZdE1FMDBpOU9JV3gxQWpu?=
- =?utf-8?B?ZTF5Sy8rZm1DelAwMWhZenlhQ0RXTUk4SW5rTG8zQ2FSK1lUMVNPOUtZNm9i?=
- =?utf-8?B?L3hLc09NNlBPaDNFK0p6Nk9IR09kS2l0Sm4xNEUxL1lPS0NhMGRXYUZHK1pt?=
- =?utf-8?B?M0MrK0hLSlBUY0V4cFZrMnMrRlgrUWpmeTdTazVTZDZOWGtSN25QMnhWMnV0?=
- =?utf-8?B?OHFJUEt5elAwcVowZ1RHTUIySEJzbEJ6NWs5d1pSUnFIMVFpUEJOa3lPMkFI?=
- =?utf-8?B?ZVZkdERpZUl5Tk9tN3lmSTBVRStWaXhaSjVsdlNHVW90a2U5NG9uUkgvQ3ZP?=
- =?utf-8?B?ZklQZ2M0SEhTeFl3eUFuZGE3T28xa0tQa2o0ZS93dUNXbHR2M1BLUGN3N0Jp?=
- =?utf-8?B?YmFLNVVxa3czc3ExU2piTVppZXAwWTNZNWdMQ0o4ejlSVHp3cTdoRjJhZExC?=
- =?utf-8?B?RDNmM3JDOTFSaUErTmtoeWRYT2tyS0Y3TWxQV2Y1MUd2cFczcExGYitNQVlx?=
- =?utf-8?B?bFpBWmV4blk2aTBJb0FBeHg2RVNzZ0h2L3U1dEJFTkUrN3l5RzJVMWVIcCtV?=
- =?utf-8?B?NHJhaklTODk5L1lWUkZIaTQrQTJPbko1R0R5VTV4VGJOT3Z1RTRZQ21vVUJt?=
- =?utf-8?B?QnJZTlVTOFhKd0JaZ3U4cStQUkNtbGdTWGdjbkQzZVFqZERLaS9HTVh6OUN1?=
- =?utf-8?B?cjBXYWN6NWdzSGdKODVEQUNOZU9rd3dtaWdnN252UklQM0NaODZsdz09?=
-X-OriginatorOrg: amd.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: cebcac0f-8a3c-42f7-d840-08deaf4f4e3a
-X-MS-Exchange-CrossTenant-AuthSource: PH8PR12MB7325.namprd12.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 11 May 2026 11:20:28.6419
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: reEjRKt8paLW0hPy5yUfsarPdFfbcglEAfsBepHKs6eSZWM+JafmvAR6oYwQM+QLoug5xeLPMgaR/XonpaPd9A==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DS7PR12MB6047
+Content-Type: text/plain; charset=US-ASCII
 
-Hi ilpo,
+On Sun, 10 May 2026, Derek J. Clark wrote:
 
-I submitted this patch series and wanted to check if you had
-a chance to review it. Please let me know if there's anything I can
-do to help move this forward.
+> This series adds many much needed fixes and features to the lenovo-wmi*
+> drivers. This version has been re-ordered to ensure the least amount of
+> churn in each patch. This has resulted in two formatting patches being
+> added to the stable Cc list as prerequisites for some of the fixes.
+> 
+> Patches 1-9 fix various bugs and formatting, and are Cc'd to stable.
+
+Thanks for the update.
+
+I've taken 1-9 into review-ilpo-fixes branch and will do fixes -> 
+for-next merge later to be able to pick up rest of the patches there.
+
+-- 
+ i.
 
 
-On 4/27/2026 9:21 PM, Muralidhara M K wrote:
-> This series adds HSMP protocol version 7 support for AMD Family 1Ah
-> Model 50h-5Fh processors and replaces offset-based chunked reading
-> with a single read method for variable-sized metrics data larger than
-> 4 KB, and addresses locking to allow concurrent reads safely.
+> for the formatting only ones, patch 7 moves all gamezone enums from the
+> gamezone header into the helpers header and patch 8 adds two functions
+> to make assigning attribute ID's for capdata0X and tunable_attr_01
+> cleaner.
 > 
-> The zen6 metric table (~13 KB) exceeds the PAGE_SIZE (4096 bytes) read
-> cap imposed by kernfs_file_read_iter().  Commit 3124eb1679b2 ("sysfs:
-> remove bin_attribute.size") cleared i_size for sysfs binary files,
-> which made kernfs_file_read_iter() fall back to PAGE_SIZE as the
-> maximum single-read length.  This means userspace gets a silently
-> truncated snapshot when reading the metric table via sysfs.
+> Patch 10 adds the remaining CPU attributes that weren't previously
+> exposed.
 > 
-> To solve this, the series introduces SYSFS_HUGE_BIN_FILE, a new sysfs
-> mode flag that routes binary attribute reads through the seq_file path
-> (seq_read_iter) instead of kernfs_file_read_iter().  The seq_file
-> buffer grows dynamically (doubling from PAGE_SIZE) and has no built-in
-> size cap, so it can serve arbitrarily large binary attributes in a
-> single read.
+> Patch 11 adds GPU attributes.
 > 
-> Additionally, the series retrieves the actual metric table size from
-> the SMU at init time (via args[2] of HSMP_GET_METRIC_TABLE_DRAM_ADDR)
-> rather than relying on a compiled-in sizeof(), and adds per-socket
-> mutex serialization for metric table reads using the scoped guard(mutex)
-> API.
+> Patch 12 renames a name constant in preparation for patch 6.
 > 
-> Link: https://lore.kernel.org/platform-driver-x86/81915669-87e0-f06d-7a91-eaec41ecc0e1@linux.intel.com/T/#m28341c51bcf27862ef6615414b1970d3db279fd7
+> Patch 13 adds battery charge-type limiting when supported only by WMI, or
+> when a module parameter to skip compatibility checks is set. The
+> MODULE_PARM_DESC macro creates one check and two warnings in checkpatch.
+> I reviewed other examples from the kernel and I am following the same
+> convention, so I left it as is.
 > 
-> Patch breakdown:
+> Patch 14 adds a module parameter, force_load_psy_ext, to bypass ACPI and
+> BIOS compatibility checks for the power supply extension.
 > 
->    1/7  HSMP messages    - Define HSMP protocol v7 message IDs and
->                            response sizes in the UAPI header.
->    2/7  UAPI structs     - Add hsmp_metric_table_zen6 UAPI structures
->                            and widen acpi.c proto_ver checks to >= VER6.
->    3/7  response_sz      - Unify response_sz validation to an upper-bound
->                            check, allowing HSMP_GET_METRIC_TABLE_DRAM_ADDR
->                            to return 3 dwords (including table size).
->    4/7  SYSFS_HUGE_BIN_FILE - Add the sysfs infrastructure: new flag,
->                            seq_show callback, and kernfs_ops for binary
->                            files larger than PAGE_SIZE.
->    5/7  Dynamic size     - Read actual table size from SMU args[2] at
->                            init time; use bin_size callback to report it
->                            to sysfs.
->    6/7  Read locking     - Add per-socket guard(mutex) serialization for
->                            metric table reads to prevent torn snapshots.
->    7/7  Wire it up       - Set SYSFS_HUGE_BIN_FILE mode on metric table
->                            bin_attributes in both acpi.c and plat.c.
+> Patch 15 adds a debugfs directory.
 > 
-> Build-tested each patch individually with W=1, zero warnings.
-> Tested on AMD Family 1Ah Model 50h platform with HSMP protocol v7.
+> Patch 16 adds a debugfs file for dumping capdata.
 > 
-> Muralidhara M K (6):
->    platform/x86/amd/hsmp: Add metrics table support for Family 1Ah Model
->      50h-5Fh
->    platform/x86/amd/hsmp: Unify response_sz validation to an upper-bound
->      check
->    sysfs: Add SYSFS_HUGE_BIN_FILE flag for binary attributes larger than
->      PAGE_SIZE
->    platform/x86/amd/hsmp: Add dynamic table size for metric table
->    platform/x86/amd/hsmp: Make metric table read locking use guard(mutex)
->    platform/x86/amd/hsmp: Support SYSFS_HUGE_BIN_FILE for metric table
->      reads
+> Signed-off-by: Derek J. Clark <derekjohn.clark@gmail.com>
+> ---
+> v12:
+>   - Break out force_load_psy_ext into its own patch.
+>   - Drop fixes tags for formatting only prerequisite patches Cc'd to
+>     stable.
+>   - Fix formatting in various places.
+>   - Use correct type when passing args in new functions. I will revisit
+>     & fix older functions in a new series.
+> v11: https://lore.kernel.org/platform-driver-x86/20260507180507.912966-1-derekjohn.clark@gmail.com/
+>   - Reorganize patches in a way that cleans up the churn with
+>     assignment of attribute IDs. This also allowed dropping the
+>     patch that moved the LWMI_FAN_DIV patch as it is now effectively
+>     moved when declaring the updated LWMI_ATTR_ID_FAN_DIV macro. As a
+>     result, some formatting only patches were added to the Cc list for
+>     stable since as they are now prerequisites to some of the fixes.
+>   - Refactor charge control patch to use charge_behavior and
+>     charge_control_end_threshold instead of charge_types to be in
+>     accordance with the power supply class documentation.
+>   - Minor additional formatting fixes.
+> v10: https://lore.kernel.org/platform-driver-x86/20260411162334.25682-1-derekjohn.clark@gmail.com/
+>   - Fix misnamed attribute in wmi-other.
+> v9: https://lore.kernel.org/platform-driver-x86/20260411162334.25682-1-derekjohn.clark@gmail.com/
+>   - Invert ida_alloc fail logic.
+>   - Fix dropped mode arg in current_value_show.
+>   - Fix misnamed attribute in documentation.
+> v8: https://lore.kernel.org/platform-driver-x86/20260406201400.438221-1-derekjohn.clark@gmail.com/
+>   - Clean up rebase mixup with re-assinment of wmi_method_args_32 in
+>     patches 6 and 14 from {} to { 0x00, 0x00 } and back.
+>   - Combine ret_obj declaration and assignment in patch 1.
+> v7: https://lore.kernel.org/platform-driver-x86/20260402032424.678528-1-derekjohn.clark@gmail.com/
+>   - Add 3 additional bug fix patches from Rong Zhang reported by
+>     shashiko.dev
+>   - Reorder patches so the fixes are upfront in patches 1-7.
+>   - Fix various typos and rebase mixups from v6.
+> v6: https://lore.kernel.org/platform-driver-x86/20260331181208.421552-1-derekjohn.clark@gmail.com/
+>   - Incorporate Rong Zhang's debugfs and decoupling patches into the
+>     series.
+>   - Add a patch to clean up too many cross-references to wmi-gamezone.h
+>   - Make lwmi_attr_id a static inline in wmi-capdata.h
+>   - Added a patch  to fix a bug where ares.arg1 is uninitialized when it
+>     is sent to the firmware.
+>   - Add supported checks before adding battery extenstion, and ensure
+>     both the new checks and the is_writable checks are not casting u32
+>     to i32.
+>   - Misc formating changes.
+> v5: https://lore.kernel.org/platform-driver-x86/20260324221032.1333636-1-derekjohn.clark@gmail.com/
+>   - Remove cv/cd_mode_id references that occured before patch 4.
+>   - Move lwmi_attr_id to capdata.c with a namespace export.
+>   - Fix mixing include.
+>   - Make lwmi_attr_is_supported return bool.
+>   - Use switch instead of if for setting/getting charge type state.
+>   - Various formatting fixes.
+> v4: https://lore.kernel.org/platform-driver-x86/20260312031032.3467565-1-derekjohn.clark@gmail.com/
+>   - Use loop instead of back gotos for identifying the working attribute
+>     ID.
+>   - Use function instead of macro to assign attribute_id, preserving
+>     types.
+>   - Removed unused defines and enum values.
+>   - Rename charging defines to clarify thier purpose.
+>   - Fixed various formatting issues from v3.
+>   - Added module param to skip ACPI check when loading the driver for
+>     the power supply extension.
+>   - Don't abort adding power supply extension if the ACPI handle from
+>     ideapad is not present.
+>   - Don't worry about symmetric cleanup when cleaning up attributes in
+>     an error state.
+>   - Reword Patch 8 commit message to be more concise.
+>   - Fix wording in Patch 7 to match the changes.
+> v3: https://lore.kernel.org/platform-driver-x86/20260224043200.2680384-1-derekjohn.clark@gmail.com/
+>   - Re-add HWMON name const and just rename LWMI_OM_FW_ATTR_BASE_PATH
+>   - Fix linker warnings by moving acpi/battery include to the end of the
+>     list.
+>   - Remove CPU/GPU OC features. These attributes are BOOL type and will
+>     need a new constructor that I'll add later.
+> v2: https://lore.kernel.org/platform-driver-x86/20260215061339.2842486-1-derekjohn.clark@gmail.com/
+>   - Fix gpu_mode misisng from attributes list.
+>   - Fix prototypes for power suppy patch.
+>   - Reorganize CPU and GPU attributes alphabetically.
+>   - Break out the patch consolidating the driver name cost.
+>   - Move some of the refactoring of attribute_id back to into patch 1
+>     where it belongs.
+>   - Fix some additional typos in function prototypes.
+> v1: https://lore.kernel.org/platform-driver-x86/20260213081243.794288-1-derekjohn.clark@gmail.com/
 > 
-> Suma Hegde (1):
->    platform/x86/amd/hsmp: Add new HSMP messages for Family 1Ah, Model
->      50h-5Fh
+> Derek J. Clark (10):
+>   platform/x86: lenovo-wmi-other: Zero initialize WMI arguments
+>   platform/x86: lenovo-wmi-other: Fix tunable_attr_01 struct members
+>   platform/x86: lenovo-wmi-helpers: Move gamezone enums to wmi-helpers
+>   platform/x86: lenovo-wmi-other: Add Attribute ID helper functions
+>   platform/x86: lenovo-wmi-other: Limit adding attributes to supported
+>     devices
+>   platform/x86: lenovo-wmi-other: Add missing CPU tunable attributes
+>   platform/x86: lenovo-wmi-other: Add GPU tunable attributes
+>   platform/x86: lenovo-wmi-other: Rename LWMI_OM_FW_ATTR_BASE_PATH
+>   platform/x86: lenovo-wmi-other: Add WMI battery charge limiting
+>   platform/x86: lenovo-wmi-other: Add force_load_psy_ext module
+>     parameter
 > 
->   arch/x86/include/uapi/asm/amd_hsmp.h | 235 ++++++++++++++++++++++++---
->   drivers/platform/x86/amd/hsmp/acpi.c |  14 +-
->   drivers/platform/x86/amd/hsmp/hsmp.c |  36 ++--
->   drivers/platform/x86/amd/hsmp/hsmp.h |   6 +-
->   drivers/platform/x86/amd/hsmp/plat.c |  13 +-
->   fs/sysfs/file.c                      |  45 +++++
->   fs/sysfs/group.c                     |   8 +-
->   include/linux/sysfs.h                |   1 +
->   8 files changed, 312 insertions(+), 46 deletions(-)
+> Rong Zhang (6):
+>   platform/x86: lenovo-wmi-helpers: Fix memory leak in
+>     lwmi_dev_evaluate_int()
+>   platform/x86: lenovo-wmi-other: Balance IDA id allocation and free
+>   platform/x86: lenovo-wmi-other: Balance component bind and unbind
+>   platform/x86: lenovo: Decouple lenovo-wmi-gamezone and
+>     lenovo-wmi-other
+>   platform/x86: lenovo-wmi-helpers: Add helper for creating per-device
+>     debugfs dir
+>   platform/x86: lenovo-wmi-capdata: Add debugfs file for dumping capdata
 > 
-
+>  .../wmi/devices/lenovo-wmi-other.rst          |  19 +
+>  drivers/platform/x86/lenovo/Kconfig           |   3 +-
+>  drivers/platform/x86/lenovo/wmi-capdata.c     | 128 ++-
+>  drivers/platform/x86/lenovo/wmi-capdata.h     |  34 +-
+>  drivers/platform/x86/lenovo/wmi-events.c      |   2 +-
+>  drivers/platform/x86/lenovo/wmi-gamezone.c    |   7 +-
+>  drivers/platform/x86/lenovo/wmi-gamezone.h    |  20 -
+>  drivers/platform/x86/lenovo/wmi-helpers.c     | 139 ++-
+>  drivers/platform/x86/lenovo/wmi-helpers.h     |  23 +
+>  drivers/platform/x86/lenovo/wmi-other.c       | 867 +++++++++++++++---
+>  drivers/platform/x86/lenovo/wmi-other.h       |  16 -
+>  11 files changed, 1061 insertions(+), 197 deletions(-)
+>  delete mode 100644 drivers/platform/x86/lenovo/wmi-gamezone.h
+>  delete mode 100644 drivers/platform/x86/lenovo/wmi-other.h
+> 
+> 
