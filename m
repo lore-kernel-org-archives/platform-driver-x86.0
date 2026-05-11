@@ -1,109 +1,159 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.18])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4EE2F438FE4;
-	Mon, 11 May 2026 16:31:38 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.18
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 87D52449EBB
+	for <platform-driver-x86@vger.kernel.org>; Mon, 11 May 2026 16:37:25 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1778517099; cv=none; b=G1Sy5CfXY4DM2XANYAeSKUNfuCtwWY1vBckEkBDXePVKIKbDKNiECCWcrQYtTDE6/+Ec9hOkLf0Ubwn9pBbFMPCZU2myFZiy13RnGH9RBg0jc9UObfKBWqR+xT9FEFEpYxPKYI6Ww8Kulczycni0JNqXAaYz6b81T8k6OqtGvHQ=
+	t=1778517445; cv=none; b=nX6UkkufXpEfyyIb478b12NlnYjWFEt6iBd4jTj5T3MjyeudzgEukUA8qjUojCEBDDMISzRZoBjone6D1VCH83ByY9AYqic0nPztmCkvzjJpo9G+gsc5Dl7AxMa9oOz2q5YQlsNbWPh+MzA6S2oHx5VMxAusMlVg3ola7XkOqCQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1778517099; c=relaxed/simple;
-	bh=dXKhRv22TYniykRdD7ytCvispTZ99l1PvGtabcu/Zq8=;
-	h=From:Date:To:cc:Subject:In-Reply-To:Message-ID:References:
-	 MIME-Version:Content-Type; b=YZou0as9isG5yrFn2UHrdgrfxuzM5uYu6GFQWa8S5+EAnym4nlLuSeYVSn0IgJEzK99OS6VcBm701cqY7nv6s6Q9jfn8JvwzbZJXkjQzaGxlFrE2P6Z95YH1INXJuoF32DA5qUyveh60scaHQ+hxqXZytNeaScO/sypAoXpwAks=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=pass smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=epHcdC9w; arc=none smtp.client-ip=198.175.65.18
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.intel.com
+	s=arc-20240116; t=1778517445; c=relaxed/simple;
+	bh=+NkMbk1SVW7S6P7NmK715GNyt/tuNvSJCJCRgeRwgmw=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=E4/A3TlRFyxwuGFWbEwl/KZARYUnoyWwkemMAxJJ1dPuZrlRaGmdoyBiDGwjoqP2SOVncRByga/Ed47SR37i9/TyO3M8kQ9dpYZN4vEoZ2VuEnPNG4NqpFH6zvWsv/H34J4ri61UI0Qg3LxB7U23xgyDNlDj2KPH9g+qQe1x1iU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Kygq7wdV; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="epHcdC9w"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1778517098; x=1810053098;
-  h=from:date:to:cc:subject:in-reply-to:message-id:
-   references:mime-version;
-  bh=dXKhRv22TYniykRdD7ytCvispTZ99l1PvGtabcu/Zq8=;
-  b=epHcdC9wGs7iW0cTxICsvWEKB3LMRpbW6T5gS8A/C7XuMfiw6P/c1qlr
-   XoLnwEVlq9XCX/LTp9Lj/XEif+ZyKZsKNaQO1qV8b35KluJzcqQkzneXO
-   Xlmcy5A9k+fcEA6LcwJjtQ2jqHgPH3FdvoawtcOTeOeprvu2u55ZMNlsH
-   uZjtpHYfXt0o0rD5J7GU/ZQkUgcCvxjKAzWbkTqJMFqyDFVOq0YrWshVB
-   bqTKDXRMNDAq2TG/phJ2a5FchrsHOIYE3bA30HwcoIbDnZi2bq6I18d0G
-   bzKWdqcCgDFqk2vUB0CWDk0Kn1KDbykVF502eiDg/VAFt50Jcd1a66Fzn
-   Q==;
-X-CSE-ConnectionGUID: l4Ksh/3zRRGTf8ZjmFs0KA==
-X-CSE-MsgGUID: vCatAGqgS/OAU5arxcHJkw==
-X-IronPort-AV: E=McAfee;i="6800,10657,11783"; a="79434832"
-X-IronPort-AV: E=Sophos;i="6.23,229,1770624000"; 
-   d="scan'208";a="79434832"
-Received: from fmviesa005.fm.intel.com ([10.60.135.145])
-  by orvoesa110.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 11 May 2026 09:31:38 -0700
-X-CSE-ConnectionGUID: JvzXzTTeTuC7Jt5pawPNNQ==
-X-CSE-MsgGUID: b/ySphJcR6iglBJZySmDeQ==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.23,229,1770624000"; 
-   d="scan'208";a="242465123"
-Received: from ijarvine-mobl1.ger.corp.intel.com (HELO localhost) ([10.245.245.28])
-  by fmviesa005-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 11 May 2026 09:31:35 -0700
-From: =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
-Date: Mon, 11 May 2026 19:31:31 +0300 (EEST)
-To: Rosen Penev <rosenp@gmail.com>
-cc: platform-driver-x86@vger.kernel.org, Hans de Goede <hansg@kernel.org>, 
-    Kees Cook <kees@kernel.org>, "Gustavo A. R. Silva" <gustavoars@kernel.org>, 
-    open list <linux-kernel@vger.kernel.org>, 
-    "open list:KERNEL HARDENING" <linux-hardening@vger.kernel.org>
-Subject: Re: [PATCH] platform/x86/intel/tpmi/plr: allocate die_info with
- plr
-In-Reply-To: <20260430225309.117557-1-rosenp@gmail.com>
-Message-ID: <db8119fd-6d40-5df0-68ef-5579290c5bb9@linux.intel.com>
-References: <20260430225309.117557-1-rosenp@gmail.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Kygq7wdV"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 63286C2BCF5
+	for <platform-driver-x86@vger.kernel.org>; Mon, 11 May 2026 16:37:25 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1778517445;
+	bh=+NkMbk1SVW7S6P7NmK715GNyt/tuNvSJCJCRgeRwgmw=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+	b=Kygq7wdVv0aBk1Ie6vYSODKTx52L8/kWnpHuOADer+mom4fpiriyko/IEdfJv2MNB
+	 gWnr/k5tNcHWJ/R0lRpcS1sLi2kHjXoM2C734jzUPwuBe7tWsmxnYdp+JRenw7A9hk
+	 vlAj+PVXGrSS3DlOGGSN9QNwnsUAE/7LWigkPhI+EiplNGBNb4SNb/zT3x+PpOnAZl
+	 tAtAusP6NB5X82XYzm4dFdH5NGQDoqiKCh++voEfncB9W7jZLlywMHAhYSrIlsyMDY
+	 qCpnXJq9ifWnjEmWFjOGxo9rmWICzu1LLDEZ70GV/sdVw47PSVZMxtZx466cAnzbzA
+	 6JBdnkYxVIM4g==
+Received: by mail-lj1-f174.google.com with SMTP id 38308e7fff4ca-393800f638bso36378771fa.1
+        for <platform-driver-x86@vger.kernel.org>; Mon, 11 May 2026 09:37:25 -0700 (PDT)
+X-Forwarded-Encrypted: i=1; AFNElJ8Ehnf+3Abpi5SNB40zLpSCLiGtjAlWGg1nZbOl3aOh7FWUK/+5AbgwL/fa//Iahd8XZw4gcV/gICWTE4KSJSTy0XGE@vger.kernel.org
+X-Gm-Message-State: AOJu0YxKMVkI7o7qtrJkxCxJDWdM0IEcKROLyR9uhQ0Nh27ca18ZQ6mO
+	uZqSIQTmmhcA6bUSfzfTPOuTzFODkv9MFCSbKsh9Nq5W2kvuZ3n7Jlx5poLsG1DuMngCT74MyQo
+	9bOh44ovnd6GGs1P2Jbl+rU56+wPa40E=
+X-Received: by 2002:a05:6512:3e1c:b0:5a8:b966:7b1f with SMTP id
+ 2adb3069b0e04-5a8b9667b9amr4147111e87.16.1778517443802; Mon, 11 May 2026
+ 09:37:23 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+References: <2420444.ElGaqSPkdT@rafael.j.wysocki> <3420768.aeNJFYEL58@rafael.j.wysocki>
+ <e46d3374-4762-3776-6195-bd6220998b5e@linux.intel.com> <CAJZ5v0i5u4uq7v52oWYNt_tXwJAcpuXVS21y6PKU54XY7y=ciA@mail.gmail.com>
+ <db0875af-5b2f-b710-43ff-ec1b9922ec27@linux.intel.com>
+In-Reply-To: <db0875af-5b2f-b710-43ff-ec1b9922ec27@linux.intel.com>
+From: "Rafael J. Wysocki" <rafael@kernel.org>
+Date: Mon, 11 May 2026 18:37:07 +0200
+X-Gmail-Original-Message-ID: <CAJZ5v0hAKEiy3JVP4w+wX-P3XxiVddVXt36zqqRdtPLnnmnYnw@mail.gmail.com>
+X-Gm-Features: AVHnY4IAXsyRuzxaEtsglew_Cd17JvCp3cVNj1XmBIbwyQ32drMEwhOgD2qaqHA
+Message-ID: <CAJZ5v0hAKEiy3JVP4w+wX-P3XxiVddVXt36zqqRdtPLnnmnYnw@mail.gmail.com>
+Subject: Re: [PATCH v1 3/4] platform/x86: xo15-ebook: Register ACPI notify
+ handler directly
+To: =?UTF-8?Q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
+Cc: "Rafael J. Wysocki" <rafael@kernel.org>, LKML <linux-kernel@vger.kernel.org>, 
+	Linux ACPI <linux-acpi@vger.kernel.org>, Hans de Goede <hansg@kernel.org>, 
+	platform-driver-x86@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Thu, 30 Apr 2026, Rosen Penev wrote:
+On Mon, May 11, 2026 at 6:17=E2=80=AFPM Ilpo J=C3=A4rvinen
+<ilpo.jarvinen@linux.intel.com> wrote:
+>
+> On Mon, 11 May 2026, Rafael J. Wysocki wrote:
+>
+> > On Mon, May 11, 2026 at 3:59=E2=80=AFPM Ilpo J=C3=A4rvinen
+> > <ilpo.jarvinen@linux.intel.com> wrote:
+> > >
+> > > On Fri, 8 May 2026, Rafael J. Wysocki wrote:
+> > >
+> > > > From: "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>
+> > > >
+> > > > To facilitate subsequent conversion of the driver to a platform one=
+,
+> > > > make it install an ACPI notify handler directly instead of using
+> > > > a .notify() callback in struct acpi_driver.
+> > > >
+> > > > No intentional functional impact.
+> > > >
+> > > > Signed-off-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
+> > > > ---
+> > > >  drivers/platform/x86/xo15-ebook.c | 19 ++++++++++++++-----
+> > > >  1 file changed, 14 insertions(+), 5 deletions(-)
+> > > >
+> > > > diff --git a/drivers/platform/x86/xo15-ebook.c b/drivers/platform/x=
+86/xo15-ebook.c
+> > > > index 616f4bb3461a..8af1b9078db8 100644
+> > > > --- a/drivers/platform/x86/xo15-ebook.c
+> > > > +++ b/drivers/platform/x86/xo15-ebook.c
+> > > > @@ -57,16 +57,15 @@ static int ebook_send_state(struct acpi_device =
+*device)
+> > > >       return 0;
+> > > >  }
+> > > >
+> > > > -static void ebook_switch_notify(struct acpi_device *device, u32 ev=
+ent)
+> > > > +static void ebook_switch_notify(acpi_handle handle, u32 event, voi=
+d *data)
+> > > >  {
+> > > >       switch (event) {
+> > > >       case ACPI_FIXED_HARDWARE_EVENT:
+> > > >       case XO15_EBOOK_NOTIFY_STATUS:
+> > > > -             ebook_send_state(device);
+> > > > +             ebook_send_state(data);
+> > > >               break;
+> > > >       default:
+> > > > -             acpi_handle_debug(device->handle,
+> > > > -                               "Unsupported event [0x%x]\n", event=
+);
+> > > > +             acpi_handle_debug(handle, "Unsupported event [0x%x]\n=
+", event);
+> > > >               break;
+> > > >       }
+> > > >  }
+> > > > @@ -123,6 +122,11 @@ static int ebook_switch_add(struct acpi_device=
+ *device)
+> > > >       if (error)
+> > > >               goto err_free_input;
+> > > >
+> > > > +     error =3D acpi_dev_install_notify_handler(device, ACPI_DEVICE=
+_NOTIFY,
+> > > > +                                             ebook_switch_notify, =
+device);
+> > > > +     if (error)
+> > > > +             goto err_unregister_input;
+> > > > +
+> > > >       ebook_send_state(device);
+> > > >
+> > > >       if (device->wakeup.flags.valid) {
+> > > > @@ -139,6 +143,10 @@ static int ebook_switch_add(struct acpi_device=
+ *device)
+> > > >  err_free_button:
+> > > >       kfree(button);
+> > > >       return error;
+> > > > +
+> > > > +err_unregister_input:
+> > > > +     input_unregister_device(input);
+> > > > +     goto err_free_button;
+> > >
+> > > The end result would be much simpler if there would be patch 5 to con=
+vert
+> > > to devm_*().
+> >
+> > Well, I can add one.
+> >
+> > Do you want me to resend an update of the series for this?
+>
+> Ah, right. I took these now to review-ilpo-next.
+>
+> (I was initially thinking of making a little bit different suggestion
+> which would have required changes to these patches but then realized it
+> was better to just add the devm_*() conversion after these).
 
-> Simplifies allocations slightly.
-> 
-> Add __counted_by for extra runtime analysis.
-> 
-> Signed-off-by: Rosen Penev <rosenp@gmail.com>
-> ---
->  drivers/platform/x86/intel/plr_tpmi.c | 9 ++-------
->  1 file changed, 2 insertions(+), 7 deletions(-)
-> 
-> diff --git a/drivers/platform/x86/intel/plr_tpmi.c b/drivers/platform/x86/intel/plr_tpmi.c
-> index 05727169f49c..2fd27e80bc1f 100644
-> --- a/drivers/platform/x86/intel/plr_tpmi.c
-> +++ b/drivers/platform/x86/intel/plr_tpmi.c
-> @@ -57,9 +57,9 @@ struct tpmi_plr_die {
->  
->  struct tpmi_plr {
->  	struct dentry *dbgfs_dir;
-> -	struct tpmi_plr_die *die_info;
->  	int num_dies;
->  	struct auxiliary_device *auxdev;
-> +	struct tpmi_plr_die die_info[] __counted_by(num_dies);
->  };
->  
->  static const char * const plr_coarse_reasons[] = {
-> @@ -278,15 +278,10 @@ static int intel_plr_probe(struct auxiliary_device *auxdev, const struct auxilia
->  	if (!num_resources)
->  		return -EINVAL;
->  
-> -	plr = devm_kzalloc(&auxdev->dev, sizeof(*plr), GFP_KERNEL);
-> +	plr = devm_kzalloc(&auxdev->dev, struct_size(plr, die_info, num_resources), GFP_KERNEL);
+So I guess I'll prepare a follow-up patch for the devm_ conversion.
 
-Is there some particular reason why we don't have devm_kzalloc_flex() 
-other than that nobody has yet bothered to added one.
-
-One of the most annoying thing with the various alloc APIs is that devm_* 
-variants seem to never keep up with them. It would be nice if there would 
-be some generic solution that when somebody decides a new alloc api func, 
-the corresponding devm counterpart would be auto-generated for it.
-
--- 
- i.
-
+Note though that there's no devm_ counterpart of
+acpi_dev_install_notify_handler() ATM, so I may need to add one while
+at it.
