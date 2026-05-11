@@ -1,175 +1,240 @@
-Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.13])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8C12F37BE87
-	for <platform-driver-x86@vger.kernel.org>; Mon, 11 May 2026 12:13:53 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.180.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A591532BF41;
+	Mon, 11 May 2026 12:24:11 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.13
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1778501634; cv=none; b=mGflv22/13NF9lfuU8C+EE+V3T5Aj+nSLAer3z4dRZRvXX/eVqdE5aUzzmmrTIX0x+DuVWAwbG/u/mREfWi2NIzN18eYy5ddAeu//hNeWx0MT2re7YDVZWjpyy7+KnOCzBw7M9jDasHYS9b756rHEGjdwOO1U0dhIDhBjm9mQkQ=
+	t=1778502253; cv=none; b=rtvFYevt1VH83EO/+Pj8AWSXVvrnjFvozVpaDg8PNnVQaMcVsNtrn823gy417ni+EN4XrXh3/7RM1z8TrfiEL+YCWqRqahhn/mwjPfO+KpUStkzzJ00u1tOGVsdzR3du+7+ChGORirlSFFrNMmamcyGBDX3NImmixRYHRU7uhZk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1778501634; c=relaxed/simple;
-	bh=8fqo9qHfK/dEgTotXTuK3of6kfoYb5MbOk81UGuKZuA=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=RiH07sH+vCPsJl107bLuwDDLeziNS/y3tX7Y35PgPR1+w8ChnYofv8FPBInTe40/k8yRhS5M3TblbLFaB5xee1BbXCBse1Ln5Ivo+lR1y2Gs39fQgF/APvadwXTkeKIloQMGtMOX5SsIOpZzHJe93SdIxMPeV/EGviyRmAUqnSg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com; spf=pass smtp.mailfrom=oss.qualcomm.com; dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b=OcAaV6ju; dkim=pass (2048-bit key) header.d=oss.qualcomm.com header.i=@oss.qualcomm.com header.b=b3pNYyIz; arc=none smtp.client-ip=205.220.180.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oss.qualcomm.com
+	s=arc-20240116; t=1778502253; c=relaxed/simple;
+	bh=xRHIRzfouC1/DZFkJmvDAlVXDHpgVNNtdVNbBInAZLA=;
+	h=From:Date:To:cc:Subject:In-Reply-To:Message-ID:References:
+	 MIME-Version:Content-Type; b=SINAtfeDsn+2RVMoKDyYOc0Z5f+kQ91xv31BZGMM1E9e0BLLzJhC0GgisQ4s7pVErKNLpKTeRLJRYA4eeeD7yKSW2jRJTxBf43Y6jo3WlgvIt4zHBYKgFOW68FqIhADKxKE/k/+RRQkr79HZPRcq8R/EuC57pQ+SfU62zeeGS9g=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=pass smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=E4EnnckK; arc=none smtp.client-ip=192.198.163.13
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b="OcAaV6ju";
-	dkim=pass (2048-bit key) header.d=oss.qualcomm.com header.i=@oss.qualcomm.com header.b="b3pNYyIz"
-Received: from pps.filterd (m0279871.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.18.1.11/8.18.1.11) with ESMTP id 64B7A4Lw1258491
-	for <platform-driver-x86@vger.kernel.org>; Mon, 11 May 2026 12:13:52 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=qualcomm.com; h=
-	cc:content-transfer-encoding:content-type:date:from:in-reply-to
-	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
-	YbyuFd3QVsgjYT9UiU61WRQarqplB3d8903mQnfn4s8=; b=OcAaV6juC49sWjng
-	91BprsOUVo1QyE85snh+gAfNAWQwepWgLNEmVSYloxL22Orjt2rJX+z+qxVVfuf0
-	YG38S3CP6qvxUkaSMHuIAV0XibE+kSEp5hdMy3/viWkK7W9Rdss/fUAtXFDKebJc
-	+e5fF/y1EBAyDJh7Jtb3iRVOlCMN3/V92OBb8aH1v0bHpmqkqZbudkZBG5PojduX
-	SBJ6CIHdbySHTqiwyayy1km2NR1MlhtRPXV1KcMgznhoU65ZINdP8aqquULxcgdc
-	01/o6RORfLYMbUyvqLCgDqbK/hWa8yMIvGUlitdSsO0f7gI1bc5oJy5w7ewoUO4W
-	Hdj48g==
-Received: from mail-vk1-f200.google.com (mail-vk1-f200.google.com [209.85.221.200])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 4e3ag212s6-1
-	(version=TLSv1.3 cipher=TLS_AES_128_GCM_SHA256 bits=128 verify=NOT)
-	for <platform-driver-x86@vger.kernel.org>; Mon, 11 May 2026 12:13:52 +0000 (GMT)
-Received: by mail-vk1-f200.google.com with SMTP id 71dfb90a1353d-5751831fe6dso366133e0c.1
-        for <platform-driver-x86@vger.kernel.org>; Mon, 11 May 2026 05:13:52 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=oss.qualcomm.com; s=google; t=1778501632; x=1779106432; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=YbyuFd3QVsgjYT9UiU61WRQarqplB3d8903mQnfn4s8=;
-        b=b3pNYyIzF3BjlDSiD8Bbj3Qjguk2una0hPh6uCYjH3jMnYzYB2c4V2H8vIZiMRrfG3
-         +0pubbNTMhgXY6jUy9l3VV7stZ8mD8KEpRahWQAlumgNw79uzUIbm3C1l8qyE5sFbzw3
-         ok48gx2R1u0PY1B2YwBZqkLY0+WgSDH9gga8lWQrkY5yADc9azwLn0QMbciGcjds5osB
-         rxlTkMT+imcvFN8sG56hd8z7DB0n6/LI69xDScxfAz9p0Dcma+kLLf/lAcJHfEuWRU3X
-         DYqxCOUEIwJJeymNC9Eq8hr6SwHSS8+SR/lUlfzExu8CHmMgV8L8Qr31pksAvCnegKD2
-         VM0g==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1778501632; x=1779106432;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-gg:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=YbyuFd3QVsgjYT9UiU61WRQarqplB3d8903mQnfn4s8=;
-        b=q+gfTYYW43O/htCR6ABcoRErWZiXIz+wCuSHWEnIQV0SvxzcnSOu9r2XlxVflIZ7gg
-         /INFCD8ird4H+YVxd9RslbEoPLYr0CMeTrUZO+qakDoYG9inmpAQHFHe+OhL3DJ71ZeI
-         YMD4CakkYKbR1oq5kHr72/ul6jZhjVF+9GMWjgKeZPi2yGS908XMb1gwvFt7EOqW9Rrq
-         /B1AU0kXEcJ69MfpMyvU5YUYxL6as4QctYfSclAv9ntHk5+XgbpsVieyNql2lGV4mJ54
-         ZJqAgjahHi1Ys3xEnBEHUtNKa5UquyBqdR4G9fyw/UVpCRXwGiasl80xUZf5lqPq+kTR
-         f/BQ==
-X-Forwarded-Encrypted: i=1; AFNElJ+M6XFdfME8Dq+M7+lzJAZzLVOUTAdEeAPPp6v36fDmwu399hIiymEBOz3SMsatxhS3GQKkPLVu2nmsgoK2QHkpzm/v@vger.kernel.org
-X-Gm-Message-State: AOJu0YwI6qmR5XKUxG3Gq3AKMtjkOtri5FigaVbNzy21MxqCENYW2E50
-	iVqWRPBYS/22JYmlv8M8vWxSk7TUqNY3z9ycp5KG410Sy8ccFGw3sa8K0uRgb8JJ2BBed85n5oi
-	0m4A9gl1OA50R3L1wGhKr7wAcN6FcPJVCMjBcH30G8BWVsuOlIR94liZ6vQ8+3E3j18hyzqNb+y
-	0S
-X-Gm-Gg: Acq92OEbzyPpgu/KDm59NQ/0M53DAgJGSvuWSDwh2U9aqFe0DjTbhs55Ba9FCex4JfM
-	OKqWMgUGHRaSClqZrjpfiBU5/scDu4gQidyzO8Leur087rCIMH2dU4k4JA/E8tmXOptt+PEM4xl
-	qoA2mhF8fkdnEZvCZ8MIiGv3SS7+MNtWjN8MoW8KORoDqoCkox+k75mcIlF7iORgMjLfx3ib4i5
-	ngB+ra4f/0AFvMJd40Vb1gjywYA847GHc2z6F+nKF1/biSDnvzmvNozzbWnfrcPILnJ82rbl2Mi
-	W6O7//kq5GvJPAE/hYiCz5p8s232IgmgaoQaL4Ab38iySVYD3qvu7c0GIOkZKF2T9ePU77BU0v1
-	6F9MfMLQCVBRqYJcwfXlb7x8cZlfEC3bmnqe1RlxZZu5ttBCAtgGYb3QqxgODtcbYtSzrvRvDZk
-	iK1Wg=
-X-Received: by 2002:a67:e24b:0:b0:612:13af:f5de with SMTP id ada2fe7eead31-630fad442d5mr3535121137.3.1778501631842;
-        Mon, 11 May 2026 05:13:51 -0700 (PDT)
-X-Received: by 2002:a67:e24b:0:b0:612:13af:f5de with SMTP id ada2fe7eead31-630fad442d5mr3535117137.3.1778501631385;
-        Mon, 11 May 2026 05:13:51 -0700 (PDT)
-Received: from [192.168.119.254] (078088045245.garwolin.vectranet.pl. [78.88.45.245])
-        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-bcac02c832asm498322166b.11.2026.05.11.05.13.48
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 11 May 2026 05:13:50 -0700 (PDT)
-Message-ID: <b98deaf5-b6af-4774-a5e5-4f0d6cfbc077@oss.qualcomm.com>
-Date: Mon, 11 May 2026 14:13:47 +0200
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="E4EnnckK"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1778502252; x=1810038252;
+  h=from:date:to:cc:subject:in-reply-to:message-id:
+   references:mime-version;
+  bh=xRHIRzfouC1/DZFkJmvDAlVXDHpgVNNtdVNbBInAZLA=;
+  b=E4EnnckKH29lQw4VFayxRComUl7jKxNJVx0LPkI5tJ1XkZlOeW0Djk0P
+   yo6REJd2sCJl8K4Q3f2e30mzvuvljqeRGhjDf02gMA//PbOtjDgpSdmQD
+   mtu8HdG99/KYq9sRiKQFYD3BjIeogJsu33ERWkQ9ADI2fmxOzgs2+7ovB
+   GI2JoRcKdpzs8uHmHiP0NOiubAioZyYH0TqZBdTsQ3OEp/uMhLCqUNFfD
+   6VvvoVP8Fctvmd1t6XoFctEkdtZzkXyh4nbybMbnOGYufpPhtgH6eGWaS
+   9JSsv2Xua//CyYVo7pUj4+1CyLZp+UUw+V/oGsO4Z7fjBF3BRchWXOZDh
+   w==;
+X-CSE-ConnectionGUID: sr/3szy/TZi1Y85aZ3mEQg==
+X-CSE-MsgGUID: qwAtPuqDQ/WZjmee03t0Dw==
+X-IronPort-AV: E=McAfee;i="6800,10657,11782"; a="81950935"
+X-IronPort-AV: E=Sophos;i="6.23,228,1770624000"; 
+   d="scan'208";a="81950935"
+Received: from orviesa004.jf.intel.com ([10.64.159.144])
+  by fmvoesa107.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 11 May 2026 05:24:11 -0700
+X-CSE-ConnectionGUID: fexu7dvBQRmfD8woWe+Snw==
+X-CSE-MsgGUID: uw5VRbGDQkuUcVLUxh/V0g==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.23,228,1770624000"; 
+   d="scan'208";a="241796609"
+Received: from ijarvine-mobl1.ger.corp.intel.com (HELO localhost) ([10.245.245.28])
+  by orviesa004-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 11 May 2026 05:24:08 -0700
+From: =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
+Date: Mon, 11 May 2026 15:24:04 +0300 (EEST)
+To: Daniel Gibson <daniel@gibson.sh>
+cc: Shyam Sundar S K <Shyam-sundar.S-k@amd.com>, 
+    Hans de Goede <hansg@kernel.org>, platform-driver-x86@vger.kernel.org, 
+    LKML <linux-kernel@vger.kernel.org>, 
+    Sindre Henriksen <sindrehenriksen93@gmail.com>, 
+    "Mario Limonciello (AMD)" <superm1@kernel.org>
+Subject: Re: [PATCH v2 2/5] platform/x86/amd/pmc: Delay suspend for some
+ Lenovo Laptops
+In-Reply-To: <20260509013105.816339-3-daniel@gibson.sh>
+Message-ID: <2fd86d67-b9e6-57ab-775c-1297e34a2e7f@linux.intel.com>
+References: <20260509013105.816339-1-daniel@gibson.sh> <20260509013105.816339-3-daniel@gibson.sh>
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v8 2/6] platform: arm64: Add driver for EC found on
- Qualcomm reference devices
-To: =?UTF-8?Q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>,
-        Anvesh Jain P <anvesh.p@oss.qualcomm.com>
-Cc: Sibi Sankar <sibi.sankar@oss.qualcomm.com>, Rob Herring
- <robh@kernel.org>,
-        Krzysztof Kozlowski <krzk+dt@kernel.org>,
-        Conor Dooley <conor+dt@kernel.org>, Hans de Goede <hansg@kernel.org>,
-        Bryan O'Donoghue <bryan.odonoghue@linaro.org>,
-        Bjorn Andersson <andersson@kernel.org>,
-        Konrad Dybcio <konradybcio@kernel.org>,
-        Randy Dunlap
- <rdunlap@infradead.org>, linux-arm-msm@vger.kernel.org,
-        devicetree@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>,
-        platform-driver-x86@vger.kernel.org,
-        Maya Matuszczyk <maccraft123mc@gmail.com>,
-        Dmitry Baryshkov <dmitry.baryshkov@oss.qualcomm.com>,
-        Akhil P Oommen <akhilpo@oss.qualcomm.com>
-References: <20260427-add-driver-for-ec-v8-0-702f74e495f7@oss.qualcomm.com>
- <20260427-add-driver-for-ec-v8-2-702f74e495f7@oss.qualcomm.com>
- <91523c61-bd03-2d96-823e-78ecd9e3798f@linux.intel.com>
- <17397c91-53e2-4786-b7c8-88c302821e22@oss.qualcomm.com>
- <88ce2f85-5d8f-9845-cdb8-77051989e57f@linux.intel.com>
-Content-Language: en-US
-From: Konrad Dybcio <konrad.dybcio@oss.qualcomm.com>
-In-Reply-To: <88ce2f85-5d8f-9845-cdb8-77051989e57f@linux.intel.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
-X-Proofpoint-ORIG-GUID: u6VoohCznvLRBAwf3L3U9DTWVM5COdx8
-X-Proofpoint-Spam-Details-Enc: AW1haW4tMjYwNTExMDEzNSBTYWx0ZWRfX3zCzpxeXFBK0
- hB9Vb2JqKbBwd2GjhbGQMxXX+Jpk+rpC6E8EuJIj9PCFudjf9rHWg3JcHZR0Al1zbfNL5HzCKMx
- ry3H0kONJ1da0wyzebEMWc47aedDoaBnHEOUigxojlsTNC1wb7BmggFj0odst1usQAC94NwNF/K
- A9mEYqf4nX+6g8g0whmQdh5Xx75WOCztWQkzFsK1F0zyOLI4QwUkhHm6YQQoZdOikoRGqJxGztF
- KAGQ1HOndTEXALKN5lOuv9jaqM52nakyku/8Px7we7KvYeWaoFOnXY9sBu9jRKN238alsgEWKjE
- bIA5qnJM4y4SgYbeorbYh+lfVqJhbNCXPbXBR0AX/fbTFsL5TgFKbjRUYg6oSmbxZPoCcwU1zha
- MxuHj6Lm2RTOEF72CQ9+avp99lm2PxyS52XuNOa9mUsrAHhCzeejSy9InY3p88bfDkZVGlN/e9s
- PrD0SjF/AHTysf5QQlg==
-X-Proofpoint-GUID: u6VoohCznvLRBAwf3L3U9DTWVM5COdx8
-X-Authority-Analysis: v=2.4 cv=NODlPU6g c=1 sm=1 tr=0 ts=6a01c800 cx=c_pps
- a=wuOIiItHwq1biOnFUQQHKA==:117 a=FpWmc02/iXfjRdCD7H54yg==:17
- a=IkcTkHD0fZMA:10 a=NGcC8JguVDcA:10 a=s4-Qcg_JpJYA:10
- a=VkNPw1HP01LnGYTKEx00:22 a=u7WPNUs3qKkmUXheDGA7:22 a=3WHJM1ZQz_JShphwDgj5:22
- a=VwQbUJbxAAAA:8 a=EUspDBNiAAAA:8 a=ZGoIsIOgen_iXHErvcUA:9 a=3ZKOabzyN94A:10
- a=QEXdDO2ut3YA:10 a=XD7yVLdPMpWraOa8Un9W:22
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1143,Hydra:6.1.51,FMLib:17.12.100.49
- definitions=2026-05-11_03,2026-05-08_02,2025-10-01_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
- priorityscore=1501 bulkscore=0 adultscore=0 suspectscore=0 malwarescore=0
- lowpriorityscore=0 impostorscore=0 spamscore=0 phishscore=0 clxscore=1015
- classifier=typeunknown authscore=0 authtc= authcc= route=outbound adjust=0
- reason=mlx scancount=1 engine=8.22.0-2604200000 definitions=main-2605110135
+Content-Type: multipart/mixed; boundary="8323328-568771658-1778502244=:981"
 
-On 5/11/26 2:07 PM, Ilpo Järvinen wrote:
-> On Mon, 11 May 2026, Anvesh Jain P wrote:
+  This message is in MIME format.  The first part should be readable text,
+  while the remaining parts are likely unreadable without MIME-aware tools.
 
-[...]
+--8323328-568771658-1778502244=:981
+Content-Type: text/plain; charset=ISO-8859-15
+Content-Transfer-Encoding: QUOTED-PRINTABLE
 
->>>> +static int qcom_ec_sci_evt_control(struct device *dev, bool enable)
->>>> +{
->>>> +	struct i2c_client *client = to_i2c_client(dev);
->>>> +
->>>> +	return i2c_smbus_write_byte_data(client, EC_SCI_EVT_CONTROL_CMD, !!enable);
->>>
->>> This converts bool -> u8 using C's implicit conversion rules (plus on top 
->>> of that does unnecessary !!). Please write the conversion explicitly, you 
->>> can use ?: syntax for brevity.
->>>
->>
->> The original v4 code used `enable ? 1 : 0` explicitly, but Konrad Dybcio
->> suggested switching to `!!enable` during his review [1]. Happy to revert
->> to the explicit form if that's the preferred style — just want to flag
->> the conflict so everyone is aligned.
->>
->> [1]
->> https://lore.kernel.org/all/6eb3a173-c364-431f-93e4-7bbb7a32431e@oss.qualcomm.com/
-> 
-> I prefer to have the boolean to binary conversion done explicitly 
-> (with the platform drivers maintainer hat on).
+On Sat, 9 May 2026, Daniel Gibson wrote:
 
-And I won't object if you prefer that
+> Some IdeaPad Slim 3 devices and similar with AMD CPUs have a
+> nonfunctional keyboard and lid switch after s2idle.
+> It helps to delay suspend by 2.5 seconds so the EC has some time
+> to do whatever it needs to get done before suspend - unfortunately
+> at least on my 16ABR8 waking it with a timer (wakealarm) still
+> triggers the issue, but at least normal resume via keypress or
+> lid works fine.
+>=20
+> This issue has been reported for many different devices, this patch
+> has been tested with the Zen3-based IdeaPad Slim 3 16ABR8 (82XR)
+> and the Zen3+-based IdeaPad Slim 3 14ARP10 (83K6).
+>=20
+> Reported-by: Sindre Henriksen <sindrehenriksen93@gmail.com>
+> Closes: https://bugzilla.kernel.org/show_bug.cgi?id=3D221383
 
-Konrad
+Cc: stable@vger.kernel.org
+
+would be warranted for this.
+
+> Tested-by: Sindre Henriksen <sindrehenriksen93@gmail.com>
+> Suggested-by: Mario Limonciello (AMD) <superm1@kernel.org>
+> Reviewed-by: Mario Limonciello (AMD) <superm1@kernel.org>
+> Signed-off-by: Daniel Gibson <daniel@gibson.sh>
+> ---
+>  drivers/platform/x86/amd/pmc/pmc-quirks.c | 31 +++++++++++++++++++++++
+>  drivers/platform/x86/amd/pmc/pmc.c        | 24 +++++++++++++++++-
+>  drivers/platform/x86/amd/pmc/pmc.h        |  1 +
+>  3 files changed, 55 insertions(+), 1 deletion(-)
+>=20
+> diff --git a/drivers/platform/x86/amd/pmc/pmc-quirks.c b/drivers/platform=
+/x86/amd/pmc/pmc-quirks.c
+> index 24506e342943..842a8f442fb5 100644
+> --- a/drivers/platform/x86/amd/pmc/pmc-quirks.c
+> +++ b/drivers/platform/x86/amd/pmc/pmc-quirks.c
+> @@ -18,6 +18,7 @@
+>  struct quirk_entry {
+>  =09u32 s2idle_bug_mmio;
+>  =09bool spurious_8042;
+> +=09bool need_suspend_delay;
+>  };
+> =20
+>  static struct quirk_entry quirk_s2idle_bug =3D {
+> @@ -33,6 +34,10 @@ static struct quirk_entry quirk_s2idle_spurious_8042 =
+=3D {
+>  =09.spurious_8042 =3D true,
+>  };
+> =20
+> +static struct quirk_entry quirk_s2idle_need_suspend_delay =3D {
+> +=09.need_suspend_delay =3D true,
+> +};
+> +
+>  static const struct dmi_system_id fwbug_list[] =3D {
+>  =09{
+>  =09=09.ident =3D "L14 Gen2 AMD",
+> @@ -203,6 +208,27 @@ static const struct dmi_system_id fwbug_list[] =3D {
+>  =09=09=09DMI_MATCH(DMI_PRODUCT_NAME, "82XQ"),
+>  =09=09}
+>  =09},
+> +=09/* https://bugzilla.kernel.org/show_bug.cgi?id=3D221383 */
+> +=09{
+> +=09=09.ident =3D "Zen3-based IdeaPad Slim and similar",
+> +=09=09.driver_data =3D &quirk_s2idle_need_suspend_delay,
+> +=09=09.matches =3D {
+> +=09=09=09DMI_MATCH(DMI_BOARD_VENDOR, "LENOVO"),
+> +=09=09=09/*
+> +=09=09=09 * Note: there are also some Zen2-based 82X* devices that
+> +=09=09=09 * need different quirks, they're already handled above
+> +=09=09=09 */
+> +=09=09=09DMI_MATCH(DMI_PRODUCT_NAME, "82X"),
+> +=09=09}
+> +=09},
+> +=09{
+> +=09=09.ident =3D "Zen3+-based IdeaPad Slim and similar",
+> +=09=09.driver_data =3D &quirk_s2idle_need_suspend_delay,
+> +=09=09.matches =3D {
+> +=09=09=09DMI_MATCH(DMI_BOARD_VENDOR, "LENOVO"),
+> +=09=09=09DMI_MATCH(DMI_PRODUCT_NAME, "83K"),
+> +=09=09}
+> +=09},
+>  =09/* https://bugzilla.kernel.org/show_bug.cgi?id=3D221273 */
+>  =09{
+>  =09=09.ident =3D "Thinkpad L14 Gen3",
+> @@ -356,6 +382,11 @@ void amd_pmc_process_restore_quirks(struct amd_pmc_d=
+ev *dev)
+>  =09=09amd_pmc_skip_nvme_smi_handler(dev->quirks->s2idle_bug_mmio);
+>  }
+> =20
+> +bool amd_pmc_quirk_need_suspend_delay(struct amd_pmc_dev *dev)
+> +{
+> +=09return dev->quirks && dev->quirks->need_suspend_delay;
+> +}
+> +
+>  void amd_pmc_quirks_init(struct amd_pmc_dev *dev)
+>  {
+>  =09const struct dmi_system_id *dmi_id;
+> diff --git a/drivers/platform/x86/amd/pmc/pmc.c b/drivers/platform/x86/am=
+d/pmc/pmc.c
+> index 2b9e5730170a..6bafd8661d68 100644
+> --- a/drivers/platform/x86/amd/pmc/pmc.c
+> +++ b/drivers/platform/x86/amd/pmc/pmc.c
+> @@ -611,6 +611,27 @@ static bool amd_pmc_intermediate_wakeup_need_delay(s=
+truct amd_pmc_dev *pdev)
+>  =09return get_metrics_table(pdev, &table) =3D=3D 0 && table.s0i3_last_en=
+try_status;
+>  }
+> =20
+> +static bool amd_pmc_want_suspend_delay(struct amd_pmc_dev *pdev)
+> +{
+> +=09/*
+> +=09 * Some Lenovo Laptops (like different IdeaPad 3 Slims) need some
+> +=09 * me-time before sleeping or they get uncooperative after waking
+> +=09 * up and don't send events for keyboard and lid switch anymore.
+> +=09 *
+> +=09 * Unfortunately this doesn't entirely fix the problem: It can still
+> +=09 * happen when resuming with a timer (wakealarm), but at least the
+> +=09 * more common usecases (wakeup by opening lid or pressing a key)
+> +=09 * work fine with this workaround.
+> +=09 *
+> +=09 * See https://bugzilla.kernel.org/show_bug.cgi?id=3D221383
+> +=09 */
+> +=09if (!disable_workarounds && amd_pmc_quirk_need_suspend_delay(pdev)) {
+> +=09=09dev_info(pdev->dev, "Delaying suspend by 2.5s to avoid platform bu=
+g\n");
+> +=09=09return true;
+> +=09}
+> +=09return false;
+> +}
+> +
+>  static void amd_pmc_s2idle_prepare(void)
+>  {
+>  =09struct amd_pmc_dev *pdev =3D &pmc;
+> @@ -647,7 +668,8 @@ static void amd_pmc_s2idle_check(void)
+>  =09struct amd_pmc_dev *pdev =3D &pmc;
+>  =09int rc;
+> =20
+> -=09if (amd_pmc_intermediate_wakeup_need_delay(pdev))
+> +=09if (amd_pmc_intermediate_wakeup_need_delay(pdev) ||
+> +=09    amd_pmc_want_suspend_delay(pdev))
+
+Thanks, this looks much cleaner. :-)
+
+Reviewed-by: Ilpo J=E4rvinen <ilpo.jarvinen@linux.intel.com>
+
+>  =09=09msleep(2500);
+> =20
+>  =09/* Dump the IdleMask before we add to the STB */
+> diff --git a/drivers/platform/x86/amd/pmc/pmc.h b/drivers/platform/x86/am=
+d/pmc/pmc.h
+> index fe3f53eb5955..f5257e47b8c4 100644
+> --- a/drivers/platform/x86/amd/pmc/pmc.h
+> +++ b/drivers/platform/x86/amd/pmc/pmc.h
+> @@ -147,6 +147,7 @@ enum amd_pmc_def {
+>  };
+> =20
+>  void amd_pmc_process_restore_quirks(struct amd_pmc_dev *dev);
+> +bool amd_pmc_quirk_need_suspend_delay(struct amd_pmc_dev *dev);
+>  void amd_pmc_quirks_init(struct amd_pmc_dev *dev);
+>  void amd_mp2_stb_init(struct amd_pmc_dev *dev);
+>  void amd_mp2_stb_deinit(struct amd_pmc_dev *dev);
+>=20
+
+--=20
+ i.
+
+--8323328-568771658-1778502244=:981--
