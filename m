@@ -1,61 +1,61 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.11])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.19])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9E6C443D515;
-	Mon, 11 May 2026 17:27:38 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.11
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CB9DD43CEED;
+	Mon, 11 May 2026 17:35:41 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.19
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1778520460; cv=none; b=LUCbSHQB8HFZDrf3WKFxcqJ2VZkavVOgk82cFZl6K+VwrkjKR/SuMYAaCxSRQ1u2jxTycDAoBAhukZ0XWwHBu6B8REI8oEnDMjmTKI7KPaMYJz2XP5ScbzBLpW7TI5nZr1PTBQm/7lnSwXsmKOdVkDWc4B26Vo0vqD/euFxILMw=
+	t=1778520944; cv=none; b=P91n0IYKtN7ZjwAPMX+H8Ih40HPfnvZIzfAN9BGMDaJrhfuuPRm/4FIRRKHmAC7q8cnQXYoxAxkljfthobxBFcRJTE1tOn8jvkLrpT4cjrXkaD6UQ1R+lI70JR56P8SiplBnKYFoTcU7W9wYu+zSq00u6leU7QgHScA7i8SDVTI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1778520460; c=relaxed/simple;
-	bh=/kzZF/YOifgcQmLU9y0waEdN3TdI6aTk2vWhPLH9RMs=;
+	s=arc-20240116; t=1778520944; c=relaxed/simple;
+	bh=hz1skr/FZ57650afmjDwceDlnB33NtKDf7Vslk+8RRI=;
 	h=From:Date:To:cc:Subject:In-Reply-To:Message-ID:References:
-	 MIME-Version:Content-Type; b=ug7KwwlSWwqwx5ljNFQ7smniUj/tn4YP7/pT6xI9exYgFNvbXeyKDjZkKYYzE3zE3BcmD/NuikuHGOXA5Vv9IEfHt+aop06EbXxWVWJRNGyB5WMgMJgQCAms4oPt2IBysVO7KH0ISkTqOur6hupyu28MdgpIvjZ6wZuI7KERp1g=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=pass smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=HhA0tYHa; arc=none smtp.client-ip=198.175.65.11
+	 MIME-Version:Content-Type; b=k4Bees7mXBx4bifGUzk26VMrJcn3dqBDlcht18PF1GfBvkD8unxt6BsNotp0piIVPec1NHY0a6sTZCbXxoici0hbAjUwuwA0AsMB2ieR9T8yxJqnff/MCbqd3VDNJYMCgcLHs+jxIDvXWAEpOATEEVmFW+EM0ttOmZ9upEqvCUI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=pass smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=dWF07MAY; arc=none smtp.client-ip=192.198.163.19
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="HhA0tYHa"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="dWF07MAY"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1778520459; x=1810056459;
+  t=1778520942; x=1810056942;
   h=from:date:to:cc:subject:in-reply-to:message-id:
    references:mime-version;
-  bh=/kzZF/YOifgcQmLU9y0waEdN3TdI6aTk2vWhPLH9RMs=;
-  b=HhA0tYHaUwZ8RQ9vvM23JuvIgJ8znYg/OSj3wK/Esfes2L8ii4q9XCCO
-   12OXPUb6Eujl3oLW+yfRJLagAFoHPbHfnx6/fFGgDlxkOtu08GT72WrAs
-   yoGV9Y3ai76460bJKS8ujKp7Ur/t+CM8Hiy7fNvXTniqCjhs85sSOjXYG
-   34+G/kkJMcKTAsrmcr1P1TBKxpjqClpI6QsJCfmqsomkf5lV4m7dRzVEZ
-   hUrleGt+KNrLmwhYgpAV8V+VSx9jrAdiOxzOVfDLjdvHlGjGYqN+8LZfs
-   3ZEpf8HoRaHftlAgLn2Yp2K3XfAf5qlk2H/wyU55KXdn47NO3zBfuiHEf
-   A==;
-X-CSE-ConnectionGUID: DcIRx10qQ2idZk3YpJHCIQ==
-X-CSE-MsgGUID: J2aDqYXtTy2rnBwg9aFScQ==
-X-IronPort-AV: E=McAfee;i="6800,10657,11783"; a="89721703"
+  bh=hz1skr/FZ57650afmjDwceDlnB33NtKDf7Vslk+8RRI=;
+  b=dWF07MAYbI5jdMO/hgJj5W3v/lItXJPnt4FYcnswEmTE12y5OW9zq+gH
+   0Tq8VW7govNMMYoubf7+VVy9JX+7jRaUHfmgvQH3DaV5cWaZjPdD99ay8
+   g04ah0ZuTAIbjYn+oys0c1+lU7a3h920QBYD4ZO0AUAIEv30j33F0dVfR
+   5DHsNIJEHB+ZcuOf4gbuWwrUzDVvVycA7jU1qxM/G9e6brOwRx0AZm6iL
+   qRqSn3Al8yjYHpnhEVYlKu3rWAOCqt4abk8NHaBwRt28lLHvPTRF/xqqj
+   Yxp+n/CXHRCBFqMVC2K4IaP2GTRnFaREpuc5aIvXMrntD1Z+dbCJBFcOn
+   g==;
+X-CSE-ConnectionGUID: xXDt7XQcQc6kafCnjB41mg==
+X-CSE-MsgGUID: 5zV6uuPpSm+QVy1P44/3tw==
+X-IronPort-AV: E=McAfee;i="6800,10657,11783"; a="78447009"
 X-IronPort-AV: E=Sophos;i="6.23,229,1770624000"; 
-   d="scan'208";a="89721703"
-Received: from fmviesa005.fm.intel.com ([10.60.135.145])
-  by orvoesa103.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 11 May 2026 10:27:38 -0700
-X-CSE-ConnectionGUID: TD491S3oTyWaAhMFhkQ+4g==
-X-CSE-MsgGUID: YDLRWhI2RNS/cqitxuewKQ==
+   d="scan'208";a="78447009"
+Received: from fmviesa009.fm.intel.com ([10.60.135.149])
+  by fmvoesa113.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 11 May 2026 10:35:41 -0700
+X-CSE-ConnectionGUID: qAJZdzWZRnO/rNICawV5eQ==
+X-CSE-MsgGUID: agnp+0OMQ+2t/ACWiheQtA==
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="6.23,229,1770624000"; 
-   d="scan'208";a="242479488"
+   d="scan'208";a="231128931"
 Received: from ijarvine-mobl1.ger.corp.intel.com (HELO localhost) ([10.245.245.28])
-  by fmviesa005-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 11 May 2026 10:27:35 -0700
+  by fmviesa009-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 11 May 2026 10:35:37 -0700
 From: =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
-Date: Mon, 11 May 2026 20:27:31 +0300 (EEST)
+Date: Mon, 11 May 2026 20:35:34 +0300 (EEST)
 To: Muralidhara M K <muralidhara.mk@amd.com>
 cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>, 
     "Rafael J. Wysocki" <rafael@kernel.org>, 
     platform-driver-x86@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>, 
-    driver-core@lists.linux.dev, 
+    driver-core@lists.linux.dev, Suma Hegde <suma.hegde@amd.com>, 
     Muthusamy Ramalingam <muthusamy.ramalingam@amd.com>
-Subject: Re: [PATCH v2 6/7] platform/x86/amd/hsmp: Make metric table read
- locking use guard(mutex)
-In-Reply-To: <20260427155129.545327-7-muralidhara.mk@amd.com>
-Message-ID: <9e34e44c-d19c-5994-1390-107b4058367c@linux.intel.com>
-References: <20260427155129.545327-1-muralidhara.mk@amd.com> <20260427155129.545327-7-muralidhara.mk@amd.com>
+Subject: Re: [PATCH v2 1/7] platform/x86/amd/hsmp: Add new HSMP messages for
+ Family 1Ah, Model 50h-5Fh
+In-Reply-To: <20260427155129.545327-2-muralidhara.mk@amd.com>
+Message-ID: <0dc34f1f-ec77-9950-b1c9-c4a256ae0477@linux.intel.com>
+References: <20260427155129.545327-1-muralidhara.mk@amd.com> <20260427155129.545327-2-muralidhara.mk@amd.com>
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
@@ -66,81 +66,262 @@ Content-Type: text/plain; charset=US-ASCII
 
 On Mon, 27 Apr 2026, Muralidhara M K wrote:
 
-> Add a per-socket mutex (metric_tbl_lock) to serialize concurrent
-> reads on the metric table sysfs file.  Without serialization, two
-> simultaneous readers could interleave the SMU refresh command and
-> the memcpy_fromio(), producing a torn (mixed old/new) snapshot.
+> From: Suma Hegde <suma.hegde@amd.com>
 > 
-> Use the scoped guard(mutex) API from <linux/cleanup.h> so the lock
-> is automatically released when hsmp_metric_tbl_read() returns,
-> including on error paths.
+> The new messages extend the HSMP interface to provide finer control over
+> power states and system monitoring capabilities.
 > 
+> Power state control:
+> - Get/Set PC6 and CC6 enable/disable control (0x29, 0x2A)
+> 
+> Power and thermal monitoring:
+> - Get CCD power consumption reading (0x34)
+> - Get Thermal delta (Tdelta) reading (0x35)
+> - Get SVI3 VR controller temperature (0x36)
+> 
+> DIMM sideband operations:
+> - Get/Set DIMM sideband data(0x33, 0x39)
+> 
+> Power management:
+> - Get/Set Floor limit control (0x38)
+> - Get/Set SDPS limit control (0x3A)
+> 
+> System capabilities:
+> - Get enabled HSMP commands (0x37)
+> 
+> Bump driver version to 2.6.
+> 
+> Reviewed-by: Muralidhara M K <muralidhara.mk@amd.com>
 > Co-developed-by: Muthusamy Ramalingam <muthusamy.ramalingam@amd.com>
 > Signed-off-by: Muthusamy Ramalingam <muthusamy.ramalingam@amd.com>
-> Signed-off-by: Muralidhara M K <muralidhara.mk@amd.com>
+> Signed-off-by: Suma Hegde <suma.hegde@amd.com>
 > ---
-> Changes v1->v2: New patch
+> Changes v1->v2: None
 > 
->  drivers/platform/x86/amd/hsmp/hsmp.c | 5 +++++
->  drivers/platform/x86/amd/hsmp/hsmp.h | 3 +++
->  2 files changed, 8 insertions(+)
+>  arch/x86/include/uapi/asm/amd_hsmp.h | 142 +++++++++++++++++++++++----
+>  drivers/platform/x86/amd/hsmp/hsmp.h |   2 +-
+>  2 files changed, 126 insertions(+), 18 deletions(-)
 > 
-> diff --git a/drivers/platform/x86/amd/hsmp/hsmp.c b/drivers/platform/x86/amd/hsmp/hsmp.c
-> index d6e377078182..49e7ed9981e9 100644
-> --- a/drivers/platform/x86/amd/hsmp/hsmp.c
-> +++ b/drivers/platform/x86/amd/hsmp/hsmp.c
-> @@ -10,7 +10,9 @@
->  #include <asm/amd/hsmp.h>
+> diff --git a/arch/x86/include/uapi/asm/amd_hsmp.h b/arch/x86/include/uapi/asm/amd_hsmp.h
+> index 92d8f256d096..603d62f8d4da 100644
+> --- a/arch/x86/include/uapi/asm/amd_hsmp.h
+> +++ b/arch/x86/include/uapi/asm/amd_hsmp.h
+> @@ -53,9 +53,19 @@ enum hsmp_message_ids {
+>  	HSMP_SET_XGMI_PSTATE_RANGE,	/* 26h Set xGMI P-state range */
+>  	HSMP_CPU_RAIL_ISO_FREQ_POLICY,	/* 27h Get/Set Cpu Iso frequency policy */
+>  	HSMP_DFC_ENABLE_CTRL,		/* 28h Enable/Disable DF C-state */
+> +	HSMP_PC6_ENABLE,		/* 29h Get/Set PC6 enable/disable status */
+> +	HSMP_CC6_ENABLE,		/* 2Ah Get/Set CC6 enable/disable status */
+>  	HSMP_GET_RAPL_UNITS = 0x30,	/* 30h Get scaling factor for energy */
+>  	HSMP_GET_RAPL_CORE_COUNTER,	/* 31h Get core energy counter value */
+>  	HSMP_GET_RAPL_PACKAGE_COUNTER,	/* 32h Get package energy counter value */
+> +	HSMP_DIMM_SB_RD,                /* 33h Get data from a specified device on the DIMM */
+> +	HSMP_READ_CCD_POWER,		/* 34h Get the average power consumed by CCD */
+> +	HSMP_READ_TDELTA,		/* 35h Get thermal solution behaviour */
+> +	HSMP_GET_SVI3_VR_CTRL_TEMP,	/* 36h Get temperature of SVI3 VR controller rails */
+> +	HSMP_GET_ENABLED_HSMP_CMDS,	/* 37h Get/Set supported HSMP commands */
+> +	HSMP_SET_GET_FLOOR_LIMIT,       /* 38h Get/Set supported Floor limit commands */
+> +	HSMP_DIMM_SB_WR,                /* 39h Set data to a specified device on the DIMM */
+> +	HSMP_SDPS_LIMIT,                /* 3Ah Get/Set SDPS limit */
+>  	HSMP_MSG_ID_MAX,
+>  };
 >  
->  #include <linux/acpi.h>
-> +#include <linux/cleanup.h>
->  #include <linux/delay.h>
-> +#include <linux/mutex.h>
->  #include <linux/device.h>
->  #include <linux/semaphore.h>
->  #include <linux/sysfs.h>
-> @@ -364,6 +366,7 @@ ssize_t hsmp_metric_tbl_read(struct hsmp_socket *sock, char *buf, size_t size)
->  	msg.msg_id	= HSMP_GET_METRIC_TABLE;
->  	msg.sock_ind	= sock->sock_ind;
+> @@ -170,16 +180,18 @@ static const struct hsmp_msg_desc hsmp_msg_desc_table[]
+>  	{0, 1, HSMP_GET},
 >  
-> +	guard(mutex)(&sock->metric_tbl_lock);
->  	ret = hsmp_send_message(&msg);
->  	if (ret)
->  		return ret;
-> @@ -408,6 +411,8 @@ int hsmp_get_tbl_dram_base(u16 sock_ind)
->  		dev_err(sock->dev, "Failed to ioremap metric table addr\n");
->  		return -ENOMEM;
->  	}
+>  	/*
+> -	 * HSMP_SET_XGMI_LINK_WIDTH, num_args = 1, response_sz = 0
+> -	 * input: args[0] = min link width[15:8] + max link width[7:0]
+> +	 * HSMP_SET_XGMI_LINK_WIDTH, num_args = 1, response_sz = 0/1
+> +	 * input: args[0] = set/get XGMI Link width[31] + min link width[15:8] + max link width[7:0]
+> +	 * output: args[0] = current min link width[15:8] + current max link width[7:0]
+>  	 */
+> -	{1, 0, HSMP_SET},
+> +	{1, 1, HSMP_SET_GET},
+>  
+>  	/*
+> -	 * HSMP_SET_DF_PSTATE, num_args = 1, response_sz = 0
+> -	 * input: args[0] = df pstate[7:0]
+> +	 * HSMP_SET_DF_PSTATE, num_args = 1, response_sz = 0/1
+> +	 * input: args[0] = set/get df pstate[31] + df pstate[7:0]
+> +	 * output: args[0] = APB enabled/disabled[8] + current df pstate[7:0]
+>  	 */
+> -	{1, 0, HSMP_SET},
+> +	{1, 1, HSMP_SET_GET},
+>  
+>  	/* HSMP_SET_AUTO_DF_PSTATE, num_args = 0, response_sz = 0 */
+>  	{0, 0, HSMP_SET},
+> @@ -305,16 +317,18 @@ static const struct hsmp_msg_desc hsmp_msg_desc_table[]
+>  	{1, 1, HSMP_SET},
+>  
+>  	/*
+> -	 * HSMP_SET_POWER_MODE, num_args = 1, response_sz = 0
+> -	 * input: args[0] = power efficiency mode[2:0]
+> +	 * HSMP_SET_POWER_MODE, num_args = 1, response_sz = 0/1
+> +	 * input: args[0] = set/get power mode[31] + power efficiency mode[2:0]
+
+Now this seems interesting, as it's only a comment change. Are here some 
+plain clarifications combined with new feature work?
+
+(Admittedly it seemed to be the only case which didn't change the code.)
+
+> +	 * output: args[0] = current power efficiency mode[2:0]
+>  	 */
+>  	{1, 1, HSMP_SET_GET},
+>  
+>  	/*
+> -	 * HSMP_SET_PSTATE_MAX_MIN, num_args = 1, response_sz = 0
+> -	 * input: args[0] = min df pstate[15:8] + max df pstate[7:0]
+> +	 * HSMP_SET_PSTATE_MAX_MIN, num_args = 1, response_sz = 0/1
+> +	 * input: args[0] = set/get DF P-state range[31] + min df pstate[15:8] + max df pstate[7:0]
+> +	 * output: args[0] = min df pstate[15:8] + max df pstate[7:0]
+>  	 */
+> -	{1, 0, HSMP_SET},
+> +	{1, 1, HSMP_SET_GET},
+>  
+>  	/*
+>  	 * HSMP_GET_METRIC_TABLE_VER, num_args = 0, response_sz = 1
+> @@ -335,10 +349,12 @@ static const struct hsmp_msg_desc hsmp_msg_desc_table[]
+>  	{0, 2, HSMP_GET},
+>  
+>  	/*
+> -	 * HSMP_SET_XGMI_PSTATE_RANGE, num_args = 1, response_sz = 0
+> -	 * input: args[0] = min xGMI p-state[15:8] + max xGMI p-state[7:0]
+> +	 * HSMP_SET_XGMI_PSTATE_RANGE, num_args = 1, response_sz = 0/1
+> +	 * input: args[0] = set/get XGMI pstate range[31] + min xGMI p-state[15:8] +
+> +	 *                  max xGMI p-state[7:0]
+> +	 * output: args[0] = min xGMI p-state[15:8] + max xGMI p-state[7:0]
+>  	 */
+> -	{1, 0, HSMP_SET},
+> +	{1, 1, HSMP_SET_GET},
+>  
+>  	/*
+>  	 * HSMP_CPU_RAIL_ISO_FREQ_POLICY, num_args = 1, response_sz = 1
+> @@ -355,9 +371,21 @@ static const struct hsmp_msg_desc hsmp_msg_desc_table[]
+>  	 */
+>  	{1, 1, HSMP_SET_GET},
+>  
+> -	/* RESERVED(0x29-0x2f) */
+> -	{0, 0, HSMP_RSVD},
+> -	{0, 0, HSMP_RSVD},
+> +	/*
+> +	 * HSMP_PC6_ENABLE, num_args = 1, response_sz = 0/1
+> +	 * input: args[0] = set/get PC6 control[31] + disable/enable PC6[0]
+> +	 * output: args[0] = current PC6 control status[0]
+> +	 */
+> +	{1, 1, HSMP_SET_GET},
 > +
-> +	mutex_init(&sock->metric_tbl_lock);
-
-devm_mutex_init() + don't forget to handle errors. (without devm_ you'd 
-have to handle mutex_destroy() calls too)
-
->  	return 0;
->  }
->  EXPORT_SYMBOL_NS_GPL(hsmp_get_tbl_dram_base, "AMD_HSMP");
+> +	/*
+> +	 * HSMP_CC6_ENABLE, num_args = 1, response_sz = 0/1
+> +	 * input: args[0] = set/get CC6 control[31] + disable/enable CC6[0]
+> +	 * output: args[0] = current CC6 control status[0]
+> +	 */
+> +	{1, 1, HSMP_SET_GET},
+> +
+> +	/* RESERVED(0x2B-0x2F) */
+>  	{0, 0, HSMP_RSVD},
+>  	{0, 0, HSMP_RSVD},
+>  	{0, 0, HSMP_RSVD},
+> @@ -385,6 +413,86 @@ static const struct hsmp_msg_desc hsmp_msg_desc_table[]
+>  	 */
+>  	{0, 2, HSMP_GET},
+>  
+> +	/*
+> +	 * HSMP_DIMM_SB_RD, num_args = 1, response_sz = 1
+> +	 * input: args[0] =
+> +	 *	Register space[23]
+> +	 *	Register offset in given reg space[22:12]
+> +	 *	LID of device[11:8]
+> +	 *	DIMM address[7:0]
+> +	 * output: args[0] = [3:0] Read data byte
+> +	 */
+> +	{1, 1, HSMP_GET},
+> +
+> +	/*
+> +	 * HSMP_READ_CCD_POWER, num_args = 1, response_sz = 1
+> +	 * input: args[0]  = apic id of core[15:0]
+> +	 * output: args[0] = CCD power(mWatts)[31:0]
+> +	 */
+> +	{1, 1, HSMP_GET},
+> +
+> +	/*
+> +	 * HSMP_READ_TDELTA, num_args = 0, response_sz = 1
+> +	 * input: None
+> +	 * output: args[0] = thermal behaviour[31:0]
+> +	 */
+> +	{0, 1, HSMP_GET},
+> +
+> +	/*
+> +	 * HSMP_GET_SVI3_VR_CTRL_TEMP, num_args = 1, response_sz = 1
+> +	 * input: args[0] = SVI3 rail index[3:1] + Read SVI3 temperature data[0]
+> +	 * output: args[0] = SVI3 rail index[30:28] + SVI3 rail temperature(degree C)[27:0]
+> +	 */
+> +	{1, 1, HSMP_GET},
+> +
+> +	/*
+> +	 * HSMP_GET_ENABLED_HSMP_CMDS, num_args = 1, response_sz = 3
+> +	 * input: args[0] = HSMP command mask[0]
+> +	 * output: status of HSMP command = args[0], args[1], args[2]
+> +	 */
+> +	{1, 3, HSMP_GET},
+> +
+> +	/*
+> +	 * HSMP_SET_GET_FLOOR_LIMIT, num_args = 1, response_sz = 1
+> +	 * input: args[0] =
+> +	 *	Set or Get[31:30]
+> +	 *		Set the Floor frequency per core = 00
+> +	 *		Set the Floor frequency for all cores = 01
+> +	 *		Get the Floor frequency of a core = 10
+> +	 *		Get the Effective Floor frequency per core = 11
+> +	 *	Reserved[29:28]
+> +	 *	Apic id / Reserved[27:16]
+> +	 *		args[27:16] is reserved if args[31:30] = 01
+> +	 *	Floor frequency limit / Reserved[15:0]
+> +	 *		if args[31] = 0, Floor frequency limit, else reserved
+> +	 *
+> +	 * output: args[0] =
+> +	 *	Effective Floor frequency limit(MHz) / None / Floor frequency limit[15:0]
+> +	 *		Effective Floor frequency if input args[31:30] = 11
+> +	 *		None if input args[31] = 0
+> +	 *		Floor frequency limit (MHz)[15:0] if args[31:30] = 10
+> +	 */
+> +	{1, 1, HSMP_SET_GET},
+> +
+> +	/*
+> +	 * HSMP_DIMM_SB_WR, num_args = 1, response_sz = 0
+> +	 * input: args[0] =
+> +	 *	Write Data[31:24]
+> +	 *	Register space[23]
+> +	 *	Register offset in given reg space[22:12]
+> +	 *	LID of device[11:8]
+> +	 *	DIMM address[7:0]
+> +	 * output: None
+> +	 */
+> +	{1, 0, HSMP_SET},
+> +
+> +	/*
+> +	 * HSMP_SDPS_LIMIT, num_args = 1, response_sz = 1
+> +	 * input: args[0] = Set/Get[31] + SDPS Limit[30:0]
+> +	 * output: args[0] = SDPS Limit[30:0]
+> +	 */
+> +	{1, 1, HSMP_SET_GET},
+> +
+>  };
+>  
+>  /* Metrics table (supported only with proto version 6) */
 > diff --git a/drivers/platform/x86/amd/hsmp/hsmp.h b/drivers/platform/x86/amd/hsmp/hsmp.h
-> index e7f051475728..038678b8ab0e 100644
+> index 0509a442eaae..b153527e0a0d 100644
 > --- a/drivers/platform/x86/amd/hsmp/hsmp.h
 > +++ b/drivers/platform/x86/amd/hsmp/hsmp.h
-> @@ -16,6 +16,7 @@
->  #include <linux/kconfig.h>
->  #include <linux/miscdevice.h>
->  #include <linux/pci.h>
-> +#include <linux/mutex.h>
->  #include <linux/semaphore.h>
->  #include <linux/sysfs.h>
+> @@ -27,7 +27,7 @@
+>  #define HSMP_DEVNODE_NAME	"hsmp"
+>  #define ACPI_HSMP_DEVICE_HID    "AMDI0097"
 >  
-> @@ -41,6 +42,8 @@ struct hsmp_socket {
->  	struct bin_attribute hsmp_attr;
->  	struct hsmp_mbaddr_info mbinfo;
->  	void __iomem *metric_tbl_addr;
-> +	/* Serializes concurrent metric table reads */
-> +	struct mutex metric_tbl_lock;
->  	void __iomem *virt_base_addr;
->  	struct semaphore hsmp_sem;
->  	char name[HSMP_ATTR_GRP_NAME_SIZE];
+> -#define DRIVER_VERSION		"2.5"
+> +#define DRIVER_VERSION		"2.6"
+>  
+>  struct hsmp_mbaddr_info {
+>  	u32 base_addr;
 > 
 
 -- 
