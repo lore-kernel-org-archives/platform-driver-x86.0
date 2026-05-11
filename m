@@ -1,67 +1,58 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.13])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.17])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D313B31F99C;
-	Mon, 11 May 2026 14:10:31 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.13
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D0FBA31F99C;
+	Mon, 11 May 2026 14:14:24 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.17
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1778508633; cv=none; b=YnPtdImRgokK4e2Sb5a8rDt21flLrhJnfJ7goLhDpezEDArBq50YTkZo30KGVT09ADF4N9+eReFQe7mAQ8HVorhS4da7aPIF7ltI73Ap6AD9vnLXbIdkBssqK+s990WkbWEOqe+WjKp509e3OB4kE7M0K1vB2BIiiUG8dc94xvQ=
+	t=1778508866; cv=none; b=lj5ExHS7nh7jxgcvmzmihUYsI3H9k5EYjWTMs7cFUz0GFHKfZHaps++tsnjFUKagxwTWFX0X4rN9vtFsRol35gBM+EgDFXBTnrlRrupCsqtkkMebhLm1xKsIppp+zPlsER08KPSHqVz/ZCyRib+wTGYdqVtBxhvVkAQQmmhNcyg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1778508633; c=relaxed/simple;
-	bh=LZs06SDlBQkgJphcssclEMPHuJKHmhU4cI5c6ooOu5E=;
+	s=arc-20240116; t=1778508866; c=relaxed/simple;
+	bh=BQalTODFlyAs/jcinxqap9g9Erit5O6lxZn9/XTjaFk=;
 	h=From:Date:To:cc:Subject:In-Reply-To:Message-ID:References:
-	 MIME-Version:Content-Type; b=h8sZwWNNUNpXn6cYMun9eOYVW4PNdPi2ZjCyZXm+a9GSZ92QN4bG+xbDEtLheTHFp4DUGvIGUeHsYHuwDJPsoWdV7GItJAxbVKQdkxdwQHmjlz6qXLmxS9RXncXrQvxfeei1Ba5sj4VH0VeXI51RKSeinRPCyZ4Sy4L6KNjb90E=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=pass smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=XMYIMuqV; arc=none smtp.client-ip=198.175.65.13
+	 MIME-Version:Content-Type; b=eVUxisVHnMzXjWDidqL9vaMVq5i2u6BH/WrvsNaftv4+jrRYBgwVyaRVHyMpXxhL+cOEWvSEcDDtiGFE5rQUttSM1kjmt9YOTze2l5X/lHNoAuGmJ22KXMzGCHXk2AqmdAMGYRt+HoDDBuNdJSdM54FY4uV1j+u7a04eZbGIKV0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=pass smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=TFOZ6VBY; arc=none smtp.client-ip=192.198.163.17
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="XMYIMuqV"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="TFOZ6VBY"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1778508631; x=1810044631;
+  t=1778508865; x=1810044865;
   h=from:date:to:cc:subject:in-reply-to:message-id:
    references:mime-version;
-  bh=LZs06SDlBQkgJphcssclEMPHuJKHmhU4cI5c6ooOu5E=;
-  b=XMYIMuqVi2qU1nNKV4HS708CUfVpa+n0kUlyFKT27o1v7I36KnGC5znk
-   Vo7LxN4hFno8/6CUM9kipFn0jryoDSxkI7OY67m3qiQ73RQgFM2Z28qb6
-   NCfmd1J298wihIBIN9o6Chr1+QY2wXsgm65ag7gKF8JV4/8Zi0Dt+WMxb
-   dt/i1UV+ibT7E2NpNDpPtWJQboHHUlV7hTMOTc/5gwp43Dp2jeGxcvp1O
-   JuClKR2Vr1FBLDGsPKficBobbKHlzdp9l+zm5Me1V/Abbi9b46eyLS2Dc
-   8o7ppmW616ZbrV8pcf3gjSfmquYzMzFy79/w/yA2HjrCBbhM6z7HP98VF
-   Q==;
-X-CSE-ConnectionGUID: z0Nd7dGxSGuYUnpKFy/dSQ==
-X-CSE-MsgGUID: zO0vDwbcSgGrBJ2IjPyrEA==
-X-IronPort-AV: E=McAfee;i="6800,10657,11783"; a="90496172"
+  bh=BQalTODFlyAs/jcinxqap9g9Erit5O6lxZn9/XTjaFk=;
+  b=TFOZ6VBYkwfya88OmcjM8FOn9D7ApSfm5bUKA6cP399il5UEjLrI/ZhR
+   VytiGYX7PS2sAazPDs79cYW2HDwGdohuQlCOq6/GJHAxuxbFhKrjwadv3
+   FHy8GlZf2Bbr1djQT37jeDzjxzehRMb9FXq37V7YQxTTNzAFh+HvL0NqE
+   LYBWKtqTkMEJta/xHiHC2bf4saqr7pU0coPLiYc6nTWvoo+dZKIgcUOyG
+   mdLjhs0C0Z0fk5+4lpZBA11cvz/iXuAFJOJmTjmUXUbn+1jkOuMOdbaR3
+   mdqw0BfUsKX/tc6TMnJuYDDhDgga3VYt0olZWxEJBNlBcvCvhIM4fi/dK
+   A==;
+X-CSE-ConnectionGUID: q5HqFuKMRJeS98m8RSieWQ==
+X-CSE-MsgGUID: VTl5yAmUSoqUd/J3NuBkcA==
+X-IronPort-AV: E=McAfee;i="6800,10657,11783"; a="79256476"
 X-IronPort-AV: E=Sophos;i="6.23,229,1770624000"; 
-   d="scan'208";a="90496172"
-Received: from fmviesa003.fm.intel.com ([10.60.135.143])
-  by orvoesa105.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 11 May 2026 07:10:31 -0700
-X-CSE-ConnectionGUID: /3nXcrQLR8aE1IGDf8g4XA==
-X-CSE-MsgGUID: pFF6rSDYSKWRtcyDw9ebzQ==
+   d="scan'208";a="79256476"
+Received: from fmviesa001.fm.intel.com ([10.60.135.141])
+  by fmvoesa111.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 11 May 2026 07:14:24 -0700
+X-CSE-ConnectionGUID: YBSXxnzmQzOw3GAhcaxZGg==
+X-CSE-MsgGUID: BZgcGZNcRgmzhZT50hN1sQ==
 X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.23,229,1770624000"; 
+   d="scan'208";a="261203111"
 Received: from ijarvine-mobl1.ger.corp.intel.com (HELO localhost) ([10.245.245.28])
-  by fmviesa003-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 11 May 2026 07:10:24 -0700
+  by smtpauth.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 11 May 2026 07:14:22 -0700
 From: =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
-Date: Mon, 11 May 2026 17:10:21 +0300 (EEST)
-To: Anvesh Jain P <anvesh.p@oss.qualcomm.com>
-cc: Sibi Sankar <sibi.sankar@oss.qualcomm.com>, Rob Herring <robh@kernel.org>, 
-    Krzysztof Kozlowski <krzk+dt@kernel.org>, 
-    Conor Dooley <conor+dt@kernel.org>, Hans de Goede <hansg@kernel.org>, 
-    Bryan O'Donoghue <bryan.odonoghue@linaro.org>, 
-    Bjorn Andersson <andersson@kernel.org>, 
-    Konrad Dybcio <konradybcio@kernel.org>, 
-    Randy Dunlap <rdunlap@infradead.org>, linux-arm-msm@vger.kernel.org, 
-    devicetree@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>, 
-    platform-driver-x86@vger.kernel.org, 
-    Maya Matuszczyk <maccraft123mc@gmail.com>, 
-    Dmitry Baryshkov <dmitry.baryshkov@oss.qualcomm.com>, 
-    Konrad Dybcio <konrad.dybcio@oss.qualcomm.com>, 
-    Akhil P Oommen <akhilpo@oss.qualcomm.com>
-Subject: Re: [PATCH v9 2/6] platform: arm64: Add driver for EC found on
- Qualcomm reference devices
-In-Reply-To: <20260511-add-driver-for-ec-v9-2-e5437c39b7f8@oss.qualcomm.com>
-Message-ID: <84949728-7d0a-4ce9-f37c-8200ef792baf@linux.intel.com>
-References: <20260511-add-driver-for-ec-v9-0-e5437c39b7f8@oss.qualcomm.com> <20260511-add-driver-for-ec-v9-2-e5437c39b7f8@oss.qualcomm.com>
+Date: Mon, 11 May 2026 17:14:18 +0300 (EEST)
+To: "Yo-Jung Leo Lin (AMD)" <leo.lin@amd.com>
+cc: Hans de Goede <hansg@kernel.org>, 
+    "Mario Limonciello (AMD)" <superm1@kernel.org>, 
+    LKML <linux-kernel@vger.kernel.org>, platform-driver-x86@vger.kernel.org
+Subject: Re: [PATCH v3] platform/x86/amd: Introduce Halo Box RGB LED driver
+In-Reply-To: <20260508-halo-leds-v2-plus-v3-1-91df458966ea@amd.com>
+Message-ID: <4c416cce-dd01-9aa9-093a-8ec6bfe1b7b8@linux.intel.com>
+References: <20260508-halo-leds-v2-plus-v3-1-91df458966ea@amd.com>
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
@@ -70,544 +61,457 @@ List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=US-ASCII
 
-On Mon, 11 May 2026, Anvesh Jain P wrote:
+On Fri, 8 May 2026, Yo-Jung Leo Lin (AMD) wrote:
 
-> From: Sibi Sankar <sibi.sankar@oss.qualcomm.com>
+> The Halo Box features an RGB LED light bar that can be controlled
+> through WMI methods to display any color combination.
 > 
-> Add Embedded controller driver support for Hamoa/Purwa/Glymur qualcomm
-> reference boards. It handles fan control, temperature sensors, access
-> to EC state changes and supports reporting suspend entry/exit to the
-> EC.
+> The driver exposes the LED through the LED multicolor subsystem,
+> allowing userspace to control RGB values via sysfs:
+>   /sys/class/leds/amd_halo:multicolor:status/multi_intensity
+>   /sys/class/leds/amd_halo:multicolor:status/brightness
 > 
-> Co-developed-by: Maya Matuszczyk <maccraft123mc@gmail.com>
-> Signed-off-by: Maya Matuszczyk <maccraft123mc@gmail.com>
-> Signed-off-by: Sibi Sankar <sibi.sankar@oss.qualcomm.com>
-> Reviewed-by: Dmitry Baryshkov <dmitry.baryshkov@oss.qualcomm.com>
-> Acked-by: Konrad Dybcio <konrad.dybcio@oss.qualcomm.com>
-> Tested-by: Akhil P Oommen <akhilpo@oss.qualcomm.com>
-> Co-developed-by: Anvesh Jain P <anvesh.p@oss.qualcomm.com>
-> Signed-off-by: Anvesh Jain P <anvesh.p@oss.qualcomm.com>
-
-Thanks for the update.
-
-Patch 2 applied to the review-ilpo-next branch.
-
--- 
- i.
-
+> Hardware interface:
+> - Three separate RGB channels (Red, Green, Blue)
+> - Each channel controlled via individual WMI method calls
+> - Value range: 0-100 (matching hardware range directly)
+> 
+> Co-developed-by: Mario Limonciello (AMD) <superm1@kernel.org>
+> Signed-off-by: Mario Limonciello (AMD) <superm1@kernel.org>
+> Signed-off-by: Yo-Jung Leo Lin (AMD) <Leo.Lin@amd.com>
 > ---
->  MAINTAINERS                            |   8 +
->  drivers/platform/arm64/Kconfig         |  13 +
->  drivers/platform/arm64/Makefile        |   1 +
->  drivers/platform/arm64/qcom-hamoa-ec.c | 451 +++++++++++++++++++++++++++++++++
->  4 files changed, 473 insertions(+)
+> v2 -> v3:
+> - Re-introduce OF/OFF method: implement them with wmidev_invoke_method
+> - Explicitly call the ON method on brightness_set callback for
+>   brightness != 0; call the OFF method when brightness == 0
+> - Turn off light bar if TURN_ON/SET_LIGHTBAR can't function normally
+> - Replace get_unaligned_le64 with casting and le16_to_cpu()
+> - Add an inline function (wmi_status_to_err) to convert WMI return
+>   values to errno
+> - Use amd_halo_wmi_set_channel in probe to set default color
+> - Use devm_mutex_init() instead
+> - Remove unused includes
+> - Link to v2: https://lore.kernel.org/r/20260504-halo-leds-v2-plus-v2-1-af027727605b@amd.com
+> 
+> v1 -> v2:
+> - Fix Kconfig dependencies
+> - Remove amd_halo_wmi_turn_off(). Handle the case where brightness=0 with the
+>   same logic where brightness != 0
+> - Remove the brightness_get callback, because currently there isn't a
+>   well-defined global bightness in hardware. Note that the sysfs brightness
+>   stil works. It just caches the value last set.
+> - Convert to wmidev_invoke_method()
+> - Convert to ARRAY_SIZE()
+> - Convert some macros to enum
+> - Convert to devm_led_classdev_multicolor_register_ext()
+> - Rename sysfs path to amd_halo:multicolor:status
+> - Fold default LED colors setting in probe, before registration
+> - Add no_singleton option
+> - Make default RGB values into macros and adjust their values
+> ---
+>  MAINTAINERS                             |   7 +
+>  drivers/platform/x86/amd/Kconfig        |  11 ++
+>  drivers/platform/x86/amd/Makefile       |   1 +
+>  drivers/platform/x86/amd/amd_halo_led.c | 312 ++++++++++++++++++++++++++++++++
+>  4 files changed, 331 insertions(+)
 > 
 > diff --git a/MAINTAINERS b/MAINTAINERS
-> index f877e5aaf2c7..6331b8a39d8c 100644
+> index c871acf2179c..464bd4d16461 100644
 > --- a/MAINTAINERS
 > +++ b/MAINTAINERS
-> @@ -22005,6 +22005,14 @@ F:	Documentation/devicetree/bindings/misc/qcom,fastrpc.yaml
->  F:	drivers/misc/fastrpc.c
->  F:	include/uapi/misc/fastrpc.h
+> @@ -1124,6 +1124,13 @@ F:	drivers/char/hw_random/geode-rng.c
+>  F:	drivers/crypto/geode*
+>  F:	drivers/video/fbdev/geode/
 >  
-> +QUALCOMM HAMOA EMBEDDED CONTROLLER DRIVER
-> +M:	Anvesh Jain P <anvesh.p@oss.qualcomm.com>
-> +M:	Sibi Sankar <sibi.sankar@oss.qualcomm.com>
-> +L:	linux-arm-msm@vger.kernel.org
-> +S:	Maintained
-> +F:	Documentation/devicetree/bindings/embedded-controller/qcom,hamoa-crd-ec.yaml
-> +F:	drivers/platform/arm64/qcom-hamoa-ec.c
+> +AMD HALO BOX RGB LED DRIVER
+> +M:	Mario Limonciello (AMD) <superm1@kernel.org>
+> +R:	Yo-Jung Leo Lin (AMD) <Leo.Lin@amd.com>
+> +L:	platform-driver-x86@vger.kernel.org
+> +S:	Supported
+> +F:	drivers/platform/x86/amd/amd_halo_led.c
 > +
->  QUALCOMM HEXAGON ARCHITECTURE
->  M:	Brian Cain <brian.cain@oss.qualcomm.com>
->  L:	linux-hexagon@vger.kernel.org
-> diff --git a/drivers/platform/arm64/Kconfig b/drivers/platform/arm64/Kconfig
-> index 10f905d7d6bf..e32e01b2a9bd 100644
-> --- a/drivers/platform/arm64/Kconfig
-> +++ b/drivers/platform/arm64/Kconfig
-> @@ -90,4 +90,17 @@ config EC_LENOVO_THINKPAD_T14S
+>  AMD HSMP DRIVER
+>  M:	Naveen Krishna Chatradhi <naveenkrishna.chatradhi@amd.com>
+>  R:	Carlos Bilbao <carlos.bilbao@kernel.org>
+> diff --git a/drivers/platform/x86/amd/Kconfig b/drivers/platform/x86/amd/Kconfig
+> index b813f9265368..a1a74ef6c859 100644
+> --- a/drivers/platform/x86/amd/Kconfig
+> +++ b/drivers/platform/x86/amd/Kconfig
+> @@ -34,6 +34,17 @@ config AMD_WBRF
+>  	  This mechanism will only be activated on platforms that advertise a
+>  	  need for it.
 >  
->  	  Say M or Y here to include this support.
->  
-> +config EC_QCOM_HAMOA
-> +	tristate "Embedded Controller driver for Qualcomm Hamoa/Glymur reference devices"
-> +	depends on ARCH_QCOM || COMPILE_TEST
-> +	depends on I2C
-> +	depends on THERMAL || THERMAL=n
+> +config AMD_HALO_LED
+> +	tristate "AMD Halo Box RGB LED Driver"
+> +	depends on ACPI_WMI && LEDS_CLASS_MULTICOLOR
 > +	help
-> +	  Say M or Y here to enable the Embedded Controller driver for Qualcomm
-> +	  Snapdragon-based Hamoa/Glymur reference devices. The driver handles fan
-> +	  control, temperature sensors, access to EC state changes and supports
-> +	  reporting suspend entry/exit to the EC.
+> +	  This driver provides RGB LED control for AMD Halo Box devices
+> +	  through the LED multicolor subsystem. The Halo Box light bar can
+> +	  be controlled via sysfs to display any RGB color combination.
 > +
-> +	  This driver currently supports Hamoa/Purwa/Glymur reference devices.
+> +	  To compile this driver as a module, choose M here: the module
+> +	  will be called amd_halo_led.
 > +
->  endif # ARM64_PLATFORM_DEVICES
-> diff --git a/drivers/platform/arm64/Makefile b/drivers/platform/arm64/Makefile
-> index 60c131cff6a1..7681be4a46e9 100644
-> --- a/drivers/platform/arm64/Makefile
-> +++ b/drivers/platform/arm64/Makefile
-> @@ -9,3 +9,4 @@ obj-$(CONFIG_EC_ACER_ASPIRE1)	+= acer-aspire1-ec.o
->  obj-$(CONFIG_EC_HUAWEI_GAOKUN)	+= huawei-gaokun-ec.o
->  obj-$(CONFIG_EC_LENOVO_YOGA_C630) += lenovo-yoga-c630.o
->  obj-$(CONFIG_EC_LENOVO_THINKPAD_T14S) += lenovo-thinkpad-t14s.o
-> +obj-$(CONFIG_EC_QCOM_HAMOA) += qcom-hamoa-ec.o
-> diff --git a/drivers/platform/arm64/qcom-hamoa-ec.c b/drivers/platform/arm64/qcom-hamoa-ec.c
+>  config AMD_ISP_PLATFORM
+>  	tristate "AMD ISP4 platform driver"
+>  	depends on I2C && X86_64 && ACPI
+> diff --git a/drivers/platform/x86/amd/Makefile b/drivers/platform/x86/amd/Makefile
+> index f6ff0c837f34..2f467dbbfc8a 100644
+> --- a/drivers/platform/x86/amd/Makefile
+> +++ b/drivers/platform/x86/amd/Makefile
+> @@ -10,5 +10,6 @@ obj-$(CONFIG_AMD_PMC)		+= pmc/
+>  obj-$(CONFIG_AMD_HSMP)		+= hsmp/
+>  obj-$(CONFIG_AMD_PMF)		+= pmf/
+>  obj-$(CONFIG_AMD_WBRF)		+= wbrf.o
+> +obj-$(CONFIG_AMD_HALO_LED)	+= amd_halo_led.o
+>  obj-$(CONFIG_AMD_ISP_PLATFORM)	+= amd_isp4.o
+>  obj-$(CONFIG_AMD_HFI)		+= hfi/
+> diff --git a/drivers/platform/x86/amd/amd_halo_led.c b/drivers/platform/x86/amd/amd_halo_led.c
 > new file mode 100644
-> index 000000000000..a018f7bf35d2
+> index 000000000000..632ccdf07ffe
 > --- /dev/null
-> +++ b/drivers/platform/arm64/qcom-hamoa-ec.c
-> @@ -0,0 +1,451 @@
-> +// SPDX-License-Identifier: GPL-2.0-only
+> +++ b/drivers/platform/x86/amd/amd_halo_led.c
+> @@ -0,0 +1,312 @@
+> +// SPDX-License-Identifier: GPL-2.0
 > +/*
-> + * Copyright (c) 2024 Maya Matuszczyk <maccraft123mc@gmail.com>
-> + * Copyright (c) Qualcomm Technologies, Inc. and/or its subsidiaries.
+> + * AMD Halo Box RGB LED Driver
+> + *
+> + * Copyright (C) 2026 Advanced Micro Devices, Inc.
+> + *
+> + * This driver provides RGB LED control for AMD Halo Box devices through
+> + * the LED multicolor subsystem. The Halo Box light bar can be controlled
+> + * via sysfs to display any RGB color combination.
 > + */
 > +
-> +#include <linux/bitfield.h>
-> +#include <linux/bits.h>
-> +#include <linux/device.h>
-> +#include <linux/dev_printk.h>
-> +#include <linux/err.h>
-> +#include <linux/i2c.h>
-> +#include <linux/interrupt.h>
-> +#include <linux/kernel.h>
+> +#include <linux/led-class-multicolor.h>
+> +#include <linux/leds.h>
 > +#include <linux/module.h>
-> +#include <linux/pm.h>
-> +#include <linux/slab.h>
-> +#include <linux/thermal.h>
+> +#include <linux/mutex.h>
+> +#include <linux/wmi.h>
 > +
-> +#define EC_SCI_EVT_READ_CMD	0x05
-> +#define EC_FW_VERSION_CMD	0x0e
-> +#define EC_MODERN_STANDBY_CMD	0x23
-> +#define EC_FAN_DBG_CONTROL_CMD	0x30
-> +#define EC_SCI_EVT_CONTROL_CMD	0x35
-> +#define EC_THERMAL_CAP_CMD	0x42
+> +#define AMD_HALO_GUID "081E747B-E028-4232-AF24-EAAEAB2B1E86"
 > +
-> +#define EC_FW_VERSION_RESP_LEN	4
-> +#define EC_THERMAL_CAP_RESP_LEN	3
-> +#define EC_FAN_DEBUG_CMD_LEN	6
-> +#define EC_FAN_SPEED_DATA_SIZE	4
-> +
-> +#define EC_MODERN_STANDBY_ENTER	0x01
-> +#define EC_MODERN_STANDBY_EXIT	0x00
-> +
-> +#define EC_FAN_DEBUG_MODE_OFF   0
-> +#define EC_FAN_DEBUG_MODE_ON    BIT(0)
-> +#define EC_FAN_ON               BIT(1)
-> +#define EC_FAN_DEBUG_TYPE_PWM   BIT(2)
-> +#define EC_MAX_FAN_CNT		2
-> +#define EC_FAN_NAME_SIZE	20
-> +#define EC_FAN_MAX_PWM		255
-> +
-> +enum qcom_ec_sci_events {
-> +	EC_FAN1_STATUS_CHANGE_EVT = 0x30,
-> +	EC_FAN2_STATUS_CHANGE_EVT,
-> +	EC_FAN1_SPEED_CHANGE_EVT,
-> +	EC_FAN2_SPEED_CHANGE_EVT,
-> +	EC_NEW_LUT_SET_EVT,
-> +	EC_FAN_PROFILE_SWITCH_EVT,
-> +	EC_THERMISTOR_1_THRESHOLD_CROSS_EVT,
-> +	EC_THERMISTOR_2_THRESHOLD_CROSS_EVT,
-> +	EC_THERMISTOR_3_THRESHOLD_CROSS_EVT,
-> +	/* Reserved: 0x39 - 0x3c/0x3f */
-> +	EC_RECOVERED_FROM_RESET_EVT = 0x3d,
+> +/* WMI method IDs from MOF */
+> +enum {
+> +	AMD_HALO_WMI_GET_LIGHTBAR = 0x01,
+> +	AMD_HALO_WMI_SET_LIGHTBAR,
+> +	AMD_HALO_WMI_TURN_ON,
+> +	AMD_HALO_WMI_TURN_OFF
 > +};
 > +
-> +struct qcom_ec_version {
-> +	u8 main_version;
-> +	u8 sub_version;
-> +	u8 test_version;
+> +/* Channel selectors for Arg0 */
+> +enum {
+> +	AMD_HALO_CHANNEL_RED = 0x01,
+> +	AMD_HALO_CHANNEL_GREEN,
+> +	AMD_HALO_CHANNEL_BLUE
 > +};
 > +
-> +struct qcom_ec_thermal_cap {
-> +#define EC_THERMAL_FAN_CNT(x)		(FIELD_GET(GENMASK(1, 0), (x)))
-> +#define EC_THERMAL_FAN_TYPE(x)		(FIELD_GET(GENMASK(4, 2), (x)))
-> +#define EC_THERMAL_THERMISTOR_MASK(x)	(FIELD_GET(GENMASK(7, 0), (x)))
-> +	u8 fan_cnt;
-> +	u8 fan_type;
-> +	u8 thermistor_mask;
+> +/* Status codes from spec */
+> +#define AMD_HALO_STATUS_SUCCESS		0x0000
+> +#define AMD_HALO_STATUS_INVALID_PARAM	0xFFFD
+> +
+> +/* Brightness uses 0-100 range */
+> +#define AMD_HALO_MAX_HW_BRIGHTNESS	100
+> +
+> +/* Default RGB brightness */
+> +#define AMD_HALO_DEFAULT_RED		50
+> +#define AMD_HALO_DEFAULT_GREEN		30
+> +#define AMD_HALO_DEFAULT_BLUE		30
+> +
+> +/**
+> + * struct amd_halo_led_data - Driver private data
+> + * @wdev: WMI device pointer
+> + * @led_mc: LED multicolor class device
+> + * @subled_info: RGB channel information
+> + * @lock: Mutex to protect WMI calls
+> + */
+> +struct amd_halo_led_data {
+> +	struct wmi_device *wdev;
+> +	struct led_classdev_mc led_mc;
+> +	struct mc_subled subled_info[3];
+> +	struct mutex lock;	/* Protects WMI method calls */
 > +};
 > +
-> +struct qcom_ec_cooling_dev {
-> +	struct thermal_cooling_device *cdev;
-> +	struct device *parent_dev;
-> +	u8 fan_id;
-> +	u8 state;
+> +struct amd_halo_wmi_args {
+> +	u32 arg0;
+> +	u32 arg1;
 > +};
 > +
-> +struct qcom_ec {
-> +	struct qcom_ec_cooling_dev *ec_cdev;
-> +	struct qcom_ec_thermal_cap thermal_cap;
-> +	struct qcom_ec_version version;
-> +	struct i2c_client *client;
-> +};
-> +
-> +static int qcom_ec_read(struct qcom_ec *ec, u8 cmd, u8 resp_len, u8 *resp)
+> +static inline int wmi_status_to_err(u16 status)
 > +{
+> +	switch (status) {
+> +	case AMD_HALO_STATUS_SUCCESS:
+> +		return 0;
+> +	case AMD_HALO_STATUS_INVALID_PARAM:
+> +		return -EINVAL;
+> +	default:
+> +		return -EIO;
+> +	}
+> +}
+> +
+> +static int __amd_halo_wmi_call(struct wmi_device *wdev,
+> +			       u32 method_id,
+> +			       u32 arg0,
+> +			       u32 arg1)
+
+Fits to less lines.
+
+> +{
+> +	struct amd_halo_wmi_args args = {
+> +		.arg0 = arg0,
+> +		.arg1 = arg1,
+> +	};
+> +	struct wmi_buffer input = {
+> +		.length = sizeof(args),
+> +		.data = &args,
+> +	};
+> +	struct wmi_buffer output = { 0 };
+
+= {} is enough to initialize to default values.
+
+> +	u16 result_status;
 > +	int ret;
 > +
-> +	ret = i2c_smbus_read_i2c_block_data(ec->client, cmd, resp_len, resp);
-> +	if (ret < 0)
+> +	ret = wmidev_invoke_method(wdev, 0, method_id,
+> +				   &input, &output, sizeof(result_status));
+> +	if (ret)
 > +		return ret;
-> +	else if (ret == 0 || ret == 0xff)
-> +		return -EOPNOTSUPP;
 > +
-> +	if (resp[0] >= resp_len)
+> +	/* Return buffer per spec: Bytes[0:1] = Status (little-endian) */
+> +	result_status = le16_to_cpu(*(__le16 *)output.data);
+
+Add include for le16_to_cpu()
+
+> +	ret = wmi_status_to_err(result_status);
+> +
+> +	kfree(output.data);
+
+Add include for kfree()
+
+> +	return ret;
+> +}
+> +
+> +/**
+> + * amd_halo_wmi_turn_on - Turn on all LED channels
+> + * @wdev: WMI device pointer
+> + *
+> + * Return: 0 on success, negative error code on failure
+> + */
+> +static int amd_halo_wmi_turn_on(struct wmi_device *wdev)
+> +{
+> +	return __amd_halo_wmi_call(wdev, AMD_HALO_WMI_TURN_ON, 0, 0);
+> +}
+> +
+> +/**
+> + * amd_halo_wmi_turn_off - Turn off all LED channels
+> + * @wdev: WMI device pointer
+> + *
+> + * Return: 0 on success, negative error code on failure
+> + */
+> +static int amd_halo_wmi_turn_off(struct wmi_device *wdev)
+> +{
+> +	return __amd_halo_wmi_call(wdev, AMD_HALO_WMI_TURN_OFF, 0, 0);
+> +}
+> +
+> +/**
+> + * amd_halo_wmi_set_channel - Set a single RGB channel value
+> + * @wdev: WMI device pointer
+> + * @channel: Channel selector (1=Red, 2=Green, 3=Blue)
+> + * @brightness: brightness to set (0-100)
+> + *
+> + * Return: 0 on success, negative error code on failure
+> + */
+> +static int amd_halo_wmi_set_channel(struct wmi_device *wdev, u32 channel,
+> +				    u32 brightness)
+> +{
+> +	if (channel < AMD_HALO_CHANNEL_RED ||
+> +	    channel > AMD_HALO_CHANNEL_BLUE ||
+> +	    brightness > AMD_HALO_MAX_HW_BRIGHTNESS)
 > +		return -EINVAL;
 > +
-> +	return 0;
+> +	return __amd_halo_wmi_call(wdev, AMD_HALO_WMI_SET_LIGHTBAR,
+> +				   channel, brightness);
 > +}
 > +
-> +/*
-> + * EC Device Firmware Version:
+> +/**
+> + * amd_halo_brightness_set - Set LED brightness and color
+> + * @cdev: LED class device
+> + * @brightness: Brightness value
 > + *
-> + * Read Response:
-> + * ----------------------------------------------------------------------
-> + * | Offset	| Name		| Description				|
-> + * ----------------------------------------------------------------------
-> + * | 0x00	| Byte count	| Number of bytes in response		|
-> + * |		|		| (excluding byte count)		|
-> + * ----------------------------------------------------------------------
-> + * | 0x01	| Test-version	| Test-version of EC firmware		|
-> + * ----------------------------------------------------------------------
-> + * | 0x02	| Sub-version	| Sub-version of EC firmware		|
-> + * ----------------------------------------------------------------------
-> + * | 0x03	| Main-version	| Main-version of EC firmware		|
-> + * ----------------------------------------------------------------------
-> + *
+> + * Return: 0 on success, negative error code on failure
 > + */
-> +static int qcom_ec_read_fw_version(struct device *dev)
+> +static int amd_halo_brightness_set(struct led_classdev *cdev,
+> +				   enum led_brightness brightness)
 > +{
-> +	struct i2c_client *client = to_i2c_client(dev);
-> +	struct qcom_ec *ec = i2c_get_clientdata(client);
-> +	struct qcom_ec_version *version = &ec->version;
-> +	u8 resp[EC_FW_VERSION_RESP_LEN];
+> +	struct led_classdev_mc *mc_cdev = lcdev_to_mccdev(cdev);
+> +	struct amd_halo_led_data *data = container_of(mc_cdev,
+> +						       struct amd_halo_led_data,
+> +						       led_mc);
+
+Alignment off by 1.
+
+> +	u32 red_hw, green_hw, blue_hw;
 > +	int ret;
 > +
-> +	ret = qcom_ec_read(ec, EC_FW_VERSION_CMD, EC_FW_VERSION_RESP_LEN, resp);
-> +	if (ret < 0)
-> +		return ret;
+> +	guard(mutex)(&data->lock);
 > +
-> +	version->main_version = resp[3];
-> +	version->sub_version = resp[2];
-> +	version->test_version = resp[1];
+> +	led_mc_calc_color_components(mc_cdev, brightness);
 > +
-> +	dev_dbg(dev, "EC Version %d.%d.%d\n",
-> +		version->main_version, version->sub_version, version->test_version);
+> +	if (brightness == 0)
+> +		return amd_halo_wmi_turn_off(data->wdev);
 > +
-> +	return 0;
-> +}
+> +	red_hw = mc_cdev->subled_info[0].brightness;
+> +	green_hw = mc_cdev->subled_info[1].brightness;
+> +	blue_hw = mc_cdev->subled_info[2].brightness;
 > +
-> +/*
-> + * EC Device Thermal Capabilities:
-> + *
-> + * Read Response:
-> + * ------------------------------------------------------------------------------
-> + * | Offset		| Name		| Description				|
-> + * ------------------------------------------------------------------------------
-> + * | 0x00		| Byte count	| Number of bytes in response		|
-> + * |			|		| (excluding byte count)		|
-> + * ------------------------------------------------------------------------------
-> + * | 0x02 (LSB)	| EC Thermal	| Bit 0-1: Number of fans		|
-> + * | 0x03		| Capabilities	| Bit 2-4: Type of fan			|
-> + * |			|		| Bit 5-6: Reserved			|
-> + * |			|		| Bit 7: Data Valid/Invalid		|
-> + * |			|		|	 (Valid - 1, Invalid - 0)	|
-> + * |			|		| Bit 8-15: Thermistor 0 - 7 presence	|
-> + * |			|		|	    (1 present, 0 absent)	|
-> + * ------------------------------------------------------------------------------
-> + *
-> + */
-> +static int qcom_ec_thermal_capabilities(struct device *dev)
-> +{
-> +	struct i2c_client *client = to_i2c_client(dev);
-> +	struct qcom_ec *ec = i2c_get_clientdata(client);
-> +	struct qcom_ec_thermal_cap *cap = &ec->thermal_cap;
-> +	u8 resp[EC_THERMAL_CAP_RESP_LEN];
-> +	int ret;
+> +	ret = amd_halo_wmi_turn_on(data->wdev);
+> +	if (ret)
+> +		goto out;
 > +
-> +	ret = qcom_ec_read(ec, EC_THERMAL_CAP_CMD, EC_THERMAL_CAP_RESP_LEN, resp);
-> +	if (ret < 0)
-> +		return ret;
+> +	ret = amd_halo_wmi_set_channel(data->wdev, AMD_HALO_CHANNEL_RED,
+> +				       red_hw);
+
+I suggest putting all these 3 to one line (instead of 2 lines each).
+
+> +	if (ret)
+> +		goto out;
 > +
-> +	cap->fan_cnt = min(EC_MAX_FAN_CNT, EC_THERMAL_FAN_CNT(resp[1]));
-> +	cap->fan_type = EC_THERMAL_FAN_TYPE(resp[1]);
-> +	cap->thermistor_mask = EC_THERMAL_THERMISTOR_MASK(resp[2]);
+> +	ret = amd_halo_wmi_set_channel(data->wdev, AMD_HALO_CHANNEL_GREEN,
+> +				       green_hw);
+> +	if (ret)
+> +		goto out;
 > +
-> +	dev_dbg(dev, "Fan count: %d Fan Type: %d Thermistor Mask: %x\n",
-> +		cap->fan_cnt, cap->fan_type, cap->thermistor_mask);
+> +	ret = amd_halo_wmi_set_channel(data->wdev, AMD_HALO_CHANNEL_BLUE,
+> +				       blue_hw);
+> +	if (ret)
+> +		goto out;
 > +
 > +	return 0;
-> +}
 > +
-> +static irqreturn_t qcom_ec_irq(int irq, void *data)
-> +{
-> +	struct qcom_ec *ec = data;
-> +	struct device *dev = &ec->client->dev;
-> +	int val;
-> +
-> +	val = i2c_smbus_read_byte_data(ec->client, EC_SCI_EVT_READ_CMD);
-> +	if (val < 0) {
-> +		dev_err_ratelimited(dev, "Failed to read EC SCI Event: %d\n", val);
-> +		return IRQ_HANDLED;
-> +	}
-> +
-> +	switch (val) {
-> +	case EC_FAN1_STATUS_CHANGE_EVT:
-> +		dev_dbg_ratelimited(dev, "Fan1 status changed\n");
-> +		break;
-> +	case EC_FAN2_STATUS_CHANGE_EVT:
-> +		dev_dbg_ratelimited(dev, "Fan2 status changed\n");
-> +		break;
-> +	case EC_FAN1_SPEED_CHANGE_EVT:
-> +		dev_dbg_ratelimited(dev, "Fan1 speed crossed low/high trip point\n");
-> +		break;
-> +	case EC_FAN2_SPEED_CHANGE_EVT:
-> +		dev_dbg_ratelimited(dev, "Fan2 speed crossed low/high trip point\n");
-> +		break;
-> +	case EC_NEW_LUT_SET_EVT:
-> +		dev_dbg_ratelimited(dev, "New LUT set\n");
-> +		break;
-> +	case EC_FAN_PROFILE_SWITCH_EVT:
-> +		dev_dbg_ratelimited(dev, "FAN Profile switched\n");
-> +		break;
-> +	case EC_THERMISTOR_1_THRESHOLD_CROSS_EVT:
-> +		dev_dbg_ratelimited(dev, "Thermistor 1 threshold crossed\n");
-> +		break;
-> +	case EC_THERMISTOR_2_THRESHOLD_CROSS_EVT:
-> +		dev_dbg_ratelimited(dev, "Thermistor 2 threshold crossed\n");
-> +		break;
-> +	case EC_THERMISTOR_3_THRESHOLD_CROSS_EVT:
-> +		dev_dbg_ratelimited(dev, "Thermistor 3 threshold crossed\n");
-> +		break;
-> +	case EC_RECOVERED_FROM_RESET_EVT:
-> +		dev_dbg_ratelimited(dev, "EC recovered from reset\n");
-> +		break;
-> +	default:
-> +		dev_notice_ratelimited(dev, "Unknown EC event: %d\n", val);
-> +		break;
-> +	}
-> +
-> +	return IRQ_HANDLED;
-> +}
-> +
-> +static int qcom_ec_sci_evt_control(struct device *dev, bool enable)
-> +{
-> +	struct i2c_client *client = to_i2c_client(dev);
-> +
-> +	return i2c_smbus_write_byte_data(client, EC_SCI_EVT_CONTROL_CMD, enable ? 1 : 0);
-> +}
-> +
-> +static int qcom_ec_fan_get_max_state(struct thermal_cooling_device *cdev, unsigned long *state)
-> +{
-> +	*state = EC_FAN_MAX_PWM;
-> +
-> +	return 0;
-> +}
-> +
-> +static int qcom_ec_fan_get_cur_state(struct thermal_cooling_device *cdev, unsigned long *state)
-> +{
-> +	struct qcom_ec_cooling_dev *ec_cdev = cdev->devdata;
-> +
-> +	*state = ec_cdev->state;
-> +
-> +	return 0;
-> +}
-> +
-> +/*
-> + * Fan Debug control command:
-> + *
-> + * Command Payload:
-> + * --------------------------------------------------------------------------------------
-> + * | Offset		| Name		| Description					|
-> + * --------------------------------------------------------------------------------------
-> + * | 0x00		| Command	| Fan control command				|
-> + * --------------------------------------------------------------------------------------
-> + * | 0x01		| Fan ID	| 0x1 : Fan 1					|
-> + * |			|		| 0x2 : Fan 2					|
-> + * --------------------------------------------------------------------------------------
-> + * | 0x02		| Byte count = 4| Size of data to set fan speed			|
-> + * --------------------------------------------------------------------------------------
-> + * | 0x03		| Mode		| Bit 0: Debug Mode On/Off (0 - OFF, 1 - ON )	|
-> + * |			|		| Bit 1: Fan On/Off (0 - Off, 1 - ON)		|
-> + * |			|		| Bit 2: Debug Type (0 - RPM, 1 - PWM)		|
-> + * --------------------------------------------------------------------------------------
-> + * | 0x04 (LSB)	| Speed in RPM	| RPM value, if mode selected is RPM		|
-> + * | 0x05		|		|						|
-> + * --------------------------------------------------------------------------------------
-> + * | 0x06		| Speed in PWM	| PWM value, if mode selected is PWM (0 - 255)	|
-> + * ______________________________________________________________________________________
-> + *
-> + */
-> +static int qcom_ec_fan_debug_mode_off(struct qcom_ec_cooling_dev *ec_cdev)
-> +{
-> +	struct device *dev = ec_cdev->parent_dev;
-> +	struct i2c_client *client = to_i2c_client(dev);
-> +	u8 request[6] = { ec_cdev->fan_id, EC_FAN_SPEED_DATA_SIZE,
-> +			  EC_FAN_DEBUG_MODE_OFF, 0, 0, 0 };
-> +	int ret;
-> +
-> +	ret = i2c_smbus_write_i2c_block_data(client, EC_FAN_DBG_CONTROL_CMD,
-> +					     sizeof(request), request);
-> +	if (ret) {
-> +		dev_err(dev, "Failed to turn off fan%d debug mode: %d\n",
-> +			ec_cdev->fan_id, ret);
-> +	}
+> +out:
+> +	/*
+> +	 * Consider the light bar non-functional if TURN_ON or SET_LIGHTBAR failed.
+> +	 * Attempt to turn the LED off completely as clean-up.
+> +	 */
+> +	if (amd_halo_wmi_turn_off(data->wdev))
+> +		dev_warn_ratelimited(&data->wdev->dev, "Failed to turn LED off on cleanup\n");
 > +
 > +	return ret;
 > +}
 > +
-> +static int qcom_ec_fan_set_cur_state(struct thermal_cooling_device *cdev, unsigned long state)
+> +/**
+> + * amd_halo_probe - Driver probe function
+> + * @wdev: WMI device
+> + * @context: Context data (unused)
+> + *
+> + * Return: 0 on success, negative error code on failure
+> + */
+> +static int amd_halo_probe(struct wmi_device *wdev, const void *context)
 > +{
-> +	struct qcom_ec_cooling_dev *ec_cdev = cdev->devdata;
-> +	struct device *dev = ec_cdev->parent_dev;
-> +	struct i2c_client *client = to_i2c_client(dev);
-> +	u8 request[6] = { ec_cdev->fan_id, EC_FAN_SPEED_DATA_SIZE,
-> +			  EC_FAN_DEBUG_MODE_ON | EC_FAN_ON | EC_FAN_DEBUG_TYPE_PWM,
-> +			  0, 0, state };
+> +	struct led_init_data led_init_data = {
+> +		.devicename = "amd_halo",
+> +		.default_label = "multicolor:" LED_FUNCTION_STATUS,
+> +		.devname_mandatory = true
+
+Add the trailing comma to any non-terminating entry.
+
+-- 
+ i.
+
+> +	};
+> +	struct amd_halo_led_data *data;
 > +	int ret;
 > +
-> +	ret = i2c_smbus_write_i2c_block_data(client, EC_FAN_DBG_CONTROL_CMD,
-> +					     sizeof(request), request);
-> +	if (ret) {
-> +		dev_err(dev, "Failed to set fan pwm: %d\n", ret);
-> +		return ret;
-> +	}
-> +
-> +	ec_cdev->state = state;
-> +
-> +	return 0;
-> +}
-> +
-> +static const struct thermal_cooling_device_ops qcom_ec_thermal_ops = {
-> +	.get_max_state = qcom_ec_fan_get_max_state,
-> +	.get_cur_state = qcom_ec_fan_get_cur_state,
-> +	.set_cur_state = qcom_ec_fan_set_cur_state,
-> +};
-> +
-> +static int qcom_ec_resume(struct device *dev)
-> +{
-> +	struct i2c_client *client = to_i2c_client(dev);
-> +
-> +	return i2c_smbus_write_byte_data(client, EC_MODERN_STANDBY_CMD,
-> +					 EC_MODERN_STANDBY_EXIT);
-> +}
-> +
-> +static int qcom_ec_suspend(struct device *dev)
-> +{
-> +	struct i2c_client *client = to_i2c_client(dev);
-> +
-> +	return i2c_smbus_write_byte_data(client, EC_MODERN_STANDBY_CMD,
-> +					 EC_MODERN_STANDBY_ENTER);
-> +}
-> +
-> +static int qcom_ec_probe(struct i2c_client *client)
-> +{
-> +	struct device *dev = &client->dev;
-> +	struct qcom_ec *ec;
-> +	unsigned int i;
-> +	int ret;
-> +
-> +	ec = devm_kzalloc(dev, sizeof(*ec), GFP_KERNEL);
-> +	if (!ec)
+> +	data = devm_kzalloc(&wdev->dev, sizeof(*data), GFP_KERNEL);
+> +	if (!data)
 > +		return -ENOMEM;
 > +
-> +	ec->client = client;
-> +
-> +	ret = devm_request_threaded_irq(dev, client->irq, NULL, qcom_ec_irq,
-> +					IRQF_ONESHOT, "qcom_ec", ec);
-> +	if (ret < 0)
+> +	ret = devm_mutex_init(&wdev->dev, &data->lock);
+> +	if (ret)
 > +		return ret;
 > +
-> +	i2c_set_clientdata(client, ec);
+> +	data->wdev = wdev;
+> +	dev_set_drvdata(&wdev->dev, data);
 > +
-> +	ret = qcom_ec_read_fw_version(dev);
-> +	if (ret < 0)
-> +		return dev_err_probe(dev, ret, "Failed to read EC firmware version\n");
+> +	data->subled_info[0].color_index = LED_COLOR_ID_RED;
+> +	data->subled_info[1].color_index = LED_COLOR_ID_GREEN;
+> +	data->subled_info[2].color_index = LED_COLOR_ID_BLUE;
+> +	data->subled_info[0].intensity = AMD_HALO_DEFAULT_RED;
+> +	data->subled_info[1].intensity = AMD_HALO_DEFAULT_GREEN;
+> +	data->subled_info[2].intensity = AMD_HALO_DEFAULT_BLUE;
 > +
-> +	ret = qcom_ec_sci_evt_control(dev, true);
-> +	if (ret < 0)
-> +		return dev_err_probe(dev, ret, "Failed to enable SCI events\n");
+> +	data->led_mc.led_cdev.brightness = AMD_HALO_MAX_HW_BRIGHTNESS;
+> +	data->led_mc.led_cdev.max_brightness = AMD_HALO_MAX_HW_BRIGHTNESS;
+> +	data->led_mc.led_cdev.brightness_set_blocking = amd_halo_brightness_set;
+> +	data->led_mc.led_cdev.flags = LED_CORE_SUSPENDRESUME | LED_RETAIN_AT_SHUTDOWN;
+> +	data->led_mc.num_colors = ARRAY_SIZE(data->subled_info);
+> +	data->led_mc.subled_info = data->subled_info;
 > +
-> +	ret = qcom_ec_thermal_capabilities(dev);
-> +	if (ret < 0)
-> +		return dev_err_probe(dev, ret, "Failed to read thermal capabilities\n");
+> +	ret = amd_halo_wmi_turn_on(wdev);
+> +	if (ret)
+> +		goto out;
 > +
-> +	if (ec->thermal_cap.fan_cnt == 0) {
-> +		dev_warn(dev, FW_BUG "Failed to get fan count, firmware update required\n");
-> +		return 0;
-> +	}
+> +	ret = amd_halo_wmi_set_channel(wdev, AMD_HALO_CHANNEL_RED,
+> +				       AMD_HALO_DEFAULT_RED);
+> +	if (ret)
+> +		goto out;
 > +
-> +	ec->ec_cdev = devm_kcalloc(dev, ec->thermal_cap.fan_cnt, sizeof(*ec->ec_cdev), GFP_KERNEL);
-> +	if (!ec->ec_cdev)
-> +		return -ENOMEM;
+> +	ret = amd_halo_wmi_set_channel(wdev, AMD_HALO_CHANNEL_GREEN,
+> +				       AMD_HALO_DEFAULT_GREEN);
+> +	if (ret)
+> +		goto out;
 > +
-> +	for (i = 0; i < ec->thermal_cap.fan_cnt; i++) {
-> +		struct qcom_ec_cooling_dev *ec_cdev = &ec->ec_cdev[i];
-> +		char name[EC_FAN_NAME_SIZE];
+> +	ret = amd_halo_wmi_set_channel(wdev, AMD_HALO_CHANNEL_BLUE,
+> +				       AMD_HALO_DEFAULT_BLUE);
+> +	if (ret)
+> +		goto out;
 > +
-> +		scnprintf(name, sizeof(name), "qcom_ec_fan_%u", i);
-> +		ec_cdev->fan_id = i + 1;
-> +		ec_cdev->parent_dev = dev;
-> +
-> +		ec_cdev->cdev = devm_thermal_of_cooling_device_register(dev, NULL, name, ec_cdev,
-> +									&qcom_ec_thermal_ops);
-> +		if (IS_ERR(ec_cdev->cdev)) {
-> +			return dev_err_probe(dev, PTR_ERR(ec_cdev->cdev),
-> +					     "Failed to register fan%d cooling device\n", i);
-> +		}
-> +	}
-> +
+> +	ret = devm_led_classdev_multicolor_register_ext(&wdev->dev, &data->led_mc,
+> +							&led_init_data);
+> +	if (ret)
+> +		return dev_err_probe(&wdev->dev, ret,
+> +				     "Failed to register multicolor LED\n");
 > +	return 0;
+> +
+> +out:
+> +	/*
+> +	 * Attempt to turn LED off as a cleanup if either TURN_ON or SET_LIGHTBAR
+> +	 * fails. For probe failure due to non-WMI errors, keep the LED in the
+> +	 * default color.
+> +	 */
+> +	dev_warn(&data->wdev->dev, "Light bar non-functional, turning it off\n");
+> +
+> +	if (amd_halo_wmi_turn_off(data->wdev))
+> +		dev_warn(&data->wdev->dev, "Failed to turn LED off on cleanup\n");
+> +
+> +	return dev_err_probe(&wdev->dev, ret, "WMI call failed during probe!\n");
 > +}
 > +
-> +static void qcom_ec_remove(struct i2c_client *client)
-> +{
-> +	struct qcom_ec *ec = i2c_get_clientdata(client);
-> +	struct device *dev = &client->dev;
-> +	int ret;
-> +
-> +	ret = qcom_ec_sci_evt_control(dev, false);
-> +	if (ret < 0)
-> +		dev_err(dev, "Failed to disable SCI events: %d\n", ret);
-> +
-> +	for (int i = 0; i < ec->thermal_cap.fan_cnt; i++) {
-> +		struct qcom_ec_cooling_dev *ec_cdev = &ec->ec_cdev[i];
-> +
-> +		qcom_ec_fan_debug_mode_off(ec_cdev);
-> +	}
-> +}
-> +
-> +static const struct of_device_id qcom_ec_of_match[] = {
-> +	{ .compatible = "qcom,hamoa-crd-ec" },
-> +	{}
+> +static const struct wmi_device_id amd_halo_id_table[] = {
+> +	{ .guid_string = AMD_HALO_GUID },
+> +	{ }
 > +};
-> +MODULE_DEVICE_TABLE(of, qcom_ec_of_match);
+> +MODULE_DEVICE_TABLE(wmi, amd_halo_id_table);
 > +
-> +static const struct i2c_device_id qcom_ec_i2c_id_table[] = {
-> +	{ "qcom-hamoa-ec", },
-> +	{}
-> +};
-> +MODULE_DEVICE_TABLE(i2c, qcom_ec_i2c_id_table);
-> +
-> +static DEFINE_SIMPLE_DEV_PM_OPS(qcom_ec_pm_ops,
-> +		qcom_ec_suspend,
-> +		qcom_ec_resume);
-> +
-> +static struct i2c_driver qcom_ec_i2c_driver = {
+> +static struct wmi_driver amd_halo_driver = {
 > +	.driver = {
-> +		.name = "qcom-hamoa-ec",
-> +		.of_match_table = qcom_ec_of_match,
-> +		.pm = &qcom_ec_pm_ops,
+> +		.name = "amd_halo_led",
 > +	},
-> +	.probe = qcom_ec_probe,
-> +	.remove = qcom_ec_remove,
-> +	.id_table = qcom_ec_i2c_id_table,
+> +	.id_table = amd_halo_id_table,
+> +	.probe = amd_halo_probe,
+> +	.no_singleton = true,
 > +};
-> +module_i2c_driver(qcom_ec_i2c_driver);
 > +
-> +MODULE_DESCRIPTION("QCOM Hamoa Embedded Controller");
+> +module_wmi_driver(amd_halo_driver);
+> +
+> +MODULE_AUTHOR("Mario Limonciello (AMD) <superm1@kernel.org>");
+> +MODULE_AUTHOR("Yo-Jung Leo Lin (AMD) <Leo.Lin@amd.com>");
+> +MODULE_DESCRIPTION("AMD Halo Box RGB LED Control Driver");
 > +MODULE_LICENSE("GPL");
 > 
+> ---
+> base-commit: 39704f00f747aba3144289870b5fd8ac230a9aaf
+> change-id: 20260429-halo-leds-v2-plus-722c8083afe8
+> 
+> Best regards,
 > 
