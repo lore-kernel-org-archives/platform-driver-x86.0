@@ -1,135 +1,164 @@
-Received: from mail-pg1-f170.google.com (mail-pg1-f170.google.com [209.85.215.170])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EA6C73FE37C
-	for <platform-driver-x86@vger.kernel.org>; Mon, 11 May 2026 14:42:00 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.170
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E170D3FCB37
+	for <platform-driver-x86@vger.kernel.org>; Mon, 11 May 2026 14:43:30 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1778510522; cv=none; b=gPQb9KQAHDsiTNB5DzOOwU5U4SAAo9qWebmfj8qq8HYq6UlhVc+DPGrScCDKmi7KGaN0xcmDgM4qel6Yd/OgRZXOx9qfPQwop5+TClKA2MVm1G3bfR2vzFNEyOTEw8h4YKZ8cQlHG1xqIyR+DmOtk1ARXVnhzLJxtEOwuB33mns=
+	t=1778510611; cv=none; b=NH6hbYTCwrljGwJlr1d3O7K4idk3TOH7Q7NtUJBao32Yk5yH2W0RpFT3y+XpTz0eCN+GlJks1QJkhLBaHkaR4Kk6SuHH5rsp74Y7+5O0G0mdIpl7xlBszf9FzuPIhTOUraOCcydmRv0douCLovzOpuzRl2QeM4RCm8qjZQ1dWBs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1778510522; c=relaxed/simple;
-	bh=Y73P+DS/FTU/93/7veziKipaMWdTKZWFtdrT9hZPEZ8=;
-	h=From:To:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=evdECXyCc0h0JfqORmi6vfEG+TFMcUFGEysj1JCgX2MijIa9974tIjlCNCdAaNhnOghPajiSK2qEfOYmwUDmfFgxnOB/9Q2maUe8on8fRFtkBxSID9aIhnQef12J6xkkL5RuIcpcgNcn6o3BEoX+/+3bFZ0wUMVn+/m3ewhH2gE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=BLK6hae5; arc=none smtp.client-ip=209.85.215.170
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1778510611; c=relaxed/simple;
+	bh=pIBbToBFWDq0XDZ87Ik5kGwisGTl5NlEP0y7mDYzjJo=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=oPJKypmcjrDCuLRJ7tTr/2ECJzj+QuWZDGdFwGzFwBeVt6jVR+nolpqMs7qjGUtgNbLBachh6ozXuhjfwPdgWe9UnJmFNQLZJQk+24NdpC4srs8BuQwpHqcDhqja54HojFXqlXSg9ZacKpG42Vc4juKOLNHshqzvjFU+0fkhh9Y=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=QUHRgCRP; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="BLK6hae5"
-Received: by mail-pg1-f170.google.com with SMTP id 41be03b00d2f7-c8025500cc7so3132816a12.1
-        for <platform-driver-x86@vger.kernel.org>; Mon, 11 May 2026 07:42:00 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20251104; t=1778510520; x=1779115320; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:to:from:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=1QMruzNzp/w/H8WMl6Rm7xeR7IZKT2QV9Y6KPDlL64Q=;
-        b=BLK6hae51WcGJrI7CQVOQVyqr0fs6P7kAD1QXrbHTBEjCyLLbxepzGX6GNWNBsJ2k3
-         KWFi6PHCVB9oRtsJue5pveKBG4gz3YaoS4aNhYtfxvPVtLGkFjm+H79ZnLxx/wgeZbIk
-         rp0fk1yXcgosa4v567iQvjTkFPU7o+XHg4YD0jak/RJvEIqXr4sW3+XD5PkHbzUm+tBa
-         vRumId3R7vS3JZxeB6xYAD7HfH8TBPruwMsoaiGFd3dUmOWEig5CxJvZcRQAH4AJZr9n
-         DQuTXaUGTgU1sL7aoJ2VbX28K2kZrP0pk23cRdbRsUzEHnUZ3cSYZY0xCFK2AG82V/j3
-         /pog==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1778510520; x=1779115320;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:to:from:x-gm-gg:x-gm-message-state:from:to
-         :cc:subject:date:message-id:reply-to;
-        bh=1QMruzNzp/w/H8WMl6Rm7xeR7IZKT2QV9Y6KPDlL64Q=;
-        b=iVXp9XxtdpggJNx5W7oBzszepbaoHJXrlaeDmhDlaErY3UyjFgAhXbjLJPxGAxlDOM
-         crB8/t04xf0NXO8QEU6h5/5PAbSz8q4ATqae9PwUmM/OEwO5fNxepN8MVfS3Y8ZfPQwm
-         TAWwF6FjcT/FkoRJAHrLtu9OleusMnJsZNkO7WXiywbgT4xeXLYdaYZ3QJ6+vJ+Pr89k
-         1E5TTZnyjqJ2EVh8ZyowbqsgmbOCHs+0xfByeO2QBcHZc2Y+dRmvp0deI2Ysj8nWaDKV
-         /hDZyvMu8scPwE6KcyB8A/GBO4cvkp0YoKkM7/eV6RfVd8D4aQvURLsRVQTh9Xzbtjoz
-         RTOQ==
-X-Forwarded-Encrypted: i=1; AFNElJ/L7R4V2lFwV4I863mehoHS/ycEdJVfd2LIauMyoXrJsHOyX5q9G4Hj06bzW6f3r8baLpeCJ5ORC8qe0MQBG8DjPeGy@vger.kernel.org
-X-Gm-Message-State: AOJu0Yz3zel8faDHNVxKeyMyfwAznOJcrQnSLhwHWvcYga2JTNr4Zv3K
-	34ZUXoPoDUqcWUq1mYZtpcqhFVSRczk4qbKai2VJxEi5Mbh4Tw5me04pSY1tbVuUcIA=
-X-Gm-Gg: Acq92OGMsFQFuBxcnJUjV5Ca6J9R6IAKpN5x7kvBReQhdB5Hkq/EQlYlHAxcTpsAdiq
-	MzHsnpRchXVPQ8yGCMlLf68NASPrf/eAcEgFZTmOYj4mwZ7g4EeApqGihjK295LuEpp6y6SNpGx
-	VUcgHQOv7q0UWwiSdmi6CzOQUzEyZFHqvG+uiZRqlHjJVDG+T0HjZilrRBz4EDO3rxmVVbkhJ5I
-	UhrzW1CvUqi40kJiSgBKBWVsHIkxU3VI1tHFMmr3QO7JOWH3FVhdERvGb4jzwAnDdK8qiJxw+Xr
-	DZaXwTfDnVEW6bjvKOkdCtQ0fPKEJOqY8VZWtMlKS3aJyVlKifCRrZHPkTJAGTNAbegs29EjJkI
-	SULOS75+vyea9IqRLijkMv18XyRfHD4IliR7xSn17hG3X216DwGWuvuXAGgPVBkSZQs5pud4+uI
-	nIbJCSW2t8ALxav1aQANB476XfUghvXlZa69dbjkrtgKRvDToGwEJLYW2sUK8Z8683AzBCbhtZR
-	d1vuaSR7AE+cA==
-X-Received: by 2002:a05:6a20:a106:b0:3a8:21e0:1ffa with SMTP id adf61e73a8af0-3aa5aadcc7amr26724961637.27.1778510520189;
-        Mon, 11 May 2026 07:42:00 -0700 (PDT)
-Received: from harrison-Surface-Pro-12in-1st-Ed-with-Snapdragon.lan ([58.164.4.185])
-        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-8396563f11csm26012405b3a.3.2026.05.11.07.41.57
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 11 May 2026 07:41:59 -0700 (PDT)
-From: Harrison Vanderbyl <harrison.vanderbyl@gmail.com>
-To: linux-arm-msm@vger.kernel.org,
-	Maximilian Luz <luzmaximilian@gmail.com>,
-	Hans de Goede <hansg@kernel.org>,
-	=?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>,
-	platform-driver-x86@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Subject: [PATCH v1 3/8] platform/surface: SAM: Add support for Surface Pro 12in
-Date: Tue, 12 May 2026 00:40:52 +1000
-Message-ID: <60b41585fc437d8f0090466d774161f1ea2fefd7.1778498477.git.harrison.vanderbyl@gmail.com>
-X-Mailer: git-send-email 2.53.0
-In-Reply-To: <cover.1778498477.git.harrison.vanderbyl@gmail.com>
-References: <cover.1778498477.git.harrison.vanderbyl@gmail.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="QUHRgCRP"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id BF449C2BCFA
+	for <platform-driver-x86@vger.kernel.org>; Mon, 11 May 2026 14:43:30 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1778510610;
+	bh=pIBbToBFWDq0XDZ87Ik5kGwisGTl5NlEP0y7mDYzjJo=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+	b=QUHRgCRP0e/6ScxK/5dTZy8ISsmkojhS0TW2/gZ0b4ivVhMZyRTDRu51KN+ZD+Om+
+	 3eusio/rAALuGOlGwuJlukGhfOjglkRzOL5AAin9/HctvptBA5kMzZHrTrcg05I3q8
+	 TW2P6VvCw0cWKbb7XMPUeM+xi7HwqxfUpgMKSNqyoIb3QpkSAyXc0FTOt1DmsEaOYM
+	 1OXlhov6sc2jsiRZKgEffZ2x+2EvegF+fywRatJpAv384a5VrbHsoK5bKBbeGxMcDl
+	 MMhCMtvl8oafT3K47Mdb9Cw6YHWo9GJUFQEcGP3EYesRsjQnR5KaqoarfZJuc1JCC3
+	 GU+8EzBj7PYvQ==
+Received: by mail-lf1-f43.google.com with SMTP id 2adb3069b0e04-5a8c94cefcdso962901e87.0
+        for <platform-driver-x86@vger.kernel.org>; Mon, 11 May 2026 07:43:30 -0700 (PDT)
+X-Forwarded-Encrypted: i=1; AFNElJ9+2S1fKYYgAKYk+dLzCeB2wfQjmVwo3ptVNDzk3dsC0UPzSkc8lw+uGl3km5gygcgat8NJmZTUxB23UxSS0ZXtPIWz@vger.kernel.org
+X-Gm-Message-State: AOJu0YyI9yrzyIyXDrZKFktLp7yT49hi/qfKnHlaKSjV4wVQw24ueFP6
+	/4ozK0FRqp2LCP/SkiMLEr8PLkZGNsk8lp+gdM9WBB/kJnuun2LrSSsLgE4kHpfLyxtbQXdpi47
+	/31xsK1LVyzbmure++S/A/Ff5SwQXhMQ=
+X-Received: by 2002:a05:6512:ad6:b0:5a8:8de0:4576 with SMTP id
+ 2adb3069b0e04-5a8b708e865mr2654068e87.25.1778510609071; Mon, 11 May 2026
+ 07:43:29 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+References: <2420444.ElGaqSPkdT@rafael.j.wysocki> <3420768.aeNJFYEL58@rafael.j.wysocki>
+ <e46d3374-4762-3776-6195-bd6220998b5e@linux.intel.com>
+In-Reply-To: <e46d3374-4762-3776-6195-bd6220998b5e@linux.intel.com>
+From: "Rafael J. Wysocki" <rafael@kernel.org>
+Date: Mon, 11 May 2026 16:43:13 +0200
+X-Gmail-Original-Message-ID: <CAJZ5v0i5u4uq7v52oWYNt_tXwJAcpuXVS21y6PKU54XY7y=ciA@mail.gmail.com>
+X-Gm-Features: AVHnY4LOe4EP62-gPoPF1mzGD3d6HSYBsrrHbr1wuI1ywmHypezLHqxn-Ir6YGE
+Message-ID: <CAJZ5v0i5u4uq7v52oWYNt_tXwJAcpuXVS21y6PKU54XY7y=ciA@mail.gmail.com>
+Subject: Re: [PATCH v1 3/4] platform/x86: xo15-ebook: Register ACPI notify
+ handler directly
+To: =?UTF-8?Q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
+Cc: "Rafael J. Wysocki" <rafael@kernel.org>, LKML <linux-kernel@vger.kernel.org>, 
+	Linux ACPI <linux-acpi@vger.kernel.org>, Hans de Goede <hansg@kernel.org>, 
+	platform-driver-x86@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-Add a SAM client device node group and registry entry for the
-Microsoft Surface Pro, 12-inch with Snapdragon.
+On Mon, May 11, 2026 at 3:59=E2=80=AFPM Ilpo J=C3=A4rvinen
+<ilpo.jarvinen@linux.intel.com> wrote:
+>
+> On Fri, 8 May 2026, Rafael J. Wysocki wrote:
+>
+> > From: "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>
+> >
+> > To facilitate subsequent conversion of the driver to a platform one,
+> > make it install an ACPI notify handler directly instead of using
+> > a .notify() callback in struct acpi_driver.
+> >
+> > No intentional functional impact.
+> >
+> > Signed-off-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
+> > ---
+> >  drivers/platform/x86/xo15-ebook.c | 19 ++++++++++++++-----
+> >  1 file changed, 14 insertions(+), 5 deletions(-)
+> >
+> > diff --git a/drivers/platform/x86/xo15-ebook.c b/drivers/platform/x86/x=
+o15-ebook.c
+> > index 616f4bb3461a..8af1b9078db8 100644
+> > --- a/drivers/platform/x86/xo15-ebook.c
+> > +++ b/drivers/platform/x86/xo15-ebook.c
+> > @@ -57,16 +57,15 @@ static int ebook_send_state(struct acpi_device *dev=
+ice)
+> >       return 0;
+> >  }
+> >
+> > -static void ebook_switch_notify(struct acpi_device *device, u32 event)
+> > +static void ebook_switch_notify(acpi_handle handle, u32 event, void *d=
+ata)
+> >  {
+> >       switch (event) {
+> >       case ACPI_FIXED_HARDWARE_EVENT:
+> >       case XO15_EBOOK_NOTIFY_STATUS:
+> > -             ebook_send_state(device);
+> > +             ebook_send_state(data);
+> >               break;
+> >       default:
+> > -             acpi_handle_debug(device->handle,
+> > -                               "Unsupported event [0x%x]\n", event);
+> > +             acpi_handle_debug(handle, "Unsupported event [0x%x]\n", e=
+vent);
+> >               break;
+> >       }
+> >  }
+> > @@ -123,6 +122,11 @@ static int ebook_switch_add(struct acpi_device *de=
+vice)
+> >       if (error)
+> >               goto err_free_input;
+> >
+> > +     error =3D acpi_dev_install_notify_handler(device, ACPI_DEVICE_NOT=
+IFY,
+> > +                                             ebook_switch_notify, devi=
+ce);
+> > +     if (error)
+> > +             goto err_unregister_input;
+> > +
+> >       ebook_send_state(device);
+> >
+> >       if (device->wakeup.flags.valid) {
+> > @@ -139,6 +143,10 @@ static int ebook_switch_add(struct acpi_device *de=
+vice)
+> >  err_free_button:
+> >       kfree(button);
+> >       return error;
+> > +
+> > +err_unregister_input:
+> > +     input_unregister_device(input);
+> > +     goto err_free_button;
+>
+> The end result would be much simpler if there would be patch 5 to convert
+> to devm_*().
 
-This set enables the use of the following devices.
-1: cover keyboard
-2: cover touchpad
-3: pen stash events.
+Well, I can add one.
 
-The battery info and charger info devices have been
-purposefully omitted as they are also reported by
-other drivers and cause conflicts.
+Do you want me to resend an update of the series for this?
 
-Signed-off-by: Harrison Vanderbyl <harrison.vanderbyl@gmail.com>
----
- .../surface/surface_aggregator_registry.c         | 15 +++++++++++++++
- 1 file changed, 15 insertions(+)
-
-diff --git a/drivers/platform/surface/surface_aggregator_registry.c b/drivers/platform/surface/surface_aggregator_registry.c
-index 0599d5adf02e..884049961415 100644
---- a/drivers/platform/surface/surface_aggregator_registry.c
-+++ b/drivers/platform/surface/surface_aggregator_registry.c
-@@ -422,6 +422,19 @@ static const struct software_node *ssam_node_group_sp11[] = {
- 	NULL,
- };
- 
-+/* Devices for Surface Pro 12" first edition (ARM/QCOM) */
-+static const struct software_node *ssam_node_group_sp12in[] = {
-+	&ssam_node_root,
-+	&ssam_node_hub_kip,
-+	&ssam_node_tmp_sensors,
-+	&ssam_node_hid_kip_keyboard,
-+	&ssam_node_hid_sam_penstash,
-+	&ssam_node_hid_kip_touchpad,
-+	&ssam_node_hid_kip_fwupd,
-+	&ssam_node_pos_tablet_switch,
-+	NULL,
-+};
-+
- /* -- SSAM platform/meta-hub driver. ---------------------------------------- */
- 
- static const struct acpi_device_id ssam_platform_hub_acpi_match[] = {
-@@ -500,6 +513,8 @@ static const struct of_device_id ssam_platform_hub_of_match[] __maybe_unused = {
- 	{ .compatible = "microsoft,arcata", (void *)ssam_node_group_sp9_5g },
- 	/* Surface Pro 11 (ARM/QCOM) */
- 	{ .compatible = "microsoft,denali", (void *)ssam_node_group_sp11 },
-+	/* Surface Pro 12in First Edition (ARM/QCOM) */
-+	{ .compatible = "microsoft,surface-pro-12in", (void *)ssam_node_group_sp12in },
- 	/* Surface Laptop 7 */
- 	{ .compatible = "microsoft,romulus13", (void *)ssam_node_group_sl7 },
- 	{ .compatible = "microsoft,romulus15", (void *)ssam_node_group_sl7 },
--- 
-2.53.0
-
+> >  }
+> >
+> >  static void ebook_switch_remove(struct acpi_device *device)
+> > @@ -149,6 +157,8 @@ static void ebook_switch_remove(struct acpi_device =
+*device)
+> >               acpi_disable_gpe(device->wakeup.gpe_device,
+> >                                device->wakeup.gpe_number);
+> >
+> > +     acpi_dev_remove_notify_handler(device, ACPI_DEVICE_NOTIFY,
+> > +                                    ebook_switch_notify);
+> >       input_unregister_device(button->input);
+> >       kfree(button);
+> >  }
+> > @@ -160,7 +170,6 @@ static struct acpi_driver xo15_ebook_driver =3D {
+> >       .ops =3D {
+> >               .add =3D ebook_switch_add,
+> >               .remove =3D ebook_switch_remove,
+> > -             .notify =3D ebook_switch_notify,
+> >       },
+> >       .drv.pm =3D &ebook_switch_pm,
+> >  };
+> >
+> >
+> >
+>
+> --
