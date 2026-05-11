@@ -1,149 +1,154 @@
-Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.15])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C036D3E8C45
-	for <platform-driver-x86@vger.kernel.org>; Mon, 11 May 2026 13:40:17 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.168.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EC1F23FADE5;
+	Mon, 11 May 2026 13:59:22 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.15
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1778506818; cv=none; b=YB1h1T514EwTLAuaU+kNH2yCqOUZf2ABuHRcdR+f1msEKrlghfNjE18AOm8QTEFjz0lRNE9kmE1WoemWya/Ll/FckY7rkJy+PVOAQL9P8IjY65vz+Ws2S607cHTYn5XSYANsKnyQvD4XleDyZTiQo4gPiGoT8fdqQ5WzoEaRqrI=
+	t=1778507964; cv=none; b=CwdJCrW3ZAC+9udspoO8FFnJqczOSR7zDj7hJD/biXqrlG2TVGbEKo5sbOaj1AIaWiCY/aM7atRWClOx/g0IOmT6EeL2iBDytmtuPcdwh9XxS1XASVd9BIPOOrys5uXi9LSg7JZMiR4yzLXAEfdtPLsV1XTGdLBnWsdHvvykMvc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1778506818; c=relaxed/simple;
-	bh=iv7kN/9CexyaXWUNLh2lz6maV1d9S2gQPdpq0kjz0Mk=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=OPDgV8iTiC+lREDO3lG97M1fwUV98VYoc+Sa0ZeA+Lx0KMpw6Vp/uBAGaKp5Qt86N0Pn9AZ8QmyWvqxwoJ8DHCXAXeAuMT+eq6JJV6huAXwDPu/202WoZB/fqIv5XfYewrEIJS3mWQgdhNEw/XHWFSNzSSGWVmst/cNq4ev7adk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com; spf=pass smtp.mailfrom=oss.qualcomm.com; dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b=R4htGWLe; dkim=pass (2048-bit key) header.d=oss.qualcomm.com header.i=@oss.qualcomm.com header.b=iafbDEC7; arc=none smtp.client-ip=205.220.168.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oss.qualcomm.com
+	s=arc-20240116; t=1778507964; c=relaxed/simple;
+	bh=FXF+GYk4YhOz2SuzlWBsAonAec/nJc7DZp/Z8EHp3QU=;
+	h=From:Date:To:cc:Subject:In-Reply-To:Message-ID:References:
+	 MIME-Version:Content-Type; b=spEBi8QuGs/j6mIKcOcX1Y3aLMGZGtCWIGTmsS8JlKOEyPLBS8V3UAFxJ55GVEcCfy9kTSQbDZ81up/dmWJb+LxaqOguwfg5vYaU6nCQ1rjb9D4EeapyyIMka3g7e9hEq+jG9CfqMO3blVEtYcy+EnHf4Fr60iwCVrn/olJqmDg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=pass smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=f+vudU1F; arc=none smtp.client-ip=198.175.65.15
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b="R4htGWLe";
-	dkim=pass (2048-bit key) header.d=oss.qualcomm.com header.i=@oss.qualcomm.com header.b="iafbDEC7"
-Received: from pps.filterd (m0279863.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.18.1.11/8.18.1.11) with ESMTP id 64BC58Cw1108950
-	for <platform-driver-x86@vger.kernel.org>; Mon, 11 May 2026 13:40:17 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=qualcomm.com; h=
-	cc:content-type:date:from:in-reply-to:message-id:mime-version
-	:references:subject:to; s=qcppdkim1; bh=5N/UX/mU9KJ4wGcjR1nq8tug
-	EB70qgQL0Zgb5R0yn0E=; b=R4htGWLe7Z3fNK+VGKp3RVMO//4Gq54CK1c7eXZu
-	aUxeBYhdujeIgdFC4dx1rPLM9sHWS/IrRKfyGxfAR9K27yFtSdhQZ7U0Gv/vogoZ
-	lgKFPJUuOTr1e+6o5ZzO58MDZEcMJV0y7zVQvmxYOwAgTC2NXfzLxkQ+XCKqUQBy
-	6XIKD67zwyFzmOp/zpJqmNQPA8BTEgOtPenJIpMAxDlKuBCyWFCbYJbgzcGLgKxT
-	SxsPGZ5rDXjwhXf1pwpMqhBL5jOdGuiAU51tsK1/XBGCd7yaGSrjGfZ6B+ARd8E+
-	Yy00iNOt/nR7x4q1DLdGTnk+ejgMisK2OqSAy0R+/nIfiw==
-Received: from mail-vs1-f70.google.com (mail-vs1-f70.google.com [209.85.217.70])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 4e3esr8b9y-1
-	(version=TLSv1.3 cipher=TLS_AES_128_GCM_SHA256 bits=128 verify=NOT)
-	for <platform-driver-x86@vger.kernel.org>; Mon, 11 May 2026 13:40:17 +0000 (GMT)
-Received: by mail-vs1-f70.google.com with SMTP id ada2fe7eead31-6312af106fcso5785252137.3
-        for <platform-driver-x86@vger.kernel.org>; Mon, 11 May 2026 06:40:16 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=oss.qualcomm.com; s=google; t=1778506816; x=1779111616; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=5N/UX/mU9KJ4wGcjR1nq8tugEB70qgQL0Zgb5R0yn0E=;
-        b=iafbDEC7IGqavh8QWvvSyBaJVNgv/7kgRDCJvI8nfYLfyr+SNcMcmKvEuDEdHSe1P5
-         jcAFVoTZ8oKD1d73hMwS9TtNSsrSFhTSfc8Y/+lfxnEO0gkOIxd7KaoJ1mTms3i4Mi9c
-         2HKGSY+DRgLT3+XAA5L/rlxkPSIGzbCE11kj4zeYRI3kjGH+rXPZ/E15zXkaCEPXqFwx
-         SkmqF4OZGuau1EBXGni3IwS5/1dCR5Kem1d35/M7g5hlioy86nbZNNEnvKr7ifAcMjd/
-         nX6urkJbRZAdTToz1QofrDLBuEn6Ovl6NIMkB22LLZkJWfSY0wJH1Q7a1oEbamYHCklz
-         baDw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1778506816; x=1779111616;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-gg:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=5N/UX/mU9KJ4wGcjR1nq8tugEB70qgQL0Zgb5R0yn0E=;
-        b=AEcPxdFmHpoCL3xs73nKkwyOdsRuu1FEDTiLKzBZQvYSejBZCXEA/TAw6g0Kiyom6w
-         ZlCGzpk2RKsmrz+GCDPxGGDbE1+ojuZTTNsLofI2BRmk25VOuzAJ+GnGLYRS9VOZFJAO
-         pZ3ubA2y5iCUIMubYsACtORrOXpZu2+5sokuoYHtMRoxmxoWx4/7a/1qpbKiXyx0eTsP
-         +ZAR+fnR6DrIlmeAlJTl+IVcrcblDJUaq2YnNrcby3fQ424jdfSOjibpv42ptDhAieNP
-         ckzwjF02bZfncawZqv6pnmkQiBhuNjx0+RnhBMZoj3+hEI2+A+U1/QacuNCatuIcaNh8
-         U+zQ==
-X-Forwarded-Encrypted: i=1; AFNElJ95vFqCBtuF5q8vZI5pwUIPzqY14prqr6L4gn3dzCnPY9FLRulBncDvw0cYBPrsAT6Jo2RcNc3C+GnBGWrCeE+//R2I@vger.kernel.org
-X-Gm-Message-State: AOJu0YzDhjk5RxAS4cLqcXMX91XcqhG4/boCmmcPKZq4ykOCDZhfN32G
-	WZS+abZvrF7mfpi2TvulqQAIH7yXbhHhvF6/tlxYzvd5WhDThNs0qwU7PBzTeJxUdVfZ5JN8vMB
-	mcCGDwQpqP00Bp4SFd4M604ujyk5euqisrwjZoh8Ly2O5lpQJwm2JrgHNSTqgLwFY88ahfK9q25
-	rg
-X-Gm-Gg: Acq92OHoRYPQX5j9TT4Rxkq102BMnfwQ2Jou+q2uWub9NAnJtFJ1OAn530K2v3iG6vX
-	VCI/bK2DjQsj9cDytiUgeAL90Xrpge5+gDnoO3KaVg82HZ9EFoQiNbJ/9veoqittdoVIhvO+xm5
-	J2t4szvpdDNSpoUHm8jKYbLbZQI8HfFyUE1pB1A+jC1u4nJHEoEPRuA/dlTvXqItMIT8IhX6UtN
-	YYGjaj2wH+sosS+cJNq5AsLmVyx3e5xsXUojTGiaxRFnyG22Z5LbJMnq/aVdosHhYwxN7zjWRZe
-	luTZmWxtIjuzPZGfOyONBuCkAas4zzvhnVfh0bfFCDniwVe1VciaHNSjF0dm+tXDyC9eg6Jo/tL
-	mB0DwlIolz/i1BYvh5mk2QmQzvEC69W7FkZ4q12WMOC/rJh4pegBnoI4yHmSYcE/Y78l84WBHdK
-	VxFV2Ns0+bqDmKlNTxhEM2dbOHfleVkVYJATU=
-X-Received: by 2002:a05:6102:580e:b0:631:41f9:ffa2 with SMTP id ada2fe7eead31-63141fa0939mr6281627137.29.1778506816050;
-        Mon, 11 May 2026 06:40:16 -0700 (PDT)
-X-Received: by 2002:a05:6102:580e:b0:631:41f9:ffa2 with SMTP id ada2fe7eead31-63141fa0939mr6281603137.29.1778506815171;
-        Mon, 11 May 2026 06:40:15 -0700 (PDT)
-Received: from umbar.lan (2001-14ba-a073-af00-264b-feff-fe8b-be8a.rev.dnainternet.fi. [2001:14ba:a073:af00:264b:feff:fe8b:be8a])
-        by smtp.gmail.com with ESMTPSA id 2adb3069b0e04-5a8a956b2a1sm2652329e87.78.2026.05.11.06.40.13
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 11 May 2026 06:40:14 -0700 (PDT)
-Date: Mon, 11 May 2026 16:40:12 +0300
-From: Dmitry Baryshkov <dmitry.baryshkov@oss.qualcomm.com>
-To: Anvesh Jain P <anvesh.p@oss.qualcomm.com>
-Cc: Sibi Sankar <sibi.sankar@oss.qualcomm.com>, Rob Herring <robh@kernel.org>,
-        Krzysztof Kozlowski <krzk+dt@kernel.org>,
-        Conor Dooley <conor+dt@kernel.org>, Hans de Goede <hansg@kernel.org>,
-        Ilpo =?utf-8?B?SsOkcnZpbmVu?= <ilpo.jarvinen@linux.intel.com>,
-        Bryan O'Donoghue <bryan.odonoghue@linaro.org>,
-        Bjorn Andersson <andersson@kernel.org>,
-        Konrad Dybcio <konradybcio@kernel.org>,
-        Randy Dunlap <rdunlap@infradead.org>, linux-arm-msm@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        platform-driver-x86@vger.kernel.org,
-        Pankaj Patil <pankaj.patil@oss.qualcomm.com>
-Subject: Re: [PATCH v9 6/6] arm64: defconfig: Enable Qualcomm reference
- device EC driver
-Message-ID: <lep27mjuw2kv642s2gvlmbro6zad2vvwt36x2va7v3juoq7lzc@b5kxiy77oqgo>
-References: <20260511-add-driver-for-ec-v9-0-e5437c39b7f8@oss.qualcomm.com>
- <20260511-add-driver-for-ec-v9-6-e5437c39b7f8@oss.qualcomm.com>
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="f+vudU1F"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1778507963; x=1810043963;
+  h=from:date:to:cc:subject:in-reply-to:message-id:
+   references:mime-version;
+  bh=FXF+GYk4YhOz2SuzlWBsAonAec/nJc7DZp/Z8EHp3QU=;
+  b=f+vudU1FaNu8h8uGVtt+NjgLx77QdSrK7bfR7Af0KgsB3Bu01CwR7wzC
+   hlzEldc7MZ6ZmCwEI0HAJeJCy6LPxEBsRWnjOw2b6ciyZvEnND/bDpWtf
+   U//lRrqSQD5aReeM6gkVs3nXD45asornku1I37aLV/95Kq3unO/b8jxSn
+   DpSljog9YBqrNLjXY4txse5DD5M8/P4DnixPa3czDhupHM+0PEL7AzT0W
+   CbmH1YvD/c4XzjhjG0jCgHGm4dabCY1Toz8r2Ls+fPMZAfPDszq4YJfYk
+   K911naNXAdz9cMWB3cEKDJZZ5gtaUGuZAJ1IzGwl4D68FZgw6jruXGysi
+   w==;
+X-CSE-ConnectionGUID: RJSSoJEzQlGChsroHENt8A==
+X-CSE-MsgGUID: H7X2TfBLTpmDayPnMYBpag==
+X-IronPort-AV: E=McAfee;i="6800,10657,11783"; a="83008205"
+X-IronPort-AV: E=Sophos;i="6.23,229,1770624000"; 
+   d="scan'208";a="83008205"
+Received: from fmviesa009.fm.intel.com ([10.60.135.149])
+  by orvoesa107.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 11 May 2026 06:59:23 -0700
+X-CSE-ConnectionGUID: pli8gOZjRymHC2wl3ykwfw==
+X-CSE-MsgGUID: srApQyP2TTqQlNsMSxFWlQ==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.23,229,1770624000"; 
+   d="scan'208";a="231069179"
+Received: from ijarvine-mobl1.ger.corp.intel.com (HELO localhost) ([10.245.245.28])
+  by fmviesa009-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 11 May 2026 06:59:20 -0700
+From: =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
+Date: Mon, 11 May 2026 16:59:16 +0300 (EEST)
+To: "Rafael J. Wysocki" <rafael@kernel.org>
+cc: LKML <linux-kernel@vger.kernel.org>, 
+    Linux ACPI <linux-acpi@vger.kernel.org>, Hans de Goede <hansg@kernel.org>, 
+    platform-driver-x86@vger.kernel.org
+Subject: Re: [PATCH v1 3/4] platform/x86: xo15-ebook: Register ACPI notify
+ handler directly
+In-Reply-To: <3420768.aeNJFYEL58@rafael.j.wysocki>
+Message-ID: <e46d3374-4762-3776-6195-bd6220998b5e@linux.intel.com>
+References: <2420444.ElGaqSPkdT@rafael.j.wysocki> <3420768.aeNJFYEL58@rafael.j.wysocki>
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20260511-add-driver-for-ec-v9-6-e5437c39b7f8@oss.qualcomm.com>
-X-Proofpoint-GUID: gofjc9JTEChKVO32we3PhNBSKJ6TD39o
-X-Proofpoint-ORIG-GUID: gofjc9JTEChKVO32we3PhNBSKJ6TD39o
-X-Proofpoint-Spam-Details-Enc: AW1haW4tMjYwNTExMDE1MSBTYWx0ZWRfXzxW/fhSqzUjf
- eUwzshh5NxbKrWVIgyMhrLmFq8FWcTVKgBAiHW77cqxDlHKKDEGMC3a3K6rISv9VgIfVUmWqssS
- xiS8R9U1Ggrght5OzgqbHBU1ehZhAvHMyN4Kqal3rekNgIoREU47xpIlONpbnhq+g45pWhAlFGH
- HC5LRPbtqlMXbgATWj008U253+4j2XAUxlHeBCzkWo9wbtEk7ZfzbTHrTubkNmLB6fRntTwNeG0
- PV4pCHaSlOed9rR3IJDZ6RU1Xsaina9qVEbG4vxfBmC4EAA3bt094BFSGTAsiGZptBQAUb3Ovgb
- 5aO+9OuUb+LGWjcy3/F00e4BNuE63bYhWVA6FYEeHLMcvvzSW67mNeusk/rvw3Us5cOFNB0yUV2
- WsbbTT0ZapHDfgaiyki7Pav66PT+JjFH8QbW9l3xgfDdBsV6tYHvj4iXAcfGsyrb45dACabEzY7
- nikoRHsmkjX0nhtDGwQ==
-X-Authority-Analysis: v=2.4 cv=G40s1dk5 c=1 sm=1 tr=0 ts=6a01dc41 cx=c_pps
- a=N1BjEkVkxJi3uNfLdpvX3g==:117 a=xqWC_Br6kY4A:10 a=kj9zAlcOel0A:10
- a=NGcC8JguVDcA:10 a=s4-Qcg_JpJYA:10 a=VkNPw1HP01LnGYTKEx00:22
- a=u7WPNUs3qKkmUXheDGA7:22 a=yOCtJkima9RkubShWh1s:22 a=EUspDBNiAAAA:8
- a=gxucJjpxkCO_kLWZwBcA:9 a=CjuIK1q_8ugA:10 a=crWF4MFLhNY0qMRaF8an:22
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1143,Hydra:6.1.51,FMLib:17.12.100.49
- definitions=2026-05-11_04,2026-05-08_02,2025-10-01_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
- spamscore=0 priorityscore=1501 adultscore=0 bulkscore=0 clxscore=1015
- malwarescore=0 impostorscore=0 lowpriorityscore=0 phishscore=0 suspectscore=0
- classifier=typeunknown authscore=0 authtc= authcc= route=outbound adjust=0
- reason=mlx scancount=1 engine=8.22.0-2604200000 definitions=main-2605110151
+Content-Type: text/plain; charset=US-ASCII
 
-On Mon, May 11, 2026 at 06:13:24PM +0530, Anvesh Jain P wrote:
-> Enable EC_QCOM_HAMOA as a module to support the embedded controller
-> found on Qualcomm CRD reference devices such as Hamoa and Glymur.
+On Fri, 8 May 2026, Rafael J. Wysocki wrote:
+
+> From: "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>
 > 
-> Reviewed-by: Pankaj Patil <pankaj.patil@oss.qualcomm.com>
-> Signed-off-by: Anvesh Jain P <anvesh.p@oss.qualcomm.com>
+> To facilitate subsequent conversion of the driver to a platform one,
+> make it install an ACPI notify handler directly instead of using
+> a .notify() callback in struct acpi_driver.
+> 
+> No intentional functional impact.
+> 
+> Signed-off-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
 > ---
->  arch/arm64/configs/defconfig | 1 +
->  1 file changed, 1 insertion(+)
+>  drivers/platform/x86/xo15-ebook.c | 19 ++++++++++++++-----
+>  1 file changed, 14 insertions(+), 5 deletions(-)
 > 
+> diff --git a/drivers/platform/x86/xo15-ebook.c b/drivers/platform/x86/xo15-ebook.c
+> index 616f4bb3461a..8af1b9078db8 100644
+> --- a/drivers/platform/x86/xo15-ebook.c
+> +++ b/drivers/platform/x86/xo15-ebook.c
+> @@ -57,16 +57,15 @@ static int ebook_send_state(struct acpi_device *device)
+>  	return 0;
+>  }
+>  
+> -static void ebook_switch_notify(struct acpi_device *device, u32 event)
+> +static void ebook_switch_notify(acpi_handle handle, u32 event, void *data)
+>  {
+>  	switch (event) {
+>  	case ACPI_FIXED_HARDWARE_EVENT:
+>  	case XO15_EBOOK_NOTIFY_STATUS:
+> -		ebook_send_state(device);
+> +		ebook_send_state(data);
+>  		break;
+>  	default:
+> -		acpi_handle_debug(device->handle,
+> -				  "Unsupported event [0x%x]\n", event);
+> +		acpi_handle_debug(handle, "Unsupported event [0x%x]\n", event);
+>  		break;
+>  	}
+>  }
+> @@ -123,6 +122,11 @@ static int ebook_switch_add(struct acpi_device *device)
+>  	if (error)
+>  		goto err_free_input;
+>  
+> +	error = acpi_dev_install_notify_handler(device, ACPI_DEVICE_NOTIFY,
+> +						ebook_switch_notify, device);
+> +	if (error)
+> +		goto err_unregister_input;
+> +
+>  	ebook_send_state(device);
+>  
+>  	if (device->wakeup.flags.valid) {
+> @@ -139,6 +143,10 @@ static int ebook_switch_add(struct acpi_device *device)
+>  err_free_button:
+>  	kfree(button);
+>  	return error;
+> +
+> +err_unregister_input:
+> +	input_unregister_device(input);
+> +	goto err_free_button;
 
-Reviewed-by: Dmitry Baryshkov <dmitry.baryshkov@oss.qualcomm.com>
+The end result would be much simpler if there would be patch 5 to convert 
+to devm_*().
 
+>  }
+>  
+>  static void ebook_switch_remove(struct acpi_device *device)
+> @@ -149,6 +157,8 @@ static void ebook_switch_remove(struct acpi_device *device)
+>  		acpi_disable_gpe(device->wakeup.gpe_device,
+>  				 device->wakeup.gpe_number);
+>  
+> +	acpi_dev_remove_notify_handler(device, ACPI_DEVICE_NOTIFY,
+> +				       ebook_switch_notify);
+>  	input_unregister_device(button->input);
+>  	kfree(button);
+>  }
+> @@ -160,7 +170,6 @@ static struct acpi_driver xo15_ebook_driver = {
+>  	.ops = {
+>  		.add = ebook_switch_add,
+>  		.remove = ebook_switch_remove,
+> -		.notify = ebook_switch_notify,
+>  	},
+>  	.drv.pm = &ebook_switch_pm,
+>  };
+> 
+> 
+> 
 
 -- 
-With best wishes
-Dmitry
+ i.
+
