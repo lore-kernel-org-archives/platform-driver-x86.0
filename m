@@ -1,177 +1,287 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.11])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C5BDD43E49C
-	for <platform-driver-x86@vger.kernel.org>; Mon, 11 May 2026 17:03:08 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A3D8844CF2C;
+	Mon, 11 May 2026 17:12:34 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.11
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1778518988; cv=none; b=GXUuDQ0E1mjLp0N24PHcDEoIAsXyoSbtyxmLaVLWGlzK5T6ILcZCh4Nzo0CuWfZ+zwViZvC8wZAvkQ4VM5b4pmFJ9pAkO2YvEY2TUY35/c3Yihtxsz9AHsq4OyNm5HlTh3Er6ZUwzYxtOSqJGvRG+JimeBMH6PedJ48hez1IgEk=
+	t=1778519557; cv=none; b=aV9Tmt/X1OzbtrVyTE3aKilY8G4py5Lbh2EfGxCEoLB5AFU15jTwQ6Z1fYInK/Mpcrf1TwbfcPGk2QvNh1tWVD4xeiyW7bq9K+vbVF7cLrB20TN3UCEcdEqAmy6u7zntpxtdTDnYywPdD1F3OXA7iMc4bJ9nATuS1aaYorrUqyY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1778518988; c=relaxed/simple;
-	bh=mU/foMwLY7I2cXRhqhtqv4ud+3Lhv5MB0VsaOfnQ5QM=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=DfOI2yWg1HEVZRPlfLDhyVyk6SfIej+/zTyhqXhoZinqKO2CPac7i8JVowzM3mM6ZQzES1uvmkoGNvrPZtaOpNG4KszjrzFPI80VWEuYKCpvXrJS4zZubrMlIbNYrZ3lmczwxksftR9S52Bn7qUSyyYNrh9uo5+Qc4ejghNPHgU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=dw4QUlX9; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1778519557; c=relaxed/simple;
+	bh=OJqbEVqPpsGl7sw9OQ6UIsHKt7a2I3x9r50XJ46TTho=;
+	h=From:Date:To:cc:Subject:In-Reply-To:Message-ID:References:
+	 MIME-Version:Content-Type; b=Q8VoA/XGn66pbHFMZJXYef7AY2w0WRddf3l4PAuYQIQxl0cBgKydX6PHWlYNcUg0cTGKN9g4CaZFQhEeg3izPmAGr/2XZ3gfTiZLMCUJ5lxAKgxpy2YYvL8yBnbYnAJfsWqHWXqGD7CldlQGsx5xUMuxdg8bj7NZqRzyGW5p4x8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=pass smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=czUQdm7T; arc=none smtp.client-ip=198.175.65.11
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="dw4QUlX9"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 5F426C2BCF5
-	for <platform-driver-x86@vger.kernel.org>; Mon, 11 May 2026 17:03:08 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1778518988;
-	bh=mU/foMwLY7I2cXRhqhtqv4ud+3Lhv5MB0VsaOfnQ5QM=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-	b=dw4QUlX9q2Pm9+dAAFkARSudtTosPocsLDchlnW/E4YLu0xo0bzvvFgbput5mAg1x
-	 /JdyhPSqdO8wpW01tPHRO6nBrP7WO/7ECSN2r+EexRFBqpV1M2ac/nIOgl4Hy0F9Ma
-	 UhU8tW4U4t/dqMyKofBG0nsf4+bwViG8BdTM7H6cFviF3NRJtdtqGjzRRicKID6N60
-	 t9mEUAXoVjRC0uR0d07iOcM/VOd+CXsX2HQEMPguXOd1DJpHqpK4kju8aKhju0UxZG
-	 FxPAmldcFUGjgGTNMQx4V7xypmOSwzl4UefhlhxPJ8pSGn3AgA6N6fTfUAnpxLLZtf
-	 E0JoDV3QvUVEQ==
-Received: by mail-lf1-f54.google.com with SMTP id 2adb3069b0e04-5a8cb92f26aso1271504e87.1
-        for <platform-driver-x86@vger.kernel.org>; Mon, 11 May 2026 10:03:08 -0700 (PDT)
-X-Forwarded-Encrypted: i=1; AFNElJ+QU46otbS+7cPmkmPzm5VDl8hpg/simjDoX9nWeBDRzkyncQh+fWHSf3VGktKRwRr4Eu3tOA5yw5Gb8u7+ndSlaZq3@vger.kernel.org
-X-Gm-Message-State: AOJu0YxBQA+UW562+NG/F6vscA5TiZXEs2I8q4KnNqCSCrQR3tz/ZNm/
-	bfuwuRFygJJJ3+KwBolWjYcbvsMXBoI76x8k7EKQxdUxtykTHX1nf4VesCn8TqQmaECieVjTR4W
-	OzuC52MqqwsLG7sXuWshWeoUsdEsq2+E=
-X-Received: by 2002:a05:6512:40d1:b0:5a8:88f8:9ed4 with SMTP id
- 2adb3069b0e04-5a888f8a070mr7770357e87.30.1778518986748; Mon, 11 May 2026
- 10:03:06 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="czUQdm7T"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1778519554; x=1810055554;
+  h=from:date:to:cc:subject:in-reply-to:message-id:
+   references:mime-version;
+  bh=OJqbEVqPpsGl7sw9OQ6UIsHKt7a2I3x9r50XJ46TTho=;
+  b=czUQdm7TQEpSp+mfjzYFqYNgowrp02wC4SmH+CqPf+fAaF0wa3Wnfr2F
+   XZ1UjtSOD2kqXI3fpO2Vs71ZjBVwaox9FP0QyG5Smp6g99VIbTt/HWng4
+   l8hAcbwtcrMOOTbrBhvsVVT009pTEs+PhaTs8KO5AOVVOv1W8QdZnGL+s
+   r6qefyWgHHRwjng6gfiIHHn/xuqLm2jxFkIly30brHJ41YuWDXavqv9jT
+   5Hh6YinCgu6ojKnK/vttXF6XxvjVL45qq3j98AhAfVGF0ztCvLcDi9oQr
+   RLfVKivIOQ5FF3ucV8x9C+bKONyEwnLG35NRlAd0z3T/ebj7kF8Ly+Vbj
+   A==;
+X-CSE-ConnectionGUID: DY/oXUqYSQugJMwfU8OcOQ==
+X-CSE-MsgGUID: emo8Juz8SCKnOdm5zByvBw==
+X-IronPort-AV: E=McAfee;i="6800,10657,11783"; a="89720114"
+X-IronPort-AV: E=Sophos;i="6.23,229,1770624000"; 
+   d="scan'208";a="89720114"
+Received: from fmviesa005.fm.intel.com ([10.60.135.145])
+  by orvoesa103.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 11 May 2026 10:12:34 -0700
+X-CSE-ConnectionGUID: dhqwgcBWS92JI870+nWqbA==
+X-CSE-MsgGUID: C3dpS6jrTjaJcS92wwl9Hg==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.23,229,1770624000"; 
+   d="scan'208";a="242474718"
+Received: from ijarvine-mobl1.ger.corp.intel.com (HELO localhost) ([10.245.245.28])
+  by fmviesa005-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 11 May 2026 10:12:30 -0700
+From: =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
+Date: Mon, 11 May 2026 20:12:27 +0300 (EEST)
+To: "David E. Box" <david.e.box@linux.intel.com>
+cc: irenic.rajneesh@gmail.com, ilpo.jarvinen@linux.intel.com, 
+    srinivas.pandruvada@linux.intel.com, xi.pardee@linux.intel.com, 
+    hansg@kernel.org, linux-kernel@vger.kernel.org, 
+    platform-driver-x86@vger.kernel.org
+Subject: Re: [PATCH V3 06/16] platform/x86/intel/pmt: Unify header fetch and
+ add ACPI source
+In-Reply-To: <20260501231054.3890305-7-david.e.box@linux.intel.com>
+Message-ID: <51cd9130-4d15-6415-707e-95f95ef21866@linux.intel.com>
+References: <20260501231054.3890305-1-david.e.box@linux.intel.com> <20260501231054.3890305-7-david.e.box@linux.intel.com>
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <2420444.ElGaqSPkdT@rafael.j.wysocki> <3420768.aeNJFYEL58@rafael.j.wysocki>
- <e46d3374-4762-3776-6195-bd6220998b5e@linux.intel.com> <CAJZ5v0i5u4uq7v52oWYNt_tXwJAcpuXVS21y6PKU54XY7y=ciA@mail.gmail.com>
- <db0875af-5b2f-b710-43ff-ec1b9922ec27@linux.intel.com> <CAJZ5v0hAKEiy3JVP4w+wX-P3XxiVddVXt36zqqRdtPLnnmnYnw@mail.gmail.com>
- <de73ccd5-15c4-4836-d63e-4bb3138310d7@linux.intel.com>
-In-Reply-To: <de73ccd5-15c4-4836-d63e-4bb3138310d7@linux.intel.com>
-From: "Rafael J. Wysocki" <rafael@kernel.org>
-Date: Mon, 11 May 2026 19:02:55 +0200
-X-Gmail-Original-Message-ID: <CAJZ5v0hn8oSu03QBNyPm35sBMPS10_MP_wfCmizt9datjDkcVQ@mail.gmail.com>
-X-Gm-Features: AVHnY4KAOkQ9IipZwCzeBLRNwmyGrQCH5FZbn18C29IxP949nS1hsjd20p7swts
-Message-ID: <CAJZ5v0hn8oSu03QBNyPm35sBMPS10_MP_wfCmizt9datjDkcVQ@mail.gmail.com>
-Subject: Re: [PATCH v1 3/4] platform/x86: xo15-ebook: Register ACPI notify
- handler directly
-To: =?UTF-8?Q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
-Cc: "Rafael J. Wysocki" <rafael@kernel.org>, LKML <linux-kernel@vger.kernel.org>, 
-	Linux ACPI <linux-acpi@vger.kernel.org>, Hans de Goede <hansg@kernel.org>, 
-	platform-driver-x86@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=US-ASCII
 
-On Mon, May 11, 2026 at 6:44=E2=80=AFPM Ilpo J=C3=A4rvinen
-<ilpo.jarvinen@linux.intel.com> wrote:
->
-> On Mon, 11 May 2026, Rafael J. Wysocki wrote:
->
-> > On Mon, May 11, 2026 at 6:17=E2=80=AFPM Ilpo J=C3=A4rvinen
-> > <ilpo.jarvinen@linux.intel.com> wrote:
-> > >
-> > > On Mon, 11 May 2026, Rafael J. Wysocki wrote:
-> > >
-> > > > On Mon, May 11, 2026 at 3:59=E2=80=AFPM Ilpo J=C3=A4rvinen
-> > > > <ilpo.jarvinen@linux.intel.com> wrote:
-> > > > >
-> > > > > On Fri, 8 May 2026, Rafael J. Wysocki wrote:
-> > > > >
-> > > > > > From: "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>
-> > > > > >
-> > > > > > To facilitate subsequent conversion of the driver to a platform=
- one,
-> > > > > > make it install an ACPI notify handler directly instead of usin=
-g
-> > > > > > a .notify() callback in struct acpi_driver.
-> > > > > >
-> > > > > > No intentional functional impact.
-> > > > > >
-> > > > > > Signed-off-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
-> > > > > > ---
-> > > > > >  drivers/platform/x86/xo15-ebook.c | 19 ++++++++++++++-----
-> > > > > >  1 file changed, 14 insertions(+), 5 deletions(-)
-> > > > > >
-> > > > > > diff --git a/drivers/platform/x86/xo15-ebook.c b/drivers/platfo=
-rm/x86/xo15-ebook.c
-> > > > > > index 616f4bb3461a..8af1b9078db8 100644
-> > > > > > --- a/drivers/platform/x86/xo15-ebook.c
-> > > > > > +++ b/drivers/platform/x86/xo15-ebook.c
-> > > > > > @@ -57,16 +57,15 @@ static int ebook_send_state(struct acpi_dev=
-ice *device)
-> > > > > >       return 0;
-> > > > > >  }
-> > > > > >
-> > > > > > -static void ebook_switch_notify(struct acpi_device *device, u3=
-2 event)
-> > > > > > +static void ebook_switch_notify(acpi_handle handle, u32 event,=
- void *data)
-> > > > > >  {
-> > > > > >       switch (event) {
-> > > > > >       case ACPI_FIXED_HARDWARE_EVENT:
-> > > > > >       case XO15_EBOOK_NOTIFY_STATUS:
-> > > > > > -             ebook_send_state(device);
-> > > > > > +             ebook_send_state(data);
-> > > > > >               break;
-> > > > > >       default:
-> > > > > > -             acpi_handle_debug(device->handle,
-> > > > > > -                               "Unsupported event [0x%x]\n", e=
-vent);
-> > > > > > +             acpi_handle_debug(handle, "Unsupported event [0x%=
-x]\n", event);
-> > > > > >               break;
-> > > > > >       }
-> > > > > >  }
-> > > > > > @@ -123,6 +122,11 @@ static int ebook_switch_add(struct acpi_de=
-vice *device)
-> > > > > >       if (error)
-> > > > > >               goto err_free_input;
-> > > > > >
-> > > > > > +     error =3D acpi_dev_install_notify_handler(device, ACPI_DE=
-VICE_NOTIFY,
-> > > > > > +                                             ebook_switch_noti=
-fy, device);
-> > > > > > +     if (error)
-> > > > > > +             goto err_unregister_input;
-> > > > > > +
-> > > > > >       ebook_send_state(device);
-> > > > > >
-> > > > > >       if (device->wakeup.flags.valid) {
-> > > > > > @@ -139,6 +143,10 @@ static int ebook_switch_add(struct acpi_de=
-vice *device)
-> > > > > >  err_free_button:
-> > > > > >       kfree(button);
-> > > > > >       return error;
-> > > > > > +
-> > > > > > +err_unregister_input:
-> > > > > > +     input_unregister_device(input);
-> > > > > > +     goto err_free_button;
-> > > > >
-> > > > > The end result would be much simpler if there would be patch 5 to=
- convert
-> > > > > to devm_*().
-> > > >
-> > > > Well, I can add one.
-> > > >
-> > > > Do you want me to resend an update of the series for this?
-> > >
-> > > Ah, right. I took these now to review-ilpo-next.
-> > >
-> > > (I was initially thinking of making a little bit different suggestion
-> > > which would have required changes to these patches but then realized =
-it
-> > > was better to just add the devm_*() conversion after these).
-> >
-> > So I guess I'll prepare a follow-up patch for the devm_ conversion.
-> >
-> > Note though that there's no devm_ counterpart of
-> > acpi_dev_install_notify_handler() ATM, so I may need to add one while
-> > at it.
->
-> While adding it will be able to remove acpi_dev_remove_notify_handler()
-> call from ebook_switch_remove(), there's no such call in rollbacks for
-> ebook_switch_probe() so it wouldn't be strictly required.
+On Fri, 1 May 2026, David E. Box wrote:
 
-Right.
+> Allow the PMT class to read discovery headers from either PCI MMIO or
+> ACPI-provided entries, depending on the discovery source. The new
+> source-aware fetch helper retrieves the first two QWORDs for both paths
+> while keeping the mapped discovery table available for users such as
+> crashlog.
+> 
+> Split intel_pmt_populate_entry() into source-specific resolvers:
+>   - pmt_resolve_access_pci(): handles both ACCESS_LOCAL and ACCESS_BARID
+>     for PCI-backed devices and sets entry->pcidev. Same existing
+>     functionality.
+>   - pmt_resolve_access_acpi(): handles only ACCESS_BARID for ACPI-backed
+>     devices, rejecting ACCESS_LOCAL which has no valid semantics without
+>     a physical discovery resource.
+> 
+> This maintains existing PCI behavior and makes no functional changes
+> for PCI devices.
+> 
+> Signed-off-by: David E. Box <david.e.box@linux.intel.com>
+> ---
+> V3 changes:
+>   - Folded the header fetch rework back into intel_pmt_dev_create() after
+>     dropping the previous common header decode helper patch
+>   - Replaced repeated literal header count values with
+>     PMT_DISC_HEADER_QWORDS for discovery-header handling
+>   - Updated discovery-header buffer declarations and copy size
+>     calculations to use PMT_DISC_HEADER_QWORDS * sizeof(*headers)
+>     for clarity in function-parameter context
+>   - Cleaned up line wrapping/indentation
+> 
+> V2 changes:
+>   - In pmt_resolve_access_acpi(), moved dev_err() call to single line
+>     instead of split across two lines
+>   - Restructured error handling in intel_pmt_populate_entry(), moving error
+>     returns from after switch/case into each case statement for better
+>     readability
+>   - Addressed Ilpo's feedback on error message formatting and error
+>     handling patterns
+> 
+>  drivers/platform/x86/intel/pmt/class.c | 130 ++++++++++++++++++++++---
+>  1 file changed, 118 insertions(+), 12 deletions(-)
+> 
+> diff --git a/drivers/platform/x86/intel/pmt/class.c b/drivers/platform/x86/intel/pmt/class.c
+> index 61834cbe3764..a162df5939e0 100644
+> --- a/drivers/platform/x86/intel/pmt/class.c
+> +++ b/drivers/platform/x86/intel/pmt/class.c
+> @@ -204,9 +204,9 @@ struct class intel_pmt_class = {
+>  };
+>  EXPORT_SYMBOL_GPL(intel_pmt_class);
+>  
+> -static int intel_pmt_populate_entry(struct intel_pmt_entry *entry,
+> -				    struct intel_vsec_device *ivdev,
+> -				    int idx)
+> +static int pmt_resolve_access_pci(struct intel_pmt_entry *entry,
+> +				  struct intel_vsec_device *ivdev,
+> +				  int idx)
+>  {
+>  	struct pci_dev *pci_dev = to_pci_dev(ivdev->dev);
+>  	struct device *dev = &ivdev->auxdev.dev;
+> @@ -286,6 +286,81 @@ static int intel_pmt_populate_entry(struct intel_pmt_entry *entry,
+>  	}
+>  
+>  	entry->pcidev = pci_dev;
+> +
+> +	return 0;
+> +}
+> +
+> +static int pmt_resolve_access_acpi(struct intel_pmt_entry *entry,
+> +				   struct intel_vsec_device *ivdev)
+> +{
+> +	struct pci_dev *pci_dev = NULL;
+> +	struct device *dev = &ivdev->auxdev.dev;
+> +	struct intel_pmt_header *header = &entry->header;
+> +	u8 bir;
+> +
+> +	if (dev_is_pci(ivdev->dev))
+> +		pci_dev = to_pci_dev(ivdev->dev);
+> +
+> +	/*
+> +	 * The base offset should always be 8 byte aligned.
+> +	 *
+> +	 * For non-local access types the lower 3 bits of base offset
+> +	 * contains the index of the base address register where the
+> +	 * telemetry can be found.
+> +	 */
+> +	bir = GET_BIR(header->base_offset);
+> +
+> +	switch (header->access_type) {
+> +	case ACCESS_BARID:
+> +		/* ACPI platform drivers use base_addr */
+> +		if (ivdev->base_addr) {
+> +			entry->base_addr = ivdev->base_addr +
+> +					   GET_ADDRESS(header->base_offset);
+> +			break;
+> +		}
+> +
+> +		/* If base_addr is not provided, then this is an ACPI companion device */
+> +		if (!pci_dev) {
+> +			dev_err(dev, "ACCESS_BARID requires PCI BAR resources or base_addr\n");
+> +			return -EINVAL;
+> +		}
+> +
+> +		entry->base_addr = pci_resource_start(pci_dev, bir) +
+> +			GET_ADDRESS(header->base_offset);
+> +		break;
+> +	default:
+> +		dev_err(dev, "Unsupported access type %d for ACPI based PMT\n",
+> +			header->access_type);
+> +		return -EINVAL;
+> +	}
+> +
+> +	return 0;
+> +}
+> +
+> +static int intel_pmt_populate_entry(struct intel_pmt_entry *entry,
+> +				    struct intel_vsec_device *ivdev,
+> +				    int idx)
+> +{
+> +	struct intel_pmt_header *header = &entry->header;
+> +	struct device *dev = &ivdev->auxdev.dev;
+> +	int ret;
+> +
+> +	switch (ivdev->src) {
+> +	case INTEL_VSEC_DISC_PCI:
+> +		ret = pmt_resolve_access_pci(entry, ivdev, idx);
+> +		if (ret)
+> +			return ret;
+> +		break;
+> +	case INTEL_VSEC_DISC_ACPI:
+> +		ret = pmt_resolve_access_acpi(entry, ivdev);
+> +		if (ret)
+> +			return ret;
+> +		break;
+> +	default:
+> +		dev_err(dev, "Unknown discovery source: %d\n", ivdev->src);
+> +		return -EINVAL;
+> +	}
+> +
+>  	entry->guid = header->guid;
+>  	entry->size = header->size;
+>  	entry->cb = ivdev->priv_data;
+> @@ -370,21 +445,52 @@ static int intel_pmt_dev_register(struct intel_pmt_entry *entry,
+>  	return ret;
+>  }
+>  
+> +static int pmt_get_headers(struct intel_vsec_device *ivdev, int idx,
+> +			   struct intel_pmt_entry *entry, u64 headers[2])
+> +{
+> +	struct device *dev = &ivdev->auxdev.dev;
+> +
+> +	switch (ivdev->src) {
+> +	case INTEL_VSEC_DISC_PCI: {
+> +		void __iomem *disc_table;
+> +
+> +		disc_table = devm_ioremap_resource(dev, &ivdev->resource[idx]);
+> +		if (IS_ERR(disc_table))
+> +			return PTR_ERR(disc_table);
+> +
+> +		memcpy_fromio(headers, disc_table, 2 * sizeof(u64));
+> +		memcpy(entry->disc_header, headers, sizeof(entry->disc_header));
+> +
+> +		/* Used by crashlog driver */
+> +		entry->disc_table = disc_table;
+> +
+> +		return 0;
+> +	}
+> +	case INTEL_VSEC_DISC_ACPI: {
+> +		memcpy(headers, &ivdev->acpi_disc[idx][0], 2 * sizeof(u64));
+> +		memcpy(entry->disc_header, headers, sizeof(entry->disc_header));
 
-> But it certainly wouldn't hurt to have one for other drivers.
+This risks copying from stack if one of the magic literals (that is not 
+bound to each other) is ever changed, so static_assert()ing it cannot 
+occur wouldn't hurt. It took me a while to figure out how you can safely 
+copy 4 entries from 2 before realizing there's also type downsizing going 
+on here.
 
-Sure, I definitely have a plan to add one.
+TBH, I don't very much like how this is currently architected. It would be 
+much nicer if the magic numbers would be properly bound to each other 
+with defines so we wouldn't need to bind them using static_assert()s.
+Is there some reason why one of these copy/array sizes cannot be 
+determined from the other?
+
+> +		entry->disc_table = NULL;
+> +
+> +		return 0;
+> +	}
+> +	default:
+> +		dev_err(dev, "Unknown discovery source type: %d\n", ivdev->src);
+> +		break;
+> +	}
+> +
+> +	return -EINVAL;
+> +}
+> +
+>  int intel_pmt_dev_create(struct intel_pmt_entry *entry, struct intel_pmt_namespace *ns,
+>  			 struct intel_vsec_device *intel_vsec_dev, int idx)
+>  {
+>  	struct device *dev = &intel_vsec_dev->auxdev.dev;
+> -	struct resource	*disc_res;
+> +	u64 headers[2];
+>  	int ret;
+>  
+> -	disc_res = &intel_vsec_dev->resource[idx];
+> -
+> -	entry->disc_table = devm_ioremap_resource(dev, disc_res);
+> -	if (IS_ERR(entry->disc_table))
+> -		return PTR_ERR(entry->disc_table);
+> -
+> -	memcpy_fromio(entry->disc_header, entry->disc_table,
+> -		      sizeof(entry->disc_header));
+> +	ret = pmt_get_headers(intel_vsec_dev, idx, entry, headers);
+> +	if (ret)
+> +		return ret;
+>  
+>  	if (ns->pmt_pre_decode) {
+>  		ret = ns->pmt_pre_decode(intel_vsec_dev, entry);
+> 
+
+-- 
+ i.
+
