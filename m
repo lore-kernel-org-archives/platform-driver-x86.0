@@ -1,59 +1,59 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.15])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.12])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1B2CB3793A8;
-	Mon, 11 May 2026 12:31:13 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.15
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B5BCA2DAFCB;
+	Mon, 11 May 2026 12:36:45 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.12
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1778502675; cv=none; b=iO01pRUNdWJGBMR0pNOEAcoaQJXYz/q9klADSd92koBFMApBaZ3GbSHjE1ydAaIPburyBsRqWNAD+ebciEWT0I7eMslOR1ExtA5FsnzcjQRGfVhsFkvHT7+66IyWYtChYbgZ0I2zN5Oghw9/03rZapDFQasj8IL7qjUdNSLXmhs=
+	t=1778503007; cv=none; b=HyaDkRluXU+COMjkdVfDdVGmXWlp+7JGJDrHWx50V315ySV3j/0W9tEdE6EZjHwANGKJqCMRbpZbmsQrtnmeqHwVGgzPy+jgajA+3RDmt80LZsAy4NE874Kt93I239TFZoaxBUh/lRk760wm0kJLqv3vmAXn7/ehzVqcrzH/nfM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1778502675; c=relaxed/simple;
-	bh=dWC3ocj1PvYR7ADsFzzlPhHZfNBAX4VjctKddktRVaQ=;
+	s=arc-20240116; t=1778503007; c=relaxed/simple;
+	bh=RR4AzaXpV6JP6QpXTwasB8ib5j5Os4asoYx7611aMNs=;
 	h=From:Date:To:cc:Subject:In-Reply-To:Message-ID:References:
-	 MIME-Version:Content-Type; b=TNvByNreDJGF5S937SR+vmzyB+CGxr+5IziWbD7uWrtefyjct+sSY7yaxdgkqkc+WmQO48rZFTwv5IBIv5z/XKEIMQFzq9cbfqPOel+OCLDZ5njpE4hqVE4AbkdYZDiUOgTuNwuNWcEnv7OjpjIAGmg/lr7U2c26m4kZ4ns8RaM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=pass smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=OyVCQb43; arc=none smtp.client-ip=198.175.65.15
+	 MIME-Version:Content-Type; b=SmAYH0w8Cn74jSMGy1SQm9v6xuCh5nBu/2pZCp4Vo5qOPhXQhzARJHsBvacJi90PRSsbJgBU6loEa4VKzNQM12JQLmNA96VWdCEa/5M7239txfWPF7/jhdHGilovyKJnVZyyFYwaMyuPv55OuZfXxsuRlGZQl9JvPOs0T/OAjp4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=pass smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=BhQHPprt; arc=none smtp.client-ip=192.198.163.12
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="OyVCQb43"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="BhQHPprt"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1778502674; x=1810038674;
+  t=1778503006; x=1810039006;
   h=from:date:to:cc:subject:in-reply-to:message-id:
    references:mime-version;
-  bh=dWC3ocj1PvYR7ADsFzzlPhHZfNBAX4VjctKddktRVaQ=;
-  b=OyVCQb43kPSI7OzOtXEf5byx2l0n2nt8p0pvfJtyr2KVNXSkDMg3oauK
-   ZBLxmSkPfcNrSldYSyKmshWDOW2AWCKgsHezYz0FkdrtCumgKT1zoWicr
-   TqgPKEki30wfK2VM5Xk3fmmxQ5+lPDg2VNB2e+iooKV2O/gDGmGW8v4ir
-   ak0bwSrvA093sQIUyHAvL5iCI+eJ/nHPdgq/4Ok0mqHqWqpixTFUVN9aE
-   dqHkJEgmo7TAQfF09iwbHsr9TXi54gAvAldriEt18vrZonCuKUGiJKc/q
-   MvRuEK+tRLv9b0cRPgUI1/UtLnaxvApnFlNNz4RWKw5Ktmqgfq5L84kmS
-   w==;
-X-CSE-ConnectionGUID: Wl4OKTG3QaSZXKE3dR+KYg==
-X-CSE-MsgGUID: 5CLFb4IvRkmdjRebX/4gTg==
-X-IronPort-AV: E=McAfee;i="6800,10657,11782"; a="82999946"
+  bh=RR4AzaXpV6JP6QpXTwasB8ib5j5Os4asoYx7611aMNs=;
+  b=BhQHPprtMNeCFmUp9YjqdzZWOj9R5bzNnM8WnBQcsuz6m5MXh33ODjx5
+   opzST3aE6cw4OR8DV1zLABQf9LxgMZO5JJOz8RtDMRun3Kxi4YNfnVq2P
+   cxfUtMJHJUuXsrvEkFEZitsLGg6YbgAvLRDOppgKVk+Ohl2T5IgIempQ0
+   +K/XMIXGysfxTWM4e8lxvlHxmne+IbE5VR97O12dH2f7AoiTXw4ttf0dh
+   7o1OZ2uq21KmR2+LYX7xrzC+kcJYh/D7Jvqgi7Y8qH3MTpX8YgyF8xyXq
+   LZFM3zk1NsfrC+RYwttRvIwWhiY1MgHfzZOFlTtuye12BefrgRAxdLl7D
+   Q==;
+X-CSE-ConnectionGUID: 1wV+eUVFRt2hZCFwm0KvYg==
+X-CSE-MsgGUID: KfH418unSq657/XYdHaPyA==
+X-IronPort-AV: E=McAfee;i="6800,10657,11782"; a="83234542"
 X-IronPort-AV: E=Sophos;i="6.23,228,1770624000"; 
-   d="scan'208";a="82999946"
-Received: from orviesa001.jf.intel.com ([10.64.159.141])
-  by orvoesa107.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 11 May 2026 05:31:11 -0700
-X-CSE-ConnectionGUID: vqupcd26QoK2OHfI5B3t5A==
-X-CSE-MsgGUID: j/2VwtKQTTWXexkvQx4QfA==
+   d="scan'208";a="83234542"
+Received: from fmviesa004.fm.intel.com ([10.60.135.144])
+  by fmvoesa106.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 11 May 2026 05:36:45 -0700
+X-CSE-ConnectionGUID: 63jGwtWCSbOsHG3CMbdjjw==
+X-CSE-MsgGUID: M45M1BTFSPq2+YmeqwpM/A==
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="6.23,228,1770624000"; 
-   d="scan'208";a="275571417"
+   d="scan'208";a="239257443"
 Received: from ijarvine-mobl1.ger.corp.intel.com (HELO localhost) ([10.245.245.28])
-  by smtpauth.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 11 May 2026 05:31:09 -0700
+  by fmviesa004-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 11 May 2026 05:36:43 -0700
 From: =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
-Date: Mon, 11 May 2026 15:31:05 +0300 (EEST)
+Date: Mon, 11 May 2026 15:36:39 +0300 (EEST)
 To: Daniel Gibson <daniel@gibson.sh>
 cc: Shyam Sundar S K <Shyam-sundar.S-k@amd.com>, 
     Hans de Goede <hansg@kernel.org>, platform-driver-x86@vger.kernel.org, 
     LKML <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH v2 1/5] platform/x86/amd/pmc: Check for intermediate
- wakeup in function
-In-Reply-To: <20260509013105.816339-2-daniel@gibson.sh>
-Message-ID: <be336ea2-7d9c-2187-2f6c-d8841006e1dc@linux.intel.com>
-References: <20260509013105.816339-1-daniel@gibson.sh> <20260509013105.816339-2-daniel@gibson.sh>
+Subject: Re: [PATCH v2 3/5] platform/x86/amd/pmc: Add delay_suspend module
+ parameter
+In-Reply-To: <20260509013105.816339-4-daniel@gibson.sh>
+Message-ID: <8de3f9e9-3de8-baf7-3aad-874bd286fd75@linux.intel.com>
+References: <20260509013105.816339-1-daniel@gibson.sh> <20260509013105.816339-4-daniel@gibson.sh>
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
@@ -64,72 +64,95 @@ Content-Type: text/plain; charset=US-ASCII
 
 On Sat, 9 May 2026, Daniel Gibson wrote:
 
-> This slightly refactors code introduced by the
+> Enabling the new delay_suspend module parameter delays suspend for
+> 2.5 seconds which is known to help for some AMD-based Lenovo Laptops
+> that otherwise failed to send/receive events for key presses or the
+> lid switch after s2idle.
+> Apparently the EC needs to do some things in the background before
 
-Avoid starting changelog with "This" or "This patch" but use imperative 
-tone instead. You can start with "Refactor code ..."
+Please fill in paragraphs to ~72 chars or clearly make another 
+paragraph with a line in between, if that's what you want.
 
-> "pmc: Require at least 2.5 seconds between HW sleep cycles"
-
-Please always use the canonical commit reference format (see 
-Documentation/process/submitting-patches.rst for detail).
-
-It's on the borderline if the origin of the code even matters that much 
-but since you're adding the (nice) comment, I guess it is easier to figure 
-out where that came from by having the reference in place.
-
-> commit
-> to allow adding different conditions for that delay later.
-
-later -> in an upcoming change
-
+> suspend or it gets into a bad state.
 > 
-> References: 9f5595d5f03f ("platform/x86/amd: pmc: Require at least 2.5 seconds between HW sleep cycles")
-
-Drop this.
-
+> There are many reports of AMD-based laptops (mostly but not exclusively
+> IdeaPads) about similar issues on the web; this parameter gives
+> affected users an easy way to try out if their issues have the same
+> root cause and to work around them until their specific device is added
+> to the quirks list.
+> I added a note to the parameter description encouraging users to report
+> their device so it can be added to the quirks list, inspired by a
+> similar request in parameter descriptions of the ideapad-laptop module.
+> 
+> The module parameter can be set to "1" to explicitly enable it,
+> "0" to disable it even on devices that are assumed to be affected,
+> or -1 (the default) to enable it if the device is assumed to be affected
+> (according to fwbug_list[])
+> 
+> Link: https://bugzilla.kernel.org/show_bug.cgi?id=221383
 > Signed-off-by: Daniel Gibson <daniel@gibson.sh>
 > ---
->  drivers/platform/x86/amd/pmc/pmc.c | 17 ++++++++++++++---
->  1 file changed, 14 insertions(+), 3 deletions(-)
+>  drivers/platform/x86/amd/pmc/pmc.c | 25 +++++++++++++++++++++++--
+>  1 file changed, 23 insertions(+), 2 deletions(-)
 > 
 > diff --git a/drivers/platform/x86/amd/pmc/pmc.c b/drivers/platform/x86/amd/pmc/pmc.c
-> index cae3fcafd4d7..2b9e5730170a 100644
+> index 6bafd8661d68..2d3d180c15d2 100644
 > --- a/drivers/platform/x86/amd/pmc/pmc.c
 > +++ b/drivers/platform/x86/amd/pmc/pmc.c
-> @@ -598,6 +598,19 @@ static int amd_pmc_verify_czn_rtc(struct amd_pmc_dev *pdev, u32 *arg)
->  	return rc;
->  }
+> @@ -16,6 +16,7 @@
+>  #include <linux/bits.h>
+>  #include <linux/debugfs.h>
+>  #include <linux/delay.h>
+> +#include <linux/dmi.h>
+>  #include <linux/io.h>
+>  #include <linux/iopoll.h>
+>  #include <linux/limits.h>
+> @@ -89,6 +90,11 @@ static bool disable_workarounds;
+>  module_param(disable_workarounds, bool, 0644);
+>  MODULE_PARM_DESC(disable_workarounds, "Disable workarounds for platform bugs");
 >  
-> +static bool amd_pmc_intermediate_wakeup_need_delay(struct amd_pmc_dev *pdev)
-> +{
-> +	/*
-> +	 * Starting a new HW sleep cycle right after waking from one
-> +	 * can cause electrical problems triggering the over voltage protection.
-> +	 * That is avoided by delaying the next suspend a bit, see also
-> +	 * https://lore.kernel.org/all/20250414162446.3853194-1-superm1@kernel.org/
-> +	 */
-> +	struct smu_metrics table;
+> +static int delay_suspend = -1;
+> +module_param(delay_suspend, int, 0644);
+> +MODULE_PARM_DESC(delay_suspend,
+> +		 "Delays s2idle by 2.5 seconds to work around buggy ECs, often causing keyboard issues after suspend. 0: don't delay, 1: do delay, -1 (default): let amd_pmc decide. If you need this please report this to: platform-driver-x86@vger.kernel.org");
 > +
-> +	return get_metrics_table(pdev, &table) == 0 && table.s0i3_last_entry_status;
-> +}
-> +
->  static void amd_pmc_s2idle_prepare(void)
->  {
->  	struct amd_pmc_dev *pdev = &pmc;
-> @@ -632,11 +645,9 @@ static void amd_pmc_s2idle_prepare(void)
->  static void amd_pmc_s2idle_check(void)
->  {
->  	struct amd_pmc_dev *pdev = &pmc;
-> -	struct smu_metrics table;
->  	int rc;
+>  static struct amd_pmc_dev pmc;
 >  
-> -	/* Avoid triggering OVP */
-> -	if (!get_metrics_table(pdev, &table) && table.s0i3_last_entry_status)
-> +	if (amd_pmc_intermediate_wakeup_need_delay(pdev))
->  		msleep(2500);
->  
->  	/* Dump the IdleMask before we add to the STB */
+>  static inline u32 amd_pmc_reg_read(struct amd_pmc_dev *dev, int reg_offset)
+> @@ -625,8 +631,23 @@ static bool amd_pmc_want_suspend_delay(struct amd_pmc_dev *pdev)
+>  	 *
+>  	 * See https://bugzilla.kernel.org/show_bug.cgi?id=221383
+>  	 */
+> -	if (!disable_workarounds && amd_pmc_quirk_need_suspend_delay(pdev)) {
+> -		dev_info(pdev->dev, "Delaying suspend by 2.5s to avoid platform bug\n");
+> +	if (amd_pmc_quirk_need_suspend_delay(pdev)) {
+> +		/*
+> +		 * delay_suspend=1 force-enables this, otherwise it can be
+> +		 * disabled with disable_workarounds or delay_suspend=0
+> +		 */
+> +		if (delay_suspend == 1 || (delay_suspend == -1 && !disable_workarounds)) {
+> +			dev_info(pdev->dev, "Delaying suspend by 2.5s to avoid platform bug\n");
+> +			return true;
+> +		}
+> +		dev_info(pdev->dev, "Not delaying suspend because of module parameter, even though your device is assumed to need it!\n");
+> +	} else if (delay_suspend == 1) {
+
+At least the parameter interactions madness is a bit more contained now 
+that it's in these smaller functions. :-/
+
+Still not a big fan of it but I guess it's not worth fighting over 
+something that normally shouldn't be needed (if we've all the needed 
+quirk info in place).
+
+> +		dev_info(pdev->dev, "Delaying suspend by 2.5s because delay_suspend=1. If this solves problems on your machine, please report this whole line to: platform-driver-x86@vger.kernel.org so it can be automatically detected as affected in the future. System Vendor: \"%s\" Product Name: \"%s\" Product Family: \"%s\" Board Vendor: \"%s\" Board Name: \"%s\"\n",
+> +			 dmi_get_system_info(DMI_SYS_VENDOR),
+> +			 dmi_get_system_info(DMI_PRODUCT_NAME),
+> +			 dmi_get_system_info(DMI_PRODUCT_FAMILY),
+> +			 dmi_get_system_info(DMI_BOARD_VENDOR),
+> +			 dmi_get_system_info(DMI_BOARD_NAME));
+>  		return true;
+>  	}
+>  	return false;
 > 
 
 -- 
